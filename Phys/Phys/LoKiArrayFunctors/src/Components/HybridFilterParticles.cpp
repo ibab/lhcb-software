@@ -1,4 +1,4 @@
-// $Id: HybridFilterParticles.cpp,v 1.1 2007-07-26 14:48:51 ibelyaev Exp $
+// $Id: HybridFilterParticles.cpp,v 1.2 2007-11-28 14:55:54 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -56,7 +56,7 @@ namespace LoKi
         const std::string& name,
         const IInterface* parent)
         : GaudiTool ( type , name , parent )
-        , m_cut     ( LoKi::BooleanConstant<LoKi::ATypes::Combination>( false ) ) 
+        , m_cut     ( LoKi::Constant<LoKi::ATypes::Combination,bool>( false ) ) 
         , m_code    ( "ANONE" )
         , m_factory ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC") 
       {

@@ -1,4 +1,4 @@
-// $Id: ExtCalls.h,v 1.2 2007-06-04 20:22:21 ibelyaev Exp $
+// $Id: ExtCalls.h,v 1.3 2007-11-28 14:54:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTCALLS_H 
 #define LOKI_EXTCALLS_H 1
@@ -43,8 +43,8 @@ namespace LoKi
     class ExtFunCalls<LHCb::Particle>
     {
     private:
-      typedef LHCb::Particle              Type ;
-      typedef LoKi::Function<const Type*> Fun  ;      
+      typedef LHCb::Particle                             Type ;
+      typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;      
     public:
       // ======================================================================
       static Fun::result_type __call__ 
@@ -62,8 +62,8 @@ namespace LoKi
     class ExtCutCalls<LHCb::Particle>
     {
     private:
-      typedef LHCb::Particle               Type ;
-      typedef LoKi::Predicate<const Type*> Fun  ;      
+      typedef LHCb::Particle                              Type ;
+      typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;      
     public:
       // ======================================================================
       static Fun::result_type __call__ 
@@ -82,7 +82,7 @@ namespace LoKi
     {
     private:
       typedef LHCb::VertexBase            Type ;
-      typedef LoKi::Function<const Type*> Fun  ;      
+      typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;      
     public:
       // ======================================================================
       static Fun::result_type __call__ 
@@ -106,8 +106,8 @@ namespace LoKi
     class ExtCutCalls<LHCb::VertexBase>
     {
     private:
-      typedef LHCb::VertexBase             Type ;
-      typedef LoKi::Predicate<const Type*> Fun  ;      
+      typedef LHCb::VertexBase                            Type ;
+      typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;      
     public:
       // ======================================================================
       static Fun::result_type __call__ 

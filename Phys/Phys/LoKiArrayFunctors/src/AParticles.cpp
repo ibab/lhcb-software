@@ -1,4 +1,4 @@
-// $Id: AParticles.cpp,v 1.3 2007-07-26 13:25:09 ibelyaev Exp $
+// $Id: AParticles.cpp,v 1.4 2007-11-28 14:55:54 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ===========================================================================
@@ -30,7 +30,7 @@
 // ============================================================================
 LoKi::AParticles::Count::Count 
 ( const LoKi::PhysTypes::Cuts& cut ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_cut (cut ) 
 {}
 // ============================================================================
@@ -39,7 +39,7 @@ LoKi::AParticles::Count::Count
 LoKi::AParticles::Count::Count 
 ( const LoKi::AParticles::Count& right ) 
   : LoKi::AuxFunBase ( right ) 
-  , LoKi::Function<LoKi::ATypes::Combination> ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function ( right ) 
   , m_cut ( right.m_cut ) 
 {}
 // ============================================================================
@@ -56,7 +56,7 @@ LoKi::AParticles::Count::operator()
 // ============================================================================
 LoKi::AParticles::Unique::Unique 
 ( const ICheckOverlap*                   tool ) 
-  : LoKi::Predicate<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_tool ( tool ) 
 {}
 // ============================================================================
@@ -64,7 +64,7 @@ LoKi::AParticles::Unique::Unique
 // ============================================================================
 LoKi::AParticles::Unique::Unique 
 ( const LoKi::Interface<ICheckOverlap>& tool ) 
-  : LoKi::Predicate<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_tool ( tool ) 
 {}
 // ============================================================================
@@ -73,7 +73,7 @@ LoKi::AParticles::Unique::Unique
 LoKi::AParticles::Unique::Unique 
 ( const LoKi::AParticles::Unique& right ) 
   : AuxFunBase ( right ) 
-  , LoKi::Predicate<LoKi::ATypes::Combination> ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate ( right ) 
   , m_tool ( right.m_tool ) 
 {}
 // ============================================================================
@@ -92,7 +92,7 @@ LoKi::AParticles::Unique::operator()
 // ============================================================================
 LoKi::AParticles::FourMomentum::FourMomentum
 ( const std::size_t index )
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_indices ( 1 , index ) 
 {}
 // ============================================================================
@@ -101,7 +101,7 @@ LoKi::AParticles::FourMomentum::FourMomentum
 LoKi::AParticles::FourMomentum::FourMomentum
 ( const std::size_t index1 , 
   const std::size_t index2 )
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_indices () 
 {
   m_indices.push_back ( index1 ) ;
@@ -115,7 +115,7 @@ LoKi::AParticles::FourMomentum::FourMomentum
 ( const std::size_t index1 , 
   const std::size_t index2 ,
   const std::size_t index3 )
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_indices () 
 {
   m_indices.push_back ( index1 ) ;
@@ -131,7 +131,7 @@ LoKi::AParticles::FourMomentum::FourMomentum
   const std::size_t index2 ,
   const std::size_t index3 ,
   const std::size_t index4 )
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_indices () 
 {
   m_indices.push_back ( index1 ) ;
@@ -145,7 +145,7 @@ LoKi::AParticles::FourMomentum::FourMomentum
 // ============================================================================
 LoKi::AParticles::FourMomentum::FourMomentum
 ( const LoKi::AParticles::FourMomentum::Indices& indices ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_indices ( indices ) 
 {
   std::sort ( m_indices.begin() , m_indices.end() ) ;
@@ -155,8 +155,8 @@ LoKi::AParticles::FourMomentum::FourMomentum
 // ============================================================================
 LoKi::AParticles::FourMomentum::FourMomentum
 ( const LoKi::AParticles::FourMomentum& right ) 
-  : LoKi::AuxFunBase ( right ) 
-  , LoKi::Function<LoKi::ATypes::Combination> ( right ) 
+  : LoKi::AuxFunBase                                         ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function ( right ) 
   , m_indices ( right.m_indices ) 
 {}
 // ============================================================================
@@ -207,9 +207,9 @@ LoKi::AParticles::Eta::clone() const
 // ============================================================================
 LoKi::AParticles::MinChild::MinChild 
 ( const LoKi::PhysTypes::Func& fun  )
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
-  , m_cut    ( LoKi::BooleanConstant<const LHCb::Particle*>  (true) ) 
+  , m_cut    ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant (true) ) 
   , m_minval ( std::numeric_limits<double>::max() ) 
 {}
 // ============================================================================
@@ -218,9 +218,9 @@ LoKi::AParticles::MinChild::MinChild
 LoKi::AParticles::MinChild::MinChild 
 ( const LoKi::PhysTypes::Func& fun  ,
   const double                 minv ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
-  , m_cut    ( LoKi::BooleanConstant<const LHCb::Particle*> (true) ) 
+  , m_cut    ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant (true) ) 
   , m_minval ( minv ) 
 {}
 // ============================================================================
@@ -229,7 +229,7 @@ LoKi::AParticles::MinChild::MinChild
 LoKi::AParticles::MinChild::MinChild 
 ( const LoKi::PhysTypes::Func& fun  ,
   const LoKi::PhysTypes::Cuts& cut  ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
   , m_cut    ( cut ) 
   , m_minval ( std::numeric_limits<double>::max() ) 
@@ -240,7 +240,7 @@ LoKi::AParticles::MinChild::MinChild
 LoKi::AParticles::MinChild::MinChild 
 ( const LoKi::PhysTypes::Cuts& cut  ,
   const LoKi::PhysTypes::Func& fun  ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
   , m_cut    ( cut ) 
   , m_minval ( std::numeric_limits<double>::max() ) 
@@ -252,7 +252,7 @@ LoKi::AParticles::MinChild::MinChild
 ( const LoKi::PhysTypes::Func& fun  ,
   const LoKi::PhysTypes::Cuts& cut  ,
   const double                 minv ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun  ) 
   , m_cut    ( cut  ) 
   , m_minval ( minv ) 
@@ -264,7 +264,7 @@ LoKi::AParticles::MinChild::MinChild
 ( const LoKi::PhysTypes::Cuts& cut  ,
   const LoKi::PhysTypes::Func& fun  ,
   const double                 minv ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun  ) 
   , m_cut    ( cut  ) 
   , m_minval ( minv ) 
@@ -274,8 +274,8 @@ LoKi::AParticles::MinChild::MinChild
 // ============================================================================
 LoKi::AParticles::MinChild::MinChild 
 ( const LoKi::AParticles::MinChild& right ) 
-  : LoKi::AuxFunBase                          ( right ) 
-  , LoKi::Function<LoKi::ATypes::Combination> ( right ) 
+  : LoKi::AuxFunBase                                         ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function ( right ) 
   , m_fun    ( right.m_fun    ) 
   , m_cut    ( right.m_cut    ) 
   , m_minval ( right.m_minval ) 
@@ -296,7 +296,7 @@ LoKi::AParticles::MinChild::operator()
 std::ostream& LoKi::AParticles::MinChild::fillStream 
 ( std::ostream& s ) const 
 { 
-  static const LoKi::BooleanConstant<const LHCb::Particle*> s_S (true) ;
+  static const LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant s_S (true) ;
   //
   s << "AMINCHILD(" << m_fun ;
   if ( m_cut.id() != s_S.id()                         ) { s << "," << m_cut    ; }
@@ -308,9 +308,9 @@ std::ostream& LoKi::AParticles::MinChild::fillStream
 // ============================================================================
 LoKi::AParticles::MaxChild::MaxChild 
 ( const LoKi::PhysTypes::Func& fun  )
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
-  , m_cut    ( LoKi::BooleanConstant<const LHCb::Particle*>(true) ) 
+  , m_cut    ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ) ) 
   , m_maxval ( -1 * std::numeric_limits<double>::max() ) 
 {}
 // ============================================================================
@@ -319,9 +319,9 @@ LoKi::AParticles::MaxChild::MaxChild
 LoKi::AParticles::MaxChild::MaxChild 
 ( const LoKi::PhysTypes::Func& fun  ,
   const double                 maxv ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
-  , m_cut    ( LoKi::BooleanConstant<const LHCb::Particle*>(true) ) 
+  , m_cut    ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ) ) 
   , m_maxval ( maxv ) 
 {}
 // ============================================================================
@@ -330,7 +330,7 @@ LoKi::AParticles::MaxChild::MaxChild
 LoKi::AParticles::MaxChild::MaxChild 
 ( const LoKi::PhysTypes::Func& fun  ,
   const LoKi::PhysTypes::Cuts& cut  ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
   , m_cut    ( cut ) 
   , m_maxval ( -1 * std::numeric_limits<double>::max() ) 
@@ -341,7 +341,7 @@ LoKi::AParticles::MaxChild::MaxChild
 LoKi::AParticles::MaxChild::MaxChild 
 ( const LoKi::PhysTypes::Cuts& cut  ,
   const LoKi::PhysTypes::Func& fun  ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
   , m_cut    ( cut ) 
   , m_maxval ( -1 * std::numeric_limits<double>::max() ) 
@@ -353,7 +353,7 @@ LoKi::AParticles::MaxChild::MaxChild
 ( const LoKi::PhysTypes::Func& fun  ,
   const LoKi::PhysTypes::Cuts& cut  ,
   const double                 maxv ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun  ) 
   , m_cut    ( cut  ) 
   , m_maxval ( maxv ) 
@@ -365,7 +365,7 @@ LoKi::AParticles::MaxChild::MaxChild
 ( const LoKi::PhysTypes::Cuts& cut  ,
   const LoKi::PhysTypes::Func& fun  ,
   const double                 maxv ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun  ) 
   , m_cut    ( cut  ) 
   , m_maxval ( maxv ) 
@@ -375,8 +375,8 @@ LoKi::AParticles::MaxChild::MaxChild
 // ============================================================================
 LoKi::AParticles::MaxChild::MaxChild 
 ( const LoKi::AParticles::MaxChild& right ) 
-  : LoKi::AuxFunBase                          ( right ) 
-  , LoKi::Function<LoKi::ATypes::Combination> ( right ) 
+  : LoKi::AuxFunBase                                         ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function ( right ) 
   , m_fun    ( right.m_fun    ) 
   , m_cut    ( right.m_cut    ) 
   , m_maxval ( right.m_maxval ) 
@@ -397,7 +397,7 @@ LoKi::AParticles::MaxChild::operator()
 std::ostream& LoKi::AParticles::MaxChild::fillStream 
 ( std::ostream& s ) const 
 { 
-  static const LoKi::BooleanConstant<const LHCb::Particle*> s_S (true) ;
+  static const LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant s_S (true) ;
   //
   s << "AMAXCHILD(" << m_fun ;
   if ( m_cut.id() != s_S.id()  ) 
@@ -411,7 +411,7 @@ std::ostream& LoKi::AParticles::MaxChild::fillStream
 // ============================================================================
 LoKi::AParticles::HasChild::HasChild
 ( const LoKi::PhysTypes::Cuts& cut  ) 
-  : LoKi::Predicate<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_cut ( cut ) 
 {}
 // ============================================================================
@@ -419,8 +419,8 @@ LoKi::AParticles::HasChild::HasChild
 // ============================================================================
 LoKi::AParticles::HasChild::HasChild
 ( const LoKi::AParticles::HasChild& right )
-  : LoKi::AuxFunBase                           ( right ) 
-  , LoKi::Predicate<LoKi::ATypes::Combination> ( right )
+  : LoKi::AuxFunBase                                          ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate ( right ) 
   , m_cut ( right.m_cut ) 
 {}
 // ============================================================================
@@ -442,9 +442,9 @@ LoKi::AParticles::HasChild::fillStream ( std::ostream& s ) const
 LoKi::AParticles::ChildFun::ChildFun
 ( const LoKi::PhysTypes::Func& fun   , 
   const int                    index ) 
- : LoKi::Function<LoKi::ATypes::Combination> () 
- , m_fun   ( fun ) 
- , m_index ( index ) 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  , m_fun   ( fun ) 
+  , m_index ( index ) 
 {}
 // ===========================================================================
 // Constructor from the fuction and index 
@@ -452,7 +452,7 @@ LoKi::AParticles::ChildFun::ChildFun
 LoKi::AParticles::ChildFun::ChildFun
 ( const int                    index ,
   const LoKi::PhysTypes::Func& fun   )
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun   ( fun   ) 
   , m_index ( index ) 
 {}
@@ -461,8 +461,8 @@ LoKi::AParticles::ChildFun::ChildFun
 // ============================================================================
 LoKi::AParticles::ChildFun::ChildFun
 ( const LoKi::AParticles::ChildFun& right )
-  : LoKi::AuxFunBase                          ( right ) 
-  , LoKi::Function<LoKi::ATypes::Combination> ( right )
+  : LoKi::AuxFunBase                                          ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function  ( right ) 
   , m_fun   ( right.m_fun   ) 
   , m_index ( right.m_index ) 
 {}
@@ -488,10 +488,10 @@ LoKi::AParticles::ChildFun::fillStream ( std::ostream& s ) const
 // ===========================================================================
 LoKi::AParticles::ChildCut::ChildCut
 ( const LoKi::PhysTypes::Cuts& cut   , 
-  const int                    index ) 
- : LoKi::Predicate<LoKi::ATypes::Combination> () 
- , m_cut   ( cut ) 
- , m_index ( index ) 
+  const int                    index )
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
+  , m_cut   ( cut ) 
+  , m_index ( index ) 
 {}
 // ===========================================================================
 // Constructor from the fuction and index 
@@ -499,7 +499,7 @@ LoKi::AParticles::ChildCut::ChildCut
 LoKi::AParticles::ChildCut::ChildCut
 ( const int                    index ,
   const LoKi::PhysTypes::Cuts& cut   )
-  : LoKi::Predicate<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_cut   ( cut   ) 
   , m_index ( index ) 
 {}
@@ -508,8 +508,8 @@ LoKi::AParticles::ChildCut::ChildCut
 // ============================================================================
 LoKi::AParticles::ChildCut::ChildCut
 ( const LoKi::AParticles::ChildCut& right )
-  : LoKi::AuxFunBase                           ( right ) 
-  , LoKi::Predicate<LoKi::ATypes::Combination> ( right )
+  : LoKi::AuxFunBase                                          ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate ( right ) 
   , m_cut   ( right.m_cut   ) 
   , m_index ( right.m_index ) 
 {}
@@ -534,7 +534,7 @@ LoKi::AParticles::ChildCut::fillStream ( std::ostream& s ) const
 // constructor from the tool:
 // ============================================================================
 LoKi::AParticles::VertexChi2::VertexChi2 ( IVertexFit*  fitter  ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fit ( fitter ) 
 {}
 // ============================================================================
@@ -542,7 +542,7 @@ LoKi::AParticles::VertexChi2::VertexChi2 ( IVertexFit*  fitter  )
 // ============================================================================
 LoKi::AParticles::VertexChi2::VertexChi2
 ( const LoKi::Interface<IVertexFit>& fitter  ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fit ( fitter ) 
 {}
 // ============================================================================
@@ -550,8 +550,8 @@ LoKi::AParticles::VertexChi2::VertexChi2
 // ============================================================================
 LoKi::AParticles::VertexChi2::VertexChi2
 ( const LoKi::AParticles::VertexChi2& right ) 
-  : LoKi::AuxFunBase                           ( right ) 
-  , LoKi::Function<LoKi::ATypes::Combination>  ( right )
+  : LoKi::AuxFunBase                                         ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function ( right ) 
   , m_fit ( right.m_fit ) 
 {}
 // ============================================================================
@@ -585,7 +585,7 @@ LoKi::AParticles::VertexChi2::fillStream ( std::ostream& s ) const
 // constructor from the tool:
 // ============================================================================
 LoKi::AParticles::MaxDOCA::MaxDOCA ( IGeomDispCalculator*  doca  ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_doca ( doca ) 
 {}
 // ============================================================================
@@ -593,7 +593,7 @@ LoKi::AParticles::MaxDOCA::MaxDOCA ( IGeomDispCalculator*  doca  )
 // ============================================================================
 LoKi::AParticles::MaxDOCA::MaxDOCA
 ( const LoKi::Interface<IGeomDispCalculator>& doca  ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_doca ( doca ) 
 {}
 // ============================================================================
@@ -601,8 +601,8 @@ LoKi::AParticles::MaxDOCA::MaxDOCA
 // ============================================================================
 LoKi::AParticles::MaxDOCA::MaxDOCA
 ( const LoKi::AParticles::MaxDOCA& right ) 
-  : LoKi::AuxFunBase                           ( right ) 
-  , LoKi::Function<LoKi::ATypes::Combination>  ( right )
+  : LoKi::AuxFunBase                                         ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function ( right ) 
   , m_doca ( right.m_doca ) 
 {}
 // ============================================================================
@@ -649,7 +649,7 @@ LoKi::AParticles::MaxDOCA::fillStream ( std::ostream& s ) const
 LoKi::AParticles::MaxDOCACut::MaxDOCACut 
 ( IGeomDispCalculator*  doca      ,
   const double          threshold )
-  : LoKi::Predicate<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_doca      ( doca      ) 
   , m_threshold ( threshold )
 {}
@@ -659,7 +659,7 @@ LoKi::AParticles::MaxDOCACut::MaxDOCACut
 LoKi::AParticles::MaxDOCACut::MaxDOCACut 
 ( const double          threshold ,
   IGeomDispCalculator*  doca      ) 
-  : LoKi::Predicate<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_doca      ( doca      ) 
   , m_threshold ( threshold )
 {}
@@ -669,7 +669,7 @@ LoKi::AParticles::MaxDOCACut::MaxDOCACut
 LoKi::AParticles::MaxDOCACut::MaxDOCACut
 ( const LoKi::Interface<IGeomDispCalculator>& doca ,
   const double          threshold )
-  : LoKi::Predicate<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_doca      ( doca      ) 
   , m_threshold ( threshold )
 {}
@@ -679,7 +679,7 @@ LoKi::AParticles::MaxDOCACut::MaxDOCACut
 LoKi::AParticles::MaxDOCACut::MaxDOCACut
 ( const double                           threshold ,
   const LoKi::Interface<IGeomDispCalculator>& doca )
-  : LoKi::Predicate<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_doca      ( doca      ) 
   , m_threshold ( threshold )
 {}
@@ -688,8 +688,8 @@ LoKi::AParticles::MaxDOCACut::MaxDOCACut
 // ============================================================================
 LoKi::AParticles::MaxDOCACut::MaxDOCACut
 ( const LoKi::AParticles::MaxDOCACut& right ) 
-  : LoKi::AuxFunBase                           ( right ) 
-  , LoKi::Predicate<LoKi::ATypes::Combination>  ( right )
+  : LoKi::AuxFunBase                                          ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate ( right ) 
   , m_doca ( right.m_doca ) 
 {}
 // ============================================================================
@@ -733,7 +733,7 @@ LoKi::AParticles::MaxDOCACut::fillStream ( std::ostream& s ) const
 // constructor from the tool:
 // ============================================================================
 LoKi::AParticles::MaxDOCAChi2::MaxDOCAChi2 ( IGeomDispCalculator*  doca  ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_doca ( doca ) 
 {}
 // ============================================================================
@@ -741,7 +741,7 @@ LoKi::AParticles::MaxDOCAChi2::MaxDOCAChi2 ( IGeomDispCalculator*  doca  )
 // ============================================================================
 LoKi::AParticles::MaxDOCAChi2::MaxDOCAChi2
 ( const LoKi::Interface<IGeomDispCalculator>& doca  ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_doca ( doca ) 
 {}
 // ============================================================================
@@ -749,8 +749,8 @@ LoKi::AParticles::MaxDOCAChi2::MaxDOCAChi2
 // ============================================================================
 LoKi::AParticles::MaxDOCAChi2::MaxDOCAChi2
 ( const LoKi::AParticles::MaxDOCAChi2& right ) 
-  : LoKi::AuxFunBase                           ( right ) 
-  , LoKi::Function<LoKi::ATypes::Combination>  ( right )
+  : LoKi::AuxFunBase                                         ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function ( right ) 
   , m_doca ( right.m_doca ) 
 {}
 // ============================================================================
@@ -800,7 +800,7 @@ LoKi::AParticles::MaxDOCAChi2::fillStream ( std::ostream& s ) const
 LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut 
 ( IGeomDispCalculator*  doca      ,
   const double          threshold )
-  : LoKi::Predicate<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_doca      ( doca      ) 
   , m_threshold ( threshold )
 {}
@@ -810,7 +810,7 @@ LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut
 LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut 
 ( const double          threshold ,
   IGeomDispCalculator*  doca      ) 
-  : LoKi::Predicate<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_doca      ( doca      ) 
   , m_threshold ( threshold )
 {}
@@ -820,7 +820,7 @@ LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut
 LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut
 ( const LoKi::Interface<IGeomDispCalculator>& doca ,
   const double          threshold )
-  : LoKi::Predicate<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_doca      ( doca      ) 
   , m_threshold ( threshold )
 {}
@@ -830,7 +830,7 @@ LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut
 LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut
 ( const double                           threshold ,
   const LoKi::Interface<IGeomDispCalculator>& doca )
-  : LoKi::Predicate<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_doca      ( doca      ) 
   , m_threshold ( threshold )
 {}
@@ -839,8 +839,8 @@ LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut
 // ============================================================================
 LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut
 ( const LoKi::AParticles::MaxDOCAChi2Cut& right ) 
-  : LoKi::AuxFunBase                           ( right ) 
-  , LoKi::Predicate<LoKi::ATypes::Combination>  ( right )
+  : LoKi::AuxFunBase                                          ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate ( right ) 
   , m_doca ( right.m_doca ) 
 {}
 // ============================================================================
@@ -890,7 +890,7 @@ LoKi::AParticles::MaxDOCAChi2Cut::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::AParticles::DecayAngle::DecayAngle
 ( const size_t child ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_child ( child ) 
 {}
 // ============================================================================
@@ -898,8 +898,8 @@ LoKi::AParticles::DecayAngle::DecayAngle
 // ============================================================================
 LoKi::AParticles::DecayAngle::DecayAngle
 ( const LoKi::AParticles::DecayAngle& right ) 
-  : LoKi::AuxFunBase                          ( right )
-  , LoKi::Function<LoKi::ATypes::Combination> ( right )
+  : LoKi::AuxFunBase                                         ( right )
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function ( right ) 
   , m_child                                   ( right.m_child ) 
 {}
 // ============================================================================
@@ -952,7 +952,7 @@ LoKi::AParticles::DecayAngle::fillStream ( std::ostream& s ) const
 LoKi::AParticles::WrongMass:: WrongMass  
 ( const double m1 , 
   const double m2 ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( m1 ) ;
@@ -965,7 +965,7 @@ LoKi::AParticles::WrongMass:: WrongMass
 ( const double m1 , 
   const double m2 , 
   const double m3 ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( m1 ) ;
@@ -980,7 +980,7 @@ LoKi::AParticles::WrongMass::WrongMass
   const double m2 , 
   const double m3 , 
   const double m4 ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( m1 ) ;
@@ -993,7 +993,7 @@ LoKi::AParticles::WrongMass::WrongMass
 // ============================================================================
 LoKi::AParticles::WrongMass::WrongMass 
 ( const std::vector<double>& masses ) 
-  : LoKi::Function<LoKi::ATypes::Combination> ()
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses ( masses ) 
 {}
 // ============================================================================
@@ -1002,7 +1002,7 @@ LoKi::AParticles::WrongMass::WrongMass
 LoKi::AParticles::WrongMass::WrongMass 
 ( const LHCb::ParticleID& pid1 , 
   const LHCb::ParticleID& pid2 ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( LoKi::Particles::massFromPID ( pid1 ) ) ;
@@ -1015,7 +1015,7 @@ LoKi::AParticles::WrongMass::WrongMass
 ( const LHCb::ParticleID& pid1 , 
   const LHCb::ParticleID& pid2 ,
   const LHCb::ParticleID& pid3 ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( LoKi::Particles::massFromPID ( pid1 ) ) ;
@@ -1030,7 +1030,7 @@ LoKi::AParticles::WrongMass::WrongMass
   const LHCb::ParticleID& pid2 ,
   const LHCb::ParticleID& pid3 ,
   const LHCb::ParticleID& pid4 ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( LoKi::Particles::massFromPID ( pid1 ) ) ;
@@ -1043,7 +1043,7 @@ LoKi::AParticles::WrongMass::WrongMass
 // ============================================================================
 LoKi::AParticles::WrongMass::WrongMass
 ( const std::vector<LHCb::ParticleID>& pids ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses ( pids.size() ) 
 {
   std::transform 
@@ -1058,7 +1058,7 @@ LoKi::AParticles::WrongMass::WrongMass
 LoKi::AParticles::WrongMass::WrongMass
 ( const std::string& name1 , 
   const std::string& name2 ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( LoKi::Particles::massFromName ( name1 ) ) ;
@@ -1071,7 +1071,7 @@ LoKi::AParticles::WrongMass::WrongMass
 ( const std::string& name1 , 
   const std::string& name2 ,
   const std::string& name3 ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( LoKi::Particles::massFromName ( name1 ) ) ;
@@ -1086,7 +1086,7 @@ LoKi::AParticles::WrongMass::WrongMass
   const std::string& name2 ,
   const std::string& name3 ,
   const std::string& name4 ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( LoKi::Particles::massFromName ( name1 ) ) ;
@@ -1099,7 +1099,7 @@ LoKi::AParticles::WrongMass::WrongMass
 // ============================================================================
 LoKi::AParticles::WrongMass::WrongMass 
 ( const std::vector<std::string>& names ) 
-  : LoKi::Function<LoKi::ATypes::Combination> () 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses ( names.size() ) 
 {
   std::transform 
@@ -1113,8 +1113,8 @@ LoKi::AParticles::WrongMass::WrongMass
 // ============================================================================
 LoKi::AParticles::WrongMass::WrongMass 
 ( const LoKi::AParticles::WrongMass& right )
-  : LoKi::AuxFunBase                          ( right ) 
-  , LoKi::Function<LoKi::ATypes::Combination> ( right ) 
+  : LoKi::AuxFunBase                                         ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function ( right ) 
   , m_masses ( right.m_masses ) 
 {}
 // ============================================================================
@@ -1156,10 +1156,6 @@ LoKi::AParticles::WrongMass::fillStream( std::ostream& s ) const
   }
   return s << ")" ;
 }
-// ============================================================================
-
-
-
 // ============================================================================
 // The END 
 // ============================================================================

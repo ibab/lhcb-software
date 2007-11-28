@@ -1,4 +1,4 @@
-// $Id: PhysMCParticles.h,v 1.8 2007-11-06 10:53:15 cattanem Exp $
+// $Id: PhysMCParticles.h,v 1.9 2007-11-28 14:54:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSMCPARTICLES_H 
 #define LOKI_PHYSMCPARTICLES_H 1
@@ -86,7 +86,7 @@ namespace LoKi
      *  @date   2003-01-28
      */
     class MCTruth 
-      : public LoKi::Predicate<const LHCb::Particle*>
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
       , public LoKi::Keeper<LHCb::MCParticle>
     {
     public:      
@@ -142,10 +142,10 @@ namespace LoKi
       ( const LoKi::MCMatch&    match    , 
         MCPARTICLE              begin    , 
         MCPARTICLE              end      ) 
-        : LoKi::Predicate<const LHCb::Particle*> () 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
         , LoKi::Keeper<LHCb::MCParticle> ( begin , end ) 
         , m_match     ( match       )
-      {};
+      {}
       /** constructor 
        *  @param match MCMatch object (working horse)
        *  @param particle  pointer to MC particle object 
@@ -198,10 +198,10 @@ namespace LoKi
       ( MCPARTICLE              begin    , 
         MCPARTICLE              end      ,
         const LoKi::MCMatch&    match    )
-        : LoKi::Predicate<const LHCb::Particle*> () 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
         , LoKi::Keeper<LHCb::MCParticle> ( begin , end ) 
         , m_match ( match )
-      {};
+      {}
       /// copy constructor 
       MCTruth( const MCTruth& right ) ;
       /// MANDATORY: virual destructor 
@@ -234,7 +234,7 @@ namespace LoKi
       MCTruth& add 
       ( MCPARTICLE first  , 
         MCPARTICLE last   ) 
-      { addObjects ( first, last ) ; return *this ; } ;      
+      { addObjects ( first, last ) ; return *this ; } 
     public:
       /// implicit convertion to match object
       operator const MCMatch& () const { return m_match ; }
@@ -282,7 +282,7 @@ namespace LoKi
      *  @date   2003-01-28
      */
     class GenMCTruth 
-      : public LoKi::Predicate<const LHCb::Particle*>
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate 
     {
     public:
       /// constructor from HepMC::GenVertex
@@ -312,12 +312,12 @@ namespace LoKi
         GENERATOR                 last     ,
         const LHCb::HepMC2MC*     table    , 
         const LoKi::MCMatch&      match    ) 
-        : LoKi::Predicate<const LHCb::Particle*> () 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
         , m_table ( table ) 
         , m_match ( match ) 
         , m_hepmc () 
         , m_mc    () 
-      { add ( first , last ) ; } ;
+      { add ( first , last ) ; } 
       /// MANDATORY: copy constructor 
       GenMCTruth ( const GenMCTruth& right ) ;
       /// MANDATORY: virtual destructor
@@ -347,7 +347,7 @@ namespace LoKi
         _add ( first , last ) ;
         rebuild() ;
         return *this ;
-      } ;
+      } 
     public:
       /// conversion operator to relation table:
       operator const LoKi::Interface<LHCb::HepMC2MC>&        () const 
@@ -397,7 +397,7 @@ namespace LoKi
      *  @date   2003-01-28
      */
     class RCTruth 
-      : public LoKi::Predicate<const LHCb::MCParticle*> 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
       , public LoKi::Keeper<LHCb::Particle>
     {
     public:      
@@ -453,10 +453,10 @@ namespace LoKi
       ( const LoKi::MCMatch&  match    , 
         PARTICLE              begin    , 
         PARTICLE              end      ) 
-        : LoKi::Predicate<const LHCb::MCParticle*>( ) 
+        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate () 
         , LoKi::Keeper<LHCb::Particle> ( begin , end )  
         , m_match ( match )
-      {} ;
+      {} 
       /** constructor 
        *  @param particle  pointer to particle object 
        *  @param match MCMatch object (working horse)
@@ -509,10 +509,10 @@ namespace LoKi
       ( PARTICLE              begin    , 
         PARTICLE              end      ,
         const LoKi::MCMatch&  match    ) 
-        : LoKi::Predicate<const LHCb::MCParticle*>( ) 
+        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate () 
         , LoKi::Keeper<LHCb::Particle> ( begin , end )  
         , m_match ( match )
-      {} ;
+      {} 
       /// copy constructor
       RCTruth( const RCTruth& right ) ;
       /// MANDATORY : virtual destructor destructor 
@@ -526,7 +526,7 @@ namespace LoKi
     public:
       /** add additional particle to the 
        *  list of Particles to be matched 
-       *  @param p  particle to be added 
+       *  @param particle particle to be added 
        */
       RCTruth& add ( const LHCb::Particle* p ) 
       { addObject ( p )  ; return *this ; }
@@ -547,7 +547,7 @@ namespace LoKi
       { 
         addObjects ( first , last ) ;
         return *this ;
-      };      
+      }      
     private:
       // default constructor is disabled 
       RCTruth();

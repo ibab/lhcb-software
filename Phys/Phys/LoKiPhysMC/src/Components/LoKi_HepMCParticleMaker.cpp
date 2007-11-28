@@ -1,12 +1,4 @@
-// $Id: LoKi_HepMCParticleMaker.cpp,v 1.11 2007-04-16 16:16:48 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.10  2007/04/04 12:09:05  ibelyaev
-//  fix an bug in default values
-//
-//
+// $Id: LoKi_HepMCParticleMaker.cpp,v 1.12 2007-11-28 14:54:10 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -160,9 +152,9 @@ protected:
     // 
     setProperty     ( "SmearParticle"    , "False"            ) ;
 
-  } ;
+  } 
   /// virtual protected destructor 
-  virtual ~LoKi_HepMCParticleMaker() {} ;
+  virtual ~LoKi_HepMCParticleMaker() {} 
 private:
   // default constructor is disabled 
   LoKi_HepMCParticleMaker() ;
@@ -212,7 +204,7 @@ private:
 // ===========================================================================
 DECLARE_TOOL_FACTORY(LoKi_HepMCParticleMaker);
 // ============================================================================
-/// standard initialization of the tool 
+// standard initialization of the tool 
 // ============================================================================
 StatusCode LoKi_HepMCParticleMaker::initialize() 
 {
@@ -284,25 +276,25 @@ StatusCode LoKi_HepMCParticleMaker::initialize()
     << endreq ;
 
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
-/// INTERMEZZO 
+// INTERMEZZO 
 // ============================================================================
 namespace 
 {
-  class UseIt: 
-    public LoKi::Predicate<const HepMC::GenParticle*>
+  class UseIt
+    : public LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate
   {
   public:
     /// constructor
     UseIt( const LoKi_HepMCParticleMaker* maker ) 
-      : LoKi::Predicate<const HepMC::GenParticle*>() 
+      : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate () 
       , m_maker ( maker ) 
     {}
     /// copy constructor
     UseIt ( const UseIt& right )
       : LoKi::AuxFunBase                          ( right )
-      , LoKi::Predicate<const HepMC::GenParticle*>( right ) 
+      , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ( right )  
       , m_maker ( right.m_maker ) 
     {}
     /// virtual destructor 
@@ -419,7 +411,7 @@ StatusCode LoKi_HepMCParticleMaker::makeParticles
   }
   //
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
 StatusCode LoKi_HepMCParticleMaker::fillParticle 
 ( const HepMC::GenParticle* gen ,
@@ -459,8 +451,10 @@ bool LoKi_HepMCParticleMaker::use ( const HepMC::GenParticle* p ) const
   }
   const Gaudi::XYZPoint p0 (  v0->point3d() ) ;
   // check for production vertex 
-  if ( 0 < m_maxZproduction   && fabs( p0.Z() ) > m_maxZproduction    ) { return false ; }
-  if ( 0 < m_maxRhoProduction && p0.Rho()       > m_maxRhoProduction  ) { return false ; }
+  if ( 0 < m_maxZproduction   && fabs( p0.Z() ) > m_maxZproduction    ) 
+  { return false ; }
+  if ( 0 < m_maxRhoProduction && p0.Rho()       > m_maxRhoProduction  ) 
+  { return false ; }
   
   // check for decay vertex 
   const HepMC::GenVertex* ve = p->end_vertex() ;
@@ -475,9 +469,7 @@ bool LoKi_HepMCParticleMaker::use ( const HepMC::GenParticle* p ) const
 
   // other particles 
   return true ;
-} ;
-// ============================================================================
-
+}
 // ============================================================================
 // The END 
 // ============================================================================

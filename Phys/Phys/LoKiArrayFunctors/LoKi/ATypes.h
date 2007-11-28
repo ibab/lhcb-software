@@ -1,4 +1,4 @@
-// $Id: ATypes.h,v 1.1.1.1 2007-06-15 08:04:18 ibelyaev Exp $
+// $Id: ATypes.h,v 1.2 2007-11-28 14:55:54 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ATYPES_H 
 #define LOKI_ATYPES_H 1
@@ -21,15 +21,15 @@ namespace LoKi
     /** The actual argument type for Exclusive HLT processing, 
      *  as requested by Gerhard RAVEN and Patrick KOPPENBURG
      */
-    typedef LHCb::Particle::ConstVector                       Combination ;
+    typedef LHCb::Particle::ConstVector                        Combination ;
     /// type of 'cuts' for the combination (interface)
-    typedef LoKi::Predicate<Combination>                            ACuts ;
+    typedef LoKi::BasicFunctors<Combination>::Predicate              ACuts ;
     /// type of 'functions' for the combination (interface)
-    typedef LoKi::Function<Combination>                             AFunc ;
+    typedef LoKi::BasicFunctors<Combination>::Function               AFunc ;
     /// type of 'cuts' for combination (assignable)
-    typedef LoKi::PredicateFromPredicate<Combination>               ACut  ;
+    typedef LoKi::BasicFunctors<Combination>::PredicateFromPredicate ACut  ;
     /// type of 'functions' for combination (assignable)
-    typedef LoKi::FunctionFromFunction<Combination>                 AFun  ;
+    typedef LoKi::BasicFunctors<Combination>::FunctionFromFunction   AFun  ;
   } // end of namespace LoKi::ATypes 
   namespace Types
   {

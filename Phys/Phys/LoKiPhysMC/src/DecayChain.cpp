@@ -1,4 +1,14 @@
-// $Id: DecayChain.cpp,v 1.3 2007-11-06 10:53:15 cattanem Exp $
+// $Id: DecayChain.cpp,v 1.4 2007-11-28 14:54:10 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2007/01/19 13:14:57  ibelyaev
+//  add good printout
+//
+// Revision 1.1  2006/05/27 11:47:14  ibelyaev
+//  add DecayChain utilities
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -36,7 +46,7 @@
 /** set the colors for output stream (not actiev for WIN32)
  *  @param  stream  reference for stream 
  *  @param  fg      color for foreground 
- *  @param  bg      color for background 
+ *  @param  fg      color for foreground 
  *  @return true if color are changed 
  */
 // ============================================================================
@@ -60,7 +70,7 @@ bool LoKi::Colors::setColor
 /** set the colors for output stream 
  *  @param  stream  reference for stream 
  *  @param  fg      color for foreground 
- *  @param  bg      color for background 
+ *  @param  fg      color for foreground 
  *  @return true if color are changed 
  */
 // ============================================================================

@@ -323,6 +323,7 @@ LoKi.Loop.m           = _mass_
 LoKi.Loop.p           = _momentum_
 
 
+
 # =============================================================================
 ## Print the decay tree for LoKi::Loop object:
 def printDecay ( s , *a ) :
@@ -340,8 +341,10 @@ printDecay . __doc__ += "\n\n" + LoKi.PrintLoop.printDecay . __doc__
 
 if not hasattr ( LoKi.Loop ,   "printDecay"   ) :
     LoKi.Loop.   printDecay   = printDecay
+    LoKi.Loop.        decay   = printDecay
 if not hasattr ( LoKi.Loop , "__printDecay__" ) :
     LoKi.Loop. __printDecay__ = printDecay
+    LoKi.Loop.      __decay__ = printDecay
     
 import LoKiCore.functions  as _LCF 
 _LCF.printDecay    . __doc__ += "\n" + LoKi.PrintLoop.printDecay    . __doc__ 
@@ -398,22 +401,22 @@ def _decorate( name = _name ) :
     import LoKiCore.decorators   as     _LoKiCore 
     _decorated   = _LoKiCore.getAndDecorateFunctions (
         name                                          , ## module name 
-        LoKi.Function('const LHCb::Particle*')        , ## the base 
+        LoKi.Functor('const LHCb::Particle*,double')  , ## the base 
         LoKi.Dicts.ExtFunCalls(LHCb.Particle)         , ## call-traits 
         LoKi.Dicts.FuncOps('const LHCb::Particle*')   ) ## operators 
     _decorated |= _LoKiCore.getAndDecorateFunctions  (
         name                                          , ## module name 
-        LoKi.Function('const LHCb::VertexBase*')      , ## the base 
+        LoKi.Functor('const LHCb::VertexBase*,double'), ## the base 
         LoKi.Dicts.ExtFunCalls(LHCb.VertexBase)       , ## call-traits 
         LoKi.Dicts.FuncOps('const LHCb::VertexBase*') ) ## operators
     _decorated |=  _LoKiCore.getAndDecoratePredicates (
         name                                          , ## module name 
-        LoKi.Predicate('const LHCb::Particle*')       , ## the base 
+        LoKi.Functor('const LHCb::Particle*,bool')    , ## the base 
         LoKi.Dicts.ExtCutCalls(LHCb.Particle)         , ## call-traits 
         LoKi.Dicts.FuncOps('const LHCb::Particle*')   ) ## operators 
     _decorated |= _LoKiCore.getAndDecoratePredicates (
         name                                          , ## module name 
-        LoKi.Predicate('const LHCb::VertexBase*')     , ## the base 
+        LoKi.Functor('const LHCb::VertexBase*,bool')  , ## the base 
         LoKi.Dicts.ExtCutCalls(LHCb.VertexBase)       , ## call-traits 
         LoKi.Dicts.FuncOps('const LHCb::VertexBase*') ) ## the operators
     # (re)decorate pids (Comparison with strings, integers and ParticleID objects:

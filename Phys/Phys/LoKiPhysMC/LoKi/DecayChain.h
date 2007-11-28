@@ -1,4 +1,4 @@
-// $Id: DecayChain.h,v 1.5 2007-11-06 10:53:14 cattanem Exp $
+// $Id: DecayChain.h,v 1.6 2007-11-28 14:54:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYCHAIN_H 
 #define LOKI_DECAYCHAIN_H 1
@@ -29,9 +29,9 @@
 #include "LoKi/BuildMCTrees.h"
 #include "LoKi/BuildGenTrees.h"
 // ============================================================================
-
 namespace LoKi
 {
+  // ==========================================================================
   /** @namespace LoKi::Colors
    *  set of primitive utilities for colorized output 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -39,26 +39,31 @@ namespace LoKi
    */
   namespace Colors
   {
+    // ========================================================================
     /** set the colors for output stream (not active for WIN32)
      *  @param  stream  reference for stream 
      *  @param  fg      color for foreground 
      *  @param  fg      color for foreground 
      *  @return true if color are changed 
      */
-    bool setColor ( std::ostream&     stream              , 
-                    const MSG::Color& fg     = MSG::BLACK , 
-                    const MSG::Color& bg     = MSG::WHITE ) ;
-    /** set the colors for output stream (not actiev for WIN32)
+    bool setColor 
+    ( std::ostream&     stream              , 
+      const MSG::Color& fg     = MSG::BLACK , 
+      const MSG::Color& bg     = MSG::WHITE ) ;
+    // ========================================================================
+    /** set the colors for output stream (not active for WIN32)
      *  @param  stream  reference for stream 
      *  @param  fg      color for foreground 
      *  @param  fg      color for foreground 
      *  @return true if color are changed 
      */
-    bool setColor ( MsgStream&        stream              , 
-                    const MSG::Color& fg     = MSG::BLACK , 
-                    const MSG::Color& bg     = MSG::WHITE ) ;
-  }; 
-  
+    bool setColor 
+    ( MsgStream&        stream              , 
+      const MSG::Color& fg     = MSG::BLACK , 
+      const MSG::Color& bg     = MSG::WHITE ) ;
+    // ========================================================================
+  }
+  // ==========================================================================  
   /** @class MarkStrem 
    *  helper utility class to "mark" the stream 
    *  @author Vanya BELYAEV ibelyaev@phsyics.syr.edu
@@ -72,9 +77,9 @@ namespace LoKi
                  const MSG::Color& fg     , 
                  const MSG::Color& bg     )
       : m_stream ( stream )
-      , m_mark   ( mark   )
-      , m_fg     ( fg     )
-      , m_bg     ( bg     )
+        , m_mark   ( mark   )
+        , m_fg     ( fg     )
+        , m_bg     ( bg     )
     { if ( m_mark )  {  LoKi::Colors::setColor ( m_stream , m_fg , m_bg ) ; } }
     //
     ~MarkStream  () { if( m_mark ) { LoKi::Colors::setColor ( m_stream ) ; } }
@@ -86,7 +91,7 @@ namespace LoKi
     MSG::Color  m_fg      ;
     MSG::Color  m_bg      ;
   };
-  
+  // ==========================================================================  
   /** @class DecayChain DecayChain.h LoKi/DecayChain.h
    *
    *  The simple utility to print a decay chain for
@@ -99,6 +104,7 @@ namespace LoKi
   class DecayChain 
   {
   public:
+    // ========================================================================
     // modes to print 4-vectors 
     enum Mode    
       { 
@@ -108,11 +114,15 @@ namespace LoKi
         LV_ONLYP      , //          as 3 values (px/py/pz) 
         LV_SHORT        //          as 3 values (M/PT/E) 
       } ;
-  public: 
-    typedef LoKi::BooleanConstant<const LHCb::Particle*>   Accept   ;    
-    typedef LoKi::BooleanConstant<const LHCb::MCParticle*> AcceptMC ;
+    // ========================================================================
+  protected:
+    // ========================================================================
+    typedef LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant     Accept    ;    
+    typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::BooleanConstant   AcceptMC  ;
+    typedef LoKi::BasicFunctors<const HepMC::GenParticle*>::BooleanConstant AcceptGen ;
+    // ========================================================================
   public:
-    
+    // ========================================================================    
     /** Standard constructor
      *  @param maxDepth  maximal decay depth 
      *  @param vertex    vertex info to be printed 
@@ -121,33 +131,38 @@ namespace LoKi
      *  @param fg        color for foreground for 'marked' lines 
      *  @param bg        color for background for 'marked' lines 
      */
-    DecayChain ( const size_t          maxDepth = 5            , 
-                 const bool            vertex   = true         , 
-                 const bool            vertexe  = false        ,
-                 const Mode            mode     = LV_WITHPT    ,
-                 const MSG::Color&     fg       = MSG::YELLOW  ,
-                 const MSG::Color&     bg       = MSG::RED     ) ;
-    
+    DecayChain
+    ( const size_t          maxDepth = 5            , 
+      const bool            vertex   = true         , 
+      const bool            vertexe  = false        ,
+      const Mode            mode     = LV_WITHPT    ,
+      const MSG::Color&     fg       = MSG::YELLOW  ,
+      const MSG::Color&     bg       = MSG::RED     ) ;
+    /// virtual & protected destructor 
     virtual ~DecayChain() ;
-    
+    // ========================================================================
   public:
-    
+    // ========================================================================    
     /// max depth 
     size_t            maxDepth    () const { return m_maxDepth ; }
     void              setMaxDepth (  const size_t      value )  
     { m_maxDepth   = value ; }
+    // ========================================================================
     /// print vertex info ?
     bool              vertex      () const { return m_vertex   ; }
     void              setVertex   (  const bool value ) 
     { m_vertex     = value ; }
+    // ========================================================================
     /// print momentum info ?
     bool              vertexe     () const { return m_vertexe  ; }
     void              setVertexE  (  const bool value ) 
     { m_vertexe    = value ; }
+    // ========================================================================
     /// color for foreground (for marked entities)
     const MSG::Color& fg          () const { return m_fg ; }
     void              setFG       (  const MSG::Color& value ) 
     { m_fg         = value ; }
+    // ========================================================================
     /// color for background (for marked entities)
     const MSG::Color& bg          () const { return m_bg ; }
     void              setBG       (  const MSG::Color& value ) 
@@ -155,16 +170,16 @@ namespace LoKi
     const Mode        mode        () const { return m_mode ; }
     void              setMode     (  const Mode&  value ) 
     { m_mode = value ; }
-    
+    // ========================================================================    
     void setFmt_M  ( const std::string& value ) { m_fmt_m  = value ; }
     void setFmt_P  ( const std::string& value ) { m_fmt_p  = value ; }
     void setFmt_PT ( const std::string& value ) { m_fmt_pt = value ; }
     void setFmt_V  ( const std::string& value ) { m_fmt_v  = value ; }
     void setFmt_D  ( const std::string& value ) { m_fmt_d  = value ; }
     void setFmt_I  ( const std::string& value ) { m_fmt_i  = value ; }
-    
+    // ========================================================================    
   public:
-    
+    // ========================================================================
     /** print the decay chain for Particle
      * 
      *  @code 
@@ -240,8 +255,8 @@ namespace LoKi
               prefix + "   "   , depth + 1      ) ;     // RECURSION 
       
       return stream ;
-    };
-    
+    }
+    // ========================================================================    
     /** print the decay chain for MCParticle
      * 
      *  @code 
@@ -340,8 +355,8 @@ namespace LoKi
       }
       
       return stream ;
-    };    
-
+    }
+    // ========================================================================
     /** print the decay chain for HepMC::GenParticle
      * 
      *  @code 
@@ -435,8 +450,8 @@ namespace LoKi
                 prefix + "   " , depth + 1 ) ; 
       }
       return stream ;
-    };
-    
+    }
+    // ========================================================================    
     /** print the decay chain for HepMC::GenEvent
      * 
      *  Essentially it prints the decay tree from "signal_vertex" 
@@ -504,8 +519,8 @@ namespace LoKi
         ( trees.begin () , 
           trees.end   () , 
           stream , term , accept , mark , prefix , depth ) ;
-    } ;
-
+    } 
+    // ========================================================================
     /** print the decay chain for LHCb::HepMCEvent
      * 
      *  Essentially it prints the underlying HepMC::GenEvent 
@@ -550,7 +565,7 @@ namespace LoKi
       return print 
         ( event->pGenEvt() , stream , term , accept , mark , prefix , depth ) ;
     }
-    
+    // ========================================================================    
     /** print the decay chain for LoKi::Types::GenContainer
      * 
      *  Essentially it prints the decay tree from "signal_vertex" 
@@ -598,9 +613,8 @@ namespace LoKi
         ( trees.begin () , 
           trees.end   () , 
           stream , term , accept , mark , prefix , depth ) ;
-    } ;
-
-
+    } 
+    // ========================================================================
     /** print the decay chain for LoKi::Types::GRange
      * 
      *  Essentially it prints the decay tree from "signal_vertex" 
@@ -674,8 +688,8 @@ namespace LoKi
       for ( ; first != last ; ++first ) 
       { print ( *first , stream , term , accept , mark , prefix , depth ) ; }
       return stream ;
-    };
-
+    }
+    // ========================================================================
     /** print the decay chain for LHCb::HepMCEvent::Container
      * 
      *  Essentially it prints sequentially all LHCb::HepMCEvent
@@ -694,7 +708,7 @@ namespace LoKi
      *
      *  @endcode 
      * 
-     *  @param events   pointer to the container of events 
+     *  @param event    pointer to the container of events 
      *  @param stream   reference to output stream 
      *  @param term     stream terminator 
      */
@@ -720,8 +734,8 @@ namespace LoKi
       return print 
         ( events -> begin () , 
           events -> end   () , stream , term , accept , mark , prefix , depth ) ;
-    } ;
-    
+    } 
+    // ========================================================================    
     /** print all independent MC-trees from LHCb::MCParticle::Container
      * 
      *  @code 
@@ -739,9 +753,9 @@ namespace LoKi
      *  @endcode 
      * 
      *  @see LoKi::MCTrees::buildTrees 
-     *  @param particles pointer to the container of particles 
-     *  @param stream    reference to output stream 
-     *  @param term      stream terminator 
+     *  @param event    pointer to the container of particles 
+     *  @param stream   reference to output stream 
+     *  @param term     stream terminator 
      */
     template < class STREAM     , 
                class TERMINATOR , 
@@ -770,8 +784,8 @@ namespace LoKi
       return print 
         ( trees.begin () , 
           trees.end   () , stream , term , accept , mark , prefix , depth ) ;
-    } ;
-
+    } 
+    // ========================================================================
     /** print all independent MC-trees from LHCb::MCParticle::ConstVector
      * 
      *  @code 
@@ -789,9 +803,9 @@ namespace LoKi
      *  @endcode 
      * 
      *  @see LoKi::MCTrees::buildTrees 
-     *  @param particles pointer to the container of particles 
-     *  @param stream    reference to output stream 
-     *  @param term      stream terminator 
+     *  @param event    pointer to the container of particles 
+     *  @param stream   reference to output stream 
+     *  @param term     stream terminator 
      */
     template < class STREAM     , 
                class TERMINATOR , 
@@ -814,8 +828,8 @@ namespace LoKi
       return print 
         ( trees.begin () , 
           trees.end   () , stream , term , accept , mark , prefix , depth ) ;
-    } ;
-
+    } 
+    // ========================================================================
     /** print all independent MC-trees from LHCb::MCParticle::Vector
      * 
      *  @code 
@@ -833,9 +847,9 @@ namespace LoKi
      *  @endcode 
      * 
      *  @see LoKi::MCTrees::buildTrees 
-     *  @param particles pointer to the container of particles 
-     *  @param stream    reference to output stream 
-     *  @param term      stream terminator 
+     *  @param event    pointer to the container of particles 
+     *  @param stream   reference to output stream 
+     *  @param term     stream terminator 
      */
     template < class STREAM     , 
                class TERMINATOR , 
@@ -858,8 +872,8 @@ namespace LoKi
       return print 
         ( trees.begin () , 
           trees.end   () , stream , term , accept , mark , prefix , depth ) ;
-    } ;
-
+    } 
+    // ========================================================================
     /** print all independent MC-trees from LoKi::Types::MCRange
      * 
      *  @code 
@@ -877,9 +891,9 @@ namespace LoKi
      *  @endcode 
      * 
      *  @see LoKi::MCTrees::buildTrees 
-     *  @param particles pointer to the container of particles 
-     *  @param stream    reference to output stream 
-     *  @param term      stream terminator 
+     *  @param event    pointer to the container of particles 
+     *  @param stream   reference to output stream 
+     *  @param term     stream terminator 
      */
     template < class STREAM     , 
                class TERMINATOR , 
@@ -902,127 +916,134 @@ namespace LoKi
       return print 
         ( trees.begin () , 
           trees.end   () , stream , term , accept , mark , prefix , depth ) ;
-    } ;
-
+    } 
+    // ========================================================================
   public:
-    
-    // atomic 
-    
+    // ========================================================================
+    // atomic
+    // ========================================================================
     /// predefined printout 
     void print
-    ( const LHCb::Particle*       p                                                                   , 
-      const LoKi::Types::Cuts&    accept = LoKi::BooleanConstant<const LHCb::Particle*>     ( true  ) , 
-      const LoKi::Types::Cuts&    mark   = LoKi::BooleanConstant<const LHCb::Particle*>     ( false ) ) const ;
+    ( const LHCb::Particle*       p                            , 
+      const LoKi::Types::Cuts&    accept = Accept    ( true  ) , 
+      const LoKi::Types::Cuts&    mark   = Accept    ( false ) ) const ;
+    // ========================================================================
     /// predefined printout    
     void print 
-    ( const LHCb::MCParticle*     p                                                                   , 
-      const LoKi::Types::MCCuts&  accept = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( true  ) , 
-      const LoKi::Types::MCCuts&  mark   = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( false ) ) const ;
+    ( const LHCb::MCParticle*     p                            , 
+      const LoKi::Types::MCCuts&  accept = AcceptMC  ( true  ) , 
+      const LoKi::Types::MCCuts&  mark   = AcceptMC  ( false ) ) const ;
+    // ========================================================================
     /// predefined printout    
     void print 
-    ( const HepMC::GenParticle*   p                                                                   , 
-      const LoKi::Types::GCuts&   accept = LoKi::BooleanConstant<const HepMC::GenParticle*> ( true  ) , 
-      const LoKi::Types::GCuts&   mark   = LoKi::BooleanConstant<const HepMC::GenParticle*> ( false ) ) const ;
-    
+    ( const HepMC::GenParticle*   p                            , 
+      const LoKi::Types::GCuts&   accept = AcceptGen ( true  ) , 
+      const LoKi::Types::GCuts&   mark   = AcceptGen ( false ) ) const ;
+    // ========================================================================
     // ranges
-
+    // ========================================================================
     /// predefined printout    
     void print 
-    ( const LoKi::Types::Range&   p                                                                   ,
-      const LoKi::Types::Cuts&    accept = LoKi::BooleanConstant<const LHCb::Particle*>     ( true  ) , 
-      const LoKi::Types::Cuts&    mark   = LoKi::BooleanConstant<const LHCb::Particle*>     ( false ) ) const ;
+    ( const LoKi::Types::Range&   p                            ,
+      const LoKi::Types::Cuts&    accept = Accept    ( true  ) , 
+      const LoKi::Types::Cuts&    mark   = Accept    ( false ) ) const ;
+    // ========================================================================
     /// predefined printout    
     void print 
-    ( const LoKi::Types::MCRange& p                                                                   ,
-      const LoKi::Types::MCCuts&  accept = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( true  ) , 
-      const LoKi::Types::MCCuts&  mark   = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( false ) ) const ;
+    ( const LoKi::Types::MCRange& p                            ,
+      const LoKi::Types::MCCuts&  accept = AcceptMC  ( true  ) , 
+      const LoKi::Types::MCCuts&  mark   = AcceptMC  ( false ) ) const ;
+    // ========================================================================
     /// predefined printout    
     void print 
-    ( const LoKi::Types::GRange&  p                                                                   ,
-      const LoKi::Types::GCuts&   accept = LoKi::BooleanConstant<const HepMC::GenParticle*> ( true  ) , 
-      const LoKi::Types::GCuts&   mark   = LoKi::BooleanConstant<const HepMC::GenParticle*> ( false ) ) const ;
-    
+    ( const LoKi::Types::GRange&  p                            ,
+      const LoKi::Types::GCuts&   accept = AcceptGen ( true  ) , 
+      const LoKi::Types::GCuts&   mark   = AcceptGen ( false ) ) const ;
+    // ========================================================================    
     // vectors 
-    
+    // ========================================================================    
     /// predefined printout    
     void print 
-    ( const LHCb::Particle::Vector& p                                                                 ,
-      const LoKi::Types::Cuts&    accept = LoKi::BooleanConstant<const LHCb::Particle*>     ( true  ) , 
-      const LoKi::Types::Cuts&    mark   = LoKi::BooleanConstant<const LHCb::Particle*>     ( false ) ) const ;
+    ( const LHCb::Particle::Vector& p                          ,
+      const LoKi::Types::Cuts&    accept = Accept    ( true  ) , 
+      const LoKi::Types::Cuts&    mark   = Accept    ( false ) ) const ;
+    // ========================================================================
     /// predefined printout
     void print 
-    ( const LHCb::MCParticle::Vector& p                                                               ,
-      const LoKi::Types::MCCuts&  accept = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( true  ) , 
-      const LoKi::Types::MCCuts&  mark   = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( false ) ) const ;
+    ( const LHCb::MCParticle::Vector& p                        ,
+      const LoKi::Types::MCCuts&  accept = AcceptMC  ( true  ) , 
+      const LoKi::Types::MCCuts&  mark   = AcceptMC  ( false ) ) const ;
+    // ========================================================================
     /// predefined printout
     void print 
-    ( const LHCb::Particle::ConstVector& p                                                            ,
-      const LoKi::Types::Cuts&    accept = LoKi::BooleanConstant<const LHCb::Particle*>     ( true  ) , 
-      const LoKi::Types::Cuts&    mark   = LoKi::BooleanConstant<const LHCb::Particle*>     ( false ) ) const ;
+    ( const LHCb::Particle::ConstVector& p                     ,
+      const LoKi::Types::Cuts&    accept = Accept    ( true  ) , 
+      const LoKi::Types::Cuts&    mark   = Accept    ( false ) ) const ;
+    // ========================================================================
     /// predefined printout
     void print 
-    ( const LHCb::MCParticle::ConstVector&  p                                                         ,
-      const LoKi::Types::MCCuts&  accept = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( true  ) , 
-      const LoKi::Types::MCCuts&  mark   = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( false ) ) const ;
+    ( const LHCb::MCParticle::ConstVector&  p                  ,
+      const LoKi::Types::MCCuts&  accept = AcceptMC  ( true  ) , 
+      const LoKi::Types::MCCuts&  mark   = AcceptMC  ( false ) ) const ;
+    // ========================================================================
     /// predefined printout    
     void print 
-    ( const LoKi::GenTypes::GenContainer&   p                                                         ,
-      const LoKi::Types::GCuts&   accept = LoKi::BooleanConstant<const HepMC::GenParticle*> ( true  ) , 
-      const LoKi::Types::GCuts&   mark   = LoKi::BooleanConstant<const HepMC::GenParticle*> ( false ) ) const ;
-    
+    ( const LoKi::GenTypes::GenContainer&   p                  ,
+      const LoKi::Types::GCuts&   accept = AcceptGen ( true  ) , 
+      const LoKi::Types::GCuts&   mark   = AcceptGen ( false ) ) const ;
+    // ========================================================================    
     // other containers
-    
+    // ========================================================================    
     /// predefined printout    
     void print 
-    ( const LHCb::Particle::Container*      p                                                         ,
-      const LoKi::Types::Cuts&    accept = LoKi::BooleanConstant<const LHCb::Particle*>     ( true  ) , 
-      const LoKi::Types::Cuts&    mark   = LoKi::BooleanConstant<const LHCb::Particle*>     ( false ) ) const ;
+    ( const LHCb::Particle::Container*      p                  ,
+      const LoKi::Types::Cuts&    accept = Accept    ( true  ) , 
+      const LoKi::Types::Cuts&    mark   = Accept    ( false ) ) const ;
+    // ========================================================================    
     /// predefined printout    
     void print 
-    ( const LHCb::MCParticle::Container*    p                                                         ,
-      const LoKi::Types::MCCuts&  accept = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( true  ) , 
-      const LoKi::Types::MCCuts&  mark   = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( false ) ) const ;
+    ( const LHCb::MCParticle::Container*    p                  ,
+      const LoKi::Types::MCCuts&  accept = AcceptMC  ( true  ) , 
+      const LoKi::Types::MCCuts&  mark   = AcceptMC  ( false ) ) const ;
+    // ========================================================================    
     /// predefined printout    
     void print 
-    ( const HepMC::GenEvent*      p                                                                   , 
-      const LoKi::Types::GCuts&   accept = LoKi::BooleanConstant<const HepMC::GenParticle*> ( true  ) , 
-      const LoKi::Types::GCuts&   mark   = LoKi::BooleanConstant<const HepMC::GenParticle*> ( false ) ) const ;
+    ( const HepMC::GenEvent*      p                            , 
+      const LoKi::Types::GCuts&   accept = AcceptGen ( true  ) , 
+      const LoKi::Types::GCuts&   mark   = AcceptGen ( false ) ) const ;
+    // ========================================================================    
     /// predefined printout    
     void print 
-    ( const LHCb::HepMCEvent*     p                                                                   , 
-      const LoKi::Types::GCuts&   accept = LoKi::BooleanConstant<const HepMC::GenParticle*> ( true  ) , 
-      const LoKi::Types::GCuts&   mark   = LoKi::BooleanConstant<const HepMC::GenParticle*> ( false ) ) const ;
+    ( const LHCb::HepMCEvent*     p                            , 
+      const LoKi::Types::GCuts&   accept = AcceptGen ( true  ) , 
+      const LoKi::Types::GCuts&   mark   = AcceptGen ( false ) ) const ;
+    // ========================================================================    
     /// predefined printout      
     void print 
-    ( const LHCb::HepMCEvent::Container*    p                                                         ,
-      const LoKi::Types::GCuts&   accept = LoKi::BooleanConstant<const HepMC::GenParticle*> ( true  ) , 
-      const LoKi::Types::GCuts&   mark   = LoKi::BooleanConstant<const HepMC::GenParticle*> ( false ) ) const ;
-    
+    ( const LHCb::HepMCEvent::Container*    p                  ,
+      const LoKi::Types::GCuts&   accept = AcceptGen ( true  ) , 
+      const LoKi::Types::GCuts&   mark   = AcceptGen ( false ) ) const ;
+    // ========================================================================    
   protected:
-    
-    /** particle name by ID
-     *  @par pid particle ID 
-     *  @return particle name 
-     */
-    const std::string name ( const LHCb::ParticleID& pid ) const ;
-    
-    // double as string
-    const std::string toString ( const long              v ) const ;
-    // int    as string
-    const std::string toString ( const int               v ) const ;
-    // long as string
-    const std::string toString ( const double            v ) const ;
-    
-    // Lorentz vector as string
+    // ========================================================================
+    /// particle name by ID
+    const std::string name     ( const LHCb::ParticleID&    p ) const ;
+    /// double as string
+    const std::string toString ( const long                 v ) const ;
+    /// int    as string
+    const std::string toString ( const int                  v ) const ;
+    /// long as string
+    const std::string toString ( const double               v ) const ;
+    /// Lorentz vector as string
     const std::string toString ( const LoKi::LorentzVector& v , 
-                                 const Mode&             m ) const ;
-    // Lorentz vector as string
+                                 const Mode&                m ) const ;
+    /// Lorentz vector as string
     const std::string toString ( const LoKi::LorentzVector& v ) const ;
-    // 3D-point as string
+    /// 3D-point as string
     const std::string toString ( const LoKi::Point3D&       v ) const ;
-    // 3D-vector as string
+    /// 3D-vector as string
     const std::string toString ( const LoKi::Vector3D&      v ) const ;
-    
+    // ========================================================================    
     /** print error message 
      *  @param msg error message 
      *  @param sc status code
@@ -1032,26 +1053,27 @@ namespace LoKi
     ( const std::string&  msg                       , 
       const StatusCode&   sc  = StatusCode::FAILURE ,
       const size_t        mx  = 10                  ) const ;
-    
+    // ========================================================================    
   protected:  /// @todo remove CLHEP methods
-    
+    // ========================================================================
     /// Lorentz vector as string : due to HepMC
     inline const std::string toString 
     ( const CLHEP::HepLorentzVector& v ) const 
     { return toString 
         ( LoKi::LorentzVector ( v.x() , v.y() , v.z() , v.e() ) ) ; }
+    // ========================================================================
     /// 3D point  as string : due to HepMC
     inline const std::string toString 
     ( const HepGeom::Point3D<double>& v ) const 
     { return toString ( LoKi::Point3D( v.x() , v.y() , v.z() ) )  ; }
-    
+    // ========================================================================    
   private: 
-    
+    // ========================================================================    
     /// copy constructor is disabled
     DecayChain( const DecayChain& );
-    
+    // ========================================================================
   private: 
-    
+    // ========================================================================
     size_t                m_maxDepth ;
     bool                  m_vertex   ;
     bool                  m_vertexe  ;
@@ -1071,9 +1093,8 @@ namespace LoKi
     // general format for integers  
     std::string           m_fmt_i    ;
   };
-  
-} // end of namespace LoKi 
-
+  // ==========================================================================
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

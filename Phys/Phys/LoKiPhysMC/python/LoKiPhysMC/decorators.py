@@ -68,12 +68,12 @@ def _decorate( name = _name ) :
     import LoKiCore.decorators as _LoKiCore    
     _decorated  = _LoKiCore.getAndDecoratePredicates (
         name                                          , ## module name
-        LoKi.Predicate('const LHCb::Particle*')       , ## the base 
+        LoKi.Functor('const LHCb::Particle*,bool')    , ## the base 
         LoKi.Dicts.CutCalls(LHCb.Particle)            , ## call-traits 
         LoKi.Dicts.FuncOps('const LHCb::Particle*')   ) ## operators 
     _decorated |= _LoKiCore.getAndDecoratePredicates (
         name                                          , ## module name
-        LoKi.Predicate('const LHCb::MCParticle*')     , ## the base 
+        LoKi.Functor('const LHCb::MCParticle*,bool')  , ## the base 
         LoKi.Dicts.CutCalls(LHCb.MCParticle)          , ## call-traits 
         LoKi.Dicts.FuncOps('const LHCb::MCParticle*') ) ## operators
     ## 

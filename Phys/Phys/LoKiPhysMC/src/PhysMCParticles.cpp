@@ -1,4 +1,4 @@
-// $Id: PhysMCParticles.cpp,v 1.8 2007-06-10 20:17:54 ibelyaev Exp $
+// $Id: PhysMCParticles.cpp,v 1.9 2007-11-28 14:54:10 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -32,7 +32,7 @@
 LoKi::PhysMCParticles::MCTruth::MCTruth 
 ( const LoKi::MCMatch&     match    , 
   const LHCb::MCParticle*  particle ) 
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , LoKi::Keeper<LHCb::MCParticle> ( particle ) 
   , m_match ( match ) 
 {} 
@@ -45,7 +45,7 @@ LoKi::PhysMCParticles::MCTruth::MCTruth
 LoKi::PhysMCParticles::MCTruth::MCTruth
 ( const LoKi::MCMatch&            match   , 
   const LoKi::MCTypes::MCRange&  range   ) 
-  : LoKi::Predicate<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
   , m_match ( match ) 
 {} 
@@ -58,7 +58,7 @@ LoKi::PhysMCParticles::MCTruth::MCTruth
 LoKi::PhysMCParticles::MCTruth::MCTruth
 ( const LoKi::MCMatch&              match   , 
   const LHCb::MCParticle::Vector& range   ) 
-  : LoKi::Predicate<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
   , m_match     ( match ) 
 {} 
@@ -71,10 +71,10 @@ LoKi::PhysMCParticles::MCTruth::MCTruth
 LoKi::PhysMCParticles::MCTruth::MCTruth
 ( const LoKi::MCMatch&                       match   , 
   const LHCb::MCParticle::ConstVector&       range   ) 
-  : LoKi::Predicate<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
   , m_match     ( match ) 
-{} ;
+{} 
 // ============================================================================
 /*  constructor 
  *  @param match MCMatch object (working horse)
@@ -84,7 +84,7 @@ LoKi::PhysMCParticles::MCTruth::MCTruth
 LoKi::PhysMCParticles::MCTruth::MCTruth
 ( const LoKi::MCMatch&                       match   , 
   const LoKi::Keeper<LHCb::MCParticle>&      range   ) 
-  : LoKi::Predicate<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , LoKi::Keeper<LHCb::MCParticle>( range )
   , m_match     ( match ) 
 {} 
@@ -97,7 +97,7 @@ LoKi::PhysMCParticles::MCTruth::MCTruth
 LoKi::PhysMCParticles::MCTruth::MCTruth
 ( const LoKi::MCMatch&                        match   , 
   const LoKi::UniqueKeeper<LHCb::MCParticle>& range   ) 
-  : LoKi::Predicate<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , LoKi::Keeper<LHCb::MCParticle>( range )
   , m_match     ( match ) 
 {} 
@@ -110,7 +110,7 @@ LoKi::PhysMCParticles::MCTruth::MCTruth
 LoKi::PhysMCParticles::MCTruth::MCTruth 
 ( const LHCb::MCParticle*  particle ,
   const LoKi::MCMatch&     match    ) 
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , LoKi::Keeper<LHCb::MCParticle>( particle )
   , m_match     ( match ) 
 {} 
@@ -123,7 +123,7 @@ LoKi::PhysMCParticles::MCTruth::MCTruth
 LoKi::PhysMCParticles::MCTruth::MCTruth
 ( const LoKi::MCTypes::MCRange&  range    ,
   const LoKi::MCMatch&            match   ) 
-  : LoKi::Predicate<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
   , m_match     ( match ) 
 {} 
@@ -136,7 +136,7 @@ LoKi::PhysMCParticles::MCTruth::MCTruth
 LoKi::PhysMCParticles::MCTruth::MCTruth
 ( const LHCb::MCParticle::Vector& range   ,
   const LoKi::MCMatch&              match   ) 
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
   , m_match     ( match ) 
 {} 
@@ -149,7 +149,7 @@ LoKi::PhysMCParticles::MCTruth::MCTruth
 LoKi::PhysMCParticles::MCTruth::MCTruth
 ( const LHCb::MCParticle::ConstVector&       range   ,
   const LoKi::MCMatch&                       match   ) 
-  : LoKi::Predicate<const LHCb::Particle*> () 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
   , m_match     ( match                       ) 
 {} 
@@ -162,7 +162,7 @@ LoKi::PhysMCParticles::MCTruth::MCTruth
 LoKi::PhysMCParticles::MCTruth::MCTruth
 ( const LoKi::Keeper<LHCb::MCParticle>&      range ,
   const LoKi::MCMatch&                       match ) 
-  : LoKi::Predicate<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , LoKi::Keeper<LHCb::MCParticle>( range )
   , m_match     ( match ) 
 {} 
@@ -175,7 +175,7 @@ LoKi::PhysMCParticles::MCTruth::MCTruth
 LoKi::PhysMCParticles::MCTruth::MCTruth
 ( const LoKi::UniqueKeeper<LHCb::MCParticle>& range ,
   const LoKi::MCMatch&                        match )
-  : LoKi::Predicate<const LHCb::Particle*> ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , LoKi::Keeper<LHCb::MCParticle>( range )
   , m_match     ( match ) 
 {} 
@@ -185,7 +185,7 @@ LoKi::PhysMCParticles::MCTruth::MCTruth
 LoKi::PhysMCParticles::MCTruth::MCTruth 
 ( const LoKi::PhysMCParticles::MCTruth& right ) 
   : LoKi::AuxFunBase                      ( right )
-  , LoKi::Predicate<const LHCb::Particle*>( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ( right ) 
   , LoKi::Keeper<LHCb::MCParticle>        ( right )
   , m_match ( right.m_match ) 
 {} 
@@ -238,7 +238,7 @@ std::ostream& LoKi::PhysMCParticles::MCTruth::fillStream
 LoKi::PhysMCParticles::RCTruth::RCTruth 
 ( const LoKi::MCMatch&  match    , 
   const LHCb::Particle* particle ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> () 
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate () 
   , LoKi::Keeper<LHCb::Particle> ( particle )
   , m_match ( match )
 {} 
@@ -251,7 +251,7 @@ LoKi::PhysMCParticles::RCTruth::RCTruth
 LoKi::PhysMCParticles::RCTruth::RCTruth 
 ( const LoKi::MCMatch&      match , 
   const LoKi::Types::Range& range ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> () 
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate () 
   , LoKi::Keeper<LHCb::Particle> ( range.begin() , range.end() )
   , m_match ( match )
 {} 
@@ -264,7 +264,7 @@ LoKi::PhysMCParticles::RCTruth::RCTruth
 LoKi::PhysMCParticles::RCTruth::RCTruth
 ( const LoKi::MCMatch&          match , 
   const LHCb::Particle::Vector& range ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> () 
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate () 
   , LoKi::Keeper<LHCb::Particle> ( range.begin() , range.end() )
   , m_match ( match )
 {} 
@@ -277,7 +277,7 @@ LoKi::PhysMCParticles::RCTruth::RCTruth
 LoKi::PhysMCParticles::RCTruth::RCTruth
 ( const LoKi::MCMatch&               match , 
   const LHCb::Particle::ConstVector& range ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> () 
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate () 
   , LoKi::Keeper<LHCb::Particle> ( range.begin() , range.end() )
   , m_match ( match )
 {} 
@@ -290,7 +290,7 @@ LoKi::PhysMCParticles::RCTruth::RCTruth
 LoKi::PhysMCParticles::RCTruth::RCTruth
 ( const LoKi::MCMatch&                match , 
   const LoKi::Keeper<LHCb::Particle>& range ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> () 
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate () 
   , LoKi::Keeper<LHCb::Particle> ( range )
   , m_match ( match )
 {} 
@@ -303,7 +303,7 @@ LoKi::PhysMCParticles::RCTruth::RCTruth
 LoKi::PhysMCParticles::RCTruth::RCTruth
 ( const LoKi::MCMatch&                      match , 
   const LoKi::UniqueKeeper<LHCb::Particle>& range ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> () 
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate () 
   , LoKi::Keeper<LHCb::Particle> ( range )
   , m_match ( match )
 {} 
@@ -316,7 +316,7 @@ LoKi::PhysMCParticles::RCTruth::RCTruth
 LoKi::PhysMCParticles::RCTruth::RCTruth 
 ( const LHCb::Particle* particle ,
   const LoKi::MCMatch&  match    ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> () 
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate () 
   , LoKi::Keeper<LHCb::Particle> ( particle )
   , m_match ( match )
 {} 
@@ -329,7 +329,7 @@ LoKi::PhysMCParticles::RCTruth::RCTruth
 LoKi::PhysMCParticles::RCTruth::RCTruth 
 ( const LoKi::Types::Range& range ,
   const LoKi::MCMatch&      match ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> () 
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate () 
   , LoKi::Keeper<LHCb::Particle> ( range.begin() , range.end() )
   , m_match ( match )
 {} 
@@ -342,7 +342,7 @@ LoKi::PhysMCParticles::RCTruth::RCTruth
 LoKi::PhysMCParticles::RCTruth::RCTruth
 ( const LHCb::Particle::Vector& range ,
   const LoKi::MCMatch&          match ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> () 
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate () 
   , LoKi::Keeper<LHCb::Particle> ( range.begin() , range.end() )
   , m_match ( match )
 {} 
@@ -355,7 +355,7 @@ LoKi::PhysMCParticles::RCTruth::RCTruth
 LoKi::PhysMCParticles::RCTruth::RCTruth
 ( const LHCb::Particle::ConstVector& range ,
   const LoKi::MCMatch&               match ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> () 
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate () 
   , LoKi::Keeper<LHCb::Particle> ( range.begin() , range.end() )
   , m_match ( match )
 {} 
@@ -368,7 +368,7 @@ LoKi::PhysMCParticles::RCTruth::RCTruth
 LoKi::PhysMCParticles::RCTruth::RCTruth
 ( const LoKi::Keeper<LHCb::Particle>& range ,
   const LoKi::MCMatch&                match ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> () 
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate () 
   , LoKi::Keeper<LHCb::Particle> ( range )
   , m_match ( match )
 {} 
@@ -381,7 +381,7 @@ LoKi::PhysMCParticles::RCTruth::RCTruth
 LoKi::PhysMCParticles::RCTruth::RCTruth
 ( const LoKi::UniqueKeeper<LHCb::Particle>& range ,
   const LoKi::MCMatch&                      match ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> () 
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate () 
   , LoKi::Keeper<LHCb::Particle> ( range )
   , m_match ( match )
 {} 
@@ -391,7 +391,7 @@ LoKi::PhysMCParticles::RCTruth::RCTruth
 LoKi::PhysMCParticles::RCTruth::RCTruth
 ( const LoKi::PhysMCParticles::RCTruth& right ) 
   : LoKi::AuxFunBase                         ( right )
-  , LoKi::Predicate<const LHCb::MCParticle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate ( right ) 
   , LoKi::Keeper<LHCb::Particle> ( right )
   , m_match ( right.m_match )
 {} 
@@ -442,7 +442,7 @@ LoKi::PhysMCParticles::GenMCTruth::GenMCTruth
 ( const HepMC::GenVertex*             particle   , 
   const LHCb::HepMC2MC*               table      , 
   const LoKi::MCMatch&                match      ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_table ( table ) 
   , m_match ( match ) 
   , m_hepmc () 
@@ -458,7 +458,7 @@ LoKi::PhysMCParticles::GenMCTruth::GenMCTruth
 ( const HepMC::GenParticle*           particle   , 
   const LHCb::HepMC2MC*               table      , 
   const LoKi::MCMatch&                match      ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_table ( table ) 
   , m_match ( match ) 
   , m_hepmc () 
@@ -474,7 +474,7 @@ LoKi::PhysMCParticles::GenMCTruth::GenMCTruth
 ( const LoKi::GenTypes::GenContainer& particles  , 
   const LHCb::HepMC2MC*               table      , 
   const LoKi::MCMatch&                match      ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_table ( table ) 
   , m_match ( match ) 
   , m_hepmc () 
@@ -490,7 +490,7 @@ LoKi::PhysMCParticles::GenMCTruth::GenMCTruth
 ( const LoKi::Types::GRange&          particles  , 
   const LHCb::HepMC2MC*               table      , 
   const LoKi::MCMatch&                match      ) 
-  : LoKi::Predicate<const LHCb::Particle*>() 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_table ( table ) 
   , m_match ( match ) 
   , m_hepmc () 
@@ -505,7 +505,7 @@ LoKi::PhysMCParticles::GenMCTruth::GenMCTruth
 LoKi::PhysMCParticles::GenMCTruth::GenMCTruth
 ( const LoKi::PhysMCParticles::GenMCTruth& right ) 
   : LoKi::AuxFunBase                       ( right )
-  , LoKi::Predicate<const LHCb::Particle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ( right ) 
   , m_table ( right.m_table ) 
   , m_match ( right.m_match ) 
   , m_hepmc ( right.m_hepmc ) 

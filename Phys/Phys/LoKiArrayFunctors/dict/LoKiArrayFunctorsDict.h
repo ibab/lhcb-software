@@ -1,4 +1,4 @@
-// $Id: LoKiArrayFunctorsDict.h,v 1.5 2007-08-14 18:27:27 ibelyaev Exp $
+// $Id: LoKiArrayFunctorsDict.h,v 1.6 2007-11-28 14:55:54 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIARRAYDICT_H 
 #define LOKI_LOKIARRAYDICT_H 1
@@ -28,8 +28,8 @@ namespace LoKi
     class FunCalls<LoKi::ATypes::Combination> 
     {
     private:
-      typedef LoKi::ATypes::Combination Type ;
-      typedef LoKi::Function<Type>      Fun  ;
+      typedef LoKi::ATypes::Combination           Type ;
+      typedef LoKi::BasicFunctors<Type>::Function Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type&           o ) { return fun ( o ) ; }
@@ -38,8 +38,8 @@ namespace LoKi
     class CutCalls<LoKi::ATypes::Combination> 
     {
     private:
-      typedef LoKi::ATypes::Combination Type ;
-      typedef LoKi::Predicate<Type>     Fun ;
+      typedef LoKi::ATypes::Combination            Type ;
+      typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
     public:
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type&           o ) { return fun ( o ) ; }

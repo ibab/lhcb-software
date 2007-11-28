@@ -1,4 +1,4 @@
-// $Id: AParticles.h,v 1.3 2007-07-26 13:25:09 ibelyaev Exp $
+// $Id: AParticles.h,v 1.4 2007-11-28 14:55:54 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLES_H 
 #define LOKI_APARTICLES_H 1
@@ -28,7 +28,7 @@
 namespace LoKi 
 {
   /** @namespace LoKi::AParticles
-   *  helper namespace with functions with accepts array of
+   *  helper namespace with functions which accept the array of
    *  particles as argument
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 20007-07-09
@@ -42,7 +42,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class Size : public LoKi::Function<LoKi::ATypes::Combination> 
+    class Size 
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function 
     {
     public:
       /// MANDATORY: virtual destructor 
@@ -65,7 +66,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class Count : public LoKi::Function<LoKi::ATypes::Combination> 
+    class Count 
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function 
     {
     public:
       /// Contructor from the critearia:
@@ -95,7 +97,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class Unique : public LoKi::Predicate<LoKi::ATypes::Combination> 
+    class Unique
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate 
     {
     public:
       /// Contructor from the tool 
@@ -134,7 +137,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
-    class FourMomentum : public LoKi::Function<LoKi::ATypes::Combination>
+    class FourMomentum 
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function 
     {
     protected :
       /// the actual type of the list of indices
@@ -365,7 +369,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class MinChild : public LoKi::Function<LoKi::ATypes::Combination> 
+    class MinChild 
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function 
     {
     public:
       /// Constructor from the function 
@@ -416,7 +421,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class MaxChild : public LoKi::Function<LoKi::ATypes::Combination> 
+    class MaxChild 
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function 
     {
     public:
       /// Constructor from the function 
@@ -466,7 +472,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class HasChild : public LoKi::Predicate<LoKi::ATypes::Combination> 
+    class HasChild 
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
     {
     public:
       /// Constructor from the critearia:
@@ -496,7 +503,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class ChildFun : public LoKi::Function<LoKi::ATypes::Combination> 
+    class ChildFun
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
       /// Constructor from the fuction and index 
@@ -531,7 +539,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class ChildCut : public LoKi::Predicate<LoKi::ATypes::Combination> 
+    class ChildCut 
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
     {
     public:
       /// Constructor from the fuction and index 
@@ -570,7 +579,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class VertexChi2 : public LoKi::Function<LoKi::ATypes::Combination> 
+    class VertexChi2
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
       /// constructor from the tool:
@@ -609,7 +619,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class MaxDOCA : public LoKi::Function<LoKi::ATypes::Combination> 
+    class MaxDOCA 
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
       /// constructor from the tool:
@@ -650,7 +661,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class MaxDOCAChi2 : public LoKi::Function<LoKi::ATypes::Combination> 
+    class MaxDOCAChi2 
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
       /// constructor from the tool:
@@ -693,7 +705,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class MaxDOCACut : public LoKi::Predicate<LoKi::ATypes::Combination> 
+    class MaxDOCACut
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
     {
     public:
       /// constructor from the tool and threshold 
@@ -745,7 +758,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class MaxDOCAChi2Cut : public LoKi::Predicate<LoKi::ATypes::Combination> 
+    class MaxDOCAChi2Cut
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
     {
     public:
       /// constructor from the tool and threshold 
@@ -806,7 +820,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-11-02
      */
-    class DecayAngle : public LoKi::Function<LoKi::ATypes::Combination>
+    class DecayAngle
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
       /** constructor with daughter index (starts from 1).
@@ -841,7 +856,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-07-26
      */
-    class WrongMass : public LoKi::Function<LoKi::ATypes::Combination>
+    class WrongMass
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
       /// constructor from two masses 
@@ -923,7 +939,7 @@ namespace LoKi
       WrongMass ( OBJECT  begin , 
                   OBJECT  end   , 
                   FUNCTOR func  ) 
-        : LoKi::Function<LoKi::ATypes::Combination> ()
+        : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
         , m_masses ( end - begin ) 
       {
         std::transform ( begin , end , m_masses.begin() , func ) ;

@@ -25,13 +25,13 @@ _T = 'std::vector<const LHCb::Particle*>'
 # =============================================================================
 
 ## @see LoKi::Types::TrFunc
-AFunc  = LoKi.Function               ( _T ) 
+AFunc  = LoKi.Functor               ( _T , 'double' ) 
 ## @see LoKi::Types::TrCuts
-ACuts  = LoKi.Predicate              ( _T ) 
+ACuts  = LoKi.Functor               ( _T ,  bool    ) 
 ## @see LoKi::Types::TrFun
-AFun   = LoKi.FunctionFromFunction   ( _T ) 
+AFun   = LoKi.FunctorFromFunctor    ( _T , 'double' ) 
 ## @see LoKi::Types::TrCut
-ACut   = LoKi.PredicateFromPredicate ( _T )
+ACut   = LoKi.FunctorFromFunctor    ( _T ,  bool    )
 
 
 # =============================================================================

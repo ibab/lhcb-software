@@ -1,4 +1,4 @@
-// $Id: AParticleCuts.h,v 1.3 2007-07-26 13:25:08 ibelyaev Exp $
+// $Id: AParticleCuts.h,v 1.4 2007-11-28 14:55:54 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLECUTS_H 
 #define LOKI_APARTICLECUTS_H 1
@@ -226,7 +226,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Counter<LoKi::ATypes::Combination>     ACOUNTER ;
+    typedef LoKi::Monitoring::Counter<LoKi::ATypes::Combination,bool> ACOUNTER ;
     // ========================================================================
     /** @typedef ACUTCHILD
      *  The predicate which evaluates another predicate using the 
@@ -1246,7 +1246,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Plot<LoKi::ATypes::Combination>           APLOT ;
+    typedef LoKi::Monitoring::Plot<LoKi::ATypes::Combination,double>     APLOT ;
     // ========================================================================
     /** @var APT
      *  Simple evaluator of the transverse momentum fo the combination:
@@ -1462,7 +1462,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Stat<LoKi::ATypes::Combination>           ASTAT ;
+    typedef LoKi::Monitoring::Counter<LoKi::ATypes::Combination,double> ASTAT ;
     // ========================================================================
     /** @var ASWITCH
      *

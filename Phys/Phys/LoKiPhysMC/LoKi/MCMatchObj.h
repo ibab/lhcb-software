@@ -1,4 +1,20 @@
-// $Id: MCMatchObj.h,v 1.5 2007-11-06 10:53:15 cattanem Exp $
+// $Id: MCMatchObj.h,v 1.6 2007-11-28 14:54:09 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.4  2007/04/16 16:16:48  pkoppenb
+// removed polemic comment
+//
+// Revision 1.3  2006/10/10 09:16:53  ibelyaev
+//  tiny fixes needed for good&valid dictionaries
+//
+// Revision 1.2  2006/08/29 11:40:47  ibelyaev
+//  many fixed to simplify MC-match
+//
+// Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
+// New package : RC <---> MC links for LoKi 
+// 
 // ============================================================================
 #ifndef LOKI_MCMATCHOBJ_H 
 #define LOKI_MCMATCHOBJ_H 1
@@ -102,6 +118,7 @@ namespace LoKi
       MCPARTICLE              last       ) const ;
     
     /** check the match of MC truth information 
+     *  @param  particle    pointer to Particle object 
      *  @param  first       begin  iterator for sequence of MC particles 
      *  @param  last        end    iterator for sequence of MC particles 
      *  @return true if *ALL* 'particles' are matched 
@@ -161,8 +178,9 @@ namespace LoKi
       MCPARTICLE    mcparticle ) const ;
 
     /** look at MC truth information using "direct" relation table 
-     *  @param obj   the object (Particle/ProtoParticle/Track/...)
-     *  @param mcp   pointer to MCParticle object 
+     *  @param table      pointer to relation table 
+     *  @param object     the object (Particle/ProtoParticle/Track/...)
+     *  @param mcparticle pointer to MCParticle object 
      */
     template <class TABLE, class OBJECT, class MCPARTICLE>
     inline bool matchInTable 
@@ -172,9 +190,9 @@ namespace LoKi
       MCPARTICLE    mcp   ) const ;
     
     /** look at MC truth information using "direct" relation table 
-     *  @param tables pointer to relation tables
-     *  @param obj    the object (Particle/ProtoParticle/Track/...)
-     *  @param mcp    pointer to MCParticle object 
+     *  @param table      pointer to relation table 
+     *  @param object     the object (Particle/ProtoParticle/Track/...)
+     *  @param mcparticle pointer to MCParticle object 
      */
     template <class TABLES, class OBJECT, class MCPARTICLE>
     inline bool matchInTables 

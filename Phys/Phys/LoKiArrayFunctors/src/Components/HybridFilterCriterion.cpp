@@ -1,4 +1,4 @@
-// $Id: HybridFilterCriterion.cpp,v 1.1 2007-07-26 13:25:09 ibelyaev Exp $
+// $Id: HybridFilterCriterion.cpp,v 1.2 2007-11-28 14:55:54 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -64,7 +64,7 @@ namespace LoKi
         const std::string& name,
         const IInterface* parent)
         : FilterCriterionBase ( type , name , parent )
-        , m_cut ( LoKi::BooleanConstant<const LHCb::Particle*>( false ) ) 
+        , m_cut ( LoKi::Constant<const LHCb::Particle*,bool>( false ) ) 
         , m_code    ( "NONE")
         , m_factory ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC" ) 
       {
