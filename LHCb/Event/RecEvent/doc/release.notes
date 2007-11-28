@@ -1,9 +1,12 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.74 2007-11-28 15:12:31 cattanem Exp $
+! $Id: release.notes,v 1.75 2007-11-28 16:00:42 wouter Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2007-11-28 Wouter Hulsbergen
+ - Fixed bug in TwoProngVertex::covMatrix7x7
 
 !========================= RecEvent v2r8 2007-11-27 ==========================
 ! 2007-11-27 - Chris Jones
