@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnvTool.cpp,v 1.1 2007-11-02 14:57:58 albrecht Exp $
+// $Id: TsaSeedTrackCnvTool.cpp,v 1.2 2007-11-28 15:32:48 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ SeedTrackCnvTool::SeedTrackCnvTool( const std::string& type,
   
   declareProperty("pFromPtKick", m_pFromPtKick = false);
   declareProperty("pFromCurvature", m_pFromCurvature = false);
-  declareProperty("stateAtLastHit", m_stateAtLastHit = true);
+  declareProperty("stateAtLastHit", m_stateAtLastHit = false);
   
 }
 //=============================================================================

@@ -3,6 +3,9 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+! 2007-11-28 Stephanie Hansmann-Menzemer
+ - change default value of z position of output track state to mid T
+   (before at z of last hit)
 
 !======================= TsaAlgorithms v3r1 2007-11-08 ======================
 ! 2007-11-07 Manuel Schiller
@@ -32,7 +35,7 @@
 ! 2007-11-02 - Johannes Albrecht
 	- TsaSeedTrackCnvTool.cpp, h: 
 		add new tool which does the conversion from TsaSeed to LHCb::Track
-		add possibility to return state at mit T
+		add possibility to return state at mid T
 		add possibility (set as default) to get momentum for Track 
 		from FastMomentumEstimate
 	- TsaSeedTrackCnv.cpp,h algorithm now calls the tool for track conversion
