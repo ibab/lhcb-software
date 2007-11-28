@@ -1,5 +1,5 @@
 
-// $Id: Funcs.h,v 1.5 2007-11-28 13:56:32 ibelyaev Exp $
+// $Id: Funcs.h,v 1.6 2007-11-28 18:09:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCS_H 
 #define LOKI_FUNCS_H 1
@@ -39,8 +39,8 @@ namespace LoKi
       typename LoKi::BasicFunctors<TYPE>::FunctionFromFunction   m_104 ;
       
       LoKi::Valid<TYPE>                  m_201  ;
+      
       LoKi::TheSame<TYPE>                m_204  ;
-
       // LoKi::SimpleSwitch<TYPE>           m_202  ;
       // LoKi::Switch<TYPE>                 m_203  ;
       // LoKi::EqualToValue<TYPE>           m_205  ;

@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.3 2007-11-28 13:56:33 ibelyaev Exp $
+// $Id: Primitives.h,v 1.4 2007-11-28 18:09:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -16,6 +16,7 @@
 #include "LoKi/Reference.h"
 #include "LoKi/Field.h"
 #include "LoKi/valid.h"
+#include "LoKi/same.h"
 #include "LoKi/EqualTo.h"
 // ============================================================================
 /** @file
@@ -1613,7 +1614,7 @@ namespace LoKi
     virtual  TheSame* clone() const { return new TheSame( *this ) ; }
     /// MANDATORY: the only one essential method 
     virtual result_type operator() ( argument object ) const 
-    { return m_value == object ? true : false ; }
+    { return LoKi::same ( m_value , object ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "(SAME?)"; }
