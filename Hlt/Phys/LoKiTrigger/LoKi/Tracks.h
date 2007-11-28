@@ -1,4 +1,4 @@
-// $Id: Tracks.h,v 1.5 2007-11-28 14:56:23 ibelyaev Exp $
+// $Id: Tracks.h,v 1.6 2007-11-28 18:09:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKS_H 
 #define LOKI_TRACKS_H 1
@@ -21,6 +21,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   /** @namespace LoKi::Tracks Tracks.h LoKi/Tracks.h
    *  Namespace with few basic "track"-functors 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -38,7 +39,7 @@ namespace LoKi
     class Key : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
-      /// MANDATORY: virtual destrcutor  
+      /// MANDATORY: virtual destructor  
       virtual ~Key () {}
       /// MANDATORY: clone method ("virtual constructor")  
       virtual  Key* clone() const { return new Key(*this) ; }
@@ -410,7 +411,7 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrIsOnTRACK(LHCb.LHCbID(" << m_id.lhcbID() << "))" ; }
     private:
-      // the defautl constructor is disabled 
+      // the default constructor is disabled 
       IsOnTrack() ; ///< no default consructor 
     private:
       LHCb::LHCbID m_id ;

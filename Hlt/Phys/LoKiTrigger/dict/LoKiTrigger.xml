@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiTrigger.xml,v 1.7 2007-11-28 14:56:23 ibelyaev Exp $ 
+     * $Id: LoKiTrigger.xml,v 1.8 2007-11-28 18:09:38 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -38,10 +38,10 @@
   <class pattern   = "LoKi::FunctionFromFunction<*LHCb::RecV*>"    />
 
   
-  <class pattern = "LoKi::HltBinders::HltBin*"      />
-  <class pattern = "LoKi::HltBinders::BinderFun*"   />
-  <class pattern = "LoKi::HltBinders::BinderValue*" />
-  <class name    = "LoKi::Dicts::HltBind" />
+  <class pattern   = "LoKi::HltBinders::HltBin*"      />
+  <class pattern   = "LoKi::HltBinders::BinderFun*"   />
+  <class pattern   = "LoKi::HltBinders::BinderValue*" />
+  <class name      = "LoKi::Dicts::HltBind" />
   
 
   <class pattern   = "LoKi::Tracks::*"                        />

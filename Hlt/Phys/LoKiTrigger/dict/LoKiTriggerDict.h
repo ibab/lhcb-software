@@ -1,4 +1,4 @@
-// $Id: LoKiTriggerDict.h,v 1.5 2007-11-28 14:56:23 ibelyaev Exp $
+// $Id: LoKiTriggerDict.h,v 1.6 2007-11-28 18:09:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -21,6 +21,43 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
+  template <>
+  class TheSame<LHCb::Track> : public LoKi::Functor<LHCb::Track,bool>
+  {
+  private:
+    typedef LHCb::Track TYPE ;
+    /// argument type
+    typedef LoKi::Functor<TYPE,bool>::argument argument  ; 
+    /// result type 
+    typedef LoKi::Functor<TYPE,bool>::result_type result_type ; 
+  public:
+    /// constructor form the value 
+    TheSame ( argument /* value */ ) 
+      : LoKi::Functor<TYPE,bool>() 
+    {}
+    /// copy constructor 
+    TheSame
+    ( const TheSame& right ) 
+      : LoKi::AuxFunBase         ( right ) 
+      , LoKi::Functor<TYPE,bool> ( right )
+    {}
+    /// virtual destructor 
+    virtual ~TheSame() {}
+    /// MANDATORY: clone method ("virtual constructor")
+    virtual  TheSame* clone() const { return new TheSame( *this ) ; }
+    /// MANDATORY: the only one essential method 
+    virtual result_type operator() ( argument /* object */ ) const 
+    { return false ; }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return s << "(SAME?)"; }
+  private :
+    // the default contructor is disabled
+    TheSame();
+  private:
+  };
+  // ==========================================================================
   namespace Dicts 
   {
     // ========================================================================
