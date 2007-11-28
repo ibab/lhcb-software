@@ -1,4 +1,4 @@
-// $Id: Math.h,v 1.8 2007-10-05 13:03:03 cattanem Exp $
+// $Id: Math.h,v 1.9 2007-11-28 13:56:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MATH_H 
 #define LOKI_MATH_H 1
@@ -18,7 +18,7 @@
 // ============================================================================
 /** @file
  *
- *  Collection of math-function s for LoKi functions
+ *  Collection of math-functions for LoKi functions
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -39,312 +39,366 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  exp ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE> ( std::exp , fun , "exp" ); }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  exp ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2> 
+      ( std::exp , fun , "exp" ); }
   // ==========================================================================
   /*  sine for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  sin ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE> ( std::sin , fun , "sin" ) ; }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  sin ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2> 
+      ( std::sin , fun , "sin" ) ; }
   // ==========================================================================
   /*  hyperbolic sine for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  sinh ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE> ( std::sinh, fun , "sinh" ) ; }
+  template <class TYPE,class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  sinh ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2> 
+      ( std::sinh, fun , "sinh" ) ; }
   // ==========================================================================
   /*  cosine for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  cos ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE>( std::cos , fun , "cos" ) ; }
+  template <class TYPE,class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  cos ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2>
+      ( std::cos , fun , "cos" ) ; }
   // ==========================================================================  
   /*  hyperbolic cosine for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  cosh ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE>( std::cosh , fun , "cosh" ) ; }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  cosh ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2>
+      ( std::cosh , fun , "cosh" ) ; }
   // ==========================================================================  
   /*  tan for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  tan ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE>( std::tan , fun , "tan" ) ; }
+  template <class TYPE,class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  tan ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2>
+      ( std::tan , fun , "tan" ) ; }
   // ==========================================================================
   /*  hyperbolic tangent for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  tanh ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE>( std::tanh , fun , "tanh" ) ; }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  tanh ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2>
+      ( std::tanh , fun , "tanh" ) ; }
   // ==========================================================================  
   /*  sqrt for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  sqrt ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE>( std::sqrt , fun , "sqrt" ) ; }
+  template <class TYPE,class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  sqrt ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2>
+      ( std::sqrt , fun , "sqrt" ) ; }
   // ==========================================================================
   /*  cbrt for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  cbrt ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE>( ::cbrt , fun , "cbrt" ) ; }
+  template <class TYPE,class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  cbrt ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2>
+      ( ::cbrt , fun , "cbrt" ) ; }
   // ==========================================================================
   /*  asine for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  asin ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE>( std::asin , fun , "asin" ) ; }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  asin ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2>
+      ( std::asin , fun , "asin" ) ; }
   // ==========================================================================  
   /*  acos for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  // inline LoKi::ComposeFunction<TYPE> 
-  acos ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE>( std::acos , fun , "acos" ) ; }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  acos ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2>
+      ( std::acos , fun , "acos" ) ; }
   // ==========================================================================  
   /*  atan for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  atan ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE>( std::atan , fun , "atan" ) ; }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  atan ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2>
+      ( std::atan , fun , "atan" ) ; }
   // ==========================================================================  
   /*  log for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  log ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE>( std::log , fun , "log" ) ; }
+  template <class TYPE,class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  log ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2>
+      ( std::log , fun , "log" ) ; }
   // ==========================================================================  
   /*  log10 for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  log10 ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE>( std::log10 , fun , "log10" ) ; }
+  template <class TYPE,class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  log10 ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2>
+      ( std::log10 , fun , "log10" ) ; }
   // ==========================================================================  
   /*  abs for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  abs ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE>( std::fabs , fun , "abs" ) ; }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  abs ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2>
+      ( std::fabs , fun , "abs" ) ; }
   // ==========================================================================  
   /*  abs for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction<TYPE>
-  fabs ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::ComposeFunction<TYPE>( std::fabs , fun , "abs" ) ; }
+  template <class TYPE,class TYPE2> 
+  inline LoKi::ComposeFunction<TYPE,TYPE2>
+  fabs ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::ComposeFunction<TYPE,TYPE2>
+      ( std::fabs , fun , "abs" ) ; }
   // ==========================================================================  
   /*  atan2 for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction2<TYPE>
-  atan2 ( const LoKi::Function<TYPE>& fun1 , 
-          const LoKi::Function<TYPE>& fun2 ) 
-  { return LoKi::ComposeFunction2<TYPE>( std::atan2 , fun1 , fun2 , "atan2" ); }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction2<TYPE,TYPE2>
+  atan2 ( const LoKi::Functor<TYPE,TYPE2>& fun1 , 
+          const LoKi::Functor<TYPE,TYPE2>& fun2 ) 
+  { return LoKi::ComposeFunction2<TYPE,TYPE2>
+      ( std::atan2 , fun1 , fun2 , "atan2" ); }
   // ==========================================================================
   /*  atan2 for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction2<TYPE>
-  atan2 ( const LoKi::Function<TYPE>& fun1 , 
-          const double                val2 ) 
-  { return LoKi::ComposeFunction2<TYPE>( std::atan2 , fun1 , val2 , "atan2" ) ; }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction2<TYPE,TYPE2>
+  atan2 ( const LoKi::Functor<TYPE,TYPE2>&       fun1 , 
+          typename LoKi::Constant<TYPE,TYPE2>::T2 val2 )
+  { return LoKi::ComposeFunction2<TYPE,TYPE2>
+      ( std::atan2 , fun1 , val2 , "atan2" ) ; }
   // ==========================================================================  
   /*  atan2 for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction2<TYPE>
-  atan2 ( const double                val1 , 
-          const LoKi::Function<TYPE>& fun2 ) 
-  { return LoKi::ComposeFunction2<TYPE>( std::atan2 , val1 , fun2  , "atan2" ) ; }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction2<TYPE,TYPE2>
+  atan2 ( typename LoKi::Constant<TYPE,TYPE2>::T2 val1 ,
+          const LoKi::Functor<TYPE,TYPE2>&        fun2 ) 
+  { return LoKi::ComposeFunction2<TYPE,TYPE2>
+      ( std::atan2 , val1 , fun2  , "atan2" ) ; }
+  // ==========================================================================  
+  /*  atan  for LoKi function
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   2002-07-24
+   */      
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction2<TYPE,TYPE2>
+  atan  ( const LoKi::Functor<TYPE,TYPE2>& fun1 , 
+          const LoKi::Functor<TYPE,TYPE2>& fun2 ) 
+  { return LoKi::ComposeFunction2<TYPE,TYPE2>
+      ( std::atan2 , fun1 , fun2 , "atan2" ); }
+  // ==========================================================================
+  /*  atan  for LoKi function
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   2002-07-24
+   */      
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction2<TYPE,TYPE2>
+  atan  ( const LoKi::Functor<TYPE,TYPE2>&       fun1 , 
+          typename LoKi::Constant<TYPE,TYPE2>::T2 val2 )
+  { return LoKi::ComposeFunction2<TYPE,TYPE2>
+      ( std::atan2 , fun1 , val2 , "atan2" ) ; }
+  // ==========================================================================  
+  /*  atan  for LoKi function
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   2002-07-24
+   */      
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction2<TYPE,TYPE2>
+  atan  ( typename LoKi::Constant<TYPE,TYPE2>::T2 val1 ,
+          const LoKi::Functor<TYPE,TYPE2>&        fun2 ) 
+  { return LoKi::ComposeFunction2<TYPE,TYPE2>
+      ( std::atan2 , val1 , fun2  , "atan2" ) ; }
   // ==========================================================================  
   /*  pow for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction2<TYPE>
-  pow ( const LoKi::Function<TYPE>& fun1 , 
-        const LoKi::Function<TYPE>& fun2 ) 
-  { return LoKi::ComposeFunction2<TYPE>( std::pow , fun1 , fun2  , "pow" ) ; }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction2<TYPE,TYPE2>
+  pow ( const LoKi::Functor<TYPE,TYPE2>& fun1 , 
+        const LoKi::Functor<TYPE,TYPE2>& fun2 ) 
+  { return LoKi::ComposeFunction2<TYPE,TYPE2>
+      ( std::pow , fun1 , fun2  , "pow" ) ; }
   // ==========================================================================  
   /*  pow for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction2<TYPE>
-  pow ( const LoKi::Function<TYPE>& fun1 , 
-        const double                val2 ) 
-  { return LoKi::ComposeFunction2<TYPE>( std::pow , fun1 , val2 , "pow" ) ; }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction2<TYPE,TYPE2>
+  pow ( const LoKi::Functor<TYPE,TYPE2>&             fun1 , 
+        typename LoKi::Constant<TYPE,TYPE2>::T2 val2 )
+  { return LoKi::ComposeFunction2<TYPE,TYPE2>
+      ( std::pow , fun1 , val2 , "pow" ) ; }
   // ==========================================================================  
   /*  pow for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
-  template <class TYPE> 
-  inline LoKi::ComposeFunction2<TYPE>
-  pow ( const double                val1 , 
-        const LoKi::Function<TYPE>& fun2 ) 
-  { return LoKi::ComposeFunction2<TYPE>( std::pow , val1 , fun2 , "pow" ) ; }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::ComposeFunction2<TYPE,TYPE2>
+  pow ( typename LoKi::Constant<TYPE,TYPE2>::T2 val1 ,
+        const LoKi::Functor<TYPE,TYPE2>&        fun2 ) 
+  { return LoKi::ComposeFunction2<TYPE,TYPE2>
+      ( std::pow , val1 , fun2 , "pow" ) ; }
   // ==========================================================================  
   /*  minimum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
    */
-  template <class TYPE>
-  inline LoKi::Min<TYPE>
-  min ( const LoKi::Function<TYPE>& fun1 , 
-        const LoKi::Function<TYPE>& fun2 ) 
-  { return LoKi::Min<TYPE>( fun1 , fun2 ) ; }
+  template <class TYPE, class TYPE2>
+  inline LoKi::Min<TYPE,TYPE2>
+  min ( const LoKi::Functor<TYPE,TYPE2>& fun1 , 
+        const LoKi::Functor<TYPE,TYPE2>& fun2 ) 
+  { return LoKi::Min<TYPE,TYPE2>( fun1 , fun2 ) ; }
   // ==========================================================================  
   /*  minimum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
    */
-  template <class TYPE>
-  inline LoKi::Min<TYPE>
-  min ( const LoKi::Function<TYPE>& fun1 , 
-        const LoKi::Function<TYPE>& fun2 , 
-        const LoKi::Function<TYPE>& fun3 ) 
-  { return LoKi::Min<TYPE>( fun1 , fun2 , fun3 ) ; }
+  template <class TYPE,class TYPE2>
+  inline LoKi::Min<TYPE,TYPE2>
+  min ( const LoKi::Functor<TYPE,TYPE2>& fun1 , 
+        const LoKi::Functor<TYPE,TYPE2>& fun2 , 
+        const LoKi::Functor<TYPE,TYPE2>& fun3 ) 
+  { return LoKi::Min<TYPE,TYPE2>( fun1 , fun2 , fun3 ) ; }
   // ==========================================================================
   /*  minimum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
    */
-  template <class TYPE>
-  inline LoKi::Min<TYPE>
-  min ( const LoKi::Function<TYPE>& fun1 , 
-        const LoKi::Function<TYPE>& fun2 , 
-        const LoKi::Function<TYPE>& fun3 , 
-        const LoKi::Function<TYPE>& fun4 ) 
-  { return LoKi::Min<TYPE>( fun1 , fun2 , fun3 , fun4 ) ; }
+  template <class TYPE, class TYPE2>
+  inline LoKi::Min<TYPE,TYPE2>
+  min ( const LoKi::Functor<TYPE,TYPE2>& fun1 , 
+        const LoKi::Functor<TYPE,TYPE2>& fun2 , 
+        const LoKi::Functor<TYPE,TYPE2>& fun3 , 
+        const LoKi::Functor<TYPE,TYPE2>& fun4 ) 
+  { return LoKi::Min<TYPE,TYPE2>( fun1 , fun2 , fun3 , fun4 ) ; }
   // ==========================================================================
   /*  minimum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
    */
-  template <class TYPE>
-  inline LoKi::Min<TYPE>
-  min ( const LoKi::Function<TYPE>& fun1 , 
-        const double                fun2 ) 
-  { return min ( fun1 , LoKi::Constant<TYPE>(fun2) ) ; }
+  template <class TYPE, class TYPE2>
+  inline LoKi::Min<TYPE,TYPE2>
+  min ( const LoKi::Functor<TYPE,TYPE2>&        fun1 , 
+        typename LoKi::Constant<TYPE,TYPE2>::T2 val2 ) 
+  { return LoKi::Min<TYPE,TYPE2> ( fun1 , val2 ) ; }
   // ==========================================================================
   /*  minimum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
    */
-  template <class TYPE>
-  inline LoKi::Min<TYPE>
-  min ( const double                fun1 , 
-        const LoKi::Function<TYPE>& fun2 ) 
-  { return min ( LoKi::Constant<TYPE>(fun1) , fun2 ) ; }
+  template <class TYPE, class TYPE2>
+  inline LoKi::Min<TYPE,TYPE2>
+  min ( typename LoKi::Constant<TYPE,TYPE2>::T2 val1 , 
+        const LoKi::Functor<TYPE,TYPE2>&        fun2 )  
+  { return LoKi::Min<TYPE,TYPE2> ( val1 , fun2 ) ; }
   // ==========================================================================
   /*  maximum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
    */
-  template <class TYPE>
-  inline LoKi::Max<TYPE>
-  max ( const LoKi::Function<TYPE>& fun1 , 
-        const LoKi::Function<TYPE>& fun2 ) 
-  { return LoKi::Max<TYPE>( fun1 , fun2 ) ; }
+  template <class TYPE, class TYPE2>
+  inline LoKi::Max<TYPE,TYPE2>
+  max ( const LoKi::Functor<TYPE,TYPE2>& fun1 , 
+        const LoKi::Functor<TYPE,TYPE2>& fun2 ) 
+  { return LoKi::Max<TYPE,TYPE2>( fun1 , fun2 ) ; }
   // ==========================================================================  
   /*  maximum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
    */
-  template <class TYPE>
-  inline LoKi::Max<TYPE>
-  max ( const LoKi::Function<TYPE>& fun1 , 
-        const LoKi::Function<TYPE>& fun2 , 
-        const LoKi::Function<TYPE>& fun3 ) 
-  { return LoKi::Max<TYPE>( fun1 , fun2 , fun3 ) ; }
+  template <class TYPE,class TYPE2>
+  inline LoKi::Max<TYPE,TYPE2>
+  max ( const LoKi::Functor<TYPE,TYPE2>& fun1 , 
+        const LoKi::Functor<TYPE,TYPE2>& fun2 , 
+        const LoKi::Functor<TYPE,TYPE2>& fun3 ) 
+  { return LoKi::Max<TYPE,TYPE2>( fun1 , fun2 , fun3 ) ; }
   // ==========================================================================
   /*  maximum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
    */
-  template <class TYPE>
-  inline LoKi::Max<TYPE>
-  max ( const LoKi::Function<TYPE>& fun1 , 
-        const LoKi::Function<TYPE>& fun2 , 
-        const LoKi::Function<TYPE>& fun3 , 
-        const LoKi::Function<TYPE>& fun4 ) 
-  { return LoKi::Max<TYPE>( fun1 , fun2 , fun3 , fun4 ) ; }
+  template <class TYPE,class TYPE2>
+  inline LoKi::Max<TYPE,TYPE2>
+  max ( const LoKi::Functor<TYPE,TYPE2>& fun1 , 
+        const LoKi::Functor<TYPE,TYPE2>& fun2 , 
+        const LoKi::Functor<TYPE,TYPE2>& fun3 , 
+        const LoKi::Functor<TYPE,TYPE2>& fun4 ) 
+  { return LoKi::Max<TYPE,TYPE2>( fun1 , fun2 , fun3 , fun4 ) ; }
   // ==========================================================================      
   /*  maximum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
    */
-  template <class TYPE>
-  inline LoKi::Max<TYPE>
-  max ( const LoKi::Function<TYPE>& fun1 , 
-        const double                fun2 ) 
-  { return max ( fun1 , LoKi::Constant<TYPE>(fun2) ) ; }
+  template <class TYPE, class TYPE2>
+  inline LoKi::Max<TYPE,TYPE2>
+  max ( const LoKi::Functor<TYPE,TYPE2>&        fun1 , 
+        typename LoKi::Constant<TYPE,TYPE2>::T2 val2 )
+  { return LoKi::Max<TYPE,TYPE2>( fun1 , val2 ) ; }
   // ==========================================================================  
   /*  maximum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
    */
-  template <class TYPE>
-  inline LoKi::Max<TYPE>
-  max ( const double                fun1 , 
-        const LoKi::Function<TYPE>& fun2 ) 
-  { return max ( LoKi::Constant<TYPE>(fun1) , fun2 ) ; }
+  template <class TYPE, class TYPE2>
+  inline LoKi::Max<TYPE,TYPE2>
+  max ( typename LoKi::Constant<TYPE,TYPE2>::T2 val1 , 
+        const LoKi::Functor<TYPE,TYPE2>&        fun2 )
+  { return LoKi::Max<TYPE,TYPE2>( val1 , fun2 ) ; }
   // ==========================================================================
   /** helpful function for creation of comparison object 
    *  @param fun1 function to be applied to the first object to be compared 
@@ -353,12 +407,12 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */
-  template <class TYPE,class CMP>
-  inline LoKi::Compare<TYPE,CMP> compare
-  ( const LoKi::Function<TYPE>& fun1  , 
-    const LoKi::Function<TYPE>& fun2  ,
-    const CMP&                  cmp   )
-  { return Compare<TYPE,CMP>( fun1 , fun2 , cmp ); }
+  template <class TYPE,class TYPE2,class CMP>
+  inline LoKi::Compare<TYPE,CMP,TYPE2> compare
+  ( const LoKi::Functor<TYPE,TYPE2>& fun1  , 
+    const LoKi::Functor<TYPE,TYPE2>& fun2  ,
+    const CMP&                  cmp = std::less<TYPE2>() )
+  { return LoKi::Compare<TYPE,CMP,TYPE2> ( fun1 , fun2 , cmp ) ; }
   // ==========================================================================  
   /** select element form the sequence with minimal value of 
    *  given function.
@@ -382,19 +436,18 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-09-05
    */      
-  template<class IT,class TYPE>
+  template<class IT,class TYPE, class TYPE2>
   inline IT select_min 
-  ( IT first                        , 
-    IT last                         , 
-    const LoKi::Function<TYPE>& fun )
+  ( IT                               first , 
+    IT                               last  , 
+    const LoKi::Functor<TYPE,TYPE2>& fun   )
   {
+    typedef typename LoKi::Functor<TYPE,TYPE2>::result_type results ;
     return std::min_element 
       ( first , 
         last  , 
-        LoKi::compare ( fun                 , 
-                        fun                 , 
-                        std::less<double>() ) ) ;  
-  };
+        LoKi::compare ( fun , fun , std::less<results>() ) ) ;  
+  }
   // ==========================================================================
   /** select element form the sequence with maximal value of function
    *  It is just an extension of the STL <tt>std::min_element</tt> 
@@ -417,20 +470,19 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-09-05
    */      
-  template<class IT,class TYPE>
+  template<class IT,class TYPE, class TYPE2>
   inline IT select_max
-  ( IT first                        , 
-    IT last                         , 
-    const LoKi::Function<TYPE>& fun )
+  ( IT first                             , 
+    IT last                              , 
+    const LoKi::Functor<TYPE,TYPE2>& fun )
   {
+    typedef typename LoKi::Functor<TYPE,TYPE2>::result_type results ;
     return std::max_element 
       ( first , 
         last  , 
-        LoKi::compare ( fun                 , 
-                        fun                 , 
-                        std::less<double>() ) ) ;  
-  };
-  // ==========================================================================  
+        LoKi::compare ( fun , fun , std::less<results>() ) ) ;  
+  }
+  // ==========================================================================
   /** select element form the sequence with minimal value of function
    *
    *  It is just an extension of the STL <tt>std::min_element</tt> 
@@ -452,14 +504,14 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-09-05
    */      
-  template<class SEQUENCE , class TYPE>
+  template<class SEQUENCE , class TYPE, class TYPE2>
   inline typename SEQUENCE::value_type select_min
-  ( SEQUENCE& sequence  , const LoKi::Function<TYPE>& fun )
+  ( SEQUENCE& sequence  , const LoKi::Functor<TYPE,TYPE2>& fun )
   {
     typedef typename SEQUENCE::value_type Type ;
     if ( sequence.begin() == sequence.end() ) { return Type (); }
     return *select_min( sequence.begin() , sequence.end() , fun );
-  };
+  }
   // ==========================================================================  
   /** select element form the sequence with maximal value of function
    *
@@ -482,14 +534,14 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-09-05
    */      
-  template<class SEQUENCE , class TYPE>
+  template<class SEQUENCE , class TYPE, class TYPE2>
   inline typename SEQUENCE::value_type select_max
-  ( SEQUENCE& sequence  , const LoKi::Function<TYPE>& fun )
+  ( SEQUENCE& sequence  , const LoKi::Functor<TYPE,TYPE2>& fun )
   {
     typedef typename SEQUENCE::value_type Type ;
     if ( sequence.begin() == sequence.end() ) { return Type () ; }
     return *select_max( sequence.begin() , sequence.end() , fun );
-  };
+  }
   // ==========================================================================  
   /** select element form the sequence with minimal value of 
    *  given function 
@@ -519,20 +571,21 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2005-03-09
    */      
-  template<class IT,class TYPE>
+  template<class IT,class TYPE, class TYPE2>
   inline IT select_min
   ( IT first                         , 
     IT last                          , 
-    const LoKi::Function<TYPE>&  fun , 
-    const LoKi::Predicate<TYPE>& cut )
+    const LoKi::Functor<TYPE,TYPE2>& fun , 
+    const LoKi::Functor<TYPE,bool>&  cut )
   {
     // empty sequence 
     if ( first == last ) { return last ; }
-    
-    typedef std::less<double>        LESS ;
-    typedef LoKi::Compare<TYPE,LESS> CMP  ;
-    const CMP cmp = CMP ( fun , fun , LESS() )  ;
-    
+    //
+    typedef typename LoKi::Functor<TYPE,TYPE2>::result_type results ;
+    typedef std::less<results>             LESS ;
+    typedef LoKi::Compare<TYPE,LESS,TYPE2> CMP  ;
+    const CMP cmp = LoKi::compare ( fun , fun , LESS() )  ;
+    //
     IT result = last ;
     for (  ; first != last ; ++first ) 
     {
@@ -540,9 +593,9 @@ namespace LoKi
       if ( last == result           ) { result = first ; continue ; }
       if ( cmp ( *first , *result ) ) { result = first ;            }  
     }
-    
+    //
     return result ;
-  };
+  }
   // ==========================================================================
   /** select element form the sequence with maximal value of 
    *  given function 
@@ -575,20 +628,21 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2005-03-09
    */      
-  template<class IT,class TYPE>
+  template<class IT,class TYPE, class TYPE2>
   inline IT select_max
-  ( IT first                         , 
-    IT last                          , 
-    const LoKi::Function<TYPE>&  fun , 
-    const LoKi::Predicate<TYPE>& cut )
+  ( IT first                             , 
+    IT last                              , 
+    const LoKi::Functor<TYPE,TYPE2>& fun , 
+    const LoKi::Functor<TYPE,bool>&  cut )
   {
     // empty sequence 
     if ( first == last ) { return last ; }
     
-    typedef std::less<double>        LESS ;
+    typedef typename LoKi::Functor<TYPE,TYPE2>::result_type results ;
+    typedef std::less<results>        LESS ;
     typedef LoKi::Compare<TYPE,LESS> CMP  ;
-    const CMP cmp = CMP ( fun , fun , LESS() )  ;
-    
+    const CMP cmp = LoKi::compare ( fun , fun , LESS() )  ;
+    //
     IT result = last ;
     for (  ; first != last ; ++first ) 
     {
@@ -597,7 +651,7 @@ namespace LoKi
       if ( cmp ( *result , *first ) ) { result = first ;            }  
     } 
     return result ;
-  };
+  }
   // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================

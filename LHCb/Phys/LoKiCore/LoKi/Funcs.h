@@ -1,5 +1,5 @@
 
-// $Id: Funcs.h,v 1.4 2007-08-27 12:27:52 ibelyaev Exp $
+// $Id: Funcs.h,v 1.5 2007-11-28 13:56:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCS_H 
 #define LOKI_FUNCS_H 1
@@ -11,6 +11,7 @@
 #include "LoKi/Functions.h"
 #include "LoKi/Operators.h"
 #include "LoKi/FuncCast.h"
+#include "LoKi/BasicFunctors.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -32,15 +33,16 @@ namespace LoKi
     struct Funcs
     {
       //
-      LoKi::Constant<TYPE>               m_101  ;
-      LoKi::BooleanConstant<TYPE>        m_102  ;
-      LoKi::PredicateFromPredicate<TYPE> m_103  ;
-      LoKi::FunctionFromFunction<TYPE>   m_104  ;
-      //
+      typename LoKi::BasicFunctors<TYPE>::Constant               m_101 ;
+      typename LoKi::BasicFunctors<TYPE>::BooleanConstant        m_102 ;
+      typename LoKi::BasicFunctors<TYPE>::PredicateFromPredicate m_103 ;
+      typename LoKi::BasicFunctors<TYPE>::FunctionFromFunction   m_104 ;
+      
       LoKi::Valid<TYPE>                  m_201  ;
+      LoKi::TheSame<TYPE>                m_204  ;
+
       // LoKi::SimpleSwitch<TYPE>           m_202  ;
       // LoKi::Switch<TYPE>                 m_203  ;
-      LoKi::TheSame<TYPE>                m_204  ;
       // LoKi::EqualToValue<TYPE>           m_205  ;
       // LoKi::Min<TYPE>                    m_301 ;
       // LoKi::Max<TYPE>                    m_302 ;

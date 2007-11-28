@@ -1,18 +1,13 @@
-// $Id: Functions.h,v 1.21 2007-11-28 13:56:32 ibelyaev Exp $
+// $Id: BasicFunctors.h,v 1.1 2007-11-28 13:56:32 ibelyaev Exp $
 // ============================================================================
-#ifndef LOKI_FUNCTIONS_H 
-#define LOKI_FUNCTIONS_H 1
+#ifndef LOKI_BASICFUNCTORS_H 
+#define LOKI_BASICFUNCTORS_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-// GaudiKernel
-// ============================================================================
-#include "GaudiKernel/StatusCode.h"
 // ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Functor.h"
-#include "LoKi/BasicFunctors.h"
 // ============================================================================
 /** @file
  *
@@ -25,14 +20,40 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2001-01-23 
+ *  @date 2007-10-31 
  */
 // ============================================================================
-namespace LoKi 
+namespace LoKi
 {
-} // end of namespace LoKi
+  // ==========================================================================
+  /** @struct BasicFunctors 
+   *
+   *  The helper structure to propagate the actual types for the basic functors 
+   *
+   *  The idea comes from Gerhard "The Great" Raven
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2007-10-31   
+   */
+  template <class TYPE>
+  struct BasicFunctors 
+  {
+  public:
+    //
+    typedef LoKi::Functor<TYPE,double>             Function               ;
+    typedef LoKi::Functor<TYPE,bool>               Predicate              ;
+    //
+    typedef LoKi::FunctorFromFunctor<TYPE,double>  FunctionFromFunction   ;
+    typedef LoKi::FunctorFromFunctor<TYPE,bool>    PredicateFromPredicate ;
+    //
+    typedef LoKi::Constant<TYPE,double>            Constant               ;
+    typedef LoKi::Constant<TYPE,bool>              BooleanConstant        ;
+    //
+  } ;
+  // ==========================================================================
+} // end of namespace LoKi 
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // LOKI_FUNCTIONS_H
+#endif // LOKI_BASICFUNCTORS_H
 // ============================================================================

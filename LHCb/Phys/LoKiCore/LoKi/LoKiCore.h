@@ -1,4 +1,4 @@
-// $Id: LoKiCore.h,v 1.20 2007-08-18 14:10:56 ibelyaev Exp $
+// $Id: LoKiCore.h,v 1.21 2007-11-28 13:56:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -49,6 +49,10 @@
 #include "LoKi/Info.h"
 #include "LoKi/ExtraInfo.h"
 #include "LoKi/StdMath.h"
+#include "LoKi/Filters.h"
+#include "LoKi/Sources.h"
+#include "LoKi/HistoBook.h"
+#include "LoKi/apply.h"
 // ============================================================================
 /** @file
  *

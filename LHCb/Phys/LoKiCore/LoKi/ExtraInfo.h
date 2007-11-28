@@ -1,4 +1,4 @@
-// $Id: ExtraInfo.h,v 1.4 2007-08-14 20:50:39 ibelyaev Exp $
+// $Id: ExtraInfo.h,v 1.5 2007-11-28 13:56:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTRAINFO_H 
 #define LOKI_EXTRAINFO_H 1
@@ -34,31 +34,32 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.sye.edu
      *  @date 2007-06-14
      */
-    template <class TYPE>
-    class GetInfo : public LoKi::Function<TYPE>
+    template <class TYPE, class TYPE2=double>
+    class GetInfo : public LoKi::Functor<TYPE,TYPE2>
     {
     public:
+      typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
+    public:
       /// constructor from the index and the default value 
-      GetInfo ( const int    index                , 
-                const double value = defaultValue ) 
-        : LoKi::Function<TYPE>() 
+      GetInfo ( const int index , T2 value = defaultValue ) 
+        : LoKi::Functor<TYPE,TYPE2>() 
         , m_index   ( index )  
         , m_default ( value ) 
-      {} ;
+      {} 
       /// copy constructor 
       GetInfo ( const GetInfo& right ) 
-        : LoKi::AuxFunBase     ( right           )  
-        , LoKi::Function<TYPE> ( right           ) 
+        : LoKi::AuxFunBase          ( right )  
+        , LoKi::Functor<TYPE,TYPE2> ( right ) 
         , m_index              ( right.m_index   )  
         , m_default            ( right.m_default ) 
-      {} ;
+      {} 
       /// MANDATORY: virtual destructor 
       virtual ~GetInfo() {}
       /// MANDATORY: clone method ("virtual constructor")
       virtual  GetInfo* clone() const { return new GetInfo(*this); }
       /// MANDATORY: the only one essential method
-      virtual typename LoKi::Function<TYPE>::result_type operator() 
-      ( typename LoKi::Function<TYPE>::argument a )  const
+      virtual typename LoKi::Functor<TYPE,TYPE2>::result_type operator() 
+        ( typename LoKi::Functor<TYPE,TYPE2>::argument a )  const
       { return LoKi::ExtraInfo::info ( a , m_index , m_default ) ; }
       /** OPTIONAL: the nice printout 
        *  @attention: it is worth to redefine it for each type
@@ -76,7 +77,7 @@ namespace LoKi
       // index to be searched 
       int    m_index   ; ///< index to be searched 
       // default value for non-existing index 
-      double m_default ; ///< default value for non-existing index 
+      TYPE2  m_default ; ///< default value for non-existing index 
     };
     // ==========================================================================
     /** @class CheckInfo
@@ -86,27 +87,27 @@ namespace LoKi
      *  @date 2007-06-14
      */
     template <class TYPE>
-    class CheckInfo : public LoKi::Predicate<TYPE>
+    class CheckInfo : public LoKi::Functor<TYPE,bool>
     {
     public:
       /// constructor fomr the index and default value 
       CheckInfo ( const int    index ) 
-        : LoKi::Predicate<TYPE>() 
+        : LoKi::Functor<TYPE,bool>() 
         , m_index   ( index )  
-      {} ;
+      {} 
       /// copy constructor 
       CheckInfo ( const CheckInfo& right ) 
-        : LoKi::AuxFunBase      ( right         )  
-        , LoKi::Predicate<TYPE> ( right         ) 
-        , m_index               ( right.m_index )  
-      {} ;
+        : LoKi::AuxFunBase         ( right         )  
+        , LoKi::Functor<TYPE,bool> ( right         ) 
+        , m_index                  ( right.m_index )  
+      {} 
       /// MANDATORY: virtual destructor 
       virtual ~CheckInfo () {} ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  CheckInfo* clone() const { return new CheckInfo (*this); }
       /// MANDATORY: the only one essential method
-      virtual typename LoKi::Predicate<TYPE>::result_type operator() 
-      ( typename LoKi::Predicate<TYPE>::argument a )  const
+      virtual typename LoKi::Functor<TYPE,bool>::result_type operator() 
+        ( typename LoKi::Functor<TYPE,bool>::argument a )  const
       { return LoKi::ExtraInfo::hasInfo ( a , m_index ) ; }
       /** OPTIONAL: the nice printout 
        *  @attention: it is worth to redefine for each type
@@ -135,41 +136,41 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-14
      */
-    template <class TYPE>
-    class GetSmartInfo : public LoKi::Function<TYPE>
+    template <class TYPE, class TYPE2=double>
+    class GetSmartInfo : public LoKi::Functor<TYPE,TYPE2>
     {
     public:
       /// contructor from ID, function and the flag 
       GetSmartInfo 
-      ( const int                   index          ,
-        const LoKi::Function<TYPE>& fun            , 
+      ( const int                        index ,
+        const LoKi::Functor<TYPE,TYPE2>& fun   , 
         const bool                  update = false ) 
-        : LoKi::Function<TYPE> () 
+        : LoKi::Functor<TYPE,TYPE2> () 
         , m_fun    ( fun    ) 
         , m_index  ( index  )
         , m_update ( update ) 
-      {} ;
+      {} 
       /// copy constructor 
       GetSmartInfo ( const GetSmartInfo& right ) 
-        : LoKi::AuxFunBase     ( right ) 
-        , LoKi::Function<TYPE> ( right ) 
+        : LoKi::AuxFunBase          ( right ) 
+        , LoKi::Functor<TYPE,TYPE2> ( right ) 
         , m_fun    ( right.m_fun    ) 
         , m_index  ( right.m_index  )
         , m_update ( right.m_update ) 
-      {} ;
+      {} 
       /// MANDATORY: virtual destructor
       virtual ~GetSmartInfo() {}
       /// MANDATORY: clone method ("virtual constructor")
       virtual  GetSmartInfo* clone() const { return new GetSmartInfo (*this); }
       /// MANDATORY: the only one essential method
-      virtual typename LoKi::Function<TYPE>::result_type operator() 
-      ( typename LoKi::Function<TYPE>::argument a )  const
+      virtual typename LoKi::Functor<TYPE,TYPE2>::result_type operator() 
+      ( typename LoKi::Functor<TYPE,TYPE2>::argument a )  const
       {
         // check extra info:
         if ( LoKi::ExtraInfo::hasInfo ( a , m_index ) ) 
         { return LoKi::ExtraInfo::info ( a , m_index , defaultValue  ) ; }   // RETURN 
         // evaluate the function 
-        const double  result = m_fun ( a ) ;
+        const double result = m_fun.fun ( a ) ;
         // update info (if needed) 
         if ( m_update ) { LoKi::ExtraInfo::addInfo( a , m_index , result ) ; }
         //
@@ -193,7 +194,7 @@ namespace LoKi
       /// get the index 
       int                         index  () const { return m_index  ; }
       /// get the function 
-      const LoKi::Function<TYPE>& fun    () const { return m_fun    ; }
+      const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
       /// get the flag 
       bool                        update () const { return m_update ; }
     private:
@@ -201,10 +202,10 @@ namespace LoKi
       GetSmartInfo() ; ///< no default constructor 
     private:
       // the function to be evaluated (if needed) 
-      LoKi::FunctionFromFunction<TYPE> m_fun ; ///< the function to be evaluated (if needed) 
+      LoKi::FunctorFromFunctor<TYPE,TYPE2> m_fun ; ///< the function to be evaluated (if needed) 
       // the index ("ID") in "extraInfo" table 
       int   m_index; ///< the index in "extraInfo" table
-      // "update" -flag (indicate the insertion of "extraInfo" for missing data
+      // "update"-flag (indicate the insertion of "extraInfo" for missing data
       bool  m_update ; ///< "update flag"
     } ;  
   } // end of namespace LoKi::ExtraInfo

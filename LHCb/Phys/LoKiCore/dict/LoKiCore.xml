@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: LoKiCore.xml,v 1.4 2007-08-15 13:44:02 ibelyaev Exp $ 
+     * $Id: LoKiCore.xml,v 1.5 2007-11-28 13:56:34 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiCore package
@@ -25,7 +25,6 @@
 
   <class name      = "LoKi::Services"        />
   
-
   <class pattern   = "LoKi::Interface<*>"    />
   
   <class pattern   = "std::unary_function<*,double>"  />
@@ -41,6 +40,8 @@
   <function name = "LoKi::Assert"         />
 
   <class name    = "Bender::Welcome"      />
+
+  <class name      = "LHCb::ParticleID"   />
   
   <exclusion>
     <class    name    = "std::unary_function<char,bool>"        />

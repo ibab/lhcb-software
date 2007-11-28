@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.5 2007-08-12 18:53:35 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.6 2007-11-28 13:56:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -12,6 +12,7 @@
 #include  "LoKi/Funcs.h"
 #include  "LoKi/Monitoring.h"
 #include  "LoKi/MoreFunctions.h"
+#include  "LoKi/BasicFunctors.h"
 // ============================================================================
 namespace LoKi
 {
@@ -27,10 +28,10 @@ namespace LoKi
     class FuncOps 
     {
     public:
-      typedef LoKi::Function<TYPE>               Func ;
-      typedef LoKi::Predicate<TYPE>              Cuts ;
-      typedef LoKi::FunctionFromFunction<TYPE>   Fun  ;
-      typedef LoKi::PredicateFromPredicate<TYPE> Cut  ;
+      typedef typename LoKi::BasicFunctors<TYPE>::Function               Func ;
+      typedef typename LoKi::BasicFunctors<TYPE>::Predicate              Cuts ;
+      typedef typename LoKi::BasicFunctors<TYPE>::FunctionFromFunction   Fun  ;
+      typedef typename LoKi::BasicFunctors<TYPE>::PredicateFromPredicate Cut  ;
     public:   
       static Cut __lt__     ( const Func&  fun1 , 
                               const Func&  fun2 ) { return fun1 <  fun2 ; }
@@ -84,16 +85,8 @@ namespace LoKi
                               const double fun2 ) { return fun2 / fun1  ; }
       static Cut __or__     ( const Cuts&  cut1 , 
                               const Cuts&  cut2 ) { return cut1 || cut2 ; }
-      static Cut __or__     ( const Cuts&  cut1 , 
-                              const bool   cut2 ) { return cut1 || cut2 ; }
       static Cut __and__    ( const Cuts&  cut1 , 
                               const Cuts&  cut2 ) { return cut1 && cut2 ; }
-      static Cut __and__    ( const Cuts&  cut1 , 
-                              const bool   cut2 ) { return cut1 && cut2 ; }
-      static Cut __ror__    ( const Cuts&  cut1 , 
-                              const bool   cut2 ) { return cut2 || cut1 ; }
-      static Cut __rand__   ( const Cuts&  cut1 , 
-                              const bool   cut2 ) { return cut2 && cut1 ; }
       static Fun __neg__    ( const Func&  fun  ) { return -1 * fun         ; }
       static Fun __abs__    ( const Func&  fun  ) { return LoKi::abs( fun ) ; }
       static Fun __pow__    ( const Func&  fun1 , 
@@ -187,6 +180,23 @@ namespace LoKi
       static Fun __monitor__ ( const Func&         c , 
                                AIDA::IHistogram1D* h )
       { return LoKi::monitor ( c , h ) ; }
+      // ======================================================================
+      static Fun __monitor__ ( const Func&              c , 
+                               const std::string&       p , 
+                               const Gaudi::Histo1DDef& h )
+      { return LoKi::plot    ( c , p , h ) ; }
+      // ======================================================================
+      static Fun __monitor__ ( const Func&              c , 
+                               const std::string&       d , 
+                               const std::string&       i , 
+                               const Gaudi::Histo1DDef& h )
+      { return LoKi::plot    ( c , d , i , h ) ; }
+      // ======================================================================
+      static Fun __monitor__ ( const Func&              c , 
+                               const std::string&       d , 
+                               const int                i , 
+                               const Gaudi::Histo1DDef& h )
+      { return LoKi::plot    ( c , d , i , h ) ; }
       // ======================================================================
       // Switch
       // ======================================================================

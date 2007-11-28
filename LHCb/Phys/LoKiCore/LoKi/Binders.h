@@ -1,4 +1,4 @@
-// $Id: Binders.h,v 1.1 2007-08-18 14:10:56 ibelyaev Exp $
+// $Id: Binders.h,v 1.2 2007-11-28 13:56:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_BINDERS_H 
 #define LOKI_BINDERS_H 1
@@ -38,20 +38,20 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */
-    template <class TYPE1,class TYPE2> 
-    class Binder1st: public LoKi::Function<TYPE2>
+    template <class TYPE1,class TYPE2, class TYPE3=double> 
+    class Binder1st: public LoKi::Functor<TYPE2,TYPE3>
     {
     private:
       /// the actual type for data-holder 
       typedef typename LoKi::Holder<TYPE1,TYPE2>   Holder_ ;
       /// the actual type of
-      typedef typename LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >  Fun_ ;
+      typedef typename LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>  Fun_ ;
     public:
       /// contructor from the function and argument
       Binder1st 
       ( typename Fun_::first_argument_type value , 
         const    Fun_&                     fun   ) 
-        : LoKi::Function<TYPE2> () 
+        : LoKi::Functor<TYPE2,TYPE3> () 
         , m_first ( value ) 
         , m_fun   ( fun   ) 
       {}
@@ -59,14 +59,14 @@ namespace LoKi
       Binder1st 
       ( const    Fun_&                     fun   ,
         typename Fun_::first_argument_type value )
-        : LoKi::Function<TYPE2> () 
+        : LoKi::Functor<TYPE2,TYPE3> () 
         , m_first ( value ) 
         , m_fun   ( fun   )  
       {}
       /// copy constructor 
       Binder1st ( const Binder1st& right ) 
         : LoKi::AuxFunBase      ( right ) 
-        , LoKi::Function<TYPE2> ( right ) 
+        , LoKi::Functor<TYPE2,TYPE3> ( right ) 
         , m_first ( right.m_first ) 
         , m_fun   ( right.m_fun   )  
       {}
@@ -75,9 +75,9 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Binder1st* clone() const { return new Binder1st(*this) ; }
       /// MANDATORY: the only one essential method 
-      virtual typename LoKi::Function<TYPE2>::result_type 
-      operator() ( typename LoKi::Function<TYPE2>::argument a ) const 
-      { return m_fun ( Holder_( m_first , a ) ) ; }
+      virtual typename LoKi::Functor<TYPE2,TYPE3>::result_type 
+      operator() ( typename LoKi::Functor<TYPE2,TYPE3>::argument a ) const 
+      { return m_fun.fun ( Holder_ ( m_first , a ) ) ; }
       /// OPTIONAL :: nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s << "Bind1st(" << m_fun << ")" ; }
@@ -88,7 +88,7 @@ namespace LoKi
       // the fixed argument 
       typename Holder_::First m_first ;  ///< the fixed argument 
       /// the actual function 
-      LoKi::FunctionFromFunction<LoKi::Holder<TYPE1,TYPE2> > m_fun ; ///< function 
+      LoKi::FunctorFromFunctor<LoKi::Holder<TYPE1,TYPE2>,TYPE3> m_fun ; ///< function 
     } ;
     // ========================================================================
     /** @class Binder2nd
@@ -100,20 +100,20 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-17
      */
-    template <class TYPE1,class TYPE2> 
-    class Binder2nd: public LoKi::Function<TYPE1>
+    template <class TYPE1,class TYPE2,class TYPE3=double> 
+    class Binder2nd: public LoKi::Functor<TYPE1,TYPE3>
     {
     private:
       /// the actual type for data-holder 
       typedef typename LoKi::Holder<TYPE1,TYPE2>   Holder_ ;
       /// the actual type of
-      typedef typename LoKi::Function<LoKi::Holder<TYPE1,TYPE2> >  Fun_ ;
+      typedef typename LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>  Fun_ ;
     public:
       /// contructor from the function and argument
       Binder2nd 
       ( typename Fun_::second_argument_type value , 
         const    Fun_&                      fun   ) 
-        : LoKi::Function<TYPE1> () 
+        : LoKi::Functor<TYPE1,TYPE3> () 
         , m_second ( value ) 
         , m_fun    ( fun   ) 
       {}
@@ -121,14 +121,14 @@ namespace LoKi
       Binder2nd 
       ( const    Fun_&                      fun   ,
         typename Fun_::second_argument_type value )
-        : LoKi::Function<TYPE1> () 
+        : LoKi::Functor<TYPE1,TYPE3> () 
         , m_second ( value ) 
         , m_fun    ( fun   )  
       {}
       /// copy constructor 
       Binder2nd ( const Binder2nd& right ) 
         : LoKi::AuxFunBase      ( right ) 
-        , LoKi::Function<TYPE1> ( right ) 
+        , LoKi::Functor<TYPE1,TYPE3> ( right ) 
         , m_second ( right.m_second ) 
         , m_fun    ( right.m_fun    )  
       {}
@@ -137,9 +137,9 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Binder2nd* clone() const { return new Binder2nd(*this) ; }
       /// MANDATORY: the only one essential method 
-      virtual typename LoKi::Function<TYPE1>::result_type 
-      operator() ( typename LoKi::Function<TYPE1>::argument a ) const 
-      { return m_fun ( Holder_( a , m_second ) ) ; }
+      virtual typename LoKi::Functor<TYPE1,TYPE3>::result_type 
+      operator() ( typename LoKi::Functor<TYPE1,TYPE3>::argument a ) const 
+      { return m_fun.fun ( Holder_ ( a , m_second ) ) ; }
       /// OPTIONAL :: nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s << "Bind2nd(" << m_fun << ")" ; }
@@ -150,7 +150,7 @@ namespace LoKi
       // the fixed argument 
       typename Holder_::Second m_second ;  ///< the fixed argument 
       /// the actual function 
-      LoKi::FunctionFromFunction<LoKi::Holder<TYPE1,TYPE2> > m_fun ; ///< function 
+      LoKi::FunctorFromFunctor<LoKi::Holder<TYPE1,TYPE2>,TYPE3> m_fun ; ///< function 
     } ;
     // ========================================================================
   } // end of namespace LoKi::Binders 

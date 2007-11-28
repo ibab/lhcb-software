@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.30 2007-10-19 13:41:54 cattanem Exp $ 
+# $Id: requirements,v 1.31 2007-11-28 13:56:34 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiCore
-version            v6r1p1
+version            v7r0
 
 # ================ structure ==================================================
 branches           cmt doc src dict python LoKi 
@@ -17,6 +17,7 @@ use                Boost            v* LCG_Interfaces
 use                ROOT             v* LCG_Interfaces 
 use                AIDA             v* LCG_Interfaces 
 use                RELAX            v* LCG_Interfaces 
+use                GSL              v* LCG_Interfaces -no_auto_imports
 use                Reflex           v* LCG_Interfaces -no_auto_imports
 use                Python           v* LCG_Interfaces 
 

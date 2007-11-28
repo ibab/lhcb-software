@@ -1,4 +1,4 @@
-// $Id: Algs.h,v 1.10 2007-08-18 14:10:56 ibelyaev Exp $
+// $Id: Algs.h,v 1.11 2007-11-28 13:56:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGS_H 
 #define LOKI_ALGS_H 1
@@ -157,18 +157,19 @@ namespace LoKi
      *  @date 2007-08-17
      */
     template<class OBJECT,class FUNCTION,class BINOP>
-    inline std::pair<OBJECT,double> 
+    inline std::pair<OBJECT,typename FUNCTION::result_type> 
     extremum
     ( OBJECT           first , 
       OBJECT           last  , 
       const FUNCTION&  fun   , 
       BINOP            binop )
     {
+      typedef std::pair<OBJECT,typename FUNCTION::result_type> PAIR ;
       // empty sequence?
-      if ( first == last ) { return std::pair<OBJECT,double> ( last , 0 ) ; }
+      if ( first == last ) { return PAIR ( last , 0 ) ; }
       // store the first result: 
       OBJECT result = first        ;
-      double value  = fun(*result) ;
+      typename FUNCTION::result_type value  = fun(*result) ;
       for ( ; first != last ; ++first ) 
       {
         const double tmp =  fun(*first) ;
@@ -178,7 +179,7 @@ namespace LoKi
           value  = tmp   ;
         } 
       }
-      return std::pair<OBJECT,double> ( result , value ) ;     // RETURN 
+      return PAIR ( result , value ) ;     // RETURN 
     }
     // ========================================================================
     /** helper function to find "extremum" (minimum or maximum)
@@ -189,7 +190,7 @@ namespace LoKi
      *  @date 2007-08-17
      */    
     template<class OBJECT,class FUNCTION,class PREDICATE,class BINOP>
-    inline std::pair<OBJECT,double> 
+    inline std::pair<OBJECT,typename FUNCTION::result_type> 
     extremum
     ( OBJECT           first , 
       OBJECT           last  , 
@@ -197,11 +198,12 @@ namespace LoKi
       const PREDICATE& cut   ,
       BINOP            binop )
     {
+      typedef std::pair<OBJECT,typename FUNCTION::result_type> PAIR ;
       // empty sequence?
-      if ( first == last ) { return std::pair<OBJECT,double>( last , 0 )  ; }
+      if ( first == last ) { return PAIR ( last , 0 )  ; }
       // store 
       OBJECT result = last ;
-      double value  = 0    ;
+      typename FUNCTION::result_type value  = 0    ;
       for ( ; first != last ; ++first ) 
       {
         // good value?
@@ -214,7 +216,7 @@ namespace LoKi
           continue ;                                          // CONTINUE 
         }
         // evaluate the  function  
-        const double tmp = fun ( *first ) ;
+        typename FUNCTION::result_type tmp = fun ( *first ) ;
         // compare it!
         if ( binop ( tmp , value ) ) 
         {
@@ -224,7 +226,7 @@ namespace LoKi
         }
       }
       // return the pair of result and  value 
-      return std::pair<OBJECT,double> ( result , value ) ;    // RETURN 
+      return PAIR ( result , value ) ;    // RETURN 
     }
     // ========================================================================
     /** select element from the sequence with maximal value of 

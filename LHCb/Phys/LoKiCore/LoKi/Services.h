@@ -1,4 +1,4 @@
-// $Id: Services.h,v 1.5 2007-07-23 17:07:40 ibelyaev Exp $
+// $Id: Services.h,v 1.6 2007-11-28 13:56:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SERVICES_H 
 #define LOKI_SERVICES_H 1
@@ -13,6 +13,8 @@
 // ============================================================================
 class IParticlePropertySvc ;
 class IAlgContextSvc       ;
+class IHistogramSvc        ;
+class IDataProviderSvc     ;
 // ============================================================================
 /** @file
  *
@@ -52,8 +54,12 @@ namespace LoKi
     LoKi::ILoKiSvc*       lokiSvc    () const ;
     /// accessor to particle properties service
     IParticlePropertySvc* ppSvc      () const ;
-    /// accessor to particle properties service
+    /// accessor to algorithm context service
     IAlgContextSvc*       contextSvc () const ;
+    /// accessor to histogram service
+    IHistogramSvc*        histoSvc   () const ;
+    /// accessor to Event Data Service 
+    IDataProviderSvc*     evtSvc     () const ;
     /// destructor (virtual) 
     virtual ~Services() ;
   protected:
@@ -87,6 +93,7 @@ namespace LoKi
     LoKi::ILoKiSvc*        m_lokiSvc    ;
     IParticlePropertySvc*  m_ppSvc      ;
     IAlgContextSvc*        m_contextSvc ;
+    mutable IHistogramSvc* m_histoSvc   ;
   };
   // ==========================================================================
 } // end of namespace LoKi

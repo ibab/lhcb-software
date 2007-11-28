@@ -1,4 +1,4 @@
-// $Id: PIDOps.h,v 1.2 2007-07-23 17:07:39 ibelyaev Exp $
+// $Id: PIDOps.h,v 1.3 2007-11-28 13:56:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PIDOPS_H 
 #define LOKI_PIDOPS_H 1
@@ -13,6 +13,7 @@
 // ============================================================================
 #include "LoKi/Functions.h"
 #include "LoKi/Operators.h"
+#include "LoKi/BasicFunctors.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -26,10 +27,10 @@ namespace LoKi
     class PIDOps 
     {
     private:
-      typedef FUNCTION                               Function ;
-      typedef typename FUNCTION::Type                Argument ;
-      typedef LoKi::PredicateFromPredicate<Argument> Result   ;
-      typedef LoKi::Function<Argument>               Other    ;
+      typedef FUNCTION                                Function ;
+      typedef typename FUNCTION::Type                 Argument ;
+      typedef typename LoKi::BasicFunctors<Argument>::PredicateFromPredicate Result ;
+      typedef typename LoKi::BasicFunctors<Argument>::Function Other    ;
     public: 
       // ======================================================================
       static Result

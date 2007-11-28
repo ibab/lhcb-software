@@ -1,4 +1,4 @@
-// $Id: valid.h,v 1.2 2007-07-23 17:07:41 ibelyaev Exp $
+// $Id: valid.h,v 1.3 2007-11-28 13:56:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VALID_H 
 #define LOKI_VALID_H 1
@@ -21,10 +21,13 @@ namespace LoKi
 {
   // ==========================================================================
   template <class TYPE1,class TYPE2>
-  bool valid ( const std::pair<TYPE1,TYPE2>& p ) ;
+  bool valid ( const std::pair<TYPE1,TYPE2>&             p ) ;
   // ========================================================================== 
   template <class TYPE1,class TYPE2>
-  bool valid ( const LoKi::Holder<TYPE1,TYPE2>& p ) ;
+  bool valid ( const LoKi::Holder<TYPE1,TYPE2>&          p ) ;
+  // ========================================================================== 
+  template <class TYPE,class ALLOCATOR>
+  inline bool valid ( const std::vector<TYPE,ALLOCATOR>& p ) ;
   // ==========================================================================
   template <class TYPE>
   inline bool valid ( const TYPE*                  ptr ) { return 0 != ptr ; }

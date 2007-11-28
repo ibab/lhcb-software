@@ -1,4 +1,4 @@
-// $Id: StdMath.h,v 1.1 2007-08-18 14:10:56 ibelyaev Exp $
+// $Id: StdMath.h,v 1.2 2007-11-28 13:56:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_STDMATH_H 
 #define LOKI_STDMATH_H 1
@@ -18,6 +18,15 @@ namespace LoKi
 {
   /** @namespace LoKi::StdMath
    *  collection of primitive math-classes and functions, missing in STD/STL
+   *
+   *  This file is a part of LoKi project - 
+   *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+   *
+   *  The package has been designed with the kind help from
+   *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+   *  contributions and advices from G.Raven, J.van Tilburg, 
+   *  A.Golutvin, P.Koppenburg have been used in the design.
+   *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-08-17
    */

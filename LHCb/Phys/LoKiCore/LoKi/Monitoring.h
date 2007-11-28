@@ -1,4 +1,4 @@
-// $Id: Monitoring.h,v 1.2 2007-07-25 15:14:13 ibelyaev Exp $
+// $Id: Monitoring.h,v 1.3 2007-11-28 13:56:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MONITORING_H 
 #define LOKI_MONITORING_H 1
@@ -12,10 +12,12 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/StatEntity.h"
+#include "GaudiKernel/HistoDef.h"
 // ============================================================================
 // Local
 // ============================================================================
 #include "LoKi/Functions.h"
+#include "LoKi/HistoBook.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -44,7 +46,7 @@ namespace LoKi
      *  // in the monitoring context, substitute it the monitored predicate:
      *  if ( monitoring )
      *   {
-     *     cut = Counter<const LHCb::Particle> ( cut , &counter("efficiency") ) ;
+     *     cut = Counter<const LHCb::Particle*,bool> ( cut , &counter("efficiency") ) ;
      *   }
      *  
      *  // and use it as a regular predicate
@@ -54,33 +56,34 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-14
      */
-    template <class TYPE> 
-    class Counter : public LoKi::Predicate<TYPE>
+    template <class TYPE, class TYPE2> 
+    class Counter : public LoKi::Functor<TYPE,TYPE2>
     {
     public:
       /// constructor from the predicate and the generic counter 
-      Counter ( const LoKi::Predicate<TYPE>& cut  , 
-                StatEntity*                  stat )
-        : LoKi::Predicate<TYPE>() 
+      Counter ( const LoKi::Functor<TYPE,TYPE2>& cut  , 
+                StatEntity*                      stat )
+        : LoKi::Functor<TYPE,TYPE2>() 
         , m_cut  ( cut  ) 
         , m_stat ( stat ) 
-      {} ;
+      {} 
       /// copy constructor 
       Counter ( const Counter& right )
-        : LoKi::AuxFunBase      ( right        ) 
-        , LoKi::Predicate<TYPE> ( right        ) 
-        , m_cut                 ( right.m_cut  ) 
-        , m_stat                ( right.m_stat ) 
-      {} ;
+        : LoKi::AuxFunBase          ( right        ) 
+        , LoKi::Functor<TYPE,TYPE2> ( right        ) 
+        , m_cut                     ( right.m_cut  ) 
+        , m_stat                    ( right.m_stat ) 
+      {} 
       /// MANDATORY: virtual constructor
       virtual ~Counter() { m_stat = 0 ; }
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Counter* clone() const { return new Counter(*this); }
       /// MANDATORY: the only one essential method:
-      virtual typename LoKi::Predicate<TYPE>::result_type operator() 
-      ( typename LoKi::Predicate<TYPE>::argument a ) const 
+      virtual typename LoKi::Functor<TYPE,TYPE2>::result_type operator() 
+        ( typename LoKi::Functor<TYPE,TYPE2>::argument a ) const 
       {
-        const typename LoKi::Predicate<TYPE>::result_type result = m_cut ( a ) ;
+        const typename LoKi::Functor<TYPE,TYPE2>::result_type result = 
+          m_cut.fun ( a ) ;
         // perform monitoring
         if ( 0 != m_stat ){ (*m_stat) += result ; } ///< perform monitoring
         return result ;                                           // RETURN 
@@ -95,75 +98,7 @@ namespace LoKi
       Counter () ; ///<  no default constructor
     private:
       // the "main" predicate:
-      LoKi::PredicateFromPredicate<TYPE> m_cut ; ///< the "main" predicate:
-      // generic counter used for monitoring:
-      StatEntity* m_stat ;///< generic counter used for monitoring
-    };
-    // ========================================================================
-    /** @class Stat
-     *  Simple function which decorates another function 
-     *  with some "monitoring" features : it uses the generic 
-     *  counter to monitor the performace.
-     *
-     *  @code
-     * 
-     *  // some function
-     *  Fun fun = PT ;
-     * 
-     *  // in the monitoring context, substitute it with the monitored predicate:
-     *  if ( monitoring )
-     *   {
-     *     fun = Stat<const LHCb::Particle> ( fun , &counter("PT") ) ;
-     *   }
-     *  
-     *  // and use it as a regular function:
-     *  
-     *  @endcode 
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2007-06-14
-     */
-    template <class TYPE> 
-    class Stat : public LoKi::Function<TYPE>
-    {
-    public:
-      /// constructor from the function and the generic counter 
-      Stat ( const LoKi::Function<TYPE>&  fun  , 
-             StatEntity*                  stat )
-        : LoKi::Function<TYPE>() 
-        , m_fun  ( fun  ) 
-        , m_stat ( stat ) 
-      {} ;
-      /// copy constructor 
-      Stat ( const Stat& right )
-        : LoKi::AuxFunBase      ( right        ) 
-        , LoKi::Function<TYPE>  ( right        ) 
-        , m_fun                 ( right.m_fun  ) 
-      {} ;
-      /// MANDATORY: virtual constructor
-      virtual ~Stat() { m_stat = 0 ; }
-      /// MANDATORY: clone method ("virtual constructor")
-      virtual  Stat* clone() const { return new Stat(*this); }
-      /// MANDATORY: the only one essential method:
-      virtual typename LoKi::Function<TYPE>::result_type operator() 
-      ( typename LoKi::Function<TYPE>::argument a ) const 
-      {
-        const typename LoKi::Function<TYPE>::result_type result = m_fun ( a ) ;
-        // perform monitoring
-        if ( 0 != m_stat ){ (*m_stat) += result ; } ///< perform monitoring
-        return result ;
-      }
-      /// OPTIONAL: just a nice printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const 
-      { return m_fun.fillStream ( s ) ; }
-      /// delegate ID:
-      virtual std::size_t id() const { return m_fun.id() ; }
-    private: 
-      // no default constructor
-      Stat () ; ///<  no default constructor
-    private:
-      // the "main" function:
-      LoKi::FunctionFromFunction<TYPE> m_fun ; ///< the "main" function
+      LoKi::FunctorFromFunctor<TYPE,TYPE2> m_cut ; ///< the "main" predicate:
       // generic counter used for monitoring:
       StatEntity* m_stat ;///< generic counter used for monitoring
     };
@@ -191,35 +126,43 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-14
      */
-    template <class TYPE> 
-    class Plot: public LoKi::Function<TYPE>
+    template <class TYPE, class TYPE2=double> 
+    class Plot: public LoKi::Functor<TYPE,TYPE2>
     {
     public:
       /// constructor from the function and the histogram  
-      Plot ( const LoKi::Function<TYPE>&  fun   , 
-             AIDA::IHistogram1D*          histo )
-        : LoKi::Function<TYPE>() 
+      Plot ( const LoKi::Functor<TYPE,TYPE2>& fun   , 
+             AIDA::IHistogram1D*              histo )
+        : LoKi::Functor<TYPE,TYPE2>() 
         , m_fun     ( fun   ) 
         , m_histo   ( histo ) 
-      {} ;
+      {} 
+      /// constructor from the function and the histogram  
+      Plot ( AIDA::IHistogram1D*              histo ,
+             const LoKi::Functor<TYPE,TYPE2>& fun   ) 
+        : LoKi::Functor<TYPE,TYPE2>() 
+        , m_fun     ( fun   ) 
+        , m_histo   ( histo ) 
+      {} 
       /// copy constructor 
       Plot ( const Plot& right )
-        : LoKi::AuxFunBase      ( right         ) 
-        , LoKi::Function<TYPE>  ( right         ) 
+        : LoKi::AuxFunBase          ( right ) 
+        , LoKi::Functor<TYPE,TYPE2> ( right ) 
         , m_fun                 ( right.m_fun   ) 
         , m_histo               ( right.m_histo ) 
-      {} ;
+      {} 
       /// MANDATORY: virtual constructor
       virtual ~Plot () { m_histo = 0 ; }
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Plot* clone() const { return new Plot(*this); }
       /// MANDATORY: the only one essential method:
-      virtual typename LoKi::Function<TYPE>::result_type operator() 
-      ( typename LoKi::Function<TYPE>::argument a ) const 
+      virtual typename LoKi::Functor<TYPE,TYPE2>::result_type operator() 
+        ( typename LoKi::Functor<TYPE,TYPE2>::argument a ) const 
       {
-        const typename LoKi::Function<TYPE>::result_type result = m_fun ( a ) ;
+        const typename LoKi::Functor<TYPE,TYPE2>::result_type result = 
+          m_fun.fun ( a ) ;
         // perform monitoring
-        if ( 0 != m_histo ) { m_histo->fill ( result ) ;  } ///< perform monitoring
+        if ( 0 != m_histo ) { m_histo -> fill ( result ) ;  } ///< perform monitoring
         return result ;
       }
       /// OPTIONAL: just a nice printout 
@@ -232,7 +175,7 @@ namespace LoKi
       Plot() ;
     private:
       // the "main" function:
-      LoKi::FunctionFromFunction<TYPE> m_fun   ; ///< the "main" function
+      LoKi::FunctorFromFunctor<TYPE,TYPE2> m_fun ; ///< the "main" function
       // the histogram for monitoring 
       AIDA::IHistogram1D*              m_histo ; ///< the histogram for monitoring 
     };
@@ -257,11 +200,11 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-06-14
    */
-  template <class TYPE> 
+  template <class TYPE, class TYPE2> 
   inline 
-  LoKi::Monitoring::Counter<TYPE>
-  monitor ( const LoKi::Predicate<TYPE>& cut , StatEntity* entity )
-  { return LoKi::Monitoring::Counter<TYPE>( cut , entity ) ; }
+  LoKi::Monitoring::Counter<TYPE,TYPE2>
+  monitor ( const LoKi::Functor<TYPE,TYPE2>& cut , StatEntity* entity )
+  { return LoKi::Monitoring::Counter<TYPE,TYPE2>( cut , entity ) ; }
   // ==========================================================================
   /** helper function for creation of monitored predicate
    *
@@ -281,59 +224,11 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-06-14
    */
-  template <class TYPE> 
+  template <class TYPE, class TYPE2> 
   inline 
-  LoKi::Monitoring::Counter<TYPE>
-  monitor ( const LoKi::Predicate<TYPE>& cut , StatEntity& entity )
-  { return LoKi::Monitoring::Counter<TYPE>( cut , &entity ) ; }
-  // ==========================================================================
-  /** helper function for creation of monitored function  
-   *
-   *  @code 
-   * 
-   *  // some function
-   *  Fun fun = ... ;
-   * 
-   *  // for monitoring mode, decorate it with self-monitoring abilities:
-   *  if ( monitoring ) { fun = monitor ( fun , &counter("some counter") ) ; }
-   *
-   * 
-   *  @endcode 
-   * 
-   *  @see LoKi::Predicate
-   *  @see LoKi::Monitoring::Counter
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2007-06-14
-   */
-  template <class TYPE> 
-  inline 
-  LoKi::Monitoring::Stat<TYPE>
-  monitor ( const LoKi::Function<TYPE>& cut , StatEntity* entity )
-  { return LoKi::Monitoring::Stat<TYPE>( cut , entity ) ; }
-  // ==========================================================================
-  /** helper function for creation of monitored function  
-   *
-   *  @code 
-   * 
-   *  // some function
-   *  Fun fun = ... ;
-   * 
-   *  // for monitoring mode, decorate it with self-monitoring abilities:
-   *  if ( monitoring ) { fun = monitor ( fun , counter("some counter") ) ; }
-   *
-   * 
-   *  @endcode 
-   * 
-   *  @see LoKi::Predicate
-   *  @see LoKi::Monitoring::Counter
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2007-06-14
-   */
-  template <class TYPE> 
-  inline 
-  LoKi::Monitoring::Stat<TYPE>
-  monitor ( const LoKi::Function<TYPE>& cut , StatEntity& entity )
-  { return LoKi::Monitoring::Stat<TYPE>( cut , &entity ) ; }
+  LoKi::Monitoring::Counter<TYPE,TYPE2>
+  monitor ( const LoKi::Functor<TYPE,TYPE2>& cut , StatEntity& entity )
+  { return LoKi::Monitoring::Counter<TYPE,TYPE2>( cut , &entity ) ; }
   // ==========================================================================
   /** helper function for creation of monitored function  
    *
@@ -355,11 +250,150 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-06-14
    */
-  template <class TYPE> 
+  template <class TYPE, class TYPE2> 
   inline 
-  LoKi::Monitoring::Plot<TYPE>
-  monitor ( const LoKi::Function<TYPE>& cut , AIDA::IHistogram1D* histo  )
-  { return LoKi::Monitoring::Plot<TYPE>( cut , histo ) ; }
+  LoKi::Monitoring::Plot<TYPE,TYPE2>
+  monitor ( const LoKi::Functor<TYPE,TYPE2>& cut , 
+            AIDA::IHistogram1D* histo  )
+  { return LoKi::Monitoring::Plot<TYPE,TYPE2>( cut , histo ) ; }
+  // ==========================================================================
+  /** helper function for creation of monitored function  
+   *
+   *  @code 
+   * 
+   *  // some function
+   *  Fun fun = ... ;
+   * 
+   *  // for monitoring mode, decorate it with self-monitoring abilities:
+   *  if ( monitoring ) 
+   *   { 
+   *     AIDA::IHistogram1D* histo = ... ;
+   *     fun = plot ( fun , histo ) ; ;
+   *   }
+   *
+   * 
+   *  @endcode 
+   * 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-06-14
+   */
+  template <class TYPE, class TYPE2> 
+  inline 
+  LoKi::Monitoring::Plot<TYPE,TYPE2>
+  plot ( const LoKi::Functor<TYPE,TYPE2>& cut , 
+         AIDA::IHistogram1D* histo  )
+  { return LoKi::Monitoring::Plot<TYPE,TYPE2>( cut , histo ) ; }
+  // ==========================================================================
+  /** helper function for creation of monitored function  
+   *
+   *  @code 
+   * 
+   *  // some function
+   *  Fun fun = ... ;
+   * 
+   *  // for monitoring mode, decorate it with self-monitoring abilities:
+   *  if ( monitoring ) 
+   *   { 
+   *     const std::string&       path = ... ;
+   *     const Gaudi::Histo1DDef& desc = ... ;
+   *     fun = plot ( fun , path , desc ) ; ;
+   *   }
+   *
+   * 
+   *  @endcode 
+   * 
+   *  @param cut the function to be monitored 
+   *  @param path the historgam path in HDS 
+   *  @param histo the histogram desctriptor 
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-06-14
+   */
+  template <class TYPE, class TYPE2> 
+  inline 
+  LoKi::Monitoring::Plot<TYPE,TYPE2>
+  plot ( const LoKi::Functor<TYPE,TYPE2>& cut   , 
+         const std::string&               path  , 
+         const Gaudi::Histo1DDef&         histo )
+  { 
+    return plot ( cut , LoKi::HistoBook::book ( path , histo ) ) ;
+  }
+  // ==========================================================================
+  /** helper function for creation of monitored function  
+   *
+   *  @code 
+   * 
+   *  // some function
+   *  Fun fun = ... ;
+   * 
+   *  // for monitoring mode, decorate it with self-monitoring abilities:
+   *  if ( monitoring ) 
+   *   { 
+   *     const std::string&       dir = ... ;
+   *     const std::string&       id  = ... ;
+   *     const Gaudi::Histo1DDef& desc = ... ;
+   *     fun = plot ( fun , path , desc ) ; ;
+   *   }
+   *
+   * 
+   *  @endcode 
+   * 
+   *  @param cut the function to be monitored 
+   *  @param dir the historgam directory in HDS 
+   *  @param id  the histogram  ID 
+   *  @param histo the histogram descriptor 
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-06-14
+   */
+  template <class TYPE, class TYPE2> 
+  inline 
+  LoKi::Monitoring::Plot<TYPE,TYPE2>
+  plot ( const LoKi::Functor<TYPE,TYPE2>& cut   , 
+         const std::string&               dir   , 
+         const std::string&               id    , 
+         const Gaudi::Histo1DDef&         histo )
+  { 
+    return plot ( cut , LoKi::HistoBook::book ( dir, id , histo ) ) ;
+  }
+  // ==========================================================================
+  /** helper function for creation of monitored function  
+   *
+   *  @code 
+   * 
+   *  // some function
+   *  Fun fun = ... ;
+   * 
+   *  // for monitoring mode, decorate it with self-monitoring abilities:
+   *  if ( monitoring ) 
+   *   { 
+   *     const std::string&       dir = ... ;
+   *     const int                id  = ... ;
+   *     const Gaudi::Histo1DDef& desc = ... ;
+   *     fun = plot ( fun , path , desc ) ; ;
+   *   }
+   *
+   * 
+   *  @endcode 
+   * 
+   *  @param cut the function to be monitored 
+   *  @param dir the historgam directory in HDS 
+   *  @param id  the histogram  ID 
+   *  @param histo the histogram desctritor 
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-06-14
+   */
+  template <class TYPE, class TYPE2> 
+  inline 
+  LoKi::Monitoring::Plot<TYPE,TYPE2>
+  plot ( const LoKi::Functor<TYPE,TYPE2>& cut   , 
+         const std::string&               dir   , 
+         const int                        id    , 
+         const Gaudi::Histo1DDef&         histo )
+  { 
+    return plot ( cut , LoKi::HistoBook::book ( dir, id , histo ) ) ;
+  }
   // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================

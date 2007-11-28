@@ -1,18 +1,19 @@
-// $Id: Functions.h,v 1.21 2007-11-28 13:56:32 ibelyaev Exp $
+// $Id: Functors.h,v 1.1 2007-11-28 13:56:32 ibelyaev Exp $
 // ============================================================================
-#ifndef LOKI_FUNCTIONS_H 
-#define LOKI_FUNCTIONS_H 1
+#ifndef LOKI_FUNCTORS_H 
+#define LOKI_FUNCTORS_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// GaudiKernel
-// ============================================================================
-#include "GaudiKernel/StatusCode.h"
-// ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/Functor.h"
-#include "LoKi/BasicFunctors.h"
+#include "LoKi/BiFunctions.h" 
+#include "LoKi/Filters.h" 
+#include "LoKi/Primitives.h" 
+#include "LoKi/Operators.h" 
+#include "LoKi/Math.h" 
+#include "LoKi/BasicFunctors.h" 
+#include "LoKi/Sources.h" 
 // ============================================================================
 /** @file
  *
@@ -25,14 +26,13 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2001-01-23 
+ *  @date 2007-10-31 
  */
 // ============================================================================
-namespace LoKi 
-{
-} // end of namespace LoKi
+
+
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // LOKI_FUNCTIONS_H
+#endif // LOKI_FUNCTORS_H
 // ============================================================================

@@ -299,7 +299,7 @@ def printDecay ( s , *a ) :
 
 
 # =============================================================================
-## Iterator (with derefernecing) througth SmartRefVector:
+## Iterator (with dereferencing) througth SmartRefVector:
 def _iter_SRV_ ( self ) :
     """
     Iterator (with derefernecing) througth SmartRefVector:
@@ -318,7 +318,30 @@ def _iter_SRV_ ( self ) :
         yield o
         index += 1
 
-        
+# =============================================================================
+## Simple function, which prints the name of the particle
+def   pname ( p ) :
+    """
+    Simple function, which prints the name of the particle
+
+    >>> p = ...
+    >>> pname ( p ) 
+    
+    """    
+    return p.__pname__ ()
+
+# =============================================================================
+## simple function, which prints the name of the particle 
+def __pname__ ( self ) :
+    """
+    Simple function, which prints the name of the particle
+    
+    >>> p = ...
+    >>> p.name()  
+    
+    """
+    return LoKi.Particles.nameFromPID( self.particleID() ) 
+
 # =============================================================================
 # The END
 # =============================================================================

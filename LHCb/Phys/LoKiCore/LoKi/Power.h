@@ -1,4 +1,4 @@
-// $Id: Power.h,v 1.9 2007-07-30 09:54:35 ibelyaev Exp $
+// $Id: Power.h,v 1.10 2007-11-28 13:56:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_POWER_H 
 #define LOKI_POWER_H 1
@@ -39,44 +39,42 @@ namespace LoKi
    *  @date   2005-04-09
    */
   // ==========================================================================
-  template <class TYPE>
-  class Power : public LoKi::Function<TYPE>
+  template <class TYPE, class TYPE2=double>
+  class Power : public LoKi::Functor<TYPE,TYPE2>
   {
+  private:
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,TYPE2>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,TYPE2>::result_type result_type ; 
   public:
-    /// define all nesessary types 
-    _LOKI_FUNCTION_TYPES_( Power , TYPE ) ;
-  protected:
-    typedef Power<TYPE>  _Self ;
-  public: 
     /** Standard constructor
      *  @param fun function to be used in "pow"
      *  @param val power itself
      */
-    Power ( const LoKi::Function<TYPE>& fun , 
-            const int                   val ) 
-      : LoKi::Function<TYPE>() 
+    Power ( const LoKi::Functor<TYPE,TYPE2>& fun , 
+            const int                        val ) 
+      : LoKi::Functor<TYPE,TYPE2>() 
       , m_fun ( fun ) 
       , m_val ( val ) 
-    {};
-    /** copy constructor 
-     *  @param right object to be copied 
-     */
-    Power ( const _Self & right ) 
+    {}
+    /// copy constructor 
+    Power ( const Power & right ) 
       : LoKi::AuxFunBase ( right ) 
-      , LoKi::Function<TYPE> ( right ) 
+      , LoKi::Functor<TYPE,TYPE2> ( right ) 
       , m_fun ( right.m_fun ) 
       , m_val ( right.m_val ) 
-    {};
+    {}
     /// MANDATORY: virtual destructor 
     virtual ~Power( ) {} ;
     /// MANDATORY: clone method ("virtual constructor")
-    virtual _Self* clone() const { return new _Self( *this ) ; }
+    virtual  Power* clone() const { return new Power ( *this ) ; }
     /// MANDATORY: the only one essential method 
     virtual  result_type operator() ( argument p ) const 
     {
-      if ( 0 == m_val ) { return 1 ; }
+      if ( 0 == m_val ) { return TYPE2(1) ; }
       // evaluate the function
-      result_type value = m_fun( p ) ;
+      result_type value = m_fun.fun ( p ) ;
       // evaluate the result
       if ( 0 <  m_val ) { return Gaudi::Math::pow ( value ,  m_val ) ; }
       if ( 0 == value ) 
@@ -88,11 +86,11 @@ namespace LoKi
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "pow("  << m_fun << "," << m_val << ")" ; };
   private:
-    /// default constructor is disabled 
-    Power() ;
+    // default constructor is disabled 
+    Power() ; ///< default constructor is disabled 
   private:
-    LoKi::FunctionFromFunction<TYPE>  m_fun ;
-    int                               m_val ;
+    LoKi::FunctorFromFunctor<TYPE,TYPE2>  m_fun ;
+    int                                   m_val ;
   };
   // ==========================================================================
   /** pow for LoKi functions
@@ -100,11 +98,11 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2005-04-09
    */      
-  template <class TYPE> 
-  inline LoKi::Power<TYPE>
-  pow ( const LoKi::Function<TYPE>& fun , 
-        const int                   val ) 
-  { return LoKi::Power<TYPE> ( fun , val ) ; }
+  template <class TYPE,class TYPE2> 
+  inline LoKi::Power<TYPE,TYPE2>
+  pow ( const LoKi::Functor<TYPE,TYPE2>& fun , 
+        const int                        val ) 
+  { return LoKi::Power<TYPE,TYPE2> ( fun , val ) ; }
   // ==========================================================================  
   /** pow2 for LoKi functions
    *  @see LoKi::pow
@@ -112,10 +110,10 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2005-04-09
    */      
-  template <class TYPE> 
-  inline LoKi::Power<TYPE>
-  pow2 ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::pow ( fun , 2 ) ; }
+  template <class TYPE,class TYPE2> 
+  inline LoKi::Power<TYPE,TYPE2>
+  pow2 ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::Power<TYPE,TYPE2> ( fun , 2 ) ; }
   // ==========================================================================  
   /** pow3 for LoKi functions
    *  @see LoKi::pow
@@ -123,10 +121,10 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2005-04-09
    */      
-  template <class TYPE> 
-  inline LoKi::Power<TYPE>
-  pow3 ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::pow ( fun , 3 ) ; }
+  template <class TYPE, class TYPE2> 
+  inline LoKi::Power<TYPE,TYPE2>
+  pow3 ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::Power<TYPE,TYPE2> ( fun , 3 ) ; }
   // ==========================================================================  
   /** pow4 for LoKi functions
    *  @see LoKi::pow
@@ -134,10 +132,10 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2005-04-09
    */      
-  template <class TYPE> 
-  inline LoKi::Power<TYPE>
-  pow4 ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::pow ( fun , 4 ) ; }
+  template <class TYPE,class TYPE2> 
+  inline LoKi::Power<TYPE,TYPE2>
+  pow4 ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::Power<TYPE,TYPE2> ( fun , 4 ) ; }
   // ==========================================================================  
   /** pow2 for LoKi functions
    *  @see LoKi::pow
@@ -145,10 +143,10 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2005-04-09
    */      
-  template <class TYPE> 
-  inline LoKi::Power<TYPE>
-  square ( const LoKi::Function<TYPE>& fun ) 
-  { return LoKi::pow2 ( fun ) ; }
+  template <class TYPE,class TYPE2> 
+  inline LoKi::Power<TYPE,TYPE2>
+  square ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::Power<TYPE,TYPE2> ( fun , 2 ) ; }
   // ==========================================================================
 } //end of namespace LoKi
 // ============================================================================

@@ -14,12 +14,13 @@ import PyCintex
 # construct the global namespace 
 _global   = PyCintex.makeNamespace('')
 # namespace LoKi
+cpp  = _global 
 std  = _global.std
 LoKi = _global.LoKi
 LHCb = _global.LHCb
 
 
-# (auto) load the obejct form LoKiCoreDict dictionary 
+# (auto) load the obejcts from LoKiCoreDict dictionary 
 LoKi.RangeBase_
 LoKi.KeeperBase
 
@@ -619,6 +620,8 @@ def decorateFunctions ( funcs , calls , opers ) :
         fun . __max__    = _max_   #
         fun . __monitor__  = _monitor_    #
         fun . __equal_to__ = _equal_to_   #
+        for attr in ( '__or__' , '__and__' ) :
+            if hasattr ( fun , attr ) : setattr ( fun , attr , None ) 
     return funcs                                          ## RETURN 
 # =============================================================================        
 ## Decorate the predicates using the proper adapters 
@@ -657,27 +660,6 @@ def decoratePredicates ( cuts , calls , opers ) :
             Uses:\n
             """
             return opers.__and__  (s,a) 
-        # "right" boolean operations:
-        def _ror_  (s,a) :
-            """
-            Construct the right 'logical-OR' predicate: other|cut
-            
-            >>> (True|cut)
-            >>> (cut2|cut)
-            
-            Uses:\n
-            """
-            return opers.__ror__  (s,a)
-        def _rand_  (s,a) :
-            """
-            Construct the right 'logical-AND' predicate: other&cut
-            
-            >>> (True&cut)
-            >>> (cut2&cut)
-            
-            Uses:\n
-            """
-            return opers.__rand__  (s,a)
         # other:
         def _invert_ ( s ) :
             """
@@ -712,8 +694,6 @@ def decoratePredicates ( cuts , calls , opers ) :
         _call_    . __doc__  += calls.__call__     . __doc__
         _or_      . __doc__  += opers.__or__       . __doc__
         _and_     . __doc__  += opers.__and__      . __doc__
-        _ror_     . __doc__  += opers.__ror__      . __doc__
-        _rand_    . __doc__  += opers.__rand__     . __doc__
         _invert_  . __doc__  += opers.__invert__   . __doc__
         _monitor_ . __doc__  += opers.__monitor__  . __doc__
         _switch_  . __doc__  += opers.__switch__   . __doc__
@@ -725,8 +705,6 @@ def decoratePredicates ( cuts , calls , opers ) :
         cut .__call__   = _call_   # operator() 
         cut .__or__     = _or_     # operator||
         cut .__and__    = _and_    # operator&&
-        cut .__ror__    = _ror_    #
-        cut .__rand__   = _rand_   #
         cut .__invert__ = _invert_ # operator!
         cut . __monitor__ = _monitor_   # monitoring 
         cut . __switch__  = _switch_    # switch 
