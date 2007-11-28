@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.23 2007-11-26 17:36:43 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.24 2007-11-28 13:50:14 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -901,10 +901,13 @@ OnlineHistogram::OnlineDisplayOption::OnlineDisplayOption(std::string Name,
   : m_name(Name), m_type(Type), 
     m_value(OCIvar), m_value_null(OCIvar_null),
     m_env(Env) 
-{ //if(Type == STRING) { //needs initialization? shuld not
-  //  OCIStringAssignText(m_env->envhp(), m_env->errhp(), (CONST OraText *) "",
-  //		(ub2)0, (OCIString **) m_value);
-  //} 
+{ if(Type == STRING) { //needs to be created (I guess)
+    OCIObjectNew ( m_env->envhp(), m_env->errhp(), m_env->svchp(), OCI_TYPECODE_VARCHAR2,
+		   (OCIType *) NULL, (dvoid *) NULL, OCI_DURATION_SESSION, TRUE,
+		   (dvoid **) &OCIvar);
+    //  OCIStringAssignText(m_env->envhp(), m_env->errhp(), (CONST OraText *) "",
+    //		(ub2)0, (OCIString **) m_value);
+  } 
 }
 
 void OnlineHistogram::OnlineDisplayOption::set(void *option){
