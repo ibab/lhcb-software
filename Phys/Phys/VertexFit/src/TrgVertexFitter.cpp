@@ -1,12 +1,11 @@
-// $Id: TrgVertexFitter.cpp,v 1.20 2007-11-27 18:24:53 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.21 2007-11-28 11:16:59 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
-
-
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "Event/Vertex.h"
 #include "Event/Particle.h"
+#include "GaudiAlg/CheckForNaN.h" // lfin
 
 #include "Kernel/IParticleStuffer.h" 
 
@@ -345,7 +344,7 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX,
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "X : " << std::setprecision(10) 
               << AX << " "<< BX << " "<< CX << " " << DX << " " << EX << endmsg ;
-    verbose() << "Y : "  << AY << " "<< BY << " "<< CY << " "<< DY << " "<< EY << " " << endmsg ;
+    verbose() << "Y : "  << AY << " "<< BY << " "<< CY << " "<< DY << " "<< EY << " " << V << endmsg ;
   }
   
   double R1 = CX*AX/BX + CY*AY/BY - EX - EY ;
@@ -386,13 +385,22 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX,
   
   Gaudi::SymMatrix3x3 fastCov;
 
-  double invDet = 1./( BX*BY*( DX + DY ) - CX*CX*BY - CY*CY*BX );
+  double det = ( BX*BY*( DX + DY ) - CX*CX*BY - CY*CY*BX );
+  double invDet = 1./det ;
+  if ( ! lfin(invDet) ){
+    Warning("Position covariance matrix failed");
+    return StatusCode::FAILURE;
+  }
+  
   fastCov(0,0) = invDet * ( -CY*CY + ( BY * ( DX + DY )));
   fastCov(1,0) = invDet * (  CX*CY );
   fastCov(2,0) = invDet * (  CX*BY );
   fastCov(1,1) = invDet * ( -CX*CX + ( BX * ( DX + DY )));
   fastCov(1,2) = invDet * (  BX*CY );
   fastCov(2,2) = invDet * (  BX*BY );
+
+  if (msgLevel(MSG::VERBOSE)) verbose() << "DET: " << invDet << " fastCov \n" << fastCov << endmsg ;
+
   V.setCovMatrix(fastCov);
 
   return StatusCode::SUCCESS;
@@ -415,7 +423,7 @@ StatusCode TrgVertexFitter::combine( const LHCb::Particle::ConstVector& daughter
 /// add not active for fast vertex fitter
 StatusCode TrgVertexFitter::add(const LHCb::Particle* p,
                LHCb::Vertex& v) const {
-  verbose() << "Print " << v.position() << " and " << p 
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Print " << v.position() << " and " << p 
             << " to inhibit compilation warnings" << endmsg ;
   Error("Adding is not allowed by TrgVertexFitter");
   return StatusCode::FAILURE;
@@ -424,7 +432,7 @@ StatusCode TrgVertexFitter::add(const LHCb::Particle* p,
 /// remove not active for fast vertex fitter
 StatusCode TrgVertexFitter::remove(const LHCb::Particle* p,
                   LHCb::Vertex& v) const {
-  verbose() << "Print " << v.position() << " and " << p 
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Print " << v.position() << " and " << p 
             << " to inhibit compilation warnings" << endmsg ;
   Error("Removing is not allowed by TrgVertexFitter");
   return StatusCode::FAILURE;

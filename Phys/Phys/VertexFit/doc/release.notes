@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.125 2007-11-27 18:24:53 pkoppenb Exp $
+! $Id: release.notes,v 1.126 2007-11-28 11:16:59 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2007-11-28 - Patrick Koppenburg
+ - TrgVertexFitter: Protect against zero covariance matrix deteminant.
+
 ! 2007-11-27 - Patrick Koppenburg
- - TrgVerexFitter: issue a failure when stuffing failed.
+ - TrgVertexFitter: issue a failure when stuffing failed.
  - Increment to v4r4p1
 
 !========================== VertexFit v4r4 2007-11-14 ===================
