@@ -1,4 +1,4 @@
-// $Id: ISTReadoutTool.h,v 1.1.1.1 2007-11-16 16:15:15 mneedham Exp $
+// $Id: ISTReadoutTool.h,v 1.2 2007-11-28 14:08:30 cattanem Exp $
 #ifndef _ISTReadoutTool_H
 #define _ISTReadoutTool_H
 
@@ -6,10 +6,10 @@
 
 #include <string>
 #include "Kernel/STDAQDefinitions.h"
+#include "Kernel/STTell1ID.h"
 #include "Event/STCluster.h"
 
 class STTell1Board;
-class STTell1ID;
 
 namespace LHCb{
  class STCluster;
