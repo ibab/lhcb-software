@@ -1,6 +1,4 @@
-// $Id: DeMuonRegion.h,v 1.9 2007-02-28 18:33:18 marcocle Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: DeMuonRegion.h,v 1.10 2007-11-28 08:00:21 cattanem Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONREGION_H
 #define MUONDET_DEMUONREGION_H 1
@@ -8,7 +6,6 @@
 
 // Include files
 #include "DetDesc/DetectorElement.h"
-#include "MuonDet/MuonParameters.h"
 
 /** @class DeMuonRegion DeMuonRegion.h MuonDet/DeMuonRegion.h
  *  

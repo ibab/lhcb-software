@@ -1,11 +1,11 @@
-// $Id: MuonChamberLayout.cpp,v 1.28 2007-10-17 11:24:04 asatta Exp $
+// $Id: MuonChamberLayout.cpp,v 1.29 2007-11-28 08:00:23 cattanem Exp $
 // Include files 
 
 // Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
 
 //Muon
-#include "MuonDet/MuonChamberLayout.h"
+#include "MuonChamberLayout.h"
 #include "MuonDet/MuonChamberGrid.h"
 #include "MuonDet/DeMuonDetector.h"
 
@@ -130,7 +130,11 @@ neighborChambers(float myX, float myY, int stat, int x_direction, int y_directio
     }
   }
 
-  if(debug) std::cout<<"Returning chambers: "<<myChambers<<std::endl;
+  if(debug) {
+    using GaudiUtils::operator<<; // for streaming std::vector
+    std::cout<<"Returning chambers: "<<myChambers<<std::endl;
+  }
+  
   return myChambers;
 
 }
@@ -529,7 +533,6 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
         
         //Are there any void Regions?
         std::string name=((*itRg)->name()).c_str();  
-        int len=name.size();
         int start=(DeMuonLocation::Default).size();  
         std::string substringSta;
         substringSta.assign(name,start,3);

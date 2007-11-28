@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.22 2007-10-17 11:24:04 asatta Exp $
+// $Id: DeMuonDetector.h,v 1.23 2007-11-28 08:00:21 cattanem Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -13,8 +13,6 @@
 #include "Kernel/Packer.h"
 
 //Muon Detector
-//#include "MuonDet/DeMuonChamber.h"
-#include "MuonDet/MuonChamberLayout.h"
 #include "MuonDet/MuonFrontEndID.h"
 
 #include "MuonDet/PackMCMuonHit.h"  
@@ -24,6 +22,11 @@
 #include "MuonDet/MuonTSMap.h"
 
 #include "MuonDet/MuonNamespace.h"
+
+// Forward declarations
+class MuonChamberLayout;
+class DeMuonChamber;
+
 /** @class DeMuonDetector DeMuonDetector.h MuonDet/DeMuonDetector.h
  *  
  *  Detector element class for the muon system

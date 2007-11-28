@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.cpp,v 1.11 2007-03-16 16:25:22 marcocle Exp $
+// $Id: MuonChamberGrid.cpp,v 1.12 2007-11-28 08:00:23 cattanem Exp $
 // Include files 
 
 // local
@@ -58,6 +58,8 @@ StatusCode MuonChamberGrid::initialize(){
 std::vector< std::pair< MuonFrontEndID,std::vector<float> > > 
 MuonChamberGrid::listOfPhysChannels(double x_enter,double y_enter,
                                     double x_exit,double y_exit) {
+
+  using GaudiUtils::operator<<; // for streaming std::vector
 
   std::vector< std::pair< MuonFrontEndID,std::vector<float> > > keepTemporary;
   std::pair< MuonFrontEndID,std::vector<float> > tmpPair;

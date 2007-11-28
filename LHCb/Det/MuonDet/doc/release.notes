@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.100 2007-11-20 07:48:58 asatta Exp $
+! $Id: release.notes,v 1.101 2007-11-28 08:00:23 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+
+!========================= MuonDet v7r1 2007-11-28 ==========================
+! 2007-11-28 - Marco Cattaneo
+ - Adapt to Gaudi v19r6 std::vector ostream
+ - Remove obsolete file MuonDet/MuonParameters.h
+ - Move file MuonDet/MuonChamberLayout.h to src/Lib, for better encapsulation
+
 ! 2007-11-20 - Alessia Satta
  - Fix unchecked StatusCode
 

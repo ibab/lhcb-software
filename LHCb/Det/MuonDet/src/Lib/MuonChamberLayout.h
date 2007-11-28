@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.h,v 1.8 2006-03-03 11:22:01 asarti Exp $
+// $Id: MuonChamberLayout.h,v 1.1 2007-11-28 08:00:23 cattanem Exp $
 #ifndef PUBLIC_MUONCHAMBERLAYOUT_H 
 #define PUBLIC_MUONCHAMBERLAYOUT_H 1
 
