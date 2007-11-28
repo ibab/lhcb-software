@@ -9,10 +9,9 @@
 _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
-import PyCintex 
+import PyCintex
 PyCintex.loadDict("libLoKiGenDict")
 PyCintex.loadDict("libLoKiMCDict")
-#PyCintex.loadDict("libLoKiGenMCDict")
 
 
 import LoKiCore.decorators as _LoKiCore
@@ -27,12 +26,12 @@ def decorate ( name = _name ) :
     
     _decorated  = _LoKiCore.getAndDecoratePredicates (
         name                                            , ## module name
-        LoKi.Predicate('const HepMC::GenParticle*')     , ## the base 
+        LoKi.Functor('const HepMC::GenParticle*,bool')  , ## the base 
         LoKi.Dicts.CutCalls(HepMC.GenParticle)          , ## call-traits 
         LoKi.Dicts.FuncOps('const HepMC::GenParticle*') ) ## operators 
     _decorated |= _LoKiCore.getAndDecoratePredicates (
         name                                            , ## module name
-        LoKi.Predicate('const LHCb::MCParticle*')       , ## the base 
+        LoKi.Functor('const LHCb::MCParticle*,bool')    , ## the base 
         LoKi.Dicts.CutCalls(LHCb.MCParticle)            , ## call-traits 
         LoKi.Dicts.FuncOps('const LHCb::MCParticle*')   ) ## operators
     ## 

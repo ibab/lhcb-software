@@ -1,4 +1,4 @@
-// $Id: GenMCParticles.h,v 1.8 2007-07-23 17:29:51 ibelyaev Exp $
+// $Id: GenMCParticles.h,v 1.9 2007-11-28 14:20:06 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENMCPARTICLES_H 
 #define LOKI_GENMCPARTICLES_H 1
@@ -46,7 +46,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class IsAMotherForMC : public LoKi::Predicate<const HepMC::GenParticle*> 
+    class IsAMotherForMC 
+      : public LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate
     {
     public:
       /** constructor from the particle and relation table 
@@ -84,7 +85,7 @@ namespace LoKi
       ( MCPARTICLE            first ,
         MCPARTICLE            last  , 
         const LHCb::HepMC2MC* table ) 
-        : LoKi::Predicate<const HepMC::GenParticle*> ()
+        : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate () 
         , m_mcps  () 
         , m_table ( table )
       { 
@@ -135,7 +136,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class IsFromHepMC : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsFromHepMC
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
       /** constructor from the particle and a table 
@@ -181,24 +183,24 @@ namespace LoKi
       ( GENOBJECT             first , 
         GENOBJECT             last  , 
         const LHCb::MC2HepMC* table  ) 
-        : LoKi::Predicate<const LHCb::MCParticle*> ()
+        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate()
         , m_gps   () 
         , m_table ( table  )
       { 
         add ( first , last ) ; 
-      } ;
+      } 
       /// constructor from range of objects
       template <class GENOBJECT>
       IsFromHepMC
       ( const LHCb::MC2HepMC* table , 
         GENOBJECT             first , 
         GENOBJECT             last  ) 
-        : LoKi::Predicate<const LHCb::MCParticle*> () 
+        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate()
         , m_gps () 
         , m_table ( table )
       { 
         add ( first , last ) ; 
-      } ;
+      } 
       /// copy constructor
       IsFromHepMC 
       ( const IsFromHepMC& right ) ;

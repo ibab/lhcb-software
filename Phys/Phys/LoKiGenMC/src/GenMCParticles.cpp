@@ -1,4 +1,4 @@
-// $Id: GenMCParticles.cpp,v 1.6 2007-06-10 20:04:47 ibelyaev Exp $
+// $Id: GenMCParticles.cpp,v 1.7 2007-11-28 14:20:09 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -43,7 +43,7 @@
 LoKi::GenMCParticles::IsAMotherForMC::IsAMotherForMC 
 ( const LHCb::MCParticle* mc   , 
   const LHCb::HepMC2MC*   table ) 
-  : LoKi::Predicate<const HepMC::GenParticle*> ()
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
   , m_mcps  () 
   , m_table ( table  )
 { 
@@ -58,7 +58,7 @@ LoKi::GenMCParticles::IsAMotherForMC::IsAMotherForMC
 LoKi::GenMCParticles::IsAMotherForMC::IsAMotherForMC 
 ( const LHCb::MCParticle::ConstVector& mc   , 
   const LHCb::HepMC2MC*   table ) 
-  : LoKi::Predicate<const HepMC::GenParticle*> ()
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
   , m_mcps  () 
   , m_table ( table  )
 { 
@@ -73,7 +73,7 @@ LoKi::GenMCParticles::IsAMotherForMC::IsAMotherForMC
 LoKi::GenMCParticles::IsAMotherForMC::IsAMotherForMC 
 ( const LoKi::MCTypes::MCRange& mc   , 
   const LHCb::HepMC2MC*         table ) 
-  : LoKi::Predicate<const HepMC::GenParticle*> ()
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
   , m_mcps  () 
   , m_table ( table  )
 { 
@@ -87,7 +87,7 @@ LoKi::GenMCParticles::IsAMotherForMC::IsAMotherForMC
 LoKi::GenMCParticles::IsAMotherForMC::IsAMotherForMC 
 ( const LoKi::GenMCParticles::IsAMotherForMC& right )
   : LoKi::AuxFunBase                           ( right ) 
-  , LoKi::Predicate<const HepMC::GenParticle*> ( right )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ( right )
   , m_mcps  ( right.m_mcps  ) 
   , m_table ( right.m_table )
 {}  
@@ -195,7 +195,7 @@ LoKi::GenMCParticles::IsAMotherForMC::add
 LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const HepMC::GenParticle* p     , 
   const LHCb::MC2HepMC*     table ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> ()
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate ()
   , m_gps   (       ) 
   , m_table ( table ) 
 { 
@@ -207,7 +207,7 @@ LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC
 LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const HepMC::GenParticle* p     , 
   const LHCb::HepMC2MC2D*   table ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> ()
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate ()
   , m_gps   (   ) 
   , m_table ( 0 ) 
 { 
@@ -220,7 +220,7 @@ LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC
 LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const HepMC::GenParticle* p     , 
   const LHCb::HepMC2MC*     table ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> ()
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate ()
   , m_gps   (   ) 
   , m_table ( 0 ) 
 { 
@@ -236,7 +236,7 @@ LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC
 LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const HepMC::GenVertex* vertex , 
   const LHCb::MC2HepMC*   table  ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> ()
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate ()
   , m_gps   (       ) 
   , m_table ( table ) 
 { 
@@ -248,7 +248,7 @@ LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC
 LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const LoKi::GenTypes::GenContainer& range , 
   const LHCb::MC2HepMC*   table  ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> ()
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate ()
   , m_gps   (       ) 
   , m_table ( table ) 
 { 
@@ -260,7 +260,7 @@ LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC
 LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const LoKi::Types::GRange& range , 
   const LHCb::MC2HepMC*      table  ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> ()
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate ()
   , m_gps   (       ) 
   , m_table ( table ) 
 { 
@@ -272,7 +272,7 @@ LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC
 LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const LoKi::Types::GRange& range , 
   const LHCb::HepMC2MC2D*    table  ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> ()
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate ()
   , m_gps   (   ) 
   , m_table ( 0 ) 
 { 
@@ -285,7 +285,7 @@ LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC
 LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const LoKi::Types::GRange& range , 
   const LHCb::HepMC2MC*      table  ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> ()
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate ()
   , m_gps   (   ) 
   , m_table ( 0 ) 
 { 
@@ -300,7 +300,7 @@ LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC
 LoKi::GenMCParticles::IsFromHepMC::IsFromHepMC 
 ( const LoKi::GenMCParticles::IsFromHepMC& right ) 
   : LoKi::AuxFunBase                         ( right ) 
-  , LoKi::Predicate<const LHCb::MCParticle*> ( right ) 
+  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate ( right )
   , m_gps   ( right.m_gps   ) 
   , m_table ( right.m_table ) 
 {}

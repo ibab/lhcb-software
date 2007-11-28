@@ -1,15 +1,5 @@
 #!/usr/bin/env python
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.2  2007/06/03 20:40:33  ibelyaev
-#  update the functions
-#
-# Revision 1.1  2007/06/01 11:53:46  ibelyaev
-#  prepare for v3r0
-#
-# =============================================================================
 ## @file functions.py LoKiGenMC/functions.py
 #  The set of basic functions from LoKiGenMC library
 #  The set of basic decorator for objects from LoKiGenMC library
