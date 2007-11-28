@@ -12,7 +12,7 @@
 
 void presenter()
 {
-  new PresenterMainFrame("LHCb Online Presenter", 10, 10, 800, 600, Silent);
+  new PresenterMainFrame("LHCb Online Presenter", 10, 10, 1000, 600, Silent);
 }
 #ifdef STANDALONE
 int main(int argc, char** argv)
