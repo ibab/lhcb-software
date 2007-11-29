@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.19 2007-11-26 17:36:43 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.20 2007-11-29 11:22:22 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 using namespace OnlineHistDBEnv_constants;
@@ -84,6 +84,7 @@ void OnlineHistPage::load() {
 	    m_sy.push_back(SIZE_Y[j]);
 	  }      
 	}
+	myOCIFetch(lstmt, 0);
 	m_syncWithDB = true;
       }
       releaseOCITaggedStatement(lstmt, "LOADPAGE");
@@ -203,6 +204,7 @@ bool OnlineHistPage::remove() {
     myOCIBindInt   (stmt,":out", out);  
     myOCIBindString(stmt,":1"  , m_name);
     myOCIStmtExecute(stmt);
+    releaseOCIStatement(stmt);
   }
   return (out > 0);  
 }
@@ -222,6 +224,7 @@ void OnlineHistPage::rename(std::string NewName) {
 	m_name = std::string((const char *) Name);
 	m_folder = std::string((const char *) Fold);
       }
+      releaseOCIStatement(stmt);
     }
   }
   else {
@@ -330,6 +333,7 @@ bool OnlineHistPage::save() {
 		     " in DeclarePage... something wrong?");
       m_shortname = std::string((const char *) theName);
     }
+    releaseOCIStatement(stmt);
   }
   
   if (out) {

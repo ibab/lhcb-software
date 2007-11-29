@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.25 2007-11-28 18:04:07 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.26 2007-11-29 11:22:22 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -47,6 +47,7 @@ void OnlineHistogram::checkServiceName() {
       if(std::string((char *) currentSN) == m_dimServiceName) 
 	unchanged=true;
     }
+    releaseOCIStatement(stmt);
   }
   if (!unchanged) {
     if (debug() > 3) cout << "Reloading Histogram " << identifier() << endl;
@@ -88,6 +89,7 @@ bool OnlineHistogram::setDimServiceName(std::string DimServiceName) {
     myOCIBindString(stmt,":2", m_hid);  
     myOCIBindString(stmt,":3", DimServiceName);
     myOCIStmtExecute(stmt);
+    releaseOCIStatement(stmt);
   }
   return (out>0);
 }
@@ -105,6 +107,7 @@ bool OnlineHistogram::setDoc(std::string doc) {
       myOCIBindString(stmt,":1", doc);
       myOCIBindInt   (stmt,":2", m_hsid);
       out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
+      releaseOCIStatement(stmt);
     }
   }
   return out;
@@ -123,6 +126,7 @@ bool OnlineHistogram::setDescr(std::string descr) {
       myOCIBindString(stmt,":1", descr);
       myOCIBindInt   (stmt,":2", m_hsid);
       out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
+      releaseOCIStatement(stmt);
     }
   }
   return out;
@@ -432,6 +436,7 @@ bool OnlineHistogram::loadAnalysisDirections() {
       }
       checkerr(OCIObjectFree ( m_envhp, m_errhp, intlist, OCI_OBJECTFREE_FORCE) );
       checkerr(OCIObjectFree ( m_envhp, m_errhp, analist, OCI_OBJECTFREE_FORCE) );
+      releaseOCIStatement(astmt);
     }
   } 
   return out;
@@ -470,6 +475,7 @@ bool OnlineHistogram::loadCreationDirections() {
       }
       checkerr(OCIObjectFree ( m_envhp, m_errhp, flolist, OCI_OBJECTFREE_FORCE) );
       checkerr(OCIObjectFree ( m_envhp, m_errhp, hnalist, OCI_OBJECTFREE_FORCE) );
+      releaseOCIStatement(stmt);
     }
   }
   return out;
@@ -481,8 +487,9 @@ OnlineHistogram::~OnlineHistogram()
   std::vector<OnlineDisplayOption*>::iterator ip;
   for (ip = m_do.begin();ip != m_do.end(); ++ip) 
     delete *ip; 
-  if(m_dispopt)
-   checkerr(OCIObjectFree ( m_envhp, m_errhp, &m_dispopt, OCI_OBJECTFREE_FORCE) );
+  if(m_dispopt) {
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, m_dispopt, OCI_OBJECTFREE_FORCE) );
+  }
 }
 
 
@@ -506,6 +513,7 @@ bool OnlineHistogram::remove(bool RemoveWholeSet) {
       warningMessage("Histogram is probably on a page, remove it from all pages first");
       out = 0;
     }
+    releaseOCIStatement(stmt);
   }
   if(out>0) m_isAbort=true;
   return (out == 1);  
@@ -531,6 +539,7 @@ void OnlineHistogram::getDisplayOptions(int doid) {
     else {
       m_domode = NONE;
     }
+    releaseOCIStatement(stmt);
   }
 }
 
@@ -546,6 +555,7 @@ int OnlineHistogram::setDisplayOptions(std::string function) {
     myOCIBindObject(stmt,":opt", (void **) &m_dispopt, OCIdispopt, (void**) &m_dispopt_null);
 
     myOCIStmtExecute(stmt);
+    releaseOCIStatement(stmt);
   }
   return out;
 }
@@ -563,6 +573,7 @@ bool OnlineHistogram::checkHSDisplayFromDB() {
     if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
       out=true;
     }
+    releaseOCIStatement(stmt);
   }
   return out;
 }
@@ -579,6 +590,7 @@ bool OnlineHistogram::checkHDisplayFromDB() {
     if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
       out=true;
     }
+    releaseOCIStatement(stmt);
   }
   return out; 
 }
@@ -593,6 +605,7 @@ int OnlineHistogram::nPageInstances() {
     myOCIBindString(stmt,":1",m_hid);
     myOCIDefineInt (stmt, 1, out );  
     myOCIStmtExecute(stmt);   
+    releaseOCIStatement(stmt);
   }
   return out;
 }
@@ -607,6 +620,7 @@ int OnlineHistogram::nThisPageInstances() {
     myOCIBindString(stmt,":2",m_page);
     myOCIDefineInt (stmt, 1, out );  
     myOCIStmtExecute(stmt);   
+    releaseOCIStatement(stmt);
   }
   return out;
 }
@@ -659,8 +673,7 @@ bool OnlineHistogram::initHistDisplayOptionsFromSet() {
   bool out=true;
   if (m_hsdisp == 0) load();
   if (m_hsdisp == 0) {
-    cout << "Warning from OnlineHistogram::initHistDisplayOptionsFromSet :" <<
-      " no Set display options available"<<endl;
+    warningMessage(" no Set display options available");
     out = false;
   }
   else {
@@ -687,39 +700,37 @@ bool OnlineHistogram::initHistoPageDisplayOptionsFromSet(std::string PageName,
   if(Instance == -1) Instance=m_instance;
   if (PageName == "_DEFAULT_") PageName = m_page;
   if (!verifyPage(PageName,Instance)) {
-    cout << "OnlineHistogram::initHistoPageDisplayOptionsFromSet aborted:" <<
-	" page/instance specified are not correct"<<endl;
-      out = false;
+    warningMessage("aborted: page/instance specified are not correct" );
+    out = false;
   }
   else {
     if (m_hsdisp == 0) load();
     if (m_hsdisp == 0) {
-	  cout << "Warning from OnlineHistogram::initHistoPageDisplayOptionsFromSet :" <<
-	    " non Set display options available"<<endl;
-	  out = false;
-	}
-	else {
-	  if (m_shdisp != 0) 
-	    warningMessage("HistoPageDisplayOptions were already defined and will be reinitialized");
-	  if (m_domode != SET) {
-	    getDisplayOptions(m_hsdisp);
-	    m_domode = SET;
-	  }
-	  std::stringstream function;
-	  function << "DECLAREHISTOPAGEDISPLAYOPTIONS(theHID => '" <<
-	    m_hid << "',thePage => '" << PageName << "',TheInstance =>" << 
-	    Instance;
-	  m_StmtMethod = "OnlineHistogram::initHistoPageDisplayOptionsFromSet";
-	  int newshdisp=  setDisplayOptions(function.str());
-	  if (newshdisp > 0) {
-	    m_shdisp = newshdisp;
-	    m_domode = HISTPAGE;
-	    m_page = PageName;
-	    m_instance = Instance;
-	  }
-	  else 
-	    out= false;
-	}
+      warningMessage("no Set display options available");
+      out = false;
+    }
+    else {
+      if (m_shdisp != 0) 
+	warningMessage("HistoPageDisplayOptions were already defined and will be reinitialized");
+      if (m_domode != SET) {
+	getDisplayOptions(m_hsdisp);
+	m_domode = SET;
+      }
+      std::stringstream function;
+      function << "DECLAREHISTOPAGEDISPLAYOPTIONS(theHID => '" <<
+	m_hid << "',thePage => '" << PageName << "',TheInstance =>" << 
+	Instance;
+      m_StmtMethod = "OnlineHistogram::initHistoPageDisplayOptionsFromSet";
+      int newshdisp=  setDisplayOptions(function.str());
+      if (newshdisp > 0) {
+	m_shdisp = newshdisp;
+	m_domode = HISTPAGE;
+	m_page = PageName;
+	m_instance = Instance;
+      }
+      else 
+	out= false;
+    }
   }
   return out;
 }
@@ -730,15 +741,13 @@ bool OnlineHistogram::initHistoPageDisplayOptionsFromHist(std::string PageName,
   if(Instance == -1) Instance=m_instance;
   if (PageName == "_DEFAULT_") PageName = m_page;
   if (!verifyPage(PageName,Instance)) {
-    cout << "OnlineHistogram::initHistoPageDisplayOptionsFromHist aborted:" <<
-      " page/instance specified are not correct"<<endl;
+    warningMessage("aborted: page/instance specified are not correct" );
     out = false;
   }
   else {
     if (m_hdisp == 0) load();
     if (m_hdisp == 0) {
-      cout << "Warning from OnlineHistogram::initHistoPageDisplayOptionsFromSet :" <<
-	" non Hist display options available"<<endl;
+      warningMessage("no Hist display options available");
       out = false;
     }
     else {
@@ -901,11 +910,23 @@ OnlineHistogram::OnlineDisplayOption::OnlineDisplayOption(std::string Name,
   : m_name(Name), m_type(Type), 
     m_value(OCIvar), m_value_null(OCIvar_null),
     m_env(Env) 
-{ if(Type == STRING) { //needs to be created (I guess)
+{ if(Type == STRING) { // needs to be created (otherwise the allocation duration is 
+                       // apparently not guaranteed)
     OCIObjectNew ( m_env->envhp(), m_env->errhp(), m_env->svchp(), OCI_TYPECODE_VARCHAR2,
     		   (OCIType *) NULL, (dvoid *) NULL, OCI_DURATION_SESSION, TRUE,
-		   (dvoid **) OCIvar);
+		   (dvoid **) m_value);
   } 
+}
+
+OnlineHistogram::OnlineDisplayOption::~OnlineDisplayOption() {
+  if(m_type == STRING) {
+    // remove allocated string (apparently, contrary to what stated in OCI doc, freeing
+    // the dispopt object doesn't free the secondary  memory segments)
+    OCIObjectFree ( m_env->envhp(), m_env->errhp(), (dvoid *) (*((OCIString **) m_value)), 
+		    OCI_OBJECTFREE_FORCE);
+    (*((OCIString **) m_value)) = NULL;
+    *m_value_null = -1;
+  }
 }
 
 void OnlineHistogram::OnlineDisplayOption::set(void *option){
@@ -1151,6 +1172,7 @@ int OnlineHistogram::declareAnalysis(std::string Algorithm,
       }
       checkerr(OCIObjectFree ( m_envhp, m_errhp, warn, OCI_OBJECTFREE_FORCE) );
       checkerr(OCIObjectFree ( m_envhp, m_errhp, alarm, OCI_OBJECTFREE_FORCE) );
+      releaseOCIStatement(stmt);
     }
   }
   return out;
@@ -1191,6 +1213,7 @@ bool OnlineHistogram::setAnalysis(int AnaID,
       out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
       checkerr(OCIObjectFree ( m_envhp, m_errhp, warn, OCI_OBJECTFREE_FORCE) );
       checkerr(OCIObjectFree ( m_envhp, m_errhp, alarm, OCI_OBJECTFREE_FORCE) );
+      releaseOCIStatement(stmt);
     }
   }
   return out;
@@ -1205,8 +1228,10 @@ bool OnlineHistogram::getAnaSettings(int AnaID,
   int Np=getAlgorithmNpar(algFromID(AnaID));
   if (Np>0) { 
     if (0 == warnTh || 0 == alarmTh) {
-      cout<<"Error in OnlineHistogram::getAnaSettings : Analysis " << AnaID;
-      cout << " requires "<<Np<<" parameters"<<endl;
+      std::stringstream message;
+      message <<"Error in OnlineHistogram::getAnaSettings : Analysis " << AnaID
+	      << " requires "<<Np<<" parameters";
+      warningMessage(message.str());
       Np=-1;
       out=false;
     }
@@ -1246,6 +1271,7 @@ bool OnlineHistogram::getAnaSettings(int AnaID,
       }
       checkerr(OCIObjectFree ( m_envhp, m_errhp, warn, OCI_OBJECTFREE_FORCE) );
       checkerr(OCIObjectFree ( m_envhp, m_errhp, alarm, OCI_OBJECTFREE_FORCE) );
+      releaseOCIStatement(stmt);
     }
   }
   return out;
@@ -1264,6 +1290,7 @@ bool OnlineHistogram::maskAnalysis(int AnaID,bool Mask) {
     myOCIBindInt   (stmt,":2", AnaID);
     myOCIBindString(stmt,":3", m_hid);
     out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
+    releaseOCIStatement(stmt);
   }
   return out;
  }
@@ -1308,8 +1335,7 @@ OnlineHistogram* OnlineHistogramStorage::getHistogram(std::string Identifier,
   if (!h) {
     h= new OnlineHistogram(*m_Histenv,Identifier,Page,Instance);
     if (h->isAbort()) {
-      cout<<"Error from OnlineHistDB::getHistogram : cannot create histogram object " 
-	  << Identifier <<endl;
+      m_Histenv->warningMessage("error from getHistogram:cannot create histogram object "+Identifier);
       delete h;
       h=0;
     }

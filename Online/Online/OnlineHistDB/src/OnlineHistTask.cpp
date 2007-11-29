@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistTask.cpp,v 1.4 2007-11-23 17:58:56 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistTask.cpp,v 1.5 2007-11-29 11:22:22 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistTask.h"
 using namespace OnlineHistDBEnv_constants;
 
@@ -60,6 +60,7 @@ void  OnlineHistTask::load() {
     else {// task does not exist
       m_abort=true;
     }
+    releaseOCIStatement(stmt);
   }
 }
 
@@ -121,6 +122,7 @@ bool OnlineHistTask::save() {
       m_abort=false;
       out=true;
     }
+    releaseOCIStatement(stmt);
   }
   return out;
 }

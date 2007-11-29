@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.23 2007-11-27 11:52:20 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.24 2007-11-29 11:22:22 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -62,6 +62,7 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
 	 OCI_SUCCESS == myOCIBindInt(stmt, ":x3", m_canwrite)) {
       myOCIStmtExecute(stmt, SEVERE);
     }
+    releaseOCIStatement(stmt);
   } 
 
   // get total entry counts
@@ -73,6 +74,7 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
 	 OCI_SUCCESS == myOCIBindInt(stmt2, ":x3", m_nPageFolders)) {
       myOCIStmtExecute(stmt2);
     }
+    releaseOCIStatement(stmt2);
   } 
 }
 
@@ -95,6 +97,7 @@ bool OnlineHistDB::commit() {
 	if (debug()>2) cout << "session terminated"<<endl; 
       }
     }
+    releaseOCIStatement(stmt);
   }
   return out;
 }
@@ -109,6 +112,7 @@ bool OnlineHistDB::declareSubSystem(std::string SubSys)
     if ( OCI_SUCCESS == myOCIBindString(stmt, ":x1", SubSys) ) {
       out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
     }
+    releaseOCIStatement(stmt);
   }
   return out;
 }
@@ -198,6 +202,7 @@ OnlineHistogram* OnlineHistDB::declareAnalysisHistogram(std::string Algorithm,
 	std::string Name= std::string((const char *) name);
 	outh=getHistogram(Name);
       }
+      releaseOCIStatement(stmt);
     }
   }
   return outh;
@@ -240,6 +245,7 @@ bool OnlineHistDB::declareCheckAlgorithm(std::string Name,
 	myOCIBindString(stmt, ":d", doc);
       out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
       checkerr(OCIObjectFree ( m_envhp, m_errhp, parameters, OCI_OBJECTFREE_FORCE) );
+      releaseOCIStatement(stmt);
     }
   }
   return out;
@@ -280,6 +286,7 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
       myOCIBindString(stmt, ":d", doc);
     }
     out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
+    releaseOCIStatement(stmt);
   }
   return out;
 }
@@ -296,6 +303,7 @@ bool OnlineHistDB::removePageFolder(std::string Folder) {
     if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
       out = (iout>0);
     }
+    releaseOCIStatement(stmt);
   }
   return out;
 }
@@ -316,6 +324,7 @@ bool OnlineHistDB::setAlgListID(int algListID) {
     if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
       out = true;
     }
+    releaseOCIStatement(stmt);
   }
   return out;
 }
@@ -410,7 +419,9 @@ int OnlineHistDB::getHistogramsByPage(std::string Page,
 	  nout++;     
 	}      
       }
+      myOCIFetch(stmt, 0);
     }
+    releaseOCIStatement(stmt);
   }
   return nout;
 }
@@ -503,7 +514,9 @@ int OnlineHistDB::genericStringQuery(std::string command, std::vector<string>& l
 	  nout++;     
 	}      
       }
+      myOCIFetch(stmt, 0);
     }
+    releaseOCIStatement(stmt);
   }
   return nout;
 }
@@ -544,7 +557,9 @@ int OnlineHistDB::getHistograms(std::string query,
 	  nout++;     
 	}      
       }
+      myOCIFetch(stmt, 0);
     }
+    releaseOCIStatement(stmt);
   }
   return nout;
 }

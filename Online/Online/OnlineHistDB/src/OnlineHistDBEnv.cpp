@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.7 2007-11-27 11:52:20 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.8 2007-11-29 11:22:22 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 using namespace OnlineHistDBEnv_constants;
 
@@ -137,7 +137,7 @@ int OnlineHistDBEnv::getAlgorithmNpar(std::string AlgName, int* Ninput)
     if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
       if(Ninput) *Ninput = xNinp;
     }
-
+    releaseOCIStatement(stmt);
   }
   return xNpar;
 }
@@ -154,6 +154,7 @@ std::string OnlineHistDBEnv::getAlgParName(std::string AlgName,
     myOCIBindInt(stmt, ":x2", Ipar);
     myOCIBindString(stmt, ":x3", out, VSIZE_PARAMETERS);
     myOCIStmtExecute(stmt);
+    releaseOCIStatement(stmt);
   }
   return std::string((const char *) out);
 }
@@ -171,9 +172,9 @@ sword OnlineHistDBEnv::prepareOCIStatement(OCIStmt* & stmt,
  
   if (OCI_SUCCESS == out) {
     if (m_debug>3) cout << "preparing untagged statement "<<sqlcommand<<endl;
-    out = checkerr(OCIStmtPrepare(stmt, m_errhp, (text *) sqlcommand,
-				  (ub4) strlen((char *) sqlcommand),
-				  (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT));
+    out = checkerr(OCIStmtPrepare2(m_svchp, &stmt, m_errhp, (text *) sqlcommand,
+				   (ub4) strlen((char *) sqlcommand), (CONST OraText  *) NULL, (ub4) 0,
+				   (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT) );
   }
   return out;
 }
@@ -202,6 +203,12 @@ sword OnlineHistDBEnv::prepareOCITaggedStatement(OCIStmt* & stmt,
   return out;
 }
  
+sword OnlineHistDBEnv::releaseOCIStatement(OCIStmt* & stmt) {
+  return checkerr(OCIStmtRelease ((OCIStmt *)stmt, (OCIError *)m_errhp,(const OraText*) NULL,
+				  0, OCI_STRLS_CACHE_DELETE) );
+}
+
+
 sword OnlineHistDBEnv::releaseOCITaggedStatement(OCIStmt* & stmt, 
 						 const char *StmtKey) {
   sword out;

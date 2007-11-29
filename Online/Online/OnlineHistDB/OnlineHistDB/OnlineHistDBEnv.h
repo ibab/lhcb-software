@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.15 2007-11-26 17:36:43 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.16 2007-11-29 11:22:22 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -124,6 +124,7 @@ class OnlineHistDBEnv {
 				  const char *sqlcommand,
 				  const char *StmtKey,
 				  bool cleanBinds=true);
+  sword releaseOCIStatement(OCIStmt* & stmt);
   sword releaseOCITaggedStatement(OCIStmt* & stmt, 
 				  const char *StmtKey);
   sword myOCIBindInt(OCIStmt* stmt,

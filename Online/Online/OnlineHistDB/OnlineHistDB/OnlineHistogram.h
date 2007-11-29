@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.17 2007-11-23 17:58:55 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.18 2007-11-29 11:22:22 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -230,7 +230,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
 			void* OCIvar,
 			OCIInd* OCIvar_null,
 			OnlineHistDBEnv * Env);
-    virtual ~OnlineDisplayOption() {}
+    virtual ~OnlineDisplayOption();
     std::string name() const { return m_name; }
     inline DisplayOptionType type() const { return m_type; }    
     void set(void* option);
