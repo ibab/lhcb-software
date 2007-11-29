@@ -1,4 +1,4 @@
-// $Id: L0DUElementaryData.cpp,v 1.4 2007-11-27 07:46:10 cattanem Exp $
+// $Id: L0DUElementaryData.cpp,v 1.5 2007-11-29 09:38:16 cattanem Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -34,7 +34,6 @@ unsigned long LHCb::L0DUElementaryData::operation(const std::string& v_operator,
 
 
 std::string LHCb::L0DUElementaryData::summary(){
-  using GaudiUtils::operator<<;
   std::stringstream s(" ");
   std::stringstream ss(" ");
   if(m_operator != "Id")
@@ -47,7 +46,6 @@ std::string LHCb::L0DUElementaryData::summary(){
 
 
 std::string LHCb::L0DUElementaryData::description(){
-  using GaudiUtils::operator<<;
   std::stringstream s(" ");
   std::stringstream ss(" ");
   if(m_operator != "Id")ss << " = [" << m_operator << "](" << m_operandsName << ")" ;
