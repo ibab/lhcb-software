@@ -1,11 +1,10 @@
-! $Id: release.notes,v 1.162 2007-11-27 12:19:32 jonrob Exp $
+! $Id: release.notes,v 1.163 2007-11-29 10:35:22 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
 
-!====================== RichKernel v7r9 2007-11-26 ====================
-
+!====================== RichKernel v7r9 2007-11-29 ====================
 ! 2007-11-27 - Chris Jones
  - Add a new method to the IRawBufferToSmartIDsTool interface to return 
    the hits for a requested HPD

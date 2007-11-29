@@ -5,7 +5,7 @@
  *  Header file for RICH base class : RichCommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.h,v 1.8 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: RichCommonBase.h,v 1.9 2007-11-29 10:35:22 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -20,12 +20,14 @@
 
 // Gaudi
 #include "GaudiKernel/IRegistry.h"
+#include "GaudiKernel/SerializeSTL.h"
 
 // Forward declarations
 class IJobOptionsSvc;
 
 namespace Rich
 {
+  using GaudiUtils::operator<<;
 
   //-----------------------------------------------------------------------------
   /** @class CommonBase RichCommonBase.h RichKernel/RichCommonBase.h
