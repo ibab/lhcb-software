@@ -28,6 +28,7 @@ static int _mbm_installer_shutdown(void* param) {
   memset(&b->buffers[id],0,sizeof(BUFFERS::BUFF));
   b->nbuffer--;
   delete p;
+  return 1;
 }
 
 MBM::Installer::Installer(int argc, char **argv)  {
