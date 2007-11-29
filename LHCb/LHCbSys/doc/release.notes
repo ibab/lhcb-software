@@ -5,6 +5,120 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v23r2>2007-11-29 LHCbSys v23r2</A></H1><PRE>
+This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
+
+- Packages added   : STKernel v1r0 - public headers for ST readout
+- Packages modified: GaudiObjDesc v11r0, KernelSys v7r0, LHCbKernel v8r0,
+    LHCbMath v2r4, Relations v5r3, RichKernel v7r9, DetSys v11r1, DetDesc v18r2,
+    DetDescCnv v4r4, MuonDet v7r1, RichDet v10r8, EventSys v23r11, RecEvent v2r8,
+    EventAssoc v4r3, RecEvent v2r8, TrackEvent v4r9, DAQSys v3r7, MuonDAQ v3r3,
+    MDF v2r7, TrackInterfaces v3r11, DaVinciMCKernel v2r5, RichRecBase v3r9,
+    CaloUtils v7r6, SimComponents v2r8, LHCbAlgs v2r13
+
+- In GaudiObjDesc v11r0, RichKernel v7r9, RichRecBase v3r9, MuonDet v7r1
+  . Changes to deal with move of STL serializers to GaudiKernel/SerializeSTL.h
+    and GaudiUtils namespace 
+
+- In GaudiObjDesc v11r0
+  . New feature to allow construction of dictionaries for std::vector<const T*>
+    on demand (T==Event class). To do so, the XML entity &StlConstPtrVector; has
+    to be put into the xml source of the corresponding event class definition.
+
+- In LHCbKernel v8r8
+  . Remove Kernel/SerializeStl.h (now in GaudiKernel)
+  . Remove Kernel/IVeloClusterPosition.h (now in Tr/TrackInterfaces)
+
+- In LHCbMath v2r4
+  . Add functions in MatrixUtils.h
+    o geoLA: Fill Lorentz vector from 3D displacement vector + Mass
+    o JacobdP4dMom: Compute Jacobian for the transformation
+                    covPxPyPzE_xyz = Jacob * covTxTyQoP_xyz;
+  . Changed templates for line-to-line calculations to allow for lines of 
+    different types
+
+- In Relations v5r3
+  . move python/Relations.py in python/Relations/Rels.py
+  . add python/Relations/__init__.py
+
+- In RichKernel v7r9
+  . Add a new method to the IRawBufferToSmartIDsTool interface to return 
+    the hits for a requested HPD
+
+- In DetDesc v18r2
+  . Added specialized fillStream() member function for ValidDataObject and
+    ParamValidDataObject.
+  . Use GaudiKernel/SerializeSTL.h to print parameters of ParamValidDataObject. 
+
+- In DetDescCnv v4r4
+  . Implemented the parsing of <map> elements inside conditions
+  . Change the class id in the opaque address if it does not match the one
+    specified in the XML of the object
+
+- In MuonDet v7r1
+  . Remove obsolete file MuonDet/MuonParameters.h
+  . Move file MuonDet/MuonChamberLayout.h to src/Lib, for better encapsulation
+
+- In RichDet v10r8
+  . Cleaned up DeRichHPD and DeRichHPDPanel and made them fully compatible
+    with the alignment framework.
+  . Method detectionPoint now has an option to chose between the photoCathode
+    side, or the outside of the window (including refraction correction).
+
+- In EventAssoc v4r3
+  . Update to take into account new (python) structure in Kernel/Relations package
+
+- In RecEvent v2r8
+  . Add new class, TwoProngVertex
+  . Update the RecVertex class with new RecVertex Location for TwoProngVertex
+ - Add new ProtoParticle TES location for HLT charged tracks
+ - Add TES locations for Offline and HLT MuonPIDs
+
+- In TrackEvent v4r9
+  . Added method to remove all measurements or nodes from a track
+  . Fixed 'Track::copy' method to work also for track with muon measurements
+  . Added method to efficiently add set of measurements to Track
+  . Added method to set StateVector to Measurement
+  . Corrected z-position for begin of T-station range in StateParameters
+
+- In RichRecBase v3r9
+  . Add new interface for photon emission point tool
+  . Remove redundant method from IRichPhotonReconstruction.h
+
+- In MuonDAQ v3r3
+  . Add dictionary
+
+- In MDF v2r7
+  . Add new Rawbank types to RawEventPrintout.h to retrieve bank type as string.
+  . Implemement connection to XML file catalog from GaudiUtils
+
+- In TrackInterfaces v3r11
+  . Add IVeloClusterPosition interface previously in LHCbKernel
+  . Add in IPatForwardTool the method setNNSwitch
+
+- In DaVinciMCKernel v2r5
+   . Changes to Particle2MCLinker:
+     o Added class MCAssociation to Particle2MCLinker.h to hold result of single
+       association in the form of an MCParticle and an association weight
+     o Added type ToRange, as existed in DC04.  
+     o Added method rangeFrom(), with identical interface as it had in DC04, to
+       return all MCParticles associated to any one Object type, via ToRange type
+     o Remove couts from Constructors + fix a few doxygen errors
+
+- In CaloUtils v7r6
+  . Adapt to changes in LHCbMath v2r4
+
+- In SimComponents v2r8
+  . Add PrintMCDecayTreeAlg to replace DumpEvent algorithm in DaVinciMCTools
+
+- In LHCbAlgs v2r13
+  . Add new implementation of FilterByRunEvent, to select (run,event) pairs with
+    FilterByRunEvent.RunEventNumList = { (182001,1), (182001,3), (182001,5) };
+  . Fix a comparision of == with double
+
+- In LHCbAlgs v2r13, MuonDet v7r1, MuonDAQ v3r3
+  . Fix unchecked StatusCode
+
 </PRE><H1><A NAME=v23r1>2007-11-15 LHCbSys v23r1</A></H1><PRE>
 This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data
 
