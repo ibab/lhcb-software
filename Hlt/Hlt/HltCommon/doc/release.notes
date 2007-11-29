@@ -5,6 +5,7 @@
 !----------------------------------------------------------------------------
 ! 2007-11-28 Gerhard Raven
       - HltInit: use templated svc locator from GaudiAlg
+      - HltSequencer: use Gaudi Histo1D properties for specifying histograms
 
 ! 2007-11-23 Gerhard Raven
       - HltSelectionDataToTes: initialize all member pointers to 0 in c'tor, use 0 instead of NULL

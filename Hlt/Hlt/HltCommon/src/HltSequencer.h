@@ -1,4 +1,4 @@
-// $Id: HltSequencer.h,v 1.10 2007-06-25 21:35:43 hernando Exp $
+// $Id: HltSequencer.h,v 1.11 2007-11-29 13:09:54 graven Exp $
 #ifndef GAUDISEQUENCER_H 
 #define GAUDISEQUENCER_H 1
 
@@ -82,7 +82,7 @@ protected:
   
 private:
 
-  StringArrayProperty m_hisDescriptor;
+  SimpleProperty< std::map<std::string, Gaudi::Histo1DDef> > m_hisDescriptor;
 
   /** Private copy, copy not allowed **/
   HltSequencer( const HltSequencer& a );

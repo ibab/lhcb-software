@@ -1,4 +1,4 @@
-// $Id: HltSequencer.cpp,v 1.14 2007-10-12 12:21:21 hernando Exp $
+// $Id: HltSequencer.cpp,v 1.15 2007-11-29 13:09:54 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -7,7 +7,6 @@
 #include "HltSequencer.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
-#include "HltBase/EParser.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "HltBase/HltTypes.h"
 #include "Event/HltSummary.h"
@@ -63,9 +62,9 @@ StatusCode HltSequencer::initialize() {
   }
 
   // generic histograms
-  m_histoTime = NULL;
-  m_histoTime0 = NULL;
-  m_histoRate = NULL;
+  m_histoTime = 0;
+  m_histoTime0 = 0;
+  m_histoRate = 0;
   if (m_measureTime) {
     m_histoTime  = book1D("time",0.,50.,500);
     m_histoTime0 = book1D("time0",0.,50.,500);
@@ -75,15 +74,10 @@ StatusCode HltSequencer::initialize() {
   
   // external booking algorithms
   if (m_measureTime) {
-    const std::vector<std::string>& hdes = m_hisDescriptor.value();
-    for (std::vector<std::string>::const_iterator it = hdes.begin();
-         it != hdes.end(); it++){
-      std::string title = "";
-      int n = 100;
-      float x0 = 0.;
-      float xf = 1.;
-      if (EParser::parseHisto1D(*it,title,n,x0,xf)) 
-        book1D(title,x0,xf,n);
+    const std::map<std::string,Gaudi::Histo1DDef>& hdes = m_hisDescriptor.value();
+    for (std::map<std::string,Gaudi::Histo1DDef>::const_iterator it = hdes.begin();
+         it != hdes.end(); ++it) {
+      book(it->second);
     }
   }
 
@@ -117,7 +111,7 @@ StatusCode HltSequencer::initialize() {
 
 void HltSequencer::saveConfiguration() {
 
-  IDataProviderSvc* hltsvc = NULL;
+  IDataProviderSvc* hltsvc = 0;
   StatusCode sc = serviceLocator()->service("HltDataSvc",hltsvc);
   if (!hltsvc) error() << " not able to retrieve Hlt Svc provider " 
                        << endreq;
@@ -125,7 +119,7 @@ void HltSequencer::saveConfiguration() {
   std::string loca = m_dataSummaryLocation+"/Configuration";
   Hlt::DataHolder<Hlt::Configuration>* holder = 
     get<Hlt::DataHolder<Hlt::Configuration> > (hltsvc,loca);
-  if (holder == NULL) error()<<" not able to get configuration " << endreq;
+  if (holder == 0) error()<<" not able to get configuration " << endreq;
   Estd::dictionary& conf = holder->object();
   
   std::string myname = name();
@@ -289,7 +283,6 @@ StatusCode HltSequencer::endRun ( ) {
 // reset the executed status of all members 
 //=========================================================================
 void HltSequencer::resetExecuted ( ) {
-// void HltSequencer::resetExecuted ( ) {
   Algorithm::resetExecuted();
   std::vector<AlgorithmEntry>::const_iterator itE;
   for ( itE = m_entries.begin(); m_entries.end() != itE; itE++ ) {
@@ -308,7 +301,6 @@ StatusCode HltSequencer::decodeNames( )  {
   //== Get the "Context" option if in the file...
   IJobOptionsSvc* jos = svc<IJobOptionsSvc>( "JobOptionsSvc" );
   Property* contextProperty = 0;  //= Have we added a property ?  
-  const std::vector<const Property*>* properties;
   std::vector<const Property*>::const_iterator itProp;
 
   //= Get the Application manager, to see if algorithm exist
@@ -336,26 +328,18 @@ StatusCode HltSequencer::decodeNames( )  {
     result = appMgr->getAlgorithm( theName, myIAlg );
     if ( !result.isSuccess() ) {
       //== Set the Context if not in the jobOptions list
+      bool found = false;
       if ( "" != context() ) {
-        bool found = false;
-        properties = jos->getProperties( theName );
+        const std::vector<const Property*>* properties = jos->getProperties( theName );
         if ( 0 != properties ) {
           // Iterate over the list to set the options
           for( itProp = properties->begin();
-               itProp != properties->end();
-               itProp++ )   {
-            const StringProperty* sp = dynamic_cast<const StringProperty*>(*itProp);
-            if ( 0 != sp )    {
-              if ( "Context" == (*itProp)->name() ) {
-                found = true;
-                break;
-              }
-            }
-          }
+               itProp != properties->end() && !found;
+               itProp++ )   found = ( "Context" == (*itProp)->name() ) ;
+          
         }
         if ( !found ) {
-          StringProperty cp = StringProperty( "Context", '"'+context()+'"' );
-          jos->addPropertyToCatalogue( theName, cp );
+          jos->addPropertyToCatalogue( theName, StringProperty( "Context", '"'+context()+'"' ) );
         }
       }
       result = appMgr->createAlgorithm( theType, theName, myIAlg );
