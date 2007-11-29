@@ -27,7 +27,6 @@
 #define E_MNF  221
 
 namespace {
-  static int USER_next_off;
   static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
 
   static int cont = 1;
