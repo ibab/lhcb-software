@@ -29,6 +29,9 @@
 	TsaStereoBase.h TsaStubExtender.cpp TsaStubExtender.h
 	TsaStubLinker.cpp TsaStubLinker.h TsaXSearchBase.cpp TsaXSearchBase.h
 
+! 2007-11-29 M. Needham
+ - States made at start, mid, begin T by default
+
 ! 2007-11-06 M Needham
  - TsaSeed: ensure StatusCode checked 
 

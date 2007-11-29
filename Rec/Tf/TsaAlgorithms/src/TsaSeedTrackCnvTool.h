@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnvTool.h,v 1.1 2007-11-02 14:57:49 albrecht Exp $
+// $Id: TsaSeedTrackCnvTool.h,v 1.2 2007-11-29 08:11:55 mneedham Exp $
 #ifndef TSASEEDTRACKCNVTOOL_H 
 #define TSASEEDTRACKCNVTOOL_H 1
 
@@ -76,8 +76,8 @@ namespace Tf
 
       std::string m_inputLocation;
       std::string m_outputLocation;
-
-      bool m_stateAtLastHit;
+      std::vector<double> m_zStates;
+ 
     };
   }
 }

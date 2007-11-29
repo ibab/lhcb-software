@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnvTool.cpp,v 1.2 2007-11-28 15:32:48 smenzeme Exp $
+// $Id: TsaSeedTrackCnvTool.cpp,v 1.3 2007-11-29 08:11:55 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -8,6 +8,12 @@
 #include "Event/StateParameters.h"
 // local
 #include "TsaSeedTrackCnvTool.h"
+
+
+// BOOST !
+#include <boost/assign/std/vector.hpp>
+#include <boost/assign/list_of.hpp>
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TsaSeedTrackCnvTool
@@ -50,7 +56,8 @@ SeedTrackCnvTool::SeedTrackCnvTool( const std::string& type,
   
   declareProperty("pFromPtKick", m_pFromPtKick = false);
   declareProperty("pFromCurvature", m_pFromCurvature = false);
-  declareProperty("stateAtLastHit", m_stateAtLastHit = false);
+  using namespace StateParameters;
+  declareProperty("zStates", m_zStates = boost::assign::list_of(ZBegT)(ZMidT)(ZAtT));
   
 }
 //=============================================================================
@@ -82,16 +89,14 @@ LHCb::Track* SeedTrackCnvTool::convert(const SeedTrack* aTrack) const
 
 
   std::vector<SeedPnt> pnts = aTrack->usedPnts();
-  //std::cout << " starting a track " << pnts.size() << std::endl;
   for ( std::vector<SeedPnt>::const_iterator itP = pnts.begin(); pnts.end() != itP; ++itP ) {
     fitTrack->addToLhcbIDs((*itP).hit()->lhcbID());
-    //std::cout << (*itP).hit()->ITChan() << std::endl;
   } //it
 
-  double zRef = pnts.back().z();
-  if( !m_stateAtLastHit ) zRef = StateParameters::ZMidT;
-  
-  addState(aTrack, fitTrack, zRef );
+ 
+  for (std::vector<double>::const_iterator iterZ =  m_zStates.begin(); iterZ != m_zStates.end(); ++iterZ){  
+    addState(aTrack, fitTrack, *iterZ );
+  } // iterZ
 
   // add history
   fitTrack->setHistory(LHCb::Track::TsaTrack);
