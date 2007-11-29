@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.30 2007-07-31 10:40:32 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.31 2007-11-29 15:52:38 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -260,6 +260,14 @@ private:
   /// (option EnableCoralConnectionCleanUp, default = false).
   /// Setting this option works only if it is set for the first CondDBAccessSvc initialized.
   bool m_coralConnCleanUp;
+  
+  /// Time between two connection trials (in seconds).
+  /// Passed to CORAL when loaded.
+  int m_retrialPeriod;
+   
+  /// How long to keep retrying before giving up (in seconds).
+  /// Passed to CORAL when loaded.
+  int m_retrialTimeOut;
 
   // -------------------------------------
   // ---------- Time Out Thread ----------

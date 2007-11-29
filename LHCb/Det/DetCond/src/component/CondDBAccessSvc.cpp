@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.42 2007-08-01 16:18:18 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.43 2007-11-29 15:52:38 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -187,6 +187,12 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   
   declareProperty("LazyConnect",       m_lazyConnect     = true );
   
+  declareProperty("CoralConnectionRetrialPeriod", m_retrialPeriod = 60,
+                  "Time between two connection trials (in seconds).");
+  
+  declareProperty("CoralConnectionRetrialTimeOut", m_retrialTimeOut = 15*60,
+                  "How long to keep retrying before giving up (in seconds).");
+  
   if ( s_XMLstorageSpec.get() == NULL){
     // attribute list spec template
     s_XMLstorageSpec = std::auto_ptr<cool::RecordSpecification>(new cool::RecordSpecification());
@@ -365,7 +371,15 @@ StatusCode CondDBAccessSvc::i_openConnection(){
           connSvcConf.setConnectionTimeOut( 0 );
 
         }        
-        
+
+        connSvcConf.setConnectionRetrialPeriod(m_retrialPeriod);
+        log << MSG::INFO << "CORAL Connection Retrial Period set to "
+            << connSvcConf.connectionRetrialPeriod() << "s" << endmsg;
+
+        connSvcConf.setConnectionRetrialTimeOut(m_retrialTimeOut);
+        log << MSG::INFO << "CORAL Connection Retrial Time-Out set to "
+            << connSvcConf.connectionRetrialTimeOut() << "s" << endmsg;
+
       }
 
       log << MSG::DEBUG << "Get cool::DatabaseSvc" << endmsg;
