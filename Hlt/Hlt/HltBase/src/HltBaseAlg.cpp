@@ -1,4 +1,4 @@
-// $Id: HltBaseAlg.cpp,v 1.8 2007-06-25 20:40:11 hernando Exp $
+// $Id: HltBaseAlg.cpp,v 1.9 2007-11-29 12:59:04 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -8,7 +8,6 @@
 
 // local
 #include "HltBase/HltBaseAlg.h"
-#include "HltBase/EParser.h"
 #include "HltBase/ESequences.h"
 
 //-----------------------------------------------------------------------------
@@ -250,19 +249,11 @@ void HltBaseAlg::initializeHistosFromDescriptor() {
 
   if (m_histogramUpdatePeriod == 0) return;
 
-  const std::vector<std::string>& hdes = m_histoDescriptor.value();
-  for (std::vector<std::string>::const_iterator it = hdes.begin();
+  const std::map<std::string, Gaudi::Histo1DDef>& hdes = m_histoDescriptor.value();
+  for (std::map<std::string, Gaudi::Histo1DDef>::const_iterator it = hdes.begin();
        it != hdes.end(); it++){
-    std::string title = "";
-    int n = 100;
-    float x0 = 0.;
-    float xf = 1.;
-    if (EParser::parseHisto1D(*it,title,n,x0,xf)) {
-      book1D(title,x0,xf,n);
-      debug() << " booking histo from descriptor " << title 
-              << "( "<< n << " , "<< x0 <<" , " << xf << ") " 
-              << endreq;
-    } 
+      book(it->second);
+      debug() << " booking histo from descriptor " << it->second << endreq;
   }
 }
 
@@ -271,30 +262,22 @@ void HltBaseAlg::initializeHistosFromDescriptor() {
 void HltBaseAlg::initializeHisto( HltHisto& histo, 
                                   const std::string& title,
                                   float x0, float xf, int nbins) {
-  histo = NULL;
+  histo = 0;
   if (m_histogramUpdatePeriod == 0) return;
 
-  const std::vector<std::string> values = m_histoDescriptor.value();
-  for (std::vector<std::string >::const_iterator it = values.begin();
+  Gaudi::Histo1DDef hd(title,x0,xf,nbins);
+  const std::map<std::string,Gaudi::Histo1DDef> values = m_histoDescriptor.value();
+  for (std::map<std::string,Gaudi::Histo1DDef >::const_iterator it = values.begin();
        it != values.end(); ++it) {
-    const std::string& des = *it;
-    std::string xtitle = "";
-    int n = 100;
-    float y0 = 0.;
-    float yf = 100.;
-    bool ok =  EParser::parseHisto1D(des,xtitle,n,y0,yf);
-    if (ok && xtitle == title) { nbins = n; x0 = y0; xf = yf;}
+    if (it->first == title) { hd = it->second;}
   }
-  histo = this->book1D( title, x0, xf, nbins);
-  debug() << " booking histo  " << title 
-          << "( "<< nbins << " , "<< x0 <<" , " << xf << ") " 
-          << endreq;
+  histo = book(hd);
+  debug() << " booking histo  " << hd << endreq;
 };
 
 void HltBaseAlg::fillHisto( HltHisto& histo, float x, float weight) {
   if (!m_monitor) return;
   if (!histo) error() << " no histogram to fill " << endreq;
-  // verbose() << " fill histo " << x << endreq;
   this->fill( histo , x, weight);
 }
 

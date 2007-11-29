@@ -1,4 +1,4 @@
-// $Id: HltBaseAlg.h,v 1.5 2007-06-25 20:40:11 hernando Exp $
+// $Id: HltBaseAlg.h,v 1.6 2007-11-29 12:59:04 graven Exp $
 #ifndef HLTBASE_HLTBASEALG_H 
 #define HLTBASE_HLTBASEALG_H 1
 
@@ -22,8 +22,9 @@ class Condition;
  *       PassPeriod: period to always accept/pass the algorithm
  *       HistogramUpdatePeriod: period to fill histograms
  *       ConditionsName: path to the conditions of the derived algorithm
- *       HistoDescriptor: a list of strings to book histograms
- *              i.e MyAlgo.HistoDescriptor = {"PT,100,0.,5000."};
+ *       HistoDescriptor: a map of strings to GaudiKernel::Histo1D
+ *                        used to specify histograms
+ *                        syntax: e MyAlgo.HistoDescriptor = {"PT" : ("PT histo",0.,5000.,100)};
  *
  *  @author Hugo Ruiz Perez
  *  @author Jose Angel Hernando Morata
@@ -76,19 +77,19 @@ protected:
 
 protected:
 
-  // check that this a required container it is not null
+  // check that this a required container it is not 0
   template <class CON>
   inline void checkInput(CON*& cont, const std::string& comment) {
-    if (cont == NULL) error() << comment << endreq;
+    if (cont == 0) error() << comment << endreq;
   }
 
   // get objects from the TES and catch exception
   template <class T>
   bool retrieve(T*& t, const std::string& name) {
-    t = NULL;
+    t = 0;
     try {t  = get<T>(name);}
     catch (GaudiException) {warning() << " No obj at " << name << endreq;}
-    return (t != NULL);
+    return (t != 0);
   }
 
   // stop the execute method, print a message or send a error
@@ -108,7 +109,7 @@ protected:
   // TODO: to be revisit, we should use histogram instead
   class HltCounter {
   public:
-    HltCounter () {m_histo = NULL; m_counter = 0; m_name="";}
+    HltCounter () {m_histo = 0; m_counter = 0; m_name="";}
     // Return counter value if treated as int
     operator int () const { return m_counter;}
     friend MsgStream& operator << ( MsgStream& o, HltCounter& counter ) 
@@ -309,7 +310,8 @@ protected:
 protected:
 
   // Property to rebook histogram from options
-  StringArrayProperty m_histoDescriptor;
+  // StringArrayProperty m_histoDescriptor;
+  SimpleProperty< std::map<std::string, Gaudi::Histo1DDef> > m_histoDescriptor;
 
   // the period to fill histograms
   int m_histogramUpdatePeriod;

@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.18 2007-11-19 19:29:41 hmdegaud Exp $
+// $Id: HltAlgorithm.h,v 1.19 2007-11-29 12:59:03 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -169,7 +169,7 @@ protected:
   // retrieve a container from the data summary
   template <class CONT>
   void sumretrieve(CONT*& con, const std::string& name) {
-    con = NULL; if (name == "") return;
+    con = 0; if (name.empty()) return;
     std::string::size_type s = name.rfind('/');
     std::string selname = (s != std::string::npos ? name.substr(s+1) : name );
     int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",selname);
@@ -189,8 +189,8 @@ protected:
   // register a container to the data summary
   template <class CONT>
   void sumregister(CONT*& con, const std::string& name) {
-    con = NULL; if (name == "") return;
-    if (m_outputHolder != NULL) 
+    con = 0; if (name.empty()) return;
+    if (m_outputHolder != 0) 
       fatal() << " A selection output already registed! " << endreq;
     std::string::size_type s = name.rfind('/');
     std::string selname = (s != std::string::npos ? name.substr(s+1) : name );
@@ -204,7 +204,7 @@ protected:
   // to register a container in the HltDataProvider (at initialization level)
   template <class CONT>
   void hltregister(CONT*& con, const std::string& name) {
-    con = NULL; if (name == "") return;
+    con = 0; if (name.empty()) return;
     std::string loca = "/Event/"+name;
     if (exist< Hlt::DataHolder<CONT> > (m_hltSvc,loca)) {
       fatal() << " output location already exist " << loca << endreq;
@@ -218,7 +218,7 @@ protected:
   // retrieve a container from the HltDataProvider (at initialization level)
   template <class CONT>
   void hltretrieve(CONT*& con, const std::string& name) {
-    con = NULL; if (name == "") return;
+    con = 0; if (name.empty()) return;
     std::string loca = "/Event/"+name;
     if (! exist<Hlt::DataHolder<CONT> > (m_hltSvc,loca)) 
       fatal() << " input location does not exist " << loca << endreq;
@@ -262,7 +262,8 @@ protected:
   // register in a value in the configuration with a key
   template <class T>
   void confregister(const std::string& key, const T& value) {
-    std::string mykey = m_selectionName+"/"+key; m_conf->add(mykey,value);
+    std::string mykey = m_selectionName+"/"+key; 
+    m_conf->add(mykey,value);
     info() << " HLT [" << mykey << "] = " << m_conf->template retrieve<T>(mykey) << endreq;    
   }
 
