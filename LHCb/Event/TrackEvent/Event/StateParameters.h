@@ -20,7 +20,7 @@ namespace StateParameters
   /// (see Location enum in State.h)
   static const double ZBegRich1 =   990. * Gaudi::Units::mm;
   static const double ZEndRich1 =  2165. * Gaudi::Units::mm;
-  static const double ZAtT      =  9410. * Gaudi::Units::mm;
+  static const double ZEndT     =  9410. * Gaudi::Units::mm;
   static const double ZBegRich2 =  9450. * Gaudi::Units::mm;
   static const double ZEndRich2 = 11900. * Gaudi::Units::mm;
   static const double ZBegT     =  7500. * Gaudi::Units::mm;
