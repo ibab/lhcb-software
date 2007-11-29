@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.41 2007-11-20 07:36:36 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.42 2007-11-29 16:59:37 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -14,6 +14,7 @@
 #include "AIDA/IHistogramFactory.h"
 // from detector description
 #include "MuonDet/DeMuonGasGap.h"
+#include "MuonDet/DeMuonChamber.h"
 #include "MuonDet/MuonBasicGeometry.h"
 #include "Kernel/MuonTileID.h"
 
