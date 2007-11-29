@@ -14,6 +14,7 @@ __author__ = "Hugo RUIZ hugo.ruiz@cern.ch"
 
 from ParticleTranslator import PTranslate
 from math import *
+from ROOT import *
 
 import gaudimodule
 Track = gaudimodule.gbl.LHCb.Track
@@ -21,6 +22,7 @@ State = gaudimodule.gbl.LHCb.State
 
 DEBUG = False
 
+#---------------------------------------------------
 class IDLinker:
 
     def __init__(self,TES):
@@ -77,6 +79,7 @@ class IDLinker:
                 if (DEBUG): print " key ",key," w ",w
         return mypars
 
+#---------------------------------------------------
 def decayName(pars):
     """ providing a list of particles [pars], return a string with the decay
     the first particle should be the mother
@@ -90,6 +93,7 @@ def decayName(pars):
     if (DEBUG): print " decay: ", decay
     return decay
     
+#---------------------------------------------------
 def makeTrack(mcpar):
     """ make a Track object from a MCParticle
     """
@@ -131,6 +135,7 @@ def eve(mcpar,i=0):
     i += 1
     return rootMother(mom,i)
     
+#---------------------------------------------------
 def findDecay(mcpars,ngenerations = 1, pid=531):
     """ returns a list of lists, each one containing the search decay
     the mother of the decay has pid (i.e 531 Bs)
@@ -149,5 +154,120 @@ def findDecay(mcpars,ngenerations = 1, pid=531):
                 bsignal.append(bsons)
     if (DEBUG): print " findDecay: size ",len(bsignal)    
     return bsignal
+
+
+#---------------------------------------------------
+def getDecays(TES, MCDecayFinder, decayDescriptor) :
+    """ Returns a list of MC particles whose decay match a given decay descriptor
+    Author: Hugo Ruiz, hugo.ruiz@cern.ch"""
+
+    decayList = []
+    
+    if DEBUG: print 'Calling getDecays with decay descriptor:', decayDescriptor
+
+    mc = TES['MC/Particles']
+    MCDecayFinder.setDecay( decayDescriptor )
+    partPointer  = MakeNullPointer(gaudimodule.gbl.LHCb.MCParticle)
+
+    while MCDecayFinder.findDecay(mc,partPointer):
+        tempPartPointer = partPointer.clone()
+        part = gaudimodule.gbl.LHCb.MCParticle(tempPartPointer)
+        del tempPartPointer
+        decayList.append(part)
+
+    return decayList
+
+
+#---------------------------------------------------
+def getProducts(inputPart, recursive = True, maxDepth = 0,
+                removePZero = True, level = 0, wantHeavyCheck = False):
+    # Warning: any new argument has to be repeated in the two calls further down
+    """ Returns the descendents of a MC particle.
+    Accepts a MC particle or a list of MC particles as input. In the second case, all descendents are returned in the same output list.
+    If recursive is set to false, only daughters.
+    maxDepth sets maximum number of generations to explore. Do all if set to zero.
+    By default, particles with zero momentum are removed.
+    Author: Hugo Ruiz, hugo.ruiz@cern.ch """
+
+    if DEBUG: print 'Calling getProducts'
+    
+    if not inputPart:
+        if DEBUG: print 'No MC particle given as input!'
+        return []
+
+    products = []
+
+    # Check whether input is a list
+    try:
+        for iCand in inputPart: # inputPart is in fact a list
+            products += getProducts(iCand, recursive = recursive, maxDepth = maxDepth,
+                                    removePZero = removePZero, level = level + 0)
+        return products
+
+    # input is not a list
+    except: 
+        myVertices = inputPart.endVertices()
+        for iVert in myVertices:
+            try:
+                iProducts = iVert.products()
+            except:
+                print 'COULD NOT GET VERTICES'; raise RuntimeError
+            if removePZero:
+                iProducts = filter(lambda a:mod(a)>0,iProducts)
+            products += iProducts
+
+
+        # Recursivity
+        if recursive and ( ( not maxDepth )  or ( level < ( maxDepth - 1 ))): # - 1 because first level is always done
+            products += getProducts( products, recursive = recursive, maxDepth = maxDepth,
+                                     removePZero = removePZero , level = level + 1)
+
+        # Make sure that particles are not repeated
+        if wantHeavyCheck and level == 0:
+            print 'DOING HEAVY CHECK'
+            for iProd in products:
+                for jProd in products:
+                    if iProd!=jProd:
+                        if iProd.momentum() == jProd.momentum():
+                            if [f_absPid(iProd),f_absPid(jProd)] in [[311,130],[130,311],[311,310],[310,311]]:
+                                print 'REPEATED:',f_p(iProd),'because of K0 to KL to KS'
+                            else:
+                                print 'REPEATED FOR OTHER REASONS', f_pid(iProd),f_pid(jProd),f_p(iProd)
+                                raise RuntimeError
+        return products
+
+
+
+#---------------------------------------------------
+def showDecayTree( TES, MCDecayFinder, MCDebugTool, decayDescriptor, maxDepth = 1 ):
+    """ Prints the decays matching a given decay descriptor.
+    Author: Hugo Ruiz, hugo.ruiz@cern.ch"""
+
+    decayList = getDecays( TES, MCDecayFinder, decayDescriptor )
+    daughters = gaudimodule.gbl.std.vector('const LHCb::MCParticle*')() 
+    for decay in decayList :
+        MCDecayFinder.descendants(decay,daughters)
+        MCDebugTool.printTree(decay,maxDepth)
+    return
+
+
+
+#---------------------------------------------------
+def showBs( TES, MCDecayFinder, MCDebugTool, maxDepth = 2):
+    """ Prints the decays of all the B particles in the event.
+    Author: Hugo Ruiz, hugo.ruiz@cern.ch"""
+    
+    showDecayTree(TES, MCDecayFinder, MCDebugTool, '[<Xb>]cc', maxDepth = maxDepth)
+    return
+    
+
+#---------------------------------------------------
+def showAll(TES, MCDecayFinder, maxDepth = 2):
+    """ Prints the whole MC tree of the event.
+    Autor: Hugo Ruiz, hugo.ruiz@cern.ch"""
+
+    showDecayTree(TES, MCDecayFinder, MCDebutTool, 'pp=> [<Xb>]cc ...', maxDepth = maxDepth)
+    return
+    
 
 

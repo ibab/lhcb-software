@@ -99,7 +99,26 @@ ParticleTranslator={
     
     }
 
+#---------------------------------------------------
 def PTranslate(n):
     if (ParticleTranslator.has_key(n) == False): return str(n)
     return ParticleTranslator[n]
  
+#---------------------------------------------------
+def pid (a) :
+    """ Returns pid of a particle or mcparticle.
+    Author: Hugo Ruiz, hugo.ruiz@cern.ch"""
+    return a.particleID().pid()
+
+#---------------------------------------------------
+def absPid (a) :
+    """ Returns absolute value of pid of a particle or mcparticle.
+    Author: Hugo Ruiz, hugo.ruiz@cern.ch"""
+    return abs(pid(a))
+
+#---------------------------------------------------
+def pidName (a) :
+    """ Returns pid of a particle or mcparticle.
+    Author: Hugo Ruiz, hugo.ruiz@cern.ch"""
+    return  PTranslate(a.particleID().pid())
+

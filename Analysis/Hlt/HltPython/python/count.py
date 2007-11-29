@@ -7,6 +7,7 @@ __author__ = "Hugo RUIZ hugo.ruiz@cern.ch"
 # =============================================================================
 
 
+#---------------------------------------------------
 class counter:
     """ Simple counter class
     Author: Hugo Ruiz"""
@@ -41,25 +42,31 @@ class counter:
         return float(self.value)
 
 
+#---------------------------------------------------
 def printCounterDict (countDic, keyList = False, referenceKey = False):
     """ Prints a dictionnary of counters.
     List of keys can be provided as keyList to force an order.
     A reference counter key to compute %'s can be provided.
     See example at bottom!
-    Author: Hugo Ruiz
+    Author: Hugo Ruiz, hugo.ruiz@cern.ch
     """
     referenceKeyIndex = 0
     if not keyList: keyList = countDic.keys()
     for iKey in keyList:
         out = iKey+': '+str(countDic[iKey])
         if referenceKey and iKey!=referenceKey:
-            if countDic[referenceKey]!=0:
-                percent = 100*float(int(countDic[iKey]))/float(int(countDic[referenceKey]))
-                out += ' ('+str(percent)+'% of '+referenceKey+')'
-        print out
+            if countDic[referenceKey]>0 and countDic[iKey]>0:
+                try:
+                    perc = 100.*float(int(countDic[iKey]))/float(int(countDic[referenceKey]))
+                    out += ' ('+str(perc)+'% of '+referenceKey+')'
+                except:
+                    print 'COULDNT DO DIVISION WITH: ', countDic[iKey], countDic[referenceKey]
+                    raise RuntimeError
+    print out
     return
                                                       
 
+#---------------------------------------------------
 def prepareCounterDict( dict, keyList ):
     """ Fills a dictionnary of counters with initial value 0 from a list of counter keys
     Author: Hugo Ruiz"""
@@ -67,6 +74,8 @@ def prepareCounterDict( dict, keyList ):
         dict[iKey] = counter( 0 )
     return
 
+
+#---------------------------------------------------
 def resetCounterDict( dict):
     """ Resets to 0 a dictionnary of counters.
     Author: Hugo Ruiz"""
@@ -74,6 +83,9 @@ def resetCounterDict( dict):
         dict[iKey].setValue( 0 )
     return
 
+
+
+#---------------------------------------------------
 def countExample():
     """ To ilustrate behaviour of counter class and functions.
     Author: Hugo Ruiz"""
