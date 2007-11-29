@@ -1,14 +1,14 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.75 2007-11-28 16:00:42 wouter Exp $
+! $Id: release.notes,v 1.76 2007-11-29 08:36:38 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r8 2007-11-29 ==========================
 ! 2007-11-28 Wouter Hulsbergen
  - Fixed bug in TwoProngVertex::covMatrix7x7
 
-!========================= RecEvent v2r8 2007-11-27 ==========================
 ! 2007-11-27 - Chris Jones
  - Add new ProtoParticle TES location for HLT charged tracks
  - Add TES locations for Offline and HLT MuonPIDs
