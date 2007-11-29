@@ -4,6 +4,7 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v10r8 2007-11-29 ========================
 ! 2007-11-09 - "Antonis Papanestis"
  - Cleaned up DeRichHPD and DeRichHPDPanel and made them fully compatible
    with the alignment framework.
