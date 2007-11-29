@@ -3,79 +3,79 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <xstring>
+#include <string>
 DBContainer::DBContainer(void)
 {
 }
-	void DBContainer::setup(char* database,char* usr,char* pwd)
-	{
-		int ln;
-		ln	= strlen(database);
-		serv	= (char*)malloc(ln+1);
-		strcpy(serv,database);
-		ln	= strlen(usr);
-		user	=	(char*)malloc(ln+1);
-		strcpy(user,usr);
-		ln	= strlen(pwd);
-		passw	= (char*)malloc(ln+1);
-		strcpy(passw,pwd);
-
-	}
-	DBContainer::DBContainer(char* database,char* usr,char* pwd)
-	{
-		int status;
-		char ErrorMessage[1024];
-		setup(database,usr,pwd);
-		status = DBConnexion(database,usr,pwd,ErrorMessage);
-
-		ociError	= (OCIError*)get_ErrorHandle();
-		ociEnv		= (OCIEnv*)get_OCIEnv(); /* the environment handle */ 
-		ociHdbc		= (OCISvcCtx*)get_ContxtHdl(); /* the context handle */
-		mysrvhp		= (OCIServer*)get_ServerHandle(); /* the server handle */
-		myusrhp	= (OCISession*)get_SessionHandle; /* user session handle */
-	}
-	DBContainer::DBContainer(char* database,char* usr,char* pwd,OCIEnv*& myenvhp,OCIServer*& mysrvhp1,OCISession*& myusrhp1, OCISvcCtx*& mysvchp, OCIError*& myerrhp, char* ErrorMessage)
-	{
-		int status;
-		setup(database,usr,pwd);
-		status = DBConnexion(database,usr,pwd,ErrorMessage);
-
-		ociError	= (OCIError*)get_ErrorHandle();
-		ociEnv		= (OCIEnv*)get_OCIEnv(); /* the environment handle */ 
-		ociHdbc		= (OCISvcCtx*)get_ContxtHdl(); /* the context handle */
-		mysrvhp		= (OCIServer*)get_ServerHandle(); /* the server handle */
-		myusrhp	= (OCISession*)get_SessionHandle; /* user session handle */
-		myenvhp	= ociEnv;
-		mysrvhp1	= mysrvhp;
-		myusrhp1	= myusrhp;
-		mysvchp	= ociHdbc;
-		myerrhp	= ociError;
-	}
-	DBContainer::~DBContainer()
-	{
-	}
-
-	int DBContainer::Connect(void)  
+void DBContainer::setup(char* database,char* usr,char* pwd)
 {
-int c=0;
-int len_buffer=1000;
-char* ErrorMess=new char[len_buffer];
-std::string ErrorMess_copy;
+  int ln;
+  ln	= strlen(database);
+  serv	= (char*)malloc(ln+1);
+  strcpy(serv,database);
+  ln	= strlen(usr);
+  user	=	(char*)malloc(ln+1);
+  strcpy(user,usr);
+  ln	= strlen(pwd);
+  passw	= (char*)malloc(ln+1);
+  strcpy(passw,pwd);
+  
+}
+DBContainer::DBContainer(char* database,char* usr,char* pwd)
+{
+  int status;
+  char ErrorMessage[1024];
+  setup(database,usr,pwd);
+  status = DBConnexion(database,usr,pwd,ErrorMessage);
+  
+  ociError	= (OCIError*)get_ErrorHandle();
+  ociEnv		= (OCIEnv*)get_OCIEnv(); /* the environment handle */ 
+  ociHdbc		= (OCISvcCtx*)get_ContxtHdl(); /* the context handle */
+  mysrvhp		= (OCIServer*)get_ServerHandle(); /* the server handle */
+  myusrhp	= (OCISession*)get_SessionHandle; /* user session handle */
+}
+DBContainer::DBContainer(char* database,char* usr,char* pwd,OCIEnv*& myenvhp,OCIServer*& mysrvhp1,OCISession*& myusrhp1, OCISvcCtx*& mysvchp, OCIError*& myerrhp, char* ErrorMessage)
+{
+  int status;
+  setup(database,usr,pwd);
+  status = DBConnexion(database,usr,pwd,ErrorMessage);
+  
+  ociError	= (OCIError*)get_ErrorHandle();
+  ociEnv		= (OCIEnv*)get_OCIEnv(); /* the environment handle */ 
+  ociHdbc		= (OCISvcCtx*)get_ContxtHdl(); /* the context handle */
+  mysrvhp		= (OCIServer*)get_ServerHandle(); /* the server handle */
+  myusrhp	= (OCISession*)get_SessionHandle; /* user session handle */
+  myenvhp	= ociEnv;
+  mysrvhp1	= mysrvhp;
+  myusrhp1	= myusrhp;
+  mysvchp	= ociHdbc;
+  myerrhp	= ociError;
+}
+DBContainer::~DBContainer()
+{
+}
 
- c=DBConnexion(serv,user,passw,ErrorMess);
- if(c!=0)
- {
-	 ErrorMess_copy=ErrorMess;
-	 delete [] ErrorMess;
-//	 throw CONFDBEXCEPTION(ErrorMess_copy);
-	 return c;
- }
+int DBContainer::Connect(void)  
+{
+  int c=0;
+  int len_buffer=1000;
+  char* ErrorMess=new char[len_buffer];
+  std::string ErrorMess_copy;
+  
+  c=DBConnexion(serv,user,passw,ErrorMess);
+  if(c!=0)
+    {
+      ErrorMess_copy=ErrorMess;
+      delete [] ErrorMess;
+      //	 throw CONFDBEXCEPTION(ErrorMess_copy);
+      return c;
+    }
   ociEnv  = (OCIEnv*)get_OCIEnv();
   ociError = (OCIError*)get_ErrorHandle();
   ociHdbc = (OCISvcCtx*)get_ContxtHdl();
-
- delete [] ErrorMess;
-return c;
+  
+  delete [] ErrorMess;
+  return c;
 }
 
 
@@ -100,7 +100,7 @@ if(c!=0)
 delete [] ErrorMess;
 return c;
 }
-int DBContainer::followPath(eConnectivityCache *ecache, iConnectivityCache *icache, int elnkidx, HopTyp *hop, int *i, int dep)
+int DBContainer::followPath(eConnectivityCache *ecache, iConnectivityCache *icache, int elnkidx, HopTyp* /* hop */, int *i, int dep)
 {
 		HopTyp ehops[100];
 		HopTyp ihops[100];
@@ -232,9 +232,7 @@ ColDesc_char::ColDesc_char()
   OCIParam *parmdp;
   OCIError* ociError ;
   int status;
-  char *r =0;
   int rescode;
-  int itml=0;
 	nrow	+= numrow;
   ociError = (OCIError*)get_ErrorHandle();
 	stmt	= statement;
@@ -323,7 +321,7 @@ end:
 		//OCIStmt *stmt;
 		nchar	= strlen("select count(*) from (")+strlen(")")+strlen(cntselect);
 		char *numselect	= (char*)malloc(nchar);
-		sprintf(numselect,"select count(*) from (%s)\0", cntselect);
+		sprintf(numselect,"select count(*) from (%s)", cntselect);
     status =OCIHandleAlloc (ociEnv, (void**)&stmthp, OCI_HTYPE_STMT , 0, 0);
     if (status != 0) goto end;
     status=OCIStmtPrepare(stmthp, ociError, (text*) numselect,(ub4) strlen(numselect),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
@@ -385,9 +383,9 @@ end:;
     alloc_buffs();
 
     fetched_row=0;
-		status	= 0;
-		status =OCIStmtFetch2(stmthp, ociError, maxrow, OCI_FETCH_NEXT,1, OCI_DEFAULT);
-    int rescode=ShowErrors (status, ociError, "OCIStmtFetch2 unsuccessful");
+    status	= 0;
+    status =OCIStmtFetch2(stmthp, ociError, maxrow, OCI_FETCH_NEXT,1, OCI_DEFAULT);
+    ShowErrors (status, ociError, "OCIStmtFetch2 unsuccessful");
 		//status =OCIStmtFetch2(stmthp, ociError, maxrow/2, OCI_FETCH_NEXT,1, OCI_DEFAULT);
   //  rescode=ShowErrors (status, ociError, "OCIStmtFetch2 unsuccessful");
 		//print_row(0);
@@ -447,7 +445,7 @@ end:;
 
 	eConnectivityCache::eConnectivityCache (DBContainer *dbase) : ConnectivityCache (dbase)
   {
-		selectstring  = &"select\
+		selectstring = "select\
 											lnk.linkid,\
 											lnk.system_name,\
 											frdev.deviceid,\
@@ -477,7 +475,7 @@ end:;
 											(todev.deviceid=toport.deviceid)";
 
 
-  cntselect  = &"select lnk.linkid, lnk.system_name \
+  cntselect  = "select lnk.linkid, lnk.system_name \
 from lhcb_macroscopic_connectivity lnk \
 where lnk.lkused=1 and \
 mod(lnk.system_name,:system)=0 ";
@@ -553,7 +551,7 @@ mod(lnk.system_name,:system)=0 ";
 iConnectivityCache::iConnectivityCache (DBContainer *dbase) : ConnectivityCache (dbase)
   {
 
-selectstring  = &"select distinct lnk.linkid,\
+selectstring  = "select distinct lnk.linkid,\
   fromdev.deviceid,\
   fromdev.devicename||'?',\
   fromport.portid,\
@@ -573,7 +571,7 @@ from LHCB_MICROSCOPIC_CONNECTIVITY lnk,\
   todev.deviceid=toport.deviceid and\
 	mod(fromdev.system_name,:system)=0";
 
-  cntselect  = &"select lnk.linkid\
+  cntselect  = "select lnk.linkid\
   from LHCB_MICROSCOPIC_CONNECTIVITY lnk,\
   lhcb_port_properties fromport,\
   lhcb_lg_devices fromdev,\

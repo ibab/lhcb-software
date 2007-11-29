@@ -148,8 +148,8 @@ public:
   OCISvcCtx* ociHdbc;
   int fetched_row;
   int maxrow;
-  char *selectstring;
-	char *cntselect;
+  const char *selectstring;
+  const char *cntselect;
 
   ConnectivityCache (DBContainer *dbase);
   virtual void alloc_buffs(void)=0;
