@@ -1073,7 +1073,7 @@ function DeclarePage(theFullName IN varchar2,theDoc IN varchar2,hlist IN histotl
  myPName  PAGE.PAGENAME%TYPE;
  outName varchar2(350);
  Nin int;
- condition varchar2(5000);
+ condition varchar2(10000);
  CURSOR sh(Xpage PAGE.PAGENAME%TYPE,Xhisto SHOWHISTO.HISTO%TYPE,Xinstance SHOWHISTO.INSTANCE%TYPE) is 
 	select PAGE from SHOWHISTO where PAGE=Xpage and HISTO=Xhisto and INSTANCE=Xinstance;
  inst int;
