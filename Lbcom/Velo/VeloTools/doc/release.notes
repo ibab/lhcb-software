@@ -3,7 +3,8 @@
 ! Responsible : Tomasz Szumlak
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
-!========================== VeloTools v2r4 2007-11-01 ========================
+
+!========================== VeloTools v3r0 2007-11-29 ========================
 ! 2007-11-02 - Tomasz Szumlak
  - fix requirements file - TrackEvent dependecy added
 
@@ -31,6 +32,7 @@
 !========================== VeloTools v2r3 2007-10-03 ========================
 ! 2007-10-03 - Marco Cattaneo
  - Do not access detector element in constructor, do it in initialize
+
 !========================== VeloTools v2r2 2007-07-23 ========================
 ! 2007-07-23 - Marco Cattaneo
  - Remove obsolete options file (uses options names inconsistent with code)
