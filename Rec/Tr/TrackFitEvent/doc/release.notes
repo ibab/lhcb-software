@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v3r11 2007-11-29 ===================
+! 2007-11-29 - Marco Cattaneo
+ - Adapt to new location of IVeloClusterPosition.h, in TrackInterfaces
+
 !========================== TrackFitEvent v3r10 2007-11-09 ===================
 ! 2007-11-09 - Marco Cattaneo
  - Fix dependencies for building dictionaries

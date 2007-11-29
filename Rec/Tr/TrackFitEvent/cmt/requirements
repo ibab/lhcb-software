@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackFitEvent
-version           v3r10
+version           v3r11
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -14,6 +14,7 @@ branches          cmt doc dict Event xml
 # Used packages.
 #============================================================================
 use   LHCbKernel      v*      Kernel
+use   TrackInterfaces v*      Tr
 
 use   TrackEvent      v*      Event
 use   DigiEvent       v*      Event
