@@ -1,4 +1,4 @@
-// $Id: Track2Calo.cpp,v 1.2 2007-07-20 13:48:09 cattanem Exp $
+// $Id: Track2Calo.cpp,v 1.3 2007-11-29 08:35:17 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -138,7 +138,7 @@ LHCb::State Track2Calo::closestState(double x, double y,LHCb::ParticleID pid){
 
   // Find points of closest distance between calo Line and track Line
   Gaudi::XYZPoint cP,tP;
-  Gaudi::Math::closestPoints<Line,Gaudi::XYZPoint>(cLine,tLine,cP,tP);
+  Gaudi::Math::closestPoints<Line,Line,Gaudi::XYZPoint>(cLine,tLine,cP,tP);
 
   // propagate the state the new Z of closest distance
   StatusCode sc = m_extrapolator->propagate ( calostate, tP.Z() , pid);
