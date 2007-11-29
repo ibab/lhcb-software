@@ -23,6 +23,7 @@ class genClassDicts:
   def clean(self, str):
     str = str.replace('*','p')
     str = str.replace(':','_')
+    str = str.replace(' ','_')
     return str
 #--------------------------------------------------------------------------------
   def genFirstLevelIncludes(self, godPackage):

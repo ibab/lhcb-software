@@ -188,7 +188,11 @@
 >
 <!ENTITY StlVector '<template name="vector" t1="THIS"/>'
 >
+<!ENTITY StlConstVector '<template name="vector" t1="const THIS"/>'
+>
 <!ENTITY StlPtrVector '<template name="vector" t1="THIS*"/>'
+>
+<!ENTITY StlConstPtrVector '<template name="vector" t1="const THIS*"/>'
 >
 <!ENTITY DataObject '<template name="SmartRef"/>
         <template name="SmartRefVector"/>'

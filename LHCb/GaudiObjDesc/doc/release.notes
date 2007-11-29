@@ -4,6 +4,12 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+! 2007-11-29 - Stefan
+- New feature to allow construction of dictionaries for std::vector<const T*>
+  on demand (T==Event class). To do so, the XML entity &StlConstPtrVector; hast
+  to be put into the xml source of the corresponding event class definition.
+  (similar eg. to &KeyedObject; etc.)
+
 !======================== GaudiObjDesc v11r0 2007-11-29 ======================
 ! 2007-11-29 - Marco Cattaneo
  - Improved workaround for namespace scoping of GaudiUtils:: serializers
