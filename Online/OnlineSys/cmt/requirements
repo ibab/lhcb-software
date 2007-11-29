@@ -9,7 +9,8 @@ branches cmt doc
 use Adder             v4r4     Online
 use confDB            v1r1     Online
 use confDBpython      v1r2     Online
-use CCPCHist          v2r6     Online
+use $(CCPCHist_use)
+macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
 use DIM               v16r13   Online
 #use DimCond          v1r0     Online
 use ExampleGaucho     v2r4     Online
