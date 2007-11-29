@@ -652,9 +652,9 @@ namespace MBMDump  {
     BMID  m_bmID;
     MEPID m_mepID;
     int   m_partID;
-    char  m_name[12];
-    char  m_buffName[12];
-    char  m_buffType[12];
+    char  m_name[18];
+    char  m_buffName[20];
+    char  m_buffType[20];
     int   m_mepFlags;
     int*  m_memory;
     /// Buffer to requirements menus

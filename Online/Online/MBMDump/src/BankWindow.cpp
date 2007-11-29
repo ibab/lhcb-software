@@ -32,11 +32,11 @@ BankWindow::BankWindow(BaseMenu* par,int cmd_id, const Format& f, const RawBank*
       memset(txt,' ',sizeof(txt));
       // 0=nothing,1=offset,2=line number
       if(m_fmt.column_one_flag == 1)  {
-        sprintf(tmp,"%4ld",(char*)data-(char*)b->data());
+        sprintf(tmp,"%4d",(int)((char*)data-(char*)b->data()));
         memcpy(txt+3,tmp,4);
       }
       else if(m_fmt.column_one_flag == 2)  {
-        sprintf(tmp,"%4ld",(data-b->data())/m_fmt.words_per_line);
+        sprintf(tmp,"%4d",(int)((data-b->data())/m_fmt.words_per_line));
         memcpy(txt+3,tmp,4);
       }
       else  {

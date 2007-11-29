@@ -264,7 +264,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       handleMenu(C_GO);
       m_dispOffset = i;
       break;
-    case C_UP:
+    case C_DN:
       nl = shiftWordsUp(n_read,N_LINES);
       if(nl == 0)break;
       if(n_ftd_lines < N_LINES)break;
@@ -275,7 +275,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       if(n_last_read == 0)n_ftd_lines--;
       handleMenu(C_WRITE);
       break;
-    case C_DN:
+    case C_UP:
       if(offset_first_word <= 0)break;   /* < 0 => Fuck up */
       offset_first_word -= m_fmt.words_per_line;
       n_read = offset_first_word + N_LINES*m_fmt.words_per_line;
@@ -283,7 +283,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       n_last_read = format_line(offset_first_word,&m_lines[0][0]);
       handleMenu(C_WRITE);
       break;
-    case C_PU:
+    case C_PD:
       nl = shiftWordsUp(n_read,N_LINES);
       if(nl == 0)break;   /* return ?? */
       offset_first_word += nl*m_fmt.words_per_line;
@@ -292,7 +292,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       handleMenu(C_DISPLAY);
       handleMenu(C_WRITE);
       break;
-    case C_PD:
+    case C_PU:
       nl = shiftWordsDown(offset_first_word,N_LINES);
       if(nl == 0)break;   /* return ?? */
       shiftBlockDown(nl,N_LINES,LINE_LENGTH);

@@ -240,7 +240,7 @@ void LHCb::FmcMessageSvc::report(int typ,const std::string& src,
   strftime(sNow,13,"%b%d-%H%M%S",&lNow);
   /*-------------------------------------------------------------------------*/
   /* compose message header */
-  snprintf(header,BUF_SZ/2,"%s%s%s: %s(%s): %s(): ",sNow,sl[typ],hostName,
+  snprintf(header,BUF_SZ/2,"%s%s%s: %s(%s): %s: ",sNow,sl[typ],hostName,
            pName,utgid,src.c_str());
   /* NULL-terminate header if truncated */
   if(!memchr(header,0,BUF_SZ/2))header[BUF_SZ/2-1]='\0';
@@ -276,7 +276,7 @@ void LHCb::FmcMessageSvc::report(int typ,const std::string& src,
 /// Dispatch a message to the relevant streams.
 void LHCb::FmcMessageSvc::reportMessage(const Message& msg)
 {
-  i_reportMessage(msg);
+  //i_reportMessage(msg);
   report(msg.getType(),msg.getSource(),msg.getMessage());
 }
 /*****************************************************************************/

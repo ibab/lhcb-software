@@ -4,6 +4,7 @@ ApplicationMgr.Dlls                  = { "GaudiOnline", "GaudiUPI" };
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 ApplicationMgr.ExtSvc                = { "LHCb::ErrorDisplay/Display"};
+Runable.Wait                         = 3;
 MessageSvc.OutputLevel  = 0;  // Minimum is Error
 MessageSvc.Format = "% F%42W%S%7W%R%T %0W%M";
 MessageSvc.LoggerOnly                = true;

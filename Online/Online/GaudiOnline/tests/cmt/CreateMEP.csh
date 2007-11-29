@@ -25,5 +25,5 @@ Writer_1.Connection     = "file://mepData_1.dat";
 END-OF-OPTS
 #
 cat /tmp/CreateMEP.opts
-$GAUDIKERNELROOT/$CMTCONFIG/Gaudi.exe /tmp/CreateMEP.opts
+$ONLINEKERNELROOT/$CMTCONFIG/gentest.exe libGaudiKernel.so GaudiMain /tmp/CreateMEP.opts
 rm /tmp/CreateMEP.opts

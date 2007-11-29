@@ -73,7 +73,7 @@ StatusCode LHCb::GaudiTask::run()  {
       ip->setProperty(StringProperty("HistogramPersistency","NONE"));
       //ip->setProperty(StringProperty("Runable",        m_runable));
       //ip->setProperty(StringProperty("EventLoop",      m_evtloop));
-      ip->setProperty(StringProperty("MessageSvcType", "LHCb::OnlineMessageSvc"));
+      ip->setProperty(StringProperty("MessageSvcType",   m_msgsvcType));
       if ( m_mainOptions.empty() )  {
         ip->setProperty(StringProperty("JobOptionsType", "NONE"));
       }
@@ -283,7 +283,8 @@ int LHCb::GaudiTask::terminateApplication()  {
     try {
       StatusCode sc = m_subMgr->terminate();
       if ( sc.isSuccess() )   {
-	m_subMgr->release();
+	// Release is called by Gaudi::setInstance; danger of releasing twice?
+	// m_subMgr->release();
 	m_subMgr = 0;
 	Gaudi::setInstance(m_appMgr);
 	return 1;

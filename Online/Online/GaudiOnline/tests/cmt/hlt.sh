@@ -5,7 +5,7 @@ killall gentest.exe
 #rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 
 export MSGSVC=MessageSvc
-export MSGSVC=LHCb::DimMessageSvc
+export MSGSVC=LHCb::FmcMessageSvc
 
 export TAN_PORT=YES
 export TAN_NODE=$HOSTNAME
@@ -46,11 +46,14 @@ $MINITERM Moore_0@${HOST}   -e "export UTGID=Moore_0  ; $gaudi_exe -opt=$OPTS/Re
 $MINITERM Moore_1@${HOST}   -e "export UTGID=Moore_1  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
 $MINITERM Moore_2@${HOST}   -e "export UTGID=Moore_2  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
 # $MINITERM Moore_3@${HOST}   -e "export UTGID=Moore_3  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
+$MINITERM Receiver@${HOST}  -e "export UTGID=Receiver ; $gaudi_exe -opt=$OPTS/MDFReceiver.opts -main=$OPTS/Main.opts "&
+$MINITERM DiskWR@${HOST}    -e "export UTGID=DiskWR   ; $gaudi_exe -opt=$OPTS/DiskWR.opts -main=$OPTS/Main.opts "&
+#
+sleep 2
+#
 $MINITERM Sender@${HOST}    -e "export UTGID=Sender   ; $gaudi_exe -opt=$OPTS/MDFSender.opts -main=$OPTS/Main.opts "&
 $MINITERM Sender2@${HOST}    -e "export UTGID=Sender2   ; $gaudi_exe -opt=$OPTS/MDFSender.opts -main=$OPTS/Main.opts "&
 #
-$MINITERM Receiver@${HOST}  -e "export UTGID=Receiver ; $gaudi_exe -opt=$OPTS/MDFReceiver.opts -main=$OPTS/Main.opts "&
-$MINITERM DiskWR@${HOST}    -e "export UTGID=DiskWR   ; $gaudi_exe -opt=$OPTS/DiskWR.opts -main=$OPTS/Main.opts "&
 #
 #
 # For debugging enable this and disable any other
