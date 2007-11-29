@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.23 2007-11-27 19:03:36 ggiacomo Exp $
+! $Id: release.notes,v 1.24 2007-11-29 13:25:37 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
+! or using makedoc script in this folder
 !
+! 20071129  OnlineHistDB v4r4
+	- improved stability:
+		remove statement caching (in most of cases) to avoid ORA-01000 (too many open cursors)
+		eventually fix (hopefully) OCI object allocation problems	  
 
-! 20071127  OnlineHistDB v4r3
+! 20071128  OnlineHistDB v4r3
  	- remove OnlineRootHist class that has been merged into Presenter code
 	- remove ROOT dependencies
 
