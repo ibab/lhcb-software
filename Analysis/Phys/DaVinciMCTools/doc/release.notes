@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.189 2007-11-23 23:27:02 gligorov Exp $
+! $Id: release.notes,v 1.190 2007-11-29 10:59:04 cattanem Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-11-29 - Marco Cattaneo
+ - Removed DumpEvent algorithm, reimplemented as PrintMCDecayTreeAlg in
+   Sim/SimComponents package
+ - Removed FilterByRunEvent algorithm, reimplemented in Kernel/LHCbAlgs package
 
 ! 2007-11-23 - Vladimir Gligorov
  - Add src/DumpEvent{.cpp, .h}
