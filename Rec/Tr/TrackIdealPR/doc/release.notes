@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
+! 2007-11-29 - Stephanie Hansmann-Menzemer
+ - switch from ZAtT to ZEndT
 
 !======================= TrackIdealPR v2r13 2007-07-23 =======================
 ! 2007-07-23 - Silvia Pozzi and Wouter Hulsbergen

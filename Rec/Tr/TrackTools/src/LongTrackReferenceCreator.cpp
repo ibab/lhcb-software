@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.16 2007-11-20 16:09:31 wouter Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.17 2007-11-29 16:45:47 smenzeme Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -88,7 +88,7 @@ StatusCode LongTrackReferenceCreator::execute(LHCb::Track& aTrack) const{
     tState = aTrack.stateAt(LHCb::State::AtT);
   }
   else {
-    tState = aTrack.closestState( StateParameters::ZAtT );
+    tState = aTrack.closestState( StateParameters::ZEndT );
     if( tState.z() < StateParameters::ZBegT - TrackParameters::propagationTolerance ||
         tState.z() > StateParameters::ZBegRich2 + TrackParameters::propagationTolerance) 
       return Warning( "No T State retrieved!", StatusCode::FAILURE );

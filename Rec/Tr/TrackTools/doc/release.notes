@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
+! 2007-11-29 - Stephanie Hansmann-Menzemer
+ - change ZAtT -> ZEndT
 
 ! 2007-11-20 - Wouter HULSBERGEN
  - added missing tolerances for float comparison in LongTrackRefCreator

@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.39 2007-07-23 11:34:01 spozzi Exp $
+// $Id: IdealTracksCreator.cpp,v 1.40 2007-11-29 16:43:21 smenzeme Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -621,7 +621,7 @@ StatusCode IdealTracksCreator::initializeState( const MCParticle* mcPart,
   if (track->hasT() == true){
     State state; state.setLocation(State::AtT);
     StatusCode sc = m_stateCreator->createState(mcPart,
-                                     StateParameters::ZAtT , 
+                                     StateParameters::ZEndT , 
                                      state );
     if ( sc.isSuccess()){
       smearQOverP(state);
