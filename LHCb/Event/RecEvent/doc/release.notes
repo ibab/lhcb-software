@@ -1,5 +1,5 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.76 2007-11-29 08:36:38 cattanem Exp $
+! $Id: release.notes,v 1.77 2007-11-29 09:31:36 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
@@ -12,9 +12,6 @@
 ! 2007-11-27 - Chris Jones
  - Add new ProtoParticle TES location for HLT charged tracks
  - Add TES locations for Offline and HLT MuonPIDs
-
-! 2007-11-27 - Marco Cattaneo
- - Fixes to cope with changes in GaudiObjDesc v11r0 (backward compatible)
 
 ! 2007-11-23 - Sean Brisbane
  - Add new class, TwoProngVertex

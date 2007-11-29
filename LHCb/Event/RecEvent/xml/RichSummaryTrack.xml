@@ -4,7 +4,7 @@
 <package name="RecEvent">
 
 <!-- **************************************************************************
-  * $Id: RichSummaryTrack.xml,v 1.2 2007-11-27 07:57:02 cattanem Exp $
+  * $Id: RichSummaryTrack.xml,v 1.3 2007-11-29 09:31:36 cattanem Exp $
   *****************************************************************************
   * XML-description of RichSummaryTrack class                                 *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -39,7 +39,7 @@
         <attribute 
                 name = "radSegments"
                 desc = "Vector of radiator segments for this track" 
-                type = "std::vector&lt;LHCb::RichSummaryRadSegment&gt;"
+                type = "LHCb::RichSummaryRadSegment::Vector"
         />
        
 </class>
