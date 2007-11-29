@@ -184,6 +184,7 @@ public:
   ColDesc_int odevid;
 
   eConnectivityCache (DBContainer *dbase) ;
+  virtual ~eConnectivityCache() {}
   virtual void alloc_buffs(void);
   void print_row(int r);
 };
@@ -203,6 +204,7 @@ public:
   ColDesc_char pnumto;
 
   iConnectivityCache (DBContainer *dbase) ;
+  virtual ~iConnectivityCache() {}
   virtual void alloc_buffs(void);
   void print_row(int r);
 };

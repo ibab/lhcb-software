@@ -3,7 +3,7 @@ package CCPCHist
 branches  cmt doc src
 use GaudiPolicy v*
 use DIM v* Online
-use BOOST v* LCG_Interfaces
+use Boost v* LCG_Interfaces
 
 apply_pattern install_more_includes more=CCPCHist
 library       CCPCHist *.cpp

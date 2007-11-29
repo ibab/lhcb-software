@@ -1,21 +1,25 @@
 // test.cpp : Defines the entry point for the console application.
 //
-
+#ifdef _WIN32
 #include <windows.h>
+#else
+#include "unistd.h"
+#define Sleep(x) ::sleep(x/1000)
+#endif
+#include <string>
 #include "oci.h"
 
-#include "confdb.h"
+#include "confDBpython/CONFDB.h"
 #include "CDB.h"
 
 
-
-int main(int argc, char* argv[])
+int main(int /* argc */, char** /* argv */)
 {
   DBContainer *cdb;
   int status;
-  string db("devdb");
-  string user("lhcb_configuration_dev");
-  string passw("T_75_op_LbDB009");
+  std::string db("devdb");
+  std::string user("lhcb_configuration_dev");
+  std::string passw("T_75_op_LbDB009");
 	cdb = new DBContainer((char*)db.c_str(),(char*)user.c_str(),(char*)passw.c_str());
 //  cdb->Connect();
   eConnectivityCache *ecache;
