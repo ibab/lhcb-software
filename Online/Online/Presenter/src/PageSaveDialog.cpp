@@ -159,6 +159,7 @@ void PageSaveDialog::ok()
         m_DbHistosOnPageIt = m_mainFrame->m_DbHistosOnPage.begin();
         while (m_DbHistosOnPageIt != m_mainFrame->m_DbHistosOnPage.end()) {
           if((*m_DbHistosOnPageIt)->onlineHistogram()->page() == page->name()) {
+	    (*m_DbHistosOnPageIt)->hostingPad->cd();
             (*m_DbHistosOnPageIt)->saveTH1ToDB((*m_DbHistosOnPageIt)->hostingPad);
           }
           m_DbHistosOnPageIt++;
