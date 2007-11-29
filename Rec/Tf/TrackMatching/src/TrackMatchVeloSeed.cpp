@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.4 2007-11-29 08:26:39 mneedham Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.5 2007-11-29 17:53:27 smenzeme Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -520,7 +520,7 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
 //=============================================================================
 double TrackMatchVeloSeed::determineZ( const Track* track )
 {
-  const State& seedState = track->closestState( StateParameters::ZAtT );
+  const State& seedState = track->closestState( StateParameters::ZEndT );
   double tX = seedState.tx();
   double zNew = m_matchAtZPosition ;
   if ( m_varZParameters.size() == 3 ) {

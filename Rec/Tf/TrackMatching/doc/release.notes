@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
+! 2007-11-29 Stephanie Hansmann-Menzemer
+ - Change ZAtT -> ZEndT
 
 ! 2007-11-29 M Needham
  - Copy all seed states to match track

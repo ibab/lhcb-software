@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnvTool.cpp,v 1.3 2007-11-29 08:11:55 mneedham Exp $
+// $Id: TsaSeedTrackCnvTool.cpp,v 1.4 2007-11-29 17:52:21 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -57,7 +57,7 @@ SeedTrackCnvTool::SeedTrackCnvTool( const std::string& type,
   declareProperty("pFromPtKick", m_pFromPtKick = false);
   declareProperty("pFromCurvature", m_pFromCurvature = false);
   using namespace StateParameters;
-  declareProperty("zStates", m_zStates = boost::assign::list_of(ZBegT)(ZMidT)(ZAtT));
+  declareProperty("zStates", m_zStates = boost::assign::list_of(ZBegT)(ZMidT)(ZEndT));
   
 }
 //=============================================================================
