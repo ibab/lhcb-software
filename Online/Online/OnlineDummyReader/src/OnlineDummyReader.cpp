@@ -22,7 +22,7 @@
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
 #include "GaudiKernel/System.h"
-
+#include "AIDA/IHistogram1D.h"
 
 using LHCb::RawBank;
 using LHCb::RawEvent;

@@ -4,7 +4,6 @@ version v1r3
 branches src cmt OnlineDummyReader
 #
 use DAQEvent            v* Event
-use ROOT		v* LCG_Interfaces
 apply_pattern install_more_includes more=OnlineDummyReader
 # 
 library OnlineDummyReader *.cpp
@@ -13,5 +12,7 @@ apply_pattern generate_rootmap library=OnlineDummyReader
 #===============================================================
 private
 
+use AIDA		v* LCG_Interfaces
+use ROOT		v* LCG_Interfaces
 apply_pattern library_Cshlibflags library=OnlineDummyReader
 apply_pattern library_Clinkopts   library=OnlineDummyReader 
