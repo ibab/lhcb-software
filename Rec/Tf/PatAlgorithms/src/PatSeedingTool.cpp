@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.4 2007-11-08 16:01:15 smenzeme Exp $
+// $Id: PatSeedingTool.cpp,v 1.5 2007-11-29 17:25:09 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -46,7 +46,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "InitialArrow",      m_initialArrow     = 0.0022                   );
   declareProperty( "CurveTol",          m_curveTol         =    5. * Gaudi::Units::mm );
   declareProperty( "zReference",        m_zReference       =  StateParameters::ZMidT);
-  declareProperty( "zOutput",           m_zOutput          =  StateParameters::ZAtT);
+  declareProperty( "zOutput",           m_zOutput          =  StateParameters::ZEndT);
   declareProperty( "dRatio",            m_dRatio           = -0.377e-3                );
   declareProperty( "TolExtrapolate",    m_tolExtrapolate   = 4.    * Gaudi::Units::mm );
   declareProperty( "yCorrection",       m_yCorrection      = .8e14 * Gaudi::Units::mm );

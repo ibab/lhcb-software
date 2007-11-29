@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2007-11-29 - Stephanie Hansmann-Menzemer
+ - change ZAtT -> ZEndT
 
 ! 2007-11-16 - Jose A. Hernando
  - getOrCreate at PatForward
