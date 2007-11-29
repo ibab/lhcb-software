@@ -33,7 +33,7 @@ Avoid 'from mod import *' in function modules
 
 Function examples
 =================
-If a module is called modulename, if possible add a last function in the module named modulenameExemple showing the functionality of the module
+If a module is called modulename, if possible add a last function in the module named modulenameExample showing the functionality of the module
 
 Functions
 =========
@@ -42,6 +42,8 @@ Allways write the return at the end
 Documentation
 =============
 Allays document between """ every module, class and function
+In the last line between """, write always:
+Author: Pepito Grillo, pepito.grillo@cern.ch
 
 
 Comments
@@ -50,3 +52,19 @@ Comment extensively the code, following the structure:
   <blank line>
   # Comment of what comes next
   <start code without blank line>
+
+Specific variable names
+=======================
+TES = gaudi.evtsvc()
+DEBUG
+
+Visual separation of material
+=============================
+Before new distinct group of stuff:
+#---------------------------------------------------
+# Utilities to do blabla
+#---------------------------------------------------
+
+New function:
+#---------------------------------------------------
+

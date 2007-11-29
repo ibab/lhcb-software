@@ -7,6 +7,10 @@
 ! 2007-11-29 - Hugo Ruiz
  - Move examples to examples directory
  - Add count.py module with a counter and related functions
+ - Add kinematics.py with kinematic functions
+ - Add easygraphs.py with tools to produce root graphs from python lists
+ - Add descriptors.py with a dictionary of decay descriptors for MCDecayFinder and with a function
+   to get Hans preselected data
  - Reformat header of mctools.py
 
 ! 2007-08-18 - Jose A. Hernando
