@@ -6,6 +6,7 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v2r7 2007-11-29 ===============================
 ! 2007-11-23 - Markus Frank
   - Add new Rawbank types to RawEventPrintout.h to retrieve bank type as string.
 
