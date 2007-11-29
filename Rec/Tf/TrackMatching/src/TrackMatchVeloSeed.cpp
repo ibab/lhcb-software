@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.3 2007-11-16 15:42:55 aperiean Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.4 2007-11-29 08:26:39 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -454,20 +454,21 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
        }
     }
 
-    // Add state at T
-    State aState = seedTrack -> closestState( StateParameters::ZAtT );
-    //State aState = tState;
-    aState.setLocation(LHCb::State::AtT);
-    TrackSymMatrix newC;
-    aState.setCovariance( newC );
-    aTrack -> addToStates( aState );
-
+    // copy all the states from the seed
+    const std::vector<State*>& seedStates = seedTrack->states();
+    for (std::vector<State*>::const_iterator iterS = seedStates.begin(); iterS != seedStates.end(); ++iterS){ 
+      State aState = **iterS;
+      TrackSymMatrix newC;
+      aState.setCovariance( newC );
+      aTrack -> addToStates( aState );
+    } // iterS
+ 
     // Add state at Velo
     if (veloTrack->hasStateAt(LHCb::State::EndVelo) == false) {
       return Warning("No State at Velo", StatusCode::FAILURE);
     }
     State vState = veloTrack->stateAt( LHCb::State::EndVelo );
-    vState.setQOverP(aState.qOverP());
+    vState.setQOverP(seedTrack->states().front()->qOverP());
     aTrack -> addToStates( vState );
 
     // Now make all the velo measurements
@@ -476,7 +477,7 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
       for (std::vector<LHCb::LHCbID>::const_iterator iter = ids.begin(); iter != ids.end(); ++iter){
         LHCb::Measurement* meas = m_measProvider->measurement(*iter);
 	// extrapolate to refz and set the reference
-        vState.setQOverP(aState.qOverP()); 
+        vState.setQOverP(seedTrack->states().front()->qOverP()); 
         m_extrapolatorVelo->propagate(vState,meas->z());
         meas->setRefVector( vState.stateVector() );
         aTrack->addToMeasurements( *meas );
