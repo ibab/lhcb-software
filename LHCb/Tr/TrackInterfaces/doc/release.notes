@@ -4,12 +4,14 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
-!====================== TrackInterfaces v3r10 2007-11-09 =====================
+!====================== TrackInterfaces v3r11 2007-11-28 =====================
 ! 2007-11-20 - Tomasz Szumlak
  - Add IVeloClusterPosition interface previously in LHCbKernel
 
 ! 2007-11-19 - Adrian Perieanu
  - Add in IPatForwardTool the method setNNSwitch
+
+!====================== TrackInterfaces v3r10 2007-11-09 =====================
 ! 2007-11-09 - Olivier Callot
  - Add interface IPatDebugTool, initially for debugging Velo tracking
 
