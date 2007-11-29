@@ -43,6 +43,4 @@ void upic_close_help () {
   free (Sys.help);
   Sys.help = (Page*) 0;
 }
-#else
-static void dummy(void)     { return; }
 #endif

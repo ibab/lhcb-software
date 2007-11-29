@@ -20,8 +20,12 @@ class UpiSensor : public Sensor {
 public:
   static UpiSensor& instance();
   static int newID();
+  virtual void  add(Interactor* source, void* id)
+  {  Sensor::add(source,id);                             }
   virtual void  add(Interactor* source, int id);
   virtual void  remove(Interactor* source, int id);
+  virtual void  remove(Interactor* source, void* id)
+  {  Sensor::remove(source,id);                          }
   virtual void  dispatch(void* param);
   virtual void  rearm() { }
 };

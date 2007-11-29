@@ -98,6 +98,4 @@ void upic_act_on_pop_up (int *num, int key, int row)    {
   /*  scrc_set_cursor (d->id, cur, 1);  */
   scrc_end_pasteboard_update (Sys.pb);
 }
-#else
-static void dummy(void) { return; }
 #endif

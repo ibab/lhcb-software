@@ -1,6 +1,6 @@
 /*
-upic_window.c
-Created           : 23-OCT-1989 by Christian Arnault
+  upic_window.c
+  Created           : 23-OCT-1989 by Christian Arnault
 */
 
 //---------------------------------------------------------------------------
@@ -11,7 +11,7 @@ Created           : 23-OCT-1989 by Christian Arnault
 //---------------------------------------------------------------------------
 extern System Sys;
 #ifdef REMOTE
-static int Window_id = 0;
+static long Window_id = 0;
 #endif
 
 //---------------------------------------------------------------------------
@@ -19,7 +19,7 @@ int upic_open_window () {
 #ifdef SCREEN
   Sys.window = scrc_open_window (SCR::SEQUENTIAL_WINDOW);
 #else
-  Sys.window = (Window*)(int)++Window_id;
+  Sys.window = (Window*)++Window_id;
   /*  upir_open_window ();  */
 #endif
   return (UPI_SS_NORMAL);

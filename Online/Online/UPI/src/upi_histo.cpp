@@ -22,6 +22,7 @@
 
 #ifdef SCREEN
 #define put_char(hh,rr,cc) scrc_put_chars (d0, hh, SCR::GRAPHIC, rr, cc, 0)
+static char    Max_text[80];
 #endif
 
 #define ROWS 21
@@ -33,7 +34,6 @@ static struct {
   Histo Linked_list_items;
 } Header = {0, 0, 0};
 
-static char    Max_text[80];
 static Pasteboard* Pb = 0;
 
 static Histo* Current_histo = 0;

@@ -1,3 +1,4 @@
+#ifdef SCREEN
 #include "RTL/rtl.h"
 #include "SCR/scr.h"
 #include "UPI/upidef.h"
@@ -396,3 +397,4 @@ extern "C" int upi_test (int argc, char** argv )   {
   while (loop());
     return 1;
 }
+#endif

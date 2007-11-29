@@ -76,10 +76,8 @@ static struct {
 
 static UpiBuffer SendBuffer = 0;
 static UpiBuffer GetBuffer = 0;
-static int Hidden = 0;
 
 static char My_name[AMS_NAME_LENGTH] = "";
-static char Server_name[AMS_NAME_LENGTH] = "";
 
 extern System Sys;
 
@@ -325,7 +323,7 @@ void upir_open_window ()    {
 }
 
 //--------------------------------------------------------------------------
-void upir_open_old_window (int menu_id)   {
+void upir_open_old_window (int /* menu_id */)   {
   UpiBufferSetCommand (SendBuffer, UPIF_OPEN_OLD_WINDOW);
   UpiBufferSend (SendBuffer);
 }
@@ -544,7 +542,7 @@ int upir_dloct (const char* prompt, int def, int* value, int min, int max)  {
 }
 
 //--------------------------------------------------------------------------
-int upir_dltxt (const char* prompt, const char* def, char* value, int length, int* ret_len) {
+int upir_dltxt (const char* prompt, const char* def, char* value, int length, int* /* ret_len */) {
   UpiBufferSetCommand (SendBuffer, UPIF_DLTXT);
   UpiBufferPutText (SendBuffer, prompt);
   UpiBufferPutText (SendBuffer, def);
@@ -731,7 +729,7 @@ int upic_find_menu_on_window(){  return UPI_SS_INVCOMMAND;    }
 int upic_refresh_screen()     {  return UPI_SS_INVCOMMAND;    }
 
 //--------------------------------------------------------------------------
-static int handler (unsigned int fac)  {
+static int handler (unsigned int /* fac */ )  {
   size_t bytes = 0;
   char* source = 0;
   UpiConnect connect = 0;
@@ -744,7 +742,7 @@ static int handler (unsigned int fac)  {
   int row, col, condition, menu_id, item_id, param_id, list_index;
 
   Queue* q = (Queue*) list_add_entry ((Linked_list*) &Header.queue.first, sizeof(Queue));
-  int status = upic_net_read (&buffer, &bytes, &source);
+  /* int status = */ upic_net_read (&buffer, &bytes, &source);
   if (source)    {
     connect = UpiConnectNew (source);
     free (source);
@@ -873,9 +871,9 @@ static int handler (unsigned int fac)  {
 }
 
 //--------------------------------------------------------------------------
-static int broadcast (int fac)    {
-  char* source;
-  int status = upic_net_spy (&source);
+static int broadcast (int /* fac */)    {
+  char* source = 0;
+  /* int status = */ upic_net_spy (&source);
   if (source)  {
     UpiConnect connect = UpiConnectFind (source);
     free (source);
@@ -887,7 +885,7 @@ static int broadcast (int fac)    {
 }
 
 //--------------------------------------------------------------------------
-static int rearm (int fac)    {
+static int rearm (int /* fac */)    {
   if (Header.queue.first) return (1);
   upic_end_update();
   UpiBufferPutInt (SendBuffer, UPIF_INPUT);

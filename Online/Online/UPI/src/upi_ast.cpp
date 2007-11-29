@@ -5,7 +5,9 @@
 #include "UPI/upidef.h"
 #include "SCR/scr.h"
 
+#ifdef SCREEN
 static int          upic_done = 0;
+#endif
 extern System Sys;
 
 //---------------------------------------------------------------------------

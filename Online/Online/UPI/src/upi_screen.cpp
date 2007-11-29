@@ -36,7 +36,11 @@ int upic_set_cursor (int menu_id, int item_id, int param_id)  {
   return (upic_set_cursor_and_mark (menu_id, item_id, param_id, 1));
 }
 //---------------------------------------------------------------------------
+#ifdef SCREEN
 int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int mark) {
+#else
+int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int /* mark */) {
+#endif
   Menu* m;
   Item* i;
   Param* p;
