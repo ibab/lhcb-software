@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.62 2007-11-26 17:39:16 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.63 2007-11-29 16:02:56 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -16,9 +16,6 @@
 
 // local
 #include "RichRawDataFormatTool.h"
-
-// Kernel
-#include "Kernel/SerializeStl.h"
 
 // Rich DAQ software
 using namespace Rich::DAQ;

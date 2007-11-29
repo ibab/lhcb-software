@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r13 2007-11-29 =======================
+! 2007-11-29 - Marco Cattaneo
+ - Remove obsolete SerializeStl include
+
 ! 2007-11-27 - Chris Jones
  - Add new method to RawBufferToSmartIDsTool to return the hits for a 
    requested HPD
