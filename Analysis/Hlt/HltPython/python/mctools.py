@@ -1,5 +1,16 @@
-# module with functions that deals LHCb MC particles and vertices
-# author: D. Martinez, J.A. Hernando
+#  Module with functions that deal with MC particles and vertices
+#  @date 2007-11-28
+#  @author Diego Martinez diego.martinez.santos@cern.ch
+#  @author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
+#  @author Hugo RUIZ hugo.ruiz@cern.ch
+# =============================================================================
+""" Module with functions that deal with MC particles and vertices """
+# =============================================================================
+__author__ = "Diego MARTINEZ diego.martinez.santos@cern.ch"
+__author__ = "Jose Angel HERNANDO jose.angel.hernando-morata@cern.ch"
+__author__ = "Hugo RUIZ hugo.ruiz@cern.ch"
+# =============================================================================
+
 
 from ParticleTranslator import PTranslate
 from math import *

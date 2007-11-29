@@ -4,6 +4,11 @@
 ! Purpose     : Exposing Hlt tools to Python
 !-----------------------------------------------------------------------------
 
+! 2007-11-29 - Hugo Ruiz
+ - Move examples to examples directory
+ - Add count.py module with a counter and related functions
+ - Reformat header of mctools.py
+
 ! 2007-08-18 - Jose A. Hernando
 	- python/hltexamples.py adding examples of how to use the HLT summary tool
 
