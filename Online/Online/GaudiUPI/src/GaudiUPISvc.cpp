@@ -4,7 +4,7 @@
 #include "GaudiUPI/ServiceMenu.h"
 #include "GaudiUPI/DialogMenu.h"
 #include "GaudiUPI/DisplayFactory.h"
-#include "GaudiUPI/UpiSensor.h"
+#include "UPI/UpiSensor.h"
 
 // Include Files
 #include "GaudiKernel/SmartIF.h"

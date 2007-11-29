@@ -1,9 +1,9 @@
 #include "GaudiUPI/DialogMenu.h"
 #include "GaudiUPI/DisplayFactory.h"
-#include "GaudiUPI/UpiSensor.h"
 #include "RTL/rtl.h"
 #include "CPP/Event.h"
 #include "UPI/upidef.h"
+#include "UPI/UpiSensor.h"
 
 namespace {
   DialogMenu* m_window;

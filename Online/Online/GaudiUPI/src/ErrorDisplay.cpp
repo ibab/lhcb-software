@@ -7,7 +7,7 @@
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiUPI/DisplayFactory.h"
 #include "GaudiUPI/DialogMenu.h"
-#include "GaudiUPI/UpiSensor.h"
+#include "UPI/UpiSensor.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 #include "RTL/Lock.h"
