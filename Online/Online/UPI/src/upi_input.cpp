@@ -311,9 +311,9 @@ int upic_key_action (unsigned int /* event */, void*)
     }
 
     switch (key)    {
-      case SCR::CTRL_A :
+      case SCR::CTRL_A:
         break;
-      case SCR::CTRL_E :
+      case SCR::CTRL_E:
         if (!p->flag)   {
           buf_pos = upic_non_blanks (p->buf);
           buf = p->buf + buf_pos;
@@ -324,7 +324,7 @@ int upic_key_action (unsigned int /* event */, void*)
           input = 1;
         }
         break;
-      case SCR::DELETE :
+      case SCR::DELETE_KEY:
         if (input && buf_pos)    {
           strcpy (buf-1, buf);
           buf--;
@@ -340,7 +340,7 @@ int upic_key_action (unsigned int /* event */, void*)
         }
         else scrc_ring_bell (d->id);
         break;
-      case SCR::MOVE_LEFT :
+      case SCR::MOVE_LEFT:
         if (input)   {
           if (buf_pos)   {
             if (buf_pos > pos)    {
