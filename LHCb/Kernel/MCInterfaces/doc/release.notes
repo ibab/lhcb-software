@@ -4,6 +4,9 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+! 2007-11-30 - Wouter Hulsbergen
+ - Add IIdealStateCreator::addMCHitStates
+
 !==================== MCInterfaces v1r3 2007-10-09 ===========================
 ! 2007-10-09 - Juan PALACIOS
  - Add MCInterfaces/IPrintMCDecayTreeTool.h

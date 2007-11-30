@@ -11,6 +11,7 @@ namespace LHCb {
  class MCHit;
  class State;
  class StateVector;
+ class Track ; 
 };
 
 /** @class IIdealStateCreator IIdealStateCreator.h "TrackMCInterfaces/IIdealStateCreator.h"
@@ -60,8 +61,9 @@ public:
   virtual StatusCode createStateVectorVertex( const LHCb::MCParticle* mcPart,
                                               LHCb::StateVector& pVec ) const = 0;
 
-
-
+  /// Adds states for all related MCHits to the track
+  virtual StatusCode addMCHitStates(const LHCb::MCParticle& mcPart, LHCb::Track& track) const = 0;
+  
 };
 
 #endif // TRACKMCINTERFACES_IIDEALSTATECREATOR_H
