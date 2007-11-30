@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.16 2007-06-22 16:47:08 mneedham Exp $
+// $Id: IdealStateCreator.cpp,v 1.17 2007-11-30 11:04:58 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -13,6 +13,7 @@
 #include "Event/State.h"
 #include "Event/StateVector.h"
 #include "Event/TrackParameters.h"
+#include "Event/Track.h"
 
 // local
 #include "IdealStateCreator.h"
@@ -357,3 +358,23 @@ void IdealStateCreator::correctSlopes(const MCHit* mcHit,
 }
 
 //=============================================================================
+// Adds states for all related MCHits to the track
+//=============================================================================
+StatusCode IdealStateCreator::addMCHitStates(const LHCb::MCParticle& mcPart, LHCb::Track& track) const
+{
+  // adds states at all MC hit positions
+  LHCb::Track::StateContainer newstates ;
+  for (std::vector<HitLinks>::iterator iterDet = m_links.begin(); 
+       iterDet != m_links.end(); ++iterDet){
+    // get the links for this detector 
+    MCHit* aMCHit = iterDet->first( &mcPart );
+    while( 0 != aMCHit ) {
+      LHCb::StateVector statevec ;
+      createStateVector(aMCHit,statevec ) ;
+      newstates.push_back( new LHCb::State(statevec) ) ;
+      aMCHit = iterDet->next();
+    } 
+  }
+  track.addToStates( newstates ) ;
+  return StatusCode::SUCCESS ;
+}

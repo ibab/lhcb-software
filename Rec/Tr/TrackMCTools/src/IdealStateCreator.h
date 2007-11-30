@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.h,v 1.13 2007-06-22 16:47:08 mneedham Exp $
+// $Id: IdealStateCreator.h,v 1.14 2007-11-30 11:04:58 wouter Exp $
 #ifndef TRACKMCTOOLS_IDEALSTATECREATOR_H
 #define TRACKMCTOOLS_IDEALSTATECREATOR_H 1
 
@@ -135,8 +135,10 @@ public:
   virtual StatusCode createStateVectorVertex( const LHCb::MCParticle* mcPart,
                                         LHCb::StateVector& pVec ) const;
 
-
   
+  /** Adds states for all related MCHits to the track */
+  StatusCode addMCHitStates(const LHCb::MCParticle& mcPart, LHCb::Track& track) const ;
+      
   /** Implement the handle method for the Incident service.
   *  This is used to inform the tool of software incidents.
   *
