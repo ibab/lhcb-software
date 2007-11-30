@@ -2,15 +2,16 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
-! 2007-26-11 M Needham
+!=========================== STCheckers v2r3 2007-11-30 =======================
+! 2007-11-26 M Needham
  - Bug fix in neighbour sum histo
 
-! 2007-23-11 M Needham
- - Ensure histo ids are the same
+! 2007-11-23 M Needham
+ - Ensure histo ids do not change
  - Add some consts
 
-! 2007-15-11 M Needham
- - Make input location of STClusters2MCHits a jobOption
+! 2007-11-15 M Needham
+ - Make input location of STEffChecker a jobOption
 
 !=========================== STCheckers v2r2 2007-05-29 =======================
 ! 2007-05-29 - Marco Cattaneo
