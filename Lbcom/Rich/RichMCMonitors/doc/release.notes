@@ -4,8 +4,9 @@
 ! Purpose     : Monitor algorithms that exclusively use MCEvent data objects
 !-----------------------------------------------------------------------------
 
+!========================== RichMCMonitors v1r5 2007-11-30 ===================
 ! 2007-11-12 - Chris Jones
- - Add check for existance of MCRichHits in MCCKPhotonYieldAlg, so processing 
+ - Add check for existence of MCRichHits in MCCKPhotonYieldAlg, so processing 
    is not aborted when these data objects are missing (a warning is printed).
 
 !========================== RichMCMonitors v1r4 2007-07-09 ===================
