@@ -1,4 +1,4 @@
-// $Id: IMeasurementProvider.h,v 1.9 2007-07-23 11:21:15 spozzi Exp $
+// $Id: IMeasurementProvider.h,v 1.10 2007-11-30 14:19:45 wouter Exp $
 #ifndef TRACKINTERFACES_IMEASUREMENTPROVIDER_H 
 #define TRACKINTERFACES_IMEASUREMENTPROVIDER_H 1
 
@@ -6,6 +6,7 @@
 // -------------
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+#include <vector>
 
 // Forward declarations
 namespace LHCb {
@@ -13,6 +14,7 @@ namespace LHCb {
  class Track;
  class Measurement;
  class StateVector;
+ class ZTrajectory ; 
 };
 
 static const InterfaceID IID_IMeasurementProvider ( "IMeasurementProvider", 1, 0 );
@@ -54,20 +56,18 @@ public:
       things like errors depending on track angle are correctly
       set. */
 
+  /** Construct a measurement with a reference trajectory. This takes care that
+      things like errors depending on track angle are correctly set. */
   virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, 
-					  const LHCb::StateVector& ref,
-					  bool localY = false ) const = 0;
-
-  /** update a measurement with a statevector **/
-  virtual StatusCode update( LHCb::Measurement& m, const LHCb::StateVector& state ) const = 0 ;
-
-  /** get the z-position from the lhcb-id **/
-  virtual double nominalZ( const LHCb::LHCbID& id ) const = 0 ;
-
-  /** This method is depricated **/
-  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, double /* par */ ) const { return measurement(id) ; }
-  /** This method is depricated **/
-  virtual void load() {}
-
+                                          const LHCb::ZTrajectory& reftraj,
+                                          bool localY = false ) const = 0;
+  
+  /** return the 'nominal' z-coordinate for the hit **/
+  virtual double nominalZ(const LHCb::LHCbID& id) const = 0 ;
+  
+  /** create measurements for a set of LHCbIDs **/
+  virtual void addToMeasurements( const std::vector<LHCb::LHCbID>&,
+                                  std::vector<LHCb::Measurement*>&,
+                                  const LHCb::ZTrajectory& ) const = 0 ;
 };
 #endif // TRACKINTERFACES_IMEASUREMENTPROVIDER_H
