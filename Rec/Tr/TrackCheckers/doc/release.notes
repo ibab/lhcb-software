@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v3r3 2007-11-30 =======================
 ! 2007-11-19 Wouter Hulsbergen
  - Adapted to change in OTMeasurement interface
 
