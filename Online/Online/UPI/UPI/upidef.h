@@ -197,8 +197,8 @@ struct PARAMETER
           val,
           min,
           max;
-  int  *list,
-        list_size;
+  void *list;
+  int   list_size;
   int   flag;                  /*  The <list-only> flag             */
   int   fortran;               /*  Fortran variable (float/strings) */
   

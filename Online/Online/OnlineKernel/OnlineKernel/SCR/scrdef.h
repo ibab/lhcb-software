@@ -38,9 +38,9 @@ namespace SCR {
           MOVE_UP,     // 28   11C
           MOVE_DOWN,   // 29   11D
           MOVE_LEFT,   // 30   11E
-          MOVE_RIGHT,  // 31   12F
+          MOVE_RIGHT,  // 31   11F
 
-          F6,          // 32
+          F6,          // 32   120
           F7,
           F8,
           F9,
@@ -48,16 +48,16 @@ namespace SCR {
           F11,
           F12,
           F13,
-          F14,         // 40
+          F14,         // 40  128
           F15,
-          F16,
+          F16,         // 42  12A
           F17,
           F18,
           F19,
           F20,
-          KPD_COMMA,
-          KPD_MINUS,
-          KPD_PERIOD,
+          KPD_COMMA,   //     12F
+          KPD_MINUS,   //     130
+          KPD_PERIOD,  //     131
 
           KPD_0,       // 50
           KPD_1,
@@ -66,19 +66,19 @@ namespace SCR {
           KPD_4,
           KPD_5,
           KPD_6,
-          KPD_7,
+          KPD_7,      //     139
           KPD_8,
           KPD_9,
 
           KPD_ENTER,  // 60
           KPD_PF1,
           KPD_PF2,
-          KPD_PF3,
-          KPD_PF4,
+          KPD_PF3,    //    13F
+          KPD_PF4,    // 64 140
           
-          KPD_FIND,
-          KPD_INSERT,
-          KPD_REMOVE,
+          KPD_FIND,   // 65 141
+          KPD_INSERT, // 66 142
+          KPD_REMOVE, // 67 143
           KPD_SELECT,
           KPD_PREV,
           KPD_NEXT,

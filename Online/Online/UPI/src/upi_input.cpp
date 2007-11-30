@@ -297,13 +297,14 @@ int upic_key_action (unsigned int /* event */, void*)
     input = p->input;
     type  = p->type;
     list_elem = p->val;
-    list_pos = p->list_size?p->list_pos:-1;
+    list_pos = p->list_size ? p->list_pos : -1;
 
     if (Sys.pop_up)    {
       upic_act_on_pop_up (&list_pos, key, 0);
       if (key == SCR::RETURN_KEY || key == SCR::ENTER)  {
-        if (type == REAL_FMT) list_elem.d  = *((double*) p->list + list_pos);
-        else list_elem.i = *(p->list + list_pos);
+        if (type == REAL_FMT) list_elem.d  = *((double*)p->list + list_pos);
+        else if (type == ASC_FMT) list_elem.c  = *((char**)p->list + list_pos);
+        else list_elem.i = *((int*)p->list + list_pos);
         upic_print_param (p, buf, list_elem);
         upic_draw_param (d, p, row, SCR::INVERSE, 0);
       }
@@ -326,8 +327,7 @@ int upic_key_action (unsigned int /* event */, void*)
         break;
       case SCR::DELETE_KEY:
         if (input && buf_pos)    {
-          strcpy (buf-1, buf);
-          buf--;
+          ::strcpy (--buf, buf);
           p->buf[p->size - 1] = ' ';
           if (buf_pos > pos)   {        /* scroll to right */
             pos++;
@@ -385,8 +385,7 @@ int upic_key_action (unsigned int /* event */, void*)
         break;
       case SCR::KPD_PERIOD :
         if (Sys.pop_up) upic_close_pop_up ();
-        else if (p->list_size > 1)
-        {
+        else if (p->list_size > 1) {
           upic_open_pop_up (m, p, row, col);
           pos = 0;
           input = 0;
@@ -499,9 +498,9 @@ int upic_key_action (unsigned int /* event */, void*)
         if (p->list_size)   {
           list_pos++;
           if (list_pos >= p->list_size) list_pos = 0;
-          if (type == REAL_FMT)
-            list_elem.d  = *((double*) p->list + list_pos);
-          else list_elem.i = *(p->list + list_pos);
+          if (type == REAL_FMT) list_elem.d  = *((double*) p->list + list_pos);
+          else if (type == ASC_FMT) list_elem.c  = *((char**) p->list + list_pos);
+          else list_elem.i = *((int*)p->list + list_pos);
           buf = p->buf;
           upic_print_param (p, p->buf, list_elem);
           upic_draw_param (d, p, row, SCR::INVERSE, OFF);
