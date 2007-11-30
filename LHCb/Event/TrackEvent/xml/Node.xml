@@ -20,68 +20,108 @@
 
       &StlPtrVector;
 
+      <enum
+        name    = 'Type'
+        value   = 'Unknown,HitOnTrack,Outlier,Reference'
+        desc    = 'enumerator for the type of Node'
+        access  = 'PUBLIC' />
+
       <constructor 
-	desc     = "Constructor from a State and a Measurement" 
-	argList  = "State* state, Measurement* meas"
-	initList = "m_measurement(meas), m_residual(0.0), m_errResidual(0.0), m_errMeasure(0.0), m_projectionMatrix()">
+	desc     = "Constructor from a Measurement" 
+	argList  = "LHCb::Measurement* meas"
+	initList = "m_type(HitOnTrack),m_refIsSet(false), m_measurement(meas), m_residual(0.0), m_errResidual(0.0), m_errMeasure(0.0), m_projectionMatrix()">
         <code>
-  m_state = state -> clone();
+          m_refVector.setZ(meas->z()) ;
         </code>
       </constructor>
 
       <constructor 
-         desc = "copy constructor"
-         argList = "const LHCb::Node&amp; aNode" >
+	desc     = "Constructor from a z-position"
+	argList  = "double z"
+	initList = "m_type(Reference),m_refIsSet(false), m_measurement(0), m_residual(0.0), m_errResidual(0.0), m_errMeasure(0.0), m_projectionMatrix()">
+        <code>
+          m_refVector.setZ(z) ;
+        </code>
       </constructor>
-
+      
       <destructor virtual = 'TRUE' desc='destructer'>
+        <code>
+        </code>
       </destructor>
  
       <attribute
-        type    = 'LHCb::State*'
+        type    = 'Type'
+        name    = 'type'
+        setMeth = 'TRUE'
+        getMeth = 'TRUE'
+        desc    = 'type of node' />
+
+      <attribute
+        type    = 'LHCb::State'
         name    = 'state'
+        setMeth = 'TRUE'
+        getMeth = 'TRUE'
+        nonconstaccessor = 'TRUE'
+        desc    = 'state' />
+
+      <attribute
+        type    = 'LHCb::StateVector'
+        name    = 'refVector'
+        desc    = 'the reference vector'
         setMeth = 'FALSE'
-        getMeth = 'FALSE'
-        desc    = 'pointer to the state (owner)'
-        access  = 'PROTECTED' />
+        getMeth = 'TRUE' />
+
+      <attribute
+        type    = 'bool'
+        name    = 'refIsSet'
+        desc    = 'flag for the reference vector'
+        setMeth = 'FALSE' />
 
       <attribute
         type    = 'LHCb::Measurement*'
         name    = 'measurement'
         setMeth = 'FALSE'
         getMeth = 'FALSE'
-        desc    = 'pointer to the measurement (not owner)'
-        access  = 'PROTECTED' />
+        desc    = 'pointer to the measurement (not owner)' />
 
       <attribute
         type    = 'double'
         name    = 'residual'
-        desc    = 'the residual value'
-        access  = 'PROTECTED' />
+        desc    = 'the residual value' />
 
       <attribute
         type    = 'double'
         name    = 'errResidual'
-        desc    = 'the residual error'
-        access  = 'PROTECTED' />
+        desc    = 'the residual error'/>
 
       <attribute
         type    = 'double'
         name    = 'errMeasure'
-        desc    = 'the measure error'
-        access  = 'PROTECTED' />
+        desc    = 'the measure error' />
 
       <attribute
         type    = 'Gaudi::TrackProjectionMatrix'
         name    = 'projectionMatrix'
-        desc    = 'the projection matrix'
-        access  = 'PROTECTED' />
+        desc    = 'the projection matrix' />
 
       <method
-        type    = 'void'
-        name    = 'reset'
-	virtual = 'TRUE'
-        desc    = 'Clear the node before re-use'>
+        name    = 'setRefVector'
+        desc    = 'Update the reference vector'
+        argList = 'const Gaudi::TrackVector refVector'>
+        <code>
+  m_refIsSet  = true;
+  m_refVector.parameters() = refVector;     
+        </code>
+      </method>
+
+      <method
+        name    = 'setRefVector'
+        desc    = 'Update the reference vector'
+        argList = 'const LHCb::StateVector refVector'>
+        <code>
+  m_refIsSet  = true;
+  m_refVector = refVector;
+        </code>
       </method>
 
       <method
@@ -130,40 +170,11 @@
       </method>
 
       <method
-        type    = 'LHCb::State &amp;'
-        name    = 'state'
-        desc    = 'Retrieve the reference to the state'>
-        <code>
-  return *m_state;
-        </code>
-      </method>
-
-      <method
-        type    = 'LHCb::State &amp;'
-        name    = 'state'
-        desc    = 'Retrieve const  the reference to the state'
-        const   = 'TRUE'>
-        <code>
-  return *m_state;
-        </code>
-      </method>
-
-      <method
         type    = 'LHCb::Node*'
         name    = 'clone'
         desc    = 'Clone the Node'
         const   = 'TRUE'
         virtual = 'TRUE'>
-      </method>
-
-      <method
-        name    = 'setState'
-        argList = 'State state'
-        desc    = 'Update the MOO state'>
-        <code>
-  if (m_state !=0) delete m_state;
-  m_state = state.clone();
-        </code>
       </method>
 
       <method
@@ -214,7 +225,7 @@
         const   = 'TRUE'
         desc    = 'z position of Node'>
         <code>
-          return m_state ? m_state->z() : 0.0 ;
+          return m_refVector.z() ;
         </code>
       </method>
 
@@ -224,7 +235,7 @@
         const   = 'TRUE'
         desc    = 'Position of the State on the Node'>
         <code>
-          return m_state ? m_state->position() : Gaudi::XYZPoint(0.,0.,0.) ;
+          return m_state.position() ;
         </code>
       </method>
 

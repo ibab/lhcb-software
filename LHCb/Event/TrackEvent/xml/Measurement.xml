@@ -40,23 +40,17 @@
 
       <constructor 
 	desc     = "Copy constructor" 
-	argList  = "LHCb::Measurement other" >
+	argList  = "LHCb::Measurement other" 
+        initList = "m_mtype(other.m_mtype),m_z(other.m_z),m_measure(other.m_measure),m_errMeasure(other.m_errMeasure),m_lhcbID(other.m_lhcbID)" >
         <code>
-          m_mtype = other.m_mtype;
-          m_z = other.m_z;
-          m_measure = other.m_measure;
-          m_errMeasure = other.m_errMeasure;
           m_trajectory.reset( (other.m_trajectory)->clone().release());
-          m_lhcbID = other.m_lhcbID;
-          m_refVector = other.m_refVector;
-          m_refIsSet = other.m_refIsSet;
         </code>
       </constructor>
 
       <constructor 
 	desc     = "Constructor" 
 	argList  = "const LHCb::Measurement::Type type, const LHCb::LHCbID id"
-        initList = "m_mtype(type), m_z(0), m_lhcbID(id), m_refIsSet(false)" >
+        initList = "m_mtype(type), m_lhcbID(id)" >
       </constructor>
 
      <attribute
@@ -107,20 +101,6 @@
         name    = 'lhcbID'
         desc    = 'the corresponding LHCbID'
         access  = 'PROTECTED' />
-
-      <attribute
-        type    = 'Gaudi::TrackVector'
-        name    = 'refVector'
-        desc    = 'the reference vector'
-        access  = 'PROTECTED' 
-        setMeth = 'FALSE' />
-
-      <attribute
-        type    = 'bool'
-        name    = 'refIsSet'
-        desc    = 'flag for the reference vector'
-        access  = 'PROTECTED'
-        setMeth = 'FALSE' />
 
       <method
         type    = 'double'
@@ -186,33 +166,21 @@
       </method>
 
       <method
-        name    = 'setRefVector'
-        desc    = 'Update the reference vector'
-        argList = 'const Gaudi::TrackVector refVector'>
-        <code>
-  m_refIsSet  = true;
-  m_refVector = refVector;
-        </code>
-      </method>
-
-      <method
-        name    = 'setRefVector'
-        desc    = 'Update the reference vector'
-        argList = 'const LHCb::StateVector refVector'>
-        <code>
-  m_refIsSet  = true;
-  m_z         = refVector.z();
-  m_refVector = refVector.parameters();
-        </code>
-      </method>
-
-      <method
         type    = 'const LHCb::Trajectory&amp;'
         name    = 'trajectory'
         desc    = 'Retrieve the trajectory representing the measurement'
         const   = 'TRUE'>
         <code>
   return *m_trajectory;
+        </code>
+      </method>
+
+       <method
+        name    = 'setTrajectory'
+        desc    = 'set the trajectory (takes ownership)'
+	argList = 'LHCb::Trajectory* traj'>
+	<code>
+ m_trajectory = std::auto_ptr &lt; LHCb::Trajectory &gt;(traj) ;
         </code>
       </method>
 
