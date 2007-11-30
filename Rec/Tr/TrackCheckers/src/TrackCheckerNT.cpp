@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.cpp,v 1.6 2007-10-22 09:45:51 mschille Exp $
+// $Id: TrackCheckerNT.cpp,v 1.7 2007-11-30 14:36:02 wouter Exp $
 // Include files 
 
 // local
@@ -20,6 +20,7 @@
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
 #include "Event/StateTraj.h"
+#include "Event/OTTime.h"
 
 // Detector stuff
 #include <OTDet/DeOTDetector.h>
@@ -352,7 +353,7 @@ MCParticle* TrackCheckerNT::getMCParticle(const Measurement *mm)
     if ( otLink.notFound() )
       error() << "Unable to retrieve OTTime-MCParticle linker table" << endmsg;
     else
-      return otLink.first(m->time());
+      return otLink.first(m->channel());
   } else if (mm->checkType(Measurement::TT)) {
     const STMeasurement *m = dynamic_cast<const STMeasurement*>(mm);
     LinkedTo<MCParticle, STCluster> ttLink(evtSvc(),msgSvc(),
@@ -551,11 +552,15 @@ int TrackCheckerNT::convertMeasurementToID(const Measurement *m)
     // ok, OT: try to get the layer/module info from the Measurement
     const OTMeasurement *otm = dynamic_cast<const OTMeasurement*>(m);
     // get OT Module which took the hit to find the Monolayer
-    DeOTDetector *OT = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
-    DeOTModule *mod = OT->findModule(otm->time()->channel());
-    int k = (mod->monoLayerA(otm->time()->channel().straw())?0:1) +
-      2 * otm->time()->channel().layer() +
-      8 * (otm->time()->channel().station() - 1);
+    const DeOTDetector *OT = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
+    const DeOTModule *mod = OT->findModule(otm->channel());
+    if(mod==0) {
+      error() << "Cannot find module for channel: " << otm->channel() << endreq ;
+      return -1 ;
+    }
+    int k = (mod->monoLayerA(otm->channel().straw())?0:1) +
+      2 * otm->channel().layer() +
+      8 * (otm->channel().station() - 1);
     return k;
   }
   if (Measurement::TT == m->type()) {
@@ -1128,7 +1133,7 @@ StatusCode TrackCheckerNT::fillHitPurEff(
 	while ( !found && ( iMeas != endMeas ) ) {
 	  if ( (*iMeas)->type() == Measurement::OT ) {
 	    OTMeasurement* meas = dynamic_cast<OTMeasurement*>( *iMeas );
-	    found = ( otTime == meas->time() );
+	    found = ( otTime->channel() == meas->channel() );
 	  }
 	  ++iMeas;
 	}

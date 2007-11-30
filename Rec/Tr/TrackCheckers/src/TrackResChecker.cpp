@@ -1,4 +1,4 @@
-// $Id: TrackResChecker.cpp,v 1.2 2007-08-01 07:58:06 mneedham Exp $
+// $Id: TrackResChecker.cpp,v 1.3 2007-11-30 14:36:02 wouter Exp $
 // Include files 
 #include "TrackResChecker.h"
 
@@ -226,7 +226,7 @@ void TrackResChecker::checkAmbiguity(const LHCb::Track* track,
     if ( (*itMeas)->type() == LHCb::Measurement::OT ) {
       // only count ones that came from same particle as track.
       LHCb::OTMeasurement* otMeas = dynamic_cast<LHCb::OTMeasurement*>(*itMeas);
-      LHCb::MCParticle* aParticle = m_otLinker.first(otMeas->time());
+      LHCb::MCParticle* aParticle = m_otLinker.first(otMeas->channel());
       
       bool found = false;
       if (0 != aParticle) {
@@ -237,7 +237,6 @@ void TrackResChecker::checkAmbiguity(const LHCb::Track* track,
       }  // if
       
       Gaudi::XYZVector direction = otMeas->trajectory().direction(0.0);
-      bool isStereo = fabs(direction.x()/direction.y()) > 0.05 ;
 
       if (found == true) {
         if (checkAmbiguity(mcPart,otMeas) == true){

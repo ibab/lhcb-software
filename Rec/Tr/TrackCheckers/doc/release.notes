@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-11-19 Wouter Hulsbergen
+ - Adapted to change in OTMeasurement interface
+
 !======================= TrackCheckers v3r2 2007-10-22 =======================
 ! 2007-10-18 - Manuel Schiller
  - Fixed TrackCheckerNT algorithm to use IProjectorSelector interface
