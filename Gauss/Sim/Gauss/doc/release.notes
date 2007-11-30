@@ -4,6 +4,19 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2007-11-30 - Gloria Corti
+ - Use new settings for Pythia 6.4 including Pythia62.opts from LbPythia
+   . Generator.opts
+ - Use latest available version of DecFiles v13r16
+ - Modify options to allow to run with gaudirun.py, replacing {} with []
+   that also works with standard options but gives crash with main in python
+   . Common.opts
+ - Main steering must be passed with python to be able to set time with units
+   for EventTime (python need to know type of property to convert it from 
+   real to int)
+   + v200601.py
+ - Introduce use of Pythia8 to allow tests
+
 !======================== Gauss v30r4 2007-10-10 =============================
 ! 2007-10-10 - Gloria Corti
  - Use latest available DecFiles v13r14
