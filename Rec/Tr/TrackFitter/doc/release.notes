@@ -3,6 +3,11 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2007-11-30 Wouter Hulsbergen
+ - set and use reference for each node (no longer from measurement)
+ - set references using TrackTraj from all existing states
+ - add counters to TrackFitEvent 
+
 !=========================== TrackFitter v2r21 2007-11-06 ===================
 ! 2007-11-06 M Needham
   - Put checking on by default
