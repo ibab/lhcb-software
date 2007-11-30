@@ -33,7 +33,7 @@ namespace SCR {
           CTRL_Y,
           CTRL_Z, // 26   11A
 
-          DELETE, // 27   11B
+          DELETE_KEY, // 27   11B
 
           MOVE_UP,     // 28   11C
           MOVE_DOWN,   // 29   11D

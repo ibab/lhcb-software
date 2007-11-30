@@ -615,7 +615,7 @@ int scrc_check_key_buffer (char *buffer)
     }
     break;
   case 0x7f :
-    return DELETE;
+    return DELETE_KEY;
 
   default:
 #ifdef _WIN32
@@ -635,8 +635,8 @@ int scrc_check_key_buffer (char *buffer)
       //case 45:   return INSERT;
       case 123:  return BACK_SPACE;
       // ? case 115:  return KPD_PF4;
-      case 46:   return DELETE;
-      case 112:  return DELETE;
+      case 46:   return DELETE_KEY;
+      case 112:  return DELETE_KEY;
       case 144:  return KPD_PF1;
       case 111:  return KPD_PF2;
       case 106:  return KPD_PF3;
