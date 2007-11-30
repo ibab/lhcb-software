@@ -3,6 +3,14 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
+
+! 2007-11-30 - Wouter Hulsbergen
+ - fixed Interpolator such that it also does the right thing for extrapolation
+ - remove extrapolators from MeasurementProviders: use TrackTraj instead
+ - add OTMeasurementProvider which calculates tof correction
+ - adapt to new functionality in Track such that measurements no longer cloned
+ - adapt LongTrackReferenceCreator to chaneg in Measurement interface
+
 ! 2007-11-29 - Stephanie Hansmann-Menzemer
  - change ZAtT -> ZEndT
 
