@@ -1,5 +1,5 @@
 package GaussSys
-version v30r4
+version v30r5
 
 branches cmt doc
 
@@ -8,25 +8,23 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-macro Gauss_use       "Gauss        v30r4   Sim"  WIN32 ""
+macro Gauss_use       "Gauss        v30r5   Sim"  WIN32 ""
 use ${Gauss_use} 
 
 # Generator packages: only a fraction available for release on Win32
 use LHCbDefinitions     v2r0      Kernel
-use GENSER              v3r2      Gen
+use GENSER              v3r3      Gen
+use EvtGen              v8r17     Gen   
+use Generators          v7r6      Gen
+use LbPythia            v5r4      Gen
+use LbPythia8           v1r0      Gen
 #
-macro EvtGen_use      "EvtGen       v8r16   Gen"  WIN32 "" 
-macro Generators_use  "Generators   v7r5    Gen"  WIN32 ""
-macro LbPythia_use    "LbPythia     v5r3    Gen"  WIN32 ""
 macro LbAlpGen_use    "LbAlpGen     v1r0    Gen"  WIN32 ""
 macro BcVegPy_use     "BcVegPy      v1r1p2  Gen"  WIN32 ""
 macro LbBcVegPy_use   "LbBcVegPy    v1r5    Gen"  WIN32 ""
 macro LbHerwig_use    "LbHerwig     v5r1    Gen"  WIN32 ""     
 macro LbHidValley_use "LbHidValley  v2r0    Gen"  WIN32 ""
 macro LbHijing_use    "LbHijing     v3r1    Gen"  WIN32 ""
-use ${EvtGen_use}
-use ${Generators_use}
-use ${LbPythia_use}
 use ${LbAlpGen_use}
 use ${BcVegPy_use}
 use ${LbBcVegPy_use}
@@ -35,11 +33,11 @@ use ${LbHidValley_use}
 use ${LbHijing_use}
 #
 use LbMIB               v2r1      Gen
-use ParticleGuns	v3r3      Gen
+use ParticleGuns	v3r4      Gen
 
 # Simulation basic packages
 use GiGa        	v19r1	  Sim     
-use GiGaCnv     	v18r3	  Sim
+use GiGaCnv     	v18r4	  Sim
 use SimSvc              v5r0      Sim
 macro GiGaVisUI_use   "GiGaVisUI    v4r0    Sim"  WIN32 ""
 use ${GiGaVisUI_use} 
@@ -48,15 +46,15 @@ use ClhepTools          v2r1      Tools
 
 # Simulation specialized packages
 use GaussKine           v1r7      Sim
-use GaussAlgs		v3r0      Sim
-use GaussTools          v13r1     Sim
-use GaussRICH		v7r2	  Sim
+use GaussAlgs		v3r1      Sim
+use GaussTools          v13r2     Sim
+use GaussRICH		v7r3	  Sim
 use GaussTracker	v6r0p1	  Sim
 use GaussCalo		v9r0p1	  Sim
 use GaussPhysics	v5r0	  Sim
 use GaussMonitor	v5r0	  Sim
-use CaloMoniSim         v3r1      Calo
-use VeloGauss           v2r1      Velo
+use CaloMoniSim         v3r1p1    Calo
+use VeloGauss           v2r2      Velo
 use MuonMoniSim         v2r2      Muon
 
 # GMDL
