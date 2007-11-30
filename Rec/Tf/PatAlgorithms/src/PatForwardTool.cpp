@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.4 2007-11-19 15:06:12 aperiean Exp $
+// $Id: PatForwardTool.cpp,v 1.5 2007-11-30 15:59:38 aperiean Exp $
 // Include files
 
 // from Gaudi
@@ -431,6 +431,9 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     fwTra->setChi2PerDoF( (*itL).chi2PerDoF() );
     fwTra->setNDoF(       (*itL).nDoF() );
     fwTra->addInfo(LHCb::Track::PatQuality, (*itL).quality());
+    // added for NNTools
+    fwTra->addInfo(LHCb::Track::Cand1stQPat, (*itL).cand1stquality());
+    fwTra->addInfo(LHCb::Track::Cand2ndQPat, (*itL).cand2ndquality());
 
     //== Add reference to the used clusters/, T stations
     for ( PatFwdHits::iterator itH = (*itL).coordBegin(); (*itL).coordEnd() != itH; itH++ ) {
