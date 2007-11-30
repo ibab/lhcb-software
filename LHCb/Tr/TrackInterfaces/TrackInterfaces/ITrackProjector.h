@@ -62,7 +62,8 @@ public:
   /// of the measurement. The details of the alignment transformation are 
   /// defined in AlignTraj.
   typedef Gaudi::Matrix1x6 Derivatives;
-  virtual Derivatives alignmentDerivatives(const LHCb::Measurement& meas, const Gaudi::XYZPoint& pivot) const = 0;
+  virtual Derivatives alignmentDerivatives(const LHCb::StateVector& state, const LHCb::Measurement& meas, 
+                                           const Gaudi::XYZPoint& pivot) const = 0;
 };
 
 //==============================================================================
