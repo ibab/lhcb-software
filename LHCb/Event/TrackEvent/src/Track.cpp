@@ -196,6 +196,23 @@ void Track::addToStates( const State& state )
 };
 
 //=============================================================================
+// Add a list of states to the list associated to the Track. This takes ownership.
+//=============================================================================
+void Track::addToStates( StateContainer& states )
+{
+  // Make sure that the incoming states are properly sorted. The 'if' is ugly, but more efficient than using 'orderByZ'.
+  bool backward = checkFlag(Track::Backward) ;
+  if(backward) std::sort(states.begin(),states.end(),TrackFunctor::decreasingByZ<State>());
+  else         std::sort(states.begin(),states.end(),TrackFunctor::increasingByZ<State>());
+  // Now append and use std::inplace_merge. Make sure there is enough capacity such that iterators stay valid.
+  m_states.reserve( states.size() + m_states.size()) ;
+  StateContainer::iterator middle = m_states.end() ;
+  m_states.insert(middle, states.begin(), states.end()) ;
+  if(backward) std::inplace_merge(m_states.begin(),middle,m_states.end(),TrackFunctor::decreasingByZ<State>());
+  else         std::inplace_merge(m_states.begin(),middle,m_states.end(),TrackFunctor::increasingByZ<State>());
+};
+
+//=============================================================================
 // Add a Measurement to the list associated to the Track
 //=============================================================================
 void Track::addToMeasurements( const Measurement& meas )
@@ -352,6 +369,7 @@ void Track::clearMeasurements()
   // now remove the measurements
   std::for_each(m_measurements.begin(), m_measurements.end(),TrackFunctor::deleteObject()) ;
   m_measurements.clear() ;
+  setPatRecStatus( Track::PatRecIDs );
 }
 
 //=============================================================================
@@ -455,9 +473,8 @@ void Track::copy( const Track& track )
 //=============================================================================
 // Clear the state vector
 //=============================================================================
-void Track::clearStates() {
-  for ( std::vector<State*>::iterator it = m_states.begin();
-        it != m_states.end(); ++it ) delete *it;
+void Track::clearStates() { 
+  std::for_each(m_states.begin(), m_states.end(),TrackFunctor::deleteObject()) ;
   m_states.clear();
 };
 

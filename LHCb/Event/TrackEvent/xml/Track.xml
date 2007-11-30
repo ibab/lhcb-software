@@ -530,6 +530,12 @@
         <arg type = 'const LHCb::State' name=' state' />
       </method>
 
+     <method
+        name    = 'addToStates'
+        desc    = 'Add a set of states to the track. Track takes ownership.'>
+        <arg type = 'StateContainer' name='states' />
+      </method>
+
       <method
         name    = 'removeFromStates'
         desc    = 'Remove a State from the list of states associated to the track'
