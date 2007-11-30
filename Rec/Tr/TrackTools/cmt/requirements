@@ -29,6 +29,7 @@ use   OTDet           v*     Det
 use   VeloDet         v*     Det
 use   MuonDet         v*     Det
 
+use   OTDAQ           v*     OT
 # Component library building rule
 #============================================================================
 library          TrackTools    ../src/*.cpp 
