@@ -1,7 +1,8 @@
-/*
-upic_remote.c
-Created           : 17-NOV-1989 by Christian Arnault
-*/
+/**
+  *
+  * upic_remote.c
+  * Created           : 17-NOV-1989 by Christian Arnault
+  */
 
 #ifdef REMOTE
 
@@ -612,16 +613,16 @@ void upir_unlock_cursor ()  {
 }
 
 //--------------------------------------------------------------------------
-void upir_back_space (int menu_id)  {
+void upir_back_space(int menu_id)  {
   UpiBufferSetCommand (SendBuffer, UPIF_BACK_SPACE);
   UpiBufferPutInt (SendBuffer, menu_id);
   UpiBufferSend (SendBuffer);
 }
 
 //--------------------------------------------------------------------------
-void upir_book_histo (Histo* h) {
-  UpiBufferSetCommand (SendBuffer, UPIF_BOOK_HISTO);
-  UpiBufferPutInt    (SendBuffer, (int) h);
+void upir_book_histo(Histo* h) {
+  UpiBufferSetCommand(SendBuffer, UPIF_BOOK_HISTO);
+  UpiBufferPutLong   (SendBuffer, (long)h);
   UpiBufferPutText   (SendBuffer, h->text);
   UpiBufferPutInt    (SendBuffer, h->bins);
   UpiBufferPutInt    (SendBuffer, h->rows);
@@ -633,29 +634,29 @@ void upir_book_histo (Histo* h) {
 //--------------------------------------------------------------------------
 void upir_unbook_histo (Histo* h) {
   UpiBufferSetCommand (SendBuffer, UPIF_UNBOOK_HISTO);
-  UpiBufferPutInt (SendBuffer, (int) h);
+  UpiBufferPutLong(SendBuffer, (long)h);
   UpiBufferSend (SendBuffer);
 }
 
 //--------------------------------------------------------------------------
 void upir_scale_histo (Histo* h, double maxw)   {
   UpiBufferSetCommand (SendBuffer, UPIF_SCALE_HISTO);
-  UpiBufferPutInt    (SendBuffer, (int) h);
-  UpiBufferPutDouble (SendBuffer, maxw);
+  UpiBufferPutLong   (SendBuffer,  (long)h);
+  UpiBufferPutDouble (SendBuffer,  maxw);
   UpiBufferSend (SendBuffer);
 }
 
 //--------------------------------------------------------------------------
 void upir_unscale_histo (Histo* h)  {
   UpiBufferSetCommand (SendBuffer, UPIF_UNSCALE_HISTO);
-  UpiBufferPutInt (SendBuffer, (int) h);
+  UpiBufferPutLong(SendBuffer, (long) h);
   UpiBufferSend (SendBuffer);
 }
 
 //--------------------------------------------------------------------------
 void upir_fill_histo (Histo* h, double x, double w)   {
-  UpiBufferSetCommand (SendBuffer, UPIF_FILL_HISTO);
-  UpiBufferPutInt    (SendBuffer, (int) h);
+  UpiBufferSetCommand(SendBuffer, UPIF_FILL_HISTO);
+  UpiBufferPutLong   (SendBuffer, (long) h);
   UpiBufferPutDouble (SendBuffer, x);
   UpiBufferPutDouble (SendBuffer, w);
   UpiBufferSend (SendBuffer);
@@ -664,7 +665,7 @@ void upir_fill_histo (Histo* h, double x, double w)   {
 //--------------------------------------------------------------------------
 void upir_display_histo (Histo* h, int row, int col)  {
   UpiBufferSetCommand (SendBuffer, UPIF_DISPLAY_HISTO);
-  UpiBufferPutInt (SendBuffer, (int) h);
+  UpiBufferPutLong(SendBuffer, (long) h);
   UpiBufferPutInt (SendBuffer, row);
   UpiBufferPutInt (SendBuffer, col);
   UpiBufferSend (SendBuffer);
@@ -673,14 +674,14 @@ void upir_display_histo (Histo* h, int row, int col)  {
 //--------------------------------------------------------------------------
 void upir_hide_histo (Histo* h) {
   UpiBufferSetCommand (SendBuffer, UPIF_HIDE_HISTO);
-  UpiBufferPutInt (SendBuffer, (int) h);
+  UpiBufferPutLong(SendBuffer, (long) h);
   UpiBufferSend (SendBuffer);
 }
 
 //--------------------------------------------------------------------------
 void upir_move_histo (Histo* h, int row, int col) {
   UpiBufferSetCommand (SendBuffer, UPIF_MOVE_HISTO);
-  UpiBufferPutInt (SendBuffer, (int) h);
+  UpiBufferPutLong(SendBuffer, (long) h);
   UpiBufferPutInt (SendBuffer, row);
   UpiBufferPutInt (SendBuffer, col);
   UpiBufferSend (SendBuffer);
@@ -689,14 +690,14 @@ void upir_move_histo (Histo* h, int row, int col) {
 //--------------------------------------------------------------------------
 void upir_moving_histo (Histo* h) {
   UpiBufferSetCommand (SendBuffer, UPIF_MOVING_HISTO);
-  UpiBufferPutInt (SendBuffer, (int) h);
+  UpiBufferPutLong(SendBuffer, (long) h);
   UpiBufferSend (SendBuffer);
 }
 
 //--------------------------------------------------------------------------
 void upir_copy_histo (Histo* h) {
   UpiBufferSetCommand (SendBuffer, UPIF_COPY_HISTO);
-  UpiBufferPutInt (SendBuffer, (int) h);
+  UpiBufferPutLong(SendBuffer, (long) h);
   UpiBufferPutHisto (SendBuffer, h);
   UpiBufferSend (SendBuffer);
 }

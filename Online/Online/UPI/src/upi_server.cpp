@@ -98,7 +98,7 @@ namespace {
   struct Histo_list {
     Histo_list Link_items;
 
-    int    remote_id;
+    long   remote_id;
     Histo* local_id;
   };
 
@@ -160,8 +160,8 @@ static int find_remote_id (SrvConnect* connect, int id);
 static int find_menu_from_window (SrvConnect* connect, Window* w);
 static SrvConnect* find_connect_with_id (int local_id, int* remote_id);
 static int new_remote_id (SrvConnect* connect, int id, Window* w);
-static Histo* find_remote_histo (SrvConnect* connect, int histo);
-static void new_remote_histo (SrvConnect* connect, int histo, Histo* hptr);
+static Histo* find_remote_histo (SrvConnect* connect, long histo);
+static void new_remote_histo (SrvConnect* connect, long histo, Histo* hptr);
 static int check_first_menu (SrvConnect* connect, Menu* menu);
 static Var* find_var (SrvConnect* connect, void* ref);
 static void input (SrvConnect* connect);
@@ -950,7 +950,7 @@ int new_remote_id (SrvConnect* connect, int id, Window* w)  {
 }  
 
 //--------------------------------------------------------------------------
-Histo* find_remote_histo (SrvConnect* connect, int histo)  {
+Histo* find_remote_histo (SrvConnect* connect, long histo)  {
   for( Histo_list* h = connect->histo_list.first;h;h=h->next) {
     if (h->remote_id == histo) return (h->local_id);
   }
@@ -958,7 +958,7 @@ Histo* find_remote_histo (SrvConnect* connect, int histo)  {
 }  
 
 //--------------------------------------------------------------------------
-void new_remote_histo (SrvConnect* connect, int histo, Histo* hptr)  {
+void new_remote_histo (SrvConnect* connect, long histo, Histo* hptr)  {
   Histo_list* h = connect->histo_list.first;
   for( ;h;h=h->next) {
     if (h->remote_id == histo) break;
@@ -1355,7 +1355,7 @@ void refresh_param_line (SrvConnect* connect)  {
 
 //--------------------------------------------------------------------------
 void set_cursor (SrvConnect* connect)  {
-  SrvConnect* c;
+  SrvConnect* c = 0;
   int menu_id, item_id, param_id, rid;
   UpiBufferGetInt (GetBuffer, &menu_id);
   UpiBufferGetInt (GetBuffer, &item_id);
@@ -1380,9 +1380,9 @@ void set_cursor (SrvConnect* connect)  {
     else    {
       upic_set_cursor_and_mark (menu_id, item_id, param_id, 0);
     }
-    connect->current_menu   = menu_id;
+    connect->current_menu    = menu_id;
     connect->current_command = item_id;
-    connect->current_param = param_id;
+    connect->current_param   = param_id;
   }
 }
 
@@ -1801,9 +1801,10 @@ void drag_histo (int row, int col) {
 //--------------------------------------------------------------------------
 void book_histo (SrvConnect* connect)  {
   char* text;
+  long histo;
   double min, max;
-  int histo, bins, rows;
-  UpiBufferGetInt    (GetBuffer, &histo);
+  int bins, rows;
+  UpiBufferGetLong   (GetBuffer, &histo);
   UpiBufferGetText   (GetBuffer, &text);
   UpiBufferGetInt    (GetBuffer, &bins);
   UpiBufferGetInt    (GetBuffer, &rows);
@@ -1815,9 +1816,9 @@ void book_histo (SrvConnect* connect)  {
 
 //--------------------------------------------------------------------------
 void unbook_histo (SrvConnect* connect)  {
-  int histo;
+  long histo;
   Histo* h;
-  UpiBufferGetInt (GetBuffer, &histo);
+  UpiBufferGetLong(GetBuffer, &histo);
   if ((h = find_remote_histo (connect, histo)))  {
     upic_unbook_histo (h);
   }
@@ -1825,10 +1826,10 @@ void unbook_histo (SrvConnect* connect)  {
 
 //--------------------------------------------------------------------------
 void scale_histo (SrvConnect* connect)  {
-  int histo;
+  long histo;
   double maxw;
   Histo* h;
-  UpiBufferGetInt (GetBuffer, &histo);
+  UpiBufferGetLong(GetBuffer, &histo);
   UpiBufferGetDouble (GetBuffer, &maxw);
   if ((h = find_remote_histo (connect, histo)))  {
     upic_scale_histo (h, maxw);
@@ -1837,9 +1838,9 @@ void scale_histo (SrvConnect* connect)  {
 
 //--------------------------------------------------------------------------
 void unscale_histo (SrvConnect* connect)  {
-  int histo;
+  long histo;
   Histo* h;
-  UpiBufferGetInt (GetBuffer, &histo);
+  UpiBufferGetLong(GetBuffer, &histo);
   if ((h = find_remote_histo (connect, histo)))  {
     upic_unscale_histo (h);
   }
@@ -1847,10 +1848,10 @@ void unscale_histo (SrvConnect* connect)  {
 
 //--------------------------------------------------------------------------
 void fill_histo (SrvConnect* connect)  {
-  int histo;
+  long histo;
   double x, w;
   Histo* h;
-  UpiBufferGetInt (GetBuffer, &histo);
+  UpiBufferGetLong(GetBuffer, &histo);
   UpiBufferGetDouble (GetBuffer, &x);
   UpiBufferGetDouble (GetBuffer, &w);
   if ((h = find_remote_histo (connect, histo)))  {
@@ -1860,10 +1861,10 @@ void fill_histo (SrvConnect* connect)  {
 
 //--------------------------------------------------------------------------
 void display_histo (SrvConnect* connect)  {
-  int histo;
+  long histo;
   int row, col;
   Histo* h;
-  UpiBufferGetInt (GetBuffer, &histo);
+  UpiBufferGetLong(GetBuffer, &histo);
   UpiBufferGetInt (GetBuffer, &row);
   UpiBufferGetInt (GetBuffer, &col);
   if ((h = find_remote_histo (connect, histo)))  {
@@ -1873,9 +1874,9 @@ void display_histo (SrvConnect* connect)  {
 
 //--------------------------------------------------------------------------
 void hide_histo (SrvConnect* connect)  {
-  int histo;
+  long histo;
   Histo* h;
-  UpiBufferGetInt (GetBuffer, &histo);
+  UpiBufferGetLong(GetBuffer, &histo);
   if ((h = find_remote_histo (connect, histo)))  {
     upic_hide_histo (h);
   }
@@ -1883,9 +1884,10 @@ void hide_histo (SrvConnect* connect)  {
 
 //--------------------------------------------------------------------------
 void move_histo (SrvConnect* connect)  {
-  int histo, row, col;
+  long histo;
+  int row, col;
   Histo* h;
-  UpiBufferGetInt (GetBuffer, &histo);
+  UpiBufferGetLong(GetBuffer, &histo);
   UpiBufferGetInt (GetBuffer, &row);
   UpiBufferGetInt (GetBuffer, &col);
   if ((h = find_remote_histo (connect, histo)))  {
@@ -1895,9 +1897,9 @@ void move_histo (SrvConnect* connect)  {
 
 //--------------------------------------------------------------------------
 void moving_histo (SrvConnect* connect)  {
-  int histo;
+  long histo;
   Histo* h;
-  UpiBufferGetInt (GetBuffer, &histo);
+  UpiBufferGetLong(GetBuffer, &histo);
   if ((h = find_remote_histo (connect, histo)))  {
     SrvConnect_of_histo = connect;
     upic_moving_histo (h);
@@ -1906,9 +1908,9 @@ void moving_histo (SrvConnect* connect)  {
 
 //--------------------------------------------------------------------------
 void copy_histo (SrvConnect* connect)  {
-  int histoId;
+  long histoId;
   Histo* histo;
-  UpiBufferGetInt (GetBuffer, &histoId);
+  UpiBufferGetLong(GetBuffer, &histoId);
   UpiBufferGetHisto (GetBuffer, &histo);
   new_remote_histo (connect, histoId, histo);
 }
@@ -1987,16 +1989,16 @@ void hide_menu (SrvConnect* connect) {
 
 //--------------------------------------------------------------------------
 Histo* fetch_histo () {
-  Histo* histo;
+  Histo* histo = 0;
   UpiBufferGetHisto (GetBuffer, &histo);
   return (upic_copy_histo (histo));
 }
 
 //--------------------------------------------------------------------------
 void fetch_menu (Menu* menu, SrvConnect* connect) {
-  Page* page;
-  Item* item;
-  int father, first, old;
+  Page* page = 0;
+  Item* item = 0;
+  int old = 0, father, first;
   if (menu->type == NORMAL_MENU) 
     old = find_menu_from_window (connect, menu->window);
 

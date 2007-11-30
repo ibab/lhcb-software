@@ -244,7 +244,7 @@ DialogItem::operator std::string()   {
 }
 
 DialogItem::operator int()  {
-  int v;
+  int v = 0;
   if      ( isString()  ) {
     size_t siz = sizeof(m_def.data()->_char);
     str_trim(m_def.data()->_char,m_def.data()->_char,&siz);
@@ -254,11 +254,13 @@ DialogItem::operator int()  {
     v = m_def.data()->_int[0];
   else if ( isReal() )
     v = (int)m_def.data()->_float[0];
+  else
+    v = m_def.data()->_int[0];
   return v;
 }
 
 DialogItem::operator float()    {
-  double v;
+  double v = 0.0;
   if      ( isString()  )    {
     size_t siz = sizeof(m_def.data()->_char);
     str_trim(m_def.data()->_char,m_def.data()->_char,&siz);
@@ -268,6 +270,8 @@ DialogItem::operator float()    {
     v = (double)m_def.data()->_int[0];
   else if ( isReal() )
     v = m_def.data()->_float[0];
+  else
+    v = (double)m_def.data()->_int[0];
   return float(v);
 }
 

@@ -327,11 +327,11 @@ int upic_move_cursor (Menu* m, Page* d, Item* i, int line)  {
 
 //---------------------------------------------------------------------------
 int upic_draw_cursor (FLAG mode)    {
-  Menu* m;
-  Page* d;
-  int row, col, attr;
+  Menu* m = 0;
+  Page* d = 0;
+  Item* i = 0;
+  int row = 0, col = 0, attr = 0;
 
-  Item* i = (Item*) 0;  
   scrc_begin_pasteboard_update (Sys.pb);
   do  {
     if (!(m = Sys.menu.cur))    {

@@ -308,17 +308,36 @@ char* UpiBufferAddress (UpiBuffer buffer, int offset) {
 /*--------------------------------------------------------------------------*/
 void UpiBufferPutInt (UpiBuffer buffer, int value)  {
   if (upibufferlog == 1)  {
-    fprintf (buffer_log_file, "UpiBufferPutInt: ");
+    fprintf (buffer_log_file,"UpiBufferPutInt: ");
     fprintf (buffer_log_file,"Buffer: %p, Value %d\n",
       (void*)buffer, value);
   }
-  int* p = (int*) UpiBufferExtend (buffer, sizeof(int));
+  int* p = (int*)UpiBufferExtend(buffer,sizeof(value));
   *p = value;
 }
-
 /*--------------------------------------------------------------------------*/
 void UpiBufferGetInt (UpiBuffer buffer, int* address) {
   int* p = (int*) UpiBufferMove (buffer, sizeof(int));
+  if (upibufferlog == 1)  {
+    fprintf (buffer_log_file, "UpiBufferGetInt: ");
+    fprintf (buffer_log_file,"Buffer: %p, Value %d\n",
+      (void*)buffer, *p);
+  }
+  *address = *p;
+}
+/*--------------------------------------------------------------------------*/
+void UpiBufferPutLong (UpiBuffer buffer, long value)  {
+  if (upibufferlog == 1)  {
+    fprintf (buffer_log_file,"UpiBufferPutLong: ");
+    fprintf (buffer_log_file,"Buffer: %p, Value %d\n",
+      (void*)buffer, value);
+  }
+  long* p = (long*)UpiBufferExtend(buffer,sizeof(value));
+  *p = value;
+}
+/*--------------------------------------------------------------------------*/
+void UpiBufferGetLong(UpiBuffer buffer,long* address) {
+  long* p = (long*) UpiBufferMove (buffer, sizeof(long));
   if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferGetInt: ");
     fprintf (buffer_log_file,"Buffer: %p, Value %d\n",
@@ -341,8 +360,7 @@ void UpiBufferPutDouble (UpiBuffer buffer, double value)    {
 /*--------------------------------------------------------------------------*/
 void UpiBufferGetDouble (UpiBuffer buffer, double* address) {
   double* p= (double*) UpiBufferMove (buffer, sizeof(double));
-  if (upibufferlog == 1)
-  {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferGetDouble: ");
     fprintf (buffer_log_file,"Buffer: %p, Value %f\n",
       (void*)buffer, *p);

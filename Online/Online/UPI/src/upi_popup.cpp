@@ -53,7 +53,7 @@ void upic_set_pop_up_cursor ()    {
 //---------------------------------------------------------------------------
 void upic_act_on_pop_up (int *num, int key, int row)    {
   Page* d = Sys.pop_up;
-  int delta, c = key, cur = d->cur_line;
+  int delta = 0, c = key, cur = d->cur_line;
 
   if (cur) scrc_change_rendition (d->id, cur, 1, 1, d->cols, SCR::NORMAL);
   scrc_begin_pasteboard_update (Sys.pb);
