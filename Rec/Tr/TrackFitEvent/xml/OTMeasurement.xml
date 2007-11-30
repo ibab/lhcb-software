@@ -14,65 +14,96 @@
       <base name='LHCb::Measurement'/>
 
       <import name='Event/Measurement'/>
-      <import name='Event/OTTime'/>
-      <import name='OTDet/DeOTDetector'/>
-      <import name='Event/TrackTypes.h'/>
+      <import name='Event/OTLiteTime'/>
+      <import name='Event/StateVector'/>
+      <import name='OTDet/DeOTModule'/>
 
       <constructor
-        desc = 'Constructor from an OTTime'>
-        <arg type='LHCb::OTTime' name='otTime' const='TRUE' />
-        <arg type='DeOTDetector' name='det' const='TRUE' />
+        desc = 'Constructor from an OTLiteTime'>
+        <arg type='LHCb::OTLiteTime' name='id' const='TRUE' />
+        <arg type='DeOTModule' name='det' const='TRUE' />
         <arg type='int' name='ambiguity' />
-        <arg type='Gaudi::TrackVector' name='refVector' const='TRUE'/>
+        <arg type='LHCb::StateVector' name='refVector' const='TRUE'/>
       </constructor>
 
       <constructor
-        desc = 'Constructor from an OTTime'>
-        <arg type='LHCb::OTTime' name='otTime' const='TRUE' />
-        <arg type='DeOTDetector' name='det' const='TRUE' />
+        desc = 'Constructor from an OTLiteTime'>
+        <arg type='LHCb::OTLiteTime' name='id' const='TRUE' />
+        <arg type='DeOTModule' name='det' const='TRUE' />
         <arg type='int' name='ambiguity = 0' />
       </constructor>
 
-     <constructor
-        desc = 'Copy constructor'>
-        <arg type='LHCb::OTMeasurement' name='other' const='TRUE'/>
-      </constructor>
-
       <attribute
-        type = 'int'
-        name = 'ambiguity'
-        desc = 'the ambiguity (+1/-1) of the measurement' />
-
-      <attribute
-        type    = 'double'
-        name    = 'stereoAngle'
-        desc    = 'the stereo angle of the measurement'
+        type = 'LHCb::OTLiteTime'
+        name = 'ottime'
+        desc = 'channel and calibrated time' 
         setMeth = 'FALSE' />
 
       <attribute
-        type = 'const LHCb::OTTime*'
-        name = 'time'
-        desc = 'Pointer to the OTTime'
-	getMeth = 'FALSE'/>
+        type = 'const DeOTModule*'
+        name = 'module'
+        desc = 'module in the OT'
+        setMeth = 'FALSE' getMeth = 'FALSE' />
+      
+       <attribute
+        type = 'float'
+        name = 'deltaTimeOfFlight'
+        desc = 'time of flight correction' />
+
+       <attribute
+        type = 'int'
+        name = 'ambiguity'
+        desc = 'the ambiguity (+1/-1) of the measurement' />
 
       <method
         name   = 'init'
         desc   = 'Initialize the data members'
         access = 'PUBLIC'>
-        <arg type='LHCb::OTTime' name='otTime' const='TRUE' />
-        <arg type='DeOTDetector' name='det' const='TRUE' />
-        <arg type='int' name='ambiguity' />
-        <arg type='bool' name='refIsSet'/>
       </method>
 
       <method
-        type = 'const LHCb::OTTime*'
-        name    = 'time'
-        desc    = 'Retrieve const  Pointer to the OTTime'
-        const   = 'TRUE'>
+	type = 'const DeOTModule&amp;'
+	name = 'module'
+	desc = 'Retrieve const the module of the measurement'
+	const = 'TRUE'>
         <code>
-  return m_time;
+          return *m_module;
         </code>
+      </method>
+
+      <method
+	type = 'LHCb::OTChannelID'
+	name = 'channel'
+	desc = 'Retrieve channel in OT'
+	const = 'TRUE'>
+        <code>
+          return m_ottime.channel();
+        </code>
+      </method>
+
+      <method
+	type = 'double'
+	name = 'calibratedTime'
+	desc = 'Retrieve the calibrated time'
+	const = 'TRUE'>
+        <code>
+          return m_ottime.calibratedTime();
+        </code>
+      </method>
+
+      <method
+	type = 'double'
+	name = 'stereoAngle'
+	desc = 'Retrieve const  the stereo angle of the measurement'
+	const = 'TRUE'>
+      </method>
+
+      <method
+        type = 'OTDet::RadiusWithError'
+        name = 'driftRadiusWithError'
+        desc = 'Retrieve the drift radius for a given length along the trajectory'
+        const = 'TRUE'>
+        <arg type='double' name='arclen' />
       </method>
 
       <method
@@ -85,6 +116,22 @@
         </code>
       </method>
 
+      <method
+        type = 'void'
+        name = 'setTimeOfFlight'
+        desc = 'Set the time of flight of this measurement'
+        const = 'FALSE'>
+        <arg
+          type = 'double'
+          name = 'tof' />
+      </method>
+      
+      <method
+        type = 'double'
+        name = 'timeOfFlight'
+        desc = 'Retrieve the time of flight of this measurement'
+        const = 'TRUE' />
+      
     </class>
   </package>
 </gdd>

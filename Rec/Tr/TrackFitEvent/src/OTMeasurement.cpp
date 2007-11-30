@@ -1,8 +1,9 @@
-// $Id: OTMeasurement.cpp,v 1.13 2007-06-04 08:57:09 wouter Exp $
+// $Id: OTMeasurement.cpp,v 1.14 2007-11-30 14:15:03 wouter Exp $
 // Include files
 
 // OTDet
 #include "OTDet/DeOTModule.h"
+#include "Event/OTLiteTime.h"
 
 // local
 #include "Event/OTMeasurement.h"
@@ -19,58 +20,68 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 /// Standard constructor, initializes variables
-OTMeasurement::OTMeasurement( const LHCb::OTTime& otTime,
-                              const DeOTDetector& geom,
+OTMeasurement::OTMeasurement( const LHCb::OTLiteTime& time,
+                              const DeOTModule& module,
                               int ambiguity,
-                              const Gaudi::TrackVector& refVector)
+                              const LHCb::StateVector& /*refVector*/)
+  : Measurement( Measurement::OT, LHCb::LHCbID(time.channel())),
+    m_ottime(time),
+    m_module(&module), 
+    m_deltaTimeOfFlight(0),
+    m_ambiguity(ambiguity)
 {
-  m_refVector = refVector;                     // reference trajectory
-  this->init( otTime, geom, ambiguity, true );
+  this->init();
 }
 
 /// Standard constructor, without the reference vector
-OTMeasurement::OTMeasurement( const LHCb::OTTime& otTime,
-                              const DeOTDetector& geom,
+OTMeasurement::OTMeasurement( const LHCb::OTLiteTime& time,
+                              const DeOTModule& module,
                               int ambiguity )
+  : Measurement( Measurement::OT, LHCb::LHCbID(time.channel())),
+    m_ottime(time),
+    m_module(&module), 
+    m_deltaTimeOfFlight(0),
+    m_ambiguity(ambiguity)
 {
-  m_refVector = Gaudi::TrackVector(); 
-  this->init( otTime, geom, ambiguity, false );
+  this->init() ;
 }
 
-/// Copy constructor
-OTMeasurement::OTMeasurement( const OTMeasurement& other )
-  : Measurement(other) {
-  m_time = other.m_time;
-  m_ambiguity = other.m_ambiguity;
-  m_stereoAngle = other.m_stereoAngle;
-}
-
-void OTMeasurement::init( const LHCb::OTTime& otTime,
-                          const DeOTDetector& geom,
-                          int ambiguity,
-                          bool refIsSet ) 
+void OTMeasurement::init() 
 {
-  // Fill the data members
-  m_mtype     = Measurement::OT;
-  m_time      = &otTime;                       // pointer to hit
-  m_ambiguity = ambiguity;                     // drift ambiguity
-  m_refIsSet  = refIsSet;
-  m_lhcbID    = LHCbID( m_time -> channel() ); // set the LHCbID
-
-  // some constants...
-  double driftVelocity = geom.driftDelay(); // ns/mm
-
-  // Calculate the drift distance (includes the propagation along wire)
-  m_measure      = m_time->calibratedTime() / driftVelocity;
-  m_errMeasure   = geom.resolution() ;
-  m_trajectory   = geom.trajectory( m_lhcbID );
-
-  // Get the z of the measurement (centre of the wire)
-  OTChannelID otChan = m_time->channel();
-  const DeOTModule* module = geom.findModule( m_time->channel() );
-  m_z =  module->centerOfStraw( otChan.straw() ).z() ;
-
-  // (almost) Obsolete
-  m_stereoAngle = module->angle();
-
+  m_trajectory   = m_module->trajectory( channel() );
+  Gaudi::XYZPoint center = m_trajectory->position( 0.5*( m_trajectory->beginRange()+m_trajectory->endRange())) ;
+  m_z = center.z() ;
+  
+  // anything else can only be done if we have a reference.
+  // I don't know what to do with these. They are part of the base class. We should just remove thenm somehow.
+  // m_errMeasure = m_measure = 0;
 }
+
+
+double LHCb::OTMeasurement::stereoAngle() const
+{
+  return m_module->angle() ;
+}
+
+OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithError( double arclen ) const 
+{
+  // Get the distance to the readout
+  float distToReadout = trajectory().endRange() - arclen;
+  // Drifttime
+  float drifttime = calibratedTime() - deltaTimeOfFlight() - distToReadout / m_module->propagationVelocity() ;
+  // The rest is doen by the module
+  return m_module->driftRadiusWithError( drifttime ) ;
+}
+
+void LHCb::OTMeasurement::setTimeOfFlight(double tof)
+{
+  m_deltaTimeOfFlight = tof - m_module->strawReferenceTimeOfFlight( channel().straw() ) ;
+}
+
+double LHCb::OTMeasurement::timeOfFlight() const
+{
+  return m_deltaTimeOfFlight + m_module->strawReferenceTimeOfFlight( channel().straw() ) ;
+}
+
+
+
