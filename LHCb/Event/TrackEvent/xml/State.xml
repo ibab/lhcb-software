@@ -19,6 +19,7 @@
        <import name="GaudiKernel/Vector3DTypes.h"/>
        <import name="GaudiKernel/SymmetricMatrixTypes.h"/>
        <import name="Event/TrackTypes.h"/>
+       <import name="Event/StateVector.h"/>
       &StlPtrVector;
 
 <!--
@@ -74,7 +75,7 @@
       <constructor
         desc    = 'Default constructor' />
 
-        <constructor 
+      <constructor 
 	desc     = "Constructor with arguments" 
 	argList  = " const Gaudi::TrackVector&amp; stateVec, 
                      const Gaudi::TrackSymMatrix&amp; cov, double z, 
@@ -82,6 +83,14 @@
 	initList = "m_stateVector(stateVec), m_covariance(cov), m_z(z)">
        <code>
        setLocation(location);
+      </code>
+      </constructor>
+
+      <constructor 
+	desc     = "Constructor from a StateVector" 
+	argList  = " const LHCb::StateVector&amp; stateVec"
+	initList = "m_stateVector(stateVec.parameters()), m_z(stateVec.z())">
+	<code>
       </code>
       </constructor>
 
@@ -390,6 +399,16 @@
         desc    = 'Update the state vector'>
         <code>
   m_stateVector = state;
+        </code>
+      </method>
+
+     <method
+        name    = 'setState'
+        argList = 'const LHCb::StateVector state'
+        desc    = 'Update the state vector'>
+        <code>
+  m_stateVector = state.parameters() ;
+  m_z           = state.z() ;
         </code>
       </method>
 
