@@ -3,37 +3,39 @@
 # Maintainer : Gloria CORTI
 #============================================================================
 package GaussTools
-version v13r1
+version v13r2
 
-#============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt src doc GaussTools
 
-#============================================================================
 # Used packages. 
 #============================================================================
 use               GiGaCnv       v*     Sim
 use               SimSvc        v*     Sim 
  
-#============================================================================
 # Include directories
 #============================================================================
 apply_pattern install_more_includes more=GaussTools
 
-#============================================================================
 # Linker library building rule
 #============================================================================
 library           GaussToolsLib           Lib/*.cpp
 
-#============================================================================
 # Component library building rule
 #============================================================================
 library           GaussTools              Components/*.cpp       
 
-#============================================================================
 # define linker and component library link options
 #============================================================================
 apply_pattern     component_library library=GaussTools
 apply_pattern     linker_library    library=GaussToolsLib
 
+# special linking with minimal G4RunManager to build genConf (necessary due
+# to G4 User Actions requiring it to exist and have physic list assigned to it)
+#============================================================================
+private
+library GenConfForG4UAction genConf/*.cpp
+macro_append GaussTools_dependencies " GenConfForG4UAction "
+macro_prepend genconfig_cmd "LD_PRELOAD=$(library_prefix)GenConfForG4UAction.$(shlibsuffix) " WIN32 ""
+macro GenConfForG4UAction_shlibflags "$(GenConfForG4UAction_use_linkopts)"

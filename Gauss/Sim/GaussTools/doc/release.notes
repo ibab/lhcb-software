@@ -1,8 +1,17 @@
 !-----------------------------------------------------------------------------
 ! Package       : Sim/GaussTools
-! Responsible	  : Witold Pokorski
+! Responsible	  : Gloria Corti
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
+
+! 2007-11-30 - Marco Clemencic and Gloria Corti 
+ - Add special code to instanciate a dummy G4RunManager and assign to it
+   a physics list as required to construct a G4 User Action, since the
+   corresponding G4 base class throw an exception in constructor if this
+   is not true ("safe-mode" to allow dynamic particles).
+   + src/genConf/ - mininal G4 code necessary
+   . requirements - add in private compilation of code and inclusion in 
+                    LD_LIBRARY
 
 !======================== GaussTools v13r1 2007-10-02 ========================
 ! 2007-10-02 - Gloria Corti
