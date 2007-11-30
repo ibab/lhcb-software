@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-11-30 - Wouter Hulsbergen
+  - Removed no-longer-existing TrackMasterFitter flag from VeloTT.opts
+  - Removed reference to TsaSeedReferenceCreator
+
 !============================ TrackSys v4r11 2007-11-05 ======================
 ! 2007-11-05 - Marco Cattaneo
  - Fixed CloneKiller options to use also Downstream tracks as input
