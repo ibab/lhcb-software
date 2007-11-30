@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.32 2007-11-30 15:12:08 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.33 2007-11-30 16:47:54 cattanem Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -31,8 +31,8 @@ DeSTSector::DeSTSector( const std::string& name ) :
   m_midTraj(0),
   m_xInverted(false),
   m_yInverted(false),
-  m_statusString("Status"),
-  m_status(OK)
+  m_status(OK),
+  m_statusString("Status")
 { 
     // constructer (first strip means we number from 1)
 }

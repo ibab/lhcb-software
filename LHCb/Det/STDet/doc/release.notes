@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.119 2007-11-30 16:22:45 cattanem Exp $
+!$Id: release.notes,v 1.120 2007-11-30 16:47:53 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
 !======================== STDet v3r8 2007-11-30 ==========================
+! 2007-11-30 - Marco Cattaneo
+ - Fix a compilation warning
+
 ! 2007-11-30 M Needham 
  - Release rest of deadstrip stuff. Functionality is off by default
 
