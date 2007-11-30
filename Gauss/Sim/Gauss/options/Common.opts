@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.25 2007-07-04 08:34:12 gcorti Exp $ 
+// $Id: Common.opts,v 1.26 2007-11-30 17:16:23 gcorti Exp $ 
 
 /** @file 
  * 
@@ -39,7 +39,7 @@ MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";  // Longer "algorithm" identifier 
 EventDataSvc.ForceLeaves         = true ;
 
 // POOL persistency 
-EventPersistencySvc.CnvServices  = {};  
+EventPersistencySvc.CnvServices  = [];  
 #include "$STDOPTS/SimDicts.opts"
 
 // Objects to be written to output file
