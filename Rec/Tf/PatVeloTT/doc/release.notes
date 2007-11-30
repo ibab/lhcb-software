@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-11-30 - Wouter Hulsbergen
+  - Removed no-longer-existing TrackMasterFitter flag from VeloTT.opts
+
 !========================== PatVeloTT v3r0 2007-10-15 =======================
 ! 2007-10-15 - Marco Cattaneo for Stephanie Hansmann-Menzemer
  - Fix a bug introduced during migration

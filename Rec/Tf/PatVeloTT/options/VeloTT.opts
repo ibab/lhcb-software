@@ -5,7 +5,6 @@ PatVeloTT.maxChi2 = 5.;
 PatVeloTT.InputUsedTracksNames = {"Rec/Track/Forward","Rec/Track/Match"};
 // Fitter
 PatVeloTT.Fitter.ZPositions        = { 990.0, 2165.0 };
-PatVeloTT.Fitter.SetRefInfo        = false;
 PatVeloTT.Fitter.ErrorP            = {1.2, 5e-8};
 PatVeloTT.Fitter.NumberFitIterations = 1;
 PatVeloTT.Fitter.MaxNumberOutliers = 1;
