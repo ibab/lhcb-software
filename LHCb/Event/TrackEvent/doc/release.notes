@@ -4,11 +4,11 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!======================= TrackEvent v4r9 2007-11-30 ==========================
 !2007-11-30 Wouter Hulsbergen
  - added method to add list of states to track
  - moved reference vector from Measurement to Node
 
-!======================= TrackEvent v4r9 2007-11-30 ==========================
 !2007-11-29 - Stephanie Hansmann-Menzemer
  - change name of state: ZAtT -> ZEndT
 
