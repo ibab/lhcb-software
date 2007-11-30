@@ -17,7 +17,7 @@ branches src doc options cmt job
 use DDDB                v1r*    Det   -no_auto_imports
 use ParamFiles          v7r0          -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
-use DecFiles            v13r14  Gen   -no_auto_imports
+use DecFiles            v13r16  Gen   -no_auto_imports
 use Geant4Files		v82r0	      -no_auto_imports
 
 #===========================================================================
@@ -71,7 +71,7 @@ use $(LbAlpGen_use)
 use ParticleGuns         v*    Gen  -no_auto_imports 
 use LbMIB                v*    Gen  -no_auto_imports
 use LbPythia             v*    Gen  -no_auto_imports
-use Generators           v*    Gen  -no_auto_imports
+use LbPythia8            v*    Gen  -no_auto_imports
 
 #-- Simulation
 use GiGaCnv              v*    Sim  -no_auto_imports
