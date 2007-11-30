@@ -1,4 +1,4 @@
-// $Id: StateZTraj.cpp,v 1.2 2007-10-17 07:47:54 wouter Exp $
+// $Id: StateZTraj.cpp,v 1.3 2007-11-30 14:00:20 wouter Exp $
 // Include files
 
 // local
@@ -32,6 +32,12 @@ namespace LHCb
   StateZTraj::Parameters StateZTraj::parameters() const
   {
     return Parameters( m_cx[0], m_cy[0], m_cx[1], m_cy[1], m_qOverP );
+  }
+
+  LHCb::StateVector StateZTraj::stateVector( double z ) const
+  {
+    Gaudi::TrackVector parameters(x(z),y(z),tx(z),ty(z),m_qOverP) ;
+    return LHCb::StateVector(parameters, z) ;
   }
 
   StateZTraj& StateZTraj::operator+=(const Parameters& /*delta*/)

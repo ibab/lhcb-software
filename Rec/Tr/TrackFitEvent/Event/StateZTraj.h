@@ -1,4 +1,4 @@
-// $Id: StateZTraj.h,v 1.1 2007-10-16 12:17:35 wouter Exp $
+// $Id: StateZTraj.h,v 1.2 2007-11-30 14:00:19 wouter Exp $
 #ifndef TRACKFITEVENT_STATEZTRAJ_H
 #define TRACKFITEVENT_STATEZTRAJ_H 1
 
@@ -9,24 +9,32 @@
 #include "Kernel/DifTraj.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/SystemOfUnits.h"
+#include "Event/ZTrajectory.h"
 
 namespace LHCb
 {
 
   /** @class StateZTraj StateZTraj.h Event/StateZTraj.h
    *
-   * Trajectory created from a State, parameterized in z. This still needs some work.
+   * Trajectory created from a State, parameterized in z. This still needs some
+   * work. It is a DifTraj, but because I cannot use MI, it actually does not
+   * derive from DifTraj. Since DifTraj is a tenmplated base anyway, it wouldn't
+   * help either, so nobody will care.
    *
    * @author Wouter Hulsbergen (after StateTraj by Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues)
    * @date   15/10/2007
    */
 
-  class StateZTraj: public DifTraj<5> {
+  class StateZTraj: public ZTrajectory {
 
   public:
 
     /// Enum providing number of colums in derivative matrix
     enum { kSize = 5 };
+
+    // typedefs
+    typedef ROOT::Math::SMatrix<double,3,kSize> Derivative;
+    typedef ROOT::Math::SVector<double,kSize>   Parameters;
 
     /// get me another one of these!
     std::auto_ptr<Trajectory> clone() const { return std::auto_ptr<Trajectory>(new StateZTraj(*this)) ; }
@@ -51,14 +59,14 @@ namespace LHCb
     virtual void expansion( double z, Gaudi::XYZPoint& p, Gaudi::XYZVector& dp, Gaudi::XYZVector& ddp ) const;
 
     /// Retrieve the parameters of this traj...
-    virtual Parameters parameters( ) const;
+    Parameters parameters( ) const;
 
     /// Update the parameters of this traj...
-    virtual StateZTraj& operator+=(const Parameters& delta);
+    StateZTraj& operator+=(const Parameters& delta);
 
     /// Retrieve the derivative of the parabolic approximation to the
     /// trajectory with respect to the state parameters
-    virtual Derivative derivative( double mu ) const;
+    Derivative derivative( double mu ) const;
 
     /// give arclength where this trajectory is closest to the
     /// specified point. (linear only. can be improved)
@@ -81,6 +89,9 @@ namespace LHCb
     /// position(mu2). Trivial because StateZTraj is parameterized in
     /// arclength.
     virtual double arclength(double mu1, double mu2) const { return mu2 - mu1 ; }
+
+    /// return stateVector at position mu
+    virtual StateVector stateVector( double mu ) const ;
 
   private:
     double x(double z) const { return polyeval(z-m_z,m_cx) ; }
