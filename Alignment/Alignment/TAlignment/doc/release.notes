@@ -5,6 +5,7 @@ Purpose	: collection of alignment algorithms
 
 ! 2007-11-29 - Louis Nicolas
  - Fixed a few option names changes in OTAlignment.opts and Escher_nikhef.opts
+ - Fixed a requirement to Det/STDet
 
 ! 2007-11-27 - Jan Amoraal
  - Added Velo boxes and modules

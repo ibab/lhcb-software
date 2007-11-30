@@ -23,7 +23,7 @@ use   	RecEvent          	v*      Event
 use 	TrackEvent		v*	Event
 use 	TrackFitEvent		v*	Tr
 use   	TrackInterfaces   	v*      Tr
-use 	STDet			v*	Det
+use 	STDet			v3r7	Det
 use     LHCbKernel              v*      Kernel
 #============================================================================
 # include directories
