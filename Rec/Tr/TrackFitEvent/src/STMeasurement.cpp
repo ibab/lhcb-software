@@ -1,4 +1,4 @@
-// $Id: STMeasurement.cpp,v 1.8 2007-06-06 15:05:06 wouter Exp $
+// $Id: STMeasurement.cpp,v 1.9 2007-11-30 14:15:25 wouter Exp $
 // Include files 
 
 // from STDet
@@ -21,10 +21,9 @@ using namespace LHCb;
 STMeasurement::STMeasurement( const STCluster& stCluster,
                               const DeSTDetector& geom,
                               const ISTClusterPosition& stClusPosTool,
-                              const Gaudi::TrackVector& refVector)
+                              const LHCb::StateVector& /*refVector*/)
 {
-  m_refVector = refVector; // reference trajectory
-  this->init( stCluster, geom, stClusPosTool, true );
+  this->init( stCluster, geom, stClusPosTool );
 }
 
 /// Standard constructor, without the reference vector
@@ -32,28 +31,19 @@ STMeasurement::STMeasurement( const STCluster& stCluster,
                               const DeSTDetector& geom,
                               const ISTClusterPosition& stClusPosTool )
 {
-  m_refVector = Gaudi::TrackVector(); // reference trajectory
-  this->init(  stCluster, geom, stClusPosTool, false );
-}
-
-/// Copy constructor
-STMeasurement::STMeasurement( const STMeasurement& other ) 
-  : Measurement(other) {
-  m_cluster = other.m_cluster;
+  this->init(  stCluster, geom, stClusPosTool );
 }
 
 
 void STMeasurement::init( const STCluster& stCluster,
                           const DeSTDetector& geom,
-                          const ISTClusterPosition& stClusPosTool,
-                          bool refIsSet ) 
+                          const ISTClusterPosition& stClusPosTool) 
 {
   // Fill the data members
   m_cluster = &stCluster; //pointer to STCluster
   STChannelID stChan = m_cluster -> channelID();
   m_mtype = ( stChan.isTT() ? Measurement::TT : Measurement::IT );
   m_lhcbID = LHCbID( stChan ) ;
-  m_refIsSet  = refIsSet;
 
   // Get the corresponding sensor
   // TODO: Add const functions in STDet

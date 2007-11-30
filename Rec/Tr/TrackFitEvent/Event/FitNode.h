@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.21 2007-09-25 11:48:09 wouter Exp $
+// $Id: FitNode.h,v 1.22 2007-11-30 14:15:24 wouter Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -83,14 +83,14 @@ namespace LHCb
     }
 
     /// Check if the transport information is set correctly
-    bool transportIsSet( )
+    bool transportIsSet() const
     {
       return m_transportIsSet;
     }
-
+    
     /// Retrieve the projection term (obsolete)
-    double projectionTerm() const { return m_refResidual + (projectionMatrix()*measurement().refVector())(0) ; }
-
+    double projectionTerm() const { return m_refResidual + (projectionMatrix()*refVector().parameters())(0) ; }
+    
     /// retrieve state predicted by the kalman filter step
     State& predictedStateUp()
     { return m_predictedStateUp; }

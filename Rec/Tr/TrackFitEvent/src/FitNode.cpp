@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.19 2007-09-25 11:48:09 wouter Exp $
+// $Id: FitNode.cpp,v 1.20 2007-11-30 14:15:25 wouter Exp $
 // Include files
 
 // local
@@ -39,31 +39,22 @@ FitNode::FitNode():
 
 /// Constructor from a z position
 FitNode::FitNode( double zPos ):
-  Node(),
+  Node(zPos),
   m_transportIsSet(false),
   m_refResidual(0),
   m_deltaChi2Up(0),
   m_deltaChi2Down(0)
 {
-  //FitNode constructer
-  State tempState = State();
-  tempState.setZ( zPos );
-  m_state = tempState.clone();
 }
 
 /// Constructor from a Measurement
 FitNode::FitNode(Measurement& aMeas):
-  Node(),
+  Node(&aMeas),
   m_transportIsSet(false),
   m_refResidual(0),
   m_deltaChi2Up(0),
   m_deltaChi2Down(0)
 {
-  //FitNode constructer
-  m_measurement   = &aMeas;
-  State tempState = State();
-  tempState.setZ( aMeas.z() );
-  m_state = tempState.clone();
 }
 
 FitNode::FitNode( const FitNode& rhs ) : 

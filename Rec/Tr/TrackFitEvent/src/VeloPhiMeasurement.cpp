@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.19 2007-06-06 15:05:06 wouter Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.20 2007-11-30 14:15:25 wouter Exp $
 // Include files 
 
 // local
@@ -18,39 +18,28 @@ using namespace LHCb;
 VeloPhiMeasurement::VeloPhiMeasurement( const VeloCluster& cluster,
                                         const DeVelo& det,
                                         const IVeloClusterPosition& clusPosTool,
-                                        const Gaudi::TrackVector& refVector )
+                                        const LHCb::StateVector& refVector )
+  : Measurement(Measurement::VeloPhi,cluster.channelID()),m_cluster(&cluster)
 {
-  m_refVector = refVector; // reference trajectory
-  this->init( cluster, det, clusPosTool, true );
+  IVeloClusterPosition::toolInfo clusInfo = 
+    clusPosTool.position(m_cluster,refVector.position(),
+                         std::pair<double,double>(refVector.tx(),refVector.ty())) ;
+  this->init( det, clusInfo ) ;
 }
 
 /// Standard constructor, initializes variables
 VeloPhiMeasurement::VeloPhiMeasurement( const VeloCluster& cluster,					
                                         const DeVelo& det,
-                                        const IVeloClusterPosition& clusPosTool)
+                                        const IVeloClusterPosition& clusPosTool) 
+  : Measurement(Measurement::VeloPhi,cluster.channelID()),m_cluster(&cluster)
 {
-  m_refVector = Gaudi::TrackVector(); // reference trajectory
-  this->init( cluster, det, clusPosTool, false );
+  IVeloClusterPosition::toolInfo clusInfo = clusPosTool.position(m_cluster);
+  this->init( det, clusInfo ) ;
 }
 
-/// Copy constructor
-VeloPhiMeasurement::VeloPhiMeasurement( const VeloPhiMeasurement& other )
-  : Measurement(other) {
-  m_cluster = other.m_cluster;
-  m_origin = other.m_origin;
-}
-
-void VeloPhiMeasurement::init( const VeloCluster& cluster,
-                               const DeVelo& det,
-                               const IVeloClusterPosition& clusPosTool,
-                               bool refIsSet ) 
+void VeloPhiMeasurement::init( const DeVelo& det, const IVeloClusterPosition::toolInfo& clusInfo)
 {
   // Fill the data members
-  m_mtype    = Measurement::VeloPhi;
-  m_refIsSet = refIsSet;
-  m_cluster  = &cluster;
-  m_lhcbID   = LHCbID( m_cluster->channelID() );
-
   const DeVeloPhiType* phiDet = det.phiSensor( m_cluster->channelID() );
   m_z = phiDet->z();
   m_origin = phiDet -> globalOrigin();
@@ -62,20 +51,11 @@ void VeloPhiMeasurement::init( const VeloCluster& cluster,
   if( ! phiDet -> isDownstream() ) {
     m_measure = -m_measure;
   }
-
-  IVeloClusterPosition::toolInfo clusInfo ;
-  if(!refIsSet) {
-    clusInfo = clusPosTool.position( &cluster );
-  } else {
-    Gaudi::XYZPoint point( m_refVector[0], m_refVector[1], m_z ) ;
-    clusInfo = clusPosTool.position(&cluster,point,std::pair<double,double>(m_refVector[2],m_refVector[3]) );
-  }
+  
   m_errMeasure  = clusInfo.fractionalError *
     phiDet -> phiPitch( clusInfo.strip.strip() );  
-
-  m_trajectory = phiDet -> trajectory( clusInfo.strip, 
-				       clusInfo.fractionalPosition );
-
+  
+  m_trajectory = phiDet -> trajectory( clusInfo.strip, clusInfo.fractionalPosition );
 }
 
 double VeloPhiMeasurement::resolution( const Gaudi::XYZPoint& point,

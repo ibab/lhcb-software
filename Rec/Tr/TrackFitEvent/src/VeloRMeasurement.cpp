@@ -1,4 +1,4 @@
-// $Id: VeloRMeasurement.cpp,v 1.15 2007-06-06 15:05:06 wouter Exp $
+// $Id: VeloRMeasurement.cpp,v 1.16 2007-11-30 14:15:25 wouter Exp $
 // Include files
 
 // local
@@ -18,54 +18,36 @@ using namespace LHCb;
 VeloRMeasurement::VeloRMeasurement( const VeloCluster& cluster,
                                     const DeVelo& det,
                                     const IVeloClusterPosition& clusPosTool,
-                                    const Gaudi::TrackVector& refVector )
+                                    const LHCb::StateVector& refVector )
+  : Measurement(Measurement::VeloR,cluster.channelID()),m_cluster(&cluster)
+
 {
-  m_refVector = refVector; // reference trajectory
-  this->init( cluster, det, clusPosTool, true );
+  IVeloClusterPosition::toolInfo clusInfo = 
+    clusPosTool.position(m_cluster,refVector.position(),
+                         std::pair<double,double>(refVector.tx(),refVector.ty())) ;
+  this->init( det, clusInfo ) ;
 }
 
 /// Standard constructor, initializes variables
 VeloRMeasurement::VeloRMeasurement( const VeloCluster& cluster,
                                     const DeVelo& det, 
                                     const IVeloClusterPosition& clusPosTool) 
+  : Measurement(Measurement::VeloR,cluster.channelID()),m_cluster(&cluster)
 {
-  m_refVector = Gaudi::TrackVector(); // reference trajectory
-  this->init( cluster, det, clusPosTool, false );
+  IVeloClusterPosition::toolInfo clusInfo = clusPosTool.position(m_cluster);
+  this->init( det, clusInfo ) ;
 }
 
-/// Copy constructor
-VeloRMeasurement::VeloRMeasurement( const VeloRMeasurement& other )
-  : Measurement(other) {
-  m_cluster = other.m_cluster;
-}
-
-void VeloRMeasurement::init( const VeloCluster& cluster,
-                             const DeVelo& det,
-                             const IVeloClusterPosition& clusPosTool,
-                             bool refIsSet ) 
+void VeloRMeasurement::init( const DeVelo& det, const IVeloClusterPosition::toolInfo& clusInfo)
 {
   // Fill the data members
-  m_mtype    = Measurement::VeloR;
-  m_refIsSet = refIsSet;
-  m_cluster  = &cluster;
-  m_lhcbID   = LHCbID( m_cluster->channelID() );
-
   const DeVeloRType* rDet=det.rSensor( m_cluster->channelID().sensor() );
   m_z = rDet -> z();
   
-  IVeloClusterPosition::toolInfo clusInfo ;
-  if(!refIsSet) {
-    clusInfo = clusPosTool.position( &cluster );
-  } else {
-    Gaudi::XYZPoint point( m_refVector[0], m_refVector[1], m_z ) ;
-    clusInfo = clusPosTool.position(&cluster,point,std::pair<double,double>(m_refVector[2],m_refVector[3]) );
-  }
   m_measure = rDet -> rOfStrip( clusInfo.strip.strip() ) +
     rDet -> rPitch( clusInfo.strip.strip() ) * clusInfo.fractionalPosition;
   m_errMeasure = rDet -> rPitch( clusInfo.strip.strip() )
     * clusInfo.fractionalError;
 
-  m_trajectory = rDet -> trajectory( clusInfo.strip,
-				     clusInfo.fractionalPosition );
-
+  m_trajectory = rDet -> trajectory( clusInfo.strip, clusInfo.fractionalPosition );
 }

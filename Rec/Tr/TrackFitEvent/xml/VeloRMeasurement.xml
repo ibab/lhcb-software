@@ -15,8 +15,8 @@
 
       <import name='Event/Measurement' />
       <import name='Event/VeloCluster' />
+      <import name='Event/StateVector' />
       <import name='VeloDet/DeVelo'/>
-      <import name='Event/TrackTypes'/>
       <import name='TrackInterfaces/IVeloClusterPosition'/>
 
       <constructor
@@ -24,7 +24,7 @@
         <arg type = 'LHCb::VeloCluster' name = 'cluster' const='TRUE' />
         <arg type = 'DeVelo' name = 'det' const='TRUE' />
         <arg type = 'IVeloClusterPosition' name = 'clusPosTool' const='TRUE' />
-        <arg type = 'Gaudi::TrackVector' name='refVector' const='TRUE'/>
+        <arg type = 'LHCb::StateVector' name='refVector' const='TRUE'/>
        </constructor>
 
       <constructor
@@ -33,11 +33,6 @@
         <arg type = 'DeVelo' name = 'det' const='TRUE' />
         <arg type = 'IVeloClusterPosition' name = 'clusPosTool' const='TRUE' />
        </constructor>
-
-     <constructor
-        desc = 'Copy constructor'>
-        <arg type='LHCb::VeloRMeasurement' name='other' const='TRUE' />
-      </constructor>
 
       <attribute
         type = 'const LHCb::VeloCluster*'
@@ -49,11 +44,9 @@
         name   = 'init'
         desc   = 'Initialize the data members'
         access = 'PUBLIC'>
-        <arg type = 'LHCb::VeloCluster' name = 'cluster' const='TRUE' />
         <arg type = 'DeVelo' name = 'det' const='TRUE' />
-        <arg type = 'IVeloClusterPosition' name = 'clusPosTool'
+        <arg type = 'IVeloClusterPosition::toolInfo' name = 'clusinfo'
 	  const='TRUE' />
-	<arg type = 'bool' name='refIsSet'/>
       </method>
 
       <method

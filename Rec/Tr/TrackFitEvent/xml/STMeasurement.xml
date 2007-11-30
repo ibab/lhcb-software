@@ -13,6 +13,7 @@
 
       <base name='LHCb::Measurement' />
       <import name='Event/Measurement' />
+      <import name='Event/StateVector' />
       <import name='Event/STCluster' />
       <import name='STDet/DeSTDetector'/>
       <import name='Kernel/ISTClusterPosition' />
@@ -22,7 +23,7 @@
         <arg type='LHCb::STCluster' name='stCluster' const='TRUE' />
         <arg type='DeSTDetector' name='det' const='TRUE' />
         <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
-        <arg type='Gaudi::TrackVector' name='refVector' const='TRUE'/>
+        <arg type='LHCb::StateVector' name='refVector' const='TRUE'/>
       </constructor>
 
       <constructor
@@ -30,11 +31,6 @@
         <arg type='LHCb::STCluster' name='stCluster' const='TRUE' />
         <arg type='DeSTDetector' name='det' const='TRUE' />
         <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
-      </constructor>
-
-     <constructor
-        desc = 'Copy constructor'>
-        <arg type='LHCb::STMeasurement' name='other' const='TRUE'/>
       </constructor>
 
       <attribute
@@ -50,7 +46,6 @@
         <arg type='LHCb::STCluster' name='stCluster' const='TRUE' />
         <arg type='DeSTDetector' name='det' const='TRUE' />
         <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
-        <arg type='bool' name='refIsSet'/>
       </method>
 
       <method
