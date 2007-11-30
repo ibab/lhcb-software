@@ -4,12 +4,12 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v3r11 2007-11-30 ===================
 ! 2007-11-30 - Wouter Hulsbergen
   - added new trajectory interface class 'ZTrajectory'
   - replaced OTTime by OTLiteTime in OTMeasurement; added access to calibration
-  - addapted to movement of refvector from Measurement to Node
+  - adapted to movement of refvector from Measurement to Node
 
-!========================== TrackFitEvent v3r11 2007-11-29 ===================
 ! 2007-11-29 - Marco Cattaneo
  - Adapt to new location of IVeloClusterPosition.h, in TrackInterfaces
 

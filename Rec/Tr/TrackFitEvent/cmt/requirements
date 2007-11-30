@@ -23,6 +23,7 @@ use   OTDet           v*      Det
 use   STDet           v*      Det
 use   VeloDet         v*      Det
 use   OTDAQ           v*      OT
+
 private
 use GaudiObjDesc v* -no_auto_imports
 end_private
