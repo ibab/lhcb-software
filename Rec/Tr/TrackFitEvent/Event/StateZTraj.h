@@ -1,4 +1,4 @@
-// $Id: StateZTraj.h,v 1.2 2007-11-30 14:00:19 wouter Exp $
+// $Id: StateZTraj.h,v 1.3 2007-11-30 14:28:29 wouter Exp $
 #ifndef TRACKFITEVENT_STATEZTRAJ_H
 #define TRACKFITEVENT_STATEZTRAJ_H 1
 
@@ -118,7 +118,7 @@ namespace LHCb
 
   template <class StateT>
   StateZTraj::StateZTraj( const StateT& state, const Gaudi::XYZVector& bfield ) 
-    : DifTraj<5>(-Gaudi::Units::km,Gaudi::Units::km ),
+    : ZTrajectory(),
       m_z(state.z()),
       m_qOverP(state.qOverP()),
       m_Bz(bfield.z())
