@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r16 2007-11-30 ======================
 ! 2007-11-22 - Chris Jones
  - Add new default tool mapping into registry, for photon emission point tools
  - Fix crashes with missing mirrors in mirror segment finder
