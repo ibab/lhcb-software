@@ -3,7 +3,7 @@
 # Maintainer : Sajan Easo
 #============================================================================
 package GaussRICH
-version v7r2
+version v7r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -47,3 +47,9 @@ apply_pattern    component_library library=GaussRICH
 # define options directory
 #============================================================================
 apply_pattern packageOpts
+
+# special linking for genConf (see GaudiTools)
+#============================================================================
+private
+macro_prepend genconfig_cmd "LD_PRELOAD=$(library_prefix)GenConfForG4UAction.$(shlibsuffix) " WIN32 ""
+
