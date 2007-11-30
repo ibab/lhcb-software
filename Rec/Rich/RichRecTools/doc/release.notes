@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v4r0 2007-11-30 ===========================
 ! 2007-11-26 - Chris Jones
  - Major reorganisation of this package to try and reduce the size of this 
    pacakge (compilation times are too long).

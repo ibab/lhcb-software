@@ -4,7 +4,7 @@
 #============================================================================
 
 package RichRecTools
-version v3r14
+version v4r0
 
 # ================ structure ================================================
 branches src cmt doc
@@ -13,7 +13,8 @@ include_path none
 # ================ dependencies =============================================
 use RichRecBase      v*   Rich
 use RichDet          v*   Det
-use TrackInterfaces  v*   Tr
+use LHCbKernel       v*   Kernel
+use GaudiKernel      v*
 use GSL              v*   LCG_Interfaces
 
 # ================ component library=========================================
