@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.73 2007-11-28 15:45:12 pkoppenb Exp $
+! $Id: release.notes,v 1.74 2007-11-30 08:08:48 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
+!========================== L0DU v8r1 2007-11-30 =========================
 ! 2007-11-28 - Patrick Koppenburg
- - Wrong lcation of include file fixed.
+ - Wrong location of include file fixed.
 
 !========================== L0DU v8r0 2007-11-02 =========================
 ! 2007-11-01 Olivier Deschamps
