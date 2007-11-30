@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2007-11-30 Wouter Hulsbergen
+ - Removed TsaSeedReferenceCreator
+
 !======================= TsaAlgorithms v3r2 2007-11-30 ======================
 ! 2007-11-30 M Needham
  - Modify state filling in case fast momentum parameterization is used
