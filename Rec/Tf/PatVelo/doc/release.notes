@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2007-11-29 - David Hutchcroft
+ - Set chi2 of RZ tracks properly 
+ - Tidied up RZ track fitting code to only calculate slope and pos after 3 coords
+
 ! 2007-11-22 - David Hutchcroft
  - Fix to PatVeloOpenTracking to use coordinates in the VELO half box frame
 

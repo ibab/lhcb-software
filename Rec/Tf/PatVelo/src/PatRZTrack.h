@@ -1,10 +1,12 @@
-// $Id: PatRZTrack.h,v 1.2 2007-10-08 17:06:05 dhcroft Exp $
+// $Id: PatRZTrack.h,v 1.3 2007-11-30 09:09:19 dhcroft Exp $
 #ifndef TF_PATRZTRACK_H 
 #define TF_PATRZTRACK_H 1
 
 // Include files
 // Include files
 #include "GaudiKernel/MsgStream.h"
+
+#include "gsl/gsl_pow_int.h"
 
 #include "TfKernel/VeloRHit.h"
 
@@ -24,17 +26,17 @@ namespace Tf {
       ~PatRZTrack( ) { }; ///< Destructor
 
       // inline access to track parameters
-      inline double meanZ()       const { return m_meanZ; }
+      inline double meanZ()       const { return m_sz / m_s0; }
       inline double rSlope()      const { return m_slope; }
-      inline double errR2()       const { return m_posErr; }
+      inline double errR2()       const { return 1. / m_s0; }
       inline double errSl2()      const { return m_slopeErr; }
       inline double rPred( double z )  const { return m_pos0 + z * m_slope; }
       inline double rErr2( double z )  const { 
-        return m_posErr + (z-m_meanZ)*(z-m_meanZ) * m_slopeErr;  
+        return errR2() + gsl_pow_2(z-meanZ()) * m_slopeErr;  
       }
       inline bool valid()          const { return m_valid; }
       inline VeloRHits* coords()       { return &m_coord; };
-      inline unsigned int nbCoords()              const { return m_nbCoord; }
+      inline unsigned int nbCoords() const { return m_coord.size(); }
       inline bool missedStations() const { return m_missedStations; }
       inline int zone()            const { return m_zone; } ///< get R zone
       inline bool backward()       const { return m_backward; }
@@ -55,10 +57,7 @@ namespace Tf {
       double rInterpolated( double z ); ///< get expected r at given Z
 
       /// get the chi2 of the track
-      inline double chi2() const{
-	return (m_sz2 - 2.*m_sz*m_pos0 - 2.*m_srz*m_slope + m_pos0*m_pos0 +
-		2.*m_pos0*m_slope*m_sr + m_sr2);
-      }
+      double chi2() const;
 
     protected:
 
@@ -79,11 +78,8 @@ namespace Tf {
       double m_pos0;
       double m_slope;
 
-      double m_meanZ;
-      double m_posErr;
       double m_slopeErr;
 
-      unsigned int m_nbCoord;
       VeloRHits m_coord;
 
   };
