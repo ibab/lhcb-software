@@ -4,6 +4,7 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+!==================== MCInterfaces v1r4 2007-11-30 ===========================
 ! 2007-11-30 - Wouter Hulsbergen
  - Add IIdealStateCreator::addMCHitStates
 
