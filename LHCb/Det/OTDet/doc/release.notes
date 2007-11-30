@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.100 2007-11-30 12:34:53 wouter Exp $
+! $Id: release.notes,v 1.101 2007-11-30 16:15:38 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+!========================== OTDet v7r7 2007-11-30 =========================
 ! 2007-11-20 - Wouter Hulsbergen
  - added missing accessor for reference time of flight
 
