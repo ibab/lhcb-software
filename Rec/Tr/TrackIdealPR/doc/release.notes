@@ -3,6 +3,12 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
+
+! 2007-11-30 - Wouter Hulsbergen
+ - changes in IdealTracksCreator
+   - removed option to add Measurements
+   - added flag for adding States at each MCHit position on track
+
 ! 2007-11-29 - Stephanie Hansmann-Menzemer
  - switch from ZAtT to ZEndT
 
