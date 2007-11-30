@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.50 2007-11-06 16:57:18 mneedham Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.51 2007-11-30 16:02:46 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -89,14 +89,14 @@ StatusCode TrackKalmanFilter::fit( Track& track )
  
   // First node must have a seed state
   std::vector<Node*>& nodes = track.nodes();
+  bool upstream = track.nodes().front()->z() > track.nodes().back()->z() ;
+  
+  // Set the reference vector and seed covariance (initially this is taken from the seed state)
   std::vector<Node*>::iterator iNode = nodes.begin();
   State state = (*iNode)->state() ;
-  TrackSymMatrix seedCov = state.covariance();
-  bool upstream = track.nodes().front()->z() > track.nodes().back()->z() ;
-
-  // Set the reference vector (initially this is taken from the seed state)
   TrackVector refVec = state.stateVector();
-
+  TrackSymMatrix seedCov = state.covariance();
+  
   // Loop over the nodes in the current order (should be sorted)
   // ==> prediction and filter
   double chisq(0) ;
@@ -116,13 +116,9 @@ StatusCode TrackKalmanFilter::fit( Track& track )
     else            node.setPredictedStateDown( state );
 
     // update the reference vector
-    refVec = state.stateVector();
+    refVec = node.refVector().parameters() ;
 
     if ( node.hasMeasurement() ) {
-      // if the reference is not set, set it to the prediction.
-      if( !node.measurement().refIsSet() )
-        node.measurement().setRefVector( refVec ) ;
-      
       // Project the reference (only in the forward filter)
       sc = projectReference( node );
       if ( sc.isFailure() ) return Warning( "Fit Failure: unable to project reference", StatusCode::FAILURE,1 );
@@ -130,9 +126,6 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       // Filter step
       sc = filter( node, state );
       if ( sc.isFailure() ) return Warning( "Fit failure:unable to filter node", StatusCode::FAILURE, 1 );
-
-      // update the reference vector
-      refVec = node.measurement().refVector();
 
       // add the chisquare
       chisq += node.chi2();
@@ -181,16 +174,13 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       else             node.setPredictedStateDown( state );
 
       // set the reference vector
-      refVec = state.stateVector();
+      refVec = node.refVector().parameters() ;
 
       if ( node.hasMeasurement() ) {
         // Filter step
         sc = filter( node, state );
         if ( sc.isFailure() ) return Warning( "Fit Failure unable to filter node!",StatusCode::FAILURE, 1 );
 	
-        // update the reference vector and the chisquare
-        refVec = node.measurement().refVector();
-
         // add the chisquare
         chisqreverse += node.chi2() ;
         if ( !upstream ) node.setDeltaChi2Upstream( node.chi2() );
@@ -331,23 +321,32 @@ StatusCode TrackKalmanFilter::predictReverseFit(const FitNode& prevNode,
 //=========================================================================
 // 
 //=========================================================================
-StatusCode TrackKalmanFilter::projectReference(FitNode& aNode) const
+StatusCode TrackKalmanFilter::projectReference(FitNode& node) const
 {
-  // project the reference state
-  Measurement& meas = aNode.measurement();
-  ITrackProjector *proj = m_projectorSelector->projector(meas);
-  if ( proj==0 )
-    return Warning( "could not get projector for measurement", StatusCode::FAILURE, 1 );
-  
-  StatusCode sc = proj -> project(LHCb::StateVector(meas.refVector(),meas.z()), meas );
-  if ( sc.isFailure() ) 
-    return Warning( "unable to project a state into a measurement", StatusCode::FAILURE,1 );
-   
-  aNode.setProjectionMatrix( proj->projectionMatrix() );
-  aNode.setRefResidual( proj -> residual() ) ;
-  aNode.setErrMeasure( proj -> errMeasure() ) ;
-  
-  return StatusCode::SUCCESS;
+  // if the reference is not set, issue an error
+  StatusCode sc = StatusCode::SUCCESS;
+  if( !node.refIsSet() ) {
+    error() << "Node without reference. " << node.measurement().type() << endmsg ;
+    sc = StatusCode::FAILURE ;
+  } else {
+    // project the reference state
+    Measurement& meas = node.measurement();
+    ITrackProjector *proj = m_projectorSelector->projector(meas);
+    if ( proj==0 ) {
+      error() << "could not get projector for measurement" << endreq ;
+      sc = StatusCode::FAILURE ;
+    } else {
+      sc = proj -> project(node.refVector(), meas );
+      if ( sc.isFailure() ) {
+        error() << "unable to project this statevector" << endreq ;
+      } else {
+        node.setProjectionMatrix( proj->projectionMatrix() );
+        node.setRefResidual( proj -> residual() ) ;
+        node.setErrMeasure( proj -> errMeasure() ) ;
+      }
+    }
+  }
+  return sc;
 }
 
 //=========================================================================
@@ -370,7 +369,7 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) const
   // calculate the linearized residual of the prediction and its error
   const TrackProjectionMatrix& H = node.projectionMatrix();
   const double errorMeas2 = node.errMeasure2();
-  double res        = node.refResidual() + ( H * (meas.refVector() - X) ) (0) ;
+  double res        = node.refResidual() + ( H * (node.refVector().parameters() - X) ) (0) ;
   double errorRes2  = errorMeas2 + Similarity(H,C)(0,0) ;  
 
   // calculate gain matrix K
@@ -516,7 +515,7 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode ) const
   // Only update residuals for node with measurement
   if ( thisNode.hasMeasurement() ) {
     const TrackProjectionMatrix& H = thisNode.projectionMatrix();
-    const TrackVector& refX = thisNode.measurement().refVector() ;
+    const TrackVector& refX = thisNode.refVector().parameters() ;
     const double res = thisNode.refResidual() + ( H*(refX - smoothedX) )(0) ;
     thisNode.setResidual( res );
     const double errRes2 = thisNode.errMeasure2() - 

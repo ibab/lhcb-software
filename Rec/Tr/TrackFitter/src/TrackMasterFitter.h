@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.11 2007-10-05 20:40:54 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.12 2007-11-30 16:02:46 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -110,7 +110,6 @@ private:
   double m_errorTx2;                ///< Error^2 on slope x
   double m_errorTy2;                ///< Error^2 on slope y
   std::vector<double> m_errorP;                  ///< Error on dp/p
-  bool m_setRefInfo;
   bool m_makeNodes;
   bool m_makeNodesAtAllReferencePositions ; ///< Temporary flag to disable creating nodes before first or after last hit
   //! helper to print a failure comment

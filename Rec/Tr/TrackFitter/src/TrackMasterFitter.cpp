@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.38 2007-10-05 20:40:54 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.39 2007-11-30 16:02:46 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -8,6 +8,7 @@
 // from TrackEvent
 #include "Event/TrackFunctor.h"
 #include "Event/StateParameters.h"
+#include "Event/TrackTraj.h"
 
 // local
 #include "TrackMasterFitter.h"
@@ -72,7 +73,6 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ErrorTx2"       , m_errorTx2 = 6.e-5                  );
   declareProperty( "ErrorTy2"       , m_errorTy2 = 1.e-4                  );
   declareProperty( "ErrorP"         , m_errorP = boost::assign::list_of(0.15)(5.0e-7));
-  declareProperty( "SetRefInfo"     , m_setRefInfo = true                 );
   declareProperty( "RefInfoTool",
                    m_refInfoToolName = "LongTrackReferenceCreator"        );
   declareProperty( "MakeNodes"      , m_makeNodes = true                  );
@@ -100,9 +100,8 @@ StatusCode TrackMasterFitter::initialize()
   m_measProvider    = tool<IMeasurementProvider>( "MeasurementProvider",
                                                   "MeasProvider", this );
   
-  if ( m_setRefInfo )
-    m_refInfoTool = tool<ITrackManipulator>( m_refInfoToolName, 
-                                             "RefInfoTool", this );
+  m_refInfoTool = tool<ITrackManipulator>( m_refInfoToolName, 
+                                           "RefInfoTool", this );
   
   m_debugLevel   = msgLevel( MSG::DEBUG );  
 
@@ -427,14 +426,9 @@ bool TrackMasterFitter::outlierRemoved( Track& track ) const
 //=========================================================================
 void TrackMasterFitter::updateRefVectors( Track& track ) const
 { 
-  std::vector<Node*>& nodes = track.nodes();
-  std::vector<Node*>::iterator iNode;
-  for ( iNode = nodes.begin(); iNode != nodes.end(); ++iNode ) {    
-    if ( (*iNode)->hasMeasurement() ) {
-      Measurement& meas = (*iNode) -> measurement();
-      meas.setRefVector( (*iNode)->state().stateVector() );
-    }
-  }
+  for (Track::NodeContainer::iterator iNode = track.nodes().begin(); 
+       iNode != track.nodes().end(); ++iNode ) 
+    (*iNode)->setRefVector( (*iNode)->state().stateVector() ) ;
 }
 
 //=========================================================================
@@ -509,12 +503,16 @@ void TrackMasterFitter::reSeed( Track& track,
 StatusCode TrackMasterFitter::makeNodes( Track& track ) const 
 {
   // Clear the nodes
-  std::vector<Node*>& nodes = track.nodes();
-  clearNodes( nodes );
-
+  track.clearNodes() ;
+  
+  // make sure the track has sufficient reference states
+  StatusCode sc = m_refInfoTool -> execute( track );
+  if (sc.isFailure()) {
+    Warning("Problems setting reference info", StatusCode::SUCCESS, 1);
+  }
+  
   // Check if it is needed to populate the track with measurements
   if ( track.checkPatRecStatus( Track::PatRecIDs ) ) {
-    m_measProvider -> load();    
     StatusCode sc = m_measProvider -> load( track );
     if ( sc.isFailure() )
       return Error( "Unable to load measurements!", StatusCode::FAILURE );
@@ -523,18 +521,10 @@ StatusCode TrackMasterFitter::makeNodes( Track& track ) const
             << ", " << track.nMeasurements() << endreq;
   }
 
-  if ( m_setRefInfo ) { 
-    StatusCode sc = m_refInfoTool -> execute( track );
-    if (sc.isFailure()) {
-      Warning("Problems setting reference info", StatusCode::SUCCESS, 1);
-    }
-  }
-
-  // reserve some space in node vector
+  // Create the nodes for the measurements.
   const std::vector<Measurement*>& measures = track.measurements();
+  Track::NodeContainer& nodes = track.nodes();
   nodes.reserve( measures.size() + m_zPositions.size() );
-
-  // Create the nodes and add them to the private copy
   double zmin(99999*Gaudi::Units::m),zmax(-99999*Gaudi::Units::m) ;
   for ( std::vector<Measurement*>::const_reverse_iterator it =
           measures.rbegin(); it != measures.rend(); ++it ) {
@@ -572,6 +562,16 @@ StatusCode TrackMasterFitter::makeNodes( Track& track ) const
     std::stable_sort( nodes.begin(), nodes.end(), TrackFunctor::increasingByZ<Node>());
   }
 
+  // Set the reference using a TrackTraj
+  LHCb::TrackTraj::StateContainer states ;
+  states.insert( states.end(), track.states().begin(), track.states().end() ) ;
+  LHCb::TrackTraj tracktraj(states) ;
+  for( Track::NodeContainer::const_iterator it = nodes.begin() ;
+       it != nodes.end(); ++it ) {
+    LHCb::StateVector ref = tracktraj.stateVector((*it)->z())  ;
+    (*it)->setRefVector( ref ) ;
+    (*it)->state().setState(ref) ;
+  }
   return StatusCode::SUCCESS;
 }
 
