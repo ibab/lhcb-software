@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.15 2007-07-23 11:27:37 spozzi Exp $
+// $Id: MeasurementProvider.h,v 1.16 2007-11-30 15:10:40 wouter Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H
 
@@ -38,16 +38,18 @@ public:
   virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, bool localY=false) const ;
   
   /** See interface class */ 
-  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, const LHCb::StateVector& ref, 
-					  bool localY=false) const ;
-
+  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, const LHCb::ZTrajectory& ref, 
+                                          bool localY=false) const ;
+  
   /** See interface class */ 
-  virtual StatusCode update(  LHCb::Measurement&, const LHCb::StateVector& refvector ) const ;
-
+  virtual void addToMeasurements( const std::vector<LHCb::LHCbID>& ids,
+                                  std::vector<LHCb::Measurement*>& measurements,
+                                  const LHCb::ZTrajectory& reftraj) const ;
+  
   /** See interface class */ 
   virtual double nominalZ( const LHCb::LHCbID& id ) const ;
-
-protected:
+  
+private:
   // Handles to actual measurement providers
   ToolHandle<IMeasurementProvider> m_veloRProvider ;
   ToolHandle<IMeasurementProvider> m_veloPhiProvider ;

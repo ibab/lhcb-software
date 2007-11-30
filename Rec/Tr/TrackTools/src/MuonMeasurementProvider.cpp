@@ -1,4 +1,4 @@
-// $Id: MuonMeasurementProvider.cpp,v 1.6 2007-09-11 14:40:50 mneedham Exp $
+// $Id: MuonMeasurementProvider.cpp,v 1.7 2007-11-30 15:10:39 wouter Exp $
 
 /** @class MuonMeasurementProvider MuonMeasurementProvider.cpp
  *
@@ -20,30 +20,35 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "Event/TrackParameters.h"
 
-class MuonMeasurementProvider : public GaudiTool, 
-				virtual public IMeasurementProvider
+class MuonMeasurementProvider : public GaudiTool, virtual public IMeasurementProvider
 {
 public:
   
   /// constructer
   MuonMeasurementProvider(const std::string& type,
-			  const std::string& name,
-			  const IInterface* parent);
+                          const std::string& name,
+                          const IInterface* parent);
   
-  virtual ~MuonMeasurementProvider() {}
+  ~MuonMeasurementProvider() {}
   
-  virtual StatusCode initialize() ;
-  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, bool localY ) const  ;
-  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, const LHCb::StateVector& refvector,
-					  bool localY) const ;
-  virtual StatusCode update(  LHCb::Measurement&, const LHCb::StateVector& refvector ) const ;
-  virtual double nominalZ( const LHCb::LHCbID& id ) const ;
-  virtual StatusCode load( LHCb::Track& track ) const ; 
+  StatusCode initialize() ;
+  LHCb::Measurement* measurement( const LHCb::LHCbID& id, bool localY ) const  ;
+  LHCb::Measurement* measurement( const LHCb::LHCbID& id, 
+                                  const LHCb::ZTrajectory& /*reftraj*/,  bool localY ) const {
+    return measurement(id,localY) ;
+  }
+  
+  double nominalZ( const LHCb::LHCbID& id ) const ;
+  
+  void addToMeasurements( const std::vector<LHCb::LHCbID>& lhcbids,
+                          std::vector<LHCb::Measurement*>& measurements,
+                          const LHCb::ZTrajectory& reftraj) const ;
+  StatusCode load( LHCb::Track&  ) const {
+    info() << "sorry, MeasurementProviderBase::load not implemented" << endreq ;
+    return StatusCode::FAILURE ;
+  }
 
 private:
-  // tools
-  ToolHandle<ITrackExtrapolator>           m_extrapolator ; ///< Extrapolator tool
-  
   // pointer to detector
   mutable DeMuonDetector* m_det;
 } ;
@@ -61,9 +66,8 @@ DECLARE_TOOL_FACTORY( MuonMeasurementProvider );
 MuonMeasurementProvider::MuonMeasurementProvider( const std::string& type,
 						const std::string& name,
 						const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_extrapolator("TrackMasterExtrapolator"),
-    m_det(0)
+  :  GaudiTool( type, name , parent ),
+     m_det(0)
 {
   declareInterface<IMeasurementProvider>(this);
 }
@@ -76,9 +80,6 @@ StatusCode MuonMeasurementProvider::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if( sc.isFailure() ) { return Error( "Failed to initialize!", sc ); }
-
-  sc = m_extrapolator.retrieve() ;
-  if( sc.isFailure() ) { return Error( "Failed to initialize extrapolator!", sc ); }
 
   // Retrieve the detector element
   m_det = getDet<DeMuonDetector>( "/dd/Structure/LHCb/DownstreamRegion/Muon" ) ;
@@ -103,56 +104,15 @@ LHCb::Measurement* MuonMeasurementProvider::measurement( const LHCb::LHCbID& id,
       warning() << "Failed to get x,y,z of tile " << muid << endreq;
     } else {
       LHCb::MuonMeasurement::MuonMeasurementType dir = localY ? 
-	LHCb::MuonMeasurement::Y : LHCb::MuonMeasurement::X ;
+        LHCb::MuonMeasurement::Y : LHCb::MuonMeasurement::X ;
       meas = new LHCb::MuonMeasurement(id,Gaudi::XYZPoint(x,y,z),dx,dy, dir);
-      debug() << " Created muon measurement! " << muid << " x "<< x<<" y "<<y<<" z "<<z<<" dx "<<dx<<" dy "<<dy<<" dz "<<dz << endreq; 
+      debug() << " Created muon measurement! " << muid << " x "<< x<<" y "<<y<<" z "<<z
+              <<" dx "<<dx<<" dy "<<dy<<" dz "<<dz << endreq; 
     }
   }
   return meas ;
 }
 
-//-----------------------------------------------------------------------------
-/// Create a measurement with statevector. For now very inefficient.
-//-----------------------------------------------------------------------------
-LHCb::Measurement* MuonMeasurementProvider::measurement( const LHCb::LHCbID& id, const LHCb::StateVector& refvector, bool localY ) const 
-{
-  // default implementation
-  LHCb::Measurement* rc = measurement(id, localY) ;
-  if(rc) {
-    StatusCode sc = update(*rc,refvector) ;
-    if(!sc.isSuccess()) {
-      // if the update failed, we delete the measurement
-      delete rc ;
-      rc =0 ;
-    }
-  }
-  return rc ;
-}
-
-//-----------------------------------------------------------------------------
-/// Update a measurement with a statevector
-//-----------------------------------------------------------------------------
-
-StatusCode MuonMeasurementProvider::update( LHCb::Measurement& ameas, 
-					   const LHCb::StateVector& refvector ) const
-{
-  StatusCode sc = StatusCode::SUCCESS ;
-  LHCb::MuonMeasurement* meas = dynamic_cast<LHCb::MuonMeasurement*>(&ameas) ;
-  if( !meas ) {
-    error() << "Wrong type " << ameas.type() << endreq ;
-    sc = StatusCode::FAILURE ;
-  } else {
-    // move the reference vector to the z position of the measurement
-    LHCb::StateVector refvectoratz = refvector ;
-    if( fabs(refvectoratz.z() - meas->z()) > 1e-10){
-       sc = const_cast<ITrackExtrapolator*>(&(*m_extrapolator))->propagate( refvectoratz, meas->z() ) ;
-      if( !sc.isSuccess() ) 
-	error() << "Problem progagating state from " << refvector.z() << " to " << ameas.z() << endreq ;
-    }
-    meas->setRefVector( refvector.parameters() ) ;
-  }
-  return sc ;
-}
 
 //-----------------------------------------------------------------------------
 // Return the z-coordinate of this lhcb-id (w/o creating the hit)
@@ -160,21 +120,20 @@ StatusCode MuonMeasurementProvider::update( LHCb::Measurement& ameas,
 
 double MuonMeasurementProvider::nominalZ( const LHCb::LHCbID& id ) const
 {
-  LHCb::MuonTileID muid = id.muonID();
-  double x,y,z,dx,dy,dz;
-  StatusCode sc = m_det->Tile2XYZ(id.muonID(),x,dx,y,dy,z,dz);
-  sc.ignore() ;
-  // this would be a lot cheaper:
-  std::cout << "muon z: " << m_det->getStationZ(id.muonID().station()) << " " << z << std::endl ;
-  return z ;
+  return m_det->getStationZ(id.muonID().station()) ;
 }
 
 //-----------------------------------------------------------------------------
-// Load all hits of this type on the track
+/// Create measurements for list of LHCbIDs
 //-----------------------------------------------------------------------------
 
-StatusCode MuonMeasurementProvider::load( LHCb::Track& ) const 
+void MuonMeasurementProvider::addToMeasurements( const std::vector<LHCb::LHCbID>& lhcbids,
+                                                 std::vector<LHCb::Measurement*>& measurements,
+                                                 const LHCb::ZTrajectory& reftraj) const
 {
-  info() << "Sorry, ::load(track), not implemented for " << name() << endreq ;
-  return StatusCode::FAILURE ;
+  for( std::vector<LHCb::LHCbID>::const_iterator id = lhcbids.begin() ;
+       id != lhcbids.end(); ++id) {
+    measurements.push_back( measurement(*id,reftraj,false) )  ;
+    measurements.push_back( measurement(*id,reftraj,true) )  ;
+  }
 }

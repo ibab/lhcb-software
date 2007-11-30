@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.5 2007-11-09 15:28:29 cattanem Exp $
+// $Id: MeasurementProviderT.cpp,v 1.6 2007-11-30 15:10:39 wouter Exp $
 // Include files
 
 //=============================================================================
@@ -15,16 +15,15 @@
  */
   
 #include "TrackInterfaces/IMeasurementProvider.h"
-#include "TrackInterfaces/ITrackExtrapolator.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolHandle.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "Event/TrackParameters.h"
 
 template <typename T>
-class MeasurementProviderT : public GaudiTool, 
-			     virtual public IIncidentListener,
-			     virtual public IMeasurementProvider
+class MeasurementProviderT : public GaudiTool,
+                             virtual public IMeasurementProvider,
+                             virtual public IIncidentListener
 {
 public:
   
@@ -37,28 +36,26 @@ public:
              
   virtual StatusCode initialize() ;
   virtual void handle(const Incident&) ;
-  virtual StatusCode load( LHCb::Track& track ) const ;
   virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, bool /*localY*/ ) const  ;
-  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, const LHCb::StateVector& refvector,
-					  bool /*localY*/  ) const ;
-  virtual StatusCode update(  LHCb::Measurement&, const LHCb::StateVector& refvector ) const ;
+  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, const LHCb::ZTrajectory& refvector,
+                                          bool /*localY*/  ) const ; 
+  virtual void addToMeasurements( const std::vector<LHCb::LHCbID>& lhcbids,
+                                  std::vector<LHCb::Measurement*>& measurements,
+                                  const LHCb::ZTrajectory& reftraj) const ;
   virtual double nominalZ( const LHCb::LHCbID& id ) const  ;
+
+  StatusCode load( LHCb::Track&  ) const {
+    info() << "sorry, MeasurementProviderBase::load not implemented" << endreq ;
+    return StatusCode::FAILURE ;
+  }
 
 private:
   const typename T::ClusterContainerType* clusters() const ;
-  LHCb::Measurement* createUnchecked( const typename T::ClusterType& cluster ) const  ;
-  void updateUnchecked( typename T::MeasurementType& meas, const LHCb::StateVector& refvector ) const ;
 
 private:
-  
-  // tools
+  bool m_useReference ;
   ToolHandle<typename T::PositionToolType> m_positiontool ;
-  ToolHandle<ITrackExtrapolator>           m_extrapolator ; ///< Extrapolator tool
-
-  // pointer to detector
   const typename T::DetectorType* m_det;
-  
-  // this one will always be mutable
   mutable typename T::ClusterContainerType* m_clusters;
 } ;
 
@@ -68,20 +65,20 @@ private:
 #include "GaudiKernel/ToolFactory.h"
 #include "Event/StateVector.h"
 #include "Event/Measurement.h"
-#include "TrackInterfaces/ITrackExtrapolator.h"
+#include "Event/ZTrajectory.h"
 
 //using namespace LHCb;
 
 template<typename T>
 MeasurementProviderT<T>::MeasurementProviderT( const std::string& type,
-					       const std::string& name,
-					       const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_positiontool(T::positionToolName()),
-    m_extrapolator("TrackMasterExtrapolator"),
-    m_det(0)
+                                               const std::string& name,
+                                               const IInterface* parent )
+  :  GaudiTool( type, name , parent ),
+     m_positiontool(T::positionToolName()),
+     m_det(0)
 {
   declareInterface<IMeasurementProvider>(this);
+  declareProperty( "UseReference", m_useReference = false );
 }
 
 //-----------------------------------------------------------------------------
@@ -96,9 +93,6 @@ StatusCode MeasurementProviderT<T>::initialize()
 
   sc = m_positiontool.retrieve() ;
   if( sc.isFailure() ) { return Error( "Failed to initialize position tool!", sc ); }
-  
-  sc = m_extrapolator.retrieve() ;
-  if( sc.isFailure() ) { return Error( "Failed to initialize extrapolator!", sc ); }
   
   // Retrieve the detector element
   m_det = getDet<typename T::DetectorType>( T::defaultDetectorLocation() );
@@ -141,12 +135,6 @@ const typename T::ClusterContainerType* MeasurementProviderT<T>::clusters() cons
 //-----------------------------------------------------------------------------
 
 template <typename T>
-LHCb::Measurement* MeasurementProviderT<T>::createUnchecked( const typename T::ClusterType& cluster ) const
-{
-  return new typename T::MeasurementType( cluster, *m_det, *m_positiontool );
-}
-
-template <typename T>
 LHCb::Measurement* MeasurementProviderT<T>::measurement( const LHCb::LHCbID& id, bool ) const
 {
   LHCb::Measurement* meas(0) ;
@@ -155,7 +143,7 @@ LHCb::Measurement* MeasurementProviderT<T>::measurement( const LHCb::LHCbID& id,
   } else {
     const typename T::ClusterType* clus = clusters()->object( T::channelId(id) );
     if (clus) {
-      meas = createUnchecked(*clus) ;
+      meas = new typename T::MeasurementType( *clus, *m_det, *m_positiontool );
     } else {
       error() << "Cannot find cluster for id " << id << endreq ;
     }
@@ -169,77 +157,43 @@ LHCb::Measurement* MeasurementProviderT<T>::measurement( const LHCb::LHCbID& id,
 
 template <typename T>
 LHCb::Measurement* MeasurementProviderT<T>::measurement( const LHCb::LHCbID& id, 
-							 const LHCb::StateVector& refvector, 
-							 bool localY) const 
+                                                         const LHCb::ZTrajectory& reftraj, 
+                                                         bool localY ) const 
 {
-  // default implementation
-  LHCb::Measurement* rc = measurement(id,localY) ;
-  if(rc) {
-    StatusCode sc = update(*rc,refvector) ;
-    if(!sc.isSuccess()) {
-      // if the update failed, we delete the measurement
-      delete rc ;
-      rc =0 ;
-    }
-  }
-  return rc ;
-}
-
-//-----------------------------------------------------------------------------
-/// Update a measurement with a statevector
-//-----------------------------------------------------------------------------
-
-template <typename T>
-void MeasurementProviderT<T>::updateUnchecked( typename T::MeasurementType& meas,
-					       const LHCb::StateVector& refvector) const
-{
-  meas.setRefVector( refvector.parameters() ) ;
-  meas.init(  *(meas.cluster()), *m_det, *m_positiontool, true ) ;
-}
-
-template <typename T>
-StatusCode MeasurementProviderT<T>::update( LHCb::Measurement& ameas, 
-					    const LHCb::StateVector& refvector) const
-{
-  StatusCode sc = StatusCode::SUCCESS ;
-  typename T::MeasurementType* meas = dynamic_cast<typename T::MeasurementType*>(&ameas) ;
-  if( !meas ) {
-    error() << "Wrong type " << ameas.type() << endreq ;
-    sc = StatusCode::FAILURE ;
+  LHCb::Measurement* meas(0) ;
+  if( !m_useReference ) {
+    meas = measurement( id, localY ) ;
   } else {
-    // move the reference vector to the z position of the measurement
-    LHCb::StateVector refvectoratz = refvector ;
-    if( fabs(refvectoratz.z()-meas->z()) > 1e-10 ) {
-      sc = const_cast<ITrackExtrapolator*>(&(*m_extrapolator))->propagate( refvectoratz, meas->z() ) ;
-      if( !sc.isSuccess() ) 
-	error() << "Problem progagating state from " << refvector.z() << " to " << ameas.z() << endreq ;
+    if ( !T::checkType(id) ) {
+      error() << "Not a velo measurement" << endreq ;
+    } else {
+      const typename T::ClusterType* clus = clusters()->object( T::channelId(id) );
+      if (clus) {
+        double z = nominalZ(id) ;
+        LHCb::StateVector refvector = reftraj.stateVector(z) ;
+        meas = new typename T::MeasurementType( *clus, *m_det, *m_positiontool, refvector);
+      } else {
+        error() << "Cannot find cluster for id " << id << endreq ;
+      }
     }
-    updateUnchecked(*meas,refvectoratz) ;
   }
-  return sc ;
+  return meas ;
 }
 
 //-----------------------------------------------------------------------------
-// Return the z-coordinate of this lhcb-id (w/o creating the hit)
+/// Create measurements for list of LHCbIDs
 //-----------------------------------------------------------------------------
 
 template <typename T>
-double MeasurementProviderT<T>::nominalZ( const LHCb::LHCbID& id ) const
+void MeasurementProviderT<T>::addToMeasurements( const std::vector<LHCb::LHCbID>& lhcbids,
+                                                 std::vector<LHCb::Measurement*>& measurements,
+                                                 const LHCb::ZTrajectory& reftraj) const
 {
-  std::auto_ptr<LHCb::Trajectory> traj = const_cast<typename T::DetectorType*>(m_det)->trajectory(id,0) ;
-  return traj->position(0.5*(traj->beginRange()+traj->endRange())).z() ;
+  for( std::vector<LHCb::LHCbID>::const_iterator id = lhcbids.begin() ;
+       id != lhcbids.end(); ++id)
+    measurements.push_back( measurement(*id,reftraj,false) ) ;
 }
 
-//-----------------------------------------------------------------------------
-// Load all hits of this type on the track
-//-----------------------------------------------------------------------------
-
-template <typename T>
-StatusCode MeasurementProviderT<T>::load( LHCb::Track& ) const 
-{
-  info() << "Sorry, ::load(track), not implemented for " << name() << endreq ;
-  return StatusCode::FAILURE ;
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Template instantiations using Traight classes
@@ -265,6 +219,11 @@ namespace MeasurementProviderTypes {
   };
 }
 
+double MeasurementProviderT<MeasurementProviderTypes::VeloR>::nominalZ( const LHCb::LHCbID& id ) const
+{
+  return m_det->rSensor( id.veloID() )->z() ;
+}
+
 typedef MeasurementProviderT<MeasurementProviderTypes::VeloR> VeloRMeasurementProvider ;
 DECLARE_TOOL_FACTORY( VeloRMeasurementProvider );
 
@@ -285,6 +244,11 @@ namespace MeasurementProviderTypes {
     static LHCb::VeloChannelID channelId( const LHCb::LHCbID& id ) { return id.veloID(); }
     static bool checkType(const LHCb::LHCbID& id) { return id.isVelo() && channelId(id).isPhiType() ; }
   };
+}
+
+double MeasurementProviderT<MeasurementProviderTypes::VeloPhi>::nominalZ( const LHCb::LHCbID& id ) const
+{
+  return m_det->phiSensor( id.veloID() )->z() ;
 }
 
 typedef MeasurementProviderT<MeasurementProviderTypes::VeloPhi> VeloPhiMeasurementProvider ;
@@ -312,6 +276,16 @@ namespace MeasurementProviderTypes {
   };
 }
 
+double MeasurementProviderT<MeasurementProviderTypes::TT>::nominalZ( const LHCb::LHCbID& id ) const
+{
+  // extremely ugly. need more functionality in det elements to do this quicker.
+  LHCb::STChannelID stid(id.stID()) ;
+  const DeSTSector* sector = const_cast<DeSTDetector*>(m_det)->findSector(stid) ;
+  float dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin, yend ;
+  sector->trajectory(stid.strip(),0,dxdy,dzdy,xAtYEq0,zAtYEq0,ybegin,yend) ;
+  return zAtYEq0 + (ybegin+yend)/2 * dzdy ;
+}
+
 typedef MeasurementProviderT<MeasurementProviderTypes::TT> TTMeasurementProvider ;
 DECLARE_TOOL_FACTORY( TTMeasurementProvider );
 
@@ -332,53 +306,15 @@ namespace MeasurementProviderTypes {
   };
 }
 
+double MeasurementProviderT<MeasurementProviderTypes::IT>::nominalZ( const LHCb::LHCbID& id ) const
+{
+  // extremely ugly. need more functionality in det elements to do this quicker.
+  LHCb::STChannelID stid(id.stID()) ;
+  const DeSTSector* sector = const_cast<DeSTDetector*>(m_det)->findSector(stid) ;
+  float dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin, yend ;
+  sector->trajectory(stid.strip(),0,dxdy,dzdy,xAtYEq0,zAtYEq0,ybegin,yend) ;
+  return zAtYEq0 + (ybegin+yend)/2 * dzdy ;
+}
+
 typedef MeasurementProviderT<MeasurementProviderTypes::IT> ITMeasurementProvider ;
 DECLARE_TOOL_FACTORY( ITMeasurementProvider );
-
-////////////////////////////////////////////////////////////////////////////////////////
-// OTMeasurementProviderT
-//
-// Requires two template instantiations, because interface is slightly
-// different. Also a bit ugly that this has a member
-// 'velopositiontool'
-////////////////////////////////////////////////////////////////////////////////////////
-
-#include "Event/OTTime.h"
-#include "Event/OTMeasurement.h"
-#include "OTDet/DeOTDetector.h"
-
-namespace MeasurementProviderTypes {
-  struct OT  {
-    typedef LHCb::OTMeasurement      MeasurementType ;
-    // there is no OT position tool. we'll just use the velo one.
-    typedef IVeloClusterPosition     PositionToolType ;
-    typedef LHCb::OTTime             ClusterType ;
-    typedef LHCb::OTTimes            ClusterContainerType ;
-    typedef DeOTDetector             DetectorType ;
-    static std::string positionToolName() { return "VeloClusterPosition" ; }
-    static std::string defaultDetectorLocation() { return DeOTDetectorLocation::Default ; }
-    static std::string defaultClusterLocation() { return LHCb::OTTimeLocation::Default ; }
-    static LHCb::OTChannelID  channelId( const LHCb::LHCbID& id ) { return id.otID(); }
-    static bool checkType(const LHCb::LHCbID& id) { return id.isOT() ; }
-  };
-}
-
-template<>
-LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::OT>::
-createUnchecked( const MeasurementProviderTypes::OT::ClusterType& cluster ) const
-{
-  return new MeasurementProviderTypes::OT::MeasurementType( cluster, *m_det, 0 );
-}
-
-template<>
-void MeasurementProviderT<MeasurementProviderTypes::OT>::
-updateUnchecked( MeasurementProviderTypes::OT::MeasurementType& meas,
-		 const LHCb::StateVector& refvector) const
-{
-  meas.setRefVector( refvector.parameters() ) ;
-  meas.init(  *(meas.time()), *m_det, 0, 0 ) ;
-}
-
-typedef MeasurementProviderT<MeasurementProviderTypes::OT> OTMeasurementProvider ;
-DECLARE_TOOL_FACTORY( OTMeasurementProvider );
-

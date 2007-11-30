@@ -1,11 +1,11 @@
-// $Id: MeasurementProvider.cpp,v 1.33 2007-07-23 11:27:37 spozzi Exp $
+// $Id: MeasurementProvider.cpp,v 1.34 2007-11-30 15:10:41 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
 // Event model
-#include "Event/StateVector.h"
+#include "Event/TrackTraj.h"
 
 // local
 #include "MeasurementProvider.h"
@@ -25,12 +25,13 @@ DECLARE_TOOL_FACTORY( MeasurementProvider );
 //=============================================================================
 MeasurementProvider::MeasurementProvider( const std::string& type,
                                           const std::string& name,
-                                          const IInterface* parent ) : GaudiTool ( type, name , parent ),
+                                          const IInterface* parent ) 
+  : GaudiTool ( type, name , parent ),
     m_veloRProvider(  "MeasurementProviderT<MeasurementProviderTypes::VeloR>/VeloRMeasurementProvider" ),
     m_veloPhiProvider("MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/VeloPhiMeasurementProvider" ),
     m_ttProvider(     "MeasurementProviderT<MeasurementProviderTypes::TT>/TTMeasurementProvider" ),
     m_itProvider(     "MeasurementProviderT<MeasurementProviderTypes::IT>/ITMeasurementProvider" ),
-    m_otProvider(     "MeasurementProviderT<MeasurementProviderTypes::OT>/OTMeasurementProvider" ),
+    m_otProvider(     "OTMeasurementProvider" ),
     m_muonProvider(   "MuonMeasurementProvider" )
 {
   declareInterface<IMeasurementProvider>(this);
@@ -39,7 +40,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareProperty( "IgnoreIT",   m_ignoreIT   = false );
   declareProperty( "IgnoreOT",   m_ignoreOT   = false );
   declareProperty( "IgnoreMuon", m_ignoreMuon = false );
-  declareProperty( "InitializeReference", m_initializeReference  = false ) ;
+  declareProperty( "InitializeReference", m_initializeReference  = true ) ;
 }
 
 //=============================================================================
@@ -100,15 +101,9 @@ StatusCode MeasurementProvider::initialize()
 //=============================================================================
 StatusCode MeasurementProvider::load( Track& track ) const
 { 
-  /// Some of the long tracks do not have a momentum assigned to the
-  /// velo states. Therefore, we need to keep track of the momentum.
-  bool hasTState = track.hasStateAt(LHCb::State::AtT) ;
-  LHCb::State tState;
-  if(hasTState) tState = track.stateAt(LHCb::State::AtT);
-  
   const std::vector<LHCbID>& ids = track.lhcbIDs();
 
-  std::vector<Measurement*> newmeasurements ;
+  std::vector<LHCbID> newids ;
   for ( std::vector<LHCbID>::const_iterator it = ids.begin();
         it != ids.end(); ++it ) {
     const LHCbID& id = *it;
@@ -122,33 +117,31 @@ StatusCode MeasurementProvider::load( Track& track ) const
 		<< endreq;
 		continue;
     }
-
-    newmeasurements.push_back( measurement( id, false ) ) ;
-    // add also y measurements for muon
-    if( id.detectorType() == LHCb::LHCbID::Muon ) 
-      newmeasurements.push_back( measurement( id, true ) ) ;
+    newids.push_back( id ) ;
   }
-
-  for( std::vector<Measurement*>::const_iterator imeas = newmeasurements.begin() ;
-       imeas != newmeasurements.end(); ++imeas)
-    if( *imeas ) {
-      Measurement* meas = *imeas ;
-      if( m_initializeReference ) {
-	// Of course we would prefer to call directly the constructor
-	// with reference, but unfortunatel we first need a generic
-	// way to get the z-position of an lhcb id.  Note:
-	// extrapolation is done by measurementproviders.
-	LHCb::State state = track.closestState( meas->z() ) ;
-	if( hasTState ) state.setQOverP(tState.qOverP());
-	m_providermap[meas->type()]->update( *meas, LHCb::StateVector(state.stateVector(),state.z()) ) ;
-      }
-      track.addToMeasurements( *meas );
-      delete meas;
-    }
-
+  
+  // create a reference trajectory
+  LHCb::TrackTraj reftraj(track) ;
+  
+  // create all measurements for selected IDs
+  LHCb::Track::MeasurementContainer newmeasurements ;
+  addToMeasurements(newids,newmeasurements,reftraj) ;
+  
+  // remove all zeros, just in case.
+  LHCb::Track::MeasurementContainer::iterator newend 
+    = std::remove_if(newmeasurements.begin(),newmeasurements.end(),
+                     std::bind2nd(std::equal_to<LHCb::Measurement*>(),static_cast<LHCb::Measurement*>(0))) ;
+  if(newend != newmeasurements.end()) {
+    warning() << "Some measurement pointers are zero: " << int(newmeasurements.end() - newend) << endreq ;
+    newmeasurements.erase(newend,newmeasurements.end()) ;
+  }
+  
+  // add the measurements to the track
+  track.addToMeasurements( newmeasurements ) ;
+  
   // Update the status flag of the Track
   track.setPatRecStatus( Track::PatRecMeas );
-
+  
   if ( track.nLHCbIDs() != track.nMeasurements() )
     warning() << "-> Track (key=" << track.key()
               << "): loaded successfully only " << track.nMeasurements()
@@ -184,18 +177,32 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id, bool localY ) 
   return provider ? provider->measurement(id, localY) : 0 ; 
 }
 
-Measurement* MeasurementProvider::measurement ( const LHCbID& id, const LHCb::StateVector& state, bool localY ) const
+Measurement* MeasurementProvider::measurement ( const LHCbID& id, const LHCb::ZTrajectory& state, bool localY ) const
 {
   const IMeasurementProvider* provider = m_providermap[measurementtype( id )] ;
   return provider ? provider->measurement(id,state, localY) : 0 ; 
 }
 
-StatusCode  MeasurementProvider::update( LHCb::Measurement& m, const LHCb::StateVector& refvector ) const 
+//-----------------------------------------------------------------------------
+/// Create a list of measurements from a list of LHCbIDs
+//-----------------------------------------------------------------------------
+void MeasurementProvider::addToMeasurements( const std::vector<LHCb::LHCbID>& ids,
+                                             std::vector<LHCb::Measurement*>& measurements,
+                                             const LHCb::ZTrajectory& tracktraj) const 
 {
-  const IMeasurementProvider* provider = m_providermap[m.type()] ;
-  return provider ? provider->update(m,refvector) : StatusCode::FAILURE ; 
+  // map the ids to measurement-providers
+  std::vector<std::vector<LHCb::LHCbID> > idsbytype(m_providermap.size());
+  for ( std::vector<LHCbID>::const_iterator it = ids.begin(); it != ids.end(); ++it )
+    idsbytype[measurementtype( *it )].push_back( *it );
+  // now call all the providers
+  for( size_t i = 0; i<m_providermap.size(); ++i)
+    if( m_providermap[i] && !idsbytype[i].empty()) 
+      m_providermap[i]->addToMeasurements( idsbytype[i], measurements, tracktraj ) ;
 }
 
+//-----------------------------------------------------------------------------
+/// Get the z-position of a measurement with this ID
+//-----------------------------------------------------------------------------
 double MeasurementProvider::nominalZ( const LHCb::LHCbID& id ) const 
 {
   const IMeasurementProvider* provider = m_providermap[measurementtype( id )] ;
