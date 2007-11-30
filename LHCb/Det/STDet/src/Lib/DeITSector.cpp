@@ -12,7 +12,8 @@ using namespace LHCb;
 
 DeITSector::DeITSector( const std::string& name ) :
   DeSTSector( name ),
-  m_parent(0)
+  m_parent(0),
+  m_prodID(0)
 { 
   // constructer
 }
@@ -49,4 +50,6 @@ StatusCode DeITSector::initialize() {
   return StatusCode::SUCCESS;
 }
 
-
+unsigned int DeITSector::prodID() const {
+  return m_prodID;
+}

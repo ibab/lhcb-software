@@ -81,3 +81,6 @@ StatusCode DeTTSector::initialize() {
   return StatusCode::SUCCESS;
 }
 
+inline unsigned int DeTTSector::prodID() const{
+  return m_parent->prodID();
+}

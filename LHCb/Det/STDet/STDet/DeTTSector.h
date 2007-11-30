@@ -61,6 +61,9 @@ public:
   /** above or below the beam-pipe **/
   std::string position() const;
 
+  /** production ID --> in fact parent ID */
+  virtual unsigned int prodID() const;
+
 private:
 
   parent_type* m_parent;

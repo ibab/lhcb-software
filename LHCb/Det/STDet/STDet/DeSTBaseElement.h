@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.10 2007-11-06 10:31:02 mneedham Exp $
+// $Id: DeSTBaseElement.h,v 1.11 2007-11-30 15:12:07 mneedham Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -198,6 +198,9 @@ inline StatusCode DeSTBaseElement::registerCondition(CallerClass* caller, Object
    updMgrSvc()->registerCondition(caller,object,mf);
    msg << MSG::DEBUG << "Start first update" << endmsg;
    sc = updMgrSvc()->update(caller);
+   if (sc.isFailure()){
+     msg << MSG::WARNING << "failed to update detector element " << endmsg;
+   }
  } 
  catch (DetectorElementException &e) {
    msg << MSG::ERROR << e << endmsg;
@@ -216,10 +219,13 @@ inline StatusCode DeSTBaseElement::registerCondition(CallerClass* caller, const 
 
  try { 
    if (forceUpdate) updMgrSvc()->invalidate(this);
-   msg << MSG::DEBUG << "Registering conditions" << endmsg;
+   msg << MSG::DEBUG << "Registering " << conditionName << " condition" << endmsg;
    updMgrSvc()->registerCondition(caller,condition(conditionName).path(),mf);
    msg << MSG::DEBUG << "Start first update" << endmsg;
    sc = updMgrSvc()->update(caller);
+   if (sc.isFailure()){
+     msg << MSG::WARNING << "failed to update detector element " <<  condition(conditionName).path() << endmsg;
+   }
  } 
  catch (DetectorElementException &e) {
    msg << MSG::ERROR << e << endmsg;

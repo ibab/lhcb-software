@@ -26,7 +26,8 @@ using namespace boost::lambda;
 
 
 DeTTHalfModule::DeTTHalfModule( const std::string& name ) :
-  DeSTBaseElement( name )
+  DeSTBaseElement( name ),
+  m_prodID(0)
 { 
   // constructer
   m_sectors.clear();

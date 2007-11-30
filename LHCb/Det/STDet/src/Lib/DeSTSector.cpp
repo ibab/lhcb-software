@@ -1,10 +1,11 @@
-// $Id: DeSTSector.cpp,v 1.31 2007-10-26 14:53:48 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.32 2007-11-30 15:12:08 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
 
 #include <algorithm>
+
 
 // Kernel
 #include "Kernel/LineTraj.h"
@@ -29,7 +30,9 @@ DeSTSector::DeSTSector( const std::string& name ) :
   m_firstStrip(1),
   m_midTraj(0),
   m_xInverted(false),
-  m_yInverted(false)
+  m_yInverted(false),
+  m_statusString("Status"),
+  m_status(OK)
 { 
     // constructer (first strip means we number from 1)
 }
@@ -134,11 +137,10 @@ StatusCode DeSTSector::initialize() {
     // sense in x and y...
     determineSense();
 
-    // cache trajectories
-    sc = registerCondition(this,this->geometry(),&DeSTSector::cacheInfo);
-    if (sc.isFailure() ){
-      msg << MSG::ERROR << "Failed to register conditions" << endreq;
-      return StatusCode::FAILURE; 
+    sc = registerConditionsCallbacks();
+    if (sc.isFailure()){
+      msg << MSG::ERROR << "Failed to registerConditions call backs";
+      return sc;
     }
   }
   return StatusCode::SUCCESS;
@@ -359,4 +361,38 @@ STChannelID DeSTSector::nextRight(const LHCb::STChannelID testChan) const
   }
 }
 
+
+StatusCode DeSTSector::registerConditionsCallbacks(){
+
+  // cache trajectories
+  // initialize method
+  MsgStream msg(msgSvc(), name() );
+
+  StatusCode sc = registerCondition(this,this->geometry(),&DeSTSector::cacheInfo);
+  if (sc.isFailure() ){
+    msg << MSG::ERROR << "Failed to register geometry conditions" << endreq;
+    return StatusCode::FAILURE; 
+  }
+
+  //  sc = registerCondition(this,m_statusString,&DeSTSector::updateStatusCondition);
+  // if (sc.isFailure() ){
+  //  msg << MSG::ERROR << "Failed to register status conditions" << endreq;
+  //  return StatusCode::FAILURE; 
+  // }
+
+  return StatusCode::SUCCESS;
+}
+
+ StatusCode DeSTSector::updateStatusCondition(){
+
+  const Condition* aCon = condition(m_statusString);
+  if (aCon == 0){
+    MsgStream msg(msgSvc(), name());
+    msg << "failed to find condition" << endmsg;
+    return StatusCode::FAILURE; 
+  }
+  int tStatus = aCon->param<int>("SectorStatus");
+  m_status = Status(tStatus);
+  return StatusCode::SUCCESS;
+ }
 

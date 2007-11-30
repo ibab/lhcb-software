@@ -1,4 +1,4 @@
-// $Id: DeTTHalfModule.h,v 1.5 2007-03-01 11:08:00 cattanem Exp $
+// $Id: DeTTHalfModule.h,v 1.6 2007-11-30 15:12:07 mneedham Exp $
 
 #ifndef _DeTTHalfModule_H_
 #define _DeTTHalfModule_H_
@@ -113,6 +113,9 @@ public:
   /** column number */
   unsigned int column() const;
 
+  /** production id */ 
+  unsigned int prodID() const;
+
 private:
 
   unsigned int m_detRegion;
@@ -122,6 +125,7 @@ private:
   std::string m_position;
   parent_type* m_parent;
   Children m_sectors;
+  unsigned int m_prodID;
 
 };
 
@@ -163,6 +167,10 @@ inline bool DeTTHalfModule::contains(const LHCb::STChannelID aChannel) const{
          && m_parent->contains(aChannel)) ;
 }
  
+
+inline unsigned int DeTTHalfModule::prodID() const{
+  return m_prodID;
+}
 
 /** ouput operator for class DeTTHalfModule
  *  @see DeHalfModule

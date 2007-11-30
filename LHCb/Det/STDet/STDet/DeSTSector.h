@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.22 2007-11-06 10:31:02 mneedham Exp $
+// $Id: DeSTSector.h,v 1.23 2007-11-30 15:12:07 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -15,7 +15,7 @@
 #include "GaudiKernel/Plane3DTypes.h"
 #include "LHCbMath/LineTypes.h"
 
-
+//#include "STDet/StatusMap.h"
 
 /** @class DeSTSector DeSTSector.h "STDet/DeSTSector.h"
  *
@@ -38,9 +38,16 @@ class DeSTSector : public DeSTBaseElement  {
 
 public:
 
-  /** status enum */
+  /** status enum 
+  * <b> For details on definitions see:</b>
+  * \li <a href="http://ckm.physik.unizh.ch/software/det/deadStrips.php"><b>documentation</b></a><p>
+  */
   enum Status{
     OK = 0,
+    Open = 1,
+    Short = 2, 
+    Pinhole = 3,
+    OtherFault = 9,
     Dead = 10
   };
 
@@ -51,7 +58,7 @@ public:
   virtual ~DeSTSector();
 
   /** initialization method
-   * @return Status of initialisation
+   * @return StatusCode OK or not
    */
   virtual StatusCode initialize();
 
@@ -87,7 +94,7 @@ public:
 
   /** convert a local u to a strip
    * @param  u local u
-   * @return strip
+   * @return bool strip
    **/
   unsigned int localUToStrip(const double u) const;
 
@@ -136,7 +143,7 @@ public:
   /** localInActive
    * @param  point point in local frame
    * @param  tol   tolerance
-   * @return bool in active region
+   * @return in active region
    */
   bool localInActive(const Gaudi::XYZPoint& point,
                      Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
@@ -144,7 +151,7 @@ public:
   /** localInBondGap
    * @param  v   v in local frame
    * @param  tol tolerance
-   * @return bool in a bond gap - ie dead region
+   * @return in a bond gap - ie dead region
    */
   bool localInBondGap( const double v ,double tol = 0) const;
 
@@ -153,7 +160,7 @@ public:
    * @param v    v in local frame
    * @param uTol
    * @param vTol
-   * @return bool in active region of box
+   * @return active region of box
    */
   bool localInBox(const double u, const double v,
                   double uTol = 0, double vTol = 0) const;
@@ -194,25 +201,29 @@ public:
 
 
   /** thickness
-   * @return thickness
+   * @return double thickness
    */
   double thickness() const;
 
-  /** get the next channel left */
+  /** get the next channel left
+  * @return next chan left  
+  */
   LHCb::STChannelID nextLeft(const LHCb::STChannelID testChan) const;
 
-  /** get the next channel right */
+  /** get the next channel right 
+  * @return next chan left  
+  */
   LHCb::STChannelID nextRight(const LHCb::STChannelID testChan) const;
 
   /**
-   * @return type
+   * @return std::string type
    */
   std::string type() const;
 
-  /** @return stereo angle */
+  /** @return double stereo angle */
   double angle() const;
 
-  /** @return sin of stereo angle */
+  /** @return double sin of stereo angle */
   double sinAngle() const;
 
   /** @return cosine of stereo angle */
@@ -221,10 +232,14 @@ public:
   /** beetle corresponding to channel  1-3 (IT) 1-4 (TT)*/
   unsigned int beetle(const LHCb::STChannelID& chan) const;
 
-  /** n beetle */
+  /** n beetle 
+   * @return double nBeetles
+  */
   unsigned int nBeetle() const;
 
-  /** Status of sector*/
+  /** Status of sector
+   @return Status of readout sector
+  */
   Status sectorStatus() const;
 
   /** Status of the Beetle corresponding to strip */
@@ -233,20 +248,29 @@ public:
   /** Status of the Beetle with given id  1-3 (IT), 1-4 (TT) */
   Status beetleStatus(const unsigned int id) const;
 
+  /** vector of beetle status */
   std::vector<DeSTSector::Status> beetleStatus() const;
 
   /** Status of channel */
   Status stripStatus(const LHCb::STChannelID& chan) const;
 
+  /** get vector of strip status for all strips in sector */
   std::vector<Status> stripStatus() const;
 
-   /** short cut for strip status ok */
+  /** short cut for strip status ok 
+  * @return isOKStrip
+  */
   bool isOKStrip(const LHCb::STChannelID& chan) const;
 
   /** strip to channel
-  * @param unsigned int strip
-  * @return STChannelID corresponding channel */ 
+  * @param strip
+  * @return corresponding channel */ 
   LHCb::STChannelID stripToChan(const unsigned int strip) const;
+
+  /** production ID 
+  *  @return unsigned int prodID
+  */
+  virtual unsigned int prodID() const = 0; 
 
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
@@ -259,6 +283,10 @@ private:
   void clear();
   void determineSense();
   StatusCode cacheInfo();
+  StatusCode registerConditionsCallbacks();
+
+
+  StatusCode updateStatusCondition();
 
   Gaudi::Plane3D m_plane;
   Gaudi::Plane3D m_entryPlane;
@@ -279,8 +307,6 @@ private:
   double m_uMaxLocal;
   double m_vMinLocal;
   double m_vMaxLocal;
-
-
 
   LHCb::Trajectory* m_midTraj;
 
@@ -306,6 +332,7 @@ private:
   typedef std::map<unsigned int,Status> StatusMap;
   mutable StatusMap m_beetleStatus;
   mutable StatusMap m_stripStatus;
+  std::string m_statusString;
 
 };
 
@@ -480,7 +507,8 @@ inline std::ostream& operator<<( std::ostream& os , const DeSTSector* aSector )
 inline MsgStream& operator<<( MsgStream& os , const DeSTSector* aSector )
 { return aSector->printOut( os ); }
 
-
+#include "STDet/StatusMap.h"
+ 
 #endif // _DeSTSector_H
 
 

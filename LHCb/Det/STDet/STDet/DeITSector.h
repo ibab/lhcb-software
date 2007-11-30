@@ -35,6 +35,8 @@ public:
   /** Destructor */
   virtual ~DeITSector(); 
  
+  virtual unsigned int prodID() const;
+
   /**
   * Retrieves reference to class identifier
   * @return the class identifier for this class
@@ -55,6 +57,7 @@ public:
 private:
 
   parent_type* m_parent;
+  unsigned int m_prodID;
 
 };
 
