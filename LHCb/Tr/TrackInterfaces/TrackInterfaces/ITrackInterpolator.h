@@ -1,4 +1,4 @@
-// $Id: ITrackInterpolator.h,v 1.1 2006-07-31 17:10:27 erodrigu Exp $
+// $Id: ITrackInterpolator.h,v 1.2 2007-11-30 14:40:39 wouter Exp $
 #ifndef TRACKINTERFACES_ITRACKINTERPOLATOR_H 
 #define TRACKINTERFACES_ITRACKINTERPOLATOR_H 1
 
@@ -26,7 +26,7 @@ class ITrackInterpolator : virtual public IAlgTool {
 public: 
   
   /// Interpolate a Track at a given z-position (the track may be re-fitted if needed!)
-  virtual StatusCode interpolate( LHCb::Track& track,
+  virtual StatusCode interpolate( const LHCb::Track& track,
                                   double z,
                                   LHCb::State& state ) = 0;
   
