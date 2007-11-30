@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.h,v 1.5 2007-05-24 06:56:59 mneedham Exp $
+// $Id: LongTrackReferenceCreator.h,v 1.6 2007-11-30 15:18:06 wouter Exp $
 #ifndef _LongTrackReferenceCreator_H
 #define _LongTrackReferenceCreator_H
 
@@ -28,7 +28,7 @@ class IMagneticFieldSvc;
 class ITrajPoca;
 
 class LongTrackReferenceCreator: public GaudiTool,
-                                 virtual public ITrackManipulator  {
+			     virtual public ITrackManipulator  {
 
 public:
 
@@ -44,19 +44,10 @@ public:
   StatusCode initialize();
 
   /** add reference info to the track */  
-  StatusCode execute(LHCb::Track& aTrack) const;
+  StatusCode execute(LHCb::Track& aTrack) const ;
 
 private:
-
-  void addReference(LHCb::Measurement* meas, LHCb::State& aState) const;
-
   ITrackExtrapolator* m_extrapolator;
-  IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service
-  ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface
-
-  // Job options
-  bool m_setLRAmbiguities;            ///< Flag to set the OT LR ambiguities
-  
 };
 
 #endif

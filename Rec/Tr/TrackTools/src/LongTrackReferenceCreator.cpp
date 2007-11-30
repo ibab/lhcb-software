@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.17 2007-11-29 16:45:47 smenzeme Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.18 2007-11-30 15:18:06 wouter Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -8,8 +8,6 @@
 // Event
 #include "Event/Track.h"
 #include "Event/State.h"
-#include "Event/Measurement.h"
-#include "Event/OTMeasurement.h"
 #include "Event/StateTraj.h"
 #include "Event/StateParameters.h"
 
@@ -29,13 +27,12 @@ DECLARE_TOOL_FACTORY( LongTrackReferenceCreator );
 // 
 //=============================================================================
 LongTrackReferenceCreator::LongTrackReferenceCreator(const std::string& type,
-                                                     const std::string& name,
-                                                     const IInterface* parent):
+					     const std::string& name,
+					     const IInterface* parent):
   GaudiTool(type, name, parent)
 { 
   // constructer
   declareInterface<ITrackManipulator>(this);
-  declareProperty( "SetLRAmbiguities", m_setLRAmbiguities = false  );
 };
 
 //=============================================================================
@@ -55,104 +52,117 @@ StatusCode LongTrackReferenceCreator::initialize()
   if (sc.isFailure()){
     return Error("Failed to initialize", sc);
   }
-
+  
   // extrapolator
   m_extrapolator = tool<ITrackExtrapolator>("TrackFastParabolicExtrapolator");
-
-  // Retrieve the magnetic field and the poca tool
-  m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
-  m_poca = tool<ITrajPoca>( "TrajPoca" );
-
- 
+  
   return StatusCode::SUCCESS;
 };
 
-//=============================================================================
-// 
-//=============================================================================
-StatusCode LongTrackReferenceCreator::execute(LHCb::Track& aTrack) const{
-
-  LHCb::State vState;
-  LHCb::State tState;
-  // get the starting states in the Velo and T
-  if ( aTrack.hasStateAt(LHCb::State::EndVelo) ) {
-    vState = aTrack.stateAt(LHCb::State::EndVelo);
-  }
-  else {
-    vState = aTrack.closestState( StateParameters::ZBegRich1 );
-  }
-  if ( fabs( vState.z() - StateParameters::ZBegRich1 ) > 1.5*Gaudi::Units::meter )
-    return Warning( "No Velo State retrieved!", StatusCode::FAILURE );
-
-  if ( aTrack.hasStateAt(LHCb::State::AtT) ) {
-    tState = aTrack.stateAt(LHCb::State::AtT);
-  }
-  else {
-    tState = aTrack.closestState( StateParameters::ZEndT );
-    if( tState.z() < StateParameters::ZBegT - TrackParameters::propagationTolerance ||
-        tState.z() > StateParameters::ZBegRich2 + TrackParameters::propagationTolerance) 
-      return Warning( "No T State retrieved!", StatusCode::FAILURE );
-  }
-    
-  // reset velo Q/p to T one
-  vState.setQOverP(tState.qOverP());
-
-  typedef std::vector<LHCb::Measurement*> MeasContainer;
-  const MeasContainer& aCont = aTrack.measurements();
-
-  if (aCont.size() == 0){
-    return Warning("Tool called for track without measurements",
-                   StatusCode::FAILURE);
-  }
-
-  MeasContainer::const_iterator iterM = aCont.begin();
-  for ( ; iterM != aCont.end(); ++iterM) {
-    
-    if ( (*iterM)->type() == Measurement::IT  ||
-         (*iterM)->type() == Measurement::OT ) {
-      addReference(*iterM,tState);
-    }
-    else {
-      addReference(*iterM,vState);
-    }
-    
-  } //iterM
-
-  return StatusCode::SUCCESS;
-}
 
 //=============================================================================
 // 
 //=============================================================================
-void LongTrackReferenceCreator::addReference( LHCb::Measurement* meas, 
-                                              LHCb::State& aState ) const
+
+template<class T>
+inline bool LessThanFirst(const T& lhs, const T& rhs)
 {
-  // Get the measurement trajectory representing the centre of gravity
-  StatusCode sc = m_extrapolator->propagate(aState,meas->z());
-  if( sc.isFailure() ) {
-    Warning("Extrapolation failed ", StatusCode::FAILURE, 1);
-  }
-  meas->setRefVector(aState.stateVector());
-
-  // Add the L/R ambiguity
-  if ( m_setLRAmbiguities && meas->type() == Measurement::OT ) {
-    XYZVector distance;
-    XYZVector bfield;
-    m_pIMF -> fieldVector( aState.position(), bfield );
-    StateTraj stateTraj = StateTraj( aState, bfield );
-    double s1 = 0.0;
-    double s2 = (meas->trajectory()).arclength( stateTraj.position(s1) );
-    sc = m_poca->minimize(stateTraj, s1, meas->trajectory(),
-                          s2, distance, 20*Gaudi::Units::mm);
-    if( sc.isFailure() ) {
-      warning() << "TrajPoca minimize failed in addReference." << endreq;
-    }
-    int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
-
-    OTMeasurement* otmeas = dynamic_cast<OTMeasurement*>(meas);
-    otmeas->setAmbiguity( ambiguity );
-  }
-
+  return lhs.first < rhs.first ;
 }
 
-//=============================================================================
+StatusCode LongTrackReferenceCreator::execute( LHCb::Track& track ) const
+{
+  // given existing states on the track, this tool adds states at fixed
+  // z-positions along the track. if a track state already exists
+  // sufficiently close to the desired state, it will not add the
+  // state.
+  StatusCode sc = StatusCode::SUCCESS ;
+
+  // first fix the momentum of states on the track. need to make sure this works for Velo-TT as well.
+  if( track.states().empty() ) {
+    error() << "Track has no states. Cannot create reference states" << endreq ;
+    sc = StatusCode::FAILURE ;
+  } else {
+    // first need to make sure all states already on track have
+    // reasonable momentum. still needs to check that this works for
+    // velo-TT
+    const LHCb::State& refstate = 
+      track.hasStateAt(LHCb::State::AtT) ? track.stateAt(LHCb::State::AtT) :
+      *( track.checkFlag(Track::Backward) ? track.states().front() : track.states().back()) ;
+    for( LHCb::Track::StateContainer::const_iterator it = track.states().begin() ;
+         it != track.states().end() ; ++it)
+      const_cast<LHCb::State*>(*it)->setQOverP( refstate.qOverP() ) ;
+    
+    
+    // collect the z-positions where we want the states
+    std::vector<double> zpositions ;
+    if( track.hasT() ) {
+      zpositions.push_back( StateParameters::ZBegT) ;
+      zpositions.push_back( StateParameters::ZEndT ) ;
+    }
+    if( track.hasTT() || (track.hasT() && track.hasVelo() ) ) 
+      zpositions.push_back(StateParameters::ZEndTT) ;
+    if( track.hasVelo() )
+      zpositions.push_back(StateParameters::ZEndVelo) ;
+    
+    // the following container is going to hold pairs of 'desired'
+    // z-positionds and actual states. the reason for the gymnastics
+    // is that we always want to propagate from the closest availlable
+    // state, but then recursively. this will make the parabolic
+    // approximation reasonably accurate.
+    typedef std::pair<double, const LHCb::State*> ZPosWithState ;
+    typedef std::vector< ZPosWithState > ZPosWithStateContainer ;
+    std::vector< ZPosWithState > states ;
+    // we first add the states we already have
+    for( std::vector<LHCb::State*>::const_iterator it = track.states().begin() ;
+         it != track.states().end() ; ++it) 
+      states.push_back( ZPosWithState((*it)->z(),(*it)) ) ;
+
+    // now add the other z-positions, provided nothing close exists
+    const double maxDistance = 50*Gaudi::Units::cm ;
+    for( std::vector<double>::iterator iz = zpositions.begin() ;
+         iz != zpositions.end(); ++iz) {
+      bool found = false ;
+      for( ZPosWithStateContainer::const_iterator it = states.begin() ;
+           it != states.end()&&!found ; ++it)
+        found = fabs( *iz - it->first ) < maxDistance ;
+      if(!found) states.push_back( ZPosWithState(*iz,0) ) ;
+    }
+    std::sort( states.begin(), states.end(), LessThanFirst<ZPosWithState> ) ;
+    
+    // create the states in between
+    LHCb::Track::StateContainer newstates ;
+    for( ZPosWithStateContainer::iterator it = states.begin();
+         it != states.end() ; ++it) 
+      if( it->second == 0 ) {
+        // find the nearest existing state to it
+        ZPosWithStateContainer::iterator best= states.end() ;
+        for( ZPosWithStateContainer::iterator jt = states.begin();
+             jt != states.end() ; ++jt) 
+          if( it != jt && jt->second
+              && ( best==states.end() || fabs( jt->first - it->first) < fabs( best->first - it->first) ) )
+            best = jt ;
+        
+        assert( best != states.end() ) ;
+        
+        // move from that state to this iterator, using the extrapolator and filling all states in between.
+        int direction = best > it ? -1 : +1 ;
+        LHCb::StateVector statevec( best->second->stateVector(), best->second->z() ) ;
+        for( ZPosWithStateContainer::iterator jt = best+direction ;
+             jt != it+direction ; jt += direction) {
+          StatusCode thissc = m_extrapolator->propagate( statevec, jt->first ) ;
+          LHCb::State* newstate = new LHCb::State( statevec ) ;
+          jt->second = newstate ;
+          newstates.push_back( newstate ) ;
+          if( !thissc.isSuccess() ) {
+            error() << "Problem propagating state in LongTrackReferenceCreator::createReferenceStates" << endmsg ;
+            sc = thissc ;
+          }
+        }
+      }
+    
+    // finally, copy the new states to the track. 
+    track.addToStates( newstates ) ;
+  }
+  return sc ;
+}
