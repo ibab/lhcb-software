@@ -1,12 +1,15 @@
 call %GAUDIONLINEROOT%\tests\cmt\preamble.bat
 set UTGID=MBMMon
 start "%UTGID%" %GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe OnlineKernel.dll mbm_mon
+set UTGID=TanServ
+start "%UTGID%" %GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe OnlineKernel.dll tan_nameserver -a -tcp -d
 set UTGID=MEPInit
-start "%UTGID%" %gaudi_exe% -main=%OPTS%/MEPinit.opts -opt=%OPTS%/Daemon.opts    -msgsvc=%msg_svc%
+rem start "%UTGID%" %gaudi_exe% -main=%OPTS%/MEPinit.opts -opt=%OPTS%/Daemon.opts    -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -opt=%OPTS%/MEPinit.opts -main=%OPTS%/Main.opts    -msgsvc=%msg_svc%
 set UTGID=ErrSrv
-start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/ErrorSrv.opts     -msgsvc=%msg_svc%
+rem start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/ErrorSrv.opts     -msgsvc=%msg_svc%
 set UTGID=ErrLog
-start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/ErrorLogger.opts  -msgsvc=MessageSvc
+rem start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/ErrorLogger.opts  -msgsvc=MessageSvc
 sleep 10
 set UTGID=EvtProd
 start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/MEPConverter.opts -msgsvc=%msg_svc%
@@ -26,7 +29,7 @@ set UTGID=Spy_2
 start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/SpyMBMFast.opts   -msgsvc=%msg_svc%
 rem
 set UTGID=OutputBuffer
-start "%UTGID%" %gaudi_exe% -main=%OPTS%/MBMinit.opts -opt=%OPTS%/Daemon.opts    -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -opt=%OPTS%/MBMinit.opts -main=%OPTS%/Main.opts    -msgsvc=%msg_svc%
 sleep 2
 set UTGID=Receiver
 start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/MDFReceiver.opts  -msgsvc=%msg_svc%
