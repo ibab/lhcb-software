@@ -4,7 +4,7 @@
 #ifdef __cplusplus
 namespace SCR {
 #endif
-  enum {
+  enum ansi_val {
           INVALID = 0x100, 
           CTRL_A, //      101
           CTRL_B, //      102
@@ -89,9 +89,9 @@ namespace SCR {
           KEY_COMPOSE,
           
           KEY_MESSAGE
-  } ansi_val;
+  };
 
-  enum {
+  enum scr_constants {
           BELL                = 7,
           CARRIAGERETURN      = 13,
           LINEFEED            = 10,
@@ -125,9 +125,9 @@ namespace SCR {
           SEQUENTIAL_WINDOW   = 0,
           DETACHED_WINDOW     = 1,
           PULLDOWN_WINDOW     = 2
-  } scr_constants;
+  };
 
-  typedef enum {
+  enum scr_on_enums {
     ON_SCREEN,
     ON_CONTENTS,
     ON_BORDER,
@@ -137,7 +137,7 @@ namespace SCR {
     ON_PAGE_UP,
     ON_PAGE_DOWN,
     ON_POP_UP
-  } scr_on_enums;
+  };
 #ifdef __cplusplus
 }
 #endif
