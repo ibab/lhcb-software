@@ -4,11 +4,12 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+!====================== TrackInterfaces v3r11 2007-11-30 =====================
 ! 2007-11-30 - Wouter Hulsbergen
- - add method in IMeasurementProvider to create measuremetns with reference ztraj
- - add projection state to ITrackProjector::alignmentDerivatives, because measurements no longer have a refvec
+ - add method in IMeasurementProvider to create measurements with reference ztraj
+ - add projection state to ITrackProjector::alignmentDerivatives, because 
+   measurements no longer have a refvec
 
-!====================== TrackInterfaces v3r11 2007-11-28 =====================
 ! 2007-11-20 - Tomasz Szumlak
  - Add IVeloClusterPosition interface previously in LHCbKernel
 
