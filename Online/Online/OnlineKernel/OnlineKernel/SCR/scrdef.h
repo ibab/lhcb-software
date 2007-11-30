@@ -4,7 +4,7 @@
 #ifdef __cplusplus
 namespace SCR {
 #endif
-  typedef enum {
+  enum {
           INVALID = 0x100, 
           CTRL_A, //      101
           CTRL_B, //      102
@@ -91,7 +91,7 @@ namespace SCR {
           KEY_MESSAGE
   } ansi_val;
 
-  typedef enum {
+  enum {
           BELL                = 7,
           CARRIAGERETURN      = 13,
           LINEFEED            = 10,
