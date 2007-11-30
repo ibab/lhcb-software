@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnvTool.cpp,v 1.4 2007-11-29 17:52:21 smenzeme Exp $
+// $Id: TsaSeedTrackCnvTool.cpp,v 1.5 2007-11-30 10:02:32 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -178,6 +178,12 @@ void SeedTrackCnvTool::addState(const SeedTrack* aTrack, LHCb::Track* lTrack, co
     //momentum assigned is p at mid T
     aState.setQOverP( qOverP );
     aState.setErrQOverP2( sigmaQOverP );
+  
+    // ok the rest we can get from the correct place
+    aStateT.setX(aTrack->x(z,0.));
+    aStateT.setY(aTrack->y(z,0.));
+    aStateT.setTx(aTrack->xSlope(z,0.));
+    aStateT.setTy(aTrack->sy());
   }
   
   // add to states

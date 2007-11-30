@@ -2,6 +2,10 @@
 ! Package     : Tf/TsaAlgorithms
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
+
+! 2007-11-30 M Needham
+ - Modify state filling in case fast momentum parameterization is used
+
 !----------------------------------------------------------------------------
 ! 2007-11-29 Stephanie Hansmann-Menzemer
  - change ZAtT to ZEndT 
