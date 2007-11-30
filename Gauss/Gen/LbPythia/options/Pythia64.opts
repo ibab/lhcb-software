@@ -1,0 +1,23 @@
+// $Id: Pythia64.opts,v 1.1 2007-11-30 14:34:41 robbep Exp $
+ 
+/** @file
+ *
+ *  Default Pythia opptions for version 6.4.
+ *
+ *  @author K. Lessnoff, A. Muir
+ *  @date 2007-11-29
+ *
+ */
+
+Generation.MinimumBias.PythiaProduction.Commands += 
+{ "pypars mstp 81 21" ,
+  "pypars parp 82 4.50" ,
+  "pypars parp 90 0.116" , 
+  "pydat1 parj 11 0.5" , 
+  "pydat1 parj 12 0.4" , 
+  "pydat1 parj 13 0.79" ,
+  "pydat1 parj 14 0.0" , 
+  "pydat1 parj 15 0.018" ,
+  "pydat1 parj 16 0.054" , 
+  "pydat1 parj 17 0.131" 
+};
