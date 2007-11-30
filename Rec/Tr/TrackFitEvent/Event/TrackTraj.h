@@ -18,7 +18,7 @@ namespace LHCb
    * @date   15/10/2007
    */
 
-  class TrackTraj : public Trajectory
+  class TrackTraj : public ZTrajectory
   {
   public:
     /// Container of states
@@ -52,6 +52,9 @@ namespace LHCb
     /// State at given z
     State state(double z) const ;
     
+    /// State at given z
+    StateVector stateVector(double z) const ;
+    
     /// Expand this track in z
     void expansion( double z, Point& p, Vector& dp, Vector& ddp ) const ;
 
@@ -69,7 +72,10 @@ namespace LHCb
     
     /// arclength between 2 coordinates on the track
     double arclength( double z1, double z2 ) const ;
-    
+
+     /// Derivative of arclength to mu
+    double dArclengthDMu(double z) const ;
+
     /// Estimate for mu which minimizes point poca
     double muEstimate(const Gaudi::XYZPoint& p) const ;
         
@@ -109,7 +115,12 @@ namespace LHCb
   
   inline LHCb::State TrackTraj::state(double z) const {
     updatecache(z) ;
-    return m_cachedinterpolation.state(z) ;
+    return m_cachedinterpolation.CubicStateInterpolationTraj::state(z) ;
+  }
+  
+  inline LHCb::StateVector TrackTraj::stateVector(double z) const {
+    updatecache(z) ;
+    return m_cachedinterpolation.CubicStateInterpolationTraj::stateVector(z) ;
   }
   
   inline void TrackTraj::expansion( double z, Trajectory::Point& p, Trajectory::Vector& dp, Trajectory::Vector& ddp ) const {
@@ -117,14 +128,14 @@ namespace LHCb
     return m_cachedinterpolation.expansion(z,p,dp,ddp) ;
   }
 
-  inline double TrackTraj::arclength( double /*z1*/, double /*z2*/ ) const { 
-    std::cout << " TrackTraj::arclength not yet implemented" << std::endl ;
-    return 0 ;
-  }
-
   inline double TrackTraj::muEstimate(const Gaudi::XYZPoint& p) const {
     updatecache(p.z()) ;
     return m_cachedinterpolation.muEstimate(p) ;
+  }
+
+  inline double TrackTraj::dArclengthDMu(double z) const {
+    updatecache(z) ;
+    return m_cachedinterpolation.dArclengthDMu(z) ;
   }
 
   inline double TrackTraj::distTo1stError( double z, double tolerance, int pathDirection) const 
@@ -154,8 +165,8 @@ namespace LHCb
     // m_cachedindex==numstates --> after last state
     bool cacheisvalid = 
       (m_cachedindex==0 && z <= m_states.front()->z()) ||
-      (m_cachedindex!=0 && m_states[m_cachedindex-1]->z() <= z && z < m_states[m_cachedindex]->z()) ||
-      (m_cachedindex==m_states.size() && z >= m_states.back()->z()) ;
+      (m_cachedindex==m_states.size() && z >= m_states.back()->z()) ||
+      (m_cachedindex!=0 && m_states[m_cachedindex-1]->z() <= z && z < m_states[m_cachedindex]->z()) ;
     
     if( !cacheisvalid ) {
       if( z <= m_states.front()->z() ) {

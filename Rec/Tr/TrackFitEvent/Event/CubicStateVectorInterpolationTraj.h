@@ -1,12 +1,12 @@
-// $Id: CubicStateVectorInterpolationTraj.h,v 1.1 2007-10-16 12:17:35 wouter Exp $
+// $Id: CubicStateVectorInterpolationTraj.h,v 1.2 2007-11-30 13:35:39 wouter Exp $
 #ifndef LHCbKernel_CubicStateVectorInterpolationTraj_H
 #define LHCbKernel_CubicStateVectorInterpolationTraj_H 1
 
 // Includes
 #include "Event/State.h"
 #include "Event/StateVector.h"
+#include "Event/ZTrajectory.h"
 #include "GaudiKernel/PhysicalConstants.h"
-#include "Kernel/Trajectory.h"
 
 namespace LHCb 
 {
@@ -19,23 +19,23 @@ namespace LHCb
    * @date   10/10/2007
    * 
    */
-  class CubicStateVectorInterpolationTraj : public Trajectory {
+  class CubicStateVectorInterpolationTraj : public ZTrajectory {
   public:
     typedef Gaudi::XYZPoint Point ;
     typedef Gaudi::XYZVector Vector ;
 
     /// Default constructor. Does nothing.
-    CubicStateVectorInterpolationTraj() : Trajectory(0,0), m_zbegin(0), m_zend(0) {}
+    CubicStateVectorInterpolationTraj() : ZTrajectory(), m_zbegin(0), m_zend(0) {}
  
     /// Constructor from two states of state-vectors
     template<class StateT>
     CubicStateVectorInterpolationTraj( const StateT& begin,
-                                   const StateT& end ) : Trajectory(0,0) { init(begin,end) ; }
-
+                                       const StateT& end ) : ZTrajectory() { init(begin,end) ; }
+    
     /// Constructor from single state(vector) and B-field
     template<class StateT>
     CubicStateVectorInterpolationTraj( const StateT& state,
-                                   const Gaudi::XYZVector& bfield ) : Trajectory(0,0) { init(state,bfield) ; }
+                                       const Gaudi::XYZVector& bfield ) : ZTrajectory() { init(state,bfield) ; }
 
     /// Initialize with two states 
     template<class StateT>
@@ -68,6 +68,8 @@ namespace LHCb
     double arclength(double z1, double z2) const ;
     /// Estimate for expansion parameter 'z' closest to point
     double muEstimate(const Point& p) const ;
+    /// Derivative of arclength to mu
+    double dArclengthDMu(double z) const ;
 
   public: // other public methods
     /// Return x(z)
@@ -92,7 +94,9 @@ namespace LHCb
     double qop(double z) const ;
     /// momentum vector at position z
     Gaudi::XYZVector momentum(double z) const { return std::abs(1/qop(z)) * Gaudi::XYZVector(tx(z),ty(z),1).Unit() ; }
-    
+    /// state vector
+    virtual StateVector stateVector(double z) const ;
+
   private:
     void interpolate1D( double za, double xa, double txa, double zb, double xb, double txb,
 			double coeff[4] ) const ;
@@ -184,23 +188,13 @@ namespace LHCb
     double d  = zb-za ;
     c[2] = (3*(xb-xa)-d*(2*txa+txb))/(d*d) ;
     c[3] = (txb-txa-2*c[2]*d)/(3*d*d) ;
-  
-    //     // we want to prevent strange wiggle. a straneg wiggle is a zero
-    //     // in the 2nd derivative. let's call ifs two coeffs b0 and b1:
-    //     double b1 = 2*3*c[3] ;
-    //     if( fabs(b1) > 0 ) {
-    //       double b0 = 2*c[2] ;
-    //       double zzero = - b0 / b1 ;
-    //       if( zzero > za && zzero < zb ) {
-    //         // pol3 interpolation gives strange wiggle. let's go 1 order
-    //         // down. this uses the constraints on xa and xb and an
-    //         // 'equally wrong' cnstraint for txa and txb,
-    //         c[0] = xa ;
-    //         c[1] = (txa-txb)/2 + (xb-xa)/d ;
-    //         c[2] = (xb-xa-c[1]*d)/(d*d) ;
-    //         c[3] = 0 ;
-    //       }
-    //     }
+  }
+
+  inline double CubicStateVectorInterpolationTraj::dArclengthDMu(double z) const 
+  {
+    double thistx = tx(z) ;
+    double thisty = ty(z) ;
+    return std::sqrt( 1 + thistx*thistx + thisty*thisty ) ;
   }
 }
 #endif
