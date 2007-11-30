@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r7 2007-11-30 =====================
+! 2007-11-30 - Marco Cattaneo
+ - Use RichRecTools v4r*
+
 ! 2007-11-26 - Chris Jones
  - Add new MC cheating options for photon reconstruction
 

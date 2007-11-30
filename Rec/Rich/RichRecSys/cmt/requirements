@@ -2,11 +2,11 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.67 2007-09-20 08:42:23 cattanem Exp $
+# $Id: requirements,v 1.68 2007-11-30 15:45:18 cattanem Exp $
 #============================================================================
 
 package           RichRecSys
-version           v3r6
+version           v3r7
 
 # ================ structure ================================================
 branches          cmt doc options
@@ -18,7 +18,7 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 
 # Common RICH reconstruction packages
 use RichRecBase         v3r*   Rich
-use RichRecTools        v3r*   Rich
+use RichRecTools        v4r*   Rich
 use RichRecAlgorithms   v2r*    Rich
 
 # "Offline" PID packages
