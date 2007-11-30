@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.41 2007-11-08 15:48:48 gcorti Exp $ 
+# $Id: requirements,v 1.42 2007-11-30 15:15:51 gcorti Exp $ 
 #============================================================================
 # Created    : 2005-06-20
 # Maintainer : Patrick ROBBE
@@ -30,8 +30,15 @@ include_dirs  $(GENERATORSROOT)
 #============================================================================
 # Component and linker libraries building rule
 #============================================================================
-library       GeneratorsLib  Lib/*.cpp Lib/*.F
-library       Generators     component/*.cpp
+macro         GeneratorsLibSrc  "Lib/*.cpp Lib/*.F "
+macro_append  GeneratorsLibSrc  "" \
+                         WIN32  "-x=ExternalGenerator.cpp -x=Signal.cpp "
+macro         GeneratorsSrc     "component/*.cpp " 
+macro_append  GeneratorsSrc     "" \
+                         WIN32  "Lib/ExternalGenerator.cpp  Lib/Signal.cpp "
+
+library       GeneratorsLib $(GeneratorsLibSrc)
+library       Generators    $(GeneratorsSrc)
 
 #============================================================================
 # define component and linker libraries link options (order is essential)
