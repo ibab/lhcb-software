@@ -1,6 +1,5 @@
-//$Id: MuonDigitization.cpp,v 1.36 2007-11-20 07:46:17 asatta Exp $
+//$Id: MuonDigitization.cpp,v 1.37 2007-11-30 07:08:19 cattanem Exp $
 
-#include <iostream>
 #include <algorithm>
 #include <vector>
 #include <cmath>
@@ -10,6 +9,7 @@
 
 #include "MuonDet/MuonBasicGeometry.h"
 #include "MuonDet/DeMuonDetector.h"
+#include "MuonDet/DeMuonGasGap.h"
 
 #include "MuonDigitization.h"
 #include "MuonChamberResponse.h" 

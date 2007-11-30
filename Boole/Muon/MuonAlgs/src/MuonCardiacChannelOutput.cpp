@@ -191,7 +191,6 @@ void MuonCardiacChannelOutput::processForDeadTime(float value, float timeGate)
 //  std::cout<<" new cardiaca channel "<<std::endl;
   std::stable_sort(m_timeList.begin(),m_timeList.end(),SortPhyChOutInTime());
   
-  bool dead=false;
   double lenghtOfDead=value;
   double timeOfStart=-5000;
   std::vector<std::pair<float,MuonCardiacTraceBack> >::iterator it;
@@ -244,7 +243,6 @@ void MuonCardiacChannelOutput::processForDeadTime(float value, float timeGate)
 
 
   for(it=m_timeList.begin();it<m_timeList.end();it++){ 
-    double timeOfHit=(*it).first;
     //if(((*it).second).getPhyChOut()-> phChInfo().isAlive()){
       //       m_phChInfo=((*it).second).getPhyChOut()->phChInfo();
       fired=true;
@@ -386,7 +384,7 @@ MuonPhysicalChannelOutput* MuonCardiacChannelOutput::getPhCh(MuonCardiacTraceBac
       if(po==pointer.getHitTrace())return phreturn;;
     }
   }
-  
+  return NULL;
 }
 
 #endif

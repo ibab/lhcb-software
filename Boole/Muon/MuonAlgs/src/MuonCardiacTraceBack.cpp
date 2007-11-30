@@ -12,7 +12,6 @@
 // Standard constructor, initializes variables
 //=============================================================================
 MuonCardiacTraceBack::MuonCardiacTraceBack(  ) {
-int i=0;
 }
 
 MuonCardiacTraceBack::MuonCardiacTraceBack(MuonHitTraceBack*
