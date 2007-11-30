@@ -15,7 +15,7 @@
 extern System Sys;
  
 //---------------------------------------------------------------------------
-static int upic_count_store_bytes (Item* i) {
+static int upic_count_store_bytes(Item* i) {
   int n = 0;
   for (Param* p = i->param.first; p; p = p->next)  {
     n += sizeof(int);
@@ -35,10 +35,10 @@ static int upic_count_store_bytes (Item* i) {
 }
 
 //---------------------------------------------------------------------------
-static char* upic_store_params_of_line (Item* i,  char* buffer) {
+static char* upic_store_params_of_line(Item* i, char* buffer) {
   double* d;
   for (const Param* p = i->param.first; p; p = p->next)  {
-    int* n = (int*) buffer;
+    int* n = (int*)buffer;
     *n = p->id;
     buffer += sizeof(int);
     switch (p->type)    {
@@ -52,7 +52,7 @@ static char* upic_store_params_of_line (Item* i,  char* buffer) {
       buffer += sizeof(double);
       break;
     default :
-      n = (int*) buffer;
+      n = (int*)buffer;
       *n = p->val.i;
       buffer += sizeof(int);
       break;
@@ -62,7 +62,7 @@ static char* upic_store_params_of_line (Item* i,  char* buffer) {
 }
 
 //---------------------------------------------------------------------------
-static char* upic_retreive_params_of_line (Item* i, char* buffer)   {
+static char* upic_retreive_params_of_line(Item* i, char* buffer)   {
   Param* p = i->param.first;
   while (p)  {
     int* n = (int*) buffer;
@@ -93,7 +93,7 @@ static char* upic_retreive_params_of_line (Item* i, char* buffer)   {
 }
 
 //---------------------------------------------------------------------------
-int upic_set_param (const void *var, int id, const char *format, ...) {
+int upic_set_param(const void *var, int id, const char *format, ...) {
   va_list args;
   Convert def, min, max, *list;
   int list_size, flag, width, fortran;
@@ -145,7 +145,6 @@ int upic_set_param (const void *var, int id, const char *format, ...) {
   switch (p->type)    {
   case ASC_FMT:    {
     char **q, **add;
-    
     p->def.c = (char*) list_malloc (width + 1);
     p->val.c = (char*) list_malloc (width + 1);
     sprintf (p->def.c, p->format, def.c);
@@ -178,8 +177,7 @@ int upic_set_param (const void *var, int id, const char *format, ...) {
     p->def.i = def.i;
     p->val.i = def.i;
     p->min.i = min.i;
-    p->max.i = max.i;
-    
+    p->max.i = max.i;    
     q = (int*) list_malloc (list_size * sizeof(int));
     p->list = (int*) q;
     add = (int*) list;
@@ -236,75 +234,70 @@ int upic_modify_param (int menu_id, int item_id, int param_id, ...) {
 
   switch (p->type)  {
   case ASC_FMT:    {
-      char **q, **add;
-      if (def.c)  {
-          sprintf (p->def.c, p->format, def.c);
+    char **q, **add;
+    if (def.c)  {
+      sprintf (p->def.c, p->format, def.c);
           sprintf (p->val.c, p->format, def.c);
-        }
-      if (list)   {
-	q = (char**)p->list;
-	for (int i=0; i<p->list_size; i++, q++)  {
-	  if (*q) free (*q);
-	}
-	if (p->list) ::free(p->list);
-	q = (char**) list_malloc (list_size * sizeof(char*));
-	p->list = (int*) q;
-	add = (char**)list;
-	for (int i=0; i<list_size; i++, q++, add++)  {
-	  *q = (char*) list_malloc (strlen(*add)+1);
-	  strcpy (*q, *add);
-	}
-      }
     }
-    break;
-  case REAL_FMT :    {
-      double *q, *add;
-      if (def.d) {
-	p->def.d = def.d;
-	p->val.d = def.d;
+    if (list)   {
+      q = (char**)p->list;
+      for (int i=0; i<p->list_size; i++, q++)  {
+	if (*q) free (*q);
       }
-      if (min.d) p->min.d = min.d;
-      if (max.d) p->max.d = max.d;
-      if (list)   {
-	if (p->list) ::free(p->list);
-	q = (double*) list_malloc (list_size * sizeof(double));
-	p->list = (int*) q;
-	add = (double*) list;
-	for (int i=0; i<list_size; i++, q++, add++)
-	  *q = *add;
-      }
-    }
-    break;
-  default:    {
-      int *q, *add;
-      if (def.i)   {
-	p->def.i = def.i;
-	p->val.i = def.i;
-      }
-      if (min.i) p->min.i = min.i;
-      if (max.i) p->max.i = max.i;
-      
-      if (list)  {
-	if ((q = p->list)) free (q);
-	
-	q = (int*) list_malloc (list_size * sizeof(int));
-	p->list = (int*) q;
-	add = (int*) list;
-	for (int i=0; i<list_size; i++, q++, add++)
-	  *q = *add;
+      if (p->list) ::free(p->list);
+      q = (char**) list_malloc (list_size * sizeof(char*));
+      p->list = (int*) q;
+      add = (char**)list;
+      for (int i=0; i<list_size; i++, q++, add++)  {
+	*q = (char*) list_malloc (strlen(*add)+1);
+	strcpy (*q, *add);
       }
     }
     break;
   }
+  case REAL_FMT :    {
+    double *q, *add;
+    if (def.d) {
+      p->def.d = def.d;
+      p->val.d = def.d;
+    }
+    if (min.d) p->min.d = min.d;
+    if (max.d) p->max.d = max.d;
+    if (list)   {
+      if (p->list) ::free(p->list);
+      q = (double*) list_malloc (list_size * sizeof(double));
+      p->list = (int*) q;
+      add = (double*) list;
+      for (int i=0; i<list_size; i++, q++, add++)
+	*q = *add;
+    }
+    break;
+  }
+  default:    {
+    int *q, *add;
+    if (def.i)   {
+      p->def.i = def.i;
+      p->val.i = def.i;
+    }
+    if (min.i) p->min.i = min.i;
+    if (max.i) p->max.i = max.i;    
+    if (list)  {
+      if (p->list) free (p->list);
+      q = (int*) list_malloc (list_size * sizeof(int));
+      p->list = (int*) q;
+      add = (int*) list;
+      for (int i=0; i<list_size; i++, q++, add++)
+	*q = *add;
+    }
+    break;
+  }
+  }
   p->list_size   = list_size;
   p->flag        = flag;
-
   upic_print_param (p, p->buf, def);
-  
 #ifdef SCREEN
   {
     int row;
-    
     upic_find_item_row(d->item.first, item_id, &row);
     upic_draw_item (i, row);
   }
@@ -330,15 +323,14 @@ int upic_get_param (int menu_id, int item_id, int param_id, Menu** m, Page** d, 
 
 //---------------------------------------------------------------------------
 int upic_refresh_param_page (int page)  {
-  Menu* m;
-  Item* i;
+  Menu* m = upic_find_menu(page);
 
-  if (!(m = upic_find_menu(page))) return UPI_SS_INVMENU;
+  if ( !m ) return UPI_SS_INVMENU;
   Page* d = m->page.first;
   while (d)  {
+    Item* i = d->item.first;
     int row = 1;
-    i = d->item.first;
-    while (i)    {
+    while (i) {
       if (i->type == PARAM && i->id != -1)    {
         if (Sys.menu.cur == m) upic_wakeup();
         upic_refresh_params_in_line (i->param.first);
@@ -860,7 +852,6 @@ int upic_find_list_elem (int menu_id, int item_id, int param_id)  {
   
   int list_size = p->list_size;
   if (!list_size) return (-1);
-
   if (p->type == ASC_FMT)  {
     int len1 = upic_non_blanks (p->val.c);
     char** q = (char **)p->list;
@@ -944,5 +935,4 @@ void upic_draw_param (Page*  page, Param* param, int row, int attrib, int /* off
   else
     scrc_put_chars (page->id, param->buf, attr, row, col, 0);
 }
-
 #endif
