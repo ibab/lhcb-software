@@ -15,7 +15,10 @@ branches          cmt doc src
 #============================================================================
 use RichRecBase      v*   Rich
 use RichDet          v*   Det
-use TrackInterfaces  v*   Tr
+use RichKernel       v*   Rich
+use LHCbKernel       v*   Kernel
+use GaudiKernel      v*
+use Boost            v*   LCG_Interfaces
 use GSL              v*   LCG_Interfaces
 
 include_path      none

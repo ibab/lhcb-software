@@ -16,7 +16,11 @@ branches          cmt doc src
 use RichRecBase      v*   Rich
 use RichDet          v*   Det
 use TrackInterfaces  v*   Tr
+use RecEvent         v*   Event
+use TrackEvent       v*   Event
+use GaudiKernel      v*
 use GSL              v*   LCG_Interfaces
+use Boost            v*   LCG_Interfaces
 
 include_path      none
 #============================================================================

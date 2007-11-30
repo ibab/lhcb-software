@@ -4,8 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================== RichRecTrackTools v1r0 2007-11-30 ==================
 ! 2007-10-31 - Chris Jones
  - Split of package from RichRecTools. Original package was growing too large
    (cmt takes an eternity to build the dependencies).
   + In an attempt at some sort of organisation, this package focuses on 
-    'photon' tools
+    'track' tools

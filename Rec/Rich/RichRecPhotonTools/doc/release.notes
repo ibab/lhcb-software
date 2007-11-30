@@ -4,6 +4,7 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================= RichRecPhotonTools v1r0 2007-11-30 ==================
 ! 2007-10-31 - Chris Jones
  - Split of package from RichRecTools. Original package was growing too large
    (cmt takes an eternity to build the dependencies).
