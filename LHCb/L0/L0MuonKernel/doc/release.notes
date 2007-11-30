@@ -4,7 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-
+!============================ L0MuonKernel v7r2 2007-11-30 ===============
+! 2007-11-30
+ - Bug fix: The ID of the L0BufferCnv was not properly defined for CU and SU.
 !============================ L0MuonKernel v7r1 2007-09-05 ===============
 ! 2007-09-06
  - Modification of ProcDataCnv to foolow up the change of specification in
