@@ -1,4 +1,4 @@
-// $Id: TrajProjector.h,v 1.4 2007-09-25 11:50:24 wouter Exp $
+// $Id: TrajProjector.h,v 1.5 2007-11-30 14:32:44 wouter Exp $
 #ifndef TRAJPROJECTOR_H 
 #define TRAJPROJECTOR_H 1
 
@@ -34,7 +34,8 @@ public:
   /// Project a state onto a measurement
   StatusCode project( const LHCb::State& state, const LHCb::Measurement& meas );
 
-  ITrackProjector::Derivatives alignmentDerivatives(const LHCb::Measurement& meas, const Gaudi::XYZPoint& pivot) const;
+  ITrackProjector::Derivatives alignmentDerivatives(const LHCb::StateVector& state,
+                                                    const LHCb::Measurement& meas, const Gaudi::XYZPoint& pivot) const;
 
   /// initialize
   virtual StatusCode initialize();

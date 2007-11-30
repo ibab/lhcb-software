@@ -1,4 +1,4 @@
-// $Id: TrajProjector.cpp,v 1.10 2007-10-16 14:16:15 wouter Exp $
+// $Id: TrajProjector.cpp,v 1.11 2007-11-30 14:32:44 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -106,20 +106,19 @@ StatusCode TrajProjector<T>::project( const State& state,
 //-----------------------------------------------------------------------------
 template <typename T>
 typename TrajProjector<T>::Derivatives
-TrajProjector<T>::alignmentDerivatives( const Measurement& meas,
+TrajProjector<T>::alignmentDerivatives( const StateVector& statevector,
+                                        const Measurement& meas,
                                         const Gaudi::XYZPoint& pivot ) const
 {
   // create the track trajectory...
-  const TrackVector& refVec = meas.refVector();
   static XYZVector bfield;
   // Create StateTraj with or without BField information.
   if( m_useBField )
     {
-      m_pIMF -> fieldVector( XYZPoint( refVec[0],
-				       refVec[1], meas.z()), bfield ).ignore();
+      m_pIMF -> fieldVector( statevector.position(),bfield ).ignore();
     }
   else { bfield.SetXYZ( 0., 0., 0. ); }
-  const StateZTraj refTraj( LHCb::StateVector(refVec,meas.z()), bfield );
+  const StateZTraj refTraj(statevector , bfield );
 
   // Get the measurement trajectory
   const Trajectory& measTraj = meas.trajectory();  
