@@ -103,8 +103,6 @@ private:
 
   IMCReconstructible* m_trackSelector; ///< Track selection tool
   IIdealStateCreator*     m_stateCreator;  ///< Create 'seed'state at last meas
-  ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface
-  IMeasurementProvider* m_measProvider;
 
   // job options
   bool m_addOTTimes;      ///< true if OT clusters should be put on track
@@ -112,10 +110,9 @@ private:
   bool m_addITClusters;   ///< true if ST clusters in IT should be put on track
   bool m_addVeloClusters; ///< true if Velo R clusters should be put on track
   bool m_addMuonHits;
-  bool m_addMeasurements; ///< flag to add the XxxMeasurements to the track
   bool m_initState;       ///< initialize seed state
   bool m_initStateUpstreamFit; ///< seed state created upstream/downstream
-  bool m_trueStatesAtMeas;  ///< Store true states at each measurement position
+  bool m_trueStatesAtMCHits;  ///< Store true states at each MCHit position
  
   std::string m_selectorToolName;     ///< Track selector tool name
   std::string m_tracksOutContainer;///< Tracks output container path in the TES
