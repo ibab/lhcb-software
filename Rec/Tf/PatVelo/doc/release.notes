@@ -4,6 +4,7 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r2 2007-11-30 ==========================
 ! 2007-11-29 - David Hutchcroft
  - Set chi2 of RZ tracks properly 
  - Tidied up RZ track fitting code to only calculate slope and pos after 3 coords
