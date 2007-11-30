@@ -20,15 +20,15 @@ static int upic_count_store_bytes (Item* i) {
   for (Param* p = i->param.first; p; p = p->next)  {
     n += sizeof(int);
     switch (p->type)    {
-      case ASC_FMT :
-        n += strlen(p->val.c) + 1;
-        break;
-      case REAL_FMT :
-        n += sizeof(double);
-        break;
-      default :
-        n += sizeof(int);
-        break;
+    case ASC_FMT :
+      n += strlen(p->val.c) + 1;
+      break;
+    case REAL_FMT :
+      n += sizeof(double);
+      break;
+    default :
+      n += sizeof(int);
+      break;
     }
   }
   return (n);
@@ -36,27 +36,26 @@ static int upic_count_store_bytes (Item* i) {
 
 //---------------------------------------------------------------------------
 static char* upic_store_params_of_line (Item* i,  char* buffer) {
-  int* n;
   double* d;
   for (const Param* p = i->param.first; p; p = p->next)  {
-    n = (int*) buffer;
+    int* n = (int*) buffer;
     *n = p->id;
     buffer += sizeof(int);
     switch (p->type)    {
-      case ASC_FMT :
-        strcpy (buffer, p->val.c);
-        buffer += strlen(buffer) + 1;
-        break;
-      case REAL_FMT :
-        d = (double*) buffer;
-        *d = p->val.d;
-        buffer += sizeof(double);
-        break;
-      default :
-        n = (int*) buffer;
-        *n = p->val.i;
-        buffer += sizeof(int);
-        break;
+    case ASC_FMT :
+      strcpy (buffer, p->val.c);
+      buffer += strlen(buffer) + 1;
+      break;
+    case REAL_FMT :
+      d = (double*) buffer;
+      *d = p->val.d;
+      buffer += sizeof(double);
+      break;
+    default :
+      n = (int*) buffer;
+      *n = p->val.i;
+      buffer += sizeof(int);
+      break;
     }
   }
   return (buffer);
@@ -64,36 +63,28 @@ static char* upic_store_params_of_line (Item* i,  char* buffer) {
 
 //---------------------------------------------------------------------------
 static char* upic_retreive_params_of_line (Item* i, char* buffer)   {
-  Param* p;
-  int* n;
-  
-  p = i->param.first;
-  while (p)
-  {
-    n = (int*) buffer;
+  Param* p = i->param.first;
+  while (p)  {
+    int* n = (int*) buffer;
     if (*n != p->id) return (0);
     buffer += sizeof(int);
     
-    switch (p->type)
-    {
-      case ASC_FMT :
-        strcpy (p->val.c, buffer);
-        buffer += strlen(buffer) + 1;
-        break;
-      case REAL_FMT :
-        {
-          double* d;
-      
-          d = (double*) buffer;
-          p->val.d = *d;
-          buffer += sizeof(double);
-        }
-        break;
-      default:
-        n = (int*) buffer;
-        p->val.i = *n;
-        buffer += sizeof(int);
-        break;
+    switch (p->type)    {
+    case ASC_FMT :
+      strcpy (p->val.c, buffer);
+      buffer += strlen(buffer) + 1;
+      break;
+    case REAL_FMT :  {
+      double* d = (double*) buffer;
+      p->val.d = *d;
+      buffer += sizeof(double);
+      break;
+    }
+    default:
+      n = (int*) buffer;
+      p->val.i = *n;
+      buffer += sizeof(int);
+      break;
     }
     p = p->next;
   }
@@ -121,23 +112,22 @@ int upic_set_param (const void *var, int id, const char *format, ...) {
   p->buf = (char*) list_malloc (width + 1);
 
   va_start (args, format);
-  switch (p->type)
-  {
-  	case ASC_FMT :
-  	  def.c = va_arg (args, char*);
-  	  min.c = va_arg (args, char*);
-  	  max.c = va_arg (args, char*);
-  	  break;
-  	case REAL_FMT :
-  	  def.d = va_arg (args, double);
-  	  min.d = va_arg (args, double);
-  	  max.d = va_arg (args, double);
-  	  break;
-  	default :
-  	  def.i = va_arg (args, int);
-  	  min.i = va_arg (args, int);
-  	  max.i = va_arg (args, int);
-  	  break;
+  switch (p->type)  {
+  case ASC_FMT :
+    def.c = va_arg (args, char*);
+    min.c = va_arg (args, char*);
+    max.c = va_arg (args, char*);
+    break;
+  case REAL_FMT :
+    def.d = va_arg (args, double);
+    min.d = va_arg (args, double);
+    max.d = va_arg (args, double);
+    break;
+  default :
+    def.i = va_arg (args, int);
+    min.i = va_arg (args, int);
+    max.i = va_arg (args, int);
+    break;
   }
   list = va_arg (args, Convert*);
   list_size = va_arg (args, int);
@@ -153,58 +143,50 @@ int upic_set_param (const void *var, int id, const char *format, ...) {
   p->list_pos = 0;
 
   switch (p->type)    {
-  case ASC_FMT:    
-    {
-      char **q, **add;
-      int i;
-      
-      p->def.c = (char*) list_malloc (width + 1);
-      p->val.c = (char*) list_malloc (width + 1);
-      sprintf (p->def.c, p->format, def.c);
-      sprintf (p->val.c, p->format, def.c);
-      
-      q = (char**) list_malloc (list_size * sizeof(char*));
-      p->list = (int*) q;
-      add = (char**) list;
-      for (i=0; i<list_size; ++i, ++q, ++add)   {
-	*q = (char*) list_malloc (strlen(*add)+1);
-	strcpy (*q, *add);
-      }
+  case ASC_FMT:    {
+    char **q, **add;
+    
+    p->def.c = (char*) list_malloc (width + 1);
+    p->val.c = (char*) list_malloc (width + 1);
+    sprintf (p->def.c, p->format, def.c);
+    sprintf (p->val.c, p->format, def.c);
+    
+    q = (char**) list_malloc (list_size * sizeof(char*));
+    p->list = (int*) q;
+    add = (char**) list;
+    for (int i=0; i<list_size; ++i, ++q, ++add)   {
+      *q = (char*) list_malloc (strlen(*add)+1);
+      strcpy (*q, *add);
     }
     break;
-  case REAL_FMT:
-    {
-      double *q, *add;
-      int i;
-      p->def.d = def.d;
-      p->val.d = def.d;
-      p->min.d = min.d;
-      p->max.d = max.d;
-      q = (double*) list_malloc (list_size * sizeof(double));
-      p->list = (int*) q;
-      add = (double*) list;
-      for (i=0; i<list_size; i++, q++, add++)
-	*q = *add;
-    }
+  }
+  case REAL_FMT:    {
+    double *q, *add;
+    p->def.d = def.d;
+    p->val.d = def.d;
+    p->min.d = min.d;
+    p->max.d = max.d;
+    q = (double*) list_malloc (list_size * sizeof(double));
+    p->list = (int*) q;
+    add = (double*) list;
+    for (int i=0; i<list_size; i++, q++, add++)
+      *q = *add;
     break;
-  default:
-    {
-      int* q;
-      int* add;
-      int i;
-      
-      p->def.i = def.i;
-      p->val.i = def.i;
-      p->min.i = min.i;
-      p->max.i = max.i;
-      
-      q = (int*) list_malloc (list_size * sizeof(int));
-      p->list = (int*) q;
-      add = (int*) list;
-      for (i=0; i<list_size; i++, q++, add++)
-	*q = *add;
-    }
+  }
+  default:    {
+    int* q, *add, i;
+    p->def.i = def.i;
+    p->val.i = def.i;
+    p->min.i = min.i;
+    p->max.i = max.i;
+    
+    q = (int*) list_malloc (list_size * sizeof(int));
+    p->list = (int*) q;
+    add = (int*) list;
+    for (i=0; i<list_size; i++, q++, add++)
+      *q = *add;
     break;
+  }
   }
   p->list_size   = list_size;
   p->flag        = flag;
@@ -220,98 +202,81 @@ int upic_modify_param (int menu_id, int item_id, int param_id, ...) {
 
   va_list args;
   
+  int list_size, flag;
   Convert def, min, max;
   Convert* list;
-  int list_size;
-  int flag;
   
-  int status;
-
-  status = upic_get_param (menu_id, item_id, param_id, &m, &d, &i, &p);
+  int status = upic_get_param (menu_id, item_id, param_id, &m, &d, &i, &p);
   if (status != UPI_SS_NORMAL) return (status);
   
   if (Sys.item.cur == i) upic_wakeup();
 
   va_start (args, param_id);
-  switch (p->type)
-  {
-  	case ASC_FMT :
-  	  def.c = va_arg (args, char*);
-  	  min.c = va_arg (args, char*);
-  	  max.c = va_arg (args, char*);
-  	  break;
-  	case REAL_FMT :
-  	  def.d = va_arg (args, double);
-  	  min.d = va_arg (args, double);
-  	  max.d = va_arg (args, double);
-  	  break;
-  	default :
-  	  def.i = va_arg (args, int);
-  	  min.i = va_arg (args, int);
-  	  max.i = va_arg (args, int);
-  	  break;
+  switch (p->type)  {
+  case ASC_FMT :
+    def.c = va_arg (args, char*);
+    min.c = va_arg (args, char*);
+    max.c = va_arg (args, char*);
+    break;
+  case REAL_FMT :
+    def.d = va_arg (args, double);
+    min.d = va_arg (args, double);
+    max.d = va_arg (args, double);
+    break;
+  default :
+    def.i = va_arg (args, int);
+    min.i = va_arg (args, int);
+    max.i = va_arg (args, int);
+    break;
   }
   list = va_arg (args, Convert*);
   list_size = va_arg (args, int);
   flag = va_arg (args, int);
   va_end (args);
 
-  switch (p->type)
-  {
-  case ASC_FMT :
-    {
-      char** q;
-      char** add;
-      int i;
-      
+  switch (p->type)  {
+  case ASC_FMT:    {
+      char **q, **add;
       if (def.c)  {
           sprintf (p->def.c, p->format, def.c);
           sprintf (p->val.c, p->format, def.c);
         }
       if (list)   {
-	q = (char **)p->list;
-	for (i=0; i<p->list_size; i++, q++)  {
+	q = (char**)p->list;
+	for (int i=0; i<p->list_size; i++, q++)  {
 	  if (*q) free (*q);
 	}
-	if ((q = (char **)p->list)) free(q);
-	
+	if (p->list) ::free(p->list);
 	q = (char**) list_malloc (list_size * sizeof(char*));
 	p->list = (int*) q;
-	add = (char**) list;
-	for (i=0; i<list_size; i++, q++, add++)  {
+	add = (char**)list;
+	for (int i=0; i<list_size; i++, q++, add++)  {
 	  *q = (char*) list_malloc (strlen(*add)+1);
 	  strcpy (*q, *add);
 	}
       }
     }
     break;
-  case REAL_FMT :
-    {
-      double* q;
-      double* add;
-      int i;
-      
+  case REAL_FMT :    {
+      double *q, *add;
       if (def.d) {
 	p->def.d = def.d;
 	p->val.d = def.d;
       }
       if (min.d) p->min.d = min.d;
       if (max.d) p->max.d = max.d;
-      
       if (list)   {
-	if ((q = (double *)p->list)) free (q);
-	
+	if (p->list) ::free(p->list);
 	q = (double*) list_malloc (list_size * sizeof(double));
 	p->list = (int*) q;
 	add = (double*) list;
-	for (i=0; i<list_size; i++, q++, add++)
+	for (int i=0; i<list_size; i++, q++, add++)
 	  *q = *add;
       }
     }
     break;
-  default:
-    {
-      int i, *q, *add;
+  default:    {
+      int *q, *add;
       if (def.i)   {
 	p->def.i = def.i;
 	p->val.i = def.i;
@@ -325,7 +290,7 @@ int upic_modify_param (int menu_id, int item_id, int param_id, ...) {
 	q = (int*) list_malloc (list_size * sizeof(int));
 	p->list = (int*) q;
 	add = (int*) list;
-	for (i=0; i<list_size; i++, q++, add++)
+	for (int i=0; i<list_size; i++, q++, add++)
 	  *q = *add;
       }
     }
@@ -729,8 +694,7 @@ int upic_store_vars (int menu_id, int item_id, char** buffer, int *length)
     while (d)  {
       i = d->item.first;
       while (i)   {
-        if (i->type == PARAM && i->id != -1)
-        {
+        if (i->type == PARAM && i->id != -1)  {
           n = (int*) buf;
           *n = i->id;
           buf += sizeof(int);
@@ -787,8 +751,7 @@ int upic_retreive_vars (int menu_id, int item_id, char* buffer)
       d = d->next;
     }
   }
-  else
-  {
+  else  {
     d = m->page.first;
     if (!d || !(i = upic_find_item (d->item.first, item_id)))
       return UPI_SS_INVCOMMAND;
@@ -812,9 +775,8 @@ void upic_restore_params_in_line (Item* i)  {
 //---------------------------------------------------------------------------
 void upic_restore_params_in_page (Menu* m)    {
   Page* d = m->page.first;
-  Item* i;
   while (d)  {
-    i = d->item.first;
+    Item *i = d->item.first;
     while (i)    {
       if (i->param.first) upic_restore_params_in_line (i);
       i = i->next;
@@ -870,18 +832,18 @@ void upic_print_param (Param* p, char* buf, Convert source) {
     case BIN_FMT :
       upic_itom (buf, p->chars, source.i);
       break;
-    case LOG_FMT :
+    case LOG_FMT:
       upic_itol (buf, p->chars, source.i);
       break;
-    case REAL_FMT :
-      sprintf (buf, p->format, source.d);
+    case REAL_FMT:
+      ::sprintf (buf, p->format, source.d);
       break;
-    case ASC_FMT :
-      sprintf (buf, p->format, source.i);
+    case ASC_FMT:
+      ::sprintf (buf, p->format, source.c);
       break;
-    case OCT_FMT :
-    case DEC_FMT :
-    case HEX_FMT :
+    case OCT_FMT:
+    case DEC_FMT:
+    case HEX_FMT:
       sprintf (buf, p->format, source.i);
       break;
   }
