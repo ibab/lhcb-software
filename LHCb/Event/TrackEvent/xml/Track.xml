@@ -134,9 +134,11 @@
         access = "PUBLIC" >
         <enumval name = "Likelihood" value = "1" desc="The Likelihood the track is real"/>
         <enumval name = "PatQuality" value = "2" desc="Quality variable from PatForward Tracking"/>
-	<enumval name = "Cand2ndQPat"      value = "3"  desc=" Quality of the second candidate"/>
-        <enumval name = "NCandCommonHits"  value = "4"  desc=" NCand with common hits"/>
-        <enumval name = "Cand2ndChi2Mat"   value = "5"  desc=" Chi2 of the second candidate"/>
+	<enumval name = "Cand1stQPat"      value = "3"  desc=" Quality of the first candidate"/>
+	<enumval name = "Cand2ndQPat"      value = "4"  desc=" Quality of the second candidate"/>
+        <enumval name = "NCandCommonHits"  value = "5"  desc=" NCand with common hits"/>
+        <enumval name = "Cand1stChi2Mat"   value = "6"  desc=" Chi2 of the first candidate"/>
+        <enumval name = "Cand2ndChi2Mat"   value = "7"  desc=" Chi2 of the second candidate"/>
         <enumval name = "nExpectedVelo" value = "10" desc="number of expected Velo hits"/>
         <enumval name = "nExpectedTT" value = "11" desc="number of expected TT hits"/>
         <enumval name = "nExpectedIT" value = "12" desc="number of expected IT hits"/>
