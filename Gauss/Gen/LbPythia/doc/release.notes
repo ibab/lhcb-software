@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-11-30 - Patrick Robbe 
+ - options/Pythia64.opts: new options for Pythia 6.4 (with new MI)
+
 !========================= LbPythia v5r3 2007-10-10 ==========================
 ! 2007-10-10 - Gloria Corti for Neal Guiessaz
  - Replace flavour with particles in both code and options, use Gaudi units
