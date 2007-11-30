@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.16 2007-11-30 15:10:40 wouter Exp $
+// $Id: MeasurementProvider.h,v 1.17 2007-11-30 17:19:26 cattanem Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H
 
@@ -11,7 +11,6 @@
 // from LHCbKernel
 #include "Kernel/LHCbID.h"
 #include "Kernel/ISTClusterPosition.h"
-#include "Kernel/IVeloClusterPosition.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/IMeasurementProvider.h"

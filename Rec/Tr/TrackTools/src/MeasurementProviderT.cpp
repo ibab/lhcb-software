@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.6 2007-11-30 15:10:39 wouter Exp $
+// $Id: MeasurementProviderT.cpp,v 1.7 2007-11-30 17:19:26 cattanem Exp $
 // Include files
 
 //=============================================================================
@@ -202,7 +202,7 @@ void MeasurementProviderT<T>::addToMeasurements( const std::vector<LHCb::LHCbID>
 #include "VeloDet/DeVelo.h"
 #include "Event/VeloCluster.h"
 #include "Event/VeloRMeasurement.h"
-#include "Kernel/IVeloClusterPosition.h"
+#include "TrackInterfaces/IVeloClusterPosition.h"
 
 namespace MeasurementProviderTypes {
   struct VeloR {
