@@ -1,4 +1,4 @@
-// $Id: PatFwdTrackCandidate.h,v 1.2 2007-11-19 15:06:20 aperiean Exp $
+// $Id: PatFwdTrackCandidate.h,v 1.3 2007-11-30 07:52:26 aperiean Exp $
 #ifndef PATFWDTRACKCANDIDATE_H
 #define PATFWDTRACKCANDIDATE_H 1
 
@@ -155,7 +155,7 @@
     void setNbIT( int nb )    { m_nbIT = nb; }
     void setNbOT( int nb )    { m_nbOT = nb; }
 
-    // added for Tr/NNTools; Adrian Perieanu
+    // added for Tr/NNTools
     void setCand1stQuality( double cand1stquality){ 
       m_cand1stquality = cand1stquality; 
     }
@@ -196,5 +196,8 @@
 
     double m_chi2PerDoF;
     int    m_nDoF;
+
+    double m_cand1stquality;
+    double m_cand2ndquality;
   };
 #endif // PATFWDTRACKCANDIDATE_H
