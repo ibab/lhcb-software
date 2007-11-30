@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.37 2007-11-30 07:08:19 cattanem Exp $
+//$Id: MuonDigitization.cpp,v 1.38 2007-11-30 07:29:50 cattanem Exp $
 
 #include <algorithm>
 #include <vector>
@@ -87,15 +87,11 @@ StatusCode MuonDigitization::initialize()
     }
     m_numberOfSpilloverEvents = evtPaths.value().size();
     // Release the interfaces no longer needed
-    sc=spillAlg->release();
-    if( !sc.isSuccess() ) {
-      warning()<<" error releasing the interface"<<endmsg;
-    }
+    spillAlg->release();
   }
-  sc=algmgr->release();
-  if( !sc.isSuccess() ) {
-    warning()<<" error releasing the alg magr"<<endmsg;
-  }
+
+  algmgr->release();
+
   info() << "number of spillover events read from aux stream "
       << m_numberOfSpilloverEvents << endmsg;
   m_numberOfEvents=m_numberOfSpilloverEvents+1;

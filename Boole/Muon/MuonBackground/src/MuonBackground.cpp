@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.42 2007-11-29 16:59:37 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.43 2007-11-30 07:30:15 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -193,20 +193,17 @@ StatusCode MuonBackground::initialize() {
       IProperty* spillProp;
       sc=spillAlg->queryInterface( IID_IProperty, (void**)&spillProp );
       if( !sc.isSuccess() ) {
-	warning()<<" Spillover problem"<<endreq;
+        warning()<<" Spillover problem"<<endreq;
       }
       StringArrayProperty evtPaths;
       evtPaths.assign( spillProp->getProperty("PathList") );
       m_readSpilloverEvents = evtPaths.value().size();
       // Release the interface, no longer needed
-      sc=spillAlg->release();
-      if( !sc.isSuccess() ) {
-        warning()<<" release problem"<<endmsg;
-      }
+      spillAlg->release();
     }
 
     debug() << "number of spillover events read from aux stream "
-        << m_readSpilloverEvents << endmsg;  
+            << m_readSpilloverEvents << endmsg;  
   }else if(m_type==FlatSpillover){
     m_readSpilloverEvents=1;
     m_luminosityFactor=m_luminosity/2.0;   
@@ -214,11 +211,7 @@ StatusCode MuonBackground::initialize() {
   }
 
   // Release interface, no longer needed  
-  sc=algmgr->release();
-  if( !sc.isSuccess() ) {
-    warning()<<" release problem"<<endmsg;
-  }
-  //initialize the detector
+  algmgr->release();
 
   return StatusCode::SUCCESS;
 };
