@@ -40,7 +40,7 @@ public:
   StatusCode initialize();
 
   /// Interpolate between the two nearest nodes to get a state
-  virtual StatusCode interpolate( LHCb::Track& track,
+  virtual StatusCode interpolate( const LHCb::Track& track,
                                   double z, 
                                   LHCb::State& state );
 

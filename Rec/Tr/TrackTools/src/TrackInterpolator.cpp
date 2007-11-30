@@ -1,4 +1,4 @@
-// $Id: TrackInterpolator.cpp,v 1.4 2007-03-13 14:32:31 cattanem Exp $
+// $Id: TrackInterpolator.cpp,v 1.5 2007-11-30 14:49:53 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -67,38 +67,70 @@ StatusCode TrackInterpolator::initialize() {
 //=============================================================================
 // Interpolate between the nearest nodes
 //=============================================================================
-StatusCode TrackInterpolator::interpolate( Track& track,
+StatusCode TrackInterpolator::interpolate( const Track& track,
                                            double z,
                                            State& state )
 {
   // Check if there are nodes on the track
-  std::vector<Node*> nodes = track.nodes();
+  typedef std::vector<Node*> NodeContainer ;
+  const NodeContainer& nodes = track.nodes();
   if ( nodes.empty() ) return Error("No nodes on track found.");
 
-  // Find the 2 nodes before and after the given z-position
-  FitNode* nodeUp   = 0;
-  FitNode* nodeDown = 0;
-  std::vector<Node*>::iterator iter = nodes.begin();
-  std::vector<Node*>::iterator iterPrev = iter;
-  double dzPrev = (*iterPrev)->z() - z;
-  ++iter;
-  while ( iter != nodes.end() ) {
-    double dz = (*iter)->z() - z;
-    if ( dz < 0. && dzPrev > 0. ) { 
-       nodeUp   = dynamic_cast<FitNode*>(*iterPrev);
-       nodeDown = dynamic_cast<FitNode*>(*iter);
-    } else if ( dz > 0. && dzPrev < 0. ) {      
-       nodeUp   = dynamic_cast<FitNode*>(*iter);
-       nodeDown = dynamic_cast<FitNode*>(*iterPrev);
-    }
-    iterPrev = iter;
-    dzPrev = dz;
-    ++iter;    
+  // If we are between the first and last node with a measurement, we
+  // interpolate. If not, we extrapolate from the closest 'inside'
+  // node. (That's more stable than interpolation.) In the end this
+  // needs to work both for upstream and downstream fits. I am not
+  // sure that it works for either now.
+
+  // first find the pair of iterators such that z is between 'prevnode' and 'nextnode'
+  NodeContainer::const_iterator nextnode = nodes.begin() ;
+  if(  nodes.front()->z() < nodes.back()->z() ) {
+    while( nextnode != nodes.end() && (*nextnode)->z() < z ) ++nextnode ;
+  } else {
+    while( nextnode != nodes.end() && (*nextnode)->z() > z ) ++nextnode ;
+  }
+  
+  // determine where we are wrt to nodes with measurements
+  bool foundprecedingmeasurement(false) ; // is there measurement in nodes < nextnode?
+  bool foundprocedingmeasurement(false) ; // is there a measurement in nodes >= nextnode?
+  // any measurement nodes between begin and nextnode?
+  for( NodeContainer::const_iterator inode = nodes.begin() ;
+       inode != nextnode && !foundprecedingmeasurement; ++inode)
+    foundprecedingmeasurement = (*inode)->hasMeasurement() ;
+  for( NodeContainer::const_iterator inode = nextnode ;
+       inode != nodes.end() && !foundprocedingmeasurement; ++inode)
+    foundprocedingmeasurement = (*inode)->hasMeasurement() ;
+  
+  // we must find either of the two (there must be measurement nodes!)
+  if( !foundprecedingmeasurement && !foundprocedingmeasurement)
+    return Error("Did not find any measurement nodes on track!") ;
+
+  // This is not necessarily a valid iterator, but that should be
+  // caught by the logic later on.
+  NodeContainer::const_iterator prevnode = nextnode ; --prevnode ;
+  
+  // interpolate only if we have measurements on both sides
+  if( !foundprecedingmeasurement || !foundprocedingmeasurement) {
+    const LHCb::Node* extrapolationnode = foundprocedingmeasurement ? *nextnode : *prevnode ;
+    state = extrapolationnode->state() ;
+    return m_extrapolator -> propagate( state, z ) ;
+  } 
+  
+  // so, we interpolate. Get the nodes:
+  const LHCb::FitNode* nodeUp   = dynamic_cast<LHCb::FitNode*>(*nextnode) ;
+  const LHCb::FitNode* nodeDown = dynamic_cast<LHCb::FitNode*>(*prevnode) ;
+  if( nodeUp->z() > nodeDown->z() ) std::swap(nodeUp,nodeDown) ;
+  
+  // bail out if we have actually reached our destination
+  if( fabs(nodeUp->z() - z) < TrackParameters::propagationTolerance ) {
+    state = nodeUp->state() ;
+    return StatusCode::SUCCESS ;
+  }
+  if( fabs(nodeDown->z() - z) < TrackParameters::propagationTolerance ) {
+    state = nodeDown->state() ;
+    return StatusCode::SUCCESS ;
   }
 
-  // If not found delegate to extrapolator
-  if ( nodeUp == 0 ) return m_extrapolator -> propagate( track, z, state );
-  
   // Get the predicted states
   State stateDown = nodeDown->predictedStateDown();
   State stateUp   = nodeUp->predictedStateUp();
