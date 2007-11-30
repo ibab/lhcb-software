@@ -14,9 +14,11 @@ branches          cmt doc src
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use  RichRecBase       v*     Rich
+use  RichKernel        v*     Rich
 use  MCEvent           v*     Event
 use  MCInterfaces      v*     Kernel
 use  LinkerEvent       v*     Event
+use  GaudiKernel       v*
 
 include_path      none
 #============================================================================
