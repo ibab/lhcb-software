@@ -57,17 +57,6 @@ StatusCode TrajOTProjector::project( const StateVector& statevector,
     StatusCode::FAILURE;
 }
 
-// FIXME: should move this code to OTMeasurement... 
-double TrajOTProjector::driftDistance( const OTMeasurement& meas,
-				       double arclen ) const 
-{
-  // Get the distance to the readout
-  double distToReadout = meas.trajectory().endRange() - arclen;
-  // Correct measure for the propagation along the wire
-  return meas.measure() -
-    distToReadout*m_det->propagationDelay()/m_det->driftDelay();
-}
-
 //-----------------------------------------------------------------------------
 /// Project a state onto a measurement
 /// It returns the chi squared of the projection
@@ -91,7 +80,9 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
   static XYZVector dist; // avoid constructing this every call to project...
   StatusCode sc = m_poca -> minimize( refTraj, s1,
 				      measTraj, s2, dist, m_tolerance );
-  if( sc.isFailure() ) { return sc; }
+  if( sc.isFailure() ) { 
+    error() << "statevector: " << statevector << endmsg ;
+    return sc; }
 
   // Determine the (oriented!) axis onto which we project. This ugly
   // construct is the result of a bug fix that was not supposed to
@@ -108,21 +99,15 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
   double distToWire = dot( unit, dist ) ;
   (const_cast<OTMeasurement&>(meas)).setAmbiguity( distToWire > 0 ? 1 : -1 ) ;
   
-  double errMeasure2;
   if (m_useDrift) {
-      // Calculate the residual: 
-      m_residual = -( distToWire - meas.ambiguity()*driftDistance( meas, s2 ) );
-
-      // Set the error on the measurement so that it can be used in the fit
-      errMeasure2 = meas.resolution2( refTraj.position(s1), 
-                                      refTraj.direction(s1) );
+    OTDet::RadiusWithError radiusWithError(meas.driftRadiusWithError(s2)) ;
+    m_residual   = -( distToWire - meas.ambiguity() * radiusWithError.val) ;
+    m_errMeasure = radiusWithError.err ;
   } else {
-      m_residual = -distToWire;
-      DeOTModule *mod = m_det->findModule(meas.lhcbID().otID()); assert(mod!=0);
-      double radius = mod->cellRadius();
-      errMeasure2 = radius*radius/3;
+    m_residual = -distToWire;
+    m_errMeasure  = meas.module().cellRadius()/std::sqrt(3) ;
   }
-  m_errResidual = m_errMeasure = sqrt(errMeasure2);
+  m_errResidual = m_errMeasure ;
 
   return StatusCode::SUCCESS;
 }
@@ -147,20 +132,19 @@ StatusCode TrajOTProjector::project( const State& state,
 /// Derivatives wrt. the measurement's alignment...
 //-----------------------------------------------------------------------------
 TrajOTProjector::Derivatives
-TrajOTProjector::alignmentDerivatives( const Measurement& meas, 
+TrajOTProjector::alignmentDerivatives( const StateVector& statevector,
+                                       const Measurement& meas, 
                                        const Gaudi::XYZPoint& pivot ) const
 {
   // create the track trajectory...
-  const TrackVector& refVec = meas.refVector();
   static XYZVector bfield;
   // Create StateTraj with or without BField information.
   if( m_useBField )
     {
-      m_pIMF -> fieldVector( XYZPoint( refVec[0],
-				       refVec[1], meas.z() ), bfield ).ignore();
+      m_pIMF -> fieldVector( statevector.position(),bfield ).ignore();
     }
   else { bfield.SetXYZ( 0., 0., 0. ); }
-  const StateZTraj refTraj( LHCb::StateVector(refVec,meas.z()), bfield );
+  const StateZTraj refTraj(statevector, bfield );
 
   // Get the measurement trajectory
   const Trajectory& measTraj = meas.trajectory();  

@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.h,v 1.11 2007-09-25 11:50:24 wouter Exp $
+// $Id: TrajOTProjector.h,v 1.12 2007-11-30 14:33:17 wouter Exp $
 #ifndef TRAJOTPROJECTOR_H 
 #define TRAJOTPROJECTOR_H 1
 
@@ -33,7 +33,8 @@ public:
   StatusCode project( const LHCb::State& state, const LHCb::Measurement& meas );
   
   typedef Gaudi::Matrix1x6 Derivatives;
-  Derivatives alignmentDerivatives(const LHCb::Measurement& meas, const Gaudi::XYZPoint& pivot) const;
+  Derivatives alignmentDerivatives(const LHCb::StateVector& state, const LHCb::Measurement& meas, 
+                                   const Gaudi::XYZPoint& pivot) const;
 
   /// initialize
   virtual StatusCode initialize();
@@ -50,8 +51,6 @@ private:
   StatusCode project( const LHCb::StateVector& state, const LHCb::OTMeasurement& meas );
 
 private:
-  double driftDistance(const LHCb::OTMeasurement& meas, double arclen ) const;
-
   DeOTDetector*      m_det;
   IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service
   ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface
