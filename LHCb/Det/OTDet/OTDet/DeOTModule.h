@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.29 2007-09-07 13:24:53 wouter Exp $
+// $Id: DeOTModule.h,v 1.30 2007-11-30 12:34:52 wouter Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -283,6 +283,9 @@ public:
 
   /** Time offset correction for a straw */
   float strawT0(unsigned int iStraw) const ;
+
+  /** Reference time-of-flight correction for straw (c=1 particle from origin)*/
+  float strawReferenceTimeOfFlight(unsigned int iStraw) const ;
 
   /** Set the rt-relation for all straws in this module */
   void setRtRelation(const OTDet::RtRelation& rtr) ;
@@ -690,6 +693,10 @@ inline float DeOTModule::propagationVelocityY() const {
 
 inline float DeOTModule::strawT0( unsigned int istraw ) const {
   return m_strawt0[istraw-1] ;
+}
+
+inline float DeOTModule::strawReferenceTimeOfFlight(unsigned int istraw) const {
+  return m_strawdefaulttof[istraw-1] ;
 }
 
 inline void DeOTModule::setStrawT0( unsigned int istraw, float t0 ) {
