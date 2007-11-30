@@ -4,8 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r18 2007-11-30 =====================
 ! 2007-11-30 Wouter Hulsbergen
- - add StateVector as asrugment to alignmentDerivatives, because ref no longer tored in Measurement
+ - add StateVector as argument to alignmentDerivatives, because ref no longer
+   stored in Measurement
  - use OT calibration in fit
 
 !====================== TrackProjectors v2r17 2007-10-22 ======================
