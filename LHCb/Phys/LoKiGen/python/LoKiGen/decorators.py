@@ -71,7 +71,6 @@ def _decorate ( name = _name  ) :
         name                                             , ## module name
         LoKi.Functor( _vgv , _vd )                       , ## the base
         LoKi.Dicts.MapsOps(_gv)                          ) ## stremers    
-    print "6 ",len(_decorated)
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                             , ## module name
         LoKi.Functor( _vgp , _vgp )                      , ## the base
@@ -80,7 +79,6 @@ def _decorate ( name = _name  ) :
         name                                             , ## module name
         LoKi.Functor( _vgv , _vgv )                      , ## the base
         LoKi.Dicts.PipeOps(_gv,_gv)                      ) ## stremers    
-    print "7 ",len(_decorated)    
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                             , ## module name
         LoKi.Functor( _vgp , 'double' )                  , ## the base
@@ -89,7 +87,6 @@ def _decorate ( name = _name  ) :
         name                                             , ## module name
         LoKi.Functor( _vgv , 'double' )                  , ## the base
         LoKi.Dicts.FunValOps(_gv)                        ) ## stremers    
-    print "8 ",len(_decorated)    
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                             , ## module name
         LoKi.Functor( _vgp , _gp )                       , ## the base
