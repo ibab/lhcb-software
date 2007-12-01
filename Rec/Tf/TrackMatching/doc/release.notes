@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
+
+! 2007-11-30 Wouter Hulsbergen
+ - Removed 'AddMeasurements' functionality
+
 ! 2007-11-29 Stephanie Hansmann-Menzemer
  - Change ZAtT -> ZEndT
 

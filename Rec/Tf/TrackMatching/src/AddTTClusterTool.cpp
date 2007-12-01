@@ -1,4 +1,4 @@
-// $Id: AddTTClusterTool.cpp,v 1.1.1.1 2007-10-09 18:11:39 smenzeme Exp $
+// $Id: AddTTClusterTool.cpp,v 1.2 2007-12-01 07:13:55 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -64,7 +64,6 @@ AddTTClusterTool::AddTTClusterTool( const std::string& type,
   declareProperty( "IntraStationCut",  m_intraStationCut = 1.0 );
   declareProperty( "SpreadWeight",     m_spreadWeight = 7.0 );
   declareProperty( "AddLHCbIDs",       m_addLHCbIDs = true );
-  declareProperty( "AddMeasurements",  m_addMeasurements = false );
   declareProperty( "Extrapolator",
                    m_extrapolatorName = "TrackHerabExtrapolator" );
   declareProperty( "TTGeometryPath",
@@ -306,20 +305,10 @@ StatusCode AddTTClusterTool::addTTClusters( Track& track,
       const STCluster* aCluster = *iClus;
       lhcbID = LHCbID( aCluster -> channelID() );
       track.addToLhcbIDs( lhcbID );
-      if ( m_addMeasurements ) { // Add also the measurements
-        STMeasurement meas =
-          STMeasurement( *aCluster, *m_ttTracker, *m_ttPositionTool );
-        // Set the reference vector
-        meas.setRefVector( *iRef );
-        track.addToMeasurements( meas );
-        ++iRef;
-      }
       ++iClus;
     }
     if ( msgLevel(MSG::DEBUG) )
-      debug() << "Added " << ttClusters.size() << " TT hits as LHCbIDs "
-              << (m_addMeasurements ? "and Measurements " : "")
-              << "to the track." << endmsg; 
+      debug() << "Added " << ttClusters.size() << " TT hits as LHCbIDs to the track." << endmsg; 
   }
  
   return StatusCode::SUCCESS;

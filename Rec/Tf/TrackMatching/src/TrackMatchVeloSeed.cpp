@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.5 2007-11-29 17:53:27 smenzeme Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.6 2007-12-01 07:13:55 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -68,7 +68,6 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty( "VariableZ",        m_variableZ = false );
   declareProperty( "VarZParameters",   m_varZParameters );
   declareProperty( "AddTTClusters",    m_addTTClusters = true );
-  declareProperty( "AddMeasurements",  m_addMeasurements = false );
   declareProperty("Chi2SeedCut", m_chi2SeedCut = 25.);
   declareProperty("LikCut", m_likCut = -30.0);
   declareProperty("referenceT", m_refT = 7500.);
@@ -383,9 +382,6 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
   StatusCode sc;
   if ( msgLevel(MSG::DEBUG) ) debug() << "Registering the tracks ..." << endmsg;
 
-  // Initialize the MeasurementProvider tool for the current event
-  if ( m_addMeasurements ) m_measProvider -> load();
-
   // fill output container
   Tracks::iterator iterMatch = matchCont->begin();
   for ( ; iterMatch != matchCont->end(); ++iterMatch ) {
@@ -411,15 +407,6 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
     // Copy velo hits (= LHCbIDs)
     aTrack -> setLhcbIDs( veloTrack -> lhcbIDs() );
     
-    // If present copy also measurements
-    if ( m_addMeasurements ) {
-      std::vector<Measurement*>::const_iterator iVeloMeas;
-      for ( iVeloMeas = veloTrack->measurements().begin(); 
-            iVeloMeas != veloTrack->measurements().end(); ++iVeloMeas) {
-        aTrack -> addToMeasurements( *(*iVeloMeas) );
-      }
-    }  
-
     // Search for tt hits
     if ( m_addTTClusters ) {  
       sc = addTTClusters( aTrack );
@@ -445,15 +432,6 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
       }
     }
 
-    // If present copy also seed measurements
-    if ( m_addMeasurements) {
-      std::vector<Measurement*>::const_iterator iSeedMeas;
-      for ( iSeedMeas = seedTrack->measurements().begin(); 
-            iSeedMeas != seedTrack->measurements().end(); ++iSeedMeas) {
-         aTrack -> addToMeasurements( *(*iSeedMeas) );
-       }
-    }
-
     // copy all the states from the seed
     const std::vector<State*>& seedStates = seedTrack->states();
     for (std::vector<State*>::const_iterator iterS = seedStates.begin(); iterS != seedStates.end(); ++iterS){ 
@@ -471,25 +449,10 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
     vState.setQOverP(seedTrack->states().front()->qOverP());
     aTrack -> addToStates( vState );
 
-    // Now make all the velo measurements
-    if ( m_addMeasurements) {
-      const std::vector<LHCb::LHCbID>& ids = veloTrack->lhcbIDs();
-      for (std::vector<LHCb::LHCbID>::const_iterator iter = ids.begin(); iter != ids.end(); ++iter){
-        LHCb::Measurement* meas = m_measProvider->measurement(*iter);
-	// extrapolate to refz and set the reference
-        vState.setQOverP(seedTrack->states().front()->qOverP()); 
-        m_extrapolatorVelo->propagate(vState,meas->z());
-        meas->setRefVector( vState.stateVector() );
-        aTrack->addToMeasurements( *meas );
-      } // for
-    }// if
-
-
     // Set various flags
     aTrack -> setType( Track::Long );
     aTrack -> setHistory( Track::TrackMatching );
-    if ( m_addMeasurements ) aTrack -> setPatRecStatus( Track::PatRecMeas );
-    else                     aTrack -> setPatRecStatus( Track::PatRecIDs  );
+    aTrack -> setPatRecStatus( Track::PatRecIDs  );
 
     // debugging the Track
     if ( msgLevel(MSG::VERBOSE) )
