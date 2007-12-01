@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.19 2007-11-28 14:08:29 ibelyaev Exp $ 
+# $Id: requirements,v 1.20 2007-12-01 13:52:13 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -12,6 +12,7 @@ branches           cmt doc src dict python LoKi
 # ================ dependencies ===============================================
 use   LoKiCore     v*    Phys 
 use   GenEvent     v*    Event
+use   LoKiNumbers  v*    Phys 
 
 # ================ own includes ===============================================
 apply_pattern install_more_includes  more=LoKi

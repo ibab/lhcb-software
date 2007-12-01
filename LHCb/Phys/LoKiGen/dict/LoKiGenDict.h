@@ -1,4 +1,4 @@
-// $Id: LoKiGenDict.h,v 1.5 2007-11-28 14:08:29 ibelyaev Exp $
+// $Id: LoKiGenDict.h,v 1.6 2007-12-01 13:52:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -16,6 +16,7 @@
 #include "LoKi/Keeper.h"
 #include "LoKi/UniqueKeeper.h"
 #include "LoKi/Monitoring.h"
+#include "LoKi/Operators.h"
 // ============================================================================
 #include "LoKi/Dicts.h"
 #include "LoKi/GenExtractDicts.h"
@@ -24,6 +25,21 @@
 // ============================================================================
 #include "LoKi/IGenHybridTool.h"
 #include "LoKi/GenHybridEngine.h"
+// ============================================================================
+/** @file
+ *  The dictionaries for the package Phys/LoKiGen
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2007-12-01
+ */
 // ============================================================================
 namespace LoKi
 {
@@ -36,9 +52,21 @@ namespace LoKi
       typedef HepMC::GenParticle          Type ;
       typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;
     public:
-      static Fun::result_type __call__ 
-      ( const Fun& fun  , const Type*           o ) { return fun ( o ) ; }
+      // __call__ 
+      static Fun::result_type              
+      __call__    ( const Fun& fun  , const Type*           o ) 
+      { return fun ( o ) ; }
+    public:
+      // __rrshift__ 
+      static Fun::result_type              
+      __rrshift__ ( const Fun& fun  , const Type*           o ) 
+      { return o >> fun  ; }
+      // __rrshift__ 
+      static std::vector<Fun::result_type> 
+      __rrshift__ ( const Fun& fun  , const LoKi::GenTypes::GenContainer& o ) 
+      { return o >> fun  ; }      
     } ;
+    // ========================================================================
     template <>
     class CutCalls<HepMC::GenParticle> 
     {
@@ -46,9 +74,26 @@ namespace LoKi
       typedef HepMC::GenParticle           Type ;
       typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;
     public:
-      static Fun::result_type __call__ 
-      ( const Fun& fun  , const Type*           o ) { return fun ( o ) ; }
+      // __call__
+      static Fun::result_type 
+      __call__    ( const Fun& fun  , const Type*           o ) 
+      { return fun ( o ) ; }
+    public:
+      // __rrshift__ 
+      static Fun::result_type              
+      __rrshift__ ( const Fun& fun  , const Type*           o ) 
+      { return o >> fun  ; }
+      // __rrshift__ 
+      static const LoKi::GenTypes::GenContainer 
+      __rrshift__ ( const Fun& fun  , const LoKi::GenTypes::GenContainer& o ) 
+      { return o >> fun  ; }      
+    public:
+      // __rshift__ 
+      static LoKi::FunctorFromFunctor<const Type*,bool>
+      __rshift__ ( const Fun& fun  , const Fun& o ) 
+      { return fun >> o   ; }      
     } ;
+    // ========================================================================
     template <>
     class FunCalls<HepMC::GenVertex> 
     {
@@ -56,9 +101,20 @@ namespace LoKi
       typedef HepMC::GenVertex            Type ;
       typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;
     public:
+      // __call__
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type*           o ) { return fun ( o ) ; }
+    public:
+      // __rrshift__ 
+      static Fun::result_type              
+      __rrshift__ ( const Fun& fun  , const Type*           o ) 
+      { return o >> fun  ; }
+      // __rrshift__ 
+      static std::vector<Fun::result_type> 
+      __rrshift__ ( const Fun& fun  , const LoKi::GenTypes::GenVContainer& o ) 
+      { return o >> fun  ; }      
     } ;
+    // ========================================================================
     template <>
     class CutCalls<HepMC::GenVertex> 
     {
@@ -66,16 +122,33 @@ namespace LoKi
       typedef HepMC::GenVertex             Type ;
       typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;
     public:
-      static Fun::result_type __call__ 
-      ( const Fun& fun  , const Type*           o ) { return fun ( o ) ; }
+      // __call__
+      static Fun::result_type 
+      __call__    ( const Fun& fun  , const Type*           o ) 
+      { return fun ( o ) ; }
+    public:
+      // __rrshift__ 
+      static Fun::result_type              
+      __rrshift__ ( const Fun& fun  , const Type*           o ) 
+      { return o >> fun  ; }
+      // __rrshift__ 
+      static const LoKi::GenTypes::GenVContainer 
+      __rrshift__ ( const Fun& fun  , const LoKi::GenTypes::GenVContainer& o ) 
+      { return o >> fun  ; }      
+    public:
+      // __rrshift__ 
+      static LoKi::FunctorFromFunctor<const Type*,bool>
+      __rshift__ ( const Fun& fun  , const Fun& o ) 
+      { return fun >> o  ; }      
     } ;
+    // ========================================================================
   } 
 }
 // ============================================================================
 namespace
 {
   struct _Instantiations 
-  {
+  {    
     // the basic types
     LoKi::Types::GRange                                    m_r1 ;
     LoKi::Types::GVRange                                   m_r2 ;
@@ -91,9 +164,22 @@ namespace
     // the basic functions 
     LoKi::Dicts::Funcs<const HepMC::GenParticle*>          m_f1 ;
     LoKi::Dicts::Funcs<const HepMC::GenVertex*>            m_f2 ;
+    LoKi::Dicts::VFuncs<const HepMC::GenParticle*>         m_f3 ;
+    LoKi::Dicts::VFuncs<const HepMC::GenVertex*>           m_f4 ;
     // operators 
     LoKi::Dicts::FuncOps<const HepMC::GenParticle*>        m_o1 ;
     LoKi::Dicts::FuncOps<const HepMC::GenVertex*>          m_o2 ;
+    LoKi::Dicts::CutsOps<const HepMC::GenParticle*>        m_o3 ;
+    LoKi::Dicts::CutsOps<const HepMC::GenVertex*>          m_o4 ;
+    // functional parts:
+    LoKi::Dicts::MapsOps<const HepMC::GenParticle*>        m_fo1 ;
+    LoKi::Dicts::PipeOps<const HepMC::GenParticle*>        m_fo2 ;
+    LoKi::Dicts::FunValOps<const HepMC::GenParticle*>      m_fo3 ;
+    LoKi::Dicts::ElementOps<const HepMC::GenParticle*>     m_fo4 ;
+    LoKi::Dicts::MapsOps<const HepMC::GenVertex*>          m_fo5 ;
+    LoKi::Dicts::PipeOps<const HepMC::GenVertex*>          m_fo6 ;
+    LoKi::Dicts::FunValOps<const HepMC::GenVertex*>        m_fo7 ;
+    LoKi::Dicts::ElementOps<const HepMC::GenVertex*>       m_fo8 ;
     /// mathematics:
     LoKi::Dicts::FunCalls<HepMC::GenParticle>              m_c1 ;
     LoKi::Dicts::FunCalls<HepMC::GenVertex>                m_c2 ;
@@ -102,13 +188,9 @@ namespace
     /// the special operators for identifiers 
     LoKi::Dicts::PIDOps<LoKi::GenParticles::Identifier>    m_i1 ;
     LoKi::Dicts::PIDOps<LoKi::GenParticles::AbsIdentifier> m_i2 ;    
-    /// monitoring and historgamming
-    LoKi::Monitoring::Counter<const HepMC::GenParticle*,bool>   m_40 ;
-    LoKi::Monitoring::Counter<const HepMC::GenParticle*,double> m_41 ;
-    LoKi::Monitoring::Plot<const HepMC::GenParticle*,double>    m_42 ;
-    LoKi::Monitoring::Counter<const HepMC::GenVertex*,bool>     m_50 ;
-    LoKi::Monitoring::Counter<const HepMC::GenVertex*,double>   m_51 ;
-    LoKi::Monitoring::Plot<const HepMC::GenVertex*,double>      m_52 ;
+    ///
+    LoKi::TheSame<const HepMC::GenParticle*> m_s1 ;
+    LoKi::TheSame<const HepMC::GenVertex*>   m_s2 ;    
     /// fictive constructor 
     _Instantiations () ;
   } ;  

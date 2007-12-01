@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.40 2007-10-08 06:51:34 cattanem Exp $ 
+! $Id: release.notes,v 1.41 2007-12-01 13:52:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,13 +14,23 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
-!=========================== LoKiGen v6r1 2007-10-08 ==========================
+!============================ LoKiGen v7r9 2007-12-01 =========================
+
+! 2007-12-01 - Vanya BELYAEV
+	
+ - The major update for the new LoKi v7r0  (The Powerful Streamers) 
+
+   cmt/requirements
+
+   version increment to v7r0 
+
+!============================ LoKiGen v6r1 2007-10-08 =========================
 ! 2007-10-07 - Vanya BELYAEV
  - cmt/requirements 
     increment version to v6r1 
     use new pattern for python modules 
 
-!=========================== LoKiGen v6r0 2007-09-04 ==========================
+!============================ LoKiGen v6r0 2007-09-04 =========================
 ! 2007-08-20 - Vanya Belyaev
  - increment the major version to v6r0 
 
@@ -49,7 +59,7 @@ New Files:
  - cmt/requirements 
     version increment to v3r1
 
-!=========================== LoKiGen v3r0 2007-06-11 ==========================
+!============================ LoKiGen v3r0 2007-06-11 =========================
 ! 2007-06-10 - Vanya BELYAEV
  - minor fixes to please Reflex and make the classes/method vizible in python
 
@@ -78,7 +88,7 @@ New Files:
 
  - cmt/requirements version increment to v3r0 
 
-!=========================== LoKiGen v2r1 2007-03-05 ==========================
+!============================ LoKiGen v2r1 2007-03-05 =========================
 ! 2007-03-04 - Vanya BELYAEV
  - LoKi/GenParticles.h, LoKi/GenParticleCuts.h,  src/GenParticles.cpp
    . Add 3 new functions DeltaPhi, DeltaEta and DeltaR2, very useful for 
@@ -94,7 +104,7 @@ New Files:
  - cmt/requirements 
      version increment to v2r1 
 
-!=========================== LoKiGen v2r0 2007-01-19 ==========================
+! =========================== LoKiGen v2r0 2007-01-19 =========================
 ! 2007-01-19 - Vanya BELYAEV
  - LoKi/BuildGenTrees.h
     new file with utilities to select the independent trees from 
@@ -103,7 +113,7 @@ New Files:
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
 
-!=========================== LoKiGen v1r8 2006-11-27 ==========================
+!============================ LoKiGen v1r8 2006-11-27 =========================
 ! 2006-11-25 - Vanya BELYAEV
  -  src/PrintHepMCDecay.h
     fix a treatment of cut-off for maximal max-level printouts
@@ -111,7 +121,7 @@ New Files:
  -  cmt/requirements 
     version increment to v1r8 
 
-!=========================== LoKiGen v1r7 2006-11-10 ==========================
+!============================ LoKiGen v1r7 2006-11-10 =========================
 ! 2006-11-09 - Vanya BELYAEV
  - LoKi/PrintHepMCDecay.h
    src/PrintHepMCDecay.h
@@ -120,7 +130,7 @@ New Files:
  - cmt/requirements 
      version increment to v1r7 
 
-!=========================== LoKiGen v1r6 2006-10-12 ==========================
+!============================ LoKiGen v1r6 2006-10-12 =========================
 ! 2006-10-10 - Vanya BELYAEV
  - LoKi/GenExtract.h
    fix for dictionaries 
@@ -131,7 +141,7 @@ New Files:
  - cmt/requirements 
     version increment to b1r6 
 
-!=========================== LoKiGen v1r5 2006-09-09 ==========================
+!============================ LoKiGen v1r5 2006-09-09 =========================
 ! 2006-09-06 - Vanya BELYAEV
  - LoKi/GenTypes.h
      add the formal defintions of containers and ranges [needed for Phys/AlgoMC]
@@ -275,4 +285,7 @@ New Files:
      -- basic functors & predicates
      -- helper utilities to manipulate HepMC graphs 
      -- STL-like algorithms for selections of particles 
+
+! -----------------------------------------------------------------------------
+! The END 
 ! -----------------------------------------------------------------------------

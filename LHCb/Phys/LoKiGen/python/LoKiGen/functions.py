@@ -1,12 +1,32 @@
 #!/usr/bin/env python
 # =============================================================================
-## @file LoKiCore/functions.py
+## @file LoKiGen/functions.py
 #  The full set of useful objects from LoKiGen library 
-#  The file is a part of LoKi and Bender projects
+#
+#  This file is a part of LoKi project - 
+#   'C++ ToolKit  for Smart and Friendly Physics Analysis'
+#
+#  The package has been designed with the kind help from
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+#  contributions and advices from G.Raven, J.van Tilburg, 
+#  A.Golutvin, P.Koppenburg have been used in the design.
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#  @date 2007-12-01
 # =============================================================================
-""" The full set of useful objects from LoKiGen library """
-_author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+"""
+The full set of useful objects from LoKiGen library
+
+This file is a part of LoKi project - 
+'C++ ToolKit  for Smart and Friendly Physics Analysis'
+
+The package has been designed with the kind help from
+Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+contributions and advices from G.Raven, J.van Tilburg, 
+A.Golutvin, P.Koppenburg have been used in the design.
+"""
+# =============================================================================
+__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -208,6 +228,29 @@ GVCOUNT    = LoKi.GenVertices.CountIF
 GVSUM      = LoKi.GenVertices.SumIF 
 
 
+
+## functional part
+_vgp      = std.vector ( _GP    )
+_vgv      = std.vector ( _GV    )
+_vd       = std.vector ('double')
+#
+GMaps      = LoKi.Functor             ( _vgp , _vd       )
+GMap       = LoKi.FunctorFromFunctor  ( _vgp , _vd       )
+GPipes     = LoKi.Functor             ( _vgp , _vgp      )
+GPipe      = LoKi.FunctorFromFunctor  ( _vgp , _vgp      )
+GFunVals   = LoKi.Functor             ( _vgp , 'double'  )
+GFunVal    = LoKi.FunctorFromFunctor  ( _vgp , 'double'  )
+GElements  = LoKi.Functor             ( _vgp , _GP       ) 
+GElement   = LoKi.FunctorFromFunctor  ( _vgp , _GP       ) 
+#
+GVMaps     = LoKi.Functor             ( _vgv , _vd       )
+GVMap      = LoKi.FunctorFromFunctor  ( _vgv , _vd       )
+GVPipes    = LoKi.Functor             ( _vgv , _vgv      )
+GVPipe     = LoKi.FunctorFromFunctor  ( _vgv , _vgv      )
+GVFunVals  = LoKi.Functor             ( _vgv , 'double'  )
+GVFunVal   = LoKi.FunctorFromFunctor  ( _vgv , 'double'  )
+GVElements = LoKi.Functor             ( _vgv , _GV       ) 
+GVElement  = LoKi.FunctorFromFunctor  ( _vgv , _GV       ) 
 
 # =============================================================================
 if '__main__' == __name__ :

@@ -1,8 +1,17 @@
 <!-- 
-     * $Id: LoKiGen.xml,v 1.10 2007-11-28 14:08:29 ibelyaev Exp $ 
+     * $Id: LoKiGen.xml,v 1.11 2007-12-01 13:52:13 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
+     *
+     *  This file is a part of LoKi project - 
+     *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+     *
+     *  The package has been designed with the kind help from
+     *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+     *  contributions and advices from G.Raven, J.van Tilburg, 
+     *  A.Golutvin, P.Koppenburg have been used in the design.
+     *
      * @author Vanya BELYAEV ibelyaev@physics.syr.edu
      * @date 2006-02-06
      * ========================================================================
@@ -22,6 +31,8 @@
   
   <class pattern   = "std::unary_function<*HepMC::*,double>"          />
   <class pattern   = "std::unary_function<*HepMC::*,bool>"            />
+  <class pattern   = "std::unary_function<*HepMC::*,std::vector<double*>"/>
+  <class pattern   = "std::unary_function<*HepMC::*,*HepMC*>"/>
   <class pattern   = "std::binary_function<*HepMC::*,*HepMC::*,bool>" />
   
   <class pattern   = "LoKi::BasicFunctors<*HepMC::*>"      />
@@ -32,7 +43,6 @@
   <class pattern   = "LoKi::Valid<*HepMC::*>"         />
   <class pattern   = "LoKi::TheSame<*HepMC::*>"       />
   
-
   <class pattern   = "LoKi::GenParticles::*"             />
   <class pattern   = "LoKi::GenVertices::*"              />
   
@@ -43,6 +53,13 @@
   <function pattern = "LoKi::Dicts::GenAlgs::*"          />
   
   <class pattern   = "LoKi::Dicts::FuncOps<*HepMC::*>"    />
+  <class pattern   = "LoKi::Dicts::CutsOps<*HepMC::*>"    />
+
+  <class pattern   = "LoKi::Dicts::MapsOps<*HepMC::*>"    />
+  <class pattern   = "LoKi::Dicts::PipeOps<*HepMC::*>"    />
+  <class pattern   = "LoKi::Dicts::FunValOps<*HepMC::*>"  />
+  <class pattern   = "LoKi::Dicts::ElementOps<*HepMC::*>" />
+
   <class pattern   = "LoKi::Dicts::PIDOps<LoKi::Gen*>"    />
   <class pattern   = "LoKi::Dicts::Maths<*HepMC*>"        />
   <class pattern   = "LoKi::Dicts::FunCalls<HepMC::Gen*>" />

@@ -1,4 +1,4 @@
-// $Id: IGenHybridTool.h,v 1.1 2007-07-25 15:07:57 ibelyaev Exp $
+// $Id: IGenHybridTool.h,v 1.2 2007-12-01 13:52:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IGENHYBRIDTOOL_H 
 #define LOKI_IGENHYBRIDTOOL_H 1
@@ -20,6 +20,7 @@
 // ============================================================================
 namespace LoKi
 { 
+  // ==========================================================================
   /** @class IGenHybridTool IMCHybridTool.h LoKi/IMCHybridTool.h
    *
    *  Helper interface for implementation of C++/Python "Hybrid" solution
@@ -54,6 +55,7 @@ namespace LoKi
     virtual ~IGenHybridTool() ;
   private:
   };
+  // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================
 // The END 
