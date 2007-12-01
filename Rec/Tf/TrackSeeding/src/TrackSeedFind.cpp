@@ -14,13 +14,11 @@
 #include "Kernel/Trajectory.h"
 #include "Kernel/LHCbID.h"
 #include "Kernel/FastClusterContainer.h"
-#include "Event/Measurement.h"
-#include "Event/STMeasurement.h"
-#include "Event/OTMeasurement.h"
 #include "Event/Track.h"
 #include "Event/TrackTypes.h"
 
 #include "Event/STLiteCluster.h"
+#include "Event/STCluster.h"
 #include "Event/OTTime.h"
 // local
 #include "SeedHit.h"
@@ -1854,17 +1852,10 @@ StatusCode TrackSeedFind::maketracks() {
       for (unsigned int i=0; i<hits.size(); ++i) {
         if (hits[i].isIT()) {
           id = LHCb::LHCbID(hits[i].getItRef()->channelID());
-          LHCb::STCluster* clus = itClusters->object(id.stID());
-          LHCb::STMeasurement meas(*clus, *m_itTracker, *m_itPositionTool);
           tTrack->addToLhcbIDs(id);
-          tTrack->addToMeasurements(meas);
         } else {
           id = LHCb::LHCbID( hits[i].getOtRef()->channel());
-          int ambiguity = -1;
-          if (hits[i].ambiguity()) ambiguity=1;
-          LHCb::OTMeasurement meas(*(hits[i].getOtRef()),*m_otTracker,ambiguity);
           tTrack->addToLhcbIDs(id);
-          tTrack->addToMeasurements(meas);
         }
       }
       tTrack->setType(LHCb::Track::Ttrack);
