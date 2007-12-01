@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: decorators.py,v 1.2 2007-12-01 12:44:27 ibelyaev Exp $
+# =============================================================================
 ## @file decorators.py LoKiNumbers/decorators.py
 #  The set of basic decorator for objects from LoKiNumberslibrary
 #  The file is a part of LoKi and Bender projects

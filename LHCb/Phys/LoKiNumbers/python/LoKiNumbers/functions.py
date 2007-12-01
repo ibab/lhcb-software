@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: functions.py,v 1.2 2007-12-01 12:44:27 ibelyaev Exp $ 
+# =============================================================================
 ## @file LoKiNumbers/functions.py
 #  The full set of useful objects from LoKiNumbers library 
 #  The file is a part of LoKi and Bender projects
