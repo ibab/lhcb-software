@@ -1,0 +1,32 @@
+# $Id: requirements,v 1.1.1.1 2007-12-01 12:38:36 ibelyaev Exp $ 
+# =============================================================================
+# Created    : 2007-12-01
+# Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
+# =============================================================================
+package            LoKiNumbers
+version            v7r0
+
+# ================ structure ==================================================
+branches           cmt doc dict python 
+
+# ================ dependencies ===============================================
+use   LoKiCore     v*    Phys 
+
+# ================ own includes ===============================================
+apply_pattern install_python_modules 
+
+
+# ============== Produce LCG dictionary =======================================
+apply_pattern    reflex_dictionary                                       \
+                 dictionary=LoKiNumbers                                  \
+                 headerfiles=$(LOKINUMBERSROOT)/dict/LoKiNumbersDict.h   \
+                 selectionfile=$(LOKINUMBERSROOT)/dict/LoKiNumbers.xml   \  
+                 options=" -U__MINGW32__ "
+
+# ================ patterns ===================================================
+
+macro LoKiNumbersDict_use_linkopts $(use_linkopts)
+
+# =============================================================================
+# The END 
+# =============================================================================

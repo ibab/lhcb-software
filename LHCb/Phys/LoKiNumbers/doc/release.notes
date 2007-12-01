@@ -1,0 +1,22 @@
+! -----------------------------------------------------------------------------
+! Package     : Phys/LoKiNumbers
+! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
+! Purpose     : Set of fictionaries for LoKi functions 
+! -----------------------------------------------------------------------------
+
+
+! =========================== LoKiNumbers v7r0 2007-12-01 =====================
+
+! 2007-12-01 - Vanya BELYAEV
+
+ - New package.
+
+   It is pure dictionary package, which contains only the dictionaries for 
+   the LoKi's functors which deal pnly with "plain numbers".
+
+   For the overall coherency the version is set to v7r0 
+
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------

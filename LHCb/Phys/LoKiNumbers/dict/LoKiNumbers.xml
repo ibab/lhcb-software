@@ -1,0 +1,29 @@
+<!-- 
+     * $Id: LoKiNumbers.xml,v 1.1.1.1 2007-12-01 12:38:36 ibelyaev Exp $ 
+     * ========================================================================
+     * @file
+     * The XML seleciton file to build Reflex 
+     * dictionaries for Phys/LoKiNumbers package
+     * @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     * @date 2007-12-01
+     * ========================================================================
+-->
+
+<lcgdict>
+  
+  <class pattern   = "LoKi::Functor<*>"            />
+  <class pattern   = "LoKi::FunctorFromFunctor<*>" />
+  <class pattern   = "LoKi::Constant<*>"           />
+  <class pattern   = "LoKi::Identity<*>"           />
+  
+  <class pattern   = "LoKi::Dicts::*Ops<*>"        />
+  <class pattern   = "LoKi::Dicts::*Calls<*>"      />
+  
+  <class name = "std::unary_function<const double,bool>"                              />
+  <class name = "std::unary_function<const double,double>"                            />
+  <class name = "std::unary_function<const std::vector<double>,double>"               />
+  <class name = "std::unary_function<const std::vector<double>,std::vector<double> >" />
+  <class pattern = "std::unary_function<const std::vector<*>,std::vector<*> >" />
+  <class name = "std::unary_function<const std::vector<double>,bool>" />
+  
+</lcgdict>
