@@ -1,14 +1,29 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MC.py,v 1.6 2007-11-28 14:13:59 ibelyaev Exp $ 
-# =============================================================================
-## @file
+## @file LoKiMC/MC.py
 #  collection of utilities for useful 'decoration' of MC-objects
+#   
+#        This file is a part of LoKi project - 
+#    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+#
+#  The package has been designed with the kind help from
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+#  contributions and advices from G.Raven, J.van Tilburg, 
+#  A.Golutvin, P.Koppenburg have been used in the design.
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2007-08-11 
 # =============================================================================
 """
 Collection of utilities for useful 'decoration' of MC-objects
+
+      This file is a part of LoKi project - 
+'C++ ToolKit  for Smart and Friendly Physics Analysis'
+
+The package has been designed with the kind help from
+Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+contributions and advices from G.Raven, J.van Tilburg, 
+A.Golutvin, P.Koppenburg have been used in the design.
 """
 # =============================================================================
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'

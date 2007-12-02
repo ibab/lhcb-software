@@ -3,10 +3,30 @@
 ## @file LoKiMC/decorators.py
 #  The set of basic decorator for objects from LoKiMC library
 #  The file is a part of LoKi and Bender projects
+#   
+#        This file is a part of LoKi project - 
+#    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+#
+#  The package has been designed with the kind help from
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+#  contributions and advices from G.Raven, J.van Tilburg, 
+#  A.Golutvin, P.Koppenburg have been used in the design.
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-""" The set of basic decorators for obejcts from LoKiMC library """
-_author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+"""
+The set of basic decorators for obejcts from LoKiMC library
+
+      This file is a part of LoKi project - 
+'C++ ToolKit  for Smart and Friendly Physics Analysis'
+
+The package has been designed with the kind help from
+Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+contributions and advices from G.Raven, J.van Tilburg, 
+A.Golutvin, P.Koppenburg have been used in the design.
+"""
+# =============================================================================
+__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
 from   LoKiMC.functions   import *
@@ -71,28 +91,70 @@ _name = __name__
 # =============================================================================
 ## Make the decoration of all objects from this module
 def _decorate ( name = _name ) :
-    """ Make the decoration of all objects from this module """
+    """
+    Make the decoration of all objects from this module
+    """
     import LoKiCore.decorators as _LoKiCore
+    _mcp = 'const LHCb::MCParticle*'
+    _mcv = 'const LHCb::MCVertex*'
+    _vp  = std.vector( _mcp )
+    _vv  = std.vector( _mcv )
+    _vd  = std.vector( 'double' )
+    #
     _decorated  = _LoKiCore.getAndDecorateFunctions (
         name                                          , ## module name 
-        LoKi.Functor('const LHCb::MCParticle*,double'), ## the base 
-        LoKi.Dicts.FunCalls(LHCb.MCParticle)          , ## call-traits 
-        LoKi.Dicts.FuncOps('const LHCb::MCParticle*') ) ## operators 
+        LoKi.Functor        (_mcp,'double')           , ## the base 
+        LoKi.Dicts.FunCalls (LHCb.MCParticle)         , ## call-traits 
+        LoKi.Dicts.FuncOps  (_mcp,_mcp)               ) ## operators 
     _decorated |= _LoKiCore.getAndDecorateFunctions  (
         name                                          , ## module name 
-        LoKi.Functor('const LHCb::MCVertex*,double')  , ## the base 
-        LoKi.Dicts.FunCalls(LHCb.MCVertex)            , ## call-traits 
-        LoKi.Dicts.FuncOps('const LHCb::MCVertex*')   ) ## operators
+        LoKi.Functor        (_mcv,'double')           , ## the base 
+        LoKi.Dicts.FunCalls (LHCb.MCVertex)           , ## call-traits 
+        LoKi.Dicts.FuncOps  (_mcv,_mcv)               ) ## operators
     _decorated |=  _LoKiCore.getAndDecoratePredicates (
         name                                          , ## module name 
-        LoKi.Functor('const LHCb::MCParticle*,bool')  , ## the base 
-        LoKi.Dicts.CutCalls(LHCb.MCParticle)          , ## call-traits 
-        LoKi.Dicts.FuncOps('const LHCb::MCParticle*') ) ## operators 
+        LoKi.Functor        (_mcp,bool)               , ## the base 
+        LoKi.Dicts.CutCalls (LHCb.MCParticle)         , ## call-traits 
+        LoKi.Dicts.CutsOps  (_mcp,_mcp)               ) ## operators 
     _decorated |= _LoKiCore.getAndDecoratePredicates (
         name                                          , ## module name 
-        LoKi.Functor('const LHCb::MCVertex*,bool')    , ## the base 
-        LoKi.Dicts.CutCalls(LHCb.MCVertex)            , ## call-traits 
-        LoKi.Dicts.FuncOps('const LHCb::MCVertex*')   ) ## the operators 
+        LoKi.Functor        (_mcv,bool)               , ## the base 
+        LoKi.Dicts.CutCalls (LHCb.MCVertex)           , ## call-traits 
+        LoKi.Dicts.CutsOps  (_mcv,_mcv)               ) ## the operators
+    ## functional part:
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                          , ## module name
+        LoKi.Functor( _vp , _vd )                     , ## the base
+        LoKi.Dicts.MapsOps(_mcp)                      ) ## streamers
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                          , ## module name
+        LoKi.Functor( _vv , _vd )                     , ## the base
+        LoKi.Dicts.MapsOps(_mcv)                      ) ## streamers    
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                          , ## module name
+        LoKi.Functor( _vp , _vp )                     , ## the base
+        LoKi.Dicts.PipeOps(_mcp,_mcp)                 ) ## streamers
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                          , ## module name
+        LoKi.Functor( _vv , _vv )                     , ## the base
+        LoKi.Dicts.PipeOps(_mcv,_mcv)                 ) ## streamers
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                          , ## module name
+        LoKi.Functor( _vp , 'double' )                , ## the base
+        LoKi.Dicts.FunValOps(_mcp)                    ) ## streamers
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                          , ## module name
+        LoKi.Functor( _vv , 'double' )                , ## the base
+        LoKi.Dicts.FunValOps(_mcv)                    ) ## streamers    
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                          , ## module name
+        LoKi.Functor( _vp , _mcp )                    , ## the base
+        LoKi.Dicts.ElementOps(_mcp,_mcp)              ) ## stremers
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                          , ## module name
+        LoKi.Functor( _vv , _mcv )                    , ## the base
+        LoKi.Dicts.ElementOps(_mcv,_mcv)              ) ## stremers    
+    
     ## decorate pids (Comparison with strings, integers and ParticleID objects:
     for t in ( MCID , MCABSID ) :
         t = type ( t ) 

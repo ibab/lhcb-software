@@ -1,7 +1,7 @@
-// $Id: LoKiMCDict.h,v 1.7 2007-11-28 14:13:59 ibelyaev Exp $
+// $Id: LoKiMCDict.h,v 1.8 2007-12-02 11:17:56 ibelyaev Exp $
 // ============================================================================
-#ifndef LOKI_LOKICOREDICT_H 
-#define LOKI_LOKICOREDICT_H 1
+#ifndef LOKI_LOKIMCDICT_H 
+#define LOKI_LOKIMCDICT_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -22,6 +22,21 @@
 #include "LoKi/IMCHybridTool.h"
 #include "LoKi/MCHybridEngine.h"
 // ============================================================================
+/** @file
+ *  The dictionaries for the package Phys/LoKiMC
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2007-12-01
+ */
+// ============================================================================
 namespace
 {
   struct _Instantiations 
@@ -41,11 +56,24 @@ namespace
     LoKi::UniqueKeeper<LHCb::MCParticle>          m_u1 ;
     LoKi::UniqueKeeper<LHCb::MCVertex>            m_u2 ;
     // the basic functions 
-    LoKi::Dicts::Funcs<const LHCb::MCParticle*>   m_f1 ;
-    LoKi::Dicts::Funcs<const LHCb::MCVertex*>     m_f2 ;
+    LoKi::Dicts::Funcs<const LHCb::MCParticle*>      m_f1 ;
+    LoKi::Dicts::Funcs<const LHCb::MCVertex*>        m_f2 ;
+    LoKi::Dicts::VFuncs<const LHCb::MCParticle*>     m_vf1 ;
+    LoKi::Dicts::VFuncs<const LHCb::MCVertex*>       m_vf2 ;
     // operators 
-    LoKi::Dicts::FuncOps<const LHCb::MCParticle*> m_o1 ;
-    LoKi::Dicts::FuncOps<const LHCb::MCVertex*>   m_o2 ;
+    LoKi::Dicts::FuncOps<const LHCb::MCParticle*>    m_o1 ;
+    LoKi::Dicts::FuncOps<const LHCb::MCVertex*>      m_o2 ;
+    LoKi::Dicts::CutsOps<const LHCb::MCParticle*>    m_o3 ;
+    LoKi::Dicts::CutsOps<const LHCb::MCVertex*>      m_o4 ;
+    // 
+    LoKi::Dicts::MapsOps<const LHCb::MCParticle*>    m_fo1 ;
+    LoKi::Dicts::MapsOps<const LHCb::MCVertex*>      m_fo2 ;
+    LoKi::Dicts::PipeOps<const LHCb::MCParticle*>    m_fo3 ;
+    LoKi::Dicts::PipeOps<const LHCb::MCVertex*>      m_fo4 ;
+    LoKi::Dicts::FunValOps<const LHCb::MCParticle*>  m_fo5 ;
+    LoKi::Dicts::FunValOps<const LHCb::MCVertex*>    m_fo6 ;
+    LoKi::Dicts::ElementOps<const LHCb::MCParticle*> m_fo7 ;
+    LoKi::Dicts::ElementOps<const LHCb::MCVertex*>   m_fo8 ;
     // calls 
     LoKi::Dicts::FunCalls<LHCb::MCParticle>       m_c1 ;
     LoKi::Dicts::CutCalls<LHCb::MCParticle>       m_c2 ;
@@ -54,17 +82,10 @@ namespace
     /// the special operators for identifiers
     LoKi::Dicts::PIDOps<LoKi::MCParticles::Identifier>    m_i1 ;
     LoKi::Dicts::PIDOps<LoKi::MCParticles::AbsIdentifier> m_i2 ;
-    /// monitoring
-    LoKi::Monitoring::Counter<const LHCb::MCParticle*,bool>   m_m1 ;
-    LoKi::Monitoring::Counter<const LHCb::MCParticle*,double> m_m2 ;
-    LoKi::Monitoring::Plot<const LHCb::MCParticle*,double>    m_m3 ;
-    LoKi::Monitoring::Counter<const LHCb::MCVertex*,bool>     m_m4 ;
-    LoKi::Monitoring::Counter<const LHCb::MCVertex*,double>   m_m5 ;
-    LoKi::Monitoring::Plot<const LHCb::MCVertex*,double>      m_m6 ;
    } ;  
 } // end of anonymout namespace 
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // LOKI_LOKICOREDICT_H
+#endif // LOKI_LOKIMCDICT_H
 // ============================================================================

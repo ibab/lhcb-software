@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.32 2007-10-08 06:55:09 cattanem Exp $ 
+! $Id: release.notes,v 1.33 2007-12-02 11:17:56 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiMC v7r0 2007-12-01 ============================
+
+! 2007-12-01 - Vanya BELYAEV
+ - upgrade for the new major version of LoKi v7r0 (The powerful streamers)
+ - cmt/requirements 
+   version increment to v7r0 
 
 !========================== LoKiMC v6r1 2007-10-08 ============================
 ! 2007-10-07 - Vanya BELYAEV

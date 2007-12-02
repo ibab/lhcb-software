@@ -3,10 +3,30 @@
 ## @file functions.py LoKiMC/functions.py
 #  The set of basic functions from LoKiMC library
 #  The file is a part of LoKi and Bender projects
+#   
+#        This file is a part of LoKi project - 
+#    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+#
+#  The package has been designed with the kind help from
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+#  contributions and advices from G.Raven, J.van Tilburg, 
+#  A.Golutvin, P.Koppenburg have been used in the design.
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-""" The set of basic functions from LoKiMC library """ 
-_author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+"""
+The set of basic functions from LoKiMC library
+
+      This file is a part of LoKi project - 
+'C++ ToolKit  for Smart and Friendly Physics Analysis'
+
+The package has been designed with the kind help from
+Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+contributions and advices from G.Raven, J.van Tilburg, 
+A.Golutvin, P.Koppenburg have been used in the design.
+""" 
+# =============================================================================
+__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore
@@ -244,6 +264,33 @@ MCISDECAY   = LoKi.MCVertices.Decay          ()
 MCVDIST     = LoKi.MCVertices.MCVertexDistance
 ## @see LoKi::Cuts::MCVXFUN
 MCVXFUN     = LoKi.MCVertices.MCVFunAsMCFun
+
+
+# functional part:
+
+## functional part
+_vp       = std.vector ( _MCP    )
+_vv       = std.vector ( _MCV    )
+_vd       = std.vector ('double')
+#
+MCMaps      = LoKi.Functor             ( _vp , _vd      )
+MCMap       = LoKi.FunctorFromFunctor  ( _vp , _vd      )
+MCPipes     = LoKi.Functor             ( _vp , _vp      )
+MCPipe      = LoKi.FunctorFromFunctor  ( _vp , _vp      )
+MCFunVals   = LoKi.Functor             ( _vp , 'double' )
+MCFunVal    = LoKi.FunctorFromFunctor  ( _vp , 'double' )
+MCElements  = LoKi.Functor             ( _vp , _MCP     ) 
+MCElement   = LoKi.FunctorFromFunctor  ( _vp , _MCP     ) 
+#
+MCVMaps     = LoKi.Functor             ( _vv , _vd      )
+MCVMap      = LoKi.FunctorFromFunctor  ( _vv , _vd      )
+MCVPipes    = LoKi.Functor             ( _vv , _vv      )
+MCVPipe     = LoKi.FunctorFromFunctor  ( _vv , _vv      )
+MCVFunVals  = LoKi.Functor             ( _vv , 'double' )
+MCVFunVal   = LoKi.FunctorFromFunctor  ( _vv , 'double' )
+MCVElements = LoKi.Functor             ( _vv , _MCV     ) 
+MCVElement  = LoKi.FunctorFromFunctor  ( _vv , _MCV     ) 
+
 
 # =============================================================================
 if '__main__' == __name__ :
