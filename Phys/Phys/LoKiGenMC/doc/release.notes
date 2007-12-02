@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.24 2007-10-08 06:52:52 cattanem Exp $ 
+! $Id: release.notes,v 1.25 2007-12-02 11:57:06 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiGenMC v7r0 2007-12-02 =========================
+
+! 2007-12-02 - Vanya BELYAEV
+ - the upgrade for th next ajor versionof LoKi v7r0 ("The powerful streamers")
+ - cmt/requirements
+   version increment to v7r0
 
 !========================== LoKiGenMC v6r1 2007-10-08 =========================
 ! 2007-10-07 - Vanya BELYAEV
@@ -382,6 +389,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.24  2007/10/08 06:52:52  cattanem
+! v6r1
+!
 ! Revision 1.23  2007/10/07 13:46:01  ibelyaev
 !  v6r1: add install_python_modules pattern
 !
