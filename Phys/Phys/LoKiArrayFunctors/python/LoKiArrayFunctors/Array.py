@@ -1,14 +1,31 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Array.py,v 1.1 2007-08-12 18:57:09 ibelyaev Exp $ 
+# $Id: Array.py,v 1.2 2007-12-02 17:10:44 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of Array-objects
+#
+#  This file is a part of LoKi project - 
+#   'C++ ToolKit  for Smart and Friendly Physics Analysis'
+#
+#  The package has been designed with the kind help from
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+#  contributions and advices from G.Raven, J.van Tilburg, 
+#  A.Golutvin, P.Koppenburg have been used in the design.
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2007-08-11 
 # =============================================================================
 """
 Collection of utilities for useful 'decoration' of Array-objects
+
+This file is a part of LoKi project - 
+'C++ ToolKit  for Smart and Friendly Physics Analysis'
+
+The package has been designed with the kind help from
+Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+contributions and advices from G.Raven, J.van Tilburg, 
+A.Golutvin, P.Koppenburg have been used in the design.
 """
 # =============================================================================
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
@@ -16,7 +33,7 @@ __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 
 from   LoKiArrayFunctors.functions import LoKi,LHCb,std
 
-_T = std.vector('const LHCb::Particle*')
+_T = LoKi.Range_('std::vector<const LHCb::Particle*>')
 
 # =============================================================================
 ## Get number of child particles :

@@ -1,4 +1,4 @@
-// $Id: AChild.h,v 1.2 2007-08-12 18:57:09 ibelyaev Exp $
+// $Id: AChild.h,v 1.3 2007-12-02 17:10:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ACHILD_H 
 #define LOKI_ACHILD_H 1
@@ -8,6 +8,10 @@
 // Event
 // ============================================================================
 #include "Event/Particle.h"
+// ============================================================================
+// LoKi
+// ============================================================================
+#include "LoKi/ATypes.h"
 // ============================================================================
 namespace LoKi
 {
@@ -22,7 +26,7 @@ namespace LoKi
      */
     inline std::size_t 
     nChildren 
-    ( const LHCb::Particle::ConstVector& vct ) { return vct.size() ; }
+    ( const LoKi::ATypes::Combination& vct ) { return vct.size() ; }
     // ========================================================================
     /** Trivial accessor to the daughter particles for the given particle.
      *
@@ -35,7 +39,7 @@ namespace LoKi
      *  @date   2006-02-11
      */
     LHCb::Particle* child
-    ( const LHCb::Particle::ConstVector& vct   , 
+    ( const LoKi::ATypes::Combination& vct   , 
       const size_t                       index ) ;
     // ========================================================================
     /** Trivial accessor to the daughter particles for the given particle.
@@ -50,7 +54,7 @@ namespace LoKi
      *  @date   2006-02-11
      */
     LHCb::Particle* child
-    ( const LHCb::Particle::ConstVector& vct    , 
+    ( const LoKi::ATypes::Combination& vct    , 
       const size_t                       index1 , 
       const size_t                       index2 ) ;
     // ========================================================================
@@ -67,7 +71,7 @@ namespace LoKi
      *  @date   2006-02-11
      */
     LHCb::Particle* child
-    ( const LHCb::Particle::ConstVector& vct    , 
+    ( const LoKi::ATypes::Combination& vct    , 
       const size_t                       index1 , 
       const size_t                       index2 ,
       const size_t                       index3 ) ;
@@ -86,7 +90,7 @@ namespace LoKi
      *  @date   2006-02-11
      */
     LHCb::Particle* child
-    ( const LHCb::Particle::ConstVector& vct    , 
+    ( const LoKi::ATypes::Combination& vct    , 
       const size_t                       index1 , 
       const size_t                       index2 ,
       const size_t                       index3 ,
@@ -98,9 +102,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-04
      */
-    inline LHCb::Particle::ConstVector 
+    inline LHCb::Particle::ConstVector
     children
-   (  const LHCb::Particle::ConstVector& vct ) { return vct ; }
+    ( const LoKi::ATypes::Combination& vct ) 
+    { return LHCb::Particle::ConstVector ( vct.begin() , vct.end() ) ; }
     // ========================================================================
     /** trivial function to access all descendants particles 
      *  @param vct  "pseudo-particle"
@@ -108,9 +113,9 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-04
      */
-    LHCb::Particle::ConstVector 
+    LHCb::Particle::ConstVector
     descendants
-    (  const LHCb::Particle::ConstVector& vct ) ;
+    (  const LoKi::ATypes::Combination& vct ) ;
     // ========================================================================
   } // end of the namespace LoKi:AChild 
   namespace Child

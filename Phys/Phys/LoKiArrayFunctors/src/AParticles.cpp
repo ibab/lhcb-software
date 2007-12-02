@@ -1,4 +1,4 @@
-// $Id: AParticles.cpp,v 1.4 2007-11-28 14:55:54 ibelyaev Exp $
+// $Id: AParticles.cpp,v 1.5 2007-12-02 17:10:46 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ===========================================================================
@@ -85,7 +85,7 @@ LoKi::AParticles::Unique::operator()
 {
   Assert ( m_tool.validPointer() , "Invalid pouinter to ICheckOverlap tool" ) ;
   // use the tool
-  return  !m_tool->foundOverlap ( v ) ;
+  return  !m_tool->foundOverlap ( v.begin() , v.end() ) ;
 }
 // ============================================================================
 // constructor from one index 
@@ -569,7 +569,7 @@ LoKi::AParticles::VertexChi2::operator()
   }
   // create the vertex
   LHCb::Vertex vertex ;
-  StatusCode sc = m_fit->fit ( a , vertex ) ;
+  StatusCode sc = m_fit -> fit ( a.begin() , a.end() , vertex ) ;
   if ( sc.isFailure() ) 
   {
     Error ( "Error from the VertexFitter, return InvalidChi2" , sc ) ;

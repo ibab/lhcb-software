@@ -1,4 +1,4 @@
-// $Id: AParticles.h,v 1.4 2007-11-28 14:55:54 ibelyaev Exp $
+// $Id: AParticles.h,v 1.5 2007-12-02 17:10:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLES_H 
 #define LOKI_APARTICLES_H 1
@@ -167,7 +167,7 @@ namespace LoKi
     protected:
       /// evaluate the full four momentum of sub-combination
       inline LoKi::LorentzVector momentum( argument a ) const 
-      { return LoKi::Kinematics::momentum ( a , indices() ) ; }
+      { return LoKi::Kinematics::momentum ( a.begin() , a.end() , indices() ) ; }
     public:
       // get access to all indices 
       const Indices& indices() const { return m_indices ; }

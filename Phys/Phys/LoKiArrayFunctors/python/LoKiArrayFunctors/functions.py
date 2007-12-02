@@ -1,13 +1,35 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: functions.py,v 1.8 2007-12-02 17:10:45 ibelyaev Exp $ 
+# =============================================================================
 ## @file
 #  The set of basic objects from LoKiHlt library
 #  The file is a part of LoKi and Bender projects
+#
+#  This file is a part of LoKi project - 
+#   'C++ ToolKit  for Smart and Friendly Physics Analysis'
+#
+#  The package has been designed with the kind help from
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+#  contributions and advices from G.Raven, J.van Tilburg, 
+#  A.Golutvin, P.Koppenburg have been used in the design.
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @daet 2007-06-09
 # =============================================================================
-""" The set of basic objects from LoKiTrack library """
-_author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+"""
+The set of basic objects from LoKiTrack library
+
+This file is a part of LoKi project - 
+'C++ ToolKit  for Smart and Friendly Physics Analysis'
+
+The package has been designed with the kind help from
+Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+contributions and advices from G.Raven, J.van Tilburg, 
+A.Golutvin, P.Koppenburg have been used in the design.
+"""
+# =============================================================================
+__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -18,7 +40,8 @@ std      = _global.std
 LoKi     = _global.LoKi
 LHCb     = _global.LHCb
 
-_T = 'std::vector<const LHCb::Particle*>' 
+_x_R = 'LoKi::Range_<std::vector<const LHCb::Particle*> >'
+_T   = _x_R
 
 # =============================================================================
 ## "Ordinary" functions for Tracks: "Tr"
@@ -150,7 +173,7 @@ APT3          = LoKi.AParticles.TransverseMomentum ( 3 )
 APT4          = LoKi.AParticles.TransverseMomentum ( 4 )
 
 ## @see LoKi::Cuts::ASAME
-ASAME         = LoKi.TheSame    ( _T )
+# ASAME         = LoKi.TheSame    ( _T )
 ## @see LoKi::Cuts::ASIZE
 ASIZE         = LoKi.AParticles.Size   ()
 
@@ -164,6 +187,23 @@ AVALID        = LoKi.Valid(_T)         ()
 AWM           = LoKi.AParticles.WrongMass 
 ## @see LoKi::Cuts::AWRONGMASS
 AWRONGMASS    = LoKi.AParticles.WrongMass 
+
+
+## functional part
+_va      = std.vector ( _T    )
+_vd       = std.vector ('double')
+#
+AMaps      = LoKi.Functor             ( _va , _vd       )
+AMap       = LoKi.FunctorFromFunctor  ( _va , _vd       )
+APipes     = LoKi.Functor             ( _va , _va       )
+APipe      = LoKi.FunctorFromFunctor  ( _va , _va       )
+AFunVals   = LoKi.Functor             ( _va , 'double'  )
+AFunVal    = LoKi.FunctorFromFunctor  ( _va , 'double'  )
+AElements  = LoKi.Functor             ( _va , _T        ) 
+AElement   = LoKi.FunctorFromFunctor  ( _va , _T        ) 
+#
+
+
 
 
 # =============================================================================

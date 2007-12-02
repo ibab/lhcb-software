@@ -1,4 +1,4 @@
-// $Id: AChild.cpp,v 1.2 2007-08-12 18:57:09 ibelyaev Exp $
+// $Id: AChild.cpp,v 1.3 2007-12-02 17:10:46 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -26,7 +26,7 @@
  */
 // ============================================================================
 LHCb::Particle* LoKi::AChild::child
-( const LHCb::Particle::ConstVector& vct   , 
+( const LoKi::ATypes::Combination& vct   , 
   const size_t                       index ) 
 {
   if ( 0 == index || vct.size() < index ) { return 0 ; }
@@ -48,7 +48,7 @@ LHCb::Particle* LoKi::AChild::child
  */
 // ========================================================================
 LHCb::Particle* LoKi::AChild::child
-( const LHCb::Particle::ConstVector& vct    , 
+( const LoKi::ATypes::Combination& vct    , 
   const size_t                       index1 , 
   const size_t                       index2 ) 
 { return LoKi::Child::child ( child ( vct , index1 ) , index2 ) ; }
@@ -68,7 +68,7 @@ LHCb::Particle* LoKi::AChild::child
  */
 // ========================================================================
 LHCb::Particle* LoKi::AChild::child
-( const LHCb::Particle::ConstVector& vct    , 
+( const LoKi::ATypes::Combination& vct    , 
   const size_t                       index1 , 
   const size_t                       index2 ,
   const size_t                       index3 ) 
@@ -90,7 +90,7 @@ LHCb::Particle* LoKi::AChild::child
  */
 // ========================================================================
 LHCb::Particle* LoKi::AChild::child
-( const LHCb::Particle::ConstVector& vct    , 
+( const LoKi::ATypes::Combination& vct    , 
   const size_t                       index1 , 
   const size_t                       index2 ,
   const size_t                       index3 ,
@@ -104,14 +104,15 @@ LHCb::Particle* LoKi::AChild::child
  *  @date   2007-06-04
  */
 // ========================================================================
-LHCb::Particle::ConstVector 
+LHCb::Particle::ConstVector
 LoKi::AChild::descendants
-( const LHCb::Particle::ConstVector& vct ) 
+( const LoKi::ATypes::Combination& vct ) 
 {
-  typedef LHCb::Particle::ConstVector VCT ;
+  typedef LHCb::Particle::ConstVector VCT  ;
   VCT result ;
   result.reserve ( 4 * vct.size() ) ;
-  for ( VCT::const_iterator i = vct.begin() ; vct.end() != i ; ++i )
+  for ( LoKi::ATypes::Combination::const_iterator i = vct.begin() ; 
+        vct.end() != i ; ++i )
   {
     const VCT& _r = LoKi::Child::descendants ( *i ) ;
     result.insert ( result.end() , _r.begin() , _r.end() ) ;

@@ -1,8 +1,17 @@
 <!-- 
-     * $Id: LoKiArrayFunctors.xml,v 1.7 2007-08-27 12:28:07 ibelyaev Exp $ 
+     * $Id: LoKiArrayFunctors.xml,v 1.8 2007-12-02 17:10:41 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiExHlt package
+     *
+     *  This file is a part of LoKi project - 
+     *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+     *
+     *  The package has been designed with the kind help from
+     *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+     *  contributions and advices from G.Raven, J.van Tilburg, 
+     *  A.Golutvin, P.Koppenburg have been used in the design.
+     *
      * @author Vanya BELYAEV ibelyaev@physics.syr.edu
      * @date 2006-02-06
      * ========================================================================
@@ -10,72 +19,33 @@
 
 <lcgdict>
   
-   
-  <class pattern   = "std::unary_function<*LHCb::Particle*,double>"          />
-  <class pattern   = "std::unary_function<*LHCb::Particle*,bool>"            />
-  <class pattern   = "std::binary_function<*LHCb::Particle*,*LHCb::Particle*,bool>" />
+  <class pattern   = "std::unary_function<*Range_*LHCb::Particle*>"          />
+  <class pattern   = "std::binary_function<*Range_*LHCb::Particle*>"          />
   
-  <class pattern   = "LoKi::Function<*std::vector*LHCb::Particle*>"         />
-  <class pattern   = "LoKi::Predicate<*std::vector*LHCb::Particle*>"       />
+  <class pattern   = "LoKi::Functor<*Range_*LHCb::Particle*>"           />
+  <class pattern   = "LoKi::FunctorFromFunctor<*Range*LHCb::Particle*>" />
   
-  <class pattern   = "LoKi::Constant<*std::vector*LHCb::Particle*>"         />
-  <class pattern   = "LoKi::BooleanConstant<*std::vector*LHCb::Particle*>"  />
-  <class pattern   = "LoKi::PredicateFromPredicate<*std::vector*LHCb::Particle*>"        />
-  <class pattern   = "LoKi::FunctionFromFunction<*std::vector*LHCb::Particle*>"          />
-
-  <class pattern   = "LoKi::Valid<*vector*>"            />
-  <class pattern   = "LoKi::TheSame<*std::vector*LHCb::Particle*>"  />
+  <class pattern   = "LoKi::Constant<*Range_*LHCb::Particle*>"         />
   
-  <!-- 
-       <class pattern   = "LoKi::EqualToValue<*vector*>"     />
-       <class pattern   = "LoKi::SimpleSwitch<*vector*>"     />
-       <class pattern   = "LoKi::Switch<*vector*>"           />
-       
-       <class pattern   = "LoKi::PredicateFromTwoPredicates<*std::vector*LHCb::Particle*>"    />
-       <class pattern   = "LoKi::PredicateFromTwoFunctions<*std::vector*LHCb::Particle*>"     />
-       <class pattern   = "LoKi::FunctionFromTwoFunctions<*std::vector*LHCb::Particle*>"      />
-       <class pattern   = "LoKi::PredicateFromFunctionAndValue<*std::vector*LHCb::Particle*>" />
-       
-       <class pattern   = "LoKi::And<*std::vector*LHCb::Particle*>"              />
-       <class pattern   = "LoKi::Or<*std::vector*LHCb::Particle*>"               />
-       <class pattern   = "LoKi::Not<*std::vector*LHCb::Particle*>"              />
-       
-       <class pattern   = "LoKi::Less<*std::vector*LHCb::Particle*>"             />
-       <class pattern   = "LoKi::Equal<*std::vector*LHCb::Particle*>"            />
-       <class pattern   = "LoKi::LessOrEqual<*std::vector*LHCb::Particle*>"      />
-       <class pattern   = "LoKi::NotEqual<*std::vector*LHCb::Particle*>"         />
-       
-       <class pattern   = "LoKi::Plus<*std::vector*LHCb::Particle*>"             />
-       <class pattern   = "LoKi::Minus<*std::vector*LHCb::Particle*>"            />
-       <class pattern   = "LoKi::Divide<*std::vector*LHCb::Particle*>"           />
-       <class pattern   = "LoKi::Multiply<*std::vector*LHCb::Particle*>"         />
-       
-       <class pattern   = "LoKi::Min<*std::vector*LHCb::Particle*>"              />
-       <class pattern   = "LoKi::Max<*std::vector*LHCb::Particle*>"              />
-       
-       <class pattern   = "LoKi::ComposeFunction<*std::vector*LHCb::Particle*>"  />
-       <class pattern   = "LoKi::ComposeFunction2<*std::vector*LHCb::Particle*>" />
-       
-       <class pattern   = "LoKi::Compare<*std::vector*LHCb::Particle*>"          />
-       
-       
-       
-       <class pattern = "LoKi::Monitoring::Counter<*std::vector*>" />
-       <class pattern = "LoKi::Monitoring::Stat<*std::vector*>"    />
-       <class pattern = "LoKi::Monitoring::Plot<*std::vector*>"    />
-  -->
-   
+  <class pattern   = "LoKi::Valid<*Range*>"            />
+  <class pattern   = "LoKi::TheSame<*Range*LHCb::Particle*>"  />
+  
   <class    pattern   = "LoKi::AParticles::*"             />
   <function pattern   = "LoKi::AKinematics::*"             />
   
   <function pattern = "LoKi::AChild::*"                   />
   
-  <class pattern   = "LoKi::Dicts::FuncOps<*std::vector*LHCb::Particle*>"    />
-  <class pattern   = "LoKi::Dicts::FunCalls<*std::vector*LHCb::Particle*>"   />
-  <class pattern   = "LoKi::Dicts::CutCalls<*std::vector*LHCb::Particle*>"   />
+  <class pattern   = "LoKi::Dicts::FuncOps<*Range_*LHCb::Particle*>"    />
+  <class pattern   = "LoKi::Dicts::CutsOps<*Range_*LHCb::Particle*>"    />
+  <class pattern   = "LoKi::Dicts::MapsOps<*Range_*LHCb::Particle*>"    />
+  <class pattern   = "LoKi::Dicts::PipeOps<*Range_*LHCb::Particle*>"    />
+  <class pattern   = "LoKi::Dicts::FunValOps<*Range_*LHCb::Particle*>"    />
+  <class pattern   = "LoKi::Dicts::ElementOps<*Range_*LHCb::Particle*>"    />
+  <class pattern   = "LoKi::Dicts::FunCalls<*Range_*LHCb::Particle*>"   />
+  <class pattern   = "LoKi::Dicts::CutCalls<*Range_*LHCb::Particle*>"   />
   
   <function pattern = "LoKi::Dicts::monitor*"            />
-
+  
   <class pattern   = "LoKi::IHybrid*"    />
   <class pattern   = "LoKi::Hybrid::*"   />
   

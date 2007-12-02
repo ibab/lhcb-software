@@ -1,9 +1,15 @@
-$Id: release.notes,v 1.9 2007-10-08 06:50:25 cattanem Exp $ 
+$Id: release.notes,v 1.10 2007-12-02 17:10:43 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+!======================== LoKiArrayFunctors v7r0 2007-12-02 ===================
+! 2007-12-02 - Vanya BELYAEV
+ - the major upgrde for new major version of LoKi v7r0 ("The powerful streamers")
+ - cmt/requirements
+   version increment to v7r0 
 
 !======================== LoKiArrayFunctors v6r1 2007-10-07 ===================
 ! 2007-10-07 - Vanya BELYAEV
