@@ -52,6 +52,11 @@ def dot(a,b):
 def angle(a,b):
     """ Returns the angle between particles or MCparticles or tracks or momentum vectors.
     Author: Hugo Ruiz, hugo.ruiz@cern.ch"""
+    if DEBUG:
+        print a
+        print b
+        print dot(a,b)
+        print mod(a)*mod(b)
     return acos(dot(a,b)/(mod(a)*mod(b)))
 
 

@@ -189,7 +189,7 @@ def getProducts(inputPart, recursive = True, maxDepth = 0,
     By default, particles with zero momentum are removed.
     Author: Hugo Ruiz, hugo.ruiz@cern.ch """
 
-    if DEBUG: print 'Calling getProducts'
+    if DEBUG: print 'Calling getProducts. Level of recursivity: ', level
     
     if not inputPart:
         if DEBUG: print 'No MC particle given as input!'
@@ -200,13 +200,23 @@ def getProducts(inputPart, recursive = True, maxDepth = 0,
     # Check whether input is a list
     try:
         for iCand in inputPart: # inputPart is in fact a list
+            if DEBUG: print 'Working with a list as input'
             products += getProducts(iCand, recursive = recursive, maxDepth = maxDepth,
                                     removePZero = removePZero, level = level + 0)
         return products
 
     # input is not a list
-    except: 
-        myVertices = inputPart.endVertices()
+    except:
+        if isinstance(inputPart, list):
+            print 'EXECUTION OF GETPRODUCTS FAILED'
+            raise RuntimeError
+        try:
+            myVertices = inputPart.endVertices()
+        except:
+            print 'COULD NOT GET ENDVERTICES OF:'
+            print inputPart
+            raise RuntimeError
+            
         for iVert in myVertices:
             try:
                 iProducts = iVert.products()
