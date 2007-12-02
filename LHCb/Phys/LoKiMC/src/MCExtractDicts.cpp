@@ -1,4 +1,4 @@
-// $Id: MCExtractDicts.cpp,v 1.1 2007-08-11 20:19:58 ibelyaev Exp $
+// $Id: MCExtractDicts.cpp,v 1.2 2007-12-02 11:57:14 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -16,7 +16,7 @@
 // get MC-particles form decay tree 
 // ============================================================================
 LHCb::MCParticle::ConstVector
-LoKi::Dicts::Extract::mcParticles
+LoKi::Dicts::MCExtract::mcParticles
 ( const LHCb::MCParticle*      particle  ,
   const LoKi::MCTypes::MCCuts& cuts      ,
   const bool                   decayOnly ) 
@@ -31,7 +31,7 @@ LoKi::Dicts::Extract::mcParticles
 // get MC-particles form decay tree 
 // ============================================================================
 LHCb::MCParticle::ConstVector
-LoKi::Dicts::Extract::mcParticles
+LoKi::Dicts::MCExtract::mcParticles
 ( const LHCb::MCVertex*        vertex    ,
   const LoKi::MCTypes::MCCuts& cuts      ,
   const bool                   decayOnly ) 

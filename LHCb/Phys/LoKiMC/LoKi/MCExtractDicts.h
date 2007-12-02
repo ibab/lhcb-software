@@ -1,4 +1,4 @@
-// $Id: MCExtractDicts.h,v 1.2 2007-08-13 10:49:21 ibelyaev Exp $
+// $Id: MCExtractDicts.h,v 1.3 2007-12-02 11:57:14 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCEXTRACTDICTS_H 
 #define LOKI_MCEXTRACTDICTS_H 1
@@ -13,7 +13,7 @@ namespace LoKi
 {
   namespace Dicts 
   {
-    namespace Extract
+    namespace MCExtract
     {
       /// get MC-particles form decay tree 
       LHCb::MCParticle::ConstVector

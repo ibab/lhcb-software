@@ -183,9 +183,9 @@ def mcParticles ( p , *a ) :
     >>> daughterPions = mcParticles ( p , 'pi+' == MCABSID , True )
 
     """
-    return LoKi.Dicts.Extract.mcParticles ( p , *a )
+    return LoKi.Dicts.MCExtract.mcParticles ( p , *a )
 
-mcParticles . __doc__ += "\n\n" + LoKi.Dicts.Extract.mcParticles . __doc__  
+mcParticles . __doc__ += "\n\n" + LoKi.Dicts.MCExtract.mcParticles . __doc__  
 
 getParticles = mcParticles 
 particles    = mcParticles
@@ -358,9 +358,9 @@ _LCF.daughters     . __doc__ += "\n" + LoKi.MCChild.children          . __doc__
 _LCF.descendants   . __doc__ += "\n" + LoKi.MCChild.descendants       . __doc__ 
 _LCF.ancestors     . __doc__ += "\n" + LoKi.MCChild.ancestors         . __doc__ 
 
-_LCF.extract       . __doc__ += "\n" + LoKi.Dicts.Extract.mcParticles . __doc__ 
-_LCF.particles     . __doc__ += "\n" + LoKi.Dicts.Extract.mcParticles . __doc__ 
-_LCF.getParticles  . __doc__ += "\n" + LoKi.Dicts.Extract.mcParticles . __doc__ 
+_LCF.extract       . __doc__ += "\n" + LoKi.Dicts.MCExtract.mcParticles . __doc__ 
+_LCF.particles     . __doc__ += "\n" + LoKi.Dicts.MCExtract.mcParticles . __doc__ 
+_LCF.getParticles  . __doc__ += "\n" + LoKi.Dicts.MCExtract.mcParticles . __doc__ 
 
 _LCF.count_if      . __doc__ += "\n" + LoKi.Dicts.MCAlgs.count_if     . __doc__ 
 _LCF.found         . __doc__ += "\n" + LoKi.Dicts.MCAlgs.found        . __doc__ 

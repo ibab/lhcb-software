@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiMC.xml,v 1.13 2007-12-02 11:17:56 ibelyaev Exp $ 
+     * $Id: LoKiMC.xml,v 1.14 2007-12-02 11:57:14 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiMC package
@@ -49,12 +49,13 @@
   <class pattern   = "LoKi::MCParticles::*"                />
   <class pattern   = "LoKi::MCVertices::*"                 />
   
-  <function pattern = "LoKi::MCKinematics::*"              />
-  <function pattern = "LoKi::PrintMC:*"                    />
-  <function pattern = "LoKi::MCChild::*"                   />
-  <function pattern = "LoKi::Dicts::MCAlgs::*"             />
-  <function pattern = "LoKi::Dicts::MCFinderDicts::*"      />
-  <function name    = "LoKi::Dicts::Extract::mcParticles"  />
+  <function pattern = "LoKi::MCKinematics::*"               />
+  <function pattern = "LoKi::PrintMC:*"                     />
+  <function pattern = "LoKi::MCChild::*"                    />
+  <function pattern = "LoKi::Dicts::MCAlgs::*"              />
+  <function pattern = "LoKi::Dicts::MCFinderDicts::*"       />
+  <function name    = "LoKi::Dicts::MCExtract::mcParticles" />
+
 
   <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::MC*>"   />
   <class pattern   = "LoKi::Dicts::CutsOps<*LHCb::MC*>"   />
