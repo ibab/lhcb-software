@@ -2,6 +2,7 @@
 #  @date 2007-11-28
 #  @author Hugo RUIZ hugo.ruiz@cern.ch
 #  @author Jose Angel HERNANDO jose.angel.hernando-morata@cern.ch
+#  SEE LAST FUNCTION FOR EXEMPLES ON HOW TO USE THE MODULE
 # =============================================================================
 """ Module that deals with counters and root persistency"""
 # =============================================================================
@@ -122,6 +123,20 @@ def showRegistered():
             objectList[iClassName] = [iObjectName]
     print objectList
             
+#---------------------------------------------------
+def deleteRegistered():
+    """  Delete all registered objects.
+    Author: Hugo Ruiz, hugo.ruiz@cern.ch
+    """
+    if not ROOTOBJECTS.keys():
+        print 'No objects registered'
+        return
+    
+    for iObjectName in ROOTOBJECTS.keys():
+        ROOTOBJECTS[iObjectName].Delete()
+    ROOTOBJECTS = 0
+    ROOTOBJECTS = {}
+    return
 
 
 #---------------------------------------------------
@@ -181,7 +196,7 @@ def desktopExample():
     # Register a pytree (from Gabriel) also
     register(PyTree('myTree', 'myTree')) 
     tree_vars = ['n/I', 'a/F', 'x[2]/F', 'y[n]/F', 'z<>/F']
-    map(lambda a:my('myTree').book(a), tree_vars)
+    my('myTree').book(tree_vars)
 
     # Some inspection
     print '\nSome inspection:'

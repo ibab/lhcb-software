@@ -72,62 +72,69 @@ class PyTree(TTree):
 		A internal class member is created with name varname to hold the var values.
 		
 		"""		
-		
-		i0 = label.find("/")
-		i1 = label.find("[")
-		i2 = label.find("]")
-		i3 = label.find("<>") # vector
 
-		# type check, I or F
-		typ = label[i0+1:]		
-		if not (typ == 'I' or typ == 'F'):
-			print 'PyTree ERROR - var type ' + typ + ' not defined. Please use I or F.'		
-			return
-		typ = typ.lower()	# compatibility between array and TTree:Branch		
-		
-		# label = "varname<>/type"
-		if i3 > -1:
-			varname = label[:i3]
-			if len(varname) == 0:
-				print 'PyTree ERROR - you must supply a varname.'		
-				return						
-			if		typ == 'i': typ = 'int'
-			elif 	typ == 'f': typ = 'float'			
-			var = std.vector(typ)()				
-			setattr(self, varname, var) # create internal varname to hold var
-			self.Branch(varname, 'vector<'+typ+'>', var)				
-		
-		# label = "varname/type"
-		elif i1 == -1 and i2 == -1:
-			varname = label[:i0]
-			if len(varname) == 0:
-				print 'PyTree ERROR - you must supply a varname.'		
-				return						
-			var = array(typ, [0])			
-			setattr(self, varname, var)
-			self.Branch(varname, var, label)
-			
-		else:	
-			size = label[i1+1:i2]
-			varname = label[:i1]
-			if len(varname) == 0 or len(size) == 0:
-				print 'PyTree ERROR - you must supply varname and size.'		
-				return						
-			
-			#label = "varname[100]/type"
-			try:
-				sizeval = int(size)
-				var = array(typ, sizeval*[0])
+		# If a list of labels is given as input, call book n times
+		if isinstance(label, list):
+			for iLabel in label:
+				self.book(iLabel)
+		else:
+	
+			# Start parsing
+			i0 = label.find("/")
+			i1 = label.find("[")
+			i2 = label.find("]")
+			i3 = label.find("<>") # vector
 
-			#label = "varname[othervarname]/type"
-			except ValueError: 
-				var = array(typ, ARRAYMAXSIZE*[0])
-		
-			setattr(self, varname, var)
-			self.Branch(varname, var, label)		
-		
-		# append to internal branch names
-		self.varnames.append(varname)		
+			# type check, I or F
+			typ = label[i0+1:]		
+			if not (typ == 'I' or typ == 'F'):
+				print 'PyTree ERROR - var type ' + typ + ' not defined. Please use I or F.'		
+				return
+			typ = typ.lower()	# compatibility between array and TTree:Branch		
+
+			# label = "varname<>/type"
+			if i3 > -1:
+				varname = label[:i3]
+				if len(varname) == 0:
+					print 'PyTree ERROR - you must supply a varname.'		
+					return						
+				if		typ == 'i': typ = 'int'
+				elif 	typ == 'f': typ = 'float'			
+				var = std.vector(typ)()				
+				setattr(self, varname, var) # create internal varname to hold var
+				self.Branch(varname, 'vector<'+typ+'>', var)				
+
+			# label = "varname/type"
+			elif i1 == -1 and i2 == -1:
+				varname = label[:i0]
+				if len(varname) == 0:
+					print 'PyTree ERROR - you must supply a varname.'		
+					return						
+				var = array(typ, [0])			
+				setattr(self, varname, var)
+				self.Branch(varname, var, label)
+
+			else:	
+				size = label[i1+1:i2]
+				varname = label[:i1]
+				if len(varname) == 0 or len(size) == 0:
+					print 'PyTree ERROR - you must supply varname and size.'		
+					return						
+
+				#label = "varname[100]/type"
+				try:
+					sizeval = int(size)
+					var = array(typ, sizeval*[0])
+
+				#label = "varname[othervarname]/type"
+				except ValueError: 
+					var = array(typ, ARRAYMAXSIZE*[0])
+
+				setattr(self, varname, var)
+				self.Branch(varname, var, label)		
+
+			# append to internal branch names
+			self.varnames.append(varname)		
 
 	#---------------------------------------------------
 	def get(self, varname):

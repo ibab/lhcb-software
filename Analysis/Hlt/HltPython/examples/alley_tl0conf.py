@@ -11,7 +11,7 @@ gaudimodule.loaddict("HltBaseDict")
 # load extra modules for MC
 from eventassoc import linkedTo
 import mctools
-from ParticleTranslator import PTranslate
+from pidtools import PTranslate
 
 # location of the opts to run
 HOME= "../options"

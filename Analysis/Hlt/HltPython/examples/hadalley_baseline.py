@@ -8,7 +8,7 @@ gaudimodule.loaddict("HltBaseDict")
 from eventassoc import linkedTo
 
 import mctools
-from ParticleTranslator import PTranslate
+from pidtools import PTranslate
 
 HOME= "../options"
 JOBOPTS = HOME+"/Moore_HadL0Conf_rawmb.opts"

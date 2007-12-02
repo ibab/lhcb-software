@@ -20,7 +20,7 @@ def momVect( a ):
         return [a.x(),a.y(),a.z()]
 
 #---------------------------------------------------
-def mod( a ):
+def mag( a ):
     """ Returns the modulus of the momentum of a particle or track  or MCparticle or a momentum vector.
     Author: Hugo Ruiz, hugo.ruiz@cern.ch"""
     try:
@@ -56,8 +56,8 @@ def angle(a,b):
         print a
         print b
         print dot(a,b)
-        print mod(a)*mod(b)
-    return acos(dot(a,b)/(mod(a)*mod(b)))
+        print mag(a)*mag(b)
+    return acos(dot(a,b)/(mag(a)*mag(b)))
 
 
 

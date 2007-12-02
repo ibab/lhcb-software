@@ -12,7 +12,7 @@ __author__ = "Hugo RUIZ hugo.ruiz@cern.ch"
 # =============================================================================
 
 
-from ParticleTranslator import PTranslate
+from pidtools import PTranslate
 from math import *
 from ROOT import *
 
