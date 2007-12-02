@@ -230,4 +230,5 @@ def desktopExample():
         
     # Save root file
     saveRegistered()
+    # saveRegistered('miFile') # if want to specify file name. The '.root' is appended
     
