@@ -3,10 +3,30 @@
 ## @file functions.py LoKiPhys/functions.py
 #  The set of basic decorator for objects from LoKiPhys library
 #  The file is a part of LoKi and Bender projects
+#
+#        This file is a part of LoKi project - 
+#    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+#
+#  The package has been designed with the kind help from
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+#  contributions and advices from G.Raven, J.van Tilburg, 
+#  A.Golutvin, P.Koppenburg have been used in the design.
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-""" The set of basic decorators for obejcts from LoKiPhys library """
-_author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+"""
+The set of basic decorators for obejcts from LoKiPhys library
+
+      This file is a part of LoKi project - 
+'C++ ToolKit  for Smart and Friendly Physics Analysis'
+
+The package has been designed with the kind help from
+Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+contributions and advices from G.Raven, J.van Tilburg, 
+A.Golutvin, P.Koppenburg have been used in the design.
+"""
+# =============================================================================
+__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
 import LoKiCore.decorators as      _LoKiCore
@@ -390,6 +410,32 @@ VIP        = LoKi.Vertices.ImpPar
 ## @see LoKi::Vertices::ImpParChi2
 VIPCHI2    = LoKi.Vertices.ImpParChi2
 
+
+
+# functional part:
+
+## functional part
+_vp       = std.vector ( _RCP    )
+_vv       = std.vector ( _RCV    )
+_vd       = std.vector ('double')
+#
+Maps      = LoKi.Functor             ( _vp , _vd      )
+Map       = LoKi.FunctorFromFunctor  ( _vp , _vd      )
+Pipes     = LoKi.Functor             ( _vp , _vp      )
+Pipe      = LoKi.FunctorFromFunctor  ( _vp , _vp      )
+FunVals   = LoKi.Functor             ( _vp , 'double' )
+FunVal    = LoKi.FunctorFromFunctor  ( _vp , 'double' )
+Elements  = LoKi.Functor             ( _vp , _RCP     ) 
+Element   = LoKi.FunctorFromFunctor  ( _vp , _RCP     ) 
+#
+VMaps     = LoKi.Functor             ( _vv , _vd      )
+VMap      = LoKi.FunctorFromFunctor  ( _vv , _vd      )
+VPipes    = LoKi.Functor             ( _vv , _vv      )
+VPipe     = LoKi.FunctorFromFunctor  ( _vv , _vv      )
+VFunVals  = LoKi.Functor             ( _vv , 'double' )
+VFunVal   = LoKi.FunctorFromFunctor  ( _vv , 'double' )
+VElements = LoKi.Functor             ( _vv , _RCV     ) 
+VElement  = LoKi.FunctorFromFunctor  ( _vv , _RCV     ) 
 
 # =============================================================================
 if '__main__' == __name__ :

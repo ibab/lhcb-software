@@ -1,8 +1,17 @@
 <!-- 
-     * $Id: LoKiPhys.xml,v 1.11 2007-11-28 14:39:30 ibelyaev Exp $ 
+     * $Id: LoKiPhys.xml,v 1.12 2007-12-02 14:17:50 ibelyaev Exp $ 
      * ========================================================================
      * @file
-     * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
+     * The seleciton file to build Reflex dictionaries for Phys/LoKiPhys package
+     *
+     *  This file is a part of LoKi project - 
+     *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+     *
+     *  The package has been designed with the kind help from
+     *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+     *  contributions and advices from G.Raven, J.van Tilburg, 
+     *  A.Golutvin, P.Koppenburg have been used in the design.
+     *
      * @author Vanya BELYAEV ibelyaev@physics.syr.edu
      * @date 2006-02-06
      * ========================================================================
@@ -25,13 +34,21 @@
   
   <class pattern   = "LoKi::Keeper<LHCb::*Vertex*>"        />
   <class pattern   = "LoKi::UniqueKeeper<LHCb::*Vertex*>"  />
-
-  <class pattern   = "std::unary_function<*LHCb::Particle*,double>"  />
-  <class pattern   = "std::unary_function<*LHCb::Particle*,bool>"    />
+  
+  <class pattern   = "std::unary_function<*LHCb::Pa*,*LHCb::Pa*>"  />
+  <class pattern   = "std::unary_function<*LHCb::Pa*,std::vector*>"  />
+  <class pattern   = "std::unary_function<*LHCb::Pa*,double>"  />
+  <class pattern   = "std::unary_function<*LHCb::Pa*,bool>"    />
+  <class pattern   = "std::unary_function<*LHCb::Ve*,*LHCb::Ve*>"  />
+  <class pattern   = "std::unary_function<*LHCb::Ve*,std::vector*>"  />
+  <class pattern   = "std::unary_function<*LHCb::Ve*,double>"  />
+  <class pattern   = "std::unary_function<*LHCb::Ve*,bool>"    />
   <class pattern   = "std::binary_function<*LHCb::*,*LHCb::*,bool>"  />
   
   <class pattern   = "LoKi::Functor<*LHCb::Pa*>" />
   <class pattern   = "LoKi::Functor<*LHCb::Ve*>" />
+  <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::Pa*>" />
+  <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::Ve*>" />
   <class pattern   = "LoKi::BasicFunctors<*LHCb::Pa*>" />
   <class pattern   = "LoKi::BasicFunctors<*LHCb::Ve*>" />
   
@@ -43,9 +60,6 @@
   <class pattern   = "LoKi::Valid<*LHCb::*>"   />
   <class pattern   = "LoKi::TheSame<*LHCb::*>" />
   
-  <class pattern = "LoKi::ExtraInfo::GetInfo<*LHCb::*>"    />
-  <class pattern = "LoKi::ExtraInfo::CheckInfo<*LHCb::*>"  />
-  
   <class pattern   = "LoKi::Particles::*"                />
   <class pattern   = "LoKi::Vertices::*"                 />
   
@@ -56,23 +70,27 @@
   <function pattern = "LoKi::Dicts::Algs::*"             />
   <function pattern = "LoKi::Dicts::monitor*"            />
   
-  <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::*>"    />
-  <class pattern   = "LoKi::Dicts::PIDOps<LoKi::Pa*>"    />
-  <class pattern   = "LoKi::Dicts::FunCalls<LHCb::Pa*>"  />
-  <class pattern   = "LoKi::Dicts::CutCalls<LHCb::Pa*>"  />
-  <class pattern   = "LoKi::Dicts::FunCalls<LHCb::Ve*>"  />
-  <class pattern   = "LoKi::Dicts::CutCalls<LHCb::Ve*>"  />
-  
-  <class name = "std::vector<const LHCb::Particle*>"    />
-  <class name = "std::vector<const LHCb::VertexBase*>"  />
+  <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::*>"     />
+  <class pattern   = "LoKi::Dicts::CutsOps<*LHCb::*>"     />
+  <class pattern   = "LoKi::Dicts::MapsOps<*LHCb::*>"     />
+  <class pattern   = "LoKi::Dicts::PipeOps<*LHCb::*>"     />
+  <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::*>"   />
+  <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::*>"  />
+ 
+  <class pattern   = "LoKi::ExtraInfo::CheckInfo<*>" />
+  <class pattern   = "LoKi::ExtraInfo::GetInfo<*>" />
 
+  <class pattern   = "LoKi::Dicts::PIDOps<*LoKi::Pa*>"     />
+  <class pattern   = "LoKi::Dicts::FunCalls<*LHCb::Ve*>"   />
+  <class pattern   = "LoKi::Dicts::CutCalls<*LHCb::Ve*>"   />
+  <class pattern   = "LoKi::Dicts::FunCalls<*LHCb::Pa*>"   />
+  <class pattern   = "LoKi::Dicts::CutCalls<*LHCb::Pa*>"   />
+  
+  <class name = "std::vector<const LHCb::Particle*>"      />
+  <class name = "std::vector<const LHCb::VertexBase*>"    />
+  
   <class name = "LoKi::SelectVertex"  />
   
-  <class pattern   = "std::*function<*LHCb::Particle*,bool>"   />
-  <class pattern   = "std::*function<*LHCb::Particle*,double>" />
-  <class pattern   = "std::*function<*LHCb::Vertex*,bool>"     />
-  <class pattern   = "std::*function<*LHCb::Vertex*,double>"   />
-
   <class pattern   = "LoKi::*Keeper<*LHCb::Vertex*>"        />
   <class pattern   = "LoKi::*Keeper<*LHCb::RecVertex*>"     />
   <class pattern   = "LoKi::*Keeper<*LHCb::Particle*>"      />
