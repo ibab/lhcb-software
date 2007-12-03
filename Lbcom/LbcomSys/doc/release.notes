@@ -6,6 +6,56 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r13>2007-12-03 LbcomSys v6r13</A></H1><PRE>
+This version uses Gaudi v19r6 and LHCb v23r2
+
+- Packages modified: L0DU v8r1, RichDAQ v3r13, RichMCMonitors v1r5,
+    RichTools v2r16, STAlgorithms v2r5, STAssociators v1r5, STCheckers v2r3,
+    STDAQ v3r3, VeloTools v3r0
+
+- In L0DU v8r1
+  . Fixed wrong location of included job options file
+
+- In RichDAQ v3r13
+  . Remove obsolete SerializeStl include
+  . Add method to RawBufferToSmartIDsTool to return the hits for a requested HPD
+  . Update pixel clustering tool to work with ALICE mode data
+
+- In RichMCMonitors v1r5
+  . Add check for existence of MCRichHits in MCCKPhotonYieldAlg, so processing 
+    is not aborted when these data objects are missing (a warning is printed).
+
+- In RichTools v2r16
+  . Fix crashes with missing mirrors in mirror segment finder
+  . Added an option to SmartIDTool to allow the detection point to be on the
+    photoCathode or the outside of the window (including refraction corrections)
+  . Add some new default tool mappings
+
+- In STAlgorithms v2r5
+  . Use isOKStrip method 
+
+- In STAssociators v1r5
+  . Make input location of STClusters2MCHits a jobOption
+
+- In STCheckers v2r3
+  . Bug fix in neighbour sum histo
+  . Ensure histo ids do not change
+  . Add some consts
+  . Make input location of STEffChecker a jobOption
+
+- In STDAQ v3r3
+  . Move to new STKernel package
+
+- In VeloTools v3r0
+  . Code update to match TELL1 board position format:
+    o seeding strip VeloChannelID as a cluster's centre strip
+    o fractional position (0-1)
+    o fractional error
+  . New tuning for the error parametrization for the pitch projection. Old
+    parameterisation available by setting ErrorParaType = 2 (default is 1 - new)
+  . Possibility to choose of algorithms to compute the projected angle,  option
+    CalculateExactProjAngle=true/false (default is false, simplified algorithm)
+
 </PRE><H1><A NAME=v6r12>2007-11-14 LbcomSys v6r12</A></H1><PRE>
 This version uses Gaudi v19r5 and LHCb v23r1
 
