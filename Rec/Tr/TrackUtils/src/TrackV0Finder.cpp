@@ -1,4 +1,4 @@
-// $Id: TrackV0Finder.cpp,v 1.1 2007-12-03 15:08:19 wouter Exp $
+// $Id: TrackV0Finder.cpp,v 1.2 2007-12-03 15:39:30 wouter Exp $
 // Include files 
 
 
@@ -62,6 +62,7 @@ private:
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/ParticleID.h"
 #include "Event/TrackTraj.h"
 #include "Event/TwoProngVertex.h"
 #include "Kernel/ITrajPoca.h"
@@ -101,7 +102,7 @@ TrackV0Finder::TrackV0Finder( const std::string& name,
 {
   declareProperty( "TrackContainer", m_trackInputListName = LHCb::TrackLocation::Default  );
   declareProperty( "PVContainer", m_pvContainerName = LHCb::RecVertexLocation::Primary ) ;
-  declareProperty( "V0Container", m_v0ContainerName = LHCb::TwoProngVertexLocation::Default ) ;
+  declareProperty( "V0Container", m_v0ContainerName = LHCb::RecVertexLocation::V0 ) ;
   declareProperty( "KsMassCut", m_ksmasscut) ;
   declareProperty( "LambdaMassCut", m_lambdamasscut) ;
   declareProperty( "UseExtrapolator", m_useExtrapolator) ;
@@ -260,9 +261,11 @@ StatusCode TrackV0Finder::execute()
           p4pos.SetE( std::sqrt(mompos.Mag2()+pimass*pimass)) ;
           p4neg.SetE( std::sqrt(momneg.Mag2()+pmass*pmass)) ;
           double pipmass = (p4pos+p4neg).M() ;
-          if( fabs(pipimass - ksmass)    < m_ksmasscut ||
-              fabs(pipmass - lambdamass) < m_lambdamasscut ||
-              fabs(ppimass - lambdamass) < m_lambdamasscut ) {
+	  bool iskscandidate = fabs(pipimass - ksmass) < m_ksmasscut ;
+	  bool islambdacandidate = fabs(ppimass - lambdamass) < m_lambdamasscut ;
+	  bool isantilambdacandidate = fabs(pipmass - lambdamass) < m_lambdamasscut ;
+	  
+          if( iskscandidate || islambdacandidate || isantilambdacandidate) {
             // Determine the states passed to the vertexer. At this
             // stage combinatorics is small enough that we can
             // eventually use a real extrapolator.
@@ -302,7 +305,12 @@ StatusCode TrackV0Finder::execute()
               vertex->addInfo(4,pipmass) ;
               vertex->addToTracks(*ipos) ;
               vertex->addToTracks(*ineg) ;
-              // create a rec vertex and put it in the event
+	      if(iskscandidate)
+		vertex->addPID(LHCb::ParticleID(m_ksProperty->pdgID())) ;
+	      if(islambdacandidate)
+		vertex->addPID(LHCb::ParticleID(m_lambdaProperty->pdgID())) ;
+	      if(isantilambdacandidate)
+		vertex->addPID(LHCb::ParticleID(m_lambdaProperty->antiParticle()->pdgID())) ;
               v0container->add( vertex ) ;
             } else {
               delete vertex ;
