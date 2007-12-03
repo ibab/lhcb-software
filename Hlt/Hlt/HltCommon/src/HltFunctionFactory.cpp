@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.13 2007-10-12 12:21:20 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.14 2007-12-03 16:36:21 hernando Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -154,7 +154,8 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn)
   } else if (name == "FlagL0Candidate"){
     fun = new Hlt::TrackFlag(Track::L0Candidate);
   }
-
+  
+  
   if (m_smart && fun) {
     int id = HltConfigurationHelper::getID(*m_conf,"InfoID",name);
     Hlt::TrackFunction* fun1 = fun;
@@ -169,7 +170,7 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn)
 
 
 Hlt::VertexFunction* HltFunctionFactory::vertexFunction(const std::string& fn) {
-  Hlt::VertexFunction* fun = NULL;
+  Hlt::VertexFunction* fun = 0;
   std::vector<std::string> cromos = EParser::parse(fn,",");
   std::string name = cromos[0];
   if (name == "VertexDz") {
@@ -184,7 +185,13 @@ Hlt::VertexFunction* HltFunctionFactory::vertexFunction(const std::string& fn) {
     fun = new Hlt::minPT();
   } else if (name == "VertexMaxPT") {
     fun = new Hlt::maxPT();
+  } else if (name == "VertexDimuonMass") {
+    fun = new Hlt::VertexDimuonMass();
+  } else if (name == "VertexSumPT") {
+    fun = new Hlt::VertexSumPT();
   }
+  
+  
   if (m_smart && fun) {
     int id = HltConfigurationHelper::getID(*m_conf,"InfoID",name);
     Hlt::VertexFunction* fun1 = fun;
@@ -206,8 +213,11 @@ Hlt::TrackBiFunction* HltFunctionFactory::trackBiFunction(const std::string& fn)
   else if (name == "Calo3DChi2") {
     ITrackMatch* imatch = tool<ITrackMatch>("HltVeloTCaloMatch");
     bfun =  new Hlt::TrackMatch(*imatch);
-  } else if (name == "DeltaP")
+  } else if (name == "DeltaP") {
     bfun = new Hlt::DeltaP();
+  } else if (name == "DimuonMass") {
+    bfun = new Hlt::DimuonMass();
+  }
   
   if (!bfun) fatal() << " requested track bifunction " << name
                      << " not in factory " << endreq;

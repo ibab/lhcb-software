@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.8 2007-11-23 12:27:58 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.9 2007-12-03 16:36:21 hernando Exp $
 // Include files 
 
 
@@ -120,6 +120,8 @@ StatusCode HltVertexMaker::initialize() {
   }
   release(factory);
 
+  initializeCounter(m_counterCombinations," combinations ");
+
   return StatusCode::SUCCESS;
 };
 
@@ -144,26 +146,27 @@ StatusCode HltVertexMaker::execute() {
   }
 
   m_input2.clear();
-  // copy(*m_inputTracks,m_input2);
+  copy(*m_inputTracks,m_input2);
   if (m_twoContainers) copy(*m_inputTracks2,m_input2);
-  else copy(*m_inputTracks,m_input2);
+  // else copy(*m_inputTracks,m_input2);
 
   if (m_debug) {
     printInfo( "tracks [1]", *m_inputTracks);
     printInfo( "tracks [2]",  m_input2);
   }
+
+  Hlt::TrackContainer::const_iterator itMEnd = m_inputTracks->end();
+  if (m_input2.size() == m_inputTracks->size()) itMEnd--;
+  Hlt::TrackContainer::const_iterator itHStart = m_input2.begin();
   
   for (Hlt::TrackContainer::const_iterator itM = m_inputTracks->begin(); 
-       itM != m_inputTracks->end(); itM++) {
+       itM != itMEnd; itM++) {
     const LHCb::Track& track1 = *(*itM);
-
+    
     verbose() << " track 0 " << track1.key() << track1.slopes() << endreq;
-
-    // 1st check which mode are we running on...
-    Hlt::TrackContainer::const_iterator itHStart;
-    if (m_twoContainers) itHStart = m_input2.begin();
-    else itHStart = itM + 1;    
-
+    
+    itHStart++;
+    
     // And then start the loop itself!
     for (Hlt::TrackContainer::const_iterator itH = itHStart; 
          itH != m_input2.end(); itH++) {
@@ -171,7 +174,8 @@ StatusCode HltVertexMaker::execute() {
       verbose() << " track 1 " << track2.key() << track2.slopes() << endreq;
       
       // can not be the same track
-      if ((*itH) == (*itM)) continue;
+      if (&track1 == &track2) continue;
+      increaseCounter(m_counterCombinations);
       
       // Check for segment overlaps
       bool accepted = true;
@@ -203,6 +207,7 @@ StatusCode HltVertexMaker::execute() {
       LHCb::RecVertex* sv = new RecVertex();
       _makeVertex(track1,track2,*sv);
       m_outputVertices->push_back(sv);
+      overtices->insert(sv);
       for (size_t i = 0; i < m_filterIDs.size(); ++i) {
         verbose()<< " info " << m_filterIDs[i]<<" = "<<m_vals[i] << endreq;
         sv->addInfo(m_filterIDs[i],m_vals[i]);
@@ -229,7 +234,7 @@ StatusCode HltVertexMaker::finalize() {
 
   for (size_t i = 0; i < m_filterNames.size(); ++i) {
     std::string title =  " event accepted " + m_filterNames[i] + " / input ";
-    infoSubsetEvents(m_tcounters[i],m_counterEntries,title);
+    infoSubsetEvents(m_tcounters[i],m_counterCombinations,title);
   }
 
   StatusCode sc = HltAlgorithm::finalize(); // must be executed first

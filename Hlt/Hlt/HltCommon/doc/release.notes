@@ -3,6 +3,11 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+! 2007-12-02 Jose A. Hernando
+      - HltVertexMaker: bugs in list of tracks and mem.leak fix
+      - HltFunctionFactory: add DimuonMass, VertexDimuonMass, VertexSumPT functions
+
 ! 2007-11-28 Gerhard Raven
       - HltInit: use templated svc locator from GaudiAlg
       - HltSequencer: use Gaudi Histo1D properties for specifying histograms

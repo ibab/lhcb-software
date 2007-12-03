@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.h,v 1.4 2007-11-14 13:57:04 hernando Exp $
+// $Id: HltVertexMaker.h,v 1.5 2007-12-03 16:36:21 hernando Exp $
 #ifndef HLTVERTEXMAKER_H 
 #define HLTVERTEXMAKER_H 1
 
@@ -57,6 +57,8 @@ protected:
   template <class CONT>
   void copy(const CONT& c1, CONT& c2)
   {std::copy(c1.begin(),c1.end(),std::back_inserter(c2));}
+
+  HltCounter m_counterCombinations;
 
 };
 #endif // HLTMAKEVERTICES_H 
