@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.9 2007-12-03 16:36:21 hernando Exp $
+// $Id: HltVertexMaker.cpp,v 1.10 2007-12-03 16:59:35 hernando Exp $
 // Include files 
 
 
@@ -63,8 +63,6 @@ StatusCode HltVertexMaker::initialize() {
     info() << "only one input container requested " 
            << m_inputTracksName << endreq;
     m_twoContainers = false;
-    m_inputTracks2Name = m_inputTracksName;
-    m_inputTracks2 = m_inputTracks;
   }
 
   // NOTE: input tracks2 needs to be defined to book histos
@@ -73,7 +71,8 @@ StatusCode HltVertexMaker::initialize() {
 
   
   checkInput(m_inputTracks," input tracks ");
-  checkInput(m_inputTracks2," input tracks2 ");
+  if (m_twoContainers)
+    checkInput(m_inputTracks2," input tracks2 ");
   checkInput(m_outputVertices," output vertices ");
 
   // create filters
