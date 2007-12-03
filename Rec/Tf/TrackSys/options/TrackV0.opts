@@ -1,0 +1,6 @@
+
+RecoTrSeq.Members += { "TrackV0Finder" } ;
+FitDownstream.Fitter.StateAtBeamLine = true ;
+PreFitDownstream.Fitter.StateAtBeamLine = true ;
+ToolSvc.TrackFitExtrapolator.MaterialLocator = "SimplifiedMaterialLocator" ;
+ToolSvc.TrackInterpolator.Extrapolator.MaterialLocator = "SimplifiedMaterialLocator" ;

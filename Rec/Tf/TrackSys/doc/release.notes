@@ -4,9 +4,12 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-12-03 - Wouter Hulsbergen
+ - Added TrackV0.opts 
+
 !============================ TrackSys v4r12 2007-12-03 ======================
 ! 2007-11-30 - Wouter Hulsbergen
-  - Removed reference to TsaSeedReferenceCreator in Fitting.opts
+ - Removed reference to TsaSeedReferenceCreator in Fitting.opts
 
 !============================ TrackSys v4r11 2007-11-05 ======================
 ! 2007-11-05 - Marco Cattaneo
