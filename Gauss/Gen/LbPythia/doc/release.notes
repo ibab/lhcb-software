@@ -4,8 +4,13 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-12-03 - Gloria Corti
+ - Convert file from DOS to Unix, to allow options to be parsed by python
+   . options/Pythia64.opts
+
 ! 2007-11-30 - Patrick Robbe 
- - options/Pythia64.opts: new options for Pythia 6.4 (with new MI)
+ - New options for Pythia 6.4 (with new MI)
+   + options/Pythia64.opts
 
 !========================= LbPythia v5r3 2007-10-10 ==========================
 ! 2007-10-10 - Gloria Corti for Neal Guiessaz
