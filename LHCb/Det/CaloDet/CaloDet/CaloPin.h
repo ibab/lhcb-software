@@ -78,11 +78,6 @@ public:
     s << m_code << "(" << sideName << " : " << box << "." << index << ")";
     m_code = s.str();
   }
-  void setFELocation(int crate, int slot, int adc)  {
-    m_crate = crate;
-    m_slot = slot;
-    m_adc = adc;
-  }
   
 
 private:
@@ -92,9 +87,6 @@ private:
   int m_side;
   int m_index;
   int m_box;
-  int m_crate;
-  int m_slot;
-  int m_adc;
   std::vector<int> m_area;
   std::vector<int> m_fCol;
   std::vector<int> m_fRow;

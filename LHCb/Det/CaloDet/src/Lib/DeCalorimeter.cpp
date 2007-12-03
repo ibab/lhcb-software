@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.41 2007-08-23 17:53:40 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.42 2007-12-03 16:22:41 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -51,6 +51,7 @@ DeCalorimeter::DeCalorimeter( const std::string& name )
   ,  m_maxEtSlope        ( 0.0  * Gaudi::Units::GeV )
   ,  m_adcMax            ( 4095       )
   ,  m_pedShift          ( 0.6        )
+  ,  m_pinPedShift       ( 5.9        )
   ,  m_activeToTotal     ( 6.         )
   //
   ,  m_subCalos          () 
@@ -150,10 +151,11 @@ StatusCode DeCalorimeter::initialize()
     return StatusCode::FAILURE;
   }
 
-  setEtInCenter   ( gain->paramAsDouble( "EtInCenter"    ) ) ;
-  setEtSlope      ( gain->paramAsDouble( "EtSlope"       ) ) ;
-  setActiveToTotal( gain->paramAsDouble( "ActiveToTotal" ) ) ;
-  setPedestalShift( gain->paramAsDouble( "PedShift"      ) ) ;
+  setEtInCenter   ( gain->paramAsDouble( "EtInCenter"      ) ) ;
+  setEtSlope      ( gain->paramAsDouble( "EtSlope"         ) ) ;
+  setActiveToTotal( gain->paramAsDouble( "ActiveToTotal"   ) ) ;
+  setPedestalShift( gain->paramAsDouble( "PedShift"        ) ) ;
+  setPinPedestalShift( gain->paramAsDouble( "PinPedShift"  ) ) ;
 
 
   Condition* reco = condition( "Reco" );
@@ -699,7 +701,7 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
     int side      = temp[++ll]; // 0 = Left ; 1 = Right
     int crate     = temp[++ll];
     int slot      = temp[++ll];
-    int adc       = temp[++ll];
+    int channel   = temp[++ll]; // == readout channel numbering ( WARNING != ADC numbering)
     int cLed      = temp[++ll];
     int rLed      = temp[++ll];
     int nReg      = temp[++ll];
@@ -721,46 +723,58 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
       lCol2      = temp[++ll];
       lRow2      = temp[++ll];
     }
-    kk++;
     // Define a CaloCellId for PIN-diode : 
     // area = m_pinArea,  
-    // relative PinRow/PinCol derives from adc 
+    // relative PinRow/PinCol derives from channel according to standard FEB usage
     // absolute PinRow/PinCol according to Card condDB 
 
     // Relative position within card (8x4)
-    int pinRow = (int) adc/nColCaloCard;
-    int pinCol = adc - pinRow * nColCaloCard;
+    int pinRow = (int) channel/nColCaloCard;
+    int pinCol = channel - pinRow * nColCaloCard;
     // Absolute Row & Col wrt to CardParam
     int iCard = cardIndexByCode( crate , slot );
     if( 0 > iCard ){
       msg << MSG::ERROR << " No FE-Card defined in crate/slot "
           << crate << "/" << slot << endreq;
-      return StatusCode::FAILURE;
-      
+      return StatusCode::FAILURE; 
     }
     LHCb::CaloCellID pinId(m_caloIndex, 
                            m_pinArea, 
                            m_feCards[iCard].firstRow() + pinRow, 
                            m_feCards[iCard].firstColumn() + pinCol );    
     
-    CaloPin pin(pinId);
-    pin.addCaloRegion(area, fCol,fRow,lCol,lRow);
-    if( area2 >= 0)pin.addCaloRegion(area2,fCol2,fRow2,lCol2,lRow2); // Hcal Leds can be  distributed on 2 areas
-    pin.setPinLocation(box,pinIndex,side);
-    pin.setFELocation(crate,slot,adc);
-    m_pins.addEntry( pin  , pinId ); // store CaloPin    
-    msg << MSG::DEBUG << "PIN diode " << kk << " " << pin << endreq;
 
 
-    // built a new VALID 'virtual' cell associated with the PIN 
-    m_cells.addEntry(CellParam(pinId),pinId);
-    m_cells[pinId].addPin(pinId);
-    m_cells[pinId].setValid( true ); 
-    m_cells[pinId].setFeCard( iCard, pinCol , pinRow);
-    // update FE-Card
-    std::vector<LHCb::CaloCellID>& ids = m_feCards[iCard].ids();
-    ids[adc] = pinId;
-    
+    CaloPin pin;
+    if( 0 <=  m_pins.index(pinId) ) {      
+      // the caloPin already exist
+      pin = m_pins[pinId];      
+      if( box != pin.box() || pinIndex != pin.index() || side != pin.side() ){
+        msg << MSG::ERROR << "PIN-diode with same ID but different location already exists " << endreq;
+        return StatusCode::FAILURE;
+      }
+      msg << MSG::DEBUG << "Extended definition for an existing  PIN-diode is found  " << endreq;
+    }else{
+      // create a new one and store it
+      pin = CaloPin(pinId);
+      pin.setPinLocation(box,pinIndex,side);
+      m_pins.addEntry( pin  , pinId );
+      // built a new VALID 'virtual' cell associated with the PIN 
+      m_cells.addEntry(CellParam(pinId),pinId);
+      m_cells[pinId].addPin(pinId);
+      m_cells[pinId].setValid( true ); 
+      m_cells[pinId].setFeCard( iCard, pinCol , pinRow);
+      // update FE-Card
+      std::vector<LHCb::CaloCellID>& ids = m_feCards[iCard].ids();
+      ids[channel] = pinId;
+      kk++;
+      msg << MSG::DEBUG << "PIN diode " << kk << "  ------" << endreq;    
+    }
+    // update CaloRegion
+    m_pins[pinId].addCaloRegion(area, fCol,fRow,lCol,lRow);
+    if( area2 >= 0)m_pins[pinId].addCaloRegion(area2,fCol2,fRow2,lCol2,lRow2); // Hcal Leds can be  distributed on 2 areas
+
+    msg << MSG::DEBUG << "-->"  << m_pins[pinId] << endreq;    
 
     // Built the Led system
     int rSize = (lRow-fRow+1)/rLed;
@@ -816,6 +830,8 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
       }
     }
     
+
+
  
     // Link to cell
     std::vector<int>& leds = m_pins[pinId].leds();

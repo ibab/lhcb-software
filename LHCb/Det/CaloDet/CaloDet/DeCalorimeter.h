@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.31 2007-08-23 17:53:40 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.32 2007-12-03 16:22:41 odescham Exp $ 
 // ============================================================================
 #ifndef       CALODET_DECALORIMETER_H
 #define       CALODET_DECALORIMETER_H 1
@@ -123,6 +123,8 @@ public:
   { m_zOffset = zOffset; }
   void setPedestalShift( const double pedShift ) 
   { m_pedShift = pedShift; }
+  void setPinPedestalShift( const double pedShift ) 
+  { m_pinPedShift = pedShift; }
 
   ///  retrieve max et in center  
   double        maxEtInCenter () const { return m_maxEtInCenter ; }; 
@@ -137,6 +139,7 @@ public:
   double        zSize         () const { return m_zSize         ; };
   double        zOffset       () const { return m_zOffset       ; };  
   double        pedestalShift () const { return m_pedShift      ; };  
+  double        pinPedestalShift () const { return m_pinPedShift  ; };  
 
 
   ///  validity flag for the cell 
@@ -311,6 +314,7 @@ private:
   int      m_adcMax;  
   ///  Pedestal shift
   double   m_pedShift;
+  double   m_pinPedShift;
   ///  Convertion from activeE() to energy seen 
   double   m_activeToTotal;
   ///  Z of the shower maximum in the local frame.
