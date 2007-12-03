@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.14 2007-12-03 16:36:21 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.15 2007-12-03 16:47:22 hernando Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -217,6 +217,8 @@ Hlt::TrackBiFunction* HltFunctionFactory::trackBiFunction(const std::string& fn)
     bfun = new Hlt::DeltaP();
   } else if (name == "DimuonMass") {
     bfun = new Hlt::DimuonMass();
+  } else if (name == "SumPT") {
+    bfun = new Hlt::SumPT();
   }
   
   if (!bfun) fatal() << " requested track bifunction " << name

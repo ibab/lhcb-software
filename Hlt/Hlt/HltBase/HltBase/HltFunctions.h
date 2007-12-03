@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.12 2007-12-03 16:34:29 hernando Exp $
+// $Id: HltFunctions.h,v 1.13 2007-12-03 16:47:09 hernando Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -369,6 +369,17 @@ namespace Hlt {
   };
 
   
+  class SumPT : public Hlt::TrackBiFunction {
+  public:
+    explicit SumPT() {}
+    double operator() (const LHCb::Track& track1,
+                       const LHCb::Track& track2) const {
+      return track1.pt()+track2.pt();
+    }
+    Estd::bifunction<LHCb::Track,LHCb::Track>* clone() const
+    {return new SumPT();}
+  };
+
   class VertexSumPT : public Hlt::VertexFunction {
   public:
     explicit VertexSumPT() {}
