@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusteringTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusteringTool.cpp,v 1.8 2007-12-03 13:49:32 jonrob Exp $
+ * $Id: RichHPDPixelClusteringTool.cpp,v 1.9 2007-12-03 14:05:33 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -54,14 +54,13 @@ StatusCode HPDPixelClusteringTool::initialize()
 const Rich::HPDPixelClusters *
 HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) const
 {
-
-  // Make a local pixel data object
-  HPDPixelClusters * pixelData = new HPDPixelClusters( smartIDs );
-
   // make sure pixels are sorted ok
   // this should be automatic via decoding but can do it here to be sure
   // as because the vector should be in the correct order, it should be v fast
   SmartIDSorter::sortByRegion(smartIDs);
+
+  // Make a local pixel data object
+  HPDPixelClusters * pixelData = new HPDPixelClusters( smartIDs );
 
   // loop over pixels
   // requires them to be sorted by row then column
