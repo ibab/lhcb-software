@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-12-03 - Chris Jones
+ - Update RICH options (disabled by default)
+
 ! 2007-11-29 - Gerhard Raven
  - Follow change in HltBase to use Histo1D properties
 

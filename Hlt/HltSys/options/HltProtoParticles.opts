@@ -45,15 +45,21 @@ HltMuonID.MuonTrackLocation = "Hlt/Track/Muon";
 // C.Jones : RICH options
 // Disabled by default. To enable uncomment the lines below
 //----------------------------------------------------------------------------------------------------
-//#include "$RICHHLTSYSOPTS/RecoHLTToolPara.opts"
-//#include "$RICHHLTSYSOPTS/RecoHLTAlgs.opts"
+
+// Global algorithm, using all three radiators
+//#include "$RICHHLTSYSOPTS/GlobalPID_AllRads.opts"
+
+// Global algorithm, using only the gas radiators (faster, but no low P PID)
+//#include "$RICHHLTSYSOPTS/GlobalPID_GasRads.opts"
+
+// Local algorithm (fastest)
+#include "$RICHHLTSYSOPTS/LocalPID.opts"
+
 // temporary, to use the cleaned forward tracks
 ToolSvc.HLT.RichTrackCreator.TracksLocation = "Hlt/Track/ForwardCLEANED";
-// uncomment to use aerogel as well as gas radiators (low P ID)
-//                                                       Aero  C4F10 CF4
-ToolSvc.HLT.RichTrackCreator.TrSegMaker.UseRadiators = { true, true, true };
+
 // Explicitly run the RICH reco sequence
-SeqHltCharged.Members += { "GaudiSequencer/HltRICHReco" };
+//SeqHltCharged.Members += { "GaudiSequencer/HltRICHReco" };
 // ... or on-demand only when really needed
 //DataOnDemandSvc.Algorithms += {"DATA='/Event/Rec/Rich/HltPIDs' TYPE='GaudiSequencer/HltRICHReco'"};
 //----------------------------------------------------------------------------------------------------
@@ -99,6 +105,17 @@ HltNoPIDsKaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 HltNoPIDsKaons.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
 HltNoPIDsKaons.PhysDesktop.NoPIDsParticleMaker.Particle =  "kaon" ;
 HltNoPIDsKaons.DecayDescriptor = "Kaon" ;
+
+// CRJ : Hack to make the 'NoPIDs' kaons use the RICH - Easy way to get everything downstream using the RICH
+/*
+HltNoPIDsKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+HltNoPIDsKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+HltNoPIDsKaons.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/Charged";
+HltNoPIDsKaons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon"} ;
+HltNoPIDsKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+HltNoPIDsKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {"RequiresDet='RICH' CombDLL(k-pi)>'-5.0'"} ;
+HltNoPIDsKaons.DecayDescriptor = "Kaon" ;
+*/
 
 //---------------------------------------------------------------------
 // Kaons using RICH HLT reco results
