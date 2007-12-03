@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiTrigger.xml,v 1.8 2007-11-28 18:09:38 ibelyaev Exp $ 
+     * $Id: LoKiTrigger.xml,v 1.9 2007-12-03 16:51:08 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -10,61 +10,56 @@
 
 <lcgdict>
   
-  <class pattern   = "std::unary_function<*LHCb::Tr*,double>"          />
-  <class pattern   = "std::unary_function<*LHCb::Tr*,bool>"            />
-  <class pattern   = "std::unary_function<*LHCb::Re*,double>"          />
-  <class pattern   = "std::unary_function<*LHCb::Re*,bool>"            />
-  <class pattern   = "std::binary_function<*LHCb::Tr*,*LHCb::Tr*,bool>" />
-  <class pattern   = "std::binary_function<*LHCb::Tr*,*LHCb::Re*,bool>" />
-  <class pattern   = "std::binary_function<*LHCb::Re*,*LHCb::Re*,bool>" />
-  <class pattern   = "std::binary_function<*LHCb::Tr*,*LHCb::Tr*,double>" />
-  <class pattern   = "std::binary_function<*LHCb::Tr*,*LHCb::Re*,double>" />
-  <class pattern   = "std::binary_function<*LHCb::Re*,*LHCb::Re*,double>" />
-
-
+  <class pattern   = "std::unary_function<*LHCb::Tr*>"          />
+  <class pattern   = "std::unary_function<*LHCb::Re*>"          />
+  <class pattern   = "std::binary_function<*LHCb::Tr*>"          />
+  <class pattern   = "std::binary_function<*LHCb::Re*>"          />
 
   <class pattern   = "LoKi::Functor<*LHCb::Tr*>"                 />
-  <class pattern   = "LoKi::BasicFunctors<*LHCb::Tr*>"           />
+  <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::Tr*>"      />
   <class pattern   = "LoKi::Constant<*LHCb::Tr*>"                />
-  <class pattern   = "LoKi::BooleanConstant<*LHCb::Tr*>"         />
-  <class pattern   = "LoKi::PredicateFromPredicate<*LHCb::Tr*>"  />
-  <class pattern   = "LoKi::FunctionFromFunction<*LHCb::Tr*>"    />
-
-  <class pattern   = "LoKi::Functor<*LHCb::RecV*>"                 />
-  <class pattern   = "LoKi::BasicFunctors<*LHCb::RecV*>"           />
-  <class pattern   = "LoKi::Constant<*LHCb::RecV*>"                />
-  <class pattern   = "LoKi::BooleanConstant<*LHCb::RecV*>"         />
-  <class pattern   = "LoKi::PredicateFromPredicate<*LHCb::RecV*>"  />
-  <class pattern   = "LoKi::FunctionFromFunction<*LHCb::RecV*>"    />
-
+  <class pattern   = "LoKi::Functor<*LHCb::Re*>"                 />
+  <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::Re*>"      />
+  <class pattern   = "LoKi::Constant<*LHCb::Re*>"                />
   
   <class pattern   = "LoKi::HltBinders::HltBin*"      />
   <class pattern   = "LoKi::HltBinders::BinderFun*"   />
   <class pattern   = "LoKi::HltBinders::BinderValue*" />
   <class name      = "LoKi::Dicts::HltBind" />
   
-
+  
   <class pattern   = "LoKi::Tracks::*"                        />
   <class pattern   = "LoKi::RecVertices::*"                   />
   <class pattern   = "LoKi::Trigger::*"                       />
   
-  <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::T*>"    />
   <class pattern   = "LoKi::Dicts::FunCalls<*LHCb::T*>"    />
   <class pattern   = "LoKi::Dicts::CutCalls<*LHCb::T*>"    />
-  <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::R*>"    />
   <class pattern   = "LoKi::Dicts::FunCalls<*LHCb::R*>"    />
   <class pattern   = "LoKi::Dicts::CutCalls<*LHCb::R*>"    />
+  
+  <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::T*>"    />
+  <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::R*>"    />
+  <class pattern   = "LoKi::Dicts::CutsOps<*LHCb::T*>"    />
+  <class pattern   = "LoKi::Dicts::CutsOps<*LHCb::R*>"    />
+  <class pattern   = "LoKi::Dicts::MapsOps<*LHCb::T*>"    />
+  <class pattern   = "LoKi::Dicts::MapsOps<*LHCb::R*>"    />
+  <class pattern   = "LoKi::Dicts::PipeOps<*LHCb::T*>"    />
+  <class pattern   = "LoKi::Dicts::PipeOps<*LHCb::R*>"    />
+  <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::T*>"  />
+  <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::R*>"  />
+  <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::T*>" />
+  <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::R*>" />
   
   <class pattern   = "LoKi::Reference<*>" />
   <class pattern   = "LoKi::Holder<*>"    />
   <class pattern   = "std::pair<*LHCb::Track*>"     />
   <class pattern   = "std::pair<*LHCb::RecVertex*>" />
-
-
+  
+  
   <function pattern = "LoKi::Dicts::TrInfo::info*" />
   
   <enum name= "LHCb::Track::Flags"     />
-
+  
   <class pattern   = "LoKi::ITrHybrid**" />
   <class pattern   = "LoKi::Hybrid::*"   />
   

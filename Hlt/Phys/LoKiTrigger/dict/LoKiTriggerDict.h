@@ -1,4 +1,4 @@
-// $Id: LoKiTriggerDict.h,v 1.6 2007-11-28 18:09:38 ibelyaev Exp $
+// $Id: LoKiTriggerDict.h,v 1.7 2007-12-03 16:51:08 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -22,42 +22,6 @@
 namespace LoKi
 {
   // ==========================================================================
-  template <>
-  class TheSame<LHCb::Track> : public LoKi::Functor<LHCb::Track,bool>
-  {
-  private:
-    typedef LHCb::Track TYPE ;
-    /// argument type
-    typedef LoKi::Functor<TYPE,bool>::argument argument  ; 
-    /// result type 
-    typedef LoKi::Functor<TYPE,bool>::result_type result_type ; 
-  public:
-    /// constructor form the value 
-    TheSame ( argument /* value */ ) 
-      : LoKi::Functor<TYPE,bool>() 
-    {}
-    /// copy constructor 
-    TheSame
-    ( const TheSame& right ) 
-      : LoKi::AuxFunBase         ( right ) 
-      , LoKi::Functor<TYPE,bool> ( right )
-    {}
-    /// virtual destructor 
-    virtual ~TheSame() {}
-    /// MANDATORY: clone method ("virtual constructor")
-    virtual  TheSame* clone() const { return new TheSame( *this ) ; }
-    /// MANDATORY: the only one essential method 
-    virtual result_type operator() ( argument /* object */ ) const 
-    { return false ; }
-    /// the basic printout method 
-    virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << "(SAME?)"; }
-  private :
-    // the default contructor is disabled
-    TheSame();
-  private:
-  };
-  // ==========================================================================
   namespace Dicts 
   {
     // ========================================================================
@@ -72,8 +36,58 @@ namespace LoKi
       typedef LHCb::Track                         Type ;
       typedef LoKi::BasicFunctors<Type>::Function Fun  ;
     public:
+      // __call__
       static Fun::result_type __call__ 
-      ( const Fun& fun  , const Type& o ) { return fun ( o ) ; }
+      ( const Fun& fun  , const Type&           o ) { return fun ( o ) ; }
+      // __call__
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , const Type*           o ) { return fun ( *o ) ; }
+      // __call__
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , const SmartRef<Type>& o ) { return fun ( *o.target() ) ; }
+    public:
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const LHCb::Track::Vector&          o ) 
+      {
+        std::vector<Fun::result_type> res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ;
+      }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const LHCb::Track::ConstVector&     o ) 
+      {
+        std::vector<Fun::result_type> res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ;
+      }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const LHCb::Track::Container&       o ) 
+      {
+        std::vector<Fun::result_type> res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ;
+      }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const SmartRefVector<LHCb::Track>&  o ) 
+      {
+        std::vector<Fun::result_type> res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ;
+      }
+      // __rrshift__
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , const Type&           o ) { return fun ( o ) ; }
+      // __rrshift__
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , const SmartRef<Type>& o ) { return fun ( *o.target() ) ; }
     } ;
     // ========================================================================
     template <>
@@ -83,8 +97,59 @@ namespace LoKi
       typedef LHCb::RecVertex                      Type ;
       typedef LoKi::BasicFunctors <Type>::Function Fun  ;
     public:
+      // __call__
       static Fun::result_type __call__ 
-      ( const Fun& fun  , const Type& o ) { return fun ( o ) ; }
+      ( const Fun& fun  , const Type&           o ) 
+      { return fun ( o           ) ; }
+      // __call__
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , const SmartRef<Type>& o ) 
+      { return fun ( *o.target() ) ; }
+    public:
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const LHCb::RecVertex::Vector&          o ) 
+      {
+        std::vector<Fun::result_type> res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ;
+      }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const LHCb::RecVertex::ConstVector&     o ) 
+      {
+        std::vector<Fun::result_type> res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ;
+      }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const LHCb::RecVertex::Container&       o ) 
+      {
+        std::vector<Fun::result_type> res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ;
+      }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const SmartRefVector<LHCb::RecVertex>&  o ) 
+      {
+        std::vector<Fun::result_type> res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ;
+      }      
+      // __rrshift__
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , const Type&           o ) 
+      { return fun ( o           ) ; }
+      // __rrshift__
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , const SmartRef<Type>& o ) 
+      { return fun ( *o.target() ) ; }
     } ;
     // ========================================================================
     template <>
@@ -94,10 +159,15 @@ namespace LoKi
       typedef LoKi::TrackTypes::TrackPair         Type ;
       typedef LoKi::BasicFunctors<Type>::Function Fun  ;
     public:
+      // __call__ 
       static Fun::result_type __call__ 
       ( const Fun& fun          , 
         Fun::first_argument  a1 , 
         Fun::second_argument a2 ) { return fun ( a1 , a2 ) ; }
+    public:
+      // __rrshift__ 
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun , Fun::argument  o ) { return fun ( o ) ; }
     } ;
     // ========================================================================
     template <>
@@ -111,6 +181,10 @@ namespace LoKi
       ( const Fun& fun          , 
         Fun::first_argument  a1 , 
         Fun::second_argument a2 ) { return fun ( a1 , a2 ) ; }
+    public:
+      // __rrshift__ 
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun , Fun::argument  o ) { return fun ( o ) ; }
     } ;    
     // ========================================================================
     template <>
@@ -124,6 +198,10 @@ namespace LoKi
       ( const Fun& fun          , 
         Fun::first_argument  a1 , 
         Fun::second_argument a2 ) { return fun ( a1 , a2 ) ; }
+    public:
+      // __rrshift__ 
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun , Fun::argument  o ) { return fun ( o ) ; }
     } ;
     // ========================================================================
     template <>
@@ -133,9 +211,78 @@ namespace LoKi
       typedef LHCb::Track           Type ;
       typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
     public:
+      // __call__
       static Fun::result_type __call__ 
       ( const Fun& fun  , 
-        const Type&           o ) { return fun ( o ) ; }
+        const Type&           o ) { return fun (  o           ) ;  }
+      // __call__
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , 
+        const Type*           o ) { return fun ( *o           ) ;  }
+      // __call__
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , 
+        const SmartRef<Type>& o ) { return fun ( *o.target()  ) ; }
+    public:
+      // ======================================================================
+      // __rrshift__
+      static Type::Vector __rrshift__ 
+      ( const Fun& fun  , const Type::Vector&               o ) 
+      { 
+        Type::Vector res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply_filter 
+          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }
+      // __rrshift__
+      static Type::Vector __rrshift__ 
+      ( const Fun& fun  , const Type::ConstVector&          o ) 
+      {
+        /// yes! I know well that it is bad, but let me hope it is no so bad... 
+        const Type::Vector& _o = reinterpret_cast<const Type::Vector&>  ( o ) ;
+        Type::Vector res ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply_filter 
+          ( _o.begin() , _o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }
+      // __rrshift__
+      static Type::Vector __rrshift__ 
+      ( const Fun& fun  , const Type::Container&            o ) 
+      { 
+        Type::Container& _o = const_cast<Type::Container&>( o ) ;
+        Type::Vector res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply_filter 
+          ( _o.begin() , _o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }   
+      // __rrshift__
+      static Type::ConstVector __rrshift__ 
+      ( const Fun& fun  , const SmartRefVector<Type>&       o ) 
+      { 
+        SmartRefVector<Type>& _o = const_cast<SmartRefVector<Type>&>( o ) ;
+        Type::ConstVector res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply_filter 
+          ( _o.begin() , _o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }      
+      // __rrshift__
+      static Fun::result_type  __rrshift__ 
+      ( const Fun& fun  , const Type&           o ) 
+      { return fun (  o          ) ; }
+      // __rrshift__
+      static Fun::result_type  __rrshift__ 
+      ( const Fun& fun  , const SmartRef<Type>& o ) 
+      { return fun ( *o.target() ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      static LoKi::FunctorFromFunctor<Type,bool> __rshift__            
+      ( const Fun& fun  , const Fun&                        o ) 
+      { return fun >> o  ; }
     } ;
     // ========================================================================
     template <>
@@ -145,8 +292,79 @@ namespace LoKi
       typedef LHCb::RecVertex       Type ;
       typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
     public:
+      // __call__
       static Fun::result_type __call__ 
-      ( const Fun& fun , const Type& o ) { return fun ( o ) ; }
+      ( const Fun& fun , const Type&           o ) 
+      { return fun ( o           ) ; }
+      // __call__
+      static Fun::result_type __call__ 
+      ( const Fun& fun , const Type*           o ) 
+      { return fun ( *o          ) ; }
+      // __call__
+      static Fun::result_type __call__ 
+      ( const Fun& fun , const SmartRef<Type>& o ) 
+      { return fun ( *o.target() ) ; }
+    public:      
+      // ======================================================================
+      // __rrshift__
+      static Type::Vector __rrshift__ 
+      ( const Fun& fun  , const Type::Vector&               o ) 
+      { 
+        Type::Vector res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply_filter 
+          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }
+      // __rrshift__
+      static Type::Vector __rrshift__ 
+      ( const Fun& fun  , const Type::ConstVector&          o ) 
+      { 
+        /// yes! I know well that it is bad, but let me hope it is no so bad... 
+        const Type::Vector& _o = reinterpret_cast<const Type::Vector&>  ( o ) ;
+        Type::Vector res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply_filter 
+          ( _o.begin() , _o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }
+      // __rrshift__
+      static Type::Vector __rrshift__ 
+      ( const Fun& fun  , const Type::Container&            o ) 
+      { 
+        Type::Container& _o = const_cast<Type::Container&>( o ) ;
+        Type::Vector res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply_filter 
+          ( _o.begin() , _o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }   
+      // __rrshift__
+      static Type::ConstVector __rrshift__ 
+      ( const Fun& fun  , const SmartRefVector<Type>&       o ) 
+      { 
+        SmartRefVector<Type>& _o = const_cast<SmartRefVector<Type>&>( o ) ;
+        Type::ConstVector res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply_filter 
+          ( _o.begin() , _o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }      
+      // __rrshift__
+      static Fun::result_type  __rrshift__ 
+      ( const Fun& fun  , const Type&           o ) 
+      { return fun (  o          ) ; }
+      // __rrshift__
+      static Fun::result_type  __rrshift__ 
+      ( const Fun& fun  , const SmartRef<Type>& o ) 
+      { return fun ( *o.target() ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,bool> __rshift__            
+      ( const Fun& fun  , const Fun&                        o ) 
+      { return fun >> o  ; }
     } ;
     // ========================================================================
     template <>
@@ -156,10 +374,20 @@ namespace LoKi
       typedef LoKi::TrackTypes::TrackPair Type ;
       typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
     public:
+      // __call__
       static Fun::result_type __call__ 
       ( const Fun& fun  , 
         Fun::first_argument  a1 , 
         Fun::second_argument a2 ) { return fun ( a1 , a2 ) ; }
+    public:
+      // __rrshift__
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , Fun::argument a ) { return fun ( a ) ; }
+    public:
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,bool> __rshift__            
+      ( const Fun& fun  , const Fun&                        o ) 
+      { return fun >> o  ; }      
     } ;
     // ========================================================================
     template <>
@@ -169,10 +397,20 @@ namespace LoKi
       typedef LoKi::TrackTypes::TrackVertexPair Type ;
       typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
     public:
+      // __call__
       static Fun::result_type __call__ 
       ( const Fun& fun  , 
         Fun::first_argument  a1 , 
         Fun::second_argument a2 ) { return fun ( a1 , a2 ) ; }
+    public:
+      // __rrshift__
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , Fun::argument a ) { return fun ( a ) ; }
+    public:
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,bool> __rshift__            
+      ( const Fun& fun  , const Fun&                        o ) 
+      { return fun >> o  ; }      
     } ;
     // ========================================================================
     template <>
@@ -186,6 +424,15 @@ namespace LoKi
       ( const Fun& fun  , 
         Fun::first_argument  a1 , 
         Fun::second_argument a2 ) { return fun ( a1 , a2 ) ; }
+    public:
+      // __rrshift__
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , Fun::argument a ) { return fun ( a ) ; }
+    public:
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,bool> __rshift__            
+      ( const Fun& fun  , const Fun&                        o ) 
+      { return fun >> o  ; }      
     } ;
     // ========================================================================
   } // end of namespace LoKi::Dicts
@@ -203,11 +450,26 @@ namespace
     LoKi::Dicts::Funcs<LoKi::TrackTypes::TrackVertexPair>     m_f4  ;
     LoKi::Dicts::Funcs<LoKi::TrackTypes::VertexPair>          m_f5  ;
     // operators 
-    LoKi::Dicts::FuncOps<LHCb::Track>                         m_o1  ;
-    LoKi::Dicts::FuncOps<LHCb::RecVertex>                     m_o2  ;
+    LoKi::Dicts::FuncOps<LHCb::Track,LHCb::Track*>            m_o1  ;
+    LoKi::Dicts::FuncOps<LHCb::RecVertex,LHCb::RecVertex*>    m_o2  ;
     LoKi::Dicts::FuncOps<LoKi::TrackTypes::TrackPair>         m_o3  ;
     LoKi::Dicts::FuncOps<LoKi::TrackTypes::TrackVertexPair>   m_o4  ;
     LoKi::Dicts::FuncOps<LoKi::TrackTypes::VertexPair>        m_o5  ;
+    // operators 
+    LoKi::Dicts::CutsOps<LHCb::Track,LHCb::Track*>            m_co1  ;
+    LoKi::Dicts::CutsOps<LHCb::RecVertex,LHCb::RecVertex*>    m_co2  ;
+    LoKi::Dicts::CutsOps<LoKi::TrackTypes::TrackPair>         m_co3  ;
+    LoKi::Dicts::CutsOps<LoKi::TrackTypes::TrackVertexPair>   m_co4  ;
+    LoKi::Dicts::CutsOps<LoKi::TrackTypes::VertexPair>        m_co5  ;
+    // functionals 
+    LoKi::Dicts::MapsOps<LHCb::Track*>                        m_fo1  ;
+    LoKi::Dicts::MapsOps<LHCb::RecVertex*>                    m_fo2  ;    
+    LoKi::Dicts::PipeOps<LHCb::Track*,LHCb::Track>            m_fo3  ;
+    LoKi::Dicts::PipeOps<LHCb::RecVertex*,LHCb::RecVertex>    m_fo4  ;    
+    LoKi::Dicts::FunValOps<LHCb::Track*>                      m_fo5  ;
+    LoKi::Dicts::FunValOps<LHCb::RecVertex*>                  m_fo6  ;    
+    LoKi::Dicts::ElementOps<LHCb::Track*,LHCb::Track>         m_fo7  ;
+    LoKi::Dicts::ElementOps<LHCb::RecVertex*,LHCb::RecVertex> m_fo8  ;    
     // calls 
     LoKi::Dicts::FunCalls<LHCb::Track>                        m_cf1 ;
     LoKi::Dicts::FunCalls<LHCb::RecVertex>                    m_cf2 ;
