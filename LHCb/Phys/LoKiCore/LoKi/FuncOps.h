@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.7 2007-12-03 12:03:22 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.8 2007-12-03 12:51:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -317,12 +317,12 @@ namespace LoKi
       // __rrshift__ 
       static std::vector<double>
       __rrshift__ ( const Map& fun , const std::vector<TYPE>& val ) 
-      { return val >> fun ; }
+      { return fun ( val ) ; }
       // __rrshift__ 
       static std::vector<double>
       __rrshift__ ( const Map& fun , 
                     const typename std::vector<TYPE>::value_type& val ) 
-      { return val >> fun ; }
+      { return fun ( std::vector<TYPE>( 1 , val ) ) ; }
     public:
       // __tee__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> > 
@@ -380,12 +380,12 @@ namespace LoKi
       // __rrshift__ 
       static std::vector<TYPE>
       __rrshift__ ( const Pipe& fun , const std::vector<TYPE>& val ) 
-      { return val >> fun ; }
+      { return fun ( val ) ; }
       // __rrshift__ 
       static std::vector<TYPE>
       __rrshift__ ( const Pipe& fun , 
                     const typename std::vector<TYPE>::value_type& val ) 
-      { return val >> fun ; }
+      { return fun ( std::vector<TYPE>( 1 , val ) ) ; }
     public:
       // __tee__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> > 
@@ -420,12 +420,12 @@ namespace LoKi
       // __rrshift__ 
       static double 
       __rrshift__ ( const FunVal& fun , const std::vector<TYPE>& val ) 
-      { return val >> fun ; }
+      { return fun ( val ) ; }
       // __rrshift__ 
       static double 
       __rrshift__ ( const FunVal& fun , 
                     const typename std::vector<TYPE>::value_type& val ) 
-      { return val >> fun ; }
+      { return fun ( std::vector<TYPE>( 1 , val ) ) ; }
     public:
       // __tee__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> > 
@@ -460,12 +460,12 @@ namespace LoKi
       // __rrshift__ 
       static TYPE
       __rrshift__ ( const Element& fun , const std::vector<TYPE>& val ) 
-      { return val >> fun ; }
+      { return fun ( val ) ; }
       // __rrshift__ 
       static TYPE
       __rrshift__ ( const Element& fun , 
                     const typename std::vector<TYPE>::value_type& val ) 
-      { return val >> fun ; }
+      { return fun ( std::vector<TYPE>( 1 , val ) ) ; }
     public:
       // __tee__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> > 
