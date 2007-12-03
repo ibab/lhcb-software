@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !-----------------------------------------------------------------------------
 
+! 2007-12-2 Jose A. Hernando
+   - HltFunctions.h add DimuonMass, VertexDimuonMass and VertexSumPT functions 
+
 ! 2007-11-28 Gerhard Raven
    - HltAlgorithm.h: use 0 instead of NULL, check strings for empty instead of ""
    - HltBaseAlg: use Histo1D properties to specify histograms

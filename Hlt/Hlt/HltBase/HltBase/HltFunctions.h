@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.11 2007-08-16 17:40:17 hernando Exp $
+// $Id: HltFunctions.h,v 1.12 2007-12-03 16:34:29 hernando Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -342,6 +342,45 @@ namespace Hlt {
     {return new DOCA();}
   };  
 
+
+  class DimuonMass : public Hlt::TrackBiFunction {
+  public:
+    explicit DimuonMass() {}
+    double operator() (const LHCb::Track& track1, 
+                       const LHCb::Track& track2) const {
+      return HltUtils::invariantMass(track1,track2,
+                                     105.658369,105.658369);
+    }
+    Estd::bifunction<LHCb::Track,LHCb::Track>* clone() const
+    {return new DimuonMass();}
+  };
+
+  class VertexDimuonMass : public Hlt::VertexFunction {
+  public:
+    explicit VertexDimuonMass() {}
+    double operator() (const LHCb::RecVertex& vertex) const {
+      const LHCb::Track& track1 = *(vertex.tracks()[0]);
+      const LHCb::Track& track2 = *(vertex.tracks()[1]);
+      return HltUtils::invariantMass(track1,track2,
+                                     105.658369,105.658369);
+    }
+    Estd::function<LHCb::RecVertex>* clone() const
+    {return new VertexDimuonMass();}
+  };
+
+  
+  class VertexSumPT : public Hlt::VertexFunction {
+  public:
+    explicit VertexSumPT() {}
+    double operator() (const LHCb::RecVertex& vertex) const {
+      double pt1 = vertex.tracks()[0]->pt();
+      double pt2 = vertex.tracks()[1]->pt();
+      return pt1+pt2;
+    }
+    Estd::function<LHCb::RecVertex>* clone() const
+    {return new VertexSumPT();}
+  };
+  
 
   /* matchIDsFraction
    */
