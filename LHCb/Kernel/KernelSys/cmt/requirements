@@ -9,5 +9,5 @@ use Relations        v5r3   Kernel
 use CaloKernel       v5r1   Calo
 use MuonKernel       v4r0   Muon
 use RichKernel       v7r9   Rich
-use L0MuonKernel     v7r1   L0
+use L0MuonKernel     v7r2   L0
 use ProcessorKernel  v5r1   L0
