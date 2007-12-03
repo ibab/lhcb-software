@@ -1,4 +1,4 @@
-// $Id: TrackV0Finder.cpp,v 1.2 2007-12-03 15:39:30 wouter Exp $
+// $Id: TrackV0Finder.cpp,v 1.3 2007-12-03 16:09:24 wouter Exp $
 // Include files 
 
 
@@ -214,8 +214,9 @@ StatusCode TrackV0Finder::execute()
   const double ksmass  = m_ksProperty->mass() ;
   const double lambdamass = m_lambdaProperty->mass() ;
   
-  // Create the output container
-  LHCb::RecVertices* v0container = new LHCb::RecVertices() ;
+  // Create the output container 
+  typedef KeyedContainer<LHCb::TwoProngVertex, Containers::HashMap> TwoProngVertices;
+  TwoProngVertices* v0container = new TwoProngVertices() ;
   put(v0container, m_v0ContainerName) ;
   //LHCb::TrackworongContainer* v0container = new LHCb::TrackTwoProngContainer ;
 
