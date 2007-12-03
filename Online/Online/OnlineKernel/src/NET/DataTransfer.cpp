@@ -494,6 +494,7 @@ NetErrorCode NET::init()  {
   }
   status = ::listen (m_me.chan, 5);
   if (status == -1)  {
+    errno = ::lib_rtl_get_error();
     ::socket_close (m_me.chan);
     m_me.terminate();
     return NET_ERROR;
