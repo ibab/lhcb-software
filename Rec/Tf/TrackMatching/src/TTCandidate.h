@@ -1,9 +1,10 @@
-// $Id: TTCandidate.h,v 1.1.1.1 2007-10-09 18:11:39 smenzeme Exp $
+// $Id: TTCandidate.h,v 1.2 2007-12-03 07:07:21 cattanem Exp $
 #ifndef TRACKMATCHING_TTCANDIDATE_H
 #define TRACKMATCHING_TTCANDIDATE_H 1
 
 // Include files
 #include "GaudiKernel/KeyedObject.h"
+#include "GaudiKernel/SerializeSTL.h"
 
 // from GSL
 #include "gsl/gsl_math.h"
@@ -229,6 +230,7 @@ inline unsigned int TTCandidate::lastLayer() const
 
 inline std::ostream& TTCandidate::fillStream(std::ostream& s) const
 {
+  using GaudiUtils::operator<<;
   s << "{ "
     << " ttClusters:\t" << m_ttClusters << std::endl
     << " distances:\t" << m_distances << std::endl
