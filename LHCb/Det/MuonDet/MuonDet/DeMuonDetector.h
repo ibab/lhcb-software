@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.23 2007-11-28 08:00:21 cattanem Exp $
+// $Id: DeMuonDetector.h,v 1.24 2007-12-03 08:47:15 cattanem Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -9,10 +9,10 @@
 // Not needed here but used by many algorithms
 
 //Gaudi
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "Kernel/Packer.h"
 
 //Muon Detector
+#include "MuonDet/DeMuonChamber.h"
 #include "MuonDet/MuonFrontEndID.h"
 
 #include "MuonDet/PackMCMuonHit.h"  
@@ -25,7 +25,8 @@
 
 // Forward declarations
 class MuonChamberLayout;
-class DeMuonChamber;
+class IDataProviderSvc;
+
 
 /** @class DeMuonDetector DeMuonDetector.h MuonDet/DeMuonDetector.h
  *  
