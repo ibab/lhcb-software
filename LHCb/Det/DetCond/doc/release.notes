@@ -1,15 +1,16 @@
-# $Id: release.notes,v 1.111 2007-11-29 15:52:38 marcocle Exp $
+# $Id: release.notes,v 1.112 2007-12-03 16:49:11 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!===================== Det/DetCond v11r7 2007-12-03 ==========================
 ! 2007-11-29 - Marco Clemencic
  - Added two options to CondDBAccessSvc to control the retrial period and
    retrial time-out of CORAL. 
 
-===================== Det/DetCond v11r6 2007-09-04 ==========================
+!===================== Det/DetCond v11r6 2007-09-04 ==========================
 ! 2007-08-01 - Marco Clemencic
  - Fixed a bug connected to "lazy connection" feature. I was using an instance
    of a cool object to call a static member function. 
