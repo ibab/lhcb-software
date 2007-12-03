@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.19 2007-08-13 12:32:19 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.20 2007-12-03 13:47:49 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -70,6 +70,9 @@ namespace Rich
 
     /// Maximum ZS address value
     static const ShortType MaxZSAddress = 255;
+
+    /// Number of pixel columns in the HPD chip
+    static const ShortType NumPixelColumns = 32;
 
     //---------------------------------------------------------------------------------
 

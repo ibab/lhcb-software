@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.163 2007-11-29 10:35:22 cattanem Exp $
+! $Id: release.notes,v 1.164 2007-12-03 13:47:49 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
+
+! 2007-12-03 - Chris Jones
+ - Update various cluster objects to allow clustering of ALICE mode data
 
 !====================== RichKernel v7r9 2007-11-29 ====================
 ! 2007-11-27 - Chris Jones

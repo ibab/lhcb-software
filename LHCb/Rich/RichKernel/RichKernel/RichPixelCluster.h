@@ -5,7 +5,7 @@
  *  Header file for pixel clustering class Rich::DAQ::PixelCluster
  *
  *  CVS Log :-
- *  $Id: RichPixelCluster.h,v 1.6 2007-11-29 09:44:31 cattanem Exp $
+ *  $Id: RichPixelCluster.h,v 1.7 2007-12-03 13:47:49 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   02/02/2007
@@ -26,6 +26,7 @@
 
 // Kernel
 #include "Kernel/RichSmartID.h"
+#include "RichKernel/RichDAQDefinitions.h"
 #include "Kernel/MemPoolAlloc.h"
 
 // Boost
@@ -117,16 +118,13 @@ namespace Rich
 
   };
 
-  namespace
-  {
-    /// Number of HPD pixel rows or columns
-    static const int nPixelRowsOrCols = 32;
-  }
-
   //-----------------------------------------------------------------------------
   /** @class HPDPixelClusters RichPixelCluster.h
    *
    *  Utility class representing a set of clusters for a single HPD
+   *
+   *  @todo Update how row and column data is handled to not need to create
+   *        ALICE mode sized array when LHCb mode is in use
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   21/03/2006
@@ -142,6 +140,42 @@ namespace Rich
 
     /// Shared pointer to a HPDPixelClusters
     typedef boost::shared_ptr<HPDPixelClusters>       SharedPtn;
+
+  public:
+
+    /** Are we in LHCb or ALICE mode ?
+     *  @return Boolean indicating data mode
+     *  @retval TRUE  ALICE mode
+     *  @retval FALSE LHCb mode
+     */
+    inline bool aliceMode() const { return m_aliceMode; }
+
+    /** Set the mode (LHCb or ALICE)
+     *  @param Boolean indiciting if we are in ALICE(true) or LHCb(false) mode
+     */
+    inline void setAliceMode( const bool mode ) { m_aliceMode = mode; }
+
+    /// Maximum number of pixel columns
+    inline int nPixelCols() const { return Rich::DAQ::NumPixelColumns; }
+
+    /// Number of pixel rows (either 32 for LHCbmode or 256 for ALICE mode)
+    inline int nPixelRows() const 
+    { 
+      return ( aliceMode() ? Rich::DAQ::MaxDataSizeALICE : Rich::DAQ::MaxDataSize );
+    }
+
+    /// Returns the 'correct' row number for the given RichSmartID (either LHCb or ALICE mode)
+    inline int rowNumber( const LHCb::RichSmartID id ) const
+    {
+      return ( !aliceMode() ? id.pixelRow() :
+               ((Rich::DAQ::NumAlicePixelsPerLHCbPixel*id.pixelRow())+id.pixelSubRow()) );
+    }
+
+    /// Returns the 'correct' column number for the given RichSmartID (either LHCb or ALICE mode)
+    inline int colNumber( const LHCb::RichSmartID id ) const
+    {
+      return id.pixelCol();
+    }
 
   public:
 
@@ -260,17 +294,24 @@ namespace Rich
     /// HPD ID
     LHCb::RichSmartID m_hpdID;
 
-    /// Raw input data (false means no hit, true means hit)
-    bool m_data[nPixelRowsOrCols][nPixelRowsOrCols];
+    /** Raw input data (row,col) (false means no hit, true means hit)
+     *  @attention Hardcoding number of rows here to ALICE mode
+     */
+    bool m_data[Rich::DAQ::MaxDataSizeALICE][Rich::DAQ::NumPixelColumns];
 
-    /// Assigned cluster for each pixel
-    Cluster * m_clusters[nPixelRowsOrCols][nPixelRowsOrCols];
+    /** Assigned cluster for each pixel
+     *  @attention Hardcoding number of rows here to ALICE mode
+     */
+    Cluster * m_clusters[Rich::DAQ::MaxDataSizeALICE][Rich::DAQ::NumPixelColumns];
 
     /// Vector of all created clusters
     Cluster::PtnVector m_allclus;
 
     /// working variable, storing the last used cluster ID
     unsigned int m_lastID;
+
+    /// Are we in ALICE mode ?
+    bool m_aliceMode;  
 
   };
 
@@ -281,23 +322,14 @@ namespace Rich
 
   inline bool HPDPixelClusters::isOn( const int row, const int col ) const
   {
-    return ( row>=0 && row<nPixelRowsOrCols &&
-             col>=0 && col<nPixelRowsOrCols && (m_data[row])[col] );
+    return ( row>=0 && row<nPixelRows() &&
+             col>=0 && col<nPixelCols() && (m_data[row])[col] );
   }
 
   inline HPDPixelClusters::Cluster *
   HPDPixelClusters::getCluster( const int row, const int col ) const
   {
     return ( isOn(row,col) ? (m_clusters[row])[col] : NULL );
-  }
-
-  inline void HPDPixelClusters::setCluster( const int row, const int col, Cluster * clus )
-  {
-    (m_clusters[row])[col] = clus;
-    LHCb::RichSmartID tmpID(m_hpdID);
-    tmpID.setPixelRow(row);
-    tmpID.setPixelCol(col);
-    clus->addPixel(tmpID);
   }
 
   inline HPDPixelClusters::Cluster *
