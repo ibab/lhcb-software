@@ -3,12 +3,12 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================= DaVinciKernel v6r9 2007-12-03 ====================
 ! 2007-12-02 - Vanya BELYAEV
  - Kernel/ICheckOverlap.h
-   add couple of templated methods for the abstratc interface ICheckOverlap
-   toallow the various containers and container adapters to be used onthe same
-   basic as the standard LHCb::Particle::ConstVector
-
+   add couple of templated methods for the abstract interface ICheckOverlap
+   to allow the various containers and container adapters to be used on the
+   same basic as the standard LHCb::Particle::ConstVector
 
 !========================= DaVinciKernel v6r8 2007-11-12 ====================
 ! 2007-10-10 - Tomasz Skwarnicki
