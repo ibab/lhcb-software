@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.8 2007-12-03 12:51:12 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.9 2007-12-03 17:44:04 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -450,12 +450,12 @@ namespace LoKi
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,double>
       __rshift__ 
       ( const Element& fun , const Func&   fun2 ) 
-      { return fun >> fun2  ; }
+      { return LoKi::Compose<std::vector<TYPE>,TYPE,double,TYPE2>( fun ,fun2 ) ; }
       // __rshift__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
       __rshift__ 
       ( const Element& fun , const Cuts&   fun2 ) 
-      { return fun >> fun2  ; }
+      { return LoKi::Compose<std::vector<TYPE>,TYPE,bool,TYPE2>( fun ,fun2 ) ; }
     public:
       // __rrshift__ 
       static TYPE
