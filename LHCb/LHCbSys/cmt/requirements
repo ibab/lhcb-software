@@ -71,7 +71,7 @@ use CaloUtils             v7r6   Calo    # Olivier Deschamps
 use RichRecBase           v3r9   Rich    # Chris Jones
 use TrackInterfaces       v3r11  Tr      # Matt Needham
 use LinkerInstances       v3r3   Event   # Eduardo Rodrigues, Thomas Ruf
-use DetCond               v11r6  Det     # Marco Clemencic
+use DetCond               v11r7  Det     # Marco Clemencic
 use CondDBEntityResolver  v4r0   Tools   # Marco Clemencic
 use CondDBUI              v2r5   Tools   # Marco Clemencic
 use SimComponents         v2r8   Sim     # Gloria Corti, Marco Cattaneo

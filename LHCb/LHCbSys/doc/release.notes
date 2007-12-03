@@ -17,7 +17,7 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
     RecEvent v2r8, TrackEvent v4r9, DAQSys v3r7, MuonDAQ v3r3, MDF v2r7,
     TrackInterfaces v3r11, DaVinciKernel v6r9, DaVinciMCKernel v2r5,
     RichRecBase v3r9, MCInterfaces v1r4, CaloUtils v7r6, SimComponents v2r8,
-    LHCbAlgs v2r13, LoKi v7r0, LoKiAlgo v7r0, LoKiAlgoMC v7r0,
+    DetCond v11r7, LHCbAlgs v2r13, LoKi v7r0, LoKiAlgo v7r0, LoKiAlgoMC v7r0,
     LoKiArrayFunctors v7r0, LoKiCore v7r0, LoKiGen v7r0, LoKiGenMC v7r0,
     LoKiMC v7r0, LoKiPhys v7r0, LoKiPhysMC v7r0
 
@@ -145,6 +145,10 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
 
 - In LHCbAlgs v2r13, MuonDet v7r1, MuonDAQ v3r3
   . Fix unchecked StatusCode
+
+- In DetCond v11r7
+  . Added two options to CondDBAccessSvc to control the retrial period and
+    retrial time-out of CORAL. 
 
 - In LoKi v7r0, LoKiAlgo v7r0, LoKiAlgoMC v7r0, LoKiArrayFunctors v7r0,
      LoKiGen v7r0, LoKiGenMC v7r0, LoKiMC v7r0, LoKiPhys v7r0, LoKiPhysMC v7r0
