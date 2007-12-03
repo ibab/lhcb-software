@@ -124,7 +124,7 @@
 	type = 'void'
 	name = 'addPID'
 	desc = 'add a PID to the vector'>
-	<arg type = 'LHCb::ParticleID' name = 'value'/> 
+	<arg type = 'LHCb::ParticleID' name = 'value' const = 'TRUE'/> 
 	<code>
 	  m_compatiblePIDs.push_back(value);
 	</code>
