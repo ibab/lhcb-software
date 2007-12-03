@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::DAQ::RawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.19 2007-11-27 12:21:03 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.20 2007-12-03 13:49:32 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -97,6 +97,7 @@ RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID ) const
         break;
       }
     }
+    if ( found_data ) break;
   }
 
   // dummy vector for cases where nothing is found

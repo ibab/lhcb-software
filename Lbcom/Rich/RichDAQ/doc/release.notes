@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2007-12-03 - Chris Jones
+ - Update pixel clustering tool to work with ALICE mode data
+
 !========================== RichDAQ v3r13 2007-11-29 =======================
 ! 2007-11-29 - Marco Cattaneo
  - Remove obsolete SerializeStl include

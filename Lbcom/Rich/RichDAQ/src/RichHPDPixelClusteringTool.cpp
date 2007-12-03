@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusteringTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusteringTool.cpp,v 1.7 2007-09-04 16:55:31 jonrob Exp $
+ * $Id: RichHPDPixelClusteringTool.cpp,v 1.8 2007-12-03 13:49:32 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -69,8 +69,8 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
         iS != smartIDs.end(); ++iS )
   {
     // get row and column data
-    const int col     = (*iS).pixelCol();
-    const int row     = (*iS).pixelRow();
+    const int col     = pixelData->colNumber(*iS);
+    const int row     = pixelData->rowNumber(*iS);
     const int lastrow = row - 1;
     const int lastcol = col - 1;
     const int nextcol = col + 1;
@@ -130,11 +130,9 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
   if ( !clustersToSplit.empty() ) pixelData->splitClusters(clustersToSplit);
 
   // print the final cluster
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << *pixelData << endreq;
-  }
+  if ( msgLevel(MSG::VERBOSE) ) { verbose() << *pixelData << endreq; }
 
-  // finally, return pointer to this cluster object
+  // finally, return a pointer to this cluster object
+  // user takes ownership at this point
   return pixelData;
 }
