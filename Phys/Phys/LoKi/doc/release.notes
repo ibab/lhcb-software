@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.14 2007-10-08 06:59:34 cattanem Exp $ 
+! $Id: release.notes,v 1.15 2007-12-03 12:02:10 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKi
 ! Responsible : Vanya BELYAEV
 ! Purpose     : The suit for the whole  LoKi project 
 ! -----------------------------------------------------------------------------
+
+!=========================== LoKi v7r0 2007-12-03 =============================
+! 2007-12-03 - Vanya BELYAEV
+ - the major update for new version iof LoKi v7r0 ("The powerful streamers")
+ - cmt/requirements:
+    version increment to v7r0
 
 !=========================== LoKi v6r0 2007-10-08 =============================
 ! 2007-10-08 - Marco Cattaneo
@@ -74,6 +80,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.14  2007/10/08 06:59:34  cattanem
+! v6r1
+!
 ! Revision 1.13  2007/09/18 11:47:39  cattanem
 ! remove LoKiTrigger dependency
 !
