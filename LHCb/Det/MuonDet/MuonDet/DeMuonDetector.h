@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.24 2007-12-03 08:47:15 cattanem Exp $
+// $Id: DeMuonDetector.h,v 1.25 2007-12-03 20:51:51 santovet Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -9,6 +9,13 @@
 // Not needed here but used by many algorithms
 
 //Gaudi
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/IDetDataSvc.h"
+#include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiAlg/GaudiAlgorithm.h"
+
 #include "Kernel/Packer.h"
 
 //Muon Detector
@@ -256,6 +263,20 @@ public:
   unsigned int getCardiacORY(const int par, const unsigned int readoutType){
     return m_phCardiacORNY[readoutType][par];
   };
+
+  //Returns the station (as DetectorElement pointer) identified by MuonTileID
+  IDetectorElement* Tile2Station(const LHCb::MuonTileID aTile);
+  
+  // Return the chambers (as vector of DeMuonChamber pointer) from the MuonTileID
+  std::vector<DeMuonChamber*> Tile2Chamber(const LHCb::MuonTileID aTile);
+
+  //Returns the station (as DetectorElement pointer) from a Hit 
+  IDetectorElement* DeMuonDetector::Hit2Station(const Gaudi::XYZPoint myPoint);
+  
+  //Returns the chamber (as DetectorElement pointer) from a Hit 
+  DeMuonChamber* DeMuonDetector::Hit2Chamber(const Gaudi::XYZPoint myPoint);
+
+
 // unsigned int getReadoutType(int station, int region,MuonLayout lay);  
 // MuonODEBoard* getODEContainingTile(LHCb::MuonTileID digit);  
 // MuonL1Board* getL1ContainingTile(LHCb::MuonTileID digit);

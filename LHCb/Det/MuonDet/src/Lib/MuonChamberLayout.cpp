@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.29 2007-11-28 08:00:23 cattanem Exp $
+// $Id: MuonChamberLayout.cpp,v 1.30 2007-12-03 20:51:51 santovet Exp $
 // Include files 
 
 // Gaudi
@@ -1559,3 +1559,225 @@ createChambersFromTile(std::vector<LHCb::MuonTileID> mytiles){
   
   return myChambers;
 }
+
+
+std::vector<unsigned int> MuonChamberLayout::
+Tile2ChamberNum(const LHCb::MuonTileID& tile){
+  
+  bool m_debug = false;
+
+  m_chaVect.resize(1);
+  
+  if( 0 == m_logVertGridX.size() ){
+    std::cout<<" The channel / pad grids have not been initialized!!!! Why? "<<std::endl;
+    fillChambersVector(this->dataSvc());
+    std::cout<<" Called initialization "<<std::endl;
+    if( 0 == m_logVertGridX.size() ){
+      std::cout<<" Initialization failed!"<<std::endl;
+      return m_chaVect;
+    }
+  }
+  
+  // OK how to make this work.....
+  // first locate the station and region from the tile
+  unsigned int station = tile.station();
+  unsigned int region  = tile.region();
+
+  MsgStream msg(msgSvc(), name());
+  
+  if(m_debug) std::cout <<"Tile det: " <<tile.layout().xGrid()
+                        <<", "<<tile.layout().yGrid()
+                        <<" in station "<<station
+                        <<" and region "<<region
+                        <<";Grid details. Reg "<<m_cgX.at(region)
+                        <<", "<<m_cgY.at(region)
+                        <<" ; Pad "<<m_padGridX[station*4 + region]
+                        <<", "<<m_padGridY[station*4 + region]
+                        <<" ; LogH "<<m_logHorizGridX[station*4 + region]
+                        <<", "<<m_logHorizGridY[station*4 + region]
+                        <<" ; LogV "<<m_logVertGridX[station*4 + region]
+                        <<", "<<m_logVertGridY[station*4 + region]<<std::endl;
+  
+  // now compare the layout parameter to possible "levels"
+  // currently chamber, logical channel, pad
+  if( m_cgX.at(region) ==  tile.layout().xGrid() && 
+      m_cgY.at(region) ==  tile.layout().yGrid() ){
+    
+    // chambers 
+
+    if ( m_debug )
+      std::cout << "Found a tile covering a chamber" << endreq;
+    m_chaVect.at(0) = getChamberNumber(tile);
+    ///    StatusCode sc = getXYZChamberTile(tile,x,deltax,y,deltay,z,deltaz,true);
+  }
+  else if( m_padGridX[station*4 + region] == tile.layout().xGrid() && 
+           m_padGridY[station*4 + region] == tile.layout().yGrid() ){
+    
+    // muon pads and logical channels with a 1:1 mapping to pads
+    
+    if ( m_debug ) 
+      std::cout << "Found a tile laying out pads" <<std::endl;
+    
+    LHCb::MuonTileID chamTile = m_layout[region].contains(tile);
+    m_chaVect.at(0) = getChamberNumber(chamTile);
+    ///    StatusCode sc = getXYZPad(tile,x,deltax,y,deltay,z,deltaz);
+  }
+  else if( m_logHorizGridX[station*4 + region] == tile.layout().xGrid() && 
+           m_logHorizGridY[station*4 + region] == tile.layout().yGrid() ){
+    
+    // horizontal logical channels
+    
+    m_chaVect = Logical2ChamberNum(tile); 
+  }
+  else if( m_logVertGridX[station*4 + region] == tile.layout().xGrid() &&
+           m_logVertGridY[station*4 + region] == tile.layout().yGrid() ){
+    
+    // vertical logical channels            
+    
+    if ( m_debug ) {
+      std::cout  << "Found a tile laying out vertical logical channels" <<std::endl;
+    }
+    m_chaVect = Logical2ChamberNum(tile);
+  } 
+  else if( 1 == tile.layout().xGrid() && 1 == tile.layout().yGrid() ) {
+   
+    // tile laying out Twelfths
+    
+    if ( m_debug )
+      std::cout << "Found a tile laying out Twelfths" <<std::endl;
+    
+    m_chaVect = Twelfth2ChamberNum(tile);
+  } 
+  else {
+    msg << MSG::ERROR 
+        << "Did not understand the LHCb::MuonTileID encoding" 
+        << " xGrid=" << tile.layout().xGrid() 
+        << " yGrid=" << tile.layout().yGrid() 
+        <<endreq;
+  }
+  
+  return m_chaVect;
+}
+
+
+std::vector<unsigned int> MuonChamberLayout::
+Logical2ChamberNum(const LHCb::MuonTileID& tile){
+
+  // If we get here then the logical strip is potenitally bigger than a chamber
+  // if not then we can subcontract to getXYZPad directly
+
+  // to find the x,y,z of the pad one must first find the chamber
+  // to find the chamber one must know the tile of the chamber
+
+  std::vector<unsigned int> chamberVect;
+  
+  unsigned int station = tile.station();
+  unsigned int region  = tile.region();
+  bool m_debug = false;  
+  
+  if( tile.layout().xGrid() >= m_layout[region].xGrid() && 
+      tile.layout().yGrid() >= m_layout[region].yGrid() ) {
+    
+    // ok logical channels are within a single chamber
+    LHCb::MuonTileID chamTile = m_layout[region].contains(tile);
+    unsigned int chamb = getChamberNumber(chamTile);
+    chamberVect.resize(1);
+    chamberVect.at(0)=chamb;
+  }
+  else if(tile.layout().xGrid() >= m_layout[region].xGrid() &&
+          tile.layout().yGrid() < m_layout[region].yGrid() ) {
+    // This logical channel crosses chambers in y, break it down into 
+    // chamber hight pads then combine the chamber extents later
+    // number of tiles to make:
+    int nTile = m_layout[region].yGrid() / tile.layout().yGrid(); // number of chamber crossed
+    
+    // width of pad (in x) is the same, hight (yGrid) that of the chamber
+    MuonLayout tempPadLayout(tile.layout().xGrid(),m_layout[region].yGrid());
+    
+    std::vector<LHCb::MuonTileID> tempTiles;
+    
+    int i;
+    for( i=0 ; i<nTile ; i++ ){
+      int yTile = ( tile.nY() * nTile ) + i ;
+      LHCb::MuonTileID tTile(station,tempPadLayout,region,tile.quarter(),tile.nX(),yTile);
+      if(m_debug) {
+        std::cout << "i: " << i 
+                  << "  nX: " << tile.nX() 
+                  << "  nY: " << yTile << std::endl;
+      }
+      tempTiles.push_back(tTile);
+    }
+    
+    // loop over the tiles and get the their chamber numbers
+
+    std::vector<LHCb::MuonTileID>::const_iterator iTile;
+    for(iTile = tempTiles.begin() ; iTile != tempTiles.end() ; iTile++){
+      LHCb::MuonTileID chamTile = m_layout[region].contains(*iTile);
+      unsigned int chamb = getChamberNumber(chamTile);
+      chamberVect.push_back(chamb);
+    }
+  }
+  else{
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::WARNING 
+        << "You requested a logical channel wider than a chamber, failing" 
+        << endreq;
+  }
+  return chamberVect;
+}
+
+
+std::vector<unsigned int> MuonChamberLayout::
+Twelfth2ChamberNum(const LHCb::MuonTileID& tile){
+  unsigned int region  = tile.region();
+  unsigned int quarter = tile.quarter();
+  std::vector<unsigned int> chamberVect;
+  
+  unsigned int twelfth;
+  if(0 == quarter){
+    if(1 == tile.nX() && 0 == tile.nY()){
+      twelfth = 0;
+    }else if(1 == tile.nX() && 1 == tile.nY()){
+      twelfth = 1;
+    }else{
+      twelfth = 2;
+    }
+  }else if(1 == quarter){
+    if(0 == tile.nX() && 1 == tile.nY()){
+      twelfth = 3;
+    }else if(1 == tile.nX() && 1 == tile.nY()){
+      twelfth = 4;
+    }else{
+      twelfth = 5;
+    }
+  }else if(2 == quarter){
+    if(1 == tile.nX() && 0 == tile.nY()){
+      twelfth = 6;
+    }else if(1 == tile.nX() && 1 == tile.nY()){
+      twelfth = 7;
+    }else{
+      twelfth = 8;
+    }
+  }else{
+    if(0 == tile.nX() && 1 == tile.nY()){
+      twelfth = 9;
+    }else if(1 == tile.nX() && 1 == tile.nY()){
+      twelfth = 10;
+    }else{
+      twelfth = 11;
+    }
+  }
+
+  int chamCorner; // only need 3 corners here
+  int nChamber;
+  unsigned int vdim=0;
+  for( chamCorner = 0 ; chamCorner < 4 ; chamCorner++ ){
+    nChamber = getTwelfthCorner(region,twelfth,chamCorner);
+    // get the chamber
+    vdim++;
+    chamberVect.resize(vdim);
+    chamberVect.at(vdim)=nChamber;
+  }
+  return chamberVect;
+}  
+

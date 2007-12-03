@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.h,v 1.1 2007-11-28 08:00:23 cattanem Exp $
+// $Id: MuonChamberLayout.h,v 1.2 2007-12-03 20:51:51 santovet Exp $
 #ifndef PUBLIC_MUONCHAMBERLAYOUT_H 
 #define PUBLIC_MUONCHAMBERLAYOUT_H 1
 
@@ -187,6 +187,15 @@ public:
   void localToglobal(IGeometryInfo* gInfo,
 		     Gaudi::XYZPoint cent, Gaudi::XYZPoint corn,
 		     double &dx, double &dy, double &dz);
+
+  ///get the chamber number (vector) from the MuonTile
+  std::vector<unsigned int> Tile2ChamberNum(const LHCb::MuonTileID& tile);
+  
+  ///get the chamber number (vector) from the logical channel tile
+  std::vector<unsigned int> Logical2ChamberNum(const LHCb::MuonTileID& tile);
+  
+  ///get the chamber number (vector) from the twelfth-chamber tile
+  std::vector<unsigned int> Twelfth2ChamberNum(const LHCb::MuonTileID& tile);
   
 protected:
 
@@ -197,6 +206,7 @@ private:
   std::vector<unsigned int> m_cgX;
   std::vector<unsigned int> m_cgY;
   std::vector<DeMuonChamber*> m_ChVec;
+  std::vector<unsigned int> m_chaVect;
 
   //Smallest chmb dimensions
   std::vector<float> m_xS;
