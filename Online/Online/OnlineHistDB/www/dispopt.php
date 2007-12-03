@@ -36,7 +36,8 @@ $DispOpt = array("LABEL_X",
 "GRIDX",
 "GRIDY",
 "THETA",
-"PHI");
+"PHI",
+"CNTPLOT");
 function get_displayoptions($disp) {
   global $conn;
   $query="BEGIN ONLINEHISTDB.GET_DISPLAYOPTIONS($disp";
@@ -116,6 +117,8 @@ function get_displayoptions($disp) {
   $_POST["THETA"] = 9999999999.;
   $query .= ",:PHI";
   $_POST["PHI"] = 9999999999.;
+  $query .= ",:CNTPLOT";
+  $_POST["CNTPLOT"] = str_repeat(" ",5);
   $query .= "); END;";
   $dstid = OCIParse($conn,$query);
   ocibindbyname($dstid,":LABEL_X",$_POST["LABEL_X"],50);
@@ -156,6 +159,7 @@ function get_displayoptions($disp) {
   ocibindbyname($dstid,":GRIDY",$_POST["GRIDY"]);
   ocibindbyname($dstid,":THETA",$_POST["THETA"]);
   ocibindbyname($dstid,":PHI",$_POST["PHI"]);
+  ocibindbyname($dstid,":CNTPLOT",$_POST["CNTPLOT"],5);
   OCIExecute($dstid);
   ocifreestatement($dstid);
 }

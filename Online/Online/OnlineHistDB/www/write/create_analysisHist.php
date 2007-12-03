@@ -23,15 +23,15 @@ for ($ip=1;$ip<=$np;$ip++) {
 }
 $parameters="thresholds(".implode(",",$mypars).")";
 $command="begin OnlineHistDB.DeclareAnalysisHistogram(theAlg=>'".$_POST["alg"].
-  "',theTitle=>'".sqlstring($_POST["hctitle"])."',${sourceh},thePars=>${parameters}); end;";
-//echo "command is $command <br>";
+  "',theTitle=>'".sqlstring($_POST["hctitle"])."',${sourceh},thePars=>${parameters},theName=>:name); end;";
+// echo "command is $command <br>";
 $stid = OCIParse($conn,$command);
+ocibindbyname($stid,":name",$name,130);
 $r=OCIExecute($stid,OCI_DEFAULT);
 if ($r) {
   ocicommit($conn);
   ocifreestatement($stid);
-  $stid = OCIParse($conn,"select HID from viewhistogram where TASK='ANALYSIS' and ALGO='".$_POST["alg"].
-		   "' and TITLE='".sqlstring($_POST["hctitle"])."'");
+  $stid = OCIParse($conn,"select HID from histogram where NAME='${name}'");
   $r=OCIExecute($stid,OCI_DEFAULT);
   if ($r) $r=OCIFetchInto($stid, $h, OCI_ASSOC);
 } 
