@@ -5,7 +5,7 @@
  *  Implementation file for RICH algorithm : RichHierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.cpp,v 1.8 2007-08-09 16:09:58 jonrob Exp $
+ *  $Id: RichHierarchicalPIDMerge.cpp,v 1.9 2007-12-03 15:23:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-10
@@ -40,7 +40,7 @@ HierarchicalPIDMerge::HierarchicalPIDMerge( const std::string& name,
     m_richGlobalPIDLocation = LHCb::RichGlobalPIDLocation::Offline;
     m_fillProcStat = true;
   }
-  else if ( context() == "HLT" )
+  else if ( context() == "HLT" || context() == "Hlt" )
   {
     m_richPIDLocation = LHCb::RichPIDLocation::HLT;
     m_richGlobalPIDLocation = LHCb::RichGlobalPIDLocation::HLT;
