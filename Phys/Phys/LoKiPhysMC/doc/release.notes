@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.36 2007-11-06 10:53:15 cattanem Exp $ 
+! $Id: release.notes,v 1.37 2007-12-03 11:48:08 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhysMC v7r0 2007-12-03 ========================
+! 2007-12-03 - Vanya BELYAEV
+ - update for the next major version of LoKi v7r0 ("The powerful Streamers")
+ - cmt/requirements
+   version increment to v7r0 
+
 
 !========================== LoKiPhysMC v6r2 2007-11-06 ========================
 ! 2007-11-06 - Marco Cattaneo
