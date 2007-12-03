@@ -1,14 +1,14 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.78 2007-12-03 15:37:48 wouter Exp $
+! $Id: release.notes,v 1.79 2007-12-03 15:56:13 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r8 2007-12-03 ==========================
 ! 2007-12-03 Wouter Hulsbergen
  - Added missing const in TwoProngVertex::addPID
 
-!========================= RecEvent v2r8 2007-11-29 ==========================
 ! 2007-11-28 Wouter Hulsbergen
  - Fixed bug in TwoProngVertex::covMatrix7x7
 
