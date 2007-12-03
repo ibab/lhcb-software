@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.10 2007-10-29 14:33:29 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.11 2007-12-03 15:28:40 frankb Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -209,10 +209,10 @@ NetworkDataReceiver::handleEventData(const RecvEntry& entry,void* buf,size_t len
       ::wtc_insert(WT_FACILITY_DAQ_EVENT,e);
       int backlog = ++m_backlog;
       if ( backlog%100 == 0 ) {
-	if ( m_lastbacklog != backlog ) {
-	  m_lastbacklog = backlog;
-	  error("Message backlog is now %d messages.",backlog);
-	}
+        if ( m_lastbacklog != backlog ) {
+          m_lastbacklog = backlog;
+          error("Message backlog is now %d messages.",backlog);
+        }
       }
     }
     else  {

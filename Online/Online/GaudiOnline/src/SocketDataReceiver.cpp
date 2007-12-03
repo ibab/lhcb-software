@@ -11,7 +11,7 @@ int gauditask_task_unlock();
  *   LHCb namespace declaration
  */
 namespace LHCb  {
-    
+
   using namespace DataTransfer;
   class SocketDataReceiver;
 
@@ -29,15 +29,15 @@ namespace LHCb  {
     static void handle_request(netentry_t* e, const netheader_t& hdr, void* param)  {
       int sc = gauditask_task_trylock();
       if ( sc == 1 ) {
-	SocketDataReceiver* p = (SocketDataReceiver*)param;
+        SocketDataReceiver* p = (SocketDataReceiver*)param;
         std::string source(hdr.name);
         char buff[256];
         int sc = net_receive(p->m_netPlug,e,buff);
         if ( sc == NET_SUCCESS )  {
           p->handleSourceRequest(p->receivers().size(),source,source);
         }
-	gauditask_task_unlock();
-	return;
+        gauditask_task_unlock();
+        return;
       }
       // Things go awfully wrong....e.g. finalize was called during data taking.
       ::fprintf(stdout,"Loosing event request....was finalize called ?\n");
@@ -46,30 +46,30 @@ namespace LHCb  {
     static void handle_event(netentry_t* e, const netheader_t& hdr, void* param)  {
       int sc = gauditask_task_trylock();
       if ( sc == 1 ) {
-	SocketDataReceiver* p = (SocketDataReceiver*)param;
+        SocketDataReceiver* p = (SocketDataReceiver*)param;
         std::string source(hdr.name);
         char* buff = new char[hdr.size];
         int sc = net_receive(p->m_netPlug,e,buff);
         if ( sc == NET_SUCCESS )  {
           RecvEntry* e = p->receiver(source);
-	  if ( !e ) {
-	    // In case the sender did not send the source request: 
-	    // add data source on the fly....
-	    p->handleSourceRequest(p->receivers().size(),source,source);
-	    e = p->receiver(source);
-	  }
-	  if ( e ) {
-	    if ( p->handleEventData(*e,buff,hdr.size).isSuccess() ) {
-	      gauditask_task_unlock();
-	      return;
-	    }
-	  }
-	  ::fprintf(stdout,"Loosing EVENT....Cannot register data source:%s.\n",hdr.name);
-	  ::fflush(stdout);
+          if ( !e ) {
+            // In case the sender did not send the source request: 
+            // add data source on the fly....
+            p->handleSourceRequest(p->receivers().size(),source,source);
+            e = p->receiver(source);
+          }
+          if ( e ) {
+            if ( p->handleEventData(*e,buff,hdr.size).isSuccess() ) {
+              gauditask_task_unlock();
+              return;
+            }
+          }
+          ::fprintf(stdout,"Loosing EVENT....Cannot register data source:%s.\n",hdr.name);
+          ::fflush(stdout);
         }
-	delete [] buff;
+        delete [] buff;
         gauditask_task_unlock();
-	return;
+        return;
       }
       // Things go awfully wrong....e.g. finalize was called during data taking.
       ::fprintf(stdout,"Loosing event....was finailize called ?\n");
