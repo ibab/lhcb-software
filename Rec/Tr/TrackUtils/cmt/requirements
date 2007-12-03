@@ -18,6 +18,7 @@ use   GaudiAlg           v*
 
 use   LinkerEvent        v*    Event
 use   TrackEvent         v*    Event
+use   TrackFitEvent      v*    Tr
 use   TrackInterfaces    v*    Tr
 use   LHCbMath           v*    Kernel
 use   STDet              v*    Det
