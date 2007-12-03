@@ -1,13 +1,13 @@
-! $Id: release.notes,v 1.164 2007-12-03 13:47:49 jonrob Exp $
+! $Id: release.notes,v 1.165 2007-12-03 14:13:32 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
 
+!====================== RichKernel v7r9 2007-12-03 ====================
 ! 2007-12-03 - Chris Jones
  - Update various cluster objects to allow clustering of ALICE mode data
 
-!====================== RichKernel v7r9 2007-11-29 ====================
 ! 2007-11-27 - Chris Jones
  - Add a new method to the IRawBufferToSmartIDsTool interface to return 
    the hits for a requested HPD
