@@ -1,4 +1,4 @@
-// $Id: Filters.h,v 1.1 2007-11-28 13:56:32 ibelyaev Exp $
+// $Id: Filters.h,v 1.2 2007-12-03 12:03:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FILTERS_H 
 #define LOKI_FILTERS_H 1
@@ -37,27 +37,28 @@ namespace LoKi
   {
     // ========================================================================
     /** @class Select
-     *  Simple functor for "filtering" of the containers.
-     *  The concept belongs to the Gerhard "The Great" Raven.
+     *
+     *  Simple functor for "filtering" or "selection".
      *
      *  @code 
      *
-     *   typedef Select<const LHCb::Track*, LHCb::Track> SELECT ;
+     *   typedef Select<LHCb::Track*,LHCb::Track> SELECT ;
      *
+     *   // the selection criteria (predicate)  itself
      *   const LoKi::Functor<LHCb::Track,bool>& good = ... ;
      *
-     *   SELECT fltr = SELECT( good ) ;   
+     *   std::vector<LHCb::Track*> input = ... ;
      *
-     *   std::vector<const LHCb::Track*> input ;
-     *
-     *   std::vector<const LHCb::Track*> output = input >> fltr ;
+     *   std::vector<LHCb::Track*> filtered = input >> SELECT ( good )  ;
      *
      *  @endcode 
      * 
+     *  The concept belongs to the Gerhard "The Great" Raven.
+     *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-11-02
      */
-    template <class TYPE, class TYPE2> 
+    template <class TYPE, class TYPE2=TYPE> 
     class Select : public LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> > 
     {
     protected:
@@ -101,20 +102,24 @@ namespace LoKi
     } ;
     // ========================================================================
     /** @class Yields
+     *
      *  Simple functor for "mapping" of the containers.
-     *  The concept belongs to the Gerhard "The Great" Raven and the 
-     *  name comes from Marcel Merk.
      *
      *  @code 
      *
-     *   typedef Yields<const LHCb::Track*, LHCb::Track> MAP;
+     *   typedef Yields<LHCb::Track*,double,LHCb::Track> YIELD ;
      *
      *   const LoKi::Functor<LHCb::Track,double>& pt = ... ;
      *
-     *   MAP m = MAP( good ) ;   
+     *   std::vector<LHCb::Track*> input = ... ;
+     * 
+     *   std::vector<double>       results = input >> YIELD( pt )  ;
      *
      *  @endcode 
      * 
+     *  The concept belongs to the Gerhard "The Great" Raven and the 
+     *  name comes from Marcel Merk.
+     *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-11-02
      */
@@ -162,18 +167,24 @@ namespace LoKi
     } ;    
     // ========================================================================
     /** @class Process
+     *
      *  Simple functor for "processing" of the containers.
-     *  The concept belongs to the Gerhard "The Great" Raven.
      *
      *  @code 
      *
-     *   typedef Yields<const LHCb::Track*, LHCb::Track> MAP;
+     *   typedef Process<LHCb::Track*,double,LHCb::Track> PROCESS ;
      *
-     *   const LoKi::Functor<LHCb::Track,double>& pt = ... ;
+     *    // get some functor for plotting the TrPT 
+     *    AIDA::IHistogram1D* histo = ...  
+     *    FunctorFromFunctor<LHCb::Track,double> plotter = monitor ( TrPT , histo )  ;
      *
-     *   MAP m = MAP( good ) ;   
+     *    std::vector<LHCb::Track*> input = ... ;
+     *
+     *    input >> PROCESS( plotter ) ;
      *
      *  @endcode 
+     *
+     *  The concept belongs to the Gerhard "The Great" Raven.
      * 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-11-02
@@ -220,6 +231,24 @@ namespace LoKi
     // ========================================================================
     /** @class Tee
      *  Simple functor for "tee" of the containers.
+     *
+     *  @code
+     *
+     *   // get some functor for plotting the TrPT 
+     *   AIDA::IHistogram1D* histo = ...  
+     *   FunctorFromFunctor<LHCb::Track,double> plotter = monitor ( TrPT , histo )  ;
+     *
+     *   // get some functor for selection of track with maximal pt 
+     *   MaxElement<LHCb::Track*>  maxPt ( TrPT ) ;
+     *
+     *   // container of input tracks:
+     *   std::vector<LHCb::Track*> input = ... ;
+     * 
+     *   // "tee"
+     *   input >> Tee<LHCb::Track*> ( compose ( maxPt , plotter ) ) ;   
+     *  
+     *  @endcode 
+     *
      *  The concept belongs to the Gerhard "The Great" Raven.
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -361,7 +390,7 @@ namespace LoKi
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return  s << "absMax(" << m_functor << ")"; } ;
+      { return  s << "max_abs(" << m_functor << ")"; } ;
     private:
       // the default construct is private:
       AbsMax () ; ///< no default contructor
@@ -412,7 +441,7 @@ namespace LoKi
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return  s << "min(" << m_functor << ")"; } ;
+      { return  s << "min_value(" << m_functor << ")"; } ;
     private:
       // the default construct is private:
       Min () ; ///< no default contructor
@@ -464,7 +493,7 @@ namespace LoKi
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return  s << "absMin(" << m_functor << ")"; } ;
+      { return  s << "min_abs_value(" << m_functor << ")"; } ;
     private:
       // the default construct is private:
       AbsMin () ; ///< no default contructor
@@ -617,7 +646,7 @@ namespace LoKi
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return  s << "absMax_element(" << m_functor << ")"; } ;
+      { return  s << "max_abs_element(" << m_functor << ")"; } ;
     private:
       // the default construct is private:
       AbsMaxElement() ; ///< no default contructor
@@ -669,7 +698,7 @@ namespace LoKi
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return  s << "absMin_element(" << m_functor << ")"; } ;
+      { return  s << "min_abs_element(" << m_functor << ")"; } ;
     private:
       // the default construct is private:
       AbsMinElement() ; ///< no default contructor
@@ -680,154 +709,22 @@ namespace LoKi
     // ========================================================================
   } // end of namespace LoKi::Filters 
   // ==========================================================================
-  /** simple "tee" function:
-   *
-   *  @code 
-   *  
-   *   std::vector<TYPE> in = ... ;
-   *
-   *   // some 'tee'-action:
-   *   const LoKi::Functor<TYPE,TYPE2>& fun = ...; 
-   *
-   *   std::vector<TYPE> out = in >> tee ( fun ) ;
-   *
-   *
-   *  @endcode 
-   *
-   *  The concept belongs to the Gerhard "The Great" Raven.
-   *
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2007-11-28
-   */
-  template <class TYPE,class TYPE2>
-  inline 
-  LoKi::Functors::Tee<TYPE,TYPE2>
-  tee ( const LoKi::Functor<std::vector<TYPE>,TYPE2>& fun ) 
-  {
-    return LoKi::Functors::Tee<TYPE,TYPE2> ( fun ) ;
-  }
-  // ==========================================================================
-  /** simple "min" function:
-   *
-   *  @code 
-   *  
-   *   std::vector<TYPE> in = ... ;
-   *
-   *   // some function
-   *   const LoKi::BasicFunctors<TYPE>::Function& fun = ...; 
-   *
-   *   // get the minimal value of the function
-   *   double m = in >> min<TYPE> ( fun ) ;
-   *
-   *  @endcode 
-   *
-   *  The concept belongs to the Gerhard "The Great" Raven.
-   *
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2007-11-28
-   */
-  template <class TYPE, class TYPE2, class TYPE1>
-  inline 
-  LoKi::Functors::Min<TYPE,TYPE2,TYPE1>
-  min ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-  {
-    return LoKi::Functors::Min<TYPE,TYPE2,TYPE1>( fun ) ;
-  }
-  // ==========================================================================
-  /** simple "max" function:
-   *
-   *  @code 
-   *  
-   *   std::vector<TYPE> in = ... ;
-   *
-   *   // some function
-   *   const LoKi::BasicFunctors<TYPE>::Function& fun = ...; 
-   *
-   *   // get the maxima;l value of the function
-   *   double m = in >> max<TYPE> ( fun ) ;
-   *
-   *  @endcode 
-   *
-   *  The concept belongs to the Gerhard "The Great" Raven.
-   *
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2007-11-28
-   */
-  template <class TYPE, class TYPE2, class TYPE1>
-  inline 
-  LoKi::Functors::Max<TYPE,TYPE2,TYPE1>
-  max ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-  {
-    return LoKi::Functors::Max<TYPE,TYPE2,TYPE1>( fun ) ;
-  }
-  // ==========================================================================
-  /** simple "absMin" function:
-   *
-   *  @code 
-   *  
-   *   std::vector<TYPE> in = ... ;
-   *
-   *   // some function
-   *   const LoKi::BasicFunctors<TYPE>::Function& fun = ...; 
-   *
-   *   // get the minimal value of the function
-   *   double m = in >> absMin<TYPE> ( fun ) ;
-   *
-   *  @endcode 
-   *
-   *  The concept belongs to the Gerhard "The Great" Raven.
-   *
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2007-11-28
-   */
-  template <class TYPE, class TYPE2, class TYPE1>
-  inline 
-  LoKi::Functors::AbsMin<TYPE,TYPE2,TYPE1>
-  absMin ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-  {
-    return LoKi::Functors::AbsMin<TYPE,TYPE2,TYPE1>( fun ) ;
-  }
-  // ==========================================================================
-  /** simple "absMax" function:
-   *
-   *  @code 
-   *  
-   *   std::vector<TYPE> in = ... ;
-   *
-   *   // some function
-   *   const LoKi::BasicFunctors<TYPE>::Function& fun = ...; 
-   *
-   *   // get the maximal value of the function
-   *   double m = in >> absMax<TYPE> ( fun ) ;
-   *
-   *  @endcode 
-   *
-   *  The concept belongs to the Gerhard "The Great" Raven.
-   *
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2007-11-28
-   */
-  template <class TYPE, class TYPE2, class TYPE1>
-  inline 
-  LoKi::Functors::AbsMax<TYPE,TYPE2,TYPE1>
-  absMax ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-  {
-    return LoKi::Functors::AbsMax<TYPE,TYPE2,TYPE1>( fun ) ;
-  }
-  // ==========================================================================
   /** simple "filter" function
    *
    *  @code 
    *  
-   *   std::vector<TYPE> in = ... ;
-   *
-   *   // some cut:
+   *   // some selection criteria (predicate) 
    *   const LoKi::BasicFunctors<TYPE2>::Function& cut = ...; 
    *
+   *   // input data 
+   *   std::vector<TYPE> in = ... ;
+   *
    *   // get the filtered results:
-   *   std::vector<TYPE> out = in >> filter<TYPE> ( cun ) ;
+   *   std::vector<TYPE> out = in >> filter<TYPE> ( cut ) ;
    *
    *  @endcode 
+   *
+   *  @see LoKi::Functors::Select
    *
    *  The concept belongs to the Gerhard "The Great" Raven.
    *
@@ -866,36 +763,174 @@ namespace LoKi
   LoKi::Functors::Select<TYPE,TYPE2>
   select ( const LoKi::Functor<TYPE2,bool>& cut ) 
   {
-    return LoKi::Functors::Select<TYPE,TYPE2>( cut ) ;
+    return LoKi::Functors::Select<TYPE,TYPE2> ( cut ) ;
   }
   // ==========================================================================
-  /** simple "yields/map" function
+  /** simple "yield/map" function 
+   *
+   *  @code 
+   *
+   *   const LoKi::Functor<LHCb::Track,double>& pt = ... ;
+   *
+   *   std::vector<LHCb::Track*> input = ... ;
+   * 
+   *   std::vector<double> results = input >> yields<LHCb::Track*>( pt )  ;
+   *
+   *  @endcode 
+   * 
+   *  The concept belongs to the Gerhard "The Great" Raven and the 
+   *  name comes from Marcel Merk.
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-11-02
+   */
+  template <class TYPE,class TYPE1,class TYPE2> 
+  inline 
+  LoKi::Functors::Yields<TYPE,TYPE1,TYPE2>
+  yields ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
+  {
+    return LoKi::Functors::Yields<TYPE,TYPE1,TYPE2> ( fun ) ;  
+  }
+  // ==========================================================================
+  /** simple "tee" function:
+   *
+   *  @code
+   *
+   *   // get some functor for plotting the TrPT 
+   *   AIDA::IHistogram1D* histo = ...  
+   *   FunctorFromFunctor<LHCb::Track,double> plotter = monitor ( TrPT , histo )  ;
+   *
+   *   // get some functor for selection of track with maximal pt 
+   *   MaxElement<LHCb::Track*>  maxPt ( TrPT ) ;
+   *
+   *   // container of input tracks:
+   *   std::vector<LHCb::Track*> input = ... ;
+   * 
+   *   // "tee"
+   *   input >> tee ( compose ( maxPt , plotter ) ) ;   
+   *  
+   *  @endcode 
+   *
+   *  The concept belongs to the Gerhard "The Great" Raven.
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-11-28
+   */
+  template <class TYPE,class TYPE2>
+  inline 
+  LoKi::Functors::Tee<TYPE,TYPE2>
+  tee ( const LoKi::Functor<std::vector<TYPE>,TYPE2>& fun ) 
+  {
+    return LoKi::Functors::Tee<TYPE,TYPE2> ( fun ) ;
+  }
+  // ==========================================================================
+  /** simple "min_value" function:
    *
    *  @code 
    *  
    *   std::vector<TYPE> in = ... ;
    *
-   *   // some cut:
-   *   const LoKi::Functor<TYPE,TYPE2>& fun = ...; 
+   *   // some function
+   *   const LoKi::BasicFunctors<TYPE>::Function& fun = ...; 
    *
-   *   // get the mapped results:
-   *   std::vector<TYPE2> out = in >> yields<TYPE> ( cun ) ;
+   *   // get the minimal value of the function
+   *   double m = in >> min_value<TYPE> ( fun ) ;
    *
    *  @endcode 
    *
-   *  The concept belongs to the Gerhard "The Great" Raven. 
-   *  The name comes from Marcel Merk.
+   *  The concept belongs to the Gerhard "The Great" Raven.
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2007-11-28   
+   *  @date 2007-11-28
    */
-  template <class TYPE,class TYPE1,class TYPE2>
+  template <class TYPE, class TYPE2, class TYPE1>
   inline 
-  LoKi::Functors::Yields<TYPE,TYPE1,TYPE2>
-  yields ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
+  LoKi::Functors::Min<TYPE,TYPE2,TYPE1>
+  min_value ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
   {
-    return LoKi::Functors::Yields<TYPE,TYPE1,TYPE2> ( fun ) ;
-  } 
+    return LoKi::Functors::Min<TYPE,TYPE2,TYPE1>( fun ) ;
+  }
+  // ==========================================================================
+  /** simple "max_value" function:
+   *
+   *  @code 
+   *  
+   *   std::vector<TYPE> in = ... ;
+   *
+   *   // some function
+   *   const LoKi::BasicFunctors<TYPE>::Function& fun = ...; 
+   *
+   *   // get the maxima;l value of the function
+   *   double m = in >> max_value<TYPE> ( fun ) ;
+   *
+   *  @endcode 
+   *
+   *  The concept belongs to the Gerhard "The Great" Raven.
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-11-28
+   */
+  template <class TYPE, class TYPE2, class TYPE1>
+  inline 
+  LoKi::Functors::Max<TYPE,TYPE2,TYPE1>
+  max_value ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
+  {
+    return LoKi::Functors::Max<TYPE,TYPE2,TYPE1>( fun ) ;
+  }
+  // ==========================================================================
+  /** simple "min_abs_value" function:
+   *
+   *  @code 
+   *  
+   *   std::vector<TYPE> in = ... ;
+   *
+   *   // some function
+   *   const LoKi::BasicFunctors<TYPE>::Function& fun = ...; 
+   *
+   *   // get the minimal value of the function
+   *   double m = in >> min_abs_value<TYPE> ( fun ) ;
+   *
+   *  @endcode 
+   *
+   *  The concept belongs to the Gerhard "The Great" Raven.
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-11-28
+   */
+  template <class TYPE, class TYPE2, class TYPE1>
+  inline 
+  LoKi::Functors::AbsMin<TYPE,TYPE2,TYPE1>
+  min_abs_value ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
+  {
+    return LoKi::Functors::AbsMin<TYPE,TYPE2,TYPE1>( fun ) ;
+  }
+  // ==========================================================================
+  /** simple "max_abs_value" function:
+   *
+   *  @code 
+   *  
+   *   std::vector<TYPE> in = ... ;
+   *
+   *   // some function
+   *   const LoKi::BasicFunctors<TYPE>::Function& fun = ...; 
+   *
+   *   // get the maximal value of the function
+   *   double m = in >> max_abs_value<TYPE> ( fun ) ;
+   *
+   *  @endcode 
+   *
+   *  The concept belongs to the Gerhard "The Great" Raven.
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-11-28
+   */
+  template <class TYPE, class TYPE2, class TYPE1>
+  inline 
+  LoKi::Functors::AbsMax<TYPE,TYPE2,TYPE1>
+  max_abs_value ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
+  {
+    return LoKi::Functors::AbsMax<TYPE,TYPE2,TYPE1>( fun ) ;
+  }
   // ==========================================================================  
   /** simple "process" function 
    *
@@ -904,10 +939,10 @@ namespace LoKi
    *   std::vector<TYPE> in = ... ;
    *
    *   // some action
-   *   const LoKi::Functor<TYPE,TYPE2>& fun = ...; 
+   *   const LoKi::Functor<TYPE2,TYPE3>& fun = ...; 
    *
    *   // get the processed results (indentical to the input)
-   *   std::vector<TYPE> out = in >> process<TYPE> ( fun ) ;
+   *   in >> process<TYPE> ( fun ) ;
    *
    *  @endcode 
    *
@@ -931,10 +966,10 @@ namespace LoKi
    *   std::vector<TYPE> in = ... ;
    *
    *   // some action
-   *   const LoKi::Functor<TYPE,TYPE2>& fun = ...; 
+   *   const LoKi::Functor<TYPE2,TYPE3>& fun = ...; 
    *
    *   // get the processed results (indentical to the input)
-   *   std::vector<TYPE> out = in >> for_each<TYPE> ( fun ) ;
+   *   in >> for_each<TYPE> ( fun ) ;
    *
    *  @endcode 
    *
@@ -1005,7 +1040,7 @@ namespace LoKi
     return LoKi::Functors::MinElement<TYPE,TYPE2,TYPE1>( fun ) ;
   }
   // ==========================================================================  
-  /** simple 'absmax_element' function 
+  /** simple 'max_abs_element' function 
    *
    *  @code 
    *  
@@ -1015,7 +1050,7 @@ namespace LoKi
    *   const LoKi::BasicFunctors<TYPE>::Function& fun = ...; 
    *
    *   // get the maximal element
-   *   TYPE m = in >> absMax_element<TYPE> ( fun ) ;
+   *   TYPE m = in >> max_abs_element<TYPE> ( fun ) ;
    *
    *  @endcode 
    *
@@ -1027,12 +1062,12 @@ namespace LoKi
   template <class TYPE,class TYPE2,class TYPE1>
   inline 
   LoKi::Functors::AbsMaxElement<TYPE,TYPE2,TYPE1>
-  absMax_element ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
+  max_abs_element ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
   {
     return LoKi::Functors::AbsMaxElement<TYPE,TYPE2,TYPE1>( fun ) ;
   }
   // ==========================================================================  
-  /** simple 'absmin_element' function 
+  /** simple 'min_abs_element' function 
    *
    *  @code 
    *  
@@ -1042,7 +1077,7 @@ namespace LoKi
    *   const LoKi::BasicFunctors<TYPE>::Function& fun = ...; 
    *
    *   // get the minimal element
-   *   TYPE m = in >> absMin_element<TYPE> ( fun ) ;
+   *   TYPE m = in >> min_abs_element<TYPE> ( fun ) ;
    *
    *  @endcode 
    *
@@ -1054,7 +1089,7 @@ namespace LoKi
   template <class TYPE,class TYPE2,class TYPE1>
   inline 
   LoKi::Functors::AbsMinElement<TYPE,TYPE2,TYPE1>
-  absMin_element ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
+  min_abs_element ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
   {
     return LoKi::Functors::AbsMinElement<TYPE,TYPE2,TYPE1>( fun ) ;
   }

@@ -1,4 +1,4 @@
-// $Id: BasicFunctors.h,v 1.1 2007-11-28 13:56:32 ibelyaev Exp $
+// $Id: BasicFunctors.h,v 1.2 2007-12-03 12:03:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_BASICFUNCTORS_H 
 #define LOKI_BASICFUNCTORS_H 1
@@ -39,15 +39,32 @@ namespace LoKi
   struct BasicFunctors 
   {
   public:
+    // the basic type for "function"  (interface)
+    typedef LoKi::Functor<TYPE,double>               Function               ;
+    // the basic type for "predicate" (interface)
+    typedef LoKi::Functor<TYPE,bool>                 Predicate              ;
+    // the basic type for "function"  (assignable)
+    typedef LoKi::FunctorFromFunctor<TYPE,double>    FunctionFromFunction   ;
+    // the basic type for "predicate" (assignable)
+    typedef LoKi::FunctorFromFunctor<TYPE,bool>      PredicateFromPredicate ;
     //
-    typedef LoKi::Functor<TYPE,double>             Function               ;
-    typedef LoKi::Functor<TYPE,bool>               Predicate              ;
-    //
-    typedef LoKi::FunctorFromFunctor<TYPE,double>  FunctionFromFunction   ;
-    typedef LoKi::FunctorFromFunctor<TYPE,bool>    PredicateFromPredicate ;
-    //
-    typedef LoKi::Constant<TYPE,double>            Constant               ;
-    typedef LoKi::Constant<TYPE,bool>              BooleanConstant        ;
+    typedef LoKi::Constant<TYPE,double>              Constant               ;
+    typedef LoKi::Constant<TYPE,bool>                BooleanConstant        ;
+    
+    // ========================================================================
+    // for functional programing:
+    // ========================================================================
+    
+    // map/yield:  
+    typedef LoKi::Functor<std::vector<TYPE>,std::vector<double> > Map        ;
+    // filter:
+    typedef LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> >   Pipe       ;
+    // reduce 
+    typedef LoKi::Functor<std::vector<TYPE>,double>               FunVal     ;
+    // element selection
+    typedef LoKi::Functor<std::vector<TYPE>,TYPE>                 Element    ;
+    // Source
+    typedef LoKi::Functor<void,std::vector<TYPE> >                Source     ;
     //
   } ;
   // ==========================================================================

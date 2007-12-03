@@ -1,4 +1,4 @@
-// $Id: Interface.h,v 1.7 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id: Interface.h,v 1.8 2007-12-03 12:03:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_INTERFACE_H 
 #define LOKI_INTERFACE_H 1
@@ -93,11 +93,16 @@ namespace LoKi
       return *this ;                                  // RETURN 
     } ;
     /// valid pointer? 
-    bool validPointer         () const { return 0 != m_object ; }
+    bool validPointer         () const { return 0 != m_object   ; }
+    /// invalid ?
+    bool operator!            () const { return !validPointer() ; }
     /// conversion to underlying type 
-    inline TYPE* operator->   () const { return getObject()   ; }
+    inline TYPE* operator->   () const { return getObject()     ; }
+    /// automatic conversion 
+    inline operator TYPE*     () const { return getObject()     ; }
     /// access to the object 
-    inline TYPE* getObject    () const { return m_object      ; }
+    inline TYPE* getObject    () const { return m_object        ; }
+    ///
   protected:
     /// the default constructor is protected
     Interface() : m_object( 0 ) {} ;

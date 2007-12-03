@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.61 2007-10-19 13:41:55 cattanem Exp $ 
+! $Id: release.notes,v 1.62 2007-12-03 12:03:23 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,15 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+!=========================== LoKiCore v7r0 2007-11-30  ========================
+
+! 2007-11-30 - Vanya BELYAEV  
+ - new MAJOR version of LoKi  
+   Many new concepts from Gerhard "The Great" for functional programming
+   essentially the whole "functor"-business is reqritten 
+ - cmt/requirements 
+   version incrmeent to v7r0
 
 !=========================== LoKiCore v6r1p1 2007-10-19 ======================
 ! 2007-10-19 - Marco Cattaneo
@@ -387,6 +396,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.61  2007/10/19 13:41:55  cattanem
+! fix for gcc 4.0
+!
 ! Revision 1.60  2007/10/08 06:44:16  cattanem
 ! move tag
 !

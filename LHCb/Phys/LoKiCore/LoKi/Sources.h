@@ -1,4 +1,4 @@
-// $Id: Sources.h,v 1.1 2007-11-28 13:56:33 ibelyaev Exp $
+// $Id: Sources.h,v 1.2 2007-12-03 12:03:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SOURCES_H 
 #define LOKI_SOURCES_H 1
@@ -17,7 +17,7 @@
 // ============================================================================
 namespace LoKi 
 {
-  namespace Filters 
+  namespace Functors
   {
     /** @class Sources Sources.h LoKi/Sources.h
      *
@@ -62,13 +62,13 @@ namespace LoKi
       virtual  Source* clone() const { return new Source ( *this ) ; }
       /// MANATORY: the only one essenial method 
       virtual typename Self::result_type operator() 
-        ( typename Self::argument /* a */ ) const 
+        ( /* typename Self::argument */ ) const 
       {
         // locate the service if needed:
-        if ( !m_svc.validPointer() ) 
+        if ( !m_svc ) 
         {
-          const LoKi::Services::Services& svc = LoKi::Services::instance() ;
-          IDataProviderSvc* evtSvc = svc.evtSvc() ;
+          const LoKi::Services::Services& svcs = LoKi::Services::instance() ;
+          IDataProviderSvc* evtSvc = svcs.evtSvc() ;
           Assert ( 0 != evtSvc , "Could not extract EventDataService!" ) ;
           m_svc = evtSvc ;
         }
@@ -77,18 +77,18 @@ namespace LoKi
         // check the validity:
         Assert ( !(!data) , "No valid data is found at '" + m_path + "'" ) ;
         // return the valid data 
-        return Self::result_type( data->begin() , data->end() ) ;
+        return typename Self::result_type( data->begin() , data->end() ) ;
       }
     public:
       /// get the service
       const LoKi::Interface<IDataProviderSvc>& evtSvc() const { return m_svc ; }
     private:
       // the data provider service 
-      LoKi::Interface<IDataProviderSvc> m_svc ; ///< data provider service
+      mutable LoKi::Interface<IDataProviderSvc> m_svc ; ///< data provider service
       // TES location of the data 
       std::string                       m_path ; ///< TES location of data 
     } ;
-  } // end of namespace LoKi::Filters
+  } // end of namespace LoKi::Functors
   // ==========================================================================
   /** simple "source" function
    *
@@ -102,7 +102,7 @@ namespace LoKi
    *
    *   std::vector<TYPE> out = in >> tee ( fun ) ;
    *
- 
+   *
    *  @endcode 
    *
    *  The concept belongs to the Gerhard "The Great" Raven.
@@ -111,14 +111,14 @@ namespace LoKi
    *  @date 2007-11-28
    */
   template <class TYPE>
-  inline 
-  std::vector<TYPE*>
+  inline
+  LoKi::Functors::Source<TYPE>
   source ( const std::string& path     , 
            IDataProviderSvc*  svc  = 0 )
   {
-    return LoKi::Filters::Source<TYPE>( path , svc ) ;
+    return LoKi::Functors::Source<TYPE>( path , svc ) ;
   }
-  
+  // ==========================================================================
   
 } // end of namespace LoKi
 // ============================================================================

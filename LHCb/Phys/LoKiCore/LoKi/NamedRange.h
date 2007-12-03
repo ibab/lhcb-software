@@ -1,4 +1,4 @@
-// $Id: NamedRange.h,v 1.7 2007-07-23 17:07:39 ibelyaev Exp $
+// $Id: NamedRange.h,v 1.8 2007-12-03 12:03:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_NAMEDRANGE_H 
 #define LOKI_NAMEDRANGE_H 1
@@ -99,6 +99,26 @@ namespace LoKi
     // the name of the range 
     std::string m_name ; ///< the name of the range
   };
+  // ==========================================================================
+  /** simple function to create the named range form arbitrary container 
+   *  
+   *  @code
+   *
+   *    const CONTAINER& cnt = ... ;
+   *   
+   *    NamedRange_<CONTAINER> r = range ( cnt , "some name") ;
+   *  
+   *  @endcode 
+   *  
+   *  @author Vanya BELYAEV ibelyaev@physics.syre.edu
+   *  @date 2007-11-29
+   */
+  template <class CONTAINER>
+  inline 
+  NamedRange_<CONTAINER> 
+  range ( const CONTAINER&   cnt  , 
+          const std::string& name ) 
+  { return NamedRange_<CONTAINER>( cnt.begin() , cnt.end() , name ) ; }
   // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.4 2007-11-28 18:09:59 ibelyaev Exp $
+// $Id: Primitives.h,v 1.5 2007-12-03 12:03:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -17,6 +17,7 @@
 #include "LoKi/Field.h"
 #include "LoKi/valid.h"
 #include "LoKi/same.h"
+#include "LoKi/apply.h"
 #include "LoKi/EqualTo.h"
 // ============================================================================
 /** @file
@@ -1503,7 +1504,7 @@ namespace LoKi
   /** @class Compose 
    *  the general case of fun2(fun1) function:
    */  
-  template <class TYPE,class TYPE1, class TYPE2>
+  template <class TYPE,class TYPE1, class TYPE2, class TYPE3=TYPE1>
   class Compose : public LoKi::Functor<TYPE,TYPE2>
   {
   private:
@@ -1515,12 +1516,12 @@ namespace LoKi
     /// contructor
     Compose
     ( const LoKi::Functor<TYPE,TYPE1>&  fun1 , 
-      const LoKi::Functor<TYPE1,TYPE2>& fun2 )
+      const LoKi::Functor<TYPE3,TYPE2>& fun2 )
       : LoKi::Functor<TYPE,TYPE2> () 
       , m_fun1 ( fun1 ) 
       , m_fun2 ( fun2 )
     {}
-    /// copy contructor
+    /// copy constructor
     Compose ( const Compose& right ) 
       : LoKi::AuxFunBase ( right ) 
       , LoKi::Functor<TYPE,TYPE2> ( right ) 
@@ -1533,15 +1534,19 @@ namespace LoKi
     virtual  Compose* clone() const { return new Compose ( *this ) ; }    
     /// the only one essential method ("function")      
     virtual  result_type operator() ( argument a ) const 
-    { return m_fun2.fun ( m_fun1.fun ( a ) ) ; }
+    { 
+      const LoKi::Apply<TYPE,TYPE1>  f1 ( &m_fun1.fun() ) ;
+      const LoKi::Apply<TYPE3,TYPE2> f2 ( &m_fun2.fun() ) ;
+      return f2.eval ( f1.eval ( a ) ) ;
+    }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << "(" << m_fun1 << ">>" << m_fun2  << ")" ; }
-  public:
+      { return s << "(" << m_fun1 << ">>" << m_fun2  << ")" ; }
+    public:
     // the first functor 
     LoKi::FunctorFromFunctor<TYPE,TYPE1>  m_fun1  ; ///< the first functor 
     // the second functor 
-    LoKi::FunctorFromFunctor<TYPE1,TYPE2> m_fun2 ; ///< the second functor 
+    LoKi::FunctorFromFunctor<TYPE3,TYPE2> m_fun2 ; ///< the second functor 
   } ;
   // ==========================================================================
   /** @class Valid 
@@ -1850,7 +1855,6 @@ namespace LoKi
       return Gaudi::Utils::toString ( a  ) ; 
     }    
   };
-  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 

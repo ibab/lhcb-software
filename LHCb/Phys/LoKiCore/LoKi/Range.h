@@ -1,4 +1,4 @@
-// $Id: Range.h,v 1.14 2007-10-19 13:41:54 cattanem Exp $
+// $Id: Range.h,v 1.15 2007-12-03 12:03:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RANGE_H
 #define LOKI_RANGE_H 1
@@ -9,6 +9,7 @@
 // ============================================================================
 #include <utility>
 #include <vector>
+#include <algorithm>
 // ============================================================================
 /** @file
  *
@@ -54,6 +55,20 @@ namespace LoKi
    *
    *  Useful class for representation of "sequence" of the objects
    *  through the range of valid iterators.
+   * 
+   *  The range could be created over *ALL* container types which 
+   *  supports at least bidirectional iterators.
+   *
+   *  The minimum requirements from the container type:
+   *    - support the concept of "CONTAINER::value_type"
+   *    - support the concept of "CONTAINER::const_iterator"
+   *    - support the concept of "CONTAINER::const_reference"
+   *    - support the concept of "CONTAINER::const_reverse_iterator"
+   *    - the iterator should be ok for "std::distance" and "std::advance" 
+   *    - support for "const_iterator         CONTAINER::begin  () const" 
+   *    - support for "const_iterator         CONTAINER::end    () const" 
+   *    - support for "const_reverse_iterator CONTAINER::rbegin () const" 
+   *    - support for "const_reverse_iterator CONTAINER::rend   () const" 
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-12
@@ -62,9 +77,12 @@ namespace LoKi
   class Range_ : public RangeBase_ 
   {
   public:
+    // ========================================================================
     typedef std::pair<typename CONTAINER::const_iterator,
                       typename CONTAINER::const_iterator> Base ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// type for actual contained iterator
     typedef CONTAINER                                  Container              ;
     typedef typename Container::value_type             value_type             ;
@@ -77,7 +95,9 @@ namespace LoKi
     /// internal types 
     typedef std::pair<iterator,iterator>               _Base                  ;
     typedef Range_<Container>                          _Self                  ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// default constructor
     Range_() : m_base( iterator() , iterator() ) {};
     /** Constructor 
@@ -99,10 +119,12 @@ namespace LoKi
     Range_( iterator ibegin       ) : m_base( ibegin , ibegin ) {};
     /// destructor
     ~Range_(){};
+    // ========================================================================
     /// empty sequence ?
     inline bool   empty () const { return m_base.second == m_base.first  ; }
     /// size of the sequence (number of elements)
-    inline size_t size  () const { return m_base.second  - m_base.first  ; }
+    inline size_t size  () const 
+    { return std::distance ( m_base.first  , m_base.second  ) ; }
     /// access to begin of the sequence (const version )
     inline iterator begin () const { return m_base.first  ; }
     /// access to end   of the sequence (const version)
@@ -114,7 +136,13 @@ namespace LoKi
     /// access for the first element (only for non-empty ranges!)
     inline const_reference front () const { return *( begin ()     ) ; }
     /// access for the back  element (only for non-empty ranges!)
-    inline const_reference back  () const { return *( end   () - 1 ) ; }
+    inline const_reference back  () const 
+    {
+      const_iterator i = end() ;
+      std::advance ( i , -1 ) ;
+      return *i ;
+    }
+    // ========================================================================
     /// get a "slice" of a range, in Python style   
     inline Range_ slice( long index1 , long index2 ) const 
     {
@@ -130,14 +158,24 @@ namespace LoKi
       if ( index1 > (long) size () ) { return  Range_() ; }     // RETURN
       if ( index2 > (long) size () ) { index2  = size() ; }
       
-      return Range_( begin() + index1 , begin() + index2 ) ;    // RETURN 
-    };
+      const_iterator i1 = begin()  ;
+      std::advance ( i1 , index1 ) ;
+      const_iterator i2 = begin()  ;
+      std::advance ( i2 , index2 ) ;    
+      // construct the slice 
+      return Range_( i1 , i2 ) ;                                 // RETURN 
+    }
+    // ========================================================================
     /** non-checked access to the elements by index 
      *  (valid only for non-empty sequences)
      *  @param index the index of the lement to be accessed 
      */
     inline const_reference operator () ( const size_t index ) const
-    { return *( begin() + index ) ; }
+    { 
+      const_iterator i = begin() ;
+      std::advance ( i , index ) ;
+      return *i ; 
+    }
     /** Checked access to the elements by index 
      *  (valid only for all sequences)
      *  @exception LoKi::Exception for out-of-range access  
@@ -149,15 +187,45 @@ namespace LoKi
       if ( index < 0 || index >= (long) size () )
       { rangeException( index , size() ) ; }
       return (*this) ( index );
-    };
+    }
     /** non-checked access to the elements by index 
      *  (valid only for non-empty sequences)
-     *  (for Python collection)
-     *  @attention return method by 'value', not by 'reference'
      *  @param index the index of the lement to be accessed 
      */
     inline const_reference operator [] ( const long index ) const
-    { return *( begin() + index ) ; }
+    { return (*this)( index ) ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// compare with another range 
+    bool operator< ( const Range_& right ) const 
+    {
+      return std::lexicographical_compare
+        ( begin () , end () , right.begin () , right.end () ) ;
+    }
+    /// compare with the base container 
+    bool operator< ( const Container& right ) const 
+    {
+      return std::lexicographical_compare
+        ( begin () , end () , right.begin () , right.end () ) ;
+    }   
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// equality with another range 
+    bool operator==( const Range_& right ) const 
+    {
+      if ( &right        == this    ) { return true  ; } // RETURN 
+      if ( right.size () != size () ) { return false ; } // RETURN 
+      return std::equal ( begin () , end () , right.begin() ) ;
+    }
+    /// equality with the base container 
+    bool operator==( const Container& right ) const 
+    {
+      if ( right.size () != size () ) { return false ; } // RETURN 
+      return std::equal ( begin () , end () , right.begin() ) ;
+    }
+    // ========================================================================
   public:
     /// conversion operator to the std::pair 
     operator const Base&      () const { return base () ; }
@@ -165,8 +233,41 @@ namespace LoKi
     inline   const Base& base () const { return m_base ; }    
   private:
     // the base itself 
-    Base m_base ;    ///<the base itself 
+    Base m_base ;    ///< the base itself 
   }; // end of class Range_
+  // ==========================================================================
+  /** simple function to create the range from the arbitrary container 
+   *  
+   *  @code
+   *
+   *    const CONTAINER& cnt = ... ;
+   *   
+   *    Range_<CONTAINER> r = range ( cnt ) ;
+   *  
+   *  @endcode 
+   *  
+   *  The range could be created over *ALL* container types which 
+   *  supports at least the bidirectional iterators.
+   *
+   *  The minimum requirements from the container type:
+   *    - support the concept of "CONTAINER::value_type"
+   *    - support the concept of "CONTAINER::const_iterator"
+   *    - support the concept of "CONTAINER::const_reference"
+   *    - support the concept of "CONTAINER::const_reverse_iterator"
+   *    - the iterator should be ok for "std::distance" and "std::advance"
+   *    - support for "const_iterator         CONTAINER::begin  () const" 
+   *    - support for "const_iterator         CONTAINER::end    () const" 
+   *    - support for "const_reverse_iterator CONTAINER::rbegin () const" 
+   *    - support for "const_reverse_iterator CONTAINER::rend   () const" 
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syre.edu
+   *  @date 2007-11-29
+   */
+  template <class CONTAINER>
+  inline 
+  Range_<CONTAINER> 
+  range ( const CONTAINER& cnt ) 
+  { return Range_<CONTAINER>( cnt.begin() , cnt.end() ) ; }
   // ==========================================================================  
 } // end of namespace LoKi
 // ============================================================================

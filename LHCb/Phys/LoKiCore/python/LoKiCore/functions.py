@@ -11,7 +11,7 @@ _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 from LoKiCore.decorators import LoKi
 
 # =============================================================================
-def monitor ( o  , m ) :
+def monitor ( o  , *m ) :
     """
     Create the monitored pedicate/function:
 
@@ -28,7 +28,7 @@ def monitor ( o  , m ) :
     >>>  cut = monitor ( cut , counter )
     
     """
-    return o.__monitor__ ( m )
+    return o.__monitor__ ( *m )
 
 # =============================================================================
 def switch ( c  , v1 , v2  ) :
@@ -244,10 +244,10 @@ def found  ( s , *a ) :
     return s.__found__ ( *a )
 
 # =============================================================================
-## Accumulate the value of th efunction through decay tree or container
+## Accumulate the value of the function through decay tree or container
 def accumulate ( s , *a ) :
-    """x
-    Accumulate the value of th efunction through decay tree or container
+    """
+    Accumulate the value of the function through decay tree or container
     """
     return s.__accumulate__ ( *a )
 
@@ -255,35 +255,94 @@ def accumulate ( s , *a ) :
 ## find a min-value of certain function ober decay tree or container 
 def min_value ( s , *a ) :
     """
-    Find a min-value fo certain function ober decay tree or container 
+    1. Find a min-value fo certain function ober decay tree or container
+
+    2. Create 'min_value' vector function from the scalar function
+    
     """
     return s.__min_value__ ( *a )
+
+# =============================================================================
+## Create 'min_abs_value' vector function from the scalar function
+def min_abs_value ( s , *a ) :
+    """
+    Create 'min_abs_value' vector function from the scalar function:
+    
+    >>> fun = ...
+    >>> vfun = min_abs_value ( fun ) 
+    
+    """
+    return s.__min_abs_value__ ( *a )
 
 
 # =============================================================================
 ## find a max-value of certain function over the decay tree or container 
 def max_value ( s , *a ) :
     """
-    Find a max-value fo certain function ober decay tree or container 
+    1. Find a max-value fo certain function ober decay tree or container
+    
+    2. Create 'min_value' vector function from the scalar function
+    
     """
     return s.__max_value__ ( *a )
 
+# =============================================================================
+## Create 'max_abs_value' vector function from the scalar function
+def max_abs_value ( s , *a ) :
+    """
+    Create 'max_abs_value' vector function from the scalar function:
+    
+    >>> fun = ...
+    >>> vfun = max_abs_value ( fun ) 
+    
+    """
+    return s.__max_abs_value__ ( *a )
 
 # =============================================================================
 ## find the element from decay tree or container whcih minimize the function
 def min_element ( s , *a ) :
     """
-    Find the element from decay tree or container whcih minimize the function
+    1. Find the element from decay tree or container whcih minimize the function
+    
+    2. Create 'min_element' vector function from the scalar function
+    
     """
     return s.__min_element__ ( *a )
+
+# =============================================================================
+## Create 'min_abs_element' vector function from the scalar function
+def min_abs_element ( s , *a ) :
+    """
+    Create 'min_abs_element' vector function from the scalar function
+
+    >>> fun = ...
+    >>> vfun = min_abs_element ( fun ) 
+    
+    """
+    return s.__min_abs_element__ ( *a )
 
 # =============================================================================
 ## find the element from decay tree or container whcih maximizes the function
 def max_element ( s , *a ) :
     """
-    Find the element from decay tree or container whcih minimize the function
+    1. Find the element from decay tree or container whcih minimize the function
+    
+    2. Create 'min_element' vector function from the scalar function    
+    
     """
-    return s.__min_element__ ( *a )
+    return s.__max_element__ ( *a )
+
+# =============================================================================
+## Create 'max_abs_element' vector function from the scalar function
+def max_abs_element ( s , *a ) :
+    """
+    Create 'max_abs_element' vector function from the scalar function
+
+    >>> fun = ...
+    >>> vfun = max_abs_element ( fun ) 
+    
+    """
+    return s.__max_abs_element__ ( *a )
 
 # =============================================================================
 # Print the decay tree for the (XXX)Particle:
@@ -342,6 +401,61 @@ def __pname__ ( self ) :
     """
     return LoKi.Particles.nameFromPID( self.particleID() ) 
 
+# =============================================================================
+## Construct 'select/filter' vector-function from the scalar predicate:
+def select ( s ) :
+    """
+    Construct 'select/filter' vector-function from the scalar predicate:
+
+    >>> cut = ...
+    >>> selector = select ( cut )
+        
+    The concept belongs to Gerghard 'The Great' Raven
+            
+    """
+    return s.__select__() 
+
+# =============================================================================
+## Construct 'process' vector-function from the scalar functor 
+def process ( s ) :
+    """
+    Construct 'process' vector-function from the scalar functor 
+
+    >>> functor = ...
+    >>> processor = process ( functor )
+        
+    The concept belongs to Gerghard 'The Great' Raven
+            
+    """
+    return s.__process__() 
+
+def tee ( s ) :
+    """
+    Construct 'tee' vector-function form the vector functor
+
+    >>> functor  = ...
+    >>> functorT = tee ( functor )
+        
+    The concept belongs to Gerghard 'The Great' Raven
+            
+    """
+    return s.__tee__ () 
+    
+# =============================================================================
+## Construct 'yield/map' vector-function from the scalar functor 
+def yields ( s ) :
+    """
+    Construct 'yield/map' vector-function from the scalar functor 
+
+    >>> functor = ...
+    >>> mapper = yields ( functor )
+    
+    The concept belongs to Gerghard 'The Great' Raven
+            
+    """
+    return s.__yields__() 
+
+    
 # =============================================================================
 # The END
 # =============================================================================

@@ -1,4 +1,4 @@
-// $Id: BiFunctions.h,v 1.4 2007-11-28 13:56:32 ibelyaev Exp $
+// $Id: BiFunctions.h,v 1.5 2007-12-03 12:03:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_BIFUNCTIONS_H 
 #define LOKI_BIFUNCTIONS_H 1
@@ -21,6 +21,11 @@ namespace LoKi
     : public    std::unary_function<const LoKi::Holder<TYPE1,TYPE2>,TYPE3> 
     , virtual   public LoKi::AuxFunBase
   {
+  public:
+    // parameters: argument
+    typedef LoKi::Holder<TYPE1,TYPE2>  Type1 ; ///< parameters: argument
+    // parameters: return value 
+    typedef TYPE3                      Type2 ; ///< parameters: return value
   public:
     /// the type of the argument
     typedef LoKi::Holder<TYPE1,TYPE2> TYPE ;

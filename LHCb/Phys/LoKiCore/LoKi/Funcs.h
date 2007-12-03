@@ -1,5 +1,5 @@
 
-// $Id: Funcs.h,v 1.6 2007-11-28 18:09:59 ibelyaev Exp $
+// $Id: Funcs.h,v 1.7 2007-12-03 12:03:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCS_H 
 #define LOKI_FUNCS_H 1
@@ -23,7 +23,7 @@ namespace LoKi
   namespace Dicts
   {
     // ========================================================================
-    /** @struct Funcs Funcs.h LoKi/Funcs.h
+    /** @struct Funcs 
      *  The fictive structure used for creation of Reflex dictionaries 
      *  The structure is moved from Phys/LoKiDict package 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -38,32 +38,27 @@ namespace LoKi
       typename LoKi::BasicFunctors<TYPE>::PredicateFromPredicate m_103 ;
       typename LoKi::BasicFunctors<TYPE>::FunctionFromFunction   m_104 ;
       
-      LoKi::Valid<TYPE>                  m_201  ;
+      LoKi::Valid<TYPE>                  m_301  ;      
       
-      LoKi::TheSame<TYPE>                m_204  ;
-      // LoKi::SimpleSwitch<TYPE>           m_202  ;
-      // LoKi::Switch<TYPE>                 m_203  ;
-      // LoKi::EqualToValue<TYPE>           m_205  ;
-      // LoKi::Min<TYPE>                    m_301 ;
-      // LoKi::Max<TYPE>                    m_302 ;
-      // LoKi::And<TYPE>                    m_303 ;
-      // LoKi::Or<TYPE>                     m_304 ;
-      // LoKi::Not<TYPE>                    m_305 ;
-      // LoKi::Less<TYPE>                   m_306 ;
-      // LoKi::Equal<TYPE>                  m_307 ;
-      // LoKi::LessOrEqual<TYPE>            m_308 ;
-      // LoKi::Plus<TYPE>                   m_309 ;
-      // LoKi::Minus<TYPE>                  m_310 ;
-      // LoKi::Multiply<TYPE>               m_311 ;
-      // LoKi::Divide<TYPE>                 m_312 ;
-      // LoKi::ComposeFunction<TYPE>        m_313 ;
-      // LoKi::ComposeFunction2<TYPE>       m_314 ;
-      // LoKi::NotEqual<TYPE>               m_315 ;
-      // LoKi::NotEqualToValue<TYPE>        m_316 ;
-      //
       Funcs () ; // undefined constructor 
     } ;
     // ========================================================================
+    /** @struct VFuncs 
+     *  The fictive structure used for creation of Reflex dictionaries 
+     *  The structure is moved from Phys/LoKiDict package 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-05-27
+     */ 
+    template <class TYPE>
+    struct VFuncs
+    {
+      LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >   m_100 ;
+      LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> > m_101 ;
+      LoKi::FunctorFromFunctor<std::vector<TYPE>,TYPE>                 m_102 ;
+      LoKi::FunctorFromFunctor<std::vector<TYPE>,double>               m_103 ;
+      //
+      VFuncs () ; // undefined constructor 
+    } ;
   } // end of namespace LoKi::Dicts 
 } // end of namespace LoKi
 // ============================================================================
