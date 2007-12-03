@@ -3,6 +3,7 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r22 2007-12-03 ===================
 ! 2007-11-30 Wouter Hulsbergen
  - set and use reference for each node (no longer from measurement)
  - set references using TrackTraj from all existing states
