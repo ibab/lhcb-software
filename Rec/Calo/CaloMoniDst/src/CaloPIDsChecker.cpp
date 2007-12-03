@@ -1,20 +1,4 @@
-// $Id: CaloPIDsChecker.cpp,v 1.2 2007-08-24 11:14:20 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2007/07/25 19:49:13  odescham
-// major release : see doc
-//
-// Revision 1.4  2005/12/08 13:14:40  odescham
-// v2r1 - use Cnv tracks only in CaloPIDsMontor.cpp
-//
-// Revision 1.3  2005/11/07 12:16:38  odescham
-// v2r0 - adapt to the new Track Event Model
-//
-// Revision 1.2  2005/05/08 09:58:25  ibelyaev
-//  remove associators, update options
-//
+// $Id: CaloPIDsChecker.cpp,v 1.3 2007-12-03 07:52:13 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -338,7 +322,6 @@ StatusCode CaloPIDsChecker::divide( AIDA::IHistogram1D *hh1
   }
   
   const double content = hh3->sumBinHeights();
-  const double nbins   = hh3->axis().bins();
   info() << "'" << hh3->title()   << "' = "
          << (content/count)*100 << "[%]" << endmsg;
   

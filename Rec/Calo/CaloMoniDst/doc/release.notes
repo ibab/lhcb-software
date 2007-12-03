@@ -1,16 +1,16 @@
-! $Id: release.notes,v 1.15 2007-11-22 16:41:58 odescham Exp $ 
-! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
+! $Id: release.notes,v 1.16 2007-12-03 07:52:13 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloMoniDst v3r0p1 2007-12-03 ===================
+! 2007-12-03 - Marco Cattaneo
+ - Fix a compiler warning
 
 ! 2007-11-22 - Olivier Deschamps
  - fix in CaloPhotonChecker.cpp
-
 
 !========================== CaloMoniDst v3r0 2007-10-08 ===================
 ! 2007-09-24 - Olivier Deschamps
