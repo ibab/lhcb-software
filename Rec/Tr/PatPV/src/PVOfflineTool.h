@@ -1,4 +1,4 @@
-// $Id: PVOfflineTool.h,v 1.1 2007-12-04 08:46:52 witekma Exp $
+// $Id: PVOfflineTool.h,v 1.2 2007-12-04 11:13:06 witekma Exp $
 #ifndef PVOFFLINETOOL_H 
 #define PVOFFLINETOOL_H 1
 // Include files:
@@ -69,7 +69,7 @@ private:
 			      std::vector<LHCb::RecVertex>& outvtxvec, 
 			      LHCb::RecVertex& outvtx);
 
-  StatusCode readTracks( std::vector<const LHCb::Track*>& rtracks);
+  void readTracks( std::vector<const LHCb::Track*>& rtracks);
 
   void getSeeds(std::vector<const LHCb::Track*>& rtracks, 
                 std::vector<double>& zseeds);

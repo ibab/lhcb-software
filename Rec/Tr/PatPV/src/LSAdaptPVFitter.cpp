@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.cpp,v 1.1 2007-12-04 08:46:52 witekma Exp $
+// $Id: LSAdaptPVFitter.cpp,v 1.2 2007-12-04 11:13:06 witekma Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -48,9 +48,9 @@ StatusCode LSAdaptPVFitter::initialize()
     return  StatusCode::FAILURE;
   }
   // Full track extrapolator
-  m_fullExtrapolator = tool<ITrackExtrapolator>("TrackHerabExtrapolator",this);
+  m_fullExtrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator",this);
   if(!m_fullExtrapolator) {
-    err() << "Unable to get TrackHerabExtrapolator" << endmsg;
+    err() << "Unable to get TrackMasterExtrapolator" << endmsg;
     return  StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
@@ -122,7 +122,6 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
       hess(i,j) = 0.0;
     }
   }
-  StatusCode sc = StatusCode::SUCCESS;
   double zPrevious = 99999.0;
   double zVtx = 0.0;
   bool converged = false;
@@ -170,7 +169,7 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
     }
     return StatusCode::FAILURE;
   }
-  return sc;
+  return StatusCode::SUCCESS;;
 }
 
 //=============================================================================
@@ -221,7 +220,7 @@ StatusCode LSAdaptPVFitter::addTrackForPV(const LHCb::Track* pvtr,
 //=============================================================================
 // initialize vertex
 //=============================================================================
-StatusCode LSAdaptPVFitter::initVertex(PVTracks& pvTracks, PVVertex& pvVtx, 
+void LSAdaptPVFitter::initVertex(PVTracks& pvTracks, PVVertex& pvVtx, 
                                           double zseed) 
 {
   if(msgLevel(MSG::VERBOSE)) {
@@ -258,7 +257,6 @@ StatusCode LSAdaptPVFitter::initVertex(PVTracks& pvTracks, PVVertex& pvVtx,
   }
   pvVtx.primVtx.setCovMatrix(hsm);
   pvVtx.primVtx.setChi2(0.0);
-  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -464,7 +462,7 @@ StatusCode LSAdaptPVFitter::outVertex(LHCb::RecVertex& vtx,
 //=============================================================================
 // Compute PV chi2
 //=============================================================================
-double LSAdaptPVFitter::setChi2(LHCb::RecVertex& vtx, 
+void LSAdaptPVFitter::setChi2(LHCb::RecVertex& vtx, 
                                 PVTrackPtrs& pvTracks)
 {
   int nDoF = -3;
@@ -482,7 +480,6 @@ double LSAdaptPVFitter::setChi2(LHCb::RecVertex& vtx,
   }
   vtx.setChi2(chi2);
   vtx.setNDoF(nDoF);
-  return chi2 / nDoF;
 }
 
 //=============================================================================

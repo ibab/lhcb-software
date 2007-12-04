@@ -1,4 +1,4 @@
-// $Id: PVOfflineTool.cpp,v 1.1 2007-12-04 08:46:52 witekma Exp $
+// $Id: PVOfflineTool.cpp,v 1.2 2007-12-04 11:13:06 witekma Exp $
 // Include files:
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
@@ -210,13 +210,13 @@ void PVOfflineTool::getSeeds(std::vector<const LHCb::Track*>& rtracks,
 //=============================================================================
 // Read tracks
 //=============================================================================
-StatusCode PVOfflineTool::readTracks(std::vector<const LHCb::Track*>& rtracks) 
+void PVOfflineTool::readTracks(std::vector<const LHCb::Track*>& rtracks) 
 {
 
   if(msgLevel(MSG::VERBOSE)) {
     verbose() << "readTracks method" << endmsg;
   }
-  StatusCode sc = StatusCode::SUCCESS;
+
   unsigned int ntrall = 0;
   std::vector<std::string>::iterator itTrName;
   for(itTrName = m_inputTracks.begin(); itTrName != m_inputTracks.end(); 
@@ -239,7 +239,6 @@ StatusCode PVOfflineTool::readTracks(std::vector<const LHCb::Track*>& rtracks)
       }
     }
   }
-  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: PatPVOffline.cpp,v 1.2 2007-12-04 08:46:52 witekma Exp $
+// $Id: PatPVOffline.cpp,v 1.3 2007-12-04 11:13:06 witekma Exp $
 // Include files:
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
@@ -50,19 +50,22 @@ StatusCode PatPVOffline::initialize() {
 StatusCode PatPVOffline::execute() {
   if(msgLevel(MSG::DEBUG)) debug() << "Execute" << endmsg;
 
-  std::vector<LHCb::RecVertex> rvts;
-  m_pvsfit->reconstructMultiPV(rvts);
-
   LHCb::RecVertices* v2tes = new LHCb::RecVertices();
+  put(v2tes,m_outputVertices);  
+
+  std::vector<LHCb::RecVertex> rvts;
+  StatusCode scfit = m_pvsfit->reconstructMultiPV(rvts);
+  if (scfit != StatusCode::SUCCESS) {
+    return StatusCode::SUCCESS;
+  }
+
   for(std::vector<LHCb::RecVertex>::iterator iv = rvts.begin(); iv != rvts.end(); iv++) {
     LHCb::RecVertex* vertex = new LHCb::RecVertex();
     *vertex = *iv;
     vertex->setTechnique(LHCb::RecVertex::Primary);
     v2tes->insert(vertex);
-
   }
  
-  put(v2tes,m_outputVertices);
 
 // ---> Debug
   if(msgLevel(MSG::DEBUG)) {

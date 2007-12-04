@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.h,v 1.1 2007-12-04 08:46:52 witekma Exp $
+// $Id: LSAdaptPVFitter.h,v 1.2 2007-12-04 11:13:06 witekma Exp $
 #ifndef LSADAPTPVFITTER_H
 #define LSADAPTPVFITTER_H 1
 // from Gaudi
@@ -42,7 +42,7 @@ private:
   StatusCode fit(LHCb::RecVertex& vtx,std::vector<PVTrack*>& pvTracks);
   // Add track for PV
   StatusCode addTrackForPV(const LHCb::Track* str,std::vector<PVTrack>& pvTracks);
-  StatusCode initVertex(PVTracks& pvTracks, 
+  void initVertex(PVTracks& pvTracks, 
                       PVVertex& pvVertex, 
                       double zseed);
   // Prepare hessian matrix and vectorD0
@@ -73,8 +73,9 @@ private:
                        Gaudi::SymMatrix3x3& hess,
                        ROOT::Math::SVector<double,3>& d0vec);
   // Set current chi2
-  double setChi2(LHCb::RecVertex& vtx, 
-                 PVTrackPtrs& pvTracks);
+  void setChi2(LHCb::RecVertex& vtx, 
+               PVTrackPtrs& pvTracks);
+  
   // Get Tukey's weight
   double getTukeyWeight(double& trchi2,int& iter);
 };

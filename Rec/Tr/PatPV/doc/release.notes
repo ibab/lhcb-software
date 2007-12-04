@@ -6,6 +6,9 @@
 
 !============================= PatPV v3r0 2007-12-04 =========================
 ! 2007-12-04 - Mariusz Witek
+  - Correction for unchecked StatusCode
+
+! 2007-12-04 - Mariusz Witek
   - major modification of the structure and some improvements
   - split PatPVOffline into Alg and Tool (PVOfflineTool)
   - put interafce IPVOfflineTool into Tr/TrackInterfaces
