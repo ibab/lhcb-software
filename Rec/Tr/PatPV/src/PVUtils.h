@@ -1,4 +1,4 @@
-// $Id: PVUtils.h,v 1.1.1.1 2007-10-09 18:46:14 smenzeme Exp $
+// $Id: PVUtils.h,v 1.2 2007-12-04 08:46:52 witekma Exp $
 #ifndef PVUTILS_H 
 #define PVUTILS_H 1
 
@@ -15,7 +15,7 @@ namespace LHCb {
 class PVTrack 
 {
 public:
-  LHCb::Track* refTrack;
+  const LHCb::Track* refTrack;
   // Current state of the track at the current point
   LHCb::State stateG;
   // Normalized vector of slope
@@ -27,7 +27,8 @@ public:
   Gaudi::XYZVector vd0;          // Impact parameter vector
   double d0;                     // Impact parameter
   double err2d0;                 // IP error squared
-  double chi2;                   // chi2 = d0 / d0err**2
+  double chi2;                   // chi2 = d02 / d0err**2
+  double weight;                 // Weight assigned to track
 
   inline double zClose() { 
     return stateG.z() - unitVect.z() * 
@@ -38,5 +39,12 @@ public:
 
 typedef std::vector<PVTrack> PVTracks;
 typedef std::vector<PVTrack*> PVTrackPtrs;
+
+class PVVertex {
+public:
+  PVTrackPtrs pvTracks;
+  LHCb::RecVertex primVtx;
+};
+typedef std::vector<PVVertex> PVVertices;
 
 #endif // PVUTILS_H
