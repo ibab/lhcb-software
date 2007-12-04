@@ -4,28 +4,12 @@ modulename.py (following python convention)
 
 Module header: date, author name...
 ===================================
-Follow the structure:
-
-  #  Module with functions that deal with MC particles and vertices
-  #  @date 2007-11-28
-  #  @author Diego Martinez diego.martinez.santos@cern.ch
-  #  @author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
-  # =============================================================================
-  """ Module with functions that deal with MC particles and vertices """
-  # =============================================================================
-  __author__ = "Diego MARTINEZ diego.martinez.santos@cern.ch"
-  __author__ = "Jose Angel HERNANDO jose.angel.hernando-morata@cern.ch"
-  # =============================================================================
-
+Follow the structure in desktop.py, that makes it understandable by doxygen
 
 Variable, method, function naming
 =========================
 variableOrFunctionName (following LHCb C++ convention)
 VARIABLENAME for global variables
-
-Names according to variable type
-================================
-bool switch: WANT_VARIABLENAME
 
 Imports
 =======
@@ -42,8 +26,7 @@ Allways write the return at the end
 Documentation
 =============
 Allays document between """ every module, class and function
-In the last line between """, write always:
-Author: Pepito Grillo, pepito.grillo@cern.ch
+Follow the structure in desktop.py, that makes it understandable by doxygen
 
 
 Comments

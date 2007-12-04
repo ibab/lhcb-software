@@ -1,13 +1,17 @@
 #! /usr/bin/env python
-#  @date 2007-11-28
-#  @author Hugo RUIZ hugo.ruiz@cern.ch
-#  @author Jose Angel HERNANDO jose.angel.hernando-morata@cern.ch
-#  SEE LAST FUNCTION FOR EXEMPLES ON HOW TO USE THE MODULE
 # =============================================================================
-""" Module that deals with counters and root persistency"""
-# =============================================================================
-__author__ = "Hugo RUIZ hugo.ruiz@cern.ch"
-__author__ = "Jose Angel HERNANDO jose.angel.hernando-morata@cern.ch"
+""" @namespace desktop
+@brief Deals with counters and root persistency.
+
+Module that deals with counters and root persistency.
+Allows initializing and printing all counters in a single command.
+Allows writting all registered ROOT objects in a file in a single command.
+See desktopExample() for examples on how to use this module.
+
+@author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
+@author Hugo Ruiz hugo.ruiz@cern.ch
+@date 2007-11-28
+"""
 # =============================================================================
 
 
@@ -30,28 +34,42 @@ TOOLS = {}
 #---------------------------------------------------
 #---------------------------------------------------
 def initCounter(name, n = 0):
-    """ init counter
+    """ Initialize counter
+    @param name Counter name
+    @param n Initial counter value
+    @author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
     """
     COUNTERS[name] = n
     return
 
 #---------------------------------------------------
 def initCounters(nameList, n = 0):
-    """ init counter list
-    Author: Hugo Ruiz, hugo.ruiz@cern.ch
+    """ Initialize counter list
+    @param nameList List of counter names
+    @param n Initial counter value
+    @author Hugo Ruiz hugo.ruiz@cern.ch
     """
+
     for iName in nameList:
         COUNTERS[iName] = n
     return
 
 #---------------------------------------------------
 def increaseCounter(name,n=1):
-    """ increase counter
+    """ Increases counter
+    @param name Counter name
+    @param n Value to be increased
+    @author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
     """
     COUNTERS[name] = COUNTERS[name] + n
 
 #---------------------------------------------------
 def showCounter(name, refName = False):
+    """ Prints counter value in a nice format
+    @param name Counter name
+    @param refName Name of counter to be used as reference for computation of percentage
+    @author Hugo Ruiz hugo.ruiz@cern.ch
+    """
     out =  name+': '+ str(COUNTERS[name])
     if refName and name!= refName:
         if COUNTERS[name] > 0 and COUNTERS[refName] > 0:
@@ -62,16 +80,31 @@ def showCounter(name, refName = False):
 
 #---------------------------------------------------
 def showCounters(nameList, refName = False):
+    """ Prints list of counter values in a nice format
+    @param nameList List of names of counters to be printed
+    @param refName Name of counter to be used as reference for computation of percentage
+    @author Hugo Ruiz hugo.ruiz@cern.ch
+    """
     for iName in nameList:
         showCounter(iName, refName)
     return
 
 #---------------------------------------------------
 def counterValue(name):
+    """ Value of the counter
+    @param name Counter name
+    @returns Value of the counter
+    @author Hugo Ruiz hugo.ruiz@cern.ch
+    """
     return COUNTERS[name]
 
 #---------------------------------------------------
 def setCounterValue(name, n):
+    """ Set the value of a counter
+    @param name Counter name
+    @returns n Value to be set
+    @author Hugo Ruiz hugo.ruiz@cern.ch
+    """
     COUNTERS[name] = n
     return
 
@@ -85,6 +118,7 @@ def setCounterValue(name, n):
 #---------------------------------------------------
 def tool(gaudi,toolname,toolinterface):
     """ retrieve a tool
+    @author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
     """
     if (TOOLS.has_key(toolname)): return TOOLS[toolname]
     TOOLS[toolname] = gaudi.toolsvc().create(toolname,interface=toolinterface)
@@ -97,7 +131,8 @@ def tool(gaudi,toolname,toolinterface):
 #---------------------------------------------------
 def register( rootObject ):
     """ Register a ROOT object in main dictionary.
-    Author: Hugo Ruiz, hugo.ruiz@cern.ch
+    @param rootOjbect Root object to be registered
+    @author Hugo Ruiz hugo.ruiz@cern.ch
     """
     objectName = rootObject.GetName()
 
@@ -111,9 +146,10 @@ def register( rootObject ):
 
 #---------------------------------------------------
 def showRegistered():
-    """ Show registered objects in an organized way.
-    Author: Hugo Ruiz, hugo.ruiz@cern.ch
+    """ Print registered objects in an organized way.
+    @author Hugo Ruiz hugo.ruiz@cern.ch
     """
+
     objectList = {}
     for iObjectName in ROOTOBJECTS.keys():
         iClassName = ROOTOBJECTS[iObjectName].ClassName()
@@ -126,8 +162,9 @@ def showRegistered():
 #---------------------------------------------------
 def deleteRegistered():
     """  Delete all registered objects.
-    Author: Hugo Ruiz, hugo.ruiz@cern.ch
+    @author Hugo Ruiz hugo.ruiz@cern.ch
     """
+
     if not ROOTOBJECTS.keys():
         print 'No objects registered'
         return
@@ -140,15 +177,14 @@ def deleteRegistered():
 
 
 #---------------------------------------------------
-def saveRegistered(fileName = False, addDate = True, keepOld = True):
-    """ Write ROOT OBJECTS in a root file
-    Author: Hugo Ruiz, hugo.ruiz@cern.ch
+def saveRegistered(fileName = 'desktop', addDate = True, keepOld = True):
+    """ Write all registered ROOT objects in a root file
+    @param fileName Name of the root file (without .root extension)
+    @param addDate Add _[current date] to file name, to allow keeping different versions
+    @param keepOld Rename the existing version of the root file to .old
+    @author Hugo Ruiz hugo.ruiz@cern.ch
     """
     
-    # Default file naname
-    if not fileName:
-        fileName = 'desktop'
-        
     # Add _date to avoid loosing data    
     if addDate:
         fileName += '_'+str(datetime.datetime.today().date())+'.root'
@@ -172,8 +208,11 @@ def saveRegistered(fileName = False, addDate = True, keepOld = True):
 #---------------------------------------------------
 def my( objectName ):
     """ Return a registered object.
-    Author: Hugo Ruiz, hugo.ruiz@cern.ch.
+    @param objectName Name of the object
+    @returns The registered object
+    @author Hugo Ruiz hugo.ruiz@cern.ch
     """
+
     return ROOTOBJECTS[ objectName ]
     
 
@@ -181,7 +220,7 @@ def my( objectName ):
 #---------------------------------------------------
 def desktopExample():
     """ Example of the functionality of this module.
-    Author: Hugo Ruiz, hugo.ruiz@cern.ch
+    @author Hugo Ruiz hugo.ruiz@cern.ch
     """
 
     # Initialize counters

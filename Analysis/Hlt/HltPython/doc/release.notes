@@ -4,6 +4,11 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2007-12-4 - Hugo Ruiz
+ - Remove centella.py (replaced by desktop.py)
+ - In doc: add files needed for doxygen documentation
+           modify conventions to allow for doxygen documentation
+
 ! 2007-12-2 - Hugo Ruiz
  - Add desktop.py, evolution of centella.py, with a solution to deal counters, root objects and gaudi tools 
 in a simple way

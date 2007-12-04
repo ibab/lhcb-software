@@ -62,9 +62,10 @@ def angle(a,b):
 
 
 #---------------------------------------------------
-def invM (partList):
+def invMass (partList):
     """ Returns the invariant mass of a set of particles or MC particles.
-    Author: Hugo Ruiz, hugo.ruiz@cern.ch"""
+    Author: Hugo Ruiz, hugo.ruiz@cern.ch
+    """
     mom = partList[0].momentum()
     for iPart in partList[1:]:
         mom += iPart.momentum()
