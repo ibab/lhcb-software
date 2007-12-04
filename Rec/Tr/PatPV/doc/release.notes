@@ -6,6 +6,9 @@
 
 !============================= PatPV v3r1 2007-12-04 =========================
 ! 2007-12-04 - Mariusz Witek
+  - Corrected problem with track extrapolation in LSAdaptPVFitter
+
+! 2007-12-04 - Mariusz Witek
   - Correction for unchecked StatusCode
 
 ! 2007-12-04 - Mariusz Witek

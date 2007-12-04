@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.h,v 1.2 2007-12-04 11:13:06 witekma Exp $
+// $Id: LSAdaptPVFitter.h,v 1.3 2007-12-04 21:48:36 witekma Exp $
 #ifndef LSADAPTPVFITTER_H
 #define LSADAPTPVFITTER_H 1
 // from Gaudi
@@ -41,10 +41,13 @@ private:
   // Least square iterative PV fit
   StatusCode fit(LHCb::RecVertex& vtx,std::vector<PVTrack*>& pvTracks);
   // Add track for PV
-  StatusCode addTrackForPV(const LHCb::Track* str,std::vector<PVTrack>& pvTracks);
+  StatusCode addTrackForPV(const LHCb::Track* str,std::vector<PVTrack>& pvTracks,
+                           double zseed);
+  
   void initVertex(PVTracks& pvTracks, 
-                      PVVertex& pvVertex, 
-                      double zseed);
+                  PVVertex& pvVertex, 
+                  const Gaudi::XYZPoint seedPoint);
+  
   // Prepare hessian matrix and vectorD0
   void prepareVertex(LHCb::RecVertex& vtx, 
                     PVTrackPtrs& pvTracks, 

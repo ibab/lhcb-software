@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.cpp,v 1.2 2007-12-04 11:13:06 witekma Exp $
+// $Id: LSAdaptPVFitter.cpp,v 1.3 2007-12-04 21:48:36 witekma Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -74,10 +74,11 @@ StatusCode LSAdaptPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
   std::vector<const LHCb::Track*>::iterator itr;
   for(itr = rTracks.begin(); itr != rTracks.end(); itr++) {    
     const LHCb::Track* track = *itr;
-    sc = addTrackForPV(track,m_pvTracks);
+    if ( !(track->hasVelo()) ) continue;
+    sc = addTrackForPV(track, m_pvTracks, seedPoint.z());
     if(!sc.isSuccess()) continue;
   }
-  initVertex(m_pvTracks,pvVertex,seedPoint.z());
+  initVertex(m_pvTracks,pvVertex,seedPoint);
   // Initial track cleaning
   for(PVTrackPtrs::iterator itrack = pvVertex.pvTracks.begin(); 
       itrack != pvVertex.pvTracks.end();) {
@@ -176,7 +177,7 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
 // Add track for PV
 //=============================================================================
 StatusCode LSAdaptPVFitter::addTrackForPV(const LHCb::Track* pvtr,
-                                          PVTracks& pvTracks) 
+                                          PVTracks& pvTracks, double zseed) 
 {
   // Create a new PVTrack to be put on the vecctor
   PVTrack pvtrack;
@@ -188,26 +189,13 @@ StatusCode LSAdaptPVFitter::addTrackForPV(const LHCb::Track* pvtr,
   pvtrack.refTrack = pvtr;
   LHCb::State mstate;
   mstate =  pvtr->firstState();
-  double r = sqrt(mstate.x() * mstate.x() + mstate.y() * mstate.y());
-  if(r > 5.0 * Gaudi::Units::mm) {
-    double zclose = 0.5 * (mstate.z() - mstate.x() / mstate.tx() +
-                           mstate.z() - mstate.y() / mstate.ty()); 
+  if ( mstate.checkLocation(LHCb::State::ClosestToBeam) != true ) {
+    // extrapolate
     if(fabs(mstate.qOverP()) > 0) {
-      StatusCode sc = m_fullExtrapolator->propagate(mstate,zclose);
+      StatusCode sc = m_fullExtrapolator->propagate(mstate,zseed);
       if(sc.isFailure()) return sc;
     } else {
-      Warning("Extrapolation of track with no momentum",0);
-      // Assign average pt = 400 MeV and update error
-      double p = 400.0 * Gaudi::Units::MeV * 
-                 sqrt(1.0 + 1.0 / ( mstate.tx()*mstate.tx() + 
-                                    mstate.ty()*mstate.ty()  ));
-       mstate.setQOverP(1.0 / p);
-       double errqp = (200.0 * Gaudi::Units::MeV) / (p * p) ;
-       double errqp2 = errqp*errqp;
-       mstate.setErrQOverP2(errqp2);
-       double zclose = 0.5 * (mstate.z() - mstate.x() / mstate.tx() +
-                              mstate.z() - mstate.y() / mstate.ty()); 
-       StatusCode sc = m_fullExtrapolator->propagate(mstate,zclose);
+       StatusCode sc = m_linExtrapolator->propagate(mstate,zseed);
        if(sc.isFailure()) return sc;
     }
   }
@@ -220,12 +208,13 @@ StatusCode LSAdaptPVFitter::addTrackForPV(const LHCb::Track* pvtr,
 //=============================================================================
 // initialize vertex
 //=============================================================================
-void LSAdaptPVFitter::initVertex(PVTracks& pvTracks, PVVertex& pvVtx, 
-                                          double zseed) 
+void LSAdaptPVFitter::initVertex(PVTracks& pvTracks, PVVertex& pvVtx,
+                                 const Gaudi::XYZPoint seedPoint) 
 {
   if(msgLevel(MSG::VERBOSE)) {
     verbose() << "initVertex method" << endmsg;
   }
+  double zseed = seedPoint.z();
   double startzs = zseed - 30.0 * Gaudi::Units::mm;
   double endzs = zseed + 30.0 * Gaudi::Units::mm;
   int nTracks = 0;
@@ -242,12 +231,14 @@ void LSAdaptPVFitter::initVertex(PVTracks& pvTracks, PVVertex& pvVtx,
     } else {
       continue;
     }
+    
   }
+  
   if(msgLevel(MSG::DEBUG)) {
     debug() << " Collected " << nTracks << " tracks out of " << pvTracks.size()
             << " for this vtx search" << endmsg;
   }
-  pvVtx.primVtx.setPosition(Gaudi::XYZPoint(0.0,0.0,zseed));
+  pvVtx.primVtx.setPosition(seedPoint);
   pvVtx.primVtx.setNDoF(2 * nTracks - 3);
   Gaudi::SymMatrix3x3 hsm;
   for(int i = 0; i < 3; i++) {
@@ -315,24 +306,9 @@ StatusCode LSAdaptPVFitter::trackExtrapolate(PVTrack* pvTrack,
   pvTrack->vd0 = pvTrack->unitVect.Cross(diffVect.Cross(pvTrack->unitVect));
   // Compute impact parameter d0
   pvTrack->d0 = sqrt(pvTrack->vd0.Mag2());
-  // Use the extrapolator to move the track to the desired position
-  ITrackExtrapolator* iExtrapolator;
-  if(msgLevel(MSG::DEBUG)) {
-    verbose() << " Extrapolating track " << pvTrack->refTrack->key()
-              << " using ";
-  }
-  double d2 = trkPoint.x()*trkPoint.x() + trkPoint.y()*trkPoint.y();
-  if( d2 < m_extrapRCut*m_extrapRCut) {
-    // Use the linear extrapolator
-    if(msgLevel(MSG::DEBUG)) verbose() << "linear";
-    iExtrapolator = m_linExtrapolator;
-  } else {
-      if(msgLevel(MSG::DEBUG)) verbose() << "full";
-      iExtrapolator = m_fullExtrapolator;
-  }
-  if(msgLevel(MSG::DEBUG)) verbose() << " extrapolator" << endmsg;
+  // Use linear extrapolator to move the track to the desired position
   LHCb::State stateToMove = pvTrack->stateG;
-  StatusCode sc = iExtrapolator->propagate(stateToMove,vtx.position().z() 
+  StatusCode sc = m_linExtrapolator->propagate(stateToMove,vtx.position().z() 
                                            + pvTrack->vd0.z());
   if(!sc.isSuccess()) {
     if(msgLevel(MSG::DEBUG)) {
