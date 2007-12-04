@@ -1,12 +1,13 @@
-#  @date 2007-11-28
-#  @author Hugo RUIZ hugo.ruiz@cern.ch
-#  See examples in the last function of the module!
+#! /usr/bin/env python
 # =============================================================================
-""" Simple shortcuts to produce and draw graphs starting from python lists"""
-# =============================================================================
-__author__ = "Hugo RUIZ hugo.ruiz@cern.ch"
-# =============================================================================
+""" @namespace easygraphs
+@brief Simple shortcuts to produce and draw graphs starting from python lists
 
+See easygraphsExample() for examples on how to use this module.
+
+@author Hugo Ruiz hugo.ruiz@cern.ch
+@date 2007-11-28
+"""
 
 from ROOT import *
 
@@ -14,9 +15,20 @@ from ROOT import *
 #---------------------------------------------------
 def graph(listX,listY,xErr=[],yErr=[],title=''
           ,markerStyle=21,markerColor=1,markerSize=1):
+    """ A shortcut to easily produce a graph from some python lists
+    @param listX List of x coordinates
+    @param listY List of y coordinates
+    @param xErr List of errors in x coordinates
+    @param yErr List of errors in y coordinates
+    @param title Graph title
+    @param markerStyle Marker Style
+    @param markerColor Marker Color
+    @param markerSize Marker Size
+    @returns Resulting graph
+    
+    @author Hugo Ruiz, hugo.ruiz@cern.ch
+    """
 
-    """ A shortcut to easily produce a graph from some python lists.
-    Author: Hugo Ruiz, hugo.ruiz@cern.ch"""
 
     if len(listX) != len(listY):
         print 'Both lists must have equal lengths'; raise RuntimeError
@@ -45,13 +57,22 @@ def graph(listX,listY,xErr=[],yErr=[],title=''
 
 
 #---------------------------------------------------
-def prepare( myGraph,xTit=False,yTit=False,
-         xMin=False,xMax=False,yMin=False,yMax=False,interLine=False,
+def prepare( myGraph, xTit=False, yTit=False,
+         xMin=False, xMax=False, yMin=False, yMax=False,
          labelSize = 0.03, titleSize = 0.04,
          yOffset = .7, xOffset = .7, title = ''):
-
     """ A shortcut to easily format a graph or a multigraph.
-    Author: Hugo Ruiz, hugo.ruiz@cern.ch"""
+    @param myGraph Graph o multigraph to be formated
+    @param xTit Title of x axis
+    @param yTit Title of y axis
+    @param xMin Minimum x value
+    @param xMax Maximum x value
+    @param yMin Minimum y value
+    @param yMax Maximum y value
+    @param labelSize Size of labels
+    @param titleSize Size of titles
+    @param title Title
+    @author Hugo Ruiz, hugo.ruiz@cern.ch"""
 
 
     myGraph.Draw('ASP')
@@ -76,13 +97,9 @@ def prepare( myGraph,xTit=False,yTit=False,
 
 
 #---------------------------------------------------
-def wait():
-    return raw_input('Press key \n')
-
-
-
-#---------------------------------------------------
-def easyGraphsExample():
+def easygraphsExample():
+    """ An example on how to use functions in this module
+    @author Hugo Ruiz, hugo.ruiz@cern.ch"""
     myC = TCanvas()
     xList = [1.,2.,3.]
     yList = [1.2,2.3,3.4]
@@ -96,5 +113,5 @@ def easyGraphsExample():
     prepare(m, xTit = 'Energy (GeV)', yTit = 'Time (ns)')
     m.Draw()
     myC.Update()
-    wait()
+    raw_input('Press key \n')
     return

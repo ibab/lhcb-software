@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-12-4 - Hugo Ruiz
+ - Rename rctools.py to recotools.py
  - Remove centella.py (replaced by desktop.py)
  - In doc: add files needed for doxygen documentation
            modify conventions to allow for doxygen documentation

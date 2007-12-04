@@ -108,9 +108,3 @@ def samePart (iDec, jDec):
     return iDec.momentum()==jDec.momentum() and iDec.particleID()==jDec.particleID()
 
 
-#---------------------------------------------------
-def getIPError( pt ):
-    """ Returns IP uncertainty from the parameterization published in LHCb-2005-012.
-    Author: Hugo Ruiz, hugo.ruiz@cern.ch"""
-    x = fabs(1/pt)
-    return 0.0223869 - (0.00424545*x)+ (0.0175535*x**2) -(0.005477*x**3)+ (0.00104437*x**4) -(0.000104878*x**5)+ (0.00000418932*x**6)
