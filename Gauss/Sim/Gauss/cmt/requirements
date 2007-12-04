@@ -127,7 +127,7 @@ macro_append Gauss_linkopts " -Wl,-Map,Linux.map " \
              Linux&Hijing   " -Wl,-Map,LinuxHijing.map "\
              Linux&BcVegPy  " -Wl,-Map,LinuxBcVegPy.map "\
              Linux&HidValley " -Wl,-Map,LinuxHidValley.map "\
-             WIN32          ""
+             WIN32          " /STACK:4000000"
 
 #-- Make just executable "visible" 
 path_remove    PATH  "/Gauss/"
@@ -141,4 +141,4 @@ path_append    PATH  "" Linux&Vis "${OSC_release_area}/DAWN/bin/Linux"
 #-- Alias for exacutable have been removed: use instead script
 #    SetupProject Gauss <version>
 #   that includes the binary directory in the PATH so that you can type
-#    Gauss.exe (GaussHerwig.exe) 
+#    Gauss.exe 

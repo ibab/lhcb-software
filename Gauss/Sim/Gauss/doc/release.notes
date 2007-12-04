@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2007-12-04 - Gloria CORTI
+ - Switch on Herwig with standard Gauss.exe (ie. without special executable)
+ - Temporarly increase stack size on windows where the default (1Mb) seems
+   to be too small. On linux and for python build it is 2Mb.
+
 ! 2007-11-30 - Gloria Corti
  - Use new settings for Pythia 6.4 including Pythia62.opts from LbPythia
    . Generator.opts
