@@ -4,7 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
-!====================== TrackInterfaces v3r11 2007-11-30 =====================
+!====================== TrackInterfaces v3r11 2007-12-04 =====================
+! 2007-12-04 - Mariusz Witek
+ - add new interface IPVOfflineTool.h for PV reconstruction
+
 ! 2007-11-30 - Wouter Hulsbergen
  - add method in IMeasurementProvider to create measurements with reference ztraj
  - add projection state to ITrackProjector::alignmentDerivatives, because 
