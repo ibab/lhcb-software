@@ -5,7 +5,7 @@
  *  Header file for utility class : Rich::TabulatedFunction1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.8 2007-09-04 16:35:24 jonrob Exp $
+ *  $Id: Rich1DTabFunc.h,v 1.9 2007-12-04 12:41:41 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -55,6 +55,7 @@ namespace Rich
     TabulatedFunction1D::TabulatedFunction1D( const gsl_interp_type * interType = gsl_interp_linear );
 
     /** Constructor from arrays containing x and y values
+     *
      *  Arrays must be of the same size and ordered such that entry i in each
      *  correspond to each other.
      *
@@ -69,6 +70,7 @@ namespace Rich
                                               const gsl_interp_type * interType = gsl_interp_linear );
 
     /** Constructor from std::vectors containing x and y values
+     *
      *  Vectors must be of the same size and ordered such that entry i in each
      *  correspond to each other.
      *
@@ -98,6 +100,8 @@ namespace Rich
 
     /// Destructor
     virtual ~TabulatedFunction1D( );
+
+  public:
 
     /** Computes the function value (y) for the given parameter (x) value
      *
@@ -198,7 +202,67 @@ namespace Rich
      */
     bool withinInputRange( const double x ) const;
 
-    /** initialise the GSL interpolator
+    /** Access the number of data points defining the interpolator
+     *
+     *  @return The number of data (x,y) points
+     */
+    unsigned int nDataPoints() const;
+
+    /// Return the interpolator name
+    std::string interpName() const;
+
+    /// Return the interpolator type
+    const gsl_interp_type * interType() const;
+
+  public:
+
+    /** Initialisation from arrays containing x and y values
+     *
+     *  Arrays must be of the same size and ordered such that entry i in each
+     *  correspond to each other.
+     *
+     *  @param x         Array of x values
+     *  @param y         Array of y values
+     *  @param size      Number of data points
+     *  @param interType GSL Interpolator type
+     */
+    bool initInterpolator( const double x[],
+                           const double y[],
+                           const int size,
+                           const gsl_interp_type * interType = gsl_interp_linear );
+
+    /** Initialisation from std::vectors containing x and y values
+     *
+     *  Vectors must be of the same size and ordered such that entry i in each
+     *  correspond to each other.
+     *
+     *  @param x         Vector of x values
+     *  @param y         Vector of y values
+     *  @param interType GSL Interpolator type
+     */
+    bool initInterpolator( const std::vector<double> & x,
+                           const std::vector<double> & y,
+                           const gsl_interp_type * interType = gsl_interp_linear );
+
+    /** Initialisation from a map of x,y values
+     *
+     *  @param data      map containing x(key) and y(data) values
+     *  @param interType GSL Interpolator type
+     */
+    bool initInterpolator( const std::map<double,double> & data,
+                           const gsl_interp_type * interType = gsl_interp_linear );
+
+    /** Initialisation from a vector of a pair of x,y values
+     *
+     *  @param data      std::vector containing and pair of x(first) and y(second) values
+     *  @param interType GSL Interpolator type
+     */
+    bool initInterpolator( const std::vector< std::pair<double,double> > & data,
+                           const gsl_interp_type * interType = gsl_interp_linear );
+
+    /** initialise the GSL interpolator using the given type
+     *
+     *  Initialisation will (re)use whatever data values the interpolator has been given
      *
      *  @param interType GSL Interpolator type
      *
@@ -208,25 +272,17 @@ namespace Rich
      */
     bool initInterpolator( const gsl_interp_type * interType );
 
-    /** Access the number of data points defining the interpolator
-     *
-     *  @return The number of data (x,y) points
-     */
-    unsigned int nDataPoints() const;
+  protected: // methods
 
     /// clear the interpolator
     void clearInterpolator();
 
-    /// Return the interpolator name
-    std::string interpName() const;
-
-    /// Return the interpolator type
-    const gsl_interp_type * interType() const;
-
-  protected: // data
+  protected: // definitions
 
     /// Internal data container type
     typedef std::map < double, double > Data;
+
+  protected: // data
 
     /// the data points
     Data m_data;

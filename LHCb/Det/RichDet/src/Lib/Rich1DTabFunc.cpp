@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::TabulatedFunction1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.cpp,v 1.5 2007-02-01 16:41:13 jonrob Exp $
+ *  $Id: Rich1DTabFunc.cpp,v 1.6 2007-12-04 12:41:41 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -33,6 +33,7 @@ TabulatedFunction1D::TabulatedFunction1D( const gsl_interp_type * interType ) :
   m_weightedDistSpline ( NULL ),
   m_interType          ( interType ) { }
 
+//============================================================================
 
 // Constructor from arrays
 TabulatedFunction1D::TabulatedFunction1D( const double x[],
@@ -40,31 +41,56 @@ TabulatedFunction1D::TabulatedFunction1D( const double x[],
                                           const int size,
                                           const gsl_interp_type * interType ) :
   m_OK                 ( false ),
-  m_mainDistAcc        ( NULL ),
-  m_mainDistSpline     ( NULL ),
-  m_weightedDistAcc    ( NULL ),
-  m_weightedDistSpline ( NULL ),
+  m_mainDistAcc        ( NULL  ),
+  m_mainDistSpline     ( NULL  ),
+  m_weightedDistAcc    ( NULL  ),
+  m_weightedDistSpline ( NULL  ),
   m_interType          ( interType )
 {
+  initInterpolator ( x, y, size, interType );
+}
+
+//============================================================================
+
+bool TabulatedFunction1D::initInterpolator( const double x[],
+                                            const double y[],
+                                            const int size,
+                                            const gsl_interp_type * interType )
+{
+  // clear the current data map
+  m_data.clear();
 
   // copy data to internal container
   for ( int i = 0; i < size; ++i ) { m_data[ x[i] ] = y[i]; }
 
   // initialise interpolation
-  m_OK = initInterpolator( interType );
+  return ( m_OK = initInterpolator( interType ) );
 }
+
+//============================================================================
 
 // Constructor from std::vector
 TabulatedFunction1D::TabulatedFunction1D( const std::vector<double> & x,
                                           const std::vector<double> & y,
                                           const gsl_interp_type * interType ) :
   m_OK                 ( false ),
-  m_mainDistAcc        ( NULL ),
-  m_mainDistSpline     ( NULL ),
-  m_weightedDistAcc    ( NULL ),
-  m_weightedDistSpline ( NULL ),
+  m_mainDistAcc        ( NULL  ),
+  m_mainDistSpline     ( NULL  ),
+  m_weightedDistAcc    ( NULL  ),
+  m_weightedDistSpline ( NULL  ),
   m_interType          ( interType )
 {
+  initInterpolator ( x, y, interType );
+}
+
+//============================================================================
+
+bool TabulatedFunction1D::initInterpolator( const std::vector<double> & x,
+                                            const std::vector<double> & y,
+                                            const gsl_interp_type * interType )
+{
+  // clear the current data map
+  m_data.clear();
 
   // Check on size of containers
   if ( x.size() != y.size() )
@@ -73,7 +99,6 @@ TabulatedFunction1D::TabulatedFunction1D( const std::vector<double> & x,
   }
   else
   {
-
     // copy data to internal container
     std::vector<double>::const_iterator ix,iy;
     for ( ix = x.begin(), iy = y.begin();
@@ -81,9 +106,9 @@ TabulatedFunction1D::TabulatedFunction1D( const std::vector<double> & x,
 
     // initialise interpolation
     m_OK = initInterpolator( interType );
-
   }
 
+  return m_OK;
 }
 
 //============================================================================
@@ -91,16 +116,29 @@ TabulatedFunction1D::TabulatedFunction1D( const std::vector<double> & x,
 // Constructor from map
 TabulatedFunction1D::TabulatedFunction1D( const std::map<double,double> & data,
                                           const gsl_interp_type * interType ) :
-  m_data               ( data  ),
   m_OK                 ( false ),
-  m_mainDistAcc        ( NULL ),
-  m_mainDistSpline     ( NULL ),
-  m_weightedDistAcc    ( NULL ),
-  m_weightedDistSpline ( NULL ),
+  m_mainDistAcc        ( NULL  ),
+  m_mainDistSpline     ( NULL  ),
+  m_weightedDistAcc    ( NULL  ),
+  m_weightedDistSpline ( NULL  ),
   m_interType          ( interType )
 {
+  initInterpolator( data, interType );
+}
+
+//============================================================================
+
+bool TabulatedFunction1D::initInterpolator( const std::map<double,double> & data,
+                                            const gsl_interp_type * interType )
+{
+  // clear the current data map
+  m_data.clear();
+
+  // update the data map
+  m_data = data;
+
   // initialise interpolation
-  m_OK = initInterpolator( interType );
+  return ( m_OK = initInterpolator( interType ) );
 }
 
 //============================================================================
@@ -109,23 +147,37 @@ TabulatedFunction1D::TabulatedFunction1D( const std::map<double,double> & data,
 TabulatedFunction1D::TabulatedFunction1D( const std::vector< std::pair<double,double> > & data,
                                           const gsl_interp_type * interType ) :
   m_OK                 ( false ),
-  m_mainDistAcc        ( NULL ),
-  m_mainDistSpline     ( NULL ),
-  m_weightedDistAcc    ( NULL ),
-  m_weightedDistSpline ( NULL ),
+  m_mainDistAcc        ( NULL  ),
+  m_mainDistSpline     ( NULL  ),
+  m_weightedDistAcc    ( NULL  ),
+  m_weightedDistSpline ( NULL  ),
   m_interType          ( interType )
 {
+  initInterpolator( data, interType );
+}
+
+//============================================================================
+
+bool 
+TabulatedFunction1D::initInterpolator( const std::vector< std::pair<double,double> > & data,
+                                       const gsl_interp_type * interType )
+{
+  // clear the current data map
+  m_data.clear();
+
   // copy data to internal container
   std::vector< std::pair<double,double> >::const_iterator i;
   for ( i = data.begin(); i != data.end(); ++i ) { m_data[i->first] = i->second; }
 
   // initialise interpolation
-  m_OK = initInterpolator( interType );
+  return ( m_OK = initInterpolator( interType ) );
 }
 
 //============================================================================
+
 // Destructor
 TabulatedFunction1D::~TabulatedFunction1D( ) { clearInterpolator(); }
+
 //============================================================================
 
 // initialise the interpolator
@@ -134,6 +186,9 @@ bool TabulatedFunction1D::initInterpolator( const gsl_interp_type * interType )
 
   // clean up first
   clearInterpolator();
+
+  // set interpolator type
+  m_interType = interType;
 
   // Needs at least 2 points to work...
   const int size = m_data.size();
@@ -177,6 +232,7 @@ bool TabulatedFunction1D::initInterpolator( const gsl_interp_type * interType )
 
 //============================================================================
 
+// clean out the GSL components
 void TabulatedFunction1D::clearInterpolator()
 {
 
@@ -203,6 +259,8 @@ void TabulatedFunction1D::clearInterpolator()
   }
 
 }
+
+//============================================================================
 
 double TabulatedFunction1D::rms( const double from,
                                  const double to,
@@ -235,3 +293,5 @@ double TabulatedFunction1D::rms( const double from,
 
   return sqrt(rms);
 }
+
+//============================================================================
