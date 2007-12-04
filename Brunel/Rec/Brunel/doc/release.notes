@@ -3,6 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v32r2>2007-12-03 Brunel v32r2</A></H1><PRE>
+
 </PRE><H1><A NAME=v32r1>2007-11-15 Brunel v32r1</A></H1><PRE>
  - Fix error in default Brunel_Ganga.py file for latest CMT structure.
  - Update BrunelCheck.opts for changes in PatChecker v3r1

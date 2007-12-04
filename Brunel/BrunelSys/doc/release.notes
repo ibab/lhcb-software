@@ -3,6 +3,55 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v32r2>2007-12-03 Brunel v32r2</A></H1><PRE>
+This version uses projects Gaudi v19r6, LHCb v23r2, Lbcom v6r13, Rec v5r2
+ and DDDB v1r* (SQLDDDB v3r0 or greater), ParamFiles v7r0, FieldMap v4r7
+
+This is a development version with tracking pattern recognition based on the Tf
+framework.
+
+- New tuning
+  . VeloClusterPosition update to match TELL1 board position format. New tuning
+    for the error parametrization for the pitch projection
+    (VeloTools v3r0, LHCbKernel v8r8, TrackInterfaces v3r11)
+  . Tidied up RZ track fitting code to only calculate slope & pos after 3 coords
+    PatVelo v3r2)
+  . Set chi2 of RZ tracks properly (PatVelo v3r2)
+  . Changes to track fit:
+    o Move reference vector to Nodes and use them in the fit
+    o Create reference from TrackTraj
+    o Use OT calibration in fit
+    o Calculate tof correction
+    o Fixed interpolator such that it does the right thing also for extrapolation
+    o Removed extrapolators from MeasurementProviders
+    Overall effect is big reduction in fit failures (in particular for VeloTT),
+    compensated by small increase in ghost rate 
+    (TrackEvent v4r9, OTDet v7r7, TrackInterfaces v3r11, TrackFitEvent v3r11,
+     TrackProjectors v2r18, TrackCheckers v3r3, TrackTools v3r2,
+     TsaAlgorithms v3r2, PatVeloTT v3r1, TrackFitter v2r22, TrackMatching v2r17,
+     TrackSeeding v1r3, TrackSys v3r2)
+  . Track measurements no longer removed by TrackToDST, since they are in any 
+    case not persistent (TrackUtils v1r17)
+  . Change default value of z position of output track state to mid T
+    (TsaAlgorithms v3r2)
+  . Reorganisation and improvements to Rich reconstruction tools
+    (RichKernel v7r9, RichDet v10r8, RichRecBase v3r9, RichDAQ v3r13,
+     RichTools v2r16, RichGlobalPID v2r14, RichRecTools v4r0,
+     RichRecTrackTools v1r0, RichRecPhotonTools v1r0)
+   
+- New functionality
+  . Modify state filling in case fast momentum parameterization is used
+    (TsaAlgorithms v3r2)
+
+- Monitoring changes
+  . Many changes and improvements to Rich monitoring
+    (RichRecMCTools v2r14, RichRecMonitors v2r13, RichRecQC v2r15,
+     RichRecPhotonTools v1r0, RichRecSys v3r7)
+
+- Bug fixes
+  . Fix unchecked StatusCode (MuonDet v7r1, MuonDAQ v3r3)
+  . Protections for missing data (RichMCMonitors v1r5, RichTools v2r16)
+
 </PRE><H1><A NAME=v32r1>2007-11-15 Brunel v32r1</A></H1><PRE>
 This version uses projects Gaudi v19r5, LHCb v23r1, Lbcom v6r12, Rec v5r1
  and DDDB v1r* (SQLDDDB v3r0 or greater), ParamFiles v7r0, FieldMap v4r7
