@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.25 2007-12-03 11:14:51 ibelyaev Exp $ 
+! $Id: release.notes,v 1.26 2007-12-04 17:24:49 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiAlgo v7r0 2007-12-03 ==========================
+!========================== LoKiAlgo v7r0 2007-12-04 ==========================
+
+! 2007-12-04 - Vanya BELYAEV
+ - LoKi/GetLoKiAlgo.h, src/GetLoKiAlgo.cpp
+   new function to access the class LoKi::Algo form the context 
 
 ! 2007-12-03 - Vanya BELYAEV
  - the major update for the new LoKi v7r0 ("The powerful streamers")
