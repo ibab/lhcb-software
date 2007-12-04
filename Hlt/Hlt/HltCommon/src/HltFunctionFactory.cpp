@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.15 2007-12-03 16:47:22 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.16 2007-12-04 16:58:58 hernando Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -189,9 +189,15 @@ Hlt::VertexFunction* HltFunctionFactory::vertexFunction(const std::string& fn) {
     fun = new Hlt::VertexDimuonMass();
   } else if (name == "VertexSumPT") {
     fun = new Hlt::VertexSumPT();
+  } else if (name == "VertexMinIP") {
+    if (!m_vertices) 
+      error() << " vertices not set in factory " << endreq;
+    //  info() << " creating VertexMinIP " << endreq;
+    fun =  new 
+      Estd::binder_function<RecVertex,RecVertex>(Hlt::VertexMinIP(),
+                                                 *m_vertices,
+                                                 Estd::abs_min());
   }
-  
-  
   if (m_smart && fun) {
     int id = HltConfigurationHelper::getID(*m_conf,"InfoID",name);
     Hlt::VertexFunction* fun1 = fun;

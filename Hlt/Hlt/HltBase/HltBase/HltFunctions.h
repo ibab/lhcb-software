@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.13 2007-12-03 16:47:09 hernando Exp $
+// $Id: HltFunctions.h,v 1.14 2007-12-04 16:59:10 hernando Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -231,6 +231,27 @@ namespace Hlt {
     double operator() (const LHCb::Track& t1, const LHCb::Track& t2) const;    
     Hlt::TrackBiFunction* clone() const {return new DeltaP();}
   };
+
+  class VertexMinIP: public Hlt::VertexBiFunction {
+  public:
+    explicit VertexMinIP(){}
+    double operator() (const LHCb::RecVertex& v,
+                       const LHCb::RecVertex& pv) const{
+      double ip0 = HltUtils::impactParameter(pv,*(v.tracks()[0]));
+      double ip1 = HltUtils::impactParameter(pv,*(v.tracks()[1]));
+      if (fabs(ip1)<fabs(ip0)) return ip1;
+      return ip0;
+    }
+    Hlt::VertexBiFunction* clone() const {return new VertexMinIP();}
+  };
+
+ //  class VertexMatch: public Hlt::VertexBiFunction {
+//   public:
+//     explicit VertexMinIP(){}
+//     double operator() (const LHCb::RecVertex& v1
+//                        const LHCb::RecVertex& v2) const;
+//     Hlt::VertexBiFunction* clone() const {return new VertexMinIP()}
+//   }
 
   class minPT : public Hlt::VertexFunction {
   public:
