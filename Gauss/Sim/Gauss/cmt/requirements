@@ -14,34 +14,34 @@ branches src doc options cmt job
 #============================================================================
 
 #-- Databases
-use DDDB                v1r*    Det   -no_auto_imports
-use ParamFiles          v7r0          -no_auto_imports
-use FieldMap            v4r7          -no_auto_imports
-use DecFiles            v13r16  Gen   -no_auto_imports
-use Geant4Files		v82r0	      -no_auto_imports
+use DDDB               v1r*   Det            -no_auto_imports
+use ParamFiles         v7r0                  -no_auto_imports
+use FieldMap           v4r7                  -no_auto_imports
+use DecFiles           v13r16 Gen            -no_auto_imports
+use Geant4Files	       v82r0	             -no_auto_imports
 
 #===========================================================================
 
 # Packages needed to compile and link the application
-use GaudiConf          v*                   -no_auto_imports
+use GaudiConf          v*                    -no_auto_imports
 use GaudiKernel        v*
  
 # Packages needed to resolve external dependencies at run time
-use Python             v*    LCG_Interfaces -no_auto_imports
-use HepMC              v*    LCG_Interfaces -no_auto_imports
+use Python             v*     LCG_Interfaces -no_auto_imports
+use HepMC              v*     LCG_Interfaces -no_auto_imports
  
 # From GAUDI project
-use GaudiSvc           v*                   -no_auto_imports
-use GaudiAud           v*                   -no_auto_imports
-use GaudiPoolDb        v*                   -no_auto_imports
-use GaudiPython        v*                   -no_auto_imports 
-use RootHistCnv        v*                   -no_auto_imports
+use GaudiSvc           v*                    -no_auto_imports
+use GaudiAud           v*                    -no_auto_imports
+use GaudiPoolDb        v*                    -no_auto_imports
+use GaudiPython        v*                    -no_auto_imports 
+use RootHistCnv        v*                    -no_auto_imports
  
 # From LHCB project
-use KernelSys          v*     Kernel        -no_auto_imports
-use DetSys             v*     Det           -no_auto_imports
-use LHCbAlgs           v*     Kernel        -no_auto_imports
-use SimComponents      v*     Sim           -no_auto_imports
+use KernelSys          v*     Kernel         -no_auto_imports
+use DetSys             v*     Det            -no_auto_imports
+use LHCbAlgs           v*     Kernel         -no_auto_imports
+use SimComponents      v*     Sim            -no_auto_imports
  
 #===========================================================================
 
@@ -52,8 +52,7 @@ macro LbHijing_use "" Linux&Hijing "LbHijing v* Gen"
 use $(LbHijing_use)
 
 #-- Optional Herwig
-macro LbHerwig_use "" Linux&Herwig "LbHerwig v* Gen"
-use $(LbHerwig_use)
+use LbHerwig             v*    Gen  -no_auto_imports
 
 #-- Optional BcVegPy
 macro LbBcVegPy_use "" Linux&BcVegPy "LbBcVegPy v* Gen"
@@ -83,6 +82,12 @@ use GaussTracker         v*    Sim  -no_auto_imports
 use GaussRICH            v*    Sim  -no_auto_imports
 use GaussCalo            v*    Sim  -no_auto_imports
 
+#-- Monitoring
+use GaussMonitor         v*    Sim   -no_auto_imports
+use CaloMoniSim          v*    Calo  -no_auto_imports
+use VeloGauss            v*    Velo  -no_auto_imports
+use MuonMoniSim          v*    Muon  -no_auto_imports
+
 #-- Optional visualisation and UI
 macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v* Sim"
 use $(GiGaVisUI_use)
@@ -90,12 +95,6 @@ use $(GiGaVisUI_use)
 #-- Optional GDML
 macro GDMLG4Writer_use "" Linux&GDML "GDMLG4Writer v* Sim"
 use $(GDMLG4Writer_use)
-
-#-- Monitoring
-use GaussMonitor        v*    Sim   -no_auto_imports
-use CaloMoniSim         v*    Calo  -no_auto_imports
-use VeloGauss           v*    Velo  -no_auto_imports
-use MuonMoniSim         v*    Muon  -no_auto_imports
 
 #===========================================================================
 #== Necessary enviroment variables
@@ -111,18 +110,14 @@ set AlwaysKillLeadingHadron 1
 application Gauss $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 application GaussHijing    $(GAUDICONFROOT)/src/GaudiMain.cpp
-application GaussHerwig    $(GAUDICONFROOT)/src/GaudiMain.cpp
 application GaussBcVegPy   $(GAUDICONFROOT)/src/GaudiMain.cpp
 application GaussHidValley $(GAUDICONFROOT)/src/GaudiMain.cpp
 application GaussAlpGen    $(GAUDICONFROOT)/src/GaudiMain.cpp
-application GaussPythia8   $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 macro_remove constituents "GaussHijing"    Linux&Hijing "Gauss"
-macro_remove constituents "GaussHerwig"    Linux&Herwig "Gauss"
 macro_remove constituents "GaussBcVegPy"   Linux&BcVegPy "Gauss"
 macro_remove constituents "GaussHidValley" Linux&HidValley "Gauss"
 macro_remove constituents "GaussAlpGen"    Linux&AlpGen "Gauss"
-macro_remove constituents "GaussPythia8"   Linux&Pythia8 "Gauss"
 
 #===========================================================================
 #-- Set macros
@@ -130,7 +125,6 @@ apply_pattern application_path
 macro Gauss_linkopts  "$(application_linkopts)"
 macro_append Gauss_linkopts " -Wl,-Map,Linux.map " \
              Linux&Hijing   " -Wl,-Map,LinuxHijing.map "\
-             Linux&Herwig   " -Wl,-Map,LinuxHerwig.map "\
              Linux&BcVegPy  " -Wl,-Map,LinuxBcVegPy.map "\
              Linux&HidValley " -Wl,-Map,LinuxHidValley.map "\
              WIN32          ""
