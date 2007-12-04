@@ -5,12 +5,15 @@
  *  Implementation file for class : Rich::TabulatedFunction1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.cpp,v 1.6 2007-12-04 12:41:41 jonrob Exp $
+ *  $Id: Rich1DTabFunc.cpp,v 1.7 2007-12-04 13:22:36 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
  */
 //============================================================================
+
+// STL
+#include <sstream>
 
 // GaudiKernel
 // Suppress "debug information truncated" warnings on Windows
@@ -188,16 +191,31 @@ bool TabulatedFunction1D::initInterpolator( const gsl_interp_type * interType )
   clearInterpolator();
 
   // set interpolator type
-  m_interType = interType;
+  if ( NULL != interType ) m_interType = interType;
 
-  // Needs at least 2 points to work...
-  const int size = m_data.size();
-  if ( size < 2 ) return false;
+  // Create the GSL interpolators
+  m_mainDistAcc        = gsl_interp_accel_alloc();
+  m_weightedDistAcc    = gsl_interp_accel_alloc();
+  m_mainDistSpline     = gsl_spline_alloc ( m_interType, m_data.size() );
+  m_weightedDistSpline = gsl_spline_alloc ( m_interType, m_data.size() );
+
+  // Check number of points needed to work ...
+  const unsigned int min_points = gsl_interp_min_size(m_mainDistSpline->interp);
+  if ( m_data.size() < min_points ) 
+  {
+    std::ostringstream mess;
+    mess << "Error whilst initialising GSL interpolator : Type '" << m_interType
+         << "' requires a minimum of " << min_points << " data points. Only given " 
+         << m_data.size(); 
+    clearInterpolator();
+    throw GaudiException( mess.str(), "*Rich::TabulatedFunction1D*", StatusCode::FAILURE );
+    return false;
+  }
 
   // Copy data to temporary initialisation arrays
-  double * x  = new double[size];
-  double * y  = new double[size];
-  double * xy = new double[size];
+  double * x  = new double[m_data.size()];
+  double * y  = new double[m_data.size()];
+  double * xy = new double[m_data.size()];
   unsigned int i = 0;
   for ( Data::const_iterator iD = m_data.begin();
         iD != m_data.end(); ++iD, ++i )
@@ -207,13 +225,9 @@ bool TabulatedFunction1D::initInterpolator( const gsl_interp_type * interType )
     xy[i] = x[i]*y[i];
   }
 
-  // Initialise the GSL interpolators
-  m_mainDistAcc        = gsl_interp_accel_alloc();
-  m_weightedDistAcc    = gsl_interp_accel_alloc();
-  m_mainDistSpline     = gsl_spline_alloc ( interType, size );
-  m_weightedDistSpline = gsl_spline_alloc ( interType, size );
-  const int err1 = gsl_spline_init ( m_mainDistSpline,     x, y,  size );
-  const int err2 = gsl_spline_init ( m_weightedDistSpline, x, xy, size );
+  // Initialise the interpolators
+  const int err1 = gsl_spline_init ( m_mainDistSpline,     x, y,  m_data.size() );
+  const int err2 = gsl_spline_init ( m_weightedDistSpline, x, xy, m_data.size() );
 
   // delete temporary arrays
   delete[] x;
@@ -222,6 +236,7 @@ bool TabulatedFunction1D::initInterpolator( const gsl_interp_type * interType )
 
   if ( err1 || err2 )
   {
+    clearInterpolator();
     throw GaudiException( "Error whilst initialising GSL interpolators",
                           "*TabulatedFunction1D*", StatusCode::FAILURE );
     return false;

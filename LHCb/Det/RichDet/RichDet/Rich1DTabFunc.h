@@ -5,7 +5,7 @@
  *  Header file for utility class : Rich::TabulatedFunction1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.9 2007-12-04 12:41:41 jonrob Exp $
+ *  $Id: Rich1DTabFunc.h,v 1.10 2007-12-04 13:22:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -224,12 +224,12 @@ namespace Rich
      *  @param x         Array of x values
      *  @param y         Array of y values
      *  @param size      Number of data points
-     *  @param interType GSL Interpolator type
+     *  @param interType GSL Interpolator type (If not given, currently configured type is used)
      */
     bool initInterpolator( const double x[],
                            const double y[],
                            const int size,
-                           const gsl_interp_type * interType = gsl_interp_linear );
+                           const gsl_interp_type * interType = NULL );
 
     /** Initialisation from std::vectors containing x and y values
      *
@@ -238,27 +238,27 @@ namespace Rich
      *
      *  @param x         Vector of x values
      *  @param y         Vector of y values
-     *  @param interType GSL Interpolator type
+     *  @param interType GSL Interpolator type (If not given, currently configured type is used)
      */
     bool initInterpolator( const std::vector<double> & x,
                            const std::vector<double> & y,
-                           const gsl_interp_type * interType = gsl_interp_linear );
+                           const gsl_interp_type * interType = NULL );
 
     /** Initialisation from a map of x,y values
      *
      *  @param data      map containing x(key) and y(data) values
-     *  @param interType GSL Interpolator type
+     *  @param interType GSL Interpolator type (If not given, currently configured type is used)
      */
     bool initInterpolator( const std::map<double,double> & data,
-                           const gsl_interp_type * interType = gsl_interp_linear );
+                           const gsl_interp_type * interType = NULL );
 
     /** Initialisation from a vector of a pair of x,y values
      *
      *  @param data      std::vector containing and pair of x(first) and y(second) values
-     *  @param interType GSL Interpolator type
+     *  @param interType GSL Interpolator type (If not given, currently configured type is used)
      */
     bool initInterpolator( const std::vector< std::pair<double,double> > & data,
-                           const gsl_interp_type * interType = gsl_interp_linear );
+                           const gsl_interp_type * interType = NULL );
 
     /** initialise the GSL interpolator using the given type
      *

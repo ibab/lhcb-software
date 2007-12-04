@@ -3,7 +3,7 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.9 2007-11-12 12:34:12 papanest Exp $
+ * $Id: DeRichHPD.cpp,v 1.10 2007-12-04 13:22:36 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
@@ -171,6 +171,12 @@ StatusCode DeRichHPD::initialize ( )
     return sc;
   }
 
+  // Make interpolators
+  m_demagMapR   = new Rich::TabulatedFunction1D();
+  m_demagMapPhi = new Rich::TabulatedFunction1D();
+  m_magMapR     = new Rich::TabulatedFunction1D();
+  m_magMapPhi   = new Rich::TabulatedFunction1D();
+  
   if (m_UseHpdMagDistortions)
   {
 
@@ -284,14 +290,12 @@ StatusCode DeRichHPD::updateTransformations ( ) {
 StatusCode DeRichHPD::updateDemagProperties()
 {
 
-  if ( m_firstUpdates%2 != 0 ) {
+  if ( m_firstUpdates%2 != 0 ) 
+  {
     MsgStream msg ( msgSvc(), myName() );
     msg << MSG::INFO << "Updating Demag properties for HPD:" << m_number <<endmsg;
-    m_firstUpdates += 1;
+    ++m_firstUpdates;
   }
-
-  // delete the current interpolators
-  cleanUpInterps();
 
   // Initialise the demagnifcation
   StatusCode sc = fillHpdDemagTable();
@@ -392,8 +396,8 @@ StatusCode DeRichHPD::fillHpdDemagTable()
 
   }
 
-  m_demagMapR   = new Rich::TabulatedFunction1D( tableR );
-  m_demagMapPhi = new Rich::TabulatedFunction1D( tablePhi );
+  m_demagMapR   -> initInterpolator ( tableR   );
+  m_demagMapPhi -> initInterpolator ( tablePhi );
 
   return StatusCode::SUCCESS;
 }
@@ -455,8 +459,8 @@ StatusCode DeRichHPD::fillHpdMagTable( )
 
   }
 
-  m_magMapR     = new Rich::TabulatedFunction1D( tableR );
-  m_magMapPhi   = new Rich::TabulatedFunction1D( tablePhi );
+  m_magMapR   -> initInterpolator( tableR   );
+  m_magMapPhi -> initInterpolator( tablePhi );
 
   return StatusCode::SUCCESS;
 }

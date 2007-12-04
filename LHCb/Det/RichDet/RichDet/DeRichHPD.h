@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.12 2007-11-12 09:42:04 papanest Exp $
+ *  $Id: DeRichHPD.h,v 1.13 2007-12-04 13:22:36 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -300,10 +300,10 @@ private: // data
   /// term, and element[1] the non-linear term for small corrections.
   double m_deMagFactor[2];
 
-  const Rich::TabulatedFunction1D * m_demagMapR;   ///< Interpolated function for HPD R for demagnification
-  const Rich::TabulatedFunction1D * m_demagMapPhi; ///< Interpolated function for HPD phi for demagnification
-  const Rich::TabulatedFunction1D * m_magMapR;     ///< Interpolated function for HPD R for magnification
-  const Rich::TabulatedFunction1D * m_magMapPhi;   ///< Interpolated function for HPD phi for magnification
+  Rich::TabulatedFunction1D * m_demagMapR;   ///< Interpolated function for HPD R for demagnification
+  Rich::TabulatedFunction1D * m_demagMapPhi; ///< Interpolated function for HPD phi for demagnification
+  Rich::TabulatedFunction1D * m_magMapR;     ///< Interpolated function for HPD R for magnification
+  Rich::TabulatedFunction1D * m_magMapPhi;   ///< Interpolated function for HPD phi for magnification
 
   /// Demagnification parameters condition
   SmartRef<Condition> m_demagCond;

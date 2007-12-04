@@ -7,6 +7,8 @@
 ! 2007-12-04 - Chris Jones
  - Update Rich::TabulatedFunction1D to allow an existing object to be
    re-initialised with new data values.
+ - Update DeRichHPD to use new re-initialisation functionality of 
+   Rich::TabulatedFunction1D
 
 !======================== RichDet v10r8 2007-11-29 ========================
 ! 2007-11-09 - "Antonis Papanestis"
