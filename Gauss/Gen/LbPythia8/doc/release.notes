@@ -4,6 +4,19 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2007-12-04 - Gloria CORTI
+ - Remove LbPythia8_load.cpp that is not necessary with Gaudi v19, since
+   this package will only be in the Gauss v30 series. Move declaration of
+   the tool factory (that is necessary!) in Pythia8Production.cpp
+ - Modify PDF commands to adapt to changes from Pythia8.080 to Pythia8.095.1
+   otherwise code does not initialize
+   . "Namespace" changed from Pythia: to PDF: (eg. PDF:useLHAPDF)
+   . Replace obsolete commands for setting limits of PDFs (eg. 
+     Pythia:xMinLHAPDF ) with global turning off of extrapolation, i.e.
+     "PDF:extrapolateLHAPDF = off" that is also the Pythia default.
+   . Stop as soon as default algorithm setting for Pythia are inconsistent
+     with version used without waiting for end of method.
+
 ! 2007-11-15 - Patrick Robbe
  - src/component/Pythia8Production.cpp: protect against empty user options
 
@@ -13,7 +26,7 @@
  - src/component/Pythia8Production.cpp: use new PYTHIA8XML variable to declare
    Pythia8 engine.
 
-!=========================== LbPythia8 2007-10-04 ============================
+!========================= LbPythia8 v1r0 2007-10-04 =========================
 ! 2007-10-04 - Gloria Corti
  - Introduce use of pythia8 in this package rather than in GENSER where
    version is fixed

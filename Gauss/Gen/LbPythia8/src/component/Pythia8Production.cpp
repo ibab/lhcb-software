@@ -1,9 +1,6 @@
-// $Id: Pythia8Production.cpp,v 1.3 2007-11-15 19:19:40 robbep Exp $
+// $Id: Pythia8Production.cpp,v 1.4 2007-12-04 16:42:53 gcorti Exp $
 
 // Include files
-
-// local
-#include "Pythia8Production.h"
 
 // from SEAL
 #include "SealBase/ShellEnvironment.h"
@@ -17,7 +14,7 @@
 #include "GaudiKernel/SystemOfUnits.h"
 #include "Event/GenCollision.h"
 
-//from Pythia8
+// from Pythia8
 #include "Pythia.h"
 #include "HepMCInterface.h"
 
@@ -30,14 +27,17 @@
 // LbPythia8
 #include "LbPythia8/GaudiRandomForPythia8.h" 
 
-// ============================================================================
-/** @file 
- *  Implementation file for class Pythia8Production
- *
- *  @date 2007-07-31 
- *  @author Arthur de Gromard
- */
+// local
+#include "Pythia8Production.h"
+
 //-----------------------------------------------------------------------------
+//  Implementation file for class: Pythia8Production
+//
+//  2007-07-31 : Arthur de Gromard
+//-----------------------------------------------------------------------------
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( Pythia8Production );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -67,7 +67,7 @@ Pythia8Production::Pythia8Production( const std::string& type,
   m_defaultSettings.push_back("Charmonium:all = off" );
   m_defaultSettings.push_back("Bottomonium:all = off" );
   m_defaultSettings.push_back("Top:all = off" );
-  m_defaultSettings.push_back("Process commands for Pythia8");
+  m_defaultSettings.push_back("Process commands for Pythia8" );
   //Then, setting the different processes    
   m_defaultSettings.push_back("HardQCD:qq2qq = on");
   m_defaultSettings.push_back("HardQCD:qqbar2ccbar = on");
@@ -103,22 +103,19 @@ Pythia8Production::Pythia8Production( const std::string& type,
   m_defaultSettings.push_back("StringFlav:mesonBL1S1J0 = 0.0135");
   m_defaultSettings.push_back("StringFlav:mesonBL1S1J1 = 0.0405");
   m_defaultSettings.push_back("StringFlav:mesonBL1S1J2 = 0.0675");
-  m_defaultSettings.push_back("Pythia:useLHAPDF = on");
+  m_defaultSettings.push_back("PDF:useLHAPDF = on");
   //Settings for LHAPDF  
-  m_defaultSettings.push_back("Pythia:LHAPDFset = cteq6l.LHpdf");
-  m_defaultSettings.push_back("Pythia:LHAPDFmember = 1");
-  m_defaultSettings.push_back("Pythia:xMinLHAPDF = 1e-6");
-  m_defaultSettings.push_back("Pythia:xMaxLHAPDF = 1");
-  m_defaultSettings.push_back("Pythia:Q2MinLHAPDF = 1.69");
-  m_defaultSettings.push_back("Pythia:Q2MaxLHAPDF = 1e8");    
+  m_defaultSettings.push_back("PDF:LHAPDFset = cteq6l.LHpdf");
+  m_defaultSettings.push_back("PDF:LHAPDFmember = 1");
+  m_defaultSettings.push_back("PDF:extrapolateLHAPDF = off");
     
   m_defaultSettings.push_back("Output commands for Pythia8");
-} ;
+}
 
 //=============================================================================
 // Destructor 
 //=============================================================================
-Pythia8Production::~Pythia8Production( ) { ; }
+Pythia8Production::~Pythia8Production( ) { }
 
 //=============================================================================
 // Initialize method
@@ -146,7 +143,7 @@ StatusCode Pythia8Production::initialize( ) {
   m_pythia = new Pythia8::Pythia( xmlpath );
   
   //Setting the random generator
-  IRndmGenSvc * randSvc( 0 ) ;
+  IRndmGenSvc* randSvc( 0 );
   try { randSvc = svc< IRndmGenSvc >( "RndmGenSvc" , true ) ; }
   catch ( const GaudiException & exc ) {
     Exception( "RndmGenSvc not found to initialize Pythia8 random engine" ) ;
@@ -173,13 +170,16 @@ StatusCode Pythia8Production::initializeGenerator( ) {
   int i = 4 ;
   double mass1, mass2;
   
-  //Initializing default settings
+  // Initializing default settings
   for (unsigned int count = 4; count<m_defaultSettings.size(); ++count) {
     if ((!(m_defaultSettings[count]=="Process commands for Pythia8")) 
         && (!(m_defaultSettings[count]=="Output commands for Pythia8"))) {
       success = m_pythia->readString(m_defaultSettings[count]);
     }
     i = count ;
+  }
+  if (!success) {
+    return Error("CHECK DEFAULT COMMANDS::: Pythia did not find input string in settings databases");
   }
 
   m_pythia->readString("Main:inCMFrame = on");
@@ -209,8 +209,8 @@ StatusCode Pythia8Production::initializeGenerator( ) {
     
   Gaudi::XYZVector pBeam1 , pBeam2 ;
   m_beamTool->getMeanBeams( pBeam1 , pBeam2 ) ;  
-  // retrieve Gaudi particle property service  
-  IParticlePropertySvc * ppSvc( 0 ) ;
+  // retrieve Gaudi particle property service
+  IParticlePropertySvc* ppSvc( 0 ) ;
   try { ppSvc = svc< IParticlePropertySvc > ( "ParticlePropertySvc" , 
                                               true ) ; }
   catch ( const GaudiException & exc ) {
