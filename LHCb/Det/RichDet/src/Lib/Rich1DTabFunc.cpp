@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::TabulatedFunction1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.cpp,v 1.8 2007-12-04 13:24:08 jonrob Exp $
+ *  $Id: Rich1DTabFunc.cpp,v 1.9 2007-12-04 13:26:25 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -134,6 +134,9 @@ bool TabulatedFunction1D::initInterpolator( const std::vector<double> & x,
   if ( x.size() != y.size() )
   {
     m_OK = false;
+    clearInterpolator();
+    throw GaudiException( "Size of x vector != size of y vector", 
+                          "*Rich::TabulatedFunction1D*", StatusCode::FAILURE );
   }
   else
   {
