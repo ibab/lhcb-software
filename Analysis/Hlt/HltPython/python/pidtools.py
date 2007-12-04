@@ -1,6 +1,12 @@
-# module to translates pid (int) <-> string
-# author: D. Martinez
+# =============================================================================
+""" @namespace pidtools.py
+@brief Translation between pid as integer and as string, and some shortcut pid functions
+@author Diego Martinez diego.martinez.santos@cern.ch
+@date 2007-11-28
+"""
+# =============================================================================
 
+#---------------------------------------------------
 ParticleTranslator={
     'phi':333,333:'phi',
     'e-':11,11:'e-',

@@ -8,13 +8,14 @@ See easygraphsExample() for examples on how to use this module.
 @author Hugo Ruiz hugo.ruiz@cern.ch
 @date 2007-11-28
 """
+# =============================================================================
+
 
 from ROOT import *
 
 
 #---------------------------------------------------
-def graph(listX,listY,xErr=[],yErr=[],title=''
-          ,markerStyle=21,markerColor=1,markerSize=1):
+def graph(listX, listY, xErr=[], yErr=[], title='', markerStyle=21, markerColor=1, markerSize=1):
     """ A shortcut to easily produce a graph from some python lists
     @param listX List of x coordinates
     @param listY List of y coordinates

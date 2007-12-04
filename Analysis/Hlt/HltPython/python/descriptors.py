@@ -1,11 +1,9 @@
-#  @date 2007-11-28
-#  @author Hugo RUIZ hugo.ruiz@cern.ch
 # =============================================================================
-""" Collection of decay descriptors"""
-# =============================================================================
-__author__ = "Hugo RUIZ hugo.ruiz@cern.ch"
-# =============================================================================
-
+""" @namespace descriptors
+@brief Collection of decay descriptors and tools to run on different types of data
+@author Hugo Ruiz hugo.ruiz@cern.ch
+@date 2007-11-28
+"""
 
 #---------------------------------------------------
 # Definition of basic segments of decay descriptors
@@ -68,7 +66,9 @@ hansFileDict['Bu2Kee'] = 'Bu2Kee'
 #---------------------------------------------------
 def decayDescriptor ( sample ):
     """ Returns decay descriptor corresponding to a sample name.
-    Author: Hugo Ruiz, hugo.ruiz@cern.ch
+    @param sample Standard name of the data sample
+    @returns Corresponding decay descriptor
+    @autor Hugo Ruiz, hugo.ruiz@cern.ch
     """
     return decayDescriptorDict[ sample ]
 
@@ -76,7 +76,9 @@ def decayDescriptor ( sample ):
 #---------------------------------------------------
 def hansVolume( sample ):
     """ Returns number of volume where Hans put the corresponding data file in his presel stripping.
-    Author: Hugo Ruiz, hugo.ruiz@cern.ch
+    @param sample Standard name of the data sample
+    @returns Volume number where Hans has the corresponding file
+    @autor Hugo Ruiz, hugo.ruiz@cern.ch
     """
     filesInVol1 = ['Bd2D0Kst', 'Bd2DstMu', 'Bd2Kpi-decprodcut', 'Bd2KstD2KSPiPi', 'Bs2DsDs', 'Bs2Dspi-Decprodcut', 'Bs2MuMu', 'Bs2PhiPhi', 'Bu2KD-KSPiPi', 'Bu2Kmumu','MBL0-lumi2-1.dst','MBL0-lumi2-2.dst']
     filesInVol3 = ['Bd2MuMuKst', 'Bd2PiPiPi', 'Bs2phigamma', 'Bs2psiphi-decprodcut', 'Bu2Kee','MBL0-lumi2-3.dst','MBL0-lumi2-4.dst']
@@ -91,7 +93,9 @@ def hansVolume( sample ):
 #---------------------------------------------------
 def optionForHansFile ( sample ):
     """ Returns an option including in the event selector the  corresponding data file in Hans's presel stripping.
-    Author: Hugo Ruiz, hugo.ruiz@cern.ch
+    @param sample Standard name of the data sample
+    @returns An option including in the event selector the  corresponding data file in Hans's presel stripping
+    @autor Hugo Ruiz, hugo.ruiz@cern.ch
     """
     
     out = 'EventSelector.Input   = {"DATAFILE=\'PFN:/afs/cern.ch/lhcb/group/trigger/vol'

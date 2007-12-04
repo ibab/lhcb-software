@@ -17,9 +17,8 @@ See desktopExample() for examples on how to use this module.
 
 #---------------------------------------------------
 
-from math import *
 from ROOT import *
-from PyTree import *
+from PyTree import PyTree
 import datetime
 import shutil
 

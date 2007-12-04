@@ -1,12 +1,21 @@
-# module with functions that deals LHCb RC objects
-# author: D. Martinez, J.A. Hernando
+# =============================================================================
+""" @namespace recotools
+@brief Functions that deal with reconstructed objects, like IP and vertex computations
+@author Diego Martinez diego.martinez.santos@cern.ch
+@author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
+@author Antonio Maria Perez-Calero Yzquierdo aperez@ecm.ub.es
+@date 2007-11-28
+"""
+# =============================================================================
 
-from math import *
+
+import math
 import gaudimodule
 import kintools
 
 DEBUG = False
 
+#---------------------------------------------------
 def rIP(track,vertex):
     """ compute radial impact paramter
     NOTE: assumes that tracks in a 3D track!
@@ -28,8 +37,8 @@ def rIP(track,vertex):
     xt = xt+tx*(zv-zt)
     yt = yt+ty*(zv-zt)
     zt = zv
-    rt = sqrt(xt*xt+yt*yt)
-    tr = sqrt(tx*tx+ty*ty)
+    rt = math.sqrt(xt*xt+yt*yt)
+    tr = math.sqrt(tx*tx+ty*ty)
     cphi = xt/rt
     sphi = yt/rt
     rv = xv*cphi+yv*sphi
@@ -43,7 +52,7 @@ def rIP(track,vertex):
     RR = Dr+tr*dz
     ZZ = Dz+dz
     ip1 = -RR/sqrt(1+tr*tr)
-    ip2 = sqrt(RR*RR+ZZ*ZZ)
+    ip2 = math.sqrt(RR*RR+ZZ*ZZ)
     if (ZZ<0): ip1 = -1.*ip1
     if (ZZ>0): ip2 = -1.*ip2
     if (DEBUG): print " Dr,Dz,dz",Dr,Dz,dz
@@ -52,6 +61,7 @@ def rIP(track,vertex):
     if (DEBUG): print " -- IP2 -- ",ip2
     return ip2
 
+#---------------------------------------------------
 def IP(track,vertex):
     """ compute impact parameter
     """ 
@@ -67,7 +77,7 @@ def IP(track,vertex):
     xv = pv.x()
     yv = pv.y()
     zv = pv.z()
-    lbda = 1./sqrt(1.+tx*tx+ty*ty);
+    lbda = 1./math.sqrt(1.+tx*tx+ty*ty);
     if (DEBUG): print " track: x,y,z,tx,ty ",xt,yt,zt,tx,ty
     if (DEBUG): print " track: qp,pt,lambda ",qp,pt,lbda
     if (DEBUG): print " vertex: x,y,z ",xv,yv,zv
@@ -87,7 +97,7 @@ def IP(track,vertex):
     zz =  dx*ty - dy*tx;
     if (DEBUG): print " xx,yy,zz ",xx,yy,zz
   
-    ip = lbda*sqrt(xx*xx+yy*yy+zz*zz);
+    ip = lbda*math.sqrt(xx*xx+yy*yy+zz*zz);
     if (zz<0.): ip = -1.*ip;
     if (DEBUG): print " -- IP -- ",ip
 
@@ -95,7 +105,7 @@ def IP(track,vertex):
     XX = dx + tx*Dz
     YY = dy + ty*Dz
     ZZ = dz + 1.*Dz
-    DD = sqrt(XX*XX+YY*YY+ZZ*ZZ)
+    DD = math.sqrt(XX*XX+YY*YY+ZZ*ZZ)
     if (ZZ<0): DD = -1.*DD
     if (DEBUG): print " Dz, ", Dz
     if (DEBUG): print " XX,YY,ZZ ",XX,YY,ZZ,DD
@@ -117,7 +127,7 @@ def getLists(track):
     """ Returns position and momentum of a track as python lists
     @param track Input track
     @returns [posx,posy,posz],[momx,momy,momz]
-    @author Antonio Perez-Calero Izquierdo aperezca@ecm.ub.es
+    @author Antonio Perez-Calero Izquierdo aperez@ecm.ub.es
     """
     pos=track.position()
     mom=track.momentum()
@@ -139,7 +149,7 @@ def produceVertex(track1,track2, returnDoca = False):
     @param track2 Second track
     @param returnDoca If set to True, DOCA of the vertex is also returned
     @returns Vertex or Vertex and DOCA, depending on value of returnDoca
-    @author Antonio Perez-Calero Izquierdo aperezca@ecm.ub.es
+    @author Antonio Perez-Calero Izquierdo aperez@ecm.ub.es
     """ 
 
     pos1,mom1=getLists(track1)
@@ -174,7 +184,7 @@ def produceVertex(track1,track2, returnDoca = False):
 
         #print point1,point2
         P1P2=(point1[0]-point2[0],point1[1]-point2[1],point1[2]-point2[2])
-        doca=sqrt(kintools.dot(P1P2,P1P2))
+        doca=math.sqrt(kintools.dot(P1P2,P1P2))
 
         coord_x=0.5*(point1[0]+point2[0])
         coord_y=0.5*(point1[1]+point2[1])
