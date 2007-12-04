@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Tracks.opts,v 1.1 2007-10-04 16:29:33 ibelyaev Exp $
+// $Id: LoKi_Tracks.opts,v 1.2 2007-12-04 14:30:13 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Tracks
@@ -34,9 +34,9 @@
 // ============================================================================
 ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
 // ============================================================================
-ApplicationMgr.ExtSvc += { "StagerSvc" } ;
-StagerSvc.BlockSize    = 20 ;
-StagerSvc.InitialStage = 5 ;
+//ApplicationMgr.ExtSvc += { "StagerSvc" } ;
+//StagerSvc.BlockSize    = 20 ;
+//StagerSvc.InitialStage = 5 ;
 // ============================================================================
 // Histograms & NTuples 
 // ============================================================================
@@ -47,6 +47,7 @@ HbookHistSvc.PrintHistos = true ;
 // Input Data
 // ============================================================================
 #pragma print OFF 
+//#include "$DAVINCIROOT/options/DaVinciTestData.opts"
 #include "$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm.opts"  
 #pragma print ON
 PoolDbCacheSvc.Catalog = {
@@ -68,9 +69,6 @@ FASTandGOOD.Selector.Code  = "(TrP>5000)&(TrCHI2<100)" ;
 ApplicationMgr.TopAlg    += { "LoKi::SelectTracks/FASTandPOS" } ;
 FASTandPOS.TrackSelector = "LoKi::Hybrid::TrackSelector/Selector" ;
 FASTandPOS.Selector.Code = "(TrP>10000)&(0<TrQ)" ;
-
-
-//ToolSvc.TrHybridFactory.OutputLevel = 2 ;
 
 
 ApplicationMgr.EvtMax   =  50 ;

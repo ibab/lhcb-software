@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.21 2007-09-24 15:51:34 jpalac Exp $ 
+! $Id: release.notes,v 1.22 2007-12-04 14:30:12 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.21 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.22 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiExample v6r1 2007-12-04 =====================
+! 2007-12-04 - Ivan BELYAEV
+ - tity update of hybrid&track selectors 
+
 
 !========================== LoKiExample v6r0 2007-09-24 =====================
 

@@ -1,4 +1,4 @@
-// $Id: LoKi_Tracks.cpp,v 1.1 2007-10-04 16:29:33 ibelyaev Exp $
+// $Id: LoKi_Tracks.cpp,v 1.2 2007-12-04 14:30:14 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -99,7 +99,9 @@ StatusCode LoKi::SelectTracks::analyse()
             << " from "                   << tracks->size() << endreq ;
 
   counter( "#good") += nTracks ;
-
+  
+  setFilterPassed ( true ) ;
+  
   return StatusCode::SUCCESS ;
 }
 // ============================================================================

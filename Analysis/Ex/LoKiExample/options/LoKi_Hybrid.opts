@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Hybrid.opts,v 1.4 2007-08-15 11:04:02 ibelyaev Exp $
+// $Id: LoKi_Hybrid.opts,v 1.5 2007-12-04 14:30:13 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Hybrid
@@ -37,9 +37,9 @@
 // ============================================================================
 ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
 // ============================================================================
-ApplicationMgr.ExtSvc += { "StagerSvc" } ;
-StagerSvc.BlockSize    = 20 ;
-StagerSvc.InitialStage = 5 ;
+//ApplicationMgr.ExtSvc += { "StagerSvc" } ;
+//StagerSvc.BlockSize    = 20 ;
+//StagerSvc.InitialStage = 5 ;
 // ============================================================================
 // Input Data
 // ============================================================================
@@ -63,12 +63,18 @@ Hybrid.FilterCriteria = {
   "All"    : "LoKi::Hybrid::FilterCriterion/ALL"    ,
   "First"  : "LoKi::Hybrid::FilterCriterion/FIRST"  ,
   "Second" : "LoKi::Hybrid::FilterCriterion/SECOND" ,
-  "Third"  : "LoKi::Hybrid::FilterCriterion/THIRD" 
+  "Third"  : "LoKi::Hybrid::FilterCriterion/THIRD"  ,
+  "Fourth" : "LoKi::Hybrid::FilterCriterion/FOURTH" 
 };
 Hybrid.ALL.Code    = " ALL "            ;
 Hybrid.FIRST.Code  = " ('mu+' == ABSID) & ( P > 10000 ) " ;
 Hybrid.SECOND.Code = " 'pi+' == ABSID " ;
 Hybrid.THIRD.Code  = " 'K+'  == ABSID " ;
+
+Hybrid.FIRST.Code  = "ADMASS('B0')<500" ;
+Hybrid.SECOND.Code = "ALL" ;
+Hybrid.THIRD.Code  = "(VFASPF(VCHI2)<30)" ;
+
 
 ApplicationMgr.EvtMax   =  100 ;
 EventSelector.PrintFreq =   10 ;
