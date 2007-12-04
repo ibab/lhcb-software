@@ -1,9 +1,24 @@
 ! =============================================================================
-! $Id: release.notes,v 1.343 2007-11-27 16:27:08 cattanem Exp $ 
+! $Id: release.notes,v 1.344 2007-12-04 11:44:30 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-12-04 - Juan Palacios
+ - Removal of 
+   ROOT::Math::Transform3D(ROOT::Math::XYZVector, 
+                           ROOT::Math::Rotation3D) 
+   constructor, for 3D transformation made from translation followed by 
+   rotation. Modify code to produce the equivalent transformation thus:
+   ROOT::Math::VectorXYZ translation = ...;
+   ROOT::Math::Rotation3D rotation = ...'
+   ROOT::Math::Transform3D myTransform(rotation, rotation(translation));
+
+   files modified:
+   - src/Lib/PVolume.cpp
+   - src/Lib/SolidChild.cpp
+ 
 
 !====================== DetDesc v18r2 2007-11-27 ==============================
  ### requires GaudiKernel >= v23r2 ###
