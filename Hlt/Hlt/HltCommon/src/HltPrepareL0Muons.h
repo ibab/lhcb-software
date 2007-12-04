@@ -1,4 +1,4 @@
-// $Id: HltPrepareL0Muons.h,v 1.1 2007-12-04 13:24:54 hernando Exp $
+// $Id: HltPrepareL0Muons.h,v 1.2 2007-12-04 13:26:35 hernando Exp $
 #ifndef HLTPREPAREL0CALOS_H 
 #define HLTPREPAREL0CALOS_H 1
 
@@ -32,6 +32,8 @@ private:
   double m_PtMin;
   std::string m_outputMuonTracksName; 
   IMuonSeedTool* m_maker;
+
+  bool checkClone(LHCb::L0MuonCandidate* muon);
 
 
 };

@@ -1,4 +1,4 @@
-// $Id: HltPrepareL0Muons.cpp,v 1.1 2007-12-04 13:24:53 hernando Exp $
+// $Id: HltPrepareL0Muons.cpp,v 1.2 2007-12-04 13:26:35 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -32,7 +32,7 @@ HltPrepareL0Muons::HltPrepareL0Muons( const std::string& name,
 {
   // declareCondition("MinPt",m_ptMin = 0.);
   
-  declareProperty("MinPt", m_PtMin = 1000.);
+  declareProperty("MinPt", m_PtMin = 0.1);
   declareProperty("OutputL0MuonTracksName"   ,
                   m_outputMuonTracksName );
 
@@ -76,6 +76,10 @@ StatusCode HltPrepareL0Muons::execute() {
        it !=  inputL0Muon->end(); ++it){
     const L0MuonCandidate& l0muon = *(*it);
     if (fabs(l0muon.pt()) < m_PtMin) continue;
+    debug() << "l0pt " << l0muon.pt()<< endmsg;
+    bool isClone=checkClone(*it);
+    if (isClone) debug() << "is clone " << endmsg;
+    if (isClone) continue;
     Track* track = new Track();
     sc = m_maker->makeTrack(l0muon,*track);
     muons->insert(track);
@@ -100,3 +104,40 @@ StatusCode HltPrepareL0Muons::finalize() {
 }
 
 //=============================================================================
+bool HltPrepareL0Muons::checkClone(L0MuonCandidate* muon)
+{
+  std::vector<MuonTileID> list_of_tileM1= muon->muonTileIDs(0);
+  MuonTileID tileM1=*(list_of_tileM1.begin());
+
+  std::vector<MuonTileID> list_of_tileM2= muon->muonTileIDs(1);
+  MuonTileID tileM2=*(list_of_tileM2.begin());
+  for( std::vector<Track*>::const_iterator pItr=m_outputTracks->begin();
+            pItr<m_outputTracks->end();pItr++){
+    std::vector< LHCb::LHCbID > list_lhcb=      (*pItr)->lhcbIDs();
+    MuonTileID oldTileM1;
+    MuonTileID oldTileM2;
+
+    for(std::vector< LHCb::LHCbID >::iterator iM1=list_lhcb.begin();iM1<list_lhcb.end();iM1++){
+      if(iM1->isMuon()){
+        if(iM1->muonID().station()==0){
+          oldTileM1=iM1->muonID();
+          break;
+        }
+      }
+    }
+    for(std::vector< LHCb::LHCbID >::iterator iM1=list_lhcb.begin();iM1<list_lhcb.end();iM1++){
+      if(iM1->isMuon()){
+        if(iM1->muonID().station()==1){
+          oldTileM2=iM1->muonID();
+          break;
+        }
+      }
+    }
+    if(oldTileM1.isValid()&&oldTileM1==tileM1&&oldTileM2.isValid()&&oldTileM2==tileM2)return true;
+
+
+
+  }
+  return false;
+
+}
