@@ -1,4 +1,4 @@
-// $Id: SolidChild.cpp,v 1.20 2007-03-16 15:57:23 cattanem Exp $ 
+// $Id: SolidChild.cpp,v 1.21 2007-12-04 11:43:48 jpalac Exp $ 
 // ===========================================================================
 /// Geometry definitions
 #include "GaudiKernel/Transform3DTypes.h" 
@@ -139,7 +139,8 @@ SolidChild::SolidChild
   else 
     {
       m_sc_matrix    = 
-        new Gaudi::Transform3D(Gaudi::XYZVector(-1.*pos), rot );
+        new Gaudi::Transform3D(rot, rot(Gaudi::XYZVector(-1.*pos)) );
+        //        new Gaudi::Transform3D(Gaudi::XYZVector(-1.*pos), rot );
       if( 0 != m_sc_matrix ) { m_sc_simple = false ; } 
     }
   /// set bounding parameters 

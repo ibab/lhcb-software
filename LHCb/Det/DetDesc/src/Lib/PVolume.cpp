@@ -1,4 +1,4 @@
-// $Id: PVolume.cpp,v 1.23 2007-01-17 12:10:29 cattanem Exp $ 
+// $Id: PVolume.cpp,v 1.24 2007-12-04 11:43:48 jpalac Exp $ 
 
 // GaudiKernel includes 
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -62,7 +62,10 @@ PVolume::PVolume
   // NB!!! transformaion is given by Translation and then Rotation!!!
 //   m_nominal = Gaudi::Transform3D(Rotation ) *
 //     Gaudi::Transform3D(Gaudi::XYZVector(Position) ) ; // MathCore syntax
-  m_nominal =  Gaudi::Transform3D(Gaudi::XYZVector(Position), Rotation);
+//  m_nominal =  Gaudi::Transform3D(Gaudi::XYZVector(Position), Rotation);
+  m_nominal =  Gaudi::Transform3D( Rotation, 
+                                   Rotation(Gaudi::XYZVector(Position)));
+  
   //  m_nominal = Rotation*Gaudi::TranslationXYZ(Position) ; // CLHEP syntax
   m_matrix  = m_nominal ;
   /// 
