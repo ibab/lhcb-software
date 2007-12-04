@@ -10,6 +10,7 @@ version           v3r11
 branches          cmt doc TrackInterfaces
 
 # =============== dependencies ==============================================
+use RecEvent         v* Event
 use TrackEvent       v* Event
 use PatKernel        v* Tf
 use LHCbKernel       v* Kernel

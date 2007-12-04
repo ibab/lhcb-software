@@ -4,10 +4,13 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+!====================== TrackInterfaces v3r11 2007-12-04 =====================
+! 2007-12-04 - Marco Cattaneo
+ - Add RecEvent dependency for RecVertex, used by IPVOfflineTool
+
 ! 2007-12-04 - Wouter Hulsbergen
  - added ITrackVertexer
 
-!====================== TrackInterfaces v3r11 2007-12-04 =====================
 ! 2007-12-04 - Mariusz Witek
  - add new interface IPVOfflineTool.h for PV reconstruction
 
