@@ -1,9 +1,11 @@
-// $Id: IPVOfflineTool.h,v 1.1 2007-12-04 08:48:09 witekma Exp $
+// $Id: IPVOfflineTool.h,v 1.2 2007-12-04 12:01:51 witekma Exp $
 #ifndef IPVOFFLINETOOL_H 
 #define IPVOFFLINETOOL_H 1
 // from STL
 #include <string>
 #include <vector>
+#include "Event/RecVertex.h"
+#include "Event/Track.h"
 // from Gaudi
 #include "GaudiKernel/AlgTool.h"
 // Interface ID 
