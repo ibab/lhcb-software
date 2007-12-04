@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!2007-12-04 - Wouter Hulsbergen
+ - Changed 'Measurement::setTrajectory' method such that it (hopefully) compiles on windows.
+
 !======================= TrackEvent v4r9 2007-11-30 ==========================
 !2007-11-30 Wouter Hulsbergen
  - added method to add list of states to track

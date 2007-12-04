@@ -175,15 +175,13 @@
         </code>
       </method>
 
-       <method
+      <method
         name    = 'setTrajectory'
-        desc    = 'set the trajectory (takes ownership)'
-	argList = 'LHCb::Trajectory* traj'>
-	<code>
- m_trajectory = std::auto_ptr &lt; LHCb::Trajectory &gt;(traj) ;
-        </code>
+        desc    = 'Set the trajectory'>
+        <arg type = 'std::auto_ptr &lt; LHCb::Trajectory &gt;' name='traj' const='FALSE'/>
+        <code>  m_trajectory = traj ; </code>
       </method>
-
+      
     </class>
 
   </package>
