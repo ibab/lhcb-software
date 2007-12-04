@@ -4,7 +4,11 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 
-!========================== VeloTools v3r0 2007-11-29 ========================
+!========================== VeloTools v3r0 2007-12-04 ========================
+! 2007-12-04 - Marco Cattaneo
+ - Fix for configurables: objects created in initialize must be deleted in
+   finalize, not destructor
+
 ! 2007-11-02 - Tomasz Szumlak
  - fix requirements file - TrackEvent dependecy added
 

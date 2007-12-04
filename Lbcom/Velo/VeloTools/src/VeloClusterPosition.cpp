@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.16 2007-11-21 13:22:26 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.17 2007-12-04 16:40:01 cattanem Exp $
 // Include files
 
 // stl
@@ -53,7 +53,9 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
     m_maxAngle ( 0. ),
     m_trackDir ( ),
     m_gloPoint ( ),
-    m_fracPos ( 0. )
+    m_fracPos ( 0. ),
+	m_p0(0),
+	m_p1(0)
 {
   declareInterface<IVeloClusterPosition>(this);
   // default paramertrizations are of form error=slope*pitch+const
@@ -85,9 +87,6 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
 // Destructor
 //=============================================================================
 VeloClusterPosition::~VeloClusterPosition(){
-  debug()<< " destructeur " <<endmsg;
-  if(m_p0!=0) delete m_p0;
-  if(m_p1!=0) delete m_p1;
 };
 //=============================================================================
 StatusCode VeloClusterPosition::initialize()
@@ -123,6 +122,8 @@ StatusCode VeloClusterPosition::initialize()
 StatusCode VeloClusterPosition::finalize() {
 
   debug() << "==> Finalize" << endmsg;
+  if(m_p0!=0) {delete m_p0; m_p0=0;}
+  if(m_p1!=0) {delete m_p1; m_p0=0;}
 
   return ( GaudiTool::finalize() );  // must be called after all other actions
 }
