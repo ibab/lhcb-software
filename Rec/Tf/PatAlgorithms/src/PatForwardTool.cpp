@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.5 2007-11-30 15:59:38 aperiean Exp $
+// $Id: PatForwardTool.cpp,v 1.6 2007-12-04 20:48:07 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -398,8 +398,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     fwTra->setHistory( LHCb::Track::PatForward );
 
     //== Add a new state in the T stations ...
-    LHCb::State temp;
-    double dz = m_fwdTool->zOutput() - m_fwdTool->zReference();
+    
     double qOverP = m_fwdTool->qOverP( *itL );
     // set q/p in all of the existing states
     const std::vector< LHCb::State * > states = fwTra->states();
@@ -408,11 +407,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
       (*iState)->setQOverP(qOverP);
       (*iState)->setErrQOverP2(qOverP*qOverP*0.012*0.012);
     }
-    temp.setLocation( LHCb::State::AtT );
-    temp.setState( (*itL).x( dz ), (*itL).y( dz ), m_fwdTool->zOutput(),
-                   (*itL).xSlope( dz ), (*itL).ySlope( dz ), qOverP );
-
-    //== overestimated covariance matrix, as input to the Kalman fit
+    
     Gaudi::TrackSymMatrix cov;
     cov(0,0) = m_stateErrorX2;
     cov(1,1) = m_stateErrorY2;
@@ -421,12 +416,21 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     double errQOverP = m_stateErrorP*qOverP;
     cov(4,4) = errQOverP * errQOverP;
 
-    temp.setCovariance( cov );
 
-    debug() << " added State " << temp.stateVector()
-            << " cov \n" << temp.covariance() << endreq;
+    for (unsigned int i=0; i<m_fwdTool->zOutputs().size(); i++)
+      {
+      LHCb::State temp;
+      double dz = m_fwdTool->zOutputs()[i] - m_fwdTool->zReference();
+      temp.setLocation( LHCb::State::AtT );
+      temp.setState( (*itL).x( dz ), (*itL).y( dz ), m_fwdTool->zOutputs()[i],
+		     (*itL).xSlope( dz ), (*itL).ySlope( dz ), qOverP );
+      
+      //== overestimated covariance matrix, as input to the Kalman fit
+      
 
-    fwTra->addToStates( temp );
+      temp.setCovariance( cov );
+      fwTra->addToStates( temp );
+    }
     //== New information, on the track fit.
     fwTra->setChi2PerDoF( (*itL).chi2PerDoF() );
     fwTra->setNDoF(       (*itL).nDoF() );

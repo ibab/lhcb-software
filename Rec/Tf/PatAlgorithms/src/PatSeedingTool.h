@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.h,v 1.2 2007-10-30 18:29:29 smenzeme Exp $
+// $Id: PatSeedingTool.h,v 1.3 2007-12-04 20:48:07 smenzeme Exp $
 #ifndef PATSEEDINGTOOL_H
 #define PATSEEDINGTOOL_H 1
 
@@ -88,7 +88,7 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
     double m_tolCollectIT;
     double m_initialArrow;
     double m_zReference;
-    double m_zOutput;
+    std::vector<double> m_zOutputs;
     double m_dRatio;
     double m_tolExtrapolate;
 

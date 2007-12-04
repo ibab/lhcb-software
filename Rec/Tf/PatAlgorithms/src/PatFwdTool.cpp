@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.cpp,v 1.4 2007-11-29 17:25:09 smenzeme Exp $
+// $Id: PatFwdTool.cpp,v 1.5 2007-12-04 20:48:07 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -37,7 +37,8 @@ PatFwdTool::PatFwdTool( const std::string& type,
 {
   declareInterface<PatFwdTool>(this);
   declareProperty( "ZReference"      , m_zReference      = StateParameters::ZMidT); 
-  declareProperty( "ZOutput"         , m_zOutput         = StateParameters::ZEndT);
+  declareProperty( "ZOutput"          ,m_zOutputs        = boost::assign::list_of(StateParameters::ZBegT)
+		   (StateParameters::ZMidT)(StateParameters::ZEndT));
   declareProperty( "ZMagnetParams"   , m_zMagnetParams   = boost::assign::list_of
 		   (5199.31) (334.725) (-1283.86) (9.59486e-06) (-413.281));
   declareProperty( "xParams"         , m_xParams         = boost::assign::list_of

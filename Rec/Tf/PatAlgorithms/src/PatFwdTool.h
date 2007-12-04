@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.h,v 1.2 2007-10-30 18:29:29 smenzeme Exp $
+// $Id: PatFwdTool.h,v 1.3 2007-12-04 20:48:07 smenzeme Exp $
 #ifndef FWDGEOMETRYTOOL_H
 #define FWDGEOMETRYTOOL_H 1
 
@@ -43,7 +43,7 @@ static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
 
     double zReference() const { return m_zReference; }
 
-    double zOutput()     const { return m_zOutput; }
+    std::vector<double> zOutputs()     const { return m_zOutputs; }
 
     bool fitXCandidate( PatFwdTrackCandidate& track,
                         double maxChi2, int minPlanes );
@@ -145,7 +145,7 @@ static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
     std::vector<double> m_yParams;
     std::vector<double> m_momentumParams;
     double m_zReference;
-    double m_zOutput;
+    std::vector<double> m_zOutputs;
     double m_xMagnetTol;
     double m_xMagnetTolSlope;
     double m_zMagnet;

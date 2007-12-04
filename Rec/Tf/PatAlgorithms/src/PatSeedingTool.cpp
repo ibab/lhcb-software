@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.5 2007-11-29 17:25:09 smenzeme Exp $
+// $Id: PatSeedingTool.cpp,v 1.6 2007-12-04 20:48:07 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -46,7 +46,8 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "InitialArrow",      m_initialArrow     = 0.0022                   );
   declareProperty( "CurveTol",          m_curveTol         =    5. * Gaudi::Units::mm );
   declareProperty( "zReference",        m_zReference       =  StateParameters::ZMidT);
-  declareProperty( "zOutput",           m_zOutput          =  StateParameters::ZEndT);
+  declareProperty( "ZOutput",           m_zOutputs        = boost::assign::list_of(StateParameters::ZBegT)
+		   (StateParameters::ZMidT)(StateParameters::ZEndT));
   declareProperty( "dRatio",            m_dRatio           = -0.377e-3                );
   declareProperty( "TolExtrapolate",    m_tolExtrapolate   = 4.    * Gaudi::Units::mm );
   declareProperty( "yCorrection",       m_yCorrection      = .8e14 * Gaudi::Units::mm );
@@ -657,15 +658,8 @@ void PatSeedingTool::storeTrack ( PatSeedTrack& track, std::vector<LHCb::Track*>
   qOverP = 1.e-6 * x0 / qOverP;
 
 
-
-
-
-  double z = m_zOutput;
-
-  temp.setLocation( LHCb::State::AtT );
-  temp.setState( track.xAtZ( z ), track.yAtZ( z ), z,
-                 track.xSlope( z ), track.ySlope( z ), qOverP );
   //== overestimated covariance matrix, as input to the Kalman fit
+
   Gaudi::TrackSymMatrix cov;
   cov(0,0) = m_stateErrorX2;
   cov(1,1) = m_stateErrorY2;
@@ -673,8 +667,17 @@ void PatSeedingTool::storeTrack ( PatSeedTrack& track, std::vector<LHCb::Track*>
   cov(3,3) = m_stateErrorTY2;
   double errQOverP = m_stateErrorP*qOverP;
   cov(4,4) = errQOverP * errQOverP;
-  temp.setCovariance( cov );
-  out->addToStates( temp );
+
+
+  for (unsigned int i=0; i<m_zOutputs.size(); i++){
+    double z = m_zOutputs[i];
+  
+    temp.setLocation( LHCb::State::AtT );
+    temp.setState( track.xAtZ( z ), track.yAtZ( z ), z,
+		   track.xSlope( z ), track.ySlope( z ), qOverP );
+    temp.setCovariance( cov );
+    out->addToStates( temp );
+  }
 
   outputTracks.push_back( out );
 }
