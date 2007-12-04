@@ -4,7 +4,7 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
-!============================= PatPV v3r0 2007-12-04 =========================
+!============================= PatPV v3r1 2007-12-04 =========================
 ! 2007-12-04 - Mariusz Witek
   - Correction for unchecked StatusCode
 
@@ -14,6 +14,6 @@
   - put interafce IPVOfflineTool into Tr/TrackInterfaces
   - add new LSAdaptPVFitter; rename old PVFitter to LSIterPVFitter
 
-
+!============================= PatPV v3r0 2007-10-12 =========================
 ! 2007-10-09 - Stephanie Hansmann-Menzemer
   - import code from Pat/PatPV, for older release notes check there

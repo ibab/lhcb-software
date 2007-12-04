@@ -1,4 +1,4 @@
-// $Id: PVOfflineTool.h,v 1.2 2007-12-04 11:13:06 witekma Exp $
+// $Id: PVOfflineTool.h,v 1.3 2007-12-04 14:11:17 cattanem Exp $
 #ifndef PVOFFLINETOOL_H 
 #define PVOFFLINETOOL_H 1
 // Include files:
@@ -12,7 +12,6 @@
 #include "IPVFitter.h"
 #include "PVSeedTool.h"
 // Track info
-#include "VeloDet/DeVelo.h"
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
 
