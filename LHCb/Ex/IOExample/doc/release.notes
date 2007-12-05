@@ -1,7 +1,12 @@
-$Id: release.notes,v 1.20 2007-11-07 17:16:06 cattanem Exp $
-Package: IOExample
-Package Manager: M.Frank
-Purpose: Demonstrate how to write and read back event data using POOL I/O.
+! $Id: release.notes,v 1.21 2007-12-05 08:28:38 cattanem Exp $
+! Package: IOExample
+! Package Manager: M.Frank
+! Purpose: Demonstrate how to write and read back event data using POOL I/O.
+!---------------------------------------------------------------------------
+
+!====================== IOExample v2r3 2007-12-05 =========================
+! 2007-12-05 - Marco Cattaneo
+ - Add options for new MultiFileCatalog when writing MDF file
 
 !====================== IOExample v2r2 2007-11-07 =========================
 ! 2007-11-07 - Marco Cattaneo

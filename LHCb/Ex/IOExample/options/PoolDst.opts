@@ -1,6 +1,6 @@
 // Options to read POOL .dst file and make a copy
 EventSelector.Input   = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v30r10/0601-11144100.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 
 InputCopyStream.Output = "DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='REC'";

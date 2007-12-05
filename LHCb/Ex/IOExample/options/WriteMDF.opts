@@ -16,6 +16,8 @@ EventSelector.Input = {
 
 // Set up the output persistency
 EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
+ApplicationMgr.SvcOptMapping    += { "Gaudi::MultiFileCatalog/FileCatalog",
+                                     "Gaudi::IODataManager/IODataManager" };
 
 // Create the MDF file using the standard Gaudi output stream:
 ApplicationMgr.OutStream  = { "Writer_0" };
