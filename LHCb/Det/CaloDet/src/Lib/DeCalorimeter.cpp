@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.42 2007-12-03 16:22:41 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.43 2007-12-05 15:51:06 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -154,8 +154,8 @@ StatusCode DeCalorimeter::initialize()
   setEtInCenter   ( gain->paramAsDouble( "EtInCenter"      ) ) ;
   setEtSlope      ( gain->paramAsDouble( "EtSlope"         ) ) ;
   setActiveToTotal( gain->paramAsDouble( "ActiveToTotal"   ) ) ;
-  setPedestalShift( gain->paramAsDouble( "PedShift"        ) ) ;
-  setPinPedestalShift( gain->paramAsDouble( "PinPedShift"  ) ) ;
+  gain->exists("PedShift") ? setPedestalShift( gain->paramAsDouble( "PedShift"        ) ) : setPedestalShift( 0. ) ;
+  gain->exists("PinPedShift") ? setPinPedestalShift(gain->paramAsDouble( "PinPedShift"  ) ) : setPinPedestalShift(0.);
 
 
   Condition* reco = condition( "Reco" );
