@@ -1,4 +1,4 @@
-// $Id: AuxFunBase.h,v 1.6 2007-12-05 15:38:45 ibelyaev Exp $
+// $Id: AuxFunBase.h,v 1.7 2007-12-05 15:47:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_AUXFUNBASE_H 
 #define LOKI_AUXFUNBASE_H 1
@@ -52,8 +52,10 @@ namespace LoKi
   public:    // to please Visual C++ compiler
     // Default constructor
     AuxFunBase  () ; ///< Default constructor
+    /// constructor from LoKi Service
+    AuxFunBase  ( const LoKi::ILoKiSvc* svc   ) ; 
     // copy consructor 
-    AuxFunBase  ( const AuxFunBase& ); //</ copy consructor 
+    AuxFunBase  ( const AuxFunBase&     right ) ; //</ copy consructor 
     // destructor 
     virtual ~AuxFunBase (); ///< destructor 
   protected:
