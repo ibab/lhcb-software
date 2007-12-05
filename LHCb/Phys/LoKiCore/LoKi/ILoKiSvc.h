@@ -1,4 +1,4 @@
-// $Id: ILoKiSvc.h,v 1.5 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id: ILoKiSvc.h,v 1.6 2007-12-05 09:37:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ILOKISVC_H 
 #define LOKI_ILOKISVC_H 1
@@ -21,6 +21,7 @@ class IParticlePropertySvc ;
 class ISvcLocator          ;
 class IToolSvc             ;
 class IAlgContextSvc       ;
+class IIncidentSvc         ;
 // ============================================================================
 /** @file
  *
@@ -51,32 +52,50 @@ namespace LoKi
     , virtual public IIncidentListener 
   {
   public:    
+    // ========================================================================
     /** get the pointer to service locator 
      *  @return ponter to Service Locator 
      *  @see ISvcLocator 
      */
     virtual ISvcLocator*          svcLoc     () const = 0 ;    
+    // ========================================================================
     /** get the pointer to Particle Property Service 
      *  @return pointer to Particle Property Service 
      *  @see IParticlePropertySvc 
      */
     virtual IParticlePropertySvc* ppSvc      () const = 0 ;    
+    // ========================================================================
     /** get the pointer to Tool Service 
      *  @return pointer to Tool Service 
      *  @see IToolSvc 
      */
     virtual IToolSvc*             toolSvc    () const = 0 ;   
-    /** get the pointer to Tool Service 
-     *  @return pointer to Tool Service 
-     *  @see IToolSvc 
+    // ========================================================================
+    /** get the pointer to Algorithm Context Service 
+     *  @return pointer to Algorithm Context Service 
+     *  @see IAlgContextSvc 
      */
     virtual IAlgContextSvc*       contextSvc () const = 0 ;   
+    // ========================================================================
+    /** get the pointer to Incident Service 
+     *  @return pointer to Incident Service 
+     *  @see IIncidentSvc
+     */
+    virtual IIncidentSvc*         incidentSvc() const = 0 ;
+    // ========================================================================
     /** get "good" error reporter
      *  @return pointer to Good error reporter
      *  @see LoKi::IReporter
      */
     virtual LoKi::IReporter*     reporter    () const = 0 ;    
+    // ========================================================================
+    /** The the sequential event number 
+     *  (needed for the proper synchronizations checks) 
+     *  @return the sequential event number 
+     */
+    virtual long                 event       () const = 0 ;
   public:
+    // ========================================================================
     /** Retrieve interface ID
      *  mandatory method from IInterface 
      *  @see IInterface 
@@ -84,9 +103,12 @@ namespace LoKi
      *  @return unique interface identifier 
      */
     static const InterfaceID& interfaceID() ;
+    // ========================================================================
   protected:
+    // ========================================================================
     // virtual protected destructor 
     virtual ~ILoKiSvc() ;
+    // ========================================================================
   };
   // ==========================================================================
 } // end of namespace LoKi

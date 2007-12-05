@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.62 2007-12-03 12:03:23 ibelyaev Exp $ 
+! $Id: release.notes,v 1.63 2007-12-05 09:37:45 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,7 +15,10 @@
 ! 
 ! -----------------------------------------------------------------------------
 
-!=========================== LoKiCore v7r0 2007-11-30  ========================
+!=========================== LoKiCore v7r0 2007-12-05  ========================
+
+! 2007-12-05 - Vanya BELYAEV
+ - remove the dictionaries for LHCb::ParticleID class
 
 ! 2007-11-30 - Vanya BELYAEV  
  - new MAJOR version of LoKi  
@@ -396,6 +399,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.62  2007/12/03 12:03:23  ibelyaev
+!  v7r0: the powerful streamers
+!
 ! Revision 1.61  2007/10/19 13:41:55  cattanem
 ! fix for gcc 4.0
 !

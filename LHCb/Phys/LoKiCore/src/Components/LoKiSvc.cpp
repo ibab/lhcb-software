@@ -1,6 +1,10 @@
-// $Id: LoKiSvc.cpp,v 1.11 2007-08-14 12:35:33 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.12 2007-12-05 09:37:45 ibelyaev Exp $
 // ============================================================================
 // Include files 
+// ============================================================================
+// STD & STL 
+// ============================================================================
+#include <climits>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -9,6 +13,8 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IAlgContextSvc.h"
+#include "GaudiKernel/Incident.h"
+#include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ServiceLocatorHelper.h"
 // ============================================================================
@@ -44,9 +50,9 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  */
 // ============================================================================
-class LoKiSvc : 
-  public virtual LoKi::ILoKiSvc , 
-  public                Service 
+class LoKiSvc 
+  : public virtual LoKi::ILoKiSvc 
+  , public                Service 
 {
   friend class SvcFactory<LoKiSvc> ;
 public:
@@ -57,7 +63,7 @@ public:
    *  @see IScvLocator 
    */
   virtual ISvcLocator*          svcLoc() const 
-  { return Service::serviceLocator() ; } ;
+  { return Service::serviceLocator() ; } 
   // ==========================================================================  
   /** get the pointer to Particle Property Service 
    *  @return pointer to Particle Property Service 
@@ -75,7 +81,7 @@ public:
     { LOKI_EXCEPTION ( "LoKiSvc: IPPSvc* points to NULL"       , sc ) ; }
     //
     return m_ppSvc ;
-  } ;
+  } 
   // ==========================================================================
   /** get the pointer to Tool Service 
    *  @return pointer to Tool Service 
@@ -98,7 +104,7 @@ public:
     }
     //
     return m_toolSvc ;
-  } ;  
+  } 
   // ==========================================================================
   /** get the pointer to Algorithm Context Service 
    *  @return pointer to Algorithm Context Service 
@@ -121,7 +127,29 @@ public:
     }
     //
     return m_contextSvc ;
-  } ;  
+  }   
+  // ==========================================================================
+  /** get the pointer to Incident Service 
+   *  @return pointer to Incident Service 
+   *  @see IIncidentSvc
+   */
+  virtual IIncidentSvc* incidentSvc () const 
+  {
+    if ( 0 != m_incidentSvc ) { return m_incidentSvc ; }
+    // locate the service 
+    StatusCode sc = service ( "IncidentSvc" , m_incidentSvc , true ) ;
+    if ( sc.isFailure() ) 
+    { 
+      m_incidentSvc = 0 ;
+      LOKI_EXCEPTION( "LoKiSvc: 'IncidentSvc' could not be located" , sc ) ; 
+    }
+    if ( 0 == m_incidentSvc ) 
+    { 
+      LOKI_EXCEPTION( "LoKiSvc: IIncicentSvc* points to NULL"       , sc ) ; 
+    }
+    //
+    return m_incidentSvc ;
+  }   
   // ==========================================================================
   /** get "good" error reporter
    *  @return pointer to Good error reporter
@@ -140,12 +168,27 @@ public:
     if ( 0 == m_reporter ) { return 0 ; }             // RETURN  
     //
     return m_reporter ;
-  } ;
+  } 
+  // ==========================================================================
+  /** The the sequential event number 
+   *  (needed for the proper synchronizations checks) 
+   *  @return the sequential event number 
+   */
+  virtual long                 event       () const { return m_event ; }
+public:
+  // ==========================================================================
+  /// Inform that a new incident has occured
+  virtual void handle ( const Incident& inc ) 
+  {
+    if ( IncidentType::BeginEvent == inc.type() ) 
+    {
+      if   ( m_event < std::numeric_limits<long>::max() ) { ++m_event ; }
+      else { m_event = 1 ; }
+    }    
+  } 
   // ==========================================================================
 public:
-  /// Inform that a new incident has occured
-  virtual void handle ( const Incident& ) {} ;
-public:
+  // ==========================================================================
   /** general service initialization
    *  @see IService 
    *  @return status code
@@ -160,6 +203,15 @@ public:
       log << MSG::ALWAYS << std::endl ;
       LoKi::Welcome::instance ().welcome( log.stream() ) ;
       log << endreq ;
+    }
+    // RESET the sequential event number 
+    m_event = 0  ;
+    //
+    {
+      /// subscribe the incident:
+      IIncidentSvc* isvc = incidentSvc() ;
+      if ( 0 == isvc  ) { return StatusCode::FAILURE ; }  
+      isvc -> addListener ( this , IncidentType::BeginEvent ) ; 
     }
     //
     {
@@ -179,9 +231,9 @@ public:
     { rep.setReporter ( m_reporter ) ; }
     //
     return StatusCode::SUCCESS ;
-  } ;  
+  }   
   // ==========================================================================
-  /** general service finalizetion 
+  /** general service finalization 
    *  @see IService 
    *  @return status code
    */
@@ -198,9 +250,17 @@ public:
     //
     m_reporter = 0 ;
     //
-    if ( 0 != m_toolSvc    ) { m_toolSvc    -> release() ; m_toolSvc    = 0 ; }    
-    if ( 0 != m_ppSvc      ) { m_ppSvc      -> release() ; m_ppSvc      = 0 ; }    
-    if ( 0 != m_contextSvc ) { m_contextSvc -> release() ; m_contextSvc = 0 ; }    
+    { 
+      /// unsubscribe the incident:
+      IIncidentSvc* isvc = incidentSvc() ;
+      if ( 0 == isvc  ) { return StatusCode::FAILURE ; }     // RETURN 
+      isvc -> removeListener ( this ) ;
+    }
+    //
+    if ( 0 != m_toolSvc     ) { m_toolSvc     -> release() ; m_toolSvc     = 0 ; }    
+    if ( 0 != m_ppSvc       ) { m_ppSvc       -> release() ; m_ppSvc       = 0 ; }    
+    if ( 0 != m_contextSvc  ) { m_contextSvc  -> release() ; m_contextSvc  = 0 ; }    
+    if ( 0 != m_incidentSvc ) { m_incidentSvc -> release() ; m_incidentSvc = 0 ; } 
     //
     LoKi::ErrorReport& rep = LoKi::ErrorReport::instance() ;
     if ( 0 != rep.reporter() ) { rep.setReporter( 0 ).ignore() ; }
@@ -213,7 +273,7 @@ public:
     }
     //
     return Service::finalize() ;
-  } ;
+  } 
   // ==========================================================================
   /** general service reinitialization
    *  @see IService 
@@ -224,10 +284,24 @@ public:
     StatusCode sc = Service::reinitialize () ;
     if ( sc.isFailure() ) { return sc ; }
     //
+    {
+      /// unsubscribe the incident:
+      IIncidentSvc* isvc = incidentSvc() ;
+      if ( 0 == isvc  ) { return StatusCode::FAILURE ; }     // RETURN 
+      isvc -> removeListener ( this ) ; 
+    }
     //
-    if ( 0 != m_toolSvc    ) { m_toolSvc    -> release() ; m_toolSvc    = 0 ; }    
-    if ( 0 != m_ppSvc      ) { m_ppSvc      -> release() ; m_ppSvc      = 0 ; }
-    if ( 0 != m_contextSvc ) { m_contextSvc -> release() ; m_contextSvc = 0 ; }
+    if ( 0 != m_toolSvc      ) { m_toolSvc     -> release() ; m_toolSvc     = 0 ; }    
+    if ( 0 != m_ppSvc        ) { m_ppSvc       -> release() ; m_ppSvc       = 0 ; }
+    if ( 0 != m_contextSvc   ) { m_contextSvc  -> release() ; m_contextSvc  = 0 ; }
+    if ( 0 != m_incidentSvc  ) { m_incidentSvc -> release() ; m_incidentSvc = 0 ; }
+    //
+    {
+      /// subscribe the incident:
+      IIncidentSvc* isvc = incidentSvc() ;
+      if ( 0 == isvc  ) { return StatusCode::FAILURE ; }           // RETURN 
+      isvc -> addListener ( this , IncidentType::BeginEvent ) ; 
+    }
     //
     { // static services:
       LoKi::Services& svc = LoKi::Services::instance() ;
@@ -243,7 +317,7 @@ public:
     }
     //
     return StatusCode::SUCCESS ;
-  } ;
+  } 
   // ==========================================================================  
 public:
   // ==========================================================================
@@ -270,7 +344,8 @@ public:
     //
     return StatusCode::SUCCESS ;
   } ; 
-  // ========================================================================== 
+  // ==========================================================================
+protected:  
 protected:
   // ==========================================================================
   /** standard constructor 
@@ -282,15 +357,17 @@ protected:
     ISvcLocator*       pSvc ) 
     : Service ( name , pSvc )
     //
-    , m_ppSvc        ( 0 ) 
-    , m_toolSvc      ( 0 ) 
-    , m_contextSvc   ( 0 ) 
-    , m_reporter     ( 0 ) 
+    , m_ppSvc        (  0 ) 
+    , m_toolSvc      (  0 ) 
+    , m_contextSvc   (  0 ) 
+    , m_incidentSvc  (  0 ) 
+    , m_reporter     (  0 )
     , m_reporterName ( "LoKi::Reporter/ERROR")
+    , m_event        ( -1 )
     //
   { 
     declareProperty ( "Reporter" , m_reporterName ) ;
-  } ;
+  } 
   // ==========================================================================
   /// virtual and protected destructor
   virtual ~LoKiSvc () 
@@ -298,10 +375,11 @@ protected:
     if ( 0 != m_reporter && 0 != m_toolSvc ) 
     { m_toolSvc -> releaseTool ( m_reporter ) ; }
     m_reporter = 0 ;
-    if ( 0 != m_toolSvc    ) { m_toolSvc    -> release() ; m_toolSvc    = 0 ; }    
-    if ( 0 != m_ppSvc      ) { m_ppSvc      -> release() ; m_ppSvc      = 0 ; } 
-    if ( 0 != m_contextSvc ) { m_contextSvc -> release() ; m_contextSvc = 0 ; } 
-  } ;  
+    if ( 0 != m_toolSvc     ) { m_toolSvc     -> release() ; m_toolSvc     = 0 ; }    
+    if ( 0 != m_ppSvc       ) { m_ppSvc       -> release() ; m_ppSvc       = 0 ; } 
+    if ( 0 != m_contextSvc  ) { m_contextSvc  -> release() ; m_contextSvc  = 0 ; } 
+    if ( 0 != m_incidentSvc ) { m_incidentSvc -> release() ; m_incidentSvc = 0 ; } 
+  }   
   // ==========================================================================
 private:
   // default constructor is disabled
@@ -315,8 +393,10 @@ private:
   mutable IParticlePropertySvc* m_ppSvc        ;
   mutable IToolSvc*             m_toolSvc      ;
   mutable IAlgContextSvc*       m_contextSvc   ;
+  mutable IIncidentSvc*         m_incidentSvc  ;
   mutable LoKi::IReporter*      m_reporter     ;
   std::string                   m_reporterName ;
+  long                          m_event        ;
 };
 // ============================================================================
 
