@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.43 2007-12-05 15:51:06 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.44 2007-12-05 16:36:19 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -233,9 +233,12 @@ StatusCode DeCalorimeter::buildCells( ) {
   if( isInitialized() ) { return StatusCode::SUCCESS; }
   int nbCells = 0;
 
-  MsgStream msg( msgSvc(), "buildCells"+ name () );
 
   m_caloIndex = CaloCellCode::CaloNumFromName( name() );
+
+
+  std::string myName = CaloCellCode::CaloNameFromNum( m_caloIndex ) + "Det";
+  MsgStream msg( msgSvc(), myName + ".BuildCells" );
 
   std::vector<double> cellSize;
 

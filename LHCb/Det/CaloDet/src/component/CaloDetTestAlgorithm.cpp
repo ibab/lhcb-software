@@ -1,8 +1,11 @@
-// $Id: CaloDetTestAlgorithm.cpp,v 1.3 2006-12-14 10:48:18 ranjard Exp $
+// $Id: CaloDetTestAlgorithm.cpp,v 1.4 2007-12-05 16:36:20 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/12/14 10:48:18  ranjard
+// v8r0 - InstallArea and new Plugins
+//
 // Revision 1.2  2005/12/16 17:12:40  odescham
 // v8r0 - LHCb v20 migration + cleaning
 //
@@ -15,8 +18,6 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
-// CaloDet
-#include "CaloDet/DeCalorimeter.h" 
 // local
 #include "CaloDetTestAlgorithm.h"
 
@@ -44,9 +45,24 @@ DECLARE_ALGORITHM_FACTORY(CaloDetTestAlgorithm)
 CaloDetTestAlgorithm::CaloDetTestAlgorithm( const std::string& name   ,
                             ISvcLocator*       svcloc )
   : GaudiAlgorithm ( name , svcloc ) 
-  , m_DetData( DeCalorimeterLocation::Ecal  )
+  , m_DetData(  )
 {
   declareProperty("DetDataLocation" , m_DetData ) ;
+  
+  int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
+  std::string detectorName = name.substr( index, 4 ); 
+  if ( name.substr(index,3) == "Prs" ) detectorName = "Prs";
+  if ( name.substr(index,3) == "Spd" ) detectorName = "Spd";
+  if("Ecal" == detectorName){
+    m_DetData = DeCalorimeterLocation::Ecal; 
+  }else  if("Hcal" == detectorName){
+    m_DetData = DeCalorimeterLocation::Hcal; 
+  }else  if("Prs" == detectorName){
+    m_DetData = DeCalorimeterLocation::Prs; 
+  }else  if("Spd" == detectorName){
+    m_DetData = DeCalorimeterLocation::Spd; 
+  }
+  
 };
 
 // ============================================================================
@@ -69,6 +85,10 @@ StatusCode CaloDetTestAlgorithm::initialize()
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!",sc);}
+
+
+  const DeCalorimeter* calo = getDet<DeCalorimeter>( m_DetData ) ;
+
   
   return StatusCode::SUCCESS;
 };
@@ -94,74 +114,7 @@ StatusCode CaloDetTestAlgorithm::finalize()
  */
 // ============================================================================
 StatusCode CaloDetTestAlgorithm::execute() 
-{
-  using namespace CaloCellCode;
-  
-  static unsigned int s_nExecute = 0 ;
-  
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
-  
-  if( 0 != s_nExecute++ ) { return StatusCode::SUCCESS ; } ///< RETURN !!!
-  
-  const DeCalorimeter* calo = getDet<DeCalorimeter>( m_DetData ) ;
-  
-  /// only for Ecal
-  if( 2 != CaloNumFromName( m_DetData ) ){ return StatusCode::SUCCESS ; }
-  
-  /// some "arbitrary" cells 
-  {  
-    const LHCb::CaloCellID cell1( CaloNumFromName( m_DetData) , 0 , 20 , 20 ) ;
-    log << MSG::DEBUG 
-        << " info for cell id "    << cell1                        << endreq ;
-    log << " valid      = "           << calo->valid      ( cell1 ) << endreq ;
-    log << " cellX      = "           << calo->cellX      ( cell1 ) << endreq ;
-    log << " celly      = "           << calo->cellY      ( cell1 ) << endreq ;
-    log << " cellZ      = "           << calo->cellZ      ( cell1 ) << endreq ;
-    log << " cellSize   = "           << calo->cellSize   ( cell1 ) << endreq ;
-    log << " cellSine   = "           << calo->cellSine   ( cell1 ) << endreq ;
-    log << " cellGain   = "           << calo->cellGain   ( cell1 ) << endreq ;
-    log << " cellTime   = "           << calo->cellTime   ( cell1 ) << endreq ;
-    log << " cellIndex  = "           << calo->cellIndex  ( cell1 ) << endreq ;
-    log << " cardNumber = "           << calo->cardNumber ( cell1 ) << endreq ;
-    log << " cardRow    = "           << calo->cardRow    ( cell1 ) << endreq ;
-    log << " cardColumn = "           << calo->cardColumn ( cell1 ) << endreq ;
-  }
-  {  
-    const LHCb::CaloCellID cell1( CaloNumFromName( m_DetData) , 1 , 16 , 36 ) ;
-    log << MSG::DEBUG 
-        << " info for cell id "    << cell1                        << endreq ;
-    log << " valid      = "           << calo->valid      ( cell1 ) << endreq ;
-    log << " cellX      = "           << calo->cellX      ( cell1 ) << endreq ;
-    log << " celly      = "           << calo->cellY      ( cell1 ) << endreq ;
-    log << " cellZ      = "           << calo->cellZ      ( cell1 ) << endreq ;
-    log << " cellSize   = "           << calo->cellSize   ( cell1 ) << endreq ;
-    log << " cellSine   = "           << calo->cellSine   ( cell1 ) << endreq ;
-    log << " cellGain   = "           << calo->cellGain   ( cell1 ) << endreq ;
-    log << " cellTime   = "           << calo->cellTime   ( cell1 ) << endreq ;
-    log << " cellIndex  = "           << calo->cellIndex  ( cell1 ) << endreq ;
-    log << " cardNumber = "           << calo->cardNumber ( cell1 ) << endreq ;
-    log << " cardRow    = "           << calo->cardRow    ( cell1 ) << endreq ;
-    log << " cardColumn = "           << calo->cardColumn ( cell1 ) << endreq ;
-  }
-  {  
-    const LHCb::CaloCellID cell1( CaloNumFromName( m_DetData) , 2 , 20 , 15 ) ;
-    log << MSG::DEBUG 
-        << " info for cell id "    << cell1                        << endreq ;
-    log << " valid      = "           << calo->valid      ( cell1 ) << endreq ;
-    log << " cellX      = "           << calo->cellX      ( cell1 ) << endreq ;
-    log << " celly      = "           << calo->cellY      ( cell1 ) << endreq ;
-    log << " cellZ      = "           << calo->cellZ      ( cell1 ) << endreq ;
-    log << " cellSize   = "           << calo->cellSize   ( cell1 ) << endreq ;
-    log << " cellSine   = "           << calo->cellSine   ( cell1 ) << endreq ;
-    log << " cellGain   = "           << calo->cellGain   ( cell1 ) << endreq ;
-    log << " cellTime   = "           << calo->cellTime   ( cell1 ) << endreq ;
-    log << " cellIndex  = "           << calo->cellIndex  ( cell1 ) << endreq ;
-    log << " cardNumber = "           << calo->cardNumber ( cell1 ) << endreq ;
-    log << " cardRow    = "           << calo->cardRow    ( cell1 ) << endreq ;
-    log << " cardColumn = "           << calo->cardColumn ( cell1 ) << endreq ;
-  }
-  
+{  
 
   return StatusCode::SUCCESS;
 
