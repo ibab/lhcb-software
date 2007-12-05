@@ -3,7 +3,7 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           L0Event
-version           v16r6
+version           v16r7
 
 branches          cmt doc Event xml src
 
