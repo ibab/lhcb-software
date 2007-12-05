@@ -1,4 +1,4 @@
-// $Id: AuxFunBase.cpp,v 1.7 2007-07-23 17:07:43 ibelyaev Exp $
+// $Id: AuxFunBase.cpp,v 1.8 2007-12-05 15:38:46 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -25,6 +25,7 @@
 #include "LoKi/Welcome.h"
 #include "LoKi/Exception.h"
 #include "LoKi/shifts.h"
+#include "LoKi/Services.h"
 // ============================================================================
 // Boost
 // ============================================================================
@@ -61,6 +62,8 @@ namespace LoKi
 // default constructor 
 // ============================================================================
 LoKi::AuxFunBase::AuxFunBase() 
+  : m_event   ( -1 )
+  , m_lokiSvc ( (LoKi::ILoKiSvc*)0 )
 {
 #ifdef LOKI_DEBUG
   // increment the instance counter
@@ -70,7 +73,9 @@ LoKi::AuxFunBase::AuxFunBase()
 // ============================================================================
 // copy constructor 
 // ============================================================================
-LoKi::AuxFunBase::AuxFunBase( const AuxFunBase& /* func */ ) 
+LoKi::AuxFunBase::AuxFunBase( const AuxFunBase& func  ) 
+  : m_event   ( func.m_event   ) 
+  , m_lokiSvc ( func.m_lokiSvc )
 {
 #ifdef LOKI_DEBUG
   // increment the instance counter
@@ -192,7 +197,7 @@ MsgStream&    operator<<
  *  (hopefully unique?) ID for the functor 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  */
-// ==========================================================================
+// ============================================================================
 std::size_t LoKi::genericID( const AuxFunBase& o ) 
 {
   // Use Boost::hash
@@ -200,8 +205,47 @@ std::size_t LoKi::genericID( const AuxFunBase& o )
   // make a cyclic shift to 12 bits left 
   return LoKi::Shifts::cyclicShiftLeft ( _id , 12 ) ;
 }
-// ==========================================================================
-
+// ============================================================================
+// get LoKi service 
+// ============================================================================
+const LoKi::Interface<LoKi::ILoKiSvc>& 
+LoKi::AuxFunBase::lokiSvc () const 
+{
+  // return valid service (if available) 
+  if ( m_lokiSvc.validPointer() ) { return m_lokiSvc ;  }
+  // get pointer form Sevices
+  const LoKi::Services& svc = LoKi::Services::instance() ;
+  m_lokiSvc = svc.lokiSvc() ;
+  if ( !m_lokiSvc )
+  { Error ( "lokiSvc(): invalid pointer to LoKi::ILoKiSvc") ; } 
+  return m_lokiSvc ;
+}
+// ============================================================================
+// set the event-ID from LoKi service 
+// ============================================================================
+void LoKi::AuxFunBase::setEvent (          ) const 
+{
+  LoKi::ILoKiSvc* svc = lokiSvc() ;
+  setEvent ( -1 ) ;
+  //
+  if ( 0 != svc ) { m_event = svc->event() ; }
+  else { Error ( "setEvent(): invalid pointer to LoKi::ILoKiSvc, set -1") ; }
+}
+// ============================================================================
+// check the data for the same event 
+// ============================================================================
+bool LoKi::AuxFunBase::sameEvent () const 
+{
+  if ( 0 > m_event ) { return  false ; }                    // RETURN 
+  // get the service 
+  LoKi::ILoKiSvc* svc = lokiSvc() ;
+  if ( 0 == svc ) 
+  {
+    Warning( "sameEvent(): could not check the event, return false ") ;
+    return false ;                                          // RETURN 
+  }
+  return svc->event() == m_event ;  
+}
 // ============================================================================
 // The END 
 // ============================================================================
