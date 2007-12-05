@@ -2,6 +2,11 @@
 ! Package Manager : Olivier Callot
 !--------------------------------------------------------------------------
 
+
+! 2007-10-31 - Marie-Helene Schune, Patrick Robbe, (Olivier Deschamps)
+ - implement the final bank format as defined in EDMS-845277
+
+
 !========================= L0Calo v9r10 2007-11-01 ========================
 ! 2007-10-31 - Patrick Koppenburg
  - increment to v9r10

@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.44 2007-10-31 14:36:18 odescham Exp $
+// $Id: L0CaloAlg.cpp,v 1.45 2007-12-05 14:07:41 odescham Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -28,7 +28,7 @@ L0CaloAlg::L0CaloAlg( const std::string& name, ISvcLocator* pSvcLocator)
   , m_rawOutput( 2 )
 {
   declareProperty("OutputData"      , m_nameOfOutputDataContainer) ;
-  declareProperty("StoreInBuffer"   , m_storeFlag      = true );
+  declareProperty("StoreInBuffer"   , m_storeFlag      = true ) ;
 };
 
 
@@ -69,7 +69,8 @@ StatusCode L0CaloAlg::initialize() {
     m_ecalFe.push_back( TriggerCard( eCard, m_ecal ) );
     int validationNb =  m_ecal->validationNumber( eCard );
     if ( m_nbValidation <= validationNb ) m_nbValidation = validationNb + 1;
-    if( !m_ecal->isPinCard(eCard) )m_ecalFe[eCard].setValidationNumber( validationNb );
+    if( !m_ecal->isPinCard(eCard) )
+      m_ecalFe[eCard].setValidationNumber( validationNb );
   }  
   // Retrieve the HCAL detector element, build cards
   m_hcal = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );  
@@ -77,6 +78,9 @@ StatusCode L0CaloAlg::initialize() {
   for  ( hCard = 0; m_hcal->nCards() > hCard; ++hCard ) {
     m_hcalFe.push_back( TriggerCard( hCard, m_hcal ) );
   }
+
+
+  m_prs = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );  
 
 
   // Link the ECAL cards to the HCAL cards for the trigger.
@@ -198,11 +202,18 @@ StatusCode L0CaloAlg::initialize() {
   m_totRawSize = 0.;
   m_nbEvents   = 0 ;
 
-  m_adcsEcal = tool<ICaloTriggerAdcsFromRaw>( "CaloTriggerAdcsFromRaw", "EcalTriggerAdcTool", this );
-  m_adcsHcal = tool<ICaloTriggerAdcsFromRaw>( "CaloTriggerAdcsFromRaw", "HcalTriggerAdcTool", this );
-  m_bitsFromRaw = tool<ICaloTriggerBitsFromRaw>( "CaloTriggerBitsFromRaw", "CaloTriggerBitsFromRaw", this );
+  m_adcsEcal = 
+    tool<ICaloTriggerAdcsFromRaw>( "CaloTriggerAdcsFromRaw", 
+                                   "EcalTriggerAdcTool", this );
+  m_adcsHcal = 
+    tool<ICaloTriggerAdcsFromRaw>( "CaloTriggerAdcsFromRaw", 
+                                   "HcalTriggerAdcTool", this );
+  m_bitsFromRaw = 
+    tool<ICaloTriggerBitsFromRaw>( "CaloTriggerBitsFromRaw", 
+                                   "CaloTriggerBitsFromRaw", this );
 
-  m_bankToTES = tool<L0CaloCandidatesFromRawBank>( "L0CaloCandidatesFromRawBank" );
+  m_bankToTES = 
+    tool<L0CaloCandidatesFromRawBank>( "L0CaloCandidatesFromRawBank" );
 
   return StatusCode::SUCCESS;
 };
@@ -212,10 +223,10 @@ StatusCode L0CaloAlg::initialize() {
 //=============================================================================
 StatusCode L0CaloAlg::execute() {
 
-    // Get the ECAL data, store them in the Front-End card
-
+  // Get the ECAL data, store them in the Front-End card
+  
   sumEcalData( );
-
+  
   // Get Spd+Prs data
   m_PrsSpdIds = m_bitsFromRaw->prsSpdCells( );
 
@@ -253,7 +264,6 @@ StatusCode L0CaloAlg::execute() {
     int etTot   = m_ecalFe[eCard].etTot()  ;
     LHCb::CaloCellID ID = m_ecalFe[eCard].cellIdMax() ;
     std::string particle = "";
-
     int numVal = m_ecalFe[eCard].validationNumber();
 
     // Validate ECAL by Prs/Spd, and select the highest electron and photon
@@ -326,7 +336,7 @@ StatusCode L0CaloAlg::execute() {
                            etMax, 
                            m_ecalFe[eCard].rowMax(),
                            m_ecalFe[eCard].colMax() );
-      verbose() << format( " Cells: %4d%4d%4d%4d EtTot%4d Prs%3d->%d Spd%3d->%d",
+      verbose() << format(" Cells: %4d%4d%4d%4d EtTot%4d Prs%3d->%d Spd%3d->%d",
                            m_ecalFe[eCard].et1(), m_ecalFe[eCard].et2(),
                            m_ecalFe[eCard].et3(), m_ecalFe[eCard].et4(), 
                            m_ecalFe[eCard].etTot(),
@@ -344,6 +354,7 @@ StatusCode L0CaloAlg::execute() {
   // Now add the highest ECAL energy in matching cards
 
   L0Candidate hadron ( m_hcal );
+
   int sumEt = 0;
   int cardMax = -1;
 
@@ -357,6 +368,12 @@ StatusCode L0CaloAlg::execute() {
     int hCol = m_hcalFe[hCard].colMax();
     int hRow = m_hcalFe[hCard].rowMax();
     int eLink;
+
+
+    LHCb::CaloCellID ID = m_hcalFe[hCard].cellIdMax() ;
+    std::string particle = "";
+    particle += " hadron";
+
     for ( eLink=0; eLink < m_hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
       eCard = m_hcalFe[hCard].ecalCardNumber( eLink );
       if ( m_ecalFe[eCard].match_included( hCol, hRow ) ) {
@@ -377,6 +394,355 @@ StatusCode L0CaloAlg::execute() {
     //
   } // hCard
 
+  
+  for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
+    if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
+    int type = m_hcal->selectionType( hCard );
+    std::string typeName ;
+    switch ( type ) {
+    case 0:  typeName = "Master"  ; break ;
+    case 1:  typeName = "Slave1"    ; break ;
+    case 2:  typeName = "Slave2"    ; break ;
+    default: typeName = "Unknown" ; break ;
+    }
+    debug()<<" hCard# "<<hCard<<" ID= "<<m_hcalFe[hCard].cellIdMax()
+           <<" type = "<<typeName<<endmsg;
+  }
+  
+
+  //  int nbHcalCards = m_hcal->nCards() ; 
+  int nbHcalCards = 50 ; 
+
+  int allhcalFe_Slave1[nbHcalCards];
+  int allhcalFe_Slave2[nbHcalCards];
+  int allhcalFe_Master[nbHcalCards];
+
+  int allSlave1 = 0 ; 
+  int allSlave2 = 0 ; 
+  int allMaster = 0 ; 
+
+  for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
+    if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
+    int type = m_hcal->selectionType( hCard );
+    if (type == 0) {
+      allhcalFe_Master[allMaster] = hCard ; 
+      allMaster++  ; 
+    }
+    if (type == 1) {
+      allhcalFe_Slave1[allSlave1] = hCard ; 
+      allSlave1++  ; 
+    }
+    if (type == 2) {
+      allhcalFe_Slave2[allSlave2] = hCard ; 
+      allSlave2++  ; 
+    }
+  }
+
+  debug()<<" #of hcal cards related to Master= "
+         <<allMaster<<" related to Slave1= "
+         <<allSlave1<<" related to Slave2= "<<allSlave2<<endmsg;
+
+
+  // Compute the size of the array which will be saved in the SEL boads
+  int nbSlave1SEL = 0 ; 
+  int nbSlave2SEL = 0 ; 
+  int nbMasterSEL = 0 ; 
+  for ( int kk=0 ; allSlave1 > kk ; kk++ ) {
+    int hCard = allhcalFe_Slave1[kk] ;
+    if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
+    std::vector<int> vValCards ;
+    int eLink;
+    for ( eLink=0; eLink < m_hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
+      eCard = m_hcalFe[hCard].ecalCardNumber( eLink );
+      int valNum = m_ecalFe[eCard].validationNumber() ;
+      std::vector<int>::iterator it ;
+      int alreadyIn = 0 ;
+      for ( it = vValCards.begin() ; it != vValCards.end() ;  it++ ) {
+        if (*it == valNum) alreadyIn = 1 ;
+      }
+      if (alreadyIn == 0 ) vValCards.push_back(valNum);
+    }
+    nbSlave1SEL += vValCards.size();
+  }
+  for ( int kk=0 ; allSlave2 > kk ; kk++ ) {
+    int hCard = allhcalFe_Slave2[kk] ;
+    if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
+    std::vector<int> vValCards ;
+    int eLink;
+    for ( eLink=0; eLink < m_hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
+      eCard = m_hcalFe[hCard].ecalCardNumber( eLink );
+      int valNum = m_ecalFe[eCard].validationNumber() ;
+      std::vector<int>::iterator it ;
+      int alreadyIn = 0 ;
+      for ( it = vValCards.begin() ; it != vValCards.end() ;  it++ ) {
+        if (*it == valNum) alreadyIn = 1 ;
+      }
+      if (alreadyIn == 0 ) vValCards.push_back(valNum);
+    }
+    nbSlave2SEL += vValCards.size();
+  }
+  for ( int kk=0 ; allMaster > kk ; kk++ ) {
+    int hCard = allhcalFe_Master[kk] ;
+    if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
+    std::vector<int> vValCards ;
+    int eLink;
+    for ( eLink=0; eLink < m_hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
+      eCard = m_hcalFe[hCard].ecalCardNumber( eLink );
+      int valNum = m_ecalFe[eCard].validationNumber() ;
+      std::vector<int>::iterator it ;
+      int alreadyIn = 0 ;
+      for ( it = vValCards.begin() ; it != vValCards.end() ;  it++ ) {
+        if (*it == valNum) alreadyIn = 1 ;
+      }
+      if (alreadyIn == 0 ) vValCards.push_back(valNum);
+    }
+    nbMasterSEL += vValCards.size();
+  }
+
+  std::vector<L0Candidate> allHadronsSlave1;
+  std::vector<L0Candidate> allHadronsSlave2;
+  std::vector<L0Candidate> allHadronsMaster;
+
+  L0Candidate hadronSlave1 ( m_hcal );
+  L0Candidate hadronSlave2 ( m_hcal );
+  L0Candidate hadronMaster ( m_hcal );
+
+  L0Candidate sumAllMaster ( m_hcal );
+
+  for ( int kk=0 ; nbSlave1SEL > kk ; kk++ ) {
+    allHadronsSlave1.push_back( L0Candidate( m_hcal ) );
+  }
+  for ( int kk=0 ; nbSlave2SEL > kk ; kk++ ) {
+    allHadronsSlave2.push_back( L0Candidate( m_hcal ) );
+  }
+  for ( int kk=0 ; nbMasterSEL > kk ; kk++ ) {
+    allHadronsMaster.push_back( L0Candidate( m_hcal ) );
+  }
+
+
+
+  // process for Slave 1
+  int etMaxEcalPerValNum[m_nbValidation];
+  int iSlave1 = 0 ; 
+  int sumEtSlave1 = 0 ;
+  for ( int kk=0 ; allSlave1 > kk ; kk++ ) {
+    int hCard = allhcalFe_Slave1[kk] ;
+    int hCol = m_hcalFe[hCard].colMax();
+    int hRow = m_hcalFe[hCard].rowMax();
+    int eLink;
+    LHCb::CaloCellID ID = m_hcalFe[hCard].cellIdMax() ;
+    std::string particle = "";
+    particle += " hadron";
+    for ( int ii=0 ; m_nbValidation> ii ; ii++ ){
+      etMaxEcalPerValNum[ii] = -1 ; 
+    }
+    for ( eLink=0; eLink < m_hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
+      eCard = m_hcalFe[hCard].ecalCardNumber( eLink );
+      int valNum = m_ecalFe[eCard].validationNumber() ;
+      if ( etMaxEcalPerValNum[valNum] <0) etMaxEcalPerValNum[valNum] = 0 ; 
+      if ( m_ecalFe[eCard].match_included( hCol, hRow ) ) {
+        if ( m_ecalFe[eCard].etMax() > etMaxEcalPerValNum[valNum] ) {
+          etMaxEcalPerValNum[valNum]= m_ecalFe[eCard].etMax();
+        }
+      }
+    }
+    int sumEtMaxPerCard = 0;
+    for ( int ii=0 ; m_nbValidation> ii ; ii++ ){
+      if (etMaxEcalPerValNum[ii] > -1 ) {
+        int et = m_hcalFe[hCard].etMax() + etMaxEcalPerValNum[ii] ; 
+        if (iSlave1 > nbSlave1SEL ) 
+          info()<<" !!!! iSlave1= "<<iSlave1<<" nbSlave1SEL= "
+                <<nbSlave1SEL<< endmsg;
+        if (iSlave1 < nbSlave1SEL ) {
+          allHadronsSlave1[iSlave1].setCandidate( et ,
+                                                  m_hcalFe[hCard].cellIdMax() );
+          if (et > sumEtMaxPerCard) sumEtMaxPerCard = et ; 
+        }
+        iSlave1++;
+        if (hadronSlave1.et() < et ) {
+          hadronSlave1.setCandidate(et , m_hcalFe[hCard].cellIdMax());
+        }
+      }
+    }
+    sumEtSlave1 += sumEtMaxPerCard ; 
+  } // end processing for Slave 1 
+  //store one candidate ... note that ID is meaningless ... taken
+  // from the maximum candidate 
+  // at maximum sumEtSlave should be equal to 2^14-1 = 16383
+  if (sumEtSlave1 > 16383 ) sumEtSlave1 = 16383 ;
+  // debug   
+  debug()<<" ====================================================" <<endmsg;
+  debug()<<" ============== Slave 1 =============================" <<endmsg;
+  for ( int kk=0 ; nbSlave1SEL > kk ; kk++ ) {
+    debug()<<"Candidat "<<kk<<" Index= "<<allHadronsSlave1[kk].ID()<<" Et= "
+           << allHadronsSlave1[kk].et()<< endmsg;
+  }
+  debug()<<" Maximum in Slave 1 Index= "<<hadronSlave1.ID()<<" Et= "
+         << hadronSlave1.et()<< endmsg;
+  debug()<<" sumEt in Slave 1 ="<<sumEtSlave1<< endmsg;
+  //--------------------------------------------------------------------------
+  // process for Slave 2
+  int iSlave2 = 0 ; 
+  int sumEtSlave2 = 0 ;
+  for ( int kk=0 ; allSlave2 > kk ; kk++ ) {
+    int hCard = allhcalFe_Slave2[kk] ;
+    int hCol = m_hcalFe[hCard].colMax();
+    int hRow = m_hcalFe[hCard].rowMax();
+    int eLink;
+    LHCb::CaloCellID ID = m_hcalFe[hCard].cellIdMax() ;
+    std::string particle = "";
+    particle += " hadron";
+    
+    for ( int ii=0 ; m_nbValidation> ii ; ii++ ){
+      etMaxEcalPerValNum[ii] = -1 ; 
+    }
+    for ( eLink=0; eLink < m_hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
+      eCard = m_hcalFe[hCard].ecalCardNumber( eLink );
+      int valNum = m_ecalFe[eCard].validationNumber() ;
+      if ( etMaxEcalPerValNum[valNum] <0) etMaxEcalPerValNum[valNum] = 0 ; 
+      if ( m_ecalFe[eCard].match_included( hCol, hRow ) ) {
+        if ( m_ecalFe[eCard].etMax() > etMaxEcalPerValNum[valNum] ) {
+          etMaxEcalPerValNum[valNum]= m_ecalFe[eCard].etMax();
+        }
+      }
+    }
+    int sumEtMaxPerCard = 0;
+    for ( int ii=0 ; m_nbValidation> ii ; ii++ ){
+      if (etMaxEcalPerValNum[ii] > -1 ) {
+        int et = m_hcalFe[hCard].etMax() + etMaxEcalPerValNum[ii] ; 
+        if (iSlave2 > nbSlave2SEL ) 
+          info()<<"!!!! iSlave2= "<<iSlave2<<" nbSlave2SEL= "
+                <<nbSlave2SEL<< endmsg;
+        if (iSlave2 < nbSlave2SEL ) {
+          allHadronsSlave2[iSlave2].setCandidate( et ,
+                                                  m_hcalFe[hCard].cellIdMax() );
+          if (et > sumEtMaxPerCard) sumEtMaxPerCard = et ; 
+        }
+        iSlave2++;
+        if (hadronSlave2.et() < et ) {
+          hadronSlave2.setCandidate(et , m_hcalFe[hCard].cellIdMax());
+        }
+      }
+    }
+    sumEtSlave2 += sumEtMaxPerCard ; 
+  } // end processing for Slave 2 
+  // at maximum sumEtSlave should be equal to 2^14 - 1 = 16383
+  if (sumEtSlave2 > 16383 ) sumEtSlave2 = 16383 ;
+  // debug   
+  debug()<<" ==================================================== " <<endmsg;
+  debug()<<" =============== Slave 2 ============================ " <<endmsg;
+  for ( int kk=0 ; nbSlave2SEL > kk ; kk++ ) {
+    debug()<<" Candidat "<<kk<<" Index= "<<allHadronsSlave2[kk].ID()
+           <<" Et= "<< allHadronsSlave2[kk].et()<< endmsg;
+  }
+  debug()<<" Maximum in Slave 2 Index= "<<hadronSlave2.ID()
+         <<" Et= "<< hadronSlave2.et()<< endmsg;
+  debug()<<" sumEt in Slave 2 ="<<sumEtSlave2<< endmsg;
+  //-----------------------------------------------------------
+  // process for Master
+  int iMaster = 0 ; 
+  int sumEtMaster = 0 ;
+  for ( int kk=0 ; allMaster > kk ; kk++ ) {
+    int hCard = allhcalFe_Master[kk] ;
+    int hCol = m_hcalFe[hCard].colMax();
+    int hRow = m_hcalFe[hCard].rowMax();
+    int eLink;
+    LHCb::CaloCellID ID = m_hcalFe[hCard].cellIdMax() ;
+    std::string particle = "";
+    particle += " hadron";
+    for ( int ii=0 ; m_nbValidation> ii ; ii++ ){
+      etMaxEcalPerValNum[ii] = -1 ; 
+    }
+    for ( eLink=0; eLink < m_hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
+      eCard = m_hcalFe[hCard].ecalCardNumber( eLink );
+      int valNum = m_ecalFe[eCard].validationNumber() ;
+      if ( etMaxEcalPerValNum[valNum] <0) etMaxEcalPerValNum[valNum] = 0 ; 
+      if ( m_ecalFe[eCard].match_included( hCol, hRow ) ) {
+        if ( m_ecalFe[eCard].etMax() > etMaxEcalPerValNum[valNum] ) {
+          etMaxEcalPerValNum[valNum]= m_ecalFe[eCard].etMax();
+        }
+      }
+    }
+    int sumEtMaxPerCard = 0;
+    for ( int ii=0 ; m_nbValidation> ii ; ii++ ){
+      if (etMaxEcalPerValNum[ii] > -1 ) {
+        int et = m_hcalFe[hCard].etMax() + etMaxEcalPerValNum[ii] ; 
+        if (iMaster > nbMasterSEL ) 
+          info()<<"!!!! iMaster= "<<iMaster<<" nbMasterSEL= "
+                <<nbMasterSEL<< endmsg;
+        if (iMaster < nbMasterSEL ) {
+          allHadronsMaster[iMaster].setCandidate( et ,
+                                                  m_hcalFe[hCard].cellIdMax() );
+          if (et > sumEtMaxPerCard) sumEtMaxPerCard = et ; 
+        }
+        iMaster++;
+        if (hadronMaster.et() < et ) {
+          hadronMaster.setCandidate(et , m_hcalFe[hCard].cellIdMax());
+        }
+      }
+    }
+    sumEtMaster += sumEtMaxPerCard ; 
+  } // end processing for Master 
+  //store one candidate ... note that ID is meaningless ... 
+  // taken from the maximum candidate 
+  // at maximum sumEtSlave should be equal to 2^14 - 1 = 16383
+  if (sumEtMaster > 16383 ) sumEtMaster = 16383 ;
+
+  // debug   
+  debug()<<" ==================================================== " <<endmsg;
+  debug()<<" ================Master ============================= " <<endmsg;
+  for ( int kk=0 ; nbMasterSEL > kk ; kk++ ) {
+    debug()<<"Candidat "<<kk<<" Index= "<<allHadronsMaster[kk].ID()<<" Et= "
+           << allHadronsMaster[kk].et()<< endmsg;
+  }
+  debug()<<" Maximum in Master Index= "<<hadronMaster.ID()<<" Et= "
+         << hadronMaster.et()<< endmsg;
+  debug()<<" sumEt in Master ="<<sumEtMaster<< endmsg;
+
+
+  //==========================================================================
+  // Process for SPD now 
+  //==========================================================================
+
+  LHCb::CaloCellID id;
+
+  std::vector<LHCb::CaloCellID>& ids = m_PrsSpdIds.second;
+
+  int nbSpdMultCards = 16 ; 
+  int valMult[nbSpdMultCards] ; 
+  for ( int kk=0 ; nbSpdMultCards > kk ; kk++ ) {
+    valMult[kk] = 0; 
+  }
+  
+  for ( std::vector<LHCb::CaloCellID>::const_iterator itID = ids.begin();
+        ids.end() != itID; ++itID ) {
+    id = *itID;
+    int spdCard  = m_prs->cardNumber( id );
+    int slot     = m_prs->cardSlot(spdCard); 
+    int crate    = m_prs->cardCrate(spdCard); 
+    
+    int identif = 2*crate ; 
+    if (slot >= 8 ) identif+= 1 ; 
+    debug() <<"SPD id "<<id<<" spdCard= " << spdCard<< " slot = "
+            <<slot<< " crate="<<crate<<" identif = "<<identif<< endreq;
+    valMult[identif] += 1 ; 
+  }
+
+
+  int totSpdMult = 0 ; 
+  for ( int kk=0 ; nbSpdMultCards > kk ; kk++ ) {
+    // check for maximum : 2^10 -1 = 1023
+    if ( valMult[kk] >  1023) valMult[kk] = 1023 ; 
+    debug() <<"kk= "<<kk<<" valMult[kk]= " << valMult[kk] << endreq;
+    totSpdMult +=  valMult[kk] ; 
+  }
+  debug() <<"Overall Spd mutiplicity : "<<totSpdMult << endreq;
+
+  //==========================================================================
+  // End of Process for SPD 
+  //==========================================================================
+  
+
   //===========================================================================
   // Prepare the output container, register it and then fill it.
   //===========================================================================
@@ -385,8 +751,8 @@ StatusCode L0CaloAlg::execute() {
   m_rawOutput[1].clear();
     
   LHCb::L0ProcessorDatas* L0Calo = new LHCb::L0ProcessorDatas();
-  put( L0Calo, m_nameOfOutputDataContainer );
-  
+  put( L0Calo, m_nameOfOutputDataContainer ) ;
+
   // Store the various candidates
 
   electron.saveCandidate(  L0DUBase::Fiber::CaloElectron,  L0Calo );
@@ -396,13 +762,15 @@ StatusCode L0CaloAlg::execute() {
   pi0Global.saveCandidate( L0DUBase::Fiber::CaloPi0Global, L0Calo );
 
   unsigned int code = 0x10000 + (sumEt << L0DUBase::Calo::Sum::Shift);    
-  LHCb::L0ProcessorData* hsum = new LHCb::L0ProcessorData ( L0DUBase::Fiber::CaloSumEt, code );
+  LHCb::L0ProcessorData* hsum = 
+    new LHCb::L0ProcessorData ( L0DUBase::Fiber::CaloSumEt, code );
   L0Calo->add( hsum );
 
   // Spd multiplicity counter
 
   code = 0x10000 + (m_spdMult << L0DUBase::Calo::Sum::Shift);
-  LHCb::L0ProcessorData* spdMult = new LHCb::L0ProcessorData ( L0DUBase::Fiber::CaloSpdMult, code );
+  LHCb::L0ProcessorData* spdMult = 
+    new LHCb::L0ProcessorData ( L0DUBase::Fiber::CaloSpdMult, code );
   L0Calo->add( spdMult);
 
   // Debug now the L0 candidates
@@ -414,50 +782,183 @@ StatusCode L0CaloAlg::execute() {
             << L0Calo->size() << " entries." << endreq;
     for( item = L0Calo->begin() ; L0Calo->end() != item ; ++item ) {
       LHCb::L0ProcessorData* cand = (*item);
-      debug() << format( "Key %2d Word %8x", cand->key(), cand->word() ) << endreq;
+      debug() << format( "Key %2d Word %8x", cand->key(), cand->word() ) 
+              << endreq;
     }
   }
   
   //=== Store the perValidation candidates, only in Raw Event
 
+  int IO = 0; // =0 input   =1 output 
+  int slave = 0 ; // 0 all selection board except hadron ones 
+  int mask = 0 ; // always on MC used only in real data 
+
+  // Save all SEL boards info. 
+  IO = 0 ; 
   for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
-    saveInRawEvent(  L0DUBase::CaloType::Electron, allElectrons[kk], 1 );
+    saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Electron, 
+                    allElectrons[kk], 1 );
   }
   for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
-    saveInRawEvent(  L0DUBase::CaloType::Photon, allPhotons[kk], 1 );
-  }
-  for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
-    if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
-    hadron.setCandidate( m_hcalFe[hCard].etMax(), m_hcalFe[hCard].cellIdMax() );
-    saveInRawEvent(  L0DUBase::CaloType::Hadron, hadron, 0 );
-  }
-  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
-    saveInRawEvent(  L0DUBase::CaloType::Pi0Local, allPi0Local[kk], 1 );
-  }
-  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
-    saveInRawEvent(  L0DUBase::CaloType::Pi0Global, allPi0Global[kk], 1 );
+    saveInRawEvent(IO,slave,mask,  L0DUBase::CaloType::Photon, 
+                   allPhotons[kk], 1 );
   }
 
-  if ( 0 < sumEt ) {
-    int word = ( L0DUBase::CaloType::SumEt << 24 ) + sumEt;
-    m_rawOutput[0].push_back( word );
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+    saveInRawEvent(IO,slave,mask,  L0DUBase::CaloType::Pi0Local, 
+                   allPi0Local[kk], 1 );
   }
-  int word = ( L0DUBase::CaloType::SpdMult << 24 ) + m_spdMult;
-  m_rawOutput[1].push_back( word );
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+    saveInRawEvent(IO,slave,mask,  L0DUBase::CaloType::Pi0Global, 
+                   allPi0Global[kk], 1 );
+  }
 
-  if ( msgLevel( MSG::DEBUG ) ) {
-    debug() <<"== L0CaloFullCandidate  Hcal: "
-            << m_rawOutput[0].size() 
-            << " Ecal " << m_rawOutput[1].size()
-            << " entries." << endreq;
-  }  
+
+  //Save the candidates ... 
+  IO = 1 ; 
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Electron, electron, 1 );
+  saveInRawEvent(IO,slave,mask,  L0DUBase::CaloType::Photon, photon, 1 );
+  saveInRawEvent(IO,slave,mask,  L0DUBase::CaloType::Pi0Local, pi0Local, 1 );
+  saveInRawEvent(IO,slave,mask,  L0DUBase::CaloType::Pi0Global, pi0Global, 1 );
+
+  //-----------------------------------------------------------------------------------
+  //For the HCAL part 
+  //-----------------------------------------------------------------------------------
+
+  // Save all SEL boards info. 
+  // Start with the 2 slaves (1 and 2) 
+  //Slave 1
+  IO = 0 ; 
+  slave = 0 ; // 0 all selection board except hadron global info 
+  mask = 0 ; // always on MC used only in real data 
+  for ( int kk=0 ; nbSlave1SEL > kk ; kk++ ) {
+    saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, 
+                    allHadronsSlave1[kk], 1 );
+  }
+  //Save the local highest candidate 
+  IO = 1 ; 
+  slave = 1 ; // 0 all selection board except hadron global info 
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, hadronSlave1, 1 );
+  //Save the local sum 
+  IO = 1 ; 
+  slave = 1 ; // 0 all selection board except hadron global info 
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::SumEt, sumEtSlave1, 1 );
+
+
+  //Slave 2
+  IO = 0 ; 
+  slave = 0 ; // 0 all selection board except hadron global info 
+  for ( int kk=0 ; nbSlave2SEL > kk ; kk++ ) {
+    saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, 
+                    allHadronsSlave2[kk], 1 );
+  }
+  //Save the local highest candidate 
+  IO = 1 ; 
+  slave = 2 ; // 0 all selection board except hadron global info 
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, hadronSlave2, 1 );
+  //Save the local sum 
+  IO = 1 ; 
+  slave = 2 ; // 0 all selection board except hadron global info 
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::SumEt, sumEtSlave2, 1 );
+
+  // Save now the master 
+  IO = 0 ; 
+  slave = 0 ; // 0 all selection board except hadron global info 
+  mask = 0 ; // always on MC used only in real data 
+  for ( int kk=0 ; nbMasterSEL > kk ; kk++ ) {
+    saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, 
+                    allHadronsMaster[kk], 1 );
+  }
+  // Highest from Slave 1 and 2
+  IO = 0 ;
+  slave = 1 ;
+  mask = 0;
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, hadronSlave1, 1 );
+  slave = 2 ;
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, hadronSlave2, 1 );
+  // Sum from Slave 1 and 2 
+  IO = 0 ;
+  slave = 1 ;
+  mask = 0;
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::SumEt, sumEtSlave1, 1 );
+  slave = 2 ;
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::SumEt, sumEtSlave2, 1 );
+  // Global info on Master 
+  IO = 1 ;
+  slave = 0 ;
+  mask = 0;
+  // Compute the Highest of Master, Slave1 and Slave2 
+  int deltaS1S2 = hadronSlave1.et() - hadronSlave2.et() ;
+  if (deltaS1S2 >= 0 ) {
+    int deltaS1M = hadronSlave1.et() - hadronMaster.et() ;
+    if (deltaS1M >=0 ) 
+      saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, 
+                      hadronSlave1, 1 );
+    if (deltaS1M <0 ) 
+      saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, 
+                      hadronMaster, 1 );
+    if (deltaS1M >=0 ) 
+      debug()<<"For Master Highest="<<hadronSlave1.ID()<<" Et= "
+             << hadronSlave1.et()<< endmsg;
+    if (deltaS1M <0 ) 
+      debug()<<"For Master Highest="<<hadronMaster.ID()<<" Et= "
+             << hadronMaster.et()<< endmsg;
+  } 
+  else{
+    int deltaS2M = hadronSlave2.et() - hadronMaster.et() ;
+    if (deltaS2M >=0 ) 
+      saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, 
+                      hadronSlave2, 1 );
+    if (deltaS2M <0 ) 
+      saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, 
+                      hadronMaster, 1 );
+    if (deltaS2M >=0 )
+      debug()<<"For Master Highest= "<<hadronSlave2.ID()<<" Et= "
+             << hadronSlave2.et()<< endmsg;
+    if (deltaS2M <0 ) 
+      debug()<<"For Master Highest="<<hadronMaster.ID()<<" Et= "
+             << hadronMaster.et()<< endmsg;
+  }
+  // Compute the Sum of Master + Slave1 + Slave2 
+  int outputSumEtMaster = sumEtSlave1 + sumEtSlave2 + sumEtMaster ;
+  //store one candidate ... note that ID is meaningless ... 
+  //  taken from the maximum candidate 
+  // at maximum outputSumMaster should be equal to 2^14 - 1 = 16383
+  if (outputSumEtMaster > 16383 ) outputSumEtMaster = 16383 ;
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::SumEt,
+                  outputSumEtMaster , 1 );
+
+  //---------------------------------------------------------------------------
+  //End of the HCAL part 
+  //---------------------------------------------------------------------------
+
+
+  //---------------------------------------------------------------------------
+  //For the SPD part 
+  //---------------------------------------------------------------------------
+  IO = 0 ; 
+  slave = 0 ; // 0 all selection board except hadron global info 
+  mask = 0 ; // always on MC used only in real data 
+
+  for ( int kk=0 ; nbSpdMultCards > kk ; kk++ ) {
+    saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::SpdMult, 
+                    kk, valMult[kk] , 1 );
+  }
+  IO = 1 ;
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::SpdMult, 
+                  totSpdMult , 1 );
+
+  //---------------------------------------------------------------------------
+  //End of the SPD part 
+  //-------------------------------------------------6-------------------------
+
 
   //== Store in the  RAW buffer if required.
-
   if ( m_storeFlag ) {
     m_nbEvents++;
     m_totRawSize = m_totRawSize + m_rawOutput[0].size() + m_rawOutput[1].size();
-    LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+    LHCb::RawEvent* raw = 
+      get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
     raw->addBank( 0, LHCb::RawBank::L0Calo, 0, m_rawOutput[0] );
     raw->addBank( 1, LHCb::RawBank::L0Calo, 0, m_rawOutput[1] );
   } else {
@@ -558,8 +1059,9 @@ void L0CaloAlg::sumHcalData( ) {
     m_hcal->cardNeighbors( card, down, left, corner );
 
     if ( MSG::VERBOSE >= msgLevel() ) {
-      verbose() << id << format( " adc %3d card%3d row%3d col%3d, down%3d left%3d corner%3d", 
-                                 adc, card, row, col, down, left, corner ) << endreq;
+      verbose() << id 
+                << format( " adc %3d card%3d row%3d col%3d, down%3d left%3d corner%3d", 
+                           adc, card, row, col, down, left, corner ) << endreq;
     }
     
     
@@ -604,7 +1106,7 @@ void L0CaloAlg::addPrsData( ) {
   for ( std::vector<LHCb::CaloCellID>::const_iterator itID = ids.begin();
         ids.end() != itID; ++itID ) {
     id = *itID;
-    
+
     if ( MSG::VERBOSE >= msgLevel() ) verbose() << id << endreq;
     
     m_ecal->cardAddress(id, card, row, col );
@@ -669,18 +1171,83 @@ void L0CaloAlg::addSpdData( ) {
 //=========================================================================
 //  Save a candidate in the Raw buffer
 //=========================================================================
-void L0CaloAlg::saveInRawEvent ( int type, L0Candidate& cand, unsigned int bank ) {
+void L0CaloAlg::saveInRawEvent ( int IO, int slave, int mask, int type, 
+                                 int identif,int SpdMult , 
+                                 unsigned int bank ) {
+  //== Coding for Raw: IO (upper 1 bit) , Slave (2 bits) ,
+  // Mask (1 bit) , type (4 bits), id (4 bits) and et (low 10 bits). 
+  if ( 0 == SpdMult ) return;
+  int word ; 
+  if (type != L0DUBase::CaloType::SpdMult ) {
+    warning()<<"Should be of type CaloSpdMult and is of type " 
+             << type << endmsg;
+  }
+  if ( msgLevel( MSG::DEBUG ) ) {
+    debug() << "== L0CaloAlg saveInRawEvent " << " IO= " << IO 
+            << " slave= " << slave << " mask= " << mask 
+            << "type= " << type << " Identif= " << identif
+            << " SpdMutl= " << SpdMult << endreq ;
+  }
 
-  //== Coding for Raw: type (upper 8 bits), id (next 16) and et (low 8 bits). 
-  if ( 0 == cand.et() ) return;
-
-  int word = ( type << 24 ) + (cand.ID().index() << 8 ) + cand.et();
+  word = ( IO << 31 ) + ( slave << 29 ) + ( mask << 28 ) + 
+    ( type << 24 ) + (identif << 10 ) + SpdMult;
   m_rawOutput[bank].push_back( word );
 }
 
-//=============================================================================
+//=====================================================================
+void L0CaloAlg::saveInRawEvent ( int IO, int slave, int mask, int type, 
+                                 L0Candidate& cand, 
+                                 unsigned int bank ) {
+  //== Coding for Raw: IO (upper 1 bit) , Slave (2 bits) , 
+  // Mask (1 bit) , type (4 bits), id (16 bits) and et (low 8 bits). 
+  if ( 0 == cand.et() ) return;
+  int word ; 
+  if (L0DUBase::CaloType::SumEt == type ) {
+    warning()<<"Should NOT be of type CaloSumEt .... " << endmsg ;
+  }
+  if ( msgLevel( MSG::DEBUG ) ) {
+    debug() << "== L0CaloAlg saveInRawEvent " <<" IO= "<<IO
+            <<" slave= "<<slave<<" mask= "<<mask<<"type= "
+            <<type<< " Index= "<<cand.ID().index()<<" cell ID " 
+            <<cand.ID()<<" Et= "<<cand.et()<< endreq;
+  }
+
+  word = ( IO << 31 ) + ( slave << 29 ) + ( mask << 28 ) + 
+    ( type << 24 ) + (cand.ID().index() << 8 ) + cand.et();
+  m_rawOutput[bank].push_back( word );
+}
+
+//========================================================================
+void L0CaloAlg::saveInRawEvent ( int IO, int slave, int mask, int type, 
+                                 int et, unsigned int bank ) {
+  //== Coding for Raw: IO (upper 1 bit) , Slave (2 bits) , 
+  // Mask (1 bit) , type (4 bits), id (16 bits) and et (low 8 bits). 
+  if ( 0 == et ) return;
+  int word ; 
+  if (L0DUBase::CaloType::SumEt == type || 
+      L0DUBase::CaloType::SpdMult == type) {
+    if ( msgLevel( MSG::DEBUG ) ) {
+      if (L0DUBase::CaloType::SumEt == type ) 
+        debug() << "== L0CaloAlg saveInRawEvent " <<" IO= "<<IO
+                <<" slave= "<<slave<<" mask= "<<mask
+                <<"type= "<<type<< " Et= "<<et << endreq;
+      if (L0DUBase::CaloType::SpdMult == type ) 
+        debug() << "== L0CaloAlg saveInRawEvent " <<" IO= "<<IO
+                <<" slave= "<<slave<<" mask= "<<mask<<"type= "<<type<<
+          " TotSpdMult= "<<et << endreq;
+    }
+    word = ( IO << 31 ) + ( slave << 29 ) + ( mask << 28 ) + 
+      ( type << 24 ) + et;
+    m_rawOutput[bank].push_back( word );
+  } else {
+    warning() << "Should be of type CaloSumEt or CaloSpdMult.... " 
+              << endmsg ;
+  }
+}
+
+//=====================================================================
 // Functions of the auxilliary class L0Candidate
-//=============================================================================
+//=====================================================================
 void  L0Candidate::setCandidate( int et, LHCb::CaloCellID ID ) {
   m_ID     = ID;
   if ( 255 >= et ) { m_et = et; } else { m_et = 255; }
@@ -693,7 +1260,8 @@ void  L0Candidate::setCandidate( int et, LHCb::CaloCellID ID ) {
   
   if ( !m_det->valid( ID ) ) {
 
-    LHCb::CaloCellID topCell( ID.calo() , ID.area() , ID.row()+1 , ID.col() ) ;
+    LHCb::CaloCellID topCell( ID.calo() , ID.area() , ID.row()+1 , 
+                              ID.col() ) ;
     m_ID = topCell ;
     
     if ( ! m_det -> valid( topCell ) ) {
