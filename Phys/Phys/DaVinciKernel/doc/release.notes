@@ -3,11 +3,11 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================= DaVinciKernel v6r9 2007-12-05 ====================
 ! 2007-12-04 - Vanya BELYAEV
  - Kernel/GetDVAlgorithm.h, src/Lib/GetDVAlgorithm.cpp
-    simple function to get DVAlgorithm form the context 
+    simple function to get DVAlgorithm from the context 
 
-!========================= DaVinciKernel v6r9 2007-12-03 ====================
 ! 2007-12-02 - Vanya BELYAEV
  - Kernel/ICheckOverlap.h
    add couple of templated methods for the abstract interface ICheckOverlap
