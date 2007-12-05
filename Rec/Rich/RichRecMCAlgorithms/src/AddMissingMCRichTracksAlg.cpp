@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : AddMissingMCRichTracksAlg
  *
  *  CVS Log :-
- *  $Id: AddMissingMCRichTracksAlg.cpp,v 1.1.1.1 2007-10-26 10:34:19 jonrob Exp $
+ *  $Id: AddMissingMCRichTracksAlg.cpp,v 1.2 2007-12-05 17:41:08 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -28,12 +28,13 @@ DECLARE_ALGORITHM_FACTORY( AddMissingMCRichTracksAlg );
 // Standard constructor, initializes variables
 AddMissingMCRichTracksAlg::AddMissingMCRichTracksAlg( const std::string& name,
                                                       ISvcLocator* pSvcLocator )
-  : RichRecAlgBase ( name, pSvcLocator ),
-    m_richRecMCTruth  ( NULL ),
-    m_mcTkCreator     ( NULL )
-{ 
-  declareProperty( "MCRichTracksLocation", 
+  : Rich::Rec::AlgBase ( name, pSvcLocator ),
+    m_richRecMCTruth   ( NULL ),
+    m_mcTkCreator      ( NULL )
+{
+  declareProperty( "MCRichTracksLocation",
                    m_mcrTracksLocation = LHCb::MCRichTrackLocation::Default );
+  declareProperty( "RejectFraction", m_rejFrac = -1.0 );
 }
 
 // Destructor
@@ -43,12 +44,22 @@ AddMissingMCRichTracksAlg::~AddMissingMCRichTracksAlg() {}
 StatusCode AddMissingMCRichTracksAlg::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
   acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
   acquireTool( "MissingMCTrackCreator", m_mcTkCreator, this );
+
+  // random number generator
+  IRndmGenSvc * randSvc = svc<IRndmGenSvc>( "RndmGenSvc", true );
+  if ( !m_rndm.initialize( randSvc, Rndm::Flat(0.,1.) ) )
+  {
+    return Error( "Unable to create Random generator" );
+  }
+
+  warning() << "Will randomly reject " << m_rejFrac*100
+            << " % of missing MC tracks" << endreq;
 
   return sc;
 }
@@ -63,7 +74,7 @@ StatusCode AddMissingMCRichTracksAlg::execute()
   // First, loop over all tracks currently in use
   // and find out those which have an MCRichTrack
   for ( LHCb::RichRecTracks::iterator track = richTracks()->begin();
-        track != richTracks()->end(); ++track ) 
+        track != richTracks()->end(); ++track )
   {
     // Does this track have an MC track ?
     const LHCb::MCRichTrack * mcTk = m_richRecMCTruth->mcRichTrack(*track);
@@ -79,19 +90,35 @@ StatusCode AddMissingMCRichTracksAlg::execute()
     // do we already have a track for this MCRichTrack
     if ( foundMCTracks.find(*mctrack) != foundMCTracks.end() )
     {
+      verbose() << "MCRichTrack " << (*mctrack)->key()
+                << " not already associated to a RichRecTrack";
       // No, so make a track for this one
-      verbose() << "MCRichTrack " << (*mctrack)->key() 
-                << " not already associated to a RichRecTrack -> Creating new track" << endreq;
-      m_mcTkCreator->newTrack(*mctrack);
+      // toss a coin to only make a given fraction of tracks
+      if ( m_rejFrac < 0 || m_rndm() > m_rejFrac )
+      {
+        verbose() << " -> Creating new track" << endreq;
+        m_mcTkCreator->newTrack(*mctrack);
+      }
+      else
+      {
+        verbose() << " -> NOT creating new track" << endreq;
+      }
     }
     else
     {
-      verbose() << "MCRichTrack " << (*mctrack)->key() 
+      verbose() << "MCRichTrack " << (*mctrack)->key()
                 << " already associated to a RichRecTrack" << endreq;
     }
-    
+
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
+StatusCode AddMissingMCRichTracksAlg::finalize()
+{
+  // finalize random number generator
+  m_rndm.finalize();
+  // Execute base class method
+  return Rich::Rec::AlgBase::finalize();
+}

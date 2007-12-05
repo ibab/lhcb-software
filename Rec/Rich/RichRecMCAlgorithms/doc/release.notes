@@ -4,6 +4,10 @@
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
 
+! 2007-12-05 - Chris Jones
+ - Add option to AddMissingMCRichTracksAlg to allow only a randomly choosen
+   configurable fraction of the missing MC tracks to be added
+
 !===================== RichRecMCAlgorithms v1r0 2007-11-30 ===================
 ! 2007-10-26 - Chris Jones
  - First version. 
