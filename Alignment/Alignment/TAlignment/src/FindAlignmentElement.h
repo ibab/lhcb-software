@@ -1,5 +1,5 @@
-// $Id: FindAlignmentElement.h,v 1.3 2007-11-27 19:20:49 janos Exp $
-#ifndef TALIGNMENT_FINDALIGNMENTELEMENT_H 
+// $Id: FindAlignmentElement.h,v 1.4 2007-12-05 15:51:12 janos Exp $
+#ifndef TALIGNMENT_FINDALIGNMENTELEMENT_H
 #define TALIGNMENT_FINDALIGNMENTELEMENT_H 1
 
 // Include files
@@ -22,18 +22,18 @@
 #include "boost/function.hpp"
 
 /** @class FindAlignmentElement FindAlignmentElement.h
- *  
+ *
  *
  *  @author Jan Amoraal
  *  @date   2007-08-31
  */
 
 /// These are some free functions
-namespace Alignment {  
+namespace Alignment {
   typedef boost::function<bool (LHCb::LHCbID)> IsDet;
   typedef boost::function<const DetectorElement* (LHCb::LHCbID)> DetElemFromID;
   typedef std::map<std::string, DetElemFromID> FunctorMap;
-  
+
   /** This should go into the sub-detector interfaces */
   /// This returns the Velo box, i.e. parent, that a sensor belongs to
   const DetectorElement* findVeloBox(const DeVeloSensor* sensor);
@@ -46,30 +46,28 @@ namespace Alignment {
 
   /// This returns the IT ladder, i.e. parent, that a sensor belongs to
   const DetectorElement* findLadder(const DeSTSector* sensor);
-  
+
   /* ***************************************************** */
 
   DetElemFromID FindElement(const std::string& findWhat);
 };
 
-class FindAlignmentElement {
-  
- public:
+struct FindAlignmentElement {
+
   typedef std::vector<AlignmentElement>::const_iterator            AlignElemIter;
-  typedef std::pair<std::vector<AlignmentElement>::const_iterator, 
-                    std::vector<AlignmentElement>::const_iterator> Range;
-  
+  typedef std::pair<std::vector<AlignmentElement>::const_iterator,
+  std::vector<AlignmentElement>::const_iterator>                   Range;
+
   FindAlignmentElement();
-  
+
   FindAlignmentElement(Alignment::DetElemFromID elemFromLHCbID, Range rangeElements);
-  
+
   const AlignmentElement* operator()(const LHCb::LHCbID& anLHCbID);
-  
+
  private:
-  
   Alignment::DetElemFromID m_elemFromLHCbID;
   Range                    m_rangeElements;
-  
-};  
+
+};
 
 #endif // TALIGNMENT_FINDALIGNMENTELEMENT_H

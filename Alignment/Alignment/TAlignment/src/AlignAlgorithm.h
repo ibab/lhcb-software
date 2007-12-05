@@ -1,5 +1,5 @@
-// $Id: AlignAlgorithm.h,v 1.10 2007-11-15 11:12:02 janos Exp $
-#ifndef TALIGNMENT_ALIGNALGORITHM_H 
+// $Id: AlignAlgorithm.h,v 1.11 2007-12-05 15:51:18 janos Exp $
+#ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
 // Include files
@@ -46,7 +46,7 @@ namespace {
 }
 
 /** @class AlignAlgorithm AlignAlgorithm.h
- *  
+ *
  *
  *  @author Jan Amoraal
  *  @date   2007-03-05
@@ -57,8 +57,8 @@ class AlignAlgorithm : public GaudiHistoAlg, virtual public IIncidentListener {
 public:
   /// Some handy typedefs
   typedef std::vector<AlignmentElement>                            Elements;
-  typedef std::pair<std::vector<AlignmentElement>::const_iterator, 
-                    std::vector<AlignmentElement>::const_iterator> Range;
+  typedef std::pair<std::vector<AlignmentElement>::const_iterator,
+		    std::vector<AlignmentElement>::const_iterator> Range;
   typedef std::vector<double>                                      AlignConstants;
   typedef std::vector<LHCb::Node*>                                 Nodes;
   typedef Gaudi::Matrix1x6                                         Derivatives;
@@ -75,12 +75,12 @@ public:
   /// Virtuals incident
   void handle(const Incident& incident);
   StatusCode queryInterface(const InterfaceID& id, void** ppI);
-    
+
   /// Methods to call when an update is triggered
   void update();
   void reset();
 
-  /** Method to get alignment constants, posXYZ and rotXYZ for a given set 
+  /** Method to get alignment constants, posXYZ and rotXYZ for a given set
   * of detector elements
   * @param elements flat vector of detector elements, i.e. std::vector<DetectorElements>
   * @param alignConstants reference to a flat vector of alignment constants, i.e. std::vector<double>
@@ -93,7 +93,7 @@ public:
   * @return StatusCode
   */
   StatusCode putAlignmentConstants(const Range& rangeElements, const AlVec& alignConstants) const;
- 
+
 protected:
 
 private:
@@ -112,7 +112,7 @@ private:
   ITrackProjectorSelector*          m_projSelector;         ///< Pointer to projector selector tool
   std::string                       m_matrixSolverToolName; ///< Name of linear algebra solver tool
   IAlignSolvTool*                   m_matrixSolverTool;     ///< Pointer to linear algebra solver tool
-  Equations*                        m_equations;            ///< Equations to solve 
+  Equations*                        m_equations;            ///< Equations to solve
   std::vector<std::vector<double> > m_constraints;
   bool                              m_correlation ;         ///< do we take into account correlations between residuals?
 
