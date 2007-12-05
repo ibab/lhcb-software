@@ -1,0 +1,11 @@
+
+// Include this options file *after* the main algorithms options file to
+// add missing MC tracks to the tracks the RICH uses
+
+RichTracksSeq.Members += { "Rich::Rec::MC::AddMissingMCRichTracksAlg/AddMissingMCTracks" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::TrackCreatorFromMCRichTracks/MissingMCTrackCreator" };
+AddMissingMCTracks.MissingMCTrackCreator.TrackSegmentTool = "RichDetMCTrSegMaker";
+AddMissingMCTracks.MissingMCTrackCreator.TrackSelector.TrackAlgs = { "MCRichTrack" };
+AddMissingMCTracks.MissingMCTrackCreator.TrackSelector.MCRichTrack.MinPCut  = 1;
+//AddMissingMCTracks.MissingMCTrackCreator.FakeRecoTracks = false;
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::TrSegMakerFromMCRichTracks/RichDetMCTrSegMaker" };

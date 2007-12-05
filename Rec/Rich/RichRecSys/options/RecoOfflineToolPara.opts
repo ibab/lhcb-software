@@ -19,6 +19,14 @@
 // RichTrackCreator using only MC information
 //#include "$RICHRECSYSOPTS/tools/RichTracksFromMCRichTracks.opts"
 
+//============================================================================================
+// Additional tracking options
+
+// uncomment the following to randomly reject a given fraction of tracks
+// NB : Only works with main track creator (no MC cheating)
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackCreatorFromRecoTracksWithForcedIneffic/RichTrackCreator" };
+//ToolSvc.Offline.RichTrackCreator.RejectFraction = 0.1;
+
 //---------------------------------------------------------------------------------------------
 // Track selector (Default)
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackSelector/TrackSelector" };
@@ -94,6 +102,12 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackSelector/TrackSelec
 // Photon reconstruction using normal reconstruction tools, but cheated the track direction
 // at the photon emission point. Remove contribution from tracking errors to CK resolution
 //#include "$RICHRECSYSOPTS/tools/RichPhotonsFromRecoWithCheatedTrackDir.opts"
+
+// Additional photon options
+// =============================================================================================
+
+// Uncomment the following to use the true MC emission point during photon reconstruction
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::TruePhotonEmissionPoint/RichPhotonEmissionPoint" };
 
 // =================================== Miscellaneous ===========================================
 

@@ -74,10 +74,6 @@ RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Likelihood/RichGloPIDPreIt"
 RichGlobalPIDSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEstFinalIt" };
 RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Likelihood/RichGloPIDFinalIt" };
 
-// Ring refit - uses working PIDs to identify good photons and refit angles
-// Results as yet not used in formation of final PID
-//RichGlobalPIDSeq.Members += { "RichRingRefitAlg/RichRingRefit" };
-
 // Finalise Global PID algorithm each event
 RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Finalize/RichGloPIDFin" };
 
@@ -123,6 +119,15 @@ RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;
 RichGloPIDTrSel.MinimumLikelihoodMomentum = 0.0*GeV;
 RichGloPIDTrSel.ResetTracksToPion         = false;
 
+// options to 'freeze' some tracks in the global PID selection
+//RichGloPIDTrSel.FreezeSelectedTracks = true;
+// Type to freeze : Full list are - "Seed","Match","Forward","KsTrack","VeloTT","MCRichTrack"
+//RichGloPIDTrSel.FrozenTrackSelector.TrackAlgs = { "VeloTT" };
+//RichGloPIDTrSel.FrozenTrackSelector.MCRichTrack.MaxPCut = 200; // GeV
+//RichGloPIDTrSel.FrozenTrackSelector.MCRichTrack.MinPCut = 0; // GeV
+// Hypothesis for frozen types : 0=el 1=mu 2=pi 3=ka 4=pr
+//RichGloPIDTrSel.FrozenTrackMassHypo = 0;
+
 // Global Algorithm parameters - phase 1
 RichGloPIDPreIt.TrackFreezeOutDLL           = 2;
 RichGloPIDPreIt.TrackForceChangeDLL         = -1;
@@ -139,23 +144,6 @@ RichGloPIDFinalIt.MinSignalForNoLLCalc      = 1e-3;
 
 // Final iteration must have this option set
 RichGloPIDFinalIt.FinalDLLCheck = true;
-
-// Ring Refit
-/*
-  RichRingRefit.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack" };
-  //                                             Aero   C4F10   CF4
-  RichRingRefit.MinSignalPhotonProb         = {  999,   1e-2,  1.50e-3  };
-  RichRingRefit.MinRefitPhotons             = {  999,    999,      7    };
-  RichRingRefit.MaxBackgroundProb           = {  999,    999,    999    };
-  RichRingRefit.MaxCandsPerPixel            = {    1,      1,      10   };
-  RichRingRefit.MinFitProbability           = {  0.5,    0.5,   0.0005  };
-  RichRingRefit.nDist          = 2.00;
-  RichRingRefit.nDistFrwrd     = 2.00;
-  RichRingRefit.nDistMatch     = 2.00;
-  RichRingRefit.nDistSeed      = 2.20;
-  RichRingRefit.nDistKshort    = 2.20;
-  RichRingRefit.NSigmaCut      = 3.00;
-*/
 
 // PID merging
 //MergeRichPIDs.UseRingRefitPIDs = false; // disabled for the moment
