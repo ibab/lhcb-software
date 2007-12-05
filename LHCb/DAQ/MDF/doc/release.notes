@@ -13,6 +13,9 @@
 ! 2007-11-04 - Markus Frank
   - Implemement connection to XML file catalog from GaudiUtils
     New files: RawDataConnection.h/cpp
+    Requires new job option:
+    ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog",
+                                      "Gaudi::IODataManager/IODataManager" };
 
 !========================= MDF v2r6 2007-11-07 ===============================
 ! 2007-11-07 - Markus Frank
