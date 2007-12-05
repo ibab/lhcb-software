@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracksWithForcedIneffic
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracksWithForcedIneffic.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracksWithForcedIneffic.cpp,v 1.2 2007-12-05 17:39:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -45,7 +45,7 @@ StatusCode TrackCreatorFromRecoTracksWithForcedIneffic::initialize()
     return Error( "Unable to create Random generator" );
   }
 
-  info() << "Will randomly reject " << m_rejFrac*100 << " % of tracks" << endreq;
+  warning() << "Will randomly reject " << m_rejFrac*100 << " % of tracks" << endreq;
 
   return sc;
 }

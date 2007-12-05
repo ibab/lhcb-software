@@ -2,10 +2,10 @@
 //-------------------------------------------------------------------------------------
 /** @file RichTrackCreatorFromRecoTracksWithForcedIneffic.h
  *
- *  Header file for tool : Rich::Rec::TrackCreatorFromRecoTracks
+ *  Header file for tool : Rich::Rec::TrackCreatorFromRecoTracksWithForcedIneffic
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracksWithForcedIneffic.h,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracksWithForcedIneffic.h,v 1.2 2007-12-05 17:39:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,6 +17,8 @@
 
 // base class
 #include "RichTrackCreatorFromRecoTracks.h"
+
+// Gaudi
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 
@@ -25,15 +27,16 @@ namespace Rich
   namespace Rec
   {
 
-    //-------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------
     /** @class TrackCreatorFromRecoTracksWithForcedIneffic RichTrackCreatorFromRecoTracksWithForcedIneffic.h
      *
-     *  Inherits from TrackCreatorFromRecoTracks and adds forced tracking inefficiency
+     *  Inherits from TrackCreatorFromRecoTracks and adds forced tracking inefficiency, by
+     *  randomly rejecting a configurable fraction of tracks.
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   15/03/2002
      */
-    //-------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------
 
     class TrackCreatorFromRecoTracksWithForcedIneffic : public TrackCreatorFromRecoTracks
     {
