@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.21 2007-12-05 08:28:38 cattanem Exp $
+! $Id: release.notes,v 1.22 2007-12-05 09:00:22 cattanem Exp $
 ! Package: IOExample
 ! Package Manager: M.Frank
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
@@ -6,7 +6,9 @@
 
 !====================== IOExample v2r3 2007-12-05 =========================
 ! 2007-12-05 - Marco Cattaneo
- - Add options for new MultiFileCatalog when writing MDF file
+ - In WriteMDF.opts, add options for new MultiFileCatalog when writing MDF file
+ - In ReadMin.opts, put algorithms in a sequence and add example of usage of
+   FilterByRunEvent algorithm
 
 !====================== IOExample v2r2 2007-11-07 =========================
 ! 2007-11-07 - Marco Cattaneo

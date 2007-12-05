@@ -1,23 +1,25 @@
-// $Id: ReadMin.opts,v 1.20 2007-12-05 08:28:38 cattanem Exp $
+// $Id: ReadMin.opts,v 1.21 2007-12-05 09:00:23 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Example to navigate the event data store, starting from a POOL file
 //--------------------------------------------------------------------
 
+ApplicationMgr.TopAlg += { "GaudiSequencer/ExampleSeq" };
+
+ExampleSeq.Members     += { "PrintHeader" };
+
+// FilterByRunEvent selects given event numbers for further processing
+ExampleSeq.Members     += { "FilterByRunEvent" };
+FilterByRunEvent.RunEventNumList = { (182001,1), (182001,3), (182001,5) };
+
 // StoreExplorerAlg algorithm loads all leaves in Event Data store
-//ApplicationMgr.TopAlg     += { "StoreExplorerAlg" };
+ExampleSeq.Members     += { "StoreExplorerAlg" };
 StoreExplorerAlg.Load = true;
 StoreExplorerAlg.PrintFreq = 1.;
 StoreExplorerAlg.ExploreRelations = 1;
 
-// DumpMCEvent algorithm dumps MC part of main event
-ApplicationMgr.TopAlg     += { "FilterByRunEvent" };
-FilterByRunEvent.RunEventNumList = { (182001,1), (182001,3), (182001,5) };
-ApplicationMgr.TopAlg     += { "PrintHeader" };
-//ApplicationMgr.TopAlg     += { "DumpMCEventAlg" };
-//ApplicationMgr.TopAlg     += { "DumpEvent" };
-//ApplicationMgr.TopAlg     += { "PrintMCDecayTreeAlg" };
-ApplicationMgr.ExtSvc     += { "ParticlePropertySvc" };
+// DumpMCEventAlg algorithm dumps MC part of main event
+ExampleSeq.Members     += { "DumpMCEventAlg" };
 DumpMCEventAlg.OutputLevel = 3; // try also 2, or 1 !!
 ApplicationMgr.EvtMax      = 5;
 
