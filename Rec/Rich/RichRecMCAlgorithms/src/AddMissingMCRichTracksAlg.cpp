@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : AddMissingMCRichTracksAlg
  *
  *  CVS Log :-
- *  $Id: AddMissingMCRichTracksAlg.cpp,v 1.2 2007-12-05 17:41:08 jonrob Exp $
+ *  $Id: AddMissingMCRichTracksAlg.cpp,v 1.3 2007-12-05 17:46:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -66,6 +66,14 @@ StatusCode AddMissingMCRichTracksAlg::initialize()
 
 StatusCode AddMissingMCRichTracksAlg::execute()
 {
+  // find MCRichTracks
+  const LHCb::MCRichTracks * mcrTracks = get<LHCb::MCRichTracks>( m_mcrTracksLocation );
+  if ( !mcrTracks )
+  {
+    return Warning( "Failed to find MCRichTracks at '" + m_mcrTracksLocation 
+                    + "' -> Cannot add any missing tracks" );
+  }
+  debug() << "Found " << mcrTracks->size() << " MCRichTracks at " << m_mcrTracksLocation << endreq;
 
   // List of found MCRichTracks
   typedef std::set<const LHCb::MCRichTrack*> FoundMCTracks;
@@ -82,8 +90,6 @@ StatusCode AddMissingMCRichTracksAlg::execute()
   }
 
   // Now, loop over all MCRichTracks
-  const LHCb::MCRichTracks * mcrTracks = get<LHCb::MCRichTracks>( m_mcrTracksLocation );
-  debug() << "Found " << mcrTracks->size() << " MCRichTracks at " << m_mcrTracksLocation << endreq;
   for ( LHCb::MCRichTracks::const_iterator mctrack = mcrTracks->begin();
         mctrack != mcrTracks->end(); ++mctrack )
   {
