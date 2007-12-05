@@ -1,4 +1,4 @@
-// $Id: RawBankReadoutStatusFilter.cpp,v 1.3 2007-12-05 15:01:56 odescham Exp $
+// $Id: RawBankReadoutStatusFilter.cpp,v 1.4 2007-12-05 15:04:07 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -72,14 +72,14 @@ StatusCode RawBankReadoutStatusFilter::execute() {
   } else {
     warning() << "No Readout status container found at "<< LHCb::RawBankReadoutStatusLocation::Default 
               <<" -> will act as the bank " << m_type << " was Missing !!"  << endreq;    
-    int value = LHCb::RawBankReadoutStatus::Missing;
+    value = LHCb::RawBankReadoutStatus::Missing;
   }
   if(NULL != status){
     value = status->status();
   }else{ 
     warning() << "No Readout status found for bankType "<< m_type 
               <<" -> will act as the bank " << m_type << " was Missing !!"  << endreq; 
-    int value = LHCb::RawBankReadoutStatus::Missing;
+    value = LHCb::RawBankReadoutStatus::Missing;
   }
 
   int decision = value && m_mask;  
