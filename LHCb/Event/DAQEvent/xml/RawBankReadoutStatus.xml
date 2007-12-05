@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Marco Clemencic -->
+<!--- Created : 2006-09-22 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='DAQEvent'>
+<!-- ****************************************************************
+     * ODIN                                                         *
+     ****************************************************************-->
+    <class 
+      author="Olivier Deschamps"
+      name="RawBankReadoutStatus"
+      desc="Class for the status of RawBank decoding"
+      >
+      
+
+       <location name = "Default"   place = "DAQ/Status" />
+
+      <enum
+        name   = 'Status'
+        desc   = 'Status value'
+        value  = '
+        OK         = 0, 
+        Corrupted  = 1, 
+        Incomplete = 2, 
+        Missing    = 4, 
+        Empty      = 8 , 
+        Tell1Sync  = 16, 
+        Tell1Link  = 32, 
+        Tell1Error = 64, 
+        Other      =128'
+        access = 'PUBLIC' />
+
+   
+      <base   name = "KeyedObject&lt;LHCb::RawBank::BankType&gt;" />
+      &KeyedObject;
+
+      <import name="sstream" std="TRUE"/>
+      <import name="Event/RawBank"/>
+
+
+      <typedef
+        def    = "Base"
+        type   = "KeyedObject&lt;LHCb::RawBank::BankType&gt;"
+        desc   = "RawBankReadoutStatus key (BankType)"
+        access = "PROTECTED"
+        />
+
+      <copyconstructor/>
+
+      <constructor
+        desc     = "non-default constructor"
+        argList  = "LHCb::RawBank::BankType type"
+        initList = "Base ( type )"
+        > <code/> </constructor>
+
+
+      <attribute name="status" desc=" mapping of source status" type="std::map&lt; int, long &gt;" getMeth='FALSE' setMeth='FALSE' />
+        
+        
+      <method 
+        name   = "status"
+        desc   = "get Readout status for a given source"
+        argList= "int source"
+        type   = "long">
+        <code>
+          if( 0 == m_status.size() )return Missing;
+          std::map&lt;int, long&gt;::iterator it = m_status.find(source);
+          if( it == m_status.end() )return Missing;
+          return m_status[source];
+        </code>
+      </method>
+
+      <method 
+        name   = "addStatus"
+        desc   = "set Readout status for a given source"
+        argList= "int source, long stat"
+        type   = "void">
+        <code>
+          long newStat = status(source) | stat ;
+          m_status[source] = newStat;
+        </code>
+      </method>
+
+      
+      
+      <method 
+        name   = "status"
+        desc   = "get Readout status for the whole bank"
+        type   = "long">
+        <code>
+          if( 0 == m_status.size() )return Missing;
+          long status = 0;
+          for(std::map&lt;int,long&gt;::iterator it = m_status.begin() ; it != m_status.end() ; ++it){
+          status |= (*it).second;
+          }
+          return status;
+        </code>
+      </method>
+
+
+    </class>
+  </package>
+</gdd>
