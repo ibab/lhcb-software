@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.65 2007-12-05 15:38:46 ibelyaev Exp $ 
+! $Id: release.notes,v 1.66 2007-12-05 16:35:21 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,7 +15,13 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+
 !=========================== LoKiCore v7r0 2007-12-05  ========================
+
+! 2007-12-05 - Vanya BELYAEV
+  
+ - LoKi/FuncOps.h
+    add the decorators for "sources"  
 
 ! 2007-12-05 - Vanya BELYAEV
  - LoKi/AuxFunBase.h, src/AuxFunBase.cpp
@@ -403,6 +409,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.65  2007/12/05 15:38:46  ibelyaev
+!  prepare for the context functors
+!
 ! Revision 1.63  2007/12/05 09:37:45  ibelyaev
 !  remove the dictionaries for LHCb::ParticleID class
 !

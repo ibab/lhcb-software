@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.9 2007-12-03 17:44:04 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.10 2007-12-05 16:35:21 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -471,6 +471,59 @@ namespace LoKi
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> > 
       __tee__     ( const Element& fun ) 
       { return LoKi::tee<TYPE>( fun ) ; }        
+    };
+    // ========================================================================
+    /** @class SourceOps
+     *  Wrapper class for operations with 'source'-functors
+     *  @see LoKi::BasicFunctors 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-11-30
+     */
+    template <class TYPE, class TYPE2=TYPE>
+    class SourceOps 
+    {
+    private:
+      typedef typename LoKi::BasicFunctors<TYPE>::Source        Source ;
+      typedef typename LoKi::BasicFunctors<TYPE>::Pipe          Pipe    ;
+      typedef typename LoKi::BasicFunctors<TYPE>::Map           Map     ;
+      typedef typename LoKi::BasicFunctors<TYPE>::Element       Element ;
+      typedef typename LoKi::BasicFunctors<TYPE>::FunVal        FunVal  ;
+      typedef typename LoKi::BasicFunctors<TYPE2>::Function     Func    ;
+      typedef typename LoKi::BasicFunctors<TYPE2>::Predicate    Cuts    ;      
+    public:
+      // __call__
+      static typename Source::result_type __call__ 
+      ( const Source& fun ) { return fun() ; }
+    public:  
+      // __rrshift__ (fictive, ignore the functor) 
+      static typename Source::result_type __rrshift__ 
+      ( const Source& /* fun */ , const std::vector<TYPE>& vct ) 
+      { return vct ; }
+    public:
+      // __rshift__
+      static typename Source::result_type __rshift__ 
+      ( const Source& fun , std::vector<TYPE>& res ) 
+      { res = fun() ; return res ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      ( const Source& fun , const Pipe&    fun2 ) 
+      { return fun >>                      fun2 ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<double> >
+      ( const Source& fun , const Map&     fun2 ) 
+      { return fun >>                      fun2 ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,double>
+      ( const Source& fun , const FunVal&  fun2 ) 
+      { return fun >>                      fun2 ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      ( const Source& fun , const Cuts&    fun2 ) 
+      { return fun >> LoKi::filter<TYPE> ( fun2 ) ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<double> >
+      ( const Source& fun , const Func&    fun2 ) 
+      { return fun >> LoKi::yields<TYPE> ( fun2 ) ; }
     };
     // ========================================================================
   } // end of namespace LoKi::Dicts
