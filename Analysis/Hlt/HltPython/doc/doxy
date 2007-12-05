@@ -1,0 +1,3 @@
+doxygen config_examples.dox
+doxygen config_scripts.dox
+doxygen config_modules.dox
