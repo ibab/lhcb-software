@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidate.cpp,v 1.4 2006-11-03 14:58:50 cattanem Exp $
+// $Id: L0CaloCandidate.cpp,v 1.5 2007-12-05 14:04:57 odescham Exp $
 // Include files 
 
 #include "GaudiKernel/SystemOfUnits.h"
@@ -18,13 +18,21 @@
 //=========================================================================
 std::string LHCb::L0CaloCandidate::typeName() const {
   switch (m_type) {
-  case L0DUBase::Fiber::CaloElectron:  return "electron";
-  case L0DUBase::Fiber::CaloPhoton:    return "photon  ";
-  case L0DUBase::Fiber::CaloHadron:    return "hadron  ";
-  case L0DUBase::Fiber::CaloPi0Local:  return "Pi0 loc ";
-  case L0DUBase::Fiber::CaloPi0Global: return "Pi0 glob";
-  case L0DUBase::Fiber::CaloSumEt:     return "Sum Et  ";
-  case L0DUBase::Fiber::CaloSpdMult:   return "Spd Mult";
+  case L0DUBase::CaloType::Electron:  return "electron";
+  case L0DUBase::CaloType::Photon:    return "photon  ";
+  case L0DUBase::CaloType::Hadron:    return "hadron  ";
+  case L0DUBase::CaloType::Pi0Local:  return "Pi0 loc ";
+  case L0DUBase::CaloType::Pi0Global: return "Pi0 glob";
+  case L0DUBase::CaloType::SumEt:     return "Sum Et  ";
+  case L0DUBase::CaloType::SpdMult:   return "Spd Mult";
+  case L0DUBase::CaloType::HadronSlave1Out:   return "Hadron Slave1 Out";
+  case L0DUBase::CaloType::HadronSlave2Out:   return "Hadron Slave2 Out";
+  case L0DUBase::CaloType::HadronSlave1In:   return "Hadron Slave1 In";
+  case L0DUBase::CaloType::HadronSlave2In:   return "Hadron Slave2 In";
+  case L0DUBase::CaloType::SumEtSlave1Out:   return "SumEt Slave1 Out";
+  case L0DUBase::CaloType::SumEtSlave2Out:   return "SumEt Slave2 Out";
+  case L0DUBase::CaloType::SumEtSlave1In:     return "SumEt Slave1 In";
+  case L0DUBase::CaloType::SumEtSlave2In:   return "SumEt Slave2 In";
   default:                      return "unknown ";
   }
 }

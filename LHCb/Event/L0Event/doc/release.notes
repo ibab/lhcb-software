@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.78 2007-11-29 09:38:16 cattanem Exp $
+! $Id: release.notes,v 1.79 2007-12-05 14:04:56 odescham Exp $
 ! Package : L0Event
 ! Package manager : Olivier Callot
 !-----------------------------------------------------------------------------
+
+
+! 2007-12-03 - Marie-Helene Schune, Patrick Robbe, O. Deschamps 	
+ - update L0DUBase.h (new elements in CaloType enum)
+ - adapt src/L0CaloCandidate.cpp
 
 !======================== L0Event v16r6 2007-11-09 ===========================
 ! 2007-11-09 - Marco Cattaneo

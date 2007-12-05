@@ -1,4 +1,4 @@
-// $Id: L0DUBase.h,v 1.5 2007-10-31 14:31:14 odescham Exp $
+// $Id: L0DUBase.h,v 1.6 2007-12-05 14:04:56 odescham Exp $
 //
 #ifndef      L0MUON_L0DUBASE_H
 #define      L0MUON_L0DUBASE_H 1
@@ -16,7 +16,9 @@ namespace L0DUBase{
     Calo candidate types as defined in EDMS-845277
   */
   namespace CaloType {
-    enum Type {Electron=0, Photon, Hadron,Pi0Local,Pi0Global,SumEt,SpdMult };
+    enum Type {Electron=0, Photon, Hadron,Pi0Local,Pi0Global,SumEt,SpdMult,
+               HadronSlave1Out,HadronSlave2Out,HadronSlave1In,HadronSlave2In,
+               SumEtSlave1Out,SumEtSlave2Out,SumEtSlave1In,SumEtSlave2In};
   }
   
   /*
