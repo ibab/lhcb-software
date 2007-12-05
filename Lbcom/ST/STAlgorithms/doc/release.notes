@@ -2,7 +2,10 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
-!======================= STAlgorithms v2r5 2007-11-30 ========================
+!======================= STAlgorithms v2r5 2007-12-05 ========================
+! 2007-12-05 - Marco Cattaneo
+ - Add STKernel dependency, for new location of ISTSignalToNoiseTool interface
+
 ! 2007-11-21 M Needham
  - Use isOKStrip method 
 

@@ -2,7 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
-!=========================== STCheckers v2r3 2007-11-30 =======================
+!=========================== STCheckers v2r3 2007-12-05 =======================
+! 2007-12-05 - Marco Cattaneo
+ - Add STKernel dependency, for new location of ISTSignalToNoiseTool interface
+
 ! 2007-11-26 M Needham
  - Bug fix in neighbour sum histo
 

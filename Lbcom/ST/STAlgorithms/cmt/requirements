@@ -14,6 +14,7 @@ use DigiEvent           v*    Event
 use MCEvent             v*    Event
 use MCInterfaces        v*    Kernel
 use LHCbMath            v*    Kernel
+use STKernel            v*    ST
 
 # ================= component library ====================
 library STAlgorithms ../src/*.cpp 

@@ -3,11 +3,12 @@
 # Maintainer : Jeroen van Tilburg
 #============================================================================
 package           STTools
-version           v3r4
+version           v3r4p1
 
 branches          cmt doc src options
 include_path      none
 
+use STKernel    v* ST
 use DigiEvent   v* Event
 use STDet       v* Det
 use LHCbKernel  v* Kernel
