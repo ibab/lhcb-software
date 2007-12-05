@@ -4,6 +4,11 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2007-12-5 - Hugo Ruiz
+ - Move examples directory under python directory
+ - Create scripts directory under python and added the split.py and stage.py scripts 
+ - Improved general documentation
+
 ! 2007-12-4 - Hugo Ruiz
  - Rename rctools.py to recotools.py
  - Remove centella.py (replaced by desktop.py)

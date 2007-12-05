@@ -23,5 +23,9 @@ use	LinkerInstances v* Event
 path_remove  PYTHONPATH "/GaudiPython/" WIN32 "\GaudiPython\"
 path_prepend PYTHONPATH "$(GAUDIPYTHONROOT)/python"
 path_remove  PYTHONPATH "/HltPython/" WIN32 "\HltPython\"
-path_append  PYTHONPATH "$(HLTPYTHONROOT)/python"
+path_append  PYTHONPATH "$(HLTPYTHONROOT)/python/modules"
+path_append  PYTHONPATH "$(HLTPYTHONROOT)/python/examples"
+path_append  PYTHONPATH "$(HLTPYTHONROOT)/python/scripts"
+
+
 
