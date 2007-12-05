@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.5 2007-10-31 14:36:18 odescham Exp $
+// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.6 2007-12-05 14:07:41 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -28,7 +28,8 @@ L0CaloCandidatesFromRawBank::L0CaloCandidatesFromRawBank( const std::string& typ
   : GaudiTool ( type, name , parent )
 {
   declareInterface<L0CaloCandidatesFromRawBank>(this);
-
+  // Store also the intermediate informations for debugging the Selection boards
+  declareProperty( "DebugDecoding" , m_doDebugDecoding = false ) ;
 }
 //=============================================================================
 // Destructor
@@ -66,47 +67,97 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
                                                        std::string& nameFullInTES,
                                                        std::string& nameInTES){
 
-  debug() << "... entering conversion" << endreq;
+  debug() << "L0CaloCandidatesFromRawBank ... entering conversion" << endreq;
+
   // Assume that full path (including rootInTES) is given in nameInTES etc.
   LHCb::L0CaloCandidates* outFull = new LHCb::L0CaloCandidates();
   put( outFull, nameFullInTES, IgnoreRootInTES );
   LHCb::L0CaloCandidates* out     = new LHCb::L0CaloCandidates();
+
   put( out, nameInTES, IgnoreRootInTES );
-  debug() << "Registered output in TES" << endreq;
+  debug() << "L0CaloCandidatesFromRawBank Registered output in TES" << endreq;
 
   Gaudi::XYZPoint dummy( 0., 0., 0.);
   Gaudi::XYZPoint center( 0., 0., 0.);
-  LHCb::L0CaloCandidate* myL0Cand;
+  LHCb::L0CaloCandidate* myL0Cand( 0 ) ;
   std::vector<LHCb::L0CaloCandidate*> bestCand;
   double tol;
   DeCalorimeter* det;
 
-  for ( std::vector<std::vector<unsigned int> >::iterator itBnk = data.begin();
+  std::map< int , LHCb::L0CaloCandidate * > mapHadrons ;
+  mapHadrons.clear() ;
+
+  for ( std::vector<std::vector<unsigned int> >::iterator itBnk = data.begin(); 
         data.end() != itBnk; ++itBnk ) {
     unsigned int* ptData = &(*(*itBnk).begin());
     int bankSize = (*itBnk).size();  //== is in bytes...
-    debug() << "  Bank " << itBnk-data.begin() << " size " << bankSize << " words" << endreq;
+    debug() << " L0CaloCandidatesFromRawBank Bank " << itBnk-data.begin() 
+            << " size " << bankSize << " words " << endreq ;
     while ( 0 < bankSize-- ){
       int cand = (*ptData++);
-      int type = cand>>24 & 0xFF;
+      unsigned short type  = ( cand & 0x0F000000 ) >> 24 ;
+      unsigned short slave = ( cand & 0x60000000 ) >> 29 ;
+      unsigned short io    = ( cand & 0x80000000 ) >> 31 ;
+      
+      debug() << " io= "<< io << " slave= " << slave 
+              << " type= " << type << endreq ;
+
       while ( bestCand.size() <= (unsigned int)type ) bestCand.push_back( 0 );
-
-      if ( msgLevel( MSG::VERBOSE ) ) verbose() << format( "Data %8x ", cand );
-
+      if ( msgLevel( MSG::VERBOSE ) ) verbose() << format( "Data %8x ", cand )<<endreq;
+      
       if ( L0DUBase::CaloType::SumEt == type ) {
+        // CaloSumEt Case 
         int sumEt = cand & 0xFFFFFF;
-        myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
-                                               sumEt, sumEt * m_etScale, dummy, 0. );
-        outFull->add( myL0Cand );
-        bestCand[type] = myL0Cand;
-        if ( msgLevel( MSG::VERBOSE ) ) verbose() << *myL0Cand << endreq;
+
+        if ( 0 == slave ) {
+          if ( 1 == io ) type = L0DUBase::CaloType::SumEt ;
+        } else if ( 1 == slave ) {
+          if ( 1 == io ) type = L0DUBase::CaloType::SumEtSlave1Out ;
+          else type = L0DUBase::CaloType::SumEtSlave1In ;
+        } else if ( 2 == slave ) {
+          if ( 1 == io ) type = L0DUBase::CaloType::SumEtSlave2Out ;
+          else type = L0DUBase::CaloType::SumEtSlave2In ;
+        }
+
+        if ( L0DUBase::CaloType::SumEt == type ) {
+          myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
+                                                 sumEt , sumEt * m_etScale , 
+                                                 dummy , 0. );
+          bestCand[type] = myL0Cand ;
+          debug() << " outFull CaloSumEt = " <<*myL0Cand << endreq;
+        } else {
+          if ( m_doDebugDecoding ) { 
+            myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
+                                                   sumEt , sumEt * m_etScale , 
+                                                   dummy , 0. );
+            outFull->add( myL0Cand );
+            debug() << " outFull CaloSumEt = " << *myL0Cand << endreq ;
+          }
+        }
       } else if ( L0DUBase::CaloType::SpdMult == type ) {
-        int mult = cand & 0xFFFFFF;
-        myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
-                                               mult, 0., dummy, 0. );
-        outFull->add( myL0Cand );
-        bestCand[type] = myL0Cand;
-        if ( msgLevel( MSG::VERBOSE ) ) verbose() << *myL0Cand << endreq;
+        int mult = 0 ;        
+        if ( 1 == io )  mult = ( cand & 0x3FFF ) ;
+        if ( 0 == io ) {
+          mult = ( cand & 0x3FF ) ;
+          // a utiliser + tard 	  address =( cand & 0x3C00 ) >> 10 ;
+        }
+
+        if ( m_doDebugDecoding == 1 ) { 
+          if (io == 0 ) { 
+            myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
+                                                   mult, 0., dummy, 0. );
+            outFull->add( myL0Cand );
+            debug() << " outFull CaloSpdMult = " <<*myL0Cand << endreq;
+          }
+        }
+
+        if ( 1 == io ) { 
+          myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
+                                                 mult, 0., dummy, 0. );
+          bestCand[type] = myL0Cand;
+        }
+
+        verbose() <<" Candidate SPD = " << *myL0Cand << endreq;
       } else {
         int rawId =  ( cand >>8 ) & 0xFFFF;
         if ( L0DUBase::CaloType::Hadron == type ) {
@@ -123,27 +174,93 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
           center.SetX( center.x() + tol );
           center.SetY( center.y() + tol );
         } else {
+          info() << "Non valid CELL Id " << id << endreq ;
           LHCb::CaloCellID tmp( id.calo(), id.area(), id.row()+1, id.col()+1);
           center = det->cellCenter( tmp );
           tol    = det->cellSize( tmp ) * .5;
-
           center.SetX( center.x() - tol );
           center.SetY( center.y() - tol );
         }
         int et = cand & 0xFF;
-        myL0Cand = new LHCb::L0CaloCandidate ( type, id, et, et * m_etScale,
-                                               center, tol );
-        outFull->add( myL0Cand );
-        if ( 0 == bestCand[type] ) {
-          bestCand[type] = myL0Cand;
-        } else if ( et > bestCand[type]->etCode() ) {
-          bestCand[type] = myL0Cand;
+        
+        bool hadronType = false ;
+        
+        if ( L0DUBase::CaloType::Hadron == type ) {
+          hadronType = true ;
+          if ( 1 == slave ) {
+            if ( 1 == io ) type = L0DUBase::CaloType::HadronSlave1Out ;
+            else type = L0DUBase::CaloType::HadronSlave1In ;
+          } else if ( 2 == slave ) {
+            if ( 1 == io ) type = L0DUBase::CaloType::HadronSlave2Out ;
+            else type = L0DUBase::CaloType::HadronSlave2In ;
+          }
         }
-        if ( msgLevel( MSG::VERBOSE ) ) verbose() << *myL0Cand << endreq;
+
+        if ( hadronType ) {
+          if ( ( 1 == io ) && ( 0 == slave ) ) { 
+            myL0Cand = new LHCb::L0CaloCandidate ( type, id, et, et * m_etScale,
+                                                   center, tol );
+            bestCand[ type ] = myL0Cand ;
+          } else if ( ( 0 == io ) && ( 0 == slave ) ) { 
+            // If Debugging, store all duplicates:
+            if ( m_doDebugDecoding ) {
+              myL0Cand = new LHCb::L0CaloCandidate ( type, id, et, 
+                                                     et * m_etScale, center, 
+                                                     tol );
+              outFull -> add( myL0Cand ) ;
+            } else { 
+              // INPUT Hadrons: select highest duplicate
+              myL0Cand = new LHCb::L0CaloCandidate ( type, id, et, 
+                                                     et * m_etScale, center, 
+                                                     tol );
+              std::map< int , LHCb::L0CaloCandidate * >::const_iterator it = 
+                mapHadrons.find( rawId ) ;
+              if ( mapHadrons.end() == it ) 
+                mapHadrons[ rawId ] = myL0Cand ;
+              else {
+                if ( (*it).second -> et() < myL0Cand -> et() ) {
+                  LHCb::L0CaloCandidate * old = it -> second ;
+                  mapHadrons.erase( it -> first ) ;
+                  mapHadrons[ rawId ] = myL0Cand ;
+                  delete old ;
+                } else {
+                  delete myL0Cand ;
+                }
+              }
+            }
+          } else {
+            // PARTIAL RESULTS Of Selection Boards: store only for debug
+            if ( m_doDebugDecoding ) {
+              myL0Cand = new LHCb::L0CaloCandidate ( type, id, et, 
+                                                     et * m_etScale, center, 
+                                                     tol );
+              outFull -> add( myL0Cand ) ;
+            }
+          }   
+        } else {
+          myL0Cand = new LHCb::L0CaloCandidate ( type, id, et, 
+                                                 et * m_etScale, center, 
+                                                 tol );
+          if ( 0 == io ) {
+            outFull -> add( myL0Cand ) ;
+            debug() << " outFull le reste type = " << type 
+                    << " " << *myL0Cand << endreq ;
+          } else {
+            bestCand[ type ] = myL0Cand ;
+          }
+        }
+        verbose() << *myL0Cand << endreq;
       }
     }
   }
 
+  // Now store all hadrons removing duplicates (if not debugging)
+  if ( ! m_doDebugDecoding ) {
+    std::map< int , LHCb::L0CaloCandidate * >::const_iterator it ;
+    for ( it = mapHadrons.begin() ; it != mapHadrons.end() ; ++it ) {
+      outFull -> add( it -> second ) ;
+    }
+  }
   //=== Produce the selected candidate's table
 
   for ( unsigned int type = 0 ; bestCand.size() > type ; type++ ) {
@@ -155,6 +272,8 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
                                              cand->et(),
                                              cand->position(),
                                              cand->posTol() );
+
+      debug() << "out bestCand type = "<<type<<*myL0Cand << endreq;
       out->add( myL0Cand );
     }
   }

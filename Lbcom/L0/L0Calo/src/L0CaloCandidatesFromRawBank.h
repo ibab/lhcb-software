@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRawBank.h,v 1.1 2006-11-07 10:25:41 ocallot Exp $
+// $Id: L0CaloCandidatesFromRawBank.h,v 1.2 2007-12-05 14:07:41 odescham Exp $
 #ifndef L0CALOCANDIDATESFROMRAWBANK_H 
 #define L0CALOCANDIDATESFROMRAWBANK_H 1
 
@@ -43,5 +43,6 @@ private:
   DeCalorimeter* m_ecal;         ///< ECAL detector element
   DeCalorimeter* m_hcal;         ///< HCAL detector element
   double         m_etScale;      ///< Conversion int -> Et.
+  bool           m_doDebugDecoding ; ///< Store intermediate information for debug
 };
 #endif // L0CALOCANDIDATESFROMRAWBANK_H

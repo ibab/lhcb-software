@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.22 2007-10-31 14:36:18 odescham Exp $
+// $Id: L0CaloAlg.h,v 1.23 2007-12-05 14:07:41 odescham Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -77,7 +77,7 @@ public:
 
 class L0CaloAlg : public GaudiAlgorithm {
 
-public:
+ public:
 
 /// standard algorithm Constructor
 
@@ -97,8 +97,10 @@ protected:
   void addPrsData(  );  ///< process the Prs information
   void addSpdData(  );  ///< Produce the Spd data
 
-  void saveInRawEvent( int, L0Candidate&, unsigned int bank ); ///< Save in Raw Event.
-  
+  void saveInRawEvent( int, int , int , int , L0Candidate& cand, unsigned int bank ) ;///< Save in Raw Event.
+  void saveInRawEvent( int, int , int , int , int , unsigned int bank ) ;///< Save in Raw Event for type SumCaloEt
+  void saveInRawEvent( int, int , int , int , int, int,  unsigned int bank ) ;///< Save in Raw Event.
+
 private:
 
   std::string m_nameOfOutputDataContainer ;   ///< of the output container.
@@ -107,6 +109,7 @@ private:
 
   DeCalorimeter* m_ecal            ; ///< Pointer to Ecal detector element
   DeCalorimeter* m_hcal            ; ///< Pointer to Hcal detector element
+  DeCalorimeter* m_prs            ; ///< Pointer to Prs detector element
   int         m_validPrs[16]       ; ///< Array for PRS validation: 1 or 2 bits
   int         m_spdMult            ; ///< Multiplicity of Spd
 

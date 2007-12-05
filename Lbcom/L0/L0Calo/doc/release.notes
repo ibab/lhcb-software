@@ -5,14 +5,14 @@
 
 ! 2007-10-31 - Marie-Helene Schune, Patrick Robbe, (Olivier Deschamps)
  - implement the final bank format as defined in EDMS-845277
-
+ NB : this requires "HadronSB" condition to be included in  condDB (SQLDDDB > v3r0)
 
 !========================= L0Calo v9r10 2007-11-01 ========================
 ! 2007-10-31 - Patrick Koppenburg
  - increment to v9r10
 
 ! 2007-10-31 - Olivier Deschamps 	
- - adapt to change in L0DUBase.h
+ - adapt to change in L0DUBase.h 
 
 !========================= L0Calo v9r9 2007-07-18 =========================
 ! 2007-07-02 - Patrick Robbe
