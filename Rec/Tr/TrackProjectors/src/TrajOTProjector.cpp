@@ -105,7 +105,7 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
     m_errMeasure = radiusWithError.err ;
   } else {
     m_residual = -distToWire;
-    m_errMeasure  = meas.module().cellRadius()/std::sqrt(3) ;
+    m_errMeasure  = meas.module().cellRadius()/std::sqrt(3.0) ;
   }
   m_errResidual = m_errMeasure ;
 
