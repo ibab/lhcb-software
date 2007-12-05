@@ -4,11 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
-
+!================ DAQEvent v7r7 2007-12-05 ============================
 ! 2007-12-04 Olivier Deschamps
  - Add new class : RawBankReadoutStatus.xml
  - New component algorithm : RawBankReadoutStatusFilter
-
 
 !================ DAQEvent v7r6p1 2007-11-12 ==========================
 ! 2007-11-12 - Marco Cattaneo
