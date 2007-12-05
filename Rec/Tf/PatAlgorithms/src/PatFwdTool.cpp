@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.cpp,v 1.5 2007-12-04 20:48:07 smenzeme Exp $
+// $Id: PatFwdTool.cpp,v 1.6 2007-12-05 10:37:21 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -176,7 +176,10 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
         double first = 1.e7;
         double last  = first;
         for ( itH =  track.coordBegin(); track.coordEnd() > itH; ++itH ) {
-          if ( (*itH)->hit()->region() == maxRegion ) {
+          unsigned int region = (*itH)->hit()->region();
+	  if (region != Tf::RegionID::OT)
+	    region+=2;
+	  if ( region == maxRegion ) {
             if ( first > 1.e6 ) first = (*itH)->projection();
             last = (*itH)->projection();
             planes.addHit( *itH );
@@ -195,7 +198,10 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
       // remove other regions !
       debug() << "========= Keep only hits of region " << bestRegion << endreq;
       for ( itH =  track.coordBegin(); track.coordEnd() > itH; ++itH ) {
-        if ( (*itH)->hit()->region() != (unsigned int)(bestRegion) ) {
+	unsigned int region = (*itH)->hit()->region();
+	if (region != Tf::RegionID::OT)
+	  region+=2;
+        if ( region != (unsigned int)(bestRegion) ) {
           (*itH)->setSelected( false );
         }
       }
@@ -597,7 +603,7 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
       if ( planeCode != hit->planeCode() ) continue;
       hit->setRlAmb( 0 );   // default
       //if ( !hit->isSelected() ) continue;
-      if ( 1 < hit->hit()->region() ) continue;    // IT ->no ambiguity!
+      if ( hit->hit()->type() != Tf::RegionID::OT ) continue;    // IT ->no ambiguity!
       temp.push_back( hit );
     }
     if ( 2 > temp.size() ) continue;   // no RL solved if at most one hit

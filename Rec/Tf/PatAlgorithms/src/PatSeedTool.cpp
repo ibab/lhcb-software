@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.cpp,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatSeedTool.cpp,v 1.2 2007-12-05 10:37:21 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -8,6 +8,8 @@
 #include "PatFwdFitLine.h"
 #include "PatFwdFitParabola.h"
 #include "PatSeedTool.h"
+
+#include "TfKernel/RegionID.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatSeedTool
@@ -196,7 +198,7 @@ void PatSeedTool::fitInitialXProjection ( PatSeedTrack& track, bool forceDebug )
     PatFwdHit* hit = *itH;
     if ( !hit->isSelected() ) continue;
     if ( !hit->hit()->isX() ) continue;
-    if ( 2 > hit->hit()->region() ) {
+    if ( hit->hit()->type() == Tf::RegionID::OT ) {
       hit->setRlAmb( 0 );
       int sta = hit->hit()->station();
       if ( largestDrift[sta] < hit->driftDistance() ) {

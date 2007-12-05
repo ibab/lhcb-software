@@ -1,10 +1,11 @@
-// $Id: PatFwdRegionCounter.h,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatFwdRegionCounter.h,v 1.2 2007-12-05 10:37:21 smenzeme Exp $
 #ifndef PATFWDREGIONCOUNTER_H
 #define PATFWDREGIONCOUNTER_H 1
 
 // Include files
 
 #include "TfKernel/HitExtension.h"
+#include "TfKernel/RegionID.h"
 
   /** @class PatFwdRegionCounter PatFwdRegionCounter.h
    *  Simple object to count the hits by region.
@@ -28,11 +29,17 @@
       for ( PatFwdHits::const_iterator ith = first; last != ith; ++ith ) {
         if ( !(*ith)->isSelected() ) continue;
         int region  = (*ith)->hit()->region();
+	if ((*ith)->hit()->type() != Tf::RegionID::OT)
+	  region+=2;
         m_regionList[region]++;
       }
     };
 
-    void addHit( PatFwdHit* hit ) { m_regionList[hit->hit()->region()]++; }
+    void addHit( PatFwdHit* hit ) { 
+      int region = hit->hit()->region();
+      if (hit->hit()->type() != Tf::RegionID::OT)
+	region+=2;
+      m_regionList[region]++; }
 
     int maxRegion() {
       int l = -1;

@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.6 2007-12-04 20:48:07 smenzeme Exp $
+// $Id: PatSeedingTool.cpp,v 1.7 2007-12-05 10:37:21 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -14,6 +14,8 @@
 #include "PatSeedingTool.h"
 #include "PatFwdFitLine.h"
 #include "PatFwdPlaneCounter.h"
+
+#include "TfKernel/RegionID.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatSeedingTool
@@ -693,7 +695,7 @@ void PatSeedingTool::debugFwdHit ( PatFwdHit* coord, MsgStream& msg ) {
                  coord->hit()->layer(),
                  coord->hit()->region(),
                  coord->isUsed() );
-  if ( 2 > coord->hit()->region() ) {
+  if ( coord->hit()->type() == Tf::RegionID::OT ) {
     msg << format( " P%2d N%2d RL%2d Drift %7.3f",
                    coord->hasPrevious(),
                    coord->hasNext(),
@@ -1184,7 +1186,7 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl) {
     PatFwdHit* hit = *itH;
     if ( hit->isIgnored() ) continue;
     hit->setProjection( hit->projection() * hit->z() / m_zForYMatch );
-    if ( 2 > hit->hit()->region() ) {
+    if (hit->hit()->type() == Tf::RegionID::OT ) {
       hit->setRlAmb( 0 );
       int sta = hit->hit()->station();
       if ( largestDrift[sta] < hit->driftDistance() ) {

@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.6 2007-12-04 20:48:07 smenzeme Exp $
+// $Id: PatForwardTool.cpp,v 1.7 2007-12-05 10:37:21 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -8,6 +8,7 @@
 
 #include "TfKernel/HitExtension.h"
 #include "TfKernel/RecoFuncs.h"
+#include "TfKernel/RegionID.h"
 
 #include "OTDet/DeOTDetector.h"
 
@@ -501,7 +502,7 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track, double xMin, doubl
           hit->setSelected( true );
           hit->setIgnored( false );
 
-          if (hit->hit()->region()<m_nOTReg)
+          if (hit->hit()->type() == Tf::RegionID::OT)
             if ( m_maxOTDrift < hit->driftDistance() ||
                  m_minOTDrift > hit->driftDistance() ) {
               hit->setSelected( false );
@@ -580,7 +581,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
           hit->setSelected( true );
           hit->setIgnored( false );
-          if (hit->hit()->region()<m_nOTReg)
+          if (hit->hit()->type() == Tf::RegionID::OT)
             if ( m_maxOTDrift < hit->driftDistance() ||
                  m_minOTDrift > hit->driftDistance()  ) {
               hit->setSelected( false );
@@ -633,7 +634,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   for ( itP = temp.begin();  temp.end() - minYPlanes >= itP; ++itP ) {
     itE = itP + minYPlanes -1;
     double spread = maxSpread;
-    if ( (*itP)->hit()->region() < m_nOTReg ) spread += 1.5;  // OT drift ambiguities...
+    if ((*itP)->hit()->type() == Tf::RegionID::OT) spread += 1.5;  // OT drift ambiguities...
 
     if ( msgLevel( MSG::VERBOSE) ){
       verbose() << format( "  first %8.2f +minXPlanes -> %8.2f (diff: %8.2f) Spread %6.2f ",
@@ -798,7 +799,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
     double spread = m_maxSpreadX + fabs( spreadSl );
 
 
-    if ( (*itP)->hit()->region() < m_nOTReg ) spread += 1.5;  // OT drift ambiguities...
+     if ((*itP)->hit()->type() == Tf::RegionID::OT)  spread += 1.5;  // OT drift ambiguities...
 
     //== If not enough hits in the maximum spread, skip
     if (  spread < (*itE)->projection() - (*itP)->projection() ) {

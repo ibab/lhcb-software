@@ -1,4 +1,4 @@
-// $Id: PatFwdTrackCandidate.h,v 1.3 2007-11-30 07:52:26 aperiean Exp $
+// $Id: PatFwdTrackCandidate.h,v 1.4 2007-12-05 10:37:21 smenzeme Exp $
 #ifndef PATFWDTRACKCANDIDATE_H
 #define PATFWDTRACKCANDIDATE_H 1
 
@@ -155,7 +155,6 @@
     void setNbIT( int nb )    { m_nbIT = nb; }
     void setNbOT( int nb )    { m_nbOT = nb; }
 
-    // added for Tr/NNTools
     void setCand1stQuality( double cand1stquality){ 
       m_cand1stquality = cand1stquality; 
     }
@@ -190,6 +189,8 @@
     double m_cosAfter;
     bool   m_fitted;
     double m_quality;
+    double m_cand1stquality;
+    double m_cand2ndquality;
 
     int    m_nbIT;
     int    m_nbOT;
@@ -197,7 +198,5 @@
     double m_chi2PerDoF;
     int    m_nDoF;
 
-    double m_cand1stquality;
-    double m_cand2ndquality;
   };
 #endif // PATFWDTRACKCANDIDATE_H

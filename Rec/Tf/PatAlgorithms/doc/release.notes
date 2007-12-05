@@ -3,6 +3,11 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2007-12-05 - Stephanie Hansmann-Menzemer
+ - bug fix (screwed up region numbering for IT and OT)
+
+! 2007-12-04 - Stephanie Hansmann-Menzemer
+ - write out states in T at 3 z positions 
 
 !========================== PatAlgorithms v3r2 2007-11-30 ====================
 ! 2007-11-29 - Stephanie Hansmann-Menzemer
