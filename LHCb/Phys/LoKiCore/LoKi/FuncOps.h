@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.10 2007-12-05 16:35:21 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.11 2007-12-05 16:43:54 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -506,22 +506,27 @@ namespace LoKi
       { res = fun() ; return res ; }
       // __rshift__
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__ 
       ( const Source& fun , const Pipe&    fun2 ) 
       { return fun >>                      fun2 ; }
       // __rshift__
       static LoKi::FunctorFromFunctor<void,std::vector<double> >
+      __rshift__ 
       ( const Source& fun , const Map&     fun2 ) 
       { return fun >>                      fun2 ; }
       // __rshift__
       static LoKi::FunctorFromFunctor<void,double>
+      __rshift__ 
       ( const Source& fun , const FunVal&  fun2 ) 
       { return fun >>                      fun2 ; }
       // __rshift__
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__ 
       ( const Source& fun , const Cuts&    fun2 ) 
       { return fun >> LoKi::filter<TYPE> ( fun2 ) ; }
       // __rshift__
       static LoKi::FunctorFromFunctor<void,std::vector<double> >
+      __rshift__ 
       ( const Source& fun , const Func&    fun2 ) 
       { return fun >> LoKi::yields<TYPE> ( fun2 ) ; }
     };
