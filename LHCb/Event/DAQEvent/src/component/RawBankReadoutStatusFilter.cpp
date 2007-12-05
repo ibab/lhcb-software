@@ -1,4 +1,4 @@
-// $Id: RawBankReadoutStatusFilter.cpp,v 1.2 2007-12-05 14:59:30 odescham Exp $
+// $Id: RawBankReadoutStatusFilter.cpp,v 1.3 2007-12-05 15:01:56 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -58,7 +58,7 @@ StatusCode RawBankReadoutStatusFilter::execute() {
   setFilterPassed(true); // accept by defaut
   int value = LHCb::RawBankReadoutStatus::OK;
 
-  if(m_typ == LHCb::RawBank::LastType){
+  if(m_type == LHCb::RawBank::LastType){
     warning() << "No BankType requested in RawBankReadoutStatusFilter -> filterPassed = true" << endreq;
     return StatusCode::SUCCESS;
   }
