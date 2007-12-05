@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.6 2007-11-28 21:46:44 cattanem Exp $
+! $Id: release.notes,v 1.7 2007-12-05 15:40:58 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
-!====================== STKernel v1r0 2007-11-28 ============================
+!====================== STKernel v1r0 2007-12-05 ============================
+! 2007-12-05 - Marco Cattaneo
+ - Add ISTSignalToNoiseTool interface, previously in DigiEvent
+
 ! 2007-11-28 - Marco Cattaneo
  - Add dictionary for Tool interface
  - Add missing LHCbKernel, DAQEvent and DigiEvent dependencies

@@ -1,5 +1,6 @@
 <lcgdict>
 
-  <class name = "ISTReadoutTool" />
+  <class name = "ISTReadoutTool"       />
+  <class name = "ISTSignalToNoiseTool" />
 
 </lcgdict>
