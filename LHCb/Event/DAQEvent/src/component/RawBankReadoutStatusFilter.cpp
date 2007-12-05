@@ -1,4 +1,4 @@
-// $Id: RawBankReadoutStatusFilter.cpp,v 1.1 2007-12-05 13:59:18 odescham Exp $
+// $Id: RawBankReadoutStatusFilter.cpp,v 1.2 2007-12-05 14:59:30 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -26,8 +26,8 @@ RawBankReadoutStatusFilter::RawBankReadoutStatusFilter( const std::string& name,
     , m_type()
     , m_mask()
 {
-  declareProperty( "BankType", m_type);
-  declareProperty( "RejectionMask", m_mask);
+  declareProperty( "BankType", m_type = LHCb::RawBank::LastType);
+  declareProperty( "RejectionMask", m_mask = 0x0); // filterPassed = true anyway
 }
 //=============================================================================
 // Destructor
@@ -53,8 +53,17 @@ StatusCode RawBankReadoutStatusFilter::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  setFilterPassed(false); // reject by defaut
-  int value = LHCb::RawBankReadoutStatus::Missing;
+    
+
+  setFilterPassed(true); // accept by defaut
+  int value = LHCb::RawBankReadoutStatus::OK;
+
+  if(m_typ == LHCb::RawBank::LastType){
+    warning() << "No BankType requested in RawBankReadoutStatusFilter -> filterPassed = true" << endreq;
+    return StatusCode::SUCCESS;
+  }
+  
+  
 
   LHCb::RawBankReadoutStatus* status = NULL;
   LHCb::RawBankReadoutStatuss*  statuss =get<LHCb::RawBankReadoutStatuss>(LHCb::RawBankReadoutStatusLocation::Default);
@@ -62,19 +71,21 @@ StatusCode RawBankReadoutStatusFilter::execute() {
     status = statuss->object( LHCb::RawBank::BankType(m_type) );  
   } else {
     warning() << "No Readout status container found at "<< LHCb::RawBankReadoutStatusLocation::Default 
-              <<" -> assume Missing banks!!"  << endreq;    
+              <<" -> will act as the bank " << m_type << " was Missing !!"  << endreq;    
+    int value = LHCb::RawBankReadoutStatus::Missing;
   }
-  
   if(NULL != status){
     value = status->status();
   }else{ 
-    warning() << "No Readout status found for bankType "<< m_type <<" -> assume Missing bank!!"  << endreq; 
+    warning() << "No Readout status found for bankType "<< m_type 
+              <<" -> will act as the bank " << m_type << " was Missing !!"  << endreq; 
+    int value = LHCb::RawBankReadoutStatus::Missing;
   }
 
   int decision = value && m_mask;  
-  if(decision ==0)setFilterPassed(true); // accept
+  if(decision !=0 )setFilterPassed(false); // reject
 
-  debug() << "Status value : " << value << " Mask : " << m_mask << " = " << filterPassed() << endreq;
+  debug() << "Status value : " << value << " Mask : " << m_mask << " => " << filterPassed() << endreq;
 
 
   return StatusCode::SUCCESS;
