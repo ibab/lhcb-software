@@ -4,6 +4,12 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================== DigiEvent v2r3 2007-12-05 ========================
+! 2007-12-05 - Marco Cattaneo
+ - Remove Kernel directory:
+   ISTSignalToNoiseTool.h moved to STKernel package
+   IVeloCluster2VeloDigitTool.h is obsolete and removed
+
 !========================== DigiEvent v2r2 2007-06-07 ========================
 ! 2007-06-07 - Marco Cattaneo
  - Adapt requirements to new GaudiObjDesc v10r0 patterns

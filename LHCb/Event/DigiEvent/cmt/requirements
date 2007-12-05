@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.10 2007-06-11 11:55:39 cattanem Exp $
+# $Id: requirements,v 1.11 2007-12-05 15:37:29 cattanem Exp $
 package DigiEvent
-version v2r2
+version v2r3
 
-branches Event Kernel xml cmt doc
+branches Event xml cmt doc
 
 use LHCbKernel   v* Kernel
 use LHCbMath     v* Kernel
@@ -14,7 +14,7 @@ end_private
 # Produce Header-Files from XML description
 #============================================================================
 apply_pattern god_headers files=../xml/*.xml
-apply_pattern install_more_includes more=Event offset=Kernel
+apply_pattern install_more_includes more=Event
 
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
