@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.18 2007-12-06 14:01:44 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.19 2007-12-06 15:51:51 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -157,9 +157,6 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   int m_nHistograms;
   int m_nPages;
   int m_nPageFolders;
-  void loginToDB (std::string passwd, 
-		  std::string user,
-		  std::string db);
   int genericStringQuery(std::string command,std::vector<string>& list);
   int getHistograms(std::string query,
 		    std::vector<OnlineHistogram*>* list=NULL,

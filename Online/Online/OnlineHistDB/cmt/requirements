@@ -27,8 +27,3 @@ apply_pattern  linker_library library=OnlineHistDB
 
 macro_append OnlineHistDB_shlibflags  "" \
   WIN32                              " oci.lib ociw32.lib "
-
-application  ohtest ../main/test.cpp
-
-apply_pattern application_path 
-
