@@ -107,6 +107,14 @@
       </method>
 
       <method
+        type = 'OTDet::RadiusWithError'
+        name = 'driftRadiusWithErrorFromY'
+        desc = 'Retrieve the drift radius for a given global y position'
+        const = 'TRUE'>
+        <arg type='double' name='globalY' />
+      </method>
+
+      <method
         type    = 'LHCb::OTMeasurement*'
         name    = 'clone'
         desc    = 'Clone the OTMeasurement'

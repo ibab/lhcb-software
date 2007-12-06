@@ -1,4 +1,4 @@
-// $Id: OTMeasurement.cpp,v 1.14 2007-11-30 14:15:03 wouter Exp $
+// $Id: OTMeasurement.cpp,v 1.15 2007-12-06 14:42:48 wouter Exp $
 // Include files
 
 // OTDet
@@ -69,7 +69,17 @@ OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithError( double arclen
   float distToReadout = trajectory().endRange() - arclen;
   // Drifttime
   float drifttime = calibratedTime() - deltaTimeOfFlight() - distToReadout / m_module->propagationVelocity() ;
-  // The rest is doen by the module
+  // The rest is done by the module
+  return m_module->driftRadiusWithError( drifttime ) ;
+}
+
+OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithErrorFromY( double globalY ) const 
+{
+  // Get the distance to the readout
+  float deltaY = trajectory().endPoint().y() - globalY ;
+  // Drifttime
+  float drifttime = calibratedTime() - deltaTimeOfFlight() - deltaY / m_module->propagationVelocityY() ;
+  // The rest is done by the module
   return m_module->driftRadiusWithError( drifttime ) ;
 }
 
