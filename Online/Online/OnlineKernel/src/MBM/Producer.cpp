@@ -27,6 +27,18 @@ void MBM::Producer::setNonBlocking(int facility, bool subscribe) {
   }
 }
 
+/// Cancel pending request
+int MBM::Producer::cancel()   {
+  if ( m_bmid != (BMID)-1 ) {
+    int sc = ::mbm_cancel_request(m_bmid);
+    if ( sc == MBM_NORMAL )  {
+      return sc;
+    }
+    throw std::runtime_error("Failed to cancel request to MBM buffer:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to cancel request to MBM buffer:"+m_buffName+" [Buffer not connected]");
+}
+
 int MBM::Producer::spaceAst(void* param) {
   Producer* prod = (Producer*)param;
   return prod->spaceAst();
@@ -66,26 +78,26 @@ int MBM::Producer::spaceAction() {
     sc = ::mbm_declare_event(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
     if ( sc == MBM_REQ_CANCEL ) {
       ::lib_rtl_printf("Failed to declare event for MBM buffer %s. Request was cancelled.\n",
-	       m_buffName.c_str());
+        m_buffName.c_str());
       return sc;
     }
     else if ( sc == MBM_NORMAL )  {
       sc = ::mbm_send_space(m_bmid);
       if ( sc == MBM_REQ_CANCEL ) {
-	::lib_rtl_printf("Failed to declare event for MBM buffer %s. Request was cancelled.\n",
-		 m_buffName.c_str());
-	return sc;
+        ::lib_rtl_printf("Failed to declare event for MBM buffer %s. Request was cancelled.\n",
+          m_buffName.c_str());
+        return sc;
       }
       else if ( sc == MBM_NORMAL )  {
         return sc;
       }
       ::lib_rtl_printf("Failed to send space for MBM buffer %s. status = %d %08X.\n",
-	       m_buffName.c_str(),sc,sc);
+        m_buffName.c_str(),sc,sc);
       throw std::runtime_error("Failed to send space for MBM buffer:"+m_buffName+" [Internal Error]");
     }
     else {
       ::lib_rtl_printf("Failed to declare event for MBM buffer %s. status = %d %08X.\n",
-	       m_buffName.c_str(),sc,sc);
+        m_buffName.c_str(),sc,sc);
     }
     throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Internal Error]");
   }

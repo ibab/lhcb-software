@@ -4,8 +4,12 @@
 #include "MBM/bmssdef.h"
 #include "RTL/rtl.h"
 
+enum MBM_dimensions  {
+  BM_MASK_SIZE  = 4
+};
+
 enum MBM_Internals  {
-  BM_MAX_REQS = 8,
+  BM_MAX_REQS   = 8,
   BM_MAX_EVTYPE = 10
 };
 

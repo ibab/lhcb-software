@@ -6,14 +6,15 @@
 #include "RTL/bits.h"
 #include "RTL/que.h"
 #include "RTL/rtl.h"
+#include "MBM/bmdef.h"
 #include <map>
 #ifndef _WIN32
   #include "semaphore.h"
 #endif
 
-typedef Bits::BitMask<4> TriggerMask;
-typedef Bits::BitMask<4> UserMask;
-typedef Bits::BitMask<4> VetoMask;
+typedef Bits::BitMask<BM_MASK_SIZE> TriggerMask;
+typedef Bits::BitMask<BM_MASK_SIZE> UserMask;
+typedef Bits::BitMask<BM_MASK_SIZE> VetoMask;
 
 namespace MBM  {
   enum BufferStates   {

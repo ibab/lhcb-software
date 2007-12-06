@@ -181,14 +181,14 @@ namespace {
     int term_in = fileno(stdin);
     while( !m_stop )  {
       int nsock = 0, mxsock = 0;
-      size_t len = size();
-      if(channels.size()<len) channels.resize(len+32);
       fd_set read_fds, exc_fds;
       FD_ZERO(&exc_fds);
       FD_ZERO(&read_fds);
       m_dirty = false;
       {
         RTL::Lock lock(m_mutex_id);
+        size_t len = size();
+        if(channels.size()<len) channels.resize(len+32);
         for(iterator i=begin(); i != end(); ++i)  {
           if ( (*i).second->armed )  {
             __NetworkChannel__ fd = (*i).first;
@@ -344,16 +344,17 @@ int IOPortManager::add(int typ, NetworkChannel::Channel c, int (*callback)(void*
   em->setDirty();
   bool locked = 0 != em->m_thread && !::lib_rtl_is_current_thread(em->m_thread);
   if ( locked ) ::lib_rtl_lock(em->m_mutex_id);
-
-  PortEntry* e = (*em)[c];
-  if ( !e ) {
-    //lib_rtl_printf("Install channel watcher for %d\n",c);
-    (*em)[c] = e = new PortEntry;
+  if ( c )  {
+    PortEntry* e = (*em)[c];
+    if ( !e ) {
+      //lib_rtl_printf("Install channel watcher for %d\n",c);
+      (*em)[c] = e = new PortEntry;
+    }
+    e->callback = callback;
+    e->param = param;
+    e->armed = 1;
+    e->type = typ;
   }
-  e->callback = callback;
-  e->param = param;
-  e->armed = 1;
-  e->type = typ;
   int sc = em->run();
   if ( locked ) ::lib_rtl_unlock(em->m_mutex_id);
   return sc;

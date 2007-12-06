@@ -426,7 +426,9 @@ int mbm_register_alloc_event(BMID bm, RTL_ast_t astadd, void* astparam)   {
 }
 
 // Consumer routines
-int mbm_add_req (BMID bm, int evtype, const unsigned int trg_mask[4], const unsigned int veto_mask[4], 
+int mbm_add_req (BMID bm, int evtype, 
+                 const unsigned int trg_mask[BM_MASK_SIZE], 
+                 const unsigned int veto_mask[BM_MASK_SIZE], 
                  int masktype, int usertype, int freqmode, float freq)
 {
   UserLock user(bm);
@@ -449,12 +451,14 @@ int mbm_add_req (BMID bm, int evtype, const unsigned int trg_mask[4], const unsi
     rq->freqmode  = freqmode;
     rq->user_type = usertype;
     rq->freq      = freq;
-    us->n_req    += 1;
+    ++us->n_req;
   }
   return user.status();
 }
 
-int mbm_del_req (BMID bm, int evtype, const unsigned int trmask[4], const unsigned int veto[4], 
+int mbm_del_req (BMID bm, int evtype, 
+                 const unsigned int trmask[BM_MASK_SIZE],
+                 const unsigned int veto[BM_MASK_SIZE], 
                  int masktype, int usertype)
 {
   UserLock user(bm);
@@ -462,23 +466,28 @@ int mbm_del_req (BMID bm, int evtype, const unsigned int trmask[4], const unsign
   if ( us )  {
     REQ *rq, *rqn;
     int i, j;
+    TriggerMask mask = *(TriggerMask*)trmask;
+    if (evtype > TOPTYP && int(mask.word(0)) <= evtype )        {
+      mask.setWord(0, evtype);
+    }
     for (i = 0, rq = us->req; i < us->n_req; i++, rq++)  {
-      if ( evtype != rq->ev_type || rq->tr_mask != trmask || rq->vt_mask != veto )
+      if ( evtype != rq->ev_type || rq->tr_mask != mask || rq->vt_mask != veto )
         continue;
       if ( masktype != rq->masktype || usertype != rq->user_type )
         continue;
       for (j = i + 1, rqn = rq + 1; j < us->n_req; j++, rq++, rqn++)      {
         ::memcpy(rq,rqn,sizeof(REQ));
       }
-      us->n_req -= 1;
+      --us->n_req;
       return MBM_NORMAL;
     }
   }
   return user.status();
 }
 
-int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, unsigned int trmask[4], 
-         int part_id, RTL_ast_t astadd, void* astpar) {
+int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, 
+                     unsigned int trmask[BM_MASK_SIZE], 
+                     int part_id, RTL_ast_t astadd, void* astpar) {
   UserLock user(bm);
   USER* us = user.user();
   if ( us )  {
@@ -517,7 +526,8 @@ int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, unsigned int tr
   return user.status();
 }
 
-int mbm_get_event(BMID bm, int** ptr, int* size, int* evtype, unsigned int trmask[4], int part_id) {
+int mbm_get_event(BMID bm, int** ptr, int* size, int* evtype, 
+                  unsigned int trmask[BM_MASK_SIZE], int part_id) {
   int sc = mbm_get_event_a(bm, ptr,size,evtype,trmask,part_id,mbm_get_event_ast,bm);
   if ( sc == MBM_NORMAL || sc == MBM_NO_EVENT ) {
     return mbm_wait_event(bm);

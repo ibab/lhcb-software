@@ -37,6 +37,9 @@ namespace MBM {
     /// Switch to non-blocking asynchronous execution mode using WT
     virtual void setNonBlocking(int facility, bool subscribe);
 
+    /// Cancel pending request
+    virtual int cancel();
+
     /// Ast to be called on event receival (may be overloaded by clients)
     virtual int spaceAst();
 

@@ -64,16 +64,18 @@ namespace DataTransfer  {
     ~NET();
     unsigned int             m_refCount;
     IOPortManager            m_mgr;
+    NetConnectionType        m_type;
     netentry_t               m_me;
     std::map<unsigned int,netentry_t*> m_db;
     lib_rtl_lock_t           m_lockid;
     Clients                  m_clients;
+    NetConnectionType type() const { return m_type; }
     netentry_t* connect(const std::string& dest);
     NetErrorCode remove(netentry_t *e);
     void sendShutdown(netentry_t *e);
     NetErrorCode disconnect(netentry_t *e);
     NetErrorCode accept();
-    NetErrorCode init();
+    NetErrorCode init(NetConnectionType type);
     NetErrorCode handleMessage(netentry_t* e);
     NetErrorCode getData(netentry_t* e, void* data);
     NetErrorCode setSockopts(int chan);
@@ -84,7 +86,7 @@ namespace DataTransfer  {
     static int acceptAction (void* param);
     static int recvAction (void* param);
     unsigned int release();
-    static NET* instance(const std::string& proc);
+    static NET* instance(const std::string& proc, NetConnectionType type);
   };
 }
 using namespace DataTransfer;
@@ -233,7 +235,9 @@ NetErrorCode netentry_t::recv(void *buffer, size_t siz, unsigned int flag)  {
   return NET_SUCCESS;
 }
 //----------------------------------------------------------------------------------
-NET::NET(const std::string& proc) : m_refCount(0), m_mgr(0), m_lockid(0)  {
+NET::NET(const std::string& proc) 
+: m_refCount(0), m_mgr(0), m_type(NET_SERVER), m_lockid(0)  
+{
   m_lockid = 0;
   m_me.sys = this;
   m_me.name = proc;
@@ -315,7 +319,7 @@ NetErrorCode NET::accept()   {
   socklen_t n = sizeof (e->addr);
   e->sys  = this;
   e->chan = ::accept(m_me.chan, (sockaddr*)&e->addr, &n);
-  if (e->chan > 0 )  {
+  if ( e->chan > 0 )  {
     netheader_t h;
     int status = e->recv(h.name,sizeof(h.name),0);
     h.name[sizeof(h.name)-1] = 0;
@@ -335,7 +339,7 @@ NetErrorCode NET::accept()   {
     e.release();
     return NET_SUCCESS;
   }
-  errno = lib_rtl_socket_error();
+  errno = ::lib_rtl_socket_error();
   return NET_ERROR;
 }
 //----------------------------------------------------------------------------------
@@ -453,7 +457,7 @@ NetErrorCode NET::send(const void* buff, size_t size, const std::string& dest, i
       m_mgr.unlock(io_lock);
       io_lock = 0;
       if ( !(e=connect(dest)) ) {
-	return NET_TASKNOTFOUND;
+        return NET_TASKNOTFOUND;
       }
       m_db[e->hash] = e;                           // Connection ok 
     }
@@ -466,40 +470,53 @@ NetErrorCode NET::send(const void* buff, size_t size, const std::string& dest, i
   return status;
 }
 //----------------------------------------------------------------------------------
-NetErrorCode NET::init()  {
-  int status = ::lib_rtl_create_lock(0, &m_lockid);
-  if ( !lib_rtl_is_success(status) )  {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Error creating NET lock. Status %d",status);
-    return NET_ERROR;
+NetErrorCode NET::init(NetConnectionType type)  {
+  // Only initialize if needed!
+  if ( m_me.addr.sin_port == 0 )  {
+    int status = 1;
+    if ( 0 == m_lockid ) {
+      status = ::lib_rtl_create_lock(0, &m_lockid);
+      if ( !lib_rtl_is_success(status) )  {
+        ::lib_rtl_signal_message(LIB_RTL_OS,"Error creating NET lock. Status %d",status);
+        return NET_ERROR;
+      }
+    }
+    m_type = type;
+    if ( type == NET_SERVER )  {
+      status = ::tan_allocate_port_number(m_me.name.c_str(),&m_me.addr.sin_port);
+      if ( status != TAN_SS_SUCCESS )  {
+        ::lib_rtl_signal_message(LIB_RTL_OS,"Allocating port number. Status %d",status);
+        return NET_ERROR;
+      }
+      m_mgr.setPort(m_me.addr.sin_port);
+      m_me.chan = ::socket(AF_INET, SOCK_STREAM, 0);
+      if (m_me.chan == -1)   {
+        errno = ::lib_rtl_get_error();
+        m_me.chan = 0;
+        m_me.terminate();
+        return NET_ERROR;
+      }
+      m_me.setSockopts();
+      status = ::bind(m_me.chan,(sockaddr*)&m_me.addr,sizeof(sockaddr_in));
+      if (status == -1)  {
+        errno = ::lib_rtl_get_error();
+        m_me.terminate();
+        return NET_ERROR;
+      }
+      status = ::listen (m_me.chan, 5);
+      if (status == -1)  {
+        errno = ::lib_rtl_get_error();
+        ::socket_close (m_me.chan);
+        m_me.terminate();
+        return NET_ERROR;
+      }
+      m_mgr.add(0,m_me.chan,acceptAction,this);
+    }
+    else   {
+      m_mgr.setPort(0xFEED);
+      m_mgr.add(0,0,acceptAction,this);
+    }
   }
-  status = ::tan_allocate_port_number(m_me.name.c_str(),&m_me.addr.sin_port);
-  if ( status != TAN_SS_SUCCESS )  {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Allocating port number. Status %d",status);
-    return NET_ERROR;
-  }
-  m_mgr.setPort(m_me.addr.sin_port);
-  m_me.chan = ::socket(AF_INET, SOCK_STREAM, 0);
-  if (m_me.chan == -1)   {
-    errno = ::lib_rtl_get_error();
-    m_me.chan = 0;
-    m_me.terminate();
-    return NET_ERROR;
-  }
-  m_me.setSockopts();
-  status = ::bind(m_me.chan,(sockaddr*)&m_me.addr,sizeof(sockaddr_in));
-  if (status == -1)  {
-    errno = ::lib_rtl_get_error();
-    m_me.terminate();
-    return NET_ERROR;
-  }
-  status = ::listen (m_me.chan, 5);
-  if (status == -1)  {
-    errno = ::lib_rtl_get_error();
-    ::socket_close (m_me.chan);
-    m_me.terminate();
-    return NET_ERROR;
-  }
-  m_mgr.add(0,m_me.chan,acceptAction,this);
   return NET_SUCCESS;
 }
 //----------------------------------------------------------------------------------
@@ -509,15 +526,21 @@ NetErrorCode NET::getData(netentry_t* e, void* data)  {
   return e->status;
 }
 //----------------------------------------------------------------------------------
-NET* NET::instance(const std::string& proc)  {
+NET* NET::instance(const std::string& proc, NetConnectionType type)  {
   NET*& n = inst();
   if ( 0 == n )  {
     std::auto_ptr<NET> conn(new NET(proc));
-    NetErrorCode status = conn->init();
+    NetErrorCode status = conn->init(type);
     if ( status != NET_SUCCESS )  {
       throw std::runtime_error("Cannot initialize network worker.");
     }
     n = conn.release();
+  }
+  else if ( n->type() == NET_CLIENT && type == NET_SERVER )  {
+    NetErrorCode status = n->init(type);
+    if ( status != NET_SUCCESS )  {
+      throw std::runtime_error("Cannot initialize network server.");
+    }
   }
   RTL::Lock lock(n->m_lockid);
   n->m_refCount++;
@@ -575,8 +598,8 @@ NetErrorCode NET::unsubscribe(void* param, unsigned int fac) {
   return NET_SUCCESS;
 }
 //----------------------------------------------------------------------------------
-NET* DataTransfer::net_init(const std::string& proc)
-{ return NET::instance(proc);                       }
+NET* DataTransfer::net_init(const std::string& proc, NetConnectionType type)
+{ return NET::instance(proc, type);                 }
 void DataTransfer::net_close(NET* net)
 { net->release();                                   }
 int DataTransfer::net_receive(NET* net, netentry_t* e, void* buff) 
@@ -589,6 +612,10 @@ int DataTransfer::net_subscribe(NET* net, void* param, unsigned int fac, net_han
 { return net->subscribe(param,fac,data,death);      }
 int DataTransfer::net_unsubscribe(NET* net, void* param, unsigned int fac)
 { return net->unsubscribe(param,fac);               }
+void* DataTransfer::net_lock(NET* net)
+{ return net ? net->m_mgr.lock() : 0;               }
+void DataTransfer::net_unlock(NET* net, void* lock)
+{ if ( net && lock ) net->m_mgr.unlock(lock);       }
 
 #ifndef ONLINEKERNEL_NO_TESTS
 

@@ -170,6 +170,18 @@ int MBM::Consumer::pause()  {
   throw std::runtime_error("Failed to pause access to MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
 
+/// Cancel pending request
+int MBM::Consumer::cancel()   {
+  if ( m_bmid != (BMID)-1 ) {
+    int sc = ::mbm_cancel_request(m_bmid);
+    if ( sc == MBM_NORMAL )  {
+      return sc;
+    }
+    throw std::runtime_error("Failed to cancel request to MBM buffer:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to cancel request to MBM buffer:"+m_buffName+" [Buffer not connected]");
+}
+
 // Run the application in synchonous mode
 int MBM::Consumer::runSynchronous() {
   int sc = eventRearm();

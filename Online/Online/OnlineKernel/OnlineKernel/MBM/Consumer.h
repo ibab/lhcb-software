@@ -71,6 +71,9 @@ namespace MBM {
     /// Pause event requests
     int pause();
 
+    /// Cancel pending request
+    virtual int cancel();
+
     /// Ast to be called on event receival (may be overloaded by clients)
     virtual int eventAst();
 
