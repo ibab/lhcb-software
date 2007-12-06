@@ -346,13 +346,41 @@ double HltUtils::invariantMass(const LHCb::Track& track1,
 
 }
 
-double HltUtils::matchIDsFraction(const LHCb::Track& track1,
-                                  const LHCb::Track& track2) {
-  size_t n0 = track1.lhcbIDs().size();
+double HltUtils::matchIDsFraction(const LHCb::Track& tref,
+                                  const LHCb::Track& track) {
+  size_t n0 = tref.lhcbIDs().size();
   if (n0 <=0) return false;
-  size_t n  = ELoop::count(track1.lhcbIDs(),track2.lhcbIDs());
+  size_t n  = ELoop::count(tref.lhcbIDs(),track.lhcbIDs());
   return double(n)/double(n0);
 }
+
+double HltUtils::vertexMatchIDsFraction(const LHCb::RecVertex& vref,
+                                        const LHCb::RecVertex& v) 
+{
+  const LHCb::Track& rtrack1 = *(vref.tracks()[0]);
+  const LHCb::Track& rtrack2 = *(vref.tracks()[1]);
+
+  const LHCb::Track& track1 = *(v.tracks()[0]);
+  const LHCb::Track& track2 = *(v.tracks()[1]);
+
+  double r11 = HltUtils::matchIDsFraction(rtrack1,track1);
+  double r12 = HltUtils::matchIDsFraction(rtrack1,track2);
+
+  double r21 = HltUtils::matchIDsFraction(rtrack2,track1);
+  double r22 = HltUtils::matchIDsFraction(rtrack2,track2);
+
+  double f11 = r11+r22;
+  double f12 = r12+r21;
+
+  double f = f11>f12? f11 : f12;
+  
+  // std::cout << " vmatching r11 r22 " <<r11<<", "<<r22 <<std::endl;
+//   std::cout << "           r12 r21 f " << r12 <<", " << r21 
+//             << " -> " << f << std::endl;
+  
+  return f;
+}
+
 
 double HltUtils::deltaEta(const LHCb::Track& track1, 
                           const LHCb::Track& track2) {
@@ -450,3 +478,36 @@ bool HltUtils::matchCellIDs( const std::vector<LHCb::CaloCellID>& oncells,
 	return false;				
 }																			 
 
+
+bool HltUtils::doShareM3(const Track& itL0Mu, 
+                         const Track& itT){
+  bool L0Clone=false;
+  MuonTileID tileM3=0;
+  const std::vector<LHCbID>& muonTiles= (itT).lhcbIDs();
+  for( std::vector<LHCbID>::const_iterator itlhcbid = muonTiles.begin();
+       itlhcbid != muonTiles.end(); ++itlhcbid){
+    MuonTileID tileMuonSegment = itlhcbid->muonID();
+    if(tileMuonSegment.station() == 2) tileM3= tileMuonSegment;
+  }
+  // std::cout << "[doShareM3] tile ID from muon segment station " 
+  //          << tileM3.station() << " " << tileM3 << std::endl;
+  
+
+  const std::vector<LHCb::LHCbID>& lista= (itL0Mu).lhcbIDs ();
+  MuonTileID L0tileM3;
+  for(std::vector<LHCbID>::const_iterator it=lista.begin();
+      it != lista.end(); ++it){
+    if(it->isMuon()){
+      MuonTileID tile=it->muonID();
+      if(tile.station()==2)L0tileM3=tile;
+    }
+  }  
+  // std::cout << " [doShareM3] tile M3 from T track "
+  //         << L0tileM3.station() << " " << L0tileM3 << std::endl;
+
+  if (tileM3==L0tileM3){
+    L0Clone=true;
+  }
+  //std::cout << "is clone"<< L0Clone << std::endl;
+  return L0Clone;
+}

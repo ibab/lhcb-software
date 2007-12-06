@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.16 2007-12-04 16:58:58 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.17 2007-12-06 16:08:43 hernando Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -153,7 +153,17 @@ Hlt::TrackFunction* HltFunctionFactory::trackFunction(const std::string& fn)
     fun = new Hlt::DeltaE();
   } else if (name == "FlagL0Candidate"){
     fun = new Hlt::TrackFlag(Track::L0Candidate);
-  }
+  } else if (name == "MuonIDDistance") {
+    ITrackFunctionTool* ifun = 
+      tool<ITrackFunctionTool>("HltMuonIDDistanceTool",this);
+    fun = new Hlt::TrackFunctionTool(*ifun);
+  } else if (name == "DoShareM3") {
+    if (!m_tracks) error() << " tracks [2] not set in factory " << endreq;
+    fun =  new Estd::binder_function<Track,Track>(Hlt::DoShareM3(), 
+                                                  *m_tracks, Estd::abs_max());
+  } 
+  
+  
   
   
   if (m_smart && fun) {
@@ -197,7 +207,14 @@ Hlt::VertexFunction* HltFunctionFactory::vertexFunction(const std::string& fn) {
       Estd::binder_function<RecVertex,RecVertex>(Hlt::VertexMinIP(),
                                                  *m_vertices,
                                                  Estd::abs_min());
+  } else if (name=="VertexMatchIDsFraction") {
+    fun =  new 
+      Estd::binder_function<RecVertex,RecVertex>(Hlt::VertexMatchIDsFraction(),
+                                                 *m_vertices,
+                                                 Estd::abs_min());
   }
+  
+
   if (m_smart && fun) {
     int id = HltConfigurationHelper::getID(*m_conf,"InfoID",name);
     Hlt::VertexFunction* fun1 = fun;
@@ -225,7 +242,7 @@ Hlt::TrackBiFunction* HltFunctionFactory::trackBiFunction(const std::string& fn)
     bfun = new Hlt::DimuonMass();
   } else if (name == "SumPT") {
     bfun = new Hlt::SumPT();
-  }
+  } 
   
   if (!bfun) fatal() << " requested track bifunction " << name
                      << " not in factory " << endreq;

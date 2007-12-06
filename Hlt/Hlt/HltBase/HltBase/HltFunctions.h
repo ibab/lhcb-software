@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.14 2007-12-04 16:59:10 hernando Exp $
+// $Id: HltFunctions.h,v 1.15 2007-12-06 16:07:36 hernando Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -15,6 +15,8 @@
 #include "HltBase/HltTypes.h"
 #include "HltBase/HltUtils.h"
 #include "HltBase/ITrackMatch.h"
+#include "HltBase/ITrackFunctionTool.h"
+#include "HltBase/ITrackBiFunctionTool.h"
 
 namespace Hlt {  
  
@@ -269,6 +271,16 @@ namespace Hlt {
     Hlt::VertexFunction* clone() const {return new maxPT();}
   };
 
+  class TrackFunctionTool : public Hlt::TrackFunction {
+  public:
+    explicit TrackFunctionTool(ITrackFunctionTool& tool) {_tool = &tool;}
+    double operator() (const LHCb::Track& t1) const
+    {double value = _tool->function(t1);return value;}
+    Hlt::TrackFunction* clone() const 
+    {return new Hlt::TrackFunctionTool(*_tool);}
+    ITrackFunctionTool* _tool;
+  };
+
   class TrackMatch : public Hlt::TrackBiFunction {
   public:
     explicit TrackMatch(ITrackMatch& tool) {_tool = &tool;}
@@ -363,6 +375,16 @@ namespace Hlt {
     {return new DOCA();}
   };  
 
+  class DoShareM3 : public Hlt::TrackBiFunction {
+  public:
+    explicit DoShareM3() {}
+    double operator() (const LHCb::Track& track1, 
+                       const LHCb::Track& track2) const {
+      return (double) HltUtils::doShareM3(track1,track2);
+    }
+    Estd::bifunction<LHCb::Track,LHCb::Track>* clone() const
+    {return new DoShareM3();}
+  };
 
   class DimuonMass : public Hlt::TrackBiFunction {
   public:
@@ -389,6 +411,21 @@ namespace Hlt {
     {return new VertexDimuonMass();}
   };
 
+  
+  
+  class VertexMatchIDsFraction : public Hlt::VertexBiFunction {
+  public:
+    explicit VertexMatchIDsFraction() {}
+    double operator() (const LHCb::RecVertex& v,
+                       const LHCb::RecVertex& vref
+                       ) const {
+      return HltUtils::vertexMatchIDsFraction(vref,v);
+      
+    }
+    Estd::bifunction<LHCb::RecVertex, LHCb::RecVertex>* clone() const
+    {return new VertexMatchIDsFraction();}
+  };
+  
   
   class SumPT : public Hlt::TrackBiFunction {
   public:

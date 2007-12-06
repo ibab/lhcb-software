@@ -3,6 +3,16 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
+
+! 2007-12-06 - Jose A. Hernando (from Sandra)
+  - HltMuonIDDistanceTool
+    function to compute muonID distance variable
+	- remove obsolete algorithms:
+   	HltMuonTrigger2MuonsNoIP.h
+	  HltMuonTrigger2MuonsWithIP.h
+    L0Muon2Tracks.h  --> HltCommon HltL0MuonPrepare
+    L0Vertex2Tracks.cpp --> HltCommon HltVertexToTracks
+
 ! 2007-11-22 - Sandra Amato
  - remove obsolete algorithms: HltMuonPreTriggerDiMuons.cpp, 
    HltMuonPreTriggerSingle.cpp, HltMuonTriggerDiMuons.cpp,

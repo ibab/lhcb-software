@@ -33,9 +33,9 @@ HltInit.TCKName = "UpdatedL0";
 //
 
 HltAllAlleys.Members ={"HltSequencer/HltL0TriggerSequence",
-                       // "HltSequencer/HltMuonAlley",
+                       "HltSequencer/HltMuonAlley",
                        // "HltSequencer/HltMuHadAlley",
-                       "HltSequencer/HltHadAlley",
+                       // "HltSequencer/HltHadAlley",
                        // "HltSequencer/HltEleAlley",
                        // "HltSequencer/HltPhoAlley",
                        "HltSelectionEntry/HltAlleys"
@@ -44,17 +44,24 @@ HltAllAlleys.ModeOr=true;
 
 #include "$HLTSYSROOT/options/HltL0TriggerSequence.opts"
 
-// #include "$HLTSYSROOT/options/HltMuonAlleyConfSequence.opts"
+//ToolSvc.PatForwardTool.OutputLevel = 1;
+
+#include "$HLTSYSROOT/options/HltMuonAlleyConfSequence.opts"
 #include "$HLTSYSROOT/options/HltHadAlleyConfSequence.opts"
+
+#include "$HLTSYSROOT/options/TsaTool.opts"
 
 // #include "$HLTSYSROOT/options/HltEleAlleyConfSequence.opts"
 // #include "$HLTSYSROOT/options/HltPhoAlleySequence.opts"
 
 HltAlleys.Selections = {"MuonTriggerSingle",
-                        "MuonTriggerDiMuon",
-                        "MuonTriggerIPDiMuon",
+                        "MuonTriggerSingleNoIP",
                         "MuonTriggerPureDiMuon",
                         "MuonTriggerPureIPDiMuon",
+                        "DimuonFromL0SingleWithIP",
+                        "DimuonFromL0SingleNoIP",
+                        "DimuonFromL0SingleAndMuonSegWithIP",
+                        "DimuonFromL0SingleAndMuonSegNoIP",
                         "HadTrigger"
                         ,"EleTriggerEleTrk"
                         ,"EleTriggerSingle"
@@ -72,7 +79,11 @@ HltEndSeq.Members = {"HltSelectionDataToTes",
 
 
 //HltSelectionDataToTes.Copy+={"MuonsForwardSingle" ,"DiMuonsForward"};
-HltSelectionDataToTes.Copy+={"MuonAndTVelo", "DiMuonAndTVelo"};
+HltSelectionDataToTes.Copy+={"MuonAndTVelo", 
+                             "DiMuonAndTVelo",
+                             "MuonAndTVeloFromMuonSeg",
+                             "MuonAndTVeloForDimuonFromL0Single"
+};
 // HltSelectionDataToTes.CopyAll = true;
 
 // HltSummaryWriter.SaveAll = true;

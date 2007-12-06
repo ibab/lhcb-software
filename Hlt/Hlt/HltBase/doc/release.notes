@@ -4,6 +4,13 @@
 ! Purpose     : Hlt Base classes
 !-----------------------------------------------------------------------------
 
+! 2007-12-6 Jose A. Hernando
+	 - IPrepareMuonTSeedTool from Sandra for MuonSegment preparation
+   - ITrackFunctionTool and ITrackBiFunctionTool to make Fuctions from GaudiTools using Tracks
+   - HltUtils adding DoShareM3 and VertexMatchIDsFraction (to compute fraction of IDs between two vertices)
+   - HltFunctions adding DoShareM3, VertexMatchIDsFraction and MuonIDDistance functions in factory
+   - HltFunctions.h add DimuonMass, VertexDimuonMass and VertexSumPT functions 
+
 ! 2007-12-2 Jose A. Hernando
    - HltFunctions.h add DimuonMass, VertexDimuonMass and VertexSumPT functions 
 

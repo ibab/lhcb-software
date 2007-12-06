@@ -67,22 +67,19 @@ namespace HltUtils
 
   double maxPT(const LHCb::RecVertex& vertex);
 
-  double matchIDsFraction(const LHCb::Track& track1, const LHCb::Track& track2);
+  double matchIDsFraction(const LHCb::Track& trackreference, 
+                          const LHCb::Track& track2);
 
-  inline bool matchIDs(const LHCb::Track& track1, const LHCb::Track& track2) {
-    return (matchIDsFraction(track1,track2) > 0.70);    
+  double vertexMatchIDsFraction(const LHCb::RecVertex& vreference, 
+                                const LHCb::RecVertex& vertex);
+
+  inline bool matchIDs(const LHCb::Track& treference, 
+                       const LHCb::Track& track) {
+    return (matchIDsFraction(treference,track) > 0.70);    
   }
   
   double closestDistanceMod(const LHCb::Track& track1,
                             const LHCb::Track& track2);
-  
-//   bool matchIDs(const LHCb::Track& track1, const LHCb::Track& track2,
-//                 double minf = 0.75) {
-//     int n = ELoop::count(track1.lhcbIDs(),track2.lhcbIDs());
-//     int n0 = track1.lhcbIDs().size();
-//     double f = (n0>0?(1.*n)/(1.*n0):0);
-//     return f>minf;
-//   }
 
   double IPError(const LHCb::Track& track);
 
@@ -108,6 +105,10 @@ namespace HltUtils
   
   
   //------------------------------------------------------------
+  
+  bool doShareM3(const LHCb::Track& track0, const LHCb::Track& track1);
+  
+
   // calocellid tools
 	
   

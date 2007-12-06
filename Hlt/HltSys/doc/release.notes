@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-12-06 - Jose A. Hernando
+ - temporary options to run the HLT muon, and hadron in the Tf
+
 ! 2007-12-03 - Chris Jones
  - Update RICH options (disabled by default)
 

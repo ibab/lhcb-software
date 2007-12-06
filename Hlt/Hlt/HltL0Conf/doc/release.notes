@@ -4,6 +4,9 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-12-06 - Jose A. Hernando
+ - PrepareMuonTSeedTool (tool from Sandra to deal with muon-segments)
+
 ! 2007-11-16 - Johannes Albrecht
 	Major update to the Tf framework, hit decoding is now done inside the PR tool 
 	(besides ITLiteCluster creation)

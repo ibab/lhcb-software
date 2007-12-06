@@ -5,6 +5,9 @@
 !----------------------------------------------------------------------------
 
 ! 2007-12-04 Jose A. Hernando
+	    - HltFunctions, adding functions for muon/dimuon alley
+
+! 2007-12-04 Jose A. Hernando
 	    - HltPrepareL0Muons to convert L0MuonCandidates into Tracks
 
 ! 2007-12-02 Jose A. Hernando
