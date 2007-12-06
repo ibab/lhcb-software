@@ -38,10 +38,12 @@ framework.
     (RichKernel v7r9, RichDet v10r8, RichRecBase v3r9, RichDAQ v3r13,
      RichTools v2r16, RichGlobalPID v2r14, RichRecTools v4r0,
      RichRecTrackTools v1r0, RichRecPhotonTools v1r0)
+  . New implementation of primary vertex fit (PatPV v3r1)
    
 - New functionality
   . Modify state filling in case fast momentum parameterization is used
     (TsaAlgorithms v3r2)
+  . In RealData.opts, add options for new MultiFileCatalog when reading MDF file
 
 - Monitoring changes
   . Many changes and improvements to Rich monitoring
