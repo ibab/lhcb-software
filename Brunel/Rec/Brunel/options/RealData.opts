@@ -37,9 +37,10 @@ PoolDbCacheSvc.Catalog = {
 };
 PoolDbCacheSvc.Dlls += { "LHCbKernelDict" };
 
-
-EventPersistencySvc.CnvServices     += {"LHCb::RawDataCnvSvc"};
-EventSelector.Input                  = {
+EventPersistencySvc.CnvServices += {"LHCb::RawDataCnvSvc"};
+ApplicationMgr.SvcOptMapping    += { "Gaudi::MultiFileCatalog/FileCatalog",
+                                     "Gaudi::IODataManager/IODataManager" };
+EventSelector.Input              = {
   "DATA='rfio:///castor/cern.ch/user/c/cattanem/Boole/v12r10/00001820_00000001_4.mdf' SVC='LHCb::MDFSelector'" 
 }; // MDF file produced with DAQ/MDF v2r6, starting from standard Brunel DST
 
