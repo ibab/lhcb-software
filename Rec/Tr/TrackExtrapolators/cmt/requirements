@@ -18,8 +18,9 @@ include_path      none
 use     GaudiAlg        v*
 use     GSL             v*     LCG_Interfaces
 
-use 	TrackEvent	v*     Event
-use     TrackInterfaces v*     Tr
+use	TrackEvent	v*	Event
+use	TrackFitEvent	v*	Tr
+use	TrackInterfaces	v*	Tr
 
 use     DetDesc         v*     Det
 
