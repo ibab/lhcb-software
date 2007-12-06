@@ -1,12 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : Calo/CaloDigit
-! Responsible : Olivier Callot
+! Responsible : Olivier Deschamps
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
-
+!======================== CaloDigit v2r5 2007-12-06 ==========================
 ! 2007-12-05 - Olivier Deschamps
- - adapt options/CaliBoole.opts to the change in CaloDAQ : writing pin-diode data in rawBank need to be explicitely requested.
+ - adapt options/CaliBoole.opts to the change in CaloDAQ : writing pin-diode data
+   in rawBank need to be explicitely requested.
 
 ! 2007-06-20 - Olivier Deschamps
  - protection against negative modulus in CaloSignalAlg

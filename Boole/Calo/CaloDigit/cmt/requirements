@@ -1,9 +1,9 @@
 #============================================================================
 # Created    : 2002-10-08
-# Maintainer : Olivier Callot
+# Maintainer : Olivier Deschamps
 #============================================================================
 package          CaloDigit
-version          v2r4
+version          v2r5
 
 #============================================================================
 # Structure, i.e. directories to process. 
