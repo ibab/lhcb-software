@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.22 2007-10-05 16:46:35 wouter Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.23 2007-12-06 13:34:25 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -103,7 +103,7 @@ StatusCode TrackHerabExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   if( istat != 0 ) {
     Warning( "Runga kutta: transport impossible ", StatusCode::FAILURE, 1 );
     if (istat == 1) Warning( "curling track", StatusCode::FAILURE, 1 );
-    *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );  
+    if (transMat) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );  
     return StatusCode::FAILURE;
   }
 
