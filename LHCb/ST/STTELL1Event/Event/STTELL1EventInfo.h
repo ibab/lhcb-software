@@ -42,7 +42,7 @@ namespace LHCb
    * Event info from a TELL1 board 
    *
    * @author Mathias Knecht
-   * created Fri Oct 19 09:57:59 2007
+   * created Thu Dec  6 16:53:51 2007
    * 
    */
 

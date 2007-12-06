@@ -1,0 +1,544 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+
+<gdd>
+  <package name='STTELL1Event'>
+  <!-- location = address in TES -->
+  <!-- classId = identifier -->
+    <class name='STTELL1Error'
+	   id='9011' 
+	   author='Mathias Knecht' 
+	   desc='Error info from one PP-FPGA for a TELL1 board'
+           serializers = 'FALSE'>
+   <base name='KeyedObject&lt; int &gt; '/>
+   <location name="TTError"   place="Raw/TT/Error"   />
+   <location name="ITError"   place="Raw/IT/Error"   />
+      <attribute
+       type    = 'bitfield'
+       name    = 'word0'
+       desc    = 'Word 0 of Error block'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'short'
+         name      = 'BCnt'
+         length    = '12'
+         desc      = 'Bunch counter'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+          <bitfield
+         type      = 'unsigned char'
+         name      = 'DetectorID'
+         length    = '4'
+         desc      = 'ID of the sub-detector'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+         <bitfield
+         type      = 'unsigned char'
+         name      = 'BankList'
+         length    = '8'
+         desc      = 'List of the Banks sent by the TELL1 (Internal use)'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+         <bitfield
+         type      = 'unsigned char'
+         name      = 'EventInformation'
+         length    = '8'
+         desc      = 'For internal use'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+       	</attribute>
+ 	   
+      <attribute
+       type    = 'bitfield'
+       name    = 'word1'
+       desc    = 'Word 1 of Error block'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'int'
+         name      = 'L0EvID'
+         length    = '32'
+         desc      = 'L0 Event ID'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+         </attribute>
+      <attribute
+       type    = 'bitfield'
+       name    = 'word2'
+       desc    = 'Word 2 of Error block'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'short'
+         name      = 'ADC1'
+         length    = '16'
+         desc      = 'ADC data section lenght'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'short'
+         name      = 'Clust1'
+         length    = '16'
+         desc      = 'Cluster data section lenght'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        
+        </attribute>
+     <attribute
+       type    = 'bitfield'
+       name    = 'word3'
+       desc    = 'Word 3 of Error block'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'short'
+         name      = 'NumClusters'
+         length    = '16'
+         desc      = 'Number of clusters'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'PCN'
+         length    = '8'
+         desc      = 'PCN from Beetle 0'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'ProcessInfo'
+         length    = '8'
+         desc      = 'Indicates what processing has been applied'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+    
+	</attribute>
+     <attribute
+       type    = 'bitfield'
+       name    = 'word4'
+       desc    = 'Word 4 of Error block'
+       init    = '0'
+       access  = 'PUBLIC'>
+         <bitfield
+         type      = 'unsigned char'
+         name      = 'EmptyVal0'
+         length    = '8'
+         desc      = 'Empty value, should be 0x00'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'EmptyVal1'
+         length    = '8'
+         desc      = 'Empty value, should be 0x8E'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+      <bitfield
+         type      = 'short'
+         name      = 'ErrorBankLenght'
+         length    = '16'
+         desc      = 'Indicates if an error occured. Without error, value is 0x0, with an error value is 0x14'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+
+	</attribute>
+     <attribute
+       type    = 'bitfield'
+       name    = 'word5'
+       desc    = 'Word 5 of Error block=Word 3 of Event Info block if Error Bank lenght is 0x14'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'OptLnkNoEvt'
+         length    = '6'
+         desc      = 'Indicates that no data has been received, one bit per link'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'OptLnkDisable'
+         length    = '6'
+         desc      = 'Indicates if link is disabled by ECS, one bit per link'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'SyncEvtSizeError'
+         length    = '6'
+         desc      = 'Set if more or less than 35 words are sent paer event (one bit per link)'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+    
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'TLKLnkLoss'
+         length    = '6'
+         desc      = 'Error on reception, bit set if the link is not plugged (one bit per link)'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'SyncRAMFull'
+         length    = '6'
+         desc      = 'Overflow on input sync RAM (one bit per link)'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'ChipAddr'
+         length    = '2'
+         desc      = 'Address of the PP-FPGA (between 0 and 3)'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+	</attribute>
+
+     <attribute
+       type    = 'bitfield'
+       name    = 'word6'
+       desc    = 'Word 6 of Error block=Word 4 of Event Info block if Error Bank lenght is 0x14'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'int'
+         name      = 'HeaderPseudoError'
+         length    = '24'
+         desc      = 'Indicates if the ADC value is between low and high thresholds, one per Analog Link'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'OptLnkNoClock'
+         length    = '6'
+         desc      = 'Indicates if no clock is received, one bit per link'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'PCNError'
+         length    = '1'
+         desc      = 'Indocates if the PCN among the links are not equal'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+    
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'R2'
+         length    = '1'
+         desc      = 'Reserved bit for later use'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+	</attribute>
+     <attribute
+       type    = 'bitfield'
+       name    = 'word7'
+       desc    = 'Word 7 of Error block=Word 5 of Event Info block if Error Bank lenght is 0x14'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'PCNBeetle0'
+         length    = '8'
+         desc      = 'PCN of the Beetle 0'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'PCNBeetle1'
+         length    = '8'
+         desc      = 'PCN of the Beetle 1'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+	 <bitfield
+         type      = 'unsigned char'
+         name      = 'PCNBeetle2'
+         length    = '8'
+         desc      = 'PCN of the Beetle 2'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+	 <bitfield
+         type      = 'unsigned char'
+         name      = 'PCNBeetle3'
+         length    = '8'
+         desc      = 'PCN of the Beetle 3'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+	
+	</attribute>
+
+
+
+
+
+
+     <attribute
+       type    = 'bitfield'
+       name    = 'word8'
+       desc    = 'Word 8 of Error block=Word 6 of Event Info block if Error Bank lenght is 0x14'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'PCNBeetle4'
+         length    = '8'
+         desc      = 'PCN of the Beetle 4'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'PCNBeetle5'
+         length    = '8'
+         desc      = 'PCN of the Beetle 5'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+	 <bitfield
+         type      = 'short'
+         name      = 'R3'
+         length    = '16'
+         desc      = 'Reserved bits for later use =0x8B8B'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+	 
+	
+	</attribute>
+      <attribute
+       type    = 'bitfield'
+       name    = 'word9'
+       desc    = 'Word 9 of Error block=Word 7 of Event Info block if Error Bank lenght is 0x14'
+       init    = '0'
+       access  = 'PUBLIC'>
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'IHeaderBeetle0'
+         length    = '4'
+         desc      = 'I Header of the Beetle 0'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'IHeaderBeetle1'
+         length    = '4'
+         desc      = 'I Header of the Beetle 1'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'IHeaderBeetle2'
+         length    = '4'
+         desc      = 'I Header of the Beetle 2'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'IHeaderBeetle3'
+         length    = '4'
+         desc      = 'I Header of the Beetle 3'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'IHeaderBeetle4'
+         length    = '4'
+         desc      = 'I Header of the Beetle 4'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'IHeaderBeetle5'
+         length    = '4'
+         desc      = 'I Header of the Beetle 5'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+       <bitfield
+         type      = 'unsigned char'
+         name      = 'R4'
+         length    = '8'
+         desc      = 'Reserved bits for later use'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+ 
+	
+	</attribute>  
+	    <attribute
+       type    = 'bitfield'
+       name    = 'word10'
+       desc    = 'Word 10 of Error block'
+       init    = '0'
+       access  = 'PUBLIC'>
+         <bitfield
+         type      = 'unsigned char'
+         name      = 'EmptyVal2'
+         length    = '8'
+         desc      = 'Empty value, should be 0x01'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'EmptyVal3'
+         length    = '8'
+         desc      = 'Empty value, should be 0x8E'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+
+       <bitfield
+         type      = 'short'
+         name      = 'Clust2'
+         length    = '16'
+         desc      = 'Cluster data section lenght'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+
+	</attribute>
+	
+	
+
+	
+	    <attribute
+       type    = 'bitfield'
+       name    = 'word11'
+       desc    = 'Word 11 of Error block'
+       init    = '0'
+       access  = 'PUBLIC'>
+         <bitfield
+         type      = 'unsigned char'
+         name      = 'EmptyVal4'
+         length    = '8'
+         desc      = 'Empty value, should be 0x02'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'EmptyVal5'
+         length    = '8'
+         desc      = 'Empty value, should be 0x8E'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+
+  	      <bitfield
+         type      = 'short'
+         name      = 'ADC2'
+         length    = '16'
+         desc      = 'ADC data section lenght'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 
+	
+	</attribute>
+	
+	
+	
+	    <attribute
+       type    = 'bitfield'
+       name    = 'word12'
+       desc    = 'Word 12 of Error block'
+       init    = '0'
+       access  = 'PUBLIC'>
+         <bitfield
+         type      = 'unsigned char'
+         name      = 'EmptyVal6'
+         length    = '8'
+         desc      = 'Empty value, should be 0x03'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'EmptyVal7'
+         length    = '8'
+         desc      = 'Empty value, should be 0x8E'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+
+  	      <bitfield
+         type      = 'short'
+         name      = 'NZS'
+         length    = '16'
+         desc      = 'NZS bank lenght'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 	
+	
+	</attribute>
+	
+	
+	    <attribute
+       type    = 'bitfield'
+       name    = 'word13'
+       desc    = 'Word 13 of Error block'
+       init    = '0'
+       access  = 'PUBLIC'>
+         <bitfield
+         type      = 'unsigned char'
+         name      = 'EmptyVal8'
+         length    = '8'
+         desc      = 'Empty value, should be 0x04'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+        <bitfield
+         type      = 'unsigned char'
+         name      = 'EmptyVal9'
+         length    = '8'
+         desc      = 'Empty value, should be 0x8E'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+
+  	      <bitfield
+         type      = 'short'
+         name      = 'PED'
+         length    = '16'
+         desc      = 'Pedestal bank lenght'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' /> 	
+	</attribute>
+	
+	
+	 </class>
+  </package>
+</gdd>

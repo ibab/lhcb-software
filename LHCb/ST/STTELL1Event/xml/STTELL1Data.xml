@@ -64,6 +64,7 @@
         type ='Data'
         name = 'data'
         desc = 'vector of raw data'
+        nonconstaccessor = 'TRUE'
       /> 
       
        <attribute 

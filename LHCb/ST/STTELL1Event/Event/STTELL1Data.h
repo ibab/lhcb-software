@@ -56,7 +56,7 @@ namespace LHCb
    * ADCs from a TELL1 board 
    *
    * @author Matthew Needham
-   * created Tue Oct 23 11:16:59 2007
+   * created Thu Dec  6 16:53:50 2007
    * 
    */
 
@@ -102,6 +102,9 @@ namespace LHCb
   
     /// Retrieve const  vector of raw data
     const Data& data() const;
+  
+    /// Retrieve  vector of raw data
+    Data& data();
   
     /// Update  vector of raw data
     void setData(const Data& value);
@@ -195,6 +198,11 @@ inline const CLID& LHCb::STTELL1Data::classID()
 }
 
 inline const LHCb::STTELL1Data::Data& LHCb::STTELL1Data::data() const 
+{
+  return m_data;
+}
+
+inline LHCb::STTELL1Data::Data& LHCb::STTELL1Data::data() 
 {
   return m_data;
 }

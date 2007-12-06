@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+
+<gdd>
+  <package name='STTELL1Event'>
+  <!-- location = address in TES -->
+  <!-- classId = identifier -->
+   
+    <class name='STTELL1BoardErrorBank'
+	   id='9010' 
+	   author='Mathias Knecht' 
+	   desc='Error Bank from a Tell1 board'
+           serializers = 'FALSE'>
+      <base name='KeyedObject&lt; int &gt; '/>  
+      <location name="TTErrorTELL1"   place="Raw/TT/ErrorTELL1"   />
+      <location name="ITErrorTELL1"   place="Raw/IT/ErrorTELL1"   />
+      
+      &KeyedContainer;
+      
+      <import name='Event/STTELL1Error' />
+     
+      
+      <typedef desc = "Vector of STTELL1Error typedef"
+       type =  "SmartRefVector&lt;LHCb::STTELL1Error&gt;"
+       def = "Error"
+       access = "PUBLIC " />
+       
+       
+       
+       
+ <!--  
+      <constructor
+        desc = 'constructor with arguments'
+        argList = 'Data data'
+        initList = 'm_data(data)'>
+      </constructor> -->
+
+  
+      
+       <relation 
+       name="errorInfo" 
+       multiplicity="M" 
+       type="LHCb::STTELL1Error"
+       desc= "Vector of 4 Error Info (1 per PP)"
+       />
+   
+      
+    
+      
+      
+      <method type = 'unsigned int'
+      	      name = 'Tell1ID'
+	      desc = 'Returns the Tell1D id'
+	      const = 'TRUE'> 
+      <code>  return key();
+      </code>
+      </method>
+      
+    
+
+    </class>   
+ 
+  </package>
+</gdd>
