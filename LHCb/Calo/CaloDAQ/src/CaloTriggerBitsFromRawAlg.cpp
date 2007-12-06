@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRawAlg.cpp,v 1.7 2007-06-06 14:25:11 cattanem Exp $
+// $Id: CaloTriggerBitsFromRawAlg.cpp,v 1.8 2007-12-06 09:31:25 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -27,6 +27,8 @@ CaloTriggerBitsFromRawAlg::CaloTriggerBitsFromRawAlg( const std::string& name,
 {
   declareProperty("OutputData"  , m_outputData  );  
   declareProperty( "Extension"  ,  m_extension = "" );
+  declareProperty( "StatusOnTES"   , m_statusOnTES = true);
+  
 
   m_toolType  = "CaloTriggerBitsFromRaw";
   m_toolName = name + "Tool";
@@ -74,6 +76,9 @@ StatusCode CaloTriggerBitsFromRawAlg::execute() {
   else {
     l0Cells = m_l0BitTool->spdCells();
   }
+  if(m_statusOnTES)m_l0BitTool->putStatusOnTES();
+  
+
   std::vector<LHCb::CaloCellID>::const_iterator iCell;
   for( iCell = l0Cells.begin(); l0Cells.end() != iCell ; ++iCell ) {
     LHCb::L0PrsSpdHit* l0Bit = new LHCb::L0PrsSpdHit( *iCell );

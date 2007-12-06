@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.8 2007-06-06 14:25:11 cattanem Exp $
+// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.9 2007-12-06 09:31:25 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,8 @@ CaloTriggerAdcsFromRawAlg::CaloTriggerAdcsFromRawAlg( const std::string& name,
   declareProperty("OutputData"  , m_outputData  );  
   declareProperty( "Extension"  ,  m_extension = "" );
   declareProperty( "PinContainer"  ,  m_pinContainer );
+  declareProperty( "StatusOnTES"   , m_statusOnTES = true);
+  
 
   m_toolType = "CaloTriggerAdcsFromRaw";  
   m_toolName  = name + "Tool";  
@@ -70,6 +72,9 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
 
   //*** get the input data from Raw and fill the output container
   std::vector<LHCb::L0CaloAdc>& l0Adcs = m_l0AdcTool->adcs( );
+  if(m_statusOnTES)m_l0AdcTool->putStatusOnTES();
+
+
   std::vector<LHCb::L0CaloAdc>::const_iterator il0Adc;
   for( il0Adc = l0Adcs.begin(); l0Adcs.end() != il0Adc ; ++il0Adc ) {
     LHCb::L0CaloAdc* adc = new LHCb::L0CaloAdc( (*il0Adc).cellID(), (*il0Adc).adc() );

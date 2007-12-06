@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.8 2007-06-12 20:24:32 odescham Exp $
+// $Id: CaloZSupAlg.cpp,v 1.9 2007-12-06 09:31:25 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -34,6 +34,7 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("ZsupThreshold"   , m_zsupThreshold      ) ;
   declareProperty("OutputType"      , m_outputType = "Digits"  ) ;
   declareProperty( "Extension"  ,  m_extension = "" );
+  declareProperty( "StatusOnTES"   , m_statusOnTES = true);
 
 
 
@@ -144,6 +145,7 @@ StatusCode CaloZSupAlg::execute() {
   //*** get the input data
 
   std::vector<LHCb::CaloAdc>& adcs = m_adcTool->adcs( );
+  if(m_statusOnTES)m_adcTool->putStatusOnTES();
 
   //***  prepare the output containers
   LHCb::CaloAdcs* newAdcs=0;

@@ -4,6 +4,25 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+
+! 2007-12-04 - Olivier Deschamps
+ - Fix bug in decoding Prs/Spd TELL1 format. Related to the treatment of 'half-board' (i.e. 32 valid channels/64)
+   DOES NO affect MC data simulated so far where non-valid channels are not simulated anyway 
+      -> only visible on real TELL1 data
+ - add a new decoding tool & interface : (I)CaloL0DataProvider (same as CaloDataProvider for 8-bit L0-Adc)
+ - better handling of corrupted/missing bank : 
+      - additional checks and improved printout in decoding tools
+      - No longer clear the whole data container  in case of partial inconsistency of data with the readout structure defined in condDB 
+      - Add the possibility to only remove the most likely corrupted data, i.e. the latest readout FEB data, via options
+          default : keep the doubful data
+      - Fill DAQEvent/RawBankReadoutStatus objects in decoding tools (new version of ICaloReadout interface)
+      - Put RawBankReadoutStatus on TES for later usage in decoding algorithms (property StatusOnTES - default = true)
+
+ - CaloFillRawBuffer : add PIN-FEB data only when requested (FillWithPin new property - default=false)
+                       -> No longer PIN-FEB header in Bank when no PIN data
+
+  
+
 !========================== CaloDAQ v4r1 2007-11-02 ==========================
 ! 2007-10-16 - Olivier Deschamps
  - Fix bug in CaloDataProvider.cpp

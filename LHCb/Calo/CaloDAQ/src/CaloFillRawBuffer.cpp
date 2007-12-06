@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.cpp,v 1.15 2007-06-06 14:25:11 cattanem Exp $
+// $Id: CaloFillRawBuffer.cpp,v 1.16 2007-12-06 09:31:24 odescham Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -45,6 +45,7 @@ CaloFillRawBuffer::CaloFillRawBuffer( const std::string& name,
 
   declareProperty( "DataCodingType",   m_dataCodingType = 1 );
   declareProperty( "InputBank",        m_inputBank          );
+  declareProperty( "FillWithPin",        m_pin   =false     );
 }
 //=============================================================================
 // Destructor
@@ -229,6 +230,7 @@ void CaloFillRawBuffer::fillPackedBank ( ) {
     std::vector<int> feCards = m_calo->tell1ToCards( kTell1 );
     for ( std::vector<int>::iterator iFe = feCards.begin(); feCards.end() != iFe; ++iFe ) {
       int cardNum = *iFe;
+      if(m_calo->isPinCard(cardNum) && !m_pin)continue; // No sub-bank for PIN-FEB if not explicitely requested
       int sizeIndex  = m_banks[kTell1].size();
       m_banks[kTell1].push_back( m_calo->cardCode( cardNum ) << 14 );
       std::vector<LHCb::CaloCellID> ids = m_calo->cardChannels( cardNum );

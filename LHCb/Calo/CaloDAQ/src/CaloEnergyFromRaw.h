@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.h,v 1.8 2007-08-06 21:31:48 odescham Exp $
+// $Id: CaloEnergyFromRaw.h,v 1.9 2007-12-06 09:31:24 odescham Exp $
 #ifndef CALOENERGYFROMRAW_H 
 #define CALOENERGYFROMRAW_H 1
 
@@ -34,6 +34,7 @@ public:
   virtual std::vector<LHCb::CaloDigit>& digits( LHCb::RawBank* bank );// decode a single bank
   virtual std::vector<LHCb::CaloDigit>& digits(  int source );// decode a single Tell1 bank  
   virtual void clear();
+  virtual void cleanData(int feb);
   
   
 protected:

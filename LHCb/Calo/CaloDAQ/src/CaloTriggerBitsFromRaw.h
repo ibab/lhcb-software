@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.h,v 1.6 2007-08-06 21:31:49 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.h,v 1.7 2007-12-06 09:31:25 odescham Exp $
 #ifndef CALOTRIGGERBITSFROMRAW_H 
 #define CALOTRIGGERBITSFROMRAW_H 1
 
@@ -32,6 +32,7 @@ public:
   virtual LHCb::Calo::PrsSpdFiredCells& prsSpdCells(int source ); // get FiredCells for a single bank
   virtual LHCb::Calo::PrsSpdFiredCells& prsSpdCells( LHCb::RawBank* bank ); // get FiredCells for a single bank
   virtual void clear();
+  virtual void cleanData(int feb);
   
 protected:
   bool getData( LHCb::RawBank* bank );

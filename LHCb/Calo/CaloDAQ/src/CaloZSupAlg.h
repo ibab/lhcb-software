@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.h,v 1.4 2007-02-22 23:39:52 odescham Exp $ 
+// $Id: CaloZSupAlg.h,v 1.5 2007-12-06 09:31:25 odescham Exp $ 
 #ifndef   CALODIGIT_CALOZSUPALG_H
 #define   CALODIGIT_CALOZSUPALG_H 1
 
@@ -57,6 +57,7 @@ private:
   DeCalorimeter*         m_calo;    ///< Detector element pointer
   ICaloEnergyFromRaw*    m_adcTool; ///< acces to adcs in Raw buffer
   int         m_numberOfCells     ; ///< Number of cells of this detector.
+  bool m_statusOnTES;
 };
 
 

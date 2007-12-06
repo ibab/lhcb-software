@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.h,v 1.6 2007-02-22 23:39:52 odescham Exp $
+// $Id: CaloFillRawBuffer.h,v 1.7 2007-12-06 09:31:24 odescham Exp $
 #ifndef CALOFILLRAWBUFFER_H 
 #define CALOFILLRAWBUFFER_H 1
 
@@ -54,5 +54,7 @@ private:
   int m_nbEvents;
   std::vector< std::vector<unsigned int> > m_banks;
   std::vector< std::vector<unsigned int> > m_trigBanks;
+  bool m_pin;
+  
 };
 #endif // CALOFILLRAWBUFFER_H

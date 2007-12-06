@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.17 2007-08-06 21:31:48 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.18 2007-12-06 09:31:25 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -58,6 +58,28 @@ void CaloTriggerBitsFromRaw::clear( ) {
   (m_data.first).clear();
   (m_data.second).clear();
 }
+
+void CaloTriggerBitsFromRaw::cleanData(int feb ) {
+  if(feb<0)return;
+  LHCb::Calo::FiredCells& prs = m_data.first;
+  LHCb::Calo::FiredCells& spd = m_data.second;
+  LHCb::Calo::FiredCells tempPrs ;
+  LHCb::Calo::FiredCells tempSpd ;
+  for(LHCb::Calo::FiredCells::iterator ispd = spd.begin();ispd != spd.end();++ispd){
+    if( m_calo->cellParam( *ispd ).cardNumber() == feb)continue;  
+    tempSpd.push_back( *ispd );
+  }  
+  for(LHCb::Calo::FiredCells::iterator iprs = prs.begin();iprs!=prs.end();++iprs){
+    if( m_calo->cellParam( *iprs ).cardNumber() == feb)continue;  
+    tempPrs.push_back( *iprs );
+  }  
+  clear();
+  m_data = std::make_pair(tempPrs,tempSpd);
+}
+
+
+
+
 //=========================================================================
 //  Return prs or spd cells independently
 //  Warning if both method are invoqued consecutively 
@@ -98,14 +120,10 @@ LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (int source ) 
       if( source >= 0 && source != sourceID )continue;
       found = true;
       decoded = getData ( *itB );
-      if( !decoded ) break;
+      if( !decoded )error() << " Error when decoding bank " << sourceID  << " -> incomplete data - May be corrupted" <<endreq;
     } 
   }
   if( !found )warning() << "rawBank sourceID : " << source << " has not been found" << endreq;
-  else if( !decoded ){
-    error() << " Error when decoding bank " << sourceID  << " -> return empty data" <<endreq;
-    clear();
-  }
   return m_data;
 }
 
@@ -123,11 +141,15 @@ LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (  LHCb::RawBa
 //  Main decoding method fill both m_prsCells and m_spdCells containers.
 //=========================================================================
 bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
+  if(NULL == bank)return false;
   unsigned int* data = bank->data();
   int size           = bank->size()/4;  // size in byte
   int version        = bank->version();
   int sourceID       = bank->sourceID();
   int lastData       = 0;
+
+  if(0 == size)m_status.addStatus( sourceID, LHCb::RawBankReadoutStatus::Empty);
+
   if ( msgLevel( MSG::DEBUG) )debug() << "Decode bank " << bank << " source " << sourceID 
                                       << " version " << version << " size " << size << endreq;
   
@@ -166,7 +188,6 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
                     << " |  valid ? " << m_calo->valid(id)
                     << " |  Prs/Spd  = " << (prsData & 1) << "/" << (spdData & 1) << endreq;
           }
-
           spdData = spdData >> 1;
           prsData = prsData >> 1;
         }
@@ -214,6 +235,8 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
     int offset   = 0;
     int lenAdc   = 0;
     int lenTrig  = 0;
+
+    int prevCard = -1;
     while( 0 != size ) {
       int word = *data++;
       size--;
@@ -225,7 +248,16 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
                 << endreq;
       }
       int code  = (word >>14 ) & 0x1FF;
-      debug() << "Read FE-board ["<< code << "] linked to TELL1 bank " << sourceID << endreq;      
+      int ctrl    = (word >> 23) &  0x1FF;
+      if ( msgLevel( MSG::DEBUG) )debug()<< "Control word :" << ctrl << endreq;
+      if( 0 != 0x1& ctrl || 0 != 0x20& ctrl || 0 != 0x40& ctrl){
+        warning() << "Tell1 error bits have been detected in data" << endreq;
+        if( 0 != 0x1  & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Error );
+        if( 0 != 0x20 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Sync  );      
+        if( 0 != 0x40 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Link  );
+      }
+      
+      if ( msgLevel( MSG::DEBUG) )debug() << "Read FE-board ["<< code << "] linked to TELL1 bank " << sourceID << endreq;      
       // access chanID via condDB
       std::vector<LHCb::CaloCellID> chanID  ;
       // look for the FE-Card in the Tell1->cards vector
@@ -236,8 +268,12 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
       }else{
         error() << " FE-Card w/ [code : " << code << "] not associated with TELL1 bank " << sourceID
                 << " in condDB :  Cannot read that bank" << endreq;
+        error() << "Warning : previous data may be corrupted" << endreq;
+        if(m_cleanCorrupted)cleanData(prevCard);
+        m_status.addStatus( sourceID,   LHCb::RawBankReadoutStatus::Corrupted || LHCb::RawBankReadoutStatus::Incomplete);
         return false;
       }
+      prevCard = card;
 
       // Process FE-data decoding
       offset   = 32;      
@@ -247,19 +283,21 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
           size--;
           offset = 0;
         }
-        int num   = ( lastData >> offset ) & 0x3F;
+        unsigned int num   = ( lastData >> offset ) & 0x3F;
         int isPrs = ( lastData >> (offset +6)) & 1;
         int isSpd = ( lastData >> (offset +7)) & 1;
         offset += 8;
         lenTrig--;
-        LHCb::CaloCellID id =  chanID[ num ];
+
+        LHCb::CaloCellID id = LHCb::CaloCellID();
+        if(num < chanID.size())id= chanID[ num ];
 
 
         // event dump
         if ( msgLevel( MSG::DEBUG) ) {
           debug() << " |  SourceID : " << sourceID
                   << " |  FeBoard : " << code 
-            //<< " |  Channel : " << bitNum
+                  << " |  Channel : " << num
                   << " |  CaloCell " << id
                   << " |  valid ? " << m_calo->valid(id)
                   << " |  Prs/Spd  = " << isPrs << "/" << isSpd << endreq;
@@ -277,7 +315,7 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
       data     += nSkip;
     } //== DataSize
     // Check All cards have been read
-    checkCards(nCards,feCards);
+    if(!checkCards(nCards,feCards))m_status.addStatus(sourceID, LHCb::RawBankReadoutStatus::Incomplete);
   } //== versions
   
   

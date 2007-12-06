@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.h,v 1.5 2007-02-22 23:39:52 odescham Exp $
+// $Id: CaloDigitsFromRaw.h,v 1.6 2007-12-06 09:31:24 odescham Exp $
 #ifndef CALOEVENT_CALODIGITSFROMRAW_H 
 #define CALOEVENT_CALODIGITSFROMRAW_H 1
 
@@ -13,6 +13,7 @@
 #include "GaudiAlg/ISequencerTimerTool.h"
 #include "CaloDet/DeCalorimeter.h"
 #include "Event/RawEvent.h"
+#include "Event/RawBankReadoutStatus.h"
 
 /** @class CaloDigitsFromRaw CaloDigitsFromRaw.h component/CaloDigitsFromRaw.h
  *  Create the CaloDIgits containers from the Raw buffer
@@ -64,6 +65,6 @@ private:
   std::string m_outputDigits;
   std::string m_outputADCs;
   DeCalorimeter* m_calo;
-  
+  bool m_statusOnTES;  
 };
 #endif // CALOEVENT_CALODIGITSFROMRAW_H

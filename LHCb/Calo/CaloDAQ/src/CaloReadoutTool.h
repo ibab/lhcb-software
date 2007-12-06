@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.1 2007-08-06 21:31:48 odescham Exp $
+// $Id: CaloReadoutTool.h,v 1.2 2007-12-06 09:31:25 odescham Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -8,6 +8,10 @@
 // from LHCb
 #include "CaloDAQ/ICaloReadoutTool.h"
 #include "CaloDet/DeCalorimeter.h"
+
+
+
+
 
 
 /** @class CaloReadoutTool CaloReadoutTool.h CaloDAQ/CaloReadoutTool.h
@@ -46,11 +50,16 @@ public:
     m_banks = bank;
   };
   virtual void clear(){return;}; // to be implemented in the parent tool
+  virtual void cleanData(int ){return; } ;// to be implemented in the parent tool
+  virtual LHCb::RawBankReadoutStatus status(){return m_status;};
+  virtual void putStatusOnTES();
+  
 
 protected:
   bool getCaloBanksFromRaw();
   int findCardbyCode(std::vector<int> feCards, int code );
-  void checkCards(int nCards, std::vector<int> feCards );
+  bool checkCards(int nCards, std::vector<int> feCards );
+
   std::string  m_detectorName;
   bool m_packedIsDefault; 
   const std::vector<LHCb::RawBank*>* m_banks;
@@ -61,6 +70,8 @@ protected:
   std::string m_raw;
   bool m_extraHeader;
   bool m_packed;
+  bool m_cleanCorrupted;
+  LHCb::RawBankReadoutStatus m_status;
 private:
 };
 #endif // CALODAQ_CALOREADOUTTOOL_H

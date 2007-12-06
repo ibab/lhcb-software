@@ -26,6 +26,7 @@ public:
 
   virtual StatusCode initialize();
   virtual void clear();
+  virtual void cleanData(int feb);
   virtual int    adc(LHCb::CaloCellID id);
   virtual double digit(LHCb::CaloCellID id);
   virtual unsigned int nTell1s(){return m_tell1s;};

@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.11 2007-06-12 20:24:32 odescham Exp $
+// $Id: CaloDigitsFromRaw.cpp,v 1.12 2007-12-06 09:31:24 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -30,6 +30,7 @@ CaloDigitsFromRaw::CaloDigitsFromRaw( const std::string& name,
   declareProperty( "Extension"  ,  m_extension = "" );
   declareProperty( "OutputType" , m_outputType = "Digits"  ) ;
   declareProperty( "PinContainer"  ,  m_pinContainerName );
+  declareProperty( "StatusOnTES"   , m_statusOnTES = true);
   m_digitOnTES =false  ;
   m_adcOnTES =false  ;
 }
@@ -126,6 +127,7 @@ void CaloDigitsFromRaw::convertSpd ( std::string containerName,
                                      double energyScale ) {
 
   LHCb::Calo::FiredCells spdCells = m_spdTool->spdCells( );
+  if(m_statusOnTES)m_spdTool->putStatusOnTES();
 
   if(m_digitOnTES){
     LHCb::CaloDigits* digits = new LHCb::CaloDigits();
@@ -151,7 +153,8 @@ void CaloDigitsFromRaw::convertSpd ( std::string containerName,
     debug() << containerName << " CaloAdc container size " << adcs->size() << endreq;
   }
 
-}
+
+} 
 
 //=========================================================================
 //  Converts the standard calorimeter adc-energy
@@ -164,6 +167,9 @@ void CaloDigitsFromRaw::convertCaloEnergies ( std::string containerName ) {
     LHCb::CaloDigits* digits = new LHCb::CaloDigits();
     put( digits, containerName );
     std::vector<LHCb::CaloDigit>& allDigits = m_energyTool->digits( );
+    if(m_statusOnTES)m_energyTool->putStatusOnTES();
+
+
 
     for ( std::vector<LHCb::CaloDigit>::const_iterator itD = allDigits.begin();
           allDigits.end() != itD; ++itD ) {

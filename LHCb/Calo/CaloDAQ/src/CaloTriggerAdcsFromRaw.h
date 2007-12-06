@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.h,v 1.5 2007-08-06 21:31:48 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.h,v 1.6 2007-12-06 09:31:25 odescham Exp $
 #ifndef CALOTRIGGERADCSFROMRAW_H 
 #define CALOTRIGGERADCSFROMRAW_H 1
 
@@ -30,6 +30,7 @@ public:
   virtual std::vector<LHCb::L0CaloAdc>& adcs( LHCb::RawBank* bank);
   virtual std::vector<LHCb::L0CaloAdc>& pinAdcs( );
   virtual void clear();
+  virtual void cleanData(int feb);
 
 protected:
   bool getData ( LHCb::RawBank* bank );

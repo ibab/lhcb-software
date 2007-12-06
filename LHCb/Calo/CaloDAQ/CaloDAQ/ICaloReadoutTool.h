@@ -1,4 +1,4 @@
-// $Id: ICaloReadoutTool.h,v 1.1 2007-08-06 21:31:48 odescham Exp $
+// $Id: ICaloReadoutTool.h,v 1.2 2007-12-06 09:31:24 odescham Exp $
 #ifndef CALODAQ_ICALOREADOUTTOOL_H 
 #define CALODAQ_ICALOREADOUTTOOL_H 1
 
@@ -9,8 +9,9 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/RawEvent.h"
+#include "Event/RawBankReadoutStatus.h"
 
-static const InterfaceID IID_ICaloReadoutTool ( "ICaloReadoutTool", 1, 0 );
+static const InterfaceID IID_ICaloReadoutTool ( "ICaloReadoutTool", 2, 0 );
 
 /** @class ICaloReadoutTool ICaloReadoutTool.h CaloDAQ/ICaloReadoutTool.h
  *  
@@ -31,7 +32,9 @@ public:
   virtual bool getBanks()=0;
   virtual void setBanks(const std::vector<LHCb::RawBank*>* bank )=0;
   virtual void clear()=0;
-  
+  virtual void cleanData(int feb)=0;
+  virtual LHCb::RawBankReadoutStatus status()=0;
+  virtual void putStatusOnTES()=0;
   
 protected:
 

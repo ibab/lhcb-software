@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRawAlg.h,v 1.3 2007-02-22 23:39:52 odescham Exp $
+// $Id: CaloTriggerBitsFromRawAlg.h,v 1.4 2007-12-06 09:31:25 odescham Exp $
 #ifndef CALOTRIGGERBITSFROMRAWALG_H 
 #define CALOTRIGGERBITSFROMRAWALG_H 1
 
@@ -34,5 +34,6 @@ private:
   bool m_isPrs;
   ICaloTriggerBitsFromRaw*    m_l0BitTool;
   std::string m_extension;  
+  bool m_statusOnTES;
 };
 #endif // CALOTRIGGERBITSFROMRAWALG_H

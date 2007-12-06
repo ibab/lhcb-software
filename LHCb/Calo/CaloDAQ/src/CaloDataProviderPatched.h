@@ -32,6 +32,7 @@ public:
   virtual CaloVector<LHCb::CaloAdc>& adcs(int source=-1);
   virtual CaloVector<LHCb::CaloDigit>& digits(int source=-1);
   virtual void clear();
+  virtual void cleanData(int feb);
   
 protected:
   bool decodeCell(LHCb::CaloCellID id);
