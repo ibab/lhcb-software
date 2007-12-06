@@ -1,5 +1,11 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
+!------------------------------------------------------------------------
+
+!==================== VeloAssociators v2r3 2007-12-05 ===================
+! 2007-12-05 - Marco Cattaneo
+ - Remove obsolete VeloCluster2VeloDigitTool
+ - Remove obsolete file VeloAssociators_load.cpp
 
 !==================== VeloAssociators v2r2 2006-05-08 ===================
 ! 2006-05-08 - Marco Cattaneo
