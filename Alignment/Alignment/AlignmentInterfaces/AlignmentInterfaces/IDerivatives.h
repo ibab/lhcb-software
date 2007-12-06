@@ -1,6 +1,9 @@
 #ifndef IDERIVATIVES_H
 #define IDERIVATIVES_H 1
 
+// from std
+#include <vector>
+
 #include "GaudiKernel/IAlgTool.h"
 
 // from LHCb/Kernel:
