@@ -5,10 +5,11 @@
 // -------------
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/ToolHandle.h" 
 
 // from TrackInterfaces
 #include "TrackInterfaces/IMaterialLocator.h"
-
+#include "TrackInterfaces/IStateCorrectionTool.h"
 
 /** @class MaterialLocatorBase MaterialLocatorBase.h
  *  
@@ -29,6 +30,9 @@ public:
   
   /// intialize
   virtual StatusCode initialize();
+
+  /// finalize
+  virtual StatusCode finalize();
   
   /// Intersect a line with volumes in the geometry
   virtual size_t intersect( const Gaudi::XYZPoint&, const Gaudi::XYZVector&, 
@@ -37,7 +41,28 @@ public:
   /// Intersect a line with volumes in the geometry
   virtual size_t intersect( const Gaudi::XYZPoint& p, const Gaudi::XYZVector& v, 
 			    Intersections& intersepts) const ;
+
+  /// Intersect a trajectory with volumes in the geometry
+  virtual size_t intersect( const LHCb::ZTrajectory& traj, Intersections& intersepts ) const ;
+
+  /// Intersect a trajectory interpolated between two statevectors with volumes in the geometry
+  virtual size_t intersect( const LHCb::StateVector& origin, const LHCb::StateVector& target,
+			    Intersections& intersepts ) const ;
+
+  void computeMaterialCorrection(Gaudi::TrackSymMatrix& noise,
+				 Gaudi::TrackVector& delta,
+				 const IMaterialLocator::Intersections& intersepts,
+				 double zorigin,
+				 double ztarget,
+				 double momentum,
+				 LHCb::ParticleID pid) const ;
+  
 private:
+  size_t m_maxNumIntervals ;
+  double m_maxDeviation ;
+  ToolHandle<IStateCorrectionTool> m_scatteringtool;
+  ToolHandle<IStateCorrectionTool> m_dedxtool;
+  ToolHandle<IStateCorrectionTool> m_elecdedxtool;
 };
 
 #endif // TRACKEXTRAPOLATORS_TRACKMATERIALINTERSECTORBASE_H 
