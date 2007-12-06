@@ -1,4 +1,4 @@
-// $Id: IMaterialLocator.h,v 1.1 2007-05-17 05:47:51 wouter Exp $
+// $Id: IMaterialLocator.h,v 1.2 2007-12-06 14:50:17 wouter Exp $
 #ifndef TRACKINTERFACES_IMATERIALLOCATOR_H 
 #define TRACKINTERFACES_IMATERIALLOCATOR_H
 
@@ -7,10 +7,20 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
+// from LHCbKernel
+#include "Kernel/ParticleID.h"
+#include "Event/TrackTypes.h"
+
 // others
 #include "DetDesc/ILVolume.h"
 
 static const InterfaceID IID_IMaterialLocator ( "IMaterialLocator", 1, 0 );
+
+// forwarded
+namespace LHCb {
+  class StateVector ;
+  class ZTrajectory ;
+}
 
 /** @class IMaterialLocatorLocator
  *  
@@ -28,9 +38,11 @@ public:
   struct Intersection {
     double z1 ;
     double z2 ;
+    double tx ;
+    double ty ;
     const Material* material ;
   } ;
-
+  
   /// container of intersections
   typedef std::vector<Intersection> Intersections ;
     
@@ -42,9 +54,23 @@ public:
   virtual size_t intersect( const Gaudi::XYZPoint& p, const Gaudi::XYZVector& v, 
 			    Intersections& intersepts) const = 0  ;
   
+  /// Intersect a trajectory with volumes in the geometry
+  virtual size_t intersect( const LHCb::ZTrajectory& traj, Intersections& intersepts ) const = 0;
+
+  /// Intersect a trajectory interpolated between two statevectors with volumes in the geometry
+  virtual size_t intersect( const LHCb::StateVector& origin, const LHCb::StateVector& target,
+			    Intersections& intersepts ) const = 0 ;
+
   /// 
   /// virtual StatusCode process( const Trajectory& traj, TrackSymMatrix* noise, TrackVector* delta, bool upstream) const = 0 ;
-
+  virtual void computeMaterialCorrection(Gaudi::TrackSymMatrix& noise,
+					 Gaudi::TrackVector& delta,
+					 const Intersections& intersepts,
+					 double zorigin,
+					 double ztarget,
+					 double momentum,
+					 LHCb::ParticleID pid) const = 0 ;
+   
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IMaterialLocator ; }
   
