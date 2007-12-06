@@ -26,19 +26,19 @@ namespace LHCb
     
     // first add the states from the track.nodes(). make sure these
     // are ordered in increasing z.
-    TrackTraj::StateContainer statesfromnodes ;
+    StateContainer statesfromnodes ;
     statesfromnodes.reserve( track.nodes().size() ) ;
     if(!track.nodes().empty()) {
       if( track.nodes().front()->z() < track.nodes().back()->z() ) {
 	//nodes in right order
-	for(std::vector<Node*>::const_iterator it = track.nodes().begin() ;
+	for(LHCb::Track::NodeContainer::const_iterator it = track.nodes().begin() ;
 	    it != track.nodes().end(); ++it) 
-	  m_states.push_back( &((*it)->state() )) ;
+	  statesfromnodes.push_back( &((*it)->state() )) ;
       } else {
 	// nodes in wrong order
-	for(std::vector<Node*>::const_reverse_iterator it = track.nodes().rbegin() ;
+	for(LHCb::Track::NodeContainer::const_reverse_iterator it = track.nodes().rbegin() ;
 	    it != track.nodes().rend(); ++it) 
-	  m_states.push_back( &((*it)->state() )) ;
+	  statesfromnodes.push_back( &((*it)->state() )) ;
       }
     }
     
@@ -54,11 +54,47 @@ namespace LHCb
     init(magfieldsvc) ;
   }
   
+  TrackTraj::TrackTraj(const LHCb::Track::NodeContainer& nodes, const IMagneticFieldSvc* magfieldsvc)
+    : ZTrajectory(), m_bfield(0,0,0)
+  {
+    // the sorting takes a lot of time. therefore, we rely on the fact
+    // that nodes and states in a track are already sorted. 
+    
+    // first add the states from the track.nodes(). make sure these
+    // are ordered in increasing z.
+    if(!nodes.empty()) {
+      m_states.reserve( nodes.size() ) ;
+      if( nodes.front()->z() < nodes.back()->z() ) {
+	//nodes in right order
+	for(LHCb::Track::NodeContainer::const_iterator it = nodes.begin() ;
+	    it != nodes.end(); ++it) 
+	  m_states.push_back( &((*it)->state() )) ;
+      } else {
+	// nodes in wrong order
+	for(LHCb::Track::NodeContainer::const_reverse_iterator it = nodes.rbegin() ;
+	    it != nodes.rend(); ++it) 
+	  m_states.push_back( &((*it)->state() )) ;
+      }
+    }
+    
+    // check states and initialize cache
+    init(magfieldsvc) ;
+  }
+  
   TrackTraj::TrackTraj(const TrackTraj::StateContainer& states, const IMagneticFieldSvc* magfieldsvc)
     : ZTrajectory(),m_states(states), m_bfield(0,0,0)
   {
     // sort
     std::sort(m_states.begin(), m_states.end(),compareStateZ) ;
+    // check states and initialize cache
+    init(magfieldsvc) ;
+  }
+  
+  TrackTraj::TrackTraj(const LHCb::Track::StateContainer& states, const IMagneticFieldSvc* magfieldsvc)
+    : ZTrajectory(), m_bfield(0,0,0)
+  {
+    // insert
+    m_states.insert(m_states.begin(),states.begin(),states.end()) ;
     // check states and initialize cache
     init(magfieldsvc) ;
   }
