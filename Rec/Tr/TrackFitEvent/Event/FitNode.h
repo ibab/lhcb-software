@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.22 2007-11-30 14:15:24 wouter Exp $
+// $Id: FitNode.h,v 1.23 2007-12-06 14:43:32 wouter Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -42,9 +42,6 @@ namespace LHCb
     /// Constructor from a Measurement
     FitNode(Measurement& meas );
 
-    /// Copy constructor
-    FitNode( const FitNode& rhs );
-
     /// Destructor
     virtual ~FitNode();
 
@@ -61,6 +58,9 @@ namespace LHCb
 
     /// retrieve noise matrix
     const Gaudi::TrackSymMatrix& noiseMatrix() const { return m_noiseMatrix; }
+
+    /// retrieve noise matrix
+    Gaudi::TrackSymMatrix& noiseMatrix() { return m_noiseMatrix; }
 
     /// set transport matrix
     void setTransportMatrix( const Gaudi::TrackMatrix& transportMatrix ) {
@@ -142,11 +142,18 @@ namespace LHCb
     /// retrieve the residual of the reference
     double refResidual() const { return m_refResidual ; }
     
+    /// set the delta-energy
+    void setDeltaEnergy( double e) { m_deltaEnergy = e; }
+
+    /// get the delta-energy
+    double deltaEnergy() const { return m_deltaEnergy ; }
+    
   private:
 
-    Gaudi::TrackMatrix    m_transportMatrix;    ///< transport matrix
-    Gaudi::TrackVector    m_transportVector;    ///< transport vector
-    Gaudi::TrackSymMatrix m_noiseMatrix;        ///< noise matrix
+    Gaudi::TrackMatrix    m_transportMatrix;    ///< transport matrix for propagation from previous node to this one
+    Gaudi::TrackVector    m_transportVector;    ///< transport vector for propagation from previous node to this one
+    Gaudi::TrackSymMatrix m_noiseMatrix;        ///< noise in propagation from previous node to this one
+    double                m_deltaEnergy;        ///< change in energy in propagation from previous node to this one
     bool                  m_transportIsSet;     ///< Flag for transport params
     double                m_refResidual;        ///< residual of the reference    
     State                 m_predictedStateUp;   ///< predicted state upstream

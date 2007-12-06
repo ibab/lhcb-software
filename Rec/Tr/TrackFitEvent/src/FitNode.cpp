@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.20 2007-11-30 14:15:25 wouter Exp $
+// $Id: FitNode.cpp,v 1.21 2007-12-06 14:43:32 wouter Exp $
 // Include files
 
 // local
@@ -55,21 +55,6 @@ FitNode::FitNode(Measurement& aMeas):
   m_deltaChi2Up(0),
   m_deltaChi2Down(0)
 {
-}
-
-FitNode::FitNode( const FitNode& rhs ) : 
-  Node(rhs),
-  m_transportMatrix   (rhs.m_transportMatrix),
-  m_transportVector   (rhs.m_transportVector),
-  m_noiseMatrix       (rhs.m_noiseMatrix),
-  m_transportIsSet    (rhs.m_transportIsSet),
-  m_refResidual       (rhs.m_refResidual),
-  m_predictedStateUp  (rhs. m_predictedStateUp),
-  m_predictedStateDown(rhs. m_predictedStateDown),
-  m_deltaChi2Up       (rhs.m_deltaChi2Up),
-  m_deltaChi2Down     (rhs.m_deltaChi2Down)
-{
-  //FitNode copy constructer
 }
 
 /// Destructor
