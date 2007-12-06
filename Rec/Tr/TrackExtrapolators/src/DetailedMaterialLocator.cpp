@@ -44,6 +44,11 @@ StatusCode DetailedMaterialLocator::initialize()
   return sc;
 }
 
+StatusCode DetailedMaterialLocator::finalize()
+{
+  return MaterialLocatorBase::finalize() ;
+}
+
 size_t DetailedMaterialLocator::intersect( const Gaudi::XYZPoint& start, const Gaudi::XYZVector& vect, 
 						ILVolume::Intersections& intersepts ) const 
 {

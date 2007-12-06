@@ -28,7 +28,7 @@ public:
 			   const IInterface* parent ) ;
   /// intialize
   virtual StatusCode initialize();
-  virtual StatusCode finalize() { return StatusCode::SUCCESS ; }
+  virtual StatusCode finalize();
   
   /// Intersect a line with volumes in the geometry
   virtual size_t intersect( const Gaudi::XYZPoint& p, const Gaudi::XYZVector& v, 
