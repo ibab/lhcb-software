@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2007-12-06 - Wouter Hulsbergen
+ - added methods to IMaterialLocator
+
 !====================== TrackInterfaces v3r11 2007-12-04 =====================
 ! 2007-12-04 - Marco Cattaneo
  - Add RecEvent dependency for RecVertex, used by IPVOfflineTool
