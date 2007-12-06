@@ -6,6 +6,8 @@ start "%UTGID%" %GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe OnlineKernel.dll tan_nam
 set UTGID=MEPInit
 rem start "%UTGID%" %gaudi_exe% -main=%OPTS%/MEPinit.opts -opt=%OPTS%/Daemon.opts    -msgsvc=%msg_svc%
 start "%UTGID%" %gaudi_exe% -opt=%OPTS%/MEPinit.opts -main=%OPTS%/Main.opts    -msgsvc=%msg_svc%
+set UTGID=OutputBuffer
+start "%UTGID%" %gaudi_exe% -opt=%OPTS%/MBMinit.opts -main=%OPTS%/Main.opts    -msgsvc=%msg_svc%
 set UTGID=ErrSrv
 rem start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/ErrorSrv.opts     -msgsvc=%msg_svc%
 set UTGID=ErrLog
@@ -28,8 +30,6 @@ start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/SpyMBM.opts      
 set UTGID=Spy_2
 start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/SpyMBMFast.opts   -msgsvc=%msg_svc%
 rem
-set UTGID=OutputBuffer
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/MBMinit.opts -main=%OPTS%/Main.opts    -msgsvc=%msg_svc%
 sleep 2
 set UTGID=Receiver
 start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/MDFReceiver.opts  -msgsvc=%msg_svc%

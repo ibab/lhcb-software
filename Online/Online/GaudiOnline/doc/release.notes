@@ -1,6 +1,9 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2007-12-06 Markus Frank
+ - Add pure client connections to network transfer library.
+
 ! 2007-08-08 Markus Frank
  - Add new task classes: Class0, Class1, Class2 based on standard GaudiTask 
    implementation

@@ -1,0 +1,113 @@
+// $Id: EventServerRunable.h,v 1.1 2007-12-06 14:39:34 frankb Exp $
+//====================================================================
+//  EventServerRunable
+//--------------------------------------------------------------------
+//
+//  Package    : GaudiOnline
+//
+//  Description: Runable to serv independent network clients with event
+//               data. requests are purely served on demand ie. each
+//               client has to ask for every event to be processed.
+//
+//  Author     : M.Frank
+//  Created    : 4/12/2007
+//
+//====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventServerRunable.h,v 1.1 2007-12-06 14:39:34 frankb Exp $
+#ifndef GAUDISVC_EVENTSERVERRUNABLE_H
+#define GAUDISVC_EVENTSERVERRUNABLE_H 1
+
+#include <map>
+
+// Framework includes
+#include "GaudiKernel/IRunable.h"
+#include "GaudiOnline/OnlineService.h"
+#include "NET/DataTransfer.h"
+#include "MBM/bmdef.h"
+#include "MBM/Consumer.h"
+#include "MBM/Requirement.h"
+#include "RTL/rtl.h"
+
+// Forward declarations
+class IIncidentSvc;
+
+/*
+ *   LHCb namespace declaration
+ */
+namespace LHCb  {
+
+  class MEPManager;
+
+  /** Class definition of EventServerRunable.
+    *
+    * Runable to serv independent network clients with event
+    * data. requests are purely served on demand ie. each
+    * client has to ask for every event to be processed.
+    *
+    *  @author Markus Frank
+    *  @version 1.0
+    */
+  class EventServerRunable : public OnlineService, virtual public IRunable  {
+
+  protected:
+    enum RunableStates { WAIT_REQ, WAIT_EVT, ACTION_EVT, DONE };
+    /// Definition of the container containing waiting clients
+    typedef std::map<std::string, MBM::Requirement> Recipients;
+
+    /// Reference to MEP manager service
+    MEPManager*          m_mepMgr;
+    /// Property: MEP manager service name/type
+    std::string          m_mepMgrName;
+    /// Number of events to be processed
+    int                  m_evtMax;
+    /// Monitoring quantity: Number of events processed
+    int                  m_evtCount;
+    /// Reference to MBM consumer to access event data
+    MBM::Consumer*       m_consumer;
+    /// Reference to network plug to send events
+    DataTransfer::NET*   m_netPlug;
+    /// Container of currently waiting event receivers
+    Recipients           m_recipients;
+    /// Event flag to wake up the server when a new request arrives
+    lib_rtl_event_t      m_suspend;
+    /// Lock to protect internal data structures
+    lib_rtl_lock_t       m_lock;
+    /// String containing node_name::UTGID of event data provider task
+    std::string          m_input;
+    /// String representation of basic request (trigger and veto masks will be taken from requestors)
+    std::string          m_req;
+    /// Parses requirement data buffer
+    MBM::Requirement     m_request;
+    /// State variable of the consumer obejct
+    int                  m_consState;
+    /// Flag to indicate if a MBM request is currently pending
+    bool                 m_reqActive;
+
+  public:
+    /// Standard Constructor
+    EventServerRunable(const std::string& nam, ISvcLocator* svcLoc);
+    /// Standard Destructor
+    virtual ~EventServerRunable();
+    // IInterface implementation : queryInterface
+    virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
+    /// IService implementation: initialize the service
+    virtual StatusCode initialize();
+    /// IService implementation: finalize the service
+    virtual StatusCode finalize();
+    /// Incident handler implemenentation: Inform that a new incident has occured
+    void handle(const Incident& inc);
+    /// IRunable implementation : Run the class implementation
+    virtual StatusCode run();
+    /// Remove a given target process from the list of pending clients
+    void removeTarget(const std::string& src);
+    /// Callback to handle a new request of a client to receive a given event
+    void handleEventRequest(DataTransfer::netentry_t* e, const DataTransfer::netheader_t& hdr);
+    /// Rescan client tables, reformulate possibly pending requests and renew the request
+    void restart();
+    /// Send event data to a list of waiting clients
+    void sendEvent();
+    /// Accessor the netplu object
+    DataTransfer::NET* netPlug() const {  return m_netPlug; }
+  };
+}      // End namespace LHCb
+#endif // GAUDISVC_EVENTSERVERRUNABLE_H

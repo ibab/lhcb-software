@@ -1,4 +1,4 @@
-// $Id: ISuspendable.h,v 1.1 2006-12-07 09:36:07 frankb Exp $
+// $Id: ISuspendable.h,v 1.2 2007-12-06 14:39:34 frankb Exp $
 //====================================================================
 //  ISuspendable.h
 //--------------------------------------------------------------------
@@ -7,7 +7,7 @@
 //  Description: Interface describing suspendable and resumable objects.
 //  Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/ISuspendable.h,v 1.1 2006-12-07 09:36:07 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/ISuspendable.h,v 1.2 2007-12-06 14:39:34 frankb Exp $
 #ifndef GAUDIONLINE_ISUSPENDABLE_H
 #define GAUDIONLINE_ISUSPENDABLE_H
 
@@ -32,10 +32,10 @@ namespace LHCb  {
     static const InterfaceID& interfaceID() { return IID_ISuspendable; }
 
     /// Suspend object operation
-    virtual StatusCode suspend() = 0;
+    virtual StatusCode suspend() const = 0;
 
     /// Resume object operation
-    virtual StatusCode resume() = 0;
+    virtual StatusCode resume() const = 0;
   };
 }
 #endif // GAUDIONLINE_ISUSPENDABLE_H

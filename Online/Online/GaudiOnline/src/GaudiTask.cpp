@@ -21,7 +21,11 @@ int gauditask_task_lock() {
   return ::lib_rtl_lock(s_lock);
 }
 int gauditask_task_trylock() {
+#if _WIN32
+  return ::lib_rtl_lock(s_lock);
+#else
   return ::lib_rtl_trylock(s_lock);
+#endif
 }
 int gauditask_task_unlock() {
   return ::lib_rtl_unlock(s_lock);
