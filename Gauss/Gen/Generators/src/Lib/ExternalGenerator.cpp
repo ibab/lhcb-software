@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.21 2006-08-28 21:27:28 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.22 2007-12-06 16:45:25 ibelyaev Exp $
 // Include files 
 
 // local
@@ -187,9 +187,23 @@ StatusCode ExternalGenerator::decayHeavyParticles( HepMC::GenEvent * theEvent,
     break ;
     
   default:
-    return Error( "This case in not implemented yet" ) ;
-    break ;
-
+    
+    if ( 15 == LHCb::ParticleID(signalPid).abspid() ) // tau ?
+    {
+      for ( it = theEvent -> particles_begin() ;
+            it != theEvent -> particles_end() ; ++it ) {
+        LHCb::ParticleID pid( (*it) -> pdg_id() ) ;
+        if ( ( pid.hasQuark( LHCb::ParticleID::charm  ) ) || 
+             ( pid.hasQuark( LHCb::ParticleID::bottom ) ) ) 
+          particleSet.insert( *it ) ;
+      }
+      break ; 
+    }
+    else 
+    {
+      return Error ( "decayHeavyParticles:This case in not implemented yet" ) ; 
+    }
+    break ; 
   }
   
   for ( HepMCUtils::ParticleSet::iterator itHeavy = particleSet.begin() ; 

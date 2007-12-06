@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.21 2007-09-09 15:49:09 robbep Exp $
+// $Id: Signal.cpp,v 1.22 2007-12-06 16:45:25 ibelyaev Exp $
 // Include files 
 
 // local
@@ -114,13 +114,21 @@ StatusCode Signal::initialize( ) {
     info() << prop -> particle() << " " ;
 
     LHCb::ParticleID pid( prop -> pdgID() ) ;
-    if ( pid.hasCharm() ) m_signalQuark = LHCb::ParticleID::charm ;
-    else if ( pid.hasBottom() ) m_signalQuark = LHCb::ParticleID::bottom ;
-    else return Error( "This case is not implemented yet" ) ;
     
     m_signalPID  = abs( prop -> pdgID() ) ;
-    if ( prop -> pdgID() > 0 ) m_sigName = prop -> particle() ;
-    else m_sigBarName = prop -> particle() ;
+    if ( pid.hasCharm() ) m_signalQuark = LHCb::ParticleID::charm ;
+    else if ( pid.hasBottom()    ) m_signalQuark = LHCb::ParticleID::bottom ;
+    else if ( 15 == pid.abspid() ) { /* no action here */ ; }
+    else 
+      {
+        always() << " UNKNOWN pid=" << pid.pid() << endreq ;
+        return Error( "This case is not implemented yet" ) ;
+      }
+    
+    
+    if ( prop -> pdgID() > 0 ) { m_sigName = prop -> particle() ; }
+    else { m_sigBarName = prop -> particle() ; }
+    
   }
 
   m_cpMixture = false ;

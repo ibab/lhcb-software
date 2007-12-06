@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.115 2007-11-30 15:15:56 gcorti Exp $
+! $Id: release.notes,v 1.116 2007-12-06 16:45:25 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2007-12-06 - Vanya BELYAEV
+
+ - src/Lib/ExternalGenerator.cpp
+   src/Lib/Signal.cpp
+   Allow the production of inclusive taus with SignalPlain tool 
+ 
 ! 2007-11-30 - Gloria Corti
  - On Win32 put Signal and ExternalGenerators base classes in component
    library rather then linker to allow compilation.
