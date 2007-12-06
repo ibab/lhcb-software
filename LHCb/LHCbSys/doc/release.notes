@@ -5,21 +5,22 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r2>2007-12-03 LHCbSys v23r2</A></H1><PRE>
+</PRE><H1><A NAME=v23r2>2007-12-05 LHCbSys v23r2</A></H1><PRE>
 This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
 
 - Packages added   : STKernel v1r0    - public headers for ST readout
                      LoKiNumbers v7r0 - Set of dictionaries for LoKi functions
 - Packages modified: GaudiObjDesc v11r0, KernelSys v7r0, LHCbKernel v8r0,
     LHCbMath v2r4, L0MuonKernel v7r2, Relations v5r3, RichKernel v7r9,
-    DetSys v11r1, DetDesc v18r2, DetDescCnv v4r4, MuonDet v7r1, OTDet v7r7, 
-    RichDet v10r8, STDet v3r8, EventSys v23r11, RecEvent v2r8, EventAssoc v4r3,
-    RecEvent v2r8, TrackEvent v4r9, DAQSys v3r7, MuonDAQ v3r3, MDF v2r7,
-    TrackInterfaces v3r11, DaVinciKernel v6r9, DaVinciMCKernel v2r5,
-    RichRecBase v3r9, MCInterfaces v1r4, CaloUtils v7r6, SimComponents v2r8,
-    DetCond v11r7, LHCbAlgs v2r13, LoKi v7r0, LoKiAlgo v7r0, LoKiAlgoMC v7r0,
+    DetSys v11r1, CaloDet v8r5, DetDesc v18r2, DetDescCnv v4r4, MuonDet v7r1,
+    OTDet v7r7, RichDet v10r8, STDet v3r8, EventSys v23r11, DAQEvent v7r7,
+    DigiEvent v2r3, EventAssoc v4r3, L0Event v17r7, RecEvent v2r8,
+    TrackEvent v4r9, DAQSys v3r7, MuonDAQ v3r3, MDF v2r7, TrackInterfaces v3r11,
+    DaVinciKernel v6r9, DaVinciMCKernel v2r5, RichRecBase v3r9, 
+    MCInterfaces v1r4, CaloUtils v7r6, SimComponents v2r8, DetCond v11r7,
+    LHCbAlgs v2r13, LoKi v7r0, LoKiAlgo v7r0, LoKiAlgoMC v7r0,
     LoKiArrayFunctors v7r0, LoKiCore v7r0, LoKiGen v7r0, LoKiGenMC v7r0,
-    LoKiMC v7r0, LoKiPhys v7r0, LoKiPhysMC v7r0
+    LoKiMC v7r0, LoKiPhys v7r0, LoKiPhysMC v7r0, IOExample v2r3
 
 - In GaudiObjDesc v11r0, RichKernel v7r9, RichRecBase v3r9, MuonDet v7r1
   . Changes to deal with move of STL serializers to GaudiKernel/SerializeSTL.h
@@ -54,10 +55,23 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
     the hits for a requested HPD
   . Update various cluster objects to allow clustering of ALICE mode data
 
+- In CaloDet v8r5
+  . Add accessor to the new condition (PinPedShift) in DeCalorimeter :
+    pedestal shift for pin-diodes
+  . Simplify CaloPin (uneeded crate/slot/adc info removed)
+  . Allow the condDB decoding for non-standard pin-diode geometry
+
 - In DetDesc v18r2
   . Added specialized fillStream() member function for ValidDataObject and
     ParamValidDataObject.
   . Use GaudiKernel/SerializeSTL.h to print parameters of ParamValidDataObject. 
+  . Removal of constructor
+      ROOT::Math::Transform3D(ROOT::Math::XYZVector, ROOT::Math::Rotation3D) 
+    for 3D transformation made from translation followed by rotation.
+    Replaced by equivalent transformation:
+      ROOT::Math::VectorXYZ translation = ...;
+      ROOT::Math::Rotation3D rotation = ...'
+      ROOT::Math::Transform3D myTransform(rotation, rotation(translation));
 
 - In DetDescCnv v4r4
   . Implemented the parsing of <map> elements inside conditions
@@ -76,12 +90,29 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
     with the alignment framework.
   . Method detectionPoint now has an option to chose between the photoCathode
     side, or the outside of the window (including refraction correction).
+  . Update Rich::TabulatedFunction1D to allow an existing object to be
+    re-initialised with new data values.
+  . Update DeRichHPD to use new re-initialisation functionality of 
+    Rich::TabulatedFunction1D
 
 - In STDet v3r8
   . Release rest of deadstrip stuff. Functionality is off by default
 
+- In DAQEvent v7r7
+  . Add new class : RawBankReadoutStatus.xml
+  . New component algorithm : RawBankReadoutStatusFilter
+
+- In DigiEvent v2r3
+  . Remove Kernel directory:
+    ISTSignalToNoiseTool.h moved to STKernel package
+    IVeloCluster2VeloDigitTool.h is obsolete and removed
+
 - In EventAssoc v4r3
   . Update to take into account new (python) structure in Kernel/Relations package
+
+- In L0Event v16r7
+  . Update L0DUBase.h (new elements in CaloType enum)
+  . Adapt src/L0CaloCandidate.cpp
 
 - In RecEvent v2r8
   . Add new class, TwoProngVertex
@@ -109,6 +140,9 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
 - In MDF v2r7
   . Add new Rawbank types to RawEventPrintout.h to retrieve bank type as string.
   . Implemement connection to XML file catalog from GaudiUtils
+    Requires new job option:
+    ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog",
+                                      "Gaudi::IODataManager/IODataManager" };
 
 - In TrackInterfaces v3r11
   . Add IVeloClusterPosition interface previously in LHCbKernel
@@ -116,9 +150,13 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
   . Add method in IMeasurementProvider to create measurements with reference ztraj
   . Add projection state to ITrackProjector::alignmentDerivatives, because 
     measurements no longer have a refvec
+  . Add new interfaces ITrackVertexer, IPVOfflineTool
+  . Add RecEvent dependency
 
 - In DaVinciKernel v6r9
   . Add couple of templated methods for the abstract interface ICheckOverlap
+  . Add Kernel/GetDVAlgorithm.h, src/Lib/GetDVAlgorithm.cpp: simple function to
+    get DVAlgorithm from the context 
 
 - In DaVinciMCKernel v2r5
    . Changes to Particle2MCLinker:
@@ -157,6 +195,11 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
 - In LoKiCore v7r0
   . Many new concepts from Gerhard Raven for functional programming
     Essentially the whole "functor"-business is rewritten 
+
+- In IOExample v2r3
+  . In WriteMDF.opts, add options for new MultiFileCatalog when writing MDF file
+  . In ReadMin.opts, put algorithms in a sequence and add example of usage of
+    FilterByRunEvent algorithm
 
 </PRE><H1><A NAME=v23r1>2007-11-15 LHCbSys v23r1</A></H1><PRE>
 This version uses Gaudi v19r5 and LCG_53c. Fully compatible with DC06 data

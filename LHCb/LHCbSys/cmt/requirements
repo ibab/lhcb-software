@@ -30,7 +30,7 @@ use DetDescCnv            v4r4    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r14   Det     # Marco Clemencic, Matt Needham
 use XmlTools              v5r1    Tools   # Marco Clemencic
 use OTDet                 v7r7    Det     # Jan Amoraal
-use CaloDet               v8r4    Det     # Olivier Deschamps
+use CaloDet               v8r5    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r1    Det     # Olivier Deschamps
 use MuonDet               v7r1    Det     # Alessia Satta, Alessio Sarti
 use Magnet                v3r6p1  Det     # N.N.
@@ -41,11 +41,11 @@ use STDet                 v3r8    Det     # Jeroen van Tilburg, Matt Needham
 use EventSys              v23r11  Event   # Marco Cattaneo
 use EventBase             v2r4    Event   # Marco Cattaneo, Gloria Corti
 use MCEvent               v2r5p1  Event   # Gloria Corti and sub-det experts
-use DigiEvent             v2r2    Event   # Marco Cattaneo and sub-det experts
+use DigiEvent             v2r3    Event   # Marco Cattaneo and sub-det experts
 use RecEvent              v2r8    Event   # Marco Cattaneo and sub-det experts
-use L0Event               v16r6   Event   # Julien Cogan
+use L0Event               v16r7   Event   # Julien Cogan
 use PhysEvent             v11r4   Event   # Patrick Koppenburg, Juan Palacios
-use DAQEvent              v7r6p1  Event   # Marco Cattaneo, Markus Frank
+use DAQEvent              v7r7    Event   # Marco Cattaneo, Markus Frank
 use GenEvent              v5r1    Event   # Gloria Corti
 use EventAssoc            v4r3    Event   # Ivan Belyaev
 use LinkerEvent           v3r2    Event   # Olivier Callot
@@ -99,5 +99,5 @@ use STKernel              v1r0   ST      # Matt Needham
 # LHCb  Examples
 use DetDescChecks         v4r4   Det     # Ivan Belyaev
 use DetDescExample        v7r5   Ex      # Marco Clemencic
-use IOExample             v2r2   Ex      # Marco Cattaneo
+use IOExample             v2r3   Ex      # Marco Cattaneo
 use DetCondExample        v11r2  Ex      # Marco Clemencic
