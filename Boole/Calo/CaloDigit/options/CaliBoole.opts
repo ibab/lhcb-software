@@ -98,6 +98,10 @@ CaloFillPrsSpdRawBuffer.DataCodingType = 3;
 PrsDigit.ZSupThreshold=0;
 SpdDigit.ZSupThreshold=0;
 CaloFillPrsSpdRawBuffer.OutputLevel=3;
+
+EcalFillRawBuffer.FillWithPin = true;
+HcalFillRawBuffer.FillWithPin = true;
+
 //--------------------------------------------------------------
 // Relations to MC truth. Built unconditionally regardless of monitoring
 //--------------------------------------------------------------

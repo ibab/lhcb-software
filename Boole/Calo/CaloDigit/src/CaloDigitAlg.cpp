@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.17 2007-06-06 15:04:24 cattanem Exp $
+// $Id: CaloDigitAlg.cpp,v 1.18 2007-12-06 09:48:41 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -234,6 +234,7 @@ StatusCode CaloDigitAlg::execute() {
     }
   }
 
+
   //== generate coherent noise for this event, add the pedestal shift
   Rndm::Numbers CoherentNoise( rndmSvc() , 
                                Rndm::Gauss( 0.0 , m_coherentNoise ) );
@@ -251,6 +252,7 @@ StatusCode CaloDigitAlg::execute() {
     std::generate( incoherentNoise.begin(), incoherentNoise.end() ,
                    Rndm::Numbers( rndmSvc(), Rndm::Gauss( 0.0 , m_incoherentNoise ) ) );
   }
+
 
   //== Add dead cells : Set the gain to zero in this cell
   if ( 0 != m_deadCellFraction ) {
@@ -317,7 +319,7 @@ StatusCode CaloDigitAlg::execute() {
       LHCb::CaloAdc* adc = new LHCb::CaloAdc( id, intAdc );
       adcs->insert( adc ) ;
     }
-    
+  
     int trigVal   = 0;
     if ( m_triggerIsBit ) {
       if ( m_triggerThreshold < intAdc * gain ) {
@@ -346,6 +348,7 @@ StatusCode CaloDigitAlg::execute() {
   } else {
     trigSize = trigBank->size();
   }
+
 
   debug() << format( "Have digitized and stored %5d adcs and %5d trigger from %5d MCDigits.",
                      adcs->size(), trigSize, mcDigits->size() )
