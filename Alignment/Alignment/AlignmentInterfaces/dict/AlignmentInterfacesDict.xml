@@ -1,5 +1,4 @@
 <lcgdict>
-  <class name    = "IAlignDetectorSelector" />
   <class name    = "IAlignSolvTool" />
   <class name    = "IATrackSelectorTool" />
   <class name    = "IDerivatives" />
