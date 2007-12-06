@@ -1,3 +1,4 @@
+
 #ifndef DAQEVENT_RAWBANK_H
 #define DAQEVENT_RAWBANK_H 1
 
@@ -69,9 +70,9 @@ namespace LHCb
                    VeloFull,
                    TTFull,
                    ITFull,
-                   EcalPacked,
-                   HcalPacked,
-                   PrsPacked,
+                   EcalPacked,//21
+                   HcalPacked,//22
+                   PrsPacked,//23
                    L0Muon,
                    ITError,
                    TTError,

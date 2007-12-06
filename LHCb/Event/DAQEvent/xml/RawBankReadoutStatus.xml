@@ -48,12 +48,20 @@
         access = "PROTECTED"
         />
 
-      <copyconstructor/>
+ 
 
       <constructor
         desc     = "non-default constructor"
         argList  = "LHCb::RawBank::BankType type"
-        initList = "Base ( type )"
+        initList = "Base ( type ), m_status()"
+        > <code/> </constructor>
+
+
+
+      <constructor 
+        desc     = "Copy Constructor" 
+        argList  = "LHCb::RawBankReadoutStatus rh"
+        initList = "Base(rh.key() ), m_status(rh.m_status)"
         > <code/> </constructor>
 
 
@@ -78,8 +86,10 @@
         desc   = "set Readout status for a given source"
         argList= "int source, long stat"
         type   = "void">
-        <code>
-          long newStat = status(source) | stat ;
+        <code>          
+          long newStat = stat;
+          std::map&lt;int, long&gt;::iterator it = m_status.find(source);
+          if( it != m_status.end() )newStat |= status(source);
           m_status[source] = newStat;
         </code>
       </method>
@@ -92,11 +102,20 @@
         type   = "long">
         <code>
           if( 0 == m_status.size() )return Missing;
-          long status = 0;
+          long stat = 0;
           for(std::map&lt;int,long&gt;::iterator it = m_status.begin() ; it != m_status.end() ; ++it){
-          status |= (*it).second;
+          stat |= (*it).second;
           }
-          return status;
+          return stat;
+        </code>
+      </method>
+
+      <method 
+        name   = "statusMap"
+        desc   = "return the status map attribute"
+        type   = "std::map&lt; int, long &gt;">
+        <code>
+          return m_status;
         </code>
       </method>
 
