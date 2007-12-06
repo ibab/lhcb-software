@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.14 2007-12-06 09:31:25 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.15 2007-12-06 13:47:22 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -266,7 +266,6 @@ bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
       if ( 0 < lenTrig ) {
         int pattern  = *data++;
         int offset   = 0;
-        if ( msgLevel( MSG::DEBUG) )debug() << format( " pattern %8x lenTrig %2d", pattern, lenTrig ) << endreq;
         lastData  = *data++;
         size -= 2;
         for (unsigned  int bitNum = 0 ; 32 > bitNum ; bitNum++ ) {
