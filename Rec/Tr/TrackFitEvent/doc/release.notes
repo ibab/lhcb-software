@@ -4,6 +4,11 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2007-12-05- Wouter Hulsbergen
+  - bug fix in TrackTraj constructor
+  - added new method to obtain driftRadius in OTMeasurement (for use in panoramix)
+  - added member for material energy loss to FitNode
+
 !========================== TrackFitEvent v3r11 2007-11-30 ===================
 ! 2007-11-30 - Wouter Hulsbergen
   - added new trajectory interface class 'ZTrajectory'
