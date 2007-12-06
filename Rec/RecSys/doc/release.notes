@@ -12,12 +12,12 @@ This version uses Gaudi v19r6 and LHCb v23r2.
                   RichRecTrackTools   v1r0: 'track'  tools for Rich reco.
                   RichRecMCAlgorithms v1r0: Rich reco. algs that use MC info.
 - Packages modified: CaloMoniDST v3r0p1, NNTools v1r1, PatAlgorithms v3r2,
-    PatVelo v3r2, PatVeloTT v3r1, RichHLTLocalPID v1r1, RichHLTSys v3r2,
-    RichGlobalPID v3r6, RichRecMCTools v2r14, RichRecMonitors v2r13,
-    RichRecQC v2r15, RichRecTools v4r0, RichRecSys v3r7, TrackFitEvent v3r11,
-    TrackFitter v2r22, TrackIdealPR v2r14, TrackMatching v2r17,
-    TrackMCTools v2r15, TrackTools v3r2, TrackSeeding v1r3, TrackSys v4r12,
-    TrackUtils v1r17, TsaAlgorithms v3r2
+    PatPV v3r1, PatVelo v3r2, PatVeloTT v3r1, RichHLTLocalPID v1r1,
+    RichHLTSys v3r2, RichGlobalPID v3r6, RichRecMCTools v2r14,
+    RichRecMonitors v2r13, RichRecQC v2r15, RichRecTools v4r0, RichRecSys v3r7,
+    TrackFitEvent v3r11, TrackFitter v2r22, TrackIdealPR v2r14,
+    TrackMatching v2r17, TrackMCTools v2r15, TrackTools v3r2, TrackSeeding v1r3,
+    TrackSys v4r12, TrackUtils v1r17, TsaAlgorithms v3r2
 
 - In CaloMoniDST v3r0p1
   . Fix a compiler warning
@@ -30,6 +30,12 @@ This version uses Gaudi v19r6 and LHCb v23r2.
 
 - In PatAlgorithms v3r2
   . getOrCreate at PatForward
+
+- In PatPV v3r1
+  . Correction for unchecked StatusCode
+  . Major modification of the structure and some improvements
+  . Split PatPVOffline into Alg and Tool (PVOfflineTool)
+  . add new LSAdaptPVFitter; rename old PVFitter to LSIterPVFitter
 
 - In PatVelo v3r2
   . Set chi2 of RZ tracks properly 
@@ -127,6 +133,7 @@ This version uses Gaudi v19r6 and LHCb v23r2.
 
 - In TrackSys v4r12
   . Removed reference to TsaSeedReferenceCreator in Fitting.opts
+  . Add TrackV0.opts
 
 - In TrackTools v3r2
   . fixed Interpolator such that it also does the right thing for extrapolation
@@ -135,10 +142,12 @@ This version uses Gaudi v19r6 and LHCb v23r2.
   . adapt to new functionality in Track such that measurements no longer cloned
   . adapt LongTrackReferenceCreator to chaneg in Measurement interface
   . added missing tolerances for float comparison in LongTrackRefCreator
+  . Added TrackVertexer
 
 - In TrackUtils v1r17
   . Remove removal of measurements in TrackToDST, not needed since measurements
     are in any case transient only members of Track
+  . Added TrackV0Finder
 
 - In TsaAlgorithms v3r2
   . Modify state filling in case fast momentum parameterization is used
