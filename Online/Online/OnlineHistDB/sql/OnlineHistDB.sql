@@ -1406,6 +1406,7 @@ No changes can be committed. Please downgrade to OnlineHistDB version '||curapi|
  -- check write permission
  EXECUTE IMMEDIATE 'update ERGOSUM set ALGLIST=ALGLIST';
  writePerm := 1;
+ commit;
 EXCEPTION
 when insuf_privs then 
  writePerm := 0;
