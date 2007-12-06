@@ -1,4 +1,4 @@
-// $Id: StateThickMSCorrectionTool.cpp,v 1.4 2007-05-09 13:20:20 hmdegaud Exp $
+// $Id: StateThickMSCorrectionTool.cpp,v 1.5 2007-12-06 14:53:55 wouter Exp $
 // Include files 
 // ------------
 // from Gaudi
@@ -46,7 +46,7 @@ StateThickMSCorrectionTool::StateThickMSCorrectionTool( const std::string& type,
 void StateThickMSCorrectionTool::correctState( LHCb::State& state,
                                                const Material* material,
                                                double wallThickness,
-                                               bool upstream )
+                                               bool upstream ) const
 {
   const double tx2        = gsl_pow_2( state.tx() );
   const double ty2        = gsl_pow_2( state.ty() );

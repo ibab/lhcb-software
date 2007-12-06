@@ -1,4 +1,4 @@
-// $Id: StateElectronEnergyCorrectionTool.cpp,v 1.3 2007-02-06 13:15:36 cattanem Exp $
+// $Id: StateElectronEnergyCorrectionTool.cpp,v 1.4 2007-12-06 14:53:54 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -42,7 +42,7 @@ StateElectronEnergyCorrectionTool::StateElectronEnergyCorrectionTool( const std:
 void StateElectronEnergyCorrectionTool::correctState( LHCb::State& state,
                                                       const Material* material,
                                                       double wallThickness,
-                                                      bool upstream )
+                                                      bool upstream ) const
 {
   //hard energy loss for electrons
   double t = wallThickness / material -> radiationLength()

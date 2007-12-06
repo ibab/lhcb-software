@@ -1,4 +1,4 @@
-// $Id: StateSimpleBetheBlochEnergyCorrectionTool.cpp,v 1.2 2007-02-06 13:15:36 cattanem Exp $
+// $Id: StateSimpleBetheBlochEnergyCorrectionTool.cpp,v 1.3 2007-12-06 14:53:55 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -44,7 +44,7 @@ StateSimpleBetheBlochEnergyCorrectionTool::StateSimpleBetheBlochEnergyCorrection
 void StateSimpleBetheBlochEnergyCorrectionTool::correctState( LHCb::State& state,
                                                               const Material* material,
                                                               double wallThickness,
-                                                              bool upstream )
+                                                              bool upstream ) const
 {
   double bbLoss = wallThickness
     * sqrt( 1. + gsl_pow_2(state.tx()) + gsl_pow_2(state.ty()) )

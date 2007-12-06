@@ -1,4 +1,4 @@
-// $Id: StateThinMSCorrectionTool.h,v 1.1 2006-08-22 12:37:51 erodrigu Exp $
+// $Id: StateThinMSCorrectionTool.h,v 1.2 2007-12-06 14:53:56 wouter Exp $
 #ifndef TRACKTOOLS_STATETHINMSCORRECTIONTOOL_H 
 #define TRACKTOOLS_STATETHINMSCORRECTIONTOOL_H 1
 
@@ -29,7 +29,7 @@ public:
   void correctState( LHCb::State& state,
                      const Material* material,
                      double wallThickness = 0,
-                     bool upstream = true );
+                     bool upstream = true ) const ;
   
   /// Standard constructor
   StateThinMSCorrectionTool( const std::string& type, 
