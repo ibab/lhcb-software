@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.24 2007-11-29 11:22:22 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.25 2007-12-06 14:01:44 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -21,27 +21,8 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
   setPageEnv((OnlineHistDBEnv*) this);
 
   // initialize Oracle session and log in
-  m_StmtMethod = "OnlineHistDB::OnlineHistDB";
-  checkerr( OCIEnvCreate ((OCIEnv **)&m_envhp, (ub4)OCI_OBJECT , (dvoid *)0,
-			  (dvoid * (*) (dvoid *, size_t))0, (dvoid * (*)(dvoid *, dvoid *, size_t))0,
-			  (void (*)(dvoid *, dvoid *))0, (size_t)0, (dvoid **)0 ),
-	    SEVERE);
-
-  checkerr( OCIHandleAlloc((dvoid *) m_envhp, (dvoid **) &m_errhp, OCI_HTYPE_ERROR,
-			   (size_t) 0, (dvoid **) 0),
-	    SEVERE);
-
-  checkerr( OCILogon2(m_envhp, 
-		      m_errhp, 
-		      &m_svchp, 
-		      (text *) user.data(), 
-		      (ub4) user.length(), 
-		      (text *) passwd.data(),
-		      (ub4) passwd.length(), 
-		      (text *) db.data(),
-		      (ub4) db.length(),
-		      OCI_LOGON2_STMTCACHE),
-	    SEVERE);
+  loginToDB(passwd,user,db);
+  
 
   // needed initialization for OCI interface
   getOCITypes();
@@ -53,6 +34,7 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
   m_PStorage = (OnlinePageStorage*) this;
 
   // check that this API version is in sync with DB current schema
+  m_StmtMethod = "OnlineHistDB::OnlineHistDB";
   OCIStmt *stmt=NULL;
   int schema = DBschema;
   m_StmtMethod = "OnlineHistDB::OnlineHistDB";
@@ -80,9 +62,94 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
 
 OnlineHistDB::~OnlineHistDB () {  
   OCICacheFree ( m_envhp, m_errhp, m_svchp);
-  if (m_envhp)
-    OCIHandleFree((dvoid *) m_envhp, OCI_HTYPE_ENV);
+  checkerr(OCISessionEnd (m_svchp, m_errhp, m_usrhp, OCI_DEFAULT));
+  checkerr(OCIServerDetach( m_srvhp, m_errhp, (ub4) OCI_DEFAULT));
+  checkerr(OCIHandleFree((dvoid *) m_svchp, (ub4) OCI_HTYPE_SVCCTX));
+  checkerr(OCIHandleFree((dvoid *) m_srvhp, (ub4) OCI_HTYPE_SERVER));
+  (void) OCIHandleFree((dvoid *) m_errhp, (ub4) OCI_HTYPE_ERROR);
+  (void) OCIHandleFree((dvoid *) m_envhp, OCI_HTYPE_ENV);
+  
   if(m_TaggedStatement) delete m_TaggedStatement;
+}
+
+
+void OnlineHistDB::loginToDB(std::string passwd,
+			     std::string user,
+			     std::string db) {
+  
+  checkerr( OCIEnvCreate ((OCIEnv **)&m_envhp, (ub4)OCI_OBJECT , (dvoid *)0,
+ 			  (dvoid * (*) (dvoid *, size_t))0, (dvoid * (*)(dvoid *, dvoid *, size_t))0,
+ 			  (void (*)(dvoid *, dvoid *))0, (size_t)0, (dvoid **)0 ),
+	    SEVERE);
+
+  checkerr( OCIHandleAlloc ((dvoid *)m_envhp, (dvoid **)&m_srvhp,
+			   OCI_HTYPE_SERVER, 0, (dvoid **) 0),
+	    SEVERE);
+
+  checkerr( OCIHandleAlloc ((dvoid *)m_envhp, (dvoid **)&m_errhp,
+			    OCI_HTYPE_ERROR, 0, (dvoid **) 0),
+	    SEVERE);
+
+
+  checkerr(OCIServerAttach (m_srvhp, m_errhp, (text *) db.c_str(),
+			    db.size(), OCI_DEFAULT),
+	   SEVERE);
+
+  checkerr(OCIHandleAlloc ((dvoid *)m_envhp, (dvoid **)&m_svchp,
+			   OCI_HTYPE_SVCCTX, 0, (dvoid **) 0),
+	   SEVERE);
+
+  /* set the server attribute in the service context handle*/
+  checkerr(OCIAttrSet ((dvoid *)m_svchp, OCI_HTYPE_SVCCTX,
+		       (dvoid *)m_srvhp, (ub4) 0, OCI_ATTR_SERVER, m_errhp),
+	   SEVERE);
+
+  /* allocate a user session handle */
+  checkerr(OCIHandleAlloc ((dvoid *)m_envhp, (dvoid **)&m_usrhp,
+			   OCI_HTYPE_SESSION, 0, (dvoid **) 0),
+	   SEVERE);
+  
+  /* set user name attribute in user session handle */
+  checkerr(OCIAttrSet ((dvoid *)m_usrhp, OCI_HTYPE_SESSION,
+		       (dvoid *)user.c_str(), user.size(),
+		       OCI_ATTR_USERNAME, m_errhp),
+	   SEVERE);
+
+  /* set password attribute in user session handle */
+  checkerr(OCIAttrSet ((dvoid *)m_usrhp, OCI_HTYPE_SESSION,
+		       (dvoid *) passwd.c_str(), (ub4)passwd.size(),
+		       OCI_ATTR_PASSWORD, m_errhp),
+	   SEVERE);
+
+  checkerr(OCISessionBegin ( m_svchp, m_errhp, m_usrhp,
+			     OCI_CRED_RDBMS, OCI_STMT_CACHE),
+	   SEVERE);
+
+  /* set the user session attribute in the service context handle*/
+  checkerr(OCIAttrSet ((dvoid *)m_svchp, OCI_HTYPE_SVCCTX,
+		       (dvoid *)m_usrhp, (ub4) 0, OCI_ATTR_SESSION, m_errhp),
+	   SEVERE);
+
+//   checkerr( OCIEnvCreate ((OCIEnv **)&m_envhp, (ub4)OCI_OBJECT , (dvoid *)0,
+// 			  (dvoid * (*) (dvoid *, size_t))0, (dvoid * (*)(dvoid *, dvoid *, size_t))0,
+// 			  (void (*)(dvoid *, dvoid *))0, (size_t)0, (dvoid **)0 ),
+// 	    SEVERE);
+
+//   checkerr( OCIHandleAlloc((dvoid *) m_envhp, (dvoid **) &m_errhp, OCI_HTYPE_ERROR,
+// 			   (size_t) 0, (dvoid **) 0),
+// 	    SEVERE);
+
+//   checkerr( OCILogon2(m_envhp, 
+// 		      m_errhp, 
+// 		      &m_svchp, 
+// 		      (text *) user.data(), 
+// 		      (ub4) user.length(), 
+// 		      (text *) passwd.data(),
+// 		      (ub4) passwd.length(), 
+// 		      (text *) db.data(),
+// 		      (ub4) db.length(),
+// 		      OCI_LOGON2_STMTCACHE),
+// 	    SEVERE);
 }
 
 bool OnlineHistDB::commit() {

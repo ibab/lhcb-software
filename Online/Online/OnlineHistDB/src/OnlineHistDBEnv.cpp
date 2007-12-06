@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.8 2007-11-29 11:22:22 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.9 2007-12-06 14:01:45 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 using namespace OnlineHistDBEnv_constants;
 
@@ -15,7 +15,9 @@ OnlineHistDBEnv::OnlineHistDBEnv(std::string User)
 
 
 OnlineHistDBEnv::OnlineHistDBEnv(OnlineHistDBEnv &m) {
-  m_envhp = m.m_envhp; m_errhp=m.m_errhp; m_svchp = m.m_svchp;
+  m_envhp = m.m_envhp; m_srvhp = m.m_srvhp; 
+  m_errhp = m.m_errhp; m_svchp = m.m_svchp;
+  m_usrhp = m.m_usrhp;
   m_user=m.m_user;
   m_debug = m.debug(); m_excLevel = m.excLevel();
   OCIthresholds = m.OCIthresholds;

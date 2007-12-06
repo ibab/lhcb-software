@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.16 2007-11-29 11:22:22 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.17 2007-12-06 14:01:44 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -176,8 +176,10 @@ class OnlineHistDBEnv {
   void floatVectorToVarray(std::vector<float> &v, OCIColl* col);
   void stringVectorToVarray(std::vector<std::string> &v,OCIColl* col);
   OCIEnv *m_envhp;
+  OCIServer  *m_srvhp; 
   OCIError *m_errhp;
   OCISvcCtx *m_svchp;
+  OCISession *m_usrhp;
 
   OCIType *OCIthresholds;
   OCIType *OCIparameters;
