@@ -135,11 +135,10 @@ StatusCode SimplifiedMaterialLocator::initialize()
 
 StatusCode SimplifiedMaterialLocator::finalize()
 {  
-  info() << "SimplifiedMaterialLocator::finalize()" << endreq ;
   for( VolumeContainer::const_iterator it = m_volumes.begin() ; 
        it != m_volumes.end(); ++it) delete *it ;
   m_volumes.clear() ;
-  return StatusCode::SUCCESS ;
+  return MaterialLocatorBase::finalize() ;
 }
 
 inline bool compareFirstTick( const ILVolume::Intersection& lhs, const ILVolume::Intersection& rhs )
