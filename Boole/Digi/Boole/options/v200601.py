@@ -5,7 +5,7 @@
 from Gaudi.Configuration import *
 
 #--Setup for v200601 geometry
-importOptions('../options/v200601.opts')
+importOptions('$BOOLEOPTS/v200601.opts')
 
 ApplicationMgr( AppName    = 'Boole',
                 AppVersion = 'v14r8' )
