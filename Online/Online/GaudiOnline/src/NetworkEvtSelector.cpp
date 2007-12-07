@@ -1,4 +1,4 @@
-// $Id: NetworkEvtSelector.cpp,v 1.1 2007-12-06 14:39:35 frankb Exp $
+// $Id: NetworkEvtSelector.cpp,v 1.2 2007-12-07 19:21:11 frankm Exp $
 //====================================================================
 //  NetworkEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -60,6 +60,8 @@ StatusCode NetworkContext::freeEvent()  {
 }
 
 void NetworkContext::handleData(const std::string& src, size_t siz, char* buff) {
+  MsgStream log(m_sel->msgSvc(),m_sel->name());
+  log << MSG::DEBUG << "Got event data from " << src << ": " << siz <<" Bytes" << endreq;
   m_banks.clear();
   decodeRawBanks(buff,buff+siz,m_banks).ignore();
   for(Banks::const_iterator i=m_banks.begin(); i != m_banks.end(); ++i)  {
@@ -87,9 +89,13 @@ StatusCode NetworkContext::rearmEvent()  {
     m_sel->suspend();
     int sc = net_send(m_netPlug,&m_request,sizeof(m_request),m_input,WT_FACILITY_CBMREQEVENT);
     if ( sc == NET_SUCCESS )  {
+      MsgStream log(m_sel->msgSvc(),m_sel->name());
+      log << MSG::DEBUG << "Sent event request to " << m_input << endreq;
       return StatusCode::SUCCESS;
     }
-    return StatusCode::SUCCESS;
+    MsgStream log(m_sel->msgSvc(),m_sel->name());
+    log << MSG::ERROR << "Failed to send event request to " << m_input << endreq;
+    return StatusCode::FAILURE;
   }
   catch(const std::exception& e)  {
     m_sel->error(std::string("Failed to read next event:")+e.what());

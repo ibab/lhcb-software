@@ -3,7 +3,7 @@ ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.ExtSvc               += {"IncidentSvc", "LHCb::MEPManager/MEPManager"};
 ApplicationMgr.Runable               = "LHCb::EventServerRunable/Runable";
-ApplicationMgr.SvcOptMapping        += { "LHCb::EventRunable/Runable", "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.SvcOptMapping        += { "LHCb::EventRunable/Runable","LHCb::MEPManager/MEPManager","LHCb::OnlineEvtSelector/EventSelector"};
 Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
 Runable.REQ = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0";
 Runable.Input                        = "OUT";

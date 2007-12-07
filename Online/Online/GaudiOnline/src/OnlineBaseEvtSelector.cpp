@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.cpp,v 1.1 2007-12-06 14:39:36 frankb Exp $
+// $Id: OnlineBaseEvtSelector.cpp,v 1.2 2007-12-07 19:21:11 frankm Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -146,9 +146,13 @@ StatusCode OnlineBaseEvtSelector::next(Context& ctxt) const {
   try  {
     OnlineContext* pCtxt = dynamic_cast<OnlineContext*>(&ctxt);
     if ( pCtxt != 0 )   {
-      pCtxt->freeEvent();
+      StatusCode sc = pCtxt->freeEvent();
+      if ( !sc.isSuccess() ) {}
       // Need to aquire the mutex if suspended
-      pCtxt->rearmEvent();
+      sc = pCtxt->rearmEvent();
+      if ( !sc.isSuccess() ) {
+	return sc;
+      }
       if ( m_allowSuspend )   {
         m_isWaiting = true;
         if ( !lib_rtl_is_success(lib_rtl_wait_for_event(m_suspendLock)) )  {
@@ -156,7 +160,7 @@ StatusCode OnlineBaseEvtSelector::next(Context& ctxt) const {
         }
         m_isWaiting = false;
       }
-      StatusCode sc = pCtxt->receiveEvent();
+      sc = pCtxt->receiveEvent();
       return sc;
     }
   }

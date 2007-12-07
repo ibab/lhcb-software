@@ -1,4 +1,4 @@
-// $Id: EventServerRunable.h,v 1.1 2007-12-06 14:39:34 frankb Exp $
+// $Id: EventServerRunable.h,v 1.2 2007-12-07 19:21:11 frankm Exp $
 //====================================================================
 //  EventServerRunable
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventServerRunable.h,v 1.1 2007-12-06 14:39:34 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventServerRunable.h,v 1.2 2007-12-07 19:21:11 frankm Exp $
 #ifndef GAUDISVC_EVENTSERVERRUNABLE_H
 #define GAUDISVC_EVENTSERVERRUNABLE_H 1
 
@@ -52,7 +52,7 @@ namespace LHCb  {
   protected:
     enum RunableStates { WAIT_REQ, WAIT_EVT, ACTION_EVT, DONE };
     /// Definition of the container containing waiting clients
-    typedef std::map<std::string, MBM::Requirement> Recipients;
+    typedef std::map<std::string, std::pair<MBM::Requirement,DataTransfer::netentry_t*> > Recipients;
 
     /// Reference to MEP manager service
     MEPManager*          m_mepMgr;
