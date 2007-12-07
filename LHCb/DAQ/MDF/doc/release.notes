@@ -6,10 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
-! 2007-12-08 - Markus Frank
+!========================= MDF v2r7 2007-12-07 ===============================
+! 2007-12-07 - Markus Frank
   - Fix bug in MDF IO to accept properly file names like PFN:file:....
 
-!========================= MDF v2r7 2007-11-29 ===============================
 ! 2007-11-23 - Markus Frank
   - Add new Rawbank types to RawEventPrintout.h to retrieve bank type as string.
 
