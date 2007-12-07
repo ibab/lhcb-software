@@ -1,6 +1,10 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2007-12-07 Markus Frank
+  - Fix several problems.
+  - Modify DataTransfer library to also allow for pure client connections.
+
 ! 2007-08-10 Markus Frank
   - Fix print formatting warnings
 

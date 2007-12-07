@@ -1,5 +1,5 @@
 package OnlineKernel
-version v1r4
+version v1r10
 
 branches  cmt doc src
 use GaudiPolicy v*
