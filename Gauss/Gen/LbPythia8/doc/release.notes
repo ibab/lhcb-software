@@ -4,6 +4,7 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia8 v1r1 2007-12-07 =========================
 ! 2007-12-04 - Gloria CORTI
  - Remove LbPythia8_load.cpp that is not necessary with Gaudi v19, since
    this package will only be in the Gauss v30 series. Move declaration of
