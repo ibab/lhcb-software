@@ -29,19 +29,22 @@
                   GPSTimeHi,
                   GPSTimeLo,
                   Word7,
-                  Word8'
+                  Word8,
+                  TriggerConfigurationKey'
         access = 'PUBLIC' />
 
       <enum
         name   = 'EventTypeBitsEnum'
         desc   = ''
-        value  = 'EventTypeBits = 0'
+        value  = 'EventTypeBits = 0,
+                  CalibrationStepBits = 16'
         access = 'PUBLIC' />
 
       <enum
         name   = 'EventTypeMasks'
         desc   = ''
-        value  = 'EventTypeMask = 0xFF'
+        value  = 'EventTypeMask       = 0x0000FFFF,
+                  CalibrationStepMask = 0xFFFF0000'
         access = 'PUBLIC' />
 
 <!--
@@ -197,9 +200,27 @@
         type="unsigned int"
         init="0" />
 
+      <attribute
+        name="version"
+        desc="Version of the ODIN bank"
+        type="unsigned int"
+        init="0" />
+
+      <attribute
+        name="calibrationStep"
+        desc="Calibration Step Number"
+        type="unsigned int"
+        init="0" />
+
+      <attribute
+        name="triggerConfigurationKey"
+        desc="Trigger Configuration Key"
+        type="unsigned int"
+        init="0" />
+
 	<constructor 
 		desc     = "Copy constructor. Creates a new ODIN object with the same information" 
-		initList = "DataObject(), m_runNumber(odin.runNumber()), m_eventType(odin.eventType()), m_orbitNumber(odin.orbitNumber()), m_eventNumber(odin.eventNumber()), m_gpsTime(odin.gpsTime()), m_detectorStatus(odin.detectorStatus()), m_errorBits(odin.errorBits()), m_bunchId(odin.bunchId()), m_triggerType(odin.triggerType()), m_readoutType(odin.readoutType()), m_forceBit(odin.forceBit()), m_bunchCrossingType(odin.bunchCrossingType()), m_bunchCurrent(odin.bunchCurrent())">
+		initList = "DataObject(), m_runNumber(odin.runNumber()), m_eventType(odin.eventType()), m_orbitNumber(odin.orbitNumber()), m_eventNumber(odin.eventNumber()), m_gpsTime(odin.gpsTime()), m_detectorStatus(odin.detectorStatus()), m_errorBits(odin.errorBits()), m_bunchId(odin.bunchId()), m_triggerType(odin.triggerType()), m_readoutType(odin.readoutType()), m_forceBit(odin.forceBit()), m_bunchCrossingType(odin.bunchCrossingType()), m_bunchCurrent(odin.bunchCurrent()), m_version(odin.version()), m_calibrationStep(odin.calibrationStep()), m_triggerConfigurationKey(odin.triggerConfigurationKey())">
                 <arg const="TRUE" name="odin" type="LHCb::ODIN"/>
                 <code/>
       	</constructor>
@@ -207,46 +228,59 @@
       <method name="set" desc="Fill data fields from the ODIN bank"
         argList="const LHCb::RawBank* bank" type="StatusCode">
         <code>
-          if ( bank->type() != LHCb::RawBank::ODIN )
-            return StatusCode::FAILURE;
+  if ( bank-&gt;type() != LHCb::RawBank::ODIN )
+    return StatusCode::FAILURE;
 
-          const unsigned int* odinData = bank->data();
+  setVersion(bank-&gt;version());
+  const unsigned int* odinData = bank->data();
 
-          setRunNumber(odinData[LHCb::ODIN::RunNumber]);
+  setRunNumber(odinData[LHCb::ODIN::RunNumber]);
 
-          setEventType(odinData[LHCb::ODIN::EventType]);
+  setOrbitNumber(odinData[LHCb::ODIN::OrbitNumber]);
 
-          setOrbitNumber(odinData[LHCb::ODIN::OrbitNumber]);
+  ulonglong temp = odinData[LHCb::ODIN::L0EventIDHi];
+  setEventNumber((temp &lt;&lt; 32) + odinData[LHCb::ODIN::L0EventIDLo]);
 
-          ulonglong temp = odinData[LHCb::ODIN::L0EventIDHi];
-          setEventNumber((temp &lt;&lt; 32) + odinData[LHCb::ODIN::L0EventIDLo]);
+  temp = odinData[LHCb::ODIN::GPSTimeHi];
+  setGpsTime ((temp &lt;&lt; 32) + odinData[LHCb::ODIN::GPSTimeLo]);
 
-          temp = odinData[LHCb::ODIN::GPSTimeHi];
-          setGpsTime ((temp &lt;&lt; 32) + odinData[LHCb::ODIN::GPSTimeLo]);
+  temp = odinData[LHCb::ODIN::Word7];
+  setDetectorStatus( (temp &amp; LHCb::ODIN::DetectorStatusMask) &gt;&gt; LHCb::ODIN::DetectorStatusBits );
+  setErrorBits( (temp &amp; LHCb::ODIN::ErrorMask) &gt;&gt; LHCb::ODIN::ErrorBits );
 
-          temp = odinData[LHCb::ODIN::Word7];
-          setDetectorStatus( (temp &amp; LHCb::ODIN::DetectorStatusMask) &gt;&gt; LHCb::ODIN::DetectorStatusBits );
-          setErrorBits( (temp &amp; LHCb::ODIN::ErrorMask) &gt;&gt; LHCb::ODIN::ErrorBits );
+  temp = odinData[LHCb::ODIN::Word8];
+  setBunchId( (temp &amp; LHCb::ODIN::BunchIDMask) &gt;&gt; LHCb::ODIN::BunchIDBits );
+  setTriggerType( (temp &amp; LHCb::ODIN::TriggerTypeMask) &gt;&gt; LHCb::ODIN::TriggerTypeBits );
+  setReadoutType( ((temp &amp; LHCb::ODIN::ReadoutTypeMask) &gt;&gt; LHCb::ODIN::ReadoutTypeBits ) == 0 ?
+                  ZeroSuppressed : NonZeroSuppressed );
 
-          temp = odinData[LHCb::ODIN::Word8];
-          setBunchId( (temp &amp; LHCb::ODIN::BunchIDMask) &gt;&gt; LHCb::ODIN::BunchIDBits );
-          setTriggerType( (temp &amp; LHCb::ODIN::TriggerTypeMask) &gt;&gt; LHCb::ODIN::TriggerTypeBits );
-          setReadoutType( ((temp &amp; LHCb::ODIN::ReadoutTypeMask) &gt;&gt; LHCb::ODIN::ReadoutTypeBits ) == 0 ?
-                          ZeroSuppressed : NonZeroSuppressed );
+  setForceBit( ((temp &amp; LHCb::ODIN::ForceMask) &gt;&gt; LHCb::ODIN::ForceBits ) != 0 );
 
-          setForceBit( ((temp &amp; LHCb::ODIN::ForceMask) &gt;&gt; LHCb::ODIN::ForceBits ) != 0 );
+  switch ( (temp &amp; LHCb::ODIN::BXTypeMask) &gt;&gt; LHCb::ODIN::BXTypeBits ) {
+    case 0  : setBunchCrossingType(NoBeam); break;
+    case 1  : setBunchCrossingType(SingleBeamLeft); break;
+    case 2  : setBunchCrossingType(SingleBeamRight); break;
+    case 3  : setBunchCrossingType(BeamCrossing); break;
+    default : setBunchCrossingType(NoBeam); break;
+  }
 
-          switch ( (temp &amp; LHCb::ODIN::BXTypeMask) &gt;&gt; LHCb::ODIN::BXTypeBits ) {
-            case 0  : setBunchCrossingType(NoBeam); break;
-            case 1  : setBunchCrossingType(SingleBeamLeft); break;
-            case 2  : setBunchCrossingType(SingleBeamRight); break;
-            case 3  : setBunchCrossingType(BeamCrossing); break;
-            default : setBunchCrossingType(NoBeam); break;
-          }
+  setBunchCurrent( (temp &amp; LHCb::ODIN::BunchCurrentMask) &gt;&gt; LHCb::ODIN::BunchCurrentBits );
 
-          setBunchCurrent( (temp &amp; LHCb::ODIN::BunchCurrentMask) &gt;&gt; LHCb::ODIN::BunchCurrentBits );
+  if (version() &lt; 3) {
 
-          return StatusCode::SUCCESS;
+    setEventType(odinData[LHCb::ODIN::EventType]);
+
+  } else {
+
+    temp = odinData[LHCb::ODIN::EventType];
+    setEventType((temp &amp; LHCb::ODIN::EventTypeMask) &gt;&gt; LHCb::ODIN::EventTypeBits);
+    setCalibrationStep((temp &amp; LHCb::ODIN::CalibrationStepMask) &gt;&gt; LHCb::ODIN::CalibrationStepBits);
+    
+    setTriggerConfigurationKey(odinData[LHCb::ODIN::TriggerConfigurationKey]);
+
+  }
+  
+  return StatusCode::SUCCESS;
         </code>
       </method>
       <method name="eventTime" desc="Return the event time (converted from the GPSTime)" type="Gaudi::Time" const="TRUE">
