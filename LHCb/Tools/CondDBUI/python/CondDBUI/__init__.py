@@ -1033,6 +1033,109 @@ class CondDB:
                 return False
         return True
     
+    def cloneTag(self, path, src_tag, dest_tag, exclude = []):
+        """ 
+        Create a copy of the tag src_tag with the name dest_tag on folderset
+        path.
+        The sub folder[set] in exclude (specified as fullpath) are not taken
+        into account for the new tag.
+        """
+        if self.readOnly:
+            raise "Cannot write on a database opened in read-only mode"
+        if self.db.existsFolderSet(path):
+            for n in [ self.getCOOLNode(p) for p in self.getChildNodes(path) if p not in exclude ]:
+                try:
+                    local_tag = n.resolveTag(src_tag)
+                    #print "%s: %s"%(n.fullPath(),local_tag)
+                    n.createTagRelation(dest_tag,local_tag)
+                except RuntimeError, x:
+                    print "Warning: %s"%x
+        else:
+            if self.db.existsFolder(path):
+                print "Warning: cloneTag not supported for folders"
+            else:
+                raise "Node '%s' does not exist"%path
+
+    def _moveTagOnNodes_recursion(self, nodes_tags, path, basetag, nodestree):
+        """
+        Internal method to move a tag on a list of nodes.
+        nodes_tags: dictionary with the tags to be associated to the folder[set]s.
+        path: starting directory
+        basetag: tag to use on path
+        nodestree: dictionary of dictionaries representing the tree of nodes that
+                   need to be changed.
+        """
+        # Get local tag
+        tag = None
+        currnode = self.getCOOLNode(path)
+        if path in nodes_tags:
+            try:
+                tag = currnode.resolveTag(nodes_tags[path])
+            except:
+                tag = nodes_tags[path]
+    
+        if nodestree: # if it has children
+            for n in nodestree:
+                nodes_tags[n] = self._moveTagOnNodes_recursion(nodes_tags,n,basetag,nodestree[n])
+    
+            # the base node is the only node allowed to have
+            # the tag in the nodes_tags dictionary
+            if tag is None:
+                tag = self.generateUniqueTagName(basetag)
+                self.cloneTag(path,basetag,tag,nodestree.keys())
+                
+            for n in nodestree:
+                x = self.getCOOLNode(n)
+                try:
+                    # try to delete an already present relation
+                    x.deleteTagRelation(tag)
+                except:
+                    # if there is not such a relation, ignore the failure
+                    pass
+                x.createTagRelation(tag, nodes_tags[n])
+        else:
+            # Do a recursive tag if we want HEAD
+            if tag is None or tag.upper() == "HEAD":
+                tag = self.generateUniqueTagName(basetag)
+                self.recursiveTag(path,tag)
+        # return the local tag
+        return tag
+        
+    def moveTagOnNodes(self,basepath,tag,nodes_tags):
+        """
+        Move (or create) the tag "tag" on the folderset basepath using the tags
+        specified in nodes_tags (dictionary) for the sub-folder[set]s.
+        If the tag for a sub-folder[set] is "HEAD", then it is automatically
+        tagged with recursiveTag.
+        """
+        # Dictionary representing the tree of nodes to touch
+        # leaf nodes are
+        basepath = basepath.strip('/')
+        if basepath == '':
+            bp = []
+        else:
+            bp = basepath.split('/')
+        basepath = '/' + basepath
+        nodes_to_modify = {}
+        for n in nodes_tags:
+            ns = n.strip('/').split('/')
+            if not ns[0:len(bp)] == bp:
+                raise "Error: node '%s' is not under '%s'"%(n,basepath)
+            d = nodes_to_modify
+            base = basepath
+            for dirname in ns[len(bp):]:
+                if base == '/':
+                    dirname = base + dirname
+                else:
+                    dirname = base + '/' + dirname
+                if dirname not in d:
+                    d[dirname] = {}
+                d = d[dirname]
+                base = dirname
+    
+        nodes_tags[basepath] = tag
+        self._moveTagOnNodes_recursion(nodes_tags,basepath,tag,nodes_to_modify)
+
     #---------------------------------------------------------------------------------#
 
     #=============================#
