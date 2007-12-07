@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !-----------------------------------------------------------------------------
 
+! 2007-12-07 Johannes Albrecht
+	 - IMuonSeedTool.h: Add interface to prepare tracks from muon coords
+	
+
 ! 2007-12-6 Jose A. Hernando
 	 - IPrepareMuonTSeedTool from Sandra for MuonSegment preparation
    - ITrackFunctionTool and ITrackBiFunctionTool to make Fuctions from GaudiTools using Tracks
