@@ -1,14 +1,17 @@
-// $Id: RawEventCreator.cpp,v 1.3 2006-12-14 13:48:18 ranjard Exp $
+// $Id: RawEventCreator.cpp,v 1.1 2007-12-07 14:34:05 marcocle Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
+
+// from LHCb
+#include "Kernel/IEventTimeDecoder.h"
 
 // local
 #include "Event/RawEvent.h"
-#include "RawEventCreator.h"
+#include "Event/ODIN.h"
 
-using namespace LHCb;
+#include "RawEventCreator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RawEventCreator
@@ -17,22 +20,36 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(RawEventCreator)
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(DAQEventTests,RawEventCreator)
 
+#ifndef ODIN_VERSION
+#define ODIN_VERSION 3
+#endif
+
+using namespace LHCb;
+using namespace DAQEventTests;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 RawEventCreator::RawEventCreator( const std::string& name,
                                   ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ), m_eventTimeDecoder(NULL)
 {
-
+  
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 RawEventCreator::~RawEventCreator() {}; 
 
+StatusCode RawEventCreator::initialize() {
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if (sc.isFailure()) return sc;
+  
+  m_eventTimeDecoder = tool<IEventTimeDecoder>("OdinTimeDecoder",this,true);
+  
+  return sc;
+}
 
 //=============================================================================
 // Main execution
@@ -61,8 +78,9 @@ StatusCode RawEventCreator::execute() {
     }
     raw->adoptBank(bank, true);
   }
-  
+
   { // Fake ODIN Bank
+#if ODIN_VERSION == 1 || ODIN_VERSION == 2
     const int words = 9;
     int len = sizeof(unsigned int) * words;
     unsigned int data[words] = 
@@ -73,20 +91,45 @@ StatusCode RawEventCreator::execute() {
         1,      // L0 event ID (HI)
         1,      // L0 event ID (LO)
         0x00041E09, // GPS Time (HI)
-        0xC736E521, // GPS Time (LO)... Fri Sep 22 14:14:12 2006
+        0xC736E521, // GPS Time (LO)... Fri Sep 22 14:14:12.645153 2006
         0xAABBBBBB, // Error Bits (AA) and Detector Status (BBBBBB)
         0x11CF0123  // Bunch Current (11), BXType (beam crossing), Force (false),
                     // ReadoutType (NonZeroSuppression), TriggerType (7),
                     // Bunch Id (123)
       };
-    
-    RawBank* bank = raw->createBank(0, RawBank::ODIN, 1, len, data);
+#else // ODIN_VERSION == 3
+    const int words = 10;
+    int len = sizeof(unsigned int) * words;
+    unsigned int data[words] = 
+      {
+        1973,       // run number 
+        0xCAFEACDC, // Calibration Step Number (CAFE), event type (ACDC) 
+        23,         // orbit id
+        1,          // L0 event ID (HI)
+        1,          // L0 event ID (LO)
+        0x000440B1, // GPS Time (HI)
+        0xE73F4B05, // GPS Time (LO)... Fri Dec  7 14:05:39.916549 2007
+        0xAABBBBBB, // Error Bits (AA) and Detector Status (BBBBBB)
+        0x11CF0123, // Bunch Current (11), BXType (beam crossing), Force (false),
+                    // ReadoutType (NonZeroSuppression), TriggerType (7),
+                    // Bunch Id (123)
+        0x01234567  // Trigger Configuration Key
+      };
+#endif
+    RawBank* bank = raw->createBank(0, RawBank::ODIN, ODIN_VERSION, len, data);
     raw->adoptBank(bank, true);
   }
 
   put( raw, RawEventLocation::Default );
 
+  // triggers a decoding of the ODIN bank
+  m_eventTimeDecoder->getTime();
+  
+  info() << " ======== ODIN data ========\n";
+  LHCb::ODIN *odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
+  info() << *odin << endmsg;
+  
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================

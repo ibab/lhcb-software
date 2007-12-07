@@ -1,4 +1,4 @@
-// $Id: ByteStreamTests.h,v 1.1 2005-10-14 12:48:50 cattanem Exp $
+// $Id: ByteStreamTests.h,v 1.1 2007-12-07 14:34:05 marcocle Exp $
 #ifndef TESTS_BYTESTREAMTESTS_H 
 #define TESTS_BYTESTREAMTESTS_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 
+namespace DAQEventTests {
 /** @class ByteStreamTests ByteStreamTests.h tests/ByteStreamTests.h
  *  
  *
@@ -28,4 +29,7 @@ protected:
 private:
 
 };
+
+} // namespace DAQEventTests
+
 #endif // TESTS_BYTESTREAMTESTS_H

@@ -1,4 +1,4 @@
-// $Id: ByteStreamTests.cpp,v 1.2 2006-12-14 13:48:18 ranjard Exp $
+// $Id: ByteStreamTests.cpp,v 1.1 2007-12-07 14:34:05 marcocle Exp $
 // Include files 
 #include <iostream>
 
@@ -12,7 +12,7 @@
 #include "Event/BankWriter.h"
 
 using namespace LHCb;
-
+using namespace DAQEventTests;
 //-----------------------------------------------------------------------------
 // Implementation file for class : ByteStreamTests
 //
@@ -20,7 +20,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(ByteStreamTests)
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(DAQEventTests,ByteStreamTests)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -73,13 +73,13 @@ StatusCode ByteStreamTests::initialize() {
   smart  >> e >> f >> d;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Execution
 //=============================================================================
 StatusCode ByteStreamTests::execute() {
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================

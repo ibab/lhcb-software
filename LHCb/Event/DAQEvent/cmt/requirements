@@ -41,9 +41,12 @@ macro_remove DAQEvent_use_linkopts '$(LHCbKernel_linkopts)'
 macro_remove DAQEventLib_use_linkopts '$(LHCbKernel_linkopts)'
 macro_remove DAQEventDict_use_linkopts '$(LHCbKernel_linkopts)'
 
-#========= Uncomment 5 lines to build and run the Test application ==========
-#use GaudiConf   v*      -no_auto_imports
-#use GaudiSvc    v*      -no_auto_imports
-#macro_append  TestRawEventlinkopts '$(DAQEvent_linkopts)'
-#application   TestRawEvent $(GAUDICONFROOT)/src/GaudiMain.cpp ../tests/*.cpp
+private
+#========= Test application ==========
+use GaudiConf   v*      -no_auto_imports
+use GaudiSvc    v*      -no_auto_imports
+macro_append  TestRawEventlinkopts '$(DAQEvent_linkopts)'
+application   TestRawEvent -group=tests $(GAUDICONFROOT)/src/GaudiMain.cpp ../tests/src/*.cpp
 #apply_pattern application_path
+
+apply_pattern QMTest
