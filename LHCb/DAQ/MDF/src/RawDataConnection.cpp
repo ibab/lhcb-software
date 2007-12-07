@@ -1,4 +1,4 @@
-// $Id: RawDataConnection.cpp,v 1.1 2007-11-19 19:27:32 frankb Exp $
+// $Id: RawDataConnection.cpp,v 1.2 2007-12-07 11:53:26 frankb Exp $
 #include "MDF/RawDataConnection.h"
 #include "MDF/StreamDescriptor.h"
 
@@ -30,7 +30,7 @@ StatusCode RawDataConnection::connectWrite(IoType typ)  {
   switch(typ)  {
     case CREATE:
     case RECREATE:
-      m_access = StreamDescriptor::connect(m_name);
+      m_access = StreamDescriptor::connect(m_pfn);
       return m_access.ioDesc == 0 ? StatusCode::FAILURE : StatusCode::SUCCESS;
     default:
       break;
