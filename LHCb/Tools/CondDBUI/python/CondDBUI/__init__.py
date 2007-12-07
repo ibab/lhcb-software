@@ -1291,7 +1291,7 @@ class ValidityKeyWrapper:
             return self.value == rhs.value
         return self.value == rhs
     
-    def __eq__(self,rhs):
+    def __ne__(self,rhs):
         if type(self) == type(rhs):
             return self.value != rhs.value
         return self.value != rhs
