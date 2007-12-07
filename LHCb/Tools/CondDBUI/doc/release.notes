@@ -1,9 +1,32 @@
 ! =============================================================================
-! $Id: release.notes,v 1.63 2007-09-04 14:10:46 cattanem Exp $
+! $Id: release.notes,v 1.64 2007-12-07 09:14:20 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+!===================== Tools/CondDBUI v2r6 2007-12-07 =========================
+                            NEEDS LCGCMT >= 53f (Gaudi v19r6)
+! 2007-12-07 - Marco Clemencic
+ - Use pyqt from LCG_Interfaces without hacks.
+ - Restructured the package to use the installation of python modules and
+   scripts as in Gaudi
+   - the main module is now CondDBUI
+   - the browser is now CondDBBrowser.py
+ - Changes in CondDBUI:
+   - Added the methods cloneTag and moveTagOnNodes to CondDBUI.CondDB.
+   - CondDB connection string can now contain environment variables.
+ - Changes in the browser
+   - Modified the way configuration and settings are stored.
+   - Added default entries for the official databases.
+
+! 2007-12-07 - Kurt Rinnert
+ - Fixed a problem with ValidityKeyWrapper.__eq__
+
+                            NEEDS LCGCMT >= 53c (Gaudi v19r5)
+! 2007-10-03 - Marco Clemencic
+ - Use pyqt from LCG_Interfaces. It still needs a small hack because of a
+   problem with PyQt v3 installation.
 
 !===================== Tools/CondDBUI v2r5 2007-09-04 =========================
 ! 2007-08-21 - Marco Clemencic
