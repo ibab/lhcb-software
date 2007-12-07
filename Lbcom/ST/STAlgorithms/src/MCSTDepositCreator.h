@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.h,v 1.6 2007-11-06 09:53:22 mneedham Exp $
+// $Id: MCSTDepositCreator.h,v 1.7 2007-12-07 10:24:23 mneedham Exp $
 #ifndef MCSTDEPOSITCREATOR_H
 #define MCSTDEPOSITCREATOR_H 1
 
@@ -100,6 +100,7 @@ private:
   double m_scaling;                      ///< Scale the deposited charge
   /// Define tool names for different response types
   std::vector<std::string> m_beetleResponseTypes;
+  bool m_useStatusConditions; ///< use dead strip info
 
 };
 

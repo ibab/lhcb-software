@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.20 2007-12-07 09:32:49 mneedham Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.21 2007-12-07 10:24:23 mneedham Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -56,9 +56,12 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   declareProperty("SigNoiseTool", m_sigNoiseToolName = "STSignalToNoiseTool");
   declareProperty("Scaling", m_scaling = 1.0);
   declareProperty("ResponseTypes", m_beetleResponseTypes);
+  declareProperty("useStatusConditions", m_useStatusConditions = false);
+
 
   m_inputLocation = MCHitLocation::TT; 
   m_outputLocation = MCSTDepositLocation::TTDeposits;
+
  
 }
 
@@ -150,9 +153,10 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
     MCHit* aHit = *iterHit;
     
     DeSTSector* aSector = m_tracker->findSector(aHit->sensDetID());
-    if ((0 != aSector)&&(aSector->sectorStatus() != DeSTSector::Dead)
-        &&(hitToDigitize(aHit))){           
+    if ((0 != aSector) && (hitToDigitize(aHit) == true)){           
       
+      if (m_useStatusConditions && aSector->sectorStatus() == DeSTSector::Dead ) continue;
+
       // global to local transformation
       const Gaudi::XYZPoint entryPoint = aSector->toLocal(aHit->entry());
       const Gaudi::XYZPoint exitPoint = aSector->toLocal(aHit->exit());
@@ -213,7 +217,7 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
 
             STChannelID aChan = aSector->stripToChan(iStrip);
 
-            if (aSector->isOKStrip(aChan) == true){
+            if ( m_useStatusConditions == false || aSector->isOKStrip(aChan) == true){
             
               const double electrons = ionization*beetleFraction*scaling*weightedCharge
                                  /totWeightedCharge;

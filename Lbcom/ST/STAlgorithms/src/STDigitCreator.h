@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.h,v 1.7 2007-11-06 09:53:22 mneedham Exp $
+// $Id: STDigitCreator.h,v 1.8 2007-12-07 10:24:23 mneedham Exp $
 #ifndef STDigitCreator_H
 #define STDigitCreator_H 1
 
@@ -81,6 +81,8 @@ private:
   double m_saturation;
   std::string m_detType;
   bool m_allStrips;
+  bool m_useStatusConditions; ///< use dead strip info
+
 
   class Less_by_Channel
     : public std::binary_function<digitPair,digitPair,bool> 

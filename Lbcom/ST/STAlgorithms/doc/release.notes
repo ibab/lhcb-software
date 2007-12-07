@@ -2,6 +2,10 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2007-12-05 M Needham
+ - change conversion from e- to ADC in options
+ - make it possible to turn on/off dead strip sim
+
 !======================= STAlgorithms v2r5 2007-12-05 ========================
 ! 2007-12-05 - Marco Cattaneo
  - Add STKernel dependency, for new location of ISTSignalToNoiseTool interface
