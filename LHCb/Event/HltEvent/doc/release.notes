@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2007-12-07 - Patrick Koppenburg
+ - Added three HLT sleections, removed one.
+
 !======================== HltEvent v8r4p1 2007-12-07 =========================
 ! 2007-12-07 - Marco Cattaneo
  - Fix dependencies for DoHltNames hack and make the action private
