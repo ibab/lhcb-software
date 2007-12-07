@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.16 2007-10-01 11:41:36 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.17 2007-12-07 09:17:00 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -9,6 +9,7 @@
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IEventProcessor.h"
+#include "GaudiKernel/System.h"
 
 #include "DetDesc/ValidDataObject.h"
 #include "DetDesc/Condition.h"
@@ -238,10 +239,10 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
       cond_copy.erase(0,m_dataProviderRootName.size());
     }
     log << MSG::DEBUG << "registering condition \"" << cond_copy
-        << "\" for object of type " << mf->type().name() << " at " << std::hex << mf->castToVoid() << endmsg;
+        << "\" for object of type " << System::typeinfoName(mf->type()) << " at " << std::hex << mf->castToVoid() << endmsg;
   }
   else {
-    log << MSG::DEBUG << "registering object of type " << mf->type().name()
+    log << MSG::DEBUG << "registering object of type " << System::typeinfoName(mf->type())
         << " (without condition)" << endmsg;
   }
   
@@ -318,7 +319,7 @@ void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *
   }
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "registering object at " << std::hex << obj << std::dec
-      << " for object of type " << mf->type().name() << " at " << std::hex << mf->castToVoid() << endmsg;
+      << " for object of type " << System::typeinfoName(mf->type()) << " at " << std::hex << mf->castToVoid() << endmsg;
   // find the "condition"
   Item *cond_item = findItem(obj);
   if (!cond_item){ // Error!!!
