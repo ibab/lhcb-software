@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v30r5 2007-12-07 =============================
+! 2007-12-07 - Gloria CORTI
+ - Remove making local executable visible. The one in InstallArea already is.
+
 ! 2007-12-04 - Gloria CORTI
  - Switch on Herwig with standard Gauss.exe (ie. without special executable)
  - Temporarly increase stack size on windows where the default (1Mb) seems

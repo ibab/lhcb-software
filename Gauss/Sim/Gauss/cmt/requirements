@@ -129,10 +129,6 @@ macro_append Gauss_linkopts " -Wl,-Map,Linux.map " \
              Linux&HidValley " -Wl,-Map,LinuxHidValley.map "\
              WIN32          " /STACK:4000000"
 
-#-- Make just executable "visible" 
-path_remove    PATH  "/Gauss/"
-path_append    PATH  "${GAUSSROOT}/${BINDIR}"
-
 #-- For visualization make appropriate engine visible (DAWN)
 path_remove    PATH  "" Linux&Vis "/DAWN/"
 path_append    PATH  "" Linux&Vis "${OSC_release_area}/DAWN/bin/Linux"
