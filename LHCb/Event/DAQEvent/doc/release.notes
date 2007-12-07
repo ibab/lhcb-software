@@ -4,6 +4,12 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2007-12-07 Marco Clemencic
+ - Updated the ODIN class to version 3 of the ODIN bank format 
+   (added CalibrationStep and TriggerConfigurationKey).
+ - Modified the tests to comply to the Gaudi QMTest infrastructure and added
+   a very simple test (to be reviewed).
+ 
 !================ DAQEvent v7r7 2007-12-05 ============================
 ! 2007-12-05 Olivier Deschamps
  - Bug fix in RawBankReadoutStatus.xml
