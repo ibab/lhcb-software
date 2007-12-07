@@ -1,10 +1,11 @@
-// $Id: MuonSeedTool.h,v 1.1 2007-07-04 12:11:04 albrecht Exp $
+// $Id: MuonSeedTool.h,v 1.2 2007-12-07 17:51:50 albrecht Exp $
 #ifndef MUONSEEDTOOL_H 
 #define MUONSEEDTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "TrackInterfaces/ITrackPtKick.h"
 
 // Interface
 #include "HltBase/IMuonSeedTool.h"           
@@ -31,6 +32,9 @@ public:
   /// Initialize method
   virtual StatusCode initialize();
   
+  virtual StatusCode makeTrack( const LHCb::Track& inputTrack,
+                                LHCb::Track& seedTrack );
+
   virtual StatusCode makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
                                 LHCb::Track& seedTrack );
 
@@ -44,8 +48,15 @@ private:
   std::vector<double> m_sigmaTx2;
   std::vector<double> m_sigmaTy2;
 
+  std::vector<double> m_sigmaX2NoM1;
+  std::vector<double> m_sigmaY2NoM1;
+  std::vector<double> m_sigmaTx2NoM1;
+  std::vector<double> m_sigmaTy2NoM1;
   
   IMuonPosTool      *m_iPosTool;
+
+  ITrackPtKick* m_fCalcPtKick;
+  
   
   //debug information
   L0ConfDataStore* m_DataStore;
