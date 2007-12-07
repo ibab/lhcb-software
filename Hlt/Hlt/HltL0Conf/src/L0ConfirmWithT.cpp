@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.cpp,v 1.3 2007-11-16 11:10:58 albrecht Exp $
+// $Id: L0ConfirmWithT.cpp,v 1.4 2007-12-07 17:35:10 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -46,7 +46,7 @@ StatusCode L0ConfirmWithT::initialize()
   }
   debug() << " Initialize L0ConfirmWithT" << endmsg;
 
-  m_TrackConfirmTool=tool<ITrackConfirmTool>( m_trackingTool );
+  m_TrackConfirmTool=tool<ITrackConfirmTool>( m_trackingTool , this );
 
   return sc;
 }
@@ -139,6 +139,6 @@ StatusCode L0ConfirmWithT::extrapolateToT3( LHCb::State& statePos, LHCb::State& 
   
   statePos.setState( xT3Pos , yT3 , zT3 , txPos , ty , statePos.qOverP()); 
   stateNeg.setState( xT3Neg , yT3 , zT3 , txNeg , ty , stateNeg.qOverP());
-  
+
   return StatusCode::SUCCESS;
 }
