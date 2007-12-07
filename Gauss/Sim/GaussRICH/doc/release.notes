@@ -4,6 +4,7 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+!========================= GaussRICH v7r3 2007-12-07 =========================
 ! 2007-11-30 - Marco Clemencic and Gloria Corti
  - Link with special code in GaussTools for genConf (to instanciate a dummy 
    G4RunManager, see GaussTools v13r2)
