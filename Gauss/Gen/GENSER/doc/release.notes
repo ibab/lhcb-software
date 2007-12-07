@@ -4,6 +4,7 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v3r3 2007-12-07 ===========================
 ! 2007-11-08 - Gloria Corti for Karl Harrison
  - Introduce linking for pythia6 and GENSER for WIN32
 
