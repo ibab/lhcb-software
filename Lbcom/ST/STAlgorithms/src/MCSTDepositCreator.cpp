@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.19 2007-11-21 13:21:11 mneedham Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.20 2007-12-07 09:32:49 mneedham Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -35,7 +35,7 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   m_spillNames.push_back("/");
   m_spillTimes.push_back(0.*Gaudi::Units::ns);
 
-  declareProperty("TofVector", m_tofVector);
+  declareProperty("TofVector", m_tofVector, "vector of flight times");
   declareProperty("SpillVector", m_spillNames);
   declareProperty("SpillTimes", m_spillTimes);
   declareProperty("MinDist", m_minDistance = 10.0e-3*Gaudi::Units::mm);

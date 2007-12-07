@@ -74,10 +74,10 @@ ITDigitCreator.DetType = "IT";
 ITClusterCreator.DetType = "IT";
 
 ToolSvc.STSignalToNoiseToolIT.DetType = "IT";
-ToolSvc.STSignalToNoiseToolIT.ConversionToADC = 0.0013;
+ToolSvc.STSignalToNoiseToolIT.ConversionToADC = 0.001;
 //MCITDepositCreator.scaling = 1.33;
 
-//ITDigitCreator.allStrips = true;
-//TTDigitCreator.allStrips = true;
+ITDigitCreator.allStrips = true;
+TTDigitCreator.allStrips = true;
 
 ITClusterKiller.DetType = "IT";
