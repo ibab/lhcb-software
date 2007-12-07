@@ -3,6 +3,8 @@
 ! Purpose: Creates dictionaries for the use of Linker relations in Python
 !------------------------------------------------------------------------------
 
+! 2007-12-07 - Thomas Ruf
+ - adapted eventassoc.py to GaudiPython which comes with Gaudi v19r6
 !==================== LinkerInstances v3r3 2007-09-27 =========================
 ! 2007-09-27 - Thomas Ruf
  - adapted eventassoc.py to latest changes in linkedfrom
