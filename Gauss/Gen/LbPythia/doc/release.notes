@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v5r4 2007-12-07 ==========================
 ! 2007-12-03 - Gloria Corti
  - Convert file from DOS to Unix, to allow options to be parsed by python
    . options/Pythia64.opts
