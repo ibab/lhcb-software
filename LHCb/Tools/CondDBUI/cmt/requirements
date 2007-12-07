@@ -1,22 +1,18 @@
-# $Id: requirements,v 1.25 2007-09-04 14:10:45 cattanem Exp $
+# $Id: requirements,v 1.26 2007-12-07 08:36:18 marcocle Exp $
 package CondDBUI
 
-version v2r5
+version v2r6
 
-branches python src cmt db
-ignore_pattern package_stamps
+branches python scripts cmt
+#ignore_pattern package_stamps
+
+# ============== Dependencies ========================================
+use GaudiPolicy v*
 
 use Python  v* LCG_Interfaces -no_auto_imports
 use COOL    v* LCG_Interfaces -no_auto_imports
 apply_tag    NEEDS_PYCOOL
 use ROOT    v* LCG_Interfaces -no_auto_imports
-
-path_remove  PYTHONPATH 	 "/<package>/" WIN32 "\<package>\"
-path_prepend PYTHONPATH          "$(CONDDBUIROOT)/src"
-
-# ====================================================================
-private
-# ============== Dependencies ========================================
 
 use DDDB       v*    Det -no_auto_imports
 
@@ -32,34 +28,29 @@ use DDDB       v*    Det -no_auto_imports
 #set TNS_ADMIN ${CONDDBUIROOT}/cmt
 
 # Needed for whatever reason...
-use CORAL v* LCG_Interfaces -no_auto_imports 
+use CORAL v* LCG_Interfaces -no_auto_imports
 
 apply_tag    NEEDS_COOL_FACTORY
-
 
 # This one is needed by CORAL
 use XercesC v* LCG_Interfaces -no_auto_imports
 
-# Needed because of a bug in PyCintex
-#use CLHEP v* LCG_Interfaces -no_auto_imports
+use pyqt v* LCG_Interfaces -no_auto_imports
 
+# ====================================================================
+# Install scripts and modules
+# ====================================================================
+
+apply_pattern install_python_modules
+apply_pattern install_scripts
+
+# ====================================================================
+private
 # ============== Environment =========================================
 
 # CORAL path
-set  CORAL_AUTH_PATH       ${HOME}/private
-set  CORAL_DBLOOKUP_PATH   ${CONDDBUIROOT}/cmt
-
-use Qt v* LCG_Interfaces -no_auto_imports
-#use pyqt v* LCG_Interfaces -no_auto_imports
-
-# Temporary fix for the broken pyqt installation
-#macro        pyqt_native_version "4.1"
-macro        pyqt_native_version "3.13_python234"
-macro        pyqt_base           "$(LCG_external)/pyqt/$(pyqt_native_version)"
-macro        pyqt_home           "$(pyqt_base)/$(LCG_system)"
-path_remove  PYTHONPATH 	 "/pyqt/" WIN32 "\pyqt\"
-#path_prepend PYTHONPATH          "$(pyqt_home)/lib/python$(Python_version)/site-packages"
-path_prepend PYTHONPATH          "$(pyqt_base)/slc3_gcc323/lib/python2.3.4/site-packages"
+#set  CORAL_AUTH_PATH       ${HOME}/private
+#set  CORAL_DBLOOKUP_PATH   ${CONDDBUIROOT}/cmt
 
 # Sessions path
 #set  CONDDBUI_SESSIONS_PATH ${CONDDBUIROOT}/python
