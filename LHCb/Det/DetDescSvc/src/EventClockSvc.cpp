@@ -1,4 +1,4 @@
-// $Id: EventClockSvc.cpp,v 1.6 2007-03-19 15:15:32 cattanem Exp $
+// $Id: EventClockSvc.cpp,v 1.7 2007-12-07 08:11:42 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -56,38 +56,38 @@ StatusCode EventClockSvc::queryInterface(const InterfaceID& riid, void** ppvUnkn
 //  
 //=========================================================================
 StatusCode EventClockSvc::initialize() {
-	// base class initialization
-	StatusCode sc = Service::initialize();
-	if (!sc.isSuccess()) return sc;
+  // base class initialization
+  StatusCode sc = Service::initialize();
+  if (!sc.isSuccess()) return sc;
 
-	// local initialization
-	MsgStream log(msgSvc(),name());
-	log << MSG::DEBUG << "--- initialize ---" << endmsg;
+  // local initialization
+  MsgStream log(msgSvc(),name());
+  log << MSG::DEBUG << "--- initialize ---" << endmsg;
 
   // find the detector data svc
   sc = service(m_detDataSvcName,m_detDataSvc,true);
-	if (!sc.isSuccess()) {
-		log << MSG::ERROR << "Unable to get a handle to the detector data service" << endmsg;
-		return sc;
-	} else {
-		log << MSG::DEBUG << "Got pointer to IDetDataSvc \"" << m_detDataSvcName << '"' << endmsg;
+  if (!sc.isSuccess()) {
+    log << MSG::ERROR << "Unable to get a handle to the detector data service" << endmsg;
+    return sc;
+  } else {
+    log << MSG::DEBUG << "Got pointer to IDetDataSvc \"" << m_detDataSvcName << '"' << endmsg;
   }
 
   // get a pointer to the tool service
   sc = service( "ToolSvc", m_toolSvc, true );
-	if (!sc.isSuccess()) {
+  if (!sc.isSuccess()) {
     log << MSG::ERROR << "Unable to get a handle to the tool service" << endmsg;
-		return sc;
-	} else {
-		log << MSG::DEBUG << "Got pointer to ToolSvc " << endmsg;
+    return sc;
+  } else {
+    log << MSG::DEBUG << "Got pointer to ToolSvc " << endmsg;
   }
 
   sc = m_toolSvc->retrieveTool(m_eventTimeDecoderName, m_eventTimeDecoder, this);
   if (!sc.isSuccess()) {
     log << MSG::ERROR << "Unable to get a handle to the IEventTimeDecoder \"" << m_eventTimeDecoderName << '"' << endmsg;
-		return sc;
-	} else {
-		log << MSG::DEBUG << "Got pointer to " <<  m_eventTimeDecoderName << endmsg;
+    return sc;
+  } else {
+    log << MSG::DEBUG << "Got pointer to " <<  m_eventTimeDecoderName << endmsg;
   }
 
   // Set the first event time at initialization.
@@ -98,7 +98,7 @@ StatusCode EventClockSvc::initialize() {
   sc = service("IncidentSvc", m_incidentSvc, false);
   if ( sc.isSuccess() ) {
     m_incidentSvc->addListener(this,IncidentType::BeginEvent);
-		log << MSG::DEBUG << "Got pointer to IncidentSvc" << endmsg;
+    log << MSG::DEBUG << "Got pointer to IncidentSvc" << endmsg;
   } else {
     log << MSG::WARNING << "Unable to register to the incident service." << endmsg;
     m_incidentSvc = NULL;
@@ -110,18 +110,18 @@ StatusCode EventClockSvc::initialize() {
 //  
 //=========================================================================
 StatusCode EventClockSvc::finalize ( ) {
-	// local finalization
-	MsgStream log(msgSvc(),name());
-	log << MSG::DEBUG << "--- finalize ---" << endmsg;
+  // local finalization
+  MsgStream log(msgSvc(),name());
+  log << MSG::DEBUG << "--- finalize ---" << endmsg;
 
-	// release the interfaces used
+  // release the interfaces used
   if (m_toolSvc         != NULL) {
     if ( m_eventTimeDecoder != NULL )
       m_toolSvc->releaseTool(m_eventTimeDecoder).ignore();
     m_toolSvc->release();
   }
-	if (m_detDataSvc      != NULL) m_detDataSvc->release();
-	if (m_incidentSvc     != NULL) {
+  if (m_detDataSvc      != NULL) m_detDataSvc->release();
+  if (m_incidentSvc     != NULL) {
     // unregister from the incident svc
     m_incidentSvc->removeListener(this,IncidentType::BeginEvent);
     m_incidentSvc->release();
