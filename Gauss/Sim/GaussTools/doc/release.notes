@@ -4,6 +4,7 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v13r2 2007-12-07 ========================
 ! 2007-11-30 - Marco Clemencic and Gloria Corti 
  - Add special code to instanciate a dummy G4RunManager and assign to it
    a physics list as required to construct a G4 User Action, since the
