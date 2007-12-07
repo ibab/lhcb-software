@@ -4,6 +4,13 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-12-07 - Johannes Albrecht
+	- src/L0ConfirmWithT.cpp: make PR tool private
+	- src/MuonSeedTool.h,cpp
+		- clean up code
+		- add resolutions for the case w/o M1 hits
+		- add function to deal with tracks from Muon Coords 
+
 ! 2007-12-06 - Jose A. Hernando
  - PrepareMuonTSeedTool (tool from Sandra to deal with muon-segments)
 
