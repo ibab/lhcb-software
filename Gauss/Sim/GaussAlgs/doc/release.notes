@@ -4,6 +4,7 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+!======================== GaussAlgs v3r1 2007-12-07 ===========================
 ! 2007-11-21 - Gloria Corti
  - In case of failure of Giga->retrieveEvent return failure of algorithm,
    since inside an exception of some type has likely been thrown
