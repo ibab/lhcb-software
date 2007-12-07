@@ -1,0 +1,13 @@
+#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.SvcOptMapping        += {"LHCb::NetworkEvtSelector/EventSelector"};
+ApplicationMgr.ExtSvc               += {"IncidentSvc"};
+//ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
+//Runable.Wait                         = 3;
+EventSelector.Input                  = "EvtServ";
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
