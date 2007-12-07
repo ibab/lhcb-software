@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando
 #============================================================================
 package           HltEvent
-version           v8r4
+version           v8r4p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -17,16 +17,16 @@ use   PhysEvent       v*    Event
 use   GaudiKernel     v*
 private
 use GaudiObjDesc v* -no_auto_imports
+action DoHltNames "python ../python/translateEnums.py"
 end_private
 
 # Produce Header-Files from XML description
 #============================================================================
 apply_pattern god_headers files=../xml/*.xml
+macro_append  install_more_includes_dependencies " DoHltNames "
 apply_pattern install_more_includes more=Event
 
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
-action DoHltNames "python ../python/translateEnums.py"
-macro_append HltEventObj2Dict_dependencies " DoHltNames "
 apply_pattern god_dictionary files=../xml/*.xml
 

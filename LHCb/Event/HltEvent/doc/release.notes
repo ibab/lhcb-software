@@ -4,6 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== HltEvent v8r4p1 2007-12-07 =========================
+! 2007-12-07 - Marco Cattaneo
+ - Fix dependencies for DoHltNames hack and make the action private
+
 !======================== HltEvent v8r4 2007-09-10 ===========================
 ! 2007-09-07 - Sandra Amato
  - included Muon2DxDist Muon3DxDist Muon3DyDist MuonTdist enums
