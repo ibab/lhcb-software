@@ -9,7 +9,7 @@ versionNumber = '$Name: not supported by cvs2svn $'.split()[1]
 if versionNumber == "$":
     versionNumber = 'HEAD'
 
-versionId  = '$Id: guiwin.py,v 1.1 2007-12-07 08:33:11 marcocle Exp $'.split()
+versionId  = '$Id: guiwin.py,v 1.2 2007-12-07 09:13:38 marcocle Exp $'.split()
 if len(versionId) < 4:
     versionDate = 'unknown'
 else:
@@ -38,8 +38,8 @@ class myWindow(qt.QMainWindow):
 
         #---- Configurations ----#
         self.confFile = os.path.join(os.environ['HOME'],'.conddbbrowserrc')
-        self.old_sessions = ["sqlite_file:$SQLDDDBROOT/db/DDDB.db/DDDB [r-]",
-                             "sqlite_file:$SQLDDDBROOT/db/LHCBCOND.db/LHCBCOND [r-]",
+        self.old_sessions = ["sqlite_file:$SQLITEDBPATH/DDDB.db/DDDB [r-]",
+                             "sqlite_file:$SQLITEDBPATH/LHCBCOND.db/LHCBCOND [r-]",
                              ]
         self.max_old_sessions = 5
         self.external_editor = "emacs"
