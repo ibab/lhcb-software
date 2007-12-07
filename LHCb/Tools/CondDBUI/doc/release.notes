@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.64 2007-12-07 09:14:20 marcocle Exp $
+! $Id: release.notes,v 1.65 2007-12-07 09:43:24 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
@@ -19,6 +19,8 @@
  - Changes in the browser
    - Modified the way configuration and settings are stored.
    - Added default entries for the official databases.
+ - Added 2 small scripts that wrap the merge and diff functions in CondDBUI
+   (merge_db.py and diff_db.py).  
 
 ! 2007-12-07 - Kurt Rinnert
  - Fixed a problem with ValidityKeyWrapper.__eq__
