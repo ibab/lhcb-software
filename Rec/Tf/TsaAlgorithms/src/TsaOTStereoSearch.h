@@ -57,6 +57,7 @@ namespace Tf
       double m_scth;
       double m_maxDriftRadius;
       int m_nHit;
+      double m_yTol2;
 
       TfTsHitNumMap m_hitNumMap;
 

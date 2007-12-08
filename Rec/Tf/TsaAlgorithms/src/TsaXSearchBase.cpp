@@ -1,4 +1,4 @@
-// $Id: TsaXSearchBase.cpp,v 1.2 2007-11-07 17:28:40 mschille Exp $
+// $Id: TsaXSearchBase.cpp,v 1.3 2007-12-08 15:46:43 mschille Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -25,14 +25,11 @@ XSearchBase::XSearchBase(const std::string& type,
   declareProperty("nSigmaTx", m_nSigmaTx = 5.0 );
   declareProperty("outlierCut", m_outlierCut = 3.1 );
 
-  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0, m_outlierCut);
-
   declareInterface<ITsaSeedStep>(this);
 }
 
 XSearchBase::~XSearchBase(){
   // destructer
-  if (0 != m_parabolaFit) delete m_parabolaFit;
 }
 
 StatusCode XSearchBase::initialize(){
@@ -41,6 +38,8 @@ StatusCode XSearchBase::initialize(){
   if (sc.isFailure()){
     return Error("Failed to initialize",sc);
   }
+
+  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0, m_outlierCut);
 
   m_sxMax = m_sxCut;
   m_sxMin = -m_sxCut;
@@ -52,6 +51,13 @@ StatusCode XSearchBase::initialize(){
     m_collectFun = &XSearchBase::collectXHitsLinear;
   }
   return StatusCode::SUCCESS;
+}
+
+StatusCode XSearchBase::finalize()
+{
+  delete m_parabolaFit;
+  m_parabolaFit = 0;
+  return GaudiTool::finalize();
 }
 
 StatusCode XSearchBase::execute(LHCb::State& aState, std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits[6] ){

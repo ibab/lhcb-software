@@ -54,6 +54,7 @@ namespace Tf
       virtual ~SeedAddHits();
 
       virtual StatusCode initialize();
+      virtual StatusCode finalize();
 
       // execute method
       virtual StatusCode execute(SeedTracks* seeds, SeedHits* hits);
@@ -85,6 +86,9 @@ namespace Tf
       std::vector<double> m_yMax;
       double m_tol;
       double m_dCut;
+
+      double m_outlierCutLine;
+      double m_outlierCutParabola;
 
     };
 

@@ -35,7 +35,8 @@ namespace Tf
       // destructer
       virtual ~XSearchBase();
 
-      StatusCode initialize();
+      virtual StatusCode initialize();
+      virtual StatusCode finalize();
 
       virtual StatusCode execute(LHCb::State& hint, std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits[6] = 0) ;
 

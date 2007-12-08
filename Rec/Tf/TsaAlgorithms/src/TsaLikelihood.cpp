@@ -1,4 +1,4 @@
-// $Id: TsaLikelihood.cpp,v 1.3 2007-11-07 17:28:39 mschille Exp $
+// $Id: TsaLikelihood.cpp,v 1.4 2007-12-08 15:46:43 mschille Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -42,17 +42,19 @@ Likelihood::Likelihood(const std::string& type,
   declareProperty("weights", m_weights = list_of(1.0)(1.0)(1./3.)(1./3.)(1.0)(1.0)(1.0));
   declareProperty("outlierCut", m_outlierCut = 3.1);
 
-  // make sure we have enough elements
-  while (m_weights.size() < 7)
-	  m_weights.push_back(-1.0);
-
-  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0, m_outlierCut);
   declareInterface<ITsaSeedStep>(this);
 };
 
 Likelihood::~Likelihood(){
   // destructer
-  delete m_parabolaFit;
+}
+
+StatusCode Likelihood::finalize()
+{
+	delete m_parabolaFit;
+	m_parabolaFit = 0;
+
+	return GaudiTool::finalize();
 }
 
 StatusCode Likelihood::initialize()
@@ -61,6 +63,12 @@ StatusCode Likelihood::initialize()
   if (sc.isFailure()){
     return Error("Failed to initialize",sc);
   }
+
+  if (m_weights.size() < 7)
+    return Error( "Failed to initialize: Not enough weights for "
+		    "likelihood contributions.", StatusCode::FAILURE );
+
+  m_parabolaFit = new SeedParabolaFit(TsaConstants::z0, m_outlierCut);
 
   m_expectedHits = tool<IOTExpectedHits>("Tf::Tsa::OTExpectedHits");
   m_expectedITHits = tool<IITExpectedHits>("Tf::Tsa::ITExpectedHits");

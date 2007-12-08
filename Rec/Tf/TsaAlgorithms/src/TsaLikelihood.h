@@ -51,6 +51,7 @@ namespace Tf
       // destructer
       virtual ~Likelihood();
 
+      virtual StatusCode finalize();
       virtual StatusCode initialize();
 
       // execute method

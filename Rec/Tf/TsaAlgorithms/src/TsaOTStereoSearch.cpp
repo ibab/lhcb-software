@@ -1,4 +1,4 @@
-// $Id: TsaOTStereoSearch.cpp,v 1.5 2007-11-07 17:28:40 mschille Exp $
+// $Id: TsaOTStereoSearch.cpp,v 1.6 2007-12-08 15:46:43 mschille Exp $
 
 #include <algorithm>
 
@@ -32,6 +32,7 @@ OTStereoSearch::OTStereoSearch(const std::string& type,
   declareProperty( "win" , m_win = 100.0);
   declareProperty( "nWin" , m_nWin = 6);
   declareProperty( "yTol", m_yTol = 20.0);
+  declareProperty( "yTol2", m_yTol2 = 10.0);
   declareProperty("nHit", m_nHit = 15);
   declareProperty( "nY", m_nY = 4);
   declareProperty("maxDriftRadius", m_maxDriftRadius = 2.7);
@@ -132,7 +133,7 @@ StatusCode OTStereoSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<S
                   SeedHit* hit = (*it);
                   double dy1 = hit->y() - hit->r()*m_scth - y1 - sy*( hit->z() - z1 );
                   double dy2 = dy1 + 2*hit->r()*m_scth;
-                  if ( fabs(dy1) < 10. || fabs(dy2) < 10. ) ++nh;
+                  if ( fabs(dy1) < m_yTol2 || fabs(dy2) < m_yTol2 ) ++nh;
                 }
                 if ( nh > nMax ) {
                   nMax = nh;
@@ -156,7 +157,7 @@ StatusCode OTStereoSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<S
                 SeedHit* hit = (*it);
                 double dy1 = hit->y() - hit->r()*m_scth - y1 - sy*( hit->z() - z1 );
                 double dy2 = dy1 + 2*hit->r()*m_scth;
-                if ( fabs(dy1) < 10. || fabs(dy2) < 10. ) {
+                if ( fabs(dy1) < m_yTol2 || fabs(dy2) < m_yTol2 ) {
                   iSel[nSel] = hit;
                   if ( fabs(dy1) < fabs(dy2) ) {
                     sSel[nSel] = -1;

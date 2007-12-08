@@ -1,4 +1,4 @@
-// $Id: TsaSeedAddHits.cpp,v 1.6 2007-11-07 17:28:40 mschille Exp $
+// $Id: TsaSeedAddHits.cpp,v 1.7 2007-12-08 15:46:43 mschille Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -34,10 +34,15 @@ SeedAddHits::SeedAddHits(const std::string& type,
 
 SeedAddHits::~SeedAddHits(){
   // destructer
-  delete m_parabolaFit;
-  delete m_fitLine;
 }
 
+StatusCode SeedAddHits::finalize() {
+  delete m_parabolaFit;
+  delete m_fitLine;
+  m_parabolaFit = 0;
+  m_fitLine = 0;
+  return GaudiTool::finalize();
+}
 
 StatusCode SeedAddHits::initialize(){
 

@@ -1,4 +1,4 @@
-// $Id: TsaStubLinker.cpp,v 1.3 2007-11-07 17:28:40 mschille Exp $
+// $Id: TsaStubLinker.cpp,v 1.4 2007-12-08 15:46:43 mschille Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -41,8 +41,8 @@ StubLinker::~StubLinker(){
 
 StatusCode StubLinker::finalize() 
 {
-  if( NULL != m_parabolaFit ) { delete m_parabolaFit; m_parabolaFit = NULL; }
-  if( NULL != m_fitLine     ) { delete m_fitLine;     m_fitLine     = NULL; }
+  delete m_parabolaFit; m_parabolaFit = 0;
+  delete m_fitLine;     m_fitLine     = 0;
   return GaudiTool::finalize();
 }
 

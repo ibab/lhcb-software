@@ -1,4 +1,4 @@
-// $Id: TsaStereoBase.cpp,v 1.6 2007-11-07 17:28:40 mschille Exp $
+// $Id: TsaStereoBase.cpp,v 1.7 2007-12-08 15:46:43 mschille Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -40,10 +40,9 @@ StereoBase::~StereoBase()
 
 StatusCode StereoBase::finalize() 
 {
-  if ( NULL != m_fitLine ) { delete m_fitLine; m_fitLine = NULL; }
+  delete m_fitLine; m_fitLine = 0;
   return GaudiTool::finalize();
 }
-
 
 StatusCode StereoBase::initialize()
 {
@@ -51,7 +50,6 @@ StatusCode StereoBase::initialize()
   if (sc.isFailure()){
     return Error("Failed to initialize",sc);
   }
-
   m_syMin = -0.3;
   m_syMax = 0.3;
 
