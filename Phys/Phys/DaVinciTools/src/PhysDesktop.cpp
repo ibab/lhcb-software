@@ -1,8 +1,9 @@
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
-#include "GaudiKernel/IIncidentSvc.h"
+//#include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IAlgorithm.h"
+#include "GaudiKernel/IToolSvc.h" 
 
 // local
 #include "PhysDesktop.h"
@@ -91,7 +92,7 @@ PhysDesktop::PhysDesktop( const std::string& type,
 
   // Declaring implemented interfaces
   declareInterface<IPhysDesktop>(this);
-  declareInterface<IIncidentListener>(this);
+  //  declareInterface<IIncidentListener>(this);
 
   // Declare properties
   //                    loading conditions
@@ -143,8 +144,15 @@ StatusCode PhysDesktop::initialize()
   if (!sc) return Warning( "Failed to initialize base class GaudiTool", sc );
   if (msgLevel(MSG::DEBUG)) debug() << ">>>   PhysDesktop::initialize() " << endmsg;
 
+  // check it is not global
+  const IToolSvc* par = dynamic_cast<const IToolSvc*>( this->parent() );
+  if ( 0!=par ){
+    err() << "Parent of PhysDesktop is ToolSvc. PhysDesktop *must* be private" << endmsg ;
+    return StatusCode::FAILURE;
+  }
+
   // Register to the Incident service to be notified at the end of one event
-  incSvc()->addListener( this, IncidentType::EndEvent, 100 );
+  //  incSvc()->addListener( this, IncidentType::EndEvent, 100 );
 
   if ( m_pMakerType == "" ){
     if (msgLevel(MSG::DEBUG)) debug() << "No ParticleMaker requested in job options"
@@ -188,6 +196,7 @@ StatusCode PhysDesktop::initialize()
   return sc;
 }
 
+/*
 //=============================================================================
 // Implementation of Listener interface
 //=============================================================================
@@ -196,7 +205,7 @@ void PhysDesktop::handle(const Incident&){
   if (!sc) Exception("Could not clean Desktop");
   return ;
 }
-
+*/
 //=============================================================================
 // Provides a reference to its internal container of particles
 //=============================================================================
@@ -271,6 +280,8 @@ StatusCode PhysDesktop::cleanDesktop(){
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Removing all entries from Particle2Vertex relations" << endmsg;
   i_p2PVTable()->clear();
+
+  if (msgLevel(MSG::VERBOSE)) verbose() << "TMP : Cleaned desktop" << endmsg ;
   
   return StatusCode::SUCCESS;
 

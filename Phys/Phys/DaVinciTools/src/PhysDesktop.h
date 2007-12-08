@@ -7,7 +7,7 @@
 #include <set>
 
 // from Gaudi
-#include "GaudiKernel/IIncidentListener.h"
+//#include "GaudiKernel/IIncidentListener.h"
 #include "GaudiAlg/GaudiTool.h"
 // from DaVinci
 #include "Kernel/IPhysDesktop.h"
@@ -24,8 +24,7 @@ class IRelatedPVFinder ;
  *
  */
 class PhysDesktop : public GaudiTool,
-                    virtual public IPhysDesktop,
-                    virtual public IIncidentListener {
+                    virtual public IPhysDesktop {
   
 public:
   
@@ -37,7 +36,7 @@ public:
   virtual ~PhysDesktop(){ } ///< Destructor
   
   /// IListener interface for cleaning at end of event
-  virtual void handle(const Incident&);
+  //  virtual void handle(const Incident&);
   
   /// Initialize method 
   StatusCode initialize();
