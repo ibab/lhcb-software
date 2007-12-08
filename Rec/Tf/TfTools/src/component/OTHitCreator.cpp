@@ -56,7 +56,7 @@ namespace Tf
       void clearEvent() { m_ownedhits.clear() ;  m_sortedhits.clear() ; m_isloaded = false ;}
       void setRange( OTHits::const_iterator begin, OTHits::const_iterator end ) { m_hitrange = OTHitRange(begin,end) ; }
       static size_t moduleIndexInRegion( LHCb::OTChannelID id ) { return id.module() + (id.quarter()%2) * 9 ; }
-     private:
+    private:
       const DeOTModule* m_det ;
       mutable HitContainer m_ownedhits ;        // these are the hits which the module owns
       mutable SortedHitContainer m_sortedhits ; // hits sorted in x. I hope I can get rid of it.
@@ -145,7 +145,7 @@ namespace Tf
                 aregion = new OTRegionImp(regionid,*this) ;
                 insert( aregion ) ;
               }
-	      size_t moduleindex = OTModule::moduleIndexInRegion((*imodule)->elementID()) ;
+              size_t moduleindex = OTModule::moduleIndexInRegion((*imodule)->elementID()) ;
               aregion->insert( moduleindex, new HitCreatorGeom::OTModule(**imodule) ) ;
               ++nummodules ;
             }
@@ -162,11 +162,13 @@ namespace Tf
       if(!isLoaded()) {
         unsigned int numhits(0) ;
         for(OTRegionImp::ModuleContainer::const_iterator imodule=begin ;
-            imodule!= end; ++imodule)
+            imodule!= end; ++imodule) {
           if(!(*imodule)->isLoaded()) {
             OTModule* module = const_cast<OTModule*>(*imodule) ;
-            numhits += module->loadHits(*(m_parent->decoder()),m_parent->tmin(),m_parent->tmax()) ;
+            module->loadHits(*(m_parent->decoder()),m_parent->tmin(),m_parent->tmax()) ;
           }
+          numhits += (*imodule)->sortedhits().size() ;
+        }
 
         // FIXME. This invalidates all pointers to hits ranges,
         // including those set in 'other' modules.
@@ -317,10 +319,10 @@ namespace Tf
 
 
   // Retrieve an OTModule
-  const Tf::HitCreatorGeom::OTModule* OTHitCreator::module( const LHCb::OTChannelID id ) const 
+  const Tf::HitCreatorGeom::OTModule* OTHitCreator::module( const LHCb::OTChannelID id ) const
   {
     Tf::RegionID regionid(id) ;
-    const Tf::HitCreatorGeom::OTRegionImp* thisregion = 
+    const Tf::HitCreatorGeom::OTRegionImp* thisregion =
       m_detectordata->region(regionid.station(),regionid.layer(),regionid.region()) ;
     size_t modindex = Tf::HitCreatorGeom::OTModule::moduleIndexInRegion( id ) ;
     const Tf::HitCreatorGeom::OTModule* thismodule = thisregion->modules()[modindex] ;

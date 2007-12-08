@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-12-08 - Christopher Rob Jones
+ - Commit patch (from Wouter) to fix crash due to OTHitCreator
+
 !============================ TfTools v1r1 2007-11-14 ========================
 ! 2007-11-14 - Wouter Hulsbergen
  - adapted to change in OTLiteTime and OTHit
