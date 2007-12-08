@@ -202,6 +202,9 @@ StatusCode DVAlgorithm::sysExecute ()
   { sc = desktop()->writeEmptyContainerIfNeeded(); }
   else 
   { verbose() << "Avoiding mandatory output" << endmsg ; }
+
+  sc = desktop()->cleanDesktop();
+  if (msgLevel(MSG::VERBOSE) && sc) verbose() << "Happily cleaned Desktop" << endmsg ;
   
   return sc ;
 }

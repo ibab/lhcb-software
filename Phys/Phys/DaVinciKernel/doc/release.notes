@@ -3,6 +3,11 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2007-12-08 - Patrick Koppenburg
+ - Do not use incident end-event to clean desktop:
+   . IPhysDesktop: Don't look for Incidents
+   . DVAlgorith.cpp: clean desktop at end of execute
+
 !========================= DaVinciKernel v6r9 2007-12-05 ====================
 ! 2007-12-04 - Vanya BELYAEV
  - Kernel/GetDVAlgorithm.h, src/Lib/GetDVAlgorithm.cpp

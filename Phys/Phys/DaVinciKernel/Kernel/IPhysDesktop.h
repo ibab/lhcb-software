@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.21 2007-01-08 22:06:03 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.22 2007-12-08 16:10:58 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -11,7 +11,7 @@
 class StatusCode;
 
 // Declaration of the interface ID ( interface id, major version, minor version)
-static const InterfaceID IID_IPhysDesktop("IPhysDesktop", 1, 2);
+static const InterfaceID IID_IPhysDesktop("IPhysDesktop", 1, 3);
 
 
 /** @class IPhysDesktop IPhysDesktop.h Kernel/IPhysDesktop.h
@@ -87,6 +87,10 @@ public:
   /// Obtain a copy of the current 1D relations table 
   /// relating LHCb::Particles to LHCb::VertexBases
   virtual const Particle2Vertex::Table particle2VertexTable() const = 0;
+
+  /// Clean desktop
+  virtual StatusCode cleanDesktop() = 0;
+  
 
 protected:
 
