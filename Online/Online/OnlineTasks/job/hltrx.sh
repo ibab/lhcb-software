@@ -36,7 +36,7 @@ export gaudi_exe2="${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe libGaudiOnline.so O
 # Online tasks - be careful when changing the startup order 
  
 # MBMInit initializes the shared memory
-$MINITERM MEPInit@${HOST} -e "export UTGID=MEPInit ; ${gaudi_exe} -main=${GAUDIONLINEROOT}/options/MEPInit.opts  -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
+$MINITERM MEPInit@${HOST} -e "export UTGID=MEPInit ; ${gaudi_exe} -main=${ONLINETASKSROOT}/options/MEPInit.opts  -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
 #
 # ErrorLogger (not required for running)
 $WIDETERM ErrorLogger@${HOST}    -e "export UTGID=ErrLog; ${gaudi_exe2} -opts=$GAUDIONLINEROOT/options/ErrorLogger.opts -main=$GAUDIONLINEROOT/options/Remap.opts " &
@@ -64,7 +64,7 @@ $MINITERM Moore_1@${HOST}   -e "export UTGID=Moore_1  ; ${gaudi_exe} -opt=$GAUDI
 #
 # Optional if you want write the data
 #
-$MINITERM DiskWR@${HOST}    -e "export UTGID=DiskWR   ; ${gaudi_exe} -opt=$ONLINETASKSROOT/options/DiskWR.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
+#$MINITERM DiskWR@${HOST}    -e "export UTGID=DiskWR   ; ${gaudi_exe} -opt=$ONLINETASKSROOT/options/DiskWR.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
 #
 # Last not least the event-builder
 #

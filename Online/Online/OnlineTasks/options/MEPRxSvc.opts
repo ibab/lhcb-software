@@ -1,6 +1,6 @@
 // 
 // MEPRxSvc.opts
-// $Id: MEPRxSvc.opts,v 1.6 2007-04-30 07:16:58 frankb Exp $
+// $Id: MEPRxSvc.opts,v 1.7 2007-12-09 16:05:03 niko Exp $
 // Sample options for the eventbuilder service MEPRxSvc
 // niko.neufeld@cern.ch
 #include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
@@ -22,7 +22,8 @@ Runable.maxBadPktRatio   = 0.1;     // maximum fraction of erroneous packets dur
 Runable.pktSamplingCount = 100;  // number of packets to sample to determine error ratio
 Runable.maxMsForGetSpace = 100;  // milliseconds to wait to get buffer memory from BM
 Runable.partitionID      = 333;       
-Runable.MEPBufSize       = 1500000;
+Runable.MEPBufSize       = 2100000;
 Runable.refCount         = 2;
 Runable.RTTCCompat       = false;       // for RTTC backward compatibility
+Runable.sockBuf           = 3000000;     // receive socket size
 #include "$ONLINETASKSROOT/options/EBSetup.opts"
