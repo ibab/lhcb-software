@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiTrigger.xml,v 1.9 2007-12-03 16:51:08 ibelyaev Exp $ 
+     * $Id: LoKiTrigger.xml,v 1.10 2007-12-09 19:04:41 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -10,6 +10,7 @@
 
 <lcgdict>
   
+
   <class pattern   = "std::unary_function<*LHCb::Tr*>"          />
   <class pattern   = "std::unary_function<*LHCb::Re*>"          />
   <class pattern   = "std::binary_function<*LHCb::Tr*>"          />
@@ -49,6 +50,10 @@
   <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::R*>"  />
   <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::T*>" />
   <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::R*>" />
+  <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::T*>" />
+  <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::R*>" />
+  <class pattern   = "LoKi::Dicts::InfoOps<*LHCb::T*>"   />
+  <class pattern   = "LoKi::Dicts::InfoOps<*LHCb::R*>"   />
   
   <class pattern   = "LoKi::Reference<*>" />
   <class pattern   = "LoKi::Holder<*>"    />

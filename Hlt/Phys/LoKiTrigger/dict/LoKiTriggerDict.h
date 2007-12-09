@@ -1,4 +1,4 @@
-// $Id: LoKiTriggerDict.h,v 1.7 2007-12-03 16:51:08 ibelyaev Exp $
+// $Id: LoKiTriggerDict.h,v 1.8 2007-12-09 19:04:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -449,6 +449,9 @@ namespace
     LoKi::Dicts::Funcs<LoKi::TrackTypes::TrackPair>           m_f3  ;
     LoKi::Dicts::Funcs<LoKi::TrackTypes::TrackVertexPair>     m_f4  ;
     LoKi::Dicts::Funcs<LoKi::TrackTypes::VertexPair>          m_f5  ;
+    //
+    LoKi::Dicts::VFuncs<LHCb::Track*>                         m_v1  ;
+    LoKi::Dicts::VFuncs<LHCb::RecVertex*>                     m_v2  ;
     // operators 
     LoKi::Dicts::FuncOps<LHCb::Track,LHCb::Track*>            m_o1  ;
     LoKi::Dicts::FuncOps<LHCb::RecVertex,LHCb::RecVertex*>    m_o2  ;
@@ -470,6 +473,11 @@ namespace
     LoKi::Dicts::FunValOps<LHCb::RecVertex*>                  m_fo6  ;    
     LoKi::Dicts::ElementOps<LHCb::Track*,LHCb::Track>         m_fo7  ;
     LoKi::Dicts::ElementOps<LHCb::RecVertex*,LHCb::RecVertex> m_fo8  ;    
+    LoKi::Dicts::SourceOps<LHCb::Track*,LHCb::Track>          m_fo9  ;
+    LoKi::Dicts::SourceOps<LHCb::RecVertex*,LHCb::RecVertex>  m_fo10 ;    
+    // infor 
+    LoKi::Dicts::InfoOps<LHCb::Track>                         m_i1 ;
+    LoKi::Dicts::InfoOps<LHCb::RecVertex>                     m_i2 ;
     // calls 
     LoKi::Dicts::FunCalls<LHCb::Track>                        m_cf1 ;
     LoKi::Dicts::FunCalls<LHCb::RecVertex>                    m_cf2 ;

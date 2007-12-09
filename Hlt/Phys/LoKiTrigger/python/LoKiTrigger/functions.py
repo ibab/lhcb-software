@@ -1,19 +1,27 @@
 #!/usr/bin/env python
 # =============================================================================
 ## @file
-#  The set of basic objects from LoKiTracklibrary
+#  The set of basic objects from LoKiTrigger library
 #  The file is a part of LoKi and Bender projects
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @daet 2007-06-09
 # =============================================================================
-""" The set of basic objects from LoKiTrack library """
-_author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+"""
+The set of basic objects from LoKiTrack library
+"""
+# =============================================================================
+__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
 from   LoKiCore.functions import equal_to 
 
-## needed since there is no autoloading of HepMC dictionaries:
+## needed since there is no autoloading of Trackin dictionaries:
+import sys,PyCintex
+
+if sys.platform == 'win32' : PyCintex.loadDict (    "TrackEventDict" )  
+else                       : PyCintex.loadDict ( "libTrackEventDict" )  
+    
 
 # Namespaces:
 _global  = _LoKiCore._global 
@@ -29,75 +37,70 @@ _V = 'LHCb::RecVertex'
 # =============================================================================
 
 ## @see LoKi::Types::TrFunc
-TrFunc  = LoKi.Function               ( _T ) 
+TrFunc  = LoKi.Functor                ( _T , 'double' ) 
 ## @see LoKi::Types::TrCuts
-TrCuts  = LoKi.Predicate              ( _T ) 
+TrCuts  = LoKi.Functor                ( _T ,  bool    ) 
 ## @see LoKi::Types::TrFun
-TrFun   = LoKi.FunctionFromFunction   ( _T ) 
+TrFun   = LoKi.FunctorFromFunctor     ( _T , 'double' ) 
 ## @see LoKi::Types::TrCut
-TrCut   = LoKi.PredicateFromPredicate ( _T )
+TrCut   = LoKi.FunctorFromFunctor     ( _T ,  bool    )
 
-# =============================================================================
-## "Ordinary" functions for Vertices: "RV"
-# =============================================================================
-
+# ## "Ordinary" functions for Vertices: "RV"
+# 
 ## @see LoKi::Types::RVFunc
-RVFunc = LoKi.Function               ( _V ) 
+RVFunc = LoKi.Functor                ( _V , 'double' ) 
 ## @see LoKi::Types::RVCuts
-RVCuts = LoKi.Predicate              ( _V ) 
+RVCuts = LoKi.Functor                ( _V ,  bool    ) 
 ## @see LoKi::Types::RVFun
-RVFun  = LoKi.FunctionFromFunction   ( _V ) 
+RVFun  = LoKi.FunctorFromFunctor     ( _V , 'double' ) 
 ## @see LoKi::Types::RVCut
-RVCut  = LoKi.PredicateFromPredicate ( _V ) 
+RVCut  = LoKi.FunctorFromFunctor     ( _V ,  bool    ) 
 
 _HTT = LoKi.Holder(_T,_T)
 _HTV = LoKi.Holder(_T,_V)
 _HVV = LoKi.Holder(_V,_V)
 
-# =============================================================================
+#
 ## Functors which deals with 2 tracks:   "TTr"
-# =============================================================================
-
+# 
 ## @see LoKi::Types::TTrFunc
-TTrFunc  = LoKi.Function               ( _HTT ) 
+TTrFunc  = LoKi.Functor                ( _HTT , 'double' ) 
 ## @see LoKi::Types::TTrCuts
-TTrCuts  = LoKi.Predicate              ( _HTT ) 
+TTrCuts  = LoKi.Functor                ( _HTT ,  bool    ) 
 ## @see LoKi::Types::TTrFun
-TTrFun   = LoKi.FunctionFromFunction   ( _HTT ) 
+TTrFun   = LoKi.FunctorFromFunctor     ( _HTT , 'double' ) 
 ## @see LoKi::Types::TTrCut
-TTrCut   = LoKi.PredicateFromPredicate ( _HTT )
+TTrCut   = LoKi.FunctorFromFunctor     ( _HTT ,  bool    )
 
-# =============================================================================
+#
 ## Functors which deals with track and vertex: "TrV"
-# =============================================================================
+#
 
 ## @see LoKi::Types::TTrVFunc
-TrVFunc  = LoKi.Function               ( _HTV ) 
+TrVFunc  = LoKi.Functor                ( _HTV , 'double' ) 
 ## @see LoKi::Types::TTrVCuts
-TrVCuts  = LoKi.Predicate              ( _HTV ) 
+TrVCuts  = LoKi.Functor                ( _HTV ,  bool    ) 
 ## @see LoKi::Types::TTrVFun
-TrVFun   = LoKi.FunctionFromFunction   ( _HTV ) 
+TrVFun   = LoKi.FunctorFromFunctor     ( _HTV , 'double' ) 
 ## @see LoKi::Types::TTrVCut
-TrVCut   = LoKi.PredicateFromPredicate ( _HTV )
+TrVCut   = LoKi.FunctorFromFunctor     ( _HTV ,  bool    )
 
-# =============================================================================
-## Functors which deals with two vertices: "RVV"
-# =============================================================================
+#
+# ## Functors which deals with two vertices: "RVV"
+#
 
 ## @see LoKi::Types::TTrVFunc
-RVVFunc  = LoKi.Function               ( _HVV ) 
+RVVFunc  = LoKi.Functor                ( _HVV , 'double' ) 
 ## @see LoKi::Types::TTrVCuts
-RVVCuts  = LoKi.Predicate              ( _HVV ) 
+RVVCuts  = LoKi.Functor                ( _HVV ,  bool    ) 
 ## @see LoKi::Types::TTrVFun
-RVVFun   = LoKi.FunctionFromFunction   ( _HVV ) 
+RVVFun   = LoKi.FunctorFromFunctor     ( _HVV , 'double' ) 
 ## @see LoKi::Types::TTrVCut
-RVVCut   = LoKi.PredicateFromPredicate ( _HVV )
+RVVCut   = LoKi.FunctorFromFunctor     ( _HVV ,  bool    )
 
 
 # =============================================================================
-## concrete functions:
-# =============================================================================
-
+# ## concrete functions:
 # =============================================================================
 
 ## @see LoKi::Cuts::RVHASINFO
@@ -111,8 +114,7 @@ RVMINPT       = LoKi.RecVertices.MinPt ()
 ## @see LoKi::Cuts::RVSINFO
 RVSINFO       = LoKi.RecVertices.SmartInfo
 
-# =============================================================================
-
+# 
 ## @see LoKi::Cuts::RVVDZ
 RVVDZ         = LoKi.RecVertices.DeltaZ () 
 ## @see LoKi::Cuts::RVVFC
@@ -120,14 +122,13 @@ RVVFC         = LoKi.RecVertices.FC     ()
 ## @see LoKi::Cuts::RVVFC2
 RVVFC2        = LoKi.RecVertices.FC2    () 
 
-# =============================================================================
-
+# 
 ## @see LoKi::Cuts::TrTYPE
 TrTYPE        = LoKi.Tracks.Type  () 
 
 
 ## @see @see LoKi::Cuts::TrALL
-TrALL         = LoKi.BooleanConstant ( _T ) ( True )
+TrALL         = LoKi.Constant ( _T , bool ) ( True )
 ## @see LoKi::Cuts::TrBACKWARD
 TrBACKWARD    = LoKi.Tracks.CheckFlag ( LHCb.Track.Backward ) 
 ## @see LoKi::Cuts::TrCHI2 
@@ -139,7 +140,7 @@ TrDOWNSTREAM  = equal_to ( TrTYPE , LHCb.Track.Downstream )
 ## @see LoKi::Cuts::TrDE
 TrDE          = LoKi.Tracks.DeltaE     () 
 ## @see LoKi::Cuts::TrFALSE
-TrFALSE       = LoKi.BooleanConstant( _T ) ( False )
+TrFALSE       = LoKi.Constant( _T , bool ) ( False )
 ## @see LoKi::Cuts::TrFILTER
 TrFILTER      = LoKi.Tracks.Selector 
 ## @see LoKi::Cuts::TrHASINFO
@@ -165,9 +166,9 @@ TrLONG        = equal_to ( TrTYPE , LHCb.Track.Long )
 ## @see LoKi::Cuts::TrMUON
 TrMUON        = equal_to ( TrTYPE , LHCb.Track.Muon ) 
 ## @see LoKi::Cuts::TrNONE
-TrNONE        = LoKi.BooleanConstant( _T ) ( False )
+TrNONE        = LoKi.Constant( _T , bool ) ( False )
 ## @see LoKi::Cuts::TrONE
-TrONE         = LoKi.Constant( _T ) ( 1.0 )
+TrONE         = LoKi.Constant( _T , 'double' ) ( 1.0 )
 ## @see LoKi::Cuts::TrP
 TrP           = LoKi.Tracks.Momentum          () 
 ## @see LoKi::Cuts::TrPIDSELECTED
@@ -185,7 +186,7 @@ TrSELECTOR   = LoKi.Tracks.Selector
 ## @see LoKi::Cuts::TrSINFO
 TrSINFO       = LoKi.Tracks.SmartInfo
 ## @see LoKi::Cuts::TrTRUE
-TrTRUE        = LoKi.BooleanConstant( _T ) ( True  )
+TrTRUE        = LoKi.Constant( _T , bool ) ( True  )
 ## @see LoKi::Cuts::TrTTRACK
 TrTTRACK      = equal_to ( TrTYPE , LHCb.Track.Ttrack ) 
 ## @see LoKi::Cuts::TrUNKNOWN
@@ -199,10 +200,9 @@ TrVELO        = equal_to ( TrTYPE , LHCb.Track.Velo )
 ## @see LoKi::Cuts::TrVELOR
 TrVELOR       = equal_to ( TrTYPE , LHCb.Track.VeloR ) 
 ## @see LoKi::Cuts::TrZERO
-TrZERO        = LoKi.Constant( _T ) ( 0.0 )
+TrZERO        = LoKi.Constant( _T , 'double' ) ( 0.0 )
 
-# =============================================================================
-
+# 
 ## @see LoKi::Cuts::TTrDA
 TTrDA         = LoKi.Tracks.DeltaAngle () 
 ## @see LoKi::Cuts::TTrDOCA
@@ -214,19 +214,50 @@ TTrMATCH      = LoKi.Tracks.TrackMatch
 ## @see LoKi::Cuts::TTrMATCHIDS
 TTrMATCHIDS   = LoKi.Tracks.MatchIDsFraction () 
 
-# =============================================================================
-
+# 
 ## @see LoKi::Cuts::TrVIP 
 TrVIP         = LoKi.Tracks.ImpactParameter () 
 ## @see LoKi::Cuts::TrVRIP 
 TrVRIP        = LoKi.Tracks.RadialIP        () 
 
+# functional stuff
 
 
+## functional part
+_vt       = std.vector ( 'LHCb::Track*'     )
+_vv       = std.vector ( 'LHCb::RecVertex*' )
+_vd       = std.vector ( 'double')
+#
+TrMaps      = LoKi.Functor             ( _vt  , _vd       )
+TrMap       = LoKi.FunctorFromFunctor  ( _vt  , _vd       )
+TrPipes     = LoKi.Functor             ( _vt  , _vt      )
+TrPipe      = LoKi.FunctorFromFunctor  ( _vt  , _vt      )
+TrFunVals   = LoKi.Functor             ( _vt  , 'double'  )
+TrFunVal    = LoKi.FunctorFromFunctor  ( _vt  , 'double'  )
+TrElements  = LoKi.Functor             ( _vt  , 'LHCb::Track*' ) 
+TrElement   = LoKi.FunctorFromFunctor  ( _vt  , 'LHCb::Track*' )
+TrSources   = LoKi.Functor             ('void', _vt      )
+TrSource    = LoKi.FunctorFromFunctor  ('void', _vt      )
+
+RVMaps      = LoKi.Functor             ( _vv  , _vd       )
+RVMap       = LoKi.FunctorFromFunctor  ( _vv  , _vd       )
+RVPipes     = LoKi.Functor             ( _vv  , _vv       )
+RVPipe      = LoKi.FunctorFromFunctor  ( _vv  , _vv       )
+RVFunVals   = LoKi.Functor             ( _vv  , 'double'  )
+RVFunVal    = LoKi.FunctorFromFunctor  ( _vv  , 'double'  )
+RVElements  = LoKi.Functor             ( _vv  , 'LHCb::RecVertex*' ) 
+RVElement   = LoKi.FunctorFromFunctor  ( _vv  , 'LHCb::RecVertex*' )
+RVSources   = LoKi.Functor             ('void', _vv      )
+RVSource    = LoKi.FunctorFromFunctor  ('void', _vv      )
 
 
-# =============================================================================
-## Simple way to create the 'smart' function from the regular function.
+TrSOURCE       = LoKi.Tracks.SourceTES 
+TrSOURCEDIRECT = LoKi.Tracks.SourceDirect 
+
+RVSOURCE       = LoKi.RecVertices.SourceTES 
+RVSOURCEDIRECT = LoKi.RecVertices.SourceDirect 
+
+# ## Simple way to create the 'smart' function from the regular function.
 def info ( key , fun , update = False ) :
     """
     Simple way to create the 'smart' function from the regular function.
@@ -234,21 +265,18 @@ def info ( key , fun , update = False ) :
     the given key in 'extra-info' data member, and int he case of missing
     information it used the supplied function to evaluate the information.
     optionally the evaluated information is added into  'extra-info'
-
+    
     >>> fun =  ...
     >>> key =  ...
     >>> smartFun = info ( key , fun , true ) 
     
     """
-    return LoKi.Dicts.Info.info ( key , fun , update )
+    return LoKi.Dicts.TrInfo.info ( key , fun , update )
 
-info. __doc__ += "\n\n" + LoKi.Dicts.Info.info . __doc__ 
+info. __doc__ += "\n\n" + LoKi.Dicts.TrInfo.info . __doc__ 
+ 
 
-# =============================================================================
-
-
-# =============================================================================
-## Simple function to 'bind' the 2-argument function 
+# ## ## Simple function to 'bind' the 2-argument function 
 def bindMin ( a , b , *c ) :
     """
     Simple function to 'bind' the 2-argument function to some container
@@ -284,8 +312,7 @@ def bindMin ( a , b , *c ) :
     return LoKi.Dicts.HltBind.bindMin ( a , b , *c  ) 
 
 
-# =============================================================================
-## Simple function to 'bind' the 2-argument function 
+# ## Simple function to 'bind' the 2-argument function 
 def bindAbsMin ( a , b , *c ) :
     """
     Simple function to 'bind' the 2-argument function to some container
@@ -328,8 +355,7 @@ def bindAbsMin ( a , b , *c ) :
     """
     return LoKi.Dicts.HltBind.bindAbsMin ( a , b , *c  ) 
 
-# =============================================================================
-## Simple function to 'bind' the 2-argument function 
+# ## Simple function to 'bind' the 2-argument function 
 def bindMax ( a , b , *c ) :
     """
     Simple function to 'bind' the 2-argument function to some containers
@@ -365,8 +391,7 @@ def bindMax ( a , b , *c ) :
     return LoKi.Dicts.HltBind.bindMin ( a , b , *c  ) 
 
 
-# =============================================================================
-## Simple function to 'bind' the 2-argument function 
+# ## Simple function to 'bind' the 2-argument function 
 def bindAbsMax ( a , b , *c ) :
     """
     Simple function to 'bind' the 2-argument function to some container
