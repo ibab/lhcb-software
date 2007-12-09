@@ -94,8 +94,16 @@ def _decorate ( name = _name  ) :
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                             , ## module name
         LoKi.Functor( _vgv , _gv )                       , ## the base
-        LoKi.Dicts.ElementOps(_gv,_gv)                   ) ## stremers    
-    print "8 ",len(_decorated)    
+        LoKi.Dicts.ElementOps(_gv,_gv)                   ) ## stremers
+    #sources
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                             , ## module name
+        LoKi.Functor( 'void' , _vgp )                    , ## the base
+        LoKi.Dicts.SourceOps(_gp,_gp)                    ) ## stremers
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                             , ## module name
+        LoKi.Functor( 'void' , _vgv )                    , ## the base
+        LoKi.Dicts.SourceOps(_gv,_gv)                    ) ## stremers
     # decorate pids (Comparison with strings, integers and ParticleID objects:
     for t in ( GID , GABSID ) :
         t = type ( t ) 

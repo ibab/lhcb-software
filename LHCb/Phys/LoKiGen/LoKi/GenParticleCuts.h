@@ -1,4 +1,4 @@
-// $Id: GenParticleCuts.h,v 1.12 2007-11-28 14:08:28 ibelyaev Exp $
+// $Id: GenParticleCuts.h,v 1.13 2007-12-09 18:08:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLECUTS_H 
 #define LOKI_GENPARTICLECUTS_H 1
@@ -12,6 +12,7 @@
 #include "LoKi/GenTypes.h"
 #include "LoKi/GenParticles.h"
 #include "LoKi/GenPIDOperators.h"
+#include "LoKi/GenSources.h"
 // ============================================================================
 /** @file
  *

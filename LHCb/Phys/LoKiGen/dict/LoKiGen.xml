@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiGen.xml,v 1.11 2007-12-01 13:52:13 ibelyaev Exp $ 
+     * $Id: LoKiGen.xml,v 1.12 2007-12-09 18:08:01 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -59,6 +59,7 @@
   <class pattern   = "LoKi::Dicts::PipeOps<*HepMC::*>"    />
   <class pattern   = "LoKi::Dicts::FunValOps<*HepMC::*>"  />
   <class pattern   = "LoKi::Dicts::ElementOps<*HepMC::*>" />
+  <class pattern   = "LoKi::Dicts::SourceOps<*HepMC::*>"  />
 
   <class pattern   = "LoKi::Dicts::PIDOps<LoKi::Gen*>"    />
   <class pattern   = "LoKi::Dicts::Maths<*HepMC*>"        />
@@ -78,6 +79,7 @@
     <class    name    = "std::unary_function<const char*,bool>" /> 
     <class    name    = "std::unary_function<const void*,bool>" /> 
     <class name ="LoKi::GenParticles::FromHepMCTree::VERTICES" />
+    <class name ="LoKi::Interface<LoKi::ILoKiSvc>" />
   </exclusion>
   
 </lcgdict>

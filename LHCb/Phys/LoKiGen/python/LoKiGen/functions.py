@@ -191,7 +191,7 @@ GTIME    = LoKi.GenParticles.ProperLifeTime ()
 ## GTOP  = LoKi.GenParticles.HasQuark ( LHCb.ParticleID.top )
 GTOP     = LoKi.GenParticles.HasQuark ( 6 )
 ## @see LoKi::Cuts::GTRUE
-GTRUE    = LoKi.BooleanConstant ( _GP )( True )
+GTRUE    = LoKi.Constant ( _GP , bool )( True )
 ## @see LoKi::Cuts::GVALID
 GVALID   = LoKi.Valid           ( _GP ) ()
 ## @see LoKi::Cuts::GVEV
@@ -201,9 +201,9 @@ GZERO     = LoKi.Constant       ( _GP + ',double' )( 0.0 )
 
 
 ## @see LoKi::Cuts::GVTRUE
-GVTRUE     = LoKi.Constant( _GV + ',bool' )(True)
+GVTRUE     = LoKi.Constant( _GV , bool )(True)
 ## @see LoKi::Cuts::GVFALSE
-GVFALSE    = LoKi.Constant( _GV + ',bool' )(False)
+GVFALSE    = LoKi.Constant( _GV , bool )(False)
 ## @see LoKi::Cuts::GVALL
 GVALL      = GVTRUE
 ## @see LoKi::Cuts::GVNONE
@@ -241,7 +241,10 @@ GPipe      = LoKi.FunctorFromFunctor  ( _vgp , _vgp      )
 GFunVals   = LoKi.Functor             ( _vgp , 'double'  )
 GFunVal    = LoKi.FunctorFromFunctor  ( _vgp , 'double'  )
 GElements  = LoKi.Functor             ( _vgp , _GP       ) 
-GElement   = LoKi.FunctorFromFunctor  ( _vgp , _GP       ) 
+GElement   = LoKi.FunctorFromFunctor  ( _vgp , _GP       )
+GSources   = LoKi.Functor             ('void', _vgp      )
+GSource    = LoKi.FunctorFromFunctor  ('void', _vgp      )
+
 #
 GVMaps     = LoKi.Functor             ( _vgv , _vd       )
 GVMap      = LoKi.FunctorFromFunctor  ( _vgv , _vd       )
@@ -251,6 +254,9 @@ GVFunVals  = LoKi.Functor             ( _vgv , 'double'  )
 GVFunVal   = LoKi.FunctorFromFunctor  ( _vgv , 'double'  )
 GVElements = LoKi.Functor             ( _vgv , _GV       ) 
 GVElement  = LoKi.FunctorFromFunctor  ( _vgv , _GV       ) 
+
+
+GSOURCE    = LoKi.GenParticles.SourceTES
 
 # =============================================================================
 if '__main__' == __name__ :

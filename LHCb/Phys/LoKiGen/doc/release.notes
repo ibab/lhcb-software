@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.41 2007-12-01 13:52:13 ibelyaev Exp $ 
+! $Id: release.notes,v 1.42 2007-12-09 18:08:01 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,7 +14,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
-!============================ LoKiGen v7r9 2007-12-01 =========================
+!============================ LoKiGen v7r9 2007-12-09 =========================
+
+! 2007-12-09 - Vanya BELYAEV
+
+ - implement sources ( on Gerhard's request )
+    new files:  LoKi/GenSources.h & src/GenSources.cpp
 
 ! 2007-12-01 - Vanya BELYAEV
 	

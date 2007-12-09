@@ -1,4 +1,4 @@
-// $Id: LoKiGenDict.h,v 1.6 2007-12-01 13:52:13 ibelyaev Exp $
+// $Id: LoKiGenDict.h,v 1.7 2007-12-09 18:08:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -172,14 +172,16 @@ namespace
     LoKi::Dicts::CutsOps<const HepMC::GenParticle*>        m_o3 ;
     LoKi::Dicts::CutsOps<const HepMC::GenVertex*>          m_o4 ;
     // functional parts:
-    LoKi::Dicts::MapsOps<const HepMC::GenParticle*>        m_fo1 ;
-    LoKi::Dicts::PipeOps<const HepMC::GenParticle*>        m_fo2 ;
-    LoKi::Dicts::FunValOps<const HepMC::GenParticle*>      m_fo3 ;
-    LoKi::Dicts::ElementOps<const HepMC::GenParticle*>     m_fo4 ;
-    LoKi::Dicts::MapsOps<const HepMC::GenVertex*>          m_fo5 ;
-    LoKi::Dicts::PipeOps<const HepMC::GenVertex*>          m_fo6 ;
-    LoKi::Dicts::FunValOps<const HepMC::GenVertex*>        m_fo7 ;
-    LoKi::Dicts::ElementOps<const HepMC::GenVertex*>       m_fo8 ;
+    LoKi::Dicts::MapsOps<const HepMC::GenParticle*>        m_fo1  ;
+    LoKi::Dicts::PipeOps<const HepMC::GenParticle*>        m_fo2  ;
+    LoKi::Dicts::FunValOps<const HepMC::GenParticle*>      m_fo3  ;
+    LoKi::Dicts::ElementOps<const HepMC::GenParticle*>     m_fo4  ;
+    LoKi::Dicts::MapsOps<const HepMC::GenVertex*>          m_fo5  ;
+    LoKi::Dicts::PipeOps<const HepMC::GenVertex*>          m_fo6  ;
+    LoKi::Dicts::FunValOps<const HepMC::GenVertex*>        m_fo7  ;
+    LoKi::Dicts::ElementOps<const HepMC::GenVertex*>       m_fo8  ;
+    LoKi::Dicts::SourceOps<const HepMC::GenVertex*>        m_fo9  ;
+    LoKi::Dicts::SourceOps<const HepMC::GenParticle*>      m_fo10 ;
     /// mathematics:
     LoKi::Dicts::FunCalls<HepMC::GenParticle>              m_c1 ;
     LoKi::Dicts::FunCalls<HepMC::GenVertex>                m_c2 ;

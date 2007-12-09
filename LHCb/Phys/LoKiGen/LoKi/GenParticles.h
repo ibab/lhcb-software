@@ -1,4 +1,4 @@
-// $Id: GenParticles.h,v 1.17 2007-11-28 14:08:29 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.18 2007-12-09 18:08:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLES_H 
 #define LOKI_GENPARTICLES_H 1
@@ -1213,7 +1213,6 @@ namespace LoKi
       // the criteria itself:
       LoKi::GenTypes::GCut m_cut       ; ///< the criteria itself:
     } ;    
-    // ========================================================================
   } // end of namespace GenParticles  
 } // end of namespace LoKi
 // ============================================================================
