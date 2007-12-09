@@ -190,7 +190,13 @@
       />
 
 
- <method
+      <attribute
+        type      = 'std::vector&lt; int &gt;'
+        name      = 'inputSelectionsIDs'
+        desc      = 'list of IDs of the input selections'
+        access    = 'PROTECTED' />
+
+      <method
 	type = 'bool'
 	name = 'decision'
 	desc = 'returns the trigger decision'
@@ -310,6 +316,7 @@ return ok;
         desc      = 'map of HltSelectionSummary es'
         access    = 'PROTECTED' />
       
+
       <method
 	type = 'bool'
 	name = 'decision'

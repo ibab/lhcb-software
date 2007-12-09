@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2007-12-09 - Jose A. Hernando
+ - Added inputSelectionsIDs() vector of IDs in HltSelectionSummary
+
 ! 2007-12-07 - Patrick Koppenburg
  - Added three HLT sleections, removed one.
 
