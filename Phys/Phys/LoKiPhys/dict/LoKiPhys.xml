@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiPhys.xml,v 1.13 2007-12-09 18:25:33 ibelyaev Exp $ 
+     * $Id: LoKiPhys.xml,v 1.14 2007-12-09 18:39:47 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiPhys package
@@ -104,8 +104,8 @@
     <class name="std::unary_function<const char*,bool>"   /> 
     <class name="std::unary_function<const void*,bool>"   /> 
     <class name="LoKi::Particles::InvariantMass::Indices" /> 
-    <class name="LoKi::Intertace<IDataProviderSvc>" /> 
-    <class name="LoKi::Intertace<LoKi::ILoKiSvc>"   /> 
-</exclusion>
+    <class name="LoKi::Interface<IDataProviderSvc>" /> 
+    <class name="LoKi::Interface<LoKi::ILoKiSvc>"   /> 
+  </exclusion>
   
 </lcgdict>
