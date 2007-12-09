@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: eventassoc.py,v 1.1 2007-12-09 20:13:20 ibelyaev Exp $ 
+# $Id: eventassoc.py,v 1.2 2007-12-09 20:29:30 ibelyaev Exp $ 
 # =============================================================================
 """
 The helper module for easy manipulations with Linker objects
@@ -15,7 +15,9 @@ The module exports two funcions:
 __author__ = "Thomas RUF Thomas.Ruf@cern.ch"
 # =============================================================================
 
-from GaudiPython.Bindings import AppMgr as __AppMgr 
+from GaudiPython.Bindings import AppMgr as __AppMgr
+from GaudiPython.Bindings import gbl    as __gbl 
+
 
 ## helper function for manipulation with linker objects 
 def linkedTo( t1, t2, location ):
@@ -40,7 +42,7 @@ def linkedTo( t1, t2, location ):
     
   """
   appMgr = __AppMgr()
-  cl = GaudiPython.gbl.LinkedTo( t1, t2)
+  cl = __gbl.LinkedTo( t1, t2)
   lt = cl( appMgr.evtsvc()._idp, None, location )
   return lt
 
@@ -50,7 +52,7 @@ def linkedFrom( t1, t2, location ):
   Helper function for manipulation with linker objects
   """
   appMgr = __AppMgr()
-  cl = GaudiPython.gbl.LinkedFrom( t1, t2, int)
+  cl =     __gbl.LinkedFrom( t1, t2, int)
   lt = cl( appMgr.evtsvc()._idp, None, location )
   return lt
 
