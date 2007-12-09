@@ -5,15 +5,24 @@
 
 <!DOCTYPE gdd SYSTEM "gdd.dtd" >
 <gdd>
- <package name="VeloEvent">
+ <package name="VeloTELL1Event">
   <class 
    name="VeloTELL1Data"
    author="Tomasz Szumlak"
-   desc="The VeloTELL1Data is keyed data object, with sensor number as a key, and is meant to store non-zero suppressed data (2048 ADC samples or 2048 pedestals)"
+   desc="The VeloTELL1Data is keyed data object, with sensor number as a key, and is meant to store non-zero suppressed data (2304 ADC samples, 2048 pedestals or 256 Headers)"
   id="4005"
   >
+
+  <desc> *
+ *
+ *  The class is meant to store Raw Non-Zero Suppressed data
+ *  from Velo sensor 
+ *
+ *</desc>
+
+  <import name = "Tell1Kernel/VeloTell1Core"/>
+
    <base name="KeyedObject&lt;int&gt;"/>
-   <import name="cassert" std="TRUE" />
 
    &KeyedContainer;
 
@@ -32,7 +41,7 @@
 
    <constructor
     desc="constructor with key"
-    initList="KeyedObject&lt;int&gt;(numberOfTELL1), m_decodedData(), m_ALink(), m_dataType(dataType)"
+    initList="KeyedObject&lt;int&gt;(numberOfTELL1), m_decodedData(), m_dataType(dataType), m_isReordered(false), m_sensorType(0)"
    >
     <arg type="int" name="numberOfTELL1" const="TRUE"/>
     <arg type="int" name="dataType" const="TRUE"/>
@@ -41,26 +50,38 @@
    <enum
     desc="Configuration constants depending on stored data type"
     name="NZSDataType"
-    value="Headers=4, ADCs=32, WriteHeaders=40, SENSOR_ADC=2048"
+    value="VeloFull=18, VeloPedestal=30, WriteHeaders=40"
+    access="PUBLIC"
+   />
+    
+   <enum
+    desc="Different bank content"
+    name="ALinkContent"
+    value="HEADERS=4, FPGA_ALINKS=16, ADC_PER_ALINK=32, SENSOR_ALINKS=64"
+    access="PUBLIC"
+   />
+
+   <enum
+    desc="Strips"
+    name="strips"
+    value="INNER_DUMMY_1=21, INNER_DUMMY_2=22, OUTER_DUMMY_1=42, OUTER_DUMMY_2=43, DUMMY_CHANNELS=64, INNER_DUMMY=85, INNER_STRIPS_1=170, INNER_STRIPS_2=171, OUTER_STRIPS_1=341, OUTER_STRIPS_2=342, INNER_STRIPS=683, PPFPGA_CHANNELS=512, SENSOR_STRIPS=2048, ALL_STRIPS=2304"
+   />
+ 
+   <enum
+    desc="Sensor types"
+    name="SensType"
+    value="PHI_SENSOR=1, R_SENSOR=2, PILE_UP=3"
     access="PUBLIC"
    />
 
    <attribute
-    desc="Vector with decoded data (2048 ADC samples/pedestals)"
+    desc="Vector with decoded data"
     name="decodedData"
     type="std::vector&lt;signed int&gt;"
     setMeth="TRUE"
-    getMeth="FALSE"
+    getMeth="TRUE"
    />
   
-   <attribute
-    desc="Vector with decoded data for one ALink (32 channels)"
-    name="ALink"
-    type="std::vector&lt;signed int&gt;"
-    setMeth="FALSE"
-    getMeth="FALSE"
-   />
-
    <attribute
     desc="Type of decoded data to be stored"
     name="dataType"
@@ -71,7 +92,15 @@
    
    <attribute
     desc="Name of last process"
-    name="motherProcess"
+    name="isReordered"
+    type="bool"
+    setMeth="TRUE"
+    getMeth="TRUE"
+   />
+
+   <attribute
+    desc="Sensor Type"
+    name="sensorType"
     type="unsigned int"
     setMeth="TRUE"
     getMeth="TRUE"
@@ -80,33 +109,176 @@
    <method
     desc="overloaded subscripting operator"
     name="operator[]"
-    type="std::vector&lt;signed int&gt;&amp;"
+    type="VeloTELL1::ALinkPair"
     access="PUBLIC"
-    const="FALSE"
+    const="TRUE"
    >
-    <arg name="ALinkNumber" type="int" const="TRUE"/>
+    <arg name="ALinkNumber" type="unsigned int" const="TRUE"/>
      <code>
       int ALinkBegin=0, ALinkEnd=0;
-      if(m_dataType==WriteHeaders){
-        ALinkBegin=ALinkNumber*Headers;
-        ALinkEnd=ALinkBegin+Headers;
-      }else{
-        ALinkBegin=ALinkNumber*ADCs;
-        ALinkEnd=ALinkBegin+ADCs;
+      // use it only before reordering
+      if(!m_isReordered){
+        if(ALinkNumber&lt;SENSOR_ALINKS){
+          if(m_dataType==WriteHeaders){
+            ALinkBegin=ALinkNumber*HEADERS;
+            ALinkEnd=ALinkBegin+HEADERS;
+          }else if(m_dataType==VeloPedestal){
+            ALinkBegin=ALinkNumber*ADC_PER_ALINK;
+            ALinkEnd=ALinkBegin+ADC_PER_ALINK;
+          }else if(m_dataType==VeloFull){
+           unsigned int processor=ALinkNumber/FPGA_ALINKS;
+           ALinkBegin=(ALinkNumber+2*processor)*ADC_PER_ALINK;
+           ALinkEnd=ALinkBegin+ADC_PER_ALINK;
+          }
+        }
       }
       //
-      m_ALink.clear();
-      std::vector&lt;signed int&gt;::iterator datIt;
-      for(datIt=(m_decodedData.begin()+ALinkBegin); datIt!=(m_decodedData.begin()+ALinkEnd); datIt++){
-        m_ALink.push_back(*datIt);
-      }
+      VeloTELL1::ALinkPair aPair;
+      aPair.first=m_decodedData.begin()+ALinkBegin;
+      aPair.second=m_decodedData.begin()+ALinkEnd;
       //
-      return ( m_ALink );
+      return ( aPair );
      </code>
     </method>
 
     <method
-     desc="return vector with all decoded samples"
+     desc="Returns true if R type"
+     name="isR"
+     type="bool"
+     access="PUBLIC"
+     const="TRUE"
+    >
+     <code>
+      if(m_isReordered&amp;&amp;m_sensorType==R_SENSOR){
+        return ( true );
+      }else{
+        return ( false );
+      }
+     </code>
+    </method>
+
+    <method
+     desc="Returns true if Pile-Up type"
+     name="isPileUp"
+     type="bool"
+     access="PUBLIC"
+     const="TRUE"
+    >
+     <code>
+      if(m_isReordered&amp;&amp;m_sensorType==PILE_UP){
+        return ( true );
+      }else{
+        return ( false );
+      }
+     </code>
+    </method>
+
+    <method
+     desc="Returns true if Phi type"
+     name="isPhi"
+     type="bool"
+     access="PUBLIC"
+     const="TRUE"
+    >
+     <code>
+      if(m_isReordered&amp;&amp;m_sensorType==PHI_SENSOR){
+        return ( true );
+      }else{
+        return ( false );
+      }
+     </code>
+    </method>
+
+    <method
+     desc="return value of the charge deposited in a given channel"
+     name="channelADC"
+     type="signed int"
+     access="PUBLIC"
+     const="TRUE"
+    >
+     <arg name="channel" type="unsigned int" const="TRUE"/>
+      <code>
+       signed int adc=0;
+       if(!m_isReordered&amp;&amp;m_dataType==VeloFull){
+         if(channel&lt;SENSOR_STRIPS){
+           unsigned int processor=channel/PPFPGA_CHANNELS;
+           unsigned int index=channel+DUMMY_CHANNELS*processor;
+           adc=m_decodedData[index];
+         }
+       }
+       return ( adc );
+      </code>
+    </method>
+
+    <method
+     desc="return value of a pedestal"
+     name="pedestalADC"
+     type="signed int"
+     access="PUBLIC"
+     const="TRUE"
+    >
+     <arg name="channel" type="unsigned int" const="TRUE"/>
+      <code>
+       signed int ped=0;
+       if(m_dataType==VeloPedestal&amp;&amp;channel&lt;SENSOR_STRIPS){
+         ped=m_decodedData[channel];
+       }
+       return ( ped );
+      </code>
+     </method>
+
+    <method
+     desc="returns adc value for a given strip - valid after reordering"
+     name="stripADC"
+     type="signed int"
+     access="PUBLIC"
+     const="TRUE"
+    >
+     <arg name="strip" type="unsigned int" const="TRUE"/>
+      <code>
+       signed int adc=0;
+       if(m_isReordered&amp;&amp;strip&lt;SENSOR_STRIPS&amp;&amp;m_dataType==VeloFull){
+         if(m_sensorType==R_SENSOR||m_sensorType==PILE_UP){
+           unsigned int processor=strip/PPFPGA_CHANNELS;
+           unsigned int index=strip+DUMMY_CHANNELS*processor;
+           adc=m_decodedData[index];
+         }else if(m_sensorType==PHI_SENSOR){
+           if(strip&lt;INNER_STRIPS){
+             if(strip&lt;INNER_STRIPS_1){
+               adc=m_decodedData[strip];
+             }else if(strip&lt;INNER_STRIPS_1+INNER_STRIPS_2){
+               unsigned int index=strip+INNER_DUMMY_1;
+               adc=m_decodedData[index];
+             }else if(strip&lt;INNER_STRIPS_1+2*INNER_STRIPS_2){
+               unsigned int index=strip+INNER_DUMMY_1+INNER_DUMMY_2;
+               adc=m_decodedData[index];
+             }else if(strip&lt;INNER_STRIPS_1+3*INNER_STRIPS_2){
+               unsigned int index=strip+INNER_DUMMY_1+2*INNER_DUMMY_2;
+               adc=m_decodedData[index];
+             }
+          }else{
+             if(strip&lt;INNER_STRIPS+OUTER_STRIPS_1){
+               unsigned int index=strip+INNER_DUMMY; 
+               adc=m_decodedData[index];
+             }else if(strip&lt;INNER_STRIPS+OUTER_STRIPS_1+OUTER_STRIPS_2){
+               unsigned int index=strip+INNER_DUMMY+OUTER_DUMMY_1;
+               adc=m_decodedData[index];
+             }else if(strip&lt;INNER_STRIPS+2*OUTER_STRIPS_1+OUTER_STRIPS_2){
+               unsigned int index=strip+INNER_DUMMY+OUTER_DUMMY_1+OUTER_DUMMY_2;
+               adc=m_decodedData[index];
+             }else if(strip&lt;INNER_STRIPS+3*OUTER_STRIPS_1+OUTER_STRIPS_2){
+               unsigned int index=strip+INNER_DUMMY+OUTER_DUMMY_1+2*OUTER_DUMMY_2;
+               adc=m_decodedData[index];
+             }
+           }
+         }
+       }
+       return ( adc );
+      </code>
+    </method>
+
+    <method
+     desc="returns vector with all decoded samples"
      name="data"
      type="std::vector&lt;signed int&gt;&amp;"
      access="PUBLIC"
@@ -126,12 +298,12 @@
     >
      <arg name="inVec" type="std::vector&lt;signed int&gt;" const="FALSE"/>
       <code>
-       assert(m_decodedData.size()&lt;=SENSOR_ADC);
        std::vector&lt;signed int&gt;::iterator datIt;
        datIt=inVec.begin();
        for( ; datIt!=inVec.end(); datIt++){
          m_decodedData.push_back(*datIt);
        }
+       assert(m_decodedData.size()&lt;=SENSOR_STRIPS);
       </code>
      </method>
 
