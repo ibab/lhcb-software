@@ -3,6 +3,36 @@
 ! Purpose: Creates dictionaries for the use of Linker relations in Python
 !------------------------------------------------------------------------------
 
+!==================== LinkerInstances v3r4 2007-12-09 =========================
+
+! 2007-12-09 - Vanya BELYAEV
+ - update the package structure on request from Marco & Thomas 
+
+   IMPORTANT NOTE: 
+   One needs to modify the client code:
+
+ ---------------------------------------------------------------------------------------------------
+ |  Old semantics                         |          NEW SEMANTICS                                 |
+ ---------------------------------------------------------------------------------------------------
+ | import eventassoc                      | import LinkerInstances.eventassoc                      |
+ | import eventassoc as XXX               | import LinkerInstances.eventassoc as XXX               |
+ | from eventassoc import *               | from LinkerInstances.eventassoc import *               |
+ | from eventassoc import linkedTo        | from LinkerInstances.eventassoc import linkedTo        |
+ | from eventassoc import linkedTo   ax Y | from LinkerInstances.eventassoc import linkedTo   as Y |
+ | from eventassoc import linkedFrom      | from LinkerInstances.eventassoc import linkedFrom      |  
+ | from eventassoc import linkedFrom as X | from LinkerInstances.eventassoc import linkedFrom as X |
+ ---------------------------------------------------------------------------------------------------
+
+  The old way still works, but produce WARNING message with detailed instructions 
+	
+  - new directory 
+    python/LinkerIntances 
+  - new file 
+    python/LinkerInstances/eventassoc.py
+  - modified files 
+    1) python/eventassoc.py 
+    2) cmt/requirements 
+
 ! 2007-12-07 - Thomas Ruf
  - adapted eventassoc.py to GaudiPython which comes with Gaudi v19r6
 !==================== LinkerInstances v3r3 2007-09-27 =========================

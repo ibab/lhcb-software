@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.20 2007-09-05 16:25:36 cattanem Exp $
+# $Id: requirements,v 1.21 2007-12-09 20:13:20 ibelyaev Exp $
 # =============================================================================
 package LinkerInstances
 author  Stefan Roiser
 manager Thomas Ruf
 
-version  v3r3
+version  v3r4
 branches cmt dict doc python xml 
 
 use LinkerEvent  v*    Event
@@ -14,18 +14,27 @@ use RecEvent     v*    Event
 use TrackEvent   v*    Event
 use PhysEvent    v*    Event
 
+# =============================================================================
 # Produce lcg dictionary for instances of Linker classes
-#============================================================================
-apply_pattern reflex_dictionary                                             \
+# =============================================================================
+
+apply_pattern reflex_dictionary                                          \
               dictionary=LinkerInstances                                 \
               headerfiles=$(LINKERINSTANCESROOT)/dict/linker_instances.h \
               selectionfile=$(LINKERINSTANCESROOT)/xml/lcg_selection.xml \
               options="-U__MINGW32__"
 
+#============================================================================
 # Hack for cmt v1r19 bug to link dictionary on windows
+#============================================================================
 macro LinkerInstancesDict_use_linkopts $(use_linkopts)
 
+# =============================================================================
 # Standard patterns
-#============================================================================
-path_append PYTHONPATH "${LINKERINSTANCESROOT}/python" \
-                 WIN32 "${LINKERINSTANCESROOT}\python"
+# =============================================================================
+apply_pattern install_python_modules 
+
+
+# =============================================================================
+# The END 
+# =============================================================================
