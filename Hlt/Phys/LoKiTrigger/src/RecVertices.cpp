@@ -1,4 +1,4 @@
-// $Id: RecVertices.cpp,v 1.3 2007-11-28 14:56:24 ibelyaev Exp $
+// $Id: RecVertices.cpp,v 1.4 2007-12-09 19:14:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -145,7 +145,8 @@ std::ostream&
 LoKi::RecVertices::SmartInfo::fillStream( std::ostream& s ) const 
 { 
   s << "RVSINFO(" << fun() << "," << index() << "," ;
-  s << update() ? "True" : "False" ;
+  if ( update() ) { s << "True"  ; }
+  else            { s << "False" ; }
   return s << ")" ;  
 }
 // ============================================================================
