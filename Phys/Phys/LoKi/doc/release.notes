@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.15 2007-12-03 12:02:10 ibelyaev Exp $ 
+! $Id: release.notes,v 1.16 2007-12-09 19:19:48 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKi
 ! Responsible : Vanya BELYAEV
 ! Purpose     : The suit for the whole  LoKi project 
 ! -----------------------------------------------------------------------------
 
-!=========================== LoKi v7r0 2007-12-03 =============================
+!=========================== LoKi v7r0 2007-12-09 =============================
+
+! 2007-12-09 - Vanya BELYAEV
+ - polishing for v7r0
+
 ! 2007-12-03 - Vanya BELYAEV
  - the major update for new version iof LoKi v7r0 ("The powerful streamers")
  - cmt/requirements:
@@ -80,6 +84,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.15  2007/12/03 12:02:10  ibelyaev
+!  v7r0
+!
 ! Revision 1.14  2007/10/08 06:59:34  cattanem
 ! v6r1
 !
