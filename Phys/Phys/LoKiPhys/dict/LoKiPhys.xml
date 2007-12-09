@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiPhys.xml,v 1.12 2007-12-02 14:17:50 ibelyaev Exp $ 
+     * $Id: LoKiPhys.xml,v 1.13 2007-12-09 18:25:33 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiPhys package
@@ -76,6 +76,8 @@
   <class pattern   = "LoKi::Dicts::PipeOps<*LHCb::*>"     />
   <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::*>"   />
   <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::*>"  />
+  <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::*>"   />
+  <class pattern   = "LoKi::Dicts::InfoOps<*LHCb::*>"     />
  
   <class pattern   = "LoKi::ExtraInfo::CheckInfo<*>" />
   <class pattern   = "LoKi::ExtraInfo::GetInfo<*>" />
@@ -102,6 +104,8 @@
     <class name="std::unary_function<const char*,bool>"   /> 
     <class name="std::unary_function<const void*,bool>"   /> 
     <class name="LoKi::Particles::InvariantMass::Indices" /> 
+    <class name="LoKi::Intertace<IDataProviderSvc>" /> 
+    <class name="LoKi::Intertace<LoKi::ILoKiSvc>"   /> 
 </exclusion>
   
 </lcgdict>

@@ -1,4 +1,4 @@
-// $Id: LoKiPhys.h,v 1.10 2007-07-23 17:35:41 ibelyaev Exp $
+// $Id: LoKiPhys.h,v 1.11 2007-12-09 18:25:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYS_H 
 #define LOKI_LOKIPHYS_H 1
@@ -43,6 +43,7 @@
 #include "LoKi/Particles15.h"
 //
 #include "LoKi/PrintDecay.h"
+#include "LoKi/PhysSources.h"
 // ============================================================================
 
 // ============================================================================

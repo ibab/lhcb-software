@@ -419,14 +419,16 @@ _vp       = std.vector ( _RCP    )
 _vv       = std.vector ( _RCV    )
 _vd       = std.vector ('double')
 #
-Maps      = LoKi.Functor             ( _vp , _vd      )
-Map       = LoKi.FunctorFromFunctor  ( _vp , _vd      )
-Pipes     = LoKi.Functor             ( _vp , _vp      )
-Pipe      = LoKi.FunctorFromFunctor  ( _vp , _vp      )
-FunVals   = LoKi.Functor             ( _vp , 'double' )
-FunVal    = LoKi.FunctorFromFunctor  ( _vp , 'double' )
-Elements  = LoKi.Functor             ( _vp , _RCP     ) 
-Element   = LoKi.FunctorFromFunctor  ( _vp , _RCP     ) 
+Maps      = LoKi.Functor             ( _vp    , _vd      )
+Map       = LoKi.FunctorFromFunctor  ( _vp    , _vd      )
+Pipes     = LoKi.Functor             ( _vp    , _vp      )
+Pipe      = LoKi.FunctorFromFunctor  ( _vp    , _vp      )
+FunVals   = LoKi.Functor             ( _vp    , 'double' )
+FunVal    = LoKi.FunctorFromFunctor  ( _vp    , 'double' )
+Elements  = LoKi.Functor             ( _vp    , _RCP     ) 
+Element   = LoKi.FunctorFromFunctor  ( _vp    , _RCP     ) 
+Sources   = LoKi.Functor             ( 'void' , _vp      ) 
+Source    = LoKi.FunctorFromFunctor  ( 'void' , _vp      ) 
 #
 VMaps     = LoKi.Functor             ( _vv , _vd      )
 VMap      = LoKi.FunctorFromFunctor  ( _vv , _vd      )
@@ -436,6 +438,15 @@ VFunVals  = LoKi.Functor             ( _vv , 'double' )
 VFunVal   = LoKi.FunctorFromFunctor  ( _vv , 'double' )
 VElements = LoKi.Functor             ( _vv , _RCV     ) 
 VElement  = LoKi.FunctorFromFunctor  ( _vv , _RCV     ) 
+VSources  = LoKi.Functor             ( 'void' , _vv   ) 
+VSource   = LoKi.FunctorFromFunctor  ( 'void' , _vv   ) 
+
+
+SOURCE         = LoKi.Particles.SourceTES
+SOURCEDESKTOP  = LoKi.Particles.SourceDesktop
+VSOURCE        = LoKi.Vertices.SourceTES
+VSOURCEDESKTOP = LoKi.Vertices.SourceDesktop
+
 
 # =============================================================================
 if '__main__' == __name__ :

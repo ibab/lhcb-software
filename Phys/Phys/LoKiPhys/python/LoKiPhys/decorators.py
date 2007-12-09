@@ -98,8 +98,26 @@ def _decorate ( name = _name ) :
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                          , ## module name
         LoKi.Functor( _vv , v )                       , ## the base
-        LoKi.Dicts.ElementOps(v,v)                    ) ## stremers    
-      # decorate pids (Comparison with strings, integers and ParticleID objects:
+        LoKi.Dicts.ElementOps(v,v)                    ) ## stremers
+    # 'sources'
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                          , ## module name
+        LoKi.Functor( 'void' , _vp )                  , ## the base
+        LoKi.Dicts.SourceOps(p,p)                     ) ## streamers
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                          , ## module name
+        LoKi.Functor( 'void' , _vv )                  , ## the base
+        LoKi.Dicts.SourceOps(v,v)                     ) ## streamers
+    # 'infos'
+    _decorated |= _LoKiCore.getAndDecorateInfos      (
+        name                                            , ## module name
+        LoKi.Functor       (p,'double')                 , ## the base 
+        LoKi.Dicts.InfoOps (p)                          ) ## methods
+    _decorated |= _LoKiCore.getAndDecorateInfos      (
+        name                                            , ## module name
+        LoKi.Functor       (v,'double')                 , ## the base 
+        LoKi.Dicts.InfoOps (v)                          ) ## methods
+    # decorate pids (Comparison with strings, integers and ParticleID objects:
     for t in ( ID , ABSID ) :
         t = type ( t ) 
         _LoKiCore.decoratePID ( t , LoKi.Dicts.PIDOps ( t ) )

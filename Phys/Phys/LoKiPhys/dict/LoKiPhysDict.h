@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.8 2007-12-02 14:17:50 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.9 2007-12-09 18:25:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -76,7 +76,7 @@ namespace LoKi
       static std::vector<Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const LHCb::Vertex::ConstVector&        o ) 
       { return o >> fun  ; }
-      //
+      // ======================================================================
     } ;
     // ========================================================================
     template <>
@@ -154,6 +154,11 @@ namespace
     LoKi::Dicts::FunValOps<const LHCb::VertexBase*>  m_fo6 ;
     LoKi::Dicts::ElementOps<const LHCb::Particle*>   m_fo7 ;
     LoKi::Dicts::ElementOps<const LHCb::VertexBase*> m_fo8 ;
+    LoKi::Dicts::SourceOps<const LHCb::Particle*>    m_fo9 ;
+    LoKi::Dicts::SourceOps<const LHCb::VertexBase*>  m_f10 ;
+    // infor
+    LoKi::Dicts::InfoOps<const LHCb::Particle*>      m_io1 ;
+    LoKi::Dicts::InfoOps<const LHCb::VertexBase*>    m_io2 ;
     // calls
     LoKi::Dicts::FunCalls<LHCb::Particle>           m_c1 ;
     LoKi::Dicts::CutCalls<LHCb::Particle>           m_c2 ;
