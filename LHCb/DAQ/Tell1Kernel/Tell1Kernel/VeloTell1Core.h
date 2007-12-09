@@ -1,4 +1,4 @@
-// $Id: VeloTell1Core.h,v 1.1 2007-09-18 07:33:03 cattanem Exp $
+// $Id: VeloTell1Core.h,v 1.2 2007-12-09 22:03:00 szumlat Exp $
 #ifndef VELOTELL1CORE_H 
 #define VELOTELL1CORE_H 1
 
@@ -126,6 +126,9 @@ namespace VeloTELL1{
   typedef std::vector<int> EngineVec;
   typedef EngineVec::iterator diT;
   typedef EngineVec::const_iterator const_diT;
-
+  // these are needed after upadate of the VeloTELL1Data
+  typedef std::vector<signed int>::const_iterator cIT;
+  // Pair of const iterators
+  typedef std::pair<cIT, cIT> ALinkPair;
 };
 #endif // VELOTELL1CORE_H

@@ -1,4 +1,4 @@
-// $Id: VeloDecodeConf.h,v 1.1 2007-09-18 07:33:02 cattanem Exp $
+// $Id: VeloDecodeConf.h,v 1.2 2007-12-09 22:03:00 szumlat Exp $
 #ifndef VELODECODECONF_H 
 #define VELODECODECONF_H 1
 
@@ -92,7 +92,8 @@ namespace VeloTELL1
   enum modes{
     NO_REORDERING=0,
     PHI_SENSOR=1,
-    R_SENSOR=2
+    R_SENSOR=2,
+    PILE_UP=3
   };
   //
   // these parameters govern of the reordering algorithm behaviour
