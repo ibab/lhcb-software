@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.66 2007-12-05 16:35:21 ibelyaev Exp $ 
+! $Id: release.notes,v 1.67 2007-12-09 17:56:43 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,8 +15,11 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiCore v7r0 2007-12-09  ========================
 
-!=========================== LoKiCore v7r0 2007-12-05  ========================
+! 2007-12-09 - Vanya BELYAEV
+ - 1) prepare for context-dependent functors (needed for HLT) 
+   2) implemenet "source"&"info" functional-operations  (a'la Gerhard) 
 
 ! 2007-12-05 - Vanya BELYAEV
   
@@ -409,6 +412,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.66  2007/12/05 16:35:21  ibelyaev
+!  add LoKi::Dicts::SourceOps
+!
 ! Revision 1.65  2007/12/05 15:38:46  ibelyaev
 !  prepare for the context functors
 !

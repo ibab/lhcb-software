@@ -1,5 +1,5 @@
 
-// $Id: Funcs.h,v 1.7 2007-12-03 12:03:22 ibelyaev Exp $
+// $Id: Funcs.h,v 1.8 2007-12-09 17:56:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCS_H 
 #define LOKI_FUNCS_H 1
@@ -56,6 +56,7 @@ namespace LoKi
       LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> > m_101 ;
       LoKi::FunctorFromFunctor<std::vector<TYPE>,TYPE>                 m_102 ;
       LoKi::FunctorFromFunctor<std::vector<TYPE>,double>               m_103 ;
+      LoKi::FunctorFromFunctor<void,std::vector<TYPE> >                m_104 ;
       //
       VFuncs () ; // undefined constructor 
     } ;

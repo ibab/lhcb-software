@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.11 2007-12-05 16:43:54 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.12 2007-12-09 17:56:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -15,6 +15,7 @@
 #include  "LoKi/BasicFunctors.h"
 #include  "LoKi/Filters.h"
 #include  "LoKi/compose.h"
+#include  "LoKi/ExtraInfo.h"
 // ============================================================================
 namespace LoKi
 {
@@ -494,11 +495,6 @@ namespace LoKi
       // __call__
       static typename Source::result_type __call__ 
       ( const Source& fun ) { return fun() ; }
-    public:  
-      // __rrshift__ (fictive, ignore the functor) 
-      static typename Source::result_type __rrshift__ 
-      ( const Source& /* fun */ , const std::vector<TYPE>& vct ) 
-      { return vct ; }
     public:
       // __rshift__
       static typename Source::result_type __rshift__ 
@@ -530,6 +526,25 @@ namespace LoKi
       ( const Source& fun , const Func&    fun2 ) 
       { return fun >> LoKi::yields<TYPE> ( fun2 ) ; }
     };
+    // ========================================================================
+    template <class TYPE>
+    class InfoOps
+    {
+    public:
+      // ======================================================================
+      // __info__ 
+      static LoKi::FunctorFromFunctor<TYPE,double>
+      __info__ ( const LoKi::Functor<TYPE,double>& fun , 
+                 const int  index                      , 
+                 const bool update                     ) 
+      { return LoKi::info ( index , fun , update ) ; }
+      // __info__ 
+      static LoKi::FunctorFromFunctor<TYPE,double>
+      __info__ ( const LoKi::Functor<TYPE,double>& fun , 
+                 const int  index                      ) 
+      { return LoKi::info ( index , fun          ) ; }
+      // ======================================================================
+    } ;
     // ========================================================================
   } // end of namespace LoKi::Dicts
 } // end of namespace LoKi

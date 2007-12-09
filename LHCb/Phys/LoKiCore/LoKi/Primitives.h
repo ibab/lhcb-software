@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.5 2007-12-03 12:03:22 ibelyaev Exp $
+// $Id: Primitives.h,v 1.6 2007-12-09 17:56:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -1545,6 +1545,51 @@ namespace LoKi
     public:
     // the first functor 
     LoKi::FunctorFromFunctor<TYPE,TYPE1>  m_fun1  ; ///< the first functor 
+    // the second functor 
+    LoKi::FunctorFromFunctor<TYPE3,TYPE2> m_fun2 ; ///< the second functor 
+  } ;
+  // ==========================================================================
+  /** @class Compose 
+   *  the general case of fun2(fun1) function:
+   */  
+  template <class TYPE1, class TYPE2, class TYPE3>
+  class Compose<void,TYPE1,TYPE2,TYPE3> : public LoKi::Functor<void,TYPE2>
+  {
+  private:
+    /// result type 
+    typedef typename LoKi::Functor<void,TYPE2>::result_type result_type ; 
+  public:
+    /// contructor
+    Compose
+    ( const LoKi::Functor<void,TYPE1>&  fun1 , 
+      const LoKi::Functor<TYPE3,TYPE2>& fun2 )
+      : LoKi::Functor<void,TYPE2> () 
+      , m_fun1 ( fun1 ) 
+      , m_fun2 ( fun2 )
+    {}
+    /// copy constructor
+    Compose ( const Compose& right ) 
+      : LoKi::AuxFunBase ( right ) 
+      , LoKi::Functor<void,TYPE2> ( right ) 
+      , m_fun1 ( right.m_fun1 ) 
+      , m_fun2 ( right.m_fun2 )
+    {}
+    /// MANDATORY: virtual destructor
+    virtual ~Compose() {}
+    /// MANDATORY: clone method ("virtual constructor")
+    virtual  Compose* clone() const { return new Compose ( *this ) ; }    
+    /// the only one essential method ("function")      
+    virtual  result_type operator() () const 
+    { 
+      const LoKi::Apply<TYPE3,TYPE2> f2 ( &m_fun2.fun() ) ;
+      return f2.eval ( m_fun1.fun() ) ;
+    }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return s << "(" << m_fun1 << ">>" << m_fun2  << ")" ; }
+  public:
+    // the first functor 
+    LoKi::FunctorFromFunctor<void,TYPE1>  m_fun1  ; ///< the first functor 
     // the second functor 
     LoKi::FunctorFromFunctor<TYPE3,TYPE2> m_fun2 ; ///< the second functor 
   } ;

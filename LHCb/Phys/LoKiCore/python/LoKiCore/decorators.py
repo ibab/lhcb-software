@@ -109,7 +109,9 @@ def getInherited ( name , base ) :
 # =============================================================================
 ## Decorate the functions using the proper adapters 
 def decorateFunctions ( funcs , calls , opers ) :
-    """ Decorate the functions using the proper adapters """
+    """
+    Decorate the functions using the proper adapters
+    """
     for fun in funcs :
         # operator(): 
         def _call_ (s,*a) :
@@ -992,50 +994,58 @@ def decorateMaps ( funcs , opers ) :
         print fun
 
         ## Use the vector function as streamer
-        def _rrshift_ ( s ,*a ) :
-            """
-            Use the vector function as streamer
-
-            >>> object =
-            >>> result = object >> functor
+        if hasattr ( opers , '__rrshift__' ) : 
+            def _rrshift_ ( s ,*a ) :
+                """
+                Use the vector function as streamer
+                
+                >>> object =
+                >>> result = object >> functor
+                
+                Uses:\n
+                """
+                return opers.__rrshift__ ( s , *a )
+            # documentation
+            _rrshift_.__doc__     += opers . __rrshift__ . __doc__ 
+            # finally redefine the functions:
+            fun      . __rrshift__ = _rrshift_ 
             
-            Uses:\n
-            """
-            return opers.__rrshift__ ( s , *a )
         ## Use the vector function as streamer
-        def _rshift_ ( s ,*a ) :
-            """
-            Use the Streamers 
+        if hasattr ( opers , '__rshift__' ) : 
+            def _rshift_ ( s ,*a ) :
+                """
+                Use the Streamers 
+                
+                >>> fun1 = ...
+                >>> fun2 = ...
+                >>> func = fun1 >> fun2 
+                
+                Uses:\n
+                """
+                return opers.__rshift__ ( s , *a )
+            # documentation
+            _rshift_ .__doc__   += opers . __rshift__  . __doc__ 
+            # finally redefine the functions:
+            fun      .__rshift__ =  _rshift_ 
             
-            >>> fun1 = ...
-            >>> fun2 = ...
-            >>> func = fun1 >> fun2 
+        if hasattr ( opers , '__tee__' ) : 
+            def _tee_  ( s ) :
+                """
+                'Tee' the action :
+                
+                >>> functor1 = ...
+                >>> functor2 = tee ( functor )
+                
+                The concept belongs to Gerghard 'The Great' Raven
+                
+                Uses:\n
+                """
+                return opers.__tee__ ( s )
+            # documentation        
+            _tee_ .__doc__  += opers . __tee__     . __doc__
+            # finally redefine the functions:            
+            fun   . __tee__  =          _tee_ 
             
-            Uses:\n
-            """
-            return opers.__rshift__ ( s , *a )
-        def _tee_  ( s ) :
-            """
-            'Tee' the action :
-
-            >>> functor1 = ...
-            >>> functor2 = tee ( functor )
-
-            The concept belongs to Gerghard 'The Great' Raven
-            
-            Uses:\n
-            """
-            return opers.__tee__ ( s )
-        
-        # documentation
-        _rrshift_   .__doc__  += opers . __rrshift__ . __doc__ 
-        _rshift_    .__doc__  += opers . __rshift__  . __doc__ 
-        _tee_       .__doc__  += opers . __tee__     . __doc__ 
-        # finally redefine the functions:
-        fun . __rrshift__ = _rrshift_ 
-        fun .  __rshift__ =  _rshift_ 
-        fun .     __tee__ =     _tee_ 
-        
     return funcs                                 ## RETURN
 
 # =============================================================================
@@ -1045,11 +1055,55 @@ def getAndDecorateMaps   ( name , base , opers ) :
     funcs = getInherited ( name , base )
     return decorateMaps  ( funcs , opers )  ## RETURN 
 # =============================================================================
+
+## Decorate the functions 'extra-info' using the proper adapters
+def decorateFunInfo ( funcs , infos  ) :
+    """
+    Decorate the functions 'extra-info' using the proper adapters
+    """
+    for fun in funcs :
+        # operator(): 
+        def _info_ (s,*a) :
+            """
+            Construct ''Smart-extra-info'' functor,
+            which returns the valeu of extraInfo(index), if the information
+            present, otherwise it evaluates the functor and (optionally)
+            updates the extraInfo field
+            
+            >>> functor = ...
+            >>> smart = infor ( 15 , functor )
+            
+            >>> particle = ...
+            >>> value = smart ( particle )
+            
+            The concept belongs to Jose Angel Hernado Morata and Hugo Ruiz Peres
+            
+            """ 
+            return infos . __info__ ( s , *a )
+        # update the documentation 
+        _info_ . __doc__ += infos . __info__ . __doc__
+        # finally decorate the function 
+        fun    . __info__  =         _info_ 
+
+    return funcs
+
+# =============================================================================
+## get all 'info'-functors and decorate them 
+def getAndDecorateInfos  ( name , base , opers ) :
+    """
+    Det all infos  and decorate them
+    """
+    funcs = getInherited ( name , base )
+    return decorateFunInfo ( funcs , opers )  ## RETURN 
+
+# =============================================================================
 ## get all pipeing functors and decorate them 
 def getAndDecoratePipes  ( name , base , opers ) :
     """ get all maps  and decorate them """
     funcs = getInherited ( name , base )
     return decorateMaps  ( funcs , opers )  ## RETURN 
+
+
 
 
 

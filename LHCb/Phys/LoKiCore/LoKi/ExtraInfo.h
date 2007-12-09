@@ -1,4 +1,4 @@
-// $Id: ExtraInfo.h,v 1.5 2007-11-28 13:56:32 ibelyaev Exp $
+// $Id: ExtraInfo.h,v 1.6 2007-12-09 17:56:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTRAINFO_H 
 #define LOKI_EXTRAINFO_H 1
@@ -127,7 +127,7 @@ namespace LoKi
     // ========================================================================
     /** @class GetSmartInfo
      *
-     *  Simple class which checks the "exxtraInfo" field of the 
+     *  Simple class which checks the "extraInfo" field of the 
      *  argument
      *  for the given key, and return the corresponding value.
      *  For the missing keys the infomation is evaluated using the 
@@ -181,7 +181,7 @@ namespace LoKi
        */
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { 
-        s <<  this->objType() << "(" << m_fun << "," << m_index << "," ;
+        s << "info(" << m_index << "," << m_fun << "," ;
         return s <<  ( m_update ? "True" : "False"  ) << ")" ;
       }
       /** unique function ID (hash); see LoKi::genericID 
@@ -209,6 +209,25 @@ namespace LoKi
       bool  m_update ; ///< "update flag"
     } ;  
   } // end of namespace LoKi::ExtraInfo
+  // ==========================================================================
+  /** simple function for "on-flight" construction of the "smart-extra-info" 
+   *  function
+   * 
+   *  The concept is inspired by Jose Angel Hernando Morata and Hugo Ruiz Peres
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-12-09
+   */
+  template <class TYPE,class TYPE2>
+  inline 
+  LoKi::ExtraInfo::GetSmartInfo<TYPE,TYPE2>
+  info 
+  ( const int                        index          , 
+    const LoKi::Functor<TYPE,TYPE2>& functor        , 
+    const bool                       update = false ) 
+  {
+    return LoKi::ExtraInfo::GetSmartInfo<TYPE,TYPE2>( index ,functor , update ) ;
+  } 
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 

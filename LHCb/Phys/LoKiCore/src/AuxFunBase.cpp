@@ -1,4 +1,4 @@
-// $Id: AuxFunBase.cpp,v 1.9 2007-12-05 15:47:48 ibelyaev Exp $
+// $Id: AuxFunBase.cpp,v 1.10 2007-12-09 17:56:43 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -57,18 +57,6 @@ namespace LoKi
   static InstanceCounter<AuxFunBase>  s_AuxFunBaseCounter  ;
 #endif 
   // ==========================================================================
-}
-// ============================================================================
-// default constructor 
-// ============================================================================
-LoKi::AuxFunBase::AuxFunBase() 
-  : m_event   ( -1 )
-  , m_lokiSvc ( (LoKi::ILoKiSvc*)0 )
-{
-#ifdef LOKI_DEBUG
-  // increment the instance counter
-  LoKi::s_AuxFunBaseCounter.increment();
-#endif 
 }
 // ============================================================================
 // constructor from LoKi Service

@@ -455,6 +455,26 @@ def yields ( s ) :
     """
     return s.__yields__() 
 
+
+# =============================================================================
+## construct "smart Extra Info" functor
+def info ( index , fun , update = False ) :
+    """
+    Construct ''Smart-extra-info'' functor,
+    which returns the valeu of extraInfo(index), if the information
+    present, otherwise it evaluates the functor and (optionally)
+    updates the extraInfo field
+
+    >>> functor = ...
+    >>> smart = infor ( 15 , functor )
+    
+    >>> particle = ...
+    >>> value = smart ( particle )
+
+    The concept belongs to Jose Angel Hernado Morata and Hugo Ruiz Peres
+    
+    """
+    return fun.__info__ ( index , update ) 
     
 # =============================================================================
 # The END
