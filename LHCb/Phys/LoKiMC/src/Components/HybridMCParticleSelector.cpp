@@ -1,4 +1,4 @@
-// $Id: HybridMCParticleSelector.cpp,v 1.2 2007-11-28 14:14:00 ibelyaev Exp $
+// $Id: HybridMCParticleSelector.cpp,v 1.3 2007-12-09 18:20:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -57,10 +57,10 @@ namespace LoKi
       virtual StatusCode initialize () ;
       /// select
       virtual bool accept      ( const LHCb::MCParticle* p ) const      
-      { return m_mccut ( p ) ; }
+      { return m_mccut.fun ( p ) ; }
       /// Test if filter is satisfied (functor interface)
       virtual bool operator()  ( const LHCb::MCParticle* p ) const 
-      { return accept ( p ) ; }
+      { return m_mccut.fun ( p ) ; }
     protected:
       /// Standard constructor
       MCParticleSelector 

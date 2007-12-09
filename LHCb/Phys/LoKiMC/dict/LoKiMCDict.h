@@ -1,4 +1,4 @@
-// $Id: LoKiMCDict.h,v 1.8 2007-12-02 11:17:56 ibelyaev Exp $
+// $Id: LoKiMCDict.h,v 1.9 2007-12-09 18:20:17 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIMCDICT_H 
 #define LOKI_LOKIMCDICT_H 1
@@ -66,14 +66,16 @@ namespace
     LoKi::Dicts::CutsOps<const LHCb::MCParticle*>    m_o3 ;
     LoKi::Dicts::CutsOps<const LHCb::MCVertex*>      m_o4 ;
     // 
-    LoKi::Dicts::MapsOps<const LHCb::MCParticle*>    m_fo1 ;
-    LoKi::Dicts::MapsOps<const LHCb::MCVertex*>      m_fo2 ;
-    LoKi::Dicts::PipeOps<const LHCb::MCParticle*>    m_fo3 ;
-    LoKi::Dicts::PipeOps<const LHCb::MCVertex*>      m_fo4 ;
-    LoKi::Dicts::FunValOps<const LHCb::MCParticle*>  m_fo5 ;
-    LoKi::Dicts::FunValOps<const LHCb::MCVertex*>    m_fo6 ;
-    LoKi::Dicts::ElementOps<const LHCb::MCParticle*> m_fo7 ;
-    LoKi::Dicts::ElementOps<const LHCb::MCVertex*>   m_fo8 ;
+    LoKi::Dicts::MapsOps<const LHCb::MCParticle*>    m_fo1  ;
+    LoKi::Dicts::MapsOps<const LHCb::MCVertex*>      m_fo2  ;
+    LoKi::Dicts::PipeOps<const LHCb::MCParticle*>    m_fo3  ;
+    LoKi::Dicts::PipeOps<const LHCb::MCVertex*>      m_fo4  ;
+    LoKi::Dicts::FunValOps<const LHCb::MCParticle*>  m_fo5  ;
+    LoKi::Dicts::FunValOps<const LHCb::MCVertex*>    m_fo6  ;
+    LoKi::Dicts::ElementOps<const LHCb::MCParticle*> m_fo7  ;
+    LoKi::Dicts::ElementOps<const LHCb::MCVertex*>   m_fo8  ;
+    LoKi::Dicts::SourceOps<const LHCb::MCParticle*>  m_fo9  ;
+    LoKi::Dicts::SourceOps<const LHCb::MCVertex*>    m_fo10 ;
     // calls 
     LoKi::Dicts::FunCalls<LHCb::MCParticle>       m_c1 ;
     LoKi::Dicts::CutCalls<LHCb::MCParticle>       m_c2 ;

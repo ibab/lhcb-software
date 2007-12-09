@@ -1,4 +1,4 @@
-// $Id: HybridMCParticleArrayFilter.cpp,v 1.2 2007-11-28 14:14:00 ibelyaev Exp $
+// $Id: HybridMCParticleArrayFilter.cpp,v 1.3 2007-12-09 18:20:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -71,7 +71,7 @@ namespace LoKi
         particles.erase 
           ( std::remove_if ( particles.begin () , 
                              particles.end   () , 
-                             !m_mccut           ) , particles.end () ) ;
+                             !m_mccut.fun()     ) , particles.end () ) ;
         //
         return StatusCode::SUCCESS ;
       }
@@ -105,11 +105,11 @@ namespace LoKi
       // ==================================================================
     private:
       // selection criteria itself 
-      LoKi::Types::MCCut m_mccut ; ///< selection criteria itself
+      LoKi::Types::MCCut  m_mccut   ; ///< selection criteria itself
       // python pseudo-code
-      std::string       m_code    ; ///< python pseudo-code
+      std::string         m_code    ; ///< python pseudo-code
       // factory type/name
-      std::string       m_factory ; ///< factory type/name
+      std::string         m_factory ; ///< factory type/name
     } ;
   } // end of namespace Hybrid 
 } // end of namespace LoKi 
@@ -126,7 +126,7 @@ StatusCode LoKi::Hybrid::MCParticleArrayFilter::initialize ()
   IMCHybridFactory* factory = tool<IMCHybridFactory> ( m_factory , this ) ;  
   if ( 0 == factory ) 
   { return Error ( "Could not locate IMCHybridFactory" ) ; }     // RETURN 
-  // (3) use the factory to get the cuts 
+  // (3) use the factory to get the cuts
   sc = factory->get (  m_code , m_mccut ) ;
   if ( sc.isFailure() ) 
   { return Error ( "Error from IMCHybridFactory", sc   ) ; }     // RETURN 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.33 2007-12-02 11:17:56 ibelyaev Exp $ 
+! $Id: release.notes,v 1.34 2007-12-09 18:20:17 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,7 +15,12 @@
 !
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiMC v7r0 2007-12-01 ============================
+!========================== LoKiMC v7r0 2007-12-09 ============================
+
+! 2007-12-09 - Vanya BELYAEV
+ - implement "sources" 
+   new files: LoKi/MCSources.h & src/MCSources.cpp
+
 
 ! 2007-12-01 - Vanya BELYAEV
  - upgrade for the new major version of LoKi v7r0 (The powerful streamers)

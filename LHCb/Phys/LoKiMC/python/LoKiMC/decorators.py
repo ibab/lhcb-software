@@ -153,8 +153,19 @@ def _decorate ( name = _name ) :
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                          , ## module name
         LoKi.Functor( _vv , _mcv )                    , ## the base
-        LoKi.Dicts.ElementOps(_mcv,_mcv)              ) ## stremers    
-    
+        LoKi.Dicts.ElementOps(_mcv,_mcv)              ) ## streamers
+    print "here2:", len(_decorated)
+     #sources
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                           , ## module name
+        LoKi.Functor( 'void' , _vp  )                  , ## the base
+        LoKi.Dicts.SourceOps(_mcp,_mcp)                ) ## stremers
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                           , ## module name
+        LoKi.Functor( 'void' , _vv )                   , ## the base
+        LoKi.Dicts.SourceOps(_mcv,_mcv)                ) ## streamers
+    print "here2:", len(_decorated)
+   
     ## decorate pids (Comparison with strings, integers and ParticleID objects:
     for t in ( MCID , MCABSID ) :
         t = type ( t ) 

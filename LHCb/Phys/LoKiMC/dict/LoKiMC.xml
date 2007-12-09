@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiMC.xml,v 1.14 2007-12-02 11:57:14 ibelyaev Exp $ 
+     * $Id: LoKiMC.xml,v 1.15 2007-12-09 18:20:17 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiMC package
@@ -63,6 +63,7 @@
   <class pattern   = "LoKi::Dicts::PipeOps<*LHCb::MC*>"    />
   <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::MC*>"  />
   <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::MC*>" />
+  <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::MC*>"  />
 
   <class pattern   = "LoKi::Dicts::PIDOps<LoKi::MC*>"       />
   <class pattern   = "LoKi::Dicts::FunCalls<LHCb::MC*>"     />
@@ -83,9 +84,11 @@
     <class name = "LoKi::MCParticles::IsContainedObject::Objects" /> 
     <class name = "LoKi::MCParticles::FromMCDecayTree::MCCont"    /> 
     
-    <class name = "LoKi::Interface<LoKi::IReporter>" /> 
-    <class name = "LoKi::Interface<GaudiTool>"       /> 
-    <class name = "LoKi::Interface<GaudiAlgorithm>"  /> 
+    <class name = "LoKi::Interface<LoKi::IReporter>"  /> 
+    <class name = "LoKi::Interface<GaudiTool>"        /> 
+    <class name = "LoKi::Interface<GaudiAlgorithm>"   /> 
+    <class name = "LoKi::Interface<LoKi::ILoKiSvc>"   /> 
+    <class name = "LoKi::Interface<IDataProviderSvc>" /> 
  </exclusion>
   
 </lcgdict>

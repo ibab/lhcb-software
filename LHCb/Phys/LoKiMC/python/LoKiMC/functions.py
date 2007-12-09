@@ -95,7 +95,7 @@ MCZERO     = LoKi.Constant     ( _MCP , 'double' ) (0.0)
 ## @see LoKi::Cuts::MCVALID
 MCVALID    = LoKi.Valid        ( _MCP )()
 ## @see LoKi::Cuts::MCSAME
-MCSAME     = LoKi.TheSame      ( _MCP )
+#MCSAME     = LoKi.TheSame      ( _MCP )
 ## @see LoKi::Cuts::OSCILLATED
 OSCILLATED = LoKi.MCParticles.Oscillated   ()
 ## @see LoKi::Cuts::MCOSCILLATED
@@ -243,7 +243,7 @@ MCVZERO     = LoKi.Constant     ( _MCV , 'double' )(0.0)
 ## @see LoKi::Cuts::MCVVALID
 MCVVALID    = LoKi.Valid        ( _MCV )()
 ## @see LoKi::Cuts::MCVSAME
-MCVSAME     = LoKi.TheSame      ( _MCV )
+#MCVSAME     = LoKi.TheSame      ( _MCV )
 ## @see LoKi::Cuts::MCVTYPE
 MCVTYPE     = LoKi.MCVertices.TypeOfMCVertex ()
 ## @see LoKi::Cuts::MCVFOT
@@ -281,6 +281,8 @@ MCFunVals   = LoKi.Functor             ( _vp , 'double' )
 MCFunVal    = LoKi.FunctorFromFunctor  ( _vp , 'double' )
 MCElements  = LoKi.Functor             ( _vp , _MCP     ) 
 MCElement   = LoKi.FunctorFromFunctor  ( _vp , _MCP     ) 
+MCSources   = LoKi.Functor             ('void', _vp     )
+MCSource    = LoKi.FunctorFromFunctor  ('void', _vp     )
 #
 MCVMaps     = LoKi.Functor             ( _vv , _vd      )
 MCVMap      = LoKi.FunctorFromFunctor  ( _vv , _vd      )
@@ -290,7 +292,11 @@ MCVFunVals  = LoKi.Functor             ( _vv , 'double' )
 MCVFunVal   = LoKi.FunctorFromFunctor  ( _vv , 'double' )
 MCVElements = LoKi.Functor             ( _vv , _MCV     ) 
 MCVElement  = LoKi.FunctorFromFunctor  ( _vv , _MCV     ) 
+MCVSources  = LoKi.Functor             ('void', _vv     )
+MCVSource   = LoKi.FunctorFromFunctor  ('void', _vv     )
 
+
+MCSOURCE    = LoKi.MCParticles.SourceTES
 
 # =============================================================================
 if '__main__' == __name__ :
