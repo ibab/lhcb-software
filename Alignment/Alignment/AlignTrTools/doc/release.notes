@@ -6,6 +6,7 @@ Purpose: LHCb Alignment Tools
 
 ! 2007-12-10 - Louis Nicolas
  - fixed Initialize/Finalize misbalance for ATrackSelector
+ - fixed a bug in getCloseHits method in Align{SelTool,SaveTuple,TrackMonitor}.cpp
 
 </PRE><H1><A NAME=v3r3>2007-11-09 AlignTrTools v3r3 </A></H1><PRE>
 - J. Blouw, 2007-11-09

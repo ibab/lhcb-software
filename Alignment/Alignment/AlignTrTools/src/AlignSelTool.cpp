@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.11 2007-11-01 13:26:56 lnicolas Exp $
+// $Id: AlignSelTool.cpp,v 1.12 2007-12-10 14:42:56 lnicolas Exp $
 // Include files 
 
 // local
@@ -246,14 +246,8 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
     }
 
   // Initialization of tracks variables
-  m_trP = 0;
   m_entryTX = aTrack.closestState( 7500. ).tx();
   m_entryTY = aTrack.closestState( 7500. ).ty();
-  m_trChi2PerDoF = 0;
-  m_trChi2Prob = 0;
-  m_nHoles = 0;
-  m_nSharedHits = 0;
-  m_nCloseHits = 0;
 
   if ( m_fieldOn && (c_minP > defValue) )
     m_trP = aTrack.p();
@@ -436,18 +430,20 @@ void AlignSelTool::getCloseHits ( ) const {
   LHCb::OTTimes::const_iterator iTimes = otTimes->begin();
 
   // Loop over all the IT clusters
-  for ( ; iClus+1 != itClusters->end(); ++iClus )
-    if ( isNeighbouringHit( (*iClus).channelID(), (*(iClus+1)).channelID() ) ) {
-      m_closeHits.push_back( (*iClus).channelID() );
-      m_closeHits.push_back( (*(iClus+1)).channelID() );
-    }
+  if ( itClusters->size() != 0 )
+    for ( ; iClus+1 != itClusters->end(); ++iClus )
+      if ( isNeighbouringHit( (*iClus).channelID(), (*(iClus+1)).channelID() ) ) {
+        m_closeHits.push_back( (*iClus).channelID() );
+        m_closeHits.push_back( (*(iClus+1)).channelID() );
+      }
   
   // Loop over all the OT times
-  for ( ; iTimes+1 != otTimes->end(); ++iTimes )
-    if ( isNeighbouringHit( (**iTimes).channel(), (**(iTimes+1)).channel()) ) {
-      m_closeHits.push_back( (**iTimes).channel() );
-      m_closeHits.push_back( (**(iTimes+1)).channel() );
-    }
+  if ( otTimes->size() != 0 )
+    for ( ; iTimes+1 != otTimes->end(); ++iTimes )
+      if ( isNeighbouringHit( (**iTimes).channel(), (**(iTimes+1)).channel()) ) {
+        m_closeHits.push_back( (**iTimes).channel() );
+        m_closeHits.push_back( (**(iTimes+1)).channel() );
+      }
 
   // sorting and stripping out duplicates
   std::sort( m_closeHits.begin(), m_closeHits.end(), lessByID() );
