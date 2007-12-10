@@ -5,22 +5,23 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r2>2007-12-05 LHCbSys v23r2</A></H1><PRE>
+</PRE><H1><A NAME=v23r2>2007-12-10 LHCbSys v23r2</A></H1><PRE>
 This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
 
 - Packages added   : STKernel v1r0    - public headers for ST readout
                      LoKiNumbers v7r0 - Set of dictionaries for LoKi functions
 - Packages modified: GaudiObjDesc v11r0, KernelSys v7r0, LHCbKernel v8r0,
     LHCbMath v2r4, L0MuonKernel v7r2, Relations v5r3, RichKernel v7r9,
-    DetSys v11r1, CaloDet v8r5, DetDesc v18r2, DetDescCnv v4r4, MuonDet v7r1,
-    OTDet v7r7, RichDet v10r8, STDet v3r8, EventSys v23r11, DAQEvent v7r7,
-    DigiEvent v2r3, EventAssoc v4r3, L0Event v17r7, RecEvent v2r8,
-    TrackEvent v4r9, DAQSys v3r7, MuonDAQ v3r3, MDF v2r7, TrackInterfaces v3r11,
-    DaVinciKernel v6r9, DaVinciMCKernel v2r5, RichRecBase v3r9, 
-    MCInterfaces v1r4, CaloUtils v7r6, SimComponents v2r8, DetCond v11r7,
-    LHCbAlgs v2r13, LoKi v7r0, LoKiAlgo v7r0, LoKiAlgoMC v7r0,
-    LoKiArrayFunctors v7r0, LoKiCore v7r0, LoKiGen v7r0, LoKiGenMC v7r0,
-    LoKiMC v7r0, LoKiPhys v7r0, LoKiPhysMC v7r0, IOExample v2r3
+    DetSys v11r1, CaloDet v8r5, DetDesc v18r2, DetDescCnv v4r4, DetDescSvc v1r15,
+    MuonDet v7r1, OTDet v7r7, RichDet v10r8, STDet v3r8, EventSys v23r11,
+    DAQEvent v7r7, DigiEvent v2r3, EventAssoc v4r3, HltEvent v8r5, L0Event v17r7,
+    RecEvent v2r8, TrackEvent v4r9, VeloEvent v16r2, DAQSys v3r7, CaloDAQ v4r2,
+    MuonDAQ v3r3, MDF v2r7, TrackInterfaces v3r11, DaVinciKernel v6r9,
+    DaVinciMCKernel v2r5, RichRecBase v3r9, MCInterfaces v1r4, CaloUtils v7r6,
+    SimComponents v2r8, DetCond v11r7, LHCbAlgs v2r13, LoKi v7r0, LoKiAlgo v7r0,
+    LoKiAlgoMC v7r0, LoKiArrayFunctors v7r0, LoKiCore v7r0, LoKiGen v7r0,
+    LoKiGenMC v7r0, LoKiMC v7r0, LoKiPhys v7r0, LoKiPhysMC v7r0, CondDBUI v2r6,
+    LinkerInstances v3r4, Tell1Kernel v1r1, IOExample v2r3
 
 - In GaudiObjDesc v11r0, RichKernel v7r9, RichRecBase v3r9, MuonDet v7r1
   . Changes to deal with move of STL serializers to GaudiKernel/SerializeSTL.h
@@ -78,6 +79,10 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
   . Change the class id in the opaque address if it does not match the one
     specified in the XML of the object
 
+- In DetDescSvc v1r15
+  . Minor improvement in UpdateManagerSvc debug output: print demangled name of
+    registered classes. 
+
 - In MuonDet v7r1
   . Remove obsolete file MuonDet/MuonParameters.h
   . Move file MuonDet/MuonChamberLayout.h to src/Lib, for better encapsulation
@@ -101,6 +106,10 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
 - In DAQEvent v7r7
   . Add new class : RawBankReadoutStatus.xml
   . New component algorithm : RawBankReadoutStatusFilter
+  . Updated the ODIN class to version 3 of the ODIN bank format 
+    (added CalibrationStep and TriggerConfigurationKey).
+  . Modified the tests to comply to the Gaudi QMTest infrastructure and added
+    a very simple test (to be reviewed).
 
 - In DigiEvent v2r3
   . Remove Kernel directory:
@@ -108,7 +117,12 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
     IVeloCluster2VeloDigitTool.h is obsolete and removed
 
 - In EventAssoc v4r3
-  . Update to take into account new (python) structure in Kernel/Relations package
+  . Update to handle new (python) structure in Kernel/Relations package
+
+- In HltEvent v8r5
+  . Fix dependencies for DoHltNames hack and make the action private
+  . Added inputSelectionsIDs() vector of IDs in HltSelectionSummary
+  . Added three HLT sleections, removed one.
 
 - In L0Event v16r7
   . Update L0DUBase.h (new elements in CaloType enum)
@@ -130,12 +144,25 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
   . added method to add list of states to track
   . moved reference vector from Measurement to Node
 
+- In VeloEvent v16r2
+  . Extended funcitonality of VeloProcessInfo class
+  . Extended functionality of the VeloTELL1Data, needed for commissioning
+
 - In RichRecBase v3r9
   . Add new interface for photon emission point tool
   . Remove redundant method from IRichPhotonReconstruction.h
 
-- In MuonDAQ v3r3
-  . Add dictionary
+- In CaloDAQ v4r2
+  . Fix bug in decoding Prs/Spd TELL1 format. Does not fix MC data generated so
+    far, only real data
+  . Add a new decoding tool & interface : (I)CaloL0DataProvider (same as
+    CaloDataProvider for 8-bit L0-Adc)
+  . Better handling of corrupted/missing banks (details in CaloDAQ release notes)
+  . CaloFillRawBuffer : add PIN-FEB data only when requested 
+    -> No longer PIN-FEB header in Bank when no PIN data
+
+- In MuonDAQ v3r3, CaloDAQ v4r2
+  . Add dictionary generation
 
 - In MDF v2r7
   . Add new Rawbank types to RawEventPrintout.h to retrieve bank type as string.
@@ -143,6 +170,7 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
     Requires new job option:
     ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog",
                                       "Gaudi::IODataManager/IODataManager" };
+  . Fix bug in MDF IO to accept properly file names like PFN:file:....
 
 - In TrackInterfaces v3r11
   . Add IVeloClusterPosition interface previously in LHCbKernel
@@ -157,6 +185,9 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
   . Add couple of templated methods for the abstract interface ICheckOverlap
   . Add Kernel/GetDVAlgorithm.h, src/Lib/GetDVAlgorithm.cpp: simple function to
     get DVAlgorithm from the context 
+  . Do not use incident end-event to clean desktop:
+    o IPhysDesktop: Don't look for Incidents
+    o DVAlgorith.cpp: clean desktop at end of execute
 
 - In DaVinciMCKernel v2r5
    . Changes to Particle2MCLinker:
@@ -195,6 +226,30 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
 - In LoKiCore v7r0
   . Many new concepts from Gerhard Raven for functional programming
     Essentially the whole "functor"-business is rewritten 
+
+- In CondDBUI v2r6
+  . Use pyqt from LCG_Interfaces
+  . Restructured the package to use the installation of python modules and
+    scripts as in Gaudi
+    o the main module is now CondDBUI
+    o the browser is now CondDBBrowser.py
+  . Changes in CondDBUI:
+    o Added the methods cloneTag and moveTagOnNodes to CondDBUI.CondDB.
+    o CondDB connection string can now contain environment variables.
+  . Changes in the browser
+    o Modified the way configuration and settings are stored.
+    o Added default entries for the official databases.
+  . Added 2 small scripts that wrap the merge and diff functions in CondDBUI
+    (merge_db.py and diff_db.py).  
+  . Fixed a problem with ValidityKeyWrapper.__eq__
+
+- In LinkerInstances v3r4
+  . Adapted eventassoc.py to GaudiPython which comes with Gaudi v19r6
+  . Update the package structure for python InstallArea. Requires modifications
+    in client code, details in LinkerInstances release notes
+
+- In Tell1Kernel v1r1
+  . Update related with Velo commissioning
 
 - In IOExample v2r3
   . In WriteMDF.opts, add options for new MultiFileCatalog when writing MDF file
