@@ -1,11 +1,13 @@
+! $Id: release.notes,v 1.88 2007-12-10 06:32:48 cattanem Exp $
 ! Package	        : L0/L0Calo
-! Package Manager : Olivier Callot
+! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
-
+!========================= L0Calo v9r11 2007-12-10 ========================
 ! 2007-10-31 - Marie-Helene Schune, Patrick Robbe, (Olivier Deschamps)
  - implement the final bank format as defined in EDMS-845277
- NB : this requires "HadronSB" condition to be included in  condDB (SQLDDDB > v3r0)
+   NB : this requires "HadronSB" condition to be included in  condDB
+        (from SQLDDDB v3r1)
 
 !========================= L0Calo v9r10 2007-11-01 ========================
 ! 2007-10-31 - Patrick Koppenburg
