@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : MicroDST/MicroDSTBase
+! Responsible : Juan Palacios
+! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
+!               functions and functors.
+!-----------------------------------------------------------------------------
+
+! 2007-12-10 - Juan Palacios
+ - First import
