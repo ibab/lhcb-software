@@ -4,13 +4,13 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== HltEvent v8r5 2007-12-10 ===========================
 ! 2007-12-09 - Jose A. Hernando
  - Added inputSelectionsIDs() vector of IDs in HltSelectionSummary
 
 ! 2007-12-07 - Patrick Koppenburg
  - Added three HLT sleections, removed one.
 
-!======================== HltEvent v8r4p1 2007-12-07 =========================
 ! 2007-12-07 - Marco Cattaneo
  - Fix dependencies for DoHltNames hack and make the action private
 
