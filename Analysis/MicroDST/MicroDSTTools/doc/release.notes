@@ -3,8 +3,11 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.1.1.1 2007-12-10 09:32:24 jpalac Exp $
+! $Id: release.notes,v 1.2 2007-12-10 09:42:19 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2007-12-10 - Juan Palacios
+ - Add src/MicroDSTTools_dll.cpp
 
 ! 2007-12-10 - Juan Palacios
  - First CVS import
