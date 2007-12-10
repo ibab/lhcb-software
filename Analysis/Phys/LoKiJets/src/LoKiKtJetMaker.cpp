@@ -1,4 +1,4 @@
-// $Id: LoKiKtJetMaker.cpp,v 1.9 2007-12-10 10:48:39 ibelyaev Exp $
+// $Id: LoKiKtJetMaker.cpp,v 1.10 2007-12-10 15:38:23 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -414,7 +414,8 @@ StatusCode LoKi::KtJetMaker::makeJets
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,KtJetMaker);
+/// The factory
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,KtJetMaker)
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: LoKiJetMakerAlg.cpp,v 1.2 2007-12-10 10:48:38 ibelyaev Exp $
+// $Id: LoKiJetMakerAlg.cpp,v 1.3 2007-12-10 15:38:23 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -87,8 +87,6 @@ namespace LoKi
  *  @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
  */
 // ============================================================================
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,JetMaker);
-// ============================================================================
 /*  standard execution of the algorithm 
  *  @see LoKi::Algo 
  *  @return status code 
@@ -128,7 +126,8 @@ StatusCode LoKi::JetMaker::analyse   ()
   return StatusCode::SUCCESS ;
 }
 // ===========================================================================
-
+/// The factory
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,JetMaker)
 // ============================================================================
 // The END 
 // ============================================================================

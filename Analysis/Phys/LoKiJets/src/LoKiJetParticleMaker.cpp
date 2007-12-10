@@ -1,4 +1,4 @@
-// $Id: LoKiJetParticleMaker.cpp,v 1.2 2007-12-10 10:48:38 ibelyaev Exp $
+// $Id: LoKiJetParticleMaker.cpp,v 1.3 2007-12-10 15:38:23 ibelyaev Exp $
 // ============================================================================
 // include files  
 // ============================================================================
@@ -88,15 +88,11 @@ namespace LoKi
   // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================
-/// the factory 
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,JetParticleMaker) ;
-// ============================================================================
 // make the particles 
 // ============================================================================
 StatusCode LoKi::JetParticleMaker::makeParticles 
 ( LHCb::Particle::ConstVector& particles ) 
 {
-  const size_t n0 = particles.size() ;
   
   IJetMaker::Input inputs ;
   // loop over all input locations 
@@ -137,6 +133,9 @@ StatusCode LoKi::JetParticleMaker::makeParticles
   
   return StatusCode::SUCCESS ;
 }
+// ============================================================================
+/// the factory 
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,JetParticleMaker) 
 // ============================================================================]
 // The END 
 // ============================================================================
