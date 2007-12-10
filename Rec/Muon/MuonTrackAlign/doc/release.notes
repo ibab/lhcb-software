@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.2 2007-07-23 09:37:23 cattanem Exp $
+! $Id: release.notes,v 1.3 2007-12-10 15:08:37 spozzi Exp $
 ! Package     : MuonTrackAlign
 ! Responsible : Alessia Satta
 ! Purpose     : Track reconstruction for Muon Alignment purposes
+
+
+
+! 20071206 - Silvia Pozzi
+ - Added the muon hits to the long tracks from which the muon tracks belong
+
+
 
 !=================== MuonTrackAlign v1r0 2007-07-23 ==================
 ! 20070723 - Silvia Pozzi

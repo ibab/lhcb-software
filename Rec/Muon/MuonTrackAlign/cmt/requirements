@@ -1,5 +1,5 @@
 package MuonTrackAlign
-version v1r0
+version v1r1
 
 
 # ================ structure =========================================
@@ -11,11 +11,9 @@ include_dirs      $(MUONTRACKALIGNROOT)
 # ================ used packages =========================================
 use MuonDAQ     v*    Muon
 use MuonDet     v*    Det
-use PatTools    v*    Pat
 use MCEvent     v*    Event
 use LinkerEvent v*    Event
-#use HltMuon     v*    Hlt -no_auto_imports
-use   GaudiAlg      v*
+use GaudiAlg      v*
 
 
 # build a component library

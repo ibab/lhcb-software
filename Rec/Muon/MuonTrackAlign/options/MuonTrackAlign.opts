@@ -1,6 +1,3 @@
-
-
-
 // This is needed to load MCHits
 //ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 //#include "$ASSOCIATORSROOT/options/Brunel.opts"
@@ -12,23 +9,23 @@
 ApplicationMgr.DLLs += { "MuonDet" };
 ApplicationMgr.DLLs += { "MuonTrackAlign" };
 //ApplicationMgr.DLLs += { "MuonTools" };
-ApplicationMgr.TopAlg += { "GaudiSequencer/AlignSeq" };
-AlignSeq.Members += { "AlignMuonRec"};
+
+RecoMUONSeq.Members += { "AlignMuonRec", "TrackEventFitter/MuonTrackFitter"};
+
 AlignMuonRec.Bfield="true";
 AlignMuonRec.CloneKiller=true;
 AlignMuonRec.OutputLevel = 5;
-MuonRead.OutputLevel=5;
 
+RecoMUON.OutputLevel = 5;
 
 //============================================
 //This is needed to fit the Muon Tracks
 
-AlignSeq.Members  += { "TrackEventFitter/MuonTrackFitter" };
 MuonTrackFitter.TracksInContainer = "/Event/Rec/Muon/MuonsForAlignment";
 MuonTrackFitter.OutputLevel = 5;
 MuonTrackFitter.Fitter.OutputLevel = 5;
 
-MuonTrackFitter.Fitter.ErrorP = 0.0001 ;
+MuonTrackFitter.Fitter.ErrorP = {0., 1e-6};
 MuonTrackFitter.Fitter.ErrorX2 =   100000 ;
 MuonTrackFitter.Fitter.ErrorY2 = 10000000 ;
 MuonTrackFitter.Fitter.ErrorTx2 = 0.01 ;
@@ -37,9 +34,11 @@ MuonTrackFitter.Fitter.ErrorTy2 = 0.01 ;
 MuonTrackFitter.Fitter.MaxNumberOutliers =0 ;
 MuonTrackFitter.Fitter.StatesAtMeasZPos = true ;
 MuonTrackFitter.Fitter.StateAtBeamLine=false;
-//AlignSeq.Members  += { "TrackChecker/MuonTrackChecker" };
-//MuonTrackChecker.TracksInContainer = "/Event/Rec/Muon/MuonsForAlignment";
 
-AlignSeq.Members += { "MuonRead"};
+DstWriter.ItemList += 
+{
+  "/Event/Rec/Muon/MuonsTrackForAlignment#1"
+};
 //============================================
+
 

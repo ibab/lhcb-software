@@ -1,4 +1,7 @@
-// $Id: AlignMuonRec.cpp,v 1.1.1.1 2007-07-23 07:14:36 asatta Exp $
+//
+//Muon_OK
+//
+// $Id: AlignMuonRec.cpp,v 1.2 2007-12-10 15:08:37 spozzi Exp $
 // Include files 
 
 // from Gaudi
@@ -34,10 +37,14 @@ AlignMuonRec::AlignMuonRec( const std::string& name,
   declareProperty( "MeasureTime"   , m_measureTime   = true );
   declareProperty( "CloneKiller"   , m_cloneKiller   = true );
   //declareProperty( "StoreTracks"   , m_storeTracks   = true );
-   declareProperty( "OutputMuonTracksName" ,
-                    m_outputMuonTracksName="/Event/Rec/Muon/MuonsForAlignment");
-  declareProperty("DecodingFromCoord", m_decodingFromCoord = true );
-  declareProperty("BField", m_Bfield = true );
+  declareProperty( "OutputMuonTracksName" ,
+		   m_outputMuonTracksName="/Event/Rec/Muon/MuonsForAlignment");
+
+  declareProperty( "OutputMuonTracksForAlignmentName" ,
+		   m_outputMuonTracksForAlignmentName="/Event/Rec/Muon/MuonsTrackForAlignment");
+
+  declareProperty( "DecodingFromCoord", m_decodingFromCoord = true );
+  declareProperty( "BField", m_Bfield = true );
 }
 //=============================================================================
 // Destructor
@@ -47,16 +54,16 @@ AlignMuonRec::~AlignMuonRec() {};
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode AlignMuonRec::initialize() {
+StatusCode AlignMuonRec::initialize() { 
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  if ( sc.isFailure() ) return sc;   // error printed already by GaudiAlgorithm
   
   debug() << "==> Initialize" << endmsg;
 
   // Counters
   m_countEvents = 0;
   m_countMuCandidates = 0;
-
+  
   //== Timing information
   if ( m_measureTime ) {
     m_timer = tool<ISequencerTimerTool>( "SequencerTimerTool" );
@@ -67,26 +74,17 @@ StatusCode AlignMuonRec::initialize() {
     m_timeMuonStore  = m_timer->addTimer( "Store muons" );
     m_timer->decreaseIndent();
   }
-
-  // create the container for storing muon tracks
   
-  //  PatDataStore* store = tool<PatDataStore> ( "PatDataStore", "" );
   m_onTES        = true;  
-  PatDataStore* store = tool<PatDataStore> ( "PatDataStore" );
-  
-  //  m_muonTracksContainer = store->createTrackContainer(m_outputMuonTracksName,
-  //              10 );
-  m_states       = store->states();
-  release( store );
-  
+
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
   if(!m_muonBuffer)info()<<"error retrieving the muon raw buffer tool "
                          <<endreq;
   
   //retrieve the pointer to the muon detector 
-  
   m_muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
-  
+
+  //calculate the transverse momentum  
   m_fCalcPtKick = tool<ITrackPtKick>("TrackPtKick");
   info() << "In init, PTKick from geometry " << endreq;
   
@@ -98,7 +96,6 @@ StatusCode AlignMuonRec::initialize() {
   m_nRegion = basegeometry.getRegions();
   
   //create container for pad position
-
   for(unsigned int station=0;station<m_nStation;station++){
     m_station.push_back( AlignMuonStationRec(msgSvc(),randSvc()));
     m_station[station].initialize();
@@ -111,29 +108,17 @@ StatusCode AlignMuonRec::initialize() {
   }
   
   //set some useful info about the layout of the muon system
-  
 
-  
   //initialze the decoding of the raw buffer
-
-  
-
 
   //set muon station position
   
   for(unsigned int station=0;station<m_nStation;station++){
     
-    //    for(unsigned int region = 0 ; region < m_nRegion ; region++ ){      
-    //  AlignMuonRegion* reg = new AlignMuonRegion();
-    //  //set some parameters 
-    //  m_station[station].region().push_back( reg );
-    // }
-    
-    //double deltaX,deltaY,z,deltaZ;
     double zSta= m_muonDetector->getStationZ(station);
     
-    
     m_station[station].setZ( zSta );
+
     //set cut for muon reconstruction
     debug()<<" station "<<endreq;
     if(station==0){
@@ -186,36 +171,51 @@ StatusCode AlignMuonRec::initialize() {
 // Main execution
 //=============================================================================
 StatusCode AlignMuonRec::execute() {
-
   debug() << "==> Execute" << endmsg;
-  
-  //  HltAlgorithm::beginExecute();
   
   //setFilterPassed(true);
   
+  LHCb::Tracks* outputTracks  = new LHCb::Tracks();
+  outputTracks->reserve(10);
+  put(outputTracks, m_outputMuonTracksForAlignmentName);
+ 
   int m_countMuonCandidates=0;
   
   m_countEvents += 1;
-  
 
   for(unsigned  station = 0 ; station < m_nStation ; station++ ){
     m_station[station].clearRegions();
   }
   createCoords();
   
+  muonSearch();   //find the tracks of muon candidates
   
-  muonSearch();   //Trova le tracce di muoni candidate
+  if(m_cloneKiller)    detectClone();   //defines a clone if two traks share pads on M2,M3,M4 
   
-  if(m_cloneKiller)    detectClone();   //Definisce un clone se 2 tracce condividono pad su M2,M3,M4 
-  
-  if(m_cloneKiller)    strongCloneKiller(); //Definisce un clone se 2 tracce condividono pad su M2,M3
-  
-  
+  if(m_cloneKiller)    strongCloneKiller(); //defines a clone if two traks share pads on M2,M3
+
+  double xM1=0.;
+  double yM1=0.;
+  double zM1=0.;
+  double zM5=0.;
+  double err2xM1 = 0.;
+  double err2xM5 = 0.;
+  double err2yM1 = 0.;
+  double err2yM5 = 0.;  
+  float xm=0;
+  float ym=0;
+  float zm=0;
+
+  LHCb::Tracks* bestCont = get<Tracks>(TrackLocation::Default ); 
   
   m_countMuCandidates += m_muonTracks.size();
-  debug()<<" size "<<m_muonTracks.size()<<endreq;
+  debug()<<"m_muonTracks.size() "<<m_muonTracks.size()<<endreq;
+
+  // create the container for storing muon tracks
   LHCb::Tracks* muonsContainer= new LHCb::Tracks;
-  debug()<<muonsContainer<<endreq;
+  muonsContainer->reserve(10);
+  put(muonsContainer, m_outputMuonTracksName);
+
   std::vector<AlignMuonTrack>::iterator itMuonTrack;
   for(itMuonTrack=m_muonTracks.begin();
       itMuonTrack<m_muonTracks.end();itMuonTrack++){
@@ -223,9 +223,7 @@ StatusCode AlignMuonRec::execute() {
       m_countMuonCandidates++;
       LHCb::Track* trgTr =new Track();
       
-        // m_muonTracksContainer->newEntry();
-      //        trgTr->setType(Track::Muon);
-      debug() << "==> Execute1" << endmsg; 
+      trgTr->setType(Track::Muon);
 
       AlignMuonPoint firstpoint, lastpoint ;
       bool first =true ;
@@ -237,66 +235,130 @@ StatusCode AlignMuonRec::execute() {
 	  first = false ;
 	}
       }
+
+      // slope of muon tracks calculated between the first and the last station
       double txref = ( firstpoint.x() - lastpoint.x() ) /  (firstpoint.z() - lastpoint.z() )  ;
       double tyref = ( firstpoint.y() - lastpoint.y() ) /  (firstpoint.z() - lastpoint.z() )  ;
 
+      LHCb::MuonTileID padTileM1= firstpoint.tile();
+      LHCb::MuonTileID padTileM5= lastpoint.tile();
+      double Tilex, Tiley, Tilez, Tiledx, Tiledy, Tiledz;
+      m_muonDetector->Tile2XYZ(padTileM1, Tilex, Tiledx, Tiley, Tiledy, Tilez, Tiledz);
+      err2xM1 = pow(Tiledx,2.);
+      err2yM1 = pow(Tiledy,2.);
+      xM1 = firstpoint.x();
+      yM1 = firstpoint.y();
+      zM1 = firstpoint.z();
+      m_muonDetector->Tile2XYZ(padTileM5, Tilex, Tiledx, Tiley, Tiledy, Tilez, Tiledz);
+      err2xM5 = pow(Tiledx,2.);
+      err2yM5 = pow(Tiledy,2.);
+      zM5 = lastpoint.z();
+
+
+      // Add the long track
+      LHCb::Tracks::const_iterator iterT;
+      LHCb::State bestState;
+      LHCb::Track* bestTrack;
+      LHCb::Track* mytr = new Track();
+  
+      bool flag=false;
+      double bestChisq=10000.;
+      double Chisq = 0;
+
+      //Processing LongTrack for matching with muon
+
+      for( iterT = bestCont->begin(); iterT != bestCont->end(); iterT++){
+	Track* testTrack = *iterT;
+
+	if (testTrack->type() != LHCb::Track::Long){
+	  continue;
+	}
+	
+	Gaudi::XYZVector slopeLong = testTrack->slopes();
+
+	double slopeLong_x = slopeLong.X();
+	double slopeLong_y = slopeLong.Y(); 
+	double slopeMuon_x = txref;
+	double slopeMuon_y = tyref; 
+	double err2slopexMuon,err2slopeyMuon;
+
+	err2slopexMuon = (err2xM5 + err2xM1)/pow(zM5-zM1,2.);
+	err2slopeyMuon = (err2yM5 + err2yM1)/pow(zM5-zM1,2.);
+
+	Chisq=pow(slopeMuon_x - slopeLong_x,2.)/err2slopexMuon 
+	  + pow(slopeMuon_y - slopeLong_y,2.)/err2slopeyMuon
+	  + pow(xM1-testTrack->closestState(zM1).x(),2.)/err2xM1 
+	  + pow(yM1-testTrack->closestState(zM1).y(),2.)/err2yM1;
+
+	debug()<<"Chisq match with Long track"<<Chisq<<endreq;
+
+	if(Chisq<40&&Chisq<bestChisq) {
+	  debug()<<"Match found: Chisq= "<<Chisq<<endreq;
+	  flag = true;
+
+	  debug()<<"testTrack"<<*testTrack<<endreq;
+	  bestState = testTrack->closestState(10000);
+	  bestTrack = testTrack;
+	  debug()<<"bestTrack"<<*bestTrack<<endreq;
+ 	  bestChisq =  Chisq;
+
+	  mytr = bestTrack->clone();
+	}else{
+	  debug()<<"Chisquare too big "<<endreq;
+	}
+
+	info()<<"bestChisq after match found "<<bestChisq<<endreq;
+	    
+      }
+	
+      if(flag){
+	trgTr->addToStates( bestState);
+      }
       for(unsigned ista=0;ista<m_nStation;ista++){
-        info()<<" new muon track "<<endreq;
-        std::vector<AlignMuonPoint> vpoint = itMuonTrack->points(ista);
-        for(std::vector<AlignMuonPoint>::const_iterator iV=vpoint.begin(); iV != vpoint.end(); iV++) {
-          
-          float xm=(*iV).x();       
-          float ym=(*iV).y();
-          float zm=(*iV).z();
-          float txm,tym;
-
-
-          if(ista<4) {
-            txm= (*itMuonTrack).slopeX(ista,ista+1);
-            tym= (*itMuonTrack).slopeY(ista,ista+1);
-          }else{ 
-            txm= (*itMuonTrack).slopeX(ista,ista-1);
-            tym= (*itMuonTrack).slopeY(ista,ista-1);
-          }
-          LHCb::State temp;
-          temp.setZ(zm);
-          temp.setX(xm);
-          temp.setY(ym);
-          temp.setTx(txref);
-          temp.setTy(tyref);
+	info()<<" new muon track passing by station "<<ista+1<<endreq;
+	std::vector<AlignMuonPoint> vpoint = itMuonTrack->points(ista);
+	for(std::vector<AlignMuonPoint>::const_iterator iV=vpoint.begin(); iV != vpoint.end(); iV++) {
+	  
+	  xm=(*iV).x();       
+	  ym=(*iV).y();
+	  zm=(*iV).z();
+	  float txm,tym;
+	  
+	  LHCb::State temp;
+	  temp.setZ(zm);
+	  temp.setX(xm);
+	  temp.setY(ym);
+	  temp.setTx(txref);
+	  temp.setTy(tyref);
 	  temp.setQOverP( 1 / 10000.) ;
-          temp.setLocation(LHCb::State::EndVelo);
+	  temp.setLocation(LHCb::State::EndVelo);
 	  m_fCalcPtKick->calculate(&temp);
 
-          trgTr->addToStates( temp );
-          trgTr->addToLhcbIDs((*iV).tile());            
-        }
+	  trgTr->addToStates( temp );
+	  trgTr->addToLhcbIDs((*iV).tile());            	  
+
+	  mytr->addToStates(temp);
+	  if(flag) mytr->addToLhcbIDs((*iV).tile());
+	  if(!flag) mytr->setType(Track::Muon);
+	  
+	  std::vector<LHCb::LHCbID> IDs;
+	  std::vector<LHCb::LHCbID>::const_iterator itID;
+	  
+	}
       }
-      
+       
+      trgTr->setType( Track::Muon );      
       trgTr->setPatRecStatus( Track::PatRecIDs ) ; 
       muonsContainer->insert(trgTr);
-            
+      if(flag) outputTracks->insert(mytr);
     }
     
-  }
-
-  debug()<<" mmm "<<muonsContainer->size()<<endreq;  
-  StatusCode fg=eventSvc()->registerObject(m_outputMuonTracksName,
-					   muonsContainer);
-  info()<<fg.isSuccess()<<endreq;
-  if(fg.isFailure()){
-    put(muonsContainer,m_outputMuonTracksName); 
   }
   
   m_muonTracks.clear();
   info()<<" stored candidates "<<m_countMuonCandidates<<endreq; 
-  debug()<<" in container "<< muonsContainer->size()<<endreq;
-
-  Tracks* muonTracks=get<Tracks>(m_outputMuonTracksName);
-  info()<<"size "<<muonTracks->size()<<endreq; 
-
-    
-    return StatusCode::SUCCESS;
+  
+  return StatusCode::SUCCESS;
 };
 
 //=============================================================================
@@ -316,12 +378,7 @@ StatusCode AlignMuonRec::finalize() {
 
 //=============================================================================
 
-
-
-
-
-StatusCode AlignMuonRec::muonSearch()   // Versione modificata per salvare tutte le hit
-{
+StatusCode AlignMuonRec::muonSearch() {
   m_muonTracks.clear();
 
   std::vector<AlignMuonPoint>::iterator itM5;
@@ -329,7 +386,7 @@ StatusCode AlignMuonRec::muonSearch()   // Versione modificata per salvare tutte
     AlignMuonRegion* thisRegion = m_station[4].region(region);
     for(itM5=thisRegion->points().begin();itM5<thisRegion->points().end();
         itM5++){
-      //serach coincidence in M4
+      //search coincidence in M4
       std::vector<AlignMuonPoint> CandidateM4;
       info()<< " MuonSearch CandidateM4"<<endreq;
       
@@ -524,13 +581,6 @@ StatusCode AlignMuonRec::printOut()
   return StatusCode::SUCCESS;
   
 };
-
-
-
-
-
-
-
 
 StatusCode AlignMuonRec::createCoords()
 {

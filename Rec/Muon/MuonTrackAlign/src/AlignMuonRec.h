@@ -1,4 +1,4 @@
-// $Id: AlignMuonRec.h,v 1.1.1.1 2007-07-23 07:14:36 asatta Exp $
+// $Id: AlignMuonRec.h,v 1.2 2007-12-10 15:08:37 spozzi Exp $
 #ifndef ALIGNMUONREC_H 
 #define ALIGNMUONREC_H 1
 
@@ -15,7 +15,7 @@
 #include "Kernel/IMuonLayout.h"
 #include "Event/Track.h"
 
-#include "PatTools/PatDataStore.h"
+//#include "PatTools/PatDataStore.h"
                               
 #include "AlignMuonStationRec.h"
 #include "AlignMuonTrack.h"
@@ -69,13 +69,12 @@ private:
   //ITrackSelector* m_trackSelector; // tool to accept a track
 
   bool               m_onTES; ///< Should create States ?
-  PatTrackContainer* m_muonTracksContainer;
-  PatStateContainer* m_states;
-
+  // roba di PatDataStore inizializzata ma non usata, provo a comm
+  //  PatTrackContainer* m_muonTracksContainer;
+  //  PatStateContainer* m_states;
 
   unsigned int m_nStation;
   unsigned int m_nRegion;
-
 
   ISequencerTimerTool* m_timer;
   int m_timeLoad;
@@ -84,7 +83,7 @@ private:
   int m_timeTag;
   //  int m_timeAsso;
   int m_timeMuonStore;
- std::vector<AlignMuonStationRec> m_station;
+  std::vector<AlignMuonStationRec> m_station;
   std::vector<std::pair<LHCb::MuonTileID,bool> > twelfthX[12];
   std::vector<std::pair<LHCb::MuonTileID,bool> > twelfthY[12];
   std::vector<AlignMuonTrack> m_muonTracks;
@@ -100,6 +99,7 @@ private:
   bool m_padM2;
   bool m_decodingFromCoord;
   std::string m_outputMuonTracksName;
+  std::string m_outputMuonTracksForAlignmentName;
 
   // counters
   int m_countEvents;
