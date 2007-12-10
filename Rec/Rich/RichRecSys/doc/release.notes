@@ -4,10 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r7 2007-12-10 =====================
 ! 2007-12-05 - Chris Jones
  - Add some additional custom options (not used by default)
 
-!====================== RichRecSys v3r7 2007-11-30 =====================
 ! 2007-11-30 - Marco Cattaneo
  - Use RichRecTools v4r*
 

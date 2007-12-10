@@ -4,12 +4,12 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================== RichRecTrackTools v1r0 2007-12-10 ==================
 ! 2007-12-05 - Chris Jones
  - Fix some doxygen comments
  - Make message about using forced inefficiency track tool a warning to
    increase visibility
 
-!======================== RichRecTrackTools v1r0 2007-11-30 ==================
 ! 2007-10-31 - Chris Jones
  - Split of package from RichRecTools. Original package was growing too large
    (cmt takes an eternity to build the dependencies).
