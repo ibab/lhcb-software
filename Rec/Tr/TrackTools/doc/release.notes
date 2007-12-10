@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2007-12-06 - Wouter Hulsbergen
+ - Added const to 'StateCorrection' tools
+
 !======================== TrackTools v3r2 2007-12-03 ========================
 ! 2007-12-03 - Wouter Hulsbergen
  - Added TrackVertexer

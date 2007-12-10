@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2007-12-06 Wouter Hulsbergen
+ - Added new methods to MaterialLocatorBase for use in TrackFit
+
 ! 2007-12-05 M Needham
  - Fix bug in TrackHerabExtrapolator
 

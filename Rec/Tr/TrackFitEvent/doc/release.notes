@@ -4,8 +4,8 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
-! 2007-12-05- Wouter Hulsbergen
-  - bug fix in TrackTraj constructor
+! 2007-12-10 - Wouter Hulsbergen
+  - bug fixed in TrackTraj constructor and caching
   - added new method to obtain driftRadius in OTMeasurement (for use in panoramix)
   - added member for material energy loss to FitNode
 
