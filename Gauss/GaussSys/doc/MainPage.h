@@ -11,7 +11,7 @@
  *
  * <b>The HepMC doxygen pages are not included, follow the link below:</b>
  * \li: 
- * <a href="http://lcgapp.cern.ch/doxygen/HEPMC/HepMC_1_26_02/doxygen/html/index.html>HepMC 1.26.02</a>
+ * <a href="http://lcgapp.cern.ch/doxygen/HEPMC/HepMC_1_26_02/doxygen/html/index.html">HepMC 1.26.02</a>
  * 
  * <hr>
  * \htmlinclude new_release.notes

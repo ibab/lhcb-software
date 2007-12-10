@@ -17,14 +17,15 @@ use GENSER              v3r3      Gen
 use EvtGen              v8r17     Gen   
 use Generators          v7r6      Gen
 use LbPythia            v5r4      Gen
-use LbPythia8           v1r0      Gen
 #
+macro LbPythia8_use   "LbPythia8    v1r1    Gen"  WIN32 ""
 macro LbAlpGen_use    "LbAlpGen     v1r0    Gen"  WIN32 ""
 macro BcVegPy_use     "BcVegPy      v1r1p2  Gen"  WIN32 ""
 macro LbBcVegPy_use   "LbBcVegPy    v1r5    Gen"  WIN32 ""
-macro LbHerwig_use    "LbHerwig     v5r1    Gen"  WIN32 ""     
+macro LbHerwig_use    "LbHerwig     v5r2    Gen"  WIN32 ""     
 macro LbHidValley_use "LbHidValley  v2r0    Gen"  WIN32 ""
 macro LbHijing_use    "LbHijing     v3r1    Gen"  WIN32 ""
+use ${LbPythia8_use}
 use ${LbAlpGen_use}
 use ${BcVegPy_use}
 use ${LbBcVegPy_use}
@@ -41,7 +42,7 @@ use GiGaCnv     	v18r4	  Sim
 use SimSvc              v5r0      Sim
 macro GiGaVisUI_use   "GiGaVisUI    v4r0    Sim"  WIN32 ""
 use ${GiGaVisUI_use} 
-use VisSvc              v5r0      Vis 
+use VisSvc              v5r1      Vis 
 use ClhepTools          v2r1      Tools
 
 # Simulation specialized packages
@@ -60,3 +61,6 @@ use MuonMoniSim         v2r2      Muon
 # GMDL
 #use GDML                v1r240p0  Sim
 #use GDMLG4Writer        v2r0      Sim
+
+# Visualization configuration
+use XmlVis              v1r0      Vis

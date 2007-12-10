@@ -3,19 +3,220 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
-Gauss               v30r5
-GENSER              v3r3
-EvtGen              v8r17 -
-Generators          v7r6   \ now also on win32
-LbPythia            v5r4   / 
-LbPythia8           v1r0  -
-ParticleGuns        v3r4  
-GiGaCnv             v18r4
-GaussAlgs           v3r1
-GaussTools          v13r2
-GaussRICH           v7r3
-CaloMoniSim         v3r1p1
-VeloGauss           v2r2
+!=============================================================================
+</PRE><H1><A NAME="v30r5">2007-12-10 - GaussSys v30r5</A></H1><PRE>
+<H2><A NAME="Note">DEVELOPEMENT version. Incompatible with DC06.</A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v23r1 (and Gaudi v19r5)</b>
+   pythia6 411.2, photos 215.2, lhapdf 5.3.0 (via LCG_GeneratorsInterfaces)
+   HepMC 1.26.02 (via LCG_Interfaces)
+   Geant4 v83r1 (based on geant4.8.3.patch01)
+   <b>DecFiles v13r16</b>, ParamFiles v7r0 
+   DDDB v1r2, FieldMap v4r7, XmlVis v1r0</A></H3>
+<H3><A NAME="Exe">Used by GaussXXX executables:
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces)
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces)
+   alpgen 2.1.2 (via LCG_GeneratorsInterfaces)
+   <b>pythia8 095.1</b></A></H3>
+<H3><A NAME="Details">
+   Post-DC06 version.
+   Partially built on Win32, also main generator phase: pythia6-evtgen-photos-lhapdf.
+   Introduce pythia8 (new C++ generator, see <i>
+   <AA href="http://indico.cern.ch/conferenceDisplay.py?confId=19346">Production
+   and Decay Models WG meeting of 15th Nov 2007</AA></i>).
+   Replace use of XmlDDDB for visualization with XmlVis dedicate package.
+   Special way of generating configurables for Geant4 actions.    
+</A></H3>
+
+!======================== Gauss v30r5 2007-12-07 =============================
+! 2007-12-07 - Gloria CORTI
+ - Remove making local executable visible. The one in InstallArea already is.
+
+! 2007-12-04 - Gloria CORTI
+ - Switch on Herwig with standard Gauss.exe (ie. without special executable)
+ - Temporarly increase stack size on windows where the default (1Mb) seems
+   to be too small. On linux and for python build it is 2Mb.
+
+! 2007-11-30 - Gloria Corti
+ - Use new settings for Pythia 6.4 including Pythia62.opts from LbPythia
+   . Generator.opts
+ - Use latest available version of DecFiles v13r16
+ - Modify options to allow to run with gaudirun.py, replacing {} with []
+   that also works with standard options but gives crash with main in python
+   . Common.opts
+ - Main steering must be passed with python to be able to set time with units
+   for EventTime (python need to know type of property to convert it from
+   real to int)
+   + v200601.py
+ - Introduce use of Pythia8 to allow tests
+
+!========================= LbPythia8 v1r1 2007-12-07 =========================
+! 2007-12-04 - Gloria CORTI
+ - Remove LbPythia8_load.cpp that is not necessary with Gaudi v19, since
+   this package will only be in the Gauss v30 series. Move declaration of
+   the tool factory (that is necessary!) in Pythia8Production.cpp
+ - Modify PDF commands to adapt to changes from Pythia8.080 to Pythia8.095.1
+   otherwise code does not initialize
+   . "Namespace" changed from Pythia: to PDF: (eg. PDF:useLHAPDF)
+   . Replace obsolete commands for setting limits of PDFs (eg.
+     Pythia:xMinLHAPDF ) with global turning off of extrapolation, i.e.
+     "PDF:extrapolateLHAPDF = off" that is also the Pythia default.
+   . Stop as soon as default algorithm setting for Pythia are inconsistent
+     with version used without waiting for end of method.
+
+! 2007-11-15 - Patrick Robbe
+ - src/component/Pythia8Production.cpp: protect against empty user options
+
+! 2007-10-08 - Patrick Robbe
+ - cmt/requirements: add new environment variable to point to xmldoc repository
+   of Pythia8/GENSER distribution
+ - src/component/Pythia8Production.cpp: use new PYTHIA8XML variable to declare
+   Pythia8 engine.
+
+!========================= LbPythia8 v1r0 2007-10-04 =========================
+! 2007-10-04 - Gloria Corti
+ - Introduce use of pythia8 in this package rather than in GENSER where
+   version is fixed
+   . requirements
+
+! 2007-07-31 - Patrick Robbe
+  - new package: interface package between Gauss and Pythia8
+    Initial version by Arthur de Gromard
+
+!========================= LbPythia v5r4 2007-12-07 ==========================
+! 2007-12-03 - Gloria Corti
+ - Convert file from DOS to Unix, to allow options to be parsed by python
+   . options/Pythia64.opts
+
+! 2007-11-30 - Patrick Robbe
+ - New options for Pythia 6.4 (with new MI)
+   + options/Pythia64.opts
+
+!====================== Generators v7r6 2007-12-06 ===========================
+! 2007-11-30 - Gloria Corti
+ - On Win32 put Signal and ExternalGenerators base classes in component
+   library rather then linker to allow compilation.
+   . requirements
+
+! 2007-11-26 - Chris Jones
+ - Add three new Signal selection 'Cut' tools
+  + SignalIsFromBDecay      : Selects only decays that originate from a b
+  + LHCbAcceptanceAndFromB  : The AND of the SignalIsFromBDecay and
+    LHCbAcceptance selections
+  + DaughtersInLHCbAndFromB : The AND of the SignalIsFromBDecay and
+    DaughtersInLHCb selections
+
+! 2007-11-08 - Gloria Corti for Karl Harrison
+ - Linking of HepMCfio for WIN32
+
+! 2007-10-11 - Patrick Robbe
+ - Move inline functions in StreamForGenerator and RandomForGenerator in
+   the .cpp files
+
+!======================== EvtGen v8r17 2007-12-07 =========================
+! 2007-10-30 - Patrick Robbe
+ - EvtPVVCPLH.cpp: corrections by Tristan du Pree
+
+! 2007-10-14 - Patrick Robbe
+ - Adapt static classes to windows compilation
+
+! 2007-10-11 - Patrick Robbe
+ - EvtIncoherentMixing: move inline access functions to static member
+   variables to .cpp files
+
+!========================== GENSER v3r3 2007-12-07 ===========================
+! 2007-11-08 - Gloria Corti for Karl Harrison
+ - Introduce linking for pythia6 and GENSER for WIN32
+
+! 2007-11-08 - Gloria Corti
+ - Change native version of pythia8 to pick up interface to hepmc compiled
+   with hepmc 1.26.2
+
+!======================== LbHerwig v5r2 2007-12-07 ==========================
+! 2007-12-04 - Gloria CORTI
+ - Remove from options 'ApplicationMgr.DLLs += { "LbHerwig" }' that in not
+   necessary with the Gauss v30 series and that causes a crash (as reported
+   by R.Lambert Bug# 31927 )
+   . options/Herwig.opts
+   . options/HerwigJimmy.opts
+   . options/HerwigMCatNLO.opts
+   . options/HerwigJimmyMCatNLO.opts
+ - Remove also obsolete LbHerwig_load.cpp
+
+!======================= ParticleGuns v3r4 2007-12-07 =======================
+! 2007-11-21 - Gloria Corti
+ - Add use of DetDesc to compile new OTCosmicGenerator
+
+! 2007-10-16 Wouter Hulsbergen
+ - Added OTCosmicGenerator
+
+!======================== VisSvc v5r1 2007-12-07 =============================
+! 2007-12-04 - Gloria CORTI
+ - Adapt default name of xml file to new package Vis/XmlVis that need to
+   be used when running
+   . VisualizationSvc.cpp
+
+!=========================== XmlVis v1r0 2007-12-03 ==========================
+! 2007-12-03 - Gloria CORTI
+ - Use names of volumes as in DC06 geometry.
+ - First version of the package copying DTD and Visualization directory from
+   XmlDDDB v30r4.
+
+   To use it give as file for the visualization $XMLVISROOT/xml/colors.xml,
+   for example for Panoramix you should do:
+
+     VisualizationSvc.ColorDbLocation = "$XMLVISROOT/xml/colors.xml";
+
+ - Modify visualization for beam pipe materials and supports
+
+!========================== VeloGauss v2r2 2007-12-07 ========================
+! 2007-11-27 - Mark Tobin
+ - Give all histograms names rather than numerical identifiers in
+   VeloGaussMoni.
+ - Set histoTopDir to Velo.
+
+!====================== CaloMoniSim v3r1p1 2007-12-07 =========================
+! 2007-11-16 - Gloria Corti
+ - Modify options to cope with running main from python (gaudirun.py):
+   units need to be written as 5*MeV and not 5 MeV.
+   . MoniSim.opts
+
+!========================= GaussRICH v7r3 2007-12-07 =========================
+! 2007-11-30 - Marco Clemencic and Gloria Corti
+ - Link with special code in GaussTools for genConf (to instanciate a dummy
+   G4RunManager, see GaussTools v13r2)
+   . requirements
+
+!======================== GaussTools v13r2 2007-12-07 ========================
+! 2007-11-30 - Marco Clemencic and Gloria Corti
+ - Add special code to instanciate a dummy G4RunManager and assign to it
+   a physics list as required to construct a G4 User Action, since the
+   corresponding G4 base class throw an exception in constructor if this
+   is not true ("safe-mode" to allow dynamic particles).
+   + src/genConf/ - mininal G4 code necessary
+   . requirements - add in private compilation of code and inclusion in
+                    LD_LIBRARY
+
+!======================== GaussAlgs v3r1 2007-12-07 ===========================
+! 2007-11-21 - Gloria Corti
+ - In case of failure of Giga->retrieveEvent return failure of algorithm,
+   since inside an exception of some type has likely been thrown
+   . GiGaFlushAlgorithm.cpp
+   . GiGaCheckEventStatus.cpp
+
+! 2007-11-19 - Gloria Corti
+ - Check status code from Giga->retrieveEvent, in case of an exception
+   caught by GiGa that could have serious failure on G4 event internally.
+   In case of failure set filterPassed false so that the event is not processed
+   further in the simulation phase and not written out.
+   . GiGaFlushAlgorithm.cpp
+   . GiGaCheckEventStatus.cpp
+
+!========================= GiGaCnv v18r4 2007-12-07 ==========================
+! 2007-11-08 - Gloria Corti
+ - Include IChronoStatSvc.h to be able to compile with Gaudi v19r5: before
+   it was included by Stat.h
+   . GiGaCnvBase.cpp
 
 !=============================================================================
 </PRE><H1><A NAME="v30r4">2007-10-11 - GaussSys v30r4</A></H1><PRE>
