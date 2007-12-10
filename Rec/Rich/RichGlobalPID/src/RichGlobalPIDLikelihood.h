@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.h,v 1.6 2007-10-23 10:43:08 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihood.h,v 1.7 2007-12-10 17:41:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -182,6 +182,9 @@ namespace Rich
 
         /// Maximum number of tracks to change in a single event iteration
         unsigned int m_maxTkChanges;
+
+        /// Maximum number of iteration retries
+        unsigned int m_maxItRetries;
 
         // working flags and variables
         bool m_inR1, m_inR2;

@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.cpp,v 1.8 2007-12-10 17:38:07 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihood.cpp,v 1.9 2007-12-10 17:41:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -57,6 +57,9 @@ Likelihood::Likelihood( const std::string& name,
 
   // Maximum number of tracks to change in a single event iteration
   declareProperty( "MaxTrackChangesPerIt", m_maxTkChanges = 5 );
+
+  // Maximum retries
+  declareProperty( "MaxIterationRetries", m_maxItRetries = 10 );
 
 }
 
@@ -149,22 +152,41 @@ StatusCode Likelihood::execute()
     // Final check, to see if we are at the global best set of hypos
     if ( m_doFinalDllCheck )
     {
-      const unsigned int nChange = initBestLogLikelihood();
-      if ( nChange != 0 )
-      {
-        // Not quite at best hypos yet ...
-        std::ostringstream mess;
-        mess << nChange << " track(s) changed hypothesis after final iteration -> Re-running";
-        Warning( mess.str(), StatusCode::SUCCESS, 3 );
-        // Rerun iterations
-        if ( msgLevel(MSG::DEBUG) )
-        { debug() << "Re-running event iteratons" << endreq; }
-        eventIteration += doIterations();
-      }
-      m_currentBestLL = logLikelihood();
-    }
 
-  }
+      unsigned int nChange(1), nRetries(0);
+      while ( nChange>0 && nRetries<m_maxItRetries )
+      {
+       ++nRetries;
+
+        nChange = initBestLogLikelihood();
+        if ( nChange > 0 )
+        {
+          // Not quite at best hypos yet ...
+          std::ostringstream mess;
+          mess << nChange << " track(s) changed hypothesis after LL minimisation " 
+               << nRetries << "  -> Re-running";
+          Warning( mess.str(), StatusCode::SUCCESS, 3 );
+          // Rerun iterations
+          if ( msgLevel(MSG::DEBUG) )
+          { debug() << "Re-running event iteratons" << endreq; }
+          eventIteration += doIterations();
+        }
+        m_currentBestLL = logLikelihood();
+
+        if ( nRetries == m_maxItRetries && nChange > 0 )
+        {
+          Warning( "Maximum number of iteration re-tries reached", StatusCode::SUCCESS );
+        }
+
+      } // retry while loop
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Ran " << nRetries << " iteration re-tries" << endreq;
+      }
+
+    } // final check
+
+  } // changes on first try
 
   if ( msgLevel(MSG::DEBUG) )
   {
@@ -267,7 +289,7 @@ unsigned int Likelihood::initBestLogLikelihood()
     RichRecTrack * rRTrack = (*track)->richRecTrack();
 
     // skip frozen tracks
-    if ( (*track)->frozenHypo() ) 
+    if ( (*track)->frozenHypo() )
     {
       if ( msgLevel(MSG::DEBUG) )
       { debug() << "  -> Skipping globally frozen track " << (*track)->key() << endreq; }
@@ -278,7 +300,7 @@ unsigned int Likelihood::initBestLogLikelihood()
     Rich::ParticleIDType minHypo = rRTrack->currentHypothesis();
 
     // Loop over all particle codes
-    for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin(); 
+    for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
           hypo != m_pidTypes.end(); ++hypo )
     {
 
@@ -309,7 +331,7 @@ unsigned int Likelihood::initBestLogLikelihood()
       }
       if ( threshold )
       {
-        for ( Rich::Particles::const_iterator hypo3 = hypo; 
+        for ( Rich::Particles::const_iterator hypo3 = hypo;
               hypo3 != m_pidTypes.end(); ++hypo3 )
         {
           (*track)->globalPID()->setParticleDeltaLL( *hypo3, deltaLogL );
@@ -380,7 +402,7 @@ void Likelihood::findBestLogLikelihood( MinTrList & minTracks )
       debug() << " -> Track " << gTrack->key() << " DLL = " << (*iP).first << endreq;
 
     // skip globally frozen tracks
-    if ( gTrack->frozenHypo() ) 
+    if ( gTrack->frozenHypo() )
     {
       if ( msgLevel(MSG::DEBUG) )
       { debug() << "  -> Skipping globally frozen track" << gTrack->key() << endreq; }
@@ -409,7 +431,7 @@ void Likelihood::findBestLogLikelihood( MinTrList & minTracks )
     bool addto(false), minFound(false);
     double minTrackDll = 99999999;
     Rich::ParticleIDType minHypo = Rich::Unknown;
-    for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin(); 
+    for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
           hypo != m_pidTypes.end(); ++hypo )
     {
 
@@ -486,7 +508,7 @@ void Likelihood::findBestLogLikelihood( MinTrList & minTracks )
       }
       if ( threshold )
       {
-        for ( Rich::Particles::const_iterator hypo3 = hypo; 
+        for ( Rich::Particles::const_iterator hypo3 = hypo;
               hypo3 != m_pidTypes.end(); ++hypo3 )
         {
           gTrack->globalPID()->setParticleDeltaLL( *hypo3, deltaLogL );
