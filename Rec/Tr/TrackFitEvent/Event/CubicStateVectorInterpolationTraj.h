@@ -1,4 +1,4 @@
-// $Id: CubicStateVectorInterpolationTraj.h,v 1.2 2007-11-30 13:35:39 wouter Exp $
+// $Id: CubicStateVectorInterpolationTraj.h,v 1.3 2007-12-10 11:58:35 wouter Exp $
 #ifndef LHCbKernel_CubicStateVectorInterpolationTraj_H
 #define LHCbKernel_CubicStateVectorInterpolationTraj_H 1
 
@@ -25,7 +25,7 @@ namespace LHCb
     typedef Gaudi::XYZVector Vector ;
 
     /// Default constructor. Does nothing.
-    CubicStateVectorInterpolationTraj() : ZTrajectory(), m_zbegin(0), m_zend(0) {}
+    CubicStateVectorInterpolationTraj() : ZTrajectory() {}
  
     /// Constructor from two states of state-vectors
     template<class StateT>
@@ -73,22 +73,22 @@ namespace LHCb
 
   public: // other public methods
     /// Return x(z)
-    double x(double z) const { return polyeval(z-m_zbegin,m_cx) ; }
+    double x(double z) const { return polyeval(z-zbegin(),m_cx) ; }
     /// Return dx/dz
-    double tx(double z) const { return poly1stderiveval(z-m_zbegin,m_cx) ; }
+    double tx(double z) const { return poly1stderiveval(z-zbegin(),m_cx) ; }
     /// Return d2x/dz2
-    double omegax(double z) const { return poly2ndderiveval(z-m_zbegin,m_cx) ; }
+    double omegax(double z) const { return poly2ndderiveval(z-zbegin(),m_cx) ; }
     /// Return y(z)
-    double y(double z) const { return polyeval(z-m_zbegin,m_cy) ; }
+    double y(double z) const { return polyeval(z-zbegin(),m_cy) ; }
     /// Return dy/dz
-    double ty(double z) const { return poly1stderiveval(z-m_zbegin,m_cy) ; }
+    double ty(double z) const { return poly1stderiveval(z-zbegin(),m_cy) ; }
     /// Return d2y/dz2
-    double omegay(double z) const { return poly2ndderiveval(z-m_zbegin,m_cy) ; }
+    double omegay(double z) const { return poly2ndderiveval(z-zbegin(),m_cy) ; }
     
     /// Return the z of the begin point
-    double zbegin() const { return m_zbegin ; }
+    double zbegin() const { return beginRange() ; }
     /// Return the z of the end point
-    double zend()   const { return m_zend ; }
+    double zend()   const { return endRange() ; }
     
     /// qop at position z
     double qop(double z) const ;
@@ -105,8 +105,6 @@ namespace LHCb
     double poly2ndderiveval( double dz, const double c[4]) const { return 2*c[2] + dz*6*c[3] ; }
     
   private:
-    double m_zbegin ;   ///< z-position of first state
-    double m_zend ;     ///< z-position of second state
     double m_cx[4] ;    ///< parameters of x(z)
     double m_cy[4] ;    ///< parameters of y(z)
     double m_qopbegin ; ///< q/p at first state
@@ -119,10 +117,9 @@ namespace LHCb
 
   template<class StateT> void  
   CubicStateVectorInterpolationTraj::init( const StateT& begin,
-                                       const StateT& end ) 
+					   const StateT& end )
   {
-    m_zbegin = begin.z() ;
-    m_zend   = end.z() ;
+    setRange( begin.z(), end.z() ) ;
     m_qopbegin = begin.qOverP() ;
     m_qopend   = end.qOverP() ;
     interpolate1D(begin.z(), begin.x(), begin.tx(), end.z(), end.x(), end.tx(), m_cx) ;
@@ -133,7 +130,7 @@ namespace LHCb
   CubicStateVectorInterpolationTraj::init( const StateT& state,
                                        const Gaudi::XYZVector& bfield)
   {
-    m_zbegin   = m_zend = state.z() ;
+    setRange( state.z(), state.z() ) ;
     m_qopbegin = m_qopend = state.qOverP() ;
     double n = std::sqrt( 1 + state.tx()*state.tx() + state.ty()*state.ty()) ;
     m_cx[0] = state.x() ;
@@ -148,7 +145,7 @@ namespace LHCb
   
   inline double CubicStateVectorInterpolationTraj::distTo1stError( double z, double tolerance, int pathDirection ) const 
   {
-    double deriv = poly2ndderiveval(z-m_zbegin,m_cx) ;
+    double deriv = poly2ndderiveval(z-zbegin(),m_cx) ;
     // validity range of linear approximation cannot be larger than that of parabolic!
     return std::min( deriv!=0 ? std::sqrt(std::abs(2*tolerance/deriv)) :10*Gaudi::Units::km,
                      distTo2ndError(z,tolerance,pathDirection)) ;
@@ -162,8 +159,8 @@ namespace LHCb
   
   inline double CubicStateVectorInterpolationTraj::qop(double z) const 
   { 
-    return z<=m_zbegin ? m_qopbegin : 
-      ( z>=m_zend ? m_qopend : m_qopbegin + (m_qopend-m_qopbegin)*(z-zbegin())/(zend()-zbegin()) ) ; 
+    return z<=zbegin() ? m_qopbegin : 
+      ( z>=zend() ? m_qopend : m_qopbegin + (m_qopend-m_qopbegin)*(z-zbegin())/(zend()-zbegin()) ) ; 
   }
   
   inline void CubicStateVectorInterpolationTraj::expansion( double z, Gaudi::XYZPoint& p, Gaudi::XYZVector& dp,
