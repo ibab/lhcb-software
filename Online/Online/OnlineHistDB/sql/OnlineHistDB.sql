@@ -1,4 +1,4 @@
-create or replace package OnlineHistDB as
+create or replace package OnlineHistDB authid current_user as
  TYPE sourceh is VARRAY(8) of HCREATOR.SOURCEH1%TYPE; 
  TYPE histotlist is TABLE OF HISTOGRAM.HID%TYPE;
  TYPE floattlist is TABLE OF real;
@@ -1411,6 +1411,7 @@ EXCEPTION
 when insuf_privs then 
  writePerm := 0;
 when OTHERS then
+ writePerm := 0;
  RAISE;
 end CheckSchema;
 
