@@ -32,6 +32,7 @@ framework.
      TrackSeeding v1r3, TrackSys v3r2)
   . Track measurements no longer removed by TrackToDST, since they are in any 
     case not persistent (TrackUtils v1r17)
+  . Write out states in T at 3 z positions (PatAlgorithms v3r2)
   . Change default value of z position of output track state to mid T
     (TsaAlgorithms v3r2)
   . Reorganisation and improvements to Rich reconstruction tools
@@ -53,6 +54,9 @@ framework.
 - Bug fixes
   . Fix unchecked StatusCode (MuonDet v7r1, MuonDAQ v3r3)
   . Protections for missing data (RichMCMonitors v1r5, RichTools v2r16)
+  . Fix screwed up region numbering for IT and OT (PatAlgorithms v3r2)
+  . Bug fixed in TrackTraj constructor and caching (TrackFitEvent v3r11)
+  . Fix bug in TrackHerabExtrapolator (TrackExtrapolators v2r16)
 
 </PRE><H1><A NAME=v32r1>2007-11-15 Brunel v32r1</A></H1><PRE>
 This version uses projects Gaudi v19r5, LHCb v23r1, Lbcom v6r12, Rec v5r1
