@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!2007-12-10 Wouter Hulsbergen
+ - moved filling of material corrections and propagation matrices to
+   TrackMasterFitter, making use of trajectory approximation
+
 !=========================== TrackFitter v2r22 2007-12-03 ===================
 ! 2007-11-30 Wouter Hulsbergen
  - set and use reference for each node (no longer from measurement)
