@@ -58,21 +58,26 @@ CreatePhotons.CreatePhotons   = true;
 //-----------------------------------------------------------------------------
 // Global PID algorithm
 //-----------------------------------------------------------------------------
-
-// Initialise Global PID algorithm for each event
 RecoRICHSeq.Members += { "GaudiSequencer/RichGlobalPIDSeq" };
 RichGlobalPIDSeq.MeasureTime   = true;
-RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Initialize/RichGloPIDInit",
-                              "Rich::Rec::GlobalPID::DigitSel/RichGloPIDDigSel",
-                              "Rich::Rec::GlobalPID::TrackSel/RichGloPIDTrSel" };
+
+// Initialise Global PID algorithm for each event
+RichGlobalPIDSeq.Members += { "GaudiSequencer/RichGlobalPIDInitSeq" };
+RichGlobalPIDInitSeq.MeasureTime   = true;
+RichGlobalPIDInitSeq.Members += { "Rich::Rec::GlobalPID::Initialize/RichGloPIDInit",
+                                  "Rich::Rec::GlobalPID::DigitSel/RichGloPIDDigSel",
+                                  "Rich::Rec::GlobalPID::TrackSel/RichGloPIDTrSel" };
+// Likelihood
+RichGlobalPIDSeq.Members += { "GaudiSequencer/RichGlobalPIDLikelihoodSeq" };
+RichGlobalPIDLikelihoodSeq.MeasureTime   = true;
 
 // First iteration of background estimation then Global PID iteration
-RichGlobalPIDSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEstPreIt" };
-RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Likelihood/RichGloPIDPreIt" };
+RichGlobalPIDLikelihoodSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEstPreIt",
+                                        "Rich::Rec::GlobalPID::Likelihood/RichGloPIDPreIt" };
 
 // Second iteration of background estimation then Global PID iteration
-RichGlobalPIDSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEstFinalIt" };
-RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Likelihood/RichGloPIDFinalIt" };
+RichGlobalPIDLikelihoodSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEstFinalIt",
+                                        "Rich::Rec::GlobalPID::Likelihood/RichGloPIDFinalIt" };
 
 // Finalise Global PID algorithm each event
 RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Finalize/RichGloPIDFin" };
