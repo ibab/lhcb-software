@@ -1,19 +1,27 @@
-// $Id: TrackMasterFitter.cpp,v 1.39 2007-11-30 16:02:46 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.40 2007-12-10 08:40:17 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
+// from TrackInterfaces
+#include "TrackInterfaces/ITrackManipulator.h"
+#include "TrackInterfaces/IMaterialLocator.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"            
+#include "TrackInterfaces/ITrackFitter.h"
+#include "TrackInterfaces/IMeasurementProvider.h"
+
 // from TrackEvent
 #include "Event/TrackFunctor.h"
 #include "Event/StateParameters.h"
 #include "Event/TrackTraj.h"
+#include "Event/Track.h"
+#include "Event/FitNode.h"
+#include "Event/State.h"
 
 // local
 #include "TrackMasterFitter.h"
-
-#include "TrackInterfaces/ITrackManipulator.h"
 
 // gsl
 #include "gsl/gsl_math.h"
@@ -48,35 +56,35 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   , m_extrapolator(0)
   , m_trackNodeFitter(0)
   , m_measProvider(0)
-  , m_refInfoTool(0)
+  , m_refStateTool(0)
+  , m_materialLocator(0)
 {
   declareInterface<ITrackFitter>( this );
 
   declareProperty( "Extrapolator"        , m_extrapolatorName =
                    "TrackMasterExtrapolator" );
-  declareProperty( "NodeFitter"          , m_trackNodeFitterName =
-                   "TrackKalmanFilter" );
   declareProperty( "FitUpstream"         , m_upstream         =   true    );
   declareProperty( "NumberFitIterations" , m_numFitIter       =     3     );
   declareProperty( "Chi2Outliers"        , m_chi2Outliers     =     9.0   );
   declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   =     2     );
-  declareProperty( "StatesAtMeasZPos"    , m_statesAtMeasZPos =   false   );
   declareProperty( "StateAtBeamLine"     , m_stateAtBeamLine  =   true    );
   declareProperty( "ZPositions"          , 
                    m_zPositions = boost::assign::list_of(StateParameters::ZBegRich1)
                                                         (StateParameters::ZEndRich1)
                                                         (StateParameters::ZBegRich2)
                                                         (StateParameters::ZEndRich2));
-  declareProperty( "IncreaseErrors" , m_increaseErrors =   true           );
   declareProperty( "ErrorX2"        , m_errorX2 = 4.0*Gaudi::Units::mm2   );
   declareProperty( "ErrorY2"        , m_errorY2 = 400.0*Gaudi::Units::mm2 );
   declareProperty( "ErrorTx2"       , m_errorTx2 = 6.e-5                  );
   declareProperty( "ErrorTy2"       , m_errorTy2 = 1.e-4                  );
   declareProperty( "ErrorP"         , m_errorP = boost::assign::list_of(0.15)(5.0e-7));
-  declareProperty( "RefInfoTool",
-                   m_refInfoToolName = "LongTrackReferenceCreator"        );
   declareProperty( "MakeNodes"      , m_makeNodes = true                  );
-  declareProperty( "NodesAtAllZPositions",m_makeNodesAtAllReferencePositions=true) ;
+  declareProperty( "NodesAtAllZPositions",m_makeNodesAtAllReferencePositions=false) ; 
+  declareProperty( "MaterialLocator", m_materialLocatorName="DetailedMaterialLocator") ;
+  declareProperty( "UpdateTransport", m_updateTransport=false) ;
+  declareProperty( "ApplyMaterialCorrections", m_applyMaterialCorrections=true) ;
+  declareProperty( "ParticleID", m_particleID=211) ; 
+  declareProperty( "TransverseMomentumForScattering", m_scatteringPt = 400.*Gaudi::Units::MeV);
 }
 
 //=========================================================================
@@ -92,16 +100,12 @@ StatusCode TrackMasterFitter::initialize()
 {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
-
-  m_extrapolator    = tool<ITrackExtrapolator>( m_extrapolatorName,
-                                                "Extrapolator",this );
-  m_trackNodeFitter = tool<ITrackFitter>( m_trackNodeFitterName,
-                                          "NodeFitter", this ) ;
-  m_measProvider    = tool<IMeasurementProvider>( "MeasurementProvider",
-                                                  "MeasProvider", this );
   
-  m_refInfoTool = tool<ITrackManipulator>( m_refInfoToolName, 
-                                           "RefInfoTool", this );
+  m_extrapolator      = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator",this );
+  m_trackNodeFitter   = tool<ITrackFitter>( "TrackKalmanFilter", "NodeFitter", this ) ;
+  m_measProvider      = tool<IMeasurementProvider>( "MeasurementProvider","MeasProvider", this );
+  m_refStateTool      = tool<ITrackManipulator>( "LongTrackReferenceCreator", "RefStateTool", this );
+  m_materialLocator   = tool<IMaterialLocator>(m_materialLocatorName, "MaterialLocator", this) ;
   
   m_debugLevel   = msgLevel( MSG::DEBUG );  
 
@@ -112,16 +116,10 @@ StatusCode TrackMasterFitter::initialize()
          << " Max " << m_numOutlierIter << " outliers removed with outliers"
          << " at chi2 > " << m_chi2Outliers << endmsg
          << " State z positions at: " << endmsg
-         << ((m_stateAtBeamLine) ? " beam line," : "")
-         << ((m_statesAtMeasZPos) ? " every measurement" : " first measurement" );
-  if ( m_statesAtMeasZPos ) {
-    m_zPositions.clear();
-  }
-  else {
-    std::vector<double>::const_iterator zPos;
-    for ( zPos = m_zPositions.begin(); zPos != m_zPositions.end(); ++zPos ) {
-      info()  << ", " << *zPos;
-    }
+         << ((m_stateAtBeamLine) ? " beam line," : "") << " first measurement" ;
+  std::vector<double>::const_iterator zPos;
+  for ( zPos = m_zPositions.begin(); zPos != m_zPositions.end(); ++zPos ) {
+    info()  << ", " << *zPos;
   }
   info() << endmsg
          << "==================================================" << endmsg;
@@ -144,7 +142,9 @@ StatusCode TrackMasterFitter::failure( const std::string& comment ) const {
 StatusCode TrackMasterFitter::fit( Track& track )
 {
   StatusCode sc;
-
+  if ( track.nStates() == 0 )
+    return Error( "Track has no state! Can not fit.", StatusCode::FAILURE );
+  
   // Make the nodes from the measurements
   if( track.nodes().empty() || m_makeNodes ) {
     sc = makeNodes( track );
@@ -152,12 +152,8 @@ StatusCode TrackMasterFitter::fit( Track& track )
       return failure( "unable to make nodes from the measurements" );
   }
   
-  // Get the seed state
-  if ( track.nStates() == 0 )
-    return Error( "Track has no state! Can not fit.", StatusCode::FAILURE );
-  State seed = seedState( track );
-
   // Check that the number of measurements is enough
+  State& seed = track.nodes().front()->state() ;
   if ( nNodesWithMeasurement( track ) < seed.nParameters() ) {
     debug() << "Track has " << track.nMeasurements() 
             << " measurements. Fitting a " << seed.nParameters() 
@@ -166,31 +162,16 @@ StatusCode TrackMasterFitter::fit( Track& track )
                     StatusCode::FAILURE, 1 );
   }
 
-  // Extrapolate the given seedstate to the z position of the first node
-  std::vector<Node*>& nodes = track.nodes();
-  std::vector<Node*>::iterator firstNode = nodes.begin();
-  double z = (*firstNode) -> z();
-  sc = m_extrapolator -> propagate( seed, z );
-  if ( sc.isFailure() ) 
-    return failure( "unable to extrapolate to measurement" );
-  seed.setLocation( ((*firstNode)->state()).location() );
-
-  // set covariance matrix to a somewhat larger value for the fit
-  TrackSymMatrix& seedCov = seed.covariance(); 
-  if ( m_increaseErrors ) {
-    seedCov = TrackSymMatrix(); // Set off-diagonal elements to zero
-    seedCov(0,0) = m_errorX2;
-    seedCov(1,1) = m_errorY2;
-    seedCov(2,2) = m_errorTx2;
-    seedCov(3,3) = m_errorTy2;
-    // error is like A^2/p^2 + B^2
-    seedCov(4,4) = gsl_pow_2( m_errorP[0] * seed.qOverP() ) + gsl_pow_2(m_errorP[1]);
-    debug() << "-> seed state covariance matrix blown up" << endmsg;
-  }
-
-  // Set the seed state in the first node
-  (*firstNode)->setState( seed );
-
+  // create a covariance matrix to seed the Kalman fit
+  TrackSymMatrix seedCov ;
+  seedCov = TrackSymMatrix(); // Set off-diagonal elements to zero
+  seedCov(0,0) = m_errorX2;
+  seedCov(1,1) = m_errorY2;
+  seedCov(2,2) = m_errorTx2;
+  seedCov(3,3) = m_errorTy2;
+  // error is like A^2/p^2 + B^2
+  seedCov(4,4) = gsl_pow_2( m_errorP[0] * seed.qOverP() ) + gsl_pow_2(m_errorP[1]);
+  
   if ( m_debugLevel )
     debug() << "SeedState: z = " << seed.z()
             << " stateVector = " << seed.stateVector()
@@ -201,20 +182,18 @@ StatusCode TrackMasterFitter::fit( Track& track )
   for ( ; iter <= m_numFitIter; ++iter ) {   
     if ( m_debugLevel ) debug() << "Iteration # " << iter << endmsg;
 
-    // Re-seeding (i.e. inflate covariance matrix)
-    if ( iter > 1 ) reSeed( track, seedCov );    
-
-    sc = m_trackNodeFitter -> fit( track );
-    if ( sc.isFailure() ) {
-      // Should only be used if the track belongs to a container and therefore has a key!
-      //std::ostringstream mess;
-      //mess << "unable to fit the track # " << track.key();
-      //return failure( mess.str() );
-      return failure( "unable to fit the track" );
+    // update reference trajectories with smoothed states
+    if( iter > 1 ) {
+      sc = updateRefVectors( track );
+      if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
     }
+
+    // reset the covariance of the first state
+    seed.covariance() = seedCov ;
+    
+    sc = m_trackNodeFitter -> fit( track );
+    if ( sc.isFailure() ) return failure( "unable to fit the track" );
       
-    // Update the reference trajectories in the measurements
-    updateRefVectors( track );
     if ( m_debugLevel ) debug() << "chi2 =  " << track.chi2() 
 				<< " ref state = (" << track.nodes().back()->state().stateVector() 
 				<< ") at z= " << track.nodes().back()->state().z() << endmsg;
@@ -227,8 +206,12 @@ StatusCode TrackMasterFitter::fit( Track& track )
           outlierRemoved( track ) ) {
     if ( m_debugLevel ) debug() << "Outlier iteration # " << iter << endmsg;
 
-    // Re-seeding (i.e. inflate covariance matrix
-    reSeed( track, seedCov );
+    // update reference trajectories with smoothed states
+    sc = updateRefVectors( track );
+    if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
+    
+    // reset the covariance of the first state
+    seed.covariance() = seedCov ;
 
     // Call the track fit
     sc = m_trackNodeFitter -> fit( track );
@@ -240,8 +223,6 @@ StatusCode TrackMasterFitter::fit( Track& track )
       return failure( "unable to fit the track" );
     }    
       
-    // Update the reference trajectories in the measurements
-    updateRefVectors( track );
     if ( m_debugLevel ) debug() << "chi2 =  " << track.chi2() 
 				<< " ref state = (" << track.nodes().back()->state().stateVector() 
 				<< ") at z= " << track.nodes().back()->state().z() << endmsg;
@@ -251,7 +232,7 @@ StatusCode TrackMasterFitter::fit( Track& track )
   // determine the track states at user defined z positions
   sc = determineStates( track );
   if ( sc.isFailure() )  {
-    clearNodes( nodes );  // clear the node vector
+    track.clearNodes() ;
     debug() << "fit failed" << endmsg ;
   } else {
     if ( m_debugLevel && !track.states().empty() )
@@ -300,22 +281,16 @@ StatusCode TrackMasterFitter::determineStates( Track& track ) const
     while ( !(*iNode)->hasMeasurement() ) ++iNode;
     State& state = (*iNode) -> state();
     state.setLocation( State::FirstMeasurement );
-    if ( !m_statesAtMeasZPos ) track.addToStates( state );
+    track.addToStates( state );
   }
   else {
     std::vector<Node*>::iterator iNode = nodes.begin();
     while ( !(*iNode)->hasMeasurement() ) ++iNode;
     State& state = (*iNode) -> state();
     state.setLocation( State::FirstMeasurement );
-    if ( !m_statesAtMeasZPos ) track.addToStates( state );
+    track.addToStates( state );
   }
 
-  // Add the states at measurement locations, if requested
-  // ------------------------------------------
-  if( m_statesAtMeasZPos ) 
-    for ( std::vector<Node*>::const_iterator it = nodes.begin(); it < nodes.end(); ++it ) 
-      if ( (*it)->hasMeasurement() ) track.addToStates( (*it)->state() ) ;
-    
   // Add the states at the predefined positions
   // ------------------------------------------
   for( std::vector<double>::const_iterator iz = m_zPositions.begin(); 
@@ -426,24 +401,12 @@ bool TrackMasterFitter::outlierRemoved( Track& track ) const
 //=========================================================================
 void TrackMasterFitter::updateRefVectors( Track& track ) const
 { 
+  StatusCode sc = StatusCode::SUCCESS ;
   for (Track::NodeContainer::iterator iNode = track.nodes().begin(); 
        iNode != track.nodes().end(); ++iNode ) 
-    (*iNode)->setRefVector( (*iNode)->state().stateVector() ) ;
-}
-
-//=========================================================================
-// 
-//=========================================================================
-void TrackMasterFitter::clearNodes( std::vector<Node*>& nodes ) const 
-{
-  if ( !nodes.empty() ) {
-    std::vector<Node*>::iterator iNode = nodes.begin();
-    while ( iNode != nodes.end() ) {
-      Node* aNode = *iNode;
-      nodes.erase( iNode );
-      delete aNode;
-    }
-  }
+    (*iNode)->setRefVector( (*iNode)->state().stateVector() ) ; 
+  if(m_updateTransport) sc =updateTransport(track) ;
+  return sc ;
 }
 
 //=========================================================================
@@ -457,8 +420,9 @@ double TrackMasterFitter::closestToBeamLine( State& state ) const
   // check on division by zero (track parallel to beam line!)
   if ( vec[2] != 0 || vec[3] != 0 ) {
     z -= ( vec[0]*vec[2] + vec[1]*vec[3] ) / ( vec[2]*vec[2] + vec[3]*vec[3] );
-  }
-  return z;
+  } 
+  // don't go outside the sensible volume
+  return std::min(std::max(z,-100*Gaudi::Units::cm), StateParameters::ZBegRich2 ) ;
 }
 
 //=========================================================================
@@ -477,36 +441,15 @@ unsigned int TrackMasterFitter::nNodesWithMeasurement( const Track& track )
 }
 
 //=============================================================================
-// Get a seed State from the Track
-//=============================================================================
-const State& TrackMasterFitter::seedState( const Track& track ) const
-{
-  return (m_upstream) ? (*track.states().back()) : (track.firstState());
-}
-
-//=========================================================================
-// Fill the covariance matrix of the first node with the original ones
-//=========================================================================
-void TrackMasterFitter::reSeed( Track& track, 
-                                const Gaudi::TrackSymMatrix& seedCov ) const
-{
-  std::vector<Node*>& nodes = track.nodes();
-  std::vector<Node*>::iterator firstNode = nodes.begin();
-  TrackSymMatrix& nodeCov = ((*firstNode)->state()).covariance();
-  nodeCov = seedCov;
-  return;
-}
-
-//=============================================================================
 // Create the nodes from the measurements
 //=============================================================================
 StatusCode TrackMasterFitter::makeNodes( Track& track ) const 
 {
   // Clear the nodes
   track.clearNodes() ;
-  
+
   // make sure the track has sufficient reference states
-  StatusCode sc = m_refInfoTool -> execute( track );
+  StatusCode sc = m_refStateTool -> execute( track );
   if (sc.isFailure()) {
     Warning("Problems setting reference info", StatusCode::SUCCESS, 1);
   }
@@ -572,6 +515,13 @@ StatusCode TrackMasterFitter::makeNodes( Track& track ) const
     (*it)->setRefVector( ref ) ;
     (*it)->state().setState(ref) ;
   }
+  
+  // add all the noise, if required
+  if(m_applyMaterialCorrections) updateMaterialCorrections( track ).ignore() ;
+
+  // create the transport of the reference (after the noise, because it uses energy loss)
+  updateTransport( track ).ignore() ;
+  
   return StatusCode::SUCCESS;
 }
 
@@ -673,4 +623,93 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
     double thischisqvelo = m_upstream ? chisqVelo[1] : chisqVelo[0] ;
     assert( thischisqvelo == track.info( Track::FitVeloChi2, 0 ) );
   }
+}
+
+
+StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track) const
+{
+  // the noise in each node is the noise in the propagation between
+  // the previous node and this node.
+
+  // first collect all volumes on the track. The advantages of collecting them all at once 
+  // is that it is much faster. (Less call to TransportSvc.)
+  LHCb::Track::NodeContainer& nodes = track.nodes() ;
+
+  if( nodes.size()>1 ) {
+    // only apply energyloss correction for tracks that traverse magnet
+    bool   applyenergyloss    = track.hasT() && (track.hasVelo()||track.hasTT()) ;
+    
+    // if only velo, or magnet off, use a fixed momentum based on pt.
+    double scatteringMomentum = track.firstState().p() ;
+    if( !track.hasT() && !track.hasTT()) {
+      double tx     = track.firstState().tx() ;
+      double ty     = track.firstState().ty() ;
+      double slope2 = tx*tx+ty*ty ;
+      double tanth  = std::min(sqrt( slope2/(1+slope2)),1e-4) ;
+      scatteringMomentum = m_scatteringPt/tanth ;
+    }
+    
+    LHCb::TrackTraj tracktraj( nodes ) ;
+    IMaterialLocator::Intersections intersections ;
+    m_materialLocator->intersect( tracktraj, intersections ) ;
+    
+    // now we need to redistribute the result between the nodes. the first node cannot have any noise.
+    LHCb::Track::NodeContainer::iterator inode = nodes.begin() ;
+    double zorigin((*inode)->z()) ;
+    double momentum(fabs(1/(*inode)->refVector().qOverP())) ;
+    for(++inode; inode!=nodes.end(); ++inode) {
+      FitNode* node = dynamic_cast<FitNode*>(*inode) ;
+      double ztarget = node->z() ;
+      Gaudi::TrackSymMatrix noise ;
+      Gaudi::TrackVector delta;
+      m_materialLocator->computeMaterialCorrection(noise,delta,intersections,zorigin,ztarget,
+                                                   momentum,LHCb::ParticleID(m_particleID)) ;
+      node->setNoiseMatrix( noise ) ;
+      double deltaE = 1 / ( 1/momentum + delta(4) ) - momentum ;
+      node->setDeltaEnergy( applyenergyloss ? deltaE : 0 ) ;
+      zorigin = ztarget ;
+    }
+  }
+  return StatusCode::SUCCESS ;
+}
+
+StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
+{
+  // sets the propagation between the previous node and this. node that the reference 
+  // of the previous node is used.
+  StatusCode sc = StatusCode::SUCCESS ;
+  
+  LHCb::Track::NodeContainer& nodes = track.nodes() ;
+  if( nodes.size()>1 ) {
+    LHCb::Track::NodeContainer::iterator inode = nodes.begin() ;
+    const LHCb::StateVector* refvector = &((*inode)->refVector()) ;
+    TrackMatrix F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    for(++inode; inode!=nodes.end(); ++inode) {
+      
+      FitNode* node = dynamic_cast<FitNode*>(*inode) ;
+      double z = node->z() ;
+      LHCb::StateVector statevector = *refvector ;
+      StatusCode thissc = m_extrapolator -> propagate(statevector,z,&F) ;
+      if ( thissc.isFailure() ) {
+        error() << "unable to propagate reference vector from z=" << refvector->z() 
+                << " to " << z ;
+        sc = thissc ;
+      }
+      
+      // correct for energy loss
+      double charge = statevector.qOverP() > 0 ? 1 :  -1 ;
+      double qopnew = 1/(1/statevector.qOverP() + charge * node->deltaEnergy()) ;
+      statevector.setQOverP( qopnew ) ;
+
+      // calculate the 'transport vector' (need to replace that)
+      Gaudi::TrackVector tranportvec = statevector.parameters() - F * refvector->parameters() ;
+      node->setTransportMatrix( F );
+      node->setTransportVector( tranportvec );
+      node->setTransportIsSet( true );
+      
+      // update the reference
+      refvector = &((*inode)->refVector()) ;
+    }
+  }
+  return sc ;
 }
