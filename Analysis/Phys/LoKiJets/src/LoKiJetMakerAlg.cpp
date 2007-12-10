@@ -1,4 +1,4 @@
-// $Id: LoKiJetMakerAlg.cpp,v 1.1 2007-10-15 22:06:35 ibelyaev Exp $
+// $Id: LoKiJetMakerAlg.cpp,v 1.2 2007-12-10 10:48:38 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -36,7 +36,6 @@ namespace LoKi
    *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
    *  @date   2005-03-21
    */
-  // ==========================================================================
   class JetMaker : public LoKi::Algo  
   {
     friend class AlgFactory<LoKi::JetMaker> ;
@@ -48,15 +47,18 @@ namespace LoKi
     JetMaker
     ( const std::string& name ,
       ISvcLocator*       pSvc ) 
-      : LoKi::Algo( name , pSvc )
-        // 
-      , m_makerName ( "LoKi::KtJetMaker/KtJetMaker"   )
+      : LoKi::Algo ( name , pSvc )
+      // 
+      , m_makerName ( "LoKi::KtJetMaker"   )
       , m_maker     ( 0   )
     { 
-      declareProperty ( "JetMaker" , m_makerName ) ;  
-    } ;
+      declareProperty 
+        ( "JetMaker"  , 
+          m_makerName , 
+          "Type type/name of jet-maker tool (IJetMaker interface)") ;  
+    }
     /// destructor
-    virtual ~JetMaker( ){};
+    virtual ~JetMaker( ){}
   public:
     /** standard execution of the algorithm 
      *  @see LoKi::Algo 
@@ -76,7 +78,8 @@ namespace LoKi
     // maker
     const IJetMaker* m_maker     ; ///< jet maker to be used 
   };
-}
+  // ==========================================================================
+} // end of namespace LoKi 
 // ============================================================================
 /** @file 
  *  Implementation file for class  LoKi::JetMaker
@@ -100,13 +103,13 @@ StatusCode LoKi::JetMaker::analyse   ()
   // input container of "particles"
   IJetMaker::Jets jets ;
   
-  if ( 0 == m_maker ) { m_maker = tool<IJetMaker> ( m_makerName , this ) ; }
-
+  if ( 0 == m_maker ) 
+  { m_maker = tool<IJetMaker> ( m_makerName , this ) ; }
+  
   // make the jets 
   StatusCode sc = m_maker->makeJets ( all.begin () , all.end   () , jets  ) ;
   
   if ( sc.isFailure() ) { return Error ( "Error from jet maker" , sc ) ; }
-
   
   // save all jets
   while ( !jets.empty() ) 
@@ -118,12 +121,12 @@ StatusCode LoKi::JetMaker::analyse   ()
   }
   
   if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
-  { counter ( "#jets" ) += selected("jets").size() ; }
+  { counter ( "#jets" ) += selected ("jets").size() ; }
   
   setFilterPassed ( true ) ;
   
   return StatusCode::SUCCESS ;
-};
+}
 // ===========================================================================
 
 // ============================================================================

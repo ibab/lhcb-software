@@ -1,9 +1,7 @@
-# $Id: requirements,v 1.7 2007-10-15 22:06:34 ibelyaev Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+# $Id: requirements,v 1.8 2007-12-10 10:48:37 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-09-06
-# Maintainer : Vanya BELYAEV
+# Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           LoKiJets
 version           v3r0
@@ -12,8 +10,8 @@ version           v3r0
 branches          cmt doc options src
 
 # =============== dependencies ================================================
-use               KtJet    v* External 
 use               LoKiAlgo v* Phys 
+use               ktjet    v* LCG_Interfaces 
 
 # =============== exported include directories ================================
 include_path      none

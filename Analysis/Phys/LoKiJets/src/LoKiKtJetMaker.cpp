@@ -1,4 +1,4 @@
-// $Id: LoKiKtJetMaker.cpp,v 1.8 2007-10-15 22:06:35 ibelyaev Exp $
+// $Id: LoKiKtJetMaker.cpp,v 1.9 2007-12-10 10:48:39 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -120,27 +120,40 @@ namespace LoKi
       , m_r            ( 0.7 )
         //
       , m_sort         ( 2   )
-        // 
-      , m_combinerName ( 0   )
+      // 
+      , m_combinerName ( ""  )
       , m_combiner     ( 0   )
     { 
       //
       declareInterface <IJetMaker> ( this ) ;
       //
-      
-      declareProperty ( "JetID"          , m_jetID  ) ;
+      declareProperty 
+        ( "JetID" , m_jetID , 
+          "Particle ID to be used for the constructed jets" ) ;
       //
-      declareProperty ( "Type"           , m_type   ) ;
-      declareProperty ( "AngularScheme"  , m_angle  ) ;
-      declareProperty ( "Recombination"  , m_recom  ) ;
-      declareProperty ( "RParameter"     , m_r      ) ;
+      declareProperty
+        ( "Type" , m_type , "The type of jets" ) ;
       //
-      declareProperty ( "Sort"           , m_sort   ) ;
+      declareProperty 
+        ( "AngularScheme" , m_angle , "Angular scheem to be used " ) ;
+      //
+      declareProperty 
+        ( "Recombination"  , m_recom , 
+          "Momentum recombination scheme to be used " ) ;
+      //
+      declareProperty 
+        ( "RParameter" , m_r , "R-parameter to be used" ) ;
+      //
+      declareProperty 
+        ( "Sort" , m_sort , "Sorting of the found jets " ) ;
       // define momentum combiner
-      declareProperty ( "ParticleCombiner", m_combinerName ) ;
-    } ;
+      declareProperty 
+        ( "ParticleCombiner"                   , 
+          m_combinerName                       , 
+          "IParticleCombiner toll to be used " ) ;
+    } 
     /// destructor
-    virtual ~KtJetMaker( ){};
+    virtual ~KtJetMaker( ){}
   public:
     /** standard initialization of the tool
      *  @return status code 
@@ -185,6 +198,7 @@ namespace LoKi
     std::string                m_combinerName ;
     mutable IParticleCombiner* m_combiner ; ///< combiner to be used 
   };
+  // ==========================================================================
 } // End of namespace LoKi
 // ============================================================================
 /** @file 
@@ -195,17 +209,19 @@ namespace LoKi
 // ============================================================================
 namespace 
 {  
+  // ==========================================================================
   typedef KtJet::KtLorentzVector   Jet          ;
   typedef std::vector<Jet>         Jets_        ;
   typedef std::vector<const Jet*>  Constituents ;
+  // ==========================================================================
   /// trivial function which "converts" particle into the "jet"
   inline Jet makeJet ( const LHCb::Particle* p ) 
   {
     if ( 0 == p ) { return Jet() ; }
     const Gaudi::LorentzVector& v = p->momentum() ;
     return Jet( v.Px() , v.Py() , v.Pz() , v.E () ) ;
-  } ;
-  //
+  } 
+  // ==========================================================================
   struct EuclidianNorm2 : public std::unary_function<Jet,double> 
   {
     inline double operator() ( const Jet& v ) const 
@@ -215,9 +231,9 @@ namespace
         v.px () * v.px () + 
         v.py () * v.py () + 
         v.pz () * v.pz () ; 
-    } ;
+    } 
   } ;
-  //
+  // ==========================================================================
   struct SmallEuclidianNorm2 : public std::binary_function<Jet,Jet,bool>
   {
     // constructor 
@@ -228,14 +244,14 @@ namespace
       if ( &v1 == &v2 ) { return true ; }
       const double  value = m_cut * std::min ( m_norm ( v1 )  , m_norm ( v2 ) )  ;
       return  m_norm ( v1 - v2 ) <= value  ;
-    } ;
+    } 
   private:
     SmallEuclidianNorm2 ( ) ;
   private:
     double             m_cut  ;
     EuclidianNorm2     m_norm ;
   } ;
-  
+  // ==========================================================================
   class CompareByEuclidianNorm2 : public std::binary_function<Jet,Jet,double>
   {
   public:
@@ -270,7 +286,7 @@ StatusCode LoKi::KtJetMaker::makeJets
       continue ; 
     }
     inputs.push_back( makeJet( p )  ) ;
-  } ;
+  } 
   
   // Jets found 
   Jets_ jets ;

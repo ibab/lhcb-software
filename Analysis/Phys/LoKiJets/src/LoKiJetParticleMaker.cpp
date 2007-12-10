@@ -1,4 +1,4 @@
-// $Id: LoKiJetParticleMaker.cpp,v 1.1 2007-10-15 22:06:35 ibelyaev Exp $
+// $Id: LoKiJetParticleMaker.cpp,v 1.2 2007-12-10 10:48:38 ibelyaev Exp $
 // ============================================================================
 // include files  
 // ============================================================================
@@ -51,18 +51,21 @@ namespace LoKi
       return StatusCode::SUCCESS ;
     }
   protected:
-    // standard constructor
-    JetParticleMaker ( const std::string& type   , 
-                       const std::string& name   , 
-                       const IInterface*  parent ) 
+    /// The standard constructor
+    JetParticleMaker
+    ( const std::string& type   , 
+      const std::string& name   , 
+      const IInterface*  parent ) 
       : GaudiTool      (  type , name , parent ) 
-      , m_jetMakerName ( "LoKi::KtKetMaker/JetMaker" )
+      , m_jetMakerName ( "LoKi::KtKetMaker" )
       , m_jetMaker     ( 0 )
     {
       declareInterface<IParticleMaker> ( this ) ;
       
-      declareProperty ( "JetMaker" , m_jetMakerName , "The type/name of Jet-Maker tool" ) ;
-      declareProperty ( "Inputs"   , m_inputs       , "The list of input locations "    ) ; 
+      declareProperty 
+        ( "JetMaker" , m_jetMakerName , "The type/name of Jet-Maker tool" ) ;
+      declareProperty 
+        ( "Inputs"   , m_inputs       , "The list of input locations "    ) ; 
     }
     /// virtual and protected destructor 
     virtual ~JetParticleMaker() {}  
@@ -85,7 +88,7 @@ namespace LoKi
   // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================
-// ============================================================================
+/// the factory 
 DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,JetParticleMaker) ;
 // ============================================================================
 // make the particles 

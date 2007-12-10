@@ -1,6 +1,4 @@
-// $Id: StdMCKtJets.opts,v 1.2 2007-10-16 14:14:57 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// $Id: StdMCKtJets.opts,v 1.3 2007-12-10 10:48:38 ibelyaev Exp $ 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -17,10 +15,6 @@
  *  @date 2006-11-10
  */
 // ============================================================================
-/// load the library:
-// ============================================================================
-ApplicationMgr.DLLs    += { "LoKiJets" , "LoKiCore" } ;
-// ============================================================================
 /// load the service 
 // ============================================================================
 ApplicationMgr.ExtSvc  += { "LoKiSvc" } ;
@@ -28,8 +22,8 @@ ApplicationMgr.ExtSvc  += { "LoKiSvc" } ;
 // configure Data-On-Demans service 
 // ============================================================================
 DataOnDemandSvc.AlgMap += {
-  'Phys/StdMCKtJets/Particles' : 'LoKi::JetMakerAlg/StdMCKtJets' ,
-  'Phys/StdMCKtJets/Vertices'  : 'LoKi::JetMakerAlg/StdMCKtJets'  
+  'Phys/StdMCKtJets/Particles' : 'LoKi::JetMaker/StdMCKtJets' ,
+  'Phys/StdMCKtJets/Vertices'  : 'LoKi::JetMaker/StdMCKtJets'  
 } ;
 // ============================================================================
 // configure the algorithm

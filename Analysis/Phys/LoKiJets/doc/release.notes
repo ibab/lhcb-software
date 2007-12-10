@@ -1,17 +1,25 @@
-! $Id: release.notes,v 1.10 2007-10-15 22:06:35 ibelyaev Exp $ 
+! $Id: release.notes,v 1.11 2007-12-10 10:48:38 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $ 
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.11 $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Tools/LoKiJets
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : Jet finding algorithm (KtJet) embedded into LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiJets v3r0 2007-12-10 =====================
+
+! 2007-12-10 - Vanya BELYAEV
+
+ - use ktjet from LCG_Interfaces
+   no local ktejet is used anymore 
+ - postpone a bit the fastjet tools 
+
 ! 2007-10-16 - Vanya BELYAEV
  - add new tool LoKi::KtJetyMaker - the simplest implementation
    of IJetMaker interface using KtJet algorithm
  - redesigne the algorithm to invoke th eJEt-Making tool
- - add LoKi::JetPArticleMaker - the implementation of "particle maker" 
+ - add LoKi::JetParticleMaker - the implementation of "particle maker" 
  - cmt/requirements
    increment the version to v3r0 
  
@@ -148,6 +156,9 @@ Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.10  2007/10/15 22:06:35  ibelyaev
+!  add JetMaker and ParticleMaker
+!
 ! Revision 1.9  2007/09/24 12:37:19  jpalac
 ! Tag as v2r4
 !
