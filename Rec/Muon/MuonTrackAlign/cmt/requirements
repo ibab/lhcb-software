@@ -24,7 +24,6 @@ library MuonTrackAlign  *.cpp
 apply_pattern component_library library=MuonTrackAlign
 
 
-
 #===============================================================
 
 
