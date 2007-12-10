@@ -2,6 +2,9 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+2007-12-10 M Needham
+ - Smear time not distance 
+
 !====================== OTSimulation v3r14 2007-10-03 =====================
 ! 2007-10-03 - Marco Cattaneo
  - Adapt to SmartIF change in Gaudi v19r5

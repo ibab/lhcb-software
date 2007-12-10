@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.24 2007-09-01 18:17:59 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.25 2007-12-10 09:31:25 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -84,7 +84,7 @@ MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
 
   declareProperty("noiseToolName",m_noiseToolName = "OTRandomDepositCreator" );
 
-  declareProperty("smearTime", m_smearTime = false);
+  declareProperty("smearTime", m_smearTime = true);
 
   // container for temporary digit storage 
   m_tempDeposits = new MCOTDepositVec();
