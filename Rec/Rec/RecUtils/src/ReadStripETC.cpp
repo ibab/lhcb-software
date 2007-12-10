@@ -1,4 +1,4 @@
-// $Id: ReadStripETC.cpp,v 1.5 2007-12-10 16:27:46 ibelyaev Exp $
+// $Id: ReadStripETC.cpp,v 1.6 2007-12-10 16:32:50 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -45,7 +45,7 @@ ReadStripETC::ReadStripETC
   : GaudiTupleAlg ( name , pSvcLocator )
     , m_usedSelectionsFilled(false)
   //
-  , m_intType ( DataTypeInfo::ID ( s_value ) ) //
+  , m_intType ( s_value ) //
   , m_writeSelResult(0)
 {
   m_vetoedFields.push_back("entry");
