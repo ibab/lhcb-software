@@ -4,6 +4,12 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2007-12-10 - Chris Jones
+ - Add new track selection algorithm that can select tracks using RichPID
+   information (from a previous algorithm). Useful to, for instance, run the
+   full Global PID likelihood minimisation on only tracks ID'ed as kaons by
+   a previous (faster) algorithm. Potentially used in the HLT.
+
 !======================= RichGlobalPID v3r6 2007-11-30 =======================
 ! 2007-10-26 - Chris Jones
  - Add ability to freeze certain tracks to a fixed mass hypothesis during
