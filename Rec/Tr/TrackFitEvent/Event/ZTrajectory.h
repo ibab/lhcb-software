@@ -1,4 +1,4 @@
-// $Id: ZTrajectory.h,v 1.1 2007-11-30 13:32:59 wouter Exp $
+// $Id: ZTrajectory.h,v 1.2 2007-12-10 08:20:46 wouter Exp $
 #ifndef EVENT_ZTRAJECTORY_H 
 #define EVENT_ZTRAJECTORY_H 1
 
@@ -32,8 +32,10 @@ namespace LHCb
     virtual StateVector stateVector( double mu ) const = 0 ;
     /// return a state at position mu
     virtual State state( double mu ) const { return State(stateVector(mu)) ; }
+    /// return the set of reference statevectors for this parameterization (if any)
+    virtual std::vector<StateVector> refStateVectors() const { return std::vector<StateVector>() ; }
   };
-
+  
 }
 
 #endif // EVENT_ZTRAJECTORY_H

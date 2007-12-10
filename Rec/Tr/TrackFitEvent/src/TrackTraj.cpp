@@ -124,7 +124,33 @@ namespace LHCb
       m_cachedindex = 0 ;
       m_cachedinterpolation.init(*m_states[0], m_bfield) ;
     }
-  }  
+  }
+
+  void TrackTraj::updatecache(double z) const
+  {
+    // m_cachedindex==0: before first state
+    // m_cachedindex==[1,...,numstates-1] --> between states
+    // m_cachedindex==numstates --> after last state
+    bool cacheisvalid = 
+      (m_cachedindex==0 && z <= m_states.front()->z()) ||
+      (m_cachedindex==m_states.size() && z >= m_states.back()->z()) ||
+      (m_cachedindex!=0 && m_states[m_cachedindex-1]->z() <= z && z < m_states[m_cachedindex]->z()) ;
+    
+    if( !cacheisvalid ) {
+      if( z <= m_states.front()->z() ) {
+	m_cachedindex=0 ;
+        m_cachedinterpolation.init(*m_states.front(), m_bfield ) ;
+      } else if( z >= m_states.back()->z() ) {
+	m_cachedindex=m_states.size() ;
+        m_cachedinterpolation.init(*m_states.back(), Gaudi::XYZVector(0,0,0) ) ;
+      } else {
+        m_cachedindex = 1 ;
+        while( m_cachedindex < m_states.size()-1 &&
+               m_states[m_cachedindex]->z() <= z) ++m_cachedindex ;
+        m_cachedinterpolation.init(*m_states[m_cachedindex-1],*m_states[m_cachedindex]) ;
+      }
+    }
+  }
   
   // Copied from Gerhard
   class ArcLengthComputer
@@ -163,5 +189,16 @@ namespace LHCb
   { 
     static ArcLengthComputer computer ;
     return computer.compute(*this,z1,z2) ;
+  } 
+
+  std::vector<StateVector> TrackTraj::refStateVectors() const 
+  { 
+    std::vector<StateVector> states ;
+    states.reserve(m_states.size()) ;
+    for( StateContainer::const_iterator it = m_states.begin() ;
+	 it != m_states.end(); ++it) 
+      states.push_back( StateVector((*it)->stateVector(),(*it)->z()) ) ;
+    return states ;
   }
+  
 }

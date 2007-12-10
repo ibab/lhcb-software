@@ -84,7 +84,9 @@ namespace LHCb
 
     /// Estimate for mu which minimizes point poca
     double muEstimate(const Gaudi::XYZPoint& p) const ;
-        
+
+    /// return the set of reference statevectors for this parameterization (if any)
+    std::vector<StateVector> refStateVectors() const ;
   private:
     void updatecache(double z) const ;
     void init(const IMagneticFieldSvc* magfieldsvc) ;
@@ -162,30 +164,6 @@ namespace LHCb
     // add tolerance to make sure we step across boundaries
     return tolerance + extrapolate ? a : 
       std::min( a, pathDirection > 0 ? m_states[m_cachedindex+1]->z() - z : z - m_states[m_cachedindex]->z() ) ;
-  }
-  
-  inline void TrackTraj::updatecache(double z) const
-  {
-    // m_cachedindex==0: before first state
-    // m_cachedindex==[1,...,numstates-1] --> between states
-    // m_cachedindex==numstates --> after last state
-    bool cacheisvalid = 
-      (m_cachedindex==0 && z <= m_states.front()->z()) ||
-      (m_cachedindex==m_states.size() && z >= m_states.back()->z()) ||
-      (m_cachedindex!=0 && m_states[m_cachedindex-1]->z() <= z && z < m_states[m_cachedindex]->z()) ;
-    
-    if( !cacheisvalid ) {
-      if( z <= m_states.front()->z() ) {
-        m_cachedinterpolation.init(*m_states.front(), m_bfield ) ;
-      } else if( z >= m_states.back()->z() ) {
-        m_cachedinterpolation.init(*m_states.back(), Gaudi::XYZVector(0,0,0) ) ;
-      } else {
-        m_cachedindex = 1 ;
-        while( m_cachedindex < m_states.size()-1 &&
-               m_states[m_cachedindex]->z() <= z) ++m_cachedindex ;
-        m_cachedinterpolation.init(*m_states[m_cachedindex-1],*m_states[m_cachedindex]) ;
-      }
-    }
   }
 }
 
