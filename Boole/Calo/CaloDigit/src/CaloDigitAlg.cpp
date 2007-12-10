@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.18 2007-12-06 09:48:41 odescham Exp $
+// $Id: CaloDigitAlg.cpp,v 1.19 2007-12-10 22:20:22 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -333,8 +333,8 @@ StatusCode CaloDigitAlg::execute() {
       if ( 0   > trigVal ) trigVal = 0;
       if ( 0 < trigVal ) {
         if ( isDebug ) {
-          debug() << id << format( " adc%6d et%8.1f trigAdc%4d",
-                                   intAdc, et, trigVal ) 
+          debug() << id << format( "energy%8.1f adc%6d et%8.1f trigAdc%4d",
+                                   energy, intAdc, et, trigVal ) 
                   << endreq;
         }
         LHCb::L0CaloAdc* trigAdc = new LHCb::L0CaloAdc( id, trigVal );

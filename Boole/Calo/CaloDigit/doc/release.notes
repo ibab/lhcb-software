@@ -4,6 +4,11 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+
+
+! 2007-12-10 - Olivier Deschamps
+ - fix in CaloSignalAlg
+
 !======================== CaloDigit v2r5 2007-12-06 ==========================
 ! 2007-12-05 - Olivier Deschamps
  - adapt options/CaliBoole.opts to the change in CaloDAQ : writing pin-diode data
