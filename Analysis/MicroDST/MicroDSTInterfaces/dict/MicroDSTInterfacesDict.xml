@@ -1,0 +1,12 @@
+<!--- $Id: -->
+<!--- Author  : Juan Palacios -->
+<!--- Created : 2007-12-10 -->
+<lcgdict>
+  <class name = "ICloneMCParticle" />
+  <class name = "ICloneMCVertex" />
+  <class name = "ICloneParticle" />
+  <class name = "ICloneProtoParticle" />
+  <class name = "ICloneRecVertex" />
+  <class name = "ICloneTrack" />
+  <class name = "ICloneVertex" />
+</lcgdict>

@@ -1,0 +1,16 @@
+!-----------------------------------------------------------------------------
+! Package     : MicroDST/MicroDSTInterfaces
+! Responsible : Juan Palacios juan.palacios@nikhef.nl
+! Purpose     : Interfaces for MicroDST cloning and storing of LHCb event
+!               model classes
+!-----------------------------------------------------------------------------
+! $Id: release.notes,v 1.1.1.1 2007-12-10 08:23:45 jpalac Exp $
+!-----------------------------------------------------------------------------
+
+! 2007-12-10 - Juan Palacios
+ - First commit of MicroDSTInterfaces, a package containing interfaces for the
+   cloning of LHCb event model classes. All interfaces have the method
+
+   EventModelType* operator() (const EventModelType*) =0;
+
+   Implementations of this method should call some cloning and storing logic.
