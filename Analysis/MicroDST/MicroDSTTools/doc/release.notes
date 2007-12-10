@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : MicroDST/MicroDSTTools
+! Responsible : Juan Palacios juan.palacios@nikhef.nl
+! Purpose     : Implementation of cloner MicroDSTTools
+!-----------------------------------------------------------------------------
+! $Id: release.notes,v 1.1.1.1 2007-12-10 09:32:24 jpalac Exp $
+!-----------------------------------------------------------------------------
+
+! 2007-12-10 - Juan Palacios
+ - First CVS import

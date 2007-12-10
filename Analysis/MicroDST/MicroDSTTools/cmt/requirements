@@ -1,0 +1,24 @@
+#============================================================================
+# Created    : 2007-12-10
+# Maintainer : Juan Palacios   Juan.Palacios@nikhef.nl 
+#==============================================================================
+# $Id: requirements,v 1.1.1.1 2007-12-10 09:32:24 jpalac Exp $
+#==============================================================================
+
+package MicroDST/MicroDSTTools
+version v1r0
+
+# =============== structure ===================================================
+branches src cmt doc
+
+# =============== dependencies ================================================
+use MicroDSTInterfaces  v* MicroDST
+use MicroDSTBase        v* MicroDST
+
+# build a components kibrary
+library MicroDSTTools ../src/*.cpp
+apply_pattern component_library library=MicroDSTTools
+
+#==============================================================================
+#==============================================================================
+
