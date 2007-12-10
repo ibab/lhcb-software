@@ -4,6 +4,7 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+!======================= TsaAlgorithms v3r2 2007-11-30 ======================
 ! 2007-12-08 - Manuel Schiller
  - modified tools using Seed(Parabola|Line)Fit to create the fit object in
    initialize instead the constructor, so that job options are respected
@@ -14,7 +15,6 @@
    weight factors in the job options than likelihood contributions
  - turned another hardcoded constant in TsaOTStereoSearch into a job option
 
-!======================= TsaAlgorithms v3r2 2007-11-30 ======================
 ! 2007-11-30 Wouter Hulsbergen
  - Removed TsaSeedReferenceCreator
 
