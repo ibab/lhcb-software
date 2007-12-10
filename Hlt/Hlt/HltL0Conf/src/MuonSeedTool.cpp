@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.4 2007-12-07 17:52:26 albrecht Exp $
+// $Id: MuonSeedTool.cpp,v 1.5 2007-12-10 18:02:35 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -98,7 +98,7 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
   MuonTileID tileM2 = lhcbIDs[0].muonID();
   MuonTileID tileM3 = lhcbIDs[1].muonID();
   // always()<<"station of m2: "<<tileM2.station() <<endmsg;
-//   always()<<"station of m3: "<<tileM3.station() <<endmsg;
+  //   always()<<"station of m3: "<<tileM3.station() <<endmsg;
 
   int muonRegion;
   if (tileM2){
@@ -157,9 +157,17 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
   std::vector<MuonTileID> mpads1 = muonL0Cand.muonTileIDs(0); 
   std::vector<MuonTileID> mpads2 = muonL0Cand.muonTileIDs(1); 
   std::vector<MuonTileID> mpads3 = muonL0Cand.muonTileIDs(2); 
+
+  LHCb::LHCbID id1 = LHCbID( mpads1.front() ); 
+  LHCb::LHCbID id2 = LHCbID( mpads2.front() ); 
+  LHCb::LHCbID id3 = LHCbID( mpads3.front() ); 
+
+  outputTrack.addToLhcbIDs( id1 );
+  outputTrack.addToLhcbIDs( id2 );
+  outputTrack.addToLhcbIDs( id3 );
   
   MuonTileID mpad2 = mpads2.front();
-  
+ 
   int regionL0Cand;
   if (mpad2){
     regionL0Cand = mpad2.region();
