@@ -17,8 +17,8 @@ use EventAssoc  v4r3    Event
 use LinkerEvent v3r2    Event
 use TrackEvent  v4r9    Event
 use PackedEvent v3r2    Event
-use VeloEvent   v16r0   Event
-use HltEvent    v8r4    Event
+use HltEvent    v8r5    Event
+use VeloEvent   v16r2   Event
 
 private
 use RELAX       v*      LCG_Interfaces
