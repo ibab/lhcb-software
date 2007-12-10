@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.52 2007-12-10 08:40:17 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.53 2007-12-10 16:01:52 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -100,7 +100,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
     FitNode& node = dynamic_cast<FitNode&>(**iNode);
 
     // Prediction step (not for first node)
-    if( iNode != nodes.end() ) {
+    if( iNode != nodes.begin() ) {
       sc = predict( node, state );
       if ( sc.isFailure() ) return Warning( "Fit failure: unable to predict node", StatusCode::FAILURE,1 );
     }
@@ -171,16 +171,23 @@ StatusCode TrackKalmanFilter::fit( Track& track )
         if ( !upstream ) node.setDeltaChi2Upstream( node.chi2() );
         else             node.setDeltaChi2Downstream( node.chi2() ) ;
       }
-
-      // save filtered state
-      if ( !upstream ) node.setState( state );
-
-      // Smoother step
-      if(m_smooth) {
-        sc = biSmooth( node, upstream );
-        if ( sc.isFailure() ) return Warning( "Fit failure: unable to biSmooth node!",StatusCode::FAILURE, 1 );
-      }
       
+      // save filtered state, but not for the first node. we also
+      // don't smooth for the first state.
+      if( irNode != nodes.rbegin() ) {
+	if ( !upstream  ) node.setState( state );
+	
+	// Smoother step
+	if(m_smooth ) {
+	  // If this is the last reverse node, the smoothed state is just this state.
+	  if( *irNode == nodes.front() ) {
+	    node.setState( state );
+	  } else {
+	    sc = biSmooth( node, upstream );
+	    if ( sc.isFailure() ) return Warning( "Fit failure: unable to biSmooth node!",StatusCode::FAILURE, 1 );
+	  }
+	}
+      }
       irPrevNode = irNode;
       ++irNode;
     } // end of prediction and filter
@@ -250,6 +257,7 @@ StatusCode TrackKalmanFilter::predictReverseFit(const FitNode& prevNode,
 {
   // invert the transport matrix
   double z = aNode.z() ;
+  //assert(fabs( prevNode.z() - aState.z()) < TrackParameters::propagationTolerance) ;
   if( fabs(z - aState.z()) > TrackParameters::propagationTolerance ) {
     TrackMatrix invF = prevNode.transportMatrix();
     if ( !(invF.Invert()) )
@@ -443,9 +451,8 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
 StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool upstream ) const
 {
   // Get the predicted state from the reverse fit
-  const State& predRevState = upstream ? thisNode.predictedStateDown() : thisNode.predictedStateUp() ;
-  const TrackVector& predRevX = predRevState.stateVector();
-  const TrackSymMatrix& predRevC = predRevState.covariance();
+  const TrackVector& predRevX = thisNode.predictedStateDown().stateVector();
+  const TrackSymMatrix& predRevC = thisNode.predictedStateDown().covariance();
   // Get the filtered state from the forward fit
   const TrackVector& filtStateX = thisNode.state().stateVector();
   const TrackSymMatrix& filtStateC = thisNode.state().covariance();
