@@ -3,9 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r8>2007-12-05 Boole v14r8</A></H1><PRE>
+</PRE><H1><A NAME=v14r8>2007-12-11 Boole v14r8</A></H1><PRE>
 This version uses projects Gaudi v19r6, LHCb v23r2, Lbcom v6r13
- and DDDB v1r* (SQLDDDB v3r0 or greater), ParamFiles v7r0, FieldMap v4r7
+ and DDDB v1r* (SQLDDDB v3r1 or greater), ParamFiles v7r0, FieldMap v4r7
 
 It can process DC06 data, but output format is different from DC06, requires
 Brunel v32r1 or greater
@@ -16,6 +16,12 @@ Brunel v32r1 or greater
   . Functionality to deal with dead strips in ST Digitization (off by default)
     (STAlgorithms v2r5, STDAQ v3r3, STDet v3r8, STKernel v1r0)
     See <a href="http://indico.cern.ch/materialDisplay.py?contribId=5&materialId=slides&confId=24032">talk</a> at ST software meeting on 2007-11-27.
+  . Adapt Calo calibration simulation to changes in CaloDAQ v4r2 (CaloDigit v2r5)
+
+- Persistency changes
+  . Implement the final L0 Calo bank format as defined in EDMS-845277
+    Requires "HadronSB" condition to be included in condDB (from SQLDDDB v3r1)
+    (L0Calo v9r11)
 
 - Bug fixes
   . Fix unchecked StatusCodes (MuonBackground v2r6, MuonMoniDigi v2r3,
@@ -25,6 +31,7 @@ Brunel v32r1 or greater
   . Fixed wrong location of included job options file (L0DU v8r1)
   . Bug fix in neighbour sum histo (STCheckers v2r3)
   . Fix v200601.py to importOptions from absolute path
+  . Protection against negative modulus in CaloSignalAlg (CaloDigit v2r5)
 
 </PRE><H1><A NAME=v14r7>2007-11-15 Boole v14r7</A></H1><PRE>
 This version uses projects Gaudi v19r5, LHCb v23r1, Lbcom v6r12
