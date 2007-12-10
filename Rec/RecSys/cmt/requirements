@@ -17,7 +17,7 @@ use CaloPIDs            v4r8    Calo  # Victor Egorychev, Vanya Belyaev
 use CaloReco            v4r9    Calo  # Olivier Deschamps
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
-use TrackExtrapolators  v2r15   Tr    # Eduardo Rodrigues
+use TrackExtrapolators  v2r16   Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r15   Tr    # Eduardo Rodrigues
 use TrackFitEvent       v3r11   Tr    # Eduardo Rodrigues
 use TrackTools          v3r2    Tr    # Eduardo Rodrigues
@@ -40,7 +40,7 @@ use PatAlgorithms       v3r2    Tf    # Stephanie Hansmann-Menzemer
 use TsaAlgorithms       v3r2    Tf    # Matt Needham
 use TrackSeeding        v1r3    Tf    # Eduardo Rodrigues, Henk Jan Bulten
 use TrackMatching       v2r17   Tf    # Eduardo Rodrigues
-use TfTools             v1r1    Tf    # Stephanie Hansmann-Menzemer
+use TfTools             v1r2    Tf    # Stephanie Hansmann-Menzemer
 
 # Primary Vertex Finder
 use PatPV               v3r1    Tr   # Mariusz Witek

@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r2>2007-12-03 RecSys v5r2</A></H1><PRE>
+</PRE><H1><A NAME=v5r2>2007-12-10 RecSys v5r2</A></H1><PRE>
 This version uses Gaudi v19r6 and LHCb v23r2.
 
 - Packages added: RichRecPhotonTools  v1r0: 'photon' tools for Rich reco.
@@ -15,9 +15,10 @@ This version uses Gaudi v19r6 and LHCb v23r2.
     PatPV v3r1, PatVelo v3r2, PatVeloTT v3r1, RichHLTLocalPID v1r1,
     RichHLTSys v3r2, RichGlobalPID v3r6, RichRecMCTools v2r14,
     RichRecMonitors v2r13, RichRecQC v2r15, RichRecTools v4r0, RichRecSys v3r7,
-    TrackFitEvent v3r11, TrackFitter v2r22, TrackIdealPR v2r14,
-    TrackMatching v2r17, TrackMCTools v2r15, TrackTools v3r2, TrackSeeding v1r3,
-    TrackSys v4r12, TrackUtils v1r17, TsaAlgorithms v3r2
+    TfTools v1r2, TrackExtrapolators v2r16, TrackFitEvent v3r11,
+    TrackFitter v2r22, TrackIdealPR v2r14, TrackMatching v2r17,
+    TrackMCTools v2r15, TrackTools v3r2, TrackSeeding v1r3, TrackSys v4r12,
+    TrackUtils v1r17, TsaAlgorithms v3r2
 
 - In CaloMoniDST v3r0p1
   . Fix a compiler warning
@@ -30,6 +31,8 @@ This version uses Gaudi v19r6 and LHCb v23r2.
 
 - In PatAlgorithms v3r2
   . getOrCreate at PatForward
+  . bug fix (screwed up region numbering for IT and OT)
+  . write out states in T at 3 z positions 
 
 - In PatPV v3r1
   . Correction for unchecked StatusCode
@@ -96,14 +99,24 @@ This version uses Gaudi v19r6 and LHCb v23r2.
   . Fix some of the cheated MC options that had stopped working
   . Fixes to get MCRichTracks working again
 
+- In TfTools v1r2
+  . Fix crash due to OTHitCreator
+
 - In TrackCheckers v3r3
   . Adapted to change in OTMeasurement interface
+
+- In TrackExtrapolators v2r16
+  . Added new methods to MaterialLocatorBase for use in TrackFit
+  . Fix bug in TrackHerabExtrapolator
 
 - In TrackFitEvent v3r11
   . Added new trajectory interface class 'ZTrajectory'
   . Replaced OTTime by OTLiteTime in OTMeasurement; added access to calibration
   . Adapted to movement of refvector from Measurement to Node
   . Adapt to new location of IVeloClusterPosition.h, in TrackInterfaces
+  . Bug fixed in TrackTraj constructor and caching
+  . Added new method to obtain driftRadius in OTMeasurement (for Panoramix)
+  . Added member for material energy loss to FitNode
 
 - In TrackFitter v2r22
   . Set and use reference for each node (no longer from measurement)
@@ -143,6 +156,7 @@ This version uses Gaudi v19r6 and LHCb v23r2.
   . adapt LongTrackReferenceCreator to chaneg in Measurement interface
   . added missing tolerances for float comparison in LongTrackRefCreator
   . Added TrackVertexer
+  . Added const to 'StateCorrection' tools
 
 - In TrackUtils v1r17
   . Remove removal of measurements in TrackToDST, not needed since measurements
@@ -154,6 +168,11 @@ This version uses Gaudi v19r6 and LHCb v23r2.
   . Change default value of z position of output track state to mid T
     (before at z of last hit)
   . Removed TsaSeedReferenceCreator
+  . Modified tools using Seed(Parabola|Line)Fit to create the fit object in
+    initialize instead the constructor, so that job options are respected
+  . TsaLikelihood now returns an error in initialize when there are less
+    weight factors in the job options than likelihood contributions
+  . Turned another hardcoded constant in TsaOTStereoSearch into a job option
 
 - In PatAlgorithms v3r2, TrackIdealPR v2r14, TrackMatching v2r17,
      TrackTools v3r2, TsaAlgorithms v3r2
