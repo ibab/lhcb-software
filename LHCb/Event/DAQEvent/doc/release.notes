@@ -4,6 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2007-12-10 Olivier Deschamps
+ - Add the status 'UNKNOWN' in RawBankReadoutStatus::Status enum
+
+
 !================ DAQEvent v7r7 2007-12-07 ============================
 ! 2007-12-07 Marco Clemencic
  - Updated the ODIN class to version 3 of the ODIN bank format 

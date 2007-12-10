@@ -30,7 +30,7 @@
         Tell1Sync  = 16, 
         Tell1Link  = 32, 
         Tell1Error = 64, 
-        Other      =128'
+        Unknown    =128'
         access = 'PUBLIC' />
 
    
@@ -74,9 +74,9 @@
         argList= "int source"
         type   = "long">
         <code>
-          if( 0 == m_status.size() )return Missing;
+          if( 0 == m_status.size() )return Unknown;
           std::map&lt;int, long&gt;::iterator it = m_status.find(source);
-          if( it == m_status.end() )return Missing;
+          if( it == m_status.end() )return Unknown;
           return m_status[source];
         </code>
       </method>
@@ -101,7 +101,7 @@
         desc   = "get Readout status for the whole bank"
         type   = "long">
         <code>
-          if( 0 == m_status.size() )return Missing;
+          if( 0 == m_status.size() )return Unknown;
           long stat = 0;
           for(std::map&lt;int,long&gt;::iterator it = m_status.begin() ; it != m_status.end() ; ++it){
           stat |= (*it).second;
