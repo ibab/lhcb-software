@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.48 2007-12-09 23:32:01 szumlat Exp $
+! $Id: release.notes,v 1.49 2007-12-10 00:28:19 szumlat Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
 
 !====================== VeloEvent v16r0 2007-09-19 ======================
+! 2007-12-06 - Tomasz Szumlak v16r2
+ - extended funcitonality of VeloProcessInfo class
+ 
 ! 2007-12-06 - Tomasz Szumlak v16r1
  - extended functionality of the VeloTELL1Data to conform
    to commissionig requirements

@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.39 2007-09-18 00:12:30 szumlat Exp $
+# $Id: requirements,v 1.40 2007-12-10 00:28:48 szumlat Exp $
 # Maintainer: Chris Parkes, Tomasz Szumlak
 #
 package VeloEvent
 
-version v16r0
+version v16r2
 
 branches cmt doc xml VeloEvent
 
