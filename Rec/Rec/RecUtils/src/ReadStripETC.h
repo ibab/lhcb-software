@@ -1,4 +1,4 @@
-// $Id: ReadStripETC.h,v 1.3 2007-09-07 12:21:13 pkoppenb Exp $
+// $Id: ReadStripETC.h,v 1.4 2007-12-10 16:27:46 ibelyaev Exp $
 #ifndef READSTRIPETC_H 
 #define READSTRIPETC_H 1
 
@@ -50,7 +50,7 @@ private:
   /// Used selections have been filled
   bool m_usedSelectionsFilled ;
   
-  long m_longType ; ///< ``Type'' code of ``long'' as defined in INTupleItem class  
+  long m_intType ; ///< ``Type'' code of ``int'' as defined in INTupleItem class  
 
   IWriteSelResult* m_writeSelResult ; ///< SelResult writer tool
 

@@ -1,34 +1,52 @@
-// $Id: ReadStripETC.cpp,v 1.4 2007-09-07 12:21:13 pkoppenb Exp $
+// $Id: ReadStripETC.cpp,v 1.5 2007-12-10 16:27:46 ibelyaev Exp $
+// ============================================================================
 // Include files 
-
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-
+// ============================================================================
 // event model
+// ============================================================================
 #include "Event/SelResult.h"
-
+// ============================================================================
 // local
+// ============================================================================
 #include "ReadStripETC.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : ReadStripETC
-//
-// 2006-06-26 : Patrick Koppenburg
-//-----------------------------------------------------------------------------
-
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ReadStripETC );
-
-
-//=============================================================================
+// ============================================================================
+/** @file 
+ *  Implementation file for class ReadStripETC
+ *  @date 2006-06-26 
+ *  @author Patrick Koppenburg
+ */
+// ============================================================================
+namespace 
+{
+  /// get the actual type from NTuple item
+  template <class TYPE> struct _GetTypeFromItem ;
+  /// get the actual type from NTuple item
+  template <class TYPE> 
+  struct _GetTypeFromItem<NTuple::Item<TYPE> >
+  {
+    typedef TYPE Type ;
+  };
+  // the actual type of "interesting" column
+  typedef Tuples::TupleObj::Int MyItem         ; ///< the type of "good" column
+  // the helper constant
+  const DataTypeInfo::Type s_value = 
+  DataTypeInfo::ID( _GetTypeFromItem<MyItem>::Type() ) ; ///< "good constant"
+}
+// ============================================================================
 // Standard constructor, initializes variables
-//=============================================================================
-ReadStripETC::ReadStripETC( const std::string& name,
-                            ISvcLocator* pSvcLocator)
+// ============================================================================
+ReadStripETC::ReadStripETC
+( const std::string& name,
+  ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
-  , m_usedSelectionsFilled(false)
-  , m_longType(8)
-    , m_writeSelResult(0)
+    , m_usedSelectionsFilled(false)
+  //
+  , m_intType ( DataTypeInfo::ID ( s_value ) ) //
+  , m_writeSelResult(0)
 {
   m_vetoedFields.push_back("entry");
   m_vetoedFields.push_back("nChargedProto");
@@ -38,16 +56,14 @@ ReadStripETC::ReadStripETC( const std::string& name,
   declareProperty( "CollectionName", m_inputCollectionName = "TagCreator");
   declareProperty( "VetoedFields", m_vetoedFields);
   declareProperty( "Selections", m_selections); /// empty means all
-
 }
-//=============================================================================
+// ============================================================================
 // Destructor
-//=============================================================================
-ReadStripETC::~ReadStripETC() {} 
-
-//=============================================================================
+// ============================================================================
+ReadStripETC::~ReadStripETC() {}
+// ============================================================================
 // Initialization
-//=============================================================================
+// ============================================================================
 StatusCode ReadStripETC::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTupleAlg
@@ -72,10 +88,9 @@ StatusCode ReadStripETC::initialize() {
 
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
+// ============================================================================
 // Main execution
-//=============================================================================
+// ============================================================================
 StatusCode ReadStripETC::execute() {
 
   debug() << "==> Execute" << endmsg ;
@@ -95,18 +110,21 @@ StatusCode ReadStripETC::execute() {
 
   return sc ;
 }
-//=============================================================================
+// ============================================================================
 // First filling of to be used fields
-//=============================================================================
-StatusCode ReadStripETC::fillUsedSelections(NTuplePtr& ntIN){
+// ============================================================================
+StatusCode ReadStripETC::fillUsedSelections(NTuplePtr& ntIN)
+{
   m_usedSelectionsFilled = true ;
   const INTuple::ItemContainer ic = ntIN->items() ;
   debug() << "There are " << ic.size() << " items in nTuple" << endmsg ;
-
+  
   bool taken = false ;
-  for ( INTuple::ItemContainer::const_iterator i=ic.begin() ; i!=ic.end() ; ++i){
+  for ( INTuple::ItemContainer::const_iterator i=ic.begin() ; i!=ic.end() ; ++i)
+  {
     verbose() << "There is item " << (*i)->name() << " of type " << (*i)->typeName() << endmsg ;
-    if ( (*i)->type()==m_longType ){ // long
+    if ( (*i)->type() == m_intType ) /// int
+    { 
       if ( m_selections.empty() ){
         taken = true ;
         for ( std::vector<std::string>::const_iterator iv = m_vetoedFields.begin() ;
@@ -132,34 +150,44 @@ StatusCode ReadStripETC::fillUsedSelections(NTuplePtr& ntIN){
         i != m_usedSelections.end(); ++i ) info() << *i << " " ;
   info() << endmsg ;
   
+  if ( m_usedSelections.empty()  ) 
+  { Warning ( "No SelResults to be selected " ) ; }
+  
   return StatusCode::SUCCESS ;
 }
-
-//=============================================================================
+// ============================================================================
 // Filling of SelResults
-//=============================================================================
-StatusCode ReadStripETC::fillSelResults(NTuplePtr& ntIN)const{
+// ============================================================================
+StatusCode ReadStripETC::fillSelResults(NTuplePtr& ntIN)const
+{
   for ( std::vector<std::string>::const_iterator i = m_usedSelections.begin() ;
-        i != m_usedSelections.end(); ++i ) {
-    NTuple::Item<long> val;
+        i != m_usedSelections.end(); ++i ) 
+  {
+    NTuple::Item<int> val;
     StatusCode status = ntIN->item(*i, val);
-    if ( status ) debug() << "Value of " << *i << " is " << val << endmsg ;
-    else {
-      err() << "Could not read value of " << *i << endmsg ;
-      return StatusCode::FAILURE;
+    if ( status.isSuccess () ) 
+    { debug() << "Value of " << *i << " is " << val << endmsg ; }
+    else 
+    {
+      return Error 
+        ( "Could not read value of " + (*i) , StatusCode::FAILURE , 1000 ) ;
     }
     m_writeSelResult->write(*i,(val!=0));
   }
   return StatusCode::SUCCESS ;
 }
-//=============================================================================
+// ============================================================================
 //  Finalize
-//=============================================================================
+// ============================================================================
 StatusCode ReadStripETC::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
   return GaudiTupleAlg::finalize();  // must be called after all other actions
 }
-
-//=============================================================================
+// ============================================================================
+/// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( ReadStripETC )
+// ============================================================================
+// The END 
+// ============================================================================

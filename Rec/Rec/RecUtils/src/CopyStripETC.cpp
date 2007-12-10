@@ -1,50 +1,69 @@
-// $Id: CopyStripETC.cpp,v 1.2 2007-07-12 15:00:54 cattanem Exp $
+// $Id: CopyStripETC.cpp,v 1.3 2007-12-10 16:27:46 ibelyaev Exp $
+// ============================================================================
 // Include files 
-
-// from Gaudi
+// ============================================================================
+// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/IRegistry.h" 
-
-// event model
+#include "GaudiKernel/DataTypeInfo.h"
+// ============================================================================
+// Event
+// ============================================================================
 #include "Event/SelResult.h"
-
+// ============================================================================
 // local
+// ============================================================================
 #include "CopyStripETC.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : CopyStripETC
-//
-// 2006-06-26 : Patrick Koppenburg
-//-----------------------------------------------------------------------------
-
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CopyStripETC );
-
-
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
-CopyStripETC::CopyStripETC( const std::string& name,
-                            ISvcLocator* pSvcLocator)
-  : GaudiTupleAlg ( name , pSvcLocator )
-  , m_longType(8)
+// ============================================================================
+/** @file 
+ *  Implementation file for class CopyStripETC
+ *  @date 2006-06-26 
+ *  @autho Patrick Koppenburg
+ */
+// ============================================================================
+namespace 
 {
-  declareProperty( "InputCollectionName", m_inputCollectionName = "TagCreator");
-  declareProperty( "OutputCollectionName", m_outputCollectionName = "<not set>");
-
+  /// get the actual type from NTuple item
+  template <class TYPE> struct _GetTypeFromItem ;
+  /// get the actual type from NTuple item
+  template <class TYPE> 
+  struct _GetTypeFromItem<NTuple::Item<TYPE> >
+  {
+    typedef TYPE Type ;
+  };
+  // the actual type of "interesting" column
+  typedef Tuples::TupleObj::Int MyItem         ; ///< the type of "good" column
+  // the helper constant
+  const DataTypeInfo::Type s_value = 
+  DataTypeInfo::ID( _GetTypeFromItem<MyItem>::Type() ) ; ///< "good constant"
 }
-//=============================================================================
+// ============================================================================
+// Standard constructor, initializes variables
+// ============================================================================
+CopyStripETC::CopyStripETC
+( const std::string& name,
+  ISvcLocator* pSvcLocator)
+  : GaudiTupleAlg ( name , pSvcLocator )
+  , m_intType( s_value )
+{
+  declareProperty
+    ( "InputCollectionName" , m_inputCollectionName = "TagCreator" ) ;
+  declareProperty
+    ( "OutputCollectionName", m_outputCollectionName = "<not set>" ) ; 
+}
+// ============================================================================
 // Destructor
-//=============================================================================
-CopyStripETC::~CopyStripETC() {} 
-
-//=============================================================================
+// ============================================================================
+CopyStripETC::~CopyStripETC() {}
+// ============================================================================
 // Initialization
-//=============================================================================
-StatusCode CopyStripETC::initialize() {
+// ============================================================================
+StatusCode CopyStripETC::initialize() 
+{
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTupleAlg
-
+  
   if ( m_outputCollectionName != "<not set>" ) {
     info() << "Will be writing out an ETC to " << m_outputCollectionName << endmsg ;
   } else {
@@ -54,18 +73,18 @@ StatusCode CopyStripETC::initialize() {
   
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
+// =============================================================================
 // Main execution
-//=============================================================================
-StatusCode CopyStripETC::execute() {
-
+// =============================================================================
+StatusCode CopyStripETC::execute() 
+{
+  
   debug() << "==> Execute" << endmsg ;
   StatusCode sc = StatusCode::SUCCESS ;
-
+  
   // it's a typedef SmartDataPtr<NTuple::Tuple> NTuplePtr
   NTuplePtr ntIN(evtColSvc(), "EventSelector.DataStreamTool_1/"+m_inputCollectionName+"/1" );
-
+  
   if ( !ntIN ) {
     err() << "Nothing at " << "EventSelector.DataStreamTool_1/"+m_inputCollectionName+"/1" << endmsg ;
     return StatusCode::FAILURE ;
@@ -73,14 +92,14 @@ StatusCode CopyStripETC::execute() {
     if (sc) sc = fillOutputETC(ntIN);
   }
   if (sc) setFilterPassed(true);
-
+  
   return sc ;
 }
-
-//=============================================================================
+// ============================================================================
 // Filling of Output ETC
-//=============================================================================
-StatusCode CopyStripETC::fillOutputETC(NTuplePtr& ntIN)const{
+// ============================================================================
+StatusCode CopyStripETC::fillOutputETC(NTuplePtr& ntIN) const
+{
   // This part is stolen from Hugo's StripETC
   Tuple ntOUT = evtCol(m_outputCollectionName);
   // pick up the location of the event - this is what makes the tag collection a collection...
@@ -93,9 +112,11 @@ StatusCode CopyStripETC::fillOutputETC(NTuplePtr& ntIN)const{
   // That's new: the rest is just copying whatever is in ntIN
   const INTuple::ItemContainer ic = ntIN->items() ;
   debug() << "There are " << ic.size() << " items in nTuple" << endmsg ;
-  for ( INTuple::ItemContainer::const_iterator i=ic.begin() ; i!=ic.end() ; ++i){
-    if ( (*i)->type()==m_longType ){
-      NTuple::Item<long> val;
+  for ( INTuple::ItemContainer::const_iterator i=ic.begin() ; i!=ic.end() ; ++i)
+  {
+    if ( m_intType == (*i)->type() )
+    {
+      MyItem val;
       StatusCode status = ntIN->item((*i)->name(), val);
       if ( status ) debug() << "Copying item ``" << (*i)->name() << "'' of type " 
                             << (*i)->typeName() << " and value " << val << endmsg ;
@@ -109,17 +130,21 @@ StatusCode CopyStripETC::fillOutputETC(NTuplePtr& ntIN)const{
     }
   }
   //  ntOUT->write();
-
+  
   return StatusCode::SUCCESS ;  
 }
-//=============================================================================
+// =============================================================================
 //  Finalize
-//=============================================================================
+// =============================================================================
 StatusCode CopyStripETC::finalize() {
-
+  
   debug() << "==> Finalize" << endmsg;
-
+  
   return GaudiTupleAlg::finalize();  // must be called after all other actions
 }
-
-//=============================================================================
+// ============================================================================
+/// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( CopyStripETC )
+// =============================================================================
+// The END 
+// =============================================================================
