@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.40 2007-12-10 08:40:17 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.41 2007-12-10 08:55:42 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -399,7 +399,7 @@ bool TrackMasterFitter::outlierRemoved( Track& track ) const
 //=========================================================================
 // Update the measurements before a refit
 //=========================================================================
-void TrackMasterFitter::updateRefVectors( Track& track ) const
+StatusCode TrackMasterFitter::updateRefVectors( Track& track ) const
 { 
   StatusCode sc = StatusCode::SUCCESS ;
   for (Track::NodeContainer::iterator iNode = track.nodes().begin(); 
