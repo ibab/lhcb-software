@@ -6,12 +6,16 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r13>2007-12-05 LbcomSys v6r13</A></H1><PRE>
+</PRE><H1><A NAME=v6r13>2007-12-10 LbcomSys v6r13</A></H1><PRE>
 This version uses Gaudi v19r6 and LHCb v23r2
 
-- Packages modified: L0DU v8r1, RichDAQ v3r13, RichMCMonitors v1r5,
+- Packages modified: L0Calo v9r11, L0DU v8r1, RichDAQ v3r13, RichMCMonitors v1r5,
     RichTools v2r16, STAlgorithms v2r5, STAssociators v1r5, STCheckers v2r3,
     STDAQ v3r3, STTools v3r4p1, Veloassociators v2r3, VeloTools v3r0
+
+- In L0Calo v9r11
+  . implement the final bank format as defined in EDMS-845277
+    Requires "HadronSB" condition to be included in condDB (from SQLDDDB v3r1)
 
 - In L0DU v8r1
   . Fixed wrong location of included job options file
