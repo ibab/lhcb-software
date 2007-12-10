@@ -173,6 +173,7 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
   . Fix bug in MDF IO to accept properly file names like PFN:file:....
 
 - In TrackInterfaces v3r11
+  . Added methods to IMaterialLocator
   . Add IVeloClusterPosition interface previously in LHCbKernel
   . Add in IPatForwardTool the method setNNSwitch
   . Add method in IMeasurementProvider to create measurements with reference ztraj
