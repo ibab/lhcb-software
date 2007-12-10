@@ -1,16 +1,17 @@
-! $Id: release.notes,v 1.49 2007-12-10 00:28:19 szumlat Exp $
+! $Id: release.notes,v 1.50 2007-12-10 07:16:14 cattanem Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
 
-!====================== VeloEvent v16r0 2007-09-19 ======================
+!====================== VeloEvent v16r2 2007-12-10 ======================
 ! 2007-12-06 - Tomasz Szumlak v16r2
  - extended funcitonality of VeloProcessInfo class
  
 ! 2007-12-06 - Tomasz Szumlak v16r1
  - extended functionality of the VeloTELL1Data to conform
-   to commissionig requirements
+   to commissioning requirements
 
+!====================== VeloEvent v16r0 2007-09-19 ======================
 ! 2007-09-19 - Marco Cattaneo
  - Add a missing STL include
 
