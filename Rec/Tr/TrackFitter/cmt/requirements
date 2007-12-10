@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.28 2007-12-03 07:28:16 cattanem Exp $
+# $Id: requirements,v 1.29 2007-12-10 16:07:58 wouter Exp $
 # Created    : 21/03/2002
 # Maintainer : Eduardo Rodrigues
 
@@ -26,3 +26,7 @@ library          TrackFitter    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern component_library library=TrackFitter
+
+#private
+#macro_append cppflags " -g "
+#macro_remove cppoptimized_s "-O2"

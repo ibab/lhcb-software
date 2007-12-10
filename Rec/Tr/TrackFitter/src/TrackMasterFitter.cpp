@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.41 2007-12-10 08:55:42 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.42 2007-12-10 16:07:58 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -79,7 +79,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ErrorTy2"       , m_errorTy2 = 1.e-4                  );
   declareProperty( "ErrorP"         , m_errorP = boost::assign::list_of(0.15)(5.0e-7));
   declareProperty( "MakeNodes"      , m_makeNodes = true                  );
-  declareProperty( "NodesAtAllZPositions",m_makeNodesAtAllReferencePositions=false) ; 
+  declareProperty( "NodesAtAllZPositions",m_makeNodesAtAllReferencePositions=true) ; 
   declareProperty( "MaterialLocator", m_materialLocatorName="DetailedMaterialLocator") ;
   declareProperty( "UpdateTransport", m_updateTransport=false) ;
   declareProperty( "ApplyMaterialCorrections", m_applyMaterialCorrections=true) ;
@@ -450,9 +450,8 @@ StatusCode TrackMasterFitter::makeNodes( Track& track ) const
 
   // make sure the track has sufficient reference states
   StatusCode sc = m_refStateTool -> execute( track );
-  if (sc.isFailure()) {
-    Warning("Problems setting reference info", StatusCode::SUCCESS, 1);
-  }
+  if (sc.isFailure())
+    return Warning("Problems setting reference info", StatusCode::FAILURE, 1);
   
   // Check if it is needed to populate the track with measurements
   if ( track.checkPatRecStatus( Track::PatRecIDs ) ) {
@@ -517,12 +516,20 @@ StatusCode TrackMasterFitter::makeNodes( Track& track ) const
   }
   
   // add all the noise, if required
-  if(m_applyMaterialCorrections) updateMaterialCorrections( track ).ignore() ;
-
-  // create the transport of the reference (after the noise, because it uses energy loss)
-  updateTransport( track ).ignore() ;
+  if(m_applyMaterialCorrections && sc.isSuccess()) {
+    sc = updateMaterialCorrections( track ) ;
+    if(!sc.isSuccess())
+      error() << "Problem setting material corrections." << endreq ;
+  }
   
-  return StatusCode::SUCCESS;
+  // create the transport of the reference (after the noise, because it uses energy loss)
+  if( sc.isSuccess()) {
+    sc = updateTransport( track ) ;
+    if(!sc.isSuccess()) 
+      error() << "Problem setting transports." << endreq ;
+  }
+  
+  return sc ;
 }
 
 //=========================================================================
@@ -649,6 +656,8 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track) cons
       scatteringMomentum = m_scatteringPt/tanth ;
     }
     
+#define USETRACKTRAJ
+#ifdef USETRACKTRAJ
     LHCb::TrackTraj tracktraj( nodes ) ;
     IMaterialLocator::Intersections intersections ;
     m_materialLocator->intersect( tracktraj, intersections ) ;
@@ -656,19 +665,42 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track) cons
     // now we need to redistribute the result between the nodes. the first node cannot have any noise.
     LHCb::Track::NodeContainer::iterator inode = nodes.begin() ;
     double zorigin((*inode)->z()) ;
-    double momentum(fabs(1/(*inode)->refVector().qOverP())) ;
     for(++inode; inode!=nodes.end(); ++inode) {
       FitNode* node = dynamic_cast<FitNode*>(*inode) ;
       double ztarget = node->z() ;
       Gaudi::TrackSymMatrix noise ;
       Gaudi::TrackVector delta;
       m_materialLocator->computeMaterialCorrection(noise,delta,intersections,zorigin,ztarget,
-                                                   momentum,LHCb::ParticleID(m_particleID)) ;
+                                                   scatteringMomentum,LHCb::ParticleID(m_particleID)) ;
       node->setNoiseMatrix( noise ) ;
-      double deltaE = 1 / ( 1/momentum + delta(4) ) - momentum ;
+      double deltaE = 1 / ( 1/scatteringMomentum + delta(4) ) - scatteringMomentum ;
       node->setDeltaEnergy( applyenergyloss ? deltaE : 0 ) ;
       zorigin = ztarget ;
     }
+#else
+    IMaterialLocator::Intersections intersections ;
+
+    // now we need to redistribute the result between the nodes. the first node cannot have any noise.
+    LHCb::Track::NodeContainer::iterator inode = nodes.begin() ;
+    LHCb::Track::NodeContainer::iterator prevnode = inode ;
+    for(++inode; inode!=nodes.end(); ++inode) {
+      m_materialLocator->intersect((*prevnode)->refVector(),
+				   (*inode)->refVector(),intersections) ;
+      
+      FitNode* node = dynamic_cast<FitNode*>(*inode) ;
+      double ztarget = node->z() ;
+      double zorigin = (*prevnode)->z() ;
+      Gaudi::TrackSymMatrix noise ;
+      Gaudi::TrackVector delta;
+      m_materialLocator->computeMaterialCorrection(noise,delta,intersections,zorigin,ztarget,
+                                                   scatteringMomentum,LHCb::ParticleID(m_particleID)) ;
+      node->setNoiseMatrix( noise ) ;
+      double deltaE = 1 / ( 1/scatteringMomentum + delta(4) ) - scatteringMomentum ;
+      node->setDeltaEnergy( applyenergyloss ? deltaE : 0 ) ;
+      prevnode = inode ;
+    } 
+
+#endif
   }
   return StatusCode::SUCCESS ;
 }
