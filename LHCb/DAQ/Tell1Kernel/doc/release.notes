@@ -2,10 +2,11 @@
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
 
-!====================== Tell1Kernel v1r0 2007-09-18 ======================
+!====================== Tell1Kernel v1r1 2007-12-10 ======================
 ! 2007-12-06 - Tomasz Szumlak - v1r1
  - update related with Velo commissioning
 
+!====================== Tell1Kernel v1r0 2007-09-18 ======================
 ! 2007-09-18 - Marco Cattaneo
  - Rename include directory to Tell1Kernel
  - Clean up requirements
