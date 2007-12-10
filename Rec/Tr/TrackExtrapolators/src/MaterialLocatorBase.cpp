@@ -1,6 +1,7 @@
 #include "MaterialLocatorBase.h"
 #include "Event/CubicStateVectorInterpolationTraj.h"
 #include "Event/TrackParameters.h"
+#include "Event/StateParameters.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "DetDesc/Material.h"
 
@@ -10,6 +11,7 @@ MaterialLocatorBase::MaterialLocatorBase(const std::string& type,
   : GaudiTool(type, name, parent),
     m_maxNumIntervals( 20 ),
     m_maxDeviation( 5*Gaudi::Units::cm),
+    m_maxDeviationAtRefstates( 2*Gaudi::Units::mm),
     m_scatteringtool("StateThickMSCorrectionTool"),
     m_dedxtool("StateSimpleBetheBlochEnergyCorrectionTool"),
     m_elecdedxtool("StateElectronEnergyCorrectionTool")
@@ -59,13 +61,33 @@ size_t MaterialLocatorBase::intersect( const Gaudi::XYZPoint& p, const Gaudi::XY
   return rc ;
 }
 
-static double midpointdeviation( const LHCb::ZTrajectory& traj, double z1, double z2)
+inline double pointerror(const LHCb::StateVector& begin,
+			 const LHCb::StateVector& end,
+			 const LHCb::StateVector& mid )
 {
-  Gaudi::XYZPoint p1 = traj.position(z1) ;
-  Gaudi::XYZPoint p2 = traj.position(z2) ;
-  Gaudi::XYZPoint ptrue  = traj.position(0.5*(z1+z2)) ;
-  Gaudi::XYZPoint pguess = p1 + 0.5*(p2-p1) ;
-  return (ptrue-pguess).R() ;
+  double len = end.z() - begin.z();
+  double tx = (end.x() - begin.x())/len ;
+  double ty = (end.y() - begin.y())/len ;
+  double dz = mid.z() - begin.z() ;
+  double dx = begin.x() + dz*tx - mid.x() ;
+  double dy = begin.y() + dz*ty - mid.y() ;
+  return sqrt(dx*dx+dy*dy) ;
+}
+
+inline double linearerror(const LHCb::StateVector& origin,
+			  const LHCb::StateVector& destination)
+{
+  // calculate deviation from a parabola
+  double dz = destination.z() - origin.z() ;
+  double dx = origin.x() + origin.tx()*dz - destination.x() ;
+  double dy = origin.y() + origin.ty()*dz - destination.y() ;
+  return 0.25*sqrt(dx*dx+dy*dy) ;
+}
+
+inline std::list<LHCb::StateVector>::iterator next(const std::list<LHCb::StateVector>::iterator& iter)
+{
+  std::list<LHCb::StateVector>::iterator rc = iter ;
+  return ++rc ;
 }
 
 size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
@@ -73,50 +95,99 @@ size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
 {
   intersepts.clear() ;
   if( std::abs(traj.endRange() - traj.beginRange())  > TrackParameters::propagationTolerance) {
-    // The material locators can only use straight lines. So, we
-    // approximate the trajectory by straight lines. We determine the
-    // number of trajectories from the maximum allowed deviation.
-    std::vector<double> zpositions ;
+    // The material locators can only use straight lines, so we
+    // approximate the trajectory by straight lines. The less
+    // intervals the better. We determine the number of intervals from
+    // the maximum allowed deviation. Because 'queuering' the
+    // trajectory for a state is potentially expensive (e.g. for the
+    // tracktraj), we also limit the number of calls to the trajectory
+    // as much as possible. There are two simple ways of calculating
+    // the error: Either we can queuery the trajkectory halfway
+    // ('midpointerror'), or we can estimate the halfway deviation
+    // from extrapolating to the end ('linearerror'). The latter is
+    // cheaper and more conservative; the former is more optimal
+    // if tracks aren't very quadratic.
+
+    // The first two ndoes are just the endpoints. We sort the in z to
+    // make things easier.
+    std::list<LHCb::StateVector> nodes ;
     const size_t maxnumnodes = m_maxNumIntervals+1 ;
-    zpositions.reserve(maxnumnodes) ;
-    zpositions.push_back(traj.beginRange()) ;
-    zpositions.push_back(traj.endRange()) ;
-    double deviation = midpointdeviation(traj, zpositions[0], zpositions[1]) ;
-    size_t worstinterval(0) ;
-    while( deviation > m_maxDeviation && zpositions.size() < maxnumnodes ) {
-      // add a node
-      zpositions.insert( zpositions.begin() + worstinterval+1, 
-			 0.5*(zpositions[worstinterval] + zpositions[worstinterval+1]) ) ;
-      if( zpositions.size() < maxnumnodes ) {
-	// find the worst node. this could be done much faster if we
-	// would 'cache' the deviations. since the trajectories are
-	// TrackTraj's, that's actually not such a strange idea ...
-	deviation = midpointdeviation(traj, zpositions[0], zpositions[1]) ;
-	worstinterval=0 ;
-	for(size_t interval=1; interval<zpositions.size()-1; ++interval) {
-	  double thisdeviation = midpointdeviation(traj, zpositions[interval], zpositions[interval+1]) ;
-	  if( deviation < thisdeviation) {
-	    deviation = thisdeviation ;
-	    worstinterval = interval ;
+    nodes.push_back(traj.stateVector(std::min(traj.beginRange(),traj.endRange()))) ;
+    nodes.push_back(traj.stateVector(std::max(traj.beginRange(),traj.endRange()))) ;
+    std::list<LHCb::StateVector>::iterator inode(nodes.begin()), nextnode ;
+    
+    // reference states for this trajectory. may be empty.
+    if( m_maxDeviationAtRefstates > 0) {
+      const std::vector<LHCb::StateVector> refstates = traj.refStateVectors() ;
+      // First insert nodes at the reference positions, if required
+      if( !refstates.empty()) {
+	while(  (nextnode = next(inode)) != nodes.end() && nodes.size() < maxnumnodes ) {
+	  std::vector<LHCb::StateVector>::const_iterator worstref = refstates.end() ;
+	  double deviation(0) ;
+	  for(std::vector<LHCb::StateVector>::const_iterator iref = refstates.begin() ;
+	      iref != refstates.end(); ++iref) 
+	    if( inode->z() < iref->z() && iref->z() < nextnode->z() ) {
+	      double thisdeviation = pointerror( *inode, *nextnode, *iref ) ;
+	      if( thisdeviation > deviation ) {
+		deviation = thisdeviation ;
+		worstref = iref ;
+	      }
+	    }
+	  if( deviation > m_maxDeviationAtRefstates && worstref!=refstates.end()) {
+	    nodes.insert(nextnode,*worstref) ;
 	  }
+	  else 
+	    ++inode ;
 	}
       }
     }
-
-    if( zpositions.size()==maxnumnodes) {
-      warning() << "Trajectory approximation did not reach desired accuracy." << endreq ;
-    } else if(msgLevel( MSG::DEBUG )) {
-      debug() << "Trajectory approximation: numnodes=" << zpositions.size() 
-	      << ", maxdeviation=" << deviation 
-	      << " at z= " << 0.5*(zpositions[worstinterval]+zpositions[worstinterval+1]) 
-	      << endreq ;
+    
+    // now the usual procedure
+    inode = nodes.begin() ;
+    double worstdeviation(0) ;
+    std::list<LHCb::StateVector>::iterator worstnode(inode)  ;
+    while(  (nextnode = next(inode)) != nodes.end() && nodes.size() < maxnumnodes ) {
+      // make sure we are fine at the midpoint
+      LHCb::StateVector midpoint = traj.stateVector( 0.5*(inode->z()+nextnode->z())) ;
+      double deviation = pointerror( *inode, *nextnode, midpoint  ) ;
+      if( deviation > m_maxDeviation ) {
+	nodes.insert(nextnode,midpoint ) ;
+      } else {
+	if( deviation > worstdeviation ) {
+	  worstdeviation = deviation ;
+	  worstnode = inode ;
+	}
+	++inode ;
+      }
+    }
+    
+    // issue a warning if we didn't make it
+    if( nodes.size()==maxnumnodes) {
+      warning() << "Trajectory approximation did not reach desired accuracy. " 
+		<< nodes.size() << " " << maxnumnodes << endreq ;
+    }
+    
+    // debug output
+    if(msgLevel( MSG::DEBUG ) || nodes.size()==maxnumnodes) {
+      info() << "Trajectory approximation: numnodes=" << nodes.size() 
+	     << ", deviation=" << worstdeviation 
+	     << " at z= " << 0.5*(worstnode->z()+next(worstnode)->z())
+	     << endreq ;
+      if( msgLevel( MSG::VERBOSE) || nodes.size()==maxnumnodes) 
+	for( inode = nodes.begin(); (nextnode = next(inode)) != nodes.end(); ++inode) {
+	  LHCb::StateVector midpoint = traj.stateVector( 0.5*(inode->z()+nextnode->z() ) ) ;
+	  info() << "interval: "
+		 << "(" << inode->z() << ", " << nextnode->z() << ")"
+		 << " ---> midpoint deviation: " 
+		 << pointerror(*inode,*nextnode,midpoint) << endreq ;
+	}
     }
     
     // Now create intersections for each of the intervals.
     static IMaterialLocator::Intersections tmpintersepts ;
-    Gaudi::XYZPoint p1 = traj.position(zpositions[0]) ;
-    for(size_t interval=0; interval<zpositions.size()-1; ++interval) {
-      Gaudi::XYZPoint p2 = traj.position(zpositions[interval+1]) ;
+    Gaudi::XYZPoint p1 = nodes.front().position() ;
+    for( inode = nodes.begin(); (nextnode = next(inode)) != nodes.end(); ++inode) {
+      Gaudi::XYZPoint p2 = nextnode->position() ;
       MaterialLocatorBase::intersect(p1,p2-p1,tmpintersepts) ;
       intersepts.insert(intersepts.end(),tmpintersepts.begin(),tmpintersepts.end()) ;
       p1 = p2 ;
