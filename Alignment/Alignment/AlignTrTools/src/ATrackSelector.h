@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ATrackSelector
  *
  *  CVS Log :-
- *  $Id: ATrackSelector.h,v 1.2 2007-04-25 14:07:06 jblouw Exp $
+ *  $Id: ATrackSelector.h,v 1.3 2007-12-10 13:49:26 lnicolas Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   31/09/2006
@@ -50,6 +50,7 @@ class ATrackSelector : public GaudiTool,
     *  @retval false Track is rejected
     */
    StatusCode initialize();
+   StatusCode finalize();
    bool accept ( const LHCb::Track& aTrack ) const;
    int traversesIT( LHCb::Track & aTrack, 
 		    int& nOThits, 

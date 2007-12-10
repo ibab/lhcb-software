@@ -4,7 +4,7 @@
  *  Implementation file for T-station alignment tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: ATrackSelector.cpp,v 1.2 2007-04-25 14:07:06 jblouw Exp $
+ *  $Id: ATrackSelector.cpp,v 1.3 2007-12-10 13:49:26 lnicolas Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @date   31/09/2006
@@ -52,6 +52,10 @@ ATrackSelector::~ATrackSelector() {};
 
 StatusCode ATrackSelector::initialize() {
  debug() << "Initialize track selector tool" << endreq;
+  return StatusCode::SUCCESS;
+}
+StatusCode ATrackSelector::finalize() {
+ debug() << "Finalize track selector tool" << endreq;
   return StatusCode::SUCCESS;
 }
 
