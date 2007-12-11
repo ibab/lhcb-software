@@ -1,4 +1,4 @@
-// $Id: HltPrepareMuonSeg.cpp,v 1.1 2007-12-06 16:12:15 hernando Exp $
+// $Id: HltPrepareMuonSeg.cpp,v 1.2 2007-12-11 09:52:25 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -44,7 +44,7 @@ StatusCode HltPrepareMuonSeg::initialize() {
 
   debug() << "==> Initialize" << endmsg;
   
-  m_prepareMuonSeed = tool<IPrepareMuonTSeedTool>("PrepareMuonTSeedTool");
+  m_prepareMuonSeed = tool<IMuonSeedTool>("MuonSeedTool",this);
   
   return StatusCode::SUCCESS;
 }
@@ -66,14 +66,14 @@ StatusCode HltPrepareMuonSeg::execute() {
    for ( std::vector<Track*>::const_iterator itT = m_inputTracks->begin();
         m_inputTracks->end() != itT; itT++ ) {
     Track* itMuonSeg = (*itT);
-    Track* track = new Track();
-
-    StatusCode sctmp = m_prepareMuonSeed->prepareSeed( *itMuonSeg , *(track) );
+    Track* seedTrack = new Track();
+//    LHCb::Track seedTrack; 
+    StatusCode sctmp = m_prepareMuonSeed->makeTrack( *itMuonSeg , *seedTrack );
     if( sctmp.isFailure() ){
       err()<<"Failed to prepare the seed"<<endmsg;
     }
-    muontracks->insert(track); 
-    m_outputTracks->push_back(track);
+    muontracks->insert(seedTrack); 
+    m_outputTracks->push_back(seedTrack);
  }//for ( std::vector<Track*>::const_iterator itT = m_inputTracks->begin() 
   return StatusCode::SUCCESS;
 }

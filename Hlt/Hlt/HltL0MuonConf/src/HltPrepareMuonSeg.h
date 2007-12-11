@@ -1,4 +1,4 @@
-// $Id: HltPrepareMuonSeg.h,v 1.1 2007-12-06 16:12:15 hernando Exp $
+// $Id: HltPrepareMuonSeg.h,v 1.2 2007-12-11 09:52:25 hernando Exp $
 #ifndef HLTPREPAREMUONSEG_H 
 #define HLTPREPAREMUONSEG_H 1
 
@@ -7,7 +7,7 @@
 #include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltFunctions.h"
 
-#include "HltBase/IPrepareMuonTSeedTool.h"
+#include "HltBase/IMuonSeedTool.h"
 
 
 
@@ -33,7 +33,7 @@ protected:
 private:
   
   
-  IPrepareMuonTSeedTool* m_prepareMuonSeed;
+  IMuonSeedTool* m_prepareMuonSeed;
   
   
   

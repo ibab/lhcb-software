@@ -4,6 +4,9 @@
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
 
+! 2007-12-11 - Jose A. Hernando
+ - Updating HltPrepareMuonSeg
+
 ! 2007-12-06 - Jose A. Hernando
  - Adding HltPrepareMuonSeg and FilterMuonSegments from Sandra
 
