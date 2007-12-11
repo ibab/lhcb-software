@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.5 2007-11-23 17:59:19 jpalac Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.6 2007-12-11 17:37:12 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -27,8 +27,10 @@ DECLARE_ALGORITHM_FACTORY( CopyRelatedMCParticles );
 CopyRelatedMCParticles::CopyRelatedMCParticles( const std::string& name,
                                                 ISvcLocator* pSvcLocator )
   : 
-  CopyAndStoreData ( name , pSvcLocator ),
+  MicroDSTAlgorithm ( name , pSvcLocator ),
   m_deepCloneMCVertex(false)
+  //  m_cloner( &localDataStore(), 
+  //            MCParticleCloner( &localDataStore() ) )
 {
   declareProperty("DeepCloneMCVertex", m_deepCloneMCVertex);
 }
@@ -44,9 +46,14 @@ CopyRelatedMCParticles::~CopyRelatedMCParticles() {}
 //=============================================================================
 StatusCode CopyRelatedMCParticles::initialize() {
 
-  StatusCode sc = CopyAndStoreData::initialize(); // must be executed first
+  StatusCode sc = MicroDSTAlgorithm::initialize(); // must be executed first
 
   debug() << "==> Initialize" << endmsg;
+
+  //  m_cloner = 
+  //    new MicroDST::CloneKeyedContainerItemToStore<LHCb::MCParticle,MCParticleCloner>(  &localDataStore(),
+  //                                                                                      MCParticleCloner( &localDataStore() ) );
+  
 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -55,6 +62,8 @@ StatusCode CopyRelatedMCParticles::initialize() {
     return StatusCode::FAILURE;
   }
   verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
+
+  m_cloner = tool<ICloneMCParticle>("MCParticleCloner", this);
 
   m_compositeLinker = new Particle2MCLinker(this,
                                             Particle2MCMethod::Composite,"")  ;
@@ -89,8 +98,7 @@ StatusCode CopyRelatedMCParticles::execute() {
 
   verbose() << "Going to store to TES" << endmsg;
 
-  return copyLocalStoreToTES();
-
+  return StatusCode::SUCCESS;
 
 }
 //=============================================================================
@@ -127,76 +135,22 @@ CopyRelatedMCParticles::storeAssociatedMCParticles(const LHCb::Particle* particl
   for (LHCb::MCParticle::ConstVector::const_iterator iMCP = assocMCPs.begin();
        iMCP != assocMCPs.end();
        ++iMCP) {
-    storeMCParticle(*iMCP);
-    
+    (*m_cloner)(*iMCP);
   }
 
-  // Store clone of mother if available
-
-  // Store origin vertex if desireable.
-  
   return sc;
 
 }
 //=============================================================================
-LHCb::MCParticle* CopyRelatedMCParticles::storeMCParticle(const LHCb::MCParticle* mcp,
-                                                          bool storeOriginVertex )
-{
-  // Store MCParticle clones
-  LHCb::MCParticle* mcpClone = 
-    cloneKeyedItemToLocalStore<LHCb::MCParticle, MCParticleItemCloner>(mcp);
-  // Store clone of mother if available
-  const LHCb::MCParticle* mother = mcp->mother();
-  LHCb::MCParticle* motherClone = 0;
-  
-  if (mother) motherClone = 
-                cloneKeyedItemToLocalStore<LHCb::MCParticle,MCParticleItemCloner>(mother);
-  
-  if (storeOriginVertex) {
-    // Store origin vertex if desireable.
-    const LHCb::MCVertex* originVertex = mcp->originVertex();
-    if (originVertex) {
-      LHCb::MCVertex* originVertexClone = storeMCVertex(originVertex);
-      mcpClone->setOriginVertex(originVertexClone);
-      originVertexClone->setMother(motherClone);
-    
-    }
-  } else {
-    mcpClone->setOriginVertex( mcp->originVertex() );
-  }
-  
-  
-}
-//=============================================================================
-StatusCode CopyRelatedMCParticles::associatedMCParticles(const LHCb::Particle* particle,
-                                                         LHCb::MCParticle::ConstVector&) 
+StatusCode 
+CopyRelatedMCParticles::associatedMCParticles(const LHCb::Particle* particle,
+                                              LHCb::MCParticle::ConstVector&) 
 {
 
   Particle2MCLinker* linker = (particle->isBasicParticle() ) ? m_linksLinker : m_compositeLinker;
 
   return StatusCode::SUCCESS;
   
-}
-//=============================================================================
-LHCb::MCVertex* CopyRelatedMCParticles::storeMCVertex(const LHCb::MCVertex* vertex) 
-{
-
-  LHCb::MCVertex* clone = cloneKeyedItemToLocalStore<LHCb::MCVertex,MCVertexItemCloner>(vertex);
-
-  if ( deepCloneMCVertex() ) {
-
-    clone->clearProducts();    
-    const SmartRefVector<LHCb::MCParticle>& products = vertex->products();
-    for (SmartRefVector<LHCb::MCParticle>::const_iterator iProd = products.begin();
-         iProd != products.end();
-         ++iProd) {
-
-      LHCb::MCParticle* productClone = storeMCParticle(*iProd, false);
-      if (productClone) clone->addToProducts(productClone);
-    }
-  }
-
-  return clone;
 }
 //=============================================================================
 //  Finalize
@@ -206,6 +160,12 @@ StatusCode CopyRelatedMCParticles::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return CopyAndStoreData::finalize();  // must be called after all other actions
+  if (0!=m_cloner) {
+    delete m_cloner;
+    m_cloner = 0;
+  }
+  
+
+  return MicroDSTAlgorithm::finalize();  // must be called after all other actions
 }
 //=============================================================================

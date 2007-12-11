@@ -1,4 +1,4 @@
-// $Id: CopyODIN.cpp,v 1.4 2007-11-02 15:19:28 jpalac Exp $
+// $Id: CopyODIN.cpp,v 1.5 2007-12-11 17:37:12 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( CopyODIN );
 //=============================================================================
 CopyODIN::CopyODIN( const std::string& name,
                     ISvcLocator* pSvcLocator)
-  : CopyAndStoreData ( name , pSvcLocator )
+  : MicroDSTAlgorithm ( name , pSvcLocator )
 {
 
 }
@@ -36,7 +36,7 @@ CopyODIN::~CopyODIN() {}
 // Initialization
 //=============================================================================
 StatusCode CopyODIN::initialize() {
-  StatusCode sc = CopyAndStoreData::initialize(); // must be executed first
+  StatusCode sc = MicroDSTAlgorithm::initialize(); // must be executed first
 
   debug() << "==> Initialize" << endmsg;
 
@@ -73,6 +73,6 @@ StatusCode CopyODIN::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return CopyAndStoreData::finalize();  // must be called after all other actions
+  return MicroDSTAlgorithm::finalize();  // must be called after all other actions
 }
 //=============================================================================

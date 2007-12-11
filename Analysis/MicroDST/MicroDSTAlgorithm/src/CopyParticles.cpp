@@ -1,4 +1,4 @@
-// $Id: CopyParticles.cpp,v 1.10 2007-11-08 16:45:23 jpalac Exp $
+// $Id: CopyParticles.cpp,v 1.11 2007-12-11 17:37:12 jpalac Exp $
 // Include files 
 
 // STL
@@ -23,9 +23,14 @@ DECLARE_ALGORITHM_FACTORY( CopyParticles );
 //=============================================================================
 CopyParticles::CopyParticles( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : CopyAndStoreData ( name , pSvcLocator )
+  : 
+  MicroDSTAlgorithm ( name , pSvcLocator ),
+  m_particleCloner(0),
+  m_particleClonerName("ParticleCloner")
 {
-  //  declareProperty( "StoreTracks", m_storeTracks );
+  std::cout << "CopyParticles constructor" << std::endl;
+  
+  declareProperty( "ICloneParticle", m_particleClonerName );
 }
 //=============================================================================
 // Destructor
@@ -37,11 +42,21 @@ CopyParticles::~CopyParticles() {}
 //=============================================================================
 StatusCode CopyParticles::initialize() {
 
-  StatusCode sc = CopyAndStoreData::initialize(); // must be executed first
+  StatusCode sc = MicroDSTAlgorithm::initialize(); // must be executed first
 
   debug() << "==> Initialize" << endmsg;
 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  debug() << "Going to initialise ParticleCloner" << endmsg;
+
+  m_particleCloner = tool<ICloneParticle>(m_particleClonerName, this);
+
+  if (m_particleCloner) {
+    debug() << "Found ParticleCloner" << endmsg;
+  } else {
+    error() << "Failed to find ParticleCloner" << endmsg;
+  }
 
   if (inputTESLocation()=="")  {
     error() << "No TES location " << endmsg;
@@ -57,32 +72,34 @@ StatusCode CopyParticles::initialize() {
 StatusCode CopyParticles::execute() {
 
   debug() << "==> Execute" << endmsg;
-  verbose() << "Going to store Particles from " << inputTESLocation()
-            << " into " << fullOutputTESLocation() << endmsg;
-
-
-  const LHCb::Particle::Container* particles = 
-    get<LHCb::Particle::Container>( inputTESLocation() );
-
-  verbose() << "Found " << particles->size() << " particles" << endmsg;
-  
-  for (Particles::const_iterator iPart = particles->begin();
-       iPart != particles->end();
-       ++iPart) {
-    verbose() << "Storing particle" << endmsg;
-    LHCb::Particle* clone = storeParticle( *iPart);
-    if (clone) {
-      verbose() << "Cloned and stored particle!" << endmsg;
-    } else {
-      verbose() << "Particle cloning failed!" << endmsg;
-    }
-  }
 
   setFilterPassed(true);
 
-  verbose() << "Going to store to TES" << endmsg;
+  verbose() << "Going to store Particles from " << inputTESLocation()
+            << " into " << fullOutputTESLocation() << endmsg;
 
-  return copyLocalStoreToTES();
+  const LHCb::Particle::Container* clones = 
+    copyKeyedContainer<Particles, ICloneParticle>( inputTESLocation(),
+                                                   m_particleCloner    );
+  
+  if (!clones) return StatusCode::FAILURE;
+  
+  verbose() << "Found " << clones->size() << " particles" << endmsg;
+  
+//   for (Particles::const_iterator iPart = particles->begin();
+//        iPart != particles->end();
+//        ++iPart) {
+//     verbose() << "Storing particle" << endmsg;
+//     //    LHCb::Particle* clone = storeParticle( *iPart);
+//     LHCb::Particle* clone = (*m_particleCloner)( *iPart);
+//     if (clone) {
+//       verbose() << "Cloned and stored particle!" << endmsg;
+//     } else {
+//       verbose() << "Particle cloning failed!" << endmsg;
+//     }
+//   }
+
+  return StatusCode::SUCCESS;
   
 
 }
@@ -94,7 +111,7 @@ LHCb::Particle* CopyParticles::storeParticle(const LHCb::Particle* particle)
   verbose() << "StoreParticles clone into local store"<< endmsg;
 
   LHCb::Particle* particleClone = 
-    cloneKeyedItemToLocalStore<LHCb::Particle, ParticleItemCloner>(particle);
+    cloneKeyedContainerItem<LHCb::Particle, ParticleItemCloner>(particle);
 
   verbose() << "StoreParticles cloned into local store!"<< endmsg;
 
@@ -115,7 +132,7 @@ const LHCb::Vertex* CopyParticles::storeVertex(const LHCb::Vertex* vertex)
   StatusCode sc(StatusCode::SUCCESS);
 
   LHCb::Vertex* vertexClone = 
-    cloneKeyedItemToLocalStore<LHCb::Vertex, VertexItemCloner>(vertex);
+    cloneKeyedContainerItem<LHCb::Vertex, VertexItemCloner>(vertex);
 
   storeOutgoingParticles(vertexClone, vertex->outgoingParticles());
 
@@ -159,6 +176,6 @@ StatusCode CopyParticles::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return CopyAndStoreData::finalize();  // must be called after all other actions
+  return MicroDSTAlgorithm::finalize();  // must be called after all other actions
 }
 //=============================================================================

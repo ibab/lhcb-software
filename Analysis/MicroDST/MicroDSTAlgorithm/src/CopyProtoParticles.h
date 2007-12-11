@@ -1,10 +1,10 @@
-// $Id: CopyProtoParticles.h,v 1.3 2007-10-24 15:38:35 jpalac Exp $
+// $Id: CopyProtoParticles.h,v 1.4 2007-12-11 17:37:12 jpalac Exp $
 #ifndef COPYPROTOPARTICLES_H 
 #define COPYPROTOPARTICLES_H 1
 
 // Include files
 // from Gaudi
-#include "MicroDST/CopyAndStoreData.h"
+#include "MicroDST/MicroDSTAlgorithm.h"
 #include "Event/ProtoParticle.h"
 #include "Event/Particle.h"
 /** @class CopyProtoParticles CopyProtoParticles.h
@@ -16,7 +16,7 @@
  *  @author Juan PALACIOS
  *  @date   2007-10-23
  */
-class CopyProtoParticles : public CopyAndStoreData {
+class CopyProtoParticles : public MicroDSTAlgorithm {
 public: 
   /// Standard constructor
   CopyProtoParticles( const std::string& name, ISvcLocator* pSvcLocator );

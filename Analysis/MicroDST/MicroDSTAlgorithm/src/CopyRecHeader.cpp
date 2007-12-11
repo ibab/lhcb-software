@@ -1,4 +1,4 @@
-// $Id: CopyRecHeader.cpp,v 1.4 2007-11-02 15:19:28 jpalac Exp $
+// $Id: CopyRecHeader.cpp,v 1.5 2007-12-11 17:37:12 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( CopyRecHeader );
 //=============================================================================
 CopyRecHeader::CopyRecHeader( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : CopyAndStoreData ( name , pSvcLocator )
+  : MicroDSTAlgorithm ( name , pSvcLocator )
 {
 
 }
@@ -37,7 +37,7 @@ CopyRecHeader::~CopyRecHeader() {}
 //=============================================================================
 StatusCode CopyRecHeader::initialize() {
 
-  StatusCode sc = CopyAndStoreData::initialize(); // must be executed first
+  StatusCode sc = MicroDSTAlgorithm::initialize(); // must be executed first
 
   debug() << "==> Initialize" << endmsg;
 
@@ -74,6 +74,6 @@ StatusCode CopyRecHeader::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return CopyAndStoreData::finalize();  // must be called after all other actions
+  return MicroDSTAlgorithm::finalize();  // must be called after all other actions
 }
 //=============================================================================

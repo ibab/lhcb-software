@@ -1,10 +1,10 @@
-// $Id: CopyMCHeader.h,v 1.1 2007-11-02 16:24:00 jpalac Exp $
+// $Id: CopyMCHeader.h,v 1.2 2007-12-11 17:37:12 jpalac Exp $
 #ifndef COPYMCHEADER_H 
 #define COPYMCHEADER_H 1
 
 // Include files
 // from Gaudi
-#include "MicroDST/CopyAndStoreData.h"
+#include "MicroDST/MicroDSTAlgorithm.h"
 
 
 /** @class CopyRecHeader CopyRecHeader.h
@@ -13,7 +13,7 @@
  *  @author Juan PALACIOS
  *  @date   2007-11-02
  */
-class CopyMCHeader : public CopyAndStoreData {
+class CopyMCHeader : public MicroDSTAlgorithm {
 public: 
   /// Standard constructor
   CopyMCHeader( const std::string& name, ISvcLocator* pSvcLocator );

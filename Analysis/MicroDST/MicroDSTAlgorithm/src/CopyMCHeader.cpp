@@ -1,4 +1,4 @@
-// $Id: CopyMCHeader.cpp,v 1.1 2007-11-02 16:24:00 jpalac Exp $
+// $Id: CopyMCHeader.cpp,v 1.2 2007-12-11 17:37:12 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( CopyMCHeader );
 //=============================================================================
 CopyMCHeader::CopyMCHeader( const std::string& name,
                             ISvcLocator* pSvcLocator)
-  : CopyAndStoreData ( name , pSvcLocator )
+  : MicroDSTAlgorithm ( name , pSvcLocator )
 {
 
 }
@@ -37,7 +37,7 @@ CopyMCHeader::~CopyMCHeader() {}
 //=============================================================================
 StatusCode CopyMCHeader::initialize() {
 
-  StatusCode sc = CopyAndStoreData::initialize(); // must be executed first
+  StatusCode sc = MicroDSTAlgorithm::initialize(); // must be executed first
 
   debug() << "==> Initialize" << endmsg;
 
@@ -75,6 +75,6 @@ StatusCode CopyMCHeader::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return CopyAndStoreData::finalize();  // must be called after all other actions
+  return MicroDSTAlgorithm::finalize();  // must be called after all other actions
 }
 //=============================================================================

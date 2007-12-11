@@ -1,10 +1,13 @@
-// $Id: CopyPrimaryVertices.cpp,v 1.5 2007-10-30 18:10:48 jpalac Exp $
+// $Id: CopyPrimaryVertices.cpp,v 1.6 2007-12-11 17:37:12 jpalac Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 // from LHCb
 #include "Event/RecVertex.h"
+// from MicroDST
+#include <MicroDST/ICloneRecVertex.h>
+#include <MicroDST/MicroDSTTool.h>
 // local
 #include "CopyPrimaryVertices.h"
 
@@ -23,10 +26,11 @@ DECLARE_ALGORITHM_FACTORY( CopyPrimaryVertices );
 //=============================================================================
 CopyPrimaryVertices::CopyPrimaryVertices( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-  : CopyAndStoreData ( name , pSvcLocator ),
-    m_storeTracks(false)
+  : MicroDSTAlgorithm ( name , pSvcLocator ),
+    m_vertexCloner(0),
+    m_vertexClonerName("RecVertexCloner")
 {
-  declareProperty( "StoreTracks", m_storeTracks );
+  declareProperty("ICloneRecVertex", m_vertexClonerName);
 }
 //=============================================================================
 // Destructor
@@ -38,7 +42,7 @@ CopyPrimaryVertices::~CopyPrimaryVertices() {}
 //=============================================================================
 StatusCode CopyPrimaryVertices::initialize() {
 
-  StatusCode sc = CopyAndStoreData::initialize(); // must be executed first
+  StatusCode sc = MicroDSTAlgorithm::initialize(); // must be executed first
 
   debug() << "==> Initialize" << endmsg;
 
@@ -50,6 +54,8 @@ StatusCode CopyPrimaryVertices::initialize() {
   }
   verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
 
+  m_vertexCloner = tool<ICloneRecVertex>(m_vertexClonerName, this);
+
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -60,14 +66,14 @@ StatusCode CopyPrimaryVertices::execute() {
   debug() << "==> Execute" << endmsg;
   verbose() << "Going to store Primary Vertex bank from " << inputTESLocation()
             << " into " << fullOutputTESLocation() << endmsg;
-  
-  const Vertices* v = 
-    copyKeyedContainer<Vertices, BasicPVCloner>( inputTESLocation(),
-                                                 fullOutputTESLocation());
 
+   const Vertices* v = 
+     copyKeyedContainer<Vertices, ICloneRecVertex>(inputTESLocation(),
+                                                   m_vertexCloner      );
+  
   setFilterPassed(true);
 
-  return (v!=0) ? StatusCode::SUCCESS : StatusCode::FAILURE;  
+  return (0!=v) ? StatusCode::SUCCESS : StatusCode::FAILURE;
 
 }
 //=============================================================================
@@ -77,6 +83,6 @@ StatusCode CopyPrimaryVertices::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return CopyAndStoreData::finalize();  // must be called after all other actions
+  return MicroDSTAlgorithm::finalize();  // must be called after all other actions
 }
 //=============================================================================

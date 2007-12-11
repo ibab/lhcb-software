@@ -1,4 +1,4 @@
-// $Id: CopyParticle2PVLink.cpp,v 1.6 2007-11-01 16:53:37 jpalac Exp $
+// $Id: CopyParticle2PVLink.cpp,v 1.7 2007-12-11 17:37:12 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -26,7 +26,7 @@ DECLARE_ALGORITHM_FACTORY( CopyParticle2PVLink );
 CopyParticle2PVLink::CopyParticle2PVLink( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : 
-  CopyAndStoreData ( name , pSvcLocator )
+  MicroDSTAlgorithm ( name , pSvcLocator )
 {
 }
 //=============================================================================
@@ -39,7 +39,7 @@ CopyParticle2PVLink::~CopyParticle2PVLink() {}
 //=============================================================================
 StatusCode CopyParticle2PVLink::initialize() {
 
-  StatusCode sc = CopyAndStoreData::initialize(); // must be executed first
+  StatusCode sc = MicroDSTAlgorithm::initialize(); // must be executed first
 
   debug() << "==> Initialize" << endmsg;
 
@@ -158,6 +158,6 @@ StatusCode CopyParticle2PVLink::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return CopyAndStoreData::finalize();  // must be called after all other actions
+  return MicroDSTAlgorithm::finalize();  // must be called after all other actions
 }
 //=============================================================================

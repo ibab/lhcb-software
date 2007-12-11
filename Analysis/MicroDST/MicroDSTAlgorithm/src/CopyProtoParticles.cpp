@@ -1,4 +1,4 @@
-// $Id: CopyProtoParticles.cpp,v 1.4 2007-10-24 17:08:52 jpalac Exp $
+// $Id: CopyProtoParticles.cpp,v 1.5 2007-12-11 17:37:12 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( CopyProtoParticles );
 //=============================================================================
 CopyProtoParticles::CopyProtoParticles( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : CopyAndStoreData ( name , pSvcLocator )
+  : MicroDSTAlgorithm ( name , pSvcLocator )
 {
 }
 //=============================================================================
@@ -36,7 +36,7 @@ CopyProtoParticles::~CopyProtoParticles() {}
 //=============================================================================
 StatusCode CopyProtoParticles::initialize() {
 
-  StatusCode sc = CopyAndStoreData::initialize(); // must be executed first
+  StatusCode sc = MicroDSTAlgorithm::initialize(); // must be executed first
 
   debug() << "==> Initialize" << endmsg;
 
@@ -131,6 +131,6 @@ StatusCode CopyProtoParticles::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return CopyAndStoreData::finalize();  // must be called after all other actions
+  return MicroDSTAlgorithm::finalize();  // must be called after all other actions
 }
 //=============================================================================

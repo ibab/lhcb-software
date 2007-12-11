@@ -1,10 +1,12 @@
-// $Id: CopyRelatedMCParticles.h,v 1.5 2007-11-23 17:59:19 jpalac Exp $
+// $Id: CopyRelatedMCParticles.h,v 1.6 2007-12-11 17:37:12 jpalac Exp $
 #ifndef COPYRELATEDMCPARTICLES_H 
 #define COPYRELATEDMCPARTICLES_H 1
 
 // Include files
+// from MicroDST
+#include <MicroDST/MicroDSTAlgorithm.h>
+#include <MicroDST/ICloneMCParticle.h>
 // from Gaudi
-#include "MicroDST/CopyAndStoreData.h"
 #include "Event/Particle.h"
 // from LHCb
 #include "Kernel/Particle2MCLinker.h"
@@ -18,7 +20,7 @@ class MCVertex;
  *  @author Juan PALACIOS
  *  @date   2007-11-02
  */
-class CopyRelatedMCParticles : public CopyAndStoreData {
+class CopyRelatedMCParticles : public MicroDSTAlgorithm {
 public: 
   /// Standard constructor
   CopyRelatedMCParticles( const std::string& name, 
@@ -84,11 +86,9 @@ private:
 
   typedef LHCb::MCParticle::Container MCParticles;
   typedef MicroDST::BasicItemCloner<LHCb::MCParticle> MCParticleItemCloner;
-  typedef MicroDST::CloneKeyedContainerItem<LHCb::MCParticle, MCParticleItemCloner> MCParticleCloner;
 
   typedef LHCb::MCVertex::Container MCVertices;
   typedef MicroDST::BasicItemCloner<LHCb::MCVertex> MCVertexItemCloner;
-  typedef MicroDST::CloneKeyedContainerItem<LHCb::MCVertex, MCVertexItemCloner> MCVertexCloner;
 
 private:
 
@@ -97,6 +97,10 @@ private:
   Particle2MCLinker* m_linksLinker; ///< Linker for basic particles
 
   bool m_deepCloneMCVertex; ///< control whether MCVertex's products should also be cloned
+
+  ICloneMCParticle* m_cloner;
+  
+  
   
 };
 #endif // COPYRELATEDMCPARTICLES_H

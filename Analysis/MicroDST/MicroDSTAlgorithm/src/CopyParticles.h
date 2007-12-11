@@ -1,12 +1,13 @@
-// $Id: CopyParticles.h,v 1.5 2007-10-24 15:38:35 jpalac Exp $
+// $Id: CopyParticles.h,v 1.6 2007-12-11 17:37:12 jpalac Exp $
 #ifndef COPYPARTICLES_H 
 #define COPYPARTICLES_H 1
 
 // Include files
 // from Gaudi
-#include "MicroDST/CopyAndStoreData.h"
-#include "Event/Particle.h"
-#include "Event/Vertex.h"
+#include <MicroDST/MicroDSTAlgorithm.h>
+#include <MicroDST/ICloneParticle.h>
+#include <Event/Particle.h>
+#include <Event/Vertex.h>
 
 /** @class CopyParticles CopyParticles.h
  *  
@@ -14,7 +15,7 @@
  *  @author Juan PALACIOS
  *  @date   2007-10-16
  */
-class CopyParticles : public CopyAndStoreData {
+class CopyParticles : public MicroDSTAlgorithm {
 public: 
   /// Standard constructor
   CopyParticles( const std::string& name, ISvcLocator* pSvcLocator );
@@ -33,12 +34,13 @@ private:
 
   typedef LHCb::Particle::Container Particles;
   typedef MicroDST::BasicItemCloner<LHCb::Particle> ParticleItemCloner;
-  typedef MicroDST::CloneKeyedContainerItem<LHCb::Particle, ParticleItemCloner> ParticleCloner;
 
   typedef LHCb::Vertex::Container Vertices;
   typedef MicroDST::BasicItemCloner<LHCb::Vertex> VertexItemCloner;
-  typedef MicroDST::CloneKeyedContainerItem<LHCb::Vertex, VertexItemCloner> VertexCloner;
 
+  ICloneParticle* m_particleCloner;
+
+  std::string m_particleClonerName;
 
 private:
 

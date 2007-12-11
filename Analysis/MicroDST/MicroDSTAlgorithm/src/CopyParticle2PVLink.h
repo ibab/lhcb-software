@@ -1,10 +1,10 @@
-// $Id: CopyParticle2PVLink.h,v 1.2 2007-10-23 14:45:06 jpalac Exp $
+// $Id: CopyParticle2PVLink.h,v 1.3 2007-12-11 17:37:12 jpalac Exp $
 #ifndef COPYPARTICLE2PVLINK_H 
 #define COPYPARTICLE2PVLINK_H 1
 
 // Include files
 // from Gaudi
-#include "MicroDST/CopyAndStoreData.h"
+#include "MicroDST/MicroDSTAlgorithm.h"
 
 // from DaVinci
 #include "Kernel/Particle2Vertex.h"
@@ -15,7 +15,7 @@
  *  @author Juan PALACIOS
  *  @date   2007-10-15
  */
-class CopyParticle2PVLink : public CopyAndStoreData {
+class CopyParticle2PVLink : public MicroDSTAlgorithm {
 public: 
   /// Standard constructor
   CopyParticle2PVLink( const std::string& name, ISvcLocator* pSvcLocator );
