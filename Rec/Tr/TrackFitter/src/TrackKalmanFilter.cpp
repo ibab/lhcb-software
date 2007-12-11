@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.53 2007-12-10 16:01:52 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.54 2007-12-11 09:45:39 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -188,6 +188,17 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 	  }
 	}
       }
+
+      // Whatever the logic before, make sure the residual matches the state
+      if ( node.hasMeasurement() ) {
+	const TrackProjectionMatrix& H  = node.projectionMatrix();
+	const TrackVector& refX         = node.refVector().parameters() ;
+	const TrackVector& smoothedX    = node.state().stateVector() ;
+	const TrackSymMatrix& smoothedC = node.state().covariance() ;
+	node.setResidual( node.refResidual() + (H*(refX - smoothedX))(0)) ;
+	node.setErrResidual( std::sqrt(node.errMeasure2() - Similarity( H, smoothedC )(0,0)) ) ;
+      }
+      
       irPrevNode = irNode;
       ++irNode;
     } // end of prediction and filter
@@ -480,18 +491,6 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool upstream ) const
   (thisNode.state()).setState( smoothedX );
   (thisNode.state()).setCovariance( smoothedC );
 
-  // Only update residuals for node with measurement
-  if ( thisNode.hasMeasurement() ) {
-    const TrackProjectionMatrix& H = thisNode.projectionMatrix();
-    const TrackVector& refX = thisNode.refVector().parameters() ;
-    const double res = thisNode.refResidual() + ( H*(refX - smoothedX) )(0) ;
-    thisNode.setResidual( res );
-    const double errRes2 = thisNode.errMeasure2() - 
-      Matrix1x1(Similarity( H, smoothedC ))(0,0);
-    if ( errRes2 < 0.) return Warning( "Negative residual error in smoother!",StatusCode::FAILURE ,1 );
-    thisNode.setErrResidual( sqrt(errRes2) );
-  }
-  
   return StatusCode::SUCCESS;
 }
 
