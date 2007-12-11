@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: eventassoc.py,v 1.2 2007-12-09 20:29:30 ibelyaev Exp $ 
+# $Id: eventassoc.py,v 1.3 2007-12-11 08:34:25 truf Exp $ 
 # =============================================================================
 """
 The helper module for easy manipulations with Linker objects
@@ -23,21 +23,11 @@ from GaudiPython.Bindings import gbl    as __gbl
 def linkedTo( t1, t2, location ):
   """
   Helper function for easy manipulation with linker objects
-
-  e.g.
-  [
-  the example is stollen from LHCb/GaudiPython TWiki page:
   
-    http://cern.ch/twiki/bin/view/GaudiPython#How_to_access_Linker_tables
-    
-  ]
-  
-  >>> linked = linkedTo ( LHCb.MCParticle , LHCb.Track , 'Rec/Track/Velo' )
+  >>> linktrack2part = linkedTo ( LHCb.MCParticle , LHCb.Track , 'Rec/Track/Best' )
   >>> track = ...        
-  >>> links = linked.range ( track )   ## get all related MC-particles 
-  >>> for i in range(0,links.size())   ## loop over all related MC-particles 
-  ...       mcpi = links[i]                ## get the related MC-particle  
-  ...       print mcpi                     ## print it 
+  >>> for mcp in linktrack2part.range(track):  ## loop over all related MC-particles 
+   ...       print mcp                          ## print it 
   >>> ....
     
   """
@@ -50,6 +40,13 @@ def linkedTo( t1, t2, location ):
 def linkedFrom( t1, t2, location ):
   """
   Helper function for manipulation with linker objects
+   e.g.
+  
+  >>> linkpart2track = linkedFrom ( LHCb.Track , LHCb.MCParticle , 'Rec/Track/Best' )
+  >>> mcp = ...        
+  >>> for track in linkpart2track.range(mcp):                 ## loop over all related tracks 
+   ...       print 'track matched to MCParticle:',track.key()  ## print it 
+  >>> ....
   """
   appMgr = __AppMgr()
   cl =     __gbl.LinkedFrom( t1, t2, int)

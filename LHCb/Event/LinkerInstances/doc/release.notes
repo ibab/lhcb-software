@@ -2,6 +2,8 @@
 ! Package manager: T.Ruf
 ! Purpose: Creates dictionaries for the use of Linker relations in Python
 !------------------------------------------------------------------------------
+! 2007-12-11 - Thomas Ruf
+ - modified the help for linkedto and linkedfrom
 
 !==================== LinkerInstances v3r4 2007-12-09 =========================
 
