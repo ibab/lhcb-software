@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2007-12-11 Jose A. Hernando
+	    - L0Entry uses now the names of channes as they are in L0DUReport
+
 ! 2007-12-04 Jose A. Hernando
 	    - HltFunctions, adding functions for muon/dimuon alley
 

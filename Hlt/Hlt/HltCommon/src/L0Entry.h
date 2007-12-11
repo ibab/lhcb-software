@@ -1,4 +1,4 @@
-// $Id: L0Entry.h,v 1.6 2007-02-08 17:38:06 hernando Exp $
+// $Id: L0Entry.h,v 1.7 2007-12-11 09:50:00 hernando Exp $
 #ifndef L0ENTRY_H 
 #define L0ENTRY_H 1
 
@@ -38,8 +38,6 @@ public:
 
 protected:
 
-  enum AlleysEntries {Muon,Hadron,Calo};
-
   std::string m_l0Location;
 
   StringArrayProperty m_l0ChannelsName;
@@ -50,7 +48,7 @@ protected:
 
   LHCb::L0DUReport* m_l0;
 
-  std::vector<int> m_l0Channels;
+  std::vector<std::string> m_l0Channels;
 
 protected:
 
