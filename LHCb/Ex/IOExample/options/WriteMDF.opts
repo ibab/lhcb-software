@@ -4,7 +4,7 @@
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
 
-// POOL Persistency
+// POOL Persistency for input file
 #include "$STDOPTS/DstDicts.opts"
 
 //---------------------------------------------------------------------------
@@ -14,13 +14,8 @@ EventSelector.Input = {
   "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/DST/0000/00001820_00000001_5.dst' TYP='POOL_ROOT' OPT='READ'"
 }; // B->J/Psi(mumu)Ks events
 
-// Set up the output persistency
-EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
-ApplicationMgr.SvcOptMapping    += { "Gaudi::MultiFileCatalog/FileCatalog",
-                                     "Gaudi::IODataManager/IODataManager" };
-
-// Create the MDF file using the standard Gaudi output stream:
-ApplicationMgr.OutStream  = { "Writer_0" };
-Writer_0.Output           = "DATAFILE='file://mdfData_0.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'";
-Writer_0.ItemList         = {"/Event/DAQ/RawEvent#1" };
+//---------------------------------------------------------------------------
+// MDF file creation
+//---------------------------------------------------------------------------
+#include "$STDOPTS/WriteMDF.opts"
 
