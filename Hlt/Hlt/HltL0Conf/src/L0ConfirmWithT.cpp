@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.cpp,v 1.4 2007-12-07 17:35:10 albrecht Exp $
+// $Id: L0ConfirmWithT.cpp,v 1.5 2007-12-11 09:51:22 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -46,7 +46,8 @@ StatusCode L0ConfirmWithT::initialize()
   }
   debug() << " Initialize L0ConfirmWithT" << endmsg;
 
-  m_TrackConfirmTool=tool<ITrackConfirmTool>( m_trackingTool , this );
+  // m_TrackConfirmTool=tool<ITrackConfirmTool>( m_trackingTool , this );
+  m_TrackConfirmTool=tool<ITrackConfirmTool>( m_trackingTool );
 
   return sc;
 }
