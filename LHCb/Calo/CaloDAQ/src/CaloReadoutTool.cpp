@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.17 2007-12-06 09:31:25 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.18 2007-12-11 21:10:55 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -82,7 +82,7 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
     }    
     
     if ( 0 == m_banks || 0 == m_banks->size() ){
-      error() << "None of short and packed banks has been found " << endreq;      
+      Error("None of short and packed banks have been found ").ignore();
       return false;
     }else{
       if( !m_packedIsDefault){      

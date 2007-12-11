@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.19 2007-12-06 09:31:24 odescham Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.20 2007-12-11 21:10:55 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -143,8 +143,8 @@ std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
   bool decoded = false;
   bool found   = false;
   if(m_getRaw)getCaloBanksFromRaw();
-  if( NULL == m_banks ){
-    error() << "banks container is not defined" << endreq;
+  if( NULL == m_banks || 0 == m_banks->size() ){
+    Error("The banks container is empty").ignore();
   }else{
     for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
          itB != m_banks->end() ; ++itB ) {
@@ -155,7 +155,12 @@ std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
       if( !decoded )error() << " Error when decoding bank " << sourceID  << " -> incomplete data - May be corrupted" <<endreq;
     } 
   }
-  if( !found )warning() << "rawBank sourceID : " << source << " has not been found" << endreq;
+  if( !found ){
+    std::stringstream s("");
+    s<< source;
+    Error("rawBank sourceID : " + s.str() + " has not been found").ignore();
+  }
+  
   return m_data ;
 } 
 //=========================================================================

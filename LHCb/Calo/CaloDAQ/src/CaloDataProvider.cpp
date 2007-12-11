@@ -187,7 +187,11 @@ bool CaloDataProvider::decodeTell1 (int source) {
     if( !decoded )error() << " Error when decoding bank " << sourceID  << " -> incomplete data - May be corrupted" <<endreq;
     m_tell1s++; // count the number of decoded TELL1
   }
-  if( !found )warning() << "rawBank sourceID : " << source << " has not been found" << endreq;
+  if( !found ){
+    std::stringstream s("");
+    s<< source;
+    Error("rawBank sourceID : " + s.str() + " has not been found").ignore();
+  }
   return decoded;
 }
 //==================================

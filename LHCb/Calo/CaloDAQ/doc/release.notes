@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2007-12-11 - Olivier Deschamps
+ - Improve printout using Error() method
+
 !========================== CaloDAQ v4r2 2007-12-06 ==========================
 ! 2007-12-06 - Marco Cattaneo
  - Add dictionary for CAloDAQ interfaces
