@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::ExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.2 2007-12-11 14:17:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -469,7 +469,8 @@ ExpectedTrackSignal::hasRichInfo( LHCb::RichRecSegment * segment ) const
       for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
             hypo != m_pidTypes.end(); ++hypo )
       {
-        if ( m_minPhotonsPerRad[segment->trackSegment().radiator()] < nObservableSignalPhotons(segment,*hypo) )
+        if ( m_minPhotonsPerRad[segment->trackSegment().radiator()] < 
+             nObservableSignalPhotons(segment,*hypo) )
         { 
           hasInfo = true; break;
         }

@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.2 2007-12-11 14:17:42 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -32,7 +32,7 @@ DetailedTrSegMakerFromRecoTracks::
 DetailedTrSegMakerFromRecoTracks( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : Rich::Rec::ToolBase  ( type, name, parent           ),
+  : BaseTrSegMakerFromRecoTracks ( type, name, parent   ),
     m_rayTracing         ( NULL                         ),
     m_richPartProp       ( NULL                         ),
     m_radTool            ( NULL                         ),
@@ -44,26 +44,14 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
     m_trExt2             ( NULL                         ),
     m_trExt1Name         ( "TrackHerabExtrapolator"     ),
     m_trExt2Name         ( "TrackParabolicExtrapolator" ),
-    m_usedRads           ( Rich::NRadiatorTypes, true   ),
     m_extrapFromRef      ( true                         ),
     m_minZmove           ( 1 * Gaudi::Units::mm         ),
-    m_deBeam             ( Rich::NRiches                ),
-    m_minRadLength       ( Rich::NRadiatorTypes         ),
-    m_checkBeamP         ( Rich::NRadiatorTypes         )
+    m_minRadLength       ( Rich::NRadiatorTypes         )
 {
-
-  // the interface
-  declareInterface<ITrSegMaker>(this);
-
-  // initialise
-  m_deBeam[Rich::Rich1] = NULL;
-  m_deBeam[Rich::Rich2] = NULL;
-
   // job options
 
   declareProperty( "PrimaryTrackExtrapolator", m_trExt1Name    );
   declareProperty( "BackupTrackExtrapolator",  m_trExt2Name    );
-  declareProperty( "UseRadiators",             m_usedRads      );
   declareProperty( "ExtrapolateFromReference", m_extrapFromRef );
   declareProperty( "MinimumZMove",             m_minZmove      );
 
@@ -100,11 +88,6 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
   m_minRadLength[Rich::Rich2Gas] = 1500*Gaudi::Units::mm;
   declareProperty( "MinRadiatorPathLength", m_minRadLength );
 
-  m_checkBeamP[Rich::Aerogel]  = false;
-  m_checkBeamP[Rich::Rich1Gas] = true;
-  m_checkBeamP[Rich::Rich2Gas] = false;
-  declareProperty( "CheckBeamPipe", m_checkBeamP );
-
 }
 
 //=============================================================================
@@ -118,7 +101,7 @@ DetailedTrSegMakerFromRecoTracks::~DetailedTrSegMakerFromRecoTracks() { }
 StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = Rich::Rec::ToolBase::initialize();
+  const StatusCode sc = BaseTrSegMakerFromRecoTracks::initialize();
   if ( sc.isFailure() ) return sc;
 
   // load primary track extrapolator ( backup is loaded on-demand )
@@ -137,18 +120,6 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
   m_radiators[Rich::Aerogel]  = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel  );
   m_radiators[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas );
   m_radiators[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas );
-  if ( !m_usedRads[Rich::Aerogel] )
-  {
-    Warning("Track segments for Aerogel are disabled",StatusCode::SUCCESS);
-  }
-  if ( !m_usedRads[Rich::Rich1Gas] )
-  {
-    Warning("Track segments for Rich1Gas are disabled",StatusCode::SUCCESS);
-  }
-  if ( !m_usedRads[Rich::Rich2Gas] )
-  {
-    Warning("Track segments for Rich2Gas are disabled",StatusCode::SUCCESS);
-  }
 
   if ( m_extrapFromRef )
   {
@@ -217,7 +188,7 @@ constructSegments( const ContainedObject * obj,
     // which radiator
     const Rich::RadiatorType rad = (*radiator)->radiatorID();
     // is this radiator in use ?
-    if ( !m_usedRads[rad] ) continue;
+    if ( !usedRads(rad) ) continue;
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << " Considering radiator " << rad << endreq;
@@ -420,8 +391,8 @@ constructSegments( const ContainedObject * obj,
     }
 
     //---------------------------------------------------------------------------------------------
-    // Correction for beam pipe in RICH1
-    if ( m_checkBeamP[rad] )
+    // Correction for beam pipe intersections
+    if ( checkBeamPipe(rad) )
     {
 
       // Get intersections with beam pipe using DeRich object
@@ -436,11 +407,13 @@ constructSegments( const ContainedObject * obj,
       sc = true;
       if ( intType == DeRichBeamPipe::NoIntersection )
       {
-        verbose() << "   --> No beam intersections -> No corrections needed" << endreq;
+        if (msgLevel(MSG::VERBOSE))
+          verbose() << "   --> No beam intersections -> No corrections needed" << endreq;
       }
       else if ( intType == DeRichBeamPipe::FrontAndBackFace )
       {
-        verbose() << "   --> Inside beam pipe -> Reject segment" << endreq;
+        if (msgLevel(MSG::VERBOSE))
+          verbose() << "   --> Inside beam pipe -> Reject segment" << endreq;
         delete entryPState;
         delete exitPState;
         continue;
@@ -448,13 +421,15 @@ constructSegments( const ContainedObject * obj,
       else if ( intType == DeRichBeamPipe::FrontFaceAndCone )
       {
         // Update entry point to exit point on cone
-        verbose() << "   --> Correcting entry point to point on cone" << endreq;
+        if (msgLevel(MSG::VERBOSE))
+          verbose() << "   --> Correcting entry point to point on cone" << endreq;
         sc = moveState( entryPState, inter2.z(), entryPStateRaw );
       }
       else if ( intType == DeRichBeamPipe::BackFaceAndCone )
       {
-        // Update exit point to enry point on cone
-        verbose() << "   --> Correcting exit point to point on cone" << endreq;
+        // Update exit point to entry point on cone
+        if (msgLevel(MSG::VERBOSE))
+          verbose() << "   --> Correcting exit point to point on cone" << endreq;
         sc = moveState( exitPState, inter1.z(), exitPStateRaw );
       }
       if ( !sc )
@@ -511,10 +486,10 @@ constructSegments( const ContainedObject * obj,
     // Create final entry and exit state points and momentum vectors
     const Gaudi::XYZPoint  entryPoint( entryPState->position() );
     Gaudi::XYZVector entryStateMomentum( entryPState->slopes() );
-    entryStateMomentum *= entryPState->p()/sqrt(entryStateMomentum.Mag2());
+    entryStateMomentum *= entryPState->p()/std::sqrt(entryStateMomentum.Mag2());
     const Gaudi::XYZPoint  exitPoint(exitPState->position());
     Gaudi::XYZVector exitStateMomentum( exitPState->slopes() );
-    exitStateMomentum *= exitPState->p()/sqrt(exitStateMomentum.Mag2());
+    exitStateMomentum *= exitPState->p()/std::sqrt(exitStateMomentum.Mag2());
 
     // Update final intersections
     RichRadIntersection::Vector & final_intersects = ( entryStateOK ? intersects1 : intersects2 );
@@ -524,7 +499,6 @@ constructSegments( const ContainedObject * obj,
     final_intersects.back().setExitMomentum(exitStateMomentum);
 
     // Errors for entry and exit states
-
     const LHCb::RichTrackSegment::StateErrors entryErrs ( entryPState->errX2(),
                                                           entryPState->errY2(),
                                                           entryPState->errTx2(),
@@ -541,9 +515,9 @@ constructSegments( const ContainedObject * obj,
     {
       verbose() << "  Found final points :-" << endreq
                 << "   Entry : Pnt=" << entryPoint << " Mom=" << entryStateMomentum
-                << " Ptot=" << sqrt(entryStateMomentum.Mag2()) << endreq
+                << " Ptot=" << std::sqrt(entryStateMomentum.Mag2()) << endreq
                 << "   Exit  : Pnt=" << exitPoint  << " Mom=" << exitStateMomentum
-                << " Ptot=" << sqrt(exitStateMomentum.Mag2()) << endreq;
+                << " Ptot=" << std::sqrt(exitStateMomentum.Mag2()) << endreq;
     }
 
     try
@@ -656,7 +630,7 @@ DetailedTrSegMakerFromRecoTracks::createMiddleInfo( const Rich::RadiatorType rad
   {
     midPoint     = fState->position() + (lState->position()-fState->position())/2;
     midMomentum  = (fState->slopes()+lState->slopes())/2;
-    midMomentum *= (fState->p()+lState->p()) / (2.0*sqrt(midMomentum.Mag2()));
+    midMomentum *= (fState->p()+lState->p()) / (2.0*std::sqrt(midMomentum.Mag2()));
     errors = LHCb::RichTrackSegment::StateErrors( (fState->errX2()+lState->errX2())/2,
                                                   (fState->errY2()+lState->errY2())/2,
                                                   (fState->errTx2()+lState->errTx2())/2,
@@ -667,7 +641,7 @@ DetailedTrSegMakerFromRecoTracks::createMiddleInfo( const Rich::RadiatorType rad
   {
     midPoint     = fState->position();
     midMomentum  = fState->slopes();
-    midMomentum *= fState->p() / sqrt(midMomentum.Mag2());
+    midMomentum *= fState->p() / std::sqrt(midMomentum.Mag2());
     errors = LHCb::RichTrackSegment::StateErrors( fState->errX2(),
                                                   fState->errY2(),
                                                   fState->errTx2(),
@@ -678,7 +652,7 @@ DetailedTrSegMakerFromRecoTracks::createMiddleInfo( const Rich::RadiatorType rad
   {
     midPoint     = lState->position();
     midMomentum  = lState->slopes();
-    midMomentum *= lState->p() / sqrt(midMomentum.Mag2());
+    midMomentum *= lState->p() / std::sqrt(midMomentum.Mag2());
     errors = LHCb::RichTrackSegment::StateErrors( lState->errX2(),
                                                   lState->errY2(),
                                                   lState->errTx2(),

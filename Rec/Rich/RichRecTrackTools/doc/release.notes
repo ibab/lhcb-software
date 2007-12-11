@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-12-11 - Chris Jones
+ - Improvements to Track segment makers
+
 !======================== RichRecTrackTools v1r0 2007-12-10 ==================
 ! 2007-12-05 - Chris Jones
  - Fix some doxygen comments

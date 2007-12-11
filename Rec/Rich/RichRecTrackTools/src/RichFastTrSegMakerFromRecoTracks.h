@@ -5,38 +5,22 @@
  *  Header file for tool : Rich::Rec::FastTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.2 2007-12-11 14:17:42 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   23/08/2004
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H
-#define RICHRECTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H 1
+#ifndef RICHRECTRACKTOOLS_RichFastTrSegMakerFromRecoTracks_H
+#define RICHRECTRACKTOOLS_RichFastTrSegMakerFromRecoTracks_H 1
 
-// from Gaudi
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/GaudiException.h"
-
-// base class and interface
-#include "RichRecBase/RichRecToolBase.h"
-#include "RichRecBase/IRichTrSegMaker.h"
-
-// Event model
-#include "Event/Track.h"
-
-// LHCbKernel
-#include "Kernel/RichSmartID.h"
+// base class
+#include "RichBaseTrSegMakerFromRecoTracks.h"
 
 // RichKernel
 #include "RichKernel/RichTrackSegment.h"
 #include "RichKernel/IRichRayTracing.h"
-
-// RichDet
-#include "RichDet/DeRich.h"
-#include "RichDet/DeRichRadiator.h"
 
 namespace Rich
 {
@@ -57,8 +41,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class FastTrSegMakerFromRecoTracks : public Rich::Rec::ToolBase,
-                                         virtual public ITrSegMaker
+    class FastTrSegMakerFromRecoTracks : public BaseTrSegMakerFromRecoTracks
     {
 
     public: // Methods for Gaudi Framework
@@ -122,9 +105,6 @@ namespace Rich
       // sanity checks on state information
       std::vector<double> m_minStateDiff;
 
-      /// Flags to turn on/off individual radiators
-      std::vector<bool> m_usedRads;
-
       /// Radiator entry planes
       std::vector<Gaudi::Plane3D> m_entryPlanes;
 
@@ -175,4 +155,4 @@ namespace Rich
   }
 }
 
-#endif // RICHRECTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H
+#endif // RICHRECTRACKTOOLS_RichFastTrSegMakerFromRecoTracks_H

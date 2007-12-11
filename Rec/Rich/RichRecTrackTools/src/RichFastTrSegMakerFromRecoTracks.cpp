@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::FastTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.2 2007-12-11 14:17:42 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 23/08/2004
@@ -31,12 +31,11 @@ FastTrSegMakerFromRecoTracks::
 FastTrSegMakerFromRecoTracks( const std::string& type,
                               const std::string& name,
                               const IInterface* parent)
-  : Rich::Rec::ToolBase ( type, name, parent         ),
+  : BaseTrSegMakerFromRecoTracks ( type, name, parent ),
     m_rayTracing   ( 0                          ),
     m_nomZstates   ( Rich::NRadiatorTypes, 0    ),
     m_zTolerance   ( Rich::NRadiatorTypes, 0    ),
     m_minStateDiff ( Rich::NRadiatorTypes, 0    ),
-    m_usedRads     ( Rich::NRadiatorTypes, true ),
     m_entryPlanes  ( Rich::NRadiatorTypes       ),
     m_exitPlanes   ( Rich::NRadiatorTypes       ),
     m_entryZ       ( Rich::NRadiatorTypes       ),
@@ -46,13 +45,7 @@ FastTrSegMakerFromRecoTracks( const std::string& type,
     m_minR2        ( Rich::NRadiatorTypes, 0    ),
     m_deRads       ( Rich::NRadiatorTypes       )
 {
-
-  // Interface
-  declareInterface<ITrSegMaker>(this);
-
   // job options
-
-  declareProperty( "UseRadiators", m_usedRads );
 
   // Should get from XML instead of hardcode ?
 
@@ -115,7 +108,7 @@ FastTrSegMakerFromRecoTracks::~FastTrSegMakerFromRecoTracks() { }
 StatusCode FastTrSegMakerFromRecoTracks::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = Rich::Rec::ToolBase::initialize();
+  const StatusCode sc = BaseTrSegMakerFromRecoTracks::initialize();
   if ( sc.isFailure() ) return sc;
 
   // Get the ray tracing tool
@@ -128,7 +121,7 @@ StatusCode FastTrSegMakerFromRecoTracks::initialize()
   const Gaudi::XYZVector tmpNorm(0,0,1);
 
   // Make temporary Aerogel description
-  if ( m_usedRads[Rich::Aerogel] )
+  if ( usedRads(Rich::Aerogel) )
   {
     const Rich::RadiatorType rad = Rich::Aerogel;
     info() << rad << " : Entry/Exit z position " << m_entryZ[rad] << " " << m_exitZ[rad] << endreq;
@@ -137,12 +130,9 @@ StatusCode FastTrSegMakerFromRecoTracks::initialize()
     m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
     m_deRads[rad]      = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel  );
   }
-  else
-  {
-    Warning("Track segments for Aerogel are disabled",StatusCode::SUCCESS);
-  }
+
   // Make temporary Rich1Gas description
-  if ( m_usedRads[Rich::Rich1Gas] )
+  if ( usedRads(Rich::Rich1Gas) )
   {
     const Rich::RadiatorType rad = Rich::Rich1Gas;
     info() << rad << " : Entry/Exit z position " << m_entryZ[rad] << " " << m_exitZ[rad] << endreq;
@@ -151,12 +141,9 @@ StatusCode FastTrSegMakerFromRecoTracks::initialize()
     m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
     m_deRads[rad]      = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas );
   }
-  else
-  {
-    Warning("Track segments for Rich1Gas are disabled",StatusCode::SUCCESS);
-  }
+
   // Make temporary Rich2Gas description
-  if ( m_usedRads[Rich::Rich2Gas] )
+  if ( usedRads(Rich::Rich2Gas) )
   {
     const Rich::RadiatorType rad = Rich::Rich2Gas;
     info() << rad << " : Entry/Exit z position " << m_entryZ[rad] << " " << m_exitZ[rad] << endreq;
@@ -164,10 +151,6 @@ StatusCode FastTrSegMakerFromRecoTracks::initialize()
     m_entryPlanes[rad] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_entryZ[rad]) );
     m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
     m_deRads[rad]      = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas );
-  }
-  else
-  {
-    Warning("Track segments for Rich2Gas are disabled",StatusCode::SUCCESS);
   }
 
   // Define the segment type
@@ -284,6 +267,47 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
         continue;
       }
     }
+
+    //---------------------------------------------------------------------------------------------
+    // Correction for beam pipe intersections
+    if ( checkBeamPipe(*rad) )
+    {
+      // Get intersections with beam pipe using DeRich object
+      const Gaudi::XYZVector vect = exitPoint - entryPoint;
+      Gaudi::XYZPoint inter1, inter2;
+      const DeRichBeamPipe::BeamPipeIntersectionType intType
+        = deBeam(*rad)->intersectionPoints( entryPoint, vect, inter1, inter2 );
+
+      if (msgLevel(MSG::VERBOSE))
+        verbose() << "  --> Beam Intersects : " << intType << " : " << inter1 << " " << inter2 << endreq;
+
+      if ( intType == DeRichBeamPipe::NoIntersection )
+      {
+        if (msgLevel(MSG::VERBOSE))
+          verbose() << "   --> No beam intersections -> No corrections needed" << endreq;
+      }
+      else if ( intType == DeRichBeamPipe::FrontAndBackFace )
+      {
+        if (msgLevel(MSG::VERBOSE))
+          verbose() << "   --> Inside beam pipe -> Reject segment" << endreq;
+        continue;
+      }
+      else if ( intType == DeRichBeamPipe::FrontFaceAndCone )
+      {
+        // Update entry point to exit point on cone
+        if (msgLevel(MSG::VERBOSE))
+          verbose() << "   --> Correcting entry point to point on cone" << endreq;
+        entryPoint = inter2;
+      }
+      else if ( intType == DeRichBeamPipe::BackFaceAndCone )
+      {
+        // Update exit point to entry point on cone
+        if (msgLevel(MSG::VERBOSE))
+          verbose() << "   --> Correcting exit point to point on cone" << endreq;
+        exitPoint = inter1;
+      }
+    }
+    //---------------------------------------------------------------------------------------------
 
     // Printout the found entry/exit points
     if ( msgLevel(MSG::VERBOSE) )

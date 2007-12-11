@@ -5,31 +5,18 @@
  *  Header file for tool : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.2 2007-12-11 14:17:42 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
  */
 //---------------------------------------------------------------------------------
 
-#ifndef RICHTOOLS_RICHTRSEGMAKERFROMRECOTRACKS_H
-#define RICHTOOLS_RICHTRSEGMAKERFROMRECOTRACKS_H 1
+#ifndef RICHRECTRACKTOOLS_RichDetailedTrSegMakerFromRecoTracks_H
+#define RICHRECTRACKTOOLS_RichDetailedTrSegMakerFromRecoTracks_H 1
 
-// from Gaudi
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/SystemOfUnits.h"
-
-// base class and interface
-#include "RichRecBase/RichRecToolBase.h"
-#include "RichRecBase/IRichTrSegMaker.h"
-
-// Event model
-#include "Event/Track.h"
-#include "Event/State.h"
-
-// LHCbKernel
-#include "Kernel/RichSmartID.h"
+// base class
+#include "RichBaseTrSegMakerFromRecoTracks.h"
 
 // RichKernel
 #include "RichKernel/BoostArray.h"
@@ -38,16 +25,8 @@
 #include "RichKernel/IRichRadiatorTool.h"
 #include "RichKernel/RichTrackSegment.h"
 
-// RichDet
-#include "RichDet/DeRich.h"
-#include "RichDet/DeRichRadiator.h"
-#include "RichDet/DeRichBeamPipe.h"
-
 // Track Extrapolator
 #include "TrackInterfaces/ITrackExtrapolator.h"
-
-// GSL
-#include "gsl/gsl_math.h"
 
 namespace Rich
 {
@@ -72,8 +51,7 @@ namespace Rich
      */
     //---------------------------------------------------------------------------------
 
-    class DetailedTrSegMakerFromRecoTracks : public Rich::Rec::ToolBase,
-                                             virtual public ITrSegMaker
+    class DetailedTrSegMakerFromRecoTracks : public BaseTrSegMakerFromRecoTracks
     {
 
     public: // Methods for Gaudi Framework
@@ -174,19 +152,6 @@ namespace Rich
                              Gaudi::XYZVector & midMomentum,
                              LHCb::RichTrackSegment::StateErrors & errors ) const;
 
-      /// Access the DeRich beam pipe objects, creating as needed on demand
-      inline const DeRichBeamPipe* deBeam( const Rich::RadiatorType rad ) const
-      {
-        const Rich::DetectorType rich = ( Rich::Rich2Gas == rad ? Rich::Rich2 : Rich::Rich1 );
-        if ( !m_deBeam[rich] )
-        {
-          m_deBeam[rich] = getDet<DeRichBeamPipe>( Rich::Rich1 == rich ?
-                                                   DeRichBeamPipeLocation::Rich1BeamPipe :
-                                                   DeRichBeamPipeLocation::Rich2BeamPipe );
-        }
-        return m_deBeam[rich];
-      }
-
     private: // data
 
       /// Ray tracing tool
@@ -224,17 +189,11 @@ namespace Rich
       std::string m_trExt1Name; ///< Primary track extrapolation tool name
       std::string m_trExt2Name; ///< Secondary track extrapolation tool name
 
-      /// Flags to turn on/off individual radiators
-      std::vector<bool> m_usedRads;
-
       /// Flag to indicate if extrapolation should always be done from the reference states
       bool m_extrapFromRef;
 
       /// Minimum state movement in z to bother with
       double m_minZmove;
-
-      /// RICH beampipe object for each radiator
-      mutable std::vector<const DeRichBeamPipe*> m_deBeam;
 
       /// Job option to define type of track segments to create
       std::string m_trSegTypeJO;
@@ -245,12 +204,9 @@ namespace Rich
       /// Min radius at exit for each radiator (temp hack)
       std::vector<double> m_minRadLength;
 
-      /// Check for beam pipe intersections in each radiator ?
-      std::vector<bool> m_checkBeamP;
-
     };
 
   }
 }
 
-#endif // RICHTOOLS_RICHTRSEGMAKERFROMRECOTRACKS_H
+#endif // RICHRECTRACKTOOLS_RichDetailedTrSegMakerFromRecoTracks_H
