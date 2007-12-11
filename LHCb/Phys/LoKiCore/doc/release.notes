@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.67 2007-12-09 17:56:43 ibelyaev Exp $ 
+! $Id: release.notes,v 1.68 2007-12-11 09:35:49 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,7 +15,17 @@
 ! 
 ! -----------------------------------------------------------------------------
 
-!=========================== LoKiCore v7r0 2007-12-09  ========================
+!=========================== LoKiCore v7r0 2007-12-11  ========================
+
+! 2007-12-11 - Vanya BELYAEV
+
+ - LoKi/BasicFunctors.h
+   add new structure "Assignable" to
+   obtain the "assignable" functor type from 
+   the abstract "functor" base (actually it saves a lot of typing)
+ - LoKi/FilterOps.h
+   clean up 
+
 
 ! 2007-12-09 - Vanya BELYAEV
  - 1) prepare for context-dependent functors (needed for HLT) 
@@ -412,6 +422,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.67  2007/12/09 17:56:43  ibelyaev
+!  improve context/sources&infos
+!
 ! Revision 1.66  2007/12/05 16:35:21  ibelyaev
 !  add LoKi::Dicts::SourceOps
 !

@@ -1,4 +1,4 @@
-// $Id: BasicFunctors.h,v 1.2 2007-12-03 12:03:22 ibelyaev Exp $
+// $Id: BasicFunctors.h,v 1.3 2007-12-11 09:35:48 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_BASICFUNCTORS_H 
 #define LOKI_BASICFUNCTORS_H 1
@@ -67,6 +67,15 @@ namespace LoKi
     typedef LoKi::Functor<void,std::vector<TYPE> >                Source     ;
     //
   } ;
+  // ==========================================================================
+  template <class TYPE>
+  struct Assignable ;
+  // ==========================================================================
+  template <class TYPE1, class TYPE2>
+  struct Assignable<LoKi::Functor<TYPE1,TYPE2> > 
+  {
+    typedef LoKi::FunctorFromFunctor<TYPE1,TYPE2>  Type ;
+  };
   // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================
