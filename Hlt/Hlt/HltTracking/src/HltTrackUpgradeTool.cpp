@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.6 2007-12-11 09:54:31 hernando Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.7 2007-12-11 16:29:49 hernando Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -171,10 +171,12 @@ StatusCode HltTrackUpgradeTool::upgrade(LHCb::Track& seed,
     verbose() << " seed is its upgraded track  " << m_trackType << endreq;
   } else if (!isReco(seed)) {
     sc = m_tool->tracksFromTrack(seed,tracks);
-    if (sc.isFailure()) warning() << " reconstruction failure " 
-                                  << m_recoName << endreq;
-    recoDone(seed,tracks);
-    verbose() << " seed upgraded, reco tracks " << tracks.size() << endreq;
+    if (sc.isFailure()) 
+      Warning(" reconstruction failure: " + m_recoName,0);
+    else {
+      recoDone(seed,tracks);
+      verbose() << " seed upgraded, reco tracks " << tracks.size() << endreq;
+    }
   } else {
     find(seed,tracks);
     verbose()<< " seed was upgraded, found tracks " << tracks.size() << endreq;
