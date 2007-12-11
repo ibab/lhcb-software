@@ -1,7 +1,19 @@
-! $Id: release.notes,v 1.40 2007-11-23 18:01:07 jpalac Exp $
-! Package     : MicroDST
+! $Id: release.notes,v 1.41 2007-12-11 17:40:16 jpalac Exp $
+! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-12-11 - Juan PALACIOS
+
+ - Use new packages MicroDST/MicroDSTInterfaces and MicroDST/MicroDSTBase.
+ - All algorithms now inherit from MicroDSTAlgorithm (replaces CopyAndStoreData)
+ - MicroDSTAlgorithms use MicroDSTTools (interfaces in MicroDSTInterfaces)
+   to clone and store event model objects.
+ - Storing is performed directly to the TES, bypassing the local store.
+ - Removed MicroDST/CopyAndStoreData.h
+ - cmt/requirements
+   . Increase version to v3r0 and remove linker library
+   . Use MicroDST/MicroDSTinterfaces and MicroDST/MicroDSTBase
 
 ! 2007-11-23 - Juan PALACIOS
  - src/CopyRelatedMCParticles{.cpp, .h}
