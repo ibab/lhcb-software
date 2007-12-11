@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.7 2007-12-05 10:37:21 smenzeme Exp $
+// $Id: PatForwardTool.cpp,v 1.8 2007-12-11 14:50:14 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -69,7 +69,7 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty("StateErrorTY2", m_stateErrorTY2 =  1.e-4);
   declareProperty("StateErrorP",   m_stateErrorP   =  0.15);
 
-  declareProperty("AddTTClusterName", m_addTtToolName = "PatAddTTCoord" );
+  declareProperty("AddTTClusterName", m_addTtToolName = "" );
 
   declareProperty( "WithoutBField"         , m_withoutBField         = false);
 

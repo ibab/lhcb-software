@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2007-12-11 - Stephanie Hansmann-Menzemer
+ - switch off use of TT in PatForwardTool per default
 
 !========================== PatAlgorithms v3r2 2007-12-10 ====================
 ! 2007-12-05 - Stephanie Hansmann-Menzemer
