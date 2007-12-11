@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.5 2007-12-07 10:00:47 hernando Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.6 2007-12-11 09:54:31 hernando Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -127,7 +127,7 @@ StatusCode HltTrackUpgradeTool::setReco(const std::string& key)
   
   if (m_tool) delete m_tool;
   m_tool = NULL;
-  m_tool = tool<ITracksFromTrack>(toolName,this);
+  m_tool = tool<ITracksFromTrack>(toolName);
   if (!m_tool) fatal() << " not able to get tool " << toolName << endreq;
 
   return StatusCode::SUCCESS;
