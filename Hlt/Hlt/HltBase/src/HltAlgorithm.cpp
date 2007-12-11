@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.22 2007-11-19 14:57:03 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.23 2007-12-11 16:27:42 hernando Exp $
 // Include files 
 
 // from boost
@@ -50,8 +50,8 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
 
   declareProperty("MinCandidates",m_minNCandidates = 1);
 
-  m_consider1 = false;
-  m_consider2 = false;
+  m_consider1 = true;
+  m_consider2 = true;
   m_selectionID = 0;
   m_outputHolder = 0;
   m_outputTracks = 0;

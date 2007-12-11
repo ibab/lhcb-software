@@ -2,7 +2,10 @@
 ! Package     : Hlt/HltBase
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+
+! 2007-12-11 Jose A. Hernando
+	 - HltBaseAlgorithm: consider always the inputs (not use anymore HltTrackMerge!)
 
 ! 2007-12-07 Johannes Albrecht
 	 - IMuonSeedTool.h: Add interface to prepare tracks from muon coords
