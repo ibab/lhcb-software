@@ -3,10 +3,11 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
+
+!======================== TrackTools v3r2 2007-12-11 ========================
 ! 2007-12-11 - Wouter Hulsbergen
  - Added missing 'template<>' in MeasurementProviderT
 
-!======================== TrackTools v3r2 2007-12-10 ========================
 ! 2007-12-06 - Wouter Hulsbergen
  - Added const to 'StateCorrection' tools
 
