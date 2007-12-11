@@ -6,10 +6,6 @@
 
 //This is needed to make the Muon Tracks
 
-ApplicationMgr.DLLs += { "MuonDet" };
-ApplicationMgr.DLLs += { "MuonTrackAlign" };
-//ApplicationMgr.DLLs += { "MuonTools" };
-
 RecoMUONSeq.Members += { "AlignMuonRec", "TrackEventFitter/MuonTrackFitter"};
 
 AlignMuonRec.Bfield="true";
