@@ -1,4 +1,4 @@
-// $Id: TrHybridTool.cpp,v 1.2 2007-12-11 18:56:22 ibelyaev Exp $
+// $Id: TrHybridTool.cpp,v 1.3 2007-12-11 19:01:40 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -388,10 +388,9 @@ inline StatusCode LoKi::Hybrid::TrTool::_get
   // consistency check:
   const TYPE1* tmp = &output ;
   StatusCode sc = ( 0 != tmp ) ? StatusCode::SUCCESS : StatusCode::FAILURE ;
-  if ( !context.empty() ) 
-  { Warning (" non-empty ''context'' is not implemented yet, ignore..") ; }
   // prepare the actual python code 
-  std::string code = makeCode  ( m_modules , m_actor , pycode , m_lines ) ;
+  std::string code = 
+    makeCode  ( m_modules , m_actor , pycode , m_lines , context ) ;
   // define the scope:
   LoKi::Hybrid::TrLock lock ( this ) ;   ///< ATTENTION: the scope is locked!!
   // clear the placeholder:
