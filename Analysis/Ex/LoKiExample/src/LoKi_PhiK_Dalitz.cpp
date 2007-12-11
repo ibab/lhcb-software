@@ -1,10 +1,11 @@
-// $Id: LoKi_PhiK_Dalitz.cpp,v 1.4 2007-08-15 11:03:14 ibelyaev Exp $
+// $Id: LoKi_PhiK_Dalitz.cpp,v 1.5 2007-12-11 11:49:11 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/LoKi.h"
+#include "LoKi/PhysKinematics.h"
 #include "GaudiAlg/GaudiTool.h" // Needed on windows
 // ============================================================================
 /** @file
@@ -27,6 +28,7 @@ LOKI_MCALGORITHM(LoKi_PhiK_Dalitz)
   using namespace LoKi ;
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts  ;
+  using namespace LoKi::Kinematics ;
   //
   const StatusCode SUCCESS = StatusCode::SUCCESS ;
   
@@ -37,9 +39,9 @@ LOKI_MCALGORITHM(LoKi_PhiK_Dalitz)
   
   for ( Loop B = loop( "k k k g" , "B+" ) ; B ; ++B )
   {
-    const double mass = B->mass() ;
-    if ( 5.0 * Gaudi::Units::GeV > mass ) { continue ; }
-    if ( 5.6 * Gaudi::Units::GeV < mass ) { continue ; }
+    const double m = B->mass() ;
+    if ( 5.0 * Gaudi::Units::GeV > m ) { continue ; }
+    if ( 5.6 * Gaudi::Units::GeV < m ) { continue ; }
     const double m123 = B->mass(1,2,3) ;
     if ( 2.0 * Gaudi::Units::GeV < m123 ) { continue ; }
     
@@ -55,30 +57,30 @@ LOKI_MCALGORITHM(LoKi_PhiK_Dalitz)
     
     if      ( 0 < q1*q2 && 0 > q1*q3 && 0 > q2*q3 ) 
     {
-      s1 = LoKi::Kinematics::mass ( B(1) , B(3) ) ;
-      s2 = LoKi::Kinematics::mass ( B(2) , B(3) ) ;
+      s1 = mass ( B(1) , B(3) ) ;
+      s2 = mass ( B(2) , B(3) ) ;
     }
     else if ( 0 < q1*q3 && 0 > q1*q2 && 0 > q3*q2 ) 
     {
-      s1 = LoKi::Kinematics::mass ( B(1) , B(2) ) ;
-      s2 = LoKi::Kinematics::mass ( B(3) , B(2) ) ;
+      s1 = mass ( B(1) , B(2) ) ;
+      s2 = mass ( B(3) , B(2) ) ;
     }
     else if ( 0 < q2*q3 && 0 > q2*q1 && 0 > q3*q1 ) 
     {
-      s1 = LoKi::Kinematics::mass ( B(2) , B(1) ) ;
-      s2 = LoKi::Kinematics::mass ( B(3) , B(1) ) ;
+      s1 = mass ( B(2) , B(1) ) ;
+      s2 = mass ( B(3) , B(1) ) ;
     }
     else 
     { Warning("Invalid charge combination!, skip!") ; continue ; }
     
-    plot ( mass / Gaudi::Units::GeV , " 3k gamma " , 4.0 , 6.0 ) ;
+    plot ( m / Gaudi::Units::GeV , " 3k gamma " , 4.0 , 6.0 ) ;
     
     s1 /= Gaudi::Units::GeV ;
     s1 = s1*s1 ;
     s2 /= Gaudi::Units::GeV ;
     s2 = s2*s2 ;
     
-    tuple -> column ( "m"    , mass                               ) ;
+    tuple -> column ( "m"    , m                                  ) ;
     tuple -> column ( "m123" , m123                               ) ;
     tuple -> column ( "m12"  , B -> mass(1,2) / Gaudi::Units::GeV ) ;
     tuple -> column ( "m23"  , B -> mass(2,3) / Gaudi::Units::GeV ) ;
