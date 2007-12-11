@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.7 2007-11-30 17:19:26 cattanem Exp $
+// $Id: MeasurementProviderT.cpp,v 1.8 2007-12-11 08:37:21 wouter Exp $
 // Include files
 
 //=============================================================================
@@ -219,6 +219,7 @@ namespace MeasurementProviderTypes {
   };
 }
 
+template<>
 double MeasurementProviderT<MeasurementProviderTypes::VeloR>::nominalZ( const LHCb::LHCbID& id ) const
 {
   return m_det->rSensor( id.veloID() )->z() ;
@@ -246,6 +247,7 @@ namespace MeasurementProviderTypes {
   };
 }
 
+template<>
 double MeasurementProviderT<MeasurementProviderTypes::VeloPhi>::nominalZ( const LHCb::LHCbID& id ) const
 {
   return m_det->phiSensor( id.veloID() )->z() ;
@@ -276,6 +278,7 @@ namespace MeasurementProviderTypes {
   };
 }
 
+template<>
 double MeasurementProviderT<MeasurementProviderTypes::TT>::nominalZ( const LHCb::LHCbID& id ) const
 {
   // extremely ugly. need more functionality in det elements to do this quicker.
@@ -306,6 +309,7 @@ namespace MeasurementProviderTypes {
   };
 }
 
+template<>
 double MeasurementProviderT<MeasurementProviderTypes::IT>::nominalZ( const LHCb::LHCbID& id ) const
 {
   // extremely ugly. need more functionality in det elements to do this quicker.
