@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2007-12-11 - David Hutchcroft
+ - Fixed divide by zero in log file output when PatVeloGeneralTracking ran on no events
+
 !========================== PatVelo v3r2 2007-11-30 ==========================
 ! 2007-11-29 - David Hutchcroft
  - Set chi2 of RZ tracks properly 

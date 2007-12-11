@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.7 2007-10-16 08:56:39 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.8 2007-12-11 09:20:32 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -633,8 +633,11 @@ storeTracks(std::vector<PatVeloSpaceTrack*> & tracks){
 
 StatusCode Tf::PatVeloGeneralTracking::finalize() {
   if( m_isDebug ) debug() << "==> Finalize" << endmsg;
-
-  info() << "Created an average of " << m_Num3DCreated / m_NumEvt 
-    << " 3D Velo Points per event" << endreq;
+  if( m_NumEvt > 1e-5 ){
+    info() << "Created an average of " << m_Num3DCreated / m_NumEvt 
+	   << " 3D Velo Points per event" << endreq;
+  }else{
+    info() << "No events processed" << endreq;
+  }
   return GaudiAlgorithm::finalize();
 }
