@@ -1,4 +1,4 @@
-// $Id: TrHybridEngineActor.cpp,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $
+// $Id: TrHybridEngineActor.cpp,v 1.2 2007-12-11 18:56:22 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -37,13 +37,13 @@ inline StatusCode LoKi::Hybrid::TrEngineActor::_add
   {
     return LoKi::Report::Error
       ("LoKi::Hybrid::TrEngineActor::addCut/Fun(): LoKi::ITrHybridTool* is not connected!") ;  
-  };
+  }
   // one more check 
   if ( name != m_tool->name() )
   {
     return LoKi::Report::Error
       ("LoKi::Hybrid::TrEngineActor::addCut/Fun() : mismatch in LoKi::ITrHybridTool name!") ;  
-  };
+  }
   // set the cut for the tool 
   m_tool->set ( cut ) ;
   // 
@@ -160,6 +160,43 @@ StatusCode LoKi::Hybrid::TrEngineActor::process
 StatusCode LoKi::Hybrid::TrEngineActor::process
 ( const std::string&          name , 
   const LoKi::Types::RVVFunc& func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// functional part 
+// ============================================================================
+// propagate the function to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::TrEngineActor::process
+( const std::string&             name , 
+  const LoKi::Types::TrMaps&     func ) const 
+{ return _add ( name , func ) ; }
+// ============================================================================
+// propagate the function to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::TrEngineActor::process
+( const std::string&             name , 
+  const LoKi::Types::TrPipes&    func ) const 
+{ return _add ( name , func ) ; }
+// ============================================================================
+// propagate the function to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::TrEngineActor::process
+( const std::string&             name , 
+  const LoKi::Types::TrFunVals&  func ) const 
+{ return _add ( name , func ) ; }
+// ============================================================================
+// propagate the function to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::TrEngineActor::process
+( const std::string&             name , 
+  const LoKi::Types::TrElements& func ) const 
+{ return _add ( name , func ) ; }
+// ============================================================================
+// propagate the function to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::TrEngineActor::process
+( const std::string&             name , 
+  const LoKi::Types::TrSources&  func ) const 
+{ return _add ( name , func ) ; }
 // ============================================================================
 // get the reference tracks    ( for Trigger/Hlt)
 // ============================================================================

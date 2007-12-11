@@ -1,4 +1,4 @@
-// $Id: TrHybridEngineActor.h,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $
+// $Id: TrHybridEngineActor.h,v 1.2 2007-12-11 18:56:21 ibelyaev Exp $
 // ===========================================================================
 #ifndef LOKI_TRHYBRIDENGINEACTOR_H 
 #define LOKI_TRHYBRIDENGINEACTOR_H 1
@@ -30,52 +30,95 @@ namespace LoKi
     class TrEngineActor
     { 
     public:
+      // ======================================================================
       // get the static instance 
       static TrEngineActor& instance() ;
+      // ======================================================================
       /// connect the hybrid tool for code translation 
       StatusCode connectTool (       LoKi::ITrHybridTool* tool ) ;
+      // ======================================================================
       /// disconnect the tool 
       StatusCode releaseTool ( const LoKi::ITrHybridTool* tool ) ;
+      // ======================================================================
       /// propagate the cut to the tool 
       StatusCode process
       ( const std::string&          name , 
         const LoKi::Types::TrCuts&  cut  ) const ;
+      // ======================================================================
       /// propagate the cut to the tool 
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::RVCuts&  cut  ) const ;
+      // ======================================================================
       /// propagate the cut to the tool 
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::TTrCuts& cut  ) const ;
+      // ======================================================================
       /// propagate the cut to the tool 
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::TrVCuts& cut  ) const ;
+      // ======================================================================
       /// propagate the cut to the tool 
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::RVVCuts& cut  ) const ;
+      // ======================================================================
       /// propagate the function to the tool 
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::TrFunc&  func ) const ;    
+      // ======================================================================
       /// propagate the function to the tool 
       StatusCode process
       ( const std::string&          name , 
         const LoKi::Types::RVFunc&  func ) const ;
+      // ======================================================================
       /// propagate the function to the tool 
       StatusCode process
       ( const std::string&          name , 
         const LoKi::Types::TTrFunc& func ) const ;
+      // ======================================================================
       /// propagate the function to the tool 
       StatusCode process
       ( const std::string&          name , 
         const LoKi::Types::TrVFunc& func ) const ;
+      // ======================================================================
       /// propagate the function to the tool 
       StatusCode process
       ( const std::string&          name , 
         const LoKi::Types::RVVFunc& func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // functional part for LHcb::Track 
+      // ======================================================================
+      /// add the function 
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::TrMaps&     fun  ) const ;
+      // ======================================================================
+      /// add the function 
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::TrPipes&    fun  ) const ;
+      // ======================================================================
+      /// add the function 
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::TrFunVals&  fun  ) const ;
+      // ======================================================================
+      /// add the function 
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::TrElements& fun  ) const ;
+      // ======================================================================
+      /// add the function 
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::TrSources&  fun  ) const ;
+      // ======================================================================      
     public:
       /// get the reference tracks   ( for Trigger/Hlt)
       std::vector<LHCb::Track*>*     tracks   () const ;

@@ -1,4 +1,4 @@
-// $Id: ITrHybridFactory.h,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $
+// $Id: ITrHybridFactory.h,v 1.2 2007-12-11 18:56:21 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ITRHYBRIDFACTORY_H 
 #define LOKI_ITRHYBRIDFACTORY_H 1
@@ -35,82 +35,171 @@ namespace LoKi
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param cuts the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::TrCut&  cuts ) = 0 ;
+    ( const std::string&   pycode       , 
+      LoKi::Types::TrCut&  cuts         , 
+      const std::string&   context = "" ) = 0 ;
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param cuts the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::RVCut&  cuts ) = 0 ;
+    ( const std::string&   pycode       ,
+      LoKi::Types::RVCut&  cuts         , 
+      const std::string&   context = "" ) = 0 ;
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param cuts the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::TTrCut& cuts ) = 0 ;
+    ( const std::string&   pycode       , 
+      LoKi::Types::TTrCut& cuts         ,
+      const std::string&   context = "" ) = 0 ;
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param cuts the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::TrVCut& cuts ) = 0 ;
+    ( const std::string&   pycode       , 
+      LoKi::Types::TrVCut& cuts         ,
+      const std::string&   context = "" ) = 0 ;
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param cuts the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::RVVCut& cuts ) = 0 ;
+    ( const std::string&   pycode       ,
+      LoKi::Types::RVVCut& cuts         ,
+      const std::string&   context = "" ) = 0 ;
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::TrFun& func ) = 0 ;
+    ( const std::string&   pycode       ,
+      LoKi::Types::TrFun&  func         ,
+      const std::string&   context = "" ) = 0 ;
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::RVFun&  func ) = 0 ;
+    ( const std::string&   pycode       , 
+      LoKi::Types::RVFun&  func         , 
+      const std::string&   context = "" ) = 0 ;
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::TTrFun& func ) = 0 ;
+    ( const std::string&   pycode       , 
+      LoKi::Types::TTrFun& func         ,
+      const std::string&   context = "" ) = 0 ;
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::TrVFun& func ) = 0 ;
+    ( const std::string&   pycode       , 
+      LoKi::Types::TrVFun& func         ,
+      const std::string&   context = "" ) = 0 ;
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::RVVFun& func ) = 0 ;
+    ( const std::string&   pycode       , 
+      LoKi::Types::RVVFun& func         , 
+      const std::string&   context = "" ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // functional part for LHCb::Track
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&   pycode       , 
+      LoKi::Types::TrMap&  func         , 
+      const std::string&   context = "" ) = 0 ;
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&   pycode       , 
+      LoKi::Types::TrPipe& func         , 
+      const std::string&   context = "" ) = 0 ;
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&     pycode       , 
+      LoKi::Types::TrFunVal& func         , 
+      const std::string&     context = "" ) = 0 ;
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&      pycode       , 
+      LoKi::Types::TrElement& func         , 
+      const std::string&      context = "" ) = 0 ;
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&     pycode       , 
+      LoKi::Types::TrSource& func         , 
+      const std::string&     context = "" ) = 0 ;
     // ========================================================================
   public:
     // ========================================================================

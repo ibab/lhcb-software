@@ -1,4 +1,4 @@
-// $Id: ITrHybridTool.h,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $
+// $Id: ITrHybridTool.h,v 1.2 2007-12-11 18:56:21 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ITRHYBRIDTOOL_H 
 #define LOKI_ITRHYBRIDTOOL_H 1
@@ -61,6 +61,18 @@ namespace LoKi
     virtual void set ( const LoKi::Types::TrVFunc&   fun ) = 0 ;    
     /// set the C++ function for Vertex-Vertex pair
     virtual void set ( const LoKi::Types::RVVFunc&   fun ) = 0 ;
+  public:
+    // the functional part
+    /// set the C++ "maps"     for Tracks 
+    virtual void set ( const LoKi::Types::TrMaps&     fun ) = 0 ;
+    /// set the C++ "pipes"    for Tracks 
+    virtual void set ( const LoKi::Types::TrPipes&    fun ) = 0 ;
+    /// set the C++ "funvals"  for Tracks 
+    virtual void set ( const LoKi::Types::TrFunVals&  fun ) = 0 ;
+    /// set the C++ "elements" for Tracks 
+    virtual void set ( const LoKi::Types::TrElements& fun ) = 0 ;
+    /// set the C++ "sources"  for Tracks 
+    virtual void set ( const LoKi::Types::TrSources&  fun ) = 0 ;
   public:
     /// get the reference container of tracks   (needed from Trigger) 
     virtual std::vector<LHCb::Track*>*     tracks   () const = 0 ;

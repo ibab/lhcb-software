@@ -1,4 +1,4 @@
-// $Id: TrHybridEngine.cpp,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $
+// $Id: TrHybridEngine.cpp,v 1.2 2007-12-11 18:56:21 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -38,7 +38,7 @@ namespace
   {
     LoKi::Hybrid::TrEngineActor& actor = LoKi::Hybrid::TrEngineActor::instance() ;
     return actor.process ( name , cut ) ;
-  } ;
+  } 
 }
 // ============================================================================
 // add the cut 
@@ -100,6 +100,43 @@ StatusCode LoKi::Hybrid::TrEngine::process
 StatusCode LoKi::Hybrid::TrEngine::process
 ( const std::string&          name , 
   const LoKi::Types::RVVFunc& func ) const { return _process ( name , func ) ; }
+// ============================================================================
+// the functional part 
+// ============================================================================
+// add the function 
+// ============================================================================
+StatusCode LoKi::Hybrid::TrEngine::process
+( const std::string&             name , 
+  const LoKi::Types::TrMaps&     func ) const 
+{ return _process ( name , func ) ; }
+// ============================================================================
+// add the function 
+// ============================================================================
+StatusCode LoKi::Hybrid::TrEngine::process
+( const std::string&             name , 
+  const LoKi::Types::TrPipes&    func ) const 
+{ return _process ( name , func ) ; }
+// ============================================================================
+// add the function 
+// ============================================================================
+StatusCode LoKi::Hybrid::TrEngine::process
+( const std::string&             name , 
+  const LoKi::Types::TrFunVals&  func ) const 
+{ return _process ( name , func ) ; }
+// ============================================================================
+// add the function 
+// ============================================================================
+StatusCode LoKi::Hybrid::TrEngine::process
+( const std::string&             name , 
+  const LoKi::Types::TrElements& func ) const 
+{ return _process ( name , func ) ; }
+// ============================================================================
+// add the function 
+// ============================================================================
+StatusCode LoKi::Hybrid::TrEngine::process
+( const std::string&             name , 
+  const LoKi::Types::TrSources&  func ) const
+{ return _process ( name , func ) ; }
 // ============================================================================
 // get the reference tracks    ( for Trigger/Hlt)
 // ============================================================================

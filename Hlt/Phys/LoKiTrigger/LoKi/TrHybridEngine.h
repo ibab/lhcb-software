@@ -1,4 +1,4 @@
-// $Id: TrHybridEngine.h,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $
+// $Id: TrHybridEngine.h,v 1.2 2007-12-11 18:56:21 ibelyaev Exp $
 // ===========================================================================
 #ifndef LOKI_TRHYBRIDENGINE_H 
 #define LOKI_TRHYBRIDENGINE_H 1
@@ -38,46 +38,86 @@ namespace LoKi
       /// destructor 
       virtual ~TrEngine( );
     public:
+      // ======================================================================
       /// add the cut 
       StatusCode process
       ( const std::string&          name , 
         const LoKi::Types::TrCuts&  cut  ) const ;
+      // ======================================================================
       /// add the cut 
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::RVCuts&  cut  ) const ;
+      // ======================================================================
       /// add the cut 
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::TTrCuts& cut  ) const ;
+      // ======================================================================
       /// add the cut 
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::TrVCuts& cut  ) const ;
+      // ======================================================================
       /// add the cut 
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::RVVCuts& cut  ) const ;
+      // ======================================================================
       /// add the function 
       StatusCode process
       ( const std::string&          name , 
         const LoKi::Types::TrFunc&  func ) const ;
+      // ======================================================================
       /// add the function 
       StatusCode process 
       ( const std::string&          name , 
       const LoKi::Types::RVFunc&  func ) const ;
+      // ======================================================================
       /// add the function 
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::TTrFunc& func ) const ;
+      // ======================================================================
       /// add the function 
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::TrVFunc& fun  ) const ;
+      // ======================================================================
       /// add the function 
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::RVVFunc& fun  ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // functional part
+      // ======================================================================
+      /// add the function 
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::TrMaps&     fun  ) const ;
+      // ======================================================================
+      /// add the function 
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::TrPipes&    fun  ) const ;
+      // ======================================================================
+      /// add the function 
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::TrFunVals&  fun  ) const ;
+      // ======================================================================
+      /// add the function 
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::TrElements& fun  ) const ;
+      // ======================================================================
+      /// add the function 
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::TrSources&  fun  ) const ;
+      // ======================================================================
     public:
       /// get the reference tracks   ( for Trigger/Hlt)
       std::vector<LHCb::Track*>*     tracks   () const ;

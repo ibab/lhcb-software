@@ -1,4 +1,4 @@
-// $Id: TrackTypes.h,v 1.2 2007-11-28 14:56:23 ibelyaev Exp $
+// $Id: TrackTypes.h,v 1.3 2007-12-11 18:56:21 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKTYPES_H 
 #define LOKI_TRACKTYPES_H 1
@@ -32,13 +32,38 @@ namespace LoKi
     // ========================================================================
     
     /// type of 'cuts' for Tracks       (interface)
-    typedef LoKi::BasicFunctors<LHCb::Track>::Predicate             TrCuts ;
+    typedef LoKi::BasicFunctors<LHCb::Track>::Predicate              TrCuts ;
     /// type of 'functions' for Tracks  (interface)
-    typedef LoKi::BasicFunctors<LHCb::Track>::Function              TrFunc ;
+    typedef LoKi::BasicFunctors<LHCb::Track>::Function               TrFunc ;
     /// type of 'cuts' for Tracks       (assignable)
-    typedef LoKi::BasicFunctors<LHCb::Track>::PredicateFromPredicate TrCut ;
+    typedef LoKi::BasicFunctors<LHCb::Track>::PredicateFromPredicate TrCut  ;
     /// type of 'functions' for Tracks  (assignable)
-    typedef LoKi::BasicFunctors<LHCb::Track>::FunctionFromFunction   TrFun ;
+    typedef LoKi::BasicFunctors<LHCb::Track>::FunctionFromFunction   TrFun  ;
+    
+    /// type of 'map'       for Tracks    (interface)
+    typedef LoKi::BasicFunctors<LHCb::Track*>::Map                   TrMaps ;
+    /// type of 'map'       for Tracks    (assignable)
+    typedef LoKi::Assignable<TrMaps>::Type                           TrMap  ;
+    
+    /// type of 'pipe'      for Tracks    (interface)
+    typedef LoKi::BasicFunctors<LHCb::Track*>::Pipe                  TrPipes ;
+    /// type of 'pipe'      for Tracks    (assignable)
+    typedef LoKi::Assignable<TrPipes>::Type                          TrPipe  ;
+    
+    /// type of 'fun-val'   for Tracks    (interface)
+    typedef LoKi::BasicFunctors<LHCb::Track*>::FunVal                TrFunVals ;
+    /// type of 'fun-val'   for Tracks    (assignable)
+    typedef LoKi::Assignable<TrFunVals>::Type                        TrFunVal  ;
+    
+    /// type of 'element'   for Tracks    (interface)
+    typedef LoKi::BasicFunctors<LHCb::Track*>::Element               TrElements ;
+    /// type of 'element'   for Tracks    (assignable)
+    typedef LoKi::Assignable<TrElements>::Type                       TrElement  ;
+    
+    /// type of 'source'   for Tracks    (interface)
+    typedef LoKi::BasicFunctors<LHCb::Track*>::Source                TrSources ;
+    /// type of 'source'   for Tracks    (assignable)
+    typedef LoKi::Assignable<TrSources>::Type                        TrSource  ;
     
     // ========================================================================
     // the regular functors for reconstructed vertics 
@@ -159,7 +184,34 @@ namespace LoKi
     typedef LoKi::TrackTypes::TrVCut              TrVCut    ;
     /// type of 'functions' for Track-Vertex-Pair  (assignable)
     typedef LoKi::TrackTypes::TrVFun              TrVFun    ;
+
+    // functional part for Tracks :
     
+    /// type for "maps" for Track  (interface)
+    typedef LoKi::TrackTypes::TrMaps     TrMaps    ;
+    /// type for "maps" for Track  (assignable)
+    typedef LoKi::TrackTypes::TrMap      TrMap     ;
+    
+    /// type for "pipes" for Track  (interface)
+    typedef LoKi::TrackTypes::TrPipes    TrPipes   ;
+    /// type for "pipes" for Track  (assignable)
+    typedef LoKi::TrackTypes::TrPipe     TrPipe    ;
+    
+    /// type for "fun-vals" for Track  (interface)
+    typedef LoKi::TrackTypes::TrFunVals  TrFunVals ;
+    /// type for "fun-vals" for Track  (assignable)
+    typedef LoKi::TrackTypes::TrFunVal   TrFunVal  ;
+    
+    /// type for "elements" for Track  (interface)
+    typedef LoKi::TrackTypes::TrElements TrElements ;
+    /// type for "elements" for Track  (assignable)
+    typedef LoKi::TrackTypes::TrElement  TrElement  ;
+    
+    /// type for "sources" for Track  (interface)
+    typedef LoKi::TrackTypes::TrSources TrSources   ;
+    /// type for "sources" for Track  (assignable)
+    typedef LoKi::TrackTypes::TrSource  TrSource    ;
+
   } // end of namespace LoKi::Types 
   // ==========================================================================
 } // end of namespace LoKi

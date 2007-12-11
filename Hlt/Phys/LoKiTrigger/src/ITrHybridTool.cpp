@@ -1,4 +1,4 @@
-// $Id: ITrHybridTool.cpp,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $
+// $Id: ITrHybridTool.cpp,v 1.2 2007-12-11 18:56:21 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -28,7 +28,7 @@
 // ============================================================================
 namespace 
 {
-  const InterfaceID IID_ITrHybridTool ( "LoKi::ITrHybridTool" , 1 , 0 ) ;
+  const InterfaceID IID_ITrHybridTool ( "LoKi::ITrHybridTool" , 2 , 0 ) ;
 }
 // ============================================================================
 // Return the unique interface ID
@@ -38,7 +38,7 @@ LoKi::ITrHybridTool::interfaceID() { return  IID_ITrHybridTool ; }
 // ============================================================================
 // destructor : virtual and protected 
 // ============================================================================
-LoKi::ITrHybridTool::~ITrHybridTool() {}; 
+LoKi::ITrHybridTool::~ITrHybridTool() {}
 // ============================================================================
 
 // ============================================================================
