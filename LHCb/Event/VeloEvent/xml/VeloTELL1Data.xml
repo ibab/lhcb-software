@@ -20,7 +20,8 @@
  *
  *</desc>
 
-  <import name = "Tell1Kernel/VeloTell1Core"/>
+   <import name = "Tell1Kernel/VeloTell1Core"/>
+   <import name = "cassert" std="TRUE" />
 
    <base name="KeyedObject&lt;int&gt;"/>
 

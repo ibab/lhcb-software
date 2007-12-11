@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.50 2007-12-10 07:16:14 cattanem Exp $
+! $Id: release.notes,v 1.51 2007-12-11 07:57:19 cattanem Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
 
-!====================== VeloEvent v16r2 2007-12-10 ======================
+!====================== VeloEvent v16r2 2007-12-11 ======================
+! 2007-12-11 - Marco Cattaneo
+ - Put back missing <cassert> include
+
 ! 2007-12-06 - Tomasz Szumlak v16r2
- - extended funcitonality of VeloProcessInfo class
+ - Extended functionality of VeloProcessInfo class
  
 ! 2007-12-06 - Tomasz Szumlak v16r1
  - extended functionality of the VeloTELL1Data to conform
