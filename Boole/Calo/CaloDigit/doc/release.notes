@@ -4,8 +4,7 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
-
-
+!======================== CaloDigit v2r5 2007-12-11 ==========================
 ! 2007-12-10 - Olivier Deschamps
  - fix in CaloSignalAlg
 
