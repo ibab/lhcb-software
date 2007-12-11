@@ -1,9 +1,8 @@
-// $Id: VeloTell1Core.h,v 1.2 2007-12-09 22:03:00 szumlat Exp $
+// $Id: VeloTell1Core.h,v 1.3 2007-12-11 08:39:10 cattanem Exp $
 #ifndef VELOTELL1CORE_H 
 #define VELOTELL1CORE_H 1
 
 // Include files
-#include <sys/types.h>
 #include <vector>
 
 /** @namespace VeloTell1Core VeloTell1Core.h Kernel/VeloTell1Core.h
@@ -14,6 +13,10 @@
  */
 
 namespace VeloTELL1{
+
+  typedef unsigned int u_int32_t;
+  typedef unsigned short int u_int16_t;
+  typedef unsigned char u_int8_t;
 
   enum strips{
     HEADER_STRIPS=4

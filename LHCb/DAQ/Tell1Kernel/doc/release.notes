@@ -2,7 +2,10 @@
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
 
-!====================== Tell1Kernel v1r1 2007-12-10 ======================
+!====================== Tell1Kernel v1r1 2007-12-11 ======================
+! 2007-12-11 - Marco Cattaneo
+ - Fix types for Windows
+
 ! 2007-12-06 - Tomasz Szumlak - v1r1
  - update related with Velo commissioning
 
