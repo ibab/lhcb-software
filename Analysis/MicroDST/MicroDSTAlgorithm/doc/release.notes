@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.41 2007-12-11 17:40:16 jpalac Exp $
+! $Id: release.notes,v 1.42 2007-12-11 17:46:59 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel
 !============================================================
@@ -14,6 +14,12 @@
  - cmt/requirements
    . Increase version to v3r0 and remove linker library
    . Use MicroDST/MicroDSTinterfaces and MicroDST/MicroDSTBase
+ - Remove:
+      MicroDST/CopyAndStoreData.h
+      MicroDST/CopyAndStoreData.icpp
+      MicroDST/Functors.hpp
+      MicroDST/IDoSomethingToParticle.h
+      src/Lib/CopyAndStoreData.cpp
 
 ! 2007-11-23 - Juan PALACIOS
  - src/CopyRelatedMCParticles{.cpp, .h}
