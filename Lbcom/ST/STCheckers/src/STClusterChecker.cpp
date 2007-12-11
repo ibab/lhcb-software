@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.cpp,v 1.15 2007-11-23 13:49:10 mneedham Exp $
+// $Id: STClusterChecker.cpp,v 1.16 2007-12-11 10:12:40 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -105,7 +105,7 @@ void STClusterChecker::fillHistograms( const STCluster* aCluster,
         plot(aCluster->totalCharge(),aSector->type()+"/1",
              "Charge", 0., 200., 200);
         plot(m_sigNoiseTool->signalToNoise(aCluster),
-             aSector->type()+"/1","S/N",0.,100., 100);
+             aSector->type()+"/2","S/N",0.,100., 100);
       }
     } 
   }

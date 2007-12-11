@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.4 2007-11-28 13:01:22 mneedham Exp $
+// $Id: STClusterMonitor.cpp,v 1.5 2007-12-11 10:12:40 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -80,10 +80,10 @@ StatusCode STClusterMonitor::execute()
 void STClusterMonitor::fillHistograms(const STCluster* aCluster)
 {
   // cluster Size 
-  plot((double)aCluster->size(),1,"Size of cluster",-0.5,6.5,7);
+  plot((double)aCluster->size(),2,"Size of cluster",-0.5,6.5,7);
 
   // high threshold
-  plot((double)aCluster->highThreshold(),1,"High threshold",-0.5,1.5,2);
+  plot((double)aCluster->highThreshold(),3,"High threshold",-0.5,1.5,2);
 
   // histogram by station
   const int iStation = aCluster->channelID().station();
