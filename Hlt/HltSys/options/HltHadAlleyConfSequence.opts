@@ -64,9 +64,9 @@ HadSingleTFRZVelo.PrimaryVerticesName = "PV2D";
 HadSingleTFRZVelo.OutputTracksName    = "HadSingleTFRZVelo";
 HadSingleTFRZVelo.FilterDescriptor = {"Calo2DChi2,<,4."};
 HadSingleTFRZVelo.HistogramUpdatePeriod = 0;
-//HadSingleTFRZVelo.HistoDescriptor = {"Calo2DChi2,100.,0.,20.",
-//                                     "Calo2DChi2Best,100.,0.,20."
-//};
+HadSingleTFRZVelo.HistoDescriptor = {"Calo2DChi2" :     ("Calo2DChi2",0.,20.,100),
+                                     "Calo2DChi2Best" : ("Calo2DChi2Best",0.,20.,100)
+};
 HadSingleTFRZVelo.OutputLevel = 3;
 
 //
@@ -88,11 +88,11 @@ HadSingleTFVelo.HistogramUpdatePeriod = 0;
 HadSingleTFVelo.FilterDescriptor = {"IP,||[],0.1,3.",
                                     "Calo3DChi2,<,4."
 };
-// HadSingleTFVelo.HistoDescriptor = {"IP,400,-1.,3.",
-//                                    "IPBest,400,-1.,3.",
-//                                    "Calo2DChi2,100.,0.,20.",
-//                                    "Calo2DChi2Best,100.,0.,20."
-// };
+HadSingleTFVelo.HistoDescriptor = {"IP" :             ("IP",-1.,3.,400),
+                                   "IPBest" :         ("IPBest",-1.,3.,400),
+                                   "Calo2DChi2" :     ("Calo2DChi2",0.,20.,100),
+                                   "Calo2DChi2Best" : ("Calo2DChi2Best",0.,20.,100)
+};
 HadSingleTFVelo.OutputLevel = 3;
 
 //
@@ -113,9 +113,9 @@ HadPreTriggerSingle.InputTracksName  = "HadSingleTRForward";
 HadPreTriggerSingle.OutputTracksName = "HadPreTriggerSingle";
 HadPreTriggerSingle.FilterDescriptor = {"PT,>,2500."};
 HadPreTriggerSingle.HistogramUpdatePeriod = 0;
-// HadPreTriggerSingle.HistoDescriptor = {"PT,100,0.,6000.",
-//                                        "PTBest,100,0.,6000."
-// };
+HadPreTriggerSingle.HistoDescriptor = { "PT" :     ("PT",0.,6000.,100),
+                                        "PTBest" : ("PTBest",0.,6000.,100)
+};
 HadPreTriggerSingle.OutputLevel = 2;
 
 
@@ -138,11 +138,11 @@ HadCompanionTFVelo.HistogramUpdatePeriod = 0;
 HadCompanionTFVelo.FilterDescriptor = {"IP,||[],0.1,3.",
                                        "DOCA,<,0.2"
 };
-// HadCompanionTFVelo.HistoDescriptor = {"IP,600,-1.,.3",
-//                                       "IPBest,600,-1.,3.",
-//                                       "DOCA,100,0.,1.",
-//                                       "DOCABest,100,0.,1."
-// };
+HadCompanionTFVelo.HistoDescriptor = {"IP"      : ("IP",-1.,.3,600),
+                                      "IPBest"  : ("IPBest",-1.,3.,600),
+                                      "DOCA"    : ("DOCA",0.,1.,100),
+                                      "DOCABest": ("DOCABest",0.,1.,100)
+};
 HadCompanionTFVelo.OutputLevel = 3;
 
 //
@@ -161,8 +161,8 @@ HadCompanionTFForward.InputTracksName  = "HadCompanionTRForward";
 HadCompanionTFForward.OutputTracksName = "HadCompanionTFForward";
 HadCompanionTFForward.FilterDescriptor = {"PT,>,1000."};
 HadCompanionTFForward.HistogramUpdatePeriod = 0;
-// HadCompanionTFForward.HistoDescriptor = {"PT,100,0.,8000.",
-//                                          "PTBest,100,0.,8000."};
+HadCompanionTFForward.HistoDescriptor = {"PT" :     ("PT",0.,8000.,100),
+                                         "PTBest" : ("PTBest",0.,8000.,100)};
 HadCompanionTFForward.OutputLevel = 3;
 
 //
@@ -175,11 +175,8 @@ HadDiHadronVMaker.OutputLevel = 2;
 HadDiHadronVMaker.FilterDescriptor = {"DOCA,<,0.2",
                                       "DimuonMass,<6000"};
 HadDiHadronTVMaker.HistogramUpdatePeriod = 0;
-// HadDiHadronTVMaker.HistoDescriptor = {"DOCA,100,0.,1.",
-//                                       "DOCABest,100,0.,0.5"
-
-// };
-
+HadDiHadronTVMaker.HistoDescriptor = {"DOCA"     : ("DOCA",0.,1.,100),
+                                      "DOCABest" : ("DOCABest",0.,0.5,100) };
 //
 // select vertices if Pt, poiting, and distance
 //
@@ -195,13 +192,12 @@ HadTrigger.FilterDescriptor = {"VertexSumPT,>,3000",
                                "VertexDz,>,2."
 };
 HadTrigger.HistogramUpdatePeriod = 0;
-// HadTrigger.HistoDescriptor = {"VertexMaxPT,100,0.,8000.",
-//                               "VertexMaxPTBest,100,0.,8000.",
-//                               "VertexMinPT,100,0.,8000.",
-//                               "VertexMinPTBest,100,0.,8000.",
-//                               "VertexPointing,100,0.,1.",
-//                               "VertexPointingBest,100,0.,1.",
-//                               "VertexDz,100,-10.,50.",
-//                               "VertexDzBest,100,-10.,50."
-// };
-
+HadTrigger.HistoDescriptor = {"VertexMaxPT"        : ("VertexMaxPT",0.,8000.,100),
+                              "VertexMaxPTBest"    : ("VertexMaxPTBest",0.,8000.,100),
+                              "VertexMinPT"        : ("VertexMinPT",0.,8000.,100),
+                              "VertexMinPTBest"    : ("VertexMinPTBest",0.,8000.,100),
+                              "VertexPointing"     : ("VertexPointing",0.,1.,100),
+                              "VertexPointingBest" : ("VertexPointingBest",0.,1.,100),
+                              "VertexDz"           : ("VertexDz",-10.,50.,100),
+                              "VertexDzBest"       : ("VertexDzBest",-10.,50.,100)
+};

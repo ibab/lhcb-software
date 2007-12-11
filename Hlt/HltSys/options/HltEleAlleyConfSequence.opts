@@ -70,10 +70,10 @@ EleSingleTFRZVelo.FilterDescriptor = {"rIP,||[],-50.,50.",
                                       "Calo2DChi2,<,4."
 };
 EleSingleTFRZVelo.HistogramUpdatePeriod = 0;
-EleSingleTFRZVelo.HistoDescriptor = {"rIP,400,-1.,3.",
-                                     "rIPBest,400,-1.,3.",
-                                     "Calo2DChi2,100.,0.,20.",
-                                     "Calo2DChi2Best,100.,0.,20."
+EleSingleTFRZVelo.HistoDescriptor = {  "rIP"            : ("rIP",-1.,3.,400),
+                                       "rIPBest"        : ("rIPBest",-1.,3.,400),
+                                       "Calo2DChi2"     : ("Calo2DChi2",0.,20.,100),
+                                       "Calo2DChi2Best" : ("Calo2DChi2Best",0.,20.,100) 
 };
 EleSingleTFRZVelo.OutputLevel = 3;
 
@@ -96,10 +96,10 @@ EleSingleTFVelo.HistogramUpdatePeriod = 0;
 EleSingleTFVelo.FilterDescriptor = {"IP,||[],0.1,3.",
                                     "Calo3DChi2,<,4."
 };
-EleSingleTFVelo.HistoDescriptor = {"IP,400,-1.,3.",
-                                   "IPBest,400,-1.,3.",
-                                   "Calo3DChi2,100.,0.,20.",
-                                   "Calo3DChi2Best,100.,0.,20."
+EleSingleTFVelo.HistoDescriptor = {"IP" :           ("IP",-1.,3.,400),
+                                   "IPBest" :       ("IPBest",-1.,3.,400),
+                                   "Calo2DChi2":    ("Calo3DChi2",0.,20.,100),
+                                   "Calo2DChi2Best":("Calo3DChi2Best",0.,20.,100)
 };
 EleSingleTFVelo.OutputLevel = 3;
 
@@ -119,8 +119,8 @@ ElePreTriggerSingle.InputTracksName  = "EleSingleTRForward";
 ElePreTriggerSingle.OutputTracksName = "ElePreTriggerSingle";
 ElePreTriggerSingle.FilterDescriptor = {"PT,>,1300."};
 ElePreTriggerSingle.HistogramUpdatePeriod = 0;
-ElePreTriggerSingle.HistoDescriptor = {"PT,100,0.,6000.",
-                                       "PTBest,100,0.,6000."
+ElePreTriggerSingle.HistoDescriptor = {"PT"     : ("PT",0.,6000.,100),
+                                       "PTBest" : ("PTBest",0.,6000.,100)
 };
 ElePreTriggerSingle.OutputLevel = 3;
 
@@ -145,10 +145,10 @@ EleCompanionTFVelo.HistogramUpdatePeriod = 0;
 EleCompanionTFVelo.FilterDescriptor = {"IP,||[],0.1,3.",
                                        "DOCA,<,0.2"
 };
-EleCompanionTFVelo.HistoDescriptor = {"IP,600,-1.,.3",
-                                      "IPBest,600,-1.,3.",
-                                      "DOCA,100,0.,1.",
-                                      "DOCABest,100,0.,1."
+EleCompanionTFVelo.HistoDescriptor = {"IP":       ( "IP",-1.,.3,600),
+                                      "IPBest":   ( "IPBest",-1.,3.,600),
+                                      "DOCA":     ( "DOCA",0.,1.,100),
+                                      "DOCABest": ( "DOCABest",0.,1.,100)
 };
 EleCompanionTFVelo.OutputLevel = 3;
 
@@ -169,8 +169,8 @@ EleCompanionTFForward.InputTracksName  = "EleCompanionTRForward";
 EleCompanionTFForward.OutputTracksName = "EleCompanionTFForward";
 EleCompanionTFForward.FilterDescriptor = {"PT,>,1000."};
 EleCompanionTFForward.HistogramUpdatePeriod = 0;
-EleCompanionTFForward.HistoDescriptor = {"PT,100,0.,8000.",
-                                         "PTBest,100,0.,8000."};
+EleCompanionTFForward.HistoDescriptor = {"PT"     : ("PT",0.,8000.,100),
+                                         "PTBest" : ("PTBest",0.,8000.,100)};
 EleCompanionTFForward.OutputLevel = 3;
 
 //
@@ -183,8 +183,8 @@ EleDiElectronVMaker.OutputLevel = 3;
 EleDiElectronVMaker.FilterDescriptor = {"DOCA,<,0.2"
 };
 EleDiElectronVMaker.HistogramUpdatePeriod = 0;
-EleDiElectronVMaker.HistoDescriptor = {"DOCA,100,0.,1.",
-                                       "DOCABest,100,0.,0.5"
+EleDiElectronVMaker.HistoDescriptor = { "DOCA" :     ("DOCA",0.,1.,100),
+                                        "DOCABest" : ("DOCABest",0.,0.5,100)
 
 };
 
@@ -201,14 +201,14 @@ EleTriggerEleTrk.FilterDescriptor = {"VertexMaxPT,>,1300.",
                                      "VertexDz,>,0."
 };
 EleTriggerEleTrk.HistogramUpdatePeriod = 0;
-EleTriggerEleTrk.HistoDescriptor = {"VertexMaxPT,100,0.,8000.",
-                                    "VertexMaxPTBest,100,0.,8000.",
-                                    "VertexMinPT,100,0.,8000.",
-                                    "VertexMinPTBest,100,0.,8000.",
-                                    "VertexPointing,100,0.,1.",
-                                    "VertexPointingBest,100,0.,1.",
-                                    "VertexDz,100,-10.,50.",
-                                    "VertexDzBest,100,-10.,50."
+EleTriggerEleTrk.HistoDescriptor = {"VertexMaxPT"       : ("VertexMaxPT",0.,8000.,100),
+                                    "VertexMaxPTBest"   : ("VertexMaxPTBest",0.,8000.,100),
+                                    "VertexMinPT"       : ("VertexMinPT",0.,8000.,100),
+                                    "VertexMinPTBest"   : ("VertexMinPTBest",0.,8000.,100),
+                                    "VertexPointing"    : ("VertexPointing",0.,1.,100),
+                                    "VertexPointingBest": ("VertexPointingBest",0.,1.,100),
+                                    "VertexDz"          : ("VertexDz",-10.,50.,100),
+                                    "VertexDzBest"      : ("VertexDzBest",-10.,50.,100)
 };
 
 
@@ -219,8 +219,8 @@ EleTriggerSingle.InputTracksName  = "ElePreTriggerSingle";
 EleTriggerSingle.OutputTracksName = "EleTriggerSingle";
 EleTriggerSingle.FilterDescriptor = {"PT,>,3000."};
 EleTriggerSingle.HistogramUpdatePeriod = 0;
-EleTriggerSingle.HistoDescriptor = {"PT,100,0.,8000.",
-                                    "PTBest,100,0.,8000."};
+EleTriggerSingle.HistoDescriptor = {"PT"     : ("PT",0.,8000.,100),
+                                    "PTBest" : ("PTBest",0.,8000.,100)};
 EleTriggerSingle.OutputLevel = 3;
 
 

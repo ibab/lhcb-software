@@ -59,16 +59,16 @@ HltPho2DIPSelection.PrimaryVerticesName = "PV2D";
 HltPho2DIPSelection.OutputTracksName    = "HltPho2DIPSelection";
 HltPho2DIPSelection.FilterDescriptor = {"rIP,||[],0.10,3.0"};
 HltPho2DIPSelection.HistogramUpdatePeriod = 0;
-HltPho2DIPSelection.HistoDescriptor = {"rIP,400,-1.,3.",
-                                       "rIPBest,400,-1.,3."};
+HltPho2DIPSelection.HistoDescriptor = {"rIP" : ("rIP",-1.,3.,400),
+                                       "rIPBest" : ("rIPBest",-1.,3.,400)};
 HltPho2DIPSelection.OutputLevel = 3;
 
 //  Velo Reco
 
 HltPhoRecoIPVelo.InputTracksName = "HltPho2DIPSelection";
 HltPhoRecoIPVelo.OutputTracksName = "HltPhoRecoIPVelo";
-HltPhoRecoIPVelo.RecoName = "Velo";
-HltPhoRecoIPVelo.OrderByPt = true;
+HltPhoRecoIPVelo.HltTrackUpgradeTool.RecoName = "Velo";
+HltPhoRecoIPVelo.HltTrackUpgradeTool.OrderByPt = true;
 
 //    3D IP selection
 
@@ -78,8 +78,8 @@ HltPho3DIPSelection.PrimaryVerticesName = "PV2D";
 HltPho3DIPSelection.OutputTracksName    = "HltPho3DIPSelection";
 HltPho3DIPSelection.FilterDescriptor = {"IP,||[],0.15,3.0"};
 HltPho3DIPSelection.HistogramUpdatePeriod = 0;
-HltPho3DIPSelection.HistoDescriptor = {"IP,400,-1.,3.",
-                                       "IPBest,400,-1.,3."};
+HltPho3DIPSelection.HistoDescriptor = {"IP" : ("IP",-1.,3.,400),
+                                       "IPBest" : ("IPBest",-1.,3.,400)};
 HltPho3DIPSelection.OutputLevel = 3;
 
 //  Forward 
@@ -87,7 +87,7 @@ HltPho3DIPSelection.OutputLevel = 3;
 HltPhoRecoIPForward.InputTracksName = "HltPho3DIPSelection";
 HltPhoRecoIPForward.OutputTracksName = "HltPhoRecoIPForward";
 HltPhoRecoIPForward.RecoName = "Forward";
-HltPhoRecoIPForward.OrderByPt = true;
+HltPhoRecoIPForward.HltTrackUpgradeTool.OrderByPt = true;
 PatHltPhoRecoIPForward.DoCleanUp = false;
 
 //  Pt cut (call it pretrigger sice couldn't implement veloTT)
@@ -96,8 +96,8 @@ PhoPreTrigger.InputTracksName     = "HltPhoRecoIPForward";
 PhoPreTrigger.OutputTracksName    = "PhoPreTrigger";
 PhoPreTrigger.FilterDescriptor = {"PT,>,1274."};
 PhoPreTrigger.HistogramUpdatePeriod = 0;
-PhoPreTrigger.HistoDescriptor =  {"PT,100,0.,8000.",
-                                   "PTBest,100,0.,8000."};
+PhoPreTrigger.HistoDescriptor =  { "PT"     : ("PT",0.,8000.,100),
+                                   "PTBest" : ("PTBest",0.,8000.,100)};
 PhoPreTrigger.OutputLevel = 3;
 
 
