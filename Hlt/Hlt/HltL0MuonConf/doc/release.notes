@@ -3,7 +3,11 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
-
+! 2007-12-11 - Sandra Amato
+ - SpaceMuonMatch: fixing LHCBID's, updating qOverP in other velostates,
+                   set track type to long
+ - removed obsolete L0MuonConfWithT.cpp,  PrepareDimuon.cpp,MuonTConfWithT.cpp
+  
 ! 2007-12-11 - Jose A. Hernando
  - Updating HltPrepareMuonSeg
 
