@@ -1,0 +1,5 @@
+// Job options to set up the persistency service for IO of MDF files
+
+EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
+ApplicationMgr.SvcOptMapping    += { "Gaudi::MultiFileCatalog/FileCatalog",
+                                     "Gaudi::IODataManager/IODataManager" };

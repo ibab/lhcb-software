@@ -2,6 +2,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v10r5 2007-12-11 ========================
+! 2007-12-11 - Marco Cattaneo
+ - Add RawDataIO.opts to setup persistency for MDF files
+ - Add WriteMDF.opts to write out RawEvent in an MDF file
+
 !======================== GaudiConf v10r4 2007-07-13 ========================
 ! 2007-07-13 - Marco Cattaneo
  - Add Rec/Track/Muon to standard DST content

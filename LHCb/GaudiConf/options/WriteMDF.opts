@@ -1,0 +1,9 @@
+// Job options for writing a file in MDF format
+
+// Set up the output persistency
+#include "$STDOPTS/RawDataIO.opts"
+
+// Create the MDF file using the standard Gaudi output stream:
+ApplicationMgr.OutStream += { "Writer_0" };
+Writer_0.Output           = "DATAFILE='file://mdfData_0.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'";
+Writer_0.ItemList         = {"/Event/DAQ/RawEvent#1" };
