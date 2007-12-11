@@ -1,8 +1,11 @@
-// $Id: RecInit.cpp,v 1.4 2007-05-18 09:02:57 cattanem Exp $
+// $Id: RecInit.cpp,v 1.5 2007-12-11 12:44:29 cattanem Exp $
 // Include files 
 
 // from Gaudi
+#include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/Incident.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 // from LHCbKernel
 #include "Kernel/IGenericTool.h"
@@ -58,6 +61,9 @@ StatusCode RecInit::initialize() {
   // Private tool to plot the memory usage
   m_memoryTool = tool<IGenericTool>( "MemoryTool", "BrunelMemory", this, true );
 
+  // Pointer to IncidentSvc
+  m_incidentSvc = svc<IIncidentSvc>("IncidentSvc",true);
+
   return StatusCode::SUCCESS;
 }
 
@@ -74,8 +80,16 @@ StatusCode RecInit::execute() {
   m_memoryTool->execute();
 
   // Get the run and event number from the ODIN bank
-  LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
-
+  LHCb::ODIN* odin = 0;
+  try {
+    odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  }
+  catch( const GaudiException& Exception ) {
+    m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
+    this->setFilterPassed( false );    
+    return Error( "ODIN missing, skipping event", StatusCode::SUCCESS );
+  }
+  
   unsigned int runNumber = odin->runNumber();
   ulonglong    evtNumber = odin->eventNumber();
   

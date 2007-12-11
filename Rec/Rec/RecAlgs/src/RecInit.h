@@ -1,4 +1,4 @@
-// $Id: RecInit.h,v 1.1.1.1 2006-03-15 16:25:05 cattanem Exp $
+// $Id: RecInit.h,v 1.2 2007-12-11 12:44:29 cattanem Exp $
 #ifndef RECINIT_H 
 #define RECINIT_H 1
 
@@ -7,6 +7,7 @@
 #include "Kernel/LbAppInit.h"
 
 class IGenericTool;
+class IIncidentSvc;
 
 /** @class RecInit RecInit.h
  *  Algorithm to initialize the reconstruction sequence
@@ -29,5 +30,6 @@ protected:
 
 private:
   IGenericTool* m_memoryTool;   ///< Pointer to (private) memory histogram tool
+  IIncidentSvc* m_incidentSvc;  ///< Pointer to the incident service.
 };
 #endif // RECINIT_H
