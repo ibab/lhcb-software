@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.17 2007-12-06 16:08:43 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.18 2007-12-11 15:16:03 hernando Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -211,7 +211,7 @@ Hlt::VertexFunction* HltFunctionFactory::vertexFunction(const std::string& fn) {
     fun =  new 
       Estd::binder_function<RecVertex,RecVertex>(Hlt::VertexMatchIDsFraction(),
                                                  *m_vertices,
-                                                 Estd::abs_min());
+                                                 Estd::abs_max());
   }
   
 

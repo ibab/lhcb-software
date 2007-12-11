@@ -5,6 +5,7 @@
 !----------------------------------------------------------------------------
 
 ! 2007-12-11 Jose A. Hernando
+      - small bug in VertexMacthingIDs use abs_max
 	    - L0Entry uses now the names of channes as they are in L0DUReport
 
 ! 2007-12-04 Jose A. Hernando
