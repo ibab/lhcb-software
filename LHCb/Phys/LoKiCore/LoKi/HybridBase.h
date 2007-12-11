@@ -1,4 +1,4 @@
-// $Id: HybridBase.h,v 1.1 2007-07-25 15:14:13 ibelyaev Exp $
+// $Id: HybridBase.h,v 1.2 2007-12-11 18:37:04 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIHYBRID_HYBRIDBASE_H 
 #define LOKIHYBRID_HYBRIDBASE_H 1
@@ -66,13 +66,15 @@ namespace LoKi
        *  @param actor the actual actor
        *  @param code the code for the functor 
        *  @param lines more python lines to be used 
+       *  @param context  even more python code to be used 
        *  @return the valid python code 
        */
       std::string makeCode 
-      ( const Strings&     modules , 
-        const std::string& actor   ,
-        const std::string& code    , 
-        const Strings&     lines = Strings() ) const ;
+      ( const Strings&     modules             , 
+        const std::string& actor               ,
+        const std::string& code                , 
+        const Strings&     lines   = Strings() , 
+        const std::string& context = ""        ) const ;
     private:
       // the default constructor is disabled 
       Base () ; ///< the default constructor is disabled 

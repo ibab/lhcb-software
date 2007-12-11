@@ -1,4 +1,4 @@
-// $Id: HybridBase.cpp,v 1.1 2007-07-25 15:14:13 ibelyaev Exp $
+// $Id: HybridBase.cpp,v 1.2 2007-12-11 18:37:04 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -166,7 +166,8 @@ std::string LoKi::Hybrid::Base::makeCode
 ( const LoKi::Hybrid::Base::Strings& modules , 
   const std::string&                 actor   ,
   const std::string&                 code    , 
-  const LoKi::Hybrid::Base::Strings& lines   ) const 
+  const LoKi::Hybrid::Base::Strings& lines   ,
+  const std::string&                 context ) const 
 {
   std::ostringstream stream ;
   // start the code:
@@ -179,21 +180,31 @@ std::string LoKi::Hybrid::Base::makeCode
   stream << "# \tactor   = " << Gaudi::Utils::toString( actor   )  << std::endl ;
   stream << "# \tmodules = " << Gaudi::Utils::toString( modules )  << std::endl ;
   stream << "# \tlines   = " << Gaudi::Utils::toString( lines   )  << std::endl ;
+  stream << "# \tcontext = " << Gaudi::Utils::toString( context )  << std::endl ;
   stream << "# " << std::string(78,'=') << std::endl ;
   // define imported modules:
+  stream << "##        MODULES :" << std::endl ;
   for ( Strings::const_iterator imodule = modules.begin() ; 
         modules.end() != imodule ; ++imodule ) 
   {
     stream << "from " << (*imodule) << " import *" << std::endl ;
   }
+  stream << "## End of MODULES  " << std::endl ;
+  stream << "## The ACTOR :"              << std::endl ;
   stream << "_actor=" << actor << std::endl ;
   // put additional lines:
+  stream << "##        LINES :" << std::endl ;
   for ( Strings::const_iterator iline = lines.begin() ; 
         lines.end() != iline ; ++iline ) 
-  {
-    stream << (*iline) << std::endl ;
-  } 
-  stream << "_code="  << code  << std::endl ;
+  { stream << (*iline) << std::endl ; }
+  stream << "## end of LINES  " << std::endl ;
+  // put the context 
+  stream << "##        CONTEXT :" << std::endl ;
+  if ( !context.empty() ) { stream << context << std::endl ; }
+  stream << "## End of CONTEXT  " << std::endl ;
+  stream << "##        CODE :"    << std::endl ;  
+  stream << "_code="  << code     << std::endl ;
+  stream << "## End of CODE :"    << std::endl ;  
   stream << "sc=_actor.process('" << name() << "',_code)" << std::endl ;
   stream << "# " << std::string(78,'=') << std::endl ;
   stream << "# The END " << std::endl ;
