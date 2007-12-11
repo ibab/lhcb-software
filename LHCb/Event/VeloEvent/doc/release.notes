@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.51 2007-12-11 07:57:19 cattanem Exp $
+! $Id: release.notes,v 1.52 2007-12-11 13:04:45 szumlat Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
 
 !====================== VeloEvent v16r2 2007-12-11 ======================
+! 2007-12-11 - Tomasz Szumlak
+ - fixed include location in VeloTELL1FData object
+
 ! 2007-12-11 - Marco Cattaneo
  - Put back missing <cassert> include
 

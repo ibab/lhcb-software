@@ -5,7 +5,7 @@
 #include "GaudiKernel/KeyedObject.h"
 #include "GaudiKernel/KeyedContainer.h"
 #include "GaudiKernel/boost_allocator.h"
-#include "Kernel/SerializeStl.h"
+#include "GaudiKernel/SerializeSTL.h"
 #include <ostream>
 
 // Forward declarations
