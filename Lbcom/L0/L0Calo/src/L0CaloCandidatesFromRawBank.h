@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRawBank.h,v 1.2 2007-12-05 14:07:41 odescham Exp $
+// $Id: L0CaloCandidatesFromRawBank.h,v 1.3 2007-12-11 18:26:50 robbep Exp $
 #ifndef L0CALOCANDIDATESFROMRAWBANK_H 
 #define L0CALOCANDIDATESFROMRAWBANK_H 1
 
@@ -10,7 +10,7 @@
 #include "Event/L0CaloCandidate.h"
 
 
-static const InterfaceID IID_L0CaloCandidatesFromRawBank ( "L0CaloCandidatesFromRawBank", 1, 0 );
+static const InterfaceID IID_L0CaloCandidatesFromRawBank ( "L0CaloCandidatesFromRawBank", 2, 0 );
 
 /** @class L0CaloCandidatesFromRawBank L0CaloCandidatesFromRawBank.h
  *  Tool to convert the Raw Bank L0CaloCandidate to TES containers
@@ -35,7 +35,8 @@ public:
 
   void convertRawBankToTES( std::vector<std::vector<unsigned int> >& data,
                             std::string& nameFullInTES,
-                            std::string& nameInTES);
+                            std::string& nameInTES,
+			    const int version );
 
 protected:
 

@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.23 2007-12-05 14:07:41 odescham Exp $
+// $Id: L0CaloAlg.h,v 1.24 2007-12-11 18:26:49 robbep Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -134,5 +134,7 @@ private:
   double m_totRawSize;
   int m_nbEvents;  
   LHCb::Calo::PrsSpdFiredCells m_PrsSpdIds;
+  
+  int m_bankVersion ; ///< Version of the bank to simulate
 };
 #endif //   L0CALO_L0CALOALG_H

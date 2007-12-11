@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.11 2007-06-06 14:59:26 cattanem Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.12 2007-12-11 18:26:50 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +65,9 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
     }
     data.push_back( temp );
   }
-  m_convertTool->convertRawBankToTES( data, nameFull, name );
+  // Version of the bank
+  int version = banks.front() -> version() ;
+  m_convertTool->convertRawBankToTES( data, nameFull, name , version );
   
   if ( "" != m_extension ) {
     //== Compare 

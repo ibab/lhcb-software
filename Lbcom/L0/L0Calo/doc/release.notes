@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.88 2007-12-10 06:32:48 cattanem Exp $
+! $Id: release.notes,v 1.89 2007-12-11 18:26:49 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2007-12-12 - Patrick Robbe
+ - src/L0CaloAlg.cpp: set correct version number to L0Calo raw bank
+ - src/L0CaloCandidatesFromRawBank: allow decoding of old DC06 banks
+ (version 0).
 
 !========================= L0Calo v9r11 2007-12-10 ========================
 ! 2007-10-31 - Marie-Helene Schune, Patrick Robbe, (Olivier Deschamps)

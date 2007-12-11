@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.45 2007-12-05 14:07:41 odescham Exp $
+// $Id: L0CaloAlg.cpp,v 1.46 2007-12-11 18:26:50 robbep Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -26,6 +26,7 @@ L0CaloAlg::L0CaloAlg( const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiAlgorithm              ( name , pSvcLocator            )
   , m_nameOfOutputDataContainer ( LHCb::L0ProcessorDataLocation::Calo  )
   , m_rawOutput( 2 )
+  , m_bankVersion( 1 ) 
 {
   declareProperty("OutputData"      , m_nameOfOutputDataContainer) ;
   declareProperty("StoreInBuffer"   , m_storeFlag      = true ) ;
@@ -411,11 +412,11 @@ StatusCode L0CaloAlg::execute() {
   
 
   //  int nbHcalCards = m_hcal->nCards() ; 
-  int nbHcalCards = 50 ; 
+  //  int nbHcalCards = 50 ; 
 
-  int allhcalFe_Slave1[nbHcalCards];
-  int allhcalFe_Slave2[nbHcalCards];
-  int allhcalFe_Master[nbHcalCards];
+  int allhcalFe_Slave1[50];
+  int allhcalFe_Slave2[50];
+  int allhcalFe_Master[50];
 
   int allSlave1 = 0 ; 
   int allSlave2 = 0 ; 
@@ -522,7 +523,7 @@ StatusCode L0CaloAlg::execute() {
 
 
   // process for Slave 1
-  int etMaxEcalPerValNum[m_nbValidation];
+  int etMaxEcalPerValNum[30];
   int iSlave1 = 0 ; 
   int sumEtSlave1 = 0 ;
   for ( int kk=0 ; allSlave1 > kk ; kk++ ) {
@@ -709,7 +710,7 @@ StatusCode L0CaloAlg::execute() {
   std::vector<LHCb::CaloCellID>& ids = m_PrsSpdIds.second;
 
   int nbSpdMultCards = 16 ; 
-  int valMult[nbSpdMultCards] ; 
+  int valMult[16] ; 
   for ( int kk=0 ; nbSpdMultCards > kk ; kk++ ) {
     valMult[kk] = 0; 
   }
@@ -752,7 +753,7 @@ StatusCode L0CaloAlg::execute() {
     
   LHCb::L0ProcessorDatas* L0Calo = new LHCb::L0ProcessorDatas();
   put( L0Calo, m_nameOfOutputDataContainer ) ;
-
+  
   // Store the various candidates
 
   electron.saveCandidate(  L0DUBase::Fiber::CaloElectron,  L0Calo );
@@ -959,12 +960,12 @@ StatusCode L0CaloAlg::execute() {
     m_totRawSize = m_totRawSize + m_rawOutput[0].size() + m_rawOutput[1].size();
     LHCb::RawEvent* raw = 
       get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-    raw->addBank( 0, LHCb::RawBank::L0Calo, 0, m_rawOutput[0] );
-    raw->addBank( 1, LHCb::RawBank::L0Calo, 0, m_rawOutput[1] );
+    raw->addBank( 0, LHCb::RawBank::L0Calo, m_bankVersion , m_rawOutput[0] );
+    raw->addBank( 1, LHCb::RawBank::L0Calo, m_bankVersion , m_rawOutput[1] );
   } else {
     std::string name     = rootInTES() + LHCb::L0CaloCandidateLocation::Default;
     std::string nameFull = rootInTES() + LHCb::L0CaloCandidateLocation::Full;
-    m_bankToTES->convertRawBankToTES( m_rawOutput, nameFull, name );
+    m_bankToTES->convertRawBankToTES( m_rawOutput, nameFull, name , m_bankVersion );
   }
 
   return StatusCode::SUCCESS;

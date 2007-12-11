@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.6 2007-12-05 14:07:41 odescham Exp $
+// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.7 2007-12-11 18:26:50 robbep Exp $
 // Include files
 
 // from Gaudi
@@ -65,7 +65,8 @@ StatusCode L0CaloCandidatesFromRawBank::initialize ( ) {
 //=========================================================================
 void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<unsigned int> >& data,
                                                        std::string& nameFullInTES,
-                                                       std::string& nameInTES){
+                                                       std::string& nameInTES,
+						       const int version){
 
   debug() << "L0CaloCandidatesFromRawBank ... entering conversion" << endreq;
 
@@ -76,7 +77,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
 
   put( out, nameInTES, IgnoreRootInTES );
   debug() << "L0CaloCandidatesFromRawBank Registered output in TES" << endreq;
-
+  
   Gaudi::XYZPoint dummy( 0., 0., 0.);
   Gaudi::XYZPoint center( 0., 0., 0.);
   LHCb::L0CaloCandidate* myL0Cand( 0 ) ;
@@ -109,20 +110,23 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
         // CaloSumEt Case 
         int sumEt = cand & 0xFFFFFF;
 
-        if ( 0 == slave ) {
-          if ( 1 == io ) type = L0DUBase::CaloType::SumEt ;
-        } else if ( 1 == slave ) {
-          if ( 1 == io ) type = L0DUBase::CaloType::SumEtSlave1Out ;
-          else type = L0DUBase::CaloType::SumEtSlave1In ;
-        } else if ( 2 == slave ) {
-          if ( 1 == io ) type = L0DUBase::CaloType::SumEtSlave2Out ;
-          else type = L0DUBase::CaloType::SumEtSlave2In ;
+	if ( version > 0 ) {
+	  if ( 0 == slave ) {
+            if ( 1 == io ) type = L0DUBase::CaloType::SumEt ;
+          } else if ( 1 == slave ) {
+            if ( 1 == io ) type = L0DUBase::CaloType::SumEtSlave1Out ;
+            else type = L0DUBase::CaloType::SumEtSlave1In ;
+          } else if ( 2 == slave ) {
+            if ( 1 == io ) type = L0DUBase::CaloType::SumEtSlave2Out ;
+            else type = L0DUBase::CaloType::SumEtSlave2In ;
+          }
         }
 
         if ( L0DUBase::CaloType::SumEt == type ) {
           myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
                                                  sumEt , sumEt * m_etScale , 
                                                  dummy , 0. );
+	  outFull -> add( myL0Cand ) ;
           bestCand[type] = myL0Cand ;
           debug() << " outFull CaloSumEt = " <<*myL0Cand << endreq;
         } else {
@@ -135,11 +139,15 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
           }
         }
       } else if ( L0DUBase::CaloType::SpdMult == type ) {
-        int mult = 0 ;        
-        if ( 1 == io )  mult = ( cand & 0x3FFF ) ;
-        if ( 0 == io ) {
-          mult = ( cand & 0x3FF ) ;
-          // a utiliser + tard 	  address =( cand & 0x3C00 ) >> 10 ;
+        int mult = 0 ; 
+        if ( version > 0 ) {
+          if ( 1 == io )  mult = ( cand & 0x3FFF ) ;
+          if ( 0 == io ) {
+            mult = ( cand & 0x3FF ) ;
+            // a utiliser + tard 	  address =( cand & 0x3C00 ) >> 10 ;
+          }
+        } else {
+          mult = cand & 0xFFFFFF ;
         }
 
         if ( m_doDebugDecoding == 1 ) { 
@@ -151,13 +159,14 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
           }
         }
 
-        if ( 1 == io ) { 
+        if ( ( 1 == io ) || ( 0 == version ) ) { 
           myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
                                                  mult, 0., dummy, 0. );
           bestCand[type] = myL0Cand;
+          outFull -> add( myL0Cand ) ;
         }
-
         verbose() <<" Candidate SPD = " << *myL0Cand << endreq;
+        
       } else {
         int rawId =  ( cand >>8 ) & 0xFFFF;
         if ( L0DUBase::CaloType::Hadron == type ) {
@@ -174,7 +183,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
           center.SetX( center.x() + tol );
           center.SetY( center.y() + tol );
         } else {
-          info() << "Non valid CELL Id " << id << endreq ;
+          info() << "Non valid CELL Id" << endreq ;
           LHCb::CaloCellID tmp( id.calo(), id.area(), id.row()+1, id.col()+1);
           center = det->cellCenter( tmp );
           tol    = det->cellSize( tmp ) * .5;
@@ -197,10 +206,18 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
         }
 
         if ( hadronType ) {
-          if ( ( 1 == io ) && ( 0 == slave ) ) { 
+          if ( ( ( 1 == io ) && ( 0 == slave ) ) || ( 0 == version ) )  { 
             myL0Cand = new LHCb::L0CaloCandidate ( type, id, et, et * m_etScale,
                                                    center, tol );
-            bestCand[ type ] = myL0Cand ;
+            if ( version > 0 ) bestCand[ type ] = myL0Cand ;
+            else { 
+              outFull -> add( myL0Cand ) ;
+              if ( 0 == bestCand[type] ) {
+                bestCand[type] = myL0Cand;
+              } else if ( et > bestCand[type]->etCode() ) {
+                bestCand[type] = myL0Cand;
+              }
+            }
           } else if ( ( 0 == io ) && ( 0 == slave ) ) { 
             // If Debugging, store all duplicates:
             if ( m_doDebugDecoding ) {
@@ -241,10 +258,17 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
           myL0Cand = new LHCb::L0CaloCandidate ( type, id, et, 
                                                  et * m_etScale, center, 
                                                  tol );
-          if ( 0 == io ) {
+          if ( ( 0 == io ) || ( 0 == version ) ) {
             outFull -> add( myL0Cand ) ;
             debug() << " outFull le reste type = " << type 
                     << " " << *myL0Cand << endreq ;
+            if ( 0 == version ) {
+              if ( 0 == bestCand[type] ) {
+                bestCand[type] = myL0Cand;
+              } else if ( et > bestCand[type]->etCode() ) {
+                bestCand[type] = myL0Cand;
+              }
+            }      
           } else {
             bestCand[ type ] = myL0Cand ;
           }
