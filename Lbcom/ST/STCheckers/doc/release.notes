@@ -2,15 +2,14 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
-! 2007-11-12 M Needham
- - Bug fixes in som histo numbering
+!=========================== STCheckers v2r3 2007-12-11 =======================
+! 2007-12-11 M Needham
+ - Bug fixes in some histo numbering
 
-!=========================== STCheckers v2r3 2007-12-05 =======================
 ! 2007-12-05 - Marco Cattaneo
  - Add STKernel dependency, for new location of ISTSignalToNoiseTool interface
 
 ! 2007-11-26 M Needham
-
  - Bug fix in neighbour sum histo
 
 ! 2007-11-23 M Needham

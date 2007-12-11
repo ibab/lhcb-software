@@ -2,11 +2,11 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!======================= STAlgorithms v2r5 2007-12-11 ========================
 ! 2007-12-05 M Needham
- - change conversion from e- to ADC in options
- - make it possible to turn on/off dead strip sim
+ - In itDigi.opts, change conversion factor from e- to ADC
+ - make it possible to turn on/off dead strip sim (default off)
 
-!======================= STAlgorithms v2r5 2007-12-05 ========================
 ! 2007-12-05 - Marco Cattaneo
  - Add STKernel dependency, for new location of ISTSignalToNoiseTool interface
 
