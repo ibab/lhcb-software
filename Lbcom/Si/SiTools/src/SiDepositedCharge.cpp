@@ -1,4 +1,4 @@
-// $Id: SiDepositedCharge.cpp,v 1.4 2007-03-23 09:00:24 jvantilb Exp $
+// $Id: SiDepositedCharge.cpp,v 1.5 2007-12-11 10:14:25 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -22,14 +22,10 @@ DECLARE_TOOL_FACTORY( SiDepositedCharge );
 SiDepositedCharge::SiDepositedCharge(const std::string& type, 
                                      const std::string& name, 
                                      const IInterface* parent) : 
-  GaudiTool( type, name, parent )
+  SiDepositedChargeBase( type, name, parent )
 {
-  // constructer
-  declareProperty("delta2", m_delta2 = 1800*keV*keV/cm);
+  // constructor
   declareProperty("scalingFactor", m_scalingFactor = 1.0);
- 
-  // need a line here to get the interface correct 
-  declareInterface<ISiDepositedCharge>(this);
 }
 
 SiDepositedCharge::~SiDepositedCharge()
@@ -39,14 +35,11 @@ SiDepositedCharge::~SiDepositedCharge()
 
 StatusCode SiDepositedCharge::initialize()
 { 
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = SiDepositedChargeBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   /// initialize generators .
   IRndmGenSvc* tRandNumSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
-  sc = tRandNumSvc->generator(Rndm::Gauss(0.,1.0),m_GaussDist.pRef());
-  if (sc.isFailure()) return Error( "Failed to init generator ", sc);
-
   sc = tRandNumSvc->generator(Rndm::Landau(0.2226,1.0),m_LandauDist.pRef());
   if (sc.isFailure()) return Error( "Failed to init generator ", sc);
 
@@ -59,7 +52,7 @@ StatusCode SiDepositedCharge::initialize()
 double SiDepositedCharge::charge(const MCHit* aHit) const
 {
   // calculate - deposited charge Landau convolved with Gauss
-  // see for example Bichsel '88 
+ // see for example Bichsel '88 
   double pathLength = m_scalingFactor * aHit->pathLength();
   const MCParticle* aParticle = aHit->mcParticle();
   double beta = aHit->p() /

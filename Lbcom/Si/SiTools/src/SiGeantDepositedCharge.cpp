@@ -1,7 +1,9 @@
-// $Id: SiGeantDepositedCharge.cpp,v 1.3 2007-01-09 14:57:21 jvantilb Exp $
+// $Id: SiGeantDepositedCharge.cpp,v 1.4 2007-12-11 10:14:25 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/IRndmGenSvc.h"
 
 // LHCbKernel
 #include "Kernel/LHCbConstants.h"
@@ -12,18 +14,17 @@
 // local
 #include "SiGeantDepositedCharge.h"
 
+
 DECLARE_TOOL_FACTORY( SiGeantDepositedCharge );
 
 SiGeantDepositedCharge::SiGeantDepositedCharge(const std::string& type, 
                                                const std::string& name, 
                                                const IInterface* parent): 
-  GaudiTool( type, name, parent )
+  SiDepositedChargeBase( type, name, parent )
 {
   /// constructor
-  declareProperty("scalingFactor", m_scalingFactor = 1.0);
+  declareProperty("scalingFactor", m_scalingFactor = 0.95);
  
-  // need a line here to get the interface correct !
-  declareInterface<ISiDepositedCharge>(this);
 }
 
 SiGeantDepositedCharge::~SiGeantDepositedCharge()
@@ -31,7 +32,13 @@ SiGeantDepositedCharge::~SiGeantDepositedCharge()
   // destructer
 }
 
+
 double SiGeantDepositedCharge::charge(const LHCb::MCHit* aHit) const
 {
-  return m_scalingFactor * aHit->energy() / LHCbConstants::SiEnergyPerIonPair;
+
+  double aBinding = atomicBinding(aHit->pathLength())*m_GaussDist->shoot();
+  return m_scalingFactor * (aHit->energy() + aBinding)/ LHCbConstants::SiEnergyPerIonPair;
 }
+
+
+

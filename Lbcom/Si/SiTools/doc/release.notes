@@ -2,6 +2,10 @@ Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+! 2007-12-11 M Needham
+ - Add new base class for deposited charge tools
+ - Allow smearing of charge from Geant
+
 !============================ SiTools v1r3 2007-05-29 =========================
 ! 2007-05-29 - Marco Cattaneo
  - Adapt to new location of MCInterfaces

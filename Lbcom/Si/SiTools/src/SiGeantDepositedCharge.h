@@ -1,9 +1,9 @@
-// $Id: SiGeantDepositedCharge.h,v 1.4 2007-06-01 11:57:59 cattanem Exp $
+// $Id: SiGeantDepositedCharge.h,v 1.5 2007-12-11 10:14:25 mneedham Exp $
 #ifndef SiGeantDepositedCharge_H
 #define SiGeantDepositedCharge_H 1
 
-// Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "SiDepositedChargeBase.h"
+
 
 // Interface
 #include "MCInterfaces/ISiDepositedCharge.h"
@@ -11,12 +11,13 @@
 /** @class SiGeantDepositedCharge SiGeantDepositedCharge.h
  *
  *  Trivial class to turn dE/dx from Geant into e-
+ * Allows for scaling + a smearing to simulate atomic binding
  *
  *  @author M.Needham
  *  @date   13/3/2002
  */
 
-class SiGeantDepositedCharge : public GaudiTool, 
+class SiGeantDepositedCharge : public SiDepositedChargeBase, 
                                virtual public ISiDepositedCharge {
 
 public: 
@@ -33,12 +34,7 @@ public:
   * @return deposited charge 
   */
   double charge(const LHCb::MCHit* aHit) const;
-
-private:
-
-  // Job option
-  double m_scalingFactor; ///< Scaling factor for the conversion into electrons
- 
+    
 };
 
 #endif // SiGeantDepositedCharge_H
