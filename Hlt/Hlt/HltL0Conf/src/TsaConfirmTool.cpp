@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.cpp,v 1.11 2007-11-16 11:29:29 albrecht Exp $
+// $Id: TsaConfirmTool.cpp,v 1.12 2007-12-11 16:30:16 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -128,7 +128,7 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   m_hitMan->prepareHitsInWindow(tp);
   
   if(msgLevel(MSG::INFO)) 
-    info()<<" number of decoded hits: "<<m_hitMan->hits().size()<<endmsg;
+    debug()<<" number of decoded hits: "<<m_hitMan->hits().size()<<endmsg;
  
   if(m_debugMode) {
     tDecode.stop();
@@ -237,7 +237,7 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   }
    
   if( msgLevel(MSG::INFO) ) 
-    info()<<"tracks found sofar in TsaSearch Tool: "<<outputTracks.size()<<endmsg;
+    debug()<<"tracks found sofar in TsaSearch Tool: "<<outputTracks.size()<<endmsg;
 
   return StatusCode::SUCCESS;
   
