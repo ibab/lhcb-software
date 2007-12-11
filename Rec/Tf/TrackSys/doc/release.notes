@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2007-12-11 - Stephanie Hansmann-Menzemer
+ - Add switch for use of TT to PatForward in RecoTracking.opts (default has changed)
 
 !============================ TrackSys v4r12 2007-12-03 ======================
 ! 2007-12-03 - Wouter Hulsbergen

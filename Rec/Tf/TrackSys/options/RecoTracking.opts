@@ -53,6 +53,7 @@ Track.DetectorList  = { "ForwardPat",   "ForwardPreFit",   "ForwardFit"
 
 // Forward pattern
 TrackForwardPatSeq.Members += { "PatForward" };
+ToolSvc.PatForwardTool.AddTTClusterName = "PatAddTTCoord";
 #include "$PATALGORITHMSROOT/options/PatFwdTool.opts"
 
 // Forward prefit
