@@ -1,5 +1,5 @@
 package MicroDST
-version v2r1
+version v3r0
 
 #############################################################
 # BRANCHES
@@ -11,10 +11,13 @@ branches component MicroDST src cmt doc
 #############################################################
 use DaVinciKernel      v*  Phys
 use MCEvent            v*  Event
+use PhysEvent          v*  Event
 use LinkerEvent        v*  Event
+use RecEvent           v*  Event
+use DAQEvent           v*  Event
 
-#for ODIN
-use   DAQEvent        v*    Event
+use MicroDSTInterfaces v*  MicroDST
+use MicroDSTBase       v*  MicroDST
 
 #############################################################
 apply_pattern install_more_includes more=MicroDST
@@ -22,9 +25,6 @@ apply_pattern install_more_includes more=MicroDST
 #############################################################
 # BUILD
 #############################################################
-# build a link kibrary
-library MicroDSTLib ../src/Lib/*.cpp
-apply_pattern linker_library library=MicroDSTLib
 # build a component library
 library MicroDST ../src/*.cpp
 
