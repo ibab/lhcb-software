@@ -6,4 +6,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-12-10 - Juan Palacios
+ - Remove everything to do with local data storage. Tools and Algos now
+   use the TES directly.
+
+! 2007-12-10 - Juan Palacios
  - First import

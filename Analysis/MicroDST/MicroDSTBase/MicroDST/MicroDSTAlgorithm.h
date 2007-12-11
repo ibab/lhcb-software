@@ -1,4 +1,4 @@
-// $Id: MicroDSTAlgorithm.h,v 1.1.1.1 2007-12-10 09:12:42 jpalac Exp $
+// $Id: MicroDSTAlgorithm.h,v 1.2 2007-12-11 16:44:37 jpalac Exp $
 #ifndef MICRODSTALGORITHM_H 
 #define MICRODSTALGORITHM_H 1
 
@@ -31,17 +31,5 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-public:
-
-
-  /**
-   *
-   * @author Juan Palacios juancho@nikhef.nl
-   */
-
-  //  StatusCode copyLocalStoreToTES();
-
 };
-// templated method implementations.
-//#include "MicroDSTAlgorithm.icpp"
 #endif // COPYANDSTOREDATA_H

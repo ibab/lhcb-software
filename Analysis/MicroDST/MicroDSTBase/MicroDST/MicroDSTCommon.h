@@ -1,9 +1,8 @@
-// $Id: MicroDSTCommon.h,v 1.1.1.1 2007-12-10 09:12:42 jpalac Exp $
+// $Id: MicroDSTCommon.h,v 1.2 2007-12-11 16:44:37 jpalac Exp $
 #ifndef MICRODST_MICRODSTCOMMON_H 
 #define MICRODST_MICRODSTCOMMON_H 1
 
 // Include files
-#include <MicroDST/Types.h>
 #include <MicroDST/Functors.hpp>
 
 
@@ -95,15 +94,6 @@ public:
   const T* copyKeyedContainer( const std::string& from, 
                                ContainedItemCloner* cloner    ) ;
 
-
-
-  /**
-   *
-   * @author Juan Palacios juancho@nikhef.nl
-   */
-  template <class T, class ContainedItemCloner >
-  const T* cloneContainerToLocalStore( const std::string& from ) ;
-
   /**
    *
    * @author Juan Palacios juancho@nikhef.nl
@@ -145,27 +135,6 @@ public:
   const T* getInputContainer( const std::string& location ) ;
 
 
-  /**
-   *
-   * @author Juan Palacios juancho@nikhef.nl
-   */
-  template <class T, class itemCloner>
-  T* cloneKeyedItemToLocalStore( const T* item );
-
-  /**
-   *
-   * @author Juan Palacios juancho@nikhef.nl
-   */
-  template <class T>
-  T* getLocalClone( const T* original    ) ;
-  
-  /**
-   *
-   * @author Juan Palacios juancho@nikhef.nl
-   */
-  template <class T>
-  T* getLocalContainer( const std::string& location );
-
   template <class T>
   inline bool exist(const std::string& location) {
     return PBASE:: template exist<T>(location);
@@ -178,11 +147,6 @@ public:
 
 
 protected:
-
-  inline MicroDST::DataStore* localDataStore() 
-  {
-    return m_store;
-  }
   
   inline const std::string& inputTESLocation() const 
   {
@@ -235,7 +199,6 @@ private:
   std::string m_inputTESLocation;
   std::string m_outputPrefix;
   std::string m_fullOutputTESLocation;
-  MicroDST::DataStore* m_store;
   
 };
 // templated method implementations.

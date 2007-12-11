@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.icpp,v 1.1.1.1 2007-12-10 09:12:42 jpalac Exp $
+// $Id: MicroDSTCommon.icpp,v 1.2 2007-12-11 16:44:37 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : MicroDSTCommon
 //
@@ -42,7 +42,6 @@ const T* MicroDSTCommon<PBASE>::copyAndStoreObject( const std::string& from,
   if (exist<T>( from ) ) {
     const T* data = this->get<T>( from );
     this->verbose() << "now copy information" << endmsg;
-    //    T* newData = new T(*data);
     T* newData = CopyFunctor::copy(data);
     this->put (newData, to );
     this->verbose() << "Data values set to\n" << *newData << "\n" << endmsg;
@@ -111,30 +110,6 @@ const T* MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
 
   return  clones; 
 
-}
-//=============================================================================
-template <class PBASE>
-template <class T, class ContainedItemCloner >
-const T* MicroDSTCommon<PBASE>::cloneContainerToLocalStore(const std::string& from) 
-{
-  this->verbose() << "now store container for location " << from << endmsg;
-
-  if (!exist<T>(from)) {
-    this->debug() << "Container location does not exist" << endmsg;
-    return 0;    
-  } else {
-    const T* data = get<T>( from );
-    if (!data) {
-      return 0;
-    }
-    T* clones = getLocalContainer<T>(from);
-
-    this->verbose() << "cloneToLocalStore " << data->size() 
-              << " elements from " << from 
-              << " into local store, size " << clones->size() << endmsg;
-    return  copyKeyedContainer<T, ContainedItemCloner>(data, 
-                                                       clones); 
-  } // if !exist
 }
 //=============================================================================
 template <class PBASE>
@@ -212,62 +187,6 @@ const T* MicroDSTCommon<PBASE>::copyKeyedContainer( const T* from, T* to    )
             << to->size() << endmsg;
 
   return to;
-}
-//=============================================================================
-template <class PBASE>
-template <class T, class itemCloner>
-T* MicroDSTCommon<PBASE>::cloneKeyedItemToLocalStore( const T* item )
-{
-  const std::string location( MicroDST::objectLocation( item->parent() ) );
-  this->verbose() <<"cloneKeyedItemToLocalStore " << location << endmsg;
-  typename T::Container* clones = 
-    getLocalContainer<typename T::Container>(location);
-  if (0==clones) {
-    this->verbose() << "found no clones" << endmsg;
-    return 0;
-  }
-  
-  this->verbose() << "Found local container" << endmsg;
-  MicroDST::CloneKeyedContainerItem<T, itemCloner> cloner(clones);
-  return cloner(item);
-    
-}
-
-//=============================================================================
-template <class PBASE>
-template <class T>
-T* MicroDSTCommon<PBASE>::getLocalClone( const T* original    ) 
-{
-  const std::string cloneLocation = MicroDST::objectLocation(original->parent());
-
-  if (!getLocalContainer<typename T::Container>(cloneLocation)) return 0;
-
-  typename T::Container* clones = 
-    getLocalContainer<typename T::Container>(cloneLocation);
-  // check what this returns if no object found.
-  return clones->object(original->key() ); 
-    
-}
-//=============================================================================
-template <class PBASE>
-template <class T>
-T* MicroDSTCommon<PBASE>::getLocalContainer( const std::string& location )
-{
-  this->verbose() << "A desperate hello from getLocalContainer, location " 
-            << location << endmsg;
-  const std::string niceLocation = MicroDST::niceLocationName(location);
-  this->verbose() << "found niceLocation " << niceLocation << endmsg;
-  MicroDST::DataStore::const_iterator iMap = localDataStore()->find(niceLocation);
-  if (iMap != localDataStore()->end()) {
-    this->verbose() << "return existing container" << endmsg;
-    return dynamic_cast<T*>((*localDataStore())[niceLocation]);
-  } else {
-    this->verbose() << "Making a new local container with address " << niceLocation
-              << endmsg;
-    T* container = new T();
-    (*localDataStore())[niceLocation] = container;
-    return dynamic_cast<T*>((*localDataStore())[niceLocation]);
-  }
 }
 //=============================================================================
 // Destructor
