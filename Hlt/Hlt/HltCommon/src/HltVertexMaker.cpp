@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.10 2007-12-03 16:59:35 hernando Exp $
+// $Id: HltVertexMaker.cpp,v 1.11 2007-12-11 16:28:08 hernando Exp $
 // Include files 
 
 
@@ -148,7 +148,13 @@ StatusCode HltVertexMaker::execute() {
   copy(*m_inputTracks,m_input2);
   if (m_twoContainers) copy(*m_inputTracks2,m_input2);
   // else copy(*m_inputTracks,m_input2);
-
+  
+  debug() << " tracks size in 2nd container " << m_input2.size() <<endreq;
+  if (m_input2.size()<2) {
+    debug() << " no enough tracks in 2nd container " << endreq;
+    return sc;
+  }
+  
   if (m_debug) {
     printInfo( "tracks [1]", *m_inputTracks);
     printInfo( "tracks [2]",  m_input2);

@@ -5,6 +5,7 @@
 !----------------------------------------------------------------------------
 
 ! 2007-12-11 Jose A. Hernando
+      - small bug in HltVertexMaker, at least 2 tracks to make a vertex!
       - small bug in VertexMacthingIDs use abs_max
 	    - L0Entry uses now the names of channes as they are in L0DUReport
 
