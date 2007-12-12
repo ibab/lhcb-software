@@ -88,4 +88,3 @@ EvtTupleSvc.Output = { "EVTTAGS2 DATAFILE='etc-output-test.root' TYP='POOL_ROOTT
 //---------------------------------------------------------------------------
 ApplicationMgr.EvtMax = -1;
 //EventSelector.FirstEvent = 7;  // To skip some events
-ApplicationMgr.EvtMax = 20 ;
