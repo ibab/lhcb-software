@@ -6,12 +6,13 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r13>2007-12-10 LbcomSys v6r13</A></H1><PRE>
+</PRE><H1><A NAME=v6r13>2007-12-11 LbcomSys v6r13</A></H1><PRE>
 This version uses Gaudi v19r6 and LHCb v23r2
 
 - Packages modified: L0Calo v9r11, L0DU v8r1, RichDAQ v3r13, RichMCMonitors v1r5,
-    RichTools v2r16, STAlgorithms v2r5, STAssociators v1r5, STCheckers v2r3,
-    STDAQ v3r3, STTools v3r4p1, Veloassociators v2r3, VeloTools v3r0
+    RichTools v2r16, SiTools v1r4, STAlgorithms v2r5, STAssociators v1r5,
+    STCheckers v2r3, STDAQ v3r3, STTools v3r4p1, Veloassociators v2r3,
+    VeloTools v3r0
 
 - In L0Calo v9r11
   . implement the final bank format as defined in EDMS-845277
@@ -35,8 +36,14 @@ This version uses Gaudi v19r6 and LHCb v23r2
     photoCathode or the outside of the window (including refraction corrections)
   . Add some new default tool mappings
 
+- In SiTools v1r4
+  . Add new base class for deposited charge tools
+  . Allow smearing of charge from Geant
+
 - In STAlgorithms v2r5
   . Use isOKStrip method 
+  . In itDigi.opts, change conversion factor from e- to ADC
+  . Make it possible to turn on/off dead strip sim (default off)
 
 - In STAssociators v1r5
   . Make input location of STClusters2MCHits a jobOption
