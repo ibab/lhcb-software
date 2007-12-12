@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.24 2007-11-07 15:53:07 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.25 2007-12-12 09:29:23 ocallot Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -557,7 +557,8 @@ StatusCode LHCb::encodeRawBanks(const RawEvent* evt, char* const data, size_t si
 }
 
 /// Copy RawEvent data from bank vectors to sequential buffer
-StatusCode LHCb::encodeRawBanks(const std::vector<RawBank*>& banks, char* const data, size_t size, bool skip_hdr_bank, size_t* length) {
+StatusCode LHCb::encodeRawBanks(const std::vector<RawBank*>& banks, char* const data, 
+                                size_t size, bool skip_hdr_bank, size_t* length) {
   typedef std::vector<RawBank*> _BankV;
   size_t len = 0;
   for(_BankV::const_iterator j=banks.begin(); j != banks.end(); ++j)  {
@@ -846,4 +847,46 @@ StatusCode LHCb::readMEPrecord(StreamDescriptor& dsc, const StreamDescriptor::Ac
     }
   }
   return StatusCode::FAILURE;
+}
+
+//== Unpacks the buffer given by the start and end pointers, and return a vector of Raw Events pointers
+
+std::vector<std::pair<std::string,LHCb::RawEvent*> > LHCb::unpackTAEBuffer( const char* start, const char* end ) {
+  std::vector<std::pair<std::string,LHCb::RawEvent*> > result;
+  RawBank* b = (RawBank*)start;            // Get the first bank in the buffer
+  if ( b->type() != RawBank::TAEHeader ) { // Is it the TAE bank?
+    RawEvent* full = new RawEvent();       // No: This is a single RawEvent, unpack it
+    decodeRawBanks( start, end, full );
+    std::pair<std::string,LHCb::RawEvent*> alone( "", full );
+    result.push_back( alone );
+    return result;
+  }
+  int nBlocks = b->size()/sizeof(int)/3;  // The TAE bank is a vector of triplets
+  int* block  = (int*)start;
+  block += 2;                             // skip bank header
+  start += b->totalSize();                // skip TAE bank
+  for ( int nbl = 0; nBlocks > nbl; ++nbl ) {
+    int nBx = *block++;
+    int off = *block++;
+    int len = *block++;
+    const char* myBeg = start+off;
+    const char* myEnd = myBeg + len;
+    RawEvent* evt = new RawEvent();
+    decodeRawBanks( myBeg, myEnd, evt );
+    std::pair<std::string,LHCb::RawEvent*> oneEvt( rootFromBxOffset( nBx ), evt );
+    result.push_back( oneEvt );
+  }
+  return result;
+}
+//== Returns the prefix on TES according to bx number, - is previous, + is next
+std::string LHCb::rootFromBxOffset( int bxOffset ) {
+  std::string root;
+  if ( 0 > bxOffset ) {
+    root = "Prev" + std::string(1,char('0'-bxOffset) ) + "/";
+  } else if ( 0 < bxOffset ) {
+    root = "Next" + std::string(1,char('0'+bxOffset) ) + "/";
+  } else {
+    root = "";
+  }
+  return root;
 }

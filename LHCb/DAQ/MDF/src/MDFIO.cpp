@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.17 2007-10-04 13:57:07 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.18 2007-12-12 09:29:23 ocallot Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -99,6 +99,78 @@ StatusCode LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
 
 StatusCode LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, const std::string& location)
 {
+  if ( 0 < m_nbPrevious || 0 < m_nbNext ) {
+    // Time Alignment Event processing
+    RawEvent privateBank;
+    std::vector<RawEvent*> theRawEvents;
+    
+    // prepare the bank containing the number of BX (prevm next  in this event, and information for each
+    int sizeCtrlBlock = 3 * ( m_nbPrevious + m_nbNext + 1 );
+    std::vector<int> ctrlData;
+    ctrlData.reserve(sizeCtrlBlock);
+    size_t offset = 0;
+    for ( int n = -m_nbPrevious; m_nbNext >= n; ++n ) {
+      std::string root = rootFromBxOffset( n );
+      SmartDataPtr<RawEvent> raw(m_evtSvc, root+location);
+      if ( raw ) {
+        theRawEvents.push_back( raw );
+        ctrlData.push_back( n );               // BX offset
+        ctrlData.push_back( offset );          // offset in buffer, after end of this bank
+        size_t len = rawEventLength(raw); 
+        ctrlData.push_back( len );             // size of this BX information
+        offset += len;
+      }
+    }
+    RawBank* ctrlBank = privateBank.createBank( 0, RawBank::TAEHeader, 0, sizeof(int)*ctrlData.size(), &*ctrlData.begin() );
+
+    // Create now the complete event header (MDF header) with complete length
+    size_t len = offset + ctrlBank->totalSize();
+    RawBank* hdrBank = createDummyMDFHeader( &privateBank, len );
+    len += hdrBank->totalSize();
+
+    // Prepare the input to add these two banks to an output buffer
+    std::vector<RawBank*> banks;
+    banks.push_back( hdrBank );
+    banks.push_back( ctrlBank );
+
+    size_t total = len;
+    size_t length= 0;
+    std::pair<char*,int> space = getDataSpace(ioDesc, total);
+    if ( space.first )  {
+      char* dest = space.first;
+      if ( encodeRawBanks( banks, dest, len, false, &length ).isSuccess())  {
+        dest  += length;
+        len   -= length;
+      }
+      for ( unsigned int kk =0; theRawEvents.size() != kk; ++kk ) {
+        size_t myLength = ctrlData[3*kk + 2];  // 2 words header, third element for each buffer
+        encodeRawBanks( theRawEvents[kk], dest, myLength, true);
+        dest  += myLength;
+        len   -= myLength;
+      }
+      //== here, len should be 0...
+      if ( 0 != len ) {
+        MsgStream msg( m_msgSvc, m_parent );
+        msg << MSG::ERROR << "Expect length=0, found " << len << " starting from " << total << endmsg;
+      }
+      
+      StatusCode sc = writeDataSpace(compTyp, chksumTyp, ioDesc, hdrBank, space.first, total);
+      if ( !sc.isSuccess() ) {
+        MsgStream err(m_msgSvc, m_parent);
+        err << MSG::ERROR << "Failed write data to output device." << endmsg;
+      }
+      privateBank.removeBank( ctrlBank );
+      privateBank.removeBank( hdrBank );
+      return sc;
+    }
+    MsgStream msg(m_msgSvc, m_parent);
+    msg << MSG::ERROR << "Failed to get space, size = " << len << endmsg;
+    privateBank.removeBank( ctrlBank );
+    privateBank.removeBank( hdrBank );
+    return StatusCode::FAILURE;
+  }
+
+  //== Normal processing for single event
   SmartDataPtr<RawEvent> raw(m_evtSvc,location);
   if ( raw )  {
     typedef std::vector<RawBank*> _V;
@@ -110,32 +182,34 @@ StatusCode LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const i
       }
     }
     MsgStream log1(m_msgSvc, m_parent);
-    unsigned int trMask[] = {~0,~0,~0,~0};
     size_t len = rawEventLength(raw);
-    RawBank* hdrBank = raw->createBank(0, RawBank::DAQ, DAQ_STATUS_BANK, sizeof(MDFHeader)+sizeof(MDFHeader::Header1), 0);
-    MDFHeader* hdr = (MDFHeader*)hdrBank->data();
-    hdr->setChecksum(0);
-    hdr->setCompression(0);
-    hdr->setHeaderVersion(3);
-    hdr->setSpare(0);
-    hdr->setDataType(MDFHeader::BODY_TYPE_BANKS);
-    hdr->setSubheaderLength(sizeof(MDFHeader::Header1));
-    hdr->setSize(len);
-    MDFHeader::SubHeader h = hdr->subHeader();
-    h.H1->setTriggerMask(trMask);
-    h.H1->setRunNumber(~0x0);
-    h.H1->setOrbitNumber(~0x0);
-    h.H1->setBunchID(~0x0);
+    RawBank* hdrBank = createDummyMDFHeader( raw, len );
     raw->adoptBank(hdrBank, true);
     log1 << MSG::INFO << "Adding dummy MDF/DAQ[DAQ_STATUS_BANK] information." << endmsg;
     return commitRawBanks(raw,hdrBank,compTyp,chksumTyp,ioDesc);
-    // log1 << MSG::ERROR << "Failed to access MDF header information." << endmsg;
-    // return StatusCode::FAILURE;
   }
   MsgStream log2(m_msgSvc, m_parent);
-  log2 << MSG::ERROR << "Failed to retrieve raw event object:"
-       << "/Event/DAQ/RawEvent" << endmsg;
+  log2 << MSG::ERROR << "Failed to retrieve raw event object at " << location << endmsg;
   return StatusCode::FAILURE;
+}
+
+RawBank* LHCb::MDFIO::createDummyMDFHeader( RawEvent* raw, size_t len ) {
+  unsigned int trMask[] = {~0,~0,~0,~0};
+  RawBank* hdrBank = raw->createBank(0, RawBank::DAQ, DAQ_STATUS_BANK, sizeof(MDFHeader)+sizeof(MDFHeader::Header1), 0);
+  MDFHeader* hdr = (MDFHeader*)hdrBank->data();
+  hdr->setChecksum(0);
+  hdr->setCompression(0);
+  hdr->setHeaderVersion(3);
+  hdr->setSpare(0);
+  hdr->setDataType(MDFHeader::BODY_TYPE_BANKS);
+  hdr->setSubheaderLength(sizeof(MDFHeader::Header1));
+  hdr->setSize(len);
+  MDFHeader::SubHeader h = hdr->subHeader();
+  h.H1->setTriggerMask(trMask);
+  h.H1->setRunNumber(~0x0);
+  h.H1->setOrbitNumber(~0x0);
+  h.H1->setBunchID(~0x0);
+  return hdrBank;
 }
 
 /// Direct I/O with valid existing raw buffers

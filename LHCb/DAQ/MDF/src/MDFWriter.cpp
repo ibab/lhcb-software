@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.10 2007-11-19 19:27:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.11 2007-12-12 09:29:23 ocallot Exp $
 //	====================================================================
 //  MDFWriter.cpp
 //	--------------------------------------------------------------------
@@ -49,6 +49,9 @@ void MDFWriter::construct()   {
   declareProperty("DataType",       m_dataType=MDFIO::MDF_NONE); // Input data type
 	declareProperty("BankLocation",		m_bankLocation=RawEventLocation::Default);  // Location of the banks in the TES
   declareProperty("DataManager",    m_ioMgrName="IODataManager");
+
+  declareProperty("nbPrevious",     m_nbPrevious  = 0 );
+  declareProperty("nbNext",         m_nbNext      = 0 );
 }
 
 MDFWriter::~MDFWriter()   {
@@ -58,6 +61,8 @@ MDFWriter::~MDFWriter()   {
 /// Initialize
 StatusCode MDFWriter::initialize()   {
   MsgStream log(msgSvc(), name());
+  log << MSG::INFO << "Initialize MDFWriter" << endmsg;
+  
   std::string con = getConnection(m_connectParams);
   // Retrieve conversion service handling event iteration
   StatusCode status = service(m_ioMgrName, m_ioMgr);

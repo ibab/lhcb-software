@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.13 2006-10-23 09:19:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.14 2007-12-12 09:29:23 ocallot Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -72,7 +72,8 @@ namespace LHCb  {
   /// Copy RawEvent data from the object to sequential buffer
   StatusCode encodeRawBanks(const RawEvent* evt,char* const data, size_t len, bool skip_hdr_bank);
   /// Copy RawEvent data from bank vectors to sequential buffer
-  StatusCode encodeRawBanks(const std::vector<RawBank*>& banks, char* const data, size_t size, bool skip_hdr_bank, size_t* length);
+  StatusCode encodeRawBanks(const std::vector<RawBank*>& banks, char* const data, 
+                            size_t size, bool skip_hdr_bank, size_t* length);
   /// Conditional decoding of raw buffer from MDF to raw event object
   StatusCode decodeRawBanks(const char* start, const char* end, RawEvent* raw);
   /// Conditional decoding of raw buffer from MDF to bank offsets
@@ -133,5 +134,12 @@ namespace LHCb  {
 
   /// read MEP record from input stream 
   StatusCode readMEPrecord(StreamDescriptor& dsc, const StreamDescriptor::Access& con);
+
+  /// unpack the buffer specified by the two pointers, and return a vector of pairs: root on TES and RawEvent
+  std::vector<std::pair<std::string,RawEvent*> > unpackTAEBuffer( const char* start, const char* end );
+
+  /// returns the prefix in TES for the raw event, according to the bx offset
+  std::string rootFromBxOffset( int bxOffset );
+  
 }
 #endif // MDF_RAWEVENTHELPERS_H

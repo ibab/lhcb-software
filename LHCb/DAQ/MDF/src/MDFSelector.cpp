@@ -1,4 +1,4 @@
-// $Id: MDFSelector.cpp,v 1.12 2007-11-19 19:27:32 frankb Exp $
+// $Id: MDFSelector.cpp,v 1.13 2007-12-12 09:29:23 ocallot Exp $
 //====================================================================
 //	MDFSelector.cpp
 //--------------------------------------------------------------------
@@ -44,7 +44,7 @@ namespace LHCb  {
       return std::pair<char*,int>(m_buff.data(),m_buff.size());
     }
     /// Read raw byte buffer from input stream
-    StatusCode readBuffer(void* const ioDesc, void* const data, size_t len)  {
+    StatusCode readBuffer(void* const /* ioDesc */, void* const data, size_t len)  {
       return m_ioMgr->read(m_connection, data, len);
     }
     /// Receive event and update communication structure

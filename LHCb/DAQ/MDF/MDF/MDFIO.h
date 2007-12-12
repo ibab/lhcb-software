@@ -1,4 +1,4 @@
-// $Id: MDFIO.h,v 1.13 2007-10-04 13:57:07 frankb Exp $
+// $Id: MDFIO.h,v 1.14 2007-12-12 09:29:23 ocallot Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -57,8 +57,11 @@ namespace LHCb {
     Gaudi::IFileCatalogSvc*       m_catalog;
     /// Flag to ignore the checksum
     bool                          m_ignoreChecksum;
-
-
+    /// Value of the number of prebious BX to store
+    int                           m_nbPrevious;
+    /// Value of the number of next BX to store
+    int                           m_nbNext;
+    
     /// Helper to retrieve data from Opaque address
     std::pair<const char*,int> getDataFromAddress();
     /// Helper to access header information
@@ -90,11 +93,13 @@ namespace LHCb {
 
     bool checkSumOk(int checksum, const char* src, int datSize, bool prt);
 
+    RawBank* createDummyMDFHeader( RawEvent* raw, size_t len );
+
   public:
 
     /// Initializing constructor
     MDFIO(Writer_t typ, const std::string& nam) 
-      : m_msgSvc(0), m_evtSvc(0), m_dataType(typ), m_parent(nam), m_catalog(0) {}
+      : m_msgSvc(0), m_evtSvc(0), m_dataType(typ), m_parent(nam), m_catalog(0), m_nbPrevious(0), m_nbNext(0) {}
 
     /// Default destructor
     virtual ~MDFIO() {}

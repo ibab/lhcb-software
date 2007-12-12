@@ -1,4 +1,4 @@
-// $Id: MDF.cpp,v 1.15 2006-11-15 10:57:22 frankb Exp $
+// $Id: MDF.cpp,v 1.16 2007-12-12 09:29:23 ocallot Exp $
 //====================================================================
 //  GaudiOnline_dll.cpp
 //--------------------------------------------------------------------
@@ -24,7 +24,7 @@ LOAD_FACTORY_ENTRIES(MDF)
 DECLARE_FACTORY_ENTRIES(MDF)  {
   DECLARE_NAMESPACE_SERVICE(  LHCb,MDFSelector);
   DECLARE_NAMESPACE_SERVICE(  LHCb,MIFSelector);
-  DECLARE_NAMESPACE_SERVICE(  LHCb,RawDataCnvSvc);
+  DECLARE_NAMESPACE_SERVICE(  LHCb,RawDataCnvSvc); 
   DECLARE_NAMESPACE_ALGORITHM(LHCb,MDFWriter);
   DECLARE_NAMESPACE_ALGORITHM(LHCb,MDFWriterLite);
   DECLARE_NAMESPACE_ALGORITHM(LHCb,MIFWriter);
