@@ -3,7 +3,7 @@
 # Maintainer : Global PID Group ( Chris Jones et. al. )
 #============================================================================
 package           GlobalReco
-version           v6r13
+version           v6r14
 
 branches          cmt doc src options root
 include_path none

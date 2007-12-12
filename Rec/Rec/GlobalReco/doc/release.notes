@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r14 2007-12-12 ======================
 ! 2007-11-28 - Chris Jones
  - Update how Offline/HLT data locations are handled, to always try and guess
    the correct location using the context() flag
