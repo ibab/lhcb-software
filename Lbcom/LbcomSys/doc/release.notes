@@ -25,6 +25,8 @@ This version uses Gaudi v19r6 and LHCb v23r2
   . Remove obsolete SerializeStl include
   . Add method to RawBufferToSmartIDsTool to return the hits for a requested HPD
   . Update pixel clustering tool to work with ALICE mode data
+  . Fix issue in filling raw event where ingress header IDs are not properly
+    included for each L1 board
 
 - In RichMCMonitors v1r5
   . Add check for existence of MCRichHits in MCCKPhotonYieldAlg, so processing 
