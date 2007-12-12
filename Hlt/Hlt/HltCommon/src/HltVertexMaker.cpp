@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.11 2007-12-11 16:28:08 hernando Exp $
+// $Id: HltVertexMaker.cpp,v 1.12 2007-12-12 15:55:43 hernando Exp $
 // Include files 
 
 
@@ -37,7 +37,7 @@ HltVertexMaker::HltVertexMaker( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
-  m_consider2=true;
+  m_consider2=true; // second container it is accepted even if empty!
   declareProperty("CheckForOverlaps", m_checkForOverlaps = false );
   declareProperty("FilterDescriptor", m_filterDescriptor);
 }
