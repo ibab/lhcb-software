@@ -18,6 +18,10 @@ Brunel v32r1 or greater
     See <a href="http://indico.cern.ch/materialDisplay.py?contribId=5&materialId=slides&confId=24032">talk</a> at ST software meeting on 2007-11-27.
   . Adapt Calo calibration simulation to changes in CaloDAQ v4r2 (CaloDigit v2r5)
 
+- New tuning
+  . In itDigi.opts, change conversion factor from e- to ADC (STAlgorithms v2r5)
+  . Smear time, not distance (OTSimulation v3r15)
+
 - Persistency changes
   . Implement the final L0 Calo bank format as defined in EDMS-845277
     Requires "HadronSB" condition to be included in condDB (from SQLDDDB v3r1)
