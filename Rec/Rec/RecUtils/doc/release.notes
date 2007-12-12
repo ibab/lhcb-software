@@ -4,14 +4,12 @@
 ! Purpose     : Collection of simple utilities tied to REC
 !-----------------------------------------------------------------------------
 
+!============================ RecUtils v1r4 2007-12-12 =======================
 ! 2007-12-10 - Vanya BELYAEV
-
  - CopyStripETC/ReadStripETC 
-
    fix the type of "int" columns.
     From now the type is picked up directly from Tuples::TupleObj
     and *NOW* further modifications are required.
-    
 
 !============================ RecUtils v1r3 2007-09-20 =======================
 ! 2007-09-07 - Patrick Koppenburg
