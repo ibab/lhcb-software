@@ -36,6 +36,8 @@ Brunel v32r1 or greater
   . Bug fix in neighbour sum histo (STCheckers v2r3)
   . Fix v200601.py to importOptions from absolute path
   . Protection against negative modulus in CaloSignalAlg (CaloDigit v2r5)
+  . Fix issue of Rich L1 board (one ingress) with no hits at all, the header for
+    that ingress was incorrectly missing in the data bank (RichDAQ v3r13)
 
 </PRE><H1><A NAME=v14r7>2007-11-15 Boole v14r7</A></H1><PRE>
 This version uses projects Gaudi v19r5, LHCb v23r1, Lbcom v6r12
