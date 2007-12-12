@@ -4,7 +4,12 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
-!================ DAQEvent v7r7 2007-12-10 ============================
+!================ DAQEvent v7r7 2007-12-12 ============================
+! 2007-12-12 - Olivier Callot
+ - add new bank type TAEHeader, in fact not a bank but a pseudo-one, put
+   as first bank in the MDF payload to describe multi-event in the same
+   MDF block. The bank is a vector of triplets of int: bxOffset, offset, size.
+
 ! 2007-12-10 Olivier Deschamps
  - Add the status 'UNKNOWN' in RawBankReadoutStatus::Status enum
 

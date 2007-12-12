@@ -97,6 +97,7 @@ namespace LHCb
                    GaudiHeader,     //45
                    TTProcFull,      //46
                    ITProcFull,      //47
+                   TAEHeader,       //48
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };
 
