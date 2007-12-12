@@ -8,7 +8,7 @@ from math import *
 HLTJOB = "$HLTSYSROOT/options/HltJob.opts"
 MINBIAS = "$HLTSYSROOT/optionss/raw06_minbias_1.opts"
 BKPISEL = "$HLTSYSROOT/options/dst06_bkpi_sel.opts"
-BKSTMUMUSEL = "$HLTSYSROOT/options/dst06_bkpi_sel.opts"
+BSMUMUSEL = "$HLTSYSROOT/options/dst06_bsmumu_sel.opts"
 
 # crete application and initialize
 gaudi = gaudimodule.AppMgr(outputlevel=3)
@@ -16,8 +16,6 @@ gaudi.config(files = [HLTJOB,BKPISEL])
 gaudi.initialize()
 
 # create tools
-IL0Value = gaudimodule.gbl.IL0Value
-L0TOOL = gaudi.toolsvc().create("L0Value",interface="IL0Value")
 HLTSUM = gaudi.toolsvc().create("HltSummaryTool",interface="IHltConfSummaryTool")
 HLTFAC = gaudi.toolsvc().create("HltFunctionFactory",interface="IHltFunctionFactory")
 
@@ -51,24 +49,10 @@ def l0():
         how to get the l0 decision per channel (i.e hadron high threshold)
         hot to get the l0 decision per condition (i.e SPD multiplicity)
     """
-    l0 = TES["Trig/L0/L0DU"]
+    l0 = TES["Trig/L0/L0DUReport"]
     print " L0 decision ",l0.decision()
                  
 
-def l0_values():
-    """ hot to get the l0 values sent to the L0DU?
-    """
-    print " L0 EtTotal ",L0TOOL.value(IL0Value.EtTotal)
-    print " L0 SPDMult ",L0TOOL.value(IL0Value.SPDMult)
-    print " L0 PuHits  ",L0TOOL.value(IL0Value.PuHits)
-    print " L0 PuPeak2 ",L0TOOL.value(IL0Value.PuPeak2)
-    print " L0 EtHad   ",L0TOOL.value(IL0Value.EtHad)
-    print " L0 EtEle   ",L0TOOL.value(IL0Value.EtEle)
-    print " L0 EtGamma ",L0TOOL.value(IL0Value.EtGamma)
-    print " L0 EtPi0Local ",L0TOOL.value(IL0Value.EtPi0Local)
-    print " L0 EtPi0Global ",L0TOOL.value(IL0Value.EtPi0Global)
-    print " L0 PtMu   ",L0TOOL.value(IL0Value.PtMu)
-    print " L0 PtDiMu ",L0TOOL.value(IL0Value.PtDiMu)
 
 def l0_candidates():
     """ hot to get the l0 candidates?
@@ -87,8 +71,7 @@ def hlt():
         how to get the decision of a selection?
         how to get the selections that an event has passed?
     """
-    sum = TES["Hlt/Summary"]
-    print " HLT decision ",sum.decision()," ", HLTSUM.decision()
+    print " HLT decision ", HLTSUM.decision()
     names = ["HadL0Entry","HadPreTriggerSingle","HadTrigger"]
     for name in names:
         print " \t",name," ? ",HLTSUM.selectionDecision(name)
@@ -125,31 +108,6 @@ def hlt_candidates_info(selection = "HadPreTriggerSingle"):
         for var in vars: s = s+" "+str(var)
         print "\t",filter," : ",s
 
-def hlt_alley_configuration(name):
-    def makeStr(vals):
-        s = " "
-        for val in vals: s = s+val+" "
-        return s
-    def printConf(members,conf):
-        for member in members:
-            if (not conf.has_key(member)): continue
-            print "\t",member," (",conf[member]["Type"],")  -> ",conf[member]["Selection"],"<-",conf[member]["InputSelections"]
-            if (conf[member]["Filters"] != " "): print "\t\t",conf[member]["Filters"]
-    tool = gaudi.toolsvc().create("HltSummaryTool",interface="IHltConfSummaryTool")
-    members = tool.confStringVector(name+"/Members")
-    conf = {}
-    for member in members:
-        conf[member] = {}
-        sele = tool.confString(member+"/Selection")
-        if (sele == ""): continue
-        conf[member]["Selection"]  = sele
-        conf[member]["Type"]    = tool.confString(sele+"/Type")
-        conf[member]["InputSelections"]  = makeStr(tool.confStringVector(sele+"/InputSelections"))
-        conf[member]["Filters"] = makeStr(tool.confStringVector(sele+"/Filters"))
-    print " HLT alley ",name," configuration :"
-    printConf(members,conf)
-
-
 def run(n=10):
     """ run 10 events and print info about L0 and HLT
     """
@@ -157,7 +115,6 @@ def run(n=10):
         print " *** L0 and HLT info *** "
         gaudi.run(1)
         l0()
-        l0_values()
         l0_candidates()
         hlt()
         hlt_candidates_info("HadPreTriggerSingle")
@@ -165,4 +122,3 @@ def run(n=10):
     print " *** configuration  *** "
     hlt_selection_configuration("HadPreTriggerSingle")
     hlt_selection_configuration("HadTrigger")
-    hlt_alley_configuration("HltHadAlley")
