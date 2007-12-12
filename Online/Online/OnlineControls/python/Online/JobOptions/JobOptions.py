@@ -98,12 +98,18 @@ class TaskType(JobOptionsObject):
     self.defaults = self._dp('NeedDefaults')
     self.tell1s   = self._dp('NeedTell1s')
     self.options  = self._dp('Options')
+    self.script   = self._dp('ScriptPath')
+    self.detector = self._dp('Detector')
+    self.runAs    = self._dp('RunAs')
     self.loadIfExists()
   # ===========================================================================
   def load(self):
     self.reader.add(self.defaults)
     self.reader.add(self.tell1s)
     self.reader.add(self.options)
+    self.reader.add(self.script)
+    self.reader.add(self.detector)
+    self.reader.add(self.runAs)
     if debug: log('TaskType> Loading '+self.name,timestamp=1)
     return self.reader.execute(0,1)
   
@@ -112,6 +118,9 @@ class TaskType(JobOptionsObject):
     self.writer.add(self.defaults)
     self.writer.add(self.tell1s)
     self.writer.add(self.options)
+    self.writer.add(self.script)
+    self.writer.add(self.detector)
+    self.writer.add(self.runAs)
     if debug: log('TaskType> Saving '+self.name+' Defaults:'+str(self.defaults.data)+' Tell1s:'+str(self.tell1s.data),timestamp=1)
     return self.writer.execute(0,1)
 
@@ -122,6 +131,9 @@ class TaskType(JobOptionsObject):
     log(p+self.name+'.Options:     "'+str(self.options.data)+'"',timestamp=1)
     log(p+self.name+'.NeedDefaults:'+str(self.defaults.data),timestamp=1)
     log(p+self.name+'.NeedTell1s:  '+str(self.tell1s.data),timestamp=1)
+    log(p+self.name+'.ScriptPath:  '+str(self.script.data),timestamp=1)
+    log(p+self.name+'.Detector:    '+str(self.detector.data),timestamp=1)
+    log(p+self.name+'.RunAs:       '+str(self.runAs.data),timestamp=1)
 
   # ===========================================================================
   def getOptions(self):         return self._getItem(self.options)
@@ -130,6 +142,12 @@ class TaskType(JobOptionsObject):
   def setDefaults(self, value): return self._setItem(self.defaults,value)
   def getTell1s(self):          return self._getItem(self.tell1s)
   def setTell1s(self, value):   return self._setItem(self.tell1s,value)
+  def getScript(self):          return self._getItem(self.script)
+  def setScript(self, value):   return self._setItem(self.script,value)
+  def getDetector(self):        return self._getItem(self.detector)
+  def setDetector(self, value): return self._setItem(self.detector,value)
+  def getRunAs(self):           return self._getItem(self.runAs)
+  def setRunAs(self, value):    return self._setItem(self.runAs,value)
 
 # =============================================================================
 class Activity(JobOptionsObject):

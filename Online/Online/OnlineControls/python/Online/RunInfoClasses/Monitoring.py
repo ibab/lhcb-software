@@ -3,6 +3,7 @@ import Online.PVSS as PVSS
 import Online.Utils as Utils
 import Online.SetupParams as Params
 import Online.PVSSSystems as Systems
+import Online.JobOptions.JobOptions as JobOptions
 from   Online.RunInfoClasses.General import General as General
 from   Online.Streaming.PartitionInfo import PartitionInfo as PartitionInfo
 from   Online.Streaming.StreamingDescriptor import StreamingDescriptor as StreamDescriptor
@@ -18,8 +19,6 @@ def getNodesFromSlots(slots):
   for i in slots:
     nodes[i[:i.find(':')]] = 1
   return nodes.keys()
-
-    
 
 # =============================================================================
 class Monitoring(General):
@@ -41,7 +40,7 @@ class Monitoring(General):
     General.__init__(self,manager,name)
     self.storage = storage
     self.streamManager = stream
-    print '+++++++++++++',self.streamManager.name()
+    #print '+++++++++++++',self.streamManager.name()
   # ===========================================================================
   def doStreaming(self):
     "Access to the use-flag"
@@ -70,9 +69,29 @@ class Monitoring(General):
     cl2 = '/Class2'+opt
 
     streams = []
+    jo_mgr = Systems.controlsMgr(Params.jobopts_system_name)
+    #log('Detectors in readout:'+str(self.detectorsInReadout()))
+    monStreams = set()
     for j in xrange(len(self.monTypes.data)):
       for i in xrange(self.monMult.data[j]):
-        streams.append([self.monTypes.data[j],self.monStreams.data[j],i])
+        typ = self.monTypes.data[j]
+        task = JobOptions.TaskType(jo_mgr,typ)
+        if task.exists():
+          # Check if the detector is in the readout
+          partID = self.partID.data
+          detector = task.getDetector()
+          if detector=='ANY' or self.isDetectorInReadout(detector):
+            monStreams.add(self.monStreams.data[j])
+            streams.append([typ,self.monStreams.data[j],i])
+            if detector=='ANY':
+              log('USE  monitoring task:'+typ+' [Task started for all detectors]')
+            else:
+              log('USE  monitoring task:'+typ+' [Detector '+detector+' is in the readout]')
+          else:
+            log('SKIP monitoring task:'+typ+' [Detector '+detector+' is NOT in the readout]')
+        else:
+          error('The task '+typ+' is not defined in the job options database. Failed to define monitoring streams.')
+          return None
 
     monTasks = []
     monStreamsByNode = {}
@@ -99,7 +118,6 @@ class Monitoring(General):
     part.load()
     recv_nodes = part.recvNodes()
 
-    monStreams = set(self.monStreams.data)
     relayReceivers = []
     relayReceiverTypes = {}
     for i in monStreams:
@@ -147,10 +165,10 @@ class Monitoring(General):
     # Define the sender tasks on the relay to feed monitoring nodes
     relaySenders = []
     monSources = {}
-    print 'Relay Nodes',relayNodes 
+    # print 'Relay Nodes',relayNodes 
     for i,nodes in monStreamsByType.items():
       rcv = 0
-      print 'MonNodes:',nodes 
+      # print 'MonNodes:',nodes 
       for k in nodes:
         if monStreamsByNode.has_key(k) and monStreamsByNode[k].issuperset([i]):
           if not monSources.has_key(k): monSources[k]=[]

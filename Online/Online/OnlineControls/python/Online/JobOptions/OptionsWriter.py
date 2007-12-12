@@ -62,13 +62,19 @@ class OptionsWriter(Control.AllocatorClient):
     self.infoCreator = info
     self.optionsDir = Params.jobopts_optsdir
     self.dp_name = self.manager.name()+':'+name+'JobOptions'
-    devMgr = self.manager.deviceMgr()
-    if not devMgr.exists(self.dp_name):
-      typ = self.manager.typeMgr().type('JobOptionsControl')
-      if not devMgr.createDevice(self.dp_name,typ,1).release():
-        error('Failed to create the datapoint:"'+self.dp_name+'"',timestamp=1,type=PVSS.DP_NOT_EXISTENT)
+
+  # ===========================================================================
+  def connect(self,name):
+    "Connect job options writer as a standalone device listening to commands."
+    devMgr = self.optionsManager().deviceMgr()
+    jo_dev = devMgr.manager().name()+':'+name+'JobOptions'
+    print 'Dev exists:',str(devMgr.exists(jo_dev)),jo_dev
+    if not devMgr.exists(jo_dev):
+      typ = devMgr.manager().typeMgr().type('JobOptionsControl')
+      if not devMgr.createDevice(jo_dev,typ,1).release():
+        error('Failed to create the datapoint:"'+jo_dev+'"',timestamp=1,type=PVSS.DP_NOT_EXISTENT)
       else:
-        log('Created the datapoint:"'+self.dp_name+'"',timestamp=1)
+        log('Created the datapoint:"'+jo_dev+'"',timestamp=1)
 
   # ===========================================================================
   def optionsManager(self):
