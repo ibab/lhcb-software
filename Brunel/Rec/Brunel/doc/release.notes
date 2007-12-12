@@ -20,7 +20,7 @@ Purpose: LHCb reconstruction program
 </PRE><H1><A NAME=v32r0>2007-10-12 Brunel v32r0</A></H1><PRE>
  - Update BrunelCheck.opts for use with Tf framework
 
-</PRE><H1><A NAME=v31r11>2007-10-08 Brunel v31r10</A></H1><PRE>
+</PRE><H1><A NAME=v31r10>2007-10-08 Brunel v31r10</A></H1><PRE>
  - Update options to include CALO monitoring (disabled by default)
  - Add options/v200601.py, to execute Brunel from Python shell
 
