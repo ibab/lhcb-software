@@ -1,9 +1,10 @@
-// $Id: MatchTVeloTracks.cpp,v 1.3 2007-07-12 16:56:55 asatta Exp $
+// $Id: MatchTVeloTracks.cpp,v 1.4 2007-12-12 13:15:22 hernando Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 #include "Event/Track.h" 
+#include "Event/State.h"
 // local
 #include "MatchTVeloTracks.h"
 
@@ -47,7 +48,9 @@ StatusCode MatchTVeloTracks::initialize()
 {
  StatusCode sc = GaudiTool::initialize();
 
-info()<<" qui "<<endreq;  
+
+  m_fastPTool = tool <IFastMomentumEstimate>("FastMomentumEstimate");
+
  return StatusCode::SUCCESS;
 
 
@@ -95,6 +98,14 @@ StatusCode MatchTVeloTracks::match2dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttr
   float zT=Ttrack.firstState().z();
   float slopexT=Ttrack.firstState().tx();
   float slopeyT=Ttrack.firstState().ty();
+/*
+  debug() << "T track first state z " << zT << endmsg;
+  State & stateAtT1 = Ttrack.stateAt(State::beginT1);
+  float zAtT1 = stateAtT1.z();
+  debug() << "T track at T1 " << zAtT1 << endmsg;
+*/
+
+
   slopeyT=yT/(zT-zpv);
 //   debug()<<" parameter "<<yT<<" "<<slopeyT<<" "<<zT<<" 
 //"<<trackZ<<endreq;    
@@ -186,8 +197,26 @@ StatusCode MatchTVeloTracks::match3dVelo(LHCb::Track& veloTrack,
     matchedTrack.copy(veloTrack);
     m_myState=&(Ttrack.firstState());
     matchedTrack.addToStates( *m_myState); 
-    float qoverp=calcP(veloTrack,Ttrack);
-    if(qoverp!=0)matchedTrack.firstState().setQOverP(1.0/qoverp);   
+
+    
+    double zMidT =  StateParameters::ZMidT;
+
+    LHCb::State* veloState= &(veloTrack.firstState());
+    LHCb::State* TStateAtTheMiddle = &(Ttrack.closestState(zMidT));
+
+    double qOverP = 0;
+    double sigmaQOverP = 0; 
+    StatusCode sc = m_fastPTool->calculate(veloState, TStateAtTheMiddle 
+                                            ,qOverP, sigmaQOverP , 
+                                                        false );
+
+    debug() << "new p " << 1.0/qOverP << endmsg;
+
+
+
+
+
+    matchedTrack.firstState().setQOverP(qOverP);   
     matchedTrack.setHistory( Track::TrackMatching );
 
     matchedTrack.addToAncestors(veloTrack);
@@ -221,6 +250,7 @@ float MatchTVeloTracks::calcP(Track& velotrack,Track& Ttrack)
   double slopeX=Ttrack.firstState().tx();
   return m_ptkickConstant/(slopeX-trackDxDz);
   
+    
 }
 
 

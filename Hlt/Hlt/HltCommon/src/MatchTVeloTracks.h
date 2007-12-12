@@ -1,4 +1,4 @@
-// $Id: MatchTVeloTracks.h,v 1.2 2007-07-12 16:56:55 asatta Exp $
+// $Id: MatchTVeloTracks.h,v 1.3 2007-12-12 13:15:22 hernando Exp $
 #ifndef MATCHTVELOTRACKS_H 
 #define MATCHTVELOTRACKS_H 1
 
@@ -6,6 +6,10 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "HltBase/IMatchTVeloTracks.h"            // Interface
+#include "Event/StateParameters.h"
+#include "TrackInterfaces/IFastMomentumEstimate.h"
+
+
 
 
 /** @class MatchTVeloTracks MatchTVeloTracks.h
@@ -46,6 +50,10 @@ private:
   float m_y_cut;
   float m_space_cut;
   float m_ptkickConstant;
+
+IFastMomentumEstimate* m_fastPTool;
+
+
 
   LHCb::State* m_myState;
 };
