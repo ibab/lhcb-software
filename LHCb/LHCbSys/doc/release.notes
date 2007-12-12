@@ -5,23 +5,28 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r2>2007-12-10 LHCbSys v23r2</A></H1><PRE>
+</PRE><H1><A NAME=v23r2>2007-12-11 LHCbSys v23r2</A></H1><PRE>
 This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
 
 - Packages added   : STKernel v1r0    - public headers for ST readout
                      LoKiNumbers v7r0 - Set of dictionaries for LoKi functions
-- Packages modified: GaudiObjDesc v11r0, KernelSys v7r0, LHCbKernel v8r0,
-    LHCbMath v2r4, L0MuonKernel v7r2, Relations v5r3, RichKernel v7r9,
-    DetSys v11r1, CaloDet v8r5, DetDesc v18r2, DetDescCnv v4r4, DetDescSvc v1r15,
-    MuonDet v7r1, OTDet v7r7, RichDet v10r8, STDet v3r8, EventSys v23r11,
-    DAQEvent v7r7, DigiEvent v2r3, EventAssoc v4r3, HltEvent v8r5, L0Event v17r7,
-    RecEvent v2r8, TrackEvent v4r9, VeloEvent v16r2, DAQSys v3r7, CaloDAQ v4r2,
-    MuonDAQ v3r3, MDF v2r7, TrackInterfaces v3r11, DaVinciKernel v6r9,
-    DaVinciMCKernel v2r5, RichRecBase v3r9, MCInterfaces v1r4, CaloUtils v7r6,
-    SimComponents v2r8, DetCond v11r7, LHCbAlgs v2r13, LoKi v7r0, LoKiAlgo v7r0,
-    LoKiAlgoMC v7r0, LoKiArrayFunctors v7r0, LoKiCore v7r0, LoKiGen v7r0,
-    LoKiGenMC v7r0, LoKiMC v7r0, LoKiPhys v7r0, LoKiPhysMC v7r0, CondDBUI v2r6,
+- Packages modified: GaudiConf v10r5, GaudiObjDesc v11r0, KernelSys v7r0,
+    LHCbKernel v8r0, LHCbMath v2r4, L0MuonKernel v7r2, Relations v5r3,
+    RichKernel v7r9, DetSys v11r1, CaloDet v8r5, DetDesc v18r2, DetDescCnv v4r4,
+    DetDescSvc v1r15, MuonDet v7r1, OTDet v7r7, RichDet v10r8, STDet v3r8,
+    EventSys v23r11, DAQEvent v7r7, DigiEvent v2r3, EventAssoc v4r3,
+    HltEvent v8r5, L0Event v17r7, RecEvent v2r8, TrackEvent v4r9,
+    VeloEvent v16r2, DAQSys v3r7, CaloDAQ v4r2, MuonDAQ v3r3, MDF v2r7,
+    TrackInterfaces v3r11, DaVinciKernel v6r9, DaVinciMCKernel v2r5,
+    RichRecBase v3r9, MCInterfaces v1r4, CaloUtils v7r6, SimComponents v2r8,
+    DetCond v11r7, LHCbAlgs v2r13, LoKi v7r0, LoKiAlgo v7r0, LoKiAlgoMC v7r0,
+    LoKiArrayFunctors v7r0, LoKiCore v7r0, LoKiGen v7r0, LoKiGenMC v7r0,
+    LoKiMC v7r0, LoKiPhys v7r0, LoKiPhysMC v7r0, CondDBUI v2r6,
     LinkerInstances v3r4, Tell1Kernel v1r1, IOExample v2r3
+
+- In GaudiConf v10r5
+  . Add RawDataIO.opts to setup persistency for MDF files
+  . Add WriteMDF.opts to write out RawEvent in an MDF file
 
 - In GaudiObjDesc v11r0, RichKernel v7r9, RichRecBase v3r9, MuonDet v7r1
   . Changes to deal with move of STL serializers to GaudiKernel/SerializeSTL.h
@@ -160,6 +165,7 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
   . Better handling of corrupted/missing banks (details in CaloDAQ release notes)
   . CaloFillRawBuffer : add PIN-FEB data only when requested 
     -> No longer PIN-FEB header in Bank when no PIN data
+  . Improve printout using Error() method
 
 - In MuonDAQ v3r3, CaloDAQ v4r2
   . Add dictionary generation
@@ -253,7 +259,7 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
   . Update related with Velo commissioning
 
 - In IOExample v2r3
-  . In WriteMDF.opts, add options for new MultiFileCatalog when writing MDF file
+  . In WriteMDF.opts, include new options for MDF IO
   . In ReadMin.opts, put algorithms in a sequence and add example of usage of
     FilterByRunEvent algorithm
 
