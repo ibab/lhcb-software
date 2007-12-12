@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.11 2007-12-12 09:29:23 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.12 2007-12-12 12:46:00 ocallot Exp $
 //	====================================================================
 //  MDFWriter.cpp
 //	--------------------------------------------------------------------
@@ -49,9 +49,7 @@ void MDFWriter::construct()   {
   declareProperty("DataType",       m_dataType=MDFIO::MDF_NONE); // Input data type
 	declareProperty("BankLocation",		m_bankLocation=RawEventLocation::Default);  // Location of the banks in the TES
   declareProperty("DataManager",    m_ioMgrName="IODataManager");
-
-  declareProperty("nbPrevious",     m_nbPrevious  = 0 );
-  declareProperty("nbNext",         m_nbNext      = 0 );
+  declareProperty("ForceTAE",       m_forceTAE = false );
 }
 
 MDFWriter::~MDFWriter()   {

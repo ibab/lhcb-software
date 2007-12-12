@@ -7,10 +7,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-12-12 - Olivier Callot
- - Add coding of TAE events in the MDF buffer, triggered by the non-zero values of
-   any of the option nbPrevious or nbNext for MDFWriter. A pseudo-bank is added
+ - Add coding of TAE events in the MDF buffer, triggered by the value of the ODIN
+   evnt type=4 (to be obtain from an enum later) or forced by the jobOption
+   forceTAE = true of MDFWriter. A pseudo-bank of type TAEHeader is added
    as first bank in the buffer, with description of the various RawEvents found.
-- Add function uppackTAEBuffer in RRawEventHelpers to decode the TAE MDF block, 
+- Add function unpackTAEBuffer in RawEventHelpers to decode the TAE MDF block, 
   it works also for non-TAE blocks. It returns a vector of pair of (name in TES, 
   RawEvent*).
 

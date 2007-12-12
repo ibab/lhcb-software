@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.18 2007-12-12 09:29:23 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.19 2007-12-12 12:46:00 ocallot Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -15,6 +15,7 @@
 #include "MDF/MDFHeader.h"
 #include "MDF/MDFIO.h"
 #include "Event/RawEvent.h"
+#include "Event/ODIN.h"
 
 using namespace LHCb;
 
@@ -99,26 +100,56 @@ StatusCode LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
 
 StatusCode LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, const std::string& location)
 {
-  if ( 0 < m_nbPrevious || 0 < m_nbNext ) {
-    // Time Alignment Event processing
-    RawEvent privateBank;
-    std::vector<RawEvent*> theRawEvents;
-    
-    // prepare the bank containing the number of BX (prevm next  in this event, and information for each
-    int sizeCtrlBlock = 3 * ( m_nbPrevious + m_nbNext + 1 );
+  SmartDataPtr<RawEvent> raw(m_evtSvc,location);
+  if ( raw )  {
+    bool isTAE = m_forceTAE;   // false in principle...
+    //== Check ODIN event type to see if this is TAE
+    typedef std::vector<RawBank*> _V;
+    const _V& oBnks = raw->banks(RawBank::ODIN);
+    for(_V::const_iterator iO=oBnks.begin(); iO != oBnks.end(); ++iO)  {
+      LHCb::ODIN odinBank;
+      odinBank.set( *iO );   //== decode the ODIN information from the bank
+      if ( 4 == odinBank.eventType() ) isTAE = true;  // ***** Need an enum value here *****
+    }
+    if ( !isTAE ) {
+      const _V& bnks = raw->banks(RawBank::DAQ);
+      for(_V::const_iterator i=bnks.begin(); i != bnks.end(); ++i)  {
+        RawBank* b = *i;
+        if ( b->version() == DAQ_STATUS_BANK )  {
+          return commitRawBanks(raw,b,compTyp,chksumTyp,ioDesc);
+        }
+      }
+      size_t len = rawEventLength(raw);
+      RawBank* hdrBank = createDummyMDFHeader( raw, len );
+      raw->adoptBank(hdrBank, true);
+
+      MsgStream log1(m_msgSvc, m_parent);
+      log1 << MSG::INFO << "Adding dummy MDF/DAQ[DAQ_STATUS_BANK] information." << endmsg;
+      return commitRawBanks(raw,hdrBank,compTyp,chksumTyp,ioDesc);
+    }
+    //== TAE event. Start scanning the whole TES for previous and next events.
+    MsgStream msg(m_msgSvc, m_parent);
+    RawEvent privateBank;                         // This holds the two temporary banks
+    std::vector<RawEvent*> theRawEvents;          // Keep pointer on found events
+    msg << MSG::DEBUG << "Found a TAE event. scan for various BXs" << endmsg;
+
+    // prepare the bank containing information for each BX
+    // Maximum +-7 crossings, due to hardware limitation of derandomisers = 15 consecutive BX
+    int sizeCtrlBlock = 3 * 15; 
     std::vector<int> ctrlData;
     ctrlData.reserve(sizeCtrlBlock);
     size_t offset = 0;
-    for ( int n = -m_nbPrevious; m_nbNext >= n; ++n ) {
+    for ( int n = -7; 7 >= n; ++n ) {
       std::string root = rootFromBxOffset( n );
-      SmartDataPtr<RawEvent> raw(m_evtSvc, root+location);
-      if ( raw ) {
-        theRawEvents.push_back( raw );
+      SmartDataPtr<RawEvent> rawEvt(m_evtSvc, root+location);
+      if ( rawEvt ) {
+        theRawEvents.push_back( rawEvt );
         ctrlData.push_back( n );               // BX offset
         ctrlData.push_back( offset );          // offset in buffer, after end of this bank
-        size_t len = rawEventLength(raw); 
+        size_t len = rawEventLength(rawEvt); 
         ctrlData.push_back( len );             // size of this BX information
         offset += len;
+        msg << MSG::DEBUG << "Found RawEvent in " << root+location << ", size =" << len << endmsg;
       }
     }
     RawBank* ctrlBank = privateBank.createBank( 0, RawBank::TAEHeader, 0, sizeof(int)*ctrlData.size(), &*ctrlData.begin() );
@@ -150,43 +181,21 @@ StatusCode LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const i
       }
       //== here, len should be 0...
       if ( 0 != len ) {
-        MsgStream msg( m_msgSvc, m_parent );
         msg << MSG::ERROR << "Expect length=0, found " << len << " starting from " << total << endmsg;
       }
       
       StatusCode sc = writeDataSpace(compTyp, chksumTyp, ioDesc, hdrBank, space.first, total);
       if ( !sc.isSuccess() ) {
-        MsgStream err(m_msgSvc, m_parent);
-        err << MSG::ERROR << "Failed write data to output device." << endmsg;
+        msg << MSG::ERROR << "Failed write data to output device." << endmsg;
       }
       privateBank.removeBank( ctrlBank );
       privateBank.removeBank( hdrBank );
       return sc;
     }
-    MsgStream msg(m_msgSvc, m_parent);
     msg << MSG::ERROR << "Failed to get space, size = " << len << endmsg;
     privateBank.removeBank( ctrlBank );
     privateBank.removeBank( hdrBank );
     return StatusCode::FAILURE;
-  }
-
-  //== Normal processing for single event
-  SmartDataPtr<RawEvent> raw(m_evtSvc,location);
-  if ( raw )  {
-    typedef std::vector<RawBank*> _V;
-    const _V& bnks = raw->banks(RawBank::DAQ);
-    for(_V::const_iterator i=bnks.begin(); i != bnks.end(); ++i)  {
-      RawBank* b = *i;
-      if ( b->version() == DAQ_STATUS_BANK )  {
-        return commitRawBanks(raw,b,compTyp,chksumTyp,ioDesc);
-      }
-    }
-    MsgStream log1(m_msgSvc, m_parent);
-    size_t len = rawEventLength(raw);
-    RawBank* hdrBank = createDummyMDFHeader( raw, len );
-    raw->adoptBank(hdrBank, true);
-    log1 << MSG::INFO << "Adding dummy MDF/DAQ[DAQ_STATUS_BANK] information." << endmsg;
-    return commitRawBanks(raw,hdrBank,compTyp,chksumTyp,ioDesc);
   }
   MsgStream log2(m_msgSvc, m_parent);
   log2 << MSG::ERROR << "Failed to retrieve raw event object at " << location << endmsg;

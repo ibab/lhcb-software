@@ -1,4 +1,4 @@
-// $Id: MDFIO.h,v 1.14 2007-12-12 09:29:23 ocallot Exp $
+// $Id: MDFIO.h,v 1.15 2007-12-12 12:46:00 ocallot Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -57,11 +57,9 @@ namespace LHCb {
     Gaudi::IFileCatalogSvc*       m_catalog;
     /// Flag to ignore the checksum
     bool                          m_ignoreChecksum;
-    /// Value of the number of prebious BX to store
-    int                           m_nbPrevious;
-    /// Value of the number of next BX to store
-    int                           m_nbNext;
-    
+    /// Flag to force TAE format of the MDF file
+    bool                          m_forceTAE;
+   
     /// Helper to retrieve data from Opaque address
     std::pair<const char*,int> getDataFromAddress();
     /// Helper to access header information
@@ -99,7 +97,7 @@ namespace LHCb {
 
     /// Initializing constructor
     MDFIO(Writer_t typ, const std::string& nam) 
-      : m_msgSvc(0), m_evtSvc(0), m_dataType(typ), m_parent(nam), m_catalog(0), m_nbPrevious(0), m_nbNext(0) {}
+      : m_msgSvc(0), m_evtSvc(0), m_dataType(typ), m_parent(nam), m_catalog(0), m_forceTAE(false) {}
 
     /// Default destructor
     virtual ~MDFIO() {}
