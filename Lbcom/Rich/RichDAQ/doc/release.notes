@@ -4,11 +4,11 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r13 2007-12-12 =======================
 ! 2007-12-12 - Chris Jones
  - Fix issue in filling raw event where ingress header IDs are not properly
    included for each L1 board
 
-!========================== RichDAQ v3r13 2007-12-03 =======================
 ! 2007-12-03 - Chris Jones
  - Update pixel clustering tool to work with ALICE mode data
 
