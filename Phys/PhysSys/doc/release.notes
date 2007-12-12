@@ -3,6 +3,18 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v6r9>2007-12-13 Phys v6r9 - First Tf framework compatible version</A></H1><PRE>
+
+- Based on LHCb v23r2 and Gaudi v19r6
+- Bug fixes to Phys/DaVinciTransporter, Phys/VertexFit
+- Small changes to Phys/DaVinciTools, Phys/ParticleMaker
+
+###############################################################################
+#                                  PHYS v6r9                                  #
+###############################################################################
+
+
+###############################################################################
 </PRE><H1><A NAME=v6r8>2007-11-14 Phys v6r8 - HLT benchmark tests version</A></H1><PRE>
 
 - Based on LHCb v22r11
