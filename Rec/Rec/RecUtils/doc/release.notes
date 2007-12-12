@@ -9,7 +9,7 @@
  - CopyStripETC/ReadStripETC 
    fix the type of "int" columns.
     From now the type is picked up directly from Tuples::TupleObj
-    and *NOW* further modifications are required.
+    and *NO* further modifications are required.
 
 !============================ RecUtils v1r3 2007-09-20 =======================
 ! 2007-09-07 - Patrick Koppenburg
