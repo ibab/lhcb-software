@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DecayTreeTuple
+! Responsible : Jeremie Borel
+! Purpose     : Successor of DecayChainNTuple
+!-----------------------------------------------------------------------------
+
+! 2007-12-12 - Patrick Koppenburg
+ - First import. Read doxygen for more information

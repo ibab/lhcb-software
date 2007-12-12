@@ -1,0 +1,31 @@
+#============================================================================
+# Created    : 2007-12-05
+# Maintainer : Jérémie Borel
+#============================================================================
+package           DecayTreeTuple
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src Kernel
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use   DaVinciKernel      v*    Phys
+use   DaVinciAssociators v*    Phys
+
+# Exported header files TEMPORARY
+#============================================================================
+apply_pattern install_more_includes more=Kernel
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          DecayTreeTuple    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=DecayTreeTuple
