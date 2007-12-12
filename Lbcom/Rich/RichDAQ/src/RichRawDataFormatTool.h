@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.27 2007-08-03 14:06:38 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.28 2007-12-12 13:58:00 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -202,6 +202,9 @@ namespace Rich
                     const LongType word,
                     const ShortType nBits = 32 ) const;
 
+      /// Returns a default data map
+      const Rich::DAQ::L1Map & dummyMap() const;
+
     private: // data
 
       /// Rich System detector element
@@ -234,9 +237,6 @@ namespace Rich
 
       /// Flag to indicate if the tool has been used in a given event
       mutable bool m_hasBeenCalled;
-
-      /// starting map
-      Rich::DAQ::L1Map m_dummyMap;
 
       /// Max HPD Occupancy Cut
       unsigned int m_maxHPDOc;

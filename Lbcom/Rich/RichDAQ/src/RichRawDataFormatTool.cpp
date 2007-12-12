@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.63 2007-11-29 16:02:56 cattanem Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.64 2007-12-12 13:57:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -76,19 +76,6 @@ StatusCode RawDataFormatTool::initialize()
 
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
-
-  // create a dummy L1data object with an empty vector for each L1 board
-  m_dummyMap.clear();
-  for ( Level1IDs::const_iterator iID = m_richSys->level1IDs().begin();
-        iID != m_richSys->level1IDs().end(); ++iID )
-  {
-    m_dummyMap[ *iID ];
-  }
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Created " << m_dummyMap.size() << " entries in empty L1 map : L1IDs = "
-            << m_richSys->level1IDs() << endreq;
-  }
 
   // if suppression is less than max possible number of (ALICE) hits, print a message.
   if ( m_maxHPDOc < BitsPerDataWord * MaxDataSizeALICE )
@@ -499,7 +486,7 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
   m_hasBeenCalled = true;
 
   // new rich data map
-  L1Map L1Data = m_dummyMap;
+  L1Map L1Data = dummyMap();
 
   // Loop over digits and sort according to L1 and HPD
   for ( LHCb::RichSmartID::Vector::const_iterator iDigit = smartIDs.begin();
@@ -1296,6 +1283,35 @@ RawDataFormatTool::decodeToSmartIDs( L1Map & decodedData ) const
     debug() << "Decoded in total " << richBanks.size() << " RICH Level1 bank(s)" << endreq;
   }
 
+}
+
+const Rich::DAQ::L1Map & RawDataFormatTool::dummyMap() const
+{
+  static Rich::DAQ::L1Map dummyMap;
+  if ( dummyMap.empty() )
+  {
+    // create an ingressmap for each L1 board
+    Rich::DAQ::IngressMap ingressMap;
+    for ( unsigned int input = 0; input<Rich::DAQ::NumIngressPerL1; ++input )
+    {
+      L1IngressHeader header;
+      header.setIngressID( L1IngressID(input) );
+      ingressMap[L1IngressID(input)].setIngressHeader(header);
+    }
+    // create a dummy L1data object with a default ingress map for each L1 board
+    for ( Level1IDs::const_iterator iID = m_richSys->level1IDs().begin();
+          iID != m_richSys->level1IDs().end(); ++iID )
+    {
+      dummyMap[ *iID ] = ingressMap;
+    }
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Created " << dummyMap.size() 
+              << " entries in empty L1 map : L1IDs = "
+              << m_richSys->level1IDs() << endreq;
+    }
+  }
+  return dummyMap;
 }
 
 void RawDataFormatTool::dumpRawBank( const LHCb::RawBank & bank,
