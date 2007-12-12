@@ -7,32 +7,39 @@
 //---------------------------
 // HLT Had Alley
 //--------------------------
-HltSummaryWriter.Save += {"PV2D",
-                          "HadL0Entry",
-                          "L0TriggerHadron",
-                          "HadPreTriggerSingle",
-                          "HadTrigger"};
 
-HltHadAlley.Members = {"L0Entry/HadL0Entry",
-                       "GaudiSequencer/HltRecoVeloRZSeq",
-                       //"HltPrepareL0Calos/HadL0Prepare",
-                       // "HltPrepareL0Calos/L0TriggerHadron", in HltL0TriggerSequence
-                       "GaudiSequencer/DVHltHadAlley",
-                       "HltTrackFilter/HadSingleTFRZVelo",
-                       "HltTrackUpgrade/HadSingleTRVelo",
-                       "HltTrackFilter/HadSingleTFVelo",
-                       "GaudiSequencer/HltDecodeT",
-                       "GaudiSequencer/HltDecodeTT",
-                       "HltTrackUpgrade/HadSingleTRForward",
-                       "HltTrackFilter/HadPreTriggerSingle",
-                       "HltTrackUpgrade/HltRecoVelo",
-                       "HltTrackFilter/HadCompanionTFVelo",
-                       "HltTrackUpgrade/HadCompanionTRForward",
-                       "HltTrackFilter/HadCompanionTFForward",
-                       "HltVertexMaker/HadDiHadronVMaker",
-                       "HltVertexFilter/HadTrigger"
+// selections to be saved in the HltSummary
+HltSummaryWriter.Save += {
+  "PV2D",
+  "HadL0Entry",
+  "L0TriggerHadron",
+  "HadPreTriggerSingle",
+  "HadTrigger"};
+
+// output selection to be in the OR of the alleys
+HltAlleys.Selections += {"HadTrigger"};
+
+HltHadAlleySequence.Members = {
+  "L0Entry/HadL0Entry",
+  "GaudiSequencer/HltRecoVeloRZSeq",
+  //"HltPrepareL0Calos/HadL0Prepare",
+  // "HltPrepareL0Calos/L0TriggerHadron", in HltL0TriggerSequence
+  "GaudiSequencer/DVHltHadAlley",
+  "HltTrackFilter/HadSingleTFRZVelo",
+  "HltTrackUpgrade/HadSingleTRVelo",
+  "HltTrackFilter/HadSingleTFVelo",
+  "GaudiSequencer/HltDecodeT",
+  "GaudiSequencer/HltDecodeTT",
+  "HltTrackUpgrade/HadSingleTRForward",
+  "HltTrackFilter/HadPreTriggerSingle",
+  "HltTrackUpgrade/HltRecoVelo",
+  "HltTrackFilter/HadCompanionTFVelo",
+  "HltTrackUpgrade/HadCompanionTRForward",
+  "HltTrackFilter/HadCompanionTFForward",
+  "HltVertexMaker/HadDiHadronVMaker",
+  "HltVertexFilter/HadTrigger"
 };
-HltHadAlley.MeasureTime = true;
+HltHadAlleySequence.MeasureTime = true;
 
 //-------------------------------------------------------------------------
 // HLT HadAlley options
@@ -42,7 +49,7 @@ HltHadAlley.MeasureTime = true;
 //
 // Enter if there is a L0Hadron yes
 //
-HadL0Entry.L0ChannelsName = {"hadron"};
+HadL0Entry.L0ChannelsName = {"Hadron"};
 HadL0Entry.SelectionName = "HadL0Entry";
 HadL0Entry.OutputLevel = 3;
 
@@ -101,7 +108,7 @@ HadSingleTFVelo.OutputLevel = 3;
 HadSingleTRForward.InputTracksName  = "HadSingleTFVelo";
 HadSingleTRForward.OutputTracksName = "HadSingleTRForward";
 HadSingleTRForward.RecoName = "Forward";
-HadSingleTRForward.OutputLevel = 2;
+HadSingleTRForward.OutputLevel = 3;
 ToolSvc.PatForwardTool.OutputLevel = 3;
 // PatHadSingleTRForward.DoCleanUp = false;
 
@@ -113,10 +120,11 @@ HadPreTriggerSingle.InputTracksName  = "HadSingleTRForward";
 HadPreTriggerSingle.OutputTracksName = "HadPreTriggerSingle";
 HadPreTriggerSingle.FilterDescriptor = {"PT,>,2500."};
 HadPreTriggerSingle.HistogramUpdatePeriod = 0;
-HadPreTriggerSingle.HistoDescriptor = { "PT" :     ("PT",0.,6000.,100),
-                                        "PTBest" : ("PTBest",0.,6000.,100)
+HadPreTriggerSingle.HistoDescriptor = { 
+  "PT" :     ("PT",0.,6000.,100),
+  "PTBest" : ("PTBest",0.,6000.,100)
 };
-HadPreTriggerSingle.OutputLevel = 2;
+HadPreTriggerSingle.OutputLevel = 3;
 
 
 //
@@ -138,10 +146,11 @@ HadCompanionTFVelo.HistogramUpdatePeriod = 0;
 HadCompanionTFVelo.FilterDescriptor = {"IP,||[],0.1,3.",
                                        "DOCA,<,0.2"
 };
-HadCompanionTFVelo.HistoDescriptor = {"IP"      : ("IP",-1.,.3,600),
-                                      "IPBest"  : ("IPBest",-1.,3.,600),
-                                      "DOCA"    : ("DOCA",0.,1.,100),
-                                      "DOCABest": ("DOCABest",0.,1.,100)
+HadCompanionTFVelo.HistoDescriptor = {
+  "IP"      : ("IP",-1.,.3,600),
+  "IPBest"  : ("IPBest",-1.,3.,600),
+  "DOCA"    : ("DOCA",0.,1.,100),
+  "DOCABest": ("DOCABest",0.,1.,100)
 };
 HadCompanionTFVelo.OutputLevel = 3;
 
@@ -152,7 +161,6 @@ HadCompanionTRForward.InputTracksName  = "HadCompanionTFVelo";
 HadCompanionTRForward.OutputTracksName = "HadCompanionTRForward";
 HadCompanionTRForward.RecoName = "Forward";
 HadCompanionTRForward.OutputLevel = 3;
-PatHadCompanionTRForward.DoCleanUp = false;
 
 //
 // Select companion tracks if they have a fiven Pt
@@ -169,11 +177,10 @@ HadCompanionTFForward.OutputLevel = 3;
 // Make vertices with the forward companion tracks 
 //
 HadDiHadronVMaker.InputTracksName    = "HadPreTriggerSingle";
-// HadDiHadronVMaker.InputTracks2Name   = "HadCompanionTFForward";
+HadDiHadronVMaker.InputTracks2Name   = "HadCompanionTFForward";
 HadDiHadronVMaker.OutputVerticesName = "HadDiHadronVMaker";
-HadDiHadronVMaker.OutputLevel = 2;
-HadDiHadronVMaker.FilterDescriptor = {"DOCA,<,0.2",
-                                      "DimuonMass,<6000"};
+HadDiHadronVMaker.OutputLevel = 3;
+HadDiHadronVMaker.FilterDescriptor = {"DOCA,<,0.2"};
 HadDiHadronTVMaker.HistogramUpdatePeriod = 0;
 HadDiHadronTVMaker.HistoDescriptor = {"DOCA"     : ("DOCA",0.,1.,100),
                                       "DOCABest" : ("DOCABest",0.,0.5,100) };
@@ -183,12 +190,8 @@ HadDiHadronTVMaker.HistoDescriptor = {"DOCA"     : ("DOCA",0.,1.,100),
 HadTrigger.InputVerticesName   = "HadDiHadronVMaker";
 HadTrigger.PrimaryVerticesName = "PV2D";
 HadTrigger.OutputVerticesName  = "HadTrigger";
-HadTrigger.OutputLevel = 2;
-HadTrigger.FilterDescriptor = {"VertexSumPT,>,3000",
-                               "VertexDimuonMass,<,6000",
-                               "VertexMaxPT,>,2500.",
-                               "VertexMinPT,>,1000.",
-                               "VertexPointing,<,0.4",
+HadTrigger.OutputLevel = 3;
+HadTrigger.FilterDescriptor = {"VertexPointing,<,0.4",
                                "VertexDz,>,2."
 };
 HadTrigger.HistogramUpdatePeriod = 0;

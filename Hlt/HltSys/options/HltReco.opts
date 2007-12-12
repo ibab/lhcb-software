@@ -8,7 +8,6 @@
 ApplicationMgr.TopAlg += {"GaudiSequencer/HltReco"};
 
 HltReco.Members = {
-  "PatInitEvent",
   "GaudiSequencer/HltRecoSequence"
 };
 

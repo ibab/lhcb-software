@@ -76,15 +76,15 @@ PrepareL0TriggerMuonNoGlobSeq.Members = {
 "HltPrepareL0Muons/L0TriggerMuonNoGlob"
 };
 
-L0EntryTriggerElectron.L0ChannelsName = {"electron"};
-L0EntryTriggerPhoton.L0ChannelsName = {"photon"};
-L0EntryTriggerLocalPi0.L0ChannelsName = {"localPi0"};
-L0EntryTriggerGlobalPi0.L0ChannelsName = {"globalPi0"};
-L0EntryTriggerHadron.L0ChannelsName = {"hadron"};
-L0EntryTriggerAllMuons.L0ChannelsName = {"muon","dimuon","muonnoglob"};
-L0EntryTriggerMuon.L0ChannelsName = {"muon"};
-L0EntryTriggerDiMuon.L0ChannelsName = {"dimuon"};
-L0EntryTriggerMuonNoGlob.L0ChannelsName = {"muonnoglob"};
+L0EntryTriggerElectron.L0ChannelsName = {"Electron"};
+L0EntryTriggerPhoton.L0ChannelsName = {"Photon"};
+L0EntryTriggerLocalPi0.L0ChannelsName = {"LocalPi0"};
+L0EntryTriggerGlobalPi0.L0ChannelsName = {"GlobalPi0"};
+L0EntryTriggerHadron.L0ChannelsName = {"Hadron"};
+L0EntryTriggerAllMuons.L0ChannelsName = {"Muon","DiMuon","MuonNoGlob"};
+L0EntryTriggerMuon.L0ChannelsName = {"Muon"};
+L0EntryTriggerDiMuon.L0ChannelsName = {"DiMuon"};
+L0EntryTriggerMuonNoGlob.L0ChannelsName = {"MuonNoGlob"};
 
 L0EntryTriggerElectron.SelectionName = "L0EntryTriggerElectronEntry";
 L0EntryTriggerPhoton.SelectionName = "L0EntryTriggerPhotonEntry";

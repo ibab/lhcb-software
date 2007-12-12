@@ -13,23 +13,22 @@ HltSummaryWriter.Save += {"PV2D",
                           "MuHadTrigger"
 };
 
+HltAlleys.Selections += {"MuHadTrigger"};
 
-HltMuHadAlley.Members = {"L0Entry/L0MuHadEntry",
-                         "HltSelectionEntry/MuHadEntry",
-                         "HltTrackFilter/MuHadMuonTF",
-                         // NEED TO CHANGE TO MAKEVERTICES TO HAVE A GOOD CONFIRMATION LOGICS
-                         "HltTrackUpgrade/HltRecoVelo",
-                         "HltTrackFilter/MuHadCompanionTFVelo",
-                         "GaudiSequencer/HltDecodeT",
-                         "HltTrackUpgrade/MuHadCompanionTRForward",
-                         "HltTrackFilter/MuHadCompanionTFForward",
-                         "HltVertexMaker/MuHadVMaker",
-                         "HltVertexFilter/MuHadTrigger"
+HltMuHadAlleySequence.Members = {
+  "L0Entry/L0MuHadEntry",
+  "HltSelectionEntry/MuHadEntry",
+  "HltTrackFilter/MuHadMuonTF",
+  // NEED TO CHANGE TO MAKEVERTICES TO HAVE A GOOD CONFIRMATION LOGICS
+  "HltTrackUpgrade/HltRecoVelo",
+  "HltTrackFilter/MuHadCompanionTFVelo",
+  "GaudiSequencer/HltDecodeT",
+  "HltTrackUpgrade/MuHadCompanionTRForward",
+  "HltTrackFilter/MuHadCompanionTFForward",
+  "HltVertexMaker/MuHadVMaker",
+  "HltVertexFilter/MuHadTrigger"
 };
-
-
-
-HltMuHadAlley.MeasureTime = true;
+HltMuHadAlleySequence.MeasureTime = true;
 
 //-------------------------------------------------------------------------
 // HLT MuHadAlley options
@@ -37,7 +36,7 @@ HltMuHadAlley.MeasureTime = true;
 
 
 // L0 entry: single muon
-L0MuHadEntry.L0ChannelsName = {"muon" ,"muonnoglob"};
+L0MuHadEntry.L0ChannelsName = {"Muon" ,"MuonNoGlob"};
 L0MuHadEntry.SelectionName = "MuonEntry";
 L0MuHadEntry.OutputLevel=3;
 
@@ -51,13 +50,14 @@ MuHadMuonTF.OutputTracksName = "MuHadMuonTF";
 MuHadMuonTF.PrimaryVerticesName = "PV2D";
 MuHadMuonTF.HistogramUpdatePeriod = 0;
 MuHadMuonTF.FilterDescriptor = {"PT,>,1000.",
-                                "IP,||[],0.1,3.",
-                                "FlagL0Candidate"
+                                "IP,||[],0.1,3."
 };
-MuHadMuonTF.HistoDescriptor = {"PT"     : ( "PT",0.,6000.,400),
-                               "PTBest" : ( "PTBest",0.,6000.,400),
-                               "IP"     : ( "IP",-1.,3.,400),
-                               "IPBest" : ( "IPBest",-1.,3.,400) 
+MuHadMuonTF.HistoDescriptor = {
+  "PT"     : ( "PT",0.,6000.,400),
+  "PTBest" : ( "PTBest",0.,6000.,400),
+  "IP"     : ( "IP",-1.,3.,400),
+  "IPBest" : ( "IPBest",-1.,3.,400) 
+};
 MuHadMuonTF.OutputLevel = 3;
 
 // do the rest of velo tracks
@@ -76,12 +76,12 @@ MuHadCompanionTFVelo.HistogramUpdatePeriod = 0;
 MuHadCompanionTFVelo.FilterDescriptor = {"IP,||[],0.1,3.",
                                          "DOCA,<,0.2"
 };
-MuHadCompanionTFVelo.HistoDescriptor = { "IP"         : ( "IP",-1.,3.,400),
-                                         "IPBest"     : ( "IPBest",-1.,3.,400),
-                                         "DOCA"       : ( "DOCA",0.,1.,400),
-                                         "DOCABest"   : ( "DOCABest",0.,1.,400)
+MuHadCompanionTFVelo.HistoDescriptor = { 
+  "IP"         : ( "IP",-1.,3.,400),
+  "IPBest"     : ( "IPBest",-1.,3.,400),
+  "DOCA"       : ( "DOCA",0.,1.,400),
+  "DOCABest"   : ( "DOCABest",0.,1.,400)
 };
-
 MuHadCompanionTFVelo.OutputLevel = 3;
 
 
@@ -97,8 +97,9 @@ MuHadCompanionTFForward.InputTracksName  = "MuHadCompanionTRForward";
 MuHadCompanionTFForward.OutputTracksName = "MuHadCompanionTFForward";
 MuHadCompanionTFForward.FilterDescriptor = {"PT,>,500."};
 MuHadCompanionTFForward.HistogramUpdatePeriod = 0;
-MuHadCompanionTFForward.HistoDescriptor = {  "PT" : ("PT",0.,6000.,100),
-                                             "PTBest" : ("PTBest",0.,6000.,100)
+MuHadCompanionTFForward.HistoDescriptor = {  
+  "PT" : ("PT",0.,6000.,100),
+  "PTBest" : ("PTBest",0.,6000.,100)
 };
 MuHadPreTriggerSingle.OutputLevel = 3;
 
@@ -111,8 +112,9 @@ MuHadVMaker.OutputLevel = 3;
 MuHadVMaker.FilterDescriptor = {"DOCA,<,0.2"
 };
 MuHadTVMaker.HistogramUpdatePeriod = 0;
-MuHadTVMaker.HistoDescriptor = {  "DOCA" : ("DOCA",100,0.,1.),
-                                  "DOCABest" : ( "DOCABest",100,0.,0.5)
+MuHadTVMaker.HistoDescriptor = {  
+  "DOCA" : ("DOCA",100,0.,1.),
+  "DOCABest" : ( "DOCABest",100,0.,0.5)
 };
 
 // select vertices if Pt, poiting, and distance
@@ -124,9 +126,11 @@ MuHadTrigger.FilterDescriptor = {"VertexPointing,<,0.4",
                                  "VertexDz,>,2."
 };
 MuHadTrigger.HistogramUpdatePeriod = 0;
-MuHadTrigger.HistoDescriptor = {"VertexPointing"     : ( "VertexPointing",0.,1.,100),
-                                "VertexPointingBest" : ( "VertexPointingBest",0.,1.,100),
-                                "VertexDz"           : ( "VertexDz",-10.,50.,100),
-                                "VertexDzBest"       : ( "VertexDzBest",-10.,50.,100)
+MuHadTrigger.HistoDescriptor = {
+  "VertexPointing"     : ( "VertexPointing",0.,1.,100),
+  "VertexPointingBest" : ( "VertexPointingBest",0.,1.,100),
+  "VertexDz"           : ( "VertexDz",-10.,50.,100),
+  "VertexDzBest"       : ( "VertexDzBest",-10.,50.,100)
 };
+
 

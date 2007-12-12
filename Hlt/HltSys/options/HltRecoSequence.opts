@@ -5,9 +5,9 @@
 HltRecoSequence.Members = {
   "GaudiSequencer/HltRecoVeloRZSeq",
   "HltTrackUpgrade/HltRecoVelo",
-  "PatPV3D/PatHltPV3D",
-  "GaudiSequencer/HltDecodeTT",
-  "HltTrackUpgrade/HltRecoVeloTT",
+  // "PatPV3D/PatHltPV3D",
+  // "GaudiSequencer/HltDecodeTT",
+  // "HltTrackUpgrade/HltRecoVeloTT",
   "GaudiSequencer/HltDecodeT",
   "HltTrackUpgrade/HltRecoForward"
 };
@@ -37,7 +37,7 @@ PatHltRecoVeloTT.PatVeloTTTool.maxPseudoChi2 = 256.;
 PatHltRecoVeloTT.PatVeloTTTool.maxSolutionsPerTrack = 1;
 PatHltRecoVeloTT.OutputLevel = 3;
 
-// HltRecoForward.InputTracksName = "Hlt/Track/Velo";
+HltRecoForward.InputTracksName = "Hlt/Track/Velo";
 HltRecoForward.OutputTracksName = "Hlt/Track/Forward";
 HltRecoForward.RecoName = "Forward";
 HltRecoForward.HistogramUpdatePeriod = 0;
@@ -104,7 +104,9 @@ createITLiteClusters.detType = "IT";
 ToolSvc.PatForwardTool.OutputLevel = 3;
 ToolSvc.PatForwardTool.MinMomentum = 1000. ;  
 ToolSvc.PatForwardTool.MinPt       = 80. ;   
-ToolSvc.PatAddTTCoord.OutputLevel = 3;
-//ToolSvc.PatForwardTool.AddTTClusterName = "";
+ToolSvc.PatForwardTool.AddTTClusterName = "";
 
 
+// Tsa
+//--------------------------------------
+#include "$HLTSYSROOT/options/TsaTool.opts"

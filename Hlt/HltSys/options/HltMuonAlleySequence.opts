@@ -53,7 +53,7 @@ HltMuonTriggerSingleMuon.Members +={"HltTrackIPSelection/HltTrackMuonIPSelection
 
 
 L0MuonEntry.SelectionName = "L0MuonEntry";
-L0MuonEntry.L0ChannelsName = {"muon" ,"dimuon"};
+L0MuonEntry.L0ChannelsName = {"Muon" ,"DiMuon"};
 // L0MuonEntry.OutputLevel = 3;
 
 MatchPatVeloRL0.PassPeriod = 1;
