@@ -4,6 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2007-12-12 Olivier Deschamps
+ - protect bankKiller against annoying printout 
+
+
 !================ DAQEvent v7r7 2007-12-12 ============================
 ! 2007-12-12 - Olivier Callot
  - add new bank type TAEHeader, in fact not a bank but a pseudo-one, put

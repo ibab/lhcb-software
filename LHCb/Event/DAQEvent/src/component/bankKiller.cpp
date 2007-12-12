@@ -1,4 +1,4 @@
-// $Id: bankKiller.cpp,v 1.3 2007-10-31 14:33:41 odescham Exp $
+// $Id: bankKiller.cpp,v 1.4 2007-12-12 12:05:02 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -83,8 +83,11 @@ StatusCode bankKiller::execute() {
     const std::vector<LHCb::RawBank*> banks = rawEvt->banks( m_bankMap[*ityp] );
 
     if( 0 == banks.size() ){
-      warning() << " No bank of type '" << *ityp 
-		<< "' ("<<  m_bankMap[*ityp] << ")  has been found - nothing to be removed"<< endreq;
+
+      std::stringstream s("");
+      s<< " No bank of type '" << *ityp		<< "' ("<<  m_bankMap[*ityp] 
+       << ")  has been found - nothing to be removed";
+      Error(s.str()).ignore();
       continue;
     }
 
