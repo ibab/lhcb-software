@@ -1,7 +1,7 @@
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiNumbers
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
-! Purpose     : Set of fictionaries for LoKi functions 
+! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
 
@@ -12,7 +12,7 @@
  - New package.
 
    It is pure dictionary package, which contains only the dictionaries for 
-   the LoKi's functors which deal pnly with "plain numbers".
+   the LoKi's functors which deal only with "plain numbers".
 
    For the overall coherency the version is set to v7r0 
 
