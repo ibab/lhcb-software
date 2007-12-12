@@ -5,7 +5,7 @@
  *  Header file for track find class LHCb::OTLiteTime
  *
  *  CVS Log :-
- *  $Id: OTLiteTime.h,v 1.3 2007-11-14 16:05:39 wouter Exp $
+ *  $Id: OTLiteTime.h,v 1.4 2007-12-12 13:04:42 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -50,7 +50,10 @@ namespace LHCb
   public:
 
     /// Print this OTLiteTime in a human readable way
-    std::ostream& fillStream(std::ostream& s) const;
+    std::ostream& fillStream(std::ostream& s) const
+    {
+      return s << "[ channel=" << m_channelid << ", " << m_calibratedTime << "]" ;
+    }
 
     /// Implement ostream << method
     friend inline std::ostream& operator << ( std::ostream& s,
