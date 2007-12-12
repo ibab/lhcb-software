@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-12-12 - Jose A. Hernando
+ - options to run the HLT muon, and hadron in the Tf
+
 ! 2007-12-11 - Gerhard Raven
  - make options consistent with current code: 
     Hlt{Ele,MuHad,Phi}AlleyConfSequence.opts, HltRecoCheck.opts
