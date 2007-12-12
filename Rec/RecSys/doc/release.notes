@@ -12,9 +12,9 @@ This version uses Gaudi v19r6 and LHCb v23r2.
                   RichRecTrackTools   v1r0: 'track'  tools for Rich reco.
                   RichRecMCAlgorithms v1r0: Rich reco. algs that use MC info.
                   MuonTrackAlign      v1r1: Now migrated to Tf, hits added
-- Packages modified: CaloMoniDST v3r0p1, NNTools v1r1, PatAlgorithms v3r2,
-    PatPV v3r1, PatVelo v3r2, PatVeloTT v3r1, RecAlgs v1r5, RecUtils v1r4,
-    RichHLTLocalPID v1r1, RichHLTSys v3r2, RichGlobalPID v3r6,
+- Packages modified: CaloMoniDST v3r0p1, GlobalReco v6r14, NNTools v1r1,
+    PatAlgorithms v3r2, PatPV v3r1, PatVelo v3r2, PatVeloTT v3r1, RecAlgs v1r5,
+    RecUtils v1r4, RichHLTLocalPID v1r1, RichHLTSys v3r2, RichGlobalPID v3r6,
     RichRecMCTools v2r14, RichRecMonitors v2r13, RichRecQC v2r15,
     RichRecTools v4r0, RichRecSys v3r7, TfTools v1r2, TrackExtrapolators v2r16,
     TrackFitEvent v3r11, TrackFitter v2r22, TrackIdealPR v2r14,
@@ -24,6 +24,10 @@ This version uses Gaudi v19r6 and LHCb v23r2.
 - In CaloMoniDST v3r0p1
   . Fix a compiler warning
   . Fix an ostream in CaloPhotonChecker.cpp
+
+- In GlobalReco v6r14
+  . Update how Offline/HLT data locations are handled, to always try and guess
+    the correct location using the context() flag
 
 - In NNTools v1r1
   . Tml p neural network was added;option files allow the user to choose the
