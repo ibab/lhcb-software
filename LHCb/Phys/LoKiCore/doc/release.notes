@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.69 2007-12-11 18:37:04 ibelyaev Exp $ 
+! $Id: release.notes,v 1.70 2007-12-12 06:40:04 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,7 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiCore v7r0 2007-12-12  ========================
 ! 2007-12-11 - Vanya BELYAEV
  - LoKi/HybridBsse.h
    src/HybridBase.cpp
@@ -22,11 +23,7 @@
     2) add the possibility to add "local" python pseudo-code 
        (referred here as "context") 
 
-
-!=========================== LoKiCore v7r0 2007-12-11  ========================
-
 ! 2007-12-11 - Vanya BELYAEV
-
  - LoKi/BasicFunctors.h
    add new structure "Assignable" to
    obtain the "assignable" functor type from 
@@ -430,6 +427,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.69  2007/12/11 18:37:04  ibelyaev
+!  Hybrid: add more structure and introduce ''the context''
+!
 ! Revision 1.68  2007/12/11 09:35:49  ibelyaev
 ! add LoKi::Assignable into LoKi/BasicFunctors.h and clean LoKi/FilterOps.h
 !
