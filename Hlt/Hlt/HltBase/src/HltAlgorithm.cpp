@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.23 2007-12-11 16:27:42 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.24 2007-12-12 15:55:18 hernando Exp $
 // Include files 
 
 // from boost
@@ -50,8 +50,8 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
 
   declareProperty("MinCandidates",m_minNCandidates = 1);
 
-  m_consider1 = true;
-  m_consider2 = true;
+  m_consider1 = false;
+  m_consider2 = false;
   m_selectionID = 0;
   m_outputHolder = 0;
   m_outputTracks = 0;
@@ -217,7 +217,7 @@ bool HltAlgorithm::beginExecute() {
   bool ok1,ok2;
 
   // must check that the producer of input tracks was actually run and succeeded
-  if( m_consider1 && m_inputTracks ){
+  if( m_inputTracks ){
     std::string::size_type s = m_inputTracksName.rfind('/');
     std::string selname = (s!=std::string::npos ? m_inputTracksName.substr(s+1)
                                                 : m_inputTracksName );
@@ -236,7 +236,7 @@ bool HltAlgorithm::beginExecute() {
   if (!(ok1 || m_consider1)) return ok1;
 
   // must check that the producer of input tracks was actually run and succeeded
-  if( m_consider2 && m_inputTracks2 ){
+  if(m_inputTracks2 ){
     std::string::size_type s = m_inputTracks2Name.rfind('/');
     std::string selname = (s!=std::string::npos ? m_inputTracks2Name.substr(s+1)
                                                 : m_inputTracks2Name );
