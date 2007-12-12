@@ -23,8 +23,8 @@ use HltL0Conf           v1r5    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v1r3    Hlt   # Alessia Satta   
 # use HltHadL0Conf        v1r1    Hlt   # Jose Angel Hernando-Morata
 
-# use HltSelections       v5r6    Hlt   # Patrick Koppenburg
-# use HltSelChecker       v5r2    Hlt   # Patrick Koppenburg
+use HltSelections       v5r7    Hlt   # Patrick Koppenburg
+use HltSelChecker       v5r2    Hlt   # Patrick Koppenburg
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
@@ -32,6 +32,6 @@ use HltL0MuonConf       v1r3    Hlt   # Alessia Satta
 
 use HltBase             v2r7   Hlt    # Jose Angel Hernando-Morata
 
-# use LoKiTrigger         v6r1   Phys   # Vanya Belyaev
+use LoKiTrigger         v7r0   Phys   # Vanya Belyaev
 # use TisTosTobbing       v2r1   Phys   # Tomasz Skwarnicki  
 
