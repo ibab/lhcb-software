@@ -1,4 +1,4 @@
-// $Id: GolHeaderV3.h,v 1.1 2007-11-26 11:08:30 wouter Exp $
+// $Id: GolHeaderV3.h,v 1.2 2007-12-12 13:05:31 wouter Exp $
 #ifndef OTDAQ_GOLHEADERV3_H 
 #define OTDAQ_GOLHEADERV3_H 1
 
@@ -18,20 +18,23 @@ namespace OTDAQ {
     GolHeaderV3(int iWord,
                 int iStation,
                 int iLayer,
-              int iQuarter,
+		int iQuarter,
                 int iModule,
                 int iOtisErFlag,
-                int iSize);
+                int iNumberOfHits);
     
     /// constructor with golHeader
-    GolHeaderV3(int id) : m_golHeader(id) {}
+    GolHeaderV3(int id) : m_data(id) {}
   
     /// Return an unsigned int from a GolHeaderV3 
     unsigned int returnInt(const GolHeaderV3& gol);
   
-    /// Retrieve Size
-    unsigned int size() const;
+    /// Retrieve NumberOfHits
+    unsigned int numberOfHits() const;
   
+    /// Retrieve the total size of the buffer with hit data (includign padding)
+    unsigned int hitBufferSize() const { return numberOfHits()/2 + numberOfHits()%2 ; }
+   
     /// Retrieve OtisErFlag
     unsigned int otisErFlag() const;
   
@@ -83,11 +86,13 @@ namespace OTDAQ {
   
     /// Retrieve Word
     bool word() const;
-  
+    
+    /// Stream to output
+    friend std::ostream& operator<<(std::ostream& os, const GolHeaderV3& header) ;
   private:
 
     /// Offsets of bitfield golHeader
-    enum golHeaderBits{sizeBits       = 24,
+    enum golHeaderBits{NumberOfHitsBits       = 24,
                        otisErFlagBits = 10,
                        otis0SEUBits   = 10,
                        otis0BufOvBits = 11,
@@ -110,7 +115,7 @@ namespace OTDAQ {
                        wordBits       = 23};
   
     /// Bitmasks for bitfield golHeader
-    enum golHeaderMasks{sizeMask       = 0xFF000000L,
+    enum golHeaderMasks{NumberOfHitsMask       = 0xFF000000L,
                         otisErFlagMask = 0x003FFC00L,
                         otis0SEUMask   = 0x00000400L,
                         otis0BufOvMask = 0x00000800L,
@@ -134,7 +139,7 @@ namespace OTDAQ {
                        };
   
   
-    unsigned int m_golHeader; ///< Gol Header ID
+    unsigned int m_data; ///< Gol Header ID
   
   }; // class GolHeaderV3
 
@@ -151,130 +156,140 @@ namespace OTDAQ {
                                   int iQuarter,
                                   int iModule,
                                   int iOtisErFlag,
-                                  int iSize) 
+                                  int iNumberOfHits) 
   {
     
-    m_golHeader = (iWord << wordBits) +
+    m_data = (iWord << wordBits) +
       (iStation << stationBits) + 
       (iLayer << layerBits) + 
       (iQuarter << quarterBits) + 
       (iModule << moduleBits) + 
       (iOtisErFlag << otisErFlagBits) + 
-      (iSize << sizeBits);
+      (iNumberOfHits << NumberOfHitsBits);
     
   }
   
-  inline unsigned int GolHeaderV3::size() const
+  inline unsigned int GolHeaderV3::numberOfHits() const
   {
-    return (unsigned int)((m_golHeader & sizeMask) >> sizeBits);
+    return (unsigned int)((m_data & NumberOfHitsMask) >> NumberOfHitsBits);
   }
   
   inline unsigned int GolHeaderV3::otisErFlag() const
   {
-    return (unsigned int)((m_golHeader & otisErFlagMask) >> otisErFlagBits);
+    return (unsigned int)((m_data & otisErFlagMask) >> otisErFlagBits);
   }
   
   
   inline unsigned int GolHeaderV3::otis0SEU() const
   {
-    return (unsigned int)((m_golHeader & otis0SEUMask ) >> otis0SEUBits );
+    return (unsigned int)((m_data & otis0SEUMask ) >> otis0SEUBits );
   }
   
   inline unsigned int GolHeaderV3::otis1SEU() const
   {
-    return (unsigned int)((m_golHeader & otis1SEUMask ) >> otis1SEUBits );
+    return (unsigned int)((m_data & otis1SEUMask ) >> otis1SEUBits );
 }
   
   inline unsigned int GolHeaderV3::otis2SEU() const
   {
-    return (unsigned int)((m_golHeader & otis2SEUMask ) >> otis2SEUBits );
+    return (unsigned int)((m_data & otis2SEUMask ) >> otis2SEUBits );
   }
   
   inline unsigned int GolHeaderV3::otis3SEU() const
   {
-    return (unsigned int)((m_golHeader & otis3SEUMask ) >> otis3SEUBits );
+    return (unsigned int)((m_data & otis3SEUMask ) >> otis3SEUBits );
   }
   
   
   inline unsigned int GolHeaderV3::otis0bufferOverflow() const
   {
-    return (unsigned int)((m_golHeader & otis0BufOvMask ) >> otis0BufOvBits );
+    return (unsigned int)((m_data & otis0BufOvMask ) >> otis0BufOvBits );
   }
   
   inline unsigned int GolHeaderV3::otis1bufferOverflow() const
   {
-    return (unsigned int)((m_golHeader & otis1BufOvMask ) >> otis1BufOvBits );
+    return (unsigned int)((m_data & otis1BufOvMask ) >> otis1BufOvBits );
   }
   
   inline unsigned int GolHeaderV3::otis2bufferOverflow() const
   {
-    return (unsigned int)((m_golHeader & otis2BufOvMask ) >> otis2BufOvBits );
+    return (unsigned int)((m_data & otis2BufOvMask ) >> otis2BufOvBits );
   }
   
   inline unsigned int GolHeaderV3::otis3bufferOverflow() const
   {
-    return (unsigned int)((m_golHeader & otis3BufOvMask ) >> otis3BufOvBits );
+    return (unsigned int)((m_data & otis3BufOvMask ) >> otis3BufOvBits );
   }
   
   
   inline unsigned int GolHeaderV3::otis0truncation() const
   {
-    return (unsigned int)((m_golHeader & otis0TruncMask ) >> otis0TruncBits );
+    return (unsigned int)((m_data & otis0TruncMask ) >> otis0TruncBits );
   }
   
   inline unsigned int GolHeaderV3::otis1truncation() const
   {
-    return (unsigned int)((m_golHeader & otis1TruncMask ) >> otis1TruncBits );
+    return (unsigned int)((m_data & otis1TruncMask ) >> otis1TruncBits );
   }
   
   inline unsigned int GolHeaderV3::otis2truncation() const
   {
-  return (unsigned int)((m_golHeader & otis2TruncMask ) >> otis2TruncBits );
+  return (unsigned int)((m_data & otis2TruncMask ) >> otis2TruncBits );
   }
   
   inline unsigned int GolHeaderV3::otis3truncation() const
   {
-    return (unsigned int)((m_golHeader & otis3TruncMask ) >> otis3TruncBits );
+    return (unsigned int)((m_data & otis3TruncMask ) >> otis3TruncBits );
   }
   
   inline unsigned int GolHeaderV3::dataProcessMode() const
   {
-    return (unsigned int)((m_golHeader & dataProModMask ) >> dataProModBits );
+    return (unsigned int)((m_data & dataProModMask ) >> dataProModBits );
   }
   
   inline unsigned int GolHeaderV3::opticalTransOK() const
   {
-    return (unsigned int)((m_golHeader & optTransOKMask ) >> optTransOKBits );
+    return (unsigned int)((m_data & optTransOKMask ) >> optTransOKBits );
   }
 
   inline unsigned int GolHeaderV3::module() const
   {
-    return (unsigned int)((m_golHeader & moduleMask) >> moduleBits);
+    return (unsigned int)((m_data & moduleMask) >> moduleBits);
   }
   
   inline unsigned int GolHeaderV3::quarter() const
   {
-    return (unsigned int)((m_golHeader & quarterMask) >> quarterBits);
+    return (unsigned int)((m_data & quarterMask) >> quarterBits);
   }
   
   inline unsigned int GolHeaderV3::layer() const
   {
-    return (unsigned int)((m_golHeader & layerMask) >> layerBits);
+    return (unsigned int)((m_data & layerMask) >> layerBits);
   }
   
   inline unsigned int GolHeaderV3::station() const
   {
-    return (unsigned int)((m_golHeader & stationMask) >> stationBits);
+    return (unsigned int)((m_data & stationMask) >> stationBits);
   }
   
   inline bool GolHeaderV3::word() const
   {
-    return 0 != ((m_golHeader & wordMask) >> wordBits);
+    return 0 != ((m_data & wordMask) >> wordBits);
   }
   
   inline unsigned int GolHeaderV3::returnInt(const GolHeaderV3& gol) 
   {
-    return gol.m_golHeader  >> 0; 
+    return gol.m_data  >> 0; 
+  } 
+
+  inline std::ostream& operator<<(std::ostream& os, const GolHeaderV3& header) 
+  {
+    return os << "[ data=0x" << header.m_data 
+	      << ", buffer size=" << header.hitBufferSize()
+	      << ", num hits="    << header.numberOfHits()
+	      << ", module ID=("
+	      << header.station() << "," << header.layer() << "," 
+	      << header.quarter() << "," << header.module() << ") ]" ;
   }
 }
 

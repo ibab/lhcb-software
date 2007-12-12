@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.h,v 1.4 2007-11-26 11:08:30 wouter Exp $
+// $Id: OTRawBankDecoder.h,v 1.5 2007-12-12 13:05:31 wouter Exp $
 #ifndef OTRAWBANKDECODER_H
 #define OTRAWBANKDECODER_H 1
 
@@ -14,7 +14,9 @@
 
 // forward declarations
 class DeOTDetector;
-
+namespace LHCb {
+  class RawBank ;
+}
 namespace OTRawBankDecoderHelpers
 {
   struct Detector ;
@@ -60,7 +62,7 @@ public:
   
   /// Decode all gol headers
   StatusCode decodeGolHeaders() const ;
-  
+
   /// Decode all modules
   StatusCode decode( LHCb::OTLiteTimeContainer& ottimes ) const ;
   
@@ -73,6 +75,8 @@ public:
 private:
   virtual void handle ( const Incident& incident );
   size_t decodeModule( OTRawBankDecoderHelpers::Module& ) const ;
+  StatusCode decodeGolHeadersV3(const LHCb::RawBank&) const ;
+  StatusCode decodeGolHeadersDC06(const LHCb::RawBank&) const ;
   
 private:
   // data

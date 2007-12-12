@@ -31,7 +31,7 @@ namespace OTDAQ
               int iSize);
   
     /// constructor with golHeader
-    GolHeaderDC06(int id) : m_golHeader(id) {}
+    GolHeaderDC06(int id) : m_data(id) {}
   
     /// Return an unsigned int from a GolHeaderDC06 
     unsigned int returnInt(const GolHeaderDC06& gol);
@@ -56,7 +56,18 @@ namespace OTDAQ
   
     /// Retrieve Word
     bool word() const;
-  
+
+    /// Stream to output
+    std::ostream& operator<<(std::ostream& os) const ;
+
+    /// Size of the bufer with hit data
+    unsigned int hitBufferSize() const { return size() ; }
+
+    /// Number of hits. Does not correct for padding!
+    unsigned int numberOfHits() const { return 2*size() ; }
+
+    /// Stream to output
+    friend std::ostream& operator<<(std::ostream& os, const GolHeaderDC06& header) ;
   private:
 
     /// Offsets of bitfield golHeader
@@ -79,7 +90,7 @@ namespace OTDAQ
                        };
   
   
-    unsigned int m_golHeader; ///< Gol Header ID
+    unsigned int m_data; ///< Gol Header ID
   
   }; // class GolHeaderDC06
 
@@ -95,7 +106,7 @@ namespace OTDAQ
                                   int iSize) 
   {
     
-    m_golHeader = (iWord << wordBits) +
+    m_data = (iWord << wordBits) +
       (iStation << stationBits) + 
       (iLayer << layerBits) + 
       (iQuarter << quarterBits) + 
@@ -107,42 +118,52 @@ namespace OTDAQ
  
   inline unsigned int GolHeaderDC06::size() const
   {
-    return (unsigned int)((m_golHeader & sizeMask) >> sizeBits);
+    return (unsigned int)((m_data & sizeMask) >> sizeBits);
   }
 
   inline unsigned int GolHeaderDC06::otisErFlag() const
   {
-    return (unsigned int)((m_golHeader & otisErFlagMask) >> otisErFlagBits);
+    return (unsigned int)((m_data & otisErFlagMask) >> otisErFlagBits);
   }
   
   inline unsigned int GolHeaderDC06::module() const
   {
-    return (unsigned int)((m_golHeader & moduleMask) >> moduleBits);
+    return (unsigned int)((m_data & moduleMask) >> moduleBits);
   }
   
   inline unsigned int GolHeaderDC06::quarter() const
   {
-    return (unsigned int)((m_golHeader & quarterMask) >> quarterBits);
+    return (unsigned int)((m_data & quarterMask) >> quarterBits);
   }
   
   inline unsigned int GolHeaderDC06::layer() const
   {
-    return (unsigned int)((m_golHeader & layerMask) >> layerBits);
+    return (unsigned int)((m_data & layerMask) >> layerBits);
   }
   
   inline unsigned int GolHeaderDC06::station() const
   {
-    return (unsigned int)((m_golHeader & stationMask) >> stationBits);
+    return (unsigned int)((m_data & stationMask) >> stationBits);
   }
   
   inline bool GolHeaderDC06::word() const
   {
-    return 0 != ((m_golHeader & wordMask) >> wordBits);
+    return 0 != ((m_data & wordMask) >> wordBits);
   }
   
   inline unsigned int GolHeaderDC06::returnInt(const GolHeaderDC06& gol) 
   {
-    return gol.m_golHeader  >> 0; 
+    return gol.m_data  >> 0; 
+  }
+
+  inline std::ostream& operator<<(std::ostream& os, const GolHeaderDC06& header) 
+  {
+    return os << "[ data=" << header.m_data
+	      << ", buffer size =" << header.hitBufferSize()
+	      << ", num hits ="    << header.numberOfHits()
+	      << ", module ID=("
+	      << header.station() << "," << header.layer() << "," 
+	      << header.quarter() << "," << header.module() << ") ]" ;
   }
 }
 

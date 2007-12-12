@@ -8,12 +8,12 @@ use DAQEvent	v*      Event
 use DigiEvent   v*      Event
 use OTDet	v*	Det
 use GSL         v*      LCG_Interfaces
-private
-use GaudiObjDesc v* -no_auto_imports
-end_private
+#private
+#use GaudiObjDesc v* -no_auto_imports
+#end_private
 
 #---- Produce Header-Files from XML description
-apply_pattern god_headers files=../xml/*.xml
+#apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=OTDAQ offset=Event
 
 # ================= component library ====================
@@ -21,11 +21,10 @@ library OTDAQ *.cpp
 apply_pattern component_library library=OTDAQ
 
 # =============== LCG Dictionaries ============================================
-apply_pattern     reflex_dictionary                             \
-                  dictionary=OTDAQ                              \
-                  headerfiles=$(OTDAQROOT)/dict/OTDAQDict.h     \
-                  selectionfile=$(OTDAQROOT)/dict/OTDAQDict.xml \
-                  options="-U__MINGW32__"
-
+#apply_pattern     reflex_dictionary                             \
+#                  dictionary=OTDAQ                              \
+#                  headerfiles=$(OTDAQROOT)/dict/OTDAQDict.h     \
+#                  selectionfile=$(OTDAQROOT)/dict/OTDAQDict.xml \
+#                  options="-U__MINGW32__"
 # Hack for cmt v1r19 bug to link dictionary on windows
-macro OTDAQDict_use_linkopts $(use_linkopts)
+#macro OTDAQDict_use_linkopts $(use_linkopts)

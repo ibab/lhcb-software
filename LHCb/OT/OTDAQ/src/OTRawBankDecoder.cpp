@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.7 2007-11-26 11:08:30 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.8 2007-12-12 13:05:31 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -19,6 +19,7 @@
 #include "RawHit.h"
 #include "GolHeaderDC06.h"
 #include "GolHeaderV3.h"
+#include "OTSpecificHeader.h"
 
 //#include "Event/DataWord.h"
 
@@ -42,7 +43,7 @@ namespace OTRawBankDecoderHelpers
   class Module
   {
   public:
-    Module() : m_detelement(0), m_isdecoded(false), m_data(0) { m_ottimes.reserve(16) ; }
+    Module() : m_detelement(0), m_isdecoded(false), m_size(0), m_data(0) { m_ottimes.reserve(16) ; }
     void clearevent() { m_isdecoded=false ; m_size=0; m_data=0 ; m_ottimes.clear() ; }
     void setData( unsigned int size, const unsigned short* data, unsigned int bankversion) { 
       m_size = size ;  m_data = data ; m_bankversion = bankversion ; }
@@ -170,7 +171,11 @@ namespace OTRawBankDecoderHelpers
     typedef Module* iterator  ;
     iterator begin() { return &(m_modules[0][0][0][0]) ; }
     iterator end() { return &(m_modules[NumStations-1][NumLayers-1][NumQuadrants-1][NumModules]); }
-    
+
+    bool isvalidID(const unsigned int station, const unsigned int layer, 
+                   const unsigned int quarter, const unsigned int module) const {
+      return station-1<=NumStations-1 && layer<=NumLayers-1  && quarter<=NumQuadrants-1 && module-1<=NumModules-1 ; }
+
   private:
     enum { NumStations=3, NumLayers=4, NumQuadrants=4, NumModules=9 } ;
     Module m_modules[NumStations][NumLayers][NumQuadrants][NumModules];
@@ -271,11 +276,105 @@ void OTRawBankDecoder::handle ( const Incident& incident )
 //decoded once the module data is asked for. (That is the 'decoding
 //on demand' part.)
 //=============================================================================
+StatusCode OTRawBankDecoder::decodeGolHeadersDC06(const RawBank& bank) const
+{
+  // There is one word which contains no data. (In real data this is
+  // the OTSpecificHeader). We just skip it.
+  const unsigned int* begin = bank.data() + 1 ;
+  const unsigned int* end   = bank.data() + bank.size()/4 ;
+  const unsigned int* idata ;  
+  int bVersion = m_forcebankversion != OTBankVersion::UNDEFINED ? m_forcebankversion : bank.version();
+  unsigned int station,layer,quarter,module,numhits ;
+  bool decodingerror(false) ;
+  for( idata = begin ; idata < end ; ++idata ) {
+    OTDAQ::GolHeaderDC06 golHeader(*idata) ;
+    numhits = golHeader.numberOfHits() ;
+    // We skip empty headers without issuing a warning
+    if( numhits > 0 ) {
+      station = golHeader.station();
+      layer = golHeader.layer();
+      quarter = golHeader.quarter();
+      module = golHeader.module();
+      if(!m_detectordata->isvalidID(station,layer,quarter,module) ) {
+	error() << "Invalid gol header "<< golHeader << endmsg ;
+	decodingerror = true ;
+      } else {
+	const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
+	m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bVersion) ; 
+	if (msgLevel(MSG::DEBUG)) debug() << "Reading gol header " << golHeader << endmsg ;
+      }
+      idata += golHeader.hitBufferSize() ;
+    }
+  }
+  
+  if(idata != end) {
+    error() << "OTRawBankDecoder: gol headers do not add up to buffer size. " << idata << " " << end << endreq ;
+    decodingerror = true ;
+  }
+  
+  return decodingerror ? StatusCode::FAILURE : StatusCode::SUCCESS ;
+}
+StatusCode OTRawBankDecoder::decodeGolHeadersV3(const RawBank& bank) const
+{
+  bool decodingerror(false) ;
+  int bVersion = m_forcebankversion != OTBankVersion::UNDEFINED ? m_forcebankversion : bank.version();
+  // The first 4 bytes are the OTSpecificHeader
+  OTDAQ::OTSpecificHeader otheader(*bank.data()) ;
+  if( msgLevel(MSG::DEBUG)) 
+    debug() << "OTSpecificHeader in bank:" << otheader << endmsg ;
+  if( otheader.error() ) 
+    warning() << "OTSpecificHeader has error bit set in bank " << bank.sourceID() << endreq ;
+  // The data starts at the next 4byte
+  const unsigned int* begin = bank.data() + 1 ;
+  const unsigned int* end   = bank.data() + bank.size()/4 ;
+  const unsigned int* idata ;
+  unsigned int station,layer,quarter,module,numhits,numgols(0) ;
+  for( idata = begin ; idata < end; ++idata) {
+    // decode the header
+    OTDAQ::GolHeaderV3 golHeader(*idata) ;
+    // if there are no hits, issue a warning
+    numhits = golHeader.numberOfHits() ;
+    if( 0 == numhits ) {
+      warning() << "Found empty GOL header " << golHeader << endmsg ;
+    } else {
+      // Decode the GOL ID
+      station = golHeader.station();
+      layer = golHeader.layer();
+      quarter = golHeader.quarter();
+      module = golHeader.module();
+      // check that the GOL ID is valid  
+      if(!m_detectordata->isvalidID(station,layer,quarter,module) ) {
+	error() << "Invalid gol header "<< golHeader << endmsg ;
+	decodingerror = true ;
+      } else {
+	const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
+	m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bVersion) ; 
+	if (msgLevel(MSG::DEBUG)) debug() << "Reading gol header " << golHeader << endmsg ;
+      }
+      // skip the actual hits
+      idata += golHeader.hitBufferSize() ;
+    }
+    ++numgols ;
+  }
+
+  // check that everything is well aligned
+  if(idata != end) {
+    error() << "GOL headers do not add up to buffer size. " << idata << " " << end << endreq ;
+    decodingerror = true ;
+  }
+  
+  // check that we have read the right number of GOLs
+  if( numgols != otheader.numberOfGOLs() ) {
+    error() << "Found " << otheader.numberOfGOLs() << " in bank header, but read only " 
+	    << numgols << " from bank." << endmsg ;
+    decodingerror = true ;
+  }
+    
+  return decodingerror ? StatusCode::FAILURE : StatusCode::SUCCESS ;
+}
 
 StatusCode OTRawBankDecoder::decodeGolHeaders() const
 {
-  // info() << "OTRawBankDecoder::decodeGolHeaders()" << endreq ;
-  if (msgLevel(MSG::DEBUG)) debug() << "Decoding GOL headers in OTRawBankDecoder" << endreq ;
   
   // Retrieve the RawEvent:
   RawEvent* event = get<RawEvent>("DAQ/RawEvent" );
@@ -283,84 +382,41 @@ StatusCode OTRawBankDecoder::decodeGolHeaders() const
   // Get the buffers associated with OT
   const std::vector<RawBank*>& OTBanks = event->banks(RawBank::OT );
   
-  // Loop over vector of banks (The Buffer)
-  bool decodingerror(false) ;
+  // Report the number of banks
+  if (msgLevel(MSG::DEBUG)) 
+    debug() << "Decoding GOL headers in OTRawBankDecoder. Number of OT banks is " 
+	    << OTBanks.size() << endreq ;
+  
   for (std::vector<RawBank*>::const_iterator  ibank = OTBanks.begin();
        ibank != OTBanks.end() ; ++ibank) {
-    // get bank version
-    bool bankdecodingerror(false) ;
+    
+    // Report the bank size and version
+    if (msgLevel(MSG::DEBUG))
+      debug() << "OT Bank sourceID= " << (*ibank)->sourceID() 
+	      << " size=" << (*ibank)->size()/4 << " bankversion=" << (*ibank)->version() << endmsg;
+    
+    // Choose decoding based on bank version
     int bVersion = m_forcebankversion != OTBankVersion::UNDEFINED ? m_forcebankversion : (*ibank)->version();
-    unsigned int nTell1 = 0u;
+    StatusCode sc ;
     switch( bVersion ) {
-    case OTBankVersion::v1:
-      nTell1 = 3 ;
-      break ;
     case OTBankVersion::DC06:
+      sc = decodeGolHeadersDC06(**ibank) ;
+      break ;
     case OTBankVersion::v3:
-      nTell1 = 1 ;
+      sc = decodeGolHeadersV3(**ibank) ;
       break ;
     default:
       error() << "Cannot decode OT raw buffer bank version "
               << bVersion << " with this version of OTDAQ" << endmsg;
-      bankdecodingerror = true ;
     } ;
-    
-    if( !bankdecodingerror ) {
-      
-      if (msgLevel(MSG::DEBUG))
-        debug() << " Bank Nr " << (*ibank)->sourceID() << " with Size "
-                << (*ibank)->size()/4 << " " << (*ibank)->version() << endmsg;
-      
-      const unsigned int* begin = (*ibank)->data() + nTell1 ;
-      const unsigned int* end   = (*ibank)->data() + (*ibank)->size()/4 ;
-      const unsigned int* idata ;
-      unsigned int buffersize,station,layer,quarter,module,numhits ;
-      
-      for( idata = begin ; idata < end && !bankdecodingerror; ++idata ) {
-        
-	// I'd rather do this with a function pointer, such that we don't need the fork.
-        if( bVersion == OTBankVersion::v2 ) {
-          // in DC06 'size' is the size of the data-block (in units of 4 bytes). in real data it is the number of hits.
-          OTDAQ::GolHeaderDC06 golHeader(*idata) ;
-          buffersize = golHeader.size();
-          station = golHeader.station();
-          layer = golHeader.layer();
-          quarter = golHeader.quarter();
-          module = golHeader.module();
-          numhits = 2*buffersize ;
-        } else {
-          OTDAQ::GolHeaderV3 golHeader(*idata) ;
-          numhits = golHeader.size();
-          station = golHeader.station();
-          layer = golHeader.layer();
-          quarter = golHeader.quarter();
-          module = golHeader.module();
-          buffersize = numhits/2 + numhits%2 ;
-        } 
-        
-        if(station<1 || station>3 || layer>3 || quarter>3 || module<1 || module >9) {
-          error() << "OTRawBankDecoder: invalid gol header. data = " << *idata << " module ID=("
-                  << station << "," << layer << "," << quarter << "," << module << "). " 
-		  << endmsg ;
-        } else {
-          const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
-          m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bVersion) ;
-        }
-        idata += buffersize ;
-      }
-      
-      if(!bankdecodingerror && idata != end) {
-        error() << "OTRawBankDecoder: gol headers do not add up to buffer size. " << idata << " " << end << endreq ;
-        bankdecodingerror = true ;
-      }
-    }
-    decodingerror |= bankdecodingerror ;
+    // ignore errors
+    sc.ignore() ;
   }
   
   // make sure we don't call this until the next event
   m_detectordata->setGolHeadersLoaded(true) ; 
   
-  return decodingerror ? StatusCode::FAILURE : StatusCode::SUCCESS ;
+  return StatusCode::SUCCESS ;
 }
 
 size_t OTRawBankDecoder::decodeModule( OTRawBankDecoderHelpers::Module& moduledata ) const 
