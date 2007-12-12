@@ -8,8 +8,8 @@ branches cmt doc
 #=======================================================
 
 # General purpose components
-use RecAlgs             v1r4    Rec   # Marco Cattaneo
-use RecUtils            v1r3    Rec   # Juan Palacios, Patrick Koppenburg
+use RecAlgs             v1r5    Rec   # Marco Cattaneo
+use RecUtils            v1r4    Rec   # Juan Palacios, Patrick Koppenburg
 
 # Calorimeter                         # Maintainer
 use CaloMoniDst         v3r0p1  Calo  # Olivier Deschamps
@@ -49,14 +49,14 @@ use PatPV               v3r1    Tr   # Mariusz Witek
 #use MuonUtils		v1r0	Muon  # N.N.
 use MuonID              v5r2    Muon  # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker      v2r2    Muon  # Erica Polycarpo, Miriam Gandelman
-#use MuonTrackAlign      v1r0    Muon  # Silvia Pozzi - not migrated to Tf
+use MuonTrackAlign      v1r1    Muon  # Silvia Pozzi
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
+use RichGlobalPID       v3r6    Rich  # Chris Jones
 use RichHLTLocalPID     v1r1    Rich  # Chris Jones
 use RichHLTSys          v3r2    Rich  # Chris Jones
 use RichLocalPID        v3r5    Rich  # Chris Jones
-use RichGlobalPID       v3r6    Rich  # Chris Jones
 use RichPIDMerge	v2r5    Rich  # Chris Jones
 use RichRecAlgorithms   v2r9    Rich  # Chris Jones
 use RichRecMCAlgorithms v1r0    Rich  # Chris Jones
