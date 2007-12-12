@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r2>2007-12-11 LHCbSys v23r2</A></H1><PRE>
+</PRE><H1><A NAME=v23r2>2007-12-12 LHCbSys v23r2</A></H1><PRE>
 This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
 
 - Packages added   : STKernel v1r0    - public headers for ST readout
@@ -115,6 +115,9 @@ This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
     (added CalibrationStep and TriggerConfigurationKey).
   . Modified the tests to comply to the Gaudi QMTest infrastructure and added
     a very simple test (to be reviewed).
+  . Add new bank type TAEHeader, in fact not a bank but a pseudo-one, put
+    as first bank in the MDF payload to describe multi-event in the same
+    MDF block. The bank is a vector of triplets of int: bxOffset, offset, size.
 
 - In DigiEvent v2r3
   . Remove Kernel directory:
