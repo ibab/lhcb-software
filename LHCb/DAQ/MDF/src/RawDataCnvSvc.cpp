@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.16 2007-11-19 19:27:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.17 2007-12-12 15:38:48 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -423,7 +423,7 @@ StatusCode RawDataCnvSvc::closeIO(void* ioDesc)  const {
 /// Read raw byte buffer from input stream
 StatusCode RawDataCnvSvc::readBuffer(void* const ioDesc, void* const data, size_t len)  {
   MDFMapEntry* ent = (MDFMapEntry*)ioDesc;
-  if ( ent && ent->connection > 0 ) {
+  if ( ent && ent->connection ) {
     return m_ioMgr->read(ent->connection,data,len);
   }
   return StatusCode::FAILURE;
@@ -439,7 +439,7 @@ RawDataCnvSvc::readRawBanks(RawDataAddress* pAddr, std::pair<char*,int>& result)
   if ( sc.isSuccess() )  {
     long long offset = pAddr->fileOffset();
     MDFMapEntry* ent = (MDFMapEntry*)iodesc;
-    if ( !ent->connection )  {
+    if ( ent->connection )  {
       if ( m_ioMgr->seek(ent->connection, offset, SEEK_SET) != -1 )  {
         setupMDFIO(msgSvc(),dataProvider());
         result = readBanks(ent);
