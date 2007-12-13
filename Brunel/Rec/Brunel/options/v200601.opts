@@ -3,10 +3,10 @@
 ///   geometry lhcb-200601 (DC06)                                           ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
-#include "$BRUNELOPTS/DstContent.opts"       // Define DST content
 #include "$BRUNELOPTS/Brunel.opts"           // Set up the processing sequences
 #include "$BRUNELOPTS/BrunelMC.opts"         // Comment for real data
 //#include "$BRUNELOPTS/ExpertCheck.opts"    // Uncomment for expert check histos
+#include "$BRUNELOPTS/DstContent.opts"       // Define DST content
 ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
 //Brunel.PreloadGeometry = true; // Uncomment to load geometry before 1st event
 //Init.DetectorList += { "L0" }; // Uncomment to reconstruct only L0-yes events

@@ -1,0 +1,57 @@
+///////////////////////////////////////////////////////////////////////////////
+/// Job options for Brunel for producing an rDST starting from an MDF file  ///
+///             Currently using DC06 geometry and conditions                ///
+///////////////////////////////////////////////////////////////////////////////
+#pragma print off
+#include "$BRUNELOPTS/Brunel.opts"           // Set up the processing sequences
+#include "$BRUNELOPTS/rDstContent.opts"      // Define rDST content
+ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off rDST output
+//Brunel.PreloadGeometry = true; // Uncomment to load geometry before 1st event
+//Init.DetectorList += { "L0" }; // Uncomment to reconstruct only L0-yes events
+
+//---------------------------------------------------------------------------
+// Set up DC06 geometry, conditions, magnetic field
+//---------------------------------------------------------------------------
+#pragma print on
+#include "$DDDBROOT/options/DC06.opts"
+
+//---------------------------------------------------------------------------
+// Additional persistency components for MDF data
+//---------------------------------------------------------------------------
+#include "$STDOPTS/RawDataIO.opts"
+
+// Dictionary needed to write POOL file, will be automatically loaded with LCG_54
+PoolDbCacheSvc.Dlls += { "LHCbKernelDict" };
+
+//---------------------------------------------------------------------------
+// Add here any job specific options, to over-ride previously defined options
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+// Number of events to process, optionally skipping some events
+//---------------------------------------------------------------------------
+ApplicationMgr.EvtMax = -1;
+//EventSelector.FirstEvent = 187;  // To skip some events 
+
+//---------------------------------------------------------------------------
+// Define Input and Output files
+//---------------------------------------------------------------------------
+
+// Monitoring histograms output
+HistogramPersistencySvc.OutputFile = "00001820_00000001_5.root";
+
+// Read-write catalog to describe output (POOL) file
+PoolDbCacheSvc.Catalog = { "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml" };
+
+// Additional catalog containing the FID of the input MDF file.
+// This FID must be generated externally at it is not contained in the MDF file.
+// WARNING! If this catalog is not provided, the output rDST file will not
+// contain the information to allow navigation back to the MDF data when reading 
+// This catalog must be opened as a Gaudi (i.e. not POOL) catalog
+FileCatalog.Catalogs = { "xmlcatalog_file:$BRUNELROOT/job/GaudiCatalog.xml" };
+
+EventSelector.Input              = {
+  "DATA='FID:94ACC0F5-09A3-DC11-8140-003048836626' SVC='LHCb::MDFSelector'" 
+}; // Input MDF file. Can use FID or LFN or PFN. Must be described in FileCatalog
+
+DstWriter.Output = "DATAFILE='PFN:00001820_00000001_5.rdst' TYP='POOL_ROOTTREE' OPT='REC'"; // Output rDST file

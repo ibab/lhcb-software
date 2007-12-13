@@ -56,6 +56,10 @@ EventNodeKiller.Nodes = { "Rec", "Raw", "Link/Rec" };
 // Monitoring phase (monitoring independent of MC truth)
 #include "$BRUNELOPTS/BrunelMoni.opts"
 
+// Set up DstWriter. Has no effect is (r)Dst writing is disabled
+DstWriter.Preload = false;
+DstWriter.RequireAlgs += { "Reco" }; // Write only if Reco ProcessPhase completed
+
 //--------------------------------------------------------------
 // Modify printout defaults
 //--------------------------------------------------------------

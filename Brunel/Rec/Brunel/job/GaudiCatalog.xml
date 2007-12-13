@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By POOL -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+  <File ID="94ACC0F5-09A3-DC11-8140-003048836626">
+    <physical>
+      <pfn filetype="MDF" name="rfio:///castor/cern.ch/user/c/cattanem/Boole/v12r10/00001820_00000001_4.mdf"/>
+    </physical>
+    <logical/>
+  </File>
+
+</POOLFILECATALOG>

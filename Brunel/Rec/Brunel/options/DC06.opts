@@ -3,17 +3,10 @@
 ///   geometry lhcb-200601 (DC06). Produces rDST, use v200601.opts for DST  ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
-#include "$BRUNELOPTS/rDstContent.opts"      // Define rDST content
 #include "$BRUNELOPTS/Brunel.opts"           // Generic options for all jobs
+#include "$BRUNELOPTS/rDstContent.opts"      // Define rDST content
 ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off rDST output
 //Init.DetectorList += { "L0" }; // Uncomment to reconstruct only L0-yes events
-
-//---------------------------------------------------------------------------
-// Special options for July 2006 rDST production:
-// . Do not save Velo tracks used by PV
-//---------------------------------------------------------------------------
-RecoTrSeq.Members -= { "TrackContainerCopy/CopyVelo" };
-PatPVOffline.InputTracks = { "Rec/Track/Best", "Rec/Track/PreparedVelo" };
 
 //---------------------------------------------------------------------------
 // Set up DC06 geometry, conditions, magnetic field

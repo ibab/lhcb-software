@@ -9,10 +9,12 @@ TrackToRDST.TTrackStates = {"FirstMeasurement"};
 TrackToRDST.downstreamStates = {"FirstMeasurement"};
 TrackToRDST.upstreamStates = {"ClosestToBeam"};
 
-DstWriter.Preload = false;
-
-// Do not try to write out if Reco ProcessPhase did not complete
-DstWriter.RequireAlgs += { "Reco" };
-
 // Objects to write out
 #include "$STDOPTS/rDstContent.opts"
+
+//---------------------------------------------------------------------------
+// Special options introduced for July 2006 rDST production:
+// . Do not save Velo tracks used by PV
+//---------------------------------------------------------------------------
+TrackVeloFitSeq.Members -= { "TrackContainerCopy/CopyVelo" };
+PatPVOffline.PVOfflineTool.InputTracks = { "Rec/Track/Best", "Rec/Track/PreparedVelo" };

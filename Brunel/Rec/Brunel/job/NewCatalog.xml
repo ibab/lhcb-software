@@ -87,4 +87,32 @@
     <logical/>
   </File>
 
+  <File ID="AC2D8E0A-BBA8-DC11-9551-003048836626">
+    <physical>
+      <pfn filetype="ROOT_All" name="00001820_00000001_5.rdst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="58110D9A-8FA9-DC11-8B79-003048836626">
+    <physical>
+      <pfn filetype="ROOT_All" name="test_mdf.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="28AB087A-90A9-DC11-A31F-003048836626">
+    <physical>
+      <pfn filetype="ROOT_All" name="test-FETC.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="24357C7B-90A9-DC11-A31F-003048836626">
+    <physical>
+      <pfn filetype="ROOT_All" name="etc-output-test.root"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>
