@@ -5,7 +5,7 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
-!=========================== MicroDSTBase 2007-12-13 =========================
+!====================== MicroDSTBase v1r0 2007-12-13 =========================
 
 ! 2007-12-10 - Juan Palacios
  - Remove everything to do with local data storage. Tools and Algos now
