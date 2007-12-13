@@ -3,11 +3,89 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v1r9>2007-12-13 Analysis v1r9 - DC06 and Tf compatible analysis  version</A></H1><PRE>
+
+ - Uses LHCb v23r2 and Gaudi v19r6
+ - Bug-fixes to Tools/Stripping
+ - Developments in Phys/LoKiJets, Phys/LoKiExample
+ - New MicroDST packages MicroDSTBase, MicroDSTInterfaces and MicroDSTTools
+ - New package Phys/DecayTreeTuple
+
+#######################################MM######################################
+#                                  ANALYSIS v1r9                              #
+###############################################################################
+
+##################################### PHYS ####################################
+
+!========================== LoKiJets v4r0 2007-12-10 =====================
+
+! 2007-12-10 - Vanya BELYAEV
+
+  Add fastjet package, but still KtJet as the default engine
+  new files:
+
+    src/LoKiFastJetMaker.cpp 
+    src/LoKiFastJetMaker.h 
+    src/LoKiFastJetWithAreaMaker.cpp
+
+  After successfull tests, the "Kt"-stuff will be removed 
+
+!===================== DecayTreeTuple v1r0 2007-12-13 =======================
+
+! 2007-12-12 - Patrick Koppenburg
+ - First import. Read doxygen for more information
+
+################################## MICRODST ###################################
+
+!====================== MicroDSTBase v1r0 2007-12-13 =========================
+
+! 2007-12-10 - Juan Palacios
+ - Remove everything to do with local data storage. Tools and Algos now
+   use the TES directly.
+
+! 2007-12-10 - Juan Palacios
+ - First import
+
+!===================== MicroDSTInterfaces v1r0 2007-12-13 ====================
+
+! 2007-12-10 - Juan Palacios
+ - First commit of MicroDSTInterfaces, a package containing interfaces for the
+   cloning of LHCb event model classes. All interfaces have the method
+
+   EventModelType* operator() (const EventModelType*) =0;
+
+   Implementations of this method should call some cloning and storing logic.
+
+!======================= MicroDSTTools v1r0 2007-12-13 =======================
+
+! 2007-12-10 - Juan Palacios
+ - Add src/MicroDSTTools_dll.cpp
+
+! 2007-12-10 - Juan Palacios
+ - First CVS import
+
+
+####################################### TOOLS #################################
+
+!======================== Stripping v6r3p1 2007-12-13 ===================
+
+! 2007-12-11 - Patrick Koppenburg
+ - Get the correct python version.
+
 </PRE><H1><A NAME=v1r8>2007-11-15 Analysis v1r8 - DC06-compatible analysis  version</A></H1><PRE>
 
  - Uses LHCb v22r11
  - Otherwise, minor changes to Phys/VertexFitCheck and Phys/FlavourTaggingChecker, plus continued development to MicroDST/MicroDSTAlgorithm
  - Released in order to have a DaVinci v19 series with the latest LHCb v22 based HLT.
+
+############################ EXAMPLES AND TUTORIALS ###########################
+
+!========================== LoKiExample v7r0 2007-12-11 =====================
+
+! 2007-12-11 - Vanya BELYAEV
+ - prepare for LoKi v7r0 
+   increment the version to v7r0 
+
 
 #######################################MM######################################
 #                                  ANALYSIS v1r8                              #

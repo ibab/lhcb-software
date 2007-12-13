@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.36 2007-12-10 18:48:20 pkoppenb Exp $
+# $Id: requirements,v 1.37 2007-12-13 13:40:17 jpalac Exp $
 package AnalysisSys
-version v1r8
+version v1r9
 
 branches doc cmt
 
@@ -20,6 +20,7 @@ use  FlavourTaggingChecker      v2r6     Phys   # Marco Musy
 use  DaVinciUser      	        v8r3     Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r1p1   Phys   # Chris Jones
 use  LoKiUser                   v6r0     Phys   # Vanya Belyaev
+use  DecayTreeTuple             v1r0     Phys   # Jeremie Borel
 ####################################################################
 use  PhysSelSys      	v10r7   PhysSel
 #===================================================================
@@ -38,18 +39,22 @@ use Bs2JpsiPhi          v3r3    PhysSel # Gerhard Raven, Jan Amoraal
 use Bd2PiPiPi0          v4r3    PhysSel # Olivier Deschamps
 
 ####################################################################
-use LoKiJets            v3r0    Phys    # Vanya Belyaev
+use LoKiJets            v4r0    Phys    # Vanya Belyaev
 
 ####################################################################
-use  Stripping          v6r3    Tools   # Juan Palacios
+use  Stripping          v6r3p1  Tools   # Juan Palacios
 
 ####################################################################
-use  MicroDSTAlgorithm  v2r1    MicroDST          # Ulrich Kerzel
+use  MicroDSTBase        v1r0    MicroDST          # Juan Palacios
+use  MicroDSTInterfaces  v1r0    MicroDST          # Juan Palacios
+use  MicroDSTTools       v1r0    MicroDST          # Juan Palacios
+use  MicroDSTAlgorithm   v3r0    MicroDST          # Ulrich Kerzel
+
 
 ####################################################################
 use Analysis            v6r5    Tutorial         # P. Koppenburg
 
 ####################################################################
-use LoKiExample         v6r0    Ex       # Vanya Belyaev
+use LoKiExample         v7r0    Ex       # Vanya Belyaev
 
 
