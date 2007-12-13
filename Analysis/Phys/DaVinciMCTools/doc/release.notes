@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.190 2007-11-29 10:59:04 cattanem Exp $
+! $Id: release.notes,v 1.191 2007-12-13 13:56:03 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+! 2007-12-13 - Vladimir Gligorov
+ - Modified BackgroundCategory to correctly identify decays involving Merged pi0s.
 
 ! 2007-11-29 - Marco Cattaneo
  - Removed DumpEvent algorithm, reimplemented as PrintMCDecayTreeAlg in
