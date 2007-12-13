@@ -1,4 +1,4 @@
-// $Id: GolHeaderV3.h,v 1.2 2007-12-12 13:05:31 wouter Exp $
+// $Id: GolHeaderV3.h,v 1.3 2007-12-13 10:17:03 wouter Exp $
 #ifndef OTDAQ_GOLHEADERV3_H 
 #define OTDAQ_GOLHEADERV3_H 1
 
@@ -284,7 +284,7 @@ namespace OTDAQ {
 
   inline std::ostream& operator<<(std::ostream& os, const GolHeaderV3& header) 
   {
-    return os << "[ data=0x" << header.m_data 
+    return os << "[ data=" << header.m_data 
 	      << ", buffer size=" << header.hitBufferSize()
 	      << ", num hits="    << header.numberOfHits()
 	      << ", module ID=("
