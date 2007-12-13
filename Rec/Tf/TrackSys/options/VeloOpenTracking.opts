@@ -1,6 +1,5 @@
-RecoVeloSeq.Members -= {"PatVeloRTracking"
-                      , "PatVeloSpaceTracking"
-                      , "PatFilterUsedClusters"
+RecoVELOSeq.Members -= { "Tf::PatVeloRTracking/PatVeloRTracking"
+                        ,"Tf::PatVeloSpaceTracking/PatVeloSpaceTracking"
                        };
 
 PatVeloGeneralTracking.PointErrorMin = 2*mm;

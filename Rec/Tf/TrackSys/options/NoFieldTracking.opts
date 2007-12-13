@@ -28,7 +28,7 @@ TrackEventCloneKiller.TracksInContainers  = {
 // ====================================================================
 
 // Tsa pattern
-TsaSeedTrackCnv.pFromCurvature = true;
+ToolSvc.Tf::Tsa::SeedTrackCnvTool.pFromCurvature = true;
 
 TsaSeed.xSearchS3.sxCut = 0.40;
 TsaSeed.xSearchS4.sxCut = 0.40;

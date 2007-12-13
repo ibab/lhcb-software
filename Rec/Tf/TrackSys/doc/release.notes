@@ -4,7 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
-!============================ TrackSys v4r12 2007-12-11 ======================
+!============================ TrackSys v4r12 2007-13-11 ======================
+! 2007-12-13 - Marco Cattaneo
+ - Update NoFieldTracking.opts and VeloOpenTracking.opts to Tf tracking sequence
+
 ! 2007-12-11 - Stephanie Hansmann-Menzemer
  - Switch on use of TT to PatForward in RecoTracking.opts (default has changed)
 
