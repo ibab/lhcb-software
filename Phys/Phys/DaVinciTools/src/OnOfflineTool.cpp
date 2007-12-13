@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.11 2007-05-10 10:01:17 pkoppenb Exp $
+// $Id: OnOfflineTool.cpp,v 1.12 2007-12-13 22:43:34 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -31,7 +31,8 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
   declareInterface<IOnOffline>(this);
 
   declareProperty( "OfflinePVLocation", m_offlinePVLocation = LHCb::RecVertexLocation::Primary);
-  declareProperty( "OnlinePVLocation", m_onlinePVLocation = LHCb::RecVertexLocation::Velo3D );
+  //  declareProperty( "OnlinePVLocation", m_onlinePVLocation = LHCb::RecVertexLocation::Velo3D );
+  declareProperty( "OnlinePVLocation", m_onlinePVLocation = "Hlt/Vertex/PV2D" );
 
   declareProperty( "Online", m_online = false );
 
