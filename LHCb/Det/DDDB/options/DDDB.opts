@@ -55,4 +55,3 @@ CondDBDispatcherSvc.Alternatives = { "/Conditions=CondDBAccessSvc/LHCBCOND" };
 // Technology dependent options
 //----------------------------------------------------------------------------
 #include "$SQLDDDBROOT/options/SQLDDDB.opts"
-DDDB.CacheHighLevel = 450;
