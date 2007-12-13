@@ -15,6 +15,9 @@ Purpose     : LHCb physics packages
 
 !========================== DaVinciTools v15r7 2007-12-13 =====================
 
+- src/OnOfflineTool.cpp
+  . Change location of Online primary vertex location.
+
 ! 2007-12-08 - Patrick Koppenburg
  - PhysDesktop: do not look for end-event incident to clean desktop. Now
    done at end of execute from DVAlgorithm. Require that PhysDesktop is private.
