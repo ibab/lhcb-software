@@ -13,8 +13,48 @@ Purpose     : LHCb physics packages
 #                                  PHYS v6r9                                  #
 ###############################################################################
 
+!========================== DaVinciTools v15r7 2007-12-13 =====================
+
+! 2007-12-08 - Patrick Koppenburg
+ - PhysDesktop: do not look for end-event incident to clean desktop. Now
+   done at end of execute from DVAlgorithm. Require that PhysDesktop is private.
+ - Increment to v15r7
+
+!====================== DaVinciTransporter v3r7p2 2007-12-13 ==================
+
+! 2007-11-27 - Patrick Koppenburg
+ - ParticleTransporter.cpp
+   . Check that momentum is not infinity. If it is issue a 
+     warning and return Failure.
+ - increment to v3r7p2
+
+!======================== ParticleMaker v3r4 2007-12-13 =====================
+
+! 2007-11-27 - Patrick Koppenburg
+ - src/NoPIDsParticleMaker.{cpp,h}
+   . Keep only track types that are explicitly foreseen (i.e. kill velo 
+     by default)
+   . Allow to switch on velo tracks (default false)
+   . Default behaviour: keep long, upstream, downstream unchanged (as long
+     as there are no tracks of other types in ProtoP container)
+   . Discard ProtoParticles with charge!=0 && track==0.
+ - src/ParticleStuffer.cpp
+   . Some printout in DEBUG. Note that Usually ParticleStuffer is a public 
+	   tool, and ToolSvc.ParticleStuffer must be configured.
+ - cmt/requirements
+   . Increment to v3r4
+
+!========================== VertexFit v4r4p1 2007-12-13 =================
+
+! 2007-11-28 - Patrick Koppenburg
+ - TrgVertexFitter: Protect against zero covariance matrix deteminant.
+
+! 2007-11-27 - Patrick Koppenburg
+ - TrgVertexFitter: issue a failure when stuffing failed.
+ - Increment to v4r4p1
 
 ###############################################################################
+
 </PRE><H1><A NAME=v6r8>2007-11-14 Phys v6r8 - HLT benchmark tests version</A></H1><PRE>
 
 - Based on LHCb v22r11
