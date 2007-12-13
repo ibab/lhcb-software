@@ -4,7 +4,7 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
-!===================== DecayChainTuple v1r0 2007-12-13 =======================
+!===================== DecayTreeTuple v1r0 2007-12-13 =======================
 
 ! 2007-12-12 - Patrick Koppenburg
  - First import. Read doxygen for more information
