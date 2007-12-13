@@ -5,7 +5,6 @@ VeloSim.SpillOver = true;
 VeloSim.InhomogeneousCharge = true;
 VeloSim.TestSimulation =  false;
 VeloSim.PileUp= true;
-VeloSim.OutputLevel=3;
 ///
 // in electrons, only MCVeloFEs above this value will be stored on TDS
 // also used in some calculations to decide whether process are worth
