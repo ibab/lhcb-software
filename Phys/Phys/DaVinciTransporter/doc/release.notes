@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.54 2007-11-27 18:21:30 pkoppenb Exp $
+! $Id: release.notes,v 1.55 2007-12-13 16:00:53 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+!====================== DaVinciTransporter v3r7p2 2007-12-13 ==================
 
 ! 2007-11-27 - Patrick Koppenburg
  - ParticleTransporter.cpp
