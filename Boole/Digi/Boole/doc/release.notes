@@ -3,8 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r8>2007-12-05 Boole v14r8</A></H1><PRE>
+</PRE><H1><A NAME=v14r8>2007-12-13 Boole v14r8</A></H1><PRE>
  - Fix v200601.py to importOptions from absolute path
+ - New file options/SuppressWarnings.opts to be used in production for a minimal
+   log file
 
 </PRE><H1><A NAME=v14r7>2007-11-15 Boole v14r7</A></H1><PRE>
  - Fix error in default Boole_Ganga.py file for latest CMT structure.

@@ -1,0 +1,15 @@
+// Include these job options in a production job to suppress all messages less
+// severe than Error, and known "harmless" Errors.
+// Only info messages passed are those useful to debug production crashes
+
+// Suppress Warnings and below by default
+MessageSvc.OutputLevel = 5;
+
+// "Known" errors
+Boole.BooleMemory.OutputLevel = 4;
+
+// Information to be kept
+Boole.OutputLevel = 3;
+EventSelector.OutputLevel = 3;
+DigiWriter.OutputLevel = 3;
+TimingAuditor.OutputLevel = 3;
