@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.37 2007-12-13 13:40:17 jpalac Exp $
+# $Id: requirements,v 1.38 2007-12-13 15:54:14 jpalac Exp $
 package AnalysisSys
 version v1r9
 
@@ -12,7 +12,7 @@ use  CommonParticles            v3r10    Phys   # Juan Palacios, WGs
 use  FlavourTagging             v7r3     Phys   # Marco Musy
 
 ####################################################################
-use  DaVinciMCTools     	v9r7     Phys   # Juan Palacios
+use  DaVinciMCTools     	v9r8     Phys   # Juan Palacios
 use  DaVinciAssociators         v9r2p3   Phys   # Philippe Charpentier
 use  VertexFitCheck             v1r2     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
