@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r8>2007-12-11 Boole v14r8</A></H1><PRE>
+</PRE><H1><A NAME=v14r8>2007-12-13 Boole v14r8</A></H1><PRE>
 This version uses projects Gaudi v19r6, LHCb v23r2, Lbcom v6r13
  and DDDB v1r* (SQLDDDB v3r1 or greater), ParamFiles v7r0, FieldMap v4r7
 
@@ -17,6 +17,8 @@ Brunel v32r1 or greater
     (STAlgorithms v2r5, STDAQ v3r3, STDet v3r8, STKernel v1r0)
     See <a href="http://indico.cern.ch/materialDisplay.py?contribId=5&materialId=slides&confId=24032">talk</a> at ST software meeting on 2007-11-27.
   . Adapt Calo calibration simulation to changes in CaloDAQ v4r2 (CaloDigit v2r5)
+  . New file options/SuppressWarnings.opts to be used in production for a minimal
+    log file
 
 - New tuning
   . In itDigi.opts, change conversion factor from e- to ADC (STAlgorithms v2r5)
