@@ -1,8 +1,7 @@
-Runable.ethInterface = 1;        // interface number for data input eth"0" eth"1" etc...
+Runable.ethInterface = 0;        // interface number for data input eth"0" eth"1" etc...
 Runable.IPNameOdin = "192.169.5.33";         // IPv4 address of the Readout Supervisor (ODIN) as a name or in dotted decimal notation, if not set
 		                  // no MEP requests will be sent 
-//Runable.rxIPAddr = "192.168.100.4";
-Runable.IPSrc = { "192.169.11.2", "xxxTELL1_1", ""
+Runable.IPSrc = { "192.169.11.2", "TELL1_1", ""
 	 ,"192.169.11.3", "TELL1_1", ""
 	 ,"192.169.11.5", "TELL1_1", ""
 	 ,"192.169.11.11", "TELL1_1", ""
