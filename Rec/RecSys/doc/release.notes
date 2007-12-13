@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r2>2007-12-12 RecSys v5r2</A></H1><PRE>
+</PRE><H1><A NAME=v5r2>2007-12-13 RecSys v5r2</A></H1><PRE>
 This version uses Gaudi v19r6 and LHCb v23r2.
 
 - Packages added: RichRecPhotonTools  v1r0: 'photon' tools for Rich reco.
@@ -174,6 +174,7 @@ This version uses Gaudi v19r6 and LHCb v23r2.
   . Removed reference to TsaSeedReferenceCreator in Fitting.opts
   . Add TrackV0.opts
   . Switch on use of TT to PatForward in RecoTracking.opts (default has changed)
+  . Update NoFieldTracking.opts and VeloOpenTracking.opts to Tf tracking sequence
 
 - In TrackTools v3r2
   . fixed Interpolator such that it also does the right thing for extrapolation
