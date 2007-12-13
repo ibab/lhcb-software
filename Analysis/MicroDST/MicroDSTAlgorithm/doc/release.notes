@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.43 2007-12-11 17:50:44 jpalac Exp $
+! $Id: release.notes,v 1.44 2007-12-13 13:29:50 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+!======================== MicroDST v3r0 2007-12-13 ====================
 
 ! 2007-12-11 - Juan PALACIOS
 
