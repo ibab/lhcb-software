@@ -47,6 +47,11 @@ framework.
   . Include new options for MDF IO (RawData.opts, GaudiConf v10r5)
   . In RealData.opts, add options for new MultiFileCatalog when reading MDF file
   . If ODIN is missing, event is skipped but processing continues (RecAlgs v1r5)
+  . New files options/RealDataRdst.opts and job/GaudiCatalog.txt to set up rDST
+    production starting from an MDF file - to be used in CCRC08  
+  . RealData.opts renamed RealDataDst.opts in analogy to RealDataRdst.opts
+  . New file options/SuppressWarnings.opts to be used in production for a minimal
+    log file
 
 - Monitoring changes
   . Many changes and improvements to Rich monitoring
@@ -62,7 +67,9 @@ framework.
   . Fixed divide by zero in log file output when PatVeloGeneralTracking ran on
     no events (PatVelo v3r2)
   . Fix formatting problems with reading/writing stripping ETC, affecting
-    November 2007 productions (RecUtils v1r4)
+    November 2007 productions (RecUtils v1r4, DC06-ETC.opts)
+  . Update track selection options for rDST, following changes to PatPV. These
+    options are moved to rDSTContent.opts from DC06.opts to make them general 
 
 </PRE><H1><A NAME=v32r1>2007-11-15 Brunel v32r1</A></H1><PRE>
 This version uses projects Gaudi v19r5, LHCb v23r1, Lbcom v6r12, Rec v5r1
