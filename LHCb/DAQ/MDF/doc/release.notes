@@ -8,7 +8,7 @@
 
 ! 2007-12-12 - Olivier Callot
  - Add coding of TAE events in the MDF buffer, triggered by the value of the ODIN
-   evnt type=4 (to be obtain from an enum later) or forced by the jobOption
+   triggerType() = LHCb::ODIN::TimingTrigger or forced by the jobOption
    forceTAE = true of MDFWriter. A pseudo-bank of type TAEHeader is added
    as first bank in the buffer, with description of the various RawEvents found.
 - Add function unpackTAEBuffer in RawEventHelpers to decode the TAE MDF block, 

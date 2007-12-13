@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.19 2007-12-12 12:46:00 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.20 2007-12-13 12:54:32 ocallot Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -109,7 +109,7 @@ StatusCode LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const i
     for(_V::const_iterator iO=oBnks.begin(); iO != oBnks.end(); ++iO)  {
       LHCb::ODIN odinBank;
       odinBank.set( *iO );   //== decode the ODIN information from the bank
-      if ( 4 == odinBank.eventType() ) isTAE = true;  // ***** Need an enum value here *****
+      if ( LHCb::ODIN::TimingTrigger == odinBank.triggerType() ) isTAE = true;
     }
     if ( !isTAE ) {
       const _V& bnks = raw->banks(RawBank::DAQ);
