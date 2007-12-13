@@ -4,9 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2007-12-13 - Olivier Callot
+ - Added an enum in ODIN to define the meaning of the Trigger Type.
+
 ! 2007-12-12 Olivier Deschamps
  - protect bankKiller against annoying printout 
-
 
 !================ DAQEvent v7r7 2007-12-12 ============================
 ! 2007-12-12 - Olivier Callot

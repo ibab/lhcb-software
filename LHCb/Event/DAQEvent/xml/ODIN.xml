@@ -115,7 +115,19 @@
                   SingleBeamRight = 2,
                   BeamCrossing    = 3'
         access = 'PUBLIC' />
-   
+
+      <enum
+	name   = 'TriggerType'
+	desc   = 'Type of trigger broadcasted by ODIN'
+	value  = 'Reserve           = 0,
+                  PhysicsTrigger    = 1,
+                  AuxilliaryTrigger = 2,
+                  RandomTrigger     = 3,
+                  PeriodicTrigger   = 4,
+                  NonZSupTrigger    = 5,
+                  TimingTrigger     = 6,
+                  CalibrationTrigger= 7'
+	access = 'PUBLIC' />
 
       &DataObject;
       <import name="GaudiKernel/Time"/>
