@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.65 2007-12-07 09:43:24 marcocle Exp $
+! $Id: release.notes,v 1.66 2007-12-14 12:51:30 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+! 2007-12-14 - Marco Clemencic
+ - Fixed a bug (introduced with the latest changes) that prevents the addition
+   of new conditions.
 
 !===================== Tools/CondDBUI v2r6 2007-12-07 =========================
                             NEEDS LCGCMT >= 53f (Gaudi v19r6)

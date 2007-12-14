@@ -9,7 +9,7 @@ versionNumber = '$Name: not supported by cvs2svn $'.split()[1]
 if versionNumber == "$":
     versionNumber = 'HEAD'
 
-versionId  = '$Id: guiwin.py,v 1.2 2007-12-07 09:13:38 marcocle Exp $'.split()
+versionId  = '$Id: guiwin.py,v 1.3 2007-12-14 12:51:30 marcocle Exp $'.split()
 if len(versionId) < 4:
     versionDate = 'unknown'
 else:
@@ -396,14 +396,14 @@ class myWindow(qt.QMainWindow):
                 keyList = self.bridge.getFolderStorageKeys(item.fullName)
                 for k in keyList:
                     xmlDict[k] = xmlHeader
-                self.dialogAddCondition.reset(item.fullName, xmlDict, externalEditorCmd=self.externalEditorCmd)
+                self.dialogAddCondition.reset(item.fullName, xmlDict, externalEditorCmd = self.external_editor)
             elif isinstance(item, guitree.guiChannel):
                 row = self.dbTable.tableDB.currentRow()
                 tagName = str(self.dbTable.choseTagName.currentText())
                 keyList = self.bridge.getFolderStorageKeys(item.parent().fullName)
                 for k in keyList:
                     xmlDict[k] = item.getCondDBCache(tagName)[row]['payload'][k]
-                self.dialogAddCondition.reset(item.parent().fullName, xmlDict, item.ID, externalEditorCmd=self.externalEditorCmd)
+                self.dialogAddCondition.reset(item.parent().fullName, xmlDict, item.ID, externalEditorCmd = self.external_editor)
             else:
                 errorMsg = qt.QMessageBox('CondDBUI',
                                           "No COOL folder selected\nInsertion in the CondDB can only be done in existing COOL folder",
