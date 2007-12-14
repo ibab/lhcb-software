@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !============================= PatPV v3r1 2007-12-04 =========================
+! 2007-12-14 - Mariusz Witek
+  - Additional correction of PatPV3D for Tf framework
+
 ! 2007-12-04 - Mariusz Witek
   - Corrected problem with track extrapolation in LSAdaptPVFitter
 

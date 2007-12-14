@@ -88,10 +88,6 @@ StatusCode PatPV3D::initialize() {
 
   m_maxTransDistSquared *= m_maxTransDistSquared;
 
-  m_inputTracks   = get<LHCb::Tracks>( m_inputTracksName );
-  m_outputVertices  = new LHCb::RecVertices();
-  put(m_outputVertices, m_outputVerticesName);
-
   // Access PVSeedTool
   m_pvSeedTool = tool<PVSeedTool>( "PVSeedTool", this );
   if( !m_pvSeedTool ) {
@@ -123,6 +119,10 @@ StatusCode PatPV3D::execute() {
   if ( isDebug ) {
     debug() << "==> Execute" << endmsg;
   }
+
+  m_inputTracks   = get<LHCb::Tracks>( m_inputTracksName );
+  m_outputVertices  = new LHCb::RecVertices();
+  put(m_outputVertices, m_outputVerticesName);
 
   m_vclusters.clear();
   m_lotravec.clear();
