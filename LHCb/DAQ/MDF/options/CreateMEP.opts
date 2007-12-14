@@ -1,4 +1,5 @@
 ApplicationMgr.DLLs       = { "MDF" };
+ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
 ApplicationMgr.TopAlg     = { "LHCb::RawEventTestCreator/RawEventGen", "StoreExplorerAlg" };
 ApplicationMgr.EvtMax     = 2000;
 ApplicationMgr.EvtSel     = "NONE";
@@ -6,6 +7,7 @@ StoreExplorerAlg.Load     = 1;
 StoreExplorerAlg.PrintFreq= 0.01;
 EventDataSvc.ForceLeaves  = 1;
 EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
+FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
 
 // To create a MEP file:
 ApplicationMgr.OutStream  = { "LHCb::MEPWriter/Writer_0", "LHCb::MEPWriter/Writer_1" };

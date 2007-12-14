@@ -1,4 +1,4 @@
-// $Id: MDFSelector.cpp,v 1.13 2007-12-12 09:29:23 ocallot Exp $
+// $Id: MDFSelector.cpp,v 1.14 2007-12-14 11:42:31 frankb Exp $
 //====================================================================
 //	MDFSelector.cpp
 //--------------------------------------------------------------------
@@ -39,9 +39,9 @@ namespace LHCb  {
     /// Standard destructor 
     virtual ~MDFContext()                                    { }
     /// Allocate buffer space for reading data
-    std::pair<char*,int> getDataSpace(void* const /* ioDesc */, size_t len)  {
+    MDFDescriptor getDataSpace(void* const /* ioDesc */, size_t len)  {
       m_buff.reserve(len);
-      return std::pair<char*,int>(m_buff.data(),m_buff.size());
+      return MDFDescriptor(m_buff.data(),m_buff.size());
     }
     /// Read raw byte buffer from input stream
     StatusCode readBuffer(void* const /* ioDesc */, void* const data, size_t len)  {

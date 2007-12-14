@@ -1,4 +1,4 @@
-// $Id: RawDataAddress.h,v 1.8 2007-08-29 08:22:12 apuignav Exp $
+// $Id: RawDataAddress.h,v 1.9 2007-12-14 11:42:23 frankb Exp $
 #ifndef MDF_RAWDATAADDRESS_H
 #define MDF_RAWDATAADDRESS_H
 
@@ -35,7 +35,7 @@ namespace LHCb  {
     int                  m_type;
 
   public:
-    enum { NO_TYPE, DATA_TYPE, BANK_TYPE, MEP_TYPE  };
+    enum { NO_TYPE, DATA_TYPE, BANK_TYPE, MEP_TYPE, TAE_TYPE };
 
     /// Dummy constructor
     RawDataAddress() : GenericAddress(), m_data(0,0),m_banks(0), m_type(NO_TYPE)  {

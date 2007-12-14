@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.14 2007-12-12 09:29:23 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.15 2007-12-14 11:42:23 frankb Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -31,6 +31,7 @@ namespace LHCb  {
   class MEPFragment;
   class MDFHeader;
   class MEPEvent;
+  typedef std::pair<char*,int> MDFDescriptor;
 
   /// Check sanity of raw bank structure
   bool checkRawBank(const RawBank* b, bool throw_exc=true,bool print_cout=false);
@@ -76,10 +77,22 @@ namespace LHCb  {
                             size_t size, bool skip_hdr_bank, size_t* length);
   /// Conditional decoding of raw buffer from MDF to raw event object
   StatusCode decodeRawBanks(const char* start, const char* end, RawEvent* raw);
+  /// Conditional decoding of raw buffer from MDF to raw event object. Data are passed as descriptor
+  inline StatusCode decodeRawBanks(const MDFDescriptor& data, RawEvent* raw)    {
+    return decodeRawBanks(data.first,data.first+data.second,raw);
+  }
   /// Conditional decoding of raw buffer from MDF to bank offsets
   StatusCode decodeRawBanks(const char* start, const char* end, int* offsets, int* noffset);
+  /// Conditional decoding of raw buffer from MDF to bank offsets. Data are passed as descriptor
+  inline StatusCode decodeRawBanks(const MDFDescriptor& data, int* offsets, int* noffset)    {
+    return decodeRawBanks(data.first,data.first+data.second,offsets,noffset);
+  }
   /// Conditional decoding of raw buffer from MDF to vector of raw banks
   StatusCode decodeRawBanks(const char* start, const char* end, std::vector<RawBank*>& banks);
+  /// Conditional decoding of raw buffer from MDF to vector of raw banks. Data are passed as descriptor
+  inline StatusCode decodeRawBanks(const MDFDescriptor& data, std::vector<RawBank*>& banks)    {
+    return decodeRawBanks(data.first,data.first+data.second,banks);
+  }
 
   /// Copy MEP fragment into opaque sequential data buffer
   StatusCode encodeFragment(const MEPFragment* f, char* const data, size_t len);
@@ -110,36 +123,56 @@ namespace LHCb  {
                         unsigned int&   partitionID, 
                         std::map<unsigned int, std::vector<MEPFragment*> >& events);
   /// Decode MEP into banks event by event
-  StatusCode decodeMEP2EventBanks( const MEPEvent* me, 
-                        unsigned int&   partitionID, 
-                        std::map<unsigned int, std::vector<RawBank*> >& events);
+  StatusCode decodeMEP2EventBanks(const MEPEvent* me, 
+                                  unsigned int&   partitionID, 
+                                  std::map<unsigned int, std::vector<RawBank*> >& events);
 
   /// Decode single fragment into a list of pairs (event id,bank)
   StatusCode decodeFragment2Banks(const MEPFragment* f, 
-                        unsigned int event_id_high,
-                        std::vector<std::pair<unsigned int,RawBank*> >& banks);
+                                  unsigned int event_id_high,
+                                  std::vector<std::pair<unsigned int,RawBank*> >& banks);
 
   /// Decode multi fragment into a list of pairs (event id,bank)
-  StatusCode decodeMultiFragment2Banks(const MEPMultiFragment* mf, 
-                        unsigned int&   partitionID, 
-                        std::vector<std::pair<unsigned int,RawBank*> >& banks);
+  StatusCode decodeMultiFragment2Banks( const MEPMultiFragment* mf, 
+                                        unsigned int&   partitionID, 
+                                        std::vector<std::pair<unsigned int,RawBank*> >& banks);
 
   /// Decode MEP event into a plain list of pairs (event id,bank)
-  StatusCode decodeMEP2Banks(const MEPEvent* me, 
-                        unsigned int&   partitionID, 
-                        std::vector<std::pair<unsigned int,RawBank*> >& banks);
+  StatusCode decodeMEP2Banks( const MEPEvent* me, 
+                              unsigned int&   partitionID, 
+                              std::vector<std::pair<unsigned int,RawBank*> >& banks);
 
   /// Decoding of MEP event descriptor and append content to raw event object
   StatusCode decodeDescriptors(const RawEventDescriptor* pAddr, RawEvent* raw);
 
-  /// read MEP record from input stream 
+  /// Read MEP record from input stream 
   StatusCode readMEPrecord(StreamDescriptor& dsc, const StreamDescriptor::Access& con);
 
-  /// unpack the buffer specified by the two pointers, and return a vector of pairs: root on TES and RawEvent
-  std::vector<std::pair<std::string,RawEvent*> > unpackTAEBuffer( const char* start, const char* end );
+  /// Return vector of MEP sub-event names
+  std::vector<std::string> buffersMEP(const char* start);
 
-  /// returns the prefix in TES for the raw event, according to the bx offset
-  std::string rootFromBxOffset( int bxOffset );
-  
+  /// Unpack the buffer specified by the two pointers, and return a vector of pairs: root on TES and RawEvent
+  std::vector<std::pair<std::string,RawEvent*> > unpackTAEBuffer(const char* start, const char* end);
+
+  /// Returns the prefix in TES for the raw event, according to the bx offset
+  std::string rootFromBxOffset(int bxOffset);
+
+  /// Return vector of TAE event names
+  std::vector<std::string> buffersTAE(const char* start);
+
+  /// Returns the prefix on TES according to bx number, - is previous, + is next
+  std::string rootFromBxOffset(int bxOffset);
+
+  /// Returns the offset of the TAE with respect to the central bx
+  int bxOffsetTAE(const std::string& root);
+
+  /// Access to TAE bank (if present)
+  RawBank* getTAEBank(const char* start);
+
+  /// Unpacks the buffer given by the start and end pointers, and fill the rawevent structure
+  StatusCode unpackTAE(const char* start, const char* end, const std::string& loc, RawEvent* raw);
+
+  /// Unpacks the buffer given by the start and end pointers, and fill the rawevent structure
+  StatusCode unpackTAE(const MDFDescriptor& data, const std::string& loc, RawEvent* raw);
 }
 #endif // MDF_RAWEVENTHELPERS_H

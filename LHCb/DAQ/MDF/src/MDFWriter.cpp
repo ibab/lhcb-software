@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.12 2007-12-12 12:46:00 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.13 2007-12-14 11:42:32 frankb Exp $
 //	====================================================================
 //  MDFWriter.cpp
 //	--------------------------------------------------------------------
@@ -97,9 +97,9 @@ StatusCode MDFWriter::finalize() {
 }
 
 /// Allocate space for IO buffer
-std::pair<char*,int> MDFWriter::getDataSpace(void* const /* ioDesc */, size_t len)  {
+MDFIO::MDFDescriptor MDFWriter::getDataSpace(void* const /* ioDesc */, size_t len)  {
   m_data.reserve(len);
-  return std::pair<char*,int>(m_data.data(), m_data.size());
+  return MDFDescriptor(m_data.data(), m_data.size());
 }
 
 /// Execute procedure

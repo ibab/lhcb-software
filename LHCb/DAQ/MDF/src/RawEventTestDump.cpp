@@ -1,4 +1,4 @@
-// $Id: RawEventTestDump.cpp,v 1.8 2007-08-29 08:22:12 apuignav Exp $
+// $Id: RawEventTestDump.cpp,v 1.9 2007-12-14 11:42:34 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -6,6 +6,7 @@
 #include "GaudiKernel/MsgStream.h" 
 #include "MDF/RawEventPrintout.h"
 #include "MDF/MDFHeader.h"
+#include "Event/RawEvent.h"
 
 /*
  *    LHCb namespace declaration

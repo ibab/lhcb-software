@@ -1,36 +1,37 @@
 //ApplicationMgr.DLLs       = { "MDF","GaudiFileCatalog" };
 ApplicationMgr.TopAlg     = { "LHCb::RawEventTestCreator/RawEventGen", "StoreExplorerAlg" };
+ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
 ApplicationMgr.EvtMax     = 1000;
 ApplicationMgr.EvtSel     = "NONE";
 StoreExplorerAlg.Load     = 1;
 StoreExplorerAlg.PrintFreq= 0.01;
 EventDataSvc.ForceLeaves  = 1;
 EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
-ApplicationMgr.SvcOptMapping        += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
-FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
+FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
 // To create a MDF file using the standard Gaudi output stream:
 ApplicationMgr.OutStream  = { "Writer_0"};
-Writer_0.Output           = "DATAFILE='file://mdfData_0.dat' SVC='LHCb::RawDataCnvSvc' OPT='REC'";
+Writer_0.Output           = "DATAFILE='PFN:file://mdfData_0.dat' SVC='LHCb::RawDataCnvSvc' OPT='REC'";
 Writer_0.ItemList         = {"/Event#1" };
 
 // To create a MDF file using the MDF writer:
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_1" };
-Writer_1.Connection       = "file://mdfData_1.dat";
+Writer_1.Connection       = "PFN:file://mdfData_1.dat";
 Writer_1.Compress         = 0;
 Writer_1.ChecksumType     = 0;
 Writer_1.GenerateMD5      = true;
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_2" };
-Writer_2.Connection       = "file://mdfData_2.dat";
+Writer_2.Connection       = "PFN:file://mdfData_2.dat";
 Writer_2.Compress         = 0;
 Writer_2.ChecksumType     = 1;
 Writer_2.GenerateMD5      = true;
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_3" };
-Writer_3.Connection       = "file://mdfData_3.dat";
+Writer_3.Connection       = "PFN:file://mdfData_3.dat";
 Writer_3.Compress         = 2;
 Writer_3.ChecksumType     = 1;
 Writer_3.GenerateMD5      = true;
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_4" };
-Writer_4.Connection       = "file://mdfData_4.dat";
+Writer_4.Connection       = "PFN:file://mdfData_4.dat";
 Writer_4.Compress         = 2;
 Writer_4.ChecksumType     = 0;
 Writer_4.GenerateMD5      = true;
+MessageSvc.OutputLevel = 1;

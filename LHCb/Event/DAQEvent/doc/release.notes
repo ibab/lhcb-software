@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2007-12-14 - Markus Frank
+ - Add numbers to bank type enum.
+
 ! 2007-12-13 - Olivier Callot
  - Added an enum in ODIN to define the meaning of the Trigger Type.
 

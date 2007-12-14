@@ -1,4 +1,4 @@
-// $Id: MDFIO.h,v 1.15 2007-12-12 12:46:00 ocallot Exp $
+// $Id: MDFIO.h,v 1.16 2007-12-14 11:42:22 frankb Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -39,7 +39,8 @@ namespace LHCb {
     //            compressed records data from address = 2
     //            banks data from address (MDF bank first) = 3
     enum Writer_t { MDF_NONE=1, MDF_RECORDS=2, MDF_BANKS=3 };
-
+    /// MDF data descriptor definition
+    typedef std::pair<char*,int> MDFDescriptor;
   protected:
     /// Streambuffer to hold compressed data
     StreamBuffer                  m_tmp;
@@ -85,9 +86,9 @@ namespace LHCb {
     /// Ignore checksum
     void setIgnoreChecksum(bool new_value) {  m_ignoreChecksum = new_value; }
 
-    std::pair<char*,int> readLegacyBanks(const MDFHeader& h, void* const ioDesc, bool dbg);
+    MDFDescriptor readLegacyBanks(const MDFHeader& h, void* const ioDesc, bool dbg);
 
-    std::pair<char*,int> readBanks(const MDFHeader& h, void* const ioDesc, bool dbg);
+    MDFDescriptor readBanks(const MDFHeader& h, void* const ioDesc, bool dbg);
 
     bool checkSumOk(int checksum, const char* src, int datSize, bool prt);
 
@@ -111,7 +112,7 @@ namespace LHCb {
       *
       * @return  Pointer to allocated memory space
       */
-    virtual std::pair<char*,int> getDataSpace(void* const ioDesc, size_t len) = 0;
+    virtual MDFDescriptor getDataSpace(void* const ioDesc, size_t len) = 0;
 
     /** Write raw char buffer to output stream
       * @param[in] ioDesc Output IO descriptor       
@@ -211,7 +212,7 @@ namespace LHCb {
       *
       * @return  Number of valid bytes in stream buffer (-1 on failure).
       */
-    virtual std::pair<char*,int> readBanks(void* const ioDesc, bool dbg=false);
+    virtual MDFDescriptor readBanks(void* const ioDesc, bool dbg=false);
 
     /** Read raw char buffer from input stream
       * @param[in] ioDesc Input IO descriptor       

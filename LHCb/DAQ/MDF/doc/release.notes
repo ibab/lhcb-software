@@ -6,6 +6,11 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2007-12-15 - Markus Frank
+ - Add support for TAE events in the RawDataCnvSvc.
+   The creation of leaves in the TES is triggered by the content of the TAE
+   meta bank.
+   
 ! 2007-12-12 - Olivier Callot
  - Add coding of TAE events in the MDF buffer, triggered by the value of the ODIN
    triggerType() = LHCb::ODIN::TimingTrigger or forced by the jobOption

@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.15 2007-11-19 19:27:32 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.16 2007-12-14 11:42:33 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -14,6 +14,7 @@
 
 // Include files
 #include "MDF/RawDataAddress.h"
+#include "MDF/RawEventHelpers.h"
 #include "MDF/RawDataSelector.h"
 #include "MDF/RawDataConnection.h"
 #include "GaudiKernel/Tokenizer.h"
@@ -34,10 +35,13 @@ RawDataSelector::LoopContext::LoopContext(const RawDataSelector* pSelector)
 /// Set connection
 StatusCode RawDataSelector::LoopContext::connect(const std::string& specs)  {
   close();
-  StatusCode sc = m_ioMgr->connectRead(m_sel,m_connection=new RawDataConnection(m_sel,specs));
+  m_connection = new RawDataConnection(m_sel,specs);
+  StatusCode sc = m_ioMgr->connectRead(true,m_connection);
   if ( sc.isSuccess() )  {
     m_conSpec = m_connection->fid();
+    return sc;
   }
+  close();
   return sc;
 }
 
@@ -112,7 +116,7 @@ StatusCode RawDataSelector::next(Context& ctxt) const  {
     StatusCode sc = pCtxt->receiveData(msgSvc());
     if ( !sc.isSuccess() ) {
       MsgStream log(msgSvc(),name());
-      log << MSG::ERROR << "Failed to receieve the next event." << endmsg;
+      log << MSG::INFO << "Failed to receieve the next event from:" << pCtxt->specs() << endmsg;
     }
     return sc;
   }
@@ -166,7 +170,7 @@ StatusCode
 RawDataSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) const   {
   const LoopContext* pctxt = dynamic_cast<const LoopContext*>(&ctxt);
   if ( pctxt ) {
-    if ( pctxt->data().second > 0 )  {
+    if ( pctxt->data().second>0 )  {
       RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,m_rootCLID,pctxt->specs(),"0",0,0);
       pA->setType(RawDataAddress::DATA_TYPE);
       pA->setFileOffset(pctxt->offset());

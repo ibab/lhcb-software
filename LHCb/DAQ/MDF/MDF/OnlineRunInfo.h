@@ -1,4 +1,4 @@
-// $Id: OnlineRunInfo.h,v 1.1 2006-10-05 16:38:01 frankb Exp $
+// $Id: OnlineRunInfo.h,v 1.2 2007-12-14 11:42:22 frankb Exp $
 //====================================================================
 //	OnlineRunInfo.h
 //--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //====================================================================
 #ifndef MDF_ONLINERUNINFO_H
 #define MDF_ONLINERUNINFO_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/OnlineRunInfo.h,v 1.1 2006-10-05 16:38:01 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/OnlineRunInfo.h,v 1.2 2007-12-14 11:42:22 frankb Exp $
 
 // Framework include files
 #include "Event/RawBank.h"
@@ -25,6 +25,8 @@ namespace LHCb  {
     */
   struct OnlineRunInfo  {
     unsigned int  Run;
+    short    int  EventType;
+    short    int  CalibrationStep;
     unsigned int  Orbit;
     long long int L0ID;
     long long int GPSTime;

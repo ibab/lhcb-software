@@ -1,4 +1,4 @@
-// $Id: MIFSelector.cpp,v 1.8 2007-11-19 19:27:32 frankb Exp $
+// $Id: MIFSelector.cpp,v 1.9 2007-12-14 11:42:32 frankb Exp $
 //====================================================================
 //	MIFSelector.cpp
 //--------------------------------------------------------------------
@@ -51,7 +51,7 @@ namespace LHCb  {
     typedef std::map<int,Connection*> FidMap;
 
     long long            m_fileOffset;
-    std::pair<char*,int> m_data;
+    MDFDescriptor        m_data;
     StreamBuffer         m_buff;
     MIFHeader*           m_header;
     const MIFSelector*   m_mifSel;
@@ -70,9 +70,9 @@ namespace LHCb  {
     }
     /// Standard destructor 
     virtual ~MIFContext();
-    std::pair<char*,int> getDataSpace(void* const /* ioDesc */, size_t len)  {
+    MDFDescriptor getDataSpace(void* const /* ioDesc */, size_t len)  {
       m_buff.reserve(len);
-      return std::pair<char*,int>(m_buff.data(), m_buff.size());
+      return MDFDescriptor(m_buff.data(), m_buff.size());
     }
     virtual StatusCode connect(const std::string& spec);
     /// Receive event and update communication structure
@@ -83,7 +83,7 @@ namespace LHCb  {
     virtual StatusCode readBuffer(void* const ioDesc, void* const data, size_t len);
     long long offset()  const                       { return m_fileOffset;     }
     /// Raw data buffer (if it exists)
-    virtual std::pair<char*,int> data() const       { return m_data;           }
+    virtual MDFDescriptor data() const              { return m_data;           }
   };
 }
 
