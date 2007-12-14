@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.16 2007-12-11 21:10:56 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.17 2007-12-14 14:53:53 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -132,7 +132,11 @@ std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs (int source ) {
       if( source >= 0 && source != sourceID )continue;
       found = true;
       decoded = getData ( *itB );
-      if( !decoded )error() << " Error when decoding bank " << sourceID  << " -> incomplete data - May be corrupted" <<endreq;
+      if( !decoded ){
+        std::stringstream s("");
+        s<< sourceID;
+        Error("Error when decoding bank " + s.str()   + " -> incomplete data - May be corrupted").ignore();
+      }
     } 
   }
   if( !found ){
@@ -197,12 +201,12 @@ bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
       }
 
       //event dump
-      if ( msgLevel( MSG::DEBUG) ) {
-        debug() << " |  SourceID : " << sourceID
-                << " |  FeBoard : " << m_calo->cardNumber(id1)
-                << " |  CaloCell " << id1
-                << " |  valid ? " << m_calo->valid(id1)
-                << " |  ADC value = " << adc1 << endreq;
+      if ( msgLevel( MSG::VERBOSE) ) {
+        verbose() << " |  SourceID : " << sourceID
+                  << " |  FeBoard : " << m_calo->cardNumber(id1)
+                  << " |  CaloCell " << id1
+                  << " |  valid ? " << m_calo->valid(id1)
+                  << " |  ADC value = " << adc1 << endreq;
       }
 
       LHCb::CaloCellID id2( ++lastID );
@@ -216,12 +220,12 @@ bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
       }
  
       //event dump
-      if ( msgLevel( MSG::DEBUG) ) {
-        debug() << " |  SourceID : " << sourceID
-                << " |  FeBoard : " << m_calo->cardNumber(id2)
-                << " |  CaloCell " << id2
-                << " |  valid ? " << m_calo->valid(id2)
-                << " |  ADC value = " << adc2 << endreq;
+      if ( msgLevel( MSG::VERBOSE) ) {
+        verbose() << " |  SourceID : " << sourceID
+                  << " |  FeBoard : " << m_calo->cardNumber(id2)
+                  << " |  CaloCell " << id2
+                  << " |  valid ? " << m_calo->valid(id2)
+                  << " |  ADC value = " << adc2 << endreq;
       }
       
     }
@@ -245,7 +249,7 @@ bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
       int ctrl    = (word >> 23) &  0x1FF;
       if ( msgLevel( MSG::DEBUG) )debug()<< "Control word :" << ctrl << endreq;
       if( 0 != 0x1& ctrl || 0 != 0x20& ctrl || 0 != 0x40& ctrl){
-        warning() << "Tell1 error bits have been detected in data" << endreq;
+        if(msgLevel(MSG::WARNING))Warning("Tell1 error bits have been detected in data").ignore();
         if( 0 != 0x1  & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Error );
         if( 0 != 0x20 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Sync  );      
         if( 0 != 0x40 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Link  );
@@ -287,13 +291,13 @@ bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
             int adc = ( lastData >> offset ) & 0xFF;
 
             // event dump
-            if ( msgLevel( MSG::DEBUG) ) {
-              debug() << " |  SourceID : " << sourceID
-                      << " |  FeBoard : " << code 
-                      << " |  Channel : " << bitNum
-                      << " |  CaloCell " << id
-                      << " |  valid ? " << m_calo->valid(id)
-                      << " |  ADC value = " << adc << endreq;
+            if ( msgLevel( MSG::VERBOSE) ) {
+              verbose() << " |  SourceID : " << sourceID
+                        << " |  FeBoard : " << code 
+                        << " |  Channel : " << bitNum
+                        << " |  CaloCell " << id
+                        << " |  valid ? " << m_calo->valid(id)
+                        << " |  ADC value = " << adc << endreq;
             }
             
             if ( 0 != id.index() ) {

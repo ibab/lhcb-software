@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.20 2007-12-11 21:10:55 odescham Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.21 2007-12-14 14:53:53 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -152,7 +152,11 @@ std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
       if( source >= 0 && source != sourceID )continue;
       found = true;
       decoded = getData ( *itB );
-      if( !decoded )error() << " Error when decoding bank " << sourceID  << " -> incomplete data - May be corrupted" <<endreq;
+      if( !decoded ){
+        std::stringstream s("");
+        s<< sourceID;
+        Error("Error when decoding bank " + s.str()   + " -> incomplete data - May be corrupted").ignore();
+      }
     } 
   }
   if( !found ){
@@ -246,12 +250,12 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
       LHCb::CaloAdc temp( cellId, adc);
 
       //event dump
-      if ( msgLevel( MSG::DEBUG) ) {
-        debug() << " |  SourceID : " << sourceID
-                << " |  FeBoard : " << m_calo->cardNumber(cellId)
-                << " |  CaloCell " << cellId
-                << " |  valid ? " << m_calo->valid(cellId)
-                << " |  ADC value = " << adc << endreq;
+      if ( msgLevel( MSG::VERBOSE) ) {
+        verbose() << " |  SourceID : " << sourceID
+                  << " |  FeBoard : " << m_calo->cardNumber(cellId)
+                  << " |  CaloCell " << cellId
+                  << " |  valid ? " << m_calo->valid(cellId)
+                  << " |  ADC value = " << adc << endreq;
       }
 
       if ( 0 != cellId.index() ) {
@@ -273,8 +277,8 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
     // Get the FE-Cards associated to that bank (via condDB)
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
-    debug() << nCards << " FE-Cards are expected to be readout : " 
-            << feCards << " in Tell1 bank " << sourceID << endreq;
+    if(msgLevel(MSG::DEBUG))debug() << nCards << " FE-Cards are expected to be readout : " 
+                                    << feCards << " in Tell1 bank " << sourceID << endreq;
     int prevCard = -1;
     while( 0 != size ) {
       // Skip 
@@ -286,7 +290,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
       int ctrl    = (word >> 23) &  0x1FF;
       if ( msgLevel( MSG::DEBUG) )debug()<< "Control word :" << ctrl << endreq;
       if( 0 != 0x1& ctrl || 0 != 0x20& ctrl || 0 != 0x40& ctrl){
-        warning() << "Tell1 error bits have been detected in data" << endreq;
+        if(msgLevel(MSG::WARNING))Warning("Tell1 error bits have been detected in data").ignore();
         if( 0 != 0x1  & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Error );
         if( 0 != 0x20 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Sync  );      
         if( 0 != 0x40 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Link  );
@@ -349,13 +353,13 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
 
 
         // event dump
-        if ( msgLevel( MSG::DEBUG) ) {
-          debug() << " |  SourceID : " << sourceID
-                  << " |  FeBoard : " << m_calo->cardNumber(id)
-                  << " |  Channel : " << bitNum
-                  << " |  CaloCell " << id
-                  << " |  valid ? " << m_calo->valid(id)
-                  << " |  ADC value = " << adc << endreq;
+        if ( msgLevel( MSG::VERBOSE) ) {
+          verbose() << " |  SourceID : " << sourceID
+                    << " |  FeBoard : " << m_calo->cardNumber(id)
+                    << " |  Channel : " << bitNum
+                    << " |  CaloCell " << id
+                    << " |  valid ? " << m_calo->valid(id)
+                    << " |  ADC value = " << adc << endreq;
         }
         
         //== Keep only valid cells
@@ -394,7 +398,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
       int ctrl    = (word >> 23) &  0x1FF;
       if ( msgLevel( MSG::DEBUG) )debug()<< "Control word :" << ctrl << endreq;
       if( 0 != 0x1& ctrl || 0 != 0x20& ctrl || 0 != 0x40& ctrl){
-        warning() << "Tell1 error bits have been detected in data" << endreq;
+        if(msgLevel(MSG::WARNING))Warning("Tell1 error bits have been detected in data").ignore();
         if( 0 != 0x1  & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Error );
         if( 0 != 0x20 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Sync  );      
         if( 0 != 0x40 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Link  );
@@ -441,13 +445,13 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
         LHCb::CaloAdc temp( id, adc );
 
         // event dump
-        if ( msgLevel( MSG::DEBUG) ) {
-          debug() << " |  SourceID : " << sourceID
-                  << " |  FeBoard : " << m_calo->cardNumber(id)
-                  << " |  Channel : " << num
-                  << " |  CaloCell " << id
-                  << " |  valid ? " << m_calo->valid(id)
-                  << " |  ADC value = " << adc << endreq;
+        if ( msgLevel( MSG::VERBOSE) ) {
+          verbose() << " |  SourceID : " << sourceID
+                    << " |  FeBoard : " << m_calo->cardNumber(id)
+                    << " |  Channel : " << num
+                    << " |  CaloCell " << id
+                    << " |  valid ? " << m_calo->valid(id)
+                    << " |  ADC value = " << adc << endreq;
         }
 
 
