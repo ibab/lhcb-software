@@ -5,7 +5,7 @@
  *  Header file for RICH global PID algorithm base class : Rich::Rec::GlobalPID::AlgBase
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlgBase.h,v 1.9 2007-10-23 10:43:07 jonrob Exp $
+ *  $Id: RichGlobalPIDAlgBase.h,v 1.10 2007-12-14 14:21:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-11-30
@@ -60,17 +60,30 @@ namespace Rich
 
         virtual ~AlgBase() = 0;  ///< Destructor
 
-        virtual StatusCode initialize(); // Algorithm initialization
+        virtual StatusCode initialize(); ///< Algorithm initialization
 
-        // Protected methods
-      protected:
+        virtual StatusCode sysExecute(); ///< system execute
 
-        StatusCode gpidTracks();  ///< Update pointer to RichGlobalPIDTracks
-        StatusCode gpidPIDs();    ///< Update pointer to RichGlobalPIDPIDs
-        StatusCode gpidSummary(); ///< Update pointer to RichGlobalPIDSummary
+      protected: // methods
 
-        // Protected data
-      protected:
+        LHCb::RichGlobalPIDTracks  * gpidTracks();  ///< Access RichGlobalPIDTracks
+        LHCb::RichGlobalPIDs       * gpidPIDs();    ///< Access RichGlobalPIDPIDs
+        LHCb::RichGlobalPIDSummary * gpidSummary(); ///< Access RichGlobalPIDSummary
+        LHCb::ProcStatus           * procStatus();  ///< Access the ProcStatus object
+
+        /// The GPID sequence name
+        inline const std::string& gpidName() const { return m_richGPIDName; }
+
+        /// The PID types to consider
+        inline const Rich::Particles& pidTypes() const { return m_pidTypes; }
+
+        /// Create new GPID event TES objects
+        void createGPIDEvent();
+
+        /// Clean up GPID event TES objects
+        void deleteGPIDEvent();
+
+      private: // data
 
         /// Pointer to parent RichGlobalPIDTrack container
         LHCb::RichGlobalPIDTracks * m_GPIDtracks;
@@ -80,6 +93,9 @@ namespace Rich
 
         /// Pointer to parent RichGlobalPID container
         LHCb::RichGlobalPIDs * m_GPIDs;
+
+        /// Pointer to the ProcStatus object
+        LHCb::ProcStatus * m_procStat;
 
         /// Location of working RICH Global PID tracks in TES
         std::string m_richGPIDTrackLocation;
@@ -104,22 +120,28 @@ namespace Rich
 
       };
 
-      inline StatusCode AlgBase::gpidTracks()
+      inline LHCb::RichGlobalPIDTracks * AlgBase::gpidTracks()
       {
-        m_GPIDtracks = get<LHCb::RichGlobalPIDTracks>( m_richGPIDTrackLocation );
-        return StatusCode::SUCCESS;
+        if ( !m_GPIDtracks ) m_GPIDtracks = get<LHCb::RichGlobalPIDTracks>( m_richGPIDTrackLocation );
+        return m_GPIDtracks;
       }
 
-      inline StatusCode AlgBase::gpidPIDs()
+      inline LHCb::RichGlobalPIDs * AlgBase::gpidPIDs()
       {
-        m_GPIDs = get<LHCb::RichGlobalPIDs>( m_richGPIDLocation );
-        return StatusCode::SUCCESS;
+        if ( !m_GPIDs ) m_GPIDs = get<LHCb::RichGlobalPIDs>( m_richGPIDLocation );
+        return m_GPIDs;
       }
 
-      inline StatusCode AlgBase::gpidSummary()
+      inline LHCb::RichGlobalPIDSummary * AlgBase::gpidSummary()
       {
-        m_GPIDSummary = get<LHCb::RichGlobalPIDSummary>( m_richGPIDSummaryLocation );
-        return StatusCode::SUCCESS;
+        if ( !m_GPIDSummary ) m_GPIDSummary = get<LHCb::RichGlobalPIDSummary>( m_richGPIDSummaryLocation );
+        return m_GPIDSummary;
+      }
+
+      inline LHCb::ProcStatus * AlgBase::procStatus()
+      {
+        if ( !m_procStat ) m_procStat = get<LHCb::ProcStatus>( m_procStatLocation );
+        return m_procStat;
       }
 
     }

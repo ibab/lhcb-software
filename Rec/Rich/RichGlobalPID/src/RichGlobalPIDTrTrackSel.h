@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.h,v 1.20 2007-12-10 17:38:07 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.h,v 1.21 2007-12-14 14:21:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -58,16 +58,6 @@ namespace Rich
         virtual StatusCode initialize();    // Algorithm initialization
         virtual StatusCode execute   ();    // Algorithm execution
 
-      private: // methods
-
-        /// Clean up after event abortion
-        inline void deleteEvent()
-        {
-          // Tidy up incase of event abort
-          if ( m_GPIDtracks && !m_GPIDtracks->empty() ) m_GPIDtracks->clear();
-          if ( m_GPIDs      && !m_GPIDs->empty()      ) m_GPIDs->clear();
-        }
-
       protected: // methods
 
         // General event initialisation
@@ -76,13 +66,6 @@ namespace Rich
         /// Determine the global PID Status of a track.
         /// Determines how the track will be used in the global likelihood
         Rich::Rec::GlobalPID::TkQuality trackStatus( LHCb::RichRecTrack * track );
-
-        /// Access on demand the ProcStatus data object
-        inline LHCb::ProcStatus * procStatus() const
-        {
-          if ( !m_procStat ) { m_procStat = get<LHCb::ProcStatus>( m_procStatLocation ); }
-          return m_procStat;
-        }
 
         /// Set tracks for use
         virtual bool trackSelection( LHCb::RichRecTrack * track ) const;
@@ -97,9 +80,6 @@ namespace Rich
 
         /// 'Frozen' Track selector
         const ITrackSelector * m_frozenTrSel;
-
-        /// Pointer to the ProcStatus data object
-        mutable LHCb::ProcStatus * m_procStat;
 
         // Selection cuts
         double m_minPhysPtot; ///< Minimum momentum for physics quality tracks

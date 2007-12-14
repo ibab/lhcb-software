@@ -4,6 +4,10 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2007-12-14 - Chris Jones
+ - Improve handling of Global PID TES data objects. Fixes crash observed when
+   running Brunel using FieldOff-VeloOpen.opts
+
 !======================= RichGlobalPID v3r6 2007-12-11 =======================
 ! 2007-12-10 - Chris Jones
  - Add new track selection algorithm that can select tracks using RichPID

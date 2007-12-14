@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::DigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.cpp,v 1.20 2007-02-02 10:03:58 jonrob Exp $
+ *  $Id: RichGlobalPIDDigitSel.cpp,v 1.21 2007-12-14 14:21:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -58,10 +58,9 @@ StatusCode DigitSel::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Check if track processing was aborted.
-  LHCb::ProcStatus * procStat = get<LHCb::ProcStatus>( m_procStatLocation );
-  if ( procStat->aborted() ) 
+  if ( procStatus()->aborted() ) 
   {
-    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ProcStatAbort );
+    procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ProcStatAbort );
     richStatus()->setEventOK( false );
     return Warning( "Processing aborted -> Abort", StatusCode::SUCCESS );
   }
@@ -72,19 +71,15 @@ StatusCode DigitSel::execute()
   // check the number of pixels
   if ( richPixels()->empty() ) 
   { // empty event ?
-
-    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::NoRichPixels );
+    procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::NoRichPixels );
     richStatus()->setEventOK( false );
     return Warning( "Event contains no pixels -> Abort", StatusCode::SUCCESS );
-
-  } 
+  }
   else if ( m_maxUsedPixels < richPixels()->size() ) 
   { // too many pixels
-
-    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedPixelLimit );
+    procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ReachedPixelLimit );
     richStatus()->setEventOK( false );
     return Warning( "Max. number of pixels exceeded -> Abort", StatusCode::SUCCESS );
-
   }
 
   // final printout of selected number of pixels

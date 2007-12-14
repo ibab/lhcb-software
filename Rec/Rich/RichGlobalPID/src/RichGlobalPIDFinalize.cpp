@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Finalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.cpp,v 1.19 2007-10-23 10:43:07 jonrob Exp $
+ *  $Id: RichGlobalPIDFinalize.cpp,v 1.20 2007-12-14 14:21:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -36,13 +36,9 @@ StatusCode Finalize::execute()
   // Event Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
-  // update pointers to global PID working objects
-  if ( !gpidPIDs() || !gpidTracks() ) return StatusCode::FAILURE;
-
   // Iterate over working tracks and keep/delete PID results
-  for ( LHCb::RichGlobalPIDTracks::iterator track = m_GPIDtracks->begin();
-        track != m_GPIDtracks->end();
-        ++track )
+  for ( LHCb::RichGlobalPIDTracks::iterator track = gpidTracks()->begin();
+        track != gpidTracks()->end(); ++track )
   {
     LHCb::RichRecTrack * rRTrack = (*track)->richRecTrack();
 
@@ -58,7 +54,7 @@ StatusCode Finalize::execute()
     // Only store results for physics quality tracks
     if ( (*track)->trQuality() != Rich::Rec::GlobalPID::Physics )
     {
-      m_GPIDs->erase( pid );
+      gpidPIDs()->erase( pid );
       continue;
     }
 
@@ -87,8 +83,8 @@ StatusCode Finalize::execute()
     // and also works in "-loglikelihood" space.
     // For final storage, renormalise the DLLS w.r.t. the pion hypothesis and
     // invert the values
-    for ( Rich::Particles::const_iterator iHypo = m_pidTypes.begin(); 
-          iHypo != m_pidTypes.end(); ++iHypo )
+    for ( Rich::Particles::const_iterator iHypo = pidTypes().begin(); 
+          iHypo != pidTypes().end(); ++iHypo )
     {
       if ( deltaLLs[*iHypo] < 0 ) { deltaLLs[*iHypo] = 0; }
       deltaLLs[*iHypo] = pionDLL - deltaLLs[*iHypo];
@@ -100,8 +96,7 @@ StatusCode Finalize::execute()
   }
 
   // All OK - Update ProcStatus with number of PIDs
-  LHCb::ProcStatus * procStat = get<LHCb::ProcStatus>( m_procStatLocation );
-  procStat->addAlgorithmStatus( m_richGPIDName, m_GPIDs->size() );
+  procStatus()->addAlgorithmStatus( gpidName(), gpidPIDs()->size() );
 
   return StatusCode::SUCCESS;
 }
