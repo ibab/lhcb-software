@@ -1,4 +1,4 @@
-// $Id: TAETestCreator.cpp,v 1.1 2007-12-14 11:42:34 frankb Exp $
+// $Id: TAETestCreator.cpp,v 1.2 2007-12-14 12:35:24 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
@@ -57,6 +57,7 @@ namespace LHCb  {
               if ( eventSvc()->registerObject(loc,copy).isSuccess() )  {
                 continue;
               }
+              delete copy;
               log << MSG::ERROR << "Failed to register RawEvent at " << loc << endmsg;
             }
             log << MSG::ERROR << "Failed to clone RawEvent." << endmsg;
