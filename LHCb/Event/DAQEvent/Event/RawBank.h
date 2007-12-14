@@ -98,6 +98,8 @@ namespace LHCb
                    TTProcFull,      // 46
                    ITProcFull,      // 47
                    TAEHeader,       // 48
+                   MuonFull,        // 49
+                   MuonError,       // 50
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };
 

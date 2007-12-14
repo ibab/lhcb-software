@@ -6,7 +6,9 @@
 
 ! 2007-12-14 - Markus Frank
  - Add numbers to bank type enum.
-
+   Add to new bank types on request of Giacomo Graziani, Andrea Salamon and Alessia Satta:
+                   MuonFull,        // 49
+                   MuonError,       // 50
 ! 2007-12-13 - Olivier Callot
  - Added an enum in ODIN to define the meaning of the Trigger Type.
 
