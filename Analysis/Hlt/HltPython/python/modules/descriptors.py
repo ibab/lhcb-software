@@ -1,8 +1,9 @@
 # =============================================================================
 """ @namespace descriptors
 @brief Collection of decay descriptors and tools to run on different types of data
-@author Hugo Ruiz hugo.ruiz@cern.ch
-@date 2007-11-28
+@author Hugo RUIZ hugo.ruiz@cern.ch
+@author Elias LOPEZ elopez@ecm.ub.es
+@date 2007-12-16
 """
 
 #---------------------------------------------------
@@ -20,48 +21,51 @@ KStar          = ' ([K*(892)0]cc -> [K+]cc [pi-]cc '+someGammas+' ) '
 
 #---------------------------------------------------
 # decayDescriptor dictionary
-decayDescriptorDict = {}
+decayDescriptorDict = {
+    'semilept'         : '{[<Xb>]cc   -> [mu+]cc..., [<Xb>]cc -> ([tau+]cc ->[ mu+]cc...)...}',
+    'Bd2DstarMuNu'     : '[B0]cc ->[{mu+ ,tau+ }]cc [{nu_mu , nu_tau}]cc '+threeBodyDstar+'...',# ... neded if  pi0 emitted
+    'Bd2D0Kstar'       : '[B0]cc   -> [D~0]cc '+KStar+someGammas , 
+    'Bs2MuMu'          : '[B_s0]cc -> [ mu+]cc [mu-]cc '+lotsOfGammas, # someGammas not enough
+    'Bd2KPi'           : '[B0]cc -> [K+]cc [pi-]cc '+someGammas,
+    'Bd2PiPi'          : '[ B0 ]cc -> [ pi+ ]cc [ pi- ]cc ' + someGammas,
+    'Bd2KK'            : '[ B0 ]cc -> [ K+ ]cc [ K- ]cc ' + someGammas,
+    'Bs2PiPi'          : '[ B_s0 ]cc -> [ pi+ ]cc [ pi- ]cc ' + someGammas,
+    'Bs2PiK'           : '[ B_s0 ]cc -> [ pi+ ]cc [ K- ]cc ' + someGammas,
+    'Bs2KK'            : '[ B_s0 ]cc -> [ K+ ]cc [ K- ]cc ' + someGammas,
+    'Bd2KstarD2KSPiPi' : '[B0]cc-> '+threeBodyD0+KStar+someGammas,
+    'Bs2DsDs'          : '[B_s0]cc  :> '+threeBodyDs+threeBodyDs+someGammas, # => needed if Ds through Ds*
+    'Bs2DsPi'          : '[B_s0]cc  -> '+threeBodyDs+' [pi-]cc'+someGammas,
+    'Bs2PhiPhi'        : '[B_s0]cc  -> '+Phi+Phi+someGammas,
+    'Bu2KD2KSPiPi'     : '[B+]cc -> [K+]cc '+threeBodyD0+lotsOfGammas,
+    'Bu2KMuMu'         : '[B+]cc -> [K+]cc mu+ mu- '+lotsOfGammas, # someGammas not enough
+    'Bd2MuMuKstar'     : '[B0]cc ->  mu+ mu- '+KStar+lotsOfGammas, # someGammas not enough
+    'Bd2PiPiPi0'       : '[B0]cc -> [pi+]cc [pi-]cc pi0 '+someGammas,
+    'Bs2PhiGamma'      : '[B_s0]cc ->'+someGammas,
+    'Bs2PsiPhi'        : '[B_s0]cc -> '+Phi+JPsi+' '+someGammas,
+    'Bu2Kee'           : '[B+]cc -> [K+]cc e+ e- '+someGammas
+    }
 
-# Special decays
-decayDescriptorDict['semilept']             = '{[<Xb>]cc   -> [mu+]cc..., [<Xb>]cc -> ([tau+]cc ->[ mu+]cc...)...}'
-
-# Ordinary decays
-decayDescriptorDict['Bd2DstarMuNu']     = '[B0]cc ->[{mu+ ,tau+ }]cc [{nu_mu , nu_tau}]cc '+threeBodyDstar+'...'# ... neded if  pi0 emitted
-decayDescriptorDict['Bd2D0Kstar']       = '[B0]cc   -> [D~0]cc '+KStar+someGammas   
-decayDescriptorDict['Bs2MuMu']          = '[B_s0]cc -> [ mu+]cc [mu-]cc '+lotsOfGammas # someGammas not enough
-decayDescriptorDict['Bd2KPi']           = '[B0]cc -> [K+]cc [pi-]cc '+someGammas
-decayDescriptorDict['Bd2KstarD2KSPiPi'] = '[B0]cc-> '+threeBodyD0+KStar+someGammas
-decayDescriptorDict['Bs2DsDs']          = '[B_s0]cc  => '+threeBodyDs+threeBodyDs+someGammas # => needed if Ds through Ds*
-decayDescriptorDict['Bs2DsPi']          = '[B_s0]cc  -> '+threeBodyDs+' [pi-]cc'+someGammas
-decayDescriptorDict['Bs2PhiPhi']        = '[B_s0]cc  -> '+Phi+Phi+someGammas
-decayDescriptorDict['Bu2KD2KSPiPi']     = '[B+]cc -> [K+]cc '+threeBodyD0+lotsOfGammas
-decayDescriptorDict['Bu2KMuMu']         = '[B+]cc -> [K+]cc mu+ mu- '+lotsOfGammas # someGammas not enough
-decayDescriptorDict['Bd2MuMuKstar']     = '[B0]cc ->  mu+ mu- '+KStar+lotsOfGammas # someGammas not enough
-decayDescriptorDict['Bd2PiPiPi0']       = '[B0]cc -> [pi+]cc [pi-]cc pi0 '+someGammas
-decayDescriptorDict['Bs2PhiGamma']      = '[B_s0]cc ->'+someGammas
-decayDescriptorDict['Bs2PsiPhi']        = '[B_s0]cc -> '+Phi+JPsi+' '+someGammas
-decayDescriptorDict['Bu2Kee']           = '[B+]cc -> [K+]cc e+ e- '+someGammas
 
 
 #---------------------------------------------------
 # Conversion to Hans preselection names
-hansFileDict ={}
-hansFileDict['Bd2DstarMuNu'] = 'Bd2DstMu'
-hansFileDict['Bd2D0Kstar'] = 'Bd2D0Kst'
-hansFileDict['Bs2MuMu'] = 'Bs2MuMu'
-hansFileDict['Bd2KPi'] = 'Bd2Kpi-decprodcut'
-hansFileDict['Bd2KstarD2KSPiPi'] = 'Bd2KstD2KSPiPi'
-hansFileDict['Bs2DsDs'] = 'Bs2DsDs'
-hansFileDict['Bs2DsPi'] = 'Bs2Dspi-Decprodcut'
-hansFileDict['Bs2PhiPhi'] = 'Bs2PhiPhi'
-hansFileDict['Bu2KD2KSPiPi'] = 'Bu2KD-KSPiPi'
-hansFileDict['Bu2KMuMu'] = 'Bu2Kmumu'
-hansFileDict['Bd2MuMuKstar'] = 'Bd2MuMuKst'
-hansFileDict['Bd2PiPiPi0'] = 'Bd2PiPiPi'
-hansFileDict['Bs2PhiGamma'] = 'Bs2phigamma'
-hansFileDict['Bs2PsiPhi'] = 'Bs2psiphi-decprodcut'
-hansFileDict['Bu2Kee'] = 'Bu2Kee'
-
+hansFileDict ={
+    'Bd2DstarMuNu'    : 'Bd2DstMu',
+    'Bd2D0Kstar'      : 'Bd2D0Kst',
+    'Bs2MuMu'         : 'Bs2MuMu',
+    'Bd2KPi'          : 'Bd2Kpi-decprodcut',
+    'Bd2KstarD2KSPiPi': 'Bd2KstD2KSPiPi',
+    'Bs2DsDs'         : 'Bs2DsDs',
+    'Bs2DsPi'         : 'Bs2Dspi-Decprodcut',
+    'Bs2PhiPhi'       : 'Bs2PhiPhi',
+    'Bu2KD2KSPiPi'    : 'Bu2KD-KSPiPi',
+    'Bu2KMuMu'        : 'Bu2Kmumu',
+    'Bd2MuMuKstar'    : 'Bd2MuMuKst',
+    'Bd2PiPiPi0'      : 'Bd2PiPiPi',
+    'Bs2PhiGamma'     : 'Bs2phigamma',
+    'Bs2PsiPhi'       : 'Bs2psiphi-decprodcut',
+    'Bu2Kee'          : 'Bu2Kee'
+}
 
 #---------------------------------------------------
 def decayDescriptor ( sample ):

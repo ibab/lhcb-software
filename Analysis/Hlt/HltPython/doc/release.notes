@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-12-5 - Hugo Ruiz
+ - descriptors.py: Added all B->hh from Elias
+
+! 2007-12-5 - Hugo Ruiz
  - Move examples directory under python directory
  - Create scripts directory under python and added the split.py and stage.py scripts 
  - Improved general documentation
