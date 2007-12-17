@@ -5,6 +5,14 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+!========================== HltSys v2r0 2007-12-17 ===================
+</PRE><H1><A NAME=v2r0>2007-12-17 HltSys v2r0</A></H1><PRE>
+This version uses LHCb v23r2 and the Tf framework. This is the first
+version migtated t Tf.
+
+! 2007-12-17 - P. Koppenburg
+ - Use 2D PV in selections
+
 ! 2007-12-12 - Jose A. Hernando
  - options to run the HLT muon, and hadron in the Tf
 
