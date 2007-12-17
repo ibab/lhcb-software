@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.29 2007-12-13 13:56:22 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.30 2007-12-17 17:47:54 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -56,7 +56,7 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   declareProperty("InclusiveDecay", m_inclusiveDecay = 0);
   declareProperty("SemileptonicDecay", m_semileptonicDecay = 0);
   declareProperty("NumNeutrinos", m_numNeutrinos = 0);
-  declareProperty("MCmatchQualityPIDoverrideLevel", m_override = 0.975); 
+  declareProperty("MCmatchQualityPIDoverrideLevel", m_override = 0.7); 
   //Override decision only if match quality for PID correct match is no 
   //no worse than by 1 order of magnitude in weight compared to alternatives.
   declareProperty("ResonanceCut", m_rescut = 10.e-6);

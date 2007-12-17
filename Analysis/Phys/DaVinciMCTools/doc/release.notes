@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.192 2007-12-13 15:51:55 jpalac Exp $
+! $Id: release.notes,v 1.193 2007-12-17 17:47:43 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-12-13 - Vladimir Gligorov
+ - Modified default chi2 at which a particle is associated to the MCParticle with the
+   "correct" PID, in prefernce to the best chi2 match, in BackgroundCategory.
 
 !========================== DaVinciMCTools v9r8 2007-10-25 ===================
 
