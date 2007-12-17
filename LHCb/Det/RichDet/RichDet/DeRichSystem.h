@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichSystem
  *
  *  CVS Log :-
- *  $Id: DeRichSystem.h,v 1.9 2007-04-23 12:28:13 jonrob Exp $
+ *  $Id: DeRichSystem.h,v 1.10 2007-12-17 12:35:26 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-01-26
@@ -257,6 +257,9 @@ private: // data
 
   /// List of all valid Level1 IDs
   Rich::DAQ::Level1IDs m_l1IDs;
+
+  /// Rich1 & Rich2 detector elements
+  boost::array<DetectorElement*, Rich::NRiches> m_deRich;
 
   /// Location of RICH Numbering schemes in Conditions DB
   boost::array<std::string, Rich::NRiches> m_condBDLocs;

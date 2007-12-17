@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.14 2007-04-23 12:28:13 jonrob Exp $
+ * $Id: DeRichSystem.cpp,v 1.15 2007-12-17 12:35:58 papanest Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -68,12 +68,13 @@ StatusCode DeRichSystem::initialize ( )
   }
   m_rich1NumberHpds = deRich1->param<int>("Rich1TotNumHpd");
 
-
-  SmartDataPtr<DetectorElement> deR0P0(dataSvc(),DeRichLocations::Rich1Panel0 );
-  if ( !deR0P0 ) {
-    msg << MSG::ERROR << "Could not load DeRichPanel R1 P0" << endmsg;
+  SmartDataPtr<DetectorElement> deRich2(dataSvc(),DeRichLocations::Rich2 );
+  if ( !deRich2 ) {
+    msg << MSG::ERROR << "Could not load DeRich2" << endmsg;
     return StatusCode::FAILURE;
   }
+  m_deRich[0] = deRich1;
+  m_deRich[1] = deRich2;
 
   // register condition for updates
   updMgrSvc()->registerCondition(this,rich1numbers.path(),&DeRichSystem::buildHPDMappings);
@@ -500,16 +501,25 @@ std::string DeRichSystem::getDeHPDLocation (LHCb::RichSmartID smartID ) const
   const unsigned int cNumber = copyNumber( smartID );
   std::string loc;
 
-  if( smartID.rich() == Rich::Rich1 )
-    if( smartID.panel() == Rich::top )
-      loc = DeRichLocations::Rich1Panel0;
-    else
-      loc = DeRichLocations::Rich1Panel1;
+  if ( m_deRich[smartID.rich()]->exists("HPDPanelDetElemLocation") )
+  {
+    std::vector<std::string> panelLoc= m_deRich[smartID.rich()]->
+      paramVect<std::string>("HPDPanelDetElemLocation");
+    loc = panelLoc[smartID.panel()];
+  }
   else
-    if( smartID.panel() == Rich::left )
-      loc = DeRichLocations::Rich2Panel0;
+  {
+    if( smartID.rich() == Rich::Rich1 )
+      if( smartID.panel() == Rich::top )
+        loc = DeRichLocations::Rich1Panel0;
+      else
+        loc = DeRichLocations::Rich1Panel1;
     else
-      loc = DeRichLocations::Rich2Panel1;
+      if( smartID.panel() == Rich::left )
+        loc = DeRichLocations::Rich2Panel0;
+      else
+        loc = DeRichLocations::Rich2Panel1;
+  }
 
   loc = loc + "/HPD:"+boost::lexical_cast<std::string>(cNumber);
   return loc;

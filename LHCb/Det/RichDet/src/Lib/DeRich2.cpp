@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.32 2007-04-03 15:42:32 papanest Exp $
+ *  $Id: DeRich2.cpp,v 1.33 2007-12-17 12:35:46 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -155,17 +155,25 @@ StatusCode DeRich2::initialize()
     }
   }
 
-  // get pointers to HPD panels
-  SmartDataPtr<DeRichHPDPanel> panel0(dataSvc(),DeRichLocations::Rich2Panel0);
+  // get pointers to HPD panels. Check for the new locations.
+  std::string panel0Location = DeRichLocations::Rich2Panel0;
+  std::string panel1Location = DeRichLocations::Rich2Panel1;
+  
+  if ( exists("HPDPanelDetElemLocation") )
+  {
+    std::vector<std::string> panelLoc= paramVect<std::string>("HPDPanelDetElemLocation");
+    panel0Location = panelLoc[0];
+    panel1Location = panelLoc[1];
+  }
+    
+  SmartDataPtr<DeRichHPDPanel> panel0(dataSvc(),panel0Location);
   if ( !panel0 ) {
-    msg << MSG::FATAL << "Cannot load " << DeRichLocations::Rich2Panel0
-        << endmsg;
+    msg << MSG::FATAL << "Cannot load " << panel0Location << endmsg;
     return StatusCode::FAILURE;
   }
-  SmartDataPtr<DeRichHPDPanel> panel1(dataSvc(),DeRichLocations::Rich2Panel1);
+  SmartDataPtr<DeRichHPDPanel> panel1(dataSvc(),panel1Location);
   if ( !panel1 ) {
-    msg << MSG::FATAL << "Cannot load " << DeRichLocations::Rich2Panel1
-        << endmsg;
+    msg << MSG::FATAL << "Cannot load " << panel1Location << endmsg;
     return StatusCode::FAILURE;
   }
   m_HPDPanels[panel0->side()] = panel0;
