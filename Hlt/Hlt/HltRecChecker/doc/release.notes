@@ -4,6 +4,7 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+!========================== HltRecChecker v1r3 2007-12-17 ===================
 ! 2007-11-28 - Gerhard Raven
     - fix problems with delete in HltRecCheckVertices
 ! 2007-11-21 - Gerhard Raven
