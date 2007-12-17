@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.16 2007-12-14 11:42:33 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.17 2007-12-17 18:45:48 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -57,7 +57,7 @@ void RawDataSelector::LoopContext::close()    {
 RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
 : Service( nam, svcloc), m_rootCLID(CLID_NULL)
 {
-  declareProperty("DataManager", m_ioMgrName="IODataManager");
+  declareProperty("DataManager", m_ioMgrName="Gaudi::IODataManager/IODataManager");
   declareProperty("NSkip", m_skipEvents=0);
 }
 

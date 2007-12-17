@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.14 2007-12-17 18:12:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.15 2007-12-17 18:45:48 frankb Exp $
 //	====================================================================
 //  MDFWriter.cpp
 //	--------------------------------------------------------------------
@@ -47,8 +47,8 @@ void MDFWriter::construct()   {
   declareProperty("ChecksumType",   m_genChecksum=1);     // Generate checksum
   declareProperty("GenerateMD5",    m_genMD5=true);      // Generate MD5 checksum
   declareProperty("DataType",       m_dataType=MDFIO::MDF_NONE); // Input data type
-	declareProperty("BankLocation",		m_bankLocation=RawEventLocation::Default);  // Location of the banks in the TES
-  declareProperty("DataManager",    m_ioMgrName="IODataManager");
+  declareProperty("BankLocation",   m_bankLocation=RawEventLocation::Default);  // Location of the banks in the TES
+  declareProperty("DataManager",    m_ioMgrName="Gaudi::IODataManager/IODataManager");
   declareProperty("ForceTAE",       m_forceTAE = false );
 }
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MIFWriter.cpp,v 1.6 2007-11-19 19:27:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MIFWriter.cpp,v 1.7 2007-12-17 18:45:48 frankb Exp $
 //	====================================================================
 //  MIFWriter.cpp
 //	--------------------------------------------------------------------
@@ -30,7 +30,7 @@ MIFWriter::MIFWriter(const std::string& nam, ISvcLocator* svc)
 : Algorithm(nam, svc), m_ioMgr(0), m_connection(0)
 {
   declareProperty("Connection",  m_connectParams="");
-  declareProperty("DataManager", m_ioMgrName="IODataManager");
+  declareProperty("DataManager", m_ioMgrName="Gaudi::IODataManager/IODataManager");
 }
 
 /// Standard Destructor

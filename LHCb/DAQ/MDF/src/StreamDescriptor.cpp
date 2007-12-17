@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.11 2007-12-17 18:12:03 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.12 2007-12-17 18:45:48 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -226,33 +226,33 @@ void LHCb::StreamDescriptor::getFileConnection(const std::string& con,
     // RFC compliand URI: Relative path, but full protocol specifiaction with seperator
     file = con.substr(idx2+3);
     proto = con.substr(0,idx2);
-    std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
+    //std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
     return;
   }
   else if ( (idx1=con.find(":/")) != std::string::npos )  {
     // Absolute path, protocol given, but no schema seperator
     file = con.substr(idx1+1);
     proto = con.substr(0,idx1);
-    std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
+    //std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
     return;
   }
   else if ( (idx0=con.find(":")) != std::string::npos )  {
     // Relative path, no schema seperator
     file = con.substr(idx0+1);
     proto = con.substr(0,idx0);
-    std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
+    //std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
     return;
   }
   else {
     // No protocol given: assume file protocol
     file = con;
     proto = "file";
-    std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
+    //std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
     return;
   }
   proto = "";
   file = "";
-  std::cout << "ERROR: getFileConnection>> " << proto << "  -> " << file << std::endl;
+  //std::cout << "ERROR: getFileConnection>> " << proto << "  -> " << file << std::endl;
 }
 
 void LHCb::StreamDescriptor::getInetConnection( const std::string& con, 

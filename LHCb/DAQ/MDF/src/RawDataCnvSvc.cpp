@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.18 2007-12-14 11:42:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.19 2007-12-17 18:45:48 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -58,8 +58,8 @@ RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc, long typ)
   declareProperty("EventsBefore",   m_evtsBefore=0);   // Events before T0
   declareProperty("EventsAfter",    m_evtsAfter=0);    // Events after T0
   declareProperty("DataType",       m_dataType=MDFIO::MDF_RECORDS);  // Input data type
-	declareProperty("BankLocation",		m_bankLocation=RawEventLocation::Default);  // Location of the banks in the TES
-  declareProperty("DataManager",    m_ioMgrName="IODataManager");
+  declareProperty("BankLocation",   m_bankLocation=RawEventLocation::Default);  // Location of the banks in the TES
+  declareProperty("DataManager",    m_ioMgrName="Gaudi::IODataManager/IODataManager");
 }
 
 // Initializing constructor
@@ -73,8 +73,8 @@ RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc)
   declareProperty("EventsBefore",   m_evtsBefore=0);   // Events before T0
   declareProperty("EventsAfter",    m_evtsAfter=0);    // Events after T0
   declareProperty("DataType",       m_dataType=MDFIO::MDF_RECORDS);     // Input data type
-	declareProperty("BankLocation",		m_bankLocation=RawEventLocation::Default);  // Location of the banks in the TES
-  declareProperty("DataManager",    m_ioMgrName="IODataManager");
+  declareProperty("BankLocation",   m_bankLocation=RawEventLocation::Default);  // Location of the banks in the TES
+  declareProperty("DataManager",    m_ioMgrName="Gaudi::IODataManager/IODataManager");
 }
 
 /// Service initialization

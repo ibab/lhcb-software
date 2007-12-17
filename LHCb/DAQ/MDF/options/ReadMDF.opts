@@ -1,6 +1,4 @@
-ApplicationMgr.Dlls                  = { "MDF", "GaudiUtils" };
 ApplicationMgr.TopAlg                = { "StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };
-ApplicationMgr.SvcOptMapping        += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
 ApplicationMgr.EvtMax                = 100000;
 ApplicationMgr.HistogramPersistency  = "NONE";
 Dump.CheckData                       = 1;
