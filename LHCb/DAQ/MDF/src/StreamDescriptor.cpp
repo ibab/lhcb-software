@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.12 2007-12-17 18:45:48 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.13 2007-12-17 18:47:12 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -219,7 +219,7 @@ void LHCb::StreamDescriptor::getFileConnection(const std::string& con,
     // RFC compliand URI: Absolute path, but full protocol specifiaction with schema seperator
     file = con.substr(idx3+3);
     proto = con.substr(0,idx3);
-    std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
+    //std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
     return;
   }
   else if ( (idx2=con.find("://")) != std::string::npos )  {
