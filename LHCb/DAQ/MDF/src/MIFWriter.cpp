@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MIFWriter.cpp,v 1.7 2007-12-17 18:45:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MIFWriter.cpp,v 1.8 2007-12-17 19:18:10 frankb Exp $
 //	====================================================================
 //  MIFWriter.cpp
 //	--------------------------------------------------------------------
@@ -79,6 +79,7 @@ StatusCode MIFWriter::execute()    {
         const std::string& dsn = pA->par()[0];
         int fid = genChecksum(1,dsn.c_str(),dsn.length()+1);
         FidMap::const_iterator i = m_fidMap.find(fid);
+	//std::cout << "FID:" << dsn << " " << fid << endl;
         if ( i == m_fidMap.end() )   {
           MsgStream log(msgSvc(),name());
           m_fidMap.insert(std::make_pair(fid,dsn));
