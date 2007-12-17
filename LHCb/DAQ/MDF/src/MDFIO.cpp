@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.21 2007-12-14 11:42:31 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.22 2007-12-17 18:12:03 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -74,10 +74,10 @@ std::pair<const char*,int> LHCb::MDFIO::getDataFromAddress() {
 }
 
 StatusCode LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
-                            RawBank*          hdr_bank,
-                            int               compTyp,
-                            int               chksumTyp,
-                            void* const       ioDesc)
+                                       RawBank*          hdr_bank,
+                                       int               compTyp,
+                                       int               chksumTyp,
+                                       void* const       ioDesc)
 {
   size_t len = rawEventLength(raw);
   size_t hdrSize = hdr_bank->totalSize();
@@ -98,7 +98,8 @@ StatusCode LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
   return StatusCode::FAILURE;
 }
 
-StatusCode LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, const std::string& location)
+StatusCode 
+LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, const std::string& location)
 {
   SmartDataPtr<RawEvent> raw(m_evtSvc,location);
   if ( raw )  {

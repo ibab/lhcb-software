@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2007-12-18 - Markus Frank
+ - Add support for non-strict RFC URIs - similar to whar ROOT supports.
+
 ! 2007-12-15 - Markus Frank
  - Add support for TAE events in the RawDataCnvSvc.
    The creation of leaves in the TES is triggered by the content of the TAE

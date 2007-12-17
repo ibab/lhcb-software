@@ -31,10 +31,10 @@ EventSelector.Input                  = {
   "DATA='file://mdfData_4.dat' SVC='LHCb::MDFSelector' NSkip='500'"
 };
 EventSelector.Input                  = {
-  "DATA='file://mdfData_0.dat' SVC='LHCb::MDFSelector'",
-  "DATA='file://mdfData_1.dat' SVC='LHCb::MDFSelector'",
-  "DATA='file://mdfData_2.dat' SVC='LHCb::MDFSelector'",
-  "DATA='file://mdfData_3.dat' SVC='LHCb::MDFSelector'",
-  "DATA='file://mdfData_4.dat' SVC='LHCb::MDFSelector'"
+  "DATA='PFN:file://mdfData_0.dat'        SVC='LHCb::MDFSelector'",
+  "DATA='PFN:file://../cmt/mdfData_1.dat' SVC='LHCb::MDFSelector'",
+  "DATA='file:mdfData_2.dat'              SVC='LHCb::MDFSelector'",
+  "DATA='PFN:mdfData_3.dat'               SVC='LHCb::MDFSelector'",
+  "DATA='mdfData_4.dat'                   SVC='LHCb::MDFSelector'"
 };
 FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };

@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.10 2007-10-26 12:32:59 cattanem Exp $
+// $Id: StreamDescriptor.cpp,v 1.11 2007-12-17 18:12:03 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -214,13 +214,45 @@ void LHCb::StreamDescriptor::getFileConnection(const std::string& con,
                                                std::string& file, 
                                                std::string& proto)
 {
-  size_t idx = con.find("://");
-  if ( idx != std::string::npos )  {
-    file = con.substr(idx+3);
-    proto = con.substr(0,idx);
+  size_t idx0, idx1, idx2, idx3;
+  if ( (idx3=con.find(":///")) != std::string::npos )  {
+    // RFC compliand URI: Absolute path, but full protocol specifiaction with schema seperator
+    file = con.substr(idx3+3);
+    proto = con.substr(0,idx3);
+    std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
     return;
   }
-  file = proto = "";
+  else if ( (idx2=con.find("://")) != std::string::npos )  {
+    // RFC compliand URI: Relative path, but full protocol specifiaction with seperator
+    file = con.substr(idx2+3);
+    proto = con.substr(0,idx2);
+    std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
+    return;
+  }
+  else if ( (idx1=con.find(":/")) != std::string::npos )  {
+    // Absolute path, protocol given, but no schema seperator
+    file = con.substr(idx1+1);
+    proto = con.substr(0,idx1);
+    std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
+    return;
+  }
+  else if ( (idx0=con.find(":")) != std::string::npos )  {
+    // Relative path, no schema seperator
+    file = con.substr(idx0+1);
+    proto = con.substr(0,idx0);
+    std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
+    return;
+  }
+  else {
+    // No protocol given: assume file protocol
+    file = con;
+    proto = "file";
+    std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
+    return;
+  }
+  proto = "";
+  file = "";
+  std::cout << "ERROR: getFileConnection>> " << proto << "  -> " << file << std::endl;
 }
 
 void LHCb::StreamDescriptor::getInetConnection( const std::string& con, 
@@ -261,13 +293,6 @@ Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
   Networking::sockaddr_in sin;
   result.type = ::toupper(specs[0]);
   switch(result.type) {
-    case 'F':          //  DATA='file://C:/Data/myfile.dat'
-      getFileConnection(specs, file, proto);
-      result.ioDesc     = FileIO::open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU|S_IRWXG );
-      result.m_write    = file_write;
-      result.m_read     = file_read;
-      result.m_seek     = file_seek;
-      break;
     case 'I':          //  DATA='ip://137.138.142.82:8000'
       /*
         struct sockaddr_in {
@@ -294,18 +319,29 @@ Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
         break;
       }
       break;
+    case 'F':          //  DATA='file://C:/Data/myfile.dat'
     default:           //  DATA='rfio:/castor/cern.ch/......
       getFileConnection(specs, file, proto);
       if ( !proto.empty() )  {
-        PosixIO* io = getIOModule(proto);
-        if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
-          result.ioFuncs    = io;
-          result.ioDesc     = io->open(file.c_str(), O_RDONLY|O_BINARY, S_IRWXU);
-          result.m_write    = posix_write;
-          result.m_read     = posix_read;
-          result.m_seek     = posix_seek;
-          return result;
-        }
+	result.type = ::toupper(proto[0]); 
+	if ( result.type == 'F' ) {
+	  result.ioDesc     = FileIO::open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU|S_IRWXG );
+	  result.m_write    = file_write;
+	  result.m_read     = file_read;
+	  result.m_seek     = file_seek;
+	  break;
+	}
+	else {
+	  PosixIO* io = getIOModule(proto);
+	  if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
+	    result.ioFuncs    = io;
+	    result.ioDesc     = io->open(file.c_str(), O_RDONLY|O_BINARY, S_IRWXU);
+	    result.m_write    = posix_write;
+	    result.m_read     = posix_read;
+	    result.m_seek     = posix_seek;
+	    return result;
+	  }
+	}
       }
       break;
   }
@@ -318,13 +354,6 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
   Networking::sockaddr_in sin;
   result.type = ::toupper(specs[0]);
   switch(result.type) {
-    case 'F':          //  DATA='file://C:/Data/myfile.dat'
-      getFileConnection(specs, file, proto);
-      result.ioDesc  = FileIO::open(file.c_str(), O_RDONLY|O_BINARY );
-      result.m_write = file_write;
-      result.m_read  = file_read;
-      result.m_seek  = file_seek;
-      break;
     case 'I':          //  DATA='ip://137.138.142.82:8000'
       result.ioDesc = Networking::socket(AF_INET,Networking::_SOCK_STREAM,Networking::_IPPROTO_IP);
       if ( result.ioDesc > 0 )   {
@@ -345,22 +374,33 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
         result.ioDesc = -1;
       }
       break;
+    case 'F':          //  DATA='file://C:/Data/myfile.dat'
     default:
       getFileConnection(specs, file, proto);
       if ( !proto.empty() )  {
-        PosixIO* io = getIOModule(proto);
-        if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
-          result.ioFuncs    = io;
-          result.ioDesc     = io->open(file.c_str(), O_RDONLY|O_BINARY, S_IREAD);
-          if ( result.ioDesc == -1 && io->serror )  {
-            //const char* msg = io->serror();
-            //std::cout << "Error connection POSIX IO:" << file << std::endl
-            //          << (char*)(msg ? msg : "Unknown error") << std::endl;
-          }
-          result.m_write    = posix_write;
-          result.m_read     = posix_read;
-          result.m_seek     = posix_seek;
-          return result;
+	result.type = ::toupper(proto[0]); 
+	if ( result.type == 'F' ) {
+	  getFileConnection(specs, file, proto);
+	  result.ioDesc  = FileIO::open(file.c_str(), O_RDONLY|O_BINARY );
+	  result.m_write = file_write;
+	  result.m_read  = file_read;
+	  result.m_seek  = file_seek;
+	}
+	else {
+	  PosixIO* io = getIOModule(proto);
+	  if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
+	    result.ioFuncs    = io;
+	    result.ioDesc     = io->open(file.c_str(), O_RDONLY|O_BINARY, S_IREAD);
+	    if ( result.ioDesc == -1 && io->serror )  {
+	      //const char* msg = io->serror();
+	      //std::cout << "Error connection POSIX IO:" << file << std::endl
+	      //          << (char*)(msg ? msg : "Unknown error") << std::endl;
+	    }
+	    result.m_write    = posix_write;
+	    result.m_read     = posix_read;
+	    result.m_seek     = posix_seek;
+	    return result;
+	  }
         }
       }
       break;
@@ -385,9 +425,6 @@ int LHCb::StreamDescriptor::close(Access& c) {
 Access LHCb::StreamDescriptor::accept(const Access& specs)  {
   Access result = specs;
   switch(specs.type)  {
-    case 'F':
-      result.ioDesc = specs.ioDesc;
-      break;
     case 'I':
       if ( specs.ioDesc > 0 )  {
         Networking::sockaddr sin;
@@ -401,6 +438,7 @@ Access LHCb::StreamDescriptor::accept(const Access& specs)  {
 	      }
       }
       break;
+    case 'F':
     default:
       result.ioDesc = specs.ioDesc;
       break;

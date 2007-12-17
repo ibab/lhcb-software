@@ -1,4 +1,4 @@
-//ApplicationMgr.DLLs       = { "MDF","GaudiFileCatalog" };
+//ApplicationMgr.DLLs     = { "MDF","GaudiFileCatalog" };
 ApplicationMgr.TopAlg     = { "LHCb::RawEventTestCreator/RawEventGen", "StoreExplorerAlg" };
 ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
 ApplicationMgr.EvtMax     = 1000;
@@ -15,23 +15,37 @@ Writer_0.ItemList         = {"/Event#1" };
 
 // To create a MDF file using the MDF writer:
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_1" };
-Writer_1.Connection       = "PFN:file://mdfData_1.dat";
+Writer_1.Connection       = "PFN:file:mdfData_1.dat";
+Writer_1.Connection       = "PFN:file://../cmt/mdfData_1.dat";
 Writer_1.Compress         = 0;
 Writer_1.ChecksumType     = 0;
 Writer_1.GenerateMD5      = true;
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_2" };
-Writer_2.Connection       = "PFN:file://mdfData_2.dat";
+Writer_2.Connection       = "file:mdfData_2.dat";
 Writer_2.Compress         = 0;
 Writer_2.ChecksumType     = 1;
 Writer_2.GenerateMD5      = true;
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_3" };
-Writer_3.Connection       = "PFN:file://mdfData_3.dat";
+Writer_3.Connection       = "PFN:mdfData_3.dat";
 Writer_3.Compress         = 2;
 Writer_3.ChecksumType     = 1;
 Writer_3.GenerateMD5      = true;
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_4" };
-Writer_4.Connection       = "PFN:file://mdfData_4.dat";
+Writer_4.Connection       = "mdfData_4.dat";
 Writer_4.Compress         = 2;
 Writer_4.ChecksumType     = 0;
 Writer_4.GenerateMD5      = true;
 MessageSvc.OutputLevel = 1;
+
+ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_5" };
+Writer_5.Connection       = "PFN:file:///tmp/mdfData_5.dat";
+ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_6" };
+Writer_6.Connection       = "PFN:file:/tmp/mdfData_6.dat";
+ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_7" };
+Writer_7.Connection       = "PFN:/tmp/mdfData_7.dat";
+ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_8" };
+Writer_8.Connection       = "file:///tmp/mdfData_8.dat";
+ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_9" };
+Writer_9.Connection       = "file:/tmp/mdfData_9.dat";
+ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_10" };
+Writer_10.Connection       = "/tmp/mdfData_10.dat";
