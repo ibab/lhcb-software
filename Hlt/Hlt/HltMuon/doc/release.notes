@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
+
+
+!========================== HltMuon v2r0 2007-12-17 ===================
 ! 2007-11-21 - Jose A. Hernando
  - m_outputMuonTracksName used as a location for HltMuonRec
 

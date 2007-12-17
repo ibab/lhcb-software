@@ -4,6 +4,7 @@
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
 
+!========================== HltMuonAlley v2r0 2007-12-17 ===================
 ! 2007-12-06 - Jose A. Hernando (from Sandra)
   - HltMuonIDDistanceTool
     function to compute muonID distance variable
