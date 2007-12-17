@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2007-12-17 - Patrick Koppenburg
+ - Added flight distance to nTuple
+
 !========================== HltSelChecker v5r2 2007-11-14 ===================
 ! 2007-10-26 - Patrick Koppenburg
  - options/DVTestHltMB.opts

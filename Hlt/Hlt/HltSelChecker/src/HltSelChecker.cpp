@@ -1,4 +1,4 @@
-// $Id: HltSelChecker.cpp,v 1.5 2007-10-26 14:23:37 pkoppenb Exp $
+// $Id: HltSelChecker.cpp,v 1.6 2007-12-17 12:21:43 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_cdf.h"
 
@@ -124,6 +124,8 @@ StatusCode HltSelChecker::saveP(std::string part , const LHCb::Particle* P,
     tuple->column( part+"IP",  -1.);
     tuple->column( part+"IPe", -1.);
     tuple->column( part+"IPprob", -1.);
+    tuple->column( part+"FD", -1);
+    tuple->column( part+"FDe", -1);
   } else {
     tuple->column( "PV",   rPV->position());    
     // ip
@@ -132,8 +134,14 @@ StatusCode HltSelChecker::saveP(std::string part , const LHCb::Particle* P,
     tuple->column( part+"IP",  ip);
     tuple->column( part+"IPe", ipe);
     tuple->column( part+"IPprob", gsl_cdf_chisq_Q(ip*ip/(ipe*ipe),1));
+    if ( NULL!=P->endVertex()){
+      double f, fe;
+      geomDispCalculator()->calcVertexDis( *(P->endVertex()), *rPV, f, fe);
+      tuple->column( part+"FD", f);
+      tuple->column( part+"FDe", fe);
+    }
   }
-  
+
   if (m_doMC) {
     StatusCode sc = saveMC(part,P,tuple);
     if (!sc) return sc;
