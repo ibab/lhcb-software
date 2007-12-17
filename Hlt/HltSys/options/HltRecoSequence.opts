@@ -5,7 +5,7 @@
 HltRecoSequence.Members = {
   "GaudiSequencer/HltRecoVeloRZSeq",
   "HltTrackUpgrade/HltRecoVelo",
-  // "PatPV3D/PatHltPV3D",
+  //  "PatPV3D/PatHltPV3D",
   // "GaudiSequencer/HltDecodeTT",
   // "HltTrackUpgrade/HltRecoVeloTT",
   "GaudiSequencer/HltDecodeT",

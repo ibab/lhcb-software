@@ -20,13 +20,8 @@ use HltRecChecker	v1r2	Hlt   # Jose Angel Hernando-Morata
 use HltL0Conf           v1r5    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v1r3    Hlt   # Alessia Satta/Sandra Amato  
 
-
-#-----UNCOMMENT THEM AS THEY ARE Tf COMPATIBLE ---------------
-
-
 use HltSelections       v5r7    Hlt   # Patrick Koppenburg
-use HltSelChecker       v5r2    Hlt   # Patrick Koppenburg
-
+use HltSelChecker       v5r3    Hlt   # Patrick Koppenburg
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
