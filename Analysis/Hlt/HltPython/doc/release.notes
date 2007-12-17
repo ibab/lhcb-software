@@ -4,7 +4,8 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
-! 2007-12-5 - Hugo Ruiz
+!!========================== HltPython v1r2 2007-12-17 ===================
+ 2007-12-5 - Hugo Ruiz
  - descriptors.py: Added all B->hh from Elias
 
 ! 2007-12-5 - Hugo Ruiz
