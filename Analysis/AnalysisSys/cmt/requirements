@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.38 2007-12-13 15:54:14 jpalac Exp $
+# $Id: requirements,v 1.39 2007-12-17 19:27:52 pkoppenb Exp $
 package AnalysisSys
 version v1r9
 
@@ -22,13 +22,13 @@ use  ParticleMakerChecker       v1r1p1   Phys   # Chris Jones
 use  LoKiUser                   v6r0     Phys   # Vanya Belyaev
 use  DecayTreeTuple             v1r0     Phys   # Jeremie Borel
 ####################################################################
-use  PhysSelSys      	v10r7   PhysSel
+use  PhysSelSys      	v10r7p1   PhysSel
 #===================================================================
 use Ccbar	        v1r5    PhysSel # Jan Amoraal, Miriam Calvo
 use B2Dilepton		v1r5	PhysSel # Rare Decays Working Group
 use B2D0X		v1r11	PhysSel # WGs
 use B2DplusX		v1r1	PhysSel # WGs
-use B2DsX		v1r5	PhysSel # WGs
+use B2DsX		v1r5p1	PhysSel # WGs
 use B2DstarX		v1r6	PhysSel # WGs
 use B2uds	        v2r6    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
 use JetsSel	        v1r4p1  PhysSel # Jets WG
