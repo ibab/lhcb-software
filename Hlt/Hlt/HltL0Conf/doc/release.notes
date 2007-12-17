@@ -4,6 +4,7 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+!========================== HltL0Conf v1r5 2007-12-17 ===================
 !2007-12-11 - Jose A. Hernando
 		- src/L0ConfirmWithT: making again PR tool public (to be understood)
 
