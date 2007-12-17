@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v3r0 2007-12-17 ===================
 ! 2007-12-11 Jose A. Hernando
 	 - HltBaseAlgorithm: consider always the inputs (not use anymore HltTrackMerge!)
 
