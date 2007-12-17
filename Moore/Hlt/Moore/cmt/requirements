@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.16 2007-11-02 14:56:05 pkoppenb Exp $
+# $Id: requirements,v 1.17 2007-12-17 13:55:34 pkoppenb Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : J.A. Hernando & P. Koppenburg & M. Cattaneo
 #============================================================================
 
 #============================================================================
 package Moore
-version v2r3
+version v3r0
 
 branches doc cmt options
 

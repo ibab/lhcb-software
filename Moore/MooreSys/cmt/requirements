@@ -1,9 +1,9 @@
 package MooreSys
-version v2r3
+version v3r0
 
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
-use  Moore  v2r3    Hlt
+use  Moore  v3r0    Hlt
