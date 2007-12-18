@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::OTHitCreator
  *
- *  $Id: OTHitCreator.h,v 1.2 2007-10-12 08:16:37 cattanem Exp $
+ *  $Id: OTHitCreator.h,v 1.3 2007-12-18 09:32:41 mschille Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -116,6 +116,9 @@ namespace Tf
     bool   rejectOutOfTime() const { return m_rejectOutOfTime ; }
     const IOTRawBankDecoder* decoder() const { return &(*m_otdecoder) ; }
     const HitCreatorGeom::OTModule* module( const LHCb::OTChannelID id ) const ;
+    // return a pointer to a custom rt relation if drift times are not to be
+    // used and null otherwise
+    const OTDet::RtRelation* getRtRelation() const;
 
   private:
     IOTRawBankDecoder* m_otdecoder ;
@@ -125,6 +128,11 @@ namespace Tf
     //mutable HitCreatorGeom::Detector<HitCreatorGeom::OTRegion>* m_detectordata ;
     //mutable HitCreatorGeom::Detector<HitCreatorGeom::RegionOfModules<HitCreatorGeom::OTModule> > *m_detectordata ;
     HitCreatorGeom::OTDetector *m_detectordata ;
+
+    bool m_noDriftTimes;
+    double m_forceDriftRadius;
+    double m_forceResolution;
+    OTDet::RtRelation *m_rtrel;
   };
 }
 

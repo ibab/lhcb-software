@@ -16,6 +16,7 @@
 #include "OTHitCreator.h"
 
 #include <algorithm>
+#include <cmath>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/construct.hpp>
@@ -43,7 +44,7 @@ namespace Tf
       typedef std::vector<OTHit> HitContainer ;
       typedef std::vector<const OTHit*> SortedHitContainer ;
       // constructor
-      OTModule(const DeOTModule& detelement ) ;
+      OTModule(const DeOTModule& detelement, const OTDet::RtRelation* rtrel ) ;
       const OTHitRange& hits() const { return m_hitrange ; }
       const DeOTModule& detelement() const { return *m_det ; }
       const HitContainer& ownedhits() const { return m_ownedhits ; }
@@ -62,10 +63,13 @@ namespace Tf
       mutable SortedHitContainer m_sortedhits ; // hits sorted in x. I hope I can get rid of it.
       mutable OTHitRange m_hitrange ;           // these are pointers in the global list of hits, used for navigation
       mutable bool m_isloaded ;
+      const OTDet::RtRelation* m_rtrel;		// pointer to custom rt relation (if non-null)
     } ;
 
-    OTModule::OTModule(const DeOTModule& detelement )
-      : Envelope<DeOTModule>(detelement), m_det(&detelement), m_isloaded(false)
+    OTModule::OTModule(const DeOTModule& detelement,
+		    const OTDet::RtRelation* rtrel )
+      : Envelope<DeOTModule>(detelement), m_det(&detelement),
+	m_isloaded(false), m_rtrel(rtrel)
     {
       // we'll take this away at some point. it is just for understanding the profiles. FIXME.
       m_ownedhits.reserve(128) ;
@@ -87,18 +91,36 @@ namespace Tf
         size_t numhits = otlitetimes.size() ;
         m_ownedhits.reserve( numhits ) ;
         // put if-statement before loop to fork only once
-        if( tmin < tmax ) {
-          for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
-               ihit != otlitetimes.end(); ++ihit) {
-            float calibTime = ihit->calibratedTime() ;
-            if( tmin <= calibTime && calibTime <= tmax )
+	if (0 == m_rtrel) {
+	  // don't use custom rt relation - drift times are on
+          if( tmin < tmax ) {
+            for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
+                 ihit != otlitetimes.end(); ++ihit) {
+              float calibTime = ihit->calibratedTime() ;
+              if( tmin <= calibTime && calibTime <= tmax )
+                m_ownedhits.push_back( Tf::OTHit(moduleelement,*ihit ) ) ;
+            }
+          } else {
+            for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
+                 ihit != otlitetimes.end(); ++ihit)
               m_ownedhits.push_back( Tf::OTHit(moduleelement,*ihit ) ) ;
           }
-        } else {
-          for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
-               ihit != otlitetimes.end(); ++ihit)
-            m_ownedhits.push_back( Tf::OTHit(moduleelement,*ihit ) ) ;
-        }
+       	} else {
+	  // use custom rt relation - drift times are off
+	  const OTDet::RtRelation& rtrel = *m_rtrel;
+          if( tmin < tmax ) {
+            for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
+                 ihit != otlitetimes.end(); ++ihit) {
+              float calibTime = ihit->calibratedTime() ;
+              if( tmin <= calibTime && calibTime <= tmax )
+                m_ownedhits.push_back( Tf::OTHit(moduleelement,*ihit,rtrel) ) ;
+            }
+          } else {
+            for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
+                 ihit != otlitetimes.end(); ++ihit)
+              m_ownedhits.push_back( Tf::OTHit(moduleelement,*ihit,rtrel) ) ;
+          }
+	}
 
         // create the sorted hits
         m_sortedhits.reserve(m_ownedhits.size()) ;
@@ -145,8 +167,9 @@ namespace Tf
                 aregion = new OTRegionImp(regionid,*this) ;
                 insert( aregion ) ;
               }
-              size_t moduleindex = OTModule::moduleIndexInRegion((*imodule)->elementID()) ;
-              aregion->insert( moduleindex, new HitCreatorGeom::OTModule(**imodule) ) ;
+	      size_t moduleindex = OTModule::moduleIndexInRegion((*imodule)->elementID()) ;
+              aregion->insert( moduleindex, new HitCreatorGeom::OTModule(**imodule,
+				      m_parent->getRtRelation()) ) ;
               ++nummodules ;
             }
       for(RegionContainer::iterator ireg = regions().begin() ; ireg != regions().end() ; ++ireg)
@@ -205,13 +228,19 @@ namespace Tf
     m_rejectOutOfTime(false),
     m_tmin(-8*Gaudi::Units::ns),
     m_tmax(56*Gaudi::Units::ns),
-    m_detectordata(0)
+    m_detectordata(0),
+    m_rtrel(0)
   {
     // interfaces
     declareInterface<IOTHitCreator>(this);
     declareProperty( "RejectOutOfTime", m_rejectOutOfTime) ;
     declareProperty( "TMin",m_tmin ) ;
     declareProperty( "TMax",m_tmax ) ;
+    declareProperty( "NoDriftTimes", m_noDriftTimes = false );
+    declareProperty( "ForceDriftRadius",
+		    m_forceDriftRadius = 0. * Gaudi::Units::mm );
+    declareProperty( "ForceResolution",
+		    m_forceResolution = 5. * Gaudi::Units::mm / std::sqrt(12) );
   }
 
   OTHitCreator::~OTHitCreator()
@@ -232,26 +261,65 @@ namespace Tf
     // tool handle to the otlitetimedecoder
     m_otdecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder") ;
 
-    // get geometry and copy the hierarchy y to navigate hits. do we
-    // want to delay this till the first event?
-    const DeOTDetector* otdet = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
-    m_detectordata = new HitCreatorGeom::OTDetector(*this,*otdet) ;
-
     // reset the limits if we don't cut on the time
     if(!m_rejectOutOfTime) {
       m_tmin = 1 ;
       m_tmax = 0 ;
     }
 
+    // get geometry
+    const DeOTDetector* otdet = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
+
+    // set up things for use without drift time (if desired)
+    if (m_noDriftTimes) {
+      // (nearly) constant drift radii are obtained by assuming a tiny
+      // drift velocity
+      // this drift velocity was chosen such that it does not upset the
+      // Newton-Raphson method in RtRelation (which returns -1 as drift radius
+      // if it thinks it is not converging), so there is a slight variation
+      // in the drift radii reported (on the order of 25 micron)
+      // making the drift velocity significantly smaller is not an option,
+      // because we then trigger non-convergence of the Newton-Raphson method
+      // in RtRelation...
+      const double vdrift = otdet->modules().front()->rtRelation().rmax() /
+	      (4e-6 * Gaudi::Units::s);
+      // need a vector to construct polynomial approximation to the tweaked
+      // rt relation; rtrelpoly: t(r) = rtrelpoly[0] + rtrelpoly[1] * r + ...
+      // a linear approximation does the job
+      std::vector<double> rtrelpoly;
+      rtrelpoly.push_back(- m_forceDriftRadius / vdrift);
+      rtrelpoly.push_back(1. / vdrift);
+      // construct new r-t relation - all drift times are mapped to
+      // m_forceDriftRadius and the resolution is set to m_forceResolution
+      m_rtrel = new OTDet::RtRelation(otdet->modules().front()->rtRelation().rmax(),
+		      rtrelpoly, m_forceResolution);
+      /* if we run without drift times, this should appear in the log */
+      info() << "Drift times are not used, drift radius set to " <<
+	      m_forceDriftRadius / Gaudi::Units::mm <<
+	      " mm, resolution set to " << m_forceResolution / Gaudi::Units::mm
+	      << " mm." << endreq;
+      info() << "rt relation gives: r(2ns) = " <<
+	      m_rtrel->radius(2.) / Gaudi::Units::mm << " mm, r(40ns) " <<
+	      m_rtrel->radius(40.) / Gaudi::Units::mm << " mm." << endreq;
+    } else {
+	/* we want a message if we run in debugging mode, just to make
+	 * sure we're aware of what we're doing */
+	debug() << "Drift times are used." << endreq;
+    }
+
+    // use geometry and copy the hierarchy to navigate hits. do we
+    // want to delay this till the first event?
+    m_detectordata = new HitCreatorGeom::OTDetector(*this,*otdet) ;
+
     return sc ;
   }
 
   StatusCode OTHitCreator::finalize()
   {
-    if(m_detectordata) {
-      delete m_detectordata ;
-      m_detectordata = 0 ;
-    }
+    delete m_detectordata ;
+    m_detectordata = 0 ;
+    delete m_rtrel;
+    m_rtrel = 0;
     return GaudiTool::finalize() ;
   }
 
@@ -334,6 +402,14 @@ namespace Tf
   {
     // we could as well use OTDet here .. we only need the element.
     const DeOTModule& thismodule = module(id)->detelement() ;
-    return Tf::OTHit( thismodule, m_otdecoder->time( id, thismodule )  ) ;
+    if (0 != m_rtrel)
+      return Tf::OTHit( thismodule, m_otdecoder->time( id, thismodule ), *m_rtrel ) ;
+    else
+      return Tf::OTHit( thismodule, m_otdecoder->time( id, thismodule )  ) ;
   }
+
+  // return a pointer to an rt relation for switching drift times off
+  // or null if that is not desired
+  const OTDet::RtRelation* OTHitCreator::getRtRelation() const
+  { return m_rtrel; }
 }

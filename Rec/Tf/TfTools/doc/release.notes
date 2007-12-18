@@ -4,6 +4,11 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-12-18 - Manuel Schiller
+ - OTHitCreator now has job options to switch off using drift times in the
+   pattern reco; the drift radius and resolution reported can also be set
+   through job options
+
 !============================ TfTools v1r2 2007-12-10 ========================
 ! 2007-12-08 - Christopher Rob Jones
  - Commit patch (from Wouter) to fix crash due to OTHitCreator
