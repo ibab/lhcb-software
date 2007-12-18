@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.39 2007-12-17 19:27:52 pkoppenb Exp $
+# $Id: requirements,v 1.40 2007-12-18 10:25:45 pkoppenb Exp $
 package AnalysisSys
 version v1r9
 
@@ -31,7 +31,7 @@ use B2DplusX		v1r1	PhysSel # WGs
 use B2DsX		v1r5p1	PhysSel # WGs
 use B2DstarX		v1r6	PhysSel # WGs
 use B2uds	        v2r6    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
-use JetsSel	        v1r4p1  PhysSel # Jets WG
+use JetsSel	        v1r4p2  PhysSel # Jets WG
 use Radiative           v2r3    PhysSel # Vanya BELYAEV
 
 # temporary packages
