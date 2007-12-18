@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.54 2007-11-28 22:02:55 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.55 2007-12-18 20:54:19 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -552,8 +552,8 @@ StatusCode MEPRxSvc::run() {
         log << MSG::DEBUG << "crhhh..." << m_freeDsc.size() << " free buffers";
 	log << MSG::DEBUG << endmsg;
         for(size_t i = 0; i < m_workDsc.size(); ++i) {
-	  log << MSG::DEBUG << "Event L0ID# " << m_workDsc[i]->m_l0ID << " missing ";
-          log << MSG::DEBUG << m_workDsc[i]->m_nrx << " MEPs. ";
+	  log << MSG::DEBUG << "Waiting to complete event L0ID# " << m_workDsc[i]->m_l0ID << " missing ";
+          log << MSG::DEBUG << printnum(m_workDsc[i]->m_nsrc - m_workDsc[i]->m_nrx),  " MEP");
 	}
 	log << endmsg;
 	ncrh = m_nCrh;
@@ -578,7 +578,8 @@ StatusCode MEPRxSvc::run() {
       rxit = --m_workDsc.end();
     } 
     else {
-      rxit = lower_bound(m_workDsc.begin(), m_workDsc.end(), mephdr->m_l0ID,MEPRx::cmpL0ID);
+      rxit = lower_bound(m_workDsc.begin(), m_workDsc.end(), 
+			 mephdr->m_l0ID,MEPRx::cmpL0ID);
       if (rxit == m_workDsc.end() || (*rxit)->m_l0ID != mephdr->m_l0ID) {
         // not found - get a new descriptor
         RXIT oldest = ageRx();
