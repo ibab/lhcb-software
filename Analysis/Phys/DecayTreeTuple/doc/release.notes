@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-12-18 - Patrick Koppenburg
+ - Added a TupleToolP2VV for B->mumuK* and friends
+ - Removed TupleToolKinetic which is a duplicate of TupleToolKinematic
+
+! 2007-12-18 - Patrick Koppenburg
  - Move interfaces to DaVinciKernel
  - Increment to v1r1
 
