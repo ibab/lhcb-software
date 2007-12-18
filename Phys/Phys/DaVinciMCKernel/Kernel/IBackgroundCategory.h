@@ -1,4 +1,4 @@
-// $Id: IBackgroundCategory.h,v 1.1.1.1 2006-10-11 13:35:09 jpalac Exp $
+// $Id: IBackgroundCategory.h,v 1.2 2007-12-18 20:51:14 gligorov Exp $
 #ifndef DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 
 #define DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 1
 
@@ -183,6 +183,9 @@ public:
   /// For a signal it returns the true signal particle, and for any background with a 
   /// category < 60 it returns the mc_mother of the final state particles
   virtual const LHCb::MCParticle* origin( const LHCb::Particle* ) = 0 ;
+
+  //Method to return the daughters of the candidate Particle as used by BackCat
+  virtual const std::vector<std::pair<const LHCb::Particle*, const LHCb::MCParticle*> > getDaughtersAndPartners( const LHCb::Particle* ) = 0 ;
 
   /// Returns the map between enum values and enum names of the categories
   virtual const std::map<int, std::string>& getCategoryMap(){return m_cat;};
