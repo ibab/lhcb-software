@@ -8,7 +8,7 @@ version           v1r1
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src Kernel
+branches          cmt doc src
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
