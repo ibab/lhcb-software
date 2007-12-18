@@ -3,12 +3,19 @@ Package     : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v19r7>2007-11-05 DaVinci v19r7. DC06-compatible stripping and analysis version for HLT benchmark tests.</A></H1><PRE>
-Based on Phys v6r8, Analysis v1r9, Rec v4r12, HLT v1r11, Lbcom v6r10p1, LHCb v22r11, Gaudi v19r5, LCGCMT 53c.
+</PRE><H1><A NAME=v19r9>2007-12-18 DaVinci v19r9. DC06-compatible analysis version.</A></H1><PRE>
+Based on Phys v6r9, Analysis v1r9, Rec v5r2, HLT v2r0, Lbcom v6r13, LHCb v23r2, Gaudi v19r6, LCGCMT 53f.
+Minor changes to Phys and Analysis with respect to DaVinci v19r8. Most changes relate to HLT.
+* MicroDST split into several packages.
+* First beta release of DecayTreeTuple, the successor of DecayChainNTuple.
+* Use newest versions of everything. Including the Tf framework for reconstruction and HLT
+* HLT v2r0 using Tf
+
+</PRE><H1><A NAME=v19r8>2007-11-18 DaVinci v19r8. DC06-compatible stripping and analysis version for HLT benchmark tests.</A></H1><PRE>
+Based on Phys v6r8, Analysis v1r8, Rec v4r12, HLT v1r11, Lbcom v6r10p1, LHCb v22r11, Gaudi v19r5, LCGCMT 53c.
 Minor changes to Phys and Analysis with respect to DaVinci v19r7. Most changes relate to HLT.
 * Use versions of Phys, Analysis, Rec, Hlt, built with LHCb v22r11.
 * New version of HLT for online benchmark tests (see HLT documentation)
-
 
 </PRE><H1><A NAME=v19r7>2007-11-05 DaVinci v19r7. New DC06 stripping version</A></H1><PRE>
 Based on Phys v6r7p1, Analysis v1r7p1, Rec v4r11, HLT v1r10, Lbcom v6r10, LHCb v22r10, Gaudi v19r5, LCGCMT 53c.

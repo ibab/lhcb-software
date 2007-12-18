@@ -4,6 +4,7 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v19r9 2007-12-18 ===================
 ! 2007-11-22 - Juan PALACIOS
  - Add tests/qmtest/davinci.qms/preselections.qms/test_bbstripping.qmt
   . QMT test for stripping options.
