@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.19 2007-11-23 23:28:23 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.20 2007-12-18 20:54:02 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -17,6 +17,8 @@
 
 typedef std::vector<const LHCb::MCParticle*> MCParticleVector;
 typedef std::vector<const LHCb::Particle*> ParticleVector;
+typedef std::pair<const LHCb::Particle*, const LHCb::MCParticle*> DaughterAndPartnerPair;
+typedef std::vector<DaughterAndPartnerPair> DaughterAndPartnerVector;
 
 /** @class BackgroundCategory BackgroundCategory.h
  * 
@@ -61,7 +63,8 @@ public:
 
   IBackgroundCategory::categories category(const LHCb::Particle*);
 
-  const LHCb::MCParticle* origin( const LHCb::Particle* ); 
+  const LHCb::MCParticle* origin( const LHCb::Particle* );
+  const DaughterAndPartnerVector getDaughtersAndPartners( const LHCb::Particle* ); 
 
   StatusCode initialize(); 
   StatusCode finalize();
@@ -101,6 +104,7 @@ private:
   //Particle2MCLinker* m_pNPPAsct;
   Particle2MCLinker* m_pChi2PPAsct; //Particle2MCWithChi2Asct::IAsct* m_pChi2PPAsct;
   const LHCb::MCParticle* m_commonMother;
+  DaughterAndPartnerVector m_daughtersAndPartners;
 
   int m_inclusiveDecay; //are we studying an inclusive decay?
   int m_semileptonicDecay; //are we studying a semileptnoic decay?

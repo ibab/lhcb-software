@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.30 2007-12-17 17:47:54 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.31 2007-12-18 20:54:01 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -51,7 +51,7 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
 
   declareInterface<IBackgroundCategory>(this);
   declareProperty("LowMassBackgroundCut", m_lowMassCut = 100.*MeV) ;
-  declareProperty("SoftPhotonCut", m_softPhotonCut = 750.*MeV) ;
+  declareProperty("SoftPhotonCut", m_softPhotonCut = 300.*MeV) ;
   declareProperty("UseSoftPhotonCut", m_useSoftPhotonCut = 1) ;
   declareProperty("InclusiveDecay", m_inclusiveDecay = 0);
   declareProperty("SemileptonicDecay", m_semileptonicDecay = 0);
@@ -65,7 +65,29 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-BackgroundCategory::~BackgroundCategory() {}; 
+BackgroundCategory::~BackgroundCategory() {};
+//=============================================================================
+const DaughterAndPartnerVector BackgroundCategory::getDaughtersAndPartners( const LHCb::Particle* reconstructed_mother)
+{
+ if ( NULL==reconstructed_mother){
+    Exception("Got NULL pointer").ignore();
+ }
+
+ DaughterAndPartnerVector::const_iterator iP;
+
+ int backcategory = category(reconstructed_mother);
+
+ verbose() << "Event is category " << backcategory << endmsg;
+ for (iP = m_daughtersAndPartners.begin(); iP != m_daughtersAndPartners.end(); ++iP){
+
+ 	 verbose() << "Reconstructed particle has PID" << ((*iP).first)->particleID().pid() << endmsg;
+	 if ((*iP).second != NULL) verbose() << "Associated particle has PID" << ((*iP).second)->particleID().pid() << endmsg;
+	 else  verbose() << "There is no associated particle" << endmsg;
+
+ }
+
+ return m_daughtersAndPartners;
+}
 //=============================================================================
 const LHCb::MCParticle* BackgroundCategory::origin(const LHCb::Particle* reconstructed_mother)
 {
@@ -813,6 +835,9 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 	//verbose() << "Beginning to associate descendants" << endmsg; 
 	MCParticleVector associated_mcparts;
 	ParticleVector::iterator iP;
+	MCParticleVector::iterator iPP;
+	DaughterAndPartnerPair temp_pair;
+	DaughterAndPartnerVector tempDaughtersAndPartners;
 
 	//verbose() << "Associating step 1" << endmsg;
 	int verboses = 0;
@@ -974,6 +999,29 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 			//verbose() << "Associating step 6b - loop step " << verboses << endmsg;
 		}
 	} 
+
+	//Now write the array of ''daughter--associated partner'' pairs
+	iPP = associated_mcparts.begin();
+	for (iP = particles_in_decay.begin() ; iP != particles_in_decay.end() ; ++iP){
+
+		temp_pair = DaughterAndPartnerPair(*iP,*iPP);
+		tempDaughtersAndPartners.push_back(temp_pair);
+
+		++iPP;
+
+	}
+
+	m_daughtersAndPartners = tempDaughtersAndPartners;
+
+	DaughterAndPartnerVector::const_iterator iDAP;
+
+ 	for (iDAP = m_daughtersAndPartners.begin(); iDAP != m_daughtersAndPartners.end(); ++iDAP){
+
+        	verbose() << "Reconstructed particle has PID " << ((*iDAP).first)->particleID().pid() << endmsg;
+        	if ((*iDAP).second != NULL) verbose() << "Associated particle has PID " << ((*iDAP).second)->particleID().pid() << endmsg;
+        	else  verbose() << "There is no associated particle" << endmsg;
+
+	}
 
 	return associated_mcparts;
 }

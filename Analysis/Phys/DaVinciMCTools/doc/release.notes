@@ -1,12 +1,19 @@
-! $Id: release.notes,v 1.193 2007-12-17 17:47:43 gligorov Exp $
+! $Id: release.notes,v 1.194 2007-12-18 20:52:58 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2007-12-18 - Vladimir Gligorov
+ - Added method getDaughtersAndPartners(Particle*) to BackgroundCategory, which
+   returns a veector of <Particle*,MCParticle*> pairs giving the B daughters and their
+   associated MCParticles (if any).
+ - Modified default chi2 at which a particle is associated to the MCParticle with the
+   "correct" PID, in preference to the best chi2 match, in BackgroundCategory (again).
+ - Modified default energy at which "soft" phtons are ignored in BackgroundCategory.
 ! 2007-12-13 - Vladimir Gligorov
  - Modified default chi2 at which a particle is associated to the MCParticle with the
-   "correct" PID, in prefernce to the best chi2 match, in BackgroundCategory.
+   "correct" PID, in preference to the best chi2 match, in BackgroundCategory.
 
 !========================== DaVinciMCTools v9r8 2007-10-25 ===================
 
