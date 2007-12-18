@@ -4,7 +4,7 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
-! 2007-11-23 - Vladimir Gligorov
+! 2007-12-18 - Vladimir Gligorov
  - Added method getDaughtersAndPartners(Particle*) to BackgroundCategory, which
    returns a veector of <Particle*,MCParticle*> pairs giving the B daughters and their
    associated MCParticles (if any).
