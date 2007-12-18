@@ -1,0 +1,70 @@
+/** @file DVTestHltBd2MuMuKstar.opts
+ *
+ *  Test file for HLT Bd->MuMuK* selection
+ *
+ *  @author P. Koppenburg
+ *  @date 2007-07-20
+ */
+//--------------------------------------------------------------
+//
+// Hlt test
+//
+#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+//
+// Plots
+//
+//#include "$HLTSELCHECKERROOT/options/Plots.opts"
+//
+// True filter criterion
+//
+//#include "$HLTSELCHECKERROOT/options/TrueBd2MuMuKstar.opts"
+//
+// Overwrite input - uncomment to run HLT on true signal only
+//
+//#include "$HLTSELCHECKERROOT/options/OverwriteWithTruth.opts"
+//
+// Options
+//
+/*
+EventSelector.Input   = {
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bd2MuMuKst-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
+*/
+
+#include "$HLTSELECTIONSROOT/options/MinimumBiasPFN.opts"
+
+MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+
+ApplicationMgr.TopAlg += { "HltSelChecker/HltBd2MuMuKstarChecker" };
+HltBd2MuMuKstarChecker.PhysDesktop.InputLocations = { "Phys/HltSelBd2MuMuKstar" } ;
+
+ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                            
+NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bd2MuMuKstar.root' TYP='ROOT' OPT='NEW'" ] ;
+
+HltBd2MuMuKstarChecker.OutputLevel = 3 ;
+HltBd2MuMuKstarChecker.Context = "HLT" ;
+//HltBd2MuMuKstarChecker.DoPrint = true ;
+OfflineChecker.OutputLevel = 3 ;
+//OfflineChecker.DoPrint = true ;
+
+ApplicationMgr.TopAlg += { "HltSelChecker/HltSingleMuonChecker" };
+HltSingleMuonChecker.PhysDesktop.InputLocations = { "Phys/HltSelSingleMuon" } ;
+
+ApplicationMgr.TopAlg += { "HltSelChecker/HltBiasedDiMuonChecker" };
+HltBiasedDiMuonChecker.PhysDesktop.InputLocations = { "Phys/HltSelBiasedDiMuon" } ;
+
+ApplicationMgr.TopAlg += { "HltSelChecker/HltUnbiasedDiMuonChecker" };
+HltUnbiasedDiMuonChecker.PhysDesktop.InputLocations = { "Phys/HltSelUnbiasedDiMuon" } ;
+
+ApplicationMgr.TopAlg += { "HltSelChecker/HltB2JpsiXChecker" };
+HltB2JpsiXChecker.PhysDesktop.InputLocations = { "Phys/HltSelB2JpsiX_MuMu" } ;
+
+MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;
+NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Muons.root' TYP='ROOT' OPT='NEW'" ] ;
+ApplicationMgr.EvtMax = 10000 ;
+EventSelector.FirstEvent = 1 ;
+EventSelector.PrintFreq = 100 ;
+HltBiasedDiMuonChecker.Context = "HLT" ;
+HltUnbiasedDiMuonChecker.Context = "HLT" ;
+HltSingleMuonChecker.Context = "HLT" ;
+HltB2JpsiXChecker.Context = "HLT" ;

@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2007-12-18 - Patrick Koppenburg
+ - Added test for muon lines
+
 !========================== HltSelChecker v5r3 2007-12-17 ===================
 ! 2007-12-17 - Patrick Koppenburg
  - Added flight distance to nTuple
