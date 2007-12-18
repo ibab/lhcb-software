@@ -4,6 +4,10 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2007-12-18 - Patrick Koppenburg
+ - Move interfaces to DaVinciKernel
+ - Increment to v1r1
+
 !===================== DecayTreeTuple v1r0 2007-12-13 =======================
 
 ! 2007-12-12 - Patrick Koppenburg

@@ -3,7 +3,7 @@
 # Maintainer : Jérémie Borel
 #============================================================================
 package           DecayTreeTuple
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -15,10 +15,6 @@ branches          cmt doc src Kernel
 #============================================================================
 use   DaVinciKernel      v*    Phys
 use   DaVinciAssociators v*    Phys
-
-# Exported header files TEMPORARY
-#============================================================================
-apply_pattern install_more_includes more=Kernel
 
 include_path      none
 #============================================================================
