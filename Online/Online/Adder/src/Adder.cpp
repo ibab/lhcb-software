@@ -18,6 +18,7 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "RTL/rtl.h"
 #include "dis.hxx"
+#include "OnlineHistDB/OnlineHistDB.h"
 
 #include <cstring>
 #include <stdlib.h>
@@ -37,9 +38,9 @@ DECLARE_ALGORITHM_FACTORY(Adder)
 // Constructor
 //------------------------------------------------------------------------------
 Adder::Adder(const std::string& name, ISvcLocator* ploc)
-  : Algorithm(name, ploc), m_nodename ("node00101"), m_histogramname(),
-  m_refreshtime(10),m_dimclientdns(),m_servername("node00101"){
-  declareProperty("nodename",m_nodename);
+  : Algorithm(name, ploc), m_nodenames (), m_histogramname(),
+  m_refreshtime(10),m_dimclientdns(),m_servername("hlt1101"){
+  declareProperty("nodenames",m_nodenames);
   declareProperty("histogramname",m_histogramname);
   declareProperty("algorithmname",m_algorithmname);
   declareProperty("taskname",m_taskname);
@@ -77,26 +78,71 @@ StatusCode Adder::initialize() {
   std::string adderpSvcnames;  
   std::string addercommentSvcnames;  
   std::vector<DimInfoTitle*> commentfoundSvcnames;
-
+  std::string task;
   m_procName = RTL::processName();
   
+  int histosfound=0;
+   
   DimClient::setDnsNode(m_dimclientdns.c_str());
   DimBrowser dbr; 
+  if ((int)m_histogramname.size()==0) {
+     //no histograms given in joboptions
+     //get list of histograms from database
+    std::string password="histeggia194";
+     OnlineHistDB *HistDB = new OnlineHistDB(password,"HIST_WRITER","ora01:1528/HISTOGRAMDB");
+     if (HistDB==0) {
+       msg << MSG::INFO << "Could not connect to Histogram database." <<  endreq;
+     }
+     else {
+       for (int j=0;j<(int)m_taskname.size();j++) {
+          std::string tmptask=m_taskname[j];
+	  bool notfound=true;
+	  for (int k=0;k<j;k++) {
+	     if ((k!=j)&&(tmptask==m_taskname[k])) {
+	        notfound=false;}
+          if (!notfound) break;	     	
+	  }  
+	  if (notfound) {
+	     /*
+             std::vector<OnlineHistogram*> list;
+	     //for v3r0
+	     
+	     std::vector<string>* ids;
+	     std::vector<string>* types;
+	     
+             int x=HistDB->getHistogramsByTask(m_taskname[j],list,&ids,&types);
+             if (x>0) {
+                for (int i=0;i<=x-1;i++) {
+	           std::string histname;
+	           //only works from onlinhistdb v2r4 onwards    
+	           //    histname =list[i]->hname();
+	           histname=list[i]->identifier();
+       	           msg << MSG::DEBUG << "Registered histogram found in DB " <<
+	           histname.c_str() << endreq; 
+	           m_histogramname.push_back(histname);
+                }
+             }
+	     */		
+          } 
+	}   
+     }   
+  }
 
   std::string Svcname;
-  Svcname="H*D/"+m_nodename+"*";	 
+  for (int j=0;j<(int)m_nodenames.size();j++) {
+  Svcname="H*D/"+m_nodenames[j]+"*";	
   dbr.getServices(Svcname.c_str());
   while( (type = dbr.getNextService(service, format)) )
   {               
 	 servicestr=service; 
 	// msg << MSG::DEBUG << "handling service " << servicestr << endreq;
-	 std::string::size_type loc=servicestr.find(m_nodename+"_Adder_",0);
+	 std::string::size_type loc=servicestr.find(m_servername+"_Adder_",0);
 	 if (loc == std::string::npos ) { 
 	    //avoid adding the results of the adder to the sum
 	    for (int i=0;i<(int)m_histogramname.size();i++) {
 	       //loop over histogram names to find all services belonging to it		          	 
 		   std::string::size_type found=m_histogramname[i].find("*",0);
-		//   	 msg << MSG::DEBUG << "Looking for i "<<i<<" histogram " << m_histogramname[i] << endreq;
+		  	// msg << MSG::DEBUG << "Looking for i "<<i<<" histogram " << m_histogramname[i] << endreq;
 		   if (found != std::string::npos ) {
               // wildcard found, need to find the individual histogram names		 
 		      std::string::size_type first=servicestr.find("/");  
@@ -104,8 +150,8 @@ StatusCode Adder::initialize() {
 		         std::string::size_type first_us=servicestr.find("_",first+1);
 		         if (first_us != std::string::npos) {
 		            std::string::size_type second_us=servicestr.find("_",first_us+1);
-			        std::string task=servicestr.substr(first_us+1,second_us-first_us-1);
-			        if (task==m_taskname[i]) {
+			        task=servicestr.substr(first_us+1,second_us-first_us-1);
+			        if ((task==m_taskname[i])||(task=="Adder")) {
 			           //valid taskname found
 			           std::string::size_type second=servicestr.find("/",first+1); 
 		               if (second > first) {
@@ -113,80 +159,93 @@ StatusCode Adder::initialize() {
 		                  std::string::size_type third=servicestr.find("/",second+1);
 		                  if (third > second) {
 			                 std::string algo=servicestr.substr(second+1,third-second-1);
+					     if (algo!=m_algorithmname[i]) {
+					        //look a slash further
+						std::string::size_type fourth=servicestr.find("/",third+1);
+						if (fourth > third) {
+						   algo=servicestr.substr(third+1,fourth-third-1);
+						   //set third to fourth so same code works in both cases
+						   third=fourth;
+						}   
+					     }   
 				             if (algo==m_algorithmname[i]) {
 				                //valid algorithm found, now check if histogramname fragment without wildcard is found
-		                        std::string histo=servicestr.substr(third+1);
+		                                std::string histo=servicestr.substr(third+1);
 				                std::string::size_type histofound=histo.find(m_histogramname[i].substr(0,found));
-				            //    msg << MSG::DEBUG << "Looking for " << m_histogramname[i].substr(0,found)<< " in " << histo << " histofound " << histofound<< endreq;	
+				               // msg << MSG::DEBUG << "Looking for " << m_histogramname[i].substr(0,found)<< " in " << histo << " histofound " << histofound<< endreq;	
 				                if (histofound !=std::string::npos) {
 				     	           //histogram found, save it 
-				     	   //       msg << MSG::DEBUG << "found histo " << histo << endreq;	       
-	                               m_histogramfoundname.push_back(histo);
-	                               //see if its unique
-	                               bool histnotexists=true;
-	                               if ((int)m_histogramuniquename.size()>0) {
-	                                  for (int k=0;k<=(int)m_histogramuniquename.size()-1;k++) {
-	                               	     if (histo==m_histogramuniquename[k]) {
-	                               	   	    histnotexists=false;
-	                               	        break;
-	                               	     }
-	                                  }
-	                               }   
-	                               if (histnotexists) m_histogramuniquename.push_back(histo);	   
-		                           m_algorithmfoundname.push_back(m_algorithmname[i]);
-		                           m_taskfoundname.push_back(m_taskname[i]); 
-		                         //  msg << MSG::DEBUG << "pushing back svcfoundname " << servicestr << endreq;
-					               Svcfoundname.push_back(servicestr);	         
-				                }
-				                else {
-				                   //histogrammname doesn't match, reiterate
-				                   continue;				      
-				                }
-		                     }
-				             else {
+				     	       //   msg << MSG::DEBUG << "found histo " << histo << endreq;	       
+	                                           m_histogramfoundname.push_back(histo);
+						   histosfound++;
+	                                           //see if its unique
+	                                           bool histnotexists=true;
+	                                           if ((int)m_histogramuniquename.size()>0) {
+	                                              for (int k=0;k<=(int)m_histogramuniquename.size()-1;k++) {
+	                               	                 if (histo==m_histogramuniquename[k]) {
+	                               	   	            histnotexists=false;
+	                               	                    break;
+	                               	                 }
+	                                              }
+	                                           }   
+	                                           if (histnotexists) m_histogramuniquename.push_back(histo);	   
+		                                      m_algorithmfoundname.push_back(m_algorithmname[i]);
+		                                      m_taskfoundname.push_back(m_taskname[i]); 
+		                                    //  msg << MSG::DEBUG << "pushing back svcfoundname " << servicestr << endreq;
+					              Svcfoundname.push_back(servicestr);	         
+				                   }
+				                   else {
+				                      //histogrammname doesn't match, reiterate
+				                     continue;				      
+				                   }
+		                               }
+				               else {
 				                //algorithmname doesn't match, reiterate
 				                continue;
-				             }
-			              }
-			              else {
+				               }
+			                    }
+			                   else {
 				             //no third slash found in service name
-			     	         msg << MSG::DEBUG << "No third slash found in service " << servicestr << ". Ignoring." << endreq;
-			                 break;								
-			              }     
-		               }
-			           else {
-			              //no second slash found in service name
-			     	      msg << MSG::DEBUG << "No second slash found in service " << servicestr << ". Ignoring." << endreq;
-			              break;
-			           }
-			        }
-			        else {
-			           //taskname doesn't match, reiterate
-			           continue;			  
-			        }
-		         }
-		         else {
-		            //underscore of UTGID not found
-		            //not a histogram service
-		            msg << MSG::DEBUG << "No underscore found in UTGID  in service " << servicestr << ". Ignoring." << endreq;
-			        break;
-		         }
-		      }			  
-		   }
-		   else {
-	          msg << MSG::DEBUG << "No wildcard found " << m_histogramname[i] << endreq;		 
-              m_histogramfoundname.push_back(m_histogramname[i]);
-              m_histogramuniquename.push_back(m_histogramname[i]);
-	          m_algorithmfoundname.push_back(m_algorithmname[i]);
-	          m_taskfoundname.push_back(m_taskname[i]);	  
-			  Svcfoundname.push_back(servicestr);          
-		   } 	
-	    } //loop over histogramnames done
-	 }
-  }   
+			     	              msg << MSG::DEBUG << "No third slash found in service " << servicestr << ". Ignoring." << endreq;
+			                      break;								
+			                   }     
+		                        }
+			                else {
+			                   //no second slash found in service name
+			     	           msg << MSG::DEBUG << "No second slash found in service " << servicestr << ". Ignoring." << endreq;
+			                   break;
+			                }
+			             }
+			             else {
+			               //taskname doesn't match, reiterate
+			               continue;			  
+			             }
+		                  }
+		                  else {
+		                    //underscore of UTGID not found
+		                    //not a histogram service
+		                     msg << MSG::DEBUG << "No underscore found in UTGID  in service " << servicestr << ". Ignoring." << endreq;
+			             break;
+		                  }
+		               }			  
+		            }
+		            else {
+	                       msg << MSG::DEBUG << "No wildcard found " << m_histogramname[i] << endreq;		 
+                               m_histogramfoundname.push_back(m_histogramname[i]);
+                               m_histogramuniquename.push_back(m_histogramname[i]);
+	                       m_algorithmfoundname.push_back(m_algorithmname[i]);
+	                       m_taskfoundname.push_back(m_taskname[i]);	  
+			       Svcfoundname.push_back(servicestr);          
+		            } 	
+	                } //loop over histogramnames done
+	            }
+                }   
+            }
   //now we have the services and the histogram names, we need to group the services per histogram
 
-  msg << MSG::DEBUG << "Looking for " << m_histogramfoundname.size() << " histograms:" << endreq;
+  if (histosfound>0) {
+  msg << MSG::DEBUG << "Looking for " << histosfound << " histograms." << endreq;
+  //msg << MSG::DEBUG << "Looking for " << m_histogramfoundname.size() << " histograms:" << endreq;
   for (int k=0;k<=(int)m_histogramuniquename.size()-1;k++) {
   	// msg << MSG::DEBUG << "Histogram " << k << " " << m_histogramuniquename[k] << endreq;
   	 icount=0;
@@ -210,7 +269,7 @@ StatusCode Adder::initialize() {
 	       	  case 1:
 	       	     tmphSvcnames.push_back(Svcfoundname[i]);
 	       	     icount++;
-	    //   	     msg << MSG::DEBUG << "Pushing back " << Svcfoundname[i] << " icount " << icount << endreq; 
+	       	 //    msg << MSG::DEBUG << "Pushing back " << Svcfoundname[i] << " icount " << icount << endreq; 
 	       	     break;
 	       	  case 2:
 	       	     tmphSvcnames2d.push_back(Svcfoundname[i]);
@@ -261,14 +320,19 @@ StatusCode Adder::initialize() {
      if (nbof1dhistos[j]>0) {
            for (int i=0;i<=nbof1dhistos[j]-1;i++) { 
            	  temp = new DimInfoHistos(hSvcname[j][i],m_refreshtime); 
-  //         	  msg << MSG::DEBUG << "Created object: " << hSvcname[j][i] << endreq;        
+           	//  msg << MSG::DEBUG << "Created object: " << hSvcname[j][i] << endreq;        
 	          tmphinfo.push_back(temp);
 	          if (i==0) {
 	          	 //do this first so the result of the title has time to come back
 	          	 instance=hSvcname[j][i].substr(hSvcname[j][i].find_last_of("_")+1,1);
-		instance_node=hSvcname[j][i].substr(hSvcname[j][i].find("/")+1,hSvcname[j][i].find("_")-hSvcname[j][i].find("/")-1);
-	          	 commentSvcname=instance_node+"_"+m_taskfoundname[j]+"_"+instance+"/"+m_algorithmfoundname[j]+"/"+m_histogramuniquename[j]+"/gauchocomment";
-	    //         msg << MSG::DEBUG << "CommentSvcname: " <<  commentSvcname << endreq;   
+		         instance_node=hSvcname[j][i].substr(hSvcname[j][i].find("/")+1,hSvcname[j][i].find("_")-hSvcname[j][i].find("/")-1);
+	          	 if (task=="Adder") {
+			    commentSvcname=instance_node+"_Adder_1/"+m_taskfoundname[j]+"/"+m_algorithmfoundname[j]+"/"+m_histogramuniquename[j]+"/gauchocomment";
+	                 }
+			 else {
+			    commentSvcname=instance_node+"_"+m_taskfoundname[j]+"_"+instance+"/"+m_algorithmfoundname[j]+"/"+m_histogramuniquename[j]+"/gauchocomment";
+                         }
+		  //   msg << MSG::DEBUG << "CommentSvcname: " <<  commentSvcname << endreq;   
 	             ttemp = new DimInfoTitle(commentSvcname);
 	             commentfoundSvcnames.push_back(ttemp);
 	          }  	      
@@ -281,8 +345,13 @@ StatusCode Adder::initialize() {
            	 if (i==0) {
 	          	 instance=hSvcname2d[j][i].substr(hSvcname2d[j][i].find_last_of("_")+1,1);
 		         instance_node=hSvcname2d[j][i].substr(hSvcname2d[j][i].find("/")+1,hSvcname2d[j][i].find("_")-hSvcname2d[j][i].find("/")-1);
-	          	 commentSvcname=instance_node+"_"+m_taskfoundname[j]+"_"+instance+"/"+m_algorithmfoundname[j]+"/"+m_histogramuniquename[j]+"/gauchocomment";
-	             ttemp = new DimInfoTitle(commentSvcname);
+	          	 if (task=="Adder") {
+			    commentSvcname=instance_node+"_Adder_1/"+m_taskfoundname[j]+"/"+m_algorithmfoundname[j]+"/"+m_histogramuniquename[j]+"/gauchocomment";
+	                 }
+			 else {
+			    commentSvcname=instance_node+"_"+m_taskfoundname[j]+"_"+instance+"/"+m_algorithmfoundname[j]+"/"+m_histogramuniquename[j]+"/gauchocomment";
+                         }
+		     ttemp = new DimInfoTitle(commentSvcname);
 	             commentfoundSvcnames.push_back(ttemp);
 	          } 
 
@@ -296,7 +365,12 @@ StatusCode Adder::initialize() {
            	  if (i==0) {
 	          	 instance=pSvcname[j][i].substr(pSvcname[j][i].find_last_of("_")+1,1);
 		         instance_node=pSvcname[j][i].substr(pSvcname[j][i].find("/")+1,pSvcname[j][i].find("_")-pSvcname[j][i].find("/")-1);
-	          	 commentSvcname=instance_node+"_"+m_taskfoundname[j]+"_"+instance+"/"+m_algorithmfoundname[j]+"/"+m_histogramuniquename[j]+"/gauchocomment";
+	          	 if (task=="Adder") {
+			    commentSvcname=instance_node+"_Adder_1/"+m_taskfoundname[j]+"/"+m_algorithmfoundname[j]+"/"+m_histogramuniquename[j]+"/gauchocomment";
+	                 }
+			 else {
+			    commentSvcname=instance_node+"_"+m_taskfoundname[j]+"_"+instance+"/"+m_algorithmfoundname[j]+"/"+m_histogramuniquename[j]+"/gauchocomment";
+                         }
 	             ttemp = new DimInfoTitle(commentSvcname);
 	             commentfoundSvcnames.push_back(ttemp);
 	          }
@@ -320,10 +394,10 @@ StatusCode Adder::initialize() {
      addercommentSvcnames=m_servername+"_Adder_1/"+m_taskfoundname[j]+"/"+m_algorithmfoundname[j]+"/"+m_histogramuniquename[j]+"/gauchocomment";  
        char* temptitle=0;
        temptitle=commentfoundSvcnames[j]->getTitle();	
- //      msg << MSG::DEBUG << "tempttitle " << temptitle << endreq;  
+//       msg << MSG::DEBUG << "tempttitle " << temptitle << endreq;  
        if (nbof1dhistos[j]>0) {    
           hinfo[j][0]->declareTitleInfo(addercommentSvcnames,temptitle);  
- //         msg << MSG::DEBUG << "declaring Info: " << adderhSvcnames << " j " << j << " tempttitle " << temptitle << endreq;   
+      //    msg << MSG::DEBUG << "declaring Info: " << adderhSvcnames << " j " << j << " tempttitle " << temptitle << endreq;   
 	      hinfo[j][0]->declareInfo(adderhSvcnames);
 	      //initialise the sum
 	      hinfo[j][0]->add(hinfo[j][0]);
@@ -362,7 +436,10 @@ StatusCode Adder::initialize() {
    
    msg << MSG::INFO << "Initialization completed. Starting DimTimer to add " << infohistos.size() << " histograms" << endreq;  
    tim= new Tim(m_refreshtime,infohistos);
- 
+  }
+  else  {
+     msg << MSG::WARNING << "No histograms found. Restart adder later. " << endreq;  
+  }
   
   return StatusCode::SUCCESS;
 }
