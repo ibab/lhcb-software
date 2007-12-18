@@ -4,6 +4,11 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-12-18 - Manuel Schiller
+ - added new member to OTHit which stores the RtRelation to be used to
+   convert drift times to drift radii and make sure it is used everywhere
+   (to have possibility to switch off using drift times in the pattern reco)
+
 !============================ TfKernel v2r1 2007-11-14 =======================
 ! 2007-11-14 - Wouter Hulsbergen
  - moved calibratedTime from OTHit to OTLiteTime

@@ -5,7 +5,7 @@
  *  Header file for track finding class Tf::OTHit
  *
  *  CVS Log :-
- *  $Id: OTHit.h,v 1.8 2007-11-14 16:06:07 wouter Exp $
+ *  $Id: OTHit.h,v 1.9 2007-12-18 09:33:14 mschille Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -47,6 +47,14 @@ namespace Tf
      */
     OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit );
 
+    /** Constructor from a DeOTModule and an OTLiteTime
+     *  @param[in] aModule Reference to the associated DeOTModule
+     *  @param[in] rawhit  The raw OT hit (OTLiteTime)
+     *  @param[in] rtrel   rt relation to be used (e.g. for no drift times)
+     */
+    OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit,
+	const OTDet::RtRelation& rtrel );
+
   public: // Simple accessors to internal data members
 
     /** Returns the calibrated time is drift time + propagation time - default tof */
@@ -84,7 +92,7 @@ namespace Tf
     /** The drift distance after correction for propagation time */
     inline float driftDistance( const double globaly ) const
     { 
-      return module().driftRadius( driftTime( globaly) ) ; 
+      return m_rtrel->radius( driftTime( globaly) ) ; 
     }
 
     /** Test if this hit is out-of-time */
@@ -94,14 +102,14 @@ namespace Tf
      *  XXX???XXX If obsolete, should we not remove this method entirely */
     inline float untruncatedDriftDistance( const double globaly ) const 
     { 
-      return module().untruncatedDriftRadius( driftTime( globaly) ) ; 
+      return m_rtrel->extrapolatedradius( driftTime( globaly) ) ; 
     }
 
     /** obsolete. please, don't use. To select valid drifttimes, cut directly on the drifttime.
      *  XXX???XXX If obsolete, should we not remove this method entirely */
     inline float untruncatedDriftDistance() const 
     { 
-      return module().untruncatedDriftRadius( driftTime(yMid()) ) ; 
+      return m_rtrel->extrapolatedradius( driftTime(yMid()) ) ; 
     }
 
     /** Access the straw number for this hit */
@@ -118,7 +126,11 @@ namespace Tf
     const DeOTModule* m_module ;         ///< Pointer to the associated DeOTModule
     LHCb::OTLiteTime  m_rawhit ;         ///< The raw OTLiteTime for this hit
     float             m_driftDistance ;  ///< The default drift distance. Defined at the point halfway along the length the wire.
+    const OTDet::RtRelation* m_rtrel;	 ///< The rt relation used to convert drift times to radii
 
+  private: // methods
+    /** set drift distance and variance to avoid duplicate code in constructors */
+    void setDriftDistAndVar();
   };
 
   /// Type for container for OTHit
@@ -134,23 +146,35 @@ namespace Tf
   // Inline function definitions
   ////////////////////////////////////////////////////////////////////////////////////
 
-  inline OTHit::OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit) :
-    LineHit(aModule,rawhit),
-    m_module(&aModule),
-    m_rawhit(rawhit)
+  inline void OTHit::setDriftDistAndVar()
   {
     // setting things from the OTHit. the cached drift distance is the
     // one in the middle of the wire, for now.
     const float time = driftTime(yMid()) ;
-    OTDet::RadiusWithError r = aModule.driftRadiusWithError( time ) ;
+    OTDet::RadiusWithError r = m_rtrel->radiusWithError( time ) ;
     m_driftDistance  = r.val ;
     setVariance(r.err*r.err) ;
   }
 
+  inline OTHit::OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit,
+		  const OTDet::RtRelation& rtrel ) :
+    LineHit(aModule,rawhit),
+    m_module(&aModule),
+    m_rawhit(rawhit),
+    m_rtrel(&rtrel)
+  { setDriftDistAndVar(); }
+
+  inline OTHit::OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit ) :
+    LineHit(aModule,rawhit),
+    m_module(&aModule),
+    m_rawhit(rawhit),
+    m_rtrel(&aModule.rtRelation())
+  { setDriftDistAndVar(); }
+
   inline bool OTHit::outOfTime( double globaly, double numsigma ) const 
   {
-    const float tres = module().driftTimeResolution(m_driftDistance) ;
-    const float tmax = module().maxDriftTime() ;
+    const float tres = m_rtrel->drifttimeError(m_driftDistance) ;
+    const float tmax = m_rtrel->tmax() ;
     const float t    = driftTime( globaly) ;
     return t<-numsigma*tres || t>tmax + numsigma*tres ;
   }
