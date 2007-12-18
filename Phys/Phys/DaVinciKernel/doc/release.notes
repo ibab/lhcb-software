@@ -3,6 +3,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2007-12-18 - Patrick Koppenburg
+ - Two new interfaces IParticleTupleTool and IEventTupleTool for 
+   filling generic nTuples.
+
 !========================= DaVinciKernel v6r9 2007-12-10 ====================
 ! 2007-12-08 - Patrick Koppenburg
  - Do not use incident end-event to clean desktop:
