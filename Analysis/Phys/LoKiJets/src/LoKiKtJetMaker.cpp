@@ -1,4 +1,4 @@
-// $Id: LoKiKtJetMaker.cpp,v 1.10 2007-12-10 15:38:23 ibelyaev Exp $
+// $Id: LoKiKtJetMaker.cpp,v 1.11 2007-12-18 10:23:23 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -117,11 +117,11 @@ namespace LoKi
       , m_type         ( 4   )  
       , m_angle        ( 1   )
       , m_recom        ( 1   )
-      , m_r            ( 0.7 )
+      , m_r            ( 0.6 )
         //
       , m_sort         ( 2   )
       // 
-      , m_combinerName ( ""  )
+      , m_combinerName ( "MomentumCombiner"  )
       , m_combiner     ( 0   )
     { 
       //

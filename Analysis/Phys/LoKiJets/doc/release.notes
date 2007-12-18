@@ -1,14 +1,16 @@
-! $Id: release.notes,v 1.12 2007-12-10 15:38:22 ibelyaev Exp $ 
+! $Id: release.notes,v 1.13 2007-12-18 10:23:23 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.12 $ 
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.13 $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Tools/LoKiJets
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : Jet finding algorithm (KtJet) embedded into LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiJets v4r0 2007-12-18 =====================
 
-!========================== LoKiJets v4r0 2007-12-10 =====================
+! 2007-12-18 - Patrick Koppenburg
+ - Small patch by Victor Coco
 
 ! 2007-12-10 - Vanya BELYAEV
 
@@ -172,6 +174,9 @@ Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.12  2007/12/10 15:38:22  ibelyaev
+!  add fastjet from LCG
+!
 ! Revision 1.11  2007/12/10 10:48:38  ibelyaev
 !   use ktjet from LCG_Interfaces
 !
