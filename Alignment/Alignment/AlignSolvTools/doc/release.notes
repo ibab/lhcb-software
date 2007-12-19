@@ -2,6 +2,9 @@
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
 !-----------------------------------------------------------------------------
 
+!=========================== AlignSolvTools v2r2 2007-12-19 ==================
+ - J. Blouw: create version v2r2 for Alignment release v2r3
+
 ! 2007-11-23 - Jan Amoraal
  - fix requirements for GSL linking
 
