@@ -3,6 +3,9 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+</PRE><H1><A NAME=v2r3>2007-12-19 AlignmentInterfaces v2r4 </A></H1><PRE>
+ - J. Blouw: new tag for Alignment release v2r3
+
 ! 2007-12-06 - Jan AMORAAL
  - Fix dictionaries
  - Add stl vector include to IDerivatives
