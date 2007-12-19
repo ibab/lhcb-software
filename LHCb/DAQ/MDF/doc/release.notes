@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2007-12-19 - Markus Frank
+ - Remove the RFIO/DCAP,... plugins from MDF and make them seperate packages.
+
 ! 2007-12-18 - Markus Frank
  - Add support for non-strict RFC URIs - similar to whar ROOT supports.
 

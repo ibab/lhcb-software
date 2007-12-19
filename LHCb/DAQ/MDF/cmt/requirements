@@ -8,10 +8,7 @@ version           v2r7
 branches          cmt doc src MDF
 use GaudiKernel    v*
 use GaudiUtils v*                -no_auto_imports
-use DAQEvent       v* Event            -no_auto_imports
-use CASTOR         v* LCG_Interfaces   -no_auto_imports
-#use dCache        v* LCG_Interfaces   -no_auto_imports
-use GaudiPoolDb    v*
+use DAQEvent       v* Event      -no_auto_imports
 
 # ==================== libraries ==================================
 apply_pattern install_more_includes more=MDF
@@ -22,32 +19,5 @@ apply_pattern linker_library library=MDF
 apply_pattern generate_rootmap library=MDF
 apply_pattern ld_library_path
 
-library MDF_RFIO ../rfio/*.cpp  -import=CASTOR
-# Make dummy RFIO library on Darwin, shift library not available
-macro_remove MDF_RFIO_use_linkopts '' Darwin '$(CASTOR_linkopts)'
-#
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_open     /EXPORT:rfio_close   /EXPORT:rfio_read '
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_write    /EXPORT:rfio_stat    /EXPORT:rfio_fstat '
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_lseek    /EXPORT:rfio_access  /EXPORT:rfio_unlink '
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_parse    /EXPORT:rfio_perror  /EXPORT:rfio_serror '
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfiosetopt    /EXPORT:rfio_mkdir   /EXPORT:rfio_opendir '
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_closedir /EXPORT:rfio_readdir /EXPORT:C__serrno '
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_ftell    /EXPORT:rfio_lseek64 '
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:C__rfio_errno '
-apply_pattern component_library library=MDF_RFIO
-
-#library MDF_GFAL ../gfal/*.cpp -import=GFAL
-macro GFAL_home                    '$(LCG_external)/gfal/1.7.7/$(LCG_system)'
-macro MDF_GFAL_cppflags            ' -I$(GFAL_home)/include -D_BUILD ' WIN32 ' '
-macro_append MDF_GFAL_shlibflags   ' -L$(GFAL_home)/lib -lgfal ' WIN32 ' '
-
-#library MDF_DCACHE ../dcache/*.cpp -import=dCache
-macro DCACHE_home                  '$(LCG_external)/dcap/1.2.33/$(LCG_system)'
-macro MDF_DCACHE_cppflags          ' -I$(DCACHE_home)/include -D_BUILD ' WIN32 ' '
-macro_append MDF_DCACHE_shlibflags ' -L$(DCACHE_home)/lib -ldcap ' WIN32 ' '
-
 # define macro if someone needs to explicitly use the MDF library explicitly
 macro MDFlib_linkopts  ' -L$(MDFROOT)/$(tag) -lMDF ' WIN32 ' /libpath:"$(MDFROOT)/$(tag)" MDF.lib'
-
-private
-#use GaudiSvc v*  -no_auto_imports
