@@ -1,4 +1,4 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.19 2006-11-28 13:15:16 cattanem Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.20 2007-12-19 16:48:20 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -507,7 +507,6 @@ StatusCode CaloMergedPi0Alg::execute()
           }
         }
       }
-
       int ir,ic;
       for( LHCb::CaloCluster::Digits::const_iterator it2 =
            cluster->entries().begin() ;
@@ -519,6 +518,7 @@ StatusCode CaloMergedPi0Alg::execute()
           int cellrow  = id.row();
           int cellcol  = id.col();
           double ecel = dig->e()*it2->fraction();
+
           if (abs(seedrow-cellrow)<=1 && abs(seedcol-cellcol)<=1) 
             {
               ir=cellrow-seedrow+1;
@@ -634,82 +634,79 @@ StatusCode CaloMergedPi0Alg::execute()
         iter++;
         double Etemp[3][3];
         double Ene3x3[2];
-        {
-          for(int is=0;is<2;++is){
-            const LHCb::CaloDigit* digit   = SubClus[is][1][1];
-            if( 0 == SubClus[is][1][1]) { continue ; }   ///< CONTINUE!
-            const LHCb::CaloCellID  idigit = digit->cellID() ;
-            SubSize[is] = detector->cellSize( idigit ) ;
-            SubX[is]    = detector->cellX   ( idigit ) ;
-            SubY[is]    = detector->cellY   ( idigit ) ;
-            SubZ[is]    = detector->cellZ   ( idigit ) ;
-            unsigned int area = idigit.area();
-            Ene3x3[is]=0;
-            for(int ir=0;ir<3;++ir){
-              for(int ic=0;ic<3;++ic){
-                Etemp[ir][ic]=Ework[is][ir][ic];
-                Ene3x3[is]=Ene3x3[is]+Ework[is][ir][ic];
-                Ework[is][ir][ic]=SubClusEne[is][ir][ic];
-              }
-            }
-            SubX[is]=SubX[is]-BarXY(1,area,Etemp)*SubSize[is];
-            SubY[is]=SubY[is]-BarXY(2,area,Etemp)*SubSize[is];
-            SubZ[is]=BarZ(Ene3x3[is],PrsDep,area,SubX[is],SubY[is],SubZ[is]);
-            log << MSG::DEBUG << "==> Lcorr " << SubZ[is] << endreq;
-          }
-        }
         
+        for(int is=0;is<2;++is){
+          const LHCb::CaloDigit* digit   = SubClus[is][1][1];
+          if( 0 == SubClus[is][1][1]) { continue ; }   ///< CONTINUE!
+          const LHCb::CaloCellID  idigit = digit->cellID() ;
+          SubSize[is] = detector->cellSize( idigit ) ;
+          SubX[is]    = detector->cellX   ( idigit ) ;
+          SubY[is]    = detector->cellY   ( idigit ) ;
+          SubZ[is]    = detector->cellZ   ( idigit ) ;
+          unsigned int area = idigit.area();
+          Ene3x3[is]=0;
+          for(int ir=0;ir<3;++ir){
+            for(int ic=0;ic<3;++ic){
+              Etemp[ir][ic]=Ework[is][ir][ic];
+              Ene3x3[is]=Ene3x3[is]+Ework[is][ir][ic];
+              Ework[is][ir][ic]=SubClusEne[is][ir][ic];
+            }
+          }
+          SubX[is]=SubX[is]-BarXY(1,area,Etemp)*SubSize[is];
+          SubY[is]=SubY[is]-BarXY(2,area,Etemp)*SubSize[is];
+          SubZ[is]=BarZ(Ene3x3[is],PrsDep,area,SubX[is],SubY[is],SubZ[is]);
+          log << MSG::DEBUG << "==> Lcorr " << SubZ[is] << endreq;
+        }
         // Reconstructing Overlap
         
-        {
-          for(int is=0;is<2;++is){
-            int js = 0 ;
-            if ( 0 == is ){ js = 1; }
-            if ( 1 == is ){ js = 0; }
-            for(int ir=0;ir<3;++ir){
-              for(int ic=0;ic<3;++ic){
-                if(1 == SubClusMask[js][ir][ic] ) {
-                  const LHCb::CaloDigit* seed    = SubClus[is][1][1];;
-                  if( 0 == seed) { continue ; }   ///< CONTINUE!
-                  const LHCb::CaloCellID  idseed = seed->cellID() ;
-                  const LHCb::CaloDigit* cel      = SubClus[js][ir][ic];;
-                  if( 0 == cel) { continue ; }   ///< CONTINUE!
-                  const LHCb::CaloCellID  idcel   = cel->cellID() ;
-                  unsigned int area = idcel.area();
-                  int rowc = idcel.row();
-                  int colc = idcel.col();
-                  int rows = idseed.row();
-                  int cols = idseed.col();
-                  double CelSize = detector->cellSize( idcel);
-                  double CelX    = detector->cellX   ( idcel);
-                  double CelY    = detector->cellY   ( idcel);
-                  // 3D  distance from the current cell to 
-                  // the other SubCluster barycenter
-                  double CelZ=(  SubX[is]*SubX[is]+
-                                 SubY[is]*SubY[is]+
-                                 SubZ[is]*SubZ[is]-
-                                 SubX[is]*CelX-
-                                 SubY[is]*CelY)/SubZ[js];
-                  double D3D=sqrt((SubX[is]-CelX)*(SubX[is]-CelX)+
-                                  (SubY[is]-CelY)*(SubY[is]-CelY)+
-                                  (SubZ[is]-CelZ)*(SubZ[is]-CelZ))/CelSize;
-                  double D2D=sqrt((SubX[is]-CelX)*(SubX[is]-CelX)+
-                                  (SubY[is]-CelY)*(SubY[is]-CelY))/CelSize;
-                  int Neig=1;
-                  if(0.5 > D2D)Neig=0;
-                  double Frac=TrShape(Neig,area,SpdHit,D3D);
-                  double EFrac=Ene3x3[is]*Frac;
-                  int jr=rowc-rows+1;
-                  int jc=colc-cols+1;
-                  Weight[js][ir][ic]=1.;
-                  Weight[is][jr][jc]=0.;
-                  if( EFrac < Ework[js][ir][ic]  ){
-                    Ework[js][ir][ic]=Ework[js][ir][ic]-EFrac;
-                    Weight[js][ir][ic]=1.-Frac;
-                    if(1 >= abs(jr-1) && 1 >= abs(jc-1)){
-                      Ework[is][jr][jc]=EFrac;
-                      Weight[is][jr][jc]=Frac;
-                    }
+        
+        for(int is=0;is<2;++is){
+          int js = 0 ;
+          if ( 0 == is ){ js = 1; }
+          if ( 1 == is ){ js = 0; }
+          for(int ir=0;ir<3;++ir){
+            for(int ic=0;ic<3;++ic){
+              if(1 == SubClusMask[js][ir][ic] ) {
+                const LHCb::CaloDigit* seed    = SubClus[is][1][1];;
+                if( 0 == seed) { continue ; }   ///< CONTINUE!
+                const LHCb::CaloCellID  idseed = seed->cellID() ;
+                const LHCb::CaloDigit* cel      = SubClus[js][ir][ic];;
+                if( 0 == cel) { continue ; }   ///< CONTINUE!
+                const LHCb::CaloCellID  idcel   = cel->cellID() ;
+                unsigned int area = idcel.area();
+                int rowc = idcel.row();
+                int colc = idcel.col();
+                int rows = idseed.row();
+                int cols = idseed.col();
+                double CelSize = detector->cellSize( idcel);
+                double CelX    = detector->cellX   ( idcel);
+                double CelY    = detector->cellY   ( idcel);
+                // 3D  distance from the current cell to 
+                // the other SubCluster barycenter
+                double CelZ=(  SubX[is]*SubX[is]+
+                               SubY[is]*SubY[is]+
+                               SubZ[is]*SubZ[is]-
+                               SubX[is]*CelX-
+                               SubY[is]*CelY)/SubZ[js];
+                double D3D=sqrt((SubX[is]-CelX)*(SubX[is]-CelX)+
+                                (SubY[is]-CelY)*(SubY[is]-CelY)+
+                                (SubZ[is]-CelZ)*(SubZ[is]-CelZ))/CelSize;
+                double D2D=sqrt((SubX[is]-CelX)*(SubX[is]-CelX)+
+                                (SubY[is]-CelY)*(SubY[is]-CelY))/CelSize;
+                int Neig=1;
+                if(0.5 > D2D)Neig=0;
+                double Frac=TrShape(Neig,area,SpdHit,D3D);
+                double EFrac=Ene3x3[is]*Frac;
+                int jr=rowc-rows+1;
+                int jc=colc-cols+1;
+                Weight[js][ir][ic]=1.;
+                if(1 >= abs(jr-1) && 1 >= abs(jc-1))Weight[is][jr][jc]=0.;
+                if( EFrac < Ework[js][ir][ic]  ){
+                  Ework[js][ir][ic]=Ework[js][ir][ic]-EFrac;
+                  Weight[js][ir][ic]=1.-Frac;
+                  if(1 >= abs(jr-1) && 1 >= abs(jc-1)){
+                    Ework[is][jr][jc]=EFrac;
+                    Weight[is][jr][jc]=Frac;
                   }
                 }
               }
@@ -717,6 +714,7 @@ StatusCode CaloMergedPi0Alg::execute()
           }
         }
       }
+      
       
 
       /// End of Reconstruction aLgorithm 
@@ -728,35 +726,35 @@ StatusCode CaloMergedPi0Alg::execute()
       double Ene3x3[2];
       double PosX[2];
       double PosY[2];
-      {
-        for(int is=0;is<2;++is){
-          const LHCb::CaloDigit* digit   = SubClus[is][1][1];;
-          if( 0 == SubClus[is][1][1]) { continue ; }   ///< CONTINUE!
-          const LHCb::CaloCellID  idigit = digit->cellID() ;
-          unsigned int area = idigit.area();
-          SubSize[is] = detector->cellSize( idigit ) ;
-          SubX[is]    = detector->cellX   ( idigit ) ;
-          SubY[is]    = detector->cellY   ( idigit ) ;
-          SubZ[is]    = detector->cellZ   ( idigit ) ;
-          double Etemp[3][3];
-          Ene3x3[is]=0;
-          for(int ir=0;ir<3;++ir){
-            for(int ic=0;ic<3;++ic){
-              Etemp[ir][ic]=Ework[is][ir][ic];
-              Ene3x3[is]=Ene3x3[is]+Ework[is][ir][ic];
-            }
+      
+      for(int is=0;is<2;++is){
+        const LHCb::CaloDigit* digit   = SubClus[is][1][1];;
+        if( 0 == SubClus[is][1][1]) { continue ; }   ///< CONTINUE!
+        const LHCb::CaloCellID  idigit = digit->cellID() ;
+        unsigned int area = idigit.area();
+        SubSize[is] = detector->cellSize( idigit ) ;
+        SubX[is]    = detector->cellX   ( idigit ) ;
+        SubY[is]    = detector->cellY   ( idigit ) ;
+        SubZ[is]    = detector->cellZ   ( idigit ) ;
+        double Etemp[3][3];
+        Ene3x3[is]=0;
+        for(int ir=0;ir<3;++ir){
+          for(int ic=0;ic<3;++ic){
+            Etemp[ir][ic]=Ework[is][ir][ic];
+            Ene3x3[is]=Ene3x3[is]+Ework[is][ir][ic];
           }
-          SubX[is]=SubX[is]-BarXY(1,area,Etemp)*SubSize[is];
-          SubY[is]=SubY[is]-BarXY(2,area,Etemp)*SubSize[is];
-          SubZ[is]=BarZ(Ene3x3[is],PrsDep,area,SubX[is],SubY[is],SubZ[is]);
-          PosX[is]=detector->cellX( SubClus[is][1][1]->cellID() )
-            -SubSize[is]*(+ Etemp[0][0] + Etemp[1][0] + Etemp[2][0]
-                          - Etemp[0][2] - Etemp[1][2] - Etemp[2][2])/Ene3x3[is];
-          PosY[is]=detector->cellY( SubClus[is][1][1]->cellID() )
-            -SubSize[is]*(+ Etemp[0][0] + Etemp[0][1] + Etemp[0][2]
-                          - Etemp[2][0] - Etemp[2][1] - Etemp[2][2])/Ene3x3[is];
         }
+        SubX[is]=SubX[is]-BarXY(1,area,Etemp)*SubSize[is];
+        SubY[is]=SubY[is]-BarXY(2,area,Etemp)*SubSize[is];
+        SubZ[is]=BarZ(Ene3x3[is],PrsDep,area,SubX[is],SubY[is],SubZ[is]);
+        PosX[is]=detector->cellX( SubClus[is][1][1]->cellID() )
+          -SubSize[is]*(+ Etemp[0][0] + Etemp[1][0] + Etemp[2][0]
+                        - Etemp[0][2] - Etemp[1][2] - Etemp[2][2])/Ene3x3[is];
+        PosY[is]=detector->cellY( SubClus[is][1][1]->cellID() )
+          -SubSize[is]*(+ Etemp[0][0] + Etemp[0][1] + Etemp[0][2]
+                        - Etemp[2][0] - Etemp[2][1] - Etemp[2][2])/Ene3x3[is];
       }
+      
       double ep1=0;
       double ep2=0;
       ep1=Ene3x3[0];
