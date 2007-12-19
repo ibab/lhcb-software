@@ -5,7 +5,7 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.12 2007-09-19 13:48:19 krinnert Exp $
+ *  $Id: HitBase.h,v 1.13 2007-12-19 16:04:33 ocallot Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -79,6 +79,8 @@ namespace Tf
         UsedByVeloGeneral,  ///< Hit has been used by the Velo General tracking algorithm
         UsedByVeloSpace,    ///< Hit has been used by the Velo Space tracking algorithm 
         UsedByVeloRZ,       ///< Hit has been used by the Velo R-Z tracking algorithm
+        UsedByPatMatch,     ///< Hit has been used by the Pat Matching algorithm (TT hit)
+        UsedByPatDownstream,///< Hit has been used by the Pat Downstream algorithm (TT hit) 
         NUMSTATUSBITS       ///< Number of status types - For internal use.
       };
 

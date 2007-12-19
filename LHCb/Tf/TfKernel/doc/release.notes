@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2007-12-19 - Olivier Callot
+ - Add new values in HitBase Estatus enum, mainly for TT hits.
+
 ! 2007-12-18 - Manuel Schiller
  - added new member to OTHit which stores the RtRelation to be used to
    convert drift times to drift radii and make sure it is used everywhere
