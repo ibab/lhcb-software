@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.12 2007-10-16 08:24:44 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.13 2007-12-19 13:10:05 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -19,7 +19,7 @@
 #include "Kernel/LHCbID.h"
 #include "Kernel/DifTraj.h"
 #include "Kernel/AlignTraj.h"
-#include "Kernel/SerializeStl.h"
+//#include "Kernel/SerializeStl.h"
 
 //#include "StringConvert.h"
 // Event
@@ -262,7 +262,7 @@ StatusCode TAConfig::ConstrainPositions( std::map<std::string,int> &map ) {
     rank = it->second;
     ConstrainPositions( rank, name, m_DETmap.size() );
   }
-  info() << "(2) Map = " << map << endreq;
+//  info() << "(2) Map = " << map << endreq;
   return StatusCode::SUCCESS;
 }
   
@@ -499,7 +499,7 @@ StatusCode TAConfig::ConfigIT( std::vector<Gaudi::Transform3D> &ITmap ) {
       rank++;
     }
   }
-  info() << "(1) Map = " << constrain_it << endreq;
+//  info() << "(1) Map = " << constrain_it << endreq;
   m_zmoy_it /= nStations;
   s_zmoy_it = 0.0;
   for ( unsigned int i = 0; i < m_ITStations.size(); i++ ) {
@@ -508,17 +508,17 @@ StatusCode TAConfig::ConfigIT( std::vector<Gaudi::Transform3D> &ITmap ) {
       m_ITLayers = m_ITBoxes[j]->childIDetectorElements();
       for ( unsigned int k = 0; k < m_ITLayers.size(); k++ ) {
         if ( m_itLayer ) {
-          (m_ITLayers[k]->geometry()->toLocalMatrix()).GetDecomposition(Rotation, position);
+          (m_ITLayers[k]->geometry()->toGlobalMatrix()).GetDecomposition(Rotation, position);
           s_zmoy_it += (position.z() - m_zmoy_it)*(position.z() - m_zmoy_it);
         }
       }
       if ( m_itBox && ! m_itLayer ) {
-        (m_ITBoxes[j]->geometry()->toLocalMatrix()).GetDecomposition(Rotation, position);
+        (m_ITBoxes[j]->geometry()->toGlobalMatrix()).GetDecomposition(Rotation, position);
         s_zmoy_it += (position.z() - m_zmoy_it)*(position.z() - m_zmoy_it);
       }
     }
     if ( m_itStation && ! m_itBox && ! m_itLayer ) {
-      (m_ITStations[i]->geometry()->toLocalMatrix()).GetDecomposition(Rotation, position);
+      (m_ITStations[i]->geometry()->toGlobalMatrix()).GetDecomposition(Rotation, position);
       s_zmoy_it += (position.z() - m_zmoy_it)*(position.z() - m_zmoy_it);
     }
   }
@@ -526,9 +526,12 @@ StatusCode TAConfig::ConfigIT( std::vector<Gaudi::Transform3D> &ITmap ) {
   return StatusCode::SUCCESS;
 }
 
+
+
 Gaudi::XYZVector TAConfig::Residual( LHCb::Track &t, LHCb::LHCbID &id ) {
-  debug() << "Into TAConfig::Residual (1)" << endreq;
   Gaudi::XYZVector distance(-999999.9999,-9999.9999,-99999.99999);
+/*
+  debug() << "Into TAConfig::Residual (1)" << endreq;
 
   // Measurement
   Measurement& hit = t.measurement( id );
@@ -537,8 +540,8 @@ Gaudi::XYZVector TAConfig::Residual( LHCb::Track &t, LHCb::LHCbID &id ) {
   State &state = t.closestState( hit.z() );
 
   // Set refVector in case it was not set before
-  if ( !hit.refIsSet() ) 
-    hit.setRefVector( state.stateVector() );
+//  if ( !hit.refIsSet() ) 
+//    hit.setRefVector( state.stateVector() );
 
   Gaudi::XYZVector bfield;
   const Gaudi::TrackVector &refVec = hit.refVector();
@@ -556,8 +559,10 @@ Gaudi::XYZVector TAConfig::Residual( LHCb::Track &t, LHCb::LHCbID &id ) {
   // Determine the actual minimum with the Poca tool
   m_poca->minimize( refTraj, s1, measTraj, s2, distance, m_tolerance );
   
+*/
   return distance;
 }
+
 void TAConfig::CreateMap( int & r,  IDetectorElement* id, double &m_zmoy ) {
   Gaudi::Rotation3D R;
   Gaudi::XYZVector T;

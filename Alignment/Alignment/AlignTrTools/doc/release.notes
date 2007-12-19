@@ -4,6 +4,11 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+</PRE><H1><A NAME=v3r3>2007-12-19 AlignTrTools v3r4 </A></H1><PRE>
+- J. Blouw: new release for Alignment releae v2r3
+  - tag v3r4, incorporates changes listed below
+
+
 ! 2007-12-10 - Louis Nicolas
  - fixed Initialize/Finalize misbalance for ATrackSelector
  - fixed a bug in getCloseHits method in Align{SelTool,SaveTuple,TrackMonitor}.cpp
