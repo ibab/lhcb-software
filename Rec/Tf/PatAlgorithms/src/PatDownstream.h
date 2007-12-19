@@ -1,4 +1,4 @@
-// $Id: PatDownstream.h,v 1.2 2007-10-23 15:19:45 cattanem Exp $
+// $Id: PatDownstream.h,v 1.3 2007-12-19 16:02:36 ocallot Exp $
 #ifndef PATDOWNSTREAM_H 
 #define PATDOWNSTREAM_H 1
 
@@ -37,11 +37,13 @@ protected:
 
   void ttCoordCleanup();  ///< tag already used coordinates
 
-   void fitAndRemove ( PatDownTrack& track );
+  void fitAndRemove ( PatDownTrack& track );
   
   void findMatchingHits( PatDownTrack& track, int plane, double tol ) ;
 
   void addUVHits( PatDownTrack& track );
+
+  void tagUsedTT( const LHCb::Track* tr );
 
 private:
   std::string   m_inputLocation;

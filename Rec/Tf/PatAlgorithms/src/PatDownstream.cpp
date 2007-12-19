@@ -1,4 +1,4 @@
-// $Id: PatDownstream.cpp,v 1.2 2007-10-23 15:19:45 cattanem Exp $
+// $Id: PatDownstream.cpp,v 1.3 2007-12-19 16:02:36 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -141,6 +141,7 @@ StatusCode PatDownstream::execute() {
     }
   }
 
+  ttCoordCleanup();
   //==========================================================================
   // Prepare the tracks, removing the seends already used in Match.
   //==========================================================================
@@ -168,6 +169,8 @@ StatusCode PatDownstream::execute() {
           if ( tr == pt ) {
             debug() << " is used in match " << (*itTM)->key(); 
             store = !m_seedFilter;
+            if ( m_seedFilter ) tagUsedTT( *itTM );
+
           }        
         }
       }
@@ -266,6 +269,7 @@ StatusCode PatDownstream::execute() {
           for ( PatTTHits::const_iterator itH = coords.begin(); coords.end() != itH; ++itH ){
             
             PatTTHit* hit = (*itH);
+            if ( hit->hit()->testStatus( Tf::HitBase::UsedByPatMatch ) ) continue;
             double yPos   = track.yAtZ( hit->z() );
             if ( !hit->hit()->isYCompatible( yPos, yTol ) ) continue;
             
@@ -274,7 +278,7 @@ StatusCode PatDownstream::execute() {
             updateTTHitForTrack( hit, yTrack, tyTr );
             double pos    = track.xAtZ( hit->z() );
             if ( xPredTol < fabs( pos - hit->x() ) ) continue;
-            hit->hit()->setUsed( false );
+            hit->hit()->setStatus( Tf::HitBase::UsedByPatDownstream, false );
             hit->setProjection( fabs( hit->x()-pos ) );
             if ( hit->hit()->isX() ) {
               m_xHits.push_back( hit );
@@ -313,7 +317,7 @@ StatusCode PatDownstream::execute() {
       
       for ( itH = m_xHits.begin(); m_xHits.end() != itH; itH++ ) {
         const PatTTHit* myHit = *itH;
-        if ( myHit->hit()->testStatus( Tf::HitBase::UsedByUnknown ) ) continue;
+        if ( myHit->hit()->testStatus( Tf::HitBase::UsedByPatDownstream ) ) continue;
         double meanZ = myHit->z();
         double posX  = myHit->x( );
         int myPlane  = myHit->planeCode();
@@ -356,7 +360,7 @@ StatusCode PatDownstream::execute() {
         int nbUsed = 0;
         for (itH1 = track.hits().begin(); track.hits().end() != itH1; ++itH1 ){
           if ( (*itH1)->hit()->sthit()->cluster().highThreshold() ) ++nbHigh;
-          if ( (*itH1)->hit()->testStatus( Tf::HitBase::UsedByUnknown )  ) ++nbUsed;
+          if ( (*itH1)->hit()->testStatus( Tf::HitBase::UsedByPatDownstream )  ) ++nbUsed;
         }
         if ( 2 > nbHigh ) {
           if ( m_printing ) info() << " === not enough high threshold points" << endreq;
@@ -407,14 +411,14 @@ StatusCode PatDownstream::execute() {
 
         //== Better candidate. Clear flag on previous hits, and store the new one in bestTrack
         for ( itH1 = bestHits.begin(); bestHits.end() != itH1; ++itH1 ) {
-          (*itH1)->hit()->setUsed( false );
+          (*itH1)->hit()->setStatus( Tf::HitBase::UsedByPatDownstream, false );
         }
         bestHits.clear();
 
         track.sortFinalHits();
         
         for ( itH1= track.hits().begin(); track.hits().end() != itH1; itH1++ ){
-          (*itH1)->hit()->setUsed( true );
+          (*itH1)->hit()->setStatus( Tf::HitBase::UsedByPatDownstream, true );
           bestHits.push_back( *itH1 );
         
           if ( m_printing ) {
@@ -504,7 +508,7 @@ void PatDownstream::ttCoordCleanup ( ) {
   PatTTHits::const_iterator itH;
   for ( itH = ttCoords.begin(); ttCoords.end() != itH; ++itH ){
     PatTTHit* hit = (*itH);
-    hit->hit()->setUsed( false );
+    hit->hit()->setStatus( Tf::HitBase::UsedByPatDownstream, false );
   }
   //== Tag hit used in forward
 
@@ -512,19 +516,28 @@ void PatDownstream::ttCoordCleanup ( ) {
     if ( exist<LHCb::Tracks>( LHCb::TrackLocation::Forward ) ) {
       LHCb::Tracks* tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Forward );
       for ( LHCb::Tracks::const_iterator itT = tracks->begin(); tracks->end() != itT; ++itT ) {
-        for ( std::vector<LHCb::LHCbID>::const_iterator itId = (*itT)->lhcbIDs().begin();
-              (*itT)->lhcbIDs().end() != itId; ++itId ) {
-          if ( !(*itId).isTT() ) continue;
-          for ( itH = ttCoords.begin(); ttCoords.end() != itH; ++itH ){
-            PatTTHit* hit = (*itH);
-            if ( hit->hit()->lhcbID() == (*itId ) ) hit->hit()->setUsed( true );
-          }
-        }
+        tagUsedTT( *itT );
       }
     }
   }
 }
 
+//=========================================================================
+//  Tag used TT hits on this track.
+//=========================================================================
+void PatDownstream::tagUsedTT( const LHCb::Track* tr ) {
+  Tf::TTStationHitManager<PatTTHit>::HitRange ttCoords = m_ttHitManager->hits();
+  for ( std::vector<LHCb::LHCbID>::const_iterator itId = tr->lhcbIDs().begin();
+        tr->lhcbIDs().end() != itId; ++itId ) {
+    if ( !(*itId).isTT() ) continue;
+    for ( PatTTHits::const_iterator itH = ttCoords.begin(); ttCoords.end() != itH; ++itH ){
+      PatTTHit* hit = (*itH);
+      if ( hit->hit()->lhcbID() == (*itId ) ) {
+        hit->hit()->setStatus( Tf::HitBase::UsedByPatMatch, true );
+      }
+    }
+  }
+}
 //=========================================================================
 //  Fit and remove the worst hit, as long as over tolerance
 //=========================================================================

@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2007-12-19 - Olivier Callot
+ - Modify PatDownstream to tag TT used hits with the option SeedFilter.
+ - Use new enum values to tag TT hits with meaningful names.
+
 !========================== PatAlgorithms v3r2 2007-12-11 ====================
 ! 2007-12-11 - Stephanie Hansmann-Menzemer
  - switch off use of TT in PatForwardTool per default, to simplify usage in HLT
