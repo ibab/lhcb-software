@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.100 2007-11-27 16:27:08 cattanem Exp $ 
+# $Id: requirements,v 1.101 2007-12-19 09:42:39 ibelyaev Exp $ 
 # =============================================================================
 package       DetDesc
-version       v18r2
+version       v18r3
 
 # =========== structure =======================================================
 branches      DetDesc doc cmt src
@@ -10,6 +10,7 @@ branches      DetDesc doc cmt src
 use           LHCbKernel        v* Kernel
 use           GaudiKernel       v*
 use           ROOT              v* LCG_Interfaces
+use           GSL               v* LCG_Interfaces 
 
 # =========== own includes ====================================================
 apply_pattern install_more_includes more=DetDesc
@@ -31,3 +32,7 @@ apply_pattern     reflex_dictionary                                 \
 
 # Hack for cmt v1r19 bug to link dictionary on windows
 macro DetDescDict_use_linkopts $(use_linkopts)
+
+# =============================================================================
+# The END 
+# =============================================================================

@@ -1,9 +1,12 @@
-// $Id: LAssembly.cpp,v 1.17 2006-10-17 11:56:40 mneedham Exp $
-
+// $Id: LAssembly.cpp,v 1.18 2007-12-19 09:42:40 ibelyaev Exp $
+// ============================================================================
 // Include files
+// ============================================================================
 // DetDesc
+// ============================================================================
 #include "DetDesc/LAssembly.h"
 #include "DetDesc/SolidBase.h"
+#include "DetDesc/VolumeIntersectionIntervals.h"
 // ============================================================================
 /** @file LAssembly.cpp
  *
@@ -13,9 +16,7 @@
  *  @author Sebastien Ponce
  */
 // ============================================================================
-
-// ============================================================================
-/** constructor
+/*  constructor
  *  @exception LVolumeException wrong paramaters value
  *  @param name name of logical volume 
  *  @param sensitivity  name of sensitive detector object (for simulation)
@@ -30,39 +31,30 @@ LAssembly::LAssembly
                 sensitivity , 
                 magnetic    )
   , m_coverComputed( false )
-{};
-
+{}
 // ============================================================================
-/** default constructor
+// default constructor
+// ============================================================================
+LAssembly::LAssembly() : LogVolBase() {}
+// ============================================================================
+/*  destructor 
  */
 // ============================================================================
-LAssembly::LAssembly()
-  : LogVolBase()
-{};
-
+LAssembly::~LAssembly() {}
 // ============================================================================
-/** destructor 
- */
-// ============================================================================
-LAssembly::~LAssembly() {};
-
-// ============================================================================
-/** class/object identifier (static method)
+/* class/object identifier (static method)
  *  @return unique class identifier 
  */
 // ============================================================================
 const CLID& LAssembly::classID ()           { return CLID_LAssembly        ; }
-
 // ============================================================================
-/** class/object identification (virtual method)
+/*  class/object identification (virtual method)
  *  @return unique class identifier 
  */      
 // ============================================================================
 const CLID& LAssembly::clID    ()     const { return LAssembly::classID()  ; }
-
-
 // ============================================================================
-/** calculate the daughter path containing the Point in Local frame , 
+/*  calculate the daughter path containing the Point in Local frame , 
  *  can be VERY slow for complex geometry, 
  *  therefore use the appropriate Level for usage 
  *  @see ILVolume 
@@ -86,17 +78,16 @@ StatusCode LAssembly::belongsTo
   /// look for daughters 
   const IPVolume* pv = *ppi;
   if( 0 == pv || 0 == pv->lvolume() ) 
-    { pVolumePath.clear() ; return StatusCode::FAILURE; } 
+  { pVolumePath.clear() ; return StatusCode::FAILURE; } 
   /// add volume to the path 
   pVolumePath.push_back( pv ) ;
   /// recursion 
   return pv->lvolume()->belongsTo( pv->matrix() * LocalPoint , 
                                    Level - 1                 , 
                                    pVolumePath               );
-};
-
+}
 // ============================================================================
-/** calculate the daughter path containing the Point in Local frame , 
+/*  calculate the daughter path containing the Point in Local frame , 
  *  can be VERY slow for complex geometry, 
  *  therefore use the appropriate Level for usage 
  *  @see ILVolume 
@@ -120,7 +111,7 @@ StatusCode LAssembly::belongsTo
   /// look for daughters 
   const IPVolume* pv = *ppi;
   if( 0 == pv || 0 == pv->lvolume() ) 
-    { replicaPath.clear() ; return StatusCode::FAILURE; } 
+  { replicaPath.clear() ; return StatusCode::FAILURE; } 
   /// get replica number 
   ILVolume::ReplicaType replica = ppi - pvBegin();
   /// add volume to the path 
@@ -129,10 +120,9 @@ StatusCode LAssembly::belongsTo
   return pv->lvolume()->belongsTo( pv->matrix() * LocalPoint , 
                                    Level - 1                 , 
                                    replicaPath               );
-};
-
+}
 // ============================================================================
-/** intersection of the logical volume with with the line \n
+/*  intersection of the logical volume with with the line \n
  *  The line is parametrized in the local reference system 
  *  of the logical volume by initial Point and direction Vector \n 
  *  @f$ \vec{x}(t) = \vec{p} + t\times \vec{v} @f$  \n 
@@ -168,10 +158,9 @@ unsigned int LAssembly::intersectLine
     ( Point     , Vector    , intersections  , threshold );
   ///
   return intersections.size();  ///< RETURN!!!
-};
-
+}
 // ============================================================================
-/** intersection of the logical volume with with the line \n
+/*  intersection of the logical volume with with the line \n
  *  Theine is parametrized in the local reference system 
  *  of the logical volume by initial Point and direction Vector \n 
  *  @f$ \vec{x}(t) = \vec{p} + t\times \vec{v} @f$  \n 
@@ -206,11 +195,11 @@ unsigned int LAssembly::intersectLine
   intersections.clear();
   /// check the valid tick values 
   if( tickMin >= tickMax ) { return 0 ;} 
-  /** line with null direction vector 
+  /* line with null direction vector 
    * is not able to intersect any volume
    */
   if( Vector.mag2() <= 0 ) { return 0 ; }       // RETURN !!!
-
+  
   
   //== Check the 'cover'
   if ( !m_coverComputed ) { 
@@ -225,19 +214,18 @@ unsigned int LAssembly::intersectLine
   if ( (m_xMax < p1.x()) && (m_xMax < p2.x()) ) return 0 ;
   if ( (m_yMin > p1.y()) && (m_yMin > p2.y()) ) return 0 ;
   if ( (m_yMax < p1.y()) && (m_yMax < p2.y()) ) return 0 ;
-
-  /** look for the intersections of the given 
+  
+  /*  look for the intersections of the given 
    *  line with daughter elements construct the 
    *  intersections container for daughter volumes
    */
   intersectDaughters
     ( Point , Vector , intersections , tickMin , tickMax , Threshold  );
-
+  
   return intersections.size();    ///< RETURN!!!
-};
-
+}
 // ============================================================================
-/** printout to STD/STL stream
+/*  printout to STD/STL stream
  *  @see ILVolume 
  *  @param os STD/STL stream
  *  @return reference to the stream
@@ -246,10 +234,8 @@ unsigned int LAssembly::intersectLine
 std::ostream& LAssembly::printOut 
 ( std::ostream & os             ) const 
 { return LogVolBase::printOut( os ) ; }
-
-
 // ============================================================================
-/** printout to Gaudi MsgStream stream
+/*  printout to Gaudi MsgStream stream
  *  @see ILVolume 
  *  @param os Gaudi MsgStream  stream
  *  @return reference to the stream
@@ -258,25 +244,23 @@ std::ostream& LAssembly::printOut
 MsgStream&    LAssembly::printOut
 ( MsgStream    & os             ) const
 { return LogVolBase::printOut( os ) ; }
-
-
-
-//=========================================================================
+// ============================================================================
 //  
-//=========================================================================
-void LAssembly::computeCover() {
-
+// =============================================================================
+void LAssembly::computeCover() 
+{
+  
   if ( m_coverComputed ) return;
-
+  
   //  MsgStream log ( msgSvc() , "TransportSvc" );
-
+  
   m_xMin = 1000000.;
   m_yMin = 1000000.;
   m_zMin = 1000000.;
   m_xMax = -1000000.;
   m_yMax = -1000000.;
   m_zMax = -1000000.;
-
+  
   double pointX, pointY, pointZ = 0.;
   Gaudi::XYZPoint motherPt( 0., 0., 0. );
   int i, j, k;

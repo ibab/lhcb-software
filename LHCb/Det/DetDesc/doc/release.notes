@@ -1,9 +1,42 @@
 ! =============================================================================
-! $Id: release.notes,v 1.345 2007-12-04 13:29:34 cattanem Exp $ 
+! $Id: release.notes,v 1.346 2007-12-19 09:42:40 ibelyaev Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-12-19 - Vanya BELYAEV
+
+ New treatmet of geometry overlaps:
+
+ New files: 
+
+  - DetDesc/Compare.h
+      comparison of floating numbers 
+  - DetDesc/IGeometryErrorSvc.h, src/Lib/IGeometryErrorSvc.cpp
+        abstract interface for hadnling of geomety errors 
+  - DetDesc/IntersectionErrors.h, src/Lib/IntersectionErrors.cpp
+       helper sutility to make a bridge between volumes and 
+       geometry error handling service 
+
+  Modified files: 
+
+  - DetDesc/VolumeIntersectionIntervals.h
+   
+     add new functions:
+       1) MergeOwnAndChildIntersections2
+       2) correct 
+       3) intersect
+       4) ... 
+
+  - src/Lib/LAssembly.cpp, src/Lib/LVolume.cpp, src/Lib/LogVolBase.cpp
+
+      make use of new functions 
+
+  - cmt/requirements 
+   
+      version increment to v18r3 
+
 
 !====================== DetDesc v18r2 2007-12-04 ==============================
 ! 2007-12-04 - Juan Palacios

@@ -1,61 +1,77 @@
-// $Id: TransportSvc.h,v 1.4 2007-09-13 14:19:16 wouter Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: TransportSvc.h,v 1.5 2007-12-19 09:46:43 ibelyaev Exp $ 
 // ============================================================================
 #ifndef     _DETDESCSVC_TRANSPORTSVC_H
 #define     _DETDESCSVC_TRANSPORTSVC_H
-
+// ============================================================================
 // Include Files
+// ============================================================================
+// STD & STL 
+// ============================================================================
+#include <iostream> 
+#include <string> 
+#include <map> 
+// ============================================================================
+// GaudiKErnel
+// ============================================================================
 #include "GaudiKernel/Kernel.h" 
 #include "GaudiKernel/Service.h" 
 #include "GaudiKernel/StatusCode.h"
-
+#include "GaudiKernel/StatEntity.h"
+// ============================================================================
+// DetDesc 
+// ============================================================================
 #include "DetDesc/ITransportSvc.h" 
+#include "DetDesc/IGeometryErrorSvc.h" 
 #include "DetDesc/TransportSvcException.h" 
-
-#include <iostream> 
-#include <string> 
-
+// ============================================================================
+// forward decalrations 
+// ============================================================================
 class IDataProviderSvc;
-class IMagneticFieldSvc;
 class IMessageSvc;
-class IChronoStatSvc; 
 class IDetectorElement; 
 class ISvcLocator;
 class GaudiException; 
-
+// ============================================================================
 /** @class TransportSvc TransportSvc.h DetDescSvc/TransportSvc.h
  *
  *  Implementation of abstract interface ITransportSvc 
+ *  and abstract interface DetDesc::IGometryErrorSvc 
  *
- *  @author Vanya Belyaev
+ *  @author Vanya Belyaev ibelyaev@physics.syr.edu
  */
-
-class TransportSvc: public         Service        , 
-                    virtual public ITransportSvc
+class TransportSvc
+  : virtual public              ITransportSvc
+  , virtual public DetDesc::IGeometryErrorSvc
+  , public                            Service
 {  
   /// typedefs: (internal only!) 
   typedef std::vector<IGeometryInfo*>     GeoContainer;
   typedef GeoContainer::reverse_iterator  rGeoIt      ; 
   ///  
- public:
+public:
   /// constructor 
-  TransportSvc( const std::string& name, ISvcLocator* ServiceLocator );
+  TransportSvc
+  ( const std::string& name, ISvcLocator* ServiceLocator );
   /// destructor 
   virtual ~TransportSvc(); 
   ///
- public:
-  /// Methods from Service:
+public:
+  // ==========================================================================
+  // Methods from (I)Service/IInterface
+  // ==========================================================================
   ///     Initialise the service.
   virtual StatusCode initialize    ();
   ///     Finalise the service.
   virtual StatusCode finalize      ();
   ///     Query the interfaces.
-  virtual StatusCode queryInterface( const InterfaceID& riid, 
-                                     void** ppvInterface );
-  ///     Service type.
-  virtual const InterfaceID& type  () const { return IID_ITransportSvc ; } ; 
-  ///  
+  virtual StatusCode queryInterface
+  ( const InterfaceID& iid , 
+    void**             ppi ) ;
+  // ==========================================================================
+public:  
+  // ==========================================================================
+  // Methods from ITransportSvc 
+  // ==========================================================================
   /** Estimate the distance between 2 points in 
    *  units of radiation length units 
    *  @see ITransportSvc 
@@ -67,12 +83,12 @@ class TransportSvc: public         Service        ,
    *  @return distance in rad length units 
    */
   virtual double distanceInRadUnits
-  ( const Gaudi::XYZPoint& Point1                    , 
-    const Gaudi::XYZPoint& Point2                    , 
-    double            Threshold                 = 0  , 
-    IGeometryInfo*    AlternativeGeometry       = 0  , 
-    IGeometryInfo*    GeometryGuess             = 0  ) ;
-  
+  ( const Gaudi::XYZPoint& Point1         , 
+    const Gaudi::XYZPoint& Point2         , 
+    double            Threshold           , 
+    IGeometryInfo*    AlternativeGeometry , 
+    IGeometryInfo*    GeometryGuess       ) ;
+  // ==========================================================================
   /** general method ( returns the "full history" of the volume 
    *  boundary intersections 
    * with different material properties between 2 points )
@@ -89,21 +105,73 @@ class TransportSvc: public         Service        ,
    *  @param GeometryGuess       a guess for navigation 
    */
   virtual unsigned long intersections
-  ( const Gaudi::XYZPoint&   Point                   ,   
-    const Gaudi::XYZVector&  Vector                  ,    
-    const ISolid::Tick&      TickMin                 ,    
-    const ISolid::Tick&      TickMax                 ,    
-    ILVolume::Intersections& Intersept               ,    
-    double                   Threshold           = 0 ,    
-    IGeometryInfo*           AlternativeGeometry = 0 ,    
-    IGeometryInfo*           GeometryGuess       = 0 )  ; 
-  ///  
+  ( const Gaudi::XYZPoint&   Point               ,   
+    const Gaudi::XYZVector&  Vector              ,    
+    const ISolid::Tick&      TickMin             ,    
+    const ISolid::Tick&      TickMax             ,    
+    ILVolume::Intersections& Intersept           ,    
+    double                   Threshold           ,    
+    IGeometryInfo*           AlternativeGeometry ,    
+    IGeometryInfo*           GeometryGuess       )  ; 
+  // ==========================================================================
+public:
+  // ==========================================================================
+  // The methods from DetDesc::IGeometryErrorSvc 
+  // ==========================================================================
+  /** set/reset the current "status" of geometry erorrs  
+   *  @param sc the status code 
+   *  @param volume the volume 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-12-14
+   */
+  virtual void setCode 
+  ( const StatusCode& sc     , 
+    const ILVolume*   volume ) ;
+  // ==========================================================================
+  /** inspect the potential error in intersections 
+   *  @param  volume   the problematic volume 
+   *  @param  point    3D point 
+   *  @param  vector   3D direction vector 
+   *  @param  cnt  the problematic container of intersections  
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-12-14
+   */
+  virtual void inspect
+  ( const ILVolume*                volume , 
+    const Gaudi::XYZPoint&         pnt    , 
+    const Gaudi::XYZVector&        vect   , 
+    const ILVolume::Intersections& cnt    ) ;
+  // ========================================================================
+  /** report the recovered action in intersections 
+   *  @param  volume    the problematic volume 
+   *  @param  material1 the affected material 
+   *  @param  material2 the affected material 
+   *  @param  delta     the problematic delta  (non-negative!)
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-12-14
+   */
+  virtual void recovered
+  ( const ILVolume* volume    , 
+    const Material* material1 ,
+    const Material* material2 ,
+    const double    delta     ) ;
+  // ========================================================================
+  /** report the skipped intersection 
+   *  @param  volume   the problematic volume 
+   *  @aram   material the affected material 
+   *  @param  delta    the problematic delta  (non-negative!)
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-12-14
+   */
+  virtual void skip
+  ( const ILVolume* volume   , 
+    const Material* material ,
+    const double    delta    ) ;
+  // ========================================================================
 private:
-  /// own private methods 
-  /// access to ChronoStat service   
-  inline IChronoStatSvc*          chronoSvc           () const ;
-  /// access to Magnetic Field service 
-  inline IMagneticFieldSvc*       magFieldSvc         () const ; 
+  // ==========================================================================
+  // own private methods 
+  // ==========================================================================
   /// access to Detector Data Service
   inline IDataProviderSvc*        detSvc              () const ; 
   /**  source of "standard" geometry information - 
@@ -138,16 +206,12 @@ private:
     const Gaudi::XYZPoint& point2, 
     IGeometryInfo*    gi     ,
     IGeometryInfo*    topGi  ) const;   
+  // ==========================================================================
 private:
-  ///  Own private data members:
+  // ==========================================================================
+  /// Own private data members:
   /// names of used services:
-  std::string                    m_chronoStatSvc_name    ; 
-  std::string                    m_magFieldSvc_name      ;   
   std::string                    m_detDataSvc_name       ;
-  ///  Chrono & Stat service 
-  mutable  IChronoStatSvc*       m_chronoStatSvc         ;
-  ///  Magnetic Field Service 
-  mutable IMagneticFieldSvc*     m_magFieldSvc           ; 
   ///  Detector Data Service 
   mutable IDataProviderSvc*      m_detDataSvc            ;
   /**  Name (address in Transient Store) for the top element 
@@ -156,7 +220,7 @@ private:
   std::string                    m_standardGeometry_address ; 
   mutable  IGeometryInfo*        m_standardGeometry         ; 
   /// 
-  mutable IGeometryInfo*         m_previousGeometry ;
+  mutable IGeometryInfo*           m_previousGeometry ;
   /// previous parameters 
   mutable Gaudi::XYZPoint          m_prevPoint1          ; 
   mutable Gaudi::XYZPoint          m_prevPoint2          ; 
@@ -171,46 +235,48 @@ private:
   mutable GeoContainer             m_vGi                 ; 
   mutable ISolid::Ticks            m_local_ticks         ;
   ///
+private:
+  /// the actual type of the Map
+  typedef std::map<std::string, std::pair<StatEntity,StatEntity> > Map ;
+  typedef std::map<std::string,unsigned long>                      Map1 ;
+  Map  m_skip        ; /// the map of the skip-intervals 
+  Map  m_recover     ; /// the map of the recovered-intervals 
+  Map1 m_codes       ; /// the map of various error-codes 
+  /// property to allow the recovery 
+  bool m_recovery    ;
+  /// property to allow the protocol
+  bool m_protocol    ;
+  
 };
-///
-
-/// access to Chrono & Stat Service 
-inline IChronoStatSvc*      TransportSvc::chronoSvc            () const 
-{ return m_chronoStatSvc    ; } ; 
-
-/// access to Magnetic Field  Service 
-inline IMagneticFieldSvc*   TransportSvc::magFieldSvc          () const 
-{ return m_magFieldSvc      ; } ;
-
+// ============================================================================
 /// access to Detector Data  Service 
 inline IDataProviderSvc*    TransportSvc::detSvc               () const 
-{ return m_detDataSvc       ; } ;
-
-
+{ return m_detDataSvc       ; } 
+// ============================================================================
 /// access to the top of standard detector geometry information 
 inline IGeometryInfo*       TransportSvc::standardGeometry     () const 
 { 
   return ( 0 != m_standardGeometry ) ? 
     m_standardGeometry : m_standardGeometry = 
     findGeometry( m_standardGeometry_address ) ; 
-};
-
+}
+// ============================================================================
 /// access to the top of standard detector geometry information 
 inline IGeometryInfo*       TransportSvc::previousGeometry     () const 
 { return m_previousGeometry ; }
-
+// ============================================================================
 ///
 inline IGeometryInfo*       TransportSvc::setPreviousGeometry  
 ( IGeometryInfo* previous ) 
 { m_previousGeometry = previous ; return previousGeometry() ; }
-
+// ============================================================================
 /// Assertion !!!
 inline void TransportSvc::Assert
 ( bool                assertion  , 
   const std::string&  Message    , 
   const StatusCode&   statusCode ) const 
-{ if( !assertion ) { throw TransportSvcException( Message , statusCode ); } };
-
+{ if( !assertion ) { throw TransportSvcException( Message , statusCode ); } }
+// ============================================================================
 /// Assertion !!!
 inline void TransportSvc::Assert
 ( bool                  assertion  , 
@@ -218,8 +284,9 @@ inline void TransportSvc::Assert
   const GaudiException& Exception  ,  
   const StatusCode&     statusCode ) const 
 { if( !assertion ) 
-  { throw TransportSvcException( Message , Exception , statusCode ); } };
-
+ { throw TransportSvcException( Message , Exception , statusCode ); } }
+// ============================================================================
+// The END 
 // ============================================================================
 #endif  //   DETDESCSVC__TRANSPORTSVC_H 
 // ============================================================================

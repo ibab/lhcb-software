@@ -1,19 +1,20 @@
-# $Id: requirements,v 1.26 2007-10-05 14:12:26 cattanem Exp $
+# $Id: requirements,v 1.27 2007-12-19 09:49:26 ibelyaev Exp $
 # =============================================================================
 # Created    : 2002-05-25
-# Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
+# Maintainer : Vanya Belyaev ibelyaev@physics.syr.edu
 # =============================================================================
 package           DetDescChecks
-version           v4r4
+version           v4r5
 
 # =============== structure ===================================================
 branches          cmt doc src options python
 
 # =============== dependencies ================================================
-use               DetDesc   v* Det
-use               DetDescSvc   v* Det
-use               GaudiAlg  v*   	
-use               Boost     v* LCG_Interfaces 
+use               DetDesc    v* Det
+use               DetDescSvc v* Det
+use               GaudiAlg   v*   	
+use               Boost      v* LCG_Interfaces 
+use               GSL        v* LCG_Interfaces
 
 # =============== constituents ================================================
 library           DetDescChecks   *.cpp -import=AIDA

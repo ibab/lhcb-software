@@ -1,25 +1,30 @@
-// $Id: LVolume.cpp,v 1.34 2007-09-20 15:03:00 wouter Exp $ 
-
+// $Id: LVolume.cpp,v 1.35 2007-12-19 09:42:40 ibelyaev Exp $ 
+// ============================================================================
 /// STD & STL includes 
+// ============================================================================
 #include <stdio.h> 
 #include <functional> 
 #include <algorithm> 
+// ============================================================================
 /// Gaudi Kernel includes
+// ============================================================================
 #include "GaudiKernel/Transform3DTypes.h"
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/SmartDataPtr.h" 
+// ============================================================================
 /// DetDesc includes 
+// ============================================================================
 #include "DetDesc/ISolid.h"
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/LVolume.h"
-#include "DetDesc/VolumeIntersectionIntervals.h"
 #include "DetDesc/SolidTicks.h"
 #include "DetDesc/Material.h"
 #include "DetDesc/Solid.h"
 #include "DetDesc/Surface.h"
 #include "DetDesc/DetDesc.h"
-
+#include "DetDesc/IntersectionErrors.h"
+#include "DetDesc/VolumeIntersectionIntervals.h"
 // ===========================================================================
 /** @file LVolume.cpp 
  *  
@@ -29,9 +34,7 @@
  *  @author: Sebastien Ponce
  */
 // ===========================================================================
-
-// =========================================================================== 
-/** constructor, pointer to ISolid* must be valid!, 
+/*  constructor, pointer to ISolid* must be valid!, 
  *  overvise constructor throws LVolumeException!  
  *  @exception LVolumeException wrong paramaters value
  *  @param name         name of logical volume 
@@ -56,10 +59,9 @@ LVolume::LVolume
 {
   if( 0 == m_solid ) 
     { throw LogVolumeException("LVolume: ISolid* points to NULL ") ; }
-}; 
-
+}
 // =========================================================================== 
-/** (default) constructor
+/* (default) constructor
  *  @param name         name of logical volume 
  */
 // =========================================================================== 
@@ -68,22 +70,21 @@ LVolume::LVolume( const std::string& name )
   , m_solid        ( 0          )
   , m_materialName ( ""         )
   , m_material     ( 0          )
-{};
-
+{}
 // ===========================================================================
-/// destructor 
+// destructor 
 // ===========================================================================
 LVolume::~LVolume()
 {
   /// reset 
   if( 0 != m_solid ) { delete m_solid ; m_solid = 0 ; }
-};
-
-const CLID& LVolume::clID   () const { return classID()    ; } 
-const CLID& LVolume::classID()       { return CLID_LVolume ; };
-
+}
 // ============================================================================
-/** calculate the daughter path containing the Point in Local frame , 
+const CLID& LVolume::clID   () const { return classID()    ; } 
+// ============================================================================
+const CLID& LVolume::classID()       { return CLID_LVolume ; };
+// ============================================================================
+/*  calculate the daughter path containing the Point in Local frame , 
  *  can be VERY slow for complex geometry, 
  *  therefore use the appropriate Level for usage 
  *  @param  LocalPoint point in local reference system of logical volume 
@@ -116,10 +117,9 @@ StatusCode LVolume::belongsTo
   return pv->lvolume()->belongsTo( pv->matrix() * LocalPoint , 
                                    Level - 1                 , 
                                    pVolumePath               );
-};
-
+}
 // ============================================================================
-/** calculate the daughter path containing the Point in Local frame , 
+/*  calculate the daughter path containing the Point in Local frame , 
  *  can be VERY slow for complex geometry, 
  *  therefore use the appropriate Level for usage 
  *  @param  LocalPoint point in local reference system of logical volume 
@@ -155,10 +155,9 @@ StatusCode LVolume::belongsTo
   return pv->lvolume()->belongsTo( pv->matrix() * LocalPoint , 
                                    Level - 1                 , 
                                    replicaPath               );
-};  
-
+}
 // ============================================================================
-/** locate material
+/*  locate material
  *  @exception LVolumeException
  *  @return pointer to material
  */
@@ -172,10 +171,9 @@ const Material* LVolume::findMaterial() const
   }
   m_material = material;
   return m_material; 
-};
-
+}
 // ============================================================================
-/** printout to STD/STL stream
+/*  printout to STD/STL stream
  *  @see ILVolume 
  *  @param os STD/STL stream
  *  @return reference to the stream
@@ -191,10 +189,9 @@ std::ostream& LVolume::printOut
      << std::endl ;
   ///
   return os << "Material name='" << materialName() << "' " << std::endl ;
-};
-
+}
 // ============================================================================
-/** printout to Gaudi MsgStream stream
+/*  printout to Gaudi MsgStream stream
  *  @see ILVolume 
  *  @param os Gaudi MsgStream  stream
  *  @return reference to the stream
@@ -210,10 +207,9 @@ MsgStream&    LVolume::printOut
      << endreq;
   ///
   return os << "Material name='" << materialName() << "' " << endreq;
-};
-
+}
 // ============================================================================
-/** Auxillary method  to calculate own intersections
+/*  Auxillary method  to calculate own intersections
  *  @exception LogVolumeException for wrong parameters or geometry errors
  *  @param  Point         initial point at the line
  *  @param  Vector        direction vector of the line
@@ -260,52 +256,55 @@ bool LVolume::intersectBody
     if( Threshold > 0 ) {
       /// the total length of intervals (in tick units)
       double Length = 
-	std::accumulate( intervals.begin() , intervals.end       () , 
-			 0.0               , AccumulateIntervals () );
-      /** this volume is not to be used for estimations 
+        std::accumulate( intervals.begin() , intervals.end       () , 
+                         0.0               , AccumulateIntervals () );
+      /*  this volume is not to be used for estimations 
        *  of radiation thickness 
        */
       if( Length * TickLength <= Threshold * m_material->radiationLength() ) {
-	useThisVolume = false ;   
-	ticks.clear     ();
-	intervals.clear (); 
+        useThisVolume = false ;   
+        ticks.clear     ();
+        intervals.clear (); 
       }
     }
   }
-  /** if this volume is to be used,  
+  /*  if this volume is to be used,  
    *  find intersections with REAL solid (not cover) 
    */
-  if( useThisVolume && m_solid != pSolid ) 
-    {
-      /** no intersections with own solid 
-       *  ( at least 2 points are required! )
-       *  for solid() == solid->coverTop() we have 
-       *  already calculated ticks!
-       */
-      if(  m_solid->intersectionTicks( Point , Vector , ticks ) < 2) { return false ; }
-      
-      /** estimate more carefuly its contribution to the total 
-       *  radiation thickness and construct intervals!
-       */
-      intervals.clear();
-      TicksToIntervals( ticks , std::back_inserter( intervals ) ); 
-    }
-
+  if ( useThisVolume && m_solid != pSolid ) 
+  {
+    /*  no intersections with own solid 
+     *  ( at least 2 points are required! )
+     *  for solid() == solid->coverTop() we have 
+     *  already calculated ticks!
+     */
+    if (  m_solid->intersectionTicks( Point , Vector , ticks ) < 2) { return false ; }
+    
+    /** estimate more carefuly its contribution to the total 
+     *  radiation thickness and construct intervals!
+     */
+    intervals.clear();
+    TicksToIntervals( ticks , std::back_inserter( intervals ) ); 
+  }
+  
   double minInterval =  Threshold * m_material->radiationLength() / TickLength;
   
   /// transform container of its own intervals into own intersection container 
-  for( Intervals::const_iterator it = intervals.begin() ; 
-       intervals.end() != it ; ++it ) { 
+  for ( Intervals::const_iterator it = intervals.begin() ; 
+        intervals.end() != it ; ++it ) { 
     if ( minInterval < fabs( (*it).second - (*it).first ) ) {
       intersections.push_back( ILVolume::Intersection( *it , m_material ) ) ; 
     }
   }
-  ///  
+  ///
+  /// V.B.:try to correct the promlems (if any) 
+  VolumeIntersectionIntervals::correct 
+    ( this , intersections , TickLength ) ;  
+  ///
   return true; 
-};
-
+}
 // ============================================================================
-/** Auxillary method  to calculate own intersections
+/*  Auxillary method  to calculate own intersections
  *  @exception LogVolumeException for wrong parameters or geometry errors
  *  @param  Point         initial point at the line
  *  @param  Vector        direction vector of the line
@@ -328,126 +327,133 @@ bool LVolume::intersectBody
   // clear the output container 
   intersections.clear();
   // check the valid tick values 
-  if( tickMin >= tickMax ) { return 0 ;} 
-  /** line with null direction vector 
+  if ( tickMin >= tickMax ) { return 0 ;} 
+  /* line with null direction vector 
    * is not able to intersect any volume
    */ 
-  if( Vector.mag2() <= 0 ) { return 0 ; }       // RETURN !!! 
+  if ( Vector.mag2() <= 0 ) { return 0 ; }       // RETURN !!! 
   // length of tick unit 
   const ISolid::Tick TickLength = std::sqrt(Vector.mag2()); 
   // assertion for material and solid 
-  if( 0 == material() || 0 == m_solid ) 
-    { Assert( false , "LVolume::intersectBody(1): FATAL for" + name() ); }
+  if ( 0 == material() || 0 == m_solid ) 
+  { Assert( false , "LVolume::intersectBody(1): FATAL for" + name() ); }
   // define "top"
   const ISolid* pSolid = m_solid->coverTop() ; 
   //  contribution of this volume is estimated in 3 steps:
   bool useThisVolume      = true  ; 
-  /**  (1) estimate the maximal possible constribution 
+  /*   (1) estimate the maximal possible constribution 
    *   of this volume using tickMin and tickMax 
    */
-  if( Threshold > 0  &&  
-      ( tickMax - tickMin )  * TickLength  
-      <= Threshold * m_material->radiationLength() ) 
-    { useThisVolume = false; }                                   /// NB!!!! 
+  if ( Threshold > 0  &&  
+       ( tickMax - tickMin )  * TickLength  
+       <= Threshold * m_material->radiationLength() ) 
+  { useThisVolume = false; }                                   /// NB!!!! 
   ISolid::Ticks           ticks;   
-  /** If threshold is given, before performing the accurate 
+  /*  If threshold is given, before performing the accurate 
    *  calculations, perform the rought estimation 
    *  using the coverTop() method!  
    *  Line MUST intersect the coverTop() solid at 
    *  least in 2 points! common points with cover 
    *  TopSolid within range from tickMin to tickMax 
    */
-
   // first intersect with the covertop. return if no intersections.
-  if( pSolid->intersectionTicks( Point   ,  
-				 Vector  , 
-				 tickMin , 
-				 tickMax , 
-				 ticks   ) < 2 ) { return false ; } 
+  if ( pSolid->intersectionTicks
+       ( Point   ,  
+         Vector  , 
+         tickMin , 
+         tickMax , 
+         ticks   ) < 2 ) { return false ; } 
   // redefine tickMin and tickMax. wdh: why? to hide a real bug?
   tickMin = *std::min_element( ticks.begin() , ticks.end() ); 
   tickMax = *std::max_element( ticks.begin() , ticks.end() );
   
   ///
   Intervals intervals; 
-  if( ( useThisVolume && Threshold > 0 ) || m_solid == pSolid ) {
+  if ( ( useThisVolume && Threshold > 0 ) || m_solid == pSolid ) {
     // create the intervals for the covertop
     TicksToIntervals( ticks , std::back_inserter( intervals ) );
-
+    
     // if there is a threshold, check that covertop intersection large enough
-    if( Threshold > 0 ) {
+    if ( Threshold > 0 ) 
+    {
       /// the total length of intervals in Tick units 
       double Length = 
-	std::accumulate( intervals.begin() , intervals.end       () ,
-			 0.0               , AccumulateIntervals () );
+        std::accumulate( intervals.begin() , intervals.end       () ,
+                         0.0               , AccumulateIntervals () );
       /// this volume is not to be used for estimations of radiation thickness 
-	if( Length * TickLength 
-	    <= Threshold * m_material->radiationLength() ) {
-	  useThisVolume = false ;   
-	  intervals.clear(); 
-	  ticks.clear(); 
-	}
+      if( Length * TickLength 
+          <= Threshold * m_material->radiationLength() ) {
+        useThisVolume = false ;   
+        intervals.clear(); 
+        ticks.clear(); 
+      }
     }
   }
-  /**  if this volume is to be used,  
+  /*   if this volume is to be used,  
    *   find intersections with REAL solid (not cover) 
    *   no intersections with own solid 
    *   ( at least 2 points are required! )
    */
-  if( useThisVolume && m_solid != pSolid ) 
-    {
-      /** no intersections with own solid 
-       *   ( at least 2 points are required! )
-       *  (sor solidUnion we have already calculated ticks!
-       */
-      if( 2 > solid()->intersectionTicks( Point   , 
-                                          Vector  , 
-                                          tickMin , 
-                                          tickMax , 
-                                          ticks   ) ) { return false ; }
-      /**  check for tickMin and tickMax 
-       *  remove extra ticks from container
-       * refine tickMin and tickMax
-       */
-      tickMin = *std::min_element( ticks.begin() , ticks.end() ); 
-      tickMax = *std::max_element( ticks.begin() , ticks.end() ); 
-      /** estimate more carefuly its contribution to the total 
-       *  radiation thickness and construct intervals!
-       */
-      intervals.clear(); 
-      TicksToIntervals( ticks , std::back_inserter( intervals ) );
-      if(Threshold>0) {
-	/// the total length of intervals in Tick units 
-	double Length = 
-	  std::accumulate( intervals.begin() , intervals.end       () ,
-			   0.0               , AccumulateIntervals () );
-	/// this volume is not to be used for estimations of radiation thickness 
-	  if( Length * TickLength 
-	      <= Threshold * m_material->radiationLength() ) {
-	    ticks.clear()         ; 
-	    intervals.clear()     ;
-	    useThisVolume = false ; 
-	  }  
-      }
+  if ( useThisVolume && m_solid != pSolid ) 
+  {
+    /*  no intersections with own solid 
+     *   ( at least 2 points are required! )
+     *  (sor solidUnion we have already calculated ticks!
+     */
+    if ( 2 > solid()->intersectionTicks
+         ( Point   , 
+           Vector  , 
+           tickMin , 
+           tickMax , 
+           ticks   ) ) { return false ; }
+    /*  check for tickMin and tickMax 
+     *  remove extra ticks from container
+     * refine tickMin and tickMax
+     */
+    tickMin = *std::min_element( ticks.begin() , ticks.end() ); 
+    tickMax = *std::max_element( ticks.begin() , ticks.end() ); 
+    /* estimate more carefuly its contribution to the total 
+     *  radiation thickness and construct intervals!
+     */
+    intervals.clear(); 
+    TicksToIntervals( ticks , std::back_inserter( intervals ) );
+    if(Threshold>0) {
+      /// the total length of intervals in Tick units 
+      double Length = 
+        std::accumulate( intervals.begin() , intervals.end       () ,
+                         0.0               , AccumulateIntervals () );
+      /// this volume is not to be used for estimations of radiation thickness 
+      if( Length * TickLength 
+          <= Threshold * m_material->radiationLength() ) {
+        ticks.clear()         ; 
+        intervals.clear()     ;
+        useThisVolume = false ; 
+      }  
     }
-  /** transform container of its own intervals 
+  }
+  /*  transform container of its own intervals 
    *  into own intersection container
    */ 
-  double minInterval =  Threshold * m_material->radiationLength() / TickLength;
-
-  for( Intervals::const_iterator it = intervals.begin() ; 
-       intervals.end() != it ; ++it )    { 
-    if ( minInterval < fabs( (*it).second - (*it).first ) ) {
+  double minInterval =  
+    Threshold * m_material->radiationLength() / TickLength;
+  
+  for ( Intervals::const_iterator it = intervals.begin() ; 
+        intervals.end() != it ; ++it )    { 
+    if ( minInterval < fabs( (*it).second - (*it).first ) ) 
+    {
       intersections.push_back( ILVolume::Intersection( *it , m_material ) ) ; 
     }
   }
+  /// check the intersections 
+  /// V.B.: try to correct 
+  VolumeIntersectionIntervals::correct 
+    ( this ,  intersections , TickLength ) ;  
   ///
   return true; 
   ///
-};
-
+}
 // ============================================================================
-/** intersection of the logical volume with with the line \n
+/*  intersection of the logical volume with with the line \n
  *  The line is parametrized in the local reference system 
  *  of the logical volume by initial Point and direction Vector \n 
  *  @f$ \vec{x}(t) = \vec{p} + t\times \vec{v} @f$  \n 
@@ -480,108 +486,43 @@ unsigned int LVolume::intersectLine
   // clear the container 
   intersections.clear();
   // line with null direction vector is not able to intersect any volume 
-  if( Vector.mag2() <= 0 ) { return 0 ; }       // RETURN !!!
-
+  if ( Vector.mag2() <= 0 ) { return 0 ; }       // RETURN !!!
+  
   // intersections with own "volume body"
   ILVolume::Intersections own;
-  if(!intersectBody( Point, Vector, own, Threshold ) ) { return 0 ; }
-
+  if (!intersectBody( Point, Vector, own, Threshold ) ) { return 0 ; }
+  
   // intersections with childrens 
   ILVolume::Intersections childrens; 
   intersectDaughters
     ( Point     , Vector    , childrens , Threshold );
   // here we'd like to fill the output container:
-  if( own.empty() )    // the parent container is empty
-    {
-      // we have only child container just copy it to the output 
-      std::copy( childrens.begin() , childrens.end  () , 
-                 std::back_inserter( intersections ) ) ;
-      return intersections.size();  ///< RETURN!!!
-    }
+  if ( own.empty() )    // the parent container is empty
+  {
+    // we have only child container just copy it to the output 
+    std::copy ( childrens.begin() , childrens.end  () , 
+                std::back_inserter( intersections ) ) ;
+    return intersections.size();  ///< RETURN!!!
+  }
   else // own container is NOT empty!
-    {
-      // perform quite non trivial merging 
-      StatusCode sc = 
-        MergeOwnAndChildContainers
-        ( own , childrens , std::back_inserter( intersections ) );
-      // check the result!!!
-      if( sc.isFailure() )
-        {
-          int level=100;
-          PVolumePath volpath;
-
-          MsgStream log( msgSvc() , "TransportSvc" );
-          log << MSG::ERROR
-              << "===== Failure to merge " << name()
-              << " type " << m_solid->typeName()
-              << " xyz=(" << Point.x() << "," << Point.y() 
-              << "," << Point.z() << ")"
-              << endreq ;
-          
-          for ( ILVolume::Intersections::const_iterator itI = own.begin();
-                own.end() != itI; itI++ ) {
-            double s = (*itI).first.first;
-            double t = (*itI).first.second;
-            log << MSG::INFO
-                << "Own : s=" << s
-                << " xyz=(" << Point.x() + s * Vector.x()
-                << "," << Point.y() + s * Vector.y()
-                << "," << Point.z() + s * Vector.z()
-                << ") to t=" << t
-                << " xyz=(" << Point.x() + t * Vector.x()
-                << "," << Point.y() + t * Vector.y()
-                << "," << Point.z() + t * Vector.z()
-                << ") radl " << (*itI).second->radiationLength()
-                << " name " << (*itI).second->name()
-                << endreq ;
-          }
-          for ( ILVolume::Intersections::const_iterator itJ = childrens.begin();
-                childrens.end() != itJ; itJ++ ) {
-            double s = (*itJ).first.first;
-            double t = (*itJ).first.second;
-            log << MSG::INFO 
-                << "Child : s=" << s
-                << " xyz=(" << Point.x() + s * Vector.x()
-                << "," << Point.y() + s * Vector.y()
-                << "," << Point.z() + s * Vector.z()
-                << ") to t=" << t
-                << " xyz=(" << Point.x() + t * Vector.x()
-                << "," << Point.y() + t * Vector.y()
-                << "," << Point.z() + t * Vector.z()
-                << ") radl " << (*itJ).second->radiationLength()
-                << " name " << (*itJ).second->name()
-                << endreq;
-            volpath.clear();
-            
-            double temx= Point.x() + (s+t)*Vector.x()/2;
-            double temy= Point.y() + (s+t)*Vector.y()/2;
-            double temz= Point.z() + (s+t)*Vector.z()/2;
-
-            belongsTo(Gaudi::XYZPoint(temx,temy,temz),level,volpath);
-
-            for(ILVolume::PVolumePath::iterator it=volpath.begin();
-                it!=volpath.end();it++) {
-              log << MSG::INFO << *it << endreq;
-            }  
-            log << endreq;
-          }
-          
-          intersections.clear();          
-          std::copy( childrens.begin () , 
-                     childrens.end   () ,
-                     std::back_inserter( intersections ) ) ;
-          
-          return intersections.size();                          // RETURN!!!
-          // temporary
-          // Assert( false , "LVolumeIntersectLine FATAL! " + name() , sc ); 
-        }
-    }
+  {
+    // perform quite non trivial merging 
+    StatusCode sc = 
+      // MergeOwnAndChildContainers
+      MergeOwnAndChildContainers2
+      ( own       , 
+        childrens , 
+        std::back_inserter ( intersections ) , 
+        this , Vector.R() ) ; 
+    // check the result!!!
+    if ( sc.isFailure() ) 
+    { DetDesc::IntersectionErrors::setCode ( sc , this ) ; }
+  }
   ///  
   return intersections.size(); 
-};
-
+}
 // ============================================================================
-/** intersection of the logical volume with with the line \n
+/*  intersection of the logical volume with with the line \n
  *  Theine is parametrized in the local reference system 
  *  of the logical volume by initial Point and direction Vector \n 
  *  @f$ \vec{x}(t) = \vec{p} + t\times \vec{v} @f$  \n 
@@ -621,16 +562,16 @@ unsigned int LVolume::intersectLine
   intersections.clear();
   // check the valid tick values 
   if( tickMin >= tickMax ) { return 0 ;}            // RETURN !!! 
-  /** line with null direction vector 
+  /* line with null direction vector 
    * is not able to intersect any volume
    */ 
   if( Vector.mag2() <= 0 ) { return 0 ; }           // RETURN !!!
 
   // own intersections
   ILVolume::Intersections own;
-  if( !intersectBody (Point,Vector,own,TickMin,TickMax,Threshold ) ) { return 0 ; }
+  if ( !intersectBody (Point,Vector,own,TickMin,TickMax,Threshold ) ) { return 0 ; }
   
-  /** look for the intersections of the given 
+  /*  look for the intersections of the given 
    *  line with daughter elements construct the 
    *  intersections container for daughter volumes
    */
@@ -639,114 +580,30 @@ unsigned int LVolume::intersectLine
     ( Point , Vector , childrens , TickMin , TickMax , Threshold  );
   // here we'd like to fill the output container:
   if( own.empty() )    // the parent container is empty
-    {
-      // we have only child container - just copy it to the output 
-      std::copy( childrens.begin () , childrens.end  () , 
-                 std::back_inserter( intersections ) ) ;
-      return intersections.size();    ///< RETURN!!!
-    }
+  {
+    // we have only child container - just copy it to the output 
+    std::copy( childrens.begin () , childrens.end  () , 
+               std::back_inserter( intersections ) ) ;
+    return intersections.size();    ///< RETURN!!!
+  }
   else   // own container is NOT empty!
-    {
-      // perform quite non trivial merging 
-      StatusCode sc = 
-        MergeOwnAndChildContainers
-        ( own , childrens , std::back_inserter( intersections ) );
-      // check the result !
-      if( sc.isFailure() ) {
-          MsgStream log( msgSvc() , "TransportSvc" );
-          char line[140];
-          sprintf( line, 
-                   " x %7.2f y %7.2f z %7.2f %d own, %d child, status ",
-                   Point.x(), Point.y(), Point.z(), own.size(), 
-                   childrens.size());
-          log << MSG::ERROR
-              << "===== Failure to merge " << name()
-              << " type " << m_solid->typeName() << endreq 
-              << line << sc << endreq;
-          
-          for ( ILVolume::Intersections::const_iterator itI = own.begin();
-                own.end() != itI; itI++ ) {
-            double s = (*itI).first.first;
-            double t = (*itI).first.second;
-            sprintf( line, 
- "s=%8.6f (%8.2f,%8.2f,%9.2f) to t=%8.6f (%8.2f,%8.2f,%9.2f) Radl %9.1f",
-                     s,
-                     Point.x() + s * Vector.x(),
-                     Point.y() + s * Vector.y(),
-                     Point.z() + s * Vector.z(),
-                     t,
-                     Point.x() + t * Vector.x(),
-                     Point.y() + t * Vector.y(),
-                     Point.z() + t * Vector.z(),
-                     (*itI).second->radiationLength() );
-            log << "Own   : " << line << endreq;
-          }
-          ILVolume::Intersections::const_iterator itJ;
-          for ( itJ = childrens.begin(); childrens.end() != itJ; itJ++ ) {
-            double s = (*itJ).first.first;
-            double t = (*itJ).first.second;
-            sprintf( line, 
- "s=%8.6f (%8.2f,%8.2f,%9.2f) to t=%8.6f (%8.2f,%8.2f,%9.2f) Radl %9.1f",
-                     s,
-                     Point.x() + s * Vector.x(),
-                     Point.y() + s * Vector.y(),
-                     Point.z() + s * Vector.z(),
-                     t,
-                     Point.x() + t * Vector.x(),
-                     Point.y() + t * Vector.y(),
-                     Point.z() + t * Vector.z(),
-                     (*itJ).second->radiationLength() );
-            log << "Child : " << line << endreq;
-          }
-
-          {
-            log << "============ Details on first level children ============"
-                << endreq;
-            
-            const PVolumes& pVol = pvolumes();
-            
-            if( pVol.empty() ) { return 0; } /// RETURN!!!
-            ILVolume::Intersections child; 
-            for( ILVolume::PVolumes::const_iterator ipv = pVol.begin() ; 
-                 pVol.end() != ipv ; ++ipv ) { 
-              IPVolume* pv = *ipv; 
-        /// construct the intersections container for each daughter volumes 
-              ILVolume::Intersections child; 
-              if( 0 != pv ) { 
-                pv->intersectLine( Point     , 
-                                   Vector    , 
-                                   child     , 
-                                   TickMin   , 
-                                   TickMax   , 
-                                   Threshold ) ; 
-              }
-              for ( itJ = child.begin(); child.end() != itJ; itJ++ ) {
-                double s = (*itJ).first.first;
-                double t = (*itJ).first.second;
-                sprintf( line, "s%9.6f t%9.6f Radl %9.1f", s, t,
-                         (*itJ).second->radiationLength() );
-                log << "Child : " << line << " pv " << pv->name()
-                    << "\t " << (*itJ).second->name() 
-                    << endreq;
-              }
-            }
-            log << "========================================================="
-                << endreq;
-          }
-          
-          intersections.clear();          
-          std::copy( childrens.begin () , 
-                     childrens.end   () ,
-                     std::back_inserter( intersections ) ) ;
-          
-          return intersections.size();                          // RETURN!!!
-        }
-    }
+  {
+    // perform quite non trivial merging 
+    StatusCode sc = 
+      // MergeOwnAndChildContainers
+      MergeOwnAndChildContainers2
+      ( own       , 
+        childrens , 
+        std::back_inserter( intersections ) , 
+        this , Vector.R () ) ;
+    // check the result !
+    if ( sc.isFailure() ) 
+    { DetDesc::IntersectionErrors::setCode ( sc , this ) ; } 
+  }
   //  
   return intersections.size(); 
   //
-};
-
+}
 // ============================================================================
 // The End 
 // ============================================================================

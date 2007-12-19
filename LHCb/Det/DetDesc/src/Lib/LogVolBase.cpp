@@ -1,15 +1,18 @@
-// $Id: LogVolBase.cpp,v 1.18 2007-01-09 15:39:52 cattanem Exp $
-
+// $Id: LogVolBase.cpp,v 1.19 2007-12-19 09:42:40 ibelyaev Exp $
+// ============================================================================
+// Incldue files 
+// ============================================================================
 // GaudiKernel
+// ============================================================================
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-
+// =============================================================================
 // DetDesc 
+// ============================================================================
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/LogVolBase.h"
-#include "DetDesc/VolumeIntersectionIntervals.h"
 #include "DetDesc/PVolume.h"
-
+#include "DetDesc/VolumeIntersectionIntervals.h"
 // ============================================================================
 /** @file LogVolBase.cpp
  *
@@ -20,15 +23,12 @@
  *  @author Marco Clemencic
  */
 // ============================================================================
-
-// ============================================================================
 /** initialize the static counter (number of existing volumes) 
  */
 // ============================================================================
 unsigned long LogVolBase::s_volumeCounter = 0 ;
-
 // ============================================================================
-/** constructor
+/*  constructor
  *  @exception LVolumeException wrong paramaters value
  *  @param name name of logical volume 
  *  @param sensitivity  name of sensitive detector object (for simulation)
@@ -49,11 +49,9 @@ LogVolBase::LogVolBase( const std::string& /*name*/    ,
   m_services = DetDesc::services();
   /// add volume counter 
   ++s_volumeCounter ;  
-};
-
+}
 // ============================================================================
-/** destructor 
- */
+// destructor 
 // ============================================================================
 LogVolBase::~LogVolBase()
 { 
@@ -62,44 +60,40 @@ LogVolBase::~LogVolBase()
   // release physical volumes
   for (PVolumes::const_iterator ipv = m_pvolumes.begin();
        ipv != m_pvolumes.end() ; ++ipv ) 
-    {
-      IPVolume* pv = *ipv ;
-      if( 0 != pv ) { delete pv ; }
-    }
+  {
+    IPVolume* pv = *ipv ;
+    if( 0 != pv ) { delete pv ; }
+  }
   m_pvolumes.clear();
   // release services
   m_services->release();
-};
-
-/** 
+}
+// ============================================================================
+/* 
  *  accessor to data service used for retriving of the material 
  *  @return pointer to data service 
  */
 IDataProviderSvc* LogVolBase::dataSvc() const { return m_services->detSvc(); }
-
-/** 
+// ============================================================================
+/*
  *  accessor to message service
  *  @return pointer to message service 
  */
 IMessageSvc* LogVolBase::msgSvc() const { return m_services->msgSvc(); }
-
 // ============================================================================
-/** add the reference
+/*  add the reference
  *  @return reference counter 
  */
 // ============================================================================
 unsigned long LogVolBase::addRef  () { return DataObject::addRef(); }
-
 // ============================================================================
-/** release the interface 
+/*  release the interface 
  *  @return reference counter 
  */
 // ============================================================================
 unsigned long LogVolBase::release () { return DataObject::release(); }
-  
-
 // ============================================================================
-/** query the interface
+/*  query the interface
  *  @param ID unique interface identifier 
  *  @param ppI placeholder for returned interface
  *  @return status code 
@@ -113,18 +107,17 @@ LogVolBase::queryInterface
   if(  0 ==  ppI ) { return StatusCode::FAILURE ; }
   *ppI = 0 ;
   if      ( ID == ILVolume::   interfaceID() ) 
-    { *ppI = static_cast<ILVolume*>   ( this ) ; }
+  { *ppI = static_cast<ILVolume*>   ( this ) ; }
   else if ( ID == IInterface:: interfaceID() )
-    { *ppI = static_cast<IInterface*> ( this ) ; }
+  { *ppI = static_cast<IInterface*> ( this ) ; }
   else { return StatusCode::FAILURE ; }               ///< RETURN !
   ///
   addRef();
   ///
   return StatusCode::SUCCESS ;
-};
-
+}
 // ============================================================================
-/** traverse the sequence of paths  \n 
+/*  traverse the sequence of paths  \n 
  *  transform the sequence of replicas to sequence of  physical volumes 
  *  @see ILVolume 
  *  @param replicaPath replica-Path 
@@ -137,7 +130,7 @@ StatusCode LogVolBase::traverse
   ILVolume::ReplicaPath::const_iterator pathEnd     ,
   ILVolume::PVolumePath&                pVolumePath ) const 
 {
-  /**  optimized implementation
+  /*   optimized implementation
    *   using functional IPVolume_fromReplica(); 
    */
   pVolumePath.clear(); ///< clear/reset the output container 
@@ -150,13 +143,12 @@ StatusCode LogVolBase::traverse
       std::find( pVolumePath.begin () , 
                  pVolumePath.end   () , 
                  (IPVolume* ) 0     ) )
-    { pVolumePath.clear() ; return StatusCode::FAILURE; } 
+  { pVolumePath.clear() ; return StatusCode::FAILURE; } 
   ///
   return StatusCode::SUCCESS;
-};
-
+}
 // ============================================================================
-/** printout to STD/STL stream
+/*  printout to STD/STL stream
  *  @param os STD/STL stream
  *  @return reference to the stream
  */
@@ -167,24 +159,23 @@ std::ostream& LogVolBase::printOut( std::ostream & os ) const
      << System::typeinfoName( typeid(*this) )
      << " ("        << s_volumeCounter << ") "
      << " name = '" << name()          << "' " ;
-  if( !sdName   ().empty() ) { os << " sensDet='"  << sdName() << "'"   ; }
-  if( !mfName   ().empty() ) { os << " magField='" << mfName() << "'"   ; }
-  if( !surfaces ().empty() ) { os << " #surfaces=" << surfaces().size() ; }
+  if ( !sdName   ().empty() ) { os << " sensDet='"  << sdName() << "'"   ; }
+  if ( !mfName   ().empty() ) { os << " magField='" << mfName() << "'"   ; }
+  if ( !surfaces ().empty() ) { os << " #surfaces=" << surfaces().size() ; }
   ///
   os << " #physvols" << m_pvolumes.size() ;
   for( ILVolume::PVolumes::const_iterator it = 
          m_pvolumes.begin() ; m_pvolumes.end() != it ; ++it )
-    {
-      os 
-        << "#"   <<  it - m_pvolumes.begin() 
-        << " "   << (*it) << std::endl ;
-    }
+  {
+    os 
+      << "#"   <<  it - m_pvolumes.begin() 
+      << " "   << (*it) << std::endl ;
+  }
   ///
   return os << std::endl ;
-};
-
+}
 // ============================================================================
-/** printout to Gaudi MsgStream stream
+/*  printout to Gaudi MsgStream stream
  *  @param os Gausi MsgStreamstream
  *  @return reference to the stream
  */
@@ -195,30 +186,28 @@ MsgStream& LogVolBase::printOut( MsgStream & os ) const
      << System::typeinfoName( typeid(*this) )
      << " ("        << s_volumeCounter << ") "
      << " name = '" << name()          << "' " ;
-  if( !sdName   ().empty() ) { os << " sensDet='"  << sdName() << "'"   ; }
-  if( !mfName   ().empty() ) { os << " magField='" << mfName() << "'"   ; }
-  if( !surfaces ().empty() ) { os << " #surfaces=" << surfaces().size() ; }
+  if ( !sdName   ().empty() ) { os << " sensDet='"  << sdName() << "'"   ; }
+  if ( !mfName   ().empty() ) { os << " magField='" << mfName() << "'"   ; }
+  if ( !surfaces ().empty() ) { os << " #surfaces=" << surfaces().size() ; }
   ///
   os << " #physvols" << m_pvolumes.size() ;
-  for( ILVolume::PVolumes::const_iterator it = 
-         m_pvolumes.begin() ; m_pvolumes.end() != it ; ++it )
-    {
-      os 
-        << "#"   <<  it - m_pvolumes.begin() 
-        << " "   << (*it) << endreq ;
-    }
+  for ( ILVolume::PVolumes::const_iterator it = 
+          m_pvolumes.begin() ; m_pvolumes.end() != it ; ++it )
+  {
+    os 
+      << "#"   <<  it - m_pvolumes.begin() 
+      << " "   << (*it) << endreq ;
+  }
   ///
   return os << endreq ;
-};
-
+}
 // ===========================================================================
-/** create EMPTY daughter physical volume 
+/*  create EMPTY daughter physical volume 
  *  @return pointer to created physical volume  
  */
 // ===========================================================================
 IPVolume* LogVolBase::createPVolume()
 { return createPVolume("",""); }
-
 // ===========================================================================
 //bool LogVolBase::copyExist  ( const size_t copy   ) const 
 //{
@@ -239,24 +228,24 @@ IPVolume* LogVolBase::createPVolume()
 // ===========================================================================
 //size_t LogVolBase::copyNumber( const std::string& pvName ) const
 //{
-  //
+//
 //  const size_t copy_number = m_pvolumes.size() ;
-  
-  // forced copy_number ?
+
+// forced copy_number ?
 //  const std::string::size_type pos = pvName.find(':') ;
 //  if( std::string::npos == pos ) { return copy_number ; }      // RETURN
-  
+
 //  const std::string tmp( pvName  , pos + 1 , std::string::npos );
 //  size_t copy_read = atoi( tmp.c_str() );
-  
-  /// check the validity of the string 
+
+/// check the validity of the string 
 //  Assert( 0 != copy_read  , 
 //          "LogVolBase::copyNumber: illegal copy_number '" + tmp + 
 //          "' for '" + pvName + "' ( lv='" + name() + "') " ) ;
-  
+
 //  if ( copy_read  < 100000 ) 
 //    {
-      //========== hack to set the output level =================
+//========== hack to set the output level =================
 //      PropertyMgr* pmgr = new PropertyMgr();
 //      int outputLevel = -1;
 //      pmgr->declareProperty( "OutputLevel", outputLevel );
@@ -265,7 +254,7 @@ IPVolume* LogVolBase::createPVolume()
 //      jobSvc->setMyProperties( "LOGVOL", pmgr );
 //   if( -1 != outputLevel ) msgSvc()->setOutputLevel( "LOGVOL", outputLevel );
 //      delete pmgr;
-      //=========================================================
+//=========================================================
 //      MsgStream log( msgSvc() , "LOGVOL" ) ;
 //      log << MSG::WARNING
 //          << " LogVolBase: copy number ' " 
@@ -274,13 +263,13 @@ IPVolume* LogVolBase::createPVolume()
 //          << " PV='" << pvName << "'" << endreq ;
 //      return copy_number ;    
 //    }
-  
+
 //  return copy_read ;
 //};
 // ===========================================================================
 
 // ===========================================================================
-/** create daughter physical volume 
+/*  create daughter physical volume 
  *  @param PVname name of daughter volume 
  *  @param LVnameForPV name of logical volume for the physical volume 
  *  @param position position of logical volume 
@@ -288,10 +277,11 @@ IPVolume* LogVolBase::createPVolume()
  *  @return pointer to created physical volume  
  */
 // ===========================================================================
-IPVolume* LogVolBase::createPVolume ( const std::string&    PVname         , 
-                                      const std::string&    LVnameForPV    ,
-                                      const Gaudi::XYZPoint&     Position  ,
-                                      const Gaudi::Rotation3D&   Rotation    ) 
+IPVolume* LogVolBase::createPVolume 
+( const std::string&    PVname         , 
+  const std::string&    LVnameForPV    ,
+  const Gaudi::XYZPoint&     Position  ,
+  const Gaudi::Rotation3D&   Rotation    ) 
 {
   PVolume* pv = 0; 
   try{ pv = new  PVolume ( PVname      , 
@@ -300,9 +290,9 @@ IPVolume* LogVolBase::createPVolume ( const std::string&    PVname         ,
                            Position    , 
                            Rotation    ) ; }
   catch( const GaudiException& Exception ) 
-    { Assert( false , "createPVolume() , exception caught! " , Exception ); } 
+  { Assert( false , "createPVolume() , exception caught! " , Exception ); } 
   catch(...)                        
-    { Assert( false , "createPVolume() , unknown exception!"); } 
+  { Assert( false , "createPVolume() , unknown exception!"); } 
 
   if( 0 == pv ) {
     throw LogVolumeException( "LVolume::createPVolume, could not create volume "+
@@ -311,12 +301,11 @@ IPVolume* LogVolBase::createPVolume ( const std::string&    PVname         ,
   }
   
   m_pvolumes.push_back( pv ); 
-
+  
   return m_pvolumes.back();
-};
-
+}
 // ============================================================================
-/** create daughter physical volume 
+/*  create daughter physical volume 
  *  @param PVname      name of daughter volume 
  *  @param LVnameForPV name of logical volume for the physical volume 
  *  @param Transform   tranformation
@@ -335,10 +324,10 @@ LogVolBase::createPVolume
                            //                         copy_number , 
                            Transform   ) ; }
   catch( const GaudiException& Exception ) 
-    { Assert( false , "createPVolume() , exception caught! " , Exception ); } 
+  { Assert( false , "createPVolume() , exception caught! " , Exception ); } 
   catch(...)                        
-    { Assert( false , "createPVolume() , unknown exception!"); } 
-
+  { Assert( false , "createPVolume() , unknown exception!"); } 
+  
   if( 0 == pv ) {
     throw LogVolumeException( "LVolume::createPVolume, could not create volume "+
                               PVname+"(lv="+LVnameForPV+")", 
@@ -346,10 +335,9 @@ LogVolBase::createPVolume
   }
   m_pvolumes.push_back( pv ); 
   return m_pvolumes.back();  
-};  
-
+}
 // ============================================================================
-/** Auxillary method  to calculate intersections with daughters
+/*  Auxillary method  to calculate intersections with daughters
  *  @exception LVolumeException wrong parameters or geometry error
  *  @param Point initial point at the line
  *  @param Vector direction vector of the line
@@ -370,42 +358,46 @@ LogVolBase::intersectDaughters
   const double             Threshold          ) const 
 {
   ///
-  if( m_pvolumes.empty() ) { return 0; } /// RETURN!!!
+  if ( m_pvolumes.empty() ) { return 0; } /// RETURN!!!
   ///
   ILVolume::Intersections child; 
   for( ILVolume::PVolumes::const_iterator ipv = m_pvolumes.begin() ; 
        m_pvolumes.end() != ipv ; ++ipv ) 
-    { 
-      IPVolume* pv = *ipv; 
-      /// construct the intersections container for each daughter volumes 
-      if( 0 != pv ) 
-        { pv->intersectLine( Point     , 
-                             Vector    , 
-                             child     , 
-                             tickMin   , 
-                             tickMax   , 
-                             Threshold ) ; }
-      else 
-        { Assert( false , 
-                  "LVolume::intersect line, IPVolume==NULL for " + name() ); }
-      
-      /// merge individidual containers and clear child container 
-      std::copy( child.begin() , 
-                 child.end  () , 
-                 std::back_inserter( childIntersections ) ) ; 
-      child.clear();
-    }
+  { 
+    IPVolume* pv = *ipv; 
+    /// construct the intersections container for each daughter volumes 
+    if( 0 != pv ) 
+    { pv->intersectLine( Point     , 
+                         Vector    , 
+                         child     , 
+                         tickMin   , 
+                         tickMax   , 
+                         Threshold ) ; }
+    else 
+    { Assert( false , 
+              "LVolume::intersect line, IPVolume==NULL for " + name() ); }
+    
+    /// merge individidual containers and clear child container 
+    std::copy( child.begin() , 
+               child.end  () , 
+               std::back_inserter( childIntersections ) ) ; 
+    child.clear();
+  }
   ///
-  std::sort( childIntersections.begin() , 
-             childIntersections.end  () , 
-             VolumeIntersectionIntervals::CompareIntersections() ); 
-  ///
+  std::stable_sort
+    ( childIntersections.begin() , 
+      childIntersections.end  () , 
+      VolumeIntersectionIntervals::CompareIntersections() ); 
+  
+  /// V.B.: try to correct 
+  VolumeIntersectionIntervals::correct 
+    ( this , childIntersections , Vector.R() ) ;
+
   return childIntersections.size(); 
   ///  
-};
-
+}
 // ============================================================================
-/** Auxillary method  to calculate intersection with daughters
+/*  Auxillary method  to calculate intersection with daughters
  *  @exception LVolumeException wrong parameters or geometry error
  *  @param Point initial point at the line
  *  @param Vector direction vector of the line
@@ -427,33 +419,38 @@ LogVolBase::intersectDaughters
   ILVolume::Intersections child; 
   for( ILVolume::PVolumes::const_iterator ipv = m_pvolumes.begin() ; 
        m_pvolumes.end() != ipv ; ++ipv  ) 
-    { 
-      const IPVolume* pv = *ipv; 
-      /// construct the intersections container for each daughter volumes 
-      if( 0 != pv ) 
-        { pv->intersectLine( Point     , 
-                             Vector    , 
-                             child     , 
-                             Threshold ) ;}
-      else 
-        { Assert( false , 
-                  "LogVolBase::intersectDaug, IPVolume==NULL for " +
-                  name() ); }
-      /// merge individidual containers and clear child container 
-      std::copy( child.begin() , 
-                 child.end  () , 
-                 std::back_inserter( childIntersections ) ) ; 
-      child.clear();
-    }
+  { 
+    const IPVolume* pv = *ipv; 
+    /// construct the intersections container for each daughter volumes 
+    if( 0 != pv ) 
+    { pv->intersectLine( Point     , 
+                         Vector    , 
+                         child     , 
+                         Threshold ) ;}
+    else 
+    { Assert( false , 
+              "LogVolBase::intersectDaug, IPVolume==NULL for " +
+              name() ); }
+    /// merge individidual containers and clear child container 
+    std::copy( child.begin() , 
+               child.end  () , 
+               std::back_inserter( childIntersections ) ) ; 
+    child.clear();
+  }
   ///
-  std::sort( childIntersections.begin() , 
-             childIntersections.end  () , 
-             VolumeIntersectionIntervals::CompareIntersections() ); 
+  std::stable_sort
+    ( childIntersections.begin() , 
+      childIntersections.end  () , 
+      VolumeIntersectionIntervals::CompareIntersections() ); 
   ///
+
+  /// V.B.: try to correct 
+  VolumeIntersectionIntervals::correct 
+    ( this , childIntersections , Vector.R() ) ;
+
   return childIntersections.size(); 
   ///
-};
-
+}
 // ============================================================================
 // The End 
 // ============================================================================

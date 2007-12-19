@@ -1,11 +1,21 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.26 2007-10-05 14:12:26 cattanem Exp $ 
+! $Id: release.notes,v 1.27 2007-12-19 09:49:26 ibelyaev Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! Purpose     : Collection of useful components for checking of 
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
+
+! 2007-12-19 - Vanya BELYAEV
+
+   see the presentation at T-Rec meeting, 17.12.2007  
+
+ - add new algorithm DetDesc::CheckOverlap 
+   and the conrresponidng configuration file 
+     options/CheckOverlap.opts
+
+ - cmt/requirements 
 
 !======================= DetDescChecks v4r4 2007-10-05 ========================
 ! 2007-10-05 - Marco Cattaneo

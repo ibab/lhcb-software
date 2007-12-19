@@ -1,10 +1,25 @@
-! =============================================================================
-! $Id: release.notes,v 1.39 2007-12-07 12:57:46 cattanem Exp $ 
+! $Id: release.notes,v 1.40 2007-12-19 09:46:43 ibelyaev Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2007-12-19 - Vanya BELYAEV
+ - New treatment of geometry overlaps/errors
+
+   src/TransportSvc.h, src/TransportSvc.cpp
+   
+    1) implement new interface DetDesc::IGeometryErrorSvc
+    2) add new properties 
+       "Recover"  (boolean) -> to activate/deactivate the recovery of the 
+                          errors          (default  is true)
+       "Protocol" (boolean) - to activate/deactivate the protocol of the  
+                          geeomtrt errors (default is "true")
+
+   cmt/requirmeents
+  
+     version increment to v1r16 
 
 !========================= DetDescSvc v1r15 2007-12-07 ========================
 ! 2007-12-07 - Marco Clemencic
