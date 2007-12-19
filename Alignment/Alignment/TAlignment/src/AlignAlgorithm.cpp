@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.12 2007-12-05 15:51:16 janos Exp $
+// $Id: AlignAlgorithm.cpp,v 1.13 2007-12-19 11:43:10 janos Exp $
 // Include files
 // from std
 // #include <utility>
@@ -252,7 +252,8 @@ StatusCode AlignAlgorithm::execute() {
       m_resHistos[index]->fill(m_iteration, res);
       m_pullHistos[index]->fill(m_iteration, res/err);
       // Get alignment derivatives
-      Derivatives der = proj->alignmentDerivatives(meas, elem->pivotXYZPoint());
+      LHCb::StateVector state((*node)->state().stateVector(),(*node)->state().z());
+      Derivatives der = proj->alignmentDerivatives(state, meas, elem->pivotXYZPoint());
       // push back normalized residuals & derivatives;
       res /= err;
       der /= err;
