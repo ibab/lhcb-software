@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.cpp,v 1.1 2007-11-16 11:44:11 albrecht Exp $
+// $Id: PatConfirmTool.cpp,v 1.2 2007-12-19 14:28:08 hmdegaud Exp $
 // Include files 
 
 // from Gaudi
@@ -83,7 +83,7 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
    *    Define track hypothesis from seed state (parabola model) and 
    *    decode IT and OT hits in search window
    */
-  TrackParabel::TrackParabel tp(seedState, m_nsigma); 
+  TrackParabel tp(seedState, m_nsigma); 
   m_tHitManager->prepareHitsInWindow(tp);
 
   if( msgLevel(MSG::DEBUG) ) 

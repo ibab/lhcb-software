@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.cpp,v 1.12 2007-12-11 16:30:16 hernando Exp $
+// $Id: TsaConfirmTool.cpp,v 1.13 2007-12-19 14:28:08 hmdegaud Exp $
 // Include files 
 
 // from Gaudi
@@ -124,7 +124,7 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   ChronoEntity tDecode, tTracking;
   if(m_debugMode) tDecode.start();
 
-  TrackParabel::TrackParabel tp(seedState, m_nsigma); 
+  TrackParabel tp(seedState, m_nsigma); 
   m_hitMan->prepareHitsInWindow(tp);
   
   if(msgLevel(MSG::INFO)) 
