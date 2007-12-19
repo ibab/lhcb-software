@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2007-12-19 - Jan Amoraal
+ - Track projectors have changed (Needs: Rec v5r2)
+
 ! 2007-12-05 - Jan Amoraal
  - Added the ability to align ensembles 
 
