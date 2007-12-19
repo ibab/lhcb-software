@@ -13,13 +13,17 @@ StoreExplorerAlg.PrintFreq           = 0.01;
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
-
+IODataManager.AgeLimit=1;
+IODataManager.OutputLevel=1;
 EventSelector.PrintFreq              = 100;
 EventSelector.Input                  = {
   "DATA='file://mdfData_0.dat' SVC='LHCb::MDFSelector'",
   "DATA='PFN:file://../cmt/mdfData_1.dat' SVC='LHCb::MDFSelector'",
   "DATA='file:mdfData_2.dat' SVC='LHCb::MDFSelector'",
   "DATA='PFN:mdfData_3.dat' SVC='LHCb::MDFSelector'",
-  "DATA='mdfData_4.dat' SVC='LHCb::MDFSelector'"
+  "DATA='mdfData_4.dat' SVC='LHCb::MDFSelector'",
+  "DATA='PFN:file:///tmp/mdfData_5.dat' SVC='LHCb::MDFSelector'",
+  "DATA='PFN:file:/tmp/mdfData_6.dat' SVC='LHCb::MDFSelector'",
+  "DATA='PFN:/tmp/mdfData_7.dat' SVC='LHCb::MDFSelector'"
 };
 Writer.Connection = "file://mifData.dat";
