@@ -1,9 +1,12 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.79 2007-12-03 15:56:13 cattanem Exp $
+! $Id: release.notes,v 1.80 2007-12-19 13:15:55 pkoppenb Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2007-12-19 - Patrick Koppenburg for Jaap Panman
+ - Added keyedContTypeDef = true to TwoProngVertex
 
 !========================= RecEvent v2r8 2007-12-03 ==========================
 ! 2007-12-03 Wouter Hulsbergen
