@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.7 2007-09-21 11:49:02 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.8 2007-12-19 13:13:07 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -189,7 +189,7 @@ StatusCode GAlign::execute() {
       if ( atrack->nStates() < 1 ) continue;
       if ( atrack->nMeasurements() == 0 ) {
 	// load the measurements on the track
-	m_measProvider->load();
+//	m_measProvider->load();
 	// calculate from the track what the measurement was
 	StatusCode mc = m_measProvider->load( *atrack );
 	if ( ! mc ) {

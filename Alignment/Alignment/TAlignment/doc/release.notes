@@ -3,6 +3,11 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+</PRE><H1><A NAME=v3r4>2007-12-19 TAlignment v3r4</A></H1><PRE>
+- J. Blouw, 19/12/2007: tag v3r4 for alignment release v2r3
+  - changes are listed below.
+
+
 ! 2007-12-19 - Jan Amoraal
  - Track projectors have changed (Needs: Rec v5r2)
 
