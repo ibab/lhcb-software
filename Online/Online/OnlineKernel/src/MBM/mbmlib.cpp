@@ -443,9 +443,6 @@ int mbm_add_req (BMID bm, int evtype,
     ::memset(rq,0,sizeof(REQ));
     rq->ev_type   = evtype;
     rq->tr_mask   = *trmask;
-    if (evtype > TOPTYP && int(trmask->word(0)) <= evtype )        {
-      rq->tr_mask.setWord(0, evtype);
-    }
     rq->vt_mask   = *veto;
     rq->masktype  = masktype;
     rq->freqmode  = freqmode;
@@ -466,12 +463,8 @@ int mbm_del_req (BMID bm, int evtype,
   if ( us )  {
     REQ *rq, *rqn;
     int i, j;
-    TriggerMask mask = *(TriggerMask*)trmask;
-    if (evtype > TOPTYP && int(mask.word(0)) <= evtype )        {
-      mask.setWord(0, evtype);
-    }
     for (i = 0, rq = us->req; i < us->n_req; i++, rq++)  {
-      if ( evtype != rq->ev_type || rq->tr_mask != mask || rq->vt_mask != veto )
+      if ( evtype != rq->ev_type || rq->tr_mask != trmask || rq->vt_mask != veto )
         continue;
       if ( masktype != rq->masktype || usertype != rq->user_type )
         continue;
@@ -951,32 +944,26 @@ int _mbm_check_wsp (BMID bm)  {
 int _mbm_match_req (BMID bm, int partid, int evtype, TriggerMask& trmask, 
                     UserMask& mask0, UserMask& mask1, UserMask& mask2)  
 {
+  int i;
+  REQ *rq;
   UserMask dummy;
   MBMQueue<USER> que(bm->usDesc, -USER_next_off);
   for(USER* u=que.get(); u; u=que.get() )  {
-    int i;
-    REQ *rq;
     u->isValid();
     if (((u->partid != 0) && (partid != 0) && (u->partid != partid)) || (u->c_state == S_pause))  {
       continue;
     }
     for (i = 0, rq = u->req; i < u->n_req; i++, rq++)  {
-      if (evtype <= TOPTYP)  {
-        if (evtype != rq->ev_type)
-          continue;
-        if (rq->masktype == BM_MASK_ALL)  {
-          if ( trmask != rq->tr_mask )
-            continue;
-        }
-        else if ( !dummy.mask_and(trmask, rq->tr_mask) )
-          continue;
-        else if ( dummy.mask_and(trmask, rq->vt_mask) )  
-          continue;
+      if (evtype != rq->ev_type)
+	continue;
+      else if (rq->masktype == BM_MASK_ALL)  {
+	if ( trmask != rq->tr_mask )
+	  continue;
       }
-      else if (rq->ev_type <= TOPTYP)
-        continue;
-      else if ( evtype < rq->ev_type || evtype > (int)rq->tr_mask.word(0) )
-        continue;
+      else if ( !dummy.mask_and(trmask, rq->tr_mask) )
+	continue;
+      else if ( dummy.mask_and(trmask, rq->vt_mask) )  
+	continue;
       else if ( (float(::rand())/float(RAND_MAX)*100.0) > rq->freq)
         continue;
 
