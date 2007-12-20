@@ -9,7 +9,7 @@ versionNumber = '$Name: not supported by cvs2svn $'.split()[1]
 if versionNumber == "$":
     versionNumber = 'HEAD'
 
-versionId  = '$Id: guiwin.py,v 1.3 2007-12-14 12:51:30 marcocle Exp $'.split()
+versionId  = '$Id: guiwin.py,v 1.4 2007-12-20 16:10:40 marcocle Exp $'.split()
 if len(versionId) < 4:
     versionDate = 'unknown'
 else:
@@ -30,18 +30,15 @@ class myWindow(qt.QMainWindow):
     def __init__(self, bridge = None, parent = None, name = 'myWindow', flags = qt.Qt.WType_TopLevel):
         qt.QMainWindow.__init__(self, parent, name, flags)
 
-        self.bridge = bridge
-        if bridge:
-            self.connectionString = self.bridge.connectionString
-        else:
-            self.connectionString = ''
-
+        self.bridge = None
+        self.connectionString = ''
+        
         #---- Configurations ----#
         self.confFile = os.path.join(os.environ['HOME'],'.conddbbrowserrc')
         self.old_sessions = ["sqlite_file:$SQLITEDBPATH/DDDB.db/DDDB [r-]",
                              "sqlite_file:$SQLITEDBPATH/LHCBCOND.db/LHCBCOND [r-]",
                              ]
-        self.max_old_sessions = 5
+        self.max_old_sessions = 15
         self.external_editor = "emacs"
         if os.path.exists(self.confFile):
             locals = {}
@@ -129,6 +126,10 @@ class myWindow(qt.QMainWindow):
         self.connect(self.dbTree.tree, qt.SIGNAL("selectionChanged(QListViewItem *)"), self.resolveSelection)
         self.connect(self.dialogAddCondition.buttonWrite, qt.SIGNAL("clicked()"), self.writeCondition)
         #----------------------------#
+
+        if bridge:
+            self.setBridge(bridge)
+        
 
     ##################
     # Signal actions #
@@ -251,9 +252,11 @@ class myWindow(qt.QMainWindow):
         self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
         try:
             if self.dialogConnectDB.exec_loop():
-                self.connectionString = self.dialogConnectDB.connectString
+                connectionString = self.dialogConnectDB.connectionString
                 is_read_only = self.dialogConnectDB.buttonLocked.isOn()
-                bridge = CondDBUI.CondDB(self.connectionString, create_new_db = False, readOnly = is_read_only)
+                bridge = CondDBUI.CondDB(connectionString,
+                                         create_new_db = False,
+                                         readOnly = is_read_only)
                 self.setBridge(bridge)
         except Exception, details:
             self.unsetCursor()
