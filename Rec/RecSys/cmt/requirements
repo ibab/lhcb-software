@@ -70,4 +70,4 @@ use RichRecSys          v3r7    Rich  # Chris Jones
 use RichRecTools        v4r0    Rich  # Chris Jones
 
 # Global reco
-use GlobalReco          v6r14   Rec   # Chris Jones
+use GlobalReco          v6r15   Rec   # Chris Jones
