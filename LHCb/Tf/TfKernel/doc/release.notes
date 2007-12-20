@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfKernel v2r2 2007-12-20 =======================
 ! 2007-12-19 - Olivier Callot
  - Add new values in HitBase Estatus enum, mainly for TT hits.
 
