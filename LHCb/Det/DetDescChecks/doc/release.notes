@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.27 2007-12-19 09:49:26 ibelyaev Exp $ 
+! $Id: release.notes,v 1.28 2007-12-20 10:50:01 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,6 +7,7 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
+!======================= DetDescChecks v4r5 2007-12-20 ========================
 ! 2007-12-19 - Vanya BELYAEV
 
    see the presentation at T-Rec meeting, 17.12.2007  
