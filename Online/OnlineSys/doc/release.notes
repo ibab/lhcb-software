@@ -5,13 +5,8 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v4r0>2007-11-01 OnlineSys v4r3</A></H1><PRE>
-This is a new version built against LHCb v23r1.
-Several bug fixes in OnlineKernel, GaudiOnline, UPI as a result
-of the Online commissioning. Improvements in the EventBuilder
-to support increaded monitoring and diagnistics as well
-as possible deadlock situation resulting in a non-reponding 
-task.
+</PRE><H1><A NAME=v4r0>2007-11-01 OnlineSys v4r4</A></H1><PRE>
+This is a new version built against LHCb v23r2.
 
 </PRE><H1><A NAME=v4r0>2007-11-01 OnlineSys v4r2</A></H1><PRE>
 This is a new version built against LHCb v23r0.
