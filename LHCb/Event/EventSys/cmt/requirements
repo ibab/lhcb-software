@@ -1,5 +1,5 @@
 package EventSys
-version v23r11
+version v24r0
 
 branches doc cmt
 
@@ -17,31 +17,17 @@ use EventAssoc  v4r3    Event
 use LinkerEvent v3r2    Event
 use TrackEvent  v4r9    Event
 use PackedEvent v3r2    Event
-use HltEvent    v8r5    Event
 use VeloEvent   v16r2   Event
+use HltEvent    v8r5    Event
 
 private
 use RELAX       v*      LCG_Interfaces
 
-#----This is only for RELAX 1_1_9 that had an inconsistent library names in rootmap files 
+#---- Include relevant RELAX dictionaries into LHCB reflex.rootmap
 pattern copy_relax_rootmap \
-  macro fixup_rootmap<dict> "i=open(r'$(RELAX_home)/lib/lib<dict>Rflx.rootmap');\
-                             lines=[line.replace('lib<dict>Dict.so','lib<dict>Rflx.so') for line in i.readlines()];\
-                             open('lib<dict>Rflx.rootmap','w').writelines(lines)" \
-        WIN32                "i=open(r'$(RELAX_home)/lib/<dict>Rflx.rootmap');\
-                             lines=[line.replace('<dict>Dict.dll','<dict>Rflx.dll') for line in i.readlines()];\
-                             open('<dict>Rflx.rootmap','w').writelines(lines)" ;\
-  action copy_relax_rootmap<dict> 'python -c "$(fixup_rootmap<dict>)";\
-                                   $(merge_rootmap_cmd) --do-merge -i lib<dict>Rflx.rootmap -m $(CMTINSTALLAREA)/$(tag)/lib/rootmap' \
-         WIN32                     'python -c "$(fixup_rootmap<dict>)" &\
-                                   python $(merge_rootmap_cmd) --do-merge -i <dict>Rflx.rootmap -m $(CMTINSTALLAREA)/$(tag)/lib/rootmap' ;\
+  action copy_relax_rootmap<dict> '$(merge_rootmap_cmd) --do-merge -i $(RELAX_home)/lib/lib<dict>Rflx.pamtoor -m $(CMTINSTALLAREA)/$(tag)/lib/reflex.rootmap' \
+         WIN32                    'python $(merge_rootmap_cmd) --do-merge -i $(RELAX_home)/lib/<dict>Rflx.pamtoor -m $(CMTINSTALLAREA)/$(tag)/lib/reflex.rootmap' ;\
   macro_append constituents  " copy_relax_rootmap<dict> "
-
-#----for later RELAX versions it should be like this
-#pattern copy_relax_rootmap \
-#  action copy_relax_rootmap<dict> '$(merge_rootmap_cmd) --do-merge -i $(RELAX_home)/lib/lib<dict>Rflx.pamtoor -m $(CMTINSTALLAREA)/$(tag)/lib/reflex.rootmap' \
-#         WIN32                    'python $(merge_rootmap_cmd) --do-merge -i $(RELAX_home)/lib/<dict>Rflx.pamtoor -m $(CMTINSTALLAREA)/$(tag)/lib/reflex.rootmap' ;\
-#  macro_append constituents  " copy_relax_rootmap<dict> "
 
 
 copy_relax_rootmap dict=CLHEP
