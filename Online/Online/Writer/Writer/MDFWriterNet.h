@@ -200,7 +200,7 @@ namespace LHCb {
    */
 
   class MDFWriterNet : public MDFWriter, INotifyClient {
-
+    typedef LHCb::Connection Connection;
   protected:
     /// The initial storage server hostname to connect to.
     std::string m_serverAddr;
@@ -236,7 +236,7 @@ namespace LHCb {
     File *m_currFile;
 
     /// The connection object being used to talk to the server.
-    Connection *m_connection;
+    Connection *m_srvConnection;
 
     /// The object that encapsulates all RPC communication.
     RPCComm *m_rpcObj;

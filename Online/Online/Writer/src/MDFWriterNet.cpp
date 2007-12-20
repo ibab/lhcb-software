@@ -101,12 +101,12 @@ StatusCode MDFWriterNet::initialize(void)
     " Initializing." << endmsg;
 
   m_currFile = NULL;
-  m_connection = new Connection(m_serverAddr, m_serverPort,
+  m_srvConnection = new Connection(m_serverAddr, m_serverPort,
 				m_sndRcvSizes, m_log, this);
   m_rpcObj = new RPCComm(m_runDBURL.c_str());
   try {
 
-    m_connection->initialize();
+    m_srvConnection->initialize();
 
   } catch(const std::exception& e) {
     *m_log << MSG::ERROR << "Caught Exception:" << e.what() << endmsg;
@@ -144,12 +144,12 @@ StatusCode MDFWriterNet::finalize(void)
   }
 
   // closeConnection() blocks till everything is flushed.
-  m_connection->closeConnection();
-  delete m_connection;
+  m_srvConnection->closeConnection();
+  delete m_srvConnection;
   delete m_rpcObj;
 
   m_currFile = NULL;
-  m_connection = NULL;
+  m_srvConnection = NULL;
   m_rpcObj = NULL;
 
   *m_log << MSG::INFO << " Writer " << getpid() <<
@@ -169,7 +169,7 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
 
   currFile = new File(getNewFileName(runNumber), runNumber);
   INIT_OPEN_COMMAND(&header, currFile->getFileName()->c_str(), currFile->getSeqNum(), runNumber);
-  m_connection->sendCommand(&header);
+  m_srvConnection->sendCommand(&header);
   currFile->open();
   currFile->incSeqNum();
   return currFile;
@@ -189,7 +189,7 @@ void MDFWriterNet::closeFile(File *currFile)
 		     currFile->getMD5Checksum(),
 		     currFile->getSeqNum(),
 		     currFile->getRunNumber());
-  m_connection->sendCommand(&header);
+  m_srvConnection->sendCommand(&header);
 }
 
 /* Writes out the buffer to the socket through the Connection object.
@@ -260,7 +260,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
 		     m_currFile->getFileName()->c_str(),
 		     m_currFile->getSeqNum(),
 		     runNumber);
-  m_connection->sendCommand(&header, (void*)data);
+  m_srvConnection->sendCommand(&header, (void*)data);
   size_t totalBytesWritten = m_currFile->updateWrite(data, len);
   m_currFile->incSeqNum();
 
@@ -312,7 +312,7 @@ std::string MDFWriterNet::getNewFileName(unsigned int runNumber)
  */
 MDFWriterNet::~MDFWriterNet()
 {
-  if(m_connection) {
+  if(m_srvConnection) {
     *m_log << MSG::WARNING << "Destructor called before finalize. Normal?" << endmsg;
     finalize();
   }
