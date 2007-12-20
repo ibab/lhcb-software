@@ -1,4 +1,4 @@
-// $Id: ICondDBAccessSvc.h,v 1.16 2007-04-20 14:39:53 marcocle Exp $
+// $Id: ICondDBAccessSvc.h,v 1.17 2007-12-20 09:54:38 marcocle Exp $
 #ifndef DETCOND_ICONDDBACCESSSVC_H 
 #define DETCOND_ICONDDBACCESSSVC_H 1
 
@@ -25,8 +25,6 @@ namespace Gaudi {
 namespace cool {
   class IRecord;
   class IRecordSpecification;
-}
-namespace cool {
 }
 
 static const InterfaceID IID_ICondDBAccessSvc ( "ICondDBAccessSvc", 1, 0 );
