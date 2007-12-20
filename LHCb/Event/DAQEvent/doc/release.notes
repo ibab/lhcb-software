@@ -4,9 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r8 2007-12-20 ============================
 ! 2007-12-14 - Markus Frank
  - Add numbers to bank type enum.
-   Add to new bank types on request of Giacomo Graziani, Andrea Salamon and Alessia Satta:
+ - Add two new bank types on request of Giacomo Graziani, Andrea Salamon and Alessia Satta:
                    MuonFull,        // 49
                    MuonError,       // 50
 ! 2007-12-13 - Olivier Callot

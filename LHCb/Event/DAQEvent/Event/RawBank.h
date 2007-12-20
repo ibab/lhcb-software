@@ -92,7 +92,7 @@ namespace LHCb
                    L0MuonProcCand,  // 40
                    L0MuonProcData,  // 41
                    L0MuonRaw,       // 42
-		   L0MuonError,     // 43
+                   L0MuonError,     // 43
                    GaudiSerialize,  // 44
                    GaudiHeader,     // 45
                    TTProcFull,      // 46
