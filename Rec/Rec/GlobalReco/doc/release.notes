@@ -4,9 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r15 2007-12-20 ======================
 ! 2007-12-20 Olivier Deschamps
  - protect against NaN in NeutralProtoPAlg::finalize()
-
 
 !========================== GlobalReco v6r14 2007-12-12 ======================
 ! 2007-11-28 - Chris Jones
