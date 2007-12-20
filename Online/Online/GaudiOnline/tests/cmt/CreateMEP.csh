@@ -4,6 +4,7 @@ endif
 cat >/tmp/CreateMEP.opts <<END-OF-OPTS
 ApplicationMgr.DLLs       = { "MDF" };
 ApplicationMgr.TopAlg     = { "LHCb::RawEventTestCreator/RawEventGen", "StoreExplorerAlg" };
+ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
 ApplicationMgr.EvtMax     = 2000;
 ApplicationMgr.EvtSel     = "NONE";
 StoreExplorerAlg.Load     = 1;

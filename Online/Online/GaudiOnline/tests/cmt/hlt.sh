@@ -1,5 +1,5 @@
 #/bin/csh
-#killall test.exe
+killall test.exe
 killall Gaudi.exe
 killall gentest.exe
 #rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
@@ -20,15 +20,9 @@ export WIDETERM='xterm  -ls -132 -geometry 160x50 -title '
 #
 #
 $MINITERM MBMInit@${HOST} -e "export UTGID=MEPInit   ; $gaudi_exe -opts=$OPTS/MEPInit.opts -main=$OPTS/Main.opts " &
-$MINITERM OutputBuffer@${HOST} -e "export UTGID=OutBuff   ; $gaudi_exe -opts=$OPTS/MBMinit.opts -main=$OPTS/Main.opts " &
+$MINITERM OutputBuffer@${HOST} -e "export UTGID=OutBuff   ; $gaudi_exe -opts=$OPTS/MBMinit.opts -main=$OPTS/Main.opts " &$MINITERM TanServer@${HOST} -e "export UTGID=TANServer; $test_exe tan_nameserver -a -tcp -d" &
 #
-#
-##$BIGTERM ErrorLogger@${HOST}    -e "export UTGID=ErrLog_0; $gaudi_exe -opts=$GAUDIUPIROOT/options/Errlog.opts" &
-#$WIDETERM ErrorLogger@${HOST}    -e "export UTGID=ErrLog; $gaudi_exe2 -opts=$OPTS/ErrorLogger.opts -main=$OPTS/Remap.opts " &
-#sleep 3
-#$MINITERM ErrSrv@${HOST} -e "export UTGID=ErrSrv   ; $gaudi_exe -main=$OPTS/ErrorSrv.opts -opt=$OPTS/Daemon.opts " &
-#
-sleep 4
+sleep 6
 #
 #  Monitors:
 #
@@ -48,8 +42,8 @@ $MINITERM EvtServ@${HOST}   -e "export UTGID=EvtServ;   $gaudi_exe -opt=$OPTS/Ev
 
 sleep 2
 
-$MINITERM Sender@${HOST}    -e "export UTGID=Sender   ; $gaudi_exe -opt=$OPTS/MDFSender.opts -main=$OPTS/Main.opts "&
-$MINITERM Sender2@${HOST}    -e "export UTGID=Sender2   ; $gaudi_exe -opt=$OPTS/MDFSender.opts -main=$OPTS/Main.opts "&
+$MINITERM Sender@${HOST}    -e "export UTGID=Sender; $gaudi_exe -opt=$OPTS/MDFSender.opts -main=$OPTS/Main.opts "&
+$MINITERM Sender2@${HOST}    -e "export UTGID=Sender2; $gaudi_exe -opt=$OPTS/MDFSender.opts -main=$OPTS/Main.opts "&
 
 #sleep 2
 $MINITERM EvtCons1@${HOST}    -e "export UTGID=EvtCons1;  $gaudi_exe -opt=$OPTS/NetworkConsumer.opts -main=$OPTS/Main.opts "&

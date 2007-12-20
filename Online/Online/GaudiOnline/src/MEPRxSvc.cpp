@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.55 2007-12-18 20:54:19 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.56 2007-12-20 20:35:28 frankb Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -64,7 +64,7 @@ namespace LHCb {
 #define PUBCNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name, m_ ## name, desc, this);} while(0);
 #define PUBARRAYCNT(name, desc) do {m_monSvc->declareInfo(#name, "I:", & m_ ## name [0], sizeof(m_ ## name), desc, this);} while(0);
 
-#define printnum(n, s) n << s << (n == 1 ? "" : "s")
+#define printnum(n,s)     n << s << ((char*)(n == 1 ? "" : "s"))
 
 #define HDR_LEN (IP_HEADER_LEN + sizeof(LHCb::MEPHdr)) 
 
@@ -553,7 +553,7 @@ StatusCode MEPRxSvc::run() {
 	log << MSG::DEBUG << endmsg;
         for(size_t i = 0; i < m_workDsc.size(); ++i) {
 	  log << MSG::DEBUG << "Waiting to complete event L0ID# " << m_workDsc[i]->m_l0ID << " missing ";
-          log << MSG::DEBUG << printnum(m_workDsc[i]->m_nsrc - m_workDsc[i]->m_nrx),  " MEP");
+          log << MSG::DEBUG << printnum(m_workDsc[i]->m_nSrc - m_workDsc[i]->m_nrx," MEP");
 	}
 	log << endmsg;
 	ncrh = m_nCrh;
