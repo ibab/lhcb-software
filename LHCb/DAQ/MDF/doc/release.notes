@@ -6,6 +6,7 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r0 2007-12-20 ===============================
 ! 2007-12-19 - Markus Frank
  - Remove the RFIO/DCAP,... plugins from MDF and make them seperate packages.
 
