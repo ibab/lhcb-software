@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.6 2007-12-11 17:37:12 jpalac Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.7 2007-12-20 16:19:06 hmdegaud Exp $
 // Include files 
 
 // from Gaudi
@@ -108,7 +108,7 @@ StatusCode CopyRelatedMCParticles::loopOnParticles(IT begin, IT end)
 
   StatusCode sc(StatusCode::SUCCESS);
   
-  for (IT iPart = begin,;
+  for (IT iPart = begin;
        sc == StatusCode::SUCCESS && iPart != end;
        ++iPart) {
     if ( storeAssociatedMCParticles( *iPart) ) {
