@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.75 2007-12-03 16:49:11 cattanem Exp $
+# $Id: requirements,v 1.76 2007-12-20 07:50:40 cattanem Exp $
 # =============================================================================
 package       DetCond
-version       v11r7
+version       v11r8
 
 # =========== structure =======================================================
 branches      DetCond doc cmt src
@@ -50,21 +50,10 @@ library       DetCond           component/*.cpp
 apply_pattern component_library library=DetCond 
 apply_pattern linker_library    library=DetCondLib 
 
-# Disable some optimizations in libstdc++ (if set)
-# It is needed because it seems that on SLC3 there are problems with
-# multithreaded applications.
-set GLIBCPP_FORCE_NEW "" \
-	slc3 "1"
 
 private
 
 macro_append DetCond_use_linkopts $(Boost_linkopts_thread)
+macro_append DetCond_use_linkopts $(Boost_linkopts_filesystem_mt)
 
-
-#macro_append DetCond_use_linkopts $(Boost_linkopts_filesystem)
-# This is needed because the library used with $(Boost_linkopts_filesystem)
-# is the non multithread one.
-macro_append DetCond_use_linkopts ' -lboost_filesystem-gcc-mt ' \
-                           Darwin ' -lboost_filesystem-$(Boost_file_version) ' \
-                           WIN32  ' boost_filesystem-vc71-mt-$(Boost_file_version).lib '
-
+end_private
