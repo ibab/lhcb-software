@@ -1,5 +1,5 @@
 package RecSys
-version v5r2
+version v5r3
 
 branches cmt doc
  
@@ -14,7 +14,7 @@ use RecUtils            v1r4    Rec   # Juan Palacios, Patrick Koppenburg
 # Calorimeter                         # Maintainer
 use CaloMoniDst         v3r0p1  Calo  # Olivier Deschamps
 use CaloPIDs            v4r8    Calo  # Victor Egorychev, Vanya Belyaev
-use CaloReco            v4r9    Calo  # Olivier Deschamps
+use CaloReco            v4r10   Calo  # Olivier Deschamps
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
 use TrackExtrapolators  v2r16   Tr    # Eduardo Rodrigues
@@ -24,7 +24,7 @@ use TrackTools          v3r2    Tr    # Eduardo Rodrigues
 use TrackFitter         v2r22   Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r18   Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackIdealPR        v2r14   Tr    # Eduardo Rodrigues
-use TrackUtils          v1r17   Tr    # Eduardo Rodrigues
+use TrackUtils          v1r18   Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r5    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v3r1    Tr    # Eduardo Rodrigues
 use PatChecker          v3r1    Tr    # Olivier Callot, David Hutchcroft
@@ -40,7 +40,7 @@ use PatAlgorithms       v3r2    Tf    # Stephanie Hansmann-Menzemer
 use TsaAlgorithms       v3r2    Tf    # Matt Needham
 use TrackSeeding        v1r3    Tf    # Eduardo Rodrigues, Henk Jan Bulten
 use TrackMatching       v2r17   Tf    # Eduardo Rodrigues
-use TfTools             v1r2    Tf    # Stephanie Hansmann-Menzemer
+use TfTools             v1r3    Tf    # Stephanie Hansmann-Menzemer
 
 # Primary Vertex Finder
 use PatPV               v3r1    Tr   # Mariusz Witek

@@ -5,6 +5,26 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v5r3>2007-12-20 RecSys v5r3</A></H1><PRE>
+This version uses Gaudi v19r7 and LHCb v23r3.
+
+- Packages modified: CaloReco v4r10, GlobalReco v6r15, TfTools v1r3,
+    TrackUtils v1r18
+
+- In CaloReco v4r10
+  . Fix unprotected array index in CaloMergedPi0.cpp
+
+- In GlobalReco v6r15
+  . Protect against NaN in NeutralProtoPAlg::finalize()
+
+- In TfTools v1r3
+  . OTHitCreator now has job options to switch off using drift times in the
+    pattern reco; the drift radius and resolution reported can also be set
+    through job options
+
+- In TrackUtils v1r18
+  . Fix TrackV0Finder to follow changes in TwoProngVertex.h 
+
 </PRE><H1><A NAME=v5r2>2007-12-13 RecSys v5r2</A></H1><PRE>
 This version uses Gaudi v19r6 and LHCb v23r2.
 
