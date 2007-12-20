@@ -20,9 +20,6 @@ ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off rDST outpu
 //---------------------------------------------------------------------------
 #include "$STDOPTS/RawDataIO.opts"
 
-// Dictionary needed to write POOL file, will be automatically loaded with LCG_54
-PoolDbCacheSvc.Dlls += { "LHCbKernelDict" };
-
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
 //---------------------------------------------------------------------------
