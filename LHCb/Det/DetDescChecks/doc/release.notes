@@ -1,11 +1,14 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.28 2007-12-20 10:50:01 cattanem Exp $ 
+! $Id: release.notes,v 1.29 2007-12-20 15:43:19 marcocle Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! Purpose     : Collection of useful components for checking of 
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
+
+! 2007-12-20 - Marco Clemencic
+ - Improved the error message of LoadDDDB in case of exceptions.
 
 !======================= DetDescChecks v4r5 2007-12-20 ========================
 ! 2007-12-19 - Vanya BELYAEV

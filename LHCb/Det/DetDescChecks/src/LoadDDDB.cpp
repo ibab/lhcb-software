@@ -1,4 +1,4 @@
-// $Id: LoadDDDB.cpp,v 1.3 2007-05-29 16:32:59 marcocle Exp $
+// $Id: LoadDDDB.cpp,v 1.4 2007-12-20 15:43:19 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -69,8 +69,14 @@ StatusCode LoadDDDB::execute() {
   try {
     detSvc()->addPreLoadItem(m_treeToLoad);
     detSvc()->preLoad();
+  } catch (std::exception &x) {
+    fatal() << "Gaught exception '" << System::typeinfoName(typeid(x)) << "'"
+              << endmsg;
+    fatal() << " ==> " << x.what() << endmsg;
+    return StatusCode::FAILURE;
   } catch (...) {
-    warning() << "Exception!!" << endmsg;
+    fatal() << "Gaught unknown exception!!" << endmsg;
+    return StatusCode::FAILURE;
   }  
   
   info() << "done." << endmsg;
