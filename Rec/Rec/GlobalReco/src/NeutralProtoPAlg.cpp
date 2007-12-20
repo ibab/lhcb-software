@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.12 2007-06-22 13:43:24 jonrob Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.13 2007-12-20 13:37:07 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -195,18 +195,25 @@ StatusCode NeutralProtoPAlg::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  info() << " -----------------------"<< endreq;
-  info() << " Created = " << (double) m_counts["All"] / (double) m_nEvts
-         << " Neutral ProtoParticles/event" << endreq;
-  for( std::map<std::string,long>::iterator iprototype = m_counts.begin();
-       iprototype != m_counts.end(); iprototype ++){
-    if((*iprototype).first != "All")
-      info() << "  -> " << (double) (*iprototype).second / (double) m_nEvts
-             << " proto/event with CaloHypo::Hypothesis = " << (*iprototype).first
-             << endreq;;
-  }
-  info() << " -----------------------"<< endreq;
+  
+  if(m_nEvts > 0 ){
 
+    info() << " -----------------------"<< endreq;
+    info() << " Created = " << (double) m_counts["All"] / (double) m_nEvts
+           << " Neutral ProtoParticles/event" << endreq;
+    for( std::map<std::string,long>::iterator iprototype = m_counts.begin();
+         iprototype != m_counts.end(); iprototype ++){
+      if((*iprototype).first != "All")
+        info() << "  -> " << (double) (*iprototype).second / (double) m_nEvts
+               << " proto/event with CaloHypo::Hypothesis = " << (*iprototype).first
+               << endreq;;
+    }
+    info() << " -----------------------"<< endreq;
+  }
+  else{
+    info() << " 0 event processed ==> 0 Neutral ProtoParticle produced ! " << endreq; 
+  }
+  
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
