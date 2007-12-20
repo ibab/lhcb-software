@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.26 2007-12-06 15:51:51 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.27 2007-12-20 13:58:11 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -297,7 +297,7 @@ bool OnlineHistDB::removePageFolder(std::string Folder) {
   // check that there are no pages on folder
   m_StmtMethod = "OnlineHistDB::removePageFolder";
   OCIStmt *stmt=NULL;
-  if ( OCI_SUCCESS == prepareOCIStatement(stmt, "begin :out := ONLINEHISTDB.DELETEPAGEFOLDER(:f)") ) {
+  if ( OCI_SUCCESS == prepareOCIStatement(stmt, "begin :out := ONLINEHISTDB.DELETEPAGEFOLDER(:f); END;") ) {
     myOCIBindInt   (stmt, ":out", iout);
     myOCIBindString(stmt, ":f", Folder);
     if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {

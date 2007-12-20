@@ -35,12 +35,15 @@ CREATE OR REPLACE SYNONYM SUBTITSTRING FOR HIST_ADMIN.SUBTITSTRING;
 CREATE OR REPLACE SYNONYM PAGEFULLNAME FOR HIST_ADMIN.PAGEFULLNAME;
 CREATE OR REPLACE SYNONYM SET_SEPARATOR FOR HIST_ADMIN.SET_SEPARATOR;\n";
 for (`cat tables.sql`) {
-  $name=0;
+  $name=$seq=0;
   if (/create +table +(\w+)/i) {
     $name=$1;
   }
   if (/create +(or +replace|) *view +(\w+)/i) {
     $name=$2;
+  }
+  if (/create +sequence +(\w+)/i) {
+    $seq=$1;
   }
   if ($name) {
     print SYNO "CREATE OR REPLACE SYNONYM ${name} FOR HIST_ADMIN.${name};\n";
@@ -50,6 +53,12 @@ for (`cat tables.sql`) {
     print PERM "GRANT INSERT ON ${name} TO HIST_WRITER;\n";
     print PERM "GRANT DELETE ON ${name} TO HIST_WRITER;\n";
   }
+  if ($seq) {
+    print SYNO "CREATE OR REPLACE SYNONYM ${seq} FOR HIST_ADMIN.${seq};\n";
+    print PERM "GRANT EXECUTE ON ${seq} TO HIST_WRITER;\n";
+    print PERM "GRANT SELECT ON ${seq} TO HIST_WRITER;\n";
+  }
+  
 }
 
 exit;

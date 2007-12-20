@@ -1,4 +1,4 @@
-create or replace package OnlineHistDB authid current_user as
+create or replace package OnlineHistDB AUTHID CURRENT_USER as
  TYPE sourceh is VARRAY(8) of HCREATOR.SOURCEH1%TYPE; 
  TYPE histotlist is TABLE OF HISTOGRAM.HID%TYPE;
  TYPE floattlist is TABLE OF real;
