@@ -1,4 +1,4 @@
-// $Id: TrackV0Finder.cpp,v 1.3 2007-12-03 16:09:24 wouter Exp $
+// $Id: TrackV0Finder.cpp,v 1.4 2007-12-20 14:21:19 cattanem Exp $
 // Include files 
 
 
@@ -306,12 +306,18 @@ StatusCode TrackV0Finder::execute()
               vertex->addInfo(4,pipmass) ;
               vertex->addToTracks(*ipos) ;
               vertex->addToTracks(*ineg) ;
-	      if(iskscandidate)
-		vertex->addPID(LHCb::ParticleID(m_ksProperty->pdgID())) ;
-	      if(islambdacandidate)
-		vertex->addPID(LHCb::ParticleID(m_lambdaProperty->pdgID())) ;
-	      if(isantilambdacandidate)
-		vertex->addPID(LHCb::ParticleID(m_lambdaProperty->antiParticle()->pdgID())) ;
+              if(iskscandidate) {
+                LHCb::ParticleID pid = LHCb::ParticleID(m_ksProperty->pdgID());
+                vertex->addPID( pid ) ;
+              }
+              if(islambdacandidate) {
+                LHCb::ParticleID pid = LHCb::ParticleID(m_lambdaProperty->pdgID());
+                vertex->addPID( pid ) ;
+              }
+              if(isantilambdacandidate) {
+                LHCb::ParticleID pid = LHCb::ParticleID(m_lambdaProperty->antiParticle()->pdgID());
+                vertex->addPID( pid ) ;
+              }
               v0container->add( vertex ) ;
             } else {
               delete vertex ;

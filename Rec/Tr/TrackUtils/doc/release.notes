@@ -4,6 +4,10 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+!========================== TrackUtils v1r18 2007-12-20 ======================
+! 2007-12-20 - Marco Cattaneo
+ - Fix TrackV0Finder to follow changes in TwoProngVertex.h 
+
 !========================== TrackUtils v1r17 2007-12-04 ======================
 ! 2007-12-03 - Wouter Hulsbergen
  - Added TrackV0Finder
