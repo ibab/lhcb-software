@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.31 2007-11-29 15:52:38 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.32 2007-12-20 15:48:52 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -23,6 +23,7 @@ template <class TYPE> class SvcFactory;
 
 class CondDBCache;
 class IRndmGenSvc;
+class ICOOLConfSvc;
 
 namespace cool {
   class Application;
@@ -197,6 +198,9 @@ private:
   /// Property CondDBAccessSvc.CheckTAGTimeOut: Seconds to sleep between one trial and the following (default = 60).
   int m_checkTagTimeOut;
 
+  /// Pointer to the service initializing COOL/CORAL.
+  ICOOLConfSvc *m_coolConfSvc;
+  
   /// Shared pointer to the COOL database instance
   cool::IDatabasePtr m_db;
 
@@ -247,27 +251,6 @@ private:
 
   /// AttributeListSpecification used to sore XML strings
   static std::auto_ptr<cool::RecordSpecification> s_XMLstorageSpec;
-
-  /// Pointer to a shared instance of the COOL Application
-  static std::auto_ptr<cool::Application> s_coolApplication;
-
-  /// Flag to turn off/on the CORAL LFCReplicaService (option UseLFCReplicaSvc, default = false).
-  /// Setting this option works only if it is set for the first CondDBAccessSvc initialized
-  /// because of a "feature" of CORAL.
-  bool m_useLFCReplicaSvc;
-
-  /// Flag to turn off/on the CORAL Automatinc connection clean up
-  /// (option EnableCoralConnectionCleanUp, default = false).
-  /// Setting this option works only if it is set for the first CondDBAccessSvc initialized.
-  bool m_coralConnCleanUp;
-  
-  /// Time between two connection trials (in seconds).
-  /// Passed to CORAL when loaded.
-  int m_retrialPeriod;
-   
-  /// How long to keep retrying before giving up (in seconds).
-  /// Passed to CORAL when loaded.
-  int m_retrialTimeOut;
 
   // -------------------------------------
   // ---------- Time Out Thread ----------

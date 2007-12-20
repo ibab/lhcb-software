@@ -3,5 +3,6 @@
   <class name="ICondDBReader"        />
   <class name="ICondDBEditor"        />
   <class name="ICondDBAccessSvc"     />
+  <class name="ICOOLConfSvc"         />
 
 </lcgdict>

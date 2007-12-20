@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.43 2007-11-29 15:52:38 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.44 2007-12-20 15:48:52 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -7,13 +7,6 @@
 
 // needed to sleep between retrials
 #include "SealBase/TimeInfo.h"
-#include "SealKernel/Context.h"
-#include "SealKernel/ComponentLoader.h"
-
-#include "RelationalAccess/IConnectionService.h"
-#include "RelationalAccess/IConnectionServiceConfiguration.h"
-#include "RelationalAccess/IReplicaSortingAlgorithm.h"
-#include "RelationalAccess/IDatabaseServiceDescription.h"
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -34,119 +27,13 @@
 #include "CoolKernel/StorageType.h"
 #include "CoolKernel/Record.h"
 
-#include "CoolApplication/Application.h"
-#include "CoolApplication/DatabaseSvcFactory.h"
-
 #include "CoralBase/AttributeList.h"
+
+#include "DetCond/ICOOLConfSvc.h"
 
 // local
 #include "CondDBAccessSvc.h"
 #include "CondDBCache.h"
-
-namespace 
-{
-
-  /** @class ReplicaSortAlg
-   *
-   * Small class implementing coral::IReplicaSortingAlgorithm interface to allow dynamic sorting of
-   * database replicas obtained from LFC.
-   * 
-   * When retrieving the list of DB replicas, LFCReplicaService obtains a list in an arbitrary order.
-   * We have to provide to CORAL a class to be used to sort the list of replicas according to our
-   * needs. First we want the closest DB, identified by the environment variable LHCBPRODSITE, then
-   * the CERN server (LCG.CERN.ch), while the remaining one can be in any order (this implementation
-   * uses the natural string ordering).
-   *
-   * @author Marco Clemencic
-   * @date   2007-05-02
-   */
-  class ReplicaSortAlg: virtual public coral::IReplicaSortingAlgorithm 
-  {
-    typedef coral::IDatabaseServiceDescription dbDesc_t;
-    typedef std::vector< const dbDesc_t * > replicaSet_t;
-    
-    /** @class  ReplicaSortAlg::Comparator
-     *
-     * Comparison function defining which replica comes before another.
-     *
-     * This class is used via the STL algorithm "sort" to order the list the way we need it.
-     *
-     * @author Marco Clemencic
-     * @date   2007-05-02
-     */
-    class Comparator: public std::binary_function<const dbDesc_t*,const dbDesc_t*,bool>
-    {
-
-      std::string site;
-
-    public:
-      
-      /// Constructor.
-      /// @param theSite the local LHCb Production Site (LCG.<i>SITE</i>.<i>country</i>)
-      Comparator(const std::string &theSite): site(theSite) {}
-
-      /// Main function
-      result_type operator() (first_argument_type a, second_argument_type b) const
-      {
-        std::string serverA =  a->serviceParameter(a->serverNameParam());
-        std::string serverB =  b->serviceParameter(b->serverNameParam());
-        
-        if ( serverA == serverB )       return false; // equality                   => false
-        if ( serverA == site )          return true;  // "SITE" < "anything"        => true
-        if ( serverB == site )          return false; // "anything" < "SITE"        => false
-        if ( serverA == "LCG.CERN.ch" ) return true;  // "LCG.CERN.ch" < "anything" => true
-        if ( serverB == "LCG.CERN.ch" ) return false; // "anything" < "LCG.CERN.ch" => false
-        return serverA < serverB;  // for any other case use, alphabetical order
-      }
-
-    };
-
-    std::string localSite;
-    MsgStream log;
-
-  public:
-
-    /// Constructor.
-    /// @param theSite the local LHCb Production Site (LCG.<i>SITE</i>.<i>country</i>)
-    ReplicaSortAlg(const std::string &theSite, IMessageSvc *msgSvc):
-      localSite(theSite),
-      log(msgSvc,"ReplicaSortAlg")
-    {
-      log << MSG::VERBOSE << "Constructor" << endmsg;
-    }
-    
-    /// Destructor.
-    virtual ~ReplicaSortAlg()
-    {
-      // log << MSG::VERBOSE << "ReplicaSortAlg --> destructor" <<std::endl;
-    }
-
-    /// Main function
-    virtual void 	sort (std::vector< const coral::IDatabaseServiceDescription * > &replicaSet) 
-    {
-      if ( log.level() <= MSG::VERBOSE ) {
-        log << MSG::VERBOSE << "Original list" << endmsg;
-        replicaSet_t::iterator i;
-        for ( i = replicaSet.begin(); i != replicaSet.end(); ++i ) {
-          log << MSG::VERBOSE << " " << (*i)->serviceParameter((*i)->serverNameParam()) << endmsg;
-        }
-      }
-      
-      log << MSG::VERBOSE << "Sorting..." << endmsg;
-      std::sort(replicaSet.begin(),replicaSet.end(),Comparator(localSite));
-
-      if ( log.level() <= MSG::VERBOSE ) {
-        log << MSG::VERBOSE << "Sorted list" << endmsg;
-        replicaSet_t::iterator i;
-        for ( i = replicaSet.begin(); i != replicaSet.end(); ++i ) {
-          log << MSG::VERBOSE << " " << (*i)->serviceParameter((*i)->serverNameParam()) << endmsg;
-        }
-      }
-    }
-    
-  };
-  
-}
 
 // Factory implementation
 DECLARE_SERVICE_FACTORY(CondDBAccessSvc)
@@ -159,13 +46,13 @@ DECLARE_SERVICE_FACTORY(CondDBAccessSvc)
 
 // ==== Static data members
 std::auto_ptr<cool::RecordSpecification> CondDBAccessSvc::s_XMLstorageSpec(NULL);
-std::auto_ptr<cool::Application> CondDBAccessSvc::s_coolApplication(NULL);
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   Service(name,svcloc),
+  m_coolConfSvc(0),
   m_rndmSvc(0),
   m_timeOutCheckerThread(0)
 {
@@ -180,18 +67,10 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   declareProperty("CheckTAGTrials",   m_checkTagTrials   = 1     );
   declareProperty("CheckTAGTimeOut",  m_checkTagTimeOut  = 60    );
   declareProperty("ReadOnly",         m_readonly         = true  );
-  declareProperty("UseLFCReplicaSvc", m_useLFCReplicaSvc = false );
-  declareProperty("EnableCoralConnectionCleanUp", m_coralConnCleanUp = false );
   
   declareProperty("ConnectionTimeOut", m_connectionTimeOut = 600 );
   
   declareProperty("LazyConnect",       m_lazyConnect     = true );
-  
-  declareProperty("CoralConnectionRetrialPeriod", m_retrialPeriod = 60,
-                  "Time between two connection trials (in seconds).");
-  
-  declareProperty("CoralConnectionRetrialTimeOut", m_retrialTimeOut = 15*60,
-                  "How long to keep retrying before giving up (in seconds).");
   
   if ( s_XMLstorageSpec.get() == NULL){
     // attribute list spec template
@@ -335,55 +214,16 @@ StatusCode CondDBAccessSvc::i_openConnection(){
   try {
     if (! m_db) { // The database is not yet opened
 
-      if ( s_coolApplication.get() == NULL) {
-
-        log << MSG::DEBUG << "Initializing COOL Application" << endmsg;
-        s_coolApplication = std::auto_ptr<cool::Application>(new cool::Application());
-
-
-        seal::Handle<seal::ComponentLoader> loader = 
-          s_coolApplication->context()->component<seal::ComponentLoader>();
-
-        log << MSG::DEBUG << "Getting CORAL Connection Service configurator" << endmsg;
-
-        loader->load( "CORAL/Services/ConnectionService" );
-        std::vector< seal::IHandle< coral::IConnectionService > > loadedServices;
-        s_coolApplication->context()->query( loadedServices );
-        coral::IConnectionServiceConfiguration &connSvcConf = loadedServices.front()->configuration();
-
-        if ( m_useLFCReplicaSvc ) {
-
-          log << MSG::INFO << "Loading CORAL LFCReplicaService" << endmsg;
-          loader->load( "CORAL/Services/LFCReplicaService" );
-          
-          std::string theSite = System::getEnv("LHCBPRODSITE");
-          if ( theSite.empty() || theSite == "UNKNOWN" ) {
-            theSite = "LCG.CERN.ch";
-          }
-
-          connSvcConf.setReplicaSortingAlgorithm(new ReplicaSortAlg(theSite,msgSvc()));
+      if ( !m_coolConfSvc ) {
+        StatusCode sc = service("COOLConfSvc",m_coolConfSvc,true);
+        if (sc.isFailure()){
+          log << MSG::ERROR << "Cannot get COOLConfSvc" << endmsg;
+          return sc;
         }
-        
-        if ( ! m_coralConnCleanUp ) {
-
-          log << MSG::DEBUG << "Disabling CORAL connection automatic clean up" << endmsg;
-          connSvcConf.disablePoolAutomaticCleanUp();
-          connSvcConf.setConnectionTimeOut( 0 );
-
-        }        
-
-        connSvcConf.setConnectionRetrialPeriod(m_retrialPeriod);
-        log << MSG::INFO << "CORAL Connection Retrial Period set to "
-            << connSvcConf.connectionRetrialPeriod() << "s" << endmsg;
-
-        connSvcConf.setConnectionRetrialTimeOut(m_retrialTimeOut);
-        log << MSG::INFO << "CORAL Connection Retrial Time-Out set to "
-            << connSvcConf.connectionRetrialTimeOut() << "s" << endmsg;
-
       }
 
       log << MSG::DEBUG << "Get cool::DatabaseSvc" << endmsg;
-      cool::IDatabaseSvc &dbSvc = s_coolApplication->databaseService();
+      cool::IDatabaseSvc &dbSvc = m_coolConfSvc->databaseSvc();
       log << MSG::DEBUG << "cool::DatabaseSvc got" << endmsg;
 
       log << MSG::DEBUG << "Opening connection" << endmsg;
@@ -920,6 +760,7 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
       }
       since = valKeyToTime(vk_since);
       until = valKeyToTime(vk_until);
+      
     } else if (!m_noDB){
       
       DataBaseOperationLock dbLock(this);
@@ -953,6 +794,8 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
 
   } catch ( cool::FolderNotFound /*&e*/) {
     //log << MSG::ERROR << e << endmsg;
+    return StatusCode::FAILURE;
+  } catch (cool::TagRelationNotFound /*&e*/) {
     return StatusCode::FAILURE;
   } catch (cool::ObjectNotFound /*&e*/) {
     //log << MSG::ERROR << "Object not found in \"" << path <<

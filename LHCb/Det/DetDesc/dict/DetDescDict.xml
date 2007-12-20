@@ -1,7 +1,7 @@
 <lcgdict>
   
   <class name="IDetectorElement"  />
-  <class name="std::vector<IDetectorElement*>"  />
+  <class name="std::vector&lt;IDetectorElement*&gt;"  />
   <class name="IGeometryInfo"     />
   <class name="ILVolume"          />
   <class name="IPVolume"          />
@@ -44,9 +44,9 @@
   
   <class pattern="Solid*" />
 
-  <class name="std::pair<double,SmartRef<Element> >" />
-  <class name="std::pair<double,SmartRef<Isotope> >" />
-  <class name="std::pair<std::pair<double,double>,const Material*>" />
+  <class name="std::pair&lt;double,SmartRef&lt;Element&gt; &gt;" />
+  <class name="std::pair&lt;double,SmartRef&lt;Isotope&gt; &gt;" />
+  <class name="std::pair&lt;std::pair&lt;double,double&gt;,const Material*&gt;" />
 
   <function pattern="DetDesc::*" />
 
