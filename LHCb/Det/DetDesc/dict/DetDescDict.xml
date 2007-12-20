@@ -7,6 +7,7 @@
   <class name="IPVolume"          />
   <class name="ISolid"            />
   <class name="ITransportSvc"     />
+  <class name="DetDesc::IGeometryErrorSvc" />
 
   <class name="IAlignment"        />
   <class name="ICalibration"      />

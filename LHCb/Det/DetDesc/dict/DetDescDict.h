@@ -1,4 +1,4 @@
-// $Id: DetDescDict.h,v 1.2 2007-06-14 08:21:38 marcocle Exp $
+// $Id: DetDescDict.h,v 1.3 2007-12-20 10:44:14 cattanem Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -19,6 +19,7 @@
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/ISolid.h"
 #include "DetDesc/ITransportSvc.h"
+#include "DetDesc/IGeometryErrorSvc.h"
 // ============================================================================
 #include "DetDesc/IAlignment.h"
 #include "DetDesc/ICalibration.h"
