@@ -5,6 +5,70 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v23r3>2007-12-20 LHCbSys v23r3</A></H1><PRE>
+This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
+
+- New packages:      MDF_DCAP v1r0 - DCAP plugin to read MDF files 
+                     MDF_GFAL v1r0 - GFAL plugin to read MDF files 
+                     MDF_RFIO v1r0 - RFIO plugin to read MDF files 
+- Packages modified: DetDesc v11r2, DetDesc v18r3, DetDescSvc v1r16, 
+    DetDescChecks v4r5, EventSys v24r0, DAQEvent v7r8, RecEvent v2r9, MDF v3r0,
+    DetCond v11r8, TfKernel v2r2
+
+- In DetDesc v18r3
+  . New treatment of geometry overlaps:
+    o DetDesc/Compare.h: Comparison of floating numbers 
+    o IGeometryErrorSvc: Abstract interface for handling of geometry errors 
+    o IntersectionErrors: Helper utility to make a bridge between volumes and 
+                          geometry error handling service 
+    o DetDesc/VolumeIntersectionIntervals.h: Add new functions
+    o LAssembly.cpp, LVolume.cpp, LogVolBase.cpp: Make use of new functions 
+
+- In DetDescSvc v1r16
+  . New treatment of geometry overlaps/errors in TransportSvc
+    o implement new interface DetDesc::IGeometryErrorSvc
+    o add new properties 
+       "Recover"  (boolean) -> to activate/deactivate the recovery of the 
+                          errors          (default  is true)
+       "Protocol" (boolean) -> to activate/deactivate the protocol of the  
+                          geomtery errors (default is "true")
+
+- In DetDescChecks v4r5
+  . Add new algorithm DetDesc::CheckOverlap 
+    See the <a href="http://indico.cern.ch/materialDisplay.py?contribId=5&materialId=slides&confId=10184">presentation at T-Rec meeting, 17.12.2007</a>
+
+- In EventSys v24r0
+  . Adapt copy_relax_rootmap pattern to new rootmap names in LCG_54
+
+- In DAQEvent v7r8
+  . Add bank types MuonFull, MuonError
+  . Added an enum in ODIN to define the meaning of the Trigger Type.
+  . Protect bankKiller against annoying printout 
+
+- In RecEvent v2r9
+  . Added keyedContTypeDef = true to TwoProngVertex
+
+- In MDF v3r0
+  . Remove the RFIO/DCAP,... plugins from MDF and make them separate packages.
+  . Add support for non-strict RFC URIs - similar to what ROOT supports.
+  . Add support for TAE events in the RawDataCnvSvc. The creation of leaves in
+    the TES is triggered by the content of the TAE meta bank TAEHeader.
+  . Add coding of TAE events in the MDF buffer, triggered by the value of the 
+    ODIN triggerType() = LHCb::ODIN::TimingTrigger or forced by the jobOption
+    forceTAE = true of MDFWriter. A pseudo-bank of type TAEHeader is added
+    as first bank in the buffer, with description of the various RawEvents found.
+  . Add function unpackTAEBuffer in RawEventHelpers to decode the TAE MDF block.
+
+- In DetCond v11r8
+  . Replace homemade linkopts with new Boost_linkopts_filesystem_mt
+  . Remove slc3 specific set, no longer supported in LCG_54
+
+- In TfKernel v2r2
+  . Add new values in HitBase Estatus enum, mainly for TT hits.
+  . added new member to OTHit which stores the RtRelation to be used to
+    convert drift times to drift radii and make sure it is used everywhere
+    (to have possibility to switch off using drift times in the pattern reco)
+
 </PRE><H1><A NAME=v23r2>2007-12-12 LHCbSys v23r2</A></H1><PRE>
 This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
 
