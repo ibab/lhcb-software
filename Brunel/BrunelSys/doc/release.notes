@@ -3,7 +3,7 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v32r3>2007-12-20 Brunel v32r3</A></H1><PRE>
+</PRE><H1><A NAME=v32r3>2007-12-21 Brunel v32r3</A></H1><PRE>
 This version uses projects Gaudi v19r7, LHCb v23r3, Lbcom v6r14, Rec v5r3
  and DDDB v1r* (SQLDDDB v3r1 or greater), ParamFiles v7r0, FieldMap v4r7
 
@@ -15,6 +15,7 @@ framework.
     by the TransportSvc. A summary of recovered errors is printed at the end.
     See the <a href="http://indico.cern.ch/materialDisplay.py?contribId=5&materialId=slides&confId=10184">presentation at T-Rec meeting, 17.12.2007</a>
     (DetDesc v18r3, DetDescSvc v1r16)
+  . In valgrind.job, use the new ROOT suppressions file available from LCG_54 
 
 - New features
   . Possibility to switch off drift times in OT pattern recognition

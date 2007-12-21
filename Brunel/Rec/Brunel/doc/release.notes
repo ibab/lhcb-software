@@ -3,9 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v32r3>2007-12-20 Brunel v32r3</A></H1><PRE>
+</PRE><H1><A NAME=v32r3>2007-12-21 Brunel v32r3</A></H1><PRE>
  - In RealDataDst.opts and RealDataRdst.opts, remove explicit loading of
    LHCbKernelDict, no longer needed with LCG_54
+ - In valgrind.job, use the new ROOT suppressions file available from LCG_54 
 
 </PRE><H1><A NAME=v32r2>2007-12-13 Brunel v32r2</A></H1><PRE>
  - New files options/RealDataRdst.opts and job/GaudiCatalog.txt to set up rDST

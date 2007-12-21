@@ -6,7 +6,6 @@
 MessageSvc.OutputLevel = 5;
 
 // "Known" errors
-TransportSvc.OutputLevel = 6;
 Brunel.BrunelMemory.OutputLevel = 5;
 
 // Information to be kept
