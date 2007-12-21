@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.39 2007-12-03 20:51:51 santovet Exp $
+// $Id: DeMuonDetector.cpp,v 1.40 2007-12-21 08:09:40 cattanem Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
@@ -10,6 +10,9 @@
 //Detector description
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
+
+// Gaudi
+#include "GaudiKernel/SmartDataPtr.h"
 
 /** @file DeMuonDetector.cpp
  * 

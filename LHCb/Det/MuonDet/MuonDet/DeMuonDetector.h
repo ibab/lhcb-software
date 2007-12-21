@@ -1,21 +1,13 @@
-// $Id: DeMuonDetector.h,v 1.25 2007-12-03 20:51:51 santovet Exp $
+// $Id: DeMuonDetector.h,v 1.26 2007-12-21 08:09:40 cattanem Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
 
-//Det Desc
+//DetDesc
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/SolidBox.h"
-// Not needed here but used by many algorithms
 
-//Gaudi
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IDetDataSvc.h"
-#include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/ToolFactory.h" 
-#include "GaudiAlg/GaudiAlgorithm.h"
-
+//LHCbKernel
 #include "Kernel/Packer.h"
 
 //Muon Detector
