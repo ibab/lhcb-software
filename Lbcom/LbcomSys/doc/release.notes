@@ -6,6 +6,14 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r14>2007-12-21 LbcomSys v6r14</A></H1><PRE>
+This version uses Gaudi v19r7 and LHCb v23r3
+
+- Packages modified: L0DU v8r2
+
+- In L0DU v8r2
+  . Fix minor memory leak in L0ProcessorDataLocation initialize()
+
 </PRE><H1><A NAME=v6r13>2007-12-11 LbcomSys v6r13</A></H1><PRE>
 This version uses Gaudi v19r6 and LHCb v23r2
 

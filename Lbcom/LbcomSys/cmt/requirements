@@ -1,5 +1,5 @@
 package LbcomSys
-version v6r13
+version v6r14
 
 branches doc cmt
 
@@ -15,7 +15,7 @@ use CaloAssociators   v6r4  Calo        # Olivier Deschamps
 
 # L0 trigger simulation                 # Maintainer
 use L0Calo            v9r11 L0          # Olivier Deschamps, Patrick Robbe
-use L0DU              v8r1  L0          # Olivier Deschamps   
+use L0DU              v8r2  L0          # Olivier Deschamps   
 use L0Muon            v7r5  L0          # Andrei Tsarogorodtsev, Julien Cogan
 use PuVeto            v7r2  L0          # Marko Zupan
 
