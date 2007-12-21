@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.75 2007-12-21 09:17:01 odescham Exp $
+! $Id: release.notes,v 1.76 2007-12-21 09:59:38 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
-
+!========================== L0DU v8r2 2007-12-21 =========================
 ! 2007-12-19 - Olivier Deschamps
  - fix minor memory leak in L0ProcessorDataLocation initialize()
 
