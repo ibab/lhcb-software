@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.41 2007-12-20 10:46:40 cattanem Exp $ 
+! $Id: release.notes,v 1.42 2007-12-21 07:39:33 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
-!========================= DetDescSvc v1r16 2007-12-20 ========================
+!========================= DetDescSvc v1r16 2007-12-21 ========================
+! 2007-12-21 - Marco Cattaneo
+ - Change format of overlaps summary table to avoid MSG::ERROR printout
+
 ! 2007-12-19 - Vanya BELYAEV
  - New treatment of geometry overlaps/errors
 
@@ -15,9 +18,9 @@
        "Recover"  (boolean) -> to activate/deactivate the recovery of the 
                           errors          (default  is true)
        "Protocol" (boolean) - to activate/deactivate the protocol of the  
-                          geeomtrt errors (default is "true")
+                          geometry errors (default is "true")
 
-   cmt/requirmeents
+   cmt/requirements
      version increment to v1r16 
 
 !========================= DetDescSvc v1r15 2007-12-07 ========================

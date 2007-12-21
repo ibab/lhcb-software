@@ -1,4 +1,4 @@
-// $Id: TransportSvc.cpp,v 1.6 2007-12-19 09:46:43 ibelyaev Exp $
+// $Id: TransportSvc.cpp,v 1.7 2007-12-21 07:39:33 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -195,87 +195,92 @@ StatusCode TransportSvc::finalize()
   
   { // skip map 
     log << MSG::ALWAYS 
-        << " GEOMETRY ERORRS: 'Skip'     map has the size " << m_skip.size() << endreq ;
+        << " GEOMETRY ERRORS: 'Skip'     map has the size " << m_skip.size() << std::endl ;
     if ( !m_skip.empty() ) 
     {  
-      boost::format fmt1 ( "| %1$=55.55s |    | %2$-65.65s |" ) ;  
+      boost::format fmt1 ( "   | %1$=55.55s |    | %2$-65.65s |" ) ;  
       fmt1 % " Logical Volume " ;
       fmt1 % " #          mean             RMS          min              max" ;
-      log << MSG::ERROR << fmt1.str() << endreq ;
+      log << fmt1.str() << std::endl ;
       for ( Map::const_iterator i = m_skip.begin() ; m_skip.end() != i ; ++i )
       {
         {
-          boost::format fmt2 ( "| %1$-55.55s | mm | %2$-65.65s |" ) ;  
+          boost::format fmt2 ( "   | %1$-55.55s | mm | %2$-65.65s |" ) ;  
           fmt2 % logVol ( i->first , 55 ) ;
           fmt2 % Gaudi::Utils::formatAsTableRow
             ( i->second.first  , false , 
               "%1$-7d %3$-14.8g %4$14.8g %5$-14.8g %6$14.8g" ) ;
-          log << MSG::ERROR << fmt2.str() << endreq ;
+          log << fmt2.str() << std::endl ;
         }
         {  
-          boost::format fmt2 ( "| %1$-55.55s | X0 | %2$-65.65s |" ) ;  
+          boost::format fmt2 ( "   | %1$-55.55s | X0 | %2$-65.65s |" ) ;  
           fmt2 % logVol ( i->first , 55 ) ;
           fmt2 % Gaudi::Utils::formatAsTableRow
             ( i->second.second  , false , 
               "%1$-7d %3$-14.8g %4$14.8g %5$-14.8g %6$14.8g" ) ;
-          log << MSG::ERROR << fmt2.str() << endreq ;
+          log << fmt2.str() << std::endl ;
         }
       }
     }
   }
+  log << endmsg;
+  
   // recovery map 
   {
     log << MSG::ALWAYS 
-        << " GEOMETRY ERORRS: 'Recover'  map has the size " << m_recover.size() << endreq ;
+        << " GEOMETRY ERRORS: 'Recover'  map has the size " << m_recover.size() << std::endl ;
     if ( !m_recover.empty() ) 
     {  
-      boost::format fmt1 ( "| %1$=55.55s |    | %2$-65.65s |" ) ;  
+      boost::format fmt1 ( "   | %1$=55.55s |    | %2$-65.65s |" ) ;  
       fmt1 % " Logical Volume " ;
       fmt1 % " #          mean             RMS          min              max" ;
-      log << MSG::ERROR << fmt1.str() << endreq ;
+      log << fmt1.str() << std::endl ;
       for ( Map::const_iterator i = m_recover.begin() ; m_recover.end() != i ; ++i )
       {
         {
-          boost::format fmt2 ( "| %1$-55.55s | mm | %2$-65.65s |" ) ;  
+          boost::format fmt2 ( "   | %1$-55.55s | mm | %2$-65.65s |" ) ;  
           fmt2 % logVol ( i->first , 55 ) ;
           fmt2 % Gaudi::Utils::formatAsTableRow
             ( i->second.first  , false , 
               "%1$-7d %3$-14.8g %4$14.8g %5$-14.8g %6$14.8g" ) ;
-          log << MSG::ERROR << fmt2.str() << endreq ;
+          log << fmt2.str() << std::endl ;
         }
         {  
-          boost::format fmt2 ( "| %1$-55.55s | X0 | %2$-65.65s |" ) ;  
+          boost::format fmt2 ( "   | %1$-55.55s | X0 | %2$-65.65s |" ) ;  
           fmt2 % logVol ( i->first , 55 ) ;
           fmt2 % Gaudi::Utils::formatAsTableRow
             ( i->second.second  , false , 
               "%1$-7d %3$-14.8g %4$14.8g %5$-14.8g %6$14.8g" ) ;
-          log << MSG::ERROR << fmt2.str() << endreq ;
+          log << fmt2.str() << std::endl ;
         }
       }
     }
   }
+  log << endmsg;
+  
   // codes:
   {
     log << MSG::ALWAYS 
-        << " GEOMETRY ERORRS: 'Codes'    map has the size " << m_codes.size() << endreq ;
+        << " GEOMETRY ERRORS: 'Codes'    map has the size " << m_codes.size() << std::endl ;
     if ( !m_codes  .empty() ) 
     {  
-      boost::format fmt1 ( "| %1$=55.55s | %2$=10.10s |" ) ;  
+      boost::format fmt1 ( "   | %1$=55.55s | %2$=10.10s |" ) ;  
       fmt1 % " Logical Volume " ;
       fmt1 % "#errors" ;
-      log << MSG::ERROR << fmt1.str() << endreq ;
+      log << fmt1.str() << std::endl ;
       for ( Map1::const_iterator i = m_codes.begin() ; m_codes.end() != i ; ++i )
       {
         {
-          boost::format fmt2 ( "| %1$-55.55s | %2$=10d |" ) ;  
+          boost::format fmt2 ( "   | %1$-55.55s | %2$=10d |" ) ;  
           fmt2 % logVol ( i->first , 55 ) ;
           fmt2 %              i->second ;
-          log << MSG::ERROR << fmt2.str() << endreq ;
+          log << fmt2.str() << std::endl ;
         }
       }
     }
   }
-  
+  log << endmsg;
+
   if ( this == DetDesc::IntersectionErrors::service() ) 
   {
     log << MSG::INFO 
