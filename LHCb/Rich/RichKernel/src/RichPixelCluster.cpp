@@ -5,7 +5,7 @@
  *  Implementation file for pixel clustering class Rich::DAQ::PixelCluster
  *
  *  CVS Log :-
- *  $Id: RichPixelCluster.cpp,v 1.5 2007-12-03 13:47:49 jonrob Exp $
+ *  $Id: RichPixelCluster.cpp,v 1.6 2007-12-21 12:12:34 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   02/02/2007
@@ -25,18 +25,30 @@ HPDPixelClusters::HPDPixelClusters( const HPDPixelCluster::SmartIDVector & smart
   : m_lastID    ( 0     ),
     m_aliceMode ( false )
 {
+
   // initialise the c arrays
-  memset ( m_data,     0, sizeof(m_data)     );
-  memset ( m_clusters, 0, sizeof(m_clusters) );
-  // use the smartIDs
+  // only do the first 1/8 - To cover LHCb mode only
+  // if Alice mode is needed then set the rest when needed
+  memset ( m_data,     0, sizeof(m_data)     / Rich::DAQ::NumAlicePixelsPerLHCbPixel );
+  memset ( m_clusters, 0, sizeof(m_clusters) / Rich::DAQ::NumAlicePixelsPerLHCbPixel );
+
+  // use the smartIDs to set the active pixels
   if ( !smartIDs.empty() )
   {
+
     // What mode are we in ?
     // note, assuming here that there is NOT a mixture of LHCb and ALICE mode hits
     // as this does not make sense (and likely not even technically possible from L1)
     setAliceMode ( smartIDs.front().pixelSubRowDataIsValid() );
+    if ( aliceMode() )
+    {
+      memset ( m_data,     0, sizeof(m_data)     );
+      memset ( m_clusters, 0, sizeof(m_clusters) );
+    }
+
     // assume all hits are from the same HPD (only sensible case)
     m_hpdID = smartIDs.front().hpdID();
+
     // set the hit pixels as "on"
     for ( HPDPixelCluster::SmartIDVector::const_iterator iS = smartIDs.begin();
           iS != smartIDs.end(); ++iS )
@@ -48,8 +60,12 @@ HPDPixelClusters::HPDPixelClusters( const HPDPixelCluster::SmartIDVector & smart
       }
       setOn( rowNumber(*iS), colNumber(*iS) );
     }
-    //m_allclus.reserve(5); // reserve size for 5 pixels in cluster
-  }
+
+    // reserve size for 5 pixels in cluster
+    //m_allclus.reserve(5); 
+
+  } // smartids not empty
+
 }
 
 void HPDPixelClusters::setCluster( const int row, const int col, Cluster * clus )
@@ -59,14 +75,14 @@ void HPDPixelClusters::setCluster( const int row, const int col, Cluster * clus 
   // set the pixel RichSmartID accordingly (ALICE or LHCb mode)
   LHCb::RichSmartID tmpID(m_hpdID);
   tmpID.setPixelCol(col);
-  if ( !aliceMode() ) 
-  { 
-    tmpID.setPixelRow    ( row ); 
+  if ( !aliceMode() )
+  {
+    tmpID.setPixelRow    ( row );
   }
   else
   {
-    tmpID.setPixelRow    ( row/Rich::DAQ::NumAlicePixelsPerLHCbPixel );
-    tmpID.setPixelSubRow ( row%Rich::DAQ::NumAlicePixelsPerLHCbPixel );
+    tmpID.setPixelRow    ( row / Rich::DAQ::NumAlicePixelsPerLHCbPixel );
+    tmpID.setPixelSubRow ( row % Rich::DAQ::NumAlicePixelsPerLHCbPixel );
   }
   // save this hit to the list of pixels for this cluster
   clus->addPixel(tmpID);
