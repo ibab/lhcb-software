@@ -1,8 +1,11 @@
-// $Id: L0ProcessorDataDecoder.h,v 1.1 2007-10-31 15:04:46 odescham Exp $
+// $Id: L0ProcessorDataDecoder.h,v 1.2 2007-12-21 09:17:01 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2007/10/31 15:04:46  odescham
+// Full review of L0DU package
+//
 // Revision 1.3  2006/02/21 15:56:49  ocallot
 // Decrease verbosity of L0DU initialisation
 //
@@ -28,6 +31,7 @@ class L0ProcessorDataDecoder : public GaudiTool, virtual public IL0ProcessorData
   virtual ~L0ProcessorDataDecoder () ;
   
   virtual StatusCode initialize () ;
+  virtual StatusCode finalize () ;
   bool   setL0ProcessorData(std::vector<std::string> dataLocs );
   bool   setL0ProcessorData(std::vector<LHCb::L0ProcessorDatas*> datass );
   bool   setL0ProcessorData(std::string dataLoc );

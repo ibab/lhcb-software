@@ -1,4 +1,4 @@
-// $Id: L0ProcessorDataDecoder.cpp,v 1.2 2007-10-31 16:42:10 odescham Exp $
+// $Id: L0ProcessorDataDecoder.cpp,v 1.3 2007-12-21 09:17:01 odescham Exp $
 // ============================================================================
 
 // from Gaudi
@@ -36,6 +36,14 @@ StatusCode L0ProcessorDataDecoder::initialize ()
   m_condDB = tool<IL0CondDBProvider>("L0CondDBProvider");
   m_dataContainer = new LHCb::L0ProcessorDatas();
   return StatusCode::SUCCESS;
+};
+
+
+StatusCode L0ProcessorDataDecoder::finalize () 
+{
+  debug() << "release L0ProcessoDataDecoder" << endreq;
+  delete m_dataContainer;
+  return GaudiTool::finalize();
 };
 
 
