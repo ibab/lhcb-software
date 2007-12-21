@@ -32,7 +32,7 @@ use XmlTools              v5r1    Tools   # Marco Clemencic
 use OTDet                 v7r7    Det     # Jan Amoraal
 use CaloDet               v8r5    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r1    Det     # Olivier Deschamps
-use MuonDet               v7r1    Det     # Alessia Satta, Alessio Sarti
+use MuonDet               v7r2    Det     # Alessia Satta, Alessio Sarti
 use Magnet                v3r6p1  Det     # N.N.
 use RichDet               v10r8   Det     # Chris Jones
 use STDet                 v3r8    Det     # Jeroen van Tilburg, Matt Needham
@@ -55,10 +55,10 @@ use HltEvent              v8r5    Event   # Jose Angel Hernando-Morata
 use VeloEvent             v16r2   Event   # Tomasz Szumlak, Chris Parkes
 
 # L1/Raw buffer encoding and decoding
-use DAQSys                v3r7    DAQ     # Marco Cattaneo
+use DAQSys                v3r8    DAQ     # Marco Cattaneo
 use MuonDAQ               v3r3    Muon    # Alessia Satta
 use OTDAQ                 v5r6    OT      # Jan Amoraal
-use CaloDAQ               v4r2    Calo    # Olivier Deschamps
+use CaloDAQ               v4r3    Calo    # Olivier Deschamps
 use SiDAQ                 v2r0    Si      # Matt Needham
 
 # Other stuff
@@ -73,7 +73,7 @@ use TrackInterfaces       v3r11  Tr      # Matt Needham
 use LinkerInstances       v3r4   Event   # Thomas Ruf
 use DetCond               v11r8  Det     # Marco Clemencic
 use CondDBEntityResolver  v4r0   Tools   # Marco Clemencic
-use CondDBUI              v2r6   Tools   # Marco Clemencic
+use CondDBUI              v2r7   Tools   # Marco Clemencic
 use SimComponents         v2r8   Sim     # Gloria Corti, Marco Cattaneo
 use MDF                   v3r0   DAQ     # Markus Frank
 use DaVinciKernel         v6r9   Phys    # Juan Palacios

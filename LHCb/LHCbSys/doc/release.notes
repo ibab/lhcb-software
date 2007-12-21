@@ -5,15 +5,15 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r3>2007-12-20 LHCbSys v23r3</A></H1><PRE>
+</PRE><H1><A NAME=v23r3>2007-12-21 LHCbSys v23r3</A></H1><PRE>
 This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 
 - New packages:      MDF_DCAP v1r0 - DCAP plugin to read MDF files 
                      MDF_GFAL v1r0 - GFAL plugin to read MDF files 
                      MDF_RFIO v1r0 - RFIO plugin to read MDF files 
-- Packages modified: DetDesc v11r2, DetDesc v18r3, DetDescSvc v1r16, 
+- Packages modified: DetSys v11r2, DetDesc v18r3, DetDescSvc v1r16, MuonDet v7r2,
     DetDescChecks v4r5, EventSys v24r0, DAQEvent v7r8, RecEvent v2r9, MDF v3r0,
-    DetCond v11r8, TfKernel v2r2
+    DAQSys v3r8, CaloDAQ v4r3, DetCond v11r8, CondDBUI v2r7, TfKernel v2r2
 
 - In DetDesc v18r3
   . New treatment of geometry overlaps:
@@ -34,8 +34,13 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
                           geomtery errors (default is "true")
 
 - In DetDescChecks v4r5
-  . Add new algorithm DetDesc::CheckOverlap 
+  . Improved the error message of LoadDDDB in case of exceptions.
+  . Added new algorithm DetDesc::CheckOverlap 
     See the <a href="http://indico.cern.ch/materialDisplay.py?contribId=5&materialId=slides&confId=10184">presentation at T-Rec meeting, 17.12.2007</a>
+
+- In MuonDet v7r2
+  . Added four new methods to the DeMuonDetector class usefull for alignment 
+    purpose (changed DeMuonDetector and MuonChamberLayout)
 
 - In EventSys v24r0
   . Adapt copy_relax_rootmap pattern to new rootmap names in LCG_54
@@ -59,9 +64,22 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
     as first bank in the buffer, with description of the various RawEvents found.
   . Add function unpackTAEBuffer in RawEventHelpers to decode the TAE MDF block.
 
+- In CaloDAQ v4r3
+  . Improve the calls to msgSvc
+  . Fix ifndef in ICALOL0DATAPROVIDER
+
 - In DetCond v11r8
   . Replace homemade linkopts with new Boost_linkopts_filesystem_mt
   . Remove slc3 specific set, no longer supported in LCG_54
+  . Allow to use tags that are not global in CondDBAccessSvc.
+  . Added a service (COOLConfSvc/ICOOLConfSvc) dedicated to the instantiation and
+    configuration of COOL/CORAL. The options to configure COOL and CORAL have
+    been moved from CondDBAccessSvc to the new service. 
+
+- In CondDBUI v2r7
+  . Added the possibility to specify a connection string on the command line of
+    CondDBBrowser.py to open a database.
+  . Fixed a bug (introduced in v2r6) that prevents the addition of new conditions
 
 - In TfKernel v2r2
   . Add new values in HitBase Estatus enum, mainly for TT hits.
