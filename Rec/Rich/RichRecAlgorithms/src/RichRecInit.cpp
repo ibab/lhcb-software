@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecInit
  *
  *  CVS Log :-
- *  $Id: RichRecInit.cpp,v 1.6 2007-09-04 16:50:36 jonrob Exp $
+ *  $Id: RichRecInit.cpp,v 1.7 2007-12-21 12:19:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -26,7 +26,7 @@ DECLARE_ALGORITHM_FACTORY( Initialise );
 // Standard constructor, initializes variables
 Initialise::Initialise( const std::string& name,
                         ISvcLocator* pSvcLocator )
-  : RichRecAlgBase ( name, pSvcLocator )
+  : Rich::Rec::AlgBase ( name, pSvcLocator )
 {
   declareProperty( "CheckProcStatus", m_checkProcStatus = true  );
   declareProperty( "CreatePixels",    m_makePixels      = false );
