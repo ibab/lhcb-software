@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.29 2007-12-20 15:43:19 marcocle Exp $ 
+! $Id: release.notes,v 1.30 2007-12-21 07:42:33 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,19 +7,18 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
+!======================= DetDescChecks v4r5 2007-12-21 ========================
+! 2007-12-21 - Marco Cattaneo
+ - Change CheckOverlap.opts to check whole LHCb by default
+
 ! 2007-12-20 - Marco Clemencic
  - Improved the error message of LoadDDDB in case of exceptions.
 
-!======================= DetDescChecks v4r5 2007-12-20 ========================
 ! 2007-12-19 - Vanya BELYAEV
-
    see the presentation at T-Rec meeting, 17.12.2007  
 
  - add new algorithm DetDesc::CheckOverlap 
-   and the conrresponidng configuration file 
-     options/CheckOverlap.opts
-
- - cmt/requirements 
+   and the conrresponding configuration file options/CheckOverlap.opts
 
 !======================= DetDescChecks v4r4 2007-10-05 ========================
 ! 2007-10-05 - Marco Cattaneo
