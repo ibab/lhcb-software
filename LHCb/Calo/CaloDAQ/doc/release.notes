@@ -4,13 +4,12 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v4r3 2007-12-21 ==========================
 ! 2007-12-14 - Olivier Deschamps
  - improve the calls to msgSvc
 
 ! 2007-12-12 - Olivier Deschamps
  - fix ifndef in ICALOL0DATAPROVIDER
-
-
 
 !========================== CaloDAQ v4r2 2007-12-12 ==========================
 ! 2007-12-11 - Olivier Deschamps
