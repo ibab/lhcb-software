@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.67 2007-12-20 16:10:40 marcocle Exp $
+! $Id: release.notes,v 1.68 2007-12-21 07:57:38 cattanem Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
 
+!===================== Tools/CondDBUI v2r7 2007-12-21 =========================
 ! 2007-12-20 - Marco Clemencic
  - Added the possibility to specify a connection string on the command line of
    CondDBBrowser.py to open a database.
