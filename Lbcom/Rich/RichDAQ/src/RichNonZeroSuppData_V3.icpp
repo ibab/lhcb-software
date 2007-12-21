@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichNonZeroSuppData
  *
- *  $Id: RichNonZeroSuppData_V3.icpp,v 1.4 2007-09-04 16:55:31 jonrob Exp $
+ *  $Id: RichNonZeroSuppData_V3.icpp,v 1.5 2007-12-21 12:04:25 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -84,8 +84,7 @@ namespace Rich
         }
 
         // How many words ?
-        const ShortType nWords = dataM.size()/2 + dataM.size()%2;
-        return nWords;
+        return ( dataM.size()/2 + dataM.size()%2 );
       }
       // ------------------------------------------------------------------------------------------------
 

@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ helper class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.icpp,v 1.15 2007-11-09 16:28:40 cattanem Exp $
+ *  $Id: RichHPDDataBank.icpp,v 1.16 2007-12-21 12:04:25 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -46,7 +46,7 @@ namespace Rich
       // initialise footer
       if ( m_header.extendedFormat() )
       {
-        // make sure the foot expects words
+        // make sure the footer expects words
         m_footer.setParityWord(0);
         // then read the word(s) from the stream
         m_footer.readFromDataStream(data);
