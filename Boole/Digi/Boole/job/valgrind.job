@@ -19,7 +19,7 @@ else
   shift
 endif
 #   
-set Bversion = "v14r8"
+set Bversion = "v14r9"
 echo "Excuting Boole $Bversion using options file $Dver.opts"
 #
 
@@ -38,7 +38,6 @@ endif
 
 # == set the program environment
 source /afs/cern.ch/lhcb/group/rich/vol4/jonrob/scripts/new-valgrind.csh
-
 source $MYJOBROOT/cmt/setup.csh -tag=$CMTDEB
 
 # Go to working directory
@@ -62,7 +61,7 @@ cp $Dver.opts valgrind.opts
 echo "ApplicationMgr.EvtMax = 5;" >> valgrind.opts
 
 # == run the excutable ================================
-valgrind --tool=memcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=40 --suppressions=$STDOPTS/Gaudi.supp --suppressions=$SuppFile ./tmpjob_$Dver.exe valgrind.opts >& memcheck.log
+valgrind --tool=memcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=40 --suppressions=$ROOTSYS/etc/valgrind-root.supp --suppressions=$STDOPTS/Gaudi.supp --suppressions=$SuppFile ./tmpjob_$Dver.exe valgrind.opts >& memcheck.log
 
 # == job is finished: remove temporary files ==========
 rm tmpjob_$Dver.exe
