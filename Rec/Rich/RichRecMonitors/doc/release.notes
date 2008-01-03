@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-01-03 - Chris Jones
+ - Add new monitor that compares reconstructed photons to ray traced photons
+
 !====================== RichRecMonitors v2r13 2007-11-29 =====================
 ! 2007-11-26 - Chris Jones
  - Various improvements to monitors + adapt to changes to photon
