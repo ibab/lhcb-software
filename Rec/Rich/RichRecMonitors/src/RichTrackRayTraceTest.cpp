@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : TrackRayTraceTest
  *
- *  $Id: RichTrackRayTraceTest.cpp,v 1.5 2007-08-09 16:17:58 jonrob Exp $
+ *  $Id: RichTrackRayTraceTest.cpp,v 1.6 2008-01-03 15:30:17 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -137,11 +137,4 @@ void TrackRayTraceTest::testRayTrace( const LHCb::RichTraceMode traceMode,
     debug() << rich << " " << traceMode << " FAILED" << endreq;
   }
 
-}
-
-//  Finalize
-StatusCode TrackRayTraceTest::finalize()
-{
-  // Execute base class method
-  return RichRecHistoAlgBase::finalize();
 }

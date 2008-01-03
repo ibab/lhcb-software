@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::TrackRayTraceTest
  *
  *  CVS Log :-
- *  $Id: RichTrackRayTraceTest.h,v 1.5 2007-03-09 22:59:34 jonrob Exp $
+ *  $Id: RichTrackRayTraceTest.h,v 1.6 2008-01-03 15:30:18 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -62,7 +62,6 @@ namespace Rich
 
       virtual StatusCode initialize();    // Algorithm initialization
       virtual StatusCode execute   ();    // Algorithm execution
-      virtual StatusCode finalize  ();    // Algorithm finalization
 
     private: // methods
 
