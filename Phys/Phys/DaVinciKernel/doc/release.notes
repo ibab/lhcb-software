@@ -3,6 +3,9 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-01-04 - Patrick Koppenburg
+ - Add them to the dictionaries
+
 ! 2007-12-18 - Patrick Koppenburg
  - Two new interfaces IParticleTupleTool and IEventTupleTool for 
    filling generic nTuples.

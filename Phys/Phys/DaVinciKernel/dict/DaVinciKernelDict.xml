@@ -14,6 +14,7 @@
   <class name = "IDecayFinder"/>
   <class name = "IDecodeSimpleDecayString"/>
   <class name = "IDirectionFit"/>
+  <class name = "IEventTupleTool"/>
   <class name = "IFilterCriteriaTESTool"/>
   <class name = "IFilterCriterion"/>
   <class name = "IFilterParticles"/>
@@ -34,6 +35,7 @@
   <class name = "IParticleReFitter"/>
   <class name = "IParticleStuffer"/>
   <class name = "IParticleTransporter"/>
+  <class name = "IParticleTupleTool"/>
   <class name = "IPhysDesktop"/>
   <class name = "IPlotTool"/>
   <class name = "IProtoParticleFilter"/>
