@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.h,v 1.3 2007-10-09 23:37:24 jucogan Exp $
+// $Id: L0MuonOutputs.h,v 1.4 2008-01-04 11:57:05 jucogan Exp $
 #ifndef COMPONENT_L0MUONOUTPUTS_H 
 #define COMPONENT_L0MUONOUTPUTS_H 1
 
@@ -66,7 +66,12 @@ private:
   L0Muon::CtrlAllCnv   m_ctrlAll[2];
   L0Muon::ProcCandCnv  m_procCand[4];
   L0Muon::ProcDataCnv  m_procData[4];
-  
+
+  bool m_ctrlFinalFlag;
+  bool m_ctrlAllFlag;
+  bool m_procCandFlag;
+  bool m_procDataFlag;
+
   int m_rawBankNorm;
   int m_nCandFinalNorm;
   

@@ -1,7 +1,11 @@
-!  $Id: release.notes,v 1.42 2007-11-01 10:27:13 cattanem Exp $
+!  $Id: release.notes,v 1.43 2008-01-04 11:57:04 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev
 !-------------------------------------------------------------------------
+
+! 2008-01-04 - Julien Cogan
+ - Prevent L0MuonCandidatesFromRaw from writing of empty containers in the 
+   TES. This is done in order to gain time for the HLT.
 
 !========================= L0Muon v7r5 2007-11-01 ========================
 ! 2007-10-31 - Patrick Koppenburg
