@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.19 2007-08-13 12:38:49 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.20 2008-01-04 16:15:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -278,7 +278,8 @@ StatusCode TrackGeomMoni::execute()
                                    trackSeg.bestPoint(),
                                    trackDir,
                                    photon,
-                                   traceMode );
+                                   traceMode, Rich::top,
+                                   trackSeg.avPhotonEnergy() );
     if ( traceMode.traceWasOK(result) )
     {
 

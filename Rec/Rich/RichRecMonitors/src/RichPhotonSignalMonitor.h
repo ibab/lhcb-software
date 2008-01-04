@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PhotonSignalMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.h,v 1.7 2007-06-01 09:03:05 cattanem Exp $
+ *  $Id: RichPhotonSignalMonitor.h,v 1.8 2008-01-04 16:15:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -48,7 +48,7 @@ namespace Rich
        */
       //---------------------------------------------------------------------------
 
-      class PhotonSignalMonitor : public RichRecHistoAlgBase
+      class PhotonSignalMonitor : public Rich::Rec::HistoAlgBase
       {
 
       public:
@@ -61,7 +61,6 @@ namespace Rich
 
         virtual StatusCode initialize();    // Algorithm initialization
         virtual StatusCode execute   ();    // Algorithm execution
-        virtual StatusCode finalize  ();    // Algorithm finalization
 
       private: // data
 

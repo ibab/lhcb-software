@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PhotonRecoRayTraceTest
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoRayTraceTest.h,v 1.1 2008-01-03 15:33:33 jonrob Exp $
+ *  $Id: RichPhotonRecoRayTraceTest.h,v 1.2 2008-01-04 16:15:15 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   03/01/2008
@@ -21,15 +21,15 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-// Event
-#include "Event/MCRichOpticalPhoton.h"
-
 // Interfaces
 #include "MCInterfaces/IRichRecMCTruthTool.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichTrackSelector.h"
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
+
+// Event
+#include "Event/MCRichOpticalPhoton.h"
 
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
@@ -67,6 +67,20 @@ namespace Rich
         virtual StatusCode initialize();    // Algorithm initialization
         virtual StatusCode execute   ();    // Algorithm execution
 
+      private: // methods
+
+        /// Make the ray tracing test plots
+        void makePlots( const std::string & type,
+                        const Gaudi::XYZPoint  & emissPoint,
+                        const Gaudi::XYZVector & emissDir,
+                        const Gaudi::XYZPoint  & detectPoint,
+                        const Gaudi::XYZPoint  & primMirrPnt,                        
+                        const Gaudi::XYZPoint  & secMirrPnt,
+                        const Rich::DetectorType rich,
+                        const Rich::RadiatorType rad,
+                        const double ckPhi,
+                        const double photonEnergy );
+
       private: // data
 
         const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
@@ -75,11 +89,20 @@ namespace Rich
         const IRayTracing * m_rayTracing;          ///< Ray tracing tool
         const ISmartIDTool * m_idTool;             ///< Pointer to RichSmartID tool
 
+        /// Use full HPD treatment in ray tracing
+        bool m_fullHPDs;
+
         /// Ray tracing mode
         LHCb::RichTraceMode m_mode;
 
         /// Flag to turn on/off the correction for refraction at aerogel C4F10 boundary
         bool m_refractCorr;
+
+        /// Number of bins for 1D histograms
+        unsigned int m_nBins1D;
+
+        /// Number of bins for 2D histograms
+        unsigned int m_nBins2D;
 
       };
 

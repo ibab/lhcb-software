@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : TrackRayTraceTest
  *
- *  $Id: RichTrackRayTraceTest.cpp,v 1.6 2008-01-03 15:30:17 jonrob Exp $
+ *  $Id: RichTrackRayTraceTest.cpp,v 1.7 2008-01-04 16:15:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -121,7 +121,8 @@ void TrackRayTraceTest::testRayTrace( const LHCb::RichTraceMode traceMode,
                                  segment->trackSegment().bestPoint(),
                                  segment->trackSegment().bestMomentum(),
                                  photon,
-                                 traceMode );
+                                 traceMode, Rich::top,
+                                 segment->trackSegment().avPhotonEnergy() );
   if ( traceMode.traceWasOK(result) )
   {
     std::ostringstream mT;

@@ -5,20 +5,18 @@ CheckRICHSeq.Context = "Offline";
 // Turn on HPD suppression warnings
 //ToolSvc.Offline.RichPixelCreator.PixelSuppress.PrintHPDSuppressions = true;
 
-// Ray tracing tests
-//CheckRICHSeq.Members += { "Rich::Rec::TrackRayTraceTest" };
-
 // track monitor sequences
 CheckRICHSeq.Members += {
-  //"GaudiSequencer/RichTkGeom" // general track geometry plots
-  //,"GaudiSequencer/RichGhostTks"  // Ghost track monitors
-  //,"GaudiSequencer/RichCKRes"  // CK angle resolutions plots
- //,"GaudiSequencer/RichTkRes" // track resolution plots
- //,"GaudiSequencer/RichPhotSig" // photon signal number plots
-  "GaudiSequencer/RichPhotAng" // photon angle plots
-  //,"GaudiSequencer/RichPhotGeom" // photon geometry plots
+   "GaudiSequencer/RichTkGeom" // general track geometry plots
+  ,"GaudiSequencer/RichGhostTks"  // Ghost track monitors
+  ,"GaudiSequencer/RichCKRes"  // CK angle resolutions plots
+  ,"GaudiSequencer/RichTkRes" // track resolution plots
+  ,"GaudiSequencer/RichPhotSig" // photon signal number plots
+  ,"GaudiSequencer/RichPhotAng" // photon angle plots
+  ,"GaudiSequencer/RichPhotGeom" // photon geometry plots
   //,"GaudiSequencer/RichPhotEff"  // photon reco efficiency plots
- //,"GaudiSequencer/RichPixelMoni" // pixel plots
+  ,"GaudiSequencer/RichPixelMoni" // pixel plots
+  ,"GaudiSequencer/RichRayTraceTests" // pixel plots
 };
 RichPhotEff.MeasureTime  = true;
 RichPhotGeom.MeasureTime = true;
@@ -27,6 +25,7 @@ RichPhotSig.MeasureTime  = true;
 RichTkGeom.MeasureTime   = true;
 RichCKRes.MeasureTime    = true;
 RichTkRes.MeasureTime    = true;
+RichRayTraceTests.MeasureTime = true;
 
 // Reco track monitors
 #include "$RICHRECMONITORSOPTS/RecoMoni_Brunel_Tracks.opts"
@@ -69,3 +68,10 @@ RichPixelMoni.Members += {
   "Rich::Rec::MC::PixelPositionMonitor/RiRecPixelPosMoni"
 // ,"Rich::Rec::MC::PixelRecoEffMonitor/RiRecPixelRecoEffMoni"
 };
+
+// Ray tracing tests
+RichRayTraceTests.Members += { "Rich::Rec::TrackRayTraceTest/TrackRayTraceTest" };
+RichRayTraceTests.Members += { "Rich::Rec::MC::PhotonRecoRayTraceTest/PhotonTestSimple",
+                               "Rich::Rec::MC::PhotonRecoRayTraceTest/PhotonTestFull" };
+PhotonTestSimple.FullHPDsInRayTracing = false;
+PhotonTestFull.FullHPDsInRayTracing = true;

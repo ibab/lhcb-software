@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.12 2007-11-26 17:14:01 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.cpp,v 1.13 2008-01-04 16:15:14 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -38,10 +38,11 @@ CherenkovAngleMonitor::CherenkovAngleMonitor( const std::string& name,
   declareProperty( "MinBeta",     m_minBeta   = 0.999 );
   // number of bins
   declareProperty( "NumberBins1D",  m_nBins1D = 200 );
+  declareProperty( "NumberBins2D",  m_nBins2D = 100 );
 }
 
 // Destructor
-CherenkovAngleMonitor::~CherenkovAngleMonitor() {};
+CherenkovAngleMonitor::~CherenkovAngleMonitor() {}
 
 //  Initialize
 StatusCode CherenkovAngleMonitor::initialize()
@@ -125,33 +126,37 @@ StatusCode CherenkovAngleMonitor::execute()
       const double delTheta = thetaRec-thetaExpTrue;
 
       plot1D( thetaRec, hid(rad,"ckTheta"), "Reconstructed Cherenkov theta",
-              minCkTheta[rad], maxCkTheta[rad] );
+              minCkTheta[rad], maxCkTheta[rad], m_nBins1D );
       plot1D( thetaExpTrue, hid(rad,"ckThetaExp"), "Expected Cherenkov theta",
-              minCkTheta[rad], maxCkTheta[rad] );
-      plot1D( phiRec, hid(rad,"ckPhi"), "Reconstructed Cherenkov phi", 0, 2*M_PI );
+              minCkTheta[rad], maxCkTheta[rad], m_nBins1D );
+      plot1D( phiRec, hid(rad,"ckPhi"), "Reconstructed Cherenkov phi", 0, 2*M_PI, m_nBins1D );
       plot1D( delTheta, hid(rad,"ckDiffAll"), "Rec-Exp CK theta all",
-              -ckRange[rad],ckRange[rad]);
+              -ckRange[rad], ckRange[rad], m_nBins1D );
+      plot2D( phiRec, delTheta, hid(rad,"ckDiffAllVPhi"), "Rec-Exp CK theta all V CK Phi",
+              0, 2*M_PI, -ckRange[rad], ckRange[rad], m_nBins2D, m_nBins2D );
 
       // theta versus phi plots
+      plot2D( phiRec, thetaRec, hid(rad,"thetaVphi"), "CK theta V phi",
+              0, 2*M_PI, minCkTheta[rad], maxCkTheta[rad], m_nBins2D, m_nBins2D );
       if ( hitPnt.y() < 0 && hitPnt.x() < 0 )
       {
-        plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR1"), "CK phi V theta : y<0 x<0",
-                minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
+        plot2D( phiRec, thetaRec, hid(rad,"thetaVphiR1"), "CK theta V phi : y<0 x<0",
+                0, 2*M_PI, minCkTheta[rad], maxCkTheta[rad], m_nBins2D, m_nBins2D );
       }
       else if ( hitPnt.y() > 0 && hitPnt.x() < 0 )
       {
-        plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR2"), "CK phi V theta : y>0 x<0",
-                minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
+        plot2D( phiRec, thetaRec, hid(rad,"thetaVphiR2"), "CK theta V phi : y>0 x<0",
+                0, 2*M_PI, minCkTheta[rad], maxCkTheta[rad], m_nBins2D, m_nBins2D );
       }
       else if ( hitPnt.y() < 0 && hitPnt.x() > 0 )
       {
-        plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR3"), "CK phi V theta : y<0 x>0",
-                minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
+        plot2D( phiRec, thetaRec, hid(rad,"thetaVphiR3"), "CK theta V phi : y<0 x>0",
+                0, 2*M_PI, minCkTheta[rad], maxCkTheta[rad], m_nBins2D, m_nBins2D );
       }
       else if ( hitPnt.y() > 0 && hitPnt.x() > 0 )
       {
-        plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR4"), "CK phi V theta : y>0 x>0",
-                minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
+        plot2D( phiRec, thetaRec, hid(rad,"thetaVphiR4"), "CK theta V phi : y>0 x>0",
+                0, 2*M_PI, minCkTheta[rad], maxCkTheta[rad], m_nBins2D, m_nBins2D );
       }
 
       if ( mcType != Rich::Unknown )
@@ -162,36 +167,41 @@ StatusCode CherenkovAngleMonitor::execute()
         {
 
           // CK angles for true photons
-          plot1D( thetaRec, hid(rad,mcType,"ckThetaTrue"), "Cherenkov theta : true",
-                  minCkTheta[rad], maxCkTheta[rad] );
+          plot1D( thetaRec, hid(rad,mcType,"ckThetaTrue"), "Reconstructed Cherenkov theta : true",
+                  minCkTheta[rad], maxCkTheta[rad], m_nBins1D );
           plot1D( thetaExpTrue, hid(rad,"ckThetaExpTrue"), "Expected Cherenkov theta : true",
-                  minCkTheta[rad], maxCkTheta[rad] );
-          plot1D( phiRec,   hid(rad,mcType,"ckPhiTrue"), "Cherenkov phi : true", 0, 2*M_PI );
+                  minCkTheta[rad], maxCkTheta[rad], m_nBins1D );
+          plot1D( phiRec,   hid(rad,mcType,"ckPhiTrue"), "Cherenkov phi : true", 0, 2*M_PI, m_nBins1D );
           plot1D( delTheta, hid(rad,"ckDiffTrue"), "Rec-Exp CK theta all : true",
-                  -ckRange[rad],ckRange[rad]);
-          profile1D( delTheta, pTot, hid(rad,"ckDiffTrueVP"), "Rec-Exp CK theta Versus Ptot all : true",
+                  -ckRange[rad],ckRange[rad], m_nBins1D );
+          plot2D( phiRec, delTheta, hid(rad,"ckDiffTrueVPhi"), "Rec-Exp CK theta all V CK Phi : true",
+                  0, 2*M_PI, -ckRange[rad], ckRange[rad], m_nBins2D, m_nBins2D );
+
+          profile1D( pTot, delTheta, hid(rad,"ckDiffTrueVP"), "Rec-Exp CK theta Versus Ptot all : true",
                      minP, maxP, 50 );
 
           // theta versus phi plots
+          plot2D( phiRec, thetaRec, hid(rad,"thetaVphiTrue"), "CK theta V phi : true CK photons",
+                  0, 2*M_PI, minCkTheta[rad], maxCkTheta[rad], m_nBins2D, m_nBins2D );
           if ( hitPnt.y() < 0 && hitPnt.x() < 0 )
           {
-            plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR1True"), "CK phi V theta : y<0 x<0 : true CK photons",
-                    minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
+            plot2D( phiRec, thetaRec, hid(rad,"thetaVphiR1True"), "CK theta V phi : y<0 x<0 : true CK photons",
+                    0, 2*M_PI, minCkTheta[rad], maxCkTheta[rad], m_nBins2D, m_nBins2D );
           }
           else if ( hitPnt.y() > 0 && hitPnt.x() < 0 )
           {
-            plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR2True"), "CK phi V theta : y>0 x<0 : true CK photons",
-                    minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
+            plot2D( phiRec, thetaRec, hid(rad,"thetaVphiR2True"), "CK theta V phi : y>0 x<0 : true CK photons",
+                    0, 2*M_PI, minCkTheta[rad], maxCkTheta[rad], m_nBins2D, m_nBins2D );
           }
           else if ( hitPnt.y() < 0 && hitPnt.x() > 0 )
           {
-            plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR3True"), "CK phi V theta : y<0 x>0 : true CK photons",
-                    minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
+            plot2D( phiRec, thetaRec, hid(rad,"thetaVphiR3True"), "CK theta V phi : y<0 x>0 : true CK photons",
+                    0, 2*M_PI, minCkTheta[rad], maxCkTheta[rad], m_nBins2D, m_nBins2D );
           }
           else if ( hitPnt.y() > 0 && hitPnt.x() > 0 )
           {
-            plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR4True"), "CK phi V theta : y>0 x>0 : true CK photons",
-                    minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
+            plot2D( phiRec, thetaRec, hid(rad,"thetaVphiR4True"), "CK theta V phi : y>0 x>0 : true CK photons",
+                    0, 2*M_PI, minCkTheta[rad], maxCkTheta[rad], m_nBins2D, m_nBins2D );
           }
 
           // Associated MCRichOpticalPhoton
@@ -213,6 +223,9 @@ StatusCode CherenkovAngleMonitor::execute()
                     -ckRange[rad],ckRange[rad], m_nBins1D );
             plot1D( delThetaExpMC, hid(rad,"mcExpDiff"), "MC-Exp CK theta true",
                     -ckRange[rad],ckRange[rad], m_nBins1D );
+            plot2D( phiMC, delThetaMC, hid(rad,"mcckDiffTrueVPhi"), "Rec-MC CK theta true V true CK Phi",
+                    0, 2*M_PI, -ckRange[rad], ckRange[rad], m_nBins2D, m_nBins2D );
+
           } // mc photon
 
             // make a tuple
@@ -238,7 +251,7 @@ StatusCode CherenkovAngleMonitor::execute()
           plot1D( phiRec,   hid(rad,mcType,"ckPhiFake"), "Cherenkov phi : fake", 0, 2*M_PI, m_nBins1D );
           plot1D( delTheta, hid(rad,"ckDiffFake"), "Rec-Exp CK theta all : fake",
                   -ckRange[rad],ckRange[rad], m_nBins1D );
-          profile1D( delTheta, pTot, hid(rad,"ckDiffFakeVP"), "Rec-Exp CK theta Versus Ptot all : fake",
+          profile1D( pTot, delTheta, hid(rad,"ckDiffFakeVP"), "Rec-Exp CK theta Versus Ptot all : fake",
                      minP, maxP, 50 ); 
 
         }

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : PhotonSignalMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.cpp,v 1.8 2007-03-20 11:44:26 jonrob Exp $
+ *  $Id: RichPhotonSignalMonitor.cpp,v 1.9 2008-01-04 16:15:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -28,7 +28,7 @@ DECLARE_ALGORITHM_FACTORY( PhotonSignalMonitor );
 // Standard constructor, initializes variables
 PhotonSignalMonitor::PhotonSignalMonitor( const std::string& name,
                                           ISvcLocator* pSvcLocator )
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
+  : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
     m_richRecMCTruth    ( NULL ),
     m_tkSignal          ( NULL ),
     m_geomEffic         ( NULL ),
@@ -45,7 +45,7 @@ PhotonSignalMonitor::~PhotonSignalMonitor() {};
 StatusCode PhotonSignalMonitor::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -138,11 +138,4 @@ StatusCode PhotonSignalMonitor::execute()
   }
 
   return StatusCode::SUCCESS;
-}
-
-//  Finalize
-StatusCode PhotonSignalMonitor::finalize()
-{
-  // Execute base class method
-  return RichRecHistoAlgBase::finalize();
 }
