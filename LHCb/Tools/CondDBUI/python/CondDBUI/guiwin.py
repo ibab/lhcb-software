@@ -9,7 +9,7 @@ versionNumber = '$Name: not supported by cvs2svn $'.split()[1]
 if versionNumber == "$":
     versionNumber = 'HEAD'
 
-versionId  = '$Id: guiwin.py,v 1.4 2007-12-20 16:10:40 marcocle Exp $'.split()
+versionId  = '$Id: guiwin.py,v 1.5 2008-01-07 17:45:05 marcocle Exp $'.split()
 if len(versionId) < 4:
     versionDate = 'unknown'
 else:
@@ -252,7 +252,7 @@ class myWindow(qt.QMainWindow):
         self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
         try:
             if self.dialogConnectDB.exec_loop():
-                connectionString = self.dialogConnectDB.connectionString
+                connectionString = self.dialogConnectDB.connectString
                 is_read_only = self.dialogConnectDB.buttonLocked.isOn()
                 bridge = CondDBUI.CondDB(connectionString,
                                          create_new_db = False,
