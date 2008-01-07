@@ -4,6 +4,10 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2008-01-07 - Marco Clemencic
+ - Changed the tag name for elements of maps inside conditions (even if it is
+   not used) to be consistent with the changes in SQLDDDB (>= v4r0). 
+
 !================ DetDescCnv v4r4 2007-11-12 ==================================
 ! 2007-11-09 - Marco Clemencic
  - Implemented the parsing of <map> elements inside conditions (see Det/SQLDDDB

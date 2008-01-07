@@ -1,4 +1,4 @@
-///  $Id: XmlBaseConditionCnv.h,v 1.6 2007-11-09 17:06:05 marcocle Exp $
+///  $Id: XmlBaseConditionCnv.h,v 1.7 2008-01-07 18:25:33 marcocle Exp $
 
 #ifndef DETDESCCNV_XMLCONDITIONCNV_H
 #define DETDESCCNV_XMLCONDITIONCNV_H
@@ -114,7 +114,7 @@ private:
   const XMLCh* paramString;
   const XMLCh* paramVectorString;
   const XMLCh* mapString;
-  const XMLCh* entryString;
+  const XMLCh* itemString;
 
   // Constant Strings for parameter names
   const XMLCh* typeString;

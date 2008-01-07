@@ -1,4 +1,4 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.10 2007-11-09 17:06:05 marcocle Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.11 2008-01-07 18:25:22 marcocle Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -28,7 +28,7 @@ XmlBaseConditionCnv::XmlBaseConditionCnv (ISvcLocator* svc) :
   paramString = xercesc::XMLString::transcode("param");
   paramVectorString = xercesc::XMLString::transcode("paramVector");
   mapString = xercesc::XMLString::transcode("map");
-  entryString = xercesc::XMLString::transcode("entry");
+  itemString = xercesc::XMLString::transcode("item");
   
   typeString = xercesc::XMLString::transcode("type");
   nameString = xercesc::XMLString::transcode("name");
@@ -51,7 +51,7 @@ XmlBaseConditionCnv::XmlBaseConditionCnv (ISvcLocator* svc,
   paramString = xercesc::XMLString::transcode("param");
   paramVectorString = xercesc::XMLString::transcode("paramVector");
   mapString = xercesc::XMLString::transcode("map");
-  entryString = xercesc::XMLString::transcode("entry");
+  itemString = xercesc::XMLString::transcode("item");
   
   typeString = xercesc::XMLString::transcode("type");
   nameString = xercesc::XMLString::transcode("name");
@@ -71,7 +71,7 @@ XmlBaseConditionCnv::~XmlBaseConditionCnv () {
   xercesc::XMLString::release((XMLCh**)&paramString);
   xercesc::XMLString::release((XMLCh**)&paramVectorString);
   xercesc::XMLString::release((XMLCh**)&mapString);
-  xercesc::XMLString::release((XMLCh**)&entryString);
+  xercesc::XMLString::release((XMLCh**)&itemString);
   
   xercesc::XMLString::release((XMLCh**)&typeString);
   xercesc::XMLString::release((XMLCh**)&nameString);
