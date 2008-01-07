@@ -1,4 +1,4 @@
-// $Id: TupleToolP2VV.cpp,v 1.1 2007-12-18 18:12:26 pkoppenb Exp $
+// $Id: TupleToolP2VV.cpp,v 1.2 2008-01-07 17:25:25 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -63,7 +63,7 @@ StatusCode TupleToolP2VV::fill( const LHCb::Particle*
   if( P ){
     double thetaL, thetaK, phi ;
     StatusCode sc = m_pB2LLKstar->calculateAngles( P, thetaL, thetaK, phi );
-    if (msgLevel(MSGG:DEBUG)) debug() << "Three angles are theta_L : " 
+    if (msgLevel(MSG::DEBUG)) debug() << "Three angles are theta_L : " 
                                       << thetaL << " K: " << thetaK
                                       << " phi: " << phi << endmsg ;
     if ( !sc ) return sc;

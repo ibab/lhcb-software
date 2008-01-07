@@ -1,4 +1,4 @@
-// $Id: TupleToolTagging.h,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolTagging.h,v 1.2 2008-01-07 17:25:25 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLTAGGING_H
 #define JBOREL_TUPLETOOLTAGGING_H 1
 
@@ -9,11 +9,6 @@
 
 class IContextTool;
 class IBTaggingTool;
-class DVAlgorithm;
-
-namespace LHCb{
-  class Tagger;
-};
 
 /** @class TupleToolTagging TupleToolTagging.h jborel/TupleToolTagging.h
  *
@@ -40,8 +35,6 @@ public:
 
 private:
   const DVAlgorithm* getParent() const;
-  //  std::string getCatName( const LHCb::Tagger& ) const;
- 
 
   std::string m_inputLocation, m_toolName;
   IContextTool* m_context;

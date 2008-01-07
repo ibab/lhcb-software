@@ -4,6 +4,9 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-01-07 - Patrick Koppenburg for Jeremie Borel
+ - Some changes in interfaces
+
 ! 2007-12-18 - Patrick Koppenburg
  - Added a TupleToolP2VV for B->mumuK* and friends
  - Removed TupleToolKinetic which is a duplicate of TupleToolKinematic

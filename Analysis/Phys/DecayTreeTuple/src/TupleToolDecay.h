@@ -1,14 +1,14 @@
-// $Id: TupleToolDecay.h,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolDecay.h,v 1.2 2008-01-07 17:25:25 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLDECAY_H 
 #define JBOREL_TUPLETOOLDECAY_H 1
 
-class IDecayFinder;
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Event/Particle.h"
 
 class IParticleTupleTool;
+class IDecayFinder;
 
 static const InterfaceID IID_TupleToolDecay ( "TupleToolDecay", 1, 0 );
 

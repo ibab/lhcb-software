@@ -1,4 +1,4 @@
-// $Id: TupleToolMCPid.h,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolMCPid.h,v 1.2 2008-01-07 17:25:25 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLMCPID_H
 #define JBOREL_TUPLETOOLMCPID_H 1
 
@@ -11,6 +11,8 @@
 #include "Kernel/Particle2MCLinker.h"
 /** @class TupleToolMCPid TupleToolMCPid.h jborel/TupleToolMCPid.h
  *
+ *  - head_MCPID : the true PID of the particle. 
+ *  - head_MCWEIGHT : the weight of the MC assoc in case of chi2 method.
  *
  *  @author Jeremie Borel
  *  @date   2007-11-07
