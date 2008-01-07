@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.4 2007-12-05 15:51:11 janos Exp $
+// $Id: AlignmentElement.h,v 1.5 2008-01-07 11:01:16 janos Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -34,16 +34,20 @@ public:
 
   /** Construct an alignment element from a detector element and an index.
    *  The index is needed for bookkeeping purposes, i.e. where to get/put
-   *  the derivatives in H and rho
+   *  the derivatives in H and rho. Also a  vector of booleans representing 
+   *  which dofs to align for, Tx, Ty, Tz, Rx, Ry, and Rz. Default is all dofs
    */
-  AlignmentElement(const DetectorElement* element, const unsigned int index);
+  AlignmentElement(const DetectorElement* element, const unsigned int index, 
+                   const std::vector<bool>& dofs = std::vector<bool>(6, true));
 
   /** Construct an alignment element from a group, i.e. vector, of
    *  detector elements and an index. The index is needed for bookkeeping
-   *  purposes, i.e. where to get/put the derivatives in H and rho
+   *  purposes, i.e. where to get/put the derivatives in H and rho. Also a 
+   *  vector of booleans representing which dofs to align for, Tx, Ty, Tz, 
+   *  Rx, Ry, and Rz. Default is all dofs
    */
-  AlignmentElement(const std::vector<const DetectorElement*>& elements, const unsigned int index);
-
+  AlignmentElement(const std::vector<const DetectorElement*>& elements, const unsigned int index, 
+                   const std::vector<bool>& dofs = std::vector<bool>(6, true));
 
  public:
 
@@ -75,6 +79,11 @@ public:
    */
   const std::vector<double> deltaRotations() const;
 
+  /**
+   *  return number of dofs we want to align for
+   */
+  unsigned int nDOFs() const;
+  
   /** Method to set the local deltas of the detector element.
    * The delta translations and rotations are in the local frame
    */
@@ -92,6 +101,7 @@ public:
    */
   // const Gaudi::Transform3D localDeltaMatrix() const;
 
+
   /** Get local centre of element. Note: local centre != pivot point
    *
    */
@@ -100,7 +110,7 @@ public:
   /** operator ==. Is this AlignmentElement constructed from this DetectorElement?
    */
   bool operator==(const DetectorElement* rhs) const;
-
+  
   /** Output stream method
    */
   std::ostream& fillStream(std::ostream& s) const;
@@ -118,9 +128,10 @@ public:
 
  private:
 
-  mutable std::vector<const DetectorElement*>  m_elements; ///< Vector of pointers to detector elements
-  unsigned int                         m_index;    ///< Index. Needed for bookkeeping
-  Gaudi::XYZPoint                      m_pivot;    ///< Pivot point
+  mutable std::vector<const DetectorElement*>  m_elements;         ///< Vector of pointers to detector elements
+  unsigned int                                 m_index;            ///< Index. Needed for bookkeeping
+  std::vector<bool>                            m_dofs;             ///< d.o.fs we want to align for
+  Gaudi::XYZPoint                              m_pivot;            ///< Pivot point
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.13 2007-12-19 11:43:10 janos Exp $
+// $Id: AlignAlgorithm.cpp,v 1.14 2008-01-07 11:01:16 janos Exp $
 // Include files
 // from std
 // #include <utility>
@@ -35,57 +35,60 @@
 
 namespace {
 
-   class Equations {
-   public:
-       Equations(size_t nElem) : m_nElem(nElem), m_v(nElem) {}
-       size_t nElem() const { return m_nElem; }
-       Gaudi::Vector6&   V(int i) { return m_v[i]; }
-       const Gaudi::Vector6&   V(int i) const { return m_v[i]; }
-       Gaudi::Matrix6x6& M(int i, int j) { assert(i<=j); return m_m[std::make_pair(i,j)]; }
-       //FIXME: return proxy that fixes i<j...
-       const Gaudi::Matrix6x6& M(int i, int j) const { assert(i<=j); return const_cast<Equations*>(this)->m_m[std::make_pair(i,j)]; }
-       void clear() { m_v.clear(); m_v.resize(m_nElem); m_m.clear(); }
-   private:
-       size_t m_nElem ;
-       std::vector<Gaudi::Vector6>                    m_v;
-       std::map<std::pair<int,int>, Gaudi::Matrix6x6> m_m;
-   };
+  class Equations {
+  public:
+    Equations(size_t nElem) : m_nElem(nElem), m_v(nElem) {}
+    size_t nElem() const { return m_nElem; }
+    Gaudi::Vector6&   V(int i) { return m_v[i]; }
+    const Gaudi::Vector6&   V(int i) const { return m_v[i]; }
+    Gaudi::Matrix6x6& M(int i, int j) { assert(i<=j); return m_m[std::make_pair(i,j)]; }
+    //FIXME: return proxy that fixes i<j...
+    const Gaudi::Matrix6x6& M(int i, int j) const { 
+      assert(i<=j); 
+      return const_cast<Equations*>(this)->m_m[std::make_pair(i,j)]; 
+    }
+    void clear() { m_v.clear(); m_v.resize(m_nElem); m_m.clear(); }
+  private:
+    size_t m_nElem ;
+    std::vector<Gaudi::Vector6>                    m_v;
+    std::map<std::pair<int,int>, Gaudi::Matrix6x6> m_m;
+  };
+  
+  Gaudi::Vector6 convert(const Gaudi::Matrix1x6& m) {
+    Gaudi::Vector6 v;
+    for (int i = 0; i < 6; ++i) v(i) = m(0,i);
+    return v;
+  };
+  
+  
+  class Data {
+  public:
+    Data(LHCb::LHCbID id, unsigned index, double r, const Gaudi::Matrix1x6& d)
+      : m_id(id),m_index(index),m_r(r),m_d(d) {}
+    LHCb::LHCbID id() const { return m_id ; }
+    unsigned index() const { return m_index; }
+    double r() const { return m_r; }
+    const Gaudi::Matrix1x6& d() const { return m_d; }
+  private:
+    LHCb::LHCbID     m_id;
+    unsigned         m_index;
+    double           m_r;
+    Gaudi::Matrix1x6 m_d;
+  };
+  
+  //FIXME: the next two stand-alone functions should move into AlVec & AlSymMat...
+  template <typename T>
+  void ass(AlVec& lhs, unsigned row, const T& rhs) {
+    for (unsigned i = 0; i < T::kSize; ++i) lhs[row+i] = rhs(i);
+  }
+  
+  template <typename T>
+  void ass(AlSymMat& lhs, unsigned col, unsigned row, const T& rhs) {
+    for (unsigned i = 0; i < T::kCols; ++i)
+	    for (unsigned j = 0; j < T::kRows; ++j)
+        lhs[col+i][row+j] = rhs(i,j);
+  }
 
-   Gaudi::Vector6 convert(const Gaudi::Matrix1x6& m) {
-	Gaudi::Vector6 v;
-	for (int i = 0; i < 6; ++i) v(i) = m(0,i);
-	return v;
-   };
-
-
-   class Data {
-   public:
-	Data(LHCb::LHCbID id, unsigned index, double r, const Gaudi::Matrix1x6& d)
-	: m_id(id),m_index(index),m_r(r),m_d(d) {}
-	LHCb::LHCbID id() const { return m_id ; }
-	unsigned index() const { return m_index; }
-	double r() const { return m_r; }
-	const Gaudi::Matrix1x6& d() const { return m_d; }
-   private:
-	LHCb::LHCbID     m_id;
-	unsigned         m_index;
-	double           m_r;
-	Gaudi::Matrix1x6 m_d;
-   };
-
-
-   //FIXME: the next two stand-alone functions should move into AlVec & AlSymMat...
-   template <typename T>
-   void ass(AlVec& lhs, unsigned row, const T& rhs) {
-	for (unsigned i=0;i<T::kSize;++i) lhs[row+i] = rhs(i);
-   }
-
-   template <typename T>
-   void ass(AlSymMat& lhs, unsigned col, unsigned row, const T& rhs) {
-	for (unsigned i=0;i<T::kCols;++i)
-	    for (unsigned j=0;j<T::kRows;++j)
-		lhs[col+i][row+j] = rhs(i,j);
-   }
 };
 
 using namespace LHCb;
@@ -152,10 +155,10 @@ StatusCode AlignAlgorithm::initialize() {
     debug() << "Number of constraints = " << m_constraints.size() << endmsg;
     unsigned nC = 0u;
     for (std::vector<std::vector<double> >::const_iterator i = m_constraints.begin(), iEnd = m_constraints.end(); i != iEnd;
-	 ++i, ++nC) {
+         ++i, ++nC) {
       debug() << nC << ": f = [ ";
       for (std::vector<double>::const_iterator j = i->begin(), jEnd = i->end()-1; j != jEnd; ++j) {
-	info()  << (*j) << " ";
+        info()  << (*j) << " ";
       }
       debug() << " ]" << endmsg;
       debug() << "   f0 = " << i->back() << endmsg;
@@ -180,25 +183,24 @@ StatusCode AlignAlgorithm::initialize() {
     const std::string name   = i->name();
     if (printDebug()) debug() << "Booking histograms for element " << name << " with index " << indexI <<endmsg;
     m_resHistos[indexI]     = book2D(1000u+indexI, "residual vs iteration for " + name,
-				     -0.5, m_nIterations-0.5, m_nIterations,
-				     -1.00 , +1.00, 100);
+                                     -0.5, m_nIterations-0.5, m_nIterations,
+                                     -1.00 , +1.00, 100);
     m_pullHistos[indexI]     = book2D(2000u+indexI, "pull vs iteration for " + name,
-				      -0.5, m_nIterations-0.5, m_nIterations,
-				      -5.00 , +5.00, 100);
+                                      -0.5, m_nIterations-0.5, m_nIterations,
+                                      -5.00 , +5.00, 100);
     m_nhitHistos[indexI]     = book1D(3000u+indexI, "number of hits vs iteration for " + name,
-				      -0.5, m_nIterations-0.5, m_nIterations);
-
+                                      -0.5, m_nIterations-0.5, m_nIterations);
     m_autoCorrHistos[indexI] = book2D(4000u+indexI, "hit autocorrelation in " + name + "  vs iteration ",
-				      -0.5, m_nIterations-0.5, m_nIterations,
-				      -0.5,+0.5,250);
+                                      -0.5, m_nIterations-0.5, m_nIterations,
+                                      -0.5,+0.5,250);
     unsigned(indexJ) = indexI;
     for (ElemIter j = i; j != iEnd; ++j, ++indexJ) {
       m_corrHistos[std::make_pair(indexI, indexJ)] = book2D((10000 + indexI) * (100 + indexJ),
-							    "hit correlation of " + name + " with " + j->name()
-							    + " vs iteration "
-							    + ( i == j ? "(excluding autocorrelations!)" : "" ),
-							    -0.5, m_nIterations-0.5, m_nIterations,
-							    -1.0, +1.0, 250);
+                                                            "hit correlation of " + name + " with " + j->name()
+                                                            + " vs iteration "
+                                                            + ( i == j ? "(excluding autocorrelations!)" : "" ),
+                                                            -0.5, m_nIterations-0.5, m_nIterations,
+                                                            -1.0, +1.0, 250);
     }
   }
 
@@ -226,24 +228,24 @@ StatusCode AlignAlgorithm::execute() {
     typedef Nodes::const_iterator NodeIter;
     for (NodeIter node = nodes.begin(), end = nodes.end(); node != end; ++node) {
       if (!(*node)->hasMeasurement()) {
-	if (printDebug()) debug() << "==> Node has no measurement" << endmsg;
-	continue;
+        if (printDebug()) debug() << "==> Node has no measurement" << endmsg;
+        continue;
       }
       /// Get measurement
       const Measurement& meas = (*node)->measurement();
       /// Get element that belongs to this measurment
       const AlignmentElement* elem = m_align->findElement(meas.lhcbID());
       if (!elem) {
-	if (printDebug()) debug() << "==> Measurement not on a to-be-aligned DetElem" << endmsg;
-	continue;
+        if (printDebug()) debug() << "==> Measurement not on a to-be-aligned DetElem" << endmsg;
+        continue;
       }
       const unsigned index = elem->index();
       if (printDebug()) debug() << "==> " << meas.lhcbID() << " -> index = " << index << " -> " <<  elem->name() << endmsg;
       /// Project measurement
       ITrackProjector* proj = m_projSelector->projector(meas);
       if (!proj) {
-	if (printDebug()) debug() << "==> Could not get projector for selected measurement!" << endmsg;
-	continue;
+        if (printDebug()) debug() << "==> Could not get projector for selected measurement!" << endmsg;
+        continue;
       }
       double res  = (*node)->residual();
       double err  = (*node)->errMeasure();
@@ -259,29 +261,29 @@ StatusCode AlignAlgorithm::execute() {
       der /= err;
       data.push_back(Data(meas.lhcbID(), index, res, der));
     }
-
+    
     ResidualCovarianceTool cov;
     cov.compute(**iT);
-
-
+    
+    
     for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
       m_equations->V(id->index())              -= convert(id->r()*id->d()) ;
       m_equations->M(id->index(), id->index()) += (Transpose(id->d())*id->d());
 
       for (std::vector<Data>::const_iterator jd = id; jd != idEnd; ++jd) {
-	if ( m_correlation || jd==id) {
-	  // make sure we go for the upper triangle...
-	  std::vector<Data>::const_iterator i(id), j(jd);
-	  if (i->index() > j->index()) std::swap(i, j);
-	  const double c = cov.HCH_norm(i->id(),j->id());
-	  m_equations->M(i->index(), j->index()) -= c * Transpose(i->d())*j->d();
-
-	  if (!( i->id() == j->id())) {
-	    m_corrHistos[std::make_pair(i->index(), j->index())]->fill(m_iteration, c/std::sqrt(cov.HCH_norm(i->id(), i->id())*cov.HCH_norm(j->id(), j->id())));
-	  } else {
-	    m_autoCorrHistos[i->index()]->fill(m_iteration,c);
-	  }
-	}
+        if ( m_correlation || jd==id) {
+          // make sure we go for the upper triangle...
+          std::vector<Data>::const_iterator i(id), j(jd);
+          if (i->index() > j->index()) std::swap(i, j);
+          const double c = cov.HCH_norm(i->id(),j->id());
+          m_equations->M(i->index(), j->index()) -= c * Transpose(i->d())*j->d();
+          
+          if (!( i->id() == j->id())) {
+            m_corrHistos[std::make_pair(i->index(), j->index())]->fill(m_iteration, c/std::sqrt(cov.HCH_norm(i->id(), i->id())*cov.HCH_norm(j->id(), j->id())));
+          } else {
+            m_autoCorrHistos[i->index()]->fill(m_iteration,c);
+          }
+        }
       }
     }
 
@@ -296,16 +298,16 @@ StatusCode AlignAlgorithm::execute() {
 void AlignAlgorithm::update() {
 
   info() <<   "==> Updating constants"
-	 << "\n==> Used " << m_nTracks << " tracks for alignment" << endmsg;
+         << "\n==> Used " << m_nTracks << " tracks for alignment" << endmsg;
 
   for (size_t i = 0; i < m_equations->nElem(); ++i) {
     for (size_t j = i; j < m_equations->nElem(); ++j) {
-       info() << "==> M["<<i<<","<<j<<"] = "      << m_equations->M(i,j) << endmsg;
+      info() << "==> M["<<i<<","<<j<<"] = "      << m_equations->M(i,j) << endmsg;
     }
     info() << "\n==> V["<<i<<"] = "    << m_equations->V(i) << endmsg;
+    
   }
-
-
+  
   const size_t numElements = std::distance(m_rangeElements.first, m_rangeElements.second);
 
   AlVec    derivatives(Derivatives::kCols*numElements + m_constraints.size());
@@ -315,7 +317,7 @@ void AlignAlgorithm::update() {
   for (unsigned i = 0u, iEnd = m_equations->nElem(); i < iEnd ; ++i) {
     ass(derivatives, i*Derivatives::kCols, m_equations->V(i));
     /// (assume upper triangular input!)
-    for (unsigned j = i ; j < iEnd ; ++j) ass(matrix, i*Derivatives::kCols, j*Derivatives::kCols, m_equations->M(i,j));
+    for (unsigned j = i ; j < iEnd; ++j ) ass(matrix, i*Derivatives::kCols, j*Derivatives::kCols, m_equations->M(i,j));
   }
 
   /// Add constraints

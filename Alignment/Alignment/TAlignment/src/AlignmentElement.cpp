@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.4 2007-12-05 15:51:11 janos Exp $
+// $Id: AlignmentElement.cpp,v 1.5 2008-01-07 11:01:16 janos Exp $
 // Include files
 
 // from STD
@@ -22,26 +22,27 @@
 // local
 #include "AlignmentElement.h"
 
-AlignmentElement::AlignmentElement(const DetectorElement* element, const unsigned int index)
+AlignmentElement::AlignmentElement(const DetectorElement* element, const unsigned int index, 
+                                   const std::vector<bool>& dofs)
   : m_elements(1u, element),
-    m_index(index) {
+    m_index(index),
+    m_dofs(dofs) {
 
   validDetectorElement(m_elements.at(0u));
+  // std::for_each(m_elements.begin(), m_elements.end(),
+  // boost::lambda::bind(&AlignmentElement::validDetectorElement, this, boost::lambda::_1));
 
-  try { /// If pivot is defined for this detector elememt get it
-    std::vector<double> pivot = m_elements.at(0)->geometry()->alignmentCondition()->paramVect<double>("pivotXYZ");
-    m_pivot = Gaudi::XYZPoint(pivot[0], pivot[1], pivot[2]);
-  } catch (ParamException& p) {
-    setPivotPoint();
-  }
+  setPivotPoint();
 }
 
-AlignmentElement::AlignmentElement(const std::vector<const DetectorElement*>& elements, const unsigned int index)
+AlignmentElement::AlignmentElement(const std::vector<const DetectorElement*>& elements, const unsigned int index, 
+                                   const std::vector<bool>& dofs)
   : m_elements(elements),
-    m_index(index) {
+    m_index(index),
+    m_dofs(dofs) {
 
   std::for_each(m_elements.begin(), m_elements.end(),
-		boost::lambda::bind(&AlignmentElement::validDetectorElement, this, boost::lambda::_1));
+                boost::lambda::bind(&AlignmentElement::validDetectorElement, this, boost::lambda::_1));
 
   setPivotPoint();
 }
@@ -80,37 +81,41 @@ const std::string AlignmentElement::name() const {
   return begin+middle+end;
 }
 
-const std::vector<double> AlignmentElement::deltaTranslations() const {
-
-  std::vector<double> averageDeltaTranslations(0u,3);
-  for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
-    std::vector<double> elemDeltaTranslations = (*i)->geometry()->alignmentCondition()->paramVect<double>("dPosXYZ");
-    std::transform(elemDeltaTranslations.begin(), elemDeltaTranslations.end(), averageDeltaTranslations.begin(),
-		   averageDeltaTranslations.begin(), std::plus<double>());
-  }
-  std::transform(averageDeltaTranslations.begin(), averageDeltaTranslations.end(),
-		 averageDeltaTranslations.begin(), boost::lambda::bind(&AlignmentElement::average, this, boost::lambda::_1));
-
-  return averageDeltaTranslations;
-}
-
-const std::vector<double> AlignmentElement::deltaRotations() const {
-
+const std::vector<double> AlignmentElement::deltaRotations() const {  
   std::vector<double> averageDeltaRotations(0u,3);
   for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
     std::vector<double> elemDeltaRotations = (*i)->geometry()->alignmentCondition()->paramVect<double>("dRotXYZ");
     std::transform(elemDeltaRotations.begin(), elemDeltaRotations.end(), averageDeltaRotations.begin(),
-		   averageDeltaRotations.begin(), std::plus<double>());
+                   averageDeltaRotations.begin(), std::plus<double>());
   }
-
   std::transform(averageDeltaRotations.begin(), averageDeltaRotations.end(),
-		 averageDeltaRotations.begin(), boost::lambda::bind(&AlignmentElement::average, this, boost::lambda::_1));
-
+                 averageDeltaRotations.begin(), boost::lambda::bind(&AlignmentElement::average, this, boost::lambda::_1));
+  
   return averageDeltaRotations;
 }
 
+
+const std::vector<double> AlignmentElement::deltaTranslations() const {
+  std::vector<double> averageDeltaTranslations(0u,3);
+  for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
+    std::vector<double> elemDeltaTranslations = (*i)->geometry()->alignmentCondition()->paramVect<double>("dPosXYZ");
+    std::transform(elemDeltaTranslations.begin(), elemDeltaTranslations.end(), averageDeltaTranslations.begin(),
+                   averageDeltaTranslations.begin(), std::plus<double>());
+  }
+  std::transform(averageDeltaTranslations.begin(), averageDeltaTranslations.end(),
+                 averageDeltaTranslations.begin(), boost::lambda::bind(&AlignmentElement::average, this, boost::lambda::_1));
+  
+  return averageDeltaTranslations;
+}
+
+unsigned int AlignmentElement::nDOFs() const {
+  unsigned int nDOF  = 0u;
+  for (std::vector<bool>::const_iterator i = m_dofs.begin(), iEnd = m_dofs.end(); i != iEnd; ++i) if ((*i)) ++nDOF;
+  return nDOF;
+}
+  
 StatusCode AlignmentElement::setLocalDeltaParams(const std::vector<double>& localDeltaT,
-						 const std::vector<double>& localDeltaR) const {
+                                                 const std::vector<double>& localDeltaR) const {
   StatusCode sc;
   for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
     sc = const_cast<IGeometryInfo*>((*i)->geometry())->ownToOffNominalParams(localDeltaT, localDeltaR, this->pivot());
@@ -119,7 +124,6 @@ StatusCode AlignmentElement::setLocalDeltaParams(const std::vector<double>& loca
       break; ///< Break loop if sc is failure
     }
   }
-
   return sc;
 }
 
@@ -129,12 +133,12 @@ bool AlignmentElement::operator==(const DetectorElement* rhs) const {
 }
 
 StatusCode AlignmentElement::setLocalDeltaMatrix(const std::vector<double>& globalDeltaT,
-						 const std::vector<double>& globalDeltaR) const {
+                                                 const std::vector<double>& globalDeltaR) const {
   /// Construct global delta matrix from deltas
   const Gaudi::Transform3D globalDeltaMatrix = DetDesc::localToGlobalTransformation(globalDeltaT,
-										    globalDeltaR,
-										    this->pivot());
-
+                                                                                    globalDeltaR,
+                                                                                    this->pivot());
+  
   StatusCode sc;
   for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
     /// Transform global delta matrix to new local delta matrix (takes current local delta matrix into account!!)

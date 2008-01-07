@@ -1,5 +1,6 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.6 2007-12-05 15:51:13 janos Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.7 2008-01-07 11:01:16 janos Exp $
 // Include files
+
 //from STL
 #include <iomanip>
 #include <algorithm>
@@ -80,7 +81,7 @@ StatusCode GetElementsToBeAligned::initialize() {
 
   info() << "===================== GetElementsToAlign =====================" << endmsg;
   info() << "   Using the following regular expressions: " << endmsg;
-
+ 
   std::vector<std::string> groupsOfElements = m_elemsToBeAligned.begin()->second;
   for (std::vector<std::string>::const_iterator i = groupsOfElements.begin(), iEnd = groupsOfElements.end(); i != iEnd; ++i) {
     /// Forward slash is the path separator
@@ -92,17 +93,17 @@ StatusCode GetElementsToBeAligned::initialize() {
     info() << "       ";
     for (Tokenizer::iterator j = regexs.begin(), jEnd = regexs.end(); j != jEnd; ++j) info() << "\"" << (*j) << "\"" << " ";
     info() << endmsg;
-
+    
     /// Create list of regular expressions
     for (Tokenizer::iterator j = regexs.begin(), jEnd = regexs.end(); j != jEnd; ++j) {
       boost::regex ex;
       /// Check if token is a valid regular expression, else catch exception and return statuscode failure.
       /// Better to stop the program and let the user fix the expression than trying to predict what he/she wants.
       try {
-	ex.assign((*j), boost::regex_constants::icase);
+        ex.assign((*j), boost::regex_constants::icase);
       } catch (boost::bad_expression& exprs) {
-	error() << "==> Error: " << (*j) << " is not a valid regular expression: " << exprs.what() << endmsg;
-	return StatusCode::FAILURE;
+        error() << "==> Error: " << (*j) << " is not a valid regular expression: " << exprs.what() << endmsg;
+        return StatusCode::FAILURE;
       }
       /// If valid add expression to list of expressions.
       m_regexs.push_back(ex);
@@ -110,28 +111,30 @@ StatusCode GetElementsToBeAligned::initialize() {
 
     /// Depth is equal to the number regular expressions in the regex list.
     m_depth = m_regexs.size();
-
+    
     /// Traverse LHCb detector in transient store and get alignable elements
     getElements(lhcb);
-
+    
     /// loop over elements and create AlignmentElements
     if (m_groupElems) m_alignElements.push_back(AlignmentElement(m_elements, m_index++));
     else std::transform(m_elements.begin(), m_elements.end(), std::back_inserter(m_alignElements),
-			boost::lambda::bind(boost::lambda::constructor<AlignmentElement>(), boost::lambda::_1, boost::lambda::var(m_index)++));
-
+                        boost::lambda::bind(boost::lambda::constructor<AlignmentElement>(), boost::lambda::_1, boost::lambda::var(m_index)++));
+    
     m_regexs.clear();
     m_depth = 0u;
     m_elements.clear();
+  
   }
-
+  
   m_rangeElements = std::make_pair(m_alignElements.begin(), m_alignElements.end());
   m_findElement   = FindAlignmentElement(Alignment::FindElement(m_elemsToBeAligned.begin()->first), m_rangeElements);
+
 
   /// Print list of detector elements that are going to be aligned
   info() << "   Going to align " << std::distance(m_rangeElements.first, m_rangeElements.second) << " detector elements:" << endmsg;
   typedef std::vector<AlignmentElement>::const_iterator ElemIter;
   for (ElemIter i = m_rangeElements.first, iEnd = m_rangeElements.second; i != iEnd; ++i) {
-    info()<<  "        " << "Element " << i->name() << " with index " << i->index() << " and pivot " << i->pivotXYZPoint() << endmsg;
+    info() <<  "        " << "Element " << i->name() << " with index " << i->index() << " and pivot " << i->pivotXYZPoint() << endmsg;
   }
   info() << "   With " << m_constraints.size() << " constraints:" << endmsg;
   unsigned nC = 0u;
@@ -193,7 +196,7 @@ void GetElementsToBeAligned::getElements(const IDetectorElement* parent) {
     /// OK we found a detector element
     if (match) {
       if (currentDepth == m_depth) {
-	m_elements.push_back(dynamic_cast<DetectorElement*>(*iC));
+        m_elements.push_back(dynamic_cast<DetectorElement*>(*iC));
       }
       /// Call thyself. Get children recursively.
       /// No need to go any deeper.

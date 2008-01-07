@@ -1,4 +1,4 @@
-// $Id: FindAlignmentElement.h,v 1.4 2007-12-05 15:51:12 janos Exp $
+// $Id: FindAlignmentElement.h,v 1.5 2008-01-07 11:01:16 janos Exp $
 #ifndef TALIGNMENT_FINDALIGNMENTELEMENT_H
 #define TALIGNMENT_FINDALIGNMENTELEMENT_H 1
 
@@ -34,6 +34,9 @@ namespace Alignment {
   typedef boost::function<const DetectorElement* (LHCb::LHCbID)> DetElemFromID;
   typedef std::map<std::string, DetElemFromID> FunctorMap;
 
+  /** Find a tracking station for a given LHCb id */
+  const DetectorElement* findTrackingStation(const LHCb::LHCbID& anLHCbID);
+
   /** This should go into the sub-detector interfaces */
   /// This returns the Velo box, i.e. parent, that a sensor belongs to
   const DetectorElement* findVeloBox(const DeVeloSensor* sensor);
@@ -53,10 +56,10 @@ namespace Alignment {
 };
 
 struct FindAlignmentElement {
-
+  
   typedef std::vector<AlignmentElement>::const_iterator            AlignElemIter;
   typedef std::pair<std::vector<AlignmentElement>::const_iterator,
-  std::vector<AlignmentElement>::const_iterator>                   Range;
+                    std::vector<AlignmentElement>::const_iterator> Range;
 
   FindAlignmentElement();
 
@@ -65,6 +68,7 @@ struct FindAlignmentElement {
   const AlignmentElement* operator()(const LHCb::LHCbID& anLHCbID);
 
  private:
+
   Alignment::DetElemFromID m_elemFromLHCbID;
   Range                    m_rangeElements;
 
