@@ -151,7 +151,9 @@ StatusCode Saver::execute() {
   secsstr >> secstr; 
   TFile *f=0;
   if (command=="SAVE_HISTOS") {
-  filename=m_savedir+"/"+m_taskname+daystr+monthstr+yearstr+"-"+hourstr+":"+minstr+":"+secstr+".root";
+  //NB the ASCII timestamp format is year-month-dayThours:mins:secs
+  //we replace ":" by "-" as you can't use it for windows filenames
+  filename=m_savedir+"/"+m_taskname+"-"+yearstr+"-"+monthstr+"-"+daystr+"T"+hourstr+"-"+minstr+"-"+secstr+".root";
   
   for (int j=0; j<= (int)m_histogramname.size()-1;j++) {
  

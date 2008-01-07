@@ -1,6 +1,8 @@
 ! Package     : Saver
 ! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
 
+! 20080107 - Saver v1r3. Change saveset filename format.
+
 ! 20070129 - Markus Frank
         - Modify requirements to link library on WIN32 platforms
 
@@ -8,62 +10,54 @@
 
 ! 20061127 - Saver v1r0
 
-This program saves histograms published by tasks using the Gaucho
+- This program saves histograms published by tasks using the Gaucho
 MonitorSvc, specifically the adder.
 
-The saver only saves when the command "save_histos" is sent to it via DIM (to
-the cmd service UTGID/, e.g. node00101_Saver_1/).
+- The saver only saves when the command "save_histos" is sent to it via DIM (to
+the cmd service UTGID/, e.g. nodename_Saver_1/).
 
-The saver saves histograms produced on a node. The histogram DIM
+- The saver saves histograms produced on a node. The histogram DIM
 service names have to be of the following format (n=histogram dimension):
 
   HnD/UTGID/Algorithmname/Histogramname
   
-Use of the MonitorSvc guarantees that this format is used. The UTGID normally has the
+- Use of the MonitorSvc guarantees that this format is used. The UTGID normally has the
 following format:
 
-  node00101_taskname_1
+  nodename_taskname_1
   
-"node" is the convention for nodes on the EFF. The first three digits (001) indicate
-the subfarmnumber, and the fourth and fifth digits (01) indicate the nodenumber inside
-the subfarm.  
-
-The names of the algorithms of the summed histograms are prefixed with the
-string "Summed_". For example,
-a Moore task publishing a histogram with name "Mass" in an algorithm "TopAlg" will create a DIM service with
-name:
-
-   H1D/node00101_Moore_1/TopAlg/Mass
-   
-The added "Mass" histogram will be published in a DIM service with name (provided the UTGID
-environment variable UTGID is set to "node00101_Adder_1):
-
-   H1D/node00101_Adder_1/Adder/Summed_TopAlg/Mass   
+- The filename of the saveset is:
+taskname-year-month-dayThour-minutes-seconds.root. The ASCII timestamp format
+specifies the ":" separator between hours/minutes/seconds, but this can not be
+used for filenames on Windows.
+ 
 
 The configuration is done via joboptions:
 
 - nodename  : This is a string containing the name of the node where the task
-producing the histograms that have to be saved is running. It is important that
-this string is part of the UTGID environment variable that is set when the tasks
-are running. For example, node00101. If the saver is supposed to save the summed histograms of
-of a subfarm, e.g. subfarm001, the nodename joboption should be set to
-"node001". To save the sums of all subfarms, set the nodename 
-to "node".
+producing the histograms that have to be saved is running. For example, to save
+the histograms summed by the Adder running on node hlt01, use
+nodename=hlt01_Adder_1.
 
 - histogramname : This is a vector of strings containing the names of the
 histograms that have to be saved. 
 
 - algorithmname : This is a vector of strings containing the names of the
 corresponding algorithms of the histograms that have to be saved (there must be
-as many algorithms as there are histograms). To select only summed histograms,
-prefix the algorithmname by the string "Summed_".
+as many algorithms as there are histograms). 
 
 - dimclientdns : This is the DIM_DNS_NODE used by the tasks producing the histograms.
 If it is not set, the DIM_DNS_NODE is taken from the environment variable (the default). 
 The summed histograms published by the adder use the DIM_DNS_NODE defined by the
 environment variable.
 
-The script cmt/startsaver.csh can be used to start the adder (in the lxplus environment).
+- taskname : The name of the task producing the histograms to be saved, e.g.
+Moore. 
+
+- savedir : The directory where the histogram savesets will be stored, e.g.
+/group/online/histograms.
+
+- The script cmt/startsaver.csh can be used to start the saver (in the lxplus environment).
 
 
 
