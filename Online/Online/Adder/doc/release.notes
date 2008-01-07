@@ -1,18 +1,20 @@
 ! Package     : Adder
 ! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
 
+! 20071221 - Eric vH       ==================== Adder v4r4 ==========================
+- Fix bug in adder when 0 histograms found.
 
 ! 20070705 - Eric vH       ==================== Adder v4r3 ==========================
-Use DimWait instead of sleep; do the addition inside a DimTimer callback.
-Support for the wildcard * in histogramnames to make it easy to add many
+- Use DimWait instead of sleep; do the addition inside a DimTimer callback.
+- Support for the wildcard * in histogramnames to make it easy to add many
 histograms.
 
 
 ! 20070209 - Eric vH       ==================== Adder v4r2 ==========================
-Added servername option to allow more flexibility in the hierarchy of adders. 
+- Added servername option to allow more flexibility in the hierarchy of adders. 
 
 ! 20070209 - Eric vH       ==================== Adder v4r0 ==========================
-major rewrite. no root, no aida. service names include taskname, algorithmname,
+- major rewrite. no root, no aida. service names include taskname, algorithmname,
 histogramname.
 
 ! 20070201 - Markus Frank  ==================== Adder v3r0 ==========================
@@ -24,22 +26,22 @@ histogramname.
 
 ! 20061106 - Adder v1r0
 
-This program adds 1D, 2D histograms published by tasks using the Gaucho
+-This program adds 1D, 2D histograms published by tasks using the Gaucho
 MonitorSvc and publishes them.
 
-The adder program should be started only when the programs producing the histograms
+-The adder program should be started only when the programs producing the histograms
 that should be added are already running; for the hierarchy of adders, the lower
 level ones should be started before the higher level ones. This is because the
 DimBrowser (who determines the exact name of the Dim histogram services names
 that the adder should subscribe to) is only run once, in the init method of the
 algorithm.
 
-The adder adds histograms produced by identical tasks on a node or a set of nodes. The histogram DIM
+-The adder adds histograms produced by identical tasks on a node or a set of nodes. The histogram DIM
 service names have to be of the following format (n=histogram dimension):
 
   HnD/UTGID/Algorithmname/Histogramname
   
-Use of the MonitorSvc guarantees that this format is used. The UTGID normally has the
+-Use of the MonitorSvc guarantees that this format is used. The UTGID normally has the
 following format:
 
   node00101_taskname_1
@@ -49,22 +51,22 @@ the subfarmnumber, and the fourth and fifth digits (01) indicate the nodenumber 
 the subfarm. For the adder, the taskname is "Adder". The last digit is the instance
 number of the task.  
 
-For example, a task called "Moore" publishing a histogram with name "Mass" will create a DIM service with
+-For example, a task called "Moore" publishing a histogram with name "Mass" will create a DIM service with
 name:
 
    H1D/node00101_Moore_1/Algorithmname/Mass
    
-The added "Algorithmname/Mass" histogram will be published in a DIM service with name (provided the UTGID
+-The added "Algorithmname/Mass" histogram will be published in a DIM service with name (provided the UTGID
 environment variable is set to "node00101_Adder_1"):
 
    H1D/node00101_Adder_1/Moore/Algorithmname/Mass   
 
-To add the summed histograms of a subfarm, the UTGID should be set to node001_Adder_1. The name of the
+-To add the summed histograms of a subfarm, the UTGID should be set to node001_Adder_1. The name of the
 DIM service containing the sum of the sums is set to 
 
    H1D/node001_Adder_1/Taskname/Algorithmname/Mass
    
-One can continue adding the sums at the level of the entire farm in a similar way:
+-One can continue adding the sums at the level of the entire farm in a similar way:
 
    H1D/node_Adder_1/Taskname/Algorithmname/Mass
 
@@ -106,4 +108,4 @@ If it is not set, the DIM_DNS_NODE is taken from the environment variable (the d
 The summed histograms published by the adder use the DIM_DNS_NODE defined by the
 environment variable.
 
-The script cmt/startadder.csh can be used to start the adder (in the lxplus environment).
+-The script cmt/startadder.csh can be used to start the adder (in the lxplus environment).
