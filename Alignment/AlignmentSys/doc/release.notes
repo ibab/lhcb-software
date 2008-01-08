@@ -9,7 +9,7 @@ Purpose: LHCb Alignment packages.
 - Packages updated: TAlignment		v2r4
 		    AlignTrTools	v3r4
  		    AlignmentInterfaces v2r4
-		    AlignSolvTools	v2r1
+		    AlignSolvTools	v2r2
 
 - in TAlignment		v3r4
 	- Track projectors have changed (Needs: Rec v5r2)
@@ -39,7 +39,7 @@ Purpose: LHCb Alignment packages.
 	- Remove obsolete interface IAlignDetector
 	- Clean-up interface IAlgnSolvTool
 
-- in AlignSolvTools		v2r1
+- in AlignSolvTools		v2r2
 	- fix requirements for GSL linking
 	- Remove obsolete tool AlignSolvTool
 	- fix unsigned/signed integer comparison warnings
