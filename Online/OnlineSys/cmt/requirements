@@ -6,7 +6,7 @@ branches cmt doc
 #=======================================================
 # LHCb Online packages
 #=======================================================
-use Adder             v4r5     Online
+use Adder             v4r4     Online
 use confDB            v1r1     Online
 use confDBpython      v1r2     Online
 use $(CCPCHist_use)
