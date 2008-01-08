@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# $Id: showCMTProjects.py,v 1.2 2008-01-08 17:37:47 hmdegaud Exp $
 
 from LbUtils.CMT import Project
 from LbUtils.Option import Parser
@@ -10,7 +11,7 @@ import os
 if __name__ == '__main__':
     
     usage = "%prog [options] projectname version"
-    parser = Parser(usage=usage, version="%prog v1r0")
+    parser = Parser(usage=usage, version="%prog $Name: not supported by cvs2svn $")
 
     env = Env.getDefaultEnv()
     log = logging.getLogger()
