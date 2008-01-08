@@ -1,7 +1,11 @@
-!$Id: release.notes,v 1.121 2008-01-08 10:20:21 mneedham Exp $
+!$Id: release.notes,v 1.122 2008-01-08 15:56:35 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+!======================== STDet v3r9 2008-01-08 ==========================
+! 2008-01-08 - Marco Cattaneo
+ - Fix some doxygen warnings
 
 ! 2008-01-08 M Needham
  - DeSTSector: final changes to allow use of dead strip conditions

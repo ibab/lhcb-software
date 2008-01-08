@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.11 2007-11-30 15:12:07 mneedham Exp $
+// $Id: DeSTBaseElement.h,v 1.12 2008-01-08 15:56:34 cattanem Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -76,10 +76,10 @@ public:
 
   /**
   * call back for update service 
-  * @param CallerClass caller
-  * @param ObjectClass object
-  * @param ObjectMemberFunction<CallerClass>::MemberFunctionType
-  * @param bool force update
+  * @param caller
+  * @param object
+  * @param mf
+  * @param forceUpdate force update
   * @return StatusCode Success or Failure
   */
   template<typename CallerClass, typename ObjectClass>
@@ -90,11 +90,11 @@ public:
 
   /**
   * call back for update service 
-  * @param CallerClass caller
-  * @param std:string conditionName 
-  * @param ObjectMemberFunction<CallerClass>::MemberFunctionType
-  * @param bool force update
-  * @ return StatusCode Success or Failure
+  * @param caller
+  * @param conditionName 
+  * @param mf
+  * @param foceUpdate force update
+  * @return StatusCode Success or Failure
   */
   template<typename CallerClass>
   StatusCode registerCondition(CallerClass* caller, const std::string& conditionName,
