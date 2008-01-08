@@ -5,6 +5,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v4r0>2007-11-01 OnlineSys v4r5</A></H1><PRE>
+This is a new version built against LHCb v23r2.
+Updates in Presenter, OnlineHistDB, UPI, Saver, Adder and OnlineTasks.
+
 </PRE><H1><A NAME=v4r0>2007-11-01 OnlineSys v4r4</A></H1><PRE>
 This is a new version built against LHCb v23r2.
 

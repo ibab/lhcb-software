@@ -1,12 +1,12 @@
 package OnlineSys
-version v4r4
+version v4r5
 
 branches cmt doc
  
 #=======================================================
 # LHCb Online packages
 #=======================================================
-use Adder             v4r4     Online
+use Adder             v4r5     Online
 use confDB            v1r1     Online
 use confDBpython      v1r2     Online
 use $(CCPCHist_use)
@@ -23,17 +23,17 @@ use InsertDB          v1r0     Online
 use MBMDump           v1r5     Online
 use OMAlib            v0r1     Online
 use OnlineDummyReader v1r4     Online
-use OnlineHistDB      v4r3     Online
+use OnlineHistDB      v4r5     Online
 use OnlineKernel      v1r12    Online
-use OnlineTasks       v1r7     Online
-use Presenter         v0r5     Online
+use OnlineTasks       v1r8     Online
+use Presenter         v0r6     Online
 #use PVSS              v1r0     Online
 #use PVSSInterface     v1r0     Online
 #use PVSSManager       v1r0     Online
 use PyDIM             v1r4     Online
 #use RunDatabase       v1r2     Online
-use Saver             v1r2     Online
-use UPI               v1r6     Online
+use Saver             v1r3     Online
+use UPI               v1r7     Online
 use UPIR              v1r0     Online
 use Viewer            v1r3     Online
 use Writer            v1r4     Online
