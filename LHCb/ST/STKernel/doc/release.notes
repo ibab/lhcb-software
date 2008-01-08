@@ -1,12 +1,11 @@
-! $Id: release.notes,v 1.8 2008-01-08 10:22:54 mneedham Exp $
+! $Id: release.notes,v 1.9 2008-01-08 16:07:22 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
-
+!====================== STKernel v1r1 2008-01-07 ============================
 ! 2008-01-08 M Needham
  - Add STFun.h/.cpp [contain functions related to calculating interstrip fraction]
-
 
 !====================== STKernel v1r0 2007-12-05 ============================
 ! 2007-12-05 - Marco Cattaneo
