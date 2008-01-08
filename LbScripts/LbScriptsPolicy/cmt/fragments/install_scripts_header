@@ -1,0 +1,45 @@
+#-- start of install_scripts_header ------
+
+
+installarea = ${CMTINSTALLAREA}
+install_scripts_dir = $(installarea)
+
+${CONSTITUENT} :: ${CONSTITUENT}install
+
+install :: ${CONSTITUENT}install
+
+${CONSTITUENT}install :: $(install_scripts_dir)
+	@if [ ! "$(installarea)" = "" ]; then\
+	  echo "installation done"; \
+	fi
+
+$(install_scripts_dir) ::
+	@if [ "$(installarea)" = "" ]; then \
+	  echo "Cannot install header files, no installation source specified"; \
+	else \
+      src=../scripts ; \
+	  dest=$(install_scripts_dir) ; \
+	  if [ -d $$src ]; then \
+	     echo "Installing files from source $$src to $$dest"; \
+	     $(install_command) --exclude="*.py?" $$src $$dest ;\
+	     chmod -R +x $$dest ; \
+	  else \
+	     echo "no source  $$src"; \
+	  fi; \
+	fi
+
+${CONSTITUENT}clean :: ${CONSTITUENT}uninstall
+
+uninstall :: ${CONSTITUENT}uninstall
+
+${CONSTITUENT}uninstall ::
+	@if test "$(installarea)" = ""; then \
+	  echo "Cannot uninstall header files, no installation source specified"; \
+	else \
+      dest=$(install_scripts_dir) ; \
+	  echo "Uninstalling files from $$dest"; \
+	  $(uninstall_command) "$${dest}" ; \
+	fi
+
+
+#-- end of install_more_includes_header ------

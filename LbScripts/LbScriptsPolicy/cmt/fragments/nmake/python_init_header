@@ -1,0 +1,23 @@
+#-- start of install_python_header ------
+
+installarea = $(CMTINSTALLAREA)
+install_python_dir = $(installarea)\python\$(package)
+init_file = $(install_python_dir)\__init__.py
+
+
+${CONSTITUENT} :: ${CONSTITUENT}install
+
+install :: ${CONSTITUENT}install
+
+${CONSTITUENT}install :: $(init_file)
+
+$(init_file) ::
+	@if exist $(install_python_dir) if NOT exist $(init_file) $(install_command) $(GAUDIPOLICYROOT)\cmt\fragments\__init__.py $(install_python_dir)
+
+${CONSTITUENT}clean :: ${CONSTITUENT}uninstall
+
+uninstall :: ${CONSTITUENT}uninstall
+
+${CONSTITUENT}uninstall ::
+	@$(uninstall_command) $(init_file)
+

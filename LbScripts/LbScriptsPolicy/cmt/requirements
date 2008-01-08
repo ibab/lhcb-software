@@ -1,0 +1,93 @@
+package LbScriptsPolicy
+version v1r0
+
+macro install_command 'python $(LbScriptsPolicy_root)/cmt/fragments/install.py -xCVS --log=./install.history '
+macro uninstall_command 'python $(LbScriptsPolicy_root)/cmt/fragments/install.py -u --log=./install.history '
+
+macro remove_command "$(cmt_uninstallarea_command)"
+
+cmtpath_pattern \
+   macro <project>_home "<path>" ; \
+   set <project>_HOME "$(<project>_home)"
+
+#--------------------------------------------
+# Patterns for specifically declaring and installing python files in the
+# current installation area
+#--------------------------------------------
+
+cmtpath_pattern \
+   macro <project>_install_python "" \
+         <project>_without_installarea "" \
+         <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/python"\
+         <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix)\python" ; \
+    path_remove  PYTHONPATH ${<project>_install_python} ; \ 
+    path_prepend PYTHONPATH ${<project>_install_python}
+
+pattern install_python_modules \
+    macro <package>_install_python "" \
+         <project>_without_installarea&Unix "$(<package>_root)/python" \
+         <project>_without_installarea&WIN32 "$(<package>_root)\python" ; \
+    path_remove  PYTHONPATH ${<package>_install_python} ; \ 
+    path_prepend PYTHONPATH ${<package>_install_python} ; \
+    document install_python <package>_python ; \
+    apply_pattern install_python_init ; \
+    macro_append <package>_python_init_dependencies " <package>_python " ;
+    
+pattern install_custom_python_modules \
+    macro <package>_install_python "" \
+         <project>_without_installarea&Unix "$(<package>_root)/<source>" \
+         <project>_without_installarea&WIN32 "$(<package>_root)\<source>" ; \
+    path_remove  PYTHONPATH ${<package>_install_python} ; \ 
+    path_prepend PYTHONPATH ${<package>_install_python} ; \
+    document install_python <package>_<source>_<offset>_python source=<source> offset=<offset> ; \
+    apply_pattern install_python_init ; \
+    macro_append <package>_python_init_dependencies " <package>_<source>_<offset>_python " ;
+
+make_fragment install_python -header=install_python_header
+
+
+pattern install_python_init \
+	document python_init <package>_python_init package=<package>
+
+make_fragment python_init -header=python_init_header -dependencies
+
+pattern python_alias \
+    alias <script> "python $(LbScripts_home)/InstallArea/scripts/<script>.py" \
+           WIN32     "python $(LbScripts_home)\InstallArea\scripts\<script>.py" ;
+
+
+#--------------------------------------------
+# Patterns for specifically declaring and installing script files in the
+# current installation area
+#--------------------------------------------
+
+cmtpath_pattern \
+   macro <project>_install_scripts "" \
+         <project>_without_installarea "" \
+         <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/scripts"\
+         <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix)\scripts" ; \
+    path_remove  PATH ${<project>_install_scripts} ; \ 
+    path_prepend PATH ${<project>_install_scripts}
+
+pattern install_scripts \
+    macro <package>_install_python "" \
+         <project>_without_installarea&Unix "$(<package>_root)/scripts" \
+         <project>_without_installarea&WIN32 "$(<package>_root)\scripts" ; \
+    path_remove  PATH ${<package>_install_scripts} ; \ 
+    path_prepend PATH ${<package>_install_scripts} ; \
+    document install_scripts install_scripts 
+    
+    
+make_fragment install_scripts -header=install_scripts_header
+
+
+#---------------------------------------------------
+# Automatic Installation
+#---------------------------------------------------
+
+cmtpath_pattern \
+    apply_pattern install_scripts ; \
+    apply_pattern install_python_modules ;
+
+
+

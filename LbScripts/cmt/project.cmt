@@ -1,0 +1,7 @@
+project LbScripts
+
+build_strategy with_installarea
+setup_strategy root
+
+container ScriptsSys
+

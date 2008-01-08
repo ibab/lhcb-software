@@ -1,0 +1,6 @@
+package LbUtils
+version v1r0
+
+use LbScriptsPolicy v*
+
+apply_pattern python_alias script=showCMTProjects

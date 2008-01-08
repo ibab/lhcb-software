@@ -1,0 +1,21 @@
+
+#-- start of install_python_header ------
+
+install_dir = $(CMTINSTALLAREA)\include
+
+${CONSTITUENT} :: ${CONSTITUENT}install
+
+install :: ${CONSTITUENT}install
+
+${CONSTITUENT}install :: $(install_dir)
+	@if NOT "$(CMTINSTALLAREA)"=="" echo "installation done"
+
+$(install_dir) ::
+	@if NOT "$(CMTINSTALLAREA)"=="" if exist $(PACKAGE_ROOT)\scripts $(install_command) "$(PACKAGE_ROOT)\scripts" "$(CMTINSTALLAREA)"
+
+${CONSTITUENT}clean :: ${CONSTITUENT}uninstall
+
+uninstall :: ${CONSTITUENT}uninstall
+
+${CONSTITUENT}uninstall ::
+	@if NOT "$(CMTINSTALLAREA)"=="" if exist $(PACKAGE_ROOT)\scripts $(uninstall_command) "$(CMTINSTALLAREA)"

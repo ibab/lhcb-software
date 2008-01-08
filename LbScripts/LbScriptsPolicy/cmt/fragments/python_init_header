@@ -1,0 +1,28 @@
+#-- start of python_init_header ------
+
+installarea = ${CMTINSTALLAREA}
+install_python_dir = $(installarea)/python/$(package)
+init_file = $(install_python_dir)/__init__.py
+
+
+${CONSTITUENT} :: ${CONSTITUENT}install
+
+install :: ${CONSTITUENT}install
+
+${CONSTITUENT}install :: $(init_file)
+
+$(init_file) ::
+	@if [ -e $(install_python_dir) -a ! -e $(init_file) ]; then \
+	  echo "Installing __init__.py file from ${LBSCRIPTSPOLICYROOT}" ; \
+	  $(install_command) ${LBSCRIPTSPOLICYROOT}/cmt/fragments/__init__.py $(install_python_dir) ; \
+	fi
+
+${CONSTITUENT}clean :: ${CONSTITUENT}uninstall
+
+uninstall :: ${CONSTITUENT}uninstall
+
+${CONSTITUENT}uninstall ::
+	@$(uninstall_command) $(init_file)
+
+
+#-- end of python_init_header ------

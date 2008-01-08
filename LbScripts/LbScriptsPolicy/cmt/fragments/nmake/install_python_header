@@ -1,0 +1,36 @@
+#-- start of install_python_header ------
+
+
+installarea = $(CMTINSTALLAREA)
+install_python_dir = $(installarea)
+
+!IF "$(source)"!=""
+src = ..\$(source)
+dest = $(install_python_dir)\python
+!ELSE
+src = ..\python
+dest = $(install_python_dir)
+!ENDIF
+
+!IF "$(offset)"!=""
+dest = $(install_python_dir)\python
+!ENDIF
+
+${CONSTITUENT} :: ${CONSTITUENT}install
+
+install :: ${CONSTITUENT}install
+
+${CONSTITUENT}install :: $(install_python_dir)
+	@if NOT "$(CMTINSTALLAREA)"=="" echo "installation done"
+
+$(install_python_dir) ::
+	@if NOT "$(CMTINSTALLAREA)"=="" if "$(offset)"=="" $(install_command) --exclude="*.py?" "$(src)" "$(dest)"
+	@if NOT "$(CMTINSTALLAREA)"=="" if NOT "$(offset)"=="" $(install_command) --exclude="*.py?" "$(src)" "$(dest)" --destname $(offset)  
+
+${CONSTITUENT}clean :: ${CONSTITUENT}uninstall
+
+uninstall :: ${CONSTITUENT}uninstall
+
+${CONSTITUENT}uninstall ::
+	@if NOT "$(CMTINSTALLAREA)"=="" if NOT "$(source)"=="" $(uninstall_command) "$(CMTINSTALLAREA)\$(source)"
+	@if NOT "$(CMTINSTALLAREA)"=="" $(uninstall_command) "$(dest)"
