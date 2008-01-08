@@ -3,11 +3,15 @@
 #include "PythiaHiggsType.h"
 
 // from Gaudi
+#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/ToolFactory.h"
 
 // from HepMC
 #include "HepMC/GenParticle.h"
 #include "HepMC/GenEvent.h"
+
+#include "Kernel/ParticleID.h"
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PythiaHiggsType
@@ -28,16 +32,19 @@ PythiaHiggsType::PythiaHiggsType( const std::string & type ,
                                   const std::string & name ,
                                   const IInterface * parent )
   : GaudiTool  ( type, name , parent ) ,
-    m_thetaMax    ( 400 * mrad ) ,
-    m_nbLepton    ( 1          ) ,
-    m_ptMin       ( 10 * GeV   ) ,
-    m_leptonWZ    ( true       ) ,
-    m_nbbquarks   ( 1          ) ,
-    m_motherofb_id( 25         ) {
+    m_thetaMax         ( 400 * mrad ) ,
+    m_nbLepton         ( 1          ) ,
+    m_TypeLepton       ( ) ,  
+    m_ptMin            ( 10 * GeV   ) ,
+    m_leptonFromMother ( true       ) ,
+    m_motheroflepton   ( ) ,
+    m_nbbquarks        ( 1          ) ,
+    m_motherofb_id     ( "H_10" ) 
+    {
 	declareInterface< IGenCutTool >( this ) ;
 
 	// default properties are set for Higgs production with the 2b 
-  // in the acceptance and a Lepton with pt>10GeV
+  // in the acceptance and a Lepton with pt>10GeV from WZ
 
 	//Rough definition of the acceptance
 	declareProperty( "ThetaMax" , m_thetaMax) ; //default=400 * mrad
@@ -45,21 +52,30 @@ PythiaHiggsType::PythiaHiggsType( const std::string & type ,
 	//Number of leptons requiered to be in the acceptance
 	declareProperty( "NumberOfLepton" , m_nbLepton) ; //max 2 leptons -- 
                                                     //0 - 1 - 2 default=1
+  m_TypeLepton.push_back ( "e+"  ) ;
+  m_TypeLepton.push_back ( "mu+" ) ;                                                 
+	//Type of leptons requiered to be in the acceptance // default e and mu
+	declareProperty( "TypeOfLepton" , m_TypeLepton) ; 
 
   //LeptonPtMin is the minimum value the pt of lepton can have
 	declareProperty( "LeptonPtMin" , m_ptMin) ; //default=10*GeV
 	
-  //LeptonIsFromWZ enabled will requiered that the lepton comes from a W or Z
-	declareProperty( "LeptonIsFromWZ" , m_leptonWZ) ; //default=true
+  //LeptonIsFromMother enabled will requiered that the lepton comes from a specific mother
+	declareProperty( "LeptonIsFromMother" , m_leptonFromMother) ; //default=true
+
+  m_motheroflepton.push_back ( "W+"  ) ;
+  m_motheroflepton.push_back ( "Z0" ) ; 
+  //MotherOfLepton is the list of particles from which the lepton comes
+	declareProperty( "MotherOfLepton" , m_motheroflepton) ; //default W and Z
 	
   //Number of bquarks requiered to be in the acceptance
 	declareProperty( "NumberOfbquarks" , m_nbbquarks ) ; //max 2 b quarks -- 
-  // 0(only with pzb>0) - 1 - 2  and -1(desactivated) default=1
+  // 0(only with pzb>0), 1, 2  and -1(desactivated) default=1
 	// BECAREFULL NumberOfbquarks=0 will search b comming from mother 
   // with pz>0 if you don't want b (ex: Z->mumu) put -1.
 
 	// MotherOfThebquarks define the mother of the b quarks
-	declareProperty( "MotherOfThebquarks" , m_motherofb_id) ; //default=25
+	declareProperty( "MotherOfThebquarks" , m_motherofb_id) ; //default=Higgs H_10
 }
 
 //=============================================================================
@@ -74,7 +90,7 @@ StatusCode PythiaHiggsType::initialize() {
   StatusCode sc = GaudiTool::initialize() ;
   if ( ! sc.isSuccess() ) return sc ;
   
-	if ( ( 6 == m_motherofb_id ) && ( 2 == m_nbbquarks ) ) {
+	if ( ( "t" == m_motherofb_id ) && ( 2 == m_nbbquarks ) ) { // remplacer ici par les fonction de PID
 		info() << "You want to have both b in the acceptance, " 
            << "check in pythia commands that you ask both top to decay in b" 
            << endmsg;
@@ -92,7 +108,7 @@ StatusCode PythiaHiggsType::initialize() {
             << endmsg;
 		return StatusCode::FAILURE;
 	}
-  
+  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
 	return sc ;
 }
 
@@ -100,12 +116,12 @@ StatusCode PythiaHiggsType::initialize() {
 // b quark tagging
 //=============================================================================
 bool PythiaHiggsType::Isb( const HepMC::GenParticle * p) const {
-	if ( 5 == abs( p -> pdg_id() ) ) {
+  if ( abs(p->pdg_id())== abs( m_ppSvc->find("b" )->pdgID() )) {
 		HepMC::GenVertex * thePV =  p -> production_vertex() ;
 		HepMC::GenVertex::particle_iterator iter ;
 		for(iter = thePV -> particles_begin( HepMC::parents);
         iter != thePV -> particles_end(HepMC::parents); ++iter){
-			if( m_motherofb_id == abs((*iter)->pdg_id())) return true;
+			if( abs( m_ppSvc->find( m_motherofb_id )->pdgID() ) == abs( (*iter)->pdg_id() )  ) return true;
 		}
 	}
 	return false;
@@ -115,15 +131,25 @@ bool PythiaHiggsType::Isb( const HepMC::GenParticle * p) const {
 // look for lepton
 //=============================================================================
 bool PythiaHiggsType::IsLepton( const HepMC::GenParticle * p ) const {
-	if ( ( 11 == abs( p -> pdg_id() ) ) || ( 13 == abs( p -> pdg_id() ) ) ) {
-		if ( ! m_leptonWZ ) return true ;
+  bool isalepton = false ;
+  for ( std::vector< std::string >::const_iterator iPart = m_TypeLepton.begin();
+              iPart != m_TypeLepton.end(); ++iPart ){
+    std::string thepid = *iPart;
+    if ( abs(p->pdg_id()) == abs (m_ppSvc->find(thepid)->pdgID())) isalepton = true;
+  }
+  if( isalepton == true ){
+		if ( ! m_leptonFromMother ) return true ;
 		else {
 			HepMC::GenVertex * thePV =  p -> production_vertex() ;
 			HepMC::GenVertex::particle_iterator iter ;
 			for(iter = thePV -> particles_begin( HepMC::parents);
           iter != thePV -> particles_end(HepMC::parents); ++iter){
-        if( ( 23 == abs((*iter)->pdg_id()) ) ||  
-            ( 24 == abs((*iter)->pdg_id()) ) ) return true;
+        for ( std::vector< std::string >::const_iterator iPart = m_motheroflepton.begin();
+              iPart != m_motheroflepton.end(); ++iPart )
+        {
+          std::string thepid = *iPart;
+          if(  abs( m_ppSvc->find(thepid)->pdgID() ) == abs( (*iter)->pdg_id() ) ) return true;
+        }
 			}
 		}
 	}
@@ -152,13 +178,13 @@ bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
 		theb2 = *(++iterb);
 	}
 
-	if ( ( 1 == bList.size() ) && ( m_motherofb_id != 6 ) ) {
+	if ( ( 1 == bList.size() ) && ( m_motherofb_id != "t" ) ) {
     Warning( "No b pairs in this event!" ) ;
   //can occure in ttbar event when one top decay on another mode than bW
     return false ;
   }
 	
-  if( ( 1 == bList.size() ) && ( m_motherofb_id==6 ) ) {
+  if( ( 1 == bList.size() ) && ( m_motherofb_id=="t" ) ) {  // remplacer ici par les fonction de PID
 		theb1 = *(iterb);
 		theb2 = *(iterb);
 	}
@@ -184,7 +210,7 @@ bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
 		thetab2 = acos( fabs( pzb2 ) / ppb2 ) ;
 	}
 
-	if( ( 1== bList.size() ) && ( m_motherofb_id==6 ) ) { 
+	if( ( 1== bList.size() ) && ( m_motherofb_id== "t" ) ) { 
     // necessary in order to avoid case where we ask 2b in ttbar event 
     // and that only one top decay in b in the acceptance
 		pzb2=-1000;
@@ -205,6 +231,12 @@ bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
         iterall!= theEvent -> particles_end() ; iterall++ ) {
     if ( IsLepton( *(iterall) ) ) LeptonList.push_back( *(iterall) ) ;
 	}
+  
+  if( ( 0 == LeptonList.size() ) ) {
+    Warning( "No lepton in this event of requiered type with requiered mother (if mother was asked)!");
+    Warning( "You either produced events with no leptons, or put the wrong type of lepton, or of lepton mother" ) ;
+    return false ;
+  }
 
 	double pxl1,pyl1,pzl1,ppl1,ptl1,thetal1;
 	double pxl2,pyl2,pzl2,ppl2,ptl2,thetal2;

@@ -4,6 +4,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
 
 // from Generators
 #include "Generators/IGenCutTool.h"
@@ -36,8 +37,7 @@ public:
                          const HepMC::GenEvent * theEvent ,
                          const LHCb::GenCollision * theCollision ) const ;
 
-private:
-
+private:        
   /// Return true if the particle is a b quark
   bool Isb( const HepMC::GenParticle * p ) const ;
 
@@ -50,16 +50,25 @@ private:
   /// Number of leptons required in the acceptance
   int m_nbLepton;
 
+  /// Type of lepton requiered in the acceptance
+  std::vector< std::string > m_TypeLepton;
+
   /// Minimum pT of the lepton
   double m_ptMin ;
 
-  /// If true, the lepton is required to come from a W or a Z
-  bool m_leptonWZ;
+  /// If true, the lepton is required to come from a given mother
+  bool m_leptonFromMother;
+
+  /// List of mother of the lepton
+  std::vector< std::string > m_motheroflepton;
 
   /// Number of quarks required to be in the acceptance
   int m_nbbquarks;
 
   /// PDG id of the mother of the b quarks
-  int m_motherofb_id;
+  std::string m_motherofb_id;
+
+  IParticlePropertySvc* m_ppSvc;
+  
 };
 #endif // COMPONENT_PythiaHiggsType_H
