@@ -837,13 +837,13 @@ int JobOptionsEditor_save(int panel_type)  {
 }
 /// Editor: Save job options for a given task.
 void JobOptionsEditor_saveOptions(string text)  {
-  string opts  = m_textEditor.Text;
-  string dp    = JobOptions_sysName()+JobOptionsTaskType_t+"_"+text+".";
-  string script = m_scriptPath.text;
-  string runas  = m_runAs.text;
+  string opts     = m_textEditor.Text;
+  string dp       = JobOptions_sysName()+JobOptionsTaskType_t+"_"+text+".";
+  string script   = m_scriptPath.text;
+  string runas    = m_runAs.text;
   string detector = m_detector.text;
-  bool   tell1 = m_needTell1Setup.state(0);
-  bool   defs  = m_needDefaults.state(0);
+  bool   tell1    = m_needTell1Setup.state(0);
+  bool   defs     = m_needDefaults.state(0);
   int rc = dpSet(dp+"Options",opts,
                  dp+"NeedTell1s",tell1,
                  dp+"NeedDefaults",defs,

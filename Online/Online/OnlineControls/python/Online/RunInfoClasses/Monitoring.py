@@ -96,8 +96,9 @@ class Monitoring(General):
     monTasks = []
     monStreamsByNode = {}
     monStreamsByType = {}
+    #print 'Slots:',mon_slots, mon_slots.size()
     for typ, strm, i in streams:
-      slot_name = mon_slots[len(monTasks)-1]
+      slot_name = mon_slots[len(monTasks)]
       node = slot_name[:slot_name.find(':')]
       item = typ+('_%02d'%i)
       if not monStreamsByNode.has_key(node): monStreamsByNode[node] = set([])

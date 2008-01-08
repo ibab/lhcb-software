@@ -14,5 +14,7 @@ export UTGID=TANServ_0
 export DATAINTERFACE=`python $ONLINEDIR/OnlineControls/scripts/getDataInterface.py`
 export TAN_PORT=YES
 export TAN_NODE=${DATAINTERFACE}
+echo "PAH= $PATH test=`which test.exe`"
+
 echo "TAN: Host: $HOST  Data interface:$DATAINTERFACE"
 exec -a $UTGID `which test.exe` tan_nameserver -a -tcp -d

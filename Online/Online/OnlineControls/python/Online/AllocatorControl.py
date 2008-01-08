@@ -214,7 +214,10 @@ class Control(PVSS.PyDeviceListener):
                 return self.makeAnswer(command,answer+'/'+result)
             elif command == "DEALLOCATE":
               result = self.doExecute('free',runDpName,partition)
-              if result == "WAS_NOT_ALLOCATED": result=None
+              if result == "WAS_NOT_ALLOCATED":
+                msg = '[WAS_NOT_ALLOCATED] Ignore Error on deallocate on request from Clara'
+                PVSS.error(msg,timestamp=1,type=PVSS.UNEXPECTEDSTATE)
+                #result=None
               if result is not None:
                 return self.makeAnswer(command,answer+'/'+result)
             elif command == "RECOVER":
