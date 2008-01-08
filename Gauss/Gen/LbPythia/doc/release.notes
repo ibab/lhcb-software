@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v6r0 2008-01-08 ==========================
 ! 2008-01-08 - Gloria CORTI for Victor COCO
  - Allow to chose the type of leptons, their mother and the higgs via options,
    passing their names. 
