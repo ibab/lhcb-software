@@ -1,5 +1,10 @@
 ! Package         : ST/STTools
 ! Package manager : Jeroen van Tilburg
+
+! 2008-01-08 M Needham
+ - Move STFun.h/.cpp to STKernel
+ - Move interstrip quantization function to STKernel
+
 !------------------------------------------------------------------------------
 
 !=========================== STTools v3r4p1 2007-12-05 ========================

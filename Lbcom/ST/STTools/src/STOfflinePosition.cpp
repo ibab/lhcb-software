@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.cpp,v 1.13 2007-10-08 14:55:22 cattanem Exp $
+// $Id: STOfflinePosition.cpp,v 1.14 2008-01-08 10:21:49 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -14,8 +14,7 @@
 // Mathematical tools
 #include <math.h> 
 
-// local
-#include "STFun.h"
+#include "Kernel/STFun.h"
 #include "STOfflinePosition.h" 
 
 

@@ -1,4 +1,4 @@
-// $Id: STOnlinePosition.h,v 1.6 2007-01-09 15:02:24 jvantilb Exp $
+// $Id: STOnlinePosition.h,v 1.7 2008-01-08 10:21:49 mneedham Exp $
 #ifndef STOnlinePosition_H
 #define STOnlinePosition_H 1
 
@@ -39,10 +39,8 @@ public:
 
 private:
 
-  double STOnlinePosition::stripFraction(const double interStripPos) const;
  
   // job options
-  int m_nBits;                    ///< Number of bits to decode interstrip frac
   std::vector<double> m_errorVec; ///< Error parametrized by cluster size
 
 };

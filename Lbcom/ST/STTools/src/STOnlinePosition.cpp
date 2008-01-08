@@ -1,4 +1,4 @@
-// $Id: STOnlinePosition.cpp,v 1.12 2007-06-29 14:37:25 mneedham Exp $
+// $Id: STOnlinePosition.cpp,v 1.13 2008-01-08 10:21:49 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -14,8 +14,7 @@
 #include "Event/STDigit.h"
 #include "Event/STCluster.h"
 
-// local
-#include "STFun.h"
+#include "Kernel/STFun.h"
 #include "STOnlinePosition.h"
 
 using namespace boost::assign;
@@ -30,7 +29,6 @@ STOnlinePosition::STOnlinePosition( const std::string& type,
 {
   m_errorVec += 0.22, 0.14, 0.25;
   declareProperty("ErrorVec",m_errorVec);
-  declareProperty("NBits",m_nBits = 2);
 
   declareInterface<ISTClusterPosition>(this);
 }
@@ -44,7 +42,7 @@ ISTClusterPosition::Info STOnlinePosition::estimate( const LHCb::STCluster*
                                                      aCluster ) const
 {
   double stripNum = STFun::position(aCluster->stripValues()).first;
-  double interStripPos = stripFraction(stripNum - floor(stripNum));
+  double interStripPos = STFun::stripFraction(stripNum - floor(stripNum));
 
   // Increase strip number by one when interstrip fraction equals 1
   if (interStripPos > 0.99) {    
@@ -70,7 +68,7 @@ ISTClusterPosition::Info
 STOnlinePosition::estimate(const SmartRefVector<LHCb::STDigit>& digits) const
 {  
   double stripNum = STFun::position(digits).first;
-  double interStripPos = stripFraction(stripNum - floor(stripNum));
+  double interStripPos = STFun::stripFraction(stripNum - floor(stripNum));
   LHCb::STChannelID firstChan = digits.front()->channelID();
  
   // Increase strip number by one when interstrip fraction equals 1
@@ -99,8 +97,5 @@ double STOnlinePosition::error(const unsigned int nStrips) const
           m_errorVec[nStrips-1] : m_errorVec.back() );
 }
 
-double STOnlinePosition::stripFraction(const double interStripPos) const
-{
-  return (LHCbMath::round((1<<m_nBits)*interStripPos))/double(1<<m_nBits);
-}
+
 
