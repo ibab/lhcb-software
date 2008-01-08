@@ -3,6 +3,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v6r10 2008-01-08 ====================
+! 2008-01-08 - Marco Cattaneo
+ - Cleanup includes in Particle2VertexAsct.h
+
 ! 2008-01-07 - Patrick Koppenburg
  - More comments by Jeremie
 

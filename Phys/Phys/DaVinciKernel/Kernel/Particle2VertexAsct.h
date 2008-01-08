@@ -1,10 +1,9 @@
-// $Id: Particle2VertexAsct.h,v 1.4 2006-05-16 10:33:16 jpalac Exp $
+// $Id: Particle2VertexAsct.h,v 1.5 2008-01-08 13:20:45 cattanem Exp $
 #ifndef ASSOCIATORS_Particle2VertexASCT_H 
 #define ASSOCIATORS_Particle2VertexASCT_H 1
 
 // Include files
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/ToolFactory.h"
 // Event
 #include "Event/Vertex.h"
 #include "Event/Particle.h"
