@@ -1,8 +1,8 @@
-// $Id: OdinTimeDecoder.cpp,v 1.3 2007-04-19 13:25:39 cattanem Exp $
+// $Id: OdinTimeDecoder.cpp,v 1.4 2008-01-08 14:20:09 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 
 // data model
 #include "Event/RawEvent.h"
