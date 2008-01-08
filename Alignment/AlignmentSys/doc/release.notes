@@ -5,6 +5,50 @@ Purpose: LHCb Alignment packages.
          This project contains 2 different alignment algorithms
          used by the Gaudi application Escher to align the LHCb detector 
          components.
+</PRE><H1><A NAME=v2r3>2007-11-09 AlignmentSys v2r3</A></H1><PRE>
+- Packages updated: TAlignment		v2r4
+		    AlignTrTools	v3r4
+ 		    AlignmentInterfaces v2r4
+		    AlignSolvTools	v2r1
+
+- in TAlignment		v3r4
+	- Track projectors have changed (Needs: Rec v5r2)
+	- Added the ability to align ensembles
+	- Fixed a few option names changes in OTAlignment.opts and Escher_nikhef.opts
+	- Fixed a requirement to Det/STDet
+	- Added Velo boxes and modules
+	- Framework++: More generic framework for the alignment of IT/OT
+- Removed:
+	 GetElementsToAlign.(h,cpp)
+	 AlignOTDetector.(h,cpp)
+	 AlignITDetector.(h,cpp)
+	 AlignmentFunctions.h
+- Added:
+	 IGetElementsToBeAligned.h
+	 GetElementsToBeAligned.(h,cpp)
+	 FindAlignmentElement.cpp
+- Modified AlignAlgorithm to use new classes and tools
+
+- in AlignTrTools		v3r4
+	- fixed Initialize/Finalize misbalance for ATrackSelector
+	- fixed a bug in getCloseHits method in Align{SelTool,SaveTuple,TrackMonitor}.cpp
+
+- in AlignmentInterfaces	v2r4
+	- Fix dictionaries
+	- Add stl vector include to IDerivatives
+	- Remove obsolete interface IAlignDetector
+	- Clean-up interface IAlgnSolvTool
+
+- in AlignSolvTools		v2r1
+	- fix requirements for GSL linking
+	- Remove obsolete tool AlignSolvTool
+	- fix unsigned/signed integer comparison warnings
+	- fix requirements
+
+
+
+
+
 </PRE><H1><A NAME=v2r2>2007-11-09 AlignmentSys v2r2</A></H1><PRE>
 - Packages updated: AlignTrTools	v3r3
                     TAlignment          v3r3
