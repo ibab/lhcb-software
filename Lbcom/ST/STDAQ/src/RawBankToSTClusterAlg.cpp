@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.17 2007-11-16 16:43:36 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.18 2008-01-08 10:22:29 mneedham Exp $
 
 #include <algorithm>
 
@@ -14,15 +14,15 @@
 #include "Event/STCluster.h"
 #include "Event/STLiteCluster.h"
 #include "Kernel/STDataFunctor.h"
-
 #include "Kernel/ISTReadoutTool.h"
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STTell1ID.h"
+#include "Kernel/STFun.h"
 
 #include "SiDAQ/SiADCWord.h"
 #include "STDAQGeneral.h"
-#include "Kernel/STDecoder.h"
 
+#include "Kernel/STDecoder.h"
 #include "Kernel/STDetSwitch.h"
 
 #include "STDet/DeSTDetector.h"
@@ -39,8 +39,7 @@ DECLARE_ALGORITHM_FACTORY( RawBankToSTClusterAlg );
 
 RawBankToSTClusterAlg::RawBankToSTClusterAlg( const std::string& name,
                                            ISvcLocator* pSvcLocator ):
-STDecodingBaseAlg (name , pSvcLocator),
-m_nBits(2){
+STDecodingBaseAlg (name , pSvcLocator){
  
  // Standard constructor, initializes variables
   declareProperty("clusterLocation", m_clusterLocation = STClusterLocation::TTClusters); 
@@ -163,7 +162,7 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
 
   // estimate the offset
   double stripNum = mean(tWords); 
-  double interStripPos = stripFraction(stripNum - floor(stripNum));
+  double interStripPos = STFun::stripFraction(stripNum - floor(stripNum));
   if (interStripPos > 0.99) stripNum +=1; 
   unsigned int offset = (unsigned int)stripNum; 
 
@@ -218,6 +217,3 @@ STLiteCluster RawBankToSTClusterAlg::word2LiteCluster(STClusterWord aWord,
 }
 
 
-double RawBankToSTClusterAlg::stripFraction(const double interStripPos) const{
-  return (LHCbMath::round((1<<m_nBits)*interStripPos))/double(1<<m_nBits);
-}
