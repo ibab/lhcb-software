@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-01-08 - Patrick Robbe
+ - Pythia.F: Add dummy subroutine calling PYTIME to force loading of 
+   libpythia6_dummy.so in Gauss, with the new compilation options in
+   CMT.
+
 !======================== EvtGen v8r17 2007-12-07 =========================
 ! 2007-10-30 - Patrick Robbe
  - EvtPVVCPLH.cpp: corrections by Tristan du Pree
