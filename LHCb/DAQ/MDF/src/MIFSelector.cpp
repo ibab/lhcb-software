@@ -1,4 +1,4 @@
-// $Id: MIFSelector.cpp,v 1.9 2007-12-14 11:42:32 frankb Exp $
+// $Id: MIFSelector.cpp,v 1.10 2008-01-08 15:20:35 cattanem Exp $
 //====================================================================
 //	MIFSelector.cpp
 //--------------------------------------------------------------------
@@ -182,5 +182,5 @@ StatusCode MIFContext::skipEvents(IMessageSvc* /* msg */,int numEvt)  {
   return StatusCode::FAILURE;
 }
 
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/SvcFactory.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MIFSelector);

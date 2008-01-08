@@ -1,4 +1,4 @@
-// $Id: TAETestCreator.cpp,v 1.2 2007-12-14 12:35:24 frankb Exp $
+// $Id: TAETestCreator.cpp,v 1.3 2008-01-08 15:20:39 cattanem Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
@@ -71,5 +71,5 @@ namespace LHCb  {
   };
 }
 
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,TAETestCreator)

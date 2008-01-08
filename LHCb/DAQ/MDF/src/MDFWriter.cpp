@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.15 2007-12-17 18:45:48 frankb Exp $
+// $Id: MDFWriter.cpp,v 1.16 2008-01-08 15:20:32 cattanem Exp $
 //	====================================================================
 //  MDFWriter.cpp
 //	--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //	Author    : Markus Frank
 //
 //	====================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiUtils/IIODataManager.h"

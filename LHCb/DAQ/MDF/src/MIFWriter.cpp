@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MIFWriter.cpp,v 1.8 2007-12-17 19:18:10 frankb Exp $
+// $Id: MIFWriter.cpp,v 1.9 2008-01-08 15:20:35 cattanem Exp $
 //	====================================================================
 //  MIFWriter.cpp
 //	--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //	Author    : Markus Frank
 //
 //	====================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h"

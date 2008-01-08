@@ -1,4 +1,4 @@
-// $Id: RawEventTestDump.cpp,v 1.9 2007-12-14 11:42:34 frankb Exp $
+// $Id: RawEventTestDump.cpp,v 1.10 2008-01-08 15:20:38 cattanem Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -124,5 +124,5 @@ namespace LHCb  {
   };
 }
 
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,RawEventTestDump)

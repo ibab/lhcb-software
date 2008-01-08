@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MEPWriter.cpp,v 1.6 2007-11-19 19:27:32 frankb Exp $
+// $Id: MEPWriter.cpp,v 1.7 2008-01-08 15:20:34 cattanem Exp $
 //	====================================================================
 //  MEPWriter.cpp
 //	--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //	Author    : Markus Frank
 //
 //	====================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiUtils/IIODataManager.h"

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.19 2007-12-17 18:45:48 frankb Exp $
+// $Id: RawDataCnvSvc.cpp,v 1.20 2008-01-08 15:20:36 cattanem Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 #include "MDF/MDFHeader.h"
 
 #include "GaudiUtils/IIODataManager.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IPersistencySvc.h"

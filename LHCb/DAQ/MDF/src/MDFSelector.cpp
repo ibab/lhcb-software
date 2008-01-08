@@ -1,4 +1,4 @@
-// $Id: MDFSelector.cpp,v 1.14 2007-12-14 11:42:31 frankb Exp $
+// $Id: MDFSelector.cpp,v 1.15 2008-01-08 15:20:28 cattanem Exp $
 //====================================================================
 //	MDFSelector.cpp
 //--------------------------------------------------------------------
@@ -108,5 +108,5 @@ namespace LHCb  {
   };
 }
 
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/SvcFactory.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MDFSelector);

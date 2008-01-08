@@ -6,7 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
-!========================= MDF v3r0 2007-12-20 ===============================
+!========================= MDF v3r0 2008-01-08 ===============================
+! 2008-01-08 - Marco Cattaneo
+ - Remove obsolete MDF.cpp file, and cleanup Factory includes
+
 ! 2007-12-19 - Markus Frank
  - Remove the RFIO/DCAP,... plugins from MDF and make them seperate packages.
 

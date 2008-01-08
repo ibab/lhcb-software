@@ -1,4 +1,4 @@
-// $Id: RawEventCopy.cpp,v 1.4 2007-04-20 12:40:25 cattanem Exp $
+// $Id: RawEventCopy.cpp,v 1.5 2008-01-08 15:20:37 cattanem Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -52,5 +52,5 @@ class RawEvent;
   };
 }
 
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,RawEventCopy)

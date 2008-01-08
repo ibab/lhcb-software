@@ -1,4 +1,4 @@
-// $Id: MEPDump.cpp,v 1.1 2006-01-10 18:14:29 frankb Exp $
+// $Id: MEPDump.cpp,v 1.2 2008-01-08 15:20:33 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -90,5 +90,5 @@ namespace LHCb  {
 }
 
 // Declaration of the Algorithm Factory
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MEPDump)

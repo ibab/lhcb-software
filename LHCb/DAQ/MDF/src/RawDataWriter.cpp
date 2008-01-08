@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.10 2007-12-17 18:45:48 frankb Exp $
+// $Id: RawDataWriter.cpp,v 1.11 2008-01-08 15:20:36 cattanem Exp $
 //	====================================================================
 //  RawDataWriter.cpp
 //	--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //	Author    : Markus Frank
 //
 //	====================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiUtils/IIODataManager.h"
 #include "MDF/RawDataConnection.h"

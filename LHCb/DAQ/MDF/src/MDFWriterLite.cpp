@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriterLite.cpp,v 1.7 2007-10-04 13:57:07 frankb Exp $
+// $Id: MDFWriterLite.cpp,v 1.8 2008-01-08 15:20:33 cattanem Exp $
 //	====================================================================
 //  MDFWriterLite.cpp
 //	--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //	Author    : Sai Suman & Niko Neufeld 
 //
 //	====================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/MsgStream.h"
 #include "MDF/RawEventHelpers.h"
