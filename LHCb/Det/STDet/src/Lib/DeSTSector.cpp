@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.33 2007-11-30 16:47:54 cattanem Exp $
+// $Id: DeSTSector.cpp,v 1.34 2008-01-08 10:20:22 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -32,7 +32,8 @@ DeSTSector::DeSTSector( const std::string& name ) :
   m_xInverted(false),
   m_yInverted(false),
   m_status(OK),
-  m_statusString("Status")
+  m_statusString("Status"),
+  m_versionString("DC06")
 { 
     // constructer (first strip means we number from 1)
 }
@@ -101,7 +102,10 @@ StatusCode DeSTSector::initialize() {
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
   else {
-   
+
+    // version 
+    if (exists("version") == true) m_versionString = param<std::string>("version") ;
+ 
     m_pitch = param<double>("pitch");
     m_nStrip =  param<int>("numStrips");
     m_capacitance = param<double>("capacitance");
@@ -374,12 +378,13 @@ StatusCode DeSTSector::registerConditionsCallbacks(){
     return StatusCode::FAILURE; 
   }
 
-  //  sc = registerCondition(this,m_statusString,&DeSTSector::updateStatusCondition);
-  // if (sc.isFailure() ){
-  //  msg << MSG::ERROR << "Failed to register status conditions" << endreq;
-  //  return StatusCode::FAILURE; 
-  // }
-
+  if (m_versionString != "DC06"){
+    sc = registerCondition(this,m_statusString,&DeSTSector::updateStatusCondition);
+    if (sc.isFailure() ){
+      msg << MSG::ERROR << "Failed to register status conditions" << endreq;
+      return StatusCode::FAILURE; 
+    }
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -391,8 +396,25 @@ StatusCode DeSTSector::registerConditionsCallbacks(){
     msg << "failed to find condition" << endmsg;
     return StatusCode::FAILURE; 
   }
+
   int tStatus = aCon->param<int>("SectorStatus");
   m_status = Status(tStatus);
+
+  std::map<int,int> beetleMap = aCon->param<std::map<int,int> >("BeetleStatus");
+  toEnumMap(beetleMap,m_beetleStatus);
+
+  std::map<int,int> stripMap = aCon->param<std::map<int,int> >("StripStatus");
+  toEnumMap(stripMap,m_stripStatus);
+ 
   return StatusCode::SUCCESS;
  }
+
+void DeSTSector::toEnumMap(const std::map<int,int>& input, DeSTSector::StatusMap& output) {
+  output.clear();
+  std::map<int,int>::const_iterator iterM = input.begin();
+  for (; iterM != input.end(); ++iterM){
+    output[iterM->first] = Status(iterM->second);
+  } // iterM
+
+}
 

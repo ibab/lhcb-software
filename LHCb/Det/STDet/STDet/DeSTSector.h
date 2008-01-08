@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.23 2007-11-30 15:12:07 mneedham Exp $
+// $Id: DeSTSector.h,v 1.24 2008-01-08 10:20:20 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -280,13 +280,14 @@ public:
 
 private:
 
+  typedef std::map<unsigned int,Status> StatusMap;
+
   void clear();
   void determineSense();
   StatusCode cacheInfo();
   StatusCode registerConditionsCallbacks();
-
-
   StatusCode updateStatusCondition();
+  void toEnumMap(const std::map<int,int>& input, DeSTSector::StatusMap& output);
 
   Gaudi::Plane3D m_plane;
   Gaudi::Plane3D m_entryPlane;
@@ -329,10 +330,10 @@ private:
 
   // status info
   Status m_status;
-  typedef std::map<unsigned int,Status> StatusMap;
   mutable StatusMap m_beetleStatus;
   mutable StatusMap m_stripStatus;
   std::string m_statusString;
+  std::string m_versionString;
 
 };
 

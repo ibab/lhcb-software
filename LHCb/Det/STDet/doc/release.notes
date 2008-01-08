@@ -1,7 +1,11 @@
-!$Id: release.notes,v 1.120 2007-11-30 16:47:53 cattanem Exp $
+!$Id: release.notes,v 1.121 2008-01-08 10:20:21 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+! 2008-01-08 M Needham
+ - DeSTSector: final changes to allow use of dead strip conditions
+ - Add test on the version to allow DC 06 backwards compatability
 
 !======================== STDet v3r8 2007-11-30 ==========================
 ! 2007-11-30 - Marco Cattaneo
