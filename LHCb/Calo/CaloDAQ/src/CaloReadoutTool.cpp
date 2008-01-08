@@ -1,8 +1,8 @@
-// $Id: CaloReadoutTool.cpp,v 1.18 2007-12-11 21:10:55 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.19 2008-01-08 13:26:33 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "CaloReadoutTool.h"
