@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.70 2008-01-08 06:55:41 cattanem Exp $
+! $Id: release.notes,v 1.71 2008-01-08 15:44:50 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+! 2008-01-08 - Marco Clemencic
+ - Fixed a problem with local tags in dump_db_to_files.py.
 
 !===================== Tools/CondDBUI v2r7 2008-01-08 =========================
 ! 2008-01-07 - Marco Clemencic

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: dump_db_to_files.py,v 1.1 2007-12-07 08:34:10 marcocle Exp $
+# $Id: dump_db_to_files.py,v 1.2 2008-01-08 15:44:51 marcocle Exp $
 
 # @todo: Add support for channel IDs
 
@@ -136,13 +136,16 @@ def copy_to_files(connString,time=0,tag="HEAD",srcs=['/'],
                 open(tmppath,'w').write(xml)
                 
         except RuntimeError, x:
-            if "Object not found" in str(x):
+            desc = str(x)
+            if "Object not found" in desc:
                 log.info("no data")
-            elif "No child tag" in str(x):
+            elif "No child tag" in desc:
+                log.info("no tag")
+            elif "not a child of" in desc:
+                # tag exists in a foldeset not containing the current one
                 log.info("no tag")
             else:
                 raise
-            
 def main():
     from optparse import OptionParser
     parser = OptionParser()
