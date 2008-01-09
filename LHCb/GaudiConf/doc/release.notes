@@ -2,6 +2,13 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v10r6 2008-01-09 ========================
+! 2008-01-09 - Marco Cattaneo
+ - Changes to DecodeRawEvent.opts:
+   . Use AlgMap property to define the algorithms
+   . Create EventClockSvc to decode ODIN even in absence of conditions
+   . Disable L0DU
+
 !======================== GaudiConf v10r5 2007-12-11 ========================
 ! 2007-12-11 - Marco Cattaneo
  - Add RawDataIO.opts to setup persistency for MDF files

@@ -1,24 +1,16 @@
 // Job options to configure the data on demand service for decoding the RawEvent
 
 // Set up the algorithms
-DataOnDemandSvc.Nodes += { "DATA='/Event/Raw'      TYPE='DataObject'" };
-DataOnDemandSvc.Nodes += { "DATA='/Event/Raw/Velo' TYPE='DataObject'" };
-DataOnDemandSvc.Nodes += { "DATA='/Event/Raw/TT'   TYPE='DataObject'" };
-DataOnDemandSvc.Nodes += { "DATA='/Event/Raw/IT'   TYPE='DataObject'" };
-DataOnDemandSvc.Nodes += { "DATA='/Event/Raw/OT'   TYPE='DataObject'" };
-DataOnDemandSvc.Nodes += { "DATA='/Event/Raw/Muon' TYPE='DataObject'" };
-DataOnDemandSvc.Nodes += { "DATA='/Event/Trig'     TYPE='DataObject'" };
-DataOnDemandSvc.Nodes += { "DATA='/Event/Trig/L0'  TYPE='DataObject'" };
-DataOnDemandSvc.Algorithms += {
-  "DATA='/Event/Raw/Velo/Clusters'     TYPE='DecodeVeloRawBuffer/createVeloClusters'"
- ,"DATA='/Event/Raw/TT/Clusters'       TYPE='RawBankToSTClusterAlg/createTTClusters'"
- ,"DATA='/Event/Raw/IT/Clusters'       TYPE='RawBankToSTClusterAlg/createITClusters'"
- ,"DATA='/Event/Raw/Velo/LiteClusters' TYPE='DecodeVeloRawBuffer/createVeloLiteClusters'"
- ,"DATA='/Event/Raw/TT/LiteClusters'   TYPE='RawBankToSTLiteClusterAlg/createTTLiteClusters'"
- ,"DATA='/Event/Raw/IT/LiteClusters'   TYPE='RawBankToSTLiteClusterAlg/createITLiteClusters'"
- ,"DATA='/Event/Raw/OT/Times'          TYPE='OTTimeCreator'"
- ,"DATA='/Event/Raw/Muon/Coords'       TYPE='MuonRec'"
- ,"DATA='/Event/Trig/L0/L0DU'          TYPE='L0DUFromRaw'"
+DataOnDemandSvc.AlgMap += {
+  "Raw/Velo/Clusters"     : "DecodeVeloRawBuffer/createVeloClusters"
+ ,"Raw/TT/Clusters"       : "RawBankToSTClusterAlg/createTTClusters"
+ ,"Raw/IT/Clusters"       : "RawBankToSTClusterAlg/createITClusters"
+ ,"Raw/Velo/LiteClusters" : "DecodeVeloRawBuffer/createVeloLiteClusters"
+ ,"Raw/TT/LiteClusters"   : "RawBankToSTLiteClusterAlg/createTTLiteClusters"
+ ,"Raw/IT/LiteClusters"   : "RawBankToSTLiteClusterAlg/createITLiteClusters"
+ ,"Raw/OT/Times"          : "OTTimeCreator"
+ ,"Raw/Muon/Coords"       : "MuonRec"
+  // ,"Trig/L0/L0DU"         : "L0DUFromRaw"
 };
 createITClusters.detType     = "IT";
 createITLiteClusters.detType = "IT";
@@ -26,3 +18,7 @@ createVeloClusters.DecodeToVeloClusters     = true;
 createVeloClusters.DecodeToVeloLiteClusters = false;
 #include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
 #include "$CALODAQROOT/options/CaloDigitsOnDemand.opts"
+
+// For ODIN, just use the EventClockSvc
+ApplicationMgr.ExtSvc += { "EventClockSvc" };
+EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
