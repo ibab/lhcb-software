@@ -239,7 +239,7 @@ void LHCb::FmcMessageSvc::report(int typ,const std::string& src,const std::strin
   strftime(sNow,13,"%b%d-%H%M%S",&lNow);
   /*-------------------------------------------------------------------------*/
   /* compose message header */
-  typ = (typ>(sizeof(sl)/sizeof(sl[0]))) ? (sizeof(sl)/sizeof(sl[0]))-1 : (typ<0 ? 0 : typ);
+  typ = (typ>int(sizeof(sl)/sizeof(sl[0]))) ? (sizeof(sl)/sizeof(sl[0]))-1 : (typ<0 ? 0 : typ);
   snprintf(header,BUF_SZ/2,"%s%s%s: %s(%s): %s: ",sNow,sl[typ],hostName,
            pName,utgid,src.c_str());
   /* NULL-terminate header if truncated */
@@ -341,7 +341,7 @@ int LHCb::FmcMessageSvc::printM(int out,int severity,const char* fName,
   strftime(sNow,13,"%b%d-%H%M%S",&lNow);
   /*-------------------------------------------------------------------------*/
   /* compose message string with header */
-  severity = (severity>(sizeof(sl)/sizeof(sl[0]))) 
+  severity = (severity>int(sizeof(sl)/sizeof(sl[0]))) 
     ? (sizeof(sl)/sizeof(sl[0]))-1 : (severity<0 ? 0 : severity);
   snprintf(msg,BUF_SZ,"%s%s%s: %s(%s): %s(): %s\n",sNow,sl[severity],hostName,
            pName,utgid,fName,rawMsg);
