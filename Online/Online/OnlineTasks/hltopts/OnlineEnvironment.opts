@@ -1,9 +1,9 @@
 #pragma print on
 //partition id already in ${PARTNAME}_Info.opts, path set in INFOOPTIONS
-//OnlineEnv.PartititonID   = 333;
 #include "$INFOOPTIONS"
 //
-ApplicationMgr.ExtSvc   += { "MonitorSvc/MonitorSvc" };
-ApplicationMgr.Dlls     += { "Gaucho" };
-MessageSvc.OutputLevel      = 4;
-// MessageSvc.LoggerOnly  = false;  // Only for DIM message service
+ApplicationMgr.SvcOptMapping += { "Gaudi::IODataManager/IODataManager"  };
+ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog" };
+ApplicationMgr.ExtSvc        += { "MonitorSvc/MonitorSvc" };
+ApplicationMgr.Dlls          += { "Gaucho" };
+MessageSvc.OutputLevel        = 4;
