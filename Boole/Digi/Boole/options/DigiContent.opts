@@ -3,11 +3,9 @@
 DigiWriter.Preload     = false;
 
 // Pack MC truth containers if not already done on input file
-DataOnDemandSvc.Nodes += { "DATA='/Event/pSim' TYPE='DataObject'" };
-DataOnDemandSvc.Algorithms += {
-  "DATA='/Event/pSim/MCParticles'   TYPE='PackMCParticle'"
-, "DATA='/Event/pSim/MCVertices'    TYPE='PackMCVertex'"
-};
+DataOnDemandSvc.AlgMap += { "pSim/MCParticles" : "PackMCParticle"
+                          , "pSim/MCVertices"  : "PackMCVertex"
+                          };
 
 // Objects to write
 #include "$STDOPTS/DigiContent.opts"

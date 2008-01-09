@@ -10,12 +10,10 @@
 #include "$STDOPTS/DigiDicts.opts"
 
 // Unpack MCParticles and MCVertices if not existing on input file
-ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
-DataOnDemandSvc.Nodes += { "DATA='/Event/MC' TYPE='DataObject'" };
-DataOnDemandSvc.Algorithms += {
-     "DATA='/Event/MC/Particles'       TYPE='UnpackMCParticle'"
-   , "DATA='/Event/MC/Vertices'        TYPE='UnpackMCVertex'"
-};
+ApplicationMgr.ExtSvc  += { "DataOnDemandSvc" };
+DataOnDemandSvc.AlgMap += { "MC/Particles" : "UnpackMCParticle"
+                          , "MC/Vertices"  : "UnpackMCVertex"
+                          };
 
 // Objects to be written to output file
 #include "$BOOLEOPTS/DigiContent.opts"

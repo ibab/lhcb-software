@@ -3,8 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r9>2007-12-21 Boole v14r9</A></H1><PRE>
+</PRE><H1><A NAME=v14r9>2008-01-09 Boole v14r9</A></H1><PRE>
  - In valgrind.job, use the new ROOT suppressions file available from LCG_54 
+ - In Boole.opts, DigiContent.opts, use AlgMap syntax to set up DataOnDemandSvc
 
 </PRE><H1><A NAME=v14r8>2007-12-13 Boole v14r8</A></H1><PRE>
  - Fix v200601.py to importOptions from absolute path
