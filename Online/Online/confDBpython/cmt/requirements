@@ -37,7 +37,7 @@ path_append PATH ""  WIN32 "$(oracle_home)/bin"
 
 application   test ../tests/test.cpp
 macro_append confDBpython_cppflags ' -I"$(oracle_home)/include" '
-
+macro_append test_dependencies " confDBpython "
 
 
 

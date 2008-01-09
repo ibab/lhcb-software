@@ -13,12 +13,16 @@ use MDF           v* DAQ            -no_auto_imports
 use DIM           v* Online         -no_auto_imports
 use OnlineKernel  v* Online
 use GaudiKernel   v*
+
 apply_pattern install_more_includes more=GaudiOnline
+
 # ==================== component libraries ==================================
 library  GaudiOnline  *.cpp -import=DIM -import=DAQEvent -import=MDF -import=AIDA
 apply_pattern linker_library   library=GaudiOnline
 apply_pattern generate_rootmap library=GaudiOnline
 macro_append GaudiOnline_shlibflags ' $(MDFlib_linkopts) '
+
 # ==================== private test application =============================
-application Gaudi "../main/*.cpp"
+application  Gaudi              "../main/*.cpp"
+macro_append Gaudi_dependencies " GaudiOnline "
 apply_pattern application_path
