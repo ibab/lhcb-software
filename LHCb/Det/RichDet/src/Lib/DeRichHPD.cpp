@@ -1,17 +1,15 @@
+
 //=============================================================================
 /** @file DeRichHPD.cpp
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.10 2007-12-04 13:22:36 jonrob Exp $
+ * $Id: DeRichHPD.cpp,v 1.11 2008-01-09 09:24:49 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
  */
 //=============================================================================
-
-// Include files
-//#include <time.h>
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -51,12 +49,13 @@ DeRichHPD::DeRichHPD():
   m_deSiSensor    ( NULL ),
   m_pvWindow      ( NULL ),
   m_windowSolid   ( NULL ),
+  m_kaptonSolid   ( NULL ),
   m_demagMapR     ( NULL ),
   m_demagMapPhi   ( NULL ),
   m_magMapR       ( NULL ),
   m_magMapPhi     ( NULL ),
   m_firstUpdates  ( 0    ),
-  m_refactParams  ( 4,  0)
+  m_refactParams  ( 4, 0 )
 { }
 
 //=============================================================================
@@ -117,6 +116,10 @@ StatusCode DeRichHPD::initialize ( )
   const IPVolume * pvHPDSMaster = geometry()->lvolume()->pvolume("pvRichHPDSMaster");
   const IPVolume * pvSilicon = pvHPDSMaster->lvolume()->pvolume("pvRichHPDSiDet");
 
+ // pointer to kapton
+  m_kaptonSolid =
+    pvHPDSMaster->lvolume()->pvolume("pvRichHPDKaptonShield")->lvolume()->solid();
+
   const ISolid* siliconSolid = pvSilicon->lvolume()->solid();
   msg << MSG::VERBOSE << "About to do a dynamic cast SolidBox "
       << siliconSolid->name() << endmsg;
@@ -154,7 +157,8 @@ StatusCode DeRichHPD::initialize ( )
   msg << MSG::DEBUG << "winInR = " << winInR << " winOutR = " << winOutR << endmsg;
 
   // get the pointer to the silicon sensor detector element
-  m_deSiSensor = childIDetectorElements().front();
+  m_deSiSensor = ( !childIDetectorElements().empty() ? 
+                   childIDetectorElements().front() : NULL );
   if ( !m_deSiSensor )
   {
     msg << MSG::ERROR << "Cannot find SiSensor detector element for HPD "
@@ -162,7 +166,7 @@ StatusCode DeRichHPD::initialize ( )
     return StatusCode::FAILURE;
   }
 
-  // register updates for the localy cached geometry information
+  // register updates for the locally cached geometry information
   updMgrSvc()->registerCondition(this, geometry(),
                                  &DeRichHPD::updateTransformations );
   sc = updMgrSvc()->update(this);
@@ -249,13 +253,16 @@ StatusCode DeRichHPD::getParameters ( )
 //=========================================================================
 // update the localy cached transforms
 //=========================================================================
-StatusCode DeRichHPD::updateTransformations ( ) {
+StatusCode DeRichHPD::updateTransformations ( ) 
+{
 
-  if ( m_firstUpdates%4 != 0 ) {
+  if ( m_firstUpdates%4 != 0 ) 
+  {
     MsgStream msg ( msgSvc(), myName() );
     msg << MSG::INFO << "Updating geometry transformations for HPD:" << m_number <<endmsg;
     m_firstUpdates += 2;
   }
+
   const IPVolume * pvHPDSMaster = geometry()->lvolume()->pvolume("pvRichHPDSMaster");
   const IPVolume * pvKapton = pvHPDSMaster->lvolume()->pvolume("pvRichHPDKaptonShield");
 
@@ -266,7 +273,7 @@ StatusCode DeRichHPD::updateTransformations ( ) {
   m_fromPanelToWindow = m_pvWindow->matrix() * pvHPDSMaster->matrix() *
     geometry()->ownMatrix();
   // Transformation from HPD panel to kapton coord system
-  m_fromPanelToKapton = pvKapton->matrix() * pvHPDSMaster->matrix() *
+  m_fromPanelToKapton = pvKapton -> matrix() * pvHPDSMaster->matrix() *
     geometry()->ownMatrix();
   // Transformation for HPD window to HPD coord system
   m_fromWindowToHPD = pvHPDSMaster->matrixInv() * m_pvWindow->matrixInv();
@@ -276,7 +283,7 @@ StatusCode DeRichHPD::updateTransformations ( ) {
   // cache the position of the inside window centre in the panel coordinate system
   m_windowInsideCentreMother = geometry()->ownMatrix().Inverse() *
     pvHPDSMaster->matrixInv() *
-    m_pvWindow->toMother(Gaudi::XYZPoint(0,0,sqrt(m_winInRsq)));
+    m_pvWindow->toMother(Gaudi::XYZPoint(0,0,std::sqrt(m_winInRsq)));
 
   // from silicon sensor to HPD including misalignment
   m_SiSensorToHPDMatrix = m_deSiSensor->geometry()->ownMatrix().Inverse();
@@ -402,7 +409,6 @@ StatusCode DeRichHPD::fillHpdDemagTable()
   return StatusCode::SUCCESS;
 }
 
-
 //=========================================================================
 //  fillHpdMagTable
 //=========================================================================
@@ -480,8 +486,8 @@ StatusCode DeRichHPD::magnifyToGlobal_old( Gaudi::XYZPoint& detectPoint,
   // The difference is that Ra is now positive.
   // Chose the solution with the minus sign
   double rWindow = ( m_deMagFactor[0] -
-                     sqrt(gsl_pow_2( m_deMagFactor[0] ) -
-                          4*m_deMagFactor[1]*rSilicon))/(2*m_deMagFactor[1]);
+                     std::sqrt(gsl_pow_2( m_deMagFactor[0] ) -
+                               4*m_deMagFactor[1]*rSilicon))/(2*m_deMagFactor[1]);
 
   // check if this point could have come from the photoCathode
   if ( m_winInRsq < rWindow*rWindow ) return StatusCode::FAILURE;
@@ -496,15 +502,15 @@ StatusCode DeRichHPD::magnifyToGlobal_old( Gaudi::XYZPoint& detectPoint,
   // the minus sign is for the cross-focussing
   const double scaleUp = ( rSilicon>0 ? -rWindow/rSilicon : 0 );
 
-  const double xWindow = scaleUp*detectPoint.x();
-  const double yWindow = scaleUp*detectPoint.y();
+  const double xWindow    = scaleUp * detectPoint.x();
+  const double yWindow    = scaleUp * detectPoint.y();
   const double XsqPlusYsq = xWindow*xWindow+yWindow*yWindow;
 
   const double winRadiusSq = ( photoCathodeSide ? m_winInRsq :m_winOutRsq );
   if ( winRadiusSq < XsqPlusYsq ) return StatusCode::FAILURE;
-  const double zWindow = sqrt(winRadiusSq - XsqPlusYsq);
+  const double zWindow = std::sqrt(winRadiusSq - XsqPlusYsq);
 
-  detectPoint = m_fromWindowToGlobal * Gaudi::XYZPoint(xWindow,yWindow,zWindow);
+  detectPoint = fromHPDWindowToGlobal() * Gaudi::XYZPoint(xWindow,yWindow,zWindow);
 
   return StatusCode::SUCCESS;
 }
@@ -529,7 +535,8 @@ StatusCode DeRichHPD::magnifyToGlobal_new( Gaudi::XYZPoint& detectPoint,
   double new_phi = anodePhi + result_phi + Gaudi::Units::pi;
   if ( new_phi > Gaudi::Units::twopi ) new_phi -= Gaudi::Units::twopi;
 
-  if ( !photoCathodeSide ) {
+  if ( !photoCathodeSide ) 
+  {
     // for the refraction on the HPD window, assuming 90 degrees angle
     result_r  = result_r + m_refactParams[3]*gsl_pow_3(result_r)+
       m_refactParams[2]*gsl_pow_2(result_r)+m_refactParams[1]*result_r+
@@ -538,20 +545,20 @@ StatusCode DeRichHPD::magnifyToGlobal_new( Gaudi::XYZPoint& detectPoint,
 
   const double xWindow = result_r * cos(new_phi);
   const double yWindow = result_r * sin(new_phi);
-  const double XsqPlusYsq = xWindow*xWindow+yWindow*yWindow;
+  const double XsqPlusYsq = xWindow*xWindow + yWindow*yWindow;
 
   const double winRadiusSq = ( photoCathodeSide ? m_winInRsq :m_winOutRsq );
   if ( winRadiusSq < XsqPlusYsq ) return StatusCode::FAILURE;
-  const double zWindow = sqrt(winRadiusSq - XsqPlusYsq);
+  const double zWindow = std::sqrt(winRadiusSq - XsqPlusYsq);
 
-  detectPoint = m_fromWindowToGlobal * Gaudi::XYZPoint(xWindow,yWindow,zWindow);
+  detectPoint = fromHPDWindowToGlobal() * Gaudi::XYZPoint(xWindow,yWindow,zWindow);
 
   return StatusCode::SUCCESS;
 }
 
 //***********************************************************************
-double DeRichHPD::demag(const double r, const double B) {
-
+double DeRichHPD::demag(const double r, const double B) 
+{
   // Radial mapping function and rotation function
   // from Gianluca Aglieri Rinella and Ann Van Lysebetten
   // for the description and correction of the magnetic distortions
@@ -576,11 +583,11 @@ double DeRichHPD::demag(const double r, const double B) {
 
   // rho calculated from r, a and b, second order, 0 constant term polynomial
   return (a*r + b*r*r);
-
 }
-//***********************************************************************
-double DeRichHPD::mag(const double rho, const double B) {
 
+//***********************************************************************
+double DeRichHPD::mag(const double rho, const double B) 
+{
   // function mag returns the r coordinate given rho and B as arguments
   // coefficients of the fits for the dependence of the mag law
   // from the magnetic field
@@ -594,10 +601,11 @@ double DeRichHPD::mag(const double rho, const double B) {
   // r calculated from rho, c and d, second order, 0 constant term polynomial
   return (c*rho + d*rho*rho);
 }
-//***********************************************************************
-double DeRichHPD::Delta_Phi(const double r, const double B) {
 
-  // It returns the rotation angle \Delta\phi [rad ]as a function of the
+//***********************************************************************
+double DeRichHPD::Delta_Phi(const double r, const double B) 
+{
+  // It returns the rotation angle \Delta\phi [rad] as a function of the
   // radial entrance
   // window coordinate r [mm] and the axial magnetic flux density B [G].
   // first calculate the coefficients a, b, c from the
@@ -624,6 +632,20 @@ double DeRichHPD::Delta_Phi(const double r, const double B) {
 
   // this calculates and returns \Delta\phi from a, b, c and r
   return ( a + b*r*r + c*r*r*r ) ;
+}
+
+//=========================================================================
+// Test for shadowing by the kapton shield of the given DeRichHPD
+//=========================================================================
+bool DeRichHPD::testKaptonShadowing( const Gaudi::XYZPoint&  pInPanel,
+                                     const Gaudi::XYZVector& vInPanel ) const
+{
+  const Gaudi::XYZPoint  pInKapton( m_fromPanelToKapton * pInPanel );
+  const Gaudi::XYZVector vInKapton( m_fromPanelToKapton * vInPanel );
+  ISolid::Ticks kaptonTicks;
+  return ( 0 != m_kaptonSolid->intersectionTicks( pInKapton,
+                                                  vInKapton,
+                                                  kaptonTicks ) );
 }
 
 // CRJ Comment out by default since having a 57 element array in each HPD just for this is

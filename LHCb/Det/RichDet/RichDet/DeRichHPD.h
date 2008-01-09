@@ -1,14 +1,16 @@
 
+//=============================================================================
 /** @file DeRichHPD.h
  *
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.13 2007-12-04 13:22:36 jonrob Exp $
+ *  $Id: DeRichHPD.h,v 1.14 2008-01-09 09:24:49 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
  */
+//=============================================================================
 
 #ifndef RICHDET_DERICHHPD_H
 #define RICHDET_DERICHHPD_H 1
@@ -51,9 +53,7 @@ public:
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const {
-    return classID();
-  }
+  const CLID& clID() const { return classID(); }
 
   /**
    * Retrieves reference to class identifier
@@ -119,7 +119,7 @@ public:
    */
   StatusCode detectionPoint ( const LHCb::RichSmartID smartID,
                               Gaudi::XYZPoint& detectPoint,
-                              bool photoCathodeSide ) const;
+                              bool photoCathodeSide = false ) const;
 
 
   /** Converts a RichSmartID to a point on the anode in global coordinates.
@@ -166,38 +166,20 @@ public:
 
   /** Converts the given RichSmartID to the position on the silicon wafer,
    *  in the coordinate system of the wafer
-   *  @param[in] smartID The RichSmartID
+   *  @param[in] smartID The RichSmartID channel identifier
    *  @return The position on the wafer
    */
   inline Gaudi::XYZPoint pointOnSilicon ( const LHCb::RichSmartID smartID ) const
   {
-    return Gaudi::XYZPoint( xOnSilicon(smartID), yOnSilicon(smartID), 0 );
+    return Gaudi::XYZPoint( xOnSilicon(smartID), yOnSilicon(smartID), 0.0 );
   }
 
-  /** Convert a point from the HPD panel coordinate system to the HPD quartz
-   *  window coordinate system
-   *  @return The position on the HPD quartz window
+  /** Get the tranformation from the HPD panel coordinate system to the HPD quartz
+   *  @return The HPD panel to the HPD quartz tranformation
    */
-  inline Gaudi::XYZPoint fromPanelToHPDWindow ( const Gaudi::XYZPoint& pWin ) const
+  inline const Gaudi::Transform3D& fromPanelToHPDWindow ( ) const
   {
-    return Gaudi::XYZPoint( m_fromPanelToWindow * pWin );
-  }
-
-  /** Convert a vector from the HPD panel coordinate system to the HPD quartz
-   *  window coordinate system
-   *  @return The vector in the HPD quartz window system
-   */
-  inline Gaudi::XYZVector fromPanelToHPDWindow ( const Gaudi::XYZVector& vWin ) const
-  {
-    return Gaudi::XYZVector( m_fromPanelToWindow * vWin );
-  }
-
-  /** Get the tranformation from the HPD panel to the kapton coordinate system
-   *  @return The panel to kapton tranform
-   */
-  inline const Gaudi::Transform3D& fromPanelToKapton ( ) const
-  {
-    return m_fromPanelToKapton;
+    return m_fromPanelToWindow;
   }
 
   /** Get the tranformation from the HPD quartz window to the HPD
@@ -208,22 +190,40 @@ public:
     return m_fromWindowToHPD;
   }
 
-  /** Convert a point from the HPD coordinate system to the panel coordinate
-   *  system including misalignment
-   *  @return The position in the HPD panel
+  /** Get the tranformation from the HPD quartz window to the global LHCb coordinate system
+   *  @return The HPD window to LHCb global tranformation
    */
-  inline Gaudi::XYZPoint fromHPDToPanel ( const Gaudi::XYZPoint& pInHPD ) const
+  inline const Gaudi::Transform3D& fromHPDWindowToGlobal ( ) const
   {
-    return Gaudi::XYZPoint( m_fromHPDToPanel * pInHPD );
+    return m_fromWindowToGlobal;
+  }
+
+  /** Get the tranformation from the HPD coordinate system to the panel coordinate
+   *  system including misalignment
+   *  @return The HPD to panel tranformation
+   */
+  inline const Gaudi::Transform3D& fromHPDToPanel ( ) const
+  {
+    return m_fromHPDToPanel;
   }
 
   /** Get the solid for the HPD window (for intersection purposes)
    *  @return The quartz window solid
    */
-  inline const ISolid*  HPDWindowSolid ( ) const
+  inline const ISolid* HPDWindowSolid ( ) const
   {
     return m_windowSolid;
   }
+
+  /** Test for shadowing by the kapton shield of the given DeRichHPD
+   *  @param[in] pInPanel Position in the HPD panel coordinate system
+   *  @param[in] vInPanel Direction vedctor in the HPD panel coordinate system
+   *  @return boolean indicating if the given direction intersects the HPD kapton shield
+   *  @retval TRUE  Does intersect
+   *  @retval FALSE Does not intersect
+   */
+  bool testKaptonShadowing( const Gaudi::XYZPoint&  pInPanel,
+                            const Gaudi::XYZVector& vInPanel ) const;
 
 private: // functions
 
@@ -259,22 +259,24 @@ private: // functions
   /// Update the locally stored transformations
   StatusCode updateTransformations();
 
-  /// Update the magnification abnd demagnification information
+  /// Update the magnification and demagnification information
   StatusCode updateDemagProperties();
 
+  /// Magnify the given detection point from the HPD anode to the cathode assuming no magnetic field
   StatusCode magnifyToGlobal_old( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
+
+  /// Magnify the given detection point from the HPD anode to the cathode assuming a magnetic field
   StatusCode magnifyToGlobal_new( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
 
-  //void init_mm( );
-  //int number_range( int from, int to );
-  //int number_mm( void );
+  /// Initialise the interpolators for demagnification (cathode to anode)
+  StatusCode fillHpdDemagTable( );
+
+  /// Initialise the interpolators for magnification (anode to cathode)
+  StatusCode fillHpdMagTable( );
 
   double Delta_Phi(const double, const double);
   double mag(const double , const double);
   double demag(const double, const double );
-
-  StatusCode fillHpdDemagTable( ); ///< Initialise the interpolators for demagnification (cathode to anode)
-  StatusCode fillHpdMagTable( );   ///< Initialise the interpolators for magnification (anode to cathode)
 
 private: // data
 
@@ -282,6 +284,8 @@ private: // data
 
   const IPVolume* m_pvWindow;      ///< The pv for the HPD quartz window
   const ISolid* m_windowSolid;     ///< The HPD window solid
+
+  const ISolid* m_kaptonSolid;     ///< Pointer to the kapton solid
 
   std::string m_name;              ///< The name of this HPD
   int m_number;                    ///< HPD number (should be the same as copy number)

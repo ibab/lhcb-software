@@ -1,8 +1,19 @@
 ]!-----------------------------------------------------------------------------
 ! Package     : Det/RichDet
 ! Responsible : Antonis Papanestis
-! Purpose     : interface to the xml description
+! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
+
+! 2008-01-09 - Chris Jones
+ - Changes to how the DeRichHPD and DeRichHPDPanel objects deal with the
+   method DeRichHPDPanel::PDWindowPoint which calculates the intersection
+   with the HPDs
+  + Various fixes to correct a small disagreement between ray tracing results
+    and the full photon reconstruction.
+  + Clean up a little how the various transforms from DeRichHPD are accessed
+  + Add the method DeRichHPD::testKaptonShadowing which checks for 
+    intersections with the kapton shield
+  + Various other minor doxygen and code improvements
 
 !======================== RichDet v10r8 2007-12-04 ========================
 ! 2007-12-04 - Chris Jones

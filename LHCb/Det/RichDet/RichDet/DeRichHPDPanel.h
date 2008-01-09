@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.49 2007-11-12 09:42:04 papanest Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.50 2008-01-09 09:24:49 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -132,10 +132,10 @@ public:
    *
    *  @param[in]  smartID     The HPD channel ID
    *  @param[out] detectPoint The detection point
-   *  @param[in]  photoCathodeSide: If false use the outside of the HPD window and correct
-   *              for refraction. If true use the photocathode side
+   *  @param[in]  photoCathodeSide  If false use the outside of the HPD window and correct
+   *                                for refraction. If true use the photocathode side
    *
-   *  @return Status of connersion
+   *  @return StatusCode indicating if the conversion was successful or not
    *  @retval StatusCode::SUCCESS Conversion to photocathode was OK
    *  @retval StatusCode::FAILURE Impossible conversion to photocathode
    */
@@ -269,11 +269,12 @@ private: // methods
   /// Returns the detector element for the given HPD number
   inline const DeRichHPD* DeHPD( const unsigned int HPDNumber ) const
   {
-    const DeRichHPD* deHPD = m_DeHPDs[HPDNumber];
+    const DeRichHPD * deHPD = m_DeHPDs[HPDNumber];
     if ( HPDNumber>m_HPDMax || !deHPD )
     {
       std::ostringstream mess;
       mess << "DeHPD:: Inappropriate HPDNumber : " << HPDNumber;
+      deHPD = NULL;
       throw GaudiException( mess.str(), "*DeRichHPDPanel*", StatusCode::FAILURE );
     }
     return deHPD;
@@ -283,8 +284,8 @@ private: // methods
   inline LHCb::RichTraceMode::RayTraceResult
   checkPanelAcc( const Gaudi::XYZPoint & point ) const
   {
-    const double u = ( m_rich == Rich::Rich1 ? point.y() : point.x() );
-    const double v = ( m_rich == Rich::Rich1 ? point.x() : point.y() );
+    const double u = ( rich() == Rich::Rich1 ? point.y() : point.x() );
+    const double v = ( rich() == Rich::Rich1 ? point.x() : point.y() );
     return ( ( fabs(u) >= fabs(m_panelColumnSideEdge) ||
                fabs(v) >= m_panelStartColPos ) ?
              LHCb::RichTraceMode::OutsideHPDPanel : LHCb::RichTraceMode::InHPDPanel );
@@ -319,10 +320,12 @@ private: // data
   Gaudi::Plane3D m_localPlane;         ///< detection plane in PDPanel coordinates
   Gaudi::XYZVector m_localPlaneNormal; ///< The normal vector of det plane in local coordinates
 
-  /** Plane2 is defined ging through all HPDs at the edge of photocathode coverage on
-   *  HPD window. It is used for HPD row/column purposes */
+  /** Plane2 is defined going through all HPDs at the edge of photocathode coverage on
+   *  HPD window. It is used for HPD row/column purposes 
+   *  This plane is parrallel to m_localPlane, thus share the same normal vector
+   */
   Gaudi::Plane3D m_localPlane2;
-  Gaudi::XYZVector m_localPlaneNormal2;  ///< Normal vector of plane2
+  double m_localPlaneZdiff; ///< Shift in Z between localPlane2 and localPlane
 
   double m_panelColumnSideEdge;    ///< Edge of the panel along the columns
   double m_panelStartColPosEven;   ///< Bottom/Start point of the even HPD columns
@@ -335,7 +338,6 @@ private: // data
   Rich::DetectorType m_rich;       ///< The RICH detector type
   Rich::Side m_side;               ///< The RICH HPD panel (up, down, left or right)
   LHCb::RichSmartID m_panelRichID; ///< RichSmartID for the panel
-  const ISolid* m_kaptonSolid;     ///< Pointer to the kapton solid
 
   std::vector<DeRichHPD*> m_DeHPDs; ///< Container for the HPDs as Det Elements
   std::vector<IDetectorElement*> m_DeSiSensors; ///< Container for the Si sensors as Det Elements
@@ -347,7 +349,7 @@ private: // data
 //=========================================================================
 inline Gaudi::XYZPoint DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID smartID ) const
 {
-  return m_DeHPDs[hpdNumber(smartID)]->detPointOnAnode(smartID);
+  return DeHPD(hpdNumber(smartID))->detPointOnAnode(smartID);
 }
 
 //=========================================================================
