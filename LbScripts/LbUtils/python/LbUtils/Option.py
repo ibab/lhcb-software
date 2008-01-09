@@ -49,8 +49,8 @@ class Parser(OptionParser):
                         log.info("%s is set to %s" % (dest, os.environ[fb_env]) )
                     elif fb_conf :
                         setattr(opt, "dest", fb_conf)
-                        setattr(opt, dest, fb_conf)
-                        log.warning("using configuration fallback for %s" % dest)
+                        setattr(values, dest, fb_conf)
+                        log.warning("using configuration fallback for %s: %s" % (dest, fb_conf))
                         log.info("%s is set to %s" % (dest, fb_conf) )
                     else :
                         log.error("no value for %s" % dest)
