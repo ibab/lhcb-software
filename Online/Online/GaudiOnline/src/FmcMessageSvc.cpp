@@ -318,8 +318,8 @@ void LHCb::FmcMessageSvc::getPName()
 int LHCb::FmcMessageSvc::printM(int out,int severity,const char* fName,
                                 char *format,...)
 {
-  char *sl[7]={"[NIL]  ","[VERB] ","[DEBUG]","[INFO] ","[WARN] ","[ERROR]",
-               "[FATAL]"};
+  char *sl[8]={"[NIL]  ","[VERB] ","[DEBUG]","[INFO] ","[WARN] ","[ERROR]",
+               "[FATAL]", "[ALWAYS]"};
   enum outType{L_DIM=0x1,L_STD=0x2,L_SYS=0x4};
   time_t now;
   struct tm lNow;
