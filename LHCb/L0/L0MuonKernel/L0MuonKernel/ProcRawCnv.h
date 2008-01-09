@@ -42,8 +42,9 @@ namespace L0Muon {
 
     void dump(int version, int ievt, std::string tab);
     void dump(int version, int ievt);
+    void formattedDump(int version, int ievt, std::string tab);
+    void formattedDump(int version, int ievt);
     
-
   private:
     
     int m_quarter;

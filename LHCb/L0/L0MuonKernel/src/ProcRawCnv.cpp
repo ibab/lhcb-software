@@ -134,9 +134,9 @@ void L0Muon::ProcRawCnv::dump(int bankVersion, int ievt,std::string tab)
 //   std::cout<<"L0Muon::ProcRawCnv::dump IN"<<std::endl;
 //   std::cout<<"L0Muon::ProcRawCnv::dump rawsize="<<raw.size()<<std::endl;
 
-  std::cout <<"L0Muon::ProcRawCnv::dump "<<tab<<"evt#: "<<ievt<<" - Q"<<m_quarter+1<<std::endl;
+  std::cout <<"__ "<<tab<<"evt#: "<<ievt<<" - Q"<<m_quarter+1<<" ; bank size: "<<raw.size()<<std::endl;
     
-  std::cout <<"L0Muon::ProcRawCnv::dump "<<tab;
+  std::cout <<"__ "<<tab;
   std::cout <<"  ";
   for (int ib=0; ib<12; ++ib) {
     std::cout <<"     "<<std::setw(2)<<ib<<"    ";
@@ -147,7 +147,7 @@ void L0Muon::ProcRawCnv::dump(int bankVersion, int ievt,std::string tab)
 
   for (int iline=0; iline<70; ++iline) {
     
-    std::cout <<"L0Muon::ProcRawCnv::dump "<<tab;
+    std::cout <<"__ "<<tab;
     std::cout <<std::setw(2)<<iline;
     std::cout<<std::hex;
     for (int ib=0; ib<12; ++ib) {
@@ -157,7 +157,52 @@ void L0Muon::ProcRawCnv::dump(int bankVersion, int ievt,std::string tab)
     std::cout <<std::endl;
   }
   
-  std::cout <<"L0Muon::ProcRawCnv::dump ----"<<std::endl;  
+  std::cout <<"__ ----"<<std::endl;  
+  std::cout.unsetf(std::ios::uppercase);
+}
+
+void L0Muon::ProcRawCnv::formattedDump(int bankVersion, int ievt) 
+{
+  std::string tab="";
+  formattedDump(bankVersion,ievt,tab);
+}
+
+void L0Muon::ProcRawCnv::formattedDump(int bankVersion, int ievt,std::string tab)
+{
+
+  std::vector<unsigned int> raw = rawBank(bankVersion,ievt);
+
+//   std::cout<<"L0Muon::ProcRawCnv::dump IN"<<std::endl;
+//   std::cout<<"L0Muon::ProcRawCnv::dump rawsize="<<raw.size()<<std::endl;
+
+  std::cout <<"++ "<<tab<<"evt#: "<<ievt<<" - Q"<<m_quarter+1<<" ; bank size: "<<raw.size()<<std::endl;
+    
+  std::cout <<"__ "<<tab;
+  std::cout <<"   ";
+  for (int ib=0; ib<12; ++ib) {
+    std::cout <<"    "<<std::setw(2)<<ib<<" ";
+  }
+  std::cout <<std::endl;
+
+  std::cout.setf(std::ios::uppercase) ;
+
+  int line_count=0;
+  for (int iline=0; iline<70; ++iline) {
+    for (int ipart=0; ipart<2; ++ipart) {
+      std::cout <<"__ "<<tab;
+      std::cout <<std::setw(3)<<line_count;
+      std::cout<<std::hex;
+      for (int ib=0; ib<12; ++ib) {
+        int word = (raw[70*ib+iline]>>(1-ipart))&0xFFFF;
+        std::cout <<" 0x"<<std::setw(4)<<std::setfill('0')<<word;
+      }
+      std::cout<<std::dec;
+      std::cout <<std::endl;
+      ++line_count;
+    }
+  }
+  
+  std::cout <<"__ ----"<<std::endl;  
   std::cout.unsetf(std::ios::uppercase);
 }
 
@@ -466,7 +511,7 @@ std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion,  int ievt
         // 
 
         for (int i=0; i<5; ++i) {
-          size=32*i;
+          size=32*(4-i);
           bitset = (olbitset>>size);
           bitset.resize(32);
           word = bitset.to_ulong();
@@ -478,7 +523,7 @@ std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion,  int ievt
         // 
 
         for (int i=0; i<8; ++i) {
-          size=32*i;
+          size=32*(7-i);
           bitset = (neighbitset>>size);
           bitset.resize(32);
           word = bitset.to_ulong();
@@ -498,20 +543,20 @@ std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion,  int ievt
         // OL data field
         // 
 
-        bitset = (olbitset>>(0));
+        bitset = (olbitset>>( (32*4) +16 ) );
         bitset.resize(16);
         word |= ( ( bitset.to_ulong() ) & 0xFFFF );
         raw.push_back(word);
 
         for (int i=0; i<4; ++i) {
-          size= 16 + 32*i ;
+          size= 16 + 32*(3-i) ;
           bitset = (olbitset>>size);
           bitset.resize(32);
           word = bitset.to_ulong();
           raw.push_back(word);
         }
         
-        bitset = (olbitset>>( (32*4) +16 ) );
+        bitset = (olbitset>>(0));
         bitset.resize(16);
         word = ( ( bitset.to_ulong() <<16) & 0xFFFF0000 );
         
