@@ -1,11 +1,12 @@
 package STDAQ
-version v3r3
+version v3r4
 
 branches cmt doc src options
 include_path none
 
 # Used packages
 use STDet        v*  Det
+use STKernel     v*  ST
 use DigiEvent    v*  Event
 use DAQEvent     v*  Event
 use LHCbKernel   v*  Kernel
@@ -14,7 +15,6 @@ use DetDesc      v*  Det
 use GaudiKernel  v*
 use GaudiAlg     v*
 use GSL          v*  LCG_Interfaces
-use STKernel v* ST
 
 #component
 library STDAQ *.cpp

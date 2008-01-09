@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : ST/STDAQ
-! Responsible : Jeroen Van Tilburg
+! Responsible : Jeroen Van Tilburg, Matt Needham
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r4 2008-01-09 =======================
 ! 2008-01-08 M Needham
  - Move to STFun for quantizing interstrip fraction
 
