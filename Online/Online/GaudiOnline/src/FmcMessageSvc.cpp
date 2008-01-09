@@ -341,6 +341,8 @@ int LHCb::FmcMessageSvc::printM(int out,int severity,const char* fName,
   strftime(sNow,13,"%b%d-%H%M%S",&lNow);
   /*-------------------------------------------------------------------------*/
   /* compose message string with header */
+  severity = (severity>(sizeof(sl)/sizeof(sl[0]))) 
+    ? (sizeof(sl)/sizeof(sl[0]))-1 : (severity<0 ? 0 : severity);
   snprintf(msg,BUF_SZ,"%s%s%s: %s(%s): %s(): %s\n",sNow,sl[severity],hostName,
            pName,utgid,fName,rawMsg);
   /*-------------------------------------------------------------------------*/
