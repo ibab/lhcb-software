@@ -4,8 +4,9 @@
 
 !======================== GaudiConf v10r6 2008-01-09 ========================
 ! 2008-01-09 - Marco Cattaneo
- - Changes to DecodeRawEvent.opts:
+ - In DecodeRawEvent.opts and UnpackDigi.opts:
    . Use AlgMap property to define the algorithms
+ - In DecodeRawEvent.opts:
    . Create EventClockSvc to decode ODIN even in absence of conditions
    . Disable L0DU
 
