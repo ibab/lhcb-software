@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.21 2007-12-07 10:24:23 mneedham Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.22 2008-01-09 07:43:43 mneedham Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -57,6 +57,7 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   declareProperty("Scaling", m_scaling = 1.0);
   declareProperty("ResponseTypes", m_beetleResponseTypes);
   declareProperty("useStatusConditions", m_useStatusConditions = false);
+  declareProperty("useSensDetID", m_useSensDetID = true);
 
 
   m_inputLocation = MCHitLocation::TT; 
@@ -151,9 +152,22 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
   MCHits::const_iterator iterHit = mcHitsCont->begin();
   for (; iterHit!=mcHitsCont->end();++iterHit){    
     MCHit* aHit = *iterHit;
-    
-    DeSTSector* aSector = m_tracker->findSector(aHit->sensDetID());
-    if ((0 != aSector) && (hitToDigitize(aHit) == true)){           
+
+    DeSTSector* aSector = 0;    
+    if (m_useSensDetID == true){
+      aSector = m_tracker->findSector(aHit->sensDetID());
+    }
+    else {
+      aSector = m_tracker->findSector(aHit->midPoint());
+    }
+
+    if (aSector == 0) {
+      //std::cout << STChannelID(aHit->sensDetID()) << std::endl;
+      Warning("Failed to find sector", StatusCode::SUCCESS, 1);
+      continue;
+    }
+
+    if (hitToDigitize(aHit) == true){           
       
       if (m_useStatusConditions && aSector->sectorStatus() == DeSTSector::Dead ) continue;
 

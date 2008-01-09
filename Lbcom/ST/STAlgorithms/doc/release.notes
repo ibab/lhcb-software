@@ -2,6 +2,11 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+
+! 2008-01-08 M Needham
+ - Warn if sector not found in MCSTDepositCreator
+ - Allow to link MCHit to sector using point (rather than sensdetid)
+
 !======================= STAlgorithms v2r5 2007-12-11 ========================
 ! 2007-12-05 M Needham
  - In itDigi.opts, change conversion factor from e- to ADC
