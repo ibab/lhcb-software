@@ -43,9 +43,8 @@ bool CleanPatTrackSelector::cleanTrack(const Track& aTrack) const {
   const ObjectContainerBase* parentCont = pTrack->parent();
   const IRegistry* reg =  parentCont->registry();
   const std::string& idName = reg->identifier();
-  std::string temp = idName.substr(idName.find("Rec"));
-
-  Asct linker = Asct( evtSvc(), TrackLocation::Forward );
+ 
+  Asct linker = Asct( evtSvc(),idName );
   const Table* table = linker.direct();
 
   if (table != 0){

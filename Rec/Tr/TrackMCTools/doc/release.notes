@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2008-01-09 M Needham
+ - Bug fix in CleanPatTrackSelector
+
 !======================= TrackMCTools v2r15 2007-11-30 =======================
 ! 2007-11-30 - Wouter Hulsbergen
  - Add IdealStateCreator::addMCHitStates
