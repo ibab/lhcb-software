@@ -171,7 +171,7 @@ class OptionsWriter(Control.AllocatorClient):
   def _configure(self, partition):
     activity = self.activityName()
     tasks = self.getTasks(activity)
-    if tasks:
+    if tasks is not None:
       run_type = self.run.runType()
       for task in tasks:
         opts = Options('//  Auto generated options for partition:'+partition+\
@@ -216,8 +216,10 @@ class OptionsWriter(Control.AllocatorClient):
         else: opts.add('// ---------------- NO task specific information')
         if not self.writeOptions(opts,activity,task):
           return None
+      if len(tasks)==0:
+        log('No tasks found for activity:'+activity,timestamp=1)
       return self.run
-    error('No tasks found for activity:'+activity)
+    error('Cannot retrieve tasks for activity:'+activity)
     return None
 
 # =============================================================================
