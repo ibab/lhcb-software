@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.50 2008-01-09 09:24:49 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.51 2008-01-09 11:01:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -337,7 +337,6 @@ private: // data
 
   Rich::DetectorType m_rich;       ///< The RICH detector type
   Rich::Side m_side;               ///< The RICH HPD panel (up, down, left or right)
-  LHCb::RichSmartID m_panelRichID; ///< RichSmartID for the panel
 
   std::vector<DeRichHPD*> m_DeHPDs; ///< Container for the HPDs as Det Elements
   std::vector<IDetectorElement*> m_DeSiSensors; ///< Container for the Si sensors as Det Elements

@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.62 2008-01-09 09:24:49 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.63 2008-01-09 11:01:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -41,9 +41,7 @@ const CLID CLID_DeRichHPDPanel = 12010;  // User defined
 DeRichHPDPanel::DeRichHPDPanel() :
   m_deRichS     (     NULL              ),
   m_rich        ( Rich::InvalidDetector ),
-  m_side        ( Rich::InvalidSide     ),
-  m_panelRichID ( LHCb::RichSmartID()   )
-{}
+  m_side        ( Rich::InvalidSide     ) { }
 
 // Standard Destructor
 DeRichHPDPanel::~DeRichHPDPanel() { }
@@ -102,10 +100,6 @@ StatusCode DeRichHPDPanel::initialize()
 
   msg << MSG::DEBUG << "------- Initializing HPD Panel: " << rich()
       << " Panel" << (int)side() << " -------" << endmsg;
-
-  // prepare a smartID for this panel
-  m_panelRichID.setRich( rich() );
-  m_panelRichID.setPanel( side() );
 
   // find the RichSystem
   SmartDataPtr<DeRichSystem> deRichS(dataSvc(),DeRichLocations::RichSystem );
@@ -600,7 +594,10 @@ DeRichHPDPanel::globalPosition( const Gaudi::XYZPoint& localPoint,
 //=========================================================================
 const int DeRichHPDPanel::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 {
-  LHCb::RichSmartID id( m_panelRichID );
-  return ( smartID(globalPoint,id).isSuccess() ? id : LHCb::RichSmartID() );
+  // Create a RichSmartID for this RICH and panel
+  LHCb::RichSmartID id( rich(), side() );
+  // set the remaining fields from the position
+  return ( smartID(globalPoint,id).isSuccess() ? 
+           id : LHCb::RichSmartID(rich(),side()) );
 }
 
