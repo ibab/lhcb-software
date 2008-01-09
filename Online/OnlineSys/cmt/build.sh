@@ -38,7 +38,7 @@ then
 	fi;
         if test -e build_${CMTCONFIG}.log; then $show rm -f build_${CMTCONFIG}.log; fi;
         if test -e build_${CMTCONFIG}.log.tmp; then $show rm -f build_${CMTCONFIG}.log.tmp; fi;
-	$show ${CMTROOT}/${CMTBIN}/cmt.exe broadcast make >build_${CMTCONFIG}.log.tmp 2>&1;
+	$show ${CMTROOT}/${CMTBIN}/cmt.exe broadcast make -j 8 >build_${CMTCONFIG}.log.tmp 2>&1;
         $show cat build_${CMTCONFIG}.log.tmp \
 	    | grep -v "${CMTCONFIG}.make ok" \
 	    | grep -v "CMTCONFIG=${CMTCONFIG}" \
