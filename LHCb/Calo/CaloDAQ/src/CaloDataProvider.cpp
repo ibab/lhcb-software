@@ -175,13 +175,6 @@ bool CaloDataProvider::decodeTell1 (int source) {
   int sourceID  ;
   if( !m_packed)source = -1 ; // Decode the whole 0-suppressed bank by default (single bank)
 
-
-  for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
-       itB != m_banks->end() ; ++itB ) {
-    sourceID       = (*itB)->sourceID();
-    warning() << "Check sourceID " << sourceID << endreq;
-    if(checkSrc( sourceID ))continue;
-  }
   
   for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
        itB != m_banks->end() ; ++itB ) {
