@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.33 2007-11-12 09:48:55 papanest Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.34 2008-01-10 17:17:34 papanest Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -45,13 +45,34 @@ StatusCode Rich::SmartIDTool::initialize()
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_richS = getDet<DeRichSystem>(DeRichLocation::RichSystem);
+  m_richS = getDet<DeRichSystem>(DeRichLocations::RichSystem);
+  DetectorElement* deRich1 = getDet<DetectorElement>(DeRichLocations::Rich1);
+  DetectorElement* deRich2 = getDet<DetectorElement>(DeRichLocations::Rich2);
 
-  // HPD panel names
-  const std::string pdPanelName[2][2] = { { DeRichHPDPanelLocation::Rich1Panel0,
-                                            DeRichHPDPanelLocation::Rich1Panel1 },
-                                          { DeRichHPDPanelLocation::Rich2Panel0,
-                                            DeRichHPDPanelLocation::Rich2Panel1 } };
+  // HPD panel locations
+  std::string pdPanelName[2][2];
+  if ( deRich1->exists("HPDPanelDetElemLocations") )
+  {
+    std::vector<std::string> r1PanelLoc = deRich1->paramVect<std::string>("HPDPanelDetElemLocations");
+    pdPanelName[0][0] = r1PanelLoc[0];
+    pdPanelName[0][1] = r1PanelLoc[1];
+  }
+  else
+  {
+    pdPanelName[0][0] = DeRichLocations::Rich1Panel0;
+    pdPanelName[0][1] = DeRichLocations::Rich1Panel1;
+  }
+  if ( deRich2->exists("HPDPanelDetElemLocations") )
+  {
+    std::vector<std::string> r1PanelLoc = deRich2->paramVect<std::string>("HPDPanelDetElemLocations");
+    pdPanelName[1][0] = r1PanelLoc[0];
+    pdPanelName[1][1] = r1PanelLoc[1];
+  }
+  else
+  {
+    pdPanelName[1][0] = DeRichLocations::Rich2Panel0;
+    pdPanelName[1][1] = DeRichLocations::Rich2Panel1;
+  }  
 
   //loop over riches and photo detector panels
   for ( unsigned int rich = 0; rich < m_photoDetPanels.size(); ++rich )
@@ -62,7 +83,7 @@ StatusCode Rich::SmartIDTool::initialize()
       debug() << "Stored photodetector panel "
               << m_photoDetPanels[rich][panel]->name()
               << " offset=" << m_photoDetPanels[rich][panel]->localOffset()
-              << endreq;
+              << endmsg;
     }
   }
 

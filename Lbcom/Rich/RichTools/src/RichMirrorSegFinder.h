@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::MirrorSegFinder
  *
  *  CVS Log :-
- *  $Id: RichMirrorSegFinder.h,v 1.16 2007-08-09 16:00:25 jonrob Exp $
+ *  $Id: RichMirrorSegFinder.h,v 1.17 2008-01-10 17:17:34 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
@@ -95,6 +95,9 @@ namespace Rich
                                           const Rich::Side side,
                                           const Gaudi::XYZPoint& reflPoint ) const;
 
+    /// Get the mirrors compatible with DC06 DDDB
+    StatusCode getMirrors_old( );
+    
   private: // classes
 
     /// Functor to sort RichSmartIDs by Rich then panel numbers

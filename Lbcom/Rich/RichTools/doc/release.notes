@@ -4,6 +4,11 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2008-01-10 - "Antonis Papanestis"
+ - Change the way to get detector elements. The paths are parameters
+   in DeRich1 and DeRich2, which can stiil be found in DeRichLocations.
+   Compatible with DC06 xml description.
+
 !=========================== RichTools v2r16 2007-11-30 ======================
 ! 2007-11-22 - Chris Jones
  - Add new default tool mapping into registry, for photon emission point tools

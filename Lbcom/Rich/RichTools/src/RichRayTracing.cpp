@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.40 2007-08-13 12:35:11 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.41 2008-01-10 17:17:34 papanest Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -73,17 +73,36 @@ StatusCode Rich::RayTracing::initialize()
   acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );
   acquireTool( "RichRefractiveIndex", m_refIndex        );
 
-  // HPD panel names
-  const std::string pdPanelName[2][2] = { { DeRichHPDPanelLocation::Rich1Panel0,
-                                            DeRichHPDPanelLocation::Rich1Panel1 },
-                                          { DeRichHPDPanelLocation::Rich2Panel0,
-                                            DeRichHPDPanelLocation::Rich2Panel1 } };
-
   // RICH detector elements
   const DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
   const DeRich* rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
   m_rich[Rich::Rich1] = rich1;
   m_rich[Rich::Rich2] = rich2;
+
+  // HPD panel locations
+  std::string pdPanelName[2][2];
+  if ( rich1->exists("HPDPanelDetElemLocations") )
+  {
+    std::vector<std::string> r1PanelLoc = rich1->paramVect<std::string>("HPDPanelDetElemLocations");
+    pdPanelName[0][0] = r1PanelLoc[0];
+    pdPanelName[0][1] = r1PanelLoc[1];
+  }
+  else
+  {
+    pdPanelName[0][0] = DeRichLocations::Rich1Panel0;
+    pdPanelName[0][1] = DeRichLocations::Rich1Panel1;
+  }
+  if ( rich2->exists("HPDPanelDetElemLocations") )
+  {
+    std::vector<std::string> r1PanelLoc = rich2->paramVect<std::string>("HPDPanelDetElemLocations");
+    pdPanelName[1][0] = r1PanelLoc[0];
+    pdPanelName[1][1] = r1PanelLoc[1];
+  }
+  else
+  {
+    pdPanelName[1][0] = DeRichLocations::Rich2Panel0;
+    pdPanelName[1][1] = DeRichLocations::Rich2Panel1;
+  }
 
   // loop over riches and photo detector panels
   unsigned int rich, panel;
@@ -92,9 +111,7 @@ StatusCode Rich::RayTracing::initialize()
     for ( panel=0; panel<m_photoDetPanels[rich].size(); ++panel )
     {
       m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
-      if ( msgLevel(MSG::DEBUG) )
-        debug() << "Stored photodetector panel "
-                << m_photoDetPanels[rich][panel]->name() << endreq;
+      debug()<<"Stored photodetector panel "<<m_photoDetPanels[rich][panel]->name()<<endreq;
     }
   }
 
