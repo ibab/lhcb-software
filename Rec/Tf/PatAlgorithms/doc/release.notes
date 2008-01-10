@@ -4,6 +4,11 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-01-10 - Olivier Callot
+ - New algorithm PatMakeV0 from Maurince enayoun to build V0 candidates
+   Requites PV to be foudn first.
+   Resulting V0s in RecVErtexLocation::V) and track pairs in Rec/Tracl/FromKs.
+
 ! 2007-12-19 - Olivier Callot
  - Modify PatDownstream to tag TT used hits with the option SeedFilter.
  - Use new enum values to tag TT hits with meaningful names.
