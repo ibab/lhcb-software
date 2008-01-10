@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.h,v 1.10 2007-07-17 11:57:25 jpalac Exp $
+// $Id: GlobalToLocalDelta.h,v 1.11 2008-01-10 12:29:57 jpalac Exp $
 #ifndef DETDESC_GLOBALTOLOCALDELTA_H 
 #define DETDESC_GLOBALTOLOCALDELTA_H 1
 
@@ -167,6 +167,107 @@ namespace DetDesc {
                                                          const IGeometryInfo* GI,
                                                          const Gaudi::Transform3D& parentTransform);
 
+ 
   
+
+  /**
+   *
+   * Obtain a global off-nominal correction D_global on top of the current total 
+   * transformation of detector element DE, T_global, starting from a correction 
+   * D' calculated at the local level of DE such that
+   *
+   * D_global * T_global = T_global * D'
+   *
+   * D_global = T_global * D' * T_global^-1
+   *
+   * @param  DE the DetectorElement in question
+   * @param  deltaPrime the Transform3D representing the correction on the current
+   *         total transformation of DE
+   * @return Transform3D D_global = T_global * D' * T_global^-1
+   *
+   * @date 2008-01-10
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   *
+   */
+ 
+  const Gaudi::Transform3D globalDeltaFromLocalDeltaPrime(const IDetectorElement*   DE,
+                                                          const Gaudi::Transform3D& deltaPrime);
+
+  /**
+   *
+   * Obtain a global off-nominal correction D_global on top of the current total 
+   * transformation of GeometryInfo GI, T_global, starting from a correction 
+   * D' calculated at the local level of GI such that
+   *
+   * D_global * T_global = T_global * D'
+   *
+   * D_global = T_global * D' * T_global^-1
+   *
+   * @param  GI the IGeometryInfo of the DetectorElement in question
+   * @param  deltaPrime the Transform3D representing the correction on the current
+   *         total transformation of DE
+   * @return Transform3D D_global = T_global * D' * T_global^-1
+   *
+   * @date 2008-01-10
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   *
+   */
+ 
+  const Gaudi::Transform3D globalDeltaFromLocalDeltaPrime(const IGeometryInfo*      GI,
+                                                          const Gaudi::Transform3D& deltaPrime);
+  
+  /**
+   *
+   * Obtain the global "delta" transformation corresponding to detector element
+   * DE's local "delta" such that
+   *
+   * T_global = D_global * T_global * D_local^-1
+   *
+   * D_global = T_global * D_local * T_global^-1
+   *
+   * @param  DE the DetectorElement in question
+   * @return Transform3D D_global = T_global * D_local * T_global^-1
+   *
+   * @date 2008-01-10
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   *
+   */
+ 
+  const Gaudi::Transform3D globalDelta(const IDetectorElement* DE);
+
+  /**
+   *
+   * Obtain the global "delta" transformation corresponding to IGeometryInfo
+   * GI's local "delta" such that
+   *
+   * T_global = D_global * T_global * D_local^-1
+   *
+   * D_global = T_global * D_local * T_global^-1
+   *
+   * @param  GI the IGeometryInfo of the DetectorElement in question
+   * @return Transform3D D_global = T_global * D_local * T_global^-1
+   *
+   * @date 2008-01-10
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   *
+   */
+ 
+  const Gaudi::Transform3D globalDelta(const IGeometryInfo* GI);
+
+  /**
+   *
+   * Obtain the 3D transformation, T_relative, representing the placement of 
+   * DetectorElement DE in the frame of DetectorElement referenceDE.
+   * 
+   *
+   * @date 2008-01-10
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   *
+   */
+
+  const Gaudi::Transform3D relativeTransformation(const IDetectorElement* referenceDE,
+                                                  const IDetectorElement* DE);
+  
+
 }
 #endif // DETDESC_GLOBALTOLOCALDELTA_H
