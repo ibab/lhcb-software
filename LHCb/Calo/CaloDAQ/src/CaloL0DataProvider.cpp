@@ -124,11 +124,25 @@ int CaloL0DataProvider::l0Adc (LHCb::CaloCellID id){
 //-------------------------------------------------------
 bool CaloL0DataProvider::decodeCell(LHCb::CaloCellID id ){
   // for packed banks only (sourceID = Tell1 ID)
-  m_readSources.clear();
-  int card = m_calo->cardNumber (id)   ; // Fe-Card from cellId
-  if(card<0)return false;
-  int tell1 = m_calo->cardToTell1(card); // Tell1 from FE-Card
-  if(tell1<0)return false;
+
+  int tell1 = -1;// Decode the whole 0-suppressed bank by default (single bank)
+
+  if( m_packed){
+    int card = m_calo->cardNumber (id)   ; // Fe-Card from cellId
+    if(card<0)return false;
+    tell1 = m_calo->cardToTell1(card); // Tell1 from FE-Card
+    if(tell1<0)return false;
+    
+    
+    bool read = false;
+    for(std::vector<int>::iterator it = m_readSources.begin() ; it != m_readSources.end() ; ++it){
+      if( tell1 == *it){
+        read = true;
+        break;
+      }    
+    }
+    if(read && m_packed)return true;
+  }
   return decodeTell1( tell1 );
 }
 //-------------------------------------------------------
@@ -137,7 +151,6 @@ bool CaloL0DataProvider::decodeTell1 (int source) {
   bool found  = false;
   if(NULL == m_banks) return false;
   int sourceID  ;
-  if( !m_packed)source = -1 ; // Decode the whole 0-suppressed bank by default (single bank)
 
   for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
        itB != m_banks->end() ; ++itB ) {
@@ -249,7 +262,7 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
       size--;
       lenTrig = word & 0x3F;
       lenAdc  = (word >> 7 ) & 0x3F;
-      //      lenAdc += 4; //PATCH FOR COMMISSIONING DATA WITH TELL1 F/W v2.3
+      //lenAdc += 4; //PATCH FOR COMMISSIONING DATA WITH TELL1 F/W v2.3
       
       int code  = (word >> 14 ) & 0x1FF;
       int ctrl    = (word >> 23) &  0x1FF;
