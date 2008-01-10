@@ -4,6 +4,11 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2008-01-10 - "Antonis Papanestis"
+ - Change the way to get detector elements. The paths are parameters
+   in DeRich1 and DeRich2, which can stiil be found in DeRichLocations.
+   Compatible with DC06 xml description.
+
 !===================== RichRecBase v3r9 2007-11-26 =======================
 ! 2007-11-26 - Marco Cattaneo
  - Adapt to GaudiObjDesc v10r0 changes to deal with changed namespace of STL
