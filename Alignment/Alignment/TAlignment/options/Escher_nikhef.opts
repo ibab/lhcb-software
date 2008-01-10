@@ -67,29 +67,31 @@ DecodingSeq.Members += { "OTTimeCreator" };
 //**************************
 // Track fit:
 //**************************
-EscherMainSeq.Members += { "GaudiSequencer/TrackFitSeq" };
+// EscherMainSeq.Members += { "GaudiSequencer/TrackFitSeq" };
 
-TrackFitSeq.Members += { "TrackFilterAlg/FilterTracks", 
-                         "TrackEventFitter/FitTracks" };
-TrackFitSeq.MeasureTime = true;
-FilterTracks.TracksInputContainer = "Rec/Track/Best";
-FilterTracks.TracksOutputContainer = "Alignment/FilteredTracks";
-FilterTracks.TrackType = "Long";
-FilterTracks.StripUnwantedDetectorHits = false;
-FilterTracks.KeepDetectorHits = "OT";
-FilterTracks.Selector.TracksLocation = "Rec/Track/Best";
-FilterTracks.Selector.BFieldStatus = true;
-FilterTracks.Selector.IsolatedTrackNStripsTolerance = 2;
-FilterTracks.Selector.IsolatedTrackNStrawsTolerance = 1;
-FilterTracks.Selector.MomentumMinCut = -999999;
-FilterTracks.Selector.Chi2PerDoFMaxCut = 999999;
-FilterTracks.Selector.Chi2ProbMinCut = 0.01;
-FilterTracks.Selector.NHolesMaxCut = 1;
-FilterTracks.Selector.NSharedHitsMaxCut = 0;
-FilterTracks.Selector.NCloseHitsMaxCut = 3;
-FilterTracks.Selector.OutputLevel = 3;
-FilterTracks.OutputLevel = 3;
-FitTracks.TracksInContainer = "Alignment/FilteredTracks";
-FitTracks.TracksOutContainer = "Alignment/OTTracks";
-//FitTracks.Fitter.NumberFitIterations = 3;
+// TrackFitSeq.Members += { "TrackFilterAlg/FilterTracks", 
+//                          "TrackEventFitter/FitTracks"   };
+// TrackFitSeq.MeasureTime                = true;
+// FilterTracks.TracksInputContainer      = "Rec/Track/Best";
+// FilterTracks.TracksOutputContainer     = "Alignment/FilteredTracks";
+// FilterTracks.TrackType                 = "Long";
+// FilterTracks.StripUnwantedDetectorHits = true;
+// FilterTracks.KeepDetectorHits          = "OT";
+// FilterTracks.MinNHits                  = 3; 
+// FilterTracks.Selector.TracksLocation   = "Rec/Track/Best";
+// FilterTracks.Selector.BFieldStatus     = false;
+// FilterTracks.Selector.TrackType        = "OT";
+// //FilterTracks.Selector.IsolatedTrackNStripsTolerance = 2;
+// //FilterTracks.Selector.IsolatedTrackNStrawsTolerance = 1;
+// //FilterTracks.Selector.MomentumMinCut = 20.0*GeV;
+// //FilterTracks.Selector.Chi2PerDoFMaxCut = 999999;
+// //FilterTracks.Selector.Chi2ProbMinCut = 0.01;
+// //FilterTracks.Selector.Chi2ProbMinCut = 0.3;
+// //FilterTracks.Selector.NHolesMaxCut = 1;
+// //FilterTracks.Selector.NSharedHitsMaxCut = 0;
+// //FilterTracks.Selector.NCloseHitsMaxCut = 3;
+// FilterTracks.OutputLevel               = 2;
+// FitTracks.TracksInContainer            = "Alignment/FilteredTracks";
+// FitTracks.TracksOutContainer           = "Alignment/AlignmentTracks";
+// //FitTracks.Fitter.NumberFitIterations = 3;
 ToolSvc.DetailedMaterialLocator.OutputLevel = 5;

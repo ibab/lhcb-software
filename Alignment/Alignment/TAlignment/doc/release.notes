@@ -3,7 +3,12 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-01-10 - Jan AMORAAL
+ - Modified TrackFilterAlg to only keep hits that are in a to-be-aligned detelem
+
 </PRE><H1><A NAME=v3r4>2007-12-19 TAlignment v3r4</A></H1><PRE>
+
+
 - J. Blouw, 19/12/2007: tag v3r4 for alignment release v2r3
   - changes are listed below.
 
