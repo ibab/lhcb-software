@@ -1,4 +1,4 @@
-// $Id: FindAlignmentElement.cpp,v 1.5 2008-01-07 11:01:16 janos Exp $
+// $Id: FindAlignmentElement.cpp,v 1.6 2008-01-10 10:39:04 janos Exp $
 // Include files
 // from GaudiKernel
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -193,19 +193,19 @@ Alignment::FunctorMap createFunctorMap() {
                                                     static_cast<const DetectorElement*>(0)));
 
   FunctorMap map = map_list_of("TrackingStations", findTrackingStation)
-                              ("VeloBoxes"     , veloBox     )
-			                        ("VeloModules"   , veloModule  )
-			                        ("TTStations"    , ttStation   )
-			                        ("TTLayers"      , ttLayer     )
-                              ("TTHalfModules" , ttHalfModule)
-			                        ("ITStations"    , itStation   )
-			                        ("ITBoxes"       , itBox       )
-			                        ("ITLayers"      , itLayer     )
-			                        ("ITLadders"     , itLadder    )
-			                        ("OTDetector"    , otDetector  )
-			                        ("OTStations"    , otStation   )
-			                        ("OTLayers"      , otLayer     )
-			                        ("OTModules"     , otModule    );
+                              ("VeloBoxes"       , veloBox     )
+			                        ("VeloModules"     , veloModule  )
+			                        ("TTStations"      , ttStation   )
+			                        ("TTLayers"        , ttLayer     )
+                              ("TTHalfModules"   , ttHalfModule)
+			                        ("ITStations"      , itStation   )
+			                        ("ITBoxes"         , itBox       )
+			                        ("ITLayers"        , itLayer     )
+			                        ("ITLadders"       , itLadder    )
+			                        ("OTDetector"      , otDetector  )
+			                        ("OTStations"      , otStation   )
+			                        ("OTLayers"        , otLayer     )
+			                        ("OTModules"       , otModule    );
 
   return map;
 }

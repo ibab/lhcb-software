@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.5 2008-01-07 11:01:16 janos Exp $
+// $Id: AlignmentElement.h,v 1.6 2008-01-10 10:37:39 janos Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -83,7 +83,9 @@ public:
    *  return number of dofs we want to align for
    */
   unsigned int nDOFs() const;
-  
+
+  const std::vector<bool>& dofFlags() const;  
+    
   /** Method to set the local deltas of the detector element.
    * The delta translations and rotations are in the local frame
    */
@@ -149,4 +151,6 @@ inline const std::vector<double> AlignmentElement::pivot() const {
   return boost::assign::list_of(m_pivot.x())(m_pivot.y())(m_pivot.z());
 }
 
+inline const std::vector<bool>& AlignmentElement::dofFlags() const { return m_dofs; };
+  
 #endif // ALIGNMENTELEMENT_H

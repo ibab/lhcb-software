@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.11 2007-12-05 15:51:18 janos Exp $
+// $Id: AlignAlgorithm.h,v 1.12 2008-01-10 10:38:29 janos Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -58,7 +58,7 @@ public:
   /// Some handy typedefs
   typedef std::vector<AlignmentElement>                            Elements;
   typedef std::pair<std::vector<AlignmentElement>::const_iterator,
-		    std::vector<AlignmentElement>::const_iterator> Range;
+                    std::vector<AlignmentElement>::const_iterator> Range;
   typedef std::vector<double>                                      AlignConstants;
   typedef std::vector<LHCb::Node*>                                 Nodes;
   typedef Gaudi::Matrix1x6                                         Derivatives;

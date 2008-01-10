@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.5 2008-01-07 11:01:16 janos Exp $
+// $Id: AlignmentElement.cpp,v 1.6 2008-01-10 10:37:39 janos Exp $
 // Include files
 
 // from STD
@@ -22,7 +22,8 @@
 // local
 #include "AlignmentElement.h"
 
-AlignmentElement::AlignmentElement(const DetectorElement* element, const unsigned int index, 
+AlignmentElement::AlignmentElement(const DetectorElement* element, 
+                                   const unsigned int index, 
                                    const std::vector<bool>& dofs)
   : m_elements(1u, element),
     m_index(index),
@@ -35,7 +36,8 @@ AlignmentElement::AlignmentElement(const DetectorElement* element, const unsigne
   setPivotPoint();
 }
 
-AlignmentElement::AlignmentElement(const std::vector<const DetectorElement*>& elements, const unsigned int index, 
+AlignmentElement::AlignmentElement(const std::vector<const DetectorElement*>& elements, 
+                                   const unsigned int index, 
                                    const std::vector<bool>& dofs)
   : m_elements(elements),
     m_index(index),

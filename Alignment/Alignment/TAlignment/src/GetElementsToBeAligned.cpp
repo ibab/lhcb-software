@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.7 2008-01-07 11:01:16 janos Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.8 2008-01-10 10:39:04 janos Exp $
 // Include files
 
 //from STL
@@ -17,6 +17,8 @@
 #include "boost/lambda/bind.hpp"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/construct.hpp"
+#include "boost/assign/std/vector.hpp"
+#include "boost/assign/list_of.hpp"
 
 // // local
 #include "GetElementsToBeAligned.h"
@@ -31,8 +33,8 @@
 DECLARE_TOOL_FACTORY( GetElementsToBeAligned );
 
 GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
-						const std::string& name,
-						const IInterface* parent )
+                                                const std::string& name,
+                                                const IInterface* parent )
   : GaudiTool ( type, name , parent ),
     m_groupElems(false),
     m_elemsToBeAligned(),
@@ -116,9 +118,14 @@ StatusCode GetElementsToBeAligned::initialize() {
     getElements(lhcb);
     
     /// loop over elements and create AlignmentElements
-    if (m_groupElems) m_alignElements.push_back(AlignmentElement(m_elements, m_index++));
+    ///                                            (tx, ty, tz, rx, ry, rz)        
+    /// This is to test the on/off switching of dofs.
+    /// need to implement a proper routine/interface
+    std::vector<bool> dofs = boost::assign::list_of(true)(true)(false)(false)(false)(true);
+
+    if (m_groupElems) m_alignElements.push_back(AlignmentElement(m_elements, m_index++, dofs));
     else std::transform(m_elements.begin(), m_elements.end(), std::back_inserter(m_alignElements),
-                        boost::lambda::bind(boost::lambda::constructor<AlignmentElement>(), boost::lambda::_1, boost::lambda::var(m_index)++));
+                        boost::lambda::bind(boost::lambda::constructor<AlignmentElement>(), boost::lambda::_1, boost::lambda::var(m_index)++, dofs));
     
     m_regexs.clear();
     m_depth = 0u;

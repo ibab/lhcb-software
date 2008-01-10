@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.14 2008-01-07 11:01:16 janos Exp $
+// $Id: AlignAlgorithm.cpp,v 1.15 2008-01-10 10:38:29 janos Exp $
 // Include files
 // from std
 // #include <utility>
@@ -21,6 +21,7 @@
 #include "Kernel/LHCbID.h"
 
 // from BOOST
+#include "boost/assign/std/vector.hpp"
 #include "boost/assign/list_of.hpp"
 
 // local
@@ -37,7 +38,9 @@ namespace {
 
   class Equations {
   public:
-    Equations(size_t nElem) : m_nElem(nElem), m_v(nElem) {}
+    Equations(size_t nElem) 
+      : m_nElem(nElem), 
+        m_v(nElem) {}
     size_t nElem() const { return m_nElem; }
     Gaudi::Vector6&   V(int i) { return m_v[i]; }
     const Gaudi::Vector6&   V(int i) const { return m_v[i]; }
@@ -64,7 +67,10 @@ namespace {
   class Data {
   public:
     Data(LHCb::LHCbID id, unsigned index, double r, const Gaudi::Matrix1x6& d)
-      : m_id(id),m_index(index),m_r(r),m_d(d) {}
+      : m_id(id),
+        m_index(index),
+        m_r(r),
+        m_d(d) {}
     LHCb::LHCbID id() const { return m_id ; }
     unsigned index() const { return m_index; }
     double r() const { return m_r; }
@@ -277,7 +283,6 @@ StatusCode AlignAlgorithm::execute() {
           if (i->index() > j->index()) std::swap(i, j);
           const double c = cov.HCH_norm(i->id(),j->id());
           m_equations->M(i->index(), j->index()) -= c * Transpose(i->d())*j->d();
-          
           if (!( i->id() == j->id())) {
             m_corrHistos[std::make_pair(i->index(), j->index())]->fill(m_iteration, c/std::sqrt(cov.HCH_norm(i->id(), i->id())*cov.HCH_norm(j->id(), j->id())));
           } else {
@@ -309,7 +314,31 @@ void AlignAlgorithm::update() {
   }
   
   const size_t numElements = std::distance(m_rangeElements.first, m_rangeElements.second);
-
+  
+  /// We should probably do this in initialize and not everytime in update. Once should be sufficient
+  /// We need to figure for which dofs we want to align for. Actually what the dimensions of the maxtrix and vector are.
+  /// testing:
+  // std::vector<std::string> dofs = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz");
+  //   size_t nDOFs = 0;
+  //   std::vector<bool> dofFlags;
+  //   //dofFlags.reserve(numElements*6u);
+  //   for (std::vector<AlignmentElement>::const_iterator i = m_rangeElements.first, iEnd = m_rangeElements.second; i != iEnd; ++i) {
+  //     info() << i->nDOFs();
+  //     nDOFs += i->nDOFs();
+  //     info() << i->name() << " ";
+  //     const std::vector<bool>& ownDOFs = i->dofFlags();
+  //     info() << ownDOFs;
+  //     info() << "DOFS: ";
+  //     for (std::vector<bool>::const_iterator j = ownDOFs.begin(), jEnd = ownDOFs.end(); j != jEnd; ++j) {
+  //       info() << (*j);
+  //       if ((*j)) info() <<  std::distance(ownDOFs.begin(), j) << dofs.at(std::distance(ownDOFs.begin(), j));
+  //     }
+  //     info() << endmsg;
+  //     dofFlags.insert(dofFlags.end(),ownDOFs.begin(), ownDOFs.end());
+  //   }
+  //   info() << "nDOFs      = " << nDOFs << endmsg;
+  //   info() << "dofsflags  = " << dofFlags << endmsg;
+  
   AlVec    derivatives(Derivatives::kCols*numElements + m_constraints.size());
   AlSymMat      matrix(Derivatives::kCols*numElements + m_constraints.size());
 
@@ -328,7 +357,7 @@ void AlignAlgorithm::update() {
       derivatives[i] = constraint.back();
       unsigned cEntry = 0u;
       for (std::vector<double>::const_iterator j = constraint.begin(), jEnd = constraint.end()-1; j != jEnd; ++j, ++cEntry) {
-	matrix[i][cEntry] = (*j);
+        matrix[i][cEntry] = (*j);
       }
     }
   }
