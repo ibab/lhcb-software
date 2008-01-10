@@ -161,6 +161,7 @@ int CaloDataProviderPatched::adc (LHCb::CaloCellID id){
 }
 //-------------------------------------------------------
 bool CaloDataProviderPatched::decodeCell(LHCb::CaloCellID id ){
+  m_readSources.clear();
   int card = m_calo->cardNumber (id)   ; // Fe-Card from cellId
   if(card<0)return false;
   int tell1 = m_calo->cardToTell1(card); // Tell1 from FE-Card

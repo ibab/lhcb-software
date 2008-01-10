@@ -124,6 +124,7 @@ int CaloL0DataProvider::l0Adc (LHCb::CaloCellID id){
 //-------------------------------------------------------
 bool CaloL0DataProvider::decodeCell(LHCb::CaloCellID id ){
   // for packed banks only (sourceID = Tell1 ID)
+  m_readSources.clear();
   int card = m_calo->cardNumber (id)   ; // Fe-Card from cellId
   if(card<0)return false;
   int tell1 = m_calo->cardToTell1(card); // Tell1 from FE-Card
@@ -248,6 +249,8 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
       size--;
       lenTrig = word & 0x3F;
       lenAdc  = (word >> 7 ) & 0x3F;
+      lenAdc += 4; //PATCH FOR COMMISSIONING DATA WITH TELL1 F/W v2.3
+      
       int code  = (word >> 14 ) & 0x1FF;
       int ctrl    = (word >> 23) &  0x1FF;
       checkCtrl( ctrl,sourceID );
