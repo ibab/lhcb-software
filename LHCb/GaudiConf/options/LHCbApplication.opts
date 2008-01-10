@@ -10,6 +10,10 @@ EventDataSvc.RootCLID    =    1;
 // Geometry
 #include "$DDDBROOT/options/DDDB.opts"
 
+// Always start the EventClockSvc (automatic only if conditions are accessed)
+ApplicationMgr.ExtSvc += { "EventClockSvc" };
+
 // Configure the DataOnDemand Service
 EventDataSvc.EnableFaultHandler = true ;
+
 

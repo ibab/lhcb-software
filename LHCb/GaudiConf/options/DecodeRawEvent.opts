@@ -19,6 +19,5 @@ createVeloClusters.DecodeToVeloLiteClusters = false;
 #include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
 #include "$CALODAQROOT/options/CaloDigitsOnDemand.opts"
 
-// For ODIN, just use the EventClockSvc
-ApplicationMgr.ExtSvc += { "EventClockSvc" };
+// For ODIN, just use the EventClockSvc, started by LHCbApplication.opts
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
