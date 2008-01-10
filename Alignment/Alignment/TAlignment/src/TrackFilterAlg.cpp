@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.cpp,v 1.5 2008-01-10 10:39:54 janos Exp $
+// $Id: TrackFilterAlg.cpp,v 1.6 2008-01-10 15:50:52 janos Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -150,8 +150,8 @@ void TrackFilterAlg::filterTrack(LHCb::Track* track, LHCb::Tracks* outputContain
     if (nHits > m_nMinHits)  {
       if (printDebug()) {
         debug() << "Found track with " << nHits << " of type " << m_detector << endmsg;
-        outputContainer->add(clonedTrack.release());
       }
+      outputContainer->add(clonedTrack.release());
     }                                                                                     /// It's yours
     //if ((clonedTrack->lhcbIDs()).size() > m_nMinHits || !m_strip) outputContainer->add(clonedTrack.release());
   }
