@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.15 2007-12-17 12:35:58 papanest Exp $
+ * $Id: DeRichSystem.cpp,v 1.16 2008-01-10 17:30:17 papanest Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -501,10 +501,10 @@ std::string DeRichSystem::getDeHPDLocation (LHCb::RichSmartID smartID ) const
   const unsigned int cNumber = copyNumber( smartID );
   std::string loc;
 
-  if ( m_deRich[smartID.rich()]->exists("HPDPanelDetElemLocation") )
+  if ( m_deRich[smartID.rich()]->exists("HPDPanelDetElemLocations") )
   {
     std::vector<std::string> panelLoc= m_deRich[smartID.rich()]->
-      paramVect<std::string>("HPDPanelDetElemLocation");
+      paramVect<std::string>("HPDPanelDetElemLocations");
     loc = panelLoc[smartID.panel()];
   }
   else

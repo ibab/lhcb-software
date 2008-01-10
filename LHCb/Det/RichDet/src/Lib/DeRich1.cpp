@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.30 2007-12-17 12:35:40 papanest Exp $
+ *  $Id: DeRich1.cpp,v 1.31 2008-01-10 17:30:15 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -90,7 +90,7 @@ StatusCode DeRich1::initialize()
     Material::Tables::const_iterator matIter;
     for (matIter=quartzWinTabProps.begin(); matIter!=quartzWinTabProps.end(); ++matIter) {
       if( (*matIter) ){
-        if ( (*matIter)->type() == "RINDEX" ) 
+        if ( (*matIter)->type() == "RINDEX" )
         {
           msg << MSG::DEBUG << "Loaded gas window refIndex from: " << (*matIter)->name()
               << endmsg;
@@ -102,7 +102,7 @@ StatusCode DeRich1::initialize()
             return StatusCode::FAILURE;
           }
         }
-        if ( (*matIter)->type() == "ABSLENGTH" ) 
+        if ( (*matIter)->type() == "ABSLENGTH" )
         {
           m_gasWinAbsLength = new RichTabulatedProperty1D( *matIter );
           if ( !m_gasWinAbsLength->valid() )
@@ -161,18 +161,17 @@ StatusCode DeRich1::initialize()
     }
   }
 
-  // get pointers to HPD panels
   // get pointers to HPD panels. Check for the new locations.
   std::string panel0Location = DeRichLocations::Rich1Panel0;
   std::string panel1Location = DeRichLocations::Rich1Panel1;
-  
-  if ( exists("HPDPanelDetElemLocation") )
+
+  if ( exists("HPDPanelDetElemLocations") )
   {
-    std::vector<std::string> panelLoc= paramVect<std::string>("HPDPanelDetElemLocation");
+    std::vector<std::string> panelLoc= paramVect<std::string>("HPDPanelDetElemLocations");
     panel0Location = panelLoc[0];
     panel1Location = panelLoc[1];
   }
-    
+
   SmartDataPtr<DeRichHPDPanel> panel0(dataSvc(),panel0Location);
   if ( !panel0 ) {
     msg << MSG::FATAL << "Cannot load " << panel0Location << endmsg;
@@ -203,7 +202,7 @@ StatusCode DeRich1::initialize()
   ums->registerCondition(this,m_secMirAlignCond.path(),&DeRich1::alignSecMirrors);
   StatusCode upsc = ums->update(this);
 
-  // initialize all child detector elements. Thsi triggers the update
+  // initialize all child detector elements. This triggers the update
   // of the radiator properties
   childIDetectorElements();
 

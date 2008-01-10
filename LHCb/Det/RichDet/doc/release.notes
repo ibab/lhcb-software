@@ -4,6 +4,15 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2008-01-10 - "Antonis Papanestis"
+ - Changes for post-DC06 xml description.
+ - New locations for detector elements. The paths are parameters
+   in DeRich1 and DeRich2, which can stiil be found in DeRichLocations.
+ - Individual QE per HPD (Rich::TabulatedProperty1D) from LHCBCOND (Tabulated 
+   Property). Warning from 4 HPDs (one per panel) if not found.
+ - Changes compatible with DC06.
+ - One method for magnification in DeRichHPD, for both old and new way.
+
 ! 2008-01-09 - Chris Jones
  - Changes to how the DeRichHPD and DeRichHPDPanel objects deal with the
    method DeRichHPDPanel::PDWindowPoint which calculates the intersection

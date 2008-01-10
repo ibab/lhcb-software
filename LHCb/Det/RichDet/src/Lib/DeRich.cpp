@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.21 2007-02-01 16:41:13 jonrob Exp $
+ *  $Id: DeRich.cpp,v 1.22 2008-01-10 17:30:15 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -32,7 +32,7 @@
 DeRich::DeRich()
   : m_gasWinRefIndex        ( 0 ),
     m_gasWinAbsLength       ( 0 ),
-    m_HPDQuantumEff         ( 0 ),
+    m_nominalHPDQuantumEff  ( 0 ),
     m_nominalSphMirrorRefl  ( 0 ),
     m_nominalSecMirrorRefl  ( 0 ),
     m_sphMirAlignCond       (),
@@ -47,7 +47,7 @@ DeRich::~DeRich() {
 
   if ( m_gasWinRefIndex )       delete m_gasWinRefIndex;
   if ( m_gasWinAbsLength )      delete m_gasWinAbsLength;
-  if ( m_HPDQuantumEff )        delete m_HPDQuantumEff;
+  if ( m_nominalHPDQuantumEff ) delete m_nominalHPDQuantumEff;
   if ( m_nominalSphMirrorRefl ) delete m_nominalSphMirrorRefl;
   if ( m_nominalSecMirrorRefl ) delete m_nominalSecMirrorRefl;
 
@@ -81,9 +81,17 @@ StatusCode DeRich::initialize ( )
   std::string HPD_QETabPropLoc;
   if ( exists( "RichHpdQETableName" ) )
     HPD_QETabPropLoc = param<std::string>( "RichHpdQETableName" );
-  else {
-    msg << MSG::FATAL << "Cannot find HPD QE location" << endmsg;
-    return StatusCode::FAILURE;
+  else
+  {
+    if ( exists( "RichNominalHpdQuantumEffTableName" ) )
+    {
+      HPD_QETabPropLoc = param<std::string>( "RichNominalHpdQuantumEffTableName" );
+    }
+    else
+    {
+      msg << MSG::FATAL << "Cannot find HPD QE location" << endmsg;
+      return StatusCode::FAILURE;
+    }
   }
 
   SmartDataPtr<TabulatedProperty> tabQE (dataSvc(), HPD_QETabPropLoc);
@@ -91,8 +99,8 @@ StatusCode DeRich::initialize ( )
     msg << MSG::ERROR << "No info on HPD Quantum Efficiency" << endmsg;
   else {
     msg << MSG::DEBUG << "Loaded HPD QE from: " << HPD_QETabPropLoc << endmsg;
-    m_HPDQuantumEff = new RichTabulatedProperty1D( tabQE );
-    if ( !m_HPDQuantumEff->valid() )
+    m_nominalHPDQuantumEff = new Rich::TabulatedProperty1D( tabQE );
+    if ( !m_nominalHPDQuantumEff->valid() )
     {
       msg << MSG::ERROR
           << "Invalid HPD QE RichTabulatedProperty1D for " << tabQE->name() << endreq;
@@ -157,8 +165,7 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
                                   const std::string& Rvector ) const {
 
   MsgStream msg( msgSvc(), myName() );
-  msg << MSG::VERBOSE << "Misaligning " << mirrorID << " in "
-      << myName() <<  endmsg;
+  msg << MSG::VERBOSE << "Misaligning " << mirrorID << " in " << myName() << endmsg;
 
   std::map<int, IPVolume*> mirrors;
   const IPVolume* cpvMirror;
@@ -226,9 +233,8 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
 
 }
 
-
 //=========================================================================
-//
+//  return a RichSmartID for a particular point in the LHCb coord system
 //=========================================================================
 const int DeRich::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 {

@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.14 2008-01-09 09:24:49 jonrob Exp $
+ *  $Id: DeRichHPD.h,v 1.15 2008-01-10 17:30:13 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -24,10 +24,12 @@
 
 // RichDet
 #include "RichDet/Rich1DTabFunc.h"
+#include "RichDet/Rich1DTabProperty.h"
+
+#include <bitset>
 
 // External declarations
 extern const CLID CLID_DERichHPD;
-
 
 /** @class DeRichHPD DeRichHPD.h
  *
@@ -164,6 +166,17 @@ public:
     return m_magMapPhi;
   }
 
+  // Anatoly Solomin 2007-10-26
+  /** Retrieves the HPD Quantum Efficiency interpolation function.
+   * For a given Photon Momentum in eV
+   * returns the HPD Quantum Efficiency percentage.
+   * @return pointer to the interpolation function for QuantumEff(PhotMom)
+   */
+  inline const Rich::TabulatedProperty1D* hpdQuantumEff() const
+  {
+    return m_hpdQuantumEffFunc;
+  }
+
   /** Converts the given RichSmartID to the position on the silicon wafer,
    *  in the coordinate system of the wafer
    *  @param[in] smartID The RichSmartID channel identifier
@@ -262,11 +275,8 @@ private: // functions
   /// Update the magnification and demagnification information
   StatusCode updateDemagProperties();
 
-  /// Magnify the given detection point from the HPD anode to the cathode assuming no magnetic field
-  StatusCode magnifyToGlobal_old( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
-
-  /// Magnify the given detection point from the HPD anode to the cathode assuming a magnetic field
-  StatusCode magnifyToGlobal_new( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
+  // go from a point on silicon to a point on the photo-cathode
+  StatusCode magnifyToGlobal( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
 
   /// Initialise the interpolators for demagnification (cathode to anode)
   StatusCode fillHpdDemagTable( );
@@ -304,16 +314,20 @@ private: // data
   /// term, and element[1] the non-linear term for small corrections.
   double m_deMagFactor[2];
 
-  Rich::TabulatedFunction1D * m_demagMapR;   ///< Interpolated function for HPD R for demagnification
-  Rich::TabulatedFunction1D * m_demagMapPhi; ///< Interpolated function for HPD phi for demagnification
-  Rich::TabulatedFunction1D * m_magMapR;     ///< Interpolated function for HPD R for magnification
-  Rich::TabulatedFunction1D * m_magMapPhi;   ///< Interpolated function for HPD phi for magnification
+  Rich::TabulatedFunction1D* m_demagMapR;   ///< Interpolated function for HPD R for demagnification
+  Rich::TabulatedFunction1D* m_demagMapPhi; ///< Interpolated function for HPD phi for demagnification
+  Rich::TabulatedFunction1D* m_magMapR;     ///< Interpolated function for HPD R for magnification
+  Rich::TabulatedFunction1D* m_magMapPhi;   ///< Interpolated function for HPD phi for magnification
+
+  ///< Interpolated property for HPD quantum efficiency
+  const Rich::TabulatedProperty1D* m_hpdQuantumEffFunc;
 
   /// Demagnification parameters condition
   SmartRef<Condition> m_demagCond;
 
-  unsigned int m_firstUpdates; ///< Flag to identify first UMS update
-
+  /// binary flags; 1 for update of demag param, 2 for update of geometry; 6 for new hpdQE
+  std::bitset<7> flags;
+  
   std::vector<double> m_refactParams; ///< refraction parameters for quartz window
 
   //int    rgiState[2+55];
@@ -344,9 +358,7 @@ inline StatusCode DeRichHPD::detectionPoint ( const LHCb::RichSmartID smartID,
   // and transform the point to get the misalignment of the Si sensor
   detectPoint = m_SiSensorToHPDMatrix * pointOnSilicon(smartID);
   detectPoint.SetZ(0.0);
-  return ( m_UseHpdMagDistortions ?
-           magnifyToGlobal_new( detectPoint, photoCathodeSide ) :  // M.Musy 07/09/2006
-           magnifyToGlobal_old( detectPoint, photoCathodeSide ) ); // old demag parameters
+  return magnifyToGlobal( detectPoint, photoCathodeSide );
 }
 
 //=========================================================================

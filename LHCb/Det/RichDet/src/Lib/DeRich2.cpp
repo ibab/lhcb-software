@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.33 2007-12-17 12:35:46 papanest Exp $
+ *  $Id: DeRich2.cpp,v 1.34 2008-01-10 17:30:16 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -158,14 +158,14 @@ StatusCode DeRich2::initialize()
   // get pointers to HPD panels. Check for the new locations.
   std::string panel0Location = DeRichLocations::Rich2Panel0;
   std::string panel1Location = DeRichLocations::Rich2Panel1;
-  
-  if ( exists("HPDPanelDetElemLocation") )
+
+  if ( exists("HPDPanelDetElemLocations") )
   {
-    std::vector<std::string> panelLoc= paramVect<std::string>("HPDPanelDetElemLocation");
+    std::vector<std::string> panelLoc= paramVect<std::string>("HPDPanelDetElemLocations");
     panel0Location = panelLoc[0];
     panel1Location = panelLoc[1];
   }
-    
+
   SmartDataPtr<DeRichHPDPanel> panel0(dataSvc(),panel0Location);
   if ( !panel0 ) {
     msg << MSG::FATAL << "Cannot load " << panel0Location << endmsg;
@@ -221,7 +221,20 @@ StatusCode DeRich2::alignSphMirrors()
   std::vector<const ILVolume*> mirrorCont;
   // (mis)align spherical mirrors
   const IPVolume* pvRich2Gas = geometry()->lvolume()->pvolume(0);
-  mirrorCont.push_back( pvRich2Gas->lvolume() );
+  const ILVolume* lvRich2Gas = pvRich2Gas->lvolume();
+  // ckeck if there are spherical mirror containers
+  const IPVolume* pvSphMirCont0 = lvRich2Gas->pvolume("pvRich2SphMirrorCont0");
+  if ( pvSphMirCont0 )
+  {
+    const ILVolume* lvSphMirCont0 = pvSphMirCont0->lvolume();
+    mirrorCont.push_back( lvSphMirCont0 );
+    const IPVolume* pvSphMirCont1 = lvRich2Gas->pvolume("pvRich2SphMirrorCont1");
+    const ILVolume* lvSphMirCont1 = pvSphMirCont1->lvolume();
+    mirrorCont.push_back( lvSphMirCont1 );
+  }
+  else
+    mirrorCont.push_back( lvRich2Gas );
+
   StatusCode sc = alignMirrors(mirrorCont, "Rich2SphMirror",
                                m_sphMirAlignCond, "RichSphMirrorRs");
   if (sc == StatusCode::FAILURE) return sc;

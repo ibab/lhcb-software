@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.24 2007-04-03 15:42:32 papanest Exp $
+ *  $Id: DeRich.h,v 1.25 2008-01-10 17:30:12 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -137,7 +137,7 @@ public:
    */
   inline const RichTabulatedProperty1D* nominalHPDQuantumEff() const
   {
-    return m_HPDQuantumEff;
+    return m_nominalHPDQuantumEff;
   }
 
   /**
@@ -205,22 +205,22 @@ protected:
 
   int m_sphMirrorSegRows;  ///< number of spherical mirror rows
   int m_sphMirrorSegCols;  ///< number of spherical mirror columns
-  int m_secMirrorSegRows; ///< number of secondary mirror rows
-  int m_secMirrorSegCols; ///< number of secondary mirror columns
+  int m_secMirrorSegRows;  ///< number of secondary mirror rows
+  int m_secMirrorSegCols;  ///< number of secondary mirror columns
 
   /// flag to test if the xml supports mirror position info
   bool m_positionInfo;
 
   /// refractive index of the quartz gas window
-  const RichTabulatedProperty1D* m_gasWinRefIndex;
+  const Rich::TabulatedProperty1D* m_gasWinRefIndex;
   /// absorption length of the quartz gas window
-  const RichTabulatedProperty1D* m_gasWinAbsLength;
+  const Rich::TabulatedProperty1D* m_gasWinAbsLength;
   /// HPD quantum efficiency
-  const RichTabulatedProperty1D* m_HPDQuantumEff;
+  const Rich::TabulatedProperty1D* m_nominalHPDQuantumEff;
   /// spherical mirror reflectivity
-  const RichTabulatedProperty1D* m_nominalSphMirrorRefl;
+  const Rich::TabulatedProperty1D* m_nominalSphMirrorRefl;
   /// flat mirror reflectivity
-  const RichTabulatedProperty1D* m_nominalSecMirrorRefl;
+  const Rich::TabulatedProperty1D* m_nominalSecMirrorRefl;
 
   /// Condition for the alignment of the spherical mirrors
   SmartRef<Condition> m_sphMirAlignCond;
