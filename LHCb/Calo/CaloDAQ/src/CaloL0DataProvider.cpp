@@ -249,7 +249,7 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
       size--;
       lenTrig = word & 0x3F;
       lenAdc  = (word >> 7 ) & 0x3F;
-      lenAdc += 4; //PATCH FOR COMMISSIONING DATA WITH TELL1 F/W v2.3
+      //      lenAdc += 4; //PATCH FOR COMMISSIONING DATA WITH TELL1 F/W v2.3
       
       int code  = (word >> 14 ) & 0x1FF;
       int ctrl    = (word >> 23) &  0x1FF;
