@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.19 2008-01-08 13:26:33 cattanem Exp $
+// $Id: CaloReadoutTool.cpp,v 1.20 2008-01-10 13:56:13 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -194,4 +194,40 @@ void CaloReadoutTool::putStatusOnTES(){
               << endreq;
     } 
   }
+}
+
+
+void CaloReadoutTool::checkCtrl(int ctrl,int sourceID){
+
+  if ( msgLevel( MSG::DEBUG) )debug()<< "Control word :" << ctrl << endreq;
+  
+  if( 0 != (0x1& ctrl) || 0 != (0x20& ctrl) || 0 != (0x40& ctrl)){
+    if(msgLevel(MSG::WARNING))Warning("Tell1 error bits have been detected in data").ignore();
+    if( 0 != (0x1  & ctrl))m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Error );
+    if( 0 != (0x20 & ctrl))m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Sync  );      
+    if( 0 != (0x40 & ctrl))m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Link  );
+  }
+}
+
+bool CaloReadoutTool::checkSrc(int source){
+
+  
+  bool read = false;
+
+  for(std::vector<int>::iterator it = m_readSources.begin() ; it != m_readSources.end() ; ++it){
+    if( source == *it){
+      read = true;
+      break;
+    }    
+  }
+
+  if(read){
+    std::stringstream s("");
+    s<< source;
+    Warning("Another bank bank with same sourceID " + s.str() + " has already been read").ignore();
+  }
+  else{
+    m_readSources.push_back(source);
+  }
+  return read;
 }

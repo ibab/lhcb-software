@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.2 2007-12-06 09:31:25 odescham Exp $
+// $Id: CaloReadoutTool.h,v 1.3 2008-01-10 13:56:13 odescham Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -41,6 +41,7 @@ public:
   // e.g. : avoid the call to getCaloBanksFromRaw() at each call of adc(bank)
   virtual bool getBanks(){
     m_getRaw = false;
+    m_readSources.clear();
     clear();
     return getCaloBanksFromRaw();    
   };
@@ -59,6 +60,8 @@ protected:
   bool getCaloBanksFromRaw();
   int findCardbyCode(std::vector<int> feCards, int code );
   bool checkCards(int nCards, std::vector<int> feCards );
+  void checkCtrl(int word, int sourceID);
+  bool CaloReadoutTool::checkSrc(int source);
 
   std::string  m_detectorName;
   bool m_packedIsDefault; 
@@ -72,6 +75,7 @@ protected:
   bool m_packed;
   bool m_cleanCorrupted;
   LHCb::RawBankReadoutStatus m_status;
+  std::vector<int> m_readSources;
 private:
 };
 #endif // CALODAQ_CALOREADOUTTOOL_H

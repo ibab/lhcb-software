@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.20 2007-12-14 14:53:53 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.21 2008-01-10 13:56:13 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -119,6 +119,7 @@ LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (int source ) 
       sourceID       = (*itB)->sourceID();
       if( source >= 0 && source != sourceID )continue;
       found = true;
+      if(checkSrc( sourceID ))continue;
       decoded = getData ( *itB );
       if( !decoded ){
         std::stringstream s("");
@@ -257,13 +258,7 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
       }
       int code  = (word >>14 ) & 0x1FF;
       int ctrl    = (word >> 23) &  0x1FF;
-      if ( msgLevel( MSG::DEBUG) )debug()<< "Control word :" << ctrl << endreq;
-      if( 0 != 0x1& ctrl || 0 != 0x20& ctrl || 0 != 0x40& ctrl){
-        if(msgLevel(MSG::WARNING))Warning("Tell1 error bits have been detected in data").ignore();
-        if( 0 != 0x1  & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Error );
-        if( 0 != 0x20 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Sync  );      
-        if( 0 != 0x40 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Link  );
-      }
+      checkCtrl(ctrl,sourceID);
       
       if ( msgLevel( MSG::DEBUG) )debug() << "Read FE-board ["<< code << "] linked to TELL1 bank " << sourceID << endreq;      
       // access chanID via condDB

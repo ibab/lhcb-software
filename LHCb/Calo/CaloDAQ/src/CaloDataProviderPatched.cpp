@@ -179,7 +179,11 @@ bool CaloDataProviderPatched::decodeTell1 (int source) {
        itB != m_banks->end() ; ++itB ) {
     sourceID       = (*itB)->sourceID();
     if( source >= 0 && source != sourceID )continue;
+
     found = true;
+
+    if(checkSrc( sourceID ))continue;
+
     if( "Spd" == m_detectorName ){
       decoded  = decodePrsTriggerBank( *itB);
     }
@@ -300,15 +304,7 @@ bool CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
       // Read ADC bank
       int code    = (word >> 14 ) & 0x1FF;// FE code = 16*crate + slot
       int ctrl    = (word >> 23) &  0x1FF;
-
-      if ( msgLevel( MSG::DEBUG) )debug()<< "Control word :" << ctrl << endreq;
-      if( 0 != 0x1& ctrl || 0 != 0x20& ctrl || 0 != 0x40& ctrl){
-        if(msgLevel(MSG::WARNING))Warning("Tell1 error bits have been detected in data").ignore();
-        if( 0 != 0x1  & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Error );
-        if( 0 != 0x20 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Sync  );      
-        if( 0 != 0x40 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Link  );
-      }
-
+      checkCtrl(ctrl,sourceID);
 
       // -----------------------------------------------------
       // PATCH : PPGA data generator // skip
@@ -418,13 +414,7 @@ bool CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
       int lenAdc  = (word >> 7 ) & 0x7F;
       int code  = (word >>14 ) & 0x1FF;
       int ctrl    = (word >> 23) &  0x1FF;
-      if ( msgLevel( MSG::DEBUG) )debug()<< "Control word :" << ctrl << endreq;
-      if( 0 != 0x1& ctrl || 0 != 0x20& ctrl || 0 != 0x40& ctrl){
-        if(msgLevel(MSG::WARNING))Warning("Tell1 error bits have been detected in data").ignore();
-        if( 0 != 0x1  & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Error );
-        if( 0 != 0x20 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Sync  );      
-        if( 0 != 0x40 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Link  );
-      }
+      checkCtrl(ctrl,sourceID);
 
       // access chanID via condDB
       std::vector<LHCb::CaloCellID> chanID  ;
@@ -616,14 +606,7 @@ bool CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) {
       }
       int code  = (word >>14 ) & 0x1FF;
       int ctrl    = (word >> 23) &  0x1FF;
-      if ( msgLevel( MSG::DEBUG) )debug()<< "Control word :" << ctrl << endreq;
-      if( 0 != 0x1& ctrl || 0 != 0x20& ctrl || 0 != 0x40& ctrl){
-        if(msgLevel(MSG::WARNING))Warning("Tell1 error bits have been detected in data").ignore();
-        if( 0 != 0x1  & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Error );
-        if( 0 != 0x20 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Sync  );      
-        if( 0 != 0x40 & ctrl)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Link  );
-      }
-
+      checkCtrl(ctrl,sourceID);
 
       if ( msgLevel( MSG::DEBUG) )debug() << "Read FE-board ["<< code << "] linked to TELL1 bank sourceID : " 
                                           << sourceID << endreq;      
