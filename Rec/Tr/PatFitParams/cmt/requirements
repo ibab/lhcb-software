@@ -24,6 +24,7 @@ use	LinkerEvent	v*	Event
 use	TrackEvent	v*	Event
 use	GaudiAlg	v*
 use	GaudiKernel	v*
+use     AIDA            v*      LCG_Interfaces 
 #============================================================================
 # Component library building rule
 #============================================================================

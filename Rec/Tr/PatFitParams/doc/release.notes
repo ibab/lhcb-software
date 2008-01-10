@@ -4,6 +4,9 @@
 ! Purpose     : Fit MC tracks to compute the PatForward parameters
 !-----------------------------------------------------------------------------
 
+! 2008-01-10 - Olivier Callot
+ - Add the PatCalibV0 algorithm from Maurice, to debug V0 processing.
+
 !======================== PatFitParams v3r0 2007-10-12 =======================
 ! 2007-10-09 - Stephanie Hansmann-Menzemer
   - import from Pat/PatFitParams, for older release note see there
