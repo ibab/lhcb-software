@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.h,v 1.3 2007-10-15 16:11:51 lnicolas Exp $
+// $Id: TrackFilterAlg.h,v 1.4 2008-01-10 10:39:54 janos Exp $
 #ifndef TALIGNMENT_TRACKFILTERALG_H 
 #define TALIGNMENT_TRACKFILTERALG_H 1
 
@@ -20,6 +20,9 @@
 // from AlignmentInterfaces
 #include "TrackInterfaces/ITrackSelector.h"
 
+#include "IGetElementsToBeAligned.h"
+#include "AlignmentElement.h"
+
 // from BOOST
 #include "boost/function.hpp"
 
@@ -36,7 +39,9 @@ public:
   /// Some handy typedefs
   typedef std::vector<LHCb::LHCbID> LHCBIDS;
   typedef std::map<std::string, boost::function<bool (LHCb::LHCbID)> > LHCbDetChecks;
-
+  typedef std::pair<std::vector<AlignmentElement>::const_iterator,
+                    std::vector<AlignmentElement>::const_iterator> Range;
+  
   /// Standard constructor
   TrackFilterAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -44,8 +49,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-
-protected:
  
 private:
     
@@ -69,7 +72,9 @@ private:
   std::string                               m_detector;              ///< Sub-detector
   unsigned int                              m_nMinHits;              ///< Min number of hits 
   LHCbDetChecks                             m_lhcbDetChecks;         ///< Map LHCb id det checks methods  
-  ITrackSelector*                            m_trackSelector;         ///< Pointer to track selector tool for alignment
+  ITrackSelector*                           m_trackSelector;         ///< Pointer to track selector tool for alignment
+  IGetElementsToBeAligned*                  m_elementsToBeAligned;
+  Range                                     m_rangeElements;
 };
 
 #endif // TALIGNMENT_TRACKFILTERALG_H
