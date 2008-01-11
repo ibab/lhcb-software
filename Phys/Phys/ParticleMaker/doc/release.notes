@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.74 2007-12-13 16:02:18 jpalac Exp $ 
+! $Id: release.notes,v 1.75 2008-01-11 11:56:11 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+! 2008-01-11 - Patrick Koppenburg
+ - src/CombinedParticleMaker.cpp:
+   . Get a pointer to State rather than a reference. Avoids changing the state.
+     Bug spotted by Vanya.
+ - Increment to v3r4p1
 
 !======================== ParticleMaker v3r4 2007-12-13 =====================
 

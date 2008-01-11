@@ -4,7 +4,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.26 2007-08-30 12:21:37 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.27 2008-01-11 11:56:11 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -331,7 +331,7 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
 
   // Mass and error
   particle->setMeasuredMass(pprop->mass());
-  particle->setMeasuredMassErr(0); // Should really put PDG value here
+  particle->setMeasuredMassErr(0); 
 
   /*
   for ( std::vector< LHCb::State*>::const_iterator s = proto->track()->states().begin() ;
@@ -341,20 +341,20 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
   }
   */
 
-  LHCb::State& usedState = proto->track()->firstState() ; // backup
+  // get a pointer to the State& returned by the track
+  const LHCb::State* usedState = &(proto->track()->firstState()) ; // backup 
   if ( proto->track()->hasStateAt( LHCb::State::ClosestToBeam )){ // default: closest to beam
-    usedState = proto->track()->stateAt( LHCb::State::ClosestToBeam );
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Using state at " << usedState.position() << endmsg ;
+    usedState = &(proto->track()->stateAt( LHCb::State::ClosestToBeam ));
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Using closest state to beam at " << usedState->position() << endmsg ;
   } else if ( proto->track()->hasStateAt( LHCb::State::FirstMeasurement )){ // if not available: first measurement
-    usedState = proto->track()->stateAt( LHCb::State::FirstMeasurement );
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Using state at " << usedState.position() << endmsg ;
+    usedState = &(proto->track()->stateAt( LHCb::State::FirstMeasurement ));
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Using first measurement state at " << usedState->position() << endmsg ;
   } else Warning("No state closest to beam or at first measurement for track. Using first state instead") ;
-  
 
   // finally, set Particle infor from State using tool
   if (msgLevel(MSG::VERBOSE)) verbose() << "Making Particle " << pprop->particle() << " from Track with P= " 
-            << usedState.momentum() << endmsg ;
-  StatusCode sc = m_p2s->state2Particle( usedState, *particle );
+            << usedState->momentum() << endmsg ;
+  StatusCode sc = m_p2s->state2Particle( *usedState, *particle );
   if (msgLevel(MSG::VERBOSE)) verbose() 
     << "Made   Particle " << pprop->particle() << " with            P= " << particle->momentum() << endmsg ;
 
