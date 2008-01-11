@@ -1,12 +1,10 @@
-// $Id: GlobalToLocalDelta.cpp,v 1.15 2008-01-10 12:29:57 jpalac Exp $
+// $Id: GlobalToLocalDelta.cpp,v 1.16 2008-01-11 14:23:00 jpalac Exp $
 // Include files 
 #include "DetDesc/IDetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 // local
 #include "DetDesc/GlobalToLocalDelta.h"
 #include "DetDesc/3DTransformationFunctions.h"
-#include "RotationZYX.h"
-#include "3DConversions.h"
 namespace DetDesc {
 
 const Gaudi::Transform3D localDeltaMatrix(const IDetectorElement* DE,
