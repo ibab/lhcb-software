@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.20 2007-11-22 13:23:33 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.21 2008-01-11 12:04:34 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -53,6 +53,7 @@ StatusCode Rich::ToolRegistry::initialize()
   defaultTools.push_back ( "Rich::SmartIDTool/RichSmartIDTool" );
   defaultTools.push_back ( "Rich::DetParameters/RichDetParameters" );
   defaultTools.push_back ( "Rich::TabulatedRefractiveIndex/RichRefractiveIndex" );
+  defaultTools.push_back ( "Rich::SnellsLawRefraction/RichSnellsLawRefraction" );
   // Reco Tools
   defaultTools.push_back ( "Rich::Rec::MassHypothesisRingCreator/RichMassHypoRings" );
   defaultTools.push_back ( "Rich::Rec::RayTraceCherenkovCone/RichRayTraceCKCone" );

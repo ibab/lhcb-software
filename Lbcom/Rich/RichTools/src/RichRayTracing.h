@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::RayTracing
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.34 2007-08-13 12:35:11 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.35 2008-01-11 12:04:31 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -24,14 +24,9 @@
 
 // RichKernel
 #include "RichKernel/IRichMirrorSegFinder.h"
-#include "RichKernel/IRichRefractiveIndex.h"
-#include "RichKernel/IRichRadiatorTool.h"
 #include "RichKernel/BoostArray.h"
 #include "RichKernel/RichGeomPhoton.h"
-
-// Math
-#include "GaudiKernel/Point3DTypes.h"
-#include "GaudiKernel/Vector3DTypes.h"
+#include "RichKernel/IRichSnellsLawRefraction.h"
 
 // Kernel
 #include "Kernel/RichSide.h"
@@ -156,8 +151,8 @@ namespace Rich
 
   private: // data
 
-    /// Refractive index tool
-    const IRefractiveIndex * m_refIndex;
+     /// Snell's Law refraction tool
+    const ISnellsLawRefraction * m_snellsLaw;
 
     /// Rich1 and Rich2 pointers
     std::vector< const DeRich* > m_rich;
@@ -180,15 +175,6 @@ namespace Rich
 
     /// RICH beampipe object for each RICH detector
     mutable std::vector<const DeRichBeamPipe*> m_deBeam;
-
-    /// aerogel exit plane (for refraction correction)
-    Gaudi::Plane3D m_aeroExitPlane;
-
-    /// Vector normal to aerogel exit plane (for refraction correction)
-    Gaudi::XYZVector m_aeroNormVect;
-
-    /// z point for plane
-    double m_minZaero;
 
   };
 

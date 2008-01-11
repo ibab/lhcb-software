@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.41 2008-01-10 17:17:34 papanest Exp $
+ * $Id: RichRayTracing.cpp,v 1.42 2008-01-11 12:04:31 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -19,7 +19,7 @@
 /// Factory stuff
 DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RayTracing );
 
-namespace Rich
+namespace
 {
   /// A z point that separates Rich1 from Rich2 (anything between 3000-9000mm)
   static const double s_RichDetSeparationPointZ = 8000.0;
@@ -31,8 +31,8 @@ namespace Rich
 Rich::RayTracing::RayTracing( const std::string& type,
                               const std::string& name,
                               const IInterface* parent)
-  : RichHistoToolBase         ( type, name, parent ),
-    m_refIndex                ( NULL               ),
+  : Rich::HistoToolBase       ( type, name, parent ),
+    m_snellsLaw               ( NULL               ),
     m_rich                    ( Rich::NRiches      ),
     m_sphMirrorSegRows        ( Rich::NRiches, 0   ),
     m_sphMirrorSegCols        ( Rich::NRiches, 0   ),
@@ -66,18 +66,16 @@ StatusCode Rich::RayTracing::initialize()
 {
 
   // intialise base class
-  const StatusCode sc = RichHistoToolBase::initialize();
+  const StatusCode sc = Rich::HistoToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // get tools
   acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );
-  acquireTool( "RichRefractiveIndex", m_refIndex        );
+  acquireTool( "RichSnellsLawRefraction", m_snellsLaw   );
 
   // RICH detector elements
-  const DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
-  const DeRich* rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
-  m_rich[Rich::Rich1] = rich1;
-  m_rich[Rich::Rich2] = rich2;
+  m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocation::Rich1 );
+  m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocation::Rich2 );
 
   // HPD panel locations
   std::string pdPanelName[2][2];
@@ -105,10 +103,9 @@ StatusCode Rich::RayTracing::initialize()
   }
 
   // loop over riches and photo detector panels
-  unsigned int rich, panel;
-  for ( rich=0; rich<m_photoDetPanels.size(); ++rich )
+  for ( unsigned int rich=0; rich<m_photoDetPanels.size(); ++rich )
   {
-    for ( panel=0; panel<m_photoDetPanels[rich].size(); ++panel )
+    for ( unsigned int panel=0; panel<m_photoDetPanels[rich].size(); ++panel )
     {
       m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
       debug()<<"Stored photodetector panel "<<m_photoDetPanels[rich][panel]->name()<<endreq;
@@ -116,19 +113,19 @@ StatusCode Rich::RayTracing::initialize()
   }
 
   // Rich1 mirrors
-  if ( rich1->exists("SphMirrorSegRows") )
+  if ( m_rich[Rich::Rich1]->exists("SphMirrorSegRows") )
   {
-    m_sphMirrorSegRows[Rich::Rich1] = rich1->param<int>( "SphMirrorSegRows"    );
-    m_sphMirrorSegCols[Rich::Rich1] = rich1->param<int>( "SphMirrorSegColumns" );
+    m_sphMirrorSegRows[Rich::Rich1] = m_rich[Rich::Rich1]->param<int>( "SphMirrorSegRows"    );
+    m_sphMirrorSegCols[Rich::Rich1] = m_rich[Rich::Rich1]->param<int>( "SphMirrorSegColumns" );
   }
   else
   {
     return Error ( "No primary mirrors for RICH1 found !" );
   }
-  if ( rich1->exists("SecMirrorSegRows") )
+  if ( m_rich[Rich::Rich1]->exists("SecMirrorSegRows") )
   {
-    m_secMirrorSegRows[Rich::Rich1] = rich1->param<int>( "SecMirrorSegRows"    );
-    m_secMirrorSegCols[Rich::Rich1] = rich1->param<int>( "SecMirrorSegColumns" );
+    m_secMirrorSegRows[Rich::Rich1] = m_rich[Rich::Rich1]->param<int>( "SecMirrorSegRows"    );
+    m_secMirrorSegCols[Rich::Rich1] = m_rich[Rich::Rich1]->param<int>( "SecMirrorSegColumns" );
   }
   else
   {
@@ -136,19 +133,19 @@ StatusCode Rich::RayTracing::initialize()
   }
 
   // Rich2 mirrors
-  if ( rich2->exists("SphMirrorSegRows") )
+  if ( m_rich[Rich::Rich2]->exists("SphMirrorSegRows") )
   {
-    m_sphMirrorSegRows[Rich::Rich2] = rich2->param<int>( "SphMirrorSegRows"    );
-    m_sphMirrorSegCols[Rich::Rich2] = rich2->param<int>( "SphMirrorSegColumns" );
+    m_sphMirrorSegRows[Rich::Rich2] = m_rich[Rich::Rich2]->param<int>( "SphMirrorSegRows"    );
+    m_sphMirrorSegCols[Rich::Rich2] = m_rich[Rich::Rich2]->param<int>( "SphMirrorSegColumns" );
   }
   else
   {
     return Error ( "No primary mirrors for RICH2 found !" );
   }
-  if ( rich2->exists("SecMirrorSegRows") )
+  if ( m_rich[Rich::Rich2]->exists("SecMirrorSegRows") )
   {
-    m_secMirrorSegRows[Rich::Rich2] = rich2->param<int>( "SecMirrorSegRows"    );
-    m_secMirrorSegCols[Rich::Rich2] = rich2->param<int>( "SecMirrorSegColumns" );
+    m_secMirrorSegRows[Rich::Rich2] = m_rich[Rich::Rich2]->param<int>( "SecMirrorSegRows"    );
+    m_secMirrorSegCols[Rich::Rich2] = m_rich[Rich::Rich2]->param<int>( "SecMirrorSegColumns" );
   }
   else
   {
@@ -158,37 +155,6 @@ StatusCode Rich::RayTracing::initialize()
   if ( m_ignoreSecMirrs )
   {
     Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS );
-  }
-
-  // initialise aerogel refraction correction
-  {
-    // radiator tool
-    const IRadiatorTool * radTool;
-    acquireTool( "RichRadiatorTool", radTool );
-
-    // get three points in exit plane
-    RichRadIntersection::Vector intersections;
-    Gaudi::XYZPoint p1(100,100,0), p2(100,-100,0), p3(-100,-100,0);
-    const Gaudi::XYZVector v(0,0,1);
-    radTool->intersections( p1, v, Rich::Aerogel, intersections );
-    p1 = intersections.back().exitPoint();
-    m_minZaero = p1.z();
-    radTool->intersections( p2, v, Rich::Aerogel, intersections );
-    p2 = intersections.back().exitPoint();
-    if ( p2.z() < m_minZaero ) m_minZaero = p2.z();
-    radTool->intersections( p3, v, Rich::Aerogel, intersections );
-    p3 = intersections.back().exitPoint();
-    if ( p3.z() < m_minZaero ) m_minZaero = p3.z();
-    debug() << "Points " << p1 << " " << p2 << " " << p3 << endreq;
-
-    // make a plane using these points
-    m_aeroExitPlane = Gaudi::Plane3D(p1,p2,p3);
-
-    // get the normal to the plane
-    m_aeroNormVect = m_aeroExitPlane.Normal();
-
-    // release tools no longer needed
-    releaseTool(radTool);
   }
 
   return sc;
@@ -235,31 +201,18 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
 
   // Correct start point/direction for aerogel refraction, if appropriate
   // see http://en.wikipedia.org/wiki/Snell's_law for details
-  if ( mode.aeroRefraction() && photonEnergy > 0 && startPoint.z() < m_minZaero )
+  if ( mode.aeroRefraction() && 
+       Rich::Rich1 == rich   )
   {
-    // get refractive indices for aerogel and rich1Gas
-    const double refAero     = m_refIndex->refractiveIndex( Rich::Aerogel,  photonEnergy );
-    const double refrich1Gas = m_refIndex->refractiveIndex( Rich::Rich1Gas, photonEnergy );
-    const double Rratio = refAero/refrich1Gas;
-    // normalise the direction vector
-    tmpDir = tmpDir.Unit();
-    // the dot product between the plane normal and the direction
-    const double cosT1 = tmpDir.Dot(m_aeroNormVect);
-    // update the point extrapolating the photon dir inside the aerogel to exit plane
-    const double distance = -(m_aeroExitPlane.Distance(tmpPos))/cosT1;
-    tmpPos += distance*tmpDir;
-    // Update the direction due to refraction on exit
-    const double cosT2 = sqrt( 1.0 - Rratio*Rratio*( 1.0 - cosT1*cosT1 ) );
-    if ( cosT1<0 ) { tmpDir = tmpDir*Rratio - m_aeroNormVect*(cosT2+(Rratio*cosT1)); }
-    else           { tmpDir = tmpDir*Rratio + m_aeroNormVect*(cosT2-(Rratio*cosT1)); }
+    m_snellsLaw->aerogelToGas(tmpPos,tmpDir,photonEnergy);
   }
 
   // default result is failure
   LHCb::RichTraceMode::RayTraceResult result = LHCb::RichTraceMode::RayTraceFailed;
 
   // first, try and reflect of both mirrors
-  bool sc = reflectBothMirrors( rich, tmpPos, tmpDir, photon,
-                                mode, forcedSide );
+  const bool sc = reflectBothMirrors( rich, tmpPos, tmpDir, photon,
+                                      mode, forcedSide );
   if ( sc )
   {
 
@@ -352,7 +305,7 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
   }
 
   // find segment
-  const DeRichSphMirror* sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, tmpPos);
+  const DeRichSphMirror* sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, tmpPos );
 
   // depending on the tracing flag
   if ( mode.mirrorSegBoundary() )
@@ -503,11 +456,11 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
 }
 
 
-//=========================================================================
+//==========================================================================
 // Raytraces from a point in the detector panel back to the spherical mirror
 // returning the mirror intersection point and the direction a track would
 // have in order to hit that point in the detector panel.
-//=========================================================================
+//==========================================================================
 StatusCode
 Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
                                           const Gaudi::XYZVector& startDir,
@@ -537,8 +490,8 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
     { return StatusCode::FAILURE; }
 
     // find secondary mirror segment
-    const DeRichSphMirror* secSegment = m_mirrorSegFinder->
-      findSecMirror(rich,side,planeIntersection);
+    const DeRichSphMirror* secSegment 
+      = m_mirrorSegFinder->findSecMirror(rich,side,planeIntersection);
 
     if ( !reflectSpherical( tmpStartPoint, tmpStartDir,
                             secSegment->centreOfCurvature(),
@@ -571,7 +524,6 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
   endDir    = storeDir;
 
   return StatusCode::SUCCESS;
-
 }
 
 //=========================================================================

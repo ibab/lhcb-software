@@ -4,6 +4,11 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2008-01-11 - Chris Jones
+ - Add new tool RichSnellsLawRefraction to perform refraction corrections
+   at the Aerogel / Rich1Gas boundary
+ - Update RichRayTracing to use the new refraction tool
+
 ! 2008-01-10 - "Antonis Papanestis"
  - Change the way to get detector elements. The paths are parameters
    in DeRich1 and DeRich2, which can stiil be found in DeRichLocations.

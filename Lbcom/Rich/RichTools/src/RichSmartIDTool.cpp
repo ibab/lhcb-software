@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichSmartIDTool.cpp
  *
- * Implementation file for class : RichSmartIDTool
+ * Implementation file for class : Rich::SmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.34 2008-01-10 17:17:34 papanest Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.35 2008-01-11 12:04:31 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -26,7 +26,7 @@ DECLARE_NAMESPACE_TOOL_FACTORY( Rich, SmartIDTool );
 Rich::SmartIDTool::SmartIDTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : RichToolBase( type, name, parent ), m_hitPhotoCathSide( false )
+  : Rich::ToolBase ( type, name, parent )
 {
   declareInterface<ISmartIDTool>(this);
   declareProperty( "HitOnPhotoCathSide", m_hitPhotoCathSide = false );
@@ -42,7 +42,7 @@ StatusCode Rich::SmartIDTool::initialize()
 {
 
   // Initialise base class
-  const StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = Rich::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   m_richS = getDet<DeRichSystem>(DeRichLocations::RichSystem);
@@ -72,18 +72,19 @@ StatusCode Rich::SmartIDTool::initialize()
   {
     pdPanelName[1][0] = DeRichLocations::Rich2Panel0;
     pdPanelName[1][1] = DeRichLocations::Rich2Panel1;
-  }  
+  }
 
-  //loop over riches and photo detector panels
+  // loop over riches and photo detector panels
   for ( unsigned int rich = 0; rich < m_photoDetPanels.size(); ++rich )
   {
     for ( unsigned int panel = 0; panel < m_photoDetPanels[rich].size(); ++panel )
     {
       m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
-      debug() << "Stored photodetector panel "
-              << m_photoDetPanels[rich][panel]->name()
-              << " offset=" << m_photoDetPanels[rich][panel]->localOffset()
-              << endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Stored photodetector panel "
+                << m_photoDetPanels[rich][panel]->name()
+                << " offset=" << m_photoDetPanels[rich][panel]->localOffset()
+                << endreq;
     }
   }
 
