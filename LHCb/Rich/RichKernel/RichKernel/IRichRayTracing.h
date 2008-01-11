@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : Rich::IRayTracing
  *
- *  $Id: IRichRayTracing.h,v 1.30 2007-08-09 15:43:48 jonrob Exp $
+ *  $Id: IRichRayTracing.h,v 1.31 2008-01-11 11:46:35 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -85,7 +85,7 @@ namespace Rich
                       const double photonEnergy      = 0 ) const = 0;
 
     /** For a given detector, raytraces a given direction from a given point to
-     *  the photo detectors. Returns the result in the form of a RichGeomPhoton
+     *  the photo detectors. Returns the result in the form of a RichGeomPhoton.
      *
      *  @param[in]  rich        The RICH detector
      *  @param[in]  startPoint  The start point to use for the ray tracing

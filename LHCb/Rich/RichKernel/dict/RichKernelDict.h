@@ -22,6 +22,7 @@
 #include "RichKernel/IRichRefractiveIndex.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichToolRegistry.h"
+#include "RichKernel/IRichSnellsLawRefraction.h"
 
 #endif // DICT_RICHKERNELDICT_H
 

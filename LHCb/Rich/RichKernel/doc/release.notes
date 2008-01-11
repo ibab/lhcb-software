@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.165 2007-12-03 14:13:32 cattanem Exp $
+! $Id: release.notes,v 1.166 2008-01-11 11:46:36 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
+
+! 2008-01-10 - Chris Jones
+ - Add new tool interface to tools that implement Snell's Law for
+   refraction
+ - Add missing initilisation for m_dataWord to RicgGeomPhoton
+ - Extend RichGeomPhoton to include direction at emission point
 
 !====================== RichKernel v7r9 2007-12-03 ====================
 ! 2007-12-03 - Chris Jones

@@ -1,23 +1,24 @@
 
 /** @file RichGeomPhoton.h
  *
- *  Header file for RICH utility class : RichGeomPhoton
+ *  Header file for RICH utility class : LHCb::RichGeomPhoton
  *
- *  $Id: RichGeomPhoton.h,v 1.4 2007-09-04 16:45:09 jonrob Exp $
+ *  $Id: RichGeomPhoton.h,v 1.5 2008-01-11 11:46:35 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-05-30
  */
 
-#ifndef RICHEVENT_RICHGEOMPHOTON_H
-#define RICHEVENT_RICHGEOMPHOTON_H 1
+#ifndef RICHKERNEL_RICHGEOMPHOTON_H
+#define RICHKERNEL_RICHGEOMPHOTON_H 1
 
 // std include
 #include <iostream>
 
 // geometry
 #include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 // Kernel
 #include "RichKernel/RichPixelCluster.h"
@@ -97,7 +98,39 @@ namespace LHCb
         m_dataWord              ( 0          ),
         m_activeSegmentFraction ( activeFrac ) { }
 
-    /** Constructor from full information
+    /** Constructor from full photon information
+     *
+     *  @param theta Cherenkov angle theta
+     *  @param phi   Cherenkov angle phi
+     *  @param emissionPoint The assumed photon emission point
+     *  @param emissionDir   The photon direction at the emission point
+     *  @param detectionPoint The photon detection point on the HPDs
+     *  @param sphMirrReflPoint The reflection point on the spherical mirrors
+     *  @param flatMirrReflPoint The reflection point on the flat mirrors
+     *  @param cluster The RichSmartID channel cluster
+     *  @param activeFrac The fraction of the associate segment that this photon could have been radiated from
+     */
+    RichGeomPhoton( const float theta,
+                    const float phi,
+                    const Gaudi::XYZPoint & emissionPoint,
+                    const Gaudi::XYZVector & emissionDir,
+                    const Gaudi::XYZPoint & detectionPoint,
+                    const Gaudi::XYZPoint & sphMirrReflPoint,
+                    const Gaudi::XYZPoint & flatMirrReflPoint,
+                    const LHCb::RichSmartID smartID = LHCb::RichSmartID(),
+                    const float activeFrac = 0 )
+      : m_CherenkovTheta         ( theta             ),
+        m_CherenkovPhi           ( phi               ),
+        m_emissionPoint          ( emissionPoint     ),
+        m_emissionDir            ( emissionDir       ),
+        m_detectionPoint         ( detectionPoint    ),
+        m_sphMirReflectionPoint  ( sphMirrReflPoint  ),
+        m_flatMirReflectionPoint ( flatMirrReflPoint ),
+        m_dataWord               ( 0                 ),
+        m_smartID                ( smartID           ),
+        m_activeSegmentFraction  ( activeFrac        ) { }
+
+  /** Constructor from full photon information (without photon direction at emission).
      *
      *  @param theta Cherenkov angle theta
      *  @param phi   Cherenkov angle phi
@@ -122,6 +155,7 @@ namespace LHCb
         m_detectionPoint         ( detectionPoint    ),
         m_sphMirReflectionPoint  ( sphMirrReflPoint  ),
         m_flatMirReflectionPoint ( flatMirrReflPoint ),
+        m_dataWord               ( 0                 ),
         m_smartID                ( smartID           ),
         m_activeSegmentFraction  ( activeFrac        ) { }
 
@@ -188,6 +222,33 @@ namespace LHCb
     inline Gaudi::XYZPoint& emissionPoint ()
     {
       return m_emissionPoint;
+    }
+
+    /**
+     * Set accessor for the estimated photon direction at the emission point
+     * @param emissionDir the new value for the estimated emission direction
+     */
+    inline void setEmissionDir ( const Gaudi::XYZVector& emissionDir )
+    {
+      m_emissionDir = emissionDir;
+    }
+
+    /**
+     * Const Get accessor for the estimated photon direction at the emission point
+     * @return the current value of the estimated emission direction
+     */
+    inline const Gaudi::XYZVector& emissionDir () const
+    {
+      return m_emissionDir;
+    }
+
+    /**
+     * Get accessor for the estimated photon direction at the emission point
+     * @return the current value of the estimated emission direction
+     */
+    inline Gaudi::XYZVector& emissionDir ()
+    {
+      return m_emissionDir;
     }
 
     /**
@@ -456,7 +517,8 @@ namespace LHCb
     float m_CherenkovTheta;                    ///< Cherenkov angle theta
     float m_CherenkovPhi;                      ///< Cherenkov angle phi
     Gaudi::XYZPoint m_emissionPoint;           ///< The photon emission point
-    Gaudi::XYZPoint m_detectionPoint;          ///< The photon detection point on the HPDS
+    Gaudi::XYZVector m_emissionDir;            ///< The photon direction at the emission point
+    Gaudi::XYZPoint m_detectionPoint;          ///< The photon detection point on the HPD entrance window
     Gaudi::XYZPoint m_sphMirReflectionPoint;   ///< The spherical mirror reflection point
     Gaudi::XYZPoint m_flatMirReflectionPoint;  ///< The flat mirror relfection point
     RichGeomPhotonCode::ShortType m_dataWord;  ///< Bit-pack data word
@@ -471,4 +533,4 @@ namespace LHCb
 
 } // end LHCb namespace
 
-#endif // RICHEVENT_RICHGEOMPHOTON_H
+#endif // RICHKERNEL_RICHGEOMPHOTON_H

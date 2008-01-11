@@ -42,6 +42,7 @@
   <class name    = "Rich::IRefractiveIndex"              />
   <class name    = "Rich::ISmartIDTool"                  />
   <class name    = "Rich::IToolRegistry"                 />
+  <class name    = "Rich::ISnellsLawRefraction"          />
 
   <class name    = "Rich::IDetParameters::RadLimits"     />
 
