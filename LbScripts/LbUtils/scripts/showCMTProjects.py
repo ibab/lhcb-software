@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: showCMTProjects.py,v 1.4 2008-01-11 10:21:05 hmdegaud Exp $
+# $Id: showCMTProjects.py,v 1.5 2008-01-11 12:49:51 hmdegaud Exp $
 
 from LbUtils.CMT import Project
 from LbUtils.Script import Script
@@ -44,7 +44,8 @@ class showCMTProjScript(Script):
                           help = "show base projects")
         
     def main(self):
-        del self.env["CMTPATH"]
+        if self.env.has_key("CMTPATH"): 
+            del self.env["CMTPATH"]
     
         projname = None
         if len(self.args) > 0:
