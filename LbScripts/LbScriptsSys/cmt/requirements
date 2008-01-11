@@ -2,5 +2,8 @@ package LbScriptsSys
 version v1r0
 
 use LbScriptsPolicy		v1r0
-use LbUtils			v1r0
+use LbUtils				v1r0
+#use LbRelease			v1r0
 
+# remove CMTPATH from the environment
+setup_script NoCMTPATH
