@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 from subprocess import Popen, PIPE
 
 
@@ -51,6 +52,30 @@ class Project(object):
         p = Popen(["cmt", "show", "projects"], stdout=PIPE, stderr=PIPE, close_fds=True)
         for line in p.stdout:
             print line[:-1]
+        for line in p.stderr:
+            log.warning(line[:-1])
+        retcode = os.waitpid(p.pid, 0)[1]
+        log.debug("return code of 'cmt show projects' in %s is %s", wdir, retcode)
+        if retcode != 0:
+            log.warning("return code of 'cmt show projects' in %s is %s", wdir, retcode)
+    def getBase(self):
+        log = logging.getLogger()
+        wdir = os.path.join(self._location,"cmt")
+        os.chdir(wdir)
+        parentlist = []
+        p = Popen(["cmt", "show", "projects"], stdout=PIPE, stderr=PIPE, close_fds=True)
+        for line in p.stdout:
+            words = line[:-1].split(" ")
+            if re.compile("^"+self._name).match(line):
+                parmatch = re.compile("C=[a-zA-Z]+").findall(line)
+                for w in parmatch :
+                    parentlist.append(w.replace("C=",""))
+            elif parentlist :
+                for par in parentlist:
+                    if re.compile("\s+" + par).match(line):
+                        m = re.compile("\(in\s+(.+)\s*\)").search(line)
+                        if m : 
+                            print "\t%s" % m.group(1)
         for line in p.stderr:
             log.warning(line[:-1])
         retcode = os.waitpid(p.pid, 0)[1]
@@ -153,5 +178,12 @@ def getProjects(cmtprojectpath, name=None, version=None, casesense=False, select
     return projlist
 
 
-def getProjectTree(cmtprojectpath, name=None, version=None, casesense=False):
+class ProjectTree():
+    pass
+
+class ReversedProjectTree():
+    pass
+
+
+def getProjectTrees(cmtprojectpath, name=None, version=None, casesense=False):
     pass

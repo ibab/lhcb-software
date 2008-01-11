@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: showCMTProjects.py,v 1.3 2008-01-09 14:32:47 hmdegaud Exp $
+# $Id: showCMTProjects.py,v 1.4 2008-01-11 10:21:05 hmdegaud Exp $
 
 from LbUtils.CMT import Project
 from LbUtils.Script import Script
@@ -37,6 +37,12 @@ class showCMTProjScript(Script):
                           action = "store_true",
                           dest = "showdependencies",
                           help = "show project dependencies")
+        parser.set_defaults(showbase=False)
+        parser.add_option("-b", "--base",
+                          action = "store_true",
+                          dest = "showbase",
+                          help = "show base projects")
+        
     def main(self):
         del self.env["CMTPATH"]
     
@@ -59,7 +65,8 @@ class showCMTProjScript(Script):
             print p.location()
             if options.showdependencies : 
                 p.getDependencies()
-
+            if options.showbase :
+                p.getBase()
 
 if __name__ == '__main__':
 
