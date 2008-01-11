@@ -52,9 +52,11 @@ pattern install_python_init \
 make_fragment python_init -header=python_init_header -dependencies
 
 pattern python_alias \
-    alias <script> "python $(LbScripts_home)/InstallArea/scripts/<script>.py" \
-           WIN32     "python $(LbScripts_home)\InstallArea\scripts\<script>.py" ;
+    alias <script> "python $(LbScripts_home)/InstallArea/scripts/<script>.py" ; \
+    document python_alias <script>_python_alias script=<script> ; \
+    macro_append <script>_python_alias_dependencies " install_scripts "
 
+make_fragment python_alias -header=python_alias_header -dependencies
 
 #--------------------------------------------
 # Patterns for specifically declaring and installing script files in the

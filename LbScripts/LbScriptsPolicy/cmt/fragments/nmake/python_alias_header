@@ -1,0 +1,25 @@
+#-- start of install_python_header ------
+
+installarea = $(CMTINSTALLAREA)
+install_scripts_dir = $(installarea)\scripts
+bat_file = $(install_scripts_dir)\$(script).bat
+py_file = $(install_scripts_dir)\$(script).py
+
+
+${CONSTITUENT} :: ${CONSTITUENT}install
+
+install :: ${CONSTITUENT}install
+
+${CONSTITUENT}install :: $(bat_file)
+
+$(bat_file) :: $(py_file)
+	@del $(bat_file)
+	@if exist $(install_scripts_dir) echo "python $(py_file) %* " > $(bat_file)
+
+${CONSTITUENT}clean :: ${CONSTITUENT}uninstall
+
+uninstall :: ${CONSTITUENT}uninstall
+
+${CONSTITUENT}uninstall ::
+	@del $(bat_file)
+
