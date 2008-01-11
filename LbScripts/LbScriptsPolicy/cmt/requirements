@@ -58,6 +58,23 @@ pattern python_alias \
 
 make_fragment python_alias -header=python_alias_header -dependencies
 
+
+pattern source_shell_alias \
+    set_append SOURCESHELLALIASLIST " <script> "
+
+cmtpath_pattern \
+    setup_script $(LbScripts_home)/InstallArea/scripts/SourceShellAlias
+
+
+pattern shell_alias \
+    set_append SHELLALIASLIST " <script> "
+
+cmtpath_pattern \
+    setup_script $(LbScripts_home)/InstallArea/scripts/ShellAlias
+
+apply_pattern source_shell_alias script=ShellAlias
+apply_pattern source_shell_alias script=SourceShellAlias
+
 #--------------------------------------------
 # Patterns for specifically declaring and installing script files in the
 # current installation area
