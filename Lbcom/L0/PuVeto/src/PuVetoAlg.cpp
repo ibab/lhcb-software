@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.32 2006-09-19 14:44:25 ocallot Exp $
+// $Id: PuVetoAlg.cpp,v 1.33 2008-01-11 15:16:20 graven Exp $
 // Include files
 #include <fstream>
 // from Gaudi
@@ -333,27 +333,18 @@ void PuVetoAlg::fillHisto (unsigned int hp[4][16]) {
   for ( unsigned int j=0 ; m_nBins > j ; j++ ) {
     m_hist[j] = 0;
   }
-
-  int ia = -1;
-  int ib = -1;
-
-  for (int pia=0;pia<16;pia++) {
-    for (int bia=0;bia<32;bia++) {
-      ia++;
-      ib = -1;
-      for (int pib=0;pib<16;pib++) {
-        for (int bib=0;bib<32;bib++) {
-          ib++;
-          if ((int)ia/128 != (int)ib/128) continue;
-          for (int i=0;i<2;i++){
-            short unsigned int acluster = getBit(bia,hp[i][pia]);
-            short unsigned int bcluster = getBit(bib,hp[i+2][pib]);
-            if (acluster && bcluster) {
-              short int bin = m_binMatrix[i][ia%128][ib%128];
-              if (bin > -1) {
-                m_hist[bin]++;
-              }
-            }
+  for (unsigned i=0;i<2;i++){
+    for (unsigned pia=0;pia<16;pia++) {
+      for (unsigned pib=0;pib<16;pib++) {
+        if( (pib>>2) != (pia>>2)  ) continue;
+        for (unsigned bia=0;bia<32;bia++) {
+          if (getBit(bia,hp[i][pia])==0) continue;
+          unsigned ia=(((pia<<5)|bia)%128);
+          for (unsigned bib=0;bib<32;bib++) {
+            if ( getBit(bib,hp[i+2][pib])==0) continue;
+            unsigned ib=(((pib<<5)|bib)%128);
+            short int bin = m_binMatrix[i][ia][ib];
+            if (bin > -1) m_hist[bin]++;
           }
         }
       }
@@ -361,25 +352,20 @@ void PuVetoAlg::fillHisto (unsigned int hp[4][16]) {
   }
 }
 
-
-
-
 //=========================================================================
 //  Mask the hits around the first peak bin, for a total of mwbins
 //=========================================================================
 void PuVetoAlg::maskHits ( short int bin,short int mwbins ) {
 
-  for (int i=0;i<128;i++) {
-    for (int j=0;j<128;j++) {
-      for (int k=0;k<2;k++) {
+  for (int k=0;k<2;k++) {
+    for (int i=0;i<128;i++) {
+      for (int j=0;j<128;j++) {
         if (abs(m_binMatrix[k][i][j]-bin)<=(mwbins-1)/2) m_maskMatrix[k][i][j] = 1;
         else  m_maskMatrix[k][i][j] = 0;
       }
     }
   }
   
- int ia = -1;
- int ib = -1;
  unsigned int maskpat[4][16];
  
  
@@ -389,18 +375,17 @@ void PuVetoAlg::maskHits ( short int bin,short int mwbins ) {
    }
  }
  
- for (int pia=0;pia<16;pia++) {
-   for (int bia=0;bia<32;bia++) {
-     ia++;
-     ib = -1;     
+ for (int i=0;i<2;i++){
+   for (int pia=0;pia<16;pia++) {
      for (int pib=0;pib<16;pib++) {
-       for (int bib=0;bib<32;bib++) {
-         ib++;
-         if ((int)ia/128 != (int)ib/128) continue;
-         for (int i=0;i<2;i++){
-           short unsigned int acluster = getBit(bia,m_hitPattern[i][pia]);
-           short unsigned int bcluster = getBit(bib,m_hitPattern[i+2][pib]);
-           if (m_maskMatrix[i][ia%128][ib%128] && acluster && bcluster) {
+       if( (pib>>2) != (pia>>2)  ) continue;
+       for (int bia=0;bia<32;bia++) {
+         if (getBit(bia,m_hitPattern[i][pia])==0) continue;
+         for (int bib=0;bib<32;bib++) {
+           if (getBit(bib,m_hitPattern[i+2][pib])==0) continue;
+           unsigned ia =((pia<<5)|bia)%128;
+           unsigned ib =((pib<<5)|bib)%128;
+           if (m_maskMatrix[i][ia][ib]) {
              setBit(bia,maskpat[i][pia]);
              setBit(bib,maskpat[i+2][pib]);
            }
@@ -410,9 +395,9 @@ void PuVetoAlg::maskHits ( short int bin,short int mwbins ) {
    }
  }
  
- for (int pi=0;pi<16;pi++) {
-   for (int bi=0;bi<32;bi++) {
-     for(int i=0;i<(int)m_nbPuSensor;i++) {
+ for(int i=0;i<(int)m_nbPuSensor;i++) {
+   for (int pi=0;pi<16;pi++) {
+     for (int bi=0;bi<32;bi++) {
       if (getBit(bi,m_hitPattern[i][pi]) && !getBit(bi,maskpat[i][pi])) 
         setBit(bi,m_maskedPattern[i][pi]);
      }

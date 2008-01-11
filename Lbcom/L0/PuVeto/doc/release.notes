@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.49 2006-09-21 12:23:32 cattanem Exp $
+! $Id: release.notes,v 1.50 2008-01-11 15:16:20 graven Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Marko Zupan
+
+
+! 2008-01-11 - Gerhard Raven
+ - change order of some nested loops in PuVetoAlg to make it faster...
 
 !======================== PuVeto v7r2 2006-09-21 =========================
 ! 2006-09-19 - Olivier Callot
