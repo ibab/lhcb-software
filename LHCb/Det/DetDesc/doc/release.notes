@@ -1,9 +1,33 @@
 ! =============================================================================
-! $Id: release.notes,v 1.349 2008-01-10 14:27:07 cattanem Exp $ 
+! $Id: release.notes,v 1.350 2008-01-11 14:23:24 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2008-01-11 - Juan PALACIOS
+ - DetDesc/3DTransformationFunctions.h
+  . Remove methods
+
+    const Gaudi::Transform3D XYZTranslation(const std::vector<double>& params);
+    Method is replaced by direct use of new ROOT::Math::Translation3D class.
+
+    const Gaudi::Transform3D ZYXRotation(const std::vector<double>& params);  
+    Method replaced by direct ure of new ROOT::Math::RotationZYX class.
+
+    void getZYXRotationParameters(const Gaudi::Rotation3D& rot,
+                                  std::vector<double>& rotParams);
+    void getTranslationParameters(const Gaudi::TranslationXYZ& trans,
+                                  std::vector<double>& transParams);
+    Get components directly from RotationZYX and Tranlsation3D objects.
+
+ - Remove from src/Lib:
+   RotationZYX.h
+   RotationZYXfwd.h
+   RotationZYX.cpp
+   3DConversions.h
+   3DConversions.cpp
+   These had been borrowed from MathCore awaiting their release.
 
 !====================== DetDesc v18r3 2008-01-10 ==============================
 ! 2008-01-10 - Juan PALACIOS
