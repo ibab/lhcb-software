@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: IRichExpectedTrackSignal.h,v 1.12 2007-04-23 12:56:12 jonrob Exp $
+ *  $Id: IRichExpectedTrackSignal.h,v 1.13 2008-01-11 11:51:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -114,14 +114,20 @@ namespace Rich
       virtual double nDetectablePhotons ( LHCb::RichRecSegment * segment,
                                           const Rich::ParticleIDType id ) const = 0;
 
-      /// The average energy of signal Cherenkov photons
+      /// The average energy of signal Cherenkov photons for the given ID
       virtual double avgSignalPhotEnergy( LHCb::RichRecSegment * segment,
                                           const Rich::ParticleIDType id ) const = 0;
 
-      /// The average energy of emitted Cherenkov photons
+      /// The average energy of emitted Cherenkov photons for the given ID
       virtual double avgEmitPhotEnergy( LHCb::RichRecSegment * segment,
                                         const Rich::ParticleIDType id ) const = 0;
 
+      /// The average energy of signal Cherenkov photons
+      virtual double avgSignalPhotEnergy( LHCb::RichRecSegment * segment ) const = 0;
+      
+      /// The average energy of emitted Cherenkov photons
+      virtual double avgEmitPhotEnergy( LHCb::RichRecSegment * segment ) const = 0;
+      
       /// Is it possible for this track to give Rich information
       virtual bool hasRichInfo( LHCb::RichRecTrack * track ) const = 0;
 

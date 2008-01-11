@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.14 2007-09-14 13:36:40 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.15 2008-01-11 11:51:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -36,11 +36,11 @@ namespace Rich
         m_smartIDTool          ( NULL               ),
         m_rayTrace             ( NULL               ),
         m_tracks               ( 0                  ),
-        m_richRecTrackLocation ( LHCb::RichRecTrackLocation::Default  ),
+        m_richRecTrackLocation ( LHCb::RichRecTrackLocation::Default ),
         m_Nevts                ( 0                  ),
         m_bookKeep             ( false              ),
-        m_traceMode            ( LHCb::RichTraceMode::IgnoreHPDAcceptance ),
-        m_traceModeRad         ( Rich::NRadiatorTypes )
+        m_traceModeRad         ( Rich::NRadiatorTypes,
+                                 LHCb::RichTraceMode(LHCb::RichTraceMode::IgnoreHPDAcceptance) )
     {
 
       // Define the interface
@@ -81,10 +81,7 @@ namespace Rich
       incSvc()->addListener( this, IncidentType::EndEvent   );
 
       // track ray tracing
-      m_traceModeRad[Rich::Aerogel]  = m_traceMode;
       m_traceModeRad[Rich::Aerogel].setAeroRefraction(true);
-      m_traceModeRad[Rich::Rich1Gas] = m_traceMode;
-      m_traceModeRad[Rich::Rich2Gas] = m_traceMode;
       info() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endreq;
       info() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endreq;
       info() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endreq;

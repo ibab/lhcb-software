@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : Rich::Rec::PhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.23 2008-01-10 17:20:31 papanest Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.24 2008-01-11 11:51:09 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -223,9 +223,8 @@ namespace Rich
 
         // make a rough guess at a size to reserve based on number of pixels
         if ( richPhotons()->empty() )
-          richPhotons()->reserve( 0.05 *
-                                  trackCreator()->richTracks()->size() *
-                                  pixelCreator()->richPixels()->size() );
+          richPhotons()->reserve( ( trackCreator()->richTracks()->size() *
+                                    pixelCreator()->richPixels()->size() ) / 20 );
 
         // Iterate over all tracks
         for ( LHCb::RichRecTracks::const_iterator iTrack =
