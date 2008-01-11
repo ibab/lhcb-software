@@ -1,9 +1,10 @@
-// $Id: 3DTransformationFunctions.h,v 1.2 2007-07-02 09:40:12 cattanem Exp $
+// $Id: 3DTransformationFunctions.h,v 1.3 2008-01-11 12:39:28 jpalac Exp $
 #ifndef DETDESC_3DTRANSFORMATIONFUNCTIONS_H 
 #define DETDESC_3DTRANSFORMATIONFUNCTIONS_H 1
 
 // Include files
 #include "GaudiKernel/Transform3DTypes.h"
+#include "Math/Translation3D.h"
 #include <vector>
 
 namespace DetDesc {
@@ -28,19 +29,6 @@ namespace DetDesc {
   const Gaudi::Transform3D localToGlobalTransformation(const std::vector<double>& translationParams,
                                                        const std::vector<double>& rotationParams,
                                                        const std::vector<double>& pivotParams);
-
- 
-  /**
-   * Make a 3D transformation object from a simple 3D translation
-   * 
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   *
-   * @param params vector containing the X,Y,Z coordinates of the translation.
-   * @return 3D transformation object representing the translation.
-   * @todo Move this function outside of DetDesc if and when a 
-   * ROOT::Math::Translation3D class available in MathCore. 
-   */
-  const Gaudi::Transform3D XYZTranslation(const std::vector<double>& params);
 
   /**
    * Build a 3D rotation from three angles.

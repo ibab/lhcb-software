@@ -1,4 +1,4 @@
-// $Id: 3DTransformationFunctions.cpp,v 1.1 2007-06-13 16:35:56 jpalac Exp $
+// $Id: 3DTransformationFunctions.cpp,v 1.2 2008-01-11 12:39:28 jpalac Exp $
 // Include files 
 
 
@@ -14,23 +14,14 @@ const Gaudi::Transform3D localToGlobalTransformation(const std::vector<double>& 
                                                      const std::vector<double>& rotationParams,
                                                      const std::vector<double>& pivotParams) 
 {
-  const Gaudi::Transform3D pivot    = DetDesc::XYZTranslation(pivotParams);
+  const ROOT::Math::Translation3D pivot    = ROOT::Math::Translation3D( pivotParams.begin(),
+                                                                 pivotParams.end()   );
   const Gaudi::Transform3D rotation = DetDesc::ZYXRotation(rotationParams);
-  const Gaudi::Transform3D translation = DetDesc::XYZTranslation(translationParams);
+  const ROOT::Math::Translation3D translation = 
+    ROOT::Math::Translation3D( translationParams.begin(),
+                               translationParams.end()    );
 
   return translation*pivot*rotation*(pivot.Inverse());
-  
-}
-
-const Gaudi::Transform3D XYZTranslation(const std::vector<double>& params) 
-{
-  return (params.size()==3) 
-    ? 
-    Gaudi::Transform3D( Gaudi::TranslationXYZ(params[0], 
-                                              params[1], 
-                                              params[2]) )
-    : 
-    Gaudi::Transform3D();
   
 }
 
@@ -53,7 +44,8 @@ void getZYXTransformParameters(const Gaudi::Transform3D& CDM,
   Gaudi::Rotation3D newRot;
   Gaudi::TranslationXYZ newTrans;
   CDM.GetDecomposition(newRot, newTrans);
-  const Gaudi::Transform3D pivotTrans = DetDesc::XYZTranslation(pivotParams);
+  const ROOT::Math::Translation3D pivotTrans = ROOT::Math::Translation3D( pivotParams.begin(),
+                                                                          pivotParams.end()    );
   
   // Take the pivot out of the rotation.
   const Gaudi::Transform3D newRotPart = 
