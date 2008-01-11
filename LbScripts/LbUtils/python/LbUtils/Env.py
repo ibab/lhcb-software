@@ -53,7 +53,11 @@ class Environment:
         Needed to provide the same interface as os.environ.
         """
         return self.env.keys()
-        
+    def has_key(self,key):
+        """
+        return True if the key is present
+        """
+        return (key in self.env.keys())
     def items(self):
         """
         Return the list of (name,value) pairs for the defined environment variables.
