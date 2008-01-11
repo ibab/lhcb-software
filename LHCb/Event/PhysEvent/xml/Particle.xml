@@ -46,7 +46,7 @@
 
         <enumval name="ConfLevel"            value="0"          desc="Confidence Level for the particle" />
         <enumval name="Weight"                                  desc="'Weight' for the particle"         />
-
+        <enumval name="Chi2OfMassConstrainedFit" value="10"     desc="Chi2 of Mass Constrained Fit"      />
         <enumval name="FirstJetIndex"        value="9500"       desc="The first index allocated for jet-related studies"   />
         <enumval name="JetActiveArea"                           desc="Jet Active Area estimation"   />
         <enumval name="JetActiveAreaError"                      desc="Uncertanty in Jet Active Area evaluation"   />
