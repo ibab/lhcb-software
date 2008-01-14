@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.h,v 1.11 2008-01-10 12:29:57 jpalac Exp $
+// $Id: GlobalToLocalDelta.h,v 1.12 2008-01-14 13:23:00 jpalac Exp $
 #ifndef DETDESC_GLOBALTOLOCALDELTA_H 
 #define DETDESC_GLOBALTOLOCALDELTA_H 1
 
@@ -168,7 +168,86 @@ namespace DetDesc {
                                                          const Gaudi::Transform3D& parentTransform);
 
  
-  
+   /**
+   * Obtain the local delta transformation starting from a position transformation
+   * from an arbitrary frame.
+   * @param  frame the Transform3D of the frame with respect to which the position
+   *         is taken
+   * @param  GI the IGeometryInfo of the detector element in question
+   * @param  parentTransform 3D transformation that describes 
+   *         the total "misaligned" global matrix T' in the frame of parentGI
+   *         Misaligned position matrix T_k' = T_k * globalDelta^-1 * globalDelta'
+   *
+   * @return 3D transformation that globalDelta' applies misalignment from nominal
+   *         position in the frame of the detector element's parent.
+   * @date 2007-07-11
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @todo Add check for parentGI really being a parent of GI
+   *
+  */
+  const Gaudi::Transform3D localDeltaFromAnyFrame(const Gaudi::Transform3D& frame,
+                                                  const IDetectorElement* DE,
+                                                  const Gaudi::Transform3D& toGlobalInFrame); 
+
+   /**
+   * Obtain the local delta transformation starting from a position transformation
+   * from an arbitrary frame.
+   * @param  frame the Transform3D of the frame with respect to which the position
+   *         is taken
+   * @param  GI the IGeometryInfo of the detector element in question
+   * @param  parentTransform 3D transformation that describes 
+   *         the total "misaligned" global matrix T' in frame
+   *
+   * @return 3D transformation representing the local off-nominal matrix for
+   *         GI, including the previously existing one. That is, should replace, 
+   *         not increment, what was there before
+   * @date 2007-07-11
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @todo Add check for parentGI really being a parent of GI
+   *
+  */
+  const Gaudi::Transform3D localDeltaFromAnyFrame(const Gaudi::Transform3D& frame,
+                                                  const IGeometryInfo* GI,
+                                                  const Gaudi::Transform3D& toGlobalInFrame); 
+   /**
+   * Obtain the local delta transformation starting from an off-nominal 
+   * transformation from an arbitrary frame.
+   * @param  frame        the Transform3D of the frame with respect to which the position
+   *                      is taken
+   * @param  DE           the detector element in question
+   * @param  deltaInFrame 3D transformation that describes the "misalignement"
+   *                      correction  transformation D_frame' in frame
+   * @return 3D transformation representing the local off-nominal matrix for
+   *         GI, including the previously existing one. That is, should replace, 
+   *         not increment, what was there before
+   * @date 2007-07-11
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @todo Add check for parentGI really being a parent of GI
+   *
+  */
+  const Gaudi::Transform3D localDeltaFromAnyFrameDelta(const Gaudi::Transform3D& frame,
+                                                       const IDetectorElement* DE,
+                                                       const Gaudi::Transform3D& deltaInFrame); 
+
+   /**
+   * Obtain the local delta transformation starting from an off-nominal 
+   * transformation from an arbitrary frame.
+   * @param  frame        the Transform3D of the frame with respect to which the position
+   *                      is taken
+   * @param  GI           the IGeometryInfo of the detector element in question
+   * @param  deltaInFrame 3D transformation that describes the "misalignement"
+   *                      correction  transformation D_frame' in frame
+   * @return 3D transformation representing the local off-nominal matrix for
+   *         GI, including the previously existing one. That is, should replace, 
+   *         not increment, what was there before
+   * @date 2007-07-11
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @todo Add check for parentGI really being a parent of GI
+   *
+  */
+  const Gaudi::Transform3D localDeltaFromAnyFrameDelta(const Gaudi::Transform3D& frame,
+                                                       const IGeometryInfo* GI,
+                                                       const Gaudi::Transform3D& deltaInFrame); 
 
   /**
    *
