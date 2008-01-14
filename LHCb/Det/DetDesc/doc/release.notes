@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.350 2008-01-11 14:23:24 jpalac Exp $ 
+! $Id: release.notes,v 1.351 2008-01-14 06:35:31 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+!====================== DetDesc v18r3 2008-01-11 ==============================
+! 2008-01-11 - Marco Cattaneo
+ - Do not add MathCore to ROOT_linkopts, already done by LHCbKernel
 
 ! 2008-01-11 - Juan PALACIOS
  - DetDesc/3DTransformationFunctions.h
@@ -29,7 +33,6 @@
    3DConversions.cpp
    These had been borrowed from MathCore awaiting their release.
 
-!====================== DetDesc v18r3 2008-01-10 ==============================
 ! 2008-01-10 - Juan PALACIOS
  - DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.cpp
   . Add new functions:

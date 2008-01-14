@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.101 2007-12-19 09:42:39 ibelyaev Exp $ 
+# $Id: requirements,v 1.102 2008-01-14 06:35:30 cattanem Exp $ 
 # =============================================================================
 package       DetDesc
 version       v18r3
@@ -20,8 +20,6 @@ library       DetDescLib        Lib/*.cpp
 
 # =========== standard patterns (the order is essential!) =====================
 apply_pattern linker_library    library=DetDescLib 
-macro_append ROOT_linkopts " -lMathCore " \
-             WIN32 " libMathCore.lib "
 
 # =============== LCG Dictionaries ============================================
 apply_pattern     reflex_dictionary                                 \
@@ -31,7 +29,7 @@ apply_pattern     reflex_dictionary                                 \
                   options="-U__MINGW32__"
 
 # Hack for cmt v1r19 bug to link dictionary on windows
-macro DetDescDict_use_linkopts $(use_linkopts)
+#macro DetDescDict_use_linkopts $(use_linkopts)
 
 # =============================================================================
 # The END 
