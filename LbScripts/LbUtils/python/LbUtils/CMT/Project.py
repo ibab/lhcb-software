@@ -1,3 +1,4 @@
+from LbUtils import Env
 import logging
 import os
 import re
@@ -49,6 +50,8 @@ class Project(object):
         log = logging.getLogger()
         wdir = os.path.join(self._location,"cmt")
         os.chdir(wdir)
+        env = Env.getDefaultEnv()
+        env["PWD"] = wdir
         p = Popen(["cmt", "show", "projects"], stdout=PIPE, stderr=PIPE, close_fds=True)
         for line in p.stdout:
             print line[:-1]
@@ -62,6 +65,8 @@ class Project(object):
         log = logging.getLogger()
         wdir = os.path.join(self._location,"cmt")
         os.chdir(wdir)
+        env = Env.getDefaultEnv()
+        env["PWD"] = wdir
         parentlist = []
         p = Popen(["cmt", "show", "projects"], stdout=PIPE, stderr=PIPE, close_fds=True)
         for line in p.stdout:
