@@ -23,19 +23,22 @@
 #include "HistoPropDialog.h"
 #include "PresenterMainFrame.h"
 
+using namespace pres;
+
 ClassImp(HistoPropDialog)
 
-  HistoPropDialog::HistoPropDialog(PresenterMainFrame* gui, Int_t Width,
-    Int_t Height, MsgLevel v) :
-      TGTransientFrame(gClient->GetRoot(), gui, Width, Height),
+HistoPropDialog::HistoPropDialog(PresenterMainFrame* gui, int width,
+    int height, MsgLevel v) :
+      TGTransientFrame(gClient->GetRoot(), gui, width, height),
       m_mainFrame(gui),
       m_verbosity(v),
       m_msgBoxReturnCode(0)
 {
   SetCleanup(kDeepCleanup);
+  Connect("CloseWindow()", "HistoPropDialog", this, "CloseWindow()");
+  DontCallClose();
   SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputSystemModal);
   build();
-  CenterOnParent();
   MapWindow();
 }
 HistoPropDialog::~HistoPropDialog()
@@ -44,52 +47,52 @@ HistoPropDialog::~HistoPropDialog()
 }
 void HistoPropDialog::ok()
 {
-  m_mainFrame->m_bulkHistoOptions.m_1DRootDrawOption =
+  m_mainFrame->bulkHistoOptions.m_1DRootDrawOption =
     dynamic_cast<TGTextLBEntry*>(m_1DRootDrawOptionComboBox->
     GetSelectedEntry())->GetText()->GetString();
-  m_mainFrame->m_bulkHistoOptions.m_2DRootDrawOption =
+  m_mainFrame->bulkHistoOptions.m_2DRootDrawOption =
     dynamic_cast<TGTextLBEntry*>(m_2DRootDrawOptionComboBox->
     GetSelectedEntry())->GetText()->GetString();
-  m_mainFrame->m_bulkHistoOptions.m_genericRootDrawOption =
+  m_mainFrame->bulkHistoOptions.m_genericRootDrawOption =
     dynamic_cast<TGTextLBEntry*>(m_genericRootDrawOptionComboBox->
     GetSelectedEntry())->GetText()->GetString();
-  m_mainFrame->m_bulkHistoOptions.m_statsOption =
+  m_mainFrame->bulkHistoOptions.m_statsOption =
     (bool) m_statOptionComboBox->GetSelected();
-  m_mainFrame->m_bulkHistoOptions.m_xLabel =
+  m_mainFrame->bulkHistoOptions.m_xLabel =
     m_xAxisLabelTextEntry->GetDisplayText();
-  m_mainFrame->m_bulkHistoOptions.m_yLabel =
+  m_mainFrame->bulkHistoOptions.m_yLabel =
     m_yAxisLabelTextEntry->GetDisplayText();
-  m_mainFrame->m_bulkHistoOptions.m_fillStyle =
+  m_mainFrame->bulkHistoOptions.m_fillStyle =
     (int) m_fillStylePatternSelector->GetPattern();
-  m_mainFrame->m_bulkHistoOptions.m_fillColour =
+  m_mainFrame->bulkHistoOptions.m_fillColour =
     (int) TColor::GetColor(m_fillColourSelector->GetColor());
-  m_mainFrame->m_bulkHistoOptions.m_lineWidth =
+  m_mainFrame->bulkHistoOptions.m_lineWidth =
     (int) m_lineWidthComboBox->GetSelected();
-  m_mainFrame->m_bulkHistoOptions.m_lineStyle =
+  m_mainFrame->bulkHistoOptions.m_lineStyle =
     (int) m_lineStyleComboBox->GetSelected();
-  m_mainFrame->m_bulkHistoOptions.m_lineColour =
+  m_mainFrame->bulkHistoOptions.m_lineColour =
     (int) TColor::GetColor(m_lineColourSelector->GetColor());
 
   // m_bulkHistoOptions = new BulkHistoOptions;
   // return m_bulkHistoOptions;
-  DeleteWindow();
+  CloseWindow();
 }
 void HistoPropDialog::build()
 {
 
   // main frame
   //   TGMainFrame *fMainFrame916 = new TGMainFrame(gClient->GetRoot(), 10, w0, kMainFrame | kVerticalFrame);
-  SetLayoutBroken(kTRUE);
+  SetLayoutBroken(true);
 
   // composite frame
   TGCompositeFrame *fMainFrame648 = new TGCompositeFrame(this, 646, 435,
     kVerticalFrame);
-  fMainFrame648->SetLayoutBroken(kTRUE);
+  fMainFrame648->SetLayoutBroken(true);
 
   // composite frame
   TGCompositeFrame *fCompositeFrame649 = new TGCompositeFrame(fMainFrame648,
     664, 448, kVerticalFrame);
-  fCompositeFrame649->SetLayoutBroken(kTRUE);
+  fCompositeFrame649->SetLayoutBroken(true);
   m_cancelButton = new TGTextButton(fCompositeFrame649,"Close");
   m_cancelButton->SetTextJustify(36);
   m_cancelButton->Resize(92, 24);
@@ -97,12 +100,12 @@ void HistoPropDialog::build()
     new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   m_cancelButton->MoveResize(536, 392, 92, 24);
   m_cancelButton->Connect("Clicked()", "HistoPropDialog", this,
-    "DeleteWindow()");
+    "CloseWindow()");
 
   // "Display Options" group frame
   TGGroupFrame *fGroupFrame651 = new TGGroupFrame(fCompositeFrame649,
     "Display Options");
-  fGroupFrame651->SetLayoutBroken(kTRUE);
+  fGroupFrame651->SetLayoutBroken(true);
   TGLabel* m_xLabelLabel = new TGLabel(fGroupFrame651,"X Label");
   m_xLabelLabel->SetTextJustify(36);
   fGroupFrame651->AddFrame(m_xLabelLabel, new TGLayoutHints(kLHintsLeft |
@@ -333,7 +336,7 @@ void HistoPropDialog::build()
   fCompositeFrame649->AddFrame(fGroupFrame651,
     new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   fGroupFrame651->MoveResize(24, 152, 608, 232);
-  TGTextButton *fTextButton760 = new TGTextButton(fCompositeFrame649,"Ok");
+  TGTextButton *fTextButton760 = new TGTextButton(fCompositeFrame649,"OK");
   fTextButton760->SetTextJustify(36);
   fTextButton760->Resize(92, 24);
   fCompositeFrame649->AddFrame(fTextButton760,
@@ -367,4 +370,8 @@ void HistoPropDialog::build()
   Resize(GetDefaultSize());
   MapWindow();
   Resize(658, 434);
+}
+void HistoPropDialog::CloseWindow() {
+  // disabling is a beauty patch for crashes on double-click crash
+  DeleteWindow();
 }

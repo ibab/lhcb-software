@@ -4,8 +4,6 @@
 #include <TGFrame.h>
 #include "presenter.h"
 
-using namespace pres;
-
 class PresenterMainFrame;
 class TGComboBox;
 class TGTextButton;
@@ -19,18 +17,19 @@ class TGLineStyleComboBox;
 class HistoPropDialog : public TGTransientFrame
 {
   public:
-    HistoPropDialog(PresenterMainFrame* gui, Int_t Width, Int_t Height,
-      MsgLevel v);
+    HistoPropDialog(PresenterMainFrame* gui, int width,
+    int height, pres::MsgLevel v);
     virtual ~HistoPropDialog();
 
     void ok();
     void build();
+    void CloseWindow();
 
   private:
     PresenterMainFrame *m_mainFrame;
     TGTextButton       *m_okButton;
     TGTextButton       *m_cancelButton;
-    MsgLevel            m_verbosity;
+    pres::MsgLevel      m_verbosity;
     int                 m_msgBoxReturnCode;
 
     TGComboBox *m_1DRootDrawOptionComboBox;

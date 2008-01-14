@@ -1,1 +1,1 @@
- valgrind --tool=callgrind --log-file=/tmp/presenteriCallTrace.log $PRESENTERROOT/$CMTCONFIG/presenter.exe
+ valgrind --tool=callgrind --log-file=presenterCallTrace.log $PRESENTERROOT/$CMTCONFIG/presenter.exe

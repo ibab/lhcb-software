@@ -10,31 +10,32 @@
 #include "PresenterMainFrame.h"
 #include "SetDimDnsNodeDialog.h"
 
+using namespace pres;
+
 ClassImp(SetDimDnsNodeDialog)
 
-SetDimDnsNodeDialog::SetDimDnsNodeDialog(PresenterMainFrame* gui, Int_t Width,
-  Int_t Height, MsgLevel v) :
-    TGTransientFrame(gClient->GetRoot(), gui, Width, Height),
+SetDimDnsNodeDialog::SetDimDnsNodeDialog(PresenterMainFrame* gui, int width,
+  int height, MsgLevel v) :
+    TGTransientFrame(gClient->GetRoot(), gui, width, height),
     m_mainFrame(gui),
     m_verbosity(v),
     m_msgBoxReturnCode(0)
 {
   SetCleanup(kDeepCleanup);
+  Connect("CloseWindow()", "SetDimDnsNodeDialog", this, "CloseWindow()");
+  DontCallClose();
   SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputSystemModal);
   build();
-  CenterOnParent();
   MapWindow();
 }
-
 SetDimDnsNodeDialog::~SetDimDnsNodeDialog()
 {
   Cleanup();
 }
-
 void SetDimDnsNodeDialog::build()
 {
-  SetLayoutBroken(kTRUE);
-  
+  SetLayoutBroken(true);
+
   m_okButton = new TGTextButton(this, "OK");
   m_okButton->SetTextJustify(36);
 //  m_okButton->SetMargins(0,0,0,0);
@@ -43,7 +44,7 @@ void SetDimDnsNodeDialog::build()
   AddFrame(m_okButton, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   m_okButton->MoveResize(88,88,92,24);
   m_okButton->Connect("Clicked()", "SetDimDnsNodeDialog", this, "ok()");
-  
+
   m_cancelButton = new TGTextButton(this, "Cancel");
   m_cancelButton->SetTextJustify(36);
 //  m_cancelButton->SetMargins(0,0,0,0);
@@ -52,7 +53,7 @@ void SetDimDnsNodeDialog::build()
   AddFrame(m_cancelButton, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   m_cancelButton->MoveResize(192,88,92,24);
   m_cancelButton->Connect("Clicked()", "SetDimDnsNodeDialog", this,
-                          "DeleteWindow()");  
+                          "DeleteWindow()");
 
   TGLabel* fLabel541 = new TGLabel(this, "DIM DNS node:");
   fLabel541->SetTextJustify(36);
@@ -60,7 +61,7 @@ void SetDimDnsNodeDialog::build()
 //  fLabel541->SetWrapLength(-1);
   AddFrame(fLabel541, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fLabel541->MoveResize(16,8,112,18);
-    
+
   // combo box
   TGComboBox *fComboBox521 = new TGComboBox(this,-1,kHorizontalFrame |
                                             kSunkenFrame | kDoubleBorder |
@@ -77,7 +78,7 @@ void SetDimDnsNodeDialog::build()
   AddFrame(fComboBox521, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fComboBox521->MoveResize(32,40,256,22);
 
-  SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputModeless);  
+  SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputModeless);
   MapSubwindows();
 
   Resize(GetDefaultSize());
@@ -86,5 +87,11 @@ void SetDimDnsNodeDialog::build()
 }
 void SetDimDnsNodeDialog::ok()
 {
+  DeleteWindow();
+}
+void SetDimDnsNodeDialog::CloseWindow() {
+  // disabling is a beauty patch for crashes on double-click crash
+  m_okButton->SetState(kButtonDisabled);
+  m_cancelButton->SetState(kButtonDisabled);
   DeleteWindow();
 }

@@ -11,7 +11,7 @@
 #pragma link C++ class PageSaveDialog;
 #pragma link C++ class PresenterMainFrame;
 #pragma link C++ class HistoPropDialog;
-#pragma link C++ class SetUtgidTaskDialog;
 #pragma link C++ class SetDimDnsNodeDialog;
+//#pragma link C++ class Offline;
 
 #endif
