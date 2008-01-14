@@ -1,6 +1,6 @@
-// $Id: MagFieldReader.cpp,v 1.9 2008-01-14 15:38:08 ahicheur Exp $
+// $Id: MagFieldReader.cpp,v 1.10 2008-01-14 15:45:48 ahicheur Exp $
 // Include files 
-#include "Riostream.h"
+
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -62,7 +62,6 @@ StatusCode MagFieldReader::initialize() {
   debug() << "FieldReader intialize() has been called" << endmsg;
   
   m_pIMF = svc<IMagneticFieldSvc>( m_FieldServiceName, true );
-  m_pIAF = svc<IMagneticFieldSvc>( "AnalyticFieldSvc", true );
 
   info() << "MagFieldReader initialized with service ==> " <<  m_FieldServiceName << endmsg;
   return StatusCode::SUCCESS;
@@ -83,25 +82,8 @@ StatusCode MagFieldReader::execute() {
 
   Gaudi::XYZVector B(0.0,0.0,0.0);
 
-  /*  ofstream gridmap;
-  gridmap.open("/afs/cern.ch/user/a/ahicheur/w0/bfieldvalid/gridmap5.txt");
-        
-  gridmap<<"DETECTOR"<<endl;
-  gridmap<<"NAME: FLDT"<<endl;
-  gridmap<<"VERSION: test"<<endl;
-  gridmap<<"#"<<endl;
-  gridmap<<"#"<<endl;
-  gridmap<<"#"<<endl;
-  gridmap<<"# Units are in cgs"<<endl;
-  gridmap<<"#"<<endl;
-  gridmap<<"AUTHOR: Adlene Hicheur"<<endl;
-  gridmap<<"PARAMETERS: 5727760"<<endl;
-  gridmap<<"GEOMETRY"<<endl;
-  gridmap<<"#   DX   DY   DZ  NX  NY  NZ   Z_OFFSET"<<endl;
-  gridmap<<"   5.0 5.0 5.0 81  81  291  -50.0"<<endl;
-  gridmap<<"#"<<endl;
-  gridmap<<"#"<<endl;*/
 
+        
   for ( double z = m_zMin; z <= m_zMax; z += m_step ) {
     for( double y = m_yMin; y <= m_yMax; y += m_step ) {
       for( double x = m_xMin; x <= m_xMax; x += m_step ) {
@@ -109,11 +91,7 @@ StatusCode MagFieldReader::execute() {
         
         // get field at point P
         m_pIMF->fieldVector( P, B );
-        
-        //        gridmap << setprecision(9) << B.x()/Gaudi::Units::tesla*1e4 << "  " << B.y()/Gaudi::Units::tesla*1e4 << "  " <<  B.z()/Gaudi::Units::tesla*1e4;
-        //     if(fabs(B.x()/Gaudi::Units::tesla*1e4)<1e-12 && fabs(B.y()/Gaudi::Units::tesla*1e4)<1e-12 && fabs(B.z()/Gaudi::Units::tesla*1e4)<1e-12) gridmap<<"  ANOM: "<< x << " " <<y<< " "<<z;
-        //    gridmap<<endl;
-        
+     
         // fill ntuple
         nt1->column( "x", P.x()/Gaudi::Units::cm );
         nt1->column( "y", P.y()/Gaudi::Units::cm );
@@ -126,10 +104,9 @@ StatusCode MagFieldReader::execute() {
       }
     }
 
-     Gaudi::XYZPoint P0( 0.0, 0.0, z);
-     Gaudi::XYZPoint P02( 0.0, 0.0, z);
+     Gaudi::XYZPoint P0( 0.0, 0.0, z );
+
       m_pIMF->fieldVector( P0, B );
-  
 
       debug() << "Magnetic Field at ("
               << P0.x() << ", " << P0.y() << ", " << P0.z() << " ) = "
@@ -137,17 +114,11 @@ StatusCode MagFieldReader::execute() {
               << (B.y())/Gaudi::Units::tesla << ", "
               << (B.z())/Gaudi::Units::tesla << " Tesla " 
               << endmsg;
-          m_pIAF->fieldVector( P02, B );
-      debug() << "Analytic Magnetic Field at ("
-              << P0.x() << ", " << P0.y() << ", " << P0.z() << " ) = "
-              << (B.x())/Gaudi::Units::tesla << ", "
-              << (B.y())/Gaudi::Units::tesla << ", "
-              << (B.z())/Gaudi::Units::tesla << " Tesla " 
-              << endmsg;
+
 
   }
 
-  //  gridmap.close();
+
 
   // Return status code.
   return StatusCode::SUCCESS;
