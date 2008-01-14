@@ -1,9 +1,31 @@
 ! =============================================================================
-! $Id: release.notes,v 1.352 2008-01-14 10:10:09 jpalac Exp $ 
+! $Id: release.notes,v 1.353 2008-01-14 13:23:39 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2008-01-14 - Juan Palacios
+ - DetDesc/GlobalToLocalDelta.h
+  . Add methods to estimate "off-nominal" delta matrix at local level, starting
+    from either total position or "off-nominal" corrections in an arbitrary 
+    frame, independent of the detector element hierarchy.
+
+  const Gaudi::Transform3D localDeltaFromAnyFrame(const Gaudi::Transform3D& frame,
+                                                  const IDetectorElement* DE,
+                                                  const Gaudi::Transform3D& toGlobalInFrame); 
+
+  const Gaudi::Transform3D localDeltaFromAnyFrame(const Gaudi::Transform3D& frame,
+                                                  const IGeometryInfo* GI,
+                                                  const Gaudi::Transform3D& toGlobalInFrame); 
+
+  const Gaudi::Transform3D localDeltaFromAnyFrameDelta(const Gaudi::Transform3D& frame,
+                                                       const IDetectorElement* DE,
+                                                       const Gaudi::Transform3D& deltaInFrame); 
+
+  const Gaudi::Transform3D localDeltaFromAnyFrameDelta(const Gaudi::Transform3D& frame,
+                                                       const IGeometryInfo* GI,
+                                                       const Gaudi::Transform3D& deltaInFrame); 
 
 ! 2008-01-14 - Juan Palacios
  - DetDesc/3DTransformationFunctions.h
