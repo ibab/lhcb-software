@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.1 2007-09-21 07:56:39 jpalac Exp $
+// $Id: CombineParticles.cpp,v 1.2 2008-01-14 17:23:01 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -185,11 +185,15 @@ StatusCode CombineParticles::execute() {
   sc = makePlots(Final,m_plots2);
   if (!sc) return sc;
 
+  if ( msgLevel(MSG::VERBOSE)) verbose() << "Saving " << Final.size() 
+                                         << " candidates " << endmsg ;
   sc = desktop()->saveTrees(Final);
   if (!sc) {
     err() << "Unable to save mothers" << endmsg;
     return StatusCode::FAILURE ;  
   }  
+  if ( msgLevel(MSG::DEBUG)) debug() << "Saved " << Final.size() 
+                                     << " candidates " << endmsg ;
   if ( !Final.empty()){
     ++m_nAccepted;
     m_nCandidates+=Final.size();

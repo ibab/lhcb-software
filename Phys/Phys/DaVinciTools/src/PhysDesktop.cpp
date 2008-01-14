@@ -235,9 +235,8 @@ const LHCb::RecVertex::ConstVector& PhysDesktop::primaryVertices(){
 const LHCb::Vertex::ConstVector& PhysDesktop::secondaryVertices() const {
   return m_secVerts;
 }
-
 //============================================================================
-// Clean local data, this is called by the handle method and at finalization
+// Clean local data, called by DVAlgorithm
 //============================================================================
 StatusCode PhysDesktop::cleanDesktop(){
 
@@ -291,8 +290,6 @@ StatusCode PhysDesktop::cleanDesktop(){
 // Finalize
 //=============================================================================
 StatusCode PhysDesktop::finalize(){
-  StatusCode sc = cleanDesktop();
-  if (!sc) return sc ;
   return GaudiTool::finalize() ;
 }
 //=============================================================================

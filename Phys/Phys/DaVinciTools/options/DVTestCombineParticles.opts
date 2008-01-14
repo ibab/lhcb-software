@@ -1,0 +1,86 @@
+/** @file 
+ *  Configuration options for the execution of 
+ *  the preselection of good Muon
+ *
+ *  @author P. Koppenburg
+ *  @date 2004-08-16
+ */
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqOldAlgorithms" };
+SeqOldAlgorithms.Members = { 
+   "MakeResonances"
+ , "FilterDesktop"
+  , "PrintHeader/OldWay"
+}; 
+SeqOldAlgorithms.MeasureTime = true ;
+
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqNewAlgorithms" };
+SeqNewAlgorithms.Members = { 
+   "CombineParticles"
+   //  , "FilterDesktop/HybridFilterDesktop"
+   , "PrintHeader/NewWay"
+}; 
+SeqNewAlgorithms.MeasureTime = true ;
+
+
+//------------------------------------------------------------------------------
+// Create Ds
+//------------------------------------------------------------------------------
+//
+// By PID filter criterion
+//
+MakeResonances.PhysDesktop.InputLocations = {"Phys/StdLooseKaons", "Phys/StdLoosePions"};
+
+MakeResonances.DecayDescriptor = "[D_s- -> K+ K- pi-]cc";
+MakeResonances.DaughterFilter.Selections = {"K- : KinFilterCriterion", 
+                                            "pi- : KinFilterCriterion, TrackTypeFilterCriterion/KTk"};
+MakeResonances.DaughterFilter.KinFilterCriterion.MinPt = 500*MeV ;
+MakeResonances.DaughterFilter.KTk.RequireLong = true ; // probably does nothing
+MakeResonances.Window = 50*MeV ;
+MakeResonances.MotherFilter.Selections = {"D_s- : VtxFilterCriterion/DsFilter"};
+MakeResonances.MotherFilter.DsFilter.MaxChi2 = 100 ; // chi2
+MakeResonances.OutputLevel = 3 ;
+//
+// Hybrid filter criterion
+//
+CombineParticles.PhysDesktop.InputLocations = {"Phys/StdLooseKaons", "Phys/StdLoosePions"};
+
+CombineParticles.DecayDescriptor = "[D_s- -> K+ K- pi-]cc";
+CombineParticles.FilterCriteria = { "Phase0Filter" : "LoKi::Hybrid::FilterCriterion/FILTER0",
+                                    "Phase1Filter" : "LoKi::Hybrid::FilterCriterion/FILTER1",
+                                    "Phase2Filter" : "LoKi::Hybrid::FilterCriterion/FILTER2" };
+
+CombineParticles.FILTER0.Code = "(PT>500)&((ABSID!=211)|(TRTYPE==3))";     // does it do what I think ?
+CombineParticles.FILTER1.Code = "(ADMASS(431)<50)";                        // kills all - why ?
+//CombineParticles.FILTER1.Code = "(ADMASS('D_s-')<50)";                   // does not work
+CombineParticles.FILTER2.Code = "(VFASPF(VCHI2)<100)";
+//------------------------------------------------------------------------------
+// Filter Ds
+//------------------------------------------------------------------------------
+FilterDesktop.PhysDesktop.InputLocations = {"Phys/MakeResonances"};
+FilterDesktop.Filter.Selections = { "D_s- : VtxFilterCriterion/DsFilter" };
+FilterDesktop.Filter.DsFilter.MaxChi2 = 16. ;
+//
+// New (temporary) way of doing the same thing
+//
+HybridFilterDesktop.PhysDesktop.InputLocations = {"Phys/MakeResonances"};
+HybridFilterDesktop.Filter.Selections = {
+                                "D_s- : LoKi::Hybrid::FilterCriterion/DsFilter" };
+HybridFilterDesktop.Filter.DsFilter.Code = "(VFASPF(VCHI2)<16)" ;
+
+FilterDesktop.OutputLevel = 3 ;
+RefineSelection.OutputLevel = 3 ;
+HybridFilterDesktop.OutputLevel = 3 ;
+//CombineParticles.OutputLevel = 1 ;
+// 
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+ApplicationMgr.EvtMax    = 20 ;
+EventSelector.PrintFreq  = 1;
+//
+//MessageSvc.OutputLevel = 1;
+//ToolSvc.OutputLevel    = 1;
+
+//FilterDesktop.OutputLevel = 1 ;
