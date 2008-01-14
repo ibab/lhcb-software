@@ -26,9 +26,13 @@ class Project(object):
         self._versiondir = versiondir
         self._dependencies = None
         self._projectfile = None
+        self._basenamelist = []
+        self._baselist = []
+        self._clientlist = []
         self.setName(versiondir)
         self.setVersion()
         self.setProjectFile()
+        self.getBaseNameList()
     def name(self):
         return self._name
     def setName(self, versiondir):
@@ -61,7 +65,7 @@ class Project(object):
         log.debug("return code of 'cmt show projects' in %s is %s", wdir, retcode)
         if retcode != 0:
             log.warning("return code of 'cmt show projects' in %s is %s", wdir, retcode)
-    def getBase(self):
+    def getBaseNameList(self):
         log = logging.getLogger()
         wdir = os.path.join(self._location,"cmt")
         os.chdir(wdir)
@@ -80,13 +84,32 @@ class Project(object):
                     if re.compile("\s+" + par).match(line):
                         m = re.compile("\(in\s+(.+)\s*\)").search(line)
                         if m : 
-                            print "\t%s" % m.group(1)
+                            self._basenamelist.append(m.group(1))
         for line in p.stderr:
             log.warning(line[:-1])
         retcode = os.waitpid(p.pid, 0)[1]
         log.debug("return code of 'cmt show projects' in %s is %s", wdir, retcode)
         if retcode != 0:
             log.warning("return code of 'cmt show projects' in %s is %s", wdir, retcode)
+    def showBaseNameList(self):
+        for pn in self._basenamelist :
+            print "\t%s" % pn
+    def addClient(self, proj):
+        self._clientlist.append(proj)
+    def getBase(self, projectlist):
+        for bn in self._basenamelist :
+            for p in projectlist :
+                if p.location() == bn :
+                    self._baselist.append(p)
+                    p.addClient(self)
+    def showBase(self):
+        if self._baselist :
+            for b in self._baselist :
+                print "\t%s" % b.location()
+    def showClient(self):
+        if self._clientlist :
+            for c in self._clientlist :
+                print "\t%s" % c.location() 
     def setProjectFile(self):
         pfname = os.path.join(self._location, "cmt", "project.cmt")
         self._projectfile = ProjectFile(pfname)
@@ -170,7 +193,7 @@ def getProjectsFromPath(path, name=None, version=None, casesense=False, select=N
             
 
 
-def getProjects(cmtprojectpath, name=None, version=None, casesense=False, select = None):
+def _getProjects(cmtprojectpath, name=None, version=None, casesense=False, select=None):
     log = logging.getLogger()
     projlist = []
     pathcomponents = cmtprojectpath.split(os.pathsep)
@@ -182,13 +205,50 @@ def getProjects(cmtprojectpath, name=None, version=None, casesense=False, select
             projlist += pl
     return projlist
 
+def getAllProjects(cmtprojectpath, select=None):
+    log = logging.getLogger()
+    projlist = []
+    pathcomponents = cmtprojectpath.split(os.pathsep)
+    for p in pathcomponents:
+        log.info("looking for projects in %s", p)
+        pl = getProjectsFromPath(p, select=select)
+        if pl:
+            log.info("Found %s project in %s", len(pl), p)
+            projlist += pl
+    return projlist
 
-class ProjectTree():
-    pass
+def getProjectInstance(projlist, projpath):
+    for p in projlist :
+        if p.location() == projpath :
+            return p
+    else:
+        return None
 
-class ReversedProjectTree():
-    pass
+def FilterProjects(projlist, name=None, version=None, casesense=False ):
+    selected = []
+    if not name and not version:
+        return projlist
+    
+    # filter according to name and version
+    if not casesense:
+        name = name.upper()
+    for p in projlist:
+        if not casesense:
+            prname = p.name().upper()
+        else:
+            prname = p.name()
+        if prname == name:
+            if not version:
+                selected.append(p)
+            else :
+                if p.version() == version:
+                    selected.append(p)
+    return selected
+    
+def getProjects(cmtprojectpath, name=None, version=None, 
+                    casesense=False, select=None ):
+    projlist = getAllProjects(cmtprojectpath, select=select)
+    for p in projlist :
+        p.getBase(projlist)
+    return FilterProjects(projlist, name=name, version=version, casesense=casesense)
 
-
-def getProjectTrees(cmtprojectpath, name=None, version=None, casesense=False):
-    pass
