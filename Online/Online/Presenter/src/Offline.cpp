@@ -19,21 +19,22 @@ path Offline::findFile(const path & dirPath,    // in this directory,
                        const string & fileName) // search for this name
 {
   path foundFile("");
-  if (!exists(dirPath)) { return foundFile; }
-  directory_iterator end_itr; // default construction yields past-the-end
-  for (directory_iterator itr(dirPath); itr != end_itr; ++itr) {
-    if (is_directory(itr->status())) {
-      if ("" != findFile(itr->path(), fileName)) { return foundFile; }
-    } else if (itr->path().leaf() == fileName) {
-      foundFile = itr->path();
-      return foundFile;
+  if (exists(dirPath)) {
+    directory_iterator end_itr; // default construction yields past-the-end
+    for (directory_iterator itr(dirPath); itr != end_itr; ++itr) {
+      if (is_directory(itr->status())) {
+        if ("" != findFile(itr->path(), fileName)) { return foundFile; }
+      } else if (itr->path().leaf() == fileName) {
+        foundFile = itr->path();
+        return foundFile;
+      }
     }
   }
   return foundFile;
 }
 void Offline::listDirectory()
 {
- path fileFound = findFile(m_path, "GauchoJob26112007_16:9:21.roo");
+ path fileFound = findFile(m_path, "GauchoJob26112007_16:9:21.root");
   
  cout << " does contain the file:  " << fileFound << endl;
 
