@@ -1,9 +1,21 @@
 ! =============================================================================
-! $Id: release.notes,v 1.351 2008-01-14 06:35:31 cattanem Exp $ 
+! $Id: release.notes,v 1.352 2008-01-14 10:10:09 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2008-01-14 - Juan Palacios
+ - DetDesc/3DTransformationFunctions.h
+  . Add method
+    template <class ROT>
+    void getZYXRotationParameters( const ROT& rotation,
+                                   double& rotX, 
+                                   double& rotY, 
+                                   double& rotZ           ) 
+
+  Takes any MathCore 3D rotation and estimates the equivalent
+  Euler 321 rotation parameters.
 
 !====================== DetDesc v18r3 2008-01-11 ==============================
 ! 2008-01-11 - Marco Cattaneo

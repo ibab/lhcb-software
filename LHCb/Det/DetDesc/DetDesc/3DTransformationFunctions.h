@@ -1,10 +1,11 @@
-// $Id: 3DTransformationFunctions.h,v 1.4 2008-01-11 14:22:26 jpalac Exp $
+// $Id: 3DTransformationFunctions.h,v 1.5 2008-01-14 10:09:54 jpalac Exp $
 #ifndef DETDESC_3DTRANSFORMATIONFUNCTIONS_H 
 #define DETDESC_3DTRANSFORMATIONFUNCTIONS_H 1
 
 // Include files
 #include "GaudiKernel/Transform3DTypes.h"
 #include "Math/Translation3D.h"
+#include "Math/RotationZYX.h"
 #include <vector>
 
 namespace DetDesc {
@@ -47,6 +48,31 @@ namespace DetDesc {
                                  std::vector<double>& rotationParams,
                                  const std::vector<double>& pivotParams = std::vector<double>(3,0.));
 
+  /**
+   *
+   * Starting from any MathCore supported 3D rotation, obtain the equivalent
+   * Euler 321 rotation parameters.
+   * Euler 321: Rotation about Z, Y', X" (co-moving axes)
+   *
+   * @param rotation Any Mathcore-supported 3D rotation
+   * @param rotX rotation angle about X" axis
+   * @param rotY rotation angle about Y' axis
+   * @param rotZ rotation angle about Z axis
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @date 2008-01-14
+   * 
+   */
+
+  template <class ROT>
+  void getZYXRotationParameters( const ROT& rotation,
+                                 double& rotX, 
+                                 double& rotY, 
+                                 double& rotZ           ) 
+  {
+    ROOT::Math::RotationZYX euler321 = ROOT::Math::RotationZYX(rotation);
+    euler321.GetComponents(rotZ, rotY, rotX); 
+  }
   
 }
 
