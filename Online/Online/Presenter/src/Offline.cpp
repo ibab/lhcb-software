@@ -23,10 +23,10 @@ path Offline::findFile(const path & dirPath, const string & fileName)
     for (directory_iterator itr(dirPath); itr != end_itr; ++itr) {
       if (is_directory(itr->status())) {
         foundFile = findFile(itr->path(), fileName); 
-        if ("" != foundFile) { return foundFile; }
+        if (is_regular(foundFile)) { return foundFile; }
       } else if (itr->path().leaf() == fileName) {
         foundFile = itr->path();
-        return foundFile;
+        if (is_regular(foundFile)) { return foundFile; }
       }
     }
   }
