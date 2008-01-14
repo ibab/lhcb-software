@@ -1,4 +1,4 @@
-// $Id: MagFieldReader.h,v 1.4 2007-07-27 16:40:00 ahicheur Exp $
+// $Id: MagFieldReader.h,v 1.5 2008-01-14 15:38:08 ahicheur Exp $
 #ifndef MAGFIELDREADER_H 
 #define MAGFIELDREADER_H 1
 
@@ -39,7 +39,8 @@ protected:
 private:
   
   // Pointer to the magnetic field service
-  IMagneticFieldSvc* m_pIMF;  
+  IMagneticFieldSvc* m_pIMF;
+  IMagneticFieldSvc* m_pIAF;  
 
 
   

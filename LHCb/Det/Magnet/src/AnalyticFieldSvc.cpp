@@ -541,7 +541,7 @@ void AnalyticFieldSvc::Bcalculation (const Gaudi::XYZPoint&  point,
 
     iReg=iz;
     
-    bool condZ = zmin[iz]<=point.z()/Gaudi::Units::cm && point.z()/Gaudi::Units::cm<zmax[iz];
+    bool condZ = zmin[iz]<=point.z()/Gaudi::Units::cm && point.z()/Gaudi::Units::cm<zmax[iz] && coord[0]<(coord[2]*tan(0.3)) && coord[1]<(coord[2]*tan(0.25));
     
  
     if (iz>4 && iz<12) {
