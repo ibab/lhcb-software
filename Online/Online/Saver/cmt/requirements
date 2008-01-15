@@ -1,7 +1,7 @@
 package Saver
 version v1r3
 
-branches cmt doc src Saver
+branches cmt doc src 
 
 use GaudiKernel  v* 
 use GaudiAlg     v*
@@ -11,6 +11,8 @@ use DIM          v* Online
 use OnlineKernel v* Online
 use Gaucho       v* Online
 use GaudiAud     v*
+use GaudiSvc     v*
+
 
 library Saver ../src/Saver_dll.cpp ../src/Saver_load.cpp ../src/Saver.cpp ../src/Saver.h  ../src/DimInfoHistos.cpp ../src/DimInfoTitle.cpp
 

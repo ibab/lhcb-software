@@ -62,12 +62,12 @@ DECLARE_ALGORITHM_FACTORY(Saver)
 //------------------------------------------------------------------------------
 Saver::Saver(const std::string& name, ISvcLocator* ploc) : Algorithm(name, ploc)
   {
-  declareProperty("nodename",m_nodename);
-  declareProperty("histogramname",m_histogramname);
-  declareProperty("algorithmname",m_algorithmname);
-  declareProperty("dimclientdns",m_dimclientdns);
-  declareProperty("taskname",m_taskname);
-  declareProperty("savedir",m_savedir);
+  declareProperty("nodename",m_nodeName);
+  declareProperty("histogramname",m_histogramName);
+  declareProperty("algorithmname",m_algorithmName);
+  declareProperty("dimclientdns",m_dimClientDns);
+  declareProperty("taskname",m_taskName);
+  declareProperty("savedir",m_saveDir);
   }
 
 //------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ StatusCode Saver::initialize() {
   IIncidentSvc* incsvc;
   sc = service("IncidentSvc",incsvc);
   int priority=100;
-  m_refreshtime=5;
+  m_refreshTime=5;
   if (sc.isSuccess()) incsvc->addListener(this,"SAVE_HISTOS",priority);
   MsgStream msg(msgSvc(), name());
 
@@ -95,249 +95,216 @@ StatusCode Saver::initialize() {
 StatusCode Saver::execute() {
   //------------------------------------------------------------------------------
   MsgStream         msg( msgSvc(), name() );
-//  msg << MSG::INFO << "executing saver....command " << command << endreq;
 
   char *service; 
   char *format;
-  time_t rawtime;
-  struct tm * timeinfo;
+  time_t rawTime;
+  struct tm *timeInfo;
   int type;
   int icount=0;
   int icount2d=0;
   int icountp=0;
-  std::string hSvcname;
-  std::string hSvcname2d;
-  std::string hSvcnames;
-  std::string hSvcnames2d;
-  std::string pSvcname;
-  std::string pSvcnames;
-  std::string commentSvcnames;
-  std::string commentSvcname;
+  std::string hSvcName;
+  std::string hSvcName2d;
+  std::string hSvcNames;
+  std::string hSvcNames2d;
+  std::string pSvcName;
+  std::string pSvcNames;
+  std::string commentSvcNames;
+  std::string commentSvcName;
+  std::string filename;
+  char year[5];
+  char month[3];
+  char day[3];
+  char hour[3];
+  char min[3];
+  char sec[3];
   DimInfoHistos* hinfo=0;
   DimInfoHistos* hinfo2d=0;
   DimInfoHistos* pinfo=0;
-  time(&rawtime);
-  timeinfo = localtime(&rawtime);
-  int year=timeinfo->tm_year+1900;
-  int day =timeinfo->tm_mday;
-  int month=timeinfo->tm_mon+1;
-  int hour=timeinfo->tm_hour;
-  int min=timeinfo->tm_min;
-  int sec=timeinfo->tm_sec;
-  std::string daystr;
-  std::string yearstr;
-  std::string monthstr;
-  std::string hourstr;
-  std::string minstr;
-  std::string secstr;
-  std::string filename;
-  std::stringstream yearsstr;
-  std::stringstream daysstr;
-  std::stringstream monthsstr;
-  std::stringstream hoursstr;
-  std::stringstream minsstr;
-  std::stringstream secsstr;
-  yearsstr << year;
-  daysstr << day;
-  monthsstr << month;
-  hoursstr << hour;
-  minsstr << min;
-  secsstr << sec;
-  yearsstr >> yearstr;
-  daysstr >> daystr;
-  monthsstr >> monthstr;
-  hoursstr >> hourstr;
-  minsstr >> minstr;
-  secsstr >> secstr; 
+  rawTime=time(NULL);
+  timeInfo = localtime(&rawTime);
+  strftime(year,sizeof(year),"%Y",timeInfo);
+  strftime(month,sizeof(month),"%m",timeInfo);
+  strftime(day,sizeof(day),"%d",timeInfo);
+  strftime(hour,sizeof(hour),"%H",timeInfo);
+  strftime(min,sizeof(min),"%M",timeInfo);
+  strftime(sec,sizeof(sec),"%S",timeInfo);
   TFile *f=0;
   if (command=="SAVE_HISTOS") {
-  //NB the ASCII timestamp format is year-month-dayThours:mins:secs
-  //we replace ":" by "-" as you can't use it for windows filenames
-  filename=m_savedir+"/"+m_taskname+"-"+yearstr+"-"+monthstr+"-"+daystr+"T"+hourstr+"-"+minstr+"-"+secstr+".root";
-  
-  for (int j=0; j<= (int)m_histogramname.size()-1;j++) {
- 
-     //j counts the histograms
-     std::vector<TH1*> hist;
-     std::vector<TH2*> hist2d;
-     std::vector<TProfile*> histp;
-     hSvcnames="H1D/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];
-     hSvcnames2d="H2D/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];
-     pSvcnames="HPD/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];
-     commentSvcnames=m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j]+"/gauchocomment";
+  //NB the ISO extended timestamp format is yearmonthdayThoursminssecs
+  //can't use separators as ":" is no good for windows filenames
+  //stick strictly to this standard so boost can parse it
+  filename=m_saveDir+"/"+m_taskName+year+month+day+"T"+hour+min+sec+".root";  
+  msg << MSG::DEBUG << "Saving to filename: " <<filename.c_str() << endreq;  
+  for (int j=0; j<= (int)m_histogramName.size()-1;j++) { 
+    //j counts the histograms
+    std::vector<TH1*> hist;
+    std::vector<TH2*> hist2d;
+    std::vector<TProfile*> histp;
+    hSvcNames="H1D/"+m_nodeName+"*"+m_algorithmName[j]+"/"+m_histogramName[j];
+    hSvcNames2d="H2D/"+m_nodeName+"*"+m_algorithmName[j]+"/"+m_histogramName[j];
+    pSvcNames="HPD/"+m_nodeName+"*"+m_algorithmName[j]+"/"+m_histogramName[j];
+    commentSvcNames=m_nodeName+"*"+m_algorithmName[j]+"/"+m_histogramName[j]+"/gauchocomment";
      
-     DimClient::setDnsNode(m_dimclientdns.c_str());  
-     DimBrowser dbr;  
-     icount = 0;
-     icount2d = 0;
-     icountp = 0;
-      // icount is the number of tasks publishing histogram nr j
-     while ((( icount==0 )|(icount2d==0))|(icountp==0))
-     {
-        //look for the services at each iteration of eventloop - task may have died
-
-	msg << MSG::DEBUG << "Looking for hSvcname: " << hSvcnames.c_str() << endreq;     
-        dbr.getServices(hSvcnames.c_str());
+    DimClient::setDnsNode(m_dimClientDns.c_str());  
+    DimBrowser dbr;  
+    icount = 0;
+    icount2d = 0;
+    icountp = 0;
+     // icount is the number of tasks publishing histogram nr j
+    while ((( icount==0 )|(icount2d==0))|(icountp==0))
+    {
+      //look for the services at each iteration of eventloop - task may have died
+      msg << MSG::DEBUG << "Looking for hSvcName: " << hSvcNames.c_str() << endreq;     
+      dbr.getServices(hSvcNames.c_str());
+      while( (type = dbr.getNextService(service, format)) )
+      { 
+	hSvcName=service;
+        msg << MSG::DEBUG << "Found service: " << hSvcName << endreq;     
+	icount++;
+      }   
+      if (icount==0) {
+        msg << MSG::DEBUG << "Looking for hSvcName2d: " << hSvcNames2d.c_str() << endreq;     
+        dbr.getServices(hSvcNames2d.c_str());
         while( (type = dbr.getNextService(service, format)) )
-        { 
-	   hSvcname=service;
-           msg << MSG::DEBUG << "Found service: " << hSvcname << endreq;     
-	   icount++;
-
-	}   
-	if (icount==0) {
-           msg << MSG::DEBUG << "Looking for hSvcname2d: " << hSvcnames2d.c_str() << endreq;     
-           dbr.getServices(hSvcnames2d.c_str());
-           while( (type = dbr.getNextService(service, format)) )
-           { 	
-	      hSvcname2d=service;
-              msg << MSG::DEBUG << "Found 2D service: " << hSvcname2d << endreq;   
-  	      icount2d++;
-	   } 
-	}  
-	if (icount2d==0) {
-           msg << MSG::DEBUG << "Looking for pSvcname: " << pSvcnames.c_str() << endreq;     
-           dbr.getServices(pSvcnames.c_str());
-           while( (type = dbr.getNextService(service, format)) )
-           { 	
-	      pSvcname=service;
-              msg << MSG::DEBUG << "Found profile service: " << hSvcname2d << endreq;   
-  	      icountp++;		 
-	   } 
+        { 	
+	  hSvcName2d=service;
+          msg << MSG::DEBUG << "Found 2D service: " << hSvcName2d << endreq;   
+  	  icount2d++;
 	} 
- 	dbr.getServices(commentSvcnames.c_str());
+      }  
+      if (icount2d==0) {
+        msg << MSG::DEBUG << "Looking for pSvcName: " << pSvcNames.c_str() << endreq;     
+        dbr.getServices(pSvcNames.c_str());
         while( (type = dbr.getNextService(service, format)) )
-        {               
-	   commentSvcname=service;
-           msg << MSG::DEBUG << "Found comment service: " << commentSvcname  <<endreq;     
-	}
-        if (((icount>0)|(icount2d>0))|(icountp>1)) break;      
-        else lib_rtl_sleep(500);
-     } 
+        { 	
+	  pSvcName=service;
+          msg << MSG::DEBUG << "Found profile service: " << hSvcName2d << endreq;   
+  	  icountp++;		 
+	} 
+      } 
+      dbr.getServices(commentSvcNames.c_str());
+      while( (type = dbr.getNextService(service, format)) )
+      {               
+	commentSvcName=service;
+        msg << MSG::DEBUG << "Found comment service: " << commentSvcName  <<endreq;     
+      }
+      if (((icount>0)|(icount2d>0))|(icountp>1)) break;      
+      else lib_rtl_sleep(500);
+    } 
   
 
-     if (icount>0) {     
-        hinfo = new DimInfoHistos(hSvcname,m_refreshtime);
-     }
-     if (icount2d>0) {
-        hinfo2d = new DimInfoHistos(hSvcname2d,m_refreshtime);
-     }
-     if (icountp>0) {
-        pinfo = new DimInfoHistos(pSvcname,m_refreshtime);
-     }
+    if (icount>0) {     
+      hinfo = new DimInfoHistos(hSvcName,m_refreshTime);
+    }
+    if (icount2d>0) {
+      hinfo2d = new DimInfoHistos(hSvcName2d,m_refreshTime);
+    }
+    if (icountp>0) {
+      pinfo = new DimInfoHistos(pSvcName,m_refreshTime);
+    }
 
-     // convert DIM buffer to ROOT
+    // convert DIM buffer to ROOT
 
 
-     if (icount>0) {
-        TH1* hist1=0;
-        int ntries=0;
-	DimInfoTitle * ttemp;
-        char* temptitle=0;  
-        while (1)
-        {
-           hist1=0;
-	   hist1= hinfo->getHisto();
-           if (hist1 != 0) {
-	      ttemp = new DimInfoTitle(commentSvcname,m_refreshtime);
-	      lib_rtl_sleep(m_refreshtime*100);    	
-	      temptitle =ttemp->getTitle();
-              if (temptitle!=0) { 		 
-	           hist1->SetTitle(temptitle);
-	      }
+    if (icount>0) {
+      TH1* hist1=0;
+      int ntries=0;
+      DimInfoTitle * ttemp;
+      char* temptitle=0;  
+      while (1)
+      {
+        hist1=0;
+	hist1= hinfo->getHisto();
+        if (hist1 != 0) {
+	  ttemp = new DimInfoTitle(commentSvcName,m_refreshTime);
+	  lib_rtl_sleep(m_refreshTime*100);    	
+	  temptitle =ttemp->getTitle();
+          if (temptitle!=0) { 		 
+	    hist1->SetTitle(temptitle);
+	  }
 
-	      msg << MSG::DEBUG << "Histogram "<< hist1->GetTitle() << " found." << endreq;   
-	      if ( 0 == f ) {
-	         f = new TFile(filename.c_str(),"create");
- 
-		 }
-	      hist1->Write();
+	  msg << MSG::DEBUG << "Histogram "<< hist1->GetTitle() << " found." << endreq;   
+	  if ( 0 == f ) {
+	    f = new TFile(filename.c_str(),"create"); 
+	  }
+	  hist1->Write();
 	 
-	      break;
-	   }  
-	     
-           ntries++;
-	   msg << MSG::DEBUG << "No histogram found after " << ntries << " attempts." << endreq;
-           if(ntries==10) break;
-           lib_rtl_sleep(500); 
-        } 
-     } 
-     if (icount2d>0) {
-        TH2* hist2=0;
-        int ntries=0;  
-        DimInfoTitle * ttemp;
-        char* temptitle=0;         
-        while (1)
-           {
-           hist2=0;
+	  break;
+	}  	     
+        ntries++;
+	msg << MSG::DEBUG << "No histogram found after " << ntries << " attempts." << endreq;
+        if(ntries==10) break;
+        lib_rtl_sleep(500); 
+      } 
+    } 
+    if (icount2d>0) {
+      TH2* hist2=0;
+      int ntries=0;  
+      DimInfoTitle * ttemp;
+      char* temptitle=0;         
+      while (1)
+      {
+        hist2=0;
+        hist2= hinfo2d->get2DHisto();
+        if (hist2 != 0) {
+	  ttemp = new DimInfoTitle(commentSvcName,m_refreshTime);
+	  lib_rtl_sleep(m_refreshTime*100);    	
+	  temptitle =ttemp->getTitle();
+          if (temptitle!=0) { 		 
+	    hist2->SetTitle(temptitle);
+	  }
+	  msg << MSG::DEBUG << "Histogram "<< hist2->GetTitle() << " found." << endreq;   
+	  if ( 0 == f ) {	      
+	    f = new TFile(filename.c_str(),"create");
+	  }   
+	  hist2->Write();		 
+	  break;
+        }    
+        ntries++;
+        msg << MSG::DEBUG << "No histogram found after " << ntries << " attempts." << endreq;
+        if(ntries==10) break;
+        lib_rtl_sleep(500); 
+      } 
+    }   
 
-	   hist2= hinfo2d->get2DHisto();
-           if (hist2 != 0) {
-	      ttemp = new DimInfoTitle(commentSvcname,m_refreshtime);
-	      lib_rtl_sleep(m_refreshtime*100);    	
-	      temptitle =ttemp->getTitle();
-              if (temptitle!=0) { 		 
-	           hist2->SetTitle(temptitle);
-	      }
-
-	      msg << MSG::DEBUG << "Histogram "<< hist2->GetTitle() << " found." << endreq;   
-	      if ( 0 == f ) {	      
-	        f = new TFile(filename.c_str(),"create");
-
-		}   
-	      hist2->Write();	
-	 
-	      break;
-	   }    
-           ntries++;
-	   msg << MSG::DEBUG << "No histogram found after " << ntries << " attempts." << endreq;
-           if(ntries==10) break;
-           lib_rtl_sleep(500); 
-        } 
-     }   
-
-     if (icountp>0) {
-        TProfile* histp=0;
-        int ntries=0;
-	DimInfoTitle * ttemp;
-        char* temptitle=0;           
-        while (1)
-           {
-           histp=0;
-
-	   histp= pinfo->getPDHisto();
-           if (histp != 0) {
-	      ttemp = new DimInfoTitle(commentSvcname,m_refreshtime);
-	      lib_rtl_sleep(m_refreshtime*100);    	
-	      temptitle =ttemp->getTitle();
-              if (temptitle!=0) { 		 
-	           histp->SetTitle(temptitle);
-	      }
-
-	      msg << MSG::DEBUG << "Histogram "<< histp->GetTitle() << " found." << endreq;   
-	      if ( 0 == f ) {	      
-	        f = new TFile(filename.c_str(),"create");
-
-		}   
-	      histp->Write();	
-	 
-	      break;
-	   }    
-           ntries++;
-	   msg << MSG::DEBUG << "No histogram found after " << ntries << " attempts." << endreq;
-           if(ntries==10) break;
-          lib_rtl_sleep(500); 
-        } 
-     }   	       
-   }
-
-  f->Close();
-
-  delete f;
-  delete hinfo;
-  delete hinfo2d;
-  delete pinfo;
-  command="";
+    if (icountp>0) {
+      TProfile* histp=0;
+      int ntries=0;
+      DimInfoTitle * ttemp;
+      char* temptitle=0;           
+      while (1)
+      {
+        histp=0;
+        histp= pinfo->getPDHisto();
+        if (histp != 0) {
+	  ttemp = new DimInfoTitle(commentSvcName,m_refreshTime);
+	  lib_rtl_sleep(m_refreshTime*100);    	
+	  temptitle =ttemp->getTitle();
+          if (temptitle!=0) { 		 
+	    histp->SetTitle(temptitle);
+	  }
+	  msg << MSG::DEBUG << "Histogram "<< histp->GetTitle() << " found." << endreq;   
+	  if ( 0 == f ) {	      
+	    f = new TFile(filename.c_str(),"create");
+	  }   
+	  histp->Write();		 
+	  break;
+        }    
+        ntries++;
+        msg << MSG::DEBUG << "No histogram found after " << ntries << " attempts." << endreq;
+        if(ntries==10) break;
+        lib_rtl_sleep(500); 
+      } 
+    }   	       
+  }
+    f->Close();
+    delete f;
+    delete hinfo;
+    delete hinfo2d;
+    delete pinfo;
+    command="";
   }
  
   return StatusCode::SUCCESS;

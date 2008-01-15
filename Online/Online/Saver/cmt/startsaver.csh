@@ -10,21 +10,11 @@ echo "DIM_DNS_NODE set to " $DIM_DNS_NODE
 setenv LHCBHOME /afs/cern.ch/lhcb
 source $LHCBHOME/scripts/CMT.csh
 
-cd ~/w0/cmtuser
-setenv CMTPATH `pwd`
+setenv User_release_area /afs/cern.ch/user/e/evh/w0/newcmt
 
 
-OnlineEnv v2r2
+SetupProject Online v4r5
+source /afs/cern.ch/user/e/evh/w0/newcmt/Online_v4r5/Online/Saver/v1r3/cmt/setup.csh
 
 
-source ~/w0/cmtuser/Online/Saver/v1r0/cmt/setup.csh 
-
-source ~/w0/cmtuser/Online/GaudiOnline/v2r2/cmt/setup.csh 
-
-$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe \
-$GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so \
-GaudiOnline \
--runable=LHCb::OnlineRunable \
--options=/afs/cern.ch/user/e/evh/w0/cmtuser/Online/Saver/v1r0/options/Saver.opts \
--msgsvc=MessageSvc \
--loop -auto
+Gaudi.exe libGaudiOnline.so GaudiOnline -options=/afs/cern.ch/user/e/evh/w0/newcmt/Online_v4r5/Online/Saver/v1r3/options/Saver.opts -loop -auto

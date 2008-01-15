@@ -33,13 +33,13 @@ private:
 
   IHistogramSvc* histoSvc;
  // TFile *f;
-  std::string m_nodename; 
-  std::vector<std::string> m_histogramname; 
-  std::vector<std::string> m_algorithmname; 
-  int m_refreshtime;
-  std::string m_dimclientdns;
-  std::string m_taskname;
-  std::string m_savedir;
+  std::string m_nodeName; 
+  std::vector<std::string> m_histogramName; 
+  std::vector<std::string> m_algorithmName; 
+  int m_refreshTime;
+  std::string m_dimClientDns;
+  std::string m_taskName;
+  std::string m_saveDir;
   std::string command;
   
 

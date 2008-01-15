@@ -1,7 +1,6 @@
 // Job options file. Simple Online Saver example
 //==============================================================
 
-ApplicationMgr.ExtSvc = { "EventSelector" };
 ApplicationMgr.ExtSvc += { "MonitorSvc" };
 
 ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho"};
@@ -16,6 +15,7 @@ Saver.OutputLevel = 1;
 
 ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
 ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 
 Saver.nodename="node00101_Adder_1";
 Saver.histogramname={"Mass","xyPositionPlot","eventtype","xyProfile"};
