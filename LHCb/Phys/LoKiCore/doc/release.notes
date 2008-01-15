@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.70 2007-12-12 06:40:04 cattanem Exp $ 
+! $Id: release.notes,v 1.71 2008-01-15 19:57:19 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-01-15 - Vanya BELYAEV
+ - src/LoKiHybridBase.cpp
+    force the loading/initialization of LoKi Service 
+ - cmnt/requirements
+    version increment to v7r1
 
 !=========================== LoKiCore v7r0 2007-12-12  ========================
 ! 2007-12-11 - Vanya BELYAEV
@@ -427,6 +433,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.70  2007/12/12 06:40:04  cattanem
+! move tag
+!
 ! Revision 1.69  2007/12/11 18:37:04  ibelyaev
 !  Hybrid: add more structure and introduce ''the context''
 !

@@ -1,4 +1,4 @@
-// $Id: HybridBase.cpp,v 1.2 2007-12-11 18:37:04 ibelyaev Exp $
+// $Id: HybridBase.cpp,v 1.3 2008-01-15 19:57:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -13,6 +13,7 @@
 // local
 // ============================================================================
 #include "LoKi/HybridBase.h"
+#include "LoKi/ILoKiSvc.h"
 // ============================================================================
 // Python 
 // ============================================================================
@@ -57,6 +58,8 @@ StatusCode LoKi::Hybrid::Base::initialize ()
 {
   StatusCode sc = GaudiTool::initialize() ;
   if ( sc.isFailure() ) { return sc ; }  
+  // force the loading/initialization of  LoKi Service 
+  svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
   // Initialize python if it not yet done 
   if ( !Py_IsInitialized() ) 
   {
@@ -176,11 +179,11 @@ std::string LoKi::Hybrid::Base::makeCode
          << name() << "'" << std::endl ;
   stream << "# " << std::string(78,'=') << std::endl ;
   stream << "# Arguments: " << std::endl ;
-  stream << "# \tcode    = " << Gaudi::Utils::toString( code    )  << std::endl ;
-  stream << "# \tactor   = " << Gaudi::Utils::toString( actor   )  << std::endl ;
-  stream << "# \tmodules = " << Gaudi::Utils::toString( modules )  << std::endl ;
-  stream << "# \tlines   = " << Gaudi::Utils::toString( lines   )  << std::endl ;
-  stream << "# \tcontext = " << Gaudi::Utils::toString( context )  << std::endl ;
+  stream << "# \tcode    = " << Gaudi::Utils::toString ( code    )  << std::endl ;
+  stream << "# \tactor   = " << Gaudi::Utils::toString ( actor   )  << std::endl ;
+  stream << "# \tmodules = " << Gaudi::Utils::toString ( modules )  << std::endl ;
+  stream << "# \tlines   = " << Gaudi::Utils::toString ( lines   )  << std::endl ;
+  stream << "# \tcontext = " << Gaudi::Utils::toString ( context )  << std::endl ;
   stream << "# " << std::string(78,'=') << std::endl ;
   // define imported modules:
   stream << "##        MODULES :" << std::endl ;
