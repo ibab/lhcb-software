@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.353 2008-01-14 13:23:39 jpalac Exp $ 
+! $Id: release.notes,v 1.354 2008-01-15 06:37:40 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r3 2008-01-14 ==============================
 ! 2008-01-14 - Juan Palacios
  - DetDesc/GlobalToLocalDelta.h
   . Add methods to estimate "off-nominal" delta matrix at local level, starting
@@ -39,7 +40,6 @@
   Takes any MathCore 3D rotation and estimates the equivalent
   Euler 321 rotation parameters.
 
-!====================== DetDesc v18r3 2008-01-11 ==============================
 ! 2008-01-11 - Marco Cattaneo
  - Do not add MathCore to ROOT_linkopts, already done by LHCbKernel
 
