@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.12 2007-12-13 22:43:34 jpalac Exp $
+// $Id: OnOfflineTool.cpp,v 1.13 2008-01-15 18:05:12 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -59,7 +59,7 @@ StatusCode OnOfflineTool::initialize(){
   if (!sc) return sc ;
   
   if ( context()=="HLT" ) {
-    info() << "Running in HLT context: Online = true" << endmsg ;
+    if (msgLevel(MSG::DEBUG)) debug() << "Running in HLT context: Online = true" << endmsg ;
     m_online = true ;
   } else if ( context()!="" ){
     warning() << "Running in " << context() << " context" << endmsg ;

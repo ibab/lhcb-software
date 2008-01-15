@@ -1,4 +1,4 @@
-// $Id: CheckPV.cpp,v 1.14 2007-06-15 13:51:28 jpalac Exp $
+// $Id: CheckPV.cpp,v 1.15 2008-01-15 18:05:10 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -54,13 +54,13 @@ StatusCode CheckPV::initialize() {
     return StatusCode::FAILURE;
   }
   if ( m_minPV > 0 && m_maxPV > 0 ){
-    info() << "will select events with between " << m_minPV << " and " << m_maxPV 
+    if (msgLevel(MSG::DEBUG)) debug() << "will select events with between " << m_minPV << " and " << m_maxPV 
            << " reconstructed PVs" << endreq ;
   } else if ( m_minPV > 0 ){
-    info() << "will select events with " << m_minPV 
+    if (msgLevel(MSG::DEBUG)) debug() << "will select events with " << m_minPV 
            << " or more reconstructed PVs" << endreq ;
    } else if ( m_minPV == 0 ){
-    info() << "will select events with no reconstructed PVs" << endreq ;
+    if (msgLevel(MSG::DEBUG)) debug() << "will select events with no reconstructed PVs" << endreq ;
   }    
 
   return StatusCode::SUCCESS;
@@ -79,7 +79,7 @@ StatusCode CheckPV::execute() {
   
   verbose() << "Getting PV from " << m_PVContainer << endreq ;  
   if ( !exist<LHCb::RecVertices>(m_PVContainer)){
-    info() << m_PVContainer << " not found" << endmsg ;
+    if (msgLevel(MSG::DEBUG)) debug() << m_PVContainer << " not found" << endmsg ;
     ok = (m_minPV<=0) ; // Ok if no PV required
   } else {  
     LHCb::RecVertices* PV = get<LHCb::RecVertices>(m_PVContainer);
@@ -114,7 +114,7 @@ StatusCode CheckPV::finalize() {
 
   debug() << "==> Finalize" << endmsg;
   double fpv = (double)m_nPV/(double)m_nEvent ;
-  info() << "Seen " << m_nPV << " PVs in " << m_nEvent 
+  if (msgLevel(MSG::DEBUG)) debug() << "Seen " << m_nPV << " PVs in " << m_nEvent 
          << " events. Average = " <<  fpv << endreq ;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions

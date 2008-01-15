@@ -1,4 +1,4 @@
-// $Id: SelResultCorrelations.cpp,v 1.3 2007-06-15 13:51:28 jpalac Exp $
+// $Id: SelResultCorrelations.cpp,v 1.4 2008-01-15 18:05:12 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -61,15 +61,15 @@ StatusCode SelResultCorrelations::initialize() {
     err() << "No algorithms defined. Use Algorithms option." << endmsg;
     return StatusCode::FAILURE ;
   } else {
-    info() << "Algorithms to check correlations:" << m_algorithmsColumn << endmsg ;
+    if (msgLevel(MSG::DEBUG)) debug() << "Algorithms to check correlations:" << m_algorithmsColumn << endmsg ;
     sc =  m_algoCorr->algorithms(m_algorithmsColumn);
     if (!sc) return sc ;
   }
   
   if (m_algorithmsRow.empty()){
-    info() << "No algorithms row defined." << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << "No algorithms row defined." << endmsg;
   } else {
-    info() << "Algorithms to check correlations against:" << m_algorithmsRow << endmsg ;
+    if (msgLevel(MSG::DEBUG)) debug() << "Algorithms to check correlations against:" << m_algorithmsRow << endmsg ;
     sc = m_algoCorr->algorithmsRow(m_algorithmsRow); // resets stuff
     if (!sc) return sc ;
   }  

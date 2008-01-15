@@ -7,6 +7,7 @@
  */
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
+ApplicationMgr.ExtSvc += { "LoKiSvc"} ; 
 
 ApplicationMgr.TopAlg += { "GaudiSequencer/SeqOldAlgorithms" };
 SeqOldAlgorithms.Members = { 
@@ -19,7 +20,7 @@ SeqOldAlgorithms.MeasureTime = true ;
 ApplicationMgr.TopAlg += { "GaudiSequencer/SeqNewAlgorithms" };
 SeqNewAlgorithms.Members = { 
    "CombineParticles"
-   //  , "FilterDesktop/HybridFilterDesktop"
+   , "FilterDesktop/HybridFilterDesktop"
    , "PrintHeader/NewWay"
 }; 
 SeqNewAlgorithms.MeasureTime = true ;
@@ -53,8 +54,8 @@ CombineParticles.FilterCriteria = { "Phase0Filter" : "LoKi::Hybrid::FilterCriter
                                     "Phase2Filter" : "LoKi::Hybrid::FilterCriterion/FILTER2" };
 
 CombineParticles.FILTER0.Code = "(PT>500)&((ABSID!=211)|(TRTYPE==3))";     // does it do what I think ?
-CombineParticles.FILTER1.Code = "(ADMASS(431)<50)";                        // kills all - why ?
-//CombineParticles.FILTER1.Code = "(ADMASS('D_s-')<50)";                   // does not work
+CombineParticles.FILTER1.Code = "(ADMASS('D_s-')<50)";                   // does not work
+//CombineParticles.FILTER1.Code  = "ADMASS('B0')<500" ;
 CombineParticles.FILTER2.Code = "(VFASPF(VCHI2)<100)";
 //------------------------------------------------------------------------------
 // Filter Ds

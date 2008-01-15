@@ -1,4 +1,4 @@
-// $Id: Bd2KstarMuMuAngleCalculator.cpp,v 1.2 2007-09-18 14:03:08 pkoppenb Exp $
+// $Id: Bd2KstarMuMuAngleCalculator.cpp,v 1.3 2008-01-15 18:05:10 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -45,7 +45,7 @@ StatusCode Bd2KstarMuMuAngleCalculator::initialize() {
   StatusCode sc = GaudiTool::initialize() ;
   if (!sc) return sc ;
   
-  info() << "Initializing Angle Calculator Tool" << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Initializing Angle Calculator Tool" << endmsg ;
   
   m_descendants = tool<IParticleDescendants>("ParticleDescendants ",this);
   m_angle = tool<IP2VVAngleCalculator>("P2VVAngleCalculator",this);

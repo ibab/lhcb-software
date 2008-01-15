@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.294 2008-01-14 17:23:00 pkoppenb Exp $
+! $Id: release.notes,v 1.295 2008-01-15 18:05:09 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-01-15 - Patrick Koppenburg
+ - New testing options DVTestCombineParticles.opts
+ - info -> debug in intialize
 
 ! 2008-01-14 - Patrick Koppenburg
  - Remove DVTestMakeResonances as it uses the obsolete version 

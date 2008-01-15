@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.19 2007-07-11 19:38:37 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.20 2008-01-15 18:05:12 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -113,8 +113,8 @@ StatusCode SimplePlotTool::reInitialize () {
     if (msgLevel(MSG::DEBUG)) debug() << "Histogram with variable " << H.getVar() << " with boundaries " 
            << H.getMin() << " " << H.getMax() << endreq ;
   }
-  info() << "Done initialization for " <<  m_variables.size() 
-         << " variables" << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Done initialization for " <<  m_variables.size() 
+                                    << " variables" << endmsg ;
 
   return StatusCode::SUCCESS;  
 };

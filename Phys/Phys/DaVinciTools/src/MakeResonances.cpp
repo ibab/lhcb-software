@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.32 2007-08-30 11:56:35 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.33 2008-01-15 18:05:11 pkoppenb Exp $
 
 #include <algorithm>
 
@@ -76,15 +76,17 @@ StatusCode MakeResonances::initialize() {
   StatusCode sc = DVAlgorithm::initialize();
   if (!sc) return sc;
 
-  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
-  info() << "Mass Cuts are " << endmsg;
-  info() << ">>>   Upper Mass Window  " 
-         << std::min(m_massWindow,m_upperMassWindow) << endmsg;
-  info() << ">>>   Lower Mass Window  " 
-         << std::min(m_massWindow,m_lowerMassWindow) << endmsg;
-  if ( m_minPt > 0.) info() << ">>>   Minimum Pt  " << m_minPt << endmsg;
-  if ( m_minMomentum > 0.) info() << ">>>   Minimum P  " 
-                                  << m_minMomentum << endmsg;
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "==> Initialize" << endmsg;
+    debug() << "Mass Cuts are " << endmsg;
+    debug() << ">>>   Upper Mass Window  " 
+            << std::min(m_massWindow,m_upperMassWindow) << endmsg;
+    debug() << ">>>   Lower Mass Window  " 
+            << std::min(m_massWindow,m_lowerMassWindow) << endmsg;
+    if ( m_minPt > 0.)  debug() << ">>>   Minimum Pt  " << m_minPt << endmsg;
+    if ( m_minMomentum > 0.)  debug() << ">>>   Minimum P  " 
+                                      << m_minMomentum << endmsg;
+  }
 
   m_daughterFilter = tool<IFilterCriterion>("ByPIDFilterCriterion",m_daughterFilterName , this ) ;
   m_motherFilter = tool<IFilterCriterion>("ByPIDFilterCriterion", m_motherFilterName, this ) ;
@@ -192,7 +194,7 @@ StatusCode MakeResonances::createDecays(){
 //=============================================================================
 StatusCode MakeResonances::createDecay(const std::string& mother, 
                                        const strings& daughters){
-  info() << "Creating " << mother << " -> " << daughters << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Creating " << mother << " -> " << daughters << endmsg;
   
   // mother
   if (msgLevel(MSG::VERBOSE)) verbose() << "Found ParticlePropertySvc " << ppSvc() << endmsg ;
@@ -242,7 +244,7 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
   
   m_decays.push_back(decay);
 
-  info() << "Initialized decay # " << m_decays.size() << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Initialized decay # " << m_decays.size() << endmsg ;
   
   return StatusCode::SUCCESS;
 }

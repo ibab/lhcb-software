@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.2 2008-01-14 17:23:01 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.3 2008-01-15 18:05:11 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -116,7 +116,7 @@ StatusCode CombineParticles::initializePlotter(IPlotTool*& plotter,
     }
     if (plotsPath == "") plotsPath = name()+plotterName;
     else plotter->setPath(plotsPath);
-    info() << plotterName <<" plots will be in " 
+    if (msgLevel(MSG::DEBUG)) debug() << plotterName <<" plots will be in " 
            << plotsPath << endmsg ;
   }
   
@@ -401,7 +401,7 @@ StatusCode CombineParticles::createDecays(){
 StatusCode CombineParticles::createDecay(const std::string& mother, 
                                        const Strings& daughters){
 
-  info() << "Creating " << mother << " -> " << daughters << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Creating " << mother << " -> " << daughters << endmsg;
   
   // mother
 
@@ -447,7 +447,7 @@ StatusCode CombineParticles::createDecay(const std::string& mother,
   
   m_decays.push_back(decay);
 
-  info() << "Initialized decay # " << m_decays.size() << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Initialized decay # " << m_decays.size() << endmsg ;
   
   return StatusCode::SUCCESS;
   

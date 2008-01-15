@@ -1,4 +1,4 @@
-// $Id: CheckSelResult.cpp,v 1.6 2007-09-07 13:40:58 pkoppenb Exp $
+// $Id: CheckSelResult.cpp,v 1.7 2008-01-15 18:05:11 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -61,8 +61,8 @@ StatusCode CheckSelResult::initialize() {
   if ((m_ANDmode) && (m_algorithms.size()>1)){
     warning() << "You have selected the 'AND' mode: "
               << "ALL algorithms are required to pass!" << endmsg;
-  } else info() << "You have selected the default 'OR' mode." << endmsg;
-  if (!m_avoidSelResult) info() 
+  } else if (msgLevel(MSG::DEBUG)) debug() << "You have selected the default 'OR' mode." << endmsg;
+  if ((!m_avoidSelResult) && msgLevel(MSG::DEBUG)) debug() 
     << "You have set AvoidSelResult to false -> will write out to TES" << endmsg; 
 
   m_writeTool = tool<IWriteSelResult>("WriteSelResult");

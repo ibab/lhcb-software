@@ -161,7 +161,7 @@ StatusCode PhysDesktop::initialize()
                                       << endmsg;
   } else {
     // Retrieve the ParticleMaker tool:
-    info() << "Using ParticleMaker : " << m_pMakerType << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << "Using ParticleMaker : " << m_pMakerType << endmsg;
     m_pMaker = tool<IParticleMaker>(m_pMakerType, this);
     if (!m_pMaker)
     {
@@ -174,10 +174,13 @@ StatusCode PhysDesktop::initialize()
     if ( m_pMakerType == "" ) warning() << "No inputLocations nor ParticleMaker defined" << endmsg ;
     if (msgLevel(MSG::DEBUG)) debug() << "Empty list of input locations -> No particles from previous processing" << endmsg;
   } else {
-    info() << "Particles and Vertices will be loaded from :- "  << endreq ;
-    for ( std::vector<std::string>::iterator iloc = m_inputLocn.begin();
-          iloc != m_inputLocn.end(); ++iloc ){
-      info() << "  -> " << *iloc << endreq;
+    if (msgLevel(MSG::DEBUG)) {
+      debug() << "Particles and Vertices will be loaded from :- "  << endreq ;
+      for ( std::vector<std::string>::iterator iloc = m_inputLocn.begin();
+            iloc != m_inputLocn.end(); ++iloc ){
+        debug() << "  -> " << *iloc ;
+      }
+      debug() << endreq ;
     }
   }
 
