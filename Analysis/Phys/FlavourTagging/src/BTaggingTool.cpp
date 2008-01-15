@@ -360,7 +360,7 @@ bool BTaggingTool::isinTree(const Particle* axp, Particle::ConstVector& sons,
 //=============================================================================
 void BTaggingTool::handle(const Incident&){
   StatusCode sc = m_physd->cleanDesktop();
-  always() << "Cleaned desktop" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Cleaned desktop" << endmsg ;
   if (!sc) Exception("Could not clean Desktop");
   return ;
 }
