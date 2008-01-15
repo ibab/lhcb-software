@@ -3,7 +3,7 @@
 # Maintainer : Marco Cattaneo
 #============================================================================
 package LHCbAlgs
-version v2r13
+version v2r14
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -21,7 +21,7 @@ use DAQEvent   v* Event
 #============================================================================
 # Component library building rule
 #============================================================================
-library LHCbAlgs ../src/*.cpp -import=AIDA -import=LHCbKernel
+library LHCbAlgs ../src/*.cpp -import=LHCbKernel
 
 #============================================================================
 # define component library link options

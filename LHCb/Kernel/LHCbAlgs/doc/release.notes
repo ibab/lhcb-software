@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r14 2008-01-15 ==========================
+! 2008-01-15 - Marco Cattaneo
+ - Add createODIN algorithm, to create DAQ/ODIN object from ODIN RawBank
+
 !======================== LHCbAlgs v2r13 2007-11-28 ==========================
 ! 2007-11-28 - Marco Cattaneo
  - Reimplemented FilterByRunEvent using property type std::vector<std::pair> >
