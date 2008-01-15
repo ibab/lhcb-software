@@ -8,7 +8,6 @@
 #include "Kernel/IParticleCombiner.h"
 #include "Kernel/IParticleReFitter.h"
 // ============================================================================
-
 /** @class IMassVertexFit IMassVertexFit.h
  *
  *  The "concrete" mass-vertex constraint interface
@@ -62,7 +61,7 @@ class IMassVertexFit :
   public virtual IParticleReFitter 
 {
 public:
-  
+  // ========================================================================== 
   /** The major method for mass-vertex constrain fit
    *  The particles from the input container container  are fit to produce 
    *  "mother" particle and its decay vertex.
@@ -115,7 +114,7 @@ public:
     const double      mass      ,
     LHCb::Particle&         mother    , 
     LHCb::Vertex&           vertex    ) const = 0 ;
-
+  // ==========================================================================
   /** The major method for mass-vertex constrain fit
    *  The particles from the input container container  are fit to produce 
    *  "mother" particle and its decay vertex.
@@ -168,7 +167,7 @@ public:
   ( const LHCb::Particle::ConstVector&  daughters ,  
     LHCb::Particle&         mother    , 
     LHCb::Vertex&           vertex    ) const = 0 ;
-  
+  // ==========================================================================  
   /** The method which allows to use almost an arbitrary 
    *  sequence of daughter particles, 
    *   e.g. following types could be  used:
@@ -200,8 +199,8 @@ public:
   {
     const LHCb::Particle::ConstVector children = Daughters( begin , end ) ;
     return fit( children , mass , mother , vertex ) ;
-  };
-
+  }
+  // ==========================================================================
   /** The method which allows to use almost an arbitrary 
    *  sequence of daughter particles,
    *   e.g. following types could be  used:
@@ -234,19 +233,19 @@ public:
   {
     const LHCb::Particle::ConstVector children = Daughters( begin , end ) ;
     return fit( children , mother , vertex ) ;
-  };
-
+  } 
+  // ==========================================================================
 public: 
-  
-  // Return the interface ID
+  // ==========================================================================
+  /// the unique interface identifier 
   static const InterfaceID& interfaceID() ;
-  
+  // ==========================================================================  
 protected:
-  
-  /// virtual and protected destructor 
-  virtual ~IMassVertexFit();
+  // ==========================================================================  
+  // virtual and protected destructor 
+  virtual ~IMassVertexFit(); ///< virtual and protected destructor 
+  // ==========================================================================  
 };
-
 // ============================================================================
 // The END 
 // ============================================================================

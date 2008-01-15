@@ -1,4 +1,4 @@
-// $Id: DaVinciKernelDict.h,v 1.9 2008-01-04 16:26:37 pkoppenb Exp $
+// $Id: DaVinciKernelDict.h,v 1.10 2008-01-15 18:16:53 ibelyaev Exp $
 #ifndef DICT_DAVINCIKERNELDICT_H 
 #define DICT_DAVINCIKERNELDICT_H 1
 
@@ -32,6 +32,7 @@
 #include "Kernel/IJetMaker.h"
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IMassVertexFit.h"
+#include "Kernel/IMassFit.h"
 #include "Kernel/IOnOffline.h"
 #include "Kernel/IP2VVAngleCalculator.h"
 #include "Kernel/IP2VVPartAngleCalculator.h"

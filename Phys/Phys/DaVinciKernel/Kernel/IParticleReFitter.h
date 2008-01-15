@@ -1,23 +1,4 @@
-// $Id: IParticleReFitter.h,v 1.4 2007-02-06 09:57:56 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/03/15 13:34:02  pkoppenb
-// Head is now DC06
-//
-// Revision 1.2.4.2  2006/01/24 09:56:05  pkoppenb
-// small changes
-//
-// Revision 1.2.4.1  2006/01/17 08:54:45  pkoppenb
-// First DC06 version
-//
-// Revision 1.2  2005/06/09 13:10:40  pkoppenb
-// Joined with v3r3b1 branch
-//
-// Revision 1.1.2.1  2005/06/09 11:55:41  pkoppenb
-// New vertex interfaces
-// 
+// $Id: IParticleReFitter.h,v 1.5 2008-01-15 18:16:52 ibelyaev Exp $
 // ============================================================================
 #ifndef VERTEXFITTER_IPARTICLEREFITTER_H 
 #define VERTEXFITTER_IPARTICLEREFITTER_H 1
@@ -34,9 +15,8 @@
 // ============================================================================
 // forward declarations 
 // ============================================================================
-class LHCb::Particle ;
+namespace LHCb { class Particle ; }
 // ============================================================================
-
 /** @class IParticleReFitter IParticleReFitter.h 
  *  
  *  The second "basic" abstract interface for (re)fitter tools.
@@ -55,7 +35,7 @@ class LHCb::Particle ;
 class IParticleReFitter : virtual public IAlgTool 
 {
 public:
-  
+  // ==========================================================================  
   /** The basic method for "refit" of the particle
    *
    *  @code 
@@ -76,10 +56,12 @@ public:
    *  @see GaudiAlgorithm::Warning
    *
    *  @param particle reference to the particle 
-   *  @return statsu code 
+   *  @return status code 
    */
   virtual StatusCode reFit ( LHCb::Particle& particle ) const = 0 ;
-  
+  // ==========================================================================
+public:
+  // ==========================================================================
   /** The method which allows to 
    *  refit a sequence of particles. The actual tyep of sequence
    *  is irrelevant, e.g. it could be 
@@ -120,20 +102,19 @@ public:
       if ( sc.isFailure() ) { code = sc ; }
     }
     return code ;
-  };
-  
+  } 
+  // ==========================================================================  
 public:
-  
+  // ==========================================================================
   /// Return the unique interface identifier 
   static const InterfaceID& interfaceID() ;
-  
+  // ==========================================================================  
 protected:
-
+  // ==========================================================================
   // virtual and protected destructor 
   virtual ~IParticleReFitter() ; ///< virtual and protected destructor 
-
+  // ==========================================================================
 };
-
 // ============================================================================
 // The END 
 // ============================================================================
