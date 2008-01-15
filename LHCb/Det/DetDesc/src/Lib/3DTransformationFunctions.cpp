@@ -1,12 +1,10 @@
-// $Id: 3DTransformationFunctions.cpp,v 1.4 2008-01-14 10:09:27 jpalac Exp $
+// $Id: 3DTransformationFunctions.cpp,v 1.5 2008-01-15 14:45:25 jpalac Exp $
 // Include files 
 
 
 
 // local
 #include "DetDesc/3DTransformationFunctions.h"
-//#include "Math/RotationZYX.h"
-//#include "3DConversions.h"
 
 namespace DetDesc {
 
@@ -24,7 +22,7 @@ const Gaudi::Transform3D localToGlobalTransformation(const std::vector<double>& 
     ROOT::Math::Translation3D( translationParams.begin(),
                                translationParams.end()    );
 
-  return Gaudi::Transform3D( translation*pivot*Gaudi::Rotation3D(rotation)*(pivot.Inverse()) );
+  return Gaudi::Transform3D( translation*pivot*rotation*(pivot.Inverse()) );
   
 }
 
@@ -34,18 +32,18 @@ void getZYXTransformParameters(const Gaudi::Transform3D& CDM,
                                const std::vector<double>& pivotParams) 
 {
 
-  ROOT::Math::RotationZYX newRot = ROOT::Math::RotationZYX( CDM.Rotation() );
+  ROOT::Math::RotationZYX newRot = CDM.Rotation<ROOT::Math::RotationZYX>();
 
   const ROOT::Math::Translation3D newTrans = CDM.Translation();
 
-  const ROOT::Math::Translation3D pivotTrans = ROOT::Math::Translation3D( pivotParams.begin(),
-                                                                          pivotParams.end()    );
+  const ROOT::Math::Translation3D pivotTrans = 
+    ROOT::Math::Translation3D( pivotParams.begin(), pivotParams.end()    );
   
-  // Take the pivot out of the rotation.
-  const Gaudi::Transform3D newRotPart = 
-    pivotTrans.Inverse() * Gaudi::Transform3D( Gaudi::Rotation3D(newRot) ) * pivotTrans;
 
-  newRotPart.GetRotation(newRot);
+  const Gaudi::Transform3D newRotPart = 
+    pivotTrans.Inverse() * newRot * pivotTrans;
+
+  newRot = newRotPart.Rotation<ROOT::Math::RotationZYX>();
 
   newRot.GetComponents(rotationParams[2], rotationParams[1], rotationParams[0]);
 
