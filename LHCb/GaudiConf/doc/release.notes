@@ -2,15 +2,13 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-!======================== GaudiConf v10r6 2008-01-10 ========================
-! 2008-01-10 - Marco Cattaneo
+!======================== GaudiConf v10r6 2008-01-15 ========================
+! 2008-01-15 - Marco Cattaneo
  - In DecodeRawEvent.opts and UnpackDigi.opts:
    . Use AlgMap property to define the algorithms
  - In DecodeRawEvent.opts:
-   . Use EventClockSvc.EventTimeDecoder to decode ODIN
+   . Add algorithm to decode ODIN
    . Disable L0DU
- - In LHCbApplication.opts:
-   . Always start EventClockSvc, even in absence of conditions
 
 !======================== GaudiConf v10r5 2007-12-11 ========================
 ! 2007-12-11 - Marco Cattaneo

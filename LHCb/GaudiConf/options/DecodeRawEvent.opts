@@ -10,6 +10,7 @@ DataOnDemandSvc.AlgMap += {
  ,"Raw/IT/LiteClusters"   : "RawBankToSTLiteClusterAlg/createITLiteClusters"
  ,"Raw/OT/Times"          : "OTTimeCreator"
  ,"Raw/Muon/Coords"       : "MuonRec"
+ ,"DAQ/ODIN"              : "createODIN"
   // ,"Trig/L0/L0DU"         : "L0DUFromRaw"
 };
 createITClusters.detType     = "IT";
@@ -18,6 +19,3 @@ createVeloClusters.DecodeToVeloClusters     = true;
 createVeloClusters.DecodeToVeloLiteClusters = false;
 #include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
 #include "$CALODAQROOT/options/CaloDigitsOnDemand.opts"
-
-// For ODIN, just use the EventClockSvc, started by LHCbApplication.opts
-EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
