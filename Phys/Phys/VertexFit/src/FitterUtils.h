@@ -1,8 +1,4 @@
-// $Id: FitterUtils.h,v 1.1 2006-05-26 10:54:02 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: FitterUtils.h,v 1.2 2008-01-15 18:24:34 ibelyaev Exp $
 // ============================================================================
 #ifndef FITTERUTILS_H 
 #define FITTERUTILS_H 1
@@ -15,14 +11,19 @@
 #include  "Event/Vertex.h"
 // ============================================================================
 
-/** @class FitterUtils FitterUtils.h
- *  
+/** @namespace FitterUtils FitterUtils.h
+ *  Helper namespace with various utility classes, useful for kinematical fits 
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date   2006-04-12
  */
 namespace FitterUtils 
-{  
+{ 
+  /** @class Entry
+   *  Helper class useful for kinematical fits 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2006-04-12
+   */
   class Entry 
   {
   public:

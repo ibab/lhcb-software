@@ -1,8 +1,20 @@
-! $Id: release.notes,v 1.127 2007-12-13 16:03:21 jpalac Exp $
+! $Id: release.notes,v 1.128 2008-01-15 18:27:17 ibelyaev Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2008-01-15 - Vanya BELYAEV
+
+ - src/MassFitter.cpp
+   new class LoKi::MassFitter, 
+   the most trivial implementation of IMassFit abstract interface 
+   ATTENTION: the tool is not properly tested yet! to be done urgently!
+
+ - src/MatrixUtils.h
+   remove the obsolete file, use 
+    LHCbMath/MatrixUtils.h & LHCbMath/MatrixTransforms.h instead
+   the related files are updated properly 
 
 !========================== VertexFit v4r4p1 2007-12-13 =================
 

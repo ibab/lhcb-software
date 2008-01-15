@@ -1,23 +1,4 @@
-// $Id: BlindVertexFitter.cpp,v 1.6 2007-01-12 14:17:53 ranjard Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ Vertsion $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2006/12/06 14:49:46  jpalac
-// *** empty log message ***
-//
-// Revision 1.4  2006/07/20 15:23:19  jpalac
-// Minor SMatrix fixes. Re-tag as v3r0
-//
-// Revision 1.3  2006/06/01 08:35:33  jpalac
-// *** empty log message ***
-//
-// Revision 1.2  2006/05/31 13:14:37  jpalac
-// *** empty log message ***
-//
-// Revision 1.1  2006/05/26 10:54:02  ibelyaev
-//  add BlindVertexFitter
-// 
+// $Id: BlindVertexFitter.cpp,v 1.7 2008-01-15 18:24:33 ibelyaev Exp $
 // ============================================================================
 // Incldue files 
 // ============================================================================
@@ -43,6 +24,11 @@
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IParticleTransporter.h"
 // ============================================================================
+// LHCbMath
+// ============================================================================
+#include "LHCbMath/MatrixUtils.h"
+#include "LHCbMath/MatrixTransforms.h"
+// ============================================================================
 // ROOT/Mathlib
 // ============================================================================
 #include "Math/Functions.h"
@@ -50,9 +36,7 @@
 // Local 
 // ============================================================================
 #include "FitterUtils.h"
-#include "LHCbMath/MatrixUtils.h"
 // ============================================================================
-
 /// anonymous namespace to hide few technical constants
 namespace 
 {
@@ -63,10 +47,8 @@ namespace
   const double s_middle  =  1  * Gaudi::Units::centimeter  ;
   const double s_middle2 = s_middle * s_middle             ;
   const double s_large   = 10  * Gaudi::Units::centimeter  ;
-  const double s_large2  = s_large  * s_large              ;
-  
-}  
-
+  const double s_large2  = s_large  * s_large              ; 
+}
 // ============================================================================
 /** @class BlindVertexFitter  BlindVertexFitter.cpp  
  *  the most trivial implementation of Kalman-filter based vertex fitter.
@@ -86,10 +68,13 @@ class BlindVertexFitter
 {
   friend class ToolFactory<BlindVertexFitter> ;
 protected:
+  // ==========================================================================  
   typedef FitterUtils::Entry  Entry    ;
   typedef std::vector<Entry>  Entries  ;
   typedef Entries::iterator   EIT      ;
+  // ==========================================================================  
 public:  
+  // ==========================================================================  
   /** The vertex fitting method without creation of a Particle 
    *
    *  @code
@@ -122,6 +107,7 @@ public:
   virtual StatusCode fit 
   ( const LHCb::Particle::ConstVector& daughters ,
     LHCb::Vertex&                      vertex    ) const ;  
+  // ==========================================================================  
   /** The vertex fitting method with creation of LHCb::Particle 
    *  ("classical")
    *
@@ -158,6 +144,7 @@ public:
   ( const LHCb::Particle::ConstVector& daughters ,
     LHCb::Particle&        particle  ,
     LHCb::Vertex&          vertex    ) const ;  
+  // ==========================================================================  
   /** add the particle to the vertex and refit 
    * 
    *  @code
@@ -184,6 +171,7 @@ public:
   virtual StatusCode add
   ( const LHCb::Particle*  particle , 
     LHCb::Vertex&          vertex   ) const ;  
+  // ==========================================================================  
   /** remove the particle from the vertex and refit 
    *
    *  @code
@@ -209,7 +197,9 @@ public:
   virtual StatusCode remove
   ( const LHCb::Particle*  particle , 
     LHCb::Vertex&          vertex   ) const ;
+  // ==========================================================================  
 public:  
+  // ==========================================================================  
   /** The major method for "combining" the daughter particles 
    *  into "mother" particle.
    *
@@ -248,7 +238,7 @@ public:
    *     }
    *  }
    *
-  *  @endcode 
+   *  @endcode 
    *
    *  @see IParticleCombiner 
    *
@@ -261,9 +251,10 @@ public:
   ( const LHCb::Particle::ConstVector&  daughters ,  
     LHCb::Particle&                     mother    , 
     LHCb::Vertex&                       vertex    ) const 
-  { return fit ( daughters , mother , vertex ) ; } ;
-  
+  { return fit ( daughters , mother , vertex ) ; } 
+  // ==========================================================================  
 public:
+  // ==========================================================================
   /** The basic method for "refit" of the particle
    *
    *  @code 
@@ -295,8 +286,10 @@ public:
     return vFit->fit ( vertex->outgoingParticles().begin() , 
                        vertex->outgoingParticles().end  () , 
                        particle , *vertex                  ) ; 
-  } ;
+  } 
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /// standard constructor 
   BlindVertexFitter 
   ( const std::string& type   , 
@@ -326,14 +319,18 @@ protected:
     declareProperty ( "SeedZmax"         , m_seedZmax    ) ;
     declareProperty ( "SeedRho"          , m_seedRho     ) ;
     declareProperty ( "Transporter"      , m_transporterName );
-  } ;
+  } 
   // protected destrcutor
   virtual ~BlindVertexFitter() {}
+  // ==========================================================================
 private:
+  // ==========================================================================
   BlindVertexFitter() ; // the default constructor is disabled 
   BlindVertexFitter( const BlindVertexFitter& );// copy is disabled 
   BlindVertexFitter& operator=( const BlindVertexFitter& ); // disabled 
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /// load the data into internal representation 
   inline StatusCode _load      
   ( const LHCb::Particle* particle , Entry& entry ) const ;
@@ -362,15 +359,19 @@ protected:
   inline StatusCode _evalCov () const ;
   /// make a seed 
   inline StatusCode _seed ( const LHCb::Vertex* vertex  ) const ;
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /// get the tranbsporter 
   inline IParticleTransporter* transporter() const 
   {
     if ( 0 != m_transporter ) { return m_transporter ; }
     m_transporter = tool<IParticleTransporter> ( m_transporterName , this ) ;
     return m_transporter ;
-  } ;
+  } 
+  // ==========================================================================
 private:
+  // ==========================================================================
   // maximal number of iteration for vertex fit 
   unsigned short m_nIterMaxI    ; ///< maximal number of iteration for vertex fit 
   // maximal number of iteratio n for "add" 
@@ -401,11 +402,12 @@ private:
   mutable Gaudi::Matrix4x4           m_cmom1    ;
   mutable Gaudi::Matrix4x3           m_mpcov    ;
   mutable Gaudi::SymMatrix3x3        m_seedaux  ;  
+  // ==========================================================================
 } ;
 // ============================================================================
 DECLARE_TOOL_FACTORY ( BlindVertexFitter ) ;
 // ============================================================================
-/// load the data from the daughter particles into the internal structures 
+// load the data from the daughter particles into the internal structures 
 // ============================================================================
 inline StatusCode BlindVertexFitter::_load 
 ( const LHCb::Particle::ConstVector& ds ) const 
@@ -417,9 +419,9 @@ inline StatusCode BlindVertexFitter::_load
   for ( ; ds.end() != c ; ++c , ++e ) { _load ( *c , *e ) ; } ;
   if ( m_entries.empty() ) { return Error("_load(): no valid data found") ; }
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================/
-/// load the data into internal representation 
+// load the data into internal representation 
 // ============================================================================/
 inline StatusCode BlindVertexFitter::_load      
 ( const LHCb::Particle*     particle , 
@@ -431,7 +433,7 @@ inline StatusCode BlindVertexFitter::_load
   return _update ( entry ) ;
 }
 // ============================================================================/
-/// update the representation 
+// update the representation 
 // ============================================================================/
 inline StatusCode BlindVertexFitter::_update 
 ( BlindVertexFitter::Entry& entry ) const 
@@ -459,7 +461,7 @@ inline StatusCode BlindVertexFitter::_update
   Gaudi::Math::geo2LA ( entry.m_p.momentum       () , entry.m_parq ) ;
   //
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================/
 // add one particle at the end of the queue
 // ============================================================================
@@ -471,7 +473,7 @@ inline StatusCode BlindVertexFitter::_add
   _load      ( child , m_entries.back() ) ;
   _transport ( m_entries.back() , newZ ) ;
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
 // transport all internal data to new Z-position
 // ============================================================================
@@ -488,7 +490,7 @@ inline StatusCode BlindVertexFitter::_transport
     entry.m_p = *entry.m_p0 ;
   } ;  
   return _update ( entry ) ;
-} ;
+}
 // ============================================================================
 // transport all internal data to new Z-position
 // ============================================================================
@@ -498,9 +500,9 @@ inline StatusCode BlindVertexFitter::_transport
   for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
   { _transport ( *entry , newZ ) ; }
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
-/// making one step of Kalman filter 
+// making one step of Kalman filter 
 // ============================================================================
 inline  StatusCode BlindVertexFitter::_step
 ( BlindVertexFitter::Entry&  entry , 
@@ -530,7 +532,7 @@ inline  StatusCode BlindVertexFitter::_step
   if ( 0 > dchi2 ) { Warning ( "_step: delta chi2 is negative!" ); }    
   entry.m_chi2 = chi2 + dchi2 ;
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
 /// kalman smoothing  
 // ============================================================================
@@ -543,7 +545,7 @@ inline StatusCode BlindVertexFitter::_smooth() const
     entry->m_q = last.m_q ;
   }
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
 // evaluate all covariances properly 
 // ============================================================================
@@ -564,7 +566,7 @@ inline StatusCode BlindVertexFitter::_evalCov() const
     entry->m_e = -1.0 * entry->m_f*entry->m_c ;
   }
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
 /// make few kalman iterations 
 // ============================================================================
@@ -638,9 +640,9 @@ inline StatusCode BlindVertexFitter::_iterate
     { Error ( "No convergency has been reached after 'nIterMax' iterations" ) ; }
   } // end of iterations
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
-/// make a seed 
+// make a seed 
 // ============================================================================
 inline StatusCode BlindVertexFitter::_seed ( const LHCb::Vertex* vertex ) const
 {
@@ -752,9 +754,9 @@ StatusCode BlindVertexFitter::fit
   { Warning ("fit():Vertex is outside of 'Rho'  fiducial volume ") ; }
   //
   return sc ;
-} ;
+} 
 // ============================================================================
-/// The vertex fitting method with creation of a Particle
+// The vertex fitting method with creation of a Particle
 // ============================================================================
 StatusCode BlindVertexFitter::fit 
 ( const LHCb::Particle::ConstVector& daughters ,
@@ -809,9 +811,9 @@ StatusCode BlindVertexFitter::fit
   particle.setMeasuredMassErr ( ::sqrt ( ::fabs ( merr  ) ) ) ;
   // 
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
-/// add the particle to the vertex and refit 
+// add the particle to the vertex and refit 
 // ============================================================================
 StatusCode BlindVertexFitter::add
 ( const LHCb::Particle*  particle , 
@@ -866,9 +868,9 @@ StatusCode BlindVertexFitter::add
   { Warning ("fit():Vertex is outside of 'Rho'  fiducial volume ") ; }
   //
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
-/// remove the particle from the vertex and refit 
+// remove the particle from the vertex and refit 
 // ============================================================================
 StatusCode BlindVertexFitter::remove
 ( const LHCb::Particle*  particle , 
@@ -917,8 +919,7 @@ StatusCode BlindVertexFitter::remove
 //   StatusCode sc  = _iterate ( m_nIterMaxIII , x ) ;
   
   return StatusCode::SUCCESS ;
-} ;
-
+}
 // ============================================================================
 // The END 
 // ============================================================================
