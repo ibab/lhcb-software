@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.14 2007-06-21 10:03:17 musy Exp $
+// $Id: BTaggingTool.h,v 1.15 2008-01-15 18:59:52 pkoppenb Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -7,6 +7,7 @@
 #include <string>
 #include <math.h>
 // from Gaudi
+#include "GaudiKernel/IIncidentListener.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -32,7 +33,8 @@
  */
 
 class BTaggingTool : public GaudiTool,
-        virtual public IBTaggingTool {
+                     virtual public IBTaggingTool,
+                     virtual public IIncidentListener  {
 
 public: 
 
@@ -54,6 +56,7 @@ public:
 		   const LHCb::Particle*, const LHCb::RecVertex*, 
 		   LHCb::Particle::ConstVector& ); 
   //-------------------------------------------------------------
+  virtual void handle(const Incident&); ///< clean desktop
 
 private:
   bool isinTree( const LHCb::Particle*, 

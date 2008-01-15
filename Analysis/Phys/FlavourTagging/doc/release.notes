@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.110 2007-07-31 09:24:51 jpalac Exp $
+! $Id: release.notes,v 1.111 2008-01-15 18:59:51 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2008-01-15 - Patrick Koppenburg
+ - Add an incident listener to BTaggingTool and use handle method to
+   clean desktop at end of event. This became necessary after the removal
+   of this feature from PhysDesktop.
+ - Increment to v7r3p1
 
 !======================== FlavourTagging v7r3 2007-07-31 =====================
 

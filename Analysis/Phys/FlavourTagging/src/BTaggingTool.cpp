@@ -2,6 +2,7 @@
 #include "BTaggingTool.h"
 // from DaVinci
 //#include "Kernel/StringUtils.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 //--------------------------------------------------------------------------
 // Implementation file for class : BTaggingTool
@@ -22,6 +23,7 @@ BTaggingTool::BTaggingTool( const std::string& type,
   GaudiTool ( type, name, parent ) {
 
   declareInterface<IBTaggingTool>(this);
+  declareInterface<IIncidentListener>(this);
 
   declareProperty( "CombineTaggersName",
                    m_CombineTaggersName = "CombineTaggersProbability" );
@@ -60,6 +62,9 @@ StatusCode BTaggingTool::initialize() {
     return StatusCode::FAILURE;
   }
   m_physd->imposeOutputLocation(m_outputLocation);
+
+  // Register to the Incident service to be notified at the end of one event
+  incSvc()->addListener( this, IncidentType::EndEvent, 100 );
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
   if( ! m_util ) {
@@ -350,4 +355,12 @@ bool BTaggingTool::isinTree(const Particle* axp, Particle::ConstVector& sons,
   }
   return false;
 }
-//==========================================================================
+//=============================================================================
+// Implementation of Listener interface
+//=============================================================================
+void BTaggingTool::handle(const Incident&){
+  StatusCode sc = m_physd->cleanDesktop();
+  always() << "Cleaned desktop" << endmsg ;
+  if (!sc) Exception("Could not clean Desktop");
+  return ;
+}
