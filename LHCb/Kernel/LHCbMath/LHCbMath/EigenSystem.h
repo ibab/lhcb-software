@@ -1,11 +1,4 @@
-// $Id: EigenSystem.h,v 1.2 2006-06-06 12:36:46 jpalac Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2006/05/31 14:49:53  jpalac
-// Add EigenSystem, make into link library, tag as v1r1
-// 
+// $Id: EigenSystem.h,v 1.3 2008-01-15 18:11:51 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_EIGENSYSTEM_H 
 #define LHCBMATH_EIGENSYSTEM_H 1
@@ -36,6 +29,7 @@ namespace Gaudi
   {
     namespace GSL
     {      
+      // ======================================================================
       /** @class EigenSystem EigenSystem.h
        *  
        *  Helper class with allows to find eigenvalues and eigenvector
@@ -62,6 +56,7 @@ namespace Gaudi
         /// destructor 
         ~EigenSystem () ;
       public:
+        // ====================================================================
         /** evaluate the eigenvalues of symmetrical matrix 
          * 
          *  @code 
@@ -87,6 +82,7 @@ namespace Gaudi
         eigenValues
         ( const ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >& mtrx , 
           const bool sorted = true ) const ;
+        // ====================================================================
         /** evaluate the eigenvalues of symmetrical matrix 
          *
          *  @code 
@@ -113,6 +109,7 @@ namespace Gaudi
         ( const ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >& mtrx ,
           ROOT::Math::SVector<T,D>&                                     vals , 
           const bool sorted = true ) const ;
+        // ====================================================================
         /** evaluate the eigenvalues and eigenvectors of the symmetrical matrix 
          *
          *  @code 
@@ -159,6 +156,7 @@ namespace Gaudi
           ROOT::Math::SVector<T,D>&                                     vals , 
           ROOT::Math::SMatrix<T,D,D>&                                   vecs , 
           const bool sorted = true ) const ;
+        // ====================================================================
         /** evaluate the eigenvalues and eigenvectors of the symmetrical matrix 
          *
          *  @code 
@@ -190,12 +188,16 @@ namespace Gaudi
           ROOT::Math::SVector<T,D>&                                     vals , 
           std::vector<ROOT::Math::SVector<T,D> >&                       vecs , 
           const bool sorted = true ) const ;
+        // ====================================================================
       protected:
+        // ====================================================================
         /// find the eigenvalues   (& sort them if needed ) 
         StatusCode _fun1 ( const bool         sorted    ) const ;
         /// find the eigenvalues&eigenvectors (& sort them if needed ) 
         StatusCode _fun2 ( const bool         sorted    ) const ;
+        // ====================================================================
       private:        
+        // ====================================================================
         /// fill the internal structures with the input data 
         template <class T,unsigned int D>
         inline StatusCode _fill
@@ -204,6 +206,7 @@ namespace Gaudi
         StatusCode _check    ( const unsigned int D ) const ;
         // thrown the exception 
         StatusCode Exception ( const StatusCode& sc ) const ;       
+        // ====================================================================
       private:
         // the size of workspace 
         mutable unsigned int   m_dim1   ; ///< the size of workspace 
@@ -262,7 +265,6 @@ namespace Gaudi
     } //  end of namespace GSL
   } //end of namespace Math 
 } // end of namespace Gaudi
-
 // ============================================================================
 #endif // LHCBMATH_EIGENSYSTEM_H
 // ============================================================================

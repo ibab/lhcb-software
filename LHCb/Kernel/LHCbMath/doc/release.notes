@@ -6,6 +6,57 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-01-15 - Vanya BELYAEV
+
+ - Split LHCbMath/MatrixUtils.h into two files MatrixUtils.h and MatrixTransforms.h
+
+    I) The current functionality of LHCbMath/MatrixUtils.h :
+
+      *     - (re)setting all elements of matrices and vectors
+      *     - set the diagonal matrix to be proportional to unit matrix 
+      *     - efficient scaling of matrices&vectors
+      *     - minimal&maximal elements of matrices and vectors
+      *     - indices of the minimal&maximal elements of matrices and vectors 
+      *     - minima&maximal by absolute value elements of matrices and vectors 
+      *     - indices of minima&maximal by absolute value elements of matrices and vectors 
+      *     - the trace of the square matrices
+      *     - find the minimal/maximal/abs.minimal&abs.maximal diagonal elements of square matrices
+      *     - count number of elements which satisfy some criteria
+      *     - count number of diagonal elements which satisfy some criteria
+      *     - check the presence of elements which satisfy some criteria
+      *     - check the presence of diagonal elements which satisfy some criteria
+      *     - efficient element-by-element "equality" for matrices 
+      *     - few specific "matrix updates" (in the spirit of BLAS)
+
+    II) The current functionality of LHCbMath/MatrixTransforms.h : 
+
+      *     - conversion from geometry&kinematical vectors into Linear Algebra vectors
+      *     - conversion from Linear Algebra vectors into geometry&kinematical vectors
+      *     - evaluation of various "chi2"-like values, like chi2-distance between 
+      *       two 3D or 4D-vectors. E.g. "vicinity" of two points, or two momenta 
+      *     - conversion form "track" to 4-momenta representation (by Sean BRISBANE)
+      *     - the transition matrix for the conversion form "track" to 
+      *        4-momenta representation (by Sean BRISBANE)
+      *
+ 
+  ATTENTION!
+  ==========
+  It "partly" breaks some existing lines, since not "Gaudi::Math::geo2la" functions
+  are available through LHCbMath/MatrixTransporms.h instead of LHCbMath/MatrixUtils.h 
+  header file. The fix is trivial: one just needs to include LHCbMath/MatrixTransforms.h file. 
+
+ - Add new file Kinematics.h to keep some pure mathematical functions useful
+   for kinematical calculations. Currently it contains the functions for 
+   evaluation of dispersions and sigmas  for mass and mass^2 and chi2 of mass:
+       *   - sigma2mass2   :   sigma^2(M^2)
+       *   - sigma2mass    :   sigma^2(M)  for M^2 > 0 
+       *   - sigmamass     :   sigma(M)    for M^2 > 0
+       *   - chi2mass      :   delta^2(M^2)/sigma^2(M^2) 
+ 
+ - Update(improve?) the doxygen comments for some other header files.
+
+
+
 !========================= LHCbMath v2r4 2007-11-29 ===========================
 ! 207-11-27 - Sean BRISBANE
  - Add functions in MatrixUtils.h

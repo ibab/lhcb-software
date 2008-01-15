@@ -1,7 +1,7 @@
-// $Id: MatrixUtils.h,v 1.4 2007-11-28 08:54:38 cattanem Exp $
+// $Id: MatrixUtils.h,v 1.5 2008-01-15 18:11:51 ibelyaev Exp $
 // ============================================================================
-#ifndef MATRIXUTILS_H
-#define MATRIXUTILS_H 1
+#ifndef LHCBMATH_MATRIXUTILS_H
+#define LHCBMATH_MATRIXUTILS_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -20,291 +20,33 @@
 #include "Math/Vector4D.h"
 #include "Math/Vector3D.h"
 // ============================================================================
-
+/** @file
+ *  The collection of functions for manipulation with matrices and vectors.
+ *  In particular it includes
+ *     - (re)setting all elements of matrices and vectors
+ *     - set the diagonal matrix to be proportional to unit matrix 
+ *     - efficient scaling of matrices&vectors
+ *     - minimal&maximal elements of matrices and vectors
+ *     - indices of the minimal&maximal elements of matrices and vectors 
+ *     - minima&maximal by absolute value elements of matrices and vectors 
+ *     - indices of minima&maximal by absolute value elements of matrices and vectors 
+ *     - the trace of the square matrices
+ *     - find the minimal/maximal/abs.minimal&abs.maximal diagonal elements of square matrices
+ *     - count number of elements which satisfy some criteria
+ *     - count number of diagonal elements which satisfy some criteria
+ *     - check the presence of elements which satisfy some criteria
+ *     - check the presence of diagonal elements which satisfy some criteria
+ *     - efficient element-by-element "equality" for matrices 
+ *     - few specific "updates" (in the spirit of BLAS)
+ *
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ */
+// ============================================================================
 namespace Gaudi
 {
   namespace Math 
   {
-    /** fill  Linear Algebra - vector from 3D-point
-     *
-     *  @code
-     *   
-     *  const Gaudi::XYZPoint xyzv = ... ;
-     *  Gaudi::Vector4 lav ;
-     *  
-     *  // fill Linear Algebra vector from 3D-point
-     *  geo2LA ( xyzv , lav ) ; 
-     *
-     *  @endcode 
-     *  
-     *  @param[in]  source 3D-point
-     *  @param[out] dest   Linear Algebra vector 
-     *  @return linear algebra vector 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-05-24
-     */
-    template <class C,class T>
-    inline ROOT::Math::SVector<T,3>& 
-    geo2LA 
-
-    ( const ROOT::Math::PositionVector3D<C>& source , 
-      ROOT::Math::SVector<T,3>&              dest   ) 
-    {
-      dest[0] = source.X () ;
-      dest[1] = source.Y () ;
-      dest[2] = source.Z () ;
-      return dest ;
-    } ;
-    /** fill  Linear Algebra - vector from 3D-vector 
-     *
-     *  @code
-     *   
-     *  const Gaudi::XYZVector xyzv = ... ;
-     *  Gaudi::Vector4 lav ;
-     *  
-     *  // fill Linear Algebra vector from 3D-Vector 
-     *  geo2LA ( xyzv , lav ) ; 
-     *
-     *  @endcode 
-     *  
-     *  @param source (input)  3D-Vector 
-     *  @param dest   (output) Linear Algebra vector 
-     *  @return linear algebra vector 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-05-24
-     */
-    template <class C,class T>
-    inline ROOT::Math::SVector<T,3>& 
-    geo2LA 
-    ( const ROOT::Math::DisplacementVector3D<C>& source , 
-      ROOT::Math::SVector<T,3>&                  dest   ) 
-    {
-      dest[0] = source.X () ;
-      dest[1] = source.Y () ;
-      dest[2] = source.Z () ;
-      return dest ;
-    } ;
-    /** fill  Linear Algebra - vector from 4D-vector 
-     *
-     *  @code
-     *   
-     *  const Gaudi::LorenztVector lorv = ... ;
-     *  Gaudi::Vector4 lav ;
-     *  
-     *  // fill Linear Algebra vector from Lorenz Vector 
-     *  geo2LA ( lorv , lav ) ; 
-     *
-     *  @endcode 
-     *  
-     *  @param source (input) Lorentz Vector 
-     *  @param dest   (output) Linear Algebra vector 
-     *  @return linear algebra vector 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-05-24
-     */
-    template <class C,class T>
-    inline ROOT::Math::SVector<T,4>& 
-    geo2LA 
-    ( const ROOT::Math::LorentzVector<C>& source , 
-      ROOT::Math::SVector<T,4>&           dest  ) 
-    {
-      dest[0] = source.X () ;
-      dest[1] = source.Y () ;
-      dest[2] = source.Z () ;
-      dest[3] = source.E () ;
-      return dest ;
-    } ;
-
-
-   
-
-    /** construct similarity("chi2") using 3D-vector 
-     *
-     *  E.g. one can ask the "chi2"-distance inbetween vertices:
-     *
-     *  @code 
-     *
-     *  const LHCb::Vertex* v1 = ... ;
-     *  const LHCb::Vertex* v2 = ... ;
-     *  
-     *  int ifail = 0 ;
-     *  // evaluate the chi2 distance 
-     *  const double chi2 = Gaudi::Math::Similarity
-     *     ( v1->position() - v2.position() , 
-     *      ( v1->covMatrix() + v2->covMatrix() ).Sinverse( ifail ) ) ;
-     *  if ( 0 != ifail ) { ... error here ... } ;
-     *
-     *  always() << " Chi2 distance between vertices is " << chi2 << endreq ;
-     *
-     *  @endcode 
-     *
-     *  @param matrix (input) symmetric (3x3) matrix used for similarity
-     *  @param delta  (input) 3D- vector 
-     *  @return reult of v^T*M*v (similarity) operation
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-05-24
-     */ 
-    template <class C,class T>
-    inline T 
-    Similarity
-    ( const ROOT::Math::DisplacementVector3D<C>&                     delta  , 
-      const ROOT::Math::SMatrix<T,3,3,ROOT::Math::MatRepSym<T,3> > & matrix ) 
-    {
-      ROOT::Math::SVector<T,3> tmp ;
-      return ROOT::Math::Similarity ( geo2LA ( delta , tmp )  , matrix ) ;
-    } ;
-    /** construct similarity("chi2") using 3D-vector 
-     *
-     *  E.g. one can ask the "chi2"-distance inbetween vertices:
-     *
-     *  @code 
-     *
-     *  const LHCb::Vertex* v1 = ... ;
-     *  const LHCb::Vertex* v2 = ... ;
-     *  
-     *  int ifail = 0 ;
-     *  // evaluate the chi2 distance 
-     *  const double chi2 = Gaudi::Math::Similarity
-     *    ( ( v1->covMatrix() + v2->covMatrix() ).Sinverse( ifail ) ,
-     *        v1->position() - v2.position() ) ;
-     *  if ( 0 != ifail ) { ... error here ... } ;
-     *
-     *  always() << " Chi2 distance between vertices is " << chi2 << endreq ;
-     *
-     *  @endcode 
-     *
-     *  @param matrix (input) symmetric (3x3) matrix used for similarity
-     *  @param delta  (input) 3D- vector 
-     *  @return result of v^T*M*v (similarity) operation
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-05-24
-     */ 
-    template <class C,class T>
-    inline T 
-    Similarity
-    ( const ROOT::Math::SMatrix<T,3,3,ROOT::Math::MatRepSym<T,3> > & matrix , 
-      const ROOT::Math::DisplacementVector3D<C>&                     delta  ) 
-    { return Similarity ( delta , matrix ) ; }
-    /** construct similarity("chi2") using 4D-vector 
-     *
-     *  E.g. one can ask the "chi2"-distance inbetween momenta of particles
-     *
-     *  @code 
-     *
-     *  const LHCb::Particle* p1 = ... ;
-     *  const LHCb::Particle* p2 = ... ;
-     *  
-     *  int ifail = 0 ;
-     *  // evaluate the chi2 distance 
-     *  const double chi2 = Gaudi::Math::Similarity
-     *     (  p1->momentum() - p2.momentum() ,
-     *     ( p1->momCovMatrix() + p2->momCovMatrix() ).Sinverse( ifail ) ) ;
-     *  if ( 0 != ifail ) { ... error here ... } ;
-     *
-     *  always() << " Chi2 distance in momenta is " << chi2 << endreq ;
-     *
-     *  @endcode 
-     *
-     *  @param delta  (input) Lorentz vector 
-     *  @param matrix (input) symmetric (4x4) matrix used for similarity
-     *  @return result of v^T*M*v (similarity) operation
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-05-24
-     */ 
-    template <class C,class T>
-    inline T 
-    Similarity
-    ( const ROOT::Math::LorentzVector<C>&                            delta  , 
-      const ROOT::Math::SMatrix<T,4,4,ROOT::Math::MatRepSym<T,4> > & matrix ) 
-    {
-      ROOT::Math::SVector<T,4> tmp ;
-      return ROOT::Math::Similarity ( geo2LA( delta , tmp ) , matrix ) ;
-    } ;
-    /** construct similarity("chi2") using 4D-vector 
-     *
-     *  E.g. one can ask the "chi2"-distance inbetween momenta of particles
-     *
-     *  @code 
-     *
-     *  const LHCb::Particle* p1 = ... ;
-     *  const LHCb::Particle* p2 = ... ;
-     *  
-     *  int ifail = 0 ;
-     *  // evaluate the chi2 distance 
-     *  const double chi2 = Gaudi::Math::Similarity
-     *    * ( p1->momCovMatrix() + p2->momCovMatrix() ).Sinverse( ifail ) , 
-     *       p1->momentum() - p2.momentum() ) ;
-     *  if ( 0 != ifail ) { ... error here ... } ;
-     *
-     *  always() << " Chi2 distance in momenta is " << chi2 << endreq ;
-     *
-     *  @endcode 
-     *
-     *  @param matrix (input) symmetric (4x4) matrix used for similarity
-     *  @param delta  (input) Lorentz vector 
-     *  @return result of v^T*M*v (similarity) operation
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-05-24
-     */ 
-    template <class C,class T>
-    inline T 
-    Similarity
-    ( const ROOT::Math::SMatrix<T,4,4,ROOT::Math::MatRepSym<T,4> > & matrix ,
-      const ROOT::Math::LorentzVector<C>&                            delta  ) 
-    { return Similarity ( delta , matrix ) ; } ;
-    /** increment  LorentzVector with 4-component linear vector 
-     *  
-     *  @code 
-     *
-     *  Gaudi::LorentzVector v1 = ... ;
-     *  const Gaudi::Vector4       v2 = ... ;
-     *  
-     *  // update Lorentz vector with LA vector:
-     *  Gaudi::Math::add ( v1 , v2 ) ;
-     *
-     *  @endcode 
-     *  
-     *  @param v1 (input/output) LorentzVector to be updated 
-     *  @param v2 (input) Linear Algebra vector, to be added to LorentzVector 
-     *  @return the updated LorenzVector 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-05-24
-     */
-    template <class C, class T>
-    inline ROOT::Math::LorentzVector<C>& 
-    add 
-    ( ROOT::Math::LorentzVector<C>& v1 , const ROOT::Math::SVector<T,4> & v2 ) 
-    { return v1 += ROOT::Math::LorentzVector<C>( v2[0] , v2[1] , v2[2] , v2[3] ) ; }
-    
-    /** increment the symmetric matrix with "symmetrized" part of other matrix
-     * 
-     *  @code 
-     * 
-     *  Gaudi::SymMatrix3x3 matrix = ... ;
-     *  const Gaudi::Matrix3x3    other  = ... ;
-     * 
-     *  // update "matrix" with the upper triangular part of "other"
-     *  Gaudi::Math::add ( matrix , other ) ;
-     *
-     *  @endcode 
-     * 
-     *  @param matrix symmetric matrix to be updated 
-     *  @param other matrix, upper traingel is used for updating
-     *  @return the updated symmetric matrix 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-05-24
-     */
-    template <class T1,class T2,unsigned int D, class R>
-    inline 
-    ROOT::Math::SMatrix<T1,D,D,ROOT::Math::MatRepSym<T1,D> >& 
-    add
-    ( ROOT::Math::SMatrix<T1,D,D,ROOT::Math::MatRepSym<T1,D> >& matrix , 
-      const ROOT::Math::SMatrix<T2,D,D,R>&                      other  ) 
-    {
-      for   ( unsigned int i = 0 ; i < D ; ++i ) 
-      { for ( unsigned int j = i ; j < D ; ++j ) { matrix(i,j) += other(i,j); } }
-      return matrix ;
-    } ;
+    // ========================================================================
     /** set all elements of vector equal to some scalar value 
      * 
      *  @code 
@@ -331,7 +73,8 @@ namespace Gaudi
     { 
       std::fill ( m.begin() , m.end() , value ) ; 
       return D ;
-    } ;
+    } 
+    // ========================================================================
     /** set all elements of matrix equal to some scalar value 
      * 
      *  @code 
@@ -359,7 +102,8 @@ namespace Gaudi
     { 
       std::fill ( m.begin() , m.end() , value ) ; 
       return m.end() - m.begin() ;
-    } ;
+    } 
+    // ========================================================================
     /** set square matrix to be proportional to unit matrix 
      *  
      *  @code
@@ -388,7 +132,8 @@ namespace Gaudi
       /// set diagonal elements 
       for ( unsigned int i = 0 ; i < D ; ++i ) { m(i,i) = value ; }
       return m.end() - m.begin() ;
-    } ;    
+    }
+    // ========================================================================
     /** efficient scale all elements of the matrix
      *
      *  @code 
@@ -418,7 +163,8 @@ namespace Gaudi
       typedef typename ROOT::Math::SMatrix<T,D1,D2,R>::iterator iterator ;
       for ( iterator it = m.begin() ;  m.end() != it ; ++it ) { (*it) *= value ; }
       return m.end() - m.begin() ;
-    } ;
+    } 
+    // ========================================================================
     /** efficient scale all elements of the vector
      *
      *  @code 
@@ -444,7 +190,8 @@ namespace Gaudi
       typedef typename ROOT::Math::SVector<T,D>::iterator iterator ;
       for ( iterator it = m.begin() ;  m.end() != it ; ++it ) { (*it) *= value ; }
       return D ;
-    } ;
+    } 
+    // ========================================================================
     /** @struct _AbsCompare
      *  The trivial structure for comparison of "numbers" by the absolute value 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -456,8 +203,7 @@ namespace Gaudi
       inline bool operator() ( const T v1 , const T v2 ) const 
       { return ::fabs( v1 ) < ::fabs( v2 ) ; }
     } ;
-
-
+    // ========================================================================
     /** find the maximal element in matrix 
      *  @param m (input) matrix to be studied
      *  @return the maximal element 
@@ -469,6 +215,7 @@ namespace Gaudi
     max_element 
     ( const ROOT::Math::SMatrix<T,D1,D2,R>& m ) 
     { return *std::max_element ( m.begin() , m.end() ) ; }
+    // ========================================================================
     /** find the minimal element in matrix 
      *  @param m (input) matrix to be studied
      *  @return the minimal element 
@@ -480,6 +227,7 @@ namespace Gaudi
     min_element 
     ( const ROOT::Math::SMatrix<T,D1,D2,R>& m ) 
     { return *std::min_element ( m.begin() , m.end() ) ; }
+    // ========================================================================
     /** find the maximal element in vector 
      *  @param m (input) vector to be studied
      *  @return the maximal element 
@@ -491,6 +239,7 @@ namespace Gaudi
     max_element 
     ( const ROOT::Math::SVector<T,D>& m ) 
     { return *std::max_element ( m.begin() , m.end() ) ; }
+    // ========================================================================
     /** find the minimal element in vector 
      *  @param m (input) vector to be studied
      *  @return the minimal element 
@@ -502,6 +251,7 @@ namespace Gaudi
     min_element 
     ( const ROOT::Math::SVector<T,D>& m ) 
     { return *std::min_element ( m.begin() , m.end() ) ; }
+    // ========================================================================
     /** find the element in matrix with the maximal absolute value  
      *
      *  @code
@@ -528,6 +278,7 @@ namespace Gaudi
     maxabs_element 
     ( const ROOT::Math::SMatrix<T,D1,D2,R>& m ) 
     { return *std::max_element ( m.begin() , m.end()  , _AbsCompare<T>() ) ; }
+    // ========================================================================
     /** find the element in matrix with the minimal absolute value  
      *  @param m (input) matrix to be studied
      *  @return the element with the minimal absolute value 
@@ -539,6 +290,7 @@ namespace Gaudi
     minabs_element 
     ( const ROOT::Math::SMatrix<T,D1,D2,R>& m ) 
     { return *std::min_element ( m.begin() , m.end()  , _AbsCompare<T>() ) ; }
+    // ========================================================================
     /** find an index of the  maximal element in matrix 
      *  @param m (input) matrix to be studied
      *  @param cmp comparison criteria
@@ -565,7 +317,8 @@ namespace Gaudi
         }
       }
       return result ;
-    } ;
+    } 
+    // ========================================================================
     /** find an index of the maximal element in symmetric matrix 
      *  @param m (input) symmetric matrix to be studied
      *  @param cmp comparison criteria
@@ -592,7 +345,8 @@ namespace Gaudi
         }
       }
       return result ;
-    } ;    
+    }     
+    // ========================================================================
     /** find an index of the  maximal element in matrix 
      *  @param m (input) matrix to be studied
      *  @return the pair (i,j)-index of the maximal element 
@@ -604,6 +358,7 @@ namespace Gaudi
     ind_max_element 
     ( const ROOT::Math::SMatrix<T,D1,D2,R>& m ) 
     { return ind_max_element ( m , std::less<T>() ) ; } ;
+    // ========================================================================
     /** find an index of the minimal element in matrix 
      *  @param m (input) matrix to be studied
      *  @param cmp comparison criteria
@@ -630,7 +385,8 @@ namespace Gaudi
         }
       }
       return result ;
-    } ;
+    } 
+    // ========================================================================
     /** find an index of the minimal element in symmetric matrix 
      *  @param m (input) symmetric matrix to be studied
      *  @param cmp comparison criteria
@@ -657,7 +413,8 @@ namespace Gaudi
         }
       }
       return result ;
-    } ;
+    } 
+    // ========================================================================
     /** find an index of the minimal element in the matrix 
      *
      *  @code 
@@ -684,7 +441,8 @@ namespace Gaudi
     inline std::pair<unsigned int,unsigned int> 
     ind_min_element 
     ( const ROOT::Math::SMatrix<T,D1,D2,R>& m ) 
-    { return ind_min_element( m , std::less<T>() ) ; } ;
+    { return ind_min_element( m , std::less<T>() ) ; } 
+    // ========================================================================
     /** find an index of the maximal element in the vector 
      *  @param m (input) vector to be studied
      *  @param cmp comparison criteria
@@ -697,6 +455,7 @@ namespace Gaudi
     ind_max_element 
     ( const ROOT::Math::SVector<T,D>& m , CMP cmp )
     { return std::max_element( m.begin() , m.end() , cmp ) - m.begin() ; }    
+    // ========================================================================
     /** find an index of the minimal element in the vector 
      *  @param m (input) vector to be studied
      *  @param cmp comparison criteria
@@ -709,6 +468,7 @@ namespace Gaudi
     ind_min_element 
     ( const ROOT::Math::SVector<T,D>& m , CMP cmp )
     { return std::min_element( m.begin() , m.end() , cmp ) - m.begin() ; }
+    // ========================================================================
     /** find an index of the maximal element in the vector 
      *  @param m (input) vector to be studied
      *  @return the index of the maximal element 
@@ -720,6 +480,7 @@ namespace Gaudi
     ind_max_element 
     ( const ROOT::Math::SVector<T,D>& m )
     { return std::max_element( m.begin() , m.end() ) - m.begin() ; }    
+    // ========================================================================
     /** find an index of the minimal element in the vector 
      *  @param m (input) vector to be studied
      *  @return the index of the minimal element 
@@ -731,6 +492,7 @@ namespace Gaudi
     ind_min_element 
     ( const ROOT::Math::SVector<T,D>& m )
     { return std::min_element ( m.begin() , m.end() ) - m.begin() ; }    
+    // ========================================================================
     /** find an index of the element with the maximal absolute value 
      *
      *  @code 
@@ -758,7 +520,8 @@ namespace Gaudi
     inline std::pair<unsigned int,unsigned int> 
     ind_maxabs_element 
     ( const ROOT::Math::SMatrix<T,D1,D2,R>& m ) 
-    { return ind_max_element( m , _AbsCompare<T>() ) ; } ;
+    { return ind_max_element( m , _AbsCompare<T>() ) ; } 
+    // ========================================================================
     /** find an index of the element with the minimal absolute value 
      *
      *  @code 
@@ -786,7 +549,8 @@ namespace Gaudi
     inline std::pair<unsigned int,unsigned int> 
     ind_minabs_element 
     ( const ROOT::Math::SMatrix<T,D1,D2,R>& m ) 
-    { return ind_min_element( m , _AbsCompare<T>() ) ; } ;
+    { return ind_min_element( m , _AbsCompare<T>() ) ; } 
+    // ========================================================================
     /** find an index of the element with maximal absolute value
      *  @param m (input) vector to be studied
      *  @return the index of the element with the maximal absolute value 
@@ -798,6 +562,7 @@ namespace Gaudi
     ind_maxabs_element 
     ( const ROOT::Math::SVector<T,D>& m )
     { return ind_max_element ( m , _AbsCompare<T>() ) ; }    
+    // ========================================================================
     /** find an index of the element with minimal absolute value 
      *  @param m (input) vector to be studied
      *  @return the index of the element with minimal absolute value 
@@ -809,6 +574,7 @@ namespace Gaudi
     ind_minabs_element 
     ( const ROOT::Math::SVector<T,D>& m )
     { return ind_min_element ( m , _AbsCompare<T>() ) ; }
+    // ========================================================================
     /** evaluate the trace (sum of diagonal elements) of the square matrix 
      *
      *  @code 
@@ -836,7 +602,8 @@ namespace Gaudi
       T result = m(0,0) ;
       for ( unsigned int i = 1 ; i < D ; ++i ) { result += m(i,i) ; }
       return result ;
-    } ;
+    } 
+    // ========================================================================
     /** find the minimal diagonal element 
      *  @param   m (input) matrix to be studied 
      *  @param   cmp comparison criteria
@@ -855,6 +622,7 @@ namespace Gaudi
       }
       return result ;
     }
+    // ========================================================================
     /** find the maximal diagonal element 
      *  @param   m (input) square matrix to be studied 
      *  @param   cmp comparison criteria
@@ -872,7 +640,8 @@ namespace Gaudi
         if ( cmp ( result , value ) ) { result = value ; }
       }
       return result ;
-    } ;
+    } 
+    // ========================================================================
     /** find the maximal diagonal element of square matrix 
      *
      *  @code 
@@ -898,6 +667,7 @@ namespace Gaudi
     max_diagonal 
     ( const ROOT::Math::SMatrix<T,D,D,R>& m ) 
     { return max_diagonal( m , std::less<T>() ) ; } ;    
+    // ========================================================================
     /** find the maximal diagonal element of the square matrix 
      *
      *  @code 
@@ -927,6 +697,7 @@ namespace Gaudi
     min_diagonal 
     ( const ROOT::Math::SMatrix<T,D,D,R>& m ) 
     { return min_diagonal( m , std::less<T>() ) ; } ;    
+    // ========================================================================
     /** find the diagonal element of square matrix with maximal absolute value 
      *
      *  @code 
@@ -952,6 +723,7 @@ namespace Gaudi
     maxabs_diagonal 
     ( const ROOT::Math::SMatrix<T,D,D,R>& m ) 
     { return max_diagonal( m , _AbsCompare<T>() ) ; } ;
+    // ========================================================================
     /** find the diagonal element of the square matrix with 
      *  the minimal absolute value 
      *
@@ -981,6 +753,7 @@ namespace Gaudi
     minabs_diagonal 
     ( const ROOT::Math::SMatrix<T,D,D,R>& m ) 
     { return min_diagonal( m , _AbsCompare<T>() ) ; } ;
+    // ========================================================================
     /** count the number of elements in matrix, which satisfy the certain criteria
      * 
      *  @code
@@ -1016,6 +789,7 @@ namespace Gaudi
     count_if 
     ( const ROOT::Math::SMatrix<T,D1,D2,R>& m , P pred )
     { return std::count_if ( m.begin() , m.end() , pred ) ; }
+    // ========================================================================
     /** count the number of elements in matrix, which satisfy the certain criteria
      * 
      *  @code
@@ -1065,7 +839,8 @@ namespace Gaudi
         }
       }
       return result ;
-    } ;
+    } 
+    // ========================================================================
     /** count number of diagonal elements in matrix, 
      *  which satisfy certain criteria
      * 
@@ -1100,7 +875,8 @@ namespace Gaudi
       for ( unsigned int i = 0 ; i < D ; ++i ) 
       { if ( pred ( m ( i , i ) ) ) { result += 1 ; } }
       return result ;
-    } ;
+    } 
+    // ========================================================================
     /** check the presence of at least one element which satisfy the 
      *  criteria
      *
@@ -1135,6 +911,7 @@ namespace Gaudi
     check_if 
     ( const ROOT::Math::SMatrix<T,D1,D2,R>& m , P pred )
     { return m.end() != std::find_if ( m.begin() , m.end() , pred ) ; }
+    // ========================================================================
     /** check the presence of at least one diagonal element which satisfy the 
      *  criteria
      *
@@ -1168,7 +945,8 @@ namespace Gaudi
       for ( unsigned int i = 0 ; i < D ; ++i ) 
       { if ( pred ( m ( i , i ) ) ) { return true ; } }
       return false ;
-    } ;
+    } 
+    // ========================================================================
     /** check the "equality" of the two matrices by checking 
      *  element-by-element: true == pred( m1(i,j) , m2(i,j) ) 
      *  
@@ -1222,7 +1000,8 @@ namespace Gaudi
         }
       }
       return true ;
-    } ;
+    } 
+    // ========================================================================
     /** check the "equality" of the two matrices by checking 
      *  element-by-element: true == pred( m1(i,j) , m2(i,j) ) 
      *
@@ -1263,101 +1042,61 @@ namespace Gaudi
     equal_if  
     ( const ROOT::Math::SMatrix<T,D1,D2,R>& m1 , 
       const ROOT::Math::SMatrix<T,D1,D2,R>& m2 , P pred )
-    { return std::equal ( m1.begin() , m1.end() , m2.begin() , pred ) ; } ;
-    
-     /** Fill Lorentz vector from 3D displacement vector + Mass
-     *     
-     *@code
+    { return std::equal ( m1.begin() , m1.end() , m2.begin() , pred ) ; } 
+    // ========================================================================
+
+
+
+    // =========================================================================
+    /** update the symmetric matrix according to the rule m +=  s*v*v^T
      *
-     *geoLA(xyz, mass, lav)
-     *
-     @endcode
-     *
-     * @param source (input) Linear Algebra vector3D
-     * @param dest   (output) Lorentz Vector 
-     * @return  Lorentz Vector
-     * @author Sean BRISBANE sean.brisbane@cern.ch
-     * @date 2007-11-27
+     *  @param left the symmetric matrix to be updated 
+     *  @param vect the vector 
+     *  @param scale the scale factor
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-10
      */
-    template<class T, class C, class M>
-    inline ROOT::Math::LorentzVector<C>&
-    geo2LA 
-    ( const ROOT::Math::SVector<T, 3>& source , const M mass,
-      ROOT::Math::LorentzVector<C>& dest  ) 
+    template <class T, class T2, unsigned int D>
+    void update 
+    ( ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> > & left  , 
+      const ROOT::Math::SVector<T2,D>&                         vect  , 
+      const double                                             scale ) 
     {
-      // first calculate momentum in carthesian coordinates:
-      double p = 1/fabs(source(2)) ;
-      double n = sqrt( 1 + source(0)*source(0)+source(1)*source(1)) ;
-      double px = p*source(0)/n ;
-      double py = p*source(1)/n ;
-      double pz = p/n ;
-      dest=   ROOT::Math::LorentzVector<C>(px,py,pz,std::sqrt(p*p+mass*mass)) ;
-      return dest ;
-    } ;
-
-  
-    /** Compute the jacobian for the transformation of a covariance matrix
-     *  with rows representing track parameters TxTyQop and columns in xyz
-     *  into a covariance matrix representing the track parameters in 
-     *  PxPyPzE and columns xyz
+      for ( unsigned int i = 0 ; i < D ; ++i ) 
+      {
+        for ( unsigned int j = i ; j < D ; ++j ) 
+        { left ( i , j ) += scale * vect(i) * vect(j) ; }
+      }
+    }
+    // =========================================================================
+    /** update the matrix according to the rule m +=  s*v1*v2^T
      *
-     * @code 
-     *
-     * ROOT::Math::SMatrix<T, 3 ,3 ,R> covTxTyQoP_xyz = ....  ;
-     * ROOT::Math::SVector<C,3>& particleMomentum=...;
-     * ROOT::Math::SMatrix<T, 4 , 3, R > covPxPyPzE_xyz;
-     * massOfParticle = ...;
-     *
-     * ROOT::Math::SMatrix<T,4,3,R> Jacob;
-     * JacobdP4dMom (particleMomentum, massOfParticle, Jacob) ;
-     * covPxPyPzE_xyz = Jacob * covTxTyQoP_xyz;
-     *
-     * @endcode 
-     *
-     * param dP4dMom (input) the txtyqop vector of track/perticle momenta
-     * mass (input) the particle mass
-     * J (output) the Jacobian for the transformation
-     * return J
-     * @author Sean BRISBANE sean.brisbane@cern.ch
-     * @date 2007-11-27
+     *  @param left the matrix to be updated 
+     *  @param vct1 the first vector 
+     *  @param vct2 the second vector 
+     *  @param scale the scale factor
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-10
      */
-
-    template <class T,class R, class M >
-    inline void  JacobdP4dMom 
-    (const ROOT::Math::SVector<T, 3>mom,
-     const M mass, 
-     ROOT::Math::SMatrix<R, 4, 3>& J)
+    template <class T, class R, class T2, class T3, unsigned int D1,unsigned int D2>
+    void update 
+    ( ROOT::Math::SMatrix<T,D1,D2,R>  & left  , 
+      const ROOT::Math::SVector<T2,D1>& vct1  , 
+      const ROOT::Math::SVector<T3,D2>& vct2  , 
+      const double                      scale ) 
     {
-      double tx = mom(0) ;
-      double ty = mom(1) ;
-      double qop = mom(2) ;
-      double p  = 1/fabs(qop) ;
-      double n2 = 1 + tx*tx + ty*ty ;
-      double n  = std::sqrt(n2) ;
-      double n3 = n2*n ;
-      double px = p*tx/n ;
-      double py = p*ty/n ;
-      double pz = p/n ;
-      double E = sqrt(p*p+mass*mass) ;
-      
-      J(0,0) = p * (1+ty*ty)/n3 ;// dpx/dtx
-      J(0,1) = p * tx * -ty/n3  ;// dpx/dty
-      J(0,2) = -px/qop ;// dpx/dqop
-      J(1,0) = p * ty * -tx/n3  ;// dpy/dtx
-      J(1,1) = p * (1+tx*tx)/n3 ;// dpy/dty
-      J(1,2) = -py/qop ;// dpy/dqop
-      J(2,0) = pz * -tx/n2 ;// dpz/dtx
-      J(2,1) = pz * -ty/n2 ;// dpz/dtx
-      J(2,2) = -pz/qop ;// dpz/dqop
-      J(3,2) = p/E * -p/qop ;// dE/dqop
-      return ; 
-    };
-
+      for ( unsigned int i = 0 ; i < D1 ; ++i ) 
+      {
+        for ( unsigned int j = 0 ; j < D2 ; ++j ) 
+        { left ( i , j ) += scale * vct1(i) * vct2(j) ; }
+      }
+    }
+    // =========================================================================
   } // end of namespace Math  
 } // end of namespace Gaudi
 
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // MATRIXUTILS_H
+#endif // LHCBMATH_MATRIXUTILS_H
 // ============================================================================
