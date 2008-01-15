@@ -20,3 +20,7 @@ DataOnDemandSvc.Nodes +=  {  "DATA='/Event/Rec'             TYPE='DataObject'",
                              "DATA='/Event/Phys'            TYPE='DataObject'",
                              "DATA='/Event/Relations/Phys'  TYPE='DataObject'"
 }; 
+// raw event
+#include "$STDOPTS/DecodeRawEvent.opts"
+// Loki service
+ApplicationMgr.ExtSvc += { "LoKiSvc"} ;
