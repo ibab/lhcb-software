@@ -3,8 +3,8 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v6r10 2008-01-16 ====================
 ! 2008-01-15 - Vanya BELYAEV 
-
  - Kernel/IMassFit.h
     New interface for mass-constrained fit.
     The interface inherits from IParticleReFitter
@@ -12,8 +12,6 @@
     add implementation of empty protected destructors and interafceID 
     for new abstract interface IMassFit  
 
-
-!======================== DaVinciKernel v6r10 2008-01-08 ====================
 ! 2008-01-08 - Marco Cattaneo
  - Cleanup includes in Particle2VertexAsct.h
 
