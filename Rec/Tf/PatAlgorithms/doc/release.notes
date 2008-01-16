@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-01-16 - Olivier Callot
- - Modify PatMatch: The std::max<bool,int> was no longer working properly.
+ - Modify PatMatch: The std::map<bool,int> was no longer working properly.
    It is replaced by a simple vector of size = max key value.
 
 ! 2008-01-10 - Olivier Callot
