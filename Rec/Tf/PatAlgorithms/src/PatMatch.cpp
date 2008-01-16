@@ -1,4 +1,4 @@
-// $Id: PatMatch.cpp,v 1.3 2007-10-30 18:29:29 smenzeme Exp $
+// $Id: PatMatch.cpp,v 1.4 2008-01-16 14:01:14 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -68,14 +68,18 @@ StatusCode PatMatch::execute() {
  
   
   std::vector<MatchCandidate> cand;
-  std::map<bool,int> veloUsed;
-  std::map<bool,int> seedUsed;
 
   LHCb::Tracks::iterator itV, itS;
-  for ( itV = velos->begin(); velos->end() != itV; ++itV ) 
-    veloUsed[(*itV)->key()] = false;
-  for ( itS = seeds->begin(); seeds->end() != itS; ++itS ) 
-    seedUsed[(*itS)->key()] = false;
+  int maxVelo = 0;
+  int maxSeed = 0;
+  for ( itV = velos->begin(); velos->end() != itV; ++itV ) {
+    if ( maxVelo < (*itV)->key() ) maxVelo =  (*itV)->key();
+  }
+  for ( itS = seeds->begin(); seeds->end() != itS; ++itS ) {
+    if ( maxSeed < (*itS)->key() ) maxSeed = (*itS)->key();
+  }
+  std::vector<bool> veloUsed( maxVelo+1, false );
+  std::vector<bool> seedUsed( maxSeed+1, false );
 
   double dxTol2 = m_dxTol * m_dxTol;
   double dxTolSlope2 = m_dxTolSlope * m_dxTolSlope; 
@@ -89,6 +93,8 @@ StatusCode PatMatch::execute() {
     double yV = vState.y() + ( m_zMatchY - vState.z() ) * vState.ty();
     double teta2 = vState.tx() * vState.tx() + vState.ty() * vState.ty();
     double tolY  = m_dyTol * m_dyTol + teta2 * m_dyTolSlope * m_dyTolSlope;
+
+    debug() << "--- Velo track " << (*itV)->key() << endreq;
 
     for ( itS = seeds->begin(); seeds->end() != itS; ++itS ) {
       if ( (*itS)->checkFlag( LHCb::Track::Invalid  ) ) continue;
@@ -107,6 +113,7 @@ StatusCode PatMatch::execute() {
       if ( 9 > dist ) {
         MatchCandidate candidate( *itV, *itS, dist );
         cand.push_back( candidate );
+        debug() << "    Seed track " << (*itS)->key() << " distX " << distX << " distY " << distY << " dist " << dist << endreq;
       }
     }
   }
@@ -115,6 +122,9 @@ StatusCode PatMatch::execute() {
   for ( std::vector<MatchCandidate>::iterator itM = cand.begin(); cand.end() != itM; ++itM ) {
     LHCb::Track* vTr = (*itM).vTr();
     LHCb::Track* sTr = (*itM).sTr();
+
+    debug() << "Candidate Velo " << vTr->key() << " used " << veloUsed[ vTr->key()] 
+            << " Seed " << sTr->key() << " used " << seedUsed[ sTr->key()] << " dist " << (*itM).dist() << endreq;
    
     if ( veloUsed[ vTr->key()] ) continue;
     if ( seedUsed[ sTr->key()] ) continue;
@@ -125,6 +135,7 @@ StatusCode PatMatch::execute() {
     LHCb::State& vState = vTr->closestState( 0.);
     LHCb::State& sState = sTr->closestState( m_zMatchY );
     //== Store the track
+    debug() << "Store Match track from Velo " << vTr->key() << " and Seed " << sTr->key() << endreq;
     LHCb::Track* match = new LHCb::Track();
     match->addToAncestors( vTr );                // set the velo as ancestor
     match->addToAncestors( sTr );                // set the seed as ancestor
