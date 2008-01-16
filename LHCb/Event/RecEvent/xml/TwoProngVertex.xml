@@ -23,8 +23,6 @@
 	noQuote="TRUE"
 	/>
 
-
-
       <base name='LHCb::RecVertex'/>
       &KeyedObject;
       <import name='Event/RecVertex'/>
@@ -32,8 +30,7 @@
       <import name='GaudiKernel/Vector4DTypes'/>
       <import name='Kernel/ParticleID'/>
       <import name='Event/Track'/>
-      <import name='LHCbMath/MatrixUtils'/>
-
+      <import name='LHCbMath/MatrixTransforms'/>
 
       <enum
         desc="Additional information assigned to this V0. Contains Impact parameter information"
