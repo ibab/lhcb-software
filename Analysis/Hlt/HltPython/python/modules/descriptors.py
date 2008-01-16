@@ -68,6 +68,16 @@ hansFileDict ={
 }
 
 #---------------------------------------------------
+# Information on offline selected samples
+offlSelInfoDict = {
+    'Bd2DstarMuNu': 'Unofficial Bender selection implemented by Hugo Ruiz based on DC04 selection published in LHCb-2007-036',
+    'Bs2DsMuNu':    'Unofficial Bender selection implemented by Antonio Perez-Calero based on DC04 selection published in LHCb-2007-127',
+    'Bd2PiK':       'Unofficial Bender selection implemented by Elias Lopez based on DC04 selection published in LHCb-2007-059'
+    }
+
+
+
+#---------------------------------------------------
 def decayDescriptor ( sample ):
     """ Returns decay descriptor corresponding to a sample name.
     @param sample Standard name of the data sample
@@ -88,7 +98,7 @@ def hansVolume( sample ):
     filesInVol3 = ['Bd2MuMuKst', 'Bd2PiPiPi', 'Bs2phigamma', 'Bs2psiphi-decprodcut', 'Bu2Kee','MBL0-lumi2-3.dst','MBL0-lumi2-4.dst']
 
     if hansFileDict[sample] in filesInVol1: return 1
-    elif hansFileDict[sample] in filesInVol2: return 2
+    elif hansFileDict[sample] in filesInVol3: return 3
     else:
         print 'SAMPLE IS NOT IN HANS PRESELECTIONS'
         raise RuntimeError
@@ -106,4 +116,24 @@ def optionForHansFile ( sample ):
     out += str(hansVolume( sample ))+'/dijkstra/Selections/'+hansFileDict[sample]+'-lum2.dst\' TYP=\'POOL_ROOTTREE\' OPT=\'READ\'"}'
     return out
 
+
+#---------------------------------------------------
+def offlSelOpts ( sample ):
+    """ Returns the name of the option file containing the input data corresponding to a given sample.
+    @param sample Standard name of the data sample
+    @returns An option file including in the event selector the corresponding offline selected sample
+    @autor Hugo Ruiz, hugo.ruiz@cern.ch
+    """
+
+    return '$HLTPYTHONROOT/options/OfflSel'+sample+'.opts'
+
+#---------------------------------------------------
+def offlSelInfo ( sample ):
+    """ Returns a brief text with explanation on the conditions of an offline selected sample.
+    @param sample Standard name of the data sample
+    @returns A brief text with explanation on the conditions of an offline selected sample.
+    @autor Hugo Ruiz, hugo.ruiz@cern.ch
+    """
+
+    return offlSelInfoDict[ sample ]
 

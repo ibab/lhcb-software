@@ -5,8 +5,14 @@
 !-----------------------------------------------------------------------------
 
 !!========================== HltPython v1r2 2007-12-17 ===================
- 2007-12-5 - Hugo Ruiz
- - descriptors.py: Added all B->hh from Elias
+
+! 2008-1-16 - Hugo Ruiz
+ - Added htmltools.py with a function to create html tables and other minor html stuff
+ - Added option files for offline selected samples in options directory
+ - descriptors.py: added a couple of functions to deal with offline-selected samples
+
+! 2007-12-5 - Hugo Ruiz
+ - descriptors.py: Added all B->hh from Elias Lopez
 
 ! 2007-12-5 - Hugo Ruiz
  - Move examples directory under python directory
