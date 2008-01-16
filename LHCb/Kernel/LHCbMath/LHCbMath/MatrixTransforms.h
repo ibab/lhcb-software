@@ -1,4 +1,4 @@
-// $Id: MatrixTransforms.h,v 1.1 2008-01-15 18:11:51 ibelyaev Exp $
+// $Id: MatrixTransforms.h,v 1.2 2008-01-16 07:22:26 cattanem Exp $
 // ============================================================================
 #ifndef LHCBMATH_MATRIXTRANSFORMS_H 
 #define LHCBMATH_MATRIXTRANSFORMS_H 1
@@ -449,9 +449,9 @@ namespace Gaudi
       const double pz = p/n          ;
       const double px = pz*source(0) ;
       const double py = pz*source(1) ;
-      dest.SetPX ( px ) ;
-      dest.SetPY ( py ) ;
-      dest.SetPZ ( pz ) ;
+      dest.SetPx ( px ) ;
+      dest.SetPy ( py ) ;
+      dest.SetPz ( pz ) ;
       dest.SetE  ( std::sqrt ( p*p + mass*mass ) ) ;
       return dest ;
     }
