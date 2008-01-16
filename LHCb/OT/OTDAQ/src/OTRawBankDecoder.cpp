@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.8 2007-12-12 13:05:31 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.9 2008-01-16 12:31:45 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -28,6 +28,7 @@
 
 // local
 #include "Event/OTBankVersion.h"
+#include "ConversionFunctions.h"
 
 // Tool interface
 #include "OTDAQ/IOTReadOutWindow.h"
@@ -62,7 +63,9 @@ namespace OTRawBankDecoderHelpers
     
   private:
     void addHitDC06(unsigned short data, float tdcconversion) ;
-     
+    void addHitV3(unsigned short data, float tdcconversion) ;
+    void addHit(unsigned int straw, unsigned int tdctime, float tdcconversion) ;
+    
   private:
     const DeOTModule* m_detelement ;
     unsigned int m_station ;
@@ -88,15 +91,18 @@ namespace OTRawBankDecoderHelpers
     m_module  = moduleid.module() ;
   }
   
+  inline void Module::addHit(unsigned int straw, unsigned int tdctime, float tdcconversion) 
+  { 
+    LHCb::OTChannelID channelid(m_station,m_layer,m_quarter,m_module,straw,tdctime) ;
+    float t0 = m_detelement->strawT0( straw ) ;
+    m_ottimes.push_back( LHCb::OTLiteTime( channelid, tdctime * tdcconversion - t0) );
+  } 
+  
   inline void Module::addHitDC06(unsigned short data, float tdcconversion) 
   { 
     OTDAQ::RawHit hit(data) ;
-    unsigned int otis    = hit.otis() ;
-    unsigned int channel = hit.channel() ;
-    unsigned int straw   = otis/2 ? 32 * (6-otis) - channel : 32 * otis + channel + 1 ;
-    LHCb::OTChannelID channelid(m_station,m_layer,m_quarter,m_module,straw,hit.time()) ;
-    float t0 = m_detelement->strawT0( straw ) ;
-    m_ottimes.push_back( LHCb::OTLiteTime( channelid, channelid.tdcTime() * tdcconversion - t0) );
+    unsigned int straw   = OTDAQ::DC06::channelToStraw( hit.otis(), hit.channel() ) ;
+    addHit( straw, hit.time(), tdcconversion ) ;
   }
   
   inline size_t Module::decodeDC06(double tdcconversion) 
@@ -118,6 +124,13 @@ namespace OTRawBankDecoderHelpers
     return m_ottimes.size() ;
   }
 
+  inline void Module::addHitV3(unsigned short data, float tdcconversion) 
+  { 
+    OTDAQ::RawHit hit(data) ;
+    unsigned int straw = OTDAQ::V3::channelToStraw( hit.otis(), hit.channel(), m_layer ) ;
+    addHit( straw, hit.time(), tdcconversion ) ;
+  }
+  
   inline size_t Module::decodeV3(double tdcconversion) 
   {
     if(!m_isdecoded) {
@@ -126,7 +139,7 @@ namespace OTRawBankDecoderHelpers
         const unsigned short* end   = begin + m_size ;
         m_ottimes.reserve( m_size ) ;
         for( const unsigned short* ihit = begin ; ihit != end ; ++ihit)
-          addHitDC06(*ihit,tdcconversion) ;
+          addHitV3(*ihit,tdcconversion) ;
       }
       m_isdecoded = true ;
     }
