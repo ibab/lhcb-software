@@ -1,16 +1,16 @@
-ApplicationMgr.DLLs += { "DaVinciTools" };
-ApplicationMgr.DLLs += { "DaVinciTransporter" };
-ApplicationMgr.DLLs += { "ProtoParticleFilter" };
-ApplicationMgr.DLLs += { "DaVinciFilter" };
-ApplicationMgr.DLLs += { "ParticleMaker" };
-ApplicationMgr.DLLs += { "VertexFit" };
-ApplicationMgr.DLLs += { "TrackTools" };
+ApplicationMgr.Dlls += { "DaVinciTools" };
+ApplicationMgr.Dlls += { "DaVinciTransporter" };
+ApplicationMgr.Dlls += { "ProtoParticleFilter" };
+ApplicationMgr.Dlls += { "DaVinciFilter" };
+ApplicationMgr.Dlls += { "ParticleMaker" };
+ApplicationMgr.Dlls += { "VertexFit" };
+ApplicationMgr.Dlls += { "TrackTools" };
 
 //DataOnDemandSvc.OutputLevel = 1 ;
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 
 // #include "$CALORECOROOT/options/CaloRecoOnDemand.opts"
-ApplicationMgr.DLLs += { "TrackExtrapolators" }; 
+ApplicationMgr.Dlls += { "TrackExtrapolators" }; 
 
 // Data-on-demand service
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
