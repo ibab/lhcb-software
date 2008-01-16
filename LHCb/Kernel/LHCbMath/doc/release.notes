@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v2r5 2008-01-16 ==========================
 ! 2008-01-15 - Vanya BELYAEV
 
  - Split LHCbMath/MatrixUtils.h into two files MatrixUtils.h and MatrixTransforms.h
@@ -54,8 +55,6 @@
        *   - chi2mass      :   delta^2(M^2)/sigma^2(M^2) 
  
  - Update(improve?) the doxygen comments for some other header files.
-
-
 
 !========================= LHCbMath v2r4 2007-11-29 ===========================
 ! 207-11-27 - Sean BRISBANE
