@@ -306,7 +306,7 @@ protected:
   /// The actual map of "nickname -> tool" for Vertex Fitters 
   mutable GaudiUtils::VectorMap<std::string,IVertexFit*>         m_vertexFits ;
   
-private:
+protected: 
 
   /// Mapping of "nickname ->type/name" for Geometry Tools
   ToolMap                                                     m_geomToolNames ;

@@ -129,7 +129,7 @@ StatusCode DVAlgorithm::loadTools() {
   
   debug() << ">>> Preloading "
           << m_vertexFitNames[""] << " as IVertexFit " << endmsg;
-  vertexFitter () ;
+  vertexFitter() ;
   
   // geometry
   if ( m_geomToolNames.end() == m_geomToolNames.find("") )
