@@ -55,7 +55,7 @@ int scrc_rearm_keyboard (unsigned int /* fac */, void* /* par */)   {
   _ss_ssig(0,Insignal);
 #else 
   typedef int (*_F)(void*);
-  IOPortManager(0).add(0, fileno(stdin), scrc_ast_keyboard, 0);
+  IOPortManager(0).addEx(0, fileno(stdin), scrc_ast_keyboard, 0);
   //IOPortManager(0).add(0, fileno(stdin), (_F)scrc_handler_keyboard, 0);
 #endif
   return WT_SUCCESS;

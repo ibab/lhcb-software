@@ -38,6 +38,18 @@ public:
     * @return  Status code indicating success (1) or failure (0/-1)
     */
   int add(int typ, NetworkChannel::Channel chan, int (*callback)(void*), void* param);
+  /// Add a new network channel to the IO Select map.
+  /** @param typ      [in]   port type: if 0, main access port
+    *                        if 1, deferred port, which belongs to this group
+    * @param chan     [in]   Channel number. 0 is accepted as stdin!
+    *                        The entry is generated and
+    *                        the group thread is started.
+    * @param callback [in]   Callback being clled on data ready
+    * @param param    [in]   Callback context parameter.
+    *
+    * @return  Status code indicating success (1) or failure (0/-1)
+    */
+  int addEx(int typ, NetworkChannel::Channel chan, int (*callback)(void*), void* param);
   /// Remove an existing network channel to the IO Select map.
   /** @param chan      [in]  Channel number. if 0 only the entry is generated and
     *                        the group thread is started.

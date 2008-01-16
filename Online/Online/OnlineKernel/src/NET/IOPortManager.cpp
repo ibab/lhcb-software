@@ -344,7 +344,7 @@ int IOPortManager::add(int typ, NetworkChannel::Channel c, int (*callback)(void*
   em->setDirty();
   bool locked = 0 != em->m_thread && !::lib_rtl_is_current_thread(em->m_thread);
   if ( locked ) ::lib_rtl_lock(em->m_mutex_id);
-  if ( c )  {
+  if ( 0 != c )  {
     PortEntry* e = (*em)[c];
     if ( !e ) {
       //lib_rtl_printf("Install channel watcher for %d\n",c);
@@ -355,6 +355,29 @@ int IOPortManager::add(int typ, NetworkChannel::Channel c, int (*callback)(void*
     e->armed = 1;
     e->type = typ;
   }
+  int sc = em->run();
+  if ( locked ) ::lib_rtl_unlock(em->m_mutex_id);
+  return sc;
+}
+
+int IOPortManager::addEx(int typ, NetworkChannel::Channel c, int (*callback)(void*), void* param)  {
+  EntryMap* em = portMap()[m_port];
+  if ( !em ) {
+    //lib_rtl_printf("Install port watcher for %d\n",m_port);
+    portMap()[m_port] = em = new EntryMap(m_port);
+  }
+  em->setDirty();
+  bool locked = 0 != em->m_thread && !::lib_rtl_is_current_thread(em->m_thread);
+  if ( locked ) ::lib_rtl_lock(em->m_mutex_id);
+  PortEntry* e = (*em)[c];
+  if ( !e ) {
+    //lib_rtl_printf("Install channel watcher for %d\n",c);
+    (*em)[c] = e = new PortEntry;
+  }
+  e->callback = callback;
+  e->param = param;
+  e->armed = 1;
+  e->type = typ;
   int sc = em->run();
   if ( locked ) ::lib_rtl_unlock(em->m_mutex_id);
   return sc;
