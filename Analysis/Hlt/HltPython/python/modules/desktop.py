@@ -21,6 +21,7 @@ from ROOT import *
 from PyTree import PyTree
 import datetime
 import shutil
+import cPickle
 
 DEBUG = False
 
