@@ -3,10 +3,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v6r10 2008-01-16 ====================
 ! 2008-01-16 - Patrick Koppenburg
  - DVAlgorithm: Declare all tools as protected instead of private.
 
-!======================== DaVinciKernel v6r10 2008-01-16 ====================
 ! 2008-01-15 - Vanya BELYAEV 
  - Kernel/IMassFit.h
     New interface for mass-constrained fit.
