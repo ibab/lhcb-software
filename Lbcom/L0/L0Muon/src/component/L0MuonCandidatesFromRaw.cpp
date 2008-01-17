@@ -1,7 +1,7 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.7 2007-10-09 23:37:24 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.8 2008-01-17 19:41:53 jucogan Exp $
 #include <algorithm>
 #include <math.h>
-#include <set>
+#include <set>/home/cogan/.emacs
 #include <boost/dynamic_bitset.hpp>
 
 #include "L0MuonCandidatesFromRaw.h"
@@ -60,7 +60,7 @@ StatusCode L0MuonCandidatesFromRaw::initialize()
 //   std::string xmlFileName = buf;
   info() <<  "XML file = " << xmlFileName << endmsg;
   L0Muon::L0MuonKernelFromXML(xmlFileName,false);
-  debug() <<  "MuonTrigger build from xml "<< endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() <<  "MuonTrigger build from xml "<< endmsg;
 
   svc->chronoStop("L0MuonCandidatesFromRaw Initialize");
   svc->chronoDelta("L0MuonCandidatesFromRaw Initialize",IChronoStatSvc::KERNEL);
@@ -81,29 +81,30 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 {
   L0Muon::RegisterFactory::selectInstance(1);
 
-  debug() << "-----------------------------------------------------------------" << endreq;
-  debug() << "-- Start execution:" << endreq;
+  if( msgLevel(MSG::DEBUG) ) {
+    debug() << "-----------------------------------------------------------------" << endreq;
+    debug() << "-- Start execution:" << endreq;
+  }
+  
   IChronoStatSvc * svc = chronoSvc();
   svc->chronoStart("L0MuonTrigger Execute");
 
-  debug() << "Chrono service started" << endreq;
   StatusCode sc;
 
   // Decode Raw banks
-  debug() << "Write on TES ..." << endreq;
   sc = m_outputTool->decodeRawBanks(m_mode);
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // Write on TES
   if ( m_writeOnTES) {
-    debug() << "Write on TES ..." << endreq;
+    if( msgLevel(MSG::DEBUG) ) debug() << "Write on TES ..." << endreq;
     sc = m_outputTool->writeOnTES(m_procVersion,m_extension);
     if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   }
 
   // Fill the container for the L0DU (L0ProcessorData)
   if ( m_writeL0ProcData) {
-    debug() << "Fill L0ProcessorData ..." << endreq;
+    if( msgLevel(MSG::DEBUG) ) debug() << "Fill L0ProcessorData ..." << endreq;
     sc = m_outputTool->writeL0ProcessorData(m_extension);
     if ( sc.isFailure() ) return sc;  
   }
@@ -159,7 +160,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
           info() << " => Evt number : "<< m_totEvent<< endreq;
         
         } else {
-          debug() << "Entry OK " << it_fromraw-fromraw->begin()<< endreq;
+          if( msgLevel(MSG::DEBUG) ) debug() << "Entry OK " << it_fromraw-fromraw->begin()<< endreq;
         }
         it_replayed++;
         it_fromraw++;
@@ -216,9 +217,11 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 
   ++m_totEvent;
 
-  debug() << "-- Execution done." << endreq;
-  debug() << "-----------------------------------------------------------------" << endreq;
-
+  if( msgLevel(MSG::DEBUG) ) {
+    debug() << "-- Execution done." << endreq;
+    debug() << "-----------------------------------------------------------------" << endreq;
+  }
+  
 
   return StatusCode::SUCCESS;
   
