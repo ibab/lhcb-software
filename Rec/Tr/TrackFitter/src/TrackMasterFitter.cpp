@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.42 2007-12-10 16:07:58 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.43 2008-01-17 11:09:37 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -652,7 +652,7 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track) cons
       double tx     = track.firstState().tx() ;
       double ty     = track.firstState().ty() ;
       double slope2 = tx*tx+ty*ty ;
-      double tanth  = std::min(sqrt( slope2/(1+slope2)),1e-4) ;
+      double tanth  = std::max(sqrt( slope2/(1+slope2)),1e-4) ;
       scatteringMomentum = m_scatteringPt/tanth ;
     }
     
