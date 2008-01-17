@@ -24,11 +24,11 @@ class Project(object):
         self._version = None
         self._location = projectpath
         self._versiondir = versiondir
-        self._dependencies = None
         self._projectfile = None
         self._basenamelist = []
         self._baselist = []
         self._clientlist = []
+        self._packagelist = []
         self.setName(versiondir)
         self.setVersion()
         self.setProjectFile()
@@ -48,8 +48,8 @@ class Project(object):
             self._version = os.path.split(self._location)[1]
     def location(self):
         return self._location
-    def dependencies(self):
-        return self._dependencies
+    def packages(self):
+        return self._packagelist
     def getDependencies(self):
         log = logging.getLogger()
         wdir = os.path.join(self._location,"cmt")
@@ -106,6 +106,10 @@ class Project(object):
         if self._baselist :
             for b in self._baselist :
                 print "\t%s" % b.location()
+    def base(self):
+        return self._baselist
+    def clients(self):
+        return self._clientlist
     def showClient(self):
         if self._clientlist :
             for c in self._clientlist :
@@ -113,6 +117,14 @@ class Project(object):
     def setProjectFile(self):
         pfname = os.path.join(self._location, "cmt", "project.cmt")
         self._projectfile = ProjectFile(pfname)
+    def show(self, showdeps=False, showbase=False, showclient=False):
+        print self.location()
+        if showdeps : 
+            self.getDependencies()
+        if showbase :
+            self.showBase()
+        if showclient :
+            self.showClient()
 
 def hasProjectFile(dirpath):
     hasfile = False
@@ -252,3 +264,22 @@ def getProjects(cmtprojectpath, name=None, version=None,
         p.getBase(projlist)
     return FilterProjects(projlist, name=name, version=version, casesense=casesense)
 
+
+def walk(top, topdown=True, toclients=True, onerror=None, alreadyfound=None):
+    if not alreadyfound:
+        alreadyfound = []
+    alreadyfound.append(top)
+    proj = top
+    if toclients :
+        deps = proj.clients()
+    else :
+        deps = proj.base()
+    packs = proj.packages()
+    if topdown :
+        yield (proj, deps, packs)
+    for d in deps :
+        if not (d in alreadyfound) :
+            for w in walk(d, topdown, toclients, onerror, alreadyfound) :
+                yield w
+    if not topdown :
+        yield (proj, deps, packs)

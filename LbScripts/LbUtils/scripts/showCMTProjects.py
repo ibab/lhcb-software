@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: showCMTProjects.py,v 1.6 2008-01-14 15:56:27 hmdegaud Exp $
+# $Id: showCMTProjects.py,v 1.7 2008-01-17 10:28:59 hmdegaud Exp $
 
 from LbUtils.CMT import Project
 from LbUtils.Script import Script
@@ -49,6 +49,19 @@ class showCMTProjScript(Script):
                           dest = "showclient",
                           help = "show client projects")
 
+        parser.set_defaults(recursebase=False)
+        parser.add_option("-B", "--recurse-base",
+                          action = "store_true",
+                          dest = "recursebase",
+                          help = "recurse in the base direction")
+
+
+        parser.set_defaults(recurseclient=False)
+        parser.add_option("-C", "--recurse-clients",
+                          action = "store_true",
+                          dest = "recurseclient",
+                          help = "recruse in the client direction")
+
         
     def main(self):
         if self.env.has_key("CMTPATH"): 
@@ -71,13 +84,16 @@ class showCMTProjScript(Script):
 
         
         for p in projlist:
-            print p.location()
-            if options.showdependencies : 
-                p.getDependencies()
-            if options.showbase :
-                p.showBase()
-            if options.showclient :
-                p.showClient()
+            if not options.recurseclient and not options.recursebase:
+                p.show(options.showdependencies, options.showbase, options.showclient)
+            else :
+                if options.recurseclient :
+                    for proj, deps, packs in Project.walk(p, topdown=True, toclients=True):
+                        proj.show(options.showdependencies, options.showbase, True)
+                else :
+                    for proj, deps, packs in Project.walk(p, topdown=True, toclients=False):
+                        proj.show(options.showdependencies, True, options.showclient)
+                    
         
 
 if __name__ == '__main__':
