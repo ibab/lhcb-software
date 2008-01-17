@@ -1,8 +1,9 @@
-!  $Id: release.notes,v 1.44 2008-01-17 13:28:43 graven Exp $
+!  $Id: release.notes,v 1.45 2008-01-17 15:34:59 cattanem Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev
 !-------------------------------------------------------------------------
 
+!========================= L0Muon v7r6 2008-01-17 ========================
 ! 2008-01-17 - Gerhard Raven
  - add some if(msgLevel(MSG::DEBUG) around debug() statements in L0MuonAlg
 
