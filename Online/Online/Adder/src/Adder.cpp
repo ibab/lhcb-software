@@ -180,17 +180,17 @@ StatusCode Adder::findDimServices() {
     //l loops over the nodes
     svcName="H*D/"+m_nodeNames[l]+"*";	
     dbr.getServices(svcName.c_str());
-    msg << MSG::DEBUG << "looking for services " << svcName << endreq;
+    //msg << MSG::DEBUG << "looking for services " << svcName << endreq;
     while( (type = dbr.getNextService(service, format)) ){               
       servicestr=service; 
-      msg << MSG::DEBUG << "handling service " << servicestr << endreq;
+      //msg << MSG::DEBUG << "handling service " << servicestr << endreq;
       std::string::size_type loc=servicestr.find(m_serverName+"_Adder_",0);
       if (loc == std::string::npos ) { 
         //avoid adding the results of the adder to the sum
         for (int i=0;i<(int)m_histogramName.size();i++) {
 	  //loop over histogram names to find all services belonging to it		          	 
 	  std::string::size_type found=m_histogramName[i].find("*",0);
-	  msg << MSG::DEBUG << "Looking for i "<<i<<" histogram " << m_histogramName[i] << endreq;
+	  //msg << MSG::DEBUG << "Looking for i "<<i<<" histogram " << m_histogramName[i] << endreq;
 	  if (found != std::string::npos ) {
             // wildcard found, need to find the individual histogram names		 
 	    std::string::size_type first=servicestr.find("/");  
@@ -220,91 +220,91 @@ StatusCode Adder::findDimServices() {
 		        //valid algorithm found, now check if histogramname fragment without wildcard is found
 		        std::string histo=servicestr.substr(third+1);
 		        std::string::size_type histofound=histo.find(m_histogramName[i].substr(0,found));
-		        msg << MSG::DEBUG << "Looking for " << m_histogramName[i].substr(0,found)<< " in " << histo << " histofound " << histofound<< endreq;	
+		       // msg << MSG::DEBUG << "Looking for " << m_histogramName[i].substr(0,found)<< " in " << histo << " histofound " << histofound<< endreq;	
 		        if (histofound !=std::string::npos) {
 			  //histogram found, save it 
-			  msg << MSG::DEBUG << "found histo " << histo << endreq;	       
+			 // msg << MSG::DEBUG << "found histo " << histo << endreq;	       
 	                  m_histogramFoundName.push_back(histo);
 			  m_histosFound++;
 	                  //see if its unique
 	                  bool histnotexists=true;
 	                  if ((int)m_histogramUniqueName.size()>0) {
-	                    for (int k=0;k<=(int)m_histogramUniqueName.size()-1;k++) {
+	                    for (int k=0;k<(int)m_histogramUniqueName.size();k++) {
 	                      if (histo==m_histogramUniqueName[k]) {
 	                        histnotexists=false;
 	                        break;
 	                      }
 	                    }
 	                  }   
-	                  if (histnotexists) {
-			    m_histogramUniqueName.push_back(histo);	   
-		            m_algorithmFoundName.push_back(m_algorithmName[i]);
-		            m_taskFoundName.push_back(m_taskName[i]); 
-			    m_svcFoundName.push_back(servicestr);	         
-			  }
-			  else {
-			    //histogrammname doesn't match, reiterate
-			    continue;				      
-			  }
-		        }
-		        else {
-			  //algorithmname doesn't match, reiterate
-			  continue;
-		        }
+	                  if (histnotexists) { m_histogramUniqueName.push_back(histo); };	   
+		          m_algorithmFoundName.push_back(m_algorithmName[i]);
+		          m_taskFoundName.push_back(m_taskName[i]); 
+			  m_svcFoundName.push_back(servicestr);
+			  msg << MSG::DEBUG << "m_histogramUniqueName " << histo << " m_algorithmFoundName "<< m_algorithmName[i] << " m_taskFoundName "<<m_taskName[i]<< " m_svcFoundName "<< servicestr << endreq;		         
+			}
+			else {
+			  //histogrammname doesn't match, reiterate
+			  continue;				      
+			}
 		      }
 		      else {
-		        //no third slash found in service name
-		        msg << MSG::DEBUG << "No third slash found in service " << servicestr << ". Ignoring." << endreq;
-		        break;								
-		      }     
+			//algorithmname doesn't match, reiterate
+			continue;
+		      }
 		    }
 		    else {
-		      //no second slash found in service name
-		      msg << MSG::DEBUG << "No second slash found in service " << servicestr << ". Ignoring." << endreq;
-		      break;
-		    }
+		      //no third slash found in service name
+		      msg << MSG::DEBUG << "No third slash found in service " << servicestr << ". Ignoring." << endreq;
+		      break;								
+		    }     
 		  }
 		  else {
-		    //taskname doesn't match, reiterate
-		    continue;			  
+		    //no second slash found in service name
+		    msg << MSG::DEBUG << "No second slash found in service " << servicestr << ". Ignoring." << endreq;
+		    break;
 		  }
-	        }
-	        else {
-		  //underscore of UTGID not found
-		  //not a histogram service
-		  msg << MSG::DEBUG << "No underscore found in UTGID  in service " << servicestr << ". Ignoring." << endreq;
-		  break;
-	        }
-	      }			  
-	    }
-	    else {
-	      msg << MSG::DEBUG << "No wildcard found " << m_histogramName[i] << endreq;		 
-              m_histogramFoundName.push_back(m_histogramName[i]);
-              m_histogramUniqueName.push_back(m_histogramName[i]);
-	      m_algorithmFoundName.push_back(m_algorithmName[i]);
-	      m_taskFoundName.push_back(m_taskName[i]);	  
-	      m_svcFoundName.push_back(servicestr);          
-	    } 	
+		}
+		else {
+		  //taskname doesn't match, reiterate
+		  continue;			  
+		}
+	      }
+	      else {
+		//underscore of UTGID not found
+		//not a histogram service
+		msg << MSG::DEBUG << "No underscore found in UTGID  in service " << servicestr << ". Ignoring." << endreq;
+		break;
+	      }
+	    }			  
 	  }
+	  else {
+	    msg << MSG::DEBUG << "No wildcard found " << m_histogramName[i] << endreq;		 
+            m_histogramFoundName.push_back(m_histogramName[i]);
+            m_histogramUniqueName.push_back(m_histogramName[i]);
+	    m_algorithmFoundName.push_back(m_algorithmName[i]);
+	    m_taskFoundName.push_back(m_taskName[i]);	  
+	    m_svcFoundName.push_back(servicestr);          
+	  } 	
+ 
         } //loop over histogramnames done (i)
       } 
-     }   
-   } //end loop over l (nodes)
+    } 
+    //msg << MSG::DEBUG << "l= " << l << "." << endreq;  
+  } //end loop over l (nodes)
   //now we have the services and the histogram names, we need to group the services per histogram
-
+  msg << MSG::INFO << "Looking for " << m_histosFound << " histograms." << endreq;
   if (m_histosFound>0) {
-    msg << MSG::DEBUG << "Looking for " << m_histosFound << " histograms." << endreq;
-    //msg << MSG::DEBUG << "Looking for " << m_histogramFoundName.size() << " histograms:" << endreq;
-    for (int k=0;k<=(int)m_histogramUniqueName.size()-1;k++) {
-      msg << MSG::DEBUG << "Histogram " << k << " " << m_histogramUniqueName[k] << endreq;
+    for (int k=0;k<(int)m_histogramUniqueName.size();k++) {
+      msg << MSG::DEBUG << "Histogram k=" << k << " " << m_histogramUniqueName[k] << " histfoundname.size " << m_histogramFoundName.size() << endreq;
       m_iCount=0;
       m_iCount2d=0;
       m_iCountp=0;
       tmphSvcNames.clear();
       tmphSvcNames2d.clear();
       tmppSvcNames.clear();
-      for (int i=0;i<=(int)m_histogramFoundName.size()-1;i++) {
+      for (int i=0;i<(int)m_histogramFoundName.size();i++) {
         if (m_histogramFoundName[i]==m_histogramUniqueName[k]) {
+	  msg << MSG::DEBUG << "Histogram found i=" << i << " " << m_histogramFoundName[i] << " service name " << m_svcFoundName[i] << endreq;
           if (m_svcFoundName[i].substr(1,1)=="1") {
             dimension=1;
           }
@@ -318,17 +318,17 @@ StatusCode Adder::findDimServices() {
 	    case 1:
 	      tmphSvcNames.push_back(m_svcFoundName[i]);
 	      m_iCount++;
-	      //    msg << MSG::DEBUG << "Pushing back " << m_svcFoundName[i] << " m_iCount " << m_iCount << endreq; 
+	      //msg << MSG::DEBUG << "Pushing back " << m_svcFoundName[i] << " m_iCount " << m_iCount << endreq; 
 	      break;
 	    case 2:
 	      tmphSvcNames2d.push_back(m_svcFoundName[i]);
 	      m_iCount2d++;
-	      //   	    msg << MSG::DEBUG << "Pushing back " << m_svcFoundName[i] << " m_iCount2d " << m_iCount2d << endreq; 
+	      //msg << MSG::DEBUG << "Pushing back " << m_svcFoundName[i] << " m_iCount2d " << m_iCount2d << endreq; 
 	      break;
 	    case 3:
 	      tmppSvcNames.push_back(m_svcFoundName[i]);
 	      m_iCountp++;
-	      //  	    msg << MSG::DEBUG << "Pushing back " << m_svcFoundName[i] << " m_iCountp " << m_iCountp << endreq; 
+	      //msg << MSG::DEBUG << "Pushing back " << m_svcFoundName[i] << " m_iCountp " << m_iCountp << endreq; 
 	      break;
 	    default:
 	    msg << MSG::DEBUG << "Unknown dimension " << dimension << endreq; 
@@ -368,7 +368,7 @@ StatusCode Adder::findDimServices() {
       if (m_nbOf1DHistos[j]>0) {
         for (int i=0;i<m_nbOf1DHistos[j];i++) { 
           temp = new DimInfoHistos(m_hSvcName[j][i],m_refreshTime); 
-          //  msg << MSG::DEBUG << "Created object: " << m_hSvcName[j][i] << endreq;        
+          //msg << MSG::DEBUG << "Created object: " << m_hSvcName[j][i] << endreq;        
 	  tmphInfo.push_back(temp);
 	  if (i==0) {
 	    //do this first so the result of the title has time to come back
@@ -438,7 +438,8 @@ StatusCode Adder::findDimServices() {
       adderpSvcNames="HPD/"+m_serverName+"_Adder_1/"+m_taskFoundName[j]+"/"+m_algorithmFoundName[j]+"/"+m_histogramUniqueName[j];
       adderCommentSvcNames=m_serverName+"_Adder_1/"+m_taskFoundName[j]+"/"+m_algorithmFoundName[j]+"/"+m_histogramUniqueName[j]+"/gauchocomment";  
       char* temptitle=0;
-      temptitle=commentFoundSvcNames[j]->getTitle();	
+      temptitle=commentFoundSvcNames[j]->getTitle();
+    //  msg << MSG::DEBUG << "Found title: " << temptitle << endreq;  	
       if (m_nbOf1DHistos[j]>0) {    
         m_hInfo[j][0]->declareTitleInfo(adderCommentSvcNames,temptitle);  
         m_hInfo[j][0]->declareInfo(adderhSvcNames);
@@ -470,11 +471,10 @@ StatusCode Adder::findDimServices() {
       if (m_nbOfPHistos[j]>0) {	   	 
         m_infoHistos.push_back(m_pInfo[j]);
       }
-      //we can now delete the objects inside commentFoundSvcNames
-      delete commentFoundSvcNames[j];
     } 
     DimServer::start(m_procName.c_str());
-    msg << MSG::INFO << "Initialization completed. Starting DimTimer to add " << m_infoHistos.size() << " histograms" << endreq;  
+    msg << MSG::INFO << "Dimservices found. Starting DimTimer to add " << m_infoHistos.size() << " histograms " << nbOfTasks<< " times." << endreq;  
+
     tim= new Tim(m_refreshTime,m_infoHistos);
   }
   else  {
