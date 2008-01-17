@@ -1,4 +1,4 @@
-// $Id: PatMatch.cpp,v 1.4 2008-01-16 14:01:14 ocallot Exp $
+// $Id: PatMatch.cpp,v 1.5 2008-01-17 06:57:59 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -64,26 +64,14 @@ StatusCode PatMatch::execute() {
   put(matchs, m_matchLocation);
  
   LHCb::Tracks* velos  = get<LHCb::Tracks>( m_veloLocation );
-  LHCb::Tracks* seeds  = get<LHCb::Tracks>( m_seedLocation );
- 
+  LHCb::Tracks* seeds  = get<LHCb::Tracks>( m_seedLocation ); 
   
   std::vector<MatchCandidate> cand;
 
   LHCb::Tracks::iterator itV, itS;
-  int maxVelo = 0;
-  int maxSeed = 0;
-  for ( itV = velos->begin(); velos->end() != itV; ++itV ) {
-    if ( maxVelo < (*itV)->key() ) maxVelo =  (*itV)->key();
-  }
-  for ( itS = seeds->begin(); seeds->end() != itS; ++itS ) {
-    if ( maxSeed < (*itS)->key() ) maxSeed = (*itS)->key();
-  }
-  std::vector<bool> veloUsed( maxVelo+1, false );
-  std::vector<bool> seedUsed( maxSeed+1, false );
 
   double dxTol2 = m_dxTol * m_dxTol;
-  double dxTolSlope2 = m_dxTolSlope * m_dxTolSlope; 
-
+  double dxTolSlope2 = m_dxTolSlope * m_dxTolSlope;
   
   for ( itV = velos->begin(); velos->end() != itV; ++itV ) {
     if ( (*itV)->checkFlag( LHCb::Track::Invalid  ) ) continue;
@@ -93,8 +81,6 @@ StatusCode PatMatch::execute() {
     double yV = vState.y() + ( m_zMatchY - vState.z() ) * vState.ty();
     double teta2 = vState.tx() * vState.tx() + vState.ty() * vState.ty();
     double tolY  = m_dyTol * m_dyTol + teta2 * m_dyTolSlope * m_dyTolSlope;
-
-    debug() << "--- Velo track " << (*itV)->key() << endreq;
 
     for ( itS = seeds->begin(); seeds->end() != itS; ++itS ) {
       if ( (*itS)->checkFlag( LHCb::Track::Invalid  ) ) continue;
@@ -113,11 +99,18 @@ StatusCode PatMatch::execute() {
       if ( 9 > dist ) {
         MatchCandidate candidate( *itV, *itS, dist );
         cand.push_back( candidate );
-        debug() << "    Seed track " << (*itS)->key() << " distX " << distX << " distY " << distY << " dist " << dist << endreq;
+        debug() << "Velo track " << (*itV)->key() << " match Seed track " << (*itS)->key() 
+                << " distX " << distX << " distY " << distY << " dist " << dist << endreq;
       }
     }
   }
   std::sort( cand.begin(), cand.end(), MatchCandidate::lowerByChi2() );
+
+  // for each track's key, tag if used or not.
+  std::map<int,bool> veloUsed;
+  std::map<int,bool> seedUsed;
+  for ( itV = velos->begin(); velos->end() != itV; ++itV ) veloUsed[(*itV)->key()] = false;
+  for ( itS = seeds->begin(); seeds->end() != itS; ++itS ) seedUsed[(*itS)->key()] = false;
   
   for ( std::vector<MatchCandidate>::iterator itM = cand.begin(); cand.end() != itM; ++itM ) {
     LHCb::Track* vTr = (*itM).vTr();
