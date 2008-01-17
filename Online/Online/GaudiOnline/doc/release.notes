@@ -5,6 +5,8 @@ Author:  Markus Frank
  - Add algorithm, which allows to merge Events from TES to output buffer:
    src/RawEvent2MBMMergerAlg.cpp
  - Add test to validate the processing of TAE events
+ - Add option to MEP manager to decide if unsused buffer should be mapped
+   MEPManager.MepUnusedBuffers = true/false;
 
 ! 2007-12-06 Markus Frank
  - Add pure client connections to network transfer library.

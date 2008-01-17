@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.15 2007-09-21 16:36:03 scheruku Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.16 2008-01-17 17:41:04 frankm Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -21,7 +21,7 @@ extern "C" int mep_install(int argc , char** argv);
 
 /// Standard service constructor
 LHCb::MEPManager::MEPManager(const std::string& nam, ISvcLocator* loc)    
-: Service(nam, loc), m_mepID(MEP_INV_DESC), m_partitionID(0x103)
+: Service(nam, loc), m_partitionID(0x103), m_mepID(MEP_INV_DESC)
 {
   m_procName = RTL::processName();
   declareProperty("Buffers",          m_buffers);
@@ -29,6 +29,7 @@ LHCb::MEPManager::MEPManager(const std::string& nam, ISvcLocator* loc)
   declareProperty("PartitionID",      m_partitionID);
   declareProperty("InitFlags",        m_initFlags);
   declareProperty("PartitionBuffers", m_partitionBuffers=false);
+  declareProperty("MapUnusedBuffers", m_mapUnused=false);
 }
 
 /// Default destructor
@@ -146,6 +147,7 @@ StatusCode LHCb::MEPManager::initialize()  {
   }
   m_bmIDs.clear();
   m_buffMap.clear();
+  mep_map_unused_buffers(m_mapUnused);
   if ( !initializeBuffers().isSuccess() )  {
     return error("Failed to initialize MEP buffers!");
   }

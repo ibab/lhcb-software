@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.5 2007-05-18 13:58:54 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.6 2008-01-17 17:41:04 frankm Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -29,20 +29,30 @@ namespace LHCb    {
 
   /** @class MEPManager MEPManager.cpp  GaudiOnline/MEPManager.cpp
     *
-    * Conversion service for the online data.
+    * Service mapping/creating MBM and MEP buffers for online data access.
     * 
     * @author  M.Frank
     * @version 1.0
     * @date    01/01/2005
     */
   class MEPManager : public Service  {
-    MEPID                      m_mepID;
+    /// Property: Container of buffer names to connect on initialize
     std::vector<std::string>   m_buffers;
+    /// Property: Process name used to include into MEP/MBM buffers
     std::string                m_procName;
+    /// Property: Initialization flags to possibly install MBM/MEP buffers
     std::string                m_initFlags;
+    /// Property: partition identifier used to connect to buffer managers
     int                        m_partitionID;
-    std::vector<BMID>          m_bmIDs;
+    /// Property: Flag to indicate if unused MEP buffers should be mapped
+    bool                       m_mapUnused;
+    /// Property: Flag to indicate if buffer names should contain partition ID
     bool                       m_partitionBuffers;
+    /// Identifier of MEP buffer
+    MEPID                      m_mepID;
+    /// Buffer to store MBM identifiers
+    std::vector<BMID>          m_bmIDs;
+    /// Map between buffer identifiers and the corresponding name
     std::map<std::string,BMID> m_buffMap;
 
   public:
@@ -101,6 +111,8 @@ namespace LHCb    {
     /// Issues error message and return error
     StatusCode error(const std::string& msg)   const;
   };
+
+  /// Simple and lazy interface definition
   typedef MEPManager IMEPManager;
 }      // End namespace LHCb
 #endif // GAUDIONLINE_MEPManager_H
