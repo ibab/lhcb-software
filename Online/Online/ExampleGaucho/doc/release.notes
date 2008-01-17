@@ -1,5 +1,11 @@
 package ExampleGaucho
+version v2r5
+
 ! Example code to run and test Gaucho  online publishing services
+
+! 20080117 = ExampleGaucho v2r5 - Eric van Herwijnen
+  - remove HelloWorld, ParentAlg and SubAlg as they conflict with algorithm names in
+  the gaudi tutorial
 
 ! 20070820 = ExampleGaucho v2r4 - Eric van Herwijnen
   - added some code to easily generate arbitrary # of histograms
