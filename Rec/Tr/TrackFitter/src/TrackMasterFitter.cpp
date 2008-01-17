@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.43 2008-01-17 11:09:37 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.44 2008-01-17 16:04:22 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -388,6 +388,7 @@ bool TrackMasterFitter::outlierRemoved( Track& track ) const
     // One also needs to delete the measurement from the track!
     Measurement& meas = (*iWorstNode) -> measurement();
     (*iWorstNode) -> removeMeasurement();
+    (*iWorstNode)->setType( LHCb::Node::Outlier ) ;
     track.removeFromMeasurements( &meas );
 
     outlierWasRemoved = true;
