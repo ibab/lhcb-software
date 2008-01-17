@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.3 2008-01-15 18:05:11 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.4 2008-01-17 16:34:54 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -78,6 +78,11 @@ StatusCode CombineParticles::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
+  // add default filtercriteria
+  m_criteriaNames[ "Phase0Filter" ] =  "LoKi::Hybrid::FilterCriterion/FILTER0";
+  m_criteriaNames[ "Phase1Filter" ] =  "LoKi::Hybrid::FilterCriterion/FILTER1";
+  m_criteriaNames[ "Phase2Filter" ] =  "LoKi::Hybrid::FilterCriterion/FILTER2";
+  
   if ( m_killOverlap ){
     m_checkOverlap = checkOverlap() ;
     m_particleDescendants = descendants();

@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.295 2008-01-15 18:05:09 pkoppenb Exp $
+! $Id: release.notes,v 1.296 2008-01-17 16:34:54 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-01-17 - Patrick Koppenburg
+ - CombineParticles: Declare LoKi::Hybrid::FilterCriterion/FILTERX as 
+   default filters for phases X=0,1,2. Remove unnecessary lines in test options.
 
 ! 2008-01-15 - Patrick Koppenburg
  - New testing options DVTestCombineParticles.opts

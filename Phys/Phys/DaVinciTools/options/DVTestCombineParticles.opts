@@ -47,15 +47,9 @@ MakeResonances.OutputLevel = 3 ;
 // Hybrid filter criterion
 //
 CombineParticles.PhysDesktop.InputLocations = {"Phys/StdLooseKaons", "Phys/StdLoosePions"};
-
 CombineParticles.DecayDescriptor = "[D_s- -> K+ K- pi-]cc";
-CombineParticles.FilterCriteria = { "Phase0Filter" : "LoKi::Hybrid::FilterCriterion/FILTER0",
-                                    "Phase1Filter" : "LoKi::Hybrid::FilterCriterion/FILTER1",
-                                    "Phase2Filter" : "LoKi::Hybrid::FilterCriterion/FILTER2" };
-
 CombineParticles.FILTER0.Code = "(PT>500)&((ABSID!=211)|(TRTYPE==3))";     // does it do what I think ?
 CombineParticles.FILTER1.Code = "(ADMASS('D_s-')<50)";                   // does not work
-//CombineParticles.FILTER1.Code  = "ADMASS('B0')<500" ;
 CombineParticles.FILTER2.Code = "(VFASPF(VCHI2)<100)";
 //------------------------------------------------------------------------------
 // Filter Ds
