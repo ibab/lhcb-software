@@ -24,6 +24,7 @@
 
 static int print_release = false;
 // static int print_addref = false;
+static bool s_map_unused = false;
 
 struct MEPDESC : public _MEPID  {
   int             owner;
@@ -37,6 +38,10 @@ struct MEPDESC : public _MEPID  {
     mepBuffer = MBM_INV_DESC; 
   }
 };
+
+void mep_map_unused_buffers(bool value) {
+  s_map_unused = value;
+}
 
 int mep_scan(MEPID dsc, int loop_delay)  {
   MEPDESC* id = (MEPDESC*)dsc;
@@ -205,39 +210,49 @@ MEPID mep_include (const char* name, int partid, int selection) {
   }
   bm->owner = lib_rtl_pid();
   bm->selection = selection;
-  bm->mepBuffer  = ( bm->selection&USE_MEP_BUFFER )
+  // Map MEP buffer
+  bm->mepBuffer = ( bm->selection&USE_MEP_BUFFER ) 
     ? mbm_include(mep_buff_name.c_str(), name, partid)
-    : mbm_map_memory(mep_buff_name.c_str());
-  if ( bm->mepBuffer == MBM_INV_DESC )  {
+    : s_map_unused ? mbm_map_memory(mep_buff_name.c_str())
+    : MBM_INV_DESC;
+  if ( (bm->selection&USE_MEP_BUFFER || s_map_unused) && bm->mepBuffer == MBM_INV_DESC )  {
     lib_rtl_delete_lock(bm->lockid);
     return MEP_INV_DESC;
   }
-  bm->mepStart = (long)bm->mepBuffer->buffer_add;
-  //mbm_register_free_event(bm->mepBuffer, mep_free, bm.get());
-  //mbm_register_alloc_event(bm->mepBuffer, mep_declare, bm.get());
-  bm->evtBuffer = ( bm->selection&USE_EVT_BUFFER )
+  else if ( bm->mepBuffer != MBM_INV_DESC ) {
+    bm->mepStart = (long)bm->mepBuffer->buffer_add;
+  }
+  // Map EVENT buffer
+  bm->evtBuffer = ( bm->selection&USE_EVT_BUFFER ) 
     ? mbm_include(evt_buff_name.c_str(), name, partid)
-    : mbm_map_memory(evt_buff_name.c_str());
-  if ( bm->evtBuffer == MBM_INV_DESC )  {
+    : s_map_unused ? mbm_map_memory(evt_buff_name.c_str())
+    : MBM_INV_DESC;
+  if ( (bm->selection&USE_EVT_BUFFER || s_map_unused) && bm->evtBuffer == MBM_INV_DESC )  {
     _mep_exclude(bm->mepBuffer, bm->selection&USE_MEP_BUFFER);
     lib_rtl_delete_lock(bm->lockid);
     return MEP_INV_DESC;
   }
-  bm->evtStart = (long)bm->evtBuffer->buffer_add;
-  mbm_register_free_event(bm->evtBuffer, mep_free, bm.get());
-  mbm_register_alloc_event(bm->evtBuffer, mep_declare, bm.get());
-  bm->resBuffer = ( bm->selection&USE_RES_BUFFER ) 
+  else if ( bm->evtBuffer != MBM_INV_DESC )  {
+    bm->evtStart = (long)bm->evtBuffer->buffer_add;
+    mbm_register_free_event(bm->evtBuffer, mep_free, bm.get());
+    mbm_register_alloc_event(bm->evtBuffer, mep_declare, bm.get());
+  }
+  // Map RESULT buffer
+  bm->resBuffer = (bm->selection&USE_RES_BUFFER) 
     ? mbm_include(res_buff_name.c_str(), name, partid)
-    : mbm_map_memory(res_buff_name.c_str());
-  if ( bm->resBuffer == MBM_INV_DESC )  {
+    : s_map_unused ? mbm_map_memory(res_buff_name.c_str())
+    : MBM_INV_DESC;
+  if ( (bm->selection&USE_RES_BUFFER || s_map_unused) && bm->resBuffer == MBM_INV_DESC )  {
     _mep_exclude(bm->evtBuffer, bm->selection&USE_EVT_BUFFER);
     _mep_exclude(bm->mepBuffer, bm->selection&USE_MEP_BUFFER);
     lib_rtl_delete_lock(bm->lockid);
     return MEP_INV_DESC;
   }
-  bm->resStart = (long)bm->resBuffer->buffer_add;
-  mbm_register_free_event(bm->resBuffer, mep_free, bm.get());
-  mbm_register_alloc_event(bm->resBuffer, mep_declare, bm.get());
+  else if ( bm->resBuffer != MBM_INV_DESC )  {
+    bm->resStart = (long)bm->resBuffer->buffer_add;
+    mbm_register_free_event(bm->resBuffer, mep_free, bm.get());
+    mbm_register_alloc_event(bm->resBuffer, mep_declare, bm.get());
+  }
   bm->partitionID = partid;
   return bm.release();
 }

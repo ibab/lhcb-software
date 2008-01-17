@@ -177,7 +177,7 @@ NetErrorCode netentry_t::send(const void *buffer,size_t siz,u_int flag) {
   for (size_t i = 0; i <= Npack; ++i )  {
     u_int tosend = i<Npack ? CHOP_SIZE : Nrest;
     u_int sent  = 0;
-    while (sent != siz)    {
+    while ( sent < tosend )    {
       int sent_now = ::send (chan, buff + already_sent, tosend, flag);
       if (sent_now == -1)  {
         errno = ::lib_rtl_socket_error();

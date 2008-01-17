@@ -57,6 +57,7 @@ namespace LHCb  {
     }
     /// Send data to target destination
     virtual StatusCode sendData(const Recipient& tar, const void* data, size_t len)  {
+      //  std::cout << "Send " << len << " bytes of data to " << tar.name << std::endl;
       int sc = net_send(m_netPlug,data,len,tar.name,WT_FACILITY_CBMEVENT);
       return sc==NET_SUCCESS ? StatusCode::SUCCESS : StatusCode::FAILURE;
     }

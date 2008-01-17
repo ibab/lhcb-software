@@ -1,3 +1,4 @@
+#!/bin/csh
 if ( -f /tmp/CreateMEP.opts ) then
   rm -f /tmp/CreateMEP.opts
 endif
@@ -13,16 +14,12 @@ EventDataSvc.ForceLeaves  = 1;
 EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
 
 // To create a MEP file:
-ApplicationMgr.OutStream  = { "LHCb::MEPWriter/Writer_0", "LHCb::MEPWriter/Writer_1" };
+ApplicationMgr.OutStream  = { "LHCb::MEPWriter/Writer_0" };
 Writer_0.Compress       = 0;
 Writer_0.ChecksumType   = 0;
 Writer_0.PackingFactor  = 10;
 Writer_0.Connection     = "file://mepData_0.dat";
-Writer_1.Compress       = 0;
-Writer_1.ChecksumType   = 0;
-Writer_1.PackingFactor  = 10;
-Writer_1.Connection     = "file://mepData_1.dat";
-
+Writer_0.MakeTAE        = true;
 END-OF-OPTS
 #
 cat /tmp/CreateMEP.opts

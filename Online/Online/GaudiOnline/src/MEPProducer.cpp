@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.9 2007-01-24 19:21:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.10 2008-01-17 17:23:58 frankm Exp $
 //  ====================================================================
 //  RawBufferCreator.cpp
 //  --------------------------------------------------------------------
@@ -10,7 +10,7 @@
 #include "MDF/MEPEvent.h"
 #include "MBM/MepProducer.h"
 #include "WT/wt_facilities.h"
-
+#include <iostream>
 #include <fcntl.h>
 #ifdef _WIN32
 #include <io.h>
@@ -52,14 +52,15 @@ namespace {
     ::printf("    -n(ame)=<name>         buffer member name\n");
     ::printf("    -a(synchronous)        Asynchonous mode (default is synchronous)\n");
     ::printf("    -s(pace)=<number>      Default space allocation in kBytes\n");
+    ::printf("    -c(ount)=<number>      Number of events to be sent. default: unlimited\n");
     ::printf("    -p(artition)=<number>  Partition ID\n");
     ::printf("    -r(efcount)=<number>   Initial MEP reference count\n");
     ::printf("    -d(ebug)               Invoke debugger\n");
   }
   struct MEPProducer  : public MEP::Producer  {
-    int m_spaceSize, m_refCount;
-    MEPProducer(const std::string& nam, int partitionID, int refcnt, size_t siz) 
-    : MEP::Producer(nam, partitionID), m_spaceSize(siz), m_refCount(refcnt)
+    int m_spaceSize, m_refCount, m_evtCount;
+    MEPProducer(const std::string& nam, int partitionID, int refcnt, size_t siz, int evtCount) 
+      : MEP::Producer(nam, partitionID), m_spaceSize(siz), m_refCount(refcnt), m_evtCount(evtCount)
     {
       m_spaceSize *= 1024;  // Space size is in kBytes
       m_flags = USE_MEP_BUFFER;
@@ -111,6 +112,13 @@ namespace {
       if ( status == MBM_NORMAL )  {
         status = spaceAction();
       }
+      if ( m_evtCount>0 ) {
+	m_evtCount--;
+	if ( m_evtCount==0 ) {
+	  std::cout << "All events requested were decleared to MEP buffer." << std::endl;
+	  exit(0);
+	}
+      }
       return status;
     }
   };
@@ -121,6 +129,7 @@ extern "C" int mep_producer(int argc,char **argv) {
   int space = 64*1024;             // default 64 kB
   int partID = 0x103;              // default is LHCb partition id
   int refCount = 1;
+  int evtCount = -1;
   std::string name = "producer";
   bool async = cli.getopt("asynchronous",1) != 0;
   bool debug = cli.getopt("debug",1) != 0;
@@ -128,10 +137,11 @@ extern "C" int mep_producer(int argc,char **argv) {
   cli.getopt("space",1,space);
   cli.getopt("partitionid",1,partID);
   cli.getopt("refcount",1,refCount);
+  cli.getopt("count",1,evtCount);
   if ( debug ) ::lib_rtl_start_debugger();
   ::printf("%synchronous MEP Producer \"%s\" Partition:%d (pid:%d) included in buffers.\n",
      async ? "As" : "S", name.c_str(), partID, MEPProducer::pid());
-  MEPProducer p(name, partID, refCount, space);
+  MEPProducer p(name, partID, refCount, space, evtCount);
   if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
   return p.run();
 }

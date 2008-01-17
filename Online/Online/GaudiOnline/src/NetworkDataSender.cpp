@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.7 2007-10-29 14:33:29 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.8 2008-01-17 17:23:58 frankm Exp $
 //  ====================================================================
 //  NetworkDataSender.cpp
 //  --------------------------------------------------------------------
@@ -175,17 +175,21 @@ StatusCode NetworkDataSender::execute()  {
 // Write MDF record from serialization buffer
 StatusCode NetworkDataSender::writeBuffer(void* const /* ioDesc */, const void* data, size_t len)  {
   // Now send the data ....
-  MsgStream output(msgSvc(),name());
   if ( m_recipients.empty() )  {
+    MsgStream output(msgSvc(),name());
     output << MSG::ERROR << "Failed to send MDF record [No known recipient]." << endmsg;
     return StatusCode::SUCCESS;
   }
   Recipient& recipient = m_recipients.front();
-  output << MSG::DEBUG << "Handle event request for recipient:" << recipient.name << endmsg;
   if ( !sendData(recipient, data, len).isSuccess() )   {
+    MsgStream output(msgSvc(),name());
     output << MSG::ERROR << "Failed to send MDF to " << recipient.name << "." << endmsg;
     ++m_sendError;
     return StatusCode::FAILURE;
+  }
+  else {
+    //MsgStream output(msgSvc(),name());
+    //output << MSG::DEBUG << "Handle event request for recipient:" << recipient.name << endmsg;
   }
   ++m_sendReq;
   m_sendBytes += len;

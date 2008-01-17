@@ -63,6 +63,7 @@ extern "C"  {
   int mep_decrement(MEPID dsc, MEPEVENT* e, int val);
   int mep_install(int argc , char** argv);
   int mep_scan(MEPID bm, int delay);
+  void mep_map_unused_buffers(bool value);
 #ifdef __cplusplus
 }
 #endif

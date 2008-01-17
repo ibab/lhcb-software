@@ -1,6 +1,10 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2008-01-19 Markus Frank
+  - Fix bug in DataTransfer, which failed on sending large events
+  - Allow to choose if unused MEP buffers should be mapped. Default=false
+
 ! 2007-12-07 Markus Frank
   - Fix several problems.
   - Modify DataTransfer library to also allow for pure client connections.

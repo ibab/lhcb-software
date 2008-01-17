@@ -3,7 +3,7 @@ OnlineEnv.PartitionID   = 333;
 OnlineEnv.MonitorSvcType    = "LHCb::MemMonitorSvc/MonitorSvc";
 ApplicationMgr.ExtSvc       = { "LHCb::MemMonitorSvc/MonitorSvc",
                                 "LHCb::DimMonitoringEngine/MonitoringEngine" };
-ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
+ApplicationMgr.SvcOptMapping += { "LHCb::MEPManager/MEPManager", "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
 // ApplicationMgr.ExtSvc   += { "MonitorSvc/MonitorSvc" };
 // ApplicationMgr.Dlls     += { "Gaucho" };
 //MessageSvc.LoggerOnly       = true;  // Set to false for stdout message service
