@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.5 2007-10-09 23:37:24 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.6 2008-01-17 13:28:43 graven Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -370,9 +370,9 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
         LHCb::MuonTileID mkey = (*itdata)->key();    
         std::vector<LHCb::MuonTileID> ols = (*itdata)->ols();
         if (ols.size()>0) {
-          debug()  <<"fillOLsfromDigits:    PU: "<<mkey.toString()<<" => "<<ols.size()<<" hits found"<<endmsg;;
+          if( msgLevel(MSG::DEBUG) ) debug()  <<"fillOLsfromDigits:    PU: "<<mkey.toString()<<" => "<<ols.size()<<" hits found"<<endmsg;;
           for (std::vector<LHCb::MuonTileID>::iterator itol=ols.begin(); itol!=ols.end(); ++itol){
-            debug()  <<"fillOLsfromDigits:       "<<(*itol).toString()<<endmsg;
+            if( msgLevel(MSG::DEBUG) )debug()  <<"fillOLsfromDigits:       "<<(*itol).toString()<<endmsg;
             ddigits.push_back(*itol);
           }
         }
@@ -418,12 +418,12 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
 
     LHCb::MuonTileID mkey = *id;
 
-    debug() << "fillOLsfromDigits:     mkey: "<<mkey.toString()<<endmsg;
+    if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     mkey: "<<mkey.toString()<<endmsg;
 
     int sta = mkey.station(); 
     LHCb::MuonTileID olID = m_ollayout.contains(mkey);
 
-    debug() << "fillOLsfromDigits:     olID: "<<olID.toString()<<endmsg;
+    if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     olID: "<<olID.toString()<<endmsg;
 
     char bufnm[1024];
     sprintf(bufnm,"(Q%d,R%d,%d,%d)",
@@ -432,7 +432,7 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
     char* format = "OL_%d_%s";
     sprintf(buf,format,sta,bufnm);
     
-    debug() << "fillOLsfromDigits:     buf: "<<buf<<endmsg;
+    if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     buf: "<<buf<<endmsg;
 
     L0Muon::TileRegister* pReg = rfactory->createTileRegister(buf,0);
     pReg->setTile(mkey);
@@ -443,7 +443,3 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
     
   return StatusCode::SUCCESS;
 }
-
-
-
-

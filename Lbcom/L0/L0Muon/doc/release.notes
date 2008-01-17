@@ -1,7 +1,10 @@
-!  $Id: release.notes,v 1.43 2008-01-04 11:57:04 jucogan Exp $
+!  $Id: release.notes,v 1.44 2008-01-17 13:28:43 graven Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev
 !-------------------------------------------------------------------------
+
+! 2008-01-17 - Gerhard Raven
+ - add some if(msgLevel(MSG::DEBUG) around debug() statements in L0MuonAlg
 
 ! 2008-01-04 - Julien Cogan
  - Prevent L0MuonCandidatesFromRaw from writing of empty containers in the 
