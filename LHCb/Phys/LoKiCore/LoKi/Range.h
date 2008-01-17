@@ -1,4 +1,4 @@
-// $Id: Range.h,v 1.15 2007-12-03 12:03:22 ibelyaev Exp $
+// $Id: Range.h,v 1.16 2008-01-17 19:29:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RANGE_H
 #define LOKI_RANGE_H 1
@@ -129,10 +129,10 @@ namespace LoKi
     inline iterator begin () const { return m_base.first  ; }
     /// access to end   of the sequence (const version)
     inline iterator end   () const { return m_base.second ; }
+    /// access to begin of the reversed sequence (const) 
+    inline reverse_iterator rbegin   () const { return reverse_iterator ( end   () ) ; }
     /// access to begin of the reversed sequence (const)
-    inline reverse_iterator rbegin   () const { return end   () ; }
-    /// access to begin of the reversed sequence (const)
-    inline reverse_iterator rend     () const { return begin () ; }
+    inline reverse_iterator rend     () const { return reverse_iterator ( begin () ) ; }
     /// access for the first element (only for non-empty ranges!)
     inline const_reference front () const { return *( begin ()     ) ; }
     /// access for the back  element (only for non-empty ranges!)
