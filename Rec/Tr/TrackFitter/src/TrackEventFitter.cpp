@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.15 2007-11-30 15:21:04 wouter Exp $
+// $Id: TrackEventFitter.cpp,v 1.16 2008-01-17 16:03:35 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -134,6 +134,7 @@ StatusCode TrackEventFitter::execute() {
       // Update counters
       counter("chisqprobSum") += track.probChi2() ;
       counter("badChisq") += bool(track.probChi2()<0.01) ;
+      counter("numOutliers") += track.nMeasurementsRemoved() ;
     }
     else {
       track.setFlag( Track::Invalid, true );
