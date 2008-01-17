@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.cpp,v 1.20 2008-01-08 15:20:36 cattanem Exp $
+// $Id: RawDataCnvSvc.cpp,v 1.21 2008-01-17 17:15:41 frankm Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -254,16 +254,17 @@ RawDataCnvSvc::unpackMEP(const MDFDescriptor& dat, const std::string& loc, RawEv
       std::map<unsigned int,std::vector<RawBank*> >::iterator it = evts.begin();
       std::vector<std::string> names = buffersMEP(dat.first);
       std::vector<std::string>::const_iterator i=names.begin();
-      for(; i != names.end() && it != evts.end(); ++i, it++)   {
+      for(; i != names.end() && it != evts.end(); ++i, ++it)   {
         if ( (*i) == loc )    {
           r = raw;
         }
         else  {
-          sc = dataProvider()->retrieveObject(*i,(DataObject*&)r);
+          sc = dataProvider()->retrieveObject((*i)+"/DAQ/RawEvent",(DataObject*&)r);
           if ( !sc.isSuccess() )  {
             return error("Failed to access raw event at:"+(*i));
           }
         }
+	//std::cout << "Filling banks for " << *i << " " << r->clID() << " " << loc << std::endl;
         sc = adoptBanks(r,(*it).second);
         if ( sc.isSuccess() )  {
           continue;

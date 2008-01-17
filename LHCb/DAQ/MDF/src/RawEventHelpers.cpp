@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.26 2007-12-14 11:42:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.27 2008-01-17 17:15:41 frankm Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -9,9 +9,12 @@
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawEventPrintout.h"
 #include "MDF/RawEventDescriptor.h"
+#include "MDF/OnlineRunInfo.h"
 #include "MDF/MDFHeader.h"
 #include "MDF/MEPEvent.h"
 #include "Event/RawEvent.h"
+#include "Event/ODIN.h"
+
 #include <stdexcept>
 #include <iostream>
 #ifdef _WIN32
@@ -961,4 +964,33 @@ StatusCode LHCb::unpackTAE(const char* start, const char* end, const std::string
 /// Unpacks the buffer given by the start and end pointers, and fill the rawevent structure
 StatusCode LHCb::unpackTAE(const MDFDescriptor& data, const std::string& loc, RawEvent* raw)  {
   return unpackTAE(data.first,data.first+data.second,loc,raw);
+}
+
+/// Force the event type in ODIN to be a TAE event
+StatusCode LHCb::change2TAEEvent(RawEvent* raw)  {
+  StatusCode sc = StatusCode::FAILURE;
+  typedef std::vector<RawBank*> _V;
+  if ( raw ) {
+    const _V& oBnks = raw->banks(RawBank::ODIN);
+    for(_V::const_iterator i=oBnks.begin(); i != oBnks.end(); ++i)  {
+      (*i)->begin<OnlineRunInfo>()->triggerType = ODIN::TimingTrigger;
+      sc = StatusCode::SUCCESS;
+    }
+  }
+  return sc;
+}
+
+/// Check if a given RawEvent structure belongs to a TAE event
+bool LHCb::isTAERawEvent(RawEvent* raw)  {
+  typedef std::vector<RawBank*> _V;
+  if ( raw ) {
+    //== Check ODIN event type to see if this is TAE
+    const _V& oBnks = raw->banks(RawBank::ODIN);
+    for(_V::const_iterator i=oBnks.begin(); i != oBnks.end(); ++i)  {
+      if ( (*i)->begin<OnlineRunInfo>()->triggerType = ODIN::TimingTrigger ) {
+        return true;
+      }
+    }
+  }
+  return false;
 }

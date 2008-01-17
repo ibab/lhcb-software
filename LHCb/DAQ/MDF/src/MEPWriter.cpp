@@ -1,4 +1,4 @@
-// $Id: MEPWriter.cpp,v 1.7 2008-01-08 15:20:34 cattanem Exp $
+// $Id: MEPWriter.cpp,v 1.8 2008-01-17 17:15:41 frankm Exp $
 //	====================================================================
 //  MEPWriter.cpp
 //	--------------------------------------------------------------------
@@ -27,9 +27,10 @@ static void* extendBuffer(void* p, size_t len)   {
 
 /// Standard algorithm constructor
 MEPWriter::MEPWriter(const std::string& name, ISvcLocator* pSvcLocator)
-: MDFWriter(name, pSvcLocator), m_evID(0)
+  : MDFWriter(name, pSvcLocator), m_evID(0)
 {
   declareProperty("PackingFactor",  m_packingFactor=20);
+  declareProperty("MakeTAE",        m_makeTAE=false);
 }
 
 /// Standard Destructor
@@ -42,6 +43,7 @@ StatusCode MEPWriter::execute()    {
   if ( raw )  {
     StatusCode sc = StatusCode::SUCCESS;
     raw->addRef();
+    if ( m_makeTAE ) change2TAEEvent(raw);
     m_events.insert(std::pair<unsigned int, RawEvent*>(m_evID++, raw.ptr()));
     if ( int(m_events.size()) == m_packingFactor )  {
       MEPEvent* me = 0;

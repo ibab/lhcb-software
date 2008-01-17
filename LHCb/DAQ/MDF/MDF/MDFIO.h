@@ -1,4 +1,4 @@
-// $Id: MDFIO.h,v 1.16 2007-12-14 11:42:22 frankb Exp $
+// $Id: MDFIO.h,v 1.17 2008-01-17 17:15:40 frankm Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -60,6 +60,16 @@ namespace LHCb {
     bool                          m_ignoreChecksum;
     /// Flag to force TAE format of the MDF file
     bool                          m_forceTAE;
+
+    /// Monitoring quantity: Number of write errors
+    int                           m_writeErrors;
+    /// Monitoring quantity: Number of write actions
+    int                           m_writeActions;
+   
+    /// Monitoring quantity: Number of space errors
+    int                           m_spaceErrors;
+    /// Monitoring quantity: Number of space actions
+    int                           m_spaceActions;
    
     /// Helper to retrieve data from Opaque address
     std::pair<const char*,int> getDataFromAddress();
@@ -98,7 +108,10 @@ namespace LHCb {
 
     /// Initializing constructor
     MDFIO(Writer_t typ, const std::string& nam) 
-      : m_msgSvc(0), m_evtSvc(0), m_dataType(typ), m_parent(nam), m_catalog(0), m_forceTAE(false) {}
+      : m_msgSvc(0), m_evtSvc(0), m_dataType(typ), m_parent(nam), m_catalog(0), m_forceTAE(false),
+      m_writeErrors(0), m_writeActions(0), m_spaceErrors(0), m_spaceActions(0)
+      {
+      }
 
     /// Default destructor
     virtual ~MDFIO() {}

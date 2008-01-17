@@ -6,6 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2008-01-19 - Markus Frank
+ - Add helper functions for processing TAE events. Fix bug in RawDtaCnvSvc when 
+   accessing TAE events.
+
 !========================= MDF v3r0 2008-01-08 ===============================
 ! 2008-01-08 - Marco Cattaneo
  - Remove obsolete MDF.cpp file, and cleanup Factory includes

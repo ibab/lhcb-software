@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.22 2007-12-17 18:12:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.23 2008-01-17 17:15:41 frankm Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -10,6 +10,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/MsgStream.h"
+#include "MDF/RawEventPrintout.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawDataAddress.h"
 #include "MDF/MDFHeader.h"
@@ -79,23 +80,39 @@ StatusCode LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
                                        int               chksumTyp,
                                        void* const       ioDesc)
 {
-  size_t len = rawEventLength(raw);
-  size_t hdrSize = hdr_bank->totalSize();
-  MDFDescriptor space = getDataSpace(ioDesc, len);
-  if ( space.first )  {
-    encodeRawBanks(raw, space.first+hdrSize, len, true);
-    StatusCode sc = 
-      writeDataSpace(compTyp, chksumTyp, ioDesc, hdr_bank, space.first, len);
-    if ( sc.isSuccess() ) {
+  try {
+    size_t len = rawEventLength(raw);
+    size_t hdrSize = hdr_bank->totalSize();
+    MDFDescriptor space = getDataSpace(ioDesc, len);
+    if ( space.first )  {
+      m_spaceActions++;
+      encodeRawBanks(raw, space.first+hdrSize, len, true);
+      StatusCode sc = 
+	writeDataSpace(compTyp, chksumTyp, ioDesc, hdr_bank, space.first, len);
+      if ( sc.isSuccess() ) {
+	m_writeActions++;
+	return sc;
+      }
+      MsgStream err(m_msgSvc, m_parent);
+      err << MSG::ERROR << "Failed write data to output device." << endmsg;
+      m_writeErrors++;
       return sc;
     }
-    MsgStream err(m_msgSvc, m_parent);
-    err << MSG::ERROR << "Failed write data to output device." << endmsg;
-    return sc;
+    MsgStream log0(m_msgSvc, m_parent);
+    log0 << MSG::ERROR << "Failed allocate output space." << endmsg;
+    m_spaceErrors++;
+    return StatusCode::FAILURE;
   }
-  MsgStream log0(m_msgSvc, m_parent);
-  log0 << MSG::ERROR << "Failed allocate output space." << endmsg;
-  return StatusCode::FAILURE;
+  catch(std::exception& e)  {
+    MsgStream log(m_msgSvc,m_parent);
+    log << MSG::ERROR << "Got exception when writing data:" << e.what() << endmsg;
+  }
+  catch(...)  {
+    MsgStream log(m_msgSvc,m_parent);
+    log << MSG::ERROR << "Got unknown exception when writing data." << endmsg;
+  }
+  m_writeErrors++;
+  return StatusCode::FAILURE;  
 }
 
 StatusCode 
@@ -104,15 +121,8 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
   SmartDataPtr<RawEvent> raw(m_evtSvc,location);
   if ( raw )  {
     size_t len;
-    bool isTAE = m_forceTAE;   // false in principle...
-    //== Check ODIN event type to see if this is TAE
+    bool isTAE = m_forceTAE || isTAERawEvent(raw);   // false in principle...unless TAE
     typedef std::vector<RawBank*> _V;
-    const _V& oBnks = raw->banks(RawBank::ODIN);
-    for(_V::const_iterator iO=oBnks.begin(); iO != oBnks.end(); ++iO)  {
-      ODIN odinBank;
-      odinBank.set( *iO );   //== decode the ODIN information from the bank
-      if ( ODIN::TimingTrigger == odinBank.triggerType() ) isTAE = true;
-    }
     if ( !isTAE ) {
       const _V& bnks = raw->banks(RawBank::DAQ);
       for(_V::const_iterator i=bnks.begin(); i != bnks.end(); ++i)  {
@@ -172,11 +182,12 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
     MDFDescriptor space = getDataSpace(ioDesc, total);
     if ( space.first )  {
       char* dest = space.first;
+      m_spaceActions++;
       if ( encodeRawBanks( banks, dest, len, false, &length ).isSuccess())  {
         dest  += length;
         len   -= length;
       }
-      for ( unsigned int kk =0; theRawEvents.size() != kk; ++kk ) {
+      for(unsigned int kk=0; theRawEvents.size() != kk; ++kk ) {
         size_t myLength = ctrlData[3*kk + 2];  // 2 words header, third element for each buffer
         encodeRawBanks( theRawEvents[kk], dest, myLength, true);
         dest  += myLength;
@@ -191,10 +202,13 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
       if ( !sc.isSuccess() ) {
         msg << MSG::ERROR << "Failed write data to output device." << endmsg;
       }
+      msg << MSG::DEBUG << "Wrote TAE event of length:" << total 
+	  << " bytes from " << theRawEvents.size() << " Bxs" << endmsg;
       privateBank.removeBank( ctrlBank );
       privateBank.removeBank( hdrBank );
       return sc;
     }
+    m_spaceErrors++;
     msg << MSG::ERROR << "Failed to get space, size = " << len << endmsg;
     privateBank.removeBank( ctrlBank );
     privateBank.removeBank( hdrBank );
@@ -233,6 +247,7 @@ LHCb::MDFIO::commitRawBuffer(const void*       data,
                              int            /* chksumTyp */,
                              void* const       ioDesc)
 {
+  StatusCode sc = StatusCode::FAILURE;
   const char* ptr = (const char*)data;
   switch(type)  {
     case MDF_BANKS:  // data buffer with bank structure
@@ -242,14 +257,20 @@ LHCb::MDFIO::commitRawBuffer(const void*       data,
         int hdrSize  = sizeof(MDFHeader)+h->subheaderLength();
         int bnkSize  = hdr->totalSize();
         writeBuffer(ioDesc, h, hdrSize);
-        return writeBuffer(ioDesc, ptr+bnkSize, len-bnkSize);
+	// Need two write due to RAW bank alignment
+	sc = writeBuffer(ioDesc, ptr+bnkSize, len-bnkSize);
+	sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
+	return sc;
       }
     case MDF_RECORDS:  // Already ready to write MDF record
-      return writeBuffer(ioDesc, ptr, len);
+      sc = writeBuffer(ioDesc, ptr, len);
+      sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
+      return sc;
     default:
+      m_writeErrors++;
       break;
   }
-  return StatusCode::FAILURE;
+  return sc;
 }
 
 /// Direct I/O with valid existing raw buffers
@@ -314,7 +335,9 @@ LHCb::MDFIO::writeDataSpace(int           compTyp,
   const char* chk_begin = ((char*)h)+4*sizeof(int);
   h->setCompression(compTyp);
   h->setChecksum(chksumTyp>0 ? genChecksum(chksumTyp,chk_begin,chkSize) : 0);
-  return writeBuffer(ioDesc, ptr, newlen);
+  StatusCode sc = writeBuffer(ioDesc, ptr, newlen);
+  sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
+  return sc;
 }
 
 bool LHCb::MDFIO::checkSumOk(int checksum, const char* src, int datSize, bool prt)  {
@@ -357,7 +380,11 @@ LHCb::MDFIO::readLegacyBanks(const MDFHeader& h, void* const ioDesc, bool dbg)
   // accomodate for potential padding of MDF header bank!
   MDFDescriptor space = getDataSpace(ioDesc, alloc_len+sizeof(int)+sizeof(RawBank));
   char* data = space.first;
-  if ( data )  {
+  if ( !data )  {
+    m_spaceErrors++;
+  }
+  else {
+    m_spaceActions++;
     RawBank* b = (RawBank*)data;
     b->setMagic();
     b->setType(RawBank::DAQ);
@@ -463,7 +490,11 @@ LHCb::MDFIO::readBanks(const MDFHeader& h, void* const ioDesc, bool dbg)  {
   // accomodate for potential padding of MDF header bank!
   MDFDescriptor space = getDataSpace(ioDesc, alloc_len+sizeof(int)+sizeof(RawBank));
   char* data = space.first;
-  if ( data )  {
+  if ( !data )  {
+    m_spaceErrors++;
+  }
+  else {
+    m_spaceActions++;
     RawBank* b = (RawBank*)data;
     b->setMagic();
     b->setType(RawBank::DAQ);
@@ -561,8 +592,10 @@ StatusCode LHCb::MDFIO::adoptBanks(RawEvent* evt,
                                    bool copy_banks)  
 {
   if ( evt )  {
-    for(std::vector<RawBank*>::const_iterator k=bnks.begin(); k!=bnks.end(); ++k)
+    for(std::vector<RawBank*>::const_iterator k=bnks.begin(); k!=bnks.end(); ++k) {
+      // std::cout << RawEventPrintout::bankHeader(*k) << std::endl;
       evt->adoptBank(*k, copy_banks);
+    }
     return StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;

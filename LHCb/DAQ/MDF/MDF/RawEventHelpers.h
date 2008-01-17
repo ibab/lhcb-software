@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.15 2007-12-14 11:42:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.16 2008-01-17 17:15:41 frankm Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -174,5 +174,12 @@ namespace LHCb  {
 
   /// Unpacks the buffer given by the start and end pointers, and fill the rawevent structure
   StatusCode unpackTAE(const MDFDescriptor& data, const std::string& loc, RawEvent* raw);
+
+  /// Force the event type in ODIN to be a TAE event
+  StatusCode change2TAEEvent(RawEvent* raw);
+
+  /// Check if a given RawEvent structure belongs to a TAE event
+  bool isTAERawEvent(RawEvent* raw);
+
 }
 #endif // MDF_RAWEVENTHELPERS_H

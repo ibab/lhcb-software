@@ -1,14 +1,10 @@
-// $Id: TAETestCreator.cpp,v 1.3 2008-01-08 15:20:39 cattanem Exp $
+// $Id: TAETestCreator.cpp,v 1.4 2008-01-17 17:15:41 frankm Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "MDF/RawEventHelpers.h"
-#include "MDF/OnlineRunInfo.h"
-#include "MDF/MDFHeader.h"
 #include "Event/RawEvent.h"
-#include "Event/RawBank.h"
-#include "Event/ODIN.h"
 
 /*
  *    LHCb namespace declaration
@@ -34,21 +30,13 @@ namespace LHCb  {
     /// Destructor
     virtual ~TAETestCreator()  {} 
 
-    void setEventType(RawEvent* raw)  {
-      typedef std::vector<RawBank*> _V;
-      const _V& oBnks = raw->banks(RawBank::ODIN);
-      for(_V::const_iterator i=oBnks.begin(); i != oBnks.end(); ++i)  {
-        (*i)->begin<OnlineRunInfo>()->triggerType = ODIN::TimingTrigger;
-      }
-    }
-
     /// Main execution
     virtual StatusCode execute()  {
       MsgStream log(msgSvc(),name());
       int nevts = abs(m_numTAEEvents)>7 ? 7 : abs(m_numTAEEvents);
       SmartDataPtr<RawEvent> raw(eventSvc(),RawEventLocation::Default);
       if ( raw )  {
-        setEventType(raw);
+        change2TAEEvent(raw);
         for(int i=-nevts; i<=nevts; ++i)  {
           if ( i != 0 )  {
             RawEvent* copy = 0;
