@@ -9,14 +9,19 @@
 #include "Tim.h"
 
 
-/** @class Adder
-
-5
-*/
+/** @class Adder Adder.h Adder/Adder.h
+ * 
+ * This program adds histograms published by tasks using
+ * the Gaucho MonitorSvc and publishes them. For user
+ * documentation see the release notes.
+ *
+ *   @author Eric van Herwijnen
+ *   @author Monica Pepe-Altarelli
+ *   @date 09/01/2008
+ */
 
 // Forward declarations
 class Tim;
-
 
 class Adder : public Algorithm {
 public:
@@ -27,43 +32,44 @@ public:
   StatusCode initialize();
   StatusCode execute();
   StatusCode finalize();
+  StatusCode findDimServices();
 private:  
-  std::string m_nodename; 
-  std::vector<std::string> Svcfoundname;
-  std::vector<std::string> m_histogramname; 
-  std::vector<std::string> m_histogramuniquename; 
-  std::vector<std::string> m_histogramfoundname; 
-  std::vector<std::string> m_algorithmname; 
-  std::vector<std::string> m_algorithmfoundname; 
-  std::vector<std::string> m_taskname; 
-  std::vector<std::string> m_taskfoundname; 
+  std::vector<std::string> m_nodeNames; 
+  std::vector<std::string> m_svcFoundName;
+  std::vector<std::string> m_histogramName; 
+  std::vector<std::string> m_histogramUniqueName; 
+  std::vector<std::string> m_histogramFoundName; 
+  std::vector<std::string> m_algorithmName; 
+  std::vector<std::string> m_algorithmFoundName; 
+  std::vector<std::string> m_taskName; 
+  std::vector<std::string> m_taskFoundName; 
 
-  int m_refreshtime;
-  std::string m_dimclientdns;
-  std::string m_servername;    
-  int icount;
-  int icount2d;
-  int icountp;
-  int svcsize;
+  int m_refreshTime;
+  std::string m_dimClientDns;
+  std::string m_serverName;    
+  int m_iCount;
+  int m_iCount2d;
+  int m_iCountp;
   //we only call the dimbrowser once, so store found service names in these arrays
 
-  std::vector<std::vector <std::string> > hSvcname;
-  std::vector<std::vector <std::string> >  hSvcname2d;
-  std::vector<std::vector <std::string> > pSvcname;
+  std::vector<std::vector <std::string> > m_hSvcName;
+  std::vector<std::vector <std::string> >  m_hSvcName2d;
+  std::vector<std::vector <std::string> > m_pSvcName;
   
   //the number of histograms found
-  std::vector<int> nbof1dhistos;
-  std::vector<int> nbof2dhistos;
-  std::vector<int> nbofphistos; 
+  std::vector<int> m_nbOf1DHistos;
+  std::vector<int> m_nbOf2DHistos;
+  std::vector<int> m_nbOfPHistos; 
+  int m_histosFound;
   
   //arrays with Dim buffers of each histogram service found
-  std::vector<std::vector<DimInfoHistos*> > hinfo;
-  std::vector<std::vector<DimInfoHistos*> > hinfo2d;
-  std::vector<std::vector<DimInfoHistos*> > pinfo;
+  std::vector<std::vector<DimInfoHistos*> > m_hInfo;
+  std::vector<std::vector<DimInfoHistos*> > m_hInfo2D;
+  std::vector<std::vector<DimInfoHistos*> > m_pInfo;
   
   DimBrowser dbr;  
   Tim* tim;
-  std::vector<std::vector<DimInfoHistos*> > infohistos;
+  std::vector<std::vector<DimInfoHistos*> > m_infoHistos;
   
   protected:
   /// Variable to contain the process name

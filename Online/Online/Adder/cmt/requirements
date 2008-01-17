@@ -14,6 +14,7 @@ use OnlineKernel v*  Online
 use Gaucho       v*  Online
 use GaudiAud     v*
 use GaudiSvc     v*
+use OnlineHistDB v*  Online
 
 library Adder ../src/Adder_dll.cpp ../src/Adder_load.cpp ../src/Adder.cpp ../src/Adder.h  ../src/DimInfoHistos.cpp ../src/DimInfoTitle.cpp ../src/Tim.cpp
 
