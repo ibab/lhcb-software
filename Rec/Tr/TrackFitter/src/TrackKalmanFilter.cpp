@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.54 2007-12-11 09:45:39 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.55 2008-01-18 14:45:58 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -74,22 +74,21 @@ StatusCode TrackKalmanFilter::initialize()
 
 
 //=========================================================================
-// Fit the track
+// Fit the nodes
 //=========================================================================
-StatusCode TrackKalmanFilter::fit( Track& track ) 
+StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const Gaudi::TrackSymMatrix& seedCov) const
 {
   StatusCode sc(StatusCode::SUCCESS, true); 
- 
+  
   // First node must have a seed state
-  std::vector<Node*>& nodes = track.nodes();
-  bool upstream = track.nodes().front()->z() > track.nodes().back()->z() ;
+  bool upstream = nodes.front()->z() > nodes.back()->z() ;
   
-  // Set the reference vector and seed covariance (initially this is taken from the seed state)
-  std::vector<Node*>::iterator iNode = nodes.begin();
+  // Set the initial state. The vector comes from the first node in
+  // the list. The seed covariance from the first node on the tr ack.
+  NodeRange::iterator iNode = nodes.begin();
   State state = (*iNode)->state() ;
-  TrackSymMatrix seedCov = state.covariance();
-  
-  // Loop over the nodes in the current order (should be sorted)
+  state.setCovariance(seedCov) ;
+
   // ==> prediction and filter
   double chisq(0) ;
   int ndof(-state.nParameters()) ;
@@ -132,6 +131,8 @@ StatusCode TrackKalmanFilter::fit( Track& track )
   } // end of prediction and filter
 
   // Run the bidirectional fit
+  NodeRange::reverse_iterator rbegin = NodeRange::reverse_iterator(nodes.end()) ; // nodes.rbegin() ;<-- workaround for LoKi::Range_ bug
+  NodeRange::reverse_iterator rend = NodeRange::reverse_iterator(nodes.begin()) ;  // nodes.rend() ;
   if ( m_biDirectionalFit ) {
 
     if( msgLevel( MSG::VERBOSE ) )
@@ -141,11 +142,11 @@ StatusCode TrackKalmanFilter::fit( Track& track )
     double chisqreverse(0) ;
     state.setCovariance( seedCov );
 
-    // Loop over the nodes in the revers order (should be sorted)
-    std::vector<Node*>::reverse_iterator irNode = nodes.rbegin();
-    std::vector<Node*>::reverse_iterator irPrevNode = irNode;
-    if ( irNode == nodes.rend() ) return Warning( "Fit failure: zero nodes left" ,StatusCode::FAILURE,  1);
-    while ( irNode != nodes.rend() ) {
+    // Loop over the nodes in the revers order (should be sorted) 
+    NodeRange::reverse_iterator irNode = rbegin ;
+    NodeRange::reverse_iterator irPrevNode = irNode;
+    if ( irNode == rend ) return Warning( "Fit failure: zero nodes left" ,StatusCode::FAILURE,  1);
+    while ( irNode != rend ) {
       FitNode& node     = dynamic_cast<FitNode&>(**irNode);
       FitNode& prevNode = dynamic_cast<FitNode&>(**irPrevNode);
 
@@ -174,7 +175,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       
       // save filtered state, but not for the first node. we also
       // don't smooth for the first state.
-      if( irNode != nodes.rbegin() ) {
+      if( irNode != rbegin ) {
 	if ( !upstream  ) node.setState( state );
 	
 	// Smoother step
@@ -190,15 +191,8 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       }
 
       // Whatever the logic before, make sure the residual matches the state
-      if ( node.hasMeasurement() ) {
-	const TrackProjectionMatrix& H  = node.projectionMatrix();
-	const TrackVector& refX         = node.refVector().parameters() ;
-	const TrackVector& smoothedX    = node.state().stateVector() ;
-	const TrackSymMatrix& smoothedC = node.state().covariance() ;
-	node.setResidual( node.refResidual() + (H*(refX - smoothedX))(0)) ;
-	node.setErrResidual( std::sqrt(node.errMeasure2() - Similarity( H, smoothedC )(0,0)) ) ;
-      }
-      
+      updateResidual(node) ;
+
       irPrevNode = irNode;
       ++irNode;
     } // end of prediction and filter
@@ -209,10 +203,10 @@ StatusCode TrackKalmanFilter::fit( Track& track )
     if( chisq < chisqreverse ) chisq = chisqreverse ;
   } else if (m_smooth) {
     // Loop in opposite direction for the old RTS smoother
-    std::vector<Node*>::reverse_iterator iPrevNode = nodes.rbegin();
-    std::vector<Node*>::reverse_iterator ithisNode = iPrevNode;
+    NodeRange::reverse_iterator iPrevNode = rbegin;
+    NodeRange::reverse_iterator ithisNode = iPrevNode;
     ++ithisNode;
-    while ( iPrevNode != nodes.rend() && ithisNode != nodes.rend() ) {
+    while ( iPrevNode != rend && ithisNode != rend ) {
       FitNode& prevNode = dynamic_cast<FitNode&>(**iPrevNode);
       FitNode& thisNode = dynamic_cast<FitNode&>(**ithisNode);
       // Smoother step
@@ -226,6 +220,80 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 
   // set the chisquare
   track.setChi2AndDoF( chisq, ndof );
+
+  return sc;
+}
+
+
+//=========================================================================
+// Fit the track
+//=========================================================================
+StatusCode TrackKalmanFilter::fit( Track& track ) 
+{
+  StatusCode sc(StatusCode::SUCCESS, true); 
+  
+  // The seed covariance comes from the first node
+  NodeContainer nodes = track.nodes() ;
+  if( nodes.empty() ) return Warning( "Fit failure: track has no nodes", StatusCode::FAILURE,1 );
+  
+  TrackSymMatrix seedCov = nodes.front()->state().covariance() ;
+  bool upstream = nodes.front()->z() > nodes.back()->z() ;
+  
+  // First locate the first and last node that actually have information
+  NodeContainer::iterator firstMeasurementNode = nodes.begin() ;
+  while( firstMeasurementNode!=nodes.end() &&
+	 //(*firstMeasurementNode)->type()!=LHCb::Node::Outlier &&
+	 (*firstMeasurementNode)->type()!=LHCb::Node::HitOnTrack 
+	 ) ++firstMeasurementNode ; 
+  
+  NodeContainer::iterator lastMeasurementNode = nodes.end() ;
+  --lastMeasurementNode ;
+  while( lastMeasurementNode!=firstMeasurementNode &&
+	 //(*lastMeasurementNode)->type()!=LHCb::Node::Outlier &&
+	 (*lastMeasurementNode)->type()!=LHCb::Node::HitOnTrack 
+	 ) --lastMeasurementNode ; 
+  NodeContainer::iterator endMeasurementNode = lastMeasurementNode ; ++endMeasurementNode;
+  
+  // Do the fit for these nodes
+  NodeRange selectednodes(firstMeasurementNode,endMeasurementNode) ;
+  sc = fit(track,selectednodes,seedCov ) ;
+
+  // Now fill up the remaining nodes, just by 'propagating'. 
+  if(sc.isSuccess()) {
+    // First the nodes at the beginning:
+    FitNode* prevNode = dynamic_cast<FitNode*>(*firstMeasurementNode);
+    LHCb::State state = prevNode->state() ;
+    for( NodeContainer::reverse_iterator inode(firstMeasurementNode) ; 
+	 inode != nodes.rend() && sc.isSuccess() ; ++inode) {
+      FitNode* node = dynamic_cast<FitNode*>(*inode);
+      sc = predictReverseFit( *prevNode, *node, state );
+      if(!sc.isSuccess()) warning() << "Unable to predict reverse fit node" << endreq ;
+      node->setState(state) ;
+      if ( !upstream ) node->setPredictedStateUp( state );
+      else             node->setPredictedStateDown( state );
+      node->setDeltaChi2Upstream(0);
+      node->setDeltaChi2Downstream(0);
+      if(node->hasMeasurement()) sc = projectReference(*node) ;
+      updateResidual(*node) ;
+      prevNode = node ;
+    }
+    
+    // Then the nodes at the end
+    state = (*lastMeasurementNode)->state() ;
+    for( NodeContainer::iterator inode(endMeasurementNode) ; 
+	 inode != nodes.end() && sc.isSuccess() ; ++inode) {
+      FitNode* node = dynamic_cast<FitNode*>(*inode);
+      sc = predict( *node, state );
+      if(!sc.isSuccess()) warning() << "Unable to predict reverse fit node" << endreq ;
+      node->setState(state) ;
+      if ( upstream ) node->setPredictedStateUp( state );
+      else            node->setPredictedStateDown( state );
+      node->setDeltaChi2Upstream(0);
+      node->setDeltaChi2Downstream(0);
+      if(node->hasMeasurement()) sc = projectReference(*node) ;
+      updateResidual(*node) ;
+    }
+  }     
 
   return sc;
 }
@@ -459,7 +527,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   return StatusCode::SUCCESS;
 }
 
-StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool upstream ) const
+StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool /*upstream*/ ) const
 {
   // Get the predicted state from the reverse fit
   const TrackVector& predRevX = thisNode.predictedStateDown().stateVector();
@@ -492,6 +560,23 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool upstream ) const
   (thisNode.state()).setCovariance( smoothedC );
 
   return StatusCode::SUCCESS;
+}
+
+void TrackKalmanFilter::updateResidual(FitNode& node) const
+{
+  if ( node.hasMeasurement() ) {
+    // We should put this inside the Node.
+    const TrackProjectionMatrix& H  = node.projectionMatrix();
+    const TrackVector& refX         = node.refVector().parameters() ;
+    const TrackVector& smoothedX    = node.state().stateVector() ;
+    const TrackSymMatrix& smoothedC = node.state().covariance() ;
+    node.setResidual( node.refResidual() + (H*(refX - smoothedX))(0)) ;
+    double sign = node.type()==LHCb::Node::HitOnTrack? -1 : 1 ;
+    node.setErrResidual( std::sqrt(node.errMeasure2() + sign * Similarity( H, smoothedC )(0,0)) ) ;
+  } else {
+    node.setResidual(0) ;
+    node.setErrResidual(0) ;
+  }
 }
 
 //=========================================================================

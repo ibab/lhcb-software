@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.23 2007-12-10 08:40:17 wouter Exp $
+// $Id: TrackKalmanFilter.h,v 1.24 2008-01-18 14:45:58 wouter Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -14,6 +14,9 @@
 // from TrackEvent
 #include "Event/Track.h"
 #include "Event/FitNode.h"
+
+// From LoKi
+#include "LoKi/Range.h"
 
 /** @class TrackKalmanFilter TrackKalmanFilter.h
  *  
@@ -42,6 +45,11 @@ public:
   StatusCode fit( LHCb::Track& track ) ;
 
 protected:
+  typedef std::vector<LHCb::Node*> NodeContainer ;
+  typedef LoKi::Range_<NodeContainer> NodeRange;
+
+  // ! Fit a range of nodes
+  StatusCode fit( LHCb::Track& track, NodeRange& nodes, const Gaudi::TrackSymMatrix& seedCov ) const ;
 
   //! predict the state at this node
   StatusCode predict( LHCb::FitNode& node, LHCb::State& state ) const;  
@@ -62,6 +70,9 @@ protected:
 
   //! smoother for bidirectional fit nodes
   StatusCode biSmooth( LHCb::FitNode& node0, bool upstream ) const;
+
+  //! update the residual such that it corresponds the the current state in the node
+  void updateResidual( LHCb::FitNode& node ) const ;
 
   // ! check that the contents of the cov matrix are fine
   StatusCode checkInvertMatrix( const Gaudi::TrackSymMatrix& mat ) const;
