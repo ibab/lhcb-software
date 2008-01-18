@@ -1,4 +1,4 @@
-// $Id: MCSTDepositMonitor.cpp,v 1.2 2007-01-10 16:02:21 cattanem Exp $
+// $Id: MCSTDepositMonitor.cpp,v 1.3 2008-01-18 10:15:08 mneedham Exp $
 
 // BOOST!
 #include "boost/lexical_cast.hpp"
@@ -36,6 +36,7 @@ MCSTDepositMonitor::MCSTDepositMonitor( const std::string& name,
 {
   // constructer
   declareProperty("DetType", m_detType = "TT");
+  declareProperty("InputData",  m_depositLocation = MCSTDepositLocation::TTDeposits );
 }
 
 MCSTDepositMonitor::~MCSTDepositMonitor()
@@ -54,7 +55,6 @@ StatusCode MCSTDepositMonitor::initialize()
   m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
 
   // Determine the location of the ST deposits
-  m_depositLocation = MCSTDepositLocation::TTDeposits;
   STDetSwitch::flip(m_detType,m_depositLocation);
 
   return StatusCode::SUCCESS;

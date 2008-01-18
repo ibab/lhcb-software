@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.cpp,v 1.13 2007-11-23 13:49:10 mneedham Exp $
+// $Id: STClusterResolution.cpp,v 1.14 2008-01-18 10:15:10 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -49,6 +49,7 @@ STClusterResolution::STClusterResolution(const std::string& name,
   this->declareProperty("SelectorName", m_selectorName = "MCParticleSelector" );
   this->declareProperty("DetType", m_detType = "TT");
   this->declareProperty("AsctLocation", m_asctLocation = "TTClusters2MCHits");
+  this->declareProperty("InputData", m_clusterLocation = STClusterLocation::TTClusters);
 }
 
 STClusterResolution::~STClusterResolution()
@@ -77,7 +78,6 @@ StatusCode STClusterResolution::initialize()
 
   m_poca = tool<ITrajPoca>( "TrajPoca" );
 
-  m_clusterLocation = STClusterLocation::TTClusters;
   STDetSwitch::flip(m_detType,m_clusterLocation);
   m_asctLocation = m_clusterLocation+"2MCHits";
 

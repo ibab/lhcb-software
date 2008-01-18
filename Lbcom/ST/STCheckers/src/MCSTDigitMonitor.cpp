@@ -1,4 +1,4 @@
-// $Id: MCSTDigitMonitor.cpp,v 1.3 2007-11-23 13:49:10 mneedham Exp $
+// $Id: MCSTDigitMonitor.cpp,v 1.4 2008-01-18 10:15:08 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -28,6 +28,7 @@ MCSTDigitMonitor::MCSTDigitMonitor( const std::string& name,
 {
   // constructer
   declareProperty("DetType", m_detType = "TT");
+  declareProperty("InputData", m_digitLocation = MCSTDigitLocation::TTDigits );
 }
 
 MCSTDigitMonitor::~MCSTDigitMonitor()
@@ -39,11 +40,13 @@ StatusCode MCSTDigitMonitor::initialize()
 {
   // Set the top directory to IT or TT.
   if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
+
+  StatusCode sc = GaudiHistoAlg::initialize();
+  if (sc.isFailure()) return Error("Failed to initialize", sc);
   
-  m_digitLocation = MCSTDigitLocation::TTDigits;
   STDetSwitch::flip(m_detType,m_digitLocation);
 
-  return GaudiHistoAlg::initialize();
+  return sc;
 }
 
 StatusCode MCSTDigitMonitor::execute()

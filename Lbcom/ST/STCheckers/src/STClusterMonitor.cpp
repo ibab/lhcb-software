@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.5 2007-12-11 10:12:40 mneedham Exp $
+// $Id: STClusterMonitor.cpp,v 1.6 2008-01-18 10:15:09 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -34,6 +34,8 @@ STClusterMonitor::STClusterMonitor( const std::string& name,
   // constructer
   declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
   declareProperty("DetType", m_detType = "TT"); 
+  declareProperty("InputData", m_clusterLocation = STClusterLocation::TTClusters);
+
 }
 
 STClusterMonitor::~STClusterMonitor() { }
@@ -49,7 +51,6 @@ StatusCode STClusterMonitor::initialize()
   m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
 
   // Determine the location of the STClusters
-  m_clusterLocation = STClusterLocation::TTClusters;
   STDetSwitch::flip(m_detType,m_clusterLocation);
  
   // sig to noise tool

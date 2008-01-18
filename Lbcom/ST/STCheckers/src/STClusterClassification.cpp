@@ -1,4 +1,4 @@
-// $Id: STClusterClassification.cpp,v 1.4 2007-11-23 13:49:10 mneedham Exp $
+// $Id: STClusterClassification.cpp,v 1.5 2008-01-18 10:15:09 mneedham Exp $
 
 // BOOST
 #include "boost/lexical_cast.hpp"
@@ -40,8 +40,10 @@ STClusterClassification::STClusterClassification(const std::string& name,
   // constructer
   this->declareProperty("SpillVector", m_spillVector);
   this->declareProperty("DetType", m_detType = "TT");
+  declareProperty("inputData", m_clusterLocation = STClusterLocation::TTClusters);
 
   m_spillVector += "/", "/Prev/", "/PrevPrev/"; 
+
 
 }
 
@@ -56,7 +58,6 @@ StatusCode STClusterClassification::initialize()
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   m_hitLocation = MCHitLocation::TT;
-  m_clusterLocation = STClusterLocation::TTClusters;
   STDetSwitch::flip(m_detType,m_clusterLocation);
   STDetSwitch::flip(m_detType,m_hitLocation);
   m_asctLocation = m_clusterLocation + "2MCHits";

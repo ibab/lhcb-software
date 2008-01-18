@@ -1,4 +1,4 @@
-// $Id: STDigitMonitor.cpp,v 1.3 2007-11-23 13:49:10 mneedham Exp $
+// $Id: STDigitMonitor.cpp,v 1.4 2008-01-18 10:15:10 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -33,6 +33,7 @@ STDigitMonitor::STDigitMonitor( const std::string& name,
 {
   // constructer
   declareProperty("DetType", m_detType = "TT" );
+  declareProperty("InputData",m_dataLocation = STDigitLocation::TTDigits );
 }
 
 STDigitMonitor::~STDigitMonitor()
@@ -52,8 +53,7 @@ StatusCode STDigitMonitor::initialize()
   // detector element     
   m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
  
-  // Determine the location of the STDigits
-  m_dataLocation = STDigitLocation::TTDigits;
+  // flip  
   STDetSwitch::flip(m_detType,m_dataLocation); 
  
   return StatusCode::SUCCESS;
@@ -65,7 +65,7 @@ StatusCode STDigitMonitor::execute()
   const STDigits* digitsCont = get<STDigits>(m_dataLocation);
   
   // number of digits
-  plot((double)digitsCont->size(), 1, "Number of digits", 0., 10000., 500);
+  plot((double)digitsCont->size(), 1, "Number of digits", 0.,10000., 500);
 
   // histos per digit
   STDigits::const_iterator iterDigit = digitsCont->begin();

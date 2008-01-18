@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2008-01-18 M Needham
+ - Make all locations jobOptions 
+
 !=========================== STCheckers v2r3 2007-12-11 =======================
 ! 2007-12-11 M Needham
  - Bug fixes in some histo numbering
