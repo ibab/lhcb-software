@@ -2,6 +2,10 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2008-01-18 M Needham
+ - Remove all strips options from requirements
+ - Add next spill 
+
 !======================= STAlgorithms v2r6 2008-01-09 ========================
 ! 2008-01-08 M Needham
  - Warn if sector not found in MCSTDepositCreator

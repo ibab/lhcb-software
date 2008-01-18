@@ -1,9 +1,10 @@
+
 // time of flight vector - always check that correct number stations defined
 MCITDepositCreator.TofVector = {25.9, 28.3, 30.5};
 
 // to add machine background
-MCITDepositCreator.SpillVector = {"/","/Prev/","/PrevPrev/", "/LHCBackground/"};
-MCITDepositCreator.SpillTimes = {0.,-25.,-50., -3.3};
+MCITDepositCreator.SpillVector = {"/","/Prev/","/PrevPrev/", "Next", "/LHCBackground/"};
+MCITDepositCreator.SpillTimes = {0.,-25.,-50.,25. ,-3.3};
 
 
 // charge sharing function  for TT
@@ -77,7 +78,6 @@ ToolSvc.STSignalToNoiseToolIT.DetType = "IT";
 ToolSvc.STSignalToNoiseToolIT.ConversionToADC = 0.001;
 //MCITDepositCreator.scaling = 1.33;
 
-ITDigitCreator.allStrips = true;
-TTDigitCreator.allStrips = true;
-
-ITClusterKiller.DetType = "IT";
+//ITDigitCreator.allStrips = true;
+//TTDigitCreator.allStrips = true;
+//ITClusterKiller.DetType = "IT";
