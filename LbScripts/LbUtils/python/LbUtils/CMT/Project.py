@@ -1,9 +1,9 @@
 from LbUtils import Env
+from LbUtils.CMT import Package
 import logging
 import os
 import re
 from subprocess import Popen, PIPE
-
 
 class ProjectFile(object):
     def __init__(self, filename):
@@ -29,6 +29,7 @@ class Project(object):
         self._baselist = []
         self._clientlist = []
         self._packagelist = []
+        self._containedpackagelist = []
         self.setName(versiondir)
         self.setVersion()
         self.setProjectFile()
@@ -125,7 +126,22 @@ class Project(object):
             self.showBase()
         if showclient :
             self.showClient()
+    def addContainedPackage(self, packagepath):
+        newpack = Package.Package(packagepath, self)
+        self._containedpackagelist.append(newpack)
+    def getContainedPackages(self):
+        log = logging.getLogger()
+        for dn in os.walk(self._location,topdown=True,onerror=Package.onPackagePathError):
+            fullname = dn[0]
+            if Package.isPackage(fullname):
+                log.debug("found package: %s", fullname)
+                self.addContainedPackage(fullname)
+        
+    def showContainedPackages(self):
+        for p in self._containedpackagelist :
+            print "\t\t%s" % p.location()
 
+    
 def hasProjectFile(dirpath):
     hasfile = False
     log = logging.getLogger()
@@ -144,6 +160,8 @@ def hasProjectFile(dirpath):
     except OSError, msg :
         log.warning("Cannot open path %s" % msg)
     return hasfile
+
+
 
 def isProject(path):
     isproj = False

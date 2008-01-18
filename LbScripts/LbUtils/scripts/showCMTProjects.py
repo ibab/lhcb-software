@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: showCMTProjects.py,v 1.7 2008-01-17 10:28:59 hmdegaud Exp $
+# $Id: showCMTProjects.py,v 1.8 2008-01-18 19:34:44 hmdegaud Exp $
 
 from LbUtils.CMT import Project
 from LbUtils.Script import Script
@@ -60,7 +60,13 @@ class showCMTProjScript(Script):
         parser.add_option("-C", "--recurse-clients",
                           action = "store_true",
                           dest = "recurseclient",
-                          help = "recruse in the client direction")
+                          help = "recurse in the client direction")
+
+        parser.set_defaults(showcontainedpackages=False)
+        parser.add_option("--show-contained-packages",
+                          action = "store_true",
+                          dest = "showcontainedpackages",
+                          help = "show contained packages in the selected project(s)")
 
         
     def main(self):
@@ -86,14 +92,23 @@ class showCMTProjScript(Script):
         for p in projlist:
             if not options.recurseclient and not options.recursebase:
                 p.show(options.showdependencies, options.showbase, options.showclient)
+                if options.showcontainedpackages :
+                    p.getContainedPackages()
+                    p.showContainedPackages()
             else :
                 if options.recurseclient :
                     for proj, deps, packs in Project.walk(p, topdown=True, toclients=True):
                         proj.show(options.showdependencies, options.showbase, True)
+                        if options.showcontainedpackages :
+                            p.getContainedPackages()
+                            p.showContainedPackages()
                 else :
                     for proj, deps, packs in Project.walk(p, topdown=True, toclients=False):
                         proj.show(options.showdependencies, True, options.showclient)
-                    
+                        if options.showcontainedpackages :
+                            p.getContainedPackages()
+                            p.showContainedPackages()
+
         
 
 if __name__ == '__main__':
