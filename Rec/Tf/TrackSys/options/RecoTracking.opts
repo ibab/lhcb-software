@@ -51,6 +51,9 @@ Track.DetectorList  = { "ForwardPat",   "ForwardPreFit",   "ForwardFit"
                       , "AddExtraInfo"
                       };
 
+// Set of standard fitting options
+#include "$TRACKSYSROOT/options/Fitting.opts"
+
 // Forward pattern
 TrackForwardPatSeq.Members += { "PatForward" };
 ToolSvc.PatForwardTool.AddTTClusterName = "PatAddTTCoord";
@@ -128,15 +131,14 @@ CopyVelo.inputLocation = "Rec/Track/PreparedVelo";
 
 // Add the likelihood information
 TrackAddExtraInfoSeq.Members += { "TrackAddLikelihood" };
+TrackAddLikelihood.TrackMatching_likTool.otEff = 0.9;
+//TrackAddLikelihood.PatDownstream_likTool.otEff = 0.9;
 
 // Clone finding and flagging
 TrackAddExtraInfoSeq.Members += { "GaudiSequencer/TrackClonesSeq" };
 TrackClonesSeq.MeasureTime = true;
 #include "$TRACKSYSROOT/options/TrackClones.opts"
 
-// Set of standard fitting options
-#include "$TRACKSYSROOT/options/Fitting.opts"
-
-TrackAddLikelihood.TrackMatching_likTool.otEff = 0.9;
-//TrackAddLikelihood.PatDownstream_likTool.otEff = 0.9;
-
+// NeuralNet ghost probability TMVA package 
+TrackAddExtraInfoSeq.Members += { "NeuralNetTmva" };
+#include "$NNTOOLSROOT/options/NeuralNetTmva.opts"

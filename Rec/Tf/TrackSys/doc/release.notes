@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v4r13 2008-01-18 ======================
+! 2008-01-18 - Marco Cattaneo
+ - In RecoTracking.opts, sdd NeuralNetTmva ghost probability algorithm to end
+   of tracking sequence
+
 !============================ TrackSys v4r12 2007-13-11 ======================
 ! 2007-12-13 - Marco Cattaneo
  - Update NoFieldTracking.opts and VeloOpenTracking.opts to Tf tracking sequence
