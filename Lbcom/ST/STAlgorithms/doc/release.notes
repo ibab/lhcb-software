@@ -2,11 +2,11 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!======================= STAlgorithms v2r6 2008-01-18 ========================
 ! 2008-01-18 M Needham
- - Remove all strips options from requirements
- - Add next spill 
+ - Disable allStrips options in Digit Creators
+ - Add Next spill to MC Deposit Creators
 
-!======================= STAlgorithms v2r6 2008-01-09 ========================
 ! 2008-01-08 M Needham
  - Warn if sector not found in MCSTDepositCreator
  - Allow to link MCHit to sector using point (rather than sensdetid)
