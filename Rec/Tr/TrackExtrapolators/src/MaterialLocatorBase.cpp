@@ -12,6 +12,7 @@ MaterialLocatorBase::MaterialLocatorBase(const std::string& type,
     m_maxNumIntervals( 20 ),
     m_maxDeviation( 5*Gaudi::Units::cm),
     m_maxDeviationAtRefstates( 2*Gaudi::Units::mm),
+    m_maxDeviationAtVeloRefstates( 0.5*Gaudi::Units::mm),
     m_scatteringtool("StateThickMSCorrectionTool"),
     m_dedxtool("StateSimpleBetheBlochEnergyCorrectionTool"),
     m_elecdedxtool("StateElectronEnergyCorrectionTool")
@@ -123,17 +124,20 @@ size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
       if( !refstates.empty()) {
 	while(  (nextnode = next(inode)) != nodes.end() && nodes.size() < maxnumnodes ) {
 	  std::vector<LHCb::StateVector>::const_iterator worstref = refstates.end() ;
-	  double deviation(0) ;
+	  double reldeviation(0) ;
 	  for(std::vector<LHCb::StateVector>::const_iterator iref = refstates.begin() ;
 	      iref != refstates.end(); ++iref) 
 	    if( inode->z() < iref->z() && iref->z() < nextnode->z() ) {
-	      double thisdeviation = pointerror( *inode, *nextnode, *iref ) ;
-	      if( thisdeviation > deviation ) {
-		deviation = thisdeviation ;
+	      double thisdeviation    = pointerror( *inode, *nextnode, *iref ) ;
+	      double thisreldeviation =  thisdeviation / 
+		( iref->z() < StateParameters::ZEndVelo ? 
+		  m_maxDeviationAtVeloRefstates : m_maxDeviationAtRefstates ) ;
+	      if( thisreldeviation > reldeviation ) {
+		reldeviation = thisreldeviation ;
 		worstref = iref ;
 	      }
 	    }
-	  if( deviation > m_maxDeviationAtRefstates && worstref!=refstates.end()) {
+	  if( reldeviation > 1 && worstref!=refstates.end()) {
 	    nodes.insert(nextnode,*worstref) ;
 	  }
 	  else 
