@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-01-19 - Vanya BELYAEV
+ - LHCbMath/MatrixUtils.h
+    add new function Gaudi::Math::mult for evaluation of v1^T*M*v2
+ 
 !========================= LHCbMath v2r5 2008-01-16 ==========================
 ! 2008-01-15 - Vanya BELYAEV
 

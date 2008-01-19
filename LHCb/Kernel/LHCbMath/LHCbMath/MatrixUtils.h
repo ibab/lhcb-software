@@ -1,4 +1,4 @@
-// $Id: MatrixUtils.h,v 1.5 2008-01-15 18:11:51 ibelyaev Exp $
+// $Id: MatrixUtils.h,v 1.6 2008-01-19 21:02:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_MATRIXUTILS_H
 #define LHCBMATH_MATRIXUTILS_H 1
@@ -1092,6 +1092,31 @@ namespace Gaudi
       }
     }
     // =========================================================================
+    /**  useful shortcut for product of vector, matrix and vector (v1^T*M*v2)
+     *  @param vct1 the first vector 
+     *  @param mtrx the matrix  
+     *  @param vct2 the second vector 
+     *  @return the product (v1^T*M*v2) 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-19
+     */
+    template<class T, class T1, class T2, class R, unsigned int D1, unsigned int D2>
+    T mult 
+    ( const ROOT::Math::SVector<T1,D1>&     vct1  ,
+      const ROOT::Math::SMatrix<T,D1,D2,R>& mtrx  , 
+      const ROOT::Math::SVector<T2,D2>&     vct2  ) 
+    {
+      T result = 0 ;
+      for ( unsigned int i = 0 ; i < D1 ; ++i ) 
+      {
+        for ( unsigned int j = 0 ; j < D2 ; ++j )
+        { result += vct1(i) * mtrx(i,j) * vct2(j) ; } 
+      }
+      return result ;
+    }
+    
+      
+
   } // end of namespace Math  
 } // end of namespace Gaudi
 
