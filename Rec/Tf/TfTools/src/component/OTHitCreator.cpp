@@ -76,7 +76,9 @@ namespace Tf
       m_sortedhits.reserve(128) ;
     }
 
-    inline bool compareHitX( const Tf::OTHit* lhs, const Tf::OTHit* rhs) { return lhs->xT() < rhs->xT() ; }
+    struct compareHitX {
+       bool operator()(const Tf::OTHit* lhs, const Tf::OTHit* rhs) const { return lhs->xT() < rhs->xT() ; }
+    };
 
     /// Decode this module
     size_t OTModule::loadHits(const IOTRawBankDecoder& decoder,
@@ -126,7 +128,7 @@ namespace Tf
         m_sortedhits.reserve(m_ownedhits.size()) ;
         for(HitContainer::const_iterator it = m_ownedhits.begin();
             it !=  m_ownedhits.end(); ++it) m_sortedhits.push_back( &(*it) ) ;
-        std::sort( m_sortedhits.begin(), m_sortedhits.end(), compareHitX) ;
+        std::sort( m_sortedhits.begin(), m_sortedhits.end(), compareHitX() ) ;
 
         m_isloaded = true ;
       }

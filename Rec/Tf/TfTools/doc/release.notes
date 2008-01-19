@@ -3,6 +3,8 @@
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2008-01-19 - Gerhard Raven
+ - use a small struct instead of function pointer in std::sort to allow inlining
 
 !============================ TfTools v1r3 2007-12-20 ========================
 ! 2007-12-18 - Manuel Schiller

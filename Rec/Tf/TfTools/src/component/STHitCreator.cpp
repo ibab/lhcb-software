@@ -4,7 +4,7 @@
  *
  *  Implementation file for class : Tf::STHitCreator
  *
- *  $Id: STHitCreator.cpp,v 1.2 2007-10-12 08:16:37 cattanem Exp $
+ *  $Id: STHitCreator.cpp,v 1.3 2008-01-19 12:49:55 graven Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -94,7 +94,9 @@ namespace Tf
       }
     }
 
-    inline bool compareHitX( const Tf::STHit* lhs, const Tf::STHit* rhs) { return lhs->xT() < rhs->xT() ; }
+    struct compareHitX {
+      bool operator()(const Tf::STHit* lhs, const Tf::STHit* rhs) const { return lhs->xT() < rhs->xT() ; }
+    };
 
     void STDetector::loadHits()
     {
@@ -134,7 +136,7 @@ namespace Tf
             for( STModule::HitContainer::const_iterator ihit = (*imodule)->ownedhits().begin() ;
                  ihit != (*imodule)->ownedhits().end(); ++ihit)
               thehits.push_back( &(*ihit) ) ;
-            std::sort( begin, thehits.end(),compareHitX) ;
+            std::sort( begin, thehits.end(),compareHitX()) ;
             // now set the pointers from the module
             (*imodule)->setRange( begin, thehits.end() ) ;
           }
