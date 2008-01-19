@@ -1,10 +1,26 @@
+// $Id: DVAlgorithm.cpp,v 1.29 2008-01-19 10:35:16 ibelyaev Exp $
+// ============================================================================
+// Include 
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/IAlgContextSvc.h"
+// ============================================================================
+// DaVinciKernel
+// ============================================================================
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/IOnOffline.h"
-
-/// Standard constructor
-DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator ) 
-  : 
-  GaudiTupleAlg ( name , pSvcLocator )
+// ============================================================================
+/** @file
+ *  The implementatinio fiel for class DVAlgorithm
+ */                                                                 
+// ============================================================================
+// Standard constructor
+// ============================================================================
+DVAlgorithm::DVAlgorithm 
+( const std::string& name, 
+  ISvcLocator* pSvcLocator ) 
+  : GaudiTupleAlg ( name , pSvcLocator )
   //
   , m_desktop               ( 0 )
   , m_desktopName           ( "PhysDesktop" )
@@ -81,35 +97,55 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   declareProperty ( "PrintSelResult"    , m_printSelResult    = false           ) ;
   declareProperty ( "AvoidForcedOutput" , m_avoidEmptyOutput  = false           ) ;
   declareProperty ( "PreloadTools"      , m_preloadTools      = true            ) ;
-};
-//=============================================================================
+  //
+  // enforce the registration for algorithm context service
+  setProperty ( "RegisterForContextService" , true ).ignore() ;
+}
+// ============================================================================
 // Initialize the thing
-//=============================================================================
-StatusCode DVAlgorithm::initialize () {
+// ============================================================================
+StatusCode DVAlgorithm::initialize () 
+{
   
-  StatusCode sc = GaudiTupleAlg::initialize();  
-  if ( sc.isFailure() ) return sc;
+  // register for the algorithm context service 
+  IAlgContextSvc* ctx = 0 ;
+  if ( registerContext() ) { ctx = contextSvc() ; }  
+  // setup sentry/guard
+  Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
   
-  if ( m_avoidSelResult ) info() << "Avoiding SelResult" << endmsg; 
+  // initialize the base 
+  
+  StatusCode sc = GaudiTupleAlg::initialize();
+  if ( sc.isFailure() ) { return sc; }                          // RETURN 
+  
+
+  if ( !registerContext() || 0 == contextSvc() ) 
+  {
+    std::string mgs = "Registration for Algorithm Context Service is disabled." ;
+    Warning( mgs +  "Some tools/utilities could have the problems." );
+  }
+  
+  if ( m_avoidSelResult ) { info() << "Avoiding SelResult" << endmsg; }
+  
   
   // Load tools very
   sc = loadTools() ;
   if ( sc.isFailure() ) { return Error("Unable to load tools", sc ) ; }
   
-  if (m_decayDescriptor == "not specified"){
-    info() << "Decay Descriptor string not specified" << endreq;
-  } else{
-    info() << "Decay Descriptor: " << m_decayDescriptor << endreq;
-  }
+  if ( m_decayDescriptor == "not specified" )
+  { info() << "Decay Descriptor string not specified"   << endreq; } 
+  else
+  { info() << "Decay Descriptor: " << m_decayDescriptor << endreq; }
   
   debug() << "End of DVAlgorithm::initialize with " << sc << endreq;
   
   return sc;
 }
-//=============================================================================
+// ============================================================================
 // Load standard tools
-//=============================================================================
-StatusCode DVAlgorithm::loadTools() {
+// ============================================================================
+StatusCode DVAlgorithm::loadTools() 
+{
   
   if ( !m_preloadTools ) 
   { return Warning( "Not preloading tools", StatusCode::SUCCESS ) ; }
@@ -168,13 +204,18 @@ StatusCode DVAlgorithm::loadTools() {
   
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
+// ============================================================================
 // Execute
-//=============================================================================
+// ============================================================================
 StatusCode DVAlgorithm::sysExecute () 
 {
   
+  // register for the algorithm context service
+  IAlgContextSvc* ctx = 0 ;
+  if ( registerContext() ) { ctx = contextSvc() ; }
+  // setup sentry/guard
+  Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
+
   StatusCode sc = desktop()->getEventInput();
   if ( sc.isFailure()) 
   { return Error (  "Not able to fill PhysDesktop" , sc ) ; }
@@ -208,7 +249,7 @@ StatusCode DVAlgorithm::sysExecute ()
   
   return sc ;
 }
-//=============================================================================
+// ============================================================================
 void DVAlgorithm::setFilterPassed  (  bool    state  ) 
 {
   ///
@@ -216,7 +257,7 @@ void DVAlgorithm::setFilterPassed  (  bool    state  )
   m_setFilterCalled = true;
   return;
 }
-//=============================================================================
+// ============================================================================
 StatusCode DVAlgorithm::fillSelResult () {
 
   // Create and fill selection result object
@@ -237,10 +278,19 @@ StatusCode DVAlgorithm::fillSelResult () {
   return sc ;
 
 }
+// ============================================================================
+// Finalize the algorithm + post-actions
+// ============================================================================
+StatusCode DVAlgorithm::finalize () 
+{
 
-//=============================================================================
-StatusCode DVAlgorithm::finalize () {
-  
+  // register for the algorithm context service
+  IAlgContextSvc* ctx = 0 ;
+  if ( registerContext() ) { ctx = contextSvc() ; }
+  // setup sentry/guard
+  Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
+
+
   if ((m_printSelResult) && (!m_avoidSelResult)){
     
     if (m_countFilterWrite < m_countFilterPassed ){
@@ -272,13 +322,16 @@ StatusCode DVAlgorithm::finalize () {
   // finalize GaudiTupleAlg base class
   return GaudiTupleAlg::finalize();
 
-}
- 
-//=============================================================================
-void DVAlgorithm::imposeOutputLocation(const std::string& outputLocationString){
+} 
+// ============================================================================
+void DVAlgorithm::imposeOutputLocation(const std::string& outputLocationString)
+{
   if ( 0==desktop() ) {
     fatal() << "Desktop has not been created yet" << endmsg;
   }
   desktop()->imposeOutputLocation(outputLocationString);  
   return;  
 }
+// ============================================================================
+// The END 
+// ============================================================================
