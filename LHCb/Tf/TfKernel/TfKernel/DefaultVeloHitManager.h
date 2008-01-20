@@ -1,6 +1,11 @@
-// $Id: DefaultVeloHitManager.h,v 1.9 2007-09-19 13:48:19 krinnert Exp $
+// $Id: DefaultVeloHitManager.h,v 1.10 2008-01-20 15:39:43 krinnert Exp $
 #ifndef INCLUDE_TF_DEFAULTVELOHITMANAGER_H
 #define INCLUDE_TF_DEFAULTVELOHITMANAGER_H 1
+
+#include <iostream>
+#include <algorithm>
+
+#include "LoKi/Range.h"
 
 #include "Event/VeloLiteCluster.h"
 #include "Event/VeloCluster.h"
@@ -30,7 +35,10 @@ namespace Tf {
     using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_nZones;
     using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_data;
     using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_dataValid;
+    using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_eventExpired;
     using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_velo;
+    using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_stationsAll;
+    using VeloHitManager<SENSORTYPE,HIT,NZONES>::m_stationBySensorNumber;
 
   public:
 
@@ -38,6 +46,11 @@ namespace Tf {
     typedef typename VeloHitManager<SENSORTYPE,HIT,NZONES>::StationIterator        StationIterator;
     typedef typename VeloHitManager<SENSORTYPE,HIT,NZONES>::StationReverseIterator StationReverseIterator;
 
+  private:
+    
+    typedef LoKi::Range_<LHCb::VeloClusters>     ClusterRange;
+    typedef LoKi::Range_<LHCb::VeloLiteCluster::FastContainer> LiteClusterRange;
+  
   public:
 
     /// Retrieve interface ID
@@ -55,8 +68,13 @@ namespace Tf {
 
     virtual void prepareHits();
 
+    void prepareHits(StationIterator it) { prepareHits(*it); }          ///< Prepare hits for one station only
+    void prepareHits(StationReverseIterator rit) { prepareHits(*rit); } ///< Prepare hits for one station only
+    void prepareHits(Station* station);        ///< Prepare hits for one station only, implementation
+      
   private:
 
+    void prepareClusterRanges();
     void addHit(const LHCb::VeloLiteCluster& clu, float signal, HitBase::velo_rhit_tag);
     void addHit(const LHCb::VeloLiteCluster& clu, float signal, HitBase::velo_phihit_tag);
     void createPointerListsAndSort();
@@ -70,6 +88,9 @@ namespace Tf {
     std::string m_clusterLocation;
     std::string m_liteClusterLocation;
 
+    //= cache 
+    std::vector<ClusterRange>     m_clusterRanges;
+    std::vector<LiteClusterRange> m_liteClusterRanges;
   };
 
   //=============================================================================
@@ -99,6 +120,9 @@ namespace Tf {
     StatusCode sc = VeloHitManager<SENSORTYPE,HIT,NZONES>::initialize(); // must be executed first
     if (sc.isFailure()) return sc;  // error printed already by GaudiTool
 
+    m_clusterRanges.resize(m_stationBySensorNumber.size());
+    m_liteClusterRanges.resize(m_stationBySensorNumber.size());
+
     GaudiTool::debug() << "==> Initialize" << endmsg;
 
     return StatusCode::SUCCESS;
@@ -117,17 +141,88 @@ namespace Tf {
   }
 
   //=============================================================================
-  // Prepare the hits from Velo(Lite)Clusters
+  // Prepare the cluster ranges for hit preparation on demand
   //=============================================================================
   template <typename SENSORTYPE, typename HIT, int NZONES>
-  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::prepareHits()
+  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::prepareClusterRanges()
   {
     if ( m_fromClusters ) { // use full velo clusters as input
       LHCb::VeloClusters* clusters = GaudiTool::get<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
 
-      LHCb::VeloClusters::const_iterator iClus;
+      // invalidate all ranges
+      std::fill(m_clusterRanges.begin(), m_clusterRanges.end(),ClusterRange(clusters->end(),clusters->end()));
+      
+      LHCb::VeloClusters::iterator iClus = clusters->begin();
+      LHCb::VeloClusters::iterator start = iClus;
+      LHCb::VeloClusters::iterator stop  = start;
+      unsigned int currentSensorNumber   = (*start)->channelID().sensor();
+      
+      for( ; iClus != clusters->end(); ++iClus) {
+        if ( (*iClus)->channelID().sensor() != currentSensorNumber ) {
+          if (currentSensorNumber < m_stationBySensorNumber.size() && m_stationBySensorNumber[currentSensorNumber]) {
+            stop = iClus; 
+            m_clusterRanges[currentSensorNumber] = ClusterRange(start,stop);
+          }
+          start = iClus;
+          currentSensorNumber = (*iClus)->channelID().sensor();
+        } 
+      } // end loop over clusters
 
-      for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
+      // set the end interator of the last cluster range
+      if (currentSensorNumber < m_stationBySensorNumber.size() && m_stationBySensorNumber[currentSensorNumber]) {
+        stop = iClus; 
+        m_clusterRanges[currentSensorNumber] = ClusterRange(start,stop);
+      }
+    } else { // the lite cluster case
+      LHCb::VeloLiteCluster::FastContainer * liteClusters =
+        GaudiTool::get<LHCb::VeloLiteCluster::FastContainer>(LHCb::VeloLiteClusterLocation::Default);
+
+      // invalidate all ranges
+      std::fill(m_liteClusterRanges.begin(), m_liteClusterRanges.end(),LiteClusterRange(liteClusters->end(),liteClusters->end()));
+      
+      LHCb::VeloLiteCluster::FastContainer::iterator iClus = liteClusters->begin();
+      LHCb::VeloLiteCluster::FastContainer::iterator start = iClus;
+      LHCb::VeloLiteCluster::FastContainer::iterator stop  = start;
+      unsigned int currentSensorNumber   = start->channelID().sensor();
+
+      for(; iClus != liteClusters->end(); ++iClus) {
+        if ( iClus->channelID().sensor() != currentSensorNumber ) {
+          if (currentSensorNumber < m_stationBySensorNumber.size() && m_stationBySensorNumber[currentSensorNumber]) {
+            stop = iClus; 
+            m_liteClusterRanges[currentSensorNumber] = LiteClusterRange(start,stop);
+          }
+          start = iClus;
+          currentSensorNumber = iClus->channelID().sensor();
+        } 
+      } // end loop over lite clusters
+
+      // set the end interator of the last lite cluster range
+      if (currentSensorNumber < m_stationBySensorNumber.size() && m_stationBySensorNumber[currentSensorNumber]) {
+        stop = iClus; 
+        m_liteClusterRanges[currentSensorNumber] = LiteClusterRange(start,stop);
+      }      
+    }
+
+    m_eventExpired = false;
+  }
+
+  //=============================================================================
+  // Prepare the hits from Velo(Lite)Clusters in a given station
+  //=============================================================================
+  template <typename SENSORTYPE, typename HIT, int NZONES>
+  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::prepareHits(Station* station)
+  {
+    if ( m_dataValid || station->hitsPrepared() ) return;
+    if ( m_eventExpired ) {
+      prepareClusterRanges();
+    }
+    
+    if ( m_fromClusters ) { // use full velo clusters as input
+
+      LHCb::VeloClusters::const_iterator iClus = m_clusterRanges[station->sensorNumber()].begin();
+      LHCb::VeloClusters::const_iterator stop  = m_clusterRanges[station->sensorNumber()].end();
+
+      for( ; iClus != stop; ++iClus) {
 
         float signal = static_cast<float>((*iClus)->totalCharge());
 
@@ -144,12 +239,12 @@ namespace Tf {
       } // end loop over clusters
 
     } else { // the lite cluster case
-      LHCb::VeloLiteCluster::FastContainer * liteClusters =
-        GaudiTool::get<LHCb::VeloLiteCluster::FastContainer>(LHCb::VeloLiteClusterLocation::Default);
 
-      LHCb::VeloLiteCluster::FastContainer::const_iterator iClus;
+      LHCb::VeloLiteCluster::FastContainer::const_iterator iClus = m_liteClusterRanges[station->sensorNumber()].begin();
+      LHCb::VeloLiteCluster::FastContainer::const_iterator stop  = m_liteClusterRanges[station->sensorNumber()].end();
 
-      for(iClus = liteClusters->begin(); iClus != liteClusters->end(); ++iClus) {
+      unsigned int cnt = 0;
+      for( ; iClus != stop; ++iClus, ++cnt) {
 
         float signal = 100.0;
         // in ignore low charge cluster mode skip this cluster if high threshold bit unset
@@ -159,12 +254,37 @@ namespace Tf {
         }
 
         addHit(*iClus, signal, typename HIT::hit_type_tag());
-
+        
       } // end loop over lite clusters
     }
 
-    createPointerListsAndSort();
+    // create pointer lists and sort
+    station->clear();
+    unsigned int stationNumber = station->stationNumber();
+    unsigned int half          = station->veloHalf();
+    for (unsigned int zone=0; zone<NZONES; ++zone) {
+      typename std::vector<HIT>::iterator iH  = VeloHitManager<SENSORTYPE,HIT,NZONES>::m_data[half][stationNumber][zone].begin();
+      typename std::vector<HIT>::iterator end = VeloHitManager<SENSORTYPE,HIT,NZONES>::m_data[half][stationNumber][zone].end();
 
+      for ( ; iH != end; ++iH ) {
+        station->zone(zone).push_back(&*iH);
+      }
+    }
+    station->sort();
+    station->setHitsPrepared(true);
+  }
+
+  //=============================================================================
+  // Prepare the hits from Velo(Lite)Clusters
+  //=============================================================================
+  template <typename SENSORTYPE, typename HIT, int NZONES>
+  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::prepareHits()
+  {
+    for (StationIterator si = m_stationsAll.begin(); si != m_stationsAll.end(); ++si) {
+      if ( !(*si)->hitsPrepared() ) {
+        prepareHits(si);
+      }
+    }
     m_dataValid = true;
   }
 
@@ -192,31 +312,6 @@ namespace Tf {
     const unsigned int half          = static_cast<unsigned int>(ps->isRight());
     const unsigned int zone          = ps->zoneOfStrip(clu.channelID().strip());
     m_data[half][stationNumber][zone].push_back(VeloPhiHit(ps,clu,signal));
-  }
-
-  template <typename SENSORTYPE, typename HIT, int NZONES>
-  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::createPointerListsAndSort()
-  {
-    for (unsigned int half=0; half<VeloHitManager<SENSORTYPE,HIT,NZONES>::m_nHalfs; ++ half) {
-
-      for (StationIterator iS = VeloHitManager<SENSORTYPE,HIT,NZONES>::m_stationsHalf[half].begin();
-           iS != VeloHitManager<SENSORTYPE,HIT,NZONES>::m_stationsHalf[half].end();
-           ++iS ) {
-        Station* station = *iS;
-        station->clear();
-        unsigned int stationNumber = station->stationNumber();
-        for (unsigned int zone=0; zone<NZONES; ++zone) {
-          typename std::vector<HIT>::iterator iH  = VeloHitManager<SENSORTYPE,HIT,NZONES>::m_data[half][stationNumber][zone].begin();
-          typename std::vector<HIT>::iterator end = VeloHitManager<SENSORTYPE,HIT,NZONES>::m_data[half][stationNumber][zone].end();
-
-          for ( ; iH != end; ++iH ) {
-            station->zone(zone).push_back(&*iH);
-          }
-        }
-        station->sort();
-      }
-
-    }
   }
 
 }

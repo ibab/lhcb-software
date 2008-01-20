@@ -1,4 +1,4 @@
-// $Id: VeloSensorHits.h,v 1.6 2007-09-11 11:04:51 krinnert Exp $
+// $Id: VeloSensorHits.h,v 1.7 2008-01-20 15:39:43 krinnert Exp $
 #ifndef INCLUDE_TF_VELOSENSORHITS_H
 #define INCLUDE_TF_VELOSENSORHITS_H 1
 
@@ -162,6 +162,12 @@ namespace Tf {
     /// strict weak ordering
     bool operator< (const VeloSensorHits<SENSORTYPE,DATATYPE,ZONES>& rhs) const;
 
+    /// check whether the hits in this station are prepared
+    bool hitsPrepared() const { return m_hitsPrepared; }
+
+    /// alter the hit preparation flag
+    void setHitsPrepared(const bool flag = true) { m_hitsPrepared = flag; }
+
   private:
 
     /// Construction without providing a sensor makes no sense
@@ -265,6 +271,8 @@ namespace Tf {
     const SENSORTYPE* m_sensor;
 
     container_type m_data[ZONES];
+
+    bool m_hitsPrepared;
   };
 
   //----------------------------------------------------------------------
@@ -281,6 +289,7 @@ namespace Tf {
   inline void VeloSensorHits<SENSORTYPE,DATATYPE,ZONES>::clear()
   {
     for (unsigned int zone=0; zone<ZONES; ++zone) m_data[zone].clear();
+    m_hitsPrepared = false;
   }
 
   template<typename SENSORTYPE, typename DATATYPE, unsigned int ZONES>
@@ -296,6 +305,7 @@ namespace Tf {
   template<typename SENSORTYPE, typename DATATYPE, unsigned int ZONES>
   VeloSensorHits<SENSORTYPE,DATATYPE,ZONES>::VeloSensorHits(const SENSORTYPE* sensor)
     : m_sensor(sensor)
+    , m_hitsPrepared(false)
   {;}
 
   template<typename SENSORTYPE, typename DATATYPE, unsigned int ZONES>

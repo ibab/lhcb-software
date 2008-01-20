@@ -1,4 +1,4 @@
-// $Id: VeloHitManager.h,v 1.5 2007-08-26 14:10:41 krinnert Exp $
+// $Id: VeloHitManager.h,v 1.6 2008-01-20 15:39:43 krinnert Exp $
 #ifndef INCLUDE_TF_VELOHITMANAGER_H
 #define INCLUDE_TF_VELOHITMANAGER_H 1
 
@@ -105,6 +105,50 @@ namespace Tf
     StationReverseIterator stationsAllReverseEnd()
     { if (!m_dataValid) { this->prepareHits(); } ; return m_stationsAll.rend(); }
 
+    /// Retrieve station iterator based on sensor number without preparing the hits
+    Station* stationNoPrep(const VeloSensorID sensorNumber)
+    { return m_stationBySensorNumber[sensorNumber]; }
+
+    /// Retrieve iterator into VELO half station list by sensor number without preparing the hits
+    StationIterator stationIterHalfNoPrep(const VeloSensorID sensorNumber)
+    { return m_stationIterHalfBySensorNumber[sensorNumber]; }
+    
+    /// Retrieve iterator into full VELO station list by sensor number without preparing the hits
+    StationIterator stationIterAllNoPrep(const VeloSensorID sensorNumber)
+    { return m_stationIterAllBySensorNumber[sensorNumber]; }
+    
+    /// Retrieve iterator to first station in a VELO half without preparing the hits
+    StationIterator stationsHalfBeginNoPrep(const VeloHalfID half)
+    { return m_stationsHalf[half].begin(); }
+
+    /// Retrieve iterator to the end of stations in a VELO half without preparing the hits
+    StationIterator stationsHalfEndNoPrep(const VeloHalfID half)
+    { return m_stationsHalf[half].end(); }
+
+    /// Retrieve reverse iterator to last station in a VELO half without preparing the hits
+    StationReverseIterator stationsHalfReverseBeginNoPrep(const VeloHalfID  half)
+    { return m_stationsHalf[half].rbegin(); }
+
+    /// Retrieve reverse iterator to the reverse end of stations in a VELO half without preparing the hits
+    StationReverseIterator stationsHalfReverseEndNoPrep(const VeloHalfID  half)
+    { return m_stationsHalf[half].rend(); }
+
+    /// Retrieve iterator to first station in a VELO half without preparing the hits
+    StationIterator stationsAllBeginNoPrep()
+    { return m_stationsAll.begin(); }
+
+    /// Retrieve iterator to the end of stations in a VELO half without preparing the hits
+    StationIterator stationsAllEndNoPrep()
+    { return m_stationsAll.end(); }
+
+    /// Retrieve reverse iterator to last station in a VELO half without preparing the hits
+    StationReverseIterator stationsAllReverseBeginNoPrep()
+    { return m_stationsAll.rbegin(); }
+
+    /// Retrieve reverse iterator to the reverse end of stations in a VELO half without preparing the hits
+    StationReverseIterator stationsAllReverseEndNoPrep()
+    { return m_stationsAll.rend(); }
+
     /// The preparation of hits, implemented by derived classes
     virtual void prepareHits() = 0;
 
@@ -143,8 +187,9 @@ namespace Tf
     /// The data
     mutable std::vector<HIT> m_data[m_nHalfs][m_nStations][NZONES];
 
-    /// Cache validity flag
+    /// Cache validity flags
     mutable bool m_dataValid;
+    mutable bool m_eventExpired;
 
     /// access to VELO detector element
     DeVelo* m_velo;
@@ -163,6 +208,7 @@ namespace Tf
                                                         const IInterface* parent)
     : GaudiTool(type, name, parent)
     , m_dataValid(false)
+    , m_eventExpired(true)
   {
     declareInterface<VeloHitManager<SENSORTYPE,HIT,NZONES> >(this);
 
@@ -260,7 +306,7 @@ namespace Tf
     std::sort(m_stationsAll.begin(),m_stationsAll.end(),typename VeloSensorHits<SENSORTYPE,HIT,NZONES>::ZLessThan());
 
     // create mapping from sensor numbers to station iterators
-    m_stationBySensorNumber.resize(maxSensorNumber+1);
+    m_stationBySensorNumber.resize(maxSensorNumber+1,0);
     m_stationIterHalfBySensorNumber.resize(maxSensorNumber+1);
     m_stationIterAllBySensorNumber.resize(maxSensorNumber+1);
 
@@ -290,7 +336,6 @@ namespace Tf
   {
     if ( IncidentType::EndEvent == incident.type() ){
       this->clearHits();
-      m_dataValid = false;
     }
   }
 
@@ -313,6 +358,7 @@ namespace Tf
     }
 
     m_dataValid = false;
+    m_eventExpired = true;
   }
 
 } // namespace Tf

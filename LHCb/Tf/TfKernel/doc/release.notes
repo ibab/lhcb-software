@@ -4,6 +4,14 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2008-01-20 - Kurt Rinnert
+ - added hit preparation on demand to the VELO hit managers. Client code that
+   uses this feature needs to access the stations via the new 'NoPrep' methods
+   and take care of preparing the hits by calling prepareHits(Station*).
+   An example can be found in PatVeloSpaceTool.
+   Code not using this feature is not affected.  Profiling with callgrind
+   shows that no runtime overhead is introduced by this change.   
+
 !============================ TfKernel v2r2 2007-12-20 =======================
 ! 2007-12-19 - Olivier Callot
  - Add new values in HitBase Estatus enum, mainly for TT hits.
