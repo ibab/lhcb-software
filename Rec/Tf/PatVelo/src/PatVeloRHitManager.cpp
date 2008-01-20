@@ -1,4 +1,4 @@
-// $Id: PatVeloRHitManager.cpp,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatVeloRHitManager.cpp,v 1.2 2008-01-20 15:46:37 krinnert Exp $
 
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
@@ -65,6 +65,7 @@ namespace Tf {
         DefaultStation*    defaultStation = *si;
         unsigned int defaultStationNumber = defaultStation->stationNumber();
         Station* station =  m_stationsHalf[half][defaultStationNumber];
+        if (station->hitsPrepared()) continue;
         station->clear();
 
         for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over inner/outer zones
@@ -78,13 +79,39 @@ namespace Tf {
             station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
           }
         }
+        station->setHitsPrepared(true);
       }
     }
     m_dataValid = true;
   }
+  
+  //=============================================================================
+  // Preparation of measurements for one station, actual implementation
+  //=============================================================================
+  void PatVeloRHitManager::prepareHits(Station* station) 
+  {
+    DefaultStation*    defaultStation = m_defaultHitManager->stationNoPrep(station->sensorNumber());
+    if (!defaultStation->hitsPrepared()) {
+      m_defaultHitManager->prepareHits(defaultStation);
+    }
+    unsigned int defaultStationNumber = defaultStation->stationNumber();
+    unsigned int half = station->veloHalf();
+
+    for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over inner/outer zones
+      Tf::VeloRHitRange hits = defaultStation->hits(zone);
+      Tf::VeloRHits::const_iterator hi   = hits.begin();
+      Tf::VeloRHits::const_iterator hend = hits.end();
+
+      m_data[half][defaultStationNumber][zone].reserve(std::distance(hi,hend));
+      for ( ; hi != hend; ++hi ) { // import all hits
+        m_data[half][defaultStationNumber][zone].push_back(PatVeloRHit(*hi)); 
+        station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
+      }
+    }
+    station->setHitsPrepared(true);
+  }
+
 }
-
-
 
 
 

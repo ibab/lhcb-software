@@ -4,6 +4,12 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-01-20 - Kurt Rinnert
+ - modified the space tracking so it uses the new hit preparation on demand 
+   features in TfKernel.  Runtime performance of the standard Brunel tracking
+   sequence is not affected.  In certain trigger scenarios (eg. when only
+   pursuing 4 space tracks) the tracking sequence is now ~10% faster.
+
 !========================== PatVelo v3r2 2007-12-11 ==========================
 ! 2007-12-11 - David Hutchcroft
  - Fixed divide by zero in log file output when PatVeloGeneralTracking ran on

@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.8 2007-10-16 08:56:39 dhcroft Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.9 2008-01-20 15:46:37 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -173,8 +173,8 @@ namespace Tf {
 
     int zone = track.zone();
 
-    PatVeloRHitManager::StationIterator startStation = m_rHitManager->stationsAllBegin();
-    PatVeloRHitManager::StationIterator stopStation  = m_rHitManager->stationsAllEnd();
+    PatVeloRHitManager::StationIterator startStation = m_rHitManager->stationsAllBeginNoPrep();
+    PatVeloRHitManager::StationIterator stopStation  = m_rHitManager->stationsAllEndNoPrep();
     --stopStation;
     PatVeloRHitManager::StationIterator lastRStationIter;
     PatVeloRHitManager::StationIterator firstRStationIter;
@@ -182,8 +182,8 @@ namespace Tf {
 
     if ( track.backward() ) {
       // backward track
-      lastRStationIter  = m_rHitManager->stationIterAll(track.maxRSensor());
-      firstRStationIter = m_rHitManager->stationIterAll(track.minRSensor());
+      lastRStationIter  = m_rHitManager->stationIterAllNoPrep(track.maxRSensor());
+      firstRStationIter = m_rHitManager->stationIterAllNoPrep(track.minRSensor());
       step = +1;
       // get previous and next R sensor numbers on same side
       if (firstRStationIter != startStation) --firstRStationIter;
@@ -192,8 +192,8 @@ namespace Tf {
       if (lastRStationIter  != stopStation)  ++lastRStationIter;
     } else {
       // Forward track, i.e. last sensor is smaller than first one.
-      lastRStationIter  = m_rHitManager->stationIterAll(track.minRSensor());
-      firstRStationIter = m_rHitManager->stationIterAll(track.maxRSensor());
+      lastRStationIter  = m_rHitManager->stationIterAllNoPrep(track.minRSensor());
+      firstRStationIter = m_rHitManager->stationIterAllNoPrep(track.maxRSensor());
       step = -1;
       // get previous and next R sensor numbers on same side
       if (lastRStationIter  != startStation) --lastRStationIter;
@@ -217,16 +217,16 @@ namespace Tf {
 
     // loop over Phi sensors in station range of R hits on track
     PatVeloPhiHitManager::StationIterator firstPhiStationIter 
-      = m_phiHitManager->stationIterAll((*firstRStationIter)->sensor()->associatedPhiSensor()->sensorNumber());
+      = m_phiHitManager->stationIterAllNoPrep((*firstRStationIter)->sensor()->associatedPhiSensor()->sensorNumber());
     PatVeloPhiHitManager::StationIterator lastPhiStationIter  
-      = m_phiHitManager->stationIterAll((*lastRStationIter)->sensor()->associatedPhiSensor()->sensorNumber());
+      = m_phiHitManager->stationIterAllNoPrep((*lastRStationIter)->sensor()->associatedPhiSensor()->sensorNumber());
 
     PatVeloPhiHitManager::StationIterator phiStationIter = firstPhiStationIter;
     for ( ; lastPhiStationIter != phiStationIter; std::advance(phiStationIter,step) ) {    
       // try inner sector of phi sensor
       PatVeloPhiHitManager::Station* station = *phiStationIter;
-      //PatVeloPhiHitManager::Station* station = m_phiHitManager->station(sens);
-      if( !station->sensor()->isReadOut() ) continue; // jump sensors not in readout
+      if ( !station->sensor()->isReadOut() ) continue; // jump sensors not in readout
+      if ( !station->hitsPrepared() ) m_phiHitManager->prepareHits(station);
 
       double z = station->z();
       // estimated radius of track in this sensor

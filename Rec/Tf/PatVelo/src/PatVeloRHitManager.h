@@ -1,6 +1,8 @@
-// $Id: PatVeloRHitManager.h,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatVeloRHitManager.h,v 1.2 2008-01-20 15:46:37 krinnert Exp $
 #ifndef INCLUDE_TF_PATVELORHITMANAGER_H
 #define INCLUDE_TF_PATVELORHITMANAGER_H 1
+
+#include <bitset>
 
 #include "PatVeloHit.h"
 #include "TfKernel/ExtendedVeloRHitManager.h"
@@ -32,8 +34,12 @@ namespace Tf {
       StatusCode initialize(); ///< Tool initialization
       StatusCode   finalize(); ///< Tool finalize
 
-      virtual void prepareHits();
+      virtual void prepareHits(); ///< Prepare all hits
 
+      void prepareHits(StationIterator it) { prepareHits(*it); }          ///< Prepare hits for one station only
+      void prepareHits(StationReverseIterator rit) { prepareHits(*rit); } ///< Prepare hits for one station only
+      void prepareHits(Station* station);        ///< Prepare hits for one station only, implementation
+      
   };
 }
 #endif // INCLUDE_TF_PATVELORHITMANAGER_H
