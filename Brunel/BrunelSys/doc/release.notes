@@ -3,9 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v32r3>2007-12-21 Brunel v32r3</A></H1><PRE>
+</PRE><H1><A NAME=v32r3>2008-01-21 Brunel v32r3</A></H1><PRE>
 This version uses projects Gaudi v19r7, LHCb v23r3, Lbcom v6r14, Rec v5r3
- and DDDB v1r* (SQLDDDB v3r1 or greater), ParamFiles v7r0, FieldMap v4r7
+ and DDDB v1r* (SQLDDDB v3r1 or greater), ParamFiles v7r1, FieldMap v4r7
 
 This is a development version with tracking pattern recognition based on the Tf
 framework.
@@ -15,11 +15,16 @@ framework.
     by the TransportSvc. A summary of recovered errors is printed at the end.
     See the <a href="http://indico.cern.ch/materialDisplay.py?contribId=5&materialId=slides&confId=10184">presentation at T-Rec meeting, 17.12.2007</a>
     (DetDesc v18r3, DetDescSvc v1r16)
-  . In valgrind.job, use the new ROOT suppressions file available from LCG_54 
+  . In valgrind.job, use the new ROOT suppressions file available from LCG_54
+  . In RecoTracking.opts, add NeuralNetTmva ghost probability algorithm to end
+    of tracking sequence. Needs ParamFiles v7r1 or greater
+    (TrackSys v4r13, NNTools v1r2) 
 
 - New features
   . Possibility to switch off drift times in OT pattern recognition
     (TfKernel v2r2, TfTools v1r3)
+  . Modified the space tracking so it uses the new hit preparation on demand 
+    features in TfKernel (PatVelo v3r3, TfKernel v2r2)
 
 - Bug fixes
   . BankKiller (used by Calorimeter) no longer prints an error every time a MDF
