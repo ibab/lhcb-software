@@ -5,11 +5,12 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r3>2007-12-20 RecSys v5r3</A></H1><PRE>
+</PRE><H1><A NAME=v5r3>2008-01-21 RecSys v5r3</A></H1><PRE>
 This version uses Gaudi v19r7 and LHCb v23r3.
 
-- Packages modified: CaloReco v4r10, GlobalReco v6r15, TfTools v1r3,
-    TrackUtils v1r18
+- Packages modified: CaloReco v4r10, GlobalReco v6r15, NNTools v1r2, 
+    PatAlgorithms v3r3, PatVelo v3r3, TfTools v1r3, TrackMCTools v2r16,
+    TrackSys v4r13, TrackUtils v1r18
 
 - In CaloReco v4r10
   . Fix unprotected array index in CaloMergedPi0.cpp
@@ -17,10 +18,32 @@ This version uses Gaudi v19r7 and LHCb v23r3.
 - In GlobalReco v6r15
   . Protect against NaN in NeutralProtoPAlg::finalize()
 
+- In NNTools v1r2
+  . Change the option file options/NeuralNetTmva.opts to take the weights files
+    from $PARAMFILESROOT/data/. Needs ParamFiles v7r1 or greater
+
+- In PatVelo v3r3
+  . Modified the space tracking so it uses the new hit preparation on demand 
+    features in TfKernel.
+
+- In PatAlgorithms v3r3
+  . New algorithm PatMakeV0 to build V0 candidates. Requires PV to be found first
+    Resulting V0s in RecVertexLocation::V0 and track pairs in Rec/Track/FromKs.
+  . Modify PatDownstream to tag TT used hits with the option SeedFilter.
+  . Use new enum values to tag TT hits with meaningful names.
+
 - In TfTools v1r3
   . OTHitCreator now has job options to switch off using drift times in the
     pattern reco; the drift radius and resolution reported can also be set
     through job options
+  . Use a small struct instead of function pointer in std::sort to allow inlining
+
+- In TrackMCTools v2r16
+  . Bug fix in CleanPatTrackSelector
+
+- In TrackSys v4r13
+  . In RecoTracking.opts, add NeuralNetTmva ghost probability algorithm to end
+    of tracking sequence
 
 - In TrackUtils v1r18
   . Fix TrackV0Finder to follow changes in TwoProngVertex.h 
