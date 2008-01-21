@@ -108,7 +108,7 @@ struct USER : public qentry_t  {
   int  c_state;                  // consumer state (Active,Pause)   
   int  p_state;                  // producer state (Active,Wspace)  
   int  partid;                   // user partition ID       
-  char name[64];                 // user name         
+  char name[BM_USER_NAME_LEN];   // user name         
   int pid;                       // process id         
   RTL_ast_t c_astadd;            // consumer signal to be send     
   RTL_ast_t p_astadd;            // producer signal to be send     
@@ -207,7 +207,7 @@ struct EVENTDesc : public qentry_t  {    // general event queue
 };
 
 struct CONTROL  {
-  int   buff_size;        // Event Buffer size
+  int buff_size;          // Event Buffer size
   int p_umax;             // maximum users
   int p_emax;             // maximum events
   int p_base;             // Memory base address
@@ -228,7 +228,7 @@ struct CONTROL  {
 
 struct BUFFERS  {
   struct BUFF {
-    char name[32];
+    char name[BM_BUFF_NAME_LEN];
     int  used;
   };
   int   p_bmax;           // Maximum number of buffers
@@ -248,8 +248,8 @@ struct BMDESCRIPT : public qentry_t  {
   unsigned int     buffer_size;
   int              owner;
   void*            lockid;
-  char             bm_name[32];
-  char             mutexName[32];
+  char             bm_name[BM_BUFF_NAME_LEN];
+  char             mutexName[BM_BUFF_NAME_LEN+4];
   RTL_ast_t        free_event;
   void*            free_event_param;
   RTL_ast_t        alloc_event;

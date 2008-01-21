@@ -5,7 +5,9 @@
 #include "RTL/rtl.h"
 
 enum MBM_dimensions  {
-  BM_MASK_SIZE  = 4
+  BM_MASK_SIZE     =  4,
+  BM_BUFF_NAME_LEN = 32,
+  BM_USER_NAME_LEN = 64
 };
 
 enum MBM_Internals  {
