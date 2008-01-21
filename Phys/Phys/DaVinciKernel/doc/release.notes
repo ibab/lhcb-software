@@ -3,6 +3,9 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-01-21 - Patrick Koppenburg for Rudolf Oldemann
+ - New method calcProjectedFlightDistance in IGeomDispCalculator
+
 ! 2008-01-19 - Vanya BELYAEV 
 
  - src/Lib/DVAlgorithm.cpp
@@ -14,9 +17,6 @@
        sentries/guards to register the algorithm for Algorithm ContextService
     3) there is warning message "intialize" methods if the registration 
        for context service  is disabled.
-
-
-   
 
 !======================== DaVinciKernel v6r10 2008-01-16 ====================
 ! 2008-01-16 - Patrick Koppenburg

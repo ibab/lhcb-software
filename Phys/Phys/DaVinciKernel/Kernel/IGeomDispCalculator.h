@@ -1,4 +1,4 @@
-// $Id: IGeomDispCalculator.h,v 1.8 2007-09-19 12:20:11 jpalac Exp $
+// $Id: IGeomDispCalculator.h,v 1.9 2008-01-21 12:36:24 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IGEOMDISPCALCULATOR_H 
 #define DAVINCIKERNEL_IGEOMDISPCALCULATOR_H 1
 
@@ -17,7 +17,7 @@ namespace LHCb {
 }
 
 
-static const InterfaceID IID_IGeomDispCalculator("IGeomDispCalculator", 2 , 1); 
+static const InterfaceID IID_IGeomDispCalculator("IGeomDispCalculator", 2 , 2); 
 
 /** @class IGeomDispCalculator IGeomDispCalculator.h Kernel/IGeomDispCalculator.h
  *  Interface for Geometrical Calculation Tool. 
@@ -166,6 +166,28 @@ class IGeomDispCalculator : virtual public IAlgTool {
                                                const LHCb::Particle& particle, 
                                                double& distance, 
                                                double& distanceError) const = 0; 
+
+  /**
+   * Calculates the projected distance and corresponding error 
+   * between a particle's decay vertex and another vertex. 
+   * Definition: l = r dot phat
+   * where l=projected distance 
+   *       r=vector from vertex to particle end-vertex 
+   *       phat = p/|p| = flight direction of the particle
+   *
+   * This variable has a sign. 
+   * A positive sign corresponds with a particle vertex displaced in the flight direction (signal-like)
+   * A negative sign corresponds with a particle vertex opposite to the flight direction (background-like)
+   * @param vertex The vertex
+   * @param particle the particle
+   * @param distance: set to the calculated distance
+   * @param distanceError: set to the calculated error on the distance
+   * @return StatusCode to report errors in the calculation
+   */
+  virtual StatusCode calcProjectedFlightDistance( const LHCb::VertexBase& vertex,
+                                                  const LHCb::Particle& particle, 
+                                                  double& distance, 
+                                                  double& distanceError) const = 0; 
 
 };
 
