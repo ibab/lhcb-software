@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.22 2007-09-19 12:51:26 jpalac Exp $
+// $Id: GeomDispCalculator.cpp,v 1.23 2008-01-21 12:26:30 pkoppenb Exp $
 
 // Include files
 
@@ -373,6 +373,29 @@ GeomDispCalculator::calcSignedFlightDistance( const LHCb::VertexBase& vertex,
   if (particle.momentum().Pz() < 0) distance*= -1;
   
   return sc;  
+}
+//==================================================================
+StatusCode 
+GeomDispCalculator::calcProjectedFlightDistance( const LHCb::VertexBase& vertex,
+                                                 const LHCb::Particle& particle, 
+                                                 double& distance, 
+                                                 double& distanceError) const
+{
+  const LHCb::Vertex* endVertex = particle.endVertex();
+
+  if (0 == endVertex) return StatusCode::FAILURE;
+
+  const Gaudi::XYZVector r = endVertex->position() - vertex.position();
+  const Gaudi::XYZVector phat = particle.momentum().Vect().Unit();
+  distance = r.Dot(phat);
+
+  // For calculating the error, neglect the direction component
+  const Gaudi::SymMatrix3x3 Vr = endVertex->covMatrix() + vertex.covMatrix();
+  const Gaudi::Vector3 deriv( phat.x(),  phat.y(),  phat.z() );
+
+  distanceError = sqrt(std::fabs(ROOT::Math::Dot(deriv,Vr*deriv)));
+  
+  return StatusCode::SUCCESS;  
 }
 //==================================================================
 // 

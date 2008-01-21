@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.11 2007-09-18 16:45:09 jpalac Exp $
+// $Id: GeomDispCalculator.h,v 1.12 2008-01-21 12:26:30 pkoppenb Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -105,6 +105,11 @@ public:
                                        const LHCb::Particle& particle, 
                                        double& distance, 
                                        double& distanceError) const;
+  
+  StatusCode calcProjectedFlightDistance( const LHCb::VertexBase& vertex,
+                                          const LHCb::Particle& particle, 
+                                          double& distance, 
+                                          double& distanceError) const;
   
 private:
 

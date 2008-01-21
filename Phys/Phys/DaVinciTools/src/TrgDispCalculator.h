@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.h,v 1.3 2007-09-18 16:45:09 jpalac Exp $
+// $Id: TrgDispCalculator.h,v 1.4 2008-01-21 12:26:30 pkoppenb Exp $
 #ifndef TRGDISPCALCULATOR_H
 #define TRGDISPCALCULATOR_H 1
 
@@ -74,6 +74,11 @@ public:
                                        const LHCb::Particle& particle, 
                                        double& distance, 
                                        double& distanceError) const;
+
+  StatusCode calcProjectedFlightDistance( const LHCb::VertexBase& vertex,
+                                          const LHCb::Particle& particle, 
+                                          double& distance, 
+                                          double& distanceError) const;
 
 private:
   /// Calculates the Impact Parameter

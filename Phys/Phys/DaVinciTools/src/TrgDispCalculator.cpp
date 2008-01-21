@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.cpp,v 1.11 2007-09-21 07:57:10 jpalac Exp $
+// $Id: TrgDispCalculator.cpp,v 1.12 2008-01-21 12:26:30 pkoppenb Exp $
 
 // Include files
 // from Gaudi
@@ -303,5 +303,28 @@ TrgDispCalculator::calcSignedFlightDistance( const LHCb::VertexBase& vertex,
   
   return sc;    
 
+}
+//==================================================================
+StatusCode 
+TrgDispCalculator::calcProjectedFlightDistance( const LHCb::VertexBase& vertex,
+                                                const LHCb::Particle& particle, 
+                                                double& distance, 
+                                                double& distanceError) const
+{
+  const LHCb::Vertex* endVertex = particle.endVertex();
+  
+  if (0 == endVertex) return StatusCode::FAILURE;
+  
+  const Gaudi::XYZVector r = endVertex->position() - vertex.position();
+  const Gaudi::XYZVector phat = particle.momentum().Vect().Unit();
+  distance = r.Dot(phat);
+  
+  // For calculating the error, neglect the direction component
+  const Gaudi::SymMatrix3x3 Vr = endVertex->covMatrix() + vertex.covMatrix();
+  const Gaudi::Vector3 deriv( phat.x(),  phat.y(),  phat.z() );
+  
+  distanceError = sqrt(std::fabs(ROOT::Math::Dot(deriv,Vr*deriv)));
+  
+  return StatusCode::SUCCESS;
 }
 //==================================================================
