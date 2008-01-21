@@ -185,6 +185,7 @@
    <constructor 
 	desc     = "Constructor with assigned key" 
 	argList  = "int key "
+	explicit = "TRUE"
 	initList = "KeyedObject&lt;int&gt;( key ), m_chi2PerDoF(0.0), m_nDoF(0), m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
       </constructor>
 

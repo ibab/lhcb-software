@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!======================= TrackEvent v4r10 2008-01-10 =========================
+! 2008-01-10 - Marco Cattaneo
+ - Make the Track(int key) constructor explicit
+
 !======================= TrackEvent v4r9 2007-12-04 ==========================
 !2007-12-04 - Wouter Hulsbergen
  - Changed 'Measurement::setTrajectory' method such that it compiles on windows
