@@ -189,5 +189,5 @@ double ResidualCovarianceTool::HCH_norm(LHCb::LHCbID i, LHCb::LHCbID j) const
     if (j == m_index[k]) ij=k+1;
    }
    assert(ii!=-1 && ij!=-1);
-   return m_HCH.fast(ii,ij);
+   return m_HCH(ii,ij);
 }
