@@ -16,8 +16,8 @@ use CaloAssociators   v6r4  Calo        # Olivier Deschamps
 # L0 trigger simulation                 # Maintainer
 use L0Calo            v9r11 L0          # Olivier Deschamps, Patrick Robbe
 use L0DU              v8r2  L0          # Olivier Deschamps   
-use L0Muon            v7r5  L0          # Andrei Tsarogorodtsev, Julien Cogan
-use PuVeto            v7r2  L0          # Marko Zupan
+use L0Muon            v7r6  L0          # Andrei Tsarogorodtsev, Julien Cogan
+use PuVeto            v7r3  L0          # Marko Zupan
 
 # Muon
 use MuonAssociators   v3r1  Muon        # Alessia Satta
@@ -36,11 +36,11 @@ use RichTools         v2r16 Rich        # Chris Jones
 use SiTools           v1r4  Si          # Matt Needham
 
 # Silicon Tracker
-use STAlgorithms      v2r5    ST        # Jeroen van Tilburg, Matt Needham
+use STAlgorithms      v2r6    ST        # Jeroen van Tilburg, Matt Needham
 use STAssociators     v1r5    ST        # Jeroen van Tilburg, Matt Needham
-use STCheckers        v2r3    ST        # Jeroen van Tilburg, Matt Needham
-use STDAQ             v3r3    ST        # Jeroen van Tilburg, Matt Needham
-use STTools           v3r4p1  ST        # Jeroen van Tilburg, Matt Needham
+use STCheckers        v2r4    ST        # Jeroen van Tilburg, Matt Needham
+use STDAQ             v3r4    ST        # Jeroen van Tilburg, Matt Needham
+use STTools           v3r5    ST        # Jeroen van Tilburg, Matt Needham
 
 # Velo
 use VeloAssociators   v2r3  Velo        # Tomasz Szumlak

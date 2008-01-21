@@ -6,13 +6,39 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r14>2007-12-21 LbcomSys v6r14</A></H1><PRE>
+</PRE><H1><A NAME=v6r14>2008-01-18 LbcomSys v6r14</A></H1><PRE>
 This version uses Gaudi v19r7 and LHCb v23r3
 
-- Packages modified: L0DU v8r2
+- Packages modified: L0DU v8r2, L0Muon v7r6, PuVeto v7r3, STAlgorithms v2r6,
+    STCheckers v2r4, STDAQ v3r4, STTools v3r5
 
 - In L0DU v8r2
   . Fix minor memory leak in L0ProcessorDataLocation initialize()
+
+- In L0Muon v7r6
+  . Add some if(msgLevel(MSG::DEBUG) around debug() statements in L0MuonAlg
+  . Prevent L0MuonCandidatesFromRaw from writing of empty containers in the TES.
+    This is done in order to gain time for the HLT.
+
+- In PuVeto v7r3
+  . Remove obosolete file PuVeto_load.cpp
+  . Change order of some nested loops in PuVetoAlg to make it faster...
+
+- In STAlgorithms v2r6
+  . Warn if sector not found in MCSTDepositCreator
+  . Allow to link MCHit to sector using point (rather than sensdetid)
+  . Disable allStrips options in Digit Creators
+  . Add Next spill to MC Deposit Creators
+
+- In STCheckers v2r4
+  . Make all locations jobOptions 
+
+- In STDAQ v3r4
+  . Use stripFraction function from Kernel instead of local version
+
+- In STTools v3r5
+  . Move STFun.h/.cpp to STKernel
+  . Move interstrip quantization function to STKernel
 
 </PRE><H1><A NAME=v6r13>2007-12-11 LbcomSys v6r13</A></H1><PRE>
 This version uses Gaudi v19r6 and LHCb v23r2
