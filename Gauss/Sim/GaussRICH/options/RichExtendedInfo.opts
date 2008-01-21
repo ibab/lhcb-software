@@ -1,4 +1,4 @@
-// $Id: RichExtendedInfo.opts,v 1.4 2006-03-15 15:07:16 jonrob Exp $
+// $Id: RichExtendedInfo.opts,v 1.5 2008-01-21 17:09:20 seaso Exp $
   
 /** @file
  *
@@ -12,6 +12,8 @@
 GiGa.ModularPL.GiGaPhysConstructorOp.RichActivateRichPhysicsProcVerboseTag=true;
 GiGa.StepSeq.Members  += { "RichG4StepAnalysis4/RichStepAgelExit" } ;
 GiGa.StepSeq.Members  += { "RichG4StepAnalysis5/RichStepMirrorRefl" } ;
+GiGa.StepSeq.Members  += { "RichG4StepAnalysis6/RichStepHpdRefl" } ;
+
 
 GiGaGetHitsAlg.RichOpticalPhotons = "/Event/MC/Rich/OpticalPhotons";
 GiGaGetHitsAlg.RichSegments       = "/Event/MC/Rich/Segments";
