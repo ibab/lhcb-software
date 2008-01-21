@@ -7,14 +7,14 @@ branches doc cmt
 # LHCb packages visible to all applications
 #===============================================================
 
-use GaudiConf	         v10r5
+use GaudiConf	         v10r6
 use GaudiObjDesc         v11r0
 
 #                                         Maintainer
 # Kernel packages
-use KernelSys             v7r0    Kernel  # Marco Cattaneo
+use KernelSys             v7r1    Kernel  # Marco Cattaneo
 use LHCbKernel            v8r0    Kernel  # Marco Cattaneo
-use LHCbMath              v2r4    Kernel  # Juan Palacios
+use LHCbMath              v2r5    Kernel  # Juan Palacios
 use Relations             v5r3    Kernel  # Ivan Belyaev
 use CaloKernel            v5r1    Calo    # Olivier Deschamps
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
@@ -35,7 +35,7 @@ use CaloDetXmlCnv         v3r1    Det     # Olivier Deschamps
 use MuonDet               v7r2    Det     # Alessia Satta, Alessio Sarti
 use Magnet                v3r6p1  Det     # N.N.
 use RichDet               v10r8   Det     # Chris Jones
-use STDet                 v3r8    Det     # Jeroen van Tilburg, Matt Needham
+use STDet                 v3r9    Det     # Jeroen van Tilburg, Matt Needham
 
 # Event data model
 use EventSys              v24r0   Event   # Marco Cattaneo
@@ -50,7 +50,7 @@ use GenEvent              v5r1    Event   # Gloria Corti
 use EventAssoc            v4r3    Event   # Ivan Belyaev
 use LinkerEvent           v3r2    Event   # Olivier Callot
 use PackedEvent           v3r2    Event   # Marco Cattaneo, Olivier Callot
-use TrackEvent            v4r9    Event   # Matt Needham
+use TrackEvent            v4r10   Event   # Matt Needham
 use HltEvent              v8r5    Event   # Jose Angel Hernando-Morata
 use VeloEvent             v16r2   Event   # Tomasz Szumlak, Chris Parkes
 
@@ -62,7 +62,7 @@ use CaloDAQ               v4r3    Calo    # Olivier Deschamps
 use SiDAQ                 v2r0    Si      # Matt Needham
 
 # Other stuff
-use LHCbAlgs              v2r13  Kernel  # Marco Cattaneo
+use LHCbAlgs              v2r14  Kernel  # Marco Cattaneo
 use MCInterfaces          v1r4   Kernel  # Marco Cattaneo et al.
 use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
 use L0Interfaces          v1r0   L0      # Olivier Deschamps
@@ -76,7 +76,7 @@ use CondDBEntityResolver  v4r0   Tools   # Marco Clemencic
 use CondDBUI              v2r7   Tools   # Marco Clemencic
 use SimComponents         v2r8   Sim     # Gloria Corti, Marco Cattaneo
 use MDF                   v3r0   DAQ     # Markus Frank
-use DaVinciKernel         v6r9   Phys    # Juan Palacios
+use DaVinciKernel         v6r10  Phys    # Juan Palacios
 use DaVinciMCKernel       v2r5   Phys    # Juan Palacios
 use DDDB                  v1r2   Det     # Marco Cattaneo
 use LoKi                  v7r0   Phys    # Ivan Belyaev
@@ -94,7 +94,7 @@ use Tell1Kernel           v1r1   DAQ     # Tomasz Szumlak
 use TfKernel              v2r2   Tf      # Stephanie Hansmann-Menzemer
 use PatKernel             v2r0   Tf      # Stephanie Hansmann-Menzemer
 use TsaKernel             v3r1   Tf      # Matt Needham
-use STKernel              v1r0   ST      # Matt Needham
+use STKernel              v1r1   ST      # Matt Needham
 
 # LHCb  Examples
 use DetDescChecks         v4r5   Det     # Ivan Belyaev

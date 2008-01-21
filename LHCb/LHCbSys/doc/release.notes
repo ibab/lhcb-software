@@ -5,15 +5,39 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r3>2007-12-21 LHCbSys v23r3</A></H1><PRE>
+</PRE><H1><A NAME=v23r3>2008-01-16 LHCbSys v23r3</A></H1><PRE>
 This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 
 - New packages:      MDF_DCAP v1r0 - DCAP plugin to read MDF files 
                      MDF_GFAL v1r0 - GFAL plugin to read MDF files 
                      MDF_RFIO v1r0 - RFIO plugin to read MDF files 
-- Packages modified: DetSys v11r2, DetDesc v18r3, DetDescSvc v1r16, MuonDet v7r2,
-    DetDescChecks v4r5, EventSys v24r0, DAQEvent v7r8, RecEvent v2r9, MDF v3r0,
-    DAQSys v3r8, CaloDAQ v4r3, DetCond v11r8, CondDBUI v2r7, TfKernel v2r2
+- Packages modified: GaudiConf v10r6, KernelSys v7r1, LHCbMath v2r5,
+    DetSys v11r2, DetDesc v18r3, DetDescSvc v1r16, MuonDet v7r2, STDet v3r9,
+    DetCond v11r8, CondDBUI v2r7, DetDescChecks v4r5, EventSys v24r0,
+    DAQEvent v7r8, RecEvent v2r9, TrackEvent v4r10, MDF v3r0, DAQSys v3r8,
+    CaloDAQ v4r3, TfKernel v2r2, DaVinciKernel v6r10, STKernel v1r1,
+    LHCbAlgs v2r14
+
+- In GaudiConf v10r6
+  . In DecodeRawEvent.opts and UnpackDigi.opts:
+    o Use AlgMap property to define the algorithms
+  . In DecodeRawEvent.opts:
+    o Add algorithm to decode ODIN
+    o Disable L0DU
+
+- In LHCbMath v2r5
+  . Split MatrixUtils.h into two files MatrixUtils.h and MatrixTransforms.h and
+    include functionality previously in MatrixUtils.h of Phys/VertexFit package 
+    See release notes for details of split.
+  . Add new function Gaudi::Math::mult for evaluation of v1^T*M*v2
+  . Add new file Kinematics.h to keep some pure mathematical functions useful
+    for kinematical calculations. Currently it contains the functions for 
+    evaluation of dispersions and sigmas  for mass and mass^2 and chi2 of mass:
+       *   - sigma2mass2   :   sigma^2(M^2)
+       *   - sigma2mass    :   sigma^2(M)  for M^2 > 0 
+       *   - sigmamass     :   sigma(M)    for M^2 > 0
+       *   - chi2mass      :   delta^2(M^2)/sigma^2(M^2) 
+  . Update(improve?) the doxygen comments for some other header files.
 
 - In DetDesc v18r3
   . New treatment of geometry overlaps:
@@ -23,6 +47,19 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
                           geometry error handling service 
     o DetDesc/VolumeIntersectionIntervals.h: Add new functions
     o LAssembly.cpp, LVolume.cpp, LogVolBase.cpp: Make use of new functions 
+  . Add new functions to GlobalToLocalDelta.{h,cpp}
+    o Obtain a global off-nominal correction D_global on top of the current total
+      transformation of a IGeometryInfo or IDetectorElement (T_global) starting
+      from a correction D' calculated at the local level of that IGeometryInfo
+      or IDetectorElement
+    o Obtain the global "delta" transformation corresponding to the local "delta"
+      of an IDetectorElement or IGeometryInfo
+    o estimate "off-nominal" delta matrix at local level, starting from either
+      total position or "off-nominal" corrections in an arbitrary frame,
+      independent of the detector element hierarchy.
+  . In 3DTransformationFunctions.h add method taking any MathCore 3D rotation
+    and estimating the equivalent Euler 321 rotation parameters.
+  . Remove functionality now in MathCore
 
 - In DetDescSvc v1r16
   . New treatment of geometry overlaps/errors in TransportSvc
@@ -32,6 +69,10 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
                           errors          (default  is true)
        "Protocol" (boolean) -> to activate/deactivate the protocol of the  
                           geomtery errors (default is "true")
+
+- In STDet v3r9
+  . DeSTSector: final changes to allow use of dead strip conditions
+  . Add test on the version to allow DC06 backwards compatibility
 
 - In DetDescChecks v4r5
   . Improved the error message of LoadDDDB in case of exceptions.
@@ -52,6 +93,9 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 
 - In RecEvent v2r9
   . Added keyedContTypeDef = true to TwoProngVertex
+
+- In TrackEvent v4r10
+  . Make the Track(int key) constructor explicit
 
 - In MDF v3r0
   . Remove the RFIO/DCAP,... plugins from MDF and make them separate packages.
@@ -80,12 +124,29 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
   . Added the possibility to specify a connection string on the command line of
     CondDBBrowser.py to open a database.
   . Fixed a bug (introduced in v2r6) that prevents the addition of new conditions
+  . Fixed a bug preventing to open a database.
 
 - In TfKernel v2r2
+  . Added hit preparation on demand to the VELO hit managers. Client code that
+    uses this feature needs to access the stations via the new 'NoPrep' methods
+    and take care of preparing the hits by calling prepareHits(Station*).
+    Code not using this feature is not affected.
   . Add new values in HitBase Estatus enum, mainly for TT hits.
   . added new member to OTHit which stores the RtRelation to be used to
     convert drift times to drift radii and make sure it is used everywhere
     (to have possibility to switch off using drift times in the pattern reco)
+
+- In DaVinciKernel v6r10
+  . Add interfaces IParticleTupleTool and IEventTupleTool for filling generic
+    nTuples
+  . Add interface IMassFit for mass-constrained fit.
+  . DVAlgorithm: Declare all tools as protected instead of private.
+
+- In STKernel v1r1
+  . Add STFun.h/.cpp [functions related to calculating interstrip fraction]
+
+- In LHCbAlgs v2r14
+  . Add createODIN algorithm, to create DAQ/ODIN object from ODIN RawBank
 
 </PRE><H1><A NAME=v23r2>2007-12-12 LHCbSys v23r2</A></H1><PRE>
 This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
