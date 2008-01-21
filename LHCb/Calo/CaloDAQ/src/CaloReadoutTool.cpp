@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.20 2008-01-10 13:56:13 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.21 2008-01-21 23:19:20 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -53,8 +53,7 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
   if( exist<LHCb::RawEvent>( m_raw ) ){
     rawEvt= get<LHCb::RawEvent>( m_raw );
   }else  {
-    warning() << "rawEvent not found at location '" << rootInTES() + m_raw 
-              << "'" << endmsg;
+    Warning( "rawEvent not found at location '" + rootInTES() + m_raw ).ignore();
     return false;
   }
       
@@ -225,6 +224,7 @@ bool CaloReadoutTool::checkSrc(int source){
     std::stringstream s("");
     s<< source;
     Warning("Another bank bank with same sourceID " + s.str() + " has already been read").ignore();
+    m_status.addStatus(source, LHCb::RawBankReadoutStatus::NonUnique );
   }
   else{
     m_readSources.push_back(source);
