@@ -59,6 +59,37 @@ private:
   IHistogram1D*        m_hNumRich1HpdqwRadiator;  
   IHistogram1D*        m_hNumRich2HpdqwRadiator;  
 
+  IHistogram1D* m_hNumRich1HpdNoRefl;
+  IHistogram1D* m_hNumRich2HpdNoRefl;
+  IHistogram1D* m_hNumRich1HpdNoReflSmall;
+  IHistogram1D* m_hNumRich2HpdNoReflSmall;
+
+  IHistogram1D* m_hNumRich1HpdRefl;
+  IHistogram1D* m_hNumRich2HpdRefl;
+  IHistogram1D* m_hNumRich1HpdReflSmall;
+  IHistogram1D* m_hNumRich2HpdReflSmall;
+
+  IHistogram1D* m_hNumRich1GasHpdRefl;
+  IHistogram1D* m_hNumRich1GasHpdReflSmall;
+  IHistogram1D* m_hNumRich1GasHpdBackScat;
+  IHistogram1D* m_hNumRich1GasHpdQWPCRefl;
+  IHistogram1D* m_hNumRich1GasHpdQWPCReflSmall;
+  IHistogram1D* m_hNumRich1GasHpdChromiumRefl;
+  IHistogram1D* m_hNumRich1GasHpdSiliconRefl;
+  IHistogram1D* m_hNumRich1GasHpdKovarRefl;
+  IHistogram1D* m_hNumRich1GasHpdKaptonRefl;
+
+  IHistogram1D* m_hNumRich1AerogelHpdKaptonRefl;
+
+  IHistogram1D* m_hNumRich2GasHpdRefl;
+  IHistogram1D* m_hNumRich2GasHpdReflSmall;
+  IHistogram1D* m_hNumRich2GasHpdBackScat;
+  IHistogram1D* m_hNumRich2GasHpdQWPCRefl;
+  IHistogram1D* m_hNumRich2GasHpdQWPCReflSmall;
+  IHistogram1D* m_hNumRich2GasHpdChromiumRefl;
+  IHistogram1D* m_hNumRich2GasHpdSiliconRefl;
+  IHistogram1D* m_hNumRich2GasHpdKovarRefl;
+  IHistogram1D* m_hNumRich2GasHpdKaptonRefl;
 
 
   std::string m_RichG4HistoPathSet3; ///< Histo path

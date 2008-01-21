@@ -1,4 +1,4 @@
-// $Id: RichG4EventHitCount.cpp,v 1.12 2007-01-12 15:32:08 ranjard Exp $
+// $Id: RichG4EventHitCount.cpp,v 1.13 2008-01-21 16:55:33 seaso Exp $
 // Include files
 
 
@@ -11,6 +11,8 @@
 // local
 #include "RichG4Hit.h"
 #include "RichG4RadiatorMaterialIdValues.h"
+#include "RichG4HpdReflectionFlag.h"
+
 //GEANT4
 #include "G4Event.hh"
 #include "G4EventManager.hh"
@@ -1207,12 +1209,16 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
     std::vector<int>TrajNumHitGasRich1( NumTrajR1,0);
     std::vector<int>TrajSatNumHitGasRich1( NumTrajR1,0);
+    std::vector<int>TrajSatNumHitGasRich1NoHpdRefl( NumTrajR1,0);
     std::vector<int>TrajNumHitAgelRich1( NumTrajR1Agel,0);
     std::vector<int>TrajSatNumHitAgelRich1( NumTrajR1Agel,0);
+    std::vector<int>TrajSatNumHitAgelRich1NoHpdRefl( NumTrajR1Agel,0);
     std::vector<int>TrajNumHitAgelWithRayleighRich1( NumTrajR1Agel,0);
     std::vector<int>TrajSatNumHitAgelWithRayleighRich1( NumTrajR1Agel,0);
+    std::vector<int>TrajSatNumHitAgelWithRayleighRich1NoHpdRefl( NumTrajR1Agel,0);
     std::vector<int>TrajNumHitGasRich2( NumTrajR2,0);
     std::vector<int>TrajSatNumHitGasRich2( NumTrajR2,0);
+    std::vector<int>TrajSatNumHitGasRich2NoHpdRefl( NumTrajR2,0);
 
     for (int ihcolb=0; ihcolb<NumRichCollection; ihcolb++) {
 
@@ -1228,6 +1234,14 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
         for (G4int ihb=0; ihb<nHitInCurCollb ; ihb++ ) {
 
           RichG4Hit* bHit = (*RHCB)[ihb];
+
+          //is it a reflected hit?    
+	       std::vector<bool> aHpdRefl = bHit->DecodeRichHpdReflectionFlag();
+	       bool areflectedInHpd= bHit->ElectronBackScatterFlag(); //plot without any bsc or refl
+         for(int ii=0; ii<(int)aHpdRefl.size() ; ++ii) 
+         {
+           if( aHpdRefl [ii]) areflectedInHpd=true; 
+	       }
 
           G4double aChTrackTotMom =  bHit->ChTrackTotMom() ;
           int ChtkId =  (int) (bHit-> GetChTrackID()) ;
@@ -1248,7 +1262,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
             //    <<ChTkPDGMass
             //    <<G4endl;
 
-          }
+          } //end if
 
           G4int NumRayleighScat = bHit->OptPhotRayleighFlag();
           
@@ -1262,35 +1276,36 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
                   if(NumRayleighScat == 0 ) {
                      TrajNumHitAgelRich1[it]++;
-                  }
+                  } //end if
                   
                 if( ChTkBeta >  ChTkBetaSaturatedCut) {
 
                   //               if(  ( aChTrackTotMom >  MinMomAgelCut)  &&
                   //    ( aChTrackTotMom <  MaxMomAgelCut ) ) {
                     TrajSatNumHitAgelWithRayleighRich1[it]++;
+                  if(!areflectedInHpd) TrajSatNumHitAgelWithRayleighRich1NoHpdRefl[it]++;
 
                   if(NumRayleighScat == 0 ) {
                     
-
                     TrajSatNumHitAgelRich1[it]++;
+                    if(!areflectedInHpd) TrajSatNumHitAgelRich1NoHpdRefl[it]++;
                   }
                   
 
                   //                 }
 
-                }
+                }//end if
 
               }
               // now skip out
               it =  TrajIdVectR1Agel.size() +1;
 
-            }
+            }//end if
 
 
             it++;
 
-          }
+          }//end while for int
 
           int itr1g = 0;
 
@@ -1309,6 +1324,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
                   //                 if(aChTrackTotMom > MinMomc4f10Cut ) {
 
                   TrajSatNumHitGasRich1[itr1g]++;
+                  if(!areflectedInHpd) TrajSatNumHitGasRich1NoHpdRefl[itr1g]++;
 
                   //                }
 
@@ -1343,6 +1359,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
                   //                if(  aChTrackTotMom > 10000 ) {
 
                   TrajSatNumHitGasRich2[it2]++;
+                  if(!areflectedInHpd) TrajSatNumHitGasRich2NoHpdRefl[it2]++;
                   //  }
 
                 }
@@ -1369,8 +1386,9 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
         }  // end loop over hits in a coll.
 
-
+        
       }
+      
 
 
 
@@ -1380,14 +1398,20 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
     aRichCounter-> setNumHitPerTrackRich1Gas(TrajNumHitGasRich1);
     aRichCounter-> setNumHitSaturatedPerTrackRich1Gas(TrajSatNumHitGasRich1);
+    aRichCounter-> setNumHitSaturatedPerTrackRich1GasNoHpdRefl(TrajSatNumHitGasRich1NoHpdRefl);
     aRichCounter-> setNumHitPerTrackRich1Agel( TrajNumHitAgelRich1);
     aRichCounter-> setNumHitPerTrackRich1WithRlyAgel( TrajNumHitAgelWithRayleighRich1);
     aRichCounter->
       setNumHitSaturatedPerTrackRich1Agel(TrajSatNumHitAgelRich1);
     aRichCounter->
+      setNumHitSaturatedPerTrackRich1AgelNoHpdRefl(TrajSatNumHitAgelRich1NoHpdRefl);
+    aRichCounter->
       setNumHitSaturatedPerTrackRich1WithRlyAgel(TrajSatNumHitAgelWithRayleighRich1);
+    aRichCounter->
+      setNumHitSaturatedPerTrackRich1WithRlyAgelNoHpdRefl(TrajSatNumHitAgelWithRayleighRich1NoHpdRefl);
     aRichCounter-> setNumHitPerTrackRich2Gas(TrajNumHitGasRich2);
     aRichCounter-> setNumHitSaturatedPerTrackRich2Gas(TrajSatNumHitGasRich2);
+    aRichCounter-> setNumHitSaturatedPerTrackRich2GasNoHpdRefl(TrajSatNumHitGasRich2NoHpdRefl);
 
 
     // now to test the procedure
@@ -1435,11 +1459,13 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
                                                       const std::vector<int> & RichG4CollectionID )
 {
 
+
+  
+
   G4HCofThisEvent * HCE;
   RichG4Counters* aRichCounter =  RichG4Counters::getInstance();
   if(aRichCounter ) {
 
-//     G4cout<<"Begin  Rich hit count "<< G4endl;
 
 
     G4int NumRichCollection= NumRichColl;
@@ -1458,13 +1484,48 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
         }
         if(RHC){
           G4int nHitInCurColl = RHC->entries();
-          //        G4cout<<"EndEvAction      "<< nHitInCurColl
+	  //                  G4cout<<"EndEvAction      "<< nHitInCurColl
           //     <<"   are stored in RichHitCollection set   "
           //      <<ihcol<< G4endl;
 
           for (G4int iha=0; iha<nHitInCurColl ; iha++ ) {
 
             RichG4Hit* aHit = (*RHC)[iha];
+
+	    std::vector<bool> aHpdRefl = aHit->DecodeRichHpdReflectionFlag();
+	    bool areflectedInHpd= false;
+            for(int ii=0; ii<(int)aHpdRefl.size() ; ++ii) {
+              if( aHpdRefl [ii]) areflectedInHpd=true; 
+	    }
+            G4int aBackScatFlag = aHit->ElectronBackScatterFlag() ;
+            RichG4HpdReflectionFlag* aRichG4HpdReflectionFlag= 
+                 RichG4HpdReflectionFlag::RichG4HpdReflectionFlagInstance();
+
+	    std::vector<bool> aBVect = aHit-> DecodeRichHpdReflectionFlag();
+            bool aHpdQwPcRefl=false;
+            if(  aBVect [aRichG4HpdReflectionFlag->HpdQwPCRefl()]){
+              aHpdQwPcRefl=true;  
+	    }         
+            
+            bool aHpdChroRefl=false;
+            if(  aBVect [aRichG4HpdReflectionFlag->  HpdChromiumRefl()]){
+              aHpdChroRefl=true;  
+	    }         
+            bool aHpdSiDetRefl=false;
+
+            if(  aBVect [aRichG4HpdReflectionFlag->  HpdSiliconRefl()]){
+              aHpdSiDetRefl=true;  
+	    }           
+            bool aHpdKovDetRefl=false;
+
+            if(  aBVect [aRichG4HpdReflectionFlag->  HpdKovarRefl()]){
+              aHpdKovDetRefl=true;  
+	    }           
+            bool aHpdKapDetRefl=false;
+
+            if(  aBVect [aRichG4HpdReflectionFlag->  HpdKaptonRefl()]){
+              aHpdKapDetRefl=true;  
+	    }         
 
             G4int aRadiatorNum=  aHit->GetRadiatorNumber();
             // Momentum of charged track in MeV
@@ -1489,12 +1550,13 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
             if(ihcol == 0 || ihcol == 1 ) {
 
               aRichCounter->bumpNumHitTotRich1All();
-
+              if(  areflectedInHpd) aRichCounter-> bumpNumHitTotRich1HpdRefl();
             }
 
             if(ihcol == 2 || ihcol == 3 ) {
 
               aRichCounter->bumpNumHitTotRich2All();
+              if(  areflectedInHpd) aRichCounter-> bumpNumHitTotRich2HpdRefl();
 
             }
 
@@ -1502,6 +1564,31 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
             if(   aRadiatorNum == Rich1C4F10CkvRadiatorNum ){
 
               aRichCounter->bumpNumHitTotRich1Gas();
+
+	      // now for the hpd reflection, backscattering etc.
+	      if(  areflectedInHpd) {                
+                 aRichCounter->bumpNumHitTotRich1GasHpdRefl();                               
+	      }
+              if(aBackScatFlag >0 ) {
+		aRichCounter->bumpNumHitTotRich1GasHpdBackScat();
+	      }
+
+              if(aHpdQwPcRefl ) {
+          	aRichCounter->bumpNumHitTotRich1GasHpdQWPCRefl();
+	      }
+              if( aHpdChroRefl ) {
+                aRichCounter-> bumpNumHitTotRich1GasHpdChromRefl();
+	      }
+              if(aHpdSiDetRefl){
+		aRichCounter-> bumpNumHitTotRich1GasHpdSiliconRefl();
+	      }
+              if(aHpdKovDetRefl){
+		aRichCounter-> bumpNumHitTotRich1GasHpdKovarRefl();
+	      }
+              if(aHpdKapDetRefl){
+		aRichCounter-> bumpNumHitTotRich1GasHpdKaptonRefl();
+	      }
+
 
               if(  ChtkId <= 1 ) {
 
@@ -1513,6 +1600,9 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
 
               aRichCounter->bumpNumHitTotRich1Agel();
 
+              if(aHpdKapDetRefl){
+		aRichCounter->bumpNumHitTotRich1AerogelHpdKaptonRefl();
+	      }
               if(  ChtkId <= 1 ) {
 
                 aRichCounter->bumpNumHitPartGunPrimaryPartRich1Agel();
@@ -1522,6 +1612,31 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
             } else if (  aRadiatorNum == Rich2CF4CkvRadiatorNum ) {
 
               aRichCounter->bumpNumHitTotRich2Gas();
+
+	      if(  areflectedInHpd) {                
+                 aRichCounter->bumpNumHitTotRich2GasHpdRefl();                               
+	      }
+              if(aBackScatFlag >0 ) {
+		aRichCounter->bumpNumHitTotRich2GasHpdBackScat();
+	      }
+
+              if(aHpdQwPcRefl ) {
+          	aRichCounter->bumpNumHitTotRich2GasHpdQWPCRefl();
+	      }
+              if( aHpdChroRefl ) {
+                aRichCounter-> bumpNumHitTotRich2GasHpdChromRefl();
+	      }
+              if(aHpdSiDetRefl){
+		aRichCounter-> bumpNumHitTotRich2GasHpdSiliconRefl();
+	      }
+              if(aHpdKovDetRefl){
+		aRichCounter-> bumpNumHitTotRich2GasHpdKovarRefl();
+	      }
+              if(aHpdKapDetRefl){
+		aRichCounter-> bumpNumHitTotRich2GasHpdKaptonRefl();
+	      }
+
+
 
               if(  ChtkId <= 1 ) {
 
@@ -1565,7 +1680,7 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
 
   }
 
-//   G4cout<<"End  Rich hit count "<< G4endl;
+
 
 
 }

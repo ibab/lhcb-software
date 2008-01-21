@@ -3,7 +3,20 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-
+!========================= GaussRICH v7r3 2008-1-21 =========================
+ - Changes in accordance with the new geometry changes in RICH in January 2008.
+ - Change in RichHpdPhotoElectricEffect to account for an extra layer of container
+   of hpd array in RICH2.
+ - New Hpd Simulation from Rob Lambert which addes chromium ring around each hpd
+   quartz window. It also has new values for the reflectivities for the various
+   optical boundaries in the hpd,rescaling of QE table and an improved simulation
+   of the backscattering inside the hpds. These involves changes mainly
+   in RichHpdPhotoElectricEffect.cpp,RichHpdEnergyLossProcess.cpp, RichHpdProperties.cpp,
+   RichG4OpBoundaryprocess.cc and the files related to these. The photons which are
+   reflected in the various hpd boundaries and the photoelectrons created by backscattering
+   process are flagged in the RichG4hit class. One result of this is to add about 10% noise
+   hits to the set of rich hits.
+- HPD Max QE is seto 0.45 in the new sqldddb. This has the effect of increasing the CPU  Time.
 !========================= GaussRICH v7r3 2007-12-07 =========================
 ! 2007-11-30 - Marco Clemencic and Gloria Corti
  - Link with special code in GaussTools for genConf (to instanciate a dummy 

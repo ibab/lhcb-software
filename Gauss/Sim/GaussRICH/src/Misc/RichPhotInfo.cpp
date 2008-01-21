@@ -17,7 +17,10 @@ RichPhotInfo::RichPhotInfo() :
   m_Mirror1DetCopyNum(-1),
   m_Mirror2DetCopyNum(-1),
   m_VerbosePhotTagFlag(false),
-  m_PhotProdRadiatorNum(-1)
+  m_PhotProdRadiatorNum(-1),
+  m_QW2PCreflFlag(0), //added by RWL 9.11.06
+  m_QW2PCreflFlagSave(0),
+  m_PhotonHpdReflectionFlag(0)
    {; }
 
 RichPhotInfo::~RichPhotInfo() {;}

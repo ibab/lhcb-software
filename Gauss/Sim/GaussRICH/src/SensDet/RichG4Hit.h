@@ -7,6 +7,7 @@
 #include "G4Allocator.hh"
 #include "G4ThreeVector.hh"
 #include "RichG4RadiatorMaterialIdValues.h"
+#include <vector>
 
 // From Kernel
 #include "Kernel/RichRadiatorType.h"
@@ -35,7 +36,8 @@ public:
   void Draw();
   void Print();
   void DrawPEOrigin();
-
+  std::vector<bool> DecodeRichHpdReflectionFlag();
+  
 private:
 
   G4double m_edep;           ///< energy deposited in the Si Det.
@@ -104,6 +106,23 @@ private:
 
   G4int m_RichVerboseHitInfo;        ///< if 0 the variables with  RichVerboseTag are disabled and have
   // no meaningful values. If not 0 they have the expected values.
+
+  G4int m_RichHpdQW2PhCathReflFlag; // if 0 no photon reflection at Hpd QW-PhCathode boundary (normal case)
+                                    // if 1 phtoton reflection happened at the Hpd QW-PhCathode boundary.
+                                   
+  G4int m_ElectronBackScatterFlag; // 0 means the track (electron) which created the hit, was not backscattered
+                                   // 1 or more means the track created the this hit was backscattered.
+                                   // this number indicates the number times the track backscattered.
+
+  G4int m_PhotoElectricProductionFlag; // 0 means the track created the hit is NOT created by Photoelectric process
+                                        // 1 means the track created the hit was produced by Photoelectric process(normal case)
+                                        // 2 means the although the track is not created by Photoelectric process,
+                                        // its parent or some grand parent is created by Photoelectric process.
+
+  G4int m_RichHpdPhotonReflectionFlag; // bit packed word which indicates if and where a photon might have
+                                       // reflected in an hpd before creating photoelectron.
+                                       // if it is zero, no reflection occured, which is the normal case for signal hits.
+                                       // if it is non zero one can unpack the bits to see where it reflected.
 
 public:
 
@@ -280,6 +299,29 @@ public:
   {m_RichVerboseHitInfo = aVerboseValue; }
   inline G4int RichVerboseHitInfo() const {return m_RichVerboseHitInfo;}
 
+
+  void setRichHpdQW2PhCathReflFlag(const G4int aFlag) 
+  {m_RichHpdQW2PhCathReflFlag=aFlag;}  
+    
+  inline G4int RichHpdQW2PhCathReflFlag()const
+  {  return m_RichHpdQW2PhCathReflFlag;}
+  
+  void setElectronBackScatterFlag(const G4int aFlagB) 
+  {m_ElectronBackScatterFlag=aFlagB;}
+  G4int ElectronBackScatterFlag() const 
+  {  return m_ElectronBackScatterFlag;}
+  
+  void setPhotoElectricProductionFlag(const G4int aFlagC)
+  {m_PhotoElectricProductionFlag= aFlagC;}
+  G4int  PhotoElectricProductionFlag()const 
+  {  return m_PhotoElectricProductionFlag;}
+
+
+  G4int RichHpdPhotonReflectionFlag() const
+  {  return m_RichHpdPhotonReflectionFlag;}
+  void setRichHpdPhotonReflectionFlag(const G4int aFlagD)
+  {m_RichHpdPhotonReflectionFlag=aFlagD;}
+  
   inline Rich::DetectorType detectorType() const
   {
     return ( GetCurRichDetNum() < 0 ? 

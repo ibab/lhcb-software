@@ -1,4 +1,4 @@
-// $Id: RichG4TrackActionPhotOpt.cpp,v 1.4 2007-01-12 15:32:06 ranjard Exp $
+// $Id: RichG4TrackActionPhotOpt.cpp,v 1.5 2008-01-21 16:56:27 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -137,6 +137,8 @@ StatusCode RichG4TrackActionPhotOpt::initialize()
 //=============================================================================
 void RichG4TrackActionPhotOpt::PreUserTrackingAction  
        ( const G4Track* aTrack ) {
+
+
    if( 0 == aTrack || 0 == trackMgr()) { return ; } /// RETURN !!!
  
   const G4DynamicParticle * aParticle = aTrack->GetDynamicParticle();
@@ -148,13 +150,14 @@ void RichG4TrackActionPhotOpt::PreUserTrackingAction
     }
     
    
+    
    G4double aRandomNum = G4UniformRand();
    if(aRandomNum >  PhotonSupFact ) {
+
      // Kill the photon       
        trackMgr()->GetTrack() ->SetTrackStatus(fStopAndKill);
      
    }
-   
               
       
   }
@@ -166,7 +169,7 @@ void RichG4TrackActionPhotOpt::PreUserTrackingAction
 //=============================================================================
 void RichG4TrackActionPhotOpt::PostUserTrackingAction 
    ( const G4Track* aTrack ) 
-{} 
+{ } 
 
 //=============================================================================
 

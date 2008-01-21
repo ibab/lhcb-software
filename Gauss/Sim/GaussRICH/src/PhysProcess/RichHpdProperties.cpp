@@ -9,6 +9,8 @@
 #include "DetDesc/TabulatedProperty.h"
 #include "boost/lexical_cast.hpp"
 #include "RichG4SvcLocator.h"
+#include "G4Material.hh"
+
 
 // create with a large number of hpds and then adjust
 // the size to the correct number of hpds in the constructer
@@ -32,12 +34,13 @@ void  RichHpdProperties::setHpdPropertiesVerboseLevel(int aLevel ) {
   m_HpdVerboseLevel=aLevel;
 
 }
-void RichHpdProperties::InitializeHpdProperties( ) {
 
+void RichHpdProperties::InitializeHpdProperties( ) {
+ 
   IDataProviderSvc* detSvc = RichG4SvcLocator::RichG4detSvc();
   IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
   MsgStream RichHpdlog( msgSvc, "RichHpdProperties" );
-
+  
 
   // First set the number of rich detectors.
 
@@ -72,6 +75,12 @@ void RichHpdProperties::InitializeHpdProperties( ) {
     m_HpdMaxQuantumEff=  Rich1DE->param<double>("RichHpdMaxQE");
     //    m_HpdMaxQuantumEff=  Rich1DE->userParameterAsDouble("RichHpdMaxQE");
 
+     m_MinPhotonEnergyInRICH=  Rich1DE->param<double> ("RichMinPhotonEnergy");
+     m_MaxPhotonEnergyInRICH=  Rich1DE->param<double> ("RichMaxPhotonEnergy");
+    //temporary test
+    // m_MinPhotonEnergyInRICH=1.5*eV;
+    // m_MaxPhotonEnergyInRICH=7.0*eV;
+    //end temporary test
   }
 
   SmartDataPtr<DetectorElement> Rich2DE(detSvc,Rich2DeStructurePathName );
@@ -261,8 +270,26 @@ void RichHpdProperties::InitializeHpdProperties( ) {
 
   m_HpdPhCathodeInnerRadius= phcathRinn;
 
+
+  
 }
 
+void RichHpdProperties::InitializeSiDetParam() {
+  IDataProviderSvc* detSvc = RichG4SvcLocator::RichG4detSvc();
+  SmartDataPtr<DetectorElement> Rich1DE(detSvc,Rich1DeStructurePathName );
+  IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
+  MsgStream RichHpdlog( msgSvc, "RichHpdProperties" );
+  if( !Rich1DE ){
+    RichHpdlog << MSG::ERROR
+               << "Can't retrieve  "<< Rich1DeStructurePathName <<" for sidet param "<< endreq;
+  }
+  else
+  {
+    m_siDetXSize= Rich1DE->param<double>("RichHpdSiliconDetectorXSize");
+    m_siDetYSize= Rich1DE->param<double>("RichHpdSiliconDetectorYSize");
+    m_siDetZSize= Rich1DE->param<double>("RichHpdSiliconDetectorZSize");    
+  }  
+}
 
 RichHpdProperties::~RichHpdProperties() { ; }
 
@@ -285,24 +312,34 @@ void  RichHpdProperties::FillHpdQETablesAtInit( IDataProviderSvc* detSvc, IMessa
     TabulatedProperty::Table table = tabQE->table();
     TabulatedProperty::Table::iterator it;
     for (it = table.begin(); it != table.end(); it++) {
-      EphotSingle.push_back((it->first)*1000000.0);
-      QeSingle.push_back((it->second)/100.0);
+      double aPhotonEnergy=(it->first);
+      double aQeOrig =  (it->second)/100.0; // division by 100 to get from percent to prob 
+      double aQeCorrected=aQeOrig;
+      //  RichHpdPropLogQE << MSG::INFO  << aPhotonEnergy <<"  "<< m_MinPhotonEnergyInRICH<<"   "
+      //                 <<m_MaxPhotonEnergyInRICH <<endreq;
+
+      if( (aPhotonEnergy >= (double) m_MinPhotonEnergyInRICH) && (aPhotonEnergy <= (double) m_MaxPhotonEnergyInRICH ) ) {
+        aQeCorrected = getHpdCorrectedQEFromPhotonEnergy(aPhotonEnergy,aQeOrig );
+      }
+      double aPhotonEnergyIneV = aPhotonEnergy*1000000.0; // mult to get from MeV to eV
+      EphotSingle.push_back(aPhotonEnergyIneV);
+      QeSingle.push_back(aQeCorrected );
     }
 
     numQEbin=(int) QeSingle.size();
 
     // now for the printout
-     if(m_HpdVerboseLevel >0) {
-      RichHpdPropLogQE << MSG::INFO  <<"Number of QE bins "<<numQEbin<<endreq;
-      RichHpdPropLogQE << MSG::INFO  <<"ephot and qe values: "<<endreq;
-      for(int ii=0; ii< numQEbin; ii++ ) {
-        RichHpdPropLogQE << MSG::INFO <<"energy QE   "
-                   << EphotSingle[ii] <<"   "<<QeSingle[ii] <<endreq;
+    // if(m_HpdVerboseLevel >0) {
+       //      RichHpdPropLogQE << MSG::INFO  <<"Hpd Number of QE bins "<<numQEbin<<endreq;
+       //  RichHpdPropLogQE << MSG::INFO  <<"Hpd ephot and qe values: "<<endreq;
+       // for(int ii=0; ii< numQEbin; ii++ ) {
+       //  RichHpdPropLogQE << MSG::INFO <<"Hpd energy QE   "
+       //            << EphotSingle[ii] <<"   "<<QeSingle[ii] <<endreq;
 
-      }
-    }
+       //  }
+       // }
     // end of printout
-
+    
   }
 
   for(int irichdet=0; irichdet<m_numberOfRichDetectors; irichdet++ ){
@@ -327,8 +364,115 @@ void  RichHpdProperties::FillHpdQETablesAtInit( IDataProviderSvc* detSvc, IMessa
     }
   }
 
+  
+}
+
+
+
+double RichHpdProperties::getHpdCorrectedQEFromPhotonEnergy(double photonenergy, double originalQE )
+{
+  //  double thisPCRI=getHpdPCRIFromPhotEnergy( photonenergy );
+  // double thisQWRI=getHpdQWRIFromPhotEnergy( photonenergy );
+  // the ref index is directly accessed through the G4 methods since
+  // it is the property of the material bulk. G4 automatically does the interpolation
+  // efficiently , of this property and hence no need to have our own direct access and interpolation.
+  // Also this correction is applied to the QE before the event loop starts, to save cpu time.
+  // SE 26-10-2007
+
+
+    double thisPCRI=1.0;
+    double thisQWRI=1.0;
+    static const G4MaterialTable* theMaterialTable = G4Material::GetMaterialTable();
+    G4int imata=0; G4bool matafound=false; 
+    G4int imatb=0; G4bool matbfound=false;
+    
+    while( (imata<  (G4int) theMaterialTable->size()) &&  (! matafound) ) {
+
+      if(RichHpdPhCathMatName == ((*theMaterialTable)[imata]->GetName())) {
+        G4Material* aMatPC = (*theMaterialTable)[imata];
+        G4MaterialPropertyVector* RindexPC=
+                      aMatPC->GetMaterialPropertiesTable()->GetProperty("RINDEX");
+          if(   RindexPC ) {
+            thisPCRI= RindexPC->GetProperty(photonenergy);
+          } 
+          matafound=true;    
+      }      
+      imata++;      
+    }    
+
+    while( (imatb<  (G4int) theMaterialTable->size()) &&  (! matbfound) ) {
+      if( RichHpdQWMatName == ((*theMaterialTable)[imatb]->GetName())) {
+        G4Material* aMatQW = (*theMaterialTable)[imatb];
+        G4MaterialPropertyVector* RindexQW=
+                      aMatQW->GetMaterialPropertiesTable()->GetProperty("RINDEX");
+        if(   RindexQW ) {
+            thisQWRI= RindexQW->GetProperty(photonenergy);
+        } 
+
+        matbfound=true;        
+      }      
+      imatb++;
+      
+    }
+
+    // the division by 100 from percent to real probability is 
+    // done in FillHpdQETablesAtInit of RichHpdProperties. SE 26-10-2007
+    //  double maxQEguess=1.0;
+    // if(originalQE > 1.0) maxQEguess=100.0; //QE by now should be in real probablitity, 
+    // this will catch the error if it isn't
+  
+    //originalQE = originalQE/maxQEguess;
+  //  double thisQWrefl=0.0;
+  // double thisPCrefl=0.0;
+    // end of modif by SE
+
+  G4double thisQWrefl=(thisQWRI-1)/(thisQWRI+1);
+  thisQWrefl=thisQWrefl*thisQWrefl;
+  //test print
+  //G4cout<< " Hpd QW property  energy refindex refl "<<photonenergy<<"   "<<thisQWRI<<"  "<<thisQWrefl<<G4endl;
+
+  //end of testprint
+  
+  G4double thisPCrefl=(thisPCRI-thisQWRI)/(thisPCRI+thisQWRI);
+  thisPCrefl=thisPCrefl*thisPCrefl;
+
+  //test print
+  //G4cout<< " Hpd PC property  energy refindex refl "<<photonenergy<<"   "<<thisPCRI<<"  "<<thisPCrefl<<G4endl;
+  //end of testprint
+  
+  
+  //double thisTrans=1.0;
+  
+  //G4double thisTrans= (1+thisQWrefl*thisPCrefl)*(1-thisQWrefl)*(1-thisPCrefl);   //first reflections
+  //G4double thisTrans= (1-thisQWrefl)*(1-thisPCrefl)/(1-thisPCrefl*thisQWrefl); //Geometric series
+  //G4double thisTrans= (1.0-thisQWrefl); //QW refl only
+  G4double thisTrans= (1.0-thisQWrefl)*(1.0-thisPCrefl*thisPCrefl); //Fudge factor :S
+
+//test print
+  //G4cout<< " Hpd QW-PC transmission "<<photonenergy<<"  "<< thisTrans<<G4endl;
+
+
+//end test print
+  //double thiscorrQE=1.0;
+  
+  G4double thiscorrQE=(originalQE/(thisTrans)); //first order
+  //thiscorrQE=(thiscorrQE/                      //second order
+  //                     (1+(1-thiscorrQE)*(thisPCRI-1)*(thisPCRI-1)
+  //    		                         /((thisPCRI+1)*(thisPCRI+1))));
+
+  if(thiscorrQE > 1.0) thiscorrQE=1.0;
+  
+  // test printout
+
+  //G4cout<< "HPD QETable  Photon energy QeOrig QeCorrected "<<photonenergy<<"  "<<originalQE<<"  "
+  //      << thiscorrQE<<G4endl;
+
+  // end of testprintout
+
+  return thiscorrQE;
 
 }
+
 
 void RichHpdProperties::FillHpdPSFTablesAtInit ( IDataProviderSvc* detSvc, IMessageSvc* msgSvc  ) {
 

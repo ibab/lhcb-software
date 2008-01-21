@@ -5,6 +5,9 @@
 #include "G4VisAttributes.hh"
 #include "G4Transform3D.hh"
 #include "G4LogicalVolume.hh"
+#include "RichG4HpdReflectionFlag.h"
+#include <bitset>
+
 
 G4Allocator<RichG4Hit> RichG4HitAllocator;
 
@@ -44,7 +47,11 @@ RichG4Hit::RichG4Hit(const RichG4Hit &right)
     m_Mirror2PhotonReflPosition(right.m_Mirror2PhotonReflPosition),
     m_Mirror1PhotonDetectorCopyNum(right.m_Mirror1PhotonDetectorCopyNum),
     m_Mirror2PhotonDetectorCopyNum(right.m_Mirror2PhotonDetectorCopyNum),
-    m_RichVerboseHitInfo(right.m_RichVerboseHitInfo )
+    m_RichVerboseHitInfo(right.m_RichVerboseHitInfo ),
+    m_RichHpdQW2PhCathReflFlag(right.m_RichHpdQW2PhCathReflFlag),
+    m_ElectronBackScatterFlag(right.m_ElectronBackScatterFlag),
+    m_PhotoElectricProductionFlag(right.m_PhotoElectricProductionFlag),
+    m_RichHpdPhotonReflectionFlag(right.m_RichHpdPhotonReflectionFlag)
 {}
 
 const RichG4Hit& RichG4Hit::operator=(const RichG4Hit &right)
@@ -82,6 +89,11 @@ const RichG4Hit& RichG4Hit::operator=(const RichG4Hit &right)
   m_Mirror1PhotonDetectorCopyNum=right.m_Mirror1PhotonDetectorCopyNum;
   m_Mirror2PhotonDetectorCopyNum=right.m_Mirror2PhotonDetectorCopyNum;
   m_RichVerboseHitInfo=right.m_RichVerboseHitInfo;
+  m_RichHpdQW2PhCathReflFlag=right.m_RichHpdQW2PhCathReflFlag;
+  m_ElectronBackScatterFlag=right.m_ElectronBackScatterFlag;
+  m_PhotoElectricProductionFlag=right.m_PhotoElectricProductionFlag;
+  m_RichHpdPhotonReflectionFlag=right.m_RichHpdPhotonReflectionFlag;
+  
 
   return *this;
 }
@@ -196,9 +208,38 @@ void RichG4Hit::Print()
     G4cout<<" RichG4Hit: Mirror1ReflEncodedCopyNum  Mirror2ReflEncodedCopyNum   "
           << m_Mirror1PhotonDetectorCopyNum<<"   "<< m_Mirror2PhotonDetectorCopyNum
           <<G4endl;
+    G4cout<<" RichG4hit QWPhcathode reflection flag "<<m_RichHpdQW2PhCathReflFlag<<G4endl;
+    G4cout<<" RichG4hit ElectronBackScatterFlag  "<< m_ElectronBackScatterFlag<<G4endl;
+    G4cout<<" RichG4hit PhotoelectricProduction flag "<<m_PhotoElectricProductionFlag<<G4endl;
+    G4cout<<" Photon reflection flag in Hpd "<<m_RichHpdPhotonReflectionFlag<<G4endl;
+    G4cout<<" Photon Hpd reflection decoded:  "<<G4endl;
+    
+    std::vector<bool> aHfl = DecodeRichHpdReflectionFlag();
+    RichG4HpdReflectionFlag* aRichG4HpdReflectionFlag= RichG4HpdReflectionFlag::RichG4HpdReflectionFlagInstance();
+    G4int aMaxFlag= aRichG4HpdReflectionFlag->MaxNumHpdReflFlag();
 
+    for(int j=0; j<aMaxFlag; ++j){
+      G4cout<<aHfl[j]<<G4endl; 
+    }
+    
   }
+  
 
+}
+std::vector<bool>  RichG4Hit::DecodeRichHpdReflectionFlag()
+{
+
+
+    RichG4HpdReflectionFlag* aRichG4HpdReflectionFlag= RichG4HpdReflectionFlag::RichG4HpdReflectionFlagInstance();
+    G4int aMaxFlag= aRichG4HpdReflectionFlag->MaxNumHpdReflFlag();
+    std::vector<bool> aBVect(aMaxFlag);
+    std::bitset<16>aCurFl ((unsigned long ) m_RichHpdPhotonReflectionFlag);
+    for(G4int i=0; i<aMaxFlag; ++i){
+      aBVect[i]= aCurFl.test(i);
+    }
+  
+  return aBVect;
+  
 }
 
 Rich::RadiatorType RichG4Hit::radiatorType() const

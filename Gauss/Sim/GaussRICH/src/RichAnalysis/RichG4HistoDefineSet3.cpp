@@ -1,4 +1,3 @@
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -175,6 +174,113 @@ void RichG4HistoDefineSet3::bookRichG4HistogramsSet3() {
                       title,50, 0.0, 1000.0 );
                         
   
+   title = "Number of hits from Rich1 without Hpd Reflections ";
+   m_hNumRich1HpdNoRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"808",
+                      title,100, 0.0, 1000.0 );
+
+   title = "Number of hits from Rich1 without Hpd Reflections SmallSize upto50";
+   m_hNumRich1HpdNoReflSmall = CurHistoSvc->book(m_RichG4HistoPathSet3+"809",
+                      title,100, 0.0, 50.0 );
+
+   title = "Number of hits from Rich2 without Hpd Reflections ";
+   m_hNumRich2HpdNoRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"848",
+                      title,100, 0.0, 1000.0 );
+
+   title = "Number of hits from Rich2 without Hpd Reflections SmallSize upto 50";
+   m_hNumRich2HpdNoReflSmall = CurHistoSvc->book(m_RichG4HistoPathSet3+"849",
+                      title,100, 0.0, 50.0 );
+
+
+   title = "Number of hits from Rich1 Hpd Reflections ";
+   m_hNumRich1HpdRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"810",
+                      title,100, 0.0, 1000.0 );
+
+   title = "Number of hits from Rich1 Hpd Reflections SmallSize upto50";
+   m_hNumRich1HpdReflSmall = CurHistoSvc->book(m_RichG4HistoPathSet3+"811",
+                      title,100, 0.0, 50.0 );
+
+   title = "Number of hits from Rich2 Hpd Reflections ";
+   m_hNumRich2HpdRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"850",
+                      title,100, 0.0, 1000.0 );
+
+   title = "Number of hits from Rich2 Hpd Reflections SmallSize upto 50";
+   m_hNumRich2HpdReflSmall = CurHistoSvc->book(m_RichG4HistoPathSet3+"851",
+                      title,100, 0.0, 50.0 );
+
+
+                        
+  
+   title = "Number of hits from Rich1 Gas HpdReflections ";
+   m_hNumRich1GasHpdRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"815",
+                      title,100, 0.0, 1000.0 );
+   title = "Number of hits from Rich1 Gas HpdReflections small sizeupto 50";
+   m_hNumRich1GasHpdReflSmall = CurHistoSvc->book(m_RichG4HistoPathSet3+"816",
+                      title,100, 0.0, 50.0 );
+
+   title = "Number of hits from Rich1 Gas Hpd BackScattering ";
+   m_hNumRich1GasHpdBackScat = CurHistoSvc->book(m_RichG4HistoPathSet3+"820",
+                      title,100, 0.0, 100.0 );
+
+   title = "Number of hits from Rich1 Gas Hpd QWPC reflections  ";
+   m_hNumRich1GasHpdQWPCRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"830",
+                      title,100, 0.0, 200.0 );
+   title = "Number of hits from Rich1 Gas Hpd QWPC reflections smallupto 50 ";
+   m_hNumRich1GasHpdQWPCReflSmall = CurHistoSvc->book(m_RichG4HistoPathSet3+"831",
+                      title,100, 0.0, 50.0 );
+
+   title = "Number of hits from Rich1 Gas Hpd Chromium reflections ";
+   m_hNumRich1GasHpdChromiumRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"840",
+                      title,100, 0.0, 100.0 );
+   title = "Number of hits from Rich1 Gas Hpd Silicon reflections ";
+   m_hNumRich1GasHpdSiliconRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"845",
+                      title,100, 0.0, 100.0 );
+
+   title = "Number of hits from Rich1 Gas Hpd Kovar reflections ";
+   m_hNumRich1GasHpdKovarRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"844",
+                      title,100, 0.0, 100.0 );
+   title = "Number of hits from Rich1 Gas Hpd Kapton reflections ";
+   m_hNumRich1GasHpdKaptonRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"846",
+                      title,100, 0.0, 100.0 );
+
+   title = "Number of hits from Rich1 Aerogel Hpd Kapton reflections ";
+   m_hNumRich1AerogelHpdKaptonRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"817",
+                      title,100, 0.0, 100.0 );
+
+
+   title = "Number of hits from Rich2 Gas HpdReflections ";
+   m_hNumRich2GasHpdRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"855",
+                      title,100, 0.0, 1000.0 );
+   title = "Number of hits from Rich2 Gas HpdReflections small sizeupto 50";
+   m_hNumRich2GasHpdReflSmall = CurHistoSvc->book(m_RichG4HistoPathSet3+"856",
+                      title,100, 0.0, 50.0 );
+
+   title = "Number of hits from Rich2 Gas Hpd BackScattering ";
+   m_hNumRich2GasHpdBackScat = CurHistoSvc->book(m_RichG4HistoPathSet3+"860",
+                      title,100, 0.0, 100.0 );
+
+   title = "Number of hits from Rich2 Gas Hpd QWPC reflections  ";
+   m_hNumRich2GasHpdQWPCRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"880",
+                      title,100, 0.0, 200.0 );
+   title = "Number of hits from Rich2 Gas Hpd QWPC reflections smallupto 50 ";
+   m_hNumRich2GasHpdQWPCReflSmall = CurHistoSvc->book(m_RichG4HistoPathSet3+"881",
+                      title,100, 0.0, 50.0 );
+
+   title = "Number of hits from Rich2 Gas Hpd Chromium reflections ";
+   m_hNumRich2GasHpdChromiumRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"890",
+                      title,100, 0.0, 100.0 );
+   title = "Number of hits from Rich2 Gas Hpd Silicon reflections ";
+   m_hNumRich2GasHpdSiliconRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"895",
+                      title,100, 0.0, 100.0 );
+
+   title = "Number of hits from Rich2 Gas Hpd Kovar reflections ";
+   m_hNumRich2GasHpdKovarRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"894",
+                      title,100, 0.0, 100.0 );
+   title = "Number of hits from Rich2 Gas Hpd Kapton reflections ";
+   m_hNumRich2GasHpdKaptonRefl = CurHistoSvc->book(m_RichG4HistoPathSet3+"896",
+                      title,100, 0.0, 100.0 );
+
+  RichG4Histolog << MSG::INFO << "End of Booking Rich G4 Histo Set3" << endreq;
+   
 }
 
 

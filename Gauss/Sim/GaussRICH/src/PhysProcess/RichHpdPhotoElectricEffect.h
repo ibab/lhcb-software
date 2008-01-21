@@ -89,6 +89,11 @@ public:
 
   void setPostPhotoElectricLogVolName( const G4String PostPhotoElecLogVolName);
 
+  void setPrePhotoElectricMatNameSec( const G4String aPrePhotoElectricMatNameSec ) 
+  {    m_PrePhotoElectricMatNameSec=aPrePhotoElectricMatNameSec;}
+  G4String PrePhotoElectricMatNameSec()  {  return  m_PrePhotoElectricMatNameSec;}
+  
+
   //  RichHpdProperties* HpdProperty() {return  m_HpdProperty; }
 
   RichHpdProperties* HpdProperty() {return  RichHpdProperties::getRichHpdPropertiesInstance(); }
@@ -130,6 +135,8 @@ private:
 
   G4String m_PrePhotoElectricLogVolName;
   G4String m_PostPhotoElectricLogVolName;
+  G4String m_PrePhotoElectricMatNameSec;
+  
   double m_HpdPhElectronKE;
   double m_PhCathodeToSilDetMaxDist;
   //   RichHpdProperties* m_HpdProperty;

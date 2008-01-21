@@ -20,7 +20,12 @@ RichPEInfo::RichPEInfo() :
  m_Mirror1PhotReflPosition(0),
  m_Mirror2PhotReflPosition(0),
  m_Mirror1PhotDetCopyNum(0),
- m_Mirror2PhotDetCopyNum(0){; }
+ m_Mirror2PhotDetCopyNum(0),
+ m_QW2PCreflFlagSave(0),
+ m_BackscatteredPeFlag(0),
+ m_PhotoElectricFlag(0),
+ m_HpdPhotonReflectionFlag(0)
+{; }
 
 RichPEInfo::~RichPEInfo() {;}
 

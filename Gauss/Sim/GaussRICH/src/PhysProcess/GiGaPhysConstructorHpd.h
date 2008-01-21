@@ -44,6 +44,11 @@ private:
   GiGaPhysConstructorHpd           ( const GiGaPhysConstructorHpd& );
   GiGaPhysConstructorHpd& operator=( const GiGaPhysConstructorHpd& );
   ///
+
+  double  m_RichHpdSiDetEfficiency;
+  double m_RichHpdPixelChipEfficiency;
+  double m_RichHpdPeBackScatterProb;
+  
 };
 // ============================================================================
 

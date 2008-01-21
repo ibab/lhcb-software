@@ -1,4 +1,4 @@
-// $Id: RichG4EventAction.cpp,v 1.15 2007-01-12 15:32:03 ranjard Exp $
+// $Id: RichG4EventAction.cpp,v 1.16 2008-01-21 16:56:27 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -161,6 +161,7 @@ RichG4EventAction::~RichG4EventAction( ){
 //=============================================================================
 void RichG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
 {
+
   if(m_RichEventActionHistoFillActivateTimer) {
     m_RichG4HistoFillTimer->RichG4BeginEventTimer();
   }
@@ -239,6 +240,7 @@ void RichG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
     }
   }
 
+
   // Print("'BeginOfEventAction' method is invoked by RichG4EventAction");
 }
 
@@ -247,6 +249,8 @@ void RichG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
 //=============================================================================
 void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
 {
+
+
 
   if(m_RichEventActionHistoFillActivateTimer) {
 
@@ -270,8 +274,11 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
 
   if( m_RichG4EventHitActivateCount) {
 
+
     m_RichG4EventHitCounter-> RichG4CountAndClassifyHits(
                                                          anEvent, m_NumRichColl,m_RichG4CollectionID);
+
+
 
     m_RichG4EventHitCounter-> RichG4CountSaturatedHits(
                                                        anEvent, m_NumRichColl,m_RichG4CollectionID);
@@ -406,7 +413,8 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
 
 
 
-  // Print("'EndOfEventAction' method is invoked by RichG4EventAction");
+
+  //   Print("'EndOfEventAction' method is invoked by RichG4EventAction");
 
 }
 

@@ -28,6 +28,11 @@ static const G4String AgelTile13MaterialName = "/dd/Materials/RichMaterials/Aero
 static const G4String AgelTile14MaterialName = "/dd/Materials/RichMaterials/AerogelT14";
 static const G4String AgelTile15MaterialName = "/dd/Materials/RichMaterials/AerogelT15";
 
+static const G4String RichHpdKovarMaterialName = "/dd/Materials/RichMaterials/Kovar";
+static const G4String RichHpdKaptonMaterialName = "/dd/Materials/RichMaterials/HpdKapton";
+static const G4String RichHpdChromiumMaterialName = "/dd/Materials/RichMaterials/HpdChromium";
+
+
 static const G4String FilterGenericMaterialName="/dd/Materials/RichMaterials/Rich1FilterGenericMaterial";
 static const G4String FilterD263MaterialName="/dd/Materials/RichMaterials/Rich1FilterD263Material";
 static const G4String Rich1GasQWindowMaterialName="/dd/Materials/RichMaterials/Rich1GasWindowQuartz";
@@ -36,6 +41,8 @@ static const G4String RichHpdQuartzWindowMaterialName="/dd/Materials/RichMateria
 static const G4String Rich1NitrogenMaterialName="/dd/Materials/RichMaterials/Rich1Nitrogen";
 static const G4String Rich2NitrogenMaterialName="/dd/Materials/RichMaterials/Rich2Nitrogen";
 static const G4String RichHpdQeffMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
+static const G4String RichHpdQWRIMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdWindowQuartzRIndexPT";
+static const G4String RichHpdPCRIMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdS20PhCathodeRIndexPT";
 static const G4String RichHpdPsfMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdPointSpreadFunction";
 static const G4String RichHpdPsfPhEnMatTabPropPath = "/dd/Materials/RichMaterialTabProperties/HpdPSFPhotonEnergy";
 static const G4String RichHpdPsfRadialMatTabPropPath = "/dd/Materials/RichMaterialTabProperties/HpdPSFRadialDist";
@@ -67,7 +74,7 @@ static const G4String LogVolHpdSMasterNameAnalysis =
 static const G4String LogVolHpdQWindowNameAnalysis =
                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichHPDQuartzWindow";
 static const G4String LogVolSiDetNameAnalysis =
-                     "/dd/Geometry/Rich1/lvRichHPDSiDet";
+                     "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichHPDSiDet";
 static const G4String Rich1FilterGenericMatName=
                              "/dd/Materials/RichMaterials/Rich1FilterGenericMaterial" ;
 static const G4String Rich1FilterD263MatName=

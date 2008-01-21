@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpRayleigh.cc,v 1.9 2006-11-02 10:23:59 seaso Exp $
+// $Id: RichG4OpRayleigh.cc,v 1.10 2008-01-21 16:53:44 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 

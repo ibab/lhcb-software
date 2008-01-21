@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4Cerenkov.hh,v 1.5 2006-02-10 09:36:38 seaso Exp $
+// $Id: RichG4Cerenkov.hh,v 1.6 2008-01-21 16:53:44 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 

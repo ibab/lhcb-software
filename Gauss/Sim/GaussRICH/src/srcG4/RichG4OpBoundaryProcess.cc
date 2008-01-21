@@ -61,6 +61,14 @@
 #include "RichG4OpBoundaryProcess.hh"
 #include "RichG4AnalysisConstGauss.h"
 #include "RichG4GaussPathNames.h"
+
+#include "GaussTools/GaussTrackInformation.h"
+#include "RichInfo.h"
+#include "RichPhotInfo.h"
+#include "RichPhotInfoAttach.h"
+#include "RichG4HpdReflectionFlag.h"
+#include "RichG4HpdReflTag.h"
+
 /////////////////////////
 // Class Implementation
 /////////////////////////
@@ -122,6 +130,13 @@ RichG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep
 
         aParticleChange.Initialize(aTrack);
 
+        //modif by RWL 9.11.06
+        //always set QW2PCreflFlag to 0 for all optical reflections as default, 
+        //gets set to 1 only if dielectric-dielectric reflection at QW/PC happens
+
+        setRichHpdQwPcReflInfo(aTrack,0);        
+        // end modif RWL and SE
+
         G4StepPoint* pPreStepPoint  = aStep.GetPreStepPoint();
         G4StepPoint* pPostStepPoint = aStep.GetPostStepPoint();
 
@@ -144,8 +159,8 @@ RichG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep
 	thePhotonMomentum = aParticle->GetTotalMomentum();
         OldMomentum       = aParticle->GetMomentumDirection();
 	OldPolarization   = aParticle->GetPolarization();
-  //         G4cout<<"G4opbondaryProc: Material1 Materil2 : from"<<Material1->GetName()<<" to  "
-  //               << Material2->GetName() <<G4endl;
+	//   G4cout<<"G4opbondaryProc: Material1 Materil2 : from"<<Material1->GetName()<<" to  "
+        //         << Material2->GetName() <<G4endl;
 
 	G4MaterialPropertiesTable* aMaterialPropertiesTable;
         G4MaterialPropertyVector* Rindex;
@@ -370,7 +385,7 @@ RichG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep
 		  }
 	  }
 	  else {
-		  DielectricDielectric();
+		  DielectricDielectric(aTrack, aStep);
 	  }
 	}
 	else {
@@ -546,7 +561,8 @@ void RichG4OpBoundaryProcess::DielectricMetal()
 	} while (NewMomentum * theGlobalNormal < 0.0);
 }
 
-void RichG4OpBoundaryProcess::DielectricDielectric()
+void RichG4OpBoundaryProcess::DielectricDielectric(const G4Track& aTrack,
+				       const G4Step&  aStep)
 {
 	G4bool Inside = false;
 	G4bool Swap = false;
@@ -598,12 +614,12 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 	      if ( theModel == unified && theFinish != polished )
 						     ChooseReflection();
 
-	      if ( theStatus == LambertianReflection ) {
-		 DoReflection();
+ 	      if ( theStatus == LambertianReflection ) {
+	     	 DoReflection();
 	      }
 	      else if ( theStatus == BackScattering ) {
-		 NewMomentum = -OldMomentum;
-		 NewPolarization = -OldPolarization;
+		     NewMomentum = -OldMomentum;
+		     NewPolarization = -OldPolarization;
 	      }
 	      else {
 
@@ -622,11 +638,12 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
             (Material1->GetName() ==  FilterGenericMaterialName) ||
             (Material1->GetName() ==  FilterD263MaterialName) ||
             (Material1->GetName() == Rich1GasQWindowMaterialName) ||
-            (Material1->GetName() == Rich2GasQWindowMaterialName ) ) {
-	  if(CurPhotStepNum > theMaxPhotStepNumInBoundaryProc ) {
+            (Material1->GetName() == Rich2GasQWindowMaterialName )|| 
+            (Material1->GetName() == RichHpdPhCathMatName )) {   // addition made on 2-11-07
+         	  if(CurPhotStepNum > theMaxPhotStepNumInBoundaryProc ) {
              
              DoAbsorption();
-          }
+            }
         }
 
         //end of modification by SE
@@ -701,11 +718,14 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 //    The QE values already contain the loss at the following two
 //    boundaries. The other boundaries below are artifical (software created ) and hence 
 //    no need to have loss there.
+//    The QE values will be corrected from now on for the reflectivity.
+//    There is therefore no need to set the TransCoeff to 1 for QW-PC
+//    RWL 9th Nov 2006
 
-       if(Material1->GetName() == RichHpdQWMatName   ||
-         Material2->GetName() == RichHpdQWMatName   )TransCoeff=1.0;
-      if(Material1->GetName() == RichHpdPhCathMatName   ||
-         Material2->GetName() == RichHpdPhCathMatName   )TransCoeff=1.0;
+     // if(Material1->GetName() == RichHpdQWMatName   ||
+     //    Material2->GetName() == RichHpdQWMatName   )TransCoeff=1.0;
+     // if(Material1->GetName() == RichHpdPhCathMatName   ||
+     //    Material2->GetName() == RichHpdPhCathMatName   )TransCoeff=1.0;
       if(Material1->GetName() == RichAirMatName   ||
          Material2->GetName() == RichAirMatName   )TransCoeff=1.0;
 
@@ -713,10 +733,11 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
          Material2->GetName() == RichHpdVacName   )TransCoeff=1.0;
       if(Material2->GetName() == Rich1NitrogenMatName   &&
          Material1->GetName() == RichHpdVacName   )TransCoeff=1.0;
-      if(Material1->GetName() ==   RichHpdVacName  &&
-         Material2->GetName() ==   RichHpdQWMatName  )TransCoeff=1.0;
-      if(Material2->GetName() ==   RichHpdVacName  &&
-         Material1->GetName() ==   RichHpdQWMatName  )TransCoeff=1.0;
+     // if(Material1->GetName() ==   RichHpdVacName  &&
+     //    Material2->GetName() ==   RichHpdQWMatName  )TransCoeff=1.0;
+     // if(Material2->GetName() ==   RichHpdVacName  &&
+     //    Material1->GetName() ==   RichHpdQWMatName  )TransCoeff=1.0;
+       if(Material1->GetName() == RichHpdPhCathMatName   )TransCoeff=1.0;
 
       if((Material1->GetName() == Rich1NitrogenMatName &&
           Material2->GetName() == Rich1C4F10MatName)  ||
@@ -760,11 +781,49 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 
 		 theStatus = FresnelReflection;
 
+          //RWL Modif 9.11.06
+          //if reflection is done check if its the QW2PC interface
+          if( (Material1->GetName() == RichHpdQWMatName) &&(Material2->GetName() == RichHpdPhCathMatName) ){
+          //set QE2PCreflFlag to 1 ... will stop QE
+          // from happening after this until re-reflection or set back to 1 by QE process
+            setRichHpdQwPcReflInfo(aTrack,1); 
+            // store the info that a reflection happened to the photon at this interface
+            RichG4HpdReflectionFlag*  aRichG4HpdReflectionFlag 
+              = RichG4HpdReflectionFlag::RichG4HpdReflectionFlagInstance();
+            RichG4HpdReflectionTag( aTrack,aRichG4HpdReflectionFlag->HpdQwPCRefl());
+          }else if ( (Material2->GetName() == RichHpdQWMatName) &&(Material1->GetName() == RichHpdPhCathMatName) ){
+          
+            // store the info that a reflection happened to the photon at this interface
+            RichG4HpdReflectionFlag*  aRichG4HpdReflectionFlag 
+              = RichG4HpdReflectionFlag::RichG4HpdReflectionFlagInstance();
+            RichG4HpdReflectionTag( aTrack,aRichG4HpdReflectionFlag->HpdPCQwRefl());
+
+          }else if ( (Material1->GetName() == RichHpdQWMatName) || 
+                     (Material2->GetName() == RichHpdQWMatName) ) { 
+             // this is the interface of Hpd QW with nitrogen outside the
+            // hpd.  Store a flag indicating that the photon reflected here.
+            RichG4HpdReflectionFlag*  aRichG4HpdReflectionFlag 
+              = RichG4HpdReflectionFlag::RichG4HpdReflectionFlagInstance();
+            RichG4HpdReflectionTag( aTrack,aRichG4HpdReflectionFlag->HpdAirQwRefl());
+          }else if ( (Material1->GetName() == RichHpdPhCathMatName) ||
+                     (Material2->GetName() == RichHpdPhCathMatName) ) {
+            
+            // this is the interface of Hpd photocathode with the vaccum inside the hpd.
+            // store a flag indicating that a reflection occured here.
+            RichG4HpdReflectionFlag*  aRichG4HpdReflectionFlag 
+              = RichG4HpdReflectionFlag::RichG4HpdReflectionFlagInstance();
+            RichG4HpdReflectionTag( aTrack,aRichG4HpdReflectionFlag->HpdAirPCRefl());  
+          }
+          
+          
+          // end of modif by RWL and SE 26-10-2007
+
 		 if ( theModel == unified && theFinish != polished )
 						     ChooseReflection();
 
 		 if ( theStatus == LambertianReflection ) {
 		    DoReflection();
+                    
 		 }
 		 else if ( theStatus == BackScattering ) {
 		    NewMomentum = -OldMomentum;
@@ -799,7 +858,6 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
             }
 
           // end of modif by SE.
-
 
                     PdotN = OldMomentum * theFacetNormal;
 	            NewMomentum = OldMomentum - (2.*PdotN)*theFacetNormal;

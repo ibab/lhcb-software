@@ -1,4 +1,3 @@
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -15,7 +14,9 @@
 // Histogramming
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
-
+// CLHEP
+// #include "CLHEP/Units/PhysicalConstants.h"
+//#include "Kernel/SystemOfUnits.h"
 #include "globals.hh"
 //
 //   Author SE 21-8-2002 
@@ -133,6 +134,31 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
+  title="Number of  Rich1 Hits in Aerogel per saturated track with no hpd refl or backscatter";
+
+  m_hNumHitAgelSatNoRefl= CurHistoSvc->book(m_RichG4HistoPathSet2+"130",
+                              title,100,0.0,50.0);
+  if(! m_hNumHitAgelSat) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+  title="Number of  saturated  Rich1 Hits in Aerogel per track for All Tracks in RICH1 ";
+
+  m_hNumTotHitAgelFullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"329",
+                              title,100,0.0,50.0);
+  if(! m_hNumTotHitAgelFullAcceptSat) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+  }
+
+  title="Number of  Sat Hits Vs polar Angle in Aerogel  ";
+
+  m_hNumHitVsAngAgelFullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"322",
+                              title,100,0.0,0.4,100,0.0,20.0);
+  if(! m_hNumHitVsAngAgelFullAcceptSat) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+  }
+
 
   title="Total number of Rich1 Hits in C4F10 per event ";
 
@@ -143,6 +169,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }
+
 
   title="Number of Rich1 Hits in C4F10 from primary particlegun per event";
 
@@ -163,6 +190,38 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }
+
+  title="Number of Rich1 Hits from C4F10 per saturated track with no hpd refl or backscatter";
+
+
+  m_hNumHitC4F10SatNoRefl= CurHistoSvc->book(m_RichG4HistoPathSet2+"160",
+                          title,100,0.0,100.0);
+  if(! m_hNumHitC4F10Sat) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+  title="Number of Rich1 saturated Hits in C4F10 per track for All Tracks in Rich1";
+
+
+  m_hNumTotHitC4F10FullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"359",
+                          title,100,0.0,100.0);
+  if(! m_hNumTotHitC4F10FullAcceptSat) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+  title="Number of Sat hits vs Track Polar Angle in C4F10 ";
+
+
+  m_hNumHitVsAngC4F10FullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"352",
+                          title,100, 0.0, 0.4, 100,0.0,60.0);
+  if(! m_hNumHitVsAngC4F10FullAcceptSat) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+
 
 
 
@@ -193,6 +252,35 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   m_hNumHitCF4Sat= CurHistoSvc->book(m_RichG4HistoPathSet2+"179",
                      title,100,0.0,200.0);
   if(! m_hNumHitCF4Sat) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+  title="Number of Rich2 Hits in CF4 per saturated track with no hpd refl or backscatter";
+
+
+  m_hNumHitCF4SatNoRefl= CurHistoSvc->book(m_RichG4HistoPathSet2+"180",
+                     title,100,0.0,200.0);
+  if(! m_hNumHitCF4Sat) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+  title="Number of Rich2 saturated Hits in CF4 per track for All Tracks in Rich2";
+
+
+  m_hNumTotHitCF4FullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"379",
+                     title,100,0.0,200.0);
+  if(!m_hNumTotHitCF4FullAcceptSat ) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+  title="Number of Sat  Hits vs polar Angle in CF4 ";
+
+
+  m_hNumHitVsAngCF4FullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"372",
+                     title,100,0.0,0.4,100,0.0,60.0);
+  if(!m_hNumHitVsAngCF4FullAcceptSat ) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }

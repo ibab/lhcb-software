@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpBoundaryProcess.hh,v 1.5 2005-12-13 17:31:40 seaso Exp $
+// $Id: RichG4OpBoundaryProcess.hh,v 1.6 2008-01-21 16:53:44 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -59,6 +59,7 @@
 #include "templates.hh"
 #include "geomdefs.hh"
 #include "Randomize.hh"
+#include "G4Track.hh"
 #include "G4Step.hh"
 #include "G4VDiscreteProcess.hh"
 #include "G4DynamicParticle.hh"
@@ -165,7 +166,8 @@ private:
 				     const G4ThreeVector&  Normal) const;
 
 	void DielectricMetal();
-	void DielectricDielectric();
+	void DielectricDielectric(const G4Track& aTrack,
+				       const G4Step&  aStep);
 
 	void ChooseReflection();
 	void DoAbsorption();

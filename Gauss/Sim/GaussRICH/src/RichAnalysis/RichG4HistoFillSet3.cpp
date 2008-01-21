@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet3.cpp,v 1.6 2007-01-12 15:32:11 ranjard Exp $
+// $Id: RichG4HistoFillSet3.cpp,v 1.7 2008-01-21 16:55:34 seaso Exp $
 // Include files
 
 
@@ -112,6 +112,38 @@ void RichG4HistoFillSet3:: FillRichG4HistoSet3( const G4Event* anEvent,
   SmartDataPtr<IHistogram1D> hNumRich1HpdqwRadiator(CurrentHistoSvc,"RICHG4HISTOSET3/718");
   SmartDataPtr<IHistogram1D>  hNumRich2HpdqwRadiator(CurrentHistoSvc,"RICHG4HISTOSET3/719");
 
+  SmartDataPtr<IHistogram1D> hNumRich1HpdNoRefl(CurrentHistoSvc,"RICHG4HISTOSET3/808");
+  SmartDataPtr<IHistogram1D> hNumRich1HpdNoReflSmall(CurrentHistoSvc,"RICHG4HISTOSET3/809");
+  SmartDataPtr<IHistogram1D> hNumRich2HpdNoRefl(CurrentHistoSvc,"RICHG4HISTOSET3/848");
+  SmartDataPtr<IHistogram1D>  hNumRich2HpdNoReflSmall(CurrentHistoSvc,"RICHG4HISTOSET3/849");
+
+  SmartDataPtr<IHistogram1D> hNumRich1HpdRefl(CurrentHistoSvc,"RICHG4HISTOSET3/810");
+  SmartDataPtr<IHistogram1D> hNumRich1HpdReflSmall(CurrentHistoSvc,"RICHG4HISTOSET3/811");
+  SmartDataPtr<IHistogram1D> hNumRich2HpdRefl(CurrentHistoSvc,"RICHG4HISTOSET3/850");
+  SmartDataPtr<IHistogram1D>  hNumRich2HpdReflSmall(CurrentHistoSvc,"RICHG4HISTOSET3/851");
+
+  SmartDataPtr<IHistogram1D>  hNumRich1GasHpdRefl  (CurrentHistoSvc,"RICHG4HISTOSET3/815");
+  SmartDataPtr<IHistogram1D> hNumRich1GasHpdReflSmall (CurrentHistoSvc,"RICHG4HISTOSET3/816");
+  SmartDataPtr<IHistogram1D>  hNumRich1GasHpdBackScat   (CurrentHistoSvc,"RICHG4HISTOSET3/820");
+  SmartDataPtr<IHistogram1D> hNumRich1GasHpdQWPCRefl  (CurrentHistoSvc,"RICHG4HISTOSET3/830");
+  SmartDataPtr<IHistogram1D> hNumRich1GasHpdQWPCReflSmall (CurrentHistoSvc,"RICHG4HISTOSET3/831");
+  SmartDataPtr<IHistogram1D> hNumRich1GasHpdChromiumRefl  (CurrentHistoSvc,"RICHG4HISTOSET3/840");
+  SmartDataPtr<IHistogram1D> hNumRich1GasHpdSiliconRefl   (CurrentHistoSvc,"RICHG4HISTOSET3/845");
+  SmartDataPtr<IHistogram1D> hNumRich1GasHpdKovarRefl  (CurrentHistoSvc,"RICHG4HISTOSET3/844");
+  SmartDataPtr<IHistogram1D> hNumRich1GasHpdKaptonRefl   (CurrentHistoSvc,"RICHG4HISTOSET3/846");
+
+  SmartDataPtr<IHistogram1D> hNumRich1AerogelHpdKaptonRefl   (CurrentHistoSvc,"RICHG4HISTOSET3/817");
+
+  SmartDataPtr<IHistogram1D>  hNumRich2GasHpdRefl  (CurrentHistoSvc,"RICHG4HISTOSET3/855");
+  SmartDataPtr<IHistogram1D>  hNumRich2GasHpdReflSmall (CurrentHistoSvc,"RICHG4HISTOSET3/856");
+  SmartDataPtr<IHistogram1D>  hNumRich2GasHpdBackScat   (CurrentHistoSvc,"RICHG4HISTOSET3/860");
+  SmartDataPtr<IHistogram1D>  hNumRich2GasHpdQWPCRefl  (CurrentHistoSvc,"RICHG4HISTOSET3/880");
+  SmartDataPtr<IHistogram1D>  hNumRich2GasHpdQWPCReflSmall (CurrentHistoSvc,"RICHG4HISTOSET3/881");
+  SmartDataPtr<IHistogram1D>  hNumRich2GasHpdChromiumRefl  (CurrentHistoSvc,"RICHG4HISTOSET3/890");
+  SmartDataPtr<IHistogram1D>  hNumRich2GasHpdSiliconRefl   (CurrentHistoSvc,"RICHG4HISTOSET3/895");
+  SmartDataPtr<IHistogram1D>  hNumRich2GasHpdKovarRefl  (CurrentHistoSvc,"RICHG4HISTOSET3/894");
+  SmartDataPtr<IHistogram1D>  hNumRich2GasHpdKaptonRefl   (CurrentHistoSvc,"RICHG4HISTOSET3/896");
+
 
   double aNumPhotProdRich1Gas = (aRichCounter->NumPhotProdRich1Gas())* 1.0 ;
   double aNumPhotGasOnRich1Mirror1 =
@@ -166,6 +198,31 @@ void RichG4HistoFillSet3:: FillRichG4HistoSet3( const G4Event* anEvent,
   double aNumRadr2hpdqw = (aRichCounter->NumHitTotRich2HpdQw() )*1.0;
   double aNumRadr1Filterd263 = (aRichCounter->NumHitTotRich1FilterD263() )*1.0;
   double aNumRadr1FilterGeneric = (aRichCounter->NumHitTotRich1FilterGeneric())*1.0;
+
+  double aNumHitTotRich1HpdRefl = (aRichCounter->NumHitTotRich1HpdRefl())*1.0;
+  double aNumHitTotRich2HpdRefl = (aRichCounter->NumHitTotRich2HpdRefl())*1.0;
+
+  double aNumHitTotRich1HpdNoRefl = (aRichCounter->NumHitTotRich1All())*1.0-aNumHitTotRich1HpdRefl;
+  double aNumHitTotRich2HpdNoRefl = (aRichCounter->NumHitTotRich2All())*1.0-aNumHitTotRich2HpdRefl;
+
+
+  double aNumHitTotRich1GasHpdRefl = (aRichCounter->NumHitTotRich1GasHpdRefl())*1.0;
+  double aNumHitTotRich1GasHpdBackScat =(aRichCounter->NumHitTotRich1GasHpdBackScat())*1.0;
+  double aNumHitTotRich1GasHpdQWPCRefl = (aRichCounter->NumHitTotRich1GasHpdQWPCRefl())*1.0;
+  double aNumHitTotRich1GasHpdChromRefl = (aRichCounter->NumHitTotRich1GasHpdChromRefl())*1.0;
+  double aNumHitTotRich1GasHpdSiliconRefl= (aRichCounter->NumHitTotRich1GasHpdSiliconRefl())*1.0;
+  double aNumHitTotRich1GasHpdKovarRefl= (aRichCounter->NumHitTotRich1GasHpdKovarRefl())*1.0;
+  double aNumHitTotRich1GasHpdKaptonRefl= (aRichCounter->NumHitTotRich1GasHpdKaptonRefl())*1.0;
+
+  double aNumHitTotRich1AerogelHpdKaptonRefl= (aRichCounter->NumHitTotRich1AerogelHpdKaptonRefl())*1.0;
+
+  double aNumHitTotRich2GasHpdRefl = (aRichCounter->NumHitTotRich2GasHpdRefl())*1.0;
+  double aNumHitTotRich2GasHpdBackScat =(aRichCounter->NumHitTotRich2GasHpdBackScat())*1.0;
+  double aNumHitTotRich2GasHpdQWPCRefl = (aRichCounter->NumHitTotRich2GasHpdQWPCRefl())*1.0;
+  double aNumHitTotRich2GasHpdChromRefl = (aRichCounter->NumHitTotRich2GasHpdChromRefl())*1.0;
+  double aNumHitTotRich2GasHpdSiliconRefl= (aRichCounter->NumHitTotRich2GasHpdSiliconRefl())*1.0;
+  double aNumHitTotRich2GasHpdKovarRefl= (aRichCounter->NumHitTotRich2GasHpdKovarRefl())*1.0;
+  double aNumHitTotRich2GasHpdKaptonRefl= (aRichCounter->NumHitTotRich2GasHpdKaptonRefl())*1.0;
 
 
   //   std::cout<<" NumPhot at Prod in C4F10  ="<< aNumPhotProdRich1Gas 
@@ -248,6 +305,41 @@ void RichG4HistoFillSet3:: FillRichG4HistoSet3( const G4Event* anEvent,
     hNumRich1HpdqwRadiator->fill(aNumRadr1hpdqw);
   if(hNumRich2HpdqwRadiator)
     hNumRich2HpdqwRadiator->fill(aNumRadr2hpdqw);
+
+
+  if( hNumRich1HpdNoRefl) hNumRich1HpdNoRefl->fill(aNumHitTotRich1HpdNoRefl );
+  if( hNumRich2HpdNoRefl) hNumRich2HpdNoRefl->fill(aNumHitTotRich2HpdNoRefl );
+  if( hNumRich1HpdNoReflSmall) hNumRich1HpdNoReflSmall->fill(aNumHitTotRich1HpdNoRefl);
+  if (hNumRich2HpdNoReflSmall) hNumRich2HpdNoReflSmall->fill(aNumHitTotRich2HpdNoRefl);
+
+
+  if( hNumRich1HpdRefl) hNumRich1HpdRefl->fill(aNumHitTotRich1HpdRefl );
+  if( hNumRich2HpdRefl) hNumRich2HpdRefl->fill(aNumHitTotRich2HpdRefl );
+  if( hNumRich1HpdReflSmall) hNumRich1HpdReflSmall->fill(aNumHitTotRich1HpdRefl);
+  if (hNumRich2HpdReflSmall) hNumRich2HpdReflSmall->fill(aNumHitTotRich2HpdRefl);
+
+  if (hNumRich1GasHpdRefl) hNumRich1GasHpdRefl->fill(aNumHitTotRich1GasHpdRefl);
+  if (hNumRich1GasHpdReflSmall) hNumRich1GasHpdReflSmall->fill(aNumHitTotRich1GasHpdRefl);
+  if (hNumRich1GasHpdBackScat) hNumRich1GasHpdBackScat->fill(aNumHitTotRich1GasHpdBackScat);
+  if (hNumRich1GasHpdQWPCRefl) hNumRich1GasHpdQWPCRefl ->fill(aNumHitTotRich1GasHpdQWPCRefl);
+  if (hNumRich1GasHpdQWPCReflSmall) hNumRich1GasHpdQWPCReflSmall->fill(aNumHitTotRich1GasHpdQWPCRefl);
+  if (hNumRich1GasHpdChromiumRefl) hNumRich1GasHpdChromiumRefl->fill(aNumHitTotRich1GasHpdChromRefl);
+  if (hNumRich1GasHpdSiliconRefl) hNumRich1GasHpdSiliconRefl->fill(aNumHitTotRich1GasHpdSiliconRefl);
+  if (hNumRich1GasHpdKovarRefl) hNumRich1GasHpdKovarRefl->fill(aNumHitTotRich1GasHpdKovarRefl);
+  if (hNumRich1GasHpdKaptonRefl) hNumRich1GasHpdKaptonRefl->fill(aNumHitTotRich1GasHpdKaptonRefl);
+
+  if (hNumRich1AerogelHpdKaptonRefl) hNumRich1AerogelHpdKaptonRefl->fill(aNumHitTotRich1AerogelHpdKaptonRefl);
+
+  if (hNumRich2GasHpdRefl) hNumRich2GasHpdRefl->fill(aNumHitTotRich2GasHpdRefl);
+  if (hNumRich2GasHpdReflSmall) hNumRich2GasHpdReflSmall->fill(aNumHitTotRich2GasHpdRefl);
+  if (hNumRich2GasHpdBackScat) hNumRich2GasHpdBackScat->fill(aNumHitTotRich2GasHpdBackScat);
+  if (hNumRich2GasHpdQWPCRefl) hNumRich2GasHpdQWPCRefl ->fill(aNumHitTotRich2GasHpdQWPCRefl);
+  if (hNumRich2GasHpdQWPCReflSmall) hNumRich2GasHpdQWPCReflSmall->fill(aNumHitTotRich2GasHpdQWPCRefl);
+  if (hNumRich2GasHpdChromiumRefl) hNumRich2GasHpdChromiumRefl->fill(aNumHitTotRich2GasHpdChromRefl);
+  if (hNumRich2GasHpdSiliconRefl) hNumRich2GasHpdSiliconRefl->fill(aNumHitTotRich2GasHpdSiliconRefl);
+  if (hNumRich2GasHpdKovarRefl) hNumRich2GasHpdKovarRefl->fill(aNumHitTotRich2GasHpdKovarRefl);
+  if (hNumRich2GasHpdKaptonRefl) hNumRich2GasHpdKaptonRefl->fill(aNumHitTotRich2GasHpdKaptonRefl);
+
 
   //=============================================================================
 }

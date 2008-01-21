@@ -127,6 +127,7 @@ inline const std::vector<int> & NumHitPerTrackRich2Gas() const
   return  m_NumHitPerTrackRich2Gas;
 }
 
+
 inline const std::vector<int> & NumHitSaturatedPerTrackRich1Gas() const
 {
   return  m_NumHitSaturatedPerTrackRich1Gas;
@@ -144,6 +145,26 @@ inline const std::vector<int> & NumHitSaturatedPerTrackRich2Gas() const
 {
   return  m_NumHitSaturatedPerTrackRich2Gas;
 }
+
+inline const std::vector<int> & NumHitSaturatedPerTrackRich1GasNoHpdRefl() const
+{
+  return  m_NumHitSaturatedPerTrackRich1GasNoHpdRefl;
+}
+inline const std::vector<int> & NumHitSaturatedPerTrackRich1AgelNoHpdRefl() const
+{
+  return m_NumHitSaturatedPerTrackRich1AgelNoHpdRefl;
+}
+inline const std::vector<int> & NumHitSaturatedPerTrackRich1WithRlyAgelNoHpdRefl() const
+{
+  return m_NumHitSaturatedPerTrackRich1WithRlyAgelNoHpdRefl;
+}
+
+inline const std::vector<int> & NumHitSaturatedPerTrackRich2GasNoHpdRefl() const
+{
+  return  m_NumHitSaturatedPerTrackRich2GasNoHpdRefl;
+}
+
+
 
 inline int NumHitPartGunPrimaryPartRich1Gas() const
 {
@@ -327,18 +348,53 @@ inline void setNumHitSaturatedPerTrackRich1Gas(const std::vector<int> & aGasSatH
   m_NumHitSaturatedPerTrackRich1Gas=aGasSatHit;
 }
 
+inline void bumpNumHitSaturatedPerTrackRich1GasNoHpdRefl(int it)
+{
+  ++m_NumHitSaturatedPerTrackRich1GasNoHpdRefl[it];
+}
+
+inline void setNumHitSaturatedPerTrackRich1GasNoHpdRefl(const std::vector<int> & aGasSatHit)
+{
+  m_NumHitSaturatedPerTrackRich1GasNoHpdRefl=aGasSatHit;
+}
+
+
+
 inline void bumpNumHitSaturatedPerTrackRich1Agel(int ita)
 {
   ++m_NumHitSaturatedPerTrackRich1Agel[ita];
 }
+
 inline void setNumHitSaturatedPerTrackRich1Agel( const std::vector<int> & aAgelSatHit )
 {
   m_NumHitSaturatedPerTrackRich1Agel=aAgelSatHit;
 }
+
+inline void bumpNumHitSaturatedPerTrackRich1AgelNoHpdRefl(int ita)
+{
+  ++m_NumHitSaturatedPerTrackRich1AgelNoHpdRefl[ita];
+}
+
+inline void setNumHitSaturatedPerTrackRich1AgelNoHpdRefl( const std::vector<int> & aAgelSatHit )
+{
+  m_NumHitSaturatedPerTrackRich1AgelNoHpdRefl=aAgelSatHit;
+}
+
+inline void bumpNumHitSaturatedPerTrackRich1WithRlyAgel(int ita)
+{
+  ++m_NumHitSaturatedPerTrackRich1WithRlyAgel[ita];
+}
+
 inline void setNumHitSaturatedPerTrackRich1WithRlyAgel( const std::vector<int> & aAgelSatHit1 )
 {
   m_NumHitSaturatedPerTrackRich1WithRlyAgel=aAgelSatHit1;
 }
+
+inline void setNumHitSaturatedPerTrackRich1WithRlyAgelNoHpdRefl( const std::vector<int> & aAgelSatHit1 )
+{
+  m_NumHitSaturatedPerTrackRich1WithRlyAgelNoHpdRefl=aAgelSatHit1;
+}
+
 
 inline void bumpNumHitSaturatedPerTrackRich2Gas(int it2)
 {
@@ -348,6 +404,16 @@ inline void bumpNumHitSaturatedPerTrackRich2Gas(int it2)
 inline void setNumHitSaturatedPerTrackRich2Gas(const std::vector<int> & aGasSatHit2)
 {
   m_NumHitSaturatedPerTrackRich2Gas=aGasSatHit2;
+}
+
+inline void bumpNumHitSaturatedPerTrackRich2GasNoHpdRefl(int it2)
+{
+  ++m_NumHitSaturatedPerTrackRich2GasNoHpdRefl[it2];
+}
+
+inline void setNumHitSaturatedPerTrackRich2GasNoHpdRefl(const std::vector<int> & aGasSatHit2)
+{
+  m_NumHitSaturatedPerTrackRich2GasNoHpdRefl=aGasSatHit2;
 }
 
 inline void bumpNumHitPartGunPrimaryPartRich1Gas()
@@ -389,3 +455,88 @@ inline void setTrackIdTraverseRich2Gas
   m_TrackIdTraverseRich2Gas= aTrackIdTraverseRich2Gas;
 
 }
+
+inline void setTrackIdFullAcceptRich1Gas(const std::vector<int> & aTrackIdFullAcceptRich1Gas) {
+  m_TrackIdFullAcceptRich1Gas=aTrackIdFullAcceptRich1Gas;
+} 
+inline void setTrackIdFullAcceptRich1Agel(const std::vector<int> & aTrackIdFullAcceptRich1Agel) {
+  m_TrackIdFullAcceptRich1Agel=aTrackIdFullAcceptRich1Agel;
+} 
+inline void setTrackIdFullAcceptRich2Gas(const std::vector<int> & aTrackIdFullAcceptRich2Gas) {
+  m_TrackIdFullAcceptRich2Gas=aTrackIdFullAcceptRich2Gas;
+} 
+
+
+inline std::vector<int> TrackIdFullAcceptRich1Gas() {return m_TrackIdFullAcceptRich1Gas;}
+inline std::vector<int> TrackIdFullAcceptRich1Agel() {return m_TrackIdFullAcceptRich1Agel;}
+inline std::vector<int> TrackIdFullAcceptRich2Gas() {return m_TrackIdFullAcceptRich2Gas;}
+
+inline void setTrackMomFullAcceptRich1Gas(const std::vector<G4ThreeVector> & aTrackMomFullAcceptRich1Gas) {
+  m_TrackMomFullAcceptRich1Gas=aTrackMomFullAcceptRich1Gas;
+} 
+inline void setTrackMomFullAcceptRich1Agel(const std::vector<G4ThreeVector> & aTrackMomFullAcceptRich1Agel) {
+  m_TrackMomFullAcceptRich1Agel=aTrackMomFullAcceptRich1Agel;
+} 
+inline void setTrackMomFullAcceptRich2Gas(const std::vector<G4ThreeVector> & aTrackMomFullAcceptRich2Gas) {
+  m_TrackMomFullAcceptRich2Gas=aTrackMomFullAcceptRich2Gas;
+} 
+
+inline std::vector<G4ThreeVector> TrackMomFullAcceptRich1Gas() {return m_TrackMomFullAcceptRich1Gas;}
+inline std::vector<G4ThreeVector> TrackMomFullAcceptRich1Agel() {return m_TrackMomFullAcceptRich1Agel;}
+inline std::vector<G4ThreeVector> TrackMomFullAcceptRich2Gas() {return m_TrackMomFullAcceptRich2Gas;}
+
+inline void setNumHitFullAcceptSatPerTrackR1Gas(const std::vector<int> & aNumHitFullAcceptSatPerTrackR1Gas) {
+  m_NumHitFullAcceptSatPerTrackR1Gas=aNumHitFullAcceptSatPerTrackR1Gas;
+} 
+inline void setNumHitFullAcceptSatPerTrackR1Agel(const std::vector<int> & aNumHitFullAcceptSatPerTrackR1Agel) {
+  m_NumHitFullAcceptSatPerTrackR1Agel=aNumHitFullAcceptSatPerTrackR1Agel;
+}
+inline void setNumHitFullAcceptSatPerTrackR2Gas(const std::vector<int> & aNumHitFullAcceptSatPerTrackR2Gas) {
+  m_NumHitFullAcceptSatPerTrackR2Gas= aNumHitFullAcceptSatPerTrackR2Gas;
+}
+
+
+inline  std::vector<int> NumHitFullAcceptSatPerTrackR1Gas() {return m_NumHitFullAcceptSatPerTrackR1Gas;}
+inline  std::vector<int> NumHitFullAcceptSatPerTrackR1Agel() {return m_NumHitFullAcceptSatPerTrackR1Agel;}
+inline  std::vector<int> NumHitFullAcceptSatPerTrackR2Gas() {return m_NumHitFullAcceptSatPerTrackR2Gas;}
+
+inline int NumHitTotRich1HpdRefl(){return m_NumHitTotRich1HpdRefl;}
+inline int NumHitTotRich2HpdRefl(){return m_NumHitTotRich2HpdRefl;}
+inline int NumHitTotRich1GasHpdRefl(){return  m_NumHitTotRich1GasHpdRefl;}
+inline int NumHitTotRich1GasHpdBackScat(){return  m_NumHitTotRich1GasHpdBackScat;}
+inline int NumHitTotRich1GasHpdQWPCRefl() {return m_NumHitTotRich1GasHpdQWPCRefl;}
+inline int NumHitTotRich1GasHpdChromRefl(){return m_NumHitTotRich1GasHpdChromRefl;} 
+inline int NumHitTotRich1GasHpdSiliconRefl(){return m_NumHitTotRich1GasHpdSiliconRefl;}
+inline int NumHitTotRich1GasHpdKovarRefl(){return m_NumHitTotRich1GasHpdKovarRefl;}
+inline int NumHitTotRich1GasHpdKaptonRefl(){return m_NumHitTotRich1GasHpdKaptonRefl;}
+
+inline int NumHitTotRich1AerogelHpdKaptonRefl(){return m_NumHitTotRich1AerogelHpdKaptonRefl;}
+
+inline int NumHitTotRich2GasHpdRefl(){return  m_NumHitTotRich2GasHpdRefl;}
+inline int NumHitTotRich2GasHpdBackScat(){return  m_NumHitTotRich2GasHpdBackScat;}
+inline int NumHitTotRich2GasHpdQWPCRefl() {return m_NumHitTotRich2GasHpdQWPCRefl;}
+inline int NumHitTotRich2GasHpdChromRefl(){return m_NumHitTotRich2GasHpdChromRefl;} 
+inline int NumHitTotRich2GasHpdSiliconRefl(){return m_NumHitTotRich2GasHpdSiliconRefl;}
+inline int NumHitTotRich2GasHpdKovarRefl(){return m_NumHitTotRich2GasHpdKovarRefl;}
+inline int NumHitTotRich2GasHpdKaptonRefl(){return m_NumHitTotRich2GasHpdKaptonRefl;}
+
+inline void bumpNumHitTotRich1HpdRefl(){ m_NumHitTotRich1HpdRefl++;}
+inline void bumpNumHitTotRich2HpdRefl(){ m_NumHitTotRich2HpdRefl++;}
+inline void bumpNumHitTotRich1GasHpdRefl(){m_NumHitTotRich1GasHpdRefl++;}
+inline void bumpNumHitTotRich1GasHpdBackScat(){ m_NumHitTotRich1GasHpdBackScat++;}
+inline void bumpNumHitTotRich1GasHpdQWPCRefl(){ m_NumHitTotRich1GasHpdQWPCRefl++;}
+inline void bumpNumHitTotRich1GasHpdChromRefl(){m_NumHitTotRich1GasHpdChromRefl++;}
+inline void bumpNumHitTotRich1GasHpdSiliconRefl(){m_NumHitTotRich1GasHpdSiliconRefl++;}
+inline void bumpNumHitTotRich1GasHpdKovarRefl(){m_NumHitTotRich1GasHpdKovarRefl++;}
+inline void bumpNumHitTotRich1GasHpdKaptonRefl(){m_NumHitTotRich1GasHpdKaptonRefl++;}
+
+inline void bumpNumHitTotRich1AerogelHpdKaptonRefl(){m_NumHitTotRich1AerogelHpdKaptonRefl++;}
+
+inline void bumpNumHitTotRich2GasHpdRefl(){m_NumHitTotRich2GasHpdRefl++;}
+inline void bumpNumHitTotRich2GasHpdBackScat(){ m_NumHitTotRich2GasHpdBackScat++;}
+inline void bumpNumHitTotRich2GasHpdQWPCRefl(){ m_NumHitTotRich2GasHpdQWPCRefl++;}
+inline void bumpNumHitTotRich2GasHpdChromRefl(){m_NumHitTotRich2GasHpdChromRefl++;}
+inline void bumpNumHitTotRich2GasHpdSiliconRefl(){m_NumHitTotRich2GasHpdSiliconRefl++;}
+inline void bumpNumHitTotRich2GasHpdKovarRefl(){m_NumHitTotRich2GasHpdKovarRefl++;}
+inline void bumpNumHitTotRich2GasHpdKaptonRefl(){m_NumHitTotRich2GasHpdKaptonRefl++;}
+

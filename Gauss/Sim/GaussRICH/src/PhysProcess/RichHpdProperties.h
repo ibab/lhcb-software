@@ -97,10 +97,34 @@ public:
     return  m_HpdMaxQuantumEff;
   }
 
+
+  G4double  MinPhotonEnergyInRICH() 
+  {
+    return m_MinPhotonEnergyInRICH;
+  }
+  G4double  MaxPhotonEnergyInRICH()
+  {
+    return m_MaxPhotonEnergyInRICH;
+  }
+
   bool UsingHpdMagneticFieldDistortion() { return m_UsingHpdMagneticFieldDistortion; }
   void setUsingHpdMagneticFieldDistortion(bool aflag) {m_UsingHpdMagneticFieldDistortion=aflag;}
 
   void setHpdPropertiesVerboseLevel(int aLevel );
+
+  void InitializeSiDetParam();
+  
+  double siDetXSize() 
+  {  return m_siDetXSize;}
+  double siDetYSize() 
+  {  return m_siDetYSize;}
+  double siDetZSize() 
+  {  return m_siDetZSize;}
+
+  double getHpdCorrectedQEFromPhotonEnergy(double photonenergy, double originalQE );
+
+  
+
 private:
 
   // standard constructor kept private.
@@ -122,9 +146,17 @@ private:
   double m_HpdPhCathodeInnerRadius;
   int m_HpdVerboseLevel;
   double m_HpdMaxQuantumEff;
-
+  G4double  m_MinPhotonEnergyInRICH;
+  G4double  m_MaxPhotonEnergyInRICH;
+  
   bool m_UsingHpdMagneticFieldDistortion;
 
+  double m_siDetXSize;
+  double m_siDetYSize;
+  double m_siDetZSize;
+  
+
+  
 
   //  bool m_UseHpdMagDistortions;
 

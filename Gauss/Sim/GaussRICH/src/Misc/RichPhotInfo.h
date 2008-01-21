@@ -70,7 +70,6 @@ public:
   {
     return m_PhotonRayleighScatFlag;
   }
-
   void setPhotonRayleighScatFlag( const G4int aPhotonRayleighScatFlag)
   {
     m_PhotonRayleighScatFlag = aPhotonRayleighScatFlag;
@@ -85,6 +84,24 @@ public:
   {
     m_PhotonRayleighScatFlag += aFlagBumpAmount;
   }
+
+  G4int QW2PCreflFlag() const
+  {
+    return m_QW2PCreflFlag;
+  }
+  void setQW2PCreflFlag(const G4int aFlag)
+  {
+    m_QW2PCreflFlag = aFlag;
+  }
+ G4int QW2PCreflFlagSave() const
+  {
+    return m_QW2PCreflFlagSave;
+  }
+  void setQW2PCreflFlagSave(const G4int aFlag)
+  {
+    m_QW2PCreflFlagSave = aFlag;
+  }
+
 
   const G4ThreeVector & AerogelExitPosition() const
   {
@@ -118,6 +135,11 @@ public:
   
   G4int PhotProdRadiatorNum() {return m_PhotProdRadiatorNum;}
   void setPhotProdRadiatorNum(G4int aRadiatorNum ){m_PhotProdRadiatorNum=aRadiatorNum;}
+  G4int PhotonHpdReflectionFlag(){ return m_PhotonHpdReflectionFlag;}
+  void setPhotonHpdReflectionFlag(G4int aFlagA){ m_PhotonHpdReflectionFlag=aFlagA;}
+  
+    
+
 
 private:
 
@@ -138,6 +160,14 @@ private:
   G4int m_Mirror2DetCopyNum;
   G4bool m_VerbosePhotTagFlag;
   G4int m_PhotProdRadiatorNum;
+  G4int m_QW2PCreflFlag; //added by RWL 9.11.06 force reflections indep of QE
+  G4int m_QW2PCreflFlagSave; //added by SE 26.10.07 to store the info on photon reflection
+                             // at the hpd QW-photocathode interface. 0 means no reflection
+                             // and 1 means with reflection.
+  
+  G4int m_PhotonHpdReflectionFlag; // bit packed flag to indicate if a photon is reflected in
+                                   // some part of the hpd
+
 };
 
 #endif

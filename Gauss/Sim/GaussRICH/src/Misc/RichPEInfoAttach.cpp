@@ -67,11 +67,11 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
             CurRichPEInfo->setPhotonAerogelExitPos ( aPhotInfo->
                                                      AerogelExitPosition() );
             
-	    CurRichPEInfo->setMirror1PhotReflPosition(aPhotInfo->Mirror1ReflPosition() );
-	    CurRichPEInfo->setMirror2PhotReflPosition(aPhotInfo->Mirror2ReflPosition() );
-	    CurRichPEInfo->setMirror1PhotDetCopyNum(aPhotInfo->Mirror1DetCopyNum());
-	    CurRichPEInfo->setMirror2PhotDetCopyNum(aPhotInfo->Mirror2DetCopyNum());
-
+      	    CurRichPEInfo->setMirror1PhotReflPosition(aPhotInfo->Mirror1ReflPosition() );
+	          CurRichPEInfo->setMirror2PhotReflPosition(aPhotInfo->Mirror2ReflPosition() );
+	          CurRichPEInfo->setMirror1PhotDetCopyNum(aPhotInfo->Mirror1DetCopyNum());
+	          CurRichPEInfo->setMirror2PhotDetCopyNum(aPhotInfo->Mirror2DetCopyNum());
+            CurRichPEInfo->setHpdPhotonReflectionFlag(aPhotInfo->PhotonHpdReflectionFlag());
           }
 
 
@@ -83,7 +83,8 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
   CurRichPEInfo-> setPhotonEmisPoint(aPhotonTk.GetVertexPosition());
   CurRichPEInfo->  setMotherOfPhotonId(aPhotonTk.GetParentID());
   CurRichPEInfo-> setOptPhotonId(aPhotonTk.GetTrackID());
-
+  CurRichPEInfo-> setPhotoElectricFlag(1);
+  
   // G4cout<<" RichPEInfo attach: Trackid Chtk photon  "
   //      <<aPhotonTk.GetParentID()<<"   "<<aPhotonTk.GetTrackID()
   //      <<G4endl;
@@ -95,16 +96,14 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
   G4VUserTrackInformation* uinf = aPETk->GetUserInformation();
   GaussTrackInformation* aRichPETrackInfo;
 
-  if(uinf)
-  {
+  if(uinf){
     aRichPETrackInfo = (GaussTrackInformation*) uinf;
-  }
-  else
-  {
+  }else{
     aRichPETrackInfo = new GaussTrackInformation();
+  }  
     aRichPETrackInfo->setDetInfo(aPETypeRichInfo);
     aPETk->SetUserInformation(aRichPETrackInfo);
-  }
+  
   //
 
   //  GaussTrackInformation* aRichPETrackInfo =
@@ -114,6 +113,105 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
   //  aRichPETrackInfo->setRichInfo(aPETypeRichInfo);
   return aPETk;
 }
+
+G4Track* RichPEBackScatAttach(const G4Track& aElectronTk, G4Track* aPEBackScatTk) 
+{
+    G4VUserTrackInformation* aTkInfo=aElectronTk.GetUserInformation();
+    GaussTrackInformation*  aRichPETrackInfo =(GaussTrackInformation*)aTkInfo;
+
+    RichPEInfo* CurRichPEBackScatInfo = new RichPEInfo();
+
+    // if( ( (aElectronTk->GetDefinition() == G4Electron::Electron()) ||
+    //    (aTrack->GetDefinition() == RichPhotoElectron::PhotoElectron()))  &&
+    //  (aCreatorProcessName  == "RichHpdPhotoelectricProcess")) {
+
+
+    if(aRichPETrackInfo){
+      if(aRichPETrackInfo->detInfo()){
+        RichInfo* aRichPETypeInfo = (RichInfo*)(aRichPETrackInfo->detInfo());
+        if(aRichPETypeInfo && aRichPETypeInfo->HasUserPEInfo())
+        {
+          RichPEInfo* aPEInfo=aRichPETypeInfo->RichPEInformation();
+          if( aPEInfo)
+          {
+           
+
+          CurRichPEBackScatInfo->
+            setMotherOfPhotonPDGcode(aPEInfo-> MotherOfPhotonPDGcode());
+
+          CurRichPEBackScatInfo->
+            setVerbosePeTagFlag(  aPEInfo->  VerbosePeTagFlag());
+
+          CurRichPEBackScatInfo->
+            setPhotonEnergyAtCkvProd( aPEInfo->PhotonEnergyAtCkvProd());
+          CurRichPEBackScatInfo->
+            setCherenkovThetaAtProd(  aPEInfo->CherenkovThetaAtProd());
+          CurRichPEBackScatInfo->
+            setCherenkovPhiAtProd(  aPEInfo->CherenkovPhiAtProd());
+          CurRichPEBackScatInfo->
+            setMotherofPhotonMomAtProd( aPEInfo-> MotherofPhotonMomAtProd() );
+          CurRichPEBackScatInfo->  
+                     setPhotOriginRadiatorNumber( aPEInfo->  PhotOriginRadiatorNumber());
+
+          // fill the following only for verbose tag mode.
+          if( aPEInfo->  VerbosePeTagFlag() ) {
+
+            CurRichPEBackScatInfo->
+              setMotherofPhotonMomVectAtProd
+              ( aPEInfo->  MotherofPhotonMomVectAtProd() );
+            CurRichPEBackScatInfo->setMotherofPhotonPDGMass( aPEInfo-> MotherofPhotonPDGMass());
+            CurRichPEBackScatInfo->setMotherofPhotonCkvPreStep( aPEInfo->MotherofPhotonCkvPreStep());
+            CurRichPEBackScatInfo->setMotherofPhotonCkvPostStep( aPEInfo->MotherofPhotonCkvPostStep());
+
+            CurRichPEBackScatInfo->setPhotonRayleighScatteringFlag( aPEInfo->PhotonRayleighScatteringFlag());
+
+
+            CurRichPEBackScatInfo->setPhotonAerogelExitPos ( aPEInfo-> PhotonAerogelExitPos());
+            
+      	    CurRichPEBackScatInfo->setMirror1PhotReflPosition( aPEInfo->Mirror1PhotReflPosition() );
+	    CurRichPEBackScatInfo->setMirror2PhotReflPosition(aPEInfo->Mirror2PhotReflPosition());
+	    CurRichPEBackScatInfo->setMirror1PhotDetCopyNum( aPEInfo->Mirror1PhotDetCopyNum());
+	    CurRichPEBackScatInfo->setMirror2PhotDetCopyNum( aPEInfo->Mirror2PhotDetCopyNum());
+            CurRichPEBackScatInfo->setHpdPhotonReflectionFlag(aPEInfo->HpdPhotonReflectionFlag());
+          }
+
+           CurRichPEBackScatInfo->  setPhotonEmisPoint( aPEInfo->PhotonEmisPoint());
+           CurRichPEBackScatInfo->  setMotherOfPhotonId( aPEInfo->MotherOfPhotonId());
+           CurRichPEBackScatInfo->  setOptPhotonId( aPEInfo->OptPhotonId());
+            
+            
+          }
+        }
+      }
+    }
+    
+
+    CurRichPEBackScatInfo-> bumpBackscatteredFlag();
+    G4int aphElectricFlag = CurRichPEBackScatInfo-> PhotoElectricFlag();
+    if(aphElectricFlag > 0) {  CurRichPEBackScatInfo-> setPhotoElectricFlag(2);}
+    
+      
+
+    RichInfo* aPEBackScatTypeRichInfo = new  RichInfo(CurRichPEBackScatInfo );
+
+
+  // check if GaussTrackInformation already exists and if not
+  // attach it to the track
+  G4VUserTrackInformation* uinf = aPEBackScatTk->GetUserInformation();
+  GaussTrackInformation* aRichPEBackScatTrackInfo;
+
+  if(uinf){
+    aRichPEBackScatTrackInfo = (GaussTrackInformation*) uinf;
+  }else{
+    aRichPEBackScatTrackInfo = new GaussTrackInformation();
+  }  
+    aRichPEBackScatTrackInfo->setDetInfo(aPEBackScatTypeRichInfo );
+    aPEBackScatTk->SetUserInformation(aRichPEBackScatTrackInfo);
+  
+    return aPEBackScatTk;
+    
+}
+
 
 
 

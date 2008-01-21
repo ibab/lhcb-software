@@ -1,4 +1,4 @@
-// $Id: RichG4Counters.cpp,v 1.7 2006-11-02 10:27:12 seaso Exp $
+// $Id: RichG4Counters.cpp,v 1.8 2008-01-21 16:55:33 seaso Exp $
 // Include files
 
 // local
@@ -72,6 +72,11 @@ void RichG4Counters::InitRichEventCounters()
   m_NumHitSaturatedPerTrackRich1WithRlyAgel.clear();
   m_NumHitSaturatedPerTrackRich2Gas.clear();
 
+  m_NumHitSaturatedPerTrackRich1GasNoHpdRefl.clear();
+  m_NumHitSaturatedPerTrackRich1AgelNoHpdRefl.clear();
+  m_NumHitSaturatedPerTrackRich1WithRlyAgelNoHpdRefl.clear();
+  m_NumHitSaturatedPerTrackRich2GasNoHpdRefl.clear();
+
   m_NumHitPartGunPrimaryPartRich1Gas=0;
   m_NumHitPartGunPrimaryPartRich1Agel=0;
   m_NumHitPartGunPrimaryPartRich2Gas=0;
@@ -81,7 +86,39 @@ void RichG4Counters::InitRichEventCounters()
   m_TrackIdTraverseRich1Agel.clear();
   m_TrackIdTraverseRich2Gas.clear();
 
+  m_TrackIdFullAcceptRich1Gas.clear();
+  m_TrackIdFullAcceptRich1Agel.clear();
+  m_TrackIdFullAcceptRich2Gas.clear();
 
+  m_TrackMomFullAcceptRich1Gas.clear();
+  m_TrackMomFullAcceptRich1Agel.clear();
+  m_TrackMomFullAcceptRich2Gas.clear();
+
+
+  m_NumHitFullAcceptSatPerTrackR1Gas.clear();
+  m_NumHitFullAcceptSatPerTrackR1Agel.clear();
+  m_NumHitFullAcceptSatPerTrackR2Gas.clear();
+
+  m_NumHitTotRich1HpdRefl=0;
+  m_NumHitTotRich2HpdRefl=0;
+  
+  m_NumHitTotRich1GasHpdRefl=0;
+  m_NumHitTotRich1GasHpdBackScat=0;  
+  m_NumHitTotRich1GasHpdQWPCRefl=0;
+  m_NumHitTotRich1GasHpdChromRefl=0;
+  m_NumHitTotRich1GasHpdSiliconRefl=0;
+  m_NumHitTotRich1GasHpdKovarRefl=0;
+  m_NumHitTotRich1GasHpdKaptonRefl=0;
+
+  m_NumHitTotRich1AerogelHpdKaptonRefl=0;
+
+  m_NumHitTotRich2GasHpdRefl=0;
+  m_NumHitTotRich2GasHpdBackScat=0;  
+  m_NumHitTotRich2GasHpdQWPCRefl=0;
+  m_NumHitTotRich2GasHpdChromRefl=0;
+  m_NumHitTotRich2GasHpdSiliconRefl=0;
+  m_NumHitTotRich2GasHpdKovarRefl=0;
+  m_NumHitTotRich2GasHpdKaptonRefl=0;
 
 }
 

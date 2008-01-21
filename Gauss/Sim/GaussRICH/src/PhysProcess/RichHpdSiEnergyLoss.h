@@ -4,11 +4,14 @@
 #include "globals.hh"
 #include <vector>
 #include "G4VEnergyLoss.hh"
+#include "Randomize.hh"
 #include "G4VParticleChange.hh"
 #include "G4DynamicParticle.hh"
 #include "G4Track.hh"
 #include "G4Step.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4ios.hh"
+#include "GiGa/GiGaBase.h"
 
 class RichHpdSiEnergyLoss :  public G4VEnergyLoss {
 
@@ -41,7 +44,14 @@ public:
                                   const G4Step& aStep);
   G4double RichHpdSiEnergyDeposit(G4double ElossInput);
   G4double RichHpdSiBackScatter(G4double EnergyInput);
+  void InitializeHpdProcParam();
 
+  void setHpdSiDetEff(double aValueA) {  m_HpdSiDetEff= (G4double) aValueA;}
+  void setHpdSiPixelChipEff(double aValueB){ m_SiPixelChipEff = (G4double) aValueB ;}     
+
+  void setHpdPeBackScaProb(double aValueC) {PeBackScaProb=(G4double) aValueC ;}
+  
+    
 private:
 
   // hide assignment and copy operators.
@@ -58,8 +68,19 @@ private:
   G4double finalRangeforSiDetStep;
   G4double PhElectronMaxEnergy;
   G4double SiHitDetGlobalEff;
-  G4double PeBackScaProb;
 
+  G4double m_HpdSiDetEff;  
+  G4double m_SiPixelChipEff;
+  
+    
+  G4double PeBackScaProb;
+  G4double PeBackScaProbCorrected;
+
+  G4double m_siliconDetXSize;
+  G4double m_siliconDetYSize;
+  G4double m_siliconDetZSize;
+  
+  
 };
 
 inline G4double RichHpdSiEnergyLoss::RichHpdSiBackScatter (G4double EnergyInput)

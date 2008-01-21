@@ -1,4 +1,4 @@
-// $Id: RichSensDet.cpp,v 1.17 2007-01-12 15:32:20 ranjard Exp $
+// $Id: RichSensDet.cpp,v 1.18 2008-01-21 16:54:12 seaso Exp $
 // Include files 
 
 // from CLHEP
@@ -96,7 +96,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   // Create a hit only when there is
   // non-zero energy deposit.  SE June 2003.
 
-  // cout<<"Rich SensDet CurEdep "<< CurEdep<<endl;
+  // G4cout<<"Rich SensDet CurEdep "<< CurEdep<<G4endl;
 
   //if ( CurEdep <= 0.1 ) { return false; }
   if(  CurEdep <= 0.001 ) { return false; }
@@ -112,8 +112,8 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
 
   G4VPhysicalVolume*  CurPV =   CurTT->GetVolume();
   G4LogicalVolume*    CurLV =   CurPV->GetLogicalVolume();
-  // Now get the charged track (ie. photoelectron )  which created the
-  // hit.
+  // Now get the charged track (ie. photoelectron or backscattered electron or the mip)  
+  // which created the  hit.
   G4Track* aTrack = aStep->GetTrack();
   // Check that tracks are charged - GC & SE April 2006
   if( aTrack->GetDefinition()->GetPDGCharge() == 0.0 ) {
@@ -130,7 +130,8 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   if(aProcess) aCreatorProcessName =  aProcess->GetProcessName();
   if(((aTrack->GetDefinition() == G4Electron::Electron()) ||
       (aTrack->GetDefinition() == RichPhotoElectron::PhotoElectron())) &&
-     (aCreatorProcessName  == "RichHpdPhotoelectricProcess"))
+     ( (aCreatorProcessName  == "RichHpdPhotoelectricProcess" ) || 
+       ( aCreatorProcessName  == "RichHpdSiEnergyLossProcess")) )
   {
     CurPEOrigin = aTrack->GetVertexPosition() ;
   }
@@ -146,8 +147,6 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   log << MSG::DEBUG << " PE Origin X Y Z "<<CurPEOrigin.x()
       <<"   "<<CurPEOrigin.y()<<"   "<<CurPEOrigin.z()<<endreq;
 
-  //  G4double CurGlobalX=CurGlobalPos.x();
-  //  G4double CurGlobalY=CurGlobalPos.y();
   G4double CurGlobalZ=CurGlobalPos.z();
 
   int CurrentRichDetNumber =-1;
@@ -162,13 +161,6 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
     // hit coordinate in Rich2
     CurrentRichDetNumber= 1;
   }
- // the following modif done for the new G4 version. SE Nov,2005.
-  
-  //  CurTT -> MoveUpHistory(2);
-  // G4int CurrentHpdNumber= CurTT -> GetVolume() -> GetCopyNo() ;
-  //  CurTT -> MoveUpHistory(1);
-
-
   G4int CurrentHpdNumber= CurTT -> GetReplicaNumber(2);
   G4int CurrentRichDetSector = CurTT ->GetReplicaNumber(3);
 
@@ -223,21 +215,23 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   G4int CurMirror2PhotonDetectorCopyNum=-1;
   G4int aRichVerboseFlag=0;
   G4int CurOptPhotID =0;
-
+  G4int CurHpdQW2PhCathReflFlag=0;
+  G4int CurElectronBackScatFlag=0;
+  G4int CurPhotoElectricFlag=0;
+  G4int CurHpdReflectionFlag=0;
+  
+  
+  
   G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
   GaussTrackInformation* aRichPETrackInfo
       = (GaussTrackInformation*)aUserTrackinfo;
 
   if( ( (aTrack->GetDefinition() == G4Electron::Electron()) ||
         (aTrack->GetDefinition() == RichPhotoElectron::PhotoElectron()))  &&
-      (aCreatorProcessName  == "RichHpdPhotoelectricProcess")) {
-
-    //    G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
-    // GaussTrackInformation* aRichPETrackInfo
-    //  = (GaussTrackInformation*)aUserTrackinfo;
-
-    if(aRichPETrackInfo)
-    {
+       (( aCreatorProcessName  == "RichHpdPhotoelectricProcess")  ||
+        ( aCreatorProcessName  == "RichHpdSiEnergyLossProcess") ) ) {
+     if(aRichPETrackInfo)
+     {
       if(aRichPETrackInfo->detInfo())
       {
         RichInfo* aRichPETypeInfo = (RichInfo*)(aRichPETrackInfo->detInfo());
@@ -255,17 +249,20 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
             CurThetaCkvAtProd   =   aPEInfo->CherenkovThetaAtProd();
             CurPhiCkvAtProd     =   aPEInfo->CherenkovPhiAtProd();
             CurChTrackTotMom    =   aPEInfo-> MotherofPhotonMomAtProd();
-            CurOptPhotID        =  aPEInfo->OptPhotonId();
-
-            // log << MSG::INFO << "Now in ProcessHits()  "
-            //  <<" Track id of charged tk opt phot pe "
-            //    << CurOptPhotMotherChTrackID <<"   "
-            //    <<  CurOptPhotID<<"   "
-            //    << aTrack->GetTrackID() << endreq;
+            CurOptPhotID        =   aPEInfo->OptPhotonId();
+            CurHpdQW2PhCathReflFlag= aPEInfo->QW2PCreflFlagSave() ;
+            CurElectronBackScatFlag = aPEInfo->BackscatteredPeFlag();
+            CurPhotoElectricFlag = aPEInfo->PhotoElectricFlag();
+            
+            
+            log << MSG::DEBUG << "Now in ProcessHits()  "
+              <<" Track id of charged tk opt phot pe "
+                << CurOptPhotMotherChTrackID <<"   "
+                <<  CurOptPhotID<<"   "
+                << aTrack->GetTrackID() << endreq;
 
             if(  aPEInfo->  VerbosePeTagFlag() ) {
               aRichVerboseFlag =1;
-
               CurChTrackMomVect    =
                 aPEInfo->  MotherofPhotonMomVectAtProd();
               CurChTrackPDGMass    = aPEInfo-> MotherofPhotonPDGMass();
@@ -273,7 +270,6 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
                 aPEInfo->MotherofPhotonCkvPreStep();
               CurChTrackCkvPostStepPos=
                 aPEInfo->MotherofPhotonCkvPostStep();
-
               CurPhotRayleighScatFlag=
                 aPEInfo->PhotonRayleighScatteringFlag();
               CurPhotAgelExitPos=
@@ -282,15 +278,19 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
               CurMirror2PhotonReflPosition= aPEInfo->Mirror2PhotReflPosition();
               CurMirror1PhotonDetectorCopyNum=aPEInfo->Mirror1PhotDetCopyNum();
               CurMirror2PhotonDetectorCopyNum=aPEInfo->Mirror2PhotDetCopyNum();
-
+              CurHpdReflectionFlag=aPEInfo->HpdPhotonReflectionFlag();
+              
+              
             }
+            
 
 
           }
         }
       }
-    }
+     }
   }
+  
 
 
   G4int CurPETrackID=aTrack->GetTrackID();
@@ -330,21 +330,39 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   newHit -> setMirror1PhotonDetectorCopyNum(CurMirror1PhotonDetectorCopyNum);
   newHit -> setMirror2PhotonDetectorCopyNum(CurMirror2PhotonDetectorCopyNum);
   newHit -> setRichVerboseHitInfo(aRichVerboseFlag);
+  newHit -> setRichHpdQW2PhCathReflFlag(CurHpdQW2PhCathReflFlag);
+  newHit ->  setElectronBackScatterFlag(CurElectronBackScatFlag );
+  newHit ->  setPhotoElectricProductionFlag(CurPhotoElectricFlag);
+  newHit->   setRichHpdPhotonReflectionFlag(CurHpdReflectionFlag);
+  
+
 
   // for now the trackID from the Gausshit base class.
   // if the mother of the corresponding optical photon exists it is set
   // as the trackid. Otherwise the track creating the
-  // hit is set as the track id/
-    // following line and the if block modified on Feb 21, 2006.
+  // hit is set as the track id. It also checks if the particle is produced
+  // by the photoelectric process or the backscatteting inside hpd; in both cases the
+  // mother of the corresponding optical photon used as trackid, if it exists.
+
   if(aRichPETrackInfo) aRichPETrackInfo->setCreatedHit(true);
-  if ( CurOptPhotMotherChTrackID >=0 ) {
+   newHit ->setTrackID(CurOptPhotMotherChTrackID); // this covers all the normal cases
+                                                  // like Charged track -> Cherenkov photon -> photoelectron-> hit
+                                                  // and photoelectron-> backscattered electron->hit.
+     if( CurOptPhotMotherChTrackID == 0) {           // this is for mip particle and the possible backscatted electrons from them.
+     newHit ->setTrackID(CurPETrackID);
+     if(aRichPETrackInfo) aRichPETrackInfo ->setToBeStored (true);       
+    }
+
+
+  
+  //  if ( CurOptPhotMotherChTrackID >=0 ) {
     // Charged track -> Cherenkov photon -> photoelectron-> hit 
-    newHit ->setTrackID(CurOptPhotMotherChTrackID);
-  } else {
+  //  newHit ->setTrackID(CurOptPhotMotherChTrackID);
+  // } else {
     // Charged track -> hit
-    newHit ->setTrackID(CurPETrackID);
-    if(aRichPETrackInfo) aRichPETrackInfo ->setToBeStored (true);
-  }
+  //   newHit ->setTrackID(CurPETrackID);
+  //   if(aRichPETrackInfo) aRichPETrackInfo ->setToBeStored (true);
+  //  }
 
   int CurrentRichCollectionSet=-1;
   if ( CurrentRichDetNumber == 0 ) {

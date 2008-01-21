@@ -1,4 +1,4 @@
-// $Id: RichG4TrackAction.cpp,v 1.3 2007-01-12 15:32:04 ranjard Exp $
+// $Id: RichG4TrackAction.cpp,v 1.4 2008-01-21 16:56:27 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -61,7 +61,10 @@ RichG4TrackAction::~RichG4TrackAction(){ }
 //=============================================================================
 void RichG4TrackAction::PreUserTrackingAction  ( const G4Track* aTrack ) {
 
+
   if( 0 == aTrack || 0 == trackMgr()           )  { return ; } /// RETURN !!!
+
+
  
 }
 
@@ -71,6 +74,7 @@ void RichG4TrackAction::PreUserTrackingAction  ( const G4Track* aTrack ) {
 //=============================================================================
 void RichG4TrackAction::PostUserTrackingAction ( const G4Track* aTrack ) 
 {
+
   // Is the track valid? Is tracking manager valid?
   if( 0 == aTrack || 0 == trackMgr()           )  { return ; } /// RETURN !!!
   if ( 0 == trackMgr()->GimmeTrajectory    () )  { return ; } /// RETURN !!!
@@ -201,6 +205,7 @@ void RichG4TrackAction::PostUserTrackingAction ( const G4Track* aTrack )
       trackMgr()->SetTrajectory( 0 ) ;
     }
 
+  
   
 
   //

@@ -57,6 +57,33 @@ public:
                     const std::vector<double> & jqeffvect, 
                     const std::vector<double> & qeffener );
 
+  //additions by RWL 11.10.06
+  //
+  // void setCurrentHpdPCRIen(int jhpdnum, int jrichdetnum, int jnumPCRIbins,
+  //                       const std::vector<double> & aPCRIvect, 
+  //                       const std::vector<double> & aPCRIener );
+  //
+  //  void setCurrentHpdQWRIen(int jhpdnum, int jrichdetnum, int jnumQWRIbins,
+  //                       const std::vector<double> & aQWRIvect,
+  //                       const std::vector<double> & aQWRIener );
+  //
+  //  void setAnHpdPCRIen(int jnumPCRIbins,
+  //                  const std::vector<double> & aPCRIvect, 
+  //                  const std::vector<double> & aPCRIener );
+
+  //  void setAnHpdQWRIen(int jnumQWRIbins,
+  //                  const std::vector<double> & aQWRIvect, 
+  //                  const std::vector<double> & aQWRIener );
+
+  //  double getHpdQWRIFromPhotEnergy(double photonenergy );
+
+  //  double getHpdPCRIFromPhotEnergy(double photonenergy );
+
+  //  double getHpdCorrectedQEFromPhotEnergy(double photonenergy, double originalQE);
+
+
+  //end of additions
+
   //  void getHpdQEDataFromDB();
 
 private:
@@ -66,6 +93,17 @@ private:
   int m_numHpdQEbins;
   std::vector<double> m_HpdQEff;
   std::vector<double> m_PhotEnergyHpdQE;
+
+
+  //  int m_numHpdQWRIbins;                    //added by RWL 11.10.06
+  // std::vector<double> m_HpdQWRI;
+  // std::vector<double> m_PhotEnergyHpdQWRI;
+  //  int m_numHpdPCRIbins;
+  //  std::vector<double> m_HpdPCRI;
+  // std::vector<double> m_PhotEnergyHpdPCRI;  //end of additions
+
+
+
   double m_WaveEnerCnv;
   int HpdQEVerboseLevel;
 

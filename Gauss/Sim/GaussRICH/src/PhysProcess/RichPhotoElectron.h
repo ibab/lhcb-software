@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichPhotoElectron.h,v 1.2 2006-01-10 14:58:23 seaso Exp $
+// $Id: RichPhotoElectron.h,v 1.3 2008-01-21 16:56:58 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 

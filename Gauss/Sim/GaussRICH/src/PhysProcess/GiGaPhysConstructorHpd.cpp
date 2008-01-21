@@ -1,4 +1,4 @@
-// $Id: GiGaPhysConstructorHpd.cpp,v 1.9 2007-01-12 15:31:59 ranjard Exp $
+// $Id: GiGaPhysConstructorHpd.cpp,v 1.10 2008-01-21 16:56:57 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -41,8 +41,16 @@ GiGaPhysConstructorHpd::GiGaPhysConstructorHpd
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : GiGaPhysConstructorBase( type , name , parent )
-{}
+  : GiGaPhysConstructorBase( type , name , parent ),
+    m_RichHpdSiDetEfficiency(0.85),
+    m_RichHpdPixelChipEfficiency(1.0),
+    m_RichHpdPeBackScatterProb(0.005823) /*RWL change 8th Nov 06*/ 
+{ 
+  declareProperty("RichHpdSiDetEfficiency", m_RichHpdSiDetEfficiency);
+  declareProperty("RichHpdPixelChipEfficiency", m_RichHpdPixelChipEfficiency);
+  declareProperty("RichHpdBackScatterProb" , m_RichHpdPeBackScatterProb);
+
+ }
 
 
 //=============================================================================
@@ -132,6 +140,11 @@ void GiGaPhysConstructorHpd::ConstructHpdSiEnLoss()
 
   RichHpdSiEnergyLoss* theRichHpdSiEnergyLossProcess =
     new RichHpdSiEnergyLoss("RichHpdSiEnergyLossProcess", fUserDefined );
+  theRichHpdSiEnergyLossProcess->setHpdSiDetEff ( m_RichHpdSiDetEfficiency);
+  theRichHpdSiEnergyLossProcess->setHpdSiPixelChipEff (m_RichHpdPixelChipEfficiency);
+  theRichHpdSiEnergyLossProcess->setHpdPeBackScaProb(m_RichHpdPeBackScatterProb);
+  theRichHpdSiEnergyLossProcess->InitializeHpdProcParam();
+  
 
   theParticleIterator->reset();
   while( (*theParticleIterator)() ){

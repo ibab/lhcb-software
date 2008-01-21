@@ -112,7 +112,29 @@ public:
   void setMirror2PhotDetCopyNum(const G4int aMirror2PhotDetCopyNum) {m_Mirror2PhotDetCopyNum=aMirror2PhotDetCopyNum;}
   G4int Mirror2PhotDetCopyNum() {return  m_Mirror2PhotDetCopyNum;}
 
-
+  G4int  QW2PCreflFlagSave() {return m_QW2PCreflFlagSave;}
+  void setQW2PCreflFlagSave(G4int afl) 
+  { m_QW2PCreflFlagSave=afl;}
+  
+  G4int  BackscatteredPeFlag()  {  return m_BackscatteredPeFlag;}
+  void setBackscatteredPeFlag(G4int aFlag)
+  {m_BackscatteredPeFlag=aFlag;}
+  void bumpBackscatteredFlag()
+  {m_BackscatteredPeFlag++;}
+  
+    
+  G4int PhotoElectricFlag() 
+  {  return m_PhotoElectricFlag;}
+  void setPhotoElectricFlag(G4int apflag) 
+  {  m_PhotoElectricFlag=apflag;}
+  
+  G4int HpdPhotonReflectionFlag()
+  {  return m_HpdPhotonReflectionFlag;}
+  void setHpdPhotonReflectionFlag( G4int aFlagA)
+  {m_HpdPhotonReflectionFlag=aFlagA;}
+  
+    
+  
 private:
 
   G4int m_PhotOriginRadiatorNumber;
@@ -135,6 +157,17 @@ private:
   G4ThreeVector m_Mirror2PhotReflPosition;
   G4int  m_Mirror1PhotDetCopyNum;
   G4int  m_Mirror2PhotDetCopyNum;
+  G4int  m_QW2PCreflFlagSave;
+  G4int  m_BackscatteredPeFlag; // 0 means track is not backscattered
+                                // 1or more means this track is backscattered.
+                                // the number indicates the number times it backscattered.
+  G4int m_PhotoElectricFlag;    // 0 means track not created by Photoelectric process 
+                                // 1 means track created in Photoelectric process.
+                                // 2 means this track is not created by photoelectric process, but
+                                // its parent track (or some grand parent track) is created by photoelectric process.
+
+  G4int m_HpdPhotonReflectionFlag;
+  
 };
 
 #endif
