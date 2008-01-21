@@ -4,6 +4,7 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r3 2008-01-21 ==========================
 ! 2008-01-20 - Kurt Rinnert
  - modified the space tracking so it uses the new hit preparation on demand 
    features in TfKernel.  Runtime performance of the standard Brunel tracking
