@@ -35,6 +35,7 @@
         access = 'PUBLIC' />
 
    
+
       <base   name = "KeyedObject&lt;LHCb::RawBank::BankType&gt;" />
       &KeyedObject;
 
