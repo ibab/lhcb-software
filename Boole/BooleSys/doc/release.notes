@@ -3,15 +3,23 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r9>2007-12-21 Boole v14r9</A></H1><PRE>
+</PRE><H1><A NAME=v14r9>2008-01-21 Boole v14r9</A></H1><PRE>
 This version uses projects Gaudi v19r7, LHCb v23r3, Lbcom v6r14
- and DDDB v1r* (SQLDDDB v3r1 or greater), ParamFiles v7r0, FieldMap v4r7
+ and DDDB v1r* (SQLDDDB v3r1 or greater), ParamFiles v7r1, FieldMap v4r7
 
 It can process DC06 data, but output format is different from DC06, requires
 Brunel v32r1 or greater
 
 - New tuning
   . In valgrind.job, use the new ROOT suppressions file available from LCG_54 
+  . In SuppressWarnings.opts, add a time stamp to remaining messages
+  . Transparent changes to L0 code to make it faster (L0Muon v7r6, PuVeto v7r3)
+  . Disable allStrips options in Digit Creators (STAlgorithms v2r6)
+  . Add Next spill to MC Deposit Creators (STAlgorithms v2r6)
+
+- New features
+  . Final changes to allow use of dead strip conditions
+    (STDet v3r9, STKernel v1r1, STDAQ v3r4, STTools v3r5)
 
 - Bug fixes
   . Fix minor memory leak in L0ProcessorDataLocation initialize() (L0DU v8r2)
