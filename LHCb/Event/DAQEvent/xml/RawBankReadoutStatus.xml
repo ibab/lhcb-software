@@ -27,10 +27,11 @@
         Incomplete = 2, 
         Missing    = 4, 
         Empty      = 8 , 
-        Tell1Sync  = 16, 
-        Tell1Link  = 32, 
-        Tell1Error = 64, 
-        Unknown    =128'
+        NonUnique  = 16, 
+        Tell1Sync  = 32, 
+        Tell1Link  = 64, 
+        Tell1Error = 128, 
+        Unknown    = 256'
         access = 'PUBLIC' />
 
    
