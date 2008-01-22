@@ -1,4 +1,4 @@
-// $Id: LoKiNumbersDict.h,v 1.2 2007-12-03 12:31:08 ibelyaev Exp $
+// $Id: LoKiNumbersDict.h,v 1.3 2008-01-22 19:21:19 ibelyaev Exp $
 // ============================================================================
 #ifndef DICT_LOKINUMBERSDICT_H 
 #define DICT_LOKINUMBERSDICT_H 1
@@ -199,8 +199,8 @@ namespace LoKi
     private:
       typedef double TYPE ;
       typedef LoKi::BasicFunctors<TYPE>::FunVal         FunVal  ;
-      typedef LoKi::BasicFunctors<double>::Function     Func    ;
-      typedef LoKi::BasicFunctors<double>::Predicate    Cuts    ;      
+      typedef LoKi::BasicFunctors<TYPE>::Function       Func    ;
+      typedef LoKi::BasicFunctors<TYPE>::Predicate      Cuts    ;      
     public:
       // __rshift__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,double>
