@@ -3,10 +3,11 @@
 // Only info messages passed are those useful to debug production crashes
 
 // Suppress Warnings and below by default
-MessageSvc.OutputLevel = 5;
+MessageSvc.OutputLevel = 4;
 
 // "Known" errors
-Boole.BooleMemory.OutputLevel = 4;
+Boole.BooleMemory.OutputLevel = 4; // Because Boole.OutputLevel = 3;
+CompareMCVertex.OutputLevel = 5;   // Due to crazy vertices produced by Gauss
 
 // Information to be kept
 Boole.OutputLevel = 3;
