@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimCmdServer.h,v 1.3 2007-03-05 16:52:26 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimCmdServer.h,v 1.4 2008-01-22 14:53:42 evh Exp $
 #ifndef GAUCHO_DIMCMDSERVER_H
 #define GAUCHO_DIMCMDSERVER_H 1
 
@@ -11,7 +11,7 @@
 #include "GaudiKernel/IIncidentListener.h"
 
 
-/** @class DimPropServer DimCmdServer.h Gaucho/DimCmdServer.h
+/** @class DimPropServer DimCmdServer.h
 
 This class get/sets allows execution of commands via dim, in particular
 for dynamic publishing of histograms

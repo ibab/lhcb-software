@@ -10,12 +10,23 @@
 // Forward declarations
 class ISvcLocator;
 class DimPropServer;
-class DimEngine;
 class DimCmdServer;
+/*class MonObject;
+class MonInt;
+class MonDouble;
+class MonLong;
+class MonFloat;
+class MonBool;
+class MonPair;
+class MonString;
+class MonTProfile;
+class MonTH1F;
+class MonTH2F;*/
+class DimMonObjectManager;
 
 
 namespace AIDA { class IBaseHistogram; }
-
+//class MonObjects;
 /** @class MonitorSvc MonitorSvc.h GaudiKernel/MonitorSvc.h
     
 This class implements the IMonitorSvc interface, and publishes Gaudi variables
@@ -61,7 +72,13 @@ public:
                    const std::string& desc, const IInterface* owner) ;
   void declareInfo(const std::string& name, const AIDA::IBaseHistogram* var, 
                    const std::string& desc, const IInterface* owner) ;
-  void declareInfo(const std::string& name, const std::string& format, const void * var, 
+
+  // Begin MO
+  void declareInfo(const std::string& name, const MonObject* var, const std::string& desc, const IInterface* owner) ;
+  void declareInfoMonObject(const std::string& name, MonObject* var, const std::string& desc, const IInterface* owner) ;
+  // End MO
+
+void declareInfo(const std::string& name, const std::string& format, const void * var, 
                    int size, const std::string& desc, const IInterface* owner) ;
   
   /** Undeclare monitoring information
@@ -74,7 +91,20 @@ public:
       @param owner Owner identifier of the monitoring information
   */
   void undeclareAll( const IInterface* owner ) ;
-  
+
+  /** Update monitoring information
+      @param name Monitoring information name knwon to the external system
+      @param owner Owner identifier of the monitoring information
+  */
+  void updateSvc( const std::string& name, const IInterface* owner ) ;
+
+  /** Update all monitoring information
+      @param owner Owner identifier of the monitoring information
+  */
+  void updateAll( const IInterface* owner ) ;
+  void resetHistos( const IInterface* owner ) ;
+
+
   /** Get the names for all declared monitoring informations for a given
       owner. If the owner is NULL, then it returns for all owners
   */
@@ -94,8 +124,12 @@ private:
   std::map<std::string,std::string> m_infoDescriptions;
 
   DimPropServer* m_dimpropsvr;
-  DimEngine* m_dimeng;
   DimCmdServer* m_dimcmdsvr;
+  // Begin MO
+  // In the case of MonObjects use its DimMonObjectManager instead of DimEngine...
+  DimMonObjectManager* m_dimMonObjectManager;
+  // End MO
+  
   std::string infoOwnerName( const IInterface* owner );
 };
 

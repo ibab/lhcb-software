@@ -1,4 +1,4 @@
-// $Id: DimCmdServer.cpp,v 1.7 2007-03-06 18:19:25 frankb Exp $
+// $Id: DimCmdServer.cpp,v 1.8 2008-01-22 14:53:42 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -31,54 +31,50 @@ static IHistogramSvc* HDS = 0;
 static IService* m_HDS = 0;
 static char *nextcommand = 0;
 
-
 DimCmdServer::DimCmdServer(std::string name, ISvcLocator* svclocator) : 
   DimCommand(name.c_str(),"C"), m_incidentSvc(0) {
   StatusCode sc;
-  
+
   m_publishsvc = 0;
   // get pointer to ServiceLocator
-  m_svcloc = svclocator;    
-  
+  m_svcloc = svclocator;
+
   // get msg logging
   sc = m_svcloc->service("MessageSvc", m_msgsvc);
   MsgStream log(m_msgsvc, "DimCmdServer");  
- 
+
   log << MSG::INFO << "Creating DimCmdServer for thisnodename " << name 
       << endreq;
 
   // to walk the transient store  
-
-
   sc = svclocator->service("HistogramDataSvc",HDS,true); 
-  if (sc.isSuccess()){    
+  if (sc.isSuccess()){
     log << MSG::INFO << "Found the HistogramDataService" << endreq;
   }
-  else {    
+  else {
     log << MSG::WARNING << "Unable to locate the HistogramDataService" 
         << endreq;
-  }   
-  
-  //to traverse the transient store  
+  }
+
+  //to traverse the transient store
   sc = svclocator->service("MonitorSvc", m_publishsvc, true );
   if( sc.isSuccess() )   {
     log << MSG::INFO << "Found the IPublish interface" << endreq;
   }
-  else {    
+  else {
     log << MSG::WARNING << "Unable to locate the IPublish interface." 
         << endreq;
-  }  
+  }
   sc = svclocator->service("IncidentSvc", m_incidentSvc, true );
   if( sc.isSuccess() )   {
     log << MSG::INFO << "Found the Incident interface" << endreq;
   }
-  else {    
+  else {
     log << MSG::WARNING << "Unable to locate the Incident interface." 
         << endreq;
-  }   
-  
-}
+  }
 
+}
 
 DimCmdServer::~DimCmdServer() {
   StatusCode sc;
@@ -88,25 +84,24 @@ DimCmdServer::~DimCmdServer() {
   if (HDS) HDS->release();
 
 }
- 
 
 void DimCmdServer::commandHandler() {
   StatusCode sc;
   MsgStream log(m_msgsvc, "DimCmdServer");
   //! hardcoded string length limits
 
-  nextcommand=getString();  
-  
+  nextcommand=getString();
+
   if ( m_incidentSvc ) {
      Incident incident("DimCmdServer","SAVE_HISTOS");
      Incident incident2("DimCmdServer","INSERT_HISTOS");
      if (strncmp(nextcommand,"save_histos",11)==0) m_incidentSvc->fireIncident(incident);
      if (strncmp(nextcommand,"insert_histos",13)==0){
         m_incidentSvc->fireIncident(incident2);
-     } 
-  }   
-  log << MSG::INFO << "received command " << nextcommand << endreq;       		
-  if (strncmp(nextcommand,"/stat/",6)==0) {	   
+     }
+  }
+  log << MSG::INFO << "received command " << nextcommand << endreq;
+  if (strncmp(nextcommand,"/stat/",6)==0) {
     std::string  m_rootName;
     SmartDataPtr<DataObject> root(HDS,m_rootName);
     std::string store_name = "Unknown";
@@ -118,7 +113,7 @@ void DimCmdServer::commandHandler() {
         store_name = isvc->name();
       }
     }
-    pObj=root->registry();	     	    	    
+    pObj=root->registry();
     SmartIF<IDataManagerSvc> mgr(HDS);
     if ( mgr )    {
       myhisto=0;
@@ -127,25 +122,23 @@ void DimCmdServer::commandHandler() {
       myhisto=dynamic_cast<AIDA::IHistogram*>(mydataobject);
       if ( sc.isSuccess() ) {
         log << MSG::INFO << "Histogram retrieved id: " << nextcommand << endreq;
-        // now subscribe to it	                  
-        log << MSG::INFO << "Subscribing to service "<< nextcommand << endreq;	       
-        m_publishsvc->declareInfo(nextcommand,myhisto,myhisto->title(),HDS);		   
+        // now subscribe to it
+        log << MSG::INFO << "Subscribing to service "<< nextcommand << endreq;
+        m_publishsvc->declareInfo(nextcommand,myhisto,myhisto->title(),HDS);
       }
       else {
-        log << MSG::INFO << "Problem retrieving histogram "  
+        log << MSG::INFO << "Problem retrieving histogram "
             << nextcommand  <<endreq;  
-      }			   		   		   
+      }
     }
     else{
       log << MSG::INFO << "Can't get to the histogram service. "  << endreq;
-    }               
-
+    }
   }
 
   log << MSG::INFO << "Leaving commandHandler. "  << endreq;
 
   //  delete [] nextcommand;
-
 
 } // end commandHandler
 
