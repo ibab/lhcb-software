@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.1 2008-01-22 09:34:58 hernando Exp $
+// $Id: HltBase.icpp,v 1.2 2008-01-22 13:35:27 hernando Exp $
 // Include files
 
 
@@ -188,6 +188,8 @@ Hlt::Data& HltBase<EBASE>::hltData()
   return *m_hltData;
 }
 
+
+
 template <class EBASE>
 Hlt::Configuration& HltBase<EBASE>::hltConf() 
 {
@@ -197,6 +199,7 @@ Hlt::Configuration& HltBase<EBASE>::hltConf()
   EBASE::Assert( m_hltConf != 0, " hltConf() no Hlt::Configuration");
   return *m_hltConf;
 }
+
 
 template <class EBASE>
 bool HltBase<EBASE>::validHltSelectionName(const std::string& selname) 

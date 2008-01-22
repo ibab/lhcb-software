@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.1 2008-01-22 09:34:58 hernando Exp $
+// $Id: HltBase.h,v 1.2 2008-01-22 13:35:27 hernando Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -248,7 +248,7 @@ protected:
 
   // returns the hlt configuration
   Hlt::Configuration& hltConf();
-
+  
   // returns true if this selection name is valid
   bool validHltSelectionName(const std::string& name);
 
