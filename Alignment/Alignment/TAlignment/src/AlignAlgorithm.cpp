@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.15 2008-01-10 10:38:29 janos Exp $
+// $Id: AlignAlgorithm.cpp,v 1.16 2008-01-22 16:13:45 janos Exp $
 // Include files
 // from std
 // #include <utility>
@@ -42,8 +42,8 @@ namespace {
       : m_nElem(nElem), 
         m_v(nElem) {}
     size_t nElem() const { return m_nElem; }
-    Gaudi::Vector6&   V(int i) { return m_v[i]; }
-    const Gaudi::Vector6&   V(int i) const { return m_v[i]; }
+    Gaudi::Vector6&       V(int i) { return m_v[i]; }
+    const Gaudi::Vector6& V(int i) const { return m_v[i]; }
     Gaudi::Matrix6x6& M(int i, int j) { assert(i<=j); return m_m[std::make_pair(i,j)]; }
     //FIXME: return proxy that fixes i<j...
     const Gaudi::Matrix6x6& M(int i, int j) const { 
@@ -52,7 +52,7 @@ namespace {
     }
     void clear() { m_v.clear(); m_v.resize(m_nElem); m_m.clear(); }
   private:
-    size_t m_nElem ;
+    size_t                                         m_nElem ;
     std::vector<Gaudi::Vector6>                    m_v;
     std::map<std::pair<int,int>, Gaudi::Matrix6x6> m_m;
   };
@@ -66,17 +66,17 @@ namespace {
   
   class Data {
   public:
-    Data(LHCb::LHCbID id, unsigned index, double r, const Gaudi::Matrix1x6& d)
-      : m_id(id),
+    Data(const LHCb::Node& node, unsigned index, double r, const Gaudi::Matrix1x6& d)
+      : m_id(&node),
         m_index(index),
         m_r(r),
         m_d(d) {}
-    LHCb::LHCbID id() const { return m_id ; }
+    const LHCb::Node* id() const { return m_id ; }
     unsigned index() const { return m_index; }
     double r() const { return m_r; }
     const Gaudi::Matrix1x6& d() const { return m_d; }
   private:
-    LHCb::LHCbID     m_id;
+    const LHCb::Node* m_id ;
     unsigned         m_index;
     double           m_r;
     Gaudi::Matrix1x6 m_d;
@@ -224,10 +224,10 @@ StatusCode AlignAlgorithm::execute() {
   m_nTracks += tracks->size();
   /// Loop over tracks
   typedef Tracks::const_iterator TrackIter;
-  for (TrackIter iT = tracks->begin(), iTend = tracks->end(); iT != iTend; ++iT) {
+  for (TrackIter iTrack = tracks->begin(), iTrackEnd = tracks->end(); iTrack != iTrackEnd; ++iTrack) {
     std::vector<Data> data;
     // Get nodes. Need them for measurements, residuals and errors
-    const Nodes& nodes = (*iT)->nodes();
+    const Nodes& nodes = (*iTrack)->nodes();
     if (printDebug()) debug() << "==> Found " << nodes.size() << " nodes"<< endmsg;
 
     // Loop over nodes and get measurements, residuals and errors
@@ -246,7 +246,8 @@ StatusCode AlignAlgorithm::execute() {
         continue;
       }
       const unsigned index = elem->index();
-      if (printDebug()) debug() << "==> " << meas.lhcbID() << " -> index = " << index << " -> " <<  elem->name() << endmsg;
+      if (printDebug()) debug() << "==> measure = " << meas.measure() << " id = " << meas.lhcbID() << " -> index = " 
+                                << index << " -> " <<  elem->name() << endmsg;
       /// Project measurement
       ITrackProjector* proj = m_projSelector->projector(meas);
       if (!proj) {
@@ -265,33 +266,29 @@ StatusCode AlignAlgorithm::execute() {
       // push back normalized residuals & derivatives;
       res /= err;
       der /= err;
-      data.push_back(Data(meas.lhcbID(), index, res, der));
+      data.push_back(Data(**node, index, res, der));
     }
     
     ResidualCovarianceTool cov;
-    cov.compute(**iT);
-    
+    cov.compute(*(*iTrack));
     
     for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
-      m_equations->V(id->index())              -= convert(id->r()*id->d()) ;
-      m_equations->M(id->index(), id->index()) += (Transpose(id->d())*id->d());
+      m_equations->V(id->index())               -= convert(id->r()*id->d()) ;
+      m_equations->M(id->index(), id->index())  += (Transpose(id->d())*id->d());
 
-      for (std::vector<Data>::const_iterator jd = id; jd != idEnd; ++jd) {
-        if ( m_correlation || jd==id) {
-          // make sure we go for the upper triangle...
-          std::vector<Data>::const_iterator i(id), j(jd);
-          if (i->index() > j->index()) std::swap(i, j);
-          const double c = cov.HCH_norm(i->id(),j->id());
-          m_equations->M(i->index(), j->index()) -= c * Transpose(i->d())*j->d();
-          if (!( i->id() == j->id())) {
-            m_corrHistos[std::make_pair(i->index(), j->index())]->fill(m_iteration, c/std::sqrt(cov.HCH_norm(i->id(), i->id())*cov.HCH_norm(j->id(), j->id())));
+      for (std::vector<Data>::const_iterator jd = data.begin(); jd != idEnd; ++jd) 
+        if( id == jd || ( m_correlation && id->index() <= jd->index() )) {
+          double c = cov.HCH_norm(*id->id(),*jd->id());
+          m_equations->M(id->index(), jd->index()) -= c * (Transpose(id->d())*jd->d());
+
+          if (!( id->id() == jd->id())) {
+            m_corrHistos[std::make_pair(id->index(), jd->index())]->
+              fill(m_iteration, c/std::sqrt(cov.HCH_norm(*id->id(), *id->id())*cov.HCH_norm(*jd->id(), *jd->id())));
           } else {
-            m_autoCorrHistos[i->index()]->fill(m_iteration,c);
+            m_autoCorrHistos[id->index()]->fill(m_iteration, c);
           }
         }
-      }
-    }
-
+    }    
   }
 
   return StatusCode::SUCCESS;
@@ -309,69 +306,116 @@ void AlignAlgorithm::update() {
     for (size_t j = i; j < m_equations->nElem(); ++j) {
       info() << "==> M["<<i<<","<<j<<"] = "      << m_equations->M(i,j) << endmsg;
     }
-    info() << "\n==> V["<<i<<"] = "    << m_equations->V(i) << endmsg;
-    
+    info() << "\n==> V["<<i<<"] = "    << m_equations->V(i) << endmsg;    
   }
-  
-  const size_t numElements = std::distance(m_rangeElements.first, m_rangeElements.second);
-  
-  /// We should probably do this in initialize and not everytime in update. Once should be sufficient
-  /// We need to figure for which dofs we want to align for. Actually what the dimensions of the maxtrix and vector are.
-  /// testing:
-  // std::vector<std::string> dofs = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz");
-  //   size_t nDOFs = 0;
-  //   std::vector<bool> dofFlags;
-  //   //dofFlags.reserve(numElements*6u);
-  //   for (std::vector<AlignmentElement>::const_iterator i = m_rangeElements.first, iEnd = m_rangeElements.second; i != iEnd; ++i) {
-  //     info() << i->nDOFs();
-  //     nDOFs += i->nDOFs();
-  //     info() << i->name() << " ";
-  //     const std::vector<bool>& ownDOFs = i->dofFlags();
-  //     info() << ownDOFs;
-  //     info() << "DOFS: ";
-  //     for (std::vector<bool>::const_iterator j = ownDOFs.begin(), jEnd = ownDOFs.end(); j != jEnd; ++j) {
-  //       info() << (*j);
-  //       if ((*j)) info() <<  std::distance(ownDOFs.begin(), j) << dofs.at(std::distance(ownDOFs.begin(), j));
-  //     }
-  //     info() << endmsg;
-  //     dofFlags.insert(dofFlags.end(),ownDOFs.begin(), ownDOFs.end());
-  //   }
-  //   info() << "nDOFs      = " << nDOFs << endmsg;
-  //   info() << "dofsflags  = " << dofFlags << endmsg;
-  
-  AlVec    derivatives(Derivatives::kCols*numElements + m_constraints.size());
-  AlSymMat      matrix(Derivatives::kCols*numElements + m_constraints.size());
+
+  /// Take the gaudi vector and matix and fill AlVec and AlSym
+  AlVec    tmpDerivatives(Derivatives::kCols*(m_equations->nElem()));
+  AlSymMat tmpMatrix(Derivatives::kCols*(m_equations->nElem()));
 
   /// Loop over map of index to 2nd derivative matrix and 1st derivative vector
   for (unsigned i = 0u, iEnd = m_equations->nElem(); i < iEnd ; ++i) {
-    ass(derivatives, i*Derivatives::kCols, m_equations->V(i));
+    ass(tmpDerivatives, i*Derivatives::kCols, m_equations->V(i));
     /// (assume upper triangular input!)
-    for (unsigned j = i ; j < iEnd; ++j ) ass(matrix, i*Derivatives::kCols, j*Derivatives::kCols, m_equations->M(i,j));
+    for (unsigned j = i ; j < iEnd; ++j ) ass(tmpMatrix, i*Derivatives::kCols, j*Derivatives::kCols, m_equations->M(i,j));
   }
+  //   for (unsigned i = 0u, iEnd = m_equations->nElem(); i < iEnd ; ++i) {
+  //     tmpDerivatives.insert(i*Derivatives::kCols, m_equations->V(i));
+  //     /// (assume upper triangular input!)
+  //     for (unsigned j = i ; j < iEnd; ++j) tmpMatrix.insert(i*Derivatives::kCols, j*Derivatives::kCols, m_equations->M(i,j));
+  //   }
 
-  /// Add constraints
-  if (!m_constraints.empty()) {
-    for (unsigned i = Derivatives::kCols*numElements, iEnd = Derivatives::kCols*numElements + m_constraints.size(),
-	   nC = 0u; i != iEnd; ++i, ++nC) {
-      const std::vector<double>& constraint = m_constraints.at(nC);
-      derivatives[i] = constraint.back();
-      unsigned cEntry = 0u;
-      for (std::vector<double>::const_iterator j = constraint.begin(), jEnd = constraint.end()-1; j != jEnd; ++j, ++cEntry) {
-        matrix[i][cEntry] = (*j);
+  /// Some of this  should go into intialize. keep it here for now
+  /// testing:
+  const std::vector<std::string> dofs = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz");
+  size_t nDOFs = 0;
+  std::vector<bool> dofMask;
+  for (std::vector<AlignmentElement>::const_iterator i = m_rangeElements.first, iEnd = m_rangeElements.second; i != iEnd; ++i) {
+    nDOFs += i->nDOFs();
+    info() << i->name() << " ";
+    const std::vector<bool>& ownDoFMask = i->dofMask();
+    info() << "DOFs: ";
+    for (std::vector<bool>::const_iterator j = ownDoFMask.begin(), jEnd = ownDoFMask.end(); j != jEnd; ++j) {
+      if ((*j)) info() << dofs.at(std::distance(ownDoFMask.begin(), j));
+    }
+    info() << endmsg;
+    dofMask.insert(dofMask.end(), ownDoFMask.begin(), ownDoFMask.end());
+  }
+  info() << "nDOFs             = " << nDOFs          << endmsg;
+  info() << "dofsflags         = " << dofMask        << endmsg;
+  info() << "size of dofsflags = " << dofMask.size() << endmsg;
+
+  /// Define new AlVec and AlSymMat corresponding to the number of degrees of freedom we want to align
+  assert(tmpMatrix.size() == dofMask.size() || tmpDerivatives.size() == dofMask.size());
+  AlVec    derivatives(nDOFs);
+  AlSymMat matrix(nDOFs);
+  
+  unsigned insert_i = 0u;
+  unsigned insert_j = 0u;
+  typedef std::vector<bool>::const_iterator boolIter; 
+  for (std::vector<bool>::const_iterator i = dofMask.begin(), iEnd = dofMask.end(); i != iEnd; ++i) {
+    if (*i) {
+      const unsigned index_i = std::distance(boolIter(dofMask.begin()), i);
+      derivatives[insert_i] = tmpDerivatives[index_i];
+      for (std::vector<bool>::const_iterator j = i, jEnd = dofMask.end(); j != jEnd; ++j) {
+        if (*j) {
+          if (printDebug()) {
+            debug() << "insert_i = " << insert_i << " insert_j = " << insert_j 
+                    << " matrix[" << index_i << "][" << std::distance(boolIter(dofMask.begin()), j) << "]" 
+                    << tmpMatrix[index_i][std::distance(boolIter(dofMask.begin()), j)] << endmsg;
+          }
+          matrix[insert_i][insert_j++] = tmpMatrix[index_i][std::distance(boolIter(dofMask.begin()), j)];
+        }
       }
+      insert_j = ++insert_i;
     }
   }
+  
+  if (printDebug()) {
+    debug() << "Tmp AlVec Vector    = " << tmpDerivatives << endmsg;
+    debug() << "Tmp AlSymMat Matrix = " << tmpMatrix      << endmsg;
+  }
+  
+  info() << "AlVec Vector    = " << derivatives << endmsg;
+  info() << "AlSymMat Matrix = " << matrix      << endmsg;
+  
+  /// Add constraints
+//   if (!m_constraints.empty()) {
+//     for (unsigned i = Derivatives::kCols*numElements, iEnd = Derivatives::kCols*numElements + m_constraints.size(),
+//            nC = 0u; i != iEnd; ++i, ++nC) {
+//       const std::vector<double>& constraint = m_constraints.at(nC);
+//       derivatives[i] = constraint.back();
+//       unsigned cEntry = 0u;
+//       for (std::vector<double>::const_iterator j = constraint.begin(), jEnd = constraint.end()-1; j != jEnd; ++j, ++cEntry) {
+//         matrix[i][cEntry] = (*j);
+//       }
+//     }
+//   }
+  
+//   info() << "AlVec Vector = " << derivatives << endmsg;
+//   info() << "AlSymMat Matrix = " << matrix << endmsg;
 
-  info() << "AlVec Vector = " << derivatives << endmsg;
-  info() << "AlSymMat Matrix = " << matrix << endmsg;
 
   /// Tool returns H^-1 and alignment constants
   bool solved = m_matrixSolverTool->compute(matrix, derivatives);
   if (solved) {
+    StatusCode sc = StatusCode::SUCCESS;
     info() << "Solution = " << derivatives << endmsg;
     /// Update alignment iff we've solved Ax=b
     if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
-    StatusCode sc = putAlignmentConstants(m_rangeElements, derivatives);
+    if (derivatives.size() != dofMask.size()) {
+      AlVec tmp(Derivatives::kCols*(m_equations->nElem()));
+      insert_i = 0u;
+      unsigned index_j = 0u;
+      for (std::vector<bool>::const_iterator i = dofMask.begin(), iEnd = dofMask.end(); i != iEnd; ++i) {
+        (*i) ? tmp[insert_i++] = derivatives[index_j++] : tmp[insert_i++] = 0.0;
+      }
+      if (printDebug()) debug() << "==> putting alignment deltas = " << tmp << endmsg;
+      sc = putAlignmentConstants(m_rangeElements, tmp);
+    } else {
+      if (printDebug()) debug() << "==> putting alignment deltas = " << derivatives << endmsg;
+      sc = putAlignmentConstants(m_rangeElements, derivatives);
+    }
     if (sc.isFailure()) error() << "==> Failed to put alignment constants" << endmsg;
   } else {
     error() << "Failed to solve system!" << endmsg;
