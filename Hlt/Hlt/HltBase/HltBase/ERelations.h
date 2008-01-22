@@ -1,4 +1,4 @@
-// $Id: ERelations.h,v 1.3 2007-11-14 13:34:18 hernando Exp $
+// $Id: ERelations.h,v 1.4 2008-01-22 09:34:58 hernando Exp $
 #ifndef HLTBASE_RELATIONS_H 
 #define HLTBASE_RELATIONS_H 1
 
@@ -10,7 +10,7 @@
 #include <map>
 
 
-namespace Estd
+namespace zen
 {
 
   /** Template base class to define relations between objects
@@ -53,7 +53,7 @@ namespace Estd
     // returns the relations of this key
     const targets& relations(const T1& t1) const {
       if (has_key(t1)) return ((_relations.find(t1))->second);
-      std::cout << " ERROR no relations to " << t1 << std::endl;
+      // std::cout << " ERROR no relations to " << t1 << std::endl;
     }
     
     // return the best relation
@@ -80,18 +80,18 @@ namespace Estd
     }
 
     void info() const {
-      std::cout << " size " << _keys.size() << std::endl;
+      // std::cout << " size " << _keys.size() << std::endl;
       for (typename std::vector<T1>::const_iterator it = _keys.begin(); 
            it != _keys.end(); ++it) {
         const T1& t1 = *it;
         const targets& tars = _relations.find(t1)->second;
-        std::cout << " targets size " << tars.size() << std::endl;
+        // std::cout << " targets size " << tars.size() << std::endl;
         for (typename targets::const_iterator it2 = tars.begin();
              it2 != tars.end(); ++it2) {
           const T2& t2 = (*it2).first;
           double w = (*it2).second;
-          std::cout  << "    t1 " << t1 
-                     << " -->  t2 " << t2 << " w " << w << std::endl;
+          // std::cout  << "    t1 " << t1 
+          //           << " -->  t2 " << t2 << " w " << w << std::endl;
         }
       }
     }

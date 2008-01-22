@@ -1,6 +1,7 @@
 #ifndef HLT_HLTSUMMARYHELPER_H 
 #define HLT_HLTSUMMARYHELPER_H 1
 
+#include "HltBase/EAssertions.h"
 #include "HltBase/HltTypes.h"
 #include "Event/HltSummary.h"
 
@@ -12,60 +13,30 @@
  */
 
 namespace HltSummaryHelper {
-
-  //! exception class: not valid key
-  class invalid_key : public std::logic_error {
-  public:
-    invalid_key(const std::string& key):logic_error(key) {
-      std::cout << "--ERROR: no selection in summary " << key << std::endl;
-    }
-  };
-
-  //! exception class: not container
-  class invalid_container : public std::logic_error {
-  public:
-    invalid_container(const std::string& key):logic_error(key) {
-      std::cout << "--ERROR: no container in selection " << key << std::endl;
-    }
-  };
-
-  template <class CONT>
-  const CONT& retrieve(const LHCb::HltSummary& sum,int id) {
+  
+  size_t ncandidates(const LHCb::HltSummary& sum, int id) {
     std::string key = " [retrieve] ";
-    if (!sum.hasSelectionSummary(id)) throw invalid_key(key);
+    if (!sum.hasSelectionSummary(id)) throw zen::invalid_key(key);
     const LHCb::HltSelectionSummary& sel = sum.selectionSummary(id);
-    if (sel.data().size()<=0) throw invalid_container(key);
-    ContainedObject* obj = sel.data().front();
-    Hlt::DataSizeHolder< CONT >* holder = 
-      dynamic_cast< Hlt::DataSizeHolder<CONT>*>(obj);
-    if (!holder) throw invalid_container(key);
-    return holder->object();
+    return sel.data().size();
   }
 
-  size_t ncandidates(const LHCb::HltSummary& sum, int id);
-
-  template <class CONT>
-  bool has(const LHCb::HltSummary& sum,int id) {
-    if (!sum.hasSelectionSummary(id)) return false;
+  template <class T>
+  std::vector<T*> retrieve(const LHCb::HltSummary& sum,int id) {
+    std::vector<T*> cont;
+    std::string key = " [retrieve] ";
+    if (!sum.hasSelectionSummary(id)) throw zen::invalid_key(key);
     const LHCb::HltSelectionSummary& sel = sum.selectionSummary(id);
-    if (sel.data().size()<=0) return false;
-    ContainedObject* obj = sel.data().front();
-    Hlt::DataSizeHolder< CONT >* holder = 
-      dynamic_cast< Hlt::DataSizeHolder<CONT>*>(obj);
-    if (!holder) return false;
-    return true;    
+    const std::vector<ContainedObject*>& data =sel.data();
+    for (std::vector<ContainedObject*>::const_iterator it = data.begin();
+         it != data.end(); ++it) {
+      ContainedObject* obj = (ContainedObject*) (*it);
+      T* t = dynamic_cast<T*>(obj);
+      if (t) cont.push_back(t);
+    }
+    return cont;
   }
-  
-  
-  //  template <class CONT>
-  //   bool register(LHCb::HltSummary& sum, int id, CONT& con) {
-  //     Hlt::DataHolder<CONT>* holder = new Hlt::DataHolder<CONT>(*con);
-  //     if (!sum.hasSelectionSummary(id)) return false;
-  //     LHCb::HltSelectionSummary& sel = sum.selectionSummary(id);    
-  //     sel.addData(*holder); 
-  //     return true;
-  //   }
-  
+
 };
 
 #endif

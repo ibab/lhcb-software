@@ -4,6 +4,56 @@
 using namespace Gaudi;
 using namespace LHCb;
 
+
+void Hlt::TrackMerge(const LHCb::Track& track, LHCb::Track& otrack) {
+
+  
+  // setting ancestors
+  otrack.addToAncestors(track);
+
+  // adding info
+  const GaudiUtils::VectorMap<int,double>& info = track.extraInfo();
+  GaudiUtils::VectorMap<int,double>::const_iterator it = info.begin();
+  for (; it != info.end(); ++it)
+    otrack.addInfo(it->first,it->second);
+  
+  // adding states
+  const std::vector<LHCb::State*>& states = track.states();
+  for (std::vector<LHCb::State*>::const_iterator it = states.begin();
+       it != states.end(); ++it) 
+    otrack.addToStates(*(*it));
+  
+  // adding ids
+  const std::vector<LHCb::LHCbID>& ids = track.lhcbIDs();
+  for (std::vector<LHCb::LHCbID>::const_iterator it = ids.begin();
+       it != ids.end(); ++it) 
+    otrack.addToLhcbIDs((*it));
+  
+
+}
+
+
+
+void Hlt::VertexCreator::operator() 
+  (const LHCb::Track& track1, const LHCb::Track& track2,
+   LHCb::RecVertex& ver) const {
+  EPoint pos = HltUtils::closestPoint(track1,track2);
+  // EVector dis = HltUtils::closestDistance(track1,track2);
+  ver.setPosition(pos);
+  ver.addToTracks((Track*) &track1);
+  ver.addToTracks((Track*) &track2);
+  // std::cout << " vertex position " << pos << std::endl;
+}
+
+bool Hlt::SortTrackByPt::operator() (const Track* lhs, 
+                                     const Track* rhs ) const {
+  double ptl = lhs->pt();
+  double ptr = rhs->pt();
+  return (ptl == ptr) ? (lhs->key() > rhs->key())
+                      : (ptl > ptr) ;
+}
+
+
 double HltUtils::rImpactParameter(const RecVertex& vertex, 
                                   const Track& track)
 {
@@ -350,7 +400,7 @@ double HltUtils::matchIDsFraction(const LHCb::Track& tref,
                                   const LHCb::Track& track) {
   size_t n0 = tref.lhcbIDs().size();
   if (n0 <=0) return false;
-  size_t n  = ELoop::count(tref.lhcbIDs(),track.lhcbIDs());
+  size_t n  = zen::count(tref.lhcbIDs(),track.lhcbIDs());
   return double(n)/double(n0);
 }
 
@@ -359,10 +409,10 @@ double HltUtils::vertexMatchIDsFraction(const LHCb::RecVertex& vref,
 {
   const LHCb::Track& rtrack1 = *(vref.tracks()[0]);
   const LHCb::Track& rtrack2 = *(vref.tracks()[1]);
-
+  
   const LHCb::Track& track1 = *(v.tracks()[0]);
   const LHCb::Track& track2 = *(v.tracks()[1]);
-
+  
   double r11 = HltUtils::matchIDsFraction(rtrack1,track1);
   double r12 = HltUtils::matchIDsFraction(rtrack1,track2);
 
@@ -401,7 +451,7 @@ double HltUtils::deltaAngle(const LHCb::Track& track1,
   return sqrt ( deta*deta + dphi*dphi );
 }
 
-double HltUtils::minPT(const LHCb::RecVertex& vertex) {
+double HltUtils::VertexMinPT(const LHCb::RecVertex& vertex) {
   const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
   double pt = 1e12;
   for (SmartRefVector<LHCb::Track>::const_iterator it = tracks.begin();
@@ -410,13 +460,46 @@ double HltUtils::minPT(const LHCb::RecVertex& vertex) {
   return pt;
 }
 
-double HltUtils::maxPT(const LHCb::RecVertex& vertex) {
+double HltUtils::VertexMaxPT(const LHCb::RecVertex& vertex) {
   const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
   double pt = -1e12;
   for (SmartRefVector<LHCb::Track>::const_iterator it = tracks.begin();
        it != tracks.end(); it++)
     if ((*it)->pt() > pt) pt = (*it)->pt();
   return pt;
+}
+
+bool HltUtils::doShareM3(const Track& itL0Mu, 
+                         const Track& itT){
+  bool L0Clone=false;
+  MuonTileID tileM3=0;
+  const std::vector<LHCbID>& muonTiles= (itT).lhcbIDs();
+  for( std::vector<LHCbID>::const_iterator itlhcbid = muonTiles.begin();
+       itlhcbid != muonTiles.end(); ++itlhcbid){
+    MuonTileID tileMuonSegment = itlhcbid->muonID();
+    if(tileMuonSegment.station() == 2) tileM3= tileMuonSegment;
+  }
+  // std::cout << "[doShareM3] tile ID from muon segment station " 
+  //          << tileM3.station() << " " << tileM3 << std::endl;
+  
+
+  const std::vector<LHCb::LHCbID>& lista= (itL0Mu).lhcbIDs ();
+  MuonTileID L0tileM3;
+  for(std::vector<LHCbID>::const_iterator it=lista.begin();
+      it != lista.end(); ++it){
+    if(it->isMuon()){
+      MuonTileID tile=it->muonID();
+      if(tile.station()==2)L0tileM3=tile;
+    }
+  }  
+  // std::cout << " [doShareM3] tile M3 from T track "
+  //         << L0tileM3.station() << " " << L0tileM3 << std::endl;
+
+  if (tileM3==L0tileM3){
+    L0Clone=true;
+  }
+  //std::cout << "is clone"<< L0Clone << std::endl;
+  return L0Clone;
 }
 
 //=============================================================================
@@ -479,35 +562,4 @@ bool HltUtils::matchCellIDs( const std::vector<LHCb::CaloCellID>& oncells,
 }																			 
 
 
-bool HltUtils::doShareM3(const Track& itL0Mu, 
-                         const Track& itT){
-  bool L0Clone=false;
-  MuonTileID tileM3=0;
-  const std::vector<LHCbID>& muonTiles= (itT).lhcbIDs();
-  for( std::vector<LHCbID>::const_iterator itlhcbid = muonTiles.begin();
-       itlhcbid != muonTiles.end(); ++itlhcbid){
-    MuonTileID tileMuonSegment = itlhcbid->muonID();
-    if(tileMuonSegment.station() == 2) tileM3= tileMuonSegment;
-  }
-  // std::cout << "[doShareM3] tile ID from muon segment station " 
-  //          << tileM3.station() << " " << tileM3 << std::endl;
-  
 
-  const std::vector<LHCb::LHCbID>& lista= (itL0Mu).lhcbIDs ();
-  MuonTileID L0tileM3;
-  for(std::vector<LHCbID>::const_iterator it=lista.begin();
-      it != lista.end(); ++it){
-    if(it->isMuon()){
-      MuonTileID tile=it->muonID();
-      if(tile.station()==2)L0tileM3=tile;
-    }
-  }  
-  // std::cout << " [doShareM3] tile M3 from T track "
-  //         << L0tileM3.station() << " " << L0tileM3 << std::endl;
-
-  if (tileM3==L0tileM3){
-    L0Clone=true;
-  }
-  //std::cout << "is clone"<< L0Clone << std::endl;
-  return L0Clone;
-}

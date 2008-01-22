@@ -1,0 +1,245 @@
+// $Id: HltBase.icpp,v 1.1 2008-01-22 09:34:58 hernando Exp $
+// Include files
+
+
+// local
+#include "HltBase/HltBase.h"
+#include "HltBase/EParser.h"
+#include "Event/HltSummary.h"
+#include "HltBase/HltConfigurationHelper.h"
+
+//-----------------------------------------------------------------------------
+// Implementation file for class : HltBase
+//
+// 2006-06-15 : Jose Angel Hernando Morata
+//-----------------------------------------------------------------------------
+
+template <class EBASE>
+void HltBase<EBASE>::create() {
+  
+  EBASE::declareProperty("HistoDescriptor", m_histoDescriptor);
+  EBASE::declareProperty("HltDataLocation", 
+                         m_hltDataLocation = 
+                         LHCb::HltSummaryLocation::Default+"/Data");
+  EBASE::declareProperty("HltConfigurationLocation", 
+                         m_hltConfigurationLocation = 
+                         LHCb::HltSummaryLocation::Default+"/Configuration");
+
+  m_TES = false;
+  m_monitor = true;
+  m_hltSvc  = 0;
+  m_hltData = 0;
+  m_hltConf = 0;
+}
+
+template <class EBASE>
+HltBase<EBASE>::~HltBase() {} 
+
+template <class EBASE>
+StatusCode HltBase<EBASE>::initialize() {  
+  EBASE::debug() << "==> Initialize HltBase " << endreq;
+  StatusCode sc = EBASE::initialize(); 
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  
+  initializeMsg();
+  initializeHistosFromDescriptor();
+
+  return StatusCode::SUCCESS;
+
+}
+
+template <class EBASE>
+void HltBase<EBASE>::initializeMsg() {
+
+  m_verbose = false;
+  m_debug   = false;
+  m_info    = false;
+  m_warning = false;
+  m_error   = false;
+  m_fatal   = true;
+
+  if (EBASE::msgLevel(MSG::ERROR)) {m_error = true;}
+  if (EBASE::msgLevel(MSG::WARNING)) {m_error = true; m_warning = true;}
+  if (EBASE::msgLevel(MSG::INFO)) 
+  {m_error = true; m_warning = true; m_info = true;}
+  if (EBASE::msgLevel(MSG::DEBUG)) 
+  {m_error = true; m_warning = true; m_info = true; m_debug = true;}
+  if (EBASE::msgLevel(MSG::VERBOSE)) 
+  {m_error=true; m_warning = true; m_info = true; m_debug = true; m_verbose=true;}
+
+  EBASE::debug() << " msg level " 
+                << m_info << m_debug << m_verbose << endreq;
+}
+
+template <class EBASE>
+void HltBase<EBASE>::infoTotalEvents(int n) {
+  EBASE::info() << " N Entries: \t" << n << endreq;
+}
+
+template <class EBASE>
+void HltBase<EBASE>::infoSubsetEvents(  int nEventsInSubset, int  nTotEvts, 
+                                    const std::string& subsetName)
+{
+  double f = (nTotEvts<=0? 0.: float(nEventsInSubset)/float(nTotEvts) );
+  EBASE::info() << " N " <<subsetName << "\t" << nEventsInSubset 
+         << " (" << 100.*f << "%)" << endreq;
+}
+
+template <class EBASE>
+void HltBase<EBASE>::infoCandidates(  int nTotCandidates, int  nTotEvts, 
+                                      const std::string& comment)
+{
+  double f = (nTotEvts<=0? 0.: float(nTotCandidates)/float(nTotEvts) );
+  EBASE::info() << " N  candidates " << comment << " \t" << f  << endreq;
+}
+
+template <class EBASE>
+void HltBase<EBASE>::initializeHistosFromDescriptor() {
+
+  if (!m_monitor) return;
+
+  const std::map<std::string, Gaudi::Histo1DDef>& hdes =
+    m_histoDescriptor.value();
+  for (std::map<std::string, Gaudi::Histo1DDef>::const_iterator 
+         it = hdes.begin(); it != hdes.end(); it++){
+      EBASE::book(it->second);
+      EBASE::debug() << " booking histo from descriptor " 
+                     << it->second << endreq;
+  }
+  
+}
+
+template <class EBASE>
+Hlt::Histo* HltBase<EBASE>::initializeHisto(const std::string& title,
+                                            float x0, float xf, int nbins) {
+  Hlt::Histo* histo = 0;
+  if (!m_monitor) return histo;
+
+  Gaudi::Histo1DDef hd(title,x0,xf,nbins);
+  const std::map<std::string,Gaudi::Histo1DDef>& values = 
+    m_histoDescriptor.value();
+  for (std::map<std::string,Gaudi::Histo1DDef >::const_iterator 
+         it = values.begin(); it != values.end(); ++it) {
+    if (it->first == title) { hd = it->second;}
+  }
+  histo = EBASE::book(hd);
+  EBASE::debug() << " booking histo  " << hd << endreq;
+  return histo;
+};
+
+template <class EBASE>
+void HltBase<EBASE>::fillHisto( Hlt::Histo& histo, float x, float weight) {
+  if (!m_monitor) return;
+  EBASE::fill( &histo , x, weight);
+}
+
+template <class EBASE>
+void HltBase<EBASE>::fillHisto( Hlt::Histo& histo, 
+                                const std::vector<double>& x, 
+                                float weight) {
+  if (!m_monitor) return;
+  for (std::vector<double>::const_iterator it = x.begin(); it != x.end();
+       ++it)
+    EBASE::fill( &histo, (*it), weight);
+}
+
+template <class EBASE>
+void HltBase<EBASE>::initializeCounter (Hlt::Counter& counter, 
+                                        const std::string& inputString) { 
+  counter.m_name = inputString;
+  counter.m_histo = 0;
+  counter.m_counter = 0;
+  // if (m_monitor >0)
+  //  counter.m_histo = initializeHisto(inputString,0.,1.,1);
+  EBASE::debug() << " counter " << counter.m_name 
+                 << " " << counter.m_counter << endreq;
+};
+
+template <class EBASE>
+void HltBase<EBASE>::increaseCounter( Hlt::Counter& count, 
+                                           int increase) {
+  count.m_counter =  count.m_counter + increase;
+  EBASE::verbose() << " counter " << count.m_name 
+                   << " = " << count.m_counter << endreq;;
+  // if (count.m_histo)
+  //  EBASE::fill( count.m_histo, 0.5, 1.*increase);
+}
+
+template <class EBASE>
+IDataProviderSvc& HltBase<EBASE>::hltSvc() {
+  if (m_hltSvc != 0) return *m_hltSvc;
+  StatusCode sc = EBASE::serviceLocator()->service("HltSvc", m_hltSvc);
+  //  if (sc.isFailure() || !m_hltSvc) 
+  EBASE::Assert( m_hltSvc != 0, " hltSvc() no HltDataSvc");
+  return *m_hltSvc;
+}
+
+template <class EBASE>
+Hlt::Data& HltBase<EBASE>::hltData() 
+{
+  if (m_hltData != 0) return *m_hltData;
+  std::string loca = "/Event/"+m_hltDataLocation;
+  if (m_TES) {
+    SmartDataPtr<Hlt::Data> obj(EBASE::evtSvc(),loca);m_hltData = obj;
+  } else {
+    SmartDataPtr<Hlt::Data> obj(&hltSvc(),loca);m_hltData = obj;
+  }
+  EBASE::Assert( m_hltData != 0, " hltData() no Hlt::Data");
+  return *m_hltData;
+}
+
+template <class EBASE>
+Hlt::Configuration& HltBase<EBASE>::hltConf() 
+{
+  if (m_hltConf != 0) return *m_hltConf;
+  std::string loca = "/Event/"+m_hltConfigurationLocation;
+  SmartDataPtr<Hlt::Configuration> obj(&hltSvc(),loca); m_hltConf = obj;
+  EBASE::Assert( m_hltConf != 0, " hltConf() no Hlt::Configuration");
+  return *m_hltConf;
+}
+
+template <class EBASE>
+bool HltBase<EBASE>::validHltSelectionName(const std::string& selname) 
+{
+  return Hlt::ConfigurationHelper::validID(hltConf(),"SelectionID",selname);
+}
+
+template <class EBASE>
+int HltBase<EBASE>::hltSelectionID(const std::string& selname) 
+{
+  return Hlt::ConfigurationHelper::getID(hltConf(),"SelectionID",selname);
+}
+
+template <class EBASE>
+std::string HltBase<EBASE>::hltSelectionName(int id) 
+{
+  return Hlt::ConfigurationHelper::getName(hltConf(),"SelectionID",id);
+}
+
+template <class EBASE>
+int HltBase<EBASE>::hltInfoID(const std::string& infoname) 
+{
+  return Hlt::ConfigurationHelper::getID(hltConf(),"InfoID",infoname);
+}
+
+template <class EBASE>
+void HltBase<EBASE>::printInfo(const std::string& title,
+                               const LHCb::Track& track) {
+  EBASE::info() << title << " track  " << track.key() 
+                << " slopes " << track.slopes()  
+                << " pt " << track.pt() 
+                << " qop " << track.firstState().qOverP()
+                << " ids " << track.lhcbIDs().size() 
+                << " states " << track.states().size()
+                << endreq;
+}
+
+template <class EBASE>
+void HltBase<EBASE>::printInfo(const std::string& title,
+                             const LHCb::RecVertex& vertex) {
+  EBASE::info() << title << " vertex  " << vertex.key() << " position " 
+               << vertex.position()  << endreq;
+  printInfo(title,vertex.tracks());
+}
+
+

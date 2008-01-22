@@ -8,21 +8,15 @@
 #include <stdexcept>
 #include "boost/any.hpp"
 
-namespace Estd {
+#include "HltBase/EAssertions.h"
+
+namespace zen {
 
   //! Key of the dictionary is a std::string
   typedef std::string Key;
   typedef std::vector<Key> key_vector;
   typedef std::vector<Key>::iterator key_iterator;
   typedef std::vector<Key>::const_iterator key_const_iterator;
-
-  //! exception class: not valid key
-  class invalid_key : public std::logic_error {
-  public:
-    invalid_key(const Estd::Key& key):logic_error(key) {
-      std::cerr << "--ERROR: Key '" << key << "' not in dictionary" << std::endl;
-    }
-  };
 
   class dictionary  {
   public:
@@ -54,13 +48,13 @@ namespace Estd {
     //! if it is not there raise an exception
     template <class T>
     T& retrieve(const Key& key) {
-      if (!has_key(key)) throw invalid_key(key);
+      if (!has_key(key)) throw zen::invalid_key(key);
       return boost::any_cast<T&>(_map[key]);
     }
 
     template <class T>
     const T& retrieve(const Key& key) const {
-      if (!has_key(key)) throw invalid_key(key);
+      if (!has_key(key)) throw zen::invalid_key(key);
       return boost::any_cast<T&>(_map[key]);
     } 
 

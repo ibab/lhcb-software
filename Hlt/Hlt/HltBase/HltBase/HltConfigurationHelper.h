@@ -10,14 +10,20 @@
  *  @date   2007-06-22
  */
 
-namespace HltConfigurationHelper {
-  
-  int getID(Hlt::Configuration& conf,
-            const std::string& root, const std::string& name);
-  
-  std::string getName(Hlt::Configuration& conf,
-                      const std::string& root, int id);  
-};
+namespace Hlt 
+{
+  namespace ConfigurationHelper {
+    
+    int getID(Hlt::Configuration& conf,
+              const std::string& root, const std::string& key);
+    
+    std::string getName(Hlt::Configuration& conf,
+                        const std::string& root, int id);  
+    
+    bool validID(Hlt::Configuration& conf,
+                 const std::string& root, const std::string& key);
+  }
+}
 
 #endif
 

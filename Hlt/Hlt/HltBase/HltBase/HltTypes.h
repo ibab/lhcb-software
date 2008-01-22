@@ -1,16 +1,16 @@
-// $Id: HltTypes.h,v 1.4 2007-11-20 12:46:18 hernando Exp $
+// $Id: HltTypes.h,v 1.5 2008-01-22 09:34:59 hernando Exp $
 #ifndef HLTBASE_HLTTYPES_H 
 #define HLTBASE_HLTTYPES_H 1
 
 #include <vector>
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/ContainedObject.h"
 #include "HltBase/EFunctions.h"
 #include "HltBase/EDictionary.h"
 #include "HltBase/ERelations.h"
-#include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/ContainedObject.h"
-// #include "Event/Track.h"
-// #include "Event/RecVertex.h"
-// #include "Event/L0CaloCandidate.h"
+#include "HltBase/HltData.h"
+#include "HltBase/IFunctionFactory.h"
+#include "HltBase/IBiFunctionFactory.h"
 
 namespace LHCb 
 {
@@ -20,76 +20,45 @@ namespace LHCb
   class L0MuonCandidate;
 }
 
-namespace Hlt 
-{
-
-  class ISizeHolder : public ContainedObject {
-  public:
-    virtual size_t size() const = 0;
-  };
- 
-  template <class CONT> 
-  class DataHolder : public DataObject , public ContainedObject {
-  public:
-    DataHolder(CONT& cont):m_cont(&cont) {};
-    virtual ~DataHolder() {};
-    CONT& object() {return *m_cont;}
-    const CONT& object() const {return *m_cont;}
-  protected:
-    CONT* m_cont;    
-  };
-
-  template <class CONT> 
-  class DataSizeHolder : public DataObject, public ISizeHolder {
-  public:
-    DataSizeHolder(CONT& cont):m_cont(&cont) {};
-    virtual ~DataSizeHolder() {};
-    CONT& object() {return *m_cont;}
-    const CONT& object() const {return *m_cont;}
-    size_t size() const {return m_cont->size();}
-  protected:
-    CONT* m_cont;    
-  };
-  
+namespace AIDA {
+  class IHistogram1D;
 }
 
-
 namespace Hlt 
 {
-  typedef std::vector< LHCb::Track* >       TrackContainer;
-  typedef std::vector< LHCb::RecVertex* >   VertexContainer;
-  // typedef std::vector< LHCb::L0CaloCandidate* >   L0CaloCandidateContainer;
-  // typedef std::vector< LHCb::L0MuonCandidate* >   L0MuonCandidateContainer;
-
-  typedef Estd::dictionary Configuration;
+  template <class OBJ>
+  class DObj : public OBJ, public DataObject {};
   
-  typedef Estd::filter<double> Filter;
+  typedef std::vector<Hlt::Selection*> Selections;
+  typedef std::vector<Hlt::Selection*>::iterator SelectionIterator;
 
-  typedef Estd::function<LHCb::Track>     TrackFunction;  
-  typedef Estd::function<LHCb::RecVertex> VertexFunction;
-  typedef Estd::filter<LHCb::Track>       TrackFilter;
-  typedef Estd::filter<LHCb::RecVertex>   VertexFilter;
+  typedef TrackSelection     TrackContainer;
+  typedef VertexSelection    VertexContainer;
+
+  typedef AIDA::IHistogram1D Histo;
+
+  typedef DObj<zen::dictionary>  Configuration;
+  typedef DObj<zen::IntRelation> IntRelation;
   
-  typedef Estd::bifunction<LHCb::Track, LHCb::Track>         TrackBiFunction;  
-  typedef Estd::bifunction<LHCb::RecVertex, LHCb::RecVertex> VertexBiFunction;
-  typedef Estd::bifunction<LHCb::Track, LHCb::RecVertex>     TrackVertexBiFunction;
+  typedef zen::filter<double> Filter;
+  
+  typedef zen::function<LHCb::Track>     TrackFunction;  
+  typedef zen::function<LHCb::RecVertex> VertexFunction;
+  typedef zen::filter<LHCb::Track>       TrackFilter;
+  typedef zen::filter<LHCb::RecVertex>   VertexFilter;
+  
+  typedef zen::bifunction<LHCb::Track, LHCb::Track>         TrackBiFunction;  
+  typedef zen::bifunction<LHCb::RecVertex, LHCb::RecVertex> VertexBiFunction;
+  typedef zen::bifunction<LHCb::Track, LHCb::RecVertex>     TrackVertexBiFunction;
 
-  typedef Hlt::DataHolder< Hlt::Configuration >  HolderConfiguration;
-  typedef Hlt::DataSizeHolder< TrackContainer >  HolderTrackContainer;
-  typedef Hlt::DataSizeHolder< VertexContainer > HolderVertexContainer;
+  typedef zen::bifilter<LHCb::Track, LHCb::Track>         TrackBiFilter;  
+  typedef zen::bifilter<LHCb::RecVertex, LHCb::RecVertex> VertexBiFilter;
+  typedef zen::bifilter<LHCb::Track, LHCb::RecVertex>     TrackVertexBiFilter;
 
 };
 
-namespace Hlt {
-  
-  class KeyRelation : public Estd::IntRelation, public DataObject {
-  public:
-    KeyRelation(){inputPath = ""; targetPath = "";}
-    ~KeyRelation() {}
-  public:
-    std::string inputPath,targetPath;
-  };  
-}
+typedef IFunctionFactory<LHCb::Track> ITrackFunctionFactory;
+typedef IFunctionFactory<LHCb::RecVertex> IVertexFunctionFactory;
+typedef IBiFunctionFactory<LHCb::Track,LHCb::Track> ITrackBiFunctionFactory;
 
-
-#endif // HLTBASE_HLTCONTAINERS_H
+#endif

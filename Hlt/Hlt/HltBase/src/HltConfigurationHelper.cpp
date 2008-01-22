@@ -3,10 +3,10 @@
 
 #include "HltBase/HltConfigurationHelper.h"
 
-  
-int HltConfigurationHelper::getID(Hlt::Configuration& conf,
-                                  const std::string& root, 
-                                  const std::string& name) {
+
+int Hlt::ConfigurationHelper::getID(Hlt::Configuration& conf,
+                                    const std::string& root, 
+                                    const std::string& name) {
   std::string key = root+"/"+name; 
   int id = 0;
   if (conf.has_key(key)) { 
@@ -21,14 +21,24 @@ int HltConfigurationHelper::getID(Hlt::Configuration& conf,
   return id;
 }
   
-std::string HltConfigurationHelper::getName(Hlt::Configuration& conf,
-                                            const std::string& root, 
-                                            int id) {
+std::string Hlt::ConfigurationHelper::getName(Hlt::Configuration& conf,
+                                              const std::string& root, 
+                                              int id) {
   std::string key = root+"/"+boost::lexical_cast<std::string>(id);
   std::string name = "unknown";
   if (conf.has_key(key)) name = conf.retrieve<std::string>(key);
   return name;
 }
+
+bool Hlt::ConfigurationHelper::validID(Hlt::Configuration& conf,
+                                       const std::string& root, 
+                                       const std::string& name) {
+  std::string key = root+"/"+name;
+  return conf.has_key(key);
+}
+
+
+
 
 
 

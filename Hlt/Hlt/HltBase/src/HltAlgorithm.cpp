@@ -1,21 +1,10 @@
-// $Id: HltAlgorithm.cpp,v 1.24 2007-12-12 15:55:18 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.25 2008-01-22 09:35:00 hernando Exp $
 // Include files 
 
-// from boost
-#include <boost/functional/hash.hpp>
-#include <boost/lexical_cast.hpp>
-
-// from Gaudi
-#include "GaudiKernel/IUpdateManagerSvc.h"
-
-// local
 #include "HltBase/HltAlgorithm.h"
 
 #include "HltBase/ESequences.h"
-#include "Event/HltNames.h"
-#include "HltBase/HltConfigurationHelper.h"
-
-using namespace LHCb;
+#include "HltBase/EParser.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltAlgorithm
@@ -23,331 +12,353 @@ using namespace LHCb;
 // 2006-06-15 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
 
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
+
 HltAlgorithm::HltAlgorithm( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : HltBaseAlg ( name , pSvcLocator )
 {
+  
+  HltBaseAlg::create();
 
-  // location of the summary and the summary box name
-  declareProperty("DataSummaryLocation",
-                  m_dataSummaryLocation = LHCb::HltSummaryLocation::Default);
+  declareProperty("PassPeriod", m_passPeriod = 0);  
+  declareProperty("HistogramUpdatePeriod" , m_histogramUpdatePeriod = 0 );
+  declareProperty("SaveConfiguration", m_saveConf = true);
 
-  declareProperty("SelectionName", m_selectionName = "");
-  declareProperty("IsTrigger", m_isTrigger = false);
-
-  // location of the input tracks, primary vertices and vertices
-  declareProperty("InputTracksName",     m_inputTracksName = "");
-  declareProperty("InputTracks2Name",    m_inputTracks2Name = "");
-  declareProperty("InputVerticesName",   m_inputVerticesName = "");
-  declareProperty("PrimaryVerticesName", m_primaryVerticesName = "");
-
-  // output location for tracks and vertices
-  declareProperty("OutputTracksName",    m_outputTracksName = "");
-  declareProperty("OutputVerticesName",  m_outputVerticesName = "");
-
+  declareProperty("ConsiderInputs",m_considerInputs = true);  
   declareProperty("MinCandidates",m_minNCandidates = 1);
 
-  m_consider1 = false;
-  m_consider2 = false;
-  m_selectionID = 0;
-  m_outputHolder = 0;
-  m_outputTracks = 0;
-  m_outputVertices = 0;
+  declareProperty("InputSelection", m_inputSelectionName = "");
+  declareProperty("InputSelection2", m_inputSelection2Name = "");
+  declareProperty("InputSelections", m_extraInputSelectionsNames);
+  declareProperty("OutputSelection", m_outputSelectionName = name);
+
+  // for backward compatibility
+  declareProperty("InputTracksName", m_inputSelectionName);
+  declareProperty("InputVerticesName", m_inputSelectionName);
+  declareProperty("InputTracks2Name", m_inputSelection2Name);
+  declareProperty("PrimaryVerticesName", m_inputSelection2Name);
+  declareProperty("OutputTracksName", m_outputSelectionName);
+  declareProperty("OutputVerticesName", m_outputSelectionName);
+
+  m_algoType = "Unknown";
+
+  m_inputSelectionsNames.clear();
   m_inputSelections.clear();
-  
+  m_outputSelection = 0;
+
+  // for backward compatibility
+  m_doInitSelections = true;
+  m_inputTracks = 0;
+  m_inputTracks2 = 0;
+  m_inputVertices = 0;
+  m_primaryVertices = 0;
+
+  m_outputTracks = 0;  
+  m_outputVertices = 0;  
 }
-//=============================================================================
-// Destructor
-//=============================================================================
+
 HltAlgorithm::~HltAlgorithm() {
 
+  if (!useTES())
+    if (m_outputSelection) delete m_outputSelection;
 } 
 
-//=============================================================================
-// Initialization
-//=============================================================================
+
 StatusCode HltAlgorithm::initialize() {
-  StatusCode sc = HltBaseAlg::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  m_hltSvc = 0;
-  sc = serviceLocator()->service("HltDataSvc", m_hltSvc);
-  if (sc.isFailure() || !m_hltSvc) 
-    error() << " not able to create HltData Provider " << endreq;
-
-  m_datasummary = 0;
-  hltretrieve(m_datasummary,m_dataSummaryLocation);
-  if (m_datasummary == 0) 
-    fatal() << " not able to hltretrieve summary data " << endreq;
-
-  m_conf = 0;
-  hltretrieve(m_conf,m_dataSummaryLocation+"/Configuration");
-  if (m_conf == 0) 
-    fatal() << " not able to hltretrieve hlt configuration " << endreq;
-
-  bool ok = true;
-  ok = initContainers();
-  if (!ok) return stop(" problems with Containers ");
+  StatusCode sc = HltBaseAlg::initialize(); 
+  if ( sc.isFailure() ) return sc;
 
   initCounters();
 
-  initHistograms();
-
-  saveConfiguration();
-
-  //  infoConfiguration();
+  if (m_doInitSelections) {
+    initSelections();
+    saveConfiguration();  
+  }
 
   return StatusCode::SUCCESS;
 
 }
 
-
-bool HltAlgorithm::initContainers() {
-
-  m_inputTracks = 0; m_inputTracks2 = 0;
-  sumretrieve(m_inputTracks,m_inputTracksName);
-  sumretrieve(m_inputTracks2,m_inputTracks2Name);
-
-  m_inputVertices = 0; m_primaryVertices = 0;
-  sumretrieve(m_primaryVertices,m_primaryVerticesName);
-  sumretrieve(m_inputVertices,m_inputVerticesName);
-
-  if (m_selectionName != "") sumregister(m_selectionName);
-
-  m_outputTracks = 0; m_outputVertices = 0;
-  sumregister(m_outputVertices,m_outputVerticesName);
-  sumregister(m_outputTracks,m_outputTracksName);
-
-  
-  infoContainer(m_inputTracks,   " input tracks ",   m_inputTracksName);
-  infoContainer(m_inputTracks2,  " input tracks2 ", m_inputTracks2Name);
-  infoContainer(m_inputVertices, " input vertices ", m_inputVerticesName);
-  infoContainer(m_outputTracks,  " output tracks ",   m_outputTracksName);
-  infoContainer(m_outputVertices," output vertices ",m_outputVerticesName);
-
-  return true;
-}
-
 void HltAlgorithm::initCounters() 
 {
 
-  initializeCounter(m_counterInput,    "Input");
-  initializeCounter(m_counterAccepted ,     "Accepted");  
-  
+   // counters
+  initializeCounter(m_counterEntries,    "Entries");
+  initializeCounter(m_counterInputs,     "Inputs");
+  initializeCounter(m_counterAccepted,   "Accepted Events");
+  initializeCounter(m_counterPassed,     "Passed Events");
+  initializeCounter(m_counterCandidates, "nCandidates");
 }
 
-void HltAlgorithm::initHistograms() {
+void HltAlgorithm::initSelections() {
 
-  if (m_histogramUpdatePeriod == 0) return;
-
-  // Input
-  if (m_primaryVertices)
-    initializeHisto(m_histoInputPVs,      "PrimaryVertices");
-  if (m_inputVertices)
-    initializeHisto(m_histoInputVertices, "InputVertices");
-  if (m_inputTracks)
-    initializeHisto(m_histoInputTracks,   "InputTracks");
-  if (m_inputTracks2)
-    initializeHisto(m_histoInputTracks2,  "InputTracks2");
-
-  // Output
-  initializeHisto(m_histoCandidates ,   "Candidates");
-  if (m_outputVertices) initializeHisto(m_histoOutputVertices,"OutputVertices");
-  if (m_outputTracks)   initializeHisto(m_histoOutputTracks,  "OutputTracks");
-}
-
-void HltAlgorithm::saveConfiguration() {
+  info() << " init Selections " << endreq;
   
-  if (m_selectionName == "") {
-    warning() << " Not able to store hlt configuration "
-              << name() << " missing selection name! " << endreq;
+  // retrieving input selections
+  // to be backward compatible, set the track,vertices input selections
+  if (!m_doInitSelections) return;
+
+  if (!m_inputSelectionName.empty()) {
+    Hlt::Selection& sel = retrieveSelection(m_inputSelectionName);
+    if (sel.classID() == LHCb::Track::classID())
+      m_inputTracks = 
+        &(retrieveTSelection<LHCb::Track>(m_inputSelectionName));
+    else if (sel.classID() == LHCb::RecVertex::classID())
+      m_inputVertices = 
+        &(retrieveTSelection<LHCb::RecVertex>(m_inputSelectionName));
+  }
+
+  if (!m_inputSelection2Name.empty()) {
+    Hlt::Selection& sel = retrieveSelection(m_inputSelection2Name);
+    if (sel.classID() == LHCb::Track::classID())
+      m_inputTracks2 = 
+        &(retrieveTSelection<LHCb::Track>(m_inputSelection2Name));
+    else if (sel.classID() == LHCb::RecVertex::classID())
+      m_primaryVertices = 
+        &(retrieveTSelection<LHCb::RecVertex>(m_inputSelection2Name));
+  }
+
+  const std::vector<std::string>& names =m_extraInputSelectionsNames.value();
+  for (std::vector<std::string>::const_iterator it = names.begin();
+       it != names.end(); ++it) {
+    std::string name = (*it);
+    Hlt::Selection& sel = retrieveSelection(name);
+    if (sel.classID() == LHCb::Track::classID()) {
+      Hlt::TrackSelection& sel = (retrieveTSelection<LHCb::Track>(name));
+      if (!m_inputTracks) m_inputTracks = &sel;
+      else m_inputTracks2 = &sel;
+    } else if (sel.classID() == LHCb::RecVertex::classID()) {
+      Hlt::VertexSelection& sel= (retrieveTSelection<LHCb::RecVertex>(name));
+      if (!m_inputVertices) m_inputVertices = &sel;
+      else m_primaryVertices = &sel;
+    }
+  }
+
+  // create and ser the outputselection
+  // to be backward compatible, set the type of the output selection
+  // Track/Velo 
+  
+  Assert(!m_outputSelectionName.empty(), 
+         "initSelections() HltAlgorithm without output selection!");
+
+  std::string type = "";
+  std::vector<std::string> values = 
+    EParser::parse(m_outputSelectionName,"/");
+  m_outputSelectionName = values.back();
+  if (values.size() == 2) type = values[0];
+
+  if (type.empty()) {
+    debug() << " output selection name " << m_outputSelectionName
+            << " without type: no selection selection created!" << endreq;
     return;
   }
-
-  std::string mykey = name()+"/Selection";
-  m_conf->add(mykey,m_selectionName);
-  info() << " HLT ["<<mykey<<"] = "
-         << m_conf->retrieve<std::string>(mykey) << endreq;
   
-  confregister("Algo",name());
-
-  if (m_inputTracks) 
-    confregister("InputTracksName",m_inputTracksName);
-  if (m_inputTracks2) 
-    confregister("InputTracks2Name",m_inputTracks2Name);
-  if (m_inputVertices) 
-    confregister("InputVerticesName",m_inputVerticesName);
-  if (m_primaryVertices) 
-    confregister("PrimaryVerticesName",m_primaryVerticesName);
-  
-  if (m_outputTracks) {
-    confregister("OutputTracksName",m_outputTracksName);
-    confregister("SelectionType",std::string("Tracks"));
+  if (type == "Track") {
+    m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
+  } else if (type == "Vertex") {
+    m_outputVertices = 
+      &(registerTSelection<LHCb::RecVertex>(m_outputSelectionName));
+  } else{
+    Assert(0,"iniSelections() Unknown selection type "+type);
   }
-  if (m_outputVertices) {
-    confregister("OutputVerticesName",m_outputVerticesName);
-    confregister("SelectionType",std::string("Vertices"));
-  }
-  if ((m_outputTracks) && (m_outputVertices))
-    error() << " Output tracks and vertices it is not allowed! " << endreq;
-  
-  if (m_inputSelections.size()>0)
-    confregister("InputSelections",m_inputSelections);
-  
 }
 
-bool HltAlgorithm::beginExecute() {
 
-  bool ok = HltBaseAlg::beginExecute();
-  if (!ok) return ok;
+void HltAlgorithm::saveConfiguration() {
 
-  // verbose() << " entering HltAlgorithm beginExecute " << endreq;
+  if (!m_saveConf) return;
 
-  if (m_outputTracks) m_outputTracks->clear();
-  if (m_outputVertices) m_outputVertices->clear();
+  std::string type = "unknown";
+  if (m_outputSelection->classID() == LHCb::Track::classID()) type = "Track";
+  else if (m_outputSelection->classID() == LHCb::RecVertex::classID())
+    type = "Vertex";
+  confregister("Algorithm",m_algoType+"/"+name(),m_outputSelectionName);
+  confregister("SelectionType",type,m_outputSelectionName);
+  confregister("InputSelections",m_inputSelectionsNames,m_outputSelectionName);
 
-  if (!m_filter)
-    selectionSummary().setDecisionType(HltEnums::Forced, true);
+}
 
-  // verbose() << " histograming inputs " << endreq;
 
-  bool ok1,ok2;
+StatusCode HltAlgorithm::sysExecute() {
 
-  // must check that the producer of input tracks was actually run and succeeded
-  if( m_inputTracks ){
-    std::string::size_type s = m_inputTracksName.rfind('/');
-    std::string selname = (s!=std::string::npos ? m_inputTracksName.substr(s+1)
-                                                : m_inputTracksName );
-    int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",selname);
-    if( m_datasummary->hasSelectionSummary(id) ){
-      if( ! selectionSummary(id).decision() ){
-        m_inputTracks->clear();
-      }
-    } else {
-      m_inputTracks->clear();
-    }
-  }
-  ok1 = size(m_inputTracks,m_nInputTracks,m_histoInputTracks,
-            " input tracks ");
-
-  if (!(ok1 || m_consider1)) return ok1;
-
-  // must check that the producer of input tracks was actually run and succeeded
-  if(m_inputTracks2 ){
-    std::string::size_type s = m_inputTracks2Name.rfind('/');
-    std::string selname = (s!=std::string::npos ? m_inputTracks2Name.substr(s+1)
-                                                : m_inputTracks2Name );
-    int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",selname);
-    if( m_datasummary->hasSelectionSummary(id) ){
-      if( ! selectionSummary(id).decision() ){
-        m_inputTracks2->clear();
-      }
-    } else {
-      m_inputTracks2->clear();
-    }
-  }
-  ok2 = size(m_inputTracks2,m_nInputTracks2,m_histoInputTracks2,
-            " input tracks 2 ");
-  if (!(ok2 || m_consider2)) return ok2;
-
-  if( m_consider1 && !(ok1||ok2) )return false;
-
-  ok = size(m_primaryVertices,m_nPrimaryVertices,m_histoInputPVs,
-            " input primary vertices ");
-  if (!ok) return ok;
+  StatusCode sc = StatusCode::SUCCESS;
   
-  ok = size(m_inputVertices,m_nInputVertices,m_histoInputVertices,
-            " input vertices ");
-  if (!ok) return ok;
+  // verbose() << " sys execute HltBaseAlg beginExecute() " << endreq;
+  sc = beginExecute();
+  if (sc.isFailure()) return sc;
+  
+  // verbose() << " sys execute DefAlgo " << endreq;
+  sc = HltBaseAlg::sysExecute();
+  if (sc.isFailure()) return sc;
+  
+  // verbose() << " sys execute HltBaseAlg endExecute() " << endreq;
+  sc = endExecute();
+  
+  return sc;
+
+}
+
+StatusCode HltAlgorithm::beginExecute() {
+
+  // verbose() << " entering beginExecute " << endreq;
+
+  StatusCode sc = StatusCode::SUCCESS;
+  setDecision(false);
+  
+  increaseCounter( m_counterEntries );
+
+  m_filter =( m_passPeriod <= 0? true:
+              ( !(m_counterEntries % m_passPeriod) == 0 ) );
+  
+  m_monitor =( m_histogramUpdatePeriod <= 0? false:
+               ( (m_counterEntries % m_histogramUpdatePeriod) == 0 ) );
+  
+  verbose() << " filter? " << m_filter 
+            << " monitor? " << m_monitor << endreq;
+  
+  if (useTES()) {
+    debug() << " cleaning from the TES " << endreq;
+    resetHltData();
+    m_inputSelections.clear();
+    m_outputSelection = 0;
+    return StatusCode::SUCCESS;
+  }
+
+  // do work if we not use the TES for selections
+  Assert( m_outputSelection != 0," beginExecute() no output selection !");
+  m_outputSelection->clean();
+  bool ok = true;
+  if (m_considerInputs) ok = considerInputs();
+  if (m_monitor) monitorInputs();
+
+  if (ok) increaseCounter(m_counterInputs);
+  else sc = StatusCode::FAILURE;
+  
+  return sc;
+}
 
 
-  increaseCounter(m_counterInput );
+bool HltAlgorithm::considerInputs() 
+{
+  if (!m_considerInputs) return true;
+  bool ok = true;
+  size_t i = 0;
+  for (std::vector<Hlt::Selection*>::iterator it = m_inputSelections.begin();
+       it != m_inputSelections.end(); ++it, ++i) {
+    ok = ok && (*it)->decision();
+    if (m_debug) 
+      debug() << " input selection " << m_inputSelectionsNames[i]
+              << " decision " << (*it)->decision() 
+              << " candidates " << (*it)->ncandidates() << endreq;
+  }
 
+  if (!ok) {
+    warning() << " Empty input or false input selection " << endreq;
+    return StatusCode::FAILURE;
+  }
+  // verbose() << " consider inputs " << ok <<endreq;
   return ok;
 }
 
-bool HltAlgorithm::endExecute() {
-  bool ok = true;
+void HltAlgorithm::monitorInputs() 
+{
+  if (!m_monitor) return;
+  for (std::vector<Hlt::Selection*>::iterator it = m_inputSelections.begin();
+       it != m_inputSelections.end(); ++it) {
+    int id = (*it)->id();
+    size_t n = (*it)->ncandidates();
+    fillHisto(*m_inputHistos[id],n,1.);
+  }
+  // verbose() << " end monitor inputs " <<endreq;
+}
 
-  fillHisto(m_histoCandidates, m_nCandidates, 1.);
+void HltAlgorithm::monitorOutput() {
+  if (!m_monitor) return;
+  size_t nCandidates = m_outputSelection->ncandidates();
+  Assert( 0 != m_outputHisto," monitorOutput() no output histo ");
+  fillHisto(*m_outputHisto,nCandidates,1.);
+  // verbose() << " end monitor output " << nCandidates << endreq;
+}
 
-  ok = size(m_outputTracks,m_nOutputTracks,m_histoOutputTracks,
-            " output tracks ");
-  if (!ok) return ok;
+void HltAlgorithm::setDecision() {
 
-  ok = size(m_outputVertices,m_nOutputVertices,m_histoOutputVertices,
-            " output vertices ");
-  if (!ok) return ok;
-
-  if (m_outputHolder) 
-    candidateFound(m_outputHolder->size());
-
-  debug() << " output candidates " << m_nCandidates << endreq;
-  if (m_nCandidates >= m_minNCandidates) {
+  Assert (0 != m_outputSelection," setDecision() no output selection! ");
+  
+  size_t nCandidates = m_outputSelection->ncandidates();
+  increaseCounter(m_counterCandidates,nCandidates);
+  if (nCandidates >= m_minNCandidates) {
     increaseCounter(m_counterAccepted);
     setDecision(true);
-  }
-  
-  ok = HltBaseAlg::endExecute();
-  return ok;
+  } 
+  if (!m_filter) setDecision(true);
+  if (filterPassed()) increaseCounter(m_counterPassed);
 }
 
 void HltAlgorithm::setDecision(bool ok) {
-  HltBaseAlg::setDecision(ok);
-  if (m_filter) {
-    selectionSummary().setDecision(ok);
-    debug() << " set decision " << selectionSummary().decision()
-            << " at selection " << m_selectionID << endreq;
-  }
+  setFilterPassed(ok);
+  if (m_filter) m_outputSelection->setDecision(ok);
+  
+  // verbose() << " decision " << filterPassed() 
+  //        << " in selection " << m_outputSelection->decision() << endreq;
 }
 
-void HltAlgorithm::setDecisionType(int decisionType) {
-  selectionSummary().setDecisionType(decisionType,true);
-  if (m_isTrigger) m_datasummary->setDecisionType(decisionType,true);
-  setDecision(true);
+StatusCode HltAlgorithm::endExecute() {
+  StatusCode sc = StatusCode::SUCCESS;
+  
+  setDecision();
+  if (m_monitor) monitorOutput();
+  
+  debug() << " output candidates " << m_outputSelection->ncandidates() 
+          << " decision " << filterPassed() << endreq;
+  
+  return sc;
 }
 
 ////  Finalize
 StatusCode HltAlgorithm::finalize() {
 
-  StatusCode sc =  HltBaseAlg::finalize();
-  infoSubsetEvents  ( m_counterAccepted , 
-                      m_counterInput,  " accepted/inputs ");  
-  if (m_passPeriod >0) 
-    infoSubsetEvents  ( m_counterPassed , 
-                        m_counterInput,  " passed/inputs ");
+  infoTotalEvents(m_counterEntries);
+  infoSubsetEvents(m_counterAccepted, m_counterEntries, " passed/entries ");
+  infoCandidates(m_counterCandidates, m_counterAccepted, " passed ");
 
-  delete m_outputHolder;
-  delete m_outputTracks;
-  delete m_outputVertices;
-  return sc;
-  
+  return StatusCode::SUCCESS;  
 }
 
-void HltAlgorithm::printInfo(const std::string& title,
-                             const Track& track) {
-  info() << title << " track  " << track.key() << " slopes " 
-         << track.slopes()  << " pt " << track.pt() 
-         << " qop " << track.firstState().qOverP() << endreq
-         << endreq;
+
+void HltAlgorithm::setInputSelection(Hlt::Selection& sel,
+                                     const std::string& selname) {
+  if (zen::find(m_inputSelectionsNames, selname)) {
+    debug() << " selection already in input " << selname << endreq;
+    return;
+  }
+  m_inputSelectionsNames.push_back(selname);
+  if (m_histogramUpdatePeriod > 0) {
+    int id = hltSelectionID(selname);
+    Hlt::Histo* histo = initializeHisto(selname);
+    bool has = (m_inputHistos.find(id) != m_inputHistos.end());
+    Assert(!has,"setInputSelection() already input selection "+selname);
+    m_inputHistos[id] = histo;
+  }
+  if (!useTES()) {
+    m_inputSelections.push_back(&sel);
+  }
+  debug() << " Input selection " << selname << endreq;
 }
 
-void HltAlgorithm::printInfo(const std::string& title,
-                             const RecVertex& vertex) {
-  info() << title << " vertex  " << vertex.key() << " position " 
-         << vertex.position()  << endreq;
-  printInfo(title,vertex.tracks());
-}
-
-void HltAlgorithm::sumregister(const std::string& selname) {
-  int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",selname);
-  if (m_datasummary->hasSelectionSummary(id))
-    fatal() << " selection already registered! " << selname << endreq;
-  else {
-    m_selectionName = selname;
-    m_selectionID = id;
-  } 
+void HltAlgorithm::setOutputSelection(Hlt::Selection* sel, 
+                                      const std::string& selname) {
+  m_outputSelectionName = selname;
+  Assert( 0 != sel,"setOutputSelection() no output selection");
+  if (m_histogramUpdatePeriod > 0) 
+    m_outputHisto = initializeHisto(selname);
+  if (!useTES()) {
+    Assert(m_outputSelection == 0, 
+           " setOutputSelection() already set output selection!");    
+    m_outputSelection = sel;
+    std::vector<int>& selids = sel->inputSelectionsIDs();
+    for (Hlt::SelectionIterator it = m_inputSelections.begin();
+         it != m_inputSelections.end(); ++it) 
+      selids.push_back( (*it)->id() );
+  }
+  debug() << " Output selection " << selname << endreq;
 }

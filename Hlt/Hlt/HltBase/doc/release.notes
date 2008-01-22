@@ -4,6 +4,22 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2008-01-22 Jose A. Hernando
+   HLT-clean, clean up 
+   - remove: HltBase/HltFunctions (to be in HltCommon)
+             HltBase/ITrackFunctionTool.h 
+             src/HltMonitorAlgorithm.cpp
+             src/HltSummaryHelper.cpp
+   - add: HltBase/EAssertions.h (external code for assertions)
+			    HltBase/HltBase.h (base template class for HltAlgorithm and HltTool)
+	        HltBase/HltBase.icpp (code of template class HltBase)
+          HltBase/HltBaseTool.h (implementation of HltTool)
+          HltBase/HltData.h (data classes for HLT)
+          HltBase/IBiFunctionFactory.h (interface for factory of bi functions)
+          HltBase/IBiFunctionTool.h (tool interface for bifunctions)
+          HltBase/IFunctionFactory.h (interface for factory of uni functions)
+          HltBase/IFunctionTool.h (tool interface for functions)
+
 !========================== HltBase v3r0 2007-12-17 ===================
 ! 2007-12-11 Jose A. Hernando
 	 - HltBaseAlgorithm: consider always the inputs (not use anymore HltTrackMerge!)

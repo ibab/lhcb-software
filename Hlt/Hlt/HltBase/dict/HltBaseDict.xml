@@ -6,10 +6,13 @@
   <class name = "IPrepareMuonTSeed"     />
   <class name = "ITrackConfirmTool"     />
   <class name = "ITrackL0CaloMatchTool" />
+  <class name = "ITrackFunctionFactory" />
+  <class name = "IVertexFunctionFactory" />
+  <class name = "ITrackBiFunctionFactory" />
+  <class name = "IPyHltFunctionFactory" />
   <class name = "IL0Value" />
   <class name = "ITrackUpgrade" />
   <class name = "ITrackMatch" />
-  <class name = "IHltFunctionFactory" />
   <class name = "Hlt::Configuration" />
   <class name = "Hlt::TrackFunction" />
   <class name = "Hlt::TrackFilter" />
@@ -19,4 +22,9 @@
   <class name = "Hlt::VertexBiFunction" />
   <class name = "Estd::IntRelation" />
   <class name = "Hlt::KeyRelation" />
+  <class name = "Hlt::Data" />
+  <class name = "Hlt::Configuration" />
+  <class name = "Hlt::Selection" />
+  <class name = "Hlt::TrackSelection" />
+  <class name = "Hlt::VertexSelection" />
 </lcgdict>

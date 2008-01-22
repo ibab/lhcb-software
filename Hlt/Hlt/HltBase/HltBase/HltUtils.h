@@ -21,6 +21,36 @@ typedef Gaudi::XYZPoint EPoint;
 
 typedef LHCb::RecVertex TVertex;
 
+namespace Hlt {
+
+  /* merge two tracks (adds info, ids, states)
+   *
+   */
+  void TrackMerge(const LHCb::Track& track, LHCb::Track& otrack);
+  
+  /* It fills the vertex using the 2 tracks
+   *
+   */
+  class VertexCreator 
+  {
+  public:
+    explicit VertexCreator() {}
+    void operator() (const LHCb::Track& track1,
+                     const LHCb::Track& track2,
+                     LHCb::RecVertex& ver) const;
+  };
+  
+  /* Functor: to order tracks by decresing order of PT
+   *
+   */
+  class SortTrackByPt {
+  public:
+    bool operator() (const LHCb::Track* iniTrack, 
+                     const LHCb::Track* endTrack ) const;
+  };
+}
+
+
 namespace HltUtils
 {
 
@@ -63,9 +93,9 @@ namespace HltUtils
              const LHCb::RecVertex& pvertex );
 
 
-  double minPT(const LHCb::RecVertex& vertex);
+  double VertexMinPT(const LHCb::RecVertex& vertex);
 
-  double maxPT(const LHCb::RecVertex& vertex);
+  double VertexMaxPT(const LHCb::RecVertex& vertex);
 
   double matchIDsFraction(const LHCb::Track& trackreference, 
                           const LHCb::Track& track2);
@@ -80,6 +110,21 @@ namespace HltUtils
   
   double closestDistanceMod(const LHCb::Track& track1,
                             const LHCb::Track& track2);
+
+
+  bool doShareM3(const LHCb::Track& track0, const LHCb::Track& track1);
+  
+
+  double vertexMatchIDsFraction(const LHCb::RecVertex& vreference, 
+                                const LHCb::RecVertex& vertex);
+  
+//   bool matchIDs(const LHCb::Track& track1, const LHCb::Track& track2,
+//                 double minf = 0.75) {
+//     int n = ELoop::count(track1.lhcbIDs(),track2.lhcbIDs());
+//     int n0 = track1.lhcbIDs().size();
+//     double f = (n0>0?(1.*n)/(1.*n0):0);
+//     return f>minf;
+//   }
 
   double IPError(const LHCb::Track& track);
 
@@ -107,11 +152,8 @@ namespace HltUtils
   //------------------------------------------------------------
   
   bool doShareM3(const LHCb::Track& track0, const LHCb::Track& track1);
-  
 
   // calocellid tools
-	
-  
 	std::vector<LHCb::CaloCellID> get3x3CellIDs( const LHCb::CaloCellID& centercell );	
 	
 	std::vector<LHCb::CaloCellID> get2x2CellIDs( const LHCb::CaloCellID& bottomleftcell );

@@ -11,20 +11,25 @@
 
 
 std::vector<std::string> EParser::parse(const std::string& descriptor,
-                                                 const std::string& marker)
+                                        const std::string& marker)
 {
   std::string cromo = descriptor;
   typedef std::string::size_type stype;
   std::vector<std::string> gens;
   stype i0 = cromo.find(marker);
+  // std::cout << " index " << i0 << std::endl;
   while (i0<cromo.size()) {
     std::string gen = std::string(cromo,0,i0);
     gens.push_back(gen);
     cromo = std::string(cromo,i0+1,cromo.size());
     // std::cout << " gen " << gen << " cromo " << cromo << std::endl;
     i0 = cromo.find(marker);
+    // std::cout << " index " << i0 << std::endl;
   }
   gens.push_back(cromo);
+  // for (std::vector<std::string>::iterator it = gens.begin();
+  //     it != gens.end(); ++it)
+  //       std::cout << " gen " << *it << std::endl;
   return gens;
 }
 

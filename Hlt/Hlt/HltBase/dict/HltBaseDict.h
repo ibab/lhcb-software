@@ -12,10 +12,11 @@
 #include "HltBase/IL0Value.h"
 #include "HltBase/ITrackUpgrade.h"
 #include "HltBase/ITrackMatch.h"
-#include "HltBase/HltTypes.h"
-#include "HltBase/IHltFunctionFactory.h"
-#include "HltBase/HltFunctions.h"
+#include "HltBase/IFunctionFactory.h"
+#include "HltBase/IBiFunctionFactory.h"
+#include "HltBase/IPyHltFunctionFactory.h"
 #include "HltBase/ERelations.h"
+#include "HltBase/HltTypes.h"
 
 // struct __Instantiations
 // {
