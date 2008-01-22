@@ -1,5 +1,5 @@
 # =========================================================================
-# $Id: requirements,v 1.41 2007-12-03 20:51:51 santovet Exp $
+# $Id: requirements,v 1.42 2008-01-22 06:24:09 cattanem Exp $
 # =========================================================================
 
 package MuonDet
@@ -32,6 +32,3 @@ apply_pattern     reflex_dictionary                                 \
                   headerfiles=$(MUONDETROOT)/dict/MuonDetDict.h     \
                   selectionfile=$(MUONDETROOT)/dict/MuonDetDict.xml \
                   options="-U__MINGW32__"
-
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro MuonDetDict_use_linkopts $(use_linkopts)
