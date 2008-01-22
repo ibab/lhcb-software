@@ -145,11 +145,11 @@ StatusCode ResidualCovarianceTool::compute(const LHCb::Track& track)
   // residuals. First we need to know which nodes correspond to
   // measurements. After that, we fill the matrix.
   std::vector<size_t> measurementnodes ;
-  m_index.clear() ;
+  m_nodes.clear() ;
   for(size_t i=0; i<numnodes; ++i)
     if( nodes[i]->hasMeasurement() ) {
       measurementnodes.push_back(i) ;
-      m_index.push_back(nodes[i]->measurement().lhcbID());
+      m_nodes.push_back(nodes[i]);
     }
   
   // allocate the H C H^T matrix
@@ -159,14 +159,15 @@ StatusCode ResidualCovarianceTool::compute(const LHCb::Track& track)
   CLHEP::HepSymMatrix V = CLHEP::HepSymMatrix(nummeasurements,0) ;
   for(size_t irow=0; irow<nummeasurements; ++irow) {
     size_t k = measurementnodes[irow] ;
-    assert(m_index[irow]==nodes[k]->measurement().lhcbID());
+    assert(m_nodes[irow]==nodes[k]);
     const Gaudi::TrackProjectionMatrix& Hk = nodes[k]->projectionMatrix() ;
     // first the off-diagonal elements
     for(size_t icol=0; icol<irow; ++icol) {
       size_t l = measurementnodes[icol] ;
-      assert(m_index[icol]==nodes[l]->measurement().lhcbID());
+      assert(m_nodes[icol]==nodes[l]) ;
       const Gaudi::TrackProjectionMatrix& Hl = nodes[l]->projectionMatrix() ;
-      m_HCH.fast(irow+1,icol+1) = (Hk * *(offdiagcov[k][l]) * Transpose(Hl))(0,0)/sqrt(nodes[k]->errMeasure2()*nodes[l]->errMeasure2()) ;
+      m_HCH.fast(irow+1,icol+1) = (Hk * *(offdiagcov[k][l]) * Transpose(Hl))(0,0)/
+        sqrt(nodes[k]->errMeasure2()*nodes[l]->errMeasure2()) ;
     }
     // now the diagonal element
     m_HCH.fast(irow+1,irow+1) = ROOT::Math::Similarity(Hk,*(diagcov[k]))(0,0)/nodes[k]->errMeasure2() ;
@@ -181,12 +182,12 @@ StatusCode ResidualCovarianceTool::compute(const LHCb::Track& track)
   return StatusCode::SUCCESS ;
 }
 
-double ResidualCovarianceTool::HCH_norm(LHCb::LHCbID i, LHCb::LHCbID j) const 
+double ResidualCovarianceTool::HCH_norm(const LHCb::Node& i, const LHCb::Node& j) const 
 {
    int ii(-1),ij(-1);   
-   for (unsigned k=0;k<m_index.size();++k) {
-    if (i == m_index[k]) ii=k+1;
-    if (j == m_index[k]) ij=k+1;
+   for (unsigned k=0;k<m_nodes.size();++k) {
+    if (&i == m_nodes[k]) ii=k+1;
+    if (&j == m_nodes[k]) ij=k+1;
    }
    assert(ii!=-1 && ij!=-1);
    return m_HCH(ii,ij);
