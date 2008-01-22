@@ -1,16 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.355 2008-01-15 14:50:34 jpalac Exp $ 
+! $Id: release.notes,v 1.356 2008-01-22 07:06:11 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r3 2008-01-22 ==============================
 ! 2008-01-15 - Juan PALACIOS
  - src/Lib/3DTransformationFunctions.cpp
   . Tidy up a bit taking advantage of latest syntax fixes in MathCore.
 
-
-!====================== DetDesc v18r3 2008-01-14 ==============================
 ! 2008-01-14 - Juan Palacios
  - DetDesc/GlobalToLocalDelta.h
   . Add methods to estimate "off-nominal" delta matrix at local level, starting
