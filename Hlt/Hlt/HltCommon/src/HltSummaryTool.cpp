@@ -144,7 +144,7 @@ HltSummaryTool::selectionTracks(const std::string& name) {
   bool ok = checkSelection(name);
   if (!ok) return tracks;
   int id = hltSelectionID(name);
-  return HltSummaryHelper::retrieve<Track>(*m_summary,id);
+  return Hlt::SummaryHelper::retrieve<Track>(*m_summary,id);
 }
 
 
@@ -154,7 +154,7 @@ HltSummaryTool::selectionVertices(const std::string& name) {
   bool ok = checkSelection(name);
   if (!ok) return vertices;
   int id = hltSelectionID(name);
-  return HltSummaryHelper::retrieve<RecVertex>(*m_summary,id);
+  return Hlt::SummaryHelper::retrieve<RecVertex>(*m_summary,id);
 }
 
 std::vector<Particle*> 
@@ -163,7 +163,7 @@ HltSummaryTool::selectionParticles(const std::string& name) {
   bool ok = checkSelection(name);
   if (!ok) return particles;
   int id = hltSelectionID(name);
-  return HltSummaryHelper::retrieve<Particle>(*m_summary,id);
+  return Hlt::SummaryHelper::retrieve<Particle>(*m_summary,id);
 
 
 }
