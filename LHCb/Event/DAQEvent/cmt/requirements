@@ -20,9 +20,6 @@ apply_pattern     reflex_dictionary                            \
                   selectionfile=$(DAQEVENTROOT)/xml/lcgdict/lcg_selection.xml \
                   options=--comments
 
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro DAQEventDict_use_linkopts $(use_linkopts)
-
 # ==================== linker library =======================================
 macro DAQEventLib_dependencies DAQEventObj2Doth
 library DAQEventLib     *.cpp
