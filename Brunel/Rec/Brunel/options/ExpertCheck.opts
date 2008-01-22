@@ -6,7 +6,7 @@
 // ApplicationMgr.StatusCodeCheck = true;
 
 // Allow two input files open at the same time (.digi, and .sim for the MCHits)
-PoolDbCacheSvc.AgeLimit = 1;
+IODataManager.AgeLimit = 1;
 
 // Data on Demand for MCParticle to MCHit association, needed by ST, IT, Tr
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };

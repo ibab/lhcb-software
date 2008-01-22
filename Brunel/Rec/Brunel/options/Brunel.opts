@@ -15,7 +15,7 @@
 #include "$STDOPTS/DstDicts.opts"
 
 // By default, Brunel only needs to open one input file at a time
-PoolDbCacheSvc.AgeLimit = 0;
+IODataManager.AgeLimit = 0;
 
 // Get the event time (for CondDb) from ODIN
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
