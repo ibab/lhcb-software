@@ -1,4 +1,4 @@
-// $Id: TransportSvc.cpp,v 1.8 2008-01-22 13:34:27 cattanem Exp $
+// $Id: TransportSvc.cpp,v 1.9 2008-01-22 16:03:04 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -91,7 +91,7 @@ TransportSvc::TransportSvc
       "The flag to allow the recovery of geometry errors" ) ;
   declareProperty 
     ( "Protocol" , m_protocol , 
-      "The flag to allow protocll for the geometry problems" ) ;
+      "The flag to allow protocol for the geometry problems" ) ;
 }
 // ============================================================================
 // Destructor:  
@@ -143,7 +143,7 @@ StatusCode TransportSvc::initialize()
   if ( MSG::DEBUG >= outputLevel() && !m_protocol ) 
   {
     log << MSG::WARNING 
-        << "The PROTOCOL property is turned to be 'true' " << endreq ;
+        << "Protocol property is always 'true' when in DEBUG" << endmsg ;
     m_protocol = true ;
   }
 
@@ -157,16 +157,16 @@ StatusCode TransportSvc::initialize()
   if ( !m_protocol ) 
   {
     log << MSG::WARNING 
-        << "The protocol of geoemtry errors is DISABLED" << endreq ;
+        << "The protocol of geometry errors is DISABLED" << endmsg;
     DetDesc::IntersectionErrors::setService ( 0 ) ;
   }
 
   // recover errors ?
   DetDesc::IntersectionErrors::setRecovery ( m_recovery ) ;
-  if (  DetDesc::IntersectionErrors::recovery() ) 
-  { log << MSG::WARNING << "The recovery of geometry errors is  ENABLED" << endreq ; }
-  else 
-  { log << MSG::WARNING << "The recovery of geometry errors is DISABLED" << endreq ; }
+  if (  DetDesc::IntersectionErrors::recovery() ) { 
+    log << MSG::INFO << "Recovery of geometry errors is  ENABLED" << endmsg; }
+  else {
+    log << MSG::INFO << "Recovery of geometry errors is DISABLED" << endmsg; }
   
   return StatusCode::SUCCESS;
 }
