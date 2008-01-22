@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.5 2007-11-28 14:56:23 ibelyaev Exp $
+// $Id: HltFunctions.h,v 1.6 2008-01-22 14:26:37 hernando Exp $
 // ============================================================================
 #ifndef LOKI_HLTFUNCTIONS_H 
 #define LOKI_HLTFUNCTIONS_H 1
@@ -13,7 +13,7 @@
 // ============================================================================
 // HltBase 
 // ============================================================================
-#include "HltBase/ITrackMatch.h"
+#include "HltBase/IBiFunctionTool.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -115,9 +115,9 @@ namespace LoKi
     {
     public:
       /// constructor from the tool 
-      TrackMatch ( ITrackMatch* tool ) ;
+      TrackMatch ( ITrackBiFunctionTool* tool ) ;
       /// constructor from the tool 
-      TrackMatch ( const LoKi::Interface<ITrackMatch>& tool ) ;
+      TrackMatch ( const LoKi::Interface<ITrackBiFunctionTool>& tool ) ;
       /// MANDATORY: virtual destructor 
       virtual ~TrackMatch() {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -129,13 +129,13 @@ namespace LoKi
       { return s << "TTrMATCH" ; }      
     public:
       /// cast to the tool
-      operator const LoKi::Interface<ITrackMatch>& () const { return m_tool ;}
+      operator const LoKi::Interface<ITrackBiFunctionTool>& () const { return m_tool ;}
     private:
       // no default constructor 
       TrackMatch() ; ///< no default constructor
     private:
       // the tool itself 
-      LoKi::Interface<ITrackMatch> m_tool ; ///< the tool itself 
+      LoKi::Interface<ITrackBiFunctionTool> m_tool ; ///< the tool itself 
     } ;  
     // ========================================================================
     /** @class RadialIP

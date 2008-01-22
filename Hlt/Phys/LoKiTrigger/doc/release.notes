@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.5 2007-12-09 19:04:41 ibelyaev Exp $
+! $Id: release.notes,v 1.6 2008-01-22 14:26:37 hernando Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2008-01-22 Jose A. Hernando
+  - Replace interface for ITrackBiFunctionTool
+  - Replace MinPT, and MaxPT in HltUtils by VertexMaxPT and VertexMinPT
 
 !========================== LoKiTrigger v7r0 2007-10-09 ===================
 

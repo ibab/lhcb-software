@@ -1,4 +1,4 @@
-// $Id: RecVertices.h,v 1.3 2007-11-28 14:56:23 ibelyaev Exp $
+// $Id: RecVertices.h,v 1.4 2008-01-22 14:26:37 hernando Exp $
 // ============================================================================
 #ifndef LOKI_RECVERTICES_H 
 #define LOKI_RECVERTICES_H 1
@@ -133,7 +133,7 @@ namespace LoKi
       SmartInfo();
     };
     // ========================================================================
-    /** @class MinPT
+    /** @class VertexMinPt
      *  Evaluator of "minPT" for the vertex 
      *
      *  The actual lines are copied from the package Hlt/HltBase 
@@ -144,13 +144,13 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
      */     
-    class MinPt : public LoKi::BasicFunctors<LHCb::RecVertex>::Function
+    class VertexMinPt : public LoKi::BasicFunctors<LHCb::RecVertex>::Function
     {
     public:
       /// mandatory: virtual destructor
-      virtual ~MinPt() {}
+      virtual ~VertexMinPt() {}
       /// MANDATORY: clone method ("virtual constructor")  
-      virtual MinPt* clone() const { return new MinPt(*this) ; }
+      virtual VertexMinPt* clone() const { return new VertexMinPt(*this) ; }
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout 
@@ -158,7 +158,7 @@ namespace LoKi
       { return s << "RVMINPT" ; }      
     } ;  
     // ========================================================================
-    /** @class MaxPT
+    /** @class VertexMaxPT
      *  Evaluator of "maxPT" for the vertex 
      *
      *  The actual lines are copied from the package Hlt/HltBase 
@@ -168,13 +168,13 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
      */     
-    class MaxPt : public LoKi::BasicFunctors<LHCb::RecVertex>::Function 
+    class VertexMaxPt : public LoKi::BasicFunctors<LHCb::RecVertex>::Function 
     {
     public:
       /// mandatory: virtual destructor
-      virtual ~MaxPt() {}
+      virtual ~VertexMaxPt() {}
       /// MANDATORY: clone method ("virtual constructor")  
-      virtual MaxPt* clone() const { return new MaxPt(*this) ; }
+      virtual VertexMaxPt* clone() const { return new VertexMaxPt(*this) ; }
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout 

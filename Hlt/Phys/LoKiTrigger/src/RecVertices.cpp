@@ -1,4 +1,4 @@
-// $Id: RecVertices.cpp,v 1.4 2007-12-09 19:14:13 ibelyaev Exp $
+// $Id: RecVertices.cpp,v 1.5 2008-01-22 14:26:38 hernando Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -69,22 +69,22 @@ std::ostream& LoKi::RecVertices::Info::fillStream( std::ostream& s ) const
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
-LoKi::RecVertices::MinPt::result_type 
-LoKi::RecVertices::MinPt::operator() 
-  ( LoKi::RecVertices::MinPt::argument a ) const 
+LoKi::RecVertices::VertexMinPt::result_type 
+LoKi::RecVertices::VertexMinPt::operator() 
+  ( LoKi::RecVertices::VertexMinPt::argument a ) const 
 {
   const LHCb::RecVertex& rv = a ;
-  return HltUtils::minPT ( rv ) ;                              // RETURN
+  return HltUtils::VertexMinPT ( rv ) ;                              // RETURN
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
-LoKi::RecVertices::MaxPt::result_type 
-LoKi::RecVertices::MaxPt::operator() 
-  ( LoKi::RecVertices::MaxPt::argument a ) const 
+LoKi::RecVertices::VertexMaxPt::result_type 
+LoKi::RecVertices::VertexMaxPt::operator() 
+  ( LoKi::RecVertices::VertexMaxPt::argument a ) const 
 {
   const LHCb::RecVertex& rv = a ;
-  return HltUtils::maxPT ( rv ) ;                              // RETURN
+  return HltUtils::VertexMaxPT ( rv ) ;                              // RETURN
 }
 // ============================================================================
 // MANDATORY: the only one essential method 

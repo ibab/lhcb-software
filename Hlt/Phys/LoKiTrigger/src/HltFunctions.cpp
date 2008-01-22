@@ -1,4 +1,4 @@
-// $Id: HltFunctions.cpp,v 1.5 2007-11-28 14:56:24 ibelyaev Exp $
+// $Id: HltFunctions.cpp,v 1.6 2008-01-22 14:26:38 hernando Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -83,7 +83,7 @@ LoKi::Tracks::DeltaE::operator()
 // constructor from the tool 
 // ============================================================================
 LoKi::Tracks::TrackMatch::TrackMatch
-( ITrackMatch* tool )
+( ITrackBiFunctionTool* tool )
   : LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function() 
   , m_tool ( tool )
 {}
@@ -91,7 +91,7 @@ LoKi::Tracks::TrackMatch::TrackMatch
 // constructor form the tool 
 // ============================================================================
 LoKi::Tracks::TrackMatch::TrackMatch
-( const LoKi::Interface<ITrackMatch>& tool )
+( const LoKi::Interface<ITrackBiFunctionTool>& tool )
   : LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function () 
   , m_tool ( tool )
 {}
@@ -111,8 +111,7 @@ LoKi::Tracks::TrackMatch::operator()
     return LoKi::Constants::PositiveInfinity ;               // RETURN
   }
   //
-  double chi2 = 0 ;
-  m_tool -> match ( t1 , t2 , chi2 ).ignore() ;
+  double chi2 = m_tool -> function ( t1 , t2 ) ;
   // 
   return chi2 ;  
 }

@@ -1,4 +1,4 @@
-// $Id: RecVertexCuts.h,v 1.1 2007-08-13 14:46:37 ibelyaev Exp $
+// $Id: RecVertexCuts.h,v 1.2 2008-01-22 14:26:37 hernando Exp $
 // ============================================================================
 #ifndef LOKI_RECVERTEXCUTS_H 
 #define LOKI_RECVERTEXCUTS_H 1
@@ -20,12 +20,12 @@ namespace LoKi
      *  The actual lines are copied from the package Hlt/HltBase 
      *   written by Jose Angel Hernando Morata
      *
-     *  @see HltUtils::maxPT
+     *  @see HltUtils::VertexMaxPT
      *  @see LoKi::RecVertices::MaxPt
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */     
-    const LoKi::RecVertices::MaxPt                                    RVMAXPT ;
+    const LoKi::RecVertices::VertexMaxPt        RVMAXPT ;
     // ========================================================================
     /** @var RVMINPT
      *  The evaluator of "minPt" for the recontructed vertex
@@ -33,12 +33,12 @@ namespace LoKi
      *  The actual lines are copied from the package Hlt/HltBase 
      *   written by Jose Angel Hernando Morata
      *
-     *  @see HltUtils::minPT
+     *  @see HltUtils::VertexMinPT
      *  @see LoKi::RecVertices::MinPt
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */     
-    const LoKi::RecVertices::MinPt                                    RVMINPT ;
+    const LoKi::RecVertices::VertexMinPt            RVMINPT ;
     // ========================================================================
     /** @var RVVDZ
      *  Evaluator of "delta-Z" distance between two vertices 
