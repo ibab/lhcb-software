@@ -36,5 +36,3 @@ apply_pattern reflex_dictionary                                      \
               headerfiles=$(CALODAQROOT)/dict/CaloDAQDict.h        \
               selectionfile=$(CALODAQROOT)/dict/CaloDAQDict.xml    \
               options="-U__MINGW32__ -DBOOST_DISABLE_ASSERTS"
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro CaloDAQDict_use_linkopts $(use_linkopts)
