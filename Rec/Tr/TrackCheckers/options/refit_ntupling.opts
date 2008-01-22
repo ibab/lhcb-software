@@ -1,0 +1,135 @@
+// This option file is supposed to be used, if you have 
+// a dst with all track collections written out and like
+// to refit them e.g. with a different db and monitor
+// track based quantities, such as hit track residuals, chi2
+//
+// author: Stephanie Hansmann-Menzemer, 22-01-08
+
+#pragma print on
+#include "$DDDBROOT/options/DC06.opts"
+
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+
+// Add here the database you like to use for refit & validation
+CONDLocal.ConnectionString = "sqlite_file:MYDATABASE";
+CONDLocal.DefaultTag = "MYTAG";
+
+//for histos
+#include "$STDOPTS/RootHist.opts"
+
+// Standard LHCb application setup
+#include "$STDOPTS/LHCbApplication.opts"
+
+//Pool persitency
+#include "$STDOPTS/DstDicts.opts"
+
+// Start Main Brunel sequence
+ApplicationMgr.TopAlg += { "GaudiSequencer/BrunelMainSeq" } ;
+BrunelMainSeq.MeasureTime = true ;
+BrunelMainSeq.Members += { "LbAppInit/Brunel" };
+ApplicationMgr.AppName = "Brunel" ;
+Brunel.OutputLevel = 3;
+MessageSvc.OutputLevel = 3;
+ToolSvc.OutputLevel = 3;
+
+// Data on demand service for decoding RawBuffer
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+#include "$STDOPTS/DecodeRawEvent.opts"
+
+ApplicationMgr.ExtSvc += { "TransportSvc" };
+TransportSvc.OutputLevel = 6; 
+
+
+// Raw data needs to be decoded for refit
+
+BrunelMainSeq.Members += { "GaudiSequencer/DecodingSeq" } ;
+DecodingSeq.MeasureTime = true;
+
+// Decode Velo
+DecodingSeq.Members += { "DecodeVeloRawBuffer", 
+                         "DecodeVeloRawBuffer/DecodeVeloClusters" };
+DecodeVeloClusters.DecodeToVeloLiteClusters = false;
+DecodeVeloClusters.DecodeToVeloClusters     = true;
+
+// Decode TT/ST
+DecodingSeq.Members += {"RawBankToSTClusterAlg/createITClusters", 
+                        "RawBankToSTLiteClusterAlg/createITLiteClusters"
+};
+
+createITClusters.detType     = "IT";
+createITLiteClusters.detType = "IT";
+#include "$STTOOLSROOT/options/Brunel.opts"
+
+// Decode OT 
+DecodingSeq.Members += { "OTTimeCreator" };
+
+BrunelMainSeq.Members  += { "ProcessPhase/Track" };
+
+Track.DetectorList +=  { "ForwardPreFit",   "ForwardFit"
+                      , "SeedPreFit",      "SeedFit"
+                      , "MatchPreFit",     "MatchFit"
+                      , "DownstreamPreFit","DownstreamFit"
+                      , "VeloTTPreFit",    "VeloTTFit"
+		      , "VeloPreFit",      "VeloFit" };
+
+// Set of standard fitting options
+#include "$TRACKSYSROOT/options/Fitting.opts"
+
+// Uncomment track collection you do not like to fit/validate
+
+TrackForwardPreFitSeq.Members    += { "TrackEventFitter/PreFitForward" };
+TrackForwardFitSeq.Members       += { "TrackEventFitter/FitForward" };
+
+TrackSeedFitSeq.Members          += { "TrackEventFitter/FitTsa" };
+
+TrackMatchPreFitSeq.Members      += { "TrackEventFitter/PreFitMatch" };
+TrackMatchFitSeq.Members         += { "TrackEventFitter/FitMatch" };
+
+TrackDownstreamPreFitSeq.Members += { "TrackEventFitter/PreFitDownstream" };
+TrackDownstreamFitSeq.Members    += { "TrackEventFitter/FitDownstream" };
+
+TrackVeloPreFitSeq.Members       += { "TrackPrepareVelo" };
+TrackVeloFitSeq.Members          += { "TrackEventFitter/FitVelo"};
+
+BrunelMainSeq.Members += { "GaudiSequencer/MonitorSeq" } ;
+
+MonitorSeq.Members += {  "TrackMonitor/Tsa"
+		       , "TrackMonitor/Forward"
+		       , "TrackMonitor/Match"
+		       , "TrackMonitor/DownStream"
+		       , "TrackMonitor/PreparedVelo" };
+
+Tsa.splitByAlgorithm = false;
+Tsa.TracksInContainer = "Rec/Track/Tsa";
+
+Forward.splitByAlgorithm = false;
+Forward.TracksInContainer = "Rec/Track/Forward";
+
+Match.splitByAlgorithm = false;
+Match.TracksInContainer = "Rec/Track/Match";
+
+DownStream.splitByAlgorithm = false;
+DownStream.TracksInContainer = "Rec/Track/Downstream";
+
+PreparedVelo.splitByAlgorithm = false;
+PreparedVelo.TracksInContainer = "Rec/Track/PreparedVelo";
+
+NTupleSvc.Output={"FILE1 DATAFILE='misaligne_tuple.root' TYP='ROOT' OPT='NEW'"};		   
+
+HistogramPersistencySvc.OutputFile = "misaligned_histo.root";  // Monitoring histos
+
+ApplicationMgr.EvtMax = -1;
+
+
+// add here xml catalog for your input files
+PoolDbCacheSvc.Catalog = {
+  "xmlcatalog_file:XXX.xml" };
+
+// add here dst with reconstructed tracks
+EventSelector.Input   = {
+"DATAFILE='LFN:XXX.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+
+
+
+

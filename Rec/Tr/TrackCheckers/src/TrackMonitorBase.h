@@ -1,11 +1,11 @@
-// $Id: TrackMonitorBase.h,v 1.2 2007-06-27 15:05:06 mneedham Exp $
+// $Id: TrackMonitorBase.h,v 1.3 2008-01-22 12:02:22 smenzeme Exp $
 #ifndef TRACKMONITORBASE_H
 #define TRACKMONITORBASE_H 1
  
 // Include files
  
 // from Gaudi
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
 
 #include <string>
 #include <map>
@@ -27,7 +27,7 @@
  *  @date   6-5-2007
  */                 
                                                            
-class TrackMonitorBase : public GaudiHistoAlg {
+class TrackMonitorBase : public GaudiTupleAlg {
                                                                              
  public:
                                                                              

@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.h,v 1.2 2007-06-27 15:05:06 mneedham Exp $
+// $Id: TrackMonitor.h,v 1.3 2008-01-22 12:02:22 smenzeme Exp $
 #ifndef TRACKMONITOR_H
 #define TRACKMONITOR_H 1
  
@@ -37,6 +37,9 @@ class TrackMonitor : public TrackMonitorBase {
 
   void fillHistograms(const LHCb::Track* aTrack, 
                       const std::string& type);
+
+  void fillNtuple(const LHCb::Track* aTrack, 
+		  const std::string& type);
   double m_refZ;
   double m_xMax;
   double m_yMax;

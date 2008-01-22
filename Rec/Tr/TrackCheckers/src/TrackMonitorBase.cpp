@@ -1,4 +1,4 @@
-// $Id: TrackMonitorBase.cpp,v 1.2 2007-06-27 15:05:06 mneedham Exp $
+// $Id: TrackMonitorBase.cpp,v 1.3 2008-01-22 12:02:22 smenzeme Exp $
 // Include files 
 #include "TrackMonitorBase.h"
 #include "Event/Track.h"
@@ -9,7 +9,7 @@
 //=============================================================================
 TrackMonitorBase::TrackMonitorBase( const std::string& name,
                                     ISvcLocator* pSvcLocator ) :
-  GaudiHistoAlg( name , pSvcLocator ),
+  GaudiTupleAlg( name , pSvcLocator ),
   m_allString("ALL"){
 
   declareProperty( "TracksInContainer",
@@ -34,7 +34,7 @@ StatusCode TrackMonitorBase::initialize()
   if ( "" == histoTopDir() ) setHistoTopDir(histoDir);
 
   // Mandatory initialization of GaudiAlgorithm
-  StatusCode sc = GaudiHistoAlg::initialize();
+  StatusCode sc = GaudiTupleAlg::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   //  m_selector = tool<ITrackSelector>( m_selectorName,
