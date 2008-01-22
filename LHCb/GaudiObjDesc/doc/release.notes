@@ -4,6 +4,15 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+! 2008-01-22 Stefan
+- new feature for enum generation: when activating the string<->enum conversion
+  so far the enum had to contain one value "Unknown". In case of several enums
+  in the same class this was not possible for each enum because of the scoping.
+  A new attribute "unknownValue" of the <enum> element can now be set to over-
+  write the value. The default is "Unknown" but can be set to any string, take
+  care to also provide an actual value of the enum with the string set in the 
+  attribute.
+
 !======================== GaudiObjDesc v11r0 2007-11-29 ======================
 ! 2007-11-29 - Stefan
  - New feature to allow construction of dictionaries for std::vector<const T*>

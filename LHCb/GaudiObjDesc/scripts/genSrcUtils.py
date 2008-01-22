@@ -132,6 +132,7 @@ class genSrcUtils(importUtils.importUtils):
         if enumAtt['strTypConv'] == 'TRUE':
           self.addInclude('GaudiKernel/VectorMap')
           enumType = enumAtt['name']
+          enumUnknown = enumAtt['unknownValue']
 
           maxLen = 0
           values = []
@@ -162,12 +163,12 @@ class genSrcUtils(importUtils.importUtils):
           defs += '}\n\n'
           defs += 'inline %s::%s %s::%sToType(const std::string & aName) {\n' % (className, enumType, className, enumType)
           defs += '  GaudiUtils::VectorMap<std::string,%s>::iterator iter =  s_%sTypMap().find(aName);\n' % ( enumType, enumType )
-          defs += '  return ( iter != s_%sTypMap().end() ? iter->second : Unknown );\n' % enumType
+          defs += '  return ( iter != s_%sTypMap().end() ? iter->second : %s );\n' % (enumType, enumUnknown)
           defs += '}\n\n'
           defs += 'inline std::string %s::%sToString(int aEnum) {\n' % (className, enumType)
           defs += '  GaudiUtils::VectorMap<std::string,%s>::iterator iter = s_%sTypMap().begin();\n' % (enumType, enumType)
           defs += '  while ( iter != s_%sTypMap().end() && iter->second != aEnum ) ++iter;\n' % enumType
-          defs += '  return ( iter != s_%sTypMap().end() ? iter->first : "Unknown");\n' % enumType
+          defs += '  return ( iter != s_%sTypMap().end() ? iter->first : "%s");\n' % (enumType, enumUnknown)
           defs += '}\n'
 
     return defs,maps,dcls

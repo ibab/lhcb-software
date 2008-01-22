@@ -67,6 +67,7 @@
         value            CDATA                             #IMPLIED
         strTypConv       (TRUE | FALSE )                   "FALSE"
         access           (PUBLIC | PROTECTED | PRIVATE)    "PRIVATE"
+        unknownValue     CDATA                             "Unknown"
 >
 <!ELEMENT enumval EMPTY>
 <!ATTLIST enumval
