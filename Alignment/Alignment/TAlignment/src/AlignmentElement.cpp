@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.6 2008-01-10 10:37:39 janos Exp $
+// $Id: AlignmentElement.cpp,v 1.7 2008-01-22 13:36:42 janos Exp $
 // Include files
 
 // from STD
@@ -30,9 +30,7 @@ AlignmentElement::AlignmentElement(const DetectorElement* element,
     m_dofs(dofs) {
 
   validDetectorElement(m_elements.at(0u));
-  // std::for_each(m_elements.begin(), m_elements.end(),
-  // boost::lambda::bind(&AlignmentElement::validDetectorElement, this, boost::lambda::_1));
-
+  
   setPivotPoint();
 }
 
@@ -95,7 +93,6 @@ const std::vector<double> AlignmentElement::deltaRotations() const {
   
   return averageDeltaRotations;
 }
-
 
 const std::vector<double> AlignmentElement::deltaTranslations() const {
   std::vector<double> averageDeltaTranslations(0u,3);
