@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.h,v 1.2 2007-11-20 12:51:21 hernando Exp $
+// $Id: HltRecCheckVertices.h,v 1.3 2008-01-22 11:04:06 hernando Exp $
 #ifndef HLTRECCHECKVERTICES_H 
 #define HLTRECCHECKVERTICES_H 1
 
@@ -6,7 +6,7 @@
 #include "HltBase/HltAlgorithm.h"
 #include "Event/MCParticle.h"
 #include "HltBase/ERelations.h"
-#include "HltBase/HltFunctions.h"
+#include "HltBase/HltTypes.h"
 
 /** @class HltRecCheckVertices HltRecCheckVertices.h
  *  
@@ -39,29 +39,29 @@ protected:
   std::string m_TESInputVerticesName;
   LHCb::RecVertices* m_TESInputVertices;
   
-  Estd::bifunction<LHCb::Track,LHCb::RecVertex>* m_ipFun;
+  zen::bifunction<LHCb::Track,LHCb::RecVertex>* m_ipFun;
 
 protected:
 
-  HltHisto m_histoNRCV;
-  HltHisto m_histoNMCV;
-  HltHisto m_histoNDV;
+  Hlt::Histo* m_histoNRCV;
+  Hlt::Histo* m_histoNMCV;
+  Hlt::Histo* m_histoNDV;
 
-  HltHisto m_histoX;
-  HltHisto m_histoY;
-  HltHisto m_histoZ;
+  Hlt::Histo* m_histoX;
+  Hlt::Histo* m_histoY;
+  Hlt::Histo* m_histoZ;
 
-  HltHisto m_histoDX;
-  HltHisto m_histoDY;
-  HltHisto m_histoDZ;
+  Hlt::Histo* m_histoDX;
+  Hlt::Histo* m_histoDY;
+  Hlt::Histo* m_histoDZ;
 
 protected:
 
-  Estd::relation<LHCb::Track*,LHCb::MCVertex*> m_relTrackMCVertex;
-  Estd::relation<LHCb::MCVertex*,LHCb::Track*> m_relMCVertexTrack;
+  zen::relation<LHCb::Track*,LHCb::MCVertex*> m_relTrackMCVertex;
+  zen::relation<LHCb::MCVertex*,LHCb::Track*> m_relMCVertexTrack;
 
-  Estd::relation<LHCb::RecVertex*,LHCb::MCVertex*> m_relVertexMCVertex;
-  Estd::relation<LHCb::MCVertex*,LHCb::RecVertex*> m_relMCVertexVertex;
+  zen::relation<LHCb::RecVertex*,LHCb::MCVertex*> m_relVertexMCVertex;
+  zen::relation<LHCb::MCVertex*,LHCb::RecVertex*> m_relMCVertexVertex;
 
 
 

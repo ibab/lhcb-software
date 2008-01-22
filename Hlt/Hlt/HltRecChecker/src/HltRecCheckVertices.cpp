@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.cpp,v 1.6 2007-11-28 15:25:46 graven Exp $
+// $Id: HltRecCheckVertices.cpp,v 1.7 2008-01-22 11:04:06 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -10,7 +10,6 @@
 #include "HltRecCheckVertices.h"
 #include "HltRecCheckUtils.h"
 #include "HltBase/ESequences.h"
-#include "HltBase/HltFunctions.h"
 
 using namespace LHCb;
 
@@ -41,22 +40,22 @@ StatusCode HltRecCheckVertices::initialize() {
 
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
 
-  initializeHisto(m_histoNRCV,"NRCV",0.,10.,10);
-  initializeHisto(m_histoNMCV,"NMCV",0.,10.,10);
-  initializeHisto(m_histoNDV,"NDV",-10.,10.,20);
+  m_histoNRCV = initializeHisto("NRCV",0.,10.,10);
+  m_histoNMCV = initializeHisto("NMCV",0.,10.,10);
+  m_histoNDV = initializeHisto("NDV",-10.,10.,20);
 
-  initializeHisto(m_histoX,"VX",-1.,1.,100);
-  initializeHisto(m_histoY,"VY",-1.,1.,100);
-  initializeHisto(m_histoZ,"VZ",-200.,200.,100);
+  m_histoX = initializeHisto("VX",-1.,1.,100);
+  m_histoY = initializeHisto("VY",-1.,1.,100);
+  m_histoZ = initializeHisto("VZ",-200.,200.,100);
 
-  initializeHisto(m_histoDX,"DeltaVX",-0.2,0.2,100);
-  initializeHisto(m_histoDY,"DeltaVY",-0.2,0.2,100);
-  initializeHisto(m_histoDZ,"DeltaVZ",-1.,1.,100);
+  m_histoDX = initializeHisto("DeltaVX",-0.2,0.2,100);
+  m_histoDY = initializeHisto("DeltaVY",-0.2,0.2,100);
+  m_histoDZ = initializeHisto("DeltaVZ",-1.,1.,100);
 
-  if (m_ipType == "2DIP")      m_ipFun = new Hlt::rIP();
-  else if (m_ipType == "3DIP") m_ipFun = new  Hlt::IP();
-  else 
-    error() << " please select an option IPType = 2DIP,3DIP " << endreq;
+ //  if (m_ipType == "2DIP")      m_ipFun = new Hlt::rIP();
+//   else if (m_ipType == "3DIP") m_ipFun = new  Hlt::IP();
+//   else 
+//     error() << " please select an option IPType = 2DIP,3DIP " << endreq;
 
   return sc;
 }
@@ -83,10 +82,11 @@ void HltRecCheckVertices::relateVertices() {
     MCParticle* mcpar = link.first( track.key() );
 
     size_t index = 0;
-    double ip = Estd::map_compare_value(track,m_TESInputVertices->begin(),
-                                        m_TESInputVertices->end(),
-                                        *m_ipFun,Estd::abs_min(),index);
-    verbose() << " ip " << ip << " index " << index << endreq;
+    // TODO: repare this JAH 22/1/08
+    //  double ip = zen::map_compare_value(track,m_TESInputVertices->begin(),
+    //                                         m_TESInputVertices->end(),
+    //                                         *m_ipFun,zen::abs_min(),index);
+    //     verbose() << " ip " << ip << " index " << index << endreq;
     RecVertex& vertex = **(m_TESInputVertices->begin()+index);
     
     if (!mcpar) continue;    
@@ -117,9 +117,9 @@ void HltRecCheckVertices::checkVertices() {
 
   int nrcver = m_relVertexMCVertex.size();
   int nmcver = m_relMCVertexVertex.size();
-  fillHisto(m_histoNRCV,nrcver,1.);
-  fillHisto(m_histoNMCV,nmcver,1.);
-  fillHisto(m_histoNDV,nrcver-nmcver,1.);
+  fillHisto(*m_histoNRCV,nrcver,1.);
+  fillHisto(*m_histoNMCV,nmcver,1.);
+  fillHisto(*m_histoNDV,nrcver-nmcver,1.);
   
   debug() << " n rec vertices " << nrcver << endreq;
   debug() << " n mc vertices " << nmcver << endreq;
@@ -138,13 +138,13 @@ void HltRecCheckVertices::checkVertices() {
     double mcy = mcver->position().y();
     double mcz = mcver->position().z();
     
-    fillHisto(m_histoX,x,1.);
-    fillHisto(m_histoY,y,1.);
-    fillHisto(m_histoZ,z,1.);
+    fillHisto(*m_histoX,x,1.);
+    fillHisto(*m_histoY,y,1.);
+    fillHisto(*m_histoZ,z,1.);
 
-    fillHisto(m_histoDX,x-mcx,1.);
-    fillHisto(m_histoDY,y-mcy,1.);
-    fillHisto(m_histoDZ,z-mcz,1.);
+    fillHisto(*m_histoDX,x-mcx,1.);
+    fillHisto(*m_histoDY,y-mcy,1.);
+    fillHisto(*m_histoDZ,z-mcz,1.);
 
     debug() << " dx vertex " << x-mcx << endreq;
     debug() << " dy vertex " << y-mcy << endreq;

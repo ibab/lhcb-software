@@ -1,4 +1,4 @@
-// $Id: HltRecChecker.cpp,v 1.5 2007-07-13 08:54:08 pkoppenb Exp $
+// $Id: HltRecChecker.cpp,v 1.6 2008-01-22 11:04:06 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -95,7 +95,7 @@ void HltRecChecker::checkTracks() {
   bool tis = false;
   
   if (nbs >0) tos = true;
-  if (m_nInputTracks > nbs) tis = true;
+  if (m_inputTracks->size() > nbs) tis = true;
 
   // int tostis = MCHlt::tostis(tos,tis);
   // title = "Track TISTOS";

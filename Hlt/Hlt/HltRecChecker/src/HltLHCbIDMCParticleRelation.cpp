@@ -1,4 +1,4 @@
-// $Id: HltLHCbIDMCParticleRelation.cpp,v 1.1 2007-11-20 12:51:20 hernando Exp $
+// $Id: HltLHCbIDMCParticleRelation.cpp,v 1.2 2008-01-22 11:04:05 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -36,7 +36,7 @@ StatusCode HltLHCbIDMCParticleRelation::execute() {
 
   debug() << "==> Execute" << endmsg;  
   
-  Hlt::KeyRelation* relation = new Hlt::KeyRelation();
+  Hlt::IntRelation* relation = new Hlt::IntRelation();
   put(relation,m_relationLocation);
   
   VeloClusters* velos = get<VeloClusters>(VeloClusterLocation::Default);

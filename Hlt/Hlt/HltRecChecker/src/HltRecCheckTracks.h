@@ -1,4 +1,4 @@
-// $Id: HltRecCheckTracks.h,v 1.2 2006-09-26 14:30:06 cattanem Exp $
+// $Id: HltRecCheckTracks.h,v 1.3 2008-01-22 11:04:06 hernando Exp $
 #ifndef HLTRECCHECKTRACKS_H 
 #define HLTRECCHECKTRACKS_H 1
 
@@ -33,13 +33,13 @@ protected:
 
 protected:
 
-  HltHisto m_histoGhost;
-  HltHisto m_histoDx;
-  HltHisto m_histoDy;
-  HltHisto m_histoDz;
-  HltHisto m_histoDTx;
-  HltHisto m_histoDTy;
-  HltHisto m_histoPOP;
+  Hlt::Histo* m_histoGhost;
+  Hlt::Histo* m_histoDx;
+  Hlt::Histo* m_histoDy;
+  Hlt::Histo* m_histoDz;
+  Hlt::Histo* m_histoDTx;
+  Hlt::Histo* m_histoDTy;
+  Hlt::Histo* m_histoPOP;
 
 };
 #endif // HLTMCMONITOR_H

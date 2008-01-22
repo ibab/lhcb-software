@@ -1,4 +1,4 @@
-// $Id: HltRecCheckTracks.cpp,v 1.3 2007-06-20 16:13:14 hernando Exp $
+// $Id: HltRecCheckTracks.cpp,v 1.4 2008-01-22 11:04:06 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -35,14 +35,13 @@ StatusCode HltRecCheckTracks::initialize() {
 
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
 
-  initializeHisto(m_histoGhost,"Ghost",0.,1.,100);
-
-  initializeHisto(m_histoDx,"DeltaX",-0.3,0.3,100);
-  initializeHisto(m_histoDy,"DeltaY",-0.3,0.3,100);
-  initializeHisto(m_histoDz,"DeltaZ",-30.,30.,100);
-  initializeHisto(m_histoDTx,"DeltaTX",-0.02,0.02,100);
-  initializeHisto(m_histoDTy,"DeltaTY",-0.02,0.02,100);
-  initializeHisto(m_histoPOP,"DeltaPOP",-1.,1.,100);
+  m_histoGhost = initializeHisto("Ghost",0.,1.,100);
+  m_histoDx = initializeHisto("DeltaX",-0.3,0.3,100);
+  m_histoDy = initializeHisto("DeltaY",-0.3,0.3,100);
+  m_histoDz = initializeHisto("DeltaZ",-30.,30.,100);
+  m_histoDTx = initializeHisto("DeltaTX",-0.02,0.02,100);
+  m_histoDTy = initializeHisto("DeltaTY",-0.02,0.02,100);
+  m_histoPOP = initializeHisto("DeltaPOP",-1.,1.,100);
 
   return sc;
 }
@@ -83,20 +82,20 @@ void HltRecCheckTracks::checkTracks() {
     double dpop = (track.p()-mcp)/mcp;
 
 
-    fillHisto( m_histoDx, dx, 1.);
-    fillHisto( m_histoDy, dy, 1.);
-    fillHisto( m_histoDz, dz, 1.);
+    fillHisto( *m_histoDx, dx, 1.);
+    fillHisto( *m_histoDy, dy, 1.);
+    fillHisto( *m_histoDz, dz, 1.);
 
-    fillHisto( m_histoDTx, dtx, 1.);
-    fillHisto( m_histoDTy, dty, 1.);
-    fillHisto( m_histoPOP, dpop, 1.);
+    fillHisto( *m_histoDTx, dtx, 1.);
+    fillHisto( *m_histoDTy, dty, 1.);
+    fillHisto( *m_histoPOP, dpop, 1.);
     
 
   }
 
   int ntracks = m_inputTracks->size();
   double rat = (1.*nghost)/(1.*ntracks);
-  fillHisto( m_histoGhost, rat, 1.);
+  fillHisto( *m_histoGhost, rat, 1.);
 
   debug() << " checkReco ghost " << nghost << " " 
           << ntracks << " " << rat << endreq;
