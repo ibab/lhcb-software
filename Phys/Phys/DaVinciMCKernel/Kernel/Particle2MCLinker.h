@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.h,v 1.3 2007-11-23 23:19:28 gligorov Exp $
+// $Id: Particle2MCLinker.h,v 1.4 2008-01-22 17:37:33 jpalac Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 1
 
@@ -41,25 +41,41 @@ namespace LHCb
 */
 
 class MCAssociation {
-        public:
-                MCAssociation() {}
-                virtual ~MCAssociation() {}
+public:
 
-                const LHCb::MCParticle* to(){return m_associatedMCP;}
-                double weight(){return m_weight;}
-                StatusCode set_to(const LHCb::MCParticle* associatedMCP)
-                                {
-                                        m_associatedMCP = associatedMCP;
-                                        return StatusCode::SUCCESS;
-                                }
-                StatusCode set_weight(double weight)
-                                {
-                                        m_weight = weight;
-                                        return StatusCode::SUCCESS;
-                                }
-        private:
-                double m_weight;
-                const LHCb::MCParticle* m_associatedMCP;
+  MCAssociation() 
+    :
+    m_associatedMCP(0),
+    m_weight(0.)
+  {}
+
+  MCAssociation(const LHCb::MCParticle* mcp, 
+                const double weight)
+    :
+    m_associatedMCP(mcp),
+    m_weight(weight)
+  {
+  }
+
+  virtual ~MCAssociation() {}
+  
+  const LHCb::MCParticle* to() const { return m_associatedMCP; }
+
+  double weight() const { return m_weight; }
+
+  StatusCode setTo(const LHCb::MCParticle* associatedMCP) {
+    m_associatedMCP = associatedMCP;
+    return StatusCode::SUCCESS;
+  }
+
+  StatusCode setWeight(double weight)  {
+    m_weight = weight;
+    return StatusCode::SUCCESS;
+  }
+
+private:
+  const LHCb::MCParticle* m_associatedMCP;
+  double m_weight;
 };
 
 template <class SOURCE=LHCb::Particle>
@@ -71,6 +87,7 @@ public:
   // Typedef for RangeFrom return type
   typedef std::vector<MCAssociation> ToRange;
   typedef ToRange::iterator ToIterator;
+  typedef ToRange::const_iterator ToConstIterator;
   // Constructors from Algorithm
   Object2MCLinker( const Algorithm* myMother,
                    const int method,
