@@ -19,6 +19,8 @@
           HltBase/IBiFunctionTool.h (tool interface for bifunctions)
           HltBase/IFunctionFactory.h (interface for factory of uni functions)
           HltBase/IFunctionTool.h (tool interface for functions)
+	        src/HltBaseTool.h
+          src/HltData.h
 
 !========================== HltBase v3r0 2007-12-17 ===================
 ! 2007-12-11 Jose A. Hernando

@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.19 2008-01-22 09:56:30 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.20 2008-01-22 10:31:48 hernando Exp $
 // Include files
 
 // from Gaudi
@@ -25,7 +25,7 @@ HltFunctionFactory::HltFunctionFactory( const std::string& type,
                                         const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
-  declareInterface<IPyHltFunctionFactory>(this);
+  //  declareInterface<IPyHltFunctionFactory>(this);
 
 }
 //=============================================================================

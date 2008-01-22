@@ -9,7 +9,6 @@
   <class name = "ITrackFunctionFactory" />
   <class name = "IVertexFunctionFactory" />
   <class name = "ITrackBiFunctionFactory" />
-  <class name = "IPyHltFunctionFactory" />
   <class name = "IL0Value" />
   <class name = "ITrackUpgrade" />
   <class name = "ITrackMatch" />

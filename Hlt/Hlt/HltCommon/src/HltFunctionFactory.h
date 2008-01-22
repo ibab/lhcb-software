@@ -1,11 +1,11 @@
-// $Id: HltFunctionFactory.h,v 1.7 2008-01-22 09:56:31 hernando Exp $
+// $Id: HltFunctionFactory.h,v 1.8 2008-01-22 10:31:49 hernando Exp $
 #ifndef HLTCOMMON_HLTFUNCTIONFACTORY_H 
 #define HLTCOMMON_HLTFUNCTIONFACTORY_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "HltBase/IPyHltFunctionFactory.h"            // Interface
+// #include "HltBase/IPyHltFunctionFactory.h"            // Interface
 #include "HltBase/IFunctionFactory.h"
 #include "HltBase/IBiFunctionFactory.h"
 #include "HltBase/HltTypes.h"
@@ -16,8 +16,8 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2007-12-09
  */
-class HltFunctionFactory : public GaudiTool, 
-                           virtual public IPyHltFunctionFactory {
+class HltFunctionFactory : public GaudiTool {
+  // virtual public IPyHltFunctionFactory {
 public: 
   /// Standard constructor
   HltFunctionFactory( const std::string& type, 

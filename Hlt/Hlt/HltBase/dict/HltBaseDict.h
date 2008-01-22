@@ -14,7 +14,6 @@
 #include "HltBase/ITrackMatch.h"
 #include "HltBase/IFunctionFactory.h"
 #include "HltBase/IBiFunctionFactory.h"
-#include "HltBase/IPyHltFunctionFactory.h"
 #include "HltBase/ERelations.h"
 #include "HltBase/HltTypes.h"
 
