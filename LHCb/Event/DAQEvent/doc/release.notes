@@ -4,10 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r8 2008-01-22 ============================
 ! 2008-01-22 - Olivier Deschamps
- - Add new RawBankReadoutStatus ("NonUnique" when several banks with identical sourceID in the same rawEvent)  
+ - Add new RawBankReadoutStatus ("NonUnique" when several banks with identical
+   sourceID in the same rawEvent)  
 
-!================ DAQEvent v7r8 2007-12-20 ============================
 ! 2007-12-14 - Markus Frank
  - Add numbers to bank type enum.
  - Add two new bank types on request of Giacomo Graziani, Andrea Salamon and Alessia Satta:
