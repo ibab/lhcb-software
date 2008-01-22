@@ -1,33 +1,37 @@
-// $Id: MatchTVeloTracks.cpp,v 1.4 2007-12-12 13:15:22 hernando Exp $
+// $Id: HltMatchTVeloTracks.cpp,v 1.1 2008-01-22 10:00:48 hernando Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 #include "Event/Track.h" 
 #include "Event/State.h"
+#include "HltBase/HltUtils.h"
 // local
-#include "MatchTVeloTracks.h"
+#include "HltMatchTVeloTracks.h"
+
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : MatchTVeloTracks
+// Implementation file for class : HltMatchTVeloTracks
 //
 // 2007-03-07 : Alessia Satta
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MatchTVeloTracks );
+DECLARE_TOOL_FACTORY( HltMatchTVeloTracks );
 
 using namespace LHCb;
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MatchTVeloTracks::MatchTVeloTracks( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent )
+HltMatchTVeloTracks::HltMatchTVeloTracks( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IMatchTVeloTracks>(this);
+  declareInterface<ITrackMatch>(this);
+  declareInterface<ITrackBiFunctionTool>(this);
   declareProperty( "x2dMatchCut",   m_2dx_cut =80      );
   declareProperty( "sectorToll",   m_sec_tol  =1.0    );
   
@@ -41,10 +45,10 @@ info()<<" ecco"<<endreq;
 //=============================================================================
 // Destructor
 //=============================================================================
-MatchTVeloTracks::~MatchTVeloTracks() {} 
+HltMatchTVeloTracks::~HltMatchTVeloTracks() {} 
 
 //=============================================================================
-StatusCode MatchTVeloTracks::initialize() 
+StatusCode HltMatchTVeloTracks::initialize() 
 {
  StatusCode sc = GaudiTool::initialize();
 
@@ -55,14 +59,16 @@ StatusCode MatchTVeloTracks::initialize()
 
 
 }
-StatusCode MatchTVeloTracks::finalize() 
+StatusCode HltMatchTVeloTracks::finalize() 
 {
  StatusCode sc = GaudiTool::finalize();
  return StatusCode::SUCCESS;
   
 }
 
-StatusCode MatchTVeloTracks::match2dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttrack, float &x_distance )
+StatusCode HltMatchTVeloTracks::match2dVelo(const LHCb::Track& veloTrack,
+                                            const LHCb::Track& Ttrack, 
+                                            double &x_distance )
 {
   double trackDrDz = veloTrack.firstState().tx();
   int zone = veloTrack.specific();
@@ -157,11 +163,11 @@ StatusCode MatchTVeloTracks::match2dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttr
 }
 
 
-StatusCode MatchTVeloTracks::match3dVelo(LHCb::Track& veloTrack,
-                                         LHCb::Track& Ttrack,
-                                         LHCb::Track& matchedTrack,
-                                         float &x_dist,
-                                         float &y_dist ){
+StatusCode HltMatchTVeloTracks::match3dVelo(const LHCb::Track& veloTrack,
+                                            const LHCb::Track& Ttrack,
+                                            LHCb::Track& matchedTrack,
+                                            double &x_dist,
+                                            double &y_dist ){
   
   double trackDxDz = veloTrack.firstState().tx();
   double trackDyDz = veloTrack.firstState().ty();
@@ -195,52 +201,41 @@ StatusCode MatchTVeloTracks::match3dVelo(LHCb::Track& veloTrack,
   if(fabs(x_dist)<m_x_cut&&fabs(y_dist)<m_y_cut){
     //fill output track parameter
     matchedTrack.copy(veloTrack);
-    m_myState=&(Ttrack.firstState());
-    matchedTrack.addToStates( *m_myState); 
-
     
     double zMidT =  StateParameters::ZMidT;
 
-    LHCb::State* veloState= &(veloTrack.firstState());
-    LHCb::State* TStateAtTheMiddle = &(Ttrack.closestState(zMidT));
+    const LHCb::State& veloState= veloTrack.firstState();
+    const LHCb::State& TStateAtTheMiddle = Ttrack.closestState(zMidT);
 
     double qOverP = 0;
     double sigmaQOverP = 0; 
-    StatusCode sc = m_fastPTool->calculate(veloState, TStateAtTheMiddle 
-                                            ,qOverP, sigmaQOverP , 
-                                                        false );
+    StatusCode sc = m_fastPTool->calculate(&veloState, &TStateAtTheMiddle 
+                                           ,qOverP, sigmaQOverP ,false );
 
     debug() << "new p " << 1.0/qOverP << endmsg;
-
-
-
-
-
+    
     matchedTrack.firstState().setQOverP(qOverP);   
     matchedTrack.setHistory( Track::TrackMatching );
 
     matchedTrack.addToAncestors(veloTrack);
-    debug() << "velo track " << &veloTrack << endmsg;
-    const SmartRefVector<Track> ancestors = veloTrack.ancestors();
-    for (SmartRefVector<Track>::const_iterator it4 = ancestors.begin();
-        it4 != ancestors.end();  ++it4){
-          matchedTrack.addToAncestors(*(*it4));
-          debug() << "velo track ancestors "  << (*it4) << endmsg;
-    }
-    const SmartRefVector<Track> Tancestors = Ttrack.ancestors();
-    for (SmartRefVector<Track>::const_iterator it4 = Tancestors.begin();
-        it4 != Tancestors.end();  ++it4) {
-        matchedTrack.addToAncestors(*(*it4));
-        debug() << "T ancestors " << (*it4) << endmsg;
+    matchedTrack.addToAncestors(Ttrack);
 
+    Hlt::TrackMerge(Ttrack,matchedTrack);
+
+    // transfer the momentum
+    const std::vector<LHCb::State*>& allStates = matchedTrack.states();
+    debug() << " N states " << allStates.size() << endmsg;
+    for(std::vector< LHCb::State* >::const_iterator 
+          itState =allStates.begin();itState<allStates.end();itState++){
+      if((*itState)->qOverP() == 0) (*itState)->setQOverP(qOverP);
     }
-    //matchedTrack.addToAncestors( veloTrack.ancestors() );
-    //matchedTrack.addToAncestors( Ttrack.ancestors() );
+
     return StatusCode::SUCCESS;    
   }  
   return StatusCode::FAILURE;
 }
-float MatchTVeloTracks::calcP(Track& velotrack,Track& Ttrack)
+
+double HltMatchTVeloTracks::momentum(const Track& velotrack,const Track& Ttrack)
 {
   double trackDxDz = velotrack.firstState().tx();
   //  double trackDyDz = track->firstState().ty();

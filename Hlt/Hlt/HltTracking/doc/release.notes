@@ -4,6 +4,19 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2008-01-22 - Jose A. Hernando
+ - HLT-clean
+   remove:
+  src/HltTrackSelector.cpp
+  src/HltTrackSelector.h
+  src/HltTracking.cpp
+  src/HltTracking.h
+  src/HltTracking_dll.cpp
+   add:
+  src/HltTrackMatch.cpp (match two tracks segments into a unique track)
+  src/HltTrackMatch.h
+
+
 !========================== HltTracking v2r0 2007-12-17 ===================
 ! 2007-12-11 - Jose A. Hernando
  - HltTrackUpgradeTool making tool public again

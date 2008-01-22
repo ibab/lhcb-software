@@ -1,9 +1,9 @@
-// $Id: SpaceMuonMatch.cpp,v 1.8 2007-12-11 12:06:09 sandra Exp $
+// $Id: SpaceMuonMatch.cpp,v 1.9 2008-01-22 09:58:06 hernando Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-
+#include "Event/HltEnums.h"
 // local
 #include "SpaceMuonMatch.h"
 
@@ -73,7 +73,7 @@ StatusCode SpaceMuonMatch::execute() {
           m_inputTracks2->end() != itMuon; itMuon++ ) {
       Track* muon=(*itMuon);
       Track* outputTrack=new Track();
-      float x_dist, y_dist; 
+      double x_dist, y_dist; 
       StatusCode sc=m_matchToolPointer->match3dVelo(*pTrack,*muon,*outputTrack, x_dist, y_dist);
       if(StatusCode::SUCCESS == sc) {
         debug() << "Matched " << endmsg;
@@ -81,18 +81,18 @@ StatusCode SpaceMuonMatch::execute() {
        //Recalculate the xdist with 2d and the LHCBID
         SmartRefVector< Track > anceRZ=pTrack->ancestors();
         Track* ppConvert = (*(anceRZ.begin()));
-        float x_dist2dRecalc= 99999999;
+        double x_dist2dRecalc= 99999999;
         StatusCode sc2 = m_matchToolPointer->match2dVelo(*ppConvert,*muon, x_dist2dRecalc);        
 
         muontracks->insert(outputTrack); 
         setFilterPassed(true);
         //float x_dist2d = (*(anceRZ.begin()))->info(LHCb::HltEnums::Muon2DxDist,-1);
         //debug() << "xdist 2d from ancestor " << x_dist2d << endmsg;
-        outputTrack->addInfo(HltNames::particleInfoID("Muon2DxDist"),x_dist2dRecalc);
-        outputTrack->addInfo(HltNames::particleInfoID("Muon3DxDist"),x_dist);
-        outputTrack->addInfo(HltNames::particleInfoID("Muon3DyDist"),y_dist);
+        outputTrack->addInfo(HltEnums::Muon2DxDist,x_dist2dRecalc);
+        outputTrack->addInfo(HltEnums::Muon3DxDist,x_dist);
+        outputTrack->addInfo(HltEnums::Muon3DyDist,y_dist);
         double tDist = (*itMuon)->info(LHCb::HltEnums::MuonTdist,-1);
-        outputTrack->addInfo(HltNames::particleInfoID("MuonTdist"),tDist );
+        outputTrack->addInfo(HltEnums::MuonTdist,tDist );
 
 
         debug() << "x_dist2d Recalc " << x_dist2dRecalc << endmsg;

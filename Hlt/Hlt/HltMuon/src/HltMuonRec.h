@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.h,v 1.2 2007-10-30 19:05:27 smenzeme Exp $
+// $Id: HltMuonRec.h,v 1.3 2008-01-22 09:59:19 hernando Exp $
 #ifndef HLTMUON_H 
 #define HLTMUON_H 1
 
@@ -17,8 +17,7 @@
 #include "HltMuonStationRec.h"
 #include "HltMuonTrack.h"
 
-#include "HltBase/HltAlgorithm.h"
-#include "HltBase/HltFunctions.h"
+#include "HltBase/IMuonSeedTool.h"
 
 /** @class HltMuonRec HltMuonRec.h
  *  
@@ -26,7 +25,7 @@
  *  @author Alessia Satta
  *  @date   2004-10-06
  */
-class HltMuonRec : public HltAlgorithm {
+class HltMuonRec : public GaudiAlgorithm {
 public: 
   /// Standard constructor
   HltMuonRec( const std::string& name, ISvcLocator* pSvcLocator );
@@ -40,9 +39,9 @@ public:
   StatusCode createCoords(int station);
   StatusCode crossStrips(unsigned int station, unsigned int region) ;
   
-//  unsigned int readoutType(int partition, MuonLayout lay);
+  //  unsigned int readoutType(int partition, MuonLayout lay);
   LHCb::MuonTileID intercept(const LHCb::MuonTileID& stripX, 
-                              const LHCb::MuonTileID& stripY) ;
+                             const LHCb::MuonTileID& stripY) ;
   StatusCode muonSearch();
   StatusCode detectClone();    
   StatusCode strongCloneKiller();
@@ -53,18 +52,18 @@ public:
 
   std::vector<LHCb::MuonTileID> DoPad(std::vector<LHCb::MuonTileID>
                                       digit,MuonTSMap* TS);
-StatusCode getPads(int station);
-StatusCode createCoordsFromLC(int station);
-StatusCode initializeLogChanDecoding();
+  StatusCode getPads(int station);
+  StatusCode createCoordsFromLC(int station);
+  StatusCode initializeLogChanDecoding();
 protected:
 private:
-//  IMuonTileXYZTool  *m_iTileTool;
-//  IMuonGeometryTool *m_iGeomTool;  
-//  IMuonGetInfoTool  *m_iGetInfo;
-DeMuonDetector* m_muonDetector;
+  //  IMuonTileXYZTool  *m_iTileTool;
+  //  IMuonGeometryTool *m_iGeomTool;  
+  //  IMuonGetInfoTool  *m_iGetInfo;
+  DeMuonDetector* m_muonDetector;
   IMuonPosTool      *m_iPosTool;
   //ITrackSelector* m_trackSelector; // tool to accept a track
-
+  
   unsigned int m_nStation;
   unsigned int m_nRegion;
   std::vector<std::string> m_stationNames;
@@ -116,6 +115,10 @@ DeMuonDetector* m_muonDetector;
   // counters
   int m_countEvents;
   int m_countMuCandidates;
-  
+
+protected:
+
+  bool m_doPrepareMuonSeg;
+  IMuonSeedTool* m_prepareMuonSeed;  
 };
 #endif // HLTMUON_H

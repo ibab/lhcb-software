@@ -1,14 +1,11 @@
-// $Id: HltInit.h,v 1.5 2007-06-25 20:50:25 hernando Exp $
+// $Id: HltInit.h,v 1.6 2008-01-22 09:56:32 hernando Exp $
 #ifndef HLTDATASTOREINIT_H 
 #define HLTDATASTOREINIT_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiKernel/IDataManagerSvc.h"
-#include "GaudiAlg/GaudiAlgorithm.h"
-
-#include "Event/HltSummary.h"
-#include "HltBase/HltTypes.h"
+#include "GaudiKernel/IDataManagerSvc.h" 
+#include "HltBase/HltBaseAlg.h"
 
 /** @class HltInit HltInit.h
  *  
@@ -20,9 +17,9 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2006-07-25
  */
-class HltInit : public GaudiAlgorithm {
+class HltInit : public HltBaseAlg {
 public:
-
+  
 
   /// Standard constructor
   HltInit( const std::string& name, ISvcLocator* pSvcLocator );
@@ -39,14 +36,11 @@ protected:
 
 protected:
 
-  std::string m_TCKName;  
-  std::string m_dataSummaryLocation;
+  IDataManagerSvc* m_hltMan;
 
-protected:
+  Hlt::Data* m_HLTData;
 
-  IDataManagerSvc* m_hltSvc;
-  Hlt::Configuration m_hltConfiguration;
-  LHCb::HltSummary m_datasummary;
+  Hlt::Configuration* m_HLTConf;
 
 };
 #endif // HLTDATASTOREINIT_H

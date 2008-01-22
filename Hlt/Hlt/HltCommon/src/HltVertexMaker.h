@@ -1,11 +1,12 @@
-// $Id: HltVertexMaker.h,v 1.5 2007-12-03 16:36:21 hernando Exp $
+// $Id: HltVertexMaker.h,v 1.6 2008-01-22 09:56:44 hernando Exp $
 #ifndef HLTVERTEXMAKER_H 
 #define HLTVERTEXMAKER_H 1
 
 // Include files
 // from Gaudi
 #include "HltBase/HltAlgorithm.h"
-#include "HltBase/HltFunctions.h"
+#include "HltBase/IBiFunctionFactory.h"
+#include "HltFunctions.h"
 
 /** @class HltVertexMaker HltVertexMaker.h
  *  
@@ -18,6 +19,8 @@
 class HltVertexMaker : public HltAlgorithm {
  public: 
 
+  typedef IBiFunctionFactory<LHCb::Track,LHCb::Track> IBiTrackFactory;
+  
   /// Standard constructor
   HltVertexMaker( const std::string& name, ISvcLocator* pSvcLocator );
   
@@ -39,13 +42,22 @@ class HltVertexMaker : public HltAlgorithm {
 
 protected:
 
+
+  // In HltAlgorithm
+  // std::string m_inputSelection2Name;
+  // Hlt::TrackSelection* m_inputTracks;
+  // Hlt::TrackSelection* m_inputTracks2;
+  // Hlt::VertexSelection* m_outputVertices;
+
   StringArrayProperty m_filterDescriptor;
+
+  Hlt::Counter m_counterCombinations;
 
   std::vector<std::string> m_filterNames;
   std::vector<int> m_filterIDs;
   std::vector<Hlt::TrackBiFunction*> m_functions;
   std::vector<Hlt::Filter*> m_filters;
-  std::vector<HltHisto> m_histos;
+  std::vector<Hlt::Histo*> m_histos;
   std::vector<int> m_tcounters;
 
   std::vector<double> m_vals;
@@ -53,13 +65,6 @@ protected:
   std::vector<LHCb::Track*> m_input2;
 
   Hlt::VertexCreator _makeVertex;
-
-  template <class CONT>
-  void copy(const CONT& c1, CONT& c2)
-  {std::copy(c1.begin(),c1.end(),std::back_inserter(c2));}
-
-  HltCounter m_counterCombinations;
-
 };
 #endif // HLTMAKEVERTICES_H 
 

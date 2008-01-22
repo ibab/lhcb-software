@@ -5,6 +5,13 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-01-22 - Jose A. Hernando
+ - HLT-clean, adaptation of options for the muon, hadron, hadmuon, photon, electron alleys:
+   HltAlgorithm use input option InputSelection, InputSelection2, or InputSelections
+   HltAlgorithm use by default ouput option OutputSelection = name of the algorithm
+   HltFilters that apply a bifunction filter, needs to be indicated in the FilterDescriptor
+   "IP,>,0.1", is now "IP_PV2D,>,0.1"
+
 !========================== HltSys v2r0 2007-12-17 ===================
 </PRE><H1><A NAME=v2r0>2007-12-17 HltSys v2r0</A></H1><PRE>
 This version uses LHCb v23r2 and the Tf framework. This is the first

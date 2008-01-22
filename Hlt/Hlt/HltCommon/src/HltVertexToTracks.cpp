@@ -1,4 +1,4 @@
-// $Id: HltVertexToTracks.cpp,v 1.1 2007-11-20 12:48:46 hernando Exp $
+// $Id: HltVertexToTracks.cpp,v 1.2 2008-01-22 09:56:44 hernando Exp $
 // Include files 
 #include <algorithm>
 
@@ -7,6 +7,7 @@
 
 // local
 #include "HltVertexToTracks.h"
+#include "HltBase/ESequences.h"
 
 using namespace LHCb;
 
@@ -27,6 +28,9 @@ HltVertexToTracks::HltVertexToTracks( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
+
+  m_doInitSelections = false;
+  m_algoType = "HltVertesToTracks";
 }
 //=============================================================================
 // Destructor
@@ -39,7 +43,16 @@ HltVertexToTracks::~HltVertexToTracks() {
 //=============================================================================
 StatusCode HltVertexToTracks::initialize() {
   debug() << "==> Initialize" << endmsg;
-  return HltAlgorithm::initialize(); // must be executed first
+  StatusCode sc = HltAlgorithm::initialize(); // must be executed first
+
+  m_inputVertices = 
+    &(retrieveTSelection<LHCb::RecVertex>(m_inputSelectionName));
+  
+  m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
+
+  saveConfiguration();
+
+  return sc;
 }
 
 //=============================================================================
@@ -50,18 +63,15 @@ StatusCode HltVertexToTracks::execute() {
 
   for(  Hlt::VertexContainer::const_iterator it= m_inputVertices->begin(); 
         it<m_inputVertices->end(); ++it){
-
+    
     SmartRefVector< LHCb::Track >  trks = (*it)->tracks();
     if(trks.size()!=2) return StatusCode::FAILURE;
 
     Track* track0 = (Track*) trks[0];
     Track* track1 = (Track*) trks[1];
-    ELoop::extend(*m_outputTracks,track0);
-    ELoop::extend(*m_outputTracks,track1);
+    zen::extend(*m_outputTracks,track0);
+    zen::extend(*m_outputTracks,track1);
   }
-
-  if (m_debug)
-    printInfo(" tracks from vertices ",*m_outputTracks);
 
   return StatusCode::SUCCESS;
 }

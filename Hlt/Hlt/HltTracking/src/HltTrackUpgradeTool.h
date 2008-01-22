@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.3 2007-11-20 12:50:01 hernando Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.4 2008-01-22 10:04:25 hernando Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/ISequencerTimerTool.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "HltBase/HltTypes.h"
-#include "HltBase/HltFunctions.h"
+#include "HltBase/HltUtils.h"
 #include "HltBase/ITrackUpgrade.h"
 // NEXT DEV take from here (27/6/07)
 // #include "TrackInterfaces/ITracksFromTrack.h"
@@ -71,7 +71,8 @@ protected:
 
   void addIDs(const LHCb::Track& seed, LHCb::Track& track);
 
-  void printInfo(const std::string& title, const Hlt::TrackContainer& con);
+  void printInfo(const std::string& title, 
+                 const std::vector<LHCb::Track*>& con);
 
   void printInfo(const std::string& title, const LHCb::Track& track);
 
@@ -93,6 +94,11 @@ protected:
 
 protected:
 
+  ISequencerTimerTool* m_timer;
+  int m_timerTool;
+
+protected:
+
   template <class T>
   void recoregister(const std::string& name, const std::string& prop,
                     const T& t) {
@@ -100,7 +106,7 @@ protected:
     info() << " reco ["<<key<<"] = " << t <<endreq;
   }
 
-  Estd::dictionary m_recoConf;
+  zen::dictionary m_recoConf;
 
   LHCb::Tracks* m_otracks;
 

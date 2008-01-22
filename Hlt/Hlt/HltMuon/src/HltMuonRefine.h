@@ -1,9 +1,8 @@
-// $Id: HltMuonRefine.h,v 1.4 2007-11-16 14:42:10 hernando Exp $
+// $Id: HltMuonRefine.h,v 1.5 2008-01-22 09:59:19 hernando Exp $
 #ifndef HLTMUON_HLTMUONREFINE_H 
 #define HLTMUON_HLTMUONREFINE_H 1
 
 #include "HltBase/HltAlgorithm.h"
-#include "HltBase/HltFunctions.h"
 
 // Include files
 #include "Event/L0MuonCandidate.h"

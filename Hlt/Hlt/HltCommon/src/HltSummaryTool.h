@@ -1,13 +1,12 @@
-// $Id: HltSummaryTool.h,v 1.7 2007-08-16 09:40:49 hernando Exp $
+// $Id: HltSummaryTool.h,v 1.8 2008-01-22 09:56:36 hernando Exp $
 #ifndef HLTCOMMON_HLTSUMMARYTOOL_H 
 #define HLTCOMMON_HLTSUMMARYTOOL_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "HltBase/HltBaseTool.h"
 #include "HltBase/IHltConfSummaryTool.h"
 #include "Kernel/IHltSummaryTool.h"
-#include "HltBase/HltTypes.h"
 #include "Event/HltSummary.h"
 
 /** @class HltSummaryTool HltSummaryTool.h
@@ -19,7 +18,7 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2007-02-08
  */
-class HltSummaryTool : public GaudiTool, 
+class HltSummaryTool : public HltBaseTool, 
                        virtual public IHltConfSummaryTool,
                        virtual public IHltSummaryTool
 {
@@ -85,13 +84,12 @@ public:
 protected:
 
   void getSummary();
+
+  bool checkSelection(const std::string& name);
   
 protected:
 
-  IDataProviderSvc* m_hltSvc;
-  Hlt::Configuration* m_conf;
-
-  std::string m_summaryLocation;
+  std::string m_hltSummaryLocation;
   LHCb::HltSummary* m_summary;
   
 };

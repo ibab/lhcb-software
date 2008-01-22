@@ -5,12 +5,8 @@
 
 // local
 #include "HltSummaryTool.h"
-#include "Event/HltNames.h"
-#include "Event/HltEnums.h"
-#include "HltBase/HltFunctions.h"
-#include "HltBase/HltConfigurationHelper.h"
 #include "HltBase/HltSummaryHelper.h"
-#include "HltBase/IHltFunctionFactory.h"
+#include "HltBase/HltUtils.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltSummaryTool
@@ -28,15 +24,15 @@ DECLARE_TOOL_FACTORY( HltSummaryTool );
 HltSummaryTool::HltSummaryTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : HltBaseTool ( type, name , parent )
 {
   m_summary = 0;
   
   declareInterface<IHltConfSummaryTool>(this);
   declareInterface<IHltSummaryTool>(this);
   
-  declareProperty("SummaryLocation",
-                  m_summaryLocation = LHCb::HltSummaryLocation::Default);
+  declareProperty("HltSummaryLocation",
+                  m_hltSummaryLocation = LHCb::HltSummaryLocation::Default);
   
 }
 //=============================================================================
@@ -46,33 +42,16 @@ HltSummaryTool::~HltSummaryTool() {}
 
 StatusCode HltSummaryTool::initialize() {
 
- IDataProviderSvc* hltsvc = 0;
-  StatusCode sc = serviceLocator()->service("HltDataSvc",hltsvc);
-  if (!hltsvc) fatal() << " not able to create Hlt Svc provider " << endreq;
-
-  m_conf = 0;
- //  Hlt::DataHolder<Hlt::Configuration>* holder = 
-//     get<Hlt::DataHolder<Hlt::Configuration> >(hltsvc,"Hlt/Configuration");
-//   if (!holder) fatal() << " not able to retrieve configuration " << endreq;
-
-//   m_conf = &(holder->object());
-
-  //  IHltFunctionFactory* ctool;
-  // ctool = tool<IHltFunctionFactory>("HltFunctionFactory");
+  StatusCode sc = HltBaseTool::initialize();
   
   return sc;
 } 
 
 void HltSummaryTool::getSummary() {
   m_summary = 0;
-  std::string loca = m_summaryLocation;
+  std::string loca = m_hltSummaryLocation;
   m_summary = get<LHCb::HltSummary >(loca);  
-  if (! m_summary) error() << " No summaryy in TES! " << endreq;
-
-  loca = m_summaryLocation+"/Configuration";
-  Hlt::DataHolder< Hlt::Configuration >* m_holder = 
-    get< Hlt::DataHolder<Hlt::Configuration> >(loca);
-  m_conf = &(m_holder->object());
+  Assert( 0 != m_summary, " getSummary() no summary in TES");
  
 }
 
@@ -87,34 +66,29 @@ bool HltSummaryTool::decision() {
 }
 
 bool HltSummaryTool::decisionType(const std::string& name) {
-  getSummary();
-  int id = (unsigned int) HltNames::decisionTypeID(name);
-  return m_summary->checkDecisionType(id);
+  info() << " deprecated decision Type " << name << endreq;
+  return decision();
 }
 
 bool HltSummaryTool::hasSelection(const std::string& name) {
+  if (!validHltSelectionName(name))
+    error() << " No valid selection name " << name << endreq;
   getSummary();
-  int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);
+  int id = hltSelectionID(name);
   return m_summary->hasSelectionSummary(id);
 }
 
 bool HltSummaryTool::selectionDecision(const std::string& name) {
-  getSummary();
-  int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);
-  bool ok =  m_summary->hasSelectionSummary(id);
-  if (!ok) return ok;
+  bool ok = checkSelection(name);
+  if (!ok) return false;
+  int id = hltSelectionID(name);
   return m_summary->selectionSummary(id).decision();
 }
 
 bool HltSummaryTool::selectionDecisionType(const std::string& name,
                                            const std::string& type) {
-  getSummary();
-  int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);
-  bool ok =  m_summary->hasSelectionSummary(id);
-  if (!ok) return ok;
-  HltSelectionSummary& sum = m_summary->selectionSummary(id);
-  int itype = (unsigned int) HltNames::decisionTypeID(type);
-  return sum.checkDecisionType(itype);
+  info() << " deprecated decision type" << name << " " << type << endreq;
+  return decision();
 }
 
 
@@ -123,76 +97,75 @@ std::vector<std::string> HltSummaryTool::selections() {
   std::vector<int> ids = m_summary->selectionSummaryIDs();
   std::vector<std::string> names;
   for (std::vector<int>::iterator it = ids.begin(); it!= ids.end(); ++it) {
-    std::string name = HltConfigurationHelper::getName(*m_conf,"SelectionID",*it);
+    int id = *it;
+    std::string name = hltSelectionName(id);
     names.push_back(name);
   }
   return names;  
 }
 
 size_t HltSummaryTool::selectionNCandidates(const std::string& name) {
-  getSummary();
-  int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);
-  return HltSummaryHelper::ncandidates(*m_summary,id);
+  bool ok = checkSelection(name);
+  if (!ok) return 0;
+  int id = hltSelectionID(name);
+  size_t ncans = m_summary->selectionSummary(id).data().size();
+  return ncans;
 }
 
 std::vector<std::string> 
 HltSummaryTool::selectionFilters(const std::string& name) {
-  getSummary();
   std::vector<std::string> filters;
   std::string key = name+"/Filters";
-  if (m_conf->has_key(key))
-    filters = m_conf->retrieve<std::vector<std::string> >(key);
+  if (hltConf().has_key(key))
+    filters = hltConf().retrieve<std::vector<std::string> >(key);
   return filters;
 }
 
 std::vector<std::string> 
 HltSummaryTool::selectionInputSelections(const std::string& name) {
-  getSummary();
   std::vector<std::string> inputs;
   std::string key = name+"/InputSelections";
-  if (m_conf->has_key(key))
-    inputs = m_conf->retrieve<std::vector<std::string> >(key);
+  if (hltConf().has_key(key))
+    inputs = hltConf().retrieve<std::vector<std::string> >(key);
   return inputs;
 }
 
 std::string 
 HltSummaryTool::selectionType(const std::string& name) {
-  getSummary();
   std::string type = "unknown";
   std::string key = name+"/SelectionType";
-  if (m_conf->has_key(key)) type = m_conf->retrieve<std::string >(key);
+  if (hltConf().has_key(key)) type = hltConf().retrieve<std::string >(key);
   return type;
 }
 
 std::vector<Track*> 
 HltSummaryTool::selectionTracks(const std::string& name) {
   std::vector<Track*> tracks;
-  getSummary();
-  int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);
-  if (!HltSummaryHelper::has<std::vector<Track*> >(*m_summary,id)) 
-    return tracks;
-  tracks = HltSummaryHelper::retrieve<std::vector<Track*> >(*m_summary,id);
-  return tracks;
+  bool ok = checkSelection(name);
+  if (!ok) return tracks;
+  int id = hltSelectionID(name);
+  return HltSummaryHelper::retrieve<Track>(*m_summary,id);
 }
+
 
 std::vector<RecVertex*> 
 HltSummaryTool::selectionVertices(const std::string& name) {
   std::vector<RecVertex*> vertices;
-  getSummary();
-  int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);
-  if (!HltSummaryHelper::has< std::vector<RecVertex*> >(*m_summary,id)) 
-    return vertices;
-  vertices = 
-    HltSummaryHelper::retrieve<std::vector<RecVertex*> >(*m_summary,id);
-  return vertices;
+  bool ok = checkSelection(name);
+  if (!ok) return vertices;
+  int id = hltSelectionID(name);
+  return HltSummaryHelper::retrieve<RecVertex>(*m_summary,id);
 }
 
 std::vector<Particle*> 
 HltSummaryTool::selectionParticles(const std::string& name) {
-  std::vector<Particle*> pars;
-  getSummary();
-  int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);
-  return pars;
+  std::vector<Particle*> particles;
+  bool ok = checkSelection(name);
+  if (!ok) return particles;
+  int id = hltSelectionID(name);
+  return HltSummaryHelper::retrieve<Particle>(*m_summary,id);
+
+
 }
 
 bool HltSummaryTool::isInSelection(const std::string& name,
@@ -209,39 +182,47 @@ bool HltSummaryTool::isInSelection(const std::string& name,
 }
 
 bool HltSummaryTool::isInSelection( const Track& track, int id) {
-  std::string name = HltConfigurationHelper::getName(*m_conf,"SelectionID",id);
+  std::string name = hltSelectionName(id);
   return isInSelection(name,track);
 }
 
 
 std::vector<std::string> HltSummaryTool::confKeys() {
-  return m_conf->keys();
+  return hltConf().keys();
 }
 
 int HltSummaryTool::confInt(const std::string& name) {
   int val = -1;
-  if (m_conf->has_key(name)) val = m_conf->retrieve<int>(name);
+  if (hltConf().has_key(name)) val = hltConf().retrieve<int>(name);
   return val;
 }
 
 double HltSummaryTool::confDouble(const std::string& name) {
   double val = 0.;
-  if (m_conf->has_key(name)) val = m_conf->retrieve<double>(name);
+  if (hltConf().has_key(name)) val = hltConf().retrieve<double>(name);
   return val;
 }
 
 std::string HltSummaryTool::confString(const std::string& name) {
   std::string val = "unknown";
-  if (m_conf->has_key(name)) val = m_conf->retrieve<std::string>(name);
+  if (hltConf().has_key(name)) val = hltConf().retrieve<std::string>(name);
   return val;
 }
 
 std::vector<std::string> HltSummaryTool::confStringVector(const std::string& name) 
 {
   std::vector<std::string> val;
-  if (m_conf->has_key(name)) 
-    val = m_conf->retrieve<std::vector<std::string> >(name);
+  if (hltConf().has_key(name)) 
+    val = hltConf().retrieve<std::vector<std::string> >(name);
   return val;
 }
 
-
+bool HltSummaryTool::checkSelection(const std::string& name) {
+  if (!validHltSelectionName(name))
+    error() << " No valid selection name " << name << endreq;  
+  getSummary();
+  int id = hltSelectionID(name);
+  bool ok =  m_summary->hasSelectionSummary(id);
+  if (!ok) debug() << " no selection in summary " << name << endreq;
+  return ok;
+}

@@ -1,4 +1,4 @@
-// $Id: HltPrepareMuonSeg.cpp,v 1.2 2007-12-11 09:52:25 hernando Exp $
+// $Id: HltPrepareMuonSeg.cpp,v 1.3 2008-01-22 09:58:06 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -23,12 +23,14 @@ using namespace LHCb;
 // Standard constructor, initializes variables
 //=============================================================================
 HltPrepareMuonSeg::HltPrepareMuonSeg( const std::string& name,
-                                  ISvcLocator* pSvcLocator)
+                                      ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
   declareProperty("OutputMuonTracksName"   ,
                   m_outputMuonTracksName = "Hlt/Tracks/ConfirmedTMuon");
-  
+
+  m_doInitSelections = false;
+  m_algoType = "HltPrepareMuonSeg";
 }
 //=============================================================================
 // Destructor
@@ -42,10 +44,16 @@ StatusCode HltPrepareMuonSeg::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
+  m_inputTracks = &(retrieveTSelection<LHCb::Track>(m_inputSelectionName));
+  
+  m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
+
   debug() << "==> Initialize" << endmsg;
   
   m_prepareMuonSeed = tool<IMuonSeedTool>("MuonSeedTool",this);
   
+
+
   return StatusCode::SUCCESS;
 }
 
@@ -55,10 +63,8 @@ StatusCode HltPrepareMuonSeg::initialize() {
 StatusCode HltPrepareMuonSeg::execute() {
   
   debug() << "==> Execute" << endmsg;
-  
 
-
-//Container with all T tracks
+  //Container with all T tracks
   Tracks* muontracks = new Tracks();
   put(muontracks,m_outputMuonTracksName);
   debug() << "Muon segments tracks size " << m_inputTracks->size()<< endmsg;
@@ -67,7 +73,7 @@ StatusCode HltPrepareMuonSeg::execute() {
         m_inputTracks->end() != itT; itT++ ) {
     Track* itMuonSeg = (*itT);
     Track* seedTrack = new Track();
-//    LHCb::Track seedTrack; 
+    //    LHCb::Track seedTrack; 
     StatusCode sctmp = m_prepareMuonSeed->makeTrack( *itMuonSeg , *seedTrack );
     if( sctmp.isFailure() ){
       err()<<"Failed to prepare the seed"<<endmsg;

@@ -4,6 +4,8 @@
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
 
+! 2007-01-21 Jose A. Hernando
+  - adaptations to HLT-clean
 
 !========================== HltL0MuonConf v2r0 2007-12-17 ===================
 ! 2007-12-11 - Sandra Amato

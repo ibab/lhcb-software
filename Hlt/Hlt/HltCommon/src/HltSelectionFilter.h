@@ -1,13 +1,13 @@
-// $Id: HltSelectionEntry.h,v 1.2 2007-07-27 22:33:17 hernando Exp $
-#ifndef HLTSELECTIONENTRY_H 
-#define HLTSELECTIONENTRY_H 1
+// $Id: HltSelectionFilter.h,v 1.1 2008-01-22 09:56:36 hernando Exp $
+#ifndef HLTCOMMON_HLTSELECTIONFILTER_H 
+#define HLTCOMMON_HLTSELECTIONFILTER_H 1
 
 // Include files
 // from Gaudi
 
 #include "HltBase/HltAlgorithm.h"
 
-/** @class HltSelectionEntry HltSelectionEntry.h
+/** @class HltSelectionFilter HltSelectionFilter.h
  *  
  *  functionality:
  *      filters a trigger with a list of selections:
@@ -20,12 +20,12 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2007-07-27
  */
-class HltSelectionEntry : public HltAlgorithm {
+class HltSelectionFilter : public HltAlgorithm {
 public: 
   /// Standard constructor
-  HltSelectionEntry( const std::string& name, ISvcLocator* pSvcLocator );
+  HltSelectionFilter( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~HltSelectionEntry( ); ///< Destructor
+  virtual ~HltSelectionFilter( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -33,14 +33,12 @@ public:
 
 protected:
 
-  std::vector< std::string > m_selectionNames;
- 
-  std::vector<std::vector<int> > m_selectionIDs;
+  // Use HltAlgorithm m_extraInputSelectionsNames;
+  // StringArrayProperty m_inputSelectionsNames;
 
   std::vector<int> m_scounters;
 
-  StringArrayProperty m_selections;
-
+  Hlt::TSelection<Hlt::Selection>* m_outputSelections;
 
 };
 #endif // HLTSELECTIONENTRY_H

@@ -29,7 +29,7 @@ use HltSelChecker       v5r3    Hlt   # Patrick Koppenburg
 
 use HltBase             v3r0   Hlt    # Jose Angel Hernando-Morata
 
-use LoKiTrigger         v7r0   Phys   # Vanya Belyaev
+#use LoKiTrigger         v7r0   Phys   # Vanya Belyaev
 use TisTosTobbing       v2r1   Phys   # Tomasz Skwarnicki  
 
 

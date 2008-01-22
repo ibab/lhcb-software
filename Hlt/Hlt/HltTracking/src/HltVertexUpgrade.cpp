@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.3 2007-11-14 14:00:11 hernando Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.4 2008-01-22 10:04:25 hernando Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -26,12 +26,13 @@ HltVertexUpgrade::HltVertexUpgrade( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
 {
   declareProperty("RecoName", m_recoName = "empty");
-
+  
   declareProperty("TransferExtraInfo", m_transferExtraInfo = true);
-
+  
   declareProperty( "TESOutputVerticesName",  
                    m_TESOutputVerticesName = "Hlt/Vertex/VertexUpgradeBank");
-  
+ 
+  m_doInitSelections = false;
 };
 //=============================================================================
 // Destructor
@@ -45,14 +46,18 @@ StatusCode HltVertexUpgrade::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
+  m_inputVertices = 
+    &(retrieveTSelection<LHCb::RecVertex>(m_inputSelectionName));
+  
+  m_outputVertices = 
+    &(registerTSelection<LHCb::RecVertex>(m_outputSelectionName));
+  
+
   m_tool = tool<HltTrackUpgradeTool>("HltTrackUpgradeTool",this);
   if (!m_tool) 
     fatal() << " not able to retrieve upgrade track tool " << endreq;
   
   m_tool->setReco(m_recoName);
-
-  checkInput(m_inputVertices," input vertices");
-  checkInput(m_outputVertices," output vertices");
 
   saveConfiguration();
 

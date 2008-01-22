@@ -1,11 +1,10 @@
-// $Id: HltPrepareL0Muons.h,v 1.2 2007-12-04 13:26:35 hernando Exp $
-#ifndef HLTPREPAREL0CALOS_H 
-#define HLTPREPAREL0CALOS_H 1
+// $Id: HltL0MuonPrepare.h,v 1.1 2008-01-22 09:56:33 hernando Exp $
+#ifndef HLTCOMMON_HLTL0MUONPREPARE_H 
+#define HLTCOMMON_HLTL0MUONPREPARE_H 1
 
 // Include files
 // from Gaudi
 #include "HltBase/HltAlgorithm.h"
-#include "HltBase/HltFunctions.h"
 #include "HltBase/IMuonSeedTool.h"
 #include "Event/L0MuonCandidate.h"
 
@@ -15,12 +14,12 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2006-07-28
  */
-class HltPrepareL0Muons : public HltAlgorithm {
+class HltL0MuonPrepare : public HltAlgorithm {
 public: 
   /// Standard constructor
-  HltPrepareL0Muons( const std::string& name, ISvcLocator* pSvcLocator );
+  HltL0MuonPrepare( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~HltPrepareL0Muons( ); ///< Destructor
+  virtual ~HltL0MuonPrepare( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution

@@ -1,8 +1,9 @@
-// $Id: RZMuonMatch.cpp,v 1.6 2007-11-22 11:05:36 sandra Exp $
+// $Id: RZMuonMatch.cpp,v 1.7 2008-01-22 09:58:06 hernando Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "Event/HltEnums.h"
 // local
 #include "RZMuonMatch.h"
 
@@ -74,11 +75,8 @@ StatusCode RZMuonMatch::execute() {
       
       debug()<<" enter loop new muon "<<m_inputTracks->size()<<endreq;
       Track* muon=(*itMuon);
-      float x_dist;
+      double x_dist;
       StatusCode sc=m_matchToolPointer->match2dVelo(*pTr2d,*muon, x_dist );
-      
-      
-
     
       if(StatusCode::SUCCESS == sc) {
         debug()<<" success "<<endreq;
@@ -86,7 +84,7 @@ StatusCode RZMuonMatch::execute() {
         m_outputTracks->push_back(pTr2d);
               
         pTr2d->setFlag(Track::PIDSelected,true);
-        pTr2d->addInfo(HltNames::particleInfoID("Muon2DxDist"),x_dist); 
+        pTr2d->addInfo(HltEnums::Muon2DxDist,x_dist); 
 
         
         if(m_debug){

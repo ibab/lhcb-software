@@ -1,4 +1,4 @@
-// $Id: HltSequencer.cpp,v 1.16 2007-12-11 16:28:08 hernando Exp $
+// $Id: HltSequencer.cpp,v 1.17 2008-01-22 09:56:36 hernando Exp $
 // Include files
 
 // from Gaudi

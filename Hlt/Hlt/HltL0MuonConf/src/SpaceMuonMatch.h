@@ -1,4 +1,4 @@
-// $Id: SpaceMuonMatch.h,v 1.5 2007-12-11 12:06:09 sandra Exp $
+// $Id: SpaceMuonMatch.h,v 1.6 2008-01-22 09:58:06 hernando Exp $
 #ifndef SPACEMUONMATCH_H 
 #define SPACEMUONMATCH_H 1
 
@@ -6,10 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "HltBase/HltAlgorithm.h"
-#include "HltBase/HltFunctions.h"
 #include "HltBase/IMatchTVeloTracks.h"
-
-
 
 /** @class SpaceMuonMatch SpaceMuonMatch.h
  *  

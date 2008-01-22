@@ -2,7 +2,7 @@
 // Define HltDataSvc 
 //
 // ApplicationMgr.SvcOptMapping += {"DataSvc/HltDataSvc"};
-HltDataSvc.ForceLeaves = true;
+HltSvc.ForceLeaves = true;
 
 //
 // defines online reconstruction parameters, does not add any algorithm!
@@ -26,27 +26,25 @@ Hlt.ModeOr = true;
 HltInitSequence.Members = {"HltInit"};
 
 // now use the updated L0 channel configuration
-HltInit.TCKName = "UpdatedL0";
+// HltInit.TCKName = "UpdatedL0";
 
 //
 // the Alleys sequencer
 //
 
-HltAllAlleysSequence.Members ={"HltSequencer/HltL0TriggerSequence",
-                               "HltSequencer/HltMuonAlleySequence",
-                               "HltSequencer/HltMuHadAlleySequence",
-                               "HltSequencer/HltHadAlleySequence",
-                               "HltSequencer/HltEleAlleySequence",
-                               "HltSequencer/HltPhoAlleySequence",
-                               "HltSelectionEntry/HltAlleys"
+HltAllAlleysSequence.Members ={
+  "HltSequencer/HltL0TriggerSequence",
+  "HltSequencer/HltMuonAlleySequence",
+  "HltSequencer/HltMuHadAlleySequence",
+  "HltSequencer/HltHadAlleySequence",
+  "HltSequencer/HltEleAlleySequence",
+  "HltSequencer/HltPhoAlleySequence",
+  "HltSelectionFilter/HltAlleys"
 };
 HltAllAlleysSequence.ModeOr=true; 
-HltAlleys.SelectionName = "HltAlleys";
+
 
 #include "$HLTSYSROOT/options/HltL0TriggerSequence.opts"
-
-//ToolSvc.PatForwardTool.OutputLevel = 1;
-
 #include "$HLTSYSROOT/options/HltMuonAlleyConfSequence.opts"
 #include "$HLTSYSROOT/options/HltMuHadAlleyConfSequence.opts"
 #include "$HLTSYSROOT/options/HltHadAlleyConfSequence.opts"
@@ -57,17 +55,9 @@ HltAlleys.SelectionName = "HltAlleys";
 // end the Hlt sequencer: write in summary and copy to TES
 //
 
-HltEndSequence.Members = {"HltSelectionDataToTes",
+HltEndSequence.Members = {"HltSelectionToTES",
                           "HltSummaryWriter"};
 
-
-
-//HltSelectionDataToTes.Copy+={"MuonsForwardSingle" ,"DiMuonsForward"};
-HltSelectionDataToTes.Copy+={"MuonAndTVelo", 
-                             "DiMuonAndTVelo",
-                             "MuonAndTVeloFromMuonSeg",
-                             "MuonAndTVeloForDimuonFromL0Single"
-};
 // HltSelectionDataToTes.CopyAll = true;
 
 // HltSummaryWriter.SaveAll = true;

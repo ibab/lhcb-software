@@ -13,11 +13,11 @@ HltSummaryWriter.Save += {"PV2D",
                           "MuHadTrigger"
 };
 
-HltAlleys.Selections += {"MuHadTrigger"};
+HltAlleys.InputSelections += {"MuHadTrigger"};
 
 HltMuHadAlleySequence.Members = {
-  "L0Entry/L0MuHadEntry",
-  "HltSelectionEntry/MuHadEntry",
+  "L0Entry/MuonEntry",
+  "HltSelectionFilter/MuHadEntry",
   "HltTrackFilter/MuHadMuonTF",
   // NEED TO CHANGE TO MAKEVERTICES TO HAVE A GOOD CONFIRMATION LOGICS
   "HltTrackUpgrade/HltRecoVelo",
@@ -36,21 +36,18 @@ HltMuHadAlleySequence.MeasureTime = true;
 
 
 // L0 entry: single muon
-L0MuHadEntry.L0ChannelsName = {"Muon" ,"MuonNoGlob"};
-L0MuHadEntry.SelectionName = "MuonEntry";
-L0MuHadEntry.OutputLevel=3;
+MuonEntry.L0ChannelsName = {"Muon" ,"MuonNoGlob"};
+MuonEntry.OutputLevel=3;
 
 // HLT entry: some L0 confirmed muon;
-MuHadEntry.Selections = {"MuonAndTVelo"};
+MuHadEntry.InputSelections = {"MuonAndTVelo"};
 
 // Select Muons with IP and pT
 //MuHadMuonTF.InputTracksName  = "MuonsForwardSingle";
 MuHadMuonTF.InputTracksName  = "MuonAndTVelo";
-MuHadMuonTF.OutputTracksName = "MuHadMuonTF";
-MuHadMuonTF.PrimaryVerticesName = "PV2D";
 MuHadMuonTF.HistogramUpdatePeriod = 0;
 MuHadMuonTF.FilterDescriptor = {"PT,>,1000.",
-                                "IP,||[],0.1,3."
+                                "IP_PV2D,||[],0.1,3."
 };
 MuHadMuonTF.HistoDescriptor = {
   "PT"     : ( "PT",0.,6000.,400),
@@ -60,21 +57,12 @@ MuHadMuonTF.HistoDescriptor = {
 };
 MuHadMuonTF.OutputLevel = 3;
 
-// do the rest of velo tracks
-HltRecoVelo.InputTracksName  = "RZVelo";
-HltRecoVelo.OutputTracksName = "Velo";
-HltRecoVelo.RecoName = "Velo";
-HltRecoVelo.OutputLevel = 3;
-
 
 // Select Velo tracks with an IP and good DOCA to Muon
-MuHadCompanionTFVelo.InputTracksName  = "Velo";
-MuHadCompanionTFVelo.InputTracks2Name = "MuHadMuonTF";
-MuHadCompanionTFVelo.OutputTracksName = "MuHadCompanionTFVelo";
-MuHadCompanionTFVelo.PrimaryVerticesName = "PV2D";
+MuHadCompanionTFVelo.InputSelection  = "Velo";
 MuHadCompanionTFVelo.HistogramUpdatePeriod = 0;
-MuHadCompanionTFVelo.FilterDescriptor = {"IP,||[],0.1,3.",
-                                         "DOCA,<,0.2"
+MuHadCompanionTFVelo.FilterDescriptor = {"IP_PV2D,||[],0.1,3.",
+                                         "DOCA_MuHadMuonTF,<,0.2"
 };
 MuHadCompanionTFVelo.HistoDescriptor = { 
   "IP"         : ( "IP",-1.,3.,400),
@@ -86,15 +74,12 @@ MuHadCompanionTFVelo.OutputLevel = 3;
 
 
 // Make forward the selected velo tracks
-MuHadCompanionTRForward.InputTracksName  = "MuHadCompanionTFVelo";
-MuHadCompanionTRForward.OutputTracksName = "MuHadCompanionTRForward";
+MuHadCompanionTRForward.InputSelection  = "MuHadCompanionTFVelo";
 MuHadCompanionTRForward.RecoName = "Forward";
 MuHadCompanionTRForward.OutputLevel = 3;
-PatMuHadCompanionTRForward.DoCleanUp = false;
 
 // Select forward track with a given Pt
-MuHadCompanionTFForward.InputTracksName  = "MuHadCompanionTRForward";
-MuHadCompanionTFForward.OutputTracksName = "MuHadCompanionTFForward";
+MuHadCompanionTFForward.InputSelection  = "MuHadCompanionTRForward";
 MuHadCompanionTFForward.FilterDescriptor = {"PT,>,500."};
 MuHadCompanionTFForward.HistogramUpdatePeriod = 0;
 MuHadCompanionTFForward.HistoDescriptor = {  
@@ -105,9 +90,8 @@ MuHadPreTriggerSingle.OutputLevel = 3;
 
 
 // Make vertices with the forward companion tracks 
-MuHadVMaker.InputTracksName    = "MuHadMuonTF";
-MuHadVMaker.InputTracks2Name   = "MuHadCompanionTFForward";
-MuHadVMaker.OutputVerticesName = "MuHadVMaker";
+MuHadVMaker.InputSelection    = "MuHadMuonTF";
+MuHadVMaker.InputSelection2   = "MuHadCompanionTFForward";
 MuHadVMaker.OutputLevel = 3;
 MuHadVMaker.FilterDescriptor = {"DOCA,<,0.2"
 };
@@ -118,12 +102,10 @@ MuHadTVMaker.HistoDescriptor = {
 };
 
 // select vertices if Pt, poiting, and distance
-MuHadTrigger.InputVerticesName   = "MuHadVMaker";
-MuHadTrigger.PrimaryVerticesName = "PV2D";
-MuHadTrigger.OutputVerticesName  = "MuHadTrigger";
+MuHadTrigger.InputSelection   = "MuHadVMaker";
 MuHadTrigger.OutputLevel = 3;
-MuHadTrigger.FilterDescriptor = {"VertexPointing,<,0.4",
-                                 "VertexDz,>,2."
+MuHadTrigger.FilterDescriptor = {"VertexPointing_PV2D,<,0.4",
+                                 "VertexDz_PV2D,>,2."
 };
 MuHadTrigger.HistogramUpdatePeriod = 0;
 MuHadTrigger.HistoDescriptor = {

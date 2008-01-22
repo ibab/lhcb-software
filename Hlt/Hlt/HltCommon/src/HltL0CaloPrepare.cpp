@@ -1,70 +1,62 @@
-// $Id: HltPrepareL0Calos.cpp,v 1.11 2007-11-20 10:07:19 graven Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.1 2008-01-22 09:56:32 hernando Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 // local
-#include "HltPrepareL0Calos.h"
+#include "HltL0CaloPrepare.h"
 #include "Event/HltEnums.h"
-//#include "Event/HltSummaryFunctor.h"
-#include "HltBase/HltSequences.h"
-#include "HltBase/HltFunctions.h"
 
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : HltPrepareL0Calos
+// Implementation file for class : HltL0CaloPrepare
 //
 // 2006-07-28 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltPrepareL0Calos );
+DECLARE_ALGORITHM_FACTORY( HltL0CaloPrepare );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-HltPrepareL0Calos::HltPrepareL0Calos( const std::string& name,
+HltL0CaloPrepare::HltL0CaloPrepare( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator ),
-    _etFun(0),
-    _typeFilter(0),
-    _etFilter(0)
+  : HltAlgorithm ( name , pSvcLocator )
 {
-  // declareCondition("MinPt",m_ptMin = 0.);
   
-  declareProperty("MinEt", m_etMin = 3500.);
+  declareProperty("MinEt", m_minEt = 3500.);
   declareProperty("CaloType", m_caloType = 2);
 
   declareProperty("CaloCandidatesLocation", m_caloCandidatesLocation = 
                   L0CaloCandidateLocation::Full);
 
   declareProperty("CaloMakerTool", m_caloMakerName = "");
+
+  m_doInitSelections = false;
+  m_algoType = "HltL0CaloPrepare";
   
-  //  declareProperty("OutputL0CaloCandidates", m_outputL0CaloCandidatesName = 
-  //                "Hlt/L0CaloCandidate/HadL0Calos");
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-HltPrepareL0Calos::~HltPrepareL0Calos() {
+HltL0CaloPrepare::~HltL0CaloPrepare() {
 } 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode HltPrepareL0Calos::initialize() {
+StatusCode HltL0CaloPrepare::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorith
 
-  _etFun = new Hlt::MemberFunction<L0CaloCandidate>(&L0CaloCandidate::et);
-  _etFilter = (( *_etFun > m_etMin).clone());
-  _typeFilter = new checkType(m_caloType);
+  m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
 
-  initializeHisto(m_histoEt,"Et",0.,6000.,100);
-  initializeHisto(m_histoEt1,"Et1",0.,6000.,100);
+  m_histoEt = initializeHisto("Et",0.,6000.,100);
+  m_histoEt1 = initializeHisto("Et1",0.,6000.,100);
 
   debug() << " calo candidates location " 
           << m_caloCandidatesLocation << endreq;
@@ -72,84 +64,55 @@ StatusCode HltPrepareL0Calos::initialize() {
   m_caloMaker = NULL;
   if (m_caloMakerName != "")
     m_caloMaker = tool<ICaloSeedTool>("HadronSeedTool");
+
+  saveConfiguration();  
   
-  // sumregister(m_calos,m_outputL0CaloCandidatesName);
-
-//   put(new Tracks(),"Hlt/Track/Caca");
-
-//   put(new Hlt::L0CaloCandidateDataSelection(m_calos),m_outputL0CaloCandidatesName);
-
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode HltPrepareL0Calos::execute() {
+StatusCode HltL0CaloPrepare::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
 
   // get calo candidates
   L0CaloCandidates* calos = get<L0CaloCandidates>(m_caloCandidatesLocation);
-
-  // select calo by type 
-  m_ocalos.clear();
-  Hlt::select(*calos,*_typeFilter,m_ocalos);
-  debug() << " number of calos " << m_ocalos.size() << endreq;
-  if (m_ocalos.size() <= 0) return stop(" No calos ");
-
-  // monitor the et of the calos
-  if (m_debug || m_monitor) {
-    std::vector<double> ets;
-    ELoop::map(m_ocalos,*_etFun,ets);
-    std::sort(ets.begin(),ets.end());
-    fillHisto(m_histoEt,ets,1.);
-    double et1 = ets.back();
-    fillHisto(m_histoEt1,et1,1.);
-    if (m_debug) print(ets.begin(),ets.end(), " ets ");
-    debug() << " et1 " << et1 << endreq;
-  }
-  
-  // select the calos above an et cut
-  m_calos.clear();
-  Hlt::select(m_ocalos,*_etFilter,m_calos);
-
   Tracks* output = new Tracks();
-  for (std::vector<L0CaloCandidate*>::iterator it = m_calos.begin();
-       it != m_calos.end(); ++it) {
-    L0CaloCandidate& calo = *(*it);
-    Track* tcalo = new Track();
-    if (m_caloMaker) m_caloMaker->makeTrack(calo,*tcalo);
-    else makeTrack(calo,*tcalo);
-    addExtras(calo,*tcalo);
-    output->insert(tcalo);
-    m_outputTracks->push_back(tcalo);
-  }
-  put(output,"Hlt/Track/"+m_outputTracksName);
-  
-  int ncan = m_calos.size();
-  debug() << " number of calos above et " << ncan << endreq;
-  if (m_debug)
-    printInfo("calos ",*m_outputTracks);
+  put(output,"Hlt/Track/"+m_outputSelectionName);
 
+  for (L0CaloCandidates::iterator it = calos->begin(); 
+       it != calos->end(); ++it) {
+    L0CaloCandidate& calo = *(*it);
+    if (calo.type() == m_caloType) {
+      if (calo.et() >= m_minEt) {
+        Track* tcalo = new Track();
+        if (m_caloMaker) m_caloMaker->makeTrack(calo,*tcalo);
+        else makeTrack(calo,*tcalo);
+        addExtras(calo,*tcalo);
+        output->insert(tcalo);
+        m_outputTracks->push_back(tcalo);
+      } 
+    }
+  }
+
+  debug() << " number of calos above et " << m_outputTracks->size() 
+          << " candidates " << m_outputSelection->ncandidates() << endreq;
+  if (m_debug)
+    printInfo(" Calos ",*m_outputTracks);
 
   return sc;
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltPrepareL0Calos::finalize() {
+
+StatusCode HltL0CaloPrepare::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-  delete _typeFilter; _typeFilter = 0;
-  delete _etFun;      _etFun = 0;
-  delete _etFilter;   _etFilter = 0;
-
   return HltAlgorithm::finalize();  
 }
 
-void HltPrepareL0Calos::makeTrack(const L0CaloCandidate& calo,
+void HltL0CaloPrepare::makeTrack(const L0CaloCandidate& calo,
                                   LHCb::Track& track) {
   
   // Get energy and position of L0 calo candidate:
@@ -164,8 +127,7 @@ void HltPrepareL0Calos::makeTrack(const L0CaloCandidate& calo,
   double e = fabs(et)/sintheta;
 
   debug() << " position " << calo.position() << " et " << et
-          << " sintheta " << sintheta << " e " << e << endreq;
-  
+          << " sintheta " << sintheta << " e " << e << endreq;  
 
   State state;
   state.setLocation(State::MidHCal);
@@ -174,7 +136,7 @@ void HltPrepareL0Calos::makeTrack(const L0CaloCandidate& calo,
   
 }
 
-void HltPrepareL0Calos::addExtras(const L0CaloCandidate& calo,
+void HltL0CaloPrepare::addExtras(const L0CaloCandidate& calo,
                                   LHCb::Track& track) {
 
   double ex     = calo.posTol()*(4./sqrt(12.0));

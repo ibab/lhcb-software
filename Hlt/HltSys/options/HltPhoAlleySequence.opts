@@ -12,11 +12,11 @@ HltSummaryWriter.Save += {"PhoL0Entry",
                           "PhoTriggerPhoTrk"
 };
 
-HltAlleys.Selections += {"PhoTriggerPhoTrk"};
+HltAlleys.InputSelections += {"PhoTriggerPhoTrk"};
 
 HltPhoAlleySequence.Members = {
   "L0Entry/PhoL0Entry",
-  "HltPrepareL0Calos/PhoTightL0Calos",
+  "HltL0CaloPrepare/PhoTightL0Calos",
   "GaudiSequencer/HltRecoVeloRZSeq",
   "HltTrackFilter/HltPho2DIPSelection",
   "HltTrackUpgrade/HltPhoRecoIPVelo",
@@ -40,13 +40,10 @@ HltPhoAlleySequence.MeasureTime = true;
 // Enter if there is a L0 photon
 //
 PhoL0Entry.L0ChannelsName = {"Photon"};
-PhoL0Entry.SelectionName = "PhoL0Entry";
 PhoL0Entry.OutputLevel = 3;
 
 
-PhoTightL0Calos.OutputTracksName = "PhoTightL0Calos";
-//  fake dependence
-PhoTightL0Calos.InputTracksName   = "L0TriggerPhoton";
+PhoTightL0Calos.InputSelection   = "L0TriggerPhoton";
 PhoTightL0Calos.CaloType = 1;  // photon !
 PhoTightL0Calos.MinEt = 2890.0;   // this trigger threshold; tighter than L0 threshold
 PhoTightL0Calos.OutputLevel = 3;
@@ -55,12 +52,9 @@ PhoTightL0Calos.OutputLevel = 3;
 //    2D IP selection
 
 
-HltPho2DIPSelection.InputTracksName     = "RZVelo";
+HltPho2DIPSelection.InputSelection     = "RZVelo";
 //  fake dependence (no matching)
-HltPho2DIPSelection.InputTracks2Name    = "PhoTightL0Calos";
-HltPho2DIPSelection.PrimaryVerticesName = "PV2D";
-HltPho2DIPSelection.OutputTracksName    = "HltPho2DIPSelection";
-HltPho2DIPSelection.FilterDescriptor = {"rIP,||[],0.10,3.0"};
+HltPho2DIPSelection.FilterDescriptor = {"rIP_PV2D,||[],0.10,3.0"};
 HltPho2DIPSelection.HistogramUpdatePeriod = 0;
 HltPho2DIPSelection.HistoDescriptor = {
   "rIP" : ("rIP",-1.,3.,400),
@@ -69,17 +63,14 @@ HltPho2DIPSelection.OutputLevel = 3;
 
 //  Velo Reco
 
-HltPhoRecoIPVelo.InputTracksName = "HltPho2DIPSelection";
-HltPhoRecoIPVelo.OutputTracksName = "HltPhoRecoIPVelo";
+HltPhoRecoIPVelo.InputSelection = "HltPho2DIPSelection";
 HltPhoRecoIPVelo.RecoName = "Velo";
 
 //    3D IP selection
 
 
-HltPho3DIPSelection.InputTracksName     = "HltPhoRecoIPVelo";
-HltPho3DIPSelection.PrimaryVerticesName = "PV2D";
-HltPho3DIPSelection.OutputTracksName    = "HltPho3DIPSelection";
-HltPho3DIPSelection.FilterDescriptor = {"IP,||[],0.15,3.0"};
+HltPho3DIPSelection.InputSelection     = "HltPhoRecoIPVelo";
+HltPho3DIPSelection.FilterDescriptor = {"IP_PV2D,||[],0.15,3.0"};
 HltPho3DIPSelection.HistogramUpdatePeriod = 0;
 HltPho3DIPSelection.HistoDescriptor = {
   "IP" : ("IP",-1.,3.,400),
@@ -89,13 +80,11 @@ HltPho3DIPSelection.OutputLevel = 3;
 
 //  Forward 
 
-HltPhoRecoIPForward.InputTracksName = "HltPho3DIPSelection";
-HltPhoRecoIPForward.OutputTracksName = "HltPhoRecoIPForward";
+HltPhoRecoIPForward.InputSelection = "HltPho3DIPSelection";
 HltPhoRecoIPForward.RecoName = "Forward";
 //  Pt cut (call it pretrigger sice couldn't implement veloTT)
 
-PhoPreTrigger.InputTracksName     = "HltPhoRecoIPForward";
-PhoPreTrigger.OutputTracksName    = "PhoPreTrigger";
+PhoPreTrigger.InputSelection     = "HltPhoRecoIPForward";
 PhoPreTrigger.FilterDescriptor = {"PT,>,1274."};
 PhoPreTrigger.HistogramUpdatePeriod = 0;
 PhoPreTrigger.HistoDescriptor =  { 
@@ -107,9 +96,8 @@ PhoPreTrigger.OutputLevel = 3;
 
 // PhoTriggerPhoTrk:  Fake PhoPreTrigger-L0Pho vertices (there is no matching here!)
 
-PhoTriggerPhoTrk.InputTracksName    = "PhoPreTrigger";
-PhoTriggerPhoTrk.InputTracks2Name   = "PhoTightL0Calos";
-PhoTriggerPhoTrk.OutputVerticesName = "PhoTriggerPhoTrk";
+PhoTriggerPhoTrk.InputSelection    = "PhoPreTrigger";
+PhoTriggerPhoTrk.InputSelection2   = "PhoTightL0Calos";
 PhoTriggerPhoTrk.OutputLevel = 3;
 
 

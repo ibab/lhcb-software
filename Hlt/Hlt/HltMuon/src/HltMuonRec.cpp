@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.cpp,v 1.10 2007-11-22 09:13:09 smenzeme Exp $
+// $Id: HltMuonRec.cpp,v 1.11 2008-01-22 09:59:19 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -30,15 +30,15 @@ using namespace LHCb;
 //=============================================================================
 HltMuonRec::HltMuonRec( const std::string& name,
                   ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "MeasureTime"   , m_measureTime   = true );
   declareProperty( "CloneKiller"   , m_cloneKiller   = true );
   //declareProperty( "StoreTracks"   , m_storeTracks   = true );
   declareProperty( "OutputMuonTracksName" ,
-                   m_outputMuonTracksName="Hlt/Tracks/Muon");
+                   m_outputMuonTracksName="Hlt/Tracks/MuonSeg");
   declareProperty("DecodingFromCoord", m_decodingFromCoord = true );
-  
+  declareProperty("DoPrepareMuonSeg", m_doPrepareMuonSeg = true);
 }
 //=============================================================================
 // Destructor
@@ -50,11 +50,15 @@ HltMuonRec::~HltMuonRec() {
 // Initialization
 //=============================================================================
 StatusCode HltMuonRec::initialize() {
-  StatusCode sc = HltAlgorithm::initialize(); // must be executed first
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
 
+  // tool to create the proper muon segmets JAH
+  if (m_doPrepareMuonSeg)
+    m_prepareMuonSeed = tool<IMuonSeedTool>("MuonSeedTool",this);
+  
   // Counters
   m_countEvents = 0;
   m_countMuCandidates = 0;
@@ -392,13 +396,18 @@ StatusCode HltMuonRec::execute() {
       trgTr->addToLhcbIDs(itMuonTrack->point(3).tile());     
       trgTr->addToLhcbIDs(itMuonTrack->point(4).tile());
       
-      outputTracks->insert(trgTr);
-      m_outputTracks->push_back(trgTr);
+      Track* muonseg = 0;
+      if (m_doPrepareMuonSeg) {
+        muonseg = new Track();
+        m_prepareMuonSeed->makeTrack(*trgTr,*muonseg);
+        delete trgTr;
+      } else {
+        muonseg = trgTr;
+      } 
+      if (muonseg) outputTracks->insert(muonseg);
+
     }
-  }  
-    
-  
-  
+  }
   
   if ( m_measureTime ) { 
     m_timer->stop( m_timeMuonStore );

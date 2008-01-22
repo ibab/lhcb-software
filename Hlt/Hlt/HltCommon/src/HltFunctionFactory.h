@@ -1,85 +1,53 @@
-// $Id: HltFunctionFactory.h,v 1.6 2007-12-04 16:58:58 hernando Exp $
-#ifndef HLTFUNCTIONFACTORY_H 
-#define HLTFUNCTIONFACTORY_H 1
+// $Id: HltFunctionFactory.h,v 1.7 2008-01-22 09:56:31 hernando Exp $
+#ifndef HLTCOMMON_HLTFUNCTIONFACTORY_H 
+#define HLTCOMMON_HLTFUNCTIONFACTORY_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "HltBase/IHltFunctionFactory.h"            // Interface
+#include "HltBase/IPyHltFunctionFactory.h"            // Interface
+#include "HltBase/IFunctionFactory.h"
+#include "HltBase/IBiFunctionFactory.h"
 #include "HltBase/HltTypes.h"
-#include "HltBase/HltFunctions.h"
 
 /** @class HltFunctionFactory HltFunctionFactory.h
  *  
  *
  *  @author Jose Angel Hernando Morata
- *  @date   2007-03-22
+ *  @date   2007-12-09
  */
-class HltFunctionFactory : public GaudiTool, virtual public IHltFunctionFactory {
+class HltFunctionFactory : public GaudiTool, 
+                           virtual public IPyHltFunctionFactory {
 public: 
   /// Standard constructor
   HltFunctionFactory( const std::string& type, 
-                      const std::string& name,
-                      const IInterface* parent);
-
+                        const std::string& name,
+                        const IInterface* parent);
+  
+  
   virtual ~HltFunctionFactory( ); ///< Destructor
 
   StatusCode initialize();
-
-  virtual void setSmart(bool smart) 
-  { m_smart = smart;}
-
-  void setVertices(std::vector<LHCb::RecVertex*>& vertices) 
-  {m_vertices = &vertices;}
-
-  void setTracks(std::vector<LHCb::Track*>& tracks) 
-  {m_tracks = &tracks;}
   
-  Hlt::TrackFunction* trackFunction(const std::string& name);
+  zen::function<LHCb::Track>* trackFunction(const std::string& name);
   
-  Hlt::TrackFilter* trackFilter(const std::string& mode);  
+  zen::filter<LHCb::Track>* trackFilter(const std::string& name);
   
-  Hlt::VertexFunction* vertexFunction(const std::string& name);
+  zen::function<LHCb::RecVertex>* vertexFunction(const std::string& name);
   
-  Hlt::VertexFilter* vertexFilter(const std::string& name);
+  zen::filter<LHCb::RecVertex>* vertexFilter(const std::string& name);
 
-  Hlt::TrackBiFunction* trackBiFunction(const std::string& name);
+  zen::bifunction<LHCb::Track,LHCb::Track>* trackBiFunction(const std::string& name);
 
 protected:
-
-  template <class T>
-  Estd::filter<T>* makeFilter(const Estd::function<T>& fun,
-                              const std::string& mode, 
-                              float x0, float xf) {
-    if (mode == "<") return (fun < x0).clone();
-    else if (mode == ">") return (fun > x0).clone();
-    else if (mode == "=") return (fun == x0).clone();
-    else if (mode == "[]") return ((fun > x0) && (fun < xf)).clone();
-    else if (mode == "||>") {
-      Hlt::AbsFun<T> afun(fun);
-      return (afun > x0).clone();
-    } else if ( mode == "||<") {
-      Hlt::AbsFun<T> afun(fun);
-      return (afun < x0).clone();
-    } else if (mode == "||[]") {
-      Hlt::AbsFun<T> afun(fun);
-      return ((afun > x0) && (afun < xf)).clone();
-    } 
-    fatal() << " not mode " << mode << endreq;
-    return NULL;
-  }
-
-protected:
-
-
-  std::string m_dataSummaryLocation;
-  Hlt::Configuration* m_conf;
   
-  bool m_smart;
-  
-  std::vector<LHCb::RecVertex*>* m_vertices;
+  IFunctionFactory<LHCb::Track>* m_trackFactory;
 
-  std::vector<LHCb::Track*>* m_tracks;
+  IFunctionFactory<LHCb::RecVertex>* m_vertexFactory;
+  
+  IBiFunctionFactory<LHCb::Track, LHCb::Track>* m_trackBiFactory;
+
+private:
 
 };
-#endif // HLTFUNCTIONFACTORY_H
+#endif // PYHLTFUNCTIONFACTORY_H

@@ -1,98 +1,94 @@
-// $Id: PhysSelEntry.cpp,v 1.2 2007-06-20 16:06:21 hernando Exp $
-// Include files
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+// $Id: HltSelectionFilter.cpp,v 1.1 2008-01-22 09:56:36 hernando Exp $
+// Include files 
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 
 // local
-#include "PhysSelEntry.h"
-#include "Event/HltNames.h"
+#include "HltSelectionFilter.h"
 
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : PhysSelEntry
+// Implementation file for class : HltSelectionFilter
 //
 // 2006-01-16 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PhysSelEntry );
+DECLARE_ALGORITHM_FACTORY( HltSelectionFilter );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PhysSelEntry::PhysSelEntry( const std::string& name,
+HltSelectionFilter::HltSelectionFilter( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
-
-  declareProperty("PhysSelLocation", 
-                  m_physSelLocation = LHCb::SelResultLocation::Default );
- 
-  declareProperty("PhysSelNames", m_physSelNames);
-  
+  m_doInitSelections = false;
+  m_algoType = "HltSelectionFilter";
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-PhysSelEntry::~PhysSelEntry() {}; 
+HltSelectionFilter::~HltSelectionFilter() {}; 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode PhysSelEntry::initialize() {
+StatusCode HltSelectionFilter::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
 
-  m_decays = m_physSelNames.value();
-  for (std::vector<std::string>::iterator it = m_decays.begin();
-       it != m_decays.end(); ++it)
-    info() << " accepting entry of decay " << (*it) << endreq;
+  m_considerInputs = false;
 
-  // initializeHisto(m_histoPhysSel,"PhysSelEntry",0.,1.,1);
-
+  const std::vector<std::string>& values = 
+    m_extraInputSelectionsNames.value();
+  for (std::vector<std::string>::const_iterator it = values.begin();
+       it != values.end(); ++it){
+    const std::string& selname = (*it);
+    retrieveSelection(selname);
+    m_scounters.push_back(0);
+  }
+  
+  m_outputSelections = 
+    &(registerTSelection<Hlt::Selection>(m_outputSelectionName));
+  
   return StatusCode::SUCCESS;
 };
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode PhysSelEntry::execute() {  
-
-  bool ok = true;
+StatusCode HltSelectionFilter::execute() {
   
-  if (!retrieve(m_physSels,m_physSelLocation)) 
-    return stop(" No PhysSel report");
-  
-  ok = false;
-  for (SelResults::const_iterator it = m_physSels->begin();
-       it != m_physSels->end(); ++it) {
-    const SelResult& sel = *(*it);
-    if (sel.found()) {
-      const std::string decay = sel.decay();
-      for (std::vector< std::string >::iterator it2 = m_decays.begin();
-           it2 != m_decays.end(); ++it2)
-        if ((*it2) == decay) ok = true;
-    } 
-  }
-  
-  if (!ok) return stop(" No Selection Found");
+  size_t i = 0;
+  for (Hlt::SelectionIterator it = m_inputSelections.begin();
+       it != m_inputSelections.end(); ++it, ++i) {
+    Hlt::Selection& sel = *(*it);
+    if (sel.decision()) {
+      debug() << " positive selection " << m_inputSelectionsNames[i] << endreq;
+      m_outputSelections->push_back(&sel);
+      m_scounters[i] += 1; 
+    }
+  }  
 
-  // fillHisto(m_histoPhysSel,1.,1.);
-
-  debug() << " accepted Selection entry " << endreq;
   return StatusCode::SUCCESS;
 };
 
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode PhysSelEntry::finalize() {
+StatusCode HltSelectionFilter::finalize() {
 
-  return HltAlgorithm::finalize();  // must be called after all other actions
+  StatusCode sc =  HltAlgorithm::finalize();  
+  for (size_t i = 0; i < m_scounters.size(); ++i){
+    std::string title = m_inputSelectionsNames[i];
+    infoSubsetEvents(m_scounters[i],m_counterEntries,title);
+  }
+  return sc;
 }
 
 //=============================================================================

@@ -1,11 +1,10 @@
-// $Id: HltVertexToTracks.h,v 1.1 2007-11-20 12:48:46 hernando Exp $
+// $Id: HltVertexToTracks.h,v 1.2 2008-01-22 09:56:44 hernando Exp $
 #ifndef HLTCOMMON_HLTVERTEXTOTRACKS_H 
 #define HLTCOMMON_HLTVERTEXTOTRACKS_H 1
 
 // Include files
 // from Gaudi
 #include "HltBase/HltAlgorithm.h"
-#include "HltBase/HltFunctions.h"
 
 /** @class L0Vertex2Tracks L0Vertex2Tracks.h
  *  

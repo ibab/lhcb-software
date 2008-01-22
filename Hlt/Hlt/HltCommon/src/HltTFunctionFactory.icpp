@@ -1,0 +1,104 @@
+// $Id: HltTFunctionFactory.icpp,v 1.1 2008-01-22 09:56:37 hernando Exp $
+// Include files
+
+#include "HltBase/EFunctions.h"
+#include "HltBase/EParser.h"
+#include "HltBase/ESequences.h"
+
+// local
+#include "HltTFunctionFactory.h"
+
+//-----------------------------------------------------------------------------
+// Implementation file for class : HltTFilter
+//
+// 2007-03-22 : Jose Angel Hernando Morata
+//-----------------------------------------------------------------------------
+
+template <class T>
+HltTFunctionFactory<T>::HltTFunctionFactory( const std::string& type,
+                                             const std::string& name,
+                                             const IInterface* parent )
+  : HltBaseTool( type, name , parent )
+{
+  declareInterface< IFunctionFactory<T> >(this);
+  declareProperty("Smart", m_smart = true);
+}
+
+template <class T>
+StatusCode HltTFunctionFactory<T>::initialize() {
+  
+  return HltBaseTool::initialize();
+}
+
+template <class T>
+bool HltTFunctionFactory<T>::command(const std::string& command,
+                                     const std::string & value) {
+  debug() << " command " << command << " value " << value << endreq;
+  if ((command == "AddInfo") && (value == "false")) {
+    m_smart = false;
+    debug() << " Creating (no smart) filters " << endreq;
+  }
+  return true;
+}
+
+template <class T>
+zen::function<T>* HltTFunctionFactory<T>::function(const std::string& fn) {
+  debug() << " creating function " << fn << endreq;
+  std::vector<std::string> cromos = EParser::parse(fn,",");
+  std::vector<std::string> gens = EParser::parse(cromos[0],"_");
+  std::string name = gens[0];
+  std::string input2 = "";
+  if (gens.size() == 2) {
+    input2 = gens[1];
+    debug() << " binder function against selection " << input2 << endreq;
+  }
+  
+  bool has = (m_creators.find(name) != m_creators.end());
+  Assert(has," function() no function in factory "+fn);
+  
+  zen::function<T>* fun = m_creators[name]->create(input2);
+
+  if (m_smart && fun) {
+    int id = hltInfoID(name);
+    zen::function<T>* fun1 = fun;
+    fun = new Hlt::SmartFunction<T>(id,*fun1);
+    debug() << " created smart function " << name << " id " << id << endreq;
+    delete fun1;
+  }
+  
+  debug() << " created function "<< fn << " " << fun << endreq;
+  
+  return fun;
+}
+
+template <class T>
+zen::filter<T>* HltTFunctionFactory<T>::filter(const std::string& name) {
+  
+  std::string funname= "";
+  std::string mode= "";
+  float x0 = 0.;
+  float xf = 1e6;
+  bool ok = EParser::parseFilter(name,funname,mode,x0,xf);
+  Assert(ok, " filter() not able to parse filtername"+ name);
+
+  debug() << " function " << funname 
+          << " operation " << mode
+          << " range " << x0 << ", " <<xf <<endreq;
+  
+  zen::filter<T>* filter = 0;
+  if (m_smart) {
+    int id = hltInfoID(funname);
+    Hlt::Info<T> info(id);
+    filter = Hlt::makeFilter(info,mode,x0,xf);
+  } else {
+    zen::function<T>* fun = function(funname);
+    filter = Hlt::makeFilter(*fun,mode,x0,xf);
+    delete fun;
+  }
+  
+  Assert( 0 != filter, " filter() can not crete filter "+name);
+  debug() << " created filter " << name << endreq;
+  
+  return filter;
+
+}

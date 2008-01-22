@@ -1,12 +1,12 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.8 2007-12-12 14:14:25 hernando Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.9 2008-01-22 10:04:25 hernando Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "HltTrackUpgradeTool.h"
+#include "Event/HltEnums.h"
 #include "HltBase/HltConfigurationHelper.h"
-#include "Event/HltNames.h"
-#include "HltBase/HltSequences.h"
+#include "HltBase/ESequences.h"
 
 using namespace LHCb;
 
@@ -92,6 +92,8 @@ StatusCode HltTrackUpgradeTool::initialize() {
 
   recoConfiguration();
 
+  m_timer = tool<ISequencerTimerTool>( "SequencerTimerTool" );
+
   // sc = setReco(m_recoName);
   // if ( sc.isFailure() ) return sc;
   return sc;
@@ -100,12 +102,10 @@ StatusCode HltTrackUpgradeTool::initialize() {
 StatusCode HltTrackUpgradeTool::setReco(const std::string& key) 
 {
   m_recoName = key;
-  info() << " InitReco " << endreq;
-  if (!m_recoConf.has_key(m_recoName+"/Tool")) {
-    fatal() << " unknown reconstruction " << m_recoName << endreq;
-    return StatusCode::FAILURE;
-  }
-
+  debug() << " InitReco " << endreq;
+  bool ok = m_recoConf.has_key(m_recoName+"/Tool");
+  Assert(ok," no reconstruction with name "+m_recoName);
+  
   std::string toolName = m_recoConf.retrieve<std::string>(m_recoName+"/Tool");
   m_recoID   = m_recoConf.retrieve<int>(m_recoName+"/RecoID");
   std::string TESInput  = m_recoConf.retrieve<std::string>(m_recoName+"/TESInput");
@@ -118,17 +118,26 @@ StatusCode HltTrackUpgradeTool::setReco(const std::string& key)
   
   if (m_recoID <= HltEnums::VeloKey) m_orderByPt = false;
 
-  info() << " Reco " << m_recoName << " ID " << m_recoID 
-         << " Tool " << toolName 
-         << " Input " << TESInput << " Output " << m_TESOutput 
-         << " owner " << m_owner << " transfers IDs " << m_transferIDs 
-         << " transfer ancestor " << m_transferAncestor
-         << " track type " << m_trackType << endreq;
+  info() << " Reco: " << m_recoName 
+          << " Tool: " << toolName 
+          << " Input: " << TESInput 
+          << " Output: " << m_TESOutput << endreq;
+
+  debug() << " reco ID " << m_recoID
+          << " owner " << m_owner << " transfers IDs " << m_transferIDs 
+          << " transfer ancestor " << m_transferAncestor
+          << " track type " << m_trackType << endreq;
   
   if (m_tool) delete m_tool;
   m_tool = NULL;
-  m_tool = tool<ITracksFromTrack>(toolName);
-  if (!m_tool) fatal() << " not able to get tool " << toolName << endreq;
+  m_tool = tool<ITracksFromTrack>(toolName,this);
+  Assert(m_tool," setReco() not able to create tool "+toolName);
+
+  m_timer = tool<ISequencerTimerTool>("SequencerTimerTool");
+  m_timer->increaseIndent();
+  m_timerTool = m_timer->addTimer(toolName);
+  m_timer->decreaseIndent();
+
 
   return StatusCode::SUCCESS;
 }
@@ -147,16 +156,16 @@ StatusCode HltTrackUpgradeTool::upgrade(std::vector<Track*>& itracks,
                                         std::vector<Track*>& otracks) {
   StatusCode sc = StatusCode::SUCCESS;
   beginExecute();
-
+  
   for (std::vector<Track*>::iterator it = itracks.begin();
        it != itracks.end(); ++it) {
     Track& seed = *(*it);
     upgrade(seed,m_tracks);
-    Hlt::copy(m_tracks,otracks);
+    zen::copy(m_tracks,otracks);
   }
   if (m_orderByPt)
     std::sort(otracks.begin(),otracks.end(),_sortByPt);
-
+  
   debug() << " upgraded " << otracks.size() << " tracks " << endreq;
   return sc;
 }
@@ -170,13 +179,15 @@ StatusCode HltTrackUpgradeTool::upgrade(LHCb::Track& seed,
     tracks.push_back(&seed);
     verbose() << " seed is its upgraded track  " << m_trackType << endreq;
   } else if (!isReco(seed)) {
+    m_timer->start(m_timerTool);
     sc = m_tool->tracksFromTrack(seed,tracks);
-    if (sc.isFailure()) 
-      debug() << " upgrade track failure ! " <<  m_recoName << endreq;
-    else {
-      recoDone(seed,tracks);
-      verbose() << " seed upgraded, reco tracks " << tracks.size() << endreq;
+    m_timer->stop(m_timerTool);
+    if (sc.isFailure()) {
+      Warning(" reconstruction failure ",1);
+      return sc;
     }
+    recoDone(seed,tracks);
+    verbose() << " seed upgraded, reco tracks " << tracks.size() << endreq;
   } else {
     find(seed,tracks);
     verbose()<< " seed was upgraded, found tracks " << tracks.size() << endreq;

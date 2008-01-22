@@ -1,4 +1,4 @@
-// $Id: RZMuonMatch.h,v 1.1.1.1 2007-05-22 10:20:31 asatta Exp $
+// $Id: RZMuonMatch.h,v 1.2 2008-01-22 09:58:06 hernando Exp $
 #ifndef RZMUONMATCH_H 
 #define RZMUONMATCH_H 1
 
@@ -6,7 +6,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "HltBase/HltAlgorithm.h"
-#include "HltBase/HltFunctions.h"
 #include "HltBase/IMatchTVeloTracks.h"
 
 /** @class RZMuonMatch RZMuonMatch.h

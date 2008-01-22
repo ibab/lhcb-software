@@ -4,6 +4,65 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-01-22 Jose A. Hernando
+      HLT-clean
+     - remove: 
+  src/HltL0Monitor.h
+  src/HltMatchOffTrack2OnCalo.cpp (move to HltHadronAlley)
+  src/HltMatchOffTrack2OnCalo.h
+  src/HltPrepareL0Calos.cpp (rename to HltL0CaloPrepare)
+  src/HltPrepareL0Calos.h
+	src/HltPrepareL0Muons.cpp (rename to HltL0MuonPrepare)
+  src/HltPrepareL0Muons.h
+	src/HltPrepareTracks.cpp (defined in HltFilters)
+  src/HltPrepareTracks.h
+	src/HltPrepareVertices.cpp (defined in HltFilters)	
+  src/HltPrepareVertices.h
+  src/HltSelectionDataToTes.cpp (rename HltSelectionToTES)
+  src/HltSelectionDataToTes.h
+  src/HltSelectionEntry.cpp (rename to HltSelectionFilter)
+  src/HltSelectionEntry.h 
+  src/HltTrackFilter.cpp (defined in HltFilters)	
+  src/HltTrackFilter.h
+	src/HltTrackFromParticle.cpp 
+  src/HltTrackFromParticle.h
+  src/HltTrackFromTes.cpp
+  src/HltTrackFromTes.h (defined in HltFilters)
+  src/HltTrackMaker.cpp 
+  src/HltTrackMaker.h
+  src/HltTrackMerge.cpp
+  src/HltTrackMerge.h
+  src/HltVertexFilter.cpp (defined in HltFilters)	
+  src/HltVertexFilter.h
+  src/L0Value.cpp
+  src/L0Value.h
+  src/MatchTVeloTracks.cpp (move to HltMuonAlley)	
+  src/MatchTVeloTracks.h
+  src/PhysSelEntry.cpp 
+  src/PhysSelEntry.h
+
+  - add:
+  src/HltFilters.cpp (define filters for Track and Vertices)
+  src/HltFilters.h
+  src/HltFunctionFactories.cpp (define factories for Track and Vertices)
+  src/HltFunctionFactories.h
+  src/HltFunctions.cpp (functions and bifunctions for Track and Vertices)
+  src/HltFunctions.h
+  src/HltL0CaloPrepare.cpp (select L0Calos and convert into a track selection)
+  src/HltL0CaloPrepare.h
+  src/HltL0MuonPrepare.cpp (select L0Muons and convert into a track selection)
+  src/HltL0MuonPrepare.h
+  src/HltSelectionFilter.cpp (selection bassed on Hlt selection decisions)
+  src/HltSelectionFilter.h
+  src/HltSelectionToTES.cpp (copy a Hlt selection into TES)
+  src/HltSelectionToTES.h
+  src/HltTFilter.h (template algorithm filter)
+  src/HltTFilter.icpp
+  src/HltTFunctionFactory.h (template function factory)
+  src/HltTFunctionFactory.icpp
+  src/HltTrackBiFunctionFactory.cpp (bifunction factory for tracks)
+  src/HltTrackBiFunctionFactory.h
+
 !========================== HltCommon v2r0 2007-12-17 ===================
 ! 2007-12-12 Jose A. Hernando
       - update MatchTveloTracks

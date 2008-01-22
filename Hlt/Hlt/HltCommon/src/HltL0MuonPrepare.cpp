@@ -1,59 +1,62 @@
-// $Id: HltPrepareL0Muons.cpp,v 1.2 2007-12-04 13:26:35 hernando Exp $
+// $Id: HltL0MuonPrepare.cpp,v 1.1 2008-01-22 09:56:33 hernando Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 // local
-#include "HltPrepareL0Muons.h"
+#include "HltL0MuonPrepare.h"
 #include "Event/HltEnums.h"
 //#include "Event/HltSummaryFunctor.h"
-#include "HltBase/HltSequences.h"
-#include "HltBase/HltFunctions.h"
 
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : HltPrepareL0Muons
+// Implementation file for class : HltL0MuonPrepare
 //
 // 2006-07-28 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltPrepareL0Muons );
+DECLARE_ALGORITHM_FACTORY( HltL0MuonPrepare );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-HltPrepareL0Muons::HltPrepareL0Muons( const std::string& name,
+HltL0MuonPrepare::HltL0MuonPrepare( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
   // declareCondition("MinPt",m_ptMin = 0.);
   
   declareProperty("MinPt", m_PtMin = 0.1);
-  declareProperty("OutputL0MuonTracksName"   ,
-                  m_outputMuonTracksName );
 
   m_maker = 0;
+
+  m_doInitSelections = false;
+  m_algoType = "HltL0MuonPrepare";
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-HltPrepareL0Muons::~HltPrepareL0Muons() {
+HltL0MuonPrepare::~HltL0MuonPrepare() {
 } 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode HltPrepareL0Muons::initialize() {
+StatusCode HltL0MuonPrepare::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorith
 
+  m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
+  
   m_maker = tool<IMuonSeedTool>("MuonSeedTool");
   if (!m_maker)
     error() << " not able to create maker muon tracks tool " << endreq;
+
+  saveConfiguration();
 
   return StatusCode::SUCCESS;
 }
@@ -61,7 +64,7 @@ StatusCode HltPrepareL0Muons::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode HltPrepareL0Muons::execute() {
+StatusCode HltL0MuonPrepare::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -69,8 +72,8 @@ StatusCode HltPrepareL0Muons::execute() {
     get<L0MuonCandidates>(L0MuonCandidateLocation::Default);
 
   Tracks* muons = new Tracks();
-//  put(muons,"Hlt/Track/L0Muon");
-  put(muons,  m_outputMuonTracksName);
+  //  put(muons,"Hlt/Track/L0Muon");
+  put(muons, "Hlt/Track/"+m_outputSelectionName);
 
   for (std::vector<L0MuonCandidate*>::iterator it= inputL0Muon->begin();
        it !=  inputL0Muon->end(); ++it){
@@ -97,14 +100,14 @@ StatusCode HltPrepareL0Muons::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode HltPrepareL0Muons::finalize() {
+StatusCode HltL0MuonPrepare::finalize() {
 
   debug() << "==> Finalize" << endmsg;
   return HltAlgorithm::finalize();  
 }
 
 //=============================================================================
-bool HltPrepareL0Muons::checkClone(L0MuonCandidate* muon)
+bool HltL0MuonPrepare::checkClone(L0MuonCandidate* muon)
 {
   std::vector<MuonTileID> list_of_tileM1= muon->muonTileIDs(0);
   MuonTileID tileM1=*(list_of_tileM1.begin());

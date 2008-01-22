@@ -1,4 +1,4 @@
-// $Id: TTrackAndDistCut.h,v 1.1 2007-10-31 11:51:50 sandra Exp $
+// $Id: TTrackAndDistCut.h,v 1.2 2008-01-22 09:58:06 hernando Exp $
 #ifndef TTRACKANDDISTCUT_H 
 #define TTRACKANDDISTCUT_H 1
 
@@ -6,7 +6,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "HltBase/HltAlgorithm.h"
-#include "HltBase/HltFunctions.h"
 #include "Event/L0MuonCandidate.h"
 #include "MuonDet/IMuonPosTool.h"
 

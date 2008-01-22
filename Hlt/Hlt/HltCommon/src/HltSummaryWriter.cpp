@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.7 2007-10-12 12:21:21 hernando Exp $
+// $Id: HltSummaryWriter.cpp,v 1.8 2008-01-22 09:56:37 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -6,8 +6,6 @@
 
 // local
 #include "HltSummaryWriter.h"
-#include "HltBase/HltConfigurationHelper.h"
-#include "HltBase/HltSummaryHelper.h"
 
 using namespace LHCb;
 
@@ -20,19 +18,17 @@ using namespace LHCb;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( HltSummaryWriter );
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 HltSummaryWriter::HltSummaryWriter( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : HltBaseAlg ( name , pSvcLocator )
 {
+  declareProperty("Save", m_AselectionNames);
   declareProperty("SaveAll", m_saveAll = false);
-  declareProperty("Save", m_selectionNames);
-  declareProperty("DataSummaryLocation", 
-                  m_dataSummaryLocation = LHCb::HltSummaryLocation::Default);
-  
+  declareProperty("HltSummaryLocation", 
+                  m_hltSummaryLocation = LHCb::HltSummaryLocation::Default);  
 }
 //=============================================================================
 // Destructor
@@ -43,44 +39,35 @@ HltSummaryWriter::~HltSummaryWriter() {}
 // Initialization
 //=============================================================================
 StatusCode HltSummaryWriter::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  sc = serviceLocator()->service("HltDataSvc",m_hltSvc);
-  if (!m_hltSvc) fatal() << " not able to create Hlt Svc provider " << endreq;
-  info() << " hltsvc " << (int) m_hltSvc << endreq;
-  
-  std::string loca = m_dataSummaryLocation;
-  Hlt::DataHolder<LHCb::HltSummary>* sholder = 
-    get<Hlt::DataHolder<LHCb::HltSummary> >(m_hltSvc,loca);
-  if (!sholder) fatal() << " not able to retrieve data summary " << endreq;
-  m_datasummary = &(sholder->object());
-
-  loca = m_dataSummaryLocation+"/Configuration";
-  Hlt::DataHolder<Hlt::Configuration>* holder = 
-    get<Hlt::DataHolder<Hlt::Configuration> >(m_hltSvc,loca);
-  if (!holder) fatal() << " not able to retrieve configuration " << endreq;
-  m_conf = &(holder->object());
-
+  m_selectionNames.clear();
   m_selectionIDs.clear();
   if (m_saveAll) {
-    m_selectionIDs = m_datasummary->selectionSummaryIDs();
+    m_selectionIDs = hltData().selectionIDs();      
   } else {
-    std::vector<std::string> cromos = m_selectionNames.value();
+    std::vector<std::string> cromos = m_AselectionNames.value();
     for (std::vector<std::string>::iterator it = cromos.begin();
          it != cromos.end(); ++it) {
       std::string name = *it;
-      int id = HltConfigurationHelper::getID(*m_conf,"SelectionID",name);
-      m_selectionIDs.push_back(id);
+      if (!validHltSelectionName(name))
+        error() << " Not valid selection name " << name << endreq;
+      else {
+        int id = hltSelectionID(name);
+        m_selectionIDs.push_back(id);
+      }
     }
   }
-
-  info() << " Write in Summary : ";
+  
   for (std::vector<int>::iterator it = m_selectionIDs.begin();
-       it != m_selectionIDs.end(); ++it) 
-    info() << HltConfigurationHelper::getName(*m_conf,"SelectionID",*it)
-           << " ";
-  info() << endreq;
+       it != m_selectionIDs.end(); ++it) {
+    int id = *it;
+    std::string selname = hltSelectionName(id);
+    info() << " write selection " << selname 
+           << " in HltSummary " << endreq;
+    m_selectionNames.push_back(selname);  
+  }
   
   return StatusCode::SUCCESS;
 }
@@ -93,90 +80,60 @@ StatusCode HltSummaryWriter::execute() {
   debug() << "==> Execute" << endmsg;
 
   m_summary = new HltSummary();
-  std::string loca = m_dataSummaryLocation;
-  put( m_summary, loca );
+  put( m_summary, m_hltSummaryLocation );
 
-  loca = m_dataSummaryLocation+"/Configuration";  
-  put(new Hlt::DataHolder<Hlt::Configuration>(*m_conf),loca);
+  // loca = hltSummaryLocation()+"/Configuration";  
+  // put(n,loca);
 
   for (std::vector<int>::iterator it = m_selectionIDs.begin();
        it != m_selectionIDs.end(); ++it) {
     int id = *it;
-    if (m_datasummary->hasSelectionSummary(id)) {
-      bool ok = m_datasummary->selectionSummary(id).decision();
-      if (ok) writeSelection(id);
+    if (hltData().hasSelection(id)) {
+      if (hltData().selection(id).decision())
+        writeSelection(id);
     } else {
-      std::string comment = "No selection in summary Data " + 
-        HltConfigurationHelper::getName(*m_conf,"SelectionID",id);
+      std::string comment = " No selection in HLT " +hltSelectionName(id);
       Warning(comment,1);
     }
   }
 
-
-  if (msgLevel(MSG::DEBUG)) {
-    debug() << " summary decision " << m_summary->decision() << endreq;
-    std::vector<int> ids = m_summary->selectionSummaryIDs();
-    for (std::vector<int>::iterator it = ids.begin(); 
-         it != ids.end(); ++it) {
-      int id = *it;
-      printInfo(*m_summary,id);
-    }
-  }    
+  setFilterPassed(true);
   return StatusCode::SUCCESS;
 }
 
 void HltSummaryWriter::writeSelection(int id) {
-  HltSelectionSummary& sdata   = m_datasummary->selectionSummary(id);
-  HltSelectionSummary& report = m_summary->selectionSummary(id);
-  report.setPattern(sdata.pattern());
-  debug() << " writed selection " << report.pattern() << " "
-          << HltConfigurationHelper::getName(*m_conf,"SelectionID",id) 
-          << endreq;
-  if (sdata.data().size()>0) {
-    ContainedObject* obj = sdata.data().front();
-    report.addData(*obj);
-    debug() << " writed selection data " << report.data().size() << endreq;
+  Hlt::Selection& sel = hltData().selection(id);
+  HltSelectionSummary& sum   = m_summary->selectionSummary(id);
+  if (sel.classID() == LHCb::Track::classID()) {
+    Hlt::TrackSelection& tsel = *(dynamic_cast<Hlt::TrackSelection*>(&sel));
+    for (Hlt::TrackSelection::iterator it = tsel.begin(); it != tsel.end();
+         ++it) sum.addData(*(*it));
+  } else if (sel.classID() == LHCb::RecVertex::classID()) {
+    Hlt::VertexSelection& tsel = *(dynamic_cast<Hlt::VertexSelection*>(&sel));
+    for (Hlt::VertexSelection::iterator it = tsel.begin(); it != tsel.end();
+         ++it) sum.addData(*(*it));
   }
+  sum.setDecision(true);
+
+
+  debug() << " selection  " << hltSelectionName(id) 
+          << " [hltdata] decision " << sel.decision() 
+          << " candidates " << sel.ncandidates() 
+          << " [hltsummary]: decision " << sum.decision() 
+          <<  " candidates " << sum.data().size() << endreq;
+  
 }
 
-void HltSummaryWriter::printInfo(const HltSummary& sum, int id) {
-  bool ok = sum.hasSelectionSummary(id);
-  std::string name = 
-    HltConfigurationHelper::getName(*m_conf,"SelectionID",id); 
-  debug() << " summary selection " << name << " ID " << id << " ? " 
-          << ok << endreq;
-  if (!ok) return;
-  if (!m_conf->has_key(name+"/SelectionType")) return;
-  std::string type = m_conf->retrieve<std::string>(name+"/SelectionType");
-  if (type == "Tracks") {
-    const std::vector<Track*>& tracks = 
-      HltSummaryHelper::retrieve< std::vector<Track*> >(sum,id);
-    printInfo(name+" tracks ", tracks);
-  } else if (type == "Vertices") {
-    const std::vector<RecVertex*>& vertices = 
-      HltSummaryHelper::retrieve< std::vector<RecVertex*> >(sum,id);
-    printInfo(name+" vertices ", vertices);
-  }
-}
+
 
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode HltSummaryWriter::finalize() {
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  StatusCode sc = HltBaseAlg::finalize();
+  debug() << " finalize " << sc << endreq;
+  return sc;
 }
 
-//=============================================================================
-void HltSummaryWriter::printInfo(const std::string& title,
-                             const Track& track) {
-  info() << title << " track  " << track.key() << " slopes " 
-         << track.slopes()  << " pt " << track.pt() << endreq;
-}
 
-void HltSummaryWriter::printInfo(const std::string& title,
-                             const RecVertex& vertex) {
-  info() << title << " vertex  " << vertex.key() << " position " 
-         << vertex.position()  << endreq;
-  printInfo(title,vertex.tracks());
-}

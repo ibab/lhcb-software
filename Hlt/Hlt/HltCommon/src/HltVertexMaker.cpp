@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.12 2007-12-12 15:55:43 hernando Exp $
+// $Id: HltVertexMaker.cpp,v 1.13 2008-01-22 09:56:44 hernando Exp $
 // Include files 
 
 
@@ -7,13 +7,9 @@
 
 // local
 #include "HltVertexMaker.h"
-#include "Event/HltNames.h"
-#include "HltBase/HltUtils.h"
-#include "HltBase/HltFunctions.h"
-#include "HltBase/EDictionary.h"
 #include "HltBase/EParser.h"
-#include "HltBase/IHltFunctionFactory.h"
-#include "HltBase/HltConfigurationHelper.h"
+#include "HltBase/ESequences.h"
+
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/construct.hpp"
 
@@ -37,9 +33,17 @@ HltVertexMaker::HltVertexMaker( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
-  m_consider2=true; // second container it is accepted even if empty!
   declareProperty("CheckForOverlaps", m_checkForOverlaps = false );
   declareProperty("FilterDescriptor", m_filterDescriptor);
+
+  m_inputTracks = 0;
+  m_inputTracks2 = 0;
+  m_outputVertices = 0;
+
+  m_twoContainers = false;
+  m_doInitSelections = false;
+  m_considerInputs = false;
+  m_algoType = "HltVertexMaker";
 }
 
 
@@ -57,27 +61,22 @@ HltVertexMaker::~HltVertexMaker() {
 //=============================================================================
 
 StatusCode HltVertexMaker::initialize() {
+  StatusCode sc = HltAlgorithm::initialize();
 
-  m_twoContainers = true;
-  if (m_inputTracks2Name.empty())  {
-    info() << "only one input container requested " 
-           << m_inputTracksName << endreq;
-    m_twoContainers = false;
+  m_inputTracks = &(retrieveTSelection<LHCb::Track>(m_inputSelectionName));
+  
+  if (!m_inputSelection2Name.empty()) {
+    m_inputTracks2 = 
+      &(retrieveTSelection<LHCb::Track>(m_inputSelection2Name));
+    m_twoContainers = true;
+    debug() << " consider 2 container " << m_inputSelection2Name << endreq; 
   }
 
-  // NOTE: input tracks2 needs to be defined to book histos
-  StatusCode sc = HltAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by HltAlgorithm
+  m_outputVertices = 
+    &(registerTSelection<LHCb::RecVertex>(m_outputSelectionName));
 
-  
-  checkInput(m_inputTracks," input tracks ");
-  if (m_twoContainers)
-    checkInput(m_inputTracks2," input tracks2 ");
-  checkInput(m_outputVertices," output vertices ");
-
-  // create filters
-  IHltFunctionFactory* factory = 
-    tool<IHltFunctionFactory>("HltFunctionFactory",this);
+  IBiTrackFactory* factory = 
+    tool<IBiTrackFactory>("HltTrackBiFunctionFactory",this);
 
   const std::vector<std::string>& hdes = m_filterDescriptor.value();
   for (std::vector<std::string>::const_iterator it = hdes.begin();
@@ -87,30 +86,29 @@ StatusCode HltVertexMaker::initialize() {
     std::string mode = "";
     float x0 = -1.e6;
     float xf =  1.e6;
-    if (!EParser::parseFilter(filtername,funname,mode,x0,xf)) continue;
-
+    bool ok = EParser::parseFilter(filtername,funname,mode,x0,xf);
+    Assert(ok," initialize() not able to parse filtername "+filtername);
+    
     m_filterNames.push_back(funname);
 
-    int id = HltConfigurationHelper::getID(*m_conf,"InfoID",funname);
-    Hlt::TrackBiFunction* fun = factory->trackBiFunction(funname);
+    int id = hltInfoID(funname);
+    Hlt::TrackBiFunction* fun = factory->function(funname);
+    Assert( 0 !=  fun,  " initialize() function no created"+funname);
     m_functions.push_back(fun);
     m_filterIDs.push_back(id);
-    if (!fun) error() << " error crearing function " << filtername 
-                      << " " << id << endreq;
+
 
     Hlt::Filter* fil = 0;
-    if (mode == "<") fil = new Estd::less<double>(x0);
-    else if (mode == ">") fil = new Estd::greater<double>(x0);
-    else fil = new Estd::in_range<double>(x0,xf);
+    if (mode == "<") fil = new zen::less<double>(x0);
+    else if (mode == ">") fil = new zen::greater<double>(x0);
+    else fil = new zen::in_range<double>(x0,xf);
+    Assert( 0 !=  fil,  " initialize() filter no created"+filtername);
     m_filters.push_back(fil);
-    if (!fil) error() << " error crearing filter " << filtername 
-                      << " " << id << endreq;
-
+    
     m_tcounters.push_back(0);   
 
     if (m_histogramUpdatePeriod>0) {
-      HltHisto histo = 0;
-      initializeHisto(histo,funname,0.,100.,100);
+      Hlt::Histo* histo = initializeHisto(funname,0.,100.,100);
       m_histos.push_back(histo);
     }
 
@@ -118,10 +116,10 @@ StatusCode HltVertexMaker::initialize() {
             << mode << x0 << "," << xf << endreq;
   }
   release(factory);
+  
+  saveConfiguration();
 
-  initializeCounter(m_counterCombinations," combinations ");
-
-  return StatusCode::SUCCESS;
+  return sc;
 };
 
 
@@ -136,30 +134,27 @@ StatusCode HltVertexMaker::execute() {
   if ( m_debug ) debug() << "HltVertexMaker: Execute" << endmsg;
 
   RecVertices* overtices = new RecVertices();
-  put(overtices,m_outputVerticesName);
-  m_outputVertices->clear();
+  put(overtices,"Hlt/Vertex/"+m_outputSelectionName);
 
-  if (!m_twoContainers && m_inputTracks->size() <2) {
+  if ((!m_twoContainers && m_inputTracks->size() <2)) {
+    debug() << " no enought tracks in container to make vertices " << endreq;
+    return sc;
+  } 
+  if (m_twoContainers && (m_inputTracks->size() + m_inputTracks2->size()<2)) {
     debug() << " no enought tracks in container to make vertices " << endreq;
     return sc;
   }
 
   m_input2.clear();
-  copy(*m_inputTracks,m_input2);
-  if (m_twoContainers) copy(*m_inputTracks2,m_input2);
-  // else copy(*m_inputTracks,m_input2);
-  
-  debug() << " tracks size in 2nd container " << m_input2.size() <<endreq;
-  if (m_input2.size()<2) {
-    debug() << " no enough tracks in 2nd container " << endreq;
-    return sc;
-  }
-  
+  zen::copy(*m_inputTracks,m_input2);
+  if (m_twoContainers) zen::copy(*m_inputTracks2,m_input2);
+
   if (m_debug) {
     printInfo( "tracks [1]", *m_inputTracks);
     printInfo( "tracks [2]",  m_input2);
   }
 
+  // set the iterators
   Hlt::TrackContainer::const_iterator itMEnd = m_inputTracks->end();
   if (m_input2.size() == m_inputTracks->size()) itMEnd--;
   Hlt::TrackContainer::const_iterator itHStart = m_input2.begin();
@@ -169,19 +164,19 @@ StatusCode HltVertexMaker::execute() {
     const LHCb::Track& track1 = *(*itM);
     
     verbose() << " track 0 " << track1.key() << track1.slopes() << endreq;
-    
+
     itHStart++;
-    
-    // And then start the loop itself!
+
     for (Hlt::TrackContainer::const_iterator itH = itHStart; 
          itH != m_input2.end(); itH++) {
       const LHCb::Track& track2 = *(*itH);
       verbose() << " track 1 " << track2.key() << track2.slopes() << endreq;
       
       // can not be the same track
-      if (&track1 == &track2) continue;
+      if ((*itH) == (*itM)) continue;
+
       increaseCounter(m_counterCombinations);
-      
+
       // Check for segment overlaps
       bool accepted = true;
       if (m_checkForOverlaps)
@@ -197,7 +192,7 @@ StatusCode HltVertexMaker::execute() {
         double val = (fun)(track1,track2);
         accepted = (fil)(val);
         verbose() << " value " << val << " accepted? " << accepted << endreq;
-        if (m_monitor) fillHisto(m_histos[i],val,1.);
+        if (m_monitor) fillHisto(*m_histos[i],val,1.);
         if (!accepted) break;
         m_tcounters[i] += 1;
         m_vals.push_back(val);
@@ -227,8 +222,8 @@ StatusCode HltVertexMaker::execute() {
 
 void HltVertexMaker::saveConfiguration() {
   HltAlgorithm::saveConfiguration();
-  confregister("Type",std::string("HltVertexMaker"));
-  confregister("Filters",m_filterDescriptor.value());
+  const std::vector<std::string>& values = m_filterDescriptor.value();
+  confregister("Filters",values);
 }
 
 
@@ -237,15 +232,16 @@ void HltVertexMaker::saveConfiguration() {
 //=============================================================================
 StatusCode HltVertexMaker::finalize() {
 
+  StatusCode sc = HltAlgorithm::finalize(); 
+  
+  info() << " N Combinations " << m_counterCombinations << endreq;
   for (size_t i = 0; i < m_filterNames.size(); ++i) {
-    std::string title =  " event accepted " + m_filterNames[i] + " / input ";
+    std::string title =  " accepted combinations " 
+      + m_filterNames[i] + " / total ";
     infoSubsetEvents(m_tcounters[i],m_counterCombinations,title);
   }
 
-  StatusCode sc = HltAlgorithm::finalize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by HltAlgorith  
-  
-  return StatusCode::SUCCESS;
+  return sc;
   
 }
 

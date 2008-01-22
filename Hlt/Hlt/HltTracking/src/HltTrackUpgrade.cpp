@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.cpp,v 1.2 2007-06-28 22:24:17 hernando Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.3 2008-01-22 10:04:25 hernando Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -27,6 +27,8 @@ HltTrackUpgrade::HltTrackUpgrade( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
 {
   declareProperty("RecoName", m_recoName = "empty");  
+  m_doInitSelections = false;
+  m_algoType = "HltTrackUpgrade";
 };
 //=============================================================================
 // Destructor
@@ -37,8 +39,11 @@ HltTrackUpgrade::~HltTrackUpgrade() {}
 //=============================================================================
 StatusCode HltTrackUpgrade::initialize() {
 
-  StatusCode sc = HltAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  StatusCode sc = HltAlgorithm::initialize();
+  if (sc.isFailure()) return sc;
+
+  m_inputTracks  = &(retrieveTSelection<LHCb::Track>(m_inputSelectionName));  
+  m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
 
   m_tool = tool<HltTrackUpgradeTool>("HltTrackUpgradeTool",this);
   if (!m_tool) 
@@ -46,13 +51,8 @@ StatusCode HltTrackUpgrade::initialize() {
   
   m_tool->setReco(m_recoName);
 
-  checkInput(m_inputTracks," input tracks");
-  checkInput(m_outputTracks," output tracks");
-
   saveConfiguration();
-
   return sc;
-
 };
 
 //=============================================================================
@@ -62,6 +62,9 @@ StatusCode HltTrackUpgrade::execute() {
 
   StatusCode sc = 
     m_tool->upgrade(*m_inputTracks,*m_outputTracks);
+
+  if (m_debug)
+    printInfo(" upgraded tracks ",*m_outputTracks);
   
   return sc;
 }
@@ -80,7 +83,5 @@ void HltTrackUpgrade::saveConfiguration() {
 
   HltAlgorithm::saveConfiguration();
 
-  std::string type = "HltTrackUpgrade";
-  confregister("Type",type);
   confregister("RecoName",m_recoName);
 }

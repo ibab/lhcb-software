@@ -1,13 +1,13 @@
-// $Id: HltMuonIDDistanceTool.h,v 1.1 2007-12-06 16:16:45 hernando Exp $
+// $Id: HltMuonIDDistanceTool.h,v 1.2 2008-01-22 10:00:48 hernando Exp $
 #ifndef HLTMUONIDDISTANCETOOL_H 
 #define HLTMUONIDDISTANCETOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "HltBase/ITrackFunctionTool.h"            // Interface
 #include "MuonDet/IMuonPosTool.h"
 #include "Event/Track.h"
+#include "HltBase/IFunctionTool.h"            // Interface
 
 /** @class HltMuonIDDistanceTool HltMuonIDDistanceTool.h
  *  

@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.h,v 1.3 2007-11-14 14:00:11 hernando Exp $
+// $Id: HltVertexUpgrade.h,v 1.4 2008-01-22 10:04:25 hernando Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADE_H 
 #define HLTTRACKING_HLTTRACKUPGRADE_H 1
 
@@ -6,9 +6,9 @@
 // from Gaudi
 #include "GaudiAlg/ISequencerTimerTool.h"
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltUtils.h"
 #include "HltBase/EDictionary.h"
 #include "HltTrackUpgradeTool.h"
-#include "HltBase/HltFunctions.h"
 
 /** @class HltVertexUpgrade HltVertexUpgrade.h
  *  
@@ -57,6 +57,11 @@ protected:
   HltTrackUpgradeTool* m_tool;
 
   Hlt::VertexCreator _makeVertex;
+
+  std::string m_inputName;
+  Hlt::VertexSelection* m_inputVertices;
+  Hlt::VertexSelection* m_outputVertices;
+  
 
 };
 #endif // HLTTRACKING_H

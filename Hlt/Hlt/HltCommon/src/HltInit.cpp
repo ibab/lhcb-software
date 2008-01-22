@@ -1,18 +1,15 @@
-// $Id: HltInit.cpp,v 1.10 2007-11-28 14:00:47 graven Exp $
-// Include files 
+// $Id: HltInit.cpp,v 1.11 2008-01-22 09:56:31 hernando Exp $
+// Include files
 
 // from Gaudi
 #include <boost/lexical_cast.hpp>
-#include "GaudiKernel/AlgFactory.h" 
-
-// local
-#include "HltInit.h"
-#include "Event/HltSummary.h"
-// #include "HltBase/ESequences.h"
-#include "Event/HltNames.h"
-
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/DataSvc.h"
+#include "GaudiKernel/IDataManagerSvc.h" 
+#include "GaudiKernel/AlgFactory.h"
+// local
+#include "HltInit.h"
+#include "Event/HltNames.h"
 
 using namespace LHCb;
 
@@ -28,21 +25,13 @@ DECLARE_SERVICE_FACTORY( DataSvc );
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( HltInit );
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 HltInit::HltInit( const std::string& name,
                   ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_hltSvc(0)
+  : HltBaseAlg ( name , pSvcLocator )
 {
-  // location of the summary and the summary box name
-  declareProperty("TCKName", m_TCKName = "Default");
-
-  // location of the summary and the summary box name
-  declareProperty("DataSummaryLocation",
-                  m_dataSummaryLocation = LHCb::HltSummaryLocation::Default);
   
 }
 //=============================================================================
@@ -54,31 +43,28 @@ HltInit::~HltInit() {}
 // Initialization
 //=============================================================================
 StatusCode HltInit::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   // create the Hlt Data Svc
-  std::string name = "DataSvc/HltDataSvc";
-  m_hltSvc = svc<IDataManagerSvc>(name,true); // 2nd argument: create
-  m_hltSvc->setRoot("/Event", new DataObject());
+  m_hltMan = NULL;
+  std::string name = "DataSvc/HltSvc";
+  debug() << " creating hltSvc " << name << endreq;
+  sc = serviceLocator()->service(name,m_hltMan,true);
+  if (!m_hltMan) fatal() << " not able to create HltSvc " << endreq;
+  info() << " created HltSvc " << endreq;
+  m_hltMan->setRoot("/Event", new DataObject());
+  
+  std::string loca = hltDataLocation();
+  m_HLTData = new Hlt::Data();
+  put(&hltSvc(), m_HLTData, loca);  
+  info() << " stored Hlt::Data in HltSvc at " << hltDataLocation() << endreq;
 
-  IDataProviderSvc* hltsvc = svc<IDataProviderSvc>(name,false);
-
-  put(hltsvc,new Hlt::DataHolder<LHCb::HltSummary>(m_datasummary),m_dataSummaryLocation );
-  if (sc.isFailure()) { 
-    Exception(std::string(" failed to register at ") + m_dataSummaryLocation, sc); 
-  }
-
-  put(hltsvc,new Hlt::DataHolder<Estd::dictionary>(m_hltConfiguration),
-             m_dataSummaryLocation+"/Configuration");
-
-
-  m_hltConfiguration.add("TCKName",m_TCKName);
-  info() << " stored hlt configuration " << m_TCKName << endreq;
-
-  // this two services should be different
-  debug() << " hlt data svc " << (int) m_hltSvc << endreq;
-  debug() << " event data svc " << (int) evtSvc() << endreq;
+  loca = hltConfigurationLocation();
+  m_HLTConf = new Hlt::Configuration();
+  put(&hltSvc(), m_HLTConf,loca);
+  info() << " stored Hlt::Configuration in HltSvc at " 
+         << hltConfigurationLocation() << endreq;
 
   saveConfiguration();
   
@@ -88,51 +74,27 @@ StatusCode HltInit::initialize() {
 
 void HltInit::saveConfiguration() {
 
-
-  // Temporally ON
+  bool info = m_info; m_info = 0;
   for (int i = 0; i < HltEnums::HltSelLastSelection; ++i) {
     std::string name = HltNames::selectionSummaryStr(i);
     if (name != "selectionSummaryUnknown") {
-      m_hltConfiguration.add("SelectionID/"+name,i);
-      info() << " HLT[SelectionID/" << name << "] = " << i << endreq;
+      confregister(name,i,"SelectionID");
       std::string sid = boost::lexical_cast<std::string>(i);
-      m_hltConfiguration.add("SelectionID/"+sid,name);      
+      confregister(sid,name,"SelectionID");
     }
   }
   
+
   for (int i = 0; i <= HltEnums::Calo3DChi2; ++i) {
     std::string name = HltNames::particleInfoStr(i);
     if (name != "particleInfoUnknown") {
-      m_hltConfiguration.add("InfoID/"+name,i);
-      info() << " HLT[InfoID/" << name << "] = " << i << endreq;
+      confregister(name,i,"InfoID");
       std::string sid = boost::lexical_cast<std::string>(i);
-      m_hltConfiguration.add("InfoID/"+sid,name);      
-    }    
+      confregister(sid,name,"InfoID");
+    }  
   }
+  m_info = info;
   
-  
-  // store the Hlt configuration
-
-  // Temporally OFF
-  // std::vector<std::string> algonames =  HltNames::selectionSummaryNames();
-//   for (std::vector<std::string>::const_iterator it = algonames.begin();
-//        it != algonames.end(); ++it) {
-//     const std::string& name = *it;
-//     int id = HltNames::selectionSummaryID(name);
-//     m_hltConfiguration.add("SelectionID/"+name,id);
-//     std::string sid = boost::lexical_cast<std::string>(id);
-//     m_hltConfiguration.add("SelectionID/"+sid,name);
-//   }
-  
-//   std::vector<std::string> infonames =  HltNames::particleInfoNames();
-//   for (std::vector<std::string>::const_iterator it = infonames.begin();
-//        it != infonames.end(); ++it) {
-//     const std::string& name = *it;
-//     int id = HltNames::particleInfoID(name);
-//     m_hltConfiguration.add("ExtraInfoID/"+name,id);
-//     std::string sid = boost::lexical_cast<std::string>(id);
-//     m_hltConfiguration.add("ExtraInfoID/"+sid,name);
-//   }
 }
 
 
@@ -140,16 +102,17 @@ void HltInit::saveConfiguration() {
 // Main execution
 //=============================================================================
 StatusCode HltInit::execute() {
+  
 
-  debug() << " decision " << m_datasummary.decision() << endreq;
-  m_datasummary.setPattern(0);
-  std::vector<int> ids = m_datasummary.selectionSummaryIDs();
-  for (std::vector<int>::iterator it = ids.begin(); 
-       it != ids.end(); ++it) {
-    int id = *it;
-    m_datasummary.selectionSummary(id).setPattern(0);
+  std::vector<Hlt::Selection*>& selections = m_HLTData->selections();
+  for (std::vector<Hlt::Selection*>::iterator it = selections.begin();
+       it != selections.end(); ++it) {
+    Hlt::Selection& sel = *(*it);
+    if (sel.decision()) sel.clean();
   }
-      
+
+  setFilterPassed(true);
+  
   return StatusCode::SUCCESS;
 }
 
@@ -158,10 +121,11 @@ StatusCode HltInit::execute() {
 //=============================================================================
 StatusCode HltInit::finalize() {
 
-  m_hltSvc->clearStore();
-  debug() << "==> Finalize" << endmsg;
+  m_hltMan->clearStore();
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  StatusCode sc = HltBaseAlg::finalize();
+  debug() << " finalize " << sc << endreq;
+  return sc;
 }
 
 //=============================================================================

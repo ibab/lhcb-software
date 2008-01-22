@@ -13,8 +13,8 @@ HltSummaryWriter.Save += {"EleL0Entry",
                           "EleTriggerEleTrk"
 };
 
-HltAlleys.Selections += {"EleTriggerSingle",
-                         "EleTriggerEleTrk"
+HltAlleys.InputSelections += {"EleTriggerSingle",
+                              "EleTriggerEleTrk"
 };
 
 HltEleAlleySequence.Members = {
@@ -25,7 +25,7 @@ HltEleAlleySequence.Members = {
   "HltTrackFilter/EleSingleTFRZVelo",
   "HltTrackUpgrade/EleSingleTRVelo",
   "HltTrackFilter/EleSingleTFVelo",
-                       "GaudiSequencer/HltDecodeT",
+  "GaudiSequencer/HltDecodeT",
   "GaudiSequencer/HltDecodeTT",
   "HltTrackUpgrade/EleSingleTRForward",
   "HltTrackFilter/ElePreTriggerSingle",
@@ -60,24 +60,18 @@ EleTriggerEleTrkSeq.MeasureTime = true;
 // Enter if there is a L0Electron yes
 //
 EleL0Entry.L0ChannelsName = {"Electron"};
-EleL0Entry.SelectionName = "EleL0Entry";
 EleL0Entry.OutputLevel = 3;
 
 
 //
 // select RZVelo tracks with an IP and matched to L0Calo
 //
-EleSingleTFRZVelo.InputTracksName     = "RZVelo";
-EleSingleTFRZVelo.InputTracks2Name    = "L0TriggerElectron";
-EleSingleTFRZVelo.PrimaryVerticesName = "PV2D";
-EleSingleTFRZVelo.OutputTracksName    = "EleSingleTFRZVelo";
-EleSingleTFRZVelo.FilterDescriptor = {"rIP,||[],-50.,50.",
-                                      "Calo2DChi2,<,4."
+EleSingleTFRZVelo.InputSelection     = "RZVelo";
+EleSingleTFRZVelo.FilterDescriptor = {
+  "Calo2DChi2_L0TriggerElectron,<,4."
 };
 EleSingleTFRZVelo.HistogramUpdatePeriod = 0;
 EleSingleTFRZVelo.HistoDescriptor = {  
-  "rIP"            : ("rIP",-1.,3.,400),
-  "rIPBest"        : ("rIPBest",-1.,3.,400),
   "Calo2DChi2"     : ("Calo2DChi2",0.,20.,100),
   "Calo2DChi2Best" : ("Calo2DChi2Best",0.,20.,100) 
 };
@@ -86,44 +80,38 @@ EleSingleTFRZVelo.OutputLevel = 3;
 //
 // Velo reconstruction of selected RZVelo
 //
-EleSingleTRVelo.InputTracksName  = "EleSingleTFRZVelo";
-EleSingleTRVelo.OutputTracksName = "EleSingleTRVelo";
+EleSingleTRVelo.InputSelection  = "EleSingleTFRZVelo";
 EleSingleTRVelo.RecoName = "Velo";
 EleSingleTRVelo.OutputLevel = 3;
 
 //
 // Select Velo tracks with an IP and matched to L0Calo
 //
-EleSingleTFVelo.InputTracksName  = "EleSingleTRVelo";
-EleSingleTFVelo.InputTracks2Name = "L0TriggerElectron";
-EleSingleTFVelo.OutputTracksName = "EleSingleTFVelo";
-EleSingleTFVelo.PrimaryVerticesName = "PV2D";
+EleSingleTFVelo.InputSelection  = "EleSingleTRVelo";
 EleSingleTFVelo.HistogramUpdatePeriod = 0;
-EleSingleTFVelo.FilterDescriptor = {"IP,||[],0.1,3.",
-                                    "Calo3DChi2,<,4."
+EleSingleTFVelo.FilterDescriptor = {
+  "IP_PV2D,||[],0.1,3.",
+  "Calo3DChi2_L0TriggerElectron,<,4."
 };
 EleSingleTFVelo.HistoDescriptor = {
   "IP" :           ("IP",-1.,3.,400),
   "IPBest" :       ("IPBest",-1.,3.,400),
-  "Calo2DChi2":    ("Calo3DChi2",0.,20.,100),
-  "Calo2DChi2Best":("Calo3DChi2Best",0.,20.,100)
+  "Calo3DChi2":    ("Calo3DChi2",0.,20.,100),
+  "Calo3DChi2Best":("Calo3DChi2Best",0.,20.,100)
 };
 EleSingleTFVelo.OutputLevel = 3;
 
 //
 // Make forward the selected velo tracks
 //
-EleSingleTRForward.InputTracksName  = "EleSingleTFVelo";
-EleSingleTRForward.OutputTracksName = "EleSingleTRForward";
+EleSingleTRForward.InputSelection  = "EleSingleTFVelo";
 EleSingleTRForward.RecoName = "Forward";
 EleSingleTRForward.OutputLevel = 3;
-PatEleSingleTRForward.DoCleanUp = false;
 
 //
 // Select forward track with a given Pt
 //
-ElePreTriggerSingle.InputTracksName  = "EleSingleTRForward";
-ElePreTriggerSingle.OutputTracksName = "ElePreTriggerSingle";
+ElePreTriggerSingle.InputSelection  = "EleSingleTRForward";
 ElePreTriggerSingle.FilterDescriptor = {"PT,>,1300."};
 ElePreTriggerSingle.HistogramUpdatePeriod = 0;
 ElePreTriggerSingle.HistoDescriptor = {
@@ -132,26 +120,15 @@ ElePreTriggerSingle.HistoDescriptor = {
 };
 ElePreTriggerSingle.OutputLevel = 3;
 
-
-//
-// do the rest of velo tracks
-//
-HltRecoVelo.InputTracksName  = "RZVelo";
-HltRecoVelo.OutputTracksName = "Velo";
-HltRecoVelo.RecoName = "Velo";
-HltRecoVelo.OutputLevel = 3;
-
-
 //
 // select velo tracks as companions 
 //
-EleCompanionTFVelo.InputTracksName     = "Velo";
-EleCompanionTFVelo.OutputTracksName    = "EleCompanionTFVelo";
+EleCompanionTFVelo.InputSelection     = "Velo";
 EleCompanionTFVelo.PrimaryVerticesName = "PV2D";
-EleCompanionTFVelo.InputTracks2Name    = "ElePreTriggerSingle";
 EleCompanionTFVelo.HistogramUpdatePeriod = 0;
-EleCompanionTFVelo.FilterDescriptor = {"IP,||[],0.1,3.",
-                                       "DOCA,<,0.2"
+EleCompanionTFVelo.FilterDescriptor = {
+  "IP_PV2D,||[],0.1,3.",
+  "DOCA_ElePreTriggerSingle,<,0.2"
 };
 EleCompanionTFVelo.HistoDescriptor = {
   "IP":       ( "IP",-1.,.3,600),
@@ -164,18 +141,14 @@ EleCompanionTFVelo.OutputLevel = 3;
 //
 // Do forward the companion tracks
 //
-EleCompanionTRForward.InputTracksName  = "EleCompanionTFVelo";
-EleCompanionTRForward.OutputTracksName = "EleCompanionTRForward";
+EleCompanionTRForward.InputSelection  = "EleCompanionTFVelo";
 EleCompanionTRForward.RecoName = "Forward";
 EleCompanionTRForward.OutputLevel = 3;
-PatEleCompanionTRForward.DoCleanUp = false;
-
 
 //
 // Select companion tracks if they have a fiven Pt
 //
-EleCompanionTFForward.InputTracksName  = "EleCompanionTRForward";
-EleCompanionTFForward.OutputTracksName = "EleCompanionTFForward";
+EleCompanionTFForward.InputSelection = "EleCompanionTRForward";
 EleCompanionTFForward.FilterDescriptor = {"PT,>,1000."};
 EleCompanionTFForward.HistogramUpdatePeriod = 0;
 EleCompanionTFForward.HistoDescriptor = {
@@ -186,12 +159,10 @@ EleCompanionTFForward.OutputLevel = 3;
 //
 // Make vertices with the forward companion tracks 
 //
-EleDiElectronVMaker.InputTracksName    = "ElePreTriggerSingle";
-EleDiElectronVMaker.InputTracks2Name   = "EleCompanionTFForward";
-EleDiElectronVMaker.OutputVerticesName = "EleDiElectronVMaker";
+EleDiElectronVMaker.InputSelection    = "ElePreTriggerSingle";
+EleDiElectronVMaker.InputSelection2   = "EleCompanionTFForward";
 EleDiElectronVMaker.OutputLevel = 3;
-EleDiElectronVMaker.FilterDescriptor = {"DOCA,<,0.2"
-};
+EleDiElectronVMaker.FilterDescriptor = {"DOCA,<,0.2"};
 EleDiElectronVMaker.HistogramUpdatePeriod = 0;
 EleDiElectronVMaker.HistoDescriptor = { 
   "DOCA" :     ("DOCA",0.,1.,100),
@@ -201,21 +172,14 @@ EleDiElectronVMaker.HistoDescriptor = {
 //
 // select vertices if Pt, poiting, and distance
 //
-EleTriggerEleTrk.InputVerticesName   = "EleDiElectronVMaker";
-EleTriggerEleTrk.PrimaryVerticesName = "PV2D";
-EleTriggerEleTrk.OutputVerticesName  = "EleTriggerEleTrk";
+EleTriggerEleTrk.InputSelection   = "EleDiElectronVMaker";
 EleTriggerEleTrk.OutputLevel = 3;
-EleTriggerEleTrk.FilterDescriptor = {"VertexMaxPT,>,1300.",
-                                     "VertexMinPT,>,1000.",
-                                     "VertexPointing,<,0.5",
-                                     "VertexDz,>,0."
+EleTriggerEleTrk.FilterDescriptor = {
+  "VertexPointing_PV2D,<,0.5",
+  "VertexDz_PV2D,>,0."
 };
 EleTriggerEleTrk.HistogramUpdatePeriod = 0;
 EleTriggerEleTrk.HistoDescriptor = {
-  "VertexMaxPT"       : ("VertexMaxPT",0.,8000.,100),
-  "VertexMaxPTBest"   : ("VertexMaxPTBest",0.,8000.,100),
-  "VertexMinPT"       : ("VertexMinPT",0.,8000.,100),
-  "VertexMinPTBest"   : ("VertexMinPTBest",0.,8000.,100),
   "VertexPointing"    : ("VertexPointing",0.,1.,100),
   "VertexPointingBest": ("VertexPointingBest",0.,1.,100),
   "VertexDz"          : ("VertexDz",-10.,50.,100),
@@ -225,8 +189,7 @@ EleTriggerEleTrk.HistoDescriptor = {
 //   TS-added compared to HadAlley:
 
 
-EleTriggerSingle.InputTracksName  = "ElePreTriggerSingle";
-EleTriggerSingle.OutputTracksName = "EleTriggerSingle";
+EleTriggerSingle.InputSelection  = "ElePreTriggerSingle";
 EleTriggerSingle.FilterDescriptor = {"PT,>,3000."};
 EleTriggerSingle.HistogramUpdatePeriod = 0;
 EleTriggerSingle.HistoDescriptor = {
