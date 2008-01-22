@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.3 2007-08-31 16:54:34 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.4 2008-01-22 11:31:53 hernando Exp $
 // Include files 
 #include <algorithm>
 
@@ -15,6 +15,7 @@
 #include "HltBase/HltTypes.h"
 #include "Event/HltSummary.h"
 #include "HltBase/HltConfigurationHelper.h"
+#include "HltBase/HltSummaryHelper.h"
 #include "Event/Track.h"
 #include "Event/Particle.h"
 
@@ -40,7 +41,7 @@ DECLARE_TOOL_FACTORY( TriggerSelectionTisTos );
 TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : HltBaseTool ( type, name , parent )
 {
   declareInterface<ITriggerSelectionTisTos>(this);
 
@@ -349,10 +350,8 @@ void TriggerSelectionTisTos::getHltSummary()
     if( m_summary == NULL ){ 
       error() << " No HLT Summary at " << m_HltSummaryLocation << " No TisTosing possible " << endmsg; 
     } else {
-      std::string loca = m_HltSummaryLocation+"/Configuration";
-      Hlt::DataHolder< Hlt::Configuration >* holder = get< Hlt::DataHolder<Hlt::Configuration> >(loca);
-      m_hltconf = &(holder->object());
-      if( m_hltconf == NULL ){ error() << " No HLT Configuration at " << loca << " No TisTosing possible " << endmsg; 
+      m_hltconf = &hltConf();
+      if( m_hltconf == NULL ){ error() << " No HLT Configuration! " << endreq;
       }
     }
   }
@@ -622,7 +621,7 @@ void TriggerSelectionTisTos::selectionTisTos( const std::string & selectionName,
   if( (m_summary==NULL)||(m_hltconf==NULL) ){ storeInCache(selectionName,decision,tis,tos); return;}
   
 
-  int selID = HltConfigurationHelper::getID(*m_hltconf,"SelectionID",selectionName);
+  int selID = Hlt::ConfigurationHelper::getID(*m_hltconf,"SelectionID",selectionName);
 
   decision= m_summary->hasSelectionSummary( selID );
   if( !decision ){ storeInCache(selectionName,decision,tis,tos); return;}
@@ -633,27 +632,45 @@ void TriggerSelectionTisTos::selectionTisTos( const std::string & selectionName,
   if( !decision ){ storeInCache(selectionName,decision,tis,tos); return;}
 
   if( sel.data().size() > 0 ){
+
+    // JAH: changed 22/1/08
+    //----------------------
+    std::vector<Track*> tracks = 
+      Hlt::SummaryHelper::retrieve<Track>(*m_summary,selID);
+    if (tracks.size() >0) {
+      trackListTISTOS(tracks,m_offlineInput,tis,tos);
+      storeInCache(selectionName,decision,tis,tos); return;
+    }
     
-  ContainedObject* obj = sel.data().front();
-
-  // try as track trigger
-  Hlt::DataSizeHolder< std::vector<Track*> >* holder = 
-    dynamic_cast< Hlt::DataSizeHolder< std::vector<Track*> >*>(obj);
-  if (holder) {
-    const std::vector<Track*> & tracks = holder->object();
-    trackListTISTOS(tracks,m_offlineInput,tis,tos);
-    storeInCache(selectionName,decision,tis,tos); return;
-  } 
-
-  // try as vertex trigger
-  Hlt::DataSizeHolder< std::vector<RecVertex*> >* holderv = 
-    dynamic_cast< Hlt::DataSizeHolder< std::vector<RecVertex*> >*>(obj);
-  if (holderv) {
-    const std::vector<RecVertex*> & vertices = holderv->object();
+    std::vector<RecVertex*> vertices = 
+      Hlt::SummaryHelper::retrieve<RecVertex>(*m_summary,selID);
+    if (vertices.size() >0) {
     vertexListTISTOS(vertices,m_offlineInput,tis,tos);
     storeInCache(selectionName,decision,tis,tos); return;
-  } 
+  }
 
+    // Previous code JAH 21/1/08
+
+    //   ContainedObject* obj = sel.data().front();
+
+    // try as track trigger
+    //  Hlt::DataSizeHolder< std::vector<Track*> >* holder = 
+    //     dynamic_cast< Hlt::DataSizeHolder< std::vector<Track*> >*>(obj);
+    //   if (holder) {
+    //     const std::vector<Track*> & tracks = holder->object();
+    //     trackListTISTOS(tracks,m_offlineInput,tis,tos);
+    //     storeInCache(selectionName,decision,tis,tos); return;
+    //   } 
+    
+    //   // try as vertex trigger
+    //   Hlt::DataSizeHolder< std::vector<RecVertex*> >* holderv = 
+    //     dynamic_cast< Hlt::DataSizeHolder< std::vector<RecVertex*> >*>(obj);
+    //   if (holderv) {
+    //     const std::vector<RecVertex*> & vertices = holderv->object();
+    //     vertexListTISTOS(vertices,m_offlineInput,tis,tos);
+    //     storeInCache(selectionName,decision,tis,tos); return;
+    //   } 
+    
   }
 
   // must be particle trigger
@@ -722,7 +739,7 @@ std::vector<const LHCb::Track*>     TriggerSelectionTisTos::matchedTOSTracks( co
   getHltSummary();
   if( (m_summary==NULL)||(m_hltconf==NULL) )return matchedTracks;
 
-  int selID = HltConfigurationHelper::getID(*m_hltconf,"SelectionID",selectionName);
+  int selID = Hlt::ConfigurationHelper::getID(*m_hltconf,"SelectionID",selectionName);
 
   bool decision= m_summary->hasSelectionSummary( selID );
   if( !decision )return matchedTracks;
@@ -733,18 +750,23 @@ std::vector<const LHCb::Track*>     TriggerSelectionTisTos::matchedTOSTracks( co
   if( !decision )return matchedTracks;
 
   if( sel.data().size() <= 0 )return matchedTracks;
+  
+  std::vector<Track*> tracks = 
+    Hlt::SummaryHelper::retrieve<Track>(*m_summary,selID);
+  if (tracks.size() == 0) return matchedTracks;
     
-  ContainedObject* obj = sel.data().front();
-
-  // try as track trigger
-  Hlt::DataSizeHolder< std::vector<Track*> >* holder = 
-    dynamic_cast< Hlt::DataSizeHolder< std::vector<Track*> >*>(obj);
-  if (!holder) return matchedTracks;
-
-  const std::vector<Track*> & tracks = holder->object();
+    // JAH 22/1/08 Previous code
+    //   ContainedObject* obj = sel.data().front();
+    
+    //   // try as track trigger
+    //   Hlt::DataSizeHolder< std::vector<Track*> >* holder = 
+    //     dynamic_cast< Hlt::DataSizeHolder< std::vector<Track*> >*>(obj);
+    //   if (!holder) return matchedTracks;
+    
+    //   const std::vector<Track*> & tracks = holder->object();
 
   std::vector<double> aveovlp;
-
+  
   for (std::vector<Track*>::const_iterator onit = tracks.begin();onit != tracks.end(); ++onit) {
        const Track& ontrack = *(*onit);
        double overlap[nHitTypes];
@@ -793,7 +815,7 @@ std::vector<const LHCb::RecVertex*> TriggerSelectionTisTos::matchedTOSVertices( 
   getHltSummary();
   if( (m_summary==NULL)||(m_hltconf==NULL) )return matchedVertices;
 
-  int selID = HltConfigurationHelper::getID(*m_hltconf,"SelectionID",selectionName);
+  int selID = Hlt::ConfigurationHelper::getID(*m_hltconf,"SelectionID",selectionName);
 
   bool decision= m_summary->hasSelectionSummary( selID );
   if( !decision )return matchedVertices;
@@ -805,14 +827,17 @@ std::vector<const LHCb::RecVertex*> TriggerSelectionTisTos::matchedTOSVertices( 
 
   if( sel.data().size() <= 0 )return matchedVertices;
     
-  ContainedObject* obj = sel.data().front();
+  std::vector<RecVertex*> onvertices = 
+    Hlt::SummaryHelper::retrieve<RecVertex>(*m_summary,selID);
+  if (onvertices.size() == 0) return matchedVertices;
 
-  // try as vertex trigger
-  Hlt::DataSizeHolder< std::vector<RecVertex*> >* holderv = 
-    dynamic_cast< Hlt::DataSizeHolder< std::vector<RecVertex*> >*>(obj);
-  if (!holderv) return matchedVertices;
-
-  const std::vector<RecVertex*> & onvertices = holderv->object();
+  // JAH 22/1/08 Previous Code
+  //   ContainedObject* obj = sel.data().front();
+  //   // try as vertex trigger
+  //   Hlt::DataSizeHolder< std::vector<RecVertex*> >* holderv = 
+  //     dynamic_cast< Hlt::DataSizeHolder< std::vector<RecVertex*> >*>(obj);
+  //   if (!holderv) return matchedVertices;  
+  //   const std::vector<RecVertex*> & onvertices = holderv->object();
 
   std::vector<double> aveovlp;
 
@@ -872,7 +897,7 @@ std::vector<const LHCb::Particle*>  TriggerSelectionTisTos::matchedTOSParticles(
   getHltSummary();
   if( (m_summary==NULL)||(m_hltconf==NULL) )return matchedParticles;
 
-  int selID = HltConfigurationHelper::getID(*m_hltconf,"SelectionID",selectionName);
+  int selID = Hlt::ConfigurationHelper::getID(*m_hltconf,"SelectionID",selectionName);
 
   bool decision= m_summary->hasSelectionSummary( selID );
   if( !decision )return matchedParticles;

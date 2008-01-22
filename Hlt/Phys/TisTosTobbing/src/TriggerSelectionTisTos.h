@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.h,v 1.4 2007-09-03 15:35:09 pkoppenb Exp $
+// $Id: TriggerSelectionTisTos.h,v 1.5 2008-01-22 11:31:53 hernando Exp $
 #ifndef TRIGGERSELECTIONTISTOS_H 
 #define TRIGGERSELECTIONTISTOS_H 1
 
@@ -9,6 +9,7 @@
 
 #include "CaloInterfaces/ITrack2Calo.h"
 #include "HltBase/HltConfigurationHelper.h"
+#include "HltBase/HltBaseTool.h"
 #include "Event/Track.h"
 
 namespace LHCb {
@@ -24,7 +25,7 @@ namespace LHCb {
  *  @sa  ITriggerSelectionTisTos docs for more explanation.
  *  This interface also defines inlined shortcuts to set Offline Input and get an output in one call. 
  */
-class TriggerSelectionTisTos : public GaudiTool, virtual public ITriggerSelectionTisTos {
+class TriggerSelectionTisTos : public HltBaseTool, virtual public ITriggerSelectionTisTos {
 public: 
 
   /// hits are split into @c HitType categories for matching in each category 
