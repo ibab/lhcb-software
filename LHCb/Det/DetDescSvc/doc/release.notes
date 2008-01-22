@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.42 2007-12-21 07:39:33 cattanem Exp $ 
+! $Id: release.notes,v 1.43 2008-01-22 13:34:27 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
-!========================= DetDescSvc v1r16 2007-12-21 ========================
+!========================= DetDescSvc v1r16 2008-01-22 ========================
+! 2008-01-22 - Marco Cattaneo
+ - Fix MsgStream created in TransportSvc initialization
+
 ! 2007-12-21 - Marco Cattaneo
  - Change format of overlaps summary table to avoid MSG::ERROR printout
 

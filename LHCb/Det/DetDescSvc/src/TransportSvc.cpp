@@ -1,4 +1,4 @@
-// $Id: TransportSvc.cpp,v 1.7 2007-12-21 07:39:33 cattanem Exp $
+// $Id: TransportSvc.cpp,v 1.8 2008-01-22 13:34:27 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -121,60 +121,46 @@ StatusCode    TransportSvc::queryInterface
 // ============================================================================
 StatusCode TransportSvc::initialize()
 {
+  /// initialise the base class 
+  StatusCode statusCode = Service::initialize();  
+  if( statusCode.isFailure() ) return statusCode; // Propagate the error
+  
   MsgStream log( msgSvc() , name() );
-  
-  {
-    /// initialise the base class 
-    StatusCode statusCode = Service::initialize() ;  
-    if( statusCode.isFailure() ) 
-      { log << MSG::ERROR 
-            << " Unable to initialize base class! " << endreq; 
-      return statusCode ; }              /// RETURN !!!
-  }
-  /// Set my own properties
-  StatusCode sc = setProperties();
-  if( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Unable to set own properties" << endmsg;
-    return sc;
-  }
-  
-  /// locate services to be used:
-  { 
-    /// 3) locate Detector Data  Service: 
-    StatusCode statusCode = serviceLocator()->
-      service ( m_detDataSvc_name , m_detDataSvc , true ) ;
-    /// it is a fatal error!!!
-    if ( statusCode.isSuccess() && 0 != m_detDataSvc ) { detSvc() -> addRef(); } 
-    else 
-    { 
-      log << MSG::FATAL
-          << " Unable to locate  Detector Data Service=" 
-          << m_detDataSvc_name << endreq; 
-      m_detDataSvc = 0 ;  
-      return StatusCode::FAILURE ;
-    } 
-  }
-  // 
+
+  /// Locate Detector Data  Service: 
+  statusCode = serviceLocator()->service(m_detDataSvc_name, m_detDataSvc, true);
+  if ( statusCode.isSuccess() && 0 != m_detDataSvc ) { 
+    detSvc() -> addRef();
+  } 
+  else { 
+    log << MSG::FATAL
+        << " Unable to locate  Detector Data Service=" 
+        << m_detDataSvc_name << endreq; 
+    m_detDataSvc = 0 ;  
+    return StatusCode::FAILURE ;
+  } 
+
   if ( MSG::DEBUG >= outputLevel() && !m_protocol ) 
   {
     log << MSG::WARNING 
         << "The PROTOCOL property is turned to be 'true' " << endreq ;
     m_protocol = true ;
   }
-  //
+
   if ( 0 == DetDesc::IntersectionErrors::service() ) 
   {
     log << MSG::INFO 
         << "Initialize the static pointer to DetDesc::IGeometryErrorSvc" << endreq ;
     DetDesc::IntersectionErrors::setService ( this ) ;
   }
-  //
+
   if ( !m_protocol ) 
   {
     log << MSG::WARNING 
         << "The protocol of geoemtry errors is DISABLED" << endreq ;
     DetDesc::IntersectionErrors::setService ( 0 ) ;
   }
+
   // recover errors ?
   DetDesc::IntersectionErrors::setRecovery ( m_recovery ) ;
   if (  DetDesc::IntersectionErrors::recovery() ) 
@@ -182,7 +168,6 @@ StatusCode TransportSvc::initialize()
   else 
   { log << MSG::WARNING << "The recovery of geometry errors is DISABLED" << endreq ; }
   
-  ///
   return StatusCode::SUCCESS;
 }
 // ============================================================================
