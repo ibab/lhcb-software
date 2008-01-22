@@ -10,10 +10,6 @@
 
 MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 
-// Add here the database you like to use for refit & validation
-CONDLocal.ConnectionString = "sqlite_file:MYDATABASE";
-CONDLocal.DefaultTag = "MYTAG";
-
 //for histos
 #include "$STDOPTS/RootHist.opts"
 
@@ -119,6 +115,19 @@ NTupleSvc.Output={"FILE1 DATAFILE='misaligne_tuple.root' TYP='ROOT' OPT='NEW'"};
 HistogramPersistencySvc.OutputFile = "misaligned_histo.root";  // Monitoring histos
 
 ApplicationMgr.EvtMax = -1;
+
+
+
+// Add here the db, you like to validate
+
+CondDBDispatcherSvc.MainAccessSvc = "CondDBLayeringSvc/DDDBLayers";
+DDDBLayers.Layers = { "CondDBAccessSvc/DDDB" };
+CondDBDispatcherSvc.Alternatives = {
+"/Conditions=CondDBLayeringSvc/CONDLayers" };
+CONDLayers.Layers = { "CondDBAccessSvc/CONDNew",
+"CondDBAccessSvc/LHCBCOND"};
+CONDLocal.ConnectionString = "sqlite_file:MYDATABASE";
+CONDLocal.DefaultTag = "MYTAG";
 
 
 // add here xml catalog for your input files
