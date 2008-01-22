@@ -1,5 +1,5 @@
 package HltSys
-version v2r0
+version v2r1
 
 branches cmt doc options
 
@@ -23,13 +23,15 @@ use HltL0MuonConf       v2r0    Hlt   # Alessia Satta/Sandra Amato
 use HltSelections       v5r7    Hlt   # Patrick Koppenburg
 use HltSelChecker       v5r3    Hlt   # Patrick Koppenburg
 
+use HltKshort           v1r0    Hlt   # Jaap Panman
+
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
 #=============================================================
 
 use HltBase             v3r0   Hlt    # Jose Angel Hernando-Morata
 
-#use LoKiTrigger         v7r0   Phys   # Vanya Belyaev
+use LoKiTrigger         v7r0   Phys   # Vanya Belyaev
 use TisTosTobbing       v2r1   Phys   # Tomasz Skwarnicki  
 
 
