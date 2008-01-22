@@ -1,4 +1,4 @@
-// $Id: FindAlignmentElement.cpp,v 1.6 2008-01-10 10:39:04 janos Exp $
+// $Id: FindAlignmentElement.cpp,v 1.7 2008-01-22 14:23:41 janos Exp $
 // Include files
 // from GaudiKernel
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -13,6 +13,11 @@
 #include "STDet/DeITDetector.h"
 #include "STDet/DeITBox.h"
 #include "OTDet/DeOTDetector.h"
+#include "MuonDet/DeMuonDetector.h"
+
+// from MuonDet
+
+//#include "Kernel/MuonTileID.h"
 
 // from BOOST
 #include "boost/assign/list_of.hpp"
@@ -53,10 +58,11 @@ Alignment::FunctorMap createFunctorMap() {
 
   /// These are needed to get a detector element from an LHCBb id.
   /// Get pointers to detector elements
-  DeVelo*       velo = getDetector<DeVelo>(DeVeloLocation::Default);            ///< Pointer to Velo Detector
+  DeVelo*       velo = getDetector<DeVelo>(DeVeloLocation::Default);             ///< Pointer to Velo Detector
   DeTTDetector* tt   = getDetector<DeTTDetector>(DeSTDetLocation::TT);           ///< Pointer to TT Detector
   DeITDetector* it   = getDetector<DeITDetector>(DeSTDetLocation::IT);           ///< Pointer to IT Detector
   DeOTDetector* ot   = getDetector<DeOTDetector>(DeOTDetectorLocation::Default); ///< Pointer to OT Detector
+  DeMuonDetector* muon   = getDetector<DeMuonDetector>(DeMuonLocation::Default);
 
   /// The following methods are overloaded. So we need a fuction pointer to the function we want, i.e.
   /// function pointers to the methods in the detector interfaces that return a detector element for
@@ -191,6 +197,15 @@ Alignment::FunctorMap createFunctorMap() {
                                                     bind<const DetectorElement*>(findOTModule,  ot, 
                                                                                  bind<OTChannelID>(&LHCbID::otID,_1)),
                                                     static_cast<const DetectorElement*>(0)));
+  
+  /// Muons
+  typedef boost::function<const DetectorElement* (const LHCb::LHCbID&)> MStationFromID;
+  MStationFromID findMuonStation = &Alignment::findMuonStation;
+
+  DetElemFromID muonDetector = 
+    ret<const DetectorElement*>(if_then_else_return(bind<bool>(&LHCbID::isMuon,_1),
+                                                    dynamic_cast<const DetectorElement*>(muon),
+                                                    static_cast<const DetectorElement*>(0)));
 
   FunctorMap map = map_list_of("TrackingStations", findTrackingStation)
                               ("VeloBoxes"       , veloBox     )
@@ -205,7 +220,9 @@ Alignment::FunctorMap createFunctorMap() {
 			                        ("OTDetector"      , otDetector  )
 			                        ("OTStations"      , otStation   )
 			                        ("OTLayers"        , otLayer     )
-			                        ("OTModules"       , otModule    );
+			                        ("OTModules"       , otModule    )
+                              ("MuonDetector"    , muonDetector)
+                              ("MuonStations"    , findMuonStation);
 
   return map;
 }
@@ -270,6 +287,26 @@ const DetectorElement* Alignment::findLadder(const DeSTSector* sensor) {
   IDetectorElement* ladder = sensor->parentIDetectorElement();
   return dynamic_cast<const DetectorElement*>(ladder);
 }
+
+
+const std::vector<const DetectorElement*> Alignment::muonStations() {
+  DeMuonDetector* muon   = getDetector<DeMuonDetector>(DeMuonLocation::Default);
+  std::vector<const DetectorElement*> muonStations;
+  for(IDetectorElement::IDEContainer::iterator i =  muon->childBegin(), iEnd = muon->childEnd(); i != iEnd; ++i) {
+    const DetectorElement* muonStation = dynamic_cast<const DetectorElement*>((*i));
+    std::cout << (*i)->name() << endmsg;
+    muonStations.push_back(muonStation);
+  }
+  return muonStations;
+}
+
+const DetectorElement* Alignment::findMuonStation(const LHCb::LHCbID& anLHCbID) {
+  if (!anLHCbID.isMuon()) return static_cast<const DetectorElement*>(0);
+  static std::vector<const DetectorElement*> muonStations = Alignment::muonStations();
+  LHCb::MuonTileID aTileID = anLHCbID.muonID();
+  return muonStations.at(aTileID.station());
+}
+
 
 FindAlignmentElement::FindAlignmentElement(){}
 

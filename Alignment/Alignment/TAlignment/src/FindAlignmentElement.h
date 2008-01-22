@@ -1,4 +1,4 @@
-// $Id: FindAlignmentElement.h,v 1.5 2008-01-07 11:01:16 janos Exp $
+// $Id: FindAlignmentElement.h,v 1.6 2008-01-22 14:23:20 janos Exp $
 #ifndef TALIGNMENT_FINDALIGNMENTELEMENT_H
 #define TALIGNMENT_FINDALIGNMENTELEMENT_H 1
 
@@ -16,6 +16,8 @@
 
 // from STDet
 #include "STDet/DeSTSector.h"
+
+// from VeloDet
 #include "VeloDet/DeVeloSensor.h"
 
 // from BOOST
@@ -50,6 +52,12 @@ namespace Alignment {
   /// This returns the IT ladder, i.e. parent, that a sensor belongs to
   const DetectorElement* findLadder(const DeSTSector* sensor);
 
+
+  /// This returns a muon station for a given lhcb id
+  const std::vector<const DetectorElement*> muonStations();
+  
+  const DetectorElement* findMuonStation(const LHCb::LHCbID& anLHCbID);
+  
   /* ***************************************************** */
 
   DetElemFromID FindElement(const std::string& findWhat);
