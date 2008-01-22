@@ -46,6 +46,3 @@ apply_pattern reflex_dictionary                                      \
               headerfiles=$(TFKERNELROOT)/dict/TfKernelDict.h        \
               selectionfile=$(TFKERNELROOT)/dict/TfKernelDict.xml    \
               options="-U__MINGW32__ -DBOOST_DISABLE_ASSERTS"
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro TfKernelDict_use_linkopts $(use_linkopts)
-#============================================================================
