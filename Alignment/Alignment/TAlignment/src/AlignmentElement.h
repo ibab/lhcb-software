@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.6 2008-01-10 10:37:39 janos Exp $
+// $Id: AlignmentElement.h,v 1.7 2008-01-22 16:13:12 janos Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -38,7 +38,7 @@ public:
    *  which dofs to align for, Tx, Ty, Tz, Rx, Ry, and Rz. Default is all dofs
    */
   AlignmentElement(const DetectorElement* element, const unsigned int index, 
-                   const std::vector<bool>& dofs = std::vector<bool>(6, true));
+                   const std::vector<bool>& dofMask = std::vector<bool>(6, true));
 
   /** Construct an alignment element from a group, i.e. vector, of
    *  detector elements and an index. The index is needed for bookkeeping
@@ -47,7 +47,7 @@ public:
    *  Rx, Ry, and Rz. Default is all dofs
    */
   AlignmentElement(const std::vector<const DetectorElement*>& elements, const unsigned int index, 
-                   const std::vector<bool>& dofs = std::vector<bool>(6, true));
+                   const std::vector<bool>& dofMask = std::vector<bool>(6, true));
 
  public:
 
@@ -84,7 +84,7 @@ public:
    */
   unsigned int nDOFs() const;
 
-  const std::vector<bool>& dofFlags() const;  
+  const std::vector<bool>& dofMask() const;  
     
   /** Method to set the local deltas of the detector element.
    * The delta translations and rotations are in the local frame
@@ -132,7 +132,7 @@ public:
 
   mutable std::vector<const DetectorElement*>  m_elements;         ///< Vector of pointers to detector elements
   unsigned int                                 m_index;            ///< Index. Needed for bookkeeping
-  std::vector<bool>                            m_dofs;             ///< d.o.fs we want to align for
+  std::vector<bool>                            m_dofMask;          ///< d.o.f's we want to align for
   Gaudi::XYZPoint                              m_pivot;            ///< Pivot point
 
 };
@@ -151,6 +151,6 @@ inline const std::vector<double> AlignmentElement::pivot() const {
   return boost::assign::list_of(m_pivot.x())(m_pivot.y())(m_pivot.z());
 }
 
-inline const std::vector<bool>& AlignmentElement::dofFlags() const { return m_dofs; };
+inline const std::vector<bool>& AlignmentElement::dofMask() const { return m_dofMask; };
   
 #endif // ALIGNMENTELEMENT_H

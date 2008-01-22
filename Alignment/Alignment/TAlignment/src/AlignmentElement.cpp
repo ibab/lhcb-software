@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.7 2008-01-22 13:36:42 janos Exp $
+// $Id: AlignmentElement.cpp,v 1.8 2008-01-22 16:13:07 janos Exp $
 // Include files
 
 // from STD
@@ -24,10 +24,10 @@
 
 AlignmentElement::AlignmentElement(const DetectorElement* element, 
                                    const unsigned int index, 
-                                   const std::vector<bool>& dofs)
+                                   const std::vector<bool>& dofMask)
   : m_elements(1u, element),
     m_index(index),
-    m_dofs(dofs) {
+    m_dofMask(dofMask) {
 
   validDetectorElement(m_elements.at(0u));
   
@@ -36,10 +36,10 @@ AlignmentElement::AlignmentElement(const DetectorElement* element,
 
 AlignmentElement::AlignmentElement(const std::vector<const DetectorElement*>& elements, 
                                    const unsigned int index, 
-                                   const std::vector<bool>& dofs)
+                                   const std::vector<bool>& dofMask)
   : m_elements(elements),
     m_index(index),
-    m_dofs(dofs) {
+    m_dofMask(dofMask) {
 
   std::for_each(m_elements.begin(), m_elements.end(),
                 boost::lambda::bind(&AlignmentElement::validDetectorElement, this, boost::lambda::_1));
@@ -109,7 +109,7 @@ const std::vector<double> AlignmentElement::deltaTranslations() const {
 
 unsigned int AlignmentElement::nDOFs() const {
   unsigned int nDOF  = 0u;
-  for (std::vector<bool>::const_iterator i = m_dofs.begin(), iEnd = m_dofs.end(); i != iEnd; ++i) if ((*i)) ++nDOF;
+  for (std::vector<bool>::const_iterator i = m_dofMask.begin(), iEnd = m_dofMask.end(); i != iEnd; ++i) if ((*i)) ++nDOF;
   return nDOF;
 }
   
@@ -173,13 +173,20 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
   const std::string s = name();
   const std::vector<double>& t = deltaTranslations();
   const std::vector<double>& r = deltaRotations();
+  const std::vector<std::string> dofs = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz");
+  
   lhs << std::endl;
   lhs << std::left << std::setw(s.size()+30u) << std::setfill('*') << "" << std::endl;
   lhs << "* Element  : " << s << "\n"
       << "* Index    : " << index() << "\n"
       << "* dPosXYZ  : " << Gaudi::XYZPoint(t[0], t[1], t[2]) << "\n"
       << "* dRotXYZ  : " << Gaudi::XYZPoint(r[0], r[1], r[2]) << "\n"
-      << "* pivotXYZ : " << pivotXYZPoint() << std::endl;
+      << "* PivotXYZ : " << pivotXYZPoint() << "\n";
+  lhs << "* DoFs     : ";
+  for (std::vector<bool>::const_iterator j = m_dofMask.begin(), jEnd = m_dofMask.end(); j != jEnd; ++j) {
+    if ((*j)) lhs << dofs.at(std::distance(m_dofMask.begin(), j)) + " ";
+  }
+  lhs << std::endl;
   lhs << std::left << std::setw(s.size()+30u) << std::setfill('*') << "" << std::endl;
 
   return lhs;
