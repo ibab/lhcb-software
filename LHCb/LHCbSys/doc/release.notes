@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r3>2008-01-16 LHCbSys v23r3</A></H1><PRE>
+</PRE><H1><A NAME=v23r3>2008-01-21 LHCbSys v23r3</A></H1><PRE>
 This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 
 - New packages:      MDF_DCAP v1r0 - DCAP plugin to read MDF files 
@@ -59,7 +59,7 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
       independent of the detector element hierarchy.
   . In 3DTransformationFunctions.h add method taking any MathCore 3D rotation
     and estimating the equivalent Euler 321 rotation parameters.
-  . Remove functionality now in MathCore
+  . Remove functionality now in MathCore, take advantage of latest syntax fixes
 
 - In DetDescSvc v1r16
   . New treatment of geometry overlaps/errors in TransportSvc
@@ -90,6 +90,8 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
   . Add bank types MuonFull, MuonError
   . Added an enum in ODIN to define the meaning of the Trigger Type.
   . Protect bankKiller against annoying printout 
+  . Add new RawBankReadoutStatus ("NonUnique" when several banks with identical
+    sourceID in the same rawEvent)  
 
 - In RecEvent v2r9
   . Added keyedContTypeDef = true to TwoProngVertex
@@ -140,7 +142,15 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
   . Add interfaces IParticleTupleTool and IEventTupleTool for filling generic
     nTuples
   . Add interface IMassFit for mass-constrained fit.
-  . DVAlgorithm: Declare all tools as protected instead of private.
+  . New method calcProjectedFlightDistance in IGeomDispCalculator
+  . src/Lib/DVAlgorithm.cpp
+    o Minor modification for dealing with Algorithm Context Service:
+      1) the property "RegisterForContexService" is setto be "true"
+      2) initialize/finalize and sysExecute methods are equipped with 
+         sentries/guards to register the algorithm for Algorithm ContextService
+      3) there is warning message "intialize" methods if the registration 
+         for context service  is disabled.
+    o Declare all tools as protected instead of private.
 
 - In STKernel v1r1
   . Add STFun.h/.cpp [functions related to calculating interstrip fraction]
