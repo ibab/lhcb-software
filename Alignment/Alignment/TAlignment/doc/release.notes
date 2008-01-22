@@ -3,6 +3,12 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-01-22 - Jan AMORAAL
+ - clean-up
+ - Added muon stations
+ - Bug fix: apply correlations correctly
+ - Use nodes in cavariance tools
+
 ! 2008-01-10 - Jan AMORAAL
  - Modified TrackFilterAlg to only keep hits that are in a to-be-aligned detelem
 
