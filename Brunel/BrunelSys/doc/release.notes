@@ -33,6 +33,7 @@ framework.
   . Fix unprotected array index in CaloMergedPi0.cpp, cause of infinite loop in
     Brunel v32r2 amd64_dbg build (CaloReco v4r10)
   . Protect against NaN in NeutralProtoPAlg::finalize() (GlobalReco v6r15)
+  . PoolDbCacheSvc.AgeLimit changed to IODataManager.AgeLimit (for Gaudi v19r7)
 
 </PRE><H1><A NAME=v32r2>2007-12-12 Brunel v32r2</A></H1><PRE>
 This version uses projects Gaudi v19r6, LHCb v23r2, Lbcom v6r13, Rec v5r2
