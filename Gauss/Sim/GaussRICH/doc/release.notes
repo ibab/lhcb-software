@@ -3,7 +3,15 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+!========================= GaussRICH v7r3 2008-1-23 =========================
+! 2008-01-23 - Sajan Easo 
+ - In the RichG4Hit add the location of the Photon incidence point on the 
+   external surface of the HPD quartz window so that it can be copied to the 
+   MCRichOpticalPhoton class for Hpd debugging studies. This is done from the
+   Step action named RichG4StepAnalysis6.cpp and is activated only with the
+   RICH verbose output flag. 
 !========================= GaussRICH v7r3 2008-1-21 =========================
+! 2008-01-21 - Sajan Easo, Rob Lambert
  - Changes in accordance with the new geometry changes in RICH in January 2008.
  - Change in RichHpdPhotoElectricEffect to account for an extra layer of container
    of hpd array in RICH2.
