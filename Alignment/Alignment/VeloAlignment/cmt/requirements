@@ -1,6 +1,6 @@
 # =============================================================================
 package       VeloAlignment
-version       v3r0
+version       v4r0
 
 # =========== structure =======================================================
 branches      doc cmt src
@@ -21,10 +21,16 @@ use           VeloDet           v*    Det
 # Needed for Millepede
 use           AlignmentInterfaces    v*    Alignment
 
+# Needed for AlignSensors
+use           ROOT              v*    LCG_Interfaces -no_auto_imports
+
 # =========== constituents =====================================================
-library       VeloAlignment           ../src/*.cpp
+library       VeloAlignment            -import=ROOT \
+                                       ../src/*.cpp
 
 # =========== standard patterns (the order is essential!) ====================== 
 apply_pattern component_library    library=VeloAlignment
+
+macro_append ROOT_linkopts " -lHist -lReflex -lMatrix -lGraf" WIN32 " libHist.lib libReflex.lib libMatrix.lib libGraf.lib"
 
 set VELOALIGNMENTOPTS  ${VELOALIGNMENTROOT}/options

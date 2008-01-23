@@ -1,0 +1,31 @@
+
+AlignSensors.OutputLevel	=3;
+AlignSensors.MinModule          = 5 ;
+AlignSensors.TrackLocation      ="Rec/Track/Velo";
+AlignSensors.PrintInfo		=false;
+AlignSensors.SelectedEvent 	= 1; //Choose event number to display
+AlignSensors.OutputNtuple	= false;
+AlignSensors.MinNResiduals	= 200;
+AlignSensors.KalmanResidual     = false;
+AlignSensors.MinDelta           = 0.0005;
+AlignSensors.ACDC               = false;
+
+AlignSensors.Fitter.ZPositions          = {};
+AlignSensors.Fitter.SetRefInfo          = false;
+//AlignSensors.Fitter.ErrorP              = boost::assign::list_of(0.15)(5.0e-7); // new value, was 0.01; // relative momentum error
+AlignSensors.Fitter.NumberFitIterations = 1;
+AlignSensors.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+AlignSensors.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+AlignSensors.Fitter.TrackSimpleExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+AlignSensors.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
+
+
+ToolSvc.DetailedMaterialLocator.OutputLevel        =5;
+
+
+////////////////////////////////////
+//Never change these options:
+AlignSensors.NTupleSplitDir     =false;
+////////////////////////////////
+
+

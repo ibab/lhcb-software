@@ -1,6 +1,17 @@
 ! Package     : VeloAlignment
-! Responsible : Sebastien Viret
+! Responsible : Marco Gersabeck
 
+
+!=============================================================================
+! 23/01/2008 - Marco Gersabeck  ** v4r0 **
+
+  - New version now includes VELO sensor alignment
+
+  - New files are: src/AlignSensors.[cpp/h] containing the source code
+                   options.AlignSensors.opts with the options
+
+  - The algorithm runs with Escher by running a python script provided in
+                   the Escher/job directory
 
 !=============================================================================
 ! 04/09/2007 - Sebastien Viret  ** v3r0 **
