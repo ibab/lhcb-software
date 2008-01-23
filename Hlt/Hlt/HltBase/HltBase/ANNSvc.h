@@ -1,4 +1,4 @@
-// $Id: ANNSvc.h,v 1.1 2008-01-23 13:11:53 graven Exp $
+// $Id: ANNSvc.h,v 1.2 2008-01-23 13:37:23 graven Exp $
 #ifndef ANNSVC_H  
 #define ANNSVC_H 1
 
@@ -28,7 +28,6 @@ public:
   ~ANNSvc();
   
   StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
-  StatusCode reinitialize();
 
   boost::optional<int>           asInt   (const std::string& major, const std::string& minor) const;
   boost::optional<std::string>   asString(const std::string& major, int minor) const;
