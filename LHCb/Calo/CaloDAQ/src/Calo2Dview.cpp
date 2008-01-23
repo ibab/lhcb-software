@@ -1,11 +1,11 @@
-// $Id: Calo2Dview.cpp,v 1.1 2008-01-23 19:05:17 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.2 2008-01-23 19:24:35 odescham Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "Kernel/CaloCellCode.h"
 // local
-#include "Calo2Dview.h"
+#include "CaloDAQ/Calo2Dview.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Calo2Dview

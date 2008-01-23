@@ -18,6 +18,7 @@ use     DigiEvent       v*      Event
 use     CaloDet         v*      Det
 use	L0Event		v*	Event
 use     MCEvent         v*      Event
+use GaudiAlg     v*
 #============================================================================
 # Component library building rule
 #============================================================================
