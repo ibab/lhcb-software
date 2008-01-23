@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.41 2007-11-30 11:12:17 wouter Exp $
+// $Id: IdealTracksCreator.cpp,v 1.42 2008-01-23 11:50:49 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -267,6 +267,7 @@ StatusCode IdealTracksCreator::execute()
       // Set some of the track properties
       // --------------------------------
       track -> setHistory( Track::TrackIdealPR );
+      track -> setPatRecStatus( Track::PatRecIDs ) ;
 
       // Add true states at each measurement 
       // ===================================
