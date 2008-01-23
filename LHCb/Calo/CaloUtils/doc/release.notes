@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.90 2007-11-29 08:35:17 cattanem Exp $
+! $Id: release.notes,v 1.91 2008-01-23 23:43:54 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2007-08-23 Olivier Deschamps
+ - src /            : new base class Calo2Dview.cpp (inherits from GaudiHistoAlg) : produces 2D display of Calorimeter
+ - cmt/requirements : import AIDA
+
 
 !========================== CaloUtils v7r6 2007-11-29 =========================
 ! 2007-11-29 - Marco Cattaneo
