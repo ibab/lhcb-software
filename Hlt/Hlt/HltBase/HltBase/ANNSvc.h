@@ -1,4 +1,4 @@
-// $Id: ANNSvc.h,v 1.2 2008-01-23 13:37:23 graven Exp $
+// $Id: ANNSvc.h,v 1.3 2008-01-23 14:04:02 graven Exp $
 #ifndef ANNSVC_H  
 #define ANNSVC_H 1
 
@@ -15,6 +15,7 @@ namespace ANNSvcUtilities {
  *  
  *  functionality:
  *     maps between 'Assigned Names and Numbers'
+ *         and also 'Assigned Numbers and Names'
  *
  *  @author Gerhard Raven
  *  @date   2008-01-02
@@ -24,7 +25,8 @@ namespace ANNSvcUtilities {
 class ANNSvc : public Service, 
                virtual public IANNSvc {
 public:
-  ANNSvc( const std::string& name, ISvcLocator* pSvcLocator,const std::vector<std::string>& majors);
+  ANNSvc( const std::string& name, ISvcLocator* pSvcLocator,
+          const std::vector<std::string>& majors );
   ~ANNSvc();
   
   StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);

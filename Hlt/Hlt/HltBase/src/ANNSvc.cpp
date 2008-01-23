@@ -3,40 +3,43 @@
 #include <map>
 #include <utility>
 #include "GaudiKernel/Property.h"
+#include "boost/lambda/lambda.hpp"
+#include "boost/lambda/bind.hpp"
 
 
 using std::map;
 using std::vector;
 using std::string;
 using boost::optional;
+namespace bl = boost::lambda;
 
 namespace ANNSvcUtilities { 
 
 template <typename KEY, typename VALUE>
 class bimap_t {
 public:
-    typedef KEY key_type;
-    typedef VALUE value_type;
-    typedef GaudiUtils::VectorMap< key_type, value_type > k2v_type;
-    typedef GaudiUtils::VectorMap< value_type, key_type > v2k_type;
-    typedef SimpleProperty<std::map<key_type,value_type> > property_type;
-    typedef boost::optional<value_type> value_result_type; 
-    typedef boost::optional<key_type>   key_result_type; 
+    typedef KEY    key_type;
+    typedef VALUE  value_type;
+    typedef GaudiUtils::VectorMap<KEY,VALUE>     k2v_type;
+    typedef GaudiUtils::VectorMap<VALUE,KEY>     v2k_type;
+    typedef SimpleProperty<std::map<KEY,VALUE> > property_type;
+    typedef optional<value_type>                 result_value_type; 
+    typedef optional<key_type>                   result_key_type; 
 
     bimap_t();
 
     property_type& property() { return m_property; } 
 
-    value_result_type value(const key_type& key) const {
+    result_value_type value(const key_type& key) const {
         typename k2v_type::const_iterator i = m_map.find(key);
-        return i == m_map.end() ? value_result_type() 
-                                : value_result_type(i->second) ;
+        return i == m_map.end() ? result_value_type() 
+                                : result_value_type(i->second) ;
     }
 
-    key_result_type   key(const value_type& value) const {
+    result_key_type   key(const value_type& value) const {
         typename v2k_type::const_iterator i = m_invmap.find(value);
-        return i == m_invmap.end() ? key_result_type() 
-                                   : key_result_type(i->second) ;
+        return i == m_invmap.end() ? result_key_type() 
+                                   : result_key_type(i->second) ;
     }
 
     const k2v_type& mapping() const { return m_map; }
@@ -122,8 +125,8 @@ bool ANNSvc::hasMajor(const string& major) const {
 
 optional<int>  ANNSvc::asInt(const string& major, const string& minor) const {
     maps_type::const_iterator i = m_maps.find(major);
-    return i==m_maps.end() ?  optional<int>() : 
-                              i->second->value(minor);
+    return i==m_maps.end() ?  optional<int>() 
+                           :  i->second->value(minor);
 }
 
 optional<string>   ANNSvc::asString(const string& major, int minor) const {
@@ -147,8 +150,9 @@ ANNSvc::items(const std::string& major) const {
 std::vector< std::string > 
 ANNSvc::majors() const {
     std::vector< std::string > r;
-    for (maps_type::const_iterator i = m_maps.begin(); i!=m_maps.end(); ++i) {
-            r.push_back( i->first );
-    }
+    std::transform( m_maps.begin(), 
+                    m_maps.end(),
+                    std::back_inserter(r), 
+                    bl::bind(&maps_type::value_type::first,bl::_1) );
     return r;
 }
