@@ -1,4 +1,4 @@
-// $Id: HybridBase.cpp,v 1.3 2008-01-15 19:57:19 ibelyaev Exp $
+// $Id: HybridBase.cpp,v 1.4 2008-01-23 13:33:34 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -33,6 +33,22 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2004-06-29
  */
+// ============================================================================
+namespace 
+{
+  /// replace all new lines with "newline+comments"
+  std::string addComment ( std::string str )
+  {
+    static const std::string comm = "\n##! " ;
+    std::string::size_type pos = str.find ( '\n' ) ;
+    while ( std::string::npos != pos ) 
+    {
+      str.insert ( pos + 1 , comm );
+      pos = str.find ( '\n' , pos + 2 ) ;
+    }
+    return str ;
+  } 
+}
 // ============================================================================
 // Standard constructor
 // ============================================================================
@@ -183,7 +199,7 @@ std::string LoKi::Hybrid::Base::makeCode
   stream << "# \tactor   = " << Gaudi::Utils::toString ( actor   )  << std::endl ;
   stream << "# \tmodules = " << Gaudi::Utils::toString ( modules )  << std::endl ;
   stream << "# \tlines   = " << Gaudi::Utils::toString ( lines   )  << std::endl ;
-  stream << "# \tcontext = " << Gaudi::Utils::toString ( context )  << std::endl ;
+  stream << "# \tcontext = " << Gaudi::Utils::toString ( addComment ( "\n" + context ) )  << std::endl ;
   stream << "# " << std::string(78,'=') << std::endl ;
   // define imported modules:
   stream << "##        MODULES :" << std::endl ;

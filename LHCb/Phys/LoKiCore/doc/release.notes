@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.72 2008-01-17 19:29:38 ibelyaev Exp $ 
+! $Id: release.notes,v 1.73 2008-01-23 13:33:34 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-01-23 - Vanya BELYAEV
+ - strc/HybridBase.cpp 
+    imporove the (buggy) printout of "context" field..
 
 ! 2008-01-17 - Vanya BELYAEV
  - LoKi/Range.h
@@ -438,6 +442,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.72  2008/01/17 19:29:38  ibelyaev
+!  Range: fix the problem with reverse iterators
+!
 ! Revision 1.71  2008/01/15 19:57:19  ibelyaev
 !  HybridBase: enforce the loading/initialization of LoKi Service
 !
