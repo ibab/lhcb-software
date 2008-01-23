@@ -1,0 +1,63 @@
+
+//--------------------------------------------------------------
+// Initiate Escher Reco Phase
+//--------------------------------------------------------------
+
+EscherMainSeq.Members += { "ProcessPhase/Reco" };
+
+Reco.DetectorList += {
+                      "VELO" 
+                     ,"Tr"
+                     ,"Moni"
+                     ,"Alignment"
+                    };
+
+// ====================================================================
+//  Tracking reconstruction phase
+// ====================================================================
+
+// Start TransportSvc, needed by track fit
+ApplicationMgr.ExtSvc += { "TransportSvc" };
+
+// --------------------------------------------------------------------
+// Pattern Recognition and Fitting
+// --------------------------------------------------------------------
+
+// Velo tracking
+RecoVELOSeq.Members += {  "DecodeVeloRawBuffer"
+                    ,"Tf::PatVeloRTracking/PatVeloRTracking"
+                    ,"Tf::PatVeloSpaceTracking/PatVeloSpaceTracking"
+                    ,"Tf::PatVeloGeneralTracking/PatVeloGeneralTracking"
+};
+
+// Decode also VeloClusters, needed for track fit
+RecoVELOSeq.Members += { "DecodeVeloRawBuffer/DecodeVeloClusters" };
+DecodeVeloClusters.DecodeToVeloLiteClusters = false;
+DecodeVeloClusters.DecodeToVeloClusters     = true;
+
+// obsolete options for PatVeloGeneric (for reference)
+//PatVeloGeneric.FullAlignment = false;
+//PatVeloGeneric.RAliTol = 0.02; 
+//PatVeloGeneric.PAliTol = 0.002;
+//PatVeloGeneric.KalmanState = 2;
+//PatVeloGeneric.MaxSkip = 10;
+//PatVeloGeneric.ClusterCut  = 30;
+//PatVeloGeneric.CleanSeed   = true;
+//PatVeloGeneric.PrivateBest = true;
+
+
+// Alignment phase
+
+ApplicationMgr.DLLs += { "VeloAlignment", "PatVelo" };
+ApplicationMgr.DLLs += { "AlignmentTools" };
+
+#include "$VELOALIGNMENTOPTS/VeloAlign.opts"
+#include "$VELOALIGNMENTOPTS/AlignSensors.opts"
+
+//====================================================
+// decide here whether to run module alignment (Align) 
+// or sensor alignment (AlignSensors)
+//----------------------------------------------------
+//RecoAlignmentSeq.Members += { "Align" };
+RecoAlignmentSeq.Members += { "AlignSensors" };
+//====================================================
