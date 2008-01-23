@@ -9,8 +9,6 @@
 
 ! 2008-01-23 - Olivier Deschamps
  - minor change in CaloReadoutTool.cpp (better handling of ReadoutStatus)
- - src /            : new GaudiHistoAlg inheriting base class Calo2Dview.cpp : produce 2D histogramming of Calorimeter
- - cmt/requirements : import AIDA
 
 ! 2008-01-22 - Olivier Deschamps
  - Add new status ("NonUnique") when several banks with identical sourceID in the same rawEvent  

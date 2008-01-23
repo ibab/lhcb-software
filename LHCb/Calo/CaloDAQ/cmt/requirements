@@ -13,17 +13,17 @@ branches          CaloDAQ cmt doc options src
 #============================================================================
 # Used packages.
 #============================================================================
+use     GaudiAlg        v*
+use     CaloDet         v*      Det
 use	DAQEvent	v*	Event
 use     DigiEvent       v*      Event
-use     CaloDet         v*      Det
 use	L0Event		v*	Event
 use     MCEvent         v*      Event
-use GaudiAlg     v*
 #============================================================================
 # Component library building rule
 #============================================================================
 apply_pattern    install_more_includes more=CaloDAQ
-library          CaloDAQ    -import=AIDA ../src/*.cpp 
+library          CaloDAQ    ../src/*.cpp 
 #============================================================================
 # define component library link options
 #============================================================================
