@@ -17,8 +17,6 @@ use   PhysEvent       v*    Event
 use   GaudiKernel     v*
 private
 use GaudiObjDesc v* -no_auto_imports
-action DoHltNames "python ../python/translateEnums.py"
-macro_append  install_more_includes_dependencies " DoHltNames "
 end_private
 
 # Produce Header-Files from XML description

@@ -4,6 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2008-01-23 - Patrick Koppenburg
+ - Used GOD-given conversion to string in HltEnums
+ - Makes HltNames and its python script obsolete. Removed.
+
 !======================== HltEvent v8r5 2007-12-10 ===========================
 ! 2007-12-09 - Jose A. Hernando
  - Added inputSelectionsIDs() vector of IDs in HltSelectionSummary

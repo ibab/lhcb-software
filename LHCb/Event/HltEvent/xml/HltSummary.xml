@@ -13,7 +13,10 @@
       <enum
         name   = 'HltDecisionType'
         desc   = 'Trigger type decision: muon, dimuon ,etc'
-        value  = 'Decision=1,
+        strTypConv = 'TRUE'
+        unknownValue = 'HltDecisionUnknown'
+        value  = 'HltDecisionUnknown=0,
+                  Decision=1,
 	          Forced=2,
                   Muon=4,
 	          DiMuon=8,
@@ -33,6 +36,8 @@
       <enum
         name   = 'HltAlley'
         desc   = 'Hlt alley'
+        strTypConv = 'TRUE'
+        unknownValue = 'AlleyUnknown'
         value  = 'AlleyUnknown=0,
 	          MuonAlley,
 	          MuonHadAlley,
@@ -43,6 +48,8 @@
       <enum
         name   = 'HltSelectionSummary'
         desc   = 'Hlt selection summary'
+        strTypConv = 'TRUE'
+        unknownValue = 'HltSelectionSummaryUnknown'
         value  = 'HltSelectionSummaryUnknown=0,
 	          MuonEntry=100,
                   DiMuonEntry=101,
@@ -97,6 +104,8 @@
       <enum
         name   = 'HltParticleInfo'
         desc   = 'Monitoring Quantities'
+        strTypConv = 'TRUE'
+        unknownValue = 'HltParticleInfoUnknown'
         value  = 'HltParticleInfoUnknown=0,
 	rIP,
 	IP,
