@@ -1,4 +1,4 @@
-// $Id: IANNSvc.h,v 1.1 2008-01-23 13:11:53 graven Exp $
+// $Id: IANNSvc.h,v 1.2 2008-01-23 15:06:53 graven Exp $
 #ifndef IANNSVC_H 
 #define IANNSVC_H 1
 
@@ -34,12 +34,21 @@ public:
   static const InterfaceID& interfaceID();
   virtual ~IANNSvc();
 
-  virtual boost::optional<int>           asInt(   const std::string& major, const std::string& minor) const = 0;
-  virtual boost::optional<std::string>   asString(const std::string& major, int minor) const = 0;
+  typedef std::string                                 major_key_type;
+  typedef std::string                                 minor_key_type;
+  typedef int                                         minor_mapped_type;
+  typedef std::pair<minor_key_type,minor_mapped_type> minor_value_type;
 
-  virtual bool hasMajor(const std::string& major) const = 0;
-  virtual std::vector< std::string > majors() const = 0;
+  virtual boost::optional<int>           asInt(   const major_key_type& major, const std::string& minor) const = 0;
+  virtual boost::optional<std::string>   asString(const major_key_type& major, int minor) const = 0;
 
-  virtual std::vector< std::pair<std::string,int> > items(const std::string& major) const = 0;
+
+
+  virtual bool hasMajor(const major_key_type& major) const = 0;
+  virtual std::vector< major_key_type > majors() const = 0;
+
+
+
+  virtual std::vector<minor_value_type> items(const std::string& major) const = 0;
 };
 #endif // IANNSVC_H

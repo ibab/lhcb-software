@@ -1,4 +1,4 @@
-// $Id: ANNSvc.h,v 1.3 2008-01-23 14:04:02 graven Exp $
+// $Id: ANNSvc.h,v 1.4 2008-01-23 15:06:53 graven Exp $
 #ifndef ANNSVC_H  
 #define ANNSVC_H 1
 
@@ -26,22 +26,22 @@ class ANNSvc : public Service,
                virtual public IANNSvc {
 public:
   ANNSvc( const std::string& name, ISvcLocator* pSvcLocator,
-          const std::vector<std::string>& majors );
+          const std::vector<major_key_type>& majors );
   ~ANNSvc();
   
   StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
-  boost::optional<int>           asInt   (const std::string& major, const std::string& minor) const;
-  boost::optional<std::string>   asString(const std::string& major, int minor) const;
+  boost::optional<int>           asInt   (const major_key_type& major, const std::string& minor) const;
+  boost::optional<std::string>   asString(const major_key_type& major, int minor) const;
 
-  bool                           hasMajor(const std::string& major) const;
+  bool                           hasMajor(const major_key_type& major) const;
 
-  std::vector< std::pair<std::string,int> > items(const std::string& major) const;
-  std::vector< std::string > majors() const;
+  std::vector<minor_value_type> items(const major_key_type& major) const;
+  std::vector<major_key_type>   majors() const;
 private:
   
-  typedef ANNSvcUtilities::bimap_t<std::string,  int>       bimap_type;
-  typedef GaudiUtils::VectorMap< std::string, bimap_type* > maps_type;
+  typedef ANNSvcUtilities::bimap_t<minor_key_type, minor_mapped_type> bimap_type;
+  typedef GaudiUtils::VectorMap< major_key_type, bimap_type* > maps_type;
   maps_type   m_maps;
 };
 #endif // ANNSVC_H 1

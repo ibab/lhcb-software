@@ -20,6 +20,7 @@ class bimap_t {
 public:
     typedef KEY    key_type;
     typedef VALUE  value_type;
+    typedef std::pair<KEY,VALUE>                 mapped_type;
     typedef GaudiUtils::VectorMap<KEY,VALUE>     k2v_type;
     typedef GaudiUtils::VectorMap<VALUE,KEY>     v2k_type;
     typedef SimpleProperty<std::map<KEY,VALUE> > property_type;
@@ -88,7 +89,7 @@ bimap_t<KEY,VALUE>::updateHandler(Property& /*prop*/) {
 // Standard constructor, initializes variables
 //=============================================================================
 ANNSvc::ANNSvc( const string& name, ISvcLocator* pSvcLocator, 
-                const vector<string>& majors )
+                const vector<IANNSvc::major_key_type>& majors )
   : Service( name , pSvcLocator )
 {
     for (vector<string>::const_iterator i  = majors.begin();
@@ -109,7 +110,7 @@ ANNSvc::~ANNSvc() {
 // queryInterface
 //=============================================================================
 StatusCode ANNSvc::queryInterface(const InterfaceID& riid,
-                                     void** ppvUnknown) {
+                                  void** ppvUnknown) {
     if ( IANNSvc::interfaceID().versionMatch(riid) )   {
         *ppvUnknown = (IANNSvc*)this;
         addRef();
@@ -119,26 +120,25 @@ StatusCode ANNSvc::queryInterface(const InterfaceID& riid,
 }
 
 
-bool ANNSvc::hasMajor(const string& major) const {
+bool ANNSvc::hasMajor(const IANNSvc::major_key_type& major) const {
     return m_maps.find(major)!=m_maps.end();
 }
 
-optional<int>  ANNSvc::asInt(const string& major, const string& minor) const {
+optional<int>  ANNSvc::asInt(const IANNSvc::major_key_type& major, const string& minor) const {
     maps_type::const_iterator i = m_maps.find(major);
     return i==m_maps.end() ?  optional<int>() 
                            :  i->second->value(minor);
 }
 
-optional<string>   ANNSvc::asString(const string& major, int minor) const {
+optional<string> ANNSvc::asString(const IANNSvc::major_key_type& major, int minor) const {
     maps_type::const_iterator i = m_maps.find(major);
     return i==m_maps.end() ? optional<string>() 
                            : i->second->key(minor);
 }
 
 
-std::vector< std::pair<std::string,int> > 
-ANNSvc::items(const std::string& major) const {
-    std::vector< std::pair<std::string,int> >  r;
+std::vector<IANNSvc::minor_value_type> ANNSvc::items(const IANNSvc::major_key_type& major) const {
+    std::vector<IANNSvc::minor_value_type>  r;
     maps_type::const_iterator i = m_maps.find(major);
     if (i!=m_maps.end())  {
         r.insert( r.end(), i->second->mapping().begin(), 
@@ -147,9 +147,8 @@ ANNSvc::items(const std::string& major) const {
     return r;
 }
 
-std::vector< std::string > 
-ANNSvc::majors() const {
-    std::vector< std::string > r;
+std::vector<IANNSvc::major_key_type> ANNSvc::majors() const {
+    std::vector< major_key_type > r;
     std::transform( m_maps.begin(), 
                     m_maps.end(),
                     std::back_inserter(r), 
