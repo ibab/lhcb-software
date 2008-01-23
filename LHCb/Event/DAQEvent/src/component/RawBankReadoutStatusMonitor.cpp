@@ -1,4 +1,4 @@
-// $Id: RawBankReadoutStatusMonitor.cpp,v 1.1 2008-01-23 18:24:25 odescham Exp $
+// $Id: RawBankReadoutStatusMonitor.cpp,v 1.2 2008-01-23 23:43:05 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -51,13 +51,19 @@ StatusCode RawBankReadoutStatusMonitor::initialize() {
   setHistoDir( name() );
 
   m_degree = 0;
+
   int word = LHCb::RawBankReadoutStatus::Unknown;
+  int k=1;
+  int i=0;
   while( word != 0 ){
+    LHCb::RawBankReadoutStatus::Status stat = (LHCb::RawBankReadoutStatus::Status) k;
+    m_stat << i << "=" << stat << "/";
     m_degree++;
     word = word >> 1;
+    k *= 2;
+    i++;
   }
-  debug() << "LHCb::RawBankReadoutStatus degree " << m_degree<<endreq;
-
+  info()  << "RawBankReadoutStatus meaning : " << m_stat.str() << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -107,22 +113,23 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
     
     
     std::stringstream base("");
-    base << typeName << "/" ;
-    
-      
-    
+    base << typeName << "/" ;    
     // 1D summary histogram for the whole bank
-    plot1D( -1., base.str() + "/1",  base.str() ,  -1, (double) m_degree+1. , m_degree+2);
+    std::stringstream tit1D("");
+    tit1D << "Status summary for " << typeName << " bank " ;
+    plot1D( -1., base.str() + "/1",  tit1D.str() ,  -1, (double) m_degree , m_degree+1.);
     debug() << "Status " << status->status() << endreq;
     for(int i = 0; i < m_degree ; ++i ){
       int word = status->status() >> i;
-      if( ( 0x1 & word) )plot1D( (double) i , base.str() + "/1",  base.str() ,   -1, (double) m_degree+1. , m_degree+2);
+      if( ( 0x1 & word) )plot1D( (double) i , base.str() + "/1",  tit1D.str() ,   -1, (double) m_degree , m_degree+1);
       int isok = (0x1 & word);
       debug() << i << " -> " <<  isok << endreq;
     }
 
 
     // 2D summary histogram as a function of the sourceID
+    std::stringstream tit2D("");
+    tit2D << "Status as a function of sourceID for " << typeName << " bank ";
     double min = -1.;
     double max = m_nSources;
     if( m_nSources <= 0){
@@ -137,11 +144,14 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
 
     for( std::map< int, long >::iterator imap = statusMap.begin() ; imap != statusMap.end() ; ++imap ){
       double source = (double)(*imap).first;
-      plot2D( -1., source,  base.str() + "/2",  base.str() , -1., (double) m_degree+1. , min, max, m_degree+2 , bin );
+      plot2D(  source, -1.,  base.str() + "/2",  
+               tit2D.str() , min, max, -1., (double) m_degree+1. , bin , m_degree+2 );
       for(int i = 0; i < m_degree ; ++i ){
         int word = (*imap).second >> i;
-        if( ( 0x1 & word) )plot2D(  (double) i , source , base.str() + "/2",  
-                                   base.str() , -1., (double) m_degree+1. , min, max, m_degree+2 , bin );
+        if( ( 0x1 & word) )plot2D(  source , (double) i , base.str() + "/2",  
+                                    tit2D.str() , min, max, -1., (double) m_degree , bin , m_degree+1 );
+
+
       }
     }
   }
