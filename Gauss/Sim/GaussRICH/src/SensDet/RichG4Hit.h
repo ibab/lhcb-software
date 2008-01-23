@@ -124,6 +124,8 @@ private:
                                        // if it is zero, no reflection occured, which is the normal case for signal hits.
                                        // if it is non zero one can unpack the bits to see where it reflected.
 
+  G4ThreeVector m_HpdQuartzWindowExtSurfPhotIncidentPosition; // Photon incidence point on the external surface of the HPD Quartz Window.
+
 public:
 
   inline void SetEdep(const G4double de)
@@ -321,7 +323,14 @@ public:
   {  return m_RichHpdPhotonReflectionFlag;}
   void setRichHpdPhotonReflectionFlag(const G4int aFlagD)
   {m_RichHpdPhotonReflectionFlag=aFlagD;}
-  
+
+
+  inline const G4ThreeVector & HpdQuartzWindowExtSurfPhotIncidentPosition () const
+    {return   m_HpdQuartzWindowExtSurfPhotIncidentPosition;}
+
+  void setHpdQuartzWindowExtSurfPhotIncidentPosition (const G4ThreeVector & aHpdQuartzWindowExtSurfPhotIncidentPosition) {
+    m_HpdQuartzWindowExtSurfPhotIncidentPosition=aHpdQuartzWindowExtSurfPhotIncidentPosition;
+  }
   inline Rich::DetectorType detectorType() const
   {
     return ( GetCurRichDetNum() < 0 ? 

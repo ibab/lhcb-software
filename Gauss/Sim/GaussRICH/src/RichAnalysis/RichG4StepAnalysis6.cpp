@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis6.cpp,v 1.1 2008-01-21 16:55:34 seaso Exp $
+// $Id: RichG4StepAnalysis6.cpp,v 1.2 2008-01-23 15:53:41 seaso Exp $
 // Include files 
 
 #include "G4Track.hh"
@@ -71,6 +71,9 @@ void RichG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
   G4StepPoint* aPreStepPoint = aStep->GetPreStepPoint();
   G4StepPoint* aPostStepPoint = aStep->GetPostStepPoint();
   if(aPostStepPoint->GetStepStatus() == fGeomBoundary ) {
+    if(aPostStepPoint->GetPhysicalVolume() &&
+       aPreStepPoint->GetPhysicalVolume()){
+
     const G4Track* aTrack= aStep ->GetTrack();
     const G4DynamicParticle* aParticle=aTrack->GetDynamicParticle();
     if(aParticle->GetDefinition() == G4OpticalPhoton::OpticalPhoton() ) {
@@ -78,6 +81,8 @@ void RichG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
       if(   aParticleKE > 0.0 ) {
         const G4ThreeVector & prePos=aPreStepPoint->GetPosition();
         const G4ThreeVector & postPos=aPostStepPoint->GetPosition();
+        const G4ThreeVector & PhotCurDir = aTrack->GetMomentumDirection();
+
 
         if( ( prePos.z() >= ZUpsRich1Analysis &&
             postPos.z() <= ZDnsRich1Analysis )  ||
@@ -133,12 +138,35 @@ void RichG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
                   (aMaterial2Name == RichHpdChromiumMaterialName) ){
                  RichG4HpdReflectionTag ( (* aTrack),  aRichG4HpdReflectionFlag->HpdChromiumRefl());
              }             
+             // now for the Hpd Quartz Window incidence location
              
+            if(aPreVolName == LogVolHpdSMasterNameAnalysis &&
+               aPostVolName ==  LogVolHpdQWindowNameAnalysis ){
+              if(PhotCurDir.z() > 0.0 ) {
+
+                RichG4HpdQWIncidentTag((* aTrack), postPos );
+                
+              }
+              
+              
+            }
+            
+            
+ 
+
+             
+
+
           }
+          
+          
           
         }
       }
     }
+    
+    }
+    
   }
 
 

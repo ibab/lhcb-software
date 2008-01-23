@@ -72,6 +72,10 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
 	          CurRichPEInfo->setMirror1PhotDetCopyNum(aPhotInfo->Mirror1DetCopyNum());
 	          CurRichPEInfo->setMirror2PhotDetCopyNum(aPhotInfo->Mirror2DetCopyNum());
             CurRichPEInfo->setHpdPhotonReflectionFlag(aPhotInfo->PhotonHpdReflectionFlag());
+
+            CurRichPEInfo->setHpdQWExtPhotIncidentPosition(aPhotInfo->HpdQWPhotIncidentPosition() );
+
+
           }
 
 

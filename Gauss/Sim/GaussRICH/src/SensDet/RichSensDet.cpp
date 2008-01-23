@@ -1,4 +1,4 @@
-// $Id: RichSensDet.cpp,v 1.18 2008-01-21 16:54:12 seaso Exp $
+// $Id: RichSensDet.cpp,v 1.19 2008-01-23 15:54:04 seaso Exp $
 // Include files 
 
 // from CLHEP
@@ -219,7 +219,8 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   G4int CurElectronBackScatFlag=0;
   G4int CurPhotoElectricFlag=0;
   G4int CurHpdReflectionFlag=0;
-  
+  G4ThreeVector CurHpdQwPhotIncidentPosition;
+
   
   
   G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
@@ -279,7 +280,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
               CurMirror1PhotonDetectorCopyNum=aPEInfo->Mirror1PhotDetCopyNum();
               CurMirror2PhotonDetectorCopyNum=aPEInfo->Mirror2PhotDetCopyNum();
               CurHpdReflectionFlag=aPEInfo->HpdPhotonReflectionFlag();
-              
+              CurHpdQwPhotIncidentPosition=aPEInfo->HpdQWExtPhotIncidentPosition();
               
             }
             
@@ -334,7 +335,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   newHit ->  setElectronBackScatterFlag(CurElectronBackScatFlag );
   newHit ->  setPhotoElectricProductionFlag(CurPhotoElectricFlag);
   newHit->   setRichHpdPhotonReflectionFlag(CurHpdReflectionFlag);
-  
+  newHit->   setHpdQuartzWindowExtSurfPhotIncidentPosition (CurHpdQwPhotIncidentPosition);
 
 
   // for now the trackID from the Gausshit base class.

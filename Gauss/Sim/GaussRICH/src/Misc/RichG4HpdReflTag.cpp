@@ -1,4 +1,4 @@
-// $Id: RichG4HpdReflTag.cpp,v 1.1 2008-01-21 16:59:00 seaso Exp $
+// $Id: RichG4HpdReflTag.cpp,v 1.2 2008-01-23 15:52:41 seaso Exp $
 // Include files
 #include "GaussTools/GaussTrackInformation.h"
 #include "RichInfo.h"
@@ -49,5 +49,37 @@ extern void RichG4HpdReflectionTag(const G4Track& aPhotonTk,
 
 
 }
+
+
+
+
+extern void   RichG4HpdQWIncidentTag(const G4Track& aPhotonTk, const G4ThreeVector & aHpdQWPoint ){
+
+   G4VUserTrackInformation* aUserTrackInfo=aPhotonTk.GetUserInformation();
+  GaussTrackInformation* aRichPhotTrackInfo
+    = (GaussTrackInformation*)aUserTrackInfo;
+  if( aRichPhotTrackInfo) {
+    if( aRichPhotTrackInfo->detInfo() ){
+      RichInfo* aRichTypeInfo =
+        ( RichInfo*) (aRichPhotTrackInfo->detInfo());
+
+      if( aRichTypeInfo && aRichTypeInfo->HasUserPhotInfo() ){
+        RichPhotInfo* aRichPhotInfo =
+          aRichTypeInfo-> RichPhotInformation();
+        if( aRichPhotInfo ) {
+          // now add the info
+          if( aRichPhotInfo -> VerbosePhotTagFlag() ) {
+           
+	    aRichPhotInfo ->setHpdQWPhotIncidentPosition(aHpdQWPoint);
+
+	  }
+	}
+      }
+    }
+  }
+ 
+
+}
+
 
 

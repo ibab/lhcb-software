@@ -139,6 +139,10 @@ public:
   void setPhotonHpdReflectionFlag(G4int aFlagA){ m_PhotonHpdReflectionFlag=aFlagA;}
   
     
+  G4ThreeVector HpdQWPhotIncidentPosition() {return m_HpdQWPhotIncidentPosition;}
+  void setHpdQWPhotIncidentPosition(const  G4ThreeVector & aHpdQWPhotIncidentPosition) {
+    m_HpdQWPhotIncidentPosition=aHpdQWPhotIncidentPosition;
+  }
 
 
 private:
@@ -167,6 +171,8 @@ private:
   
   G4int m_PhotonHpdReflectionFlag; // bit packed flag to indicate if a photon is reflected in
                                    // some part of the hpd
+
+  G4ThreeVector m_HpdQWPhotIncidentPosition;
 
 };
 

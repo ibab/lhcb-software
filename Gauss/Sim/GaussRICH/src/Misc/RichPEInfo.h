@@ -133,7 +133,10 @@ public:
   void setHpdPhotonReflectionFlag( G4int aFlagA)
   {m_HpdPhotonReflectionFlag=aFlagA;}
   
-    
+  G4ThreeVector HpdQWExtPhotIncidentPosition(){return  m_HpdQWExtPhotIncidentPosition;}
+  void setHpdQWExtPhotIncidentPosition( const  G4ThreeVector & aHpdQWExtPhotIncidentPosition){
+    m_HpdQWExtPhotIncidentPosition=  aHpdQWExtPhotIncidentPosition;    
+  }  
   
 private:
 
@@ -168,6 +171,9 @@ private:
 
   G4int m_HpdPhotonReflectionFlag;
   
+  G4ThreeVector m_HpdQWExtPhotIncidentPosition;
+
+
 };
 
 #endif

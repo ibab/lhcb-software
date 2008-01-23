@@ -24,7 +24,8 @@ RichPEInfo::RichPEInfo() :
  m_QW2PCreflFlagSave(0),
  m_BackscatteredPeFlag(0),
  m_PhotoElectricFlag(0),
- m_HpdPhotonReflectionFlag(0)
+ m_HpdPhotonReflectionFlag(0),
+ m_HpdQWExtPhotIncidentPosition(0)
 {; }
 
 RichPEInfo::~RichPEInfo() {;}

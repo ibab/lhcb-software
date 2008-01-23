@@ -20,7 +20,8 @@ RichPhotInfo::RichPhotInfo() :
   m_PhotProdRadiatorNum(-1),
   m_QW2PCreflFlag(0), //added by RWL 9.11.06
   m_QW2PCreflFlagSave(0),
-  m_PhotonHpdReflectionFlag(0)
+  m_PhotonHpdReflectionFlag(0),
+  m_HpdQWPhotIncidentPosition(0)
    {; }
 
 RichPhotInfo::~RichPhotInfo() {;}
