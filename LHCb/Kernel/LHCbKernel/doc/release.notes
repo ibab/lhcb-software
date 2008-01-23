@@ -3,6 +3,9 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
+! 2008-01-23 - Gerhard Raven
+ - Fix derivatives in AlignTraj (forgot to zero three numbers!).
+   Credit goes to Wouter Hulsbergen for pointing out the mistake...
 
 !===================== LHCbKernel v8r0 2007-11-23 ========================
 ! 2007-11-23 - Marco Cattaneo
