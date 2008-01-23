@@ -4,6 +4,11 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-01-23 - Patrick Koppenburg
+ - Use automatic string conversion in HltEnums from GOD
+   instead of HltNames.
+ - Increment to v2r1
+
 ! 2008-01-22 Jose A. Hernando
       HLT-clean
      - remove: 

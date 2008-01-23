@@ -1,4 +1,4 @@
-// $Id: L0Entry.cpp,v 1.11 2008-01-22 09:56:44 hernando Exp $
+// $Id: L0Entry.cpp,v 1.12 2008-01-23 11:42:22 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -9,7 +9,6 @@
 
 // local
 #include "L0Entry.h"
-#include "Event/HltNames.h"
 
 using namespace LHCb;
 

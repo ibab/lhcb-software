@@ -1,4 +1,4 @@
-// $Id: HltInit.cpp,v 1.11 2008-01-22 09:56:31 hernando Exp $
+// $Id: HltInit.cpp,v 1.12 2008-01-23 11:42:22 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -7,9 +7,9 @@
 #include "GaudiKernel/DataSvc.h"
 #include "GaudiKernel/IDataManagerSvc.h" 
 #include "GaudiKernel/AlgFactory.h"
+#include "Event/HltEnums.h"
 // local
 #include "HltInit.h"
-#include "Event/HltNames.h"
 
 using namespace LHCb;
 
@@ -76,7 +76,7 @@ void HltInit::saveConfiguration() {
 
   bool info = m_info; m_info = 0;
   for (int i = 0; i < HltEnums::HltSelLastSelection; ++i) {
-    std::string name = HltNames::selectionSummaryStr(i);
+    std::string name = HltEnums::HltSelectionSummaryToString(i);
     if (name != "selectionSummaryUnknown") {
       confregister(name,i,"SelectionID");
       std::string sid = boost::lexical_cast<std::string>(i);
@@ -86,7 +86,7 @@ void HltInit::saveConfiguration() {
   
 
   for (int i = 0; i <= HltEnums::Calo3DChi2; ++i) {
-    std::string name = HltNames::particleInfoStr(i);
+    std::string name = HltEnums::HltParticleInfoToString(i);
     if (name != "particleInfoUnknown") {
       confregister(name,i,"InfoID");
       std::string sid = boost::lexical_cast<std::string>(i);

@@ -1,10 +1,9 @@
-// $Id: HltMonitorAlgorithm.h,v 1.6 2007-07-13 09:45:51 hernando Exp $
+// $Id: HltMonitorAlgorithm.h,v 1.7 2008-01-23 11:50:16 pkoppenb Exp $
 #ifndef HLTBASE_HLTMONITORALGORITHM_H 
 #define HLTBASE_HLTMONITORALGORITHM_H 1
 
 // Include files
 #include "Event/HltSummary.h"
-#include "Event/HltNames.h"
 
 #include "HltBase/HltBaseAlg.h"
 #include "HltBase/HltTypes.h"

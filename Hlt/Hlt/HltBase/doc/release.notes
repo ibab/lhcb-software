@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2008-01-23 - Patrick Koppenburg
+ - Remove HltNames.h
+ - increment to v3r1
+
 ! 2008-01-22 Jose A. Hernando
    HLT-clean, clean up 
    - remove: HltBase/HltFunctions (to be in HltCommon)

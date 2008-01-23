@@ -4,6 +4,11 @@
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
 
+! 2008-01-23 - Patrick Koppenburg
+ - Use automatic string conversion in HltEnums from GOD
+   instead of HltNames.
+ - Increment to v2r1
+
 ! 2007-01-21 Jose A. Hernando
   - adaptations to HLT-clean
 

@@ -3,7 +3,7 @@
 # Maintainer : Jose Angel Hernando Morata 
 #============================================================================
 package           HltBase
-version           v3r0
+version           v3r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
