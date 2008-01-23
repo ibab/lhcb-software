@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2008-01-23 - Gerhard Raven
+ - add IANNSvc, and a 'mix-in' implementation ANNSvc
+
 ! 2008-01-23 - Patrick Koppenburg
  - Remove HltNames.h
  - increment to v3r1
