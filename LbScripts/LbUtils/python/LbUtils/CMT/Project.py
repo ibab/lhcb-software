@@ -26,14 +26,19 @@ class Project(object):
         self._versiondir = versiondir
         self._projectfile = None
         self._basenamelist = []
-        self._baselist = []
-        self._clientlist = []
+        self._baselist = set()
+        self._clientlist = set()
         self._packagelist = []
-        self._containedpackagelist = []
+        self._containedpackagelist = set()
+        self._usedpackagelist = {}
         self.setName(versiondir)
         self.setVersion()
         self.setProjectFile()
         self.getBaseNameList()
+    def __eq__(self, other):
+        return self._location == other._location
+    def __hash__(self):
+        return self._location.__hash__()
     def name(self):
         return self._name
     def setName(self, versiondir):
@@ -96,12 +101,12 @@ class Project(object):
         for pn in self._basenamelist :
             print "\t%s" % pn
     def addClient(self, proj):
-        self._clientlist.append(proj)
+        self._clientlist.add(proj)
     def getBase(self, projectlist):
         for bn in self._basenamelist :
             for p in projectlist :
                 if p.location() == bn :
-                    self._baselist.append(p)
+                    self._baselist.add(p)
                     p.addClient(self)
     def showBase(self):
         if self._baselist :
@@ -128,7 +133,7 @@ class Project(object):
             self.showClient()
     def addContainedPackage(self, packagepath):
         newpack = Package.Package(packagepath, self)
-        self._containedpackagelist.append(newpack)
+        self._containedpackagelist.add(newpack)
     def getContainedPackages(self):
         log = logging.getLogger()
         for dn in os.walk(self._location,topdown=True,onerror=Package.onPackagePathError):
@@ -136,11 +141,24 @@ class Project(object):
             if Package.isPackage(fullname):
                 log.debug("found package: %s", fullname)
                 self.addContainedPackage(fullname)
-        
+                dn[1][:] = []
     def showContainedPackages(self):
         for p in self._containedpackagelist :
-            print "\t\t%s" % p.location()
-
+            print "  %s" % p.location()
+    def showUsedPackages(self, binary_list):
+        for p in self._containedpackagelist :
+            p.showUsedPackages(binary_list)
+    def getUsedPackages(self, binary_list, projectlist=None):
+        if not projectlist :
+            projectlist = set()
+            projectlist.add(self)
+        if not self._containedpackagelist:
+            self.getContainedPackages()
+        for b in binary_list :
+            self._usedpackagelist[b] = set()
+            for p in self._containedpackagelist :
+                self._usedpackagelist[b] |= p.getBinaryUsedPackages(b, projectlist)
+        return self._usedpackagelist
     
 def hasProjectFile(dirpath):
     hasfile = False
@@ -173,8 +191,8 @@ def isProject(path):
     return isproj
 
 def getProjectsFromPath(path, name=None, version=None, casesense=False, select=None):
-    projlist=[]
-    selected=[]
+    projlist = set()
+    selected = set()
     log = logging.getLogger()
     try:
         lsdir = os.listdir(path)
@@ -183,11 +201,11 @@ def getProjectsFromPath(path, name=None, version=None, casesense=False, select=N
             if isProject(fullname):
                 if not select :
                     log.debug("%s has no project version directory", fullname)
-                    projlist.append(Project(fullname))
+                    projlist.add(Project(fullname))
                 else :
                     if fullname.find(select) != -1 :
                         log.debug("%s has no project version directory", fullname)
-                        projlist.append(Project(fullname))                        
+                        projlist.add(Project(fullname))                        
             if os.path.isdir(fullname):
                 lsintdir = os.listdir(fullname)
                 for ff in lsintdir:
@@ -195,11 +213,11 @@ def getProjectsFromPath(path, name=None, version=None, casesense=False, select=N
                     if isProject(fn):
                         if not select :
                             log.debug("%s has a project version directory", fn)
-                            projlist.append(Project(fn,True))
+                            projlist.add(Project(fn,True))
                         else :
                             if fn.find(select) != -1 :
                                 log.debug("%s has a project version directory", fn)
-                                projlist.append(Project(fn,True))
+                                projlist.add(Project(fn,True))
     except OSError, msg:
         log.warning("Cannot open path %s" % msg)
     if not name and not version:
@@ -215,10 +233,10 @@ def getProjectsFromPath(path, name=None, version=None, casesense=False, select=N
             prname = p.name()
         if prname == name:
             if not version:
-                selected.append(p)
+                selected.add(p)
             else :
                 if p.version() == version:
-                    selected.append(p)
+                    selected.add(p)
     return selected
             
 
@@ -237,14 +255,14 @@ def _getProjects(cmtprojectpath, name=None, version=None, casesense=False, selec
 
 def getAllProjects(cmtprojectpath, select=None):
     log = logging.getLogger()
-    projlist = []
+    projlist = set()
     pathcomponents = cmtprojectpath.split(os.pathsep)
     for p in pathcomponents:
         log.info("looking for projects in %s", p)
         pl = getProjectsFromPath(p, select=select)
         if pl:
             log.info("Found %s project in %s", len(pl), p)
-            projlist += pl
+            projlist |= pl
     return projlist
 
 def getProjectInstance(projlist, projpath):
@@ -285,8 +303,8 @@ def getProjects(cmtprojectpath, name=None, version=None,
 
 def walk(top, topdown=True, toclients=True, onerror=None, alreadyfound=None):
     if not alreadyfound:
-        alreadyfound = []
-    alreadyfound.append(top)
+        alreadyfound = set()
+    alreadyfound.add(top)
     proj = top
     if toclients :
         deps = proj.clients()
@@ -296,7 +314,7 @@ def walk(top, topdown=True, toclients=True, onerror=None, alreadyfound=None):
     if topdown :
         yield (proj, deps, packs)
     for d in deps :
-        if not (d in alreadyfound) :
+        if d not in alreadyfound :
             for w in walk(d, topdown, toclients, onerror, alreadyfound) :
                 yield w
     if not topdown :

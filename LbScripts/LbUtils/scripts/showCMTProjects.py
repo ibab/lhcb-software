@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: showCMTProjects.py,v 1.8 2008-01-18 19:34:44 hmdegaud Exp $
+# $Id: showCMTProjects.py,v 1.9 2008-01-23 15:06:15 hmdegaud Exp $
 
 from LbUtils.CMT import Project
 from LbUtils.Script import Script
@@ -68,6 +68,20 @@ class showCMTProjScript(Script):
                           dest = "showcontainedpackages",
                           help = "show contained packages in the selected project(s)")
 
+        parser.set_defaults(showusedpackages=False)
+        parser.add_option("--show-used-packages",
+                          action = "store_true",
+                          dest = "showusedpackages",
+                          help = "show used packages in the selected project(s) according to the list of binaries")
+
+        parser.add_option("--binaries",
+                          dest="binaries",
+                          help="set binaries platforms", 
+                          fallback_env="CMTCONFIG")
+
+        parser.add_option("-t", "--tags",
+                          dest="tags",
+                          help="set CMT extra tags" )
         
     def main(self):
         if self.env.has_key("CMTPATH"): 
@@ -88,6 +102,10 @@ class showCMTProjScript(Script):
                                        options.casesensitive, 
                                        options.selection)
 
+        if options.binaries :
+            binary_list = options.binaries.split(",")
+        if options.tags :
+            tag_list = options.tags.split(",")
         
         for p in projlist:
             if not options.recurseclient and not options.recursebase:
@@ -95,6 +113,9 @@ class showCMTProjScript(Script):
                 if options.showcontainedpackages :
                     p.getContainedPackages()
                     p.showContainedPackages()
+                if options.showusedpackages :
+                    p.getContainedPackages()
+                    p.showUsedPackages(binary_list)
             else :
                 if options.recurseclient :
                     for proj, deps, packs in Project.walk(p, topdown=True, toclients=True):
@@ -102,12 +123,18 @@ class showCMTProjScript(Script):
                         if options.showcontainedpackages :
                             p.getContainedPackages()
                             p.showContainedPackages()
+                        if options.showusedpackages :
+                            p.getContainedPackages()
+                            p.showUsedPackages(binary_list)
                 else :
                     for proj, deps, packs in Project.walk(p, topdown=True, toclients=False):
                         proj.show(options.showdependencies, True, options.showclient)
                         if options.showcontainedpackages :
                             p.getContainedPackages()
                             p.showContainedPackages()
+                        if options.showusedpackages :
+                            p.getContainedPackages()
+                            p.showUsedPackages(binary_list)
 
         
 
