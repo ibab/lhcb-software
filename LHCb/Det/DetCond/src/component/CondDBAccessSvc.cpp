@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.44 2007-12-20 15:48:52 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.45 2008-01-23 17:22:07 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -28,6 +28,7 @@
 #include "CoolKernel/Record.h"
 
 #include "CoralBase/AttributeList.h"
+#include "CoralBase/Exception.h"
 
 #include "DetCond/ICOOLConfSvc.h"
 
@@ -37,6 +38,16 @@
 
 // Factory implementation
 DECLARE_SERVICE_FACTORY(CondDBAccessSvc)
+
+// Utility function
+namespace {
+  template <class EXC>
+  inline void report_exception(MsgStream &log, const std::string &msg, const EXC& e){
+    log << MSG::ERROR << msg << endmsg;
+    log << MSG::ERROR << System::typeinfoName(typeid(e)) << ": "
+                      << e.what() << endmsg;
+  }
+}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CondDBAccessSvc
@@ -237,9 +248,13 @@ StatusCode CondDBAccessSvc::i_openConnection(){
     m_rootFolderSet = m_db->getFolderSet("/");
   }
   //  catch ( cool::DatabaseDoesNotExist &e ) {
+  catch ( coral::Exception &e ) {
+    report_exception(log,"Problems opening database",e);
+    m_db.reset();
+    return StatusCode::FAILURE;
+  }
   catch ( cool::Exception &e ) {
-    log << MSG::ERROR << "Problems opening database" << endmsg;
-    log << MSG::ERROR << e.what() << endmsg;
+    report_exception(log,"Problems opening database",e);
     m_db.reset();
     return StatusCode::FAILURE;
   }
@@ -329,7 +344,7 @@ StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
       return StatusCode::FAILURE;
     }
     catch (std::exception &e) {
-      log << MSG::ERROR << "got a std::exception : " << e.what() << endmsg;
+      report_exception(log,"got exception",e);
       return StatusCode::FAILURE;
     }
 
@@ -802,6 +817,9 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
     //  "\" for tag \"" << (*accSvc)->tag() << "\" ("<< now << ')' << endmsg;
     //log << MSG::DEBUG << e << endmsg;
     return StatusCode::FAILURE;
+  } catch (coral::Exception &e) {
+    MsgStream log(msgSvc(),name());
+    report_exception(log,"got CORAL exception",e);
   }
   return StatusCode::SUCCESS;
 }
@@ -852,6 +870,8 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<
   } catch ( cool::FolderNotFound /*&e*/) {
     //log << MSG::ERROR << e << endmsg;
     return StatusCode::FAILURE;
+  } catch (coral::Exception &e) {
+    report_exception(log,"got CORAL exception",e);
   }
   return StatusCode::SUCCESS;
 
