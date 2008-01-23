@@ -1,4 +1,4 @@
-// $Id: bankKiller.h,v 1.2 2006-09-08 12:15:53 cattanem Exp $
+// $Id: bankKiller.h,v 1.3 2008-01-23 18:24:25 odescham Exp $
 #ifndef BANKKILLER_H
 #define BANKKILLER_H 1
 
@@ -32,7 +32,6 @@ class bankKiller : public GaudiAlgorithm {
  protected:
   
  private:   
-  std::map<std::string,LHCb::RawBank::BankType> m_bankMap;
   std::vector< std::string > m_bankTypes;
 };
 #endif //    BANKKILLER_H

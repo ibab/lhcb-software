@@ -31,8 +31,10 @@
         Tell1Sync  = 32, 
         Tell1Link  = 64, 
         Tell1Error = 128, 
-        Unknown    = 256'
+        Unknown    = 256' 
         access = 'PUBLIC' />
+      <!-- 'Unknown' MUST BE THE LAST ITEM -->
+
 
    
 
