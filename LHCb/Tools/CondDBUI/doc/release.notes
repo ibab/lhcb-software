@@ -1,9 +1,20 @@
 ! =============================================================================
-! $Id: release.notes,v 1.71 2008-01-08 15:44:50 marcocle Exp $
+! $Id: release.notes,v 1.72 2008-01-23 13:17:45 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+! 2008-01-23 - Marco Clemencic
+ - Added a the sub-module CondDBUI.Admin for functions needed for administrative
+   tasks. Currently it contains:
+    - check_addition_db_content:
+      checks if the database we are going to merge into another one contains
+      only files which are not yet there
+    - merge_and_tag:
+      insert the content of a database into another one (after calling
+      'check_addition_db_content') and apply a tag to the new files (move it if
+      it already exists)
 
 ! 2008-01-08 - Marco Clemencic
  - Fixed a problem with local tags in dump_db_to_files.py.
