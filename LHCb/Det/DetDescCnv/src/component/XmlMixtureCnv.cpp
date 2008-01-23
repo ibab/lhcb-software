@@ -1,4 +1,4 @@
-// $Id: XmlMixtureCnv.cpp,v 1.8 2007-04-20 14:20:31 marcocle Exp $
+// $Id: XmlMixtureCnv.cpp,v 1.9 2008-01-23 17:22:30 marcocle Exp $
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
@@ -100,7 +100,8 @@ StatusCode XmlMixtureCnv::i_createObj (xercesc::DOMElement* element,
                                        DataObject*& refpObject) {
   // Since we do not have all the needed information yet, we create
   // an empty mixture and hope we get all we need to build it properly
-  Mixture* dataObj = new Mixture("", 0.0, 0);
+  std::string mixtureName = dom2Std (element->getAttribute (nameString));
+  Mixture* dataObj = new Mixture(mixtureName, 0.0, 0);
   refpObject = dataObj;
 
   // We do not assume that most of the mixtures have

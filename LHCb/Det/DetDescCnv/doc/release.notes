@@ -4,6 +4,9 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2008-01-21 - Marco Clemencic
+ - Modified XmlMixtureCnv to correctly set the name of the mixture from XML. 
+
 ! 2008-01-07 - Marco Clemencic
  - Changed the tag name for elements of maps inside conditions (even if it is
    not used) to be consistent with the changes in SQLDDDB (>= v4r0). 
