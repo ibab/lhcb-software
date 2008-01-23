@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.21 2008-01-21 23:19:20 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.22 2008-01-23 18:20:27 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -185,12 +185,16 @@ void CaloReadoutTool::putStatusOnTES(){
     status = new Status( m_status  );
     statuss->insert( status );
   } else {
-    debug() << "Status for bankType " <<  LHCb::RawBank::BankType(m_status.key()) << " already exists" << endreq;
+    std::stringstream type("");
+    type << LHCb::RawBank::typeName(m_status.key()) ;
+    
+    Warning("Status for bankType " +  type.str() + " already exists", StatusCode::SUCCESS ).ignore();
     if( status->status() != m_status.status() ){
-      error() << "Status for bankType " <<  LHCb::RawBank::BankType(m_status.key()) << " already exists" << endreq;
-      error() << " with different status value !!! "
-              << status->status() << " / " << m_status.status()
-              << endreq;
+      Warning("Status for bankType " +  type.str() + " already exists  with different status value -> merge both"
+              , StatusCode::SUCCESS).ignore();
+      for( std::map< int, long >::iterator it = m_status.statusMap().begin() ; it != m_status.statusMap().end() ; ++it){
+        status->addStatus((*it).first , (*it).second);
+      }
     } 
   }
 }
@@ -201,7 +205,7 @@ void CaloReadoutTool::checkCtrl(int ctrl,int sourceID){
   if ( msgLevel( MSG::DEBUG) )debug()<< "Control word :" << ctrl << endreq;
   
   if( 0 != (0x1& ctrl) || 0 != (0x20& ctrl) || 0 != (0x40& ctrl)){
-    if(msgLevel(MSG::WARNING))Warning("Tell1 error bits have been detected in data").ignore();
+    if(msgLevel(MSG::WARNING))Warning("Tell1 error bits have been detected in data", StatusCode::SUCCESS).ignore();
     if( 0 != (0x1  & ctrl))m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Error );
     if( 0 != (0x20 & ctrl))m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Sync  );      
     if( 0 != (0x40 & ctrl))m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Link  );

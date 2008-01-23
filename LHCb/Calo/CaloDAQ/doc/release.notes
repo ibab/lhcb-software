@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2008-01-23 - Olivier Deschamps
+ - minor change in CaloReadoutTool.cpp (better handling of ReadoutStatus)
+
 ! 2008-01-22 - Olivier Deschamps
  - Add new status ("NonUnique") when several banks with identical sourceID in the same rawEvent  
 
