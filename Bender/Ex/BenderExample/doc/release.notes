@@ -1,12 +1,32 @@
-! $Id: release.notes,v 1.18 2007-09-29 13:42:46 ibelyaev Exp $
+! $Id: release.notes,v 1.19 2008-01-23 13:41:01 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.18 $
+! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.19 $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! ====================== Ex/BenderExample v8r0p2 2008-01-23 ===================
+
+! 2008-01-23 - Vanya BELYAEV
+ - options/HistorySvcFix.opts
+
+    The temporary fix for the bad interference of HistorySvc/ToolSvc 
+    in Gaudi_v19r6
+
+    Teh usage is trivial:
+
+   
+   ## read external configruation files
+    gaudi.config (
+        files = [
+        '$BENDEREXAMPLEROOT/options/HistorySvcFix.opts' ,  ## ADD THIS LINE
+        '$DAVINCIROOT/options/DaVinciCommon.opts'      ,
+        '$DAVINCIROOT/options/DaVinciTestData.opts'    ] )
+    
+
 
 ! ====================== Ex/BenderExample v8r0 2007-09-29 ====================
 

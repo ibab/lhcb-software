@@ -49,15 +49,19 @@ def configure ( **args ) :
     """
     Configure the job
     """
-    
+
     ## get the input data
     import data_Bs2Jpsiphi_mm as input 
 
     ## read external configruation files
     gaudi.config (
         files = [
-        '$DAVINCIROOT/options/DaVinciCommon.opts'   ,
-        '$DAVINCIROOT/options/DaVinciTestData.opts' ] )
+        '$BENDEREXAMPLEROOT/options/HistorySvcFix.opts' ,
+        '$DAVINCIROOT/options/DaVinciCommon.opts'      ,
+        '$DAVINCIROOT/options/DaVinciTestData.opts'    ] )
+    
+    ## gaudi.ActivateHistory = True
+    ## gaudi.ExtSvc += [ "HistorySvc" , "ToolSvc" , "LoKiSvc" ]
     
     ## create local algorithm:
     hello = HelloWorld('Hello')
