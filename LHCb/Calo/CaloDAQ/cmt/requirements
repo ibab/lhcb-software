@@ -22,7 +22,7 @@ use     MCEvent         v*      Event
 # Component library building rule
 #============================================================================
 apply_pattern    install_more_includes more=CaloDAQ
-library          CaloDAQ    ../src/*.cpp 
+library          CaloDAQ    -import=AIDA ../src/*.cpp 
 #============================================================================
 # define component library link options
 #============================================================================
