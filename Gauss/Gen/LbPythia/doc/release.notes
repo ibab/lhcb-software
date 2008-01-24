@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-01-24 - Patrick Robbe
+ - Allow to choose the limit to apply to a particle to consider it as
+   a zero lifetime particle: New job option "WidthLimit" for 
+   PythiaProduction tool.
+
 !========================= LbPythia v6r0 2008-01-08 ==========================
 ! 2008-01-08 - Gloria CORTI for Victor COCO
  - Allow to chose the type of leptons, their mother and the higgs via options,

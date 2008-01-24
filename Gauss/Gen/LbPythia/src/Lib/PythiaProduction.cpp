@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.3 2007-05-16 16:31:58 gcorti Exp $
+// $Id: PythiaProduction.cpp,v 1.4 2008-01-24 17:00:49 robbep Exp $
 
 // Include files
 
@@ -77,13 +77,15 @@ PythiaProduction::PythiaProduction( const std::string& type,
     m_had_mstu_1 ( 0 ) , 
     m_had_mstu_2 ( 0 ) , 
     // list of particles to be printed using PyList(12) 
-    m_pdtlist    (   )    
+    m_pdtlist    (   ) , 
+    m_widthLimit ( 1.5e-6 * GeV ) 
 {
   declareInterface< IProductionTool >( this ) ;
   declareProperty( "Commands" , m_commandVector ) ;
   declareProperty( "PygiveCommands" , m_pygive  ) ;
   declareProperty( "PDTList"        , m_pdtlist ) ;
   declareProperty( "BeamToolName" , m_beamToolName = "CollidingBeams" ) ;
+  declareProperty( "WidthLimit" , m_widthLimit = 1.5e-6 * GeV ) ;
   // Set the default settings for Pythia here:
   m_defaultSettings.clear() ;
   m_defaultSettings.push_back( "pysubs msel 0" ) ;
@@ -322,7 +324,8 @@ void PythiaProduction::updateParticleProperties( const ParticleProperty *
     if ( kc > 0 ) {
       if ( 0 == thePP -> lifetime() ) pwidth = 0. ;
       else pwidth = ( hbarc / ( thePP -> lifetime() * c_light ) ) ;
-      if ( pwidth < ( 1.5e-6 * GeV ) ) pwidth = 0. ;
+      //      if ( pwidth < ( 1.5e-6 * GeV ) ) pwidth = 0. ;
+      if ( pwidth < m_widthLimit ) pwidth = 0. ;
 
       lifetime =  thePP -> lifetime() * c_light ;
       if ( ( lifetime <= 1.e-4 * mm ) || ( lifetime >= 1.e16 * mm ) ) 
