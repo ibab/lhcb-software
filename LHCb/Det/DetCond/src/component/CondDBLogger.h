@@ -1,0 +1,105 @@
+// $Id: CondDBLogger.h,v 1.1 2008-01-24 15:14:15 marcocle Exp $
+#ifndef COMPONENT_CONDDBLOGGER_H 
+#define COMPONENT_CONDDBLOGGER_H 1
+
+// Include files
+#include "GaudiKernel/Service.h"
+#include "DetCond/ICondDBReader.h"
+
+template <class TYPE> class SvcFactory;
+
+/** @class CondDBLogger CondDBLogger.h component/CondDBLogger.h
+ *  
+ *  Logger of acesses to CondDB.
+ *  
+ *  CondDBLogger is a simple class that allow to store in a file all the
+ *  requests made to a ICondDBReader instance.  It has to be used as a front-end
+ *  to the instance we want to monitor.
+ *  
+ *  Given the following option snippet
+ *  @code
+ *  MyCondDBUser.Reader = "ACondDBReader";
+ *  @endcode
+ *  the CondDBLogger can be enabled with
+ *  @code
+ *  CondDBLogger.LoggedReader = "ACondDBReader";
+ *  MyCondDBUser.Reader = "CondDBLogger";
+ *  @endcode
+ *  or in python options
+ *  @code
+ *  user = MyCondDBUser()
+ *  user.Reader = CondDBLogger(LoggedReader = user.Reader)
+ *  @endcode
+ *  
+ *  @param LoggedReader
+ *         Fully qualified name of the ICondDBReader to which the calls have to
+ *         be forwarded.
+ *  @param LogFile
+ *         Path to the log file (it is overwritten if it exists).  If not
+ *         specified or set to empty, the file name is set from the name of the
+ *         instance plus '.log'.
+ * 
+ *  @author Marco CLEMENCIC
+ *  @date   2008-01-24
+ */
+class CondDBLogger: public virtual Service,
+                    public virtual ICondDBReader {
+public: 
+
+  /** Query interfaces of Interface
+      @param riid       ID of Interface to be retrieved
+      @param ppvUnknown Pointer to Location for interface pointer
+  */
+  virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
+
+  /// Initilize COOL (CondDB) Access Layer Service
+  virtual StatusCode initialize();
+  /// Finalize Service
+  virtual StatusCode finalize();
+
+  // --------- ICondDBReader implementation
+
+  /// Try to retrieve an object from the Condition DataBase. If path points to a FolderSet,
+  /// channel and when are ignored and data is set ot NULL.
+  virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
+                                DataPtr &data,
+                                std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel = 0);
+
+  /// Retrieve the names of the children nodes of a FolderSet.
+  virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
+
+  // --------- ICondDBInfo implementation
+
+  /** Get the current default database tags
+   *  @param  tags vector of DB name, tag pairs. Empty if DB not available
+   */ 
+  virtual void defaultTags( std::vector<LHCb::CondDBNameTagPair>& tags) const;
+
+protected:
+
+  /// Standard constructor
+  CondDBLogger( const std::string& name, ISvcLocator* svcloc ); 
+
+  virtual ~CondDBLogger( ); ///< Destructor
+
+private:
+  
+  // -------------------- Data Members
+
+  /// Pointer to the CondDBReader whose activity has to be logged.
+  ICondDBReader *m_loggedReader;
+
+  /// Name of the CondDBReader whose activity has to be logged.
+  std::string m_loggedReaderName;
+
+  /// Path to the file that will contain the log.
+  std::ostream *m_logFile;
+
+  /// Path to the file that will contain the log.
+  std::string m_logFileName;
+
+  /// Allow SvcFactory to instantiate the service.
+  friend class SvcFactory<CondDBLogger>;
+
+};
+#endif // COMPONENT_CONDDBLAYERINGSVC_H
