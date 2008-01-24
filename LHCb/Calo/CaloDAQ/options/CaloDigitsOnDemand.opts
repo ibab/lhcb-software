@@ -1,11 +1,11 @@
-// $Id: CaloDigitsOnDemand.opts,v 1.3 2007-03-05 09:47:30 cattanem Exp $ 
+// $Id: CaloDigitsOnDemand.opts,v 1.4 2008-01-24 11:29:18 cattanem Exp $ 
 // ============================================================================
 // Data on demand options for CaloDigits
 // ============================================================================
-DataOnDemandSvc.Algorithms += { 
-    "DATA='/Event/Raw/Spd/Digits'  TYPE='CaloDigitsFromRaw/SpdFromRaw'"  ,
-    "DATA='/Event/Raw/Prs/Digits'  TYPE='CaloDigitsFromRaw/PrsFromRaw'"  ,
-    "DATA='/Event/Raw/Ecal/Digits' TYPE='CaloZSupAlg/EcalZSup'" ,
-    "DATA='/Event/Raw/Hcal/Digits' TYPE='CaloZSupAlg/HcalZSup'"
+DataOnDemandSvc.AlgMap += {
+     "Raw/Spd/Digits"  : "CaloDigitsFromRaw/SpdFromRaw"
+   , "Raw/Prs/Digits"  : "CaloDigitsFromRaw/PrsFromRaw"
+   , "Raw/Ecal/Digits" : "CaloZSupAlg/EcalZSup"
+   , "Raw/Hcal/Digits" : "CaloZSupAlg/HcalZSup"
   };
 
