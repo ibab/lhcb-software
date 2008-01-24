@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.64 2007-12-12 13:57:59 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.65 2008-01-24 17:17:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -58,7 +58,7 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
   declareProperty( "DumpRawBanks",       m_dumpBanks          = false );
   declareProperty( "UseZeroSuppression", m_zeroSupp           = true );
   declareProperty( "UseExtendedFormat",  m_extendedFormat     = false );
-  declareProperty( "DecodeUsingODIN",    m_decodeUseOdin      = true );
+  declareProperty( "DecodeUsingODIN",    m_decodeUseOdin      = false );
   declareProperty( "CheckDataIntegrity", m_checkDataIntegrity = true );
   declareProperty( "CheckEventIDs",      m_checkEventsIDs     = true );
   declareProperty( "CheckBXIDs",         m_checkBxIDs         = true );
@@ -85,7 +85,7 @@ StatusCode RawDataFormatTool::initialize()
 
   if ( m_extendedFormat ) info() << "Will encode RawEvent using extended HPD format" << endreq;
 
-  if ( !m_decodeUseOdin )      Warning( "ODIN integrity checks are disabled", StatusCode::SUCCESS );
+  if ( m_decodeUseOdin )       Warning( "ODIN integrity checks are enabled", StatusCode::SUCCESS );
   if ( !m_checkDataIntegrity ) Warning( "HPD Data integrity checks are disabled", StatusCode::SUCCESS );
   if ( !m_checkEventsIDs )     Warning( "Header Event ID checks are disabled", StatusCode::SUCCESS );
   if ( !m_checkBxIDs )         Warning( "Header BX ID checks are disabled", StatusCode::SUCCESS );

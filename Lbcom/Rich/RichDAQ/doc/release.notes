@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2008-01-24 - Chris Jones
+ - Disable by default data integrity checks with ODIN. Due to changes in ODIN
+   information that makes this check no longer possible.
+
 !========================== RichDAQ v3r13 2007-12-12 =======================
 ! 2007-12-12 - Chris Jones
  - Fix issue in filling raw event where ingress header IDs are not properly
