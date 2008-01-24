@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.42 2008-01-11 12:04:31 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.43 2008-01-24 17:19:55 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -77,37 +77,13 @@ StatusCode Rich::RayTracing::initialize()
   m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocation::Rich1 );
   m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocation::Rich2 );
 
-  // HPD panel locations
-  std::string pdPanelName[2][2];
-  if ( rich1->exists("HPDPanelDetElemLocations") )
-  {
-    std::vector<std::string> r1PanelLoc = rich1->paramVect<std::string>("HPDPanelDetElemLocations");
-    pdPanelName[0][0] = r1PanelLoc[0];
-    pdPanelName[0][1] = r1PanelLoc[1];
-  }
-  else
-  {
-    pdPanelName[0][0] = DeRichLocations::Rich1Panel0;
-    pdPanelName[0][1] = DeRichLocations::Rich1Panel1;
-  }
-  if ( rich2->exists("HPDPanelDetElemLocations") )
-  {
-    std::vector<std::string> r1PanelLoc = rich2->paramVect<std::string>("HPDPanelDetElemLocations");
-    pdPanelName[1][0] = r1PanelLoc[0];
-    pdPanelName[1][1] = r1PanelLoc[1];
-  }
-  else
-  {
-    pdPanelName[1][0] = DeRichLocations::Rich2Panel0;
-    pdPanelName[1][1] = DeRichLocations::Rich2Panel1;
-  }
-
   // loop over riches and photo detector panels
-  for ( unsigned int rich=0; rich<m_photoDetPanels.size(); ++rich )
+  for ( unsigned int rich=0; rich<Rich::NRiches; ++rich )
   {
-    for ( unsigned int panel=0; panel<m_photoDetPanels[rich].size(); ++panel )
+    for ( unsigned int panel=0; panel<Rich::NHPDPanelsPerRICH; ++panel )
     {
-      m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
+      m_photoDetPanels[rich][panel] =
+        getDet<DeRichHPDPanel>( pdPanelName((Rich::DetectorType)rich,(Rich::Side)panel) );
       debug()<<"Stored photodetector panel "<<m_photoDetPanels[rich][panel]->name()<<endreq;
     }
   }
@@ -161,6 +137,29 @@ StatusCode Rich::RayTracing::initialize()
 }
 
 //=============================================================================
+// Returns the appropriate detector element name name for the given RICH and panel
+//=============================================================================
+const std::string &
+Rich::RayTracing::pdPanelName( const Rich::DetectorType rich,
+                               const Rich::Side         panel ) const
+{
+  if ( m_rich[rich]->exists("HPDPanelDetElemLocations") )
+  {
+    return (m_rich[rich]->paramVect<std::string>("HPDPanelDetElemLocations"))[panel];
+  }
+  else
+  {
+    // Backwards compat for DC06
+    const std::string dc06Names[Rich::NRiches][Rich::NHPDPanelsPerRICH]
+      = { { DeRichHPDPanelLocation::Rich1Panel0,
+            DeRichHPDPanelLocation::Rich1Panel1 },
+          { DeRichHPDPanelLocation::Rich2Panel0,
+            DeRichHPDPanelLocation::Rich2Panel1 } };
+    return dc06Names[rich][panel];
+  }
+}
+
+//=============================================================================
 // reflect the trajectory on the mirror, and determine the position where
 // it hits the detector plane,
 // take into account the geometrical boundaries of mirrors and detector
@@ -201,7 +200,7 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
 
   // Correct start point/direction for aerogel refraction, if appropriate
   // see http://en.wikipedia.org/wiki/Snell's_law for details
-  if ( mode.aeroRefraction() && 
+  if ( mode.aeroRefraction() &&
        Rich::Rich1 == rich   )
   {
     m_snellsLaw->aerogelToGas(tmpPos,tmpDir,photonEnergy);
@@ -490,7 +489,7 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
     { return StatusCode::FAILURE; }
 
     // find secondary mirror segment
-    const DeRichSphMirror* secSegment 
+    const DeRichSphMirror* secSegment
       = m_mirrorSegFinder->findSecMirror(rich,side,planeIntersection);
 
     if ( !reflectSpherical( tmpStartPoint, tmpStartDir,

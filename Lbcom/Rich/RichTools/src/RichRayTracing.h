@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::RayTracing
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.35 2008-01-11 12:04:31 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.36 2008-01-24 17:19:55 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -148,6 +148,14 @@ namespace Rich
       }
       return m_deBeam[rich];
     }
+
+    /** Returns the appropriate detector element name name for the given RICH and panel
+     *  @param[in] rich  The RICH detector type
+     *  @param[in] panel The RICH panel
+     *  @return The RICH panel name in the XML description
+     */
+    const std::string & pdPanelName( const Rich::DetectorType rich,
+                                     const Rich::Side         panel ) const;
 
   private: // data
 
