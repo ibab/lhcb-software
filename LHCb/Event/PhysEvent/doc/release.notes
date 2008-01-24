@@ -1,18 +1,14 @@
-! $Id: release.notes,v 1.132 2008-01-11 11:07:38 ibelyaev Exp $
+! $Id: release.notes,v 1.133 2008-01-24 11:12:45 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
-
+!======================== PhysEvent v11r5 2008-01-24 ========================
 ! 2008-01-11 - Vanya Belyaev
-
  - xml/Particle.xml
-
-   add the enum to store the chi2 of themass-constrained fit
+   add the enum to store the chi2 of the mass-constrained fit
 
         <enumval name="Chi2OfMassConstrainedFit" value="10"     desc="Chi2 of Mass Constrained Fit"      />
-
-
 
 !======================== PhysEvent v11r4 2007-11-09 ========================
 ! 2007-11-09 - Marco Cattaneo
