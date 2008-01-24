@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : Rich::RadIntersection
  *
  *  CVS Log :-
- *  $Id: RichRadIntersection.h,v 1.5 2007-02-20 16:42:02 cattanem Exp $
+ *  $Id: RichRadIntersection.h,v 1.6 2008-01-24 17:31:20 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-02-28
@@ -17,6 +17,7 @@
 
 // STL
 #include <functional>
+#include <cmath>
 #include <algorithm> // for std::sort
 
 // Include files
@@ -136,10 +137,10 @@ namespace Rich
       return (exitPoint()-entryPoint()).Mag2();
     }
 
-    /// Returns the path length (squared) in the given radiator
+    /// Returns the path length in the given radiator
     inline double pathLength() const
     {
-      return sqrt( pathLength2() );
+      return std::sqrt( pathLength2() );
     }
 
     /// Overload output to ostream

@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-01-24 - Chris Jones
+ - Make number of RICHes an unsigned int.
+ - Fix doxygen comment and use std::sqrt in RichRadIntersection
+
 !===================== LHCbKernel v8r1 2008-01-24 ========================
 ! 2008-01-23 - Gerhard Raven
  - Fix derivatives in AlignTraj (forgot to zero three numbers!).

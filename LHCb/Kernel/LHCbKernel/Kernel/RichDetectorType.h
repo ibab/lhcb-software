@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : RichDetectorType
  *
  *  CVS Log :-
- *  $Id: RichDetectorType.h,v 1.9 2007-02-01 16:45:31 jonrob Exp $
+ *  $Id: RichDetectorType.h,v 1.10 2008-01-24 17:31:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -25,7 +25,7 @@ namespace Rich
 {
 
   /// Number of RICH detectors
-  static const int NRiches = 2;
+  static const unsigned int NRiches = 2;
 
   /** @enum Rich::DetectorType
    *
