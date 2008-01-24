@@ -34,8 +34,8 @@ ApplicationMgr.EvtMax = -1;
 
 HistogramPersistencySvc.OutputFile = "00001820_00000001_4.root"; // Monitoring histos
 
-// POOL file catalogs. First one is read-write, others are read only
-PoolDbCacheSvc.Catalog = {
+// File catalogs. First one is read-write, others are read only
+FileCatalog.Catalogs = {
   "xmlcatalog_file:NewCatalog.xml"
   // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
 };
