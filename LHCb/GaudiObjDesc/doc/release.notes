@@ -4,6 +4,7 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!======================== GaudiObjDesc v11r1 2008-12-24 ======================
 ! 2008-01-22 Stefan
 - new feature for enum generation: when activating the string<->enum conversion
   so far the enum had to contain one value "Unknown". In case of several enums
