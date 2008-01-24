@@ -444,9 +444,9 @@ double RichHpdProperties::getHpdCorrectedQEFromPhotonEnergy(double photonenergy,
   //double thisTrans=1.0;
   
   //G4double thisTrans= (1+thisQWrefl*thisPCrefl)*(1-thisQWrefl)*(1-thisPCrefl);   //first reflections
-  //G4double thisTrans= (1-thisQWrefl)*(1-thisPCrefl)/(1-thisPCrefl*thisQWrefl); //Geometric series
+  G4double thisTrans= (1-thisQWrefl)*(1-thisPCrefl)/(1-thisPCrefl*thisQWrefl); //Geometric series
   //G4double thisTrans= (1.0-thisQWrefl); //QW refl only
-  G4double thisTrans= (1.0-thisQWrefl)*(1.0-thisPCrefl*thisPCrefl); //Fudge factor :S
+  //G4double thisTrans= (1.0-thisQWrefl)*(1.0-thisPCrefl*thisPCrefl); //Fudge factor -:) S
 
 //test print
   //G4cout<< " Hpd QW-PC transmission "<<photonenergy<<"  "<< thisTrans<<G4endl;
