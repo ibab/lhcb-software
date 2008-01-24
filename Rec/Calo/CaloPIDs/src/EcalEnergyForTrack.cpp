@@ -1,8 +1,11 @@
-// $Id: EcalEnergyForTrack.cpp,v 1.2 2007-08-24 21:25:18 odescham Exp $
+// $Id: EcalEnergyForTrack.cpp,v 1.3 2008-01-24 10:22:42 vegorych Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2007/08/24 21:25:18  odescham
+// fix uncheck. StatusCodes
+//
 // Revision 1.1  2006/06/18 18:35:28  ibelyaev
 //  the firstcommmit for DC06 branch
 //
@@ -28,11 +31,11 @@ protected:
     const IInterface*  parent ) 
     : CaloEnergyForTrack ( type , name , parent ) 
   {
-    _setProperty ( "DataAddress"   , LHCb::CaloDigitLocation::Ecal ) ;
-    _setProperty ( "MorePlanes"    , "3"    ) ; /// 3 additional planes 
-    _setProperty ( "AddNeigbours"  , "true" ) ; 
-    _setProperty ( "Tolerance"     , "5"    ) ; /// 5 * Gaudi::Units::mm 
-    _setProperty ( "Calorimeter"   , DeCalorimeterLocation::Ecal   ) ;
+    setProperty ( "DataAddress"   , LHCb::CaloDigitLocation::Ecal ) ;
+    setProperty ( "MorePlanes"    , 3    ) ; /// 3 additional planes 
+    setProperty ( "AddNeigbours"  , true ) ; 
+    setProperty ( "Tolerance"     , 5 ) ; /// 5 * Gaudi::Units::mm 
+    setProperty ( "Calorimeter"   , DeCalorimeterLocation::Ecal   ) ;
   } ;
   virtual ~EcalEnergyForTrack() {}
 private:

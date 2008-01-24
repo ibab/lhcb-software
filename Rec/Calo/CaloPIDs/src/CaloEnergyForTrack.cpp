@@ -1,8 +1,11 @@
-// $Id: CaloEnergyForTrack.cpp,v 1.1 2006-06-18 18:35:27 ibelyaev Exp $
+// $Id: CaloEnergyForTrack.cpp,v 1.2 2008-01-24 10:22:42 vegorych Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $  
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:27  ibelyaev
+//  the firstcommmit for DC06 branch
+//  
 // ============================================================================
 // Include files
 // ============================================================================
@@ -59,7 +62,7 @@ CaloEnergyForTrack::CaloEnergyForTrack
   declareProperty ( "BadValue"    , m_bad           ) ;
   declareProperty ( "MorePlanes"  , m_morePlanes    ) ;
   declareProperty ( "NSigmas"     , m_nSigmas       ) ;
-  declareProperty ( "AddNeibours" , m_addNeighbors  ) ;
+  declareProperty ( "AddNeigbours" , m_addNeighbors  ) ;
 } ;
 // ============================================================================
 /// initialize the tool 

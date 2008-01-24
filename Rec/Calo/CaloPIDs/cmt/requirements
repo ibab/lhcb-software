@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.31 2007-09-20 09:31:59 cattanem Exp $
+# $Id: requirements,v 1.32 2008-01-24 10:22:42 vegorych Exp $
 # =============================================================================
 # Created    : 2006-05-28
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           CaloPIDs
-version           v4r8
+version           v4r9
 
 # =============== structure ===================================================
 branches          cmt doc src options 
@@ -34,6 +34,9 @@ apply_pattern     component_library library=CaloPIDs
 	
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.31  2007/09/20 09:31:59  cattanem
+# v4r8
+#
 # Revision 1.30  2007/05/26 17:18:06  vegorych
 # new PIDs from DC06 and BremPID added
 #

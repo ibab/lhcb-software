@@ -1,8 +1,11 @@
-// $Id: CaloPhotonMatch.cpp,v 1.3 2007-08-24 21:25:18 odescham Exp $
+// $Id: CaloPhotonMatch.cpp,v 1.4 2008-01-24 10:22:42 vegorych Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2007/08/24 21:25:18  odescham
+// fix uncheck. StatusCodes
+//
 // Revision 1.2  2006/08/03 08:45:59  jonrob
 // Add missing data initialisations
 //
@@ -104,9 +107,9 @@ protected:
   {
     declareInterface<ICaloTrackMatch> ( this ) ;
     // 
-    _setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal       ) ;
-    _setProperty ( "Tolerance"    , "15"    ) ; // 15 millimeters
-    _setProperty ( "Extrapolator" , "TrackMasterExtrapolator/Regular" ) ;
+    setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal       ) ;
+    setProperty ( "Tolerance"    , 15    ) ; // 15 millimeters
+    setProperty ( "Extrapolator" , "TrackMasterExtrapolator/Regular" ) ;
   } ;
   /// virtual and protected destructor 
   virtual ~CaloPhotonMatch(){} ;
