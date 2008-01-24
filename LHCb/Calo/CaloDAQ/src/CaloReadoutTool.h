@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.3 2008-01-10 13:56:13 odescham Exp $
+// $Id: CaloReadoutTool.h,v 1.4 2008-01-24 20:12:53 odescham Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -41,7 +41,6 @@ public:
   // e.g. : avoid the call to getCaloBanksFromRaw() at each call of adc(bank)
   virtual bool getBanks(){
     m_getRaw = false;
-    m_readSources.clear();
     clear();
     return getCaloBanksFromRaw();    
   };

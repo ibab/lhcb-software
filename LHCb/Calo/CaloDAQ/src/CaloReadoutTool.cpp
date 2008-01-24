@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.22 2008-01-23 18:20:27 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.23 2008-01-24 20:12:53 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -45,6 +45,9 @@ CaloReadoutTool::~CaloReadoutTool() {}
 //  Get required CaloBanks (short or packed format) - Fill m_banks
 //=========================================================================
 bool CaloReadoutTool::getCaloBanksFromRaw( ) {
+
+
+  m_readSources.clear();
 
   m_banks = NULL;
   LHCb::RawEvent* rawEvt = NULL ;
@@ -188,7 +191,7 @@ void CaloReadoutTool::putStatusOnTES(){
     std::stringstream type("");
     type << LHCb::RawBank::typeName(m_status.key()) ;
     
-    Warning("Status for bankType " +  type.str() + " already exists", StatusCode::SUCCESS ).ignore();
+    if ( msgLevel( MSG::DEBUG) )debug() << "Status for bankType " <<  type  << " already exists" << endreq;
     if( status->status() != m_status.status() ){
       Warning("Status for bankType " +  type.str() + " already exists  with different status value -> merge both"
               , StatusCode::SUCCESS).ignore();

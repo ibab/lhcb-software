@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+
+! 2008-01-24 - Olivier Deschamps
+ - CaloReadoutTool : fix abusive warning  + fix wrong initialization of m_readSource
+
 !========================== CaloDAQ v4r3 2008-01-24 ==========================
 ! 2008-01-24 - Marco Cattaneo
  - Change CalDigitsOnDemand.opts to use DataOnDemndSvc.AlgMap
