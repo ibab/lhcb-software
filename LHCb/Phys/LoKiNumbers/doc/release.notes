@@ -4,22 +4,18 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiNumbers v7r1 2008-01-24 =====================
 ! 2008-01-22 - Vanya BELYAEV
  - dict/LoKiNumbers.xml, dict/LoKiNumbersDict.h 
-    fix for windonws 32 platgform to suppress the (auto)generation 
+    fix for windows 32 platform to suppress the (auto)generation 
     of "strange" functors
       XXX<double*,yyy>, XXX<const double*,yyy>, 
      XXX<std::vector<double>*,yyy> and XXX<const std::vector<double>*,yyy> 
 
  - cmt/requirements 
-
-     version increpemtn to v7r1 
-  
-
-
+     version increment to v7r1 
 
 ! =========================== LoKiNumbers v7r0 2007-12-01 =====================
-
 ! 2007-12-01 - Vanya BELYAEV
 
  - New package.
