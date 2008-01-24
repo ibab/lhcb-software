@@ -3,7 +3,7 @@ version v7r1
 
 branches doc cmt
 
-use LHCbKernel       v8r0   Kernel
+use LHCbKernel       v8r1   Kernel
 use LHCbMath         v2r5   Kernel
 use Relations        v5r3   Kernel
 use CaloKernel       v5r1   Calo
