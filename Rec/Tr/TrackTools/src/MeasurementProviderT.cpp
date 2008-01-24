@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.8 2007-12-11 08:37:21 wouter Exp $
+// $Id: MeasurementProviderT.cpp,v 1.9 2008-01-24 09:27:45 wouter Exp $
 // Include files
 
 //=============================================================================
@@ -78,7 +78,7 @@ MeasurementProviderT<T>::MeasurementProviderT( const std::string& type,
      m_det(0)
 {
   declareInterface<IMeasurementProvider>(this);
-  declareProperty( "UseReference", m_useReference = false );
+  declareProperty( "UseReference", m_useReference = true );
 }
 
 //-----------------------------------------------------------------------------

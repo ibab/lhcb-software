@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2008-01-24 - Wouter Hulsbergen
+ - Change Si measurement providers to use track-state by default
+
 !======================== TrackTools v3r2 2007-12-11 ========================
 ! 2007-12-11 - Wouter Hulsbergen
  - Added missing 'template<>' in MeasurementProviderT
