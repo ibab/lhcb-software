@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2008-01-24 - Gerhard Raven
+ - add PropertyConfig and IConfigAccessSvc
+
 ! 2008-01-23 - Gerhard Raven
  - add IANNSvc, and a 'mix-in' implementation ANNSvc
 
