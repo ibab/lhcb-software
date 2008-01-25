@@ -6,11 +6,16 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r14>2008-01-18 LbcomSys v6r14</A></H1><PRE>
+</PRE><H1><A NAME=v6r14>2008-01-25 LbcomSys v6r14</A></H1><PRE>
 This version uses Gaudi v19r7 and LHCb v23r3
 
-- Packages modified: L0DU v8r2, L0Muon v7r6, PuVeto v7r3, STAlgorithms v2r6,
-    STCheckers v2r4, STDAQ v3r4, STTools v3r5
+- Packages modified: CaloAssociators v6r5, L0DU v8r2, L0Muon v7r6, PuVeto v7r3,
+    STAlgorithms v2r6, STCheckers v2r4, STDAQ v3r4, STTools v3r5
+
+- In CaloAssociators v6r5
+  . In CaloAssociators.opts, remove obosolete ApplicationMgr.DLLs option and
+    use DataOnDemandSvc.AlgMap instead of old Algorithms option
+  . Add BooleRelations.opts : options to create Linker for Ecal & Hcal in Boole
 
 - In L0DU v8r2
   . Fix minor memory leak in L0ProcessorDataLocation initialize()
@@ -21,7 +26,7 @@ This version uses Gaudi v19r7 and LHCb v23r3
     This is done in order to gain time for the HLT.
 
 - In PuVeto v7r3
-  . Remove obosolete file PuVeto_load.cpp
+  . Remove obsolete file PuVeto_load.cpp
   . Change order of some nested loops in PuVetoAlg to make it faster...
 
 - In STAlgorithms v2r6

@@ -11,7 +11,7 @@ branches doc cmt
 use Associators       v3r6  Associators # Matt Needham
 
 # Calorimeter
-use CaloAssociators   v6r4  Calo        # Olivier Deschamps
+use CaloAssociators   v6r5  Calo        # Olivier Deschamps
 
 # L0 trigger simulation                 # Maintainer
 use L0Calo            v9r11 L0          # Olivier Deschamps, Patrick Robbe
