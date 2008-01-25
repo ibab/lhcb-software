@@ -13,7 +13,7 @@ use RecUtils            v1r4    Rec   # Juan Palacios, Patrick Koppenburg
 
 # Calorimeter                         # Maintainer
 use CaloMoniDst         v3r0p1  Calo  # Olivier Deschamps
-use CaloPIDs            v4r8    Calo  # Victor Egorychev, Vanya Belyaev
+use CaloPIDs            v4r9    Calo  # Victor Egorychev, Vanya Belyaev
 use CaloReco            v4r10   Calo  # Olivier Deschamps
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
