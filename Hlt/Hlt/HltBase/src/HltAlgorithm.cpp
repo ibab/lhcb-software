@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.26 2008-01-25 16:55:03 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.27 2008-01-25 16:57:12 hernando Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -72,9 +72,12 @@ StatusCode HltAlgorithm::initialize() {
 
   if (m_doInitSelections) {
     initSelections();
+    verbose() << "Done initSelections" << endmsg ;
     saveConfiguration();  
+    verbose() << "Saved config" << endmsg ;
   }
 
+  verbose() << "Initialised HltAlgorithms" << endmsg ;
   return StatusCode::SUCCESS;
 
 }
@@ -97,6 +100,7 @@ void HltAlgorithm::initSelections() {
   // retrieving input selections
   // to be backward compatible, set the track,vertices input selections
   if (!m_doInitSelections) return;
+  verbose() << m_inputSelectionName << endmsg ;
 
   if (!m_inputSelectionName.empty()) {
     Hlt::Selection& sel = retrieveSelection(m_inputSelectionName);
@@ -108,6 +112,9 @@ void HltAlgorithm::initSelections() {
         &(retrieveTSelection<LHCb::RecVertex>(m_inputSelectionName));
   }
 
+  verbose() << "Done input selection" << endmsg ;
+  verbose() << m_inputSelection2Name << endmsg ;
+
   if (!m_inputSelection2Name.empty()) {
     Hlt::Selection& sel = retrieveSelection(m_inputSelection2Name);
     if (sel.classID() == LHCb::Track::classID())
@@ -117,6 +124,9 @@ void HltAlgorithm::initSelections() {
       m_primaryVertices = 
         &(retrieveTSelection<LHCb::RecVertex>(m_inputSelection2Name));
   }
+
+  verbose() << "Done input selections 2" << endmsg ;
+
 
   const std::vector<std::string>& names =m_extraInputSelectionsNames.value();
   for (std::vector<std::string>::const_iterator it = names.begin();
@@ -165,18 +175,26 @@ void HltAlgorithm::initSelections() {
 
 
 void HltAlgorithm::saveConfiguration() {
-
+  
   if (!m_saveConf) return;
+  verbose() << "Saving Config " << m_outputSelectionName << endmsg ;
+  if ( m_outputSelection == 0 ) {
+    warning() << "m_outputSelection is NULL. Not saving config." << endmsg ;
+    return ;
+  }
+  
+  verbose() << " classID: " << m_outputSelection->classID() << endmsg ;
 
   std::string type = "unknown";
   Assert(m_outputSelection != 0," No output Selection");
   if (m_outputSelection->classID() == LHCb::Track::classID()) type = "Track";
   else if (m_outputSelection->classID() == LHCb::RecVertex::classID())
     type = "Vertex";
+  verbose() << "Type : " << type << endmsg ;
   confregister("Algorithm",m_algoType+"/"+name(),m_outputSelectionName);
   confregister("SelectionType",type,m_outputSelectionName);
   confregister("InputSelections",m_inputSelectionsNames,m_outputSelectionName);
-  
+  verbose() << "Done saveConfigureation" << endmsg ;  
   info() << " HLT input selections " << m_inputSelectionsNames << endreq;
   info() << " HLT output selection " << m_outputSelectionName << endreq;
 }
