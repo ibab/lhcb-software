@@ -1,5 +1,7 @@
 //options for T confirmation with L0 muon single
 
+ToolSvc.TsaConfirmTool.calcLikelihood = false;
+
 ToolSvc.TsaConfirmTool.nSigma=5;
 //L0MuonConfL0SingleWithT.TsaConfirmTool.otDataSvcName     = "L0ConfToolOTDataSvc";
 //L0MuonConfL0SingleWithT.TsaConfirmTool.itDataSvcName     = "L0ConfToolITDataSvc";

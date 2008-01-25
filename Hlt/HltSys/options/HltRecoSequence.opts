@@ -5,7 +5,7 @@
 HltRecoSequence.Members = {
   "GaudiSequencer/HltRecoVeloRZSeq",
   "HltTrackUpgrade/HltRecoVelo",
-  "PatPV3D/PatHltPV3D",
+  "PatPV3D/HltPatPV3D",
   "GaudiSequencer/HltDecodeTT",
   // "HltTrackUpgrade/HltRecoVeloTT",
   "GaudiSequencer/HltDecodeT",
@@ -77,9 +77,9 @@ HltPreparePrimaryVertices.OutputLevel = 3;
 //------------------------
 HltRecoVeloSeq.Members += {
   "HltTrackUpgrade/HltRecoVelo",
-  "PatPV3D"
+  "PatPV3D/HltPatPV3D"
 };
-PatPV3D.InputTracksName = "Hlt/Track/Velo";
+HltPatPV3D.InputTracksName = "Hlt/Track/Velo";
 
 // Decode TT
 //-------------
