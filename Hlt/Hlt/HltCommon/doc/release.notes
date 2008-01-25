@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-01-25 - Jose A. Hernando
+  - set location of the tracks,vertices selections at Hlt/Selection/Track,Vertex at HltSelectionToTES algorithm
+
 ! 2008-01-23 - Patrick Koppenburg
  - Use automatic string conversion in HltEnums from GOD
    instead of HltNames.
