@@ -8,12 +8,12 @@ branches doc cmt
 #===============================================================
 
 use GaudiConf	         v10r6
-use GaudiObjDesc         v11r0
+use GaudiObjDesc         v11r1
 
 #                                         Maintainer
 # Kernel packages
 use KernelSys             v7r1    Kernel  # Marco Cattaneo
-use LHCbKernel            v8r0    Kernel  # Marco Cattaneo
+use LHCbKernel            v8r1    Kernel  # Marco Cattaneo
 use LHCbMath              v2r5    Kernel  # Juan Palacios
 use Relations             v5r3    Kernel  # Ivan Belyaev
 use CaloKernel            v5r1    Calo    # Olivier Deschamps
@@ -44,14 +44,14 @@ use MCEvent               v2r5p1  Event   # Gloria Corti and sub-det experts
 use DigiEvent             v2r3    Event   # Marco Cattaneo and sub-det experts
 use RecEvent              v2r9    Event   # Marco Cattaneo and sub-det experts
 use L0Event               v16r7   Event   # Julien Cogan
-use PhysEvent             v11r4   Event   # Patrick Koppenburg, Juan Palacios
+use PhysEvent             v11r5   Event   # Patrick Koppenburg, Juan Palacios
 use DAQEvent              v7r8    Event   # Marco Cattaneo, Markus Frank
 use GenEvent              v5r1    Event   # Gloria Corti
 use EventAssoc            v4r3    Event   # Ivan Belyaev
 use LinkerEvent           v3r2    Event   # Olivier Callot
 use PackedEvent           v3r2    Event   # Marco Cattaneo, Olivier Callot
 use TrackEvent            v4r10   Event   # Matt Needham
-use HltEvent              v8r5    Event   # Jose Angel Hernando-Morata
+use HltEvent              v8r6    Event   # Jose Angel Hernando-Morata
 use VeloEvent             v16r2   Event   # Tomasz Szumlak, Chris Parkes
 
 # L1/Raw buffer encoding and decoding
@@ -67,7 +67,7 @@ use MCInterfaces          v1r4   Kernel  # Marco Cattaneo et al.
 use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
 use L0Interfaces          v1r0   L0      # Olivier Deschamps
 use CaloInterfaces        v7r4   Calo    # Olivier Deschamps
-use CaloUtils             v7r6   Calo    # Olivier Deschamps
+use CaloUtils             v7r7   Calo    # Olivier Deschamps
 use RichRecBase           v3r9   Rich    # Chris Jones
 use TrackInterfaces       v3r11  Tr      # Matt Needham
 use LinkerInstances       v3r4   Event   # Thomas Ruf
@@ -87,7 +87,7 @@ use LoKiCore              v7r0   Phys    # Ivan Belyaev
 use LoKiGen               v7r0   Phys    # Ivan Belyaev
 use LoKiGenMC             v7r0   Phys    # Ivan Belyaev
 use LoKiMC                v7r0   Phys    # Ivan Belyaev
-use LoKiNumbers           v7r0   Phys    # Ivan Belyaev
+use LoKiNumbers           v7r1   Phys    # Ivan Belyaev
 use LoKiPhys              v7r0   Phys    # Ivan Belyaev
 use LoKiPhysMC            v7r0   Phys    # Ivan Belyaev
 use Tell1Kernel           v1r1   DAQ     # Tomasz Szumlak
