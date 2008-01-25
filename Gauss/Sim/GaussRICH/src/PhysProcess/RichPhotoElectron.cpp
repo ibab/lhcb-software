@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichPhotoElectron.cpp,v 1.6 2008-01-21 16:56:58 seaso Exp $
+// $Id: RichPhotoElectron.cpp,v 1.7 2008-01-25 16:01:53 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 // 
 // 
@@ -39,6 +39,8 @@
 // ----------------------------------------------------------------------
 // RichPhotoelectron created by SE 10-3-2003.
 // Modifed according to G4.8   SE 9-1-2006
+// Modifed according to G4.9.1   SE 25-1-2008, but commented out
+//  since it is not yet compatible with the lhcb version of G4.
 //
 //#include "g4std/fstream"
 //#include "g4std/iomanip"
@@ -80,6 +82,12 @@ RichPhotoElectron* RichPhotoElectron::Definition()
                  true,            -1.0,          NULL,
              false,           "e"
               );
+    // Bohr Magnetron
+   //   G4double muB =  -0.5*eplus*hbar_Planck/(0.51099906*MeV/c_squared) ;
+   //
+   // anInstance->SetPDGMagneticMoment( muB * 1.0011596521859 );
+
+
   }
   theInstance = reinterpret_cast<RichPhotoElectron*>(anInstance);
   return theInstance;

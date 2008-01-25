@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.h,v 1.5 2006-03-01 09:31:26 jonrob Exp $
+// $Id: GetMCRichHitsAlg.h,v 1.6 2008-01-25 16:02:58 seaso Exp $
 #ifndef SENSDET_GetMCRichHitsAlg_H
 #define SENSDET_GetMCRichHitsAlg_H 1
 
@@ -13,6 +13,7 @@
 
 // RichKernel
 #include "RichKernel/RichMap.h"
+#include "RichG4HpdReflectionFlag.h"
 
 /** @class GetMCRichHitsAlg GetMCRichHitsAlg.h
  *
@@ -68,6 +69,9 @@ private:
   DMap m_nitroHits;
   /// overall aerogel filter CK hit count in each radiator
   DMap m_aeroFilterHits;
+
+  /// overall hits from HPD reflections rwl 22.01.08
+  DMap m_hpdReflHits;
 
   /// overall MCParticle-less hit count in each radiator
   RMap m_nomcpHits;

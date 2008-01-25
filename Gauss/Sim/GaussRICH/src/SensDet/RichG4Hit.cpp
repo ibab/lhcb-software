@@ -231,7 +231,7 @@ void RichG4Hit::Print()
   
 
 }
-std::vector<bool>  RichG4Hit::DecodeRichHpdReflectionFlag()
+std::vector<bool>  RichG4Hit::DecodeRichHpdReflectionFlag() const
 {
 
 

@@ -178,7 +178,7 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
 
 
 
-  //    G4cout<<"Now particle  "<<aParticle->GetDefinition()->GetParticleName()
+  //  G4cout<<"Now particle  "<<aParticle->GetDefinition()->GetParticleName()
   //       << "in HpdEnergyloss KE= "<<aKinEnergyInit <<G4endl;
   // if the Photoelectron hits the kovar of the Hpd envelope
   // endcap or barrel,  then the kill the photoelectron.
@@ -356,13 +356,17 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
           G4double aPElectronTime= aTrack.GetGlobalTime();
 
  
-          //G4DynamicParticle* aElectron= 
-          //   new G4DynamicParticle (RichPhotoElectron::PhotoElectron(),
-          //                      GlobalElectronDirection, aKinEnergyInit) ;
-          // for now use the g4electron with the current G4.. SE Oct4-2007
-          G4DynamicParticle* aElectron= 
-             new G4DynamicParticle (G4Electron::Electron(),
+          // G4cout<<" Creating a backscattered electron with energy "<<aKinEnergyInit<< G4endl;
+          
+           G4DynamicParticle* aElectron= 
+             new G4DynamicParticle (RichPhotoElectron::PhotoElectron(),
                                 GlobalElectronDirection, aKinEnergyInit) ;
+
+          // for now use the g4electron with the current G4.. SE Oct4-2007
+          // changed SE Jan24-2008
+          //G4DynamicParticle* aElectron= 
+          //   new G4DynamicParticle (G4Electron::Electron(),
+          //                      GlobalElectronDirection, aKinEnergyInit) ;
 
           aParticleChange.SetNumberOfSecondaries(1) ;
 	  

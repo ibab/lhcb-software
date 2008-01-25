@@ -1,4 +1,4 @@
-// $Id: RichG4HpdReflectionFlag.cpp,v 1.1 2008-01-21 16:59:00 seaso Exp $
+// $Id: RichG4HpdReflectionFlag.cpp,v 1.2 2008-01-25 16:01:26 seaso Exp $
 // Include files 
 
 
@@ -31,7 +31,7 @@ RichG4HpdReflectionFlag::RichG4HpdReflectionFlag(  ) {
 
   m_HpdPCQwRefl=8;   // reflection at hpd Photocathode- Quartz
 
-  m_MaxNumHpdReflFlag=10; // max number of flags.
+  m_MaxNumHpdReflFlag=8; // max number of flags.//rwl edit 22.01.08
   
 }
 

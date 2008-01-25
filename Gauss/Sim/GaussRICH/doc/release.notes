@@ -4,6 +4,16 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 !========================= GaussRICH v7r3 2008-1-23 =========================
+! 2008-01-25 - Sajan Easo 
+ - In RichHpdPhotoElectricEffect and HpdSiEnergyLoss processes, the 
+   RichPhotoelectron is activated insted of the normal  G4Electron as the
+   secondary particle created. This is seems to work ok with Gaussv30r5.
+ - 2008-01-25 - Sajan Easo 
+ - GetMCRichHitsAlg.cpp and GetMCRichOpticalPhotonsAlg.cpp are modified in preparation
+   for modifications in the MCRichHit and MCRichOpticalPhoton classes. The changes are
+   commented out for now. The MCRichHit is expected to have additional flags for the
+   new HPD simulation. The MCRichOpticalPhoton class is expected to have the photon
+   coordinate on the hpd quartz window.
 ! 2008-01-23 - Sajan Easo 
  - In the RichG4Hit add the location of the Photon incidence point on the 
    external surface of the HPD quartz window so that it can be copied to the 

@@ -1,4 +1,4 @@
-// $Id: GiGaPhysConstructorHpd.cpp,v 1.10 2008-01-21 16:56:57 seaso Exp $
+// $Id: GiGaPhysConstructorHpd.cpp,v 1.11 2008-01-25 16:01:53 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -168,14 +168,14 @@ void GiGaPhysConstructorHpd::ConstructHpdSiEnLoss()
             pmanager->AddProcess( theRichHpdSiEnergyLossProcess ,-1,2,2);
 	    //   }
         
-	    //  if(particle->GetParticleName() == "pe-")
-	    //  {
-              //   G4cout<<" All the processes for pe- " <<G4endl;
-              //  pmanager->DumpInfo();  
+	      if(particle->GetParticleName() == "pe-")
+	      {
+		//  G4cout<<" All the processes for pe- " <<G4endl;
+		// pmanager->DumpInfo();  
             
-            //  (RichPhotoElectron::PhotoElectron())->SetProcessManager(pmanager);
-            // (RichPhotoElectron::PhotoElectron())->GetProcessManager()->DumpInfo();
-	    //  }
+                (RichPhotoElectron::PhotoElectron())->SetProcessManager(pmanager);
+		// (RichPhotoElectron::PhotoElectron())->GetProcessManager()->DumpInfo();
+	      }
       }
     //    if (theDecayProcess->IsApplicable(*particle)) { 
     //      pmanager ->AddProcess(theDecayProcess);

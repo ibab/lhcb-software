@@ -349,9 +349,9 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     //create the photoelectron
     G4double ElecKineEnergy= 100000*m_HpdPhElectronKE;
 
-     G4DynamicParticle* aElectron=
-     new G4DynamicParticle (G4Electron::Electron(),
-                           GlobalElectronDirection, ElecKineEnergy) ;
+    //  G4DynamicParticle* aElectron=
+    //  new G4DynamicParticle (G4Electron::Electron(),
+    //                       GlobalElectronDirection, ElecKineEnergy) ;
     //
     // end of temporary fix.
     //   test of number of proc for the photoelectron particle
@@ -384,9 +384,9 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     //
     //    G4double ElecKineEnergy= m_HpdPhElectronKE;
 
-    // G4DynamicParticle* aElectron=
-    //  new G4DynamicParticle (RichPhotoElectron::PhotoElectron(),
-    //                         GlobalElectronDirection, ElecKineEnergy) ;
+      G4DynamicParticle* aElectron=
+        new G4DynamicParticle (RichPhotoElectron::PhotoElectron(),
+                             GlobalElectronDirection, ElecKineEnergy) ;
 
     aParticleChange.SetNumberOfSecondaries(1) ;
     //  aParticleChange.AddSecondary( aElectron ) ;
@@ -403,7 +403,7 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     G4Track* aTaggedSecPETrack = RichPEInfoAttach(aTrack,aSecPETrack);
     aParticleChange.AddSecondary(aTaggedSecPETrack);
 
-    //   G4cout<<" RichHpdPhotoelectric effect : Now created a photoelectron with energy =  "
+    //  G4cout<<" RichHpdPhotoelectric effect : Now created a photoelectron with energy =  "
     //      << ElecKineEnergy<<G4endl;
 
 

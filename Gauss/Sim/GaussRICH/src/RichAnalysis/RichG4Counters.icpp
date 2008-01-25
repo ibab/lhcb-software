@@ -146,6 +146,8 @@ inline const std::vector<int> & NumHitSaturatedPerTrackRich2Gas() const
   return  m_NumHitSaturatedPerTrackRich2Gas;
 }
 
+//saturated hits without reflections
+
 inline const std::vector<int> & NumHitSaturatedPerTrackRich1GasNoHpdRefl() const
 {
   return  m_NumHitSaturatedPerTrackRich1GasNoHpdRefl;

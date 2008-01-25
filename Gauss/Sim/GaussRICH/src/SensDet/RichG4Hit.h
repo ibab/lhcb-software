@@ -36,7 +36,7 @@ public:
   void Draw();
   void Print();
   void DrawPEOrigin();
-  std::vector<bool> DecodeRichHpdReflectionFlag();
+  std::vector<bool> DecodeRichHpdReflectionFlag() const;
   
 private:
 

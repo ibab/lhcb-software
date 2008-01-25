@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.26 2007-09-04 16:29:57 seaso Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.27 2008-01-25 16:02:58 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -119,8 +119,8 @@ StatusCode GetMCRichHitsAlg::execute()
       // now loop through the hits in the current collection.
       for ( int ihit = 0; ihit < numberofhits; ++ihit )
       {
-        // Pointer to G4 hit
-        const RichG4Hit * g4hit = (*myCollection)[ihit];
+        // Pointer to G4 hit modif rwl 22.01.08
+        const RichG4Hit * g4hit = (*myCollection)[ihit];  
         if ( !g4hit ) { Error( "Null RichG4Hit pointer" ); continue; }
 
         // Make new persistent hit object
@@ -199,6 +199,45 @@ StatusCode GetMCRichHitsAlg::execute()
           mchit->setScatteredPhoton( true );
         }
 
+        //begin modif rlambert 22.01.08
+
+        
+        //        if(g4hit->ElectronBackScatterFlag()) mchit->setHpdSiBackscatter(true);
+
+
+        //        RichG4HpdReflectionFlag* aRichG4HpdReflectionFlag= 
+        //  RichG4HpdReflectionFlag::RichG4HpdReflectionFlagInstance();
+        
+        //  std::vector<bool> aBVect = g4hit->DecodeRichHpdReflectionFlag();
+        // bool isaHpdReflection=false;
+        
+        //  for(int ii=0; ii<aBVect.size() && !isaHpdReflection; ii++) isaHpdReflection=aBVect[ii];
+        
+
+        // if(  aBVect [aRichG4HpdReflectionFlag->HpdQwPCRefl()])     mchit->setHpdReflQWPC(true);  
+        
+        // if(  aBVect [aRichG4HpdReflectionFlag->HpdChromiumRefl()]) mchit->setHpdReflChr(true);  
+        
+        // if(  aBVect [aRichG4HpdReflectionFlag->HpdAirQwRefl()])    mchit->setHpdReflAirQW(true); 
+
+        // if(  aBVect [aRichG4HpdReflectionFlag->HpdAirPCRefl()])    mchit->setHpdReflAirPC(true); 
+
+        //        if(  aBVect [aRichG4HpdReflectionFlag->HpdSiliconRefl()])  mchit->setHpdReflSi(true);  
+        
+        // if(  aBVect [aRichG4HpdReflectionFlag->HpdKovarRefl()])    mchit->setHpdReflKovar(true);  
+        
+        // if(  aBVect [aRichG4HpdReflectionFlag->HpdKaptonRefl()])   mchit->setHpdReflKapton(true);  
+
+        //       if(  aBVect [aRichG4HpdReflectionFlag->HpdPCQwRefl()])     mchit->setHpdReflPCQW(true);  
+
+        //       if ( msgLevel(MSG::DEBUG) && isaHpdReflection )
+        // {
+        //  debug() << " MCRichhit from an internal HPD reflection " << endreq;
+        // }
+
+        //
+        //end modif rlambert 22.01.08
+
         // get sensitive detector identifier from det elem
         const RichSmartID detID( m_richDets[rich]->sensitiveVolumeID(entry) );
         if ( !detID.isValid() )
@@ -246,6 +285,7 @@ StatusCode GetMCRichHitsAlg::execute()
           if ( mchit->hpdQuartzCK()  ) ++m_hpdQzHits[rich];
           if ( mchit->nitrogenCK()   ) ++m_nitroHits[rich];
           if ( mchit->aeroFilterCK() ) ++m_aeroFilterHits[rich];
+          if ( mchit->isHpdReflection() ) ++m_hpdReflHits[rich]; //rwl 22.01.08
         }
 
         // radiator counters
@@ -273,6 +313,10 @@ StatusCode GetMCRichHitsAlg::execute()
                     << " MCParticle " << mcPart << endreq;
         }
 
+        if ( msgLevel(MSG::DEBUG) && mchit->isHpdReflection() )
+        {
+          debug() << " MCRichhit from an internal HPD reflection " << endreq;
+        }
       } // end loop on hits in the collection
 
     } // end loop on collections
@@ -329,6 +373,16 @@ StatusCode GetMCRichHitsAlg::finalize()
   info() << "Av. # Aero Filter CK hits   : Rich1 = "
          << occ(m_aeroFilterHits[Rich::Rich1],m_nEvts)
          << " Rich2 = " << occ(m_aeroFilterHits[Rich::Rich2],m_nEvts)
+         << endmsg;
+
+  info() << "# HPD Reflection hits   : Rich1 = "     //rwl 22.01.08
+         << m_hpdReflHits[Rich::Rich1]
+         << " Rich2 = " << m_hpdReflHits[Rich::Rich2]
+         << endmsg;
+  
+  info() << "Av. # HPD Reflection hits   : Rich1 = "     //rwl 22.01.08
+         << occ(m_hpdReflHits[Rich::Rich1],m_nEvts)
+         << " Rich2 = " << occ(m_hpdReflHits[Rich::Rich2],m_nEvts)
          << endmsg;
   
   info() << "Av. # Signal CK MCRichHits  : Aero  = "
