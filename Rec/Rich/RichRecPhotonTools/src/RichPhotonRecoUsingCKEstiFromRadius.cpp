@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.1.1.1 2007-11-26 17:25:46 jonrob Exp $
+ * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.2 2008-01-25 13:33:29 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -53,10 +53,6 @@ PhotonRecoUsingCKEstiFromRadius( const std::string& type,
   m_sepGMax[Rich::Rich2Gas]  = 130;
   declareProperty( "SepGMax", m_sepGMax );
 
-  // Default fudge factors for DC06
-  m_ckFudge[Rich::Aerogel] =  0.0009376;
-  m_ckFudge[Rich::C4F10]   =  0.0003628;
-  m_ckFudge[Rich::CF4]     =  0.0001462;
   declareProperty( "CKThetaQuartzRefractCorrections", m_ckFudge );
 
 }
@@ -93,10 +89,8 @@ StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
     // fudge factor warning
     if ( fabs(m_ckFudge[rad]) > 1e-7 )
     {
-      std::ostringstream mess;
-      mess << "Applying " << Rich::text(rad)
-           << " CK theta correction factor : " << m_ckFudge[rad];
-      Warning( mess.str(), StatusCode::SUCCESS );
+      info() << "Applying " << Rich::text(rad)
+             << " CK theta correction factor : " << m_ckFudge[rad] <<endreq;
     }
   }
 
@@ -124,7 +118,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   Gaudi::XYZPoint & emissionPoint = gPhoton.emissionPoint();
   emissionPoint = trSeg.bestPoint();
 
-  // Cannot set these ??
+  // Cannot set these yet - Could be done if needed, but at what CPU cost ?
   //Gaudi::XYZPoint & sphReflPoint = gPhoton.sphMirReflectionPoint();
   //Gaudi::XYZPoint & secReflPoint = gPhoton.flatMirReflectionPoint();
 
@@ -162,27 +156,36 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   const LHCb::RichRecPointOnRing * point = ( ring ? ring->getPointClosestInAzimuth(phiCerenkov) : NULL );
   if ( point )
   {
-    const double sep2_tmp = ( gsl_pow_2(segPSide.x()-point->localPosition().x()) +
-                              gsl_pow_2(segPSide.y()-point->localPosition().y()) );
-    thetaCerenkov += ring->radius() * sqrt( sep2 / sep2_tmp );
-  }
-  else
-  {
-    thetaCerenkov += sqrt(sep2) * m_scale[radiator];
-  }
 
-  // --------------------------------------------------------------------------------------
-  // Set (remaining) photon parameters
-  // --------------------------------------------------------------------------------------
-  gPhoton.setCherenkovTheta         ( thetaCerenkov  );
-  gPhoton.setCherenkovPhi           ( phiCerenkov    );
-  gPhoton.setActiveSegmentFraction  ( fraction       );
-  gPhoton.setDetectionPoint         ( pixel->globalPosition()  );
-  gPhoton.setSmartID                ( pixel->hpdPixelCluster().primaryID() );
-  gPhoton.setMirrorNumValid         ( unambigPhoton  );
-  gPhoton.setSphMirrorNum           ( 0 );
-  gPhoton.setFlatMirrorNum          ( 0 );
-  // --------------------------------------------------------------------------------------
+    // Check if the point is OK for uses as a reference
+    if ( sameSide( radiator, pixPRad, point->localPosition() ) )
+    {
 
-  return StatusCode::SUCCESS;
+      // estimate CK theta from reference point
+      const double sep2_tmp = ( gsl_pow_2(segPSide.x()-point->localPosition().x()) +
+                                gsl_pow_2(segPSide.y()-point->localPosition().y()) );
+      thetaCerenkov += ring->radius() * std::sqrt( sep2 / sep2_tmp );
+
+      // --------------------------------------------------------------------------------------
+      // Set (remaining) photon parameters
+      // --------------------------------------------------------------------------------------
+      gPhoton.setCherenkovTheta         ( thetaCerenkov  );
+      gPhoton.setCherenkovPhi           ( phiCerenkov    );
+      gPhoton.setActiveSegmentFraction  ( fraction       );
+      gPhoton.setDetectionPoint         ( pixel->globalPosition() );
+      gPhoton.setSmartID                ( pixel->hpdPixelCluster().primaryID() );
+      gPhoton.setMirrorNumValid         ( unambigPhoton  );
+      //gPhoton.setSphMirrorNum           ( 0 );
+      //gPhoton.setFlatMirrorNum          ( 0 );
+      // --------------------------------------------------------------------------------------
+
+      // photon reco worked !
+      return StatusCode::SUCCESS;
+
+    }
+
+  } // reference point located OK
+
+  // if we get here photon reco failed
+  return StatusCode::FAILURE;
 }

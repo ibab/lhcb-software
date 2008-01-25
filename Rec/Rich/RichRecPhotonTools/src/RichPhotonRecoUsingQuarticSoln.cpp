@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.1.1.1 2007-11-26 17:25:46 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.2 2008-01-25 13:33:29 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -33,8 +33,8 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
     m_mirrorSegFinder     ( NULL ),
     m_rayTracing          ( NULL ),
     m_idTool              ( NULL ),
-    m_refIndex            ( NULL ),
     m_emissPoint          ( NULL ),
+    m_snellsLaw           ( NULL ),
     m_testForUnambigPhots ( Rich::NRadiatorTypes, true  ),
     m_rejectAmbigPhots    ( Rich::NRadiatorTypes, false ),
     m_useAlignedMirrSegs  ( Rich::NRadiatorTypes, true  ),
@@ -63,10 +63,6 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   declareProperty( "UseSecondaryMirrors",                m_useSecMirs = true  );
   declareProperty( "RejectAmbiguousPhotons",       m_rejectAmbigPhots         );
 
-  // Default fudge factors for DC06
-  m_ckFudge[Rich::Aerogel] = -0.000358914;
-  m_ckFudge[Rich::C4F10]   = -0.000192933;
-  m_ckFudge[Rich::CF4]     = -3.49182e-05;
   declareProperty( "CKThetaQuartzRefractCorrections", m_ckFudge );
 
   declareProperty( "CheckBeamPipe", m_checkBeamPipe );
@@ -80,9 +76,9 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
 
   declareProperty( "MinActiveFraction", m_minActiveFrac );
 
-  m_minSphMirrTolIt[Rich::Aerogel]  = pow(0.10 * Gaudi::Units::mm,2);
-  m_minSphMirrTolIt[Rich::Rich1Gas] = pow(0.08 * Gaudi::Units::mm,2);
-  m_minSphMirrTolIt[Rich::Rich2Gas] = pow(0.05 * Gaudi::Units::mm,2);
+  m_minSphMirrTolIt[Rich::Aerogel]  = std::pow(0.10 * Gaudi::Units::mm,2);
+  m_minSphMirrTolIt[Rich::Rich1Gas] = std::pow(0.08 * Gaudi::Units::mm,2);
+  m_minSphMirrTolIt[Rich::Rich2Gas] = std::pow(0.05 * Gaudi::Units::mm,2);
   declareProperty( "MinSphMirrTolIt", m_minSphMirrTolIt );
 
 }
@@ -109,11 +105,11 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
   acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );
   acquireTool( "RichRayTracing",      m_rayTracing      );
   acquireTool( "RichSmartIDTool",     m_idTool, 0, true );
-  acquireTool( "RichRefractiveIndex", m_refIndex        );
   acquireTool( "RichPhotonEmissionPoint", m_emissPoint  );
+  acquireTool( "RichSnellsLawRefraction", m_snellsLaw   );
 
   // loop over radiators
-  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin(); 
+  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
         rad != Rich::radiators().end(); ++rad )
   {
 
@@ -144,9 +140,7 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
     // fudge factor warning
     if ( std::fabs(m_ckFudge[*rad]) > 1e-7 )
     {
-      std::ostringstream mess;
-      mess << "Applying " << *rad << " CK theta correction factor : " << m_ckFudge[*rad];
-      Warning( mess.str(), StatusCode::SUCCESS );
+      info() << "Applying " << *rad << " CK theta correction factor : " << m_ckFudge[*rad] << endreq;
     }
 
     info() << "Minimum active " << *rad << " segment fraction = " << m_minActiveFrac[*rad] << endreq;
@@ -182,7 +176,7 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
 //=========================================================================
 //  reconstruct a photon from track segment and pixel
 //=========================================================================
-StatusCode 
+StatusCode
 PhotonRecoUsingQuarticSoln::
 reconstructPhoton ( const LHCb::RichRecSegment * segment,
                     const LHCb::RichRecPixel * pixel,
@@ -201,13 +195,16 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // Detector information (RICH, radiator and HPD panel)
   const Rich::DetectorType rich     = trSeg.rich();
   const Rich::RadiatorType radiator = trSeg.radiator();
-  const Rich::Side side             = m_rich[rich]->side( detectionPoint );
+  const Rich::Side         side     = m_rich[rich]->side( detectionPoint );
 
   // Emission point to use for photon reconstruction
   // operate directly on photon data member for efficiency
-  // Starting value is the "best" point on the track segment
   Gaudi::XYZPoint & emissionPoint = gPhoton.emissionPoint();
   m_emissPoint->emissionPoint( segment, pixel, emissionPoint );
+
+  // Photon direction at emission point
+  // Again, operator directly on data member
+  Gaudi::XYZVector & photonDirection = gPhoton.emissionDir();
 
   // Final reflection points on sec and spherical mirrors
   // operate directly on photon data
@@ -264,8 +261,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       if ( !findMirrorData( rich, side, virtDetPoint, emissionPoint1,
                             sphSegment1, secSegment1, sphReflPoint1, secReflPoint1 ) )
       {
-        return Warning( "Failed to reconstruct photon for start of segment" );
-        //return StatusCode::FAILURE;
+        //return Warning( Rich::text(radiator)+" : Failed to reconstruct photon for start of segment" );
+        return StatusCode::FAILURE;
       }
       if ( m_checkBeamPipe[radiator] )
       {
@@ -285,8 +282,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       if ( !findMirrorData( rich, side, virtDetPoint, emissionPoint2,
                             sphSegment2, secSegment2, sphReflPoint2, secReflPoint2 ) )
       {
-        return Warning( "Failed to reconstruct photon for end of segment" );
-        //return StatusCode::FAILURE;
+        //return Warning( Rich::text(radiator)+" : Failed to reconstruct photon for end of segment" );
+        return StatusCode::FAILURE;
       }
       if ( !beamTestOK && m_checkBeamPipe[radiator] )
       {
@@ -299,7 +296,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       if ( !beamTestOK )
       {
         // both start and end points failed beam pipe test -> reject
-        //return Warning( "Failed beam pipe intersection checks" );
+        //return Warning( Rich::text(radiator)+" : Failed beam pipe intersection checks" );
         return StatusCode::FAILURE;
       }
       // -------------------------------------------------------------------------------
@@ -314,7 +311,11 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                                                    sphReflPoint1-emissionPoint1 ) ||
                           sphSegment2->intersects( emissionPoint2,
                                                    sphReflPoint2-emissionPoint2 ) );
-        if ( !ok ) return StatusCode::FAILURE;
+        if ( !ok ) 
+        {
+          //return Warning( Rich::text(radiator)+" : Failed mirror segment intersection checks" );
+          return StatusCode::FAILURE;
+        }
       }
       // -------------------------------------------------------------------------------
 
@@ -328,7 +329,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                                      emissionPoint,
                                      fraction ) )
       {
-        //return Warning( "Failed to compute best gas emission point" );
+        //return Warning( Rich::text(radiator)+" : Failed to compute best gas emission point" );
         return StatusCode::FAILURE;
       }
       // -------------------------------------------------------------------------------
@@ -353,7 +354,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     // if configured to do so reject ambiguous photons
     if ( m_rejectAmbigPhots[radiator] && !unambigPhoton )
     {
-      //return Warning( "Failed ambiguous photon test" );
+      //return Warning( Rich::text(radiator)+" : Failed ambiguous photon test" );
       return StatusCode::FAILURE;
     }
 
@@ -365,7 +366,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   if ( fraction < m_minActiveFrac[radiator] )
   {
-    //return Warning( "Failed active segment fraction cut" );
+    //return Warning( Rich::text(radiator)+" : Failed active segment fraction cut" );
     return StatusCode::FAILURE;
   }
   // --------------------------------------------------------------------------------------
@@ -381,7 +382,10 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     if ( !findMirrorData(rich,side,
                          virtDetPoint,emissionPoint,
                          sphSegment,secSegment,sphReflPoint,secReflPoint ) )
+    {
+      //return Warning( Rich::text(radiator)+" : Failed backup photon reconstruction" ); 
       return StatusCode::FAILURE;
+    }
   }
   // --------------------------------------------------------------------------------------
 
@@ -407,8 +411,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                             sphSegment->radius(),
                             sphReflPoint ) )
       {
-        return Warning( "Failed to reconstruct photon using mirror segments" );
-        //return StatusCode::FAILURE;
+        //return Warning( Rich::text(radiator)+" : Failed to reconstruct photon using mirror segments" );
+        return StatusCode::FAILURE;
       }
 
     }
@@ -428,15 +432,17 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                                                             virtDetPoint - sphReflPoint,
                                                             secSegment->centreNormalPlane(),
                                                             secReflPoint );
-        if ( sc.isFailure() ) { return StatusCode::FAILURE; }
+        if ( sc.isFailure() ) 
+        { 
+          //return Warning( Rich::text(radiator)+" : Failed to intersect nominal secondary mirror plane" );
+          return sc; 
+        }
         // (re)find the secondary mirror
         secSegment = m_mirrorSegFinder->findSecMirror( rich, side, secReflPoint );
 
         // Construct plane tangential to secondary mirror passing through reflection point
-        // CRJ : Unit() method may not be needed here ...
-        const Gaudi::Plane3D
-          plane( Gaudi::XYZVector( secSegment->centreOfCurvature() - secReflPoint ).Unit(),
-                 secReflPoint );
+        const Gaudi::Plane3D plane( secSegment->centreOfCurvature() - secReflPoint,
+                                    secReflPoint );
 
         // re-find the reflection of the detection point in the sec mirror
         // (virtual detection point) with this mirror plane
@@ -450,9 +456,10 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                               sphSegment->radius(),
                               sphReflPoint ) )
         {
-          return Warning( "Failed to reconstruct photon using mirror segments" );
-          //return StatusCode::FAILURE;
+          //return Warning(  Rich::text(radiator)+" : Failed to reconstruct photon using mirror segments" );
+          return StatusCode::FAILURE;
         }
+
         // (re)find the spherical mirror segment
         sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, sphReflPoint );
 
@@ -481,12 +488,12 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   {
     if ( sphReflPoint.x() * virtDetPoint.x() < 0.0 )
     {
-      //return Warning( "RICH2 : Reflection point on wrong side" );
+      //return Warning( Rich::text(radiator)+" : Reflection point on wrong side" );
       return StatusCode::FAILURE;
     }
     if ( m_checkPhotCrossSides[radiator] && (sphReflPoint.x() * emissionPoint.x() < 0.0) )
     {
-      //return Warning( "RICH2 : Photon cross between left and right sides" );
+      //return Warning( Rich::text(radiator)+" : Photon cross between left and right sides" );
       return StatusCode::FAILURE;
     }
   }
@@ -494,12 +501,12 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   {
     if ( sphReflPoint.y() * virtDetPoint.y() < 0.0 )
     {
-      //return Warning( "RICH1 : Reflection point on wrong side" );
+      //return Warning( Rich::text(radiator)+" : Reflection point on wrong side" );
       return StatusCode::FAILURE;
     }
     if ( m_checkPhotCrossSides[radiator] && (sphReflPoint.y() * emissionPoint.y() < 0.0) )
     {
-      //return Warning( "RICH1 : Photon cross between top and bottom sides" );
+      //return Warning( Rich::text(radiator)+" : Photon cross between top and bottom sides" );
       return StatusCode::FAILURE;
     }
   }
@@ -515,14 +522,18 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                                                         virtDetPoint - sphReflPoint,
                                                         secSegment->centreNormalPlane(),
                                                         secReflPoint );
-    if ( sc.isFailure() ) { return StatusCode::FAILURE; }
+    if ( sc.isFailure() ) 
+    { 
+      //return Warning( Rich::text(radiator)+" : Failed final secondary mirror plane intersection" );
+      return sc; 
+    }
   }
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
   // calculate the cherenkov angles using the photon and track vectors
   // --------------------------------------------------------------------------------------
-  Gaudi::XYZVector photonDirection = sphReflPoint - emissionPoint;
+  photonDirection = (sphReflPoint-emissionPoint).Unit();
   double thetaCerenkov(0), phiCerenkov(0);
   trSeg.angleToDirection( photonDirection, thetaCerenkov, phiCerenkov );
   // --------------------------------------------------------------------------------------
@@ -577,7 +588,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 //=========================================================================
 // Find mirror segments and reflection points for given data
 //=========================================================================
-bool
+bool 
 PhotonRecoUsingQuarticSoln::
 findMirrorData( const Rich::DetectorType rich,
                 const Rich::Side side,
@@ -712,24 +723,10 @@ correctAeroRefraction( const LHCb::RichTrackSegment& trSeg,
                        Gaudi::XYZVector& photonDirection,
                        double & thetaCerenkov ) const
 {
-  // Normalise photon vector to magnitude one
-  photonDirection = photonDirection.Unit();
-
-  // get refractive indices for aerogel and rich1Gas
-  const double refAero
-    = m_refIndex->refractiveIndex( Rich::Aerogel, trSeg.avPhotonEnergy() );
-  const double refrich1Gas
-    = m_refIndex->refractiveIndex( Rich::Rich1Gas,   trSeg.avPhotonEnergy() );
-  const double RratioSq = (refAero*refAero)/(refrich1Gas*refrich1Gas);
-
-  // Apply Snells law and update angle
-  Gaudi::XYZVector newDir( 0, 0,
-                           sqrt(1.-(1.-photonDirection.Z()*photonDirection.Z())/RratioSq ) );
-  const double R = photonDirection.Y()/photonDirection.X();
-  newDir.SetX( sqrt( (1.-newDir.Z()*newDir.Z())/(1. + R*R) ) );
-  if ( photonDirection.X() < 0 ) newDir.SetX( -newDir.X() );
-  newDir.SetY( R*newDir.X() );
-  const double ctc = newDir.Dot( trSeg.bestMomentum().Unit() );
+  // apply Snell's Law
+  m_snellsLaw->gasToAerogel( photonDirection, trSeg.avPhotonEnergy() );
+  // update CK theta
+  const double ctc = photonDirection.Dot( trSeg.bestMomentum().Unit() );
   thetaCerenkov = ( ctc>1 ? 0 : acos(ctc) );
 }
 

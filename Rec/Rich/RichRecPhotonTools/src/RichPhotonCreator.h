@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.h,v 1.1.1.1 2007-11-26 17:25:46 jonrob Exp $
+ *  $Id: RichPhotonCreator.h,v 1.2 2008-01-25 13:33:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -52,9 +52,6 @@ namespace Rich
 
       // Initialize method
       StatusCode initialize();
-
-      // Finalize method
-      StatusCode finalize();
 
     protected: // methods
 

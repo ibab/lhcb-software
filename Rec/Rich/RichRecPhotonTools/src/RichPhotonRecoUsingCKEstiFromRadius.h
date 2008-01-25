@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingCKEstiFromRadius.h,v 1.1.1.1 2007-11-26 17:25:46 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingCKEstiFromRadius.h,v 1.2 2008-01-25 13:33:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -83,6 +83,16 @@ namespace Rich
       StatusCode reconstructPhoton ( const LHCb::RichRecSegment * segment,
                                      const LHCb::RichRecPixel * pixel,
                                      LHCb::RichGeomPhoton& gPhoton ) const;
+
+    private: // methods
+
+      /// Check if the local coordinate hits a and b are on the same detector side
+      inline bool sameSide( const Rich::RadiatorType rad,
+                            const Gaudi::XYZPoint & a,
+                            const Gaudi::XYZPoint & b ) const
+      {
+        return ( Rich::Rich2Gas == rad ? a.x() * b.x() > 0 : a.y() * b.y() > 0 );
+      }
 
     private: // data
 

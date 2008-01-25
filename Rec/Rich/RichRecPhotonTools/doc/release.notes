@@ -4,6 +4,11 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-01-25 - Chris Jones
+ - Improvements to ray tracing photon reconstruction.
+ - Update quartic photon reconstruction tool to use new Snell's law tool.
+ - Change messages aout CK theta correction factors from warning to info.
+
 !======================= RichRecPhotonTools v1r0 2007-11-30 ==================
 ! 2007-10-31 - Chris Jones
  - Split of package from RichRecTools. Original package was growing too large

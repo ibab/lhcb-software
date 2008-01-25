@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.1.1.1 2007-11-26 17:25:46 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.2 2008-01-25 13:33:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -28,8 +28,8 @@
 #include "RichKernel/IRichMirrorSegFinder.h"
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
-#include "RichKernel/IRichRefractiveIndex.h"
 #include "RichRecBase/IRichPhotonEmissionPoint.h"
+#include "RichKernel/IRichSnellsLawRefraction.h"
 
 // RichKernel
 #include "Kernel/RichSide.h"
@@ -210,11 +210,11 @@ namespace Rich
       /// RichSmartID tool
       const ISmartIDTool* m_idTool;
 
-      /// Refractive index tool
-      const IRefractiveIndex * m_refIndex;
-
       /// Estimated emission point tool
       const IPhotonEmissionPoint * m_emissPoint;
+
+      /// Snell's Law refraction tool
+      const ISnellsLawRefraction * m_snellsLaw;
 
       /** @brief Flag to indicate if the unambiguous photon test should be performed
        *  for each radiator
