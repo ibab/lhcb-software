@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.2 2008-01-25 13:46:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -32,9 +32,7 @@ GeomEffPhotonTracing::GeomEffPhotonTracing ( const std::string& type,
     m_richSys         ( NULL ),
     m_nGeomEff        ( 0    ),
     m_nGeomEffBailout ( 0    ),
-    m_pdInc           ( 0    ),
-    m_traceMode       ( LHCb::RichTraceMode::RespectHPDTubes,
-                        LHCb::RichTraceMode::SimpleHPDs )
+    m_pdInc           ( 0    )
 {
 
   // define interface
@@ -45,6 +43,7 @@ GeomEffPhotonTracing::GeomEffPhotonTracing ( const std::string& type,
   declareProperty( "NPhotonsGeomEffBailout", m_nGeomEffBailout = 20    );
   declareProperty( "CheckHPDsAreActive",     m_hpdCheck        = false );
   declareProperty( "CheckBeamPipe", m_checkBeamPipe            = false );
+  declareProperty( "UseDetailedHPDsInRayTracing", m_useDetailedHPDsForRayT = false );
 
 }
 
@@ -76,9 +75,12 @@ StatusCode GeomEffPhotonTracing::initialize()
     m_phiValues.push_back(ckPhi);
   }
 
+  // configure ray tracing
+  m_traceMode = LHCb::RichTraceMode( LHCb::RichTraceMode::RespectHPDTubes,
+                                     ( m_useDetailedHPDsForRayT ? 
+                                       LHCb::RichTraceMode::FullHPDs : 
+                                       LHCb::RichTraceMode::SimpleHPDs ) );
   if ( m_checkBeamPipe ) { m_traceMode.setBeamPipeIntersects(true); }
-
-  // the ray-tracing mode
   info() << "Sampling Mode : " << m_traceMode << endreq;
 
   return sc;
@@ -134,7 +136,8 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
                                        emissionPt,
                                        photDir,
                                        photon,
-                                       mode );
+                                       mode, Rich::top,
+                                       segment->trackSegment().avPhotonEnergy() );
         if ( m_traceMode.traceWasOK(result) )
         {
           // Check HPD status

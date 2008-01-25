@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::CherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.2 2008-01-25 13:46:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -177,6 +177,10 @@ double CherenkovAngle::avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
   // radiator
   const Rich::RadiatorType iRad = segment->trackSegment().radiator();
 
+  // ray tracing mode
+  LHCb::RichTraceMode mode( LHCb::RichTraceMode::IgnoreHPDAcceptance );
+  mode.setAeroRefraction ( iRad == Rich::Aerogel ); 
+
   // send off virtual photons
   double ckPhi = 0.0;
   double rSum  = 0.0;
@@ -191,8 +195,6 @@ double CherenkovAngle::avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
     const Gaudi::XYZVector photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, ckPhi );
 
     Gaudi::XYZPoint hitPointGlobal;
-    LHCb::RichTraceMode mode( LHCb::RichTraceMode::IgnoreHPDAcceptance );
-    mode.setAeroRefraction ( iRad == Rich::Aerogel ); 
     const LHCb::RichTraceMode::RayTraceResult result = 
       m_rayTrace->traceToDetector( segment->trackSegment().rich(),
                                    emissionPt,

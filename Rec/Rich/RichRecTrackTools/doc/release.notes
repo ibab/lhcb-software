@@ -4,6 +4,12 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-01-25 - Chris Jones
+ - Add new methods to average track signal tool.
+ - Add ray tracing options to photon ray tracing geom. eff. tool.
+ - Set segment average photon energy in segment creator (remove setting
+   in track creator).
+
 !======================== RichRecTrackTools v1r0 2007-12-11 ==================
 ! 2007-12-11 - Chris Jones
  - Improvements to Track segment makers

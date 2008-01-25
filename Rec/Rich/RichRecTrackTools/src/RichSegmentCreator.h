@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::SegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.h,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichSegmentCreator.h,v 1.2 2008-01-25 13:46:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -29,6 +29,7 @@
 #include "RichKernel/RichStatDivFunctor.h"
 
 // interfaces
+#include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichRecBase/IRichSegmentCreator.h"
 #include "RichKernel/IRichDetParameters.h"
 
@@ -97,6 +98,9 @@ namespace Rich
       void FinishEvent();
 
     private:  // Private data
+
+      /// Pointer to RichExpectedTrackSignal interface
+      const IExpectedTrackSignal * m_signal;
 
       /// Pointer to RichRecTracks
       mutable LHCb::RichRecSegments * m_segments;

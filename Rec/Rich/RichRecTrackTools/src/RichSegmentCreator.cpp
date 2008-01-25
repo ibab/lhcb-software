@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.2 2008-01-25 13:46:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -29,6 +29,7 @@ SegmentCreator::SegmentCreator ( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
   : RichRecToolBase ( type, name, parent      ),
+    m_signal        ( NULL                    ),
     m_segments      ( 0                       ),
     m_richRecSegmentLocation ( LHCb::RichRecSegmentLocation::Default ),
     m_binsEn        ( Rich::NRadiatorTypes, 5 ),
@@ -67,6 +68,8 @@ StatusCode SegmentCreator::initialize()
   {
     debug() << "RichRecSegment location : " << m_richRecSegmentLocation << endreq;
   }
+
+  acquireTool( "RichExpectedTrackSignal", m_signal );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -134,12 +137,18 @@ LHCb::RichRecSegment *
 SegmentCreator::newSegment( LHCb::RichTrackSegment* segment,
                             LHCb::RichRecTrack* pTrk ) const
 {
-  return ( !segment ? 0 :
-           new LHCb::RichRecSegment ( segment,
-                                      pTrk,
-                                      m_binsEn[segment->radiator()],
-                                      m_minPhotEn[segment->radiator()],
-                                      m_maxPhotEn[segment->radiator()] ) );
+  LHCb::RichRecSegment * seg(NULL);
+  if ( segment )
+  {
+    seg = new LHCb::RichRecSegment ( segment,
+                                     pTrk,
+                                     m_binsEn[segment->radiator()],
+                                     m_minPhotEn[segment->radiator()],
+                                     m_maxPhotEn[segment->radiator()] );
+    // Set the average photon energy
+    segment->setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(seg) );
+  }
+  return seg;
 }
 
 // Forms a new RichRecSegment object

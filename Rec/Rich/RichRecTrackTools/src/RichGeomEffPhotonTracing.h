@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::GeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.2 2008-01-25 13:46:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -101,6 +101,9 @@ namespace Rich
 
       /// Increment parameter for PD efficiencies
       double m_pdInc;
+
+      /// JO flag to switch between simple or detail HPD description in ray tracing
+      bool m_useDetailedHPDsForRayT;
 
       /// Ray-tracing configuration object
       LHCb::RichTraceMode m_traceMode;

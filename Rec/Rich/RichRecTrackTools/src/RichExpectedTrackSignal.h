@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::ExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.h,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.h,v 1.2 2008-01-25 13:46:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -129,13 +129,19 @@ namespace Rich
       double nDetectablePhotons ( LHCb::RichRecSegment * segment,
                                   const Rich::ParticleIDType id ) const;
 
-      // The average energy of signal Cherenkov photons
+      // The average energy of signal Cherenkov photons for the given ID
       double avgSignalPhotEnergy( LHCb::RichRecSegment * segment,
                                   const Rich::ParticleIDType id ) const;
 
-      // The average energy of emitted Cherenkov photons
+      // The average energy of emitted Cherenkov photons for the given ID
       double avgEmitPhotEnergy( LHCb::RichRecSegment * segment,
                                 const Rich::ParticleIDType id ) const;
+
+      // The average energy of signal Cherenkov photons
+      double avgSignalPhotEnergy( LHCb::RichRecSegment * segment ) const;
+
+      // The average energy of emitted Cherenkov photons
+      double avgEmitPhotEnergy( LHCb::RichRecSegment * segment ) const;
 
       // Is it possible for this track to give Rich information
       bool hasRichInfo( LHCb::RichRecTrack * track ) const;

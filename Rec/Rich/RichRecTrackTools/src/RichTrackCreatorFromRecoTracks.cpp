@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.2 2008-01-25 13:46:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -204,11 +204,6 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
         // make a new RichRecSegment from this RichTrackSegment
         // takes ownership of RichTrackSegment* *iSeg - responsible for deletion
         LHCb::RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
-
-        // Set the average photon energy (for default hypothesis)
-        newSegment->trackSegment()
-          .setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(newSegment,
-                                                            newTrack->currentHypothesis()) );
 
         // Get PD panel impact point
         if ( rayTraceHPDPanelPoints(**iSeg,newSegment).isSuccess() )

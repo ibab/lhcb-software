@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::ExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.2 2007-12-11 14:17:42 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.3 2008-01-25 13:46:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -202,8 +202,8 @@ ExpectedTrackSignal::nSignalPhotons (  LHCb::RichRecSegment * segment,
 }
 
 double
-ExpectedTrackSignal::avgSignalPhotEnergy(  LHCb::RichRecSegment * segment,
-                                           const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::avgSignalPhotEnergy( LHCb::RichRecSegment * segment,
+                                          const Rich::ParticleIDType id ) const
 {
 
   // NB : If used often this method should cache information in segment
@@ -214,7 +214,6 @@ ExpectedTrackSignal::avgSignalPhotEnergy(  LHCb::RichRecSegment * segment,
   double avgEnergy = 0;
   if ( nSig> 0 )
   {
-
     // loop over energy bins
     const Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & spectra = segment->signalPhotonSpectra();
     double totalEnergy = 0;
@@ -226,7 +225,6 @@ ExpectedTrackSignal::avgSignalPhotEnergy(  LHCb::RichRecSegment * segment,
     
     // normalise result
     avgEnergy = ( totalEnergy>0 ? avgEnergy/totalEnergy : 0 );
-
   }
 
   if ( msgLevel(MSG::DEBUG) )
@@ -271,10 +269,27 @@ ExpectedTrackSignal::avgEmitPhotEnergy( LHCb::RichRecSegment * segment,
 }
 
 double
+ExpectedTrackSignal::avgSignalPhotEnergy( LHCb::RichRecSegment * segment ) const
+{
+  return ( nSignalPhotons(segment,Rich::Pion) > 0 ?
+           avgSignalPhotEnergy ( segment, Rich::Pion         ) :
+           avgSignalPhotEnergy ( segment, m_pidTypes.front() ) );
+}
+
+double
+ExpectedTrackSignal::avgEmitPhotEnergy( LHCb::RichRecSegment * segment ) const
+{
+  return ( nEmittedPhotons(segment,Rich::Pion) > 0 ?
+           avgEmitPhotEnergy ( segment, Rich::Pion         ) :
+           avgEmitPhotEnergy ( segment, m_pidTypes.front() ) );
+}
+
+double
 ExpectedTrackSignal::nScatteredPhotons ( LHCb::RichRecSegment * segment,
                                          const Rich::ParticleIDType id ) const
 {
-  if ( !segment->nScatteredPhotons().dataIsValid(id) ) {
+  if ( !segment->nScatteredPhotons().dataIsValid(id) ) 
+  {
     // Scattered componented is calculated with the signal
     nSignalPhotons( segment, id );
   }
