@@ -29,6 +29,7 @@ DigiWriter.ItemList =
 , "/Event/Link/Raw/IT/Clusters#1"
 , "/Event/Link/Raw/OT/Times#1"
 , "/Event/Link/Raw/Ecal/Digits#1"
+, "/Event/Link/Raw/Hcal/Digits#1"
 , "/Event/Link/Raw/Muon/Digits#1"
 , "/Event/MC/TrackInfo#1"
 

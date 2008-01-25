@@ -2,7 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-!======================== GaudiConf v10r6 2008-01-15 ========================
+!======================== GaudiConf v10r6 2008-01-25 ========================
+! 2008-01-25 - Marco Cattaneo
+ - Add Event/Link/Raw/Hcal/Digits to DigiContent.opts and MCDstContent.opts
+
 ! 2008-01-15 - Marco Cattaneo
  - In DecodeRawEvent.opts and UnpackDigi.opts:
    . Use AlgMap property to define the algorithms

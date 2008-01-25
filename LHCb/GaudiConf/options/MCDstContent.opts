@@ -9,6 +9,10 @@ DstWriter.OptItemList +=
   // Links for  extended Rich info if corresponding data available on input file
 , "/Event/Link/MC/Particles2MCRichTracks#1"
 , "/Event/Link/MC/Rich/Hits2MCRichOpticalPhotons#1"
+
+  // Objects propagated from Boole, not available in DC06
+, "/Event/Link/Raw/Hcal/Digits#1"  // From Boole v14r9
+
 }; 
 
 DstWriter.ItemList += 
