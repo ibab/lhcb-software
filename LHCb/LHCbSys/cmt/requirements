@@ -78,7 +78,7 @@ use SimComponents         v2r8   Sim     # Gloria Corti, Marco Cattaneo
 use MDF                   v3r0   DAQ     # Markus Frank
 use DaVinciKernel         v6r10  Phys    # Juan Palacios
 use DaVinciMCKernel       v2r5   Phys    # Juan Palacios
-use DDDB                  v1r2   Det     # Marco Cattaneo
+use DDDB                  v1r3   Det     # Marco Cattaneo
 use LoKi                  v7r0   Phys    # Ivan Belyaev
 use LoKiAlgo              v7r0   Phys    # Ivan Belyaev
 use LoKiAlgoMC            v7r0   Phys    # Ivan Belyaev

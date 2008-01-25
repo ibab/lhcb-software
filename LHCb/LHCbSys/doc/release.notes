@@ -5,14 +5,14 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r3>2008-01-24 LHCbSys v23r3</A></H1><PRE>
+</PRE><H1><A NAME=v23r3>2008-01-25 LHCbSys v23r3</A></H1><PRE>
 This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 
 - New packages:      MDF_DCAP v1r0 - DCAP plugin to read MDF files 
                      MDF_GFAL v1r0 - GFAL plugin to read MDF files 
                      MDF_RFIO v1r0 - RFIO plugin to read MDF files 
 - Packages modified: GaudiConf v10r6, GaudiObjDesc v11r1, KernelSys v7r1,
-    LHCbKernel v8r1, LHCbMath v2r5, DetSys v11r2, DetDesc v18r3,
+    LHCbKernel v8r1, LHCbMath v2r5, DDDB v1r3, DetSys v11r2, DetDesc v18r3,
     DetDescSvc v1r16, MuonDet v7r2, STDet v3r9, DetCond v11r8, CondDBUI v2r7,
     DetDescChecks v4r5, EventSys v24r0, DAQEvent v7r8, HltEvent v8r6,
     PhysEvent v11r5, RecEvent v2r9, TrackEvent v4r10, MDF v3r0, DAQSys v3r8,
@@ -25,6 +25,7 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
   . In DecodeRawEvent.opts:
     o Add algorithm to decode ODIN
     o Disable L0DU
+  . Add Event/Link/Raw/Hcal/Digits to DigiContent.opts and MCDstContent.opts
 
 - In GaudiObjDesc v11r1
   . New feature for enum generation: when activating the string<->enum conversion
@@ -51,6 +52,9 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
        *   - sigmamass     :   sigma(M)    for M^2 > 0
        *   - chi2mass      :   delta^2(M^2)/sigma^2(M^2) 
   . Update(improve?) the doxygen comments for some other header files.
+
+- In DDDB v1r3
+  . Change requirements to pick up SQLDDDB v4r*
 
 - In DetDesc v18r3
   . New treatment of geometry overlaps:
@@ -143,6 +147,7 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
   . Add a protection against events pile-up in the same rawEvent
     (actually, several banks with same sourceID)
   . Fix unclear precedence to please windows compiler
+  . Add Hcal together with Ecal as default in CaloReCreateMCLinks.cpp
 
 - In DetCond v11r8
   . Replace homemade linkopts with new Boost_linkopts_filesystem_mt
