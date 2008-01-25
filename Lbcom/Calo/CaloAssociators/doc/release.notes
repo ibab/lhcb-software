@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.49 2007-09-19 12:22:39 cattanem Exp $
+! $Id: release.notes,v 1.50 2008-01-25 13:09:54 odescham Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+
+! 2008-01-25 - Olivier Deschamps
+ - add BooleRelations.opts : options to create Linker for Ecal & Hcal in Boole
 
 !===================== CaloAssociators v6r4 2007-09-19 ========================
 ! 2007-09-19 - Marco Cattaneo
