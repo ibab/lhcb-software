@@ -4,7 +4,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::AddMissingMCRichTracksAlg
  *
  *  CVS Log :-
- *  $Id: AddMissingMCRichTracksAlg.h,v 1.3 2007-12-05 17:41:08 jonrob Exp $
+ *  $Id: AddMissingMCRichTracksAlg.h,v 1.4 2008-01-25 13:22:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   26/10/2007
@@ -79,8 +79,8 @@ namespace Rich
         /// random number generator
         mutable Rndm::Numbers m_rndm;
 
-        /// Fraction of tracks to reject
-        double m_rejFrac;
+        /// Fraction of missing MC tracks to add
+        double m_mcAddFrac;
 
       };
 

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.1.1.1 2007-10-26 10:34:19 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.2 2008-01-25 13:22:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -34,8 +34,6 @@ MCMassHypoRingsAlg::MCMassHypoRingsAlg( const std::string& name,
     m_rayTrace     ( 0 ),
     m_maxCKtheta   ( Rich::NRadiatorTypes, 999 ),
     m_minCKtheta   ( Rich::NRadiatorTypes, 0   ),
-    m_traceMode    ( LHCb::RichTraceMode::RespectHPDTubes,
-                     LHCb::RichTraceMode::SimpleHPDs ),
     m_linker       ( NULL )
 {
 
@@ -63,6 +61,8 @@ MCMassHypoRingsAlg::MCMassHypoRingsAlg( const std::string& name,
   m_usedRads[Rich::Rich1Gas] = true;
   m_usedRads[Rich::Rich2Gas] = true;
 
+  declareProperty( "UseDetailedHPDsInRayTracing", m_useDetailedHPDsForRayT = false );
+
 }
 
 // Destructor
@@ -81,12 +81,15 @@ StatusCode MCMassHypoRingsAlg::initialize()
   acquireTool( "RichRayTraceCKCone",  m_rayTrace );
 
   /// Ray-tracing configuration object
+  m_traceMode = LHCb::RichTraceMode( LHCb::RichTraceMode::RespectHPDTubes,
+                                     ( m_useDetailedHPDsForRayT ? 
+                                       LHCb::RichTraceMode::FullHPDs : 
+                                       LHCb::RichTraceMode::SimpleHPDs ) );
   m_traceMode.setAeroRefraction ( true );
   info() << "MCTrack " << m_traceMode << endreq;
-
+  
   return sc;
 }
-
 
 StatusCode MCMassHypoRingsAlg::execute()
 {

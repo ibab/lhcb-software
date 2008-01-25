@@ -4,14 +4,14 @@
  *  Header file for algorithm class : Rich::Rec::MC::MCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.h,v 1.1.1.1 2007-10-26 10:34:19 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.h,v 1.2 2008-01-25 13:22:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
  */
 
-#ifndef RICHRECMONITOR_RICHMCMASSHYPORINGSALG_H
-#define RICHRECMONITOR_RICHMCMASSHYPORINGSALG_H 1
+#ifndef RICHRECMCALGORITHMS_RICHMCMASSHYPORINGSALG_H
+#define RICHRECMCALGORITHMS_RICHMCMASSHYPORINGSALG_H 1
 
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
@@ -116,6 +116,9 @@ namespace Rich
         /// Ray-tracing configuration object
         LHCb::RichTraceMode m_traceMode;
 
+        /// JO flag to switch between simple or detail HPD description in ray tracing
+        bool m_useDetailedHPDsForRayT;
+
         /// Pointer to linker object
         mutable MCRichSegmentToMCCKRing * m_linker;
 
@@ -144,4 +147,4 @@ namespace Rich
   }
 }
 
-#endif // RICHRECMONITOR_RICHMCMASSHYPORINGSALG_H
+#endif // RICHRECMCALGORITHMS_RICHMCMASSHYPORINGSALG_H

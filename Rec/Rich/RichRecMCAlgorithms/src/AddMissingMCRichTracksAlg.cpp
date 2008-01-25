@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : AddMissingMCRichTracksAlg
  *
  *  CVS Log :-
- *  $Id: AddMissingMCRichTracksAlg.cpp,v 1.3 2007-12-05 17:46:33 jonrob Exp $
+ *  $Id: AddMissingMCRichTracksAlg.cpp,v 1.4 2008-01-25 13:22:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -34,7 +34,7 @@ AddMissingMCRichTracksAlg::AddMissingMCRichTracksAlg( const std::string& name,
 {
   declareProperty( "MCRichTracksLocation",
                    m_mcrTracksLocation = LHCb::MCRichTrackLocation::Default );
-  declareProperty( "RejectFraction", m_rejFrac = -1.0 );
+  declareProperty( "AddFraction", m_mcAddFrac = 1.0 );
 }
 
 // Destructor
@@ -58,8 +58,8 @@ StatusCode AddMissingMCRichTracksAlg::initialize()
     return Error( "Unable to create Random generator" );
   }
 
-  warning() << "Will randomly reject " << m_rejFrac*100
-            << " % of missing MC tracks" << endreq;
+  info() << "Will add " << m_mcAddFrac*100
+         << " % of missing MC tracks" << endreq;
 
   return sc;
 }
@@ -94,13 +94,13 @@ StatusCode AddMissingMCRichTracksAlg::execute()
         mctrack != mcrTracks->end(); ++mctrack )
   {
     // do we already have a track for this MCRichTrack
-    if ( foundMCTracks.find(*mctrack) != foundMCTracks.end() )
+    if ( foundMCTracks.find(*mctrack) == foundMCTracks.end() )
     {
       verbose() << "MCRichTrack " << (*mctrack)->key()
                 << " not already associated to a RichRecTrack";
       // No, so make a track for this one
       // toss a coin to only make a given fraction of tracks
-      if ( m_rejFrac < 0 || m_rndm() > m_rejFrac )
+      if ( m_rndm() < m_mcAddFrac )
       {
         verbose() << " -> Creating new track" << endreq;
         m_mcTkCreator->newTrack(*mctrack);

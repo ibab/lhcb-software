@@ -4,6 +4,10 @@
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
 
+! 2008-01-25 - Chris Jones
+ - Fix bug in missing MCRichTrack adding algorithm (adding the wrong tracks)
+ - Add ray tracing option to MC mass hypothesis ring algorithm
+
 !===================== RichRecMCAlgorithms v1r0 2007-12-10 ===================
 ! 2007-12-05 - Chris Jones
  - Add option to AddMissingMCRichTracksAlg to allow only a randomly choosen
