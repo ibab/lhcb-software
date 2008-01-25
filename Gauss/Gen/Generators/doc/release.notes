@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.117 2007-12-19 18:11:57 gcorti Exp $
+! $Id: release.notes,v 1.118 2008-01-25 11:42:45 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2008-01-25 - Patrick Robbe
+ - Special.cpp: set pile-up generation tool as a private tool
 
 !====================== Generators v7r7 2007-12-19 ===========================
 ! 2007-12-06 - Vanya BELYAEV

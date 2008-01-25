@@ -1,4 +1,4 @@
-// $Id: Special.cpp,v 1.10 2007-03-08 13:42:16 robbep Exp $
+// $Id: Special.cpp,v 1.11 2008-01-25 11:42:45 robbep Exp $
 // Include files 
 
 // local
@@ -53,7 +53,7 @@ StatusCode Special::initialize( ) {
 
   if ( "" != m_pileUpProductionToolName ) 
     m_pileUpProductionTool = 
-      tool< IProductionTool >( m_pileUpProductionToolName ) ;
+      tool< IProductionTool >( m_pileUpProductionToolName , this ) ;
 
   m_pileUpEventsVector.clear() ;
   m_pileUpCollisionsVector.clear() ;
