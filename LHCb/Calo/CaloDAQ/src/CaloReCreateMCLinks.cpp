@@ -1,8 +1,11 @@
-// $Id: CaloReCreateMCLinks.cpp,v 1.8 2007-08-27 14:03:50 odescham Exp $
+// $Id: CaloReCreateMCLinks.cpp,v 1.9 2008-01-25 13:08:36 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2007/08/27 14:03:50  odescham
+// clean unchecked StatusCode
+//
 // Revision 1.7  2006/12/14 10:33:17  ranjard
 // v3r0 - use InstallArea and fix CaloReCreateMCLinks.cpp to use new Gaudi
 //
@@ -113,8 +116,8 @@ protected:
     //m_mc    .push_back (  LHCb::MCCaloDigitLocation::Prs   ) ;
     m_raw   .push_back (    LHCb::CaloDigitLocation::Ecal  ) ;
     m_mc    .push_back (  LHCb::MCCaloDigitLocation::Ecal  ) ;
-    //m_raw   .push_back (    LHCb::CaloDigitLocation::Hcal  ) ;
-    //m_mc    .push_back (  LHCb::MCCaloDigitLocation::Hcal  ) ;
+    m_raw   .push_back (    LHCb::CaloDigitLocation::Hcal  ) ;
+    m_mc    .push_back (  LHCb::MCCaloDigitLocation::Hcal  ) ;
     //
     declareProperty ( "Digits"     , m_raw     ) ;
     declareProperty ( "MCDigits"   , m_mc      ) ;
