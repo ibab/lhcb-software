@@ -5,10 +5,14 @@ Purpose: LHCb Digitization program
 
 </PRE><H1><A NAME=v14r9>2008-01-25 Boole v14r9</A></H1><PRE>
 This version uses projects Gaudi v19r7, LHCb v23r3, Lbcom v6r14
- and DDDB v1r* (SQLDDDB v3r1 or greater), ParamFiles v7r1, FieldMap v4r7
+ and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
 
 It can process DC06 data, but output format is different from DC06, requires
 Brunel v32r1 or greater
+
+- Persistency changes
+  . Add /Event/Link/Raw/Hcal/Digits to DigiContent
+    (GaudiConf v19r6, CaloDAQ v4r3, CaloAssociators v6r5, Boole.opts)
 
 - New tuning
   . In valgrind.job, use the new ROOT suppressions file available from LCG_54
@@ -25,6 +29,8 @@ Brunel v32r1 or greater
 
 - Bug fixes
   . Fix minor memory leak in L0ProcessorDataLocation initialize() (L0DU v8r2)
+  . Fix problem with calculation of strip capacitance in VeloSim, database info
+    was inconsistent with changes introduced in Boole v14r5 (SQLDDDB v4r0)
 
 </PRE><H1><A NAME=v14r8>2007-12-13 Boole v14r8</A></H1><PRE>
 This version uses projects Gaudi v19r6, LHCb v23r2, Lbcom v6r13
