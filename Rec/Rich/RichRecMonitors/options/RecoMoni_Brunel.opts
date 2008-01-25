@@ -70,8 +70,14 @@ RichPixelMoni.Members += {
 };
 
 // Ray tracing tests
-RichRayTraceTests.Members += { "Rich::Rec::TrackRayTraceTest/TrackRayTraceTest" };
-RichRayTraceTests.Members += { "Rich::Rec::MC::PhotonRecoRayTraceTest/PhotonTestSimple",
-                               "Rich::Rec::MC::PhotonRecoRayTraceTest/PhotonTestFull" };
-PhotonTestSimple.FullHPDsInRayTracing = false;
-PhotonTestFull.FullHPDsInRayTracing = true;
+//RichRayTraceTests.Members += { "Rich::Rec::TrackRayTraceTest/TrackRayTraceTest" };
+RichRayTraceTests.Members += { 
+  "Rich::Rec::MC::PhotonRecoRayTraceTest/PhotRayTraceTestSimple"
+ ,"Rich::Rec::MC::PhotonRecoRayTraceTest/PhotRayTraceTestFull" 
+  //,"Rich::Rec::MC::PhotonRecoRayTraceTest/PhotRayTraceTestSimpleNoAmbig" 
+  //,"Rich::Rec::MC::PhotonRecoRayTraceTest/PhotRayTraceTestFullNoAmbig" 
+};
+PhotRayTraceTestSimple.FullHPDsInRayTracing = false;
+PhotRayTraceTestFull.FullHPDsInRayTracing   = true;
+//PhotRayTraceTestSimpleNoAmbig.FullHPDsInRayTracing = false;
+//PhotRayTraceTestFullNoAmbig.FullHPDsInRayTracing   = true;

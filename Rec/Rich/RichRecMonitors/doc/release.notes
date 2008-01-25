@@ -6,7 +6,7 @@
 
 ! 2008-01-03 - Chris Jones
  - Add new monitor that compares reconstructed photons to ray traced photons
- - Misc. Improvements to other monitors
+ - Misc. improvements to other monitors
 
 !====================== RichRecMonitors v2r13 2007-11-29 =====================
 ! 2007-11-26 - Chris Jones

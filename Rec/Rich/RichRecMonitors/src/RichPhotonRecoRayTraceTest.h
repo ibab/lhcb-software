@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PhotonRecoRayTraceTest
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoRayTraceTest.h,v 1.2 2008-01-04 16:15:15 jonrob Exp $
+ *  $Id: RichPhotonRecoRayTraceTest.h,v 1.3 2008-01-25 13:27:00 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   03/01/2008
@@ -103,6 +103,9 @@ namespace Rich
 
         /// Number of bins for 2D histograms
         unsigned int m_nBins2D;
+
+        /// Reject ambiguous photons ?
+        bool m_rejectAmbigPhots;
 
       };
 

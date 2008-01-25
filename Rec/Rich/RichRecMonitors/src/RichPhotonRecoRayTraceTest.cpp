@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::MC::PhotonRecoRayTraceTest
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoRayTraceTest.cpp,v 1.2 2008-01-04 16:15:14 jonrob Exp $
+ *  $Id: RichPhotonRecoRayTraceTest.cpp,v 1.3 2008-01-25 13:27:00 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   03/01/2008
@@ -36,9 +36,9 @@ PhotonRecoRayTraceTest::PhotonRecoRayTraceTest( const std::string& name,
   // JOs
   declareProperty( "RefractionCorrection", m_refractCorr = true  );
   declareProperty( "FullHPDsInRayTracing", m_fullHPDs    = false );
-  // number of bins
   declareProperty( "NumberBins1D",  m_nBins1D = 200 );
   declareProperty( "NumberBins2D",  m_nBins2D = 100 );
+  declareProperty( "RejectAmbiguousPhotons", m_rejectAmbigPhots = false );
 }
 
 // Destructor
@@ -93,6 +93,9 @@ StatusCode PhotonRecoRayTraceTest::execute()
     for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = photons.begin();
           iPhot != photons.end(); ++iPhot )
     {
+      // photon selection
+      if ( m_rejectAmbigPhots && !(*iPhot)->geomPhoton().mirrorNumValid() ) continue;
+
       // Make plots against reco photon
       makePlots( "Reco/",
                  (*iPhot)->geomPhoton().emissionPoint(),
@@ -146,10 +149,10 @@ void PhotonRecoRayTraceTest::makePlots( const std::string & type,
   // Histogramming
   const RichHistoID hid;
   //                       Aero  C4F10  CF4
-  const double pRLoc[]  = { 5,    4,     4   };
-  const double pRGlo[]  = { 10,   10,    10  };
-  const double primMR[] = { 0.6,  0.2,   0.2 };
-  const double secMR[]  = { 0.6,  0.2,   0.6 };
+  const double pRLoc[]  = { 0.6,  0.5,   1     };
+  const double pRGlo[]  = { 1,    1,     3     };
+  const double primMR[] = { 0.5,  0.001, 0.001 };
+  const double secMR[]  = { 0.2,  0.03,  0.3   };
 
   // Ray trace with these photon parameters
   LHCb::RichGeomPhoton rayTracedPhoton;
@@ -167,54 +170,97 @@ void PhotonRecoRayTraceTest::makePlots( const std::string & type,
   if ( result < LHCb::RichTraceMode::InHPDTube ) return;
   const std::string tag = ( result >= LHCb::RichTraceMode::InHPDTube ? "InHPD" : "OutHPD" );
 
+  // Detector region
+  std::string region, regionT;
+  if      ( detectPoint.y() < 0 && detectPoint.x() < 0 ) { region = "R1"; regionT = "y<0 x<0"; }
+  else if ( detectPoint.y() > 0 && detectPoint.x() < 0 ) { region = "R2"; regionT = "y>0 x<0"; }
+  else if ( detectPoint.y() < 0 && detectPoint.x() > 0 ) { region = "R3"; regionT = "y<0 x>0"; }
+  else if ( detectPoint.y() > 0 && detectPoint.x() > 0 ) { region = "R4"; regionT = "y>0 x>0"; }
+
   // HPD Hit positions Global coordinates
   const double detPntXDiff = rayTracedPhoton.detectionPoint().x() - detectPoint.x();
   const double detPntYDiff = rayTracedPhoton.detectionPoint().y() - detectPoint.y();
   const double detPntZDiff = rayTracedPhoton.detectionPoint().z() - detectPoint.z();
-  plot1D( detPntXDiff, hid(rad,type+"detPntXDiffGlo"+tag), "Det Point X Sep Global : "+tag, -pRGlo[rad], pRGlo[rad], m_nBins1D );
-  plot1D( detPntYDiff, hid(rad,type+"detPntYDiffGlo"+tag), "Det Point Y Sep Global : "+tag, -pRGlo[rad], pRGlo[rad], m_nBins1D );
-  plot1D( detPntZDiff, hid(rad,type+"detPntZDiffGlo"+tag), "Det Point Z Sep Global : "+tag, -pRGlo[rad], pRGlo[rad], m_nBins1D );
+  plot1D( detPntXDiff, hid(rad,type+"detPnt/Global/XDiff"+tag), "Det Point X Sep Global : "+tag, -pRGlo[rad], pRGlo[rad], m_nBins1D );
+  plot1D( detPntYDiff, hid(rad,type+"detPnt/Global/YDiff"+tag), "Det Point Y Sep Global : "+tag, -pRGlo[rad], pRGlo[rad], m_nBins1D );
+  plot1D( detPntZDiff, hid(rad,type+"detPnt/Global/ZDiff"+tag), "Det Point Z Sep Global : "+tag, -pRGlo[rad], pRGlo[rad], m_nBins1D );
+  plot2D( ckPhi, detPntXDiff, 
+          hid(rad,type+"detPnt/Global/XDiffVPhi"+tag), "Det Point X Sep Global V CK Phi: "+tag, 
+          0, 2*M_PI, -pRGlo[rad], pRGlo[rad], m_nBins2D, m_nBins2D );
+  plot2D( ckPhi, detPntYDiff, 
+          hid(rad,type+"detPnt/Global/YDiffVPhi"+tag), "Det Point Y Sep Global V CK Phi: "+tag, 
+          0, 2*M_PI, -pRGlo[rad], pRGlo[rad], m_nBins2D, m_nBins2D );
+  plot2D( ckPhi, detPntZDiff, 
+          hid(rad,type+"detPnt/Global/ZDiffVPhi"+tag), "Det Point Z Sep Global V CK Phi: "+tag, 
+          0, 2*M_PI, -pRGlo[rad], pRGlo[rad], m_nBins2D, m_nBins2D );
+  plot2D( ckPhi, detPntXDiff, 
+          hid(rad,type+"detPnt/Global/XDiffVPhi"+tag+region), "Det Point X Sep Global V CK Phi: "+tag+" : "+regionT, 
+          0, 2*M_PI, -pRGlo[rad], pRGlo[rad], m_nBins2D, m_nBins2D );
+  plot2D( ckPhi, detPntYDiff, 
+          hid(rad,type+"detPnt/Global/YDiffVPhi"+tag+region), "Det Point Y Sep Global V CK Phi: "+tag+" : "+regionT, 
+          0, 2*M_PI, -pRGlo[rad], pRGlo[rad], m_nBins2D, m_nBins2D );
+  plot2D( ckPhi, detPntZDiff, 
+          hid(rad,type+"detPnt/Global/ZDiffVPhi"+tag+region), "Det Point Z Sep Global V CK Phi: "+tag+" : "+regionT, 
+          0, 2*M_PI, -pRGlo[rad], pRGlo[rad], m_nBins2D, m_nBins2D );
 
   // HPD Hit positions Local Coordinates
   const Gaudi::XYZPoint origLocDetPnt = m_idTool->globalToPDPanel(detectPoint);
   const Gaudi::XYZPoint rayTLocDetPnt = m_idTool->globalToPDPanel(rayTracedPhoton.detectionPoint());
   const double detPntXDiffLoc = rayTLocDetPnt.x() - origLocDetPnt.x();
   const double detPntYDiffLoc = rayTLocDetPnt.y() - origLocDetPnt.y();
-  plot1D( detPntXDiffLoc, hid(rad,type+"detPntXDiffLoc"+tag), "Det Point X Sep Local : "+tag, -pRLoc[rad], pRLoc[rad], m_nBins1D );
-  plot1D( detPntYDiffLoc, hid(rad,type+"detPntYDiffLoc"+tag), "Det Point Y Sep Local : "+tag, -pRLoc[rad], pRLoc[rad], m_nBins1D );
+  plot1D( detPntXDiffLoc, hid(rad,type+"detPnt/Local/XDiff"+tag), "Det Point X Sep Local : "+tag, -pRLoc[rad], pRLoc[rad], m_nBins1D );
+  plot1D( detPntYDiffLoc, hid(rad,type+"detPnt/Local/YDiff"+tag), "Det Point Y Sep Local : "+tag, -pRLoc[rad], pRLoc[rad], m_nBins1D );
   plot2D( ckPhi, detPntXDiffLoc,
-          hid(rad,type+"detPntXDiffLocVPhi"+tag), "Det Point X Sep Local V CK phi : "+tag,
+          hid(rad,type+"detPnt/Local/XDiffVPhi"+tag), "Det Point X Sep Local V CK phi : "+tag,
           0, 2*M_PI, -pRLoc[rad], pRLoc[rad], m_nBins2D, m_nBins2D );
   plot2D( ckPhi, detPntYDiffLoc,
-          hid(rad,type+"detPntYDiffLocVPhi"+tag), "Det Point Y Sep Local V CK phi : "+tag,
+          hid(rad,type+"detPnt/Local/YDiffVPhi"+tag), "Det Point Y Sep Local V CK phi : "+tag,
+          0, 2*M_PI, -pRLoc[rad], pRLoc[rad], m_nBins2D, m_nBins2D );
+  plot2D( ckPhi, detPntXDiffLoc,
+          hid(rad,type+"detPnt/Local/XDiffVPhi"+tag+region), "Det Point X Sep Local V CK phi : "+tag+" : "+regionT,
+          0, 2*M_PI, -pRLoc[rad], pRLoc[rad], m_nBins2D, m_nBins2D );
+  plot2D( ckPhi, detPntYDiffLoc,
+          hid(rad,type+"detPnt/Local/YDiffVPhi"+tag+region), "Det Point Y Sep Local V CK phi : "+tag+" : "+regionT,
           0, 2*M_PI, -pRLoc[rad], pRLoc[rad], m_nBins2D, m_nBins2D );
 
   // Primary mirror reflection points
   const double primMirrXDiff = rayTracedPhoton.sphMirReflectionPoint().x() - primMirrPnt.x();
   const double primMirrYDiff = rayTracedPhoton.sphMirReflectionPoint().y() - primMirrPnt.y();
   const double primMirrZDiff = rayTracedPhoton.sphMirReflectionPoint().z() - primMirrPnt.z();
-  plot1D( primMirrXDiff, hid(rad,type+"primMirrXDiff"+tag), "Primary Mirror X Sep : "+tag, -primMR[rad], primMR[rad], m_nBins1D );
-  plot1D( primMirrYDiff, hid(rad,type+"primMirrYDiff"+tag), "Primary Mirror Y Sep : "+tag, -primMR[rad], primMR[rad], m_nBins1D );
-  plot1D( primMirrZDiff, hid(rad,type+"primMirrZDiff"+tag), "Primary Mirror Z Sep : "+tag, -primMR[rad], primMR[rad], m_nBins1D );
-  plot2D( ckPhi, primMirrXDiff, hid(rad,type+"primMirrXDiffVPhi"+tag), "Primary Mirror X Sep V CK Phi : "+tag,
+  plot1D( primMirrXDiff, hid(rad,type+"primMirr/XDiff"+tag), "Primary Mirror X Sep : "+tag, -primMR[rad], primMR[rad], m_nBins1D );
+  plot1D( primMirrYDiff, hid(rad,type+"primMirr/YDiff"+tag), "Primary Mirror Y Sep : "+tag, -primMR[rad], primMR[rad], m_nBins1D );
+  plot1D( primMirrZDiff, hid(rad,type+"primMirr/ZDiff"+tag), "Primary Mirror Z Sep : "+tag, -primMR[rad], primMR[rad], m_nBins1D );
+  plot2D( ckPhi, primMirrXDiff, hid(rad,type+"primMirr/XDiffVPhi"+tag), "Primary Mirror X Sep V CK Phi : "+tag,
           0, 2*M_PI, -primMR[rad], primMR[rad], m_nBins2D, m_nBins2D );
-  plot2D( ckPhi, primMirrYDiff, hid(rad,type+"primMirrYDiffVPhi"+tag), "Primary Mirror Y Sep V CK Phi : "+tag,
+  plot2D( ckPhi, primMirrYDiff, hid(rad,type+"primMirr/YDiffVPhi"+tag), "Primary Mirror Y Sep V CK Phi : "+tag,
           0, 2*M_PI, -primMR[rad], primMR[rad], m_nBins2D, m_nBins2D );
-  plot2D( ckPhi, primMirrZDiff, hid(rad,type+"primMirrZDiffVPji"+tag), "Primary Mirror Z Sep V CK Phi : "+tag,
+  plot2D( ckPhi, primMirrZDiff, hid(rad,type+"primMirr/ZDiffVPji"+tag), "Primary Mirror Z Sep V CK Phi : "+tag,
+          0, 2*M_PI, -primMR[rad], primMR[rad], m_nBins2D, m_nBins2D );
+  plot2D( ckPhi, primMirrXDiff, hid(rad,type+"primMirr/XDiffVPhi"+tag+region), "Primary Mirror X Sep V CK Phi : "+tag+" : "+regionT,
+          0, 2*M_PI, -primMR[rad], primMR[rad], m_nBins2D, m_nBins2D );
+  plot2D( ckPhi, primMirrYDiff, hid(rad,type+"primMirr/YDiffVPhi"+tag+region), "Primary Mirror Y Sep V CK Phi : "+tag+" : "+regionT,
+          0, 2*M_PI, -primMR[rad], primMR[rad], m_nBins2D, m_nBins2D );
+  plot2D( ckPhi, primMirrZDiff, hid(rad,type+"primMirr/ZDiffVPji"+tag+region), "Primary Mirror Z Sep V CK Phi : "+tag+" : "+regionT,
           0, 2*M_PI, -primMR[rad], primMR[rad], m_nBins2D, m_nBins2D );
 
   // Primary mirror reflection points
   const double secMirrXDiff = rayTracedPhoton.flatMirReflectionPoint().x() - secMirrPnt.x();
   const double secMirrYDiff = rayTracedPhoton.flatMirReflectionPoint().y() - secMirrPnt.y();
   const double secMirrZDiff = rayTracedPhoton.flatMirReflectionPoint().z() - secMirrPnt.z();
-  plot1D( secMirrXDiff, hid(rad,type+"secMirrXDiff"+tag), "Secondary Mirror X Sep : "+tag, -secMR[rad], secMR[rad], m_nBins1D );
-  plot1D( secMirrYDiff, hid(rad,type+"secMirrYDiff"+tag), "Secondary Mirror Y Sep : "+tag, -secMR[rad], secMR[rad], m_nBins1D );
-  plot1D( secMirrZDiff, hid(rad,type+"secMirrZDiff"+tag), "Secondary Mirror Z Sep : "+tag, -secMR[rad], secMR[rad], m_nBins1D );
-  plot2D( ckPhi, secMirrXDiff, hid(rad,type+"secMirrXDiffVPhi"+tag), "Secondary Mirror X Sep V CK Phi : "+tag,
+  plot1D( secMirrXDiff, hid(rad,type+"secMirr/XDiff"+tag), "Secondary Mirror X Sep : "+tag, -secMR[rad], secMR[rad], m_nBins1D );
+  plot1D( secMirrYDiff, hid(rad,type+"secMirr/YDiff"+tag), "Secondary Mirror Y Sep : "+tag, -secMR[rad], secMR[rad], m_nBins1D );
+  plot1D( secMirrZDiff, hid(rad,type+"secMirr/ZDiff"+tag), "Secondary Mirror Z Sep : "+tag, -secMR[rad], secMR[rad], m_nBins1D );
+  plot2D( ckPhi, secMirrXDiff, hid(rad,type+"secMirr/XDiffVPhi"+tag), "Secondary Mirror X Sep V CK Phi : "+tag,
           0, 2*M_PI, -secMR[rad], secMR[rad], m_nBins2D, m_nBins2D );
-  plot2D( ckPhi, secMirrYDiff, hid(rad,type+"secMirrYDiffVPhi"+tag), "Secondary Mirror Y Sep V CK Phi : "+tag,
+  plot2D( ckPhi, secMirrYDiff, hid(rad,type+"secMirr/YDiffVPhi"+tag), "Secondary Mirror Y Sep V CK Phi : "+tag,
           0, 2*M_PI, -secMR[rad], secMR[rad], m_nBins2D, m_nBins2D );
-  plot2D( ckPhi, secMirrZDiff, hid(rad,type+"secMirrZDiffVPji"+tag), "Secondary Mirror Z Sep V CK Phi : "+tag,
+  plot2D( ckPhi, secMirrZDiff, hid(rad,type+"secMirr/ZDiffVPji"+tag), "Secondary Mirror Z Sep V CK Phi : "+tag,
+          0, 2*M_PI, -secMR[rad], secMR[rad], m_nBins2D, m_nBins2D );
+  plot2D( ckPhi, secMirrXDiff, hid(rad,type+"secMirr/XDiffVPhi"+tag+region), "Secondary Mirror X Sep V CK Phi : "+tag+" : "+regionT,
+          0, 2*M_PI, -secMR[rad], secMR[rad], m_nBins2D, m_nBins2D );
+  plot2D( ckPhi, secMirrYDiff, hid(rad,type+"secMirr/YDiffVPhi"+tag+region), "Secondary Mirror Y Sep V CK Phi : "+tag+" : "+regionT,
+          0, 2*M_PI, -secMR[rad], secMR[rad], m_nBins2D, m_nBins2D );
+  plot2D( ckPhi, secMirrZDiff, hid(rad,type+"secMirr/ZDiffVPji"+tag+region), "Secondary Mirror Z Sep V CK Phi : "+tag+" : "+regionT,
           0, 2*M_PI, -secMR[rad], secMR[rad], m_nBins2D, m_nBins2D );
 
 }

@@ -5,15 +5,15 @@
  *  Header file for algorithm class : Rich::rec::MC::PhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.h,v 1.7 2007-11-26 17:14:01 jonrob Exp $
+ *  $Id: RichPhotonGeomMonitor.h,v 1.8 2008-01-25 13:27:00 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
 //---------------------------------------------------------------------------
 
-#ifndef RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H
-#define RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H 1
+#ifndef RICHRECMONITOR_RichPhotonGeomMonitor_H
+#define RICHRECMONITOR_RichPhotonGeomMonitor_H 1
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
@@ -74,4 +74,4 @@ namespace Rich
   }
 }
 
-#endif // RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H
+#endif // RICHRECMONITOR_RichPhotonGeomMonitor_H
