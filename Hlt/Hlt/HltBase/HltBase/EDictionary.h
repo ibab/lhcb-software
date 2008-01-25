@@ -18,6 +18,7 @@ namespace zen {
   typedef std::vector<Key>::iterator key_iterator;
   typedef std::vector<Key>::const_iterator key_const_iterator;
 
+  // a dictionary similar to python dictionary
   class dictionary  {
   public:
 

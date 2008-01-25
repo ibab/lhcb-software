@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.2 2008-01-22 13:35:27 hernando Exp $
+// $Id: HltBase.h,v 1.3 2008-01-25 16:55:03 hernando Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -228,7 +228,7 @@ protected:
     if (myroot.empty()) myroot = BASE::name();
     std::string mykey = myroot + "/" + key;
     hltConf().add(mykey,value);
-    if (m_info)
+    if (m_debug)
       BASE::info() << " HLT [" << mykey << "] = " << value << endreq;    
   }
 

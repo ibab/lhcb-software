@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.13 2008-01-22 09:56:44 hernando Exp $
+// $Id: HltVertexMaker.cpp,v 1.14 2008-01-25 16:54:51 hernando Exp $
 // Include files 
 
 
@@ -222,8 +222,10 @@ StatusCode HltVertexMaker::execute() {
 
 void HltVertexMaker::saveConfiguration() {
   HltAlgorithm::saveConfiguration();
+
   const std::vector<std::string>& values = m_filterDescriptor.value();
   confregister("Filters",values);
+  info() << " HLT filters " << values << endreq;
 }
 
 

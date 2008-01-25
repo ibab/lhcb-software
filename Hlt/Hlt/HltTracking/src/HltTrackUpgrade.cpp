@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.cpp,v 1.3 2008-01-22 10:04:25 hernando Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.4 2008-01-25 16:55:26 hernando Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -84,4 +84,5 @@ void HltTrackUpgrade::saveConfiguration() {
   HltAlgorithm::saveConfiguration();
 
   confregister("RecoName",m_recoName);
+  info() << " HLT Recostruction " << m_recoName << endreq;
 }

@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.25 2008-01-22 09:35:00 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.26 2008-01-25 16:55:03 hernando Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -47,7 +47,7 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   m_outputSelection = 0;
 
   // for backward compatibility
-  m_doInitSelections = true;
+  m_doInitSelections = false;
   m_inputTracks = 0;
   m_inputTracks2 = 0;
   m_inputVertices = 0;
@@ -169,13 +169,16 @@ void HltAlgorithm::saveConfiguration() {
   if (!m_saveConf) return;
 
   std::string type = "unknown";
+  Assert(m_outputSelection != 0," No output Selection");
   if (m_outputSelection->classID() == LHCb::Track::classID()) type = "Track";
   else if (m_outputSelection->classID() == LHCb::RecVertex::classID())
     type = "Vertex";
   confregister("Algorithm",m_algoType+"/"+name(),m_outputSelectionName);
   confregister("SelectionType",type,m_outputSelectionName);
   confregister("InputSelections",m_inputSelectionsNames,m_outputSelectionName);
-
+  
+  info() << " HLT input selections " << m_inputSelectionsNames << endreq;
+  info() << " HLT output selection " << m_outputSelectionName << endreq;
 }
 
 

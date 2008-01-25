@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.1 2008-01-22 09:56:37 hernando Exp $
+// $Id: HltTFilter.icpp,v 1.2 2008-01-25 16:54:51 hernando Exp $
 // Include files
 
 #include "HltBase/EDictionary.h"
@@ -142,7 +142,7 @@ void HltTFilter<T>::saveConfiguration() {
 
   const std::vector<std::string>& filters = m_filterDescriptor.value();
   confregister("Filters",filters);
-
+  info() << " HLT filters " << filters << endreq;
 }
 
 

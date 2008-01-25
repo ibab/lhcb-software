@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.20 2008-01-22 09:34:58 hernando Exp $
+// $Id: HltAlgorithm.h,v 1.21 2008-01-25 16:55:03 hernando Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -17,7 +17,7 @@
  *        - algorithm decision if true if output candidates >= minimum (1)
  *
  *  options:
- *      InputSelection, InputSelections, OuputSelection
+ *      InputSelection, InputSelection2, InputSelections, OutputSelection
  *      (if no OutputSelection takes name of the algorithm)
  *
  *  @author Hugo Ruiz Perez
@@ -34,8 +34,7 @@ public:
   virtual ~HltAlgorithm( ); 
 
   // initialize algorithm
-  virtual StatusCode initialize();    
-
+  virtual StatusCode initialize();
 
   // finalize algorithm
   virtual StatusCode finalize  ();

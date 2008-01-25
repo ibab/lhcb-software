@@ -1,4 +1,4 @@
-// $Id: HltData.h,v 1.1 2008-01-22 09:34:59 hernando Exp $
+// $Id: HltData.h,v 1.2 2008-01-25 16:55:03 hernando Exp $
 #ifndef HLTBASE_HLTDATA_H 
 #define HLTBASE_HLTDATA_H 1
 
@@ -110,6 +110,7 @@ namespace Hlt
   typedef TSelection<LHCb::Track> TrackSelection;
   typedef TSelection<LHCb::RecVertex> VertexSelection;
 
+  // Hlt::Data is the prototype class for LHCb::HltSummary
   class Data : public DataObject {
   public:
     Data() {}
