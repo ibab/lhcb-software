@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.23 2008-01-24 20:12:53 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.24 2008-01-25 14:43:41 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -191,7 +191,7 @@ void CaloReadoutTool::putStatusOnTES(){
     std::stringstream type("");
     type << LHCb::RawBank::typeName(m_status.key()) ;
     
-    if ( msgLevel( MSG::DEBUG) )debug() << "Status for bankType " <<  type  << " already exists" << endreq;
+    if ( msgLevel( MSG::DEBUG) )debug() << "Status for bankType " <<  type.str()  << " already exists" << endreq;
     if( status->status() != m_status.status() ){
       Warning("Status for bankType " +  type.str() + " already exists  with different status value -> merge both"
               , StatusCode::SUCCESS).ignore();
