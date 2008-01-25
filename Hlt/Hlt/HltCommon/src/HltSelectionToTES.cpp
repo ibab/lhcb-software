@@ -1,4 +1,4 @@
-// $Id: HltSelectionToTES.cpp,v 1.1 2008-01-22 09:56:36 hernando Exp $
+// $Id: HltSelectionToTES.cpp,v 1.2 2008-01-25 15:35:57 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -26,9 +26,9 @@ HltSelectionToTES::HltSelectionToTES( const std::string& name,
   declareProperty("CopyAll",m_copyAll = false);
   declareProperty("Copy", m_AselectionNames);
   declareProperty("m_trackLocation", 
-                  m_trackLocation = "Hlt/TrackSelection/");
+                  m_trackLocation = "Hlt/Selection/Track/");
   declareProperty("m_vertexLocation", 
-                  m_vertexLocation = "Hlt/VertexSelection/");
+                  m_vertexLocation = "Hlt/Selection/Vertex/");
 
 }
 //=============================================================================
@@ -90,15 +90,16 @@ StatusCode HltSelectionToTES::execute() {
     } else {
       Hlt::Selection& sel = hltData().selection(id);
       std::string selname = hltSelectionName(id);
-      if (sel.decision()) {
-        if (sel.classID() == LHCb::Track::classID()) {
-          LHCb::Tracks* tracks = copy<LHCb::Tracks,LHCb::Track>(id);
-          put(tracks,m_trackLocation+selname);
-        } else if (sel.classID() == LHCb::RecVertex::classID()) {
-          LHCb::RecVertices* vertices = 
-            copy<LHCb::RecVertices,LHCb::RecVertex>(id);
-          put(vertices,m_vertexLocation+selname);
-        }
+      if (sel.classID() == LHCb::Track::classID()) {
+        LHCb::Tracks* tracks = 0;
+        if (sel.decision()) tracks = copy<LHCb::Tracks,LHCb::Track>(id);
+        else tracks = new LHCb::Tracks();
+        put(tracks,m_trackLocation+selname);
+      } else if (sel.classID() == LHCb::RecVertex::classID()) {
+        LHCb::RecVertices* vertices = 0;
+        if (sel.decision()) vertices = copy<LHCb::RecVertices,LHCb::RecVertex>(id);
+        else vertices = new LHCb::RecVertices();
+        put(vertices,m_vertexLocation+selname);
       }
     }
   }
