@@ -8,11 +8,17 @@ HltSummaryWriter.Save += {
   "MuonTriggerIPDiMuon",
   "MuonTriggerPureDiMuon",
   "MuonTriggerPureIPDiMuon",
-  "MuonAndTVelo" ,
+  "MuonAndTVelo",
   "DiMuonAndTVelo",
   "MuonAndTVeloFromMuonSeg"
 };
 
+
+HltSelectionToTES.Copy += {
+  "MuonAndTVelo",
+  "DiMuonAndTVelo",
+  "MuonAndTVeloFromMuonSeg"
+}; 
 
 // to declare as input for the OR of the muon alley
 HltAlleys.InputSelections += {

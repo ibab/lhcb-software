@@ -152,8 +152,8 @@ HltForwardMuons.DecayDescriptor = "Muon" ;
 SeqHltMuons.Members += { "HltMuonForTES"} ;
 //HltMuonForTES.InputSingleLocation ="Hlt/Track/MuonsForwardSingle";
 //HltMuonForTES.InputDimuonLocation ="Hlt/Track/DiMuonsForward";
-HltMuonForTES.InputSingleLocation ="Hlt/Track/MuonAndTVelo";
-HltMuonForTES.InputDimuonLocation ="Hlt/Track/DiMuonAndTVelo";
+HltMuonForTES.InputSingleLocation ="Hlt/Selection/Track/MuonAndTVelo";
+HltMuonForTES.InputDimuonLocation ="Hlt/Selection/Track/DiMuonAndTVelo";
 
 HltMuonForTES.OutputMuonLocation ="Hlt/Track/MuonsFromAlley";
 HltMuonForTES.OutputLevel =3;

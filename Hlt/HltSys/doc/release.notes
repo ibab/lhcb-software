@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-01-25 - Jose A. Hernando
+  - Adding options to store muon tracks in the TES at Hlt/Selection/Track/MuonAndTVelo
+
 ! 2008-01-22 - Jose A. Hernando
  - HLT-clean, adaptation of options for the muon, hadron, hadmuon, photon, electron alleys:
    HltAlgorithm use input option InputSelection, InputSelection2, or InputSelections

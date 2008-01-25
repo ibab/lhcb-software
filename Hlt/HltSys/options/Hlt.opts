@@ -55,11 +55,13 @@ HltAllAlleysSequence.ModeOr=true;
 // end the Hlt sequencer: write in summary and copy to TES
 //
 
+HltEndSequence.ModeOr = true;
 HltEndSequence.Members = {"HltSelectionToTES",
                           "HltSummaryWriter"};
 
-// HltSelectionDataToTes.CopyAll = true;
+HltSelectionToTES.OutputLevel = 3;
 
+// If you want to save all the Hlt selections in the summary uncomment
 // HltSummaryWriter.SaveAll = true;
 HltSummaryWriter.Save += {"HltAlleys"};
 HltSummaryWriter.OutputLevel=3;
