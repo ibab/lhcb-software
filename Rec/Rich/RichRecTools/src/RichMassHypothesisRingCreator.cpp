@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::MassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.19 2007-09-21 09:47:20 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.20 2008-01-25 13:40:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -32,8 +32,6 @@ MassHypothesisRingCreator( const std::string& type,
     m_rings         ( NULL ),
     m_coneTrace     ( NULL ),
     m_richPartProp  ( NULL ),
-    m_traceMode     ( LHCb::RichTraceMode::RespectHPDTubes,
-                      LHCb::RichTraceMode::SimpleHPDs ),
     m_traceModeRad  ( Rich::NRadiatorTypes ),
     m_nPointScale   ( Rich::NRadiatorTypes ),
     m_maxPoint      ( Rich::NRadiatorTypes, 100 ),
@@ -49,6 +47,7 @@ MassHypothesisRingCreator( const std::string& type,
   declareProperty( "MaxRingPoints", m_maxPoint  );
   declareProperty( "MinRingPoints", m_minPoint  );
   declareProperty( "CheckBeamPipe", m_checkBeamPipe = false );
+  declareProperty( "UseDetailedHPDsInRayTracing", m_useDetailedHPDsForRayT = false );
 
 }
 
@@ -69,13 +68,16 @@ StatusCode MassHypothesisRingCreator::initialize()
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
-  if ( m_checkBeamPipe ) { m_traceMode.setBeamPipeIntersects(true); }
-
   // the ray-tracing mode
-  m_traceModeRad[Rich::Aerogel]  = m_traceMode;
+  LHCb::RichTraceMode tmpMode ( LHCb::RichTraceMode::RespectHPDTubes,
+                                ( m_useDetailedHPDsForRayT ?
+                                  LHCb::RichTraceMode::FullHPDs :
+                                  LHCb::RichTraceMode::SimpleHPDs ) );
+  if ( m_checkBeamPipe ) { tmpMode.setBeamPipeIntersects(true); }
+  m_traceModeRad[Rich::Aerogel]  = tmpMode;
   m_traceModeRad[Rich::Aerogel].setAeroRefraction(true);
-  m_traceModeRad[Rich::Rich1Gas] = m_traceMode;
-  m_traceModeRad[Rich::Rich2Gas] = m_traceMode;
+  m_traceModeRad[Rich::Rich1Gas] = tmpMode;
+  m_traceModeRad[Rich::Rich2Gas] = tmpMode;
   info() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endreq;
   info() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endreq;
   info() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endreq;
@@ -86,7 +88,6 @@ StatusCode MassHypothesisRingCreator::initialize()
   m_nPointScale[Rich::Rich2Gas] = m_maxPoint[Rich::Rich2Gas] / 0.028;
 
   // ring info
-  //info() << "NPoint scale factors       = " << m_nPointScale << endreq;
   info() << "Maximum # ray trace points = " << m_maxPoint << endreq;
   info() << "Minimum # ray trace points = " << m_minPoint << endreq;
 
@@ -114,7 +115,7 @@ void MassHypothesisRingCreator::massHypoRings( LHCb::RichRecSegment * segment ) 
 // Forms a new RichRecRing object from a RichRecSegment
 LHCb::RichRecRing *
 MassHypothesisRingCreator::massHypoRing( LHCb::RichRecSegment * segment,
-                                            const Rich::ParticleIDType id ) const
+                                         const Rich::ParticleIDType id ) const
 {
   // does the ring already exist ?
   return ( segment ? ( segment->hypothesisRings().dataIsValid(id) ?
@@ -150,9 +151,8 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
     unsigned int nPoints = static_cast<unsigned int>( m_nPointScale[rad] * ckTheta );
     if      ( nPoints < m_minPoint[rad] ) { nPoints = m_minPoint[rad]; }
     else if ( nPoints > m_maxPoint[rad] ) { nPoints = m_maxPoint[rad]; }
-    //debug() << id << " " << ckTheta << " using " << nPoints << " points" << endreq;
     const StatusCode sc = m_coneTrace->rayTrace( newRing, nPoints, m_traceModeRad[rad] );
-    if ( sc.isSuccess() ) 
+    if ( sc.isSuccess() )
     {
       // save to container
       massHypoRings()->insert( newRing );
@@ -163,7 +163,7 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
       delete newRing;
       newRing = NULL;
     }
-    
+
   }
 
   // set data in segment

@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2008-01-25 - Chris Jones
+ - Add options to mass hypothesis ring creator to allow ray tracing mode to
+   be configurable
+
 !===================== RichRecTools v4r0 2007-11-30 ===========================
 ! 2007-11-26 - Chris Jones
  - Major reorganisation of this package to try and reduce the size of this 

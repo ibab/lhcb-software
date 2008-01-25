@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::MassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.h,v 1.11 2007-08-09 16:38:31 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.h,v 1.12 2008-01-25 13:40:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -119,8 +119,8 @@ namespace Rich
       /// Location of Rings in TES
       std::string m_ringLocation;
 
-      /// Ray-tracing configuration object (JO)
-      LHCb::RichTraceMode m_traceMode;
+      /// JO flag to switch between simple or detail HPD description in ray tracing
+      bool m_useDetailedHPDsForRayT;
 
       /// Cached trace modes for each radiator
       std::vector<LHCb::RichTraceMode> m_traceModeRad;
