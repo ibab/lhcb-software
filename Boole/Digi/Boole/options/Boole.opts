@@ -191,9 +191,7 @@ RelationsTrSeq.Members += { "BuildMCTrackInfo" };
 
 #include "$RICHMCASSOCIATORSROOT/options/BooleRelations.opts"
 
-RelationsCALOSeq.Members += { "CaloDigitsFromRaw/EcalFromRaw" };
-RelationsCALOSeq.Members += { "CaloReCreateMCLinks" };
-RelationsCALOSeq.Members += { "CaloDigitMCTruth" };
+#include "$CALOASSOCIATORSROOT/options/BooleRelations.opts"
 
 RelationsMUONSeq.Members += { "MuonDigit2MCParticleAlg" };
 RelationsMUONSeq.Members += { "MuonTileDigitInfo" };

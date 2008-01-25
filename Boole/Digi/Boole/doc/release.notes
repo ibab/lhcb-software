@@ -3,13 +3,14 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r9>2008-01-24 Boole v14r9</A></H1><PRE>
+</PRE><H1><A NAME=v14r9>2008-01-25 Boole v14r9</A></H1><PRE>
  - In valgrind.job, use the new ROOT suppressions file available from LCG_54 
  - In Boole.opts, DigiContent.opts, use AlgMap syntax to set up DataOnDemandSvc
  - Update to use ParamFiles v7r1 (latest version)
  - In SuppressWarnings.opts, add a time stamp to remaining messages
  - Use new Gaudi XML file catalog instead of the POOL one, using
-   FileCatalog.Catalogs option instead of PoolDbCacheSvc.Catalog 
+   FileCatalog.Catalogs option instead of PoolDbCacheSvc.Catalog
+ - In Boole.opts, update RelationsCalo sequence to produce also Hcal Digit links
 
 </PRE><H1><A NAME=v14r8>2007-12-13 Boole v14r8</A></H1><PRE>
  - Fix v200601.py to importOptions from absolute path
