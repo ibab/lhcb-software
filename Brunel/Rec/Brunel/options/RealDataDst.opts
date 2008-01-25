@@ -38,14 +38,13 @@ ApplicationMgr.EvtMax = -1;
 HistogramPersistencySvc.OutputFile = "00001820_00000001_5.root";
 
 // Read-write catalog to describe output (POOL) file
-PoolDbCacheSvc.Catalog = { "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml" };
+FileCatalog.Catalogs = { "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml" };
 
 // Additional catalog containing the FID of the input MDF file.
-// This FID must be generated externally at it is not contained in the MDF file.
+// This FID must be generated externally as it is not contained in the MDF file.
 // WARNING! If this catalog is not provided, the output DST file will not
 // contain the information to allow navigation back to the MDF data when reading 
-// This catalog must be opened as a Gaudi (i.e. not POOL) catalog
-FileCatalog.Catalogs = { "xmlcatalog_file:$BRUNELROOT/job/GaudiCatalog.xml" };
+FileCatalog.Catalogs += { "xmlcatalog_file:$BRUNELROOT/job/GaudiCatalog.xml" };
 
 EventSelector.Input              = {
   "DATA='FID:94ACC0F5-09A3-DC11-8140-003048836626' SVC='LHCb::MDFSelector'" 

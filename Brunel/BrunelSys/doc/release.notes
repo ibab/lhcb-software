@@ -25,6 +25,8 @@ framework.
     (TfKernel v2r2, TfTools v1r3)
   . Modified the space tracking so it uses the new hit preparation on demand 
     features in TfKernel (PatVelo v3r3, TfKernel v2r2)
+  . Now uses Gaudi XML catalog, no longer the POOL one, using
+    FileCatalog.Catalogs option instead of PoolDbCacheSvc.Catalog 
 
 - Bug fixes
   . BankKiller (used by Calorimeter) no longer prints an error every time a MDF
@@ -33,7 +35,8 @@ framework.
   . Fix unprotected array index in CaloMergedPi0.cpp, cause of infinite loop in
     Brunel v32r2 amd64_dbg build (CaloReco v4r10)
   . Protect against NaN in NeutralProtoPAlg::finalize() (GlobalReco v6r15)
-  . PoolDbCacheSvc.AgeLimit changed to IODataManager.AgeLimit (for Gaudi v19r7)
+  . Fix AddNeibours warning in HcalE and EcalE initialisation (CaloPIDs v4r9)
+  . Change PoolDbCacheSvc.AgeLimit to IODataManager.AgeLimit, for Gaudi v19r7
 
 </PRE><H1><A NAME=v32r2>2007-12-12 Brunel v32r2</A></H1><PRE>
 This version uses projects Gaudi v19r6, LHCb v23r2, Lbcom v6r13, Rec v5r2

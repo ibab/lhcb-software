@@ -32,12 +32,9 @@ ApplicationMgr.EvtMax = -1;
 HistogramPersistencySvc.OutputFile = "FieldOff-VeloOpen.root";  // Monitoring histos
 
 //---------------------------------------------------------------------------
-// POOL file catalogs. First one is read-write, others are read only
+// File catalogs. First one is read-write, any others are read only
 //---------------------------------------------------------------------------
-PoolDbCacheSvc.Catalog = {
-  "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml"
-  // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
-};
+FileCatalog.Catalogs = { "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml" };
 
 //---------------------------------------------------------------------------
 // Event input
