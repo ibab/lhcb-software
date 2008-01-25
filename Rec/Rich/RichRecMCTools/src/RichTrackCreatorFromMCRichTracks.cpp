@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.15 2007-10-26 10:41:58 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.16 2008-01-25 13:24:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -297,11 +297,6 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
 
             // set radiator info
             setDetInfo( newTrack, (*iSeg)->radiator() );
-
-            // Set the average photon energy (for default hypothesis)
-            newSegment->trackSegment()
-              .setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(newSegment,
-                                                                newTrack->currentHypothesis()) );
 
             // make RichRecRings for the mass hypotheses if requested
             if ( m_buildHypoRings ) m_massHypoRings->massHypoRings( newSegment );

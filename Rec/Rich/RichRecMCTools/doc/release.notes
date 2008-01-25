@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2008-01-25 - Chris Jones
+ - Remove setting of average track segment photon energy in MC track creator
+   tool (now done in segment creator).
+
 !====================== RichRecMCTools v2r14 2007-11-30 =======================
 ! 2007-11-26 - Chris Jones
  - Add two new tools
