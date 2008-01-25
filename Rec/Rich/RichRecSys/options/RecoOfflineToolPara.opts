@@ -116,7 +116,7 @@ ToolSvc.Offline.RichToolRegistry.Context = "Offline";
 // Segment creator
 //                                                Aerogel  C4F10   CF4
 ToolSvc.Offline.RichSegmentCreator.EnergyBins = { 5,       5,      5   }; // Best but slow treatment
-//ToolSvc.Offline.RichSegmentCreator.EnergyBins = { 1,       1,      1   }; // Fast treatment
+//ToolSvc.Offline.RichSegmentCreator.EnergyBins = { 2,       2,      2   }; // Fast treatment
 
 // raytracing
 ToolSvc.Offline.RichRayTraceCKCone.BailoutTries = { 50,  50,  50  };
@@ -125,6 +125,7 @@ ToolSvc.Offline.RichRayTraceCKCone.BailoutTries = { 50,  50,  50  };
 ToolSvc.Offline.RichMassHypoRings.MaxRingPoints = { 100,  100,  100  }; 
 ToolSvc.Offline.RichMassHypoRings.MinRingPoints = { 100,  100,  100  }; 
 ToolSvc.Offline.RichMassHypoRings.CheckBeamPipe = true;
+ToolSvc.Offline.RichMassHypoRings.UseDetailedHPDsInRayTracing = false;
 
 // Geometrical efficiency from CK mass Ring
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::GeomEffCKMassRing/RichGeomEff" };
@@ -134,6 +135,7 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::GeomEffCKMassRing/RichGe
 //ToolSvc.Offline.RichGeomEff.NPhotonsGeomEffCalc          = 100;
 //ToolSvc.Offline.RichGeomEff.NPhotonsGeomEffBailout       = 50;
 //ToolSvc.Offline.RichGeomEff.CheckBeamPipe                = true;
+//ToolSvc.Offline.RichGeomEff.UseDetailedHPDsInRayTracing  = false;
 
 // Fixed value
 //ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::GeomEffFixedValue/RichGeomEff" };

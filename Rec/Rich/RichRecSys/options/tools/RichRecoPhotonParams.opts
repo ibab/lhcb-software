@@ -14,3 +14,6 @@ ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckSideCrossing               =
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.MinActiveFraction               = { 0.2,   0.2,   0.2   };
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckPrimaryMirrorSegments      = { false, false, false };
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 3,     3,     3     };
+
+// Correction factors for small biases                                                Aero          C4F10          CF4
+ToolSvc.Offline.RichPhotonCreator.PhotonParams.CKThetaQuartzRefractCorrections = { -0.000358914, -0.000192933, -3.49182e-05 };

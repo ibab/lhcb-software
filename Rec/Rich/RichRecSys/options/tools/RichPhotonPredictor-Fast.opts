@@ -38,7 +38,5 @@ ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI       = {  110.0,    0.0
 ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI       = {  390.0,   86.0,      165.0  };
 ToolSvc.Offline.RichPhotonCreator.Predictor.CKthetaMax        = {  0.24,    0.0520,    0.030  };
 ToolSvc.Offline.RichPhotonCreator.Predictor.SepGMax           = {  342.0,   75.0,      130.0  };
-ToolSvc.Offline.RichPhotonCreator.Predictor.NSigma            = {  6.5,     6.5,       12     };
-//ToolSvc.Offline.RichPhotonCreator.Predictor.NSigma            = {  6.0,     6.0,       11     };
+ToolSvc.Offline.RichPhotonCreator.Predictor.NSigma            = {  5.5,     5.5,       11.5   };
 //----------------------------------------------------------------------------------------------------------
-

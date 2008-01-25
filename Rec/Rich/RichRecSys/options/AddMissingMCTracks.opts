@@ -9,3 +9,6 @@ AddMissingMCTracks.MissingMCTrackCreator.TrackSelector.TrackAlgs = { "MCRichTrac
 AddMissingMCTracks.MissingMCTrackCreator.TrackSelector.MCRichTrack.MinPCut  = 1;
 //AddMissingMCTracks.MissingMCTrackCreator.FakeRecoTracks = false;
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::TrSegMakerFromMCRichTracks/RichDetMCTrSegMaker" };
+
+// Fraction of missing MC tracks to add
+AddMissingMCTracks.AddFraction = 1.0;
