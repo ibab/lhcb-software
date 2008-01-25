@@ -4,6 +4,11 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================== DDDB v1r3 2008-01-25 =============================
+! 2008-01-25 - Marco Cattaneo
+ - Change requirements to pick up SQLDDDB v4r* for backwards incompatible Rich
+   changes in post DC06 tags
+
 !========================== DDDB v1r2 2007-11-01 =============================
 ! 2007-11-01 - Marco Cattaneo
  - Change requirements to pick up SQLDDDB v3r*, needed by MuonDet v7r0
