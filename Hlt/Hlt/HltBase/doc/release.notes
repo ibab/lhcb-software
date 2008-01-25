@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2008-01-25 - Gerhard Raven
+ - simplify EParser using boost, remove unused method
+
 ! 2008-01-24 - Gerhard Raven
  - add PropertyConfig and IConfigAccessSvc
 

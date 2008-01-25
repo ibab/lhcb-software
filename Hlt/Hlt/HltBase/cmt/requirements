@@ -48,4 +48,3 @@ apply_pattern    reflex_dictionary                                 \
 macro HltBaseDict_use_linkopts $(use_linkopts)
 
 macro_append Boost_linkopts $(Boost_linkopts_regex)
-# macro HltBase_linkopts 

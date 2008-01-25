@@ -1,4 +1,4 @@
-// $Id: ANNSvc.h,v 1.4 2008-01-23 15:06:53 graven Exp $
+// $Id: ANNSvc.h,v 1.5 2008-01-25 12:18:50 graven Exp $
 #ifndef ANNSVC_H  
 #define ANNSVC_H 1
 
@@ -36,8 +36,8 @@ public:
 
   bool                           hasMajor(const major_key_type& major) const;
 
-  std::vector<minor_value_type> items(const major_key_type& major) const;
-  std::vector<major_key_type>   majors() const;
+  std::vector<minor_value_type>  items(const major_key_type& major) const;
+  std::vector<major_key_type>    majors() const;
 private:
   
   typedef ANNSvcUtilities::bimap_t<minor_key_type, minor_mapped_type> bimap_type;

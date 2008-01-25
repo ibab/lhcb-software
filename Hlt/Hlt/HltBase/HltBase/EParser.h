@@ -1,4 +1,4 @@
-// $Id: EParser.h,v 1.1 2007-06-25 20:40:11 hernando Exp $
+// $Id: EParser.h,v 1.2 2008-01-25 12:18:50 graven Exp $
 #ifndef HLTBASE_EPARSER_H 
 #define HLTBASE_EPARSER_H 1
 
@@ -17,10 +17,6 @@ namespace EParser
 {
   std::vector<std::string> parse(const std::string& descriptor,
                                  const std::string& separator);
-  
-  bool parseHisto1D(const std::string& descriptor,
-                    std::string& title,
-                    int& n, float& x0, float& xf);
   
   bool parseFilter(const std::string& decriptor,
                    std::string& namefilter, std::string& mode,
