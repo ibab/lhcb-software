@@ -1,16 +1,4 @@
-// $Id: CaloAssociators.opts,v 1.10 2006-10-13 16:50:22 odescham Exp $ 
-// ============================================================================
-// CVS tag $Nam:$ , version $Revision: 1.10 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.9  2006/02/23 21:30:45  odescham
-// Standardize TES path + cleaning
-//
-// Revision 1.8  2006/02/23 14:08:51  ibelyaev
-//  fiz to please MCTruth
-//
-// ============================================================================
-
+// $Id: CaloAssociators.opts,v 1.11 2008-01-25 13:28:57 cattanem Exp $ 
 // ============================================================================
 /** @file CaloAssociators.cpp
  *  Job-options file to run CaloAssociators 
@@ -19,12 +7,10 @@
  */
 // ============================================================================
 
-ApplicationMgr.DLLs += { "CaloAssociators" };
-
 /// load options 
-DataOnDemandSvc.Algorithms +=
+DataOnDemandSvc.AlgMap +=
   { 
-    "DATA='/Event/Relations/Raw/Calo/Digits'    TYPE='CaloDigit2MCLinks2Table'",
-    "DATA='/Event/Relations/Rec/Calo/Clusters'  TYPE='CaloClusterMCTruth'"         
+    "Relations/Raw/Calo/Digits"   : "CaloDigit2MCLinks2Table",
+    "Relations/Rec/Calo/Clusters" : "CaloClusterMCTruth"         
   }; 
 // ============================================================================

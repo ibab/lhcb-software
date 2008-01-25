@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.50 2008-01-25 13:09:54 odescham Exp $
+! $Id: release.notes,v 1.51 2008-01-25 13:28:57 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
@@ -6,9 +6,13 @@
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!===================== CaloAssociators v6r5 2008-01-25 ========================
+! 2008-01-25 - Marco Cattaneo
+ - In CaloAssociators.opts, remove obosolete ApplicationMgr.DLLs option and
+   use DataOnDemandSvc.AlgMap instead of old Algorithms option
 
 ! 2008-01-25 - Olivier Deschamps
- - add BooleRelations.opts : options to create Linker for Ecal & Hcal in Boole
+ - Add BooleRelations.opts : options to create Linker for Ecal & Hcal in Boole
 
 !===================== CaloAssociators v6r4 2007-09-19 ========================
 ! 2007-09-19 - Marco Cattaneo
