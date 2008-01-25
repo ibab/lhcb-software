@@ -8,16 +8,25 @@ Dump.FullDump                        = 0;
 Dump.OutputLevel                     = 3;
 StoreExplorerAlg.Load                = 1;
 StoreExplorerAlg.PrintFreq           = 0.01;
-StoreExplorerAlg.AccessForeign       = true;
 EventDataSvc.RootCLID                = 1;
+EventDataSvc.ForceLeaves             = true;
 EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
 EventSelector.PrintFreq              = 100;
+EventSelector.Input                  = {
+  "DATA='PFN:file://mdfData_0.dat'        SVC='LHCb::MDFSelector'",
+  "DATA='PFN:file://../cmt/mdfData_1.dat' SVC='LHCb::MDFSelector'",
+  "DATA='file:mdfData_2.dat'              SVC='LHCb::MDFSelector'",
+  "DATA='PFN:mdfData_3.dat'               SVC='LHCb::MDFSelector'",
+  "DATA='mdfData_4.dat'                   SVC='LHCb::MDFSelector'"
+};
+FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
+ApplicationMgr.OutStream  += { "POOLMini" };
 //  Setup for ROOT I/O System
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 PoolDbCacheSvc.Dlls       += {"CLHEPRflx", "STLRflx", "GaudiKernelDict"};
-FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
-EventSelector.Input                  = {
-  "DATA='PFN:mdfMini.root' TYP='POOL_ROOTTREE' OPT='OLD'"
-};
-ReadAlg.OutputLevel                  = 2;
+POOLMini.ItemList          = { "/Event#1", "/Event/DAQ#1" };
+POOLMini.Output            = "DATAFILE='PFN:mdfMini.root' TYP='POOL_ROOTTREE' OPT='RECREATE'";
+ReadAlg.OutputLevel        = 2;
+PoolDbCacheSvc.OutputLevel = 1;
+FileCatalog.Catalogs       = { "xmlcatalog_file:Cnew.xml" };

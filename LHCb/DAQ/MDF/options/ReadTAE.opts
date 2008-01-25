@@ -1,6 +1,3 @@
-ApplicationMgr.Dlls                  = { "MDF" };
-//ApplicationMgr.ExtSvc                = { "EventSelector", "EvtDataSvc" };
-ApplicationMgr.SvcOptMapping        += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
 ApplicationMgr.TopAlg                = { "LHCb::RawEventTestDump/Dump","StoreExplorerAlg" };
 ApplicationMgr.EvtMax                = 100000;
 ApplicationMgr.HistogramPersistency  = "NONE";

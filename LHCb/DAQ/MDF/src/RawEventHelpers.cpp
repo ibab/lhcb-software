@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.27 2008-01-17 17:15:41 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.28 2008-01-25 22:58:45 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -987,7 +987,7 @@ bool LHCb::isTAERawEvent(RawEvent* raw)  {
     //== Check ODIN event type to see if this is TAE
     const _V& oBnks = raw->banks(RawBank::ODIN);
     for(_V::const_iterator i=oBnks.begin(); i != oBnks.end(); ++i)  {
-      if ( (*i)->begin<OnlineRunInfo>()->triggerType = ODIN::TimingTrigger ) {
+      if ( (*i)->begin<OnlineRunInfo>()->triggerType == ODIN::TimingTrigger ) {
         return true;
       }
     }

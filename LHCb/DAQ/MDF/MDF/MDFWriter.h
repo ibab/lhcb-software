@@ -1,4 +1,4 @@
-// $Id: MDFWriter.h,v 1.6 2007-11-19 19:27:32 frankb Exp $
+// $Id: MDFWriter.h,v 1.7 2008-01-25 22:58:45 frankb Exp $
 //	====================================================================
 //  MDFWriter.h
 //	--------------------------------------------------------------------
@@ -59,8 +59,10 @@ namespace LHCb    {
     TMD5*         m_md5;
     /// Input data type (banks from TES=1, compressed data from address = 2)
     int           m_dataType;
-		/// Location of the raw banks in the TES
-		std::string		m_bankLocation;
+    /// Location of the raw banks in the TES
+    std::string   m_bankLocation;
+    /// Bytes write count
+    long long int m_bytesWritten;
 
     /// Internal setup (may not be called from sub-classes!
     void construct();

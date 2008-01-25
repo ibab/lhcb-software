@@ -1,4 +1,4 @@
-// $Id: MDFWriter.cpp,v 1.17 2008-01-17 17:15:41 frankm Exp $
+// $Id: MDFWriter.cpp,v 1.18 2008-01-25 22:58:45 frankb Exp $
 //	====================================================================
 //  MDFWriter.cpp
 //	--------------------------------------------------------------------
@@ -16,6 +16,7 @@
 #include "MDF/MDFHeader.h"
 #include "Event/RawEvent.h"
 #include "TMD5.h"
+#include <iomanip>
 
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFWriter)
 
@@ -31,7 +32,7 @@ MDFWriter::MDFWriter(MDFIO::Writer_t typ, const std::string& nam, ISvcLocator* p
 
 /// Standard algorithm constructor
 MDFWriter::MDFWriter(const std::string& nam, ISvcLocator* pSvc)
-: Algorithm(nam, pSvc), MDFIO(MDFIO::MDF_RECORDS, nam)
+  : Algorithm(nam, pSvc), MDFIO(MDFIO::MDF_RECORDS, nam)
 {
   construct();
 }
@@ -40,6 +41,7 @@ MDFWriter::MDFWriter(const std::string& nam, ISvcLocator* pSvc)
 void MDFWriter::construct()   {
   m_ioMgr = 0;
   m_connection = 0;
+  m_bytesWritten = 0;
   m_md5 = new TMD5();
   m_data.reserve(1024*64);
   declareProperty("Connection",     m_connectParams="");
@@ -70,6 +72,7 @@ StatusCode MDFWriter::initialize()   {
         << m_ioMgrName << endreq;
     return status;
   }
+  m_bytesWritten = 0;
   m_connection = new RawDataConnection(this,con);
   status = m_ioMgr->connectWrite(m_connection,IDataConnection::RECREATE,"MDF");
   if ( m_connection->isConnected() )
@@ -84,8 +87,8 @@ StatusCode MDFWriter::finalize() {
   if ( m_genMD5 )  {
     MsgStream log(msgSvc(), name());
     m_md5->Final();
-    log << MSG::INFO << "Output:" << m_connectParams
-      << " MD5 sum:" << m_md5->AsString() << endmsg;
+    log << MSG::INFO << "Size:" << std::setw(8) << m_bytesWritten << " Output:" << m_connectParams
+	<< " MD5 sum:" << m_md5->AsString() << endmsg;
   }
   if ( m_ioMgr )  {
     m_ioMgr->disconnect(m_connection).ignore();
@@ -123,6 +126,7 @@ StatusCode MDFWriter::writeBuffer(void* const ioDesc, const void* data, size_t l
   Connection* c = (Connection*)ioDesc;
   StatusCode sc = m_ioMgr->write(c, data, len);
   if ( sc.isSuccess() )  {
+    m_bytesWritten += len;
     if ( m_genMD5 )  {
       m_md5->Update((const unsigned char*)data, len);
     }

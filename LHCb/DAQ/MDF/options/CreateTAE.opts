@@ -1,7 +1,3 @@
-ApplicationMgr.Dlls                  = { "MDF" };
-//ApplicationMgr.ExtSvc                = { "EventSelector", "EvtDataSvc" };
-ApplicationMgr.SvcOptMapping        += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
-ApplicationMgr.TopAlg                = { "LHCb::TAETestCreator/TAECreator","StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };
 ApplicationMgr.EvtMax                = 100000;
 ApplicationMgr.HistogramPersistency  = "NONE";
 Dump.CheckData                       = 1;
@@ -17,7 +13,7 @@ EventDataSvc.ForceLeaves             = true;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
 EventSelector.PrintFreq              = 100;
 EventSelector.Input                  = {
-  "DATA='file://test.mdf' SVC='LHCb::MDFSelector'"
+  "DATA='PFN:file://mdfData_0.dat' SVC='LHCb::MDFSelector'"
 };
 FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
 
@@ -28,4 +24,4 @@ Writer_0.Compress         = 0;
 Writer_0.ChecksumType     = 1;
 Writer_0.GenerateMD5      = true;
 Writer_0.ForceTAE         = true;
-MessageSvc.OutputLevel    = 1;
+MessageSvc.OutputLevel    = 3;

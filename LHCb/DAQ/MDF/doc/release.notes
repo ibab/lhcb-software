@@ -9,6 +9,8 @@
 ! 2008-01-19 - Markus Frank
  - Add helper functions for processing TAE events. Fix bug in RawDtaCnvSvc when 
    accessing TAE events.
+ - Fix crucial bug (typo??) in detecting TAE events
+ - Fix bug in accessing IODataManager
 
 !========================= MDF v3r0 2008-01-08 ===============================
 ! 2008-01-08 - Marco Cattaneo

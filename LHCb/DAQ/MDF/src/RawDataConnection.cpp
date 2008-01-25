@@ -1,14 +1,18 @@
-// $Id: RawDataConnection.cpp,v 1.2 2007-12-07 11:53:26 frankb Exp $
+// $Id: RawDataConnection.cpp,v 1.3 2008-01-25 22:58:45 frankb Exp $
 #include "MDF/RawDataConnection.h"
 #include "MDF/StreamDescriptor.h"
-
+#include <iostream>
 using namespace LHCb;
 using namespace Gaudi;
 
 /// Standard constructor
 RawDataConnection::RawDataConnection(const IInterface* owner, const std::string& fname)
 : IDataConnection(owner,fname)
-{
+{ //               01234567890123456789012345678901234567890
+  // Check if FID: A82A3BD8-7ECB-DC11-8DC0-000423D950B0
+  if ( fname.length() == 36 && fname[8]=='-'&&fname[13]=='-'&&fname[18]=='-'&&fname[23]=='-' ) {
+    m_name = "FID:"+fname;
+  }
   m_bind.ioDesc = m_access.ioDesc = 0;
 }
 
