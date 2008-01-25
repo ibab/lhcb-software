@@ -1,9 +1,26 @@
-! $Id: release.notes,v 1.38 2007-12-09 18:25:33 ibelyaev Exp $ 
+! $Id: release.notes,v 1.39 2008-01-25 14:42:22 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-01-25 - Vanya BELYAEV
+
+  - LoKi/Particles19.h, 
+    src/Particles19.cpp
+
+       various "lifetime" functors, which are using ILifetimeFitetr interface 
+
+  - LoKi/ParticleContetxCuts.h, 
+    LoKi/Particles20.h,
+    src/Particles20.cpp
+
+        new "context-depet" funcntors 
+  
+  - cmt/requirements
+
+        version increment to v7r1 
 
 !========================== LoKiPhys v7r0 2007-12-09 ==========================
 

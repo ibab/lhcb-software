@@ -1,4 +1,4 @@
-// $Id: PhysSources.h,v 1.1 2007-12-09 18:25:33 ibelyaev Exp $
+// $Id: PhysSources.h,v 1.2 2008-01-25 14:42:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSSOURCES_H 
 #define LOKI_PHYSSOURCES_H 1
@@ -281,7 +281,7 @@ namespace LoKi
         LHCb::VertexBase::ConstVector& output   ) const ;
     private:
       // TES locations of Particles 
-      std::vector<std::string>  m_path ; ///< TES locations of HepMC events 
+      std::vector<std::string>  m_path ; ///< TES locations of vertices 
       /// data provder service 
       mutable LoKi::Interface<IDataProviderSvc>  m_dataSvc ;
       /// 'on-flight' filter

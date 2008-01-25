@@ -1,11 +1,11 @@
-// $Id: Particles2.h,v 1.6 2007-11-28 14:39:29 ibelyaev Exp $
+// $Id: Particles2.h,v 1.7 2008-01-25 14:42:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES2_H 
 #define LOKI_PARTICLES2_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// LoKiPhys 
+// LoKi 
 // ============================================================================
 #include "LoKi/PhysTypes.h"
 #include "LoKi/Particles1.h"
@@ -28,7 +28,7 @@ namespace LoKi
 {
   namespace Particles 
   {
-    // ============================================================================
+    // ========================================================================
     /** @class TimeDistance
      *  
      *  evaluator of the time distance (c*tau) 
@@ -82,7 +82,7 @@ namespace LoKi
     private:
       LoKi::Particles::VertexDistance m_fun ;
     };
-    // ============================================================================
+    // ========================================================================
     /** @class TimeSignedDistance
      *  
      *  evaluator of the time distance (c*tau) 
@@ -136,7 +136,7 @@ namespace LoKi
     private:
       LoKi::Particles::VertexSignedDistance m_fun ;
     };
-    // ============================================================================    
+    // ========================================================================
     /** @class TimeDotDistance
      *  
      *  evaluator of the time distance (c*tau) 
@@ -188,7 +188,51 @@ namespace LoKi
       // the evaluator 
       LoKi::Particles::VertexDotDistance m_fun ;
     };
-    // ============================================================================
+    // ========================================================================
+    /** @class LifetimeDistance
+     *
+     *  The estimate of the particle lifetime (c*tau), based on the 
+     *  first iteration of "Lifetime-fitter" and neglecting the errors 
+     *   in particle momenta 
+     *
+     *  Essentially the algorithm is described in detail by Paul Avery in  
+     *     http://www.phys.ufl.edu/~avery/fitting/lifetime.pdf
+     *
+     *  More precise variants (more iterations) use
+     *   the abstract interface ILifetimeFitter 
+     * 
+     *  @see LoKi::Cuts::LT
+     *
+     *  @autor Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-19
+     */
+    class LifetimeDistance 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+      , public LoKi::Vertices::VertexHolder 
+    {
+    public:
+      /// constructor 
+      LifetimeDistance 
+      ( const LHCb::VertexBase* vertex ) ;
+      /// constructor 
+      LifetimeDistance 
+      ( const LoKi::Point3D&    vertex ) ;
+      /// constructor 
+      LifetimeDistance 
+      ( const LoKi::Vertices::VertexHolder&       base  ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~LifetimeDistance () {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  LifetimeDistance* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+    private:
+      // The default constructor is disabled
+      LifetimeDistance() ; ///< No default constrtuctor
+    } ;
+    // ========================================================================
   }  // end of namespace LoKi::Particles
 }  // end of namespace LoKi
 // ============================================================================

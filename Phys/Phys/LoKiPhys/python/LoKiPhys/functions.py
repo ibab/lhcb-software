@@ -349,6 +349,35 @@ DANG     = LoKi.Particles.CosineDirectionAngle
 ## @see LoKi::Cuts::DIRA
 DIRA     = LoKi.Particles.CosineDirectionAngle 
 
+
+
+## @see LoKi::Cuts::LIFETIME
+LIFETIME         = LoKi.Particles.LifeTime
+## @see LoKi::Cuts::LIFETIMECHI2
+LIFETIMECHI2     = LoKi.Particles.LifeTimeChi2
+## @see LoKi::Cuts::LIFETIMESIGNCHI2
+LIFETIMESIGNCHI2 = LoKi.Particles.LifeTimeSignedChi2
+## @see LoKi::Cuts::LIFETIMEFITCHI2
+LIFETIMEFITCHI2  = LoKi.Particles.LifeTimeFitChi2
+
+## @see LoKi::Cuts::LIFETIME
+LTIME         = LoKi.Particles.LifeTime
+## @see LoKi::Cuts::LIFETIMECHI2
+LTIMECHI2     = LoKi.Particles.LifeTimeChi2
+## @see LoKi::Cuts::LIFETIMESIGNCHI2
+LTIMESIGNCHI2 = LoKi.Particles.LifeTimeSignedChi2
+## @see LoKi::Cuts::LIFETIMEFITCHI2
+LTIMEFITCHI2  = LoKi.Particles.LifeTimeFitChi2
+
+## @see LoKi::Cuts::LIFETIMECHI2
+LTCHI2     = LoKi.Particles.LifeTimeChi2
+## @see LoKi::Cuts::LIFETIMESIGNCHI2
+LTSIGNCHI2 = LoKi.Particles.LifeTimeSignedChi2
+## @see LoKi::Cuts::LIFETIMEFITCHI2
+LTFITCHI2  = LoKi.Particles.LifeTimeFitChi2
+
+
+
 ## @see LoKi::Cuts::VTRUE
 VTRUE     = LoKi.Constant( _RCV , bool )(True)
 ## @see LoKi::Cuts::VFALSE

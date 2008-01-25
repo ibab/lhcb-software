@@ -1,4 +1,4 @@
-// $Id: Vertices1.h,v 1.9 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Vertices1.h,v 1.10 2008-01-25 14:42:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES1_H 
 #define LOKI_VERTICES1_H 1
@@ -131,7 +131,12 @@ namespace LoKi
        *  @return the estimate of the distance between vertex and the 'vertex'
        */
       result_type distance   ( argument v ) const ;
-    private:
+    public:
+      void setVertex ( const LHCb::VertexBase* vertex ) const 
+      { m_fun.setVertex ( vertex )  ; }
+      void setVertex ( const LoKi::Point3D&    vertex ) const 
+      { m_fun.setVertex ( vertex )  ; }
+    private :
       /// default constructor is private 
       VertexSignedDistance();
     private:

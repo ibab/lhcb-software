@@ -1,4 +1,4 @@
-// $Id: ImpactParamTool.h,v 1.6 2007-07-23 17:35:41 ibelyaev Exp $
+// $Id: ImpactParamTool.h,v 1.7 2008-01-25 14:42:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IMPACTPARAMTOOL_H 
 #define LOKI_IMPACTPARAMTOOL_H 1
@@ -33,7 +33,7 @@
 namespace LoKi
 {
   /** @namespace LoKi::Vertices 
-   *  collection of vertex-releated objects and fucntions 
+   *  collection of vertex-releated objects and functions 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-02-16 
    */
@@ -51,23 +51,33 @@ namespace LoKi
     {    
     public:
       /// accessor to the tool itself 
-      inline IGeomDispCalculator*  tool () const 
-      { return m_tool.getObject() ; }
-    protected:
+      inline IGeomDispCalculator*  tool () const { return getTool() ; }
+      /// accessor to the tool itself 
+      inline const LoKi::Interface<IGeomDispCalculator>& getTool () const { return m_tool ; }
+    public:
       /// constructor 
       ImpactParamTool 
-      ( IGeomDispCalculator*   tool  ) ;
+      ( const IGeomDispCalculator* tool  ) ;
       /// copy constructor 
       ImpactParamTool     
-      ( const ImpactParamTool& tool  ) ;
+      ( const ImpactParamTool&     tool  ) ;
       /// virtual destructor 
       virtual ~ImpactParamTool();
+    public:
+      // set the tool
+      void setTool ( const IGeomDispCalculator* t ) const { m_tool = t ; }
+      // set the tool
+      void setTool ( const LoKi::Interface<IGeomDispCalculator>& t ) const 
+      { m_tool = t ; }      
+    public:
+      /// cast 
+      operator const LoKi::Interface<IGeomDispCalculator>& () const { return m_tool ; }
     private:
       /// default constructor is private 
       ImpactParamTool();
     private:
       // the local pointer to the tool 
-      LoKi::Interface<IGeomDispCalculator> m_tool ;
+      mutable LoKi::Interface<IGeomDispCalculator> m_tool ;
     } ;
     // ========================================================================
   } // end of namespace LoKi::Vertices;

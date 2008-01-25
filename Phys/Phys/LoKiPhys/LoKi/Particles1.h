@@ -1,4 +1,4 @@
-// $Id: Particles1.h,v 1.8 2007-11-28 14:39:29 ibelyaev Exp $
+// $Id: Particles1.h,v 1.9 2008-01-25 14:42:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES1_H 
 #define LOKI_PARTICLES1_H 1
@@ -147,6 +147,11 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual computation 
       result_type distance           ( argument p ) const ;
+    public:
+      void setVertex ( const LHCb::VertexBase* vertex ) const 
+      { m_fun.setVertex ( vertex )  ; }
+      void setVertex ( const LoKi::Point3D&    vertex ) const 
+      { m_fun.setVertex ( vertex )  ; }
     private:
       /// default constructor is private
       VertexSignedDistance();
@@ -250,6 +255,11 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual computation 
       result_type chi2 ( argument p ) const ;
+    public:
+      void setVertex ( const LHCb::VertexBase* vertex ) const 
+      { m_fun.setVertex ( vertex )  ; }
+      void setVertex ( const LoKi::Point3D&    vertex ) const 
+      { m_fun.setVertex ( vertex )  ; }
     private:
       /// default constructor is private
       VertexChi2Distance();

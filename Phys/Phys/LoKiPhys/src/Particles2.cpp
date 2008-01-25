@@ -1,10 +1,15 @@
-// $Id: Particles2.cpp,v 1.7 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles2.cpp,v 1.8 2008-01-25 14:42:22 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // Event
 // ============================================================================
 #include "Event/RecVertex.h"
+// ============================================================================
+// LHCbMath
+// ============================================================================
+#include "LHCbMath/MatrixUtils.h"
+#include "LHCbMath/MatrixTransforms.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -337,6 +342,98 @@ LoKi::Particles::TimeDotDistance::fillStream
 ( std::ostream& s ) const 
 { return s << "TDOT" ; }
 // ============================================================================
+
+
+
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::Particles::LifetimeDistance::LifetimeDistance 
+( const LHCb::VertexBase* vertex ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  , LoKi::Vertices::VertexHolder ( vertex )  
+{}
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::Particles::LifetimeDistance::LifetimeDistance 
+( const LoKi::Point3D& vertex ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  , LoKi::Vertices::VertexHolder ( vertex )  
+{}
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::Particles::LifetimeDistance::LifetimeDistance 
+( const LoKi::Vertices::VertexHolder&     vertex ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  , LoKi::Vertices::VertexHolder ( vertex )  
+{}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::LifetimeDistance*
+LoKi::Particles::LifetimeDistance::clone() const
+{ return new  LoKi::Particles::LifetimeDistance ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::LifetimeDistance::result_type
+LoKi::Particles::LifetimeDistance::operator() 
+  ( LoKi::Particles::LifetimeDistance::argument p ) const 
+{
+  if( 0 == p      ) 
+  { 
+    Error ( " Argument is invalid, return  InvalidDistance " ) ;
+    return  LoKi::Constants::InvalidDistance ;                     // RETURN 
+  }
+  // get "end vertex"
+  const LHCb::VertexBase* end = p -> endVertex() ;
+  if ( 0 == end ) 
+  {
+    Error ( " EndVertex is invalid, return  InvalidDistance " ) ;
+    return  LoKi::Constants::InvalidDistance ;                     // RETURN 
+  }
+  // check the production vertex 
+  if ( _vertex == type () ) 
+  { Assert ( 0 != vertex() , "The Production Vertex points to NULL") ; }
+  
+  Gaudi::SymMatrix3x3 vD = end -> covMatrix() ;
+  // point or vertex ??
+  if ( _vertex == type() ) { vD += vertex() -> covMatrix() ; }
+  if ( !vD.Invert() ) 
+  {
+    Error ( "Failure in the matrix inversion, return InvalidDistance") ;
+    return  LoKi::Constants::InvalidDistance ;                     // RETURN
+  }
+  // matrix E:   vec(p)/m:
+  Gaudi::Vector3 E ;
+  E[0]  = p -> momentum () . Px () ;
+  E[1]  = p -> momentum () . Py () ;
+  E[2]  = p -> momentum () . Pz () ;
+  E    /= p -> momentum () . M  () ;
+  // err2 in ctau 
+  const double vctau = 1.0 / ROOT::Math::Similarity ( vD , E ) ;
+  // matrix d:
+  Gaudi::Vector3 d ;
+  if ( _vertex == type() ) 
+  { Gaudi::Math::geo2LA ( vertex()->position() - end->position () , d ) ; }
+  else 
+  { Gaudi::Math::geo2LA ( point()              - end->position ()  , d ) ; }
+  //
+  const double ctau = -vctau * Gaudi::Math::mult ( E , vD ,  d ) ;
+  return ctau ;                                                    // RETURN 
+}
+// ============================================================================
+std::ostream&
+LoKi::Particles::LifetimeDistance::fillStream
+( std::ostream& s ) const 
+{ return s << "LT" ; }
+// ============================================================================
+
+
+
+
 
 // ============================================================================
 // The END 

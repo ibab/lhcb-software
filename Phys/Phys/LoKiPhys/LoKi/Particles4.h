@@ -1,4 +1,4 @@
-// $Id: Particles4.h,v 1.9 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles4.h,v 1.10 2008-01-25 14:42:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES4_H 
 #define LOKI_PARTICLES4_H 1
@@ -90,7 +90,7 @@ namespace LoKi
       /// copy constructor 
       ImpPar ( const LoKi::Particles::ImpPar&    right  ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~ImpPar(){} ;
+      virtual ~ImpPar(){} 
       /// MANDATORY: clone method ("virtual constructor")
       virtual ImpPar* clone() const { return new ImpPar( *this ) ; }        
       /// MANDATORY: the only one essential method 
@@ -356,6 +356,11 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual evaluator 
       result_type mip ( argument p ) const ;
+    public:
+      /// get the evaluator 
+      const LoKi::Particles::ImpPar& impPar() const { return m_fun ; }
+      /// cast to helper tool 
+      operator const LoKi::Vertices::ImpactParamTool& () const { return m_fun ; }  
     private:
       // default constructor is private 
       MinImpPar();
@@ -537,7 +542,7 @@ namespace LoKi
         : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
         , LoKi::Keeper<LHCb::VertexBase>( first , last )
         , m_fun      ( (const LHCb::VertexBase*) 0 , tool )
-      {};
+      {}
       /// copy constructor 
       MinImpParChi2 ( const LoKi::Particles::MinImpParChi2& right ) ;
       /// MANDATORY: virtual destructor 
@@ -552,6 +557,11 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual evaluator 
       result_type mipchi2 ( argument p ) const ;
+    public:
+      /// get the evaluator 
+      const LoKi::Particles::ImpParChi2& impParChi2() const { return m_fun ; }
+      /// cast to helper tool 
+      operator const LoKi::Vertices::ImpactParamTool& () const { return m_fun ; }  
     private:
       // default constructor is private 
       MinImpParChi2();

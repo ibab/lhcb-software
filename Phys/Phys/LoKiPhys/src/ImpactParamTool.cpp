@@ -1,4 +1,4 @@
-// $Id: ImpactParamTool.cpp,v 1.4 2007-07-23 17:35:52 ibelyaev Exp $
+// $Id: ImpactParamTool.cpp,v 1.5 2008-01-25 14:42:22 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -31,13 +31,13 @@
  */
 // ============================================================================
 LoKi::Vertices::ImpactParamTool::ImpactParamTool 
-( IGeomDispCalculator* tool ) 
+( const IGeomDispCalculator* tool ) 
   : LoKi::AuxFunBase () 
   , m_tool ( tool )
 {
-  if ( 0 == m_tool.getObject() ) 
-  { throw LoKi::Exception("ImpactParamTool():  Tool* points to NULL "  ,
-                          StatusCode::FAILURE , __FILE__ , __LINE__ ); }
+  //if ( 0 == m_tool.getObject() ) 
+  //{ throw LoKi::Exception("ImpactParamTool():  Tool* points to NULL "  ,
+  //                        StatusCode::FAILURE , __FILE__ , __LINE__ ); }
 }
 // ============================================================================
 //  copy 
@@ -47,10 +47,10 @@ LoKi::Vertices::ImpactParamTool::ImpactParamTool
   : LoKi::AuxFunBase ( tool ) 
   , m_tool           ( tool.m_tool )
 {
-  if ( 0 == m_tool.getObject()  ) 
-  { throw LoKi::Exception
-      ("ImpactParamTool( copy ):  Tool* points to NULL ",
-       StatusCode::FAILURE , __FILE__ , __LINE__ ); }
+  //if ( 0 == m_tool.getObject()  ) 
+  //{ throw LoKi::Exception
+  //    ("ImpactParamTool( copy ):  Tool* points to NULL ",
+  //     StatusCode::FAILURE , __FILE__ , __LINE__ ); }
 }
 // ============================================================================
 //  virtual destructor
