@@ -3,12 +3,16 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v32r3>2008-01-21 Brunel v32r3</A></H1><PRE>
+</PRE><H1><A NAME=v32r3>2008-01-25 Brunel v32r3</A></H1><PRE>
 This version uses projects Gaudi v19r7, LHCb v23r3, Lbcom v6r14, Rec v5r3
- and DDDB v1r* (SQLDDDB v3r1 or greater), ParamFiles v7r1, FieldMap v4r7
+ and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
 
 This is a development version with tracking pattern recognition based on the Tf
 framework.
+
+- Persistency changes
+  . Propagate /Event/Link/Raw/Hcal/Digits to DST if present on input .digi file
+    (present from Boole v14r9) (GaudiConf v10r6)
 
 - New tuning
   . New treatment of geometry overlaps. By default overlap errors are "recovered"
@@ -19,6 +23,8 @@ framework.
   . In RecoTracking.opts, add NeuralNetTmva ghost probability algorithm to end
     of tracking sequence. Needs ParamFiles v7r1 or greater
     (TrackSys v4r13, NNTools v1r2) 
+  . Modified the T, IT and OT geometry so that IT and OT use independent
+    parameters for their position inside T (SQLDDDB v4r0)
 
 - New features
   . Possibility to switch off drift times in OT pattern recognition
