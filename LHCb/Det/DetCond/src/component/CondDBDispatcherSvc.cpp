@@ -1,4 +1,4 @@
-// $Id: CondDBDispatcherSvc.cpp,v 1.5 2007-05-11 10:04:56 marcocle Exp $
+// $Id: CondDBDispatcherSvc.cpp,v 1.6 2008-01-26 15:47:46 marcocle Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -164,6 +164,11 @@ ICondDBReader *CondDBDispatcherSvc::alternativeFor(const std::string &path) {
 StatusCode CondDBDispatcherSvc::getObject (const std::string &path, const Gaudi::Time &when,
                                            DataPtr &data,
                                            std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel) {
+  return alternativeFor(path)->getObject(path,when,data,descr,since,until,channel);
+}
+StatusCode CondDBDispatcherSvc::getObject (const std::string &path, const Gaudi::Time &when,
+                                           DataPtr &data,
+                                           std::string &descr, Gaudi::Time &since, Gaudi::Time &until, const std::string &channel) {
   return alternativeFor(path)->getObject(path,when,data,descr,since,until,channel);
 }
 

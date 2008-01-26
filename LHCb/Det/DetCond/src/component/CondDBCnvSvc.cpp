@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.cpp,v 1.13 2007-05-11 10:04:56 marcocle Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.14 2008-01-26 15:47:46 marcocle Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
@@ -143,6 +143,13 @@ StatusCode CondDBCnvSvc::queryInterface(const InterfaceID& riid,
 StatusCode CondDBCnvSvc::getObject (const std::string &path, const Gaudi::Time &when,
                                            DataPtr &data,
                                            std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel)
+{
+  return m_dbReader->getObject(path,when,data,descr,since,until,channel);
+}
+
+StatusCode CondDBCnvSvc::getObject (const std::string &path, const Gaudi::Time &when,
+                                           DataPtr &data,
+                                           std::string &descr, Gaudi::Time &since, Gaudi::Time &until, const std::string &channel)
 {
   return m_dbReader->getObject(path,when,data,descr,since,until,channel);
 }

@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.32 2007-12-20 15:48:52 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.33 2008-01-26 15:47:46 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -64,6 +64,13 @@ public:
   virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
                                 DataPtr &data,
                                 std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel = 0);
+
+  /// Try to retrieve an object from the Condition DataBase. If path points to a FolderSet,
+  /// channel and when are ignored and data is set ot NULL.
+  /// (Version with alphanumeric channel id)
+  virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
+                                DataPtr &data,
+                                std::string &descr, Gaudi::Time &since, Gaudi::Time &until, const std::string &channel);
 
   /// Retrieve the names of the children nodes of a FolderSet.
   virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
@@ -223,7 +230,22 @@ private:
   /// Connect to the COOL database. It sets 'm_db'.
   StatusCode i_openConnection();
 
-  /// Connect to the COOL database. It sets 'm_db'.
+  /// Internal method to retrieve an object.
+  StatusCode CondDBAccessSvc::i_getObject(const std::string &path, const Gaudi::Time &when,
+                                          DataPtr &data,
+                                          std::string &descr, Gaudi::Time &since, Gaudi::Time &until,
+                                          bool use_numeric_chid,
+                                          cool::ChannelId channel, const std::string &channelstr);
+
+  /// Internal method to retrieve an object from the database.
+  /// If the cache is activated, the result is copied there.
+  StatusCode CondDBAccessSvc::i_getObjectFromDB(const std::string &path, const cool::ValidityKey &when,
+                                                DataPtr &data,
+                                                std::string &descr, cool::ValidityKey &since, cool::ValidityKey &until,
+                                                bool use_numeric_chid,
+                                                cool::ChannelId channel, const std::string &channelstr);
+
+    /// Connect to the COOL database. It sets 'm_db'.
   StatusCode i_validateDefaultTag();
 
   /// Check if the TAG set exists in the DB.

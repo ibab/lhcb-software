@@ -1,4 +1,4 @@
-// $Id: CondDBCache.h,v 1.6 2007-02-14 16:13:31 marcocle Exp $
+// $Id: CondDBCache.h,v 1.7 2008-01-26 15:47:46 marcocle Exp $
 #ifndef COMPONENT_CONDDBCACHE_H 
 #define COMPONENT_CONDDBCACHE_H 1
 
@@ -47,6 +47,8 @@ public:
   bool insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &obj, const cool::ChannelId &channel = 0);
 
   bool addFolder(const std::string &path, const std::string &descr, const cool::IRecordSpecification& spec);
+  bool addFolder(const std::string &path, const std::string &descr, const cool::IRecordSpecification& spec, 
+                 const std::map<cool::ChannelId,std::string>& ch_names);
   bool addFolderSet(const std::string &path, const std::string &descr);
   bool addObject(const std::string &path, const cool::ValidityKey &since, const cool::ValidityKey &until,
                  const cool::IRecord& rec, const cool::ChannelId &channel, IOVType *iov_before = NULL);
@@ -62,7 +64,7 @@ public:
   bool get(const std::string &path, const cool::ValidityKey &when,
            const cool::ChannelId &channel,
            cool::ValidityKey &since, cool::ValidityKey &until,
-           std::string &descr, ICondDBReader::DataPtr &payload) ;
+           std::string &descr, ICondDBReader::DataPtr &payload);
 
   /// Search an entry in the cache and returns the data string or an empty string if no object is found.
   /// (version kept for backward compatibility)
@@ -72,6 +74,12 @@ public:
     return get(path,when,0,since,until,descr,payload);
   }
 
+  /// Find the value of the channel id fot the given channel name in a folder
+  /// (if present in the cache).
+  /// Returns true if the channel name in the folder was found
+  bool getChannelId(const std::string &path,const std::string &name,
+                    cool::ChannelId &channel) const;
+  
   void getSubNodes(const std::string &path, std::vector<std::string> &node_names);
 
   /// Remove all entries from the cache;
@@ -132,7 +140,8 @@ private:
   /// Internal class used to keep the items common to a given path.
   struct CondFolder {
 
-    typedef GaudiUtils::HashMap<cool::ChannelId,ItemListType> StorageType;
+    typedef GaudiUtils::Map<cool::ChannelId,ItemListType> StorageType;
+    typedef GaudiUtils::HashMap<std::string,cool::ChannelId> ChannelNamesMapType;
     
     CondFolder(const cool::IFolderPtr &fld):
       description(fld->description()),
@@ -146,6 +155,7 @@ private:
     std::string description;
     boost::shared_ptr<cool::IRecordSpecification> spec;
     StorageType items;
+    ChannelNamesMapType channelNames;
     bool sticky;
     /// Search for the first item in the storage valid at the given time.
     inline ItemListType::iterator find(const cool::ValidityKey &when, const cool::ChannelId &channel = 0) {
@@ -193,7 +203,7 @@ private:
 
   /// Actual storage
   StorageType m_cache;
-
+  
   size_t m_highLvl;
   size_t m_lowLvl;
   size_t m_level;

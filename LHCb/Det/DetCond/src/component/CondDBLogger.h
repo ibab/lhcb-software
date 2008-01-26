@@ -1,4 +1,4 @@
-// $Id: CondDBLogger.h,v 1.1 2008-01-24 15:14:15 marcocle Exp $
+// $Id: CondDBLogger.h,v 1.2 2008-01-26 15:47:46 marcocle Exp $
 #ifndef COMPONENT_CONDDBLOGGER_H 
 #define COMPONENT_CONDDBLOGGER_H 1
 
@@ -30,7 +30,25 @@ template <class TYPE> class SvcFactory;
  *  user = MyCondDBUser()
  *  user.Reader = CondDBLogger(LoggedReader = user.Reader)
  *  @endcode
- *  
+ * 
+ *  The format of the log file is very simple.  Each line starts with an
+ *  operation code then the time of the operation in ns (as returned by
+ *  Gaudi::Time::ns()).  The rest of the line depend on the operation:
+ *  - "INI:"
+ *    - Initialization of the logger
+ *  - "TAG:"
+ *    - Request of the used tag
+ *  - "GCH:"
+ *    - Retrieve the child nodes of a folderset. 
+ *  - "GET:"
+ *    - Request of an object from the database, the format is<br>
+ *      &lt;path&gt; &lt;channel&nbsp;id&gt; &lt;path&gt; &lt;evt.time&gt; &lt;status&gt;
+ *  - "GCN:"
+ *    - Request of an object from the database using the channel name, the format is<br>
+ *      &lt;path&gt; &lt;channel&nbsp;name&gt; &lt;path&gt; &lt;evt.time&gt; &lt;status&gt;
+ *  - "FIN:"
+ *    - Finalization of the logger
+ * 
  *  @param LoggedReader
  *         Fully qualified name of the ICondDBReader to which the calls have to
  *         be forwarded.
@@ -44,8 +62,8 @@ template <class TYPE> class SvcFactory;
  */
 class CondDBLogger: public virtual Service,
                     public virtual ICondDBReader {
-public: 
-
+public:
+  
   /** Query interfaces of Interface
       @param riid       ID of Interface to be retrieved
       @param ppvUnknown Pointer to Location for interface pointer
@@ -64,6 +82,12 @@ public:
   virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
                                 DataPtr &data,
                                 std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel = 0);
+
+  /// Try to retrieve an object from the Condition DataBase. If path points to a FolderSet,
+  /// channel and when are ignored and data is set ot NULL.
+  virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
+                                DataPtr &data,
+                                std::string &descr, Gaudi::Time &since, Gaudi::Time &until, const std::string &channel);
 
   /// Retrieve the names of the children nodes of a FolderSet.
   virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
@@ -93,7 +117,7 @@ private:
   std::string m_loggedReaderName;
 
   /// Path to the file that will contain the log.
-  std::ostream *m_logFile;
+  std::auto_ptr<std::ostream> m_logFile;
 
   /// Path to the file that will contain the log.
   std::string m_logFileName;

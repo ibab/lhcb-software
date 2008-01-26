@@ -1,4 +1,4 @@
-// $Id: CondDBLayeringSvc.h,v 1.3 2007-05-11 10:04:56 marcocle Exp $
+// $Id: CondDBLayeringSvc.h,v 1.4 2008-01-26 15:47:46 marcocle Exp $
 #ifndef COMPONENT_CONDDBLAYERINGSVC_H 
 #define COMPONENT_CONDDBLAYERINGSVC_H 1
 
@@ -37,6 +37,12 @@ public:
   virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
                                 DataPtr &data,
                                 std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel = 0);
+
+  /// Try to retrieve an object from the Condition DataBase. If path points to a FolderSet,
+  /// channel and when are ignored and data is set ot NULL.
+  virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
+                                DataPtr &data,
+                                std::string &descr, Gaudi::Time &since, Gaudi::Time &until, const std::string &channel);
 
   /// Retrieve the names of the children nodes of a FolderSet.
   virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);

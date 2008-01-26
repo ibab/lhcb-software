@@ -1,4 +1,4 @@
-// $Id: CondDBLogger.cpp,v 1.1 2008-01-24 15:14:15 marcocle Exp $
+// $Id: CondDBLogger.cpp,v 1.2 2008-01-26 15:47:46 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -30,8 +30,8 @@ CondDBLogger::CondDBLogger( const std::string& name, ISvcLocator* svcloc ):
                   "Fully qualified name of the ICondDBReader to which the calls"
                   " have to be forwarded.");
   declareProperty("LogFile",       m_logFileName      = "",
-                  "Path to the log file (it is overwritten if it exists)."
-                  "If not specified or set to empty, the file name is set from"
+                  "Path to the log file (it is overwritten if it exists). "
+                  "If not specified or set to empty, the file name is set from "
                   "the name of the instance plus '.log'." );
 
 }
@@ -89,14 +89,14 @@ StatusCode CondDBLogger::initialize(){
   }
 
   // Open the output file and start writing.
-  m_logFile =  new std::ofstream(m_logFileName.c_str());
+  m_logFile =  std::auto_ptr<std::ostream>(new std::ofstream(m_logFileName.c_str()));
   if ( ! m_logFile->good() ) {
     log << MSG::ERROR << "Problems opening " << m_logFileName << endreq;
     return StatusCode::FAILURE;
   }
   log << MSG::DEBUG << "File '" << m_logFileName << "' opened for writing." << endreq;
 
-  (*m_logFile) << "INI: " << Gaudi::Time::current() << " " << name() << " logging " << m_loggedReaderName << std::endl;
+  (*m_logFile) << "INI: " << Gaudi::Time::current().ns() << " " << name() << " logging " << m_loggedReaderName << std::endl;
 
   return sc;
 }
@@ -113,10 +113,9 @@ StatusCode CondDBLogger::finalize(){
     m_loggedReader = 0;
   }
 
-  if (m_logFile) {
-    (*m_logFile) << "FIN: " << Gaudi::Time::current() << " " << name() << std::endl;
-    delete m_logFile;
-    m_logFile = 0;
+  if (m_logFile.get()) {
+    (*m_logFile) << "FIN: " << Gaudi::Time::current().ns() << " " << name() << std::endl;
+    m_logFile.reset(0);
   }
 
   return Service::finalize();
@@ -126,11 +125,27 @@ StatusCode CondDBLogger::finalize(){
 //  retrieve an object
 //=========================================================================
 StatusCode CondDBLogger::getObject (const std::string &path, const Gaudi::Time &when,
-                                           DataPtr &data,
-                                           std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel)
+                                    DataPtr &data,
+                                    std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel)
 {
   if ( m_loggedReader ) {
-    (*m_logFile) << "GET: " << Gaudi::Time::current() << " " << path << " " << when << " " << std::flush;
+    (*m_logFile) << "GET: " << Gaudi::Time::current().ns() << " "
+                            << path << " " << channel << " "
+                            << when.ns() << " " << std::flush;
+    StatusCode sc = m_loggedReader->getObject(path,when,data,descr,since,until,channel);
+    (*m_logFile) << sc << std::endl;
+    return sc;
+  }
+  return StatusCode::FAILURE;
+}
+StatusCode CondDBLogger::getObject (const std::string &path, const Gaudi::Time &when,
+                                    DataPtr &data,
+                                    std::string &descr, Gaudi::Time &since, Gaudi::Time &until, const std::string &channel)
+{
+  if ( m_loggedReader ) {
+    (*m_logFile) << "GCN: " << Gaudi::Time::current().ns() << " "
+                            << path << " " << channel << " "
+                            << when.ns() << " " << std::flush;
     StatusCode sc = m_loggedReader->getObject(path,when,data,descr,since,until,channel);
     (*m_logFile) << sc << std::endl;
     return sc;
@@ -144,7 +159,7 @@ StatusCode CondDBLogger::getObject (const std::string &path, const Gaudi::Time &
 StatusCode CondDBLogger::getChildNodes (const std::string &path, std::vector<std::string> &node_names)
 {
   if ( m_loggedReader ) {
-    (*m_logFile) << "GCH: " << Gaudi::Time::current() << " " << path <<  " " << std::flush;
+    (*m_logFile) << "GCH: " << Gaudi::Time::current().ns() << " " << path <<  " " << std::flush;
     StatusCode sc = m_loggedReader->getChildNodes(path,node_names);
     (*m_logFile) << sc << path << std::endl;
     return sc;
@@ -157,7 +172,7 @@ StatusCode CondDBLogger::getChildNodes (const std::string &path, std::vector<std
 //=========================================================================
 void CondDBLogger::defaultTags ( std::vector<LHCb::CondDBNameTagPair>& tags ) const {
   if ( m_loggedReader ) {
-    (*m_logFile) << "TAG: " << Gaudi::Time::current() << std::endl;
+    (*m_logFile) << "TAG: " << Gaudi::Time::current().ns() << std::endl;
     m_loggedReader->defaultTags(tags);
   }
 }

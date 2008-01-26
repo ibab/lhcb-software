@@ -1,4 +1,4 @@
-// $Id: CondDBCache.cpp,v 1.7 2007-02-14 16:13:31 marcocle Exp $
+// $Id: CondDBCache.cpp,v 1.8 2008-01-26 15:47:46 marcocle Exp $
 // Include files 
 
 
@@ -53,6 +53,12 @@ bool CondDBCache::insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &
   StorageType::iterator f = m_cache.find(id);
   if (f == m_cache.end()){
     f = m_cache.insert(StorageType::value_type(id,CondFolder(folder))).first;
+    // Fill the map of channel names.
+    std::map<cool::ChannelId,std::string>::const_iterator p;
+    std::map<cool::ChannelId,std::string> ch_names = folder->listChannelsWithNames();
+    for (p = ch_names.begin(); p != ch_names.end(); ++p) {
+      f->second.channelNames[p->second] = p->first;
+    }
   } else {
     if (f->second.items[channel].end() != f->second.conflict(obj->since(),obj->until(),channel)) {
       m_log << MSG::WARNING << "Conflict found: item not inserted" << endmsg;
@@ -75,6 +81,20 @@ bool CondDBCache::addFolder(const std::string &path, const std::string &descr,
   StorageType::iterator f = m_cache.find(path);
   if (f == m_cache.end()){
     f = m_cache.insert(StorageType::value_type(path,CondFolder(descr,spec))).first;
+  }
+  return true;
+}
+bool CondDBCache::addFolder(const std::string &path, const std::string &descr,
+                            const cool::IRecordSpecification& spec, 
+                            const std::map<cool::ChannelId,std::string>& ch_names) {
+  StorageType::iterator f = m_cache.find(path);
+  if (f == m_cache.end()){
+    f = m_cache.insert(StorageType::value_type(path,CondFolder(descr,spec))).first;
+    // Fill the map of channel names.
+    std::map<cool::ChannelId,std::string>::const_iterator p; 
+    for (p = ch_names.begin(); p != ch_names.end(); ++p) {
+      f->second.channelNames[p->second] = p->first;
+    }
   }
   return true;
 }
@@ -182,7 +202,22 @@ bool CondDBCache::get(const std::string &path, const cool::ValidityKey &when,
   m_log << " MISSING" << endmsg;
   return false;
 }
-
+//=========================================================================
+//  
+//=========================================================================
+bool CondDBCache::getChannelId(const std::string &path,const std::string &name,
+                               cool::ChannelId &channel) const {
+  StorageType::const_iterator f = m_cache.find(path);
+  if ( m_cache.end() != f ) {
+    CondFolder::ChannelNamesMapType::const_iterator id = f->second.channelNames.find(name);
+    if ( f->second.channelNames.end() != id ) {
+      channel = id->second;
+      return true;
+    }
+  }
+  channel = 0;
+  return false;
+}
 //=========================================================================
 //  
 //=========================================================================

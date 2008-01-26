@@ -1,4 +1,4 @@
-// $Id: CondDBLayeringSvc.cpp,v 1.3 2007-05-11 10:04:56 marcocle Exp $
+// $Id: CondDBLayeringSvc.cpp,v 1.4 2008-01-26 15:47:46 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -100,6 +100,17 @@ StatusCode CondDBLayeringSvc::finalize(){
 StatusCode CondDBLayeringSvc::getObject (const std::string &path, const Gaudi::Time &when,
                                            DataPtr &data,
                                            std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel)
+{
+  std::vector<ICondDBReader*>::iterator layer;
+  bool found_object = false;
+  for ( layer = m_layers.begin(); layer != m_layers.end() && ! found_object; ++layer ) {
+    found_object = (*layer)->getObject(path,when,data,descr,since,until,channel).isSuccess();
+  }
+  return (found_object) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+}
+StatusCode CondDBLayeringSvc::getObject (const std::string &path, const Gaudi::Time &when,
+                                           DataPtr &data,
+                                           std::string &descr, Gaudi::Time &since, Gaudi::Time &until, const std::string &channel)
 {
   std::vector<ICondDBReader*>::iterator layer;
   bool found_object = false;

@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.45 2008-01-23 17:22:07 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.46 2008-01-26 15:47:46 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -740,73 +740,64 @@ StatusCode CondDBAccessSvc::i_recursiveTag(const std::string &path, const std::s
 
 StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time &when,
                                       DataPtr &data,
-                                      std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel){
+                                      std::string &descr, Gaudi::Time &since, Gaudi::Time &until,
+                                      cool::ChannelId channel){
+  return i_getObject(path, when, data, descr, since, until,
+                     true, channel, "");
+}
 
+StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time &when,
+                                      DataPtr &data,
+                                      std::string &descr, Gaudi::Time &since, Gaudi::Time &until,
+                                      const std::string &channel){
+  return i_getObject(path, when, data, descr, since, until,
+                     false, 0, channel);
+}
+
+StatusCode CondDBAccessSvc::i_getObjectFromDB(const std::string &path, const cool::ValidityKey &when,
+                                              DataPtr &data,
+                                              std::string &descr, cool::ValidityKey &since, cool::ValidityKey &until,
+                                              bool use_numeric_chid, cool::ChannelId channel, const std::string &channelstr){
   try {
-    if (m_useCache) {
-      cool::ValidityKey vk_when = timeToValKey(when);
-      cool::ValidityKey vk_since, vk_until;
-      if (!m_cache->get(path,vk_when,channel,vk_since,vk_until,descr,data)) {
-        // not found
-        if (!m_noDB) {
-          DataBaseOperationLock dbLock(this);
-          if (database()->existsFolderSet(path)) {
-            // with FolderSets, I put an empty entry and clear the shared_ptr
-            m_cache->addFolderSet(path,"");
-            data.reset();
-            return StatusCode::SUCCESS;
-          }
-          // go to the database
-          cool::IFolderPtr folder = database()->getFolder(path);
-          cool::IObjectPtr obj;
-          if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION
-              || tag().empty() || tag() == "HEAD" ){
-            obj = folder->findObject(vk_when,channel);
-          } else {
-            obj = folder->findObject(vk_when,channel,folder->resolveTag(tag()));
-          }
-          m_cache->insert(folder,obj,channel);
-          // now the object is in the cache
-          m_cache->get(path,vk_when,channel,vk_since,vk_until,descr,data);
-        } else {
-          // we are not using the db: no way of getting the object from it
-          return StatusCode::FAILURE;
-        }
-      }
-      since = valKeyToTime(vk_since);
-      until = valKeyToTime(vk_until);
+    DataBaseOperationLock dbLock(this);
+    // Check if the user asked for a folderset
+    if (database()->existsFolderSet(path)) {
       
-    } else if (!m_noDB){
+      // with FolderSets, I put an empty entry and clear the shared_ptr
+      if (m_useCache) m_cache->addFolderSet(path,"");
+      data.reset();
+      return StatusCode::SUCCESS;
       
-      DataBaseOperationLock dbLock(this);
-      if (database()->existsFolderSet(path)) {
-        // with FolderSets, I clear the shared_ptr (it's the folderset signature)
-        data.reset();
-        return StatusCode::SUCCESS;
-      }
-
-      cool::IFolderPtr folder = database()->getFolder(path);
-      descr = folder->description();
-
-      cool::IObjectPtr obj;
-      if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION
-          || tag().empty() || tag() == "HEAD"){
-        obj = folder->findObject(timeToValKey(when),channel);
-      } else {
-        obj = folder->findObject(timeToValKey(when),channel,folder->resolveTag(tag()));
-      }
-
-      // deep copy of the attr. list
-      data = DataPtr(new cool::Record(obj->payload()));
-
-      since = valKeyToTime(obj->since());
-      until = valKeyToTime(obj->until());
-
-    } else {
-      //log << MSG::ERROR << "Object not found in cache and database is off" << endmsg;
-      return StatusCode::FAILURE;
     }
+    else {
+      
+      // we want a folder, so go to the database to get it
+      cool::IFolderPtr folder = database()->getFolder(path);
+      cool::IObjectPtr obj;
 
+      if ( !use_numeric_chid ) { // we need to convert from name to id
+        channel = folder->channelId(channelstr);
+      }
+
+      if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION
+          || tag().empty() || tag() == "HEAD" ){
+        obj = folder->findObject(when,channel);
+      } else {
+        obj = folder->findObject(when,channel,folder->resolveTag(tag()));
+      }
+
+      if (m_useCache){
+        m_cache->insert(folder,obj,channel);
+        // now get the data from the cache
+        m_cache->get(path,when,channel,since,until,descr,data);
+      } else {
+        data = DataPtr(new cool::Record(obj->payload()));
+        descr = folder->description();
+        since = obj->since();
+        until = obj->until();
+      }
+      
+    }
   } catch ( cool::FolderNotFound /*&e*/) {
     //log << MSG::ERROR << e << endmsg;
     return StatusCode::FAILURE;
@@ -822,6 +813,48 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
     report_exception(log,"got CORAL exception",e);
   }
   return StatusCode::SUCCESS;
+}
+
+StatusCode CondDBAccessSvc::i_getObject(const std::string &path, const Gaudi::Time &when,
+                                        DataPtr &data,
+                                        std::string &descr, Gaudi::Time &since, Gaudi::Time &until,
+                                        bool use_numeric_chid, cool::ChannelId channel, const std::string &channelstr){
+
+  cool::ValidityKey vk_when = timeToValKey(when);
+  cool::ValidityKey vk_since, vk_until;
+    
+  if (m_useCache) {
+    
+    // Check if the cache knows about the path
+    if ( m_cache->hasPath(path) ) {
+      
+      // the folder is in the cache
+      if ( !use_numeric_chid ) { // we need to convert from name to id
+        if (!m_cache->getChannelId(path,channelstr,channel)) {
+          // the channel name cannot bre found in the cached folder
+          return StatusCode::FAILURE;
+        }
+      }
+
+      if ( m_cache->get(path,vk_when,channel,vk_since,vk_until,descr,data) ) {
+        since = valKeyToTime(vk_since);
+        until = valKeyToTime(vk_until);
+        return StatusCode::SUCCESS;
+      }
+    }
+    
+  }
+  // If we get here, either we do not know about the folder, we didn't
+  // find the object, or we are not using the cache, so let's try the DB
+  if (m_noDB) { 
+    // oops... we are not using the db: no way of getting the object from it
+    return StatusCode::FAILURE;
+  }
+  
+  StatusCode sc = i_getObjectFromDB(path,vk_when,data,descr,vk_since,vk_until,use_numeric_chid,channel,channelstr);
+  since = valKeyToTime(vk_since);
+  until = valKeyToTime(vk_until);
+  return sc;
 }
 
 //=========================================================================
