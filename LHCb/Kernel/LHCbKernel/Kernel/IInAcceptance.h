@@ -1,6 +1,6 @@
-// $Id: IInAcceptance.h,v 1.2 2006-04-05 10:16:30 ibelyaev Exp $
+// $Id: IInAcceptance.h,v 1.3 2008-01-26 13:31:19 mneedham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 #ifndef KERNEL_IINACCEPTANCE_H
 #define KERNEL_IINACCEPTANCE_H 1

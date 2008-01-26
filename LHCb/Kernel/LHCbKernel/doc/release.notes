@@ -4,6 +4,11 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+<<<<<<< release.notes
+! 2008-01-26 M Needham
+ - Add PiecewiseTrajectory class from Gerhard 
+
+=======
 ! 2008-01-24 - Chris Jones
  - Make number of RICHes an unsigned int.
  - Fix doxygen comment and use std::sqrt in RichRadIntersection
@@ -13,6 +18,7 @@
  - Fix derivatives in AlignTraj (forgot to zero three numbers!).
    Credit goes to Wouter Hulsbergen for pointing out the mistake...
 
+>>>>>>> 1.346
 !===================== LHCbKernel v8r0 2007-11-23 ========================
 ! 2007-11-23 - Marco Cattaneo
  - Remove Kernel/SerializeStl.h (now in GaudiKernel)
