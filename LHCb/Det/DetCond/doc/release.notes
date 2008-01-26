@@ -1,17 +1,22 @@
-# $Id: release.notes,v 1.117 2008-01-24 15:14:15 marcocle Exp $
+# $Id: release.notes,v 1.118 2008-01-26 15:48:02 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
-! 2008-01-24 - Marco Clemencic
+! 2008-01-26 - Marco Clemencic
  - Added the service CondDBLogger (implementation of ICondDBReader) that, if put
    between a user and a provider of the ICondDBReader interface, stores in a
    file all the requests that were made to the CondDBReader, with the time of
    the request.
    The class allows to generate some history of the CondDB traffic to be able to
    analyze and replay it afterward.
+ - Added the algorithm CondDBReplayAlg. It can read a file produced with
+   CondDBLogger to replay the requests to the database.
+ - Modified ICondDBReader and CondDBAccessSvc to allow the retrieval of objects
+   from the conditions database using the channel name (available since COOL
+   2.3.0, LCGCMT 54).
 
 ! 2008-01-21 - Marco Clemencic
  - Improved error messages in case of CORAL exceptions.
