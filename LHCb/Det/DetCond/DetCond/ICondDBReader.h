@@ -1,4 +1,4 @@
-// $Id: ICondDBReader.h,v 1.3 2007-05-11 10:04:56 marcocle Exp $
+// $Id: ICondDBReader.h,v 1.4 2008-01-26 16:28:14 marcocle Exp $
 #ifndef DETCOND_ICONDDBREADER_H 
 #define DETCOND_ICONDDBREADER_H 1
 
@@ -47,7 +47,14 @@ public:
                                 DataPtr &data,
                                 std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel = 0) = 0;
 
-  /// Retrieve the names of the children nodes of a FolderSet.
+  /// Retrieve data from the condition database.
+  /// Returns a shared pointer to an attribute list, the folder description and the IOV limits.
+  /// (Version with alphanumeric channel id)
+  virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
+                                DataPtr &data,
+                                std::string &descr, Gaudi::Time &since, Gaudi::Time &until, const std::string &channel) = 0;
+
+    /// Retrieve the names of the children nodes of a FolderSet.
   virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names) = 0;
 
 protected:
