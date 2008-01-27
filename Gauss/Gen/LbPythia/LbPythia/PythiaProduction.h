@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.h,v 1.7 2008-01-24 17:00:49 robbep Exp $
+// $Id: PythiaProduction.h,v 1.8 2008-01-27 15:03:27 robbep Exp $
 #ifndef LBPYTHIA_PYTHIAPRODUCTION_H 
 #define LBPYTHIA_PYTHIAPRODUCTION_H 1
 
@@ -130,5 +130,10 @@ private:
   IBeamTool * m_beamTool ;
 
   double m_widthLimit ; ///< Limit to consider a particle with no lifetime
+  
+  /** Name of optional SLHA decay file (to be placed in Gen/DecFiles/dkfiles 
+   *  directory)
+   */
+  std::string m_slhaDecayFile ; 
 };
 #endif // LBPYTHIA_PYTHIAPRODUCTION_H

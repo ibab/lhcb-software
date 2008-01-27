@@ -1,10 +1,14 @@
-// $Id: PythiaProduction.cpp,v 1.4 2008-01-24 17:00:49 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.5 2008-01-27 15:03:08 robbep Exp $
 
 // Include files
 
 // local
 #include "LbPythia/Pythia.h"
 #include "LbPythia/PythiaProduction.h"
+
+// from SEAL
+#include "SealBase/ShellEnvironment.h"
+#include "SealBase/Filename.h"
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -86,6 +90,8 @@ PythiaProduction::PythiaProduction( const std::string& type,
   declareProperty( "PDTList"        , m_pdtlist ) ;
   declareProperty( "BeamToolName" , m_beamToolName = "CollidingBeams" ) ;
   declareProperty( "WidthLimit" , m_widthLimit = 1.5e-6 * GeV ) ;
+  declareProperty( "SLHADecayFile" , m_slhaDecayFile = "empty" ) ;
+
   // Set the default settings for Pythia here:
   m_defaultSettings.clear() ;
   m_defaultSettings.push_back( "pysubs msel 0" ) ;
@@ -153,6 +159,20 @@ StatusCode PythiaProduction::initialize( ) {
   // Obtain beam tool
   m_beamTool = tool< IBeamTool >( m_beamToolName , this ) ;
 
+  // Name of PYSLHA file to read
+  if ( "empty" != m_slhaDecayFile ) {
+    if ( seal::ShellEnvironment().has( "DECFILESROOT" ) ) {
+      std::string temp = m_slhaDecayFile ;
+      m_slhaDecayFile = seal::ShellEnvironment().get( "DECFILESROOT" ) +
+        "/dkfiles/" + temp ;
+    }
+    // Check if file exists
+    seal::Filename shlaDecayFile( m_slhaDecayFile ) ;
+    if ( ! shlaDecayFile.exists() ) 
+      return Error( "The SLHA decay file does not exist" ) ;
+    if ( ! shlaDecayFile.isReadable() ) 
+      return Error( "The SLHA decay file cannot be read" ) ;
+  }
 
   // Set size of common blocks in HEPEVT: note these correspond to stdhep
   HepMC::HEPEVT_Wrapper::set_sizeof_int( 4 ) ;
@@ -256,6 +276,27 @@ StatusCode PythiaProduction::initializeGenerator( ) {
   // if file already exist, delete it
   std::remove( m_pythiaListingFileName.c_str() ) ;
   Pythia::InitPyBlock( m_pythiaListingUnit , m_pythiaListingFileName ) ;
+
+  // if specified, read SHLA decay file
+  if ( "empty" != m_slhaDecayFile ) {
+    int lunUnit = F77Utils::getUnit( msgLevel( MSG::DEBUG ) ) ;
+    if ( 0 >= lunUnit ) 
+      return Error( "No Fortran Unit available" ) ;
+    sc = F77Utils::openOld( lunUnit , m_slhaDecayFile , 
+                                       msgLevel( MSG::INFO ) ) ;
+    if ( sc.isFailure() ) 
+      return Error( "Cannot open SLHA decay file" ) ;
+
+    Pythia::pymssm().imss(22) = lunUnit ;
+    // KSUSY1 = 1000000
+    int KSUSY1 = 1000000 ;
+    int status = 0 ;
+    Pythia::PySlha( 2 , KSUSY1+22 , status ) ;
+
+    sc = F77Utils::close( lunUnit , msgLevel( MSG::INFO ) ) ;
+    if ( sc.isFailure() ) 
+      return Error( "Cannot close SLHA decay file" ) ;
+  }
   
   Pythia::PyInit( m_frame, m_beam, m_target, m_win ) ;  
 
