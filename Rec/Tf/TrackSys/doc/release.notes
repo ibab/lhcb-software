@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2008-01-28 - Manuel Schiller
+ - In NoFieldTracking.opts, added include to use new PatSeeding tuning when
+   running without magnetic field, but left it commented out because
+   PatSeeding is not executed in the default setup
+
 !============================ TrackSys v4r13 2008-01-18 ======================
 ! 2008-01-18 - Marco Cattaneo
  - In RecoTracking.opts, sdd NeuralNetTmva ghost probability algorithm to end

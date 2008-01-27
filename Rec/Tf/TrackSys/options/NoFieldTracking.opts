@@ -84,6 +84,8 @@ ToolSvc.PatFwdTool.WithoutBField     = true;
 // VeloTT pattern
 #include "$PATVELOTTROOT/options/VeloTT_noB.opts"
 
+// uncomment to use first tuning of PatSeeding without B field
+//#include "$PATALGORITHMSROOT/options/PatSeedingTool-FieldOff.opts"
 
 // ====================================================================
 // Add pre-fit algorithms
