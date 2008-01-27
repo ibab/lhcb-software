@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichHit.xml,v 1.11 2006-12-21 10:37:04 cattanem Exp $
+  * $Id: MCRichHit.xml,v 1.12 2008-01-27 09:57:08 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -59,8 +59,17 @@
                 <bitfield desc="The Rich detector"  length="2"  name="rich" type="Rich::DetectorType" getMeth="FALSE" setMeth="FALSE" />
                 <bitfield desc="If Cherenkov radiation, the radiator medium" length="5"  name="radiator" type="Rich::RadiatorType" getMeth="FALSE" setMeth="FALSE" />
                 <bitfield desc="If an aerogel hit, store the aerogel tile ID number. ID is adjusted from the G4 number to run from zero" length="5"  name="aerogelTileID" />
-                <bitfield desc="Did the photon undergo Rayleigh scattering"                                    length="1"  name="scatteredPhoton"   />
-                <bitfield desc="Hit from a charged track hitting the HPD entrance window"                      length="1"  name="chargedTrack"      />
+                <bitfield desc="Did the photon undergo Rayleigh scattering"                                       length="1"  name="scatteredPhoton"   />
+                <bitfield desc="Hit from a charged track hitting the HPD entrance window"                         length="1"  name="chargedTrack"      />
+                <bitfield desc="Hit from an electron backscattered at the HPD silicon chip"                       length="1"  name="hpdSiBackscatter"  />
+                <bitfield desc="Hit from a photon reflected by the QW/PC interface in the HPD"                    length="1"  name="hpdReflQWPC"       />
+                <bitfield desc="Hit from a photon reflected by the Chromium in the HPD"                           length="1"  name="hpdReflChr"        />
+                <bitfield desc="Hit from a photon reflected by the Air/QW interface in the HPD"                   length="1"  name="hpdReflAirQW"      />
+                <bitfield desc="Hit from a photon reflected by the Air/PC interface in the HPD"                   length="1"  name="hpdReflAirPC"      />
+                <bitfield desc="Hit from a photon reflected by the silicon in the HPD"                            length="1"  name="hpdReflSi"         />
+                <bitfield desc="Hit from a photon reflected by the kovar in the HPD"                              length="1"  name="hpdReflKovar"      />
+                <bitfield desc="Hit from a photon reflected by the kapton in the HPD"                             length="1"  name="hpdReflKapton"     />
+                <bitfield desc="Hit from a photon reflected by the PC/QW interface in the HPD"                    length="1"  name="hpdReflPCQW"       />
         </attribute>
 
         <method 
@@ -170,29 +179,59 @@
         </method>
 
         <method 
-                name  = "isSignal"
+                name  = "isRICHRadiator"
                 const = "TRUE" 
-                desc  = "Returns true if this hit is unscattered Cherenkov radiation from the main radiators" 
+                desc  = "Returns true if this hit is Cherenkov radiation from the main radiators" 
                 type  = "bool" >
                 <code>
-                   return ( !scatteredPhoton() &amp;&amp; ( radiator() == Rich::Aerogel ||
-                                                            radiator() == Rich::C4F10   || 
-                                                            radiator() == Rich::CF4     )  );  
+                   return ( radiator() == Rich::Aerogel ||
+                            radiator() == Rich::C4F10   || 
+                            radiator() == Rich::CF4       );  
+                </code>
+        </method>
+
+        <method 
+                name  = "hpdReflection"
+                const = "TRUE" 
+                desc  = "Returns true if this hit is from an optical reflection within the HPD" 
+                type  = "bool" >
+                <code>
+	          return ( hpdReflQWPC()   ||   
+     	                   hpdReflChr()    ||
+     	                   hpdReflAirQW()  ||
+     	                   hpdReflAirPC()  ||
+     	                   hpdReflSi()     ||
+     	                   hpdReflKovar()  ||
+     	                   hpdReflKapton() ||
+     	                   hpdReflPCQW()
+                         );
+                </code>
+        </method>
+
+        <method 
+                name  = "isSignal"
+                const = "TRUE" 
+                desc  = "Returns true if this hit is unscattered and unreflected Cherenkov radiation from the main radiators" 
+                type  = "bool" >
+                <code>
+                   return ( !isBackground() );  
                 </code>
         </method>
 
         <method 
                 name  = "isBackground"
                 const = "TRUE" 
-                desc  = "Returns true if this hit is a background hit. I.e. not from true unscattered Cherenkov radiation from the main radiators" 
+                desc  = "Returns true if this hit is a background hit" 
                 type  = "bool" >
                 <code>
-                   return ( !isSignal() &amp;&amp; ( scatteredPhoton() ||
-                                                     chargedTrack()    ||
-                                                     gasQuartzCK()     ||
-                                                     hpdQuartzCK()     ||
-                                                     nitrogenCK()      ||
-                                                     aeroFilterCK() ) );
+                   return ( !isRICHRadiator() || (   scatteredPhoton()  || 
+                                                     hpdReflection()    ||
+                                                     hpdSiBackscatter() ||
+                                                     chargedTrack()     ||
+                                                     gasQuartzCK()      ||
+                                                     hpdQuartzCK()      ||
+                                                     nitrogenCK()       ||
+                                                     aeroFilterCK()      )  );
                 </code>
         </method>
 
@@ -201,23 +240,7 @@
                 const = "TRUE" 
                 desc  = "Returns an MCRichDigitHistoryCode object for this hit" 
                 type  = "LHCb::MCRichDigitHistoryCode" >
-                <code>
-        LHCb::MCRichDigitHistoryCode hist;
-        // store history into hist
-        if ( !isBackground() )
-        {
-          if      ( Rich::Aerogel == radiator() ) { hist.setAerogelHit(true); }
-          else if ( Rich::C4F10   == radiator() ) { hist.setC4f10Hit(true);   }
-          else if ( Rich::CF4     == radiator() ) { hist.setCf4Hit(true);     }
-        }
-        if ( scatteredPhoton() ) { hist.setScatteredHit(true);  }
-        if ( chargedTrack()    ) { hist.setChargedTrack(true);  }
-        if ( gasQuartzCK()     ) { hist.setGasQuartzCK(true);   }
-        if ( hpdQuartzCK()     ) { hist.setHpdQuartzCK(true);   }
-        if ( nitrogenCK()      ) { hist.setNitrogenCK(true);    }
-        if ( aeroFilterCK()    ) { hist.setAeroFilterCK(true);  }
-        return hist;
-                </code>
+                
         </method>
         
 </class>

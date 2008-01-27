@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.90 2007-11-09 07:45:56 cattanem Exp $
+! $Id: release.notes,v 1.91 2008-01-27 09:57:08 jonrob Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+! 2008-01-27 - Chris Jones
+ - Additions to MCRichHit to store new HPD reflection background types in hit
+   history code (R.Lambert).
 
 !======================== MCEvent v2r5p1 2007-11-09 ==========================
 ! 2007-11-09 - Marco Cattaneo

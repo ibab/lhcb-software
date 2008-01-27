@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichOpticalPhoton.xml,v 1.9 2006-12-21 10:37:04 cattanem Exp $
+  * $Id: MCRichOpticalPhoton.xml,v 1.10 2008-01-27 09:57:08 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichOpticalPhoton class                              *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -51,6 +51,12 @@
        <attribute 
                 name = "aerogelExitPoint"
                 desc = "If applicable, exit point of the photon from the aerogel radiator"  
+                type = "Gaudi::XYZPoint"
+        />
+
+       <attribute 
+                name = "HpdQWIncidencePoint"
+                desc = "Photon incidence point on the external surface of the HPD Quartz Window "  
                 type = "Gaudi::XYZPoint"
         />
 
