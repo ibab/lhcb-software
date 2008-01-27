@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichOpticalPhoton.xml,v 1.10 2008-01-27 09:57:08 jonrob Exp $
+  * $Id: MCRichOpticalPhoton.xml,v 1.11 2008-01-27 10:09:03 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichOpticalPhoton class                              *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -54,12 +54,6 @@
                 type = "Gaudi::XYZPoint"
         />
 
-       <attribute 
-                name = "HpdQWIncidencePoint"
-                desc = "Photon incidence point on the external surface of the HPD Quartz Window "  
-                type = "Gaudi::XYZPoint"
-        />
-
         <attribute 
                 name = "cherenkovTheta"
                 desc = "Cherenkov angle theta at production"  
@@ -97,6 +91,12 @@
                 name = "mcRichHit"
                 desc = "Associated MCRichHit"  
                 type = "LHCb::MCRichHit"
+        />
+
+        <attribute 
+                name = "HpdQWIncidencePoint"
+                desc = "Photon incidence point on the external surface of the HPD Quartz Window "  
+                type = "Gaudi::XYZPoint"
         />
         
 </class>
