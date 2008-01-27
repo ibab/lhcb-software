@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.h,v 1.2 2007-12-05 15:51:14 janos Exp $
+// $Id: GetElementsToBeAligned.h,v 1.3 2008-01-27 18:41:30 janos Exp $
 #ifndef GETELEMENTSTOBEALIGNED_H
 #define GETELEMENTSTOBEALIGNED_H 1
 
@@ -59,8 +59,10 @@ public:
 protected:
 
 private:
+  enum e_DoFs {Tx, Ty, Tz, Rx, Ry, Rz};
 
   void getElements(const IDetectorElement* parent);
+  
   bool                                             m_groupElems;
   std::map<std::string, std::vector<std::string> > m_elemsToBeAligned; ///< Elemenst : Path to elements
   RegExs                                           m_regexs;           ///< List of regular expresions

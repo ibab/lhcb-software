@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.8 2008-01-10 10:39:04 janos Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.9 2008-01-27 18:41:30 janos Exp $
 // Include files
 
 //from STL
@@ -86,16 +86,28 @@ StatusCode GetElementsToBeAligned::initialize() {
  
   std::vector<std::string> groupsOfElements = m_elemsToBeAligned.begin()->second;
   for (std::vector<std::string>::const_iterator i = groupsOfElements.begin(), iEnd = groupsOfElements.end(); i != iEnd; ++i) {
+    /// Split string into path to det elem regex and dofs to align
+    std::string path = "", dofs = "";
+    if ((*i).find(":") != std::string::npos) {
+      Tokenizer path_DoFs((*i), Separator(":"));
+      path = *(path_DoFs.begin());
+      dofs = *(++path_DoFs.begin());
+    } else path = (*i);
+        
+    debug() << "Path to detelems: " << path << endmsg;
+    debug() << "DoFs to align   : " << dofs << endmsg;
+        
+    /// Break path into a set of regexs
     /// Forward slash is the path separator
-    Separator sep("/");
+    // Separator pathSep("/");
     /// Tokens of regular expressions
-    Tokenizer regexs((*i), sep);
+    Tokenizer regexs(path, Separator("/"));//pathSep);
 
     /// Print the list of regular expressions that are going to be used.
     info() << "       ";
     for (Tokenizer::iterator j = regexs.begin(), jEnd = regexs.end(); j != jEnd; ++j) info() << "\"" << (*j) << "\"" << " ";
     info() << endmsg;
-    
+
     /// Create list of regular expressions
     for (Tokenizer::iterator j = regexs.begin(), jEnd = regexs.end(); j != jEnd; ++j) {
       boost::regex ex;
@@ -117,15 +129,32 @@ StatusCode GetElementsToBeAligned::initialize() {
     /// Traverse LHCb detector in transient store and get alignable elements
     getElements(lhcb);
     
-    /// loop over elements and create AlignmentElements
-    ///                                            (tx, ty, tz, rx, ry, rz)        
-    /// This is to test the on/off switching of dofs.
-    /// need to implement a proper routine/interface
-    std::vector<bool> dofs = boost::assign::list_of(true)(true)(false)(false)(false)(true);
+    
+    /// Set the dofs we want to align for
+    /// First try to find matches
+    bool matchTx = false, matchTy = false, matchTz = false;
+    bool matchRx = false, matchRy = false, matchRz = false;
+    if (dofs.find("Tx") != std::string::npos) matchTx = true;
+    if (dofs.find("Ty") != std::string::npos) matchTy = true;
+    if (dofs.find("Tz") != std::string::npos) matchTz = true;
+    if (dofs.find("Rx") != std::string::npos) matchRx = true;
+    if (dofs.find("Ry") != std::string::npos) matchRy = true;
+    if (dofs.find("Rz") != std::string::npos) matchRz = true;
+    /// create mask
+    std::vector<bool> dofMask = boost::assign::list_of(matchTx)(matchTy)(matchTz)(matchRx)(matchRy)(matchRz);
+    /// align for all dofs if dofs not specified or couldn't find any match 
+    if (dofs.empty() || (!matchTx && !matchTy && !matchTz && !matchRx && !matchRy && !matchRz)) { 
+      dofMask.at(Tx) = true; dofMask.at(Ty) = true; dofMask.at(Tz) = true;
+      dofMask.at(Rx) = true; dofMask.at(Ry) = true; dofMask.at(Rz) = true;
+    }
 
-    if (m_groupElems) m_alignElements.push_back(AlignmentElement(m_elements, m_index++, dofs));
+    /// Loop over elements and create AlignmentElements
+    if (m_groupElems) m_alignElements.push_back(AlignmentElement(m_elements, m_index++, dofMask));
     else std::transform(m_elements.begin(), m_elements.end(), std::back_inserter(m_alignElements),
-                        boost::lambda::bind(boost::lambda::constructor<AlignmentElement>(), boost::lambda::_1, boost::lambda::var(m_index)++, dofs));
+                        boost::lambda::bind(boost::lambda::constructor<AlignmentElement>(), 
+                                            boost::lambda::_1, 
+                                            boost::lambda::var(m_index)++, 
+                                            dofMask));
     
     m_regexs.clear();
     m_depth = 0u;
@@ -141,8 +170,9 @@ StatusCode GetElementsToBeAligned::initialize() {
   info() << "   Going to align " << std::distance(m_rangeElements.first, m_rangeElements.second) << " detector elements:" << endmsg;
   typedef std::vector<AlignmentElement>::const_iterator ElemIter;
   for (ElemIter i = m_rangeElements.first, iEnd = m_rangeElements.second; i != iEnd; ++i) {
-    info() <<  "        " << "Element " << i->name() << " with index " << i->index() << " and pivot " << i->pivotXYZPoint() << endmsg;
+    info() <<  "        " << (*i) << endmsg;
   }
+
   info() << "   With " << m_constraints.size() << " constraints:" << endmsg;
   unsigned nC = 0u;
   bool clear = false;

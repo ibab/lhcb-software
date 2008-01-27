@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.16 2008-01-22 16:13:45 janos Exp $
+// $Id: AlignAlgorithm.cpp,v 1.17 2008-01-27 18:41:30 janos Exp $
 // Include files
 // from std
 // #include <utility>
@@ -109,6 +109,8 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
 				  m_iteration(0u),
 				  m_nIterations(0u),
 				  m_rangeElements(),
+          m_nDoFs(0u),
+          m_dofMask(),
 				  m_nTracks(0u),
 				  m_initAlignConstants(),
 				  m_align(0),
@@ -146,15 +148,32 @@ StatusCode AlignAlgorithm::initialize() {
   /// Get range  detector elements
   m_rangeElements = m_align->rangeElements();
 
-  if (printDebug()) {
+  if (printDebug())
     debug() << "==> Got " << std::distance(m_rangeElements.first, m_rangeElements.second) << " elements to align!" << endmsg;
-    for (ElemIter i = m_rangeElements.first, iEnd = m_rangeElements.second; i != iEnd; ++i) {
-      debug()<<  "        " << i->index() << " : " << i->name() << "\n" << endmsg;
+    
+  for (ElemIter i = m_rangeElements.first, iEnd = m_rangeElements.second; i != iEnd; ++i) {
+    m_nDoFs += i->nDOFs();
+    const std::vector<bool>& ownDoFMask = i->dofMask();
+    if (printDebug()) {
+      debug() <<  "        " << (*i) << endmsg;
+      const std::vector<std::string> dofs = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz");
+      debug() << "DOFs: ";
+      for (std::vector<bool>::const_iterator j = ownDoFMask.begin(), jEnd = ownDoFMask.end(); j != jEnd; ++j) {
+        if ((*j)) info() << dofs.at(std::distance(ownDoFMask.begin(), j));
+      }
+      debug() << endmsg;
     }
+    m_dofMask.insert(m_dofMask.end(), ownDoFMask.begin(), ownDoFMask.end());
   }
-
+  
   m_equations = new Equations(std::distance(m_rangeElements.first, m_rangeElements.second));
 
+  if (printDebug()) {
+    debug() << "nDOFs             = " << m_nDoFs          << endmsg;
+    debug() << "dofsflags         = " << m_dofMask        << endmsg;
+    debug() << "size of dofsflags = " << m_dofMask.size() << endmsg;
+  }
+  
   // get constraints
   m_constraints = m_align->constraints();
   if (printDebug()) {
@@ -325,46 +344,26 @@ void AlignAlgorithm::update() {
   //     for (unsigned j = i ; j < iEnd; ++j) tmpMatrix.insert(i*Derivatives::kCols, j*Derivatives::kCols, m_equations->M(i,j));
   //   }
 
-  /// Some of this  should go into intialize. keep it here for now
-  /// testing:
-  const std::vector<std::string> dofs = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz");
-  size_t nDOFs = 0;
-  std::vector<bool> dofMask;
-  for (std::vector<AlignmentElement>::const_iterator i = m_rangeElements.first, iEnd = m_rangeElements.second; i != iEnd; ++i) {
-    nDOFs += i->nDOFs();
-    info() << i->name() << " ";
-    const std::vector<bool>& ownDoFMask = i->dofMask();
-    info() << "DOFs: ";
-    for (std::vector<bool>::const_iterator j = ownDoFMask.begin(), jEnd = ownDoFMask.end(); j != jEnd; ++j) {
-      if ((*j)) info() << dofs.at(std::distance(ownDoFMask.begin(), j));
-    }
-    info() << endmsg;
-    dofMask.insert(dofMask.end(), ownDoFMask.begin(), ownDoFMask.end());
-  }
-  info() << "nDOFs             = " << nDOFs          << endmsg;
-  info() << "dofsflags         = " << dofMask        << endmsg;
-  info() << "size of dofsflags = " << dofMask.size() << endmsg;
-
   /// Define new AlVec and AlSymMat corresponding to the number of degrees of freedom we want to align
-  assert(tmpMatrix.size() == dofMask.size() || tmpDerivatives.size() == dofMask.size());
-  AlVec    derivatives(nDOFs);
-  AlSymMat matrix(nDOFs);
+  assert(tmpMatrix.size() == m_dofMask.size() || tmpDerivatives.size() == m_dofMask.size());
+  AlVec    derivatives(m_nDoFs);
+  AlSymMat matrix(m_nDoFs);
   
   unsigned insert_i = 0u;
   unsigned insert_j = 0u;
   typedef std::vector<bool>::const_iterator boolIter; 
-  for (std::vector<bool>::const_iterator i = dofMask.begin(), iEnd = dofMask.end(); i != iEnd; ++i) {
+  for (std::vector<bool>::const_iterator i = m_dofMask.begin(), iEnd = m_dofMask.end(); i != iEnd; ++i) {
     if (*i) {
-      const unsigned index_i = std::distance(boolIter(dofMask.begin()), i);
+      const unsigned index_i = std::distance(boolIter(m_dofMask.begin()), i);
       derivatives[insert_i] = tmpDerivatives[index_i];
-      for (std::vector<bool>::const_iterator j = i, jEnd = dofMask.end(); j != jEnd; ++j) {
+      for (std::vector<bool>::const_iterator j = i, jEnd = m_dofMask.end(); j != jEnd; ++j) {
         if (*j) {
           if (printDebug()) {
             debug() << "insert_i = " << insert_i << " insert_j = " << insert_j 
-                    << " matrix[" << index_i << "][" << std::distance(boolIter(dofMask.begin()), j) << "]" 
-                    << tmpMatrix[index_i][std::distance(boolIter(dofMask.begin()), j)] << endmsg;
+                    << " matrix[" << index_i << "][" << std::distance(boolIter(m_dofMask.begin()), j) << "]" 
+                    << tmpMatrix[index_i][std::distance(boolIter(m_dofMask.begin()), j)] << endmsg;
           }
-          matrix[insert_i][insert_j++] = tmpMatrix[index_i][std::distance(boolIter(dofMask.begin()), j)];
+          matrix[insert_i][insert_j++] = tmpMatrix[index_i][std::distance(boolIter(m_dofMask.begin()), j)];
         }
       }
       insert_j = ++insert_i;
@@ -403,11 +402,11 @@ void AlignAlgorithm::update() {
     info() << "Solution = " << derivatives << endmsg;
     /// Update alignment iff we've solved Ax=b
     if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
-    if (derivatives.size() != dofMask.size()) {
+    if (derivatives.size() != m_dofMask.size()) {
       AlVec tmp(Derivatives::kCols*(m_equations->nElem()));
       insert_i = 0u;
       unsigned index_j = 0u;
-      for (std::vector<bool>::const_iterator i = dofMask.begin(), iEnd = dofMask.end(); i != iEnd; ++i) {
+      for (std::vector<bool>::const_iterator i = m_dofMask.begin(), iEnd = m_dofMask.end(); i != iEnd; ++i) {
         (*i) ? tmp[insert_i++] = derivatives[index_j++] : tmp[insert_i++] = 0.0;
       }
       if (printDebug()) debug() << "==> putting alignment deltas = " << tmp << endmsg;

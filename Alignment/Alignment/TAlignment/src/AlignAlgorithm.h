@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.12 2008-01-10 10:38:29 janos Exp $
+// $Id: AlignAlgorithm.h,v 1.13 2008-01-27 18:41:30 janos Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -104,6 +104,8 @@ private:
   size_t                            m_iteration;            ///< Iteration counter
   size_t                            m_nIterations;          ///< Number of iterations
   Range                             m_rangeElements;        ///< Detector elements
+  size_t                            m_nDoFs;                ///< Number of dofs we want to align for
+  std::vector<bool>                 m_dofMask;              ///< Mask to apply to remove rows and columns
   size_t                            m_nTracks;              ///< Number of tracks
   std::vector<double>               m_initAlignConstants;   ///< Initial alignment constants
   IGetElementsToBeAligned*          m_align;                ///< Pointer to tool to align detector
