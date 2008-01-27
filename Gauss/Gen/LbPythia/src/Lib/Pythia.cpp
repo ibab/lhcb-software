@@ -1,4 +1,4 @@
-// $Id: Pythia.cpp,v 1.5 2007-10-08 16:52:00 gcorti Exp $
+// $Id: Pythia.cpp,v 1.6 2008-01-27 15:01:48 robbep Exp $
 // Include files
 
 // local
@@ -234,6 +234,22 @@ void Pythia::PyAddp( int ip, int kf, double energy, double theta, double phi ) {
 #endif
 }
 
+// PYSLHA Fortran Function
+extern "C" {
+#ifdef WIN32
+  void __stdcall PYSLHA( int * , int * , int * ) ;
+#else
+  void pyslha_( int * , int * , int * ) ;
+#endif
+}
+
+void Pythia::PySlha( int mupda , int kforig , int & ifail ) {
+#ifdef WIN32
+  PYSLHA( &mupda , &kforig , &ifail ) ;
+#else
+  pyslha_( &mupda , &kforig , &ifail ) ;
+#endif
+}
 
 // ============================================================================
 /// PYGIVE Fortran function
