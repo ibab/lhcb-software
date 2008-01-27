@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.8 2008-01-22 16:13:07 janos Exp $
+// $Id: AlignmentElement.cpp,v 1.9 2008-01-27 18:42:12 janos Exp $
 // Include files
 
 // from STD
@@ -72,7 +72,7 @@ const std::string AlignmentElement::name() const {
   std::string middle;
   for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
     std::string nameElem = boost::algorithm::erase_all_regex_copy((*i)->name(), boost::regex("/dd/Structure/LHCb/.*Region/"))
-      + (i != (iEnd - 1u)?", \n":"\n");
+      + (i != (iEnd - 1u)?", \n":"");
     middle += nameElem;
   }
 
@@ -81,8 +81,20 @@ const std::string AlignmentElement::name() const {
   return begin+middle+end;
 }
 
+const std::vector<double> AlignmentElement::deltaTranslations() const {
+  std::vector<double> averageDeltaTranslations(3u, 0.0);
+  for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
+    std::vector<double> elemDeltaTranslations = (*i)->geometry()->alignmentCondition()->paramVect<double>("dPosXYZ");
+    std::transform(elemDeltaTranslations.begin(), elemDeltaTranslations.end(), averageDeltaTranslations.begin(),
+                   averageDeltaTranslations.begin(), std::plus<double>());
+  }
+  std::transform(averageDeltaTranslations.begin(), averageDeltaTranslations.end(),
+                 averageDeltaTranslations.begin(), boost::lambda::bind(&AlignmentElement::average, this, boost::lambda::_1));
+  return averageDeltaTranslations;
+}
+
 const std::vector<double> AlignmentElement::deltaRotations() const {  
-  std::vector<double> averageDeltaRotations(0u,3);
+  std::vector<double> averageDeltaRotations(3u, 0.0);
   for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
     std::vector<double> elemDeltaRotations = (*i)->geometry()->alignmentCondition()->paramVect<double>("dRotXYZ");
     std::transform(elemDeltaRotations.begin(), elemDeltaRotations.end(), averageDeltaRotations.begin(),
@@ -92,19 +104,6 @@ const std::vector<double> AlignmentElement::deltaRotations() const {
                  averageDeltaRotations.begin(), boost::lambda::bind(&AlignmentElement::average, this, boost::lambda::_1));
   
   return averageDeltaRotations;
-}
-
-const std::vector<double> AlignmentElement::deltaTranslations() const {
-  std::vector<double> averageDeltaTranslations(0u,3);
-  for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
-    std::vector<double> elemDeltaTranslations = (*i)->geometry()->alignmentCondition()->paramVect<double>("dPosXYZ");
-    std::transform(elemDeltaTranslations.begin(), elemDeltaTranslations.end(), averageDeltaTranslations.begin(),
-                   averageDeltaTranslations.begin(), std::plus<double>());
-  }
-  std::transform(averageDeltaTranslations.begin(), averageDeltaTranslations.end(),
-                 averageDeltaTranslations.begin(), boost::lambda::bind(&AlignmentElement::average, this, boost::lambda::_1));
-  
-  return averageDeltaTranslations;
 }
 
 unsigned int AlignmentElement::nDOFs() const {
@@ -171,9 +170,9 @@ const Gaudi::XYZPoint AlignmentElement::localCentre() const {
 
 std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
   const std::string s = name();
-  const std::vector<double>& t = deltaTranslations();
-  const std::vector<double>& r = deltaRotations();
-  const std::vector<std::string> dofs = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz");
+  const std::vector<double> t = deltaTranslations();
+  const std::vector<double> r = deltaRotations();
+  static const std::vector<std::string> dofs = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz");
   
   lhs << std::endl;
   lhs << std::left << std::setw(s.size()+30u) << std::setfill('*') << "" << std::endl;
@@ -181,8 +180,8 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
       << "* Index    : " << index() << "\n"
       << "* dPosXYZ  : " << Gaudi::XYZPoint(t[0], t[1], t[2]) << "\n"
       << "* dRotXYZ  : " << Gaudi::XYZPoint(r[0], r[1], r[2]) << "\n"
-      << "* PivotXYZ : " << pivotXYZPoint() << "\n";
-  lhs << "* DoFs     : ";
+      << "* PivotXYZ : " << pivotXYZPoint() << "\n"
+      << "* DoFs     : ";
   for (std::vector<bool>::const_iterator j = m_dofMask.begin(), jEnd = m_dofMask.end(); j != jEnd; ++j) {
     if ((*j)) lhs << dofs.at(std::distance(m_dofMask.begin(), j)) + " ";
   }
