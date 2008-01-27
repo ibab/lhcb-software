@@ -4,6 +4,24 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-01-28 - Manuel Schiller
+ - added code to PatSeedingTool to perform better without magnetic filed
+   does not affect performance at all when running with default settings
+ - added code to PatSeedingTool to allow better tuning when running with
+   a misaligned detector
+   does not affect performance at all when running with default settings
+ - added code to PatSeedTool to fix a corner case which could produce NaNs
+   as track parameters:
+   In a few cases, the line fit in y projection could start to oscillate
+   wildly. The x coordinates of hits are modified according to the track's
+   y, which causes an even more violent shift in y parameters on the next
+   iteration - eventually, you'll find NaNs all over the place. The bad thing
+   about this is that these hits with NaNs as coordinates may cause the fit
+   of other tracks in that event to fail as well.
+   To put a stop to this, the fit will now discard tracks which change their
+   slope in yz projection by more than 1.0. This improves efficiency and
+   decreases ghost rate slightly.
+
 !========================== PatAlgorithms v3r3 2008-01-21 ====================
 ! 2008-01-17 - Olivier Callot
  - Modify again PatMatch to use std::map<int,bool>, which is correct in that order.

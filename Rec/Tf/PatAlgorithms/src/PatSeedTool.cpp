@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.cpp,v 1.2 2007-12-05 10:37:21 smenzeme Exp $
+// $Id: PatSeedTool.cpp,v 1.3 2008-01-27 23:02:00 mschille Exp $
 // Include files
 
 // from Gaudi
@@ -90,8 +90,20 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
         line.solve();
         double day = line.ax();
         double dby = line.bx();
-        if ( isDebug ) info() << "    day " << day << " dby " << dby << endreq;
-
+        if ( isDebug )
+		info() << "    day " << day << " dby " << dby << endreq;
+	if ( fabs( dby ) > 1.0 ) {
+	  // if we get a track with stereo hits on it which do not
+	  // belong together, the y fit may diverge. the problem about
+	  // this is that the hits are shifted depending on their y
+	  // coordinate. when the fit diverges, dby may become nan, and
+	  // this nan will propagate everywhere, so hit coordinates also
+	  // become nan. to avoid this bad case, we stop the fit
+	  // iteration - and throw away the track in its entirety
+	  if ( isDebug )
+		  info() << "    fabs(dby) > 1.0, abandoning track!" << endreq;
+	  return false;
+	}
         track.updateYParameters( day, dby );
         if ( fabs( day ) < 0.05 && fabs( dby ) < 0.00005 ) break;
       }

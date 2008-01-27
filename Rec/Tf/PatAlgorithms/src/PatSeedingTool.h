@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.h,v 1.3 2007-12-04 20:48:07 smenzeme Exp $
+// $Id: PatSeedingTool.h,v 1.4 2008-01-27 23:02:00 mschille Exp $
 #ifndef PATSEEDINGTOOL_H
 #define PATSEEDINGTOOL_H 1
 
@@ -77,6 +77,9 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
 
     void processTracks( std::string name, std::vector<LHCb::Track*>& outputTracks );
 
+    bool isIsolated(PatFwdHits::const_iterator it,
+		const Tf::TStationHitManager<PatForwardHit>::HitRange& range);
+
 
 
   private:
@@ -137,6 +140,7 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
     std::vector<std::vector<LHCb::LHCbID> > m_foundIds;
 
     bool m_printing;
+    bool m_fieldOff;
 
     static const unsigned int m_nSta = Tf::RegionID::OTIndex::kNStations;
     static const unsigned int m_nLay = Tf::RegionID::OTIndex::kNLayers;
@@ -144,6 +148,14 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
     Tf::RegionID::ITIndex::kNRegions;
     static const unsigned int m_nOTReg = Tf::RegionID::OTIndex::kNRegions;
     static const unsigned int m_nITReg = Tf::RegionID::ITIndex::kNRegions;
+
+    double m_cloneMaxXDist;
+    double m_maxTrackChi2LowMult;
+    std::vector<double> m_qualityWeights;
+    int m_maxMisses;
+    bool m_enforceIsolation;
+    double m_OTIsolation;
+    double m_ITIsolation;
 
   };
 

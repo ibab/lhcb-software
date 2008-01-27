@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.7 2007-12-05 10:37:21 smenzeme Exp $
+// $Id: PatSeedingTool.cpp,v 1.8 2008-01-27 23:02:00 mschille Exp $
 // Include files
 
 // from Gaudi
@@ -78,7 +78,15 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
 		   (-6.3453) (-4.77725) (-14.9039) (3.13647e-08) );
   declareProperty( "MeasureTime",       m_measureTime      = false                    );
   declareProperty( "UseForward",        m_useForward       = false                    );
-  }
+  declareProperty( "FieldOff",		m_fieldOff	   = false		      );
+  declareProperty( "CloneMaxXDist",	m_cloneMaxXDist	   = 10.0 );
+  declareProperty( "QualityWeights",	m_qualityWeights   = boost::assign::list_of(1.0)(-0.2) );
+  declareProperty( "MaxTrackChi2LowMult", m_maxTrackChi2LowMult = 5.0 );
+  declareProperty( "MaxMisses",		m_maxMisses	   = 1 );
+  declareProperty( "EnforceIsolation",	m_enforceIsolation = false );
+  declareProperty( "ITIsolation",	m_ITIsolation	   = 15. );
+  declareProperty( "OTIsolation",	m_OTIsolation	   = 20. );
+}
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -112,6 +120,7 @@ StatusCode PatSeedingTool::initialize() {
   }
 
   if (m_momentumParams.size()<4) return Error ( "Not enough momentumParams values" );
+  if (m_qualityWeights.size()<2) return Error ( "Not enough qualityWeights values" );
 
   return StatusCode::SUCCESS;
 }
@@ -396,6 +405,7 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
       for ( PatFwdHits::const_iterator itH0 = rangeH0.begin();
             rangeH0.end() != itH0; ++itH0 ) {
         if ( (*itH0)->isUsed() ) continue;
+	if ( !isIsolated(itH0, rangeH0) ) continue;
         PatFwdHit* hit0 = *itH0;
 
         m_printing = msgLevel( MSG::VERBOSE );
@@ -409,6 +419,7 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
           PatFwdHit* hit3 = *itH3;
           if ( hit3->x() < x3Min ) continue;
           if ( hit3->x() > x3Max ) break;
+	  if ( !isIsolated(itH3, rangeH3) ) continue;
           double z0 = hit0->z();
           double x0 = hit0->x();
           double sl = (hit3->x() - x0 ) / (hit3->z() - z0 );
@@ -436,6 +447,7 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
               hit1->setDriftDistance(otHit->untruncatedDriftDistance());
             if ( x1Min > hit1->x() ) continue;
             if ( x1Max < hit1->x() ) break;
+	    if ( !isIsolated(itH1, rangeH1) ) continue;
             double y = ( (x0 + ( hit1->z() - z0 )*sl) - hit1->x() ) / hit1->hit()->dxDy();
             double pred = x0 + ( m_tHitManager->region(sta,2,region)->z() - z0 ) *sl + y * m_tHitManager->region(sta,2,region)->sinT();
             double x2Min = pred - 1.5*m_tolCollect;
@@ -456,6 +468,7 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
                 hit2->setDriftDistance(otHit->untruncatedDriftDistance());
               if ( x2Min > hit2->x() ) continue;
               if ( x2Max < hit2->x() ) break;
+	      if ( !isIsolated(itH2, rangeH2) ) continue;
 	      if ( m_printing )
                 info() << "     hit sta " << sta << " lay 2 x = " << hit2->x() << endreq;
               PatSeedTrack track( hit0, hit1, hit2, hit3, m_zReference, m_dRatio, m_initialArrow );
@@ -470,36 +483,36 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
               if ( itH0+1 != rangeH0.end() ) {
                 if ( (*(itH0+1))->x() - hit0->x() < m_tolCollect ) {
                   ++itH0;
-                  track.addCoord( *itH0 );
-                  if ( m_printing ) info() << "   + hit sta " << sta << " lay 0 x = "
-                                           << (*itH0)->x() << endreq;
+		  track.addCoord( *itH0 );
+		  if ( m_printing ) info() << "   + hit sta " << sta << " lay 0 x = "
+			  << (*itH0)->x() << endreq;
                 }
               }
 
               if ( itH1+1 != rangeH1.end() ) {
                 if ( (*(itH1+1))->x() - hit1->x() < m_tolCollect ) {
                   ++itH1;
-                  track.addCoord( *itH1 );
-                  if ( m_printing ) info() << "   + hit sta " << sta << " lay 1 x = "
-                                           << (*itH1)->x() << endreq;
-                }
+		  track.addCoord( *itH1 );
+		  if ( m_printing ) info() << "   + hit sta " << sta << " lay 1 x = "
+			  << (*itH1)->x() << endreq;
+		}
               }
 
               if ( itH2+1 != rangeH2.end() ) {
                 if ( (*(itH2+1))->x() - hit2->x() < m_tolCollect ) {
                   ++itH2;
-                  track.addCoord( *itH2 );
-                  if ( m_printing ) info() << "   + hit sta " << sta << " lay 2 x = "
-                                           << (*itH2)->x() << endreq;
-                }
+		  track.addCoord( *itH2 );
+		  if ( m_printing ) info() << "   + hit sta " << sta << " lay 2 x = "
+			  << (*itH2)->x() << endreq;
+		}
               }
 
               if ( itH3+1 != rangeH3.end() ) {
                 if ( (*(itH3+1))->x() - hit3->x() < m_tolCollect ) {
                   ++itH3;
-                  track.addCoord( *itH3 );
-                  if ( m_printing ) info() << "   + hit sta " << sta << " lay 3 x = "
-                                           << (*itH3)->x() << endreq;
+		  track.addCoord( *itH3 );
+		  if ( m_printing ) info() << "   + hit sta " << sta << " lay 3 x = "
+			  << (*itH3)->x() << endreq;
                 }
               }
 
@@ -520,6 +533,7 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
     for ( std::vector<PatSeedTrack>::iterator itT = candidates.begin();
           candidates.end() != itT; ++itT ) {
       PatSeedTrack& track = *itT;
+      bool fitOK = true;
       m_printing = msgLevel( MSG::DEBUG );
      
       if ( m_printing ) info() << "   candidate " << itT - candidates.begin()
@@ -558,6 +572,7 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
             updateHitForTrack( hit, track.yAtZ(hit->z()),0);
             if ( - m_tolExtrapolate > track.distance( hit ) ) continue;
             if (   m_tolExtrapolate < track.distance( hit ) ) break;
+	    if ( !isIsolated(itH, rangeXX) ) continue;
             if ( m_printing ) {
               info() << "Add coord ";
               debugFwdHit( hit, info() );
@@ -568,8 +583,8 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
         if ( 3 <= track.nPlanes() - nbPlanes  ) {
           nbSta++;
           int minPlanes = 4* nbSta - 1;
-          bool ok = m_seedTool->fitTrack( track, m_maxChi2HitOT, minPlanes, false, m_printing );
-          if ( m_printing ) info() << "*** refitted track candidate status " << ok << endreq;
+          fitOK = m_seedTool->fitTrack( track, m_maxChi2HitOT, minPlanes, false, m_printing );
+          if ( m_printing ) info() << "*** refitted track candidate status " << fitOK << endreq;
         }
       }
       // Try in IT again if needed
@@ -597,6 +612,7 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
               updateHitForTrack( hit, track.yAtZ(hit->z()), 0);
               if ( - m_tolExtrapolate > track.distance( hit ) ) continue;
               if (   m_tolExtrapolate < track.distance( hit ) ) break;
+	      if ( !isIsolated(itH, rangeYY) ) continue;
               if ( m_printing ) {
                 info() << "Add coord ";
                 debugFwdHit( hit, info() );
@@ -608,19 +624,31 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
           if ( 3 < nbAdded ) {
             nbSta++;
             int minPlanes = 4* nbSta +1-nbSta;
-            m_seedTool->fitTrack( track, m_maxChi2HitOT, minPlanes, false, m_printing );
+            fitOK = m_seedTool->fitTrack( track, m_maxChi2HitOT, minPlanes, false, m_printing );
           }
         }
       }
 
-
       if ( m_printing ) {
-        info() << " --- We have found " << nbSta << " stations." << endreq;
+        info() << " --- We have found " << nbSta << " stations, fitOK " <<
+		fitOK << "." << endreq;
         for ( itH = track.coordBegin(); track.coordEnd() != itH; ++itH ) {
           debugFwdHit( *itH, info() );
         }
       }
-      if ( 3 == nbSta ) storeTrack( track, outputTracks );
+
+      if ( m_fieldOff ) {
+	// cut on track curvature when running without magnetic field
+	double dz = 0.5 * ((*track.coordBegin())->z() -
+		(*(track.coordBegin() + (track.nCoords() - 1)))->z());
+	if ( m_tolCollect / dz / dz < fabs( track.curvature() ) ) {
+	  if ( m_printing ) info() << "    magnet off: curvature too high: "
+		  << track.curvature() << endreq;
+	  continue;
+	}
+      }
+
+      if ( 3 == nbSta && fitOK ) storeTrack( track, outputTracks );
     }
   }
   if ( m_measureTime ) m_timer->stop( m_timeItOt );
@@ -734,7 +762,7 @@ bool PatSeedingTool::addIfBetter (  PatSeedTrack& track, std::vector<PatSeedTrac
   for ( std::vector<PatSeedTrack>::iterator itT = candidates.begin();
         candidates.end() != itT; ++itT ) {
     int nCommon = 0;
-    if ( 10 < fabs( (*itT).xAtZ( zTrack) - xTrack ) ) continue;
+    if ( m_cloneMaxXDist < fabs( (*itT).xAtZ( zTrack) - xTrack ) ) continue;
 
     //== compare the list of hits only if not too far...
     for ( PatFwdHits::const_iterator itH1 = (*itT).coordBegin();
@@ -757,7 +785,16 @@ bool PatSeedingTool::addIfBetter (  PatSeedTrack& track, std::vector<PatSeedTrac
           debugFwdHit( *itH1, info() );
         }
       }
-      if ( track.nCoords() - track.chi2()/5 < (*itT).nCoords() - (*itT).chi2()/5 ) {
+      double qual1 = 0., qual2 = 0.;
+      if (m_qualityWeights[0] != 0.) {
+	qual1 += m_qualityWeights[0] * double(track.nCoords());
+	qual2 += m_qualityWeights[0] * double((*itT).nCoords());
+      }
+      if (m_qualityWeights[1] != 0.) {
+	qual1 += m_qualityWeights[1] * double(track.chi2());
+	qual2 += m_qualityWeights[1] * double((*itT).chi2());
+      }
+      if ( qual1 < qual2 ) {
         if ( printing ) info() << "  new is shorter / higher chi2 -> ignore new" << endreq;
         return false;
       }
@@ -821,6 +858,11 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
     } else if ( matchIn0 ) {
       if ( matchIn0 ) info() << "*** Hit0 " << hit0->x();
     }
+
+    // isolation in station 0?
+    if ( !isIsolated(itH0, range) )
+	    continue;
+
     m_printing = matchIn0;
 
     double x2Min = x0 + ( x0 - m_xMagTol) * zScaling;
@@ -854,6 +896,10 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
         info() << "    hit2 " <<  hit2->hit()->xAtYEq0();
       }
 
+      // isolation in station 2?
+      if ( !isIsolated(itH2, rangeX2) )
+	    continue;
+
       //== Check center of magnet compatibility
       double slope = ( x2 - x0 ) / ( z2 - z0 );
       double intercept =  x0 - z0 * slope;
@@ -885,6 +931,10 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
           info() << "         ==> found hit1 " << x1 << endreq;
         }
 
+	// isolation in station 1?
+	if ( !isIsolated(itH1, rangeX1) )
+		continue;
+
         PatSeedTrack track( x0, x1, x2, z0, z1, z2, m_zReference, m_dRatio );
         track.setYParams( 0, 0);
         int nbMissed = 0;
@@ -894,16 +944,18 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
         for ( unsigned int nLay = 0; 2 > nLay ; ++nLay, lay1 = 3-lay1 ){
           for ( sta = 0; sta < m_nSta; ++sta ) {
             int found = 0;
-
+ 
             double xPred = track.xAtZ( m_tHitManager->region(sta,lay1, region)->z());
             Tf::TStationHitManager<PatForwardHit>::HitRange rangeX2 =
-              m_tHitManager->hitsWithMinX( xPred - 2*m_tolCollect, sta, lay1, region );
+              m_tHitManager->hitsWithMinX( xPred - 2. * m_tolCollect, sta, lay1, region );
             for ( itH = rangeX2.begin(); rangeX2.end() != itH; ++itH ) {
               PatFwdHit* hit = *itH;
               if ( hit->isUsed() ) continue;
               xPred = track.xAtZ( hit->hit()->zAtYEq0() );
               if ( xPred - m_tolCollect - hit->driftDistance() > hit->hit()->xAtYEq0() ) continue;
               if ( xPred + m_tolCollect + hit->driftDistance() < hit->hit()->xAtYEq0() ) break;
+	      if ( !isIsolated(itH, rangeX2) )
+		      continue;
               track.addCoord( hit );
               ++found;
             }
@@ -914,17 +966,17 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
                                 found,  nbMissed )
                      << endreq;
             }
-            if ( 1 < nbMissed ) break;
+            if ( m_maxMisses < nbMissed ) break;
           }
-          if ( 1 < nbMissed ) break;
+          if ( m_maxMisses < nbMissed ) break;
         }
-        if ( 1 < nbMissed ) continue;
+        if ( m_maxMisses < nbMissed ) continue;
 
         //== Fit the track
         if ( m_printing ) info() << " -- start fitting, nCoord = " << track.nCoords() << endreq;
         track.sort();
-        bool fitted = m_seedTool->fitTrack( track, m_maxChi2Hit, m_minXPlanes, true, m_printing );
-        if ( !fitted ) {
+        bool fitOK = m_seedTool->fitTrack( track, m_maxChi2Hit, m_minXPlanes, true, m_printing );
+        if ( !fitOK ) {
           if ( m_printing ) info() << "    -- fit failed" << endreq;
           continue;
         }
@@ -932,11 +984,20 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
           if ( m_printing ) info() << "    -- global chi2 too high " << track.chi2() << endreq;
           continue;
         }
+	if (m_fieldOff) {
+	  // cut on curvature when running without magnetic field
+	  double dz = 0.5 * (z2 - z0);
+	  if (m_tolCollect / dz / dz < fabs(track.curvature())) {
+	    if ( m_printing ) info() << "    magnet off: curvature too high: "
+		    << track.curvature() << endreq;
+	    continue;
+	  }
+	}
 
         //== Limited OT multiplicity -> check if compatible with in the central Y region
         if ( 2 > region && 8 > track.nCoords() ) {
-          fitted = m_seedTool->fitTrack( track, m_maxFinalChi2, m_minXPlanes, true, m_printing );
-          if ( !fitted ) {
+          bool fitOK = m_seedTool->fitTrack( track, m_maxFinalChi2, m_minXPlanes, true, m_printing );
+          if ( !fitOK ) {
             if ( m_printing ) info() << "    -- re-fit with final Chi2 failed" << endreq;
             continue;
           }  
@@ -946,7 +1007,7 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
                                      << " neighbouring OT hits" << endreq;
             continue;
           }
-          if ( 5 < track.chi2() ) {
+          if ( m_maxTrackChi2LowMult < track.chi2() ) {
             if ( m_printing ) info() << "    -- global chi2 too high " << track.chi2() << endreq;
             continue;
           }
@@ -980,10 +1041,10 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
     if ( track.valid() ) {
       m_printing = msgLevel( MSG::DEBUG );
             
-      bool ok = m_seedTool->fitTrack( track, m_maxChi2Hit, m_minXPlanes, true, m_printing );
-      if ( !ok ) track.setValid( false );
+      bool fitOK = m_seedTool->fitTrack( track, m_maxChi2Hit, m_minXPlanes, true, m_printing );
+      if ( !fitOK ) track.setValid( false );
       // cut on chi2 per DoF
-      if ( 15 < track.chi2() ) {
+      if ( m_maxFinalChi2 < track.chi2() ) {
         track.setValid( false );
       }
     }
@@ -1035,6 +1096,9 @@ void PatSeedingTool::collectStereoHits ( PatSeedTrack& track, unsigned int regio
         if ( m_printing ) info() << format( "Stereo in sta%2d lay%2d region%2d xMin %7.2f xmax %7.2f",
                                             sta, sLay, testRegion, xMin, xMax ) << endreq;
 
+	int found = 0;
+	int nDense[20];
+	for (int i = 0; i < 20; nDense[i++] = 0);
         Tf::TStationHitManager<PatForwardHit>::HitRange rangeW = m_tHitManager->hitsWithMinX( xMin, sta, sLay, testRegion);
         for ( itH = rangeW.begin(); rangeW.end() != itH; ++itH ) {
           PatFwdHit* hit = *itH;
@@ -1043,9 +1107,19 @@ void PatSeedingTool::collectStereoHits ( PatSeedTrack& track, unsigned int regio
           if ( xMax < hit->x() ) break;
           double y = ( hit->x() - track.xAtZ( hit->z() ) );
           y = y * ( m_zForYMatch / hit->z() ) /  m_tHitManager->region(sta, sLay, testRegion)->sinT();
+	  // check if the hit is isolated
+	  if ( !isIsolated(itH, rangeW) ) {
+		  int idx = int(y * 20. / 3e3);
+		  if (idx < 0) idx = 0;
+		  if (idx >= 20) idx = 19;
+		  if (nDense[idx]++ > 0)
+			  continue;
+	  }
+
           hit->setProjection( y );
           hit->setIgnored( false );
           stereo.push_back( hit );
+	  ++found;
         }
       }
     }
@@ -1387,8 +1461,64 @@ StatusCode PatSeedingTool::performTracking( LHCb::Tracks* outputTracks){
 
   performTracking(outvec);
   
-  for (unsigned int i=0; i<outvec.size(); i++)
+  for (unsigned i = 0; outvec.size() > i; ++i) {
     outputTracks->insert(outvec[i]);
+  }
 
   return StatusCode::SUCCESS;
+}
+
+//======================================================================
+bool PatSeedingTool::isIsolated(
+		PatFwdHits::const_iterator it,
+		const Tf::TStationHitManager<PatForwardHit>::HitRange& range)
+{
+	if ( !m_enforceIsolation )
+		return true;
+	double isolationRange = m_OTIsolation;
+	if ( (*it)->hit()->sthit() )
+		isolationRange = m_ITIsolation;
+	// create a window around *it which contains all hits within the
+	// window from x - isolationRange to x + isolationRange
+	double x = (*it)->hit()->xAtYEq0();
+	PatFwdHits::const_iterator iLo = it, iHi = it + 1;
+	while ( range.begin() != iLo &&
+			fabs((*(iLo - 1))->hit()->xAtYEq0() - x) < isolationRange )
+		--iLo;
+	if ( fabs((*iLo)->hit()->xAtYEq0() - x) > isolationRange )
+		++iLo;
+	while ( range.end() != iHi &&
+			fabs((*iHi)->hit()->xAtYEq0() - x) < isolationRange )
+		++iHi;
+	// if there is nothing in there except for *it, we're done
+	if ( 1 == iHi - iLo )
+		return true;
+	if ( (*it)->hit()->othit() ) {
+		// for the OT, it's simple: two hits per layer maximum,
+		// and these two must be flagged as neighbouring
+		// (i.e. must be due to particle passage through the two 
+		// staggered monolayers)
+		if (2 < iHi - iLo )
+			return false;
+		if ( it == iLo ) ++it;
+		// the framework flags such neighbouring hits, so we just
+		// use the flags
+		if ( !(*iLo)->hasNext() || !(*it)->hasPrevious() )
+			return false;
+		return true;
+	} else {
+		// recognise ladder-ladder overlaps - this will give 2 hits
+		// box-box overlaps will not show up since the hits are in
+		// different regions
+		if ( 2 < iHi - iLo )
+			return false;
+		if ( it == iLo ) ++it;
+		LHCb::STChannelID id1 = (*iLo)->hit()->sthit()->cluster().channelID();
+		LHCb::STChannelID id2 = (*it)->hit()->sthit()->cluster().channelID();
+		// test for neighbouring ladders
+		if ( 1 != abs(id1.uniqueSector() - id2.uniqueSector()) )
+			return false;
+		return true;
+	}
+	// we should never arrive here
 }
