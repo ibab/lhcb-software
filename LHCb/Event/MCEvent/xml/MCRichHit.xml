@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichHit.xml,v 1.12 2008-01-27 09:57:08 jonrob Exp $
+  * $Id: MCRichHit.xml,v 1.13 2008-01-28 16:36:48 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -241,6 +241,17 @@
                 desc  = "Returns an MCRichDigitHistoryCode object for this hit" 
                 type  = "LHCb::MCRichDigitHistoryCode" >
                 
+        </method>
+
+        <method
+          name    = "fillStream"
+          desc    = "Print this MCRichDigit in a human readable way"
+          type    = "std::ostream&amp;"
+          virtual = "FALSE"
+          const   = "TRUE">
+          <arg
+            type = "std::ostream"
+            name = "s"/>
         </method>
         
 </class>

@@ -5,7 +5,7 @@
  *  Implementation file for class : MCRichHit
  *
  *  CVS Log :-
- *  $Id: MCRichHit.cpp,v 1.1 2008-01-27 09:57:08 jonrob Exp $
+ *  $Id: MCRichHit.cpp,v 1.2 2008-01-28 16:36:48 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    26/01/2008
@@ -25,7 +25,7 @@ LHCb::MCRichDigitHistoryCode LHCb::MCRichHit::mcRichDigitHistoryCode() const
   hist.setAerogelHit ( Rich::Aerogel == radiator() );
   hist.setC4f10Hit   ( Rich::C4F10   == radiator() );
   hist.setCf4Hit     ( Rich::CF4     == radiator() );
- 
+
   // set background flags
   hist.setScatteredHit(scatteredPhoton());
   hist.setChargedTrack(chargedTrack());
@@ -45,4 +45,27 @@ LHCb::MCRichDigitHistoryCode LHCb::MCRichHit::mcRichDigitHistoryCode() const
 
   // return final flag
   return hist;
+}
+
+std::ostream& LHCb::MCRichHit::fillStream(std::ostream& s) const
+{
+  s << "{ " << rich() << " " << radiator();
+
+  s << " entry= " << m_entry
+    << " energy= " << m_energy
+    << " timeOfFlight=" << m_timeOfFlight
+    << " sensDetID=" << m_sensDetID
+    << " mcParticle=" << mcParticle();
+  
+  if ( hpdSiBackscatter() ) s << " hpdSiBackscatter";
+  if ( hpdReflQWPC()      ) s << " hpdReflQWPC";
+  if ( hpdReflChr()       ) s << " hpdReflChr";
+  if ( hpdReflAirQW()     ) s << " hpdReflAirQW";
+  if ( hpdReflAirPC()     ) s << " hpdReflAirPC";
+  if ( hpdReflSi()        ) s << " hpdReflSi";
+  if ( hpdReflKovar()     ) s << " hpdReflKovar";
+  if ( hpdReflKapton()    ) s << " hpdReflKapton";
+  if ( hpdReflPCQW()      ) s << " hpdReflPCQW";
+
+  return s << " }";
 }
