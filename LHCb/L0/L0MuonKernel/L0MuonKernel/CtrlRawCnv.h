@@ -18,6 +18,13 @@
 namespace L0Muon {
   
   class CtrlRawCnv  {
+    
+  private:
+
+    static const unsigned int board_full_frame_size = 36;
+    static const unsigned int board_full_data_size  = board_full_frame_size*2;
+    static const unsigned int board_frame_size      = 23;
+    static const unsigned int board_data_size       = board_frame_size*2 ;
 
   public:
 
@@ -40,13 +47,34 @@ namespace L0Muon {
 
     void dump(int version, int ievt, std::string tab);
     void dump(int version, int ievt);
+    void formattedDump(int version, int ievt, std::string tab);
+    void formattedDump(int version, int ievt);
+
+    int  L0_B_Id(int iboard, int ichannel)      {return m_L0_B_Id[iboard][ichannel];}
+    int  L0EventNumber(int iboard, int ichannel){return m_L0EventNumber[iboard][ichannel];}
+    int  BCID_SU(int iboard) {return m_BCID_SU[iboard];}
+    int  BCID_CU(int iboard) {return m_BCID_CU[iboard];}
+    int  BCID(int iboard, int ichannel) {return m_BCID[iboard][ichannel];}
+    int  BCID_BCSU(int iboard, int ichannel, int ibcsu) {return m_BCID_BCSU[iboard][ichannel][ibcsu];}
 
   private:
     
     int m_side;
+
+    enum fpgas {CU,SU};
+
     // Input candidate registers
     CandRegisterHandler m_candRegHandler[2];
     CandRegisterHandler m_candRegHandlerBCSU[2][12];
+
+    int m_L0_B_Id[2][2];
+    int m_L0EventNumber[2][2];
+    int m_BCID[2][2];
+    int m_BCID_BCSU[2][2][12];
+    int m_BCID_SU[2];
+    int m_BCID_CU[2];
+    int m_opt_link_error[2][2][12];
+    int m_error[2];
 
   };
 }; // namespace L0Muon

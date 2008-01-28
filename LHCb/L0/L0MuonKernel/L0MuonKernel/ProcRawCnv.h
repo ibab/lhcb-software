@@ -21,6 +21,13 @@ namespace L0Muon {
   
   class ProcRawCnv  {
 
+  private:
+
+    static const unsigned int board_full_frame_size = 36;
+    static const unsigned int board_full_data_size  = board_full_frame_size*2;
+    static const unsigned int board_frame_size      = 34;
+    static const unsigned int board_data_size       = board_frame_size*2;
+
   public:
 
     /// Default Constructor
@@ -36,6 +43,9 @@ namespace L0Muon {
 
     std::vector<PMuonCandidate> muonCandidatesPU();
     std::vector<PMuonCandidate> muonCandidatesBCSU();
+    std::vector<LHCb::MuonTileID> ols(LHCb::MuonTileID puid);    
+    std::vector<LHCb::MuonTileID> neighs(LHCb::MuonTileID puid);
+    std::vector<LHCb::MuonTileID> pus();
 
     void decodeBank(std::vector<unsigned int> raw, int version);
     std::vector<unsigned int> rawBank(int version, int ievt);
@@ -45,10 +55,17 @@ namespace L0Muon {
     void formattedDump(int version, int ievt, std::string tab);
     void formattedDump(int version, int ievt);
     
+    int  L0_B_Id(int iboard, int ichannel)      {return m_L0_B_Id[iboard][ichannel];}
+    int  L0EventNumber(int iboard, int ichannel){return m_L0EventNumber[iboard][ichannel];}
+    int  BCID_BCSU(int iboard) {return m_BCID_BCSU[iboard];}
+    int  BCID_PU(int iboard, int ichannel)      {return m_BCID_PU[iboard][ichannel];}
+
   private:
     
     int m_quarter;
 
+    std::vector<unsigned int> reorderOLChannels(std::vector<unsigned int> raw);
+    
     // Candidate registers
     CandRegisterHandler m_candRegHandlerBCSU[12];
     CandRegisterHandler m_candRegHandlerPU[12][4];
@@ -60,6 +77,15 @@ namespace L0Muon {
     // Pointers to tile registers, organised into a map with the puID as a key
     std::map<LHCb::MuonTileID, TileRegister*> m_olsMap;
     std::map<LHCb::MuonTileID, TileRegister*> m_neighsMap;
+
+    int m_L0_B_Id[12][2];
+    int m_L0EventNumber[12][2];
+    int m_BCID_PU[12][4];
+    int m_BCID_BCSU[12];
+    
+    int opt_link_error[12][4];
+    int ser_link_error[12][4];
+    int par_link_error[12][4];
 
   };
 }; // namespace L0Muon
