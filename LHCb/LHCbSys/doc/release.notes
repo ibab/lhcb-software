@@ -5,19 +5,20 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r3>2008-01-25 LHCbSys v23r3</A></H1><PRE>
+</PRE><H1><A NAME=v23r3>2008-01-28 LHCbSys v23r3</A></H1><PRE>
 This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 
 - New packages:      MDF_DCAP v1r0 - DCAP plugin to read MDF files 
                      MDF_GFAL v1r0 - GFAL plugin to read MDF files 
                      MDF_RFIO v1r0 - RFIO plugin to read MDF files 
 - Packages modified: GaudiConf v10r6, GaudiObjDesc v11r1, KernelSys v7r1,
-    LHCbKernel v8r1, LHCbMath v2r5, DDDB v1r3, DetSys v11r2, DetDesc v18r3,
-    DetDescSvc v1r16, MuonDet v7r2, STDet v3r9, DetCond v11r8, CondDBUI v2r7,
-    DetDescChecks v4r5, EventSys v24r0, DAQEvent v7r8, HltEvent v8r6,
-    PhysEvent v11r5, RecEvent v2r9, TrackEvent v4r10, MDF v3r0, DAQSys v3r8,
-    CaloDAQ v4r3, TfKernel v2r2, DaVinciKernel v6r10, STKernel v1r1,
-    LHCbAlgs v2r14, LoKiNumbers v7r1
+    LHCbKernel v8r1, LHCbMath v2r5, RichKernel v7r10, DDDB v1r3, DetSys v11r2,
+    DetDesc v18r3, DetDescSvc v1r16, MuonDet v7r2, RichDet v10r9, STDet v3r9,
+    DetCond v11r8, CondDBUI v2r7, DetDescChecks v4r5, EventSys v24r0,
+    DAQEvent v7r8, HltEvent v8r6, PhysEvent v11r5, RecEvent v2r9,
+    TrackEvent v4r10, MDF v3r0, DAQSys v3r8, CaloDAQ v4r3, TfKernel v2r2,
+    DaVinciKernel v6r10, STKernel v1r1, LHCbAlgs v2r14, LoKiNumbers v7r1,
+    RichRecBase v3r10
 
 - In GaudiConf v10r6
   . In DecodeRawEvent.opts and UnpackDigi.opts:
@@ -38,6 +39,9 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 
 - In LHCbKernel v8r1
   . Fix derivatives in AlignTraj (forgot to zero three numbers!).
+  . Add PiecewiseTrajectory class
+  . Make number of RICHes an unsigned int.
+  . Fix doxygen comment and use std::sqrt in RichRadIntersection
 
 - In LHCbMath v2r5
   . Split MatrixUtils.h into two files MatrixUtils.h and MatrixTransforms.h and
@@ -52,6 +56,11 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
        *   - sigmamass     :   sigma(M)    for M^2 > 0
        *   - chi2mass      :   delta^2(M^2)/sigma^2(M^2) 
   . Update(improve?) the doxygen comments for some other header files.
+
+- In RichKernel v7r10
+  . Add new tool interface to tools that implement Snell's Law for refraction
+  . Add missing initialisation for m_dataWord to RichGeomPhoton
+  . Extend RichGeomPhoton to include direction at emission point
 
 - In DDDB v1r3
   . Change requirements to pick up SQLDDDB v4r*
@@ -87,6 +96,27 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
        "Protocol" (boolean) -> to activate/deactivate the protocol of the  
                           geomtery errors (default is "true")
 
+- In MuonDet v7r2
+  . Added four new methods to the DeMuonDetector class usefull for alignment 
+    purpose (changed DeMuonDetector and MuonChamberLayout)
+
+- In RichDet v10r9
+  . Changes for post-DC06 xml description, compatible with DC06
+    o New locations for detector elements. The paths are parameters
+      in DeRich1 and DeRich2, which can stiil be found in DeRichLocations.
+    o Individual QE per HPD (Rich::TabulatedProperty1D) from LHCBCOND (Tabulated 
+      Property). Warning from 4 HPDs (one per panel) if not found.
+    o One method for magnification in DeRichHPD, for both old and new way.
+  . Changes to how the DeRichHPD and DeRichHPDPanel objects deal with the
+    method DeRichHPDPanel::PDWindowPoint which calculates the intersection
+    with the HPDs
+    o Various fixes to correct a small disagreement between ray tracing results
+      and the full photon reconstruction.
+    o Clean up a little how the various transforms from DeRichHPD are accessed
+    o Add the method DeRichHPD::testKaptonShadowing which checks for 
+      intersections with the kapton shield
+    o Various other minor doxygen and code improvements
+
 - In STDet v3r9
   . DeSTSector: final changes to allow use of dead strip conditions
   . Add test on the version to allow DC06 backwards compatibility
@@ -95,10 +125,6 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
   . Improved the error message of LoadDDDB in case of exceptions.
   . Added new algorithm DetDesc::CheckOverlap 
     See the <a href="http://indico.cern.ch/materialDisplay.py?contribId=5&materialId=slides&confId=10184">presentation at T-Rec meeting, 17.12.2007</a>
-
-- In MuonDet v7r2
-  . Added four new methods to the DeMuonDetector class usefull for alignment 
-    purpose (changed DeMuonDetector and MuonChamberLayout)
 
 - In EventSys v24r0
   . Adapt copy_relax_rootmap pattern to new rootmap names in LCG_54
@@ -201,6 +227,12 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 
 - In LoKiNumbers v7r1
   . Fix for Windows to suppress the (auto)generation of "strange" functors
+
+- In RichRecBase v3r10
+  . Extend IRichExpectedTrackSignal interface with a few new methods
+  . Change the way to get detector elements. The paths are parameters
+    in DeRich1 and DeRich2, which can stiil be found in DeRichLocations.
+    Compatible with DC06 xml description.
 
 </PRE><H1><A NAME=v23r2>2007-12-12 LHCbSys v23r2</A></H1><PRE>
 This version uses Gaudi v19r6 and LCG_53f. Fully compatible with DC06 data
