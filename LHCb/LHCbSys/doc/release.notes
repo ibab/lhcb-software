@@ -13,9 +13,9 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
                      MDF_RFIO v1r0 - RFIO plugin to read MDF files 
 - Packages modified: GaudiConf v10r6, GaudiObjDesc v11r1, KernelSys v7r1,
     LHCbKernel v8r1, LHCbMath v2r5, RichKernel v7r10, DDDB v1r3, DetSys v11r2,
-    DetDesc v18r3, DetDescSvc v1r16, MuonDet v7r2, RichDet v10r9, STDet v3r9,
-    DetCond v11r8, CondDBUI v2r7, DetDescChecks v4r5, EventSys v24r0,
-    DAQEvent v7r8, HltEvent v8r6, PhysEvent v11r5, RecEvent v2r9,
+    DetDesc v18r3, DetDescCnv v4r5, DetDescSvc v1r16, MuonDet v7r2,
+    RichDet v10r9, STDet v3r9, DetCond v11r8, CondDBUI v2r7, DetDescChecks v4r5,
+    EventSys v24r0, DAQEvent v7r8, HltEvent v8r6, PhysEvent v11r5, RecEvent v2r9,
     TrackEvent v4r10, MDF v3r0, DAQSys v3r8, CaloDAQ v4r3, TfKernel v2r2,
     DaVinciKernel v6r10, STKernel v1r1, LHCbAlgs v2r14, LoKiNumbers v7r1,
     RichRecBase v3r10
@@ -86,6 +86,11 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
   . In 3DTransformationFunctions.h add method taking any MathCore 3D rotation
     and estimating the equivalent Euler 321 rotation parameters.
   . Remove functionality now in MathCore, take advantage of latest syntax fixes
+
+- In DetDescCnv v4r5
+  . Modified XmlMixtureCnv to correctly set the name of the mixture from XML. 
+  . Changed the tag name for elements of maps inside conditions (even if it is
+    not used) to be consistent with the changes in SQLDDDB (>= v4r0). 
 
 - In DetDescSvc v1r16
   . New treatment of geometry overlaps/errors in TransportSvc
@@ -182,12 +187,32 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
   . Added a service (COOLConfSvc/ICOOLConfSvc) dedicated to the instantiation and
     configuration of COOL/CORAL. The options to configure COOL and CORAL have
     been moved from CondDBAccessSvc to the new service. 
+  . Added the service CondDBLogger (implementation of ICondDBReader) that, if put
+    between a user and a provider of the ICondDBReader interface, stores in a
+    file all the requests that were made to the CondDBReader, with the time of
+    the request. The class allows to generate some history of the CondDB traffic
+    to be able to analyze and replay it afterward.
+  . Added the algorithm CondDBReplayAlg. It can read a file produced with
+    CondDBLogger to replay the requests to the database.
+  . Modified ICondDBReader and CondDBAccessSvc to allow the retrieval of objects
+    from the conditions database using the channel name
+  . Improved error messages in case of CORAL exceptions.
 
 - In CondDBUI v2r7
   . Added the possibility to specify a connection string on the command line of
     CondDBBrowser.py to open a database.
   . Fixed a bug (introduced in v2r6) that prevents the addition of new conditions
   . Fixed a bug preventing to open a database.
+  . Fixed a problem with local tags in dump_db_to_files.py.
+  . Added a the sub-module CondDBUI.Admin for functions needed for administrative
+    tasks. Currently it contains:
+    o check_addition_db_content:
+      checks if the database we are going to merge into another one contains
+      only files which are not yet there
+    o merge_and_tag:
+      insert the content of a database into another one (after calling
+      'check_addition_db_content') and apply a tag to the new files (move it if
+      it already exists)
 
 - In CaloUtils v7r7
   . _setProperty was removed from CaloTracktool.h and CaloTrackTool.cpp

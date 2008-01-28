@@ -26,7 +26,7 @@ use ProcessorKernel       v5r1    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use DetSys                v11r2   Det     # Marco Cattaneo
 use VeloDet               v12r3   Det     # Mark Tobin, Kurt Rinnert
 use DetDesc               v18r3   Det     # Marco Clemencic, Juan Palacios
-use DetDescCnv            v4r4    Det     # Marco Clemencic, Juan Palacios
+use DetDescCnv            v4r5    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r16   Det     # Marco Clemencic, Matt Needham
 use XmlTools              v5r1    Tools   # Marco Clemencic
 use OTDet                 v7r7    Det     # Jan Amoraal
