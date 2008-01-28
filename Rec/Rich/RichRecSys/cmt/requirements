@@ -2,11 +2,11 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.68 2007-11-30 15:45:18 cattanem Exp $
+# $Id: requirements,v 1.69 2008-01-28 12:58:05 cattanem Exp $
 #============================================================================
 
 package           RichRecSys
-version           v3r7
+version           v3r8
 
 # ================ structure ================================================
 branches          cmt doc options

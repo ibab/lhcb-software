@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r8 2008-01-28 =====================
 ! 2008-01-25 - Chris Jones
  - Minor changes to tool options (ray tracing mode)
  - Improvements to ray-tracing photon reconstruction options
