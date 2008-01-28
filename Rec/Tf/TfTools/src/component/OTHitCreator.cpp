@@ -242,7 +242,7 @@ namespace Tf
     declareProperty( "ForceDriftRadius",
 		    m_forceDriftRadius = 0. * Gaudi::Units::mm );
     declareProperty( "ForceResolution",
-		    m_forceResolution = 5. * Gaudi::Units::mm / std::sqrt(12) );
+		    m_forceResolution = 5. * Gaudi::Units::mm / std::sqrt(12.) );
   }
 
   OTHitCreator::~OTHitCreator()
