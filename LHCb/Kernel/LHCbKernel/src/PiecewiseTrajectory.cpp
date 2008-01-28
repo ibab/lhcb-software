@@ -122,7 +122,8 @@ void
 LHCb::PiecewiseTrajectory::append(LHCb::Trajectory *t) 
 {
     m_traj.push_back(std::make_pair(t,endRange()-t->beginRange()));
-    range().second += t->endRange()-t->beginRange();
+    Range tRange = range();
+    setRange(tRange.first, tRange.second + t->endRange()-t->beginRange());
 }
 // FIXME: prepend needs a bit more thinking -- it's friday afternoon & 
 //        time to enjoy the sunshine ;-)
