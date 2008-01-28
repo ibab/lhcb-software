@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.cpp,v 1.1 2008-01-22 09:29:55 jucogan Exp $
+// $Id: L0MuonFromRawTrans.cpp,v 1.2 2008-01-28 08:54:09 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -35,14 +35,6 @@ L0MuonFromRawTrans::L0MuonFromRawTrans( const std::string& name,
   m_configfile="L0MuonKernel.xml";
   declareProperty( "ConfigFile"     , m_configfile      );
 
-  for (int i= 0; i<2; ++i) {
-    m_ctrlRaw[i] =  L0Muon::CtrlRawCnv(i);
-  }
-  // Converters for the banks of the 4 TELL1s connected to the processing boards
-  for (int i= 0; i<4; ++i) {
-    m_procRaw[i] = L0Muon::ProcRawCnv(i);
-  }
-
   m_bankEventCounter  = 0;
 
 }
@@ -65,6 +57,13 @@ StatusCode L0MuonFromRawTrans::initialize() {
   info() <<  "XML file = " << xmlFileName << endmsg;
   L0Muon::L0MuonKernelFromXML(xmlFileName,false);
 
+  for (int i= 0; i<2; ++i) {
+    m_ctrlRaw[i] =  L0Muon::CtrlRawCnv(i);
+  }
+  // Converters for the banks of the 4 TELL1s connected to the processing boards
+  for (int i= 0; i<4; ++i) {
+    m_procRaw[i] = L0Muon::ProcRawCnv(i);
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -77,7 +76,18 @@ StatusCode L0MuonFromRawTrans::execute() {
   L0Muon::RegisterFactory::selectInstance(1);
 
   StatusCode sc;
+
   sc = decodeRawBanks();
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  sc = writeOnTES(1);
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  //  m_procRaw[3].formattedDump(1,0);
+  //m_procRaw[3].dump(1,0);
+  //m_ctrlRaw[1].dump(1,0);
+
+  sc = releaseRegisters();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   return StatusCode::SUCCESS;
@@ -103,7 +113,7 @@ StatusCode L0MuonFromRawTrans::decodeRawBanks(){
   LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
   debug() << "decodeRawBanks:  ==> got rawEvt " << endmsg;
 
-//   const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::L0Muon );
+  //   const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::L0Muon );
   const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::TT );
   if (banks.size()!=0) {
     for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin(); banks.end() != itBnk; ++itBnk ) {
@@ -117,7 +127,10 @@ StatusCode L0MuonFromRawTrans::decodeRawBanks(){
       for ( int k = 0; size > k; ++k ) {
         data.push_back( *body++ );
       }
-      m_ctrlRaw[srcID].decodeBank(data,bankVersion);
+      if (srcID==0)
+        m_ctrlRaw[1].decodeBank(data,bankVersion);
+      if (srcID==2)
+        m_procRaw[3].decodeBank(data,bankVersion);      
     }
   }
   
@@ -138,18 +151,81 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
   location = rootInTES() + LHCb::L0MuonCandidateLocation::Default + extension;
   LHCb::L0MuonCandidates* pl0mcands = new LHCb::L0MuonCandidates();
   put(pl0mcands , location );
-  debug() << "writeOnTES -------------------------"<< endreq;
-  debug() << "writeOnTES at "<< location << endreq;
+  if (msgLevel( MSG::DEBUG )) {
+    debug() << "writeOnTES -------------------------"<< endreq;
+    debug() << "writeOnTES at "<< location << endreq;
+  }
   for (int i= 0; i<2; ++i) {
     cands = m_ctrlRaw[i].muonCandidates();
-    debug() << "writeOnTES: => "<<cands.size()<<" candidates found"<< endreq;
+    if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES: => "<<cands.size()<<" candidates found"<< endreq;
     for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
-      debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
+      if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
       LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
       pl0mcands->insert(l0mcand);
     }
   }
 
+  location = rootInTES() + LHCb::L0MuonCandidateLocation::BCSU + extension;
+  LHCb::L0MuonCandidates* pbcsucands = new LHCb::L0MuonCandidates();
+  if (msgLevel( MSG::DEBUG )) {
+    debug() << "writeOnTES -------------------------"<< endreq;
+    debug() << "writeOnTES at "<< location << endreq;
+  }
+  for (int i= 0; i<2; ++i) {
+    cands = m_ctrlRaw[i].muonCandidatesBCSU();
+    if (msgLevel( MSG::DEBUG )) {
+      debug() << "writeOnTES: side "<<i<< endreq;
+      debug() << "writeOnTES: => "<<cands.size()<<" candidates found (BCSU)"<< endreq;
+    }
+    for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
+      if( msgLevel(MSG::DEBUG) ) debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
+      LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
+      pbcsucands->insert(l0mcand);
+    }
+  }
+
+  location = rootInTES() + LHCb::L0MuonCandidateLocation::PU  + extension;
+  LHCb::L0MuonCandidates* ppucands = new LHCb::L0MuonCandidates();
+  if (msgLevel( MSG::DEBUG )) {
+    debug() << "writeOnTES -------------------------"<< endreq;
+    debug() << "writeOnTES at "<< location << endreq;
+  }
+  put(ppucands , location );
+  for (int i= 0; i<4; ++i) {      
+    cands = m_procRaw[i].muonCandidatesPU();
+    if (msgLevel( MSG::DEBUG )) {
+      debug() << "writeOnTES: quarter "<<i<< endreq;
+      debug() << "writeOnTES: => "<<cands.size()<<" candidates found (PU)"<< endreq;
+    }
+    for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
+      if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
+      LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
+      ppucands->insert(l0mcand);
+    }
+  }
+
+
+  location = rootInTES() + LHCb::L0MuonDataLocation::Default + extension;
+  LHCb::L0MuonDatas* pdata = new LHCb::L0MuonDatas();
+  put(pdata , location );
+  if (msgLevel( MSG::DEBUG )) {
+    debug() << "writeOnTES -------------------------"<< endreq;
+    debug() << "writeOnTES at "<< location << endreq;
+  }
+  for (int i= 0; i<4; ++i) {
+    if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES: quarter "<<i<< endreq;
+    std::vector<LHCb::MuonTileID>  pus = m_procRaw[i].pus();
+    for (std::vector<LHCb::MuonTileID>::iterator itpu=pus.begin(); itpu!=pus.end(); ++itpu){
+      //debug() << "writeOnTES: pu = "<<itpu->toString()<< endreq;
+      std::vector<LHCb::MuonTileID> ols = m_procRaw[i].ols(*itpu);
+      //debug() << "writeOnTES: ols length = "<<ols.size()<< endreq;
+      std::vector<LHCb::MuonTileID> neighs = m_procRaw[i].neighs(*itpu);
+      //debug() << "writeOnTES: neighs length = "<<neighs.size()<< endreq;
+      LHCb::L0MuonData *l0muondata = new LHCb::L0MuonData(*itpu, ols, neighs);
+      pdata->insert(l0muondata);
+    }
+  }
+  
   return StatusCode::SUCCESS;
 }
 
