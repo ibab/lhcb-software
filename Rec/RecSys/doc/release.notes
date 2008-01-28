@@ -5,12 +5,15 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r3>2008-01-25 RecSys v5r3</A></H1><PRE>
+</PRE><H1><A NAME=v5r3>2008-01-28 RecSys v5r3</A></H1><PRE>
 This version uses Gaudi v19r7 and LHCb v23r3.
 
 - Packages modified: CaloPIDs v4r9, CaloReco v4r10, GlobalReco v6r15,
-    NNTools v1r2, PatAlgorithms v3r3, PatVelo v3r3, TfTools v1r3,
-    TrackMCTools v2r16, TrackSys v4r13, TrackUtils v1r18
+    NNTools v1r2, PatAlgorithms v3r3, PatFitParams v3r1, PatVelo v3r3,
+    RichRecMCAlgorithms v1r1, RichRecMCTools v2r15, RichRecMonitors v2r14,
+    RichRecPhotonTools v1r1, RichRecSys v3r8, RichRecTools v4r1,
+    RichRecTrackTools v1r1, TfTools v1r3, TrackCheckers v3r4, TrackMCTools v2r16,
+    TrackSys v4r13, TrackUtils v1r18
 
 - In CaloPIDs v4r9
   ._setProperty was changed to setProperty
@@ -35,6 +38,45 @@ This version uses Gaudi v19r7 and LHCb v23r3.
     Resulting V0s in RecVertexLocation::V0 and track pairs in Rec/Track/FromKs.
   . Modify PatDownstream to tag TT used hits with the option SeedFilter.
   . Use new enum values to tag TT hits with meaningful names.
+  . Added code to PatSeedingTool to perform better without magnetic field
+  . Added code to PatSeedingTool to allow better tuning when running with
+    a misaligned detector
+  . Added code to PatSeedTool to fix a corner case which could produce NaNs
+    as track parameters
+
+- In PatFitParams v3r1
+  . Add the PatCalibV0 algorithm from Maurice, to debug V0 processing.
+
+- In RichRecMCAlgorithms v1r1
+  . Fix bug in missing MCRichTrack adding algorithm (adding the wrong tracks)
+  . Add ray tracing option to MC mass hypothesis ring algorithm
+
+- In RichRecMCTools v2r15
+  . Remove setting of average track segment photon energy in MC track creator
+    tool (now done in segment creator).
+
+- In RichRecMonitors v2r14
+  . Add new monitor that compares reconstructed photons to ray traced photons
+  . Misc. improvements to other monitors
+
+- In RichRecPhotonTools v1r1
+  . Improvements to ray tracing photon reconstruction.
+  . Update quartic photon reconstruction tool to use new Snell's law tool.
+  . Change messages about CK theta correction factors from warning to info.
+
+- In RichRecSys v3r8
+  . Minor changes to tool options (ray tracing mode)
+  . Improvements to ray-tracing photon reconstruction options
+
+- In RichRecTools v4r1
+  . Add options to mass hypothesis ring creator to allow ray tracing mode to
+    be configurable
+
+- In RichRecTrackTools v1r1
+  . Add new methods to average track signal tool.
+  . Add ray tracing options to photon ray tracing geom. eff. tool.
+  . Set segment average photon energy in segment creator (remove setting
+    in track creator).
 
 - In TfTools v1r3
   . OTHitCreator now has job options to switch off using drift times in the
@@ -42,12 +84,18 @@ This version uses Gaudi v19r7 and LHCb v23r3.
     through job options
   . Use a small struct instead of function pointer in std::sort to allow inlining
 
+- In TrackCheckers v3r4
+  . Add hit-track residuals to Monitoring classes
+
 - In TrackMCTools v2r16
   . Bug fix in CleanPatTrackSelector
 
 - In TrackSys v4r13
   . In RecoTracking.opts, add NeuralNetTmva ghost probability algorithm to end
     of tracking sequence
+  . In NoFieldTracking.opts, added include to use new PatSeeding tuning when
+    running without magnetic field, but left it commented out because
+    PatSeeding is not executed in the default setup
 
 - In TrackUtils v1r18
   . Fix TrackV0Finder to follow changes in TwoProngVertex.h 
