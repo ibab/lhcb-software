@@ -1,11 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.73 2008-01-28 10:36:33 cattanem Exp $
+! $Id: release.notes,v 1.74 2008-01-28 10:38:41 cattanem Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
 
-!===================== Tools/CondDBUI v2r8 2008-01-28 =========================
+!===================== Tools/CondDBUI v2r7 2008-01-28 =========================
 ! 2008-01-23 - Marco Clemencic
  - Added a the sub-module CondDBUI.Admin for functions needed for administrative
    tasks. Currently it contains:
