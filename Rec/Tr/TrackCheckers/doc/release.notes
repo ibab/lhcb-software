@@ -3,8 +3,10 @@
 ! Responsible : Edwin Bos
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
+
+!======================= TrackCheckers v3r4 2008-01-28 =======================
 ! 2008-01-22 Stephanie Hansmann-Menzemer
- - Add hit-track residuals to Montioring classes
+ - Add hit-track residuals to Monitoring classes
 
 !======================= TrackCheckers v3r3 2007-11-30 =======================
 ! 2007-11-19 Wouter Hulsbergen
