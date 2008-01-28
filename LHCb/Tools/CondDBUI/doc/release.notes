@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.72 2008-01-23 13:17:45 marcocle Exp $
+! $Id: release.notes,v 1.73 2008-01-28 10:36:33 cattanem Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
 
+!===================== Tools/CondDBUI v2r8 2008-01-28 =========================
 ! 2008-01-23 - Marco Clemencic
  - Added a the sub-module CondDBUI.Admin for functions needed for administrative
    tasks. Currently it contains:
@@ -19,7 +20,6 @@
 ! 2008-01-08 - Marco Clemencic
  - Fixed a problem with local tags in dump_db_to_files.py.
 
-!===================== Tools/CondDBUI v2r7 2008-01-08 =========================
 ! 2008-01-07 - Marco Clemencic
  - Fixed a bug preventing to open a database.
 
