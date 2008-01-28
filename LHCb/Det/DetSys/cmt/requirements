@@ -4,7 +4,7 @@ version v11r2
 branches cmt doc dict
 
 use DetDesc             v18r3   Det
-use DetDescCnv          v4r4    Det
+use DetDescCnv          v4r5    Det
 use DetDescSvc          v1r16   Det
 use XmlTools            v5r1    Tools
 use VeloDet             v12r3   Det
