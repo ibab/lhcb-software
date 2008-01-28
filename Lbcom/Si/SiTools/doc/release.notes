@@ -2,6 +2,9 @@ Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+! 2008-01-28 M Needham
+ - Set scale to 1
+
 !============================ SiTools v1r4 2007-12-11 =========================
 ! 2007-12-11 M Needham
  - Add new base class for deposited charge tools

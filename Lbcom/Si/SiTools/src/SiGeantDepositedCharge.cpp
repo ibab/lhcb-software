@@ -1,4 +1,4 @@
-// $Id: SiGeantDepositedCharge.cpp,v 1.4 2007-12-11 10:14:25 mneedham Exp $
+// $Id: SiGeantDepositedCharge.cpp,v 1.5 2008-01-28 15:48:02 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -23,7 +23,7 @@ SiGeantDepositedCharge::SiGeantDepositedCharge(const std::string& type,
   SiDepositedChargeBase( type, name, parent )
 {
   /// constructor
-  declareProperty("scalingFactor", m_scalingFactor = 0.95);
+  declareProperty("scalingFactor", m_scalingFactor = 1.0);
  
 }
 
