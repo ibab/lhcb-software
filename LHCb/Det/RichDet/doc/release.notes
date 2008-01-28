@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v10r9 2008-01-28 ========================
 ! 2008-01-10 - "Antonis Papanestis"
  - Changes for post-DC06 xml description.
  - New locations for detector elements. The paths are parameters

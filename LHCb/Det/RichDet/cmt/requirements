@@ -1,5 +1,5 @@
 package RichDet
-version v10r8
+version v10r9
 
 branches src RichDet dict doc cmt
 
@@ -22,6 +22,3 @@ apply_pattern     reflex_dictionary                                 \
                   headerfiles=$(RICHDETROOT)/dict/RichDetDict.h     \
                   selectionfile=$(RICHDETROOT)/dict/RichDetDict.xml \
                   options="-U__MINGW32__"
-
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro RichDetDict_use_linkopts $(use_linkopts)
