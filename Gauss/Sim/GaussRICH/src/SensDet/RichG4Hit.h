@@ -7,7 +7,9 @@
 #include "G4Allocator.hh"
 #include "G4ThreeVector.hh"
 #include "RichG4RadiatorMaterialIdValues.h"
+#include "RichG4HpdReflectionFlag.h"
 #include <vector>
+#include <bitset>
 
 // From Kernel
 #include "Kernel/RichRadiatorType.h"
@@ -18,7 +20,7 @@
 // SiDet sensitive detector are stored as the Rich hit coordinates
 // in this class.
 
-class RichG4Hit : public GaussHitBase 
+class RichG4Hit : public GaussHitBase
 {
 
 public:
@@ -37,7 +39,7 @@ public:
   void Print();
   void DrawPEOrigin();
   std::vector<bool> DecodeRichHpdReflectionFlag() const;
-  
+
 private:
 
   G4double m_edep;           ///< energy deposited in the Si Det.
@@ -56,9 +58,9 @@ private:
   G4int m_ChTrackPDG;         ///< PDG code of the mother of the optical photon.
   G4int m_PETrackPDG;          ///< PDG code of the track
   G4int m_RadiatorNumber;      ///< radiator number which produced the photon.
-                               // c4f10 =1, cf4=2. aerogel=10-25,Gasqw=6-7(rich1,rich2) 
+                               // c4f10 =1, cf4=2. aerogel=10-25,Gasqw=6-7(rich1,rich2)
                                // , hpdqw=8, filtergeneric=4,
-                               // filterd263=5, nitrogen=30-31(rich1,rich2).   
+                               // filterd263=5, nitrogen=30-31(rich1,rich2).
   G4ThreeVector m_PhotEmisPt;  ///< emiss pt coord of the photon.
   G4double m_PhotEnergyAtProd;  ///< Photon energy in MeV at Ckv Production.
   G4double m_ThetaCkvAtProd;    ///< Cherenkov Angle Theta (rad) at Ckv production.
@@ -109,15 +111,15 @@ private:
 
   G4int m_RichHpdQW2PhCathReflFlag; // if 0 no photon reflection at Hpd QW-PhCathode boundary (normal case)
                                     // if 1 phtoton reflection happened at the Hpd QW-PhCathode boundary.
-                                   
+
   G4int m_ElectronBackScatterFlag; // 0 means the track (electron) which created the hit, was not backscattered
                                    // 1 or more means the track created the this hit was backscattered.
                                    // this number indicates the number times the track backscattered.
 
   G4int m_PhotoElectricProductionFlag; // 0 means the track created the hit is NOT created by Photoelectric process
-                                        // 1 means the track created the hit was produced by Photoelectric process(normal case)
-                                        // 2 means the although the track is not created by Photoelectric process,
-                                        // its parent or some grand parent is created by Photoelectric process.
+  // 1 means the track created the hit was produced by Photoelectric process(normal case)
+  // 2 means the although the track is not created by Photoelectric process,
+  // its parent or some grand parent is created by Photoelectric process.
 
   G4int m_RichHpdPhotonReflectionFlag; // bit packed word which indicates if and where a photon might have
                                        // reflected in an hpd before creating photoelectron.
@@ -302,20 +304,20 @@ public:
   inline G4int RichVerboseHitInfo() const {return m_RichVerboseHitInfo;}
 
 
-  void setRichHpdQW2PhCathReflFlag(const G4int aFlag) 
-  {m_RichHpdQW2PhCathReflFlag=aFlag;}  
-    
+  void setRichHpdQW2PhCathReflFlag(const G4int aFlag)
+  {m_RichHpdQW2PhCathReflFlag=aFlag;}
+
   inline G4int RichHpdQW2PhCathReflFlag()const
   {  return m_RichHpdQW2PhCathReflFlag;}
-  
-  void setElectronBackScatterFlag(const G4int aFlagB) 
+
+  void setElectronBackScatterFlag(const G4int aFlagB)
   {m_ElectronBackScatterFlag=aFlagB;}
-  G4int ElectronBackScatterFlag() const 
+  G4int ElectronBackScatterFlag() const
   {  return m_ElectronBackScatterFlag;}
-  
+
   void setPhotoElectricProductionFlag(const G4int aFlagC)
   {m_PhotoElectricProductionFlag= aFlagC;}
-  G4int  PhotoElectricProductionFlag()const 
+  G4int  PhotoElectricProductionFlag()const
   {  return m_PhotoElectricProductionFlag;}
 
 
@@ -326,19 +328,66 @@ public:
 
 
   inline const G4ThreeVector & HpdQuartzWindowExtSurfPhotIncidentPosition () const
-    {return   m_HpdQuartzWindowExtSurfPhotIncidentPosition;}
+  {return   m_HpdQuartzWindowExtSurfPhotIncidentPosition;}
 
   void setHpdQuartzWindowExtSurfPhotIncidentPosition (const G4ThreeVector & aHpdQuartzWindowExtSurfPhotIncidentPosition) {
     m_HpdQuartzWindowExtSurfPhotIncidentPosition=aHpdQuartzWindowExtSurfPhotIncidentPosition;
   }
   inline Rich::DetectorType detectorType() const
   {
-    return ( GetCurRichDetNum() < 0 ? 
+    return ( GetCurRichDetNum() < 0 ?
              (GetGlobalPos().z() < 4000 ? Rich::Rich1 : Rich::Rich2) :
              static_cast<Rich::DetectorType>(GetCurRichDetNum()) );
   }
 
   Rich::RadiatorType radiatorType() const;
+
+  // HPD Reflections
+
+  bool isHpdQwPCRefl() const
+  {
+    return ( 0 != reflectionBits().test(hpdRefFlags()->HpdQwPCRefl()) );
+  }
+  bool isHpdChromiumRefl() const
+  {
+    return ( 0 != reflectionBits().test(hpdRefFlags()->HpdChromiumRefl()) );
+  }
+  bool isHpdAirQwRefl() const
+  {
+    return ( 0 != reflectionBits().test(hpdRefFlags()->HpdAirQwRefl()) );
+  }
+  bool isHpdAirPCRefl() const
+  {
+    return ( 0 != reflectionBits().test(hpdRefFlags()->HpdAirPCRefl()) );
+  }
+  bool isHpdSiliconRefl() const
+  {
+    return ( 0 != reflectionBits().test(hpdRefFlags()->HpdSiliconRefl()) );
+  }
+  bool isHpdKovarRefl() const
+  {
+    return ( 0 != reflectionBits().test(hpdRefFlags()->HpdKovarRefl()) );
+  }
+  bool isHpdKaptonRefl() const
+  {
+    return ( 0 != reflectionBits().test(hpdRefFlags()->HpdKaptonRefl()) );
+  }
+  bool isHpdPCQwRefl() const
+  {
+    return ( 0 != reflectionBits().test(hpdRefFlags()->HpdPCQwRefl()) );
+  }
+
+private:
+
+  RichG4HpdReflectionFlag * hpdRefFlags() const
+  {
+    return RichG4HpdReflectionFlag::RichG4HpdReflectionFlagInstance();
+  }
+
+  std::bitset<16> reflectionBits() const
+  {
+    return std::bitset<16>((unsigned long)m_RichHpdPhotonReflectionFlag);
+  }
 
 };
 

@@ -5,8 +5,6 @@
 #include "G4VisAttributes.hh"
 #include "G4Transform3D.hh"
 #include "G4LogicalVolume.hh"
-#include "RichG4HpdReflectionFlag.h"
-#include <bitset>
 
 
 G4Allocator<RichG4Hit> RichG4HitAllocator;
@@ -229,8 +227,8 @@ void RichG4Hit::Print()
   
   }
   
-
 }
+
 std::vector<bool>  RichG4Hit::DecodeRichHpdReflectionFlag() const
 {
 
@@ -238,7 +236,7 @@ std::vector<bool>  RichG4Hit::DecodeRichHpdReflectionFlag() const
     RichG4HpdReflectionFlag* aRichG4HpdReflectionFlag= RichG4HpdReflectionFlag::RichG4HpdReflectionFlagInstance();
     G4int aMaxFlag= aRichG4HpdReflectionFlag->MaxNumHpdReflFlag();
     std::vector<bool> aBVect(aMaxFlag);
-    std::bitset<16>aCurFl ((unsigned long ) m_RichHpdPhotonReflectionFlag);
+    std::bitset<16> aCurFl((unsigned long)m_RichHpdPhotonReflectionFlag);
     for(G4int i=0; i<aMaxFlag; ++i){
       aBVect[i]= aCurFl.test(i);
     }

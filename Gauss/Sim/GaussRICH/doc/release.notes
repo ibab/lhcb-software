@@ -3,7 +3,14 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+
+! 2008-01-28 - Chris Jones
+ - Activate the filling of the HPD reflection flags in the MCRichHits by default.
+   Requires the head of Event/MCEvent
+ - Tidy up things a little.
+
 !========================= GaussRICH v7r3 2008-1-23 =========================
+
 ! 2008-01-25 - Sajan Easo 
  - In RichHpdPhotoElectricEffect and HpdSiEnergyLoss processes, the 
    RichPhotoelectron is activated insted of the normal  G4Electron as the
@@ -20,7 +27,9 @@
    MCRichOpticalPhoton class for Hpd debugging studies. This is done from the
    Step action named RichG4StepAnalysis6.cpp and is activated only with the
    RICH verbose output flag. 
+
 !========================= GaussRICH v7r3 2008-1-21 =========================
+
 ! 2008-01-21 - Sajan Easo, Rob Lambert
  - Changes in accordance with the new geometry changes in RICH in January 2008.
  - Change in RichHpdPhotoElectricEffect to account for an extra layer of container
@@ -35,6 +44,7 @@
    process are flagged in the RichG4hit class. One result of this is to add about 10% noise
    hits to the set of rich hits.
 - HPD Max QE is seto 0.45 in the new sqldddb. This has the effect of increasing the CPU  Time.
+
 !========================= GaussRICH v7r3 2007-12-07 =========================
 ! 2007-11-30 - Marco Clemencic and Gloria Corti
  - Link with special code in GaussTools for genConf (to instanciate a dummy 

@@ -55,12 +55,12 @@ RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase* gigabase,
 RichHpdPhotoElectricEffect::~RichHpdPhotoElectricEffect() {; }
 
 
-void RichHpdPhotoElectricEffect::setHpdPhElecParam() {
+void RichHpdPhotoElectricEffect::setHpdPhElecParam() 
+{
 
-
-    std::cout<< "RichHpdPhotoElectricEffect UseHpdMagDistortions=    "
+    std::cout<< "RichHpdPhotoElectricEffect UseHpdMagDistortions = "
 	     <<m_UseHpdMagDistortions<<std::endl;
-    std::cout<< "RichHpdPhotoElectricEffect PsfPreDc06Flag =    "
+    std::cout<< "RichHpdPhotoElectricEffect PsfPreDc06Flag       = "
 	     << m_PSFPreDc06Flag <<std::endl;
 
     RichHpdProperties*  m_HpdProperty = HpdProperty();

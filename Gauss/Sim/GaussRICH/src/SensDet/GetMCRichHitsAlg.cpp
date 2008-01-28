@@ -1,8 +1,8 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.27 2008-01-25 16:02:58 seaso Exp $
-// Include files 
+// $Id: GetMCRichHitsAlg.cpp,v 1.28 2008-01-28 17:10:29 jonrob Exp $
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -120,7 +120,7 @@ StatusCode GetMCRichHitsAlg::execute()
       for ( int ihit = 0; ihit < numberofhits; ++ihit )
       {
         // Pointer to G4 hit modif rwl 22.01.08
-        const RichG4Hit * g4hit = (*myCollection)[ihit];  
+        const RichG4Hit * g4hit = (*myCollection)[ihit];
         if ( !g4hit ) { Error( "Null RichG4Hit pointer" ); continue; }
 
         // Make new persistent hit object
@@ -129,8 +129,7 @@ StatusCode GetMCRichHitsAlg::execute()
         hits->push_back( mchit );
 
         // hit position
-        const Gaudi::XYZPoint entry = Gaudi::XYZPoint(g4hit->GetGlobalPos());
-        mchit->setEntry( entry );
+        mchit->setEntry( Gaudi::XYZPoint(g4hit->GetGlobalPos()) );
 
         // energy deposited
         mchit->setEnergy( g4hit->GetEdep() );
@@ -140,11 +139,11 @@ StatusCode GetMCRichHitsAlg::execute()
 
         // Rich detector information
         const Rich::DetectorType rich = g4hit->detectorType();
-        if ( mchit->richInfoValid() )
+        mchit->setRich( rich );
+        if ( !mchit->richInfoValid() )
         {
           Warning( "Invalid RICH detector from G4Hit" );
         }
-        mchit->setRich( rich );
 
         // radiator information
         const Rich::RadiatorType rad = g4hit->radiatorType();
@@ -164,7 +163,7 @@ StatusCode GetMCRichHitsAlg::execute()
         if ( Rich::Aerogel == rad )
         {
           const int aeroID = radID - Rich1AgelTile0CkvRadiatorNum;
-          if ( aeroID < 2*2*2*2*2 )
+          if ( aeroID < 2*2*2*2*2 ) // Aerogel tile ID field has 5 bits allocated
           {
             mchit->setAerogelTileID( aeroID );
           }
@@ -177,73 +176,36 @@ StatusCode GetMCRichHitsAlg::execute()
           }
         }
 
-        // the following case is when a non-pe charged track passes through
-        // a Silicon detector and creates a MIP signal  like in  a tracking det.
-        // In this case there is no radiator history, since there was
-        // no cherenkov radiation at all. hence the 'warning' flag is commeted out.
-        // SE 20-2-06.
-        // else
-        // {
-        //   Warning( "Radiator ID < 0 and track ID < 0 -> Radiator history unknown",
-        //         StatusCode::SUCCESS );
-        // }
-
         // charged track hitting HPD flag
-        if ( g4hit->GetChTrackID() < 0 )
-        {
-          mchit->setChargedTrack( true );
-        }
+        mchit->setChargedTrack( g4hit->GetChTrackID() < 0 );
+        
         // Rayleigh scattered flag
-        if ( g4hit->OptPhotRayleighFlag() > 0 )
+        mchit->setScatteredPhoton( g4hit->OptPhotRayleighFlag() > 0 );
+        
+        // Back scattered electrons
+        mchit->setHpdSiBackscatter( g4hit->ElectronBackScatterFlag() );
+
+        // HPD reflections
+        mchit->setHpdReflQWPC   ( g4hit->isHpdQwPCRefl()     );
+        mchit->setHpdReflChr    ( g4hit->isHpdChromiumRefl() );
+        mchit->setHpdReflAirQW  ( g4hit->isHpdAirQwRefl()    );
+        mchit->setHpdReflAirPC  ( g4hit->isHpdAirPCRefl()    );
+        mchit->setHpdReflSi     ( g4hit->isHpdSiliconRefl()  );
+        mchit->setHpdReflKovar  ( g4hit->isHpdKovarRefl()    );
+        mchit->setHpdReflKapton ( g4hit->isHpdKaptonRefl()   );
+        mchit->setHpdReflPCQW   ( g4hit->isHpdPCQwRefl()     );
+
+        if ( msgLevel(MSG::DEBUG) && mchit->hpdReflection() )
         {
-          mchit->setScatteredPhoton( true );
+          debug() << " MCRichhit from an internal HPD reflection " << endreq;
         }
-
-        //begin modif rlambert 22.01.08
-
-        
-        //        if(g4hit->ElectronBackScatterFlag()) mchit->setHpdSiBackscatter(true);
-
-
-        //        RichG4HpdReflectionFlag* aRichG4HpdReflectionFlag= 
-        //  RichG4HpdReflectionFlag::RichG4HpdReflectionFlagInstance();
-        
-        //  std::vector<bool> aBVect = g4hit->DecodeRichHpdReflectionFlag();
-        // bool isaHpdReflection=false;
-        
-        //  for(int ii=0; ii<aBVect.size() && !isaHpdReflection; ii++) isaHpdReflection=aBVect[ii];
-        
-
-        // if(  aBVect [aRichG4HpdReflectionFlag->HpdQwPCRefl()])     mchit->setHpdReflQWPC(true);  
-        
-        // if(  aBVect [aRichG4HpdReflectionFlag->HpdChromiumRefl()]) mchit->setHpdReflChr(true);  
-        
-        // if(  aBVect [aRichG4HpdReflectionFlag->HpdAirQwRefl()])    mchit->setHpdReflAirQW(true); 
-
-        // if(  aBVect [aRichG4HpdReflectionFlag->HpdAirPCRefl()])    mchit->setHpdReflAirPC(true); 
-
-        //        if(  aBVect [aRichG4HpdReflectionFlag->HpdSiliconRefl()])  mchit->setHpdReflSi(true);  
-        
-        // if(  aBVect [aRichG4HpdReflectionFlag->HpdKovarRefl()])    mchit->setHpdReflKovar(true);  
-        
-        // if(  aBVect [aRichG4HpdReflectionFlag->HpdKaptonRefl()])   mchit->setHpdReflKapton(true);  
-
-        //       if(  aBVect [aRichG4HpdReflectionFlag->HpdPCQwRefl()])     mchit->setHpdReflPCQW(true);  
-
-        //       if ( msgLevel(MSG::DEBUG) && isaHpdReflection )
-        // {
-        //  debug() << " MCRichhit from an internal HPD reflection " << endreq;
-        // }
-
-        //
-        //end modif rlambert 22.01.08
 
         // get sensitive detector identifier from det elem
-        const RichSmartID detID( m_richDets[rich]->sensitiveVolumeID(entry) );
+        const RichSmartID detID( m_richDets[rich]->sensitiveVolumeID(mchit->entry()) );
         if ( !detID.isValid() )
         {
           std::ostringstream mess;
-          mess << "Invalid RichSmartID returned for silicon point " << entry;
+          mess << "Invalid RichSmartID returned for silicon point " << mchit->entry();
           Warning( mess.str() );
         }
         else
@@ -253,11 +215,8 @@ StatusCode GetMCRichHitsAlg::execute()
         }
 
         // fill reference to MCParticle (need to const cast as method is not const !!)
-        // const int trackID = (const_cast<RichG4Hit*>(g4hit))->GetTrackID(); //replaced for Windows 4-9-2007
-          RichG4Hit* nonconstg4hit = const_cast<RichG4Hit*>(g4hit);    //      with this and the next line
-          const int trackID = nonconstg4hit->GetTrackID();             //      as suggested by GC.
-
-
+        RichG4Hit* nonconstg4hit = const_cast<RichG4Hit*>(g4hit);  
+        const int trackID = nonconstg4hit->GetTrackID();
 
         const MCParticle * mcPart = table[trackID].particle();
         if ( mcPart )
@@ -268,7 +227,7 @@ StatusCode GetMCRichHitsAlg::execute()
         {
           warning() << "No MCParticle for MCRichHit associated to G4 Track ID = "
                     << trackID << " Track Momentum = " << g4hit->ChTrackTotMom()
-                    << " Hit Energy = " << g4hit->GetEdep()  <<endmsg;
+                    << " Hit Energy = " << g4hit->GetEdep() << endmsg;
         }
 
         // now increment the various hit counters
@@ -281,11 +240,11 @@ StatusCode GetMCRichHitsAlg::execute()
         else
         {
           ++m_hitTally[rich];
-          if ( mchit->gasQuartzCK()  ) ++m_gasQzHits[rich];
-          if ( mchit->hpdQuartzCK()  ) ++m_hpdQzHits[rich];
-          if ( mchit->nitrogenCK()   ) ++m_nitroHits[rich];
-          if ( mchit->aeroFilterCK() ) ++m_aeroFilterHits[rich];
-          if ( mchit->isHpdReflection() ) ++m_hpdReflHits[rich]; //rwl 22.01.08
+          if ( mchit->gasQuartzCK()   )  ++m_gasQzHits[rich];
+          if ( mchit->hpdQuartzCK()   )  ++m_hpdQzHits[rich];
+          if ( mchit->nitrogenCK()    )  ++m_nitroHits[rich];
+          if ( mchit->aeroFilterCK()  )  ++m_aeroFilterHits[rich];
+          if ( mchit->hpdReflection() )  ++m_hpdReflHits[rich]; //rwl 22.01.08
         }
 
         // radiator counters
@@ -307,16 +266,11 @@ StatusCode GetMCRichHitsAlg::execute()
 
         if ( msgLevel(MSG::VERBOSE) )
         {
-          verbose() << "Created MCRichHit " << entry << " energy " << g4hit->GetEdep()
-                    << " " << rich << " " << rad << " radID = " << radID
-                    << " sensDetID " << detID
-                    << " MCParticle " << mcPart << endreq;
+          verbose() << "Created MCRichHit " << *mchit << endreq;
         }
 
-        if ( msgLevel(MSG::DEBUG) && mchit->isHpdReflection() )
-        {
-          debug() << " MCRichhit from an internal HPD reflection " << endreq;
-        }
+        if ( mchit->hpdReflection() ) info() << "REFLECTION HIT" << endreq;
+
       } // end loop on hits in the collection
 
     } // end loop on collections
@@ -324,13 +278,13 @@ StatusCode GetMCRichHitsAlg::execute()
     // Verify that all hits are stored for output.
     if ( hits->size() != totalSize )
     {
-      return Error("MCRichHits and RichG4HitCollection have different sizes!");
+      return Error("MCRichHits and RichG4HitCollection have different sizes !");
     }
 
   }
   else
   {
-    info() << "No RichG4Hits to be converted since no Collections available"
+    info() << "No RichG4Hits to be converted since no collections available"
            << endmsg;
   }
 
@@ -344,7 +298,7 @@ StatusCode GetMCRichHitsAlg::finalize()
 {
   const Rich::StatDivFunctor occ;
 
-  info() << "Av. # Invalid RICH flags            = " 
+  info() << "Av. # Invalid RICH flags            = "
          << occ(m_invalidRichHits,m_nEvts)
          << endmsg;
 
@@ -375,20 +329,15 @@ StatusCode GetMCRichHitsAlg::finalize()
          << " Rich2 = " << occ(m_aeroFilterHits[Rich::Rich2],m_nEvts)
          << endmsg;
 
-  info() << "# HPD Reflection hits   : Rich1 = "     //rwl 22.01.08
-         << m_hpdReflHits[Rich::Rich1]
-         << " Rich2 = " << m_hpdReflHits[Rich::Rich2]
-         << endmsg;
-  
-  info() << "Av. # HPD Reflection hits   : Rich1 = "     //rwl 22.01.08
+  info() << "Av. # HPD reflection hits   : Rich1 = "     //rwl 22.01.08
          << occ(m_hpdReflHits[Rich::Rich1],m_nEvts)
          << " Rich2 = " << occ(m_hpdReflHits[Rich::Rich2],m_nEvts)
          << endmsg;
-  
+
   info() << "Av. # Signal CK MCRichHits  : Aero  = "
          << occ(m_radHits[Rich::Aerogel],m_nEvts)
          << " C4F10 = " <<  occ(m_radHits[Rich::C4F10],m_nEvts)
-         <<   " CF4 = "   <<  occ(m_radHits[Rich::CF4],m_nEvts)
+         << " CF4 = "   <<  occ(m_radHits[Rich::CF4],m_nEvts)
          << endmsg;
 
   info() << "Av. # Charged Track hits    : Aero  = "
@@ -409,7 +358,7 @@ StatusCode GetMCRichHitsAlg::finalize()
 
   // number of hits in each aerogel tile
   info() << "Av. # Aero hits per tile   :" << endreq;
-  const int maxTileID = 
+  const int maxTileID =
     Rich1AgelTile15CkvRadiatorNum-Rich1AgelTile0CkvRadiatorNum;
   for ( int iTile = 0; iTile <= maxTileID; ++iTile )
   {

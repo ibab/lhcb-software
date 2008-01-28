@@ -1,4 +1,4 @@
-// $Id: RichG4HpdReflectionFlag.cpp,v 1.2 2008-01-25 16:01:26 seaso Exp $
+// $Id: RichG4HpdReflectionFlag.cpp,v 1.3 2008-01-28 17:10:29 jonrob Exp $
 // Include files 
 
 
@@ -45,6 +45,6 @@ RichG4HpdReflectionFlag*  RichG4HpdReflectionFlag::RichG4HpdReflectionFlagInstan
 //=============================================================================
 // Destructor
 //=============================================================================
-RichG4HpdReflectionFlag::~RichG4HpdReflectionFlag() {} 
+RichG4HpdReflectionFlag::~RichG4HpdReflectionFlag() { } 
 
 //=============================================================================
