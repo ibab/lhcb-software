@@ -4,6 +4,7 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================== RichRecTrackTools v1r1 2008-01-28 ==================
 ! 2008-01-25 - Chris Jones
  - Add new methods to average track signal tool.
  - Add ray tracing options to photon ray tracing geom. eff. tool.
