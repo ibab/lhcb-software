@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.36 2007-11-12 14:04:01 cattanem Exp $ 
+# $Id: requirements,v 1.37 2008-01-28 10:34:22 cattanem Exp $ 
 # =============================================================================
 package       DetDescCnv
-version       v4r4
+version       v4r5
 
 # =========== structure =======================================================
 branches      DetDescCnv doc cmt src
