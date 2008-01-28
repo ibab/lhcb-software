@@ -13,5 +13,5 @@ use CaloDet             v8r5    Det
 use CaloDetXmlCnv       v3r1    Det
 use MuonDet             v7r2    Det
 use Magnet              v3r6p1  Det
-use RichDet             v10r8   Det
+use RichDet             v10r9   Det
 use STDet               v3r9    Det
