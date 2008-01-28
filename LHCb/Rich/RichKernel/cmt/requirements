@@ -2,11 +2,11 @@
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.66 2007-11-27 08:40:29 cattanem Exp $
+# $Id: requirements,v 1.67 2008-01-28 09:42:15 cattanem Exp $
 #============================================================================
 
 package RichKernel
-version v7r9
+version v7r10
 
 # ================ structure =================================================
 branches RichKernel cmt dict doc src
@@ -31,9 +31,6 @@ apply_pattern reflex_dictionary                                       \
               headerfiles=$(RICHKERNELROOT)/dict/RichKernelDict.h     \
               selectionfile=$(RICHKERNELROOT)/dict/RichKernelDict.xml \
               options="-U__MINGW32__"
-
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro RichKernelDict_use_linkopts $(use_linkopts)
 
 # Debug flag
 macro_append cppflags "" \
