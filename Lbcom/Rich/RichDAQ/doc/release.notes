@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r14 2008-01-28 =======================
 ! 2008-01-24 - Chris Jones
  - Disable by default data integrity checks with ODIN. Due to changes in ODIN
    information that makes this check no longer possible.
