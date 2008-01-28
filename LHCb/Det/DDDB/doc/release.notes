@@ -4,7 +4,11 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
-!========================== DDDB v1r3 2008-01-25 =============================
+!========================== DDDB v1r3 2008-01-28 =============================
+! 2008-01-28 - Marco Cattaneo
+ - Add oracle dependency to allow access to Oracle DDDB
+ - Add lfc dependency to get credentials for Oracle DDDB access
+
 ! 2008-01-25 - Marco Cattaneo
  - Change requirements to pick up SQLDDDB v4r* for backwards incompatible Rich
    changes in post DC06 tags

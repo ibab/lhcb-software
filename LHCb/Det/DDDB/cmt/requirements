@@ -25,7 +25,11 @@ use   DetCond               v*    Det   -no_auto_imports
 # Bridge from XML parser to database
 use   CondDBEntityResolver  v*    Tools -no_auto_imports
 
-# Database back-end library
+# Database back-end libraries
 use   sqlite                v*    LCG_Interfaces -no_auto_imports
+use   oracle                v*    LCG_Interfaces -no_auto_imports
+
+# To get credentials for accessing oracle db
+use   lfc                   v*    LCG_Interfaces -no_auto_imports
 
 include_path      none
