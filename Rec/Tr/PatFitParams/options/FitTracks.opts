@@ -10,7 +10,7 @@ RecoPROTOSeq.Members = {};
 RecoMUONSeq.Members = {};
 OutputDSTSeq.Members = {};
 MCLinksTrSeq.Members = {};
-PoolDbCacheSvc.AgeLimit = 1;
+IODataManager.AgeLimit = 1;
 #pragma print on
 
 NTupleSvc.Output = { "FILE1 DATAFILE='track.root' TYP='ROOT' OPT='NEW'"};
@@ -18,7 +18,7 @@ NTupleSvc.Output = { "FILE1 DATAFILE='track.root' TYP='ROOT' OPT='NEW'"};
 EventSelector.Input   = {
   "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001276/DIGI/00001276_00000002_5.digi' TYP='POOL_ROOTTREE' OPT='READ'" 
 };
-PoolDbCacheSvc.Catalog = {
+FileCatalog.Catalogs = {
   "xmlcatalog_file:$PATFITPARAMSROOT/options/NewCatalog.xml"
 };
 RecoTrSeq.Members = { "PatInitEvent",

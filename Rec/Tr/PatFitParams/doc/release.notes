@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !======================== PatFitParams v3r1 2008-01-28 =======================
+! 2008-01-28 - Marco Cattaneo
+ - Update options for Gaudi v19r7
+
 ! 2008-01-10 - Olivier Callot
  - Add the PatCalibV0 algorithm from Maurice, to debug V0 processing.
 
