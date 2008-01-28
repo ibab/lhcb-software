@@ -1,10 +1,12 @@
-# $Id: release.notes,v 1.118 2008-01-26 15:48:02 marcocle Exp $
+# $Id: release.notes,v 1.119 2008-01-28 10:29:38 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!===================== Det/DetCond v11r8 2008-01-28 ==========================
+                           NEEDS: LCGCMT >= 54
 ! 2008-01-26 - Marco Clemencic
  - Added the service CondDBLogger (implementation of ICondDBReader) that, if put
    between a user and a provider of the ICondDBReader interface, stores in a
@@ -21,8 +23,6 @@
 ! 2008-01-21 - Marco Clemencic
  - Improved error messages in case of CORAL exceptions.
 
-!===================== Det/DetCond v11r8 2007-12-21 ==========================
-                           NEEDS: LCGCMT >= 54
 ! 2007-12-20 - Marco Clemencic
  - Allow to use tags that are not global in CondDBAccessSvc.
  - Added a service (COOLConfSvc/ICOOLConfSvc) dedicated to the instantiation and
