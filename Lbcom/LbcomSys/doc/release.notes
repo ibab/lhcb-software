@@ -6,11 +6,12 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r14>2008-01-25 LbcomSys v6r14</A></H1><PRE>
+</PRE><H1><A NAME=v6r14>2008-01-28 LbcomSys v6r14</A></H1><PRE>
 This version uses Gaudi v19r7 and LHCb v23r3
 
 - Packages modified: CaloAssociators v6r5, L0DU v8r2, L0Muon v7r6, PuVeto v7r3,
-    STAlgorithms v2r6, STCheckers v2r4, STDAQ v3r4, STTools v3r5
+    RichDAQ v3r14, RichTools v2r17, STAlgorithms v2r6, STCheckers v2r4,
+    STDAQ v3r4, STTools v3r5
 
 - In CaloAssociators v6r5
   . In CaloAssociators.opts, remove obosolete ApplicationMgr.DLLs option and
@@ -28,6 +29,18 @@ This version uses Gaudi v19r7 and LHCb v23r3
 - In PuVeto v7r3
   . Remove obsolete file PuVeto_load.cpp
   . Change order of some nested loops in PuVetoAlg to make it faster...
+
+- In RichDAQ v3r14
+  . Disable by default data integrity checks with ODIN. Due to changes in ODIN
+    information that makes this check no longer possible.
+
+- In RichTools v2r17
+  . Add new tool RichSnellsLawRefraction to perform refraction corrections
+    at the Aerogel / Rich1Gas boundary
+  . Update RichRayTracing to use the new refraction tool
+  . Change the way to get detector elements. The paths are parameters
+    in DeRich1 and DeRich2, which can stiil be found in DeRichLocations.
+    Compatible with DC06 xml description.
 
 - In STAlgorithms v2r6
   . Warn if sector not found in MCSTDepositCreator

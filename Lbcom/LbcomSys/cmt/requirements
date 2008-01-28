@@ -27,10 +27,10 @@ use OTMonitor         v2r7  OT          # Jan Amoraal
 use OTAssociators     v4r1  OT          # Jan Amoraal
 
 # Rich
-use RichDAQ           v3r13 Rich        # Chris Jones
+use RichDAQ           v3r14 Rich        # Chris Jones
 use RichMCMonitors    v1r5  Rich        # Chris Jones
 use RichMCTools       v3r7  Rich        # Chris Jones
-use RichTools         v2r16 Rich        # Chris Jones
+use RichTools         v2r17 Rich        # Chris Jones
 
 # Silicon detectors
 use SiTools           v1r4  Si          # Matt Needham
