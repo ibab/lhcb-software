@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r10 2008-01-28 ==========================
 ! 2008-01-11 - Chris Jones
  - Extend IRichExpectedTrackSignal interface with a few new methods
 

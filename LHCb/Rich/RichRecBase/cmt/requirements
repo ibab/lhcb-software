@@ -2,11 +2,11 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.64 2007-11-27 10:31:53 cattanem Exp $
+# $Id: requirements,v 1.65 2008-01-28 09:53:00 cattanem Exp $
 #============================================================================
 
 package   RichRecBase
-version   v3r9
+version   v3r10
 
 #============================================================================
 # Structure
@@ -44,10 +44,7 @@ apply_pattern reflex_dictionary                                         \
               selectionfile=$(RICHRECBASEROOT)/dict/RichRecBaseDict.xml \
               options="-U__MINGW32__ -DBOOST_DISABLE_ASSERTS"
 
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro RichRecBaseDict_use_linkopts $(use_linkopts)
-
 #============================================================================
 private
-include_dirs $(RICHRECBASEROOT)/Event
+#include_dirs $(RICHRECBASEROOT)/Event
 use GaudiObjDesc v* -no_auto_imports
