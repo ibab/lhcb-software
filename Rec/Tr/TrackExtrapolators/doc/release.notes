@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2008-01-28 Wouter Hulsbergen
+ - Cleanup of debug output in MaterialLocatorBase
+
 !======================= TrackExtrapolators v2r16 2007-12-10 =================
 ! 2007-12-06 Wouter Hulsbergen
  - Added new methods to MaterialLocatorBase for use in TrackFit

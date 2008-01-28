@@ -166,25 +166,23 @@ size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
     }
     
     // issue a warning if we didn't make it
-    if( nodes.size()==maxnumnodes) {
-      warning() << "Trajectory approximation did not reach desired accuracy. " 
-		<< nodes.size() << " " << maxnumnodes << endreq ;
-    }
+    if( nodes.size()==maxnumnodes )
+      warning() << "Trajectory approximation did not reach desired accuracy. " << endreq ;
     
     // debug output
-    if(msgLevel( MSG::DEBUG ) || nodes.size()==maxnumnodes) {
-      info() << "Trajectory approximation: numnodes=" << nodes.size() 
-	     << ", deviation=" << worstdeviation 
-	     << " at z= " << 0.5*(worstnode->z()+next(worstnode)->z())
-	     << endreq ;
-      if( msgLevel( MSG::VERBOSE) || nodes.size()==maxnumnodes) 
-	for( inode = nodes.begin(); (nextnode = next(inode)) != nodes.end(); ++inode) {
-	  LHCb::StateVector midpoint = traj.stateVector( 0.5*(inode->z()+nextnode->z() ) ) ;
-	  info() << "interval: "
-		 << "(" << inode->z() << ", " << nextnode->z() << ")"
-		 << " ---> midpoint deviation: " 
-		 << pointerror(*inode,*nextnode,midpoint) << endreq ;
-	}
+    if(msgLevel( MSG::VERBOSE ) ||
+       (msgLevel( MSG::DEBUG) && nodes.size()==maxnumnodes ) ) {
+      debug() << "Trajectory approximation: numnodes=" << nodes.size() 
+	      << ", deviation=" << worstdeviation 
+	      << " at z= " << 0.5*(worstnode->z()+next(worstnode)->z())
+	      << endreq ;
+      for( inode = nodes.begin(); (nextnode = next(inode)) != nodes.end(); ++inode) {
+	LHCb::StateVector midpoint = traj.stateVector( 0.5*(inode->z()+nextnode->z() ) ) ;
+	debug() << "interval: "
+		<< "(" << inode->z() << ", " << nextnode->z() << ")"
+		<< " ---> midpoint deviation: " 
+		<< pointerror(*inode,*nextnode,midpoint) << endreq ;
+      }
     }
     
     // Now create intersections for each of the intervals.
