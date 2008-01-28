@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.22 2008-01-09 07:43:43 mneedham Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.23 2008-01-28 15:50:52 mneedham Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -41,7 +41,7 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   declareProperty("MinDist", m_minDistance = 10.0e-3*Gaudi::Units::mm);
 
   declareProperty("ChargeSharerName",m_chargeSharerName ="STChargeSharingTool");
-  declareProperty("DepChargeTool", m_depChargeToolName = "SiDepositedCharge");
+  declareProperty("DepChargeTool", m_depChargeToolName = "SiGeantDepositedCharge");
 
   declareProperty("SiteSize", m_siteSize = 0.02*Gaudi::Units::mm);
   declareProperty("MaxNumSites", m_maxNumSites = 150);

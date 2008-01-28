@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2008-01-28 M Needham
+ - Use Geant deposited energy
+
 !======================= STAlgorithms v2r6 2008-01-18 ========================
 ! 2008-01-18 M Needham
  - Disable allStrips options in Digit Creators
