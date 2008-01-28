@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r17 2008-01-28 ======================
 ! 2008-01-11 - Chris Jones
  - Add new tool RichSnellsLawRefraction to perform refraction corrections
    at the Aerogel / Rich1Gas boundary
