@@ -76,6 +76,9 @@ use CondDBEntityResolver  v4r0   Tools   # Marco Clemencic
 use CondDBUI              v2r7   Tools   # Marco Clemencic
 use SimComponents         v2r8   Sim     # Gloria Corti, Marco Cattaneo
 use MDF                   v3r0   DAQ     # Markus Frank
+use MDF_DCAP              v1r0   DAQ     # Markus Frank
+use MDF_GFAL              v1r0   DAQ     # Markus Frank
+use MDF_RFIO              v1r0   DAQ     # Markus Frank
 use DaVinciKernel         v6r10  Phys    # Juan Palacios
 use DaVinciMCKernel       v2r5   Phys    # Juan Palacios
 use DDDB                  v1r3   Det     # Marco Cattaneo
