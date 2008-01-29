@@ -16,6 +16,7 @@ EventSelector.Decode                 = false;
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = { "MEP", "SEND" };
 MEPManager.PartitionBuffers          = false;
+MEPManager.MapUnusedBuffers          = false;
 //
 // Prescale events declared to RESULT buffer
 //

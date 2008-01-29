@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.10 2008-01-17 17:23:58 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.11 2008-01-29 15:08:38 frankm Exp $
 //  ====================================================================
 //  RawBufferCreator.cpp
 //  --------------------------------------------------------------------
@@ -55,21 +55,25 @@ namespace {
     ::printf("    -c(ount)=<number>      Number of events to be sent. default: unlimited\n");
     ::printf("    -p(artition)=<number>  Partition ID\n");
     ::printf("    -r(efcount)=<number>   Initial MEP reference count\n");
+    ::printf("    -m(apunused)           Map unused MEP buffers\n");
     ::printf("    -d(ebug)               Invoke debugger\n");
   }
   struct MEPProducer  : public MEP::Producer  {
     int m_spaceSize, m_refCount, m_evtCount;
-    MEPProducer(const std::string& nam, int partitionID, int refcnt, size_t siz, int evtCount) 
+    MEPProducer(const std::string& nam, int partitionID, int refcnt, size_t siz, int evtCount, bool unused) 
       : MEP::Producer(nam, partitionID), m_spaceSize(siz), m_refCount(refcnt), m_evtCount(evtCount)
     {
       m_spaceSize *= 1024;  // Space size is in kBytes
       m_flags = USE_MEP_BUFFER;
+      ::mep_map_unused_buffers(unused);
       include();
       m_bmid = m_mepID->mepBuffer;
       ::printf(" Buffer space: %d bytes\n",m_spaceSize);
       ::printf(" MEP    buffer start: %08lX\n",m_mepID->mepStart);
-      ::printf(" EVENT  buffer start: %08lX\n",m_mepID->evtStart);
-      ::printf(" RESULT buffer start: %08lX\n",m_mepID->resStart);
+      if ( unused ) {
+	::printf(" EVENT  buffer start: %08lX\n",m_mepID->evtStart);
+	::printf(" RESULT buffer start: %08lX\n",m_mepID->resStart);
+      }
     }
     ~MEPProducer()  {
     }
@@ -133,6 +137,7 @@ extern "C" int mep_producer(int argc,char **argv) {
   std::string name = "producer";
   bool async = cli.getopt("asynchronous",1) != 0;
   bool debug = cli.getopt("debug",1) != 0;
+  bool unused = cli.getopt("mapunused",1) != 0;
   cli.getopt("name",1,name);
   cli.getopt("space",1,space);
   cli.getopt("partitionid",1,partID);
@@ -141,7 +146,7 @@ extern "C" int mep_producer(int argc,char **argv) {
   if ( debug ) ::lib_rtl_start_debugger();
   ::printf("%synchronous MEP Producer \"%s\" Partition:%d (pid:%d) included in buffers.\n",
      async ? "As" : "S", name.c_str(), partID, MEPProducer::pid());
-  MEPProducer p(name, partID, refCount, space, evtCount);
+  MEPProducer p(name, partID, refCount, space, evtCount, unused);
   if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
   return p.run();
 }
