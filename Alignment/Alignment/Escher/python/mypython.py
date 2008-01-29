@@ -2,12 +2,12 @@
 from ROOT import *
 
 #import gaudi stuff
-import gaudimodule
-from gaudimodule import gbl
+import GaudiPython
+from GaudiPython import *
 
 #gaudimodule.gbl.makeClass('GAlign')
-gaudimodule.loaddict("TAlignmentDict")
-gaudi= gaudimodule.AppMgr(outputlevel = 3, joboptions='$ESCHEROPTS/v200601.opts')
+GaudiPython.loaddict('TAlignmentDict')
+gaudi= GaudiPython.AppMgr(outputlevel = 3, joboptions='$ESCHEROPTS/v200601.opts')
 incSvc = gaudi.service('IncidentSvc', 'IIncidentSvc' )
 glofit = gbl.Incident('GlobalFit', 'GlobalMPedeFit' )
 converged = gbl.Incident('Converged', 'Converged' )
@@ -17,14 +17,14 @@ gaudi.algorithm('Align').Enable=0
 #initialize the AppMgr
 gaudi.initialize()
 
-align = gaudimodule.Helper.algorithm( gaudi._algmgr,  'Align')
+align = GaudiPython.Helper.algorithm( gaudi._algmgr,  'Align')
 
 # change some properties in choosen options files
 gaudi.config( files = [ '../options/v200601.opts',
                         '../options/Alignment.opts'],
-              options = [ 'ApplicationMgr.EvtMax = 10000', #should be the same as 'events_maxIter' !
-                          'Align.evtsPerRun = 10000',  #should be the same as 'EvtMax' !
-                          'Align.MaxIterations = 3'] )
+              options = [ 'ApplicationMgr.EvtMax = 70', #should be the same as 'events_maxIter' !
+                          'Align.evtsPerRun = 70',  #should be the same as 'EvtMax' !
+                          'Align.MaxIterations = 1'] )
 
 # get some properties...
 # max no events for one detector alignment

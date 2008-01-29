@@ -23,9 +23,22 @@
 //---------------------------------------------------------------------------
 // DC06 database tags
 // Comment the two lines below to switch back to the xml dbase
-DDDB.DefaultTAG = "DC06";
-LHCBCOND.DefaultTAG = "DC06";
+DDDB.DefaultTAG = "DC06-repro0710";
+LHCBCOND.DefaultTAG = "DC06-repro0710";
 #include "$DDDBROOT/options/DC06.opts"
+
+// Redefine some of the dbase stuff...
+CondDBDispatcherSvc.MainAccessSvc = "CondDBLayeringSvc/DDDBLayers";
+DDDBLayers.Layers = {"CondDBAccessSvc/DDDBNew", "CondDBAccessSvc/DDDB"};
+DDDBNew.ConnectionString = "sqlite_file:/software/lhcb/DBASE/Det/SQLDDDB/v3r1/db/DDDB.db/DDDB";
+DDDBNew.DefaultTag = "DC06-repro0710";
+
+CondDBDispatcherSvc.Alternatives = { "/Conditions=CondDBLayeringSvc/CONDLayers"};
+CONDLayers.Layers = { "CondDBAccessSvc/CONDNew", "CondDBAccessSvc/LHCBCOND"};
+CONDNew.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/LHCBCOND-v2r3.db/LHCBCOND";
+//CONDNew.DefaultTag = "MisAlign-1";
+CONDNew.DefaultTag = "DC06-repro0710";
+
 
 // DC06 magnetic field
 MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
@@ -50,8 +63,9 @@ PoolDbCacheSvc.Catalog = {
   // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
 };
 EventSelector.Input   = {
-"DATAFILE='PFN:/data/work/maciuc/Brunel_PG3_Boff.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:/data/work/maciuc/Brunel_PG4_Boff.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+"DATAFILE='PFN:/home/he/blouw/cmtuser/Alignment_v2r3/Alignment/Escher/v2r2/data/prova_v32r2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+//"DATAFILE='PFN:/data/work/maciuc/Brunel_PG3_Boff.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+//"DATAFILE='PFN:/data/work/maciuc/Brunel_PG4_Boff.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 
 //---------------------------------------------------------------------------

@@ -1,19 +1,20 @@
 // Millepede configuration:
 // T-station configuring tool
-ToolSvc.TAConfig.OutputLevel = 3;
+ToolSvc.Derivatives.OutputLevel = 2;
+ToolSvc.TAConfig.OutputLevel = 2;
 ToolSvc.TAConfig.Centipede.OutputLevel = 1;
 ToolSvc.TAConfig.Velo_left_modules  = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 ToolSvc.TAConfig.Velo_right_modules = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 
 ToolSvc.TAConfig.PenaltyTerms       = {30.0,30.0,30.0,30.0,30.0,30.0};
-ToolSvc.TAConfig.Degrees_of_Freedom = {1,0,1,0,0,0};
+ToolSvc.TAConfig.Degrees_of_Freedom = {1,1,0,0,0,0};
 ToolSvc.TAConfig.nTrackModelParameters = 4;
 ToolSvc.TAConfig.Fix_alignable_objects = true;
 ToolSvc.TAConfig.Fix_first_object = true;
 ToolSvc.TAConfig.Fix_last_object = true;
 ToolSvc.TAConfig.Fix_x_position = true;
-ToolSvc.TAConfig.Fix_y_position = false;
-ToolSvc.TAConfig.Fix_z_position = true;
+ToolSvc.TAConfig.Fix_y_position = true;
+ToolSvc.TAConfig.Fix_z_position = false;
 ToolSvc.TAConfig.Fix_alpha_rotation = false;
 ToolSvc.TAConfig.Fix_beta_rotation = false;
 ToolSvc.TAConfig.Fix_gamma_rotation = false;
@@ -42,3 +43,7 @@ ToolSvc.TAConfig.IT_ladder = false;
 ToolSvc.TAConfig.TT_system = false;
 ToolSvc.TAConfig.TT_station = false;
 ToolSvc.TAConfig.TT_layer = true;
+// Muon
+ToolSvc.TAConfig.MUON_system = false;
+ToolSvc.TAConfig.MUON_stations = true;
+ToolSvc.TAConfig.MUON_chambers = false;

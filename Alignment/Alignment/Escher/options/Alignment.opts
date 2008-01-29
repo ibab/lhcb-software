@@ -90,7 +90,7 @@ CondChecker.OutputLevel = 3;
 //**************************
 // Alignment options (Amsterdam Framework)
 //**************************
-EscherMainSeq.Members += {"GaudiSequencer/OpenASeq"};
+//EscherMainSeq.Members += {"GaudiSequencer/OpenASeq"};
 OpenASeq.Members += {
                           "AlignAlgorithm/AlignOTStations"
                          ,"AlignAlgorithm/AlignOTLayers"
@@ -105,7 +105,11 @@ AlignmentSeq.MeasureTime = true;
 // Alignment options (Heidelberg Framework)
 //**************************
 EscherMainSeq.Members += {"GaudiSequencer/ClosedASeq"};
-//ClosedASeq.Members += {"GAlign/Align"};
-Align.Detectors = {"OT"};
-Align.InputContainer = "Alignment/OTTracks";
+ClosedASeq.Members += {"GAlign/Align"};
+Align.OutputLevel = 2;
+//Align.Detectors = {"OT"};
+Align.Detectors = {"Muon"};
+Align.InputContainer = "/Event/Rec/Muon/MuonsTrackForAlignment";
+//Align.InputContainer = "Alignment/OTTracks";
+//Align.InputContainer = "Rec/Track/Best";
 #include "$ESCHERROOT/options/TAlignment.opts"
