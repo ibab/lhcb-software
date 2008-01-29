@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.13 2007-12-19 13:10:05 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.14 2008-01-29 16:31:40 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -25,6 +25,7 @@
 // Event
 #include "Event/StateTraj.h"
 #include "Event/Track.h"
+#include "Event/MuonMeasurement.h"
 
 #include "STDet/DeSTLayer.h"
 #include "STDet/DeITLayer.h"
@@ -34,12 +35,7 @@
 #include "STDet/DeITDetector.h"
 #include "STDet/DeTTDetector.h"
 #include "STDet/DeTTHalfModule.h"
-#include "OTDet/DeOTDetector.h"
-#include "OTDet/DeOTLayer.h"
-#include "OTDet/DeOTQuarter.h"
-#include "OTDet/DeOTStation.h"
-#include "OTDet/DeOTModule.h"
-#include "VeloDet/DeVelo.h"
+#include "MuonDet/DeMuonChamber.h"
 
 // Conditions
 #include "DetDesc/IAlignment.h"
@@ -64,7 +60,8 @@ TAConfig::TAConfig( const std::string& type,
   velo_detector(false),
   tt_detector(false),
   it_detector(false),
-  ot_detector(false) {
+  ot_detector(false),
+  muon_detector(false) {
 
   // Interface
   declareInterface<ITAConfigTool>(this);
@@ -72,6 +69,7 @@ TAConfig::TAConfig( const std::string& type,
   // options
   declareProperty("MillepedeTool" , m_CentipedeTool  = "Centipede");
   declareProperty("DerivativeTool", m_derivativTool = "Derivatives");
+  declareProperty("MeasurementProvider", m_MeasProvider = "MuonMeasurementProvider");
   declareProperty("nTrackModelParameters", m_ntrack_pars = 4 );
   declareProperty("CommonXFraction", m_commonXFraction = 0.69 );
   declareProperty("Degrees_of_Freedom", m_dof );
@@ -105,6 +103,10 @@ TAConfig::TAConfig( const std::string& type,
   declareProperty("IT_box",m_itBox = false );
   declareProperty("IT_layer",m_itLayer = false );
   declareProperty("IT_ladder",m_itLadder = false );
+  // Muon chamber
+  declareProperty("MUON_system", m_muSys = false );
+  declareProperty("MUON_stations", m_muStation = false );
+  declareProperty("MUON_chambers", m_muChamber = true );
   //  declareProperty("TT_objects", m_TTmap );
   declareProperty("TT_system",m_ttSys = false );
   declareProperty("TT_station",m_ttStation = false );
@@ -129,6 +131,8 @@ StatusCode TAConfig::Initialize( std::vector<std::string> &m_dets ) {
      error() << "Error instantiating Centipede class" << endreq;
      return StatusCode::FAILURE;
   }  
+  // Measurement provider 
+  m_measprovider = tool<IMeasurementProvider>("MeasurementProvider");
   // derivatives tool
   m_derivatives = tool<IDerivatives>( "Derivatives");
   // Track extrapolator
@@ -210,6 +214,16 @@ StatusCode TAConfig::CacheDetElements() {
         return sc;
       }
     }
+    if ( *t_i == "MUON" || *t_i == "Muon" ) {
+      info() << "Get the Muon geometry info" << endreq;
+      m_muon = getDet<DeMuonDetector>(DeMuonLocation::Default);
+      m_demuon = getDet<DetectorElement>(DeMuonLocation::Default);
+      muon_detector = true;
+      sc = ConfigMuon( m_DETmap );
+      if ( sc.isFailure() ) {
+        return sc;
+      }
+    }
     info() << "Continue initialization..." << endreq;
     info() << "Number of elements in m_DETmap : " << m_DETmap.size() << endreq;
   }
@@ -238,6 +252,8 @@ StatusCode TAConfig::CacheDetElements() {
   if ( m_fix && it_detector ) sc = ConstrainPositions( constrain_it );
   // For Trigger Tracker
   if ( m_fix && tt_detector ) sc = ConstrainPositions( constrain_tt );
+  // For Muon
+  if ( m_fix && muon_detector ) sc = ConstrainPositions( constrain_muon );
   // For Velo
   if ( m_fix && velo_detector ) sc = ConstrainPositions( constrain_velo );
   return StatusCode::SUCCESS;
@@ -319,6 +335,63 @@ StatusCode TAConfig::ConfigTT( std::vector<Gaudi::Transform3D> & TTmap ) {
     }
   }
   s_zmoy_tt /= nStations;
+  return StatusCode::SUCCESS;
+}
+StatusCode TAConfig::ConfigMuon( std::vector<Gaudi::Transform3D> &MUmap ) {
+  unsigned int nStations = m_muon->stations();
+  Gaudi::Rotation3D Rotation;
+  Gaudi::XYZVector position;
+  m_demuon->geometry()->toGlobalMatrix().GetDecomposition( Rotation, position );
+  info() << "Muon system name & position: " << m_demuon->name() << " "
+         << position.x() << " "
+         << position.y() << " "
+         << position.z() << endreq;
+  m_zmoy_mu = 0;
+  int rank = m_rank.size();
+  if ( m_muSys && ! m_muStation && ! m_muChamber ) {
+    MUmap.push_back( m_demuon->geometry()->toGlobalMatrix() );
+    AlignmentCondition *mu_cond = const_cast<AlignmentCondition*>
+      (m_demuon->geometry()->alignmentCondition() );
+    m_ALImap.push_back( mu_cond->offNominalMatrix() );
+    CreateMap( rank, m_demuon, m_zmoy_mu );
+  }
+  m_MUStations = m_demuon->childIDetectorElements();
+  info() << "Number of Muon stations: " << m_MUStations.size() << endreq;
+  for ( unsigned int i = 0; i < m_MUStations.size(); i++ ) { //Loop over stations
+    m_MUChambers = m_MUStations[i]->childIDetectorElements();
+    info() << "At DE : " << m_MUStations[i]->name() << endreq;
+    for ( unsigned int j = 0; j < m_MUChambers.size(); j++ ) { // loop over chambers
+      if ( m_muChamber ) {
+        CreateMap( rank, m_MUChambers[j], m_zmoy_mu );
+        info() << "Align DE " << m_MUChambers[j]->name() << endreq;
+        if ( m_fix ) {
+          if ( i == 0 && m_fix_first ) {// M1
+            // fix all chambers...
+            info() << "Constrain chambers in M1:" << endreq;
+            constrain_muon.insert(make_pair( m_MUChambers[j]->name(), rank ));
+          }
+          if ( i == 4 && m_fix_last ) {// M5
+            info() << "Constrain chambers in M5:" << endreq;
+            constrain_muon.insert(make_pair( m_MUChambers[j]->name(), rank ));
+          }
+        }
+        rank++;
+      }
+    }
+    if ( m_muStation && ! m_muChamber ) {
+      CreateMap( rank, m_MUStations[i], m_zmoy_mu );
+      info() << "De " << m_MUStations[i]->name() << " has rank " << rank << endreq;
+      if ( m_fix ) {
+        if ( i == 0 && m_fix_first ) { //fix first station
+          constrain_muon.insert( make_pair( m_MUStations[i]->name(), rank ));
+        }
+        if ( i == 4 && m_fix_last ) { //fix last station
+          constrain_muon.insert( make_pair( m_MUStations[i]->name(), rank ));
+        }
+      }
+      rank++;
+    }
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -527,41 +600,6 @@ StatusCode TAConfig::ConfigIT( std::vector<Gaudi::Transform3D> &ITmap ) {
 }
 
 
-
-Gaudi::XYZVector TAConfig::Residual( LHCb::Track &t, LHCb::LHCbID &id ) {
-  Gaudi::XYZVector distance(-999999.9999,-9999.9999,-99999.99999);
-/*
-  debug() << "Into TAConfig::Residual (1)" << endreq;
-
-  // Measurement
-  Measurement& hit = t.measurement( id );
-  
-  // State of track at z of hit
-  State &state = t.closestState( hit.z() );
-
-  // Set refVector in case it was not set before
-//  if ( !hit.refIsSet() ) 
-//    hit.setRefVector( state.stateVector() );
-
-  Gaudi::XYZVector bfield;
-  const Gaudi::TrackVector &refVec = hit.refVector();
-  const Gaudi::XYZPoint refPoint( refVec[0], refVec[1], hit.z() );
-  m_bField->fieldVector( refPoint, bfield );
-  const StateTraj refTraj( refVec, hit.z(), bfield );
-
-  // Get the measurement trajectory
-  const Trajectory& measTraj = hit.trajectory();
-
-  // Determine initial estimates of s1 and s2
-  double s1 = 0.0; // Assume state is already close to the minimum
-  double s2 = measTraj.arclength( refTraj.position(s1) );
-
-  // Determine the actual minimum with the Poca tool
-  m_poca->minimize( refTraj, s1, measTraj, s2, distance, m_tolerance );
-  
-*/
-  return distance;
-}
 
 void TAConfig::CreateMap( int & r,  IDetectorElement* id, double &m_zmoy ) {
   Gaudi::Rotation3D R;
@@ -837,7 +875,7 @@ StatusCode TAConfig::FillMatrix( const int &rank,
 				 const double trPar[4],
 				 const double &measMP,
 				 const double &referenceZ, 
-				 const double &stereo_angle ) {
+				 const double &gamma ) {
   
   //-----------------------------
   // prepare Millepede;
@@ -845,12 +883,18 @@ StatusCode TAConfig::FillMatrix( const int &rank,
   //-----------------------------
   m_derLC.resize( m_ntrack_pars ,0.);
   m_derGB.resize( m_n_dof*m_DETmap.size() ,0.);
-  //  m_Centipede->ZerLoc( m_derGB, m_derLC );
   // initialize the derivatives      
-  m_derivatives->SetLocal( m_derLC, rank, referenceZ, stereo_angle );
+  m_derivatives->SetLocal( m_derLC, rank, referenceZ, 0.0, gamma );
   Gaudi::XYZVector origin( trPar[0], trPar[2], 0.0);
   Gaudi::XYZVector slopes( trPar[1], trPar[3], 0.0);
-  m_derivatives->SetGlobal( slopes, origin, m_DETmap[rank], m_derGB, rank, referenceZ, stereo_angle );
+  debug() << "Reference Z = " << referenceZ << " " << "Angle = " << gamma/(2*3.141592)*360 << endreq;
+  debug() << "Local derivatives: " << m_derLC << endreq;
+  StatusCode sc = m_derivatives->SetGlobal( slopes, origin, m_DETmap[rank], m_derGB, rank, referenceZ, gamma );
+  debug() << "Global derivatives: " << m_derGB << endreq;
+  if ( sc == StatusCode::FAILURE ) {
+    error() << "Error in calculating derivatives; will exit!" << endreq;
+    return StatusCode::FAILURE;
+  }
   //fill arrays of MP       
   m_Centipede->EquLoc( m_derGB, m_derLC, measMP , 1.44 ); // resolution = 1.44 mm since no drift time info...
   return StatusCode::SUCCESS;
@@ -870,17 +914,33 @@ StatusCode TAConfig::FillMatrix( const int &rank,
 //-------------------------------------------------------
 
 StatusCode TAConfig::CalcResidual( const LHCb::Track &track, 
-				   const LHCb::LHCbID &id, 
+				   const LHCb::Measurement *trMeas, 
 				   const int &rank, 
 				   const double &weight,
 				   double &measMP,
 				   double &referenceZ,
-				   double &stereo_angle,
+				   double &gamma,
 				   LHCb::State &trState ) {
-  const Measurement& trMeas = track.measurement(id); // Get measurement
   //     const Gaudi::TrackVector& trRefVec = trMeas.refVector(); //get ref vector
-  trState = track.closestState(trMeas.z() ); //get state
-  StatusCode sc = m_extrapolator->propagate( track, trMeas.z(), trState );
+  // Check if this was a muon measurement.
+  const LHCb::Trajectory *ptraj;
+  double z = 0;
+  if ( trMeas->type() == LHCb::Measurement::Muon ) {
+    // This is a muon hit!
+    const  LHCb::MuonMeasurement *muMeas = dynamic_cast<const MuonMeasurement*>(trMeas);
+    z = muMeas->z();
+    trState = track.closestState( z );
+    // trajectory describing measurement
+    // e.g. the 'wire' in case of OT
+    ptraj = &muMeas->trajectory();
+  } else {
+    z = trMeas->z();
+    trState = track.closestState( z ); //get state
+    // trajectory describing measurement
+    ptraj = &trMeas->trajectory();
+  }
+  info() << "Measurement is at z = " << z << endreq;
+  StatusCode sc = m_extrapolator->propagate( track, z, trState );
   if ( sc.isFailure() ) {
     error() << "Error in propagating track state to desired z-position" << endreq;
     return sc;
@@ -891,17 +951,15 @@ StatusCode TAConfig::CalcResidual( const LHCb::Track &track,
   //get the bfield vector
   Gaudi::XYZVector bfVector;
   m_bField->fieldVector( trState.position(), bfVector );
-  //make the statertaj
+  //make the state traj
   const StateTraj statetraj(trState, bfVector);
-  // trajectory describing measurement
-  // e.g. the 'wire' in case of OT
-  const LHCb::Trajectory& ptraj = trMeas.trajectory(); 
   //determine initial estimates of paths along the trajectories
   double alongState = 0.;
-  double alongWire =  ptraj.arclength(statetraj.position( alongState ) );
+  double alongWire =  ptraj->arclength(statetraj.position( alongState ) );
   // !! get Poca between statetraj & ptraj	           
   Gaudi::XYZVector pocaVec;
-  sc = m_poca->minimize( ptraj, alongWire,  statetraj, alongState, pocaVec, 0.01);
+  sc = m_poca->minimize( *ptraj, alongWire,  statetraj, alongState, pocaVec, 0.01);
+  Gaudi::XYZPoint hit_point = ptraj->position(alongWire);
   if( sc.isFailure() ) return sc;
   double mag = sqrt(pocaVec.Mag2() );
   sign = (pocaVec.x() > 0) ? 1 : -1; // -1 = left of straw
@@ -910,13 +968,27 @@ StatusCode TAConfig::CalcResidual( const LHCb::Track &track,
   //-----------------------------------------------
   Gaudi::XYZPoint pointZero; pointZero.SetCoordinates(0,0,0); 
   Gaudi::XYZPoint pointatZ; pointatZ.SetCoordinates(0,0,20000); 
+  // x-axis through the point on the wire where the hit occured
+  Gaudi::XYZPoint XpointatZ1; XpointatZ1.SetCoordinates(hit_point.x(),hit_point.y(),hit_point.z() ); 
+  Gaudi::XYZPoint XpointatZ2; XpointatZ2.SetCoordinates(6000,hit_point.y(),hit_point.z()); 
   Gaudi::XYZVector ZVec;     
   double onstraw = 0.; double onZaxis = 0.; 
   int direction = 0; //direction of measMP seen from (0,0,z)
-  const LineTraj* linetraj = new LineTraj(ptraj.beginPoint(), ptraj.endPoint() );
+  // make a line trajectory between the begin and end point of measurement.
+  const LineTraj* linearhit = new LineTraj(ptraj->beginPoint(), ptraj->endPoint() );
+  // make a line trajectory describing z and x axes.
   const LineTraj* ZaxisTraj = new LineTraj( pointZero, pointatZ );
-  sc = m_poca->minimize( (*linetraj), onstraw, false, (*ZaxisTraj), onZaxis, false, ZVec, 0.01);    
+  const LineTraj* XaxisTraj = new LineTraj( XpointatZ1, XpointatZ2 );
+  // find the poca between (linearized) hit trajectory and z-axis.
+  sc = m_poca->minimize( (*linearhit), onstraw, false, (*ZaxisTraj), onZaxis, false, ZVec, 0.01);    
   if( sc.isFailure() ) return sc;
+  // get angle between x-axis and trajectory describing the hit:
+  // First, calculate the product of the absolute values of the lengths of both vectors
+  double l1 = sqrt( XaxisTraj->direction().Mag2() );
+  double l2 = sqrt( linearhit->direction().Mag2() );
+  double dp = XaxisTraj->direction().Dot( linearhit->direction() );
+  dp = dp / ( l1 * l2 );
+  gamma = acos( dp );
   //  projection of wire on z Axis -> for XPLANES it gives right x&z value
   Gaudi::XYZPoint pointZonAxis = ZaxisTraj->position(onZaxis);
   direction = (ZVec.x() > 0 ) ? 1 : -1;  //get the right side
@@ -925,15 +997,8 @@ StatusCode TAConfig::CalcResidual( const LHCb::Track &track,
   //  no drift distance info !!
   //---------------------------------
   measMP = direction*( sqrt( ZVec.x()*ZVec.x() + ZVec.y()*ZVec.y() )) ; 
-  if ( id.isOT() && ot_detector )
-    stereo_angle = m_ot->findModule( id.otID() )->angle();
-  else if ( id.isTT() && tt_detector )
-    stereo_angle =  m_tt->findLayer( id.stID() )->angle();
-  else if ( id.isIT() && it_detector )
-    stereo_angle = m_it->findLayer( id.stID() )->angle();
-  else
-    return StatusCode::FAILURE;
-  referenceZ = ptraj.position(alongWire).z();
+  info() << "Residual = " << measMP << endreq;
+  referenceZ = ptraj->position(alongWire).z();
   return StatusCode::SUCCESS;
 }
 
@@ -972,6 +1037,20 @@ StatusCode TAConfig::Rank( LHCb::LHCbID &id, int & r ) {
     } else if ( m_ttStation ) {
       name = (m_tt->findStation( id.stID() ))->name();
     }
+  } else if ( muon_detector && id.isMuon() ) {
+    // id.muonID() is a MuonTileID.
+    if ( m_muStation ) {
+      const unsigned int station = id.muonID().station();
+      // DeMuonDetector.ReturnADetElement takes as arguments
+      // the station nr, the region nr. and the chamber nr.
+      // for this purpose, the station id suffices.
+      // name = (m_muon->ReturnADetElement( id.muonID().station(), -1, -1 ))->name();
+     name = MuonDetName( station ); 
+     debug() << "Muon det id = " << station << endreq;
+     debug() << "Muon det name = " << name << endreq;
+    } else if ( m_muSys ) {
+      name = m_muon->name();
+    }
   } else if ( velo_detector && id.isVelo() ) {
     // not yet done...
   }
@@ -981,8 +1060,12 @@ StatusCode TAConfig::Rank( LHCb::LHCbID &id, int & r ) {
     debug() << "value of map = Rank nr. = " << (*t).second << endreq;
     r = (*t).second;
     return StatusCode::SUCCESS;
-  } else
+  } else {
+    error() << "Error calculating rank position in matrix" << endreq;
+    error() << "Was trying to find the rank of element " << name << endreq;
     return StatusCode::FAILURE;
+  }
+  error() << "Failure calculatin rank!" << endreq;
   return StatusCode::FAILURE;
 }
 
@@ -1016,3 +1099,61 @@ void TAConfig::ArraytoVector( const double the_array[], std::vector<double> &the
   }
 }
 
+std::string TAConfig::MuonDetName( const unsigned int &lsta ) {
+  int lreg = -1;
+  int lchm = -1;
+  IDetectorElement* myDet = (IDetectorElement*)0;
+  int msta(0),mreg(0),mchm(0);
+
+  //Getting stations
+  IDetectorElement::IDEContainer::iterator itSt=m_muon->childBegin();
+  for(itSt=m_muon->childBegin(); itSt<m_muon->childEnd(); itSt++){
+    if((msta == lsta) && (lreg == -1) && (lchm == -1)) {
+      myDet = *itSt;
+      return myDet->name();
+    }
+    //Getting regions
+    mreg = 0;
+    IDetectorElement::IDEContainer::iterator itRg=(*itSt)->childBegin();
+    for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
+      if((msta == lsta) && (mreg == lreg) && (lchm == -1)) {
+        myDet = *itRg; 
+        return myDet->name(); 
+      } 
+      //Getting chambers
+      mchm = 0;
+      IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
+      for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
+        
+        if((msta == lsta) && (mreg == lreg) && (mchm == lchm)) {
+          myDet = *itCh;
+          return myDet->name();
+        } 
+        mchm++;
+      }//Chamber Loop 
+      mreg++;
+    }//Region Loop
+    msta++; 
+  }//Stations Loop
+
+  return myDet->name();
+
+}
+
+
+  /*
+  std::string name = "";
+  //Getting stations
+  IDetectorElement::IDEContainer::iterator itSt;
+  debug() << "Finding muon station name which has hit: " << mstation << "..." << endreq;
+  for(itSt=m_muon->childBegin(); itSt<m_muon->childEnd(); itSt++){
+    debug() << "name = " << (*itSt)->name() << endreq;
+    //    const DeMuonChamber *must = dynamic_cast<const DeMuonChamber*>(*itSt);
+    //    debug() << "station id = " << must->stationNumber() << endreq;
+    //      if( mstation == must->stationNumber() ) {
+    name=(*itSt)->name();
+    //    }
+  }
+  return name;
+}
+  */

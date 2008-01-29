@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.9 2007-09-21 12:17:53 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.10 2008-01-29 16:31:40 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -28,6 +28,7 @@
 // Tracking
 #include "TrackInterfaces/ITrajectoryProvider.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
+#include "TrackInterfaces/IMeasurementProvider.h"
 
 // geometry
 #include "DetDesc/IDetectorElement.h"
@@ -53,6 +54,8 @@
 #include "OTDet/DeOTDetector.h"
 #include "STDet/DeITDetector.h"
 #include "STDet/DeTTDetector.h"
+#include "MuonDet/DeMuonDetector.h"
+
 
 // boost
 #include "boost/assign/list_of.hpp"
@@ -92,7 +95,7 @@ class TAConfig : public GaudiTupleTool,
 		  double [], 
 		  const int & ); 
    StatusCode CalcResidual( const LHCb::Track &,
-			    const LHCb::LHCbID &,
+			    const LHCb::Measurement *,
 			    const int &,
 			    const double &,
 			    double &,
@@ -143,6 +146,8 @@ class TAConfig : public GaudiTupleTool,
       return it_detector;
      else if ( det == "OT" )
        return ot_detector;
+     else if ( det == "MUON" || det == "Muon" )
+       return muon_detector;
      return false;
    };
    
@@ -175,7 +180,6 @@ class TAConfig : public GaudiTupleTool,
   };
   
 
-   Gaudi::XYZVector Residual( LHCb::Track &, LHCb::LHCbID & );
    StatusCode Rank( LHCb::LHCbID &, int & );
  private:
    
@@ -183,11 +187,13 @@ class TAConfig : public GaudiTupleTool,
    StatusCode ConfigTT( std::vector<Gaudi::Transform3D> & );
    StatusCode ConfigOT( std::vector<Gaudi::Transform3D> & );
    StatusCode ConfigIT( std::vector<Gaudi::Transform3D> & );
+   StatusCode ConfigMuon( std::vector<Gaudi::Transform3D> & );
    void CreateMap( int &, IDetectorElement*, double & );
    StatusCode RetrieveAPars( const std::string & );
    StatusCode ConfigMillepede();
    StatusCode ConstrainPositions( std::map<std::string,int> & );
    StatusCode ConstrainPositions( const int &, const std::string &, const int & );
+   std::string MuonDetName( const unsigned int & );
    //  StatusCode GlobalFit();
    void VectortoArray(const std::vector<double>& , double[] );
    void ArraytoVector(const double[], std::vector<double>& );
@@ -195,6 +201,7 @@ class TAConfig : public GaudiTupleTool,
    std::string m_CentipedeTool;
    std::string m_MilleConfTool;
    std::string m_derivativTool;
+   std::string m_MeasProvider;
    std::vector<std::string> m_detectors;
    int m_ntrack_pars; // number of local track parameters
    double m_commonXFraction;
@@ -207,6 +214,7 @@ class TAConfig : public GaudiTupleTool,
    int m_nstd;
    double m_zmoy;
    double m_zmoy_velo;
+   double m_zmoy_mu;
    double m_zmoy_ot, s_zmoy_ot;
    double m_zmoy_it, s_zmoy_it;
    double m_zmoy_tt, s_zmoy_tt;
@@ -228,11 +236,13 @@ class TAConfig : public GaudiTupleTool,
    bool m_itSys, m_itStation, m_itBox, m_itLayer, m_itLadder;
    //  std::vector<bool> m_TTmap;
    bool m_ttSys, m_ttStation, m_ttLayer, m_ttLadder;
+   bool m_muSys, m_muStation, m_muChamber;
    std::string m_itCond, m_ttCond, m_otCond;
    //
    // Millepede configuration variables
    std::map<std::string, int> m_C_pos;
-   std::map<std::string, int> constrain_it, constrain_ot, constrain_tt, constrain_velo;
+   std::map<std::string, int> constrain_it, 
+     constrain_ot, constrain_tt, constrain_velo, constrain_muon;
 
    bool *m_DOF;
    int m_n_dof;
@@ -245,7 +255,7 @@ class TAConfig : public GaudiTupleTool,
    
    // The detectors
    bool velo_detector;
-   bool tt_detector, it_detector, ot_detector;
+   bool tt_detector, it_detector, ot_detector, muon_detector;
    int m_totStations; // total number of alignable objects
    //  int m_VeloStations; // total number of alignable velo objects
   int m_TTObjects; // total number of alignable tt objects
@@ -273,6 +283,10 @@ class TAConfig : public GaudiTupleTool,
   std::vector<IDetectorElement* > m_OTLayers;
   std::vector<IDetectorElement* > m_OTQuadrants;
   std::vector<IDetectorElement* > m_OTModules;
+  DeMuonDetector *m_muon;
+  DetectorElement *m_demuon;
+  std::vector<IDetectorElement*> m_MUStations;
+  std::vector<IDetectorElement*> m_MUChambers;
 
   std::string m_previous_de;
 
@@ -306,6 +320,7 @@ class TAConfig : public GaudiTupleTool,
   ICentipede *m_Centipede;
   IDerivatives *m_derivatives;
   ITrackExtrapolator* m_extrapolator;
+  IMeasurementProvider *m_measprovider;
 
   //MD check MP track fit
   std::vector< std::vector<double> > m_trackpoints;

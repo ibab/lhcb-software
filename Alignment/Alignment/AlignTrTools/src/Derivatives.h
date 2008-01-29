@@ -39,7 +39,7 @@ std::vector<bool>& );
 			std::vector<double> &, const int &, const double &, const double & );
 
   StatusCode SetLocal( std::vector<double> &, const int &, const double &,
-const double & );
+		       const double &, const double & );
 
 
 
