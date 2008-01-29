@@ -3,15 +3,15 @@
 // Set up the algorithms
 DataOnDemandSvc.AlgMap += {
   "Raw/Velo/Clusters"     : "DecodeVeloRawBuffer/createVeloClusters"
- ,"Raw/TT/Clusters"       : "RawBankToSTClusterAlg/createTTClusters"
- ,"Raw/IT/Clusters"       : "RawBankToSTClusterAlg/createITClusters"
- ,"Raw/Velo/LiteClusters" : "DecodeVeloRawBuffer/createVeloLiteClusters"
- ,"Raw/TT/LiteClusters"   : "RawBankToSTLiteClusterAlg/createTTLiteClusters"
- ,"Raw/IT/LiteClusters"   : "RawBankToSTLiteClusterAlg/createITLiteClusters"
- ,"Raw/OT/Times"          : "OTTimeCreator"
- ,"Raw/Muon/Coords"       : "MuonRec"
- ,"DAQ/ODIN"              : "createODIN"
-  // ,"Trig/L0/L0DU"         : "L0DUFromRaw"
+  ,"Raw/TT/Clusters"       : "RawBankToSTClusterAlg/createTTClusters"
+  ,"Raw/IT/Clusters"       : "RawBankToSTClusterAlg/createITClusters"
+  ,"Raw/Velo/LiteClusters" : "DecodeVeloRawBuffer/createVeloLiteClusters"
+  ,"Raw/TT/LiteClusters"   : "RawBankToSTLiteClusterAlg/createTTLiteClusters"
+  ,"Raw/IT/LiteClusters"   : "RawBankToSTLiteClusterAlg/createITLiteClusters"
+  ,"Raw/OT/Times"          : "OTTimeCreator"
+  ,"Raw/Muon/Coords"       : "MuonRec"
+  ,"DAQ/ODIN"              : "createODIN"
+  ,"Trig/L0/L0DUReport"    : "L0DUFromRawAlg"
 };
 createITClusters.detType     = "IT";
 createITLiteClusters.detType = "IT";
