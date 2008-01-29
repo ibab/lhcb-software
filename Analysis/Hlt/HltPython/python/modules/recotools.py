@@ -51,7 +51,7 @@ def rIP(track,vertex):
     dz = -(Dr*tr+Dz)/(1+tr*tr)
     RR = Dr+tr*dz
     ZZ = Dz+dz
-    ip1 = -RR/sqrt(1+tr*tr)
+    ip1 = -RR/math.sqrt(1+tr*tr)
     ip2 = math.sqrt(RR*RR+ZZ*ZZ)
     if (ZZ<0): ip1 = -1.*ip1
     if (ZZ>0): ip2 = -1.*ip2
@@ -118,7 +118,7 @@ def ipError( pt ):
     @param pt Transverse momentum of the track
     @author Hugo Ruiz, hugo.ruiz@cern.ch
     """
-    x = fabs(1/pt)
+    x = math.fabs(1/pt)
     return 0.0223869 - (0.00424545*x)+ (0.0175535*x**2) -(0.005477*x**3)+ (0.00104437*x**4) -(0.000104878*x**5)+ (0.00000418932*x**6)
 
 
@@ -143,6 +143,23 @@ def getLists(track):
     return [posx,posy,posz],[momx,momy,momz]
 
 #---------------------------------------------------
+def dotLists(list1,list2):
+    """ Returns dot product of two python lists
+    @param  list1,list2 Input lists
+    @returns dot Dot product
+    @author Antonio Perez-Calero Izquierdo aperez@ecm.ub.es
+    """
+    if len(list1)!=len(list2):
+        print "Vectors must be of equal dimension"
+        return
+    else:
+        dot=0.
+        for i in range(len(list1)):
+            dot+=list1[i]*list2[i]
+
+        return dot
+
+#---------------------------------------------------
 def produceVertex(track1,track2, returnDoca = False):
     """ Produces a vertex made out of two tracks.
     @param track1 First track
@@ -164,14 +181,14 @@ def produceVertex(track1,track2, returnDoca = False):
 
     tol = 1.e-13
 
-    d02=kintools.dot(v0,mom2)
-    d21=kintools.dot(mom1,mom2)
-    d01=kintools.dot(v0,mom1)
-    d22=kintools.dot(mom2,mom2)
-    d11=kintools.dot(mom1,mom1)
+    d02=dotLists(v0,mom2)
+    d21=dotLists(mom1,mom2)
+    d01=dotLists(v0,mom1)
+    d22=dotLists(mom2,mom2)
+    d11=dotLists(mom1,mom1)
 
     den=d11*d22-d21*d21
-    if fabs(den)<tol:
+    if math.fabs(den)<tol:
         vertex_cord.SetXYZ(0,0,-8000)
         doca=1000000.
     else:
@@ -182,9 +199,8 @@ def produceVertex(track1,track2, returnDoca = False):
         point1=[pos1[0]+mu1*mom1[0],pos1[1]+mu1*mom1[1],pos1[2]+mu1*mom1[2]]
         point2=[pos2[0]+mu2*mom2[0],pos2[1]+mu2*mom2[1],pos2[2]+mu2*mom2[2]]
 
-        #print point1,point2
         P1P2=(point1[0]-point2[0],point1[1]-point2[1],point1[2]-point2[2])
-        doca=math.sqrt(kintools.dot(P1P2,P1P2))
+        doca=math.sqrt(dotLists(P1P2,P1P2))
 
         coord_x=0.5*(point1[0]+point2[0])
         coord_y=0.5*(point1[1]+point2[1])

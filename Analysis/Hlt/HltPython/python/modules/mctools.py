@@ -10,6 +10,7 @@
 
 
 from pidtools import PTranslate
+from kintools import mag
 import math
 from ROOT import *
 
@@ -223,7 +224,7 @@ def getProducts(inputPart, recursive = True, maxDepth = 0, removePZero = True, l
             except:
                 print 'COULD NOT GET VERTICES'; raise RuntimeError
             if removePZero:
-                iProducts = filter(lambda a:mod(a)>0,iProducts)
+                iProducts = filter(lambda a:mag(a)>0,iProducts)
             products += iProducts
 
 

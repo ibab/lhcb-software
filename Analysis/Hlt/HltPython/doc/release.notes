@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !!========================== HltPython v1r2 2007-12-17 ===================
+! 2008-1-29 - Antonio Perez-Calero
+ - kintools.py: debugged module and improved angle function.Added several DEBUG messages.
+ - recotools.py debugged module, added dotLists function, modified produceVertex using dotLists
+ - mctools.py   debugged module
 
 ! 2008-1-29 - Antonio Perez-Calero
  - descriptors.py: added decay descriptor for Bs2DsMuNu

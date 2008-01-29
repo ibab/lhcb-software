@@ -7,7 +7,7 @@
 
 
 import math
-
+DEBUG=False
 #---------------------------------------------------
 def momList( a ):
     """ Converts the momentum of a particle or MCparticle or track or a momentum vector into a list [px, py, pz].
@@ -62,14 +62,20 @@ def angle(a,b):
     @param a A particle or MCparticle or track or a momentum vector
     @param b Another particle or MCparticle or track or a momentum vector
     @return The angle between the momenta
-    @author Hugo Ruiz, hugo.ruiz@cern.ch"""
-    if DEBUG:
-        print a
-        print b
-        print dot(a,b)
-        print mag(a)*mag(b)
-    return acos(dot(a,b)/(mag(a)*mag(b)))
-
+    @author Hugo Ruiz, hugo.ruiz@cern.ch
+    @author Antonio Perez-Calero, aperez@ecm.ub.es"""
+    if mag(a)*mag(b)!=0:
+        angleAB=math.acos(dot(a,b)/(mag(a)*mag(b)))
+        if DEBUG: print 'Calculated angle',angleAB
+        return angleAB
+    else:
+        print 'Could not compute angle, divide by zero!'
+        if DEBUG:
+            print a
+            print b
+            print dot(a,b)
+            print mag(a)*mag(b)
+        return 
 
 
 #---------------------------------------------------
@@ -108,6 +114,8 @@ def angularMatch( refPart, candidateList, angleMax = 0.001):
             iAngle =  angle(refPart,iCand)
         except:
             print 'angularMatch: ANGLE COMPUTATION FAILED!!!'
+            if DEBUG:
+                print 'dot',dot(refPart,iCand),'mod product',mag(refPart)*mag(iCand),'cosine',dot(refPart,iCand)/(mag(refPart)*mag(iCand))
             raise RuntimeError
         if iAngle < angleMax:
             matchedCandList.append(iCand)
