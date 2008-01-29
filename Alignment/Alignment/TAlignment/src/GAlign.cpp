@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.8 2007-12-19 13:13:07 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.9 2008-01-29 16:40:39 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -20,6 +20,7 @@
 // Event
 #include "Event/StateTraj.h"
 #include "Event/Track.h"
+#include "Event/MuonMeasurement.h"
 #include "TAlignment/GAlign.h"
 
 #include "STDet/DeSTLayer.h"
@@ -65,6 +66,7 @@ GAlign::GAlign( const std::string& name,
   tt_detector(false),
   it_detector(false),
   ot_detector(false),
+  muon_detector(false),
   m_evtsPerRun(0),
   m_MaxIterations(1),
   m_ForceIterations(false),
@@ -123,7 +125,8 @@ StatusCode GAlign::initialize() {
   ot_detector = m_taConfig->AlignDetector( s );
   s = "IT";
   it_detector = m_taConfig->AlignDetector( s );
-
+  s = "Muon";
+  muon_detector = m_taConfig->AlignDetector( s );
   // add listener to incident svc
   IIncidentSvc* incSvc = svc<IIncidentSvc>("IncidentSvc");
   if (!incSvc) {
@@ -175,7 +178,7 @@ bool GAlign::Converged() {
 StatusCode GAlign::execute() {
   debug() << "Into GAlign execute (1)" << endreq;
   if ( ! exist<Tracks>( m_inputcontainer ) ) {
-    info() << "Error: no tracks in container " << m_inputcontainer << endreq;
+    error() << "Error: no tracks in container " << m_inputcontainer << endreq;
     return StatusCode::FAILURE;
   } else {
     Tracks *inCont = get<Tracks>(m_inputcontainer);
@@ -185,6 +188,7 @@ StatusCode GAlign::execute() {
     bool crossed = false;
     
     for ( iterT = inCont->begin(), tr_cnt = 0; iterT != inCont->end(); iterT++, tr_cnt++) {
+      debug() << "Looping... track nr: " << tr_cnt << endreq;
       Track *atrack = *iterT;
       if ( atrack->nStates() < 1 ) continue;
       if ( atrack->nMeasurements() == 0 ) {
@@ -215,38 +219,60 @@ StatusCode GAlign::execute() {
       for ( itID = atrack->lhcbIDs().begin(); atrack->lhcbIDs().end() != itID; ++itID ) {
 	// check if this LHCbID is really on the track
 	LHCb::LHCbID id = *itID;
-	if ( atrack->isOnTrack( id ) &&  atrack->isMeasurementOnTrack( id )) {
-	  debug() << "LHCbID " << id.detectorType() << " is on track!" << " "
+	if ( atrack->isOnTrack( id ) &&  atrack->isMeasurementOnTrack( id )
+	     && (( id.isTT() && tt_detector ) ||
+                 ( id.isOT() && ot_detector ) ||
+                 ( id.isIT() && it_detector ) ||
+                 ( id.isMuon() && muon_detector) ) ) {
+	  info() << "LHCbID " << id.detectorType() << " is on track!" << " "
 		  << "and has Measurement " << atrack->isMeasurementOnTrack( id ) << endreq;
 	  double Z_position = 0.0;
-	  double stereo_angle = 0.0;
+	  double gamma = 0.0;
 	  double measMP = 0.0;
 	  LHCb::State trState;
 	  sc = m_taConfig->Rank( id, rank );
 	  if ( sc.isFailure() ) {
-	    debug() << "Not processing any data from tracks!" << endreq;
-	    debug() << "while tt = " << tt_detector << " and it = " 
-		    << it_detector << " and ot = " << ot_detector << endreq;
-	    debug() << "This hit: isOT(): " << id.isOT() 
-		    << " isIT(): " << id.isIT() << " isTT(): " 
-		    << id.isTT() << " id.isVelo(): " << id.isVelo() << endreq;
+            error() << "Not processing any data from tracks!" << endreq;
+            error() << "while tt = " << tt_detector << " and it = "
+                    << it_detector << " and ot = " << ot_detector << endreq;
+            error() << "This hit: isOT(): " << id.isOT()
+                    << " isIT(): " << id.isIT() << " isTT(): "
+                    << id.isTT() << " isMuon() " << id.isMuon() << " id.isVelo(): " << id.isVelo() << endreq;
 	  }
-	  if ( sc.isSuccess() ) {
-	    m_taConfig->CalcResidual( *atrack, 
-				      id, 
-				      rank, 
-				      weight, 
+          // in case we have more than one measurement per LHCbID (e.g. for the Muonchambers)
+  	  // loop over the measurements that belong to this LHCbID.
+	  int numTrajs = 1;
+  	  if ( id.isMuon() ) numTrajs++;
+ 	  for ( int i = 0; i < numTrajs; i++ ) {
+	    LHCb::Measurement *trMeas = m_measProvider->measurement( id, i );
+ 	    LHCb::MuonMeasurement *muMeas;
+            if ( trMeas->type() == LHCb::Measurement::Muon ) {
+ 		muMeas = dynamic_cast<MuonMeasurement*>(trMeas);
+                info() << "Muon measuremnt type = " << muMeas->muonProjection() << endreq;
+            }
+	    if ( sc.isSuccess() ) {
+	      sc = m_taConfig->CalcResidual( *atrack, 
+				        trMeas, 
+				        rank, 
+				        weight, 
+				        measMP,
+				        Z_position, 
+				        gamma, 
+				        trState ); 
+              if ( sc.isFailure() ) {
+                error() << "1: Error calculating residual" << endreq;
+              }
+	      sc = m_taConfig->ConfMatrix( gamma,
 				      measMP,
-				      Z_position, 
-				      stereo_angle, 
-				      trState ); 
-	    m_taConfig->ConfMatrix( stereo_angle,
-				    measMP,
-				    weight,
-				    Z_position,
-				    trPar,
-				    chiMat );
-	  }
+				      weight,
+				      Z_position,
+				      trPar,
+				      chiMat );
+              if ( sc.isFailure() ) {
+                error() << "1: Error configuring matrix" << endreq;
+	      }
+            }
+          } // loop over measurements which belong to lhcbid.
 	} 
       } // First loop over hits
       // Do a local track fit to get an estimate of the track parameters
@@ -256,39 +282,52 @@ StatusCode GAlign::execute() {
       for ( itID = atrack->lhcbIDs().begin(); atrack->lhcbIDs().end() != itID; ++itID ) {
 	// check if this LHCbID is really on the track
 	LHCb::LHCbID id = *itID;
-	if ( atrack->isOnTrack( id ) &&  atrack->isMeasurementOnTrack( id )) {
-	  debug() << "LHCbID " << id.detectorType() << " is on track!" << " "
-		  << "and has Measurement " << atrack->isMeasurementOnTrack( id ) << endreq;
-	  double stereo_angle = 0.0;
+	if ( atrack->isOnTrack( id ) &&  atrack->isMeasurementOnTrack( id )
+	     && (( id.isTT() && tt_detector ) ||
+                 ( id.isOT() && ot_detector ) ||
+                 ( id.isIT() && it_detector ) ||
+                 ( id.isMuon() && muon_detector) ) ) {
 	  double measMP = 0.0;
 	  Z_position = -1000.0;
 	  LHCb::State trState;
 	  sc = m_taConfig->Rank( id, rank );
 	  if ( sc.isFailure() ) {
-	    debug() << "Not processing any data from tracks!" << endreq;
-	    debug() << "while tt = " << tt_detector << " and it = " 
+	    error() << "Not processing any data from tracks!" << endreq;
+	    error() << "while tt = " << tt_detector << " and it = " 
 		    << it_detector << " and ot = " << ot_detector << endreq;
-	    debug() << "This hit: isOT(): " << id.isOT() 
+	    error() << "This hit: isOT(): " << id.isOT() 
 		    << " isIT(): " << id.isIT() << " isTT(): " 
 		    << id.isTT() << " id.isVelo(): " << id.isVelo() << endreq;
 	  }
-	  sc = m_taConfig->CalcResidual( *atrack,
-				      id, 
-				      rank, 
-				      weight, 
-				      measMP,
-				      Z_position, 
-				      stereo_angle, 
-				      trState ); 
-	  if ( sc.isFailure() )
-	    continue;
-	  // Configure the 'large' C-matrix
-	  sc = m_taConfig->FillMatrix( rank, 
-				       trPar,
-				       measMP, 
-				       Z_position, 
-				       stereo_angle );
-	}
+          // in case we have more than one measurement per LHCbID (e.g. for the Muonchambers)
+          // loop over the measurements that belong to this LHCbID.
+          int numTrajs = 1;
+          if ( id.isMuon() ) numTrajs++;
+          for ( int i = 0; i < numTrajs; i++ ) {
+            LHCb::Measurement *trMeas = m_measProvider->measurement( id, i );
+	    // get the angle of the trajectory wrt to the 'standard' X-axis...
+	    double gamma = 0.0;
+	    sc = m_taConfig->CalcResidual( *atrack,
+				          trMeas, 
+				          rank, 
+				          weight, 
+				          measMP,
+				          Z_position, 
+				          gamma, 
+				          trState ); 
+	    info() << "Measurement = " << measMP << endreq;
+	    if ( sc.isFailure() ) {
+	      error() << "Error in CalcResidual, will continue!" << endreq;
+	      continue;
+	    }
+	    // Configure the 'large' C-matrix
+	    sc = m_taConfig->FillMatrix( rank, 
+				           trPar,
+				           measMP, 
+				           Z_position, 
+				           gamma );
+	  }
+        }
       }
       /**************************************************************
        *  do local track fit with MP only when there was a track going through

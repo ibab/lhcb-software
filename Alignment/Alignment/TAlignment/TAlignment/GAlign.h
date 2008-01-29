@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment algorithm: TAlignment
  *
  *  CVS Log :-
- *  $Id: GAlign.h,v 1.1 2007-09-21 11:49:02 jblouw Exp $
+ *  $Id: GAlign.h,v 1.2 2008-01-29 16:40:39 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @date   30/12/2007
@@ -91,7 +91,7 @@ public:
   string m_inputcontainer;
   std::vector<std::string> m_detectors;
   int m_nGlPars; // Number of alignment parameters
-  bool velo_detector, tt_detector, it_detector, ot_detector;
+  bool velo_detector, tt_detector, it_detector, ot_detector, muon_detector;
   int m_evtsPerRun;
   int m_MaxIterations;
   bool m_ForceIterations;
