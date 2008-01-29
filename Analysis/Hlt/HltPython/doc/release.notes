@@ -6,6 +6,9 @@
 
 !!========================== HltPython v1r2 2007-12-17 ===================
 
+! 2008-1-29 - Antonio Perez-Calero
+ - descriptors.py: added decay descriptor for Bs2DsMuNu
+
 ! 2008-1-16 - Hugo Ruiz
  - Added htmltools.py with a function to create html tables and other minor html stuff
  - Added option files for offline selected samples in options directory
