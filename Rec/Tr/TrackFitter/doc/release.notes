@@ -3,6 +3,13 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!2008-01-29 Wouter Hulsbergen
+ - changes in TrackKalmanFilter to improve fit stability
+    - remove smoothing of nodes outside measurement range
+    - better preconditioning for matrix inversion
+    - more stable expression for smooting covariance matrix
+ - increased errors of initial cov matrix to be suitable also for velo-TT and T tracks
+
 !2007-12-10 Wouter Hulsbergen
  - moved filling of material corrections and propagation matrices to
    TrackMasterFitter, making use of trajectory approximation
