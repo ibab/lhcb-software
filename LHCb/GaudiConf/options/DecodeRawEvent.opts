@@ -19,3 +19,4 @@ createVeloClusters.DecodeToVeloClusters     = true;
 createVeloClusters.DecodeToVeloLiteClusters = false;
 #include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
 #include "$CALODAQROOT/options/CaloDigitsOnDemand.opts"
+#include "$L0DUOPTS/L0DUConfig.opts"
