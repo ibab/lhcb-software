@@ -749,6 +749,11 @@ void RichG4OpBoundaryProcess::DielectricDielectric(const G4Track& aTrack,
       if(Material2->GetName() == Rich2NitrogenMatName   &&
          Material1->GetName() == RichHpdVacName   )TransCoeff=1.0;
 
+      if((Material1->GetName() == Rich2NitrogenMatName &&
+          Material2->GetName() == Rich2CF4MatName)  ||
+         (Material1->GetName() ==  Rich2CF4MatName &&
+          Material2->GetName() == Rich2NitrogenMatName) )TransCoeff=1.0;
+
       // Now for the modif to comapare with SICBMC for aerogel.
       // avoided to make things more realistic in November 2005.
 

@@ -28,28 +28,7 @@ RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase* gigabase,
   : G4VDiscreteProcess(processName, aType ),
     m_numTotHpd(std::vector<int>(2))
 {
-
-
     //  G4cout << GetProcessName() << " is created " << G4endl;
-    // set the default for mag distortions to be false. This is set 
-    // as a parameter which can be changed from the options file.
-   //  m_UseHpdMagDistortions = false;
-   //   IDataProviderSvc* detSvc;
-   //   if ( gigabase->svcLoc()->service( "DetectorDataSvc", detSvc, true) ) {
-
-   //  m_HpdProperty = new RichHpdProperties(detSvc, gigabase->msgSvc()) ;
-
-    // the following commented out and read from the options file
-    // SE 26-10-2006
-    //    SmartDataPtr<DetectorElement> Rich1DE(detSvc,Rich1DeStructurePathName );
-    // if( Rich1DE ){
-    //  m_UseHpdMagDistortions = Rich1DE->param<int>("UseHpdMagDistortions");
-    // } 
-    // std::cout<< "RichHpdPhotoElectricEffect UseHpdMagDistortions=   "<<
-    //  m_UseHpdMagDistortions<<std::endl;
-
-  // }
-
 }
 
 RichHpdPhotoElectricEffect::~RichHpdPhotoElectricEffect() {; }
@@ -62,9 +41,11 @@ void RichHpdPhotoElectricEffect::setHpdPhElecParam()
 	     <<m_UseHpdMagDistortions<<std::endl;
     std::cout<< "RichHpdPhotoElectricEffect PsfPreDc06Flag       = "
 	     << m_PSFPreDc06Flag <<std::endl;
+     std::cout<< "RichHpdPhotoElectricEffect UseNominalHpdQE =   "<<m_HpdQEUsingNominalTable<<std::endl;
 
     RichHpdProperties*  m_HpdProperty = HpdProperty();
     m_HpdProperty -> setUsingHpdMagneticFieldDistortion((bool) m_UseHpdMagDistortions );
+    m_HpdProperty -> setUseNominalHpdQE( (bool) m_HpdQEUsingNominalTable );
     m_HpdProperty -> InitializeHpdProperties( );
 
     m_HpdPhElectronKE=m_HpdProperty->RichHpdHighVoltage();

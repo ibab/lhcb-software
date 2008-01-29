@@ -99,6 +99,11 @@ public:
   }
   bool IsPSFPreDc06Flag() {return m_IsPSFPreDc06Flag;}
   void  setIsPreDc06Flag(bool apsfg) {m_IsPSFPreDc06Flag = apsfg;}
+  bool HpdQEUseNominalTable(){    return m_HpdQEUseNominalTable;}
+  void setHpdQEUseNominalTable(bool aQEOption){m_HpdQEUseNominalTable=aQEOption;}
+  
+    
+      
   
     
 private:
@@ -119,7 +124,8 @@ private:
   int m_MaxNumberRayleighScatAllowed;
   bool m_UseHpdMagDistortions;
   bool m_IsPSFPreDc06Flag;
-
+  bool m_HpdQEUseNominalTable;
+  
   
     
   

@@ -1,4 +1,4 @@
-// $Id: GiGaPhysConstructorOp.cpp,v 1.20 2007-01-12 15:32:00 ranjard Exp $
+// $Id: GiGaPhysConstructorOp.cpp,v 1.21 2008-01-29 12:43:17 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +65,8 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
     m_MaxAllowedPhotStepNumInRayleigh(5000),
     m_MaxNumberRayleighScatAllowed(50),
     m_UseHpdMagDistortions(false),
-    m_IsPSFPreDc06Flag(true)
+    m_IsPSFPreDc06Flag(false),
+    m_HpdQEUseNominalTable(false)
 {
   // in the above 3 is for the three radiators.
 
@@ -94,6 +95,7 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
                   m_UseHpdMagDistortions);
   declareProperty("RichPSFPreDc06Flag", m_IsPSFPreDc06Flag);
 
+  declareProperty("RichHpdUseNominalQETable", m_HpdQEUseNominalTable);
   
 
 }
@@ -240,6 +242,7 @@ void GiGaPhysConstructorOp::ConstructOp() {
 
   theRichHpdPhotoElectricProcess->setUseHpdMagDistortions( (G4bool) m_UseHpdMagDistortions);
   theRichHpdPhotoElectricProcess->setPSFPreDc06Flag(m_IsPSFPreDc06Flag);
+  theRichHpdPhotoElectricProcess->setHpdQEUsingNominalTable(m_HpdQEUseNominalTable);
   theRichHpdPhotoElectricProcess->setHpdPhElecParam();  
   
 

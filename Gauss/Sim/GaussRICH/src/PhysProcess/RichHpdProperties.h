@@ -110,6 +110,13 @@ public:
   bool UsingHpdMagneticFieldDistortion() { return m_UsingHpdMagneticFieldDistortion; }
   void setUsingHpdMagneticFieldDistortion(bool aflag) {m_UsingHpdMagneticFieldDistortion=aflag;}
 
+  bool UseNominalHpdQE()  {return m_UseNominalHpdQE;}
+  void setUseNominalHpdQE(bool aQEUseTableOption){ m_UseNominalHpdQE=aQEUseTableOption;}
+  
+    
+    
+
+
   void setHpdPropertiesVerboseLevel(int aLevel );
 
   void InitializeSiDetParam();
@@ -150,6 +157,8 @@ private:
   G4double  m_MaxPhotonEnergyInRICH;
   
   bool m_UsingHpdMagneticFieldDistortion;
+  bool m_UseNominalHpdQE;
+  
 
   double m_siDetXSize;
   double m_siDetYSize;
