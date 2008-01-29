@@ -40,7 +40,7 @@ static const G4String Rich2GasQWindowMaterialName="/dd/Materials/RichMaterials/R
 static const G4String RichHpdQuartzWindowMaterialName="/dd/Materials/RichMaterials/HpdWindowQuartz";
 static const G4String Rich1NitrogenMaterialName="/dd/Materials/RichMaterials/Rich1Nitrogen";
 static const G4String Rich2NitrogenMaterialName="/dd/Materials/RichMaterials/Rich2Nitrogen";
-static const G4String RichHpdQeffMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
+static const G4String RichHpdQeffMatTabPropPath="/dd/Materials/RichMaterialTabProperties/NominalHpdQuantumEff";
 static const G4String RichHpdQWRIMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdWindowQuartzRIndexPT";
 static const G4String RichHpdPCRIMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdS20PhCathodeRIndexPT";
 static const G4String RichHpdPsfMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdPointSpreadFunction";
@@ -52,13 +52,21 @@ static const G4String LogVolAgelNameAnalysis=
                               "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Aerogel";
 static const G4String LogVolC4F10NameAnalysis=
                                "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1SubMaster";
-
+static const G4String LogVolRich1Mirror1MasterNameAnalysis=
+                              "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1Master";
+static const G4String LogVolRich1Mirror1QuadrantNameAnalysis=
+                              "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1QuadrantModule";
 static const G4String LogVolRich1Mirror1NameAnalysis=
-                              "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1";
+                              "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1CarbonFibreInnerLayer";
 static const G4String LogVolRich1Mirror2NameAnalysis=
                              "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror2";
+
+static const G4String LogVolRich2Mirror1ContainerNameAnalysis=
+                        "/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2SphMirrorCont";
+
 static const G4String LogVolRich2Mirror1NameAnalysis=
                               "/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2SphMirror";
+static const G4String LogVolRich2Mirror1NameAnalysisSubString="Hex";
 static const G4String LogVolRich2Mirror2NameAnalysis=
                               "/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2SecMirrorSeg";
 static const G4String LogVolRich2Mirror2ContainerAnalysis=
