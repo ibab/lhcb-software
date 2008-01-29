@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.28 2008-01-25 22:58:45 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.29 2008-01-29 14:46:01 frankm Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -350,6 +350,25 @@ size_t LHCb::rawEventLength(const std::vector<RawBank*>& banks)    {
   size_t len = 0;
   for(std::vector<RawBank*>::const_iterator j=banks.begin(); j != banks.end(); ++j)  {
     len += (*j)->totalSize();
+  }
+  return len;
+}
+
+/// Determine length of the sequential buffer from RawEvent object
+size_t LHCb::rawEventLengthTAE(const std::vector<RawBank*>& banks)    {
+  size_t len = 0;
+  for(std::vector<RawBank*>::const_iterator j=banks.begin(); j != banks.end(); ++j)  {
+    if ( !((*j)->type() == RawBank::DAQ && (*j)->version() == DAQ_STATUS_BANK) )
+      len += (*j)->totalSize();
+  }
+  return len;
+}
+/// Determine length of the sequential buffer from RawEvent object
+size_t LHCb::rawEventLengthTAE(const RawEvent* evt)    {
+  size_t i, len;
+  RawEvent* raw = const_cast<RawEvent*>(evt);
+  for(len=0, i=RawBank::L0Calo; i<RawBank::LastType; ++i)  {
+    len += rawEventLengthTAE(raw->banks(RawBank::BankType(i)));
   }
   return len;
 }
