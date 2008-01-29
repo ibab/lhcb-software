@@ -7,14 +7,14 @@ Dump.DumpData                        = 0;
 Dump.FullDump                        = 0;
 Dump.OutputLevel                     = 3;
 StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 0.99;
+StoreExplorerAlg.PrintFreq           = 0.01;
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.ForceLeaves             = true;
 EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
 EventSelector.PrintFreq              = 100;
 EventSelector.Input                  = {
-  "DATA='file://TAE_data.mdf' SVC='LHCb::MDFSelector'"
+  "DATA='file://taeData.mdf' SVC='LHCb::MDFSelector'"
 };
 FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
 

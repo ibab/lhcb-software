@@ -1,9 +1,10 @@
-// $Id: TAETestCreator.cpp,v 1.4 2008-01-17 17:15:41 frankm Exp $
+// $Id: TAETestCreator.cpp,v 1.5 2008-01-29 10:55:27 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "MDF/RawEventHelpers.h"
+#include "MDF/MDFHeader.h"
 #include "Event/RawEvent.h"
 
 /*
@@ -36,6 +37,13 @@ namespace LHCb  {
       int nevts = abs(m_numTAEEvents)>7 ? 7 : abs(m_numTAEEvents);
       SmartDataPtr<RawEvent> raw(eventSvc(),RawEventLocation::Default);
       if ( raw )  {
+	// Need to remove all MDF header banks first
+	typedef std::vector<RawBank*> _V;
+	_V bnks = raw->banks(RawBank::DAQ);
+	for(_V::iterator ib=bnks.begin(); ib != bnks.end(); ++ib)  {
+	  if ( (*ib)->version() == DAQ_STATUS_BANK )
+	    raw->removeBank(*ib);
+	}
         change2TAEEvent(raw);
         for(int i=-nevts; i<=nevts; ++i)  {
           if ( i != 0 )  {

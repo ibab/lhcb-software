@@ -35,4 +35,7 @@ EventSelector.Input                  = {
   "DATA='PFN:mdfData_3.dat'               SVC='LHCb::MDFSelector'",
   "DATA='mdfData_4.dat'                   SVC='LHCb::MDFSelector'"
 };
+EventSelector.Input                  = {
+  "DATA='PFN:file:taeData.mdf' SVC='LHCb::MDFSelector'"
+};
 FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };

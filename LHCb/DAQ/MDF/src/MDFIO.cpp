@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.23 2008-01-17 17:15:41 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.24 2008-01-29 10:55:27 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -158,10 +158,10 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
         theRawEvents.push_back( rawEvt );
         ctrlData.push_back( n );               // BX offset
         ctrlData.push_back( offset );          // offset in buffer, after end of this bank
-        size_t len = rawEventLength(rawEvt); 
-        ctrlData.push_back( len );             // size of this BX information
-        offset += len;
-        msg << MSG::DEBUG << "Found RawEvent in " << loc << ", size =" << len << endmsg;
+        size_t l = rawEventLength(rawEvt); 
+        ctrlData.push_back(l);                 // size of this BX information
+        offset += l;
+        msg << MSG::DEBUG << "Found RawEvent in " << loc << ", size =" << l << endmsg;
       }
     }
     len = ctrlData.size();

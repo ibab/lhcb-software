@@ -1,4 +1,4 @@
-ApplicationMgr.EvtMax                = 100000;
+ApplicationMgr.EvtMax                = 1000;
 ApplicationMgr.HistogramPersistency  = "NONE";
 Dump.CheckData                       = 1;
 Dump.CheckData                       = 0;
@@ -6,7 +6,7 @@ Dump.DumpData                        = 1;
 Dump.FullDump                        = 0;
 Dump.OutputLevel                     = 3;
 StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 0.99;
+StoreExplorerAlg.PrintFreq           = 0.01;
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
 EventDataSvc.ForceLeaves             = true;
@@ -18,8 +18,11 @@ EventSelector.Input                  = {
 FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
 
 // To create a MDF file using the MDF writer:
+ApplicationMgr.TopAlg     = { "LHCb::RawEventTestCreator/RawEventGen", "StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };
+ApplicationMgr.TopAlg     = { "LHCb::RawEventTestCreator/RawEventGen", "LHCb::TAETestCreator/TAECreator", "StoreExplorerAlg" };
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_0" };
-Writer_0.Connection       = "PFN:file://TAE_data.mdf";
+TAECreator.TAEEvents      = 5;
+Writer_0.Connection       = "PFN:file://taeData.mdf";
 Writer_0.Compress         = 0;
 Writer_0.ChecksumType     = 1;
 Writer_0.GenerateMD5      = true;
