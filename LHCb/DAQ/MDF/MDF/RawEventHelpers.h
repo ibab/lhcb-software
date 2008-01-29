@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.16 2008-01-17 17:15:41 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.17 2008-01-29 14:46:01 frankm Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -52,6 +52,11 @@ namespace LHCb  {
   size_t rawEventLength(const RawEvent* evt);
   /// Determine length of the sequential buffer from vector of raw banks
   size_t rawEventLength(const std::vector<RawBank*>& banks);
+   /// Determine length of the sequential buffer from RawEvent object
+  size_t rawEventLengthTAE(const std::vector<RawBank*>& banks);
+  /// Determine length of the sequential buffer from RawEvent object
+  size_t rawEventLengthTAE(const RawEvent* evt);
+
   /// Determine number of banks from rawEvent object
   size_t numberOfBanks(const RawEvent* evt);
   /// Determine number of bank types from rawEvent object
