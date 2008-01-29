@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.cpp,v 1.2 2007-12-07 19:21:11 frankm Exp $
+// $Id: OnlineBaseEvtSelector.cpp,v 1.3 2008-01-29 14:03:25 frankb Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -72,6 +72,7 @@ StatusCode OnlineBaseEvtSelector::initialize()    {
   if ( !lib_rtl_is_success(lib_rtl_set_event(m_suspendLock)) )  {
     return error("Cannot activate event lock.");
   }
+  suspend();
   for ( m_nreqs=0; m_nreqs<8; ++m_nreqs )  {
     if ( !m_Rqs[m_nreqs].empty() )   {
       m_Reqs[m_nreqs].parse(m_Rqs[m_nreqs]);

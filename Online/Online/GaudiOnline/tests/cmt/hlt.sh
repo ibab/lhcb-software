@@ -10,7 +10,7 @@ $MINITERM TanServer@${HOST} -e "export UTGID=${NODENAME}/TANServer; exec -a \${U
 $MINITERM ROCollect@${HOST} -e "export UTGID=${NODENAME}/ROCollect; exec -a \${UTGID} $gaudi_run libGaudiOnline.so romon_collect -gbl=ROMonitor -size=64 -delay=500 -verbose"&
 $MINITERM ROPublish@${HOST} -e "export UTGID=${NODENAME}/ROPublish; exec -a \${UTGID} $gaudi_run libGaudiOnline.so romon_dimserver -gbl=ROMonitor -size=64 -delay=500 -verbose"&
 #
-sleep 6
+sleep 4
 #
 #  Monitors:
 #
@@ -26,7 +26,7 @@ $MINITERM Receiver@${HOST}  -e "export UTGID=${NODENAME}/Receiver;  exec -a \${U
 # $MINITERM DiskWR@${HOST}  -e "export UTGID=${NODENAME}/DiskWR;    exec -a \${UTGID} $gaudi_task -opt=$OPTS/DiskWR.opts"&
 $MINITERM EvtServ@${HOST}   -e "export UTGID=${NODENAME}/EvtServ;   exec -a \${UTGID} $gaudi_task -opt=$OPTS/EventServer.opts"&
 #
-sleep 2
+sleep 4
 #
 $MINITERM Sender@${HOST}    -e "export UTGID=${NODENAME}/Sender;    exec -a \${UTGID} $gaudi_task -opt=$OPTS/MDFSender.opts"&
 $MINITERM Sender2@${HOST}   -e "export UTGID=${NODENAME}/Sender2;   exec -a \${UTGID} $gaudi_task -opt=$OPTS/MDFSender.opts"&

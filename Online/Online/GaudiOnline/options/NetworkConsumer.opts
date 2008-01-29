@@ -1,12 +1,14 @@
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.ExtSvc               += {"IncidentSvc","LHCb::NetworkEvtSelector/EventSelector"};
-//ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 0.001;
 Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
 MEPManager.Buffers                   = {};
 //Runable.Wait                         = 3;
-EventSelector.OutputLevel            = 1;
+EventSelector.OutputLevel            = 3;
 EventSelector.Input                  = "$NODENAME/EvtServ";
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
