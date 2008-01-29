@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.cpp,v 1.3 2007-11-02 11:04:24 odescham Exp $
+// $Id: L0DUAlg.cpp,v 1.4 2008-01-29 16:02:29 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -36,17 +36,15 @@ L0DUAlg::L0DUAlg( const std::string& name,
   m_dataLocations.push_back(LHCb::L0ProcessorDataLocation::PileUp);
  // configure DAQ
   declareProperty( "BankVersion"             , m_rawVsn   = 1 );
-  declareProperty( "ConfigProviderType"      , m_configType = "L0DUConfigProvider");
-  declareProperty( "ConfigProviderName"      , m_configName = "L0DUConfig");
   declareProperty( "EmulatorTool"            , m_emulatorType="L0DUEmulatorTool");
-  declareProperty( "TCK"                     , m_tck=0xFFFF);
   //
   declareProperty( "StoreInBuffer"           , m_fillRaw = true );
   declareProperty( "RawLocation"             , m_rawLocation    = LHCb::RawEventLocation::Default   );
   declareProperty( "WriteOnTES"              , m_writeOnTES = true   );
   declareProperty( "ReportLocation"          , m_reportLocation = LHCb::L0DUReportLocation::Default );
   //
-  declareProperty( "TCK"                     , m_tck=0xFFFF);
+  declareProperty( "TCK"                     , m_tck="");
+  declareProperty( "L0DUConfigProviderName"  , m_configName="L0DUConfig");
 
   m_rawSrcID = 0 ;// hardcoded rawBank srcID
   m_rawBankType  = LHCb::RawBank::L0DU; // rawBank Type
@@ -70,11 +68,16 @@ StatusCode L0DUAlg::initialize() {
 
 
   //---------------------------
-  // check TCK
-  if(m_tck>0xFFFF){
-    error() << "The requested Trigger Configuration Key (TCK) " << m_tck << " is NOT a 16-bit word" << endreq;
-    return StatusCode::FAILURE; 
-  }  
+  if(m_tck == ""){
+    error() << "The Trigger Configuration Key is undefined" << endreq;
+    return StatusCode::FAILURE;
+  }
+  if( "0x" != m_tck.substr( 0, 2 ) ){
+    error() << "The requested TCK value " << m_tck << " MUST be in hexadecimal format '0x" << m_tck << "'" << endreq;
+    return StatusCode::FAILURE;
+  }
+
+
   //----------------------------
   // Get the L0DUAlg emulator tool
   //---------------------------
@@ -83,10 +86,20 @@ StatusCode L0DUAlg::initialize() {
   //--------------------------------
   // Get the L0DUAlg configuration tool
   //--------------------------------
-  m_confTool = tool<IL0DUConfigProvider>(m_configType , m_configName);
-  m_config   = m_confTool->config( m_tck );
+  int itck;
+  std::istringstream is( m_tck.c_str() );
+  is >> std::hex >> itck;
+  m_confTool = tool<IL0DUConfigProvider>("L0DUMultiConfigProvider" , m_configName );
+  debug() << " loading the configuration for TCK = " << m_tck << " /  " << itck << endreq;
+  m_config   = m_confTool->config( itck );
+  if( NULL == m_config){
+    error() << " Unable to load the configuration for TCK = " << m_tck << " /  " << itck << endreq;
+    return StatusCode::FAILURE;
+  }
 
-  
+  debug() << "OK for config " << m_config << endreq;
+  debug() << "TCK = " << m_config->tck() << endreq;
+
   return sc;
 };
 
@@ -103,8 +116,8 @@ StatusCode L0DUAlg::execute() {
   if(sc.isFailure())return sc;
 
   // push Report and Config on TES
-  debug() <<"Push L0DUReport on TES" << endreq;
   if(m_writeOnTES){
+    debug() <<"Push L0DUReport on TES" << endreq;
     LHCb::L0DUReport* report = new LHCb::L0DUReport(m_emulator->report());
     put (report   , rootInTES() + m_reportLocation );//non-const
   }

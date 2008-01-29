@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.h,v 1.1 2007-10-31 15:04:45 odescham Exp $
+// $Id: L0DUAlg.h,v 1.2 2008-01-29 16:02:29 odescham Exp $
 #ifndef L0DUAlg_H 
 #define L0DUAlg_H 1
 
@@ -38,14 +38,13 @@ private:
   
   // parameters
   unsigned int m_rawSrcID;
-  std::string m_configType;
-  std::string m_configName;
   std::string m_emulatorType;
-  unsigned long m_tck;
   bool m_fillRaw;
   std::string m_rawLocation;
   bool m_writeOnTES;
   std::string m_reportLocation;
+  std::string m_tck;
+  std::string m_configName;
 
 //
   unsigned int m_rawVsn ;  

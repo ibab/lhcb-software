@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.3 2007-11-02 07:10:52 cattanem Exp $
+// $Id: L0DUConfigProvider.cpp,v 1.4 2008-01-29 16:02:29 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -11,8 +11,9 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0DUConfigProvider
 //
-//  Provide L0DU configuration according to Trigger Configuration Key
-//  Configuration described in option file
+//  Provide a **SINGLE** L0DU configuration according to 
+//  the Trigger Configuration Key
+//  Configuration described in options file
 //
 //
 // 2007-10-25 : Olivier Deschamps
@@ -41,11 +42,17 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
   declareProperty( "Data"                    , m_data     );
   declareProperty( "Conditions"              , m_conditions );
   declareProperty( "Channels"                , m_channels );
-  declareProperty( "PrintOut"                , m_print=true);
   // for options defined configuration
-  declareProperty( "TCK"                     , m_tckopts = 0xFFFF);  
   declareProperty( "Description"             , m_def     = "NO DESCRIPTION");  
   declareProperty( "Separators"              , m_sepMap);
+
+
+  // TCK from name
+  int index = name.rfind("0x") + 2 ;
+  std::string tck = name.substr( index, name.length() );
+  std::istringstream is( tck.c_str() );
+  is >> std::hex >> m_tckopts  ;
+
 
   //
   m_sepMap["["] = "]";
@@ -88,7 +95,7 @@ L0DUConfigProvider::~L0DUConfigProvider() {}
 
 
 //============
-// Initialize 
+// finalize 
 //============
 StatusCode L0DUConfigProvider::finalize(){
 
@@ -141,18 +148,17 @@ StatusCode L0DUConfigProvider::initialize(){
 
 
   //=====================================
-  // definition of the configuration from condDB/xml-file
-  //@TODO
-
-  // getConfigViaXML()
 
 
-  //=====================================
-  // from options
+  if(m_channels.size()   == 0  || 
+     m_conditions.size() == 0  || 
+     m_def               == "") {
+    error() << "Incomplete description for configuration (TCK = " << m_tckopts << ")" << endreq;
+    return StatusCode::FAILURE;  
+  }
+  
 
 
-  if(m_channels.size() == 0 )return StatusCode::FAILURE;  // NO configuration
-   
   // create L0DU configuration 
   m_config = new LHCb::L0DUConfig(m_tckopts);
   sc = createChannels();
@@ -173,17 +179,16 @@ StatusCode L0DUConfigProvider::initialize(){
 }
 
 void L0DUConfigProvider::printConfig(LHCb::L0DUConfig config){
-  if(!m_print)return;
-  info() << "**** L0DU Configs loading : " <<endreq;
-  info() << "              - " << config.data().size()<< " data with "<<endreq;
-  info() << "                    - " << m_pData << " predefined data "<<endreq;
-  info() << "                    - " << m_cData << " constant   data "<<endreq;
-  info() << "                    - " << config.data().size()-m_cData-m_pData << " new data "<<endreq;
-  info() << "              - " << config.conditions().size() << " Elementary conditions " << endreq;
-  info() << "              - " << config.channels().size()   << " Channels " << endreq;
-  info() << " " << endreq;
-  info() <<  "Short description ::" << config.definition()  << endreq;
-  debug() << "Full description  ::" << config.description() << endreq;
+  info() << "**** L0DU Configs loading : " << format("0x%4X" , config.tck()) << endreq;
+  debug() << "              - " << config.data().size()<< " data with "<<endreq;
+  debug() << "                    - " << m_pData << " predefined data "<<endreq;
+  debug() << "                    - " << m_cData << " constant   data "<<endreq;
+  debug() << "                    - " << config.data().size()-m_cData-m_pData << " new data "<<endreq;
+  debug() << "              - " << config.conditions().size() << " Elementary conditions " << endreq;
+  debug() << "              - " << config.channels().size()   << " Channels " << endreq;
+  debug() << " " << endreq;
+  info() <<  "Short description :: " << config.definition()  << endreq;
+  verbose() << "Full description  :: " << config.description() << endreq;
 }
 
 

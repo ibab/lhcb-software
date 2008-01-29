@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.2 2007-11-02 07:34:58 cattanem Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.3 2008-01-29 16:02:30 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -57,6 +57,11 @@ StatusCode L0DUReportMonitor::execute() {
 
   debug() << "==> Execute" << endmsg;
   
+
+  if( !exist<LHCb::L0DUReport>( m_reportLocation )){
+    Error("L0DUReport not found at location " + m_reportLocation ).ignore();
+    return StatusCode::SUCCESS;
+  }
 
   LHCb::L0DUReport* report   = get<LHCb::L0DUReport>( m_reportLocation );
   LHCb::L0DUConfig* config   = report->configuration();
@@ -152,7 +157,7 @@ StatusCode L0DUReportMonitor::finalize() {
 
   
   info() << "======================================================================== " <<endreq;
-  info() << " L0DUReport Monitoring ran on " << m_evtCntMap.size() <<" different Configuration(s) " << endreq;
+  info() << " L0DUReport Monitoring ran on " << m_evtCntMap.size() <<" Configuration(s) " << endreq;
   info() << "======================================================================== "  << endreq;
   info() << " " << endreq;
   for(std::map<unsigned int,LHCb::L0DUConfig*>::iterator it = m_configs.begin(); it != m_configs.end(); it++){
@@ -170,7 +175,7 @@ StatusCode L0DUReportMonitor::finalize() {
     double eRate = 100.* sqrt(m_decCnt)/m_evtCnt;
     
     info() << "   **************************************************** " << endreq;    
-    info() << "   ***  Trigger Configuration Key "  << tck << endreq;
+    info() << "   ***  Trigger Configuration Key : "  << format("0x%4X", tck)  << " (" << tck << ")"<<  endreq;
     info() << "   **************************************************** " << endreq;    
     debug() << "       REMIND : the corresponding L0DU algorithm description is : " << endreq;
     debug() << config->description() << endreq;

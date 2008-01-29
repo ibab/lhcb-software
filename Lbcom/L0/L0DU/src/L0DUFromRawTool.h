@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.h,v 1.2 2007-10-31 16:42:10 odescham Exp $
+// $Id: L0DUFromRawTool.h,v 1.3 2008-01-29 16:02:30 odescham Exp $
 #ifndef L0DUFROMRAWTOOL_H 
 #define L0DUFROMRAWTOOL_H 1
 
@@ -56,9 +56,10 @@ private:
   
   //
   std::string m_rawLocation;
-  std::string m_configType;
-  std::string m_configName;
   std::string m_emulatorType;
+  std::string m_configName;
+
+
   IL0DUConfigProvider*   m_confTool;
   IL0DUEmulatorTool*     m_emuTool;
   IL0CondDBProvider*     m_condDB;  
@@ -82,7 +83,7 @@ private:
   LHCb::L0DUReport m_reportLocal;
   LHCb::L0ProcessorDatas* m_processorDatas;
   unsigned int m_tck;  
-  int m_forcedTCK;
+  bool m_warning;
   unsigned int m_size;
   
 };

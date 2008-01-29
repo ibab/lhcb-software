@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.76 2007-12-21 09:59:38 cattanem Exp $
+! $Id: release.notes,v 1.77 2008-01-29 16:02:29 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+
+! 2008-01-29 - Olivier Deschamps 
+ - Finalize the implementation of the TCK mechanism 
+  -> new tool L0DUMultiConfigProvider (same interface as L0DUConfigProvider)
+  -> fix backward compatibility with previous DC06 data : assign TCK = 0xDC06 when bank vsn = 0
+  -> enable the decoding of DC06 format
+  -> review L0DUConfig.opts 
+  -> update and rename all individual configuration options files
 
 !========================== L0DU v8r2 2007-12-21 =========================
 ! 2007-12-19 - Olivier Deschamps

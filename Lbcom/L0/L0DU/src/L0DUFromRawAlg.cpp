@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawAlg.cpp,v 1.1 2007-10-31 15:04:45 odescham Exp $
+// $Id: L0DUFromRawAlg.cpp,v 1.2 2008-01-29 16:02:29 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -73,13 +73,14 @@ StatusCode L0DUFromRawAlg::execute() {
   // decode the bank
   m_fromRaw->decodeBank();  
 
+  LHCb::L0DUReport rep = m_fromRaw->report();
   // put the report and processor data on TES
-  LHCb::L0DUReport* report = new LHCb::L0DUReport( m_fromRaw->report() );
+  LHCb::L0DUReport* report = new LHCb::L0DUReport( rep );
   put (report , m_L0DUReportLocation );
-
   LHCb::L0ProcessorDatas* datas = new LHCb::L0ProcessorDatas();
   put (datas  , m_proDataLoc );
 
+  
   // clone Processor Data and put it on TES
   for(LHCb::L0ProcessorDatas::iterator it = m_fromRaw->L0ProcessorDatas()->begin();
       it != m_fromRaw->L0ProcessorDatas()->end(); it++){
@@ -117,8 +118,6 @@ StatusCode L0DUFromRawAlg::execute() {
    }
 
   
-
-  // that's all
   return StatusCode::SUCCESS;
 }
 
@@ -131,14 +130,11 @@ StatusCode L0DUFromRawAlg::finalize() {
 
   //
   info() << " - ------------------------------------------------------------------" << endreq;
-  info() << " - ========> Final summary of the L0DU emulator" << endreq;
+  info() << " - ========> Final summary of L0DUFromRawAlg" << endreq;
   info() << " - Total number of events processed           : " << m_evt << endreq;
   info() << " - Average bank size : " << (double) m_size/ (double) m_evt 
          << " (bytes)  | min= " << m_sizeMin << "  | max= " << m_sizeMax <<endreq;
   info() << " - ------------------------------------------------------------------" << endreq;
-
-
-  //
 
 
 

@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.h,v 1.1 2007-10-31 15:04:45 odescham Exp $
+// $Id: L0DUConfigProvider.h,v 1.2 2008-01-29 16:02:29 odescham Exp $
 #ifndef L0DUCONFIGPROVIDER_H 
 #define L0DUCONFIGPROVIDER_H 1
 
@@ -10,6 +10,9 @@
 
 /** @class L0DUConfigProvider L0DUConfigProvider.h
  *  
+ *  Provide a **SINGLE** L0DU configuration according to 
+ *  the Trigger Configuration Key
+ *  Configuration described in options file
  *
  *  @author Olivier Deschamps
 
@@ -28,7 +31,17 @@ public:
 
   virtual ~L0DUConfigProvider( ); ///< Destructor
 
-  LHCb::L0DUConfig*  config(long tck){return m_configs.object(tck);};
+  LHCb::L0DUConfig*  config(long tck){
+    if( tck != m_tckopts)warning() << "The requested TCK " << tck  
+                                   <<" is not consistent with the options definition " 
+                                   << m_tckopts << " CHECK your options ! " << endreq;
+    if(tck < 0 || tck > 0xFFFF){
+      warning() << "requested TCK is not a 16 bit word" << endreq;
+      return NULL;
+    }
+    return m_configs.object(tck); 
+  }; 
+
   LHCb::L0DUConfigs  configs(){return m_configs;};
   
   
@@ -70,7 +83,7 @@ private:
   
   unsigned long m_cData;
   int m_pData;
-  unsigned long m_tckopts;
+  long m_tckopts;
   std::vector<std::string> m_comparators;
   std::vector<std::pair<std::string, unsigned int> > m_operators;
 

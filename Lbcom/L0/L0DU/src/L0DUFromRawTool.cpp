@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.1 2007-10-31 15:04:45 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.2 2008-01-29 16:02:30 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -27,18 +27,15 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
     m_report(),
     m_reportLocal(),
     m_processorDatas(),
-    m_tck(0xFFFF)
+    // DO NOT TOUCH !! IF YOU MODIFY THIS VALUE THIS WILL BREAK THE DC06 BACKWARD COMPATIBILITY
+    m_tck(0xDC06), // default value for DC06 production (TCK was not implemented in Bank) 
+    m_warning(true)
 {
   declareInterface<IL0DUFromRawTool>(this);
   
   declareProperty( "RawLocation"    , m_rawLocation = LHCb::RawEventLocation::Default   );
-  declareProperty( "ConfigProviderType" , m_configType  = "L0DUConfigProvider");
-  declareProperty( "ConfigProviderName" , m_configName  = "L0DUConfig");
   declareProperty( "EmulatorTool"   , m_emulatorType="L0DUEmulatorTool");
-// CAUTION : YOU MUST KNOW WHAT YOU ARE DOING WHEN YOU CHANGE THE NEXT PROPERTY !!!!
-  declareProperty( "forcedTCK"      , m_forcedTCK   = -1); 
-  
-  
+  declareProperty( "L0DUConfigProviderName"  , m_configName="L0DUConfig");
 }
 //=============================================================================
 // Destructor
@@ -54,7 +51,7 @@ StatusCode L0DUFromRawTool::initialize(){
    if(sc.isFailure())return sc;
 
   // get the configuration provider tool
-  m_confTool = tool<IL0DUConfigProvider>(m_configType , m_configName);
+  m_confTool = tool<IL0DUConfigProvider>("L0DUMultiConfigProvider" , m_configName);
   m_emuTool  = tool<IL0DUEmulatorTool>(m_emulatorType, m_emulatorType,this);
   m_condDB   = tool<IL0CondDBProvider>("L0CondDBProvider");
 
@@ -66,10 +63,6 @@ StatusCode L0DUFromRawTool::initialize(){
     m_processorDatas->insert( temp );
   }
 
-  if(m_forcedTCK >= 0){
-    warning() << "!!!!!!!!!!!!! YOU ARE ASSUMMED TO KNOW WHAT YOU ARE DOING !!!!!!!!!!!!! " << endreq;
-    warning() << " ==> Trigger Configuration Key is forced to the value : " << m_forcedTCK << endreq;
-  }
   
 
   return sc;
@@ -92,9 +85,11 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
   rawEvt= get<LHCb::RawEvent>( rootInTES() + m_rawLocation );
   m_banks= &rawEvt->banks(   LHCb::RawBank::L0DU );
 
+  
   debug() << "Number of L0DU bank(s) found : " << m_banks->size() << endreq; // should be == 1 for L0DU
+  if( 1 != m_banks->size() )warning() << "More than one L0DU bank has been found in the RawEvent" <<endreq;
   return true;
-}
+} 
 
 
 bool L0DUFromRawTool::decodeBank(int ibank){
@@ -149,7 +144,6 @@ bool L0DUFromRawTool::decodeBank(int ibank){
   // Version 0 : preliminary version used for DC06 simulated data
   //--------------------------------------------------------------
   if(m_vsn == 0){
-    return false; // @ToDo decoding DC06 format
     unsigned int word;
     word = *data;
     m_report.setDecision( (bool) (word & 0x1) );
@@ -173,290 +167,314 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     m_dataMap["Sum(Et)"]=  word & 0x3FFF;
     m_dataMap["Spd(Mult)" ]= (word>>14) & 0x3FFF;
 
-    // No TCK mechanism at time of version 1 : used forced TCK passed via options
-    if(m_forcedTCK == -1){
-      warning() << " For L0DU rawBank format version = 0 you should force the TCK value " << endreq;
-    }else{ 
-      debug() <<"For version 0 the TCK is forced to value : " << m_forcedTCK << endreq;
-      config = m_confTool->config( m_forcedTCK);
-      m_report.setConfiguration(config);
+    // No TCK mechanism at time of version 1 :  TCK = FFFE assumed
+    if ( msgLevel( MSG::DEBUG) )debug() <<"For rawBank version 0 the TCK is forced to : " << m_tck  << endreq;
+    if(m_warning){
+      m_warning = false;
+      std::stringstream tck("");
+      tck << format("0x%4X", m_tck);
+      info() << "For L0DU bank version = 0 the TCK value is forced to " << tck.str() << endreq;
+    } 
+    if ( msgLevel( MSG::DEBUG) )debug() << "Loading configuration" << endreq;
+    config = m_confTool->config( m_tck );
+
+    if( NULL == config){
+      error() << " Unable to load the configuration for tck = " << m_tck << endreq;
+      return false;
     }
+    m_report.setConfiguration(config);
+    if ( msgLevel( MSG::DEBUG) )debug() << "L0DU bank version 0 decoded" << endreq;
   }
   // Version 1 : complete RawBank as described in EDMS 868071
   //---------------------------------------------------------
   else if(m_vsn == 1){  
 
+    // global header
+    unsigned int itc      = (*data & 0x00000003)  >> 0;
+    unsigned int iec      = (*data & 0x0000000C)  >> 2;
+    m_pgaVsn              = (*data & 0x00000FF0)  >> 4;
+    m_status              = (*data & 0x0000F000)  >> 12;
+    m_tck                 = (*data & 0xFFFF0000)  >> 16;
     
-  // global header
-  unsigned int itc      = (*data & 0x00000003)  >> 0;
-  unsigned int iec      = (*data & 0x0000000C)  >> 2;
-  m_pgaVsn              = (*data & 0x00000FF0)  >> 4;
-  m_status              = (*data & 0x0000F000)  >> 12;
-  m_tck                 = (*data & 0xFFFF0000)  >> 16;
-  
-  debug() << "-- Global header ==>  TCK = " << m_tck << " L0DU Status : " 
-          << m_status << " Firmware version : " << m_pgaVsn << endreq;
-  verbose() << "      --> Number of Condition & Channel summaries are : " << iec << " / " << itc << " respectively " <<endreq;
-  
-  //---------------------------------
-  // get corresponding configuration
-  //---------------------------------
-  unsigned int tck=m_tck;
-  if(m_forcedTCK >= 0){
-    tck=m_forcedTCK;
-    warning() << "YOU ARE ASSUMMED TO KNOW WHAT YOU ARE DOING : TCK IS FORCED TO VALUE : " << m_forcedTCK << endreq;
-  }
-  config = m_confTool->config( tck);
-  m_report.setConfiguration(config);
-  //---------------------------------
-
-  // PGA3-block header
-  if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-
-  unsigned int pga3Status    = (*data & 0x001FFFFF ) >>  0;
-  m_bcid3                    = (*data & 0x0FE00000 ) >> 21;
-  unsigned int  nmu          = (*data & 0xF0000000 ) >> 28;
-
-
-  m_dataMap["MuonCU0(Status)"] = (pga3Status >> 0) & 0xF;
-  m_dataMap["MuonCU1(Status)"] = (pga3Status >> 4) & 0xF;
-  m_dataMap["MuonCU2(Status)"] = (pga3Status >> 8) & 0xF;
-  m_dataMap["MuonCU3(Status)"] = (pga3Status >> 12)& 0xF;
-  
-
-  debug() << "-- PGA3 header ==> Processors status : "  << pga3Status  << "  BCID : " <<  m_bcid3 << endreq;
-  debug() << "      --> Number of L0Muon on bank (0-sup) : " << nmu     << endreq;
-  unsigned int pga3Size = 4 * ( 4 + ( int((nmu+3)/4) ) + ( int((nmu+1)/2) ) );
-  debug() << "  PGA3 block size should be : "<< pga3Size  << " (bytes) " <<endreq;
-
-
-  // PGA3 processing
-  if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-  m_dataMap["Muon1(Pt)"]      = (*data & 0x0000007F ) >> 0;
-  m_dataMap["Muon1(Sgn)"]     = (*data & 0x00000080 ) >> 7;
-  m_dataMap["Muon2(Pt)"]      = (*data & 0x00007F00 ) >> 8;
-  m_dataMap["Muon2(Sgn)"]     = (*data & 0x00008000 ) >> 15;
-  m_dataMap["Muon3(Pt)"]      = (*data & 0x007F0000 ) >> 16;
-  m_dataMap["Muon3(Sgn)"]     = (*data & 0x00800000 ) >> 23;
-  m_dataMap["DiMuon(Pt)"]     = (*data & 0xFF000000 ) >> 24;
-
-  if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-  m_dataMap["Muon1(Add)"]      = (*data & 0x0000FFFF ) >>0;
-  m_dataMap["Muon2(Add)"]      = (*data & 0xFFFF0000 ) >>16;
-
-  if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-  m_dataMap["Muon3(Add)"]      = (*data & 0x0000FFFF)  >> 0;
-  m_muCleanPattern             = (*data & 0x00FF0000)  >>16;
-  
-  verbose() << " L0Muon processed data decoded  - Muon cleaning pattern = " << m_muCleanPattern << endreq;
-
-  // PGA3 Input data
-  int n[8]; 
-  for(unsigned int imu =0 ; imu < nmu ; imu++){
-    int odd = imu-int(imu/2)*2;
-    if(odd == 0 && NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-    std::stringstream num("");
-    n[imu] = ((*data  >> 16*odd) & 0x0000E000 ) >> 13;
-    num << n[imu];
-    m_dataMap["M"+num.str()+"(Add)"] = (*data  >> 16*odd) & 0x0000FFFF ;
-  }
+    debug() << "-- Global header ==>  TCK = " << m_tck << " L0DU Status : " 
+            << m_status << " Firmware version : " << m_pgaVsn << endreq;
+    verbose() << "      --> Number of Condition & Channel summaries are : " 
+              << iec << " / " << itc << " respectively " <<endreq;
     
-  for(unsigned int imu =0 ; imu < nmu ; imu++){
-    int biodd = imu-int(imu/4)*4;
-    if(biodd == 0 && NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-    std::stringstream num("");
-    num << n[imu];
-    m_dataMap["M"+num.str()+"(Pt)"] =   (*data >> 8*biodd) & 0x0000007F ;
-    m_dataMap["M"+num.str()+"(Sgn)"] = ((*data >> 8*biodd) & 0x00000080) >> 7;
-  }
+    //---------------------------------
+    // get corresponding configuration
+    //---------------------------------
+    config = m_confTool->config( m_tck);
+    if( NULL == config){
+      error() << " Unable to load the configuration for tck = " << m_tck << endreq;
+      return false;
+    }
+    m_report.setConfiguration(config);
+    //---------------------------------
     
-  verbose() << " L0Muon input data decoded  ( " << nmu << " )" << endreq;
-
-  // PGA2-block header
-  if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-  m_rsda       = (*data & 0x0000FFFF );
-  unsigned int pga2Status= (*data & 0x0FFF0000 ) >> 16;
-  nm                     = (*data & 0x30000000 ) >> 28;
-  np                     = (*data & 0xC0000000 ) >> 30;
-  m_bcid2                =  m_rsda & 0xFFF;
-  unsigned int decision  = (m_rsda >> 12) & 1;
-  debug() << "-- PGA2 header ==> Processor Status : "  << pga2Status << " BCID : "<< m_bcid2 << endreq;
-  debug() << "      --> RSDA : " <<  m_rsda << " Decision : " << decision << endreq;
-  verbose() << "      --> Number of Previous/Next BX : " << nm << "/" << np << endreq;
-  // update L0DUReport
-  m_report.setDecision( (bool) decision );
-  
-  
-  m_dataMap["Electron(Status)"] = (pga2Status>>L0DUBase::Fiber::CaloElectron)  & 0x1;
-  m_dataMap["Photon(Status)"]   = (pga2Status>>L0DUBase::Fiber::CaloPhoton)    & 0x1;
-  m_dataMap["Hadron(Status)"]   = (pga2Status>>L0DUBase::Fiber::CaloHadron)    & 0x1;
-  m_dataMap["GlobalPi0(Status)"]= (pga2Status>>L0DUBase::Fiber::CaloPi0Local)  & 0x1;
-  m_dataMap["LocalPi0(Status)"] = (pga2Status>>L0DUBase::Fiber::CaloPi0Global) & 0x1;
-  m_dataMap["Sum(Status)"]      = (pga2Status>>L0DUBase::Fiber::CaloSumEt)     & 0x1;
-  m_dataMap["Spd(Status)"]      = (pga2Status>>L0DUBase::Fiber::CaloSpdMult)   & 0x1;
-  m_dataMap["PU1(Status)"]      = (pga2Status>>L0DUBase::Fiber::Pu1)           & 0x1;
-  m_dataMap["PU2(Status)"]      = (pga2Status>>L0DUBase::Fiber::Pu2)           & 0x1;
-
-  // check the bank size is consistent
-  
-  unsigned int pga2Size = 4 * ( 7 + iec + 2*itc +  (itc+iec)*(nm+np) + (int( (nm+1)/2) + int ((np+1)/2)));
-  debug() << "  PGA2 block size should be " << pga2Size << " (bytes)" << endreq;
-  unsigned int allSize = 4 + pga2Size + pga3Size;
-  if(m_size == allSize){
-    debug() << "---> The total expected size (header + PGA2 + PGA3) " << allSize 
-            << " matches the actual bank size ________________ <** OK **> " <<endreq;
-  }else{
+    // PGA3-block header
+    if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+    
+    unsigned int pga3Status    = (*data & 0x001FFFFF ) >>  0;
+    m_bcid3                    = (*data & 0x0FE00000 ) >> 21;
+    unsigned int  nmu          = (*data & 0xF0000000 ) >> 28;
+    
+    
+    m_dataMap["MuonCU0(Status)"] = (pga3Status >> 0) & 0xF;
+    m_dataMap["MuonCU1(Status)"] = (pga3Status >> 4) & 0xF;
+    m_dataMap["MuonCU2(Status)"] = (pga3Status >> 8) & 0xF;
+    m_dataMap["MuonCU3(Status)"] = (pga3Status >> 12)& 0xF;
+    
+    
+    debug() << "-- PGA3 header ==> Processors status : "  << pga3Status  
+            << "  BCID : " <<  m_bcid3 << endreq;
+    debug() << "      --> Number of L0Muon on bank (0-sup) : " << nmu     << endreq;
+    unsigned int pga3Size = 4 * ( 4 + ( int((nmu+3)/4) ) + ( int((nmu+1)/2) ) );
+    debug() << "  PGA3 block size should be : "<< pga3Size  << " (bytes) " <<endreq;
+    
+    
+    // PGA3 processing
+    if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+    m_dataMap["Muon1(Pt)"]      = (*data & 0x0000007F ) >> 0;
+    m_dataMap["Muon1(Sgn)"]     = (*data & 0x00000080 ) >> 7;
+    m_dataMap["Muon2(Pt)"]      = (*data & 0x00007F00 ) >> 8;
+    m_dataMap["Muon2(Sgn)"]     = (*data & 0x00008000 ) >> 15;
+    m_dataMap["Muon3(Pt)"]      = (*data & 0x007F0000 ) >> 16;
+    m_dataMap["Muon3(Sgn)"]     = (*data & 0x00800000 ) >> 23;
+    m_dataMap["DiMuon(Pt)"]     = (*data & 0xFF000000 ) >> 24;
+    
+    if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+    m_dataMap["Muon1(Add)"]      = (*data & 0x0000FFFF ) >>0;
+    m_dataMap["Muon2(Add)"]      = (*data & 0xFFFF0000 ) >>16;
+    
+    if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+    m_dataMap["Muon3(Add)"]      = (*data & 0x0000FFFF)  >> 0;
+    m_muCleanPattern             = (*data & 0x00FF0000)  >>16;
+    
+    verbose() << " L0Muon processed data decoded  - Muon cleaning pattern = " 
+              << m_muCleanPattern << endreq;
+    
+    // PGA3 Input data
+    int n[8]; 
+    for(unsigned int imu =0 ; imu < nmu ; imu++){
+      int odd = imu-int(imu/2)*2;
+      if(odd == 0 && NULL == ++data){
+        error()<<"No more data in bank --> CORRUPTION" <<endreq; 
+        return false;
+      }
+      std::stringstream num("");
+      n[imu] = ((*data  >> 16*odd) & 0x0000E000 ) >> 13;
+      num << n[imu];
+      m_dataMap["M"+num.str()+"(Add)"] = (*data  >> 16*odd) & 0x0000FFFF ;
+    }
+    
+    for(unsigned int imu =0 ; imu < nmu ; imu++){
+      int biodd = imu-int(imu/4)*4;
+      if(biodd == 0 && NULL == ++data){error()<<"No more data in bank --> CORRUPTION" 
+                                              <<endreq; return false;}
+      std::stringstream num("");
+      num << n[imu];
+      m_dataMap["M"+num.str()+"(Pt)"] =   (*data >> 8*biodd) & 0x0000007F ;
+      m_dataMap["M"+num.str()+"(Sgn)"] = ((*data >> 8*biodd) & 0x00000080) >> 7;
+    }
+    
+    verbose() << " L0Muon input data decoded  ( " << nmu << " )" << endreq;
+    
+    // PGA2-block header
+    if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+    m_rsda       = (*data & 0x0000FFFF );
+    unsigned int pga2Status= (*data & 0x0FFF0000 ) >> 16;
+    nm                     = (*data & 0x30000000 ) >> 28;
+    np                     = (*data & 0xC0000000 ) >> 30;
+    m_bcid2                =  m_rsda & 0xFFF;
+    unsigned int decision  = (m_rsda >> 12) & 1;
+    debug() << "-- PGA2 header ==> Processor Status : "  << pga2Status << " BCID : "<< m_bcid2 << endreq;
+    debug() << "      --> RSDA : " <<  m_rsda << " Decision : " << decision << endreq;
+    verbose() << "      --> Number of Previous/Next BX : " << nm << "/" << np << endreq;
+    // update L0DUReport
+    m_report.setDecision( (bool) decision );
+    
+    
+    m_dataMap["Electron(Status)"] = (pga2Status>>L0DUBase::Fiber::CaloElectron)  & 0x1;
+    m_dataMap["Photon(Status)"]   = (pga2Status>>L0DUBase::Fiber::CaloPhoton)    & 0x1;
+    m_dataMap["Hadron(Status)"]   = (pga2Status>>L0DUBase::Fiber::CaloHadron)    & 0x1;
+    m_dataMap["GlobalPi0(Status)"]= (pga2Status>>L0DUBase::Fiber::CaloPi0Local)  & 0x1;
+    m_dataMap["LocalPi0(Status)"] = (pga2Status>>L0DUBase::Fiber::CaloPi0Global) & 0x1;
+    m_dataMap["Sum(Status)"]      = (pga2Status>>L0DUBase::Fiber::CaloSumEt)     & 0x1;
+    m_dataMap["Spd(Status)"]      = (pga2Status>>L0DUBase::Fiber::CaloSpdMult)   & 0x1;
+    m_dataMap["PU1(Status)"]      = (pga2Status>>L0DUBase::Fiber::Pu1)           & 0x1;
+    m_dataMap["PU2(Status)"]      = (pga2Status>>L0DUBase::Fiber::Pu2)           & 0x1;
+    
+    // check the bank size is consistent
+    
+    unsigned int pga2Size = 4 * ( 7 + iec + 2*itc +  (itc+iec)*(nm+np) 
+                                  + (int( (nm+1)/2) + int ((np+1)/2)));
+    debug() << "  PGA2 block size should be " << pga2Size << " (bytes)" << endreq;
+    unsigned int allSize = 4 + pga2Size + pga3Size;
+    if(m_size == allSize){
+      debug() << "---> The total expected size (header + PGA2 + PGA3) " << allSize 
+              << " matches the actual bank size ________________ <** OK **> " <<endreq;
+    }else{
     error() << "---> The total expecte size "<<allSize 
-            << " does NOT match the bank size __________________  <** POSSIBLE DATA CORRUPTION **>" << endreq;
-  }
-
-  if ( (0x7F & m_bcid2) == m_bcid3){
-    debug() << "---> The PGA3 and PGA2 data are aligned _____________________________________ <** OK **> " << endreq;
-  }else{
-    error() << "---> The PGA3 and PGA2 data are NOT aligned  BCIDs (MSB)= " <<  (m_bcid2 & 0x7F) << " /"  << m_bcid3 << endreq;
-  }
-  
-
-  // PGA2 processing
-  //clear summaries Maps
-  m_ecs.clear();
-  m_tcs.clear();
-  m_fcs.clear();
-
-  for(unsigned int i = 0 ; i < itc ; i++){
-    if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-    m_fcs[std::make_pair(0,i)] = *data;
-  }
-  for(unsigned int i = 0 ; i < itc ; i++){
-    if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-    m_tcs[std::make_pair(0,i)]=*data;
-  }
-  for(unsigned int i = 0 ; i < iec ; i++){
-    if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-    m_ecs[std::make_pair(0,i)]=*data;
-  }
-  
-
-  verbose() << "PGA2 decision processing decoded " <<endreq;
-
-  //PGA2 input (*data
-  if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-
-  m_dataMap["Sum(Et)"]      = (*data & 0x00003FFF );
-  m_sumEt[0] = m_dataMap["Sum(Et)"];
-  m_dataMap["Spd(Mult)"]    = (*data & 0x0FFFC000 ) >> 14;
-  m_dataMap["PU(MoreInfo)"] = (*data & 0xF0000000 ) >> 28;
-
-  if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-  m_dataMap["Electron(Et)" ] = (*data & 0x000000FF ) >> 0;
-  m_dataMap["Photon(Et)"   ] = (*data & 0x0000FF00 ) >> 8;
-  m_dataMap["GlobalPi0(Et)"] = (*data & 0x00FF0000 ) >> 16;
-  m_dataMap["LocalPi0(Et)" ] = (*data & 0xFF000000 ) >> 24;
-
-  if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-  m_dataMap["Hadron(Et)"   ] = (*data & 0x000000FF ) >> 0;
-  m_dataMap["PUPeak1(Cont)"] = (*data & 0x0000FF00 ) >> 8;
-  m_dataMap["PUPeak2(Cont)"] = (*data & 0x00FF0000 ) >> 16;
-  m_dataMap["PUHits(Mult)" ] = (*data & 0xFF000000 ) >> 24;
-
-  if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-  m_dataMap["Electron(Add)" ] = (*data & 0x0000FFFF ) >> 0;
-  m_dataMap["Photon(Add)"   ] = (*data & 0xFFFF0000 ) >> 16;
-
-  if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-  m_dataMap["GlobalPi0(Add)"] = (*data & 0x0000FFFF );
-  m_dataMap["LocalPi0(Add)" ] = (*data & 0xFFFF0000 ) >> 16;
-
-  if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-  m_dataMap["Hadron(Add)"  ]  = (*data & 0x0000FFFF );
-  m_dataMap["PUPeak1(Add)" ]  = (*data & 0x00FF0000 ) >> 16;
-  m_dataMap["PUPeak2(Add)" ]  = (*data & 0xFF000000 ) >> 24;
+            << " does NOT match the bank size __________________  <** POSSIBLE DATA CORRUPTION **>" 
+            << endreq;
+    }
     
-  verbose() << " L0Calo & L0PileUp input data decoded " <<endreq;
-  
-
-  // Previous/Next BX
-  for(unsigned int im = nm ; im > 0 ; im--){
+    if ( (0x7F & m_bcid2) == m_bcid3){
+      debug() 
+        << "---> The PGA3 and PGA2 data are aligned _____________________________________ <** OK **> " 
+        << endreq;
+    }else{
+      error() << "---> The PGA3 and PGA2 data are NOT aligned  BCIDs (MSB)= " 
+              <<  (m_bcid2 & 0x7F) << " /"  << m_bcid3 << endreq;
+    }
+    
+    
+    // PGA2 processing
+    //clear summaries Maps
+    m_ecs.clear();
+    m_tcs.clear();
+    m_fcs.clear();
+    
     for(unsigned int i = 0 ; i < itc ; i++){
       if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-      m_tcs[std::make_pair(im,i)] = *data;
+      m_fcs[std::make_pair(0,i)] = *data;
+    }
+    for(unsigned int i = 0 ; i < itc ; i++){
+      if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+      m_tcs[std::make_pair(0,i)]=*data;
     }
     for(unsigned int i = 0 ; i < iec ; i++){
       if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-      m_ecs[std::make_pair(im,i)] = *data;
+      m_ecs[std::make_pair(0,i)]=*data;
     }
-  }
-  verbose() << nm << " Previous BX summaries decoded " << endreq;  
-
-
-  // SumEt
-  for(unsigned int im = nm ; im > 0 ; im--){
-    int odd = im-int(im/2)*2;
-    if(odd == 0 &&  NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-    std::stringstream num("");
-    num << im;
-    m_sumEt[im]= (*data >> 16*odd) & 0x3FFF ;
-  }
-  verbose() << nm << " Previous BX sumET decoded " << endreq;
-
-
-
-  for(int ip = 0 ; ip < np ; ip++){
-    for(unsigned int i = 0 ; i < itc ; i++){
-      if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-      m_tcs[std::make_pair(ip,i)] = *data;
-    }
-    for(unsigned int i = 0 ; i < iec ; i++){
-      if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-      m_ecs[std::make_pair(ip,i)] = *data;
-    }
-  }
-  verbose() << np << " Next BX summaries decoded " << endreq;  
-   
-  for(int ip = 0 ; ip < np ; ip++){
-    int odd = ip-int(ip/2)*2;
-    if(odd == 0 && NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-    std::stringstream num("");
-    num << ip;
-    m_sumEt[ip]                        = (*data >> 16*odd) & 0x3FFF ;
-  }
-  verbose() << nm << " Next BX sumET decoded " << endreq;
     
-  // check the size 
-  verbose() << " <============= Decoding completed successfuly =============>" << endreq;
-
-  // Print all data values extracted from rawBank
-  if ( msgLevel( MSG::VERBOSE) ){
-    for(std::map<std::string, unsigned int>::iterator imap = m_dataMap.begin();imap!=m_dataMap.end();imap++){
-      verbose() << "Data " << (*imap).first << " = " <<  (*imap).second << endreq;
+    
+    verbose() << "PGA2 decision processing decoded " <<endreq;
+    
+    //PGA2 input (*data
+    if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+    
+    m_dataMap["Sum(Et)"]      = (*data & 0x00003FFF );
+    m_sumEt[0] = m_dataMap["Sum(Et)"];
+    m_dataMap["Spd(Mult)"]    = (*data & 0x0FFFC000 ) >> 14;
+    m_dataMap["PU(MoreInfo)"] = (*data & 0xF0000000 ) >> 28;
+    
+    if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+    m_dataMap["Electron(Et)" ] = (*data & 0x000000FF ) >> 0;
+    m_dataMap["Photon(Et)"   ] = (*data & 0x0000FF00 ) >> 8;
+    m_dataMap["GlobalPi0(Et)"] = (*data & 0x00FF0000 ) >> 16;
+    m_dataMap["LocalPi0(Et)" ] = (*data & 0xFF000000 ) >> 24;
+    
+    if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+    m_dataMap["Hadron(Et)"   ] = (*data & 0x000000FF ) >> 0;
+    m_dataMap["PUPeak1(Cont)"] = (*data & 0x0000FF00 ) >> 8;
+    m_dataMap["PUPeak2(Cont)"] = (*data & 0x00FF0000 ) >> 16;
+    m_dataMap["PUHits(Mult)" ] = (*data & 0xFF000000 ) >> 24;
+    
+    if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+    m_dataMap["Electron(Add)" ] = (*data & 0x0000FFFF ) >> 0;
+    m_dataMap["Photon(Add)"   ] = (*data & 0xFFFF0000 ) >> 16;
+    
+    if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+    m_dataMap["GlobalPi0(Add)"] = (*data & 0x0000FFFF );
+    m_dataMap["LocalPi0(Add)" ] = (*data & 0xFFFF0000 ) >> 16;
+    
+    if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+    m_dataMap["Hadron(Add)"  ]  = (*data & 0x0000FFFF );
+    m_dataMap["PUPeak1(Add)" ]  = (*data & 0x00FF0000 ) >> 16;
+    m_dataMap["PUPeak2(Add)" ]  = (*data & 0xFF000000 ) >> 24;
+    
+    verbose() << " L0Calo & L0PileUp input data decoded " <<endreq;
+    
+    
+    // Previous/Next BX
+    for(unsigned int im = nm ; im > 0 ; im--){
+      for(unsigned int i = 0 ; i < itc ; i++){
+        if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+        m_tcs[std::make_pair(im,i)] = *data;
+      }
+      for(unsigned int i = 0 ; i < iec ; i++){
+        if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+        m_ecs[std::make_pair(im,i)] = *data;
+      }
     }
-  }
-  
-  // -----------------------------------------------
-  // BUILDING output (L0ProcessorData & L0Report)
-  // -----------------------------------------------
-  verbose() << "fill processor Data" <<endreq;
-  // fill L0ProcessorData with input data in rawBank
-  fillProcessorData();
-  //  emulate the config accordingly for later usage (monitoring) 
-  if(NULL != config)m_emuTool->process(config , m_processorDatas);
-  // Fill report with the consecutive BXs info
-  verbose() << "filling L0DU Report with consecutive BX" << endreq;
-  m_report.setChannelsDecisionSummaries( m_tcs );
-  m_report.setConditionsValueSummaries(  m_ecs );
-  m_report.setSumEt( m_sumEt );    
-  m_report.setFiredChannelsSummaries( m_fcs );  
-  verbose() << " <==== Building output (emulated ProcessorData & L0DUReport) completed successfuly ====>" << endreq;
+    verbose() << nm << " Previous BX summaries decoded " << endreq;  
+    
+    
+    // SumEt
+    for(unsigned int im = nm ; im > 0 ; im--){
+      int odd = im-int(im/2)*2;
+      if(odd == 0 &&  NULL == ++data){error()<<"No more data in bank --> CORRUPTION" 
+                                             <<endreq; return false;}
+      std::stringstream num("");
+      num << im;
+      m_sumEt[im]= (*data >> 16*odd) & 0x3FFF ;
+    }
+    verbose() << nm << " Previous BX sumET decoded " << endreq;
+    
 
-  //---------------------------------------------------------
-  // End of coding version = 1
-  //---------------------------------------------------------
-
+    
+    for(int ip = 0 ; ip < np ; ip++){
+      for(unsigned int i = 0 ; i < itc ; i++){
+        if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+        m_tcs[std::make_pair(ip,i)] = *data;
+      }
+      for(unsigned int i = 0 ; i < iec ; i++){
+        if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
+        m_ecs[std::make_pair(ip,i)] = *data;
+      }
+    }
+    verbose() << np << " Next BX summaries decoded " << endreq;  
+    
+    for(int ip = 0 ; ip < np ; ip++){
+      int odd = ip-int(ip/2)*2;
+      if(odd == 0 && NULL == ++data){error()<<"No more data in bank --> CORRUPTION" 
+                                            <<endreq; return false;}
+      std::stringstream num("");
+      num << ip;
+      m_sumEt[ip]                        = (*data >> 16*odd) & 0x3FFF ;
+    }
+    verbose() << nm << " Next BX sumET decoded " << endreq;
+    
+    // check the size 
+    verbose() << " <============= Decoding completed successfuly =============>" << endreq;
+    
+    // Print all data values extracted from rawBank
+    if ( msgLevel( MSG::VERBOSE) ){
+      for(std::map<std::string, unsigned int>::iterator imap = m_dataMap.begin();
+          imap!=m_dataMap.end();imap++){
+        verbose() << "Data " << (*imap).first << " = " <<  (*imap).second << endreq;
+      }
+    }
+    
+    // -----------------------------------------------
+    // BUILDING output (L0ProcessorData & L0Report)
+    // -----------------------------------------------
+    verbose() << "fill processor Data" <<endreq;
+    // fill L0ProcessorData with input data in rawBank
+    fillProcessorData();
+    //  emulate the config accordingly for later usage (monitoring) 
+    if(NULL != config)m_emuTool->process(config , m_processorDatas);
+    // Fill report with the consecutive BXs info
+    verbose() << "filling L0DU Report with consecutive BX" << endreq;
+    m_report.setChannelsDecisionSummaries( m_tcs );
+    m_report.setConditionsValueSummaries(  m_ecs );
+    m_report.setSumEt( m_sumEt );    
+    m_report.setFiredChannelsSummaries( m_fcs );  
+    verbose() 
+      << " <==== Building output (emulated ProcessorData & L0DUReport) completed successfuly ====>" 
+      << endreq;
+    
+    //---------------------------------------------------------
+    // End of coding version = 1
+    //---------------------------------------------------------
+    
   }  else{
     error() << " Unknown bank version " << m_vsn << endreq;
     return false;
   }
-
+  
   return true;
 }
 

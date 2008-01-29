@@ -1,4 +1,20 @@
-// $Id: L0ProcessorDataDecoder.h,v 1.3 2007-12-21 09:59:38 cattanem Exp $
+<<<<<<< L0ProcessorDataDecoder.h
+// $Id: L0ProcessorDataDecoder.h,v 1.4 2008-01-29 16:02:30 odescham Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2007/10/31 15:04:46  odescham
+// Full review of L0DU package
+//
+// Revision 1.3  2006/02/21 15:56:49  ocallot
+// Decrease verbosity of L0DU initialisation
+//
+//
+//
+=======
+// $Id: L0ProcessorDataDecoder.h,v 1.4 2008-01-29 16:02:30 odescham Exp $
+>>>>>>> 1.3
 // ============================================================================
 #ifndef L0DU_L0PROCESSORDATADECODER_H
 #define L0DU_L0PROCESSORDATADECODER_H

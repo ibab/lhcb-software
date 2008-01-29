@@ -1,17 +1,16 @@
-// -----------------------------------------------------------------------------------
-// The Trigger Configuration Key (TCK) MECHANISM IS PARTIALLY IMPLEMENTED SO FAR
-// ==> ALL CONFIGURATION DEFINED VIA OPTION FILE HAVE THE SAME DEFAULT TCK (0xFFFF)
-// -----------------------------------------------------------------------------------
 
-L0DU.TCK = 65535;  // This is the default 
+L0DU.TCK = "0xFFFF";  // This is the default for L0DUAlg
 
-// ==> UNCOMMENT YOUR PREFERD CONFIGURATION 
 
-//#include "$L0DUROOT/options/L0DUConfig_alg0_set0_lumi1.opts"
-//#include "$L0DUROOT/options/L0DUConfig_alg0_set0_lumi2.opts"
-//#include "$L0DUROOT/options/L0DUConfig_alg0_set0_lumi3.opts"
-//#include "$L0DUROOT/options/L0DUConfig_alg0_set0_lumi4.opts"
-//#include "$L0DUROOT/options/L0DUConfig_alg0_set0_lumi5.opts"
-//#include "$L0DUROOT/options/L0DUConfig_alg0_set0_lumi6.opts"
+// PREDEFINED L0DU CONFIGURATION (L0DUMultiConfigProvider tool)
+//ToolSvc.L0DUConfig.Preload = true; // preload all config during initialisation or get on-Demand (default)
 
-#include "$L0DUROOT/options/L0DUConfig_alg1_set0_lumi2.opts"
+#include "$L0DUROOT/options/L0DUConfig_0xFFFF_alg1_set0_lumi2.opts"  // 2007 tuning - L0-stripping production  (L0DUbank vsn =1) 
+#include "$L0DUROOT/options/L0DUConfig_0xDC06_alg0_set0_lumi2.opts"  // DC04/DC06 tuning - DC06 production (L0DU bank vsn = 0)
+#include "$L0DUROOT/options/L0DUConfig_0xFFFE_alg0_set1_lumi1.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
+#include "$L0DUROOT/options/L0DUConfig_0xFFFD_alg0_set1_lumi2.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
+#include "$L0DUROOT/options/L0DUConfig_0xFFFC_alg0_set1_lumi3.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
+#include "$L0DUROOT/options/L0DUConfig_0xFFFB_alg0_set1_lumi4.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
+#include "$L0DUROOT/options/L0DUConfig_0xFFFA_alg0_set1_lumi5.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
+#include "$L0DUROOT/options/L0DUConfig_0xFFF9_alg0_set1_lumi6.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
+
