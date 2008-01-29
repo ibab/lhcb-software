@@ -1,0 +1,6 @@
+${CONSTITUENT} :: ${FILEPATH}$(library_prefix)${NAME}${FILESUFFIX}
+	cp $? ${FILEPATH}${NAME}${FILESUFFIX}
+
+
+${CONSTITUENT}clean ::
+	/bin/rm -f ${FILEPATH}${NAME}${FILESUFFIX}

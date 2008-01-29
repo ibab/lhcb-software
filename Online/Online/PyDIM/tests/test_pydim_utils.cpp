@@ -1,4 +1,4 @@
-#include "pydim_utils.cpp"
+#include "../src/pydim_utils.cpp"
 
 
 using namespace std;
@@ -119,8 +119,9 @@ int main () {
     
     // testing next_element()
     
-    int type, multiplicity, internal_ptr=0, failed=0;
-     
+    int type, multiplicity, failed=0;
+    unsigned int internal_ptr=0;
+
     print ("testing next_element()...");
     // TEST 1         
     if (!next_element(good_format01, &internal_ptr, &type, &multiplicity))

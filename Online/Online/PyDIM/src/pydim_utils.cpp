@@ -59,8 +59,7 @@ extern "C" {
 /* **************************************************************************
  * Utility functions
  * *************************************************************************/
-void 
-printPyObject(PyObject *object) 
+static void printPyObject(PyObject *object) 
 {
    if ( !object ) return;
    PyObject_Print(object, stdout, Py_PRINT_RAW);

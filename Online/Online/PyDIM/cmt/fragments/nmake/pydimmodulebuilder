@@ -1,0 +1,7 @@
+${CONSTITUENT} :: ${FILEPATH}$(library_prefix)${NAME}${FILESUFFIX}
+	cp $? ${FILEPATH}`echo ${NAME} | cut -c4-`${FILESUFFIX}
+
+
+${CONSTITUENT}clean ::
+	/bin/rm -f ${FILEPATH}`echo ${NAME} | cut -c4-`${FILESUFFIX}
+

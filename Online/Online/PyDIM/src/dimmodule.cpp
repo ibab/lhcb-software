@@ -762,7 +762,7 @@ dim_dis_add_service(PyObject* self, PyObject* args) {
   return Py_BuildValue("i", service_id);
 }
 
-void printPyObject(PyObject* object) {
+static void printPyObject(PyObject* object) {
    if ( !object ) return;
    PyObject_Print(object, stdout, Py_PRINT_RAW);
    print("\n");

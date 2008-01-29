@@ -2,23 +2,33 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           PyDIM 
-version           v1r3
+version           v2r0
 #============================================================================
-branches          cmt doc src
+branches          cmt doc src python
 use GaudiPolicy   v*
-use DIM           v* Online          -no_auto_imports
-use Reflex        v* LCG_Interfaces
+use DIM           v* Online
 use Python        v* LCG_Interfaces
 
-apply_pattern install_more_includes more=PyDim
-#
-# temporary, until SEAL does it properly
-apply_pattern     reflex_dictionary                                   \
-                  dictionary=DIM                                      \
-                  imports="DIM ../src/DimPython.cpp"                  \
-                  headerfiles=$(PYDIMROOT)/src/dim_dict.h             \
-                  selectionfile=$(PYDIMROOT)/src/dim_dict.xml
+make_fragment pydimmodulebuilder
 
-macro_append PyDIM_reflex_options ' --comments '
-macro_append PyDIMDict_shlibflags ' $(DIM_linkopts) $(Python_linkopts) $(Reflex_linkopts) '
+pattern pydim_module \
+  library <name> -import=Python <files> ;\
+  macro <name>_shlibflags  "$(libraryshr_linkopts) $(use_linkopts)" ;\
+  document pydimmodulebuilder <name>_pymodule $(bin)<name>.so ;\
+  macro_remove constituents "" WIN32 "<name>_pymodule" ;\
+  macro_append <name>_cppflags " -ftemplate-depth-64" WIN32 "" ;\
+  path_remove PYTHONPATH "/<package>/" WIN32 "\<package>\" ;\
+  path_append PYTHONPATH $(<PACKAGE>ROOT)/$(tag); \
+  path_remove PYTHONPATH "/<package>/" WIN32 "\<package>\" ;\
+  path_append PYTHONPATH $(<PACKAGE>ROOT)/$(tag)
+
+apply_pattern pydim_module name=dimc   files="dimmodule.cpp   pydim_utils.cpp"
+apply_pattern pydim_module name=dimcpp files="dimmodule++.cpp pydim_utils.cpp"
+
+#application dim_test        -group=tests ../tests/test.c
+application dim_test_client -group=tests ../tests/test_client.c
+application dim_test_cpp    -group=tests ../tests/test.cpp
+application dim_test_utils  -group=tests ../tests/test_pydim_utils.cpp
+
 apply_pattern ld_library_path
+apply_pattern install_python_modules
