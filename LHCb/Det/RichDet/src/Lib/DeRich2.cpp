@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.34 2008-01-10 17:30:16 papanest Exp $
+ *  $Id: DeRich2.cpp,v 1.35 2008-01-29 07:58:28 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -114,38 +114,39 @@ StatusCode DeRich2::initialize()
   }
 
   // get the nominal reflectivity of the spherical mirror
-  std::string surfLoc;
-  if (name().find("Magnet") == std::string::npos)
-    surfLoc = "";
+  std::string sphMirrorReflLoc;
+  if ( exists("NominalSphericalMirrorReflectivityLoc" ) )
+    sphMirrorReflLoc = param<std::string>( "NominalSphericalMirrorReflectivityLoc" );
   else
-    surfLoc = "AfterMagnetRegion/";
+    sphMirrorReflLoc = "/dd/Geometry/AfterMagnetRegion/Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceIdealReflectivityPT";
 
-  const std::string sphMirrorReflLoc = "/dd/Geometry/"+surfLoc+
-    "Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceIdealReflectivityPT";
   SmartDataPtr<TabulatedProperty> sphMirrorRefl( dataSvc(), sphMirrorReflLoc );
   if ( !sphMirrorRefl )
     msg << MSG::ERROR << "No info on spherical mirror reflectivity" << endmsg;
-  else {
-    msg << MSG::DEBUG << "Loaded spherical mirror reflectivity from: "
-        << sphMirrorReflLoc << endmsg;
+  else
+  {
+    msg << MSG::DEBUG << "Loaded spherical mirror reflectivity from: "<<sphMirrorReflLoc<<endmsg;
     m_nominalSphMirrorRefl = new RichTabulatedProperty1D( sphMirrorRefl );
     if ( !m_nominalSphMirrorRefl->valid() )
     {
-      msg << MSG::ERROR
-          << "Invalid RichTabulatedProperty1D for " << sphMirrorRefl->name() << endreq;
+      msg << MSG::ERROR<<"Invalid RichTabulatedProperty1D for "<<sphMirrorRefl->name()<<endmsg;
       return StatusCode::FAILURE;
     }
   }
 
   // get the nominal reflectivity of the secondary mirror
-  const std::string secMirrorReflLoc = "/dd/Geometry/"+surfLoc+
-    "Rich2/Rich2SurfaceTabProperties/Rich2Mirror2SurfaceIdealReflectivityPT";
+  std::string secMirrorReflLoc;
+  if ( exists("NominalSecondaryMirrorReflectivityLoc" ) )
+    secMirrorReflLoc = param<std::string>( "NominalSecondaryMirrorReflectivityLoc" );
+  else
+    secMirrorReflLoc = "/dd/Geometry/AfterMagnetRegion/Rich2/Rich2SurfaceTabProperties/Rich2Mirror2SurfaceIdealReflectivityPT";
+
   SmartDataPtr<TabulatedProperty> secMirrorRefl(dataSvc(),secMirrorReflLoc);
   if ( !secMirrorRefl )
     msg << MSG::ERROR << "No info on secondary mirror reflectivity" << endmsg;
-  else {
-    msg << MSG::DEBUG << "Loaded secondary mirror reflectivity from: "
-        << secMirrorReflLoc << endmsg;
+  else
+  {
+    msg << MSG::DEBUG << "Loaded secondary mirror reflectivity from: "<<secMirrorReflLoc<<endmsg;
     m_nominalSecMirrorRefl = new RichTabulatedProperty1D( secMirrorRefl );
     if ( !m_nominalSecMirrorRefl->valid() )
     {

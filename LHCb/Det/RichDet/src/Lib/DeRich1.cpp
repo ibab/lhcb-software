@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.31 2008-01-10 17:30:15 papanest Exp $
+ *  $Id: DeRich1.cpp,v 1.32 2008-01-29 07:58:28 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -80,7 +80,8 @@ StatusCode DeRich1::initialize()
 
   const IPVolume* pvGasWindow( 0 );
   const IPVolume* pvRich1SubMaster = geometry()->lvolume()->pvolume("pvRich1SubMaster");
-  if ( pvRich1SubMaster ) {
+  if ( pvRich1SubMaster )
+  {
     pvGasWindow = pvRich1SubMaster->lvolume()->pvolume("pvRich1MagShH0:0")->
       lvolume()->pvolume("pvRich1GQuartzWH0:0");
   }
@@ -120,38 +121,43 @@ StatusCode DeRich1::initialize()
   }
 
   // get the nominal reflectivity of the spherical mirror
-  std::string surfLoc;
-  if (name().find("Magnet") == std::string::npos)
-    surfLoc = "";
+  std::string sphMirrorReflLoc;
+  if ( exists("NominalSphericalMirrorReflectivityLoc" ) )
+    sphMirrorReflLoc = param<std::string>( "NominalSphericalMirrorReflectivityLoc" );
   else
-    surfLoc = "BeforeMagnetRegion/";
+    sphMirrorReflLoc = "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT";
 
-  const std::string sphMirrorReflLoc = "/dd/Geometry/"+surfLoc+
-    "Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT";
   SmartDataPtr<TabulatedProperty> sphMirrorRefl( dataSvc(), sphMirrorReflLoc );
   if ( !sphMirrorRefl )
-    msg << MSG::ERROR << "No info on spherical mirror reflectivity" << endmsg;
-  else {
+  {
+    msg << MSG::ERROR <<"No info on spherical mirror reflectivity at "<<sphMirrorReflLoc<<endmsg;
+    return StatusCode::FAILURE;
+  }
+  else
+  {
     msg << MSG::DEBUG << "Loaded spherical mirror reflectivity from: "
         << sphMirrorReflLoc << endmsg;
     m_nominalSphMirrorRefl = new RichTabulatedProperty1D( sphMirrorRefl );
     if ( !m_nominalSphMirrorRefl->valid() )
     {
-      msg << MSG::ERROR
-          << "Invalid RichTabulatedProperty1D for " << sphMirrorRefl->name() << endreq;
+      msg << MSG::ERROR <<"Invalid RichTabulatedProperty1D for "<<sphMirrorRefl->name()<<endmsg;
       return StatusCode::FAILURE;
     }
   }
 
   // get the nominal reflectivity of the secondary mirror
-  const std::string secMirrorReflLoc = "/dd/Geometry/"+surfLoc+
-    "Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT";
+  std::string secMirrorReflLoc;
+  if ( exists("NominalSecondaryMirrorReflectivityLoc" ) )
+    secMirrorReflLoc = param<std::string>( "NominalSecondaryMirrorReflectivityLoc" );
+  else
+    secMirrorReflLoc = "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT";
+
   SmartDataPtr<TabulatedProperty> secMirrorRefl(dataSvc(),secMirrorReflLoc);
   if ( !secMirrorRefl )
     msg << MSG::ERROR << "No info on secondary mirror reflectivity" << endmsg;
-  else {
-    msg << MSG::DEBUG << "Loaded secondary mirror reflectivity from: "
-        << secMirrorReflLoc << endmsg;
+  else
+  {
+    msg << MSG::DEBUG <<"Loaded secondary mirror reflectivity from: "<<secMirrorReflLoc<<endmsg;
     m_nominalSecMirrorRefl = new RichTabulatedProperty1D( secMirrorRefl );
     if ( !m_nominalSecMirrorRefl->valid() )
     {
@@ -185,22 +191,23 @@ StatusCode DeRich1::initialize()
   m_HPDPanels[panel0->side()] = panel0;
   m_HPDPanels[panel1->side()] = panel1;
 
-  // conditions for mirror alignment
+  // DC06 compatible mirror (mis)alignment
+  bool alignMirros( false );
   m_sphMirAlignCond = condition( "Rich1Mirror1Align" );
-  if ( !m_sphMirAlignCond ) {
-    msg << MSG::FATAL << "Cannot load Condition Rich1Mirror1Align" << endmsg;
-    return StatusCode::FAILURE;
+  if ( m_sphMirAlignCond )
+  {
+    alignMirros = true;
+    updMgrSvc()->registerCondition(this,m_sphMirAlignCond.path(),&DeRich1::alignSphMirrors);
   }
   m_secMirAlignCond = condition( "Rich1Mirror2Align" );
-  if ( !m_secMirAlignCond ) {
-    msg << MSG::FATAL << "Cannot load Condition Rich1Mirror2Align" << endmsg;
-    return StatusCode::FAILURE;
+  if ( m_secMirAlignCond )
+  {
+    alignMirros = true;
+    updMgrSvc()->registerCondition(this,m_secMirAlignCond.path(),&DeRich1::alignSecMirrors);
   }
 
-  IUpdateManagerSvc* ums = updMgrSvc();
-  ums->registerCondition(this,m_sphMirAlignCond.path(),&DeRich1::alignSphMirrors);
-  ums->registerCondition(this,m_secMirAlignCond.path(),&DeRich1::alignSecMirrors);
-  StatusCode upsc = ums->update(this);
+  StatusCode upsc = StatusCode::SUCCESS;
+  if ( alignMirros ) upsc = updMgrSvc()->update(this);
 
   // initialize all child detector elements. This triggers the update
   // of the radiator properties

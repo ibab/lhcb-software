@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichSphMirror
  *
  *  CVS Log :-
- *  $Id: DeRichSphMirror.h,v 1.17 2007-04-03 15:42:32 papanest Exp $
+ *  $Id: DeRichSphMirror.h,v 1.18 2008-01-29 07:58:28 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -20,9 +20,8 @@
 
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/ISolid.h"
-#include "DetDesc/TabulatedProperty.h"
+#include "RichDet/Rich1DTabProperty.h"
 
-#include "Kernel/RichDetectorType.h"
 
 // External declarations
 extern const CLID CLID_DeRichSphMirror;
@@ -136,7 +135,7 @@ public:
    *
    * @return Pointer to mirror reflectivity
    */
-  inline const TabulatedProperty* reflectivity() const
+  inline const Rich::TabulatedProperty1D* reflectivity() const
   {
     return m_reflectivity;
   }
@@ -160,42 +159,35 @@ public:
     return m_centreNormalPlane;
   }
 
+private: // methods
+
   /**
    * Update the geometrical parameters.
    * @return SUCCESS if everything OK
    */
   StatusCode updateGeometry();
 
+private: // data
 
-private:
-
-  Rich::DetectorType m_rich;        ///< The Rich detector of this mirror
   /// mirror reflectivity
-  const TabulatedProperty* m_reflectivity;
+  const Rich::TabulatedProperty1D* m_reflectivity;
 
-  const ISolid* m_solid;             ///< The mirror solid
+  const ISolid* m_solid;                ///< The mirror solid
 
   Gaudi::XYZPoint m_centreOfCurvature;  ///< The centre of curvature
   Gaudi::XYZPoint m_mirrorCentre;       ///< The mirror centre
+
   Gaudi::XYZPoint m_localOrigin;        ///< The local centre of curvature
   Gaudi::XYZPoint m_localMirrorCentre;  ///< The local mirror centre
 
-  /// Alignment constant for x alignment.  Not used presently
-  double m_alignmentConstantX;
-  /// Alignment constant for y alignment.  Not used presently
-  double m_alignmentConstantY;
+  double m_radius;      ///< Spherical mirror radius
+  int m_mirrorNumber;   ///< mirror (segment) number
+  std::string m_name;   ///< The name of this mirror
 
-  double m_radius;                  ///< Spherical mirror radius
-
-  int m_mirrorNumber;               ///< mirror (segment) number
-
-  std::string m_name; ///< The name of this mirror
-
-  ///< The normal vector at the centre of the mirror
-  Gaudi::XYZVector m_centreNormal;
   /// The normal vector at the centre of the mirror
+  Gaudi::XYZVector m_centreNormal;
+  /// The plane normal to the normal vector at the centre of the mirror
   Gaudi::Plane3D m_centreNormalPlane;
-
 };
 
 #endif    //  RICHDET_DERICHSPHMIRROR_H

@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.29 2007-09-13 13:10:55 jpalac Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.30 2008-01-29 07:58:28 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -19,6 +19,8 @@
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Transform3DTypes.h"
 
+#include "Kernel/RichDetectorType.h"
+
 /// Detector description classes
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidSphere.h"
@@ -33,12 +35,16 @@
 const CLID CLID_DeRichSphMirror = 12030;  // User defined
 
 // Standard Constructor
-DeRichSphMirror::DeRichSphMirror()
-  : m_mirrorNumber(-1)
+DeRichSphMirror::DeRichSphMirror() :
+  m_reflectivity ( NULL ),
+  m_mirrorNumber ( -1   )
 {}
 
 // Standard Destructor
-DeRichSphMirror::~DeRichSphMirror() {}
+DeRichSphMirror::~DeRichSphMirror()
+{
+  if ( m_reflectivity ) { delete m_reflectivity; m_reflectivity = NULL; }
+}
 
 // Retrieve Pointer to class defininition structure
 const CLID& DeRichSphMirror::classID()
@@ -55,18 +61,20 @@ StatusCode DeRichSphMirror::initialize()
   bool secondary( false );
   // find if this mirror is in Rich1 or Rich2 and
   // if this is a primary or secondary mirror
+
+  Rich::DetectorType rich;
   const std::string::size_type pos = name().find("Rich");
   if ( std::string::npos != pos ) {
     m_name = name().substr(pos);
     std::string richNum = m_name.substr(4,1);
     if ( richNum == "1" ) {
-      m_rich = Rich::Rich1;
+      rich = Rich::Rich1;
       const std::string::size_type secPos = name().find("Mirror2");
       if ( std::string::npos != secPos ) secondary = true;
     }
     else
       if ( richNum == "2") {
-        m_rich = Rich::Rich2;
+        rich = Rich::Rich2;
         const std::string::size_type secPos = name().find("SecMirror");
         if ( std::string::npos != secPos ) secondary = true;
       }
@@ -85,7 +93,7 @@ StatusCode DeRichSphMirror::initialize()
   MsgStream msg( msgSvc(), localName );
 
   // extract mirror number from detector element name
-  const std::string::size_type pos2 = name().find(':');
+  const std::string::size_type pos2 = name().rfind(':');
   if ( std::string::npos == pos2 ) {
     msg << MSG::FATAL << "A spherical mirror without a number!" << endmsg;
     return StatusCode::FAILURE;
@@ -93,24 +101,12 @@ StatusCode DeRichSphMirror::initialize()
   m_mirrorNumber = atoi( name().substr(pos2+1).c_str() );
   const std::string mirNumString = name().substr(pos2+1);
 
-  const std::string & rich1GeomLoc = "BeforeMagnetRegion/Rich1";
-  const std::string & rich2GeomLoc = "AfterMagnetRegion/Rich2";
-  const std::string & rich2Location = DeRichLocations::Rich2;
-  const std::string & rich1Location = DeRichLocations::Rich1;
-
-  // get DeRich1 and 2
-  SmartDataPtr<DeRich> deRich1(dataSvc(), rich1Location);
-  if (!deRich1) {
-    msg << MSG::FATAL << "Cannot locate " << rich1Location << endmsg;
-    return StatusCode::FAILURE;
-  }
-  DeRich* rich1 = deRich1;
-  SmartDataPtr<DeRich> deRich2(dataSvc(), rich2Location);
+  // get DeRich2
+  SmartDataPtr<DeRich> deRich2(dataSvc(), DeRichLocations::Rich2);
   if (!deRich2) {
-    msg << MSG::FATAL << "Cannot locate " << rich2Location << endmsg;
+    msg << MSG::FATAL << "Cannot locate " << DeRichLocations::Rich2 << endmsg;
     return StatusCode::FAILURE;
   }
-  DeRich* rich2 = deRich2;
 
   double hexRadius = 510.0*Gaudi::Units::mm;
   if ( deRich2->exists("Rich2SphMirrorHexDiameter") )
@@ -151,13 +147,13 @@ StatusCode DeRichSphMirror::initialize()
   // and its centre
   m_localOrigin = Gaudi::XYZVector(0.0, 0.0, 0.0);
   Gaudi::Polar3DVector toSphCentre(1.0, 0.0, 0.0);
-  if ( 0.0 != sphereSolid->startThetaAngle() ) {
+  if ( 0.0 != sphereSolid->startThetaAngle() )
+  {
     toSphCentre.SetCoordinates( 1.0,
                                 sphereSolid->startThetaAngle() +
                                 sphereSolid->deltaThetaAngle()/2.0,
                                 sphereSolid->startPhiAngle() +
                                 sphereSolid->deltaPhiAngle()/2.0 );
-
   }
 
   // convert to XYZ
@@ -176,18 +172,18 @@ StatusCode DeRichSphMirror::initialize()
   m_mirrorCentre = geometry()->toGlobal(m_localMirrorCentre);
   m_centreOfCurvature = geometry()->toGlobal(m_localOrigin);
 
-  msg << MSG::DEBUG << "Mirror #" << m_mirrorNumber << " " << m_rich << " Radius:"
+  msg << MSG::DEBUG << "Mirror #" << m_mirrorNumber << " " << rich << " Radius:"
       << m_radius << " Centre of curvature " << m_centreOfCurvature << endmsg;
   msg << MSG::DEBUG << "Centre of mirror " << m_mirrorCentre << endmsg;
 
-  // the following lines can be uncommented for debug
+  // the following lines can be uncommented for debuging
   // right and left middle points are for verification of the hex segment position
   //const double flatToCentre = hexRadius*sin(60*degree);
   //const Gaudi::XYZPoint middleRightSide
   //  (sqrt(m_radius*m_radius-flatToCentre*flatToCentre),0.0,flatToCentre);
   //const Gaudi::XYZPoint middleLeftSide
   //  (sqrt(m_radius*m_radius-flatToCentre*flatToCentre),0.0,-flatToCentre);
-  //if( m_rich == Rich::Rich2 ) {
+  //if( rich == Rich::Rich2 ) {
   //  if( (m_mirrorNumber == 31) || (m_mirrorNumber < 28 && m_mirrorNumber != 0) )
   //    msg << MSG::VERBOSE << "Right middle "
   //        << geometry()->toGlobal(middleRightSide) << endmsg;
@@ -208,13 +204,13 @@ StatusCode DeRichSphMirror::initialize()
 
   // find surface properties
   std::string surfLocation, sphMirrorName, surfName;
-  if ( m_rich == Rich::Rich1 ) {
-    surfLocation = "/dd/Geometry/"+rich1GeomLoc+"/Rich1Surfaces";
+  if ( rich == Rich::Rich1 ) {
+    surfLocation = "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1Surfaces";
     sphMirrorName = ( secondary  ? "Mirror2" : "Mirror1");
     surfName = ":"+mirNumString;
   }
   else{
-    surfLocation = "/dd/Geometry/"+rich2GeomLoc+"/Rich2Surfaces";
+    surfLocation = "/dd/Geometry/AfterMagnetRegion/Rich2/Rich2Surfaces";
     sphMirrorName = ( secondary  ? "SecMirror" : "SphMirror");
     surfName = "Seg"+mirNumString;
   }
@@ -257,7 +253,7 @@ StatusCode DeRichSphMirror::initialize()
     for (Surface::Tables::const_iterator table_iter = surfTabProp.begin();
          table_iter != surfTabProp.end(); ++table_iter) {
       if ( (*table_iter)->type() == "REFLECTIVITY" ) {
-        m_reflectivity = (*table_iter);
+        m_reflectivity = new Rich::TabulatedProperty1D( (*table_iter) );
         foundRefl = true;
         break;
       }
@@ -272,16 +268,16 @@ StatusCode DeRichSphMirror::initialize()
     return StatusCode::FAILURE;
   }
 
-  msg << MSG::DEBUG << "Reflectivity is from TabProp "
-      << m_reflectivity->name() << endmsg;
+  msg << MSG::DEBUG<< "Reflectivity is from TabProp "
+      << m_reflectivity->tabProperty()->name() << endmsg;
   msg << MSG::VERBOSE <<"End initialisation for DeRichSphMirror" << endmsg;
 
   // register condition update for alignment
-  if ( Rich::Rich1 == m_rich )
-    updMgrSvc()->registerCondition(this, rich1,
+  if ( Rich::Rich1 == rich )
+    updMgrSvc()->registerCondition(this, geometry(),
                                    &DeRichSphMirror::updateGeometry );
   else
-    updMgrSvc()->registerCondition(this, rich2,
+    updMgrSvc()->registerCondition(this, deRich2.ptr(),
                                    &DeRichSphMirror::updateGeometry );
 
   StatusCode update = updMgrSvc()->update(this);
@@ -292,7 +288,7 @@ StatusCode DeRichSphMirror::initialize()
 }
 
 //=========================================================================
-//  intersects
+//  intersects with return point
 //=========================================================================
 StatusCode DeRichSphMirror:: intersects(const Gaudi::XYZPoint& globalP,
                                         const Gaudi::XYZVector& globalV,
