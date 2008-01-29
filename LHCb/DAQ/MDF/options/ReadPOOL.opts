@@ -18,6 +18,6 @@ EventSelector.PrintFreq              = 100;
 PoolDbCacheSvc.Dlls       += {"CLHEPRflx", "STLRflx", "GaudiKernelDict"};
 FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
 EventSelector.Input                  = {
-  "DATA='PFN:mdfMini.root' TYP='POOL_ROOTTREE' OPT='OLD'"
+  "DATA='PFN:mdfPOOL.dat' TYP='POOL_ROOTTREE' OPT='OLD'"
 };
 ReadAlg.OutputLevel                  = 2;

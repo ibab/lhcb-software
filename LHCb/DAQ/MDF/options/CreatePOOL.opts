@@ -26,7 +26,7 @@ ApplicationMgr.OutStream  += { "POOLMini" };
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 PoolDbCacheSvc.Dlls       += {"CLHEPRflx", "STLRflx", "GaudiKernelDict"};
 POOLMini.ItemList          = { "/Event#1", "/Event/DAQ#1" };
-POOLMini.Output            = "DATAFILE='PFN:mdfMini.root' TYP='POOL_ROOTTREE' OPT='RECREATE'";
+POOLMini.Output            = "DATAFILE='PFN:mdfPOOL.dat' TYP='POOL_ROOTTREE' OPT='RECREATE'";
 ReadAlg.OutputLevel        = 2;
 PoolDbCacheSvc.OutputLevel = 1;
 FileCatalog.Catalogs       = { "xmlcatalog_file:Cnew.xml" };

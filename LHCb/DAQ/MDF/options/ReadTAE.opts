@@ -14,7 +14,7 @@ EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
 EventSelector.PrintFreq              = 100;
 EventSelector.Input                  = {
-  "DATA='file://taeData.mdf' SVC='LHCb::MDFSelector'"
+  "DATA='file://taeData.dat' SVC='LHCb::MDFSelector'"
 };
 FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
 
@@ -23,7 +23,6 @@ ApplicationMgr.OutStream  += { "TAEMini" };
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 PoolDbCacheSvc.Dlls       += {"CLHEPRflx", "STLRflx", "GaudiKernelDict"};
 TAEMini.ItemList          = { "/Event#1", "/Event/DAQ#1", "/Event/Prev1/DAQ", "/Event/Prev2", "/Event/Next1/DAQ/RawEvent" };
-TAEMini.Output            = "DATAFILE='PFN:TAEMini.root' TYP='POOL_ROOTTREE' OPT='RECREATE'";
+TAEMini.Output            = "DATAFILE='PFN:taePOOL.dat' TYP='POOL_ROOTTREE' OPT='RECREATE'";
 ReadAlg.OutputLevel        = 2;
 PoolDbCacheSvc.OutputLevel = 1;
-
