@@ -22,9 +22,9 @@
 #include "RTL/DoubleLinkedQueue.h"
 #define MAGIC_PATTERN int(0xFEEDBABE)
 
-static int print_release = false;
+static int print_release   = false;
 // static int print_addref = false;
-static bool s_map_unused = false;
+static bool s_map_unused   = true;
 
 struct MEPDESC : public _MEPID  {
   int             owner;

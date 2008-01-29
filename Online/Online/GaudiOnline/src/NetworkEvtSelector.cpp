@@ -1,4 +1,4 @@
-// $Id: NetworkEvtSelector.cpp,v 1.2 2007-12-07 19:21:11 frankm Exp $
+// $Id: NetworkEvtSelector.cpp,v 1.3 2008-01-29 08:54:05 frankb Exp $
 //====================================================================
 //  NetworkEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -41,6 +41,7 @@ static void handle_event(netentry_t* e, const netheader_t& h, void* param)  {
 NetworkContext::NetworkContext(const NetworkEvtSelector* s)
 : OnlineContext(s)
 {
+  m_evdesc.setEventType(EVENT_TYPE_EVENT);
 }
 
 void NetworkContext::taskDead(const std::string& who)  {

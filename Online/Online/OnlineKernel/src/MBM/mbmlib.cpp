@@ -39,6 +39,10 @@ static inline int mbm_error(const char* fn, int line)  {
   ::lib_rtl_printf("MBM Error:Bad!!!! %s Line:%d\n",fn,line);
   return MBM_ERROR;  
 }
+static inline int mbm_error_status()  {  
+  return MBM_ERROR;  
+}
+#define MBM_ERROR_STATUS mbm_error_status()
 #undef MBM_ERROR
 #define  MBM_ERROR mbm_error(__FILE__,__LINE__);
 #define  MBMQueue RTL::DoubleLinkedQueue
@@ -271,8 +275,7 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   _mbm_wes_ast_add  = _mbm_wes_ast;
   std::auto_ptr<BMDESCRIPT> bm(mbm_map_memory(bm_name));
   if ( !bm.get() )  {
-    lib_rtl_signal_message(LIB_RTL_OS,"Cannot map memory sections for %s.",
-            bm_name);
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Cannot map memory sections:%s.",bm_name);
     return MBM_INV_DESC;
   }
 
@@ -713,8 +716,8 @@ int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle, bool create)  {
   if( !lib_rtl_is_success(status) && create )  {
     status = ::lib_rtl_create_section("bm_buffers", len, &h, true);
     if(!lib_rtl_is_success(status))   {   
-      ::lib_rtl_signal_message(LIB_RTL_OS,"Cannot access section bm_buffers.");
-      return MBM_ERROR;
+      //::lib_rtl_signal_message(LIB_RTL_OS,"Cannot access section bm_buffers.");
+      return MBM_ERROR_STATUS;
     }
     BUFFERS* buffs = (BUFFERS*)h->address;
     ::memset(buffs,0,len);
@@ -722,7 +725,7 @@ int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle, bool create)  {
   }
   else if (!lib_rtl_is_success(status)) {
     *handle = 0;
-    return MBM_ERROR;
+    return MBM_ERROR_STATUS;
   }
   BUFFERS* b = (BUFFERS*)h->address;
   b->p_bmax = MBM_MAX_BUFF;
@@ -1876,4 +1879,52 @@ int _mbm_flush_sections(BMID bm)   {
   lib_rtl_flush_section(bm->bitm_add);
   return 1;
 }
+
+// MAP buffer manager sections for monitoring
+BMID mbm_map_mon_memory(const char* bm_name)  {
+  char text[128];
+  std::auto_ptr<BMDESCRIPT> bm(new BMDESCRIPT());
+  ::strncpy(bm->bm_name,bm_name,sizeof(bm->bm_name));
+  bm->bm_name[sizeof(bm->bm_name)-1] = 0;
+  bm->owner = -1;
+  sprintf(text, "bm_ctrl_%s", bm->bm_name);
+  int len, status  = lib_rtl_map_section(text, sizeof(CONTROL), &bm->ctrl_add);
+  if (!lib_rtl_is_success(status))    {
+    lib_rtl_signal_message(LIB_RTL_OS,"Error mapping control section for %s.Status=%d",
+                           bm_name,status);
+    return 0;
+  }
+  bm->ctrl = (CONTROL*)bm->ctrl_add->address;
+  sprintf(text, "bm_user_%s",   bm_name);
+  len = sizeof(USERDesc)+(bm->ctrl->p_umax-1)*sizeof(USER);
+  status  = lib_rtl_map_section(text, len, &bm->user_add);
+  if (!lib_rtl_is_success(status))  {
+    lib_rtl_signal_message(LIB_RTL_OS,"Error mapping user section for %s. Status=%d",
+                           bm_name,status);
+    _mbm_unmap_sections(bm.get());
+    return 0;
+  }
+  bm->usDesc = (USERDesc*)bm->user_add->address;
+  bm->user   = &bm->usDesc->users[0];
+  bm->bitmap_size = bm->ctrl->bm_size;
+  bm->buffer_size = bm->ctrl->buff_size;
+  return bm.release();
+}
+
+/// Access buffer control block
+CONTROL* mbm_get_control_table(BMID bm) {
+  if ( bm && bm != MBM_INV_DESC )  {
+    return bm->ctrl;
+  }
+  return 0;
+}
+
+/// Access buffer control block
+USER* mbm_get_user_table(BMID bm) {
+  if ( bm && bm != MBM_INV_DESC )  {
+    return bm->user;
+  }
+  return 0;
+}
+
 

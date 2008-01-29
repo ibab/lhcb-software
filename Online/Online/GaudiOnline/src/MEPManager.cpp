@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.16 2008-01-17 17:41:04 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.17 2008-01-29 08:54:05 frankb Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -29,7 +29,7 @@ LHCb::MEPManager::MEPManager(const std::string& nam, ISvcLocator* loc)
   declareProperty("PartitionID",      m_partitionID);
   declareProperty("InitFlags",        m_initFlags);
   declareProperty("PartitionBuffers", m_partitionBuffers=false);
-  declareProperty("MapUnusedBuffers", m_mapUnused=false);
+  declareProperty("MapUnusedBuffers", m_mapUnused=true);
 }
 
 /// Default destructor

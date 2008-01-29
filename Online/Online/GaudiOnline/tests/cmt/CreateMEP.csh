@@ -1,7 +1,16 @@
-#!/bin/csh
-if ( -f /tmp/CreateMEP.opts ) then
-  rm -f /tmp/CreateMEP.opts
-endif
+#!/bin/bash
+if test -f /tmp/CreateMEP.opts;
+then
+  rm -f /tmp/CreateMEP.opts;
+fi
+
+CREATETAE=false;
+if test "${1}" = "-tae";
+then
+    CREATETAE=true;
+    echo "We are creating TAE events.....";
+fi
+
 cat >/tmp/CreateMEP.opts <<END-OF-OPTS
 ApplicationMgr.DLLs       = { "MDF" };
 ApplicationMgr.TopAlg     = { "LHCb::RawEventTestCreator/RawEventGen", "StoreExplorerAlg" };
@@ -19,7 +28,7 @@ Writer_0.Compress       = 0;
 Writer_0.ChecksumType   = 0;
 Writer_0.PackingFactor  = 10;
 Writer_0.Connection     = "file://mepData_0.dat";
-Writer_0.MakeTAE        = true;
+Writer_0.MakeTAE        = ${CREATETAE};
 END-OF-OPTS
 #
 cat /tmp/CreateMEP.opts

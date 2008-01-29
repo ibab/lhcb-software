@@ -71,20 +71,25 @@ namespace LHCb  {
       STARTUP_DONE
     };
     enum State  {
-      ST_UNKNOWN,
-      ST_LOADED,
-      ST_NOT_READY,
-      ST_READY,
-      ST_RUNNING,
-      ST_STOPPED,
-      ST_ERROR
+      ST_UNKNOWN   = 'U',
+      ST_NOT_READY = 'N',
+      ST_READY     = 'r',
+      ST_RUNNING   = 'R',
+      ST_STOPPED   = 'S',
+      ST_ERROR     = 'E'
     };
     enum SubState  {
-      SUCCESS_ACTION,
-      EXEC_ACTION,
-      FAILED_ACTION,
-      UNKNOWN_ACTION
+      SUCCESS_ACTION = 'S',
+      EXEC_ACTION    = 'E',
+      FAILED_ACTION  = 'F',
+      UNKNOWN_ACTION = 'U'
     };
+    struct FSMMonitoring {
+      unsigned long lastCmd, doneCmd;
+      int pid;
+      char targetState, state, metaState, pad;
+    } m_monitor;
+
   protected:
     /// Variable to contain object name (==constant)
     std::string   m_name;
@@ -92,14 +97,14 @@ namespace LHCb  {
     std::string   m_stateName;
     /// Variable to contain the process name
     std::string   m_procName;
-    /// Sub state
-    std::string   m_subStateName;
+    /// Task states
+    int m_targetState, m_currentState, m_subState;
     /// Pointer to dim command to treceive transition changes
     DimCommand*   m_command;
     /// Pointer to the dim service publishing the state
     DimService*   m_service;
     /// Pointer to the dim service publishing the sub-state
-    DimService*   m_subStateService;
+    DimService*   m_fsmService;
     /// Gaudi property manager
     PropertyMgr*  m_propertyMgr;
     /// Flag to indicate the event loop is "ON"
@@ -115,15 +120,17 @@ namespace LHCb  {
     /// Print error message (returns FAILURE)
     StatusCode printErr(int flag, const char* fmt, ...);
     /// Declare FSM state
-    StatusCode declareState(const std::string& new_state);
+    StatusCode _declareState(const std::string& new_state);
     /// Declare FSM state
     StatusCode declareState(State state);
     /// Declare FSM sub-state
     StatusCode declareSubState(SubState state);
-    /// Declare FSM state
-    StatusCode declareSubState(const std::string& new_state);
+    /// Set transition target state
+    void setTargetState(State target) { m_targetState = target; }
     /// Accessor to property manager
     PropertyMgr& propertyMgr()   { return *m_propertyMgr; }
+    /// Translate integer state to string name
+    static std::string stateName(int state);
 
   public:
     /// Initializing constructor                       (OFFLINE     -> Inactive)

@@ -37,9 +37,13 @@ typedef int (*RTL_ast_t)(void*);
 
 #ifdef MBM_IMPLEMENTATION
 struct BMDESCRIPT;
+struct CONTROL;
+struct USER;
 typedef BMDESCRIPT* BMID;
 #else
 typedef void* BMID;
+typedef void* USER;
+typedef void* CONTROL;
 #endif
 #define MBM_INV_DESC   ((BMID)-1)
 
@@ -97,12 +101,19 @@ extern "C"  {
   int  mbm_get_event_ast(void* par);
   /// Map buffer memory sections
   BMID mbm_map_memory(const char* bm_name);
+  /// Map buffer memory sections used for monitoring
+  BMID mbm_map_mon_memory(const char* name);
   /// Unmap buffer memory sections
   int mbm_unmap_memory(BMID bm);
   /// Map global buffer information on this machine
   int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle, bool create=true);
   /// Unmap global buffer information on this machine
   int mbm_unmap_global_buffer_info(lib_rtl_gbl_t handle, bool remove=false);
+  /// Access buffer control block
+  CONTROL* mbm_get_control_table(BMID bm);
+  /// Access user control block
+  USER* mbm_get_user_table(BMID bm);
+
 #ifdef __cplusplus
 #undef __MBM_CONST
 }

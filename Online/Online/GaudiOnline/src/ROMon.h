@@ -1,6 +1,7 @@
 #ifndef GAUDIONLINE_ROMON_H
 #define GAUDIONLINE_ROMON_H 1
 
+#include <ctime>
 #include "MBM/bmdef.h"
 #include "MBM/bmstruct.h"
 
@@ -98,9 +99,10 @@ namespace ROMon {
     int  partitionID;
     int  processID;
     int  events;
+    char reqs[4];
     char type;
     char state;
-    /// 2 Byte payload padding to ensure 32 bit alignment
+    /// 3 Byte payload padding to ensure 32 bit alignment
     char pad[2];
   public:    // Public data accessors
     /// Length of the object in bytes
@@ -154,11 +156,19 @@ namespace ROMon {
   public:
     typedef VarItems<MBMBuffer> Buffers;
     typedef FixItems<FSMTask>   Tasks;
+    /// Total size of the node information
     int  totalSize;
+    /// Size of the MBM buffer information
     int  bmSize;
+    /// Size of the FSM task list
     int  taskSize;
+    /// Time stamp of the monitor snapshot [seconds since epoche]
+    time_t time;
+    /// Time stamp of the monitor snapshot [milli seconds]
+    unsigned int millitm;
     /// Object name
     char name[32];
+
   public:    // Public data accessors
     /// Reset object structure
     Node* reset();
@@ -173,6 +183,7 @@ namespace ROMon {
   };
 
   class Nodeset {
+  public:
     typedef VarItems<Node> Nodes;
     /// Object name
     char name[32];

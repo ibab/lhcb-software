@@ -38,6 +38,11 @@ int MBM::Manager::mapSections()  {
   return m_bm ? MBM_NORMAL : MBM_ERROR;
 }
 
+int MBM::Manager::mapMonitorSections()  {
+  m_bm = mbm_map_mon_memory(bm_id);
+  return m_bm ? MBM_NORMAL : MBM_ERROR;
+}
+
 int MBM::Manager::unmapSections()  {
   if ( m_bm ) {
     // Internally this deletes the buffer descriptor!

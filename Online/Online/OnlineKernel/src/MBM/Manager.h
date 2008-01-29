@@ -31,6 +31,8 @@ namespace MBM {
     virtual ~Manager();
     /// Map BM memory sections
     virtual int mapSections();
+    /// Map BM monitoring memory sections
+    virtual int mapMonitorSections();
     /// Unmap BM memory sections
     virtual int unmapSections();
     /// Parse installer options

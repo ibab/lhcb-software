@@ -1,12 +1,15 @@
 #!/bin/sh
 killall test.exe
 killall Gaudi.exe
-killall gentest.exe
+#killall gentest.exe
 #rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 #
 export TAN_PORT=YES
 export TAN_NODE=$HOSTNAME
-export DIM_DNS_NODE=$HOSTNAME
+if test -z "${DIM_DNS_NODE}";
+then
+    export DIM_DNS_NODE=$HOSTNAME;
+fi;
 #
 export OPTS=$GAUDIONLINEROOT/options
 export msg_svc=LHCb::FmcMessageSvc
