@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.13 2007-12-10 08:40:17 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.14 2008-01-29 14:33:27 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -100,7 +100,6 @@ private:
   double m_errorTy2;                ///< Error^2 on slope y
   std::vector<double> m_errorP;     ///< Error on dp/p
   bool m_makeNodes;
-  bool m_makeNodesAtAllReferencePositions ; ///< Temporary flag to disable creating nodes before first or after last hit
   bool m_updateTransport ;          ///< Update the transport matrices between iterations
   bool m_applyMaterialCorrections ; ///< Apply material corrections
   int m_particleID ;                ///< PID value used for material corrections

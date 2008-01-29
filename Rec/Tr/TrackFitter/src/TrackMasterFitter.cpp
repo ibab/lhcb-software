@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.44 2008-01-17 16:04:22 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.45 2008-01-29 14:33:27 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -73,13 +73,12 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
                                                         (StateParameters::ZEndRich1)
                                                         (StateParameters::ZBegRich2)
                                                         (StateParameters::ZEndRich2));
-  declareProperty( "ErrorX2"        , m_errorX2 = 4.0*Gaudi::Units::mm2   );
-  declareProperty( "ErrorY2"        , m_errorY2 = 400.0*Gaudi::Units::mm2 );
-  declareProperty( "ErrorTx2"       , m_errorTx2 = 6.e-5                  );
-  declareProperty( "ErrorTy2"       , m_errorTy2 = 1.e-4                  );
-  declareProperty( "ErrorP"         , m_errorP = boost::assign::list_of(0.15)(5.0e-7));
+  declareProperty( "ErrorX2"        , m_errorX2 = 10000.0*Gaudi::Units::mm2 );
+  declareProperty( "ErrorY2"        , m_errorY2 = 10000.0*Gaudi::Units::mm2 );
+  declareProperty( "ErrorTx2"       , m_errorTx2 = 0.01                  );
+  declareProperty( "ErrorTy2"       , m_errorTy2 = 0.01                  );
+  declareProperty( "ErrorP"         , m_errorP = boost::assign::list_of(0.0)(0.001));
   declareProperty( "MakeNodes"      , m_makeNodes = true                  );
-  declareProperty( "NodesAtAllZPositions",m_makeNodesAtAllReferencePositions=true) ; 
   declareProperty( "MaterialLocator", m_materialLocatorName="DetailedMaterialLocator") ;
   declareProperty( "UpdateTransport", m_updateTransport=false) ;
   declareProperty( "ApplyMaterialCorrections", m_applyMaterialCorrections=true) ;
@@ -477,25 +476,22 @@ StatusCode TrackMasterFitter::makeNodes( Track& track ) const
     zmax = std::max( zmax, node->z()) ;
   }
 
-  // Loop over the predefined z positions and add them to the nodes only if they are 
-  // between the first and last measurement.
+  // Loop over the predefined z positions and add them to the nodes.
   for (std::vector<double>::const_iterator izpos = m_zPositions.begin() ; 
        izpos != m_zPositions.end(); ++izpos ) {
     double z = *izpos;
-    if( m_makeNodesAtAllReferencePositions || (zmin < z && z < zmax ) ) {
-      FitNode* node = new FitNode( z );
-      State& state = node->state();
-      // set the location (must find a better way to do this!)
-      if ( fabs(z - StateParameters::ZBegRich1) < TrackParameters::lowTolerance )
-        state.setLocation( State::BegRich1 );
-      else if ( fabs(z - StateParameters::ZEndRich1 ) < TrackParameters::lowTolerance )
-        state.setLocation( State::EndRich1 );
-      else if ( fabs(z - StateParameters::ZBegRich2 ) < TrackParameters::lowTolerance )
-        state.setLocation( State::BegRich2 );
-      else if ( fabs(z - StateParameters::ZEndRich2 ) < TrackParameters::lowTolerance )
-        state.setLocation( State::EndRich2 );
-      nodes.push_back( node ) ;
-    }
+    FitNode* node = new FitNode( z );
+    State& state = node->state();
+    // set the location (must find a better way to do this!)
+    if ( fabs(z - StateParameters::ZBegRich1) < TrackParameters::lowTolerance )
+      state.setLocation( State::BegRich1 );
+    else if ( fabs(z - StateParameters::ZEndRich1 ) < TrackParameters::lowTolerance )
+      state.setLocation( State::EndRich1 );
+    else if ( fabs(z - StateParameters::ZBegRich2 ) < TrackParameters::lowTolerance )
+      state.setLocation( State::BegRich2 );
+    else if ( fabs(z - StateParameters::ZEndRich2 ) < TrackParameters::lowTolerance )
+      state.setLocation( State::EndRich2 );
+    nodes.push_back( node ) ;
   }
 
   // Sort the nodes in z
