@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.30 2008-01-29 12:32:01 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.31 2008-01-29 13:43:22 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -240,6 +240,7 @@ StatusCode GetMCRichHitsAlg::execute()
           if ( mchit->nitrogenCK()       ) ++m_nitroHits[rich];
           if ( mchit->aeroFilterCK()     ) ++m_aeroFilterHits[rich];
           if ( mchit->hpdSiBackscatter() ) ++m_siBackScatt[rich];
+          if ( mchit->chargedTrack()     ) ++m_ctkHits[rich];
           if ( mchit->hpdReflection()    )  
           {
             ++m_hpdReflHits[rich];
@@ -266,7 +267,6 @@ StatusCode GetMCRichHitsAlg::execute()
           {
             ++m_aeroTileHits[mchit->aerogelTileID()];
           }
-          if ( mchit->chargedTrack()    ) ++m_ctkHits[rad];
           if ( mchit->scatteredPhoton() ) ++m_scatHits[rad];
           if ( !mcPart                  ) ++m_nomcpHits[rad];
         }
@@ -280,6 +280,12 @@ StatusCode GetMCRichHitsAlg::execute()
         if ( msgLevel(MSG::DEBUG) && mchit->hpdReflection() ) 
         {
           debug() << "HPD internal Reflection Hit : " << *mchit << endreq;
+        }
+
+        // (temp) si back-scatter hits
+        if ( msgLevel(MSG::DEBUG) && mchit->hpdSiBackscatter() ) 
+        {
+          debug() << "Si back-scatter hit : " << *mchit << endreq;
         }
 
       } // end loop on hits in the collection
@@ -345,11 +351,15 @@ StatusCode GetMCRichHitsAlg::finalize()
          << " Rich2 = " << occ(m_siBackScatt[Rich::Rich2],m_nEvts)
          << endmsg;
 
+  info() << "Av. # Charged Track hits      : Rich1 = "
+         << occ(m_ctkHits[Rich::Rich1],m_nEvts)
+         << " Rich2 = " << occ(m_ctkHits[Rich::Rich2],m_nEvts)
+         << endmsg;
+
   info() << "Av. # All HPD reflection hits : Rich1 = "
          << occ(m_hpdReflHits[Rich::Rich1],m_nEvts)
          << " Rich2 = " << occ(m_hpdReflHits[Rich::Rich2],m_nEvts)
          << endmsg;
-
   info() << "  Av. # QW/PC refl. hits      : Rich1 = "
          << occ(m_hpdReflHitslQWPC[Rich::Rich1],m_nEvts)
          << " Rich2 = " << occ(m_hpdReflHitslQWPC[Rich::Rich2],m_nEvts)
@@ -389,11 +399,6 @@ StatusCode GetMCRichHitsAlg::finalize()
          << " CF4 = "   <<  occ(m_radHits[Rich::CF4],m_nEvts)
          << endmsg;
 
-  info() << "Av. # Charged Track hits      : Aero  = "
-         << occ(m_ctkHits[Rich::Aerogel],m_nEvts)
-         << " C4F10 = " << occ(m_ctkHits[Rich::C4F10],m_nEvts)
-         << " CF4 = "   << occ(m_ctkHits[Rich::CF4],m_nEvts)
-         << endmsg;
   info() << "Av. # Rayleigh scattered hits : Aero  = "
          << occ(m_scatHits[Rich::Aerogel],m_nEvts)
          << " C4F10 = " << occ(m_scatHits[Rich::C4F10],m_nEvts)

@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.h,v 1.7 2008-01-29 12:25:52 jonrob Exp $
+// $Id: GetMCRichHitsAlg.h,v 1.8 2008-01-29 13:43:22 jonrob Exp $
 #ifndef SENSDET_GetMCRichHitsAlg_H
 #define SENSDET_GetMCRichHitsAlg_H 1
 
@@ -56,8 +56,8 @@ private:
   DMap m_invalidRadHits;
   /// number of hits with invalid RICH flag
   unsigned long int m_invalidRichHits;
-  /// overall charged track hit count in each radiator
-  RMap m_ctkHits;
+  /// overall charged track hit count in each detector
+  DMap m_ctkHits;
   /// overall scattered hit count in each radiator
   RMap m_scatHits;
 
