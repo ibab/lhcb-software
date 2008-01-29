@@ -4,6 +4,10 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2008-1-29
+- python/examples/hltexamples.py
+  - make the module a script and remove the HLTFAC factory tool
+
 !!========================== HltPython v1r2 2007-12-17 ===================
 ! 2008-1-29 - Antonio Perez-Calero
  - kintools.py: debugged module and improved angle function.Added several DEBUG messages.

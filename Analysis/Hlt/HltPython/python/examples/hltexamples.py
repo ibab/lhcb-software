@@ -1,5 +1,13 @@
 #! /usr/bin/env python
 
+#==================================================
+#
+# example script of how to deal with the HLT summary
+#
+# python hltexamples.py
+#
+#==================================================
+
 import gaudimodule
 from math import *
 # from ROOT import TH1F
@@ -15,14 +23,13 @@ gaudi = gaudimodule.AppMgr(outputlevel=3)
 gaudi.config(files = [HLTJOB,BKPISEL])
 gaudi.initialize()
 
-# create tools
+# create HLT tool to deal with the summary
 HLTSUM = gaudi.toolsvc().create("HltSummaryTool",interface="IHltConfSummaryTool")
-HLTFAC = gaudi.toolsvc().create("HltFunctionFactory",interface="IHltFunctionFactory")
 
+# get the transient event store
+TES = gaudi.evtsvc()
 # STDVectorVertices = gaudimodule.gbl.std.vector("LHCb::RecVertex *")
 # STDVectorTrack = gaudimodule.gbl.std.vector("LHCb::Track *") 
-
-TES = gaudi.evtsvc()
 
 def info(name):
     """ returns a function to retrieve the info from the object
@@ -122,3 +129,7 @@ def run(n=10):
     print " *** configuration  *** "
     hlt_selection_configuration("HadPreTriggerSingle")
     hlt_selection_configuration("HadTrigger")
+
+
+run(10)
+gaudi.finalize()
