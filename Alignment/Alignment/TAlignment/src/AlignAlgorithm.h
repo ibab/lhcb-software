@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.13 2008-01-27 18:41:30 janos Exp $
+// $Id: AlignAlgorithm.h,v 1.14 2008-01-29 16:35:31 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -70,6 +70,7 @@ public:
   virtual ~AlignAlgorithm( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode finalize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
   /// Virtuals incident
@@ -106,7 +107,6 @@ private:
   Range                             m_rangeElements;        ///< Detector elements
   size_t                            m_nDoFs;                ///< Number of dofs we want to align for
   std::vector<bool>                 m_dofMask;              ///< Mask to apply to remove rows and columns
-  size_t                            m_nTracks;              ///< Number of tracks
   std::vector<double>               m_initAlignConstants;   ///< Initial alignment constants
   IGetElementsToBeAligned*          m_align;                ///< Pointer to tool to align detector
   std::string                       m_tracksLocation;       ///< Tracks location for alignment
@@ -117,6 +117,7 @@ private:
   Equations*                        m_equations;            ///< Equations to solve
   std::vector<std::vector<double> > m_constraints;
   bool                              m_correlation ;         ///< do we take into account correlations between residuals?
+  bool                              m_updateInFinalize ;    ///< Call update from finalize
 
   /// Monitoring
   // @todo: Move this to a monitoring tool
