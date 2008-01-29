@@ -1,4 +1,4 @@
-// $Id: FindAlignmentElement.cpp,v 1.7 2008-01-22 14:23:41 janos Exp $
+// $Id: FindAlignmentElement.cpp,v 1.8 2008-01-29 15:01:04 janos Exp $
 // Include files
 // from GaudiKernel
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -250,8 +250,9 @@ Alignment::DetElemFromID Alignment::FindElement(const std::string& findWhat) {
 const DetectorElement* Alignment::findTrackingStation(const LHCb::LHCbID& anLHCbID) {
   DetectorElement* elem = 0;
   if (anLHCbID.isVelo()) elem = getDetector<DetectorElement>(DeVeloLocation::Default);
-  if (anLHCbID.isIT())   elem = getDetector<DetectorElement>(DeSTDetLocation::IT);
-  if (anLHCbID.isOT())   elem = getDetector<DetectorElement>(DeOTDetectorLocation::Default);
+  if (anLHCbID.isTT()  ) elem = getDetector<DetectorElement>(DeSTDetLocation::TT);
+  if (anLHCbID.isIT()  ) elem = getDetector<DetectorElement>(DeSTDetLocation::IT);
+  if (anLHCbID.isOT()  ) elem = getDetector<DetectorElement>(DeOTDetectorLocation::Default);
   return elem;
 }
 
