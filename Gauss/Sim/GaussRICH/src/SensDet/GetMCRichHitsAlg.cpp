@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.29 2008-01-29 12:25:52 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.30 2008-01-29 12:32:01 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -195,11 +195,6 @@ StatusCode GetMCRichHitsAlg::execute()
         mchit->setHpdReflKapton ( g4hit->isHpdKaptonRefl()   );
         mchit->setHpdReflPCQW   ( g4hit->isHpdPCQwRefl()     );
 
-        if ( msgLevel(MSG::DEBUG) && mchit->hpdReflection() )
-        {
-          debug() << " MCRichhit from an internal HPD reflection " << endreq;
-        }
-
         // get sensitive detector identifier from det elem
         const RichSmartID detID( m_richDets[rich]->sensitiveVolumeID(mchit->entry()) );
         if ( !detID.isValid() )
@@ -284,7 +279,7 @@ StatusCode GetMCRichHitsAlg::execute()
         // (temp) Debug reflection hits
         if ( msgLevel(MSG::DEBUG) && mchit->hpdReflection() ) 
         {
-          debug() << "Refl. Hit : " << *mchit << endreq;
+          debug() << "HPD internal Reflection Hit : " << *mchit << endreq;
         }
 
       } // end loop on hits in the collection
