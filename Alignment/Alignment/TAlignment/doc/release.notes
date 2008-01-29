@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-01-29 - Wouter Hulsbergen
+ - Add more printouts in update
+ - Add option to update in finalize
+
 ! 2008-01-27 - Jan AMORAAL
  - Can choose which global dofs to align for
  - Bug fix: in AlignmentElement.cpp 
