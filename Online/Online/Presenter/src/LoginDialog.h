@@ -4,8 +4,6 @@
 #include <TGFrame.h>
 #include "presenter.h"
 
-using namespace pres;
-
 class PresenterMainFrame;
 class TGComboBox;
 class TGTextButton;
@@ -16,17 +14,19 @@ class TGTextEntry;
 class LoginDialog : public TGTransientFrame
 {
   public:
-    LoginDialog(PresenterMainFrame* gui, Int_t Width, Int_t Height);
+    LoginDialog(PresenterMainFrame* gui, int width, int height,
+                const pres::DatabaseMode databaseMode);
     virtual ~LoginDialog();
 
     void build();
     void login();
-    void cancelLogin();
-    void defaultPw(const char *);
+    void CloseWindow();
+    void defaultPw(int account);
     //void connectToDatabase(int intp); //*SIGNAL*
 
   private:
     PresenterMainFrame* m_mainFrame;
+    pres::DatabaseMode m_databaseMode;
     TGTextEntry*  m_dbPasswdInput;
     TGTextBuffer* m_dbPasswd;
     TGComboBox*   m_histogramDB;
