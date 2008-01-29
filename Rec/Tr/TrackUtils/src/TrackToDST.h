@@ -1,4 +1,4 @@
-// $Id: TrackToDST.h,v 1.4 2007-03-21 09:25:15 cattanem Exp $
+// $Id: TrackToDST.h,v 1.5 2008-01-29 20:25:34 smenzeme Exp $
 #ifndef _TrackToDST_H_
 #define _TrackToDST_H_
 
@@ -43,6 +43,7 @@ private:
   mutable SLocations m_upstreamStates;
   mutable SLocations m_downstreamStates;
   mutable SLocations m_tStates;
+  mutable SLocations m_muonStates;
 
   typedef std::vector<std::string> Strings;
   Strings m_veloStrings;
@@ -50,6 +51,7 @@ private:
   Strings m_upstreamStrings;
   Strings m_downstreamStrings;
   Strings m_tStrings;
+  Strings m_muonStrings;
 
   void cleanStates(LHCb::Track* aTrack,  const SLocations& loc) const;
   void stringToLoc(const Strings& sCont, SLocations& loc) const;

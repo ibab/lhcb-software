@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
+! 2008-01-29 - Stephanie Hansmann-Menzemer
+ - Add list of states to be written out for muon tracks in TrackToDST
 
 !========================== TrackUtils v1r18 2007-12-20 ======================
 ! 2007-12-20 - Marco Cattaneo

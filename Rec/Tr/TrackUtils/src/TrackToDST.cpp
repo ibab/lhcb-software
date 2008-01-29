@@ -1,4 +1,4 @@
-// $Id: TrackToDST.cpp,v 1.11 2007-11-27 13:17:00 smenzeme Exp $
+// $Id: TrackToDST.cpp,v 1.12 2008-01-29 20:25:34 smenzeme Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -53,12 +53,14 @@ TrackToDST::TrackToDST(const std::string& name,
   declareProperty("TTrackStates", m_tStrings);
   declareProperty("downstreamStates", m_downstreamStrings);
   declareProperty("upstreamStates", m_upstreamStrings);
+  declareProperty("muonState", m_muonStrings);
 
   m_veloStrings = list_of("ClosestToBeam");
   m_longStrings =  list_of("ClosestToBeam")("BegRich1")("BegRich2");
   m_tStrings = list_of("FirstMeasurement")( "BegRich2");
   m_downstreamStrings = list_of("BegRich1")("FirstMeasurement")("BegRich2");
   m_upstreamStrings = list_of("ClosestToBeam")("BegRich1");
+  m_muonStrings     = list_of("ClosestToBeam")("BegRich1")("BegRich2")("Muon");
 
 }
 
@@ -81,6 +83,7 @@ StatusCode TrackToDST::initialize()
   stringToLoc(m_tStrings,m_tStates);
   stringToLoc(m_downstreamStrings,m_downstreamStates);
   stringToLoc(m_upstreamStrings,m_upstreamStates);
+  stringToLoc(m_muonStrings,m_muonStates);
 
   return StatusCode::SUCCESS;
 }
