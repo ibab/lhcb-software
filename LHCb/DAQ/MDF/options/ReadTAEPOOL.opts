@@ -1,0 +1,23 @@
+ApplicationMgr.TopAlg                = { "LHCb::RawEventTestDump/Dump","StoreExplorerAlg" };
+ApplicationMgr.EvtMax                = 100000;
+ApplicationMgr.HistogramPersistency  = "NONE";
+Dump.CheckData                       = 1;
+Dump.CheckData                       = 0;
+Dump.DumpData                        = 0;
+Dump.FullDump                        = 0;
+Dump.OutputLevel                     = 3;
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 0.01;
+StoreExplorerAlg.AccessForeign       = true;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
+EventSelector.PrintFreq              = 100;
+//  Setup for ROOT I/O System
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+PoolDbCacheSvc.Dlls       += {"CLHEPRflx", "STLRflx", "GaudiKernelDict"};
+FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
+EventSelector.Input                  = {
+  "DATA='PFN:taePOOL.dat' TYP='POOL_ROOTTREE' OPT='OLD'"
+};
+ReadAlg.OutputLevel                  = 2;

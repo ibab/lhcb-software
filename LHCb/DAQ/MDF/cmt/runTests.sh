@@ -1,4 +1,5 @@
 #!/bin/bash
+. setup.sh
 export EXE=`cmt show macro_value GAUDI_install_scripts`/../$CMTCONFIG/bin/Gaudi.exe
 cat << /EOF >/tmp/runtest.py
 import os, sys, string
@@ -25,15 +26,15 @@ def execute(cmd):
   os.system("$EXE "+cmd)
 
 tests = []
-tests.append("../options/CreateMDF.opts")
-tests.append("../options/ReadMDF.opts")
-tests.append("../options/CreateMIF.opts")
-tests.append("../options/ReadMIF.opts")
-tests.append("../options/CreatePOOL.opts")
-tests.append("../options/ReadPOOL.opts")
-tests.append("../options/CreateTAE.opts")
-tests.append("../options/ReadTAE.opts")
-tests.append("../options/ReadTAEPOOL.opts")
+tests.append("$MDFROOT/options/CreateMDF.opts")
+tests.append("$MDFROOT/options/ReadMDF.opts")
+tests.append("$MDFROOT/options/CreateMIF.opts")
+tests.append("$MDFROOT/options/ReadMIF.opts")
+tests.append("$MDFROOT/options/CreatePOOL.opts")
+tests.append("$MDFROOT/options/ReadPOOL.opts")
+tests.append("$MDFROOT/options/CreateTAE.opts")
+tests.append("$MDFROOT/options/ReadTAE.opts")
+tests.append("$MDFROOT/options/ReadTAEPOOL.opts")
 for i in tests:
   if nextTest(i)>0:
     execute(i)
