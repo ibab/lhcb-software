@@ -3,6 +3,21 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+!========================= GaussRICH v7r3 2008-1-29 =========================
+! 2008-01-29 - Sajan Easo, Marco Musy
+ - Added the reading of HPD QE Tables from the conditions DB. This would read  one table
+   per HPD. An switch is available in Rich.opts to activate the reading of the nominal QE table
+   from sqldddb. The default is set to reading the tables from Conditions DB.
+ - The HPD Demag reading is modified to read from the Conditions Database via the RichDet so that
+   the magnetic field distortions can be applied directly from the conditions database.
+   A switch is available in Rich.opts to use the old cross-focussing parameters used for DC06 which are
+   useful for the no-magetic field running.
+ - The default for the HPD PSF is set to the new value set after DC06. This would give a slightly
+    worse resolution than that used for DC06. A Switch is available in Rich.opts to use the
+    DC06 compatible PSF value.
+ - In RichG4StepAnalysis5.cpp modified the the mirror number assignment in accordance with the new Rich1 and
+   Rich2 mirror configurations from Jan2008 in the database. In Rich1, this means using the 4 CMA mirrors and
+   in Rich2 this means using the envelope volumes of the mirror.
 
 ! 2008-01-29 - Chris Jones
  - Add summary printout for each type of HPD reflection background, not just
