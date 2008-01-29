@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2008-01-28 - Markus Frank
+ - Fix bug in RawDataCnvSvc introduced by processing TAE events
+
 ! 2008-01-19 - Markus Frank
  - Add helper functions for processing TAE events. Fix bug in RawDtaCnvSvc when 
    accessing TAE events.
