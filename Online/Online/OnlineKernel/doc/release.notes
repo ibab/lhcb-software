@@ -1,6 +1,9 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2008-01-28 Markus Frank
+  - Some improvements on monitoring displays to build generic displays.
+
 ! 2008-01-19 Markus Frank
   - Fix bug in DataTransfer, which failed on sending large events
   - Allow to choose if unused MEP buffers should be mapped. Default=false
