@@ -5,7 +5,7 @@
  *  Implementation file for class : MCRichHit
  *
  *  CVS Log :-
- *  $Id: MCRichHit.cpp,v 1.2 2008-01-28 16:36:48 jonrob Exp $
+ *  $Id: MCRichHit.cpp,v 1.3 2008-01-29 12:23:18 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    26/01/2008
@@ -49,14 +49,17 @@ LHCb::MCRichDigitHistoryCode LHCb::MCRichHit::mcRichDigitHistoryCode() const
 
 std::ostream& LHCb::MCRichHit::fillStream(std::ostream& s) const
 {
-  s << "{ " << rich() << " " << radiator();
-
-  s << " entry= " << m_entry
-    << " energy= " << m_energy
-    << " timeOfFlight=" << m_timeOfFlight
-    << " sensDetID=" << m_sensDetID
-    << " mcParticle=" << mcParticle();
+  s << "{ " << Rich::text(radiator())
+    << " "  << m_sensDetID;
   
+  s << " entry="  << m_entry
+    << " energy=" << m_energy
+    << " tof="    << m_timeOfFlight
+    << " mcPart=" << mcParticle();
+  
+  // background flags
+  if ( scatteredPhoton()  ) s << " RayleighScattered";
+  if ( chargedTrack()     ) s << " TrackHitHPD";
   if ( hpdSiBackscatter() ) s << " hpdSiBackscatter";
   if ( hpdReflQWPC()      ) s << " hpdReflQWPC";
   if ( hpdReflChr()       ) s << " hpdReflChr";
