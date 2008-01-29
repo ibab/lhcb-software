@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.h,v 1.6 2008-01-25 16:02:58 seaso Exp $
+// $Id: GetMCRichHitsAlg.h,v 1.7 2008-01-29 12:25:52 jonrob Exp $
 #ifndef SENSDET_GetMCRichHitsAlg_H
 #define SENSDET_GetMCRichHitsAlg_H 1
 
@@ -70,8 +70,27 @@ private:
   /// overall aerogel filter CK hit count in each radiator
   DMap m_aeroFilterHits;
 
-  /// overall hits from HPD reflections rwl 22.01.08
+  /// Back-scattering from Si hits
+  DMap m_siBackScatt;
+
+  /// overall hits from all types of HPD reflections
   DMap m_hpdReflHits;
+  /// overall hits from photons reflected by the QW/PC interface in the HPD
+  DMap m_hpdReflHitslQWPC;
+  /// overall hits from photons reflected by the Chromium in the HPD
+  DMap m_hpdReflHitslChr;
+  /// overall hits from photons reflected by the Air/QW interface in the HPD
+  DMap m_hpdReflHitsAirQW;
+  /// overall hits from photons reflected by the Air/PC interface in the HPD
+  DMap m_hpdReflHitsAirPC;
+  /// overall hits from photons reflected by the silicon in the HP
+  DMap m_hpdReflHitsSi;
+  /// overall hits from photons reflected by the kovar in the HP
+  DMap m_hpdReflHitsKovar;
+  /// overall hits from photons reflected by the kapton in the HP
+  DMap m_hpdReflHitsKapton;
+  /// overall hits from photons reflected by the PC/QW interface in the HPD
+  DMap m_hpdReflHitsPCQW;
 
   /// overall MCParticle-less hit count in each radiator
   RMap m_nomcpHits;
