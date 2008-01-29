@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.55 2008-01-18 14:45:58 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.56 2008-01-29 12:01:11 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -47,7 +47,6 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
 
   declareProperty( "BiDirectionalFit" , m_biDirectionalFit  = true   );
   declareProperty( "Smooth", m_smooth = true ) ;
-  declareProperty( "checked", m_checked = true);
 }
 
 //=========================================================================
@@ -499,16 +498,14 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   thisNodeC += covUpDate;
 
   // check that the cov matrix is positive
-  if (m_checked == true){
-    sc = checkPositiveMatrix( thisNodeC ) ;
-    if ( sc.isFailure() ) {
-      std::ostringstream mess;
-      mess << "Non-positive cov. matrix in smoother for z = "
+  sc = checkPositiveMatrix( thisNodeC ) ;
+  if ( sc.isFailure() ) {
+    std::ostringstream mess;
+    mess << "Non-positive cov. matrix in smoother for z = "
          << thisNode.z() << " thisNodeC = " << thisNodeC;
-      Warning("Problems in smoothing",StatusCode::FAILURE,1);
-      return failure( mess.str() );
-    }
-  } // only if checked
+    Warning("Problems in smoothing",StatusCode::FAILURE,1);
+    return failure( mess.str() );
+  }
 
   // Only update residuals for node with measurement
   if ( thisNode.hasMeasurement() ) {
@@ -536,13 +533,14 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool /*upstream*/ ) c
   const TrackVector& filtStateX = thisNode.state().stateVector();
   const TrackSymMatrix& filtStateC = thisNode.state().covariance();
   // Calculate the gain matrix. Start with inverting the cov matrix of the difference.
-  TrackSymMatrix invR = filtStateC + predRevC ;
-  StatusCode sc = invertMatrix( invR );
-  if ( sc.isFailure() ) {
+  TrackSymMatrix R = filtStateC + predRevC ;
+  TrackSymMatrix invR = R ;
+  bool OK = invertMatrix( invR );
+  if ( !OK ) {
     error() << "unable to invert matrix in smoother" << invR << endreq ;
-    return Warning( "Failure inverting matrix in smoother", StatusCode::FAILURE, 1 );
+    return StatusCode::FAILURE ;
   }
-  
+
   TrackVector    smoothedX ;
   TrackSymMatrix smoothedC ;
   // Now we need to choose wisely which state is the reference. (In
@@ -550,11 +548,22 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool /*upstream*/ ) c
   if( filtStateC(0,0) < predRevC(0,0) ) {
     SMatrix<double,5,5> K = filtStateC * invR ;
     smoothedX = filtStateX + K * (predRevX - filtStateX) ;
-    ROOT::Math::AssignSym::Evaluate(smoothedC, K * predRevC ) ;
+    // This is the fast expression, but it is not stable enough:
+    //
+    //     ROOT::Math::AssignSym::Evaluate(smoothedC, K * predRevC ) ; 
+    //
+    // The inversion of R fails if R has sufficiently large condition
+    // number, even if we precondition it (as in invertMatrix). The
+    // 'fast' expression for the covariance matrix may then lead to a
+    // non-pos-def covariance matrix.  The following works better, but
+    // is noticably slower because of the similarity:
+    ROOT::Math::AssignSym::Evaluate(smoothedC, -2 * K * filtStateC) ;
+    smoothedC += filtStateC + ROOT::Math::Similarity(K,R) ;
   } else {
     SMatrix<double,5,5> K = predRevC * invR ;
     smoothedX    = predRevX + K * (filtStateX - predRevX) ;
-    ROOT::Math::AssignSym::Evaluate(smoothedC, K * filtStateC ) ;
+    ROOT::Math::AssignSym::Evaluate(smoothedC, -2 * K * predRevC) ;
+    smoothedC += predRevC + ROOT::Math::Similarity(K,R) ;
   }
   (thisNode.state()).setState( smoothedX );
   (thisNode.state()).setCovariance( smoothedC );
@@ -580,43 +589,28 @@ void TrackKalmanFilter::updateResidual(FitNode& node) const
 }
 
 //=========================================================================
-// Invert prev node covariance matrix
-// What follows may seem strange - trust me it works - you
-// are strongly recommended NOT to change it. It turns out that
-// the choice of MeV, mm as units is BAD - the inversion simply fails
-// for numerical reasons. Therefore it is necessary to change back to G3
-// units, invert then go back to G4 units
-// M. Needham 13/6/2000
-// J.A. Hernando (we trust you) 15/05/05
+// Invert covariance matrix after conditioning
 //=========================================================================
-StatusCode TrackKalmanFilter::invertMatrix( Gaudi::TrackSymMatrix& m ) const
-{
-  // check that the elements are not too large else dsinv will crash
-  if (m_checked) {
-    StatusCode sc = checkInvertMatrix( m );
-    if (sc.isFailure())  return sc;
-  }
-  TrackUnitsConverters::convertToG3( m );
-  const bool OK = m.Invert();
-  TrackUnitsConverters::convertToG4( m );
 
-  return OK ? StatusCode::SUCCESS: Warning("Failed to invert covariance matrix", StatusCode::FAILURE,1);
+bool TrackKalmanFilter::invertMatrix( Gaudi::TrackSymMatrix& matrix ) const
+{
+  // Reduce matrix condition number by scaling it such that it has
+  // unit values on the diagonal The time-limitation here is not the
+  // sqrt (which we could solve with an approximation), but really the
+  // scaling itself. The total procedure is about a factor 1.5 slower
+  // than the inversion alone.
+  double scale[TrackSymMatrix::kRows] ;
+  for(size_t j=0; j<TrackSymMatrix::kRows; ++j) 
+    scale[j] = 1/sqrt(matrix(j,j)) ;
+  for(size_t j=0; j<TrackSymMatrix::kRows; ++j)
+    for(size_t k=0; k<=j; ++k)
+      matrix(j,k) *= scale[j] * scale[k] ;
+  bool OK = matrix.Invert() ;
+  for(size_t j=0; j<TrackSymMatrix::kRows; ++j)
+    for(size_t k=0; k<=j; ++k)
+      matrix(j,k) *= scale[j] * scale[k] ;
+  return OK ;
 }
 
 //=========================================================================
 
-
-//=========================================================================
-// 
-//=========================================================================
-StatusCode TrackKalmanFilter::checkInvertMatrix( const Gaudi::TrackSymMatrix& mat ) const
-{
-  for ( unsigned int i = 0; i < TrackSymMatrix::kRows ; ++i ) {
-    for ( unsigned int j = 0; j <=i; ++j ) {
-      if ( mat(i,j) > 1e20 )
-        return Warning( "Covariance errors too big to invert!",
-                        StatusCode::FAILURE, 1 );
-    }
-  }
-  return StatusCode::SUCCESS;
-}
