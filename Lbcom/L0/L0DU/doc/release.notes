@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.77 2008-01-29 16:02:29 odescham Exp $
+! $Id: release.notes,v 1.78 2008-01-30 09:26:52 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
-
+!========================== L0DU v8r2 2008-01-30 =========================
 ! 2008-01-29 - Olivier Deschamps 
  - Finalize the implementation of the TCK mechanism 
   -> new tool L0DUMultiConfigProvider (same interface as L0DUConfigProvider)
@@ -12,7 +12,6 @@
   -> review L0DUConfig.opts 
   -> update and rename all individual configuration options files
 
-!========================== L0DU v8r2 2007-12-21 =========================
 ! 2007-12-19 - Olivier Deschamps
  - fix minor memory leak in L0ProcessorDataLocation initialize()
 
