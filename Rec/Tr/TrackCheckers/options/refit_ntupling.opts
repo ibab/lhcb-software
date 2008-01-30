@@ -131,8 +131,7 @@ CONDLocal.DefaultTag = "MYTAG";
 
 
 // add here xml catalog for your input files
-PoolDbCacheSvc.Catalog = {
-  "xmlcatalog_file:XXX.xml" };
+FileCatalog.Catalogs = { "xmlcatalog_file:XXX.xml" };
 
 // add here dst with reconstructed tracks
 EventSelector.Input   = {

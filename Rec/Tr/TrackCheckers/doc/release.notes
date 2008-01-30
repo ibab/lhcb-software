@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !======================= TrackCheckers v3r4 2008-01-28 =======================
+! 2008-01-30 - Marco Cattaneo
+ - In refit_ntupling.opts, replace PoolDbCacheSvc.Catalog by FileCatalog.Catalogs
+   for Gaudi v19r7
+
 ! 2008-01-22 Stephanie Hansmann-Menzemer
  - Add hit-track residuals to Monitoring classes
 
