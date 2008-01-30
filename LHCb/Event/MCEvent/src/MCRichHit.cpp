@@ -5,7 +5,7 @@
  *  Implementation file for class : MCRichHit
  *
  *  CVS Log :-
- *  $Id: MCRichHit.cpp,v 1.5 2008-01-30 10:39:32 jonrob Exp $
+ *  $Id: MCRichHit.cpp,v 1.6 2008-01-30 10:42:51 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    26/01/2008
@@ -26,24 +26,24 @@ LHCb::MCRichDigitHistoryCode LHCb::MCRichHit::mcRichDigitHistoryCode() const
   hist.setCf4Hit     ( Rich::CF4     == radiator() );
 
   // set background flags
-  hist.setScatteredHit(scatteredPhoton());
-  hist.setChargedTrack(chargedTrack());
-  hist.setGasQuartzCK(gasQuartzCK());
-  hist.setHpdQuartzCK(hpdQuartzCK());
-  hist.setNitrogenCK(nitrogenCK());
-  hist.setAeroFilterCK(aeroFilterCK());
-  hist.setHpdSiBackscatter(hpdSiBackscatter());
-  hist.setHpdReflQWPC(hpdReflQWPC());
-  hist.setHpdReflChr(hpdReflChr());
-  hist.setHpdReflAirQW(hpdReflAirQW());
-  hist.setHpdReflAirPC(hpdReflAirPC());
-  hist.setHpdReflSi(hpdReflSi());
-  hist.setHpdReflKovar(hpdReflKovar());
-  hist.setHpdReflKapton(hpdReflKapton());
-  hist.setHpdReflPCQW(hpdReflPCQW());
+  hist.setScatteredHit     ( scatteredPhoton()  );
+  hist.setChargedTrack     ( chargedTrack()     );
+  hist.setGasQuartzCK      ( gasQuartzCK()      );
+  hist.setHpdQuartzCK      ( hpdQuartzCK()      );
+  hist.setNitrogenCK       ( nitrogenCK()       );
+  hist.setAeroFilterCK     ( aeroFilterCK()     );
+  hist.setHpdSiBackscatter ( hpdSiBackscatter() );
+  hist.setHpdReflQWPC      ( hpdReflQWPC()      );
+  hist.setHpdReflChr       ( hpdReflChr()       );
+  hist.setHpdReflAirQW     ( hpdReflAirQW()     );
+  hist.setHpdReflAirPC     ( hpdReflAirPC()     );
+  hist.setHpdReflSi        ( hpdReflSi()        );
+  hist.setHpdReflKovar     ( hpdReflKovar()     );
+  hist.setHpdReflKapton    ( hpdReflKapton()    );
+  hist.setHpdReflPCQW      ( hpdReflPCQW()      );
 
   // if this hit is pure signal, set this in the history code
-  hist.setIsSignal(isSignal());
+  hist.setIsSignal         ( isSignal()         );
 
   // return final flag
   return hist;
