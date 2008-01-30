@@ -7,6 +7,7 @@
 #include "dis.hxx"
 #include "dic.hxx"
 #include "confdb.h"
+#include "stdio.h"
 class connection
 {
 public:
@@ -95,7 +96,8 @@ void HuginRPC::rpcHandler()
   connection **oconns = (connection **)malloc(len*sizeof(connection*));
   connection **oconns1 = (connection **)malloc(len*sizeof(connection*));
   int tellpos=0;
-  for (int i=0;i<len;i++)
+  int i;
+  for (i=0;i<len;i++)
   {
     char *lin = (char*)(result[i].c_str());
     char *hug,*rob,*hport,*robport;
