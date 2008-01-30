@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichHit.xml,v 1.15 2008-01-30 10:39:32 jonrob Exp $
+  * $Id: MCRichHit.xml,v 1.16 2008-01-30 10:49:44 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -186,7 +186,7 @@
                 <code>
                    return ( radiator() == Rich::Aerogel ||
                             radiator() == Rich::C4F10   || 
-                            radiator() == Rich::CF4       );  
+                            radiator() == Rich::CF4     );  
                 </code>
         </method>
 
@@ -203,8 +203,7 @@
                            hpdReflSi()     ||
                            hpdReflKovar()  ||
                            hpdReflKapton() ||
-                           hpdReflPCQW()
-                         );
+                           hpdReflPCQW()   );
                 </code>
         </method>
 
@@ -231,7 +230,7 @@
                                                    gasQuartzCK()      ||
                                                    hpdQuartzCK()      ||
                                                    nitrogenCK()       ||
-                                                   aeroFilterCK()      )  );
+                                                   aeroFilterCK()      ) );
                 </code>
         </method>
 

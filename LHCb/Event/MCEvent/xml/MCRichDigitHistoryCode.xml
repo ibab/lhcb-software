@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDigitHistoryCode.xml,v 1.12 2008-01-30 10:49:44 jonrob Exp $
+  * $Id: MCRichDigitHistoryCode.xml,v 1.13 2008-01-30 10:54:25 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichDigitHistoryCode class                           *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -61,7 +61,7 @@
                 <bitfield desc="One of the contributing hits came from a dark hit (I.e. a red photon)"                                     length="1" name="darkHit"      />
                 <bitfield desc="This digit was produced due to charge sharing in the HPD silicon pixel chip"                               length="1" name="chargeShareHit" />
 
-                <bitfield desc="One of the contributing hits was pure Cherenkov (unscattered/reflected etc.) signal from one of the main RICH radiators" length="1"  name="isSignal" />
+                <bitfield desc="One of the contributing hits was pure Cherenkov (unscattered/reflected etc.) signal from one of the main RICH radiators" length="1"  name="hasSignal" />
 
                 <bitfield desc="One of the contributing hits came from an electron backscattered at the HPD silicon chip"                       length="1"  name="hpdSiBackscatter"  />
 
@@ -106,16 +106,6 @@
         </method>
 
         <method 
-                name  = "isBackground"
-                const = "TRUE" 
-                desc  = "Returns true if this digit is only due to background. I.e. none of the contributing hits were signal hits" 
-                type  = "bool" >
-                <code>
-                  return ( !isSignal() );
-                </code>
-        </method>
-
-        <method 
                 name  = "hasBackground"
                 const = "TRUE" 
                 desc  = "Returns true if at least one of the hits contributing to this digit came from a background source" 
@@ -131,6 +121,26 @@
                            aeroFilterCK()     ||
                            chargeShareHit()   || 
                            darkHit()          );
+                </code>
+        </method>
+
+       <method 
+                name  = "isSignal"
+                const = "TRUE" 
+                desc  = "Returns true if this digit is purely due to Cherekov signal from one of the main RICH radiators. I.e. has NO background contribution." 
+                type  = "bool" >
+                <code>
+                  return ( hasSignal() &amp;&amp; !hasBackground() );
+                </code>
+        </method>
+
+        <method 
+                name  = "isBackground"
+                const = "TRUE" 
+                desc  = "Returns true if this digit is only due to background. I.e. none of the contributing hits were signal hits" 
+                type  = "bool" >
+                <code>
+                  return ( !isSignal() );
                 </code>
         </method>
 

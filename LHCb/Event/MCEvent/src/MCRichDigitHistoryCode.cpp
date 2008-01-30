@@ -5,7 +5,7 @@
  *  Implementation file for class : MCRichDigitHistoryCode
  *
  *  CVS Log :-
- *  $Id: MCRichDigitHistoryCode.cpp,v 1.2 2008-01-30 10:39:32 jonrob Exp $
+ *  $Id: MCRichDigitHistoryCode.cpp,v 1.3 2008-01-30 10:58:35 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    01/09/2006
@@ -27,14 +27,14 @@ std::ostream& LHCb::MCRichDigitHistoryCode::fillStream(std::ostream& s) const
   
   // signal radiators
   if ( aerogelHit() ) s << " AeroCK";
-  if ( c4f10Hit() )   s << " R1GasCK";
-  if ( cf4Hit() )     s << " R2GasCK";
+  if ( c4f10Hit()   ) s << " R1GasCK";
+  if ( cf4Hit()     ) s << " R2GasCK";
 
   // background radiators
-  if ( gasQuartzCK() )    s << " GasQuartzCK";
-  if ( hpdQuartzCK() )    s << " HPDQuartzCK";
-  if ( nitrogenCK() )     s << " N2CK";
-  if ( aeroFilterCK() )   s << " AeroFilterCK";
+  if ( gasQuartzCK()  ) s << " GasQuartzCK";
+  if ( hpdQuartzCK()  ) s << " HPDQuartzCK";
+  if ( nitrogenCK()   ) s << " N2CK";
+  if ( aeroFilterCK() ) s << " AeroFilterCK";
 
   // background history
   if ( scatteredHit()     ) s << " RayleighScattered";
