@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.29 2008-01-29 14:46:01 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.30 2008-01-30 10:40:06 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -13,16 +13,28 @@
 #include "MDF/MDFHeader.h"
 #include "MDF/MEPEvent.h"
 #include "Event/RawEvent.h"
-#include "Event/ODIN.h"
 
 #include <stdexcept>
 #include <iostream>
+
 #ifdef _WIN32
 #include <winsock.h>
 #define LITTLE_ENDIAN
 #else
 #include <netinet/in.h>
 #endif
+
+/// Type of trigger broadcasted by ODIN
+enum TriggerType{ 
+  ODIN_Reserve           = 0,
+  ODIN_PhysicsTrigger    = 1,
+  ODIN_AuxilliaryTrigger = 2,
+  ODIN_RandomTrigger     = 3,
+  ODIN_PeriodicTrigger   = 4,
+  ODIN_NonZSupTrigger    = 5,
+  ODIN_TimingTrigger     = 6,
+  ODIN_CalibrationTrigger= 7
+};
 
 using LHCb::RawEvent;
 using LHCb::RawBank;
@@ -992,7 +1004,7 @@ StatusCode LHCb::change2TAEEvent(RawEvent* raw)  {
   if ( raw ) {
     const _V& oBnks = raw->banks(RawBank::ODIN);
     for(_V::const_iterator i=oBnks.begin(); i != oBnks.end(); ++i)  {
-      (*i)->begin<OnlineRunInfo>()->triggerType = ODIN::TimingTrigger;
+      (*i)->begin<OnlineRunInfo>()->triggerType = ODIN_TimingTrigger;
       sc = StatusCode::SUCCESS;
     }
   }
@@ -1006,7 +1018,7 @@ bool LHCb::isTAERawEvent(RawEvent* raw)  {
     //== Check ODIN event type to see if this is TAE
     const _V& oBnks = raw->banks(RawBank::ODIN);
     for(_V::const_iterator i=oBnks.begin(); i != oBnks.end(); ++i)  {
-      if ( (*i)->begin<OnlineRunInfo>()->triggerType == ODIN::TimingTrigger ) {
+      if ( (*i)->begin<OnlineRunInfo>()->triggerType == ODIN_TimingTrigger ) {
         return true;
       }
     }
