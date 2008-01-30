@@ -31,6 +31,8 @@ Brunel v32r1 or greater
   . Fix minor memory leak in L0ProcessorDataLocation initialize() (L0DU v8r2)
   . Fix problem with calculation of strip capacitance in VeloSim, database info
     was inconsistent with changes introduced in Boole v14r5 (SQLDDDB v4r0)
+  . Add a finalize() to MuonDetectorResponse, to avoid deleting in the destructor
+    objects created in initialize() (MuonAlgs v6r6)
 
 </PRE><H1><A NAME=v14r8>2007-12-13 Boole v14r8</A></H1><PRE>
 This version uses projects Gaudi v19r6, LHCb v23r2, Lbcom v6r13
