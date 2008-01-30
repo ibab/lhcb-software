@@ -1,7 +1,8 @@
 // test.cpp : Defines the entry point for the console application.
 //
-
+#ifdef WIN32
 #include <windows.h>
+#endif
 #include "oci.h"
 #include "dis.hxx"
 #include "dic.hxx"
