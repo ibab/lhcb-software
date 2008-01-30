@@ -102,5 +102,5 @@ use STKernel              v1r1   ST      # Matt Needham
 # LHCb  Examples
 use DetDescChecks         v4r5   Det     # Ivan Belyaev
 use DetDescExample        v7r5   Ex      # Marco Clemencic
-use IOExample             v2r3   Ex      # Marco Cattaneo
+use IOExample             v2r4   Ex      # Marco Cattaneo
 use DetCondExample        v11r2  Ex      # Marco Clemencic
