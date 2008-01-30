@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.92 2008-01-27 10:09:03 jonrob Exp $
+! $Id: release.notes,v 1.93 2008-01-30 16:56:47 jonrob Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
@@ -7,6 +7,8 @@
 ! 2008-01-27 - Chris Jones
  - Additions to MCRichHit to store new HPD reflection background types in hit
    history code (R.Lambert).
+ - Improve the MCRichHit fillStream method.
+ - Improve the MC history methods and flags in MCRichDigitHistoryCode
  - Add addition member to MCRichOpticalPhoton to store impact point of photon
    on the HPD Quartz Window.
 
