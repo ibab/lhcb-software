@@ -2,11 +2,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v10r6 2008-01-30 ========================
 ! 2008-01-29 - Olivier Deschamps
  - In DecodeRawEvent.opts:
   . Resurect L0DU with correct naming
 
-!======================== GaudiConf v10r6 2008-01-25 ========================
 ! 2008-01-25 - Marco Cattaneo
  - Add Event/Link/Raw/Hcal/Digits to DigiContent.opts and MCDstContent.opts
 
