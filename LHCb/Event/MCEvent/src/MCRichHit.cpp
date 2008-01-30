@@ -5,7 +5,7 @@
  *  Implementation file for class : MCRichHit
  *
  *  CVS Log :-
- *  $Id: MCRichHit.cpp,v 1.7 2008-01-30 10:54:25 jonrob Exp $
+ *  $Id: MCRichHit.cpp,v 1.8 2008-01-30 16:17:29 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    26/01/2008
@@ -24,6 +24,7 @@ LHCb::MCRichDigitHistoryCode LHCb::MCRichHit::mcRichDigitHistoryCode() const
   hist.setAerogelHit ( Rich::Aerogel == radiator() );
   hist.setC4f10Hit   ( Rich::C4F10   == radiator() );
   hist.setCf4Hit     ( Rich::CF4     == radiator() );
+  hist.setHasSignal  ( isSignal()                  );
 
   // set background flags
   hist.setScatteredHit     ( scatteredPhoton()  );
@@ -41,9 +42,6 @@ LHCb::MCRichDigitHistoryCode LHCb::MCRichHit::mcRichDigitHistoryCode() const
   hist.setHpdReflKovar     ( hpdReflKovar()     );
   hist.setHpdReflKapton    ( hpdReflKapton()    );
   hist.setHpdReflPCQW      ( hpdReflPCQW()      );
-
-  // if this hit is pure signal, set this in the history code
-  hist.setHasSignal        ( isSignal()         );
 
   // return final flag
   return hist;
