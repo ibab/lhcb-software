@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !====================== RichRecMonitors v2r14 2008-01-28 =====================
+! 2008-01-30 - Marco Cattaneo
+ - Use DataOnDemandSvc.AlgMap syntax in BuildMCCherenkovRings.opts
+
 ! 2008-01-03 - Chris Jones
  - Add new monitor that compares reconstructed photons to ray traced photons
  - Misc. improvements to other monitors

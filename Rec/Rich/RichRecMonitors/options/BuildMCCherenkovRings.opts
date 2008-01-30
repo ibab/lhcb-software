@@ -5,15 +5,15 @@
 //ApplicationMgr.TopAlg += { "Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings" };
 
 // Use data-on-demand service to run as and when needed
-DataOnDemandSvc.Algorithms += 
+DataOnDemandSvc.AlgMap += 
 { 
-  "DATA='/Event/MC/Rich/CherenkovRings'               TYPE='Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings'",
-  "DATA='/Event/Prev/MC/Rich/CherenkovRings'          TYPE='Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings'",
-  "DATA='/Event/PrevPrev/MC/Rich/CherenkovRings'      TYPE='Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings'",
-  "DATA='/Event/Next/MC/Rich/CherenkovRings'          TYPE='Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings'",
-  "DATA='/Event/NextNext/MC/Rich/CherenkovRings'      TYPE='Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings'",
-  "DATA='/Event/LHCBackground/MC/Rich/CherenkovRings' TYPE='Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings'",
-  "DATA='/Event/Link/MC/Rich/Segments2MCCKRings'      TYPE='Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings'"
+                "MC/Rich/CherenkovRings" : "Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings"
+ ,         "Prev/MC/Rich/CherenkovRings" : "Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings"
+ ,     "PrevPrev/MC/Rich/CherenkovRings" : "Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings"
+ ,         "Next/MC/Rich/CherenkovRings" : "Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings"
+ ,     "NextNext/MC/Rich/CherenkovRings" : "Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings"
+ ,"LHCBackground/MC/Rich/CherenkovRings" : "Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings"
+ ,     "Link/MC/Rich/Segments2MCCKRings" : "Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings"
 };
 
 BuildMCRichRings.Context = "Offline";
