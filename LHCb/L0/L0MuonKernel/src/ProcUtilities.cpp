@@ -1,4 +1,4 @@
-// $Id: ProcUtilities.cpp,v 1.1 2007-08-27 09:32:26 jucogan Exp $
+// $Id: ProcUtilities.cpp,v 1.2 2008-01-30 09:37:53 jucogan Exp $
 
 #include "L0MuonKernel/ProcUtilities.h"
 
@@ -135,11 +135,16 @@ std::vector<LHCb::MuonTileID> L0Muon::add2pads(int quarter,int board, int pu,
   if (!padM1ID.isValid()) {
     if ( padM1ID.nX()>=2*padM1ID.layout().xGrid() ) {
       std::vector<LHCb::MuonTileID> lpads =  padM1ID.layout().tilesInRegion(padM1ID,padM1ID.region());
-      if (lpads.size()!=1) {
-        std::cout <<" M1 PAD DOES NOT COVER EXACTLY ONE PAD IN UPPER REGION"<<std::endl;
-        std::cout <<" padM1ID= "<<padM1ID.toString()<< " ; lpads.size()= "<<lpads.size()<<std::endl;
+      if (lpads.size()==0) {
+        std::cout <<" L0Muon::add2pads : M1 PAD DOES NOT COVER ANY PAD IN UPPER REGION"<<std::endl;
+        std::cout <<"  \t=>padM1ID= "<<padM1ID.toString()<< " ; lpads.size()= "<<lpads.size()<<std::endl;
+      } else {
+        if (lpads.size()>1) {
+          std::cout <<" L0Muon::add2pads : M1 PAD DOES NOT COVER EXACTLY ONE PAD IN UPPER REGION"<<std::endl;
+          std::cout <<"  \t=>padM1ID= "<<padM1ID.toString()<< " ; lpads.size()= "<<lpads.size()<<std::endl;
+        }
+        padM1ID = lpads[0];
       }
-      padM1ID = lpads[0];
     } else {
       if(debug)   std::cout << "WARNING: M1 PAD IS NOT VALID: padM1ID= " << padM1ID.toString()  <<" ?? "<<std::endl;
     }

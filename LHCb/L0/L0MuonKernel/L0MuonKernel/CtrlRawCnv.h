@@ -75,6 +75,7 @@ namespace L0Muon {
     int m_BCID_CU[2];
     int m_opt_link_error[2][2][12];
     int m_error[2];
+    int m_boardIndex[2][2];
 
   };
 }; // namespace L0Muon

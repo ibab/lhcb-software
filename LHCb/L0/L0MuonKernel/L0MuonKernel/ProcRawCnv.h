@@ -82,6 +82,8 @@ namespace L0Muon {
     int m_L0EventNumber[12][2];
     int m_BCID_PU[12][4];
     int m_BCID_BCSU[12];
+
+    int m_boardIndex[12][2];
     
     int opt_link_error[12][4];
     int ser_link_error[12][4];

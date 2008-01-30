@@ -328,6 +328,7 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
       word = raw[pos];
       m_L0_B_Id[ib][ich]       = ((word>> 0)&0xFFF);
       m_L0EventNumber[ib][ich] = ((word>>16)&0xFFF);
+      m_boardIndex[ib][ich]    = ((word>>12)&0xF) ;
       
 //       std::cout<<"board:"<<ib<<" ch "<<ich
 //                <<std::hex
@@ -353,7 +354,10 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
 
   //   //   unsigned int header = raw[0];
   // Loop over processing boards 
-  for (int ib=0; ib<12; ++ib) {
+  for (int ind=0; ind<12; ++ind) {
+
+    int ib = ind;
+    // int ib = m_boardIndex[ind][0]
 
     word = raw[ib*L0Muon::ProcRawCnv::board_data_size + 0 ];
     m_candRegHandlerBCSU[ib].setCandOffM1( ( (word>> 0)&0x0F ) ,0);
@@ -376,6 +380,13 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
     m_candRegHandlerBCSU[ib].setCandOffM2( ( (word>>20)&0x0F ) ,1);
     m_candRegHandlerBCSU[ib].setCandRowM3( ( (word>>24)&0x1F ) ,1);
     m_candRegHandlerBCSU[ib].setCandColM3( ( (word>>29)&0x03 ) ,1);
+
+    int ncand = m_candRegHandlerBCSU[ib].getStatus()&0x3;
+    ncand = ncand<3 ? ncand : 2;
+    for( int icand =0; icand<ncand;++icand){
+      m_candRegHandlerBCSU[ib].setCandBoard( ib ,icand);
+      m_candRegHandlerBCSU[ib].setCandQuarter( m_quarter ,icand);
+    }
 
 //     int status_bcsuA = (word>> 4)&0x0F;
 //     int status_bcsuB = m_candRegHandlerBCSU[ib].getStatus();
@@ -407,9 +418,14 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
       m_candRegHandlerPU[ib][ipu].setCandRowM3( ( (word>>24)&0x1F ) ,1);
       m_candRegHandlerPU[ib][ipu].setCandColM3( ( (word>>29)&0x03 ) ,1);
 
-      m_candRegHandlerPU[ib][ipu].setCandPU( ipu ,0);
-      m_candRegHandlerPU[ib][ipu].setCandPU( ipu ,1);
-
+      int ncand = m_candRegHandlerPU[ib][ipu].getStatus()&0x3;
+      ncand = ncand<3 ? ncand : 2;
+      for( int icand =0; icand<ncand;++icand){
+        m_candRegHandlerPU[ib][ipu].setCandPU( ipu ,icand);
+        m_candRegHandlerPU[ib][ipu].setCandBoard( ib ,icand);
+        m_candRegHandlerPU[ib][ipu].setCandQuarter( m_quarter ,icand);
+      }
+      
 //       int status_puA = (word>> 4)&0x0F;
 //       int status_puB = m_candRegHandlerPU[ib][ipu].getStatus();
 //       std::cout<<"\t=> L0Muon::ProcRawCnv::decodeBank     PU candidates : "<<ib<<" "<<ipu<<" "
@@ -592,6 +608,7 @@ std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion,  int ievt
   std::vector<unsigned int> raw;
   int event_number;
   int l0_bid;
+  int board_index;
   unsigned int event_num_word;
   int bcid;
 
@@ -611,7 +628,8 @@ std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion,  int ievt
     
     event_number   = m_L0EventNumber[ib][0];
     l0_bid         = m_L0_B_Id[ib][0];
-    event_num_word = ((event_number<<16)&0xFFF0000 )+ ( l0_bid&0xFFF );
+    board_index    = m_boardIndex[ib][0];
+    event_num_word = ((event_number<<16)&0xFFF0000 ) + ((board_index<<12)&0xF000) + ( l0_bid&0xFFF );
     raw.push_back(event_num_word);
     //     std::cout<<"\t=> L0Muon::ProcRawCnv::rawBank  event_num_word written 0x"<< std::hex<<raw.back()<<std::dec<<std::endl;
 
@@ -805,7 +823,8 @@ std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion,  int ievt
     itraw= raw.begin() + ib*L0Muon::ProcRawCnv::board_full_data_size+L0Muon::ProcRawCnv::board_full_frame_size;
     event_number   = m_L0EventNumber[ib][1];
     l0_bid         = m_L0_B_Id[ib][1];
-    event_num_word = ((event_number<<16)&0xFFF0000 )+ ( l0_bid&0xFFF );
+    board_index    = m_boardIndex[ib][1];
+    event_num_word = ((event_number<<16)&0xFFF0000 )+ ((board_index<<12)&0xF000) + ( l0_bid&0xFFF );
     raw.insert(itraw,event_num_word);
 
 //     std::cout<<"\t=> L0Muon::ProcRawCnv::rawBank     PU input data done "<<raw.size()<<" words"<<std::endl;

@@ -164,9 +164,11 @@ void L0Muon::CtrlRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
     word = raw[icuwd];
     m_L0_B_Id[iq][0]       = ((word>> 0)&0xFFF);    
     m_L0EventNumber[iq][0] = ((word>>16)&0xFFF);
+    m_boardIndex[iq][0]    = ((word>>12)&0xF) ;
     word = raw[isuwd];
     m_L0_B_Id[iq][1]       = ((word>> 0)&0xFFF);    
     m_L0EventNumber[iq][1] = ((word>>16)&0xFFF);
+    m_boardIndex[iq][1]    = ((word>>12)&0xF) ;
     ++icuwd;
     ++isuwd;
    
@@ -215,6 +217,7 @@ void L0Muon::CtrlRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
         m_candRegHandlerBCSU[iq][ib].setCandPT(    ( (word    )&0x7F),0);
         m_candRegHandlerBCSU[iq][ib].setCandColM3( ( (word>> 8)&0x1F),0);
         m_candRegHandlerBCSU[iq][ib].setCandRowM3( ( (word>>13)&0x03),0);
+        
 
         ++icuwd;
 
@@ -292,7 +295,13 @@ void L0Muon::CtrlRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
         ++isuwd;
 
       }
-      
+      int ncand = m_candRegHandlerBCSU[iq][ib].getStatus()&0x3;
+      ncand = ncand<3 ? ncand : 2;
+      for( int icand =0; icand<ncand;++icand){
+        m_candRegHandlerBCSU[iq][ib].setCandBoard(ib,icand);
+        m_candRegHandlerBCSU[iq][ib].setCandQuarter(m_side*2+iq,icand);
+      }
+    
     }// End of loop over BCSU candidates
 
      // Selected pair of candidates
@@ -338,6 +347,12 @@ void L0Muon::CtrlRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
     m_candRegHandler[iq].setCandCharge(( (word>> 8)&0x01),1);
     m_candRegHandler[iq].setCandCharge(( (word>>12)&0x01),0);
 
+    int ncand = m_candRegHandler[iq].getStatus()&0x3;
+    ncand = ncand<3 ? ncand : 2;
+    for( int icand =0; icand<ncand;++icand) {
+      m_candRegHandler[iq].setCandQuarter(m_side*2+iq,icand);
+    }
+
   }// End of loop over quarters
 
   // temporary check
@@ -356,6 +371,7 @@ std::vector<unsigned int> L0Muon::CtrlRawCnv::rawBank(int bankVersion,  int ievt
   std::vector<unsigned int> raw;
   int event_number;
   int l0_bid;
+  int board_index;
   unsigned int event_num_word;
   int bcid;
 
@@ -383,7 +399,8 @@ std::vector<unsigned int> L0Muon::CtrlRawCnv::rawBank(int bankVersion,  int ievt
 
     event_number   = m_L0EventNumber[iq][CU];
     l0_bid         = m_L0_B_Id[iq][CU];
-    event_num_word = ((event_number<<16)&0xFFF0000 )+ ( l0_bid&0xFFF );
+    board_index    = m_boardIndex[iq][CU];
+    event_num_word = ((event_number<<16)&0xFFF0000 ) + ((board_index<<12)&0xF000) + ( l0_bid&0xFFF );
     raw.push_back(event_num_word);// raw[(iq*44)+ 0 ] 
 
     word=0;
@@ -451,7 +468,8 @@ std::vector<unsigned int> L0Muon::CtrlRawCnv::rawBank(int bankVersion,  int ievt
 
     event_number   = m_L0EventNumber[iq][SU];
     l0_bid         = m_L0_B_Id[iq][SU];
-    event_num_word = ((event_number<<16)&0xFFF0000 )+ ( l0_bid&0xFFF );
+    board_index    = m_boardIndex[iq][SU];
+    event_num_word = ((event_number<<16)&0xFFF0000 ) + ((board_index<<12)&0xF000) + ( l0_bid&0xFFF );
     raw.push_back(event_num_word);// raw[(iq*44) + 22 + 0 ] 
 
     word = ( ( (m_error[iq]<<8)&0x1 ) + ( (m_BCID_CU[iq]<<4)&0xF0 ) + ( m_BCID_SU[iq]&0xF ) );
