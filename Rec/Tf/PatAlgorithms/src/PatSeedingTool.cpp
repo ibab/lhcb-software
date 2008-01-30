@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.8 2008-01-27 23:02:00 mschille Exp $
+// $Id: PatSeedingTool.cpp,v 1.9 2008-01-30 08:01:55 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -1515,8 +1515,9 @@ bool PatSeedingTool::isIsolated(
 		if ( it == iLo ) ++it;
 		LHCb::STChannelID id1 = (*iLo)->hit()->sthit()->cluster().channelID();
 		LHCb::STChannelID id2 = (*it)->hit()->sthit()->cluster().channelID();
+		int idDiff = id1.uniqueSector() - id2.uniqueSector();
 		// test for neighbouring ladders
-		if ( 1 != abs(id1.uniqueSector() - id2.uniqueSector()) )
+		if ( 1 != abs(idDiff) )
 			return false;
 		return true;
 	}
