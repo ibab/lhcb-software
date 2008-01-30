@@ -39,6 +39,7 @@ framework.
     features in TfKernel (PatVelo v3r3, TfKernel v2r2)
   . Now uses Gaudi XML catalog, no longer the POOL one, using
     FileCatalog.Catalogs option instead of PoolDbCacheSvc.Catalog 
+  . In ExpertCheck.opts add options for CondDb logging (commented out)
 
 - Bug fixes
   . BankKiller (used by Calorimeter) no longer prints an error every time a MDF

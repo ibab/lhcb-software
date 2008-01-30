@@ -5,6 +5,10 @@
 // Uncomment next line to find unchecked status codes (slow!!)
 // ApplicationMgr.StatusCodeCheck = true;
 
+// Log time of each CondDB access
+//CondDBLogger.LoggedReader = "CondDBDispatcherSvc";
+//CondDBCnvSvc.CondDBReader = "CondDBLogger";
+
 // Allow two input files open at the same time (.digi, and .sim for the MCHits)
 IODataManager.AgeLimit = 1;
 
