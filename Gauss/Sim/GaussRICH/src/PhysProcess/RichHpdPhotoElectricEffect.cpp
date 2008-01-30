@@ -392,6 +392,7 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     // G4cout<<"Now killing photon which is converted"<<G4endl;
     aParticleChange.ProposeLocalEnergyDeposit(PhotonEnergy);
     //   aParticleChange.SetEnergyChange(0.);
+    //      aParticleChange.ProposeEnergy(0.0);
     aParticleChange.ProposeTrackStatus(fStopAndKill);
 
   } else {

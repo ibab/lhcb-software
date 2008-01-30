@@ -1,4 +1,4 @@
-// $Id: RichSensDet.cpp,v 1.19 2008-01-23 15:54:04 seaso Exp $
+// $Id: RichSensDet.cpp,v 1.20 2008-01-30 16:12:53 seaso Exp $
 // Include files 
 
 // from CLHEP
@@ -133,7 +133,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
      ( (aCreatorProcessName  == "RichHpdPhotoelectricProcess" ) || 
        ( aCreatorProcessName  == "RichHpdSiEnergyLossProcess")) )
   {
-    CurPEOrigin = aTrack->GetVertexPosition() ;
+    CurPEOrigin = aTrack->GetVertexPosition() ;     
   }
 
   MsgStream log( msgSvc() , name() );
@@ -261,6 +261,10 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
                 << CurOptPhotMotherChTrackID <<"   "
                 <<  CurOptPhotID<<"   "
                 << aTrack->GetTrackID() << endreq;
+	    if( CurElectronBackScatFlag > 0) {
+            log << MSG::DEBUG << "Now in RichSensDet ProcessHits() backscattered eln  "
+		<< CurElectronBackScatFlag << endreq;
+	    }
 
             if(  aPEInfo->  VerbosePeTagFlag() ) {
               aRichVerboseFlag =1;
@@ -344,16 +348,27 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   // hit is set as the track id. It also checks if the particle is produced
   // by the photoelectric process or the backscatteting inside hpd; in both cases the
   // mother of the corresponding optical photon used as trackid, if it exists.
+  // if( CurElectronBackScatFlag > 0 ) {
+  //  G4cout<<" RichsensDet Backsct eln Mothertrackid currentTrackid "<<CurOptPhotMotherChTrackID<<"  "<<CurPETrackID<<G4endl;
+  //}
 
-  if(aRichPETrackInfo) aRichPETrackInfo->setCreatedHit(true);
-   newHit ->setTrackID(CurOptPhotMotherChTrackID); // this covers all the normal cases
+     if(aRichPETrackInfo) aRichPETrackInfo->setCreatedHit(true);
+      newHit ->setTrackID(CurOptPhotMotherChTrackID); // this covers all the normal cases
                                                   // like Charged track -> Cherenkov photon -> photoelectron-> hit
-                                                  // and photoelectron-> backscattered electron->hit.
+                                                   //  photoelectron-> backscattered electron->hit.
+
      if( CurOptPhotMotherChTrackID == 0) {           // this is for mip particle and the possible backscatted electrons from them.
      newHit ->setTrackID(CurPETrackID);
      if(aRichPETrackInfo) aRichPETrackInfo ->setToBeStored (true);       
-    }
+     }
 
+     //    if( CurElectronBackScatFlag > 0 ) {
+     // newHit ->setTrackID(CurPETrackID); //  photoelectron-> backscattered electron->hit.
+     // if(aRichPETrackInfo) aRichPETrackInfo ->setToBeStored (true);       
+     // }
+    
+  
+  
 
   
   //  if ( CurOptPhotMotherChTrackID >=0 ) {

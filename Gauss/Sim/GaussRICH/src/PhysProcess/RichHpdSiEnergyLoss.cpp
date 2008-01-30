@@ -272,13 +272,17 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   // energy. Hence the energy deposited on the hit is 20 keV.
   G4double EnegydepositMultFactor=1.0;
 
-  if(aCreatorProcessName == "RichHpdPhotoelectricProcess" ) {
+  if( (aCreatorProcessName == "RichHpdPhotoelectricProcess") ||  (aCreatorProcessName == "RichHpdSiEnergyLossProcess") ) {
     if(aKinEnergyInit > 1500 ) {
       aKinEnergyInit= aKinEnergyInit/100000;
+
+      // if( aCreatorProcessName == "RichHpdSiEnergyLossProcess" ) {
+      //	G4cout<<" a backscatered eln back in RichHpdenergyLossProcess "<<G4endl;
+      // }
       // EnegydepositMultFactor=10.0;
     }    
   } else {
-    //    G4cout<<" Now a non pe particle in Hpd Si Det" <<G4endl;
+    // G4cout<<" Now a non pe particle in RicHpdEnergyLoss  " <<G4endl;
   }
     
   //end of temporary fix.
@@ -319,8 +323,10 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
       //input value is measured back-hit fraction
       //convert to BScatter probability using efficiency,
       //also can do using sum of GS in inverse
+      // for now allow only one backscatered electron per charged particle.
 
-      if(Randreflect <= PeBackScaProbCorrected)
+
+      if( (Randreflect <= PeBackScaProbCorrected) &&  (aCreatorProcessName != "RichHpdSiEnergyLossProcess" ) )
         {
 
 	  //create new photoelectron, kill old photoelectron
@@ -357,10 +363,16 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
 
  
           // G4cout<<" Creating a backscattered electron with energy "<<aKinEnergyInit<< G4endl;
-          
-           G4DynamicParticle* aElectron= 
-             new G4DynamicParticle (RichPhotoElectron::PhotoElectron(),
-                                GlobalElectronDirection, aKinEnergyInit) ;
+
+	   G4double aElecKineEnergyForTracking= aKinEnergyInit*100000;
+
+      G4DynamicParticle* aElectron= 
+	     new G4DynamicParticle (RichPhotoElectron::PhotoElectron(),
+                                GlobalElectronDirection, aElecKineEnergyForTracking) ;
+
+	    // the 100000 above is to get the photoelectron tracked without getting killed
+            // before tracking. The energy is scaled down by 100000 before the energydeposit is made to create hits.
+
 
           // for now use the g4electron with the current G4.. SE Oct4-2007
           // changed SE Jan24-2008
@@ -368,9 +380,13 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
           //   new G4DynamicParticle (G4Electron::Electron(),
           //                      GlobalElectronDirection, aKinEnergyInit) ;
 
+        // G4DynamicParticle* aElectron= 
+        //      new G4DynamicParticle (G4Electron::Electron(),
+        //                         GlobalElectronDirection,aElecKineEnergyForTracking ) ;
+
           aParticleChange.SetNumberOfSecondaries(1) ;
 	  
-          G4Track * aSecPETrack =
+           G4Track * aSecPETrack =
 	             new G4Track(aElectron,aPElectronTime,GlobalElectronOrigin);
 	    
           aSecPETrack->SetTouchableHandle((G4VTouchable*)0);

@@ -158,7 +158,7 @@ G4Track* RichPEBackScatAttach(const G4Track& aElectronTk, G4Track* aPEBackScatTk
                      setPhotOriginRadiatorNumber( aPEInfo->  PhotOriginRadiatorNumber());
 
           // fill the following only for verbose tag mode.
-          if( aPEInfo->  VerbosePeTagFlag() ) {
+          //if( aPEInfo->  VerbosePeTagFlag() ) {
 
             CurRichPEBackScatInfo->
               setMotherofPhotonMomVectAtProd
@@ -176,8 +176,9 @@ G4Track* RichPEBackScatAttach(const G4Track& aElectronTk, G4Track* aPEBackScatTk
 	    CurRichPEBackScatInfo->setMirror2PhotReflPosition(aPEInfo->Mirror2PhotReflPosition());
 	    CurRichPEBackScatInfo->setMirror1PhotDetCopyNum( aPEInfo->Mirror1PhotDetCopyNum());
 	    CurRichPEBackScatInfo->setMirror2PhotDetCopyNum( aPEInfo->Mirror2PhotDetCopyNum());
-            CurRichPEBackScatInfo->setHpdPhotonReflectionFlag(aPEInfo->HpdPhotonReflectionFlag());
-          }
+      CurRichPEBackScatInfo->setHpdPhotonReflectionFlag(aPEInfo->HpdPhotonReflectionFlag());
+      //          }
+          
 
            CurRichPEBackScatInfo->  setPhotonEmisPoint( aPEInfo->PhotonEmisPoint());
            CurRichPEBackScatInfo->  setMotherOfPhotonId( aPEInfo->MotherOfPhotonId());

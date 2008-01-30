@@ -3,6 +3,9 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+! 2008-01-30 - Sajan Easo
+ - Fixed a problem with transport of backscattered photoelectron and the hit it creates
+   by modifying RichHpdSiEnergyLoss.cpp
 
 ! 2008-01-29 - Sajan Easo, Marco Musy
  - Added the reading of HPD QE Tables from the conditions DB. This would read  one table
