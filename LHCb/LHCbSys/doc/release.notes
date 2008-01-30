@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r3>2008-01-28 LHCbSys v23r3</A></H1><PRE>
+</PRE><H1><A NAME=v23r3>2008-01-30 LHCbSys v23r3</A></H1><PRE>
 This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 
 - New packages:      MDF_DCAP v1r0 - DCAP plugin to read MDF files 
@@ -16,7 +16,7 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
     DetDesc v18r3, DetDescCnv v4r5, DetDescSvc v1r16, MuonDet v7r2,
     RichDet v10r9, STDet v3r9, DetCond v11r8, CondDBUI v2r7, DetDescChecks v4r5,
     EventSys v24r0, DAQEvent v7r8, HltEvent v8r6, PhysEvent v11r5, RecEvent v2r9,
-    TrackEvent v4r10, MDF v3r0, DAQSys v3r8, CaloDAQ v4r3, TfKernel v2r2,
+    TrackEvent v4r10, MDF v3r1, DAQSys v3r8, CaloDAQ v4r3, TfKernel v2r2,
     DaVinciKernel v6r10, STKernel v1r1, LHCbAlgs v2r14, LoKiNumbers v7r1,
     RichRecBase v3r10
 
@@ -25,7 +25,7 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
     o Use AlgMap property to define the algorithms
   . In DecodeRawEvent.opts:
     o Add algorithm to decode ODIN
-    o Disable L0DU
+    o Resurrect L0DU with correct naming (L0DUReport)
   . Add Event/Link/Raw/Hcal/Digits to DigiContent.opts and MCDstContent.opts
 
 - In GaudiObjDesc v11r1
@@ -64,6 +64,8 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 
 - In DDDB v1r3
   . Change requirements to pick up SQLDDDB v4r*
+  . Add oracle dependency to allow access to Oracle DDDB
+  . Add lfc dependency to get credentials for Oracle DDDB access
 
 - In DetDesc v18r3
   . New treatment of geometry overlaps:
@@ -157,7 +159,7 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 - In TrackEvent v4r10
   . Make the Track(int key) constructor explicit
 
-- In MDF v3r0
+- In MDF v3r0, v3r1
   . Remove the RFIO/DCAP,... plugins from MDF and make them separate packages.
   . Add support for non-strict RFC URIs - similar to what ROOT supports.
   . Add support for TAE events in the RawDataCnvSvc. The creation of leaves in
@@ -167,6 +169,9 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
     forceTAE = true of MDFWriter. A pseudo-bank of type TAEHeader is added
     as first bank in the buffer, with description of the various RawEvents found.
   . Add function unpackTAEBuffer in RawEventHelpers to decode the TAE MDF block.
+  . Fix bug in RawDataCnvSvc introduced by processing TAE events
+  . Fix crucial bug (typo??) in detecting TAE events
+  . Fix bug in accessing IODataManager
 
 - In CaloDAQ v4r3
   . Improve the calls to msgSvc
