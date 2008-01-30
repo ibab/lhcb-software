@@ -1,4 +1,4 @@
-// $Id: AlgorithmCorrelations.cpp,v 1.1 2007-03-02 08:49:26 cattanem Exp $
+// $Id: AlgorithmCorrelations.cpp,v 1.2 2008-01-30 18:53:57 pkoppenb Exp $
 // Include files 
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
@@ -58,7 +58,7 @@ StatusCode AlgorithmCorrelations::initialize(){
 // Set matrix
 //=============================================================================
 StatusCode AlgorithmCorrelations::reset(){
-  debug() << "==> Reset" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Reset" << endmsg;
   if (m_algorithmsColumn.empty()){
     err() << "No algorithms defined. Use Algorithms option." << endmsg;
     return StatusCode::FAILURE;
@@ -104,7 +104,7 @@ StatusCode AlgorithmCorrelations::reset(){
       //      if ( ( !m_square ) || (i1<i2)) {
       AlgoMatrix SRM( *(ialg1), *(ialg2) );
       m_SelResultMatrices.push_back( SRM ) ;
-      debug() << "Pushed back pair " << *(ialg1) << ", " << *(ialg2) << endmsg ;
+      if (msgLevel(MSG::DEBUG)) debug() << "Pushed back pair " << *(ialg1) << ", " << *(ialg2) << endmsg ;
     }
   }
   return StatusCode::SUCCESS;
@@ -113,7 +113,7 @@ StatusCode AlgorithmCorrelations::reset(){
 // end of event - do the work
 //=============================================================================
 StatusCode AlgorithmCorrelations::endEvent(){
-  debug() << "End of event... do the work" << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "End of event... do the work" << endmsg ;
   StatusCode sc = addResults();
   if (!sc) return sc;
   sc = resetAlgoResult(m_rowResults);
@@ -135,7 +135,7 @@ StatusCode AlgorithmCorrelations::resetAlgoResult(std::vector<AlgoResult>& Resul
 // Add all results to matrix elements
 //=============================================================================
 StatusCode AlgorithmCorrelations::addResults(){
-  debug() << "Put all results in matrices" << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Put all results in matrices" << endmsg ;
   // fill statistics
   std::vector<AlgoMatrix>::iterator isrm = m_SelResultMatrices.begin();
   for ( std::vector<AlgoResult>::const_iterator iar1 = m_columnResults.begin();
@@ -153,15 +153,18 @@ StatusCode AlgorithmCorrelations::addResults(){
               << iar1->algo() << " and " << iar2->algo() << endmsg ;
         return StatusCode::FAILURE;
       }
-      if (a2=="ALWAYS") isrm->addResult(iar1->result(),true);
-      else isrm->addResult(iar1->result(),iar2->result());
+      if (a2=="ALWAYS") {
+        isrm->addResult(iar1->result(),true);
+        if (msgLevel(MSG::VERBOSE)) verbose() << a1 << " has now " << isrm->getStatistics()
+                                              << endmsg ;
+      } else isrm->addResult(iar1->result(),iar2->result());
       ++isrm;
     }
   }
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-// Fill a result
+// Fill a result - entry point
 //=============================================================================
 StatusCode AlgorithmCorrelations::fillResult(const std::string& algo, 
                                              const bool& result){
@@ -176,13 +179,13 @@ StatusCode AlgorithmCorrelations::fillResult(const std::string& algo,
 StatusCode AlgorithmCorrelations::fillResult(const std::string& algo, 
                                              const bool& result,
                                              std::vector<AlgoResult>& Results){
-  debug() << "FillResult " << algo << " " << result << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "fillResult " << algo << " " << result << endmsg ;
   bool found = false ;
   for ( std::vector<AlgoResult>::iterator iar = Results.begin();
         iar != Results.end(); ++iar){
-    verbose() << "Checking algorithm " << iar->algo() << endmsg ;
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Checking algorithm " << iar->algo() << endmsg ;
     if ((iar->algo() == algo ) || ("/Event/Phys/"+iar->algo() == algo)){
-      debug() << "Updating algorithm " << iar->algo() << endmsg ;
+      if (msgLevel(MSG::DEBUG)) debug() << "Updating algorithm " << iar->algo() << endmsg ;
       StatusCode sc = iar->setResult(result);
       if (!sc){
         err() << "Resetting result for algorithm " << iar->algo() 
@@ -194,8 +197,8 @@ StatusCode AlgorithmCorrelations::fillResult(const std::string& algo,
       break ;
     }
   }
-  if (found) debug() << "Algorithm " << algo << " has been found" << endmsg ;
-  else verbose() << "Algorithm " << algo << " has not been found" << endmsg ;
+  if (found) if (msgLevel(MSG::DEBUG)) debug() << "Algorithm " << algo << " has been found" << endmsg ;
+  else if (msgLevel(MSG::VERBOSE)) verbose() << "Algorithm " << algo << " has not been found" << endmsg ;
 
   return StatusCode::SUCCESS;
 }
@@ -243,16 +246,16 @@ StatusCode AlgorithmCorrelations::printTable(void) {
   const int nalgow = happyAlgorithms() ;
   const int decimals = getDecimals();
 
-  debug() << nalgow << " algorithms find something " << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << nalgow << " algorithms find something " << endmsg ;
 
   const int nl = 4+9+decimals+m_longestName+(6+decimals)*nalgow ;
   const int namelength =  name().length() ;
   const double halflength = ((double)nl - namelength )/2. ;
   const int nlh = int(halflength);
-  debug() << name() << " " << name().length() << " " << namelength << " " << halflength << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << name() << " " << name().length() << " " << namelength << " " << halflength << endmsg ;
   std::string halfspace = "";
   if ( nlh > 0 ) halfspace = std::string(nlh,' ');
-  debug() << "Will print table with " << nl << " " << nlh << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Will print table with " << nl << " " << nlh << endmsg ;
   
   const std::string hyphenline(nl, '-');
   const std::string equalline(nl, '=');
@@ -330,7 +333,7 @@ int AlgorithmCorrelations::happyAlgorithms(void) {
   for( std::vector<std::string>::const_iterator ia = m_algorithmsRow.begin();
        ia!= m_algorithmsRow.end() ; ++ia  ){
      if (( isEffective(*ia) ) && (*ia != "ALWAYS" )) ++nalgow ;
-     verbose() << "Algorithm " << *ia << " says: " << isEffective(*ia) << endmsg ;
+     if (msgLevel(MSG::VERBOSE)) verbose() << "Algorithm " << *ia << " says: " << isEffective(*ia) << endmsg ;
   } 
   return nalgow;  
 }
@@ -345,12 +348,12 @@ int AlgorithmCorrelations::getDecimals(void) {
        isrm != m_SelResultMatrices.end(); ++isrm ){
     int sum = isrm->getStatistics();
     if (sum>maxevt) maxevt = sum;
-    //    verbose() << sum << " -> max = " << maxevt << endmsg ;
+    //    if (msgLevel(MSG::VERBOSE)) verbose() << sum << " -> max = " << maxevt << endmsg ;
   }
   double minerror = 100./maxevt;
   double signif = -log(minerror)/log(10.)+1;
   int IntSignif = int(signif);
-  debug() << "Minimal error is " << minerror << "% -> gets " << IntSignif << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Minimal error is " << minerror << "% -> gets " << IntSignif << endmsg ;
   if (IntSignif<=0) return 0;
   else return IntSignif ;
 }
