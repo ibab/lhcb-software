@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2008-01-29 - Olivier Deschamps
+ - bug fix in CaloL0DataProvider (for Prs trigger but decoding)
+
 !========================== CaloDAQ v4r3 2008-01-25 ==========================
 ! 2008-01-25 - Olivier Deschamps
  - add Hcal together with Ecal as default in CaloReCreateMCLinks.cpp

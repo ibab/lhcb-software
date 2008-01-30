@@ -160,7 +160,7 @@ bool CaloL0DataProvider::decodeTell1 (int source) {
 
     if(checkSrc( sourceID ))continue;
 
-    if( "Spd" == m_detectorName ){
+    if( "Spd" == m_detectorName || "Prs" == m_detectorName ){
       decoded = decodePrsTriggerBank( *itB);
     }else{
       decoded = decodeBank ( *itB );
