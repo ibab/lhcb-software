@@ -7,14 +7,12 @@ MessageSvc.OutputLevel = 4;
 
 // "Known" Initialisation Warnings
 Brunel.BrunelMemory.OutputLevel = 4; // Because Brunel.OutputLevel = 3;
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.OutputLevel = 5; //CK theta factor
 ToolSvc.PhotonPID.OutputLevel = 5; // Vertex location HARD-CODED : IP(0.,0.,0.)
 
 // "Known" run time Warnings
 RichGloPIDFinalIt.OutputLevel = 5; // track(s) changed hypothesis
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.OutputLevel = 5; // Bad states
-FitTsa.Fitter.NodeFitter.OutputLevel = 5; // protect absurd tracks
-FitTsa.Fitter.NodeFitter.Extrapolator.OutputLevel = 5; // fit failure
+MessageSvc.setError = { "HPD:0", "HPD:130", "HPD:260", "HPD:390" }; // Missing QE in DC06 tags
 
 // Information to be kept
 Brunel.OutputLevel = 3;
