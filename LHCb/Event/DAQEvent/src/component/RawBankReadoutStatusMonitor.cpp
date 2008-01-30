@@ -1,4 +1,4 @@
-// $Id: RawBankReadoutStatusMonitor.cpp,v 1.2 2008-01-23 23:43:05 odescham Exp $
+// $Id: RawBankReadoutStatusMonitor.cpp,v 1.3 2008-01-30 14:39:15 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -117,7 +117,7 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
     // 1D summary histogram for the whole bank
     std::stringstream tit1D("");
     tit1D << "Status summary for " << typeName << " bank " ;
-    plot1D( -1., base.str() + "/1",  tit1D.str() ,  -1, (double) m_degree , m_degree+1.);
+    plot1D( -1., base.str() + "/1",  tit1D.str() ,  -1, (double) m_degree , m_degree+1);
     debug() << "Status " << status->status() << endreq;
     for(int i = 0; i < m_degree ; ++i ){
       int word = status->status() >> i;
