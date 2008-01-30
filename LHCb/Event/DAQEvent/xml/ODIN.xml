@@ -240,6 +240,9 @@
       <method name="set" desc="Fill data fields from the ODIN bank"
         argList="const LHCb::RawBank* bank" type="StatusCode">
         <code>
+  ulonglong    temp64;
+  unsigned int temp32;
+  
   if ( bank-&gt;type() != LHCb::RawBank::ODIN )
     return StatusCode::FAILURE;
 
@@ -250,25 +253,25 @@
 
   setOrbitNumber(odinData[LHCb::ODIN::OrbitNumber]);
 
-  ulonglong temp = odinData[LHCb::ODIN::L0EventIDHi];
-  setEventNumber((temp &lt;&lt; 32) + odinData[LHCb::ODIN::L0EventIDLo]);
+  temp64 = odinData[LHCb::ODIN::L0EventIDHi];
+  setEventNumber((temp64 &lt;&lt; 32) + odinData[LHCb::ODIN::L0EventIDLo]);
 
-  temp = odinData[LHCb::ODIN::GPSTimeHi];
-  setGpsTime ((temp &lt;&lt; 32) + odinData[LHCb::ODIN::GPSTimeLo]);
+  temp64 = odinData[LHCb::ODIN::GPSTimeHi];
+  setGpsTime ((temp64 &lt;&lt; 32) + odinData[LHCb::ODIN::GPSTimeLo]);
 
-  temp = odinData[LHCb::ODIN::Word7];
-  setDetectorStatus( (temp &amp; LHCb::ODIN::DetectorStatusMask) &gt;&gt; LHCb::ODIN::DetectorStatusBits );
-  setErrorBits( (temp &amp; LHCb::ODIN::ErrorMask) &gt;&gt; LHCb::ODIN::ErrorBits );
+  temp32 = odinData[LHCb::ODIN::Word7];
+  setDetectorStatus( (temp32 &amp; LHCb::ODIN::DetectorStatusMask) &gt;&gt; LHCb::ODIN::DetectorStatusBits );
+  setErrorBits( (temp32 &amp; LHCb::ODIN::ErrorMask) &gt;&gt; LHCb::ODIN::ErrorBits );
 
-  temp = odinData[LHCb::ODIN::Word8];
-  setBunchId( (temp &amp; LHCb::ODIN::BunchIDMask) &gt;&gt; LHCb::ODIN::BunchIDBits );
-  setTriggerType( (temp &amp; LHCb::ODIN::TriggerTypeMask) &gt;&gt; LHCb::ODIN::TriggerTypeBits );
-  setReadoutType( ((temp &amp; LHCb::ODIN::ReadoutTypeMask) &gt;&gt; LHCb::ODIN::ReadoutTypeBits ) == 0 ?
+  temp32 = odinData[LHCb::ODIN::Word8];
+  setBunchId( (temp32 &amp; LHCb::ODIN::BunchIDMask) &gt;&gt; LHCb::ODIN::BunchIDBits );
+  setTriggerType( (temp32 &amp; LHCb::ODIN::TriggerTypeMask) &gt;&gt; LHCb::ODIN::TriggerTypeBits );
+  setReadoutType( ((temp32 &amp; LHCb::ODIN::ReadoutTypeMask) &gt;&gt; LHCb::ODIN::ReadoutTypeBits ) == 0 ?
                   ZeroSuppressed : NonZeroSuppressed );
 
-  setForceBit( ((temp &amp; LHCb::ODIN::ForceMask) &gt;&gt; LHCb::ODIN::ForceBits ) != 0 );
+  setForceBit( ((temp32 &amp; LHCb::ODIN::ForceMask) &gt;&gt; LHCb::ODIN::ForceBits ) != 0 );
 
-  switch ( (temp &amp; LHCb::ODIN::BXTypeMask) &gt;&gt; LHCb::ODIN::BXTypeBits ) {
+  switch ( (temp32 &amp; LHCb::ODIN::BXTypeMask) &gt;&gt; LHCb::ODIN::BXTypeBits ) {
     case 0  : setBunchCrossingType(NoBeam); break;
     case 1  : setBunchCrossingType(SingleBeamLeft); break;
     case 2  : setBunchCrossingType(SingleBeamRight); break;
@@ -276,7 +279,7 @@
     default : setBunchCrossingType(NoBeam); break;
   }
 
-  setBunchCurrent( (temp &amp; LHCb::ODIN::BunchCurrentMask) &gt;&gt; LHCb::ODIN::BunchCurrentBits );
+  setBunchCurrent( (temp32 &amp; LHCb::ODIN::BunchCurrentMask) &gt;&gt; LHCb::ODIN::BunchCurrentBits );
 
   if (version() &lt; 3) {
 
@@ -284,9 +287,9 @@
 
   } else {
 
-    temp = odinData[LHCb::ODIN::EventType];
-    setEventType((temp &amp; LHCb::ODIN::EventTypeMask) &gt;&gt; LHCb::ODIN::EventTypeBits);
-    setCalibrationStep((temp &amp; LHCb::ODIN::CalibrationStepMask) &gt;&gt; LHCb::ODIN::CalibrationStepBits);
+    temp32 = odinData[LHCb::ODIN::EventType];
+    setEventType((temp32 &amp; LHCb::ODIN::EventTypeMask) &gt;&gt; LHCb::ODIN::EventTypeBits);
+    setCalibrationStep((temp32 &amp; LHCb::ODIN::CalibrationStepMask) &gt;&gt; LHCb::ODIN::CalibrationStepBits);
     
     setTriggerConfigurationKey(odinData[LHCb::ODIN::TriggerConfigurationKey]);
 
