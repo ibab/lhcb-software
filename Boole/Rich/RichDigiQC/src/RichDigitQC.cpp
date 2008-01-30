@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.34 2007-04-23 12:24:32 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.35 2008-01-30 16:58:12 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -26,23 +26,12 @@ DECLARE_ALGORITHM_FACTORY( DigitQC );
 
 // Standard constructor, initializes variables
 DigitQC::DigitQC( const std::string& name,
-                  ISvcLocator* pSvcLocator)
+                  ISvcLocator* pSvcLocator )
   : Rich::HistoAlgBase ( name, pSvcLocator ),
     m_richSys        ( 0                 ),
     m_smartIDs       ( 0                 ),
     m_mcTool         ( 0                 ),
-    m_evtC           ( 0                 ),
-    m_spillDigits    ( Rich::NRiches     ),
-    m_totalSpills    ( Rich::NRiches     ),
-    m_allHits        ( Rich::NRiches, 0  ),
-    m_scattHits      ( Rich::NRiches, 0  ),
-    m_chrgTkHits     ( Rich::NRiches, 0  ),
-    m_gasQCK         ( Rich::NRiches, 0  ),
-    m_hpdQCK         ( Rich::NRiches, 0  ),
-    m_nitroQCK       ( Rich::NRiches, 0  ),
-    m_aeroFiltQCK    ( Rich::NRiches, 0  ),
-    m_bkgHits        ( Rich::NRiches, 0  ),
-    m_chrgShrHits    ( Rich::NRiches, 0  )
+    m_evtC           ( 0                 )
 {
 
   // Declare job options
@@ -86,11 +75,11 @@ StatusCode DigitQC::execute()
   LHCb::MCRichDigits * richDigits = get<LHCb::MCRichDigits>( m_digitTDS );
 
   // temporary tally
-  HPDCounter nHPD[Rich::NRiches];
+  HPDCounter nHPDSignal[Rich::NRiches];
 
   // Loop over all digits
-  std::vector<unsigned int> backs(Rich::NRiches);
-  SpillDetCount spills(Rich::NRiches);
+  Rich::Map<Rich::DetectorType,unsigned int> backs;
+  SpillDetCount spills;
   for ( LHCb::MCRichDigits::const_iterator iDigit = richDigits->begin();
         iDigit != richDigits->end(); ++iDigit )
   {
@@ -103,28 +92,34 @@ StatusCode DigitQC::execute()
     const std::string location = mchitLocation( mcDig );
     m_evtLocs[location] = true;
 
+    // count all hits
+    ++m_allDigits[rich];
+    ++(m_spillDigits[rich])[location];
+
     // Check if digit is background
     if ( mcDig->history().isBackground() )
     {
+      //  count background hits
       ++backs[rich];
       ++m_bkgHits[rich];
       // tally up the different background sources
-      if ( mcDig->history().scatteredHit()   ) { ++m_scattHits   [rich]; }
-      if ( mcDig->history().chargedTrack()   ) { ++m_chrgTkHits  [rich]; }
-      if ( mcDig->history().gasQuartzCK()    ) { ++m_gasQCK      [rich]; }
-      if ( mcDig->history().hpdQuartzCK()    ) { ++m_hpdQCK      [rich]; }
-      if ( mcDig->history().nitrogenCK()     ) { ++m_nitroQCK    [rich]; }
-      if ( mcDig->history().aeroFilterCK()   ) { ++m_aeroFiltQCK [rich]; }
-      if ( mcDig->history().chargeShareHit() ) { ++m_chrgShrHits [rich]; }
+      if ( mcDig->history().scatteredHit()     ) { ++m_scattHits   [rich]; }
+      if ( mcDig->history().chargedTrack()     ) { ++m_chrgTkHits  [rich]; }
+      if ( mcDig->history().gasQuartzCK()      ) { ++m_gasQCK      [rich]; }
+      if ( mcDig->history().hpdQuartzCK()      ) { ++m_hpdQCK      [rich]; }
+      if ( mcDig->history().nitrogenCK()       ) { ++m_nitroQCK    [rich]; }
+      if ( mcDig->history().aeroFilterCK()     ) { ++m_aeroFiltQCK [rich]; }
+      if ( mcDig->history().chargeShareHit()   ) { ++m_chrgShrHits [rich]; }
+      if ( mcDig->history().hpdReflection()    ) { ++m_hpdReflHits [rich]; }
+      if ( mcDig->history().hpdSiBackscatter() ) { ++m_siBackScatt [rich]; }
     }
     else
     {
       // Count signal hits
-      ++(nHPD[rich])[mcDig->key().hpdID()];
-      ++(m_spillDigits[rich])[location];
+      ++(nHPDSignal[rich])[mcDig->key().hpdID()];
+      ++(m_spillDigitsSignal[rich])[location];
       ++(spills[rich])[location];
     }
-    ++m_allHits[rich];
 
   }
 
@@ -138,10 +133,8 @@ StatusCode DigitQC::execute()
       LHCb::MCRichHits * hits = get<LHCb::MCRichHits>( iC->first );
       for ( LHCb::MCRichHits::const_iterator iH = hits->begin(); iH != hits->end(); ++iH )
       {
-        if ( !(*iH)->isBackground()  )
-        {
+        if ( !(*iH)->isBackground() )
           ++(m_totalSpills[(*iH)->rich()])[iC->first];
-        }
       }
       if ( msgLevel(MSG::DEBUG) )
       {
@@ -155,15 +148,15 @@ StatusCode DigitQC::execute()
 
   // Various tallies and plots
   //------------------------------------------------------------------------------
-  for ( int iRich = 0; iRich<Rich::NRiches; ++iRich )
+  for ( unsigned int iRich = 0; iRich<Rich::NRiches; ++iRich )
   {
     const Rich::DetectorType rich = (Rich::DetectorType)iRich;
     const std::string RICH = Rich::text(rich);
 
     unsigned int totDet(0);
     L1Counter totL1;
-    for ( HPDCounter::const_iterator iHPD = nHPD[rich].begin();
-          iHPD != nHPD[rich].end(); ++iHPD )
+    for ( HPDCounter::const_iterator iHPD = nHPDSignal[rich].begin();
+          iHPD != nHPDSignal[rich].end(); ++iHPD )
     {
       plot1D( (*iHPD).second, RICH+" : Average HPD occupancy (nHits>0)", 0, 150, 75 );
       if ( m_extraHists )
@@ -173,7 +166,7 @@ StatusCode DigitQC::execute()
         title << RICH << " : HPD " << (*iHPD).first << " " << hID << " occupancy (nHits>0)";
         plot1D( (*iHPD).second, hID.data(), title.str(), 0, 150, 75 );
       }
-      (m_nHPD[rich])[(*iHPD).first] += (*iHPD).second;
+      (m_nHPDSignal[rich])[(*iHPD).first] += (*iHPD).second;
       const Rich::DAQ::Level1ID l1ID = m_richSys->level1ID( (*iHPD).first );
       totL1[l1ID] += (*iHPD).second;
       totDet      += (*iHPD).second;
@@ -226,7 +219,7 @@ StatusCode DigitQC::finalize()
   info() << "===============================================================================================" << endreq
          << "                            RICH Digitisation Simulation Summary" << endreq;
 
-  for ( int iRich = 0; iRich<Rich::NRiches; ++iRich )
+  for ( unsigned int iRich = 0; iRich<Rich::NRiches; ++iRich )
   {
     const Rich::DetectorType rich = (Rich::DetectorType)iRich;
     const std::string RICH = Rich::text(rich);
@@ -234,13 +227,13 @@ StatusCode DigitQC::finalize()
 
     // Form final numbers
     L1Counter totL1;
-    unsigned int totDet(0);
+    unsigned int totDetSignal(0);
 
     debug() << " " << RICH << " : Individual HPD info :-" << endreq;
     unsigned int maxOcc(0), minOcc(999999);
     Rich::DAQ::HPDHardwareID maxHPD(0), minHPD(0);
-    for ( HPDCounter::const_iterator iHPD = m_nHPD[rich].begin();
-          iHPD != m_nHPD[rich].end(); ++iHPD )
+    for ( HPDCounter::const_iterator iHPD = m_nHPDSignal[rich].begin();
+          iHPD != m_nHPDSignal[rich].end(); ++iHPD )
     {
       const Rich::DAQ::HPDHardwareID hID ( m_richSys->hardwareID( (*iHPD).first ) );
       const Rich::DAQ::Level1ID l1ID     ( m_richSys->level1ID( (*iHPD).first ) );
@@ -248,8 +241,8 @@ StatusCode DigitQC::finalize()
       const StatusCode sc = m_smartIDs->hpdPosition( (*iHPD).first, hpdGlo );
       if (sc.isFailure()) continue;
       const Gaudi::XYZPoint hpdLoc       ( m_smartIDs->globalToPDPanel( hpdGlo ) );
-      totL1[l1ID] += (*iHPD).second;
-      totDet      += (*iHPD).second;
+      totL1[l1ID]  += (*iHPD).second;
+      totDetSignal += (*iHPD).second;
       if ( (*iHPD).second > maxOcc ) { maxOcc = (*iHPD).second; maxHPD = hID; }
       if ( (*iHPD).second < minOcc ) { minOcc = (*iHPD).second; minHPD = hID; }
       if ( m_extraHists )
@@ -260,7 +253,7 @@ StatusCode DigitQC::finalize()
         plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : SmartID Col layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.hpdCol() );
       }
       debug() << "    HPD " << (*iHPD).first << " hardID "
-              << boost::format("%3i") % hID.data() 
+              << boost::format("%3i") % hID.data()
               << " : L1 board";
       debug() << boost::format("%3i") % l1ID.data() << endreq;
       debug() << "      Global position : " << hpdGlo << endreq
@@ -268,33 +261,37 @@ StatusCode DigitQC::finalize()
               << "      Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
     }
 
-    info() << " " << RICH << " : Av. total  hit occupancy     " << occ(m_allHits[rich],m_evtC) << " hits/event" << endreq
-           << "       : Av. signal hit occupancy     " << occ(totDet,m_evtC) << " hits/event" << endreq
+    info() << " " << RICH << " : Av. total  hit occupancy     " << occ(m_allDigits[rich],m_evtC) << " hits/event" << endreq
+           << "       : Av. signal hit occupancy     " << occ(totDetSignal,m_evtC) << " hits/event" << endreq
            << "       : Av. HPD hit occupancy        "
-           << occ(totDet,m_evtC*m_nHPD[rich].size()) << " hits/event" << endreq;
+           << occ(m_allDigits[rich],m_evtC*m_nHPDSignal[rich].size()) << " hits/event" << endreq;
     {for ( SpillCount::iterator iC = m_spillDigits[rich].begin(); iC != m_spillDigits[rich].end(); ++iC )
     {
       std::string loc = iC->first;
       loc.resize(28,' ');
-      info() << "       :   " << loc << " " << eff(iC->second,totDet) << " % of total, "
-             << eff(iC->second,(m_totalSpills[rich])[iC->first]) << " % signal eff." << endreq;
+      info() << "       :   " << loc << " " << eff(iC->second,m_allDigits[rich]) << " % of total, "
+             << eff((m_spillDigitsSignal[rich])[iC->first],totDetSignal) << " % signal eff." << endreq;
     }}
     info() << "       : % overall background hits      "
-           << eff(m_bkgHits[rich],totDet) << " % " << endreq
+           << eff(m_bkgHits[rich],m_allDigits[rich]) << " % " << endreq
            << "       :   % rayleigh scattered hits    "
-           << eff(m_scattHits[rich],totDet) << " % " << endreq
+           << eff(m_scattHits[rich],m_allDigits[rich]) << " % " << endreq
            << "       :   % charged track on HPD hits  "
-           << eff(m_chrgTkHits[rich],totDet) << " % " << endreq
+           << eff(m_chrgTkHits[rich],m_allDigits[rich]) << " % " << endreq
            << "       :   % gas quartz window CK hits  "
-           << eff(m_gasQCK[rich],totDet) << " % " << endreq
+           << eff(m_gasQCK[rich],m_allDigits[rich]) << " % " << endreq
            << "       :   % hpd quartz window CK hits  "
-           << eff(m_hpdQCK[rich],totDet) << " % " << endreq
+           << eff(m_hpdQCK[rich],m_allDigits[rich]) << " % " << endreq
            << "       :   % nitrogen CK hits           "
-           << eff(m_nitroQCK[rich],totDet) << " % " << endreq
+           << eff(m_nitroQCK[rich],m_allDigits[rich]) << " % " << endreq
            << "       :   % aerogel filter CK hits     "
-           << eff(m_aeroFiltQCK[rich],totDet) << " % " << endreq
+           << eff(m_aeroFiltQCK[rich],m_allDigits[rich]) << " % " << endreq
+           << "       :   % silicon back-scatter hits  "
+           << eff(m_siBackScatt[rich],m_allDigits[rich]) << " % " << endreq
+           << "       :   % internal reflection hits   "
+           << eff(m_hpdReflHits[rich],m_allDigits[rich]) << " % " << endreq
            << "       :   % silicon charge share hits  "
-           << eff(m_chrgShrHits[rich],totDet) << " % " << endreq;
+           << eff(m_chrgShrHits[rich],m_allDigits[rich]) << " % " << endreq;
 
     int iC = 0;
     for ( L1Counter::const_iterator iL1 = totL1.begin(); iL1 != totL1.end(); ++iL1, ++iC )

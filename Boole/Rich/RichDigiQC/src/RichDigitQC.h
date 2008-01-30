@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : Rich::MC::Digi::DigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.26 2007-05-29 15:58:58 cattanem Exp $
+ *  $Id: RichDigitQC.h,v 1.27 2008-01-30 16:58:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -102,43 +102,56 @@ namespace Rich
 
         /// Counter for hits in each HPD
         typedef Rich::HashMap< const LHCb::RichSmartID, unsigned int > HPDCounter;
-        HPDCounter m_nHPD[Rich::NRiches]; ///< Tally for HPD occupancy, in each RICH
+        Rich::Map< Rich::DetectorType, HPDCounter > m_nHPDSignal; ///< Tally for HPD occupancy, in each RICH
 
         typedef Rich::HashMap< std::string, unsigned int > SpillCount;
-        typedef std::vector< SpillCount > SpillDetCount;
+
+        typedef Rich::Map< Rich::DetectorType, SpillCount > SpillDetCount;
 
         /// Number of digitised hits per RICH detector and event location
         SpillDetCount m_spillDigits;
 
-        /// Number of digitised hits per RICH detector and event location
+        /// Number of signal digitised hits per RICH detector and event location
+        SpillDetCount m_spillDigitsSignal;
+
+        /// Number of raw MC hits hits per RICH detector and event location
         SpillDetCount m_totalSpills;
 
-        /// Number of hits in each RICH
-        std::vector< unsigned int > m_allHits;
+        /// Counter for hit tallies
+        typedef std::map< Rich::DetectorType, unsigned int > HitTally;
+
+        /// Number of digitised hits in each RICH
+        HitTally m_allDigits;
 
         /// Number of rayleigh scattered hits in each RICH
-        std::vector< unsigned int > m_scattHits;
+        HitTally m_scattHits;
 
         /// Number of charged track hits in each RICH
-        std::vector< unsigned int > m_chrgTkHits;
+        HitTally m_chrgTkHits;
 
         /// Number of gas quartz window CK hits in each RICH
-        std::vector< unsigned int > m_gasQCK;
+        HitTally m_gasQCK;
 
         /// Number of HPD quartz window CK hits in each RICH
-        std::vector< unsigned int > m_hpdQCK;
+        HitTally m_hpdQCK;
 
         /// Number of nitrogen CK hits in each RICH
-        std::vector< unsigned int > m_nitroQCK;
+        HitTally m_nitroQCK;
 
         /// Number of nitrogen CK hits in each RICH
-        std::vector< unsigned int > m_aeroFiltQCK;
+        HitTally m_aeroFiltQCK;
 
         /// Number of background hits in each RICH
-        std::vector< unsigned int > m_bkgHits;
+        HitTally m_bkgHits;
 
         /// Number of charge shared hits in each RICH
-        std::vector< unsigned int > m_chrgShrHits;
+        HitTally m_chrgShrHits;
+
+        /// Number of HPD Reflection hits in each RICH
+        HitTally m_hpdReflHits;
+
+        /// Number of silicon backscatter hits in each RICH
+        HitTally m_siBackScatt;
 
         /// List of event locations to look for MCRichHits in
         typedef Rich::HashMap< std::string, bool > EventLocations;
