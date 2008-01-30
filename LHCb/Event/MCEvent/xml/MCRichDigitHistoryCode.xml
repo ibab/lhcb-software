@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDigitHistoryCode.xml,v 1.13 2008-01-30 10:54:25 jonrob Exp $
+  * $Id: MCRichDigitHistoryCode.xml,v 1.14 2008-01-30 11:04:18 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichDigitHistoryCode class                           *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -130,7 +130,7 @@
                 desc  = "Returns true if this digit is purely due to Cherekov signal from one of the main RICH radiators. I.e. has NO background contribution." 
                 type  = "bool" >
                 <code>
-                  return ( hasSignal() &amp;&amp; !hasBackground() );
+                 return ( !hasBackground() );
                 </code>
         </method>
 
@@ -140,7 +140,7 @@
                 desc  = "Returns true if this digit is only due to background. I.e. none of the contributing hits were signal hits" 
                 type  = "bool" >
                 <code>
-                  return ( !isSignal() );
+                  return ( !hasSignal() );
                 </code>
         </method>
 
