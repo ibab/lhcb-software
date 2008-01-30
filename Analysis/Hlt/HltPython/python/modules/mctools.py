@@ -257,7 +257,7 @@ def showDecayTree( decayDescriptor, TES, MCDecayFinder, MCDebugTool,  maxDepth =
     @param MCDecayFinder gaudi.toolsvc().create('MCDecayFinder', interface='IMCDecayFinder')
     @author Hugo Ruiz, hugo.ruiz@cern.ch"""
 
-    decayList = getDecays( TES, MCDecayFinder, decayDescriptor )
+    decayList = getDecays( decayDescriptor,TES, MCDecayFinder)
     daughters = gaudimodule.gbl.std.vector('const LHCb::MCParticle*')() 
     for decay in decayList :
         MCDecayFinder.descendants(decay,daughters)
@@ -275,7 +275,7 @@ def showBs( TES, MCDecayFinder, MCDebugTool, maxDepth = 2):
     @param maxDepth Maximum generational distance
     @author Hugo Ruiz, hugo.ruiz@cern.ch"""
     
-    showDecayTree(TES, MCDecayFinder, MCDebugTool, '[<Xb>]cc', maxDepth = maxDepth)
+    showDecayTree('[<Xb>]cc',TES, MCDecayFinder, MCDebugTool, maxDepth = maxDepth)
     return
     
 

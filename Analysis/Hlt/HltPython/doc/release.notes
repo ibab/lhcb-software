@@ -9,6 +9,11 @@
   - make the module a script and remove the HLTFAC factory tool
 
 !!========================== HltPython v1r2 2007-12-17 ===================
+! 2008-1-30 - Antonio Perez-Calero
+ - mctools.py: debugged showBs function
+ - descriptors.py: modified decay descriptor for Bs2DsMuNu, adding the possible decay via D*_s
+ - kintools.py: not yet finished debugging
+
 ! 2008-1-29 - Antonio Perez-Calero
  - kintools.py: debugged module and improved angle function.Added several DEBUG messages.
  - recotools.py debugged module, added dotLists function, modified produceVertex using dotLists

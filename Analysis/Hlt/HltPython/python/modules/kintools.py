@@ -64,18 +64,21 @@ def angle(a,b):
     @return The angle between the momenta
     @author Hugo Ruiz, hugo.ruiz@cern.ch
     @author Antonio Perez-Calero, aperez@ecm.ub.es"""
+    #DEBUG=1
     if mag(a)*mag(b)!=0:
+        if DEBUG: print 'Calculating angle'
         angleAB=math.acos(dot(a,b)/(mag(a)*mag(b)))
         if DEBUG: print 'Calculated angle',angleAB
         return angleAB
     else:
-        print 'Could not compute angle, divide by zero!'
+        print 'Could not compute angle, divide by zero! Angle value set to 1000'
+        angleAB=1000
         if DEBUG:
-            print a
-            print b
-            print dot(a,b)
+            #print a
+            #print b
+            #print dot(a,b)
             print mag(a)*mag(b)
-        return 
+        return angleAB
 
 
 #---------------------------------------------------
@@ -101,9 +104,11 @@ def angularMatch( refPart, candidateList, angleMax = 0.001):
     @author Hugo Ruiz, hugo.ruiz@cern.ch"""
 
     # Convert candidateList to a list if it is not
-    if not candidateList: return []
+    #if len(candidateList)==0: return []
+    #if not candidateList: return []
     try:
         a = candidateList[0]
+        #print 'Reading list'
     except:
         candidateList = [candidateList]
 
@@ -111,7 +116,9 @@ def angularMatch( refPart, candidateList, angleMax = 0.001):
     matchedCandList = []
     for iCand in candidateList:
         try:
+            #print 'calling angle calculation'
             iAngle =  angle(refPart,iCand)
+            #print 'angle',iAngle
         except:
             print 'angularMatch: ANGLE COMPUTATION FAILED!!!'
             if DEBUG:
@@ -119,7 +126,7 @@ def angularMatch( refPart, candidateList, angleMax = 0.001):
             raise RuntimeError
         if iAngle < angleMax:
             matchedCandList.append(iCand)
-            iCand.angle = iAngle
+            #iCand.angle = iAngle
 
     return matchedCandList
 
