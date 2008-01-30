@@ -8,6 +8,8 @@
 #include "dic.hxx"
 #include "confdb.h"
 #include "stdio.h"
+#include <stdlib.h>
+#include <ctype.h>
 class connection
 {
 public:
