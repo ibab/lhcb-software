@@ -8,13 +8,14 @@ RichPDSignal.UseLHCBackground = false; // requires "Gauss" LHC events
 // charge sharing
 DigiRICHSeq.Members += { "Rich::MC::Digi::SimpleChargeSharing/RichChargeShare" };
 // "tuned" to give 2.5 % on the final digits
-RichChargeShare.ChargeShareFraction = 0.015;
+RichChargeShare.ChargeShareFraction = 0.025;
 
 // deposit summation
 DigiRICHSeq.Members += { "Rich::MC::Digi::SummedDeposits/RichSummedDeposits" };
 
 // Detailed treatment of HPD response
 DigiRICHSeq.Members += { "Rich::MC::Digi::DetailedFrontEndResponse/RichPDResponse" };
+RichPDResponse.TimeCalib = { 10, 6 };
 
 // Refractive index using XML tabulation
 // CRJ : Probably no longer needed ?

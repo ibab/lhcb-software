@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.cpp,v 1.13 2007-09-20 16:36:14 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.cpp,v 1.14 2008-01-30 16:59:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -43,8 +43,8 @@ DetailedFrontEndResponse::DetailedFrontEndResponse( const std::string& name,
   declareProperty( "ThresholdSigma",    m_ThresholdSigma = 140. ); // in electrons
 
    // Shift time ( value correlated settings in RichSignal )
-  m_timeShift[Rich::Rich1] = 18;
-  m_timeShift[Rich::Rich2] = 7;
+  m_timeShift[Rich::Rich1] = 10;
+  m_timeShift[Rich::Rich2] = 6;
   declareProperty( "TimeCalib", m_timeShift );
 
   el_per_adc = 40.;
@@ -79,6 +79,8 @@ StatusCode DetailedFrontEndResponse::initialize()
   if ( sc.isFailure() ) { return Error( "Failed to initialise random number generators", sc ); }
 
   releaseTool( smartIDs );
+
+  info() << "Time Calibration (Rich1/RICH2) = " << m_timeShift << endreq;
 
   return sc;
 }
