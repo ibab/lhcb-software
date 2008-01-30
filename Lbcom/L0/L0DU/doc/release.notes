@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.78 2008-01-30 09:26:52 cattanem Exp $
+! $Id: release.notes,v 1.79 2008-01-30 12:13:54 pkoppenb Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2008-01-30 - Patrick KOPPENBURG
+ - L0ETC.cpp:
+   . Define nTuple ID as 1 explicitly (fixes writing error with new Gaudi)
+   . Write all fields even if L0 is not there (pointed out by Chris)
+   . Write out Tuple.
 
 !========================== L0DU v8r2 2008-01-30 =========================
 ! 2008-01-29 - Olivier Deschamps 

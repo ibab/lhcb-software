@@ -1,4 +1,4 @@
-// $Id: L0ETC.cpp,v 1.2 2007-07-15 16:57:48 pkoppenb Exp $
+// $Id: L0ETC.cpp,v 1.3 2008-01-30 12:13:54 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -78,7 +78,7 @@ StatusCode L0ETC::execute() {
   m_events++ ;
   
   // This is what it is about...
-  Tuple tup = evtCol(m_collectionName);
+  Tuple tup = evtCol(1,m_collectionName);
   
   // pick up the location of the event --
   // this is what makes the tag collection a collection...
@@ -97,6 +97,8 @@ StatusCode L0ETC::execute() {
     tup->column("run",   (int)evtHeader->runNumber() );
   } else {
     Warning("    not able to retrieve MCHeader");
+    tup->column("event", -1 );
+    tup->column("run",   -1 );
   }
 
   // get L0 result
@@ -111,7 +113,12 @@ StatusCode L0ETC::execute() {
   } else {
     Warning("    not able to retrieve L0DUReport");
     tup->column ( "L0", false ) ;
+    for ( std::vector<std::string>::const_iterator c = m_l0channels.begin();
+          c != m_l0channels.end(); ++c){
+      tup->column ( (*c), false ) ;
+    }
   }
+  tup->write();
 
   return StatusCode::SUCCESS;
 }
