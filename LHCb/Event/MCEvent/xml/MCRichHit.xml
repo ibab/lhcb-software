@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichHit.xml,v 1.13 2008-01-28 16:36:48 jonrob Exp $
+  * $Id: MCRichHit.xml,v 1.14 2008-01-30 10:29:55 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -224,14 +224,14 @@
                 desc  = "Returns true if this hit is a background hit" 
                 type  = "bool" >
                 <code>
-                   return ( !isRICHRadiator() || (   scatteredPhoton()  || 
-                                                     hpdReflection()    ||
-                                                     hpdSiBackscatter() ||
-                                                     chargedTrack()     ||
-                                                     gasQuartzCK()      ||
-                                                     hpdQuartzCK()      ||
-                                                     nitrogenCK()       ||
-                                                     aeroFilterCK()      )  );
+                   return ( !isRICHRadiator() || ( scatteredPhoton()  || 
+                                                   hpdReflection()    ||
+                                                   hpdSiBackscatter() ||
+                                                   chargedTrack()     ||
+                                                   gasQuartzCK()      ||
+                                                   hpdQuartzCK()      ||
+                                                   nitrogenCK()       ||
+                                                   aeroFilterCK()      )  );
                 </code>
         </method>
 

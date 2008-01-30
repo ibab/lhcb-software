@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDigitHistoryCode.xml,v 1.9 2008-01-27 09:57:08 jonrob Exp $
+  * $Id: MCRichDigitHistoryCode.xml,v 1.10 2008-01-30 10:29:55 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichDigitHistoryCode class                           *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -129,11 +129,17 @@
                 desc  = "Returns true if at least one of the hits contributing to this digit came from a background source" 
                 type  = "bool" >
                 <code>
-    return ( chargeShareHit() || scatteredHit() ||
-             chargedTrack() || gasQuartzCK() ||
-             hpdQuartzCK() || nitrogenCK() || aeroFilterCK() ||
-             darkHit() || hpdReflection() || hpdSiBackscatter()
-           );
+                  return ( scatteredHit()     ||
+                           hpdReflection()    || 
+                           hpdSiBackscatter() ||
+                           chargedTrack()     || 
+                           gasQuartzCK()      ||
+                           hpdQuartzCK()      || 
+                           nitrogenCK()       || 
+                           aeroFilterCK()     ||
+                           chargeShareHit()   || 
+                           darkHit()
+                         );
                 </code>
         </method>
 
