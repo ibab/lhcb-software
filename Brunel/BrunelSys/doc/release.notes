@@ -3,7 +3,7 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v32r3>2008-01-25 Brunel v32r3</A></H1><PRE>
+</PRE><H1><A NAME=v32r3>2008-01-30 Brunel v32r3</A></H1><PRE>
 This version uses projects Gaudi v19r7, LHCb v23r3, Lbcom v6r14, Rec v5r3
  and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
 
@@ -25,6 +25,12 @@ framework.
     (TrackSys v4r13, NNTools v1r2) 
   . Modified the T, IT and OT geometry so that IT and OT use independent
     parameters for their position inside T (SQLDDDB v4r0)
+  . Improvements to ray tracing photon reconstruction 
+    (RichRecPhotonTools v1r1, RichRecSys v3r8)
+  . Changes in TrackKalmanFilter to improve fit stability (TrackFitter v2r23)
+  . Call for intersections less often (TrackFitter v2r23) 
+  . Si measurement-providers now use the track state to estimate the cluster
+    position error (TrackTools v3r3)
 
 - New features
   . Possibility to switch off drift times in OT pattern recognition
