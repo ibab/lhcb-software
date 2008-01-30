@@ -17,19 +17,19 @@ use CaloPIDs            v4r9    Calo  # Victor Egorychev, Vanya Belyaev
 use CaloReco            v4r10   Calo  # Olivier Deschamps
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
-use TrackExtrapolators  v2r16   Tr    # Eduardo Rodrigues
-use TrackMCTools        v2r16   Tr    # Eduardo Rodrigues
+use TrackCheckers       v3r4    Tr    # Eduardo Rodrigues
+use TrackExtrapolators  v2r17   Tr    # Eduardo Rodrigues
 use TrackFitEvent       v3r11   Tr    # Eduardo Rodrigues
-use TrackTools          v3r2    Tr    # Eduardo Rodrigues
-use TrackFitter         v2r22   Tr    # Eduardo Rodrigues
+use TrackFitter         v2r23   Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r18   Tr    # Eduardo Rodrigues, Edwin Bos
-use TrackIdealPR        v2r14   Tr    # Eduardo Rodrigues
+use TrackMCTools        v2r16   Tr    # Eduardo Rodrigues
+use TrackIdealPR        v2r15   Tr    # Eduardo Rodrigues
+use TrackTools          v3r3    Tr    # Eduardo Rodrigues
 use TrackUtils          v1r18   Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r5    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v3r1    Tr    # Eduardo Rodrigues
 use PatChecker          v3r1    Tr    # Olivier Callot, David Hutchcroft
 use PatFitParams        v3r1    Tr    # Olivier Callot
-use TrackCheckers       v3r4    Tr    # Eduardo Rodrigues
 
 # Tf packages: Track Pattern Recognition
 use TrackSys            v4r13   Tf    # Eduardo Rodrigues

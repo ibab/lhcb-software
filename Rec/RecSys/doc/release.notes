@@ -5,15 +5,16 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r3>2008-01-28 RecSys v5r3</A></H1><PRE>
+</PRE><H1><A NAME=v5r3>2008-01-30 RecSys v5r3</A></H1><PRE>
 This version uses Gaudi v19r7 and LHCb v23r3.
 
 - Packages modified: CaloPIDs v4r9, CaloReco v4r10, GlobalReco v6r15,
     NNTools v1r2, PatAlgorithms v3r3, PatFitParams v3r1, PatVelo v3r3,
     RichRecMCAlgorithms v1r1, RichRecMCTools v2r15, RichRecMonitors v2r14,
     RichRecPhotonTools v1r1, RichRecSys v3r8, RichRecTools v4r1,
-    RichRecTrackTools v1r1, TfTools v1r3, TrackCheckers v3r4, TrackMCTools v2r16,
-    TrackSys v4r13, TrackUtils v1r18
+    RichRecTrackTools v1r1, TfTools v1r3, TrackCheckers v3r4,
+    TrackExtrapolators v2r17, TrackFitter v2r23, TrackIdealPR v2r15,
+    TrackMCTools v2r16, TrackSys v4r13, TrackTools v3r3, TrackUtils v1r18
 
 - In CaloPIDs v4r9
   ._setProperty was changed to setProperty
@@ -46,6 +47,7 @@ This version uses Gaudi v19r7 and LHCb v23r3.
 
 - In PatFitParams v3r1
   . Add the PatCalibV0 algorithm from Maurice, to debug V0 processing.
+  . Update options for Gaudi v19r7
 
 - In RichRecMCAlgorithms v1r1
   . Fix bug in missing MCRichTrack adding algorithm (adding the wrong tracks)
@@ -87,8 +89,24 @@ This version uses Gaudi v19r7 and LHCb v23r3.
 - In TrackCheckers v3r4
   . Add hit-track residuals to Monitoring classes
 
+- In TrackExtrapolators v2r17
+  . Cleanup of debug output in MaterialLocatorBase
+
+- In TrackFitter v2r23
+  . Changes in TrackKalmanFilter to improve fit stability
+    o remove smoothing of nodes outside measurement range
+    o better preconditioning for matrix inversion
+    o more stable expression for smooting covariance matrix
+  . Increased errors of initial cov matrix to be suitable also for velo-TT
+    and T tracks
+  . Moved filling of material corrections and propagation matrices to
+    TrackMasterFitter, making use of trajectory approximation
+
+- In TrackIdealPR v2r15
+  . Added missing PatRecID flag to track in IdealTracksCreator
+
 - In TrackMCTools v2r16
-  . Bug fix in CleanPatTrackSelector
+  . Bug fixes in CleanPatTrackSelector and IdealStateCreator::addMCHitStates
 
 - In TrackSys v4r13
   . In RecoTracking.opts, add NeuralNetTmva ghost probability algorithm to end
@@ -96,6 +114,9 @@ This version uses Gaudi v19r7 and LHCb v23r3.
   . In NoFieldTracking.opts, added include to use new PatSeeding tuning when
     running without magnetic field, but left it commented out because
     PatSeeding is not executed in the default setup
+
+- In TrackTools v3r3
+  . Change Si measurement providers to use track-state by default
 
 - In TrackUtils v1r18
   . Fix TrackV0Finder to follow changes in TwoProngVertex.h 
