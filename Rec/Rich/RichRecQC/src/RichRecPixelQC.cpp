@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.15 2007-08-13 12:39:23 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.16 2008-01-30 17:01:29 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -114,17 +114,19 @@ StatusCode PixelQC::execute()
           const MCFlags flags = getHistories( *iR );
           // count
           ++m_rawTally.pixels[rich];
-          if ( flags.isBkg        ) { ++m_rawTally.bkgs[rich]; }
-          if ( flags.isHPDQCK     ) { ++m_rawTally.npdqcks[rich]; }
-          if ( flags.isGasCK      ) { ++m_rawTally.ngasck[rich]; }
-          if ( flags.isN2CK       ) { ++m_rawTally.n2ck[rich]; }
-          if ( flags.isChargedTk  ) { ++m_rawTally.ntrack[rich]; }
-          if ( flags.isChargeShare) { ++m_rawTally.nchargeshare[rich]; }
-          if ( flags.isAeroFiltCK ) { ++m_rawTally.naerofilter[rich]; }
-          if ( flags.isSignal     ) { ++m_rawTally.signal[rich]; }
-          if ( flags.isAerogelCK  ) { ++m_rawTally.radHits[Rich::Aerogel]; }
-          if ( flags.isRich1GasCK ) { ++m_rawTally.radHits[Rich::Rich1Gas]; }
-          if ( flags.isRich2GasCK ) { ++m_rawTally.radHits[Rich::Rich2Gas]; }
+          if ( flags.isBkg           ) { ++m_rawTally.bkgs[rich]; }
+          if ( flags.isHPDQCK        ) { ++m_rawTally.npdqcks[rich]; }
+          if ( flags.isGasCK         ) { ++m_rawTally.ngasck[rich]; }
+          if ( flags.isN2CK          ) { ++m_rawTally.n2ck[rich]; }
+          if ( flags.isChargedTk     ) { ++m_rawTally.ntrack[rich]; }
+          if ( flags.isChargeShare   ) { ++m_rawTally.nchargeshare[rich]; }
+          if ( flags.isAeroFiltCK    ) { ++m_rawTally.naerofilter[rich]; }
+          if ( flags.isSiBackScatter ) { ++m_rawTally.nbackscatter[rich]; }
+          if ( flags.isHPDIntReflect ) { ++m_rawTally.nhpdintreflect[rich]; }
+          if ( flags.isSignal        ) { ++m_rawTally.signal[rich]; }
+          if ( flags.isAerogelCK     ) { ++m_rawTally.radHits[Rich::Aerogel]; }
+          if ( flags.isRich1GasCK    ) { ++m_rawTally.radHits[Rich::Rich1Gas]; }
+          if ( flags.isRich2GasCK    ) { ++m_rawTally.radHits[Rich::Rich2Gas]; }
         } // raw channel ids
 
         // Get the reconstructed pixels for this HPD
@@ -144,17 +146,19 @@ StatusCode PixelQC::execute()
             ++nHPDHits;
             ++pixels[rich];
             ++m_recoTally.pixels[rich];
-            if ( flags.isBkg        ) { ++m_recoTally.bkgs[rich]; }
-            if ( flags.isHPDQCK     ) { ++m_recoTally.npdqcks[rich]; }
-            if ( flags.isGasCK      ) { ++m_recoTally.ngasck[rich]; }
-            if ( flags.isN2CK       ) { ++m_recoTally.n2ck[rich]; }
-            if ( flags.isChargedTk  ) { ++m_recoTally.ntrack[rich]; }
-            if ( flags.isChargeShare) { ++m_recoTally.nchargeshare[rich]; }
-            if ( flags.isAeroFiltCK ) { ++m_recoTally.naerofilter[rich]; }
-            if ( flags.isSignal     ) { ++nHPDSignalHits; ++signal[rich]; ++m_recoTally.signal[rich]; }
-            if ( flags.isAerogelCK  ) { ++m_recoTally.radHits[Rich::Aerogel]; }
-            if ( flags.isRich1GasCK ) { ++m_recoTally.radHits[Rich::Rich1Gas]; }
-            if ( flags.isRich2GasCK ) { ++m_recoTally.radHits[Rich::Rich2Gas]; }
+            if ( flags.isBkg           ) { ++m_recoTally.bkgs[rich]; }
+            if ( flags.isHPDQCK        ) { ++m_recoTally.npdqcks[rich]; }
+            if ( flags.isGasCK         ) { ++m_recoTally.ngasck[rich]; }
+            if ( flags.isN2CK          ) { ++m_recoTally.n2ck[rich]; }
+            if ( flags.isChargedTk     ) { ++m_recoTally.ntrack[rich]; }
+            if ( flags.isChargeShare   ) { ++m_recoTally.nchargeshare[rich]; }
+            if ( flags.isAeroFiltCK    ) { ++m_recoTally.naerofilter[rich]; }
+            if ( flags.isSiBackScatter ) { ++m_recoTally.nbackscatter[rich]; }
+            if ( flags.isHPDIntReflect ) { ++m_recoTally.nhpdintreflect[rich]; }
+            if ( flags.isSignal        ) { ++nHPDSignalHits; ++signal[rich]; ++m_recoTally.signal[rich]; }
+            if ( flags.isAerogelCK     ) { ++m_recoTally.radHits[Rich::Aerogel]; }
+            if ( flags.isRich1GasCK    ) { ++m_recoTally.radHits[Rich::Rich1Gas]; }
+            if ( flags.isRich2GasCK    ) { ++m_recoTally.radHits[Rich::Rich2Gas]; }
           }
         }
 
@@ -188,13 +192,15 @@ PixelQC::MCFlags PixelQC::getHistories( const LHCb::RichSmartID id ) const
   {
     if ( (*iS)->history().isBackground() )
     {
-      flags.isBkg    = true;
-      if ( (*iS)->history().hpdQuartzCK()    ) { flags.isHPDQCK = true; }
-      if ( (*iS)->history().gasQuartzCK()    ) { flags.isGasCK  = true; }
-      if ( (*iS)->history().nitrogenCK()     ) { flags.isN2CK   = true; }
-      if ( (*iS)->history().chargedTrack()   ) { flags.isChargedTk   = true; }
-      if ( (*iS)->history().chargeShareHit() ) { flags.isChargeShare = true; }
-      if ( (*iS)->history().aeroFilterCK()   ) { flags.isAeroFiltCK = true; }
+      flags.isBkg = true;
+      if ( (*iS)->history().hpdQuartzCK()    )   { flags.isHPDQCK = true; }
+      if ( (*iS)->history().gasQuartzCK()    )   { flags.isGasCK  = true; }
+      if ( (*iS)->history().nitrogenCK()     )   { flags.isN2CK   = true; }
+      if ( (*iS)->history().chargedTrack()   )   { flags.isChargedTk   = true; }
+      if ( (*iS)->history().chargeShareHit() )   { flags.isChargeShare = true; }
+      if ( (*iS)->history().aeroFilterCK()   )   { flags.isAeroFiltCK  = true; }
+      if ( (*iS)->history().hpdSiBackscatter() ) { flags.isSiBackScatter = true; }
+      if ( (*iS)->history().hpdReflection()    ) { flags.isHPDIntReflect = true; }
     }
     else
     {
@@ -202,9 +208,6 @@ PixelQC::MCFlags PixelQC::getHistories( const LHCb::RichSmartID id ) const
       if ( (*iS)->history().aerogelHit()   ) { flags.isAerogelCK = true;  }
       if ( (*iS)->history().c4f10Hit()     ) { flags.isRich1GasCK = true; }
       if ( (*iS)->history().cf4Hit()       ) { flags.isRich2GasCK = true; }
-      // requires new MCEvent
-      //if ( (*iS)->history().rich1GasHit()  ) { flags.isRich1GasCK = true; }
-      //if ( (*iS)->history().rich2GasHit()  ) { flags.isRich2GasCK = true; }
     }
   }
 
@@ -276,6 +279,14 @@ void PixelQC::printRICH( const Rich::DetectorType rich ) const
   if ( m_rawTally.naerofilter[rich] > 0 )
     info() << "        :   - Aero. filter CK : " << occ(m_recoTally.naerofilter[rich],m_nEvts)
            << "   Eff. = " << pois(m_recoTally.naerofilter[rich],m_rawTally.naerofilter[rich]) << " %" << endreq;
+
+  if ( m_rawTally.nbackscatter[rich] > 0 )
+    info() << "        :   - Si Back-Scatter : " << occ(m_recoTally.nbackscatter[rich],m_nEvts)
+           << "   Eff. = " << pois(m_recoTally.nbackscatter[rich],m_rawTally.nbackscatter[rich]) << " %" << endreq;
+
+  if ( m_rawTally.nhpdintreflect[rich] > 0 )
+    info() << "        :   - HPD Reflections : " << occ(m_recoTally.nhpdintreflect[rich],m_nEvts)
+           << "   Eff. = " << pois(m_recoTally.nhpdintreflect[rich],m_rawTally.nhpdintreflect[rich]) << " %" << endreq;
 
   if ( m_rawTally.ntrack[rich] > 0 )
     info() << "        :   - Track On HPD    : " << occ(m_recoTally.ntrack[rich],m_nEvts)

@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-01-30 - Chris Jones
+ - Extend pixel monitoring to include new MC background types (HPD reflections
+   and silicon back-scattering).
+
 !======================= RichRecQC v2r15 2007-11-30 ==========================
 ! 2007-11-26 - Chris Jones
  - Make sure RichPIDQC always uses the Error(...) and Warning(..) methods.

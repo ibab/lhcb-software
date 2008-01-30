@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PixelQC
  *
  *  CVS Log :-
- *  $Id: RichRecPixelQC.h,v 1.9 2007-06-01 06:50:12 cattanem Exp $
+ *  $Id: RichRecPixelQC.h,v 1.10 2008-01-30 17:01:29 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -80,20 +80,23 @@ namespace Rich
           /// Default constructor
           MCFlags() :
             isBkg(false),isHPDQCK(false),isGasCK(false),isN2CK(false),
-            isChargedTk(false),isChargeShare(false),isAeroFiltCK(false),isSignal(false),
-            isAerogelCK(false),isRich1GasCK(false),isRich2GasCK(false) { }
+            isChargedTk(false),isChargeShare(false),isAeroFiltCK(false),isSiBackScatter(false),
+            isHPDIntReflect(false),
+            isSignal(false),isAerogelCK(false),isRich1GasCK(false),isRich2GasCK(false) { }
           // data members
-          bool isBkg;         ///< Hit is background, of any sort
-          bool isHPDQCK;      ///< Hit is from CK radiation from the HPD quartz windows
-          bool isGasCK;       ///< Hit is from CK radiation from the gas volume quartz windows
-          bool isN2CK;        ///< Hit is from CK radiation from N2
-          bool isChargedTk;   ///< Hit is from a charged track hitting the HPD
-          bool isChargeShare; ///< Hit is from charge sharing in the HPD silicon detector
-          bool isAeroFiltCK;  ///< Hit is from CK radiator in the aerogel Filter
-          bool isSignal;      ///< Hit is from (unscatted) CK radiation from one of the main radiators
-          bool isAerogelCK;   ///< Hit is from (unscatted) CK radiation from the aerogel radiator
-          bool isRich1GasCK;  ///< Hit is from (unscatted) CK radiation from the Rich1 gas radiator
-          bool isRich2GasCK;  ///< Hit is from (unscatted) CK radiation from the Rich2 gas radiator
+          bool isBkg;           ///< Hit is background, of any sort
+          bool isHPDQCK;        ///< Hit is from CK radiation from the HPD quartz windows
+          bool isGasCK;         ///< Hit is from CK radiation from the gas volume quartz windows
+          bool isN2CK;          ///< Hit is from CK radiation from N2
+          bool isChargedTk;     ///< Hit is from a charged track hitting the HPD
+          bool isChargeShare;   ///< Hit is from charge sharing in the HPD silicon detector
+          bool isAeroFiltCK;    ///< Hit is from CK radiator in the aerogel Filter
+          bool isSiBackScatter; ///< Hit is from back-scattering from the silicon chip
+          bool isHPDIntReflect; ///< Hit is from internal reflections inside the HPD
+          bool isSignal;        ///< Hit is from (unscattered) CK radiation from one of the main radiators
+          bool isAerogelCK;     ///< Hit is from (unscattered) CK radiation from the aerogel radiator
+          bool isRich1GasCK;    ///< Hit is from (unscattered) CK radiation from the Rich1 gas radiator
+          bool isRich2GasCK;    ///< Hit is from (unscattered) CK radiation from the Rich2 gas radiator
         };
 
         /// Stores tallys opf various types
@@ -110,6 +113,8 @@ namespace Rich
               ntrack            ( Rich::NRiches,        0 ),
               nchargeshare      ( Rich::NRiches,        0 ),
               naerofilter       ( Rich::NRiches,        0 ),
+              nbackscatter      ( Rich::NRiches,        0 ),
+              nhpdintreflect    ( Rich::NRiches,        0 ),
               signal            ( Rich::NRiches,        0 ),
               radHits           ( Rich::NRadiatorTypes, 0 ) {}
           // data members
@@ -120,7 +125,9 @@ namespace Rich
           std::vector<unsigned int> n2ck;     ///< Total number of N2 CK hits
           std::vector<unsigned int> ntrack;   ///< Total number of charged track on HPD hits
           std::vector<unsigned int> nchargeshare; ///< Total number of silicon charge share hits
-          std::vector<unsigned int> naerofilter; ///< Total number of aerogel filter C hits
+          std::vector<unsigned int> naerofilter; ///< Total number of aerogel filter CK hits
+          std::vector<unsigned int> nbackscatter; ///< Total number of back-scattered hits
+          std::vector<unsigned int> nhpdintreflect; ///< Total number of HPD internal reflection hits
           std::vector<unsigned int> signal;   ///< Total number of signal hits
           std::vector<unsigned int> radHits;  ///< Total number of signal hits for each radiator
         };
