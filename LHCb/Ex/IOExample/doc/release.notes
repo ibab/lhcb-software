@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.23 2007-12-11 13:28:35 cattanem Exp $
+! $Id: release.notes,v 1.24 2008-01-30 15:45:32 cattanem Exp $
 ! Package: IOExample
 ! Package Manager: M.Frank
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
 !---------------------------------------------------------------------------
+
+!====================== IOExample v2r4 2008-01-30 =========================
+! 2008-01-30 - Marco Cattaneo
+ - Replace PoolDbCacheSvc.Catalog by FileCatalog.Catalogs, for Gaudi v19r7
 
 !====================== IOExample v2r3 2007-12-11 =========================
 ! 2007-12-11 - Marco Cattaneo

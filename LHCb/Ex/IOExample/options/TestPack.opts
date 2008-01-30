@@ -1,4 +1,4 @@
-// $Id: TestPack.opts,v 1.2 2007-03-05 10:27:54 cattanem Exp $
+// $Id: TestPack.opts,v 1.3 2008-01-30 15:45:32 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Options for a program to test packing and unpacking of .sim data
@@ -21,7 +21,7 @@ CompareMCParticle.OutputLevel = 2;
 
 // The input catalog describes the input file.
 // In this example it is the catalog produced by WriteMin.opts
-PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
+FileCatalog.Catalogs = {"xmlcatalog_file:MyCatalog.xml"};
 
 // Input file
 #include "$IOEXAMPLEROOT/options/PoolSim.opts"

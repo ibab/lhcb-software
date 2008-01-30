@@ -1,4 +1,4 @@
-// $Id: ReadMin.opts,v 1.21 2007-12-05 09:00:23 cattanem Exp $
+// $Id: ReadMin.opts,v 1.22 2008-01-30 15:45:32 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Example to navigate the event data store, starting from a POOL file
@@ -28,7 +28,7 @@ ApplicationMgr.EvtMax      = 5;
 
 // The input catalog describes the input file.
 // In this example it is the catalog produced by WriteMin.opts
-PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
+FileCatalog.Catalogs = {"xmlcatalog_file:MyCatalog.xml"};
 
 // Unpack the packed containers on demand
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };

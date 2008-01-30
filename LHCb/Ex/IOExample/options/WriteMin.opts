@@ -5,8 +5,8 @@ ApplicationMgr.HistogramPersistency = "NONE";
 ApplicationMgr.EvtMax   = 100;
 EventSelector.PrintFreq = 1;
 
-// Updates the local POOL catalog with the created file
-PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
+// Updates the local file catalog with the created file
+FileCatalog.Catalogs = {"xmlcatalog_file:MyCatalog.xml"};
 
 // Set up the OutputStream that copies an event data file
 ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
