@@ -9,23 +9,15 @@ use confDBpython       v*  Online
 use DIM v* Online
 
 
-private
-<<<<<<< requirements
 application   Hugin Hugin.cpp
 application   Test rpc_client.cpp
 
-=======
 apply_pattern package_shlibflags
 macro_append confDBpython_shlibflags $(Boost_linkopts_python)
 path_append PATH ""  WIN32 "$(oracle_home)/bin"
 
 path_append PATH ""  WIN32 "$(oracle_home)/bin"
 
-
-application   test ../tests/test.cpp
-macro_append confDBpython_cppflags ' -I"$(oracle_home)/include" '
-macro_append test_dependencies " confDBpython "
->>>>>>> 1.2
 
 
 
