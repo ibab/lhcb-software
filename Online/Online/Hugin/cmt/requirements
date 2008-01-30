@@ -1,0 +1,23 @@
+package Hugin
+#version v1r0
+#author "Beat"
+
+branches cmt src
+
+use GaudiPolicy  v* 
+use confDBpython       v*  Online
+use DIM v* Online
+
+
+application   Hugin Hugin.cpp
+application   Test rpc_client.cpp
+
+apply_pattern package_shlibflags
+macro_append confDBpython_shlibflags $(Boost_linkopts_python)
+path_append PATH ""  WIN32 "$(oracle_home)/bin"
+
+path_append PATH ""  WIN32 "$(oracle_home)/bin"
+
+
+
+
