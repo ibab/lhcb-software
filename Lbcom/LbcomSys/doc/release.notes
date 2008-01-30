@@ -6,7 +6,7 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r14>2008-01-28 LbcomSys v6r14</A></H1><PRE>
+</PRE><H1><A NAME=v6r14>2008-01-30 LbcomSys v6r14</A></H1><PRE>
 This version uses Gaudi v19r7 and LHCb v23r3
 
 - Packages modified: CaloAssociators v6r5, L0DU v8r2, L0Muon v7r6, PuVeto v7r3,
@@ -20,6 +20,17 @@ This version uses Gaudi v19r7 and LHCb v23r3
 
 - In L0DU v8r2
   . Fix minor memory leak in L0ProcessorDataLocation initialize()
+  . Finalize the implementation of the TCK mechanism 
+    o new tool L0DUMultiConfigProvider (same interface as L0DUConfigProvider)
+    o fix backward compatibility with previous DC06 data : 
+      assign TCK = 0xDC06 when bank vsn = 0
+    o enable the decoding of DC06 format
+    o review L0DUConfig.opts 
+    o update and rename all individual configuration options files
+  . Fixes to L0ETC.cpp
+    o Define nTuple ID as 1 explicitly (fixes writing error with new Gaudi)
+    o Write all fields even if L0 is not there
+    o Write out Tuple.
 
 - In L0Muon v7r6
   . Add some if(msgLevel(MSG::DEBUG) around debug() statements in L0MuonAlg
@@ -33,6 +44,8 @@ This version uses Gaudi v19r7 and LHCb v23r3
 - In RichDAQ v3r14
   . Disable by default data integrity checks with ODIN. Due to changes in ODIN
     information that makes this check no longer possible.
+  . In Brunel_DecodeRawEvent.opts, use DataOnDemandSvc.AlgMap option instead of
+    obsolete Algorithms option
 
 - In RichTools v2r17
   . Add new tool RichSnellsLawRefraction to perform refraction corrections
