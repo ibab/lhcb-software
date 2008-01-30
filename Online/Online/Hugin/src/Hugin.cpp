@@ -6,7 +6,7 @@
 #include "oci.h"
 #include "dis.hxx"
 #include "dic.hxx"
-#include "confdb.h"
+#include "CONFDB.h"
 #include "stdio.h"
 #include <stdlib.h>
 #include <ctype.h>
