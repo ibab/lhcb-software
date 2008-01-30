@@ -5,7 +5,7 @@
  *  Implementation file for class : MCRichDigitHistoryCode
  *
  *  CVS Log :-
- *  $Id: MCRichDigitHistoryCode.cpp,v 1.1 2006-09-01 10:32:38 jonrob Exp $
+ *  $Id: MCRichDigitHistoryCode.cpp,v 1.2 2008-01-30 10:39:32 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    01/09/2006
@@ -16,31 +16,40 @@
 
 std::ostream& LHCb::MCRichDigitHistoryCode::fillStream(std::ostream& s) const
 {
-
   s << "[";
 
   // event history
-  if ( signalEvent()   ) s << " :SignalEvent";
-  if ( prevEvent()     ) s << " :PrevEvent";
-  if ( prevPrevEvent() ) s << " :PrevPrevEvent";
-  if ( nextEvent()     ) s << " :NextEvent";
-  if ( nextNextEvent() ) s << " :NextNextEvent";
+  if ( signalEvent()   ) s << " SignalEvent";
+  if ( prevEvent()     ) s << " PrevEvent";
+  if ( prevPrevEvent() ) s << " PrevPrevEvent";
+  if ( nextEvent()     ) s << " NextEvent";
+  if ( nextNextEvent() ) s << " NextNextEvent";
   
-  // signal types
+  // signal radiators
   if ( aerogelHit() ) s << " AeroCK";
   if ( c4f10Hit() )   s << " R1GasCK";
   if ( cf4Hit() )     s << " R2GasCK";
 
-  // background history
-  if ( scatteredHit() )   s << " Scattered";
-  if ( chargedTrack() )   s << " ChargedTrack";
+  // background radiators
   if ( gasQuartzCK() )    s << " GasQuartzCK";
   if ( hpdQuartzCK() )    s << " HPDQuartzCK";
   if ( nitrogenCK() )     s << " N2CK";
   if ( aeroFilterCK() )   s << " AeroFilterCK";
-  if ( darkHit() )        s << " DarkHit";
-  if ( chargeShareHit() ) s << " ChargeShare";
 
-  s << " ]";
-  return s;
+  // background history
+  if ( scatteredHit()     ) s << " RayleighScattered";
+  if ( chargedTrack()     ) s << " TrackHitHPD";
+  if ( darkHit()          ) s << " DarkHit";
+  if ( chargeShareHit()   ) s << " ChargeShare";
+  if ( hpdSiBackscatter() ) s << " hpdSiBackscatter";
+  if ( hpdReflQWPC()      ) s << " hpdReflQWPC";
+  if ( hpdReflChr()       ) s << " hpdReflChr";
+  if ( hpdReflAirQW()     ) s << " hpdReflAirQW";
+  if ( hpdReflAirPC()     ) s << " hpdReflAirPC";
+  if ( hpdReflSi()        ) s << " hpdReflSi";
+  if ( hpdReflKovar()     ) s << " hpdReflKovar";
+  if ( hpdReflKapton()    ) s << " hpdReflKapton";
+  if ( hpdReflPCQW()      ) s << " hpdReflPCQW";
+
+  return s << " ]";
 }

@@ -5,7 +5,7 @@
  *  Implementation file for class : MCRichHit
  *
  *  CVS Log :-
- *  $Id: MCRichHit.cpp,v 1.4 2008-01-30 10:29:55 jonrob Exp $
+ *  $Id: MCRichHit.cpp,v 1.5 2008-01-30 10:39:32 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    26/01/2008
@@ -43,6 +43,7 @@ LHCb::MCRichDigitHistoryCode LHCb::MCRichHit::mcRichDigitHistoryCode() const
   hist.setHpdReflPCQW(hpdReflPCQW());
 
   // if this hit is pure signal, set this in the history code
+  hist.setIsSignal(isSignal());
 
   // return final flag
   return hist;
