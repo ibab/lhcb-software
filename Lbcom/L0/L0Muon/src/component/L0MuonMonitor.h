@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitor.h,v 1.1 2008-01-28 08:54:53 jucogan Exp $
+// $Id: L0MuonMonitor.h,v 1.2 2008-01-30 09:38:09 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITOR_H 
 #define COMPONENT_L0MUONMONITOR_H 1
 
@@ -74,8 +74,10 @@ private:
 
   std::map<Channel_type , MuonSystemLayout > m_channel_layout;
 
-//   std::map<std::string , AIDA::IHistogram2D* >  m_hitMaps;
-//   std::map<int,AIDA::IHistogram2D* > m_seeds;
+
+  // Properties
+  std::string m_extension;
+  
 
 };
 

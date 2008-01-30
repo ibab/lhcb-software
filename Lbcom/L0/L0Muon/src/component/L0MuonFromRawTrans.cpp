@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.cpp,v 1.2 2008-01-28 08:54:09 jucogan Exp $
+// $Id: L0MuonFromRawTrans.cpp,v 1.3 2008-01-30 09:38:09 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -157,7 +157,10 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
   }
   for (int i= 0; i<2; ++i) {
     cands = m_ctrlRaw[i].muonCandidates();
-    if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES: => "<<cands.size()<<" candidates found"<< endreq;
+    if (msgLevel( MSG::DEBUG )) {
+      debug() << "writeOnTES: side "<<i<< endreq;
+      debug() << "writeOnTES: => "<<cands.size()<<" candidates found"<< endreq;
+    }
     for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
       if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
       LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);

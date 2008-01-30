@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitor.cpp,v 1.1 2008-01-28 08:54:53 jucogan Exp $
+// $Id: L0MuonMonitor.cpp,v 1.2 2008-01-30 09:38:09 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,7 @@
 #include "Kernel/MuonLayout.h"
 // from Event
 #include "Event/L0MuonData.h"
+#include "Event/L0MuonCandidate.h"
 
 // local
 #include "L0MuonMonitor.h"
@@ -28,7 +29,9 @@ L0MuonMonitor::L0MuonMonitor( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
 {
- 
+
+  declareProperty("Extension"     , m_extension = ""  ); 
+
 }
 //=============================================================================
 // Destructor
@@ -57,12 +60,12 @@ StatusCode L0MuonMonitor::initialize() {
           int nx=lay.xGrid()*2;
           int ny=lay.yGrid()*2;
           // 1 2D histo per region and per station with the location of the hits
-          // m_hitMaps[name]=book2D(name,name,-0.5,nx-0.5,nx,-0.5,ny-0.5,ny);
           book2D(name,name,-0.5,nx-0.5,nx,-0.5,ny-0.5,ny);
         }
       }
     }
   }
+
   // Book histos for candidates
   setHistoDir("L0Muon/Candidates");
   book1D("NCands_per_event_ctrl","NCands_per_event_ctrl",-0.5,2.5,3);
@@ -72,7 +75,6 @@ StatusCode L0MuonMonitor::initialize() {
     int ny=lay.yGrid()*2;
     std::string name = "Seed_"+regionName(reg);
     // 1 2D histo per region with the candidate's seed location 
-    // m_seeds[reg]=book2D(name,name,-0.5,nx-0.5,nx,-0.5,ny-0.5,ny);
     book2D(name,name,-0.5,nx-0.5,nx,-0.5,ny-0.5,ny);
   }
   
@@ -85,11 +87,13 @@ StatusCode L0MuonMonitor::initialize() {
 StatusCode L0MuonMonitor::execute() {
 
   debug() << "==> Execute" << endmsg;  
+  std::string location;
   
-  // Fill hitmaps
-  if (  exist<LHCb::L0MuonDatas>( LHCb::L0MuonDataLocation::Default) ) {
+  // Get L0Muon Hits
+  location = rootInTES() + LHCb::L0MuonDataLocation::Default + m_extension;
+  if (  exist<LHCb::L0MuonDatas>(location ) ) {
     std::vector<LHCb::MuonTileID> ddigits;
-    LHCb::L0MuonDatas* pdatas = get<LHCb::L0MuonDatas>( LHCb::L0MuonDataLocation::Default);
+    LHCb::L0MuonDatas* pdatas = get<LHCb::L0MuonDatas>( location );
     LHCb::L0MuonDatas::const_iterator itdata;
     for (itdata = pdatas->begin() ; itdata!=pdatas->end() ; ++itdata){
       LHCb::MuonTileID mkey = (*itdata)->key();    
@@ -100,6 +104,8 @@ StatusCode L0MuonMonitor::execute() {
         }
       }
     }
+
+    // Fill hitmap
     std::vector<LHCb::MuonTileID>::iterator itddigits;
     for (itddigits=ddigits.begin();itddigits<ddigits.end();++itddigits){
       int sta = itddigits->station();
@@ -110,13 +116,28 @@ StatusCode L0MuonMonitor::execute() {
           int x = itddigits->nX();
           int y = itddigits->nY();
           std::string name = histoName(type,reg,sta);
-//           fill(m_hitMaps[name],x,y,1,name);
           fill(histo2D(name),x,y,1,name);
         }
       }
     }
   }
 
+  // Get L0Muon candidates from controller board
+  location = rootInTES() + LHCb::L0MuonCandidateLocation::Default + m_extension;
+  if (  exist<LHCb::L0MuonCandidates>(location ) ) {
+    LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
+    LHCb::L0MuonCandidates::const_iterator itcand;
+    for ( itcand= cands->begin(); itcand<cands->end();++itcand) {
+      LHCb::MuonTileID seed = (*itcand)->muonTileIDs(2)[0];
+      int x = seed.nX();
+      int y = seed.nY();
+      int reg = seed.region();
+      std::string name = "Seed_"+regionName(reg);
+      fill(histo2D(name),x,y,1,name);
+      info() <<seed.toString()<< endreq;
+    }
+  }
+  
   return StatusCode::SUCCESS;
 }
 
