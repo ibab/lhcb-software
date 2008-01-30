@@ -19,9 +19,11 @@ class MuonDetectorResponse  {
 public:
 //constructor
 MuonDetectorResponse(){};
- void initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
+  void initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
                       IDataProviderSvc* detSvc, IMessageSvc * msgSvc);
-  ~MuonDetectorResponse();
+  void finalize();
+  
+  ~MuonDetectorResponse() {};
   MuonPhysicalChannelResponse* getResponse(MuonPhChID& phChID);
   MuonPhysicalChannelResponse* getResponse(int part,int areadout);
   MuonChamberResponse* getChamberResponse(int part);

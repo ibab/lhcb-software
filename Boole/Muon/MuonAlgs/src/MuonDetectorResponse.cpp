@@ -136,7 +136,7 @@ log<<MSG::DEBUG<<"inserted "<<endreq;
 
 
 
-MuonDetectorResponse::~MuonDetectorResponse(){
+void MuonDetectorResponse::finalize(){
   for(int indexRegion=0;indexRegion<m_partition;indexRegion++){
     int station=indexRegion/4;
     int region=indexRegion-station*4;

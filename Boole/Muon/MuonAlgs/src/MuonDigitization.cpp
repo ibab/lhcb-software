@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.38 2007-11-30 07:29:50 cattanem Exp $
+//$Id: MuonDigitization.cpp,v 1.39 2008-01-30 16:40:36 cattanem Exp $
 
 #include <algorithm>
 #include <vector>
@@ -294,10 +294,9 @@ StatusCode MuonDigitization::finalize()
   // Release the tools
   //if( m_pMuonTileXYZ ) toolSvc()->releaseTool( m_pMuonTileXYZ );
   //if( m_pGetInfo ) toolSvc()->releaseTool( m_pGetInfo );
+  detectorResponse.finalize();
+  
   return GaudiAlgorithm::finalize();
-
- 
-  return StatusCode::SUCCESS;
 }
 
 StatusCode MuonDigitization::addChamberNoise(){
