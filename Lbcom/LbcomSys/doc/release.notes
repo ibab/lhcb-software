@@ -31,6 +31,7 @@ This version uses Gaudi v19r7 and LHCb v23r3
     o Define nTuple ID as 1 explicitly (fixes writing error with new Gaudi)
     o Write all fields even if L0 is not there
     o Write out Tuple.
+  . Replace PoolDbCacheSvc.Catalog by FileCatalog.Catalogs, for Gaudi v19r7
 
 - In L0Muon v7r6
   . Add some if(msgLevel(MSG::DEBUG) around debug() statements in L0MuonAlg

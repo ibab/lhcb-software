@@ -35,7 +35,7 @@ InputCopyStream.RequireAlgs = { "L0Filter" };
 //---------------------------------------------------------------------------
 // Catalog for registering new files
 //---------------------------------------------------------------------------
-PoolDbCacheSvc.Catalog =  { "xmlcatalog_file:pool_xml_catalog.xml" } ;
+FileCatalog.Catalogs =  { "xmlcatalog_file:pool_xml_catalog.xml" } ;
 
 //---------------------------------------------------------------------------
 // Write out an ETC

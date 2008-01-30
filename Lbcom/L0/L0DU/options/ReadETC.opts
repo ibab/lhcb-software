@@ -40,4 +40,4 @@ EventSelector.Input   = {
 //---------------------------------------------------------------------------
 // File catalog must include the files that were used to make the ETC
 //---------------------------------------------------------------------------
-PoolDbCacheSvc.Catalog =  { "xmlcatalog_file:pool_xml_catalog.xml" } ;
+FileCatalog.Catalogs =  { "xmlcatalog_file:pool_xml_catalog.xml" } ;
