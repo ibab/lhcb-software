@@ -4,10 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r8 2008-01-30 ============================
 ! 2008-01-30 Marco Clemencic
  - Fixed compilation warnings in ODIN.xml on Win32.  
 
-!================ DAQEvent v7r8 2008-01-24 ============================
 ! 2008-01-23 - Olivier Deschamps
  - Add new algorithm RawBankReadoutStatusMonitor : monitoring of ReadoutStatus
  - RawBank.h : add new static method typeName(type) that returns the bankType as string
