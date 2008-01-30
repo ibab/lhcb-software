@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDigitHistoryCode.xml,v 1.11 2008-01-30 10:39:32 jonrob Exp $
+  * $Id: MCRichDigitHistoryCode.xml,v 1.12 2008-01-30 10:49:44 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichDigitHistoryCode class                           *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -84,7 +84,7 @@
                 <code>
                    return ( aerogelHit() ||
                             c4f10Hit()   || 
-                            cf4Hit()      );  
+                            cf4Hit()     );  
                 </code>
         </method>
 
@@ -94,14 +94,14 @@
                 desc  = "Returns true if one of the contributing hits is from an optical reflection within the HPD" 
                 type  = "bool" >
                 <code>
-	          return ( hpdReflQWPC()   ||   
-     	                   hpdReflChr()    ||
-     	                   hpdReflAirQW()  ||
-     	                   hpdReflAirPC()  ||
-     	                   hpdReflSi()     ||
-     	                   hpdReflKovar()  ||
-     	                   hpdReflKapton() ||
-     	                   hpdReflPCQW()    );
+                  return ( hpdReflQWPC()   ||
+                           hpdReflChr()    ||
+                           hpdReflAirQW()  ||
+                           hpdReflAirPC()  ||
+                           hpdReflSi()     ||
+                           hpdReflKovar()  ||
+                           hpdReflKapton() ||
+                           hpdReflPCQW()   );
                 </code>
         </method>
 
@@ -130,8 +130,7 @@
                            nitrogenCK()       || 
                            aeroFilterCK()     ||
                            chargeShareHit()   || 
-                           darkHit()
-                         );
+                           darkHit()          );
                 </code>
         </method>
 
