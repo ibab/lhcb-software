@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.35 2008-01-30 16:58:12 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.36 2008-01-31 12:19:43 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -261,10 +261,10 @@ StatusCode DigitQC::finalize()
               << "      Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
     }
 
-    info() << " " << RICH << " : Av. total  hit occupancy     " << occ(m_allDigits[rich],m_evtC) << " hits/event" << endreq
-           << "       : Av. signal hit occupancy     " << occ(totDetSignal,m_evtC) << " hits/event" << endreq
-           << "       : Av. HPD hit occupancy        "
-           << occ(m_allDigits[rich],m_evtC*m_nHPDSignal[rich].size()) << " hits/event" << endreq;
+    info() << " " << RICH
+           << " : Av. total  hit occupancy     " << occ(m_allDigits[rich],m_evtC) << " hits/event" << endreq;
+    info() << "       : Av. signal hit occupancy     " << occ(totDetSignal,m_evtC) << " hits/event" << endreq;
+
     {for ( SpillCount::iterator iC = m_spillDigits[rich].begin(); iC != m_spillDigits[rich].end(); ++iC )
     {
       std::string loc = iC->first;
@@ -272,6 +272,14 @@ StatusCode DigitQC::finalize()
       info() << "       :   " << loc << " " << eff(iC->second,m_allDigits[rich]) << " % of total, "
              << eff((m_spillDigitsSignal[rich])[iC->first],totDetSignal) << " % signal eff." << endreq;
     }}
+
+    info() << "       : Av. HPD hit occupancy        "
+           << occ(m_allDigits[rich],m_evtC*m_nHPDSignal[rich].size()) << " hits/event" << endreq;
+    info() << "       :   Min Av. HPD occ. hID=" << boost::format("%6i") % minHPD.data()
+           << occ(minOcc,m_evtC) << " hits/event" << endreq;
+    info() << "       :   Max Av. HPD occ. hID=" << boost::format("%6i") % maxHPD.data()
+           << occ(maxOcc,m_evtC) << " hits/event" << endreq;
+
     info() << "       : % overall background hits      "
            << eff(m_bkgHits[rich],m_allDigits[rich]) << " % " << endreq
            << "       :   % rayleigh scattered hits    "
@@ -299,11 +307,6 @@ StatusCode DigitQC::finalize()
       debug() << "       : Av. L1 board" << boost::format("%3i") % (*iL1).first.data()
               << " hit occupancy   = " << occ((*iL1).second,m_evtC) << endreq;
     }
-
-    info() << "       : Min Av. HPD occupancy hID=" << boost::format("%3i") % minHPD.data()
-           << occ(minOcc,m_evtC) << " hits/event" << endreq
-           << "       : Max Av. HPD occupancy hID=" << boost::format("%3i") % maxHPD.data()
-           << occ(maxOcc,m_evtC) << " hits/event" << endreq;
 
   }
 
