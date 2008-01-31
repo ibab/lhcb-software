@@ -35,7 +35,7 @@ public:
                                 const Gaudi::Transform3D &, /// matrix representing shifts & rotations
                                 std::vector<double> &, const int &, const double &, const double & ) = 0;
  
-  virtual StatusCode SetLocal( std::vector<double> &, const int &, const double &, const double & ) = 0;
+  virtual StatusCode SetLocal( std::vector<double> &, const int &, const double &, const double &, const double & ) = 0;
 
   virtual double GetGlobalDerivative_X() = 0;
   virtual double GetGlobalDerivative_Y() = 0;

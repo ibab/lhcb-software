@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ITAConfigTool
  *
  *  CVS Log :-
- *  $Id: ITAConfigTool.h,v 1.4 2007-08-31 09:58:38 jblouw Exp $
+ *  $Id: ITAConfigTool.h,v 1.5 2008-01-31 11:41:03 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -25,6 +25,7 @@ IID_ITAConfigTool("ITAConfig",0,0);
 namespace LHCb {
 	class Track;
 	class LHCbID;
+	class Measurement;
         class State;
 };
 
@@ -38,7 +39,7 @@ class ITAConfigTool : virtual public IAlgTool {
 
   virtual StatusCode Initialize( std::vector<std::string> & ) = 0;
   virtual StatusCode CalcResidual( const LHCb::Track &, 
-				 const LHCb::LHCbID &, 
+				 const LHCb::Measurement *, 
 				 const int &,
 				 const double &,
 				 double &,
@@ -70,8 +71,6 @@ class ITAConfigTool : virtual public IAlgTool {
 				    double &,
 				    double & ) = 0;
   virtual int NumTrPars() = 0;
-  virtual Gaudi::XYZVector Residual( LHCb::Track &, 
-				     LHCb::LHCbID & ) = 0;
   virtual StatusCode GlobalFit( std::vector<double> &, 
 				std::vector<double> &, 
 				std::vector<double> & ) = 0;
