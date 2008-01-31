@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusteringTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusteringTool.cpp,v 1.9 2007-12-03 14:05:33 jonrob Exp $
+ * $Id: RichHPDPixelClusteringTool.cpp,v 1.10 2008-01-31 17:22:26 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -32,8 +32,8 @@ HPDPixelClusteringTool( const std::string& type,
   // Define interface
   declareInterface<IPixelClusteringTool>(this);
   // job options
-  declareProperty( "MinClusterSize", m_minClusSize = 1   );
-  declareProperty( "MaxClusterSize", m_maxClusSize = 999 );
+  declareProperty( "MinClusterSize", m_minClusSize = 1      );
+  declareProperty( "MaxClusterSize", m_maxClusSize = 999999 );
   declareProperty( "AllowDiagonalsInClusters", m_allowDiags = true );
 }
 
@@ -57,7 +57,7 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
   // make sure pixels are sorted ok
   // this should be automatic via decoding but can do it here to be sure
   // as because the vector should be in the correct order, it should be v fast
-  SmartIDSorter::sortByRegion(smartIDs);
+  sortIDs(smartIDs);
 
   // Make a local pixel data object
   HPDPixelClusters * pixelData = new HPDPixelClusters( smartIDs );
@@ -127,7 +127,7 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
     }
   }
   if ( !clustersToSplit.empty() ) pixelData->splitClusters(clustersToSplit);
-
+  
   // print the final cluster
   if ( msgLevel(MSG::VERBOSE) ) { verbose() << *pixelData << endreq; }
 

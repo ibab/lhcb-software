@@ -4,7 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
-!========================== RichDAQ v3r14 2008-01-28 =======================
+! 2008-01-31 - Chris Jones
+ - Fix bug in Pixel sorting of clustering when in ALICE mode
+
+!========================== RichDAQ v3r14 2008-01-28 =========================
 ! 2008-01-28 - Marco Cattaneo
  - In Brunel_DecodeRawEvent.opts, use DataOnDemandSvc.AlgMap option instead of
    obsolete Algorithms option
@@ -13,7 +16,7 @@
  - Disable by default data integrity checks with ODIN. Due to changes in ODIN
    information that makes this check no longer possible.
 
-!========================== RichDAQ v3r13 2007-12-12 =======================
+!========================== RichDAQ v3r13 2007-12-12 =========================
 ! 2007-12-12 - Chris Jones
  - Fix issue in filling raw event where ingress header IDs are not properly
    included for each L1 board
