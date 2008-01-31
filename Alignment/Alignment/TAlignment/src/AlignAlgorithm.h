@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.14 2008-01-29 16:35:31 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.15 2008-01-31 13:06:39 janos Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -33,8 +33,9 @@
 #include "AlignmentInterfaces/IAlignSolvTool.h"
 
 // AIDA
-#include "AIDA/IHistogram2D.h"
 #include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
+#include "AIDA/IProfile1D.h"
 
 // from local
 // @todo: this should be moved to the interfaces package
@@ -42,23 +43,23 @@
 #include "AlignmentElement.h"
 
 namespace {
-    class Equations;
+  class Equations;
 }
 
 /** @class AlignAlgorithm AlignAlgorithm.h
- *
- *
- *  @author Jan Amoraal
- *  @date   2007-03-05
- */
+*
+*
+*  @author Jan Amoraal
+*  @date   2007-03-05
+*/
 
 class AlignAlgorithm : public GaudiHistoAlg, virtual public IIncidentListener {
 
-public:
+ public:
   /// Some handy typedefs
   typedef std::vector<AlignmentElement>                            Elements;
   typedef std::pair<std::vector<AlignmentElement>::const_iterator,
-                    std::vector<AlignmentElement>::const_iterator> Range;
+  std::vector<AlignmentElement>::const_iterator> Range;
   typedef std::vector<double>                                      AlignConstants;
   typedef std::vector<LHCb::Node*>                                 Nodes;
   typedef Gaudi::Matrix1x6                                         Derivatives;
@@ -95,9 +96,9 @@ public:
   */
   StatusCode putAlignmentConstants(const Range& rangeElements, const AlVec& alignConstants) const;
 
-protected:
+ protected:
 
-private:
+ private:
   /// handy typedefs
   typedef Elements::const_iterator ElemIter;
   bool printDebug() const {return msgLevel(MSG::DEBUG);};
@@ -123,9 +124,11 @@ private:
   // @todo: Move this to a monitoring tool
   std::map<unsigned int, IHistogram2D*>                          m_resHistos;
   std::map<unsigned int, IHistogram2D*>                          m_pullHistos;
-  std::map<unsigned int, IHistogram1D*>                          m_nhitHistos;
+  std::map<unsigned int, IHistogram1D*>                          m_nHitsHistos;
   std::map<unsigned int, IHistogram2D*>                          m_autoCorrHistos;
   std::map<std::pair<unsigned int, unsigned int>, IHistogram2D*> m_corrHistos;
+  IProfile1D*                                                    m_totChi2vsIterHisto;
+  IProfile1D*                                                    m_dChi2AlignvsIterHisto;
 };
 
 #endif // TALIGNMENT_ALIGNALGORITHM_H
