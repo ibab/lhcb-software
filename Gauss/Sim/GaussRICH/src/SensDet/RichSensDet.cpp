@@ -1,4 +1,4 @@
-// $Id: RichSensDet.cpp,v 1.20 2008-01-30 16:12:53 seaso Exp $
+// $Id: RichSensDet.cpp,v 1.21 2008-01-31 14:15:41 seaso Exp $
 // Include files 
 
 // from CLHEP
@@ -254,6 +254,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
             CurHpdQW2PhCathReflFlag= aPEInfo->QW2PCreflFlagSave() ;
             CurElectronBackScatFlag = aPEInfo->BackscatteredPeFlag();
             CurPhotoElectricFlag = aPEInfo->PhotoElectricFlag();
+            CurHpdReflectionFlag=aPEInfo->HpdPhotonReflectionFlag();
             
             
             log << MSG::DEBUG << "Now in ProcessHits()  "
@@ -261,10 +262,10 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
                 << CurOptPhotMotherChTrackID <<"   "
                 <<  CurOptPhotID<<"   "
                 << aTrack->GetTrackID() << endreq;
-	    if( CurElectronBackScatFlag > 0) {
-            log << MSG::DEBUG << "Now in RichSensDet ProcessHits() backscattered eln  "
-		<< CurElectronBackScatFlag << endreq;
-	    }
+	          if( CurElectronBackScatFlag > 0) {
+               log << MSG::DEBUG << "Now in RichSensDet ProcessHits() backscattered eln  "
+		           << CurElectronBackScatFlag << endreq;
+	          }
 
             if(  aPEInfo->  VerbosePeTagFlag() ) {
               aRichVerboseFlag =1;
@@ -283,7 +284,6 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
               CurMirror2PhotonReflPosition= aPEInfo->Mirror2PhotReflPosition();
               CurMirror1PhotonDetectorCopyNum=aPEInfo->Mirror1PhotDetCopyNum();
               CurMirror2PhotonDetectorCopyNum=aPEInfo->Mirror2PhotDetCopyNum();
-              CurHpdReflectionFlag=aPEInfo->HpdPhotonReflectionFlag();
               CurHpdQwPhotIncidentPosition=aPEInfo->HpdQWExtPhotIncidentPosition();
               
             }
