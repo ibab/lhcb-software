@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis6.cpp,v 1.2 2008-01-23 15:53:41 seaso Exp $
+// $Id: RichG4StepAnalysis6.cpp,v 1.3 2008-01-31 13:50:51 seaso Exp $
 // Include files 
 
 #include "G4Track.hh"
@@ -88,28 +88,30 @@ void RichG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
             postPos.z() <= ZDnsRich1Analysis )  ||
             ( prePos.z() >= ZUpsRich2Analysis &&
               postPos.z() <= ZDnsRich2Analysis )) {
+
           // additional safety to ensure that the photon step
-          // is within rich1 or rich2.
-          if( ( prePos.z() <= ZDnsRich1Analysis &&
-               prePos.x() >= -1.0*  Rich1AnalysisXHalfSize &&
-               prePos.x() <=  Rich1AnalysisXHalfSize &&
-               prePos.y() >= -1.0* Rich1AnalysisYHalfSize &&
-               prePos.y() <= Rich1AnalysisYHalfSize &&
-               postPos.z() >= ZUpsRich1Analysis &&
-               postPos.x() >=  -1.0*  Rich1AnalysisXHalfSize &&
-               postPos.x() <=    Rich1AnalysisXHalfSize &&
-               postPos.y() >= -1.0* Rich1AnalysisYHalfSize &&
-               postPos.y() <=  Rich1AnalysisYHalfSize ) ||
-              ( prePos.z() <= ZDnsRich2Analysis &&
-                prePos.x() >= -1.0*  CF4AnalysisDnstrXHalfSize &&
-                prePos.x() <=  CF4AnalysisDnstrXHalfSize  &&
-               prePos.y() >= -1.0* CF4AnalysisDnstrYHalfSize &&
-               prePos.y() <= CF4AnalysisDnstrYHalfSize &&
-               postPos.z() >= ZUpsRich2Analysis &&
-               postPos.x() >=  -1.0*  CF4AnalysisDnstrXHalfSize &&
-               postPos.x() <=   CF4AnalysisDnstrXHalfSize &&
-               postPos.y() >= -1.0* CF4AnalysisDnstrYHalfSize &&
-               postPos.y() <=  CF4AnalysisDnstrYHalfSize ) ) {
+          // is within rich1 or rich2. modified since the hpds are outside the following.
+         
+          // if( ( prePos.z() <= ZDnsRich1Analysis &&
+          //     prePos.x() >= -1.0*  Rich1AnalysisXHalfSize &&
+          //     prePos.x() <=  Rich1AnalysisXHalfSize &&
+          //     prePos.y() >= -1.0* Rich1AnalysisYHalfSize &&
+          //     prePos.y() <= Rich1AnalysisYHalfSize &&
+          //     postPos.z() >= ZUpsRich1Analysis &&
+          //     postPos.x() >=  -1.0*  Rich1AnalysisXHalfSize &&
+          //     postPos.x() <=    Rich1AnalysisXHalfSize &&
+          //     postPos.y() >= -1.0* Rich1AnalysisYHalfSize &&
+          //     postPos.y() <=  Rich1AnalysisYHalfSize ) ||
+          //    ( prePos.z() <= ZDnsRich2Analysis &&
+          //      prePos.x() >= -1.0*  CF4AnalysisDnstrXHalfSize &&
+          //      prePos.x() <=  CF4AnalysisDnstrXHalfSize  &&
+          //     prePos.y() >= -1.0* CF4AnalysisDnstrYHalfSize &&
+          //     prePos.y() <= CF4AnalysisDnstrYHalfSize &&
+          //     postPos.z() >= ZUpsRich2Analysis &&
+          //     postPos.x() >=  -1.0*  CF4AnalysisDnstrXHalfSize &&
+          //     postPos.x() <=   CF4AnalysisDnstrXHalfSize &&
+          //     postPos.y() >= -1.0* CF4AnalysisDnstrYHalfSize &&
+          //     postPos.y() <=  CF4AnalysisDnstrYHalfSize ) ) {
 
 
              const G4String & aPreVolName=
@@ -152,12 +154,14 @@ void RichG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
             }
             
             
+            
  
 
              
 
-
-          }
+            
+            //}
+      
           
           
           

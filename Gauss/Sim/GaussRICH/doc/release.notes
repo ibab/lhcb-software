@@ -3,6 +3,11 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+! 2008-01-31 - Rob Lambert, Sajan Easo
+   Fixed a problem in RichG4StepAnalysis6.cpp which was preventing the flags for the various 
+    hpd reflections from being recorded into the userparameters for the track and hence into the
+    RichG4hit.
+
 ! 2008-01-30 - Sajan Easo
  - Fixed a problem with transport of backscattered photoelectron and the hit it creates
    by modifying RichHpdSiEnergyLoss.cpp

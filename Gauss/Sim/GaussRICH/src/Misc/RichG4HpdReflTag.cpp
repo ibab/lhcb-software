@@ -1,4 +1,4 @@
-// $Id: RichG4HpdReflTag.cpp,v 1.2 2008-01-23 15:52:41 seaso Exp $
+// $Id: RichG4HpdReflTag.cpp,v 1.3 2008-01-31 13:53:47 seaso Exp $
 // Include files
 #include "GaussTools/GaussTrackInformation.h"
 #include "RichInfo.h"
@@ -29,7 +29,7 @@ extern void RichG4HpdReflectionTag(const G4Track& aPhotonTk,
           aRichTypeInfo-> RichPhotInformation();
         if( aRichPhotInfo ) {
           // now add the info
-          if( aRichPhotInfo -> VerbosePhotTagFlag() ) {
+          //if( aRichPhotInfo -> VerbosePhotTagFlag() ) {
            
             //RichG4HpdReflectionFlag* aRichG4HpdReflectionFlag= RichG4HpdReflectionFlag::RichG4HpdReflectionFlagInstance();
             // G4int aMaxFlag=aRichG4HpdReflectionFlag->MaxNumHpdReflFlag();
@@ -37,7 +37,9 @@ extern void RichG4HpdReflectionTag(const G4Track& aPhotonTk,
             std::bitset<16>aCurFl((unsigned long ) (aRichPhotInfo->PhotonHpdReflectionFlag()));
              aCurFl.set(aFlagPos,1);           
              aRichPhotInfo->setPhotonHpdReflectionFlag( (G4int) (aCurFl.to_ulong()));
-          }
+             //}
+          
+          
           
         }
         

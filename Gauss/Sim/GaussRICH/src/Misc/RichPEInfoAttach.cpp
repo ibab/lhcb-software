@@ -46,6 +46,8 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
           CurRichPEInfo->
             setMotherofPhotonMomAtProd(aPhotInfo->ChTrackMomAtProd() );
           CurRichPEInfo->  setPhotOriginRadiatorNumber(aPhotInfo->PhotProdRadiatorNum());
+            CurRichPEInfo->setHpdPhotonReflectionFlag(aPhotInfo->PhotonHpdReflectionFlag());
+            CurRichPEInfo->setQW2PCreflFlagSave(aPhotInfo->QW2PCreflFlagSave());
 
           // fill the following only for verbose tag mode.
           if( aPhotInfo->  VerbosePhotTagFlag() ) {
@@ -71,8 +73,6 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
 	          CurRichPEInfo->setMirror2PhotReflPosition(aPhotInfo->Mirror2ReflPosition() );
 	          CurRichPEInfo->setMirror1PhotDetCopyNum(aPhotInfo->Mirror1DetCopyNum());
 	          CurRichPEInfo->setMirror2PhotDetCopyNum(aPhotInfo->Mirror2DetCopyNum());
-            CurRichPEInfo->setHpdPhotonReflectionFlag(aPhotInfo->PhotonHpdReflectionFlag());
-
             CurRichPEInfo->setHpdQWExtPhotIncidentPosition(aPhotInfo->HpdQWPhotIncidentPosition() );
 
 
