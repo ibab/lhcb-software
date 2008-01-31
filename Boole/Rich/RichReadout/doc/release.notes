@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2008-01-31 - Chris Jones
+ - Improved detailed monitoring algorithm to include plots for HPR reflections
+
 ! 2008-01-30 - Chris Jones
  - Retune the HPD timing numbers
 

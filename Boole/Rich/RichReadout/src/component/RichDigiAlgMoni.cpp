@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.15 2007-04-23 12:26:04 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.16 2008-01-31 15:41:00 jonrob Exp $
 
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -26,14 +26,14 @@ AlgMoni::AlgMoni( const std::string& name,
     m_smartIDTool    ( NULL ),
     m_mcTool         ( NULL ),
     m_richSys        ( NULL ),
-    m_ID             ( 0   ),
-    m_maxID          ( 300 )
+    m_ID             ( 0    ),
+    m_maxID          ( 500  )
 {
   // Declare job options
   declareProperty( "InputMCRichDigits", m_mcdigitTES = LHCb::MCRichDigitLocation::Default   );
   declareProperty( "InputMCRichDeposits", m_mcdepTES = LHCb::MCRichDepositLocation::Default );
   declareProperty( "InputMCRichHits", m_mchitTES     = LHCb::MCRichHitLocation::Default     );
-  declareProperty( "MaxHPDQuartzHistos", m_maxID );
+  declareProperty( "MaxHPDHistos", m_maxID );
 }
 
 // Destructor
@@ -107,7 +107,7 @@ StatusCode AlgMoni::execute()
   {
 
     // Smart ID
-    const LHCb::RichSmartID id    = (*iMcDigit)->key();
+    const LHCb::RichSmartID id = (*iMcDigit)->key();
 
     // position for this ID
     Gaudi::XYZPoint point;
@@ -118,13 +118,13 @@ StatusCode AlgMoni::execute()
     const Rich::DetectorType rich = id.rich();
 
     // increment digit count
-    ++digMult[id.rich()];
+    ++digMult[rich];
 
     // increment PD multiplicity count
     ++pdMult[id.hpdID()];
     if ( (*iMcDigit)->history().hpdQuartzCK() )
     {
-      ++hpdCKMult[id.rich()];
+      ++hpdCKMult[rich];
       hasHPDQuartzCKBkg[id.hpdID()] = true;
     }
 
@@ -245,7 +245,7 @@ StatusCode AlgMoni::execute()
     std::vector<unsigned int> nChargedTracks(Rich::NRiches,0);
 
     // map of backgrounds in each HPD
-    PartMap pmap1, pmap2;
+    PartMap pmap1, pmap2, pmap3;
 
     // Loop over deposits
     for ( LHCb::MCRichDeposits::const_iterator iDep = deps->begin();
@@ -270,8 +270,8 @@ StatusCode AlgMoni::execute()
       // study hpd quartz window backgrounds
       if ( (*iDep)->history().hpdQuartzCK() )
       {
-        // key for this hits HPD and MCParticle pair
-        const PartKey key( (*iDep)->smartID().hpdID(), (*iDep)->parentHit()->mcParticle() );
+      // key for this hit HPD and MCParticle pair
+      const PartKey key( (*iDep)->smartID().hpdID(), (*iDep)->parentHit()->mcParticle() );
         // add pointer to deposit to vector for this key
         pmap1[key].push_back( *iDep );
         if ( msgLevel(MSG::VERBOSE) )
@@ -282,13 +282,21 @@ StatusCode AlgMoni::execute()
                     << " loc=" << locpoint << " mcp=" << (*iDep)->parentHit()->mcParticle() << endreq;
         }
       }
-      // study gasquartz window backgrounds
-      if ( (*iDep)->history().gasQuartzCK() )
-      {
-        // key for this hits HPD and MCParticle pair
+
+      // study gas quartz window backgrounds
+      if ( (*iDep)->history().gasQuartzCK() ) 
+      { 
+        // key for this hit HPD and MCParticle pair
         const PartKey key( (*iDep)->smartID().hpdID(), (*iDep)->parentHit()->mcParticle() );
-        // add pointer to deposit to vector for this key
-        pmap2[key].push_back( *iDep );
+        pmap2[key].push_back(*iDep); 
+      }
+
+      // HPD Reflections
+      if ( (*iDep)->history().hpdReflection() ) 
+      {
+        // key for this hit HPD 
+        const PartKey key( (*iDep)->smartID().hpdID(), NULL );
+        pmap3[key].push_back(*iDep);
       }
 
     } // MCRichDeposits loop
@@ -296,6 +304,7 @@ StatusCode AlgMoni::execute()
     // fill background plots
     fillHPDPlots( pmap1, "HPDQuartzBkg", "HPD Quartz Window CK" );
     fillHPDPlots( pmap2, "GasQuartzBkg", "Gas Quartz Window CK" );
+    fillHPDPlots( pmap3, "HPDReflectionBkg", "HPD Internal reflections" );
 
   } // MCRichDeposits exist
 
@@ -412,6 +421,8 @@ void AlgMoni::fillHPDPlots( const PartMap & pmap,
   // count for each RICH
   std::vector<unsigned int> nHPDs(Rich::NRiches,0);
 
+  debug() << "Filling plots for " << plotsName << endreq;
+
   // plots for each HPD
   for ( PartMap::const_iterator iP = pmap.begin(); iP != pmap.end(); ++iP )
   {
@@ -431,19 +442,23 @@ void AlgMoni::fillHPDPlots( const PartMap & pmap,
     std::string Hid = plotsDir+"/"+boost::lexical_cast<std::string>( m_ID++ );
     // loop over deposits
     Rich::Map<LHCb::RichSmartID,bool> uniqueIDs;
+    debug() << "Found " << (*iP).second.size() << " Deposits for " << Hid << " " << HPD.str() << endreq;
     for ( std::vector<const LHCb::MCRichDeposit*>::const_iterator iD = (*iP).second.begin();
           iD != (*iP).second.end(); ++iD )
     {
       uniqueIDs[(*iD)->smartID()] = true;
-      // fill plot
+      // hit point on silicon in local coords
+      const Gaudi::XYZVector hitP
+        = m_smartIDTool->globalToPDPanel((*iD)->parentHit()->entry()) - hpdLoc;
+      // fill single event HPD plot
       if ( m_ID < m_maxID )
       {
-        // hit point on silicon in local coords
-        const Gaudi::XYZVector hitP
-          = m_smartIDTool->globalToPDPanel((*iD)->parentHit()->entry()) - hpdLoc;
-        plot2D( hitP.X(), hitP.Y(), Hid, HPD.str(), -8*Gaudi::Units::mm,
-                8*Gaudi::Units::mm, -8*Gaudi::Units::mm, 8*Gaudi::Units::mm, 32, 32 );
+        plot2D( hitP.X(), hitP.Y(), Hid, HPD.str(), 
+                -8*Gaudi::Units::mm, 8*Gaudi::Units::mm, -8*Gaudi::Units::mm, 8*Gaudi::Units::mm, 32, 32 );
       }
+      // Intergrated plot
+      plot2D( hitP.X(), hitP.Y(), plotsDir+"/"+"intBkg", "Integrated "+plotsName, 
+              -8*Gaudi::Units::mm, 8*Gaudi::Units::mm, -8*Gaudi::Units::mm, 8*Gaudi::Units::mm, 32, 32 );         
     }
     // plot number of hits
     plot1D( (*iP).second.size(), plotsDir+"/"+hid(hpdID.rich(),"/nHitsPerHPD"),
@@ -453,7 +468,7 @@ void AlgMoni::fillHPDPlots( const PartMap & pmap,
             "# digits per HPD from "+plotsName, 0.5, 200.5, 100 );
     // position of HPD
     plot2D( hpdLoc.X(), hpdLoc.Y(),
-            plotsDir+"/"+hid(hpdID.rich(),"hitHPDs"), "Location of hpd Quartz CK affect HPDs",
+            plotsDir+"/"+hid(hpdID.rich(),"hitHPDs"), "HPD Hit Map",
             xMinPDLoc[hpdID.rich()],xMaxPDLoc[hpdID.rich()],
             yMinPDLoc[hpdID.rich()],yMaxPDLoc[hpdID.rich()] );
   }
@@ -482,14 +497,11 @@ void AlgMoni::countNPE( PhotMap & photMap,
   if ( tkPtot > 1*Gaudi::Units::GeV &&
        mcid != Rich::Unknown &&
        mcid != Rich::Electron &&
-       mcBeta( hit->mcParticle() ) > 0.99 &&
-       !hit->scatteredPhoton() &&
-       !hit->chargedTrack()
-       && ( rad == Rich::Aerogel ||
-            rad == Rich::Rich1Gas ||
-            rad == Rich::Rich2Gas ) ) {
+       hit->isSignal() &&
+       mcBeta( hit->mcParticle() ) > 0.99 ) 
+  {
     PhotPair pairC( hit->mcParticle(), rad );
     ++photMap[ pairC ];
   }
-
+  
 }

@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.14 2007-05-29 15:50:02 cattanem Exp $
+// $Id: RichDigiAlgMoni.h,v 1.15 2008-01-31 15:41:00 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -157,16 +157,7 @@ namespace Rich
 
       inline bool AlgMoni::trueCKHit(  const LHCb::MCRichHit * hit )
       {
-
-        // Which radiator
-        const Rich::RadiatorType rad = (Rich::RadiatorType)( hit->radiator() );
-
-        // Is this a true hit
-        return ( !hit->scatteredPhoton() &&
-                 !hit->chargedTrack()
-                 && ( rad == Rich::Aerogel ||
-                      rad == Rich::Rich1Gas ||
-                      rad == Rich::Rich2Gas ) );
+        return hit->isSignal();
       }
 
     }
