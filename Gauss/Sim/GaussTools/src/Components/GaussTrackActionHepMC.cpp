@@ -1,4 +1,4 @@
-// $Id: GaussTrackActionHepMC.cpp,v 1.5 2007-01-12 15:36:44 ranjard Exp $
+// $Id: GaussTrackActionHepMC.cpp,v 1.6 2008-01-31 13:27:14 seaso Exp $
 // Include files 
 
 // STD & STL 
@@ -269,6 +269,8 @@ int GaussTrackActionHepMC::processID(const G4VProcess* creator ) {
       processID = LHCb::MCVertex::PhotoElectric;
     } else if( "RichHpdPhotoelectricProcess" == pname ) {
       processID = LHCb::MCVertex::RICHPhotoElectric;
+    } else if ("RichHpdSiEnergyLossProcess" == pname ){
+      processID = LHCb::MCVertex::RichHpdBackScat;    
     } else if( "RichG4Cerenkov" == pname ) {
       processID = LHCb::MCVertex::Cerenkov;
     } else if( "eIoni" == pname || "hIoni" == pname || "ionIoni" == pname ||
