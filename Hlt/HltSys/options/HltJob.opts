@@ -21,7 +21,7 @@
 #include "$HLTSYSROOT/options/L0.opts"
 #include "$HLTSYSROOT/options/Hlt.opts"
 // #include "$HLTSYSROOT/options/HltReco.opts"
-// #include "$HLTSYSROOT/options/HltSelections.opts"
+#include "$HLTSYSROOT/options/HltSelections.opts"
 
 //
 // Histos and NTuple
