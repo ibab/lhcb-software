@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.cpp,v 1.2 2008-01-28 18:13:26 pkoppenb Exp $
+// $Id: TupleToolMCTruth.cpp,v 1.3 2008-01-31 10:34:12 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -129,7 +129,7 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
     // lifetime
     if( m_storePT ){
       Gaudi::XYZVector dist = endVertex - originVertex;
-      // copied from DecayChainNTuple, old version. Hope that's correct...
+      // copied from DecayChainNTuple // 
       mcTau = trueP.M() * dist.Dot( trueP.Vect() ) / trueP.Vect().mag2();
       mcTau /= Gaudi::Units::picosecond * Gaudi::Units::c_light;
     }
@@ -142,7 +142,7 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
     test &= tuple->column( head + "_MC_ASSOCNUMBER", nbAss );
 
   if( m_storeKinetic )
-    test &= tuple->column( head + "_TRUEP", trueP );
+    test &= tuple->column( head + "_TRUEP_", trueP );
 
   if( m_storeVertexes ){
     test &= tuple->column( head + "_TRUEORIGINVERTEX_", originVertex );

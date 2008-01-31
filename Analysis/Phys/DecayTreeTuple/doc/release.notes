@@ -4,6 +4,9 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-01-31 - Patrick Koppenburg for Jeremie Borel
+ - Removed TupleToolMCPid.h and TupleToolMCPid.cpp
+
 ! 2008-01-28 - Patrick Koppenburg
  - Bug fix in Truth tool. Thanks to Marco Gersabeck for spotting it.
 
