@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-01-31 - Jan Amoraal
+ - Plot chi2 variables vs iteration
+
 ! 2008-01-29 - Wouter Hulsbergen
  - Add more printouts in update
  - Add option to update in finalize
