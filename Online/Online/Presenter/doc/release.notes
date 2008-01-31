@@ -4,6 +4,13 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v0r6 2008-01-30 =============
+! 2008-01-30
+ o based on Root 5.18.00 and Boost 1.34.1
+ + modes of operation switchable between Online, History and Page Editor
+ + new configuration: command-line and via file
+ icon theme: GNOME Art "Gnome 2.18 icon theme By aneglus"
+
 !============ Presenter v0r5 2007-11-29 =============
 ! 2007-11-29
  + updated to OnlineHistDB v4
