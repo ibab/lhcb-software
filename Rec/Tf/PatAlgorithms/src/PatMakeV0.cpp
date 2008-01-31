@@ -1,4 +1,4 @@
-// $Id: PatMakeV0.cpp,v 1.1 2008-01-10 15:37:30 ocallot Exp $
+// $Id: PatMakeV0.cpp,v 1.2 2008-01-31 16:45:56 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatMakeV0
 //
-// 2007-02-09 : Maurice Benayoun & Olivier Callot
+// 2008-31-01 : Maurice Benayoun & Olivier Callot
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -1117,8 +1117,8 @@ StatusCode PatMakeV0::MakeV0(const LHCb::Track * posTrack,const LHCb::Track * ne
 
   //Discussion point : Is it possible to include the off diagonal components using your algorithm
   Gaudi::SymMatrix3x3 locErrors;
-  ROOT::Math::SVector<double, 3> errorDiagonal ( m_sigmaX,m_sigmaY,m_sigmaZ);
-  locErrors.SetDiagonal(errorDiagonal);
+  ROOT::Math::SVector<double, 3> errorSqDiagonal ( m_sigmaX*m_sigmaX,m_sigmaY*m_sigmaY,m_sigmaZ*m_sigmaZ);
+  locErrors.SetDiagonal(errorSqDiagonal);
   v0->setCovMatrix(locErrors);
 
   if (IDsFlag){
