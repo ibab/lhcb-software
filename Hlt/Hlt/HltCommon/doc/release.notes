@@ -5,6 +5,7 @@
 !----------------------------------------------------------------------------
 
 ! 2008-01-29 - Jose A. Hernando
+  - saveConfiguration in HltSelectionFilter() was missing!
   - adding isMuon to the factory
 
 ! 2008-01-25 - Jose A. Hernando

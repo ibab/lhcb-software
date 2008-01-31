@@ -1,4 +1,4 @@
-// $Id: HltSelectionFilter.cpp,v 1.1 2008-01-22 09:56:36 hernando Exp $
+// $Id: HltSelectionFilter.cpp,v 1.2 2008-01-31 15:16:07 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -56,6 +56,8 @@ StatusCode HltSelectionFilter::initialize() {
   m_outputSelections = 
     &(registerTSelection<Hlt::Selection>(m_outputSelectionName));
   
+  saveConfiguration();
+
   return StatusCode::SUCCESS;
 };
 
