@@ -1,4 +1,4 @@
-// $Id: gslSVDsolver.cpp,v 1.2 2007-11-21 14:14:47 janos Exp $
+// $Id: gslSVDsolver.cpp,v 1.3 2008-01-31 11:03:46 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -57,6 +57,7 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
   gsl_matrix* matrixV = gsl_matrix_alloc(size, size);
   gsl_vector* vectorS = gsl_vector_alloc(size);
   gsl_vector* vectorW = gsl_vector_alloc(size);
+  gsl_matrix* matrixU = matrixA ;
 
   info() << "==> Matrix A  = " << (*matrixA) << endmsg;
  
@@ -98,6 +99,25 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
 
   info() << "==> Regularised Vector S  = " << (*vectorS) << endmsg;
 
+  // Replace symMatrix with its inverse (the covariance matrix)
+  for(unsigned irow=0; irow<size; ++irow)
+    for(unsigned int icol=0; icol<=irow; ++icol) 
+      symMatrix[irow][icol] = 0 ;
+  for(unsigned int k=0; k<size; ++k) {
+    double s = gsl_vector_get(vectorS,k) ;
+    if( s>0 ) {
+      for(unsigned irow=0; irow<size; ++irow)
+	for(unsigned int icol=0; icol<=irow; ++icol) {
+	  // honestly: don't have a clue about the order of U and V
+	  // here, but they should be identical for our symmetric
+	  // systems
+	  symMatrix[irow][icol] +=
+	    gsl_matrix_get(matrixV, irow, k) * gsl_matrix_get(matrixU, icol, k) / s ;
+	}
+    }
+  }
+
+  // Now calculate the solution
   gsl_vector* vectorB = gsl_vector_alloc(size);
   for (unsigned(i) = 0; i < size; ++i) gsl_vector_set(vectorB, i, vector[i]);
   gsl_vector* vectorX = gsl_vector_alloc(size);
@@ -112,6 +132,7 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
   for (unsigned(i) = 0; i < size; ++i) vector[i] = (*gsl_vector_const_ptr(vectorX, i));
 
   info() << "==> Vector x = " << (*vectorX) << endmsg;
+  
   
   /// free gsl vector and matrices
   gsl_matrix_free(matrixA);
