@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.2 2008-01-31 18:13:07 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -8,6 +8,9 @@
 #include "TupleToolTrigger.h"
 
 #include "Event/L0DUReport.h"
+//#include "Event/HltSummary.h"
+#include "Event/HltEnums.h"
+#include "Kernel/IHltSummaryTool.h"
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
@@ -30,39 +33,84 @@ TupleToolTrigger::TupleToolTrigger( const std::string& type,
 					    const std::string& name,
 					    const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  , m_summaryTool(0)
 {
   declareInterface<IEventTupleTool>(this);
-  declareProperty( "VerboseL0", m_verboseL0=false );
+  declareProperty( "VerboseL0",         m_verboseL0=false );
+  declareProperty( "VerboseAlleys",     m_verboseAlleys=false );
+  declareProperty( "VerboseSelections", m_verboseSelections=false );
 }
 
+//=========================================================================
+//  
+//=========================================================================
+StatusCode TupleToolTrigger::initialize ( ) {
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc;
+  m_summaryTool = tool<IHltSummaryTool>("HltSummaryTool",this);
+
+
+  return StatusCode::SUCCESS ;
+}
 //=============================================================================
-
 StatusCode TupleToolTrigger::fill( Tuples::Tuple& tuple ) {
-  int dec = -1;
-  LHCb::L0DUReport* report = 0;
-
+  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger" << endmsg ;
+  
+  if (!fillL0(tuple)) return StatusCode::FAILURE ;
+  if (!fillHlt(tuple)) return StatusCode::FAILURE ;
+  return StatusCode::SUCCESS;
+}
+//=============================================================================
+StatusCode TupleToolTrigger::fillL0( Tuples::Tuple& tuple ) {
   if( exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default) ){
-    report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
-    dec = report->decision();
-    debug() << "L0 decsion:  " << dec << endreq;
+    LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
+    if ( ! tuple->column( "L0Decision", report->decision() ) ) return StatusCode::FAILURE;
+    if (msgLevel(MSG::DEBUG)) debug() << "L0 decision:  " << report->decision() << endreq;
+    if ( m_verboseL0 ){
+      LHCb::L0DUChannel::Map channels = report->configuration()->channels();
+      for(LHCb::L0DUChannel::Map::const_iterator it = channels.begin();
+          it!=channels.end();it++){
+        if ( ! tuple->column( "L0_"+(*it).first , 
+                              report->channelDecision( ((*it).second)->id() )))
+          return StatusCode::FAILURE;
+        if (msgLevel(MSG::VERBOSE)) 
+          if (msgLevel(MSG::VERBOSE)) verbose() << (*it).first << " : " 
+                    << report->channelDecision( ((*it).second)->id() ) << endreq;
+      } 
+    }
   } else {
     Warning("Can't get LHCb::L0DUReportLocation::Default (" +
 	    LHCb::L0DUReportLocation::Default + ")" );
+    if ( ! tuple->column( "L0Decision", -1 ) ) return StatusCode::FAILURE;
   }
-
-  if( ! tuple->column( "L0Decision", dec ) ) return StatusCode::FAILURE;
-
-  /*
-  if( m_verboseL0 && report ){
-    std::vector<std::string> names = report->channelNames();
-    for( std::vector<std::string>::const_iterator it = names.begin();
-	 names.end()!=it; ++it ){
-      int d=-1;
-      d = report->channelDecisionByName( *it );
-      std::string n = "L0Decision_" + *it;
-      if( !tuple->column( n, d ) ) return StatusCode::FAILURE;
-    }
-  }
-  */
   return StatusCode::SUCCESS;
 }
+//=============================================================================
+StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple ) {
+  // HLT
+
+  if( !tuple->column( "HltDecision", m_summaryTool->decision() )) return StatusCode::FAILURE;
+
+  /// @todo need to add more granularity in the alleys. 
+
+  if ( m_verboseAlleys){
+    std::vector<std::string> sels = m_summaryTool->confStringVector("HltAlleys/InputSelections");
+    
+    for ( std::vector<std::string>::const_iterator i = sels.begin() ; i!=sels.end() ; ++i){
+      if ( ! tuple->column( "Hlt"+(*i), m_summaryTool->selectionDecision(*i) ) ) return StatusCode::FAILURE;
+      if (msgLevel(MSG::VERBOSE)) verbose() << *i << " says " << m_summaryTool->selectionDecision(*i) << endmsg ;
+    }
+  }
+  
+  if ( m_verboseSelections){
+    for ( int i = LHCb::HltEnums::HltSelEntry ; i!= LHCb::HltEnums::HltSelLastSelection ; ++i){
+      std::string s = LHCb::HltEnums::HltSelectionSummaryToString(i) ;
+      if ( ! tuple->column( s, m_summaryTool->selectionDecision(s) ) ) 
+        return StatusCode::FAILURE;
+      if (msgLevel(MSG::VERBOSE)) verbose() << s << " says " 
+                                            << m_summaryTool->selectionDecision(s) << endmsg ; 
+    } 
+  }
+  return StatusCode::SUCCESS;
+}
+

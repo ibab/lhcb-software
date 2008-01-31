@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.h,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolTrigger.h,v 1.2 2008-01-31 18:13:07 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLTRIGGER_H
 #define JBOREL_TUPLETOOLTRIGGER_H 1
 
@@ -19,6 +19,7 @@
  *  @author Jeremie Borel
  *  @date   2007-11-07
  */
+class IHltSummaryTool;
 class TupleToolTrigger : public GaudiTool, virtual public IEventTupleTool {
 public:
   /// Standard constructor
@@ -28,9 +29,20 @@ public:
 
   virtual ~TupleToolTrigger( ){}; ///< Destructor
 
+  StatusCode initialize() ;
+
   StatusCode fill( Tuples::Tuple& );
 
 private:
-  bool m_verboseL0;
+
+  StatusCode fillL0( Tuples::Tuple& );
+  StatusCode fillHlt( Tuples::Tuple& );
+  
+
+  bool m_verboseL0;     ///< get details on L0
+  bool m_verboseAlleys; ///< get details on alleys
+  bool m_verboseSelections; ///< get details on selections
+  IHltSummaryTool* m_summaryTool ; ///< HLT summary tool
+  
 };
 #endif // JBOREL_TUPLETOOLTRIGGER_H

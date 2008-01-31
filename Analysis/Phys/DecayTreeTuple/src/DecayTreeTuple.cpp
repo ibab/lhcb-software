@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.cpp,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: DecayTreeTuple.cpp,v 1.2 2008-01-31 18:13:07 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -58,8 +58,8 @@ DECLARE_ALGORITHM_FACTORY( DecayTreeTuple );
 //=============================================================================
 
 DecayTreeTuple::OnePart::OnePart( DecayTreeTuple* parent
-				  , const Particle& me
-				  , const std::string& head )
+                                  , const Particle& me
+                                  , const std::string& head )
   : m_head( head )
   , m_parent( parent )
   , m_mother(0)
@@ -127,8 +127,8 @@ void DecayTreeTuple::OnePart::clearTools(){
 
 // -----------------------------------------------------
 bool DecayTreeTuple::OnePart::fill( Tuples::Tuple& tuple
-				    , const Particle* mother
-				    , const Particle* pp ){
+                                    , const Particle* mother
+                                    , const Particle* pp ){
   bool test = true;
   for( std::vector< IParticleTupleTool* >::iterator it = m_tools.begin();
        m_tools.end()!=it; ++it ){
@@ -137,7 +137,7 @@ bool DecayTreeTuple::OnePart::fill( Tuples::Tuple& tuple
     if( localTest ){}
     else {
       m_parent->Warning("Tool '" + (*it)->type() + "' acting on particle '"
-			+ headName() + "' returned a failure status." );
+                        + headName() + "' returned a failure status." );
     }
   }
   return test;
@@ -182,7 +182,7 @@ void DecayTreeTuple::OnePart::printStructure( std::ostream& os, bool verbose ) c
 // Standard constructor, initializes variables
 //=============================================================================
 DecayTreeTuple::DecayTreeTuple( const std::string& name,
-				ISvcLocator* pSvcLocator)
+                                ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
   , m_dkFinder(0)
   , m_nSuccessEvent(0)
@@ -217,7 +217,7 @@ StatusCode DecayTreeTuple::initialize() {
   StatusCode sc = DVAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
-  debug() << "==> Initialize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
   if( initializeDecays() )
     return StatusCode::SUCCESS;
@@ -229,26 +229,26 @@ StatusCode DecayTreeTuple::initialize() {
 //=============================================================================
 StatusCode DecayTreeTuple::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
   const LHCb::Particle::ConstVector& mothers = desktop()->particles();
   if( mothers.empty() ){
     setFilterPassed(false);
     return StatusCode::SUCCESS;
   }
-  verbose() << "I have " << mothers.size()
-	    << " particles to handle" << endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "I have " << mothers.size()
+                                        << " particles to handle" << endreq;
 
   Tuple tuple = nTuple( m_tupleName,  m_tupleName );
 
   Particle::ConstVector heads;
   StatusCode test = getDecayMatches( mothers, heads );
   if( test ){
-    verbose() << "There is " << heads.size()
-	      << " top particles matching the decay." << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "There is " << heads.size()
+                                          << " top particles matching the decay." << endreq;
   }
   else {
-    verbose() << "No particle matching the decay." << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "No particle matching the decay." << endreq;
     setFilterPassed(false);
     return StatusCode::SUCCESS;
   }
@@ -256,31 +256,31 @@ StatusCode DecayTreeTuple::execute() {
   test = fillTuple( tuple, heads );
 
   if( test ){
-    verbose() << "NTuple sucessfully filled" << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "NTuple sucessfully filled" << endreq;
   }
-//   StatusCode test ;
+  //   StatusCode test ;
 
-//   if( 1 ){
-//     DataObject* pObject = get<DataObject>("/Event");
-//     if (pObject!=0 ) {
+  //   if( 1 ){
+  //     DataObject* pObject = get<DataObject>("/Event");
+  //     if (pObject!=0 ) {
 
-//       Tuple etc = evtCol( "MyTuple" );
-//       // std::cout << "address : " << pObject->registry()->address() << std::endl;
+  //       Tuple etc = evtCol( "MyTuple" );
+  //       // std::cout << "address : " << pObject->registry()->address() << std::endl;
 
-//       bool toto=true;
-//       test = etc->column( "Address", pObject->registry()->address() );
-//       toto = test.isSuccess();
-//       std::cout << "BOOKING ETC ( toto : " << toto << ")" << std::endl;
-//       std::cout << "BOOKING ETC ( test : " << test << ")" << std::endl;
-//       test = etc->column( "runNumber", 1 );
-//       etc->column( "eventNumber", 2 );
-//       etc->write();       
-//     } else {
-//       Error("not able to retrieve IOpaqueAddress");
-//       return StatusCode::FAILURE;
-//     }
+  //       bool toto=true;
+  //       test = etc->column( "Address", pObject->registry()->address() );
+  //       toto = test.isSuccess();
+  //       std::cout << "BOOKING ETC ( toto : " << toto << ")" << std::endl;
+  //       std::cout << "BOOKING ETC ( test : " << test << ")" << std::endl;
+  //       test = etc->column( "runNumber", 1 );
+  //       etc->column( "eventNumber", 2 );
+  //       etc->write();       
+  //     } else {
+  //       Error("not able to retrieve IOpaqueAddress");
+  //       return StatusCode::FAILURE;
+  //     }
 
-//   }
+  //   }
 
   //  setFilterPassed(false);  // Mandatory. Set to true if event is accepted.
   setFilterPassed(test);  // Mandatory. Set to true if event is accepted.
@@ -292,7 +292,7 @@ StatusCode DecayTreeTuple::execute() {
 //=============================================================================
 StatusCode DecayTreeTuple::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
   for( std::vector<OnePart*>::iterator it = m_parts.begin();
        m_parts.end() != it; ++it ){
@@ -305,14 +305,14 @@ StatusCode DecayTreeTuple::finalize() {
   unsigned int totEvent = m_nFailedEvent + m_nSuccessEvent;
   unsigned int totCand = m_nFailedCandidate + m_nSuccessCandidate;
   info() << totEvent << " non empty events and " 
-	 << totCand << " candidates processed." << endmsg;
+         << totCand << " candidates processed." << endmsg;
   info() << "Event with one or more skipped candidate rate:" 
-	 << m_nFailedEvent << "/" <<  totEvent << " = "
-	 << (totEvent!=0 ? m_nFailedEvent/totEvent : 0 ) << "." << endmsg;
+         << m_nFailedEvent << "/" <<  totEvent << " = "
+         << (totEvent!=0 ? m_nFailedEvent/totEvent : 0 ) << "." << endmsg;
 
   info() << "Proportion of skipped candidates: " 
-	 << m_nFailedCandidate << "/" << totCand << " = " 
-	 << (totCand!=0 ? m_nFailedCandidate / totCand : 0 ) << "." << endmsg;
+         << m_nFailedCandidate << "/" << totCand << " = " 
+         << (totCand!=0 ? m_nFailedCandidate / totCand : 0 ) << "." << endmsg;
 
 
   return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
@@ -349,12 +349,12 @@ std::string DecayTreeTuple::escape( const std::string& input ) {
   boost::regex e( expr );
   std::string ret;
   ret = boost::regex_replace( input, e, replace
-			      , boost::match_default | boost::format_all );
+                              , boost::match_default | boost::format_all );
 
   // remove double __ and trailing and leading _
   e.assign( "(^_+)|(_+$)|(_{2,})" );
   ret = boost::regex_replace( ret, e, "(?1)(?2)(?3_)"
-			      , boost::match_default | boost::format_all );
+                              , boost::match_default | boost::format_all );
 
   return ret;
 
@@ -369,7 +369,7 @@ bool DecayTreeTuple::initializeDecays() {
   m_dkFinder = tool<IDecayFinder>( "DecayFinder", this );
   if( !m_dkFinder->setDecay( m_headDecay ) ){
     Error( "Cannot initialize the main decay '" + m_headDecay
-	   + "' properly." );
+           + "' properly." );
     return false;
   }
   info() << "Will look for " << m_dkFinder->decay() << endreq;
@@ -378,7 +378,7 @@ bool DecayTreeTuple::initializeDecays() {
   m_decays.reserve( m_decayMap.size() );
   std::map<std::string,std::string>::iterator mit;
   for( mit=m_decayMap.begin(); m_decayMap.end()!=mit; ++mit ){
-    debug() << "Try now to instanciate " << mit->first << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << "Try now to instanciate " << mit->first << endreq;
     TupleToolDecay *m = tool<TupleToolDecay>( "TupleToolDecay", mit->first, this );
     if( !m->initialize( mit->second ) ){
       Error( "Cannot initialize '" + mit->first + "' branch properly, skipping it." );
@@ -393,7 +393,7 @@ bool DecayTreeTuple::initializeDecays() {
       m_decays[i]->printInfo();
     }
   } else {
-    debug() << "No sub decay to create" << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << "No sub decay to create" << endreq;
   }
   return true;
 }
@@ -440,7 +440,7 @@ void DecayTreeTuple::initializeStufferTools(){
       // inherit by default: give all the tools to the particles:
       std::vector<OnePart*>::iterator op;
       for( op=m_parts.begin(); op!=m_parts.end(); ++op ){
-	(*op)->addTool( test2 );
+        (*op)->addTool( test2 );
       }
     }
 
@@ -449,23 +449,23 @@ void DecayTreeTuple::initializeStufferTools(){
     }
     if( test1 && test2 ){
       Warning("The tool '" + *it +
-	      "', will be called both by the IParticleTupleTool" +
-	      " and IEventTupleTool interfaces. That's fine as long as you" +
-	      " know what you are doing." );
+              "', will be called both by the IParticleTupleTool" +
+              " and IEventTupleTool interfaces. That's fine as long as you" +
+              " know what you are doing." );
     }
     if( test1 && !test2 )
-      verbose() << *it << " instantiated as an Event related tool" << endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() << *it << " instantiated as an Event related tool" << endreq;
     if( !test1 && test2 )
-      verbose() << *it << " instantiated as a Particle related tool" << endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() << *it << " instantiated as a Particle related tool" << endreq;
   }
 
-  debug() << "Generic and inherited tool list successfully created" << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "Generic and inherited tool list successfully created" << endreq;
 }
 //=============================================================================
 //=============================================================================
 
 StatusCode DecayTreeTuple::fillTuple( Tuples::Tuple& tuple
-				      , const Particle::ConstVector& heads ){
+                                      , const Particle::ConstVector& heads ){
   Particle::ConstVector::const_iterator pit = heads.begin();
   Particle::ConstVector row;
 
@@ -510,7 +510,7 @@ StatusCode DecayTreeTuple::fillTuple( Tuples::Tuple& tuple
 //=============================================================================
 
 void DecayTreeTuple::initializeOnePartsStufferTools( OnePart* P
-						     , const TupleToolDecay* m ){
+                                                     , const TupleToolDecay* m ){
 
   // there is a specific descriptor for P, i.e. default settings are wrong
   P->clearTools();
@@ -521,12 +521,12 @@ void DecayTreeTuple::initializeOnePartsStufferTools( OnePart* P
   const std::vector<std::string>& locTools = m->getStuffers();
 
   std::insert_iterator<std::vector<std::string> > ii( remainTools
-						      , remainTools.begin() );
+                                                      , remainTools.begin() );
   std::set_difference( globalTools.begin(), globalTools.end()
-		       , locTools.begin(), locTools.end()
-		       , ii );
+                       , locTools.begin(), locTools.end()
+                       , ii );
 
-  verbose() << "Remains " << remainTools.size() << " to inherit" << std::endl;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Remains " << remainTools.size() << " to inherit" << std::endl;
 
   // inherit again the remaining global tools:
   std::vector<std::string>::const_iterator it = remainTools.begin();
@@ -535,17 +535,17 @@ void DecayTreeTuple::initializeOnePartsStufferTools( OnePart* P
       // find the right tool:
       bool flag = false;
       for( int k=0; k<(int)m_pTools.size(); ++k ){
-	if( *it == m_pTools[k]->type() ){
-	  verbose() << "Parts " << P->info() << " inherits "
-		    << m_pTools[k]->type() << endreq;
-	  P->addTool( m_pTools[k] );
-	  flag = true;
-	  break;
-	}
+        if( *it == m_pTools[k]->type() ){
+          if (msgLevel(MSG::VERBOSE)) verbose() << "Parts " << P->info() << " inherits "
+                                                << m_pTools[k]->type() << endreq;
+          P->addTool( m_pTools[k] );
+          flag = true;
+          break;
+        }
       }
       if( !flag )
-	Warning( "Hmm, should not happen, the tool '" +
-		 *it + "' will be ignored for some reason..." );
+        Warning( "Hmm, should not happen, the tool '" +
+                 *it + "' will be ignored for some reason..." );
     }
   }
 
@@ -563,7 +563,7 @@ void DecayTreeTuple::initializeOnePartsStufferTools( OnePart* P
 //=============================================================================
 
 StatusCode DecayTreeTuple::fillParticles( Tuples::Tuple& tuple
-					  , const Particle::ConstVector& row ){
+                                          , const Particle::ConstVector& row ){
   if( sizeCheckOrInit( row ) ){
     bool test = true;
     const int size = m_parts.size();
@@ -582,7 +582,7 @@ StatusCode DecayTreeTuple::fillEventRelatedVariables( Tuples::Tuple& tuple ){
   if( !m_eTools.empty() ){
     // const IPhysDesktop* desk = desktop();
     for( std::vector< IEventTupleTool* >::iterator it = m_eTools.begin();
-	 m_eTools.end() != it; ++it ){
+         m_eTools.end() != it; ++it ){
       if( ! (*it)->fill( tuple ) ) return StatusCode::FAILURE;
     }
     return StatusCode::SUCCESS;
@@ -595,7 +595,7 @@ StatusCode DecayTreeTuple::fillEventRelatedVariables( Tuples::Tuple& tuple ){
 //=============================================================================
 
 bool DecayTreeTuple::getDecayMatches( const Particle::ConstVector& pool
-	       , Particle::ConstVector& heads ){
+                                      , Particle::ConstVector& heads ){
   const Particle* head(0);
   while( m_dkFinder->findDecay( pool, head ) ){
     heads.push_back( head );
@@ -607,13 +607,13 @@ bool DecayTreeTuple::getDecayMatches( const Particle::ConstVector& pool
 //=============================================================================
 // StatusCode DecayTreeTuple::writeEventAddress( Tuples::Tuple& toot ){
 //   Tuples::Tuple tuple = evtCol( m_tupleName, m_tupleName );
-//   debug() << "Writing IOpaqueAddress to " << m_eventColName << endreq;
+//   if (msgLevel(MSG::DEBUG)) debug() << "Writing IOpaqueAddress to " << m_eventColName << endreq;
 
 //   // pick up the location of the event --
 //   // this is what makes the tag collection a collection...
 //   DataObject* pObject = get<DataObject>("/Event");
 //   if ( pObject ) {
-//     debug() << "IOpaqueAddress is "
+//     if (msgLevel(MSG::DEBUG)) debug() << "IOpaqueAddress is "
 // 	    << pObject->registry()->address() << endreq;
 //     if( tuple->column("Address", pObject->registry()->address() ) )
 //       return StatusCode::SUCCESS;
@@ -634,8 +634,8 @@ bool DecayTreeTuple::sizeCheckOrInit( const Particle::ConstVector& row ){
 
   if( !m_parts.empty() ){
     Error( "The number of matched particles with the DecayFinder ("
-	   + m_dkFinder->decay()
-	   + ") has changed. Skipping the candidate.");
+           + m_dkFinder->decay()
+           + ") has changed. Skipping the candidate.");
     return false;
   }
 
@@ -649,8 +649,8 @@ bool DecayTreeTuple::sizeCheckOrInit( const Particle::ConstVector& row ){
     m_parts.push_back( p );
   }
 
-  debug() << "There is " << m_parts.size()
-	  << " particle to initialize." << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "There is " << m_parts.size()
+                                    << " particle to initialize." << endreq;
 
   // set the base properties...
   initializeStufferTools();
@@ -681,7 +681,7 @@ bool DecayTreeTuple::sizeCheckOrInit( const Particle::ConstVector& row ){
     std::string n = m_parts[k]->headName();
     if( names.count( n )>0 ){
       Error("You are using two times the name " + n 
-	    + " for your tuple branches.");
+            + " for your tuple branches.");
       return false;
     }
   }
@@ -701,7 +701,7 @@ bool DecayTreeTuple::sizeCheckOrInit( const Particle::ConstVector& row ){
     }
   }
   info() << "Tree " << m_tupleName << " initialized:\n"
-	 << tmp.str() << endreq;
+         << tmp.str() << endreq;
 
   return true;
 }
@@ -735,15 +735,15 @@ void DecayTreeTuple::matchSubDecays( const Particle::ConstVector& row ){
       // loop on the matched particles and find the associated OnePart* object
       int off = getOffset( buffer[k], row, false );
       if( off == (int)row.size() ){
-	Error("The decay descriptor \n'" + (*mit)->getInfo()
-	      +"'\n returned a match which is not also matched by your main decay descriptor. Ignoring it.");
-	break;
+        Error("The decay descriptor \n'" + (*mit)->getInfo()
+              +"'\n returned a match which is not also matched by your main decay descriptor. Ignoring it.");
+        break;
       }
       if( m_tupleNameAsToolName ){
-	std::string n = (*mit)->getName();
-	// if there is more than one, append numerical values:
-	if( size>1 ) n.append( boost::lexical_cast<std::string>(k) );
-	m_parts[off]->headName( escape(n) );
+        std::string n = (*mit)->getName();
+        // if there is more than one, append numerical values:
+        if( size>1 ) n.append( boost::lexical_cast<std::string>(k) );
+        m_parts[off]->headName( escape(n) );
       }
       // assign the correct tools:
       initializeOnePartsStufferTools( m_parts[off], *mit );
@@ -770,8 +770,8 @@ std::string DecayTreeTuple::getBranchName( const Particle* p ){
     flag = false;
     for( int k=0; k<(int)m_parts.size(); ++k ){
       if( buffer == m_parts[k]->headName() ){
-	flag = true;
-	break;
+        flag = true;
+        break;
       }
     }
     if( !flag ) break;

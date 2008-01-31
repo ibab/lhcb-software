@@ -4,6 +4,9 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-01-31 - Patrick Koppenburg
+ - TupleToolTrigger: Implemented.
+
 ! 2008-01-31 - Patrick Koppenburg for Jeremie Borel
  - Removed TupleToolMCPid.h and TupleToolMCPid.cpp
 
