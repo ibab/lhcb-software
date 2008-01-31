@@ -4,6 +4,9 @@
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
 
+! 2008-01-29 - Jose A. Hernando, Leandro de Paula
+  adding HltIsMuonTool
+
 ! 2008-01-22 - Jose A. Hernando 
   HLT-clean adaptations
   HltMatchTVeloTracks (to match Velo and T segments)

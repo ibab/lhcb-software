@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-01-29 - Jose A. Hernando
+  - adding isMuon to the factory
+
 ! 2008-01-25 - Jose A. Hernando
   - set location of the tracks,vertices selections at Hlt/Selection/Track,Vertex at HltSelectionToTES algorithm
 

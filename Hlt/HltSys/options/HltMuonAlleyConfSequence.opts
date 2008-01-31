@@ -113,7 +113,7 @@ L0MuonConfirmedWithT.RecoName = "TConf";
 L0MuonConfirmedWithT.OutputLevel = 3;
  
 L0MuonAndTConfirmed.InputSelection = "L0MuonConfirmedWithT";
-L0MuonAndTConfirmed.FilterDescriptor = {"MuonIDDistance,<,100."};
+L0MuonAndTConfirmed.FilterDescriptor = {"IsMuon,>,0."};
 L0MuonAndTConfirmed.OutputLevel = 3;
 
 RZMuon.InputSelection = "RZVelo";
@@ -185,7 +185,7 @@ DiMuonConfirmedWithT.RecoName = "TConf";
 DiMuonConfirmedWithT.OutputLevel = 3;
 
 DiMuonAndTConfirmed.InputSelection = "DiMuonConfirmedWithT";
-DiMuonAndTConfirmed.FilterDescriptor = {"MuonIDDistance,<,100."};
+DiMuonAndTConfirmed.FilterDescriptor = {"IsMuon,>,0."};
 DiMuonAndTConfirmed.OutputLevel = 3;
 
 RZDiMuon.InputSelection = "RZVelo";
@@ -276,7 +276,7 @@ MuonTConfirmedWithT.RecoName = "TConf";
 MuonTConfirmedWithT.OutputLevel = 3;
 
 MuonTAndTConfirmed.InputSelection = "MuonTConfirmedWithT";
-MuonTAndTConfirmed.FilterDescriptor = {"MuonIDDistance,<,100."};
+MuonTAndTConfirmed.FilterDescriptor = {"IsMuon,>,0."};
 MuonTAndTConfirmed.OutputLevel = 3;
 
 RZMuonSeg.InputSelection = "RZVelo";
