@@ -4,6 +4,9 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichActivateRichPhysicsProcVerboseTag=true;
 
 GiGa.StepSeq.Members  += { "RichG4StepAnalysis4/RichStepAgelExit" } ;
 GiGa.StepSeq.Members  += { "RichG4StepAnalysis5/RichStepMirrorRefl" } ;
+// The following already in Rich.opts
+//GiGa.StepSeq.Members  += { "RichG4StepAnalysis6/RichStepHpdRefl" } ;
+
 GetRichExtendedInfo.convertMCRichExtendedInfo = true;
 
 // now switch on creation of rich debug verbose output convertors.

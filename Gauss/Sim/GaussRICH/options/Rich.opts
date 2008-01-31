@@ -15,6 +15,7 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Gas=40
 GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich2Gas=40;
 GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
 
+
 // to create  'extended output info' for detailed analysis, 
 // (a) uncomment the line in this file with RichVerbose.opts.
 // (b) comment the three lines in this file where   RichOpticalPhotons = "" 
@@ -34,6 +35,7 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
 //GiGaGetHitsAlg.RichSegments       = "";
 //GiGaGetHitsAlg.RichTracks         = "";
 
+GiGa.StepSeq.Members  += { "RichG4StepAnalysis6/RichStepHpdRefl" } ;
 GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" } ;
 GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" } ;
 GiGa.TrackSeq.Members      += { "RichG4TrackActionAerogelPhoton/RichG4AgelPhot" };
@@ -47,10 +49,14 @@ GiGa.TrackSeq.Members      += { "RichG4TrackActionAerogelPhoton/RichG4AgelPhot" 
 // Use of Magnetic field distortions in Hpd: default is set to false, which means not used.
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichUseHpdMagDistortions=false; 
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichUseHpdMagDistortions=true; 
-// Use of PreDc06 PSF parametrization. Default is true which keeps the PSF as set in the beginning of Dc06.
-// if set to false, it gives slightly worse resolution than that assumed at the beginning of dc06.
+// Use of PreDc06 PSF parametrization. If true it keeps the PSF as set in the beginning of Dc06.
+// The Default is set to false, which gives slightly worse resolution than that assumed at the beginning of dc06.
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichPSFPreDc06Flag= true;
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichPSFPreDc06Flag= false;
+// The HpdQE is by default read from the conditions DB. But if the RichHpdUseNominalQETable is
+// set to true the nominal table from the sqldddb-materials-richmaterialtabproperty.xml is read. This
+// nominal table was used for dc06.
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichHpdUseNominalQETable= false;
 
 // To print RICH hits on the screen, uncomment the line with RichG4EventAction/RichG4Event
 // and the line with RichEventActionVerbose=3
