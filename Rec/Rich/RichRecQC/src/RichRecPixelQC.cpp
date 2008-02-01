@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.17 2008-02-01 14:18:51 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.18 2008-02-01 14:26:57 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -192,7 +192,6 @@ PixelQC::MCFlags PixelQC::getHistories( const LHCb::RichSmartID id ) const
   {
     // CRJ should use isBackground here, but not compatible with DC06
     // so stick with !isSignal (not quite the same) for the time being
-    info() << "MCSummary : " << (*iS)->history() << endreq;
     if ( !(*iS)->history().isSignal() )
     {
       flags.isBkg = true;
