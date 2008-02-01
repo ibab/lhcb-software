@@ -1,4 +1,4 @@
-// $Id: IGetElementsToBeAligned.h,v 1.1 2007-11-15 11:12:05 janos Exp $
+// $Id: IGetElementsToBeAligned.h,v 1.2 2008-02-01 09:09:32 wouter Exp $
 #ifndef IGETELEMENTSTOBEALIGNED_H 
 #define IGETELEMENTSTOBEALIGNED_H 1
 
@@ -13,6 +13,8 @@
 
 // from Kernel
 #include "Kernel/LHCbID.h"
+
+#include "LoKi/Range.h"
 
 /// Where am I going to put these?
 #include "AlignmentElement.h"
@@ -30,16 +32,15 @@ static const InterfaceID IID_IGetElementsToBeAligned ( "IGetElementsToBeAligned"
 class IGetElementsToBeAligned : virtual public IAlgTool {
 
  public:
-  typedef std::vector<AlignmentElement>                            Elements;     
-  typedef std::pair<std::vector<AlignmentElement>::const_iterator, 
-                    std::vector<AlignmentElement>::const_iterator> Range;
+  typedef std::vector<AlignmentElement>                            Elements;
+  typedef LoKi::Range_<Elements>                                   ElementRange ;
   typedef std::vector<std::vector<double> >                        Constraints;
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IGetElementsToBeAligned; };
 
   // Return pair of forward begin iter and forward end iter
-  virtual const Range& rangeElements() const = 0;
+  virtual const ElementRange& rangeElements() const = 0;
 
   // Return constraints
   virtual const Constraints& constraints() const = 0;

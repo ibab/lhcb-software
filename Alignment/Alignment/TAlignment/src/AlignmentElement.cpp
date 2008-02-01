@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.9 2008-01-27 18:42:12 janos Exp $
+// $Id: AlignmentElement.cpp,v 1.10 2008-02-01 09:09:32 wouter Exp $
 // Include files
 
 // from STD
@@ -64,6 +64,7 @@ void AlignmentElement::setPivotPoint() {
   }
   averageR /= double(m_elements.size());
   m_pivot = Gaudi::XYZPoint(0.0, 0.0, 0.0) + averageR;
+  m_alignmentFrame = DetDesc::XYZTranslation(this->pivot());
 }
 
 const std::string AlignmentElement::name() const {
@@ -106,37 +107,25 @@ const std::vector<double> AlignmentElement::deltaRotations() const {
   return averageDeltaRotations;
 }
 
-unsigned int AlignmentElement::nDOFs() const {
-  unsigned int nDOF  = 0u;
-  for (std::vector<bool>::const_iterator i = m_dofMask.begin(), iEnd = m_dofMask.end(); i != iEnd; ++i) if ((*i)) ++nDOF;
-  return nDOF;
-}
-  
-StatusCode AlignmentElement::setLocalDeltaParams(const std::vector<double>& localDeltaT,
-                                                 const std::vector<double>& localDeltaR) const {
-  StatusCode sc;
-  for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
-    sc = const_cast<IGeometryInfo*>((*i)->geometry())->ownToOffNominalParams(localDeltaT, localDeltaR, this->pivot());
-    if (sc.isFailure()) {
-      std::cout << "Failed to update local delta parameters of detector element " + (*i)->name() <<  std::endl;
-      break; ///< Break loop if sc is failure
-    }
-  }
-  return sc;
-}
-
 bool AlignmentElement::operator==(const DetectorElement* rhs) const {
   ElemIter match = std::find(m_elements.begin(), m_elements.end(), rhs);
   return (match != m_elements.end() ? true : false);
 }
 
-StatusCode AlignmentElement::setLocalDeltaMatrix(const std::vector<double>& globalDeltaT,
-                                                 const std::vector<double>& globalDeltaR) const {
+StatusCode AlignmentElement::updateGeometry( const AlParameters& parameters) const 
+{
   /// Construct global delta matrix from deltas
-  const Gaudi::Transform3D globalDeltaMatrix = DetDesc::localToGlobalTransformation(globalDeltaT,
-                                                                                    globalDeltaR,
-                                                                                    this->pivot());
+  //   const std::vector<double>& localDeltaT = parameters.translation() ;
+  //   const std::vector<double>& localDeltaR = parameters.rotation() ;
+  //   const Gaudi::Transform3D globalDeltaMatrix = DetDesc::localToGlobalTransformation(localDeltaT,
+  //                                                                                     localDeltaR,
+  // 										    this->pivot()) ;
+  //   std::cout << "Juan's calculation: " << globalDeltaMatrix << std::endl ;
+  //   std::cout << "Mine: " 
+  // 	    << m_alignmentFrame * parameters.transform() * m_alignmentFrame.Inverse() << std::endl ;
   
+  // transform the delta to the global frame
+  const Gaudi::Transform3D globalDeltaMatrix = m_alignmentFrame * parameters.transform() * m_alignmentFrame.Inverse() ;
   StatusCode sc;
   for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
     /// Transform global delta matrix to new local delta matrix (takes current local delta matrix into account!!)
@@ -148,7 +137,6 @@ StatusCode AlignmentElement::setLocalDeltaMatrix(const std::vector<double>& glob
       break; ///< Break loop if sc is failure
     }
   }
-
   return sc;
 }
 
@@ -182,7 +170,7 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
       << "* dRotXYZ  : " << Gaudi::XYZPoint(r[0], r[1], r[2]) << "\n"
       << "* PivotXYZ : " << pivotXYZPoint() << "\n"
       << "* DoFs     : ";
-  for (std::vector<bool>::const_iterator j = m_dofMask.begin(), jEnd = m_dofMask.end(); j != jEnd; ++j) {
+  for (AlDofMask::const_iterator j = m_dofMask.begin(), jEnd = m_dofMask.end(); j != jEnd; ++j) {
     if ((*j)) lhs << dofs.at(std::distance(m_dofMask.begin(), j)) + " ";
   }
   lhs << std::endl;
@@ -190,3 +178,4 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
 
   return lhs;
 }
+

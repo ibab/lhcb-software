@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.7 2008-01-22 16:13:12 janos Exp $
+// $Id: AlignmentElement.h,v 1.8 2008-02-01 09:09:32 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -21,8 +21,34 @@
 #include "boost/assign/std/vector.hpp"
 #include "boost/assign/list_of.hpp"
 
+// LOcal
+#include "AlDofMask.h"
+#include "AlParameters.h"
+
 /** @class AlignmentElement AlignmentElement.h
  *
+ * The alignment element represents a single alignable object. 
+ *
+ * About reference frames (WDH)
+ * ----------------------------
+ * There are 3 relevant reference frames in the alignment:
+ *
+ * - the global frame: this is the LHCb frame. 
+ *
+ * - the 'database-frame': this is the frame in which the
+ * delta-alignment is applied. Thie includes all previous
+ * delta-alignments. We don't need to worry about the definition of
+ * this frame ,because Juan has provided the transformation functions
+ * to translate a delta-transform of the globalframe into the
+ * 'data-base' frame.
+ *
+ * - the 'alignment-frame': this is the frame in which the derivatives
+ * to the delta-alignment are calculated. So, the result of the
+ * alignment procedure is a delta-alignment in the alignment-frame. We
+ * transform to the globalframe by using the 'alignmentFrame'
+ * transform. Currently, this is just the translation with the pivot
+ * point. In the very near future, we would like to include the
+ * stereoangle rotation.
  *
  *  @author Jan Amoraal
  *  @date   2007-08-15
@@ -82,21 +108,15 @@ public:
   /**
    *  return number of dofs we want to align for
    */
-  unsigned int nDOFs() const;
+  unsigned int nDOFs() const { return m_dofMask.nActive() ; }
 
-  const std::vector<bool>& dofMask() const;  
+  const AlDofMask& dofMask() const { return m_dofMask ; }
     
-  /** Method to set the local deltas of the detector element.
-   * The delta translations and rotations are in the local frame
+  /** Method to update the parameters of the detector element. 
+   * The delta translations and rotations are in the alignment frame (see above).
    */
-  StatusCode setLocalDeltaParams(const std::vector<double>& localDeltaT,
-				 const std::vector<double>& localDeltaR) const;
+  StatusCode updateGeometry(const AlParameters& parameters) const ;
 
-  /** Method to set the local delta transformation matrix (from global to local)
-   * The delta translations and rotations are in the global frame
-   */
-  StatusCode setLocalDeltaMatrix(const std::vector<double>& globalDeltaT,
-				 const std::vector<double>& globalDeltaR) const;
 
   /** Method to get the local delta transformation matrix (from global to local)
    *
@@ -117,7 +137,7 @@ public:
    */
   std::ostream& fillStream(std::ostream& s) const;
 
-
+  const Gaudi::Transform3D& alignmentFrame() const { return m_alignmentFrame; }
  private:
 
   typedef std::vector<const DetectorElement*>::const_iterator ElemIter;
@@ -132,9 +152,9 @@ public:
 
   mutable std::vector<const DetectorElement*>  m_elements;         ///< Vector of pointers to detector elements
   unsigned int                                 m_index;            ///< Index. Needed for bookkeeping
-  std::vector<bool>                            m_dofMask;          ///< d.o.f's we want to align for
+  AlDofMask                                    m_dofMask;          ///< d.o.f's we want to align for
   Gaudi::XYZPoint                              m_pivot;            ///< Pivot point
-
+  Gaudi::Transform3D                           m_alignmentFrame;   ///> Frame in which delta-derivatives are calculated (will replace pivot point)
 };
 
 inline std::ostream& operator<<(std::ostream& lhs, const AlignmentElement& element) {
@@ -150,7 +170,5 @@ inline const Gaudi::XYZPoint& AlignmentElement::pivotXYZPoint() const { return m
 inline const std::vector<double> AlignmentElement::pivot() const {
   return boost::assign::list_of(m_pivot.x())(m_pivot.y())(m_pivot.z());
 }
-
-inline const std::vector<bool>& AlignmentElement::dofMask() const { return m_dofMask; };
   
 #endif // ALIGNMENTELEMENT_H

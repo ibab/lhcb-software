@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.9 2008-01-27 18:41:30 janos Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.10 2008-02-01 09:09:32 wouter Exp $
 // Include files
 
 //from STL
@@ -162,23 +162,21 @@ StatusCode GetElementsToBeAligned::initialize() {
   
   }
   
-  m_rangeElements = std::make_pair(m_alignElements.begin(), m_alignElements.end());
+  m_rangeElements = ElementRange(m_alignElements.begin(), m_alignElements.end());
   m_findElement   = FindAlignmentElement(Alignment::FindElement(m_elemsToBeAligned.begin()->first), m_rangeElements);
 
 
   /// Print list of detector elements that are going to be aligned
-  info() << "   Going to align " << std::distance(m_rangeElements.first, m_rangeElements.second) << " detector elements:" << endmsg;
-  typedef std::vector<AlignmentElement>::const_iterator ElemIter;
-  for (ElemIter i = m_rangeElements.first, iEnd = m_rangeElements.second; i != iEnd; ++i) {
+  info() << "   Going to align " << m_rangeElements.size() << " detector elements:" << endmsg;
+  for( ElementRange::const_iterator i = m_rangeElements.begin() ; i != m_rangeElements.end(); ++i)
     info() <<  "        " << (*i) << endmsg;
-  }
-
+  
   info() << "   With " << m_constraints.size() << " constraints:" << endmsg;
   unsigned nC = 0u;
   bool clear = false;
   for (IGetElementsToBeAligned::Constraints::const_iterator i = m_constraints.begin(), iEnd = m_constraints.end(); i != iEnd;
        ++i, ++nC) {
-    if (i->empty() || i->size()-1u !=  std::distance(m_rangeElements.first, m_rangeElements.second)*6u) {
+    if (i->empty() || i->size()-1u !=  m_rangeElements.size()*6u) {
       warning() << "Number of elements do not much total number of degrees of freedom!" << endmsg;
       warning() << "Setting constraints to ZERO!" << endmsg;
       clear = true;
@@ -242,7 +240,7 @@ void GetElementsToBeAligned::getElements(const IDetectorElement* parent) {
   }
 }
 
-const IGetElementsToBeAligned::Range& GetElementsToBeAligned::rangeElements() const {
+const IGetElementsToBeAligned::ElementRange& GetElementsToBeAligned::rangeElements() const {
   return m_rangeElements;
 }
 

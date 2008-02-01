@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.15 2008-01-31 13:06:39 janos Exp $
+// $Id: AlignAlgorithm.h,v 1.16 2008-02-01 09:09:32 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -55,15 +55,15 @@ namespace {
 
 class AlignAlgorithm : public GaudiHistoAlg, virtual public IIncidentListener {
 
- public:
+public:
   /// Some handy typedefs
-  typedef std::vector<AlignmentElement>                            Elements;
-  typedef std::pair<std::vector<AlignmentElement>::const_iterator,
-  std::vector<AlignmentElement>::const_iterator> Range;
+  typedef IGetElementsToBeAligned::Elements                        Elements;
+  typedef IGetElementsToBeAligned::ElementRange                    ElementRange ;
   typedef std::vector<double>                                      AlignConstants;
   typedef std::vector<LHCb::Node*>                                 Nodes;
   typedef Gaudi::Matrix1x6                                         Derivatives;
   typedef Gaudi::Matrix6x6                                         HMatrix;
+  enum { CanonicalConstraintOff=0, CanonicalConstraintOn, CanonicalConstraintAuto} CanonicalConstraintStrategy ;
 
   /// Standard constructor
   AlignAlgorithm( const std::string& name, ISvcLocator* pSvcLocator );
@@ -82,32 +82,24 @@ class AlignAlgorithm : public GaudiHistoAlg, virtual public IIncidentListener {
   void update();
   void reset();
 
+  /** Add canonical constraints. Return the number of added constraints. */
+  size_t addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2) const ;
+  
   /** Method to get alignment constants, posXYZ and rotXYZ for a given set
   * of detector elements
   * @param elements flat vector of detector elements, i.e. std::vector<DetectorElements>
   * @param alignConstants reference to a flat vector of alignment constants, i.e. std::vector<double>
   */
-  void getAlignmentConstants(const Range& rangeElements, AlignConstants& alignConstants) const;
+  void getAlignmentConstants(const ElementRange& rangeElements, AlignConstants& alignConstants) const;
 
-  /** Method to put alignment constants
-  * @param elements flat vector of detector elements
-  * @param alignConstants Alignment vector of parameters
-  * @return StatusCode
-  */
-  StatusCode putAlignmentConstants(const Range& rangeElements, const AlVec& alignConstants) const;
-
- protected:
-
- private:
-  /// handy typedefs
-  typedef Elements::const_iterator ElemIter;
+protected:
+  
+private:
   bool printDebug() const {return msgLevel(MSG::DEBUG);};
 
   size_t                            m_iteration;            ///< Iteration counter
   size_t                            m_nIterations;          ///< Number of iterations
-  Range                             m_rangeElements;        ///< Detector elements
-  size_t                            m_nDoFs;                ///< Number of dofs we want to align for
-  std::vector<bool>                 m_dofMask;              ///< Mask to apply to remove rows and columns
+  ElementRange                      m_rangeElements;        ///< Detector elements
   std::vector<double>               m_initAlignConstants;   ///< Initial alignment constants
   IGetElementsToBeAligned*          m_align;                ///< Pointer to tool to align detector
   std::string                       m_tracksLocation;       ///< Tracks location for alignment
@@ -119,6 +111,8 @@ class AlignAlgorithm : public GaudiHistoAlg, virtual public IIncidentListener {
   std::vector<std::vector<double> > m_constraints;
   bool                              m_correlation ;         ///< do we take into account correlations between residuals?
   bool                              m_updateInFinalize ;    ///< Call update from finalize
+  int                               m_canonicalConstraintStrategy ; ///< Constrain global dofs
+  size_t                            m_minNumberOfHits ;     ///< Minimum number of hits for an Alignable to be aligned
 
   /// Monitoring
   // @todo: Move this to a monitoring tool

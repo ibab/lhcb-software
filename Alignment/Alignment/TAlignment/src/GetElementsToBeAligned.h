@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.h,v 1.3 2008-01-27 18:41:30 janos Exp $
+// $Id: GetElementsToBeAligned.h,v 1.4 2008-02-01 09:09:32 wouter Exp $
 #ifndef GETELEMENTSTOBEALIGNED_H
 #define GETELEMENTSTOBEALIGNED_H 1
 
@@ -46,7 +46,7 @@ public:
 
   // Virtual in IGetElementsToBeAligned
   // Return pair of begin iter and end iter
-  const IGetElementsToBeAligned::Range& rangeElements() const;
+  const IGetElementsToBeAligned::ElementRange& rangeElements() const;
 
   // Virtual in IGetElementsToBeAligned
   // Return constraints
@@ -70,7 +70,7 @@ private:
   size_t                                           m_index;            ///< index
   mutable std::vector<const DetectorElement*>      m_elements;         ///< Flat vector of detector elements
   mutable IGetElementsToBeAligned::Elements        m_alignElements;      ///< Flat vector of alignment elements
-  IGetElementsToBeAligned::Range                   m_rangeElements; ///< Range of elements to be aligned
+  IGetElementsToBeAligned::ElementRange            m_rangeElements; ///< Range of elements to be aligned
   IGetElementsToBeAligned::Constraints             m_constraints;        ///< Constraints
   mutable FindAlignmentElement                     m_findElement;        ///< instance of FindAlignmentElement
 };
