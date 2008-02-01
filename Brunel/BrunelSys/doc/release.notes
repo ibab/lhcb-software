@@ -38,7 +38,8 @@ framework.
   . Modified the space tracking so it uses the new hit preparation on demand 
     features in TfKernel (PatVelo v3r3, TfKernel v2r2)
   . Now uses Gaudi XML catalog, no longer the POOL one, using
-    FileCatalog.Catalogs option instead of PoolDbCacheSvc.Catalog 
+    FileCatalog.Catalogs option instead of PoolDbCacheSvc.Catalog
+    (GaudiPoolDB v3r0)
   . In ExpertCheck.opts add options for CondDb logging (commented out)
 
 - Bug fixes
@@ -53,9 +54,11 @@ framework.
   . Correct small bug in TrackSelector eta cut (TrackTools v3r3)
   . In DC06-ETC.opts, fix Linkers if reprocessing from DST input
 
-- New monitoring
+- Monitoring changes
   . Extend pixel monitoring to include new MC background types (HPD reflections
     and silicon back-scattering) (RichRecQC v2r16)
+  . If histogram ID is not explicitly given, it is now assigned in a
+    deterministic way (GaudiAlg v10r3)
 
 </PRE><H1><A NAME=v32r2>2007-12-12 Brunel v32r2</A></H1><PRE>
 This version uses projects Gaudi v19r6, LHCb v23r2, Lbcom v6r13, Rec v5r2
