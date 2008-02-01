@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::HPDHitsMoni
  *
  *  CVS Log :-
- *  $Id: RichHPDHitsMoni.h,v 1.4 2007-03-09 23:14:27 jonrob Exp $
+ *  $Id: RichHPDHitsMoni.h,v 1.5 2008-02-01 14:19:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -64,7 +64,6 @@ namespace Rich
 
         virtual StatusCode initialize();    // Algorithm initialization
         virtual StatusCode execute   ();    // Algorithm execution
-        virtual StatusCode finalize  ();    // Algorithm finalization
 
       private: // data
 

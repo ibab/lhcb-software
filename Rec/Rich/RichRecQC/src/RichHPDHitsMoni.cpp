@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::HPDHitsMoni
  *
- *  $Id: RichHPDHitsMoni.cpp,v 1.4 2007-04-23 13:26:04 jonrob Exp $
+ *  $Id: RichHPDHitsMoni.cpp,v 1.5 2008-02-01 14:19:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -113,11 +113,4 @@ StatusCode HPDHitsMoni::execute()
   } // L1 boards
 
   return StatusCode::SUCCESS;
-}
-
-//  Finalize
-StatusCode HPDHitsMoni::finalize()
-{
-  // Execute base class method
-  return RichRecHistoAlgBase::finalize();
 }
