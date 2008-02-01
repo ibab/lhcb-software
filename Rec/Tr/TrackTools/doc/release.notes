@@ -4,10 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+!======================== TrackTools v3r3 2008-02-02 ========================
 ! 2008-02-02 M Needham
- - Correct small bug in trackselector eta cut
+ - Correct small bug in TrackSelector eta cut
 
-!======================== TrackTools v3r3 2008-01-30 ========================
 ! 2008-01-24 - Wouter Hulsbergen
  - Change Si measurement providers to use track-state by default
 
