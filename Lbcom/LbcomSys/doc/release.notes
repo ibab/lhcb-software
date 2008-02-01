@@ -10,8 +10,8 @@
 This version uses Gaudi v19r7 and LHCb v23r3
 
 - Packages modified: CaloAssociators v6r5, L0DU v8r2, L0Muon v7r6, PuVeto v7r3,
-    RichDAQ v3r14, RichTools v2r17, STAlgorithms v2r6, STCheckers v2r4,
-    STDAQ v3r4, STTools v3r5
+    RichDAQ v3r14, RichMCTools v3r8, RichTools v2r17, STAlgorithms v2r6, 
+    STCheckers v2r4, STDAQ v3r4, STTools v3r5
 
 - In CaloAssociators v6r5
   . In CaloAssociators.opts, remove obosolete ApplicationMgr.DLLs option and
@@ -48,6 +48,12 @@ This version uses Gaudi v19r7 and LHCb v23r3
   . In Brunel_DecodeRawEvent.opts, use DataOnDemandSvc.AlgMap option instead of
     obsolete Algorithms option
   . Fix bug in Pixel sorting of clustering when in ALICE mode
+
+- In RichMCTools v3r8
+  . Minor tweek to signal / background discrimination logic to work with
+    new DC06 data when uses the latest additions to MCEvent, which adds
+    support for new HPD reflection backgrounds but also fixes a few minor
+    issues, where signal hits would not be identified as such.
 
 - In RichTools v2r17
   . Add new tool RichSnellsLawRefraction to perform refraction corrections
