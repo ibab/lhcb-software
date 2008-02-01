@@ -4,6 +4,14 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2008-02-01 - Chris Jones
+ - Minor tweek to signal / background discrimination logic to work with
+   new DC06 data when uses the latest additions to MCEvent, which adds
+   support for new HPD reflection backgrounds but also fixes a few minor
+   issues, where signal hits would not be identified as such. The logic
+   is not 100% ideal, so once DC06 support is no longer needed it should be 
+   changed.
+
 !========================== RichMCTools v3r7 2007-09-19 =====================
 ! 2007-08-09 - Chris Jones
  - Update RichMCTrack info tool to correctly perform aerogel refraction

@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.34 2007-03-01 20:05:15 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.35 2008-02-01 14:17:59 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -180,15 +180,14 @@ bool MCTruthTool::isBackground ( const Rich::HPDPixelCluster& cluster ) const
   for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
         iS != cluster.smartIDs().end(); ++iS )
   {
-    if ( !isBackground( *iS ) ) return false;
+    if ( !isBackground(*iS) ) return false;
   }
   return true;
 }
 
 bool MCTruthTool::isBackground ( const LHCb::RichSmartID id ) const
 {
-
-  // first, try via summary objects
+  // try via summary objects
   MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
   if ( iEn != mcRichDigSumMap().end() )
   {
@@ -197,18 +196,17 @@ bool MCTruthTool::isBackground ( const LHCb::RichSmartID id ) const
           iSum != (*iEn).second.end(); ++iSum )
     {
       // returns true if hit is only background (no signal contribution)
-      if ( !(*iSum)->history().isBackground() ) return false;
+      // CRJ : Should use hasSignal here, but not compatible with DC06
+      //       so stick with isSignal (not quite the same) for the time being
+      //if ( (*iSum)->history().hasSignal() ) return false;
+      if ( (*iSum)->history().isSignal() ) return false;
     }
-    // if get here, is only background
-    return true;
   }
-
-  // if all else fails, assume background
-  if ( msgLevel(MSG::DEBUG) )
+  else if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Failed to find MC history for " << id << endreq;
   }
-
+  
   // if all else fails, assume background
   return true;
 }
@@ -238,6 +236,9 @@ MCTruthTool::isCherenkovRadiation( const LHCb::RichSmartID id,
           iSum != (*iEn).second.end(); ++iSum )
     {
       const LHCb::MCRichDigitHistoryCode & code = (*iSum)->history();
+      // CRJ : Should use hasSignal here, but not compatible with DC06
+      //       so stick with isSignal (not quite the same) for the time being
+      //if ( code.hasSignal() )
       if ( code.isSignal() )
       {
         if      ( Rich::Aerogel == rad && code.aerogelHit() ) { return true; }
