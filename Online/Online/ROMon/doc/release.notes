@@ -1,0 +1,10 @@
+Package: ROMon
+Author:  Markus Frank
+
+
+!================== ROMon v1r0 2008-02-01 =============================
+
+  New Package.
+  The ROMon package supports very basic online monitoring and 
+  information collection to investigate the readout status.
+
