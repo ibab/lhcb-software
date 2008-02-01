@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichDigiQC v3r8 2008-02-02 ========================
 ! 2008-01-30 - Chris Jones
  - Extend digit monitor for new background types (HPD reflections and silicon
    back-scattering).
