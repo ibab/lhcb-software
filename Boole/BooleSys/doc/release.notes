@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r9>2008-01-25 Boole v14r9</A></H1><PRE>
+</PRE><H1><A NAME=v14r9>2008-02-02 Boole v14r9</A></H1><PRE>
 This version uses projects Gaudi v19r7, LHCb v23r3, Lbcom v6r14
  and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
 
@@ -20,12 +20,14 @@ Brunel v32r1 or greater
   . Transparent changes to L0 code to make it faster (L0Muon v7r6, PuVeto v7r3)
   . Disable allStrips options in Digit Creators (STAlgorithms v2r6)
   . Add Next spill to MC Deposit Creators (STAlgorithms v2r6)
+  . Retune the HPD timing numbers (RichReadout v2r9)
 
 - New features
   . Final changes to allow use of dead strip conditions
     (STDet v3r9, STKernel v1r1, STDAQ v3r4, STTools v3r5)
   . Use new Gaudi XML file catalog instead of the POOL one, using
     FileCatalog.Catalogs option instead of PoolDbCacheSvc.Catalog 
+  . In ExpertCheck.opts add options for CondDb logging (commented out)
 
 - Bug fixes
   . Fix minor memory leak in L0ProcessorDataLocation initialize() (L0DU v8r2)
@@ -33,6 +35,12 @@ Brunel v32r1 or greater
     was inconsistent with changes introduced in Boole v14r5 (SQLDDDB v4r0)
   . Add a finalize() to MuonDetectorResponse, to avoid deleting in the destructor
     objects created in initialize() (MuonAlgs v6r6)
+
+- Monitoring changes
+  . Extend digit monitor for new background types (HPD reflections and silicon
+    back-scattering) (RichDigiQC v3r8)
+  . Improved detailed monitoring algorithm to include plots for HPR reflections
+    (RichReadout v2r9)
 
 </PRE><H1><A NAME=v14r8>2007-12-13 Boole v14r8</A></H1><PRE>
 This version uses projects Gaudi v19r6, LHCb v23r2, Lbcom v6r13

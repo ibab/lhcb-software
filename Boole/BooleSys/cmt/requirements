@@ -24,6 +24,6 @@ use MuonMoniDigi        v2r3    Muon  # Alessio Sarti
 use OTSimulation        v3r15   OT    # Jan Amoraal
 
 # Rich
-use RichDigiQC          v3r7    Rich  # Chris Jones
+use RichDigiQC          v3r8    Rich  # Chris Jones
 use RichMCAssociators   v2r5    Rich  # Chris Jones
-use RichReadout         v2r8    Rich  # Chris Jones
+use RichReadout         v2r9    Rich  # Chris Jones
