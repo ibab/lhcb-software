@@ -3,7 +3,7 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v32r3>2008-01-30 Brunel v32r3</A></H1><PRE>
+</PRE><H1><A NAME=v32r3>2008-02-02 Brunel v32r3</A></H1><PRE>
 This version uses projects Gaudi v19r7, LHCb v23r3, Lbcom v6r14, Rec v5r3
  and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
 
@@ -50,6 +50,12 @@ framework.
   . Protect against NaN in NeutralProtoPAlg::finalize() (GlobalReco v6r15)
   . Fix AddNeibours warning in HcalE and EcalE initialisation (CaloPIDs v4r9)
   . Change PoolDbCacheSvc.AgeLimit to IODataManager.AgeLimit, for Gaudi v19r7
+  . Correct small bug in TrackSelector eta cut (TrackTools v3r3)
+  . In DC06-ETC.opts, fix Linkers if reprocessing from DST input
+
+- New monitoring
+  . Extend pixel monitoring to include new MC background types (HPD reflections
+    and silicon back-scattering) (RichRecQC v2r16)
 
 </PRE><H1><A NAME=v32r2>2007-12-12 Brunel v32r2</A></H1><PRE>
 This version uses projects Gaudi v19r6, LHCb v23r2, Lbcom v6r13, Rec v5r2
