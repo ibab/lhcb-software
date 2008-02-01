@@ -7,7 +7,7 @@
 !========================= MuonAlgs v6r6 2008-01-30 ==========================
 ! 2008-01-30 - Marco Cattaneo
  - Add a finalize() to MuonDetectorResponse, to avoid deleting in the destructor
-   onbjects created in initialize(), to please genConf
+   objects created in initialize(), to please genConf
 
 !========================= MuonAlgs v6r5 2007-11-30 ==========================
 ! 2007-11-30 - Marco Cattaneo

@@ -144,24 +144,21 @@ void MuonDetectorResponse::finalize(){
 		delete m_poissonDist[indexRegion];
     for(int readout=0;readout<=m_muonDetector->readoutInRegion(station, region);
         readout++){
-      delete responseVector[readout][indexRegion];      
+      //      delete responseVector[readout][indexRegion];      
 		}
 	}
+
   std::vector<Rndm::Numbers*>::iterator  iterJitter;
   for(iterJitter=m_timeJitter.begin();iterJitter<m_timeJitter.end();
       iterJitter++){
-    (*iterJitter)->finalize();
     delete *iterJitter;    
   }
  
   std::vector<Rndm::Numbers*>::iterator iterNoise;	
 	for(iterNoise=m_electronicNoise.begin();iterNoise<m_electronicNoise.end();
       iterNoise++){
-    (*iterNoise)->finalize();
     delete *iterNoise;
 	}
-  //  if( m_pGetInfo ) m_toolSvc->releaseTool( m_pGetInfo );
-   // delete m_pGetInfo;  
 }
 
 
