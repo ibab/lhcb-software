@@ -6,7 +6,7 @@
 
 package RecUtils
 
-version v1r4
+version v1r5
 
 branches src cmt doc options
 

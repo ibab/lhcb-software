@@ -4,6 +4,10 @@
 ! Purpose     : Collection of simple utilities tied to REC
 !-----------------------------------------------------------------------------
 
+!============================ RecUtils v1r5 2008-02-01 =======================
+! 2008-02-01 - Marco Cattaneo
+ - Update options for new FileCatalog option
+
 !============================ RecUtils v1r4 2007-12-12 =======================
 ! 2007-12-10 - Vanya BELYAEV
  - CopyStripETC/ReadStripETC 
