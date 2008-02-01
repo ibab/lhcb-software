@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.94 2008-01-31 10:29:47 jonrob Exp $
+! $Id: release.notes,v 1.95 2008-02-01 09:09:24 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
+!======================== MCEvent v2r6 2008-02-02 ============================
 ! 2008-01-31 - Chris Jones
  - Add new MCVertex type, RichHpdBackScat, for back-scattering in the RICH HPDs
 
