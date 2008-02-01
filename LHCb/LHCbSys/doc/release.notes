@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r3>2008-01-30 LHCbSys v23r3</A></H1><PRE>
+</PRE><H1><A NAME=v23r3>2008-02-02 LHCbSys v23r3</A></H1><PRE>
 This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 
 - New packages:      MDF_DCAP v1r0 - DCAP plugin to read MDF files 
@@ -15,10 +15,10 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
     LHCbKernel v8r1, LHCbMath v2r5, RichKernel v7r10, DDDB v1r3, DetSys v11r2,
     DetDesc v18r3, DetDescCnv v4r5, DetDescSvc v1r16, MuonDet v7r2,
     RichDet v10r9, STDet v3r9, DetCond v11r8, CondDBUI v2r7, DetDescChecks v4r5,
-    EventSys v24r0, DAQEvent v7r8, HltEvent v8r6, PhysEvent v11r5, RecEvent v2r9,
-    TrackEvent v4r10, MDF v3r1, DAQSys v3r8, CaloDAQ v4r3, TfKernel v2r2,
-    DaVinciKernel v6r10, STKernel v1r1, LHCbAlgs v2r14, LoKiNumbers v7r1,
-    RichRecBase v3r10, IOExample v2r4
+    EventSys v24r0, DAQEvent v7r8, HltEvent v8r6, MCEvent v2r6, PhysEvent v11r5,
+    RecEvent v2r9, TrackEvent v4r10, MDF v3r1, DAQSys v3r8, CaloDAQ v4r3,
+    TfKernel v2r2, DaVinciKernel v6r10, STKernel v1r1, LHCbAlgs v2r14,
+    LoKiNumbers v7r1, RichRecBase v3r10, IOExample v2r4
 
 - In GaudiConf v10r6
   . In DecodeRawEvent.opts and UnpackDigi.opts:
@@ -123,6 +123,10 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
     o Add the method DeRichHPD::testKaptonShadowing which checks for 
       intersections with the kapton shield
     o Various other minor doxygen and code improvements
+  . Changes for composite (CMA) Rich1 spherical mirrors. The Rich1 mirrors
+    now have individual alignment conditions.
+  . Introduced user parameters in DeRich1/2 for the location of the 
+    mirror reflectivity
 
 - In STDet v3r9
   . DeSTSector: final changes to allow use of dead strip conditions
@@ -149,6 +153,15 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 - In HltEvent v8r6
   . Used GOD-given conversion to string in HltEnums
   . Makes HltNames and its python script obsolete. Removed.
+
+- In MCEvent v2r6
+  . Add new MCVertex type, RichHpdBackScat, for back-scattering in the RICH HPDs
+  . Additions to MCRichHit to store new HPD reflection background types in hit
+    history code
+  . Improve the MCRichHit fillStream method.
+  . Improve the MC history methods and flags in MCRichDigitHistoryCode
+  . Add addition member to MCRichOpticalPhoton to store impact point of photon
+    on the HPD Quartz Window.
 
 - In PhysEvent v11r5
   . Particle.xml: Add the enum to store the chi2 of the mass-constrained fit
@@ -254,6 +267,7 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 
 - In LHCbAlgs v2r14
   . Add createODIN algorithm, to create DAQ/ODIN object from ODIN RawBank
+  . AlgorithmCorrelations : Protect debug() and verbose()
 
 - In LoKiNumbers v7r1
   . Fix for Windows to suppress the (auto)generation of "strange" functors

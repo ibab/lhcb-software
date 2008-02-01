@@ -40,7 +40,7 @@ use STDet                 v3r9    Det     # Jeroen van Tilburg, Matt Needham
 # Event data model
 use EventSys              v24r0   Event   # Marco Cattaneo
 use EventBase             v2r4    Event   # Marco Cattaneo, Gloria Corti
-use MCEvent               v2r5p1  Event   # Gloria Corti and sub-det experts
+use MCEvent               v2r6    Event   # Gloria Corti and sub-det experts
 use DigiEvent             v2r3    Event   # Marco Cattaneo and sub-det experts
 use RecEvent              v2r9    Event   # Marco Cattaneo and sub-det experts
 use L0Event               v16r7   Event   # Julien Cogan
