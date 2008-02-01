@@ -3,6 +3,12 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-02-01 - Wouter Hulsbergen
+ - New classes AlParameters and AlDofMask
+ - Print parameter values when updating
+ - Add constraints for global translation and rotation
+ - Add threshold on minimum number of hits
+
 ! 2008-01-31 - Jan Amoraal
  - Plot chi2 variables vs iteration
 
