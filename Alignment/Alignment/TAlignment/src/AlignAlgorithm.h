@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.16 2008-02-01 09:09:32 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.17 2008-02-01 19:03:35 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -113,7 +113,7 @@ private:
   bool                              m_updateInFinalize ;    ///< Call update from finalize
   int                               m_canonicalConstraintStrategy ; ///< Constrain global dofs
   size_t                            m_minNumberOfHits ;     ///< Minimum number of hits for an Alignable to be aligned
-
+  bool                              m_fillCorrelationHistos; ///< Flag to turn on filling of residual correlation histos
   /// Monitoring
   // @todo: Move this to a monitoring tool
   std::map<unsigned int, IHistogram2D*>                          m_resHistos;

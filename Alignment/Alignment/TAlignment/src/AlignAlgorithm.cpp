@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.20 2008-02-01 09:09:32 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.21 2008-02-01 19:03:35 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -163,7 +163,8 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("UseCorrelations"      , m_correlation          = true                    );
   declareProperty("UpdateInFinalize"     , m_updateInFinalize     = false                   );
   declareProperty("CanonicalConstraintStrategy", m_canonicalConstraintStrategy = CanonicalConstraintAuto ) ; 
-  declareProperty("MinNumberOfHits"      , m_minNumberOfHits = 1 ) ;
+  declareProperty("MinNumberOfHits"      , m_minNumberOfHits = 1 ) ; 
+  declareProperty("FillCorrelationsHistos" , m_fillCorrelationHistos = false ) ;
 }
 
 AlignAlgorithm::~AlignAlgorithm() {}
@@ -248,17 +249,19 @@ StatusCode AlignAlgorithm::initialize() {
                                       -5.00 , +5.00, 100);
     m_nHitsHistos[indexI]     = book1D(3000u+indexI, "number of hits vs iteration for " + name,
                                        -0.5, m_nIterations-0.5, m_nIterations);
-    m_autoCorrHistos[indexI] = book2D(4000u+indexI, "hit autocorrelation in " + name + "  vs iteration ",
-                                      -0.5, m_nIterations-0.5, m_nIterations,
-                                      -0.5,+0.5,250);
-    unsigned(indexJ) = indexI; 
-    for(ElementRange::const_iterator j = i; j != m_rangeElements.end(); ++j, ++indexJ) {
-      m_corrHistos[std::make_pair(indexI, indexJ)] = book2D((10000 + indexI) * (100 + indexJ),
-                                                            "hit correlation of " + name + " with " + j->name()
-                                                            + " vs iteration "
-                                                            + ( i == j ? "(excluding autocorrelations!)" : "" ),
-                                                            -0.5, m_nIterations-0.5, m_nIterations,
-                                                            -1.0, +1.0, 250);
+    if( m_fillCorrelationHistos ) {
+      m_autoCorrHistos[indexI] = book2D(4000u+indexI, "hit autocorrelation in " + name + "  vs iteration ",
+					-0.5, m_nIterations-0.5, m_nIterations,
+					-0.5,+0.5,250);
+      unsigned(indexJ) = indexI; 
+      for(ElementRange::const_iterator j = i; j != m_rangeElements.end(); ++j, ++indexJ) {
+	m_corrHistos[std::make_pair(indexI, indexJ)] = book2D((10000 + indexI) * (100 + indexJ),
+							      "hit correlation of " + name + " with " + j->name()
+							      + " vs iteration "
+							      + ( i == j ? "(excluding autocorrelations!)" : "" ),
+							      -0.5, m_nIterations-0.5, m_nIterations,
+							      -1.0, +1.0, 250);
+      }
     }
   }
 
@@ -341,14 +344,16 @@ StatusCode AlignAlgorithm::execute() {
 	    double c = cov.HCH_norm(*id->id(),*jd->id());
 	    m_equations->M(id->index(), jd->index()) -= c * (Transpose(id->d())*jd->d());
 	    
-	    if (!( id->id() == jd->id())) {
-	      m_corrHistos[std::make_pair(id->index(), jd->index())]->
-		fill(m_iteration, c/std::sqrt(cov.HCH_norm(*id->id(), *id->id())*cov.HCH_norm(*jd->id(), *jd->id())));
-	    } else {
-	      m_autoCorrHistos[id->index()]->fill(m_iteration, c);
+	    if( m_fillCorrelationHistos ) {
+	      if (!( id->id() == jd->id())) {
+		m_corrHistos[std::make_pair(id->index(), jd->index())]->
+		  fill(m_iteration, c/std::sqrt(cov.HCH_norm(*id->id(), *id->id())*cov.HCH_norm(*jd->id(), *jd->id())));
+	      } else {
+		m_autoCorrHistos[id->index()]->fill(m_iteration, c);
+	      }
 	    }
 	  }
-      } 
+      }
       // keep some information about the tracks that we have seen
       m_equations->addTrackSummary( (*iTrack)->chi2(), (*iTrack)->nDoF(), numexternalhits ) ;
     }
@@ -438,14 +443,15 @@ void AlignAlgorithm::update() {
 
   m_totChi2vsIterHisto->fill(m_iteration, m_equations->totalChiSquare()/m_equations->totalNumDofs());
   
-  for (size_t i = 0; i < m_equations->nElem(); ++i) {
-    for (size_t j = i; j < m_equations->nElem(); ++j) {
-      info() << "==> M["<<i<<","<<j<<"] = "      << m_equations->M(i,j) << endmsg;
+  if(printDebug()) {
+    for (size_t i = 0; i < m_equations->nElem(); ++i) {
+      for (size_t j = i; j < m_equations->nElem(); ++j) {
+	debug() << "==> M["<<i<<","<<j<<"] = "      << m_equations->M(i,j) << endmsg;
+      }
+      debug() << "\n==> V["<<i<<"] = "    << m_equations->V(i) << endmsg;
     }
-    info() << "\n==> V["<<i<<"] = "    << m_equations->V(i) << endmsg;
   }
-
-  
+    
   /// Take the gaudi vector and matix and fill AlVec and AlSym for ALL elements and ALL parameters
   AlVec    tmpDerivatives(Derivatives::kCols*(m_equations->nElem()));
   AlSymMat tmpMatrix(Derivatives::kCols*(m_equations->nElem()));
@@ -518,8 +524,12 @@ void AlignAlgorithm::update() {
 	     << "Number of constraints: " << numConstraints << std::endl
 	     << "Number of active parameters: " << nDOFs-numConstraints << std::endl ;
   
-  info() << "AlVec Vector    = " << derivatives << endmsg;
-  info() << "AlSymMat Matrix = " << matrix      << endmsg;
+  if(nDOFs < 50 ) {
+    info() << "AlVec Vector    = " << derivatives << endmsg;
+    info() << "AlSymMat Matrix = " << matrix      << endmsg;
+  } else {
+    info() << "Matrices too big to dump to std" << endmsg ;
+  }
 
   // Tool returns H^-1 and alignment constants. Need to copy the 2nd derivative because we still need it.
   AlSymMat dChi2dX = matrix ;
@@ -528,7 +538,8 @@ void AlignAlgorithm::update() {
   if (solved) {
     StatusCode sc = StatusCode::SUCCESS;
     double deltaChi2 = derivatives * dChi2dX * derivatives ;
-    info() << "Solution = " << derivatives << endmsg ;
+    if(printDebug())
+      info() << "Solution = " << derivatives << endmsg ;
     logmessage << "Chisquare/dof of the alignment change: " 
 	       << deltaChi2 << " / " << nDOFs-numConstraints << std::endl ;
     m_dChi2AlignvsIterHisto->fill(m_iteration,deltaChi2) ;
