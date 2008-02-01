@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.16 2008-01-30 17:01:29 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.17 2008-02-01 14:18:51 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -190,22 +190,25 @@ PixelQC::MCFlags PixelQC::getHistories( const LHCb::RichSmartID id ) const
   for ( Summaries::const_iterator iS = summaries.begin();
         iS != summaries.end(); ++iS )
   {
-    if ( (*iS)->history().isBackground() )
+    // CRJ should use isBackground here, but not compatible with DC06
+    // so stick with !isSignal (not quite the same) for the time being
+    info() << "MCSummary : " << (*iS)->history() << endreq;
+    if ( !(*iS)->history().isSignal() )
     {
       flags.isBkg = true;
-      if ( (*iS)->history().hpdQuartzCK()    )   { flags.isHPDQCK = true; }
-      if ( (*iS)->history().gasQuartzCK()    )   { flags.isGasCK  = true; }
-      if ( (*iS)->history().nitrogenCK()     )   { flags.isN2CK   = true; }
-      if ( (*iS)->history().chargedTrack()   )   { flags.isChargedTk   = true; }
-      if ( (*iS)->history().chargeShareHit() )   { flags.isChargeShare = true; }
-      if ( (*iS)->history().aeroFilterCK()   )   { flags.isAeroFiltCK  = true; }
+      if ( (*iS)->history().hpdQuartzCK()      ) { flags.isHPDQCK = true; }
+      if ( (*iS)->history().gasQuartzCK()      ) { flags.isGasCK  = true; }
+      if ( (*iS)->history().nitrogenCK()       ) { flags.isN2CK   = true; }
+      if ( (*iS)->history().chargedTrack()     ) { flags.isChargedTk   = true; }
+      if ( (*iS)->history().chargeShareHit()   ) { flags.isChargeShare = true; }
+      if ( (*iS)->history().aeroFilterCK()     ) { flags.isAeroFiltCK  = true; }
       if ( (*iS)->history().hpdSiBackscatter() ) { flags.isSiBackScatter = true; }
       if ( (*iS)->history().hpdReflection()    ) { flags.isHPDIntReflect = true; }
     }
     else
     {
       flags.isSignal = true;
-      if ( (*iS)->history().aerogelHit()   ) { flags.isAerogelCK = true;  }
+      if ( (*iS)->history().aerogelHit()   ) { flags.isAerogelCK  = true; }
       if ( (*iS)->history().c4f10Hit()     ) { flags.isRich1GasCK = true; }
       if ( (*iS)->history().cf4Hit()       ) { flags.isRich2GasCK = true; }
     }

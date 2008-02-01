@@ -4,6 +4,14 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-02-01 - Chris Jones
+ - Minor tweek to signal / background discrimination logic to work with
+   new DC06 data when uses the latest additions to MCEvent, which adds
+   support for new HPD reflection backgrounds but also fixes a few minor
+   issues, where signal hits would not be identified as such. The logic
+   is not 100% ideal, so once DC06 support is no longer needed it should be 
+   changed.
+
 !======================= RichRecQC v2r16 2008-02-02 ==========================
 ! 2008-01-30 - Chris Jones
  - Extend pixel monitoring to include new MC background types (HPD reflections
