@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.31 2007-12-18 20:54:01 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.32 2008-02-01 21:51:59 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -201,6 +201,116 @@ MCParticleVector BackgroundCategory::get_mc_mothers(MCParticleVector mc_particle
 	return mc_mothers;
 }
 //=============================================================================
+int BackgroundCategory::topologycheck(const LHCb::MCParticle* topmother)
+{
+
+	int sumofpids = 0;
+
+        SmartRefVector<LHCb::MCParticle>::const_iterator iP;
+        SmartRefVector<LHCb::MCVertex>::const_iterator iV = topmother->endVertices().begin();
+	verbose() << "Printing out decay vertices of a " << topmother->particleID().abspid() << endmsg;
+        verbose() << topmother->endVertices() << endmsg;
+
+	verbose() << "MC Topology step 1" << endmsg;
+
+	for (iP = (*iV)->products().begin(); iP != (*iV)->products().end(); ++iP) {
+
+		verbose() << "MC Topology step 2" << endmsg;
+
+                SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
+		verbose() << "Printing out decay vertices of a " << (*iP)->particleID().abspid() << endmsg;
+		verbose() << (*iP)->endVertices() << endmsg;
+		
+		verbose() << "MC Topology step 3" << endmsg;
+
+                if (	(*iVV)->products().empty() ||
+                	isStable( (*iP)->particleID().abspid() ) ||
+                	(*iP)->particleID().abspid() == 111
+
+        	   ) {
+
+			verbose() << "MC Topology step 4" << endmsg;
+
+        		if((*iP)->particleID().abspid() != 22) sumofpids += (*iP)->particleID().abspid();
+
+			verbose() << "MC sum is now " << sumofpids << endmsg;
+
+                } else {
+
+			verbose() << "MC Topology step 5" << endmsg;
+
+			sumofpids += (*iP)->particleID().abspid();			
+			sumofpids += topologycheck(*iP);
+
+			verbose() << "MC sum is now " << sumofpids << endmsg;
+                }
+
+		verbose() << "MC Topology step 6" << endmsg;
+
+        }
+
+	verbose() << "MC Topology step 7" << endmsg;
+
+	verbose() << "MC sum is now " << sumofpids << endmsg;
+
+        return sumofpids;
+}
+//=============================================================================
+int BackgroundCategory::topologycheck(const LHCb::Particle* topmother)
+{
+
+        int sumofpids = 0;
+
+	verbose() << "Topology step 1" << endmsg;
+
+	ParticleVector particles_in_decay = m_particleDescendants->descendants(topmother);
+        ParticleVector::const_iterator iP = particles_in_decay.begin();
+
+	verbose() << "Topology step 2, mother is a " << topmother->particleID().pid() << endmsg;
+
+        for (iP = particles_in_decay.begin(); iP != particles_in_decay.end(); ++iP) {
+
+		verbose() << "Topology step 3, daughter is a " << (*iP)->particleID().pid() << endmsg;
+
+		if ((*iP) != 0) {
+
+			verbose() << "Topology step 3a" << endmsg;
+
+			if((*iP)->particleID().abspid() != 22) sumofpids += (*iP)->particleID().abspid();
+			verbose() << "Sum is now " << sumofpids << endmsg;
+
+                	/*if (  (*iP)->isBasicParticle() || (*iP)->particleID().abspid() == 111
+			   ) {
+
+				verbose() << "Topology step 4" << endmsg;
+
+                	        if((*iP)->particleID().abspid() != 22) sumofpids += (*iP)->particleID().abspid();
+
+				verbose() << "Sum is now " << sumofpids << endmsg;
+
+	                } else {
+
+				verbose() << "Topology step 5, about to get children of a " << (*iP)->particleID().pid() << endmsg;
+
+                	        sumofpids += topologycheck(*iP);
+
+				verbose() << "Sum is now " << sumofpids << endmsg;
+	                }*/
+
+			verbose() << "Topology step 5a" << endmsg;
+		}
+
+		verbose() << "Topology step 6" << endmsg;
+
+        }
+
+	verbose() << "Topology step 7" << endmsg;
+
+	verbose() << "Sum is now " << sumofpids << endmsg;
+
+        return sumofpids;
+}
+//=============================================================================
 MCParticleVector BackgroundCategory::create_finalstatedaughterarray_for_mcmother(const LHCb::MCParticle* topmother)
   //Uses Patrick's tool (ParticleDescendants) to create an array of the final state products of the MCParticle
   //determined to be the joint mother (if indeeed there is one) of the MCParticles associated to the final
@@ -267,10 +377,12 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
 	if (particles_in_decay.empty()) {
     		Warning("No descendants for Particle");
     		return Undefined; 
+	} else {
+		verbose() << "Descendents are " << particles_in_decay << endreq;
 	}
   	verbose() << "Categorising step 1" << endmsg;
 	//Now we have to associate each one of them to an MCParticle if possible
-	MCParticleVector mc_particles_linked_to_decay = associate_particles_in_decay(particles_in_decay);  
+	MCParticleVector mc_particles_linked_to_decay = associate_particles_in_decay(particles_in_decay);
 	verbose() << "Categorising step 2" << endmsg;
 	//Now to create a vector with the final mothers of all these mc particles.
 	MCParticleVector mc_mothers_final = get_mc_mothers(mc_particles_linked_to_decay,reconstructed_mother);
@@ -288,7 +400,7 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
 				verbose() << "Categorising step 6" << endmsg;
 				if (condition_D(reconstructed_mother) ) {
 					verbose() << "Categorising step 7" << endmsg;
-					if (condition_E() ) {
+					if (condition_E(reconstructed_mother) ) {
 						verbose() << "Categorising step 8" << endmsg;
 						//This is a signal decay
 						return Signal;
@@ -638,11 +750,13 @@ bool BackgroundCategory::condition_D(const LHCb::Particle* reconstructed_mother)
 	return carryon;
 }
 //=============================================================================
-bool BackgroundCategory::condition_E()
-  //Not implemented but meant to check whether we missed any resonances
-  //in the decay chain. 
+bool BackgroundCategory::condition_E(const LHCb::Particle* candidate)
+  //Check whether we missed any resonances in the decay chain. 
 {
-  return true;
+
+  if ( topologycheck(candidate) == topologycheck(m_commonMother) ) return true;
+  else return false;
+  
 }
 //=============================================================================
 bool BackgroundCategory::condition_F(const LHCb::Particle* candidate)
@@ -775,7 +889,7 @@ int BackgroundCategory::condition_PV(/*MCParticleVector mc_mothers_final, */MCPa
 	//MCParticleVector::const_iterator iP = mc_mothers_final.begin();
 
 	for (MCParticleVector::const_iterator iPP = mc_particles_linked_to_decay.begin(); 
-       iPP != mc_particles_linked_to_decay.end(); ++iPP) {
+       		iPP != mc_particles_linked_to_decay.end(); ++iPP) {
 
 		if (*iPP) {
 			SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iPP)->endVertices().begin();
@@ -944,9 +1058,9 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 				        mc_TempDeux = (*mcPartIt).to();
 				        verbose() << "To Range MCParticle is at " << mc_TempDeux << endmsg;
 				        verbose() << "To Range MCParticle has PID = " << mc_TempDeux->particleID().pid() << endmsg;
-				        //verbose() << "To Range energy = " << mc_TempDeux->momentum().e() << endmsg;
-				        //verbose() << "Range pt = " << mc_TempDeux->momentum().vect().perp() << endmsg;
-				        //verbose() << "Range momentum = " << mc_TempDeux->momentum().vect().mag() << endmsg;
+				        verbose() << "To Range energy = " << mc_TempDeux->momentum().E() << endmsg;
+				        verbose() << "Range pt = " << mc_TempDeux->momentum().Pt() << endmsg;
+				        verbose() << "Range momentum = " << mc_TempDeux->momentum().P() << endmsg;
 				        verbose() << "Range weight = " << (*mcPartIt).weight() << endmsg; 
 				        mc_weight = (*mcPartIt).weight();
 				        if ( mc_weight > minimumweight ) {
@@ -996,6 +1110,7 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 			//verbose() << "Associating step 5b - loop step " << verboses << endmsg;
 			verbose() << "Composite MCParticle is at " << mcTemp << endmsg;
 			associated_mcparts.push_back(mcTemp);
+			//associated_mcparts.push_back(0);
 			//verbose() << "Associating step 6b - loop step " << verboses << endmsg;
 		}
 	} 
@@ -1030,7 +1145,7 @@ StatusCode BackgroundCategory::finalize(){
 
 	if( NULL != m_pCPPAsct ) delete m_pCPPAsct;
 	if( NULL != m_pNPPAsct ) delete m_pNPPAsct;
-	if( NULL != m_pChi2PPAsct ) delete m_pChi2PPAsct;
+	//if( NULL != m_pChi2PPAsct ) delete m_pChi2PPAsct;
 
 	StatusCode sc = GaudiTool::finalize();
 	if (!sc) return sc;

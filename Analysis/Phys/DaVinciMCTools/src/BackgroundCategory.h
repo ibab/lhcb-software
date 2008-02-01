@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.20 2007-12-18 20:54:02 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.21 2008-02-01 21:51:59 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -78,6 +78,8 @@ private:
   MCParticleVector associate_particles_in_decay(ParticleVector);
   MCParticleVector get_mc_mothers(MCParticleVector, const LHCb::Particle*);
   MCParticleVector create_finalstatedaughterarray_for_mcmother(const LHCb::MCParticle*);
+  int topologycheck(const LHCb::MCParticle*);
+  int topologycheck(const LHCb::Particle*);
 
   bool isStable(int);
 
@@ -86,7 +88,7 @@ private:
   bool condition_C(ParticleVector, MCParticleVector);
   //  bool condition_D(MCParticleVector, const Particle*);
   bool condition_D(const LHCb::Particle*);
-  bool condition_E();
+  bool condition_E(const LHCb::Particle*);
   bool condition_F(const LHCb::Particle*);
   bool condition_G(MCParticleVector,ParticleVector);
   bool condition_H(MCParticleVector,ParticleVector);
