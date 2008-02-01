@@ -8,7 +8,6 @@ MessageSvc.OutputLevel = 4;
 // "Known" errors
 Boole.BooleMemory.OutputLevel = 4; // Because Boole.OutputLevel = 3;
 CompareMCVertex.OutputLevel = 5;   // Due to crazy vertices produced by Gauss
-MessageSvc.setError = { "HPD:0", "HPD:130", "HPD:260", "HPD:390" }; // Missing QE in DC06 tags
 
 // Information to be kept
 Boole.OutputLevel = 3;

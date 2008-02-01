@@ -5,6 +5,10 @@
 // Uncomment line below to monitor untested status codes
 //ApplicationMgr.StatusCodeCheck = true;
 
+// Log time of each CondDB access
+//CondDBLogger.LoggedReader = "CondDBDispatcherSvc";
+//CondDBCnvSvc.CondDBReader = "CondDBLogger";
+
 // IT+TT detailed monitoring
 MCTTDepositMonitor.FullDetail = true;
 MCITDepositMonitor.FullDetail = true;
