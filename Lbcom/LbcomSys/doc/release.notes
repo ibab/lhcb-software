@@ -47,6 +47,7 @@ This version uses Gaudi v19r7 and LHCb v23r3
     information that makes this check no longer possible.
   . In Brunel_DecodeRawEvent.opts, use DataOnDemandSvc.AlgMap option instead of
     obsolete Algorithms option
+  . Fix bug in Pixel sorting of clustering when in ALICE mode
 
 - In RichTools v2r17
   . Add new tool RichSnellsLawRefraction to perform refraction corrections
