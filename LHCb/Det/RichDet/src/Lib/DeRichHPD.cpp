@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.12 2008-01-10 17:30:16 papanest Exp $
+ * $Id: DeRichHPD.cpp,v 1.13 2008-02-01 10:49:26 papanest Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
@@ -183,9 +183,9 @@ StatusCode DeRichHPD::initialize ( )
   SmartRef<Condition> hpdQuantumEffCond = condition("QuantumEffTable");
   if ( hpdQuantumEffCond.path() == "" )
   {
-    MsgStream msg( msgSvc(), myName() );
-    if ( m_number%130 == 0 )
-      msg << MSG::WARNING << "Cannot get QE from LHCBCOND; will use nominal QE from DDDB" << endmsg;
+    //MsgStream msg( msgSvc(), myName() );
+    //if ( m_number%130 == 0 )
+    //  msg << MSG::WARNING << "Cannot get QE from LHCBCOND; will use nominal QE from DDDB" << endmsg;
     SmartDataPtr<DeRich> deRich1( dataSvc(), DeRichLocations::Rich1 );
     m_hpdQuantumEffFunc = deRich1->nominalHPDQuantumEff();
   }
