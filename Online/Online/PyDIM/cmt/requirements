@@ -31,4 +31,8 @@ application dim_test_cpp    -group=tests ../tests/test.cpp
 application dim_test_utils  -group=tests ../tests/test_pydim_utils.cpp
 
 apply_pattern ld_library_path
+<<<<<<< requirements
+
+=======
 apply_pattern install_python_modules
+>>>>>>> 1.9
