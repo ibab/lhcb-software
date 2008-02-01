@@ -1,4 +1,4 @@
-// $Id: CopyStripETC.cpp,v 1.3 2007-12-10 16:27:46 ibelyaev Exp $
+// $Id: CopyStripETC.cpp,v 1.4 2008-02-01 12:26:46 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -101,7 +101,7 @@ StatusCode CopyStripETC::execute()
 StatusCode CopyStripETC::fillOutputETC(NTuplePtr& ntIN) const
 {
   // This part is stolen from Hugo's StripETC
-  Tuple ntOUT = evtCol(m_outputCollectionName);
+  Tuple ntOUT = evtCol(1,m_outputCollectionName);
   // pick up the location of the event - this is what makes the tag collection a collection...
   DataObject* pObject = get<DataObject>("/Event");
   if (pObject!=0) {

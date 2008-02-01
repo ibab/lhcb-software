@@ -6,6 +6,7 @@
 
 !============================ RecUtils v1r5 2008-02-01 =======================
 ! 2008-02-01 - Marco Cattaneo
+ - In CopyStripETC.cpp book output ETC with explicit numeric ID
  - Update options for new FileCatalog option
 
 !============================ RecUtils v1r4 2007-12-12 =======================
