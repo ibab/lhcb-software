@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.cpp,v 1.11 2007-07-04 15:29:53 mneedham Exp $
+ *  $Id: TrackSelector.cpp,v 1.12 2008-02-01 08:43:06 mneedham Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -158,7 +158,7 @@ bool TrackSelector::accept ( const Track& aTrack ) const
  
   // eta
   double eta = aTrack.pseudoRapidity();
-  if ( eta < m_minEtaCut || nMeas > m_maxEtaCut )
+  if ( eta < m_minEtaCut || eta > m_maxEtaCut )
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() << " -> #eta " << eta << " failed cut" << endreq;
