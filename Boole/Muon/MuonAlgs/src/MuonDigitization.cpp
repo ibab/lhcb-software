@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.39 2008-01-30 16:40:36 cattanem Exp $
+//$Id: MuonDigitization.cpp,v 1.40 2008-02-03 14:38:02 asatta Exp $
 
 #include <algorithm>
 #include <vector>
@@ -444,6 +444,8 @@ MuonDigitization::createInput(
             listph;
           debug()<<"eccoci "<<endreq;
       	  int det=(*iter)-> sensDetID();
+          if(det<0)continue;
+          
           unsigned int hitStation=m_muonDetector->stationID(det);
           unsigned int hitRegion=m_muonDetector->regionID(det);          
           unsigned int hitChamber=m_muonDetector->chamberID(det);

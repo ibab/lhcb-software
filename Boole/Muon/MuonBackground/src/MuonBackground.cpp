@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.43 2007-11-30 07:30:15 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.44 2008-02-03 14:39:43 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -587,7 +587,9 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
       if(hitPointer!=0){
         for (iter=(hitPointer)->begin();iter<(hitPointer)->end();iter++)
       {
-        int det=(*iter)->sensDetID();        
+        int det=(*iter)->sensDetID();
+        if(det<0)continue;
+        
         station=m_muonDetector->stationID(det);
         region=m_muonDetector->regionID(det);
         gap=m_muonDetector->gapID(det);;

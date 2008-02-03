@@ -136,7 +136,7 @@ StatusCode MuonDigitChecker::execute() {
 	for (iter = hits->begin(); iter < hits->end();iter++){
 	  
 	  MyDetID = (*iter)->sensDetID();
-	  
+	  if(MyDetID<0)continue;
 	  //Needs to extract info from sens ID      
 	  int station = muonD->stationID(MyDetID);  
 	  int region  = muonD->regionID(MyDetID);   
