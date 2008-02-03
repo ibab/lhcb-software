@@ -1,4 +1,4 @@
-// $Id: MuonHitChecker.cpp,v 1.9 2007-01-12 15:55:06 ranjard Exp $
+// $Id: MuonHitChecker.cpp,v 1.10 2008-02-03 14:58:31 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +29,8 @@ MuonHitChecker::MuonHitChecker( const std::string& name,
     m_detailedMonitor   ( false ) 
 {
   declareProperty( "DetailedMonitor"         ,m_detailedMonitor );
+  m_hit_outside_gaps=0;
+  
 }
 
 //=============================================================================
@@ -77,6 +79,7 @@ StatusCode MuonHitChecker::execute() {
       tnhit[i][j] = 0;
     }
   }
+  
 
   std::vector<float> m_sta,m_reg,m_con,m_x,m_y,m_z,m_time;
   std::vector<float> m_id,m_px,m_py,m_pz,m_E,m_xv,m_yv,m_zv,m_tv, m_mom;
@@ -95,7 +98,9 @@ StatusCode MuonHitChecker::execute() {
     for (iter = hits->begin(); iter < hits->end();iter++){
       
       MyDetID = (*iter)->sensDetID();
-
+      if(MyDetID<0) m_hit_outside_gaps++;
+      if(MyDetID<0) continue;
+      
       //Needs to extract info from sens ID      
       int station = muonD->stationID(MyDetID);  
       
@@ -265,6 +270,7 @@ StatusCode MuonHitChecker::finalize() {
     }
   }
   info()<<" allR"<<endmsg;
+  info()<<" number of hit generate doutside gaps volume "<<  m_hit_outside_gaps<<endreq;
   
   return StatusCode::SUCCESS;
 }

@@ -1,6 +1,9 @@
 Package         : MuonMoniSim
 Package manager : A Sarti
 
+! 2007-01-12 - Alessia Satta
+ - add counter for hit generated outside gaps volume
+
 !====================== MuonMoniSim v2r2 2007-02-08 =======================
 ! 2007-01-12 - Gloria CORTI
  - update code to cope with Gaudi v19r0: use macro for factory (also

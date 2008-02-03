@@ -1,4 +1,4 @@
-// $Id: MuonHitChecker.h,v 1.4 2006-01-13 13:38:27 asarti Exp $
+// $Id: MuonHitChecker.h,v 1.5 2008-02-03 14:58:31 asatta Exp $
 #ifndef MuonHitChecker_H 
 #define MuonHitChecker_H 1
 
@@ -38,6 +38,7 @@ private:
   int nhit_ri[5],cnt_ri[5];
 
   bool m_detailedMonitor;
-
+  int m_hit_outside_gaps;
+  
 };
 #endif // MuonHitChecker_H
