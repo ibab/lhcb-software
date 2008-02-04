@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.2 2008-02-04 16:34:24 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.3 2008-02-04 22:29:03 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -261,8 +261,8 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
 
       for(unsigned int ir = 0 ; ir < ibox ; ir++){
         for(unsigned int ic = 0 ; ic < ibox ; ic++){
-          int iic = (theCol-m_centre)*ibox + ir ;
-          int iir = (theRow-m_centre)*ibox + ic ;
+          int iic = (theCol-m_centre)*ibox + ic ;
+          int iir = (theRow-m_centre)*ibox + ir ;
           if(!m_dim){
             iic += m_reg * m_centre;
             iir += m_reg * m_centre;
@@ -328,8 +328,8 @@ AIDA::IHistogram2D*  Calo2Dview::fillCaloPin2D(const HistoID unit, LHCb::CaloCel
     unsigned int ibox = m_reg/(area+1);
     for(unsigned int ir = 0 ; ir < ibox ; ir++){
       for(unsigned int ic = 0 ; ic < ibox ; ic++){
-        int iic = (col-m_centre)*ibox + ir;
-        int iir = (row-m_centre)*ibox + ic;
+        int iic = (col-m_centre)*ibox + ic;
+        int iir = (row-m_centre)*ibox + ir;
         if(!m_dim){
           iic += m_reg * m_centre;
           iir += m_reg * m_centre;
