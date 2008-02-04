@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!2008-02-04 - Wouter Hulsbergen
+ - Added pointer to detector element to Measurement class
+
 !======================= TrackEvent v4r10 2008-01-10 =========================
 ! 2008-01-10 - Marco Cattaneo
  - Make the Track(int key) constructor explicit
