@@ -951,9 +951,9 @@ getSizeFromFormat(const char* format) {
     default: print("Bad type character extracted from character(%c). Type is %d\n", format[ptr], type);
       return 0;
     }
-    print("Found element %d with multiplicity %d", type, mult);
+//    print("Found element %d with multiplicity %d", type, mult);
   }
-  print("Size of buffer is %d", size);
+//  print("Size of buffer is %d", size);
   return size;
 }
 
