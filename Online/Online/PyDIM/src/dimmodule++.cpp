@@ -672,8 +672,9 @@ DimRpcInfo_getString (DimRpcInfo_Object * self)
     Py_BEGIN_ALLOW_THREADS
     cpp_res = self->cpp_dimRpcInfo->getString();
     Py_END_ALLOW_THREADS    
-    res = PyString_FromString(cpp_res);
-    
+   res = PyString_FromStringAndSize(cpp_res,size);
+//    res = PyString_FromFormat("%s",cpp_res); 
+   
     return res; /* res is a new reference and will be owned by the caller */
 }
 

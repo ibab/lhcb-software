@@ -713,7 +713,10 @@ dim_dis_add_service(PyObject* self, PyObject* args) {
     return NULL;
   }
   buffer = (char*)malloc(size);
+//	char sizes;
   if (!buffer) {
+//		sprintf( &sizes ,"Size of the format is: %d", size);
+//    PyErr_SetString(PyExc_MemoryError, &sizes);
     PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
     return NULL;
   }
@@ -951,9 +954,9 @@ getSizeFromFormat(const char* format) {
     default: print("Bad type character extracted from character(%c). Type is %d\n", format[ptr], type);
       return 0;
     }
-    //print("Found element %d with multiplicity %d", type, mult);
+    print("Found element %d with multiplicity %d", type, mult);
   }
-  //print("Size of buffer is %d", size);
+  print("Size of buffer is %d", size);
   return size;
 }
 
@@ -1581,7 +1584,7 @@ PyMODINIT_FUNC
 initdimc(void)
 {
     PyObject *m;
-    printf("Initializing C DIM interface... ");
+    printf("Initializing C DIM interface... \n");
     m = Py_InitModule3("dimc", DimMethods, "DIM methods");
     if (m == NULL)
         return;
