@@ -4,6 +4,13 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+! 2008-02-04 Stefan
+- change for <import> element, so far it was not possible to forward declare a
+  class living in the global namespace. Now with setting the attribute 
+  namespace='::' the class will be forward delcared outside the "Event" namespace
+  (e.g. LHCb) and otherwise handled as any other forward declaration (ie. included
+  after the class body.
+
 !======================== GaudiObjDesc v11r1 2008-12-24 ======================
 ! 2008-01-22 Stefan
 - new feature for enum generation: when activating the string<->enum conversion

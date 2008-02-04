@@ -71,8 +71,9 @@ class importUtils:
     for k in self.forwardDeclGlob.keys():
       ind = 0;
       for sk in k.split('::') :
-        s += '%snamespace %s {\n' % (' '*ind, sk )
-        ind += 2
+        if sk :
+          s += '%snamespace %s {\n' % (' '*ind, sk )
+          ind += 2
       for ns in self.forwardDeclGlob[k] : s += '%sclass %s;\n' % (' '*ind, ns.split('/')[-1].split('.')[0])
       ind -= 2
       while (ind >= 0) :
