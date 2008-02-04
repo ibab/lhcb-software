@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.1 2008-01-23 23:43:54 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.2 2008-02-04 16:34:24 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -66,21 +66,21 @@ StatusCode Calo2Dview::initialize() {
   const LHCb::CaloCellID refEcal(2, 0, 8 ,4);
   m_caloMap[2]=getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
   m_centreMap[2] = 32;
-  m_regMap[2]    = 3;
+  m_regMap[2]    = 6;
   m_xsizeMap[2]   = m_caloMap[2]->cellSize( refEcal ) ;
   m_ysizeMap[2]  = m_xsizeMap[2] ;
   // Prs
   const LHCb::CaloCellID refPrs(1, 0, 8 ,4);
   m_caloMap[1]=getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
   m_centreMap[1] = 32;
-  m_regMap[1]    = 3;
+  m_regMap[1]    = 6;
   m_xsizeMap[1]   = m_caloMap[1]->cellSize( refPrs ) ;
     m_ysizeMap[1]  = m_xsizeMap[1] ;
   // Spd
   const LHCb::CaloCellID refSpd(0, 0, 8 ,4);
   m_caloMap[0]=getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
   m_centreMap[0] = 32;
-  m_regMap[0]    = 3;
+  m_regMap[0]    = 6;
   m_xsizeMap[0]   = m_caloMap[0]->cellSize( refSpd ) ;
   m_ysizeMap[0]  = m_xsizeMap[0] ;
 
@@ -105,7 +105,6 @@ void Calo2Dview::getCaloParam(unsigned int calo){
 
   if((int)calo == m_caloType)return;
   m_calo= m_caloMap[calo];
-  m_reg = m_regMap[calo];
   m_centre=m_centreMap[calo];
   m_reg=m_regMap[calo];
   m_xsize=m_xsizeMap[calo];
@@ -248,7 +247,7 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
 
   // L0-cluster mode
   unsigned int icl = 1;
-  if(m_l0)icl  = 2;  
+  if(m_l0)icl  = 2;
 
   for(unsigned int kr = 0 ; kr < icl ; kr++){
     for(unsigned int kc = 0 ; kc < icl ; kc++){
@@ -258,10 +257,12 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
       unsigned int theCol = col+kc;
       
       // Fill the standard view  for PMT
-      for(unsigned int ir = 0 ; ir < m_reg-area ; ir++){
-        for(unsigned int ic = 0 ; ic < m_reg-area ; ic++){
-          int iic = (theCol-m_centre)*(m_reg-area) + ir ;
-          int iir = (theRow-m_centre)*(m_reg-area) + ic ;
+      unsigned int ibox = m_reg/(area+1);
+
+      for(unsigned int ir = 0 ; ir < ibox ; ir++){
+        for(unsigned int ic = 0 ; ic < ibox ; ic++){
+          int iic = (theCol-m_centre)*ibox + ir ;
+          int iir = (theRow-m_centre)*ibox + ic ;
           if(!m_dim){
             iic += m_reg * m_centre;
             iir += m_reg * m_centre;
@@ -323,10 +324,12 @@ AIDA::IHistogram2D*  Calo2Dview::fillCaloPin2D(const HistoID unit, LHCb::CaloCel
     unsigned int row = (*icel).row();
     unsigned int col = (*icel).col();
     unsigned int area =(*icel).area();
-    for(unsigned int ir = 0 ; ir < m_reg-area ; ir++){
-      for(unsigned int ic = 0 ; ic < m_reg-area ; ic++){
-        int iic = (col-m_centre)*(m_reg-area) + ir;
-        int iir = (row-m_centre)*(m_reg-area) + ic;
+
+    unsigned int ibox = m_reg/(area+1);
+    for(unsigned int ir = 0 ; ir < ibox ; ir++){
+      for(unsigned int ic = 0 ; ic < ibox ; ic++){
+        int iic = (col-m_centre)*ibox + ir;
+        int iir = (row-m_centre)*ibox + ic;
         if(!m_dim){
           iic += m_reg * m_centre;
           iir += m_reg * m_centre;

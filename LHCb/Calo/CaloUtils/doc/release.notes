@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.92 2008-01-24 10:16:53 vegorych Exp $
+! $Id: release.notes,v 1.93 2008-02-04 16:34:24 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2008-02-04 - Olivier Deschamps
+- bug fix in Calo2Dview.cpp
 
 !========================== CaloUtils v7r7 2008-01-24 =========================
 ! 2008-12-24 - Victor Egorychev
