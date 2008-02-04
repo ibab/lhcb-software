@@ -63,14 +63,14 @@ pattern source_shell_alias \
     set_append SOURCESHELLALIASLIST " <script> "
 
 cmtpath_pattern \
-    setup_script $(LbScripts_home)/InstallArea/scripts/SourceShellAlias
+    setup_script $(LBSCRIPTSPOLICYROOT)/scripts/SourceShellAlias
 
 
 pattern shell_alias \
     set_append SHELLALIASLIST " <script> "
 
 cmtpath_pattern \
-    setup_script $(LbScripts_home)/InstallArea/scripts/ShellAlias
+    setup_script $(LBSCRIPTSPOLICYROOT)/scripts/ShellAlias
 
 apply_pattern source_shell_alias script=ShellAlias
 apply_pattern source_shell_alias script=SourceShellAlias
