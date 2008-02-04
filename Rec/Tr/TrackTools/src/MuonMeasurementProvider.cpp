@@ -1,4 +1,4 @@
-// $Id: MuonMeasurementProvider.cpp,v 1.7 2007-11-30 15:10:39 wouter Exp $
+// $Id: MuonMeasurementProvider.cpp,v 1.8 2008-02-04 09:52:44 wouter Exp $
 
 /** @class MuonMeasurementProvider MuonMeasurementProvider.cpp
  *
@@ -105,7 +105,7 @@ LHCb::Measurement* MuonMeasurementProvider::measurement( const LHCb::LHCbID& id,
     } else {
       LHCb::MuonMeasurement::MuonMeasurementType dir = localY ? 
         LHCb::MuonMeasurement::Y : LHCb::MuonMeasurement::X ;
-      meas = new LHCb::MuonMeasurement(id,Gaudi::XYZPoint(x,y,z),dx,dy, dir);
+      meas = new LHCb::MuonMeasurement(id,*m_det,Gaudi::XYZPoint(x,y,z),dx,dy, dir);
       debug() << " Created muon measurement! " << muid << " x "<< x<<" y "<<y<<" z "<<z
               <<" dx "<<dx<<" dy "<<dy<<" dz "<<dz << endreq; 
     }

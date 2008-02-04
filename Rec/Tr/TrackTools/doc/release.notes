@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2008-02-04 - Wouter Hulsbergen
+ - Adapted MuonMeasurementProvider to change in MuonMeasurement interface
+
 !======================== TrackTools v3r3 2008-02-02 ========================
 ! 2008-02-02 M Needham
  - Correct small bug in TrackSelector eta cut
