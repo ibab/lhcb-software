@@ -15,8 +15,6 @@ extern "C" {
 #include <stdio.h>
 }
 
-// test comment
-
 /* **************************************************************************
  * Various defines necesarry for converting between the dim buffers and Python
  * objects.
@@ -590,6 +588,4 @@ iterator_to_allocated_buffer(PyObject  *iter, /* list or tuple PyObject */
          // the call succeded
          return 1;
      } else {
-         return 0;
-     }    
-}
+         return                 
