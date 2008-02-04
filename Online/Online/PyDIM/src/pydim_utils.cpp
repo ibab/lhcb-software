@@ -588,4 +588,6 @@ iterator_to_allocated_buffer(PyObject  *iter, /* list or tuple PyObject */
          // the call succeded
          return 1;
      } else {
-         return                 
+         return 0;
+			}    
+}

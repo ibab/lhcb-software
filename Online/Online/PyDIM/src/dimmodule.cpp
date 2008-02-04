@@ -810,7 +810,7 @@ next_element(const char *schema, int *p, int *type, int *mult)
     *type = -1;
     return 0;
   }
-  //print("Type is %d", *type, *mult);
+  print("Type is %d", *type, *mult);
   switch (schema[++(*p)]) {
   case '\0': *mult = MUL_INFINITE; break;
   case ';': *mult = 1; ++(*p); break;
