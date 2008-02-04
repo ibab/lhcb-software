@@ -15,6 +15,8 @@ extern "C" {
 #include <stdio.h>
 }
 
+// test comment
+
 /* **************************************************************************
  * Various defines necesarry for converting between the dim buffers and Python
  * objects.
