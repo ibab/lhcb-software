@@ -10,6 +10,9 @@
   namespace='::' the class will be forward delcared outside the "Event" namespace
   (e.g. LHCb) and otherwise handled as any other forward declaration (ie. included
   after the class body.
+- new feature for ONLY forward declartions (in contrast to including the forward
+  declared type after the class body). To do so set the <import> attribute 
+  soft="FORWARDONLY". The type will be forward declared but not indcluded.
 
 !======================== GaudiObjDesc v11r1 2008-12-24 ======================
 ! 2008-01-22 Stefan

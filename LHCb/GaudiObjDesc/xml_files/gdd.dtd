@@ -9,7 +9,7 @@
 <!ATTLIST import
         name             CDATA                             #REQUIRED
         std              (TRUE | FALSE)                    "FALSE"
-        soft             (TRUE | FALSE)                    "FALSE"
+        soft             (TRUE | FALSE | FORWARDONLY)      "FALSE"
         namespace        CDATA                             #IMPLIED
 >
 

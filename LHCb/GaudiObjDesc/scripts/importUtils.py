@@ -25,9 +25,10 @@ class importUtils:
       for imp in godClass['import']:
         impAtt = imp['attrs']
         impName = impAtt['name']
+        impSoft = impAtt['soft']
         if impAtt['std'] == 'TRUE' and impName not in stdIncludes : stdIncludes.append(impName)
         else :
-          if impAtt['soft'] == 'TRUE':                                             # do forward declaration stuff
+          if impSoft == 'TRUE' or impSoft == 'FORWARDONLY':                        # do forward declaration stuff
             impNS = impAtt.get('namespace')
             if godClass['attrs'].has_key('scope'):
               myNS = godClass['attrs']['scope']
@@ -42,7 +43,7 @@ class importUtils:
               if not forwardDeclGlob.has_key(impNS) : forwardDeclGlob[impNS] = [impName]
               elif impName not in forwardDeclGlob[impNS] : forwardDeclGlob[impNS].append(impName)
             elif impName not in forwardDeclLHCb : forwardDeclLHCb.append(impName)
-            if impName not in forwardIncl : forwardIncl.append(impName)
+            if impSoft == 'TRUE' and impName not in forwardIncl : forwardIncl.append(impName)
           else :                                                                   # do include stuff
             if impName not in include : include.append(impName)
 #--------------------------------------------------------------------------------
