@@ -53,7 +53,7 @@ use MuonTrackAlign      v1r1    Muon  # Silvia Pozzi
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
-use RichGlobalPID       v3r6    Rich  # Chris Jones
+use RichGlobalPID       v3r7    Rich  # Chris Jones
 use RichHLTLocalPID     v1r1    Rich  # Chris Jones
 use RichHLTSys          v3r2    Rich  # Chris Jones
 use RichLocalPID        v3r5    Rich  # Chris Jones
