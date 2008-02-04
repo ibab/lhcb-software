@@ -22,6 +22,7 @@ use   DigiEvent       v*      Event
 use   OTDet           v*      Det
 use   STDet           v*      Det
 use   VeloDet         v*      Det
+use   MuonDet         v*      Det
 use   OTDAQ           v*      OT
 
 private
