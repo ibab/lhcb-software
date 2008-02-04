@@ -18,7 +18,8 @@ class FallBackOption(Option):
              'help',
              'metavar',
              'fallback_env',
-             'fallback_conf']
+             'fallback_conf',
+             'mandatory']
 
 
 

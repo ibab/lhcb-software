@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-# $Id: showCMTProjects.py,v 1.9 2008-01-23 15:06:15 hmdegaud Exp $
+# $Id: showCMTProjects.py,v 1.10 2008-02-04 14:46:37 hmdegaud Exp $
 
 from LbUtils.CMT import Project
 from LbUtils.Script import Script
+import copy
 
 import os
 
@@ -20,8 +21,6 @@ class showCMTProjScript(Script):
                           action="store_false", 
                           dest="casesensitive",
                           help="matching of the project name in case insensitive mode")
-    
-    
     
         parser.add_option("-P", "--project-path",
                           dest="cmtprojectpath",
@@ -102,6 +101,8 @@ class showCMTProjScript(Script):
                                        options.casesensitive, 
                                        options.selection)
 
+        intern_projlist = copy.copy(projlist)
+
         if options.binaries :
             binary_list = options.binaries.split(",")
         if options.tags :
@@ -109,32 +110,32 @@ class showCMTProjScript(Script):
         
         for p in projlist:
             if not options.recurseclient and not options.recursebase:
-                p.show(options.showdependencies, options.showbase, options.showclient)
-                if options.showcontainedpackages :
-                    p.getContainedPackages()
-                    p.showContainedPackages()
-                if options.showusedpackages :
-                    p.getContainedPackages()
-                    p.showUsedPackages(binary_list)
+                p.show(options.showdependencies, 
+                       options.showbase, 
+                       options.showclient,
+                       options.showcontainedpackages,
+                       options.showusedpackages,
+                       binary_list,
+                       intern_projlist)
             else :
                 if options.recurseclient :
                     for proj, deps, packs in Project.walk(p, topdown=True, toclients=True):
-                        proj.show(options.showdependencies, options.showbase, True)
-                        if options.showcontainedpackages :
-                            p.getContainedPackages()
-                            p.showContainedPackages()
-                        if options.showusedpackages :
-                            p.getContainedPackages()
-                            p.showUsedPackages(binary_list)
+                        proj.show(options.showdependencies, 
+                                  options.showbase, 
+                                  True,
+                                  options.showcontainedpackages,
+                                  options.showusedpackages,
+                                  binary_list,
+                                  intern_projlist)
                 else :
                     for proj, deps, packs in Project.walk(p, topdown=True, toclients=False):
-                        proj.show(options.showdependencies, True, options.showclient)
-                        if options.showcontainedpackages :
-                            p.getContainedPackages()
-                            p.showContainedPackages()
-                        if options.showusedpackages :
-                            p.getContainedPackages()
-                            p.showUsedPackages(binary_list)
+                        proj.show(options.showdependencies, 
+                                  True, 
+                                  options.showclient,
+                                  options.showcontainedpackages,
+                                  options.showusedpackages,
+                                  binary_list,
+                                  intern_projlist)
 
         
 

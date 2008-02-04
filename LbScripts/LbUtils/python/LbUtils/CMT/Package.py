@@ -35,7 +35,24 @@ class Package(object):
             p = Popen(["cmt", "show", "uses"], stdout=PIPE, stderr=PIPE, close_fds=True)
             for line in p.stdout:
                 if not line.startswith("#"):
-                    print line[:-1]
+                    line = line.replace("(no_auto_imports)","").replace("(","").replace(")","")
+                    words = line[:-1].split()
+                    words = words[1:]
+                    if words[-1].endswith("/") :
+                        words[-1] = words[-1][:-1]
+                    pakpath =""
+                    if len(words) == 4 :
+                        pakpath = os.path.join(words[3], words[2], words[0])
+                    elif len(words) == 3:
+                        pakpath = os.path.join(words[2], words[0])
+                        
+                    if isPackage(pakpath):
+                        print pakpath
+                    else :
+                        pakpath = os.path.join(pakpath,words[1])
+                        if isPackage(pakpath):
+                            print pakpath
+                    
             for line in p.stderr:
                 log.warning(line[:-1])
             retcode = os.waitpid(p.pid, 0)[1]
@@ -46,9 +63,99 @@ class Package(object):
         for b in binary_list:
             self._usedpackagelist[b] = self.getBinaryUsedPackages(b, projectlist)
         return self._usedpackagelist
-    def getBinaryUsedPackages(self, binary, projectlist):
+    def getBinaryUsedPackages(self, binary, projectlist=None):
+        from LbUtils.CMT.Project import Project, isProject, getProjectInstance
         packagelist = set()
-        return packagelist
+        log = logging.getLogger()
+        wdir = os.path.join(self._fulllocation,"cmt")
+        os.chdir(wdir)
+        env = Env.getDefaultEnv()
+        env["PWD"] = wdir
+        env["CMTCONFIG"] = binary
+        p = Popen(["cmt", "show", "uses"], stdout=PIPE, stderr=PIPE, close_fds=True)
+        for line in p.stdout:
+            if not line.startswith("#"):
+                thepack = None
+                theproj = None
+                line = line.replace("(no_auto_imports)","").replace("(","").replace(")","")
+                words = line[:-1].split()
+                words = words[1:]
+                if words[-1].endswith("/") :
+                    words[-1] = words[-1][:-1]
+                pakpath = ""
+                if isProject(words[-1]):
+                    theproj = Project(words[-1])
+                    if projectlist :
+                        if theproj not in projectlist:
+                            projectlist.add(theproj)
+                        else:
+                            theproj = getProjectInstance(projectlist, words[-1])
+                    
+                if len(words) == 4 :
+                    pakpath = os.path.join(words[3], words[2], words[0])
+                elif len(words) == 3:
+                    pakpath = os.path.join(words[2], words[0])
+                if isPackage(pakpath):
+                    thepak = Package(pakpath)
+                else :
+                    pakpath = os.path.join(pakpath,words[1])
+                    if isPackage(pakpath):
+                        thepack = Package(pakpath)
+                if theproj and thepack :
+                    if not theproj.hasContainedPackage(thepack):
+                        theproj.addContainedPackage(pakpath)
+                    thepack = getPackageInstance(theproj.containedPackages(), pakpath)
+                if thepack:
+                    packagelist.add(thepack)
+        for line in p.stderr:
+            log.warning(line[:-1])
+        retcode = os.waitpid(p.pid, 0)[1]
+        log.debug("return code of 'cmt show uses' in %s is %s", wdir, retcode)
+        if retcode != 0:
+            log.warning("return code of 'cmt show uses' in %s is %s", wdir, retcode)
+        self._usedpackagelist[binary] = set()
+        for pak in packagelist :
+            if  pak.hasConstituents(binary):
+               self._usedpackagelist[binary].add(pak) 
+        return self._usedpackagelist[binary]
+    
+    def binaryUsedPackages(self, binary):
+        return self._usedpackagelist[binary]
+    def showConstituents(self, binary):
+        log = logging.getLogger()
+        wdir = os.path.join(self._fulllocation,"cmt")
+        os.chdir(wdir)
+        env = Env.getDefaultEnv()
+        env["PWD"] = wdir
+        env["CMTCONFIG"] = binary
+        p = Popen(["cmt", "show", "macro_value","all_constituents"], stdout=PIPE, stderr=PIPE, close_fds=True)
+        for line in p.stdout:
+            line = line[:-1].strip()
+        for line in p.stderr:
+            log.warning(line[:-1])
+        retcode = os.waitpid(p.pid, 0)[1]
+        log.debug("return code of 'cmt show macro_value all_constituents' in %s is %s", wdir, retcode)
+        if retcode != 0:
+            log.warning("return code of 'cmt show macro_value all_constituents' in %s is %s", wdir, retcode)
+        return line
+    def hasConstituents(self, binary):
+        log = logging.getLogger()
+        wdir = os.path.join(self._fulllocation,"cmt")
+        os.chdir(wdir)
+        env = Env.getDefaultEnv()
+        env["PWD"] = wdir
+        env["CMTCONFIG"] = binary
+        p = Popen(["cmt", "show", "macro_value","all_constituents"], stdout=PIPE, stderr=PIPE, close_fds=True)
+        for line in p.stdout:
+            line = line[:-1].strip()
+        for line in p.stderr:
+            log.warning(line[:-1])
+        retcode = os.waitpid(p.pid, 0)[1]
+        log.debug("return code of 'cmt show macro_value all_constituents' in %s is %s", wdir, retcode)
+        if retcode != 0:
+            log.warning("return code of 'cmt show macro_value all_constituents' in %s is %s", wdir, retcode)
+        return (line != "")
+        
         
         
 def hasRequirementsFile(dirpath):
@@ -80,6 +187,16 @@ def isPackage(path):
             isproj = True
     return isproj
 
+def getPackageInstance(packlist, packpath, absolute=True):
+    for p in packlist :
+        if absolute :
+            if p.fullLocation() == packpath :
+                return p
+        else:
+            if p.location() == packpath:
+                return p
+    else:
+        return None
 
 def onPackagePathError(error):
     log = logging.getLogger()

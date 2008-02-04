@@ -123,7 +123,13 @@ class Project(object):
     def setProjectFile(self):
         pfname = os.path.join(self._location, "cmt", "project.cmt")
         self._projectfile = ProjectFile(pfname)
-    def show(self, showdeps=False, showbase=False, showclient=False):
+    def show(self, showdeps=False, 
+             showbase=False, 
+             showclient=False, 
+             showcontainedpackages=False, 
+             showusedpackages= False,
+             binary_list=None,
+             project_list=None):
         print self.location()
         if showdeps : 
             self.getDependencies()
@@ -131,6 +137,13 @@ class Project(object):
             self.showBase()
         if showclient :
             self.showClient()
+        if showcontainedpackages and not showusedpackages:
+            self.getContainedPackages()
+            self.showContainedPackages()
+        if showusedpackages :
+            self.getContainedPackages()
+            self.getUsedPackages(binary_list, project_list)
+            self.printUsedPackages(binary_list, showcontainedpackages)
     def addContainedPackage(self, packagepath):
         newpack = Package.Package(packagepath, self)
         self._containedpackagelist.add(newpack)
@@ -142,6 +155,10 @@ class Project(object):
                 log.debug("found package: %s", fullname)
                 self.addContainedPackage(fullname)
                 dn[1][:] = []
+    def hasContainedPackage(self, package):
+        return package in self._containedpackagelist
+    def containedPackages(self):
+        return self._containedpackagelist
     def showContainedPackages(self):
         for p in self._containedpackagelist :
             print "  %s" % p.location()
@@ -159,6 +176,37 @@ class Project(object):
             for p in self._containedpackagelist :
                 self._usedpackagelist[b] |= p.getBinaryUsedPackages(b, projectlist)
         return self._usedpackagelist
+    def printUsedPackages(self, binary_list, showcontained=False ):
+        if not showcontained:
+            all_packs = set()
+            for b in binary_list:
+                all_packs |= self._usedpackagelist[b]
+            for p in all_packs :
+                if p.parentProject() == self:
+                    print "    %s" % p.location(),
+                else :
+                    print "    %s" % p.fullLocation(),
+                print "( ",
+                for b in binary_list :
+                    if p in self._usedpackagelist[b] :
+                        print "%s " % b,
+                print ")"
+        else :
+            for c in self._containedpackagelist :
+                print "  %s" %c.location()
+                all_packs = set()
+                for b in binary_list:
+                    all_packs |= c.binaryUsedPackages(b)
+                for p in all_packs :
+                    if p.parentProject() == self:
+                        print "    %s" % p.location(),
+                    else :
+                        print "    %s" % p.fullLocation(),
+                    print "( ",
+                    for b in binary_list :
+                        if p in self._usedpackagelist[b] :
+                            print "%s " % b,
+                    print ")"
     
 def hasProjectFile(dirpath):
     hasfile = False
@@ -273,7 +321,7 @@ def getProjectInstance(projlist, projpath):
         return None
 
 def FilterProjects(projlist, name=None, version=None, casesense=False ):
-    selected = []
+    selected = set()
     if not name and not version:
         return projlist
     
@@ -287,10 +335,10 @@ def FilterProjects(projlist, name=None, version=None, casesense=False ):
             prname = p.name()
         if prname == name:
             if not version:
-                selected.append(p)
+                selected.add(p)
             else :
                 if p.version() == version:
-                    selected.append(p)
+                    selected.add(p)
     return selected
     
 def getProjects(cmtprojectpath, name=None, version=None, 
