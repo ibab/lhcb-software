@@ -63,10 +63,9 @@ pattern source_shell_alias \
     set_append SOURCESHELLALIASLIST " <script> "
 
 cmtpath_pattern \
-    set SOURCESHELLDIR "<path>/$(<project>_installarea_prefix)/scripts" \
-               WIN32   "<path>\$(<project>_installarea_prefix)\scripts" ; \
+    set SOURCESHELLDIR "$(<project>_home)/InstallArea/scripts" ; \
     setup_script $(LBSCRIPTSPOLICYROOT)/scripts/SourceShellAlias
-
+    set_remove SOURCESHELLDIR
 
 pattern shell_alias \
     set_append SHELLALIASLIST " <script> "

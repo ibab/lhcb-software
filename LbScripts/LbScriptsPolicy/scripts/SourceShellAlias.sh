@@ -1,7 +1,9 @@
 
 if [ "x$SOURCESHELLALIASLIST" !=  "x" ] ; then
   for a in $SOURCESHELLALIASLIST ; do 
-    alias $a=". $SOURCESHELLDIR/$a.sh"
+    if [ -a $SOURCESHELLDIR/$a.sh ] ; then
+      alias $a=". $SOURCESHELLDIR/$a.sh"
+    fi
   done
   unset SOURCESHELLALIASLIST
   unset a
