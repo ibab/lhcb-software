@@ -16,7 +16,7 @@
       <import name='Event/StateVector.h' />
       <import name='Kernel/LHCbID' />
       <import name='Kernel/Trajectory' />
-      <import name='DetDesc/DetectorElement' />
+      <import name='DetDesc/DetectorElement' soft='FORWARDONLY' namespace = '::'/>
 
       &StlPtrVector;
 
@@ -109,6 +109,7 @@
         desc    = 'the corresponding detectorElement'
 	setMeth = 'FALSE'
 	getMeth = 'FALSE'
+	transient = 'TRUE'
         access  = 'PROTECTED' />
 
       <method
