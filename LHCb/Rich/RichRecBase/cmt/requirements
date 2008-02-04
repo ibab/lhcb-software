@@ -2,7 +2,7 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.65 2008-01-28 09:53:00 cattanem Exp $
+# $Id: requirements,v 1.66 2008-02-04 07:06:11 cattanem Exp $
 #============================================================================
 
 package   RichRecBase
@@ -46,5 +46,4 @@ apply_pattern reflex_dictionary                                         \
 
 #============================================================================
 private
-#include_dirs $(RICHRECBASEROOT)/Event
 use GaudiObjDesc v* -no_auto_imports
