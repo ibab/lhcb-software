@@ -143,8 +143,8 @@ void MuonDetectorResponse::finalize(){
 	  delete responseChamber[indexRegion];
 		delete m_poissonDist[indexRegion];
     for(int readout=0;readout<m_muonDetector->readoutInRegion(station, region);
-        readout++){
-      //      delete responseVector[readout][indexRegion];      
+        readout++) {
+      delete responseVector[readout][indexRegion];      
 		}
 	}
 
