@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.17 2008-02-01 19:03:35 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.18 2008-02-04 16:09:03 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -96,6 +96,7 @@ protected:
   
 private:
   bool printDebug() const {return msgLevel(MSG::DEBUG);};
+  bool printVerbose() const {return msgLevel(MSG::VERBOSE);};
 
   size_t                            m_iteration;            ///< Iteration counter
   size_t                            m_nIterations;          ///< Number of iterations
@@ -112,6 +113,7 @@ private:
   bool                              m_correlation ;         ///< do we take into account correlations between residuals?
   bool                              m_updateInFinalize ;    ///< Call update from finalize
   int                               m_canonicalConstraintStrategy ; ///< Constrain global dofs
+  bool                              m_constrainZShearings;  ///< Constrain z-shearings
   size_t                            m_minNumberOfHits ;     ///< Minimum number of hits for an Alignable to be aligned
   bool                              m_fillCorrelationHistos; ///< Flag to turn on filling of residual correlation histos
   /// Monitoring

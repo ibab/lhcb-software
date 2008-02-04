@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+
+! 2008-02-04 - Wouter Hulsbergen
+ - Added constraints for z-shearings (including z-scale)
+
 ! 2008-02-01 - Wouter Hulsbergen
  - New classes AlParameters and AlDofMask
  - Print parameter values when updating

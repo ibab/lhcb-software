@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.21 2008-02-01 19:03:35 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.22 2008-02-04 16:09:03 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -163,6 +163,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("UseCorrelations"      , m_correlation          = true                    );
   declareProperty("UpdateInFinalize"     , m_updateInFinalize     = false                   );
   declareProperty("CanonicalConstraintStrategy", m_canonicalConstraintStrategy = CanonicalConstraintAuto ) ; 
+  declareProperty("ConstrainZShearings"  , m_constrainZShearings = false ) ;
   declareProperty("MinNumberOfHits"      , m_minNumberOfHits = 1 ) ; 
   declareProperty("FillCorrelationsHistos" , m_fillCorrelationHistos = false ) ;
 }
@@ -300,15 +301,16 @@ StatusCode AlignAlgorithm::execute() {
 	// Get element that belongs to this measurment
 	const AlignmentElement* elem = m_align->findElement(meas.lhcbID());
 	if (!elem) {
-	  if (printDebug()) debug() << "==> Measurement not on a to-be-aligned DetElem " 
-				    << meas.lhcbID() << endmsg;
+	  if (printVerbose()) verbose() << "==> Measurement not on a to-be-aligned DetElem " 
+					<< meas.lhcbID() << endmsg;
 	  ++numexternalhits ;
 	  continue;
 	}
     	
 	const unsigned index = elem->index();
-	if (printDebug()) debug() << "==> measure = " << meas.measure() << " id = " << meas.lhcbID() << " -> index = " 
-				  << index << " -> " <<  elem->name() << endmsg;
+	if (printVerbose()) verbose() << "==> measure = " << meas.measure() << " id = " << meas.lhcbID() << " -> index = " 
+				      << index << " -> " <<  elem->name() << endmsg;
+
 	// Project measurement
 	ITrackProjector* proj = m_projSelector->projector(meas);
 	if (!proj) {
@@ -394,13 +396,17 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2C
     pivot += thisweight * Gaudi::XYZVector( it->pivotXYZPoint() ) ;
   }
   if(weight>0) pivot *= 1/weight ;
-  info() << "Adding canonical constraints. Pivot = " << pivot << endmsg ;
   Gaudi::Transform3D canonicalframe( pivot ) ;
   Gaudi::Transform3D canonicalframeInv = canonicalframe.Inverse() ;
 
-  size_t size = dChi2dAlpha.size() ;
   // add extra rows/columns
-  const size_t numConstraints = 6 ;
+  size_t size = dChi2dAlpha.size() ;
+  size_t numConstraints = 6 ;
+  if(m_constrainZShearings) numConstraints += 3 ;
+  info() << "Adding canonical constraints."
+	 << " Pivot = " << pivot 
+	 << " #constraints = " << numConstraints << endmsg ;
+  
   dChi2dAlpha.reSize(size + numConstraints ) ;
   d2Chi2dAlpha2.reSize(size + numConstraints ) ;
   // Set all new elements to 0
@@ -409,6 +415,7 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2C
     for(size_t j=0; j<=i; ++j)
       d2Chi2dAlpha2[i][j] = 0 ;
   }
+  
   // Now fill the only patr that is nonzero: d2Chi2/dAlphadLambda. 
   iElem = 0 ;
   for( ElementRange::const_iterator it = m_rangeElements.begin(); it != m_rangeElements.end(); ++it, ++iElem) {
@@ -418,11 +425,18 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2C
     // just translations.
     Gaudi::Transform3D trans = canonicalframeInv * it->alignmentFrame() ;
     Gaudi::Matrix6x6 jacobian = AlParameters::jacobian( trans ) ;
-    for(size_t i=0; i<Derivatives::kCols; ++i)
+    for(size_t i=0; i<6; ++i)
       for(size_t j=0; j<Derivatives::kCols; ++j)
 	// and here comes the 2nd place we could do things entirely
 	// wrong, but I think that this is right.
 	d2Chi2dAlpha2[size+i][j+iElem*Derivatives::kCols] = jacobian(i,j) ;
+    if(m_constrainZShearings) {
+      double deltaZ = it->pivotXYZPoint().z() - pivot.z() ;
+      // the 3 constraints are in this order: zx-shearing, zy-shearing and z-scale ('zz-shearing')
+      for(size_t i=0; i<3; ++i)
+	for(size_t j=0; j<Derivatives::kCols; ++j) 
+	  d2Chi2dAlpha2[size+i+6][j+iElem*Derivatives::kCols] = deltaZ * jacobian(i,j) ;
+    }
   }
   return numConstraints ;
 }
@@ -432,8 +446,13 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2C
 //  Update
 //=============================================================================
 void AlignAlgorithm::update() {
+
+  if( m_equations->nElem()==0 ) {
+    warning() << "==> No elements to align." << endmsg ;
+    return ;
+  }
   
-  info() << "==> Updating constants" << std::endl ;
+  info() << "==> Updating constants" << endmsg ;
   std::ostringstream logmessage ;
   logmessage << "********************* ALIGNMENT LOG ************************" << std::endl
 	     << "Iteration: " << m_iteration << std::endl
@@ -453,8 +472,9 @@ void AlignAlgorithm::update() {
   }
     
   /// Take the gaudi vector and matix and fill AlVec and AlSym for ALL elements and ALL parameters
-  AlVec    tmpDerivatives(Derivatives::kCols*(m_equations->nElem()));
-  AlSymMat tmpMatrix(Derivatives::kCols*(m_equations->nElem()));
+  size_t numParameters = Derivatives::kCols * m_equations->nElem() ;
+  AlVec    tmpDerivatives(numParameters);
+  AlSymMat tmpMatrix(numParameters);
 
   /// Loop over map of index to 2nd derivative matrix and 1st derivative vector
   for (unsigned i = 0u, iEnd = m_equations->nElem(); i < iEnd ; ++i) {
@@ -473,9 +493,8 @@ void AlignAlgorithm::update() {
   // Now reduce the large system to the active parameters
 
   // Create the dof mask and a map from AlignableElements to an
-  // offset. Note that the dofmask is initialized with 'true' to make
-  // sure the canonical dofs are active. The offsets are initialized
-  // with '-1', which signals 'not enough hits'.
+  // offset. The offsets are initialized with '-1', which signals 'not
+  // enough hits'.
   size_t dim(0) ;
   size_t iElem(0) ;
   std::vector<int>  offsets(m_rangeElements.size(),-1) ;
@@ -488,7 +507,20 @@ void AlignAlgorithm::update() {
     } else {
       for(size_t ipar=0; ipar<Derivatives::kCols; ++ipar) dofmask[iElem*Derivatives::kCols+ipar] = false ;
     }
-  
+
+  // only add the contraints if they have non-zero derivatives. need
+  // to replace the following with something more sensible:
+  const double threshold = FLT_MIN ;
+  size_t numRemovedConstraints(0) ;
+  for(size_t i=0; i<numConstraints; ++i) {
+    bool active=false ;
+    for(size_t j=0; j<numParameters && !active; ++j)
+      active = dofmask[j] && fabs(tmpMatrix[numParameters+i][j])>threshold ;
+    dofmask[numParameters+i] = active ;
+    numRemovedConstraints += active ? 0 : 1 ;
+  }
+  numConstraints -= numRemovedConstraints ;
+
   size_t nDOFs = std::count(dofmask.begin(), dofmask.end(), true) ;
   AlVec    derivatives(nDOFs);
   AlSymMat matrix(nDOFs);
@@ -538,8 +570,10 @@ void AlignAlgorithm::update() {
   if (solved) {
     StatusCode sc = StatusCode::SUCCESS;
     double deltaChi2 = derivatives * dChi2dX * derivatives ;
-    if(printDebug())
+    if(printDebug()) {
       info() << "Solution = " << derivatives << endmsg ;
+      info() << "Covariance = " << matrix << endmsg ;
+    }
     logmessage << "Chisquare/dof of the alignment change: " 
 	       << deltaChi2 << " / " << nDOFs-numConstraints << std::endl ;
     m_dChi2AlignvsIterHisto->fill(m_iteration,deltaChi2) ;
