@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.5 2007-11-21 14:12:10 janos Exp $
+// $Id: DiagSolvTool.cpp,v 1.6 2008-02-04 15:15:53 wouter Exp $
 // Include files 
 
 #include <stdio.h>
@@ -102,6 +102,7 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
   //  m_bigmatrix.diagonalize_GSL(w,z);
 
   info() << "After diagonalization" << endmsg;
+  info() << "Eigen values: " << w << endmsg ;
   
   if (infjob==0) {
 
@@ -152,7 +153,7 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
         }
 
         for (int k=0;k<N;k++) {
-          if (w[k]>threshold) m_bigmatrix[i][j]=m_bigmatrix[i][j]+(z[k][i]*z[k][j]/w[k]);
+          if (w[k]>threshold) m_bigmatrix[i][j]=m_bigmatrix[i][j]+(z[k][i]*z[k][j]/(w[k]*m_scale));
           //with GSL convention:
           //   if (w[k]>threshold) m_bigmatrix[i][j]=m_bigmatrix[i][j]+(z[i][k]*z[j][k]/w[k]); 
         }
