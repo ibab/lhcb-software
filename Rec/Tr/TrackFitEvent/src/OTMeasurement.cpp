@@ -1,4 +1,4 @@
-// $Id: OTMeasurement.cpp,v 1.15 2007-12-06 14:42:48 wouter Exp $
+// $Id: OTMeasurement.cpp,v 1.16 2008-02-04 09:47:50 wouter Exp $
 // Include files
 
 // OTDet
@@ -37,9 +37,8 @@ OTMeasurement::OTMeasurement( const LHCb::OTLiteTime& time,
 OTMeasurement::OTMeasurement( const LHCb::OTLiteTime& time,
                               const DeOTModule& module,
                               int ambiguity )
-  : Measurement( Measurement::OT, LHCb::LHCbID(time.channel())),
+  : Measurement( Measurement::OT, LHCb::LHCbID(time.channel()), &module),
     m_ottime(time),
-    m_module(&module), 
     m_deltaTimeOfFlight(0),
     m_ambiguity(ambiguity)
 {
@@ -48,7 +47,7 @@ OTMeasurement::OTMeasurement( const LHCb::OTLiteTime& time,
 
 void OTMeasurement::init() 
 {
-  m_trajectory   = m_module->trajectory( channel() );
+  m_trajectory   = module().trajectory( channel() );
   Gaudi::XYZPoint center = m_trajectory->position( 0.5*( m_trajectory->beginRange()+m_trajectory->endRange())) ;
   m_z = center.z() ;
   
@@ -60,7 +59,7 @@ void OTMeasurement::init()
 
 double LHCb::OTMeasurement::stereoAngle() const
 {
-  return m_module->angle() ;
+  return module().angle() ;
 }
 
 OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithError( double arclen ) const 
@@ -68,9 +67,9 @@ OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithError( double arclen
   // Get the distance to the readout
   float distToReadout = trajectory().endRange() - arclen;
   // Drifttime
-  float drifttime = calibratedTime() - deltaTimeOfFlight() - distToReadout / m_module->propagationVelocity() ;
+  float drifttime = calibratedTime() - deltaTimeOfFlight() - distToReadout / module().propagationVelocity() ;
   // The rest is done by the module
-  return m_module->driftRadiusWithError( drifttime ) ;
+  return module().driftRadiusWithError( drifttime ) ;
 }
 
 OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithErrorFromY( double globalY ) const 
@@ -78,19 +77,19 @@ OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithErrorFromY( double g
   // Get the distance to the readout
   float deltaY = trajectory().endPoint().y() - globalY ;
   // Drifttime
-  float drifttime = calibratedTime() - deltaTimeOfFlight() - deltaY / m_module->propagationVelocityY() ;
+  float drifttime = calibratedTime() - deltaTimeOfFlight() - deltaY / module().propagationVelocityY() ;
   // The rest is done by the module
-  return m_module->driftRadiusWithError( drifttime ) ;
+  return module().driftRadiusWithError( drifttime ) ;
 }
 
 void LHCb::OTMeasurement::setTimeOfFlight(double tof)
 {
-  m_deltaTimeOfFlight = tof - m_module->strawReferenceTimeOfFlight( channel().straw() ) ;
+  m_deltaTimeOfFlight = tof - module().strawReferenceTimeOfFlight( channel().straw() ) ;
 }
 
 double LHCb::OTMeasurement::timeOfFlight() const
 {
-  return m_deltaTimeOfFlight + m_module->strawReferenceTimeOfFlight( channel().straw() ) ;
+  return m_deltaTimeOfFlight + module().strawReferenceTimeOfFlight( channel().straw() ) ;
 }
 
 

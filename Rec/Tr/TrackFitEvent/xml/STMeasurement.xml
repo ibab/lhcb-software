@@ -43,7 +43,6 @@
         name   = 'init'
         desc   = 'Initialize the data members'
         access = 'PUBLIC'>
-        <arg type='LHCb::STCluster' name='stCluster' const='TRUE' />
         <arg type='DeSTDetector' name='det' const='TRUE' />
         <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
       </method>

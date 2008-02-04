@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2008-02-04 - Wouter Hulsbergen
+ - Added pointer to detector element to Measurement classes
+
 !========================== TrackFitEvent v3r11 2007-12-10 ===================
 ! 2007-12-10 - Wouter Hulsbergen
   - bug fixed in TrackTraj constructor and caching

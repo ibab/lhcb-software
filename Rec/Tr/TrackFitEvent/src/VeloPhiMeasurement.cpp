@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.20 2007-11-30 14:15:25 wouter Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.21 2008-02-04 09:47:50 wouter Exp $
 // Include files 
 
 // local
@@ -41,6 +41,7 @@ void VeloPhiMeasurement::init( const DeVelo& det, const IVeloClusterPosition::to
 {
   // Fill the data members
   const DeVeloPhiType* phiDet = det.phiSensor( m_cluster->channelID() );
+  m_detectorElement = phiDet ;
   m_z = phiDet->z();
   m_origin = phiDet -> globalOrigin();
   

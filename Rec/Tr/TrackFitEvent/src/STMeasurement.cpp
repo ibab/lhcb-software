@@ -1,4 +1,4 @@
-// $Id: STMeasurement.cpp,v 1.9 2007-11-30 14:15:25 wouter Exp $
+// $Id: STMeasurement.cpp,v 1.10 2008-02-04 09:47:50 wouter Exp $
 // Include files 
 
 // from STDet
@@ -22,37 +22,37 @@ STMeasurement::STMeasurement( const STCluster& stCluster,
                               const DeSTDetector& geom,
                               const ISTClusterPosition& stClusPosTool,
                               const LHCb::StateVector& /*refVector*/)
+  : Measurement( Measurement::IT, LHCbID(stCluster.channelID()), 0), m_cluster(&stCluster)
 {
-  this->init( stCluster, geom, stClusPosTool );
+  this->init( geom, stClusPosTool );
 }
 
 /// Standard constructor, without the reference vector
 STMeasurement::STMeasurement( const STCluster& stCluster,
                               const DeSTDetector& geom,
                               const ISTClusterPosition& stClusPosTool )
+  : Measurement( Measurement::IT, LHCbID(stCluster.channelID()), 0), m_cluster(&stCluster)
 {
-  this->init(  stCluster, geom, stClusPosTool );
+  this->init( geom, stClusPosTool );
 }
 
 
-void STMeasurement::init( const STCluster& stCluster,
-                          const DeSTDetector& geom,
+void STMeasurement::init( const DeSTDetector& geom,
                           const ISTClusterPosition& stClusPosTool) 
 {
   // Fill the data members
-  m_cluster = &stCluster; //pointer to STCluster
   STChannelID stChan = m_cluster -> channelID();
   m_mtype = ( stChan.isTT() ? Measurement::TT : Measurement::IT );
-  m_lhcbID = LHCbID( stChan ) ;
 
   // Get the corresponding sensor
   // TODO: Add const functions in STDet
   DeSTDetector* tmpGeom = const_cast<DeSTDetector*>(&geom);
-  DeSTSector* stSector = tmpGeom->findSector( stChan );
+  const DeSTSector* stSector = tmpGeom->findSector( stChan );
+  m_detectorElement = stSector ;
 
   // Get the centre of gravity and the measurement error
   ISTClusterPosition::Info measVal =
-    stClusPosTool.estimate( &stCluster );
+    stClusPosTool.estimate( m_cluster );
   m_measure    = stSector -> localU( stChan.strip() )
                  + ( measVal.fractionalPosition* stSector -> pitch() );
   m_errMeasure = measVal.fractionalError*stSector -> pitch();

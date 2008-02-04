@@ -67,7 +67,7 @@
 	desc = 'Retrieve const the module of the measurement'
 	const = 'TRUE'>
         <code>
-          return *m_module;
+          return *static_cast&lt;const DeOTModule*&gt;(detectorElement());
         </code>
       </method>
 

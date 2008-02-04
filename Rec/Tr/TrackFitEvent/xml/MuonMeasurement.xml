@@ -14,6 +14,7 @@
       <base name='LHCb::Measurement' />
       <import name='Event/Measurement' />
       <import name='Kernel/MuonTileID' />
+      <import name='MuonDet/DeMuonDetector' />
 
       <enum
         name   = 'MuonMeasurementType'
@@ -25,6 +26,7 @@
       <constructor
         desc = 'Constructor from a Muon Hit'>
         <arg type='LHCb::LHCbID' name='lhcbID' const='TRUE' />
+        <arg type='DeMuonDetector' name='muondet' const='TRUE' />
         <arg type='Gaudi::XYZPoint' name='position' const='TRUE' />
         <arg type='double' name='dx' />
         <arg type='double' name='dy' />

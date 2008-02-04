@@ -1,8 +1,9 @@
-// $Id: MuonMeasurement.cpp,v 1.2 2007-07-23 11:12:35 spozzi Exp $
+// $Id: MuonMeasurement.cpp,v 1.3 2008-02-04 09:47:50 wouter Exp $
 // Include files 
 
 // local
 #include "Event/MuonMeasurement.h"
+#include "MuonDet/DeMuonDetector.h"
 #include "Kernel/LineTraj.h"
 
 using namespace LHCb;
@@ -16,14 +17,17 @@ using namespace LHCb;
 
 /// Standard constructor, initializes variables
 MuonMeasurement::MuonMeasurement( const LHCbID& lhcbID,
+				  const DeMuonDetector& muondet,
                                   const Gaudi::XYZPoint& position,
                                   double dx, double dy,
-                                  MuonMeasurement::MuonMeasurementType& XY): 
-  m_position(position),  m_muonProjection(XY) 
+                                  MuonMeasurement::MuonMeasurementType& XY)
+  : Measurement(Measurement::Muon,lhcbID,0),
+    m_position(position),  m_muonProjection(XY) 
 {
-  setLhcbID(lhcbID);
+  LHCb::MuonTileID muid = lhcbID.muonID();
+  DeMuonChamber* chamber = muondet.getChmbPtr(muid.station(),muid.region(),muid.quarter()) ;
+  m_detectorElement = chamber ;
   setZ(position.z());
-  setType(Measurement::Muon);
   if(m_muonProjection == Y){
     setMeasure(position.x());
     setErrMeasure(2.*dy/sqrt(12.));

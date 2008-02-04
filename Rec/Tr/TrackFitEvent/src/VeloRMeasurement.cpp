@@ -1,4 +1,4 @@
-// $Id: VeloRMeasurement.cpp,v 1.16 2007-11-30 14:15:25 wouter Exp $
+// $Id: VeloRMeasurement.cpp,v 1.17 2008-02-04 09:47:50 wouter Exp $
 // Include files
 
 // local
@@ -42,6 +42,7 @@ void VeloRMeasurement::init( const DeVelo& det, const IVeloClusterPosition::tool
 {
   // Fill the data members
   const DeVeloRType* rDet=det.rSensor( m_cluster->channelID().sensor() );
+  m_detectorElement = rDet ;
   m_z = rDet -> z();
   
   m_measure = rDet -> rOfStrip( clusInfo.strip.strip() ) +
