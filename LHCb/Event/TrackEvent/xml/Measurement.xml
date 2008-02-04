@@ -16,6 +16,7 @@
       <import name='Event/StateVector.h' />
       <import name='Kernel/LHCbID' />
       <import name='Kernel/Trajectory' />
+      <import name='DetDesc/DetectorElement' />
 
       &StlPtrVector;
 
@@ -41,7 +42,7 @@
       <constructor 
 	desc     = "Copy constructor" 
 	argList  = "LHCb::Measurement other" 
-        initList = "m_mtype(other.m_mtype),m_z(other.m_z),m_measure(other.m_measure),m_errMeasure(other.m_errMeasure),m_lhcbID(other.m_lhcbID)" >
+        initList = "m_mtype(other.m_mtype),m_z(other.m_z),m_measure(other.m_measure),m_errMeasure(other.m_errMeasure),m_lhcbID(other.m_lhcbID),m_detectorElement(other.m_detectorElement)" >
         <code>
           m_trajectory.reset( (other.m_trajectory)->clone().release());
         </code>
@@ -49,8 +50,8 @@
 
       <constructor 
 	desc     = "Constructor" 
-	argList  = "const LHCb::Measurement::Type type, const LHCb::LHCbID id"
-        initList = "m_mtype(type), m_lhcbID(id)" >
+	argList  = "const LHCb::Measurement::Type type, const LHCb::LHCbID id, const DetectorElement* elem=0"
+        initList = "m_mtype(type), m_lhcbID(id), m_detectorElement(elem)" >
       </constructor>
 
      <attribute
@@ -101,6 +102,24 @@
         name    = 'lhcbID'
         desc    = 'the corresponding LHCbID'
         access  = 'PROTECTED' />
+
+      <attribute
+        type    = 'const DetectorElement*'
+        name    = 'detectorElement'
+        desc    = 'the corresponding detectorElement'
+	setMeth = 'FALSE'
+	getMeth = 'FALSE'
+        access  = 'PROTECTED' />
+
+      <method
+        type    = 'const DetectorElement*'
+        name    = 'detectorElement'
+        desc    = 'Retrieve const corresponding detectorElement'
+        const   = 'TRUE'>
+        <code>
+  return m_detectorElement ;
+        </code>
+      </method>
 
       <method
         type    = 'double'
