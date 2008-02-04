@@ -2,9 +2,9 @@
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
 !-----------------------------------------------------------------------------
 
-! 2008-01-31 Wouter Hulsbergen
+! 2008-02-04 Wouter Hulsbergen
  - make sure gslSVDsolver returns the cov matrix as well
-
+ - fix cov matrix returned by DiagSolvTool
 
 !=========================== AlignSolvTools v2r2 2007-12-19 ==================
  - J. Blouw: create version v2r2 for Alignment release v2r3
