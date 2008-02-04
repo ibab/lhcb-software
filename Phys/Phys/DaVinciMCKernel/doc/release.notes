@@ -4,6 +4,9 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+! 2008-02-04 - Patrick Koppenburg
+ - IBackgroundCategoryTool: getMap method not virtual.
+
 ! 2008-01-22 - Juan PALACIOS
  - Kernel/Particle2MCLinker.h
   . Fix some problems with MCAssociation class.
