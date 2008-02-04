@@ -23,7 +23,7 @@ class Directory(object):
             volmatch = exp.search(line)
             if volmatch:
                 return volmatch.group(1)
-        raise NotInAFS, "Directory %s is not on an AFS volume" % self._name
+        raise NotInAFS("Directory %s is not on an AFS volume" % self._name )
     def getVolumeID(self):
         """ get the volume ID of a directory """
         exp = re.compile("contained\s+in\svolume\s+(\d+)")
@@ -99,8 +99,8 @@ def isAFSDir(dirpath):
     """ test if the directory is an afs one """
     try:
         tmpdir = Directory(dirpath)
-        id = tmpdir.ID()
-    except NotInAfs :
+        tmpdir.ID()
+    except NotInAfs, NotInAfsInstance :
         return False
     else:
         return True
