@@ -4,11 +4,10 @@ version v1r0
 use LbUtils v1r0
 
 apply_pattern python_alias script=showProjects
-apply_pattern python_alias script=addrel
-apply_pattern python_alias script=remrel
-apply_pattern python_alias script=archive
-apply_pattern python_alias script=update
 apply_pattern python_alias script=usedProjects
+apply_pattern python_alias script=Benchmark
 
 
 apply_pattern source_shell_alias script=setup_external
+apply_pattern source_shell_alias script=GaussBench
+
