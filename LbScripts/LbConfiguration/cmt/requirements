@@ -1,0 +1,7 @@
+package LbConfiguration
+version v1r0
+
+use LbUtils		v*
+
+
+apply_pattern source_shell_alias script=LbLogin
