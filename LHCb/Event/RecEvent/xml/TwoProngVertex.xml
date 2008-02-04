@@ -68,7 +68,7 @@
         type = 'ROOT::Math::SVector&lt;double,3&gt;'
         name = 'momA'
         desc = 'fitted momentum (tx,ty,qop) of first track'
-        setMeth = 'FALSE'
+        setMeth = 'TRUE'
         nonconstaccessor = 'TRUE' />
 
     <attribute
@@ -89,7 +89,7 @@
         type = 'ROOT::Math::SVector&lt;double,3&gt;'
         name = 'momB'
         desc = 'fitted momentum (tx,ty,qop) of second track'
-        setMeth = 'FALSE'
+        setMeth = 'TRUE'
         nonconstaccessor = 'TRUE'  />
 
     <attribute
@@ -250,6 +250,16 @@
 	  return trackIndex &lt; tracks().size() ? tracks().at(trackIndex)->type() : LHCb::Track::TypeUnknown ;
 	</code>
       </method>
+
+      <method
+   type = "void"
+   name = "GetArmenteros_Podolanski"
+   desc = "return the Armenteros_Podolanski variables - Pt(V0) and PPerp assymetry of the daughters"
+   const = "TRUE">
+<arg type = "double" name = "qT" inout = "BOTH"/>
+	<arg type = "double" name = "alpha" inout = "BOTH"/>
+      </method>
+      
 
 
 

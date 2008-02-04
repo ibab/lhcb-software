@@ -1,4 +1,4 @@
-// $Id: TwoProngVertex.cpp,v 1.6 2007-11-28 16:00:29 wouter Exp $
+// $Id: TwoProngVertex.cpp,v 1.7 2008-02-04 16:05:23 sean Exp $
 // Include files
 
 // local
@@ -22,6 +22,29 @@ namespace LHCb
     : LHCb::RecVertex(position)
   {
   }
+
+	   void TwoProngVertex::GetArmenteros_Podolanski(double& qT,
+                                                   double& alpha) const
+     {
+       
+       const  double pA = fabs(1./ m_momA(2)); //correct
+       const  double pB = fabs(1./ m_momB(2));//correct
+       const double pAz =pA/ sqrt(m_momA(0)*m_momA(0)+m_momA(1)*m_momA(1)+1);  
+       const double pBz = pB/ sqrt(m_momB(0)*m_momB(0)+m_momB(1)*m_momB(1)+1);
+       const Gaudi::XYZVector p3A(m_momA(0)*pAz, m_momA(1)*pAz, pAz);
+       const Gaudi::XYZVector p3B(m_momB(0)*pBz, m_momB(1)*pBz, pBz);
+       const Gaudi::XYZVector p3V0 = p3A+p3B; 
+       const double plA = p3A.Dot(p3V0);
+       const double plB = p3B.Dot(p3V0);
+       const double norm = 1./(p3V0.R()*p3V0.R());
+       
+       alpha = (plA-plB)/(plA+plB);
+       qT = .5*(sqrt(pA*pA - plA*plA*norm)+sqrt(pB*pB-plB*plB*norm));
+       
+       return;
+     }
+                  
+
 
  
   const Gaudi::SymMatrix9x9 TwoProngVertex::covMatrix9x9() const

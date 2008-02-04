@@ -1,12 +1,16 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.82 2008-01-16 07:20:51 cattanem Exp $
+! $Id: release.notes,v 1.83 2008-02-04 16:05:23 sean Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
 !========================= RecEvent v2r9 2008-01-16 ==========================
-! 2008-01-16 - Marco Cattaneo
+!
+2008-02-04 - Sean Brisbane
+ - Added function in TwoProngVertex to calculate the Armenteros-Podolanski variables
+
+ 2008-01-16 - Marco Cattaneo
  - In TwoProngVertex.xml, include LHCbMath/MatrixTransforms.h to adapt to latest
    changes
 
