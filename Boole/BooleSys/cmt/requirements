@@ -17,8 +17,8 @@ use CaloDigit           v2r5    Calo  # Olivier Callot
 
 # Muon
 use MuonAlgs            v6r6    Muon  # Alessia Satta
-use MuonBackground      v2r6    Muon  # Alessia Satta
-use MuonMoniDigi        v2r3    Muon  # Alessio Sarti
+use MuonBackground      v2r7    Muon  # Alessia Satta
+use MuonMoniDigi        v2r4    Muon  # Alessio Sarti
 
 # Outer Tracker
 use OTSimulation        v3r15   OT    # Jan Amoraal
