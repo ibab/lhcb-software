@@ -713,10 +713,7 @@ dim_dis_add_service(PyObject* self, PyObject* args) {
     return NULL;
   }
   buffer = (char*)malloc(size);
-//	char sizes;
   if (!buffer) {
-//		sprintf( &sizes ,"Size of the format is: %d", size);
-//    PyErr_SetString(PyExc_MemoryError, &sizes);
     PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
     return NULL;
   }
@@ -810,10 +807,10 @@ next_element(const char *schema, int *p, int *type, int *mult)
     *type = -1;
     return 0;
   }
-  print("Type is %d", *type, *mult);
+//  print("Type is %d", *type, *mult);
   switch (schema[++(*p)]) {
-  case '\0': *mult = MUL_INFINITE; break;
-  case ';': *mult = 1; ++(*p); break;
+  case '\0': *mult = MUL_INFINITE; print("End of string"); break;
+  case ';': *mult = 1; ++(*p); print("Multiplicity 1");break;
   case ':':
     //printf("2 %c\n", schema[*p]);
     (*p)++;

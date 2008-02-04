@@ -49,6 +49,10 @@ def test_dis_interface():
 	dimc.dis_set_dns_port(x)
 	print 'dis_get/dns_port functions tested'
 
+	svc1 = dimc.dis_add_service('Test Service Nr.1', "F:1;I:1;D:2;C:1;C:1;", dis_service1, 1)
+	svc2 = dimc.dis_add_service('Test Service Nr.2', "D:1", Struct().service2, 2)
+
+
 	s=Struct()
 
 	dimc.dis_add_exit_handler(dummy)
@@ -83,8 +87,8 @@ def test_dis_interface():
 	dimc.dis_add_cmnd('test1', "C:20", dummy, 1)
 	dimc.dis_add_cmnd('test2', "F:2;D:2;I:3;S:1;C:5;C:1", Struct().dummy, 2)
 
-	svc1 = dimc.dis_add_service('Test Service Nr.1', "F:1;I:1;D:2;C:1;C:1;", service1, 1)
-	svc2 = dimc.dis_add_service('Test Service Nr.2', "D:1", Struct().service2, 2)
+#	svc1 = dimc.dis_add_service('Test Service Nr.1', "F:1;I:1;D:2;C:1;C:1;", dis_service1, 1)
+#	svc2 = dimc.dis_add_service('Test Service Nr.2', "D:1", Struct().service2, 2)
 
 	print("Starting serving services 1 and 2. Their ids are", svc1, svc2)
 	dimc.dis_start_serving()
@@ -117,4 +121,4 @@ def test_dic_interface():
        sleep(1)
 
 if __name__=='__main__':
-	test_dic_interface()
+	test_dis_interface()
