@@ -1,4 +1,4 @@
-// $Id: TrackGhostClassificationBase.cpp,v 1.4 2007-10-08 11:27:36 mneedham Exp $
+// $Id: TrackGhostClassificationBase.cpp,v 1.5 2008-02-04 08:52:00 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -53,19 +53,6 @@ void TrackGhostClassificationBase::generic(const LHCb::Track& aTrack,
   LHCbIDs::const_iterator start = aTrack.lhcbIDs().begin();
   LHCbIDs::const_iterator stop = aTrack.lhcbIDs().end();
   generic(start,stop,tinfo);
-
-  if (tinfo.classification() == LHCb::GhostTrackInfo::None){
-
-    // we still have some work to do
-
-    // parent was a ghost
-    if (ghostParent(aTrack) == true){
-     tinfo.setClassification(GhostTrackInfo::GhostParent); 
-     return;
-   }
-  }
-  return;
-
 };
 
 void TrackGhostClassificationBase::specific(const LHCb::Track& aTrack, 
@@ -163,23 +150,6 @@ bool TrackGhostClassificationBase::spillover(const LHCb::GhostTrackInfo::LinkPai
   return (aPair.first  == 0 ? true: false);
 }
 
-
-bool TrackGhostClassificationBase::ghostParent(const LHCb::Track& aTrack) const{
-
-  // is it a ghost parent ?
-  bool parentGhost = false;
-  const SmartRefVector<LHCb::Track>& parents = aTrack.ancestors();
-  for (unsigned int iTrack = 0; iTrack != parents.size() && parentGhost == false ; ++iTrack){
-    const Track* aTrack = parents[iTrack];
-    if (aTrack != 0) {
-      ILHCbIDsToMCParticles::LinkMap testMap;
-      m_linkTool->link(*aTrack,testMap);
-      parentGhost = isGhost(testMap);
-    }
-  }  // for
-
-  return parentGhost;
-}
 
 bool TrackGhostClassificationBase::isGhost(const ILHCbIDsToMCParticles::LinkMap& lMap) const{
 

@@ -4,12 +4,19 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2008-02-04 M Needham
+  - Modifications in ghost classification tools
+  - get ghost parent from the LHCbIDs
+  - add specializations for downstream and upstream tracks  
+
+
 !======================= TrackMCTools v2r16 2008-01-30 =======================
 ! 2008-01-23 - Wouter Hulsbergen
  - Fixed bug in IdealStateCreator::addMCHitStates
 
 ! 2008-01-09 M Needham
  - Bug fix in CleanPatTrackSelector
+
 
 !======================= TrackMCTools v2r15 2007-11-30 =======================
 ! 2007-11-30 - Wouter Hulsbergen

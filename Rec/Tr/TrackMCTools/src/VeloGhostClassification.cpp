@@ -1,4 +1,4 @@
-// $Id: VeloGhostClassification.cpp,v 1.3 2007-05-31 15:21:39 cattanem Exp $
+// $Id: VeloGhostClassification.cpp,v 1.4 2008-02-04 08:52:00 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -51,6 +51,10 @@ void VeloGhostClassification::specific(LHCbIDs::const_iterator& start,
 
   // match the phiHits
   LHCb::GhostTrackInfo::LinkPair phiMatch = bestPair(phiHits);
+
+  if (rMatch.first == 0 || phiMatch.first == 0){
+     tinfo.setClassification(GhostTrackInfo::GhostParent);  
+  }
 
   if (isMatched(rMatch) && isMatched(phiMatch) && phiMatch.first != rMatch.first){
     tinfo.setClassification(LHCb::GhostTrackInfo::InconsistentParts);

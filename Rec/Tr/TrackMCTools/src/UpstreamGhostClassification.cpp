@@ -1,58 +1,58 @@
-// $Id: LongGhostClassification.cpp,v 1.4 2008-02-04 08:52:00 mneedham Exp $
+// $Id: UpstreamGhostClassification.cpp,v 1.1 2008-02-04 08:52:00 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
 #include "Kernel/VeloChannelID.h"
 
-#include "LongGhostClassification.h"
+#include "UpstreamGhostClassification.h"
 
 #include "Event/Track.h"
 
 
-DECLARE_TOOL_FACTORY(LongGhostClassification)
+DECLARE_TOOL_FACTORY(UpstreamGhostClassification)
 
 using namespace LHCb;
 
-LongGhostClassification::LongGhostClassification(const std::string& type,
+UpstreamGhostClassification::UpstreamGhostClassification(const std::string& type,
                      const std::string& name,
                      const IInterface* parent):
   TrackGhostClassificationBase(type, name, parent){
 
 };
 
-LongGhostClassification::~LongGhostClassification(){
+UpstreamGhostClassification::~UpstreamGhostClassification(){
   // destructer
 }
 
-void LongGhostClassification::specific(LHCbIDs::const_iterator& start, 
+void UpstreamGhostClassification::specific(LHCbIDs::const_iterator& start, 
                                        LHCbIDs::const_iterator& stop, 
                                        LHCb::GhostTrackInfo& tinfo) const{
 
   // split into velo and T hits
   LHCbIDs::const_iterator iter = start;
-  LHCbIDs tHits;  tHits.reserve(20);
+  LHCbIDs ttHits;  ttHits.reserve(20);
   LHCbIDs vHits;  vHits.reserve(20);
   for (; iter != stop; ++iter){
-    if (iter->detectorType() == LHCbID::OT || 
-        iter->detectorType() == LHCbID::IT){
-      tHits.push_back(*iter); 
+    if (iter->detectorType() == LHCbID::TT){
+      ttHits.push_back(*iter); 
     }
     else if (iter->detectorType() == LHCbID::Velo){
       vHits.push_back(*iter);
     }
   } // for iter
 
-  // match the T Hits
-  LHCb::GhostTrackInfo::LinkPair tMatch = bestPair(tHits);
 
   // match the velo Hits
   LHCb::GhostTrackInfo::LinkPair vMatch = bestPair(vHits);
 
-  if (tMatch.first == 0 || vMatch.first == 0 || tMatch.second < m_purityCut || vMatch.second < m_purityCut){
-    tinfo.setClassification(GhostTrackInfo::GhostParent);  
+  // match the velo Hits
+  LHCb::GhostTrackInfo::LinkPair ttMatch = bestPair(ttHits);
+
+  if (vMatch.first == 0 || vMatch.second < m_purityCut){
+     tinfo.setClassification(GhostTrackInfo::GhostParent);  
   }
 
-  if (isMatched(vMatch) && isMatched(tMatch) && vMatch.first != tMatch.first){
+  if (isMatched(vMatch) && isMatched(ttMatch) && vMatch.first != ttMatch.first){
      tinfo.setClassification(LHCb::GhostTrackInfo::InconsistentParts);
   }
 

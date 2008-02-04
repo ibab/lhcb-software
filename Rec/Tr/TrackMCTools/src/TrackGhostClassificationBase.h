@@ -75,8 +75,6 @@ public:
   /** spillover test */
   bool spillover(const LHCb::GhostTrackInfo::LinkPair& aPair) const;
 
-  /** parent of track was a ghost */
-  bool ghostParent(const LHCb::Track& aTrack) const;
 
   /** check if ghost*/
   bool isGhost(const ILHCbIDsToMCParticles::LinkMap& lmap) const;
@@ -115,12 +113,12 @@ public:
   /** purity is more than m_purityCut*/
   bool isMatched(const LHCb::GhostTrackInfo::LinkPair& aPair) const;
 
-
- private:
-
-  ILHCbIDsToMCParticles* m_linkTool;
+ protected:
   double m_purityCut;
 
+ private:
+  ILHCbIDsToMCParticles* m_linkTool;
+ 
 };
 
 inline ILHCbIDsToMCParticles* TrackGhostClassificationBase::linkTool() const{
