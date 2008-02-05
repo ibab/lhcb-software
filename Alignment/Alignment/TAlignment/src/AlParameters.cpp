@@ -37,12 +37,17 @@ std::string AlParameters::parName(int parindex)
   return rc ;
 }
 
+static inline double signedroot(double root)
+{
+  return root >= 0 ? std::sqrt(root) : - std::sqrt(root) ;
+}
+
 std::ostream& AlParameters::fillStream(std::ostream& os) const 
 {    
   for(unsigned int iactive=0; iactive<dim(); ++iactive) {
     os << std::setw(6)  << parName(m_mask.parIndex(iactive)) << ": " 
        << std::setw(12) << m_parameters[iactive] << " +/- "
-       << std::setw(12) << std::sqrt(m_covariance[iactive][iactive]) << std::endl ;
+       << std::setw(12) << signedroot(m_covariance[iactive][iactive]) << std::endl ;
   }
   return os ;
 }
