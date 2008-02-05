@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.7 2008-02-05 09:55:21 wouter Exp $
+// $Id: DiagSolvTool.cpp,v 1.8 2008-02-05 21:38:13 wouter Exp $
 // Include files 
 
 #include <stdio.h>
@@ -44,8 +44,8 @@ DiagSolvTool::DiagSolvTool( const std::string& type,
   declareInterface<IAlignSolvTool>(this);
   declareProperty( "NumberOfPrintedEigenvalues", m_numberOfPrintedEigenvalues = 20 ) ;
   declareProperty( "LowerModCut",par_modcut=0);
-  declareProperty("WriteMonNTuple",par_writentp=false);
-  
+  declareProperty( "WriteMonNTuple",par_writentp=false);
+  declareProperty( "ApplyScaling", m_applyScaling=true) ;
 }
 //=============================================================================
 // Destructor
@@ -84,13 +84,14 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
   
   //normalize bigmatrix and bigvector before solving, alternatively use preconditionning (but complicates eigenvalue analysis)
   
-  m_scale=findMax(m_bigmatrix);
-
-  if (m_scale>1e-19) {    
-    m_bigvector*=(1./m_scale);
-    m_bigmatrix*=(1./m_scale);
-  } else {m_scale=1.;}
-
+  m_scale=1 ;
+  if( m_applyScaling ) {
+    m_scale = findMax(m_bigmatrix);
+    if (m_scale>1e-19) {    
+      m_bigvector*=(1./m_scale);
+      m_bigmatrix*=(1./m_scale);
+    } else {m_scale=1.;}
+  }
   //   Precond(m_bigmatrix,rweight,cweight,true);
 
   //  for(int i=0;i<N;i++) m_bigvector[i]*=rweight[i];
