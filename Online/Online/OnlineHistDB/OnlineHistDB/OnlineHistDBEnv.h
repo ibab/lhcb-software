@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.18 2007-12-06 15:51:51 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.19 2008-02-05 22:16:56 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -21,7 +21,8 @@ class OnlinePageStorage;
 
 namespace OnlineHistDBEnv_constants {
   static const std::string DB="lbora01:1528/HISTOGRAMDB";
-  static const std::string ACCOUNT="HIST_WRITER";
+  static const std::string ACCOUNT="HIST_READER";
+  static const std::string PASSWORD="welcome";
   static const unsigned int DBschema = 7;
 
   static const int NHTYPES=6;

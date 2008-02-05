@@ -1,9 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.18 2007-11-29 11:22:22 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.19 2008-02-05 22:16:56 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
  * 
- *  Histogram class header for the C++ interface to the Online Monitoring Histogram DB
+ *  Histogram class for the C++ interface to the Online Monitoring Histogram DB
  *  @author Giacomo Graziani (INFN Firenze)
  *  @date 1/12/2006
  */

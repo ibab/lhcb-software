@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.19 2007-12-06 15:51:51 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.20 2008-02-05 22:16:56 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -20,7 +20,7 @@ class  OnlineHistDB : public OnlineHistDBEnv,
 {
  public:
   /// constructor
-  OnlineHistDB (std::string passwd, 
+  OnlineHistDB (std::string passwd=OnlineHistDBEnv_constants::PASSWORD, 
 		std::string user=OnlineHistDBEnv_constants::ACCOUNT, 
 		std::string db=OnlineHistDBEnv_constants::DB);
   virtual ~OnlineHistDB();
