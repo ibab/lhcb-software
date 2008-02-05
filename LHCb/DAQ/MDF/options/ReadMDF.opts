@@ -40,11 +40,13 @@ EventSelector.Input                  = {
   ,"DATA='root:file://$MDFROOT/cmt/mdfData_8.dat'            SVC='LHCb::MDFSelector'"
   ,"DATA='root:file:$MDFROOT/cmt/mdfData_9.dat'              SVC='LHCb::MDFSelector'"
   ,"DATA='$MDFROOT/cmt/mdfData_10.dat'                       SVC='LHCb::MDFSelector'"
+};
 #ifndef WIN32
-  ,"DATA='root:rfio:/castor/cern.ch/user/f/frankb/mdfData_11.dat' SVC='LHCb::MDFSelector'"
+EventSelector.Input                 += {
+   "DATA='root:rfio:/castor/cern.ch/user/f/frankb/mdfData_11.dat' SVC='LHCb::MDFSelector'"
   ,"DATA='root:castor:/castor/cern.ch/user/f/frankb/mdfData_12.dat' SVC='LHCb::MDFSelector'"
   ,"DATA='castor:/castor/cern.ch/user/f/frankb/mdfData_13.dat'      SVC='LHCb::MDFSelector'"
-#endif
 };
+#endif
 FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
 StoreExplorerAlg.OutputLevel = 3;

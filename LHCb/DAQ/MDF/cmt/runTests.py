@@ -2,7 +2,10 @@ import os, sys, string
 
 exe = os.popen('cmt show macro_value GAUDI_install_scripts').readlines()[0][:-1]
 exe = exe + os.sep + '..' + os.sep + os.environ['CMTCONFIG']+os.sep+'bin'+os.sep+'Gaudi.exe'
-mdf = os.environ['MDFROOT']
+mdf = os.environ['MDFROOT'].replace(os.sep,'/')
+if sys.platform=='win32' and mdf[2]==':': mdf = mdf[2:]
+os.environ['MDFROOT'] = mdf
+
 def nextTest(msg):
   print msg
   val = ''
@@ -21,8 +24,10 @@ def nextTest(msg):
   return 1
 
 def execute(cmd):
-  print '-->',cmd
-  os.system(exe+" "+cmd)
+  c = cmd
+  c=c.replace('/',os.sep)
+  print '-->',c
+  os.system(exe+" "+c)
 
 print 'gaudi executable is:',exe
 tests = []
