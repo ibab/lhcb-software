@@ -1,14 +1,17 @@
-! $Id: release.notes,v 1.197 2008-02-01 21:57:38 gligorov Exp $
+! $Id: release.notes,v 1.198 2008-02-05 14:04:43 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
-!========================== DaVinciMCTools v9r9 2008-01-25 ===================
+!========================== DaVinciMCTools v9r10 2008-02-05 ==================
+
 ! 2008-02-01 - Vladimir Gligorov
  - Added category 10, Quasi Signal, to Background Category. An event qualifies
    as quasi-signal if its MCTruth decay chain contains intermediate resonances which
    are not present in the reconstructed decay chain, but is otherwise signal.
+
+!========================== DaVinciMCTools v9r9 2008-01-25 ===================
 
 ! 2008-01-25 - Patrick Koppenburg
  - Increment to v9r9
