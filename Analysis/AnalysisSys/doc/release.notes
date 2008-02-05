@@ -6,6 +6,8 @@ Purpose     : LHCb analysis packages
 </PRE><H1><A NAME=v1r9>2008-02-05 Analysis v1r10 - DC06 and Tf compatible analysis  version</A></H1><PRE>
 
  - Uses LHCb v23r3 and Gaudi v19r7
+ - Bug fixes to pre-selections and FlavourTagging
+ - Developments in DecayTreeTuple and DaVinciMCTools (BackgrondCategoryTool)
 
 #######################################MM######################################
 #                                  ANALYSIS v1r10                             #
