@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.75 2008-01-11 11:56:11 pkoppenb Exp $ 
+! $Id: release.notes,v 1.76 2008-02-05 10:51:22 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+!======================== ParticleMaker v3r4p1 2008-02-05 ===================
 
 ! 2008-01-11 - Patrick Koppenburg
  - src/CombinedParticleMaker.cpp:
