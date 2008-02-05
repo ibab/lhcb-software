@@ -1,11 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.31 2008-01-30 12:18:49 frankb Exp $
-//	====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.32 2008-02-05 16:44:18 frankb Exp $
+//  ====================================================================
 //  RawEventHelpers.cpp
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawEventPrintout.h"
 #include "MDF/RawEventDescriptor.h"

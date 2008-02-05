@@ -53,9 +53,11 @@ ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_9" };
 Writer_9.Connection       = "root:file:$MDFROOT/cmt/mdfData_9.dat";
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_10" };
 Writer_10.Connection       = "$MDFROOT/cmt/mdfData_10.dat";
+#ifndef WIN32
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_11" };
 Writer_11.Connection       = "root:rfio:/castor/cern.ch/user/f/frankb/mdfData_11.dat";
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_12" };
 Writer_12.Connection       = "root:castor:/castor/cern.ch/user/f/frankb/mdfData_12.dat";
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_13" };
 Writer_13.Connection       = "castor:/castor/cern.ch/user/f/frankb/mdfData_13.dat";
+#endif

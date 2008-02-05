@@ -1,11 +1,11 @@
-// $Id: RawDataWriter.h,v 1.6 2007-11-19 19:27:32 frankb Exp $
-//	====================================================================
+// $Id: RawDataWriter.h,v 1.7 2008-02-05 16:44:18 frankb Exp $
+//  ====================================================================
 //  RawDataWriter.h
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #ifndef MDF_RAWDATAWRITER_H
 #define MDF_RAWDATAWRITER_H
 
@@ -109,8 +109,8 @@ namespace LHCb    {
     bool          m_genMD5;
     /// Timeout before really closing the file
     int           m_closeTMO;
-		/// Location of the raw banks in the TES
-		std::string		m_bankLocation;
+    /// Location of the raw banks in the TES
+    std::string    m_bankLocation;
     /// Reference to file manager service
     Gaudi::IIODataManager* m_ioMgr;
     /// Name of the IO manager service

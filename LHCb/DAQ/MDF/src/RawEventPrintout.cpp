@@ -1,11 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventPrintout.cpp,v 1.1 2007-12-14 11:42:33 frankb Exp $
-//	====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventPrintout.cpp,v 1.2 2008-02-05 16:44:18 frankb Exp $
+//  ====================================================================
 //  MIFWriter.cpp
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #include "MDF/RawEventPrintout.h"
 #include "Event/RawBank.h"
 #include "Event/RawEvent.h"

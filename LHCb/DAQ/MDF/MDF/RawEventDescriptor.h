@@ -1,11 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventDescriptor.h,v 1.5 2007-06-21 15:55:07 frankb Exp $
-//	====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventDescriptor.h,v 1.6 2008-02-05 16:44:18 frankb Exp $
+//  ====================================================================
 //  MDFWriter.h
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #ifndef MDF_RAWEVENTDESCRIPTOR_H
 #define MDF_RAWEVENTDESCRIPTOR_H
 
@@ -54,7 +54,7 @@ namespace LHCb    {
   public:
     typedef MEPFragment    _F;
     typedef RawEventHeader _H;
-    int	         m_evType;
+    int           m_evType;
     int          m_PID;
     unsigned int m_TrMask[4];
     int          m_Size;

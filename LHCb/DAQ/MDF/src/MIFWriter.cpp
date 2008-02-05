@@ -1,11 +1,11 @@
-// $Id: MIFWriter.cpp,v 1.9 2008-01-08 15:20:35 cattanem Exp $
-//	====================================================================
+// $Id: MIFWriter.cpp,v 1.10 2008-02-05 16:44:18 frankb Exp $
+//  ====================================================================
 //  MIFWriter.cpp
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DataObject.h"
@@ -79,7 +79,7 @@ StatusCode MIFWriter::execute()    {
         const std::string& dsn = pA->par()[0];
         int fid = genChecksum(1,dsn.c_str(),dsn.length()+1);
         FidMap::const_iterator i = m_fidMap.find(fid);
-	//std::cout << "FID:" << dsn << " " << fid << endl;
+  //std::cout << "FID:" << dsn << " " << fid << endl;
         if ( i == m_fidMap.end() )   {
           MsgStream log(msgSvc(),name());
           m_fidMap.insert(std::make_pair(fid,dsn));

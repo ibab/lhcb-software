@@ -29,20 +29,22 @@ EventSelector.Input                  = {
   "DATA='file://mdfData_4.dat' SVC='LHCb::MDFSelector' NSkip='500'"
 };
 EventSelector.Input                  = {
-  "DATA='PFN:root:file://../cmt/mdfData_1.dat' SVC='LHCb::MDFSelector'",
-  "DATA='PFN:root:file://mdfData_0.dat'        SVC='LHCb::MDFSelector'",
-  "DATA='root:file:mdfData_2.dat'              SVC='LHCb::MDFSelector'",
-  "DATA='PFN:root:mdfData_3.dat'               SVC='LHCb::MDFSelector'",
-  "DATA='root:mdfData_4.dat'                   SVC='LHCb::MDFSelector'",
-  "DATA='PFN:root:file://$MDFROOT/cmt/mdfData_5.dat'        SVC='LHCb::MDFSelector'",
-  "DATA='PFN:root:file:$MDFROOT/cmt/mdfData_6.dat'          SVC='LHCb::MDFSelector'",
-  "DATA='PFN:root:$MDFROOT/cmt/mdfData_7.dat'               SVC='LHCb::MDFSelector'",
-  "DATA='root:file://$MDFROOT/cmt/mdfData_8.dat'            SVC='LHCb::MDFSelector'",
-  "DATA='root:file:$MDFROOT/cmt/mdfData_9.dat'              SVC='LHCb::MDFSelector'",
-  "DATA='$MDFROOT/cmt/mdfData_10.dat'                       SVC='LHCb::MDFSelector'",
-  "DATA='root:rfio:/castor/cern.ch/user/f/frankb/mdfData_11.dat' SVC='LHCb::MDFSelector'",
-  "DATA='root:castor:/castor/cern.ch/user/f/frankb/mdfData_12.dat' SVC='LHCb::MDFSelector'",
-  "DATA='castor:/castor/cern.ch/user/f/frankb/mdfData_13.dat'      SVC='LHCb::MDFSelector'"
+  "DATA='PFN:root:file://../cmt/mdfData_1.dat' SVC='LHCb::MDFSelector'"
+  ,"DATA='PFN:root:file://mdfData_0.dat'        SVC='LHCb::MDFSelector'"
+  ,"DATA='root:file:mdfData_2.dat'              SVC='LHCb::MDFSelector'"
+  ,"DATA='PFN:root:mdfData_3.dat'               SVC='LHCb::MDFSelector'"
+  ,"DATA='root:mdfData_4.dat'                   SVC='LHCb::MDFSelector'"
+  ,"DATA='PFN:root:file://$MDFROOT/cmt/mdfData_5.dat'        SVC='LHCb::MDFSelector'"
+  ,"DATA='PFN:root:file:$MDFROOT/cmt/mdfData_6.dat'          SVC='LHCb::MDFSelector'"
+  ,"DATA='PFN:root:$MDFROOT/cmt/mdfData_7.dat'               SVC='LHCb::MDFSelector'"
+  ,"DATA='root:file://$MDFROOT/cmt/mdfData_8.dat'            SVC='LHCb::MDFSelector'"
+  ,"DATA='root:file:$MDFROOT/cmt/mdfData_9.dat'              SVC='LHCb::MDFSelector'"
+  ,"DATA='$MDFROOT/cmt/mdfData_10.dat'                       SVC='LHCb::MDFSelector'"
+#ifndef WIN32
+  ,"DATA='root:rfio:/castor/cern.ch/user/f/frankb/mdfData_11.dat' SVC='LHCb::MDFSelector'"
+  ,"DATA='root:castor:/castor/cern.ch/user/f/frankb/mdfData_12.dat' SVC='LHCb::MDFSelector'"
+  ,"DATA='castor:/castor/cern.ch/user/f/frankb/mdfData_13.dat'      SVC='LHCb::MDFSelector'"
+#endif
 };
 FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
 StoreExplorerAlg.OutputLevel = 3;

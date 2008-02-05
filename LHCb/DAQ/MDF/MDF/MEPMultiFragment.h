@@ -1,12 +1,12 @@
-// $Id: MEPMultiFragment.h,v 1.7 2006-10-23 09:19:40 frankb Exp $
+// $Id: MEPMultiFragment.h,v 1.8 2008-02-05 16:44:18 frankb Exp $
 //====================================================================
-//	MEPMultiFragment.h
+//  MEPMultiFragment.h
 //--------------------------------------------------------------------
 //
 //====================================================================
 #ifndef MDF_MEPMULTIFRAGMENT_H
 #define MDF_MEPMULTIFRAGMENT_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPMultiFragment.h,v 1.7 2006-10-23 09:19:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPMultiFragment.h,v 1.8 2008-02-05 16:44:18 frankb Exp $
 
 // Framework include files
 #include "MDF/MEPFragment.h"

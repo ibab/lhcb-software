@@ -1,11 +1,11 @@
-// $Id: MIFSelector.cpp,v 1.11 2008-02-05 16:18:18 frankb Exp $
+// $Id: MIFSelector.cpp,v 1.12 2008-02-05 16:44:18 frankb Exp $
 //====================================================================
-//	MIFSelector.cpp
+//  MIFSelector.cpp
 //--------------------------------------------------------------------
 //
-//	Package    : MIF
+//  Package    : MIF
 //
-//	Author     : M.Frank
+//  Author     : M.Frank
 //====================================================================
 
 // Include files
@@ -123,8 +123,8 @@ StatusCode MIFContext::connect(const std::string& spec)  {
     if ( sc.isSuccess() )  {
       MsgStream log(m_msg,"MIFSelector");
       log << MSG::ALWAYS << "Connected to:" << spec << " " << c->pfn() 
-	/* << " " << fid */ 
-	  << endmsg;
+  /* << " " << fid */ 
+    << endmsg;
       m_fidMap.insert(std::make_pair(fid,c.release()));
       m_mifFID = fid;
       return sc;

@@ -1,6 +1,6 @@
-// $Id: RawDataSelector.h,v 1.14 2007-11-19 19:27:32 frankb Exp $
+// $Id: RawDataSelector.h,v 1.15 2008-02-05 16:44:18 frankb Exp $
 //====================================================================
-//	RawDataSelector.h
+//  RawDataSelector.h
 //--------------------------------------------------------------------
 //
 //  Description: The RawDataSelector component is able

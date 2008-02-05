@@ -1,11 +1,11 @@
-// $Id: StreamDescriptor.h,v 1.5 2006-06-29 16:39:48 frankb Exp $
+// $Id: StreamDescriptor.h,v 1.6 2008-02-05 16:44:18 frankb Exp $
 //====================================================================
-//	StreamDescriptor.h
+//  StreamDescriptor.h
 //--------------------------------------------------------------------
 //
-//	Author     : M.Frank
+//  Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/StreamDescriptor.h,v 1.5 2006-06-29 16:39:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/StreamDescriptor.h,v 1.6 2008-02-05 16:44:18 frankb Exp $
 #ifndef LHCb_STREAMDESCRIPTOR_H
 #define LHCb_STREAMDESCRIPTOR_H 1
 

@@ -1,11 +1,11 @@
-// $Id: RawDataCnvSvc.cpp,v 1.22 2008-01-29 08:33:17 frankb Exp $
-//	====================================================================
+// $Id: RawDataCnvSvc.cpp,v 1.23 2008-02-05 16:44:18 frankb Exp $
+//  ====================================================================
 //  RawDataCnvSvc.cpp
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #include "MDF/RawDataConnection.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawDataAddress.h"
@@ -264,7 +264,7 @@ RawDataCnvSvc::unpackMEP(const MDFDescriptor& dat, const std::string& loc, RawEv
             return error("Failed to access raw event at:"+(*i));
           }
         }
-	//std::cout << "Filling banks for " << *i << " " << r->clID() << " " << loc << std::endl;
+  //std::cout << "Filling banks for " << *i << " " << r->clID() << " " << loc << std::endl;
         sc = adoptBanks(r,(*it).second);
         if ( sc.isSuccess() )  {
           continue;
@@ -287,20 +287,20 @@ StatusCode RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pA, DataObject* pObj)  {
       if ( pReg && pAddRaw )  {
         std::string id = pReg->identifier().substr(6);
         if ( id.empty() )  {
-	  if ( pAddRaw->banks() && pAddRaw->type() == RawDataAddress::BANK_TYPE ) {
+    if ( pAddRaw->banks() && pAddRaw->type() == RawDataAddress::BANK_TYPE ) {
             return regAddr(pReg, pAddRaw, "/DAQ", DataObject::classID());
-	  }
-	  else {
-	    MDFDescriptor dat = pAddRaw->data();
-	    if ( dat.second>0 )  {
-	      if ( pAddRaw->type() == RawDataAddress::DATA_TYPE )
-		return registerRawAddresses(pReg,pAddRaw,buffersTAE(dat.first));
-	      else if ( pAddRaw->type() == RawDataAddress::MEP_TYPE )
-		return registerRawAddresses(pReg,pAddRaw,buffersMEP(dat.first));
-	      return regAddr(pReg, pAddRaw, "/DAQ", DataObject::classID());
-	    }
-	  }
-	  return error("Failed to access raw data input:"+pA->par()[0]);
+    }
+    else {
+      MDFDescriptor dat = pAddRaw->data();
+      if ( dat.second>0 )  {
+        if ( pAddRaw->type() == RawDataAddress::DATA_TYPE )
+    return registerRawAddresses(pReg,pAddRaw,buffersTAE(dat.first));
+        else if ( pAddRaw->type() == RawDataAddress::MEP_TYPE )
+    return registerRawAddresses(pReg,pAddRaw,buffersMEP(dat.first));
+        return regAddr(pReg, pAddRaw, "/DAQ", DataObject::classID());
+      }
+    }
+    return error("Failed to access raw data input:"+pA->par()[0]);
         }
         else if (id.substr(id.length()-4) == "/DAQ" )
           return regAddr(pReg, pAddRaw, "/RawEvent", RawEvent::classID());
@@ -308,23 +308,23 @@ StatusCode RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pA, DataObject* pObj)  {
           return regAddr(pReg, pAddRaw, "/DAQ", DataObject::classID());
         else if (id.substr(id.length()-9) == "/RawEvent" )  {
           StatusCode sc  = StatusCode::FAILURE;
-	  RawEvent*  raw = dynamic_cast<RawEvent*>(pObj);
-	  int        typ = pAddRaw->type();
-	  // MBM input from event selector: banks already filled...
-	  if ( pAddRaw->banks() && typ == RawDataAddress::BANK_TYPE ) {
-	    return adoptBanks(raw,*pAddRaw->banks());
-	  }
-	  else {
-	    MDFDescriptor   dat     = accessRawData(pAddRaw);
-	    if ( dat.second > 0 )  {
-	      if ( typ == RawDataAddress::DATA_TYPE )
-		sc = unpackTAE(dat,pReg->identifier(),raw);
-	      else if ( typ == RawDataAddress::MEP_TYPE )
-		sc = unpackMEP(dat,pReg->identifier(),raw);
-	      else
-		return error("UNKNOWN decoding requested - not yet implemented:"+pA->par()[0]);
-	    }
-	    if ( sc.isSuccess() ) return sc;
+    RawEvent*  raw = dynamic_cast<RawEvent*>(pObj);
+    int        typ = pAddRaw->type();
+    // MBM input from event selector: banks already filled...
+    if ( pAddRaw->banks() && typ == RawDataAddress::BANK_TYPE ) {
+      return adoptBanks(raw,*pAddRaw->banks());
+    }
+    else {
+      MDFDescriptor   dat     = accessRawData(pAddRaw);
+      if ( dat.second > 0 )  {
+        if ( typ == RawDataAddress::DATA_TYPE )
+    sc = unpackTAE(dat,pReg->identifier(),raw);
+        else if ( typ == RawDataAddress::MEP_TYPE )
+    sc = unpackMEP(dat,pReg->identifier(),raw);
+        else
+    return error("UNKNOWN decoding requested - not yet implemented:"+pA->par()[0]);
+      }
+      if ( sc.isSuccess() ) return sc;
             return error("Failed to decode raw data from input from:"+pA->par()[0]);
           }
           return error("Failed to access raw data from input:"+pA->par()[0]);

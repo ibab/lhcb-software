@@ -1,11 +1,11 @@
-// $Id: RawDataCnvSvc.h,v 1.10 2007-12-14 11:42:23 frankb Exp $
-//	====================================================================
+// $Id: RawDataCnvSvc.h,v 1.11 2008-02-05 16:44:18 frankb Exp $
+//  ====================================================================
 //  RawDataCnvSvc.h
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #ifndef MDF_RAWDATACNVSVC_H
 #define MDF_RAWDATACNVSVC_H
 
@@ -59,8 +59,8 @@ namespace LHCb  {
     IDataManagerSvc*    m_dataMgr;
     /// Properties for time alignment events
     int                 m_evtsBefore, m_evtsAfter;
-		/// Location of the raw banks in the TES
-		std::string	        m_bankLocation;
+    /// Location of the raw banks in the TES
+    std::string          m_bankLocation;
     /// Reference to file manager service
     Gaudi::IIODataManager* m_ioMgr;
     /// Name of the IO manager service

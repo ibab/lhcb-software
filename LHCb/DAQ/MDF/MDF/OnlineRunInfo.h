@@ -1,12 +1,12 @@
-// $Id: OnlineRunInfo.h,v 1.3 2008-01-25 22:58:45 frankb Exp $
+// $Id: OnlineRunInfo.h,v 1.4 2008-02-05 16:44:18 frankb Exp $
 //====================================================================
-//	OnlineRunInfo.h
+//  OnlineRunInfo.h
 //--------------------------------------------------------------------
 //
 //====================================================================
 #ifndef MDF_ONLINERUNINFO_H
 #define MDF_ONLINERUNINFO_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/OnlineRunInfo.h,v 1.3 2008-01-25 22:58:45 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/OnlineRunInfo.h,v 1.4 2008-02-05 16:44:18 frankb Exp $
 
 // Framework include files
 #include "Event/RawBank.h"

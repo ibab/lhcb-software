@@ -1,11 +1,11 @@
-// $Id: MDFSelector.cpp,v 1.15 2008-01-08 15:20:28 cattanem Exp $
+// $Id: MDFSelector.cpp,v 1.16 2008-02-05 16:44:18 frankb Exp $
 //====================================================================
-//	MDFSelector.cpp
+//  MDFSelector.cpp
 //--------------------------------------------------------------------
 //
-//	Package    : MDF
+//  Package    : MDF
 //
-//	Author     : M.Frank
+//  Author     : M.Frank
 //====================================================================
 
 // Framework include files

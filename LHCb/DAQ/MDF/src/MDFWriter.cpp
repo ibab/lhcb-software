@@ -1,11 +1,11 @@
-// $Id: MDFWriter.cpp,v 1.19 2008-02-05 16:18:18 frankb Exp $
-//	====================================================================
+// $Id: MDFWriter.cpp,v 1.20 2008-02-05 16:44:18 frankb Exp $
+//  ====================================================================
 //  MDFWriter.cpp
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/MsgStream.h"
@@ -91,7 +91,7 @@ StatusCode MDFWriter::finalize() {
     MsgStream log(msgSvc(), name());
     m_md5->Final();
     log << MSG::INFO << "Size:" << std::setw(8) << m_bytesWritten << " Output:" << m_connectParams
-	<< " MD5 sum:" << m_md5->AsString() << endmsg;
+  << " MD5 sum:" << m_md5->AsString() << endmsg;
   }
   if ( m_ioMgr )  {
     m_ioMgr->disconnect(m_connection).ignore();

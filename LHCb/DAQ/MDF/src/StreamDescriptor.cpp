@@ -1,12 +1,12 @@
 //====================================================================
-//	OnlineEvtSelector.cpp
+//  OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
 //
-//	Package    : LHCb
+//  Package    : LHCb
 //
-//	Author     : M.Frank
+//  Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.14 2008-02-05 10:32:40 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.15 2008-02-05 16:44:18 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -324,29 +324,29 @@ Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
     default:           //  DATA='rfio:/castor/cern.ch/......
       getFileConnection(specs, file, proto);
       if ( !proto.empty() )  {
-	result.type = ::toupper(proto[0]); 
-	if ( result.type == 'F' ) {
-	  result.ioDesc     = FileIO::open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU|S_IRWXG );
-	  result.m_write    = file_write;
-	  result.m_read     = file_read;
-	  result.m_seek     = file_seek;
-	  break;
-	}
-	else {
-	  if ( proto == "dcap" || proto == "dcache" || proto=="gsidcap" || proto == "castor" ) {
-	    proto = "root";
-	    file  = specs;
-	  }
-	  PosixIO *io = getIOModule(proto);
-	  if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
-	    result.ioFuncs    = io;
-	    result.ioDesc     = io->open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU|S_IRWXG);
-	    result.m_write    = posix_write;
-	    result.m_read     = posix_read;
-	    result.m_seek     = posix_seek;
-	    return result;
-	  }
-	}
+  result.type = ::toupper(proto[0]); 
+  if ( result.type == 'F' ) {
+    result.ioDesc     = FileIO::open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU|S_IRWXG );
+    result.m_write    = file_write;
+    result.m_read     = file_read;
+    result.m_seek     = file_seek;
+    break;
+  }
+  else {
+    if ( proto == "dcap" || proto == "dcache" || proto=="gsidcap" || proto == "castor" ) {
+      proto = "root";
+      file  = specs;
+    }
+    PosixIO *io = getIOModule(proto);
+    if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
+      result.ioFuncs    = io;
+      result.ioDesc     = io->open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU|S_IRWXG);
+      result.m_write    = posix_write;
+      result.m_read     = posix_read;
+      result.m_seek     = posix_seek;
+      return result;
+    }
+  }
       }
       break;
   }
@@ -383,32 +383,32 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
     default:
       getFileConnection(specs, file, proto);
       if ( !proto.empty() )  {
-	result.type = ::toupper(proto[0]); 
-	if ( result.type == 'F' ) {
-	  result.ioDesc  = FileIO::open(file.c_str(), O_RDONLY|O_BINARY );
-	  result.m_write = file_write;
-	  result.m_read  = file_read;
-	  result.m_seek  = file_seek;
-	}
-	else {
-	  if ( proto == "dcap" || proto == "dcache" || proto=="gsidcap" || proto == "castor" ) {
-	    proto = "root";
-	    file  = specs;
-	  }
-	  PosixIO* io = getIOModule(proto);
-	  if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
-	    result.ioFuncs    = io;
-	    result.ioDesc     = io->open(file.c_str(), O_RDONLY|O_BINARY, S_IREAD);
-	    if ( result.ioDesc == -1 && io->serror )  {
-	      //const char* msg = io->serror();
-	      //std::cout << "Error connection POSIX IO:" << file << std::endl
-	      //          << (char*)(msg ? msg : "Unknown error") << std::endl;
-	    }
-	    result.m_write    = posix_write;
-	    result.m_read     = posix_read;
-	    result.m_seek     = posix_seek;
-	    return result;
-	  }
+  result.type = ::toupper(proto[0]); 
+  if ( result.type == 'F' ) {
+    result.ioDesc  = FileIO::open(file.c_str(), O_RDONLY|O_BINARY );
+    result.m_write = file_write;
+    result.m_read  = file_read;
+    result.m_seek  = file_seek;
+  }
+  else {
+    if ( proto == "dcap" || proto == "dcache" || proto=="gsidcap" || proto == "castor" ) {
+      proto = "root";
+      file  = specs;
+    }
+    PosixIO* io = getIOModule(proto);
+    if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
+      result.ioFuncs    = io;
+      result.ioDesc     = io->open(file.c_str(), O_RDONLY|O_BINARY, S_IREAD);
+      if ( result.ioDesc == -1 && io->serror )  {
+        //const char* msg = io->serror();
+        //std::cout << "Error connection POSIX IO:" << file << std::endl
+        //          << (char*)(msg ? msg : "Unknown error") << std::endl;
+      }
+      result.m_write    = posix_write;
+      result.m_read     = posix_read;
+      result.m_seek     = posix_seek;
+      return result;
+    }
         }
       }
       break;
@@ -443,7 +443,7 @@ Access LHCb::StreamDescriptor::accept(const Access& specs)  {
           int opt = 1;
           Networking::setsockopt(result.ioDesc,SOL_SOCKET,SO_REUSEADDR,
                                  (Networking::SockOpt_t*)&opt,sizeof(opt));
-	      }
+        }
       }
       break;
     case 'F':

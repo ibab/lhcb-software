@@ -1,11 +1,11 @@
-// $Id: MDFIO.h,v 1.17 2008-01-17 17:15:40 frankm Exp $
-//	====================================================================
+// $Id: MDFIO.h,v 1.18 2008-02-05 16:44:17 frankb Exp $
+//  ====================================================================
 //  MDFIO.h
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #ifndef DAQ_MDF_MDFIO_H
 #define DAQ_MDF_MDFIO_H
 
@@ -172,7 +172,7 @@ namespace LHCb {
     virtual StatusCode commitRawBanks(int                compTyp,
                                       int                chksumTyp,
                                       void* const        ioDesc,
-																			const std::string& location);
+                                      const std::string& location);
 
     /** Commit raw banks to IO stream. -- Main entry point --
       * @param[in] raw       Pointer to RawEvent

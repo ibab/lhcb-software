@@ -1,15 +1,15 @@
-// $Id: RawDataSelector.cpp,v 1.17 2007-12-17 18:45:48 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.18 2008-02-05 16:44:18 frankb Exp $
 //====================================================================
-//	OnlineMDFEvtSelector.cpp
+//  OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
 //
-//	Package    : MDF
+//  Package    : MDF
 //
 //  Description: The LHCb::RawDataSelector component is able
 //               to produce a list of event references given 
 //               a set of "selection criteria".
 //
-//	Author     : M.Frank
+//  Author     : M.Frank
 //====================================================================
 
 // Include files
