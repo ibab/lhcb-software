@@ -11,9 +11,6 @@
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 // These lines are probably not necessary. Keep them commented for now...
 //ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
-
-ApplicationMgr.DLLs  += { "GaudiAud" };
-
 //--------------------------------------------------------------
 // Data on demand service for decoding RawBuffer
 //--------------------------------------------------------------

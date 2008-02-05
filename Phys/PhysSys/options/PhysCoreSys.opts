@@ -1,11 +1,3 @@
-ApplicationMgr.Dlls += { "DaVinciTools" };
-ApplicationMgr.Dlls += { "DaVinciTransporter" };
-ApplicationMgr.Dlls += { "ProtoParticleFilter" };
-ApplicationMgr.Dlls += { "DaVinciFilter" };
-ApplicationMgr.Dlls += { "ParticleMaker" };
-ApplicationMgr.Dlls += { "VertexFit" };
-ApplicationMgr.Dlls += { "TrackTools" };
-
 //DataOnDemandSvc.OutputLevel = 1 ;
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 
