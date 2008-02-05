@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.6 2008-02-04 15:15:53 wouter Exp $
+// $Id: DiagSolvTool.cpp,v 1.7 2008-02-05 09:55:21 wouter Exp $
 // Include files 
 
 #include <stdio.h>
@@ -42,6 +42,7 @@ DiagSolvTool::DiagSolvTool( const std::string& type,
   : GaudiTupleTool ( type, name , parent )
 {
   declareInterface<IAlignSolvTool>(this);
+  declareProperty( "NumberOfPrintedEigenvalues", m_numberOfPrintedEigenvalues = 20 ) ;
   declareProperty( "LowerModCut",par_modcut=0);
   declareProperty("WriteMonNTuple",par_writentp=false);
   
@@ -102,7 +103,20 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
   //  m_bigmatrix.diagonalize_GSL(w,z);
 
   info() << "After diagonalization" << endmsg;
-  info() << "Eigen values: " << w << endmsg ;
+
+
+  // Dump the 10 smallest eigenvalues
+  std::ostringstream logmessage ;
+  logmessage << "Smallest eigen values: [ " << std::setprecision(4) ;
+  for(size_t ipar = std::max(0,int(N) - int(m_numberOfPrintedEigenvalues)); ipar<N; ++ipar) 
+    logmessage << w[ipar] << ", " ;
+  logmessage << "]" ;
+  info() << logmessage.str() << endmsg ;
+  
+  // Issue a warning for each negative eigenvalue
+  for(int ipar = 0; ipar<N; ++ipar) 
+    if( w[ipar] < - DBL_MIN ) 
+      error() << "Second derivative has negative eigenvalue: " << w[ipar] << endmsg ;
   
   if (infjob==0) {
 
@@ -175,7 +189,7 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
   }
   else {
     
-    info() << "inversion (diagonalization) of big matrix failed" <<endmsg;
+    error() << "inversion (diagonalization) of big matrix failed" <<endmsg;
   }
   
   return infjob;

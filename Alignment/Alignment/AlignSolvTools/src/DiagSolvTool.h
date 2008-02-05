@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.h,v 1.4 2007-11-21 14:12:10 janos Exp $
+// $Id: DiagSolvTool.h,v 1.5 2008-02-05 09:55:21 wouter Exp $
 #ifndef ALIGNSOLVTOOLS_DIAGSOLVTOOL_H 
 #define ALIGNSOLVTOOLS_DIAGSOLVTOOL_H 1
 
@@ -44,6 +44,7 @@ protected:
 private:
 
   //parameters
+  size_t m_numberOfPrintedEigenvalues ;
 
   double m_scale;
   int par_modcut;
