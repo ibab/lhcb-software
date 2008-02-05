@@ -178,7 +178,20 @@ StatusCode ResidualCovarianceTool::compute(const LHCb::Track& track)
     for( size_t icol = 0; icol < irow; ++icol)
       delete offdiagcov[irow][icol] ;
   }
-  
+
+  // Let's check the result. Keep track of the roots.
+  m_error = false ;
+  std::vector<double> diagroots ;
+  for(size_t irow=0; irow<nummeasurements && !m_error; ++irow) {
+    double c = m_HCH.fast(irow+1,irow+1) ;
+    m_error = ! (0 <= c && c <=1) ;
+    diagroots.push_back(std::sqrt(c)) ;
+  }
+  for(size_t irow=0; irow<nummeasurements && !m_error; ++irow) 
+    for(size_t icol=0; icol<irow && !m_error; ++icol) {
+      double c = m_HCH.fast(irow+1,icol+1) / (diagroots[irow]*diagroots[icol]) ;
+      m_error =  ! (-1 <= c && c <=1) ;
+    }
   return StatusCode::SUCCESS ;
 }
 

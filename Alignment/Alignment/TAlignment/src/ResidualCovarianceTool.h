@@ -1,4 +1,4 @@
-// $Id: ResidualCovarianceTool.h,v 1.2 2008-01-22 16:15:15 janos Exp $
+// $Id: ResidualCovarianceTool.h,v 1.3 2008-02-05 21:39:16 wouter Exp $
 #ifndef TRACKTOOLS_RESIDUALCOVARIANCETOOL_H 
 #define TRACKTOOLS_RESIDUALCOVARIANCETOOL_H 1
 
@@ -23,16 +23,18 @@ public:
   //ResidualCovarianceTool( const std::string& type, 
   //			  const std::string& name,
   //			  const IInterface* parent);
-  ResidualCovarianceTool() {}
+  ResidualCovarianceTool() : m_error(false) {}
   virtual ~ResidualCovarianceTool( ) {}; ///< Destructor
   
   virtual StatusCode compute(const LHCb::Track& track) ;
   
   const CLHEP::HepSymMatrix& HCH_norm() const { return m_HCH ; }
   double HCH_norm(const LHCb::Node& i, const LHCb::Node& j) const;
+  bool error() const { return m_error ; }
 
 private:
   CLHEP::HepSymMatrix m_HCH ;
   std::vector<const LHCb::Node*> m_nodes ;
+  bool m_error ;
 };
 #endif // TRACKTOOLS_MEASUREMENTPROVIDER_H
