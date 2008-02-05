@@ -5,6 +5,14 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+
+</PRE><H1><A NAME=v3r0>2008-03-05 HltSys v3r0</A></H1><PRE>
+This version uses LHCb v23r3. 
+ - There has been a major cleanup of the code in the alleys. 
+ - The selections now include the inclusive muon selections. But the rate is still unreasonable. 
+ - First version of HltKshort, but not yet run.
+
+!========================== HltSys v3r0 2007-03-05 ===================
 ! 2008-02-04 - Tomasz Skwarnicki
   - Fix HltL0TriggerSequence to restore ability to Tis/Tos L0 Trigger
   - Fix HltAlleys in HltSelections.opts to refer to the one in Hlt.opts 
@@ -22,11 +30,11 @@ Purpose: LHCb High Level Trigger packages.
    HltFilters that apply a bifunction filter, needs to be indicated in the FilterDescriptor
    "IP,>,0.1", is now "IP_PV2D,>,0.1"
 
-!========================== HltSys v2r0 2007-12-17 ===================
 </PRE><H1><A NAME=v2r0>2007-12-17 HltSys v2r0</A></H1><PRE>
 This version uses LHCb v23r2 and the Tf framework. This is the first
-version migtated t Tf.
+version migtated to Tf.
 
+!========================== HltSys v2r0 2007-12-17 ===================
 ! 2007-12-17 - P. Koppenburg
  - Use 2D PV in selections
 
