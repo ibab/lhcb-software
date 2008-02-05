@@ -1,4 +1,4 @@
-// $Id: AlgorithmCorrelations.h,v 1.1 2007-03-02 08:49:26 cattanem Exp $
+// $Id: AlgorithmCorrelations.h,v 1.2 2008-02-05 18:36:17 pkoppenb Exp $
 #ifndef ALGORITHMCORRELATIONS_H 
 #define ALGORITHMCORRELATIONS_H 1
 
@@ -11,14 +11,18 @@
  *  
  *  Tool to print a table of correlations of Bernoullian variables. See
  *  Interface doxygen.
- *  Options for this implementation:
- *    If one wants to declare the algorithm directly to the tool (ignoring
+ *  Options for this implementation, ff one wants to declare the algorithm directly to the tool (ignoring
  *    the corresponding methods):
+ *  @code
  *      Algorithms = { "alg1", "alg2"... }
- *      AlgorithmsRow, optional, for non-squere matrices.
+ *      AlgorithmsRow, optional, for non-square matrices. Defines headers for columns
+ *  @endcode
  *    Other options:
- *      OnlyNonZero = true ; ///< skips algorithms with eff=0 in table
- *      Decimals = -1 ; ///< defines precision. -1 means automatic precision.
+ *  @code
+ *      OnlyNonZero = true ; // skips algorithms with eff=0 in table
+ *      Decimals = -1 ; // defines precision. -1 means automatic precision.
+ *      UseNumbers = true ;  // labels columns by numbers
+ *  @endcode
  *
  *  @author Patrick KOPPENBURG
  *  @date   2005-04-19
@@ -44,29 +48,31 @@ public:
   StatusCode endEvent() ;
 
 protected:
-  StatusCode reset(void); // reset everything
-  bool isEffective(const std::string& ); ///< Algo did something
-  int happyAlgorithms(void); ///< Number of algos that did something
-  int getDecimals(void); ///< Number of significant decimals
-  StatusCode addResults(void); // add all results
-  StatusCode resetAlgoResult(std::vector<AlgoResult>&);
-  StatusCode fillResult(const std::string&,const bool&,std::vector<AlgoResult>&) ;
+  StatusCode reset(void);                     ///< reset everything
+  bool isEffective(const std::string& ) const ; ///< Algo did something
+  int happyAlgorithms(void) const ;           ///< Number of algos that did something
+  unsigned int getDecimals(void) const ;      ///< Number of significant decimals
+  StatusCode addResults(void);                ///< add all results
+  StatusCode resetAlgoResult(std::vector<AlgoResult>&); ///< reset algo Results
+  StatusCode fillResult(const std::string&,const bool&,std::vector<AlgoResult>&) ; ///< fill results
   
 private:
-  std::vector<std::string> m_algorithmsRow ; ///< Algorithms to check
-  std::vector<std::string> m_algorithmsColumn ; ///< Algorithms to against (= Row by default)
+  std::vector<std::string> m_conditionAlgorithms ;    ///< Algorithms to check against
+  std::vector<std::string> m_algorithmsToTest ; ///< Algorithms to check
   std::vector<AlgoMatrix> m_SelResultMatrices ; ///< Pairs of correlations
-  std::vector<AlgoResult> m_rowResults; ///< results of algorithms in this event
-  std::vector<AlgoResult> m_columnResults; ///< results of algorithms in this event
+  std::vector<AlgoResult> m_conditionResults;         ///< results of algorithms in this event
+  std::vector<AlgoResult> m_testResults;      ///< results of algorithms in this event
   
-  int m_longestName ; ///< Longest algorithm name
+  unsigned int m_longestName ; ///< Longest algorithm name
   bool m_minimize ; ///< Use mimimal table width
   int m_decimals ; ///< Number of decimals 
+  bool m_square ; ///< it is a squere matrix
+  bool m_useNumbers ; ///< use numbers as column labels
 
   // container of results for one algorithm
   class AlgoResult{
   public:
-    AlgoResult(){m_algo = "Undefined";reset(); return;};
+    AlgoResult(){m_algo = "UNDEFINED";reset(); return;};
     AlgoResult(std::string& algo){m_algo = algo;reset(); return;};
     ~AlgoResult(){};
    
@@ -98,16 +104,16 @@ private:
     ~AlgoMatrix(){};
 
     /// Add SelResult
-    void addResult(const bool&, const bool&);
+    void addConditionalResult(const bool&, const bool&);
 
     /// Return full statistics
-    int getStatistics() const{return m_alg2passed;};
+    int getConditionalStatistics() const{return m_alg2passed;};
   
     /// Return full statistics
-    double getFraction() const{
+    double getConditionalFraction() const{
       if ( m_alg2passed>0) return double(m_bothpassed)/m_alg2passed;
       else return -1. ; };
-    double getPercent() const{return 100.*this->getFraction();};
+    double getConditionalPercent() const{return 100.*getConditionalFraction();};
 
     /// Return algorithm names
     void getAlgorithms( std::string&, std::string& ) const;
