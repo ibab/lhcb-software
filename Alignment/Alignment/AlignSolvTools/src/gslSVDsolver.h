@@ -1,4 +1,4 @@
-// $Id: gslSVDsolver.h,v 1.2 2007-11-21 14:14:47 janos Exp $
+// $Id: gslSVDsolver.h,v 1.3 2008-02-05 21:38:40 wouter Exp $
 #ifndef GSLSVDSOLVER_H 
 #define GSLSVDSOLVER_H 1
 
@@ -38,6 +38,7 @@ private:
   bool         m_svdJacobi;    ///< Use Jacobi SVD?
   double       m_svdEpsilon;   ///< SVD threshold. The singular values are stored in gsl_vector S.
   unsigned int m_nZero;        ///< remove the n smallest eigenvalues
+  size_t m_numberOfPrintedEigenvalues ;
 };
 
 inline std::ostream& operator<<(std::ostream& lhs, const gsl_vector& rhs) {

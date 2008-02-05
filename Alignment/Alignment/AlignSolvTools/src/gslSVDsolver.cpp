@@ -1,4 +1,4 @@
-// $Id: gslSVDsolver.cpp,v 1.3 2008-01-31 11:03:46 wouter Exp $
+// $Id: gslSVDsolver.cpp,v 1.4 2008-02-05 21:38:40 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +29,7 @@ gslSVDsolver::gslSVDsolver( const std::string& type,
   declareProperty("SVDJacobi" ,           m_svdJacobi  = false);
   declareProperty("SVDEpsilon",           m_svdEpsilon = 0.0  );
   declareProperty("SVDSetSmallestToZero", m_nZero      = 0    );
+  declareProperty( "NumberOfPrintedEigenvalues", m_numberOfPrintedEigenvalues = 20 ) ;
 }
 //=============================================================================
 // Destructor
@@ -59,7 +60,7 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
   gsl_vector* vectorW = gsl_vector_alloc(size);
   gsl_matrix* matrixU = matrixA ;
 
-  info() << "==> Matrix A  = " << (*matrixA) << endmsg;
+  debug() << "==> Matrix A  = " << (*matrixA) << endmsg;
  
   debug() << "Factorising matrix A" << endmsg;
   /// Factorise A into the SVD A = USV^T. Note matrix A is replaced with matrix U.
@@ -78,10 +79,17 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
   }
   debug() << "Done factorising matrix A" << endmsg;
 
-  info() << "==> Matrix U  = " << (*matrixA) << endmsg;
-  info() << "==> Vector S  = " << (*vectorS) << endmsg;
-  info() << "==> Matrix V  = " << (*matrixV) << endmsg;
+  debug() << "==> Matrix U  = " << (*matrixA) << endmsg;
+  debug() << "==> Vector S  = " << (*vectorS) << endmsg;
+  debug() << "==> Matrix V  = " << (*matrixV) << endmsg;
 
+  std::ostringstream logmessage ;
+  logmessage << "Smallest eigen values: [ " << std::setprecision(4) ;
+  for(size_t ipar = std::max(0,int(size) - int(m_numberOfPrintedEigenvalues)); ipar<size; ++ipar) 
+    logmessage << gsl_vector_get(vectorS,ipar) << ", " ;
+  logmessage << "]" ;
+  info() << logmessage.str() << endmsg ;
+  
   /// Regularise by zeroing singular values below threshold
   if (m_svdEpsilon > 0) {
     /// Threshold is epsilon times max singular value
@@ -97,8 +105,8 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
     }
   }
 
-  info() << "==> Regularised Vector S  = " << (*vectorS) << endmsg;
-
+  debug() << "==> Regularised Vector S  = " << (*vectorS) << endmsg;
+  
   // Replace symMatrix with its inverse (the covariance matrix)
   for(unsigned irow=0; irow<size; ++irow)
     for(unsigned int icol=0; icol<=irow; ++icol) 
@@ -131,7 +139,7 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
   /// Fill AlVec
   for (unsigned(i) = 0; i < size; ++i) vector[i] = (*gsl_vector_const_ptr(vectorX, i));
 
-  info() << "==> Vector x = " << (*vectorX) << endmsg;
+  debug() << "==> Vector x = " << (*vectorX) << endmsg;
   
   
   /// free gsl vector and matrices
