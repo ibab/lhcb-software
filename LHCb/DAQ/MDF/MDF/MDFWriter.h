@@ -1,4 +1,4 @@
-// $Id: MDFWriter.h,v 1.7 2008-01-25 22:58:45 frankb Exp $
+// $Id: MDFWriter.h,v 1.8 2008-02-05 10:33:31 frankm Exp $
 //	====================================================================
 //  MDFWriter.h
 //	--------------------------------------------------------------------
@@ -57,8 +57,6 @@ namespace LHCb    {
     StreamBuffer  m_data;
     /// Pointer to checksum object
     TMD5*         m_md5;
-    /// Input data type (banks from TES=1, compressed data from address = 2)
-    int           m_dataType;
     /// Location of the raw banks in the TES
     std::string   m_bankLocation;
     /// Bytes write count

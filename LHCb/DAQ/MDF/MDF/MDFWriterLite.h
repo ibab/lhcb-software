@@ -1,4 +1,4 @@
-// $Id: MDFWriterLite.h,v 1.6 2007-08-29 08:22:12 apuignav Exp $
+// $Id: MDFWriterLite.h,v 1.7 2008-02-05 10:33:31 frankm Exp $
 //	====================================================================
 //  MDFWriterLite.h
 //	--------------------------------------------------------------------
@@ -54,8 +54,6 @@ namespace LHCb    {
     StreamBuffer  m_data;
     /// Pointer to checksum object
     TMD5*         m_md5;
-    /// Input data type (banks from TES=1, compressed data from address = 2)
-    int           m_dataType;
     /// Maximum size of each file (after which a new file will be written)
     size_t	  m_maxFileSizeKB;
     /// Maximum number of events in a file (after which a new file will be written)
