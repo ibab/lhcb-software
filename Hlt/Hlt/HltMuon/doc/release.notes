@@ -4,7 +4,7 @@
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
 
-!!========================== HltMuon v3r0 2008-02-05 ===================
+!========================== HltMuon v3r0 2008-02-05 ===================
  2008-01-22 - Jose A. Hernando
  - adaptations to HLT-clean
  - HltMuonRec, set the size of the errors in the cov matrix for T search
