@@ -2,7 +2,6 @@
 // Test job options for FlightDistanceFilterCriterion
 //
 #include "$B2HHROOT/options/DVPreselB2hh.opts"
-ApplicationMgr.DLLs  += { "PhysSelections" };
 
 ApplicationMgr.TopAlg += { "Sequencer/SeqTestFilter" };
 SeqTestFilter.Members += { "RefineSelection/FilterLongB", 
