@@ -104,7 +104,7 @@ HltMuonTConfL0SingleTrigger.Members = {
 MuonEntry.L0ChannelsName = {"Muon" ,"MuonNoGlob"};
 MuonEntry.OutputLevel = 3;
 
-L0MuonSingle.InputSelection ="L0TriggerAllMuons";
+L0MuonSingle.InputSelection ="L0AllMuons";
 L0MuonSingle.FilterDescriptor = {"PT,||>,1300"};
 L0MuonSingle.OutputLevel = 3;
 
@@ -173,9 +173,6 @@ HltMuonTConfL0DimuonTrigger.Members = {
 L0DimuonEntry.L0ChannelsName = {"DiMuon"};
 L0DimuonEntry.OutputLevel = 3;
 
-L0TriggerDiMuon.InputSelection    = "L0TriggerAllMuons";
-L0TriggerDiMuon.FilterDescriptor = {"SumPT,>,1500."};
-L0TriggerDiMuon.OutputLevel = 3;
 
 L0MuonDimuon.InputSelection ="L0TriggerDiMuon";
 L0MuonDimuon.OutputLevel = 3;

@@ -21,7 +21,8 @@ HltSelections.Context = "HLT" ;
 //---------------------------------------------------------------------
 
 #include "$HLTSYSROOT/options/HltRecoSequence.opts"
-HltSelections.Members += {"HltSelectionEntry/HltAlleys",
+//HltSelections.Members += {"HltSelectionEntry/HltAlleys",
+HltSelections.Members += {"HltSelectionFilter/HltAlleys",
                           "GaudiSequencer/PassedAlleys", // empty sequencer
                           "GaudiSequencer/HltRecoSequence"
 };
