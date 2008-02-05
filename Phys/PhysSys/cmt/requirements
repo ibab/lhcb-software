@@ -10,7 +10,7 @@ use  DaVinciFilter      	v6r6     Phys   # Juan Palacios
 use  ProtoParticleFilter        v1r3     Phys   # Chris Jones
 use  DaVinciTools       	v15r8    Phys   # Juan Palacios
 use  DaVinciTransporter 	v3r7p2   Phys   # Juan Palacios
-use  ParticleMaker      	v3r4     Phys   # Chris Jones
-use  VertexFit			v4r4p1   Phys   # Yuehong Xie
+use  ParticleMaker      	v3r4p1   Phys   # Chris Jones
+use  VertexFit			v4r5     Phys   # Yuehong Xie
 
 

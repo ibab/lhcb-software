@@ -8,9 +8,89 @@ Purpose     : LHCb physics packages
 - Based on LHCb v23r3 and Gaudi v19r7
 
 ###############################################################################
-#                                  PHYS v6r9                                  #
+#                                  PHYS v6r10                                 #
 ###############################################################################
 
+!========================== VertexFit v4r5 2008-02-05 ===================
+
+! 2008-02-05 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v4r5
+
+ - options/DVFlightDistanceFilterCriterion.opts
+  . Remove .DLLs += line.
+
+! 2008-01-15 - Vanya BELYAEV
+
+ - src/MassFitter.cpp
+   new class LoKi::MassFitter, 
+   the most trivial implementation of IMassFit abstract interface 
+   ATTENTION: the tool is not properly tested yet! to be done urgently!
+
+ - src/MatrixUtils.h
+   remove the obsolete file, use 
+    LHCbMath/MatrixUtils.h & LHCbMath/MatrixTransforms.h instead
+   the related files are updated properly 
+
+!======================== ParticleMaker v3r4p1 2008-02-05 ===================
+
+! 2008-01-11 - Patrick Koppenburg
+ - src/CombinedParticleMaker.cpp:
+   . Get a pointer to State rather than a reference. Avoids changing the state.
+     Bug spotted by Vanya.
+ - Increment to v3r4p1
+
+!======================== DaVinciTools v15r8 2008-02-05 =====================
+
+! 2008-02-05 - Juan PALACIOS
+ - options/DVFlightDistanceFilterCriterion.opts
+  . remove .DLLs  += line.
+
+! 2008-01-21 - Patrick Koppenburg for Rudolf Oldemann
+ - New method calcProjectedFlightDistance in GeomDispCalculators
+
+! 2008-01-17 - Patrick Koppenburg
+ - CombineParticles: Declare LoKi::Hybrid::FilterCriterion/FILTERX as 
+   default filters for phases X=0,1,2. Remove unnecessary lines in test options.
+
+! 2008-01-15 - Patrick Koppenburg
+ - New testing options DVTestCombineParticles.opts
+ - info -> debug in intialize
+
+! 2008-01-14 - Patrick Koppenburg
+ - Remove DVTestMakeResonances as it uses the obsolete version 
+   of CombineParticles.
+ - Add DVTestCombineParticles.opts
+ - PhysDesktop: do not clean at finalize()
+ - Increment to v15r8
+
+!========================== DaVinciFilter v6r6 2008-02-05 =================
+
+! 2008-02-05 - Juan PALACIOS
+ - options/DVFlightDistanceFilterCriterion.opts
+ - options/DVTestByPIDFilterParticles.opts
+  . Remove ApplicationMgr.DLLs += lines.
+
+! 2008-01-21 - Patrick Koppenburg for Rudolf Oldemann
+ - FlightDistanceFC: use new projected distance
+
+! 2008-01-17 - Patrick Koppenburg
+ - FilterDesktop: Allow to redefine filter to be used.
+
+! 2008-01-15 - Patrick Koppenburg
+ - Make ByPIDFilterCriterion.cpp even more paranoid about wrong syntax.
+ - info -> debug in initialize in all tools.
+
+! 2008-01-14 - Patrick Koppenburg
+ - Change the parsing of cuts in ByPIDFilterCriterion.cpp to allow for 
+   Loki::Hybrid:: filters
+ - Adapt comments in FilterDesktop.h
+ - Increment to v6r6
+
+! 2007-12-19 - Patrick Koppenburg
+ - Remove FlightDistanceFilterCriterion.h. cpp has already been removed in 
+   Feb 2006. Bug reported by Rudolf Oldemann.
+ - Increment to v6r5p3
 
 </PRE><H1><A NAME=v6r9>2007-12-13 Phys v6r9 - First Tf framework compatible version</A></H1><PRE>
 
