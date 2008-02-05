@@ -60,12 +60,10 @@ make_fragment python_alias -header=python_alias_header -dependencies
 
 
 pattern source_shell_alias \
-    set_append SOURCESHELLALIASLIST " <script> "
+    set_append SOURCESHELLALIASLIST " $(<package>_cmtpath)/InstallArea/scripts/<script> "
 
 cmtpath_pattern \
-    set SOURCESHELLDIR "$(<project>_home)/InstallArea/scripts" ; \
     setup_script $(LBSCRIPTSPOLICYROOT)/scripts/SourceShellAlias
-    set_remove SOURCESHELLDIR
 
 pattern shell_alias \
     set_append SHELLALIASLIST " <script> "
