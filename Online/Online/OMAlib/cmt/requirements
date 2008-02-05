@@ -3,21 +3,25 @@
 # Maintainer : Giacomo Graziani 
 # =============================================================================
 package          OMAlib
-version          v0r1
+version          v0r2
 
 
 branches src cmt doc OMAlib
 
 use   ROOT             v5*      LCG_Interfaces
-use   OnlineHistDB     v4*      Online
+use   OnlineHistDB     v4r6      Online
 #
 apply_pattern install_more_includes more=OMAlib
 #
+# Go for the latest and greatest ROOT
+macro ROOT_config_version "5.18.00"
+
+
 
 library OMAlib  *.cpp
 apply_pattern linker_library library=OMAlib
 
-macro_append OMAlib_shlibflags " -lHist  " WIN32 " libHist.lib "
+macro_append OMAlib_shlibflags " -lHist  -lGraf -lRIO  " WIN32 " libHist.lib libGraf.lib libRIO.lib"
 
 
 #===============================================================

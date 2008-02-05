@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.1.1.1 2007-10-16 13:03:03 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.2 2008-02-05 23:01:47 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -20,6 +20,10 @@ OMAlib::OMAlib(std::string DBpasswd,
   doAlgList(); 
 }
 
+OMAlib::OMAlib() : m_debug(2) {
+  m_histDB = new OnlineHistDB();
+  m_localDBsession=true;
+}
 
 OMAlib::~OMAlib() {
   std::map<std::string, OMAalg*>::iterator i;
