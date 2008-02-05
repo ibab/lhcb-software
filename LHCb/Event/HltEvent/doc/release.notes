@@ -4,6 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2008-02-05 - Patrick Koppenburg
+ - HltEnums: accessor methods allowing to get the GaudiMap fo enum and string.
+   That's very useful for looping over enums.
+
 !======================== HltEvent v8r6 2008-01-24 ===========================
 ! 2008-01-23 - Patrick Koppenburg
  - Used GOD-given conversion to string in HltEnums
