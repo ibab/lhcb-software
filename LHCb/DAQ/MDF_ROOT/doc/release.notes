@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : DAQ/MDF_ROOT
+! Responsible : Markus Frank
+! Purpose     : ROOT plugin to read MDF files.
+!-----------------------------------------------------------------------------
+
+!========================== MDF_ROOT v1r0 2008-02-09  ========================
+
+! 2007-12-19 - Markus Frank
+  - New package: ...to read MDF files with any protocol supported by ROOT
