@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.73 2008-01-23 13:33:34 ibelyaev Exp $ 
+! $Id: release.notes,v 1.74 2008-02-05 09:35:28 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,8 +15,16 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! 2008-02-05 - Vanya BELYAEV
+
+ - python/LoKiCore/functions.py
+
+    fix a typo in _iter_SRV_ function, iteration throuigh smartrefvector
+     (many thanks to Ricardo Vazquez Gomez)
+
+
 ! 2008-01-23 - Vanya BELYAEV
- - strc/HybridBase.cpp 
+ - src/HybridBase.cpp 
     imporove the (buggy) printout of "context" field..
 
 ! 2008-01-17 - Vanya BELYAEV
@@ -442,6 +450,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.73  2008/01/23 13:33:34  ibelyaev
+!  fix the printout for HybridBase-'context' field
+!
 ! Revision 1.72  2008/01/17 19:29:38  ibelyaev
 !  Range: fix the problem with reverse iterators
 !

@@ -361,15 +361,15 @@ def printDecay ( s , *a ) :
 ## Iterator (with dereferencing) througth SmartRefVector:
 def _iter_SRV_ ( self ) :
     """
-    Iterator (with derefernecing) througth SmartRefVector:
+    Iterator (with derefernecing) througth (SmartRef)Vector:
 
-    >>> srf = ...
+    >>> srv = ...
     >>> for o in srv :
     ...   print o
 
     """
     vct   = self
-    size  = svct.size() 
+    size  = vct.size() 
     index = 0
     while index < size :
         o = vct[index]
