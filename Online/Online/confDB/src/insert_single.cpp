@@ -84,7 +84,7 @@ extern "C" {
 			return -1;
 		}
 		int sysID=GetSubsystemID(systemnameList);
-		//std::cout<<"value of systemnameList "<<systemnameList<<"value of sysID="<<sysID<<std::endl;
+		//std:://cout<<"value of systemnameList "<<systemnameList<<"value of sysID="<<sysID<<std::endl;
 		if(sysID==-1)
 		{
 			GetErrorMess(appliName, "systemnameList is null",ErrMess,1);
@@ -673,7 +673,7 @@ extern "C" {
 		{
 			if(port_nbfrom!=NULL)
 				pfromlen=strlen(port_nbfrom)+1;
-			//std::cout<<"port_nbfrom "<<port_nbfrom<<" and its length="<<pfromlen<<std::endl;
+			//std:://cout<<"port_nbfrom "<<port_nbfrom<<" and its length="<<pfromlen<<std::endl;
 			status =OCIBindByName(hstmt, &bndp2[0], ociError,(text*) ":portnbfrom", -1,(dvoid*)port_nbfrom, pfromlen,  SQLT_STR, (dvoid *)&pfrom,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 		}		
 		if(status!=OCI_SUCCESS)
@@ -685,7 +685,7 @@ extern "C" {
 		{
 			if(port_nbto!=NULL)
 				ptolen=strlen(port_nbto)+1;
-			//std::cout<<"port_nbto "<<port_nbto<<" and its length="<<ptolen<<std::endl;
+			//std:://cout<<"port_nbto "<<port_nbto<<" and its length="<<ptolen<<std::endl;
 			status =OCIBindByName(hstmt, &bndp2[1], ociError,(text*) ":portnbto", -1,(dvoid*)port_nbto, ptolen,  SQLT_STR, (dvoid *) &pto,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 		}		
 		if(status!=OCI_SUCCESS)
@@ -705,7 +705,7 @@ extern "C" {
 		{
 			if(node_from!=NULL)
 				nfromlen=strlen(node_from)+1;
-			//std::cout<<"nfrom "<<nfrom<<" and its length="<<nfromlen<<std::endl;
+			//std:://cout<<"nfrom "<<nfrom<<" and its length="<<nfromlen<<std::endl;
 			status =OCIBindByName(hstmt, &bndp[0], ociError,(text*) ":nfrom", -1,(dvoid*)node_from, nfromlen,  SQLT_STR, (dvoid *) &nodefrom,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 		}	
 		if(status!=OCI_SUCCESS)
@@ -717,7 +717,7 @@ extern "C" {
 		{
 			if(node_to!=NULL)
 				ntolen=strlen(node_to)+1;
-			//std::cout<<"nto "<<nto<<" and its length="<<ntolen<<std::endl;
+			//std:://cout<<"nto "<<nto<<" and its length="<<ntolen<<std::endl;
 			status =OCIBindByName(hstmt, &bndp[1], ociError,(text*) ":nto", -1,(dvoid*)node_to, ntolen,  SQLT_STR, (dvoid *) &nodeto,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 		}		
 		if(status!=OCI_SUCCESS)
@@ -729,7 +729,7 @@ extern "C" {
 		{
 			if(link_type!=NULL)
 				lktypelen=strlen(link_type)+1;
-			//std::cout<<"lktype "<<link_type<<" and its length="<<lktypelen<<std::endl;
+			//std:://cout<<"lktype "<<link_type<<" and its length="<<lktypelen<<std::endl;
 			status =OCIBindByName(hstmt, &bndp[2], ociError,(text*) ":lktype", -1,(dvoid*)link_type,lktypelen,  SQLT_STR, (dvoid *) &lktype,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 		}
 		if(status!=OCI_SUCCESS)
@@ -752,7 +752,7 @@ extern "C" {
 		{
 			if(port_typeto1!=NULL)
 				ptypetolen=strlen(port_typeto1)+1;
-			//std::cout<<"value of strlen port_typeto"<<strlen(port_typeto)<<std::endl;
+			//std:://cout<<"value of strlen port_typeto"<<strlen(port_typeto)<<std::endl;
 			status =OCIBindByName(hstmt, &bndp2[4], ociError,(text*) ":ptypeto", -1,(dvoid*)port_typeto1, ptypetolen,  SQLT_STR, (dvoid *) &ptypeto,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 		}
 
@@ -765,7 +765,7 @@ extern "C" {
 		{
 			if(link_information!=NULL)
 				lkinfolen=strlen(link_information)+1;
-			//std::cout<<"value of strlen port_typeto"<<strlen(port_typeto)<<std::endl;
+			//std:://cout<<"value of strlen port_typeto"<<strlen(port_typeto)<<std::endl;
 			status =OCIBindByName(hstmt, &bndp2[5], ociError,(text*) ":lkinfo", -1,(dvoid*)link_information, lkinfolen,  SQLT_STR, (dvoid *) &lkinfo_null,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 		}
 		if(status!=OCI_SUCCESS)
@@ -784,7 +784,7 @@ extern "C" {
 		else
 			status= OCIStmtExecute(ociHdbc, hstmt, ociError, 1, 0, 0, 0, OCI_DEFAULT );
 
-		//std::cout<<"numrows"<<numrows<<std::endl;
+		//std:://cout<<"numrows"<<numrows<<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -1763,7 +1763,7 @@ extern "C" {
 		int i=0;
 
 		char seqname[100]="lhcb_history_deviceseq.nextval";
-		//std::cout<<"value of first_time "<<first_time <<std::endl;
+		//std:://cout<<"value of first_time "<<first_time <<std::endl;
 		int last_rows=last_rows1;
 		int* numrows_inserted=NULL;
 		int numrows=0;
@@ -1876,7 +1876,7 @@ extern "C" {
 		else
 			status =OCIBindByName(hstmt, &bndp[0], ociError,(text*) ":hwname", -1,(dvoid*)hwname, hwnamelen+1,  SQLT_STR, (dvoid *) &dname1,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 
-		//std::cout<<"before binding "<<std::endl;
+		//std:://cout<<"before binding "<<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -1933,7 +1933,7 @@ extern "C" {
 		}
 		else
 			status= OCIStmtExecute(ociHdbc, hstmt, ociError, 1, 0, 0, 0, OCI_DEFAULT );
-		//std::cout<<"after execute "<<std::endl;
+		//std:://cout<<"after execute "<<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -2132,8 +2132,8 @@ extern "C" {
 		}
 		else
 			status= OCIStmtExecute(ociHdbc, hstmt, ociError, 1, 0, 0, 0, OCI_DEFAULT );
-		//std::cout<<"value of rescode="<<rescode_plsql<<std::endl;
-		//std::cout<<"value of rescode="<<devid<<std::endl;
+		//std:://cout<<"value of rescode="<<rescode_plsql<<std::endl;
+		//std:://cout<<"value of rescode="<<devid<<std::endl;
 
 		if(rescode_plsql!=0)
 		{
@@ -2146,7 +2146,7 @@ extern "C" {
 		{
 			sprintf(sqlstmt,"BEGIN insert into %s (ipaddress,subnet_info,ipname,terminal_name,author,created) values(:ipadd,:subnet,:ipname,'%s','%s',sysdate);  insert into %s (portid,deviceid,port_nbr,port_way,port_type,ipaddress,author,terminal_name ) values (%s,%d,:ptnb,:ptway,:ptype,:ipadd,'%s','%s'); :numrows:=%s; end;" ,IPINFO_TABLE,host,login,PORT_TABLE,seqname,devid,login,host, SQLROWCOUNT);
 			status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"sqlstmt="<<sqlstmt<<std::endl;
+			//std:://cout<<"sqlstmt="<<sqlstmt<<std::endl;
 		}
 		pos1=0;
 		pos2=0;
@@ -2188,7 +2188,7 @@ extern "C" {
 			GetErrorMess(appliName,  "MALLOC_UNSUCCESSFUL ",ErrMess,1);
 			return -1;
 		}
-		//std::cout<<"before loop nb_ipadd="<<nb_ipadd<<std::endl;
+		//std:://cout<<"before loop nb_ipadd="<<nb_ipadd<<std::endl;
 
 
 		while(i<nb_ipadd)
@@ -2266,7 +2266,7 @@ extern "C" {
 
 			i++;
 		}
-		//std::cout<<"after loop subnet_maxlen="<<subnet_maxlen<<std::endl;
+		//std:://cout<<"after loop subnet_maxlen="<<subnet_maxlen<<std::endl;
 		ipaddVector=(char*)malloc(ipadd_maxlen*nb_ipadd*sizeof(char));
 		if (ipaddVector!=NULL)
 			rescode=NormalizeVector(ipaddressList, nb_ipadd,ipadd_maxlen,ipaddVector);
@@ -2386,7 +2386,7 @@ extern "C" {
 			GetErrorMess(appliName,  "MALLOC_UNSUCCESSFUL ",ErrMess,1);
 			return -1;
 		}
-		//std::cout<<"before binding"<<ipadd_maxlen<<std::endl;
+		//std:://cout<<"before binding"<<ipadd_maxlen<<std::endl;
 
 		if(status!=OCI_SUCCESS)
 		{
@@ -2796,7 +2796,7 @@ extern "C" {
 		int sysname=null_charptr(system_name);
 		int psysname=null_charptr(parent_sysname);
 		int rescode_temp=null_charptr(rescode_plsql);
-		std::cout<<"sysname="<<system_name<<" and parent="<<parent_sysname<<std::endl;
+		//std::cout<<"sysname="<<system_name<<" and parent="<<parent_sysname<<std::endl;
 		if(system_name==NULL)
 		{
 			GetErrorMess(appliName, "system name can't be null",ErrMess,1);

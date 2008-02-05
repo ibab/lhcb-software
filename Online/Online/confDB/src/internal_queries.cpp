@@ -161,7 +161,7 @@ extern "C" {
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch (stmthp, ociError, 1, OCI_FETCH_NEXT, OCI_DEFAULT);
-				std::cout<<"value of statname "<<statname_temp<<" and time "<< statvalue <<std::endl;
+				//std::cout<<"value of statname "<<statname_temp<<" and time "<< statvalue <<std::endl;
 				if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 				{
 					pos1=strcspn(statname_temp,"?");

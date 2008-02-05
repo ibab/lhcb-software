@@ -214,7 +214,7 @@ extern "C" {
 				roundtrip=round_trip_max;
 
 			sprintf(selectdevtype,"BEGIN :rescode:=%s(:devname,1,:roundtrip,1); END;",_createRT);
-			//std::cout <<"selecttype "<<selectdevtype<<" sysname " <<systemname<< " devicename :"<<devicename<< std::endl;
+			//std:://cout <<"selecttype "<<selectdevtype<<" sysname " <<systemname<< " devicename :"<<devicename<< std::endl;
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		}
 
@@ -419,7 +419,7 @@ extern "C" {
 			GetErrorMess(appliName, "One subsystem name should be given",ErrMess,1);
 			return -1;
 		}
-		//std::cout<<"sysID= "<<sysID<<" and value of dev_from="<<dev_from<<std::endl;	
+		//std:://cout<<"sysID= "<<sysID<<" and value of dev_from="<<dev_from<<std::endl;	
 		char* port_list_temp=NULL;
 		if(sysID==-1)
 		{
@@ -450,7 +450,7 @@ extern "C" {
 			char selectdevtype[1000];
 			sprintf(selectdevtype,"select distinct t.port_nbr||'|'||nvl(t.port_type,'none')||'|'||t.port_way||'?' from %s t,%s e,%s r,%s d where t.portid=e.pfromid0 and e.nodeid_end1=r.deviceid and  mod(r.system_name,%d)=0 and e.nodeid_start0=d.deviceid and d.devicename=:devfrom ",PORT_TABLE,DESTINATIONTABLE,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE,sysID);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"selectdevtype "<<selectdevtype<<" and value of sysID="<<sysID<<std::endl;	
+			//std:://cout<<"selectdevtype "<<selectdevtype<<" and value of sysID="<<sysID<<std::endl;	
 		}
 
 
@@ -500,7 +500,7 @@ extern "C" {
 		else
 			status=OCIAttrGet((dvoid*) parmdp, (ub4) OCI_DTYPE_PARAM,(dvoid*) &len11, (ub4 *) 0, (ub4) OCI_ATTR_DATA_SIZE,(OCIError *) ociError);
 
-		//std::cout<<"dev_from= "<<dev_from<<std::endl;	
+		//std:://cout<<"dev_from= "<<dev_from<<std::endl;	
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -552,10 +552,10 @@ extern "C" {
 					memcpy(port_list_temp+pos1,portlist,pos2+1);
 					i++;
 					pos1+=pos2+1;
-					//std::cout<<"after fecthc value of portlist="<<port_list_temp<<std::endl;
+					//std:://cout<<"after fecthc value of portlist="<<port_list_temp<<std::endl;
 				}
 			}
-			//std::cout<<"value of portlist="<<portlist<<" and value of pos1="<<pos1<<std::endl;
+			//std:://cout<<"value of portlist="<<portlist<<" and value of pos1="<<pos1<<std::endl;
 			if(i>0)
 			{
 				status=0;
@@ -587,7 +587,7 @@ extern "C" {
 		status=OCITransCommit(ociHdbc, ociError, 0);
 		status+=OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 
-		//std::cout<<"protlist= "<<pfrom_list<<std::endl;	
+		//std:://cout<<"protlist= "<<pfrom_list<<std::endl;	
 		if(rescode!=0 )
 			OCIReportError(ociError,appliName, ErrMess,1); 
 		return (status+rescode);
@@ -694,7 +694,7 @@ extern "C" {
 
 			//start = clock();
 
-			//std::cout <<"value of systemname "<<systemname<<"  and value of dev_from "<<dev_from <<" and dev_to "<< dev_to <<std::endl;
+			//std:://cout <<"value of systemname "<<systemname<<"  and value of dev_from "<<dev_from <<" and dev_to "<< dev_to <<std::endl;
 			sprintf(selectdevtype,"BEGIN %s(:mboard,1,:rescode,:cpntid,:cpntname); if :rescode=0 then :resquery:=%s(:cpntid); else :resquery:=-1; end if; if :resquery=0 then :rcode:=%s(:cpntid,:portid); else :rcode:=-1; end if;END;",_CreateMicroLgLinks,_CreateMicroPaths,_InsertMicroPathUsingID);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		}
@@ -765,7 +765,7 @@ extern "C" {
 
 		//finish = clock();
 		//time = (double(finish)-double(start))/CLOCKS_PER_SEC;  
-		//std::cout <<"value of tabame "<<tabname <<" time elapsed "<<time<<std::endl;
+		//std:://cout <<"value of tabame "<<tabname <<" time elapsed "<<time<<std::endl;
 
 		if(status!=OCI_SUCCESS)
 		{
@@ -781,7 +781,7 @@ extern "C" {
 					if(rescode_pl!=0)	
 					{
 						//rescode=ShowErrors (OCI_SUCCESS_WITH_INFO, ociError, "OCIPL/SQL fct unsuccessful");
-						//std::cout <<"length tabname "<<strlen(tabname)<<std::endl;
+						//std:://cout <<"length tabname "<<strlen(tabname)<<std::endl;
 						if(rescode==-1)
 							GetErrorMess(appliName, "Cpnt Name not found",ErrMess,1);
 						else
@@ -824,7 +824,7 @@ extern "C" {
 			{
 				sprintf(selectdevtype,"select d.pathid,d.link_pos,d.nfrom||'?',d.nto||'?' from %s d order by pathid,link_pos ",MICROPATH_TEMP);
 				status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout <<"value of selectdevtype "<<selectdevtype <<std::endl;
+				//std:://cout <<"value of selectdevtype "<<selectdevtype <<std::endl;
 
 				if(status!=OCI_SUCCESS)
 				{
@@ -1255,10 +1255,10 @@ extern "C" {
 
 			//start = clock();
 
-			//std::cout <<"value of systemname "<<systemname<<"  and value of dev_from "<<dev_from <<" and dev_to "<< dev_to <<std::endl;
+			//std:://cout <<"value of systemname "<<systemname<<"  and value of dev_from "<<dev_from <<" and dev_to "<< dev_to <<std::endl;
 			sprintf(selectdevtype,"BEGIN %s(:mboard,1,:rescode,:cpntid); if :rescode=0 then :resquery:=%s(:portidfrom); else :resquery:=-1; end if; if :resquery=0 then :rcode:=%s(:portidfrom,:portidto,:cpntname); else :rcode:=-1; end if;END;",_CreateMicroLgLinks,_CreateMicroPaths_Host,_InsertMicroPathFromPortID);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout <<"selectdevtype= "<<selectdevtype<<std::endl;
+			//std:://cout <<"selectdevtype= "<<selectdevtype<<std::endl;
 		}
 		if(status!=OCI_SUCCESS)
 		{
@@ -1335,7 +1335,7 @@ extern "C" {
 
 		//finish = clock();
 		//time = (double(finish)-double(start))/CLOCKS_PER_SEC;  
-		//std::cout <<"after firts execute "<<std::endl;
+		//std:://cout <<"after firts execute "<<std::endl;
 
 		if(status!=OCI_SUCCESS)
 		{
@@ -1344,7 +1344,7 @@ extern "C" {
 		}
 		else
 		{
-			//std::cout <<"value of maboard= "<<mboard<<" and value of cpntid="<<cpntid<<"value of rescode_pl2= "<<rescode_pl2<<" value of rescode_pl="<<rescode_pl<<" and value of resquery ="<<resquery<<std::endl;
+			//std:://cout <<"value of maboard= "<<mboard<<" and value of cpntid="<<cpntid<<"value of rescode_pl2= "<<rescode_pl2<<" value of rescode_pl="<<rescode_pl<<" and value of resquery ="<<resquery<<std::endl;
 
 			if(rescode_pl2!=0)
 			{
@@ -1353,7 +1353,7 @@ extern "C" {
 					if(rescode_pl!=0)	
 					{
 						//rescode=ShowErrors (OCI_SUCCESS_WITH_INFO, ociError, "OCIPL/SQL fct unsuccessful");
-						//std::cout <<"length tabname "<<strlen(tabname)<<std::endl;
+						//std:://cout <<"length tabname "<<strlen(tabname)<<std::endl;
 
 						GetErrorMess(appliName, "Pb when creating the micro lg links",ErrMess,1);
 
@@ -1394,7 +1394,7 @@ extern "C" {
 			{
 				sprintf(selectdevtype,"select d.pathid,d.link_pos,d.nfrom||'?',d.nto||'?' from %s d order by pathid,link_pos ",MICROPATH_TEMP);
 				status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout <<"value of selectdevtype "<<selectdevtype <<std::endl;
+				//std:://cout <<"value of selectdevtype "<<selectdevtype <<std::endl;
 
 				if(status!=OCI_SUCCESS)
 				{
@@ -1824,10 +1824,10 @@ extern "C" {
 
 			//start = clock();
 
-			//std::cout <<"value of systemname "<<systemname<<"  and value of dev_from "<<dev_from <<" and dev_to "<< dev_to <<std::endl;
+			//std:://cout <<"value of systemname "<<systemname<<"  and value of dev_from "<<dev_from <<" and dev_to "<< dev_to <<std::endl;
 			sprintf(selectdevtype,"BEGIN %s(:mboard,1,:rescode,:cpntid); if :rescode=0 then :resquery:=%s(:portidfrom); else :resquery:=-1; end if; if :resquery=0 then :rcode:=%s(:portidfrom,:cpntname,:cpnttype_given); else :rcode:=-1; end if;END;",_CreateMicroLgLinks,_CreateMicroPaths_Host,_InsertMicroPathCpntType);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout <<"value of selectdevtype= "<<selectdevtype<<" and mboard= "<<mboard<<std::endl;
+			//std:://cout <<"value of selectdevtype= "<<selectdevtype<<" and mboard= "<<mboard<<std::endl;
 
 		}
 		if(status!=OCI_SUCCESS)
@@ -1905,8 +1905,8 @@ extern "C" {
 
 		//finish = clock();
 		//time = (double(finish)-double(start))/CLOCKS_PER_SEC;  
-		//std::cout <<"value of tabame "<<tabname <<" time elapsed "<<time<<std::endl;
-		//std::cout <<"vallue of maboard= "<<mboard<<"value of rescode_pl2= "<<rescode_pl2<<" value of rescode_pl="<<rescode_pl<<" and value of resquery ="<<resquery<<std::endl;
+		//std:://cout <<"value of tabame "<<tabname <<" time elapsed "<<time<<std::endl;
+		//std:://cout <<"vallue of maboard= "<<mboard<<"value of rescode_pl2= "<<rescode_pl2<<" value of rescode_pl="<<rescode_pl<<" and value of resquery ="<<resquery<<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -1921,7 +1921,7 @@ extern "C" {
 					if(rescode_pl!=0)	
 					{
 						//rescode=ShowErrors (OCI_SUCCESS_WITH_INFO, ociError, "OCIPL/SQL fct unsuccessful");
-						//std::cout <<"length tabname "<<strlen(tabname)<<std::endl;
+						//std:://cout <<"length tabname "<<strlen(tabname)<<std::endl;
 						if(rescode==-1)
 							GetErrorMess(appliName, "Cpnt Name not found",ErrMess,1);
 						else
@@ -1964,7 +1964,7 @@ extern "C" {
 			{
 				sprintf(selectdevtype,"select d.pathid,d.link_pos,d.nfrom||'?',d.nto||'?' from %s d order by pathid,link_pos ",MICROPATH_TEMP);
 				status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout <<"value of selectdevtype "<<selectdevtype <<std::endl;
+				//std:://cout <<"value of selectdevtype "<<selectdevtype <<std::endl;
 
 				if(status!=OCI_SUCCESS)
 				{
@@ -2375,7 +2375,7 @@ extern "C" {
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 
 		}
-		//std::cout << "switch_name ...." <<switch_name<<  std::endl;
+		//std:://cout << "switch_name ...." <<switch_name<<  std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -2515,13 +2515,13 @@ extern "C" {
 			pos44_bis=0;
 			pos55_bis=0;
 			pos66_bis=0;
-			//std::cout<<"ebefore loop"<<std::endl;
+			//std:://cout<<"ebefore loop"<<std::endl;
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT, 1,OCI_DEFAULT);
 
 				OCIReportError(ociError,appliName, ErrMess,1); 
-				//std::cout<<"in the loop status="<<ErrMess<<std::endl;
+				//std:://cout<<"in the loop status="<<ErrMess<<std::endl;
 				if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 				{
 					pos1=strcspn(portinfo,"?");
@@ -2590,10 +2590,10 @@ extern "C" {
 				}
 			}
 			status=0;
-			//std::cout<<"pos3="<<len_array_subnetnext<<std::endl;
-			//std::cout<<"pos4="<<len_array_destinip<<std::endl;
-			//std::cout<<"pos5="<<len_array_portnext<<std::endl;
-			//std::cout<<"pos6="<<rescode<<std::endl;
+			//std:://cout<<"pos3="<<len_array_subnetnext<<std::endl;
+			//std:://cout<<"pos4="<<len_array_destinip<<std::endl;
+			//std:://cout<<"pos5="<<len_array_portnext<<std::endl;
+			//std:://cout<<"pos6="<<rescode<<std::endl;
 			if(pos22>0)
 			{
 				if(len_array_destinname>pos22)
@@ -2712,7 +2712,7 @@ extern "C" {
 			OCIReportError(ociError,appliName, ErrMess,0); 
 		finish = clock();
 		time = (double(finish)-double(start))/CLOCKS_PER_SEC;  
-		std::cout<<"method 1 time= "<<time <<std::endl;
+		//std::cout<<"method 1 time= "<<time <<std::endl;
 		return (rescode+status);
 	}
 
@@ -2828,7 +2828,7 @@ extern "C" {
 		{
 			//start = clock();
 
-			//std::cout <<"value of systemname "<<systemname<<"  and value of dev_from "<<dev_from <<" and dev_to "<< dev_to <<std::endl;
+			//std:://cout <<"value of systemname "<<systemname<<"  and value of dev_from "<<dev_from <<" and dev_to "<< dev_to <<std::endl;
 			sprintf(selectdevtype,"select t.port_nbr||'|'||nvl(t.port_type,'none')||'|'||t.port_way||'?', e.ipaddress||'?',e.subnet_info||'?',f.ipaddress||'?',m.devicename||'?',u.macaddress||'?' from %s t,%s p,%s e,%s f, %s r,%s m,%s u,%s d where d.deviceid=p.deviceid and u.serialnb=d.serialnb and t.port_nbr=u.port_nbr and nvl(t.port_type,'none')=nvl(u.port_type,'none') and u.port_way=p.port_way and p.ipaddress=e.ipaddress and p.portid=r.ptoid0 and t.portid=r.pfromid0 and r.ptoid1=f.portid and r.routingpathused=1 and r.nodeid_start0=:dfrom and r.nodeid_end1=m.deviceid", PORT_TABLE,PORT_TABLE,IPINFO_TABLE,PORT_TABLE,ROUTINGTABLE,LOGICAL_DEVICE_TABLE,HWPORT_TABLE,LOGICAL_DEVICE_TABLE);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		}
@@ -2870,7 +2870,7 @@ extern "C" {
 
 		//finish = clock();
 		//time = (double(finish)-double(start))/CLOCKS_PER_SEC;  
-		//std::cout <<"value of tabame "<<tabname <<" time elapsed "<<time<<std::endl;
+		//std:://cout <<"value of tabame "<<tabname <<" time elapsed "<<time<<std::endl;
 
 		if(status!=OCI_SUCCESS)
 		{
@@ -2884,7 +2884,7 @@ extern "C" {
 				if(rescode==0)	
 				{
 					//rescode=ShowErrors (OCI_SUCCESS_WITH_INFO, ociError, "OCIPL/SQL fct unsuccessful");
-					//std::cout <<"length tabname "<<strlen(tabname)<<std::endl;
+					//std:://cout <<"length tabname "<<strlen(tabname)<<std::endl;
 					GetErrorMess(appliName, tabname,ErrMess,1);
 					status=OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 					free(tabname);
@@ -2895,7 +2895,7 @@ extern "C" {
 			{
 				sprintf(selectdevtype,"select d.pathid,d.link_pos,t.devicename||'?',d.pfrom,d.port_way1, g.devicename||'?',d.pto,d.port_way2,nvl(l.link_info,'none')||'?' from %s d, %s t,%s g,%s l,%s p where p.portid=decode(d.port_way1,1,l.portidto,l.portidfrom) and p.deviceid=d.nfrom and p.port_nbr||'|'||nvl(p.port_type,'none')=d.pfrom and d.port_way1=p.port_way and  d.nfrom=t.deviceid and d.nto=g.deviceid order by pathid,link_pos ",PATH_TEMP,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE,MACRO_CONNECTIVITY_TABLE,PORT_TABLE);
 				status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout <<"value of selectdevtype "<<selectdevtype <<std::endl;
+				//std:://cout <<"value of selectdevtype "<<selectdevtype <<std::endl;
 
 				if(status!=OCI_SUCCESS)
 				{
@@ -3458,7 +3458,7 @@ extern "C" {
 		else
 		{
 			//start = clock();
-			//std::cout <<"value of systemname "<<systemname<<"  and value of dev_from "<<dev_from <<" and dev_to "<< dev_to <<std::endl;
+			//std:://cout <<"value of systemname "<<systemname<<"  and value of dev_from "<<dev_from <<" and dev_to "<< dev_to <<std::endl;
 			sprintf(selectdevtype,"BEGIN :tabname:=%s(:devf,:devto,:dtypegiven); END;",_GiveDestinType);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		}
@@ -3507,7 +3507,7 @@ extern "C" {
 
 		//finish = clock();
 		//time = (double(finish)-double(start))/CLOCKS_PER_SEC;  
-		//std::cout <<"value of tabame "<<tabname <<std::endl;
+		//std:://cout <<"value of tabame "<<tabname <<std::endl;
 
 		if(status!=OCI_SUCCESS)
 		{
@@ -3535,7 +3535,7 @@ extern "C" {
 			{
 				sprintf(selectdevtype,"select d.pathid,d.link_pos,t.devicename||'?',d.pfrom,d.port_way1, g.devicename||'?',d.pto,d.port_way2,nvl(l.link_info,'none')||'?' from %s d, %s t,%s g,%s l,%s p where p.portid=decode(d.port_way1,1,l.portidto,l.portidfrom) and p.deviceid=d.nfrom and p.port_nbr||'|'||nvl(p.port_type,'none')=d.pfrom and d.port_way1=p.port_way and  d.nfrom=t.deviceid and d.nto=g.deviceid order by pathid,link_pos ",PATH_TEMP,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE,MACRO_CONNECTIVITY_TABLE,PORT_TABLE);
 				status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout <<"value of selectdevtype "<<selectdevtype <<std::endl;
+				//std:://cout <<"value of selectdevtype "<<selectdevtype <<std::endl;
 
 				if(status!=OCI_SUCCESS)
 				{

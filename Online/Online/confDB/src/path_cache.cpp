@@ -224,7 +224,7 @@ extern "C" {
 		{
 			if(strcspn(systemnameList,",")<strlen(systemnameList))
 			{
-				//std ::cout<<"value of sysIDlist "<<systemnameList<<std::endl;
+				//std :://cout<<"value of sysIDlist "<<systemnameList<<std::endl;
 				sysID=RetrieveSysIDList(systemnameList,sysIDlist);
 				if(sysID==-1)
 				{
@@ -237,8 +237,8 @@ extern "C" {
 				sysID=GetSubsystemID(systemnameList);
 			}
 		}
-		//std ::cout<<"value of sysIDlist "<<sysID<<std::endl;
-		//std ::cout<<"value of sysIDlist "<<sysIDlist<<std::endl;
+		//std :://cout<<"value of sysIDlist "<<sysID<<std::endl;
+		//std :://cout<<"value of sysIDlist "<<sysIDlist<<std::endl;
 		status =OCIHandleAlloc (ociEnv, (void**)&stmthp, OCI_HTYPE_STMT , 0, 0);
 
 		if(status!=OCI_SUCCESS)
@@ -259,7 +259,7 @@ extern "C" {
 				else
 					sprintf(selectconn,"select -t.linkid,f.deviceid,g.deviceid,f.port_nbr||'|'||nvl(f.port_type,'none')||'?',g.port_nbr||'|'||nvl(g.port_type,'none')||'?',t.link_type,t.bidirectional_link_used,t.lkused,decode(t.link_weight,1,2,2,1,0),n.devicename||'?',m.devicename||'?',nvl(t.link_info,'none')||'?' from %s t,%s g,%s f,%s m,%s n,%s l where t.lkused=1 and g.deviceid=m.deviceid and f.deviceid=n.deviceid and t.portidfrom=g.portid and t.portidto=f.portid and mod(l.system_name,t.system_name)*mod(t.system_name,l.system_name)=0 and (l.devicename=:dfrom  )",MACRO_CONNECTIVITY_TABLE,PORT_TABLE,PORT_TABLE,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE);
 
-				std::cout<<"value of dfrom "<<dfrom<<std::endl;
+				//std::cout<<"value of dfrom "<<dfrom<<std::endl;
 				//if(bidi_link==0)
 				//	sprintf(selectconn,"select t.linkid,g.deviceid,f.deviceid,g.port_nbr||'|'||nvl(g.port_type,'none')||'?',f.port_nbr||'|'||nvl(f.port_type,'none')||'?',t.link_type,t.bidirectional_link_used,t.lkused,t.link_weight,m.devicename||'?',n.devicename||'?',nvl(t.link_info,'none')||'?' from %s t,%s g,%s f, %s l,%s m,%s n, lhcb_device_system r,lhcb_device_system y,lhcb_device_system z where t.lkused=1 and g.deviceid=m.deviceid and f.deviceid=n.deviceid and t.portidfrom=g.portid and t.portidto=f.portid and l.devicename=:dfrom and l.deviceid=r.deviceid and y.deviceid=m.deviceid and z.deviceid=n.deviceid and r.systemid=y.systemid and y.systemid=z.systemid  ",MACRO_CONNECTIVITY_TABLE,PORT_TABLE,PORT_TABLE,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE);
 				//else
@@ -302,7 +302,7 @@ extern "C" {
 			}
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectconn,(ub4) strlen(selectconn),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		}
-		//std::cout<<"selectconn="<<selectconn<<std::endl;
+		//std:://cout<<"selectconn="<<selectconn<<std::endl;
 		if(bidi_link==0 ||bidi_link==1)
 		{
 			if(status!=OCI_SUCCESS)
@@ -324,7 +324,7 @@ extern "C" {
 			//{	
 			//	status =OCIBindByName(stmthp, &bndp[1], ociError,(text*) ":dto", -1,(dvoid*)dto, strlen(dto)+1,  SQLT_STR, (dvoid *)0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 			//}
-			//std ::cout<<"value of selectconn "<<selectconn <<std::endl;
+			//std :://cout<<"value of selectconn "<<selectconn <<std::endl;
 		}
 		if(status!=OCI_SUCCESS)
 		{
@@ -591,7 +591,7 @@ extern "C" {
 				return -1;
 			}
 		}
-		//std ::cout<<"after define " <<std::endl;
+		//std :://cout<<"after define " <<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -717,7 +717,7 @@ extern "C" {
 				return -1;
 			}
 		}
-		//std ::cout<<"before strcpy all " <<std::endl;
+		//std :://cout<<"before strcpy all " <<std::endl;
 		//strcpy(pfrom_list_temp,"?");
 		//strcpy(pto_list_temp,"?");
 		//strcpy(nfrom_list_temp1,"?");
@@ -741,7 +741,7 @@ extern "C" {
 		node_pos3bis=0;
 		lkinfo_pos2=0;
 		lkinfo_pos3=0;
-		//std ::cout<<"before the loop " <<std::endl;
+		//std :://cout<<"before the loop " <<std::endl;
 		while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 		{
 			Format_output(pfrom_null, port_nbrfrom, logmessage, '|');
@@ -753,11 +753,11 @@ extern "C" {
 			if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 
-				//std ::cout<<"after copy line by line nfrom="<<nfrom_list_temp1<<std::endl;
-				//std ::cout<<"after copy line by line nto="<<nto_list_temp1<<std::endl;
-				//std ::cout<<"after copy line by line pfrom="<<pfrom_list_temp<<std::endl;
-				//std ::cout<<"after copy line by line pto_temp="<<pto_list_temp<<std::endl;
-				//std ::cout<<"after copy line by line lkinfo_temp="<<lkinfo_list_temp<<std::endl;
+				//std :://cout<<"after copy line by line nfrom="<<nfrom_list_temp1<<std::endl;
+				//std :://cout<<"after copy line by line nto="<<nto_list_temp1<<std::endl;
+				//std :://cout<<"after copy line by line pfrom="<<pfrom_list_temp<<std::endl;
+				//std :://cout<<"after copy line by line pto_temp="<<pto_list_temp<<std::endl;
+				//std :://cout<<"after copy line by line lkinfo_temp="<<lkinfo_list_temp<<std::endl;
 
 				lkid_list_temp[i]=linkid;
 				lkweight_list_temp[i]=lkweight;
@@ -852,7 +852,7 @@ extern "C" {
 				else
 				{
 					//if(i==0)
-					//	std ::cout<<"before copy line by line port_nbrfrom="<<port_nbrfrom<<std::endl;
+					//	std :://cout<<"before copy line by line port_nbrfrom="<<port_nbrfrom<<std::endl;
 					memcpy(pfrom_list_temp+pos3,port_nbrfrom,pos1+1);
 					memcpy(pto_list_temp+pos3bis,port_nbrto,pos1bis+1);
 					memcpy(nfrom_list_temp1+node_pos3,nodename_from1,node_pos1+1);
@@ -1005,7 +1005,7 @@ extern "C" {
 				}
 			}
 		}
-		//std ::cout<<"after looping i=" <<i<<std::endl;
+		//std :://cout<<"after looping i=" <<i<<std::endl;
 		if(status!=OCI_SUCCESS && status != OCI_SUCCESS_WITH_INFO)
 		{
 			if(rescode==0 && i==0)
@@ -1052,10 +1052,10 @@ extern "C" {
 
 			}
 		}
-		//std::cout<<"value of _nfrom_name_temp="<<nfrom_list_temp1<<std::endl;
-		//std::cout<<"before copying in the array " <<std::endl;
-		//std::cout<<"1 end of pto_list_temp+pos1= " <<pto_list_temp+1300<<std::endl;
-		//std::cout<<"1 end of nfrom_array_list+pos1= " <<nfrom_array_list+1300<<std::endl;
+		//std:://cout<<"value of _nfrom_name_temp="<<nfrom_list_temp1<<std::endl;
+		//std:://cout<<"before copying in the array " <<std::endl;
+		//std:://cout<<"1 end of pto_list_temp+pos1= " <<pto_list_temp+1300<<std::endl;
+		//std:://cout<<"1 end of nfrom_array_list+pos1= " <<nfrom_array_list+1300<<std::endl;
 		if(rescode==0)
 		{
 			if(getallpaths==0)
@@ -1203,7 +1203,7 @@ extern "C" {
 						GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
 						return -1;
 					}
-					//std::cout<<"first allocation success " <<std::endl;
+					//std:://cout<<"first allocation success " <<std::endl;
 					for(j=0;j<i;j++)
 					{
 
@@ -1303,7 +1303,7 @@ extern "C" {
 						else
 						{
 							//	if(j>9950)
-							//	std::cout<<"before copying success " <<j<<std::endl;
+							//	std:://cout<<"before copying success " <<j<<std::endl;
 							pos1bis=strcspn(pfrom_list_temp+pos1,"?");
 							pfrom_list_temp[pos1bis+pos1]='\0';
 							strcpy(pfrom_array_list[j],pfrom_list_temp+pos1);
@@ -1315,7 +1315,7 @@ extern "C" {
 							pos6+=pos6bis+1;
 
 							//if(j==1330)
-							//std::cout<<"1 end of pto_list_temp+pos1= " <<pto_list_temp+pos6<<std::endl;
+							//std:://cout<<"1 end of pto_list_temp+pos1= " <<pto_list_temp+pos6<<std::endl;
 
 							pos7bis=strcspn(nfrom_list_temp1+pos7,"?");
 							nfrom_list_temp1[pos7bis+pos7]='\0';
@@ -1323,7 +1323,7 @@ extern "C" {
 							pos7+=pos7bis+1;
 
 							//if(j==1330)
-							//std::cout<<"3 end of copy nfrom_list_temp1+pos7=" <<nfrom_list_temp1+pos7<<std::endl;
+							//std:://cout<<"3 end of copy nfrom_list_temp1+pos7=" <<nfrom_list_temp1+pos7<<std::endl;
 
 							pos8bis=strcspn(nto_list_temp1+pos8,"?");
 							nto_list_temp1[pos8bis+pos8]='\0';
@@ -1331,14 +1331,14 @@ extern "C" {
 							pos8+=pos8bis+1;
 
 							//if(j==1330)
-							//std::cout<<"4 end of copy " <<nto_list_temp1+pos8<<std::endl;
+							//std:://cout<<"4 end of copy " <<nto_list_temp1+pos8<<std::endl;
 							pos9bis=strcspn(lkinfo_list_temp+pos9,"?");
 							lkinfo_list_temp[pos9bis+pos9]='\0';
 							strcpy(lkinfo_array_list[j],lkinfo_list_temp+pos9);
 							pos9+=pos9bis+1;
 
 							//if(j==1330)
-							//std::cout<<"end of copy " <<lkinfo_list_temp+pos9<<std::endl;
+							//std:://cout<<"end of copy " <<lkinfo_list_temp+pos9<<std::endl;
 
 
 						}
@@ -2215,7 +2215,7 @@ extern "C" {
 		if(lkinfo_list_temp!=NULL)
 			free(lkinfo_list_temp);
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-		//std::cout<<"loading conn"<<std::endl;
+		//std:://cout<<"loading conn"<<std::endl;
 		if(rescode!=0)
 			OCIReportError(ociError,appliName, ErrMess,1); 
 		else
@@ -2292,7 +2292,7 @@ extern "C" {
 				sysID=GetSubsystemID(systemnameList);
 			}
 		}
-		//std ::cout<<"value of sysIDlist "<<sysID<<std::endl;
+		//std :://cout<<"value of sysIDlist "<<sysID<<std::endl;
 		status =OCIHandleAlloc (ociEnv, (void**)&stmthp, OCI_HTYPE_STMT , 0, 0);
 
 		if(status!=OCI_SUCCESS)
@@ -2345,8 +2345,8 @@ extern "C" {
 			}
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectconn,(ub4) strlen(selectconn),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		}
-		printf("Internal Conn: %s %s\n",selectconn,dfrom);
-		//std ::cout<<"value of sysIDlist "<<selectconn<<std::endl;
+		////printf("Internal Conn: %s %s\n",selectconn,dfrom);
+		//std :://cout<<"value of sysIDlist "<<selectconn<<std::endl;
 		if(bidi_link==0 ||bidi_link==1)
 		{
 			if(status!=OCI_SUCCESS)
@@ -2390,7 +2390,7 @@ extern "C" {
 
 
 
-		//std ::cout<<"after define " <<std::endl;
+		//std :://cout<<"after define " <<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -2415,9 +2415,9 @@ extern "C" {
 			}
 
 		}
-		//std ::cout<<"before strcpy all " <<std::endl;
+		//std :://cout<<"before strcpy all " <<std::endl;
 
-		//std ::cout<<"before the loop " <<std::endl;
+		//std :://cout<<"before the loop " <<std::endl;
 		while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 		{
 			status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1, OCI_DEFAULT);
@@ -2441,7 +2441,7 @@ extern "C" {
 				}
 			}
 		}
-		//std ::cout<<"after looping i=" <<i<<std::endl;
+		//std :://cout<<"after looping i=" <<i<<std::endl;
 		if(status!=OCI_SUCCESS && status != OCI_SUCCESS_WITH_INFO)
 		{
 			if(rescode==0 && i==0)
@@ -2455,8 +2455,8 @@ extern "C" {
 
 			}
 		}
-		//std::cout<<"value of _nfrom_name_temp="<<nfrom_list_temp1<<std::endl;
-		//std::cout<<"before copying in the array " <<std::endl;
+		//std:://cout<<"value of _nfrom_name_temp="<<nfrom_list_temp1<<std::endl;
+		//std:://cout<<"before copying in the array " <<std::endl;
 		if(rescode==0)
 		{
 			if(getallpaths==0)
@@ -2619,7 +2619,7 @@ extern "C" {
 		int res=-1;
 		int stop=1;
 		int j=0;
-		printf ("In GetIndexForTabINT: searching for element %d \n",element_searched);
+		////printf ("In GetIndexForTabINT: searching for element %d \n",element_searched);
 		while(i<elt_List_len)
 		{
 			if(element_List[i]==element_searched)
@@ -2721,10 +2721,10 @@ extern "C" {
 
 			//start = clock();
 
-			//std::cout <<"value of systemname "<<systemname<<"  and value of dev_from "<<dev_from <<" and dev_to "<< dev_to <<std::endl;
+			//std:://cout <<"value of systemname "<<systemname<<"  and value of dev_from "<<dev_from <<" and dev_to "<< dev_to <<std::endl;
 			sprintf(selectdevtype,"BEGIN %s(:mboard,1,:rescode,:cpntid); if :rescode=0 then :resquery:=%s(:portidfrom); else :resquery:=-1; end if; END;",_CreateMicroLgLinks,_CreateMicroPaths_Host);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout <<"selectdevtype= "<<selectdevtype<<std::endl;
+			//std:://cout <<"selectdevtype= "<<selectdevtype<<std::endl;
 		}
 		if(status!=OCI_SUCCESS)
 		{
@@ -2779,7 +2779,7 @@ extern "C" {
 
 		//finish = clock();
 		//time = (double(finish)-double(start))/CLOCKS_PER_SEC;  
-		//std::cout <<"after firts execute "<<std::endl;
+		//std:://cout <<"after firts execute "<<std::endl;
 
 		if(status!=OCI_SUCCESS)
 		{
@@ -2788,13 +2788,13 @@ extern "C" {
 		}
 		else
 		{
-			//std::cout <<"value of maboard= "<<mboard<<" and value of cpntid="<<cpntid<<"value of rescode_pl2= "<<rescode_pl2<<" value of rescode_pl="<<rescode_pl<<" and value of resquery ="<<resquery<<std::endl;
+			//std:://cout <<"value of maboard= "<<mboard<<" and value of cpntid="<<cpntid<<"value of rescode_pl2= "<<rescode_pl2<<" value of rescode_pl="<<rescode_pl<<" and value of resquery ="<<resquery<<std::endl;
 			if(resquery!=0) //means that the PL/SQL fct unsuccessfully executed
 			{
 				if(rescode_pl!=0)	
 				{
 					//rescode=ShowErrors (OCI_SUCCESS_WITH_INFO, ociError, "OCIPL/SQL fct unsuccessful");
-					//std::cout <<"length tabname "<<strlen(tabname)<<std::endl;
+					//std:://cout <<"length tabname "<<strlen(tabname)<<std::endl;
 					GetErrorMess(appliName, "Pb when creating the micro lg links",ErrMess,1);
 					if(OCITransCommit(ociHdbc, ociError, 0)!=OCI_SUCCESS)
 					{
@@ -2822,9 +2822,9 @@ extern "C" {
 			{
 				//        sprintf(selectdevtype,"select pathid from %s d where path_weight=3 and node11=-:pto ",MICRODETPATH_TEMP);
 				sprintf(selectdevtype,"select pathid from %s where path_weight=3 and node11=-:pto ",MICRODETPATH_TEMP);
-				printf("select statement: %s\n        PortID = %d\n",selectdevtype,mboardportid_to);
+				////printf("select statement: %s\n        PortID = %d\n",selectdevtype,mboardportid_to);
 				status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevtype,(ub4) strlen(selectdevtype),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout <<"value of selectdevtype "<<selectdevtype <<std::endl;
+				//std:://cout <<"value of selectdevtype "<<selectdevtype <<std::endl;
 				if(status!=OCI_SUCCESS)
 				{
 					if(rescode==0)	
@@ -2852,7 +2852,7 @@ extern "C" {
 					status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1, OCI_DEFAULT);
 					if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 					{
-						//std::cout <<"value of pathid 1"<<pathid <<std::endl;
+						//std:://cout <<"value of pathid 1"<<pathid <<std::endl;
 						if(pathid>0)
 							rescode=0;
 						else
@@ -2863,7 +2863,7 @@ extern "C" {
 					else
 					{
 						rescode=-1;
-						//std::cout <<"value of pathid 2"<<pathid <<std::endl;
+						//std:://cout <<"value of pathid 2"<<pathid <<std::endl;
 						if(status!=OCI_SUCCESS && status != OCI_SUCCESS_WITH_INFO )
 						{
 							rescode=-1;
@@ -2903,15 +2903,15 @@ extern "C" {
 		int pos1=0;
 		int j=0;
 		int elt_searched_len=strlen(element_searched);
-		//std::cout<<"elt_searched_len="<<elt_searched_len<<" and elt_List_nb="<<elt_List_nb<<" and element_searched="<<element_searched<<std::endl;
-		printf ("In GetIndexForTabCHAR: searching for element %s \n",element_searched);
+		//std:://cout<<"elt_searched_len="<<elt_searched_len<<" and elt_List_nb="<<elt_List_nb<<" and element_searched="<<element_searched<<std::endl;
+		////printf ("In GetIndexForTabCHAR: searching for element %s \n",element_searched);
 		while(i<elt_List_nb)
 		{
 			if(strncmp(element_List[i],element_searched,elt_searched_len)==0)
 			{
 				elt_idx[j]=i;
 				j++;
-				//std::cout<<"found matching element element_List[i]="<<element_List[i]<<" and i="<<i<<std::endl; 
+				//std:://cout<<"found matching element element_List[i]="<<element_List[i]<<" and i="<<i<<std::endl; 
 			}
 
 			i++;
@@ -2920,7 +2920,7 @@ extern "C" {
 		if(j>0)
 		{
 			res=0;
-			//std::cout<<"j greater than 0"<<std::endl;
+			//std:://cout<<"j greater than 0"<<std::endl;
 		}
 		return res;
 	}
@@ -3094,7 +3094,7 @@ extern "C" {
 		int next_step=0;
 		//char portfrom_info[100];
 		//char portto_info[100];
-		printf("GetDetailedConnectivityBetweenDeviceDeviceTypes_Cache: %s %s \n",dev_from,dev_to );
+		////printf("GetDetailedConnectivityBetweenDeviceDeviceTypes_Cache: %s %s \n",dev_from,dev_to );
 		if(devtype_given==1)
 		{
 			_devicetoList_possible=(int*)malloc(_len_array_devto*sizeof(int));
@@ -3117,12 +3117,12 @@ extern "C" {
 				return -1;
 			}
 		}	
-		//std::cout<<"before starting"<<std::endl;
+		//std:://cout<<"before starting"<<std::endl;
 
 
 		if(reload_connectivity==1 || lkid_list==NULL)
 		{
-			//std::cout<<"loading connectivity table reload_connectivity="<<reload_connectivity<<std::endl;
+			//std:://cout<<"loading connectivity table reload_connectivity="<<reload_connectivity<<std::endl;
 			if(devtype_given==1 ||devtype_given==0)
 			{
 
@@ -3139,7 +3139,7 @@ extern "C" {
 				}
 			}
 
-			//std::cout<<"after LoadConnectivityTable_InCache and rescode="<<rescode<<"_len_array_gv="<<_len_array_gv<< std::endl;
+			//std:://cout<<"after LoadConnectivityTable_InCache and rescode="<<rescode<<"_len_array_gv="<<_len_array_gv<< std::endl;
 			if(rescode!=0)
 			{
 
@@ -3179,7 +3179,7 @@ extern "C" {
 		{
 			rescode=0;
 		}	
-		//std::cout<<"Connectivity loaded"<<std::endl;
+		//std:://cout<<"Connectivity loaded"<<std::endl;
 		elt_idx=(int*)malloc(elt_idx_len*sizeof(int));
 		elt_idx_temp=(int*)malloc(elt_idx_temp_len*sizeof(int));
 
@@ -3222,10 +3222,10 @@ extern "C" {
 		}
 		i=0;
 		int deviceid_from=0;
-		//std::cout<<"before getting the tabCHAR"<<std::endl;
+		//std:://cout<<"before getting the tabCHAR"<<std::endl;
 		rescode=GetIndexForTabCHAR_second(nfrom_array_list,max_rows, dev_from, elt_idx,elt_idx_len);
 
-		//std::cout<<"max_rows="<<max_rows<<" and dev_from="<<dev_from<<std::endl;
+		//std:://cout<<"max_rows="<<max_rows<<" and dev_from="<<dev_from<<std::endl;
 		if(rescode==-1)
 		{
 			if(delete_connectivity==1)
@@ -3428,12 +3428,12 @@ extern "C" {
 					if(node_to_list[m]==deviceid_to)
 					{
 						path_end_old[i]=1;
-						//std::cout<<"case 1 deviceid_to="<<deviceid_to<<std::endl;
+						//std:://cout<<"case 1 deviceid_to="<<deviceid_to<<std::endl;
 					}
 					else
 					{
 						path_end_old[i]=0;
-						//std::cout<<"case 2 deviceid_to="<<deviceid_to<<std::endl;
+						//std:://cout<<"case 2 deviceid_to="<<deviceid_to<<std::endl;
 
 					}
 				}
@@ -3450,7 +3450,7 @@ extern "C" {
 		pos3=0;
 		pos4=0;
 		pos5=0;
-		//std::cout<<"before getting in the loop"<<std::endl;
+		//std:://cout<<"before getting in the loop"<<std::endl;
 		start = clock();
 		while(stop==0 && j<nb_of_hop)
 		{
@@ -3635,26 +3635,26 @@ extern "C" {
 									}
 									if(len_array_gv_internal>0)
 									{
-										//std::cout<<"elt_value="<<elt_value<<" and len_array_gv_internal="<<len_array_gv_internal<<std::endl;
+										//std:://cout<<"elt_value="<<elt_value<<" and len_array_gv_internal="<<len_array_gv_internal<<std::endl;
 										rescode=GetIndexForTabINT(node_from_list_internal,len_array_gv_internal,elt_value , elt_idx_int_temp1,elt_idx_int_temp1_len,1);
 										if(elt_idx_int_temp1_len>0)
 										{
 											linkid_int=path_matrix_old[i*nb_of_hop+(j-2)];
-											printf("Link ID = %d\n", linkid_int);
+											////printf("Link ID = %d\n", linkid_int);
 											rescode=GetIndexForTabINT(lkid_list,len_array_gv,linkid_int , elt_idx_int_temp1,elt_idx_int_temp1_len,1);
 											port_idx=elt_idx_int_temp1[0];
-											//std::cout<<"linkid_int="<<linkid_int<<" and pto_array_list[port_idx]="<<pto_array_list[port_idx]<<std::endl;
+											//std:://cout<<"linkid_int="<<linkid_int<<" and pto_array_list[port_idx]="<<pto_array_list[port_idx]<<std::endl;
 
 											rescode=DecomposePort(pfrom_array_list[elt_value_temp1],strlen(pfrom_array_list[elt_value_temp1]),  ptnb_from, ptype_from);
 											rescode+=DecomposePort(pto_array_list[port_idx],strlen(pto_array_list[port_idx]),  ptnb_to, ptype_to);
-											//std::cout<<"ptnb_to="<<ptnb_to<<" and ptype_to="<<ptype_to<<std::endl;
+											//std:://cout<<"ptnb_to="<<ptnb_to<<" and ptype_to="<<ptype_to<<std::endl;
 
 											if(linkid_int>0)
 											{
 												rescode+=GetPortID_portinfo(elt_value,ptnb_from,ptype_from,1,pfrom_int,ErrMess_temp);
 												rescode+=GetPortID_portinfo(elt_value,ptnb_to,ptype_to,2,pto_int,ErrMess_temp);
 												rescode+=CheckInternalConnectivity(pfrom_int, pto_int,ErrMess_temp);
-												//std::cout<<"pfrom_int="<<pfrom_int<<" and pto_int="<<pto_int<<" and rescode="<<rescode<<std::endl;
+												//std:://cout<<"pfrom_int="<<pfrom_int<<" and pto_int="<<pto_int<<" and rescode="<<rescode<<std::endl;
 
 											}
 											else
@@ -3764,7 +3764,7 @@ extern "C" {
 				{
 					if(path_end_old[i]==1)
 					{
-						//std::cout<<"je suis dans path end 1"<<std::endl;
+						//std:://cout<<"je suis dans path end 1"<<std::endl;
 						path_valid=(int*)realloc(path_valid,(valid_path+1)*nb_of_hop*sizeof(int));
 						pathid_list_temp=(int*)realloc(pathid_list_temp,(nb_of_line1+j)*sizeof(int));
 						link_pos_list_temp=(int*)realloc(link_pos_list_temp,(nb_of_line1+j)*sizeof(int));
@@ -3867,18 +3867,18 @@ extern "C" {
 							if(rescode==0)
 							{
 								strcpy(nfrom1_list_temp+pos2,nfrom_array_list[elt_value]);
-								//std::cout<<"value of nfrom_array_list[elt_value]="<<nfrom_array_list[elt_value]<<std::endl;
-								//std::cout<<"value of nfrom1_list_temp"<<nfrom1_list_temp<<std::endl;
-								//std::cout<<"value of nfrom1_list_temp+pos2"<<nfrom1_list_temp+pos2<<std::endl;
-								//	fprintf (f, "node_from_name=%s and node_id=%d \n",nfrom1_list+pos2,_node_from_list_gv[elt_value]);
+								//std:://cout<<"value of nfrom_array_list[elt_value]="<<nfrom_array_list[elt_value]<<std::endl;
+								//std:://cout<<"value of nfrom1_list_temp"<<nfrom1_list_temp<<std::endl;
+								//std:://cout<<"value of nfrom1_list_temp+pos2"<<nfrom1_list_temp+pos2<<std::endl;
+								//	f//printf (f, "node_from_name=%s and node_id=%d \n",nfrom1_list+pos2,_node_from_list_gv[elt_value]);
 								pos2+=strlen(nfrom_array_list[elt_value])+1;
 
 							}
 							if(rescode==0)
 							{
 								strcpy(nto1_list_temp+pos1,nto_array_list[elt_value]);
-								//std::cout<<"value of nto_array_list[elt_value]="<<nto_array_list[elt_value]<<std::endl;
-								//std::cout<<"value of nto1_list_temp"<<nto1_list_temp<<std::endl;
+								//std:://cout<<"value of nto_array_list[elt_value]="<<nto_array_list[elt_value]<<std::endl;
+								//std:://cout<<"value of nto1_list_temp"<<nto1_list_temp<<std::endl;
 								pos1+=strlen(nto_array_list[elt_value])+1;
 							}
 							if(rescode==0)
@@ -3906,10 +3906,10 @@ extern "C" {
 				}
 			}
 			//finish = clock();
-			//std::cout<<"time to executed iteration j="<<j<<" and time="<<finish-start<<std::endl;
+			//std:://cout<<"time to executed iteration j="<<j<<" and time="<<finish-start<<std::endl;
 			j=j+2;
 			stop=ComputePathWeight(path_end_old,path_matrix_old_len);
-			//std::cout<<"time 1 to executed iteration j="<<j<<" and stop="<<stop<<std::endl;
+			//std:://cout<<"time 1 to executed iteration j="<<j<<" and stop="<<stop<<std::endl;
 			path_matrix_old=(int*)realloc(path_matrix_old,nb_of_line*nb_of_hop*sizeof(int));
 			path_end_old=(int*)realloc(path_end_old,nb_of_line*sizeof(int));
 			path_type=(int*)realloc(path_type,nb_of_line*sizeof(int));
@@ -3918,7 +3918,7 @@ extern "C" {
 			CopyVector(path_type,path_type_new,nb_of_line,nb_of_line,0);//copy + element shift
 			path_matrix_old_len=nb_of_line;
 			stop+=ComputePathWeight(path_end_new,nb_of_line);
-			//std::cout<<"time 2 to executed iteration j="<<j<<" and stop="<<stop<<std::endl;
+			//std:://cout<<"time 2 to executed iteration j="<<j<<" and stop="<<stop<<std::endl;
 			path_matrix_new_len=0;
 			nb_of_line=0;
 
@@ -4077,12 +4077,12 @@ extern "C" {
 					nto1_arraylen=pos1;
 					pto1_arraylen=pos3;
 					lkinfo1_arraylen=pos5;
-					//std::cout<<"len_array="<<len_array<<" and nb of line="<<nb_of_line1<<std::endl;
-					//std::cout<<"pfrom1_arraylen="<<pfrom1_arraylen<<" and pos4="<<pos4<<std::endl;
-					//std::cout<<"nfrom1_arraylen="<<nfrom1_arraylen<<" and pos2="<<pos2<<std::endl;
-					//std::cout<<"pto1_arraylen="<<pto1_arraylen<<" and pos3="<<pos3<<std::endl;
-					//std::cout<<"nto1_arraylen="<<nto1_arraylen<<" and pos1="<<pos1<<std::endl;
-					//std::cout<<"lkinfo1_arraylen="<<lkinfo1_arraylen<<" and pos5="<<pos5<<std::endl;
+					//std:://cout<<"len_array="<<len_array<<" and nb of line="<<nb_of_line1<<std::endl;
+					//std:://cout<<"pfrom1_arraylen="<<pfrom1_arraylen<<" and pos4="<<pos4<<std::endl;
+					//std:://cout<<"nfrom1_arraylen="<<nfrom1_arraylen<<" and pos2="<<pos2<<std::endl;
+					//std:://cout<<"pto1_arraylen="<<pto1_arraylen<<" and pos3="<<pos3<<std::endl;
+					//std:://cout<<"nto1_arraylen="<<nto1_arraylen<<" and pos1="<<pos1<<std::endl;
+					//std:://cout<<"lkinfo1_arraylen="<<lkinfo1_arraylen<<" and pos5="<<pos5<<std::endl;
 					rescode=-1;
 
 				}
@@ -4114,7 +4114,7 @@ extern "C" {
 
 		}
 		nb_of_line=0;
-		//std::cout<<"out of the last loop and valid_path="<<valid_path<<std::endl;
+		//std:://cout<<"out of the last loop and valid_path="<<valid_path<<std::endl;
 		free(elt_idx_temp);
 		free(elt_idx);
 		if(elt_idx_temp1!=NULL)
@@ -4208,7 +4208,7 @@ extern "C" {
 			}
 		}
 
-		//std::cout<<"end of connec_cache "<<std::endl;	
+		//std:://cout<<"end of connec_cache "<<std::endl;	
 		return rescode;
 	}
 	int GetDetailedConnectivityBetweenDeviceDeviceType_CacheReverse(char appliName[100],char* systemnameList,char* dev_from, char* dev_to,int devtype_given, int& len_array, int &pfrom1_arraylen,int &nfrom1_arraylen,int &pto1_arraylen,int &nto1_arraylen,int &lkinfo1_arraylen,char* nfrom1_list,char* nto1_list,char* pfrom1_list,int* pfrom_list,char* pto1_list,int* pto_list,int* pathid_list,int* link_pos_list,char* lkinfo_list,int reload_connectivity,int delete_connectivity,char* ErrMessage)
@@ -4306,12 +4306,12 @@ extern "C" {
 				return -1;
 			}
 		}	
-		//std::cout<<"in reverse conn, before starting"<<std::endl;
+		//std:://cout<<"in reverse conn, before starting"<<std::endl;
 
 
 		if(reload_connectivity==1 || lkid_list_scd==NULL || nfrom_array_list_scd==NULL)
 		{
-			//std::cout<<"loading connectivity table BIDIRECTIONAL_WAY_USED="<<BIDIRECTIONAL_WAY_USED<<std::endl;
+			//std:://cout<<"loading connectivity table BIDIRECTIONAL_WAY_USED="<<BIDIRECTIONAL_WAY_USED<<std::endl;
 			if(devtype_given==1 ||devtype_given==0)
 				rescode=LoadConnectivityTable_InCache( systemnameList,dev_from,"none",BIDIRECTIONAL_WAY_USED,0,ErrMess_temp);
 			else
@@ -4320,7 +4320,7 @@ extern "C" {
 					rescode=LoadConnectivityTable_InCache( systemnameList,dev_from,dev_to,BIDIRECTIONAL_WAY_USED, 0,ErrMess_temp);
 			}
 
-			//std::cout<<"after LoadConnectivityTable_InCache and rescode="<<rescode<<"_len_array_gv="<<_len_array_gv<< std::endl;
+			//std:://cout<<"after LoadConnectivityTable_InCache and rescode="<<rescode<<"_len_array_gv="<<_len_array_gv<< std::endl;
 			if(rescode!=0)
 			{
 
@@ -4360,7 +4360,7 @@ extern "C" {
 		{
 			rescode=0;
 		}	
-		//std::cout<<"Connectivity loaded"<<std::endl;
+		//std:://cout<<"Connectivity loaded"<<std::endl;
 		elt_idx=(int*)malloc(elt_idx_len*sizeof(int));
 		elt_idx_temp=(int*)malloc(elt_idx_temp_len*sizeof(int));
 		if(elt_idx==NULL || elt_idx_temp==NULL)
@@ -4403,9 +4403,9 @@ extern "C" {
 		}
 		i=0;
 		int deviceid_from=0;
-		//std::cout<<"in reverse, before getting the tabCHAR, devfrom="<<dev_from<<std::endl;
+		//std:://cout<<"in reverse, before getting the tabCHAR, devfrom="<<dev_from<<std::endl;
 		rescode=GetIndexForTabCHAR_second(nfrom_array_list_scd,max_rows_scd, dev_from, elt_idx,elt_idx_len);
-		//std::cout<<"in reversr max_rows="<<max_rows_scd<<" and rescode="<<dev_from<<std::endl;
+		//std:://cout<<"in reversr max_rows="<<max_rows_scd<<" and rescode="<<dev_from<<std::endl;
 		if(rescode==-1)
 		{
 
@@ -4454,7 +4454,7 @@ extern "C" {
 		if(devtype_given==2 ||devtype_given==0)
 		{
 			rescode=GetIndexForTabCHAR_second(nto_array_list_scd,max_rows_scd, dev_to, elt_idx,elt_idx_len);
-			//std::cout<<"in reversr max_rows="<<max_rows_scd<<" and rescode="<<dev_from<<std::endl;
+			//std:://cout<<"in reversr max_rows="<<max_rows_scd<<" and rescode="<<dev_from<<std::endl;
 			if(rescode==-1)
 			{
 
@@ -4631,7 +4631,7 @@ extern "C" {
 		pos3=0;
 		pos4=0;
 		pos5=0;
-		//std::cout<<"before getting in the loop"<<std::endl;
+		//std:://cout<<"before getting in the loop"<<std::endl;
 		start = clock();
 		while(stop==0 && j<nb_of_hop)
 		{
@@ -4644,7 +4644,7 @@ extern "C" {
 					elt_value=path_matrix_old[i*nb_of_hop+(j-1)];
 
 					rescode=GetIndexForTabINT(node_from_list_scd,len_array_gv_scd,elt_value , elt_idx_temp,elt_idx_temp_len,1);
-					//std::cout<<"in the loop rescode="<<rescode<<" and elt_idx_temp_len="<<elt_idx_temp_len<<std::endl;
+					//std:://cout<<"in the loop rescode="<<rescode<<" and elt_idx_temp_len="<<elt_idx_temp_len<<std::endl;
 					if(elt_idx_temp_len==0)
 					{
 						if(elt_idx_temp==0)
@@ -4745,7 +4745,7 @@ extern "C" {
 							if(path_type[i]%lktype_list_scd[elt_value_temp1]==0||lktype_list_scd[elt_value_temp1]%path_type[i]==0)
 							{
 								rescode=GetIndexForTabINT(path_matrix_temp,j,elt_value_temp2 , elt_idx_temp1,elt_idx_temp1_len,2);
-								//std::cout<<"in the loop k="<<k<<" and rescode="<<rescode<<std::endl;
+								//std:://cout<<"in the loop k="<<k<<" and rescode="<<rescode<<std::endl;
 
 								if(rescode==-1 ||elt_idx_temp1_len==0)
 								{
@@ -5051,18 +5051,18 @@ extern "C" {
 							if(rescode==0)
 							{
 								strcpy(nfrom1_list_temp+pos2,nfrom_array_list_scd[elt_value]);
-								//std::cout<<"value of nfrom_array_list[elt_value]="<<nfrom_array_list[elt_value]<<std::endl;
-								//std::cout<<"value of nfrom1_list_temp"<<nfrom1_list_temp<<std::endl;
-								//std::cout<<"value of nfrom1_list_temp+pos2"<<nfrom1_list_temp+pos2<<std::endl;
-								//	fprintf (f, "node_from_name=%s and node_id=%d \n",nfrom1_list+pos2,_node_from_list_gv[elt_value]);
+								//std:://cout<<"value of nfrom_array_list[elt_value]="<<nfrom_array_list[elt_value]<<std::endl;
+								//std:://cout<<"value of nfrom1_list_temp"<<nfrom1_list_temp<<std::endl;
+								//std:://cout<<"value of nfrom1_list_temp+pos2"<<nfrom1_list_temp+pos2<<std::endl;
+								//	f//printf (f, "node_from_name=%s and node_id=%d \n",nfrom1_list+pos2,_node_from_list_gv[elt_value]);
 								pos2+=strlen(nfrom_array_list_scd[elt_value])+1;
 
 							}
 							if(rescode==0)
 							{
 								strcpy(nto1_list_temp+pos1,nto_array_list_scd[elt_value]);
-								//std::cout<<"value of nto_array_list[elt_value]="<<nto_array_list[elt_value]<<std::endl;
-								//std::cout<<"value of nto1_list_temp"<<nto1_list_temp<<std::endl;
+								//std:://cout<<"value of nto_array_list[elt_value]="<<nto_array_list[elt_value]<<std::endl;
+								//std:://cout<<"value of nto1_list_temp"<<nto1_list_temp<<std::endl;
 								pos1+=strlen(nto_array_list_scd[elt_value])+1;
 							}
 							if(rescode==0)
@@ -5090,7 +5090,7 @@ extern "C" {
 				}
 			}
 			//finish = clock();
-			//std::cout<<"time to executed iteration j="<<j<<" and time="<<finish-start<<std::endl;
+			//std:://cout<<"time to executed iteration j="<<j<<" and time="<<finish-start<<std::endl;
 			j=j+2;
 			stop=ComputePathWeight(path_end_old,path_matrix_old_len);
 			path_matrix_old=(int*)realloc(path_matrix_old,nb_of_line*nb_of_hop*sizeof(int));
@@ -5290,7 +5290,7 @@ extern "C" {
 
 		}
 		nb_of_line=0;
-		//std::cout<<"out of the last loop and valid_path="<<valid_path<<std::endl;
+		//std:://cout<<"out of the last loop and valid_path="<<valid_path<<std::endl;
 		free(elt_idx_temp);
 		free(elt_idx);
 		if(elt_idx_temp1!=NULL)
@@ -5384,7 +5384,7 @@ extern "C" {
 			}
 		}
 
-		//std::cout<<"end of connec_cache "<<std::endl;	
+		//std:://cout<<"end of connec_cache "<<std::endl;	
 		return rescode;
 	}
 
@@ -5713,7 +5713,7 @@ extern "C" {
 
 							}
 							//if(j==11)
-							//std::cout<<"copy of the corresponding path line to check loop"<<std::endl;
+							//std:://cout<<"copy of the corresponding path line to check loop"<<std::endl;
 
 						}
 						for(k=0;k<elt_idx_temp_len;k++)
@@ -5983,9 +5983,9 @@ extern "C" {
 			stop+=ComputePathWeight(path_end_old,path_matrix_old_len);
 			path_matrix_new_len=0;
 			nb_of_line=0;
-			//std::cout<<"j="<<j<<" and stop="<<stop<<std::endl;
+			//std:://cout<<"j="<<j<<" and stop="<<stop<<std::endl;
 		}	
-		//std::cout<<"out of the loop"<<std::endl;
+		//std:://cout<<"out of the loop"<<std::endl;
 		if(stop>0) // get the last valid path of the loop
 		{
 			for(i=0;i<path_matrix_old_len;i++)
@@ -6137,7 +6137,7 @@ extern "C" {
 
 		//fclose(f);
 		nb_of_line=0;
-		//std::cout<<"out of the last loop and valid_opath="<<valid_path<<std::endl;
+		//std:://cout<<"out of the last loop and valid_opath="<<valid_path<<std::endl;
 		free(elt_idx_temp);
 		free(elt_idx);
 		if(pathid_list6!=NULL)
@@ -6205,7 +6205,7 @@ extern "C" {
 			}
 		}
 
-		//std::cout<<"before returning "<<std::endl;	
+		//std:://cout<<"before returning "<<std::endl;	
 		return rescode;
 	}
 
@@ -6531,7 +6531,7 @@ extern "C" {
 
 							}
 							//if(j==11)
-							//std::cout<<"copy of the corresponding path line to check loop"<<std::endl;
+							//std:://cout<<"copy of the corresponding path line to check loop"<<std::endl;
 
 						}
 						for(k=0;k<elt_idx_temp_len;k++)
@@ -6799,9 +6799,9 @@ extern "C" {
 			stop+=ComputePathWeight(path_end_old,path_matrix_old_len);
 			path_matrix_new_len=0;
 			nb_of_line=0;
-			//std::cout<<"j="<<j<<" and stop="<<stop<<std::endl;
+			//std:://cout<<"j="<<j<<" and stop="<<stop<<std::endl;
 		}	
-		//std::cout<<"out of the loop"<<std::endl;
+		//std:://cout<<"out of the loop"<<std::endl;
 		if(stop>0) // get the last valid path of the loop
 		{
 			for(i=0;i<path_matrix_old_len;i++)
@@ -6953,7 +6953,7 @@ extern "C" {
 
 		//fclose(f);
 		nb_of_line=0;
-		//std::cout<<"out of the last loop and valid_opath="<<valid_path<<std::endl;
+		//std:://cout<<"out of the last loop and valid_opath="<<valid_path<<std::endl;
 		free(elt_idx_temp);
 		free(elt_idx);
 		if(pathid_list6!=NULL)
@@ -7021,7 +7021,7 @@ extern "C" {
 			}
 		}
 
-		//std::cout<<"before returning "<<std::endl;	
+		//std:://cout<<"before returning "<<std::endl;	
 		return rescode;
 	}
 	/************************************************************************/
@@ -7079,9 +7079,9 @@ extern "C" {
 				free(link_pos_list_cache_rev);
 		}
 		rescode=GetAllPathsPerDevice_cache(appliName, systemnameList, devname,len_array_cache, lkid_list5_cache, pathid_list_cache, link_pos_list_cache, reload_connectivity, delete_connectivity, ErrMessage_cache);
-		//std::cout<<"rescode="<<rescode<<" and ermess="<<ErrMessage_cache<<" and len_array_cache="<<len_array_cache<<std::endl;
+		//std:://cout<<"rescode="<<rescode<<" and ermess="<<ErrMessage_cache<<" and len_array_cache="<<len_array_cache<<std::endl;
 		rescode_rev=GetAllPathsPerDevice_cache_reverse(appliName, systemnameList, devname,len_array_cache_rev, lkid_list5_cache_rev, pathid_list_cache_rev, link_pos_list_cache_rev, reload_connectivity, delete_connectivity, ErrMessage_cache_rev);
-		//std::cout<<"rescode_rev="<<rescode_rev<<" and ermess="<<ErrMessage_cache_rev<<std::endl;
+		//std:://cout<<"rescode_rev="<<rescode_rev<<" and ermess="<<ErrMessage_cache_rev<<std::endl;
 
 		if(rescode==0 && rescode_rev==0)
 		{
@@ -7413,7 +7413,7 @@ extern "C" {
 		if((p=strstr(ErrMess,"NO_ROWS_SELECTED"))!=NULL || (p=strstr(ErrMess,"DEVICE NOT CONNECTED"))!=NULL)
 		{
 			rescode=GetDetailedConnectivityBetweenDeviceDeviceType_CacheReverse(appliName,"ALL",dev_from, dev_to,devto_type_given, len_array, pfrom_arraylen,nfrom_arraylen,pto_arraylen,nto_arraylen,lkinfo_arraylen,nfrom_list,nto_list,pfrom_list, pfrom1_list,pto_list,pto1_list, pathid_list,link_pos_list,lkinfo_list,reload_connectivity,delete_connectivity, ErrTemp);	
-			//std::cout<<"value of errtemp="<<ErrTemp<<std::endl;
+			//std:://cout<<"value of errtemp="<<ErrTemp<<std::endl;
 			if((p=strstr(ErrTemp,"DEVICE NOT CONNECTED"))==NULL)
 				strcpy(ErrMess,ErrTemp);
 		}

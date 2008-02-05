@@ -629,7 +629,7 @@ extern "C" {
 
 				sprintf(sqlstmt,"BEGIN if lower(nvl(:nto,'none'))='none' then update %s t set t.bidirectional_link_used=:biused,t.last_update=sysdate,t.user_update='%s' where  t.portidfrom=(select e.portid from %s e,%s l where  l.deviceid=e.deviceid and l.devicename=:nfrom and e.port_nbr=:pfrom and nvl(e.port_type,'none')=:ptypefrom and e.port_way=2) ; else if lower(nvl(:nfrom,'none'))='none' then update %s t set t.bidirectional_link_used=:biused,t.last_update=sysdate,t.user_update='%s' where t.portidto=(select e.portid from %s e, %s l where l.devicename=:nto and l.deviceid=e.deviceid and e.port_way=1 and nvl(e.port_type,'none')=:ptypeto and e.port_nbr=:pto) ;  end if; end if; :numrows:=%s; END; ",MACRO_CONNECTIVITY_TABLE,login,PORT_TABLE,LOGICAL_DEVICE_TABLE,MACRO_CONNECTIVITY_TABLE,login,PORT_TABLE,LOGICAL_DEVICE_TABLE,SQLROWCOUNT);
 				status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout<<"value of stmt "<<sqlstmt <<std::endl;
+				//std:://cout<<"value of stmt "<<sqlstmt <<std::endl;
 			}
 			if(status!=OCI_SUCCESS)
 			{
@@ -1185,7 +1185,7 @@ extern "C" {
 			{
 				sprintf(sqlstmt,"BEGIN if lower(nvl(:nto,'none'))='none' then update %s t set t.lkused=:lkused,t.last_update=sysdate,t.user_update='%s' where t.portidfrom=(select e.portid from %s e,%s l where l.deviceid=e.deviceid and l.devicename=:nfrom and e.port_nbr=:pfrom and nvl(e.port_type,'none')=:ptypefrom and e.port_way=2) ; else if lower(nvl(:nfrom,'none'))='none' then update %s t set t.lkused=:lkused,t.last_update=sysdate,t.user_update='%s' where t.portidto=(select e.portid from %s e, %s l where l.devicename=:nto and l.deviceid=e.deviceid and e.port_way=1 and nvl(e.port_type,'none')=:ptypeto and e.port_nbr=:pto) ;  end if; end if; :numrows:=%s; END; ",MACRO_CONNECTIVITY_TABLE,login,PORT_TABLE,LOGICAL_DEVICE_TABLE,MACRO_CONNECTIVITY_TABLE,login,PORT_TABLE,LOGICAL_DEVICE_TABLE,SQLROWCOUNT);
 				status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout<<"value of stmt "<<sqlstmt << "and len= "<<strlen(sqlstmt)<<std::endl;
+				//std:://cout<<"value of stmt "<<sqlstmt << "and len= "<<strlen(sqlstmt)<<std::endl;
 			}
 			if(status!=OCI_SUCCESS)
 			{
@@ -1256,7 +1256,7 @@ extern "C" {
 					status =OCIBindByName(hstmt, &bndp2[0], ociError,(text*) ":pfrom", -1,(dvoid*)pfrom,  _max_ptfrom3List_len,  SQLT_STR, (dvoid *) &_ptfrom3_nullvalue[0] ,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 				}
 			}
-			//std::cout<<"before binding "<<std::endl;
+			//std:://cout<<"before binding "<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -1317,7 +1317,7 @@ extern "C" {
 
 
 
-			//std::cout<<"after binding "<<std::endl;
+			//std:://cout<<"after binding "<<std::endl;
 
 			if(status!=OCI_SUCCESS)
 			{
@@ -1399,7 +1399,7 @@ extern "C" {
 			}
 			else
 				status= OCIStmtExecute(ociHdbc, hstmt, ociError, _nodefrom3NbElement, 0, 0, 0, OCI_DEFAULT );
-			//std::cout<<"after execute "<<std::endl;
+			//std:://cout<<"after execute "<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -1420,7 +1420,7 @@ extern "C" {
 					else
 						numrows=numrows_inserted[i];
 				}
-				//std::cout<<"numrows= "<<numrows<<std::endl;
+				//std:://cout<<"numrows= "<<numrows<<std::endl;
 				if(numrows==0)
 				{
 					int res_query1;
@@ -1428,7 +1428,7 @@ extern "C" {
 					int sysID=GetSubsystemID("DAQ,TFC");
 					sprintf(sqlstmt,"BEGIN :rescode:=%s(%d); :numrows:=%s; END; ",_UpdatePathUsed,sysID,SQLROWCOUNT);
 					status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-					//std::cout<<"value of sqlstmt 2 "<<sqlstmt<<std::endl;			
+					//std:://cout<<"value of sqlstmt 2 "<<sqlstmt<<std::endl;			
 					if(status!=OCI_SUCCESS)
 					{
 						if(rescode==0)	
@@ -1500,7 +1500,7 @@ extern "C" {
 					int sysID=GetSubsystemID("DAQ,TFC");
 					sprintf(sqlstmt,"BEGIN :rescode:=%s(%d); :numrows:=%s; END; ",_UpdatePathUsed,sysID,SQLROWCOUNT);
 					status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-					//std::cout<<"value of sqlstmt 2 "<<sqlstmt<<std::endl;			
+					//std:://cout<<"value of sqlstmt 2 "<<sqlstmt<<std::endl;			
 					if(status!=OCI_SUCCESS)
 					{
 						if(rescode==0)	
@@ -1793,7 +1793,7 @@ extern "C" {
 
 				sprintf(sqlstmt,"BEGIN if lower(nvl(:nto,'none'))='none' then update %s t set t.link_type=nvl((select p.linktypeid from %s p where p.link_name=:lkname),-1),t.last_update=sysdate,t.user_update='%s' where t.portIDfrom=(select k.portid from %s k,%s g where g.devicename=:nfrom and g.deviceid=k.deviceid and k.port_nbr=:pfrom and k.port_way=2 and nvl(k.port_type,'none')=:ptypefrom); else if lower(nvl(:nfrom,'none'))='none' then update %s t set t.link_type=(select f.linktypeID from %s f where f.link_name=:lkname),t.last_update=sysdate,t.user_update='%s' where t.portIDto=(select l.portid from %s l,%s e where e.devicename=:nto and e.deviceid=l.deviceid and l.port_nbr=:pto and  l.port_way=1 and nvl(l.port_type,'none')=:ptypeto) ;  end if; end if;  :numrows:=%s; END; ",MACRO_CONNECTIVITY_TABLE,LINKTYPE_TABLE,login,PORT_TABLE,LOGICAL_DEVICE_TABLE,MACRO_CONNECTIVITY_TABLE,LINKTYPE_TABLE,login,PORT_TABLE,LOGICAL_DEVICE_TABLE,SQLROWCOUNT);		
 				status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout<<"value of stmt "<<sqlstmt <<std::endl;
+				//std:://cout<<"value of stmt "<<sqlstmt <<std::endl;
 			}
 			if(status!=OCI_SUCCESS)
 			{
@@ -1859,7 +1859,7 @@ extern "C" {
 				{
 					for(i=0;i<_nodefrom2NbElement;i++)
 						numrows_inserted[i]=0;
-					//std::cout<<"before binding "<<std::endl;
+					//std:://cout<<"before binding "<<std::endl;
 					status =OCIBindByName(hstmt, &bndp2[0], ociError,(text*) ":pfrom", -1,(dvoid*)pfrom, _max_ptfrom2List_len,  SQLT_STR, (dvoid *)& _ptfrom2_nullvalue[0] ,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 				}
 			}
@@ -1870,7 +1870,7 @@ extern "C" {
 			}
 			else
 				status =OCIBindByName(hstmt, &bndp2[1], ociError,(text*) ":pto", -1,(dvoid*)pto, _max_ptto2List_len,  SQLT_STR, (dvoid *)& _ptto2_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-			//std::cout<<"before binding [2]"<<std::endl;
+			//std:://cout<<"before binding [2]"<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -1879,7 +1879,7 @@ extern "C" {
 			else
 				status =OCIBindByName(hstmt, &bndp2[2], ociError,(text*) ":nfrom", -1,(dvoid*)nodefrom, _max_nodefrom2List_len,  SQLT_STR, (dvoid *) & _nodefrom2_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 
-			//std::cout<<"before binding [3]"<<std::endl;
+			//std:://cout<<"before binding [3]"<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -1887,7 +1887,7 @@ extern "C" {
 			}
 			else
 				status =OCIBindByName(hstmt, &bndp2[3], ociError,(text*) ":nto", -1,(dvoid*)nodeto, _max_nodeto2List_len,  SQLT_STR,  (dvoid *) & _nodeto2_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-			//std::cout<<"before binding [4]"<<std::endl;
+			//std:://cout<<"before binding [4]"<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -1895,7 +1895,7 @@ extern "C" {
 			}
 			else
 				status =OCIBindByName(hstmt, &bndp2[4], ociError,(text*) ":lkname", -1,(dvoid*)linktype, _max_linktypeList_len2Update,SQLT_STR, (dvoid *) & _linktype_nullvalueUpdate[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-			//std::cout<<"before binding [5]"<<std::endl;
+			//std:://cout<<"before binding [5]"<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -1912,7 +1912,7 @@ extern "C" {
 			else
 				status =OCIBindByName(hstmt, &bndp2[5], ociError,(text*) ":ptypefrom", -1,(dvoid*)ptypefrom, _max_ptypefrom2List_len,  SQLT_STR, (dvoid *) &_ptypefrom2_nullvalue[0] ,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 
-			//std::cout<<"before binding [6]"<<std::endl;
+			//std:://cout<<"before binding [6]"<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -2013,14 +2013,14 @@ extern "C" {
 					else
 						numrows=numrows_inserted[i];
 				}
-				//std::cout<<"after execute numrows="<<numrows<<std::endl;
+				//std:://cout<<"after execute numrows="<<numrows<<std::endl;
 				if(numrows==0)
 				{
 					status = OCITransCommit(ociHdbc, ociError, 0);
 					int sysID=GetSubsystemID("DAQ,TFC");
 					sprintf(sqlstmt,"BEGIN :rescode:=%s(%d); :numrows:=%s; END; ",_UpdateDynamicTables,sysID,SQLROWCOUNT);
 					status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-					//std::cout<<"sql 2"<< sqlstmt<<std::endl;
+					//std:://cout<<"sql 2"<< sqlstmt<<std::endl;
 					if(status!=OCI_SUCCESS)
 					{
 						if(rescode==0)	
@@ -2086,7 +2086,7 @@ extern "C" {
 					int sysID=GetSubsystemID("DAQ,TFC");
 					sprintf(sqlstmt,"BEGIN :rescode:=%s(%d); :numrows:=%s; END; ",_UpdateDynamicTables,sysID,SQLROWCOUNT);
 					status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-					//std::cout<<"sql 2"<< sqlstmt<<std::endl;
+					//std:://cout<<"sql 2"<< sqlstmt<<std::endl;
 					if(status!=OCI_SUCCESS)
 					{
 						if(rescode==0)	
@@ -2378,7 +2378,7 @@ extern "C" {
 
 				sprintf(sqlstmt,"BEGIN if lower(nvl(:nto,'none'))='none' then update %s t set t.link_info=:lkinfo,t.last_update=sysdate,t.user_update='%s' where t.portIDfrom=(select k.portid from %s k,%s g where g.devicename=:nfrom and g.deviceid=k.deviceid and k.port_nbr=:pfrom and k.port_way=2 and nvl(k.port_type,'none')=:ptypefrom); else if lower(nvl(:nfrom,'none'))='none' then update %s t set t.link_info=:lkinfo,t.last_update=sysdate,t.user_update='%s' where t.portIDto=(select l.portid from %s l,%s e where e.devicename=:nto and e.deviceid=l.deviceid and l.port_nbr=:pto and  l.port_way=1 and nvl(l.port_type,'none')=:ptypeto) ;  end if; end if;  :numrows:=%s; END; ",MACRO_CONNECTIVITY_TABLE,login,PORT_TABLE,LOGICAL_DEVICE_TABLE,MACRO_CONNECTIVITY_TABLE,login,PORT_TABLE,LOGICAL_DEVICE_TABLE,SQLROWCOUNT);		
 				status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout<<"value of stmt "<<sqlstmt <<std::endl;
+				//std:://cout<<"value of stmt "<<sqlstmt <<std::endl;
 			}
 			if(status!=OCI_SUCCESS)
 			{
@@ -2444,7 +2444,7 @@ extern "C" {
 				{
 					for(i=0;i<_nodefrom2NbElement;i++)
 						numrows_inserted[i]=0;
-					//std::cout<<"before binding "<<std::endl;
+					//std:://cout<<"before binding "<<std::endl;
 					status =OCIBindByName(hstmt, &bndp2[0], ociError,(text*) ":pfrom", -1,(dvoid*)pfrom, _max_ptfrom5List_len,  SQLT_STR, (dvoid *)& _ptfrom5_nullvalue[0] ,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 				}
 			}
@@ -2455,7 +2455,7 @@ extern "C" {
 			}
 			else
 				status =OCIBindByName(hstmt, &bndp2[1], ociError,(text*) ":pto", -1,(dvoid*)pto, _max_ptto5List_len,  SQLT_STR, (dvoid *)& _ptto5_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-			//std::cout<<"before binding [2]"<<std::endl;
+			//std:://cout<<"before binding [2]"<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -2464,7 +2464,7 @@ extern "C" {
 			else
 				status =OCIBindByName(hstmt, &bndp2[2], ociError,(text*) ":nfrom", -1,(dvoid*)nodefrom, _max_nodefrom5List_len,  SQLT_STR, (dvoid *) & _nodefrom5_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 
-			//std::cout<<"before binding [3]"<<std::endl;
+			//std:://cout<<"before binding [3]"<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -2472,7 +2472,7 @@ extern "C" {
 			}
 			else
 				status =OCIBindByName(hstmt, &bndp2[3], ociError,(text*) ":nto", -1,(dvoid*)nodeto, _max_nodeto5List_len,  SQLT_STR,  (dvoid *) & _nodeto5_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-			//std::cout<<"before binding [4]"<<std::endl;
+			//std:://cout<<"before binding [4]"<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -2480,7 +2480,7 @@ extern "C" {
 			}
 			else
 				status =OCIBindByName(hstmt, &bndp2[4], ociError,(text*) ":lkinfo", -1,(dvoid*)linkinfo, _max_linkinfoList_len5Update,SQLT_STR, (dvoid *) & _linkinfo_nullvalueUpdate[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-			//std::cout<<"before binding [5]"<<std::endl;
+			//std:://cout<<"before binding [5]"<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -2497,7 +2497,7 @@ extern "C" {
 			else
 				status =OCIBindByName(hstmt, &bndp2[5], ociError,(text*) ":ptypefrom", -1,(dvoid*)ptypefrom, _max_ptypefrom5List_len,  SQLT_STR, (dvoid *) &_ptypefrom5_nullvalue[0] ,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 
-			//std::cout<<"before binding [6]"<<std::endl;
+			//std:://cout<<"before binding [6]"<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -2598,7 +2598,7 @@ extern "C" {
 					else
 						numrows=numrows_inserted[i];
 				}
-				//std::cout<<"after execute numrows="<<numrows<<std::endl;
+				//std:://cout<<"after execute numrows="<<numrows<<std::endl;
 				if(numrows==0)
 				{
 					status = OCITransCommit(ociHdbc, ociError, 0);

@@ -424,7 +424,7 @@ extern "C" {
 			sprintf(selectdev,"BEGIN update %s set cpnt_status=:dstatus,location=:dlocation where cpnt_status=%d and snbid=(select snbid from %s where cpntname=:dname) and replacable=1; if %s=1 then insert ALL into %s(HISTORYCPNTID,snbid,  cpnt_status, user_comment, location, status_change, created,author,terminal_name) values (%s,snb1,'%s',:usercomment,:dlocation,to_date(:statchange,'%s'), sysdate,'%s','%s') select snbid as snb1 from %s where cpntname=:dname;if to_date(:statchange,'%s')<to_date(:statchange2,'%s') then insert ALL into %s(HISTORYCPNTID, cpntid,  cpnt_status, user_comment, location, status_change,created,author,terminal_name) values (%s,devid1,'NONE',:usercomment,motherboard,to_date(:statchange,'%s'), sysdate,'%s','%s') select cpntid as devid1,devicename as motherboard from %s,%s  where cpntname=:dname and motherboardid=deviceid; end if; if to_date(:statchange2,'%s')<to_date(:statchange,'%s') then :rescode:=-15; :numrows:=0; else update %s set snbid=(select snbid from %s where serialnb=:snb),last_update=sysdate,user_update='%s' where cpntname=:dname and %d=(select cpnt_status from %s where serialnb=:snb and cpnt_status=%d) returning cpntid into :devid; if %s=1 then insert all into %s(historycpntid,snbid,cpntid,cpnt_status,user_comment,location,status_change,created,author,terminal_name) values (%s,snb,devid1,'IN_USE',:usercomment,locat,to_date(:statchange2,'%s'),sysdate,'%s','%s') select snbid as snb,cpntid as devid1,devicename as locat from %s,%s where cpntname=:dname and motherboardid=deviceid;update %s set cpnt_status=%d where serialnb=:snb; :numrows:=%s;  else :rescode:=-5; :numrows:=0; end if;  end if; else :rescode:=-10; :numrows:=0;end if;END;",HW_CPNTS_TABLE,IN_USE,LG_CPNTS_TABLE,SQLROWCOUNT,HISTORY_CPNT_TABLE,seq_name,new_cpnt_status,_date_format,login,host,LG_CPNTS_TABLE,_date_format,_date_format,HISTORY_CPNT_TABLE,seq_name,_date_format,login,host,LG_CPNTS_TABLE,LOGICAL_DEVICE_TABLE,_date_format,_date_format,LG_CPNTS_TABLE,HW_CPNTS_TABLE,login,SPARE,HW_CPNTS_TABLE,SPARE,SQLROWCOUNT,HISTORY_CPNT_TABLE,seq_name,_date_format,login,host,LG_CPNTS_TABLE,LOGICAL_DEVICE_TABLE,HW_CPNTS_TABLE,IN_USE,SQLROWCOUNT,login,host);			
 		}	
 
-		//std::cout<<"selectdev="<<selectdev<<std::endl;
+		//std:://cout<<"selectdev="<<selectdev<<std::endl;
 		status=OCIStmtPrepare(stmthp, ociError, (text*)selectdev, (ub4)strlen((char *)selectdev), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		if(status!=OCI_SUCCESS)
 		{
@@ -482,7 +482,7 @@ extern "C" {
 		}
 		else
 		{
-			//std::cout<<"date ="<<status_datechange<<std::endl;
+			//std:://cout<<"date ="<<status_datechange<<std::endl;
 			if(status_datechange!=NULL) 
 				status=OCIBindByName(stmthp, &bndp[4], ociError,(text*)":statchange",-1,(dvoid*) status_datechange,strlen(status_datechange)+1, SQLT_STR, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0, OCI_DEFAULT);
 			else
@@ -515,10 +515,10 @@ extern "C" {
 		else	
 			status=OCIBindByName(stmthp, &bndp3, ociError,(text*)":rescode",-1,(dvoid*) &res_code,sizeof(int), SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0, OCI_DEFAULT);
 
-		//std::cout<<"after binding 6"<<serialnb_replaced<<std::endl;
+		//std:://cout<<"after binding 6"<<serialnb_replaced<<std::endl;
 		if(serialnb_replaced!=NULL && strncmp(serialnb_replaced,"none",4)!=0)
 		{
-			//std::cout<<"date of repalce ="<<replace_date<<std::endl;
+			//std:://cout<<"date of repalce ="<<replace_date<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)
@@ -554,7 +554,7 @@ extern "C" {
 		}
 		else
 			status= OCIStmtExecute(ociHdbc, stmthp, ociError,  1, 0, 0, 0, OCI_DEFAULT );
-		//std::cout<<"res_code="<<res_code<<" numrows "<<numrows<<std::endl;
+		//std:://cout<<"res_code="<<res_code<<" numrows "<<numrows<<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -573,7 +573,7 @@ extern "C" {
 					if (res_code==-5)
 					{
 						GetErrorMess(appliName,"Error The given serial nb is not a SPARE",ErrMess,1);
-						//std::cout<<"value of rescode="<<numrows<<std::endl;
+						//std:://cout<<"value of rescode="<<numrows<<std::endl;
 					}
 					else
 					{
@@ -784,7 +784,7 @@ extern "C" {
 			sprintf(selectdev,"BEGIN update %s set cpnt_status=:dstatus,location=:dlocation where replacable=1 and cpnt_status!=%d and cpnt_status!=%d and serialnb=:snb; if %s=1 then insert all into %s(historycpntid, snbid,  cpnt_status, user_comment, location, status_change, created,author,terminal_name) values (%s,snbid,'%s',:usercomment,:dlocation,to_date(:statchange,'%s'), sysdate,'%s','%s') select snbid from %s where serialnb=:snb; :numrows:=%s; :rescode:=0; else :rescode:=-10; :numrows:=0;end if;END;",HW_CPNTS_TABLE,IN_USE,DESTROYED,SQLROWCOUNT,HISTORY_CPNT_TABLE,seq_name,new_cpnt_status,_date_format,login,host,HW_CPNTS_TABLE,SQLROWCOUNT);			
 		else
 			sprintf(selectdev,"BEGIN update %s set cpnt_status=:dstatus,location=(select serialnb from %s,%s where cpntname=:dname and motherboardid=deviceid) where replacable=1 and cpnt_status!=%d and cpnt_status!=%d and serialnb=:snb; if %s=1 then update %s set snbid=(select snbid from %s where serialnb=:snb),  last_update=sysdate,user_update='%s' where cpntname=:dname and snbid is null returning cpntid,snbid,motherboardid into :devid,:sysname,:dlocation; if %s=1 then insert all into %s(historycpntid, cpntid,snbid, cpnt_status, user_comment, location, status_change,created,author,terminal_name) values (%s,:devid,:sysname,'%s',:usercomment,location,to_date(:statchange,'%s'),sysdate,'%s','%s') select devicename as location from %s where deviceid=:dlocation;:numrows:=%s; :rescode:=0; else :rescode:=-5; :numrows:=0;end if; else :rescode:=-10; :numrows:=0; end if; END;",HW_CPNTS_TABLE,LG_CPNTS_TABLE,LOGICAL_DEVICE_TABLE,IN_USE,DESTROYED,SQLROWCOUNT,LG_CPNTS_TABLE,HW_CPNTS_TABLE,login,SQLROWCOUNT,HISTORY_CPNT_TABLE,seq_name,new_cpnt_status,_date_format,login,host,LOGICAL_DEVICE_TABLE,SQLROWCOUNT);	
-		//std::cout<<"selectdev="<<selectdev<<std::endl;
+		//std:://cout<<"selectdev="<<selectdev<<std::endl;
 		status=OCIStmtPrepare(stmthp, ociError, (text*)selectdev, (ub4)strlen((char *)selectdev), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		if(status!=OCI_SUCCESS)
 		{
@@ -816,7 +816,7 @@ extern "C" {
 		}
 		else
 		{
-			//std::cout<<"date ="<<status_datechange<<std::endl;
+			//std:://cout<<"date ="<<status_datechange<<std::endl;
 			if(status_datechange!=NULL) 
 				status=OCIBindByName(stmthp, &bndp[2], ociError,(text*)":statchange",-1,(dvoid*) status_datechange,strlen(status_datechange)+1, SQLT_STR, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0, OCI_DEFAULT);
 			else
@@ -908,7 +908,7 @@ extern "C" {
 		}
 		else
 			status= OCIStmtExecute(ociHdbc, stmthp, ociError,  1, 0, 0, 0, OCI_DEFAULT );
-		//std::cout<<"res_code="<<res_code<<" numrows "<<numrows<<std::endl;
+		//std:://cout<<"res_code="<<res_code<<" numrows "<<numrows<<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -927,7 +927,7 @@ extern "C" {
 					if (res_code==-5)
 					{
 						GetErrorMess(appliName,"Error The given functional device is already in USE",ErrMess,1);
-						//std::cout<<"value of rescode="<<numrows<<std::endl;
+						//std:://cout<<"value of rescode="<<numrows<<std::endl;
 					}
 					else
 					{
@@ -1118,7 +1118,7 @@ extern "C" {
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
 			Format_output(dname_null,devicename, logmessage,'?');
-			//std::cout0 <<"logmessage dname "<<logmessage <<"oracle "<<dname_null <<std::endl;
+			//std:://cout0 <<"logmessage dname "<<logmessage <<"oracle "<<dname_null <<std::endl;
 			i=strcspn(devicename,"?");
 			if(len_functionaldname>i)
 			{
@@ -1288,7 +1288,7 @@ extern "C" {
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
 			Format_output(dname_null,devicename, logmessage,'?');
-			//std::cout0 <<"logmessage dname "<<logmessage <<"oracle "<<dname_null <<std::endl;
+			//std:://cout0 <<"logmessage dname "<<logmessage <<"oracle "<<dname_null <<std::endl;
 			i=strcspn(devicename,"?");
 			if(len_serialnb>i)
 			{
@@ -1419,7 +1419,7 @@ extern "C" {
 				}
 
 			}
-			//std::cout<<"value of selectdev "<<selectdev<<std::endl;	
+			//std:://cout<<"value of selectdev "<<selectdev<<std::endl;	
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdev,(ub4) strlen(selectdev),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		}
 

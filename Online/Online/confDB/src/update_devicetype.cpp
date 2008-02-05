@@ -488,7 +488,7 @@ extern "C" {
 		}
 		else
 		{
-			//std::cout<<"before if res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
+			//std:://cout<<"before if res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
 
 			if(res_query!=0)
 			{
@@ -514,7 +514,7 @@ extern "C" {
 				GetErrorMess(appliName, "NO_ERROR",ErrMess,0);
 			}
 			//status+=res_query;
-			//std::cout<<"res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
+			//std:://cout<<"res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
 
 
 		}
@@ -802,7 +802,7 @@ extern "C" {
 		}
 		else
 		{
-			//std::cout<<"before if res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
+			//std:://cout<<"before if res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
 
 			if(res_query!=0)
 			{
@@ -828,7 +828,7 @@ extern "C" {
 				GetErrorMess(appliName, "NO_ERROR",ErrMess,0);
 			}
 			//status+=res_query;
-			//std::cout<<"res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
+			//std:://cout<<"res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
 
 
 		}
@@ -974,7 +974,7 @@ extern "C" {
 				//sprintf(sqlstmt,"BEGIN update %s set nodeused=decode(:nused,1,1,0,0,nodeused),last_update=sysdate,user_update='%s' where devicename=:dname; if :numrows1=1 then update %s e set e.last_update=sysdate,e.user_update='%s',e.lkused=(select t.nodeused*f.nodeused from %s t,%s f, %s l,%s m where t.deviceid=l.deviceid and l.portid=e.portidfrom and f.deviceid=m.deviceid and m.portid=e.portidto); end if; :numrows:=%s; END;",LOGICAL_DEVICE_TABLE,login,MACRO_CONNECTIVITY_TABLE,login,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE,PORT_TABLE,PORT_TABLE,SQLROWCOUNT);
 				sprintf(sqlstmt,"BEGIN update %s set system_name=:sysid,last_update=sysdate,user_update='%s' where devicetype=:dname; :numrows:=%s; END;",DEVICETYPE_TABLE,login,SQLROWCOUNT);
 				status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout<<"sql stmt "<<sqlstmt<<std::endl;
+				//std:://cout<<"sql stmt "<<sqlstmt<<std::endl;
 
 			}
 			if(status!=OCI_SUCCESS)
@@ -1069,7 +1069,7 @@ extern "C" {
 			}
 			else
 				status= OCIStmtExecute(ociHdbc, hstmt, ociError, _SysdeviceTypeNbElementUpdate, 0, 0, 0, OCI_DEFAULT );
-			//std::cout<<"res_query "<<res_query<<std::endl;
+			//std:://cout<<"res_query "<<res_query<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -1114,7 +1114,7 @@ extern "C" {
 			}
 			status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
 			status+=freeSysDeviceTypeUpdate();
-			//std::cout<<"after free device"<<std::endl;
+			//std:://cout<<"after free device"<<std::endl;
 			if(dname!=NULL)
 				free(dname);
 
@@ -1161,7 +1161,7 @@ extern "C" {
 			}
 			status+=res_query;
 		}
-		//std::cout<<"end of fct "<<std::endl;
+		//std:://cout<<"end of fct "<<std::endl;
 		return (status+rescode);
 	}
 

@@ -418,7 +418,7 @@ extern "C" {
 		{
 			strcpy(ipadd,"none");
 		}
-		//std::cout<<"value of ipadd "<<ipadd<<std::endl;
+		//std:://cout<<"value of ipadd "<<ipadd<<std::endl;
 		res_query+=AppendString(ipadd,_ipaddressList,_ipaddressList_len,_ipaddressNbElement,_max_ipaddress_len,first_time);
 		res_query+=AppendString(macadd,_macaddressList,_macaddressList_len,_macaddressNbElement,_max_macaddress_len,first_time);
 		res_query+=AppendString(ipname,_ipnameList,_ipnameList_len,_ipnameNbElement,_max_ipname_len,first_time);
@@ -524,7 +524,7 @@ extern "C" {
 			//need to proceed with messages
 
 			status =OCIHandleAlloc (ociEnv, (void**)&hstmt, OCI_HTYPE_STMT , 0, 0);
-			//std::cout<<"value of _macaddressNbEl "<<_macaddressNbEl<<"value of max "<<_max_macaddress_len<<std::endl;
+			//std:://cout<<"value of _macaddressNbEl "<<_macaddressNbEl<<"value of max "<<_max_macaddress_len<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -533,7 +533,7 @@ extern "C" {
 			else
 				sprintf(sqlstmt,"BEGIN if instr(:ipadd,'none')=0 then :rescode:=%s(:ipadd,:ipname,:subnet,'%s','%s'); end if; insert ALL WHEN (instr(:ipadd,'none')>0) then into %s (portid,deviceid,port_nbr,port_way,administrative_status,speed,port_type,phy,pxi_booting,ipaddress,author,user_update,terminal_name) values (%s,devid,:port_nbr,:portway,:adminstatus,:speed,:portype,:phy,:pxi,NULL,'%s','%s','%s') else into %s (serialnb,port_nbr,port_type,port_way,bia,macaddress,author,created,terminal_name) values (snb,:port_nbr,:portype,:portway,:bia,:mac,'%s',sysdate,'%s') into %s(portid,deviceid,port_nbr,port_way,administrative_status,speed,port_type,phy,pxi_booting,ipaddress,author,user_update,terminal_name) values (%s,devid,:port_nbr,:portway,:adminstatus,:speed,:portype,:phy,:pxi,:ipadd,'%s','%s','%s') select deviceid as devid,serialnb as snb from  %s  where devicename=:dname; :numrows:=%s; end; ",_insertIpaddress,login,host,PORT_TABLE,seq_name,login,login,host,HWPORT_TABLE,login,host,PORT_TABLE,seq_name,login,login,host,LOGICAL_DEVICE_TABLE,SQLROWCOUNT);	
 
-			//std::cout<<"sql "<<sqlstmt<<"and its length "<<strlen(sqlstmt)<<std::endl;
+			//std:://cout<<"sql "<<sqlstmt<<"and its length "<<strlen(sqlstmt)<<std::endl;
 			if (OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT))
 			{
 				if(rescode==0)	
@@ -577,8 +577,8 @@ extern "C" {
 
 				numrows_inserted=(int*)malloc(sizeof(int)*_devicenameNbElement1);
 				rescode_inserted=(int*)malloc(sizeof(int)*_devicenameNbElement1);
-				//std::cout<<"value of devicename "<<devname<<"port_nb "<<dportnb<<"and"<<std::endl;
-				//std::cout<<"value of portype "<<dportype<<"bia "<<bia<<"and"<<std::endl;
+				//std:://cout<<"value of devicename "<<devname<<"port_nb "<<dportnb<<"and"<<std::endl;
+				//std:://cout<<"value of portype "<<dportype<<"bia "<<bia<<"and"<<std::endl;
 
 
 				if(devname==NULL||dphy==NULL||dportnb==NULL||dbia==NULL||dmac==NULL||dip==NULL||dipname==NULL||dsubnet==NULL||dportype==NULL||numrows_inserted==NULL||rescode_inserted==NULL)
@@ -1193,7 +1193,7 @@ extern "C" {
 				}
 
 			}
-			//std::cout<<"before binding 1 "<<std::endl;
+			//std:://cout<<"before binding 1 "<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -1300,7 +1300,7 @@ extern "C" {
 			else
 				status=OCIBindArrayOfStruct(bndp3, ociError,  sizeof(int), 0, 0, 0);
 
-			//std::cout<<"before executing 1 "<<std::endl;
+			//std:://cout<<"before executing 1 "<<std::endl;
 
 			if(status!=OCI_SUCCESS)
 			{
@@ -1329,7 +1329,7 @@ extern "C" {
 					else
 						numrows=numrows_inserted[i];
 				}
-				//std::cout<<"numrows= "<<numrows<<std::endl;
+				//std:://cout<<"numrows= "<<numrows<<std::endl;
 				if(numrows==0)
 				{
 					status = OCITransCommit(ociHdbc, ociError, 0);
@@ -1611,7 +1611,7 @@ extern "C" {
 				}
 
 			}
-			//std::cout<<"before binding 1 "<<std::endl;
+			//std:://cout<<"before binding 1 "<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -1669,7 +1669,7 @@ extern "C" {
 			else
 				status=OCIBindArrayOfStruct(bndp3, ociError,  sizeof(int), 0, 0, 0);
 
-			//std::cout<<"before executing 1 "<<std::endl;
+			//std:://cout<<"before executing 1 "<<std::endl;
 
 			if(status!=OCI_SUCCESS)
 			{
@@ -1698,7 +1698,7 @@ extern "C" {
 					else
 						numrows=numrows_inserted[i];
 				}
-				//std::cout<<"numrows= "<<numrows<<std::endl;
+				//std:://cout<<"numrows= "<<numrows<<std::endl;
 				if(numrows==0)
 				{
 					status = OCITransCommit(ociHdbc, ociError, 0);

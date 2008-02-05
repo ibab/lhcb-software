@@ -136,23 +136,23 @@ int ShowErrors (sword status, OCIError *errhp, const char* log)
 		return 0;
 	case OCI_SUCCESS_WITH_INFO:
 		OCIErrorGet (errhp, 1, 0, &errcode, errbuf, sizeof(errbuf), OCI_HTYPE_ERROR);
-		printf("Error - OCI_SUCCESS_WITH_INFO %s and errbuf: %s\n", log,errbuf);
+		//printf("Error - OCI_SUCCESS_WITH_INFO %s and errbuf: %s\n", log,errbuf);
 		return errcode;
 	case OCI_NEED_DATA:
-		printf("Error - OCI_NEED_DATA %s\n", log);
+		//printf("Error - OCI_NEED_DATA %s\n", log);
 		return status;
 	case OCI_NO_DATA:
-		printf("Error - OCI_NODATA %s\n", log);
+		//printf("Error - OCI_NODATA %s\n", log);
 		return status;
 	case OCI_ERROR:
 		OCIErrorGet (errhp, 1, 0, &errcode, errbuf, sizeof(errbuf), OCI_HTYPE_ERROR);
-		printf("Error - %s and %s\n", errbuf, log);
+		//printf("Error - %s and %s\n", errbuf, log);
 		return errcode;
 	case OCI_INVALID_HANDLE:
-		printf("Error - OCI_INVALID_HANDLE %s\n", log);
+		//printf("Error - OCI_INVALID_HANDLE %s\n", log);
 		return status;
 	case OCI_STILL_EXECUTING:
-		printf("Error - OCI_STILL_EXECUTE %s\n", log);
+		//printf("Error - OCI_STILL_EXECUTE %s\n", log);
 		return status;
 	default:
 		return status;
@@ -200,7 +200,7 @@ int null_charptr(char* ptr_name)
 //return vale when doing a select for return values or buffer too small: security issue, len_attributevalue (=length using strlen)
 void Format_output(int output_oraclecode, char* attribute_value, char* logmessage, char separator)
 {
-	//std::cout << "output_oraclecode" << output_oraclecode<< std::endl;
+	//std:://cout << "output_oraclecode" << output_oraclecode<< std::endl;
 	switch(output_oraclecode)
 	{
 	case 0:
@@ -251,7 +251,7 @@ int GetSubsystemID(char * sysnameList)
 			strcpy(sysname,sysnameList);
 		else
 		{
-			std::cout<<"value of sysname ="<<sysnameList[pos1]<<std::endl;
+			//std::cout<<"value of sysname ="<<sysnameList[pos1]<<std::endl;
 			check_needed=1;
 			if(sysnameList[pos1]!=' ')
 				strncpy(sysname,sysnameList+pos1,pos);
@@ -264,7 +264,7 @@ int GetSubsystemID(char * sysnameList)
 
 		}
 		sysname[pos]='\0';
-		//std::cout<<"value of sysname ="<<sysname<<"and pos= "<<pos<<std::endl;
+		//std:://cout<<"value of sysname ="<<sysname<<"and pos= "<<pos<<std::endl;
 		while(stop==0 && i<_nb_of_subsystem)
 		{
 			if(strcmp(sysname,_list_of_subsystemname[i])==0)
@@ -310,7 +310,7 @@ int RetrieveSysIDList(char * sysnameList,char* sysIDlist)
 		else
 			memcpy(sysname,sysnameList+pos1,pos+1);
 		sysname[pos]='\0';
-		//std::cout<<"value of sysname="<<sysname<<std::endl;
+		//std:://cout<<"value of sysname="<<sysname<<std::endl;
 		while(stop==0 &&  j<_nb_of_subsystem)
 		{
 			if(strcmp(sysname,_list_of_subsystemname[j])==0)
@@ -329,9 +329,9 @@ int RetrieveSysIDList(char * sysnameList,char* sysIDlist)
 
 	}
 	Idlist_len=i;
-	//std::cout<<"value of Idlist_len="<<Idlist_len<<std::endl;
-	//std::cout<<"value of sysname="<<sysname<<std::endl;
-	//std::cout<<"value of IDlist[0]="<<IDlist[0]<<std::endl;
+	//std:://cout<<"value of Idlist_len="<<Idlist_len<<std::endl;
+	//std:://cout<<"value of sysname="<<sysname<<std::endl;
+	//std:://cout<<"value of IDlist[0]="<<IDlist[0]<<std::endl;
 
 	for(i=0;i<Idlist_len;i++)
 	{

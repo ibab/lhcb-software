@@ -221,7 +221,7 @@ extern "C" {
 			else
 			{
 				sprintf(sqlstmt,"BEGIN update %s set link_name=:lkname,last_update=sysdate,user_update='%s' where link_name=:oldlkname; :numrows:=%s; end;",LINKTYPE_TABLE,login,SQLROWCOUNT);
-				//std::cout<<"sqlstmt "<< sqlstmt<<std::endl;
+				//std:://cout<<"sqlstmt "<< sqlstmt<<std::endl;
 
 				status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 			}
@@ -323,8 +323,8 @@ extern "C" {
 			else
 			{
 				numrows=-1;
-				//std::cout<<"ltype_old  "<< ltype_old<<" ltype "<<ltype<< std::endl;
-				//std::cout<<"numrows_inserted[0] "<< numrows_inserted[0]<<"_oldlinkTypeNbElementUpdate"<<_oldlinkTypeNbElementUpdate<<std::endl;
+				//std:://cout<<"ltype_old  "<< ltype_old<<" ltype "<<ltype<< std::endl;
+				//std:://cout<<"numrows_inserted[0] "<< numrows_inserted[0]<<"_oldlinkTypeNbElementUpdate"<<_oldlinkTypeNbElementUpdate<<std::endl;
 				for(i=0;i< _oldlinkTypeNbElementUpdate;i++)
 				{
 					if(numrows_inserted[i]==0)

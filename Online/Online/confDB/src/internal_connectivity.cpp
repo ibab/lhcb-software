@@ -196,7 +196,7 @@ extern "C" {
 	//		sysID=GetSubsystemID(systemnameList);
 	//	}
 	//}
-	////std ::cout<<"value of sysIDlist "<<sysIDlist <<std::endl;
+	////std :://cout<<"value of sysIDlist "<<sysIDlist <<std::endl;
 	//status =OCIHandleAlloc (ociEnv, (void**)&stmthp, OCI_HTYPE_STMT , 0, 0);
 	//
 	//if(status!=OCI_SUCCESS)
@@ -397,7 +397,7 @@ extern "C" {
 	//	}
 	//}
 	//	
-	////std ::cout<<"after define " <<std::endl;
+	////std :://cout<<"after define " <<std::endl;
 	//if(status!=OCI_SUCCESS)
 	//{
 	//	if(rescode==0)	
@@ -481,7 +481,7 @@ extern "C" {
 	//		return -1;
 	//	}
 	//}
-	////std ::cout<<"before strcpy all " <<std::endl;
+	////std :://cout<<"before strcpy all " <<std::endl;
 	//strcpy(pfrom_list_temp,"?");
 	//strcpy(pto_list_temp,"?");
 	//pos2=2;
@@ -491,7 +491,7 @@ extern "C" {
 	//node_pos2bis=2;
 	//
 	//lkinfo_pos2=2;
-	////std ::cout<<"before the loop " <<std::endl;
+	////std :://cout<<"before the loop " <<std::endl;
 	//while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 	//{
 	//	Format_output(pfrom_null, port_nbrfrom, logmessage, '|');
@@ -562,7 +562,7 @@ extern "C" {
 	//		else
 	//		{
 	//			//if(i==0)
-	//				//std ::cout<<"before copy line by line port_nbrfrom="<<port_nbrfrom<<std::endl;
+	//				//std :://cout<<"before copy line by line port_nbrfrom="<<port_nbrfrom<<std::endl;
 	//			memcpy(pfrom_list_temp+pos3,port_nbrfrom,pos1+1);
 	//			memcpy(pto_list_temp+pos3bis,port_nbrto,pos1bis+1);
 	//			if((bidi_link==0 || bidi_link==1) && bidirectional_link_used==1) // we revert the link...
@@ -589,7 +589,7 @@ extern "C" {
 	//				lktype_temp[i]=link_type;
 	//			}
 	//			//if(i==0)
-	//			//	std ::cout<<"after copy line by line lkinfo_temp="<<lkinfo_temp<<std::endl;
+	//			//	std :://cout<<"after copy line by line lkinfo_temp="<<lkinfo_temp<<std::endl;
 	//		}
 	//		i++;
 	//	}
@@ -662,7 +662,7 @@ extern "C" {
 	//		}
 	//	}
 	//}
-	////std ::cout<<"after looping i=" <<i<<std::endl;
+	////std :://cout<<"after looping i=" <<i<<std::endl;
 	//if(status!=OCI_SUCCESS && status != OCI_SUCCESS_WITH_INFO)
 	//{
 	//	if(rescode==0 && i==0)
@@ -697,8 +697,8 @@ extern "C" {
 	//			
 	//	}
 	//}
-	////std::cout<<"value of _nfrom_name_temp="<<nfrom_list_temp1<<std::endl;
-	////std::cout<<"before copying in the array " <<std::endl;
+	////std:://cout<<"value of _nfrom_name_temp="<<nfrom_list_temp1<<std::endl;
+	////std:://cout<<"before copying in the array " <<std::endl;
 	//if(rescode==0)
 	//{
 	//	if(getallpaths==0)

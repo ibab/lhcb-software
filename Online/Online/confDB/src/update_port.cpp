@@ -911,7 +911,7 @@ extern "C" {
 			else
 				status= OCIStmtExecute(ociHdbc, hstmt, ociError, _devicenameNbElement5Update, 0, 0, 0, OCI_DEFAULT );
 
-			//std::cout<<"value of portid_list[0]="<<portid_list[0]<<std::endl;
+			//std:://cout<<"value of portid_list[0]="<<portid_list[0]<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -953,7 +953,7 @@ extern "C" {
 					int res_query1;
 					sprintf(sqlstmt,"BEGIN :rescode:=%s(1); :numrows:=%s; END; ",_UpdatePathUsed,SQLROWCOUNT);
 					status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-					//std::cout<<"value of sqlstmt 2 "<<sqlstmt<<std::endl;			
+					//std:://cout<<"value of sqlstmt 2 "<<sqlstmt<<std::endl;			
 					if(status!=OCI_SUCCESS)
 					{
 						if(rescode==0)	

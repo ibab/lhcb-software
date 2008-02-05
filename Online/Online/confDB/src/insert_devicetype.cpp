@@ -196,8 +196,8 @@ extern "C" {
 			res_query=getTerminalName(host,len_host,errmessg1);
 			len_host=LOGIN_LEN;
 			res_query=getLoginUser(login,len_host,errmessg2);
-			//std::cout<<"end cache before"<<login<<" host before"<<host<<std::endl;
-			//std::cout<<" errmessg1 "<<errmessg1<<" errmessg2 "<<errmessg2<<std::endl;
+			//std:://cout<<"end cache before"<<login<<" host before"<<host<<std::endl;
+			//std:://cout<<" errmessg1 "<<errmessg1<<" errmessg2 "<<errmessg2<<std::endl;
 
 			if(strncmp("NO_ERROR",errmessg1,8)==0 && strncmp("NO_ERROR",errmessg2,8)==0 )
 			{
@@ -234,7 +234,7 @@ extern "C" {
 				return -1;
 			}
 			//need to proceed with messages
-			//std::cout<<"end cache "<<login<<" host "<<host<<std::endl;
+			//std:://cout<<"end cache "<<login<<" host "<<host<<std::endl;
 
 
 			status =OCIHandleAlloc (ociEnv, (void**)&hstmt, OCI_HTYPE_STMT , 0, 0);
@@ -272,10 +272,10 @@ extern "C" {
 					status+=NormalizeVector(_rgbcolorList, _rgbcolorNbElement,_max_rgbcolorLength,rgbcol);
 
 				numrows_inserted=(int*)malloc(sizeof(int)*_devicetypeNbElement);
-				//std::cout<<"dtype="<<dtype<<" and"<<std::endl;
-				//std::cout<<"value of _DeviceTypeList="<<_DeviceTypeList<<" and"<<std::endl;
-				//std::cout<<"value of _max_devicetypeLength="<<_max_devicetypeLength<<" and"<<std::endl;
-				//std::cout<<"value of _devicetypeNbElement="<<_devicetypeNbElement<<" and"<<std::endl;
+				//std:://cout<<"dtype="<<dtype<<" and"<<std::endl;
+				//std:://cout<<"value of _DeviceTypeList="<<_DeviceTypeList<<" and"<<std::endl;
+				//std:://cout<<"value of _max_devicetypeLength="<<_max_devicetypeLength<<" and"<<std::endl;
+				//std:://cout<<"value of _devicetypeNbElement="<<_devicetypeNbElement<<" and"<<std::endl;
 				if(dtype==NULL || descrip==NULL||numrows_inserted==NULL||rgbcol==NULL)
 				{
 
@@ -475,12 +475,12 @@ extern "C" {
 				FIRST_TIME_DEVICETYPE=1;
 				force_insert=0;
 			}
-			//std::cout<<"res_query not null "<<res_query<<" rescode "<<rescode<<std::endl;
+			//std:://cout<<"res_query not null "<<res_query<<" rescode "<<rescode<<std::endl;
 
 		}
 		else
 		{
-			//std::cout<<"before if res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
+			//std:://cout<<"before if res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
 
 			if(res_query!=0)
 			{
@@ -505,7 +505,7 @@ extern "C" {
 				status=0;
 				GetErrorMess(appliName, "NO_ERROR",ErrMess,0);
 			}
-			//std::cout<<"res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
+			//std:://cout<<"res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
 
 
 		}

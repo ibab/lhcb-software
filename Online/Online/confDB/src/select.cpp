@@ -142,7 +142,7 @@ extern "C" {
 		}
 		else
 			status=OCIAttrGet((dvoid*) parmdp, (ub4) OCI_DTYPE_PARAM,(dvoid*) &devtypelen, (ub4 *) 0, (ub4) OCI_ATTR_DATA_SIZE,(OCIError *) ociError);
-		//std::cout<<"devtypelen="<<devtypelen<<std::endl;	
+		//std:://cout<<"devtypelen="<<devtypelen<<std::endl;	
 
 		if(status!=OCI_SUCCESS)
 		{
@@ -162,7 +162,7 @@ extern "C" {
 		}
 		else
 			status=OCIAttrGet((dvoid*) parmdp, (ub4) OCI_DTYPE_PARAM,(dvoid*) &descriptionlen, (ub4 *) 0, (ub4) OCI_ATTR_DATA_SIZE,(OCIError *) ociError);
-		//std::cout<<"descriptionlen="<<descriptionlen<<std::endl;	
+		//std:://cout<<"descriptionlen="<<descriptionlen<<std::endl;	
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)
@@ -181,7 +181,7 @@ extern "C" {
 		}
 		else
 			status=OCIAttrGet((dvoid*) parmdp, (ub4) OCI_DTYPE_PARAM,(dvoid*) &rgbcolorlen, (ub4 *) 0, (ub4) OCI_ATTR_DATA_SIZE,(OCIError *) ociError);
-		//std::cout<<"rgbcolorlen="<<rgbcolorlen<<std::endl;		
+		//std:://cout<<"rgbcolorlen="<<rgbcolorlen<<std::endl;		
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)
@@ -585,7 +585,7 @@ extern "C" {
 			MinStringLength(locationlen);
 			MinStringLength(serialnblen);
 			MinStringLength(devfunctionlen);
-			//std::cout << "devtype_len" << devtypelen<< std::endl;
+			//std:://cout << "devtype_len" << devtypelen<< std::endl;
 			devicetype_temp = (char *) realloc(devicetype_temp,(devtypelen + 1)*sizeof(char));
 			devicename_temp= (char *) realloc(devicename_temp,(devlen + 1)*sizeof(char));
 			location_temp = (char *) realloc(location_temp,(locationlen + 1)*sizeof(char));
@@ -1175,13 +1175,13 @@ extern "C" {
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
 			Format_output(serialnb_null,serialnb_temp, logmessage,'?');
-			//std::cout <<"logmessage bar "<<logmessage << "oracle "<<bar_null <<std::endl;
+			//std:://cout <<"logmessage bar "<<logmessage << "oracle "<<bar_null <<std::endl;
 			Format_output(dtype_null,devicetype_temp, logmessage,'?');
-			//std::cout <<"logmessage dtype "<<logmessage <<"oracle "<<dtype_null <<std::endl;
+			//std:://cout <<"logmessage dtype "<<logmessage <<"oracle "<<dtype_null <<std::endl;
 			Format_output(location_null,location_temp, logmessage,'?');
-			//std::cout <<"logmessage uuid "<<logmessage <<"oracle "<<uuid_null <<std::endl;
+			//std:://cout <<"logmessage uuid "<<logmessage <<"oracle "<<uuid_null <<std::endl;
 			Format_output(dname_null,devicename_temp, logmessage,'?');
-			//std::cout0 <<"logmessage dname "<<logmessage <<"oracle "<<dname_null <<std::endl;
+			//std:://cout0 <<"logmessage dname "<<logmessage <<"oracle "<<dname_null <<std::endl;
 			Format_output(devfunction_null,functiondev_temp, logmessage,'?');
 
 			pos1=strcspn(devicename_temp,"?");
@@ -1732,7 +1732,7 @@ extern "C" {
 			{
 				sprintf(selectport,"select e.portid,t.devicename||'?',e.port_nbr||'?',e.port_way,e.administrative_status,nvl(e.speed,0),nvl(e.port_type,'None')||'?',nvl(e.phy,'None')||'?',nvl(e.pxi_booting,0),nvl(e.ipaddress,'None')||'?' from %s e,%s t where e.portid=:portID and t.deviceid=e.deviceid  ",PORT_TABLE,LOGICAL_DEVICE_TABLE);
 				status=OCIStmtPrepare(stmthp, ociError, (text*) selectport,(ub4) strlen(selectport),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout <<"logmessage bar "<<selectport << "oracle "<<selectport <<std::endl;
+				//std:://cout <<"logmessage bar "<<selectport << "oracle "<<selectport <<std::endl;
 				if(status!=OCI_SUCCESS)
 				{
 					if(rescode==0)
@@ -3860,7 +3860,7 @@ extern "C" {
 		{
 			sprintf(selectconn,"select t.linkid,e.devicename||'?',f.devicename||'?',p.port_nbr||'?',nvl(p.port_type,'none')||'?',g.port_nbr||'?',nvl(g.port_type,'none')||'?',nvl(l.link_name,'none')||'?',t.bidirectional_link_used, t.lkused,nvl(t.link_info,'none')||'?' from %s t,%s p,%s g,%s l,%s e,%s f where t.linkid=:lkid and t.link_type=l.linktypeID and p.portid=t.portidfrom and g.portid=t.portidto and p.deviceid=e.deviceid and g.deviceid=f.deviceid",MACRO_CONNECTIVITY_TABLE,PORT_TABLE,PORT_TABLE,LINKTYPE_TABLE,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectconn,(ub4) strlen(selectconn),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"value of selectconn "<<selectconn<<std::endl;
+			//std:://cout<<"value of selectconn "<<selectconn<<std::endl;
 		}
 
 		if(status!=OCI_SUCCESS)
@@ -4171,7 +4171,7 @@ extern "C" {
 			pos2=strcspn(dnameto_temp,"?");
 			dnamefrom_temp[pos1]='\0';
 			dnameto_temp[pos2]='\0';
-			//std::cout<<"value of lkname_temp "<<portnbfrom_temp<<" pp " <<portnbto_temp<<std::endl;
+			//std:://cout<<"value of lkname_temp "<<portnbfrom_temp<<" pp " <<portnbto_temp<<std::endl;
 			pos1=strcspn(portnbfrom_temp,"?");
 			pos2=strcspn(portnbto_temp,"?");
 			portnbfrom_temp[pos1]='\0';
@@ -4184,14 +4184,14 @@ extern "C" {
 			pos2=strcspn(lkinfo_temp,"?");
 			lkinfo_temp[pos2]='\0';
 			lkname_temp[pos1]='\0';
-			//std::cout<<"value of lkname_temp "<<lkname_temp<<std::endl;
-			//std::cout<<"value of linkid "<<linkid<<std::endl;
+			//std:://cout<<"value of lkname_temp "<<lkname_temp<<std::endl;
+			//std:://cout<<"value of linkid "<<linkid<<std::endl;
 			len=strlen(lkinfo_temp)+strlen(lkname_temp)+strlen(dnamefrom_temp)+strlen(dnameto_temp)+strlen(portnbfrom_temp)+strlen(porttypeto_temp)+strlen(porttypefrom_temp)+strlen(portnbto_temp)+strlen("|linkid (I): |node_from (C): |node_to (C): |port_nbrfrom (C): |port_typefrom (C) : |port_nbrto (C): |port_typeto (C) : |link_type (C): |bidirectional_link_used (I):1 |lkused (I):1 |link_info (C): |");
 			sprintf(buffer,"%d",linkid);
-			//std::cout<<"value of buffer "<<buffer<<std::endl;
+			//std:://cout<<"value of buffer "<<buffer<<std::endl;
 			len+=strlen(buffer);
-			//std::cout<<"value of lkname_temp "<<lkname_temp<<std::endl;
-			//std::cout<<"value of len "<<len<<std::endl;
+			//std:://cout<<"value of lkname_temp "<<lkname_temp<<std::endl;
+			//std:://cout<<"value of len "<<len<<std::endl;
 			if(len>len_conn)
 			{
 				len++;
@@ -4222,10 +4222,10 @@ extern "C" {
 			}
 			else
 			{
-				//std::cout<<"before sprintf connrow "<<std::endl;
+				//std:://cout<<"before sprintf connrow "<<std::endl;
 				sprintf(Conn_row,"|linkid (I):%d |node_from (C):%s |node_to (C):%s |port_nbrfrom (C):%s |port_typefrom (C): %s|port_nbrto (C):%s |port_typeto (C):%s |link_type (C):%s |bidirectional_link_used (I):%d |lkused (I):%d |link_info (C):%s |",linkid,dnamefrom_temp,dnameto_temp,portnbfrom_temp,porttypefrom_temp,portnbto_temp,porttypeto_temp,lkname_temp,bidirectional_link_used, lkused,lkinfo_temp);
 
-				//std::cout<<"after sprintf connrow "<<Conn_row<<std::endl;
+				//std:://cout<<"after sprintf connrow "<<Conn_row<<std::endl;
 				if(portnbfrom_temp!=NULL)
 					free(portnbfrom_temp);
 				if(portnbto_temp!=NULL)
@@ -5219,7 +5219,7 @@ extern "C" {
 			len=strlen(lkinfo_temp)+strlen(lkname_temp)+strlen(dnamefrom_temp)+strlen(dnameto_temp)+strlen(portnbfrom_temp)+strlen(portnbto_temp)+strlen(porttypefrom_temp)+strlen(porttypeto_temp)+strlen("|linkid (I): |node_from (C): |node_to (C): |port_nbrfrom (C): |port_typefrom (C): |port_nbrto (C): |port_typeto (C): |link_type (C): |bidirectional_link_used (I):1 |lkused (I):1 |link_info (C): |");
 			sprintf(buffer,"%d",linkid);
 			len+=strlen(buffer);
-			//std::cout<<"value of lkinfo_temp"<<lkinfo_temp<<std:endl;
+			//std:://cout<<"value of lkinfo_temp"<<lkinfo_temp<<std:endl;
 			if(len>len_conn)
 			{
 				len++;
@@ -7687,7 +7687,7 @@ extern "C" {
 
 			}
 
-			//std::cout<<"before last free"<<std::endl;
+			//std:://cout<<"before last free"<<std::endl;
 		}
 		if(destin!=NULL)
 			destin=(char*)realloc(destin,0*sizeof(char));
@@ -7764,7 +7764,7 @@ extern "C" {
 		{
 			sprintf(selectdevID,"select t.devicename||'|' from %s t, %s f where t.devicetypeID=f.devicetypeID and f.devicetype=:dtype and t.active=0 and t.nodeused=1",LOGICAL_DEVICE_TABLE,DEVICETYPE_TABLE);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevID,(ub4) strlen(selectdevID),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"stmt"<<selectdevID<<std::endl;
+			//std:://cout<<"stmt"<<selectdevID<<std::endl;
 		}
 		if(status!=OCI_SUCCESS)
 		{
@@ -8105,7 +8105,7 @@ extern "C" {
 		else
 		{
 			sprintf(selectdev,"select portid from %s where deviceid=:devid and port_nbr=:pnb and nvl(port_type,'none')=:ptype and port_way=:pway",PORT_TABLE);
-			printf("Select statement: %s\n     with deviceid=%d, Port Number=%s porttype=%s PortWay=%d\n",selectdev, deviceID,port_nb,port_type, port_way);
+			//printf("Select statement: %s\n     with deviceid=%d, Port Number=%s porttype=%s PortWay=%d\n",selectdev, deviceID,port_nb,port_type, port_way);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdev,(ub4) strlen(selectdev),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		}
 
@@ -8422,7 +8422,7 @@ extern "C" {
 		{
 			sprintf(selectdevID,"select devicename||'|' from %s where instr(nvl(location,'none'),:location)>0",LOGICAL_DEVICE_TABLE);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevID,(ub4) strlen(selectdevID),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"stmt"<<selectdevID<<std::endl;
+			//std:://cout<<"stmt"<<selectdevID<<std::endl;
 		}
 		if(status!=OCI_SUCCESS)
 		{
@@ -8629,7 +8629,7 @@ extern "C" {
 			else
 				sprintf(selectdevID," select t.devicename||'|' from %s t where functionid=0",LOGICAL_DEVICE_TABLE);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevID,(ub4) strlen(selectdevID),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"stmt"<<selectdevID<<std::endl;
+			//std:://cout<<"stmt"<<selectdevID<<std::endl;
 		}
 		if(strstr(function,"none")==NULL)
 		{
@@ -8736,10 +8736,10 @@ extern "C" {
 					}
 				}
 			}
-			//std::cout<<"devName="<<devName<<std::endl;
-			//std::cout<<"pos2="<<pos2<<std::endl;
-			//std::cout<<"i="<<i<<std::endl;
-			//std::cout<<"len_array="<<len_array<<std::endl;
+			//std:://cout<<"devName="<<devName<<std::endl;
+			//std:://cout<<"pos2="<<pos2<<std::endl;
+			//std:://cout<<"i="<<i<<std::endl;
+			//std:://cout<<"len_array="<<len_array<<std::endl;
 			if(rescode==0)
 			{	
 
@@ -8840,7 +8840,7 @@ extern "C" {
 		{
 			sprintf(selectdevID,"select serialnb||'|'||nvl(hwname,'none')||'?' from %s where nvl(location,'none')=:location and device_status=%d",HW_DEVICE_TABLE,SPARE);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevID,(ub4) strlen(selectdevID),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"stmt"<<selectdevID<<std::endl;
+			//std:://cout<<"stmt"<<selectdevID<<std::endl;
 		}
 		if(status!=OCI_SUCCESS)
 		{
@@ -9043,7 +9043,7 @@ extern "C" {
 		{
 			sprintf(selectdevID,"select serialnb||'|'||nvl(hwname,'none')||'?' from %s where nvl(hwtype,'none')=:hwtype and device_status=%d",HW_DEVICE_TABLE, SPARE);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevID,(ub4) strlen(selectdevID),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"stmt"<<selectdevID<<std::endl;
+			//std:://cout<<"stmt"<<selectdevID<<std::endl;
 		}
 		if(status!=OCI_SUCCESS)
 		{
@@ -9280,8 +9280,8 @@ extern "C" {
 
 			sprintf(selectdev," select nvl(t.hwname,'none')||'?',nvl(t.hwtype,'none')||'?',t.device_status,nvl(t.responsible,'none')||'?',nvl(t.user_comments,'none')||'?',nvl(t.location,'none')||'?',t.serialnb||'?',d.devicename||'?' from %s t,%s d where t.serialnb=:dname and t.serialnb=d.serialnb",HW_DEVICE_TABLE,LOGICAL_DEVICE_TABLE);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdev,(ub4) strlen(selectdev),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<" select stmt "<< selectdev <<std::endl;
-			//std::cout<<" serialnb "<< serialnb <<std::endl;
+			//std:://cout<<" select stmt "<< selectdev <<std::endl;
+			//std:://cout<<" serialnb "<< serialnb <<std::endl;
 		}
 
 		if(status!=OCI_SUCCESS)
@@ -9312,7 +9312,7 @@ extern "C" {
 			status=OCIParamGet(stmthp, OCI_HTYPE_STMT, ociError,(dvoid **) &parmdp, (ub4) 1);
 		}
 
-		//std::cout<<" param " <<std::endl;
+		//std:://cout<<" param " <<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)
@@ -9436,7 +9436,7 @@ extern "C" {
 			MinStringLength(responlen);
 			MinStringLength(commentslen);
 			MinStringLength(dnamelen);
-			//std::cout << "devtype_len" << devtypelen<< std::endl;
+			//std:://cout << "devtype_len" << devtypelen<< std::endl;
 			hwtype_temp = (char *) realloc(hwtype_temp,(devtypelen + 1)*sizeof(char));
 			hwname_temp= (char *) realloc(hwname_temp,(devlen + 1)*sizeof(char));
 			location_temp = (char *) realloc(location_temp,(locationlen + 1)*sizeof(char));
@@ -9618,7 +9618,7 @@ extern "C" {
 			{
 				sprintf(selectdev," select nvl(hwname,'none')||'?',nvl(hwtype,'none')||'?',device_status,nvl(responsible,'none')||'?',nvl(user_comments,'none')||'?',nvl(location,'none')||'?',serialnb||'?' from %s where serialnb=:dname",HW_DEVICE_TABLE);
 				status=OCIStmtPrepare(stmthp, ociError, (text*) selectdev,(ub4) strlen(selectdev),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout<<"selectdev "<<selectdev <<std::endl;
+				//std:://cout<<"selectdev "<<selectdev <<std::endl;
 				if(status!=OCI_SUCCESS)
 				{
 					if(rescode==0)
@@ -9863,7 +9863,7 @@ extern "C" {
 		{
 			sprintf(selectdevID,"select t.ipalias||'|' from %s t , %s d where t.ipaddress=d.ipaddress and d.ipname=:ipname",IPALIAS_TABLE,IPINFO_TABLE);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevID,(ub4) strlen(selectdevID),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"stmt"<<selectdevID<<std::endl;
+			//std:://cout<<"stmt"<<selectdevID<<std::endl;
 		}
 		if(status!=OCI_SUCCESS)
 		{
@@ -10062,7 +10062,7 @@ extern "C" {
 		{
 			sprintf(selectdevID,"select function_name||'|' from %s",DEVICE_FUNCTION_TABLE);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevID,(ub4) strlen(selectdevID),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"stmt"<<selectdevID<<std::endl;
+			//std:://cout<<"stmt"<<selectdevID<<std::endl;
 		}
 
 		if(status!=OCI_SUCCESS)
@@ -10321,7 +10321,7 @@ extern "C" {
 		}
 		else
 			status=OCIAttrGet((dvoid*) parmdp, (ub4) OCI_DTYPE_PARAM,(dvoid*) &ipalias_len, (ub4 *) 0, (ub4) OCI_ATTR_DATA_SIZE,(OCIError *) ociError);
-		//std::cout<<"devtypelen="<<devtypelen<<std::endl;	
+		//std:://cout<<"devtypelen="<<devtypelen<<std::endl;	
 
 		if(status!=OCI_SUCCESS)
 		{
@@ -10341,7 +10341,7 @@ extern "C" {
 		}
 		else
 			status=OCIAttrGet((dvoid*) parmdp, (ub4) OCI_DTYPE_PARAM,(dvoid*) &ipname_len, (ub4 *) 0, (ub4) OCI_ATTR_DATA_SIZE,(OCIError *) ociError);
-		//std::cout<<"descriptionlen="<<descriptionlen<<std::endl;	
+		//std:://cout<<"descriptionlen="<<descriptionlen<<std::endl;	
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)
@@ -10722,7 +10722,7 @@ extern "C" {
 		{
 			sprintf(selectdevID,"select system_name||'|' from %s",SUBSYSTEM_TABLE);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevID,(ub4) strlen(selectdevID),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"stmt"<<selectdevID<<std::endl;
+			//std:://cout<<"stmt"<<selectdevID<<std::endl;
 		}
 
 		if(status!=OCI_SUCCESS)
@@ -10915,7 +10915,7 @@ extern "C" {
 		{
 			sprintf(selectdevID,"select distinct nvl(hwtype,'none')||'?' from %s where device_status=%d",HW_DEVICE_TABLE,SPARE);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevID,(ub4) strlen(selectdevID),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"stmt"<<selectdevID<<std::endl;
+			//std:://cout<<"stmt"<<selectdevID<<std::endl;
 		}
 
 		if(status!=OCI_SUCCESS)

@@ -76,12 +76,12 @@ extern "C" {
 		if(count_free>4)
 		{
 			status=OCISessionEnd (mysvchp,err,myusrhp1,OCI_DEFAULT);
-			//std::cout<<"OCISessionEnd and status="<<status<<std::endl;
+			//std:://cout<<"OCISessionEnd and status="<<status<<std::endl;
 		}
 		if(count_free>3)
 		{
 			status=OCIServerDetach (mysrvhp1,err,OCI_DEFAULT);
-			//std::cout<<"OCIServerDetach and status="<<status<<std::endl;
+			//std:://cout<<"OCIServerDetach and status="<<status<<std::endl;
 		}                      
 
 
@@ -89,34 +89,34 @@ extern "C" {
 		if(count_free>4)
 		{
 			status=OCIHandleFree(myusrhp1,OCI_HTYPE_SESSION);
-			//std::cout<<"OCIHandleFree 1 and status="<<status<<std::endl;
+			//std:://cout<<"OCIHandleFree 1 and status="<<status<<std::endl;
 
 		}
 		if(count_free>3)
 		{
 			status+=OCIHandleFree(mysvchp,OCI_HTYPE_SVCCTX);
-			//std::cout<<"OCIHandleFree 2 and status="<<status<<std::endl;
+			//std:://cout<<"OCIHandleFree 2 and status="<<status<<std::endl;
 
 		}
 		if(count_free>2)
 		{
 			status+=OCIHandleFree (err, OCI_HTYPE_ERROR);
-			//std::cout<<"OCIHandleFree 3 and status="<<status<<std::endl;
+			//std:://cout<<"OCIHandleFree 3 and status="<<status<<std::endl;
 
 		}
 		if(count_free>1)
 		{
 			status+=OCIHandleFree(mysrvhp1,OCI_HTYPE_SERVER);
-			//std::cout<<"OCIHandleFree 4 and status="<<status<<std::endl;
+			//std:://cout<<"OCIHandleFree 4 and status="<<status<<std::endl;
 
 		}
 		if(count_free>0)
 		{
 			status+=OCIHandleFree (env, OCI_HTYPE_ENV);
-			//std::cout<<"OCIHandleFree 5 and status="<<status<<std::endl;
+			//std:://cout<<"OCIHandleFree 5 and status="<<status<<std::endl;
 
 			//status+=OCITerminate ( OCI_DEFAULT );
-			//std::cout<<"OCITerminate 2 and status="<<status<<std::endl;
+			//std:://cout<<"OCITerminate 2 and status="<<status<<std::endl;
 
 		}
 		if(status== OCI_SUCCESS)
@@ -345,12 +345,12 @@ extern "C" {
 		if(rescode==0)
 		{
 			OCIReportError(myerrhp,appliName,ErrorMessage,0);
-			std::cout << " OCI Connection successfully established and current version of the library " << CONFDBLIB_VERSION << std::endl;
+			//std::cout << " OCI Connection successfully established and current version of the library " << CONFDBLIB_VERSION << std::endl;
 		}
 		else
 		{
 			OCIReportError(myerrhp,appliName,ErrorMessage,1);
-			std::cout << "OCI Connection not successfully established ...." <<  std::endl;
+			//std::cout << "OCI Connection not successfully established ...." <<  std::endl;
 		}
 		free(errmessg);
 		return (rescode);
@@ -441,7 +441,7 @@ extern "C" {
 				i++;
 			}
 		}
-		//std::cout<<"value of system_name"<<system_name<<" and value of sysID="<<sysID<<std::endl;
+		//std:://cout<<"value of system_name"<<system_name<<" and value of sysID="<<sysID<<std::endl;
 		if(i>0)
 		{
 			if(len_array>i)
@@ -515,14 +515,14 @@ extern "C" {
 				ociHdbc=0; /* the context handle */
 				mysrvhp=0; /* the server handle */
 				myusrhp=0; /* user session handle */
-				//std::cout<<"Connection aborted : couldn't load subsystem table"<<std::endl;
+				//std:://cout<<"Connection aborted : couldn't load subsystem table"<<std::endl;
 				GetErrorMess(appliName,"SUBSYSTEM_TABLE_EMPTY",ErrorMessage,1);
 				return -1;
 			}
 			else
 			{
 				std::cout<<"Successful Loading "<<std::endl;
-				//std::cout<<"value of =_nb_of_subsystem"<<_nb_of_subsystem<<std::endl;
+				//std:://cout<<"value of =_nb_of_subsystem"<<_nb_of_subsystem<<std::endl;
 			}
 
 		}
@@ -564,7 +564,7 @@ CICDBGuard CICDBGuard::g_Guard;
 
 CICDBGuard::~CICDBGuard()
 {
-std::cout<<"Guard is terminating..."<<std::endl;
+std:://cout<<"Guard is terminating..."<<std::endl;
 OCITerminate(OCI_DEFAULT);
 };
 */

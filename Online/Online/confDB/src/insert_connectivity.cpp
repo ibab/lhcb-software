@@ -244,7 +244,7 @@ extern "C" {
 		{
 			strcpy(port_typeto1,"none");
 		}
-		//std::cout<<"value of port_typeto1 "<<port_typeto1<<"value of port_typeto"<<port_typeto <<std::endl;
+		//std:://cout<<"value of port_typeto1 "<<port_typeto1<<"value of port_typeto"<<port_typeto <<std::endl;
 		if(FIRST_TIME_CONNECTIVITY==1 && _NodeFromList==NULL) //means new loop in the mass insertion (by 10000)
 		{
 			first_time=1; //need to put to 1, as if new cache
@@ -366,7 +366,7 @@ extern "C" {
 			{
 				sprintf(sqlstmt,"BEGIN insert ALL into %s (linkid,portidfrom,portidto,link_type,bidirectional_link_used,link_weight,lkused,link_info,author,user_update,terminal_name) values (%s,portidfrom,portidto,lknb,:biused, lkweight,1,:lkinfo,'%s','%s','%s') select f.portid as portidfrom,g.portid as portidto,s.linktypeID as lknb,decode(m.node,1,l.node+m.node+1,l.node+m.node) as lkweight from %s f,%s g,%s l,%s m,%s s ,%s k where f.deviceid=l.deviceid and l.devicename=:nfrom and g.deviceid=m.deviceid and m.devicename=:nto and s.link_name=:lktype and f.port_nbr=:portnbfrom and f.port_way=2 and nvl(f.port_type,'none')=:ptypefrom and g.port_nbr=:portnbto and g.port_way=1 and nvl(g.port_type,'none')=:ptypeto and mod(l.system_name,k.systemID)=0 and mod(m.system_name,k.systemID)=0 and rownum=1; if %s=1 then update %s r set r.system_name=(select case when ceil(power(10,sum(distinct log(10,t.systemID))))-power(10,sum(distinct log(10,t.systemID)))>0.5  then floor(power(10,sum(distinct log(10,t.systemid)))) else ceil(power(10,sum(distinct log(10,t.systemid)))) end from %s t,%s o,%s d,%s p,%s h where t.systemid not in (select q.systemid from %s v, %s q where mod(v.systemid,q.systemid)=0 and v.systemid!=q.systemid) and mod(o.system_name,t.systemid)=0 and mod(d.system_name,t.systemid)=0 and o.deviceid=p.deviceid and p.portid=r.portidfrom and r.portidto=h.portid and h.deviceid=d.deviceid) where r.system_name=-1 and r.portidfrom in (select v.portid from %s v,%s b where v.deviceid=b.deviceid and b.devicename=:nfrom) and r.portidto in (select v.portid from %s v,%s b where v.deviceid=b.deviceid and b.devicename=:nto);  end if;  :numrows:=%s; END;",MACRO_CONNECTIVITY_TABLE,seq_name,login,login,host,PORT_TABLE,PORT_TABLE,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE,LINKTYPE_TABLE,SUBSYSTEM_TABLE,SQLROWCOUNT,MACRO_CONNECTIVITY_TABLE,SUBSYSTEM_TABLE,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE,PORT_TABLE,PORT_TABLE,SUBSYSTEM_TABLE,SUBSYSTEM_TABLE,PORT_TABLE,LOGICAL_DEVICE_TABLE,PORT_TABLE,LOGICAL_DEVICE_TABLE,SQLROWCOUNT);	
 				status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout<<"value of stmt "<<sqlstmt <<" and length="<<strlen(sqlstmt)<<std::endl;
+				//std:://cout<<"value of stmt "<<sqlstmt <<" and length="<<strlen(sqlstmt)<<std::endl;
 			}
 			if(status!=OCI_SUCCESS)
 			{
@@ -627,12 +627,12 @@ extern "C" {
 					else
 						numrows=numrows_inserted[i];
 				}
-				std::cout<<"before updating tables "<<sqlstmt <<std::endl;
+				//std::cout<<"before updating tables "<<sqlstmt <<std::endl;
 				if(numrows==0)
 				{
 					status = OCITransCommit(ociHdbc, ociError, 0);
 					sprintf(sqlstmt,"BEGIN  :rescode:=%s(%d); :numrows:=%s; END; ",_UpdateDynamicTables,sysID,SQLROWCOUNT); 
-					std::cout<<"value of stmt 3 "<<sqlstmt <<std::endl;
+					//std::cout<<"value of stmt 3 "<<sqlstmt <<std::endl;
 					status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 					if(status!=OCI_SUCCESS)
 					{
@@ -700,7 +700,7 @@ extern "C" {
 					status = OCITransCommit(ociHdbc, ociError, 0);
 					//update routing and destination tables only if it's part of the DAQ and TFC...
 					sprintf(sqlstmt,"BEGIN  :rescode:=%s(%d); :numrows:=%s; END; ",_UpdateDynamicTables,sysID,SQLROWCOUNT); 
-					//std::cout<<"value of stmt 4 "<<sqlstmt <<std::endl;
+					//std:://cout<<"value of stmt 4 "<<sqlstmt <<std::endl;
 					status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 					if(status!=OCI_SUCCESS)
 					{
@@ -717,7 +717,7 @@ extern "C" {
 					}
 					else
 						status =OCIBindByName(hstmt, &bndp2[0], ociError,(text*) ":rescode", -1,(dvoid*)res_query1, 101,SQLT_STR, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-					//std::cout<<"value of stmt 4 OCIBindByName" <<std::endl;
+					//std:://cout<<"value of stmt 4 OCIBindByName" <<std::endl;
 
 					if(status!=OCI_SUCCESS)
 					{
@@ -726,7 +726,7 @@ extern "C" {
 					}
 					else
 						status= OCIStmtExecute(ociHdbc, hstmt, ociError, 1, 0, 0, 0, OCI_DEFAULT );
-					//std::cout<<"value of stmt 4 OCIStmtExecute" <<std::endl;
+					//std:://cout<<"value of stmt 4 OCIStmtExecute" <<std::endl;
 					if(status!=OCI_SUCCESS)
 					{
 						if(rescode==0)	
@@ -744,7 +744,7 @@ extern "C" {
 			}
 			status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
 			status+=freeConnectivity();
-			std::cout<<"after freeconnect"<<std::endl;
+			//std::cout<<"after freeconnect"<<std::endl;
 			if(nodefrom!=NULL) //means not null otehriwse it's -1
 				free(nodefrom);
 			if(nodeto!=NULL)
@@ -755,7 +755,7 @@ extern "C" {
 				free(lkinfo);
 			if(portnbfrom!=NULL)
 				free(portnbfrom);
-			//std::cout<<"after portnbfrom"<<std::endl;
+			//std:://cout<<"after portnbfrom"<<std::endl;
 			if(portnbto!=NULL)
 				free(portnbto);
 			if(portypefrom!=NULL)

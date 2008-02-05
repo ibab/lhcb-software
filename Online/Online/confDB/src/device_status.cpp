@@ -414,7 +414,7 @@ extern "C" {
 			sprintf(selectdev,"BEGIN update %s set device_status=:dstatus,location=:dlocation where device_status=%d and serialnb=(select serialnb from %s where devicename=:dname); if %s=1 then insert ALL into %s(historydeviceid, serialnb,  device_status, user_comment, location, status_change, system_name,created,author,terminal_name) values (%s,snb1,'%s',:usercomment,:dlocation,to_date(:statchange,'%s'), sysid,sysdate,'%s','%s') select serialnb as snb1,system_name as sysid from %s where devicename=:dname;if to_date(:statchange,'%s')<to_date(:statchange2,'%s') then insert ALL into %s(historydeviceid, deviceid,  device_status, user_comment, location, status_change, system_name,created,author,terminal_name) values (%s,devid1,'NONE',:usercomment,location,to_date(:statchange,'%s'), sysid,sysdate,'%s','%s') select deviceid as devid1,system_name as sysid,location from %s where devicename=:dname; end if; if to_date(:statchange2,'%s')<to_date(:statchange,'%s') then :rescode:=-15; :numrows:=0; else update %s set serialnb=:snb,last_update=sysdate,user_update='%s' where devicename=:dname and %d=(select device_status from %s where serialnb=:snb and device_status=%d) returning deviceid into :devid; if %s=1 then insert all into %s(historydeviceid,serialnb,deviceid,device_status,user_comment,location,status_change,system_name,created,author,terminal_name) values (%s,snb,devid1,'IN_USE',:usercomment,locat,to_date(:statchange2,'%s'),sysid,sysdate,'%s','%s') select serialnb as snb,deviceid as devid1,location as locat,system_name as sysid from %s where devicename=:dname;update %s set device_status=%d where serialnb=:snb; :numrows:=%s; :rescode:=%s(:devid,:dlocation,:dstatus,:statchange,'%s',:usercomment,'%s',:snb,:statchange2);  else :rescode:=-5; :numrows:=0; end if;  end if; else :rescode:=-10; :numrows:=0;end if;END;",HW_DEVICE_TABLE,IN_USE,LOGICAL_DEVICE_TABLE,SQLROWCOUNT,HISTORY_DEVICE_TABLE,seqname,new_device_status,_date_format,login,host,LOGICAL_DEVICE_TABLE,_date_format,_date_format,HISTORY_DEVICE_TABLE,seqname,_date_format,login,host,LOGICAL_DEVICE_TABLE,_date_format,_date_format,LOGICAL_DEVICE_TABLE,login,SPARE,HW_DEVICE_TABLE,SPARE,SQLROWCOUNT,HISTORY_DEVICE_TABLE,seqname,_date_format,login,host,LOGICAL_DEVICE_TABLE,HW_DEVICE_TABLE,IN_USE,SQLROWCOUNT,_UpdateBoardCpnt,login,host);			
 		}	
 
-		//std::cout<<"selectdev="<<selectdev<<std::endl;
+		//std:://cout<<"selectdev="<<selectdev<<std::endl;
 		status=OCIStmtPrepare(stmthp, ociError, (text*)selectdev, (ub4)strlen((char *)selectdev), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		if(status!=OCI_SUCCESS)
 		{
@@ -472,7 +472,7 @@ extern "C" {
 		}
 		else
 		{
-			//std::cout<<"date ="<<status_datechange<<std::endl;
+			//std:://cout<<"date ="<<status_datechange<<std::endl;
 			if(status_datechange!=NULL) 
 				status=OCIBindByName(stmthp, &bndp[4], ociError,(text*)":statchange",-1,(dvoid*) status_datechange,strlen(status_datechange)+1, SQLT_STR, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0, OCI_DEFAULT);
 			else
@@ -505,10 +505,10 @@ extern "C" {
 		else	
 			status=OCIBindByName(stmthp, &bndp3, ociError,(text*)":rescode",-1,(dvoid*) &res_code,sizeof(int), SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0, OCI_DEFAULT);
 
-		//std::cout<<"after binding 6"<<serialnb_replaced<<std::endl;
+		//std:://cout<<"after binding 6"<<serialnb_replaced<<std::endl;
 		if(serialnb_replaced!=NULL && strncmp(serialnb_replaced,"none",4)!=0)
 		{
-			//std::cout<<"date of repalce ="<<replace_date<<std::endl;
+			//std:://cout<<"date of repalce ="<<replace_date<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)
@@ -548,7 +548,7 @@ extern "C" {
 		}
 		else
 			status= OCIStmtExecute(ociHdbc, stmthp, ociError,  1, 0, 0, 0, OCI_DEFAULT );
-		//std::cout<<"res_code="<<res_code<<" numrows "<<numrows<<std::endl;
+		//std:://cout<<"res_code="<<res_code<<" numrows "<<numrows<<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -567,7 +567,7 @@ extern "C" {
 					if (res_code==-5)
 					{
 						GetErrorMess(appliName,"Error The given serial nb is not a SPARE",ErrMess,1);
-						//std::cout<<"value of rescode="<<numrows<<std::endl;
+						//std:://cout<<"value of rescode="<<numrows<<std::endl;
 					}
 					else
 					{
@@ -821,13 +821,13 @@ extern "C" {
 			free(location1);
 			return -1;
 		}
-		//std::cout<<"value of selectdev before"<<std::endl;	
+		//std:://cout<<"value of selectdev before"<<std::endl;	
 		if(serialnb_replaced==NULL||strncmp(serialnb_replaced,"none",4)==0)
 			sprintf(selectdev,"BEGIN update %s set device_status=%d where device_status=%d and serialnb=(select serialnb from %s where devicename=:dname) returning serialnb into :snb; if %s=1 then update %s set serialnb=:snb,last_update=sysdate,user_update='%s' where devicename=:bname and serialnb is null returning deviceid,location into :devid,:location; if %s=1 then insert into %s(historydeviceid,serialnb,deviceid,device_status,user_comment,location,status_change,created,author,terminal_name) values (%s,:snb,:devid,'TEST',:usercomment,:location,to_date(:statchange,'%s'),sysdate,'%s','%s'); update %s set nodeused=0,serialnb=NULL,last_update=sysdate,user_update='%s' where devicename=:dname returning deviceid,system_name,location into :dID,:sysID,:loc; insert into %s(historydeviceid,serialnb,deviceid,device_status,user_comment,location,status_change,system_name,created,author,terminal_name) values (%s,NULL,:dID,'NONE',:usercomment,:loc,to_date(:statchange,'%s'),:sysID,sysdate,'%s','%s'); :numrows:=%s; :rescode:=%s(:dID,:devid,:statchange,'%s', :usercomment,'%s'); else :rescode:=-5; :numrows:=0; end if; else :rescode:=-10; :numrows:=0; end if;END;",HW_DEVICE_TABLE,TEST,IN_USE,LOGICAL_DEVICE_TABLE,SQLROWCOUNT,LOGICAL_DEVICE_TABLE,login,SQLROWCOUNT,HISTORY_DEVICE_TABLE,seqname,_date_format,login,host,LOGICAL_DEVICE_TABLE,login,HISTORY_DEVICE_TABLE,seqname,_date_format,login,host,SQLROWCOUNT,_TestUseBoardCpnt,login,host);
 		else		
 			sprintf(selectdev,"BEGIN update %s set device_status=%d where device_status=%d and serialnb=(select serialnb from %s where devicename=:dname) returning serialnb into :snb;if %s=1 then update %s set serialnb=:snb,last_update=sysdate,user_update='%s' where devicename=:bname and serialnb is null returning deviceid,location into :devid,:location; if %s=1 then insert  into %s(historydeviceid,serialnb,deviceid,device_status,user_comment,location,status_change,created,author,terminal_name) values (%s,:snb,:devid,'TEST',:usercomment,:location,to_date(:statchange,'%s'),sysdate,'%s','%s'); if to_date(:statchange,'%s')<to_date(:statchange2,'%s') then insert all into %s(historydeviceid,deviceid,device_status,user_comment,location,status_change,system_name,created,author,terminal_name) values (%s,deviceid,'NONE',:usercomment,location,to_date(:statchange,'%s'),system_name,sysdate,'%s','%s') select deviceid,location,system_name from %s where devicename=:dname; end if; if to_date(:statchange2,'%s')<to_date(:statchange,'%s') then :numrows:=0; :rescode:=-15; else update %s set serialnb=:snb2,last_update=sysdate,user_update='%s' where devicename=:dname and %d=(select device_status from %s where device_status=%d and serialnb=:snb2) returning deviceid,system_name,location into :dID,:sysID,:loc;if %s=1 then update %s set device_status=%d where serialnb=:snb2; insert into %s(historydeviceid,serialnb,deviceid,device_status,user_comment,location,status_change,system_name,created,author,terminal_name) values (%s,:snb2,:dID,'IN_USE',:usercomment,:loc,to_date(:statchange2,'%s'),:sysID,sysdate,'%s','%s'); :numrows:=%s; :rescode:=%s(:dID,:devid,:statchange,'%s', :usercomment,'%s',:snb,:statchange2);  else :rescode:=-3; :numrows:=0;  end if; end if; else :rescode:=-5; :numrows:=0; end if; else :rescode:=-10; :numrows:=0; end if;END;",HW_DEVICE_TABLE,TEST,IN_USE,LOGICAL_DEVICE_TABLE,SQLROWCOUNT,LOGICAL_DEVICE_TABLE,login,SQLROWCOUNT,HISTORY_DEVICE_TABLE,seqname,_date_format,login,host,_date_format,_date_format,HISTORY_DEVICE_TABLE,seqname,_date_format,login,host,LOGICAL_DEVICE_TABLE,_date_format,_date_format,LOGICAL_DEVICE_TABLE,login,SPARE,HW_DEVICE_TABLE,SPARE,SQLROWCOUNT,HW_DEVICE_TABLE,IN_USE,HISTORY_DEVICE_TABLE,seqname,_date_format,login,host,SQLROWCOUNT,_TestUseBoardCpnt,login,host);
 
-		//std::cout<<"value of selectdev "<<selectdev <<" and strlen= "<<strlen(selectdev)<<std::endl;
+		//std:://cout<<"value of selectdev "<<selectdev <<" and strlen= "<<strlen(selectdev)<<std::endl;
 		status=OCIStmtPrepare(stmthp, ociError, (text*)selectdev, (ub4)strlen((char *)selectdev), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		if(status!=OCI_SUCCESS)
 		{
@@ -1005,7 +1005,7 @@ extern "C" {
 					// need to update the link state if there is no replacement and also pathes--> linkused=0 and pathused=0
 					sprintf(selectdev,"begin update %s e set e.last_update=sysdate,e.user_update='%s',e.lkused=(select t.nodeused*f.nodeused from %s t,%s f, %s l,%s m where t.deviceid=l.deviceid and l.portid=e.portidfrom and f.deviceid=m.deviceid and m.portid=e.portidto) where (e.portidto in (select p.portid from %s p where p.deviceid=%d)) or (e.portidfrom in (select p.portid from %s p  where p.deviceid=%d)); if %s>0 then :rescode:=%s(%d); end if; end; ",MACRO_CONNECTIVITY_TABLE,login,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE,PORT_TABLE,PORT_TABLE,PORT_TABLE,devid2,PORT_TABLE,devid2,SQLROWCOUNT,_UpdatePathUsed,sysID);
 					status=OCIStmtPrepare(stmthp, ociError, (text*)selectdev, (ub4)strlen((char *)selectdev), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-					//std::cout<<"value of selectdev "<<selectdev <<" and strlen= "<<strlen(selectdev)<<std::endl;
+					//std:://cout<<"value of selectdev "<<selectdev <<" and strlen= "<<strlen(selectdev)<<std::endl;
 					if(status!=OCI_SUCCESS)
 					{
 						if(rescode==0)
@@ -1216,7 +1216,7 @@ extern "C" {
 		else
 			sprintf(selectdev,"BEGIN update %s set device_status=:dstatus where device_status!=%d and device_status!=%d and serialnb=:snb; if %s=1 then update %s set serialnb=:snb, nodeused=1, last_update=sysdate,user_update='%s' where devicename=:dname and serialnb is null returning deviceid,system_name,location into :devid,:sysname,:dlocation; if %s=1 then insert into %s(historydeviceid, deviceid,serialnb,  device_status, user_comment, location, status_change, system_name,created,author,terminal_name) values (%s,:devid,:snb,'%s',:usercomment,:dlocation,to_date(:statchange,'%s'),:sysname, sysdate,'%s','%s');update %s set  CPNT_STATUS=:dstatus where location=:snb; if %s>0 then update %s t set t.snbid=(select p.snbid from %s p where p.hwname=t.cpntname) where t.motherboardid=:devid;insert all into %s (historycpntid,snbid,cpntid,cpnt_status,user_comment,location,status_change,created,author,terminal_name) values(%s,snbid,cpntid,'%s',:usercomment,:snb,to_date(:statchange,'%s'),sysdate,'%s','%s') select snbid,cpntid from %s where motherboardid=:devid; end if; :numrows:=%s; :rescode:=0; else :rescode:=-5; :numrows:=0;end if; else :rescode:=-10; :numrows:=0; end if; END;",HW_DEVICE_TABLE,IN_USE,DESTROYED, SQLROWCOUNT,LOGICAL_DEVICE_TABLE,login,SQLROWCOUNT,HISTORY_DEVICE_TABLE,seqname,new_device_status,_date_format,login,host,HW_CPNTS_TABLE,SQLROWCOUNT,LG_CPNTS_TABLE,HW_CPNTS_TABLE, HISTORY_CPNT_TABLE,seq_name,new_device_status,_date_format,login,host,LG_CPNTS_TABLE,SQLROWCOUNT);
 
-		//std::cout<<"selectdev="<<selectdev<<std::endl;
+		//std:://cout<<"selectdev="<<selectdev<<std::endl;
 		status=OCIStmtPrepare(stmthp, ociError, (text*)selectdev, (ub4)strlen((char *)selectdev), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		if(status!=OCI_SUCCESS)
 		{
@@ -1248,7 +1248,7 @@ extern "C" {
 		}
 		else
 		{
-			//std::cout<<"date ="<<status_datechange<<std::endl;
+			//std:://cout<<"date ="<<status_datechange<<std::endl;
 			if(status_datechange!=NULL) 
 				status=OCIBindByName(stmthp, &bndp[2], ociError,(text*)":statchange",-1,(dvoid*) status_datechange,strlen(status_datechange)+1, SQLT_STR, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0, OCI_DEFAULT);
 			else
@@ -1340,7 +1340,7 @@ extern "C" {
 		}
 		else
 			status= OCIStmtExecute(ociHdbc, stmthp, ociError,  1, 0, 0, 0, OCI_DEFAULT );
-		//std::cout<<"res_code="<<res_code<<" numrows "<<numrows<<std::endl;
+		//std:://cout<<"res_code="<<res_code<<" numrows "<<numrows<<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -1359,7 +1359,7 @@ extern "C" {
 					if (res_code==-5)
 					{
 						GetErrorMess(appliName,"Error The given functional device is already in USE",ErrMess,1);
-						//std::cout<<"value of rescode="<<numrows<<std::endl;
+						//std:://cout<<"value of rescode="<<numrows<<std::endl;
 					}
 					else
 					{
@@ -1551,7 +1551,7 @@ extern "C" {
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
 			Format_output(dname_null,devicename, logmessage,'?');
-			//std::cout0 <<"logmessage dname "<<logmessage <<"oracle "<<dname_null <<std::endl;
+			//std:://cout0 <<"logmessage dname "<<logmessage <<"oracle "<<dname_null <<std::endl;
 			i=strcspn(devicename,"?");
 			if(len_functionaldname>i)
 			{
@@ -1722,7 +1722,7 @@ extern "C" {
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
 			Format_output(dname_null,devicename, logmessage,'?');
-			//std::cout0 <<"logmessage dname "<<logmessage <<"oracle "<<dname_null <<std::endl;
+			//std:://cout0 <<"logmessage dname "<<logmessage <<"oracle "<<dname_null <<std::endl;
 			i=strcspn(devicename,"?");
 			if(len_serialnb>i)
 			{
@@ -2125,7 +2125,7 @@ extern "C" {
 				}
 
 			}
-			//std::cout<<"value of sqlquery "<<selectdev<<std::endl;	
+			//std:://cout<<"value of sqlquery "<<selectdev<<std::endl;	
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdev,(ub4) strlen(selectdev),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		}
 
@@ -2174,7 +2174,7 @@ extern "C" {
 		}
 		else	
 			status=OCIStmtExecute(ociHdbc, stmthp, ociError, 0, 0,(OCISnapshot *) 0, (OCISnapshot *) 0, OCI_DEFAULT);
-		//std::cout<<"after execute "<<std::endl;	
+		//std:://cout<<"after execute "<<std::endl;	
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)
@@ -2251,11 +2251,11 @@ extern "C" {
 					{
 						memcpy(devicenamehist_list+pos3,devicenamehist_row,pos1+1);
 						i++;
-						//std::cout<<"devicenamehist_list "<<(devicenamehist_list+pos3)<<" and  i="<<std::endl;	
+						//std:://cout<<"devicenamehist_list "<<(devicenamehist_list+pos3)<<" and  i="<<std::endl;	
 					}
 				}
 			}
-			//std::cout<<"after the loop "<<i<<std::endl;	
+			//std:://cout<<"after the loop "<<i<<std::endl;	
 
 			if(rescode==0)
 			{	
@@ -2296,7 +2296,7 @@ extern "C" {
 
 
 		} 
-		//std::cout<<"just before free "<<i<<std::endl;
+		//std:://cout<<"just before free "<<i<<std::endl;
 		if(devicenamehist_row!=NULL)
 			free(devicenamehist_row);
 		if(devicenamehist_list!=NULL)
@@ -2314,7 +2314,7 @@ extern "C" {
 			}
 		}
 		rescode+=status;
-		//std::cout<<"end of fct "<<std::endl;	
+		//std:://cout<<"end of fct "<<std::endl;	
 
 		return rescode;
 	}

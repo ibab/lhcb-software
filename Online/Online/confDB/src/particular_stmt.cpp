@@ -67,7 +67,7 @@ extern "C" {
 		char selectdevID[1000];
 		int lenarray=1000;
 		int state_res=0;
-		//std::cout<<" entering fct "<<ListSubsystemUsed<<std::endl;
+		//std:://cout<<" entering fct "<<ListSubsystemUsed<<std::endl;
 		if(strcspn(ListSubsystemUsed,";")<strlen(ListSubsystemUsed))
 		{
 			GetErrorMess(appliName,"INVALID SYSTEMLIST",ErrorMessage,1);
@@ -84,7 +84,7 @@ extern "C" {
 		//	GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 		//	return -1;	
 		//}
-		//std::cout<<"sublist values" <<SubList<<std::endl;
+		//std:://cout<<"sublist values" <<SubList<<std::endl;
 		status =OCIHandleAlloc (ociEnv, (void**)&stmthp, OCI_HTYPE_STMT , 0, 0);
 		if(status!=OCI_SUCCESS)
 		{	
@@ -102,7 +102,7 @@ extern "C" {
 			else
 				sprintf(selectdevID,"select t.system_name||'|',max(e.active) from %s t,%s e where  mod(e.system_name,t.systemid)=0 and t.system_name in (%s) group by t.system_name ",SUBSYSTEM_TABLE,LOGICAL_DEVICE_TABLE,ListSubsystemUsed);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevID,(ub4) strlen(selectdevID),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"selectdevID="<<selectdevID<<std::endl;
+			//std:://cout<<"selectdevID="<<selectdevID<<std::endl;
 		}
 
 		if(status!=OCI_SUCCESS)
@@ -188,7 +188,7 @@ extern "C" {
 					pos3=pos2;
 					pos2+=pos1+1;
 
-					//std::cout<<"devname= "<<devName<<" and pos1="<<pos1<<" and pos2="<<pos2<<std::endl;
+					//std:://cout<<"devname= "<<devName<<" and pos1="<<pos1<<" and pos2="<<pos2<<std::endl;
 					//actual_len+=pos1+1;
 					devIDs_temp=(char*) realloc(devIDs_temp,pos2*sizeof(char));
 					ListSubsystemState[i]=state_res;
@@ -330,7 +330,7 @@ extern "C" {
 
 
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdevID,(ub4) strlen(selectdevID),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"selectdevID="<<selectdevID<<std::endl;
+			//std:://cout<<"selectdevID="<<selectdevID<<std::endl;
 		}
 		if(status!=OCI_SUCCESS )
 		{
@@ -418,7 +418,7 @@ extern "C" {
 					pos3=pos2;
 					pos2+=pos1+1;
 
-					//std::cout<<"devname= "<<devName<<" and pos1="<<pos1<<" and pos2="<<pos2<<std::endl;
+					//std:://cout<<"devname= "<<devName<<" and pos1="<<pos1<<" and pos2="<<pos2<<std::endl;
 					//actual_len+=pos1+1;
 					devIDs_temp=(char*) realloc(devIDs_temp,pos2*sizeof(char));
 
@@ -443,7 +443,7 @@ extern "C" {
 
 
 		}
-		std::cout<<"i= "<<i<<std::endl;
+		//std::cout<<"i= "<<i<<std::endl;
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 		if(strstr(ErrorMessage,"NO_ROWS_SELECTED")==NULL)
 		{
@@ -505,7 +505,7 @@ extern "C" {
 			//sprintf(sqlstmt,"BEGIN update %s set nodeused=decode(:nused,1,1,0,0,nodeused),last_update=sysdate,user_update='%s' where devicename=:dname; if :numrows1=1 then update %s e set e.last_update=sysdate,e.user_update='%s',e.lkused=(select t.nodeused*f.nodeused from %s t,%s f, %s l,%s m where t.deviceid=l.deviceid and l.portid=e.portidfrom and f.deviceid=m.deviceid and m.portid=e.portidto); end if; :numrows:=%s; END;",LOGICAL_DEVICE_TABLE,login,MACRO_CONNECTIVITY_TABLE,login,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE,PORT_TABLE,PORT_TABLE,SQLROWCOUNT);
 			sprintf(sqlstmt,"BEGIN update %s set system_name=:new_sysname where system_name=:old_sysname; :numrows:=%s; END;",SUBSYSTEM_TABLE,SQLROWCOUNT);
 			status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"sql stmt "<<sqlstmt<<std::endl;
+			//std:://cout<<"sql stmt "<<sqlstmt<<std::endl;
 
 		}
 		if(status!=OCI_SUCCESS)
@@ -543,7 +543,7 @@ extern "C" {
 		}
 		else
 			status= OCIStmtExecute(ociHdbc, hstmt, ociError, 1, 0, 0, 0, OCI_DEFAULT );
-		//std::cout<<"res_query "<<res_query<<std::endl;
+		//std:://cout<<"res_query "<<res_query<<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -580,7 +580,7 @@ extern "C" {
 			OCIReportError(ociError,appliName, ErrMess,0); 
 
 
-		//std::cout<<"end of fct "<<std::endl;
+		//std:://cout<<"end of fct "<<std::endl;
 		return (status+rescode);
 	}
 

@@ -164,7 +164,7 @@ extern "C" {
 		int force_insert=0;
 		int first_time=first_time1;
 
-		//std::cout<<"value of port_typeto1 "<<port_typeto1<<"value of port_typeto"<<port_typeto <<std::endl;
+		//std:://cout<<"value of port_typeto1 "<<port_typeto1<<"value of port_typeto"<<port_typeto <<std::endl;
 		if(FIRST_TIME_MICROCONNECTIVITY==1 && _cpntNodeFromList==NULL) //means new loop in the mass insertion (by 10000)
 		{
 			first_time=1; //need to put to 1, as if new cache
@@ -269,7 +269,7 @@ extern "C" {
 			{
 				sprintf(sqlstmt,"BEGIN if :nfrom='motherboard' then insert ALL into %s(linkid,cpntidfrom,portidfrom,cpntidto,portidto,link_type,bidirectional_link_used,link_weight,lkused,author,created,terminal_name) values (%s,-1,:portnbfrom,cpntidto,:portnbto,lknb,:biused,lkweight,1,'%s',sysdate,'%s') select s.linktypeid as lknb,f.cpntid as cpntidto,decode(f.cpntid,-1,3,1) as lkweight from %s f,%s s where f.cpntname=:nto and s.link_name=:lktype ; else if :nto='motherboard' then insert ALL into %s(linkid,cpntidfrom,portidfrom,cpntidto,portidto,link_type,bidirectional_link_used,link_weight,lkused,author,created,terminal_name) values (%s,cpntidfrom,:portnbfrom,-1,:portnbto,lknb,:biused,lkweight,1,'%s',sysdate,'%s') select s.linktypeid as lknb,f.cpntid as cpntidfrom, decode(f.cpntid,-1,3,2) as lkweight from %s f,%s s where f.cpntname=:nfrom and s.link_name=:lktype; else insert ALL into %s(linkid,cpntidfrom,portidfrom,cpntidto,portidto,link_type,bidirectional_link_used,link_weight,lkused,author,created,terminal_name) values (%s,cpntidfrom,:portnbfrom,cpntidto,:portnbto,lknb,:biused,0,1,'%s',sysdate,'%s') select s.linktypeid as lknb,t.cpntid as cpntidfrom,f.cpntid as cpntidto from %s t,%s f,%s s where t.cpntname=:nfrom and f.cpntname=:nto and s.link_name=:lktype and f.motherboardid=t.motherboardid; end if;end if;:numrows:=%s;end;",MICRO_CONNECTIVITY_TABLE,seqname,login,host,LG_CPNTS_TABLE,LINKTYPE_TABLE,MICRO_CONNECTIVITY_TABLE,seqname,login,host,LG_CPNTS_TABLE,LINKTYPE_TABLE,MICRO_CONNECTIVITY_TABLE,seqname,login,host,LG_CPNTS_TABLE,LG_CPNTS_TABLE,LINKTYPE_TABLE,SQLROWCOUNT);
 				status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout<<"value of stmt "<<sqlstmt <<" and length="<<strlen(sqlstmt)<<std::endl;
+				//std:://cout<<"value of stmt "<<sqlstmt <<" and length="<<strlen(sqlstmt)<<std::endl;
 			}
 			if(status!=OCI_SUCCESS)
 			{
@@ -480,14 +480,14 @@ extern "C" {
 				{
 					status = OCITransCommit(ociHdbc, ociError, 0);
 					//sprintf(sqlstmt,"BEGIN  :rescode:=%s(1); :numrows:=%s; END; ",MACRO_CONNECTIVITY_TABLE,_UpdateDynamicTables,SQLROWCOUNT);
-					//std::cout<<"value of stmt 3 "<<sqlstmt <<std::endl;
+					//std:://cout<<"value of stmt 3 "<<sqlstmt <<std::endl;
 
 				}
 
 			}
 			status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
 			status+=freeMicroConnectivity();
-			//std::cout<<"after freeconnect"<<std::endl;
+			//std:://cout<<"after freeconnect"<<std::endl;
 			if(nodefrom!=NULL) //means not null otehriwse it's -1
 				free(nodefrom);
 			if(nodeto!=NULL)

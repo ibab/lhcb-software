@@ -279,7 +279,7 @@ extern "C" {
 		int force_insert=0;
 		int first_time=first_time1;
 		char seqname[100]="lhcb_history_deviceseq.nextval";
-		//std::cout<<"value of first_time "<<first_time <<std::endl;
+		//std:://cout<<"value of first_time "<<first_time <<std::endl;
 		int last_rows=last_rows1;
 		char seq_name[100]="lhcb_lg_deviceseq.nextval";
 		int* numrows_inserted=NULL;
@@ -297,7 +297,7 @@ extern "C" {
 		if(FIRST_TIME_DEVICE==1 && _DeviceList==NULL)
 		{
 			first_time=1;
-			//std::cout<<"case of FIRST_TIME_DEVICE==1 && _DeviceList==NULL"<<std::endl;
+			//std:://cout<<"case of FIRST_TIME_DEVICE==1 && _DeviceList==NULL"<<std::endl;
 
 		}
 		if(first_time==1)
@@ -337,9 +337,9 @@ extern "C" {
 		res_query+=AppendInt(dresponsible1,_responsible1_nullvalue,_responsible1NbEl,first_time);
 		res_query+=AppendInt(dfunctiondev1,_devfunction1_nullvalue,_devfunction1NbEl,first_time);
 
-		//std::cout<<"value of devicelist "<<_DeviceList<<std::endl;
+		//std:://cout<<"value of devicelist "<<_DeviceList<<std::endl;
 
-		//std::cout<<"value of FIRST_TIME_DEVICE "<<FIRST_TIME_DEVICE <<std::endl;
+		//std:://cout<<"value of FIRST_TIME_DEVICE "<<FIRST_TIME_DEVICE <<std::endl;
 
 		if(_deviceNbElement==MAXROWS && last_rows!=1)
 		{
@@ -440,25 +440,25 @@ extern "C" {
 				if(dname!=NULL)
 				{
 					status=NormalizeVector(_DeviceList, _deviceNbElement,_max_deviceLength,dname);
-					//std::cout<<"dname not null "<<_max_deviceLength<<std::endl;
+					//std:://cout<<"dname not null "<<_max_deviceLength<<std::endl;
 				}
 				dserialnb=(char*)malloc( _serialnb1NbElement*_max_serialnb1_length*sizeof(char));
 				if(dserialnb!=NULL)
 				{
 					status+=NormalizeVector(_serialnb1List, _serialnb1NbElement,_max_serialnb1_length,dserialnb);
-					//std::cout<<"dserialnb not null "<<_max_serialnb1_length<<std::endl;
+					//std:://cout<<"dserialnb not null "<<_max_serialnb1_length<<std::endl;
 				}
 				dlocation=(char*)malloc( _locationNbElement*_max_location_length*sizeof(char));
 				if(dlocation!=NULL)
 				{
 					status+=NormalizeVector(_locationList, _locationNbElement,_max_location_length,dlocation);
-					//std::cout<<"dlocation not null "<<_max_location_length<<std::endl;
+					//std:://cout<<"dlocation not null "<<_max_location_length<<std::endl;
 				}
 				dtype=(char*)malloc(_devtypeNbElement*_max_devtype_length*sizeof(char));
 				if(dtype!=NULL)
 				{
 					status+=NormalizeVector(_DevtypeList, _devtypeNbElement,_max_devtype_length,dtype);
-					//std::cout<<"dtype not null "<<_max_devtype_length<<std::endl;
+					//std:://cout<<"dtype not null "<<_max_devtype_length<<std::endl;
 				}
 				dhwtype=(char*)malloc(_hwtype1NbElement*_max_hwtype1Length*sizeof(char));
 				if(dhwtype!=NULL)
@@ -470,33 +470,33 @@ extern "C" {
 				if(dresponsible!=NULL)
 				{
 					status+=NormalizeVector(_responsible1List, _responsible1NbElement,_max_responsible1Length,dresponsible);
-					//std::cout<<"dresponsible not null "<<_max_responsible1Length<<std::endl;
+					//std:://cout<<"dresponsible not null "<<_max_responsible1Length<<std::endl;
 				}
 				dfunctiondev=(char*)malloc(_devfunction1NbElement*_max_devfunction1Length*sizeof(char));
 				if(dfunctiondev!=NULL)
 				{
 					status+=NormalizeVector(_devfunction1List, _devfunction1NbElement,_max_devfunction1Length,dfunctiondev);
-					//std::cout<<"dresponsible not null "<<_max_responsible1Length<<std::endl;
+					//std:://cout<<"dresponsible not null "<<_max_responsible1Length<<std::endl;
 				}
 				numrows_inserted=(int*)malloc(sizeof(int)*_deviceNbElement);
-				//std::cout<<"after memory allocation "<<_deviceNbElement<<std::endl;
+				//std:://cout<<"after memory allocation "<<_deviceNbElement<<std::endl;
 				if( (dtype==NULL) || (dname==NULL) || dfunctiondev==NULL || (dresponsible==NULL) || (dserialnb==NULL) || (dresponsible==NULL)||dcomments==NULL||dhwtype==NULL||numrows_inserted==NULL)
 				{
-					//std::cout<<"memory pb "<<std::endl;
+					//std:://cout<<"memory pb "<<std::endl;
 
 					rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
 					GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
 					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					//std::cout<<"memory pb 1"<<std::endl;
+					//std:://cout<<"memory pb 1"<<std::endl;
 					status+=freeDevice();
-					//std::cout<<"memory pb 2"<<std::endl;
+					//std:://cout<<"memory pb 2"<<std::endl;
 					if(dname!=NULL)
 						free(dname);
 					if(dtype!=NULL)
 						free(dtype);
 					if(dlocation!=NULL)
 						free(dlocation);
-					//std::cout<<"memory pb 3"<<std::endl;
+					//std:://cout<<"memory pb 3"<<std::endl;
 					if(dserialnb!=NULL)
 						free(dserialnb);
 					if(dfunctiondev!=NULL)
@@ -505,7 +505,7 @@ extern "C" {
 						free(dresponsible);
 					if(dcomments!=NULL)
 						free(dcomments);
-					//std::cout<<"memory pb 4"<<std::endl;
+					//std:://cout<<"memory pb 4"<<std::endl;
 					if(dhwtype!=NULL)
 						free(dhwtype);
 					if(numrows_inserted!=NULL)
@@ -520,11 +520,11 @@ extern "C" {
 				{
 					for(i=0;i<_deviceNbElement;i++)
 						numrows_inserted[i]=0;
-					//std::cout<<"before binding 0"<<std::endl;
+					//std:://cout<<"before binding 0"<<std::endl;
 					status =OCIBindByName(hstmt, &bndp[0], ociError,(text*) ":dname", -1,(dvoid*)dname, _max_deviceLength,  SQLT_STR, (dvoid *) & _deviceList_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 				}
 			}
-			//std::cout<<"before binding "<<std::endl;
+			//std:://cout<<"before binding "<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -710,7 +710,7 @@ extern "C" {
 			}
 			else
 				status= OCIStmtExecute(ociHdbc, hstmt, ociError, _deviceNbElement, 0, 0, 0, OCI_DEFAULT );
-			//std::cout<<"after execute "<<std::endl;
+			//std:://cout<<"after execute "<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -767,7 +767,7 @@ extern "C" {
 			}
 
 			status+=freeDevice();
-			//std::cout<<"after free device final"<<std::endl;
+			//std:://cout<<"after free device final"<<std::endl;
 			if(dname!=NULL)
 				free(dname);
 			if(dtype!=NULL)
@@ -832,7 +832,7 @@ extern "C" {
 			}
 
 		}
-		//std::cout<<"end of fct "<<std::endl;
+		//std:://cout<<"end of fct "<<std::endl;
 		return (status+rescode);
 	}
 
@@ -874,7 +874,7 @@ extern "C" {
 		int force_insert=0;
 		int first_time=first_time1;
 		char seqname[100]="lhcb_history_deviceseq.nextval";
-		//std::cout<<"value of first_time "<<first_time <<std::endl;
+		//std:://cout<<"value of first_time "<<first_time <<std::endl;
 		int last_rows=last_rows1;
 		int* numrows_inserted=NULL;
 		int numrows=0;
@@ -889,7 +889,7 @@ extern "C" {
 		if(FIRST_TIME_DEVICE_SPARE==1 && _SpareDeviceList==NULL)
 		{
 			first_time=1;
-			//std::cout<<"case of FIRST_TIME_DEVICE==1 && _DeviceList==NULL"<<std::endl;
+			//std:://cout<<"case of FIRST_TIME_DEVICE==1 && _DeviceList==NULL"<<std::endl;
 
 		}
 		if(first_time==1)
@@ -915,9 +915,9 @@ extern "C" {
 		res_query+=AppendInt(dhwtype1,_Sparehwtype1_nullvalue,_Sparehwtype1NbEl,first_time);
 		res_query+=AppendInt(dcomments1,_Sparecomments1_nullvalue,_Sparecomments1NbEl,first_time);
 		res_query+=AppendInt(dresponsible1,_Spareresponsible1_nullvalue,_Spareresponsible1NbEl,first_time);
-		//std::cout<<"value of devicelist "<<_DeviceList<<std::endl;
+		//std:://cout<<"value of devicelist "<<_DeviceList<<std::endl;
 
-		//std::cout<<"value of FIRST_TIME_DEVICE "<<FIRST_TIME_DEVICE <<std::endl;
+		//std:://cout<<"value of FIRST_TIME_DEVICE "<<FIRST_TIME_DEVICE <<std::endl;
 
 		if(_SparedeviceNbElement==MAXROWS && last_rows!=1)
 		{
@@ -1015,19 +1015,19 @@ extern "C" {
 				if(dname!=NULL)
 				{
 					status=NormalizeVector(_SpareDeviceList, _SparedeviceNbElement,_max_SparedeviceLength,dname);
-					//std::cout<<"dname not null "<<_max_deviceLength<<std::endl;
+					//std:://cout<<"dname not null "<<_max_deviceLength<<std::endl;
 				}
 				dserialnb=(char*)malloc( _Spareserialnb1NbElement*_max_Spareserialnb1_length*sizeof(char));
 				if(dserialnb!=NULL)
 				{
 					status+=NormalizeVector(_Spareserialnb1List, _Spareserialnb1NbElement,_max_Spareserialnb1_length,dserialnb);
-					//std::cout<<"dserialnb not null "<<_max_serialnb1_length<<std::endl;
+					//std:://cout<<"dserialnb not null "<<_max_serialnb1_length<<std::endl;
 				}
 				dlocation=(char*)malloc( _SparelocationNbElement*_max_Sparelocation_length*sizeof(char));
 				if(dlocation!=NULL)
 				{
 					status+=NormalizeVector(_SparelocationList, _SparelocationNbElement,_max_Sparelocation_length,dlocation);
-					//std::cout<<"dlocation not null "<<_max_location_length<<std::endl;
+					//std:://cout<<"dlocation not null "<<_max_location_length<<std::endl;
 				}
 
 				dhwtype=(char*)malloc(_Sparehwtype1NbElement*_max_Sparehwtype1Length*sizeof(char));
@@ -1040,33 +1040,33 @@ extern "C" {
 				if(dresponsible!=NULL)
 				{
 					status+=NormalizeVector(_Spareresponsible1List, _Spareresponsible1NbElement,_max_Spareresponsible1Length,dresponsible);
-					//std::cout<<"dresponsible not null "<<_max_responsible1Length<<std::endl;
+					//std:://cout<<"dresponsible not null "<<_max_responsible1Length<<std::endl;
 				}
 				numrows_inserted=(int*)malloc(sizeof(int)*_SparedeviceNbElement);
-				//std::cout<<"after memory allocation "<<_deviceNbElement<<std::endl;
+				//std:://cout<<"after memory allocation "<<_deviceNbElement<<std::endl;
 				if(  (dname==NULL) || (dresponsible==NULL) || (dserialnb==NULL) || (dresponsible==NULL)||dcomments==NULL||dhwtype==NULL||numrows_inserted==NULL)
 				{
-					//std::cout<<"memory pb "<<std::endl;
+					//std:://cout<<"memory pb "<<std::endl;
 
 					rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
 					GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
 					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					//std::cout<<"memory pb 1"<<std::endl;
+					//std:://cout<<"memory pb 1"<<std::endl;
 					status+=freeDeviceSpare();
-					//std::cout<<"memory pb 2"<<std::endl;
+					//std:://cout<<"memory pb 2"<<std::endl;
 					if(dname!=NULL)
 						free(dname);
 
 					if(dlocation!=NULL)
 						free(dlocation);
-					//std::cout<<"memory pb 3"<<std::endl;
+					//std:://cout<<"memory pb 3"<<std::endl;
 					if(dserialnb!=NULL)
 						free(dserialnb);
 					if(dresponsible!=NULL)
 						free(dresponsible);
 					if(dcomments!=NULL)
 						free(dcomments);
-					//std::cout<<"memory pb 4"<<std::endl;
+					//std:://cout<<"memory pb 4"<<std::endl;
 					if(dhwtype!=NULL)
 						free(dhwtype);
 					if(numrows_inserted!=NULL)
@@ -1081,11 +1081,11 @@ extern "C" {
 				{
 					for(i=0;i<_SparedeviceNbElement;i++)
 						numrows_inserted[i]=0;
-					//std::cout<<"before binding 0"<<std::endl;
+					//std:://cout<<"before binding 0"<<std::endl;
 					status =OCIBindByName(hstmt, &bndp[0], ociError,(text*) ":hwname", -1,(dvoid*)dname, _max_SparedeviceLength,  SQLT_STR, (dvoid *) & _SparedeviceList_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 				}
 			}
-			//std::cout<<"before binding "<<std::endl;
+			//std:://cout<<"before binding "<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -1200,7 +1200,7 @@ extern "C" {
 			}
 			else
 				status= OCIStmtExecute(ociHdbc, hstmt, ociError, _SparedeviceNbElement, 0, 0, 0, OCI_DEFAULT );
-			//std::cout<<"after execute "<<std::endl;
+			//std:://cout<<"after execute "<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -1254,7 +1254,7 @@ extern "C" {
 			}
 
 			status+=freeDeviceSpare();
-			//std::cout<<"after free device final"<<std::endl;
+			//std:://cout<<"after free device final"<<std::endl;
 			if(dname!=NULL)
 				free(dname);
 
@@ -1316,7 +1316,7 @@ extern "C" {
 			}
 
 		}
-		//std::cout<<"end of fct "<<std::endl;
+		//std:://cout<<"end of fct "<<std::endl;
 		return (status+rescode);
 
 	}

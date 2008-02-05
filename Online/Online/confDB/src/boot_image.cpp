@@ -133,7 +133,7 @@ extern "C" {
 		char* dboot_protocol=NULL;
 		int force_insert=0;
 		int first_time=first_time1;
-		//std::cout<<"value of first_time "<<first_time <<std::endl;
+		//std:://cout<<"value of first_time "<<first_time <<std::endl;
 		int last_rows=last_rows1;
 		int* numrows_inserted=NULL;
 		int numrows=0;
@@ -272,25 +272,25 @@ extern "C" {
 				if(dname!=NULL)
 				{
 					status=NormalizeVector(_DeviceListBootingImage, _deviceBootingImageNbElement,_max_deviceLengthBootingImage,dname);
-					//std::cout<<"dname not null "<<_max_deviceLength<<std::endl;
+					//std:://cout<<"dname not null "<<_max_deviceLength<<std::endl;
 				}
 				dboot_image=(char*)malloc( _bootImBootingImageNbElement*_max_bootImLengthBootingImage*sizeof(char));
 				if(dboot_image!=NULL)
 				{
 					status+=NormalizeVector(_bootImListBootingImage,_bootImBootingImageNbElement,_max_bootImLengthBootingImage,dboot_image);
-					//std::cout<<"dserialnb not null "<<_max_serialnb1_length<<std::endl;
+					//std:://cout<<"dserialnb not null "<<_max_serialnb1_length<<std::endl;
 				}
 				dinitrd_image_location=(char*)malloc( _initrdImBootingImageNbElement*_max_initrdImLengthBootingImage*sizeof(char));
 				if(dinitrd_image_location!=NULL)
 				{
 					status+=NormalizeVector(_initrdImListBootingImage, _initrdImBootingImageNbElement,_max_initrdImLengthBootingImage,dinitrd_image_location);
-					//std::cout<<"dlocation not null "<<_max_location_length<<std::endl;
+					//std:://cout<<"dlocation not null "<<_max_location_length<<std::endl;
 				}
 				dphysical_location=(char*)malloc(_physicalImBootingImageNbElement*_max_physicalImLengthBootingImage*sizeof(char));
 				if(dphysical_location!=NULL)
 				{
 					status+=NormalizeVector(_physicalImListBootingImage, _physicalImBootingImageNbElement,_max_physicalImLengthBootingImage,dphysical_location);
-					//std::cout<<"dtype not null "<<_max_devtype_length<<std::endl;
+					//std:://cout<<"dtype not null "<<_max_devtype_length<<std::endl;
 				}
 				dkernel_image_location=(char*)malloc(_kernelImBootingImageNbElement*_max_kernelImLengthBootingImage*sizeof(char));
 				if(dkernel_image_location!=NULL)
@@ -300,17 +300,17 @@ extern "C" {
 					status+=NormalizeVector(_bootProtocolListBootingImage, _bootProtocolBootingImageNbElement,_max_bootProtocolLengthBootingImage,dboot_protocol);
 
 				numrows_inserted=(int*)malloc(sizeof(int)*_deviceBootingImageNbElement);
-				//std::cout<<"after memory allocation "<<_deviceNbElement<<std::endl;
+				//std:://cout<<"after memory allocation "<<_deviceNbElement<<std::endl;
 				if( (dkernel_image_location==NULL) || (dname==NULL) || (dboot_protocol==NULL) || (dphysical_location==NULL) || (dinitrd_image_location==NULL)||dboot_image==NULL||numrows_inserted==NULL)
 				{
-					//std::cout<<"memory pb "<<std::endl;
+					//std:://cout<<"memory pb "<<std::endl;
 
 					rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
 					GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
 					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					//std::cout<<"memory pb 1"<<std::endl;
+					//std:://cout<<"memory pb 1"<<std::endl;
 					status+=freeDeviceBootImage();
-					//std::cout<<"memory pb 2"<<std::endl;
+					//std:://cout<<"memory pb 2"<<std::endl;
 					if(dname!=NULL)
 						free(dname);
 					if(dboot_image!=NULL)
@@ -332,11 +332,11 @@ extern "C" {
 				{
 					for(i=0;i<_deviceBootingImageNbElement;i++)
 						numrows_inserted[i]=0;
-					//std::cout<<"before binding 0"<<std::endl;
+					//std:://cout<<"before binding 0"<<std::endl;
 					status =OCIBindByName(hstmt, &bndp[0], ociError,(text*) ":dname", -1,(dvoid*)dname, _max_deviceLengthBootingImage,  SQLT_STR, (dvoid *) & _deviceListBootingImage_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
 				}
 			}
-			//std::cout<<"before binding "<<std::endl;
+			//std:://cout<<"before binding "<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -443,7 +443,7 @@ extern "C" {
 			}
 			else
 				status= OCIStmtExecute(ociHdbc, hstmt, ociError, _deviceBootingImageNbElement, 0, 0, 0, OCI_DEFAULT );
-			//std::cout<<"after execute "<<std::endl;
+			//std:://cout<<"after execute "<<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
@@ -496,7 +496,7 @@ extern "C" {
 			}
 
 			status+=freeDeviceBootImage();
-			//std::cout<<"after free device final"<<std::endl;
+			//std:://cout<<"after free device final"<<std::endl;
 			if(dname!=NULL)
 				free(dname);
 			if(dboot_image!=NULL)
@@ -557,7 +557,7 @@ extern "C" {
 			}
 
 		}
-		//std::cout<<"end of fct "<<std::endl;
+		//std:://cout<<"end of fct "<<std::endl;
 		return (status+rescode);
 	}
 
@@ -829,7 +829,7 @@ extern "C" {
 
 			status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		}
-		std::cout<<"slqstmt="<<sqlstmt<<" and len="<<strlen(sqlstmt)<<std::endl;
+		//std::cout<<"slqstmt="<<sqlstmt<<" and len="<<strlen(sqlstmt)<<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -911,7 +911,7 @@ extern "C" {
 		}
 		else
 			status= OCIStmtExecute(ociHdbc, hstmt, ociError, 1, 0, 0, 0, OCI_DEFAULT );
-		std::cout<<"after execution"<<std::endl;   
+		//std::cout<<"after execution"<<std::endl;   
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -1031,7 +1031,7 @@ extern "C" {
 			sprintf(selectdev,"select t.devicename||'?',nvl(e.kernel_image_location,'none')||'?',nvl(e.physical_location,'none'),nvl(e.initrd_image_location,'none'),nvl(e.boot_image_location,'none'),e.deviceid,nvl(e.boot_protocol,'none')||'?',1 from %s e,%s t where t.devicename=:dname and t.deviceid=e.deviceid union select t.devicetype||'?',nvl(e.kernel_image_location,'none')||'?',nvl(e.physical_location,'none'),nvl(e.initrd_image_location,'none'),nvl(e.boot_image_location,'none'),e.devicetypeid,nvl(e.boot_protocol,'none')||'?',2 from %s e,%s t where t.devicetype=:dname and t.devicetypeid=e.devicetypeid",DEVICEBOOTING_TABLE,LOGICAL_DEVICE_TABLE,DEVICETYPEBOOTING_TABLE,DEVICETYPE_TABLE);
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectdev,(ub4) strlen(selectdev),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		}
-		//std::cout<<"select="<<selectdev<<" and strlen(select)="<<strlen(selectdev)<<std::endl;
+		//std:://cout<<"select="<<selectdev<<" and strlen(select)="<<strlen(selectdev)<<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)
@@ -1165,7 +1165,7 @@ extern "C" {
 			MinStringLength(initrdlen);
 			MinStringLength(kernellen);
 
-			//std::cout << "bootImlen" << bootImlen<< std::endl;
+			//std:://cout << "bootImlen" << bootImlen<< std::endl;
 			bootIm_temp = (char *) realloc(bootIm_temp,(bootImlen + 1)*sizeof(char));
 			devicename_temp= (char *) realloc(devicename_temp,(devlen + 1)*sizeof(char));
 			physical_temp = (char *) realloc(physical_temp,(physicallen + 1)*sizeof(char));
@@ -1282,7 +1282,7 @@ extern "C" {
 		}
 		else
 			status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
-		//std::cout << "after fetching" <<  std::endl;
+		//std:://cout << "after fetching" <<  std::endl;
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
 			Format_output(bootPro_null,bootPro_temp, logmessage,'?');
@@ -1315,7 +1315,7 @@ extern "C" {
 			}
 			sprintf(buffer,"%d",deviceid);
 			len+=strlen(buffer);
-			//std::cout << "devicetype_given=" <<devicetype_given<<  std::endl;
+			//std:://cout << "devicetype_given=" <<devicetype_given<<  std::endl;
 
 			if(len_device<len)
 			{

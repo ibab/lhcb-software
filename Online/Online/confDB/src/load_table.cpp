@@ -149,7 +149,7 @@ extern "C" {
 			}
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectconn,(ub4) strlen(selectconn),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		}
-		//std ::cout<<"value of selectconn "<<selectconn <<std::endl;
+		//std :://cout<<"value of selectconn "<<selectconn <<std::endl;
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -331,7 +331,7 @@ extern "C" {
 				return -1;
 			}
 		}
-		std ::cout<<"after defining"<<std::endl;	
+		//std::cout<<"after defining"<<std::endl;	
 		if(status!=OCI_SUCCESS)
 		{
 			if(rescode==0)	
@@ -598,7 +598,7 @@ extern "C" {
 				}
 			}
 		}
-		//std ::cout<<"value of i="<<i << " and value of rescode"<<rescode<<std::endl;	
+		//std :://cout<<"value of i="<<i << " and value of rescode"<<rescode<<std::endl;	
 		if(status!=OCI_SUCCESS && status != OCI_SUCCESS_WITH_INFO)
 		{
 			if(rescode==0 && i==0)
@@ -634,7 +634,7 @@ extern "C" {
 
 			}
 		}
-		std ::cout<<"value of len_array="<<len_array <<" and value of i="<<i<<std::endl;
+		//std::cout<<"value of len_array="<<len_array <<" and value of i="<<i<<std::endl;
 		if(rescode==0)
 		{
 			if(len_array>i-1)
@@ -657,7 +657,7 @@ extern "C" {
 				rescode=-1;
 				len_array=i;
 			}
-			//std ::cout<<"value of pfromarray="<<portfrom_len <<" and value of pos2="<<pos2<<std::endl;
+			//std :://cout<<"value of pfromarray="<<portfrom_len <<" and value of pos2="<<pos2<<std::endl;
 
 			if(portfrom_len>pos2-1)
 			{
@@ -670,7 +670,7 @@ extern "C" {
 				rescode=-1;
 				portfrom_len=pos2;
 			}
-			//std ::cout<<"value of ptoarray="<<portto_len <<" and value of pos2bis="<<pos2bis<<std::endl;
+			//std :://cout<<"value of ptoarray="<<portto_len <<" and value of pos2bis="<<pos2bis<<std::endl;
 			if(portto_len>pos2bis-1)
 			{
 
@@ -694,7 +694,7 @@ extern "C" {
 				lkinfo_len=pos6;
 			}
 		}
-		//std ::cout<<"value of pfromlist="<<pfrom_list_temp <<std::endl;
+		//std :://cout<<"value of pfromlist="<<pfrom_list_temp <<std::endl;
 
 		if(lkid_list_temp!=NULL)
 			free(lkid_list_temp);
@@ -822,7 +822,7 @@ extern "C" {
 				else
 					sprintf(selectconn,"select t.deviceid,t.devicename||'|' from %s t where t.deviceid!=-1 and mod(t.system_name,%d)=0 ",LOGICAL_DEVICE_TABLE,sysID);
 			}
-			//std::cout<<"selectconn "<<selectconn <<std::endl;
+			//std:://cout<<"selectconn "<<selectconn <<std::endl;
 			status=OCIStmtPrepare(stmthp, ociError, (text*) selectconn,(ub4) strlen(selectconn),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		}
 
@@ -863,7 +863,7 @@ extern "C" {
 		{
 			status=OCIAttrGet((dvoid*) parmdp, (ub4) OCI_DTYPE_PARAM,(dvoid*) &devlen, (ub4 *) 0, (ub4) OCI_ATTR_DATA_SIZE,(OCIError *) ociError);
 			devicename=(char*)malloc((devlen+1)*sizeof(char));
-			//std::cout<<"value of devlen "<<devlen << std::endl;
+			//std:://cout<<"value of devlen "<<devlen << std::endl;
 			if(devicename==NULL)
 			{
 				if(rescode==0)	
@@ -1143,7 +1143,7 @@ extern "C" {
 		{
 			status=OCIAttrGet((dvoid*) parmdp, (ub4) OCI_DTYPE_PARAM,(dvoid*) &devlen, (ub4 *) 0, (ub4) OCI_ATTR_DATA_SIZE,(OCIError *) ociError);
 			devicename=(char*)malloc((devlen+1)*sizeof(char));
-			//std::cout<<"value of devlen "<<devlen << std::endl;
+			//std:://cout<<"value of devlen "<<devlen << std::endl;
 			if(devicename==NULL)
 			{
 				if(rescode==0)	
@@ -1398,7 +1398,7 @@ extern "C" {
 		{
 			status=OCIAttrGet((dvoid*) parmdp, (ub4) OCI_DTYPE_PARAM,(dvoid*) &devlen, (ub4 *) 0, (ub4) OCI_ATTR_DATA_SIZE,(OCIError *) ociError);
 			lkname=(char*)malloc((devlen+1)*sizeof(char));
-			//std::cout<<"value of devlen "<<devlen << std::endl;
+			//std:://cout<<"value of devlen "<<devlen << std::endl;
 			if(lkname==NULL)
 			{
 				if(rescode==0)	

@@ -198,7 +198,7 @@ extern "C" {
 				sprintf(sqlstmt,"BEGIN insert ALL into %s(linktypeID,link_name,link_nbr,author,user_update,terminal_name) values (%s,:lkname,prime_nb,'%s','%s','%s') select prime_nb from %s  where prime_nb_position=(select nvl(count(link_nbr),0)+1 from %s); :numrows:=%s; end;",LINKTYPE_TABLE,seqname,login,login,host,PRIME_NUMBER_TABLE,LINKTYPE_TABLE,SQLROWCOUNT);
 				status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 			}
-			//std::cout<<"value of sqlstmt "<<sqlstmt <<std::endl;
+			//std:://cout<<"value of sqlstmt "<<sqlstmt <<std::endl;
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
