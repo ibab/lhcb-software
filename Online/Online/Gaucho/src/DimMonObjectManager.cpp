@@ -148,7 +148,7 @@ void DimMonObjectManager::updateServiceMonObject(std::string infoName){
   m_dimMonObjectsIt = m_dimMonObjects.find(infoName);  
   if(m_dimMonObjectsIt != m_dimMonObjects.end()) {
     (*m_dimMonObjectsIt).second->updateService();
-    msg("updateSvc: Service " + infoName + " updated", m_name, MSG::INFO);
+    msg("updateSvc: Service " + infoName + " updated", m_name, MSG::INFO);    
     return;
   }
   msg("updateSvc: No DimServiceMonObject found with the name:" + infoName, m_name, MSG::WARNING);
