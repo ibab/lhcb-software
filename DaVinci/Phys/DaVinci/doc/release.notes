@@ -4,6 +4,12 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2008-02-05 - Juan PALACIOS
+ - Add file options/DaVinciMainSeqFixes.opts.
+  . File is included by options/DaVinciMainSeq before any members have been
+    added to the sequence. Currently there to fix track link problems with
+    re-processed events, but can be place holder for other fixes.
+
 ! 2008-01-24 - Patrick Koppenburg
  - Assume input data is DST in stripping test
 
