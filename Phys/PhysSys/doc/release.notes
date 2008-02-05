@@ -6,6 +6,7 @@ Purpose     : LHCb physics packages
 </PRE><H1><A NAME=v6r10>2008-02-05 Phys v6r10 - Second Tf framework compatible version</A></H1><PRE>
 
 - Based on LHCb v23r3 and Gaudi v19r7
+- Minor bug fixes and removal of obsolete files and option lines.
 
 ###############################################################################
 #                                  PHYS v6r10                                 #
