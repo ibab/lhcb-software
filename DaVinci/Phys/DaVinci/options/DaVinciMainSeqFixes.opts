@@ -1,0 +1,5 @@
+DaVinciMainSeq.Members += {"TESCheck/DaVinciEvtCheck",
+                           "EventNodeKiller/DaVinciEvtNodeKiller",
+                           "TrackAssociator"};
+DaVinciEvtCheck.Inputs = {"Link/Rec/Track/Best"};
+DaVinciEvtNodeKiller.Nodes = {"Link/Rec"};
