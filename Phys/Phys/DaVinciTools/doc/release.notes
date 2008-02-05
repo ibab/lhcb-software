@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.297 2008-01-21 12:26:30 pkoppenb Exp $
+! $Id: release.notes,v 1.298 2008-02-05 10:57:25 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+
+!======================== DaVinciTools v15r8 2008-02-05 =====================
+
+! 2008-02-05 - Juan PALACIOS
+ - options/DVFlightDistanceFilterCriterion.opts
+  . remove .DLLs  += line.
 
 ! 2008-01-21 - Patrick Koppenburg for Rudolf Oldemann
  - New method calcProjectedFlightDistance in GeomDispCalculators
