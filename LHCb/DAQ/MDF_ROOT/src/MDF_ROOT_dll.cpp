@@ -1,28 +1,31 @@
-// $Id: MDF_ROOT_dll.cpp,v 1.1 2008-02-05 12:15:09 frankb Exp $
-//	====================================================================
+// $Id: MDF_ROOT_dll.cpp,v 1.2 2008-02-05 16:49:36 frankb Exp $
+//  ====================================================================
 //  MDFIO.cpp
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #include "MDF/PosixIO.h"
 #include <cstdio>
 #include <cstring>
-
 #ifdef _WIN32
+#include <io.h>
+#include <sys/stat.h>
+static const int S_IRWXU = (S_IREAD|S_IWRITE);
 #define EXPORT __declspec(dllexport)
 #else
+#include <ctype.h>
+#include <unistd.h>
 #define EXPORT
 #endif
-
 
 #include "TFile.h"
 #include "TSystem.h"
 #include <map>
 #include <iostream>
 namespace {
-  
+
   struct MyFile : public TFile {
     Long64_t offset() const { return this->TFile::GetRelOffset(); }
   };
@@ -37,8 +40,8 @@ namespace {
     std::string url=filepath;
     url+="?filetype=raw";
     //std::cout << "open:" << flags << " " << int(O_WRONLY+O_CREAT) << " " 
-    //	      << (int)O_RDONLY << " " << mode << (int)S_IWRITE 
-    //	      << " " << (int)S_IREAD << " " << std::endl;
+    //        << (int)O_RDONLY << " " << mode << (int)S_IWRITE 
+    //        << " " << (int)S_IREAD << " " << std::endl;
     if ( (flags&(O_WRONLY|O_CREAT))!=0 && ((mode&S_IWRITE)!= 0) ) {
       f = TFile::Open(url.c_str(),"RECREATE","",0);
     }
@@ -57,8 +60,8 @@ namespace {
     if ( i != fileMap().end() ) {
       TFile* f = (*i).second;
       if ( f ) {
-	if ( !f->IsZombie() ) f->Close();
-	delete f;
+        if ( !f->IsZombie() ) f->Close();
+        delete f;
       }
       fileMap().erase(i);
       return 0;
@@ -73,7 +76,7 @@ namespace {
     FileMap::iterator i = fileMap().find(fd);
     if ( i != fileMap().end() ) {
       if ( (*i).second->ReadBuffer((char*)ptr,size)==0 )
-	return size;
+        return size;
     }
     return -1;
   }
@@ -81,7 +84,7 @@ namespace {
     FileMap::iterator i = fileMap().find(fd);
     if ( i != fileMap().end() ) {
       if ( (*i).second->WriteBuffer((const char*)ptr,size)==0 ) 
-	return size;
+        return size;
     }
     return -1;
   }
@@ -91,20 +94,20 @@ namespace {
       TFile* f = (*i).second;
       switch(how) {
       case SEEK_SET:
-	f->Seek(offset,TFile::kBeg);
-	return ((MyFile*)f)->offset();
+        f->Seek(offset,TFile::kBeg);
+        return ((MyFile*)f)->offset();
       case SEEK_CUR:
-	f->Seek(offset,TFile::kCur);
-	return ((MyFile*)f)->offset();
+        f->Seek(offset,TFile::kCur);
+        return ((MyFile*)f)->offset();
       case SEEK_END:
-	f->Seek(offset,TFile::kEnd);
-	return ((MyFile*)f)->offset();
+        f->Seek(offset,TFile::kEnd);
+        return ((MyFile*)f)->offset();
       }
     }
     return -1;
   }
   long root_lseek(int s, long offset, int how) {
-    return root_lseek64(s,offset,how);
+    return (long)root_lseek64(s,offset,how);
   }
   int root_stat(const char*   /* path */, struct stat * /*statbuf */) {    return -1;  }
   int root_stat64(const char* /* path */, struct stat64 * /* statbuf */) { return -1; }
@@ -160,10 +163,10 @@ extern "C" EXPORT LHCb::PosixIO* MDF_ROOT()  {
     p.serror    = root_serror;
 
     p.setopt    = 0;
-  #ifdef _WIN32
+#ifdef _WIN32
     p.serrno    = 0;
     p.ioerrno   = 0;
-  #endif
+#endif
   }
   return &p;
 }
