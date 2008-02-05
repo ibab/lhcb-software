@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.41 2007-12-19 13:25:46 pkoppenb Exp $
+# $Id: requirements,v 1.42 2008-02-05 08:58:25 pkoppenb Exp $
 package AnalysisSys
 version v1r10
 
@@ -20,7 +20,7 @@ use  FlavourTaggingChecker      v2r6     Phys   # Marco Musy
 use  DaVinciUser      	        v8r3     Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r1p1   Phys   # Chris Jones
 use  LoKiUser                   v6r0     Phys   # Vanya Belyaev
-use  DecayTreeTuple             v1r0     Phys   # Jeremie Borel
+use  DecayTreeTuple             v1r1     Phys   # Jeremie Borel
 ####################################################################
 use  PhysSelSys      	v10r7p1   PhysSel
 #===================================================================
@@ -42,7 +42,7 @@ use Bd2PiPiPi0          v4r3    PhysSel # Olivier Deschamps
 use LoKiJets            v4r0    Phys    # Vanya Belyaev
 
 ####################################################################
-use  Stripping          v6r3p1  Tools   # Juan Palacios
+use  Stripping          v6r4    Tools   # Juan Palacios
 
 ####################################################################
 use  MicroDSTBase        v1r0    MicroDST          # Juan Palacios
