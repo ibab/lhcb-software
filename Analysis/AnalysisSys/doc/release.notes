@@ -3,6 +3,93 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v1r9>2008-02-05 Analysis v1r10 - DC06 and Tf compatible analysis  version</A></H1><PRE>
+
+ - Uses LHCb v23r3 and Gaudi v19r7
+
+#######################################MM######################################
+#                                  ANALYSIS v1r10                             #
+###############################################################################
+
+##################################### PHYSSEL #################################
+
+!========================== B2uds v2r6p1 2008-02-05 ===================
+
+! 2008-01-15 - Patrick Koppenburg
+ - Correct incorrect option that now produces an error after change of 
+   ByPIDFilterCriterion
+
+!========================== B2DstarX v1r6p1 2008-02-05 =================
+
+! 2008-01-15 - Patrick Koppenburg
+ - Correct a comma at the end of selection otions.
+ - Batchelor -> Bachelor
+
+!======================== Stripping v6r4 2008-02-05 =====================
+
+! 2008-01-30 - Patrick Koppenburg
+ - Remove obsolete options
+ - Adapt to new GaudiPoolDb
+
+! 2008-01-24 - Patrick Koppenburg
+ - Base.opts: add Phys/Selections to dst
+ - Increment to v6r4
+
+##################################### PHYS ####################################
+
+!===================== DecayTreeTuple v1r1 2008-02-05 =======================
+
+! 2008-01-31 - Patrick Koppenburg
+ - TupleToolTrigger: Implemented.
+
+! 2008-01-31 - Patrick Koppenburg for Jeremie Borel
+ - Removed TupleToolMCPid.h and TupleToolMCPid.cpp
+
+! 2008-01-28 - Patrick Koppenburg
+ - Bug fix in Truth tool. Thanks to Marco Gersabeck for spotting it.
+
+! 2008-01-07 - Patrick Koppenburg for Jeremie Borel
+ - Some changes in interfaces
+
+! 2007-12-18 - Patrick Koppenburg
+ - Added a TupleToolP2VV for B->mumuK* and friends
+ - Removed TupleToolKinetic which is a duplicate of TupleToolKinematic
+
+! 2007-12-18 - Patrick Koppenburg
+ - Move interfaces to DaVinciKernel
+ - Increment to v1r1
+
+!======================= FlavourTagging v7r3p1 2008-01-15 ====================
+! 2008-01-15 - Patrick Koppenburg
+ - Add an incident listener to BTaggingTool and use handle method to
+   clean desktop at end of event. This became necessary after the removal
+   of this feature from PhysDesktop.
+ - Increment to v7r3p1
+
+!========================== DaVinciMCTools v9r10 2008-02-05 ==================
+
+! 2008-02-01 - Vladimir Gligorov
+ - Added category 10, Quasi Signal, to Background Category. An event qualifies
+   as quasi-signal if its MCTruth decay chain contains intermediate resonances which
+   are not present in the reconstructed decay chain, but is otherwise signal.
+
+!========================== DaVinciMCTools v9r9 2008-01-25 ===================
+
+! 2008-01-25 - Patrick Koppenburg
+ - Increment to v9r9
+
+! 2007-12-18 - Vladimir Gligorov
+ - Added method getDaughtersAndPartners(Particle*) to BackgroundCategory, which
+   returns a veector of <Particle*,MCParticle*> pairs giving the B daughters and their
+   associated MCParticles (if any).
+ - Modified default chi2 at which a particle is associated to the MCParticle with the
+   "correct" PID, in preference to the best chi2 match, in BackgroundCategory (again).
+ - Modified default energy at which "soft" phtons are ignored in BackgroundCategory.
+! 2007-12-13 - Vladimir Gligorov
+ - Modified default chi2 at which a particle is associated to the MCParticle with the
+   "correct" PID, in preference to the best chi2 match, in BackgroundCategory.
+
+
 </PRE><H1><A NAME=v1r9>2007-12-13 Analysis v1r9 - DC06 and Tf compatible analysis  version</A></H1><PRE>
 
  - Uses LHCb v23r2 and Gaudi v19r6
