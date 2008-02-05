@@ -21,6 +21,22 @@ extern "C" {
 #define print(...) printf("%s:%u ::%s: ", __FILE__, __LINE__, __FUNCTION__); printf(__VA_ARGS__); printf("\n");
 
 using namespace std;
+
+namespace DIM  {
+  static PyThreadState* s_mainThreadState = 0;
+};
+
+static void init_threading()  {
+  static bool firstInit = true;
+  if ( firstInit )  {
+    firstInit = false;
+    PyEval_InitThreads();
+    DIM::s_mainThreadState = PyThreadState_Get();
+		print("Threads initialized")
+  }
+}
+
+
 int list_to_schema(PyObject *, char *);
 int tuple_to_schema(PyObject *, char *);
 
@@ -777,11 +793,11 @@ list2Tuple(PyObject* list) {
   if ( !PyList_Check(list) ) return NULL;
   size = PyList_Size(list);
   tuple = PyTuple_New(size);
-  print("Converting list to tuple. Found tuple elements:");
+//  print("Converting list to tuple. Found tuple elements:");
   for(i=0; i<size; i++) {
     PyTuple_SetItem(tuple, i, PyList_GetItem(list, i) );
-    PyObject_Print( PyList_GetItem(list, i), stdout, Py_PRINT_RAW );
-    printf(" ");
+//    PyObject_Print( PyList_GetItem(list, i), stdout, Py_PRINT_RAW );
+//    printf(" ");
   }
   printf("\n");
   printPyObject(list);
@@ -842,10 +858,10 @@ dim_buf_to_list(const char *schema, const char *buf, int len, int *n)
   PyObject *list, *tmp;
   float f;
 
-  print("Converting buffer to a list. Using format %s", schema);
+//  print("Converting buffer to a list. Using format %s", schema);
   if (!(list = PyList_New(0))) return NULL;
   while (next_element(schema, &m, &type, &mult)) {
-    //print("schema=%s m=%d type=%d mult=%d, len=%d n=%d", schema, m, type, mult, len , *n);
+//    print("schema=%s m=%d type=%d mult=%d, len=%d n=%d", schema, m, type, mult, len , *n);
     switch (type) {
     case _DIM_INT:
       if (mult == MUL_INFINITE)
@@ -853,7 +869,7 @@ dim_buf_to_list(const char *schema, const char *buf, int len, int *n)
       for (j = 0; j < mult; ++j)
         if (*n + _DIM_INT_LEN <= len) {
           PyList_Append(list, PyInt_FromLong( *(int *) &buf[*n]));
-          print("-->Creating PY interger %d", *(int*) &buf[*n]);
+          print(" --> Creating PyInteger %d", *(int*) &buf[*n]);
           *n += _DIM_INT_LEN;
         } else goto short_buffer;
       break;
@@ -864,7 +880,7 @@ dim_buf_to_list(const char *schema, const char *buf, int len, int *n)
         if (*n + _DIM_FLOAT_LEN <= len) {
           f = *(float *)(&buf[*n]);
           PyList_Append(list, PyFloat_FromDouble(f));
-          print("-->Creating Pyfloat %f", f);
+          print(" --> Creating Pyfloat %f", f);
           *n += _DIM_FLOAT_LEN;
         } else goto short_buffer;
       break;
@@ -876,7 +892,7 @@ dim_buf_to_list(const char *schema, const char *buf, int len, int *n)
           PyList_Append(list, PyFloat_FromDouble(*(double *)
                                                  &buf[*n]));
           *n += _DIM_DOUBLE_LEN;
-          print("-->Creating Pydouble %f", *(double *)&buf[*n] );
+          print(" --> Creating Pydouble %f", *(double *)&buf[*n] );
         } else goto short_buffer;
       break;
     case _DIM_XTRA:
@@ -894,12 +910,12 @@ dim_buf_to_list(const char *schema, const char *buf, int len, int *n)
       if (*n + mult < len) {
         tmp = PyString_FromStringAndSize( &buf[*n], mult);
         PyList_Append(list, tmp);
-        print("-->Creating long PyString: '%s'", PyString_AsString(tmp) )
+        print(" --> Creating long PyString: '%s'", PyString_AsString(tmp) )
         *n += mult;
       } else {
         tmp =  PyString_FromStringAndSize(&buf[*n], len - *n);
         PyList_Append(list, tmp);
-        print("-->Creating short PyString: '%s'", PyString_AsString(tmp) );
+        print(" --> Creating short PyString: '%s'", PyString_AsString(tmp) );
         goto short_buffer;
       }
       break;
@@ -930,7 +946,7 @@ dim_buf_to_tuple(const char *schema, const char *buf, int len, int *n) {
     print("Could not convert buffer to list");
     return NULL;
   }
-  print("Converting list to tuple");
+//  print("Converting list to tuple");
   tuple = list2Tuple(list);
   Py_DECREF(list);
   return tuple;
@@ -1262,6 +1278,8 @@ dim_dic_info_service(PyObject* self, PyObject* args) {
   unsigned int service_id;
   PyObject* pyFunc=NULL, *default_value=NULL ;
   _dic_info_service_callback* tmp;
+	// Init threading if needed
+	init_threading();
 
   print("Registering service: ");
   print("timeout = %d", timeout);
@@ -1354,6 +1372,18 @@ dim_dic_info_service(PyObject* self, PyObject* args) {
     return 0;
 }
 
+static void handlePythonError(PyThreadState* st)  {
+  if ( PyErr_Occurred() )   {
+    PyErr_Print(); 
+    PyErr_Clear();
+  }
+  if ( st )  {
+    ::PyEval_ReleaseThread(st);
+    ::PyThreadState_Clear(st);
+    ::PyThreadState_Delete(st);
+  }
+}
+
 
 /******************************************************************************/
 /* DIC interface internal functions */
@@ -1366,7 +1396,21 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
   PyObject* args, *res;
   _dic_info_service_callback* svc;
   int n=0;
-  print(">------------------------------------------------------------------>");
+  PyThreadState* st = 0;
+  try   {
+// Let us try to handle the threadStates correctly (should we run _init_section() here?)
+	st = PyThreadState_New(DIM::s_mainThreadState->interp);
+  PyEval_AcquireThread(st);
+	}
+  catch(std::exception& e)  {
+    print("Exception occurred: %s",e.what());
+    handlePythonError(st);
+  }
+  catch(...)  {
+    print("Unknwon exception occurred....");
+    handlePythonError(st);
+  }
+//  print(">------------------------------------------------------------------>");
   svc = _dic_info_service_buffer2Callback[(char*)buffer];
   if ( !svc ){
     print("Invalid update service request");
@@ -1380,7 +1424,7 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
     args = dim_buf_to_tuple(svc->format, (char*)buffer, *size, &n);
   }
   if (args) {
-      print("Executing callback %p for service %s", svc->func, svc->name);
+      print("Executing callback %p for service %s with n %d", svc->func, svc->name,n);
       res = PyEval_CallObject(svc->func, args);
   } else {
     //service failed and a default value was not specified
@@ -1394,7 +1438,10 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
   }
   Py_DECREF(res);
   Py_XDECREF(args);
-  print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+  PyEval_ReleaseThread(st);
+  PyThreadState_Clear(st);
+  PyThreadState_Delete(st);
+//  print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 }
 
 static PyMethodDef DimMethods[] = {
@@ -1571,7 +1618,7 @@ static PyMethodDef DimMethods[] = {
   {    "dic_info_service"              ,
        dim_dic_info_service                ,
        METH_VARARGS                    ,
-       "Called by a client when a service is not needed anymore."
+       "Called by a client when a service is not needed anymore." //This should be corrected, I think
   },
   {NULL, NULL, 0, NULL}        /* Sentinel */
 };

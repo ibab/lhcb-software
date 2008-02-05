@@ -116,9 +116,10 @@ def dic_command_callback(*args):
     __dic_service_refreshed = 1
 
 def test_dic_interface():    
-    dimc.dic_info_service('SERVICE_NO_FUNC', 'C:1;F:1;C:20', dic_command_callback)
-    while not __dic_service_refreshed:
-       sleep(1)
+	dimc.dic_info_service('SERVICE_NO_FUNC', 'C:1;F:1;C:20', dic_command_callback)
+	while not __dic_service_refreshed:
+		sleep(1)
 
 if __name__=='__main__':
 	test_dis_interface()
+#	test_dic_interface()
