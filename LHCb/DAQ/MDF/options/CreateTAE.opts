@@ -1,4 +1,4 @@
-ApplicationMgr.EvtMax                = 1000;
+ApplicationMgr.EvtMax                = 100000;
 ApplicationMgr.HistogramPersistency  = "NONE";
 Dump.CheckData                       = 1;
 Dump.CheckData                       = 0;
@@ -6,15 +6,29 @@ Dump.DumpData                        = 1;
 Dump.FullDump                        = 0;
 Dump.OutputLevel                     = 3;
 StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 0.01;
+StoreExplorerAlg.PrintFreq           = 0.002;
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
 EventDataSvc.ForceLeaves             = true;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
 EventSelector.PrintFreq              = 100;
 EventSelector.Input                  = {
-  "DATA='PFN:file://mdfData_0.dat' SVC='LHCb::MDFSelector'"
+  "DATA='PFN:root:file://../cmt/mdfData_1.dat' SVC='LHCb::MDFSelector'",
+  "DATA='PFN:root:file://mdfData_0.dat'        SVC='LHCb::MDFSelector'",
+  "DATA='root:file:mdfData_2.dat'              SVC='LHCb::MDFSelector'",
+  "DATA='PFN:root:mdfData_3.dat'               SVC='LHCb::MDFSelector'",
+  "DATA='root:mdfData_4.dat'                   SVC='LHCb::MDFSelector'",
+  "DATA='PFN:root:file://$MDFROOT/cmt/mdfData_5.dat'        SVC='LHCb::MDFSelector'",
+  "DATA='PFN:root:file:$MDFROOT/cmt/mdfData_6.dat'          SVC='LHCb::MDFSelector'",
+  "DATA='PFN:root:$MDFROOT/cmt/mdfData_7.dat'               SVC='LHCb::MDFSelector'",
+  "DATA='root:file://$MDFROOT/cmt/mdfData_8.dat'            SVC='LHCb::MDFSelector'",
+  "DATA='root:file:$MDFROOT/cmt/mdfData_9.dat'              SVC='LHCb::MDFSelector'",
+  "DATA='$MDFROOT/cmt/mdfData_10.dat'                       SVC='LHCb::MDFSelector'",
+  "DATA='root:rfio:/castor/cern.ch/user/f/frankb/mdfData_11.dat' SVC='LHCb::MDFSelector'",
+  "DATA='root:castor:/castor/cern.ch/user/f/frankb/mdfData_12.dat' SVC='LHCb::MDFSelector'",
+  "DATA='castor:/castor/cern.ch/user/f/frankb/mdfData_13.dat'      SVC='LHCb::MDFSelector'"
 };
+
 FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
 
 // To create a MDF file using the MDF writer:
@@ -23,7 +37,7 @@ ApplicationMgr.TopAlg     = { "LHCb::RawEventTestCreator/RawEventGen", "LHCb::TA
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_0" };
 TAECreator.TAEEvents      = 5;
 Writer_0.Connection       = "PFN:file://taeData.dat";
-Writer_0.Compress         = 0;
+Writer_0.Compress         = 2;
 Writer_0.ChecksumType     = 1;
 Writer_0.GenerateMD5      = true;
 Writer_0.ForceTAE         = true;

@@ -1,4 +1,4 @@
-// $Id: MIFSelector.cpp,v 1.10 2008-01-08 15:20:35 cattanem Exp $
+// $Id: MIFSelector.cpp,v 1.11 2008-02-05 16:18:18 frankb Exp $
 //====================================================================
 //	MIFSelector.cpp
 //--------------------------------------------------------------------
@@ -121,6 +121,10 @@ StatusCode MIFContext::connect(const std::string& spec)  {
     std::auto_ptr<IDataConnection> c(new RawDataConnection(m_sel,spec));
     StatusCode sc = m_ioMgr->connectRead(false,c.get());
     if ( sc.isSuccess() )  {
+      MsgStream log(m_msg,"MIFSelector");
+      log << MSG::ALWAYS << "Connected to:" << spec << " " << c->pfn() 
+	/* << " " << fid */ 
+	  << endmsg;
       m_fidMap.insert(std::make_pair(fid,c.release()));
       m_mifFID = fid;
       return sc;

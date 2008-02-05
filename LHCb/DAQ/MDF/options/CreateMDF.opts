@@ -11,44 +11,51 @@ Dump.CheckData                       = 0;
 Dump.DumpData                        = 0;
 Dump.FullDump                        = 0;
 Dump.OutputLevel                     = 3;
+
 // To create a MDF file using the standard Gaudi output stream:
-ApplicationMgr.OutStream  = { "Writer_0"};
-Writer_0.Output           = "DATAFILE='PFN:file://mdfData_0.dat' SVC='LHCb::RawDataCnvSvc' OPT='REC'";
+ApplicationMgr.OutStream += { "Writer_0"};
+Writer_0.Output           = "DATAFILE='PFN:root:file://mdfData_0.dat' SVC='LHCb::RawDataCnvSvc' OPT='REC'";
 Writer_0.ItemList         = {"/Event#1" };
 
 // To create a MDF file using the MDF writer:
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_1" };
-Writer_1.Connection       = "PFN:file:mdfData_1.dat";
 Writer_1.Connection       = "PFN:file://../cmt/mdfData_1.dat";
 Writer_1.Compress         = 0;
 Writer_1.ChecksumType     = 0;
 Writer_1.GenerateMD5      = true;
+
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_2" };
-Writer_2.Connection       = "file:mdfData_2.dat";
+Writer_2.Connection       = "root:file:mdfData_2.dat";
 Writer_2.Compress         = 0;
 Writer_2.ChecksumType     = 1;
 Writer_2.GenerateMD5      = true;
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_3" };
-Writer_3.Connection       = "PFN:mdfData_3.dat";
+Writer_3.Connection       = "PFN:root:mdfData_3.dat";
 Writer_3.Compress         = 2;
 Writer_3.ChecksumType     = 1;
 Writer_3.GenerateMD5      = true;
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_4" };
-Writer_4.Connection       = "mdfData_4.dat";
+Writer_4.Connection       = "root:mdfData_4.dat";
 Writer_4.Compress         = 2;
 Writer_4.ChecksumType     = 0;
 Writer_4.GenerateMD5      = true;
 MessageSvc.OutputLevel = 3;
 
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_5" };
-Writer_5.Connection       = "PFN:file:///tmp/mdfData_5.dat";
+Writer_5.Connection       = "PFN:root:file://$MDFROOT/cmt/mdfData_5.dat";
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_6" };
-Writer_6.Connection       = "PFN:file:/tmp/mdfData_6.dat";
+Writer_6.Connection       = "PFN:root:file:$MDFROOT/cmt/mdfData_6.dat";
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_7" };
-Writer_7.Connection       = "PFN:/tmp/mdfData_7.dat";
+Writer_7.Connection       = "PFN:$MDFROOT/cmt/mdfData_7.dat";
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_8" };
-Writer_8.Connection       = "file:///tmp/mdfData_8.dat";
+Writer_8.Connection       = "root:file://$MDFROOT/cmt/mdfData_8.dat";
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_9" };
-Writer_9.Connection       = "file:/tmp/mdfData_9.dat";
+Writer_9.Connection       = "root:file:$MDFROOT/cmt/mdfData_9.dat";
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_10" };
-Writer_10.Connection       = "/tmp/mdfData_10.dat";
+Writer_10.Connection       = "$MDFROOT/cmt/mdfData_10.dat";
+ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_11" };
+Writer_11.Connection       = "root:rfio:/castor/cern.ch/user/f/frankb/mdfData_11.dat";
+ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_12" };
+Writer_12.Connection       = "root:castor:/castor/cern.ch/user/f/frankb/mdfData_12.dat";
+ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_13" };
+Writer_13.Connection       = "castor:/castor/cern.ch/user/f/frankb/mdfData_13.dat";

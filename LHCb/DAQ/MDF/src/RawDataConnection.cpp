@@ -1,4 +1,4 @@
-// $Id: RawDataConnection.cpp,v 1.3 2008-01-25 22:58:45 frankb Exp $
+// $Id: RawDataConnection.cpp,v 1.4 2008-02-05 16:18:19 frankb Exp $
 #include "MDF/RawDataConnection.h"
 #include "MDF/StreamDescriptor.h"
 #include <iostream>
@@ -13,6 +13,7 @@ RawDataConnection::RawDataConnection(const IInterface* owner, const std::string&
   if ( fname.length() == 36 && fname[8]=='-'&&fname[13]=='-'&&fname[18]=='-'&&fname[23]=='-' ) {
     m_name = "FID:"+fname;
   }
+  m_age = 0;
   m_bind.ioDesc = m_access.ioDesc = 0;
 }
 
@@ -24,7 +25,10 @@ StatusCode RawDataConnection::connectRead()  {
   m_bind = StreamDescriptor::bind(m_pfn);
   if ( m_bind.ioDesc > 0 )   {
     m_access = StreamDescriptor::accept(m_bind);
-    if ( m_access.ioDesc != 0 ) return StatusCode::SUCCESS;
+    if ( m_access.ioDesc != 0 )  {
+      resetAge();
+      return StatusCode::SUCCESS;
+    }
     StreamDescriptor::close(m_bind);
   }
   return StatusCode::FAILURE;
@@ -34,6 +38,7 @@ StatusCode RawDataConnection::connectWrite(IoType typ)  {
   switch(typ)  {
     case CREATE:
     case RECREATE:
+      resetAge();
       m_access = StreamDescriptor::connect(m_pfn);
       return m_access.ioDesc == 0 ? StatusCode::FAILURE : StatusCode::SUCCESS;
     default:
@@ -44,16 +49,19 @@ StatusCode RawDataConnection::connectWrite(IoType typ)  {
 
 /// Read raw byte buffer from input stream
 StatusCode RawDataConnection::read(void* const data, size_t len)  {
+  resetAge();
   return StreamDescriptor::read(m_access,data,len) ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }
 
 /// Write raw byte buffer to output stream
 StatusCode RawDataConnection::write(const void* data, int len)  {
+  resetAge();
   return StreamDescriptor::write(m_access,data,len) ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }
 
 /// Seek on the file described by ioDesc. Arguments as in ::seek()
 long long int RawDataConnection::seek(long long int where, int origin)  {
+  resetAge();
   return StreamDescriptor::seek(m_access,where,origin);
 }
 

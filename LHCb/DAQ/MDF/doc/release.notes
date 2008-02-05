@@ -9,6 +9,7 @@
 ! 2008-02-09 - Markus Frank
  - Add support for ROOT protocol as back up for any non-implemented protocols.
  - Fix bug in MDF writer
+ - Implement retry for decompression if data space is insufficient.
 
 !========================= MDF v3r1 2008-01-30 ===============================
 ! 2008-01-28 - Markus Frank

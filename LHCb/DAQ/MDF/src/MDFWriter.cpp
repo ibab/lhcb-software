@@ -1,4 +1,4 @@
-// $Id: MDFWriter.cpp,v 1.18 2008-01-25 22:58:45 frankb Exp $
+// $Id: MDFWriter.cpp,v 1.19 2008-02-05 16:18:18 frankb Exp $
 //	====================================================================
 //  MDFWriter.cpp
 //	--------------------------------------------------------------------
@@ -27,13 +27,15 @@ using namespace Gaudi;
 MDFWriter::MDFWriter(MDFIO::Writer_t typ, const std::string& nam, ISvcLocator* pSvc)
 : Algorithm(nam, pSvc), MDFIO(typ, nam)
 {
+  m_inputType = typ;
   construct();
 }
 
 /// Standard algorithm constructor
 MDFWriter::MDFWriter(const std::string& nam, ISvcLocator* pSvc)
-  : Algorithm(nam, pSvc), MDFIO(MDFIO::MDF_RECORDS, nam)
+: Algorithm(nam, pSvc), MDFIO(MDFIO::MDF_RECORDS, nam)
 {
+  m_inputType = MDFIO::MDF_NONE;
   construct();
 }
 
@@ -48,10 +50,11 @@ void MDFWriter::construct()   {
   declareProperty("Compress",       m_compress=2);        // File compression
   declareProperty("ChecksumType",   m_genChecksum=1);     // Generate checksum
   declareProperty("GenerateMD5",    m_genMD5=true);       // Generate MD5 checksum
-  declareProperty("DataType",       m_dataType=MDFIO::MDF_NONE); // Input data type
+  declareProperty("DataType",       m_inputType);         // Input data type
+  declareProperty("MDFDataType",    m_dataType);          // Output data type
   declareProperty("BankLocation",   m_bankLocation=RawEventLocation::Default);  // Location of the banks in the TES
   declareProperty("DataManager",    m_ioMgrName="Gaudi::IODataManager/IODataManager");
-  declareProperty("ForceTAE",       m_forceTAE = false );
+  declareProperty("ForceTAE",       m_forceTAE = false);
 }
 
 MDFWriter::~MDFWriter()   {
@@ -109,11 +112,11 @@ MDFIO::MDFDescriptor MDFWriter::getDataSpace(void* const /* ioDesc */, size_t le
 StatusCode MDFWriter::execute()    {
   setupMDFIO(msgSvc(),eventSvc());
   MsgStream log(msgSvc(), name());
-  switch(m_dataType) {
-    case MDF_NONE:
+  switch(m_inputType) {
+    case MDFIO::MDF_NONE:
       return commitRawBanks(m_compress, m_genChecksum, m_connection, m_bankLocation);
-    case MDF_BANKS:
-    case MDF_RECORDS:
+    case MDFIO::MDF_BANKS:
+    case MDFIO::MDF_RECORDS:
       return commitRawBuffer(m_dataType, m_compress, m_genChecksum, m_connection);
     default:
       break;

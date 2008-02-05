@@ -21,3 +21,4 @@ EventSelector.Input                  = {
   "DATA='PFN:mdfPOOL.dat' TYP='POOL_ROOTTREE' OPT='OLD'"
 };
 ReadAlg.OutputLevel                  = 2;
+IODataManager.AgeLimit               = 5;

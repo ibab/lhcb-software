@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.25 2008-01-29 14:46:01 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.26 2008-02-05 16:18:18 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -509,24 +509,51 @@ LHCb::MDFIO::readBanks(const MDFHeader& h, void* const ioDesc, bool dbg)  {
       m_tmp.reserve(readSize+rawSize);
       ::memcpy(m_tmp.data(),&h,rawSize); // Need to copy header to get checksum right
       if ( readBuffer(ioDesc,m_tmp.data()+rawSize,readSize).isSuccess() )  {
-        ::memcpy(bptr+rawSize, m_tmp.data()+rawSize, hdrSize);
-        if ( m_ignoreChecksum )  {
-          hdr->setChecksum(0);
-        }
-        else if ( checksum && checksum != genChecksum(1,m_tmp.data()+4*sizeof(int),chkSize) )  {
-          return MDFDescriptor(0,-1);
-        }
-        // Checksum is correct...from all we know data integrity is proven
-        size_t new_len = 0;
-        const char* src = m_tmp.data()+rawSize;
-        char* ptr = ((char*)data) + bnkSize;
-        size_t space_size = space.second - bnkSize;
-        if ( decompressBuffer(compress,ptr,space_size,src+hdrSize,h.size(),new_len).isSuccess()) {
-          hdr->setSize(new_len);
-          hdr->setCompression(0);
-          hdr->setChecksum(0);
-          return std::pair<char*, int>(data,bnkSize+new_len);
-        }
+	int space_retry = 0;
+	while ( space_retry++ < 5 ) {
+	  if ( space_retry>1 ) {
+	    MsgStream log(m_msgSvc, m_parent);
+	    alloc_len *= 2;
+	    log << MSG::INFO << "Retry with increased buffer space of " << alloc_len << " bytes." << endmsg;
+	    space = getDataSpace(ioDesc, alloc_len+sizeof(int)+sizeof(RawBank));
+	    data = space.first;
+	    if ( !data )  {
+	      m_spaceErrors++;
+	      goto NoSpace;
+	    }
+	    m_spaceActions++;
+	    b = (RawBank*)data;
+	    b->setMagic();
+	    b->setType(RawBank::DAQ);
+	    b->setSize(rawSize+hdrSize);
+	    b->setVersion(DAQ_STATUS_BANK);
+	    b->setSourceID(0);
+	    bnkSize = b->totalSize();
+	    ::memcpy(b->data(), &h, rawSize);
+	    bptr = (char*)b->data();
+	    hdr = (MDFHeader*)bptr;
+	  }
+	  ::memcpy(bptr+rawSize, m_tmp.data()+rawSize, hdrSize);
+	  if ( m_ignoreChecksum )  {
+	    hdr->setChecksum(0);
+	  }
+	  else if ( checksum && checksum != genChecksum(1,m_tmp.data()+4*sizeof(int),chkSize) )  {
+	    return MDFDescriptor(0,-1);
+	  }
+	  // Checksum is correct...from all we know data integrity is proven
+	  size_t new_len = 0;
+	  const char* src = m_tmp.data()+rawSize;
+	  char* ptr = ((char*)data) + bnkSize;
+	  size_t space_size = space.second - bnkSize;
+	  if ( decompressBuffer(compress,ptr,space_size,src+hdrSize,h.size(),new_len).isSuccess()) {
+	    hdr->setSize(new_len);
+	    hdr->setCompression(0);
+	    hdr->setChecksum(0);
+	    return std::pair<char*, int>(data,bnkSize+new_len);
+	  }
+	  ++space_retry;
+	}
+  NoSpace:
         MsgStream log0(m_msgSvc, m_parent);
         log0 << MSG::ERROR << "Cannot allocate sufficient space for decompression." << endmsg;
         return MDFDescriptor(0,-1);

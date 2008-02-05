@@ -1,4 +1,4 @@
-// $Id: MDFWriter.h,v 1.8 2008-02-05 10:33:31 frankm Exp $
+// $Id: MDFWriter.h,v 1.9 2008-02-05 16:18:18 frankb Exp $
 //	====================================================================
 //  MDFWriter.h
 //	--------------------------------------------------------------------
@@ -61,7 +61,8 @@ namespace LHCb    {
     std::string   m_bankLocation;
     /// Bytes write count
     long long int m_bytesWritten;
-
+    /// Input data type (like MDFIO::m_dataType)
+    int           m_inputType;
     /// Internal setup (may not be called from sub-classes!
     void construct();
 
