@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.cpp,v 1.2 2007-08-31 16:54:34 tskwarni Exp $
+// $Id: TriggerTisTos.cpp,v 1.3 2008-02-05 01:52:24 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -83,6 +83,10 @@ void TriggerTisTos::getAlleyExitSelections()
   // done before ?
   if( m_alleyExitSelections.size() !=0 ){ return; }
   getHltSummary();
+  // given by input selections of "HltAlleys" if exists ...
+  m_alleyExitSelections = inputTriggerSelectionNames("HltAlleys");
+  if( m_alleyExitSelections.size() !=0 ){ return; }
+  // ... use old algorithm otherwise 
   // exit selection has InputSelection's but is not an InputSelection to anything 
   const std::vector< std::string > keys = m_hltconf->keys();
   for( std::vector< std::string >::const_iterator ikey=keys.begin();ikey!=keys.end();++ikey){

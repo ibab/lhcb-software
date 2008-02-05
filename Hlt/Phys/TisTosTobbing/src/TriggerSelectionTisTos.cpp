@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.4 2008-01-22 11:31:53 hernando Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.5 2008-02-05 01:52:24 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -673,11 +673,19 @@ void TriggerSelectionTisTos::selectionTisTos( const std::string & selectionName,
     
   }
 
-  // must be particle trigger
+  // must be particle trigger ...
   const SmartRefVector< LHCb::Particle > & particles = sel.particles();         
   if( particles.size() > 0 ){
     particleListTISTOS( particles,m_offlineInput,tis,tos);
+  } else {
+    //   ... or HltSelectionFilter
+    std::string selInput = selectionName + "/InputSelections";
+    if( m_hltconf->has_key( selInput ) ){             
+             selectionTisTos( m_hltconf->retrieve< std::vector<std::string> >(selInput),
+                              decision, tis, tos, kSelectionOR );
+    }    
   }
+  
 
   storeInCache(selectionName,decision,tis,tos);
 }
