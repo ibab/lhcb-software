@@ -33,7 +33,17 @@
 	          Calibration=16384'
         access = 'PUBLIC' />
 
-      <enum
+     <method
+	type = 'GaudiUtils::VectorMap &lt; std::string, LHCb::HltEnums::HltDecisionType &gt;'
+	name = 'hltDecisionTypeTypMap'
+	desc = 'copies map of enum and name. Useful for looping over all enums.'
+	const = 'TRUE' >
+	<code>
+  return s_HltDecisionTypeTypMap() ;
+	</code>
+     </method>
+
+     <enum
         name   = 'HltAlley'
         desc   = 'Hlt alley'
         strTypConv = 'TRUE'
@@ -45,7 +55,17 @@
                   CalAlley'
         access = 'PUBLIC' />
 
-      <enum
+      <method
+	type = 'GaudiUtils::VectorMap &lt; std::string, LHCb::HltEnums::HltAlley &gt;'
+	name = 'hltAlleyTypMap'
+	desc = 'copies map of enum and name. Useful for looping over all enums.'
+	const = 'TRUE' >
+	<code>
+  return s_HltAlleyTypMap() ;
+	</code>
+     </method>
+
+     <enum
         name   = 'HltSelectionSummary'
         desc   = 'Hlt selection summary'
         strTypConv = 'TRUE'
@@ -101,6 +121,16 @@
                   HltSelLastSelection=1021'
         access = 'PUBLIC' />
 
+     <method
+	type = 'GaudiUtils::VectorMap &lt; std::string, LHCb::HltEnums::HltSelectionSummary &gt;'
+	name = 'hltSelectionSummaryTypMap'
+	desc = 'copies map of enum and name. Useful for looping over all enums.'
+	const = 'TRUE' >
+	<code>
+  return s_HltSelectionSummaryTypMap() ;
+	</code>
+     </method>
+
       <enum
         name   = 'HltParticleInfo'
         desc   = 'Monitoring Quantities'
@@ -154,8 +184,18 @@
 	TrackFlagL0 = 202,   
         UserQuantity = 1000'
 	access = ' PUBLIC' />	
+     <method
+	type = 'GaudiUtils::VectorMap &lt; std::string, LHCb::HltEnums::HltParticleInfo &gt;'
+	name = 'hltParticleInfoTypMap'
+	desc = 'copies map of enum and name. Useful for looping over all enums.'
+	const = 'TRUE' >
+	<code>
+  return s_HltParticleInfoTypMap() ;
+	</code>
+     </method>
     </class>
     
+
     <class
       name        = 'HltSelectionSummary'
       author      = 'Jose Hernando'
