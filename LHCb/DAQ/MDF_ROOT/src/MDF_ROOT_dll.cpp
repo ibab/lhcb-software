@@ -1,4 +1,4 @@
-// $Id: MDF_ROOT_dll.cpp,v 1.2 2008-02-05 16:49:36 frankb Exp $
+// $Id: MDF_ROOT_dll.cpp,v 1.3 2008-02-05 18:04:24 frankb Exp $
 //  ====================================================================
 //  MDFIO.cpp
 //  --------------------------------------------------------------------
@@ -17,6 +17,7 @@ static const int S_IRWXU = (S_IREAD|S_IWRITE);
 #else
 #include <ctype.h>
 #include <unistd.h>
+#define O_BINARY 0
 #define EXPORT
 #endif
 
@@ -45,7 +46,7 @@ namespace {
     if ( (flags&(O_WRONLY|O_CREAT))!=0 && ((mode&S_IWRITE)!= 0) ) {
       f = TFile::Open(url.c_str(),"RECREATE","",0);
     }
-    else if ( flags==O_RDONLY && (mode&S_IREAD)!=0 ) {
+    else if ( (flags==O_RDONLY || flags==(O_BINARY|O_RDONLY)) && (mode&S_IREAD)!=0 ) {
       f = TFile::Open(url.c_str());
     }
     if ( f && !f->IsZombie() ) {
