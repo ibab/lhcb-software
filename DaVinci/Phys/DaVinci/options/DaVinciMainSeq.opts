@@ -7,7 +7,9 @@ DaVinciMainSeq.MeasureTime = true ;
 // To avoid loading Sim file to get /Event/Header, explicitly make it
 // from the raw buffer. Needs to be done *before* LbAppInit
 //DaVinciMainSeq.Members += { "CreateRawEvent", "EventHeaderFromRaw" };
-
+#include "$DAVINCIROOT/options/DaVinciMainSeqFixes.opts"
+//
 DaVinciMainSeq.Members += { "LbAppInit/DaVinci" };
-DaVinci.OutputLevel = 4 ;                                                                                                
+DaVinci.OutputLevel = 4 ;
+
 
