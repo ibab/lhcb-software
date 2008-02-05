@@ -36,6 +36,18 @@ static void init_threading()  {
   }
 }
 
+static void handlePythonError(PyThreadState* st)  {
+  if ( PyErr_Occurred() )   {
+    PyErr_Print(); 
+    PyErr_Clear();
+  }
+  if ( st )  {
+    ::PyEval_ReleaseThread(st);
+    ::PyThreadState_Clear(st);
+    ::PyThreadState_Delete(st);
+  }
+}
+
 
 int list_to_schema(PyObject *, char *);
 int tuple_to_schema(PyObject *, char *);
@@ -216,7 +228,7 @@ static PyCallback dis_callbackExitHandler_func,
   dis_callbackClientExitHandler_func;
 
 static void
-dim_dis_callbackExitHandler(int* code) {
+dim_dis_get_dns_portExitHandler(int* code) {
   PyObject *arg, *res;
 
   if ( dis_callbackExitHandler_func.self ) {
@@ -617,6 +629,9 @@ dim_dis_add_cmnd(PyObject* self, PyObject* args) {
   in long Python object for the callback. The address will become a string
   long tag - will be passed back to the python callback
   */
+
+	init_threading();
+
   unsigned int res=0;
   char *name=NULL, *format=NULL;
   long tag, uniqueTag;
@@ -624,11 +639,11 @@ dim_dis_add_cmnd(PyObject* self, PyObject* args) {
   PyObject *pyFunc;
   CmndCallback *callback;
   string s;
-
-  if ( !PyArg_ParseTuple(args, "s#s#Ol", &name, &sizeName, &format, &sizeFormat, &pyFunc, &tag) &&  PyCallable_Check(pyFunc) ) {
+  if ( !PyArg_ParseTuple(args, "s#s#Ol", &name, &sizeName, &format, &sizeFormat, &pyFunc, &tag) /*&& PyCallable_Check(pyFunc)*/ ) {
     PyErr_SetString(PyExc_TypeError, "Invalid argument: expected two strings, a function pointer and an integer");
     return NULL;
   }
+
   Py_INCREF(pyFunc);
   //print("Adding command %p with name %s, description %s and tag %l", pyFunc, name, format, tag);
   uniqueTag = ++commandCallbackNumber;
@@ -1063,6 +1078,21 @@ dim_callbackCommandFunc(void* uTag, void* address, int* size) {
   // ServiceCallback *callback;
   int n=0;
 
+	PyThreadState* st = 0;
+	try   {
+	// Let us try to handle the threadStates correctly 
+		st = PyThreadState_New(DIM::s_mainThreadState->interp);
+		PyEval_AcquireThread(st);
+	}
+	catch(std::exception& e)  {
+		print("Exception occurred: %s",e.what());
+		handlePythonError(st);
+	}
+	catch(...)  {
+		print("Unknown exception occurred....");
+		handlePythonError(st);
+	}
+
   // printf("dim_callbackCommandFunc:: Got unique tag %l \n", uniqueTag);
   // printf("%d %d %d\n", sizeof(int), sizeof(long double), sizeof(char));
   pyFunc = cmndUniqueTag2PythonFunc[uniqueTag]->func;
@@ -1080,6 +1110,9 @@ dim_callbackCommandFunc(void* uTag, void* address, int* size) {
     Py_DECREF(res);
   }
   PyGILState_Release(gstate);
+  PyEval_ReleaseThread(st);
+  PyThreadState_Clear(st);
+  PyThreadState_Delete(st);
 }
 
 /******************************************************************************/
@@ -1372,19 +1405,6 @@ dim_dic_info_service(PyObject* self, PyObject* args) {
     return 0;
 }
 
-static void handlePythonError(PyThreadState* st)  {
-  if ( PyErr_Occurred() )   {
-    PyErr_Print(); 
-    PyErr_Clear();
-  }
-  if ( st )  {
-    ::PyEval_ReleaseThread(st);
-    ::PyThreadState_Clear(st);
-    ::PyThreadState_Delete(st);
-  }
-}
-
-
 /******************************************************************************/
 /* DIC interface internal functions */
 /******************************************************************************/
@@ -1398,7 +1418,7 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
   int n=0;
   PyThreadState* st = 0;
   try   {
-// Let us try to handle the threadStates correctly (should we run _init_section() here?)
+// Let us try to handle the threadStates correctly 
 	st = PyThreadState_New(DIM::s_mainThreadState->interp);
   PyEval_AcquireThread(st);
 	}
@@ -1407,7 +1427,7 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
     handlePythonError(st);
   }
   catch(...)  {
-    print("Unknwon exception occurred....");
+    print("Unknown exception occurred....");
     handlePythonError(st);
   }
 //  print(">------------------------------------------------------------------>");
@@ -1618,7 +1638,7 @@ static PyMethodDef DimMethods[] = {
   {    "dic_info_service"              ,
        dim_dic_info_service                ,
        METH_VARARGS                    ,
-       "Called by a client when a service is not needed anymore." //This should be corrected, I think
+       "Request an information service from a server."
   },
   {NULL, NULL, 0, NULL}        /* Sentinel */
 };
