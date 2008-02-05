@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v4r0 2008-02-05 ===================
 ! 2008-01-25 - Gerhard Raven
  - simplify EParser using boost, remove unused method
 
