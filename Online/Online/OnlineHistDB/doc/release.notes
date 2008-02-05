@@ -1,12 +1,15 @@
-! $Id: release.notes,v 1.25 2008-02-05 22:16:56 ggiacomo Exp $
+! $Id: release.notes,v 1.26 2008-02-05 23:02:39 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
 ! or using makedoc script in this folder
 !
-! 20071129  OnlineHistDB v4r5
+! 20080205  OnlineHistDB v4r6
 	minor changes for OMAlib v0r2
+
+! 20071220  OnlineHistDB v4r5
+	minor bug fix
 
 ! 20071129  OnlineHistDB v4r4
 	- improved stability:
