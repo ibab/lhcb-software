@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.128 2008-01-15 18:27:17 ibelyaev Exp $
+! $Id: release.notes,v 1.129 2008-02-05 10:42:47 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+!========================== VertexFit v4r5 2008-02-05 ===================
+
+! 2008-02-05 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v4r5
 
 ! 2008-01-15 - Vanya BELYAEV
 
