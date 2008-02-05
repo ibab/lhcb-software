@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.13 2007-12-17 18:47:12 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.14 2008-02-05 10:32:40 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -215,32 +215,33 @@ void LHCb::StreamDescriptor::getFileConnection(const std::string& con,
                                                std::string& proto)
 {
   size_t idx0, idx1, idx2, idx3;
-  if ( (idx3=con.find(":///")) != std::string::npos )  {
+  idx0 = con.find(":");
+  if ( (idx3=con.find(":///")) != std::string::npos && idx0 == idx3 )  {
     // RFC compliand URI: Absolute path, but full protocol specifiaction with schema seperator
-    file = con.substr(idx3+3);
+    file  = con.substr(idx3+3);
     proto = con.substr(0,idx3);
-    //std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
+    //std::cout << "getFileConnection(1)>> " << proto << "  -> " << file << " " << idx3 << " " << idx0 << std::endl;
     return;
   }
-  else if ( (idx2=con.find("://")) != std::string::npos )  {
+  else if ( (idx2=con.find("://")) != std::string::npos && idx0 == idx2 )  {
     // RFC compliand URI: Relative path, but full protocol specifiaction with seperator
     file = con.substr(idx2+3);
     proto = con.substr(0,idx2);
-    //std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
+    //std::cout << "getFileConnection(2)>> " << proto << "  -> " << file << " " << idx2 << " " << idx0 << std::endl;
     return;
   }
-  else if ( (idx1=con.find(":/")) != std::string::npos )  {
+  else if ( (idx1=con.find(":/")) != std::string::npos && idx0 == idx1 )  {
     // Absolute path, protocol given, but no schema seperator
     file = con.substr(idx1+1);
     proto = con.substr(0,idx1);
-    //std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
+    //std::cout << "getFileConnection(3)>> " << proto << "  -> " << file << " " << idx1 << " " << idx0 << std::endl;
     return;
   }
-  else if ( (idx0=con.find(":")) != std::string::npos )  {
+  else if ( idx0 != std::string::npos )  {
     // Relative path, no schema seperator
     file = con.substr(idx0+1);
     proto = con.substr(0,idx0);
-    //std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
+    //std::cout << "getFileConnection(4)>> " << proto << "  -> " << file << " " << idx0 << std::endl;
     return;
   }
   else {
@@ -332,10 +333,14 @@ Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
 	  break;
 	}
 	else {
-	  PosixIO* io = getIOModule(proto);
+	  if ( proto == "dcap" || proto == "dcache" || proto=="gsidcap" || proto == "castor" ) {
+	    proto = "root";
+	    file  = specs;
+	  }
+	  PosixIO *io = getIOModule(proto);
 	  if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
 	    result.ioFuncs    = io;
-	    result.ioDesc     = io->open(file.c_str(), O_RDONLY|O_BINARY, S_IRWXU);
+	    result.ioDesc     = io->open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU|S_IRWXG);
 	    result.m_write    = posix_write;
 	    result.m_read     = posix_read;
 	    result.m_seek     = posix_seek;
@@ -380,13 +385,16 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
       if ( !proto.empty() )  {
 	result.type = ::toupper(proto[0]); 
 	if ( result.type == 'F' ) {
-	  getFileConnection(specs, file, proto);
 	  result.ioDesc  = FileIO::open(file.c_str(), O_RDONLY|O_BINARY );
 	  result.m_write = file_write;
 	  result.m_read  = file_read;
 	  result.m_seek  = file_seek;
 	}
 	else {
+	  if ( proto == "dcap" || proto == "dcache" || proto=="gsidcap" || proto == "castor" ) {
+	    proto = "root";
+	    file  = specs;
+	  }
 	  PosixIO* io = getIOModule(proto);
 	  if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
 	    result.ioFuncs    = io;
