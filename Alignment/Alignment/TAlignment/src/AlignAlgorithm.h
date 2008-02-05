@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.18 2008-02-04 16:09:03 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.19 2008-02-05 22:02:16 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -83,7 +83,10 @@ public:
   void reset();
 
   /** Add canonical constraints. Return the number of added constraints. */
-  size_t addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2) const ;
+  size_t addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,
+				 std::vector<bool>& dofmask, std::ostream& logmessage) const ;
+  void preCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,AlVec& scale, const std::vector<int>& offsets) const ;
+  void postCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2, const AlVec& scale) const ;
   
   /** Method to get alignment constants, posXYZ and rotXYZ for a given set
   * of detector elements
@@ -115,6 +118,7 @@ private:
   int                               m_canonicalConstraintStrategy ; ///< Constrain global dofs
   bool                              m_constrainZShearings;  ///< Constrain z-shearings
   size_t                            m_minNumberOfHits ;     ///< Minimum number of hits for an Alignable to be aligned
+  bool                              m_usePreconditioning ;   ///< Precondition the system of equations before calling solver
   bool                              m_fillCorrelationHistos; ///< Flag to turn on filling of residual correlation histos
   /// Monitoring
   // @todo: Move this to a monitoring tool

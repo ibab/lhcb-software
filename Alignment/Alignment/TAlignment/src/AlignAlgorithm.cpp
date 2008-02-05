@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.22 2008-02-04 16:09:03 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.23 2008-02-05 22:02:16 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -166,6 +166,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("ConstrainZShearings"  , m_constrainZShearings = false ) ;
   declareProperty("MinNumberOfHits"      , m_minNumberOfHits = 1 ) ; 
   declareProperty("FillCorrelationsHistos" , m_fillCorrelationHistos = false ) ;
+  declareProperty("UsePreconditioning", m_usePreconditioning = false ) ;
 }
 
 AlignAlgorithm::~AlignAlgorithm() {}
@@ -336,28 +337,32 @@ StatusCode AlignAlgorithm::execute() {
     if (!data.empty()) {
       ResidualCovarianceTool cov;
       cov.compute(*(*iTrack));
-
-      for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
-	m_equations->V(id->index())               -= convert(id->r()*id->d()) ;
-	m_equations->M(id->index(), id->index())  += (Transpose(id->d())*id->d());
-	
-	for (std::vector<Data>::const_iterator jd = data.begin(); jd != idEnd; ++jd) 
-	  if( id == jd || ( m_correlation && id->index() <= jd->index() )) {
-	    double c = cov.HCH_norm(*id->id(),*jd->id());
-	    m_equations->M(id->index(), jd->index()) -= c * (Transpose(id->d())*jd->d());
-	    
-	    if( m_fillCorrelationHistos ) {
-	      if (!( id->id() == jd->id())) {
-		m_corrHistos[std::make_pair(id->index(), jd->index())]->
-		  fill(m_iteration, c/std::sqrt(cov.HCH_norm(*id->id(), *id->id())*cov.HCH_norm(*jd->id(), *jd->id())));
-	      } else {
-		m_autoCorrHistos[id->index()]->fill(m_iteration, c);
+      if(cov.error()) {
+	warning() << "Error computing residual cov matrix. Skipping track of type "
+		  << (*iTrack)->type() << endmsg ;
+      } else {
+	for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
+	  m_equations->V(id->index())               -= convert(id->r()*id->d()) ;
+	  m_equations->M(id->index(), id->index())  += (Transpose(id->d())*id->d());
+	  
+	  for (std::vector<Data>::const_iterator jd = data.begin(); jd != idEnd; ++jd) 
+	    if( id == jd || ( m_correlation && id->index() <= jd->index() )) {
+	      double c = cov.HCH_norm(*id->id(),*jd->id());
+	      m_equations->M(id->index(), jd->index()) -= c * (Transpose(id->d())*jd->d());
+	      
+	      if( m_fillCorrelationHistos ) {
+		if (!( id->id() == jd->id())) {
+		  m_corrHistos[std::make_pair(id->index(), jd->index())]->
+		    fill(m_iteration, c/std::sqrt(cov.HCH_norm(*id->id(), *id->id())*cov.HCH_norm(*jd->id(), *jd->id())));
+		} else {
+		  m_autoCorrHistos[id->index()]->fill(m_iteration, c);
+		}
 	      }
 	    }
-	  }
+	}
+	// keep some information about the tracks that we have seen
+	m_equations->addTrackSummary( (*iTrack)->chi2(), (*iTrack)->nDoF(), numexternalhits ) ;
       }
-      // keep some information about the tracks that we have seen
-      m_equations->addTrackSummary( (*iTrack)->chi2(), (*iTrack)->nDoF(), numexternalhits ) ;
     }
   }
 
@@ -375,25 +380,65 @@ inline std::ostream& operator<<(std::ostream& os, std::vector<double>& mask) {
   return os ;
 }
 
-size_t AlignAlgorithm::addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2) const
+void AlignAlgorithm::preCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,
+				  AlVec& scale, const std::vector<int>& offsets) const
+{  
+  // This is just not sufficiently fool proof!
+  size_t size = dChi2dAlpha.size() ;
+  scale.reSize(size ) ;
+  for(size_t i=0; i<size; ++i) scale[i] = 1 ;
+  int iElem(0) ;
+  for( ElementRange::const_iterator it = m_rangeElements.begin(); it != m_rangeElements.end(); ++it, ++iElem) 
+    if( offsets[iElem]>=0 ) {
+      size_t ndof = (*it).dofMask().nActive() ;
+      size_t N = m_equations->numHits(iElem) ;
+      for(size_t i = offsets[iElem]; i< offsets[iElem]+ndof; ++i) {
+	assert( i < size ) ;
+	if( d2Chi2dAlpha2[i][i] > 0 )
+	  scale[i] = std::sqrt( N / d2Chi2dAlpha2[i][i] ) ;
+      }
+    }
+
+  for(size_t i=0; i<size; ++i) {
+    dChi2dAlpha[i] *= scale[i] ;
+    for(size_t j=0; j<=i; ++j)
+      d2Chi2dAlpha2[i][j] *= scale[i] * scale[j] ;
+  }
+}
+
+void AlignAlgorithm::postCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,
+				   const AlVec& scale) const
+{ 
+  size_t size = dChi2dAlpha.size() ;
+  for(size_t i=0; i<size; ++i) {
+    dChi2dAlpha[i] *= scale[i] ;
+    for(size_t j=0; j<=i; ++j)
+      d2Chi2dAlpha2[i][j] *= scale[i] * scale[j] ;
+  }
+}
+
+size_t AlignAlgorithm::addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,
+					       std::vector<bool>& dofmask,
+					       std::ostream& logmessage) const
 {
   // This add lagrange multipliers to constrain the average rotation
-  // and translation. Ideally, we could calculate this in ant
+  // and translation. Ideally, we could calculate this in any
   // frame. In practise, the average depends on the reference frame in
   // which is is calculated. We will calculate a single 'pivot' point
   // to define the transform to the frame in which we apply the
   // constraint.
   //
-  // In the neare future we also need to constrain the z-scale and the
-  // z-shearing.
-
+  info() << "Adding canonical constraints." << endmsg ;
   double weight(0) ;
   Gaudi::XYZVector pivot ;
+  double zmin(9999999), zmax(-999999) ;
   size_t iElem(0) ;
   for( ElementRange::const_iterator it = m_rangeElements.begin(); it != m_rangeElements.end(); ++it, ++iElem) {
     double thisweight = m_equations->weight(iElem) ;
     weight += thisweight ;
     pivot += thisweight * Gaudi::XYZVector( it->pivotXYZPoint() ) ;
+    zmin = std::min(it->pivotXYZPoint().z(),zmin) ;
+    zmax = std::min(it->pivotXYZPoint().z(),zmax) ;
   }
   if(weight>0) pivot *= 1/weight ;
   Gaudi::Transform3D canonicalframe( pivot ) ;
@@ -403,9 +448,6 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2C
   size_t size = dChi2dAlpha.size() ;
   size_t numConstraints = 6 ;
   if(m_constrainZShearings) numConstraints += 3 ;
-  info() << "Adding canonical constraints."
-	 << " Pivot = " << pivot 
-	 << " #constraints = " << numConstraints << endmsg ;
   
   dChi2dAlpha.reSize(size + numConstraints ) ;
   d2Chi2dAlpha2.reSize(size + numConstraints ) ;
@@ -425,20 +467,58 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2C
     // just translations.
     Gaudi::Transform3D trans = canonicalframeInv * it->alignmentFrame() ;
     Gaudi::Matrix6x6 jacobian = AlParameters::jacobian( trans ) ;
+    double thisweight = m_equations->weight(iElem) ;
     for(size_t i=0; i<6; ++i)
       for(size_t j=0; j<Derivatives::kCols; ++j)
 	// and here comes the 2nd place we could do things entirely
 	// wrong, but I think that this is right.
-	d2Chi2dAlpha2[size+i][j+iElem*Derivatives::kCols] = jacobian(i,j) ;
+	d2Chi2dAlpha2[size+i][j+iElem*Derivatives::kCols] = thisweight/weight * jacobian(i,j) ;
     if(m_constrainZShearings) {
       double deltaZ = it->pivotXYZPoint().z() - pivot.z() ;
       // the 3 constraints are in this order: zx-shearing, zy-shearing and z-scale ('zz-shearing')
       for(size_t i=0; i<3; ++i)
 	for(size_t j=0; j<Derivatives::kCols; ++j) 
-	  d2Chi2dAlpha2[size+i+6][j+iElem*Derivatives::kCols] = deltaZ * jacobian(i,j) ;
+	  d2Chi2dAlpha2[size+i+6][j+iElem*Derivatives::kCols] = thisweight/weight * deltaZ/(zmax-zmin) * jacobian(i,j) ;
     }
   }
-  return numConstraints ;
+  
+  if(printDebug()) 
+    debug() << "Full matrix after adding constraints: " << std::endl
+	    << d2Chi2dAlpha2 << endmsg ;
+    
+  
+  // we have now calculated everything for all constraints. However,
+  // we may not want all of them:
+  // * remove constraints that have no active non-zero derivative 
+  // * remove constraints if the dof is effectively constrained by inactive parameters
+  // this is pretty tricky. need to replace the following with something more sensible:
+  const std::vector<std::string> constraintnames = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz")("Szx")("Szy")("Szz");
+  const double threshold = FLT_MIN ;
+  size_t numRemovedConstraints(0) ;
+  for(size_t i=0; i<numConstraints; ++i) {
+    bool hasNonZeroDerivativeToActive(false) ;
+    bool hasNonZeroDerivativeToInactive(false) ;
+    for(size_t j=0; j<size && !(hasNonZeroDerivativeToActive&&hasNonZeroDerivativeToInactive); ++j) 
+      // check that derivative is non-zero
+      if( fabs(d2Chi2dAlpha2[size+i][j])>threshold ) {
+	if( dofmask[j] ) hasNonZeroDerivativeToActive = true ;
+	// the logic fails because rotations cannot 'constrain' translations. need to think of something else.
+	// if( !dofmask[j] ) hasNonZeroDerivativeToInactive = true ;
+      }
+    bool useConstrained = hasNonZeroDerivativeToActive && !hasNonZeroDerivativeToInactive ;
+    dofmask.push_back( useConstrained ) ;
+    numRemovedConstraints += useConstrained ? 0 : 1 ;
+  }
+
+  // Finally, add some info to the log message
+  assert( dofmask.size() == size + numConstraints) ;
+  logmessage << "Pivot for canonical constraints: " << pivot << std::endl ;
+  logmessage << "Added canonical constraints for (global) : " ;
+  for(size_t i=0; i<numConstraints; ++i)
+    if( dofmask[size+i] ) logmessage << constraintnames[i] << "," ;
+  logmessage << std::endl ;
+
+  return numConstraints - numRemovedConstraints ;
 }
 
 
@@ -483,13 +563,6 @@ void AlignAlgorithm::update() {
     for (unsigned j = i ; j < iEnd; ++j ) ass(tmpMatrix, i*Derivatives::kCols, j*Derivatives::kCols, m_equations->M(i,j));
   }
 
-  // Add the canonical constraints, if needed
-  size_t numConstraints(0) ;
-  if( m_canonicalConstraintStrategy==CanonicalConstraintOn ||
-      (m_canonicalConstraintStrategy==CanonicalConstraintAuto && m_equations->numExternalHits()==0) ) {
-    numConstraints = addCanonicalConstraints(tmpDerivatives,tmpMatrix) ;
-  }
-  
   // Now reduce the large system to the active parameters
 
   // Create the dof mask and a map from AlignableElements to an
@@ -508,19 +581,14 @@ void AlignAlgorithm::update() {
       for(size_t ipar=0; ipar<Derivatives::kCols; ++ipar) dofmask[iElem*Derivatives::kCols+ipar] = false ;
     }
 
-  // only add the contraints if they have non-zero derivatives. need
-  // to replace the following with something more sensible:
-  const double threshold = FLT_MIN ;
-  size_t numRemovedConstraints(0) ;
-  for(size_t i=0; i<numConstraints; ++i) {
-    bool active=false ;
-    for(size_t j=0; j<numParameters && !active; ++j)
-      active = dofmask[j] && fabs(tmpMatrix[numParameters+i][j])>threshold ;
-    dofmask[numParameters+i] = active ;
-    numRemovedConstraints += active ? 0 : 1 ;
+  // Add the canonical constraints, if needed
+  size_t numConstraints(0) ;
+  if( m_canonicalConstraintStrategy==CanonicalConstraintOn ||
+      (m_canonicalConstraintStrategy==CanonicalConstraintAuto && m_equations->numExternalHits()==0) ) {
+    numConstraints = addCanonicalConstraints(tmpDerivatives,tmpMatrix,dofmask, logmessage) ;
+    assert(dofmask.size() == tmpDerivatives.size() ) ;
   }
-  numConstraints -= numRemovedConstraints ;
-
+  
   size_t nDOFs = std::count(dofmask.begin(), dofmask.end(), true) ;
   AlVec    derivatives(nDOFs);
   AlSymMat matrix(nDOFs);
@@ -565,7 +633,10 @@ void AlignAlgorithm::update() {
 
   // Tool returns H^-1 and alignment constants. Need to copy the 2nd derivative because we still need it.
   AlSymMat dChi2dX = matrix ;
+  AlVec scale(dChi2dX.size()) ;
+  if(m_usePreconditioning) preCondition(derivatives,matrix, scale,offsets) ;
   bool solved = m_matrixSolverTool->compute(matrix, derivatives);
+  if(m_usePreconditioning) postCondition(derivatives,matrix, scale) ;
 
   if (solved) {
     StatusCode sc = StatusCode::SUCCESS;
