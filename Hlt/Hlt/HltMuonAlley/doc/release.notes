@@ -4,6 +4,7 @@
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
 
+!========================== HltMuonAlley v2r1 2008-02-05 ===================
 ! 2008-01-29 - Jose A. Hernando, Leandro de Paula
   adding HltIsMuonTool
 
