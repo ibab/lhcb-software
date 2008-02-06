@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.12 2007-12-10 14:42:56 lnicolas Exp $
+// $Id: AlignSelTool.cpp,v 1.13 2008-02-06 12:27:49 lnicolas Exp $
 // Include files 
 
 // local
@@ -36,6 +36,7 @@ AlignSelTool::AlignSelTool ( const std::string& type,
   // Initializing the variables one might cut on
   m_multiplicity ( defValue      ),
   m_trP          ( abs(defValue) ),
+  m_trPt         ( abs(defValue) ),
   m_trChi2PerDoF ( defValue      ),
   m_trChi2Prob   ( abs(defValue) ),
   m_nHoles       ( defValue      ),
@@ -54,21 +55,22 @@ AlignSelTool::AlignSelTool ( const std::string& type,
   declareProperty ( "OTTimesLocation",
                     m_otTimesPath = LHCb::OTTimeLocation::Default );
 
-  declareProperty ( "BFieldStatus",                  m_fieldOn    = true    );
-  declareProperty ( "IsolatedTrackNStrawsTolerance", m_nStrawsTol = 1       );
-  declareProperty ( "IsolatedTrackNStripsTolerance", m_nStripsTol = 2       );
+  declareProperty ( "BFieldStatus",                  m_fieldOn    = true   );
+  declareProperty ( "IsolatedTrackNStrawsTolerance", m_nStrawsTol = 1      );
+  declareProperty ( "IsolatedTrackNStripsTolerance", m_nStripsTol = 2      );
 
-  declareProperty ( "TrackType",          c_trackType      = "ALL"           );
-  declareProperty ( "ModulesToAlign",     c_modulesToAlign = defValue        );
-  declareProperty ( "ConstantOccupancy",  c_constOccup      = false           );
+  declareProperty ( "TrackType",          c_trackType      = "ALL"         );
+  declareProperty ( "ModulesToAlign",     c_modulesToAlign = defValue      );
+  declareProperty ( "ConstantOccupancy",  c_constOccup      = false        );
 
-  declareProperty ( "MultiplicityMaxCut", c_maxMulti       = abs(defValue)   );
-  declareProperty ( "MomentumMinCut",     c_minP           = defValue        );
-  declareProperty ( "Chi2PerDoFMaxCut",   c_maxChi2PerDoF  = abs(defValue)   );
-  declareProperty ( "Chi2ProbMinCut",     c_minChi2Prob    = defValue        );
-  declareProperty ( "NHolesMaxCut",       c_maxNHoles      = abs(defValue)   );
-  declareProperty ( "NSharedHitsMaxCut",  c_maxNSharedHits = abs(defValue)   );
-  declareProperty ( "NCloseHitsMaxCut",   c_maxNCloseHits  = abs(defValue)   );
+  declareProperty ( "MultiplicityMaxCut", c_maxMulti       = abs(defValue) );
+  declareProperty ( "MomentumMinCut",     c_minP           = defValue      );
+  declareProperty ( "PtMinCut",           c_minPt          = defValue      );
+  declareProperty ( "Chi2PerDoFMaxCut",   c_maxChi2PerDoF  = abs(defValue) );
+  declareProperty ( "Chi2ProbMinCut",     c_minChi2Prob    = defValue      );
+  declareProperty ( "NHolesMaxCut",       c_maxNHoles      = abs(defValue) );
+  declareProperty ( "NSharedHitsMaxCut",  c_maxNSharedHits = abs(defValue) );
+  declareProperty ( "NCloseHitsMaxCut",   c_maxNCloseHits  = abs(defValue) );
 }
 //=============================================================================
 
@@ -151,13 +153,12 @@ void AlignSelTool::handle ( const Incident& incident ) {
 
 void AlignSelTool::initEvent ( ) const {
   m_configured = true;
+  m_tracks = get<LHCb::Tracks>( m_tracksPath );
   // Get the hits close to any other
   if ( c_maxNCloseHits < abs(defValue) ) {
     m_closeHits.clear();
     getCloseHits();
   }
-  if ( (c_maxMulti < abs(defValue)) || (c_maxNSharedHits < abs(defValue)) )
-    m_tracks = get<LHCb::Tracks>( m_tracksPath );
   // Get the hits shared by more than one track
   if ( c_maxNSharedHits < abs(defValue) ) {
     m_sharedHits.clear();
@@ -183,8 +184,8 @@ bool AlignSelTool::accept ( const LHCb::Track& aTrack ) const {
     return false;
 
   // Cut on some variables
-  if ( cutMultiplicity( ) || cutTrackP( ) || cutNHoles( ) ||
-       cutTrackChi2PerDoF( ) || cutTrackChi2Prob( ) || 
+  if ( cutMultiplicity( ) || cutTrackP( ) || cutTrackPt( ) ||
+       cutNHoles( ) || cutTrackChi2PerDoF( ) || cutTrackChi2Prob( ) || 
        cutNSharedHits( ) || cutNCloseHits( ) ) return false;
 
   // Cut tracks "randomly" to get "constant" occupancy of detector
@@ -207,6 +208,9 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
   // Get the number of IT and OT hits
   int nITHits = 0;
   int nOTHits = 0;
+  m_nCloseHits = 0;
+  m_nSharedHits = 0;
+
   // Do we want to fill the nodes vector even if we don't cut on anything?
   if ( (c_maxNHoles < abs(defValue)) ||
        c_trackType.compare( "ALL" ) ) {
@@ -251,6 +255,8 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
 
   if ( m_fieldOn && (c_minP > defValue) )
     m_trP = aTrack.p();
+  if ( m_fieldOn && (c_minPt > defValue) )
+    m_trPt = aTrack.pt();
   if ( c_maxChi2PerDoF < abs(defValue) )
     m_trChi2PerDoF = aTrack.chi2PerDoF();
   if ( c_minChi2Prob > defValue )
@@ -264,7 +270,7 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
       if ( c_maxNSharedHits < abs(defValue) )
         if ( std::binary_search( m_sharedHits.begin(),
                                  m_sharedHits.end(), aID, lessByID() ) )
-          m_nSharedHits++;
+          ++m_nSharedHits;
       // Close Hits
       if ( c_maxNCloseHits < abs(defValue) )
         if ( std::binary_search( m_closeHits.begin(),
@@ -319,6 +325,16 @@ bool AlignSelTool::cutMultiplicity ( ) const {
 //=============================================================================
 bool AlignSelTool::cutTrackP ( ) const {
   if ( m_fieldOn && (m_trP < c_minP) ) return true;
+  return false;
+}
+//=============================================================================
+
+
+//=============================================================================
+// Cutting on the track transverse momentum at first state
+//=============================================================================
+bool AlignSelTool::cutTrackPt ( ) const {
+  if ( m_fieldOn && (m_trPt < c_minPt) ) return true;
   return false;
 }
 //=============================================================================
@@ -724,6 +740,8 @@ void AlignSelTool::printCutValues( ) const {
     info() << "          Max Multiplicity cut = " << c_maxMulti << endmsg;
   if ( c_minP != defValue )
     info() << "          Min P cut = " << c_minP << endmsg;
+  if ( m_fieldOn && (c_minPt != defValue) )
+    info() << "          Min Pt cut = " << c_minPt << endmsg;
   if ( c_maxChi2PerDoF != abs(defValue) )
     info() << "          Max chi2/DoF cut = " << c_maxChi2PerDoF << endmsg;
   if ( c_minChi2Prob != defValue )
