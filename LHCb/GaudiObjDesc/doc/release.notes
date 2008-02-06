@@ -4,6 +4,7 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!======================== GaudiObjDesc v11r2 2008-02-06 ======================
 ! 2008-02-04 Stefan
 - change for <import> element, so far it was not possible to forward declare a
   class living in the global namespace. Now with setting the attribute 
