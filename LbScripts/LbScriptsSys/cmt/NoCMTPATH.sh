@@ -1,3 +1,0 @@
-
-unset CMTPATH
-

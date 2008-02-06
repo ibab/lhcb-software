@@ -8,5 +8,3 @@ use LbConfiguration		v1r0
 # use LbLegacy			v1r0
 # use LbScriptsDoc		v1r0
 
-# remove CMTPATH from the environment
-setup_script NoCMTPATH
