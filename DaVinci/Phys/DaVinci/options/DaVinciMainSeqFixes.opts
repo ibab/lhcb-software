@@ -1,5 +1,8 @@
+// $Id: DaVinciMainSeqFixes.opts,v 1.2 2008-02-06 10:02:11 jpalac Exp $
 DaVinciMainSeq.Members += {"TESCheck/DaVinciEvtCheck",
                            "EventNodeKiller/DaVinciEvtNodeKiller",
                            "TrackAssociator"};
 DaVinciEvtCheck.Inputs = {"Link/Rec/Track/Best"};
+DaVinciEvtCheck.Stop = false;
+DaVinciEvtCheck.OutputLevel = 5;
 DaVinciEvtNodeKiller.Nodes = {"Link/Rec"};
