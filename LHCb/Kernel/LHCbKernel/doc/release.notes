@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-02-06 - Chris Jones
+ - Slight tweek to RichSmartID fillStream method, to print panel in a
+   mor human friendly way.
+
 !===================== LHCbKernel v8r1 2008-01-28 ========================
 ! 2008-01-28 M Needham
  - fix to make PiecewiseTrajectory compile under windows
