@@ -5,18 +5,19 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r3>2008-02-02 LHCbSys v23r3</A></H1><PRE>
+</PRE><H1><A NAME=v23r3>2008-02-05 LHCbSys v23r3</A></H1><PRE>
 This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 
 - New packages:      MDF_DCAP v1r0 - DCAP plugin to read MDF files 
                      MDF_GFAL v1r0 - GFAL plugin to read MDF files 
                      MDF_RFIO v1r0 - RFIO plugin to read MDF files 
+                     MDF_ROOT v1r0 - ROOT plugin to read MDF files 
 - Packages modified: GaudiConf v10r6, GaudiObjDesc v11r1, KernelSys v7r1,
     LHCbKernel v8r1, LHCbMath v2r5, RichKernel v7r10, DDDB v1r3, DetSys v11r2,
     DetDesc v18r3, DetDescCnv v4r5, DetDescSvc v1r16, MuonDet v7r2,
     RichDet v10r9, STDet v3r9, DetCond v11r8, CondDBUI v2r7, DetDescChecks v4r5,
     EventSys v24r0, DAQEvent v7r8, HltEvent v8r6, MCEvent v2r6, PhysEvent v11r5,
-    RecEvent v2r9, TrackEvent v4r10, MDF v3r1, DAQSys v3r8, CaloDAQ v4r3,
+    RecEvent v2r9, TrackEvent v4r10, MDF v3r2, DAQSys v3r8, CaloDAQ v4r3,
     TfKernel v2r2, DaVinciKernel v6r10, STKernel v1r1, LHCbAlgs v2r14,
     LoKiNumbers v7r1, RichRecBase v3r10, IOExample v2r4
 
@@ -172,7 +173,7 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 - In TrackEvent v4r10
   . Make the Track(int key) constructor explicit
 
-- In MDF v3r0, v3r1
+- In MDF v3r0, v3r1, v3r2
   . Remove the RFIO/DCAP,... plugins from MDF and make them separate packages.
   . Add support for non-strict RFC URIs - similar to what ROOT supports.
   . Add support for TAE events in the RawDataCnvSvc. The creation of leaves in
@@ -185,6 +186,9 @@ This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
   . Fix bug in RawDataCnvSvc introduced by processing TAE events
   . Fix crucial bug (typo??) in detecting TAE events
   . Fix bug in accessing IODataManager
+  . Add support for ROOT protocol as back up for any non-implemented protocols.
+  . Fix bug in MDF writer
+  . Implement retry for decompression if data space is insufficient.
 
 - In CaloDAQ v4r3
   . Improve the calls to msgSvc
