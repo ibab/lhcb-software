@@ -3,9 +3,11 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
 ! 2008-02-06 - Gerhard Raven
   - add three implementations of IConfigAccessSvc: ConfigDBAccessSvc, ConfigFileAccessSvc, ConfigStackAccessSvc
   - add an implementations of IANNSvc: HltANNSvc
+  - remove 'release' call in HltVertexMaker to fix warnings at end of job
 
 !========================== HltCommon v3r0 2008-02-05 ===================
 ! 2008-01-29 - Jose A. Hernando

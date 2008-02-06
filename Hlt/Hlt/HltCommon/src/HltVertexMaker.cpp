@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.14 2008-01-25 16:54:51 hernando Exp $
+// $Id: HltVertexMaker.cpp,v 1.15 2008-02-06 20:04:44 graven Exp $
 // Include files 
 
 
@@ -115,7 +115,6 @@ StatusCode HltVertexMaker::initialize() {
     debug() << " filter " << filtername << " " << id << " "
             << mode << x0 << "," << xf << endreq;
   }
-  release(factory);
   
   saveConfiguration();
 
