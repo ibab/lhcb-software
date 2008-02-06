@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.2 2008-01-29 16:02:30 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.3 2008-02-06 19:32:54 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -87,7 +87,11 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
 
   
   debug() << "Number of L0DU bank(s) found : " << m_banks->size() << endreq; // should be == 1 for L0DU
-  if( 1 != m_banks->size() )warning() << "More than one L0DU bank has been found in the RawEvent" <<endreq;
+  if( 0 == m_banks->size() ) {
+    Error("No L0DU bank found in rawEvent",StatusCode::SUCCESS).ignore();
+    return false;
+  }
+  if( 1 != m_banks->size() )Warning("More than one L0DU bank has been found in the RawEvent", StatusCode::SUCCESS).ignore();
   return true;
 } 
 
