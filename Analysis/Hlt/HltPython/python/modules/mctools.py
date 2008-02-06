@@ -44,7 +44,7 @@ def mcPartIndicesFromLHCbIDs( ids, TES):
 def mcParticleFromLHCbID(id, TES):
     """ return the MCParticle associated to this LHCbID (None if None)
     """
-    key = mcParticleKeyFromLHCbID(id)
+    key = mcParticleKeyFromLHCbID(id, TES)
     if (key<0):
         return None
     else:
