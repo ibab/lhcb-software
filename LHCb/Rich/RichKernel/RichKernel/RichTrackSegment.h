@@ -5,7 +5,7 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.3 2007-09-04 16:45:09 jonrob Exp $
+ *  $Id: RichTrackSegment.h,v 1.4 2008-02-06 10:47:10 jonrob Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
@@ -359,7 +359,7 @@ namespace LHCb
       return radIntersections().front().entryMomentum();
     }
 
-    // Returns the momentum vector at the mid point
+    /// Returns the momentum vector at the mid point
     inline const Gaudi::XYZVector& middleMomentum() const
     {
       return m_middleMomentum;
