@@ -22,6 +22,7 @@ from PyTree import PyTree
 import datetime
 import shutil
 import cPickle
+import commands
 
 DEBUG = False
 
