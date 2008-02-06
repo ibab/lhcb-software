@@ -4,6 +4,10 @@ Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
 
+! 2008-02-06 - Jan Amoraal
+ - Plot total chi2 vs iteration
+ - changes to reflect changes in DetDesc (replace XYZTranslation with Translation3D)
+
 ! 2008-02-04 - Wouter Hulsbergen
  - Added constraints for z-shearings (including z-scale)
 
