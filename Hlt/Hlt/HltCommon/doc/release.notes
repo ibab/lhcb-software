@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-02-06 - Gerhard Raven
+  - add three implementations of IConfigAccessSvc: ConfigDBAccessSvc, ConfigFileAccessSvc, ConfigStackAccessSvc
 
 !========================== HltCommon v3r0 2008-02-05 ===================
 ! 2008-01-29 - Jose A. Hernando
