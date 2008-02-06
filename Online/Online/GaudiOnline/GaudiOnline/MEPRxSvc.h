@@ -120,7 +120,6 @@ namespace LHCb  {
     Workers                     m_freeDsc;
     Workers                     m_workDsc;
     Workers                     m_usedDsc; 
-    int                         m_nCnt;
     lib_rtl_lock_t              m_freeDscLock;
     lib_rtl_lock_t              m_usedDscLock;
 
@@ -181,7 +180,7 @@ namespace LHCb  {
     int openSocket(int protocol);
     // counter functions
     void clearCounters();
-    int setupCounters(int);
+    int setupCounters();
     void publishCounters(void);
     void handle(const Incident& inc); 
   };
