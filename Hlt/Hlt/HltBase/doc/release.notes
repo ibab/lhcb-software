@@ -3,6 +3,11 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2008-02-06 - Gerhard Raven
+ - use a real 'digest_type' instead of a string to represent its hex value
+ - Move md5 digest computation into PropertyConfig to avoid chicken-and-egg
+   problem: using a tool to do this would mean accessing the ToolSvc before
+   we have had a chance to configur it...
 
 !========================== HltBase v4r0 2008-02-05 ===================
 ! 2008-01-25 - Gerhard Raven

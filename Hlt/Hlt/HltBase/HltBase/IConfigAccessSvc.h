@@ -1,4 +1,4 @@
-// $Id: IConfigAccessSvc.h,v 1.1 2008-01-24 22:21:09 graven Exp $
+// $Id: IConfigAccessSvc.h,v 1.2 2008-02-06 14:52:00 graven Exp $
 #ifndef ICONFIGACCESSSVC_H 
 #define ICONFIGACCESSSVC_H 1
 
@@ -29,8 +29,7 @@ public:
   /// Return the interface ID
   static const InterfaceID& interfaceID();
   virtual ~IConfigAccessSvc();
-  typedef std::string CfgID_t ; //FIXME: replace by 128 bit quantity... (it's an MD5 sum of PropertyConfig instances)
-  virtual boost::optional<PropertyConfig> read(const CfgID_t& ref) = 0;
-  virtual CfgID_t                        write(const PropertyConfig& config) = 0;
+  virtual boost::optional<PropertyConfig> read(const PropertyConfig::digest_type& ref) = 0;
+  virtual PropertyConfig::digest_type    write(const PropertyConfig& config) = 0;
 };
 #endif // ICONFIGACCESSSVC_H
