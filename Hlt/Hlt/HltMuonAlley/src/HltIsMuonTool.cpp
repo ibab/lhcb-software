@@ -1,4 +1,4 @@
-// $Id: HltIsMuonTool.cpp,v 1.1 2008-01-31 14:59:55 hernando Exp $
+// $Id: HltIsMuonTool.cpp,v 1.2 2008-02-06 15:42:46 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -33,7 +33,7 @@ HltIsMuonTool::HltIsMuonTool( const std::string& type,
 // FOI parameters from off line   28/1/8
   declareProperty( "par1x", m_p1x = boost::assign::list_of (6.5)(5.0)(3.0)(3.0));
   declareProperty( "par2x", m_p2x = boost::assign::list_of (35.)(35.)(30.)(25.));
-  declareProperty( "par2x", m_p3x = boost::assign::list_of (.03)(.05)(.08)(.10));
+  declareProperty( "par3x", m_p3x = boost::assign::list_of (.03)(.05)(.08)(.10));
   declareProperty( "par1y", m_p1y = boost::assign::list_of (5.5)(4.0)(2.5)(2.5));
   declareProperty( "par2y", m_p2y = boost::assign::list_of (35.)(35.)(25.)(25.));
   declareProperty( "par2y", m_p3y = boost::assign::list_of (.07)(.17)(.17)(.22));
