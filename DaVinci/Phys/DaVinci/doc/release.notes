@@ -1,8 +1,19 @@
+! $Id: release.notes,v 1.213 2008-02-06 10:05:22 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v19r10 2008-02-06 ===================
+
+! 2008-02-06 - Juan PALACIOS
+ - options/DaVinciMainSeqFixes.opts
+  . Add options
+       DaVinciEvtCheck.Stop = false;
+       DaVinciEvtCheck.OutputLevel = 5;
+    for the case where the linkers are not stored on the DST 
+    (as is the case in the standard rDST)
 
 ! 2008-02-05 - Juan PALACIOS
  - Add file options/DaVinciMainSeqFixes.opts.
@@ -17,6 +28,7 @@
  - Fix version number of DaVinci_Ganga.py
 
 !========================== DaVinci v19r9 2007-12-18 ===================
+
 ! 2007-11-22 - Juan PALACIOS
  - Add tests/qmtest/davinci.qms/preselections.qms/test_bbstripping.qmt
   . QMT test for stripping options.
