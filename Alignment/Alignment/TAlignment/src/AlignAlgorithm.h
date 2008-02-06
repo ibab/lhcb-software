@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.20 2008-02-06 11:53:48 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.21 2008-02-06 17:00:51 janos Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -122,6 +122,7 @@ private:
   size_t                            m_minNumberOfHits ;     ///< Minimum number of hits for an Alignable to be aligned
   bool                              m_usePreconditioning ;   ///< Precondition the system of equations before calling solver
   bool                              m_fillCorrelationHistos; ///< Flag to turn on filling of residual correlation histos
+
   /// Monitoring
   // @todo: Move this to a monitoring tool
   std::map<unsigned int, IHistogram2D*>                          m_resHistos;
@@ -130,6 +131,7 @@ private:
   std::map<unsigned int, IHistogram2D*>                          m_autoCorrHistos;
   std::map<std::pair<unsigned int, unsigned int>, IHistogram2D*> m_corrHistos;
   IProfile1D*                                                    m_totChi2vsIterHisto;
+  IProfile1D*                                                    m_norTotChi2vsIterHisto;
   IProfile1D*                                                    m_dChi2AlignvsIterHisto;
 };
 
