@@ -52,11 +52,17 @@ pattern install_python_init \
 make_fragment python_init -header=python_init_header -dependencies
 
 pattern python_alias \
+    set_append PYTHONALIASLIST " <script> " ; \
     alias <script> "python $(<project>_home)/InstallArea/scripts/<script>.py" ; \
     document python_alias <script>_python_alias script=<script> ; \
     macro_append <script>_python_alias_dependencies " install_scripts "
 
 make_fragment python_alias -header=python_alias_header -dependencies
+
+action ShowPythonAlias "echo $(PYTHONALIASLIST) | tr ' ' '\n' " \
+            WIN32           "echo $(PYTHONALIASLIST)"
+
+
 
 
 pattern source_shell_alias \
@@ -65,11 +71,21 @@ pattern source_shell_alias \
 cmtpath_pattern \
     setup_script $(LBSCRIPTSPOLICYROOT)/scripts/SourceShellAlias
 
+action ShowSourceShellAlias "echo $(SOURCESHELLALIASLIST) | tr ' ' '\n' " \
+            WIN32           "echo $(SOURCESHELLALIASLIST)"
+
+
+
 pattern shell_alias \
     set_append SHELLALIASLIST " <script> "
 
 cmtpath_pattern \
     setup_script $(LBSCRIPTSPOLICYROOT)/scripts/ShellAlias
+
+action ShowShellAlias "echo $(SHELLALIASLIST)" \
+            WIN32     "echo $(SHELLALIASLIST)"
+
+
 
 apply_pattern source_shell_alias script=ShellAlias
 apply_pattern source_shell_alias script=SourceShellAlias
@@ -107,5 +123,12 @@ cmtpath_pattern \
     apply_pattern install_scripts ; \
     apply_pattern install_python_modules ;
 
+#---------------------------------------------------
+# remove CMTPATH from the environment
+#---------------------------------------------------
 
+apply_pattern source_shell_alias script=NoCMTPATH
+
+# remove CMTPATH from the environment
+setup_script ../scripts/NoCMTPATH
 
