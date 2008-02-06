@@ -39,11 +39,11 @@
       <base name='KeyedObject&lt;int&gt;' />
       &KeyedObject;
 
-      <import name="GaudiKernel/MsgStream"/>
       <import name='GaudiKernel/GaudiException' />
       <import name='Event/State' />
       <import name='Event/Measurement' />
-      <import name='Event/Node' />
+      <import name='Event/TrackParameters' />
+      <import name='Node' soft='FORWARDONLY' />
       <import name='Kernel/LHCbID' />
       <import name='GaudiKernel/Plane3DTypes' />
       <import name='GaudiKernel/GenericMatrixTypes' />

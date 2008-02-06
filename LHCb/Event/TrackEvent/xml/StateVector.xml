@@ -11,10 +11,10 @@
       desc             = 'StateVector is a simple track state vector with z position'
       virtual          = 'FALSE' >
 
-      <import name ="GaudiKernel/MsgStream"/>
-       <import name="GaudiKernel/Point3DTypes.h"/>
-       <import name="GaudiKernel/Vector3DTypes.h"/>
-       <import name="Event/TrackTypes.h"/>
+      <import name="GaudiKernel/MsgStream" />
+      <import name="GaudiKernel/Point3DTypes"/>
+      <import name="GaudiKernel/Vector3DTypes"/>
+      <import name="Event/TrackTypes"/>
       &StlPtrVector;
       
       <constructor 

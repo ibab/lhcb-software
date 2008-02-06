@@ -10,6 +10,7 @@
 // local
 #include "Event/Track.h"
 #include "Event/TrackFunctor.h"
+#include "Event/Node.h"
 
 using namespace Gaudi;
 using namespace LHCb;
