@@ -97,8 +97,6 @@ namespace LHCb  {
     std::string   m_stateName;
     /// Variable to contain the process name
     std::string   m_procName;
-    /// Task states
-    int m_targetState, m_currentState, m_subState;
     /// Pointer to dim command to treceive transition changes
     DimCommand*   m_command;
     /// Pointer to the dim service publishing the state
@@ -126,7 +124,7 @@ namespace LHCb  {
     /// Declare FSM sub-state
     StatusCode declareSubState(SubState state);
     /// Set transition target state
-    void setTargetState(State target) { m_targetState = target; }
+    void setTargetState(State target) { m_monitor.targetState = target; }
     /// Accessor to property manager
     PropertyMgr& propertyMgr()   { return *m_propertyMgr; }
     /// Translate integer state to string name
