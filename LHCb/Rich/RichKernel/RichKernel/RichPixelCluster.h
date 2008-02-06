@@ -5,7 +5,7 @@
  *  Header file for pixel clustering class Rich::DAQ::PixelCluster
  *
  *  CVS Log :-
- *  $Id: RichPixelCluster.h,v 1.9 2007-12-21 12:16:43 jonrob Exp $
+ *  $Id: RichPixelCluster.h,v 1.10 2008-02-06 10:46:46 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   02/02/2007
@@ -277,15 +277,15 @@ namespace Rich
     /// Split the given clusters up into single channel clusters
     void splitClusters( const Cluster::PtnVector & clusters );
 
-    /// Print in a human readable way
-    MsgStream& fillStream( MsgStream& os ) const;
-
     /// Overload output to MsgStream
     friend inline MsgStream& operator << ( MsgStream& os,
                                            const HPDPixelClusters & data )
     { return data.fillStream(os); }
 
   private: // methods
+
+    /// Print in a human readable way
+    MsgStream& fillStream( MsgStream& os ) const;
 
     /// Remove a cluster
     void removeCluster( Cluster * clus );
