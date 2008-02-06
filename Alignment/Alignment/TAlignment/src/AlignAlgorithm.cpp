@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.23 2008-02-05 22:02:16 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.24 2008-02-06 11:53:48 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -380,11 +380,11 @@ inline std::ostream& operator<<(std::ostream& os, std::vector<double>& mask) {
   return os ;
 }
 
-void AlignAlgorithm::preCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,
+void AlignAlgorithm::preCondition(AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2,
 				  AlVec& scale, const std::vector<int>& offsets) const
 {  
   // This is just not sufficiently fool proof!
-  size_t size = dChi2dAlpha.size() ;
+  size_t size = halfDChi2DAlpha.size() ;
   scale.reSize(size ) ;
   for(size_t i=0; i<size; ++i) scale[i] = 1 ;
   int iElem(0) ;
@@ -394,30 +394,30 @@ void AlignAlgorithm::preCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,
       size_t N = m_equations->numHits(iElem) ;
       for(size_t i = offsets[iElem]; i< offsets[iElem]+ndof; ++i) {
 	assert( i < size ) ;
-	if( d2Chi2dAlpha2[i][i] > 0 )
-	  scale[i] = std::sqrt( N / d2Chi2dAlpha2[i][i] ) ;
+	if( halfD2Chi2DAlpha2[i][i] > 0 )
+	  scale[i] = std::sqrt( N / halfD2Chi2DAlpha2[i][i] ) ;
       }
     }
 
   for(size_t i=0; i<size; ++i) {
-    dChi2dAlpha[i] *= scale[i] ;
+    halfDChi2DAlpha[i] *= scale[i] ;
     for(size_t j=0; j<=i; ++j)
-      d2Chi2dAlpha2[i][j] *= scale[i] * scale[j] ;
+      halfD2Chi2DAlpha2[i][j] *= scale[i] * scale[j] ;
   }
 }
 
-void AlignAlgorithm::postCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,
+void AlignAlgorithm::postCondition(AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2,
 				   const AlVec& scale) const
 { 
-  size_t size = dChi2dAlpha.size() ;
+  size_t size = halfDChi2DAlpha.size() ;
   for(size_t i=0; i<size; ++i) {
-    dChi2dAlpha[i] *= scale[i] ;
+    halfDChi2DAlpha[i] *= scale[i] ;
     for(size_t j=0; j<=i; ++j)
-      d2Chi2dAlpha2[i][j] *= scale[i] * scale[j] ;
+      halfD2Chi2DAlpha2[i][j] *= scale[i] * scale[j] ;
   }
 }
 
-size_t AlignAlgorithm::addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,
+size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2,
 					       std::vector<bool>& dofmask,
 					       std::ostream& logmessage) const
 {
@@ -443,22 +443,23 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2C
   if(weight>0) pivot *= 1/weight ;
   Gaudi::Transform3D canonicalframe( pivot ) ;
   Gaudi::Transform3D canonicalframeInv = canonicalframe.Inverse() ;
+  info() << "Pivot for canonical constraints: " << pivot << endmsg ;
 
   // add extra rows/columns
-  size_t size = dChi2dAlpha.size() ;
+  size_t size = halfDChi2DAlpha.size() ;
   size_t numConstraints = 6 ;
   if(m_constrainZShearings) numConstraints += 3 ;
   
-  dChi2dAlpha.reSize(size + numConstraints ) ;
-  d2Chi2dAlpha2.reSize(size + numConstraints ) ;
+  halfDChi2DAlpha.reSize(size + numConstraints ) ;
+  halfD2Chi2DAlpha2.reSize(size + numConstraints ) ;
   // Set all new elements to 0
   for(size_t i=size; i<size+numConstraints; ++i) {
-    dChi2dAlpha[i] = 0 ;
+    halfDChi2DAlpha[i] = 0 ;
     for(size_t j=0; j<=i; ++j)
-      d2Chi2dAlpha2[i][j] = 0 ;
+      halfD2Chi2DAlpha2[i][j] = 0 ;
   }
   
-  // Now fill the only patr that is nonzero: d2Chi2/dAlphadLambda. 
+  // Now fill the only patr that is nonzero: halfD2Chi2/DAlphadLambda. 
   iElem = 0 ;
   for( ElementRange::const_iterator it = m_rangeElements.begin(); it != m_rangeElements.end(); ++it, ++iElem) {
     // calculate the Jacobian for going from the 'alignment' frame to
@@ -472,19 +473,19 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2C
       for(size_t j=0; j<Derivatives::kCols; ++j)
 	// and here comes the 2nd place we could do things entirely
 	// wrong, but I think that this is right.
-	d2Chi2dAlpha2[size+i][j+iElem*Derivatives::kCols] = thisweight/weight * jacobian(i,j) ;
+	halfD2Chi2DAlpha2[size+i][j+iElem*Derivatives::kCols] = thisweight/weight * jacobian(i,j) ;
     if(m_constrainZShearings) {
       double deltaZ = it->pivotXYZPoint().z() - pivot.z() ;
       // the 3 constraints are in this order: zx-shearing, zy-shearing and z-scale ('zz-shearing')
       for(size_t i=0; i<3; ++i)
 	for(size_t j=0; j<Derivatives::kCols; ++j) 
-	  d2Chi2dAlpha2[size+i+6][j+iElem*Derivatives::kCols] = thisweight/weight * deltaZ/(zmax-zmin) * jacobian(i,j) ;
+	  halfD2Chi2DAlpha2[size+i+6][j+iElem*Derivatives::kCols] = thisweight/weight * deltaZ/(zmax-zmin) * jacobian(i,j) ;
     }
   }
   
   if(printDebug()) 
     debug() << "Full matrix after adding constraints: " << std::endl
-	    << d2Chi2dAlpha2 << endmsg ;
+	    << halfD2Chi2DAlpha2 << endmsg ;
     
   
   // we have now calculated everything for all constraints. However,
@@ -500,7 +501,7 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2C
     bool hasNonZeroDerivativeToInactive(false) ;
     for(size_t j=0; j<size && !(hasNonZeroDerivativeToActive&&hasNonZeroDerivativeToInactive); ++j) 
       // check that derivative is non-zero
-      if( fabs(d2Chi2dAlpha2[size+i][j])>threshold ) {
+      if( fabs(halfD2Chi2DAlpha2[size+i][j])>threshold ) {
 	if( dofmask[j] ) hasNonZeroDerivativeToActive = true ;
 	// the logic fails because rotations cannot 'constrain' translations. need to think of something else.
 	// if( !dofmask[j] ) hasNonZeroDerivativeToInactive = true ;
@@ -512,7 +513,6 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2C
 
   // Finally, add some info to the log message
   assert( dofmask.size() == size + numConstraints) ;
-  logmessage << "Pivot for canonical constraints: " << pivot << std::endl ;
   logmessage << "Added canonical constraints for (global) : " ;
   for(size_t i=0; i<numConstraints; ++i)
     if( dofmask[size+i] ) logmessage << constraintnames[i] << "," ;
@@ -520,6 +520,40 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2C
 
   return numConstraints - numRemovedConstraints ;
 }
+
+
+void AlignAlgorithm::printCanonicalConstraints(const AlVec& parameters, const AlSymMat& covariance,
+					       size_t numConstraints, std::ostream& logmessage) const
+{
+  // first extract the part concerning the lagrange multipliers
+  size_t N = parameters.size() ;
+  AlVec lambda(numConstraints);
+  AlSymMat covlambda(numConstraints) ;
+  for(size_t i=0; i<numConstraints; ++i) {
+    lambda[i] = parameters[N - numConstraints + i] ;
+    for(size_t j=0; j<=i; ++j)
+      covlambda[i][j] = covariance[N - numConstraints + i][N - numConstraints + j] ;
+  }
+  // For a lagrage constraint defined as delta-chisqyare = 2 * lambda * constraint, the solution for lambda is
+  //  lambda     =   W * constraint
+  //  cov-lambda =   W
+  // where W is minus the inverse of the covariance of the constraint. From this we extract
+  //   constraint       = W^{-1} * lambda
+  //   constraint error = sqrt( W^{-1} )
+  //   chisquare = - lambda * constraint
+  // Note that this all needs to work for vectors.
+
+  AlSymMat V = -1 * covlambda ; // Al$%$%^&$%&&*&^
+  int ierr ;
+  V.invert(ierr) ;
+  AlVec x = (V * lambda) ; // This might need a minus sign ...
+  double chisquare = (lambda * V * lambda) ;
+  logmessage << "Canonical constraint values: " << std::endl ;
+  for(size_t i=0; i<numConstraints; ++i) 
+    logmessage << std::setw(5) << i << std::setw(12) << x[i] << " +/- " << std::sqrt( V[i][i] ) << std::endl ;
+  logmessage << "Canonical constraint chisquare: " << chisquare << std::endl ;
+}
+
 
 
 //=============================================================================
@@ -537,8 +571,8 @@ void AlignAlgorithm::update() {
   logmessage << "********************* ALIGNMENT LOG ************************" << std::endl
 	     << "Iteration: " << m_iteration << std::endl
 	     << "Used " << m_equations->numTracks() << " tracks for alignment" << std::endl
-	     << "Total chisquare/dofs = " << m_equations->totalChiSquare() << " / " << m_equations->totalNumDofs() << std::endl
-	     << "Total number of hits in external detectors = " << m_equations->numExternalHits() << std::endl;
+	     << "Total chisquare/dofs: " << m_equations->totalChiSquare() << " / " << m_equations->totalNumDofs() << std::endl
+	     << "Total number of hits in external detectors: " << m_equations->numExternalHits() << std::endl;
 
   m_totChi2vsIterHisto->fill(m_iteration, m_equations->totalChiSquare()/m_equations->totalNumDofs());
   
@@ -632,22 +666,24 @@ void AlignAlgorithm::update() {
   }
 
   // Tool returns H^-1 and alignment constants. Need to copy the 2nd derivative because we still need it.
-  AlSymMat dChi2dX = matrix ;
-  AlVec scale(dChi2dX.size()) ;
+  AlSymMat halfDChi2dX = matrix ;
+  AlVec scale(halfDChi2dX.size()) ;
   if(m_usePreconditioning) preCondition(derivatives,matrix, scale,offsets) ;
   bool solved = m_matrixSolverTool->compute(matrix, derivatives);
   if(m_usePreconditioning) postCondition(derivatives,matrix, scale) ;
 
   if (solved) {
     StatusCode sc = StatusCode::SUCCESS;
-    double deltaChi2 = derivatives * dChi2dX * derivatives ;
+    double deltaChi2 = derivatives * halfDChi2dX * derivatives ;
     if(printDebug()) {
       info() << "Solution = " << derivatives << endmsg ;
       info() << "Covariance = " << matrix << endmsg ;
     }
-    logmessage << "Chisquare/dof of the alignment change: " 
+    logmessage << "Alignment change chisquare/dof: " 
 	       << deltaChi2 << " / " << nDOFs-numConstraints << std::endl ;
     m_dChi2AlignvsIterHisto->fill(m_iteration,deltaChi2) ;
+
+    if(numConstraints>0) printCanonicalConstraints(derivatives,matrix,numConstraints,logmessage) ;
 
     if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
     size_t iElem(0) ;

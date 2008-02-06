@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.19 2008-02-05 22:02:16 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.20 2008-02-06 11:53:48 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -85,6 +85,8 @@ public:
   /** Add canonical constraints. Return the number of added constraints. */
   size_t addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,
 				 std::vector<bool>& dofmask, std::ostream& logmessage) const ;
+  void printCanonicalConstraints(const AlVec& parameters, const AlSymMat& covariance,
+				 size_t numConstraints, std::ostream& logmessage) const ;
   void preCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,AlVec& scale, const std::vector<int>& offsets) const ;
   void postCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2, const AlVec& scale) const ;
   
