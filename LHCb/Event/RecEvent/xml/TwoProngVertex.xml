@@ -26,10 +26,10 @@
       <base name='LHCb::RecVertex'/>
       &KeyedObject;
       <import name='Event/RecVertex'/>
-      <import name='Event/State'/>
+      <import name='Event/TrackTypes'/>
       <import name='GaudiKernel/Vector4DTypes'/>
       <import name='Kernel/ParticleID'/>
-      <import name='Event/Track'/>
+      <import name='Track' soft='FORWARDONLY'/>
       <import name='LHCbMath/MatrixTransforms'/>
 
       <enum
