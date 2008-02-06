@@ -19,11 +19,17 @@ use L0Event		v*    Event
 use TrackEvent          v*    Event
 
 use HltBase             v*    Hlt
-#use LoKiTrigger         v*    Phys
+use LoKiTrigger         v*    Phys
 
 use TrackInterfaces     v*    Tr
 
 use Boost        v*   LCG_Interfaces
+
+
+#### for CORAL access
+use           CORAL             v*      LCG_Interfaces
+use           SEAL              v*      LCG_Interfaces
+apply_tag   NEEDS_CORAL_BASE
 
 
 #============================================================================
