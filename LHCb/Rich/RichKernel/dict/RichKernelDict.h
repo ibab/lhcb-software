@@ -8,6 +8,8 @@
 #include "RichKernel/RichDecodedData.h"
 #include "RichKernel/RichHypoData.h"
 #include "RichKernel/RichObjPtn.h"
+#include "RichKernel/RichSmartIDCnv.h"
+#include "RichKernel/RichHPDIdentifier.h"
 
 // Interfaces
 #include "RichKernel/IRichDetParameters.h"

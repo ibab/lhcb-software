@@ -4,6 +4,10 @@
   <class name    = "Rich::HPDPixelClusters"               />
   <class name    = "Rich::HPDPixelClusters::ConstSharedPtn" />
 
+  <class name    = "Rich::DAQ::HPDIdentifier"            />
+
+  <class name    = "Rich::SmartIDGlobalOrdering"         />
+
   <class name    = "LHCb::RichGeomPhoton"                />
 
   <class name    = "LHCb::RichTrackSegment"              />
