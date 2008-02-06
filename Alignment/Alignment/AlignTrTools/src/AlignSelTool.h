@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.h,v 1.8 2007-11-01 13:18:07 lnicolas Exp $
+// $Id: AlignSelTool.h,v 1.9 2008-02-06 12:43:01 lnicolas Exp $
 #ifndef ALIGNTRTOOLS_ALIGNSELTOOL_H 
 #define ALIGNTRTOOLS_ALIGNSELTOOL_H 1
 
@@ -107,6 +107,7 @@ private:
   bool c_constOccup;
   int c_maxMulti;
   double c_minP;
+  double c_minPt;
   double c_maxChi2PerDoF;
   double c_minChi2Prob;
   int c_maxNHoles;
@@ -128,6 +129,7 @@ private:
   LHCb::Track theTrack;
   mutable int m_multiplicity;
   mutable double m_trP;
+  mutable double m_trPt;
   mutable double m_entryTX;
   mutable double m_entryTY;
   mutable double m_trChi2PerDoF;
@@ -161,6 +163,7 @@ private:
   bool cutConstOccup ( ) const;
   bool cutMultiplicity ( ) const;
   bool cutTrackP ( ) const;
+  bool cutTrackPt ( ) const;
   bool cutTrackChi2PerDoF ( ) const;
   bool cutTrackChi2Prob ( ) const;
   bool cutNHoles ( ) const;
