@@ -6,7 +6,8 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
-! 2008-02-09 - Markus Frank
+!========================= MDF v3r2 2008-02-05 ===============================
+! 2008-02-05 - Markus Frank
  - Add support for ROOT protocol as back up for any non-implemented protocols.
  - Fix bug in MDF writer
  - Implement retry for decompression if data space is insufficient.
