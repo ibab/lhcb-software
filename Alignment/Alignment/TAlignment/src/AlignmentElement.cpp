@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.10 2008-02-01 09:09:32 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.11 2008-02-06 17:00:20 janos Exp $
 // Include files
 
 // from STD
@@ -8,6 +8,9 @@
 
 // Gaudi math
 #include "GaudiKernel/Vector3DTypes.h"
+
+// from Root
+#include "Math/Translation3D.h"
 
 // from DetDesc
 #include "DetDesc/ParamException.h"
@@ -64,7 +67,7 @@ void AlignmentElement::setPivotPoint() {
   }
   averageR /= double(m_elements.size());
   m_pivot = Gaudi::XYZPoint(0.0, 0.0, 0.0) + averageR;
-  m_alignmentFrame = DetDesc::XYZTranslation(this->pivot());
+  m_alignmentFrame = Gaudi::Transform3D(ROOT::Math::Translation3D(pivot()[0], pivot()[1], pivot()[2]));
 }
 
 const std::string AlignmentElement::name() const {

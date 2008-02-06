@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.8 2008-02-01 09:09:32 wouter Exp $
+// $Id: AlignmentElement.h,v 1.9 2008-02-06 17:00:20 janos Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -154,7 +154,7 @@ public:
   unsigned int                                 m_index;            ///< Index. Needed for bookkeeping
   AlDofMask                                    m_dofMask;          ///< d.o.f's we want to align for
   Gaudi::XYZPoint                              m_pivot;            ///< Pivot point
-  Gaudi::Transform3D                           m_alignmentFrame;   ///> Frame in which delta-derivatives are calculated (will replace pivot point)
+  Gaudi::Transform3D                           m_alignmentFrame;   ///< Frame in which delta-derivatives are calculated (will replace pivot point)
 };
 
 inline std::ostream& operator<<(std::ostream& lhs, const AlignmentElement& element) {
