@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.167 2008-01-28 09:42:15 cattanem Exp $
+! $Id: release.notes,v 1.168 2008-02-06 10:49:24 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2008-02-06 - Chris Jones
+ - Add new utility (RichSmartIDCnv.h) to perform conversions of
+   RichSmartIDs to various schemes. Currently implemented is a global
+   pixel ordering scheme (useful for monitoring).
 
 !====================== RichKernel v7r10 2008-01-28 ====================
 ! 2008-01-10 - Chris Jones
