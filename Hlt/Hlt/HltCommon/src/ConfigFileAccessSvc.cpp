@@ -1,5 +1,4 @@
 #include "ConfigFileAccessSvc.h"
-#include "md5.h"
 #include <sstream>
 
 #include "boost/lexical_cast.hpp"
