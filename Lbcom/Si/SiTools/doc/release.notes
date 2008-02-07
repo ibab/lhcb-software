@@ -2,8 +2,9 @@ Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+!============================ SiTools v1r5 2008-02-06 =========================
 ! 2008-01-28 M Needham
- - Set scale to 1
+ - In SiGeantDepositedCharge, set default scalingFactor to 1.0
 
 !============================ SiTools v1r4 2007-12-11 =========================
 ! 2007-12-11 M Needham
