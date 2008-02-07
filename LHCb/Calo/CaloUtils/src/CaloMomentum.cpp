@@ -1,5 +1,8 @@
 #include "CaloUtils/CaloMomentum.h"
 
+#include "Event/CaloCluster.h"
+#include "Event/CaloHypo.h"
+#include "Event/ProtoParticle.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CaloMomentum

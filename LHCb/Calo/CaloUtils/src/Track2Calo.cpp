@@ -1,4 +1,4 @@
-// $Id: Track2Calo.cpp,v 1.3 2007-11-29 08:35:17 cattanem Exp $
+// $Id: Track2Calo.cpp,v 1.4 2008-02-07 12:25:55 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -13,6 +13,7 @@
 #include "Event/Track.h"
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
 // local
 #include "CaloUtils/Track2Calo.h"
 

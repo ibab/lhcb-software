@@ -1,4 +1,4 @@
-// $Id: CaloElectron.h,v 1.4 2007-06-25 20:33:34 odescham Exp $
+// $Id: CaloElectron.h,v 1.5 2008-02-07 12:25:54 cattanem Exp $
 #ifndef CALOELECTRON_H 
 #define CALOELECTRON_H 1
 
@@ -6,12 +6,14 @@
 #include "CaloUtils/Part2Calo.h"
 //from LHCb
 #include "CaloUtils/ICaloElectron.h"            
-#include "Event/ProtoParticle.h"
-#include "Event/Track.h"
 //
-#include "TrackInterfaces/ITrackExtrapolator.h"
 #include "CaloUtils/CaloMomentum.h"
 
+// Forward declarations
+namespace LHCb 
+{
+  class ProtoParticle;
+}
 
 
 /** @class CaloElectron CaloElectron.h

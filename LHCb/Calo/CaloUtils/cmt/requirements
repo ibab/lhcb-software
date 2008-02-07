@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.48 2008-01-24 10:16:53 vegorych Exp $
+# $Id: requirements,v 1.49 2008-02-07 12:25:55 cattanem Exp $
 # =============================================================================
 # Created    : 02/11/2001
 # Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # =============================================================================
 package             CaloUtils
-version             v7r7
+version             v7r8
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
@@ -16,7 +16,12 @@ use CaloInterfaces   v*      Calo
 use TrackInterfaces  v*      Tr
 use CaloDet          v*      Det 
 use LHCbMath         v*      Kernel
-use EventSys         v*      Event     
+use PhysEvent        v*      Event
+use RecEvent         v*      Event
+use TrackEvent       v*      Event
+use MCEvent          v*      Event
+use DigiEvent        v*      Event
+use L0Event          v*      Event
 
 # ================= own includes ==============================================
 apply_pattern install_more_includes more=CaloUtils

@@ -3,15 +3,21 @@
 
 // Include files
 #include <vector>
+#include "GaudiKernel/GenericMatrixTypes.h"
 #include "GaudiKernel/SymmetricMatrixTypes.h"
 #include "GaudiKernel/Vector4DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
+
 #include "Event/CaloPosition.h"
-//RecEvent
 #include "Event/RecVertex.h"
-#include "Event/ProtoParticle.h"
-#include "Event/CaloCluster.h"
-#include "Event/CaloHypo.h"
+
+// Forward declarations
+namespace LHCb 
+{
+  class CaloCluster;
+  class CaloHypo;
+  class ProtoParticle;
+}
 
 
 namespace LHCb 

@@ -1,9 +1,10 @@
-// $Id: Part2Calo.h,v 1.2 2007-06-25 21:44:13 odescham Exp $
+// $Id: Part2Calo.h,v 1.3 2008-02-07 12:25:54 cattanem Exp $
 #ifndef PART2CALO_H 
 #define PART2CALO_H 1
 
 // Include files
-#include "CaloUtils/Track2Calo.h"            
+#include "CaloUtils/Track2Calo.h"
+#include "Event/ProtoParticle.h"
 // from Gaudi
 #include "CaloInterfaces/IPart2Calo.h"            
 

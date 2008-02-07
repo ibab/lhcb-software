@@ -1,4 +1,4 @@
-// $Id: Track2Calo.h,v 1.1 2007-06-25 20:33:34 odescham Exp $
+// $Id: Track2Calo.h,v 1.2 2008-02-07 12:25:55 cattanem Exp $
 #ifndef TRACK2CALO_H 
 #define TRACK2CALO_H 1
 
@@ -6,10 +6,14 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 //from LHCb
-#include "TrackInterfaces/ITrackExtrapolator.h"
 #include "CaloInterfaces/ITrack2Calo.h"            
 
-
+// Forward declarations
+class ITrackExtrapolator;
+namespace LHCb 
+{
+  class Track;
+}
 
 /** @class Track2Calo Track2Calo.h
  *  

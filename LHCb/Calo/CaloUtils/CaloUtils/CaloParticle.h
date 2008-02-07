@@ -4,10 +4,13 @@
 // Include files
 #include "CaloUtils/CaloMomentum.h"
 //PhysEvent
-#include "Event/Vertex.h"
 #include "Event/Particle.h"
 
-
+// Forward declarations
+namespace LHCb 
+{
+  class Vertex;
+}
 
 namespace LHCb 
 {

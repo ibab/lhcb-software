@@ -1,4 +1,4 @@
-// $Id: ICaloElectron.h,v 1.2 2007-06-25 20:33:34 odescham Exp $
+// $Id: ICaloElectron.h,v 1.3 2008-02-07 12:25:54 cattanem Exp $
 #ifndef ICALOELECTRON_H 
 #define ICALOELECTRON_H 1
 
@@ -10,6 +10,12 @@
 // from LHCb
 #include "CaloUtils/CaloMomentum.h"
 
+// Forward declarations
+namespace LHCb 
+{
+  class Particle;
+  class ProtoParticle;
+}
 
 static const InterfaceID IID_ICaloElectron ( "ICaloElectron", 3, 0 );
 
