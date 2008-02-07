@@ -1,4 +1,4 @@
-// $Id: IDebugTool.h,v 1.2 2007-02-24 14:29:15 pkoppenb Exp $
+// $Id: IDebugTool.h,v 1.3 2008-02-07 12:48:40 cattanem Exp $
 #ifndef DAVINCIMCTOOLS_IDEBUGTOOL_H
 #define DAVINCIMCTOOLS_IDEBUGTOOL_H 1
 
@@ -13,8 +13,8 @@
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
 
-// From DaVinci
-#include "Kernel/Particle2MCLinker.h"
+// Forward declarations
+class Particle2MCLinker;
 
 // Declaration of the interface ID (interface id, major version, minor version)
 static const InterfaceID IID_IDebugTool("IDebugTool", 2, 0);

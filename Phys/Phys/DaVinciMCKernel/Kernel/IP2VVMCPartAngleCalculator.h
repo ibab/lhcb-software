@@ -1,4 +1,4 @@
-// $Id: IP2VVMCPartAngleCalculator.h,v 1.1 2007-09-18 13:39:06 pkoppenb Exp $
+// $Id: IP2VVMCPartAngleCalculator.h,v 1.2 2008-02-07 12:48:40 cattanem Exp $
 #ifndef IMCANGLECALCULATOR_H 
 #define IMCANGLECALCULATOR_H 1
 
@@ -8,11 +8,17 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-#include "Event/MCParticle.h"
+
+// Forward declarations
+namespace LHCb 
+{
+  class MCParticle;
+}
+
 
 static const InterfaceID IID_IP2VVMCPartAngleCalculator ( "IP2VVMCPartAngleCalculator", 1, 0 );
 
-/** @class IP2VVMCPartAngleCalculator IP2VVMCPartAngleCalculator.h v1r3/IP2VVMCPartAngleCalculator.h
+/** @class IP2VVMCPartAngleCalculator IP2VVMCPartAngleCalculator.h Kernel/IP2VVMCPartAngleCalculator.h
  *  
  *  Calculates the three angles in a P->VV decay. The methods are called
  *  ThetaL, ThetaK and Phi to comply with the B->MuMuK* conventions,

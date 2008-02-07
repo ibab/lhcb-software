@@ -1,26 +1,27 @@
-// $Id: IBackgroundCategory.h,v 1.3 2008-02-04 16:51:29 pkoppenb Exp $
+// $Id: IBackgroundCategory.h,v 1.4 2008-02-07 12:48:40 cattanem Exp $
 #ifndef DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 
 #define DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 1
 
 // Include files
 // from STL
+#include <map>
 #include <string>
+#include <utility>
+#include <vector>
 
 // from Gaudi
-#include "Event/Particle.h"
-#include "Event/MCParticle.h"
 #include "GaudiKernel/IAlgTool.h"
-#include <map>
-
-//using namespace LHCb;
 
 // forward declarations
-//class Particle;
-//class MCParticle;
+namespace LHCb 
+{
+  class Particle;
+  class MCParticle;
+}
 
 static const InterfaceID IID_IBackgroundCategory ( "IBackgroundCategory", 1, 0 );
 
-/** @class IBackgroundCategory IBackgroundCategory.h pkoppenb/IBackgroundCategory.h
+/** @class IBackgroundCategory IBackgroundCategory.h Kernel/IBackgroundCategory.h
  *
  *  Returns the background category for a reconstructed candidate Particle. Many thanks
  *  go to all the users who tested this tool, but especially to Luis Fernandez,

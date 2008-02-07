@@ -4,6 +4,11 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+!====================== DaVinciMCKernel v2r6 2008-02-07 =====================
+! 2008-02-07 - Marco Cattaneo
+ - Clean up some public includes by using forward declarations if possible
+ - Fix a couple of Doxygen warnings
+
 ! 2008-02-04 - Patrick Koppenburg
  - IBackgroundCategoryTool: getMap method not virtual.
 
@@ -13,8 +18,8 @@
 
 ! 2007-12-18 - Vladimir Gligorov
  - Added method getDaughtersAndPartners(Particle*) to BackgroundCategory, which
-   returns a veector of <Particle*,MCParticle*> pairs giving the B daughters and their
-   associated MCParticles (if any).
+   returns a veector of <Particle*,MCParticle*> pairs giving the B daughters and
+   their associated MCParticles (if any).
 
 !====================== DaVinciMCKernel v2r5 2007-11-27 =====================
 ! 2007-11-23 - Vladimir Gligorov
