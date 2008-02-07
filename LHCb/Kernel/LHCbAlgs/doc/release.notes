@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r15 2008-02-07 ==========================
 ! 2008-02-05 - Patrick Koppenburg
  - AlgorithmCorrelations : More functionality. And allow non-square matrices 
    (did not work previously)
