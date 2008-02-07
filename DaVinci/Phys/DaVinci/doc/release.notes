@@ -1,11 +1,31 @@
-! $Id: release.notes,v 1.213 2008-02-06 10:05:22 jpalac Exp $
+! $Id: release.notes,v 1.214 2008-02-07 15:52:09 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
-!========================== DaVinci v19r10 2008-02-06 ===================
+!========================== DaVinci v19r10 2008-02-07 ===================
+
+! 2008-02-07 - Juan PALACIOS
+ - tests/qmtest/davinci.qms/preselections.qms/test_bu2d0k_d02kspipi.qmt
+  . Change comparison correlation table to account for changes 
+    in efficiencies:
+        StdLooseD02ksPiPi 13% -> 16%
+        StdLooseKsDD      53% -> 52%
+ - tests/qmtest/davinci.qms/preselections.qms/test_bbstripping.qmt
+  . Change comparison correlation table to account for changes 
+    in Higs pre-selection:
+           PreselHWZ2bbl 0.12% -> 0.08%
+    Most likely due to changes in jet finder algorithm.
+
+ - options/DaVinciMainSeq.opts
+  . Comment out include of options/DaVinciMainSeqFixes.opts. 
+    Users should include it if MCParticle linking is needed.
+
+ - cmt/requirements
+  . -tag_add=QMTest no longer needed in DaVinciTests alias.
+
 
 ! 2008-02-06 - Juan PALACIOS
  - options/DaVinciMainSeqFixes.opts
