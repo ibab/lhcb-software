@@ -4,6 +4,15 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-02-07 - Gerhard Raven
+  - add PropertyConfigSvc: a service which, given a configuration key
+    pushes sets of properties to the job options service
+  - add HltConfigSvc: extension of the PropertyConfigSvc which 
+    maps a TCK to a configuration key, and which subscribes to the
+    beginEvent incident to check for changes in TCK (right now, 
+    it doesn't actually check as there is no data with a TCK in 
+    the ODIN bank)
+    
 ! 2008-02-07 Jose A. Hernando
   - HltFunctionFactory.h trying to get back the factory to be use in Python
 
