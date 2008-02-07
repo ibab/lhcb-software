@@ -1,4 +1,4 @@
-// $Id: MDFWriter.cpp,v 1.21 2008-02-07 07:51:13 frankm Exp $
+// $Id: MDFWriter.cpp,v 1.22 2008-02-07 09:10:02 frankb Exp $
 //  ====================================================================
 //  MDFWriter.cpp
 //  --------------------------------------------------------------------
@@ -113,8 +113,9 @@ StatusCode MDFWriter::execute()    {
   std::pair<const char*,int> data;
   setupMDFIO(msgSvc(),eventSvc());
   MsgStream log(msgSvc(), name());
-  log << MSG::ALWAYS << "Got data as " << m_inputType << " Send as " << m_dataType << endreq;
-  switch(m_inputType) {
+  log << MSG::VERBOSE << "Got data as " << m_inputType 
+      << " Send as " << m_dataType << endreq;
+  switch(m_inputType)   {
     case MDFIO::MDF_NONE:
       return commitRawBanks(m_compress, m_genChecksum, m_connection, m_bankLocation);
     case MDFIO::MDF_BANKS:
