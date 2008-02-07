@@ -228,7 +228,7 @@ static PyCallback dis_callbackExitHandler_func,
   dis_callbackClientExitHandler_func;
 
 static void
-dim_dis_get_dns_portExitHandler(int* code) {
+dim_dis_callbackExitHandler(int* code) {
   PyObject *arg, *res;
 
   if ( dis_callbackExitHandler_func.self ) {
@@ -606,10 +606,25 @@ struct _dic_info_service_callback{
   int tag;
 };
 
+struct _dic_cmnd_service_callback{
+  PyObject* func;
+	PyObject* cmnd_callback;
+  char* name;
+  char* format;
+  PyObject* defaultArgument;
+  char* buffer;
+  int size;
+  int tag;
+};
+
 static map<char*, _dic_info_service_callback*> _dic_info_service_buffer2Callback;
 static map<unsigned int, _dic_info_service_callback*> _dic_info_service_id2Callback;
 
+/*static map<char*, _dic_cmnd_service_callback*> _dic_cmnd_service_buffer2Callback;
+static map<unsigned int, _dic_cmnd_service_callback*> _dic_cmnd_service_id2Callback;*/
+
 void _dic_info_service_dummy (void*, void*, int*);
+//void _dic_cmnd_service_dummy (void*, void*, int*);
 
 /******************************************************************************/
 
@@ -1405,6 +1420,119 @@ dim_dic_info_service(PyObject* self, PyObject* args) {
     return 0;
 }
 
+//static PyObject*
+//dim_dic_cmnd_callback(PyObject* self, PyObject* args) {
+  /*Arguments: string name                 ,
+               string format               ,
+               PyObject* callbackFunction  ,
+							 PyObject* cmd_callback			 ,
+               int tag                     , (optional, default=0)
+               PyObject* default_value       (optional, default=NULL)
+
+   Calls : unsigned int dic_info_service ( char* name         ,
+                                           int*  address      ,
+                                           int*  size         ,
+                                           void* cmd_callback ,
+                                           long  tag)
+
+    Returns 1 if the command was successfully requested (status variable)
+  */
+/*  char* name, *format;
+  long int tag=0;
+  int format_size;
+  int name_size;
+  int buffer_size;
+  unsigned int status;
+  PyObject* pyFunc=NULL, *cmnd_callback=NULL,*default_value=NULL ;
+  _dic_cmnd_service_callback* tmp;
+	// Init threading if needed
+	init_threading();
+
+	print("Sending command");
+  if ( !PyArg_ParseTuple(args, "s#s#OO|lO",	&name,
+                                            &name_size,
+                                            &format,
+                                            &format_size,
+                                            &pyFunc,
+                                            &cmnd_callback,
+                                            &tag,
+                                            &default_value) )
+  {
+    goto invalid_args;
+  }
+  print("Data filler is %p", pyFunc);
+  if ( !PyCallable_Check(pyFunc) ){
+    goto invalid_args;
+  }
+  //increasing the ref count of the python objects
+  Py_INCREF(pyFunc);
+  if (cmnd_callback) {
+      Py_INCREF(cmnd_callback);
+  }
+  if (default_value) {
+      Py_INCREF(default_value);
+  }
+  //creating a new command structure
+  tmp = (_dic_cmnd_service_callback*)malloc(sizeof(_dic_cmnd_service_callback));
+  if (!tmp) {
+      goto no_memory;
+  }
+  buffer_size = getSizeFromFormat(format);
+  tmp->tag = tag;
+  tmp->size = buffer_size;
+  print("Buffer size is %d", buffer_size);
+  tmp->buffer = (char*)malloc(sizeof(char*)*buffer_size);
+  tmp->format = (char*)malloc(sizeof(char)*format_size+1);
+  tmp->name = (char*)malloc(sizeof(char)*name_size+1);
+  tmp->defaultArgument = default_value;
+  tmp->func = pyFunc;
+	tmp->cmnd_callback=cmnd_callback; // We will see what we do with it
+  if ( !tmp->format || !tmp->name || !tmp->buffer) {
+    goto no_memory;
+  }
+  strcpy(tmp->name, name);
+  strcpy(tmp->format, format);
+  _dic_cmnd_service_buffer2Callback[tmp->buffer] = tmp;
+	_dic_cmnd_service_dummy(&tag,tmp->buffer,&buffer_size); //Is this correct? We fill the buffer before sending the command
+
+	print("Now issuing dic_cmnd_callback");
+  //sending the command
+  status = dic_cmnd_callback(	name,
+                            	tmp->buffer,
+                            	buffer_size,
+															NULL,  // Here comes the cmnd_callback
+                            	tag);
+  if ( status!=1 ){
+    print("Sending command %s failed. Received status %d", name, status);
+    goto dealocate;
+  }
+  print ("Command %s succesfully sent", name);
+  return Py_BuildValue("i", status);
+
+  //invalid arguments
+  invalid_args:
+    PyErr_SetString(PyExc_TypeError,
+          "Invalid parameters. Expected arguments: string name, string format, PyObject* callbackFunction, \
+PyObject* cmnd_callback, int tag, PyObject* default_value");
+    return NULL;
+  //alocate memory problem
+  no_memory:
+    PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
+    Py_DECREF(pyFunc);
+    return NULL;
+
+ //invalid service registering
+ dealocate:
+    Py_XDECREF(tmp->func);
+    _dic_info_service_buffer2Callback.erase(tmp->buffer);
+    //_dic_info_service_id2Callback.erase(tmp->buffer);
+    free(tmp->buffer);
+    free(tmp->format);
+    free(tmp->name);
+    free(tmp);
+    return 0;
+}
+*/
 /******************************************************************************/
 /* DIC interface internal functions */
 /******************************************************************************/
@@ -1463,6 +1591,64 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
   PyThreadState_Delete(st);
 //  print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 }
+
+//void _dic_cmnd_service_dummy (void* tag, void* buffer, int* size) {
+  /* Stub function for passing the data that has to be sent to a python callback.
+     Receives tag, buffer, size
+  */
+/*  PyObject* args, *res;
+  _dic_cmnd_service_callback* cmd;
+  int n=0;
+//  PyThreadState* st = 0;
+//  try   {
+// Let us try to handle the threadStates correctly 
+//	print("Mark1");
+//	st = PyThreadState_New(DIM::s_mainThreadState->interp);
+//	print("Mark2");
+//  PyEval_AcquireThread(st);
+//	}
+//  catch(std::exception& e)  {
+//    print("Exception occurred: %s",e.what());
+//    handlePythonError(st);
+//  }
+//  catch(...)  {
+//    print("Unknown exception occurred....");
+//    handlePythonError(st);
+//  }
+  cmd = _dic_cmnd_service_buffer2Callback[(char*)buffer];
+  if ( !cmd ){
+    print("Invalid command request");
+    return;
+  }
+  if ( !(*size) ) {
+//    args = cmd->defaultArgument; 	
+		args=0;
+		print("No arguments specified");
+  } else {
+    print("Converting C buffer to python arguments. Size of the received buffer is %d and format '%s'", cmd->size, cmd->format);
+    args = dim_buf_to_tuple(cmd->format, (char*)buffer, *size, &n);
+  }
+//  if (args) {
+      print("Executing callback %p for command %s", cmd->func, cmd->name);
+      res = PyEval_CallObject(cmd->func, args);
+//  } else {
+    //service failed and a default value was not specified
+//    print("Command error or could not get values from it");
+//    return;
+//  }
+
+  if ( !res ){
+     print("Callback to python function %p failed", cmd->func);
+     return;
+  }
+  Py_DECREF(res);
+  Py_XDECREF(args);
+//  PyEval_ReleaseThread(st);
+//  PyThreadState_Clear(st);
+//  PyThreadState_Delete(st);
+//  print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+}*/
+
 
 static PyMethodDef DimMethods[] = {
   {    "dis_start_serving"          ,
@@ -1636,10 +1822,15 @@ static PyMethodDef DimMethods[] = {
        "Called by a client when a service is not needed anymore."
   },
   {    "dic_info_service"              ,
-       dim_dic_info_service                ,
+       dim_dic_info_service            ,
        METH_VARARGS                    ,
        "Request an information service from a server."
   },
+/*  {    "dic_cmnd_callback"              ,
+       dim_dic_cmnd_callback            ,
+       METH_VARARGS                     ,
+       "Request the execution of a command by a server and register a completion callback."
+  },*/
   {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
