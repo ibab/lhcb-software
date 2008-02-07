@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.26 2007-09-04 16:46:57 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.27 2008-02-07 17:55:08 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -198,9 +198,9 @@ namespace Rich
             debug() << "Created pixel " << *pixel << endreq;
           }
 
-        }
+        } // smartID -> gloval coordinate OK
 
-      }
+      } // smartID is valid
 
       // Add to reference map
       if ( bookKeep() )
@@ -355,7 +355,7 @@ namespace Rich
 
                   } // loop over clusters
 
-                  // cleanup 
+                  // cleanup
                   delete clusters;
 
                 } // do clustering if
