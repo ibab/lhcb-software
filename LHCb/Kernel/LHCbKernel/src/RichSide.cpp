@@ -5,7 +5,7 @@
  *  Implementation file for enumeration : Rich::Side
  *
  *  CVS Log :-
- *  $Id: RichSide.cpp,v 1.3 2007-02-01 16:45:22 jonrob Exp $
+ *  $Id: RichSide.cpp,v 1.4 2008-02-07 17:53:06 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-19
@@ -27,6 +27,35 @@ std::string Rich::text( const Rich::Side side )
   case Rich::bottom:        return "bottom or right"; // Note also covers Rich::right
   case Rich::InvalidSide:   return "Invalid side";
   default:                  return "SHOULD NEVER SEE THIS";
+  }
+}
+
+// Text conversion for Rich::DetectorType and Rich::Side enumeration
+std::string Rich::text( const Rich::DetectorType rich, const Rich::Side side )
+{
+  if ( Rich::Rich1 == rich )
+  {
+    switch( side )
+    {
+    case Rich::top:           return "top";
+    case Rich::bottom:        return "bottom";
+    case Rich::InvalidSide:   return "Invalid side";
+    default:                  return "SHOULD NEVER SEE THIS";
+    }
+  }
+  else if ( Rich::Rich2 == rich )
+  {
+    switch( side )
+    {
+    case Rich::left:          return "left";
+    case Rich::right:         return "right";
+    case Rich::InvalidSide:   return "Invalid side";
+    default:                  return "SHOULD NEVER SEE THIS";
+    }
+  }
+  else
+  {
+    return "Invalid RICH Detector";
   }
 }
 

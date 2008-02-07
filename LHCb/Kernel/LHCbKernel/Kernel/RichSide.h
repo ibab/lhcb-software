@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : Rich::Side
  *
  *  CVS Log :-
- *  $Id: RichSide.h,v 1.10 2007-02-20 16:42:02 cattanem Exp $
+ *  $Id: RichSide.h,v 1.11 2008-02-07 17:53:06 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -19,6 +19,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include "Kernel/RichDetectorType.h"
 
 namespace Rich 
 {
@@ -52,6 +53,14 @@ namespace Rich
    *  @return Rich Side as an std::string
    */
   std::string text( const Rich::Side side );
+
+  /** Text conversion for Rich::DetectorType and Rich::Side enumeration
+   *
+   *  @param rich Rich Detector
+   *  @param side Rich Side enumeration
+   *  @return Rich Side as an std::string
+   */
+  std::string text( const Rich::DetectorType rich, const Rich::Side side );
 
   /// Std Vector typedef
   typedef std::vector<Side> RichSideVector;
