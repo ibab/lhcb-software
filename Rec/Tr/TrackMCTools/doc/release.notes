@@ -4,11 +4,11 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================= TrackMCTools v2r17 2008-02-06 =======================
 ! 2008-02-04 M Needham
-  - Modifications in ghost classification tools
-  - get ghost parent from the LHCbIDs
-  - add specializations for downstream and upstream tracks  
-
+  - Modifications in ghost classification tools to make them work better on DST:
+    . get ghost parent from the LHCbIDs
+    . add specializations for downstream and upstream tracks  
 
 !======================= TrackMCTools v2r16 2008-01-30 =======================
 ! 2008-01-23 - Wouter Hulsbergen
@@ -16,7 +16,6 @@
 
 ! 2008-01-09 M Needham
  - Bug fix in CleanPatTrackSelector
-
 
 !======================= TrackMCTools v2r15 2007-11-30 =======================
 ! 2007-11-30 - Wouter Hulsbergen
