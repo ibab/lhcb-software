@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.h,v 1.3 2008-01-22 09:56:37 hernando Exp $
+// $Id: HltSummaryWriter.h,v 1.4 2008-02-07 14:29:23 pkoppenb Exp $
 #ifndef HLTCOMMON_HLTSUMMARYWRITER_H 
 #define HLTCOMMON_HLTSUMMARYWRITER_H 1
 
@@ -6,8 +6,9 @@
 // from Gaudi
 #include "HltBase/HltBaseAlg.h"
 #include "Event/HltSummary.h"
+#include "Event/RecVertex.h"
 
-/** @class HltHadAlleyPreTrigger HltHadAlleyPreTrigger.h
+/** @class HltSummaryWriter.h
  *  
  *
  *  @author Jose Angel Hernando Morata
