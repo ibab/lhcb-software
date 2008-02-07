@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.27 2008-02-05 16:44:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.28 2008-02-07 07:51:13 frankm Exp $
 //  ====================================================================
 //  MDFIO.cpp
 //  --------------------------------------------------------------------
@@ -257,10 +257,10 @@ LHCb::MDFIO::commitRawBuffer(const void*       data,
         int hdrSize  = sizeof(MDFHeader)+h->subheaderLength();
         int bnkSize  = hdr->totalSize();
         writeBuffer(ioDesc, h, hdrSize);
-  // Need two write due to RAW bank alignment
-  sc = writeBuffer(ioDesc, ptr+bnkSize, len-bnkSize);
-  sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
-  return sc;
+	// Need two write due to RAW bank alignment
+	sc = writeBuffer(ioDesc, ptr+bnkSize, len-bnkSize);
+	sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
+	return sc;
       }
     case MDF_RECORDS:  // Already ready to write MDF record
       sc = writeBuffer(ioDesc, ptr, len);

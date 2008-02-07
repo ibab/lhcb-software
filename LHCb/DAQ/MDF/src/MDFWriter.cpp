@@ -1,4 +1,4 @@
-// $Id: MDFWriter.cpp,v 1.20 2008-02-05 16:44:18 frankb Exp $
+// $Id: MDFWriter.cpp,v 1.21 2008-02-07 07:51:13 frankm Exp $
 //  ====================================================================
 //  MDFWriter.cpp
 //  --------------------------------------------------------------------
@@ -110,16 +110,41 @@ MDFIO::MDFDescriptor MDFWriter::getDataSpace(void* const /* ioDesc */, size_t le
 
 /// Execute procedure
 StatusCode MDFWriter::execute()    {
+  std::pair<const char*,int> data;
   setupMDFIO(msgSvc(),eventSvc());
   MsgStream log(msgSvc(), name());
+  log << MSG::ALWAYS << "Got data as " << m_inputType << " Send as " << m_dataType << endreq;
   switch(m_inputType) {
     case MDFIO::MDF_NONE:
       return commitRawBanks(m_compress, m_genChecksum, m_connection, m_bankLocation);
     case MDFIO::MDF_BANKS:
-    case MDFIO::MDF_RECORDS:
-      return commitRawBuffer(m_dataType, m_compress, m_genChecksum, m_connection);
-    default:
+      data = getDataFromAddress();
+      if ( data.first )  {
+	switch(m_dataType) {
+	case MDFIO::MDF_RECORDS:
+	  return commitRawBuffer(data.first+2*sizeof(int), data.second-2*sizeof(int), 
+				 m_dataType, m_compress, m_genChecksum, m_connection);
+	case MDFIO::MDF_BANKS:
+	  return commitRawBuffer(data.first, data.second, m_dataType, m_compress, m_genChecksum, m_connection);
+	default:
+	  break;
+	}
+      }
       break;
+    case MDFIO::MDF_RECORDS:
+      data = getDataFromAddress();
+      if ( data.first )  {
+	switch(m_dataType) {
+	case MDFIO::MDF_BANKS:
+	case MDFIO::MDF_RECORDS:
+	  return commitRawBuffer(data.first, data.second, m_dataType, m_compress, m_genChecksum, m_connection);
+	default:
+	  break;
+	}
+      }
+      break;
+  default:
+    break;
   }
   return StatusCode::FAILURE;
 }
