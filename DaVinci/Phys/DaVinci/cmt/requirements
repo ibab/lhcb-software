@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.370 2008-01-21 15:40:46 pkoppenb Exp $
+# $Id: requirements,v 1.371 2008-02-07 15:49:59 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -61,6 +61,6 @@ apply_pattern application_path
 
 # define aliases
 alias DaVinci "${DAVINCIROOT}/${BINDIR}/DaVinci.exe"
-alias DaVinciTests "cmt -tag_add=QMTest qmtest_run"
+alias DaVinciTests "cmt qmtest_run"
 # for QMtest
 apply_pattern QMTest
