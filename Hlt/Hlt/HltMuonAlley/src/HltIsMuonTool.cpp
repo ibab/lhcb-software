@@ -1,4 +1,4 @@
-// $Id: HltIsMuonTool.cpp,v 1.2 2008-02-06 15:42:46 hernando Exp $
+// $Id: HltIsMuonTool.cpp,v 1.3 2008-02-07 14:03:36 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -36,7 +36,7 @@ HltIsMuonTool::HltIsMuonTool( const std::string& type,
   declareProperty( "par3x", m_p3x = boost::assign::list_of (.03)(.05)(.08)(.10));
   declareProperty( "par1y", m_p1y = boost::assign::list_of (5.5)(4.0)(2.5)(2.5));
   declareProperty( "par2y", m_p2y = boost::assign::list_of (35.)(35.)(25.)(25.));
-  declareProperty( "par2y", m_p3y = boost::assign::list_of (.07)(.17)(.17)(.22));
+  declareProperty( "par3y", m_p3y = boost::assign::list_of (.07)(.17)(.17)(.22));
 
   declareInterface<ITrackFunctionTool>(this);
 }
