@@ -3,6 +3,11 @@ Package     : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v19r10>2008-02-07 DaVinci v19r10. DC06-compatible analysis version.</A></H1><PRE>
+Based on Phys v6r10, Analysis v1r10, Rec v5r3, HLT v3r0, Lbcom v6r14, LHCb v23r3, Gaudi v19r7, LCGCMT 54.
+
+ Contains bug fixes, options and code developments and cleanups in Phys, Analysis and HLT. 
+
 </PRE><H1><A NAME=v19r9>2007-12-18 DaVinci v19r9. DC06-compatible analysis version.</A></H1><PRE>
 Based on Phys v6r9, Analysis v1r9, Rec v5r2, HLT v2r0, Lbcom v6r13, LHCb v23r2, Gaudi v19r6, LCGCMT 53f.
 Minor changes to Phys and Analysis with respect to DaVinci v19r8. Most changes relate to HLT.
