@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PixelPositionMonitor
  *
  *  CVS Log :-
- *  $Id: RichPixelPositionMonitor.h,v 1.11 2007-08-09 16:17:58 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.h,v 1.12 2008-02-07 17:58:34 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -27,6 +27,7 @@
 // RichKernel
 #include "RichKernel/RichMap.h"
 #include "RichKernel/RichDAQDefinitions.h"
+#include "RichKernel/RichSmartIDCnv.h"
 
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
@@ -93,6 +94,9 @@ namespace Rich
 
         /// Pointer to RICH system detector element
         const DeRichSystem * m_richSys;
+
+        /// Number of bins in 2D histos
+        unsigned int m_n2DBins;
 
       };
 

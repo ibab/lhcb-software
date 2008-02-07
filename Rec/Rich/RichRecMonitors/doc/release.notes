@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-02-07 - Chris Jones
+ - Add more comparison histos to pixel position monitor
+
 !====================== RichRecMonitors v2r14 2008-01-28 =====================
 ! 2008-01-30 - Marco Cattaneo
  - Use DataOnDemandSvc.AlgMap syntax in BuildMCCherenkovRings.opts

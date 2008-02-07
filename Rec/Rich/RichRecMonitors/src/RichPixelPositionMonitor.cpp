@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.13 2007-08-13 12:38:49 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.14 2008-02-07 17:58:34 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -33,7 +33,10 @@ PixelPositionMonitor::PixelPositionMonitor( const std::string& name,
     m_richRecMCTruth ( NULL ),
     m_mcTool         ( NULL ),
     m_idTool         ( NULL ),
-    m_richSys        ( NULL ) { }
+    m_richSys        ( NULL ) 
+{
+  declareProperty( "N2DBins", m_n2DBins = 500 );
+}
 
 // Destructor
 PixelPositionMonitor::~PixelPositionMonitor() { }
@@ -93,6 +96,12 @@ StatusCode PixelPositionMonitor::execute()
     const Gaudi::XYZPoint & gPos = pixel->globalPosition();
     // local position on HP panels
     const Gaudi::XYZPoint & lPos = pixel->localPosition();
+    // position on anode in global coords
+    Gaudi::XYZPoint anodeGlobal;
+    StatusCode sc = m_idTool->anodeGlobalPosition( pixel->hpdPixelCluster(), anodeGlobal );
+    if ( sc.isFailure() ) { Warning( "Problem with getting anode global position" ); continue; }
+    // position on anode in local coords
+    const Gaudi::XYZPoint anodeLocal = m_idTool->globalToPDPanel(anodeGlobal);
 
     // Which detector ?
     const Rich::DetectorType rich = pixel->detector();
@@ -101,9 +110,12 @@ StatusCode PixelPositionMonitor::execute()
     // HPD ID
     const LHCb::RichSmartID pdID = pixel->hpdPixelCluster().hpd();
 
+    // Which panel
+    const Rich::Side side = pdID.panel();
+
     // Centre point of HPD
     Gaudi::XYZPoint hpdGlo;
-    const StatusCode sc = m_idTool->hpdPosition(pdID,hpdGlo);
+    sc = m_idTool->hpdPosition(pdID,hpdGlo);
     if ( sc.isFailure() ) { Warning( "Problem with get HPD position" ); continue; }
     const Gaudi::XYZPoint hpdLoc = m_idTool->globalToPDPanel(hpdGlo);
 
@@ -140,11 +152,11 @@ StatusCode PixelPositionMonitor::execute()
     plot1D( gPos.z(), hid(rich,"obsZglo"), "Observed hits z global",
             zMinPDGlo[rich], zMaxPDGlo[rich] );
     plot2D( gPos.x(), gPos.y(), hid(rich,"obsXYglo"), "Observed hits yVx global",
-            xMinPDGlo[rich], xMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich], 100,100 );
+            xMinPDGlo[rich], xMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich], m_n2DBins,m_n2DBins );
     plot2D( gPos.x(), gPos.z(), hid(rich,"obsXZglo"), "Observed hits zVx global",
-            xMinPDGlo[rich], xMaxPDGlo[rich], zMinPDGlo[rich], zMaxPDGlo[rich], 100,100 );
+            xMinPDGlo[rich], xMaxPDGlo[rich], zMinPDGlo[rich], zMaxPDGlo[rich], m_n2DBins,m_n2DBins );
     plot2D( gPos.y(), gPos.z(), hid(rich,"obsYZglo"), "Observed hits yVz global",
-            yMinPDGlo[rich], yMaxPDGlo[rich], zMinPDGlo[rich], zMaxPDGlo[rich], 100,100 );
+            yMinPDGlo[rich], yMaxPDGlo[rich], zMinPDGlo[rich], zMaxPDGlo[rich], m_n2DBins,m_n2DBins );
     plot1D( lPos.x(), hid(rich,"obsXloc"), "Observed hits x local",
             xMinPDLoc[rich], xMaxPDLoc[rich] );
     plot1D( lPos.y(), hid(rich,"obsYloc"), "Observed hits y local",
@@ -152,13 +164,39 @@ StatusCode PixelPositionMonitor::execute()
     plot1D( lPos.z(), hid(rich,"obsZloc"), "Observed hits z local",
             zMinPDLoc[rich], zMaxPDLoc[rich] );
     plot2D( lPos.x(), lPos.y(), hid(rich,"obsXYloc"), "Observed hits yVx local",
-            xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], 100,100 );
+            xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], m_n2DBins,m_n2DBins );
+
+    plot2D( anodeLocal.x(), anodeLocal.y(), hid(rich,"obsXYAnodeloc"), "Observed hits yVx anode local",
+            xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], m_n2DBins,m_n2DBins );
 
     // global - local correlations
     profile1D( lPos.x(), gPos.x(), hid(rich,"gloLocCorrX"), "Global X versus Local X",
                xMinPDLoc[rich], xMaxPDLoc[rich] );
     profile1D( lPos.y(), gPos.y(), hid(rich,"gloLocCorrY"), "Global Y versus Local Y",
                yMinPDLoc[rich], yMaxPDLoc[rich] );
+
+    // Pixel plots using new scheme
+    const Rich::SmartIDGlobalOrdering order( pixel->hpdPixelCluster().primaryID() );
+    // Make some plots for each RICH detector
+    plot2D( order.globalPixelX(), order.globalPixelY(),
+            hid(rich,"pixHitMap"), "Pixel Hit Map",
+            order.minGlobalPixelX()-0.5,  order.maxGlobalPixelX()+0.5,
+            order.minGlobalPixelY()-0.5,  order.maxGlobalPixelY()+0.5,
+            order.totalNumInGlobalX()+1,  order.totalNumInGlobalY()+1 );
+    plot2D( order.globalPixelX(), 
+            lPos.X(),
+            //gPos.X(),
+            hid(rich,side,"gPixXVlocalX"), "Anode local X versus 'global' pixel X",
+            order.minGlobalPixelX()-0.5,  order.maxGlobalPixelX()+0.5,
+            xMinPDLoc[rich], xMaxPDLoc[rich],
+            order.totalNumInGlobalX()+1, m_n2DBins );
+    plot2D( order.globalPixelY(),
+            lPos.Y(),
+            //gPos.Y(),
+            hid(rich,side,"gPixYVlocalY"), "Anode local Y versus 'global' pixel Y",
+            order.minGlobalPixelY()-0.5,  order.maxGlobalPixelY()+0.5,
+            yMinPDLoc[rich], yMaxPDLoc[rich],
+            order.totalNumInGlobalY()+1, m_n2DBins );
 
     // Background plots
     if ( m_richRecMCTruth->isBackground(pixel) )
@@ -171,11 +209,11 @@ StatusCode PixelPositionMonitor::execute()
       plot1D( gPos.z(), hid(rich,"obsZgloB"), "Observed background hits z global",
               zMinPDGlo[rich], zMaxPDGlo[rich] );
       plot2D( gPos.x(), gPos.y(), hid(rich,"obsXYgloB"), "Observed background hits yVx global",
-              xMinPDGlo[rich], xMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich], 100,100 );
+              xMinPDGlo[rich], xMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich], m_n2DBins,m_n2DBins );
       plot2D( gPos.x(), gPos.z(), hid(rich,"obsXZgloB"), "Observed background hits zVx global",
-              xMinPDGlo[rich], xMaxPDGlo[rich], zMinPDGlo[rich], zMaxPDGlo[rich], 100,100 );
+              xMinPDGlo[rich], xMaxPDGlo[rich], zMinPDGlo[rich], zMaxPDGlo[rich], m_n2DBins,m_n2DBins );
       plot2D( gPos.y(), gPos.z(), hid(rich,"obsYZgloB"), "Observed background hits yVz global",
-              yMinPDGlo[rich], yMaxPDGlo[rich], zMinPDGlo[rich], zMaxPDGlo[rich], 100,100 );
+              yMinPDGlo[rich], yMaxPDGlo[rich], zMinPDGlo[rich], zMaxPDGlo[rich], m_n2DBins,m_n2DBins );
       // local position on HP panels
       plot1D( lPos.x(), hid(rich,"obsXlocB"), "Observed background hits x local",
               xMinPDLoc[rich], xMaxPDLoc[rich] );
@@ -184,7 +222,7 @@ StatusCode PixelPositionMonitor::execute()
       plot1D( lPos.z(), hid(rich,"obsZlocB"), "Observed background hits z local",
               zMinPDLoc[rich], zMaxPDLoc[rich] );
       plot2D( lPos.x(), lPos.y(), hid(rich,"obsXYlocB"), "Observed background hits yVx local",
-              xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], 100,100 );
+              xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], m_n2DBins,m_n2DBins );
     }
 
     // background value distribution
@@ -200,7 +238,7 @@ StatusCode PixelPositionMonitor::execute()
       if ( mcP )
       {
         plot2D( lPos.x(), lPos.y(), hid(rad,"signalHits"), "True Cherenkov signal hits",
-                xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], 100,100 );
+                xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], m_n2DBins,m_n2DBins );
       }
     }
 
@@ -327,8 +365,8 @@ StatusCode PixelPositionMonitor::execute()
     profile1D( localRadial, (*iPD).second.size(), hid(rich,"AvHPDOccVD"),
                "Average HPD occupancy versus radial distance", 0,maxAvO[rich] , 50 );
     profile2D( hpdLoc.x(), hpdLoc.y(), (*iPD).second.size(), hid(rich,"AvHPDOccVXY"),
-               "Average HPD occupancy versus X,Y", 
-               xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], 100, 100 );
+               "Average HPD occupancy versus X,Y",
+               xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], m_n2DBins, m_n2DBins );
   }
 
   return StatusCode::SUCCESS;
