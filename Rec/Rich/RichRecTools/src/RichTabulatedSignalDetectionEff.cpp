@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.12 2007-02-02 10:10:42 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.13 2008-02-07 17:59:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -61,12 +61,6 @@ StatusCode TabulatedSignalDetectionEff::initialize()
           << " Digitisation pedestal eff.   = " << m_pedLoss << endreq;
 
   return sc;
-}
-
-StatusCode TabulatedSignalDetectionEff::finalize()
-{
-  // Execute base class method
-  return Rich::Rec::ToolBase::finalize();
 }
 
 double
