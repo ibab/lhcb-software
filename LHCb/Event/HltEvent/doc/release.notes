@@ -4,10 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== HltEvent v8r7 2008-02-07 ===========================
 ! 2008-02-07 - Patrick Koppenburg
  - HltEnums : get reference to GaudiMap.
 
-!======================== HltEvent v8r7 2008-02-07 ===========================
 ! 2008-02-07 - Marco Cattaneo
  - Remove unnecessary includes and dependencies
 
