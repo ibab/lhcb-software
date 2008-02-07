@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.3 2008-01-29 16:02:30 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.4 2008-02-07 17:24:52 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -175,7 +175,7 @@ StatusCode L0DUReportMonitor::finalize() {
     double eRate = 100.* sqrt(m_decCnt)/m_evtCnt;
     
     info() << "   **************************************************** " << endreq;    
-    info() << "   ***  Trigger Configuration Key : "  << format("0x%4X", tck)  << " (" << tck << ")"<<  endreq;
+    info() << "   ***  Trigger Configuration Key : "  << format("0x%04X", tck)  << " (" << tck << ")"<<  endreq;
     info() << "   **************************************************** " << endreq;    
     debug() << "       REMIND : the corresponding L0DU algorithm description is : " << endreq;
     debug() << config->description() << endreq;

@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.3 2008-02-06 19:32:54 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.4 2008-02-07 17:24:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -176,7 +176,7 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     if(m_warning){
       m_warning = false;
       std::stringstream tck("");
-      tck << format("0x%4X", m_tck);
+      tck << format("0x%04X", m_tck);
       info() << "For L0DU bank version = 0 the TCK value is forced to " << tck.str() << endreq;
     } 
     if ( msgLevel( MSG::DEBUG) )debug() << "Loading configuration" << endreq;

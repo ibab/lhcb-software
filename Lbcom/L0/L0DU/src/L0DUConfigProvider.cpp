@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.4 2008-01-29 16:02:29 odescham Exp $
+// $Id: L0DUConfigProvider.cpp,v 1.5 2008-02-07 17:24:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -179,7 +179,7 @@ StatusCode L0DUConfigProvider::initialize(){
 }
 
 void L0DUConfigProvider::printConfig(LHCb::L0DUConfig config){
-  info() << "**** L0DU Configs loading : " << format("0x%4X" , config.tck()) << endreq;
+  info() << "**** L0DU Configs loading : " << format("0x%04X" , config.tck()) << endreq;
   debug() << "              - " << config.data().size()<< " data with "<<endreq;
   debug() << "                    - " << m_pData << " predefined data "<<endreq;
   debug() << "                    - " << m_cData << " constant   data "<<endreq;

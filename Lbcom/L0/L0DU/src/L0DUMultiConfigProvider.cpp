@@ -1,4 +1,4 @@
-// $Id: L0DUMultiConfigProvider.cpp,v 1.1 2008-01-29 16:02:30 odescham Exp $
+// $Id: L0DUMultiConfigProvider.cpp,v 1.2 2008-02-07 17:24:52 odescham Exp $
 // Include files 
 
 #include<iostream>
@@ -104,7 +104,7 @@ LHCb::L0DUConfig*  L0DUMultiConfigProvider::config( long tck ){
   
 
   std::stringstream s("");
-  s << "0x" << format("%4X", tck) ;
+  s << "0x" << format("%04X", tck) ;
   
   return loadConfig( s.str() );
 

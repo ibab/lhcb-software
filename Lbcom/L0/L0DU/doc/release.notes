@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.82 2008-02-06 19:32:54 odescham Exp $
+! $Id: release.notes,v 1.83 2008-02-07 17:24:52 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
 
-! 2008-02-06 - Olivier Deschamps 
+! 2008-02-07 - Olivier Deschamps 
+ - fix TCK string format (%4X -> %04X) 
  - L0DUFromRawTool : add protection against non-existing L0DU rawBank
 
 
