@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.20 2008-01-22 10:31:48 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.21 2008-02-07 15:19:43 hernando Exp $
 // Include files
 
 // from Gaudi
@@ -49,22 +49,22 @@ StatusCode HltFunctionFactory::initialize(){
   return StatusCode::SUCCESS;
 }
 
-zen::function<LHCb::Track>* 
+Hlt::TrackFunction* 
 HltFunctionFactory::trackFunction(const std::string& name)
 {return m_trackFactory->function(name);}   
 
-zen::filter<LHCb::Track>* 
+Hlt::TrackFilter* 
 HltFunctionFactory::trackFilter(const std::string& name)
 {return m_trackFactory->filter(name);} 
   
-zen::function<LHCb::RecVertex>* 
+Hlt::VertexFunction* 
 HltFunctionFactory::vertexFunction(const std::string& name)
 {return m_vertexFactory->function(name);}
 
-zen::filter<LHCb::RecVertex>* 
+Hlt::VertexFilter* 
 HltFunctionFactory::vertexFilter(const std::string& name)
 {return m_vertexFactory->filter(name);}
   
-zen::bifunction<LHCb::Track,LHCb::Track>* 
+Hlt::TrackBiFunction* 
 HltFunctionFactory::trackBiFunction(const std::string& name)
 {return m_trackBiFactory->function(name);}

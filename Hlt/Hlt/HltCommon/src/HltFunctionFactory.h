@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.h,v 1.8 2008-01-22 10:31:49 hernando Exp $
+// $Id: HltFunctionFactory.h,v 1.9 2008-02-07 15:19:43 hernando Exp $
 #ifndef HLTCOMMON_HLTFUNCTIONFACTORY_H 
 #define HLTCOMMON_HLTFUNCTIONFACTORY_H 1
 
@@ -29,20 +29,20 @@ public:
 
   StatusCode initialize();
   
-  zen::function<LHCb::Track>* trackFunction(const std::string& name);
+  Hlt::TrackFunction* trackFunction(const std::string& name);
   
-  zen::filter<LHCb::Track>* trackFilter(const std::string& name);
+  Hlt::TrackFilter* trackFilter(const std::string& name);
   
-  zen::function<LHCb::RecVertex>* vertexFunction(const std::string& name);
+  Hlt::VertexFunction* vertexFunction(const std::string& name);
   
-  zen::filter<LHCb::RecVertex>* vertexFilter(const std::string& name);
+  Hlt::VertexFilter* vertexFilter(const std::string& name);
 
-  zen::bifunction<LHCb::Track,LHCb::Track>* trackBiFunction(const std::string& name);
+  Hlt::TrackBiFunction* trackBiFunction(const std::string& name);
 
 protected:
   
   IFunctionFactory<LHCb::Track>* m_trackFactory;
-
+  
   IFunctionFactory<LHCb::RecVertex>* m_vertexFactory;
   
   IBiFunctionFactory<LHCb::Track, LHCb::Track>* m_trackBiFactory;

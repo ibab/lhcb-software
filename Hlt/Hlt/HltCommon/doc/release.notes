@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-02-07 Jose A. Hernando
+  - HltFunctionFactory.h trying to get back the factory to be use in Python
+
 ! 2008-02-06 - Gerhard Raven
   - add three implementations of IConfigAccessSvc: ConfigDBAccessSvc, ConfigFileAccessSvc, ConfigStackAccessSvc
   - add an implementations of IANNSvc: HltANNSvc
