@@ -1,5 +1,6 @@
 <lcgdict>
   <class name = "IHltConfSummaryTool"       />
+  <class name = "IHltFunctionFactory"       />
   <class name = "IMatchTVeloTracks"     />
   <class name = "IPrepareCaloSeed"      />
   <class name = "IPrepareMuonSeed"      />

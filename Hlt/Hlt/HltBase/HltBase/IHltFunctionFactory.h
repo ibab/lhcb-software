@@ -1,4 +1,4 @@
-// $Id: IHltFunctionFactory.h,v 1.5 2007-08-16 09:39:21 hernando Exp $
+// $Id: IHltFunctionFactory.h,v 1.6 2008-02-07 16:55:15 hernando Exp $
 #ifndef HLTBASE_IHLTFUNCTIONFACTORY_H 
 #define HLTBASE_IHLTFUNCTIONFACTORY_H 1
 
@@ -25,13 +25,6 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IHltFunctionFactory; }
 
-  // funtions/filters works with the info
-  // functions check if the info is stored, otherwise it is calculated
-  virtual void setSmart(bool smart) = 0;
-
-  virtual void setTracks(std::vector<LHCb::Track*>& tracks) = 0;
-
-  virtual void setVertices(std::vector<LHCb::RecVertex*>& vertex) = 0;
   
   virtual Hlt::TrackFunction* trackFunction(const std::string& name) = 0;
 

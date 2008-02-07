@@ -3,6 +3,11 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+! 2008-02-07 Jose A. Hernando
+ - IHltFunctionFactory, recovering interface tool to be use in python
+ - IHltConfSummaryTool, accesing particles from selection
+
 ! 2008-02-06 - Gerhard Raven
  - use a real 'digest_type' instead of a string to represent its hex value
  - Move md5 digest computation into PropertyConfig to avoid chicken-and-egg

@@ -2,6 +2,7 @@
 #define DICT_HLTBASEDICT_H 1
 
 #include "HltBase/IHltConfSummaryTool.h"
+#include "HltBase/IHltFunctionFactory.h"
 #include "HltBase/IMatchTVeloTracks.h"
 #include "HltBase/IPrepareCaloSeed.h"
 #include "HltBase/IPrepareMuonSeed.h"
