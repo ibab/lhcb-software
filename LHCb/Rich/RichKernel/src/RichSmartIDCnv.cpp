@@ -5,7 +5,7 @@
  *  Implementation file for RichSmartID conversion utilities
  *
  *  CVS Log :-
- *  $Id: RichSmartIDCnv.cpp,v 1.1 2008-02-06 10:47:40 jonrob Exp $
+ *  $Id: RichSmartIDCnv.cpp,v 1.2 2008-02-07 16:44:56 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008
@@ -32,8 +32,7 @@ unsigned int Rich::SmartIDGlobalOrdering::_panelHPDColOffset() const
 {
   return ( Rich::Rich2 == smartID().rich() ?
            ( Rich::left == smartID().panel() ? _nHPDCols() : 0 ) :
-           ( Rich::top  == smartID().panel() ? _nHPDCols() : 0 )
-           );
+           ( Rich::top  == smartID().panel() ? _nHPDCols() : 0 ) );
 }
 
 // Returns the 'global' HPD column number
@@ -72,23 +71,32 @@ int Rich::SmartIDGlobalOrdering::_pixelRowNum() const
 // Returns a 'global' pixel column number
 int Rich::SmartIDGlobalOrdering::globalPixelX() const
 {
-  return ( Rich::Rich1 == smartID().rich() ?
-           ( _pixelRowNum() +
+  if ( Rich::Rich1 == smartID().rich() )
+  {
+    return ( _pixelRowNum() +
              (_numInCol()*_nPixelRowsPerHPD()) +
-             (int)(globalHpdNumInColOffset()*_nPixelRowsPerHPD()) ) :
-           smartID().pixelCol() + (_hpdCol()*_nPixelColsPerHPD())
-           );
+             (int)(globalHpdNumInColOffset()*_nPixelRowsPerHPD()) );
+  }
+  else
+  {
+    return ( smartID().pixelCol() + (_hpdCol()*_nPixelColsPerHPD()) );
+  }
 }
 
 // Returns a 'global' pixel row number
 int Rich::SmartIDGlobalOrdering::globalPixelY() const
 {
-  return ( Rich::Rich2 == smartID().rich() ?
-           ( _pixelRowNum() +
+  if ( Rich::Rich1 == smartID().rich() )
+  {
+    return ( smartID().pixelCol() +
+             (_hpdCol()*_nPixelColsPerHPD()) );
+  }
+  else
+  {
+    return ( _pixelRowNum() +
              (_numInCol()*_nPixelRowsPerHPD()) +
-             (int)(globalHpdNumInColOffset()*_nPixelRowsPerHPD()) ) :
-           smartID().pixelCol() + (_hpdCol()*_nPixelColsPerHPD())
-           );
+             (int)(globalHpdNumInColOffset()*_nPixelRowsPerHPD()) );
+  }
 }
 
 MsgStream&

@@ -5,7 +5,7 @@
  *  Header file for RichSmartID conversion utilities
  *
  *  CVS Log :-
- *  $Id: RichSmartIDCnv.h,v 1.1 2008-02-06 10:47:29 jonrob Exp $
+ *  $Id: RichSmartIDCnv.h,v 1.2 2008-02-07 16:45:25 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008
@@ -178,7 +178,7 @@ namespace Rich
      */
     inline double globalHpdNumInColOffset() const
     {
-      return (smartID().hpdCol()%2)*0.5;
+      return (smartID().hpdCol()%2) * ( Rich::Rich2 == smartID().rich() ? 0.5 : -0.5 );
     }
 
     /// Returns a 'global' HPD column number
