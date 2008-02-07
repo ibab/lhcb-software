@@ -1,4 +1,4 @@
-// $Id: MDF_ROOT_dll.cpp,v 1.3 2008-02-05 18:04:24 frankb Exp $
+// $Id: MDF_ROOT_dll.cpp,v 1.4 2008-02-07 13:54:52 frankb Exp $
 //  ====================================================================
 //  MDFIO.cpp
 //  --------------------------------------------------------------------
@@ -21,6 +21,7 @@ static const int S_IRWXU = (S_IREAD|S_IWRITE);
 #define EXPORT
 #endif
 
+#include "TUrl.h"
 #include "TFile.h"
 #include "TSystem.h"
 #include <map>
@@ -38,16 +39,27 @@ namespace {
   }
   int root_open(const char *filepath, int flags, unsigned int mode) {
     TFile* f = 0;
-    std::string url=filepath;
-    url+="?filetype=raw";
-    //std::cout << "open:" << flags << " " << int(O_WRONLY+O_CREAT) << " " 
-    //        << (int)O_RDONLY << " " << mode << (int)S_IWRITE 
-    //        << " " << (int)S_IREAD << " " << std::endl;
+    TUrl url(filepath);
+    TString opts="filetype=raw", proto, spec;
+    opts += url.GetOptions();
+    url.SetOptions(opts);
+    proto = url.GetProtocol();
+    if ( proto == "file" || proto == "http" ) {
+      spec = filepath;
+      spec += "?filetype=raw";
+    }
+    else {
+      spec = url.GetUrl();
+    }
+    //std::cout << "URL:" << url.GetUrl() << std::endl;
+    //std::cout << "   opts:    " << url.GetOptions() << std::endl;
+    //std::cout << "   protocol:" << url.GetProtocol() << std::endl;
+    //std::cout << "   specs:   " << (const char*)spec << std::endl;
     if ( (flags&(O_WRONLY|O_CREAT))!=0 && ((mode&S_IWRITE)!= 0) ) {
-      f = TFile::Open(url.c_str(),"RECREATE","",0);
+      f = TFile::Open(spec,"RECREATE","",0);
     }
     else if ( (flags==O_RDONLY || flags==(O_BINARY|O_RDONLY)) && (mode&S_IREAD)!=0 ) {
-      f = TFile::Open(url.c_str());
+      f = TFile::Open(spec);
     }
     if ( f && !f->IsZombie() ) {
       int fd = int(fileMap().size()+0xFEED);
