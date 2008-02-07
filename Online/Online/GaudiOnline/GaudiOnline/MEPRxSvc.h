@@ -129,6 +129,7 @@ namespace LHCb  {
     IMonitorSvc*                m_monSvc;
 
     int                         m_sourceID;
+    int                         m_nCnt;
 
     u_int32_t m_ownAddress;
     /* Counters per source */ 
@@ -180,7 +181,7 @@ namespace LHCb  {
     int openSocket(int protocol);
     // counter functions
     void clearCounters();
-    int setupCounters();
+    int setupCounters(int n);
     void publishCounters(void);
     void handle(const Incident& inc); 
   };
