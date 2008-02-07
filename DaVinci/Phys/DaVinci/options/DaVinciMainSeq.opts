@@ -1,4 +1,6 @@
 //=================================================================
+// $Id: DaVinciMainSeq.opts,v 1.4 2008-02-07 15:50:31 jpalac Exp $
+//=================================================================
 // Start DaVinci sequence
 //
 ApplicationMgr.TopAlg += { "GaudiSequencer/DaVinciMainSeq" } ;
@@ -7,7 +9,10 @@ DaVinciMainSeq.MeasureTime = true ;
 // To avoid loading Sim file to get /Event/Header, explicitly make it
 // from the raw buffer. Needs to be done *before* LbAppInit
 //DaVinciMainSeq.Members += { "CreateRawEvent", "EventHeaderFromRaw" };
-#include "$DAVINCIROOT/options/DaVinciMainSeqFixes.opts"
+// 
+// Un-comment following line if running on re-processed DC06 DSTs.
+// and need MCParticle -> Track linking.
+//#include "$DAVINCIROOT/options/DaVinciMainSeqFixes.opts"
 //
 DaVinciMainSeq.Members += { "LbAppInit/DaVinci" };
 DaVinci.OutputLevel = 4 ;
