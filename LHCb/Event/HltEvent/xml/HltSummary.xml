@@ -203,8 +203,6 @@
 
       <import name='GaudiKernel/VectorMap' />
       <import name='Event/Particle' />
-      <import name='Event/Track' />
-      <import name='Event/RecVertex' />
 
       <attribute
         type = 'bitfield'
