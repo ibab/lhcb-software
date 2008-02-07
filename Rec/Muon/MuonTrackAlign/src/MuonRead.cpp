@@ -1,18 +1,20 @@
-// $Id: MuonRead.cpp,v 1.3 2007-07-26 16:02:14 spozzi Exp $
+// $Id: MuonRead.cpp,v 1.4 2008-02-07 16:56:23 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-#include "Event/Track.h"
 #include "GaudiKernel/NTuple.h"
 #include "GaudiAlg/TupleObj.h" 
 #include "GaudiKernel/INTupleSvc.h"
 // local
 #include "MuonRead.h"
-using namespace LHCb;
+
 //from LHCb
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
+#include "Event/Track.h"
+#include "Event/Node.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonRead
 //
@@ -64,22 +66,22 @@ StatusCode MuonRead::execute() {
 
   Tuple Simone = nTuple(1,"Brunelmuonhit");
 
-  Tracks* muonTracks=get<Tracks>(m_muonTracksName);
+  LHCb::Tracks* muonTracks=get<LHCb::Tracks>(m_muonTracksName);
 
   info()<<"muon track size "<<muonTracks->size()<<endreq;
 
   m_muonDigit=m_muonBuffer->getTile();  //Restituisce un vettore di MuonTileID
-  Tracks::const_iterator it;
+  LHCb::Tracks::const_iterator it;
 
   for(it=muonTracks->begin();it!=muonTracks->end();it++){
     info()<<" a muon track "<<endreq;
 
     double x,y,z,dx,dy,dz;
-    std::vector<LHCbID >  list_of_tile=(*it)->lhcbIDs () ;
-    std::vector<LHCbID>::const_iterator itTile;
+    std::vector<LHCb::LHCbID>  list_of_tile=(*it)->lhcbIDs () ;
+    std::vector<LHCb::LHCbID>::const_iterator itTile;
 
-    std::vector<State* >  list_of_states=(*it)->states () ;
-    std::vector<State*>::const_iterator iStates;
+    std::vector<LHCb::State*>  list_of_states=(*it)->states () ;
+    std::vector<LHCb::State*>::const_iterator iStates;
     
        
     std::vector<double> Fx,Fy,Fz,Fdx,Fdy,Ftx,Fty,Fdtx,Fdty,Fp;
@@ -134,7 +136,7 @@ StatusCode MuonRead::execute() {
     Simone->fill("status",float((*it)->fitStatus())) ;
 
     for(itTile=list_of_tile.begin();itTile!=list_of_tile.end();itTile++){
-      MuonTileID tile=itTile->muonID();
+      LHCb::MuonTileID tile=itTile->muonID();
       
       m_muonDet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
       info()<<"*** tile position ***"<<tile<<endreq;
@@ -151,7 +153,7 @@ StatusCode MuonRead::execute() {
       region.push_back(tile.region());
       station.push_back(tile.station());
 
-      MCParticle* pp=NULL;
+      LHCb::MCParticle* pp=NULL;
       searchNature(tile,pp);
       if(pp!=NULL){
         info()<<pp->particleID().pid()<<endreq;
@@ -257,7 +259,7 @@ StatusCode MuonRead::finalize() {
 
 //=============================================================================
 
-StatusCode MuonRead::searchNature(MuonTileID tile,MCParticle*& pp)
+StatusCode MuonRead::searchNature(LHCb::MuonTileID tile,LHCb::MCParticle*& pp)
 {
   pp=NULL;
 
@@ -271,13 +273,13 @@ StatusCode MuonRead::searchNature(MuonTileID tile,MCParticle*& pp)
   debug()<<" my link found "<<endmsg;
   std::vector<LHCb::MuonTileID>::iterator iDigit;
 
-  MCParticle* ppfirst=NULL;
+  LHCb::MCParticle* ppfirst=NULL;
 
   bool first=true;
   bool second=false;
 
   for(iDigit = m_muonDigit.begin(); iDigit != m_muonDigit.end(); iDigit++){
-    MuonTileID digitile=(*iDigit);
+    LHCb::MuonTileID digitile=(*iDigit);
     if((digitile.intercept(tile)).isValid()){
       debug()<<" find the digit corresponding to tile "<<first<<endreq;
        pp = myLink.first( digitile );   

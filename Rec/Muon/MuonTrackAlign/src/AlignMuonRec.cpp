@@ -1,7 +1,7 @@
 //
 //Muon_OK
 //
-// $Id: AlignMuonRec.cpp,v 1.2 2007-12-10 15:08:37 spozzi Exp $
+// $Id: AlignMuonRec.cpp,v 1.3 2008-02-07 16:56:23 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -322,7 +322,6 @@ StatusCode AlignMuonRec::execute() {
 	  xm=(*iV).x();       
 	  ym=(*iV).y();
 	  zm=(*iV).z();
-	  float txm,tym;
 	  
 	  LHCb::State temp;
 	  temp.setZ(zm);

@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.4 2007-12-11 15:22:25 cattanem Exp $
+! $Id: release.notes,v 1.5 2008-02-07 16:56:23 cattanem Exp $
 ! Package     : MuonTrackAlign
 ! Responsible : Alessia Satta
 ! Purpose     : Track reconstruction for Muon Alignment purposes
 !---------------------------------------------------------------------
+
+!=================== MuonTrackAlign v1r2 2008-02-07 ==================
+! 2008-02-07 - Marco Cattaneo
+ - Add a missing include following changes to TrackEvent
+ - Fix a compilation warning
 
 !=================== MuonTrackAlign v1r1 2007-12-11 ==================
 ! 2007-12-11 - Marco Cattaneo
