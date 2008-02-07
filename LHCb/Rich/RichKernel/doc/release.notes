@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.168 2008-02-06 10:49:24 jonrob Exp $
+! $Id: release.notes,v 1.169 2008-02-07 17:54:35 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2008-02-07 - Chris Jones
+ - Add new method to RichHistoID.h
 
 ! 2008-02-06 - Chris Jones
  - Add new utility (RichSmartIDCnv.h) to perform conversions of
