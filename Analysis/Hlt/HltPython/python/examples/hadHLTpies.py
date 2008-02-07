@@ -1,0 +1,856 @@
+
+# =============================================================================
+""" @namespace hadHLTpies
+@brief Build pies and extract information of events triggering Hadronic HLT
+@author Xabier Cid Vidal xabier.cid.vidal@cern.ch
+@date 2008-05-02
+"""
+# =============================================================================
+
+
+from ROOT import *
+import gaudimodule
+
+from array import array
+from math import *
+from copy import copy
+
+
+from causeTools import *
+from addDict import *
+from tracksAndVerticesClassifyTools import *
+
+DEBUG=False
+
+#---------------------------------------------------
+
+def classifyHPTtracksByGhosts(gaudimod=0,N=100000000,g_mode=True):
+
+    """Classify tracks triggering in HLT according to the presence of ghosts. Need to input:
+
+    @param gaudimod Configuration of the analysis (DATACARDS and extra opts).
+    @param N Number of events you want to check. Default all.
+    @param g_mode Boolean. Return or not Pie with information. Default True
+
+    @returns numeric information and, if g_mode, also TPie with percentage of 111,110,10,01,00 tracks, where:
+		
+		        VELO        TS    Same/Dif MC Particle
+		110      NG         NG              Dif
+		111      NG         NG              Same
+		01       G          NG
+		10       NG         G
+		00       G          G
+
+		G  = Ghost
+		NG = No Ghost
+
+		Ghost: less than 70% of hits from the same MCparticle
+
+                Also prints same data with uncertainties.
+
+    @author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
+    """
+
+
+    TRIG="HadPreTriggerSingle"
+    
+    ## check if gaudimodule was properly stablished
+    
+    if gaudimod==0:
+        print "\n ERROR: Please input your gaudimodule.AppMgr()"
+        if g_mode: return None,None
+        else: return None
+
+    else:
+        gaudi=gaudimod
+
+
+
+    try:
+            gaudi.initialize()
+
+            TES = gaudi.evtsvc()
+
+            HLTSUM = gaudi.toolsvc().create("HltSummaryTool",
+                                    interface="IHltConfSummaryTool")
+            
+    except:
+            print "\n\n      WRONG OPTIONS FOR GAUDIMODULE, PLEASE CHECK THEM"
+            if g_mode: return None,None
+            else: return None
+
+
+    ## find for each event tracks and classify them
+    def run(n,trig):
+            gaudi.evtsel().rewind()
+            types={}
+            ## initialize output dictionary
+            types["tracks"]=0
+            types["events"]=0
+            if DEBUG: types["anomaly"]=0
+
+            for i in range(n):
+                
+                    ## run event 
+                    gaudi.run(1)
+                    try: sels = HLTSUM.selections()
+                    except: break
+
+                    if trig in sels:
+
+                            ## count events of a certain track
+                            types["events"]+=1
+
+                            ## find tracks
+                            tracks=HLTSUM.selectionTracks(trig)
+
+
+                            if len(tracks) == 0 and DEBUG: types["anomaly"]+=1
+
+                            ## classify them and add it to output dictionary
+                            for track in tracks:
+
+                                    add_elto_dic(types,classifyTrackByGhosts(TES,track))
+                                    ## count tracks number
+                                    types["tracks"]+=1
+
+
+            return types
+
+
+    out=run(N,TRIG)
+
+    labels=["111","110","01","10","00"]
+
+    condl=True
+
+    ## if one type is not in counter, add it as 0
+    for l in labels:
+            if not out.has_key(l):
+                    out[l]=0
+
+    print "\n\n OUT=",out
+    print "\n\n"
+
+    out_copy=copy(out)        
+
+    ## if there are tracks, draw Pie
+
+    if out["tracks"]!=0:
+
+            tracks=out.pop("tracks")
+
+            vals=[]
+            colors=[]
+            unc=[]
+
+            ## find out percentages of each type and uncertainties
+            
+            i=0
+            for l in labels:
+                vals.append(out[l]*1.0/tracks)
+                ## uncertainty from error propagation in "a/b"
+                unc.append(sqrt(out[l]*tracks*(out[l]+tracks))/tracks**2)
+                colors.append(i+2)
+                i+=1
+
+            ## build pies
+            valsa=array("f",vals)
+            colorsa=array("i",colors)
+            pie= TPie("Percentage of each track","Percentage of each kind in "+str(tracks)+" tracks for "+TRIG,5,valsa,colorsa)
+
+            for i in range(5):
+                pie.SetEntryLabel(i,labels[i])
+
+            pie.SetLabelFormat("%txt: %perc")
+            pie.SetRadius(0.35)
+
+
+            ## print percentages and uncertainties
+            print "\n\n    Percentage and uncertainty of each kind of tracks:"
+
+            for i in range(5):
+                if i!=1:
+                    print labels[i]+": "+str(round(vals[i],3))+" +- "+str(round(unc[i],3))
+                else:
+                        print labels[i]+": "+str(round(vals[i],3))+"00 +- "+str(round(unc[i],3))
+
+            ## if g_mode return both counter and pies
+            if g_mode: return out_copy,pie
+            ## else return only counter
+            return out_copy
+
+
+    else:
+            ## if there are no tracks return Nothing
+            print "  \n\n NO "+TRIG+" EVENTS"
+            if g_mode: return None,None
+            else: return None
+
+
+
+#---------------------------------------------------
+
+
+def getInformationFromHPTtracks(gaudimod=0,classify_ghosts=[],intruders=[],holes=[],g_mode=False,N=100000000):
+
+    	"""
+	Build pies with information about forward tracks triggering in HadPreTrigger Single. 
+	
+	@param gaudimod Configuration of the analysis (DATACARDS and extra opts).
+        @param classify_ghosts (string):
+	        	VELO        TS    Same/Dif MC Particle
+	        110      NG         NG              Dif
+	        111      NG         NG              Same
+	        01       G          NG
+	        10       NG         G
+	        00       G          G
+
+	       G  = Ghost
+	       NG = No Ghost
+
+	       Ghost: less than 70% of hits from the same MCparticle
+
+        @param Intruders (boolean): 8 first mcpar hits are 8 first used in track reconstruction  
+        @param Holes (boolean): track has hits amongst 8 first from different mcpars
+        @param g_mode (boolean) Graphical mode. If true returns three groups of pies. First histogram of delta p. Second dict with info of physics tracks when they don't come from b or c (histogram of decay radio, histogram of decay z and pie with most popular eves). Third list of main pies. Default false
+        @param N (int) Number of events to be analysed. Default all
+
+	@returns
+	  out_deltap: List with entries of delta p over p.
+
+	  out_nbc: Dict with info about physics tracks not coming from b or c
+	               - list with decay radio of eves
+		       - list with decay z of eves
+		       - dict with eves and number of times they appeared
+
+	  out_pies: 5 dictionaries with info of cause of triggering (number of tracks of each type):
+	               - First pie: Physics tracks percentage
+				- ghost:    Has less than 70% of hits from same MC particle
+				- phys:     Comes from a MCparticle which accomplishes the trigger conditions
+				- non_phys: Comes from a MCparticle not accomplishing them
+
+	               - Second pie: Origin of physics tracks
+		                - Comes from a B
+				- Comes from a C
+				- Doesn't come frome any of them
+
+	               - Third pie: Non physics, why?
+				- pt: Comes from a MCparticle with pt<2.4 GeV to which reconstruction has given a pt bigger than that
+				- ip: Comes from a MCparticle with IP<0.1 mm  to which reconstruction has given an IP bigger than that
+
+	               - Fourth pie: What has given the track an ip
+				- vertex: IP has been given due to a wrong vertex used in calculation
+				- resol:  IP has been given due to some element resolution
+
+	               - Fifth pie: Element whose resolution has caused wrong IP (and therefore trigger)
+				- IP_slope:       Bad slope resolution
+				- IP_vertex:      Bad vertex resolution
+				- IP_both:        Both elements resolution
+				- IP_combination: Combination of both elements
+
+          If  \"g_mode\" also returns one histogram, one dictionary and one list with the same info in the form of histograms and pies.
+
+        @author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
+        """
+
+	TRIG="HadPreTriggerSingle"
+
+	## check if gaudimodule was properly stablished
+
+        if gaudimod==0:
+            print "\n ERROR: Please input your gaudimodule.AppMgr()"
+            return None
+
+        else:
+            gaudi=gaudimod
+
+            try:
+		    gaudi.initialize()
+	                
+		    TES = gaudi.evtsvc()
+		    HLTSUM = gaudi.toolsvc().create("HltSummaryTool",
+                                interface="IHltConfSummaryTool")
+
+		    det = gaudi.detsvc()
+		    VELO = det['/dd/Structure/LHCb/BeforeMagnetRegion/Velo']
+
+		    gaudi.evtsel().rewind()
+
+            except:
+                print "\n  ERROR: Please configure your gaudi"
+                return None
+
+            j=1
+
+            ## check which conditions are imposed
+            searchg=False
+            searchi=False
+            searchh=False
+
+
+            if not isinstance(classify_ghosts,list): searchg=True
+
+            if not isinstance(intruders,list): searchi=True
+
+            if not isinstance(holes,list): searchh=True
+
+	    ## build output
+	    tracks_numb=0
+	    out_pies=[]
+	    for i in range(5):
+		    out_pies.append({})
+
+	    out_nbc={"eves":{},"decay_radio":[],"decay_z":[]}
+	    out_deltap=[]
+
+	    ## run the N events
+	    for i in range(N):
+
+                    gaudi.run(1)
+		    if DEBUG: print "\n  EVENT NUMB=",j
+                    try: sels = HLTSUM.selections()
+                    except:
+                            break
+		    ## make sure our event triggers our TRIG
+		    if TRIG in sels:
+		    
+			    tracks = HLTSUM.selectionTracks(TRIG)
+
+			    for track in tracks:
+
+				    condg=True
+				    condi=True
+				    condh=True
+
+				    ## check if each imposed condition is accomplished
+				    if searchg:
+					condg=False
+					if classify_ghosts==classifyTrackByGhosts(TES,track): condg=True
+
+				    if searchi:
+					condi=False
+					if intruders==hasIntruders(TES,track): condi=True
+
+				    if searchh:
+					condh=False
+					if holes==hasHoles(TES,track,VELO): condh=True
+
+				    ## If so
+				    if condg and condi and condh:
+
+					    tracks_numb+=1
+					    
+					    reason=reasonOfTrigger(TES,track)
+
+					    fill_deltap(TES,track,out_deltap)
+
+					    ## first pie: ghost/physics/no physics
+					    if reason=="ghost":
+						    add_elto_dic(out_pies[0],reason)
+
+
+					    elif reason=="phys":
+						    add_elto_dic(out_pies[0],reason)
+						    ## second pie: physics tracks origin b/c/neither b nor c
+						    add_elto_dic(out_pies[1],origin_quark(TES,track))
+						    ## fill information about non b or c physics tracks
+						    non_b_or_c_ph(TES,track,out_nbc["eves"],out_nbc["decay_radio"],out_nbc["decay_z"])
+
+					    else:
+						    add_elto_dic(out_pies[0],"non_phys")
+						    ## third pie: ip or pt cause of wrong triggering
+						    if reason=="pt":
+							    add_elto_dic(out_pies[2],reason)
+						    else:
+							    add_elto_dic(out_pies[2],"ip")
+							    ## fourth pie: ip given because of misuse of vertex or elements resolution
+							    if reason=="vertex":
+								    add_elto_dic(out_pies[3],reason)
+							    else:
+								    add_elto_dic(out_pies[3],"ip_resol")
+								    ## fifth pie: element whose resolution caused trigger (slope, vertex, combination or both)
+								    add_elto_dic(out_pies[4],reason)
+
+
+                    j+=1
+
+
+	## If there are no tracks return Nothing
+	if tracks_numb==0:
+		
+		print "THERE ARE NO TRACKS AVALIABLE IN YOUR SELECTION"
+		if g_mode: return None,None,None,None,None,None
+		else: return None,None,None
+
+
+
+	## if not g_mode, only return data
+	if not g_mode:
+		return out_pies,out_nbc,out_deltap
+
+	
+	## BUILD HISTOGRAM OF DELTA P OVER P
+		
+	name_tracks=str(tracks_numb)+" forward tracks from "+TRIG
+	name_tracks_s="forward tracks from "+TRIG
+		    
+	
+	hist_deltap=TH1F("\Deltap/p","Resolution in momentum using "+name_tracks,100,-0.5,0.5)
+
+
+	hist_deltap.SetYTitle("# of occurrences")
+	hist_deltap.SetXTitle("\Deltap/p")
+
+	for o in out_deltap:
+		hist_deltap.Fill(o)
+
+
+
+	##############################################################################
+	## BUILD HISTOGRAMS DECAY POS
+
+	plots_nbc={}
+	plots_nbc["decay_radio"]=TH1F("Radio of decay","Radio of decay of non B or C eves using "+name_tracks,100,0,20)
+	plots_nbc["decay_z"]=TH1F("Position of decay","Z position in decay of non B or C eves  using "+name_tracks,100,-300,1000)
+	
+	plots_nbc["decay_radio"].SetYTitle("# of occurrences")
+	plots_nbc["decay_radio"].SetXTitle("Radio of Decay (mm)")
+	plots_nbc["decay_z"].SetYTitle("# of occurrences")
+	plots_nbc["decay_z"].SetXTitle("Z Position of Decay (mm)")
+
+	for f in plots_nbc:
+		for o in out_nbc[f]:
+	    		plots_nbc[f].Fill(o)
+
+
+
+	## BUILD PIE OF NON B OR C EVES
+
+
+	total=0
+	info=[]
+	origin=copy(out_nbc["eves"])
+	parlist=origin.keys()
+
+	for t in origin.values():
+		total+=t
+
+	## Calculate percentages
+	for t in origin:
+	    info.append(float(origin[t])/total)
+
+	i=0
+	par={}
+	for p in parlist:
+	    par[p]=info[i]
+	    i+=1
+
+	infopar=info
+	infopar.sort(reverse=True)
+	parlist_sorted=[]
+	i=0
+
+
+	## Build new list with particles sorted according to percentages
+	
+	for p in infopar:
+	    for key in par:
+		for k in parlist_sorted:
+		    if k==key:
+			i=1
+			break
+		    else: i=0 
+
+		if par[key]==p and i==0:
+		    parlist_sorted.append(key)
+
+	
+	## Build TPie, leaving just 8 more popular particles and counting the rest as "others" 
+	labs=[]
+	vals=[]
+	colors=[]
+
+	if len(parlist)>8: hm=8
+	else: hm=len(parlist)
+
+	ot=0
+
+	for i in range(hm,len(parlist)):
+		ot+=infopar[i]
+
+	for i in range(hm):
+	    labs.append(parlist_sorted[i])
+	    vals.append(infopar[i])
+	    colors.append(i+1)
+
+	labs.append("others")
+	vals.append(ot)
+	colors.append(hm+1)
+
+	nvals=len(labs)
+	valsa=array("f",vals)
+	colorsa=array("i",colors)
+
+	pie_e= TPie("Non B or C eves"," Eves from Physics forward tracks from "+TRIG+" not having B or C quarks",nvals,valsa,colorsa)  
+
+
+	for i in range(len(labs)):
+	    pie_e.SetEntryLabel(i,labs[i])
+	    pie_e.SetLabelFormat("%perc")
+
+
+	leg_e = TLegend(0.4,0.6,0.89,0.89);
+	boxes=[]
+
+	for i in range(len(labs)):
+	    boxes.append(TBox(0.0,0.0,0.01,0.06))
+	    boxes[i].SetFillColor(i+1)
+
+	for i in range(len(labs)):
+	    leg_e.AddEntry(boxes[i],labs[i],"f");
+
+
+	pie_e.SetRadius(0.25)
+	pie_e.SetX(0.65)
+	pie_e.SetY(0.4)
+	plots_nbc["eves"]=[pie_e,leg_e]
+
+	
+
+	
+	#######################################################################3
+
+
+	## BUILD A LIST WITH FIVE MAIN PIES
+
+	piesn=[3,3,2,2,4]
+	
+	labels=[]
+	all_p=[]
+
+	labels.append(["phys","non_phys","ghost"])
+	labels.append(["isB","isC","others"])
+	labels.append(["pt","ip"])
+	labels.append(["vertex","ip_resol"])
+	labels.append(["IP_vertex","IP_slope","IP_both","IP_combination"])
+
+	## If one of the labels is not there, add its value as 0. Calculate total numbers for percentages
+	for i in range(5):
+		total=0
+		for el in labels[i]:
+			if not out_pies[i].has_key(el): out_pies[i][el]=0
+			total+=out_pies[i][el]
+		all_p.append(total)
+	
+		
+	## Define new labels
+		
+	labelsnew=[]
+
+	labelsnew.append(["Physics","Non physics","Ghosts"])
+	labelsnew.append(["Has B","Has C","#splitline{Does not have}{neither B nor C}"])
+	labelsnew.append(["We can blame RC pt","We can blame RC IP"])
+	labelsnew.append(["#splitline{We have used a}{wrong vertex}","#splitline{We can blame}{resolution}"])
+	labelsnew.append(["Resolution of vertices","Slopes resolution","Resolution of both","Combination of both"])
+
+	## Define titles of pies
+	
+	titles_o=[]
+	titles_o.append("Percentage of physics and non physics in ")
+	titles_o.append("Quarks in eves of physics ")
+	titles_o.append("Cause of triggering in non physics ")
+	titles_o.append("Check who gave an IP to the non physics ")
+	titles_o.append("Elements whose resolution gave an IP to the non physics ")
+
+	titles=[]
+	
+	for t in titles_o:
+		titles.append(t+name_tracks_s)
+
+
+	## Build TPies
+
+	vals=[]
+	colors=[]
+	valsa=[]
+	colorsa=[]
+	pies=[]
+
+	for c in range(5):
+		
+		p=piesn[c]
+		
+		colors.append([])
+		vals.append([])
+		
+		for i in range(p):
+			vals[c].append(float(out_pies[c][labels[c][i]])/all_p[c])
+			colors[c].append(i+2)
+
+		valsa.append(array("f",vals[c]))
+		colorsa.append(array("i",colors[c]))
+
+		pies.append(TPie("Percentage in "+str(c),titles[c],p,valsa[c],colorsa[c]))
+
+		for i in range(p):
+			pies[c].SetEntryLabel(i,labelsnew[c][i])
+
+		pies[c].SetLabelFormat("#splitline{%perc}{%txt}")
+		pies[c].SetRadius(0.25)
+
+
+	##########################################################################################
+
+	## RETURN
+	
+	return out_pies,out_nbc,out_deltap,pies,plots_nbc,hist_deltap
+
+
+#---------------------------------------------------
+
+
+def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N=100000000):
+
+    	"""
+	Build pies with information about vertices triggering in HadTrigger. 
+	
+	@param gaudimod Configuration of the analysis (DATACARDS and extra opts).
+
+        @param Intruders (boolean): 8 first mcpar hits are 8 first used in track reconstruction (for tracks linked to vertices)  
+        @param Holes (boolean): track has hits amongst 8 first from different mcpars (for tracks linked to vertices)
+        @param g_mode (boolean) Graphical mode. If true returns a list of 4 pies. First, percentage of ghost and no ghost vertices. Second, percentage of physics and no physics no ghost vertices. Third, percentage of physics vertices coming from B and C. Fourth, percentage of non physics vertices types. Default false
+        @param N (int) Number of events to be analysed. Default all
+
+	@returns list of dictionaries with counters of each entry:
+	
+	       - First: Ghost and no ghost vertices percentage
+			- ghost:    All tracks linked to vertex are \"111\"
+			- no_ghost: There's at least one track linked to vertex non \"111\"
+
+	       - Second: Physics and no physics vertices percentage
+	                - physics: All tracks linked to vertex are physics and come from same eve.
+			- non_physics: Previous conditions are not fulfilled
+
+	       - Third: Origin of physics vertices
+			- Comes from a B
+			- Comes from a C
+			- Doesn't come frome any of them
+
+	       - Fourth: Non physics, why?
+			- random_vertex: all tracks linked to vertex are physics but they don't come from same MC particle.
+			- no_phys_other: there is at least one track linked to vertex being non physics
+	       
+	  To see explanation of types of tracks mentioned here type help(trackPies) in tracks_HPT_pies.
+	  If  \"g_mode\" also returns 4 pies.
+
+        @author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
+        """
+
+	TRIG="HadTrigger"
+
+	## check if gaudimodule was properly stablished
+
+        if gaudimod==0:
+            print "\n ERROR: Please input your gaudimodule.AppMgr()"
+            return None
+
+        else:
+            gaudi=gaudimod
+
+            try:
+		    gaudi.initialize()
+	                
+		    TES = gaudi.evtsvc()
+		    HLTSUM = gaudi.toolsvc().create("HltSummaryTool",
+                                interface="IHltConfSummaryTool")
+
+		    det = gaudi.detsvc()
+		    VELO = det['/dd/Structure/LHCb/BeforeMagnetRegion/Velo']
+
+		    gaudi.evtsel().rewind()
+
+            except:
+                print "\n  ERROR: Please configure your gaudi"
+                return None
+
+            j=1
+
+            ## check which conditions are imposed
+            searchi=False
+            searchh=False
+
+            if not isinstance(intruders,list): searchi=True
+
+            if not isinstance(holes,list): searchh=True
+
+	    ## build output
+	    vert_numb=0
+	    out_pies=[]
+	    for i in range(4):
+		    out_pies.append({})
+
+	    
+	    ## run the N events
+	    for i in range(N):
+
+                    gaudi.run(1)
+		    if DEBUG: print "\n  EVENT NUMB=",j
+                    try: sels = HLTSUM.selections()
+                    except:
+                            break
+		    ## make sure our event triggers our TRIG
+		    if TRIG in sels:
+			    ## find vertices triggering HadTrigger
+			    vertices=findHTvertices(HLTSUM)
+
+			    for vert in vertices:
+
+				    condi=True
+				    condh=True
+
+				    ## check if each imposed condition is accomplished
+
+				    if searchi:
+					condi=False
+					condi_l=[]
+					for track in vert.tracks():
+						condi_l.append(hasIntruders(TES,track))
+					if intruders and (True in condi_l): condi=True
+					if not intruders and not (True in condi_l): condi=True
+
+				    if searchh:
+					condh=False
+					condh_l=[]
+					for track in vert.tracks():
+						condh_l.append(hasHoles(TES,track,VELO))
+					if holes and (True in condh_l): condh=True
+					if not holes and not (True in condh_l): condh=True
+
+
+				    ## If so
+				    if condi and condh:
+
+					    vert_numb+=1
+					    
+					    reason=classifyVertexByReasonOfTrigger(TES,vert)
+
+					    ## first pie: ghost/no_ghost
+					    if reason=="ghost":
+						    add_elto_dic(out_pies[0],reason)
+
+					    else:
+						    add_elto_dic(out_pies[0],"no_ghost")
+						    ## second pie: physics/no_physics
+						    if reason=="phys":
+							    add_elto_dic(out_pies[1],reason)
+							    ## third pie: physics tracks origin b/c/neither b nor c
+							    add_elto_dic(out_pies[2],origin_quark(TES,vert.tracks()[0]))
+
+						    else:
+							    add_elto_dic(out_pies[1],"non_phys")
+							    ## fourth pie: random vertex or some non physics track
+							    add_elto_dic(out_pies[3],reason)
+
+
+                    j+=1
+
+
+	## If there are no vertices return Nothing
+	if vert_numb==0:
+		
+		print "THERE ARE NO VERTICES AVALIABLE IN YOUR SELECTION"
+		if g_mode: return None,None
+		else: return None
+
+
+
+	## if not g_mode, only return data
+	if not g_mode:
+		return out_pies
+
+	
+	#######################################################################3
+
+
+	## BUILD A LIST WITH 4 MAIN PIES
+
+	piesn=[2,2,3,2]
+	
+	labels=[]
+	all_p=[]
+
+	labels.append(["ghost","no_ghost"])
+	labels.append(["phys","non_phys"])
+	labels.append(["isB","isC","others"])
+	labels.append(["random_vertex","no_phys_other"])
+
+	## If one of the labels is not there, add its value as 0. Calculate total numbers for percentages
+	for i in range(4):
+		total=0
+		for el in labels[i]:
+			if not out_pies[i].has_key(el): out_pies[i][el]=0
+			total+=out_pies[i][el]
+		all_p.append(total)
+	
+		
+	## Define new labels
+		
+	labelsnew=[]
+
+	labelsnew.append(["Ghost","No ghost"])
+	labelsnew.append(["Physics","No physics"])
+	labelsnew.append(["Has B","Has C","#splitline{Does not have}{neither B nor C}"])
+	labelsnew.append(["#splitline{Tracks in vertex}{come from different eves}","No physics tracks"])
+	
+
+	## Define titles of pies
+	
+	titles_o=[]
+	titles_o.append("Percentage of ghost and no ghost ")
+	titles_o.append("Cause of triggering in non physics ")
+	titles_o.append("Quarks in eves of physics ")
+	titles_o.append("Types of non physics ")
+	
+	titles=[]
+	
+	for t in titles_o:
+		titles.append(t+"vertices from HadTrigger")
+
+
+	## Build TPies
+
+	vals=[]
+	colors=[]
+	valsa=[]
+	colorsa=[]
+	pies=[]
+
+	for c in range(4):
+		
+		p=piesn[c]
+		
+		colors.append([])
+		vals.append([])
+		
+		for i in range(p):
+			vals[c].append(float(out_pies[c][labels[c][i]])/all_p[c])
+			colors[c].append(i+2)
+
+		valsa.append(array("f",vals[c]))
+		colorsa.append(array("i",colors[c]))
+
+		pies.append(TPie("Percentage in "+str(c),titles[c],p,valsa[c],colorsa[c]))
+
+		for i in range(p):
+			pies[c].SetEntryLabel(i,labelsnew[c][i])
+
+		pies[c].SetLabelFormat("#splitline{%perc}{%txt}")
+		pies[c].SetRadius(0.25)
+
+
+	##########################################################################################
+
+	## RETURN
+	
+	return out_pies,pies

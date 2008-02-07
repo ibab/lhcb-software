@@ -9,40 +9,44 @@
   - make the module a script and remove the HLTFAC factory tool
 
 !!========================== HltPython v1r2 2007-12-17 ===================
-! 2008-1-30 - Antonio Perez-Calero
+!! 2008-02-07 - Hugo Ruiz for Xabier Cid
+ - added hadHLTpies.py to examples
+ - added frequencyAndBpercentage.py and tracksAndVerticesClassifyTools.py to modules
+
+! 2008-01-30 - Antonio Perez-Calero
  - mctools.py: debugged showBs function
  - descriptors.py: modified decay descriptor for Bs2DsMuNu, adding the possible decay via D*_s
  - kintools.py: not yet finished debugging
 
-! 2008-1-29 - Antonio Perez-Calero
+! 2008-01-29 - Antonio Perez-Calero
  - kintools.py: debugged module and improved angle function.Added several DEBUG messages.
  - recotools.py debugged module, added dotLists function, modified produceVertex using dotLists
  - mctools.py   debugged module
 
-! 2008-1-29 - Antonio Perez-Calero
+! 2008-01-29 - Antonio Perez-Calero
  - descriptors.py: added decay descriptor for Bs2DsMuNu
 
-! 2008-1-16 - Hugo Ruiz
+! 2008-01-16 - Hugo Ruiz
  - Added htmltools.py with a function to create html tables and other minor html stuff
  - Added option files for offline selected samples in options directory
  - descriptors.py: added a couple of functions to deal with offline-selected samples
 
-! 2007-12-5 - Hugo Ruiz
+! 2007-12-05 - Hugo Ruiz
  - descriptors.py: Added all B->hh from Elias Lopez
 
-! 2007-12-5 - Hugo Ruiz
+! 2007-12-05 - Hugo Ruiz
  - Move examples directory under python directory
  - Create scripts directory under python and added the split.py and stage.py scripts 
  - Improved general documentation
 
-! 2007-12-4 - Hugo Ruiz
+! 2007-12-04 - Hugo Ruiz
  - Rename rctools.py to recotools.py
  - Remove centella.py (replaced by desktop.py)
  - In doc: add files needed for doxygen documentation
            modify conventions to allow for doxygen documentation
  - Rename kinematics.py into kintools.py
 
-! 2007-12-2 - Hugo Ruiz
+! 2007-12-02 - Hugo Ruiz
  - Add desktop.py, evolution of centella.py, with a solution to deal counters, root objects and gaudi tools 
 in a simple way
  - Rename ParticleTranslator.py to pidtools.py, adding a couple of functions to it, and replacing the name in 
