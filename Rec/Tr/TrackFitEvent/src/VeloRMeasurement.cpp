@@ -1,5 +1,11 @@
-// $Id: VeloRMeasurement.cpp,v 1.17 2008-02-04 09:47:50 wouter Exp $
+// $Id: VeloRMeasurement.cpp,v 1.18 2008-02-07 16:13:26 cattanem Exp $
 // Include files
+
+// From VeloDet
+#include "VeloDet/DeVelo.h"
+
+// From Event
+#include "Event/VeloCluster.h"
 
 // local
 #include "Event/VeloRMeasurement.h"

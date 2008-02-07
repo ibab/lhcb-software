@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v3r12 2008-02-07 ===================
+! 2008-02-07 - Marco Cattaneo
+ - Clean up public includes, using new GaudiObjDesc forward declaration possibilities
+
 ! 2008-02-04 - Wouter Hulsbergen
  - Added pointer to detector element to Measurement classes
 

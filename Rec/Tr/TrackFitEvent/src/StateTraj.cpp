@@ -1,8 +1,8 @@
-// $Id: StateTraj.cpp,v 1.18 2007-10-16 12:16:30 wouter Exp $
+// $Id: StateTraj.cpp,v 1.19 2008-02-07 16:13:26 cattanem Exp $
 // Include files
 
 // Units
-#include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // local
 #include "Event/StateTraj.h"

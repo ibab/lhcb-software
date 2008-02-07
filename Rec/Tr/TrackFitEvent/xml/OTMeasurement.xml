@@ -15,8 +15,8 @@
 
       <import name='Event/Measurement'/>
       <import name='Event/OTLiteTime'/>
-      <import name='Event/StateVector'/>
       <import name='OTDet/DeOTModule'/>
+      <import name='StateVector' soft='FORWARDONLY'/>
 
       <constructor
         desc = 'Constructor from an OTLiteTime'>

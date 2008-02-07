@@ -1,4 +1,5 @@
 
+#include "Event/Node.h"
 #include "Event/TrackTraj.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include <algorithm>

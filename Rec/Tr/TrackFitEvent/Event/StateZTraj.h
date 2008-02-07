@@ -1,4 +1,4 @@
-// $Id: StateZTraj.h,v 1.3 2007-11-30 14:28:29 wouter Exp $
+// $Id: StateZTraj.h,v 1.4 2008-02-07 16:13:25 cattanem Exp $
 #ifndef TRACKFITEVENT_STATEZTRAJ_H
 #define TRACKFITEVENT_STATEZTRAJ_H 1
 
@@ -8,7 +8,6 @@
 // from LHCbKernel
 #include "Kernel/DifTraj.h"
 #include "GaudiKernel/PhysicalConstants.h"
-#include "GaudiKernel/SystemOfUnits.h"
 #include "Event/ZTrajectory.h"
 
 namespace LHCb

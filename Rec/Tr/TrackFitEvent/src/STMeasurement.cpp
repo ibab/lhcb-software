@@ -1,8 +1,15 @@
-// $Id: STMeasurement.cpp,v 1.10 2008-02-04 09:47:50 wouter Exp $
+// $Id: STMeasurement.cpp,v 1.11 2008-02-07 16:13:26 cattanem Exp $
 // Include files 
 
 // from STDet
+#include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
+
+// from Event
+#include "Event/STCluster.h"
+
+// from Kernel
+#include "Kernel/ISTClusterPosition.h"
 
 // local
 #include "Event/STMeasurement.h"
