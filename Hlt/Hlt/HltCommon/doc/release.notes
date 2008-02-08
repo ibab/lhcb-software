@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-02-08 - Gerhard Raven
+  - add HltGenConfig: creates Property configurations...
+
 ! 2008-02-07 - Gerhard Raven
   - add PropertyConfigSvc: a service which, given a configuration key
     pushes sets of properties to the job options service
