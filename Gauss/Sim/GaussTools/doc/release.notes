@@ -3,12 +3,17 @@
 ! Responsible	  : Gloria Corti
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
-!======================== GaussTools v13r2 2008-01-31 ========================
+
+!======================== GaussTools v13r3 2008-02-08 ========================
+! 2008-02-08 - Gloria CORTI
+ - Insert private preloading for Mac OS as provided by Brett VIREN
+
 ! 2007-11-30 - Sajan Easo and Gloria Corti 
  - For Activating the creation of RICH-HpdBackscattered electrons 
    the files GaussPostTrackAction.cpp and GaussTrackActionHepMC.cpp modified.
    This also required an associated change in the MCEvent/../MCVertex.xml.
    This declares the Backscatering as one of the sources of particles.
+
 !======================== GaussTools v13r2 2007-12-07 ========================
 ! 2007-11-30 - Marco Clemencic and Gloria Corti 
  - Add special code to instanciate a dummy G4RunManager and assign to it
