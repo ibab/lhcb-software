@@ -1,63 +1,128 @@
-#include "SCR/scr.h"
-#include "SCR/ScrDisplay.h"
-#include "RTL/rtl.h"
-#include <algorithm>
+// $Id: ROMonDisplay.cpp,v 1.2 2008-02-08 17:28:51 frankm Exp $
+//====================================================================
+//  ROMon
+//--------------------------------------------------------------------
+//
+//  Package    : ROMon
+//
+//  Description: Readout monitoring in the LHCb experiment
+//
+//  Author     : M.Frank
+//  Created    : 29/1/2008
+//
+//====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.2 2008-02-08 17:28:51 frankm Exp $
 
-/** @class 
- *
- * @author  M.Frank
- * @version 1.0
- */
-class ROMonDisplay : public ScrDisplay  {
-public:
-  MonitorDisplay* m_buffers;
-  MonitorDisplay* m_streams;
-  MonitorDisplay* m_logging;
-  MonitorDisplay* m_files;
-  MonitorDisplay* m_hltRec;
-  ROMonDisplay();
-  void waitInput();
-};
+// C++ include files
+#include <cstdlib>
 
-using namespace SCR;
-ROMonDisplay::ROMonDisplay()   {
-  setup_window();
-  m_hltRec  = createSubDisplay(Position(0,5), Area(27,m_area.height-5),"Farm receivers");
-  int right = m_hltRec->right();
-  int width = m_area.width-right;
-  m_buffers = createSubDisplay(Position(right,5), Area(width,8),"Buffer Monitor");
-  m_streams = createSubDisplay(Position(right,m_buffers->bottom()-1),Area(width,12),"Stream Information");
-  m_logging = createSubDisplay(Position(right,m_streams->bottom()-1),Area(width,4), "Logger Summary");
-  m_files   = createSubDisplay(Position(right,m_logging->bottom()-1),Area(width,m_area.height-m_logging->bottom()+1), "File Information");
-  
-  end_update();
-  ::scrc_set_cursor(display(),2,2);
+// Framework include files
+#include "RTL/Lock.h"
+#define MBM_IMPLEMENTATION
+#include "ROMon/ROMon.h"
+#include "ROMon/ROMonDisplay.h"
+#include "dic.hxx"
+
+using namespace ROMon;
+
+char* ROMonDisplay::Descriptor::reserve(size_t siz) {
+  if ( siz > length ) {
+    release();
+    pointer = (char*)::malloc(length=siz);
+  }
+  return pointer;
 }
 
-void ROMonDisplay::waitInput() {
-  while(1) {
-    //::scrc_wait(display());
+/// Standard constructor
+ROMonDisplay::ROMonDisplay() : m_svcID(0), m_lock(0)
+{
+}
+
+/// Standard destructor
+ROMonDisplay::~ROMonDisplay()   {
+}
+
+/// Initialize the data access
+void ROMonDisplay::initialize()   {
+  int sc = ::lib_rtl_create_lock(0,&m_lock);
+  if ( !lib_rtl_is_success(sc) ) {
     begin_update();
-    draw_line();
-    draw_line_normal("Storage Monitor");
-    draw_line_reverse("Storage Monitor");
-    m_buffers->begin_update();
-    m_buffers->draw_line_bold("Buffer info:%s",::lib_rtl_timestr());
-    m_buffers->draw_bar();
-    m_streams->begin_update();
-    m_streams->draw_bar();
-    m_streams->draw_line_bold("Stream info:%s",::lib_rtl_timestr());    
-    m_streams->draw_bar();
-    m_streams->end_update();
-    m_buffers->end_update();
+    draw_line_reverse("Files to initialize display: %s",::lib_rtl_error_message(::lib_rtl_get_error()));
     end_update();
-    ::scrc_set_cursor(display(),2,2);
-    lib_rtl_sleep(1000);
+    return;
+  }
+  m_svcID = ::dic_info_service((char*)m_svcName.c_str(),MONITORED,0,0,0,infoHandler,(long)this,0,0);
+}
+
+/// Finalize data access
+void ROMonDisplay::finalize()   {
+  if ( m_svcID != 0 ) {
+    ::dic_release_service(m_svcID);
+    m_svcID = 0;
+  }
+  if ( m_lock ) {
+    ::lib_rtl_cancel_lock(m_lock);
+    ::lib_rtl_delete_lock(m_lock);
+    m_lock = 0;
   }
 }
 
-extern "C" int scr_romon(int /* argc */, char** /* argv */) {
-  ROMonDisplay disp;
-  disp.waitInput();
-  return 1;
+/// Start the update cycle
+void ROMonDisplay::update()   {
+  const Nodeset* ns = m_data.data<const Nodeset>();
+  if ( ns && m_data.actual>0 ) {
+    if ( ns->type == Nodeset::TYPE ) {
+      RTL::Lock lock(m_lock);
+      dim_lock();
+      updateDisplay(*ns);
+      dim_unlock();
+    }
+    else if ( ns->type == Node::TYPE ) {
+      RTL::Lock lock(m_lock);
+      dim_lock();
+      updateDisplay(*m_data.data<const Node>());
+      dim_unlock();
+    }
+  }
+}
+
+/// Update all displays
+void ROMonDisplay::updateDisplay(const Nodeset& /* ns */)   {
+}
+
+/// Update all displays
+void ROMonDisplay::updateDisplay(const Node& /* ns */)   {
+}
+
+/// Run the interrupt loop
+void ROMonDisplay::run()   {
+  while(1) {
+    update();
+    ::lib_rtl_sleep(m_delay);
+  }
+}
+
+/// DimInfoHandler overload
+void ROMonDisplay::infoHandler(void* tag, void* address, int* size) {
+  if ( address && tag && size && *size>0 ) {
+    size_t len = *size;
+    ROMonData data(address);
+    ROMonDisplay* display = *(ROMonDisplay**)tag;
+    Descriptor& d = display->data();
+    switch(data.type())  {
+    case Node::TYPE:
+    case Nodeset::TYPE:
+      break;
+    default:
+      // if ( !d.data ) d.data = (char;
+      return;
+    }
+    RTL::Lock lock(display->lock());
+   if ( d.length < len ) {
+      d.length = len;
+      d.reserve(size_t(1.2*len));
+    }
+    d.actual = len;
+    ::memcpy(d.data<char>(),address,d.actual);
+  }
 }

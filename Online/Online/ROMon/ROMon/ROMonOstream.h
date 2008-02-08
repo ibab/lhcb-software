@@ -1,4 +1,4 @@
-// $Id: ROMonOstream.h,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Id: ROMonOstream.h,v 1.2 2008-02-08 17:28:51 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonOstream.h,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonOstream.h,v 1.2 2008-02-08 17:28:51 frankm Exp $
 #ifndef ROMON_ROMONOSTREAM_H
 #define ROMON_ROMONOSTREAM_H 1
 
@@ -31,7 +31,7 @@ template<typename T> std::ostream& operator<<(std::ostream& os, const ROMon::Fix
      << " Begin: "       << (void*)items.begin()
      << " End: "         << (void*)items.end();
   if ( items.begin() != items.end() ) os << std::endl;
-  for (T* p=items.begin(); p!=items.end(); ++p) os << *p;
+  for (const T* p=items.begin(); p!=items.end(); ++p) os << *p;
   return os;
 }
 
@@ -45,7 +45,7 @@ template<typename T> std::ostream& operator<<(std::ostream& os, const ROMon::Var
      << " Begin: "       << (void*)items.begin()
      << " End: "         << (void*)items.end();
   if ( items.begin() != items.end() ) os << std::endl;
-  for (T* p=items.begin(); p!=items.end(); p=items.next(p)) os << *p;
+  for (const T* p=items.begin(); p!=items.end(); p=items.next(p)) os << *p;
   return os;
 }
 

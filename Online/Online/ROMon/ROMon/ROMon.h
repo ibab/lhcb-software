@@ -1,4 +1,4 @@
-// $Id: ROMon.h,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Id: ROMon.h,v 1.2 2008-02-08 17:28:51 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.2 2008-02-08 17:28:51 frankm Exp $
 #ifndef GAUDIONLINE_ROMON_H
 #define GAUDIONLINE_ROMON_H 1
 
@@ -66,7 +66,7 @@ namespace ROMon {
     const pointer_type end() const 
       {  return begin()+size();                        }
     /// Iterator implementation: Next element of iteration
-    const pointer_type next(pointer_type prev) const
+    const_iterator next(const_iterator prev) const
       {  return ++prev;                                }
     /// Add new element to container and return pointer to next object
     pointer_type add(pointer_type /* prev */)      
@@ -110,12 +110,19 @@ namespace ROMon {
     /// Iterator implementation: begin of object iteration
     pointer_type begin()  const
       {  return (pointer_type)data();                            }
+
     /// Iterator implementation: end of object iteration
     const pointer_type end()   const
       {  return (pointer_type)(data()+data_length());            }
+
     /// Iterator implementation: Next element of iteration
-    const pointer_type next(pointer_type prev) const
-      {  return (pointer_type)(((char*)prev)+prev->length());    }
+    const_iterator next(const_iterator prev) const
+      {  return (const_iterator)(((char*)prev)+prev->length());}
+
+    /// Iterator implementation: Next element of iteration
+    iterator next(iterator prev) 
+      {  return (iterator)(((char*)prev)+prev->length());}
+
     /// Add new element to container and return pointer to next object
     pointer_type add(pointer_type prev)            {
       m_size++;
