@@ -48,19 +48,35 @@ namespace L0Muon {
     std::vector<LHCb::MuonTileID> pus();
 
     void decodeBank(std::vector<unsigned int> raw, int version);
-    std::vector<unsigned int> rawBank(int version, int ievt);
+    std::vector<unsigned int> rawBank(int version);
 
-    void dump(int version, int ievt, std::string tab);
-    void dump(int version, int ievt);
-    void formattedDump(int version, int ievt, std::string tab);
-    void formattedDump(int version, int ievt);
+    void dump(int version, std::string tab);
+    void dump(int version);
+    void formattedDump(int version, std::string tab);
+    void formattedDump(int version);
     
-    int  L0_B_Id(int iboard, int ichannel)      {return m_L0_B_Id[iboard][ichannel];}
-    int  L0EventNumber(int iboard, int ichannel){return m_L0EventNumber[iboard][ichannel];}
-    int  BCID_BCSU(int iboard) {return m_BCID_BCSU[iboard];}
-    int  BCID_PU(int iboard, int ichannel)      {return m_BCID_PU[iboard][ichannel];}
+    int L0_B_Id(int iboard, int ichannel) {return m_L0_B_Id[iboard][ichannel];}
+    int L0EventNumber(int iboard, int ichannel) {return m_L0EventNumber[iboard][ichannel];}
+    int BCID_BCSU(int iboard) {return m_BCID_BCSU[iboard];}
+    int BCID_PU(int iboard, int ipu) {return m_BCID_PU[iboard][ipu];}
+    
+    int opt_link_error(int iboard, int ipu) {return m_opt_link_error[iboard][ipu];}
+    int ser_link_error(int iboard, int ipu) {return m_ser_link_error[iboard][ipu];}
+    int par_link_error(int iboard, int ipu) {return m_par_link_error[iboard][ipu];}
+  
+    int boardIndexError(int iboard, int ichannel) {return m_boardIndex[iboard][ichannel]!=iboard;}
+    
+    bool inError(bool verbose=false);
+  
+    bool isActiv(){return m_activ;}
+
+    int decodingError(int ib){ return m_decodingError[ib];}
+
+    void setEventCounters(int L0EventNum, int L0_B_Id);
 
   private:
+    
+    bool m_activ;
     
     int m_quarter;
 
@@ -85,10 +101,13 @@ namespace L0Muon {
 
     int m_boardIndex[12][2];
     
-    int opt_link_error[12][4];
-    int ser_link_error[12][4];
-    int par_link_error[12][4];
+    int m_add_link_error[12][4];
+    int m_opt_link_error[12][4];
+    int m_ser_link_error[12][4];
+    int m_par_link_error[12][4];
 
+    int m_decodingError[12];
+    
   };
 }; // namespace L0Muon
  
