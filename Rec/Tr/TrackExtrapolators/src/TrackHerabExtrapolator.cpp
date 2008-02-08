@@ -1,6 +1,7 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.23 2007-12-06 13:34:25 mneedham Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.24 2008-02-08 07:52:43 cattanem Exp $
 
 // from Gaudi
+#include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/ToolFactory.h"
 

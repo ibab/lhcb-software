@@ -1,6 +1,7 @@
-// $Id: TrackKiselExtrapolator.cpp,v 1.13 2007-10-05 16:46:35 wouter Exp $
+// $Id: TrackKiselExtrapolator.cpp,v 1.14 2008-02-08 07:52:43 cattanem Exp $
 
 // from Gaudi
+#include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/ToolFactory.h"
 
@@ -497,6 +498,3 @@ void TrackKiselExtrapolator::extrapolateAnalytic( const double T_in[], // input 
   J[24] = 1;
     
 }
-
-
-
