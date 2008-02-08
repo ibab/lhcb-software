@@ -1,4 +1,4 @@
-// $Id: ROMonDisplay.cpp,v 1.2 2008-02-08 17:28:51 frankm Exp $
+// $Id: ROMonDisplay.cpp,v 1.3 2008-02-08 18:19:34 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.2 2008-02-08 17:28:51 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.3 2008-02-08 18:19:34 frankm Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -34,7 +34,7 @@ char* ROMonDisplay::Descriptor::reserve(size_t siz) {
 }
 
 /// Standard constructor
-ROMonDisplay::ROMonDisplay() : m_svcID(0), m_lock(0)
+ROMonDisplay::ROMonDisplay() : m_svcID(0), m_lock(0), m_delay(1000)
 {
 }
 

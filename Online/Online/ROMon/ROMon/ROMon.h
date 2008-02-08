@@ -1,4 +1,4 @@
-// $Id: ROMon.h,v 1.2 2008-02-08 17:28:51 frankm Exp $
+// $Id: ROMon.h,v 1.3 2008-02-08 18:19:34 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.2 2008-02-08 17:28:51 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.3 2008-02-08 18:19:34 frankm Exp $
 #ifndef GAUDIONLINE_ROMON_H
 #define GAUDIONLINE_ROMON_H 1
 
@@ -226,6 +226,7 @@ namespace ROMon {
   public:
     typedef VarItems<MBMBuffer> Buffers;
     typedef FixItems<FSMTask>   Tasks;
+
     enum { TYPE = 1 };
     /// First word: Data type descriptor (MUST always be 1)
     int  type;
@@ -264,6 +265,7 @@ namespace ROMon {
   class Nodeset {
   public:
     typedef VarItems<Node> Nodes;
+    typedef std::pair<time_t,unsigned int> TimeStamp;
     enum { TYPE = 2 };
     /// First word: Data type descriptor (MUST always be 2)
     int  type;
@@ -274,7 +276,11 @@ namespace ROMon {
     /// Reset object structure
     Nodeset* reset();
     /// Length of the object in bytes
-    int length()  const {  return sizeof(Nodeset)+nodes.data_length(); }    
+    int length()  const {  return sizeof(Nodeset)+nodes.data_length(); }
+    /// Retrieve timestamp of earliest updated node
+    TimeStamp firstUpdate() const;
+    /// Retrieve timestamp of most recent updated node
+    TimeStamp lastUpdate() const;
   };
 
   typedef VarItems<Nodeset> Processorfarm;

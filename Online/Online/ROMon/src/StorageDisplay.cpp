@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.1 2008-02-08 17:29:16 frankm Exp $
+// $Id: StorageDisplay.cpp,v 1.2 2008-02-08 18:19:34 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.1 2008-02-08 17:29:16 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.2 2008-02-08 18:19:34 frankm Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -83,20 +83,16 @@ static void help() {
 /// Standard constructor
 StorageDisplay::StorageDisplay(int argc, char** argv) : ROMonDisplay(), m_partName("LHCb")
 {
-  int hdr_height = 5;
-  int hlt_width = 27;
-  int buff_height = 8;
-  int strm_height = 12;
-  int logg_height = 4;
   RTL::CLI cli(argc,argv,help);
-  cli.getopt("headerheight",  1, hdr_height);
-  cli.getopt("streamheight",  1, strm_height);
-  cli.getopt("loggerheight",  1, logg_height);
-  cli.getopt("widthhltrec",   1, hlt_width);
-  cli.getopt("bufferheight",  1, buff_height);
-  cli.getopt("delay",         1, m_delay);
-  cli.getopt("servicename",   1, m_svcName);
-  cli.getopt("partitionname", 1, m_partName);
+  int hdr_height, hlt_width, buff_height, strm_height, logg_height;
+  cli.getopt("headerheight",  1, hdr_height    =    5);
+  cli.getopt("streamheight",  1, strm_height   =    8);
+  cli.getopt("loggerheight",  1, logg_height   =    4);
+  cli.getopt("widthhltrec",   1, hlt_width     =   27);
+  cli.getopt("bufferheight",  1, buff_height   =    5);
+  cli.getopt("delay",         1, m_delay       = 1000);
+  cli.getopt("servicename",   1, m_svcName     = "RONodePublish_storectl01");
+  cli.getopt("partitionname", 1, m_partName    = "LHCb");
 
   setup_window();
   m_hltRec  = createSubDisplay(Position(0,hdr_height), Area(hlt_width,m_area.height-hdr_height),"Farm receivers");
@@ -192,6 +188,7 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
       total.received += s.received;
     }
   }
+  disp->draw_line_normal("");
   disp->draw_line_bold(" %-12s %12s->%-12s %11d %11d %11d","Total","Recv Layer","Stream Layer",
 		       total.sent,total.received,total.written);
   disp->draw_line_normal("");
@@ -242,9 +239,8 @@ void StorageDisplay::showHLT(const Nodeset& ns) {
 /// Show the information about MBM buffers on the storage nodes
 void StorageDisplay::showBuffers(const Nodeset& ns) {
   MonitorDisplay* disp = m_buffers;
-  const Nodes& nodes = ns.nodes;
   disp->draw_line_bold("  Buffer Information:         Produced Pending Size[kB] Free[kB] Slots Users ");
-  for (Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
+  for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
     // Fixme: This must go into the publishing....
     char* p = strchr(n->name,'.');
@@ -260,28 +256,39 @@ void StorageDisplay::showBuffers(const Nodeset& ns) {
   }
 }
 
+/// Update header information
+void StorageDisplay::showHeader(const Nodeset& ns)   {
+  char b1[64], b2[64];
+  Nodeset::TimeStamp frst=ns.firstUpdate(), last=ns.lastUpdate();
+  ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&frst.first));
+  ::strftime(b2,sizeof(b1),"%H:%M:%S",::localtime(&last.first));
+  draw_line_normal ("         Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
+}
 
 /// Update all displays
-void StorageDisplay::updateDisplay(const Nodeset& /* ns */)   {
+void StorageDisplay::updateDisplay(const Nodeset& ns)   {
   begin_update();
+  draw_line_reverse("         Stream Monitor for partition %s on %s   [%s]",
+		    m_partName.c_str(), RTL::nodeName().c_str(), ::lib_rtl_timestr());    
   m_hltRec->begin_update();
   m_buffers->begin_update();
   m_streams->begin_update();
   m_logging->begin_update();
   m_files->begin_update();
-  /*
-  updateHeader();
+
+  showHeader(ns);
   showHLT(ns);
   showBuffers(ns);
   showStreams(ns);
   showLogging();
   showFiles();
-  */
+
   m_files->end_update();
   m_logging->end_update();
   m_streams->end_update();
   m_buffers->end_update();
   m_hltRec->end_update();
+  end_update();
 }
 
 extern "C" int romon_storage(int argc,char** argv) {

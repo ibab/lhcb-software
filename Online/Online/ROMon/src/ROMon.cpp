@@ -50,6 +50,40 @@ Nodeset* Nodeset::reset() {
   return this;
 }
 
+/// Retrieve timestamp of earliest updated node
+Nodeset::TimeStamp Nodeset::firstUpdate() const {
+  bool has_nodes = false;
+  TimeStamp t(INT_MAX,999);
+  for(Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
+    has_nodes = true;
+    if ( (*n).time < t.first ) {
+      t.first = (*n).time;
+      t.second = (*n).millitm;
+    }
+    else if ( (*n).time == t.first && (*n).millitm < t.second ) {
+      t.second = (*n).millitm;
+    }
+  }
+  return has_nodes ? t : TimeStamp(0,0);
+}
+
+/// Retrieve timestamp of most recent updated node
+Nodeset::TimeStamp Nodeset::lastUpdate() const {
+  bool has_nodes = false;
+  TimeStamp t(0,0);
+  for(Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
+    has_nodes = true;
+    if ( (*n).time > t.first ) {
+      t.first = (*n).time;
+      t.second = (*n).millitm;
+    }
+    else if ( (*n).time == t.first && (*n).millitm > t.second ) {
+      t.second = (*n).millitm;
+    }
+  }
+  return has_nodes ? t : TimeStamp(0,0);
+}
+
 /// Default constructor
 FSMTask::FSMTask() : processID(-1) {
   name[0] = 0;
