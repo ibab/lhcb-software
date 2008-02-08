@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v30r5
+version v30r6
 
 #============================================================================
 #-- Structure
@@ -15,9 +15,9 @@ branches src doc options cmt job
 
 #-- Databases
 use DDDB               v1r*   Det            -no_auto_imports
-use ParamFiles         v7r0                  -no_auto_imports
+use ParamFiles         v7r1                  -no_auto_imports
 use FieldMap           v4r7                  -no_auto_imports
-use DecFiles           v13r16 Gen            -no_auto_imports
+use DecFiles           v14r1  Gen            -no_auto_imports
 use Geant4Files	       v82r0	             -no_auto_imports
 
 #===========================================================================
@@ -130,8 +130,11 @@ macro_append Gauss_linkopts " -Wl,-Map,Linux.map " \
              WIN32          " /STACK:4000000"
 
 #-- For visualization make appropriate engine visible (DAWN)
-path_remove    PATH  "" Linux&Vis "/DAWN/"
-path_append    PATH  "" Linux&Vis "${OSC_release_area}/DAWN/bin/Linux"
+#path_remove    PATH  "" Linux&Vis "/DAWN/"
+#path_append    PATH  "" Linux&Vis "${OSC_release_area}/DAWN/bin/Linux"
+#path_remove    PATH  "" Linux&Vis "/dawn/"
+path_append    PATH  "" Linux&Vis "$(DAWN_HOME)/$(LCG_system)/bin"
+
 
 #===========================================================================
 #-- Alias for exacutable have been removed: use instead script

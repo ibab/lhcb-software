@@ -4,6 +4,15 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-02-08 - Gloria CORTI
+ - Use latest versions of ParamFiles v7r1 and DecFiles v14r1
+ - Adapt to change in the options for catalog:
+   PoolDbCacheSvc.Catalog = {...}; is now FileCatalog.Catalogs = {...};
+   . Gauss.opts
+ - Introduce new steering options for evolving survey geometry as tagged in
+   SQLDDD
+   . lhcb-200801.opts - NEW
+
 !======================== Gauss v30r5 2007-12-07 =============================
 ! 2007-12-07 - Gloria CORTI
  - Remove making local executable visible. The one in InstallArea already is.
