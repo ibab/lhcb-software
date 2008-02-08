@@ -1,14 +1,14 @@
-// $Id: PatVeloSpaceTrack.h,v 1.3 2007-10-16 08:56:39 dhcroft Exp $
+// $Id: PatVeloSpaceTrack.h,v 1.4 2008-02-08 06:49:49 cattanem Exp $
 #ifndef TF_PATVELOSPACETRACK_H
 #define TF_PATVELOSPACETRACK_H 1
 
 // Include files
-
-#include "Event/Track.h"
+#include "gsl/gsl_math.h"
 
 // Gaudi
 #include "GaudiKernel/boost_allocator.h"
 
+#include "Event/Track.h"
 #include "PatVeloHit.h"
 #include "CircularRangeUtils.h"
 
