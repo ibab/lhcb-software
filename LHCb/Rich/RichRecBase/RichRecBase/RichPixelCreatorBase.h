@@ -5,7 +5,7 @@
  *  Header file for tool base class : Rich::Rec::PixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.21 2007-09-14 13:36:57 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.22 2008-02-08 14:30:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -98,7 +98,7 @@ namespace Rich
       // Returns a pointer to the RichRecPixels
       LHCb::RichRecPixels * richPixels() const;
 
-      
+
       // Access the range for the pixels in the given RICH detector
       IPixelCreator::PixelRange range( const Rich::DetectorType rich ) const;
 
@@ -206,6 +206,49 @@ namespace Rich
       /// Map indicating if a given RichSmartID has been considered already
       mutable Rich::HashMap< LHCb::RichSmartID::KeyType, bool > m_pixelDone;
 
+    private: // helper classes
+
+      /** @class SortByRegion RichPixelCreatorBase.h RichRecBase/RichPixelCreatorBase.h
+       *
+       *  Class to sort the RichRecPixels according to detector regions
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   20/04/2005
+       */
+      class SortByRegion
+        : std::binary_function<const LHCb::RichRecPixel*,const LHCb::RichRecPixel*,bool>
+      {
+      public:
+        /// Method to return true if RichRecPixel p1 should be listed before p2
+        inline bool operator() ( const LHCb::RichRecPixel * p1,
+                                 const LHCb::RichRecPixel * p2 ) const
+        {
+          // only using the first smartID here. what else can we do ?
+          return ( p1->hpdPixelCluster().primaryID().dataBitsOnly().key() <
+                   p2->hpdPixelCluster().primaryID().dataBitsOnly().key() );
+        }
+      };
+
+      /** @class PixStats RichPixelCreatorBase.h RichRecBase/RichPixelCreatorBase.h
+       *
+       *  Simple class to hold pixel/cluster creation statistics
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   20/04/2005
+       */
+      class PixStats
+      {
+      public:
+        PixStats() : numClusters(0), numPixels(0), rejectedPixels(0) { }
+      public:
+        unsigned int numClusters;     ///< Number of selected HPD pixel clusters
+        unsigned int numPixels;       ///< Number of selected raw HPD pixels
+        unsigned int rejectedPixels;  ///< number of rejected HPD pixels
+      public:
+        /// Has this tally seen some pixels
+        bool hasSomeStats() const { return numPixels>0 || rejectedPixels>0 ; }
+      };
+
     private: // data
 
       /// Pointer to RICH system detector element
@@ -274,10 +317,7 @@ namespace Rich
       mutable HPDItMap m_hpdIts;
 
       /// Hit count tally
-      mutable boost::array<unsigned int, Rich::NRiches> m_hitCount;
-
-      /// Suppressed hit count tally
-      mutable boost::array<unsigned int, Rich::NRiches> m_suppressedHitCount;
+      mutable boost::array<PixStats, Rich::NRiches> m_hitCount;
 
       /// Event count
       unsigned int m_Nevts;
@@ -298,23 +338,6 @@ namespace Rich
 
       /// returns a pointer to the HPD clustering tool for the given RICH
       const Rich::DAQ::IPixelClusteringTool * hpdClusTool( const Rich::DetectorType rich ) const;
-
-    private: // helper classes
-
-      /// Class to sort the RichRecPixels according to detector regions
-      class SortByRegion
-        : std::binary_function<const LHCb::RichRecPixel*,const LHCb::RichRecPixel*,bool>
-      {
-      public:
-        /// Method to return true if RichRecPixel p1 should be listed before p2
-        inline bool operator() ( const LHCb::RichRecPixel * p1,
-                                 const LHCb::RichRecPixel * p2 ) const
-        {
-          // only using the first smartID here. what else can we do ?
-          return ( p1->hpdPixelCluster().primaryID().dataBitsOnly().key() <
-                   p2->hpdPixelCluster().primaryID().dataBitsOnly().key() );
-        }
-      };
 
     };
 
@@ -348,7 +371,8 @@ namespace Rich
     inline void PixelCreatorBase::savePixel( LHCb::RichRecPixel * pix ) const
     {
       richPixels()->insert( pix );
-      ++m_hitCount[pix->detector()];
+      ++(m_hitCount[pix->detector()].numClusters);
+      m_hitCount[pix->detector()].numPixels += pix->hpdPixelCluster().size();
       m_hasBeenCalled = true;
     }
 
@@ -404,7 +428,7 @@ namespace Rich
       const unsigned int startSize = smartIDs.size();
       const bool suppressed =
         ( !m_applyPixelSuppression ? false : hpdSuppTool(hpdID.rich())->applyPixelSuppression(hpdID,smartIDs) );
-      m_suppressedHitCount[hpdID.rich()] += (startSize-smartIDs.size());
+      m_hitCount[hpdID.rich()].rejectedPixels += (startSize-smartIDs.size());
       return suppressed;
     }
 

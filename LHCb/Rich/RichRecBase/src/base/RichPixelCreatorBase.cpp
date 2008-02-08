@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.27 2008-02-07 17:55:08 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.28 2008-02-08 14:30:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -108,12 +108,6 @@ namespace Rich
       incSvc()->addListener( this, IncidentType::BeginEvent );
       incSvc()->addListener( this, IncidentType::EndEvent   );
 
-      // Intialise counts
-      m_hitCount[Rich::Rich1]           = 0;
-      m_hitCount[Rich::Rich2]           = 0;
-      m_suppressedHitCount[Rich::Rich1] = 0;
-      m_suppressedHitCount[Rich::Rich2] = 0;
-
       // Some tricks to avoid loading tools during first event
       // load hit suppression tools
       if ( m_applyPixelSuppression && m_usedDets[Rich::Rich1] ) { hpdSuppTool(Rich::Rich1); }
@@ -136,22 +130,30 @@ namespace Rich
     void PixelCreatorBase::printStats() const
     {
       if ( m_Nevts > 0
-           && !( m_hitCount[Rich::Rich1] == 0 &&
-                 m_hitCount[Rich::Rich2] == 0 &&
-                 m_suppressedHitCount[Rich::Rich1] == 0 &&
-                 m_suppressedHitCount[Rich::Rich2] == 0
-                 ) )
+           && ( m_hitCount[Rich::Rich1].hasSomeStats() ||
+                m_hitCount[Rich::Rich2].hasSomeStats()
+                ) )
       {
-        const StatDivFunctor occ("%8.2f +-%7.2f");
-        info() << "======================================================================================" << endreq
-               << "                       Pixel Creator Summary for " << m_Nevts << " events :-" << endreq
-               << "  Selected   :  RICH1 = " << occ(m_hitCount[Rich::Rich1],m_Nevts)
-               << "  RICH2 = " << occ(m_hitCount[Rich::Rich2],m_Nevts)
-               << "  pixels/event" << endreq
-               << "  Rejected   :  RICH1 = " << occ(m_suppressedHitCount[Rich::Rich1],m_Nevts)
-               << "  RICH2 = " << occ(m_suppressedHitCount[Rich::Rich2],m_Nevts)
-               << "  pixels/event" << endreq
-               << "======================================================================================" << endreq;
+        const StatDivFunctor occ("%8.2f +-%6.2f");
+        const std::string & lines 
+          = "=====================================================================================================";
+        info() << lines << endreq
+               << "                       Pixel Cluster Creator Summary for " << m_Nevts << " events :-" << endreq;
+
+        info() << " Selected         :  RICH1 = " << occ(m_hitCount[Rich::Rich1].numClusters,m_Nevts)
+               << "  RICH2 = " << occ(m_hitCount[Rich::Rich2].numClusters,m_Nevts)
+               << " HPD pixel clusters / event" << endreq;
+
+        info() << " Av. Cluster Size :  RICH1 = " 
+               << occ(m_hitCount[Rich::Rich1].numPixels,m_hitCount[Rich::Rich1].numClusters)
+               << "  RICH2 = " << occ(m_hitCount[Rich::Rich2].numPixels,m_hitCount[Rich::Rich2].numClusters)
+               << " HPD pixels / cluster" << endreq;
+        
+        info() << " Rejected         :  RICH1 = " << occ(m_hitCount[Rich::Rich1].rejectedPixels,m_Nevts)
+               << "  RICH2 = " << occ(m_hitCount[Rich::Rich2].rejectedPixels,m_Nevts)
+               << " HPD pixels / event" << endreq;
+
+        info() << lines << endreq;
       }
       else
       {
