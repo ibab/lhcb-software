@@ -22,19 +22,22 @@
 #include "PresenterMainFrame.h"
 #include "PageSaveDialog.h"
 
+using namespace pres;
+
 ClassImp(PageSaveDialog)
 
-PageSaveDialog::PageSaveDialog(PresenterMainFrame* gui, Int_t Width,
-  Int_t Height, MsgLevel v) :
-    TGTransientFrame(gClient->GetRoot(), gui, Width, Height),
+PageSaveDialog::PageSaveDialog(PresenterMainFrame* gui, int width,
+  int height, MsgLevel v) :
+    TGTransientFrame(gClient->GetRoot(), gui, width, height),
     m_mainFrame(gui),
     m_verbosity(v),
     m_msgBoxReturnCode(0)
 {
   SetCleanup(kDeepCleanup);
+  Connect("CloseWindow()", "PageSaveDialog", this, "CloseWindow()");
+  DontCallClose();
   SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputSystemModal);
   build();
-  CenterOnParent();
   MapWindow();
 }
 PageSaveDialog::~PageSaveDialog()
@@ -43,22 +46,22 @@ PageSaveDialog::~PageSaveDialog()
 }
 void PageSaveDialog::build()
 {
-  SetLayoutBroken(kTRUE);
+  SetLayoutBroken(true);
 
   TGLabel *fLabel530 = new TGLabel(this,"Enter or select the parent folder:");
   fLabel530->SetTextJustify(36);
-  AddFrame(fLabel530, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
-  fLabel530->MoveResize(16,8,192, 18);
+  AddFrame(fLabel530, new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+  fLabel530->MoveResize(16, 8, 192, 18);
 
-  folderNameTextEntry = new TGTextEntry(this, new TGTextBuffer(15),-1,
+  m_folderNameTextEntry = new TGTextEntry(this, new TGTextBuffer(15),-1,
                               kSunkenFrame | kDoubleBorder | kOwnBackground);
-  folderNameTextEntry->SetMaxLength(255);
-  folderNameTextEntry->SetAlignment(kTextLeft);
-  folderNameTextEntry->Resize(456, folderNameTextEntry->GetDefaultHeight());
-  AddFrame(folderNameTextEntry,
+  m_folderNameTextEntry->SetMaxLength(255);
+  m_folderNameTextEntry->SetAlignment(kTextLeft);
+  m_folderNameTextEntry->Resize(456, m_folderNameTextEntry->GetDefaultHeight());
+  AddFrame(m_folderNameTextEntry,
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
-  folderNameTextEntry->MoveResize(16, 32, 456, 22);
-  folderNameTextEntry->Connect("ReturnPressed()",
+  m_folderNameTextEntry->MoveResize(16, 32, 456, 22);
+  m_folderNameTextEntry->Connect("ReturnPressed()",
     "PageSaveDialog", this,
     "setOkButton()");
 
@@ -93,17 +96,16 @@ void PageSaveDialog::build()
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   fLabel717->MoveResize(16, 256, 72, 18);
 
-  pageNameTextEntry = new TGTextEntry(this, new TGTextBuffer(15),-1,
+  m_pageNameTextEntry = new TGTextEntry(this, new TGTextBuffer(15),-1,
     kSunkenFrame | kDoubleBorder | kOwnBackground);
-  pageNameTextEntry->SetMaxLength(255);
-  pageNameTextEntry->SetAlignment(kTextLeft);
-  pageNameTextEntry->Resize(376, pageNameTextEntry->GetDefaultHeight());
-  AddFrame(pageNameTextEntry,
+  m_pageNameTextEntry->SetMaxLength(255);
+  m_pageNameTextEntry->SetAlignment(kTextLeft);
+  m_pageNameTextEntry->Resize(376, m_pageNameTextEntry->GetDefaultHeight());
+  AddFrame(m_pageNameTextEntry,
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
-  pageNameTextEntry->MoveResize(96, 256, 376, 22);
-  pageNameTextEntry->Connect("ReturnPressed()", "PageSaveDialog", this,
+  m_pageNameTextEntry->MoveResize(96, 256, 376, 22);
+  m_pageNameTextEntry->Connect("ReturnPressed()", "PageSaveDialog", this,
                              "setOkButton()");
-
 
   m_okButton = new TGTextButton(this,"OK");
   m_okButton->SetTextJustify(36);
@@ -121,7 +123,7 @@ void PageSaveDialog::build()
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   m_cancelButton->MoveResize(376, 288, 80, 24);
   m_cancelButton->Connect("Clicked()", "PageSaveDialog", this,
-                          "DeleteWindow()");
+                          "CloseWindow()");
 
   MapSubwindows();
   Resize(GetDefaultSize());
@@ -130,36 +132,40 @@ void PageSaveDialog::build()
 }
 void PageSaveDialog::ok()
 {
-  m_okButton->SetEnabled(false);
+  m_okButton->SetState(kButtonDisabled);
+  m_cancelButton->SetState(kButtonDisabled);
 
   if (m_mainFrame->isConnectedToHistogramDB()) {
 
     OnlineHistDB* m_histogramDB = m_mainFrame->histogramDB();
-    std::string folderName = folderNameTextEntry->GetText();
-    std::string pageName = pageNameTextEntry->GetText();
+    std::string folderName = m_folderNameTextEntry->GetText();
+    std::string pageName = m_pageNameTextEntry->GetText();
 
     try {
-      OnlineHistPage* page = m_histogramDB->getPage("/"+folderName+"/"+pageName);
+      OnlineHistPage* page = m_histogramDB->getPage(Slash+folderName+Slash+pageName);
       page->removeAllHistograms();
       double xlow, ylow, xup, yup;
 
-      m_DbHistosOnPageIt = m_mainFrame->m_DbHistosOnPage.begin();
-      while (m_DbHistosOnPageIt != m_mainFrame->m_DbHistosOnPage.end()) {
-        ((*m_DbHistosOnPageIt)->hostingPad)->GetPadPar(xlow, ylow, xup, yup);
-        OnlineHistogram* onlineHistogram = page->addHistogram((*m_DbHistosOnPageIt)->onlineHistogram(),
-            (float)xlow , (float)ylow, (float)xup, (float)yup);
-        if (onlineHistogram) {
+      m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
+      while (m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end()) {
+        if ((*m_DbHistosOnPageIt)->hostingPad) {
+          ((*m_DbHistosOnPageIt)->hostingPad)->GetPadPar(xlow, ylow, xup, yup);
+          OnlineHistogram* onlineHistogram = page->addHistogram((*m_DbHistosOnPageIt)->onlineHistogram(),
+              (float)xlow , (float)ylow, (float)xup, (float)yup);
+          if (onlineHistogram) {
             (*m_DbHistosOnPageIt)->setOnlineHistogram(onlineHistogram);
+          }
         }
         m_DbHistosOnPageIt++;
       }
 
       if (page->save()) {
         // now save current ROOT display options of histograms on page
-        m_DbHistosOnPageIt = m_mainFrame->m_DbHistosOnPage.begin();
-        while (m_DbHistosOnPageIt != m_mainFrame->m_DbHistosOnPage.end()) {
+        m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
+        while (m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end()) {
           if((*m_DbHistosOnPageIt)->onlineHistogram()->page() == page->name()) {
-	    (*m_DbHistosOnPageIt)->hostingPad->cd();
+// TODO: get rid of ->cd() because it stealthily diverts gPad
+(*m_DbHistosOnPageIt)->hostingPad->cd();
             (*m_DbHistosOnPageIt)->saveTH1ToDB((*m_DbHistosOnPageIt)->hostingPad);
           }
           m_DbHistosOnPageIt++;
@@ -176,46 +182,53 @@ void PageSaveDialog::ok()
             Exc.c_str()), kMBIconExclamation,
           kMBOk, &m_msgBoxReturnCode);
     }
-    DeleteWindow();
+    CloseWindow();
   }
 }
-void PageSaveDialog::updateTextFields(TGListTreeItem* node, Int_t, Int_t, Int_t)
+void PageSaveDialog::updateTextFields(TGListTreeItem* node, int, int, int)
 {
   if (node) {
     char path[1024];
-    
+
     m_pageFolderListTree->GetPathnameFromItem(node, path);
     std::string dbPath = std::string(path);
     // Drop DB url
     dbPath = dbPath.erase(0, std::string(
                           m_pageFolderListTree->GetFirstItem()->GetText()).
                             length() + 2);
-    
-    // find pagename in path                        
+
+    // find pagename in path
     TObjArray* pathSlices = TPRegexp("^((?:(?:[^/]*)/)*)([^/]*)$").
                                       MatchS(dbPath.c_str());
-                                      
-    const TString folderName = ((TObjString *)pathSlices->At(1))->GetString();                                  
-    const TString pageName = ((TObjString *)pathSlices->At(2))->GetString();
-    
+
+    TString folderName = ((TObjString *)pathSlices->At(1))->GetString();
+    folderName = folderName.Strip(TString::kTrailing,'/');
+    TString pageName = ((TObjString *)pathSlices->At(2))->GetString();
+
     pathSlices->Delete();
     delete pathSlices;
-    
+
     if (NULL != node->GetUserData()) {
-       pageNameTextEntry->SetText(pageName);
-       folderNameTextEntry->SetText(folderName);
+       m_pageNameTextEntry->SetText(pageName);
+       m_folderNameTextEntry->SetText(folderName);
     } else {
-       folderNameTextEntry->SetText(dbPath.c_str());
-    }   
+       m_folderNameTextEntry->SetText(dbPath.c_str());
+    }
 
     setOkButton();
   }
 }
 void PageSaveDialog::setOkButton() {
-  if (TString(folderNameTextEntry->GetText()).Sizeof() > 1  &&
-      TString(pageNameTextEntry->GetText()).Sizeof() > 1 ) {
+  if (TString(m_folderNameTextEntry->GetText()).Sizeof() > 1  &&
+      TString(m_pageNameTextEntry->GetText()).Sizeof() > 1 ) {
     m_okButton->SetEnabled(true);
   } else {
     m_okButton->SetEnabled(false);
   }
+}
+void PageSaveDialog::CloseWindow() {
+  // disabling is a beauty patch for crashes on double-click crash
+  m_okButton->SetState(kButtonDisabled);
+  m_cancelButton->SetState(kButtonDisabled);
+  DeleteWindow();
 }

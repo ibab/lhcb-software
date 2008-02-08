@@ -4,11 +4,13 @@
 #include <TObjString.h>
 #include <TObjArray.h>
 
+#include "presenter.h"
 #include "HistogramIdentifier.h"
 
-HistogramIdentifier::HistogramIdentifier(std::string histogramUrl):
+using namespace pres;
+
+HistogramIdentifier::HistogramIdentifier(const std::string & histogramUrl):
   m_histogramUrlTS(histogramUrl.c_str()),
-  m_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/_]+_)?([^/_]*)(_[^/]*)?/([^/]*)/(([^_]*)(_\\$)?(.*))$"),
   m_identifier(""),
   m_histogramType(""),
   m_histogramUTGID(""),
@@ -24,17 +26,8 @@ HistogramIdentifier::HistogramIdentifier(std::string histogramUrl):
   m_gauchocommentBeat(""),
   m_gauchocommentEric("")
 {
-// ^(H1D|H2D|P1D|HPD|P2D|CNT)?/?(([^/_]+_)?([^/_]*)(_[^/]*)?)?/([^/]*)/(([^_]*)(_\$)?(.*))$
-// test cases:
-//  CC-PC/CCPCAlg/TELL1Mult3_$T3/L2/Q1/myTell1
-//  H1D/node00101_taskname_1/CCPCAlg/TELL1Mult3_$T3/L2/Q1/myTell1
-//  H2D/node00101_taskname_1/CCPCAlg/TELL1Mult3_$T3/L2/Q1/myTell1
-//  CC-PC/CCPCAlg/TELL1Mult1_$T3/L2/Q0/myTell1
-//  CC-PC/er_CCPCAlg/TELL1Mult1_$T3/L2/Q0/myTell1
-//  CC-PC/CCPCAlg/TELL1Mult1_1//sdf/sf/sCC-PC/CCPCAlg/myTell1
-//  CC-PC/CCPCAlg/T3/L2/Q1/myTell1
 // groups:
-//  $0 matches magic
+//  $0 matches magic, returns histogramUrl
 //  $1 histogram type
 //  $. UTGID
 //  $2 UTGID prefix
@@ -46,7 +39,7 @@ HistogramIdentifier::HistogramIdentifier(std::string histogramUrl):
 //  $8 set switch: is "_$" if $3 is histogramSetName "" if histogramName
 //  $9 histogram name
 
-  TObjArray* histogramUrlMatchGroup = m_histogramUrlRegexp.
+  TObjArray* histogramUrlMatchGroup = HistogramUrlRegexp.
     MatchS(m_histogramUrlTS);
 
   if (!histogramUrlMatchGroup->IsEmpty()) {
@@ -66,7 +59,7 @@ HistogramIdentifier::HistogramIdentifier(std::string histogramUrl):
     TString setSwitch = ((TObjString *)histogramUrlMatchGroup->At(8))->
       GetString();
 
-    if ("_$" == setSwitch) {
+    if (SET_SWITCH == setSwitch) {
       m_isFromHistogramSet = true;
       m_setName = (((TObjString *)histogramUrlMatchGroup->At(7))->
         GetString()).Data();
@@ -75,19 +68,19 @@ HistogramIdentifier::HistogramIdentifier(std::string histogramUrl):
     } else if ("" == setSwitch) {
       m_isFromHistogramSet = false;
       m_setName = "";
-      m_histogramName = (((TObjString *)histogramUrlMatchGroup->At(7))->
+      m_histogramName = (((TObjString *)histogramUrlMatchGroup->At(6))->
         GetString()).Data();
     }
-
-    m_identifier = m_histogramType + "/" + m_taskName + "/" + m_algorithmName
-      + "/" + (((TObjString *)histogramUrlMatchGroup->At(6))->GetString()).
-      Data();
+    m_identifier =  m_taskName + Slash + m_algorithmName +
+                    Slash + (((TObjString *)histogramUrlMatchGroup->
+                    At(6))->GetString()).Data();
     if (m_isPlausible && m_histogramType != "") {
       m_isDimFormat = true;
     }
-    m_gauchocommentBeat = histogramUrl + "/gauchocomment";
-    m_gauchocommentEric = histogramUrl.erase(0, m_histogramType.length()+1) +
-                                             "/gauchocomment";
+    m_gauchocommentBeat = histogramUrl + GAUCHOCOMMENT;
+    m_gauchocommentEric = histogramUrl.substr(m_histogramType.length() + 1,
+                                              histogramUrl.length())
+                          + GAUCHOCOMMENT;
   }
   histogramUrlMatchGroup->Delete();
   delete histogramUrlMatchGroup;
