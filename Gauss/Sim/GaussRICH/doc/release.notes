@@ -3,28 +3,33 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+
+
 ! 2008-01-31 - Rob Lambert, Sajan Easo
-   Fixed a problem in RichG4StepAnalysis6.cpp which was preventing the flags for the various 
-    hpd reflections from being recorded into the userparameters for the track and hence into the
-    RichG4hit.
+ - Fixed a problem in RichG4StepAnalysis6.cpp which was preventing the flags
+   for the various hpd reflections from being recorded into the userparameters
+   for the track and hence into the RichG4hit.
 
 ! 2008-01-30 - Sajan Easo
- - Fixed a problem with transport of backscattered photoelectron and the hit it creates
-   by modifying RichHpdSiEnergyLoss.cpp
+ - Fixed a problem with transport of backscattered photoelectron and the hit 
+   it creates by modifying RichHpdSiEnergyLoss.cpp
 
 ! 2008-01-29 - Sajan Easo, Marco Musy
- - Added the reading of HPD QE Tables from the conditions DB. This would read  one table
-   per HPD. An switch is available in Rich.opts to activate the reading of the nominal QE table
-   from sqldddb. The default is set to reading the tables from Conditions DB.
- - The HPD Demag reading is modified to read from the Conditions Database via the RichDet so that
-   the magnetic field distortions can be applied directly from the conditions database.
-   A switch is available in Rich.opts to use the old cross-focussing parameters used for DC06 which are
-   useful for the no-magetic field running.
- - The default for the HPD PSF is set to the new value set after DC06. This would give a slightly
-    worse resolution than that used for DC06. A Switch is available in Rich.opts to use the
-    DC06 compatible PSF value.
- - In RichG4StepAnalysis5.cpp modified the the mirror number assignment in accordance with the new Rich1 and
-   Rich2 mirror configurations from Jan2008 in the database. In Rich1, this means using the 4 CMA mirrors and
+ - Added the reading of HPD QE Tables from the conditions DB. This would read
+   one table per HPD. An switch is available in Rich.opts to activate the 
+   reading of the nominal QE table from sqldddb. 
+   The default is set to reading the tables from Conditions DB.
+ - The HPD Demag reading is modified to read from the Conditions Database
+   via the RichDet so that the magnetic field distortions can be applied 
+   directly from the conditions database.
+   A switch is available in Rich.opts to use the old cross-focussing parameters
+   used for DC06 which are useful for the no-magetic field running.
+ - The default for the HPD PSF is set to the new value set after DC06. This
+   would give a slightly worse resolution than that used for DC06. 
+   A Switch is available in Rich.opts to use the DC06 compatible PSF value.
+ - In RichG4StepAnalysis5.cpp modified the the mirror number assignment in 
+   accordance with the new Rich1 and Rich2 mirror configurations from Jan2008
+   in the database. In Rich1, this means using the 4 CMA mirrors and
    in Rich2 this means using the envelope volumes of the mirror.
 
 ! 2008-01-29 - Chris Jones
@@ -32,7 +37,8 @@
    an overall summary.
 
 ! 2008-01-28 - Chris Jones
- - Activate the filling of the HPD reflection flags in the MCRichHits by default.
+ - Activate the filling of the HPD reflection flags in the MCRichHits by
+   default.
    Requires the head of Event/MCEvent
  - Tidy up things a little.
 
@@ -40,12 +46,13 @@
  - In RichHpdPhotoElectricEffect and HpdSiEnergyLoss processes, the 
    RichPhotoelectron is activated insted of the normal  G4Electron as the
    secondary particle created. This is seems to work ok with Gaussv30r5.
- - 2008-01-25 - Sajan Easo 
- - GetMCRichHitsAlg.cpp and GetMCRichOpticalPhotonsAlg.cpp are modified in preparation
-   for modifications in the MCRichHit and MCRichOpticalPhoton classes. The changes are
-   commented out for now. The MCRichHit is expected to have additional flags for the
-   new HPD simulation. The MCRichOpticalPhoton class is expected to have the photon
+ - GetMCRichHitsAlg.cpp and GetMCRichOpticalPhotonsAlg.cpp are modified in
+   preparation for modifications in the MCRichHit and MCRichOpticalPhoton 
+   classes. The changes are commented out for now. The MCRichHit is expected
+   to have additional flags for the new HPD simulation. 
+   The MCRichOpticalPhoton class is expected to have the photon
    coordinate on the hpd quartz window.
+
 ! 2008-01-23 - Sajan Easo 
  - In the RichG4Hit add the location of the Photon incidence point on the 
    external surface of the HPD quartz window so that it can be copied to the 
@@ -55,18 +62,20 @@
 
 ! 2008-01-21 - Sajan Easo, Rob Lambert
  - Changes in accordance with the new geometry changes in RICH in January 2008.
- - Change in RichHpdPhotoElectricEffect to account for an extra layer of container
-   of hpd array in RICH2.
- - New Hpd Simulation from Rob Lambert which addes chromium ring around each hpd
-   quartz window. It also has new values for the reflectivities for the various
-   optical boundaries in the hpd,rescaling of QE table and an improved simulation
-   of the backscattering inside the hpds. These involves changes mainly
-   in RichHpdPhotoElectricEffect.cpp,RichHpdEnergyLossProcess.cpp, RichHpdProperties.cpp,
-   RichG4OpBoundaryprocess.cc and the files related to these. The photons which are
-   reflected in the various hpd boundaries and the photoelectrons created by backscattering
-   process are flagged in the RichG4hit class. One result of this is to add about 10% noise
+ - Change in RichHpdPhotoElectricEffect to account for an extra layer of 
+   containerof hpd array in RICH2.
+ - New Hpd Simulation from Rob Lambert which addes chromium ring around each
+   hpdquartz window. It also has new values for the reflectivities for the 
+   various optical boundaries in the hpd,rescaling of QE table and an improved
+   simulation of the backscattering inside the hpds. These involves changes 
+   mainly in RichHpdPhotoElectricEffect.cpp,RichHpdEnergyLossProcess.cpp, 
+   RichHpdProperties.cpp, RichG4OpBoundaryprocess.cc and the files related to
+   these. The photons which are reflected in the various hpd boundaries and 
+   the photoelectrons created by backscattering process are flagged in the 
+   RichG4hit class. One result of this is to add about 10% noise
    hits to the set of rich hits.
-- HPD Max QE is seto 0.45 in the new sqldddb. This has the effect of increasing the CPU  Time.
+ - HPD Max QE is seto 0.45 in the new sqldddb. This has the effect of 
+   increasing the CPU  Time.
 
 !========================= GaussRICH v7r3 2007-12-07 =========================
 ! 2007-11-30 - Marco Clemencic and Gloria Corti
