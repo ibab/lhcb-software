@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::SmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.35 2008-01-11 12:04:31 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.36 2008-02-08 20:57:59 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -46,40 +46,14 @@ StatusCode Rich::SmartIDTool::initialize()
   if ( sc.isFailure() ) return sc;
 
   m_richS = getDet<DeRichSystem>(DeRichLocations::RichSystem);
-  DetectorElement* deRich1 = getDet<DetectorElement>(DeRichLocations::Rich1);
-  DetectorElement* deRich2 = getDet<DetectorElement>(DeRichLocations::Rich2);
-
-  // HPD panel locations
-  std::string pdPanelName[2][2];
-  if ( deRich1->exists("HPDPanelDetElemLocations") )
-  {
-    std::vector<std::string> r1PanelLoc = deRich1->paramVect<std::string>("HPDPanelDetElemLocations");
-    pdPanelName[0][0] = r1PanelLoc[0];
-    pdPanelName[0][1] = r1PanelLoc[1];
-  }
-  else
-  {
-    pdPanelName[0][0] = DeRichLocations::Rich1Panel0;
-    pdPanelName[0][1] = DeRichLocations::Rich1Panel1;
-  }
-  if ( deRich2->exists("HPDPanelDetElemLocations") )
-  {
-    std::vector<std::string> r1PanelLoc = deRich2->paramVect<std::string>("HPDPanelDetElemLocations");
-    pdPanelName[1][0] = r1PanelLoc[0];
-    pdPanelName[1][1] = r1PanelLoc[1];
-  }
-  else
-  {
-    pdPanelName[1][0] = DeRichLocations::Rich2Panel0;
-    pdPanelName[1][1] = DeRichLocations::Rich2Panel1;
-  }
 
   // loop over riches and photo detector panels
   for ( unsigned int rich = 0; rich < m_photoDetPanels.size(); ++rich )
   {
     for ( unsigned int panel = 0; panel < m_photoDetPanels[rich].size(); ++panel )
     {
-      m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
+      m_photoDetPanels[rich][panel]
+        = getDet<DeRichHPDPanel>( pdPanelName((Rich::DetectorType)rich,(Rich::Side)panel) );
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Stored photodetector panel "
                 << m_photoDetPanels[rich][panel]->name()
@@ -383,3 +357,35 @@ const LHCb::RichSmartID::Vector& Rich::SmartIDTool::readoutChannelList( ) const
   return m_readoutChannels;
 }
 
+//================================================================================
+// Returns the appropriate detector element name name for the given RICH and panel
+//================================================================================
+const std::string &
+Rich::SmartIDTool::pdPanelName( const Rich::DetectorType rich,
+                                const Rich::Side         panel ) const
+{
+  static DetectorElement* deRich[Rich::NRiches] =
+    { getDet<DetectorElement>(DeRichLocations::Rich1),
+      getDet<DetectorElement>(DeRichLocations::Rich2) };
+  
+  if ( deRich[rich]->exists("HPDPanelDetElemLocations") )
+  {
+    const std::vector< std::string > & locs
+      = deRich[rich]->paramVect<std::string>("HPDPanelDetElemLocations");
+    if ( locs.size() != Rich::NHPDPanelsPerRICH )
+    {
+      Exception( "Wrong number of HPDPanelDetElemLocations" );
+    }
+    return locs[panel];
+  }
+  else
+  {
+    // Backwards compat for DC06
+    const std::string* dc06Names[Rich::NRiches][Rich::NHPDPanelsPerRICH]
+      = { { &DeRichHPDPanelLocation::Rich1Panel0,
+            &DeRichHPDPanelLocation::Rich1Panel1 },
+          { &DeRichHPDPanelLocation::Rich2Panel0,
+            &DeRichHPDPanelLocation::Rich2Panel1 } };
+    return *dc06Names[rich][panel];
+  }
+}

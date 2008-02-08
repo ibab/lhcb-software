@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.43 2008-01-24 17:19:55 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.44 2008-02-08 20:57:59 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -136,26 +136,32 @@ StatusCode Rich::RayTracing::initialize()
   return sc;
 }
 
-//=============================================================================
+//================================================================================
 // Returns the appropriate detector element name name for the given RICH and panel
-//=============================================================================
+//================================================================================
 const std::string &
 Rich::RayTracing::pdPanelName( const Rich::DetectorType rich,
                                const Rich::Side         panel ) const
 {
   if ( m_rich[rich]->exists("HPDPanelDetElemLocations") )
   {
-    return (m_rich[rich]->paramVect<std::string>("HPDPanelDetElemLocations"))[panel];
+    const std::vector< std::string > & locs
+      = m_rich[rich]->paramVect<std::string>("HPDPanelDetElemLocations");
+    if ( locs.size() != Rich::NHPDPanelsPerRICH ) 
+    {
+      Exception( "Wrong number of HPDPanelDetElemLocations" );
+    }
+    return locs[panel];
   }
   else
   {
     // Backwards compat for DC06
-    const std::string dc06Names[Rich::NRiches][Rich::NHPDPanelsPerRICH]
-      = { { DeRichHPDPanelLocation::Rich1Panel0,
-            DeRichHPDPanelLocation::Rich1Panel1 },
-          { DeRichHPDPanelLocation::Rich2Panel0,
-            DeRichHPDPanelLocation::Rich2Panel1 } };
-    return dc06Names[rich][panel];
+    const std::string* dc06Names[Rich::NRiches][Rich::NHPDPanelsPerRICH]
+      = { { &DeRichHPDPanelLocation::Rich1Panel0,
+            &DeRichHPDPanelLocation::Rich1Panel1 },
+          { &DeRichHPDPanelLocation::Rich2Panel0,
+            &DeRichHPDPanelLocation::Rich2Panel1 } };
+    return *dc06Names[rich][panel];
   }
 }
 

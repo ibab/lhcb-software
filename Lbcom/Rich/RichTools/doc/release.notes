@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2008-02-08 - Chris Jones
+ - Add fix for bug (found via valgrind) due to a reference to temporary being
+   passed. Also tidy up similar code in other places.
+
 !=========================== RichTools v2r17 2008-01-28 ======================
 ! 2008-01-11 - Chris Jones
  - Add new tool RichSnellsLawRefraction to perform refraction corrections

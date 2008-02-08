@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::RayTracing
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.36 2008-01-24 17:19:55 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.37 2008-02-08 20:57:59 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -170,10 +170,10 @@ namespace Rich
     /// photodetector for each rich
     boost::array<HPDPanelsPerRich, Rich::NRiches> m_photoDetPanels;
 
-    std::vector<int> m_sphMirrorSegRows;
-    std::vector<int> m_sphMirrorSegCols;
-    std::vector<int> m_secMirrorSegRows;
-    std::vector<int> m_secMirrorSegCols;
+    std::vector<int> m_sphMirrorSegRows; ///< Number of primary mirror rows in each RICH
+    std::vector<int> m_sphMirrorSegCols; ///< Number of primary mirror columns in each RICH
+    std::vector<int> m_secMirrorSegRows; ///< Number of secondary mirror rows in each RICH
+    std::vector<int> m_secMirrorSegCols; ///< Number of secondary mirror columns in each RICH
 
     /// Mirror segment finder tool
     const IMirrorSegFinder* m_mirrorSegFinder;

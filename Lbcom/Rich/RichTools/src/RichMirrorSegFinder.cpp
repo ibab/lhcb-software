@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::MirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.25 2008-01-10 17:17:34 papanest Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.26 2008-02-08 20:57:59 jonrob Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -79,7 +79,7 @@ StatusCode Rich::MirrorSegFinder::initialize( )
   if ( rich1->exists("SphericalMirrorDetElemLocations") ) // post DC06 description
   {
     // Rich1 spherical mirrors
-    std::vector<std::string> r1SphMirLoc = rich1->paramVect<std::string>("SphericalMirrorDetElemLocations");
+    const std::vector<std::string> & r1SphMirLoc = rich1->paramVect<std::string>("SphericalMirrorDetElemLocations");
     for (unsigned int r1sphm=0; r1sphm<r1SphMirLoc.size(); ++r1sphm)
     {
       const DeRichSphMirror* sm = getDet<DeRichSphMirror>( r1SphMirLoc[r1sphm] );
@@ -89,7 +89,7 @@ StatusCode Rich::MirrorSegFinder::initialize( )
         m_sphMirrors[Rich::Rich1][Rich::bottom].push_back( sm );
     }
     // Rich1 secondary mirrors
-    std::vector<std::string> r1SecMirLoc = rich1->paramVect<std::string>("SecondaryMirrorDetElemLocations");
+    const std::vector<std::string> & r1SecMirLoc = rich1->paramVect<std::string>("SecondaryMirrorDetElemLocations");
     for (unsigned int r1secm=0; r1secm<r1SecMirLoc.size(); ++r1secm)
     {
       const DeRichSphMirror* secm = getDet<DeRichSphMirror>( r1SecMirLoc[r1secm] );
@@ -99,7 +99,7 @@ StatusCode Rich::MirrorSegFinder::initialize( )
         m_secMirrors[Rich::Rich1][Rich::bottom].push_back( secm );
     }
     // Rich2 spherical mirrors
-    std::vector<std::string> r2SphMirLoc = rich2->paramVect<std::string>("SphericalMirrorDetElemLocations");
+    const std::vector<std::string> & r2SphMirLoc = rich2->paramVect<std::string>("SphericalMirrorDetElemLocations");
     for (unsigned int r2sphm=0; r2sphm<r2SphMirLoc.size(); ++r2sphm)
     {
       const DeRichSphMirror* sm = getDet<DeRichSphMirror>( r2SphMirLoc[r2sphm] );
@@ -109,7 +109,7 @@ StatusCode Rich::MirrorSegFinder::initialize( )
         m_sphMirrors[Rich::Rich2][Rich::right].push_back( sm );
     }
     // Rich2 secondary mirrors
-    std::vector<std::string> r2SecMirLoc = rich2->paramVect<std::string>("SecondaryMirrorDetElemLocations");
+    const std::vector<std::string> & r2SecMirLoc = rich2->paramVect<std::string>("SecondaryMirrorDetElemLocations");
     for (unsigned int r2secm=0; r2secm<r2SecMirLoc.size(); ++r2secm)
     {
       const DeRichSphMirror* secm = getDet<DeRichSphMirror>( r2SecMirLoc[r2secm] );

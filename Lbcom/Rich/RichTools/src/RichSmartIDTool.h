@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::SmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.24 2007-11-12 09:48:55 papanest Exp $
+ *  $Id: RichSmartIDTool.h,v 1.25 2008-02-08 20:57:59 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -100,6 +100,16 @@ namespace Rich
 
     // Converts a position in global coordinates to the local coordinate system.
     virtual Gaudi::XYZPoint globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const;
+
+  private:
+
+    /** Returns the appropriate detector element name name for the given RICH and panel
+     *  @param[in] rich  The RICH detector type
+     *  @param[in] panel The RICH panel
+     *  @return The RICH panel name in the XML description
+     */
+    const std::string & pdPanelName( const Rich::DetectorType rich,
+                                     const Rich::Side         panel ) const;
 
   private:
 
