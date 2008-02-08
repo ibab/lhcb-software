@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.10 2008-02-01 09:09:32 wouter Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.11 2008-02-08 10:02:12 wouter Exp $
 // Include files
 
 //from STL
@@ -10,8 +10,14 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/DataObject.h"
 
-// from LHCbKernel
-#include "Kernel/LHCbID.h"
+// from TrackEvent
+#include "Event/Measurement.h"
+
+// from Det
+#include "OTDet/DeOTDetector.h"
+#include "STDet/DeSTDetector.h"
+#include "VeloDet/DeVelo.h"
+#include "MuonDet/DeMuonDetector.h"
 
 // from Boost
 #include "boost/lambda/bind.hpp"
@@ -165,6 +171,15 @@ StatusCode GetElementsToBeAligned::initialize() {
   m_rangeElements = ElementRange(m_alignElements.begin(), m_alignElements.end());
   m_findElement   = FindAlignmentElement(Alignment::FindElement(m_elemsToBeAligned.begin()->first), m_rangeElements);
 
+  // Fill the element map
+  for( Elements::const_iterator ialignable = m_alignElements.begin(); ialignable != m_alignElements.end(); ++ialignable) {
+    AlignmentElement::ElementContainer allelements = (*ialignable).elementsInTree() ;
+    for( AlignmentElement::ElementContainer::const_iterator ielement = allelements.begin() ; 
+	 ielement != allelements.end(); ++ielement) {
+      m_elementMap[*ielement] = &(*ialignable) ;
+    }
+  }
+  info() << "   Number of elements in map: " << m_elementMap.size() << endmsg ;
 
   /// Print list of detector elements that are going to be aligned
   info() << "   Going to align " << m_rangeElements.size() << " detector elements:" << endmsg;
@@ -248,6 +263,43 @@ const IGetElementsToBeAligned::Constraints& GetElementsToBeAligned::constraints(
   return m_constraints;
 }
 
-const AlignmentElement* GetElementsToBeAligned::findElement(LHCb::LHCbID anLHCbID) const {
-  return m_findElement(anLHCbID);
+const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::Measurement& meas) const {
+  // old code: return m_findElement(meas.lhcbID()) ;
+
+  // first get the detector element from the measurement. this is no
+  // longer needed if we have a new version of brunel.
+  const DetectorElement* element(0) ; // = meas.detectorElement() ;
+  {
+    static DeVelo*       velo = getDet<DeVelo>(DeVeloLocation::Default); 
+    static DeSTDetector* tt   = getDet<DeSTDetector>(DeSTDetLocation::TT);
+    static DeSTDetector* it   = getDet<DeSTDetector>(DeSTDetLocation::IT);
+    static DeOTDetector* ot   = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
+    static DeMuonDetector* muon = getDet<DeMuonDetector>(DeMuonLocation::Default);
+    LHCb::LHCbID id = meas.lhcbID() ;
+    switch( id.detectorType() ) {
+    case LHCb::LHCbID::Velo:
+      element = id.isVeloR() ? 
+	static_cast<const DetectorElement*>(velo->rSensor( id.veloID() )) :
+	static_cast<const DetectorElement*>(velo->phiSensor( id.veloID() )) ;
+	break ;
+    case LHCb::LHCbID::TT:
+      element = tt->findSector( id.stID() );
+      break ;
+    case LHCb::LHCbID::IT:
+      element = it->findSector( id.stID() );
+      break ;
+    case LHCb::LHCbID::OT:
+      element = ot->findModule( id.otID() ) ;
+      break ;
+    case LHCb::LHCbID::Muon:
+      element = muon->getChmbPtr(id.muonID().station(), id.muonID().region(), id.muonID().quarter() ) ;
+      break ;
+    default:
+      error() << "LHCbID from non-tracking detector"  << endmsg ;
+    }
+  }
+  
+  // see if that element is in the map
+  ElementMap::const_iterator it = m_elementMap.find( element ) ;
+  return it == m_elementMap.end() ? 0 : it->second ;
 }

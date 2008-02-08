@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.9 2008-02-06 17:00:20 janos Exp $
+// $Id: AlignmentElement.h,v 1.10 2008-02-08 10:02:12 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -77,6 +77,8 @@ public:
 
  public:
 
+  typedef std::vector<const DetectorElement*> ElementContainer ;
+
   /** Method to get the detector elements
    */
   //const std::vector<const DetectorElement*> elements() const;
@@ -137,20 +139,27 @@ public:
    */
   std::ostream& fillStream(std::ostream& s) const;
 
+  /** Transform from frame in which alignment parameters are defined to global frame */
   const Gaudi::Transform3D& alignmentFrame() const { return m_alignmentFrame; }
- private:
+  
+  /** Return all elements that are served by this alignment element */
+  ElementContainer elementsInTree() const ;
+
+private:
 
   typedef std::vector<const DetectorElement*>::const_iterator ElemIter;
 
   void validDetectorElement(const DetectorElement* element) const;
 
   void setPivotPoint();
-
+  
   double average(double n) const { return n/double(m_elements.size()); };
 
- private:
+  static void addToElementsInTree( const IDetectorElement* const element, ElementContainer& elements ) ;
 
-  mutable std::vector<const DetectorElement*>  m_elements;         ///< Vector of pointers to detector elements
+private:
+
+  std::vector<const DetectorElement*>          m_elements;         ///< Vector of pointers to detector elements
   unsigned int                                 m_index;            ///< Index. Needed for bookkeeping
   AlDofMask                                    m_dofMask;          ///< d.o.f's we want to align for
   Gaudi::XYZPoint                              m_pivot;            ///< Pivot point

@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.11 2008-02-06 17:00:20 janos Exp $
+// $Id: AlignmentElement.cpp,v 1.12 2008-02-08 10:02:12 wouter Exp $
 // Include files
 
 // from STD
@@ -8,9 +8,6 @@
 
 // Gaudi math
 #include "GaudiKernel/Vector3DTypes.h"
-
-// from Root
-#include "Math/Translation3D.h"
 
 // from DetDesc
 #include "DetDesc/ParamException.h"
@@ -50,6 +47,27 @@ AlignmentElement::AlignmentElement(const std::vector<const DetectorElement*>& el
   setPivotPoint();
 }
 
+AlignmentElement::ElementContainer AlignmentElement::elementsInTree() const
+{
+  ElementContainer elements ;
+  elements.reserve(  m_elements.size() ) ;
+  for( ElementContainer::const_iterator ielem = m_elements.begin();
+       ielem != m_elements.end(); ++ielem) 
+    addToElementsInTree( *ielem, elements ) ;
+  return elements ;
+}
+
+void AlignmentElement::addToElementsInTree( const IDetectorElement* const ielement,
+					    ElementContainer& elements ) 
+{
+  const DetectorElement* element = dynamic_cast<const DetectorElement*>(ielement) ;
+  if( element ) elements.push_back(element) ;
+  elements.reserve(elements.size() + ielement->childIDetectorElements().size()) ;
+  for( IDetectorElement::IDEContainer::const_iterator ichild = ielement->childBegin() ;
+       ichild != ielement->childEnd(); ++ichild ) 
+    addToElementsInTree(*ichild, elements) ;
+}
+
 void AlignmentElement::validDetectorElement(const DetectorElement* element) const {
   /// Check that it doesn't point to null
   if (!element) throw GeometryInfoException("DetectorElement* points to NULL!");
@@ -67,7 +85,7 @@ void AlignmentElement::setPivotPoint() {
   }
   averageR /= double(m_elements.size());
   m_pivot = Gaudi::XYZPoint(0.0, 0.0, 0.0) + averageR;
-  m_alignmentFrame = Gaudi::Transform3D(ROOT::Math::Translation3D(pivot()[0], pivot()[1], pivot()[2]));
+  m_alignmentFrame = Gaudi::Transform3D(averageR) ;
 }
 
 const std::string AlignmentElement::name() const {

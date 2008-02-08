@@ -1,4 +1,4 @@
-// $Id: IGetElementsToBeAligned.h,v 1.2 2008-02-01 09:09:32 wouter Exp $
+// $Id: IGetElementsToBeAligned.h,v 1.3 2008-02-08 10:02:13 wouter Exp $
 #ifndef IGETELEMENTSTOBEALIGNED_H 
 #define IGETELEMENTSTOBEALIGNED_H 1
 
@@ -29,6 +29,10 @@ static const InterfaceID IID_IGetElementsToBeAligned ( "IGetElementsToBeAligned"
  *  @date   2007-10-08
  */
 
+namespace LHCb {
+  class Measurement ;
+}
+
 class IGetElementsToBeAligned : virtual public IAlgTool {
 
  public:
@@ -45,9 +49,8 @@ class IGetElementsToBeAligned : virtual public IAlgTool {
   // Return constraints
   virtual const Constraints& constraints() const = 0;
   
-
-  // Return method that finds an alignment element for a given LHCb id
-  virtual const AlignmentElement* findElement(LHCb::LHCbID anLHCbID) const = 0;
+  // Return method that finds an alignment element for a given Measuerment
+  virtual const AlignmentElement* findElement(const LHCb::Measurement& meas) const = 0;
   
 
  protected:

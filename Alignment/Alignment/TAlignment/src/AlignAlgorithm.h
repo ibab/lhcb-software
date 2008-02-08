@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.21 2008-02-06 17:00:51 janos Exp $
+// $Id: AlignAlgorithm.h,v 1.22 2008-02-08 10:02:12 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -119,6 +119,7 @@ private:
   bool                              m_updateInFinalize ;    ///< Call update from finalize
   int                               m_canonicalConstraintStrategy ; ///< Constrain global dofs
   bool                              m_constrainZShearings;  ///< Constrain z-shearings
+  bool                              m_useWeightedAverageConstraint ; ///< Flag to turn on weighting in constraint averages
   size_t                            m_minNumberOfHits ;     ///< Minimum number of hits for an Alignable to be aligned
   bool                              m_usePreconditioning ;   ///< Precondition the system of equations before calling solver
   bool                              m_fillCorrelationHistos; ///< Flag to turn on filling of residual correlation histos

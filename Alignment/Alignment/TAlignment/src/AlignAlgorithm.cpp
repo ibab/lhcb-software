@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.25 2008-02-06 17:00:51 janos Exp $
+// $Id: AlignAlgorithm.cpp,v 1.26 2008-02-08 10:02:12 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -164,6 +164,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("UpdateInFinalize"            , m_updateInFinalize            = false                   );
   declareProperty("CanonicalConstraintStrategy" , m_canonicalConstraintStrategy = CanonicalConstraintAuto ); 
   declareProperty("ConstrainZShearings"         , m_constrainZShearings         = false                   );
+  declareProperty("UseWeightedAverageConstraint", m_useWeightedAverageConstraint = false ) ;
   declareProperty("MinNumberOfHits"             , m_minNumberOfHits             = 1u                      ); 
   declareProperty("FillCorrelationsHistos"      , m_fillCorrelationHistos       = false                   );
   declareProperty("UsePreconditioning"          , m_usePreconditioning          = false                   );
@@ -301,7 +302,7 @@ StatusCode AlignAlgorithm::execute() {
 	// Get measurement
 	const Measurement& meas = (*node)->measurement();
 	// Get element that belongs to this measurment
-	const AlignmentElement* elem = m_align->findElement(meas.lhcbID());
+	const AlignmentElement* elem = m_align->findElement(meas);
 	if (!elem) {
 	  if (printVerbose()) verbose() << "==> Measurement not on a to-be-aligned DetElem " 
 					<< meas.lhcbID() << endmsg;
@@ -466,12 +467,13 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
     // just translations.
     Gaudi::Transform3D trans = canonicalframeInv * it->alignmentFrame() ;
     Gaudi::Matrix6x6 jacobian = AlParameters::jacobian( trans ) ;
-    double thisweight = m_equations->weight(iElem) ;
-    for (size_t i = 0u; i < 6u; ++i) {
-      for (size_t j = 0u; j < Derivatives::kCols; ++j) {
-        // and here comes the 2nd place we could do things entirely
-        // wrong, but I think that this is right.
-        halfD2Chi2DAlpha2[size+i][j+iElem*Derivatives::kCols] = thisweight/weight * jacobian(i,j) ;
+    double thisweight = m_useWeightedAverageConstraint ? m_equations->weight(iElem)/weight : 1./double( m_equations->nElem() ) ;
+    thisweight = 1./double( m_equations->nElem() ) ;
+    for(size_t i=0; i<6; ++i) {
+      for(size_t j=0; j<Derivatives::kCols; ++j) {
+	// and here comes the 2nd place we could do things entirely
+	// wrong, but I think that this is right.
+	halfD2Chi2DAlpha2[size+i][j+iElem*Derivatives::kCols] = thisweight * jacobian(i,j) ;
       }
     }
     if (m_constrainZShearings) {
@@ -479,7 +481,7 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
       // the 3 constraints are in this order: zx-shearing, zy-shearing and z-scale ('zz-shearing')
       for (size_t i = 0u; i < 3u; ++i) {
         for (size_t j = 0u; j <Derivatives::kCols; ++j) {
-          halfD2Chi2DAlpha2[size+i+6][j+iElem*Derivatives::kCols] = thisweight/weight * deltaZ/(zmax-zmin) * jacobian(i,j) ;
+          halfD2Chi2DAlpha2[size+i+6][j+iElem*Derivatives::kCols] = thisweight * deltaZ/(zmax-zmin) * jacobian(i,j) ;
         }
       }
     }
