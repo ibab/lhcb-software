@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.cpp,v 1.4 2008-02-08 11:17:00 jucogan Exp $
+// $Id: L0MuonFromRawTrans.cpp,v 1.5 2008-02-08 12:33:01 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -418,6 +418,33 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
     }
   }
 
+  //   location = rootInTES() + LHCb::L0MuonCandidateLocation::BCSU + "Ctrl"+ extension;
+  //   LHCb::L0MuonCandidates* pbcsucands = new LHCb::L0MuonCandidates();
+  //   put(pbcsucands , location );
+  //   if (msgLevel( MSG::DEBUG )) {
+  //     debug() << "writeOnTES -------------------------"<< endreq;
+  //     debug() << "writeOnTES at "<< location << endreq;
+  //   }
+  //   for (int i= 0; i<2; ++i) {
+  //     if (!m_ctrlRaw[i].isActiv()) continue;
+  //     cands = m_ctrlRaw[i].muonCandidatesBCSU();
+  //     if (msgLevel( MSG::DEBUG )) {
+  //       debug() << "writeOnTES: side "<<i<< endreq;
+  //       debug() << "writeOnTES: => "<<cands.size()<<" candidates found (BCSU)"<< endreq;
+  //     }
+  //     if (m_ctrlRaw[i].inError()) {
+  //       if (msgLevel( MSG::DEBUG )){
+  //         debug() << "writeOnTES: => in Error !!!"<< endreq;
+  //       }
+  //       //continue;
+  //     }
+  //     for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
+  //       if( msgLevel(MSG::DEBUG) ) debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
+  //       LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
+  //       pbcsucands->insert(l0mcand);
+  //     }
+  //   }
+
   location = rootInTES() + LHCb::L0MuonCandidateLocation::BCSU + extension;
   LHCb::L0MuonCandidates* pbcsucands = new LHCb::L0MuonCandidates();
   put(pbcsucands , location );
@@ -425,7 +452,7 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
     debug() << "writeOnTES -------------------------"<< endreq;
     debug() << "writeOnTES at "<< location << endreq;
   }
-  for (int i= 0; i<2; ++i) {
+  for (int i= 0; i<4; ++i) {
     if (!m_procRaw[i].isActiv()) continue;
     cands = m_procRaw[i].muonCandidatesBCSU();
     if (msgLevel( MSG::DEBUG )) {

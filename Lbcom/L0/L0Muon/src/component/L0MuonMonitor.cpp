@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitor.cpp,v 1.3 2008-02-08 11:17:00 jucogan Exp $
+// $Id: L0MuonMonitor.cpp,v 1.4 2008-02-08 12:33:01 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -157,6 +157,7 @@ StatusCode L0MuonMonitor::execute() {
       fill(histo2D(name),x,y,1,name);
     }
   }
+
   // Get L0Muon candidates from BCSU
   location = rootInTES() + LHCb::L0MuonCandidateLocation::BCSU + m_extension;
   if (  exist<LHCb::L0MuonCandidates>(location ) ) {
