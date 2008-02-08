@@ -1,4 +1,4 @@
-// $Id: CompareMCVertex.cpp,v 1.2 2006-05-29 16:10:24 cattanem Exp $
+// $Id: CompareMCVertex.cpp,v 1.3 2008-02-08 08:32:54 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -75,7 +75,7 @@ StatusCode CompareMCVertex::execute() {
       }
     }
     if ( !isOK || MSG::VERBOSE >= msgLevel() ) {
-      if( !isOK ) Warning( "Packed MCVertex info truncated. Set DEBUG OutputLevel for details" );
+      if( !isOK ) Warning( "Packed MCVertex info truncated. Set DEBUG OutputLevel for details" ).ignore();
       
       debug() << "=== MCVertex key " << oVert->key() << endmsg;
       debug() << format( "  old point %12.5f %12.5f %12.5f %12.4f %2d",

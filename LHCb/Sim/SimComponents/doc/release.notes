@@ -5,6 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v2r8p1 2008-02-08 ======================
+! 2008-02-08 - Marco Cattaneo
+ - Fix an untested StatusCode
+
 !====================== SimComponents v2r8 2007-11-26 ========================
 ! 2007-11-26 - Marco Cattaneo
  - Add PrintMCDecayTreeAlg to replace DumpEvent algorithm in DaVinciMCTools
