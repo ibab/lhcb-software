@@ -5,7 +5,7 @@
  * Header file for tool TrackVelodEdxCharge
  *
  * CVS Log :-
- * $Id: TrackVelodEdxCharge.h,v 1.2 2007-02-06 13:15:36 cattanem Exp $
+ * $Id: TrackVelodEdxCharge.h,v 1.3 2008-02-08 07:37:58 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 18/07/2006
@@ -28,7 +28,7 @@
 #include "Event/VeloRMeasurement.h"
 
 //-----------------------------------------------------------------------------
-/** @class TrackVelodEdxCharge TrackVelodEdxCharge.h RecoTools/TrackVelodEdxCharge.h
+/** @class TrackVelodEdxCharge TrackVelodEdxCharge.h
  *
  *  Implementation of ITrackVelodEdxCharge
  *
@@ -65,9 +65,6 @@ public:
 
   /// Tool initialisation
   StatusCode initialize();
-
-  /// Tool finalisation
-  StatusCode finalize();
 
 public:
 

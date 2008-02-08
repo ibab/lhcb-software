@@ -1,4 +1,4 @@
-// $Id: TrackLikelihood.cpp,v 1.3 2007-10-06 10:31:40 mneedham Exp $
+// $Id: TrackLikelihood.cpp,v 1.4 2008-02-08 07:37:58 cattanem Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -6,8 +6,10 @@
 
 // Event
 #include "Event/Track.h"
+#include "Event/VeloCluster.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
+#include "Event/STCluster.h"
 #include "Event/STMeasurement.h"
 
 // local
@@ -21,6 +23,7 @@
 #include "Kernel/LHCbID.h"
 #include "LoKi/select.h"
 
+#include "gsl/gsl_math.h"
 #include "gsl/gsl_rng.h"
 #include "gsl/gsl_randist.h"
 #include "gsl/gsl_cdf.h"

@@ -1,7 +1,7 @@
-// $Id: THitExpectation.cpp,v 1.2 2007-10-10 18:32:17 smenzeme Exp $
+// $Id: THitExpectation.cpp,v 1.3 2008-02-08 07:37:58 cattanem Exp $
 
 // from GaudiKernel
-#include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
 // Event
@@ -17,9 +17,6 @@
 
 #include "THitExpectation.h"
 
-using namespace LHCb;
-using namespace Gaudi;
-
 //=============================================================================
 // 
 //=============================================================================
@@ -28,7 +25,7 @@ THitExpectation::THitExpectation(const std::string& type,
                                  const IInterface* parent):
   GaudiTool(type, name, parent)
 { 
-  // constructer
+  // constructor
 
   declareInterface<IHitExpectation>(this);
 }
@@ -53,10 +50,10 @@ StatusCode THitExpectation::initialize()
   return StatusCode::SUCCESS;
 }
 
-Tf::Tsa::Parabola THitExpectation::xParabola(const Track& aTrack, const double z) const{
+Tf::Tsa::Parabola THitExpectation::xParabola(const LHCb::Track& aTrack, const double z) const{
   
   // find the closest state
-  const State& aState = aTrack.closestState(z);
+  const LHCb::State& aState = aTrack.closestState(z);
 
   //  double m_curvFactor = 42.0;
 
@@ -69,10 +66,10 @@ Tf::Tsa::Parabola THitExpectation::xParabola(const Track& aTrack, const double z
   return Tf::Tsa::Parabola(a,b,c);
 }
 
-double THitExpectation::curvature(const State& aState) const{
+double THitExpectation::curvature(const LHCb::State& aState) const{
 
-  XYZPoint P = aState.position();
-  static XYZVector B;
+  Gaudi::XYZPoint P = aState.position();
+  static Gaudi::XYZVector B;
   m_pIMF->fieldVector( P, B ).ignore();
   const double tx = aState.tx();
   const double ty = aState.ty();
@@ -86,7 +83,7 @@ double THitExpectation::curvature(const State& aState) const{
 Tf::Tsa::Line THitExpectation::yLine(const LHCb::Track& aTrack, const double z)const{
 
   // find the closest state
-  State aState = aTrack.closestState(z);
+  LHCb::State aState = aTrack.closestState(z);
 
   const double m = aState.ty();
   const double c = aState.y() - m*aState.z();

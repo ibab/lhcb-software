@@ -5,7 +5,7 @@
  * Implementation file for tool TrackVelodEdxCharge
  *
  * CVS Log :-
- * $Id: TrackVelodEdxCharge.cpp,v 1.2 2007-02-06 13:15:36 cattanem Exp $
+ * $Id: TrackVelodEdxCharge.cpp,v 1.3 2008-02-08 07:37:58 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 18/07/2006
@@ -14,6 +14,7 @@
 
 #include "GaudiKernel/ToolFactory.h"
 #include "TrackVelodEdxCharge.h"
+#include "Event/VeloCluster.h"
 
 // namespaces
 using namespace LHCb;
@@ -48,12 +49,6 @@ StatusCode TrackVelodEdxCharge::initialize()
          << " ratio = " << m_Ratio <<endreq;
 
   return sc;
-}
-
-StatusCode TrackVelodEdxCharge::finalize()
-{
-  // finalise base class and return
-  return GaudiTool::finalize();
 }
 
 StatusCode TrackVelodEdxCharge::nTracks( const LHCb::Track * track,
