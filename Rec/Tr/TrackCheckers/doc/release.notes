@@ -4,6 +4,10 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v3r4p1 2008-02-08 =====================
+! 2008-02-08 - Marco Cattaneo
+ - Add missing includes following changes in event model includes
+
 !======================= TrackCheckers v3r4 2008-01-28 =======================
 ! 2008-01-30 - Marco Cattaneo
  - In refit_ntupling.opts, replace PoolDbCacheSvc.Catalog by FileCatalog.Catalogs

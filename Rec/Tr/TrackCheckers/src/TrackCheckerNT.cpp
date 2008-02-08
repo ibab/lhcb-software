@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.cpp,v 1.7 2007-11-30 14:36:02 wouter Exp $
+// $Id: TrackCheckerNT.cpp,v 1.8 2008-02-08 08:13:01 cattanem Exp $
 // Include files 
 
 // local
@@ -14,13 +14,17 @@
 // from Event/MCEvent
 #include "Event/MCVertex.h"
 
+// from Event/DigiEvent
+#include "Event/OTTime.h"
+#include "Event/STCluster.h"
+#include "Event/VeloCluster.h"
+
 // from Tr/TrackFitEvent
 #include "Event/STMeasurement.h"
 #include "Event/OTMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
 #include "Event/StateTraj.h"
-#include "Event/OTTime.h"
 
 // Detector stuff
 #include <OTDet/DeOTDetector.h>

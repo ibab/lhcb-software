@@ -1,4 +1,4 @@
-// $Id: ExtrapolatorChecker.cpp,v 1.4 2007-06-27 15:05:06 mneedham Exp $
+// $Id: ExtrapolatorChecker.cpp,v 1.5 2008-02-08 08:13:01 cattanem Exp $
 // Include files 
 
 // local
@@ -6,6 +6,7 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // from Event/LinkerEvent
 #include "Linker/LinkedTo.h"

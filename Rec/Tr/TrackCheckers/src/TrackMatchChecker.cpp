@@ -1,4 +1,4 @@
-// $Id: TrackMatchChecker.cpp,v 1.5 2007-05-07 09:38:40 cattanem Exp $
+// $Id: TrackMatchChecker.cpp,v 1.6 2008-02-08 08:13:01 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -16,6 +16,7 @@
 
 // from TrackFitEvent
 #include "Event/STMeasurement.h"
+#include "Event/STCluster.h"
 
 // local
 #include "TrackMatchChecker.h"

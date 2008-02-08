@@ -1,4 +1,4 @@
-// $Id: TrackVeloTTChecker.cpp,v 1.6 2006-11-17 10:57:29 cattanem Exp $
+// $Id: TrackVeloTTChecker.cpp,v 1.7 2008-02-08 08:13:01 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -16,8 +16,10 @@
 #include "Event/MCParticle.h"
 #include "Event/Track.h"
 #include "Event/STMeasurement.h"
+#include "Event/STCluster.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
+#include "Event/VeloCluster.h"
 
 // local
 #include "TrackVeloTTChecker.h"
