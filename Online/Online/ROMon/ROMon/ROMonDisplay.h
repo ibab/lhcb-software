@@ -1,4 +1,4 @@
-// $Id: ROMonDisplay.h,v 1.1 2008-02-08 17:29:16 frankm Exp $
+// $Id: ROMonDisplay.h,v 1.2 2008-02-08 21:20:39 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonDisplay.h,v 1.1 2008-02-08 17:29:16 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonDisplay.h,v 1.2 2008-02-08 21:20:39 frankm Exp $
 #ifndef ROMON_ROMONDISPLAY_H
 #define ROMON_ROMONDISPLAY_H 1
 
@@ -65,6 +65,7 @@ namespace ROMon {
 
     /// Initialize the data access
     virtual void initialize();
+
     /// Finalize data access
     virtual void finalize();
 

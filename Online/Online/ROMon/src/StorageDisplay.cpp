@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.2 2008-02-08 18:19:34 frankm Exp $
+// $Id: StorageDisplay.cpp,v 1.3 2008-02-08 21:20:40 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.2 2008-02-08 18:19:34 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.3 2008-02-08 21:20:40 frankm Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -150,10 +150,9 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
 	const MBMClient& c = *ic;
 	if (strncmp(c.name,part.c_str(),part.length())==0) {
 	  char nam[BM_USER_NAME_LEN], *typ, *str, *node, *ptr;
-	  strcpy(nam,c.name);
-	  typ = nullstr(nam,"_SND");
+	  ::strcpy(nam,c.name);
 	  node = nam+part.length();
-	  if ( typ ){
+	  if ( (typ=nullstr(nam,"_SND")) ){
 	    *(typ+3) = 0;
 	    ptr = nullchr(str=typ+4,'_');
 	    if ( !ptr ) streams[str].node = "Monitoring";
@@ -242,9 +241,6 @@ void StorageDisplay::showBuffers(const Nodeset& ns) {
   disp->draw_line_bold("  Buffer Information:         Produced Pending Size[kB] Free[kB] Slots Users ");
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
-    // Fixme: This must go into the publishing....
-    char* p = strchr(n->name,'.');
-    if ( p ) *p = 0;
     for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       const MBMBuffer& b = *ib;
       const CONTROL& c = b.ctrl;
@@ -262,14 +258,15 @@ void StorageDisplay::showHeader(const Nodeset& ns)   {
   Nodeset::TimeStamp frst=ns.firstUpdate(), last=ns.lastUpdate();
   ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&frst.first));
   ::strftime(b2,sizeof(b1),"%H:%M:%S",::localtime(&last.first));
-  draw_line_normal ("         Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
+  draw_line_normal ("");
+  draw_line_reverse("         Stream Monitor for partition %s on %s   [%s]",
+		    m_partName.c_str(), RTL::nodeName().c_str(), ::lib_rtl_timestr());    
+  draw_line_bold   ("         Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
 }
 
 /// Update all displays
 void StorageDisplay::updateDisplay(const Nodeset& ns)   {
   begin_update();
-  draw_line_reverse("         Stream Monitor for partition %s on %s   [%s]",
-		    m_partName.c_str(), RTL::nodeName().c_str(), ::lib_rtl_timestr());    
   m_hltRec->begin_update();
   m_buffers->begin_update();
   m_streams->begin_update();

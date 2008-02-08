@@ -1,4 +1,4 @@
-// $Id: ROMon.h,v 1.3 2008-02-08 18:19:34 frankm Exp $
+// $Id: ROMon.h,v 1.4 2008-02-08 21:20:39 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.3 2008-02-08 18:19:34 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.4 2008-02-08 21:20:39 frankm Exp $
 #ifndef GAUDIONLINE_ROMON_H
 #define GAUDIONLINE_ROMON_H 1
 
@@ -165,6 +165,7 @@ namespace ROMon {
   class MBMBuffer {
   public:
     typedef FixItems<MBMClient> Clients;
+    typedef CONTROL Control;
     /// Object name
     char    name[BM_USER_NAME_LEN];
     /// Copy of the BM control structure
