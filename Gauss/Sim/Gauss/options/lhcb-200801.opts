@@ -3,8 +3,8 @@
 
 /** @file 
  * 
- *  Job options for Gauss to produce events with geometry version
- *  lhcb-200601.opts (DC06)
+ *  Job options for Gauss to produce events with evolving survey geometry
+ *  as available in corresponding "head" tag of DDDB
  *
  */
 
@@ -16,8 +16,13 @@
 //--------------------------------------------------------------------------
 // Geometry database dependent options
 //--------------------------------------------------------------------------
-#include "$DDDBROOT/options/DC06.opts"
- 
+// Head database tags
+DDDB.DefaultTAG = "head-20080130";
+LHCBCOND.DefaultTAG = "head-20080130";
+
+// Magnetic field
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+
 //--------------------------------------------------------------------------
 // Switch off monitors of detectors in production
 //--------------------------------------------------------------------------
