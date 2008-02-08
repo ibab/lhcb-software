@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitor.h,v 1.2 2008-01-30 09:38:09 jucogan Exp $
+// $Id: L0MuonMonitor.h,v 1.3 2008-02-08 11:17:00 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITOR_H 
 #define COMPONENT_L0MUONMONITOR_H 1
 
@@ -42,6 +42,17 @@ private:
     };
   };
   
+  static inline std::string quarterName(int qua)
+  { 
+    switch ( qua ) {   
+    case 0    : return "Q1";
+    case 1    : return "Q2";
+    case 2    : return "Q3";
+    case 3    : return "Q4";
+    default : return "Unknown";
+    };
+  };
+  
   static inline std::string regionName(int reg)
   { 
     switch ( reg ) {   
@@ -65,9 +76,9 @@ private:
     };
   };
 
-  std::string histoName(L0MuonMonitor::Channel_type ch_type, int reg, int sta)
+  std::string histoName(L0MuonMonitor::Channel_type ch_type, int reg, int sta, int qua)
   {
-    return stationName(sta)+"_"+regionName(reg)+"_"+channelTypeName(ch_type);
+    return quarterName(qua)+"_"+stationName(sta)+"_"+regionName(reg)+"_"+channelTypeName(ch_type);
   };
   
   void setLayouts(); // Set the layouts in use

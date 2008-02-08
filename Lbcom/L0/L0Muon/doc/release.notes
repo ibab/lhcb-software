@@ -1,7 +1,13 @@
-!  $Id: release.notes,v 1.45 2008-01-17 15:34:59 cattanem Exp $
+!  $Id: release.notes,v 1.46 2008-02-08 11:17:00 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev
 !-------------------------------------------------------------------------
+
+! 2008-02-08 Julien Cogan
+ - L0MuonFromRawTrans : new algorithm to decode the data with the format
+   used at the pit during commissionning.
+ - L0MuonMonitor : new algorithm to make histograms from L0Muon data 
+   stored in the TES. 
 
 !========================= L0Muon v7r6 2008-01-17 ========================
 ! 2008-01-17 - Gerhard Raven
