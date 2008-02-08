@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v7r0 2008-02-08 ==========================
 ! 2008-01-27 - Patrick Robbe
  - Pythia.h/.cpp: Add interface to PYSLHA function
  - PythiaProduction: Add possibility to call PYSLHA using a Les Houches

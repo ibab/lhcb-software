@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v9r0 2008-02-08 ===========================
 ! 2008-01-08 - Patrick Robbe
  - Pythia.F: Add dummy subroutine calling PYTIME to force loading of 
    libpythia6_dummy.so in Gauss, with the new compilation options in
