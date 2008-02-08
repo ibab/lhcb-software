@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.18 2008-01-23 10:24:24 wouter Exp $
+// $Id: IdealStateCreator.cpp,v 1.19 2008-02-08 07:03:54 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -6,6 +6,7 @@
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // from Event
 #include "Event/MCParticle.h"
