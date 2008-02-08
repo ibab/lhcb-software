@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.h,v 1.1 2008-02-08 17:29:16 frankm Exp $
+// $Id: StorageDisplay.h,v 1.2 2008-02-08 17:32:07 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/StorageDisplay.h,v 1.1 2008-02-08 17:29:16 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/StorageDisplay.h,v 1.2 2008-02-08 17:32:07 frankm Exp $
 #ifndef ROMON_STORAGEDISPLAY_H
 #define ROMON_STORAGEDISPLAY_H 1
 
@@ -35,12 +35,16 @@ namespace ROMon {
 
     /// Reference to the MBMBuffer diaplay
     MonitorDisplay* m_buffers;
+
     /// reference to the Streams display
     MonitorDisplay* m_streams;
+
     /// Reference to the logger window
     MonitorDisplay* m_logging;
+
     /// Reference to the display showing current files
     MonitorDisplay* m_files;
+
     /// Reference to the HLT receiver display
     MonitorDisplay* m_hltRec;
 
