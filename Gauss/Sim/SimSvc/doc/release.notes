@@ -1,9 +1,14 @@
 !-----------------------------------------------------------------------------
 ! Package     : Sim/SimSvc
-! Responsible : Sebastien Ponce
+! Responsible : Gloria Corti, originally Sebastien Ponce
 ! Purpose     : description of simulation parameters associated to logical
 !               volumes
 !-----------------------------------------------------------------------------
+
+!=========================== SimSvc v5r1 2007-02-08 ==========================
+! 2007-12-12 - Gloria Corti
+ - Adapt to location of Simulation.xml in Gauss package for default file
+   . SimulationSvc.cpp
 
 !==================== SimSvc v5r0 2007-03-16 =================================
 ! 2007-03-16 - Gloria Corti

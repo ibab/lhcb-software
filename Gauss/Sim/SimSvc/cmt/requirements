@@ -1,16 +1,28 @@
+#============================================================================
+# Created    : 2003-01-24
+# Maintainer : Gloria Corti
+#============================================================================
 package SimSvc
-version v5r0
+version v5r1
 
+# Structure, i.e. directories to process. 
+#============================================================================
 branches SimSvc doc cmt src
 
-use GaudiPolicy v* 
-apply_pattern install_more_includes more=SimSvc
-
+# Used packages
+#============================================================================
+use GaudiPolicy    v* 
 use DetDescCnv     v* Det
 
-# build a component library
+apply_pattern install_more_includes more=SimSvc
+
+
+# Component library building rule
+#============================================================================
 library SimSvc     *.cpp
 
+# define component library link options
+#============================================================================
 apply_pattern component_library library=SimSvc
 
 

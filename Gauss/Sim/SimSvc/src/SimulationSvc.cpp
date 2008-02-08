@@ -68,9 +68,9 @@ StatusCode SimulationSvc::initialize() {
     return status;  
   }
   if( m_simDbLocation.empty() || "empty" == m_simDbLocation ) { 
-    if ( 0 != getenv("XMLDDDBROOT") ) {
-      m_simDbLocation  = getenv("XMLDDDBROOT");
-      m_simDbLocation += "/DDDB/Simulation/simulation.xml";
+    if ( 0 != getenv("GAUSSROOT") ) {
+      m_simDbLocation  = getenv("GAUSSROOT");
+      m_simDbLocation += "/xml/Simulation.xml";
     } else {
       m_simDbLocation = "";
     }
