@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.26 2008-02-08 10:02:12 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.27 2008-02-09 02:19:12 janos Exp $
 // Include files
 // from std
 // #include <utility>
@@ -284,20 +284,27 @@ StatusCode AlignAlgorithm::execute() {
 
   // Get tracks
   Tracks* tracks = get<Tracks>(m_tracksLocation);
-  if (printDebug()) debug() << "Number of tracks in container " + m_tracksLocation + ": " << tracks->size() << endmsg;
+  if (printVerbose()) verbose() << "Number of tracks in container " + m_tracksLocation + ": " << tracks->size() << endmsg;
   /// Loop over tracks
   typedef Tracks::const_iterator TrackIter;
   for (TrackIter iTrack = tracks->begin(), iTrackEnd = tracks->end(); iTrack != iTrackEnd; ++iTrack) {
-    //
+    // Compute covariance matrix for track
+    ResidualCovarianceTool cov;
+    cov.compute(*(*iTrack));
+    // skip track
+    if (cov.error()) {
+      warning() << "Error computing residual cov matrix. Skipping track of type "
+                << (*iTrack)->type() << endmsg ;
+      continue;
+    }
     std::vector<Data> data;
     // Get nodes. Need them for measurements, residuals and errors
     const Nodes& nodes = (*iTrack)->nodes();
-    if (printDebug()) debug() << "==> Found " << nodes.size() << " nodes"<< endmsg;
-
+    if (printVerbose()) verbose() << "==> Found " << nodes.size() << " nodes"<< endmsg;
     // Loop over nodes and get measurements, residuals and errors
     typedef Nodes::const_iterator NodeIter;
     size_t numexternalhits(0) ;
-    for (NodeIter node = nodes.begin(), end = nodes.end(); node != end; ++node) 
+    for (NodeIter node = nodes.begin(), end = nodes.end(); node != end; ++node) {
       if ((*node)->hasMeasurement()) {
 	// Get measurement
 	const Measurement& meas = (*node)->measurement();
@@ -335,39 +342,41 @@ StatusCode AlignAlgorithm::execute() {
 	data.push_back(Data(**node, index, res, der));
 	m_equations->addHitSummary( index, err ) ;
       }
+    }
     
     if (!data.empty()) {
-      ResidualCovarianceTool cov;
-      cov.compute(*(*iTrack));
-      if(cov.error()) {
-	warning() << "Error computing residual cov matrix. Skipping track of type "
-		  << (*iTrack)->type() << endmsg ;
-      } else {
-	for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
-	  m_equations->V(id->index())               -= convert(id->r()*id->d()) ;
-	  m_equations->M(id->index(), id->index())  += (Transpose(id->d())*id->d());
-	  
-	  for (std::vector<Data>::const_iterator jd = data.begin(); jd != idEnd; ++jd) {
-	    if ( id == jd || ( m_correlation && id->index() <= jd->index() )) {
-	      double c = cov.HCH_norm(*id->id(),*jd->id());
-	      m_equations->M(id->index(), jd->index()) -= c * (Transpose(id->d())*jd->d());
-	      
-	      if ( m_fillCorrelationHistos ) {
-		if (!( id->id() == jd->id())) {
-		  m_corrHistos[std::make_pair(id->index(), jd->index())]->
-                  fill(m_iteration, c/std::sqrt(cov.HCH_norm(*id->id(), *id->id())*cov.HCH_norm(*jd->id(), *jd->id())));
-		} else {
-		  m_autoCorrHistos[id->index()]->fill(m_iteration, c);
-		}
-	      }
-	    }
+      // old 
+      // ResidualCovarianceTool cov;
+      //       cov.compute(*(*iTrack));
+      //       if(cov.error()) {
+      // 	warning() << "Error computing residual cov matrix. Skipping track of type "
+      // 		  << (*iTrack)->type() << endmsg ;
+      //       } else {
+      for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
+        m_equations->V(id->index())               -= convert(id->r()*id->d()) ;
+        m_equations->M(id->index(), id->index())  += (Transpose(id->d())*id->d());
+        
+        for (std::vector<Data>::const_iterator jd = data.begin(); jd != idEnd; ++jd) {
+          if ( id == jd || ( m_correlation && id->index() <= jd->index() )) {
+            double c = cov.HCH_norm(*id->id(),*jd->id());
+            m_equations->M(id->index(), jd->index()) -= c * (Transpose(id->d())*jd->d());
+	    
+            if ( m_fillCorrelationHistos ) {
+              if (!( id->id() == jd->id())) {
+                m_corrHistos[std::make_pair(id->index(), jd->index())]->
+                fill(m_iteration, c/std::sqrt(cov.HCH_norm(*id->id(), *id->id())*cov.HCH_norm(*jd->id(), *jd->id())));
+              } else {
+                m_autoCorrHistos[id->index()]->fill(m_iteration, c);
+              }
+            }
           }
         }
-	// keep some information about the tracks that we have seen
-	m_equations->addTrackSummary( (*iTrack)->chi2(), (*iTrack)->nDoF(), numexternalhits ) ;
       }
+      // keep some information about the tracks that we have seen
+      m_equations->addTrackSummary( (*iTrack)->chi2(), (*iTrack)->nDoF(), numexternalhits ) ;
     }
   }
+  //}
 
   return StatusCode::SUCCESS;
 }
@@ -640,8 +649,8 @@ void AlignAlgorithm::update() {
       derivatives[insert_i] = tmpDerivatives[index_i];
       for (std::vector<bool>::const_iterator j = i, jEnd = dofmask.end(); j != jEnd; ++j) {
         if (*j) {
-          if (printDebug()) {
-            debug() << "insert_i = " << insert_i << " insert_j = " << insert_j 
+          if (printVerbose()) {
+            verbose() << "insert_i = " << insert_i << " insert_j = " << insert_j 
                     << " matrix[" << index_i << "][" << std::distance(boolIter(dofmask.begin()), j) << "]" 
                     << tmpMatrix[index_i][std::distance(boolIter(dofmask.begin()), j)] << endmsg;
           }
@@ -658,8 +667,8 @@ void AlignAlgorithm::update() {
   }
 
   logmessage << "Number of alignables with insufficient statistics: " << std::count(offsets.begin(),offsets.end(),-1) << std::endl
-	     << "Number of constraints: " << numConstraints << std::endl
-	     << "Number of active parameters: " << nDOFs-numConstraints << std::endl ;
+	     << "Number of constraints: "                             << numConstraints << std::endl
+	     << "Number of active parameters: "                       << nDOFs-numConstraints << std::endl ;
   
   if (nDOFs < 50 ) {
     info() << "AlVec Vector    = " << derivatives << endmsg;
