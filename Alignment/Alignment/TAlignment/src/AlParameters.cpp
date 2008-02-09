@@ -70,16 +70,41 @@ std::vector<double> AlParameters::rotation() const
   return rc ;
 }
 
+// old
+// ROOT::Math::Transform3D AlParameters::transform() const
+// {
+//   double pars[6];
+//   for (size_t iactive = 0u; iactive < dim(); ++iactive) {
+//     std::cout << "iactive = " << iactive << " m_mask.parIndex(iactive) =  " << m_mask.parIndex(iactive) << " pars = " << pars[m_mask.parIndex(iactive)] << " m_parameters = " << m_parameters[iactive] <<  std::endl;
+//     pars[m_mask.parIndex(iactive)] = m_parameters[iactive] ;    std::cout << "iactive = " << iactive << " m_mask.parIndex(iactive) =  " << m_mask.parIndex(iactive) << " pars = " << pars[m_mask.parIndex(iactive)] << " m_parameters = " << m_parameters[iactive] <<  std::endl;
+    
+//   }
+//   return transform(pars) ;
+// }
+
+// old
+//ROOT::Math::Transform3D AlParameters::transform(double pars[6])
+// {
+//   ROOT::Math::Transform3D translation( ROOT::Math::XYZVector(pars[0],pars[1],pars[2]) ) ;
+//   ROOT::Math::Transform3D rotation( ROOT::Math::RotationX(pars[3])*
+//  				    ROOT::Math::RotationY(pars[4])*
+// 				    ROOT::Math::RotationZ(pars[5])
+//  				    ) ;
+//   return translation * rotation ;
+// }
+
 ROOT::Math::Transform3D AlParameters::transform() const
 {
-  double pars[6] ;
-  for(size_t iactive=0; iactive<dim(); ++iactive)
+  std::vector<double> pars(6, 0.0);
+  for (size_t iactive = 0u; iactive < dim(); ++iactive) {
     pars[m_mask.parIndex(iactive)] = m_parameters[iactive] ;
+  }
   return transform(pars) ;
 }
 
-ROOT::Math::Transform3D AlParameters::transform(double pars[6])
+ROOT::Math::Transform3D AlParameters::transform(const std::vector<double>& pars)
 {
+  assert(pars.size() == 6);
   ROOT::Math::Transform3D translation( ROOT::Math::XYZVector(pars[0],pars[1],pars[2]) ) ;
   ROOT::Math::Transform3D rotation( ROOT::Math::RotationX(pars[3])*
  				    ROOT::Math::RotationY(pars[4])*
@@ -179,7 +204,8 @@ AlParameters::Matrix6x6 AlParameters::jacobianNumeric( const ROOT::Math::Transfo
   ROOT::Math::Transform3D Tinv = T.Inverse() ;
   
   for(int j=0; j<6; ++j) {
-    double delta[6] = {0,0,0,0,0,0} ;
+    //old: double delta[6] = {0,0,0,0,0,0} ;
+    std::vector<double> delta(6, 0.0);
     delta[j] += epsilon ;
     ROOT::Math::Transform3D Delta      = transform(delta) ;
     ROOT::Math::Transform3D DeltaPrime = T * Delta * Tinv ;

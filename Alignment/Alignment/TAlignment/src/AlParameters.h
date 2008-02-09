@@ -14,10 +14,10 @@ class AlParameters
 public:
   /** Enums, typedefs */
   enum { Tx=0, Ty, Tz, Rx, Ry, Rz, NumPars } EParameter ;
-  typedef AlVec      Vector ;
-  typedef AlSymMat   Covariance ;
+  typedef AlVec                             Vector ;
+  typedef AlSymMat                          Covariance ;
   typedef ROOT::Math::SMatrix<double, 6, 6> Matrix6x6 ;
-  typedef boost::array<double,NumPars> TransformParameters ;
+  typedef boost::array<double,NumPars>      TransformParameters ;
 
   /** Constructors */
   AlParameters(AlDofMask mask=AlDofMask()) ;
@@ -29,7 +29,8 @@ public:
   std::vector<double> rotation() const ;
   ROOT::Math::Transform3D transform() const ;
   // create the transform for a given delta
-  static ROOT::Math::Transform3D transform(double delta[6]) ;
+  //static ROOT::Math::Transform3D transform(double delta[6]) ;
+  static ROOT::Math::Transform3D transform(const std::vector<double>& pars) ;
   // compute the delta jacobian for a given coordinate transformation
   static Matrix6x6 jacobian( const ROOT::Math::Transform3D& transform) ;
   static Matrix6x6 jacobianNumeric( const ROOT::Math::Transform3D& transform) ;
