@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.12 2008-02-08 10:02:12 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.13 2008-02-09 02:30:22 janos Exp $
 // Include files
 
 // from STD
@@ -136,11 +136,11 @@ bool AlignmentElement::operator==(const DetectorElement* rhs) const {
 StatusCode AlignmentElement::updateGeometry( const AlParameters& parameters) const 
 {
   /// Construct global delta matrix from deltas
-  //   const std::vector<double>& localDeltaT = parameters.translation() ;
-  //   const std::vector<double>& localDeltaR = parameters.rotation() ;
-  //   const Gaudi::Transform3D globalDeltaMatrix = DetDesc::localToGlobalTransformation(localDeltaT,
-  //                                                                                     localDeltaR,
-  // 										    this->pivot()) ;
+  // const std::vector<double>& globalDeltaT = parameters.translation() ;
+//   const std::vector<double>& globalDeltaR = parameters.rotation() ;
+//   const Gaudi::Transform3D globalDeltaMatrix = DetDesc::localToGlobalTransformation(globalDeltaT,
+//                                                                                     globalDeltaR,
+//                                                                                     this->pivot()) ;
   //   std::cout << "Juan's calculation: " << globalDeltaMatrix << std::endl ;
   //   std::cout << "Mine: " 
   // 	    << m_alignmentFrame * parameters.transform() * m_alignmentFrame.Inverse() << std::endl ;
