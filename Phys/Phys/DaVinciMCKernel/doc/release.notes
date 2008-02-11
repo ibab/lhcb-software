@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.27 2008-02-11 10:59:40 jpalac Exp $
+! $Id: release.notes,v 1.28 2008-02-11 12:34:00 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2008-02-11 - Juan PALACIOS
+ - Kernel/IDebugTool.h, IPrintDecayTreeTool.h
+  . revert cleaning up of includes from  2008-02-07. Kernel/Particle2MCLinker
+    HAS to be included as Particle2MCLinker is a typedef of a templated 
+    classs, so no forward declaration is possible.
 
 ! 2008-02-11 - Juan PALACIOS
  - Kernel/Particle2MCLinker.icpp
