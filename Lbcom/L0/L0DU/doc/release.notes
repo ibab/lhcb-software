@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.83 2008-02-07 17:24:52 odescham Exp $
+! $Id: release.notes,v 1.84 2008-02-11 21:57:41 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+
+! 2008-02-11 - Olivier Deschamps 
+ - L0DUFromRawTool : fix redundant rootInTES in get<rawEvent>(rootInTES() + rawEventLocation )
 
 
 ! 2008-02-07 - Olivier Deschamps 

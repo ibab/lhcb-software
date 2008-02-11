@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.4 2008-02-07 17:24:52 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.5 2008-02-11 21:57:41 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -82,7 +82,7 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
     return false;
   }      
   
-  rawEvt= get<LHCb::RawEvent>( rootInTES() + m_rawLocation );
+  rawEvt= get<LHCb::RawEvent>( m_rawLocation );
   m_banks= &rawEvt->banks(   LHCb::RawBank::L0DU );
 
   
