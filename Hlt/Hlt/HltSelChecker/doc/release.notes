@@ -12,6 +12,13 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-02-11 - Patrick Koppenburg
+ - HltBackgroundCategory : new algorithm that prints correlation of background
+   category and hlt selection. Note that it requires  LHCbKernel from 
+   2008-02-11 or later.
+ - DVTestHltBd2MuMuKstar.opts : use it
+ - increment to v5r5
+
 !========================== HltSelChecker v5r4 2008-02-05 ===================
 ! 2007-12-18 - Patrick Koppenburg
  - Added test for muon lines

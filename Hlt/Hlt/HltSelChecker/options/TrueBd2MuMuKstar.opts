@@ -10,10 +10,11 @@
 // Truth filter for Bd -> MuMuK*
 //
 SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
+SeqHltTruthFilter.IgnoreFilterPassed = true ;
 SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltNoPIDsPions","Phys/HltMuons" } ;
 SelectTrueDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bd2MuMuKstar",
-                                              "pi+ : TrueMCFilterCriterion/Bd2MuMuKstar",
-                                              "mu+ : TrueMCFilterCriterion/Bd2MuMuKstar"} ;
+                                       "pi+ : TrueMCFilterCriterion/Bd2MuMuKstar",
+                                       "mu+ : TrueMCFilterCriterion/Bd2MuMuKstar"} ;
 
 SelectTrueDecay.Filter.Bd2MuMuKstar.MCDecayFinder.Decay = "[[B0]nos => ^K+ ^pi- ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc, [[B0]os => ^K- ^pi+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc" ;
 //

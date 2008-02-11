@@ -48,7 +48,7 @@ HltSelChecker.Context = "HLT" ;
 OfflineChecker.OutputLevel = 3 ;
 //OfflineChecker.DoPrint = true ;
 
-ApplicationMgr.EvtMax = -1 ;
+ApplicationMgr.EvtMax = 50 ;
 EventSelector.FirstEvent = 1 ;
 EventSelector.PrintFreq = 1 ;
 
@@ -58,3 +58,54 @@ PrintMCTree.ParticleNames = { "B0", "B~0" };
 // HltAlleyMuons.OutputLevel = 1 ;
 // HltForwardMuons.OutputLevel = 1 ;
 
+
+ApplicationMgr.TopAlg += { "DecayTreeTuple/Bd2MuMuKstarTree" };
+
+Bd2MuMuKstarTree.OutputLevel = 3;
+Bd2MuMuKstarTree.PhysDesktop.OutputLevel = 3;
+Bd2MuMuKstarTree.PhysDesktop.InputLocations = {"Phys/HltSelBd2MuMuKstar"};
+// Bd2MuMuKstarTree.FillEventCollection = true;
+ToolSvc.BTaggingTool.OutputLevel = 4;
+
+Bd2MuMuKstarTree.Decay = "[B0 -> (^J/psi(1S) => ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc";
+
+Bd2MuMuKstarTree.ToolList += {  
+      "TupleToolTrigger"
+    , "TupleToolMCTruth"
+    , "TupleToolMCBackgroundInfo"
+    , "TupleToolGeometry"
+    , "TupleToolKinematic"
+    , "TupleToolPropertime"
+    , "TupleToolPrimaries"
+    , "TupleToolEventInfo"
+};
+
+// special for head
+Bd2MuMuKstarTree.Branches = {
+  "Head" : "[B0]cc : [B0 -> (J/psi(1S) => mu+ mu-) (K*(892)0 -> K+ pi-)]cc" 
+};
+
+Bd2MuMuKstarTree.Head.ToolList = { "TupleToolP2VV"
+                                   //, "TupleToolTagging"
+};
+
+#include "$FLAVOURTAGGINGOPTS/BTaggingTool.opts"
+
+Bd2MuMuKstarTree.TupleToolMCTruth.StoreKineticInfo = true;
+Bd2MuMuKstarTree.TupleToolMCTruth.StoreVertexInfo = true;
+Bd2MuMuKstarTree.TupleToolTrigger.VerboseL0 = true ;
+Bd2MuMuKstarTree.TupleToolTrigger.VerboseAlleys = true ;
+Bd2MuMuKstarTree.TupleToolTrigger.VerboseSelections = true ;
+
+//Bd2MuMuKstarTree.Head.TupleToolP2VV.OutputLevel = 2 ;
+
+//Bd2MuMuKstarTree.OutputLevel = 1 ;
+
+//ApplicationMgr.TopAlg += { "HltBackgroundCategory" } ;
+//HltBackgroundCategory.AlgorithmCorrelations.UseNumbers = false ;
+//HltBackgroundCategory.AlgorithmCorrelations.Decimals = 3 ;
+HltBackgroundCategory.FillAll = true ;
+//HltBackgroundCategory.AlgorithmCorrelations.OnlyNonZero = false ;
+//HltBackgroundCategory.AlgorithmCorrelations.OutputLevel = 1 ;
+
+//HltSelectionsCorrs.OutputLevel = 2 ;
