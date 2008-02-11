@@ -1,8 +1,13 @@
+! $Id: release.notes,v 1.27 2008-02-11 10:59:40 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2008-02-11 - Juan PALACIOS
+ - Kernel/Particle2MCLinker.icpp
+  . Fix some of my own typos.
 
 !====================== DaVinciMCKernel v2r6 2008-02-07 =====================
 ! 2008-02-07 - Marco Cattaneo
