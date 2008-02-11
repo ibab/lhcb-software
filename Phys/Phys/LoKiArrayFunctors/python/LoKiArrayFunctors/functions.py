@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.8 2007-12-02 17:10:45 ibelyaev Exp $ 
+# $Id: functions.py,v 1.9 2008-02-11 10:26:28 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The set of basic objects from LoKiHlt library
@@ -190,8 +190,9 @@ AWRONGMASS    = LoKi.AParticles.WrongMass
 
 
 ## functional part
-_va      = std.vector ( _T    )
-_vd       = std.vector ('double')
+_va       = 'std::vector<LoKi::Range_<std::vector<const LHCb::Particle*> > >' ## std.vector ( _T    )
+## _va       = std.vector ( _T    )
+_vd       = 'std::vector<double>'                                             ## std.vector ('double')
 #
 AMaps      = LoKi.Functor             ( _va , _vd       )
 AMap       = LoKi.FunctorFromFunctor  ( _va , _vd       )

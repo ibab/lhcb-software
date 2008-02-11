@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.3 2007-12-02 17:10:45 ibelyaev Exp $ 
+# $Id: decorators.py,v 1.4 2008-02-11 10:26:28 ibelyaev Exp $ 
 # =============================================================================
 ## @file  LoKiArrayFunctors/decorators.py
 #  The set of basic decorator for objects from LoKiHlt library
@@ -54,8 +54,10 @@ def _decorate ( name = _name  ) :
         LoKi.Dicts.CutCalls(_T)                         , ## call-traits 
         LoKi.Dicts.CutsOps(_T,_T)                       ) ## operators 
     ## functional:
-    _vd = std.vector( 'double' )
-    _va = std.vector( _T ) 
+    
+    _va = 'std::vector<LoKi::Range_<std::vector<const LHCb::Particle*> > >' ## std.vector ( _T    )
+    _vd = 'std::vector<double>'                                             ## std.vector ('double')
+
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                             , ## module name
         LoKi.Functor( _va , _vd  )                       , ## the base
