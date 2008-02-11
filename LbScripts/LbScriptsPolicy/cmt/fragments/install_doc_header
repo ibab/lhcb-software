@@ -1,0 +1,44 @@
+#-- start of install_doc_header ------
+
+
+installarea = ${CMTINSTALLAREA}
+install_doc_dir = $(installarea)
+
+${CONSTITUENT} :: ${CONSTITUENT}install
+
+install :: ${CONSTITUENT}install
+
+${CONSTITUENT}install :: $(install_doc_dir)
+	@if [ ! "$(installarea)" = "" ]; then\
+	  echo "installation done"; \
+	fi
+
+$(install_doc_dir) ::
+	@if [ "$(installarea)" = "" ]; then \
+	  echo "Cannot install doc files, no installation source specified"; \
+	else \
+      src=../doc ; \
+	  dest=$(install_doc_dir) ; \
+	  if [ -d $$src ]; then \
+	     echo "Installing files from source $$src to $$dest"; \
+	     $(install_command) $$src $$dest ;\
+	  else \
+	     echo "no source  $$src"; \
+	  fi; \
+	fi
+
+${CONSTITUENT}clean :: ${CONSTITUENT}uninstall
+
+uninstall :: ${CONSTITUENT}uninstall
+
+${CONSTITUENT}uninstall ::
+	@if test "$(installarea)" = ""; then \
+	  echo "Cannot uninstall doc files, no installation source specified"; \
+	else \
+      dest=$(install_doc_dir) ; \
+	  echo "Uninstalling files from $$dest"; \
+	  $(uninstall_command) "$${dest}" ; \
+	fi
+
+
+#-- end of install_doc_header ------

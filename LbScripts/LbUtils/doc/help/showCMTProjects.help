@@ -1,0 +1,27 @@
+Usage: showCMTProjects.py [options] projectname version
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -s, --case-sensitive  matching of the project name in case sensitive mode
+                        [default: True]
+  -i, --case-insensitive
+                        matching of the project name in case insensitive mode
+  -P CMTPROJECTPATH, --project-path=CMTPROJECTPATH
+                        set CMTPROJECTPATH The fallback environment variable
+                        is set to CMTPROJECTPATH
+  -S SELECTION, --select=SELECTION
+                        filter project path according to the selection
+  -d, --dependencies    show project dependencies
+  -b, --base            show base projects
+  -c, --client          show client projects
+  -B, --recurse-base    recurse in the base direction
+  -C, --recurse-clients
+                        recurse in the client direction
+  --show-contained-packages
+                        show contained packages in the selected project(s)
+  --show-used-packages  show used packages in the selected project(s)
+                        according to the list of binaries
+  --binaries=BINARIES   set binaries platforms The fallback environment
+                        variable is set to CMTCONFIG
+  -t TAGS, --tags=TAGS  set CMT extra tags

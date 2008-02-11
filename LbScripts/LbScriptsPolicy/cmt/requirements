@@ -102,21 +102,40 @@ apply_pattern source_shell_alias script=SourceShellAlias
 cmtpath_pattern \
    macro <project>_install_scripts "" \
          <project>_without_installarea "" \
-         <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/scripts"\
+         <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/scripts" \
          <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix)\scripts" ; \
     path_remove  PATH ${<project>_install_scripts} ; \ 
     path_prepend PATH ${<project>_install_scripts}
 
 pattern install_scripts \
-    macro <package>_install_python "" \
-         <project>_without_installarea&Unix "$(<package>_root)/scripts" \
-         <project>_without_installarea&WIN32 "$(<package>_root)\scripts" ; \
+    macro <package>_install_scripts "" \
+          <project>_without_installarea&Unix "$(<package>_root)/scripts" \
+          <project>_without_installarea&WIN32 "$(<package>_root)\scripts" ; \
     path_remove  PATH ${<package>_install_scripts} ; \ 
     path_prepend PATH ${<package>_install_scripts} ; \
     document install_scripts install_scripts 
     
-    
 make_fragment install_scripts -header=install_scripts_header
+
+cmtpath_pattern \
+   macro <project>_install_script_doc "" \
+         <project>_without_installarea "" \
+         <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/doc/help" \
+         <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix)\doc\help" ; \
+    path_remove  HPATH ${<project>_install_script_doc} ; \ 
+    path_prepend HPATH ${<project>_install_script_doc}
+
+pattern install_script_doc \
+    macro <package>_install_script_doc "" \
+          <project>_without_installarea&Unix "$(<package>_root)/doc/help" \
+          <project>_without_installarea&WIN32 "$(<package>_root)\doc\help" ; \
+    path_remove  HPATH ${<package>_install_script_doc} ; \ 
+    path_prepend HPATH ${<package>_install_script_doc} ; \
+    document install_doc install_doc 
+    
+make_fragment install_doc -header=install_doc_header
+
+
 
 
 #---------------------------------------------------
@@ -125,7 +144,8 @@ make_fragment install_scripts -header=install_scripts_header
 
 cmtpath_pattern \
     apply_pattern install_scripts ; \
-    apply_pattern install_python_modules ;
+    apply_pattern install_python_modules ; \
+    apply_pattern install_script_doc
 
 #---------------------------------------------------
 # remove CMTPATH from the environment
