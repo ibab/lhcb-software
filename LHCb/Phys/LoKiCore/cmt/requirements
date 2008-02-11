@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.32 2008-01-15 19:57:19 ibelyaev Exp $ 
+# $Id: requirements,v 1.33 2008-02-11 09:59:13 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -18,7 +18,7 @@ use                ROOT             v* LCG_Interfaces
 use                AIDA             v* LCG_Interfaces 
 use                RELAX            v* LCG_Interfaces 
 use                GSL              v* LCG_Interfaces -no_auto_imports
-use                Reflex           v* LCG_Interfaces -no_auto_imports
+use                Reflex           v* LCG_Interfaces 
 use                Python           v* LCG_Interfaces 
 
 # ================ own includes ===============================================

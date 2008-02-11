@@ -1,4 +1,4 @@
-// $Id: Print.h,v 1.10 2007-08-11 20:17:00 ibelyaev Exp $
+// $Id: Print.h,v 1.11 2008-02-11 09:59:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRINT_H 
 #define LOKI_PRINT_H 1
@@ -11,6 +11,9 @@
 // ============================================================================
 #include "GaudiKernel/ToStream.h"
 #include "GaudiKernel/MsgStream.h"
+// ============================================================================
+class DataObject ;
+class ContainedObject ;
 // ============================================================================
 /** @file
  *
@@ -37,15 +40,15 @@ namespace LoKi
    */
   namespace Print
   {
-    // ============================================================================
+    // ========================================================================
     template <class TYPE> 
     inline  std::string toString ( const TYPE& value ) 
     { return Gaudi::Utils::toString ( value ) ; }
-    // ============================================================================
+    // ========================================================================
     template <class TYPE> 
     inline  std::string print    ( const TYPE& value ) 
     { return toString ( value ) ; }
-    // ============================================================================
+    // ========================================================================
     /** Trivial generic printout to some stream 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-16
@@ -58,7 +61,7 @@ namespace LoKi
     { 
       return Gaudi::Utils::toStream ( object , stream ) ; 
     }
-    // ============================================================================
+    // =======================================================================
     template <class TYPE>
     inline MsgStream& toStream 
     ( MsgStream&   stream , 
@@ -68,7 +71,11 @@ namespace LoKi
       { Gaudi::Utils::toStream ( object , stream ) ; }
       return stream ;      
     }
-    // ============================================================================
+    // ========================================================================
+    /// make printout of DataObject
+    std::string toString ( const DataObject*      obj ) ;
+    /// make printout of DataObject
+    std::string toString ( const ContainedObject* obj ) ;    
   } // end of namespace LoKi::Print
 } // end of namespace LoKi
 // ============================================================================

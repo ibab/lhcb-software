@@ -991,7 +991,7 @@ def decorateMaps ( funcs , opers ) :
     Decorate all mapping functions
     """
     for fun in funcs :
-        print fun
+        ## print fun
 
         ## Use the vector function as streamer
         if hasattr ( opers , '__rrshift__' ) : 
@@ -1051,7 +1051,9 @@ def decorateMaps ( funcs , opers ) :
 # =============================================================================
 ## get all mapping functors and decorate them 
 def getAndDecorateMaps   ( name , base , opers ) :
-    """ get all maps  and decorate them """
+    """
+    get all maps  and decorate them
+    """
     funcs = getInherited ( name , base )
     return decorateMaps  ( funcs , opers )  ## RETURN 
 # =============================================================================
