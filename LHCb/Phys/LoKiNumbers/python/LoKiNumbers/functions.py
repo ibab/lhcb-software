@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.2 2007-12-01 12:44:27 ibelyaev Exp $ 
+# $Id: functions.py,v 1.3 2008-02-11 10:03:58 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiNumbers/functions.py
 #  The full set of useful objects from LoKiNumbers library 
@@ -20,7 +20,8 @@ LoKi     = _LoKiCore.LoKi
 
 
 _d = 'double'
-_v = std.vector( _d ) 
+## _v = std.vector( _d ) 
+_v = 'std::vector<double>' 
 XFunc     = LoKi.Functor            ( _d , _d   )
 XFun      = LoKi.FunctorFromFunctor ( _d , _d   )
 XCuts     = LoKi.Functor            ( _d , bool )
@@ -61,7 +62,7 @@ XID       = X
 XV        = LoKi.Identity ( _v , _v   ) ()
 XVID      = XV
 
-XVector   = _v
+XVector   = std.vector(_d)
 
 # =============================================================================
 ## The iterator function for the vector of something

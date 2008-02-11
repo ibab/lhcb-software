@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.43 2007-12-10 07:33:14 cattanem Exp $ 
+! $Id: release.notes,v 1.44 2008-02-11 10:05:33 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,14 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+!============================ LoKiGen v7r1 2008-02-11 =========================
+
+! 2008-02-11 - Vanya BELYAEV
+ - many small fixes for new Gaudi/ROOT/Reflex 
+ - cmt/requirements 
+     version increment to v7r1
+
 
 !============================ LoKiGen v7r0 2007-12-09 =========================
 

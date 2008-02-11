@@ -1,16 +1,17 @@
-# $Id: requirements,v 1.2 2008-01-22 19:21:19 ibelyaev Exp $ 
+# $Id: requirements,v 1.3 2008-02-11 10:03:58 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2007-12-01
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiNumbers
-version            v7r1
+version            v7r2
 
 # ================ structure ==================================================
 branches           cmt doc dict python 
 
 # ================ dependencies ===============================================
 use   LoKiCore     v*    Phys 
+use   GaudiPython v* 
 
 # ================ own includes ===============================================
 apply_pattern install_python_modules 

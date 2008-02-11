@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.34 2007-12-09 18:20:17 ibelyaev Exp $ 
+! $Id: release.notes,v 1.35 2008-02-11 10:06:58 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiMC v7r1 2008-02-11 ============================
+
+! 2008-02-11 - Vanya BELYAEV
+ - various minor fixes for new Gaudi/ROOT/Reflex 
+ - cmt/requirements
+    version increment to v7r1 
 
 !========================== LoKiMC v7r0 2007-12-09 ============================
 

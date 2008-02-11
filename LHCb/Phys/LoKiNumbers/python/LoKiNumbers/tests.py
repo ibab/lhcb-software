@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.2 2007-12-01 12:44:27 ibelyaev Exp $
+# $Id: tests.py,v 1.3 2008-02-11 10:03:58 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -11,6 +11,8 @@ The basic tests for LoKiNumbers package
 """
 _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
+
+import GaudiPython.Pythonizations
 
 from LoKiNumbers.decorators import *
 from LoKiCore.functions     import *

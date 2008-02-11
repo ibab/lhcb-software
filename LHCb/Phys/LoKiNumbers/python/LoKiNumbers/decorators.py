@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.2 2007-12-01 12:44:27 ibelyaev Exp $
+# $Id: decorators.py,v 1.3 2008-02-11 10:03:58 ibelyaev Exp $
 # =============================================================================
 ## @file decorators.py LoKiNumbers/decorators.py
 #  The set of basic decorator for objects from LoKiNumberslibrary
@@ -26,7 +26,7 @@ def _decorate ( name = _name  ) :
     """
     import LoKiCore.decorators as _LoKiCore
     _d = 'double'
-    _v = std.vector( _d ) 
+    _v = 'std::vector<double>' 
     
     _decorated   = _LoKiCore.getAndDecorateFunctions  (
         name                                             , ## module name 

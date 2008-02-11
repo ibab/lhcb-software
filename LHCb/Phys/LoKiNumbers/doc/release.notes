@@ -4,6 +4,14 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiNumbers v7r2 2008-02-11 =====================
+
+! 2008-02-11 - Vanya BELYAEV
+ - various fixes for new Gaudi 
+ - cmt/requirements 
+    version incretement to v7r2 
+
+
 ! =========================== LoKiNumbers v7r1 2008-01-24 =====================
 ! 2008-01-22 - Vanya BELYAEV
  - dict/LoKiNumbers.xml, dict/LoKiNumbersDict.h 

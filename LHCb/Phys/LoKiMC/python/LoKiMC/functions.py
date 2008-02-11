@@ -269,9 +269,13 @@ MCVXFUN     = LoKi.MCVertices.MCVFunAsMCFun
 # functional part:
 
 ## functional part
-_vp       = std.vector ( _MCP    )
-_vv       = std.vector ( _MCV    )
-_vd       = std.vector ('double')
+##_vp       = std.vector ( _MCP    )
+##_vv       = std.vector ( _MCV    )
+##_vd       = std.vector ('double')
+_vp       = 'std::vector<const LHCb::MCParticle*>'
+_vv       = 'std::vector<const LHCb::MCVertex*>'
+_vd       = 'std::vector<double>'
+
 #
 MCMaps      = LoKi.Functor             ( _vp , _vd      )
 MCMap       = LoKi.FunctorFromFunctor  ( _vp , _vd      )

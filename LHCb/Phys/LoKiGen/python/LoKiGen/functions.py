@@ -230,9 +230,13 @@ GVSUM      = LoKi.GenVertices.SumIF
 
 
 ## functional part
-_vgp      = std.vector ( _GP    )
-_vgv      = std.vector ( _GV    )
-_vd       = std.vector ('double')
+#_vgp      = std.vector ( _GP    )
+#_vgv      = std.vector ( _GV    )
+#_vd       = std.vector ('double')
+_vgp      = 'std::vector<const HepMC::GenParticle*>'
+_vgv      = 'std::vector<const HepMC::GenVertex*>'
+_vd       = 'std::vector<double>'
+
 #
 GMaps      = LoKi.Functor             ( _vgp , _vd       )
 GMap       = LoKi.FunctorFromFunctor  ( _vgp , _vd       )

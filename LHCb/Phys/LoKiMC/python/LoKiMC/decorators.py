@@ -97,9 +97,12 @@ def _decorate ( name = _name ) :
     import LoKiCore.decorators as _LoKiCore
     _mcp = 'const LHCb::MCParticle*'
     _mcv = 'const LHCb::MCVertex*'
-    _vp  = std.vector( _mcp )
-    _vv  = std.vector( _mcv )
-    _vd  = std.vector( 'double' )
+    #_vp  = std.vector( _mcp )
+    #_vv  = std.vector( _mcv )
+    #_vd  = std.vector( 'double' )
+    _vp  = 'std::vector<const LHCb::MCParticle*>' ## std.vector( _mcp )
+    _vv  = 'std::vector<const LHCb::MCVertex*>'   ## std.vector( _mcv )
+    _vd  = 'std::vector<double>'                  ## std.vector( 'double' )
     #
     _decorated  = _LoKiCore.getAndDecorateFunctions (
         name                                          , ## module name 
@@ -154,7 +157,6 @@ def _decorate ( name = _name ) :
         name                                          , ## module name
         LoKi.Functor( _vv , _mcv )                    , ## the base
         LoKi.Dicts.ElementOps(_mcv,_mcv)              ) ## streamers
-    print "here2:", len(_decorated)
      #sources
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                           , ## module name
@@ -164,7 +166,6 @@ def _decorate ( name = _name ) :
         name                                           , ## module name
         LoKi.Functor( 'void' , _vv )                   , ## the base
         LoKi.Dicts.SourceOps(_mcv,_mcv)                ) ## streamers
-    print "here2:", len(_decorated)
    
     ## decorate pids (Comparison with strings, integers and ParticleID objects:
     for t in ( MCID , MCABSID ) :

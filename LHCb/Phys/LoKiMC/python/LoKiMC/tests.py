@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.2 2007-12-02 11:17:57 ibelyaev Exp $
+# $Id: tests.py,v 1.3 2008-02-11 10:06:58 ibelyaev Exp $
 # =============================================================================
 ## @file   LoKiMC/tests.py
 #   
@@ -29,6 +29,8 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
+
+import GaudiPython.Pythonizations
 
 import LoKiMC.MC
 import LoKiNumbers.decorators 

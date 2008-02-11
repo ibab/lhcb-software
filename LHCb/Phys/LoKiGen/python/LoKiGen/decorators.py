@@ -39,9 +39,15 @@ def _decorate ( name = _name  ) :
     import LoKiCore.decorators as _LoKiCore
     _gp  = 'const HepMC::GenParticle*'
     _gv  = 'const HepMC::GenVertex*'
-    _vgp = std.vector ( _gp      )
-    _vgv = std.vector ( _gv      )
-    _vd  = std.vector ( 'double' )
+    
+    ## _vgp = std.vector ( _gp      )
+    ## _vgv = std.vector ( _gv      )
+    ## _vd  = std.vector ( 'double' )
+
+    _vgp = 'std::vector<const HepMC::GenParticle*>'
+    _vgv = 'std::vector<const HepMC::GenVertex*>'
+    _vd  = 'std::vector<double>'
+
     _decorated  = _LoKiCore.getAndDecorateFunctions (
         name                                             , ## module name 
         LoKi.Functor('const HepMC::GenParticle*,double') , ## the base 
