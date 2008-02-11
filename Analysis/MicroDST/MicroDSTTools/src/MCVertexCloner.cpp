@@ -1,4 +1,4 @@
-// $Id: MCVertexCloner.cpp,v 1.1.1.1 2007-12-10 09:32:24 jpalac Exp $
+// $Id: MCVertexCloner.cpp,v 1.2 2008-02-11 22:40:07 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -45,6 +45,10 @@ LHCb::MCVertex* MCVertexCloner::clone(const LHCb::MCVertex* vertex)
 StatusCode MCVertexCloner::initialize()
 {
 
+  StatusCode sc = MicroDSTTool::initialize();
+  
+  if (! sc.isSuccess() ) return sc;
+
   m_particleCloner = tool<ICloneMCParticle>( "MCParticleCloner",
                                              this->parent()       );
 
@@ -52,6 +56,11 @@ StatusCode MCVertexCloner::initialize()
   
 }
 //=============================================================================
+//=============================================================================
+StatusCode MCVertexCloner::finalize() 
+{
+  return MicroDSTTool::finalize();
+}
 //=============================================================================
 // Destructor
 //=============================================================================
