@@ -1,4 +1,4 @@
-// $Id: MCVertexCloner.h,v 1.1.1.1 2007-12-10 09:32:24 jpalac Exp $
+// $Id: MCVertexCloner.h,v 1.2 2008-02-11 22:39:53 jpalac Exp $
 #ifndef MCVERTEXCLONER_H 
 #define MCVERTEXCLONER_H 1
 
@@ -23,6 +23,8 @@ public:
   virtual ~MCVertexCloner( ); ///< Destructor
 
   StatusCode initialize();
+
+  StatusCode finalize();
 
   virtual LHCb::MCVertex* operator() (const LHCb::MCVertex* mcVertex);
 
