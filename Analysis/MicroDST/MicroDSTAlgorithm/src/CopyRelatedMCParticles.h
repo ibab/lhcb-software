@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.h,v 1.6 2007-12-11 17:37:12 jpalac Exp $
+// $Id: CopyRelatedMCParticles.h,v 1.7 2008-02-11 17:14:49 jpalac Exp $
 #ifndef COPYRELATEDMCPARTICLES_H 
 #define COPYRELATEDMCPARTICLES_H 1
 
@@ -56,8 +56,7 @@ private:
    * @author Juan Palacios juancho@nikhef.nl
    */
   StatusCode associatedMCParticles(const LHCb::Particle* particle,
-                                   LHCb::MCParticle::ConstVector&);
-  
+                                   Particle2MCLinker::ToRange&);
 
   /**
    *
@@ -90,6 +89,8 @@ private:
   typedef LHCb::MCVertex::Container MCVertices;
   typedef MicroDST::BasicItemCloner<LHCb::MCVertex> MCVertexItemCloner;
 
+  typedef  LinkerWithKey<LHCb::MCParticle, LHCb::Particle> MCLinker;
+
 private:
 
   Particle2MCLinker* m_compositeLinker; ///< Linker for composite particles
@@ -100,7 +101,7 @@ private:
 
   ICloneMCParticle* m_cloner;
   
-  
+  MCLinker* m_linker;
   
 };
 #endif // COPYRELATEDMCPARTICLES_H
