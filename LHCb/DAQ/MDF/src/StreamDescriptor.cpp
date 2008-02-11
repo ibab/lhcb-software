@@ -6,7 +6,7 @@
 //
 //  Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.16 2008-02-11 07:40:14 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.17 2008-02-11 07:56:50 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -393,7 +393,7 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
   else {
     if ( proto == "dcap"   ||   proto == "dcache" || 
 	 proto =="gsidcap" ||   proto == "castor" || 
-	 proto == "rfio" )
+	 proto == "rfio"   ||   proto == "gfal"  )
       {
 	proto = "root";
 	file  = specs;

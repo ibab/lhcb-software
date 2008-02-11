@@ -3,9 +3,9 @@ import os, sys, string
 exe = os.popen('cmt show macro_value GAUDI_install_scripts').readlines()[0][:-1]
 exe = exe + os.sep + '..' + os.sep + os.environ['CMTCONFIG']+os.sep+'bin'+os.sep+'Gaudi.exe'
 mdf = os.environ['MDFROOT'].replace(os.sep,'/')
-if sys.platform=='win32' and mdf[2]==':': mdf = mdf[2:]
+if sys.platform=='win32' and mdf[1]==':': mdf = mdf[2:]
 os.environ['MDFROOT'] = mdf
-
+print 'MDFROOT:',os.environ['MDFROOT']
 def nextTest(msg):
   print msg
   val = ''
