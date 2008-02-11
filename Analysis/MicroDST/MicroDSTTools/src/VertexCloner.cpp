@@ -1,4 +1,4 @@
-// $Id: VertexCloner.cpp,v 1.1.1.1 2007-12-10 09:32:24 jpalac Exp $
+// $Id: VertexCloner.cpp,v 1.2 2008-02-11 22:42:26 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -42,6 +42,10 @@ StatusCode VertexCloner::initialize()
 {
 
   debug() << "==> Initialize" << endmsg;
+
+  StatusCode sc = MicroDSTTool::initialize();
+  
+  if (! sc.isSuccess() ) return sc;
 
   debug() << "Going to get ParticleCloner" << endmsg;
   
