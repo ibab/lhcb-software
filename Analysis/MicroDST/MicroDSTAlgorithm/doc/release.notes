@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.44 2007-12-13 13:29:50 jpalac Exp $
+! $Id: release.notes,v 1.45 2008-02-11 17:16:28 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2008-02-11 - Juan PALACIOS
+ - src/CopyRelatedMCParticles.h
+  . Add a MCParticle to Particle linker table.
+  . Change signature of associatedMCParticles to use a Particle2MCLinker::ToRange.
+ - src/CopyRelatedMCParticles.cpp
+  . More work on association.
 
 !======================== MicroDST v3r0 2007-12-13 ====================
 
