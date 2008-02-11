@@ -1,0 +1,22 @@
+ApplicationMgr.TopAlg                = { "StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };
+ApplicationMgr.EvtMax                = 100000;
+ApplicationMgr.HistogramPersistency  = "NONE";
+Dump.CheckData                       = 1;
+Dump.CheckData                       = 0;
+Dump.DumpData                        = 0;
+Dump.FullDump                        = 0;
+Dump.OutputLevel                     = 3;
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 0.002;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
+EventSelector.PrintFreq              = 100;
+// Check legacy data:
+#ifndef WIN32
+EventSelector.Input                 = {
+   "DATA='root:rfio://castorlhcb:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/production/CCRC08/v0/00002090/RAW/0000/00002090_00002534_1.raw' SVC='LHCb::MDFSelector'"
+};
+#endif
+FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
+StoreExplorerAlg.OutputLevel = 3;

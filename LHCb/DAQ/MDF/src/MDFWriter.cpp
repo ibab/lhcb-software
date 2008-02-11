@@ -1,4 +1,4 @@
-// $Id: MDFWriter.cpp,v 1.23 2008-02-11 07:27:47 frankm Exp $
+// $Id: MDFWriter.cpp,v 1.24 2008-02-11 07:40:14 frankb Exp $
 //  ====================================================================
 //  MDFWriter.cpp
 //  --------------------------------------------------------------------
@@ -50,8 +50,8 @@ void MDFWriter::construct()   {
   declareProperty("Compress",       m_compress=2);        // File compression
   declareProperty("ChecksumType",   m_genChecksum=1);     // Generate checksum
   declareProperty("GenerateMD5",    m_genMD5=true);       // Generate MD5 checksum
-  declareProperty("DataType",       m_inputType);         // Input data type
-  declareProperty("MDFDataType",    m_dataType);          // Output data type
+  declareProperty("InputDataType",  m_inputType);         // Input data type
+  declareProperty("DataType",       m_dataType);          // Output data type
   declareProperty("BankLocation",   m_bankLocation=RawEventLocation::Default);  // Location of the banks in the TES
   declareProperty("DataManager",    m_ioMgrName="Gaudi::IODataManager/IODataManager");
   declareProperty("ForceTAE",       m_forceTAE = false);

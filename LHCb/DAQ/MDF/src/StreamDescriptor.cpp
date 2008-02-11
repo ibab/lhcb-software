@@ -6,7 +6,7 @@
 //
 //  Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.15 2008-02-05 16:44:18 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.16 2008-02-11 07:40:14 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -391,10 +391,13 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
     result.m_seek  = file_seek;
   }
   else {
-    if ( proto == "dcap" || proto == "dcache" || proto=="gsidcap" || proto == "castor" ) {
-      proto = "root";
-      file  = specs;
-    }
+    if ( proto == "dcap"   ||   proto == "dcache" || 
+	 proto =="gsidcap" ||   proto == "castor" || 
+	 proto == "rfio" )
+      {
+	proto = "root";
+	file  = specs;
+      }
     PosixIO* io = getIOModule(proto);
     if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
       result.ioFuncs    = io;

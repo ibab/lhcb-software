@@ -14,21 +14,6 @@ EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
 EventSelector.PrintFreq              = 100;
 // Check legacy data:
 EventSelector.Input                  = {
-  "DATA='file://VeloTestbeam/VeloTestbeam.dat' SVC='LHCb::MDFSelector'",
-  "DATA='file://Vsn1/mdfData_0.dat' SVC='LHCb::MDFSelector'",
-  "DATA='file://Vsn1/mdfData_1.dat' SVC='LHCb::MDFSelector'",
-  "DATA='file://Vsn1/mdfData_2.dat' SVC='LHCb::MDFSelector'",
-  "DATA='file://Vsn1/mdfData_3.dat' SVC='LHCb::MDFSelector'",
-  "DATA='file://Vsn1/mdfData_4.dat' SVC='LHCb::MDFSelector'"
-};
-EventSelector.Input                  = {
-  "DATA='file://mdfData_0.dat' SVC='LHCb::MDFSelector' NSkip='500'",
-  "DATA='file://mdfData_1.dat' SVC='LHCb::MDFSelector' NSkip='500'",
-  "DATA='file://mdfData_2.dat' SVC='LHCb::MDFSelector' NSkip='500'",
-  "DATA='file://mdfData_3.dat' SVC='LHCb::MDFSelector' NSkip='500'",
-  "DATA='file://mdfData_4.dat' SVC='LHCb::MDFSelector' NSkip='500'"
-};
-EventSelector.Input                  = {
   "DATA='PFN:root:file://../cmt/mdfData_1.dat' SVC='LHCb::MDFSelector'"
   ,"DATA='PFN:root:file://mdfData_0.dat'        SVC='LHCb::MDFSelector'"
   ,"DATA='root:file:mdfData_2.dat'              SVC='LHCb::MDFSelector'"
