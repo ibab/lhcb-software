@@ -3,6 +3,22 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v32r3p1>2008-02-11 Brunel v32r3p1</A></H1><PRE>
+This version uses projects Gaudi v19r7, LHCb v23r3, Lbcom v6r14, Rec v5r3
+ and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
+
+This is a development version with tracking pattern recognition based on the Tf
+framework.
+
+- New features
+  . When opening MDF files, use ROOT as default for: rfio, castor, dcache, dcap,
+    gsidcap and gfal (MDF v3r3)
+
+- Bug fixes
+  . Add fix for bug (crashes initialisation on Windows) due to a reference to
+    temporary being passed (RichTools v2r17p1)
+  . Proper handling of URL options (MDF_RFIO v1r1)
+
 </PRE><H1><A NAME=v32r3>2008-02-04 Brunel v32r3</A></H1><PRE>
 This version uses projects Gaudi v19r7, LHCb v23r3, Lbcom v6r14, Rec v5r3
  and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7

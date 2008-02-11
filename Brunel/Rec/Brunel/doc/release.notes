@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v32r3p1>2008-02-11 Brunel v32r3p1</A></H1><PRE>
+ - In requirements, use RichTool v2r17p1 (bug fix for this patch release)
+ - In requirements, use MDF v3r3 and MDF_ROOT v1r1 (patch release to allow
+   MDF I/O at all sites)
+
 </PRE><H1><A NAME=v32r3>2008-02-01 Brunel v32r3</A></H1><PRE>
  - In RealDataDst.opts and RealDataRdst.opts, remove explicit loading of
    LHCbKernelDict, no longer needed with LCG_54
