@@ -1,4 +1,4 @@
-// $Id: AlgorithmCorrelations.h,v 1.2 2008-02-05 18:36:17 pkoppenb Exp $
+// $Id: AlgorithmCorrelations.h,v 1.3 2008-02-11 16:41:04 pkoppenb Exp $
 #ifndef ALGORITHMCORRELATIONS_H 
 #define ALGORITHMCORRELATIONS_H 1
 
@@ -50,6 +50,7 @@ public:
 protected:
   StatusCode reset(void);                     ///< reset everything
   bool isEffective(const std::string& ) const ; ///< Algo did something
+  double algoRate(const std::string& ) const ; ///< Algo did something
   int happyAlgorithms(void) const ;           ///< Number of algos that did something
   unsigned int getDecimals(void) const ;      ///< Number of significant decimals
   StatusCode addResults(void);                ///< add all results
@@ -68,6 +69,7 @@ private:
   int m_decimals ; ///< Number of decimals 
   bool m_square ; ///< it is a squere matrix
   bool m_useNumbers ; ///< use numbers as column labels
+  unsigned int m_nEvents ; ///< number of events
 
   // container of results for one algorithm
   class AlgoResult{
@@ -107,7 +109,8 @@ private:
     void addConditionalResult(const bool&, const bool&);
 
     /// Return full statistics
-    int getConditionalStatistics() const{return m_alg2passed;};
+    int getConditionalStatistics() const{return m_bothpassed;};
+    int getFullStatistics() const{return m_alg2passed;};
   
     /// Return full statistics
     double getConditionalFraction() const{
