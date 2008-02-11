@@ -67,44 +67,6 @@ namespace
         }
     }
 
-    void* secure_memset(void* dst, int c, uint32_t size) {
-        return memset(dst, c, size);
-    }
-}
-
-md5::md5()
-{
-    init();
-}
-
-md5::~md5()
-{
-    // Zeroize sensitive information.
-    secure_memset(buffer, 0, sizeof(buffer));
-}
-
-md5::md5(const char* a_str)
-{
-    init();
-    update(a_str);
-}
-
-md5::md5(const void* a_data, uint32_t a_data_size)
-{
-    init();
-    update(a_data, a_data_size);
-}
-
-md5::md5(std::istream& a_istream)
-{
-    init();
-    update(a_istream);
-}
-
-md5::md5(std::istream& a_istream, uint32_t a_size)
-{
-    init();
-    update(a_istream, a_size);
 }
 
 void md5::init()
@@ -120,10 +82,6 @@ void md5::init()
     state[3] = 0x10325476;
 }
 
-void md5::update(const char* a_str)
-{
-    update(a_str, strlen(a_str));  // Optimization possible but not worth it.
-}
 
 void md5::update(const void* a_data, uint32_t a_data_size)
 {
@@ -166,21 +124,6 @@ void md5::update(const void* a_data, uint32_t a_data_size)
     // Buffer remaining input.
     memcpy(buffer+buffer_index, reinterpret_cast<
         const uint8_t*>(a_data)+input_index, a_data_size-input_index);
-}
-
-void md5::update(std::istream& a_istream)
-{
-    uint8_t buffer[1024];
-    while (a_istream) {
-        a_istream.read(reinterpret_cast<char*>(&buffer[0]), sizeof(buffer));
-        update(buffer, a_istream.gcount());
-    }
-}
-
-void md5::update(std::istream& a_istream, uint32_t a_size)
-{
-    // TODO
-    assert(1==0);
 }
 
 const md5::digest_type& md5::digest()
@@ -403,6 +346,5 @@ void md5::process_block(const uint8_t (*a_block)[64])
     state[3] += d;
 
     // Zeroize sensitive information.
-    secure_memset(reinterpret_cast<uint8_t*>(x), 0, sizeof(x));
+    memset(reinterpret_cast<uint8_t*>(x), 0, sizeof(x));
 }
-

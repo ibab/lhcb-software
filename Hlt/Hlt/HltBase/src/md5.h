@@ -45,20 +45,16 @@ public:
     typedef unsigned char uint8_t;
     typedef unsigned int uint32_t;
 
-    md5();
-    ~md5();
+    md5() { init(); }
+    ~md5() { // Zeroize sensitive information.
+        memset(buffer, 0, sizeof(buffer));
+    }
 
     // Constructs a digest for given message data.
-    md5(const char* a_str);
-    md5(const void* a_data, uint32_t a_data_size);
-    md5(std::istream& a_istream);
-    md5(std::istream& a_istream, uint32_t a_size);
-
-    // Updates the digest with additional message data.
-    void update(const char* a_str);
-    void update(const void* a_data, uint32_t a_data_size);
-    void update(std::istream& a_istream);
-    void update(std::istream& a_istream, uint32_t a_size);
+    md5(const char* a_str) {
+       init();
+       update(a_str);
+    }
 
     // A message digest.
     class digest_type
@@ -116,29 +112,22 @@ public:
     // Acquires the digest.
     const digest_type& digest();
 
-protected:
+private:
     void init();
+
+    // Updates the digest with additional message data.
+    void update(const void* a_data, uint32_t a_data_size);
+    void update(const char* a_str) { update(a_str, strlen(a_str)); }
 
     // Transforms the next message block and updates the state.
     void process_block(const uint8_t (*a_block)[64]);
 
-private:
     uint32_t state[4];
     uint32_t count[2];   // Number of bits mod 2^64.
     uint8_t buffer[64];  // Input buffer.
     digest_type m_digest;  // The last cached digest.
     bool is_dirty;  // Whether the last cached digest is valid.
 };
-
-inline bool operator==(const md5::digest_type& a, const md5::digest_type& b)
-{
-    return (memcmp(a.value(), b.value(), 16) == 0);
-}
-
-inline bool operator!=(const md5::digest_type& a, const md5::digest_type& b)
-{
-    return !operator==(a, b);
-}
 
 
 #endif

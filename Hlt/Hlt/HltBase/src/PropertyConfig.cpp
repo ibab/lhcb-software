@@ -2,41 +2,8 @@
 #include "boost/regex.hpp"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/IProperty.h"
-#include "md5.h"
 
 using namespace std;
-
-namespace {
-    boost::uint8_t unhex(char C) {
-            char c=tolower(C);
-            boost::uint8_t x = ( c >= '0' && c <= '9' ? c-'0' :
-                               ( c >= 'a' && c <='f'  ? 10+(c-'a') 
-                                                      : 255 ) );
-            if (x==255) {  /* whoah  */ }
-            return x;
-    };
-};
-
-std::string 
-PropertyConfig::digest_type::hexit(const uint8_t *begin,const uint8_t *end) {
-    string s;
-    static const char *digits="0123456789abcdef";
-    while(begin!=end) {
-        s+=digits[(*begin>>4)&0x0F];
-        s+=digits[(*begin++ )&0x0F];
-    }
-    return s;
-}
-
-void 
-PropertyConfig::digest_type::unhexit(const std::string& s,value_type& t) {
-    assert(s.size()==32 || s.empty());
-    if (s.empty()) {
-      for (int i=0;i<16;++i) t[i]=0;
-    } else {
-      for (int i=0;i<16;++i) t[i]=(unhex(s[2*i])<<4|unhex(s[2*i+1]));
-    }
-};
 
 void PropertyConfig::initProperties( const IProperty& obj) {
     typedef vector<Property*> PropertyList;
@@ -71,7 +38,7 @@ istream& PropertyConfig::read(istream& is) {
             }
         } else if (parsing_deps) {
             if (boost::regex_match(s,what,dep) ) { 
-                m_depRefs.push_back(make_pair(what[1],digest_type(what[2])));
+                m_depRefs.push_back(make_pair(what[1],MD5::convertString2Digest(what[2])));
             } else if (boost::regex_match(s,what,depend) ) { 
                 parsing_deps = false;
             } else {
@@ -110,12 +77,5 @@ ostream& PropertyConfig::print(ostream& os) const {
     return os << endl;
 }
 
-PropertyConfig::digest_type 
-PropertyConfig::digest() const {
-   std::ostringstream s; s << *this;
-   return createDigest( std::string( md5(s.str().c_str()).digest().hex_str_value(),32) );
-}
-
 std::ostream& operator<<(std::ostream& os, const PropertyConfig& x) { return x.print(os);}
 std::istream& operator>>(std::istream& is, PropertyConfig& x)       { return x.read(is);}
-std::ostream& operator<<(std::ostream& os, const PropertyConfig::digest_type& x) { return os << x.str() ; }

@@ -6,6 +6,9 @@
 
 ! 2008-02-11 Gerhard Raven
  - add .cvsignore file to cmt directory to ignore cmt generated files
+ - factor invocation of actual MD5 digest computation out of PropertyConfig 
+   into seperate file & strip md5 computation to (almost) minimum required
+   (warning: needs corresponding changes in HltCommon)
 
 ! 2008-02-07 Jose A. Hernando
  - IHltFunctionFactory, recovering interface tool to be use in python
