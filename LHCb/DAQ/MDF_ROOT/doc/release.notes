@@ -4,6 +4,10 @@
 ! Purpose     : ROOT plugin to read MDF files.
 !-----------------------------------------------------------------------------
 
+!========================== MDF_ROOT v1r1 2008-02-11  ========================
+! 2008-02-11 - Markus Frank
+ - Proper handling of URL options
+
 !========================== MDF_ROOT v1r0 2008-02-05  ========================
 ! 2008-02-05 - Markus Frank
   - New package: ...to read MDF files with any protocol supported by ROOT
