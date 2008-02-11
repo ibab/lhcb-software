@@ -16,7 +16,7 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 import LoKiCore.decorators as _LoKiCore 
 from   LoKiCore.functions import equal_to 
 
-## needed since there is no autoloading of Trackin dictionaries:
+## needed since there is no autoloading of Tracking dictionaries:
 import sys,PyCintex
 
 if sys.platform == 'win32' : PyCintex.loadDict (    "TrackEventDict" )  
@@ -108,9 +108,9 @@ RVHASINFO     = LoKi.RecVertices.HasInfo
 ## @see LoKi::Cuts::RVINFO
 RVINFO        = LoKi.RecVertices.Info  
 ## @see LoKi::Cuts::RVMAXPT
-RVMAXPT       = LoKi.RecVertices.MaxPt () 
+RVMAXPT       = LoKi.RecVertices.VertexMaxPt () 
 ## @see LoKi::Cuts::RVMAXPT
-RVMINPT       = LoKi.RecVertices.MinPt () 
+RVMINPT       = LoKi.RecVertices.VertexMinPt () 
 ## @see LoKi::Cuts::RVSINFO
 RVSINFO       = LoKi.RecVertices.SmartInfo
 
@@ -224,9 +224,9 @@ TrVRIP        = LoKi.Tracks.RadialIP        ()
 
 
 ## functional part
-_vt       = std.vector ( 'LHCb::Track*'     )
-_vv       = std.vector ( 'LHCb::RecVertex*' )
-_vd       = std.vector ( 'double')
+_vt       = 'std::vector<LHCb::Track*>'     ## std.vector ( 'LHCb::Track*'     )
+_vv       = 'std::vector<LHCb::RecVertex*>' ## std.vector ( 'LHCb::RecVertex*' )
+_vd       = 'std::vector<double>'           ## std.vector ( 'double')
 #
 TrMaps      = LoKi.Functor             ( _vt  , _vd       )
 TrMap       = LoKi.FunctorFromFunctor  ( _vt  , _vd       )
@@ -284,7 +284,7 @@ def bindMin ( a , b , *c ) :
     The function comes in two flavours:
 
     1) for the given argument, return the minimal value of 2D-function against all
-    objects frio the reference container:
+    objects from the reference container:
 
     Find the minimal distance of the closest approach:
     
@@ -296,11 +296,11 @@ def bindMin ( a , b , *c ) :
 
 
     2) for the given argument, seek for the element from the reference container
-    which minimizes 2D-function and return the value of the secodn function with
+    which minimizes 2D-function and return the value of the second function with
     this minimal element:
     
-    Evaluate of the transverse momentum of th etarck, which
-    has the the minimal dictance of the closest approach to the given track:
+    Evaluate of the transverse momentum of the track, which
+    has the the minimal distance of the closest approach to the given track:
     
     >>> tracks = ...
     >>> pt = bindMin ( TTrDOCA , TrPT , tracks )   ## create the function
@@ -320,7 +320,7 @@ def bindAbsMin ( a , b , *c ) :
     The function comes in two flavours:
     
     1) for the given argument, return the minimal (absolute) value
-    of 2D-function against all objects for the reference container:
+    of 2D-function against all objects from the reference container:
     
     Find the minimal (absolute) distance of the closest approach:
     
@@ -332,11 +332,11 @@ def bindAbsMin ( a , b , *c ) :
 
     
     2) for the given argument, seek for the element from the reference container
-    which minimizes th eabsoluet value for 2D-function and return the value
+    which minimizes the absolute value for 2D-function and return the value
     of the second function with this minimal element:
     
-    Evaluate of the transverse momentum of th etarck, which
-    has the the minimal dictance of the closest approach to the given track:
+    Evaluate of the transverse momentum of the track, which
+    has the the minimal distance of the closest approach to the given track:
     
     >>> tracks = ...
     >>> pt = bindAbsMin ( TTrDOCA , TrPT , tracks )   ## create the function
@@ -363,7 +363,7 @@ def bindMax ( a , b , *c ) :
     The function comes in two flavours:
 
     1) for the given argument, return the maximal value of 2D-function against all
-    objects frio the reference container:
+    objects from the reference container:
 
     find the maximal distance of the closest approach:
     
@@ -378,7 +378,7 @@ def bindMax ( a , b , *c ) :
     which maximizes 2D-function and return the value of the secodn function with
     this maximal element:
     
-    Evaluate of the transverse momentum of th etarck, which
+    Evaluate of the transverse momentum of the track, which
     has the the maximal distance of the closest approach to the given track:
     
     >>> tracks = ...
@@ -401,7 +401,7 @@ def bindAbsMax ( a , b , *c ) :
     1) for the given argument, return the maximal (absolute) value
     of 2D-function against all objects from the reference container:
     
-    Find the maximal (absoluet) distance of the closest approach:
+    Find the maximal (absolute) distance of the closest approach:
     
     >>> tracks = ...
     >>> doca = bindAbsMax ( TTrDOCA , tracks )   ## create the function
@@ -411,11 +411,11 @@ def bindAbsMax ( a , b , *c ) :
 
 
     2) for the given argument, seek for the element from the reference container
-    which maximizes the absoluet value for 2D-function and return the value of
+    which maximizes the absolute value for 2D-function and return the value of
     the second function with this maximal element:
     
     Evaluate of the transverse momentum of the tarck, which
-    has the the maximal (absoluet) distance of the closest approach to the given track:
+    has the the maximal (absolute) distance of the closest approach to the given track:
     
     >>> tracks = ...
     >>> pt = bindAbsMax ( TTrDOCA , TrPT tracks )   ## create the function
@@ -433,7 +433,6 @@ def bindAbsMax ( a , b , *c ) :
     
     """
     return LoKi.Dicts.HltBind.bindAbsMax ( a , b , *c  ) 
-
 
 
 bindMin    . __doc__ += "\n\n" + LoKi.Dicts.HltBind.bindMin    . __doc__ 

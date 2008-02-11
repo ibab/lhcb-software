@@ -83,9 +83,9 @@ def _decorate ( name = _name  ) :
         LoKi.Dicts.CutCalls (_HVV)                      , ## call-traits 
         LoKi.Dicts.CutsOps  (_HVV,_HVV)                 ) ## the operators
     ## functional stuff
-    _vt = std.vector ( _pt      )
-    _vv = std.vector ( _pv      )
-    _vd = std.vector ( 'double' ) 
+    _vt = 'std::vector<LHCb::Track*>'     ## std.vector ( _pt      )
+    _vv = 'std::vector<LHCb::RecVertex*>' ## std.vector ( _pv      )
+    _vd = 'std::vector<double>'           ## std.vector ( 'double' ) 
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                            , ## module name
         LoKi.Functor( _vt , _vd )                       , ## the base
