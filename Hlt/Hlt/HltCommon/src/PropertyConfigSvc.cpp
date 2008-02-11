@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.1 2008-02-07 16:36:58 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.2 2008-02-11 14:56:10 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -104,7 +104,7 @@ StatusCode PropertyConfigSvc::initialize() {
   // read table of pre-assigned, possible configurations for this job...
   // i.e. avoid reading _everything_ when we really need to be quick
   for (vector<std::string>::const_iterator i = m_prefetch.begin(); i!=m_prefetch.end(); ++i ) {
-     PropertyConfig::digest_type digest = PropertyConfig::createDigest(*i);
+     PropertyConfig::digest_type digest = MD5::convertString2Digest(*i);
      assert( digest.str() == *i) ;
      loadConfig( digest );
      validateConfig( digest );

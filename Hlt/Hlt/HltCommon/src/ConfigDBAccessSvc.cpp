@@ -177,7 +177,7 @@ ConfigDBAccessSvc::prefetch(const PropertyConfig::digest_type& ref) {
         coral::ICursor& c = q->execute();
         size_t  nrow(0);
         while ( c.next() ) { //TODO: bind variables to currentRow
-           PropertyConfig::digest_type id = PropertyConfig::createDigest( c.currentRow()["id"].data<std::string>() );
+           PropertyConfig::digest_type id = MD5::convertString2Digest( c.currentRow()["id"].data<std::string>() );
            std::pair<cache_t::iterator,cache_t::iterator> iter = m_cache.equal_range(id);
            if (iter.first!=iter.second) { 
                 info() << " prefetch: entry already in cache !!???? " << id  << endmsg;

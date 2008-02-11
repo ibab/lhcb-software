@@ -6,6 +6,8 @@
 
 ! 2008-02-11 - Gerhard Raven
   - add .cvsignore file to cmt directory to ignore cmt generated files
+  - follow factorization of MD5 computation out of HltBase/PropertyConfig 
+     into seperate file
 
 ! 2008-02-08 - Gerhard Raven
   - add HltGenConfig: creates Property configurations...

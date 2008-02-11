@@ -84,7 +84,7 @@ ConfigFileAccessSvc::write(const PropertyConfig& config) {
    fs::path fdir = fnam.branch_path();
    if (!fs::exists(fdir) && !fs::create_directory(fdir)) {
             error() << " directory " << fdir.string() << " does not exist, and could not create... " << endmsg;
-            return PropertyConfig::createNullDigest();
+            return MD5::createInvalidDigest();
    }
    if (!fs::exists(fnam)) {
             fs::ofstream s( fnam );
@@ -97,7 +97,7 @@ ConfigFileAccessSvc::write(const PropertyConfig& config) {
             s >> x;
             if ( x==config ) return digest;
             error() << " config already exists, but contents are different..." << endmsg;
-            return PropertyConfig::createNullDigest();
+            return MD5::createInvalidDigest();
     }
 }
 

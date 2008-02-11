@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.1 2008-02-07 16:36:58 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.2 2008-02-11 14:56:10 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -89,7 +89,7 @@ HltConfigSvc::configure(const TCK_t& tck) const {
         error() << " could not resolve " << tck << " to a configID " << endl;
         return StatusCode::FAILURE;
     }
-    return PropertyConfigSvc::configure( PropertyConfig::createDigest(i->second) );
+    return PropertyConfigSvc::configure( MD5::convertString2Digest(i->second) );
 }
 
 //=============================================================================
@@ -102,7 +102,7 @@ HltConfigSvc::reconfigure(const TCK_t& tck) const {
         error() << " could not resolve " << tck << " to a configID " << endl;
         return StatusCode::FAILURE;
     }
-    return PropertyConfigSvc::reconfigure( PropertyConfig::createDigest( i->second) );
+    return PropertyConfigSvc::reconfigure( MD5::convertString2Digest( i->second) );
 }
 
 //=============================================================================
@@ -115,7 +115,7 @@ HltConfigSvc::loadConfig(const TCK_t& tck) {
         error() << " could not resolve " << tck << " to a configID " << endl;
         return StatusCode::FAILURE;
     }
-    return PropertyConfigSvc::loadConfig( PropertyConfig::createDigest(i->second) );
+    return PropertyConfigSvc::loadConfig( MD5::convertString2Digest(i->second) );
 }
 
 //=============================================================================
