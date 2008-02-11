@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.7 2007-12-20 16:19:06 hmdegaud Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.8 2008-02-11 17:15:52 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -28,9 +28,9 @@ CopyRelatedMCParticles::CopyRelatedMCParticles( const std::string& name,
                                                 ISvcLocator* pSvcLocator )
   : 
   MicroDSTAlgorithm ( name , pSvcLocator ),
-  m_deepCloneMCVertex(false)
-  //  m_cloner( &localDataStore(), 
-  //            MCParticleCloner( &localDataStore() ) )
+  m_deepCloneMCVertex(false),
+  m_cloner(0),
+  m_linker(0)
 {
   declareProperty("DeepCloneMCVertex", m_deepCloneMCVertex);
 }
@@ -50,11 +50,6 @@ StatusCode CopyRelatedMCParticles::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  //  m_cloner = 
-  //    new MicroDST::CloneKeyedContainerItemToStore<LHCb::MCParticle,MCParticleCloner>(  &localDataStore(),
-  //                                                                                      MCParticleCloner( &localDataStore() ) );
-  
-
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if (inputTESLocation()=="")  {
@@ -65,9 +60,8 @@ StatusCode CopyRelatedMCParticles::initialize() {
 
   m_cloner = tool<ICloneMCParticle>("MCParticleCloner", this);
 
-  m_compositeLinker = new Particle2MCLinker(this,
-                                            Particle2MCMethod::Composite,"")  ;
-
+   m_compositeLinker = new Particle2MCLinker(this,
+                                             Particle2MCMethod::Composite,"")  ;
   m_linksLinker     = new Particle2MCLinker(this,
                                             Particle2MCMethod::Links,"")  ;
 
@@ -88,8 +82,9 @@ StatusCode CopyRelatedMCParticles::execute() {
 
   verbose() << "Found " << particles->size() << " particles" << endmsg;
 
-  // Actually this needs to be iterative, so we store the MCParticles for
-  // everything in the tree.
+  m_linker = new MCLinker(evtSvc(),
+                          msgSvc(),
+                          fullOutputTESLocation());
 
   StatusCode sc = loopOnParticles( particles->begin(),
                                    particles->end()    );
@@ -128,14 +123,23 @@ CopyRelatedMCParticles::storeAssociatedMCParticles(const LHCb::Particle* particl
 
   // Get a vector of associated particles
 
-  LHCb::MCParticle::ConstVector assocMCPs;
+  //  LHCb::MCParticle::ConstVector assocMCPs;
+
+  Particle2MCLinker::ToRange assocMCPs;
 
   StatusCode sc = associatedMCParticles(particle, assocMCPs);
 
-  for (LHCb::MCParticle::ConstVector::const_iterator iMCP = assocMCPs.begin();
+  debug() << "Going to clone " << assocMCPs.size() 
+          << " associated MCParticles" << endmsg;
+
+  for (Particle2MCLinker::ToRange::iterator iMCP = assocMCPs.begin();
        iMCP != assocMCPs.end();
        ++iMCP) {
-    (*m_cloner)(*iMCP);
+    debug() << "CLONING MCParticle!" << endmsg;
+    const LHCb::MCParticle* clonedMCParticle = (*m_cloner)(iMCP->to());
+    m_linker->link(particle, clonedMCParticle);
+    debug() << "CLONED MCParticle!" << endmsg;
+    //
   }
 
   return sc;
@@ -144,11 +148,36 @@ CopyRelatedMCParticles::storeAssociatedMCParticles(const LHCb::Particle* particl
 //=============================================================================
 StatusCode 
 CopyRelatedMCParticles::associatedMCParticles(const LHCb::Particle* particle,
-                                              LHCb::MCParticle::ConstVector&) 
+                                              Particle2MCLinker::ToRange& assocMCPs)
+
+                                              //LHCb::MCParticle::ConstVector& assocMCPs) 
 {
 
   Particle2MCLinker* linker = (particle->isBasicParticle() ) ? m_linksLinker : m_compositeLinker;
 
+  if ( !assocMCPs.empty() ) assocMCPs.clear();
+
+  if ( linker->isAssociated(particle) ) {
+    
+  } else {
+    debug() << "Found no associated MCParticles for Particle\n" 
+            << *particle << endmsg;
+    return StatusCode::SUCCESS;
+  }
+
+  Particle2MCLinker::ToRange range = linker->rangeFrom(particle);
+  
+  debug() << "Found " << range.size() 
+          << " associated MCParticles for Particle\n" 
+          << *particle << endmsg;
+
+  for (Particle2MCLinker::ToRange::iterator toIter = range.begin();
+       toIter != range.end();
+       ++toIter) {
+    //    assocMCPs.push_back( toIter->to() ); 
+    assocMCPs.push_back(*toIter);
+  }
+  
   return StatusCode::SUCCESS;
   
 }
@@ -160,10 +189,10 @@ StatusCode CopyRelatedMCParticles::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  if (0!=m_cloner) {
-    delete m_cloner;
-    m_cloner = 0;
-  }
+//   if (0!=m_cloner) {
+//     delete m_cloner;
+//     m_cloner = 0;
+//   }
   
 
   return MicroDSTAlgorithm::finalize();  // must be called after all other actions
