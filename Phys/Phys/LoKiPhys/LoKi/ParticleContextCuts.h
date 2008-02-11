@@ -1,4 +1,4 @@
-// $Id: ParticleContextCuts.h,v 1.1 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: ParticleContextCuts.h,v 1.2 2008-02-11 10:11:10 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLECONTEXTCUTS_H 
 #define LOKI_PARTICLECONTEXTCUTS_H 1
@@ -46,7 +46,7 @@ namespace LoKi
      *  const LHCb::Particle* B = ... ;
      *  
      *  // use the functor
-     *  const double dira = BPVDIRA ( B ) ;
+     *  const double costheta = BPVDIRA ( B ) ;
      *
      *  @endcode
      *
@@ -56,6 +56,7 @@ namespace LoKi
      *             clear and safe analogues...
      * 
      *
+     *  @see LoKi::Cuts::BESTPVCOSPF
      *  @see LoKi::Cuts::DIRA
      *  @see LoKi::Particles::CosineDirectionAngle
      *  @see LoKi::Particles::CosineDirectionAngleWithTheBestPrimaryVertex
@@ -64,23 +65,54 @@ namespace LoKi
      */
     const LoKi::Particles::CosineDirectionAngleWithTheBestPV          BPVDIRA ;
     // ========================================================================
+    /** @var BESTPVCOSPF
+     *  The special "context-dependent" version of DIRA functor.
+     *  It takes the best primary vertex from IPhysDesktop tool
+     *
+     *  @code 
+     *
+     *  // B-candidate:
+     *  const LHCb::Particle* B = ... ;
+     *  
+     *  // use the functor
+     *  const double costheta = BESTPVDIRA ( B ) ;
+     *
+     *  @endcode
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @see LoKi::Cuts::BPVDIRA
+     *  @see LoKi::Cuts::DIRA
+     *  @see LoKi::Particles::CosineDirectionAngle
+     *  @see LoKi::Particles::CosineDirectionAngleWithTheBestPrimaryVertex
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-16
+     */    
+    const LoKi::Particles::CosineDirectionAngleWithTheBestPV      BESTPVCOSPF ;
+    // ========================================================================
     /** @typedef BPVIP 
      *  The special "context-dependent" version of LoKi::Particles::ImpPar functor
      *  which gets the related primary vertex from IPhysDesktop tool
      *
      *  @code
      *
-     *   // constuct the functor 
-     *   const BPIP bpip  = BPIP ("")  ;
+     *   // construct the functor 
+     *   const BPVIP fun  = BPVIP ("")  ;
      *
      *   // B-candidate
      *   const LHCb::Particle* B = ... ;
      *
      *   // use the functor
-     *   const double ip = bpip ( B ) ;
+     *   const double ip = fun ( B ) ;
      *
      *  @endcode
      *
+     *  @see LoKi::Cuts::BESTPVIP
      *  @see LoKi::Particles::ImpParWithTheBestPV
      *  @see LoKi::Particles::ImpPar
      *  @see IGeomDispCalculator
@@ -95,23 +127,58 @@ namespace LoKi
      */
     typedef LoKi::Particles::ImpParWithTheBestPV                        BPVIP ;
     // ========================================================================
+    /** @typedef BESTPVIP 
+     *  The special "context-dependent" version of LoKi::Particles::ImpPar functor
+     *  which gets the related primary vertex from IPhysDesktop tool
+     *
+     *  @code
+     *
+     *   // construct the functor 
+     *   const BESPPVIP fun  = BESTPVIP ("")  ;
+     *
+     *   // B-candidate
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   // use the functor
+     *   const double ip = fun ( B ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Cuts::BPVIP
+     *  @see LoKi::Particles::ImpParWithTheBestPV
+     *  @see LoKi::Particles::ImpPar
+     *  @see IGeomDispCalculator
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-24
+     */
+    typedef LoKi::Particles::ImpParWithTheBestPV                     BESTPVIP ;
+    // ========================================================================
     /** @typedef BPVIPCHI2
      *  The special "context-dependent" version of LoKi::Particles::ImpParChi2 
      *  functor which gets the related primary vertex from IPhysDesktop tool
      *
      *  @code
      *
-     *   // constuct the functor 
-     *   const BPIPCHI2 bpipchi2  = BPIPCHI2 ("")  ;
+     *   // construct the functor 
+     *   const BPIPCHI2 fun  = BPIPCHI2 ("")  ;
      *
      *   // B-candidate
      *   const LHCb::Particle* B = ... ;
      *
      *   // use the functor
-     *   const double chi2 = bpipchi2 ( B ) ;
+     *   const double chi2 = fun ( B ) ;
      *
      *  @endcode
      *
+     *  @see LoKi::Cuts::BESTPVIPCHI2 
      *  @see LoKi::Particles::ImpParChi2WithTheBestPV
      *  @see LoKi::Particles::ImpParChi2
      *  @see IGeomDispCalculator
@@ -126,6 +193,40 @@ namespace LoKi
      */
     typedef LoKi::Particles::ImpParChi2WithTheBestPV                BPVIPCHI2 ;
     // ========================================================================
+    /** @typedef BESTPVIPCHI2
+     *  The special "context-dependent" version of LoKi::Particles::ImpParChi2 
+     *  functor which gets the related primary vertex from IPhysDesktop tool
+     *
+     *  @code
+     *
+     *   // constuct the functor 
+     *   const BESTPIPCHI2 fun  = BESTPIPCHI2 ("")  ;
+     *
+     *   // B-candidate
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   // use the functor
+     *   const double chi2 = fun ( B ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Cuts::BPVIPCHI2 
+     *  @see LoKi::Particles::ImpParChi2WithTheBestPV
+     *  @see LoKi::Particles::ImpParChi2
+     *  @see IGeomDispCalculator
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-24
+     */
+    typedef LoKi::Particles::ImpParChi2WithTheBestPV             BESTPVIPCHI2 ;
+    // ========================================================================
     /** @typedef MIPSOURCE 
      *  The special version of LoKi::Particles::MinImpPar functor
      *  which gets all the primary vertices form "source"
@@ -136,22 +237,63 @@ namespace LoKi
      *  const MIPSOURCE::Source& source = ... ;
      *
      *  // construct the main functor:
-     *  const MIPSOURCE mip  = MIPSOURCE ( source , "" ) ;
+     *  const MIPSOURCE fun  = MIPSOURCE ( source , "" ) ;
      *
      *  // get B-candidate 
      *  const LHCb::Particle* B = ... ;
      *  
      *  // use the functor:
-     *  const doule value = mip ( B ) ;
+     *  const doule value = fun ( B ) ;
      *
      *  @endcode 
      *
+     *  @see LoKi::Cuts::MINIPWITHSOURCE
      *  @see LoKi::Particles::MinImpParWithSource 
      *  @see IPhysDesktop 
      *  @see LoKi::getPhysDesktop
      *  @see LoKi::Particles::MinImpPar
      *  @see LoKi::Particles::SourceDesktop
      *  @see LoKi::Particles::SourceTES
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-16
+     */
+    typedef LoKi::Particles::MinImpParWithSource                    MIPSOURCE ;
+    // ========================================================================
+    /** @typedef MINIPWITHSOURCE 
+     *  The special version of LoKi::Particles::MinImpPar functor
+     *  which gets all the primary vertices form "source"
+     *
+     *  @code 
+     *
+     *  // get the helper functor-"source"
+     *  const MINIPWITHSOURCE::Source& source = ... ;
+     *
+     *  // construct the main functor:
+     *  const MINIPWITHSOURCE fun  = MINIPWITHSOURCE ( source , "" ) ;
+     *
+     *  // get B-candidate 
+     *  const LHCb::Particle* B = ... ;
+     *  
+     *  // use the functor:
+     *  const doule value = fun ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::MIPSOURCE
+     *  @see LoKi::Particles::MinImpParWithSource 
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::MinImpPar
+     *  @see LoKi::Particles::SourceDesktop
+     *  @see LoKi::Particles::SourceTES
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
      *
      *  @attention There are no direct needs to use this "Context" 
      *             functor inside the native LoKi-based C++ code, 
@@ -180,6 +322,7 @@ namespace LoKi
      *
      *  @endcode 
      *
+     *  @see LoKi::Cuts::MINIPWITHDV 
      *  @see LoKi::Particles::MinImpParDV
      *  @see LoKi::Particles::MinImpParWithSource 
      *  @see IPhysDesktop 
@@ -196,6 +339,42 @@ namespace LoKi
      */
     typedef LoKi::Particles::MinImpParDV                                MIPDV ;
     // ========================================================================
+    /** @typedef MINIPWITHDV
+     *  The special version of LoKi::Particles::MinImpPar functor
+     *  which gets all the primary vertices from desktop
+     *
+     *  @code 
+     *
+     *  // construct the functor:
+     *  const MINIPWITHDV fun  = MINIPWITHDV ( "" ) ;
+     *
+     *  // get B-candidate 
+     *  const LHCb::Particle* B = ... ;
+     *  
+     *  // use the functor:
+     *  const doule value = fun ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::MINIPWITHDV 
+     *  @see LoKi::Particles::MinImpParDV
+     *  @see LoKi::Particles::MinImpParWithSource 
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::MinImpPar
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-16
+     */
+    typedef LoKi::Particles::MinImpParDV                          MINIPWITHDV ;
+    // ========================================================================
     /** @typedef MIPTES
      *  The special version of LoKi::Particles::MinImpPar functor
      *  which gets all the primary vertices from transient store
@@ -203,16 +382,17 @@ namespace LoKi
      *  @code 
      *
      *  // construct the functor:
-     *  const MIPTES mip  = MIPTES ( LHCb::PrimVertexLocation::Default , "" ) ;
+     *  const MIPTES fun  = MIPTES ( LHCb::PrimVertexLocation::Default , "" ) ;
      *
      *  // get B-candidate 
      *  const LHCb::Particle* B = ... ;
      *  
      *  // use the functor:
-     *  const doule value = mip ( B ) ;
+     *  const doule value = fun ( B ) ;
      *
      *  @endcode 
      *
+     *  @see LoKi::Cuts::MINIPWITHTES
      *  @see LoKi::Particles::MinImpParTES
      *  @see LoKi::Particles::MinImpParWithSource 
      *  @see IPhysDesktop 
@@ -229,6 +409,42 @@ namespace LoKi
      */
     typedef LoKi::Particles::MinImpParTES                              MIPTES ;
     // ========================================================================
+    /** @typedef MINIPWITHTES
+     *  The special version of LoKi::Particles::MinImpPar functor
+     *  which gets all the primary vertices from transient store
+     *
+     *  @code 
+     *
+     *  // construct the functor:
+     *  const MINIPWITHTES fun  = MINIPWITHPTES ( LHCb::PrimVertexLocation::Default , "" ) ;
+     *
+     *  // get B-candidate 
+     *  const LHCb::Particle* B = ... ;
+     *  
+     *  // use the functor:
+     *  const doule value = fun ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::MIPTES
+     *  @see LoKi::Particles::MinImpParTES
+     *  @see LoKi::Particles::MinImpParWithSource 
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::MinImpPar
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-16
+     */
+    typedef LoKi::Particles::MinImpParTES                         MINIPWITHTES ;
+    // ========================================================================
     /** @typedef MIPCHI2SOURCE 
      *  The special version of LoKi::Particles::MinImpParChi2 functor
      *  which gets all the primary vertices form "source"
@@ -239,16 +455,17 @@ namespace LoKi
      *  const MIPCHI2SOURCE::Source& source = ... ;
      *
      *  // construct the main functor:
-     *  const MIPCHI2SOURCE mip  = MIPCHI2SOURCE ( source , "" ) ;
+     *  const MIPCHI2SOURCE fun  = MIPCHI2SOURCE ( source , "" ) ;
      *
      *  // get B-candidate 
      *  const LHCb::Particle* B = ... ;
      *  
      *  // use the functor:
-     *  const doule value = mip ( B ) ;
+     *  const doule value = fun ( B ) ;
      *
      *  @endcode 
      *
+     *  @see LoKi::Particles::MINIPCHI2WITHSOURCE
      *  @see LoKi::Particles::MinImpParChi2WithSource 
      *  @see IPhysDesktop 
      *  @see LoKi::getPhysDesktop
@@ -264,7 +481,47 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    typedef LoKi::Particles::MinImpParChi2WithSource            MIPCIH2SOURCE ;
+    typedef LoKi::Particles::MinImpParChi2WithSource            MIPCHI2SOURCE ;
+    // ========================================================================
+    /** @typedef MINIPCHI2WITHSOURCE 
+     *  The special version of LoKi::Particles::MinImpParChi2 functor
+     *  which gets all the primary vertices form "source"
+     *
+     *  @code 
+     *
+     *  // get the helper functor-"source"
+     *  const MINIPCHI2WITHSOURCE::Source& source = ... ;
+     *
+     *  // construct the main functor:
+     *  const MINIPCHI2WITHSOURCE fun  = MINIPCHI2WITHSOURCE ( source , "" ) ;
+     *
+     *  // get B-candidate 
+     *  const LHCb::Particle* B = ... ;
+     *  
+     *  // use the functor:
+     *  const doule value = fun ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::MIPCHI2SOURCE
+     *  @see LoKi::Particles::MinImpParChi2WithSource 
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::MinImpParChi2
+     *  @see LoKi::Vertices::SourceDesktop
+     *  @see LoKi::Vertices::SourceTES
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-16
+     */
+    typedef LoKi::Particles::MinImpParChi2WithSource      MINIPCHI2WITHSOURCE ;
     // ========================================================================
     /** @typedef MIPCHI2DV
      *  The special version of LoKi::Particles::MinImpParChi2 functor
@@ -283,6 +540,7 @@ namespace LoKi
      *
      *  @endcode 
      *
+     *  @see LoKi::Particles::MINIPCHI2WITHDV
      *  @see LoKi::Particles::MinImpParChi2DV
      *  @see LoKi::Particles::MinImpParChi2WithSource 
      *  @see IPhysDesktop 
@@ -298,6 +556,42 @@ namespace LoKi
      *  @date 2008-01-16
      */
     typedef LoKi::Particles::MinImpParChi2DV                        MIPCHI2DV ;
+    // ========================================================================
+    /** @typedef MINIPCHI2WITHDV
+     *  The special version of LoKi::Particles::MinImpParChi2 functor
+     *  which gets all the primary vertices from desktop
+     *
+     *  @code 
+     *
+     *  // construct the functor:
+     *  const MINIPCHI2WITHDV fun  = MINIPCHI2WITHDV ( "" ) ;
+     *
+     *  // get B-candidate 
+     *  const LHCb::Particle* B = ... ;
+     *  
+     *  // use the functor:
+     *  const doule value = fun ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::MICHI2DV
+     *  @see LoKi::Particles::MinImpParChi2DV
+     *  @see LoKi::Particles::MinImpParChi2WithSource 
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::MinImpParChi2
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-16
+     */
+    typedef LoKi::Particles::MinImpParChi2DV                  MINIPCHI2WITHDV ;
     // ========================================================================
     /** @typedef MIPCHI2TES
      *  The special version of LoKi::Particles::MinImpParChi2 functor
@@ -316,6 +610,7 @@ namespace LoKi
      *
      *  @endcode 
      *
+     *  @see LoKi::Particles::MINIPCHI2WITHTES
      *  @see LoKi::Particles::MinImpParChi2TES
      *  @see LoKi::Particles::MinImpParChi2WithSource 
      *  @see IPhysDesktop 
@@ -332,6 +627,42 @@ namespace LoKi
      */
     typedef LoKi::Particles::MinImpParChi2TES                      MIPCHI2TES ;
     // ========================================================================
+    /** @typedef MINIPCHI2WITHTES
+     *  The special version of LoKi::Particles::MinImpParChi2 functor
+     *  which gets all the primary vertices from transient store
+     *
+     *  @code 
+     *
+     *  // construct the functor:
+     *  const MINIPCHI2WITHTES fun  = MINIPCHI2WITHTES ( LHCb::PrimVertexLocation::Default , "" ) ;
+     *
+     *  // get B-candidate 
+     *  const LHCb::Particle* B = ... ;
+     *  
+     *  // use the functor:
+     *  const doule value = fun ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::MIPCHI2TES
+     *  @see LoKi::Particles::MinImpParChi2TES
+     *  @see LoKi::Particles::MinImpParChi2WithSource 
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::MinImpParChi2
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-16
+     */
+    typedef LoKi::Particles::MinImpParChi2TES                MINIPCHI2WITHTES ;
+    // ========================================================================
     /** @var BPVVD 
      *  The special "context-dependent" version of LoKi::Particles::VertexDistance 
      *  functor which gets "the best primary vertex" from IPhysDesktop
@@ -346,6 +677,7 @@ namespace LoKi
      *
      *  @endcode 
      *
+     *  @see LoKi::Cuts::BESTPVVERTSEP
      *  @see LoKi::Cuts::VertexDistanceDV
      *  @see IPhysDesktop 
      *  @see LoKi::getPhysDesktop
@@ -362,6 +694,39 @@ namespace LoKi
      */
     const LoKi::Particles::VertexDistanceDV                             BPVVD ;
     // ========================================================================
+    /** @var BESTPVVERTSEP
+     *  The special "context-dependent" version of LoKi::Particles::VertexDistance 
+     *  functor which gets "the best primary vertex" from IPhysDesktop
+     *
+     *  @code
+     *
+     *  // get B-candidate:
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // use the functor 
+     *  const double vd = BESTPVVERTSEP( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::BPVVD
+     *  @see LoKi::Cuts::VertexDistanceDV
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::VertexDistance
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     *
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-24        
+     */
+    const LoKi::Particles::VertexDistanceDV                     BESTPVVERTSEP ;
+    // ========================================================================
     /** @var BPVVDSIGN 
      *  The special "context-dependent" version 
      *  of LoKi::Particles::VertexSignedDistance 
@@ -377,6 +742,7 @@ namespace LoKi
      *
      *  @endcode 
      *
+     *  @see LoKi::Cuts::BESTPVVERTSEPSIGN
      *  @see LoKi::Cuts::VertexSignedDistanceDV
      *  @see IPhysDesktop 
      *  @see LoKi::getPhysDesktop
@@ -393,6 +759,40 @@ namespace LoKi
      */
     const LoKi::Particles::VertexSignedDistanceDV                   BPVVDSIGN ;
     // ========================================================================
+    /** @var BESTPVVERTSEPSIGN 
+     *  The special "context-dependent" version 
+     *  of LoKi::Particles::VertexSignedDistance 
+     *  functor which gets "the best primary vertex" from IPhysDesktop
+     *
+     *  @code
+     *
+     *  // get B-candidate:
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // use the functor 
+     *  const double vd = BESTPVVERTSEPSIGN ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::BPVVDSIGN
+     *  @see LoKi::Cuts::VertexSignedDistanceDV
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::VertexSignedDistance
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     *
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-24        
+     */
+    const LoKi::Particles::VertexSignedDistanceDV          BESTPVVERTSEPSIGN ;
+    // ========================================================================
     /** @var BPVVDDOT
      *  The special "context-dependent" version 
      *  of LoKi::Particles::VertexDotDistance 
@@ -408,6 +808,7 @@ namespace LoKi
      *
      *  @endcode 
      *
+     *  @see LoKi::Cuts::BESTPVVERTSEPALONGMOM
      *  @see LoKi::Cuts::VertexDotDistanceDV
      *  @see IPhysDesktop 
      *  @see LoKi::getPhysDesktop
@@ -424,6 +825,40 @@ namespace LoKi
      */
     const LoKi::Particles::VertexDotDistanceDV                       BPVVDDOT ;
     // ========================================================================
+    /** @var BESTPVVERTSEPALONGMOM 
+     *  The special "context-dependent" version 
+     *  of LoKi::Particles::VertexDotDistance 
+     *  functor which gets "the best primary vertex" from IPhysDesktop
+     *
+     *  @code
+     *
+     *  // get B-candidate:
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // use the functor 
+     *  const double vd = BESTPVVERTSEPALONGMOM ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::BPVVDDOT 
+     *  @see LoKi::Cuts::VertexDotDistanceDV
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::VertexDotDistance
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     *
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-24        
+     */
+    const LoKi::Particles::VertexDotDistanceDV          BESTPVVERTSEPALONGMOM ;
+    // ========================================================================
     /** @var BPVVDCHI2
      *  The special "context-dependent" version 
      *  of LoKi::Particles::VertexChi2Distance 
@@ -439,6 +874,7 @@ namespace LoKi
      *
      *  @endcode 
      *
+     *  @see LoKi::Cuts::BESTPVVERTSEPCHI2
      *  @see LoKi::Cuts::VertexChi2DistanceDV
      *  @see IPhysDesktop 
      *  @see LoKi::getPhysDesktop
@@ -455,10 +891,179 @@ namespace LoKi
      */
     const LoKi::Particles::VertexChi2DistanceDV                     BPVVDCHI2 ;
     // ========================================================================
-    
-
-
-
+    /** @var BESTPVVERTSEPCHI2 
+     *  The special "context-dependent" version 
+     *  of LoKi::Particles::VertexChi2Distance 
+     *  functor which gets "the best primary vertex" from IPhysDesktop
+     *
+     *  @code
+     *
+     *  // get B-candidate:
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // use the functor 
+     *  const double chi2 = BPVVDCHI2 ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::BPVVDCHI2
+     *  @see LoKi::Cuts::VertexChi2DistanceDV
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::VertexChi2Distance
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     *
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-24        
+     */
+    const LoKi::Particles::VertexChi2DistanceDV              BESTPVVERTSEPCHI2 ;
+    // ========================================================================
+    /** @typedef BPVLTIME
+     *  The special "context-dependent" version of 
+     *  LoKi::Particles::LifeTime functor
+     *  which gets "the best primary vertex" from IPhysDesktop
+     *  and ILifetimeFitter from GaudiAlgorithm 
+     *
+     *  @code
+     *
+     *  // get B-candidate:
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // prepare the functor:
+     *  Fun fun = BPVLTIME ( "PropertimeFitter/ProperTime:PUBLIC" ) ;
+     *
+     *  // use the functor 
+     *  const double ltime = fun ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::LifeTimeDV
+     *  @see LoKi::Particles::LifeTime
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::LifeTime
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-02-10
+     */
+    typedef LoKi::Particles::LifeTimeDV                              BPVLTIME ;
+    // ========================================================================    
+    /** @typedef BPVLTCHI2
+     *  The special version of LoKi::Particles::LifeTimeChi2 functor
+     *  which gets "the best primary vertex" from IPhysDesktop
+     *  and ILifetimeFitter from GaudiAlgorithm 
+     *
+     *  @code
+     *
+     *  // get B-candidate:
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // prepare the functor:
+     *  Fun fun = BPVLTCHI2 ( "PropertimeFitter/ProperTime:PUBLIC" ) ;
+     *
+     *  // use the functor 
+     *  const double chi2 = fun ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::LifeTimeChi2DV
+     *  @see LoKi::Particles::LifeTimeChi2
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::LifeTimeChi2
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-17
+     */
+    typedef LoKi::Particles::LifeTimeChi2DV                         BPVLTCHI2 ;
+    // ========================================================================    
+    /** @typedef BPVLTSIGNCHI2 
+     *  The special version of LoKi::Particles::LifeTimeChi2 functor
+     *  which gets "the best primary vertex" from IPhysDesktop
+     *  and ILifetimeFitter from GaudiAlgorithm 
+     *
+     *  @code
+     *
+     *  // get B-candidate:
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // prepare the functor:
+     *  Fun fun = BPVLTSIGNCHI2 ( "PropertimeFitter/ProperTime:PUBLIC" ) ;
+     *
+     *  // use the functor 
+     *  const double chi2 = fun ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::BPVLTSIGNCHI2
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::LifeTimeSignedChi2
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-17
+     */
+    typedef LoKi::Particles::LifeTimeSignedChi2DV               BPVLTSIGNCHI2 ;
+    // ========================================================================    
+    /** @class BPVLTFITCHI2
+     *  The special version of LoKi::Particles::LifeTimeFitChi2 functor
+     *  which gets "the best primary vertex" from IPhysDesktop
+     *  and ILifetimeFitter from DVAlgorithm 
+     *
+     *  @code
+     *
+     *  // get B-candidate:
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // prepare the functor:
+     *  Fun fun = BPVLTFITCHI2 ( "PropertimeFitter/ProperTime:PUBLIC" ) ;
+     *
+     *  // use the functor 
+     *  const double chi2 = fun ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @attention This functor is *NOT* (time/sigma)**2, this functor evaluates 
+     *             the quality/consistency of the properlifetime fit
+     *
+     *  @see LoKi::Particles::LifeTimeFitChi2DV
+     *  @see LoKi::Particles::LifeTimeFitChi2
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::LifeTimeSignedChi2
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-17
+     */
+    typedef LoKi::Particles::LifeTimeFitChi2DV                   BPVLTFITCHI2 ;
+    // ========================================================================
   } // end of namespace LoKi::Cuts 
 } // end of namespace LoKi
 // ============================================================================

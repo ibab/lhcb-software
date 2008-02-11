@@ -348,6 +348,14 @@ FILTER   = LoKi.Particles.Filter
 DANG     = LoKi.Particles.CosineDirectionAngle 
 ## @see LoKi::Cuts::DIRA
 DIRA     = LoKi.Particles.CosineDirectionAngle 
+## @see LoKi::Cuts::DETA
+DETA     = LoKi.Particles.DeltaEta
+## @see LoKi::Cuts::DPHI
+DPHI     = LoKi.Particles.DeltaPhi
+## @see LoKi::Cuts::DELTAR2
+DELTAR2  = LoKi.Particles.DeltaR2
+## @see LoKi::Cuts::DR2
+DR2      = LoKi.Particles.DeltaR2
 
 
 
@@ -440,13 +448,82 @@ VIP        = LoKi.Vertices.ImpPar
 VIPCHI2    = LoKi.Vertices.ImpParChi2
 
 
+# =============================================================================
+# Aliases from Vava GLIGOROV
+# =============================================================================
+CLOSESTAPPROACH         = CLAPP
+CLOSESTAPPROACHCHI2     = CLAPPCHI2 
+COSPF                   = DIRA
+DPHI2DETA2              = DR2
+PDGID                   = ID
+MEASUREDMASS            = MM
+MINCLOSESTAPPROACH      = MINCLAPP
+MINCLOSESTAPPROACHCHI2  = MINCLAPPCHI2 
+MINIPCHI2               = MIPCHI2
+NDAUGHTERS              = NDAUGS
+VERTEXSEP               = VD
+VERTEXSEPCHI2           = VDCHI2
+VERTEXSEPSIGN           = VDSIGN
+APPLYVERTEXFUNTOENDVERT = VFASPF 
 
-# functional part:
+# =============================================================================
+# CONTEXT-DEPENDENT FUNCTORS
+# =============================================================================
+BPVDIRA               = LoKi.Particles.CosineDirectionAngleWithTheBestPV
+BESTPVCOSPF           = LoKi.Particles.CosineDirectionAngleWithTheBestPV  ## by Vava GLIGOROV
+
+BPVIP                 = LoKi.Particles.ImpParWithTheBestPV
+BESTPVIP              = LoKi.Particles.ImpParWithTheBestPV                ## by Vava GLIGOROV
+
+BPVIPCHI2             = LoKi.Particles.ImpParChi2WithTheBestPV
+BESTPVIPCHI2          = LoKi.Particles.ImpParChi2WithTheBestPV            ## by Vava GLIGOROV
+
+MIPSOURCE             = LoKi.Particles.MinImpParWithSource
+MINIPWITHSOURCE       = LoKi.Particles.MinImpParWithSource                ## by Vava GLIGOROV 
+
+MIPDV                 = LoKi.Particles.MinImpParDV
+MINIPWITHDV           = LoKi.Particles.MinImpParDV                        ## by Vava GLIGOROV 
+
+MIPTES                = LoKi.Particles.MinImpParTES
+MINIPWITHTES          = LoKi.Particles.MinImpParTES                       ## by Vava GLIGOROV 
+
+MIPCHI2SOURSE         = LoKi.Particles.MinImpParChi2WithSource
+MINIPCHI2WITHSOURSE   = LoKi.Particles.MinImpParChi2WithSource            ## by Vava GLIGOROV
+
+MIPCHI2DV             = LoKi.Particles.MinImpParChi2DV
+MINIPCHI2WITHDV       = LoKi.Particles.MinImpParChi2DV                    ## by Vava GLIGOROV
+
+MIPCHI2TES            = LoKi.Particles.MinImpParChi2TES
+MINIPCHI2WITHTES      = LoKi.Particles.MinImpParChi2TES                   ## by Vava GLIGOROV 
+
+BPVVD                 = LoKi.Particles.VertexDistanceDV
+BESTPVVERTSEP         = LoKi.Particles.VertexDistanceDV                   ## by Vava GLIGOROV 
+
+BPVVDSIGN             = LoKi.Particles.VertexSignedDistanceDV
+BESTPVVERTSEPSIGN     = LoKi.Particles.VertexSignedDistanceDV             ## by Vava GLIGOROV 
+
+BPVVDDOT              = LoKi.Particles.VertexDotDistanceDV
+BESTPVVERTSEPALONGMOM = LoKi.Particles.VertexDotDistanceDV                ## by Vava GLIGOROV 
+
+BPVVDCHI2             = LoKi.Particles.VertexChi2DistanceDV
+BPVLTIME              = LoKi.Particles.LifeTimeDV
+BPVLT                 = LoKi.Particles.LifeTimeDV
+BPVLTCHI2             = LoKi.Particles.LifeTimeChi2DV
+BPVLTSIGNCHI2         = LoKi.Particles.LifeTimeSignedChi2DV
+BPVLTFITCHI2          = LoKi.Particles.LifeTimeFitChi2DV
+
+
+# =============================================================================
+# Functional part: 
+# =============================================================================
 
 ## functional part
-_vp       = std.vector ( _RCP    )
-_vv       = std.vector ( _RCV    )
-_vd       = std.vector ('double')
+#_vp       = std.vector ( _RCP    )
+#_vv       = std.vector ( _RCV    )
+#_vd       = std.vector ('double')
+_vp       = 'std::vector<const LHCb::Particle*>'   ## std.vector ( _RCP    )
+_vv       = 'std::vector<const LHCb::VertexBase*>' ## std.vector ( _RCV    )
+_vd       = 'std::vector<double>'                  ## std.vector ('double')
 #
 Maps      = LoKi.Functor             ( _vp    , _vd      )
 Map       = LoKi.FunctorFromFunctor  ( _vp    , _vd      )

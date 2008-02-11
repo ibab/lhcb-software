@@ -39,12 +39,11 @@ def _decorate ( name = _name ) :
     Make the decoration of all objects from this module
     """
     import LoKiCore.decorators as     _LoKiCore
-    vector = _LoKiCore.std
     p = 'const LHCb::Particle*'
     v = 'const LHCb::VertexBase*'
-    _vp  = std.vector( p )
-    _vv  = std.vector( v )
-    _vd  = std.vector( 'double' )
+    _vp  = 'std::vector<const LHCb::Particle*>'   ## std.vector( p )
+    _vv  = 'std::vector<const LHCb::VertexBase*>' ## std.vector( v )
+    _vd  = 'std::vector<double>'                  ## std.vector( 'double' )
     #
     _decorated  = _LoKiCore.getAndDecorateFunctions (
         name                                          , ## module name 

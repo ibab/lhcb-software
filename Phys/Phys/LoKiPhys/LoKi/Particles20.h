@@ -1,4 +1,4 @@
-// $Id: Particles20.h,v 1.1 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: Particles20.h,v 1.2 2008-02-11 10:11:11 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES20_H 
 #define LOKI_PARTICLES20_H 1
@@ -57,7 +57,7 @@ namespace LoKi
      */
     class CosineDirectionAngleWithTheBestPV
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
-      , LoKi::AuxDesktopBase 
+      , public virtual LoKi::AuxDesktopBase 
     {
     public:
       /// the default constructor, creates the object in invalid state 
@@ -94,7 +94,7 @@ namespace LoKi
      */
     class ImpParWithTheBestPV
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
-      , LoKi::AuxDesktopBase 
+      , public virtual LoKi::AuxDesktopBase 
     {
     public:
       /** the "default" constructor,
@@ -151,7 +151,7 @@ namespace LoKi
      */
     class ImpParChi2WithTheBestPV
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
-      , LoKi::AuxDesktopBase 
+      , public virtual LoKi::AuxDesktopBase 
     {
     public:
       /** the "default" constructor,
@@ -191,7 +191,7 @@ namespace LoKi
     // ========================================================================
     /** @class MinImpParWithSource
      *  The special version of LoKi::Particles::MinImpPar functor
-     *  which gets all the primary vertoices form "source"
+     *  which gets all the primary vertices form the "source"
      *
      *  @see LoKi::Cuts::MIPSOURCE
      *  @see IPhysDesktop 
@@ -260,7 +260,7 @@ namespace LoKi
     // ========================================================================
     /** @class MinImpParDV
      *  The special version of LoKi::Particles::MinImpParWithSource functor
-     *  which gets all the primary vertices from Desktop
+     *  which gets all the primary vertices from the Desktop
      *
      *  @see LoKi::Cuts::MIPDV
      *  @see IPhysDesktop 
@@ -276,7 +276,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParDV : public LoKi::Particles::MinImpParWithSource 
+    class MinImpParDV 
+      : public LoKi::Particles::MinImpParWithSource 
     {
     public:
       /** the "default" constructor,
@@ -296,7 +297,7 @@ namespace LoKi
     // ========================================================================
     /** @class MinImpParTES
      *  The special version of LoKi::Particles::MinImpParWithSource functor
-     *  which gets all the primary vertices from TES
+     *  which gets all the primary vertices from the Transient Event Store
      *
      *  @see LoKi::Cuts::MIPTES
      *  @see IPhysDesktop 
@@ -312,7 +313,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParTES : public LoKi::Particles::MinImpParWithSource 
+    class MinImpParTES 
+      : public LoKi::Particles::MinImpParWithSource 
     {
     public:
       /** the constructor,
@@ -416,7 +418,7 @@ namespace LoKi
     // ========================================================================
     /** @class MinImpParChi2DV
      *  The special version of LoKi::Particles::MinImpParChi2WithSource functor
-     *  which gets all the primary vertices from Desktop
+     *  which gets all the primary vertices from the Desktop
      *
      *  @see LoKi::Cuts::MIPCHI2DV
      *  @see IPhysDesktop 
@@ -432,7 +434,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParChi2DV : public LoKi::Particles::MinImpParChi2WithSource 
+    class MinImpParChi2DV 
+      : public LoKi::Particles::MinImpParChi2WithSource 
     {
     public:
       /** the "default" constructor,
@@ -452,7 +455,7 @@ namespace LoKi
     // ========================================================================
     /** @class MinImpParChi2TES
      *  The special version of LoKi::Particles::MinImpParChi2WithSource functor
-     *  which gets all the primary vertices from TES
+     *  which gets all the primary vertices from the Transient Event Store
      *
      *  @see LoKi::Cuts::MIPCHI2TES
      *  @see IPhysDesktop 
@@ -468,7 +471,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParChi2TES : public LoKi::Particles::MinImpParChi2WithSource 
+    class MinImpParChi2TES 
+      : public LoKi::Particles::MinImpParChi2WithSource 
     {
     public:
       /** the constructor,
@@ -504,7 +508,7 @@ namespace LoKi
     // ========================================================================
     /** @class VertexDistanceDV 
      *  The special version of LoKi::Particles::VertexDistance functor
-     *  which gets "the best primary vertex" from IPhysDesktop
+     *  which gets "the best primary vertex" from the Desktop
      *
      *  @see LoKi::Cuts::BPVVD
      *  @see IPhysDesktop 

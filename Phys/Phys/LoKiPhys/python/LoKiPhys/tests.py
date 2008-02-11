@@ -17,6 +17,10 @@
 """ The basic tests for LoKiPhys package """
 _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
+
+# temporary:
+import GaudiPython.Pythonizations
+
 import LoKiPhys.Phys
 import LoKiNumbers.decorators 
 from LoKiPhys.decorators import *

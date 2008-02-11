@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.39 2008-01-25 14:42:22 ibelyaev Exp $ 
+! $Id: release.notes,v 1.40 2008-02-11 10:11:11 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+
+!========================== LoKiPhys v7r1 2008-02-11 ==========================
+
+! 2008-02-11 - Vanya BELYAEV
+
+ - many minor fixes due to new Gaudi/ROOT/Reflex
+ - implement many shortcuts&aliases, proposed by Vava GLIGOROV
+
 
 ! 2008-01-25 - Vanya BELYAEV
 

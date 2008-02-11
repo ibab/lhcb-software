@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.8 2007-12-03 11:14:51 ibelyaev Exp $ 
+# $Id: decorators.py,v 1.9 2008-02-11 10:13:27 ibelyaev Exp $ 
 # =============================================================================
 ## @file decorators.py LoKiAlgo/decorators.py
 #  The set of basic decorator for objects from LoKiAlgo library
@@ -380,7 +380,7 @@ def _decorateAlg ( alg ) :
     """
     Decorate LoKi::Algo class
     """
-    import GaudiAlgs
+    import GaudiPython.GaudiAlgs
     _Alg = LoKi.Dicts.Alg( alg )
     ## the major LoKi object - algorithm 
     class Algo( _Alg ) :
@@ -392,21 +392,21 @@ def _decorateAlg ( alg ) :
     Algo .  Base      = _Alg
     Algo . _Base      = _Alg
     ## initialze with N-tuples 
-    Algo . initialize = GaudiAlgs._initialize_tuple_
+    Algo . initialize = GaudiPython.GaudiAlgs._initialize_tuple_
     ## the default execute 
     Algo . execute    = Algo   .execute_
     ## the default analyse
     Algo . analyse    = Algo   .analyse_
     ## some accessors 
-    Algo . ntupleSvc  = GaudiAlgs._ntupleSvc
-    Algo . tupleSvc   = GaudiAlgs._ntupleSvc
-    Algo . ntupSvc    = GaudiAlgs._ntupleSvc
-    Algo . tupSvc     = GaudiAlgs._ntupleSvc
-    Algo . evtColSvc  = GaudiAlgs._evtcolSvc
-    Algo . evtcolSvc  = GaudiAlgs._evtcolSvc
-    GaudiAlgs._decorate_algs_    ( [ Algo ] )
-    GaudiAlgs._decorate_plots_   ( [ Algo ] )
-    GaudiAlgs._decorate_tuples_  ( [ Algo ] )
+    Algo . ntupleSvc  = GaudiPython.GaudiAlgs._ntupleSvc
+    Algo . tupleSvc   = GaudiPython.GaudiAlgs._ntupleSvc
+    Algo . ntupSvc    = GaudiPython.GaudiAlgs._ntupleSvc
+    Algo . tupSvc     = GaudiPython.GaudiAlgs._ntupleSvc
+    Algo . evtColSvc  = GaudiPython.GaudiAlgs._evtcolSvc
+    Algo . evtcolSvc  = GaudiPython.GaudiAlgs._evtcolSvc
+    GaudiPython.GaudiAlgs._decorate_algs_    ( [ Algo ] )
+    GaudiPython.GaudiAlgs._decorate_plots_   ( [ Algo ] )
+    GaudiPython.GaudiAlgs._decorate_tuples_  ( [ Algo ] )
     ##
     return Algo
 ## ============================================================================

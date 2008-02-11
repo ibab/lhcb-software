@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.22 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.23 2008-02-11 10:11:11 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -293,9 +293,9 @@ namespace LoKi
      *  const LHCb:Particle* K1 = ... ;
      *  const LHCb:Particle* K2 = ... ;
      * 
-     *  Cun clapp = CHI2DOCA ( K1 , geo() ) ;
+     *  Cun fun = CHI2DOCA ( K1 , geo() ) ;
      *  
-     *  const double chi2 = clapp( K2 ) ;
+     *  const double value = clapp( K2 ) ;
      *
      *  @endcode 
      *
@@ -612,6 +612,7 @@ namespace LoKi
      *
      *  @endcode 
      *
+     *  @see LoKi::Cuts::CLOSESTAPPROACH
      *  @see LoKi::Particles::ClosestApproach
      *  @see LHCb::Particle
      *  @see IGeomDispCalculator
@@ -649,6 +650,67 @@ namespace LoKi
      *  @date   2002-07-15
      */
     typedef LoKi::Particles::ClosestApproachChi2                    CLAPPCHI2 ;
+    // ========================================================================
+    /** @typedef CLOSESTAPPROACH
+     *  Evaluator of the closest approach 
+     *  distance between 2 particles 
+     *  
+     *  The tool IGeomDispCalculator is used 
+     *  for evaluation
+     *
+     *  @code 
+     *
+     *  const LHCb:Particle* K1 = ... ;
+     *  const LHCb:Particle* K2 = ... ;
+     * 
+     *  Fun fun = CLAPP( K1 , geo() ) ;
+     *  
+     *  const double value = fun ( K2 ) ;
+     *
+     *  @endcode 
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @see LoKi::Cuts::CLAPP
+     *  @see LoKi::Particles::ClosestApproach
+     *  @see LHCb::Particle
+     *  @see IGeomDispCalculator
+     * 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::ClosestApproach                  CLOSESTAPPROACH ;
+    // ========================================================================
+    /** @typedef CLOSESTAPPROACHCHI2
+     *  Evaluator of the closest approach chi2 
+     *  distance between 2 particles 
+     *  
+     *  The tool IGeomDispCalculator is used 
+     *  for evaluation
+     *
+     *  @code 
+     *
+     *  const LHCb:Particle* K1 = ... ;
+     *  const LHCb:Particle* K2 = ... ;
+     * 
+     *  Fun fun = CLOSESTAPPROACHCHI2 ( K1 , geo() ) ;
+     *  
+     *  const double value = fun ( K2 ) ;
+     *
+     *  @endcode 
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @see LoKi::Particles::ClosestApproachChi2 
+     *  @see LHCb::Particle
+     *  @see LoKi::Cuts::DOCACHI2
+     *  @see LoKi::Cuts::CHI2DOCA
+     *  @see IGeomDispCalculator
+     * 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::ClosestApproachChi2          CLOSESTAPPROACHCHI2 ;
     // ========================================================================
     /** @var CONFLEV
      *  Trivial function which evaluates "confidence level" for 
@@ -693,6 +755,36 @@ namespace LoKi
      *  @date 2006-02-15
      */
     const   LoKi::Particles::ConfidenceLevel                        CONFLEVEL ;
+    // ========================================================================
+    /** @typedef COSPF
+     *  Simple function which evalutes the coside of the angle inbetween
+     *  the particle momentum and the vector from the primary to the secondary
+     *  vertex 
+     * 
+     *  @code
+     * 
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // get the tool 
+     *  const LHCb::VertexBase* primary = ... ;
+     *
+     *  // construct a function
+     *  Fun fun = COSPF ( primary ) ;
+     *
+     *  // use it!
+     *  const double cosTheta = dira( B ) ;
+     *
+     *  @endcode
+     *
+     *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
+     *
+     *  @see LoKi::Particles::CosineDirectionAngle
+     *  @see LoKi::Cuts::DANG
+     *  @see LoKi::Cuts::DIRA
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-03-20
+     */
+    typedef LoKi::Particles::CosineDirectionAngle                       COSPF ;
     // ========================================================================
     /** @typedef COUNTER
      *  Simple monitoring counter for predicates
@@ -900,6 +992,7 @@ namespace LoKi
      *
      *  @see LoKi::Particles::CosineDirectionAngle
      *  @see LoKi::Cuts::DIRA
+     *  @see LoKi::Cuts::COSPF
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-03-20
      */
@@ -979,6 +1072,7 @@ namespace LoKi
      *
      *  @see LoKi::Particles::CosineDirectionAngle
      *  @see LoKi::Cuts::DANG
+     *  @see LoKi::Cuts::COSPF
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-03-20
      */
