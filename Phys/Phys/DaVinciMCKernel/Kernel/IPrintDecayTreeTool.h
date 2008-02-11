@@ -1,4 +1,4 @@
-// $Id: IPrintDecayTreeTool.h,v 1.4 2008-02-07 12:48:40 cattanem Exp $
+// $Id: IPrintDecayTreeTool.h,v 1.5 2008-02-11 12:33:48 jpalac Exp $
 #ifndef DAVINCIMCTOOLS_IPRINTDECAYTREETOOL_H
 #define DAVINCIMCTOOLS_IPRINTDECAYTREETOOL_H 1
 
@@ -12,9 +12,7 @@
 
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
-
-// Forward declarations
-class Particle2MCLinker;
+#include "Kernel/Particle2MCLinker.h"
 
 // Declaration of the interface ID (interface id, major version, minor version)
 static const InterfaceID IID_IPrintDecayTreeTool("IPrintDecayTreeTool", 1, 0);
