@@ -3,8 +3,28 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.3 2007-12-13 13:27:18 jpalac Exp $
+! $Id: release.notes,v 1.4 2008-02-11 22:44:08 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-02-11 - Juan PALACIOS
+
+ - src/MCParticleCloner{.h, .cpp}
+  . clone method now takes optional boolean to stop potential infinite loop
+    in clning MCParticles, their MCVertices, the MCParticles that come out of
+    the MCVertices, ad infinitum.
+
+ - src/MCVertexCloner.h
+  . Add finalize() method.
+
+ - src/MCVertexCloner.cpp
+  . Run finalize and initialize methods, which just call their
+    MicroDSTTool couterparts.
+
+ - src/ParticleCloner.cpp, VertexCloner.cpp
+  . Run MicroDST::initialize()
+
+ - cmt/requirements
+  . Increase version to v1r1
 
 !======================= MicroDSTTools v1r0 2007-12-13 =======================
 
