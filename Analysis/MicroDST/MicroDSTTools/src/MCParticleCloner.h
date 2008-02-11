@@ -1,4 +1,4 @@
-// $Id: MCParticleCloner.h,v 1.1.1.1 2007-12-10 09:32:24 jpalac Exp $
+// $Id: MCParticleCloner.h,v 1.2 2008-02-11 22:37:16 jpalac Exp $
 #ifndef MCPARTICLECLONER_H 
 #define MCPARTICLECLONER_H 1
 
@@ -25,6 +25,8 @@ public:
 
   StatusCode initialize();
 
+  StatusCode finalize();
+
   virtual LHCb::MCParticle* operator() (const LHCb::MCParticle* mcp);
   
 
@@ -32,7 +34,7 @@ protected:
 
 private:
 
-  LHCb::MCParticle* clone(const LHCb::MCParticle* mcp);
+  LHCb::MCParticle* clone(const LHCb::MCParticle* mcp, bool cloneOriginVertex);
 
   LHCb::MCVertex* cloneVertexTree(const LHCb::MCVertex* mcVertex);
   

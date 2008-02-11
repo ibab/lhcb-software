@@ -1,4 +1,4 @@
-// $Id: MCParticleCloner.cpp,v 1.1.1.1 2007-12-10 09:32:24 jpalac Exp $
+// $Id: MCParticleCloner.cpp,v 1.2 2008-02-11 22:37:16 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -38,6 +38,12 @@ MCParticleCloner::MCParticleCloner( const std::string& type,
 StatusCode MCParticleCloner::initialize()
 {
 
+  debug() << "==> Initialize" << endmsg;
+
+  StatusCode sc = MicroDSTTool::initialize();
+  
+  if (! sc.isSuccess() ) return sc;
+
   m_vertexCloner = this->tool<ICloneMCVertex>( "MCVertexCloner", 
                                                this->parent()    );
 
@@ -45,9 +51,13 @@ StatusCode MCParticleCloner::initialize()
   
 }
 //=============================================================================
-LHCb::MCParticle* MCParticleCloner::clone(const LHCb::MCParticle* mcp)
+LHCb::MCParticle* MCParticleCloner::clone(const LHCb::MCParticle* mcp,
+                                          bool cloneOriginVertex=true)
 {
-  //  LHCb::MCParticle* clone = m_mcpCloner(mcp);
+
+  debug() << "clone() called for\n " << *mcp << endmsg;
+  
+
   LHCb::MCParticle* clone = 
     cloneKeyedContainerItem<LHCb::MCParticle, BasicMCPCloner>(mcp);
 
@@ -56,15 +66,21 @@ LHCb::MCParticle* MCParticleCloner::clone(const LHCb::MCParticle* mcp)
   LHCb::MCParticle* motherClone = (mother) ? 
     cloneKeyedContainerItem<LHCb::MCParticle, BasicMCPCloner>(mother) : 0;
 
+  if (cloneOriginVertex) {
+
     const LHCb::MCVertex* originVertex = mcp->originVertex();  
 
     if (originVertex) {
+      debug() << "Found origin vertex\n " << *originVertex << endmsg;
       LHCb::MCVertex* originVertexClone = cloneVertexTree(originVertex);
       clone->setOriginVertex(originVertexClone);
       originVertexClone->setMother(motherClone);  
+    } else {
+      debug() << "No originVertex found"<< endmsg;
     }
+  }
 
-    return clone;
+  return clone;
 
 }
 //=============================================================================
@@ -77,8 +93,11 @@ LHCb::MCVertex* MCParticleCloner::cloneVertexTree(const LHCb::MCVertex* mcVertex
   for (SmartRefVector<LHCb::MCParticle>::const_iterator iProd = products.begin();
        iProd != products.end();
        ++iProd) {
-
-    LHCb::MCParticle* productClone = this->clone(*iProd);
+    debug() << "cloning Vertex Tree product\n" << *(*iProd)<< endmsg;
+    // somehow have to switch off the storing of the origin vertex in
+    // this cloning process!
+    LHCb::MCParticle* productClone = this->clone(*iProd, false);
+    debug() << "cloned Vertex Tree product" << endmsg;
     if (productClone) clone->addToProducts(productClone);
   }
 
@@ -89,6 +108,11 @@ LHCb::MCVertex* MCParticleCloner::cloneVertexTree(const LHCb::MCVertex* mcVertex
 LHCb::MCParticle* MCParticleCloner::operator() (const LHCb::MCParticle* mcp) 
 {
   return this->clone(mcp);
+}
+//=============================================================================
+StatusCode MCParticleCloner::finalize() 
+{
+  return MicroDSTTool::finalize();
 }
 //=============================================================================
 // Destructor
