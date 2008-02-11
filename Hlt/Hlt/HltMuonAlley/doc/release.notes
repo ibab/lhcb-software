@@ -4,6 +4,9 @@
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
 
+! 2008-02-11 - Gerhard Raven
+  add .cvsignore file to ignore install.history and Makefile in cmt directory
+
 ! 2008-02-07 - Jose A. Hernando, Leandro de Paula
   even smaller bug in HltIsMuonTool properties
 
@@ -11,7 +14,6 @@
   small bug in HltIsMuonTool properties
 
 !========================== HltMuonAlley v2r1 2008-02-05 ===================
->>>>>>> 1.27
 ! 2008-01-29 - Jose A. Hernando, Leandro de Paula
   adding HltIsMuonTool
 
@@ -36,6 +38,9 @@
    MatchPatVeloRMuonHits.cpp, MatchPatVeloSpaceL0.cpp,
    MatchPatVeloSpaceMuonHits.cpp
  - remove the PatContainers from the other ones.
+
+! 2007-11-15 Gerhard Raven
+   - streamline L0Vertex2Tracks a bit...
 
 !========================== HltMuonAlley v1r6 2007-11-14 ===================
 ! 2007-10-31 - Patrick Koppenburg
