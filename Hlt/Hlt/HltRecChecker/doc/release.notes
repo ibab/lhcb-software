@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
+! 2008-02-11 - Gerhard Raven
+  - add .cvsignore file to cmt directory to ignore cmt generated files
 
 !========================== HltRecChecker v1r4 2008-02-05 ===================
 ! 2008-01-22 - Jose A. Hernando
