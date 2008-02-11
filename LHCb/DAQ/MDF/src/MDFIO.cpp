@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.28 2008-02-07 07:51:13 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.29 2008-02-11 07:27:47 frankm Exp $
 //  ====================================================================
 //  MDFIO.cpp
 //  --------------------------------------------------------------------
@@ -88,10 +88,10 @@ StatusCode LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
       m_spaceActions++;
       encodeRawBanks(raw, space.first+hdrSize, len, true);
       StatusCode sc = 
-  writeDataSpace(compTyp, chksumTyp, ioDesc, hdr_bank, space.first, len);
+	writeDataSpace(compTyp, chksumTyp, ioDesc, hdr_bank, space.first, len);
       if ( sc.isSuccess() ) {
-  m_writeActions++;
-  return sc;
+	m_writeActions++;
+	return sc;
       }
       MsgStream err(m_msgSvc, m_parent);
       err << MSG::ERROR << "Failed write data to output device." << endmsg;

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.32 2008-02-05 16:44:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.33 2008-02-11 07:27:47 frankm Exp $
 //  ====================================================================
 //  RawEventHelpers.cpp
 //  --------------------------------------------------------------------
@@ -978,6 +978,7 @@ int LHCb::bxOffsetTAE(const std::string& root) {
 /// Unpacks the buffer given by the start and end pointers, and return a vector of Raw Events pointers
 StatusCode LHCb::unpackTAE(const char* start, const char* end, const std::string& loc, RawEvent* raw) {
   RawBank* b = getTAEBank(start);
+  // std::cout << "UnpackTAE:" << (void*)b << " " << (void*)start << " " << (void*)(*(int*)start) << std::endl;
   if ( b ) {   // Is it the TAE bank?
     int bx = bxOffsetTAE(loc);
     if ( -7 <= bx && 7 >= bx )  {

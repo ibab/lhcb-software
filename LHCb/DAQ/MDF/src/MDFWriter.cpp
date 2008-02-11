@@ -1,4 +1,4 @@
-// $Id: MDFWriter.cpp,v 1.22 2008-02-07 09:10:02 frankb Exp $
+// $Id: MDFWriter.cpp,v 1.23 2008-02-11 07:27:47 frankm Exp $
 //  ====================================================================
 //  MDFWriter.cpp
 //  --------------------------------------------------------------------
@@ -110,6 +110,7 @@ MDFIO::MDFDescriptor MDFWriter::getDataSpace(void* const /* ioDesc */, size_t le
 
 /// Execute procedure
 StatusCode MDFWriter::execute()    {
+  StatusCode sc;
   std::pair<const char*,int> data;
   setupMDFIO(msgSvc(),eventSvc());
   MsgStream log(msgSvc(), name());
@@ -123,10 +124,13 @@ StatusCode MDFWriter::execute()    {
       if ( data.first )  {
 	switch(m_dataType) {
 	case MDFIO::MDF_RECORDS:
-	  return commitRawBuffer(data.first+2*sizeof(int), data.second-2*sizeof(int), 
-				 m_dataType, m_compress, m_genChecksum, m_connection);
+	  sc = writeBuffer(m_connection,data.first+2*sizeof(int), data.second-2*sizeof(int));
+	  sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
+	  return sc;
 	case MDFIO::MDF_BANKS:
-	  return commitRawBuffer(data.first, data.second, m_dataType, m_compress, m_genChecksum, m_connection);
+	  sc = writeBuffer(m_connection,data.first, data.second);
+	  sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
+	  return sc;
 	default:
 	  break;
 	}
@@ -136,9 +140,26 @@ StatusCode MDFWriter::execute()    {
       data = getDataFromAddress();
       if ( data.first )  {
 	switch(m_dataType) {
-	case MDFIO::MDF_BANKS:
 	case MDFIO::MDF_RECORDS:
-	  return commitRawBuffer(data.first, data.second, m_dataType, m_compress, m_genChecksum, m_connection);
+	  sc = writeBuffer(m_connection,data.first, data.second);
+	  sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
+	  return sc;
+	case MDFIO::MDF_BANKS:
+	  {
+	    MDFHeader* h = (MDFHeader*)data.first;
+	    m_data.reserve(data.second+100*sizeof(int));
+	    RawBank* b = (RawBank*)m_data.data();
+	    size_t len = sizeof(MDFHeader)+h->subheaderLength();
+	    b->setMagic();
+	    b->setType(RawBank::DAQ);
+	    b->setSize(len);
+	    b->setVersion(DAQ_STATUS_BANK);
+	    b->setSourceID(0);
+	    ::memcpy(b->data(), data.first, data.second);
+	    sc = writeBuffer(m_connection,m_data.data(),data.second+b->hdrSize());
+	    sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
+	    return sc;
+	  }	    
 	default:
 	  break;
 	}
