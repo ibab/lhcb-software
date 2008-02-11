@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.h,v 1.3 2008-02-08 18:19:34 frankm Exp $
+// $Id: StorageDisplay.h,v 1.4 2008-02-11 20:00:18 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/StorageDisplay.h,v 1.3 2008-02-08 18:19:34 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/StorageDisplay.h,v 1.4 2008-02-11 20:00:18 frankm Exp $
 #ifndef ROMON_STORAGEDISPLAY_H
 #define ROMON_STORAGEDISPLAY_H 1
 
@@ -58,6 +58,7 @@ namespace ROMon {
     /// Standard destructor
     virtual ~StorageDisplay();
 
+    /// Show the display header information (title, time, ...)
     void showHeader(const Nodeset& ns);
 
     /// Show the data logging status

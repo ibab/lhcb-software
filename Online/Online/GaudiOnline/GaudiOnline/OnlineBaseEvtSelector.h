@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.h,v 1.1 2007-12-06 14:39:35 frankb Exp $
+// $Id: OnlineBaseEvtSelector.h,v 1.2 2008-02-11 20:02:08 frankm Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineBaseEvtSelector.h,v 1.1 2007-12-06 14:39:35 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineBaseEvtSelector.h,v 1.2 2008-02-11 20:02:08 frankm Exp $
 #ifndef GAUDIONLINE_ONLINEBASEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEBASEEVTSELECTOR_H 1
 
@@ -194,6 +194,8 @@ namespace LHCb  {
     void increaseEvtCount()    const     {  m_evtCount++;     }
     /// Flag to indicate that event decoding is required
     bool mustDecode() const              {  return m_decode;  }
+    /// Set flag to indicate that event decoding is required
+    void setDecode(bool value)           {  m_decode = value; }
     /// Number of active requests required by the job options
     int numReq() const                   {  return m_nreqs;   }
     /// Access requests given by the job option data

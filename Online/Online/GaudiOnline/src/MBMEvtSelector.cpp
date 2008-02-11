@@ -1,4 +1,4 @@
-// $Id: MBMEvtSelector.cpp,v 1.1 2007-12-06 14:39:35 frankb Exp $
+// $Id: MBMEvtSelector.cpp,v 1.2 2008-02-11 20:02:08 frankm Exp $
 //====================================================================
 //  MBMEvtSelector
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMEvtSelector.cpp,v 1.1 2007-12-06 14:39:35 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMEvtSelector.cpp,v 1.2 2008-02-11 20:02:08 frankm Exp $
 #ifndef GAUDIONLINE_MBMEVTSELECTOR_H
 #define GAUDIONLINE_MBMEVTSELECTOR_H 1
 
@@ -36,14 +36,14 @@ namespace LHCb  {
     */
   class MBMContext : public OnlineContext  {
   private:
-    const MBMEvtSelector* m_onlineSel;
+    MBMEvtSelector*       m_onlineSel;
     MBM::Consumer*        m_consumer;
     void*                 m_mepStart;
     StatusCode connectMEP(const std::string& input);
     StatusCode connectMBM(const std::string& input);
   public:
     /// Standard constructor
-    MBMContext(const MBMEvtSelector* pSelector);
+    MBMContext(MBMEvtSelector* pSelector);
     /// Standard destructor 
     virtual ~MBMContext() {}
     virtual StatusCode connect(const std::string& input);
@@ -89,7 +89,7 @@ namespace LHCb  {
 }
 #endif // GAUDIONLINE_MBMEVTSELECTOR_H
 
-// $Id: MBMEvtSelector.cpp,v 1.1 2007-12-06 14:39:35 frankb Exp $
+// $Id: MBMEvtSelector.cpp,v 1.2 2008-02-11 20:02:08 frankm Exp $
 //====================================================================
 //  MBMEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -160,7 +160,7 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineEvtSelector)
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MBMEvtSelector)
 using namespace LHCb;
 
-MBMContext::MBMContext(const MBMEvtSelector* s)
+MBMContext::MBMContext(MBMEvtSelector* s)
 : OnlineContext(s), m_onlineSel(s), m_consumer(0), m_mepStart(0)
 {
 }
@@ -236,14 +236,16 @@ StatusCode MBMContext::connectMEP(const std::string& input)  {
   MEPID mepID = m->mepID();
   if ( mepID != MEP_INV_DESC )  {
     m_mepStart = (void*)mepID->mepStart;
-    if ( input == "EVENT" )  {
-      m_consumer = new MBM::Consumer(mepID->evtBuffer,mepID->processName,mepID->partitionID);
-    }
-    else if ( input == "MEP" )  {
+    if ( input == "MEP" )  {
       m_consumer = new MBM::Consumer(mepID->mepBuffer,mepID->processName,mepID->partitionID);
+    }
+    else if ( input == "EVENT" )  {
+      m_consumer = new MBM::Consumer(mepID->evtBuffer,mepID->processName,mepID->partitionID);
+      m_onlineSel->setDecode(true);
     }
     else if ( input == "RESULT" )  {
       m_consumer = new MBM::Consumer(mepID->resBuffer,mepID->processName,mepID->partitionID);
+      m_onlineSel->setDecode(true);
     }
     if ( m_consumer )  {
       if ( m_consumer->id() != MBM_INV_DESC )  {
@@ -312,7 +314,7 @@ StatusCode MBMEvtSelector::finalize()    {
 
 // Create event selector iteration context
 StatusCode MBMEvtSelector::createContext(Context*& refpCtxt) const  {
-  MBMContext* ctxt = new MBMContext(this);
+  MBMContext* ctxt = new MBMContext(const_cast<MBMEvtSelector*>(this));
   refpCtxt = ctxt;
   return ctxt->connect(m_input);
 }

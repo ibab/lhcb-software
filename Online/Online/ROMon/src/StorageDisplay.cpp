@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.3 2008-02-08 21:20:40 frankm Exp $
+// $Id: StorageDisplay.cpp,v 1.4 2008-02-11 20:00:18 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.3 2008-02-08 21:20:40 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.4 2008-02-11 20:00:18 frankm Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -262,6 +262,10 @@ void StorageDisplay::showHeader(const Nodeset& ns)   {
   draw_line_reverse("         Stream Monitor for partition %s on %s   [%s]",
 		    m_partName.c_str(), RTL::nodeName().c_str(), ::lib_rtl_timestr());    
   draw_line_bold   ("         Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
+  for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
+    char* c = ::strchr((*n).name,'.');
+    if ( c ) *c = 0;
+  }
 }
 
 /// Update all displays

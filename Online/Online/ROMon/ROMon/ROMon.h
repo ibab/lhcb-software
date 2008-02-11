@@ -1,4 +1,4 @@
-// $Id: ROMon.h,v 1.4 2008-02-08 21:20:39 frankm Exp $
+// $Id: ROMon.h,v 1.5 2008-02-11 20:00:18 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.4 2008-02-08 21:20:39 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.5 2008-02-11 20:00:18 frankm Exp $
 #ifndef GAUDIONLINE_ROMON_H
 #define GAUDIONLINE_ROMON_H 1
 
@@ -35,10 +35,13 @@ namespace ROMon {
    */
   template <typename T> class FixItems {
   public:
-    typedef T  item_type;
-    typedef T* pointer_type;
-    typedef T* iterator;
+    typedef T        item_type;
+    typedef T*       pointer_type;
+    typedef T*       iterator;
     typedef const T* const_iterator;
+    typedef T        value_type;
+    typedef T&       reference;
+    typedef const T& const_reference;
 
     /// Number of fixed size elements in the container
     int  m_size;
@@ -81,10 +84,13 @@ namespace ROMon {
    */
   template <typename T> class VarItems {
   public:
-    typedef T  item_type;
-    typedef T* pointer_type;
-    typedef T* iterator;
+    typedef T        item_type;
+    typedef T*       pointer_type;
+    typedef T*       iterator;
     typedef const T* const_iterator;
+    typedef T        value_type;
+    typedef T&       reference;
+    typedef const T& const_reference;
 
     /// Number of variable size elements in the container
     int  m_size;

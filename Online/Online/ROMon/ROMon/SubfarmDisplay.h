@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.h,v 1.2 2008-02-11 20:00:18 frankm Exp $
+// $Id: SubfarmDisplay.h,v 1.1 2008-02-11 20:00:43 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,9 +12,9 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/MonitoringDisplay.h,v 1.2 2008-02-11 20:00:18 frankm Exp $
-#ifndef ROMON_MONITORINGDISPLAY_H
-#define ROMON_MONITORINGDISPLAY_H 1
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SubfarmDisplay.h,v 1.1 2008-02-11 20:00:43 frankm Exp $
+#ifndef ROMON_SUBFARMDISPLAY_H
+#define ROMON_SUBFARMDISPLAY_H 1
 
 // Framework includes
 #include "ROMon/ROMonDisplay.h"
@@ -24,36 +24,36 @@
  */
 namespace ROMon {
 
-  /**@class MonitoringDisplay ROMon.h GaudiOnline/MonitoringDisplay.h
+  /**@class SubfarmDisplay ROMon.h GaudiOnline/SubfarmDisplay.h
    *
    *   Monitoring display for the LHCb storage system.
    *
    *   @author M.Frank
    */
-  class MonitoringDisplay : public ROMonDisplay  {
+  class SubfarmDisplay : public ROMonDisplay  {
   protected:
-
-    /// Reference to the Relay info display
-    MonitorDisplay* m_relay;
 
     /// reference to the node display
     MonitorDisplay* m_nodes;
 
-    /// Reference to the display showing monitoring tasks
-    MonitorDisplay* m_tasks;
+    /// Reference to the display showing the MOORE tasks
+    MonitorDisplay* m_moores;
 
-    /// Partition name for projection(s)
-    std::string     m_partName;
+    /// Reference to the display showing the event builder tasks
+    MonitorDisplay* m_builders;
 
-    /// Name pof relay node
-    std::string     m_relayNode;
+    /// Reference to the display showing the event holder tasks
+    MonitorDisplay* m_holders;
+
+    /// Reference to the display showing the event sender tasks
+    MonitorDisplay* m_senders;
 
   public:
     /// Standard constructor
-    MonitoringDisplay(int argc, char** argv);
+    SubfarmDisplay(int argc, char** argv);
 
     /// Standard destructor
-    virtual ~MonitoringDisplay();
+    virtual ~SubfarmDisplay();
 
     /// Show the display header information (title, time, ...)
     void showHeader(const Nodeset& ns);
@@ -61,15 +61,12 @@ namespace ROMon {
     /// Display the node information
     void showNodes(const Nodeset& ns);
 
-    /// Show the task information
+    /// Show the event builder information
     void showTasks(const Nodeset& ns);
-
-    /// Show the relay information
-    void showRelay(const Nodeset& ns);
 
     /// Update all displays
     virtual void updateDisplay(const Nodeset& ns);
   };
 }      // End namespace ROMon
-#endif /* ROMON_MONITORINGDISPLAY_H */
+#endif /* ROMON_SUBFARMDISPLAY_H */
 
