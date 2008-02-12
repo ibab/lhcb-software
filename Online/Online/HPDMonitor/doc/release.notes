@@ -3,6 +3,8 @@
 ! Responsible : Ulrich Kerzel
 ! Purpose     : Online monitor for Gaudi
 !-----------------------------------------------------------------------------
+! 2008-02-11 - Ulrich Kerzel
+#include <vector>, does not seem to be there automatically with LHCb v23r3
 
 ! 2007-10-31 - Ulrich Kerzel
 - removed compiler warnings:

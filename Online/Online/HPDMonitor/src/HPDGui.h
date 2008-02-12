@@ -1,9 +1,10 @@
-// $Id: HPDGui.h,v 1.14 2007-08-15 17:09:21 ukerzel Exp $
+// $Id: HPDGui.h,v 1.15 2008-02-12 19:02:58 ukerzel Exp $
 #ifndef HPDGUI_H 
 #define HPDGUI_H 1
 
 // Include files
 #include <map>
+#include <vector>
 
 //
 // ROOT
@@ -27,6 +28,7 @@
 #include <TGTab.h>
 #include <TGStatusBar.h>
 #include <TGListTree.h>
+
 
 //Canvas, etc
 #include <TCanvas.h>
