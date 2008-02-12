@@ -1,0 +1,26 @@
+installarea = ${CMTINSTALLAREA}
+
+
+pydimtarget = $(installarea)/$(tag)/lib/$(name).so
+source = $(bin)lib$(name).so
+
+${CONSTITUENT} :: $(pydimtarget)
+
+install :: ${CONSTITUENT}
+
+${CONSTITUENT}install :: $(pydimtarget)
+
+$(pydimtarget) :: $(source)
+	echo "----> creating python module $(name) -> $(pydimtarget) "
+	mkdir -p $(installarea)/$(tag)/lib
+	cp $(source) $(pydimtarget)
+
+${CONSTITUENT}clean :: ${CONSTITUENT}uninstall
+
+uninstall :: ${CONSTITUENT}uninstall
+
+${CONSTITUENT}uninstall ::
+	@rm -rf $(pydimtarget)
+
+
+#-- end of python_init_header ------

@@ -1,7 +1,0 @@
-${CONSTITUENT} :: ${FILEPATH}$(library_prefix)${NAME}${FILESUFFIX}
-	echo "----> Constituent:  ${CONSTITUENT} $(lib) ${FILEPATH}$(library_prefix)${NAME}${FILESUFFIX}"
-	cp ${FILEPATH}${NAME}${FILESUFFIX} $(lib)
-
-${CONSTITUENT}clean ::
-	/bin/rm -f ${FILEPATH}${NAME}${FILESUFFIX}
-	/bin/rm -f ${FILEPATH}$(library_prefix)${NAME}${FILESUFFIX}
