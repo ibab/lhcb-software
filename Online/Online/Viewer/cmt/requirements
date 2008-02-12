@@ -23,4 +23,5 @@ macro_append Viewer_linkopts "-lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPost
 macro_append SaveHistos_cppflags "-Dunix -D_REENTRANT " WIN32 ""
 macro_append SaveHistos_linkopts "-lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic" \
   WIN32 " libHist.lib libGraf.lib libGraf3d.lib libGpad.lib libTree.lib libRint.lib libPostscript.lib libMatrix.lib libPhysics.lib "
-macro_append SaveHistos_dependencies " Viewer_dependencies "
+macro_append SaveHistos_dependencies " Viewer_dependencies " WIN32 ""
+
