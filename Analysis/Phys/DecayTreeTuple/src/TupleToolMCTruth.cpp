@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.cpp,v 1.3 2008-01-31 10:34:12 pkoppenb Exp $
+// $Id: TupleToolMCTruth.cpp,v 1.4 2008-02-12 13:59:35 jpalac Exp $
 // Include files
 
 // from Gaudi
@@ -72,10 +72,16 @@ StatusCode TupleToolMCTruth::initialize(){
   }
 
   if( ! m_useChi2Method ){
-    m_pLink = new Particle2MCLinker( this, Particle2MCMethod::Links, "" );
-    m_pComp = new Particle2MCLinker( this, Particle2MCMethod::Composite, "" );
+    m_pLink = new Particle2MCLinker( this, 
+                                     Particle2MCMethod::Links, 
+                                     std::vector<std::string>(1,"") );
+    m_pComp = new Particle2MCLinker( this, 
+                                     Particle2MCMethod::Composite, 
+                                     std::vector<std::string>(1,"") );
   } else {
-    m_pChi2 = new Particle2MCLinker( this, Particle2MCMethod::Chi2, "" );
+    m_pChi2 = new Particle2MCLinker( this, 
+                                     Particle2MCMethod::Chi2,
+                                     std::vector<std::string>(1,""));
   }
   
   return StatusCode::SUCCESS;
