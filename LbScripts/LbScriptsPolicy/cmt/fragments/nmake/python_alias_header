@@ -14,7 +14,7 @@ ${CONSTITUENT}install :: $(bat_file)
 
 $(bat_file) :: $(py_file)
 	@del $(bat_file)
-	@if exist $(install_scripts_dir) echo "python $(py_file) %* " > $(bat_file)
+	@if exist $(install_scripts_dir) echo python $(py_file) %* > $(bat_file)
 
 ${CONSTITUENT}clean :: ${CONSTITUENT}uninstall
 
