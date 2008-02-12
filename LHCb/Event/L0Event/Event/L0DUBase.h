@@ -1,4 +1,4 @@
-// $Id: L0DUBase.h,v 1.6 2007-12-05 14:04:56 odescham Exp $
+// $Id: L0DUBase.h,v 1.7 2008-02-12 14:51:33 odescham Exp $
 //
 #ifndef      L0MUON_L0DUBASE_H
 #define      L0MUON_L0DUBASE_H 1
@@ -256,7 +256,7 @@ namespace L0DUBase{
     Hits[Index::Size]  = {Fiber::Pu2, Type::Digit, L0Pu::HitsLSB::Mask, L0Pu::HitsLSB::Shift, 
                               Fiber::Pu2, L0Pu::HitsMSB::Mask, L0Pu::HitsMSB::Shift, L0Pu::HitsLSBSize  },   
     BCID1[Index::Size]   = { Fiber::Pu1, Type::Digit , L0Pu::BCID1::Mask  , L0Pu::BCID1::Shift  ,Fiber::Empty,0,0,0},
-      BCID2[Index::Size]   = { Fiber::Pu2, Type::Digit , L0Pu::BCID1::Mask  , L0Pu::BCID1::Shift  ,Fiber::Empty,0,0,0},
+      BCID2[Index::Size]   = { Fiber::Pu2, Type::Digit , L0Pu::BCID2::Mask  , L0Pu::BCID2::Shift  ,Fiber::Empty,0,0,0},
         Status1[Index::Size] = { Fiber::Pu1, Type::Digit , L0Pu::Status::Mask , L0Pu::Status::Shift  ,Fiber::Empty,0,0,0},
           Status2[Index::Size] = { Fiber::Pu2, Type::Digit , L0Pu::Status::Mask , L0Pu::Status::Shift  ,Fiber::Empty,0,0,0},
             MoreInfo[Index::Size]= { Fiber::Pu1, Type::Digit , L0Pu::MoreInfo::Mask, L0Pu::MoreInfo::Shift,Fiber::Empty,0,0,0};
