@@ -20,5 +20,5 @@ StoreExplorerAlg.PrintFreq           = 0.001;
 // Prescale events declared to RESULT buffer
 ApplicationMgr.TopAlg               += { "Sequencer/SendSequence" };
 SendSequence.Members                 = {"Prescaler/Prescaler", "LHCb::DecisionSetterAlg/DecisionSetter"};
-Prescaler.PercentPass                = 10.;
+Prescaler.PercentPass                = 100.;
 Prescaler.OutputLevel                = 4;

@@ -1,0 +1,7 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+ApplicationMgr.OutputLevel = 1;
+ApplicationMgr.TopAlg  = { "Dummy" };
+Dummy.OutputLevel = 1;
+MessageSvc.OutputLevel  = 1;
+
