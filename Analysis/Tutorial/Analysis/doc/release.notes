@@ -8,6 +8,16 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-02-12 - Juan PALACIOS
+
+ - cmt/requirements
+  . Increase version to v6r5p1
+
+ - solutions/DaVinci6/TutorialChecker.cpp
+  . Adapt to future removal of Particle2MCLinker constructor taking simple
+    string as location of objects to associate. Pass a size 1 
+    std::vector<std::string> instead.
+
 !===================== Tutorial/Analysis v6r5 2007-10-25 ======================
 ! 2007-10-25 - Juan PALACIOS
  - cmt/requirements
