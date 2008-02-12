@@ -148,7 +148,7 @@ ClientData DialogItem::value (const DialogItemContainer* cont) const  {
     char *ptr = (char*)container->data()->_char;
     size_t siz = sizeof(display_container) - 1;
     // First do some Cleanup before actually returning the pointer
-    ::sscanf(m_fmt.c_str(),"%%%ldd",&siz);
+    ::sscanf(m_fmt.c_str(),"%%%zdd",&siz);
     ptr[std::min(siz,strlen(ptr))] = 0;
     str_trim(ptr,ptr,&siz);
     return (ClientData)ptr;
