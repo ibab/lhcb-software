@@ -193,7 +193,7 @@ void dim_stop()
 	DIM_THR_init_done = 0;
 }
 
-int dim_start_thread(thread_ast, tag)
+long dim_start_thread(thread_ast, tag)
 void *(*thread_ast)(void *);
 long tag;
 {
@@ -207,8 +207,15 @@ long tag;
 	pthread_attr_init(&attr);
 	pthread_create(&t_id, &attr, thread_ast, (void *)tag);
 #endif
-	return((int)t_id);
+	return((long)t_id);
 }	
+
+int dim_stop_thread(long t_id)
+{
+	int ret;
+	ret = pthread_cancel((pthread_t)t_id);
+	return ret;
+}
 
 int dim_set_scheduler_class(int pclass)
 {
@@ -449,13 +456,18 @@ int dim_wait()
   return(-1);
 }
 
-int dim_start_thread(thread_ast, tag)
-void (*thread_ast)();
-long tag;
+long dim_start_thread(void (*thread_ast)(), long tag)
+
 {
 	printf("dim_start_thread: not available\n");
+	return (long)0;
 }
 
+int dim_stop_thread(long t_id)
+{
+	printf("dim_stop_thread: not available\n");
+	return 0;
+}
 #endif
 
 #else
@@ -471,7 +483,7 @@ DllExp HANDLE Global_DIM_event = 0;
 DllExp HANDLE Global_DIM_mutex = 0;
 void dim_tcpip_stop(), dim_dtq_stop();
 
-int dim_start_thread(thread_ast, tag)
+long dim_start_thread(thread_ast, tag)
 #ifndef STDCALL
 void (*thread_ast)();
 long tag;
@@ -500,12 +512,11 @@ HANDLE hthread;
         0,                           /* use default creation flags		*/
         &threadid);					 /* returns the thread identifier	*/
 #endif
-	return (int)threadid;
+	return (long)hthread;
 }
 
 
-int dim_stop_thread(thread_id)
-long thread_id;
+int dim_stop_thread(long thread_id)
 {
 	int ret;
 

@@ -268,6 +268,9 @@ private :
 	void declareIt(char *name, char *formatin, char *formatout);
 	void storeIt(void *data, int size);
 	void timerHandler();
+public:
+	int itsKilled;
+	int itsTimeout;
 };
 
 

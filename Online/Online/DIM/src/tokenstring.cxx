@@ -24,7 +24,16 @@ TokenString::TokenString(char *str, char *seps)
 
 TokenString::~TokenString()
 {
-	delete token_buff;
+  if(token_buff) 
+  { 
+	  delete []token_buff; 
+	  token_buff = 0; 
+  }
+  if(token_seps) 
+  { 
+	  delete []token_seps; 
+	  token_seps = 0; 
+  }
 }
 
 void TokenString::store_str(char *str)

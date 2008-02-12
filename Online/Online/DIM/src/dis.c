@@ -1094,7 +1094,7 @@ register int size, status;
 		{
 			execute_service(newp->req_id);
 		}
-		if(type != MONIT_ONLY)
+		if((type != MONIT_ONLY) && (type != MONIT_FIRST))
 		{
 			if(newp->timeout != 0)
 			{

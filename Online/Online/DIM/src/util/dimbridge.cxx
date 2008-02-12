@@ -26,6 +26,7 @@ class BridgeService: public DimInfo, public SLLItem
 		if(srv)
 			delete(srv);
 		declared = 0;
+//  		cout << "Disconnecting bridge for: " << srv_name << endl;
 	}
     else if(!declared)
     {
@@ -43,14 +44,30 @@ class BridgeService: public DimInfo, public SLLItem
 
   public:
     BridgeService(char *name, char *format):
-      DimInfo(name, &no_link, sizeof(no_link)), declared(0), srv(0)
-      { 
-	strcpy(srv_format, format);
-	strcpy(srv_name, name);
-	cmnd = 0;
-	found = 1;
-	cout << "Bridging Service: " << name << endl;
-      }
+		DimInfo(name, &no_link, sizeof(no_link)), declared(0), srv(0)
+		{ 
+			strcpy(srv_format, format);
+			strcpy(srv_name, name);
+			cmnd = 0;
+			found = 1;
+//			cout << "Bridging Service: " << name << endl;
+		}
+	BridgeService(char *name, char *format, int rate):
+		DimInfo(name, rate, &no_link, sizeof(no_link)), declared(0), srv(0)
+		{ 
+			strcpy(srv_format, format);
+			strcpy(srv_name, name);
+			cmnd = 0;
+			found = 1;
+//			cout << "Bridging Service: " << name << ", rate = " << rate << " seconds" << endl;
+		}
+  	~BridgeService()
+  	{
+  		if(declared)
+  			delete(srv);
+  		declared = 0;
+//  		cout << "Stopped bridge for: " << srv_name << endl;
+  	}
     char *getName() { return srv_name; };
     void clear() { found = 0;};
     void set() {found = 1;};
@@ -77,13 +94,14 @@ class BridgeCommand: public DimCommand, public SLLItem
 
   public:
     BridgeCommand(char *name, char *format):
-      DimCommand(name, format) 
-      { 
-	DimServer::start(bridge_name);
-	cmnd = 1;
-	found = 1;
-	strcpy(srv_name, name);
-        cout << "Bridging Command: " << name << endl;}
+		DimCommand(name, format) 
+		{ 
+			DimServer::start(bridge_name);
+			cmnd = 1;
+			found = 1;
+			strcpy(srv_name, name);
+//			cout << "Bridging Command: " << name << endl;
+		}
     char *getName() { return srv_name; };
     void clear() { found = 0;};
     void set() {found = 1;};
@@ -91,6 +109,14 @@ class BridgeCommand: public DimCommand, public SLLItem
     int isCmnd() { return cmnd;};
 };
 
+void print_usage()
+{
+	cout << "Usage: DimBridge [from_node] to_node services [time_interval]" << endl;
+	cout << "    from_node - by default DIM_DNS_NODE" << endl;
+	cout << "    to_node - the complete node name of the new DNS" << endl;
+	cout << "    services - the list of service names (wildcards allowed)" << endl;
+	cout << "    time_interval - the interval in seconds to be used for updating the services" << endl;
+}
 
 int main(int argc, char **argv)
 {
@@ -101,13 +127,11 @@ int type, known;
 BridgeService *ptrs, *aux_ptrs;
 BridgeCommand *ptrc, *aux_ptrc;
 SLList lists, listc;
+int rate = 0;
 
 	if(argc < 3)
     {
-		cout << "Usage: DimBridge [from_node] to_node services" << endl;
-		cout << "    from_node - by default DIM_DNS_NODE" << endl;
-		cout << "    to_node - the complete node name of the new DNS" << endl;
-		cout << "    services - the list of service names (wildcards allowed)" << endl;
+		print_usage();
     }
 	if( argc == 3)
     {
@@ -117,12 +141,33 @@ SLList lists, listc;
     }
 	if (argc == 4)
 	{
+		if(sscanf(argv[3],"%d", &rate))
+		{
+			strcpy(from_node, DimClient::getDnsNode());
+			strcpy(to_node, argv[1]);
+			strcpy(services, argv[2]);
+		}
+		else
+		{
+			rate = 0;
+			strcpy(from_node, argv[1]);
+			strcpy(to_node, argv[2]);
+			strcpy(services, argv[3]);
+		}
+    }
+	if(argc == 5)
+	{
 		strcpy(from_node, argv[1]);
 		strcpy(to_node, argv[2]);
 		strcpy(services, argv[3]);
+		sscanf(argv[4],"%d", &rate);
     }
 
-	cout << "Starting DimBridge from "<<from_node<<" to "<<to_node<<" for "<< services<<endl;
+	cout << "Starting DimBridge from "<<from_node<<" to "<<to_node<<" for "<< services;
+	if(rate)
+		cout << " interval = " << rate << endl; 
+	else
+		cout << endl;
 
 	strcpy(bridge_name,"Bridge_");
 	strcat(bridge_name, from_node);
@@ -181,8 +226,11 @@ SLList lists, listc;
 			{
 				if(type == DimSERVICE)
 				{
+				  if(!rate)
 					ptrs = new BridgeService(service, format);
-					lists.add(ptrs);
+				  else
+					ptrs = new BridgeService(service, format, rate);
+				  lists.add(ptrs);
 				}
 				else if (type == DimCOMMAND)
 				{

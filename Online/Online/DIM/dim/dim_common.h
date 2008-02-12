@@ -12,7 +12,8 @@
 #define MONIT_ONLY	0x20
 #define UPDATE 		0x40
 #define TIMED_ONLY	0x80
-#define MAX_TYPE_DEF    0x80
+#define MONIT_FIRST 0x100
+#define MAX_TYPE_DEF    0x100
 #define STAMPED       0x1000
 
 typedef enum { SRC_NONE, SRC_DIS, SRC_DIC, SRC_DNS, SRC_DNA, SRC_USR }SRC_TYPES;
@@ -44,8 +45,8 @@ typedef enum { SRC_NONE, SRC_DIS, SRC_DIC, SRC_DNS, SRC_DNA, SRC_USR }SRC_TYPES;
 #ifdef WIN32
 typedef __int64		longlong;
 #else
-/* #include <sys/types.h> */
-typedef long long int	longlong;
+#include <sys/types.h> 
+typedef int64_t	longlong;
 #endif
 
 #endif
@@ -176,7 +177,7 @@ _DIM_PROTOE( int dim_get_priority,		(int dim_thread, int prio) );
 _DIM_PROTOE( int dim_set_priority,		(int dim_thread, int *prio) );
 _DIM_PROTOE( int dim_set_scheduler_class,		(int sched_class) );
 _DIM_PROTOE( int dim_get_scheduler_class,		(int *sched_class) );
-_DIM_PROTOE( int dim_start_thread,    (void(*rout)(void*), void *tag) );
+_DIM_PROTOE( long dim_start_thread,    (void(*rout)(void*), void *tag) );
 _DIM_PROTOE( int dic_set_dns_node,		(char *node) );
 _DIM_PROTOE( int dic_get_dns_node,		(char *node) );
 _DIM_PROTOE( int dic_set_dns_port,		(int port) );
@@ -186,7 +187,7 @@ _DIM_PROTOE( int dis_get_dns_node,		(char *node) );
 _DIM_PROTOE( int dis_set_dns_port,		(int port) );
 _DIM_PROTOE( int dis_get_dns_port,		() );
 _DIM_PROTOE( void dim_stop,				() );
-
+_DIM_PROTOE( int dim_stop_thread,		(long tid) );
 
 #ifdef WIN32
 #define getpid _getpid

@@ -13,8 +13,11 @@
 #define DEBUG
 */
 
+/* Modifies the number of open connections to 8192 for Windows and Linux */
+/* Can not be moved from here ! */
+#include <dim_tcpip.h>
+
 #ifdef WIN32
-#define FD_SETSIZE      8192
 #define ioctl ioctlsocket
 
 #define closesock myclosesocket
@@ -663,28 +666,36 @@ void tcpip_task( void *dummy)
 				FD_CLR( (unsigned)DIM_IO_path[0], pfds );
 			  }
 			{
-			DISABLE_AST
+/*
+//			DISABLE_AST
+*/
 			while( (ret = fds_get_entry( &rfds, &conn_id )) > 0 ) 
 			{
 				if( Net_conns[conn_id].reading )
 				{
 					do
 					{
+			DISABLE_AST
 						do_read( conn_id );
 						count = 0;
 						if(Net_conns[conn_id].channel)
 						{
 							count = get_bytes_to_read(conn_id);
 						}
+			ENABLE_AST
 					}while(count > 0 );
 				}
 				else
 				{
+			DISABLE_AST
 					do_accept( conn_id );
+			ENABLE_AST
 				}
 				FD_CLR( (unsigned)Net_conns[conn_id].channel, &rfds );
 			}
-			ENABLE_AST
+/*
+//			ENABLE_AST
+*/
 			}
 #ifndef WIN32
 			return;
@@ -810,7 +821,7 @@ int port;
 #ifndef VxWorks
 	else if( (host = gethostbyname(node)) == (struct hostent *)0 ) 
 	{
-		if(!check_node_addr(node, ipaddr, &host_number))
+		if(!check_node_addr(node, ipaddr))
 			return(0);
 		host_number = 1;
 /*

@@ -11,7 +11,7 @@ char *DimServer::dimDnsNode = 0;
 int DimServer::autoStart = 1;
 
 extern "C" {
-static void user_routine( void *tagp, void **buf, int *size, int *first_time)
+static void user_routine( void *tagp, void **buf, int *size, int* /* first_time */ )
 {
 //	int *tag = (int *)tagp;
 //	int id = *tag;
@@ -122,30 +122,57 @@ void DimCommand::declareIt(char *name, char *format, DimCommandHandler *handler)
 }
 
 extern "C" {
+
+#include <stdio.h>
+
+static void timeout_rout(DimRpc *t)
+{
+	sleep(t->itsTimeout);
+	t->itsKilled = 1;
+}
+
 static void rpcin_routine( void *tagp, void *buf, int *size)
 {
 //	int *tag = (int *)tagp;
 //	int id = *tag;
 	DimRpc *t;
-	int ids[2];
+	int tout, clientId, ids[2];
+	long tid;
 
 //	t = (DimRpc *)id_get_ptr(id, SRC_DIS);
 	t = *(DimRpc **)tagp;
 	t->itsDataIn = buf;
 	t->itsSizeIn = *size;
+	clientId = dis_get_conn_id();
+	tout = dis_get_timeout(t->itsIdOut, clientId);
+	t->itsTimeout = tout;
+	tid = 0;
+	if(tout > 0)
+	{
+		t->itsKilled = 0;
+		tid = dim_start_thread((void(*)(void *))timeout_rout,(void *)t);
+	}
 	DimCore::inCallback = 2;
 	t->rpcHandler();
 	DimCore::inCallback = 0;
 	t->itsDataIn = 0;
 	t->itsSizeIn = 0;
-	ids[0] = dis_get_conn_id();
-	ids[1] = 0;
-	dis_selective_update_service(t->itsIdOut, ids);
+	if(!t->itsKilled)
+	{
+		if(tid)
+		{
+			dim_stop_thread(tid);
+		}
+		ids[0] = clientId;
+		ids[1] = 0;
+		dis_selective_update_service(t->itsIdOut, ids);
+	}
 }
+
 }
 
 extern "C" {
-static void rpcout_routine( void *tagp, void **buf, int *size, int *firt_time)
+  static void rpcout_routine( void *tagp, void **buf, int *size, int* /* firt_time */ )
 {
 //	int *tag = (int *)tagp;
 //	int id = *tag;
@@ -171,6 +198,8 @@ void DimRpc::declareIt(char *name, char *formatin, char *formatout)
 	strcat(itsNameOut,(char *)"/RpcOut");
 	itsDataOut = new char[1];
 	itsDataOutSize = itsSizeOut = 1;
+	itsKilled = 0;
+	itsTimeout = 0;
 	
 //	itsTagId = id_get((void *)this, SRC_DIS);
 	itsIdIn = dis_add_cmnd( itsNameIn, formatin, 

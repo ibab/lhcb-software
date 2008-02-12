@@ -84,6 +84,7 @@ public:
 	void rpcInfoHandler() {
 		int value;
 		value = getInt();
+		dim_print_date_time();
 		cout << "RPC Service received: " << value << "\n" << endl;
 	}
 	RpcService(char *name, int timeout) :	DimRpcInfo(name, timeout, -1) {};
@@ -95,15 +96,17 @@ int main()
 	int value = 0;
 	SimpleService simple("PVSS_SIMPLE_SERVICE");
 	ComplexService complex("PVSS_COMPLEX_SERVICE");
-	RpcService rpc("PVSS_RPC", 10);
+	RpcService rpc("TESTRPC/INT", 25);
 	DimDoubleArray dda("TEST_SRVC");
 
 	while(1)
 	{
-		cout << "RPC Service sent: " << value << "\n" << endl;
-		rpc.setData(++value);
+		dim_print_date_time();
 		value++;
-		sleep(10);
+		cout << "RPC Service sent: " << value << "\n" << endl;
+		rpc.setData(value);
+		value++;
+		sleep(30);
 	}
 	return 0;
 }

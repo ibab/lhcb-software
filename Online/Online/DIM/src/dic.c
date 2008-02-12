@@ -344,7 +344,8 @@ DIS_PACKET *packet;
 				{
 					if( servp->timeout > 0 ) 
 					{
-						dtq_clear_entry( servp->timer_ent );
+						if(servp->timer_ent)
+							dtq_clear_entry( servp->timer_ent );
 					}
 				}
 				Curr_conn_id = conn_id;
@@ -881,22 +882,25 @@ void (*routine)();
 		Service_pend_head->serv_id = 0;
 	}
 	dll_insert_queue( (DLL *) Service_pend_head, (DLL *)newp );
-	if( timeout ) {
-		tout = timeout;
-		if(type != ONCE_ONLY)
+	newp->timer_ent = NULL;
+	if(type != MONIT_FIRST)
+	{
+		if( timeout ) 
 		{
-			if(tout < 10) 
-				tout = 10;
-			ftout = (float)tout * (float)1.5;
-			tout = (int)ftout;
-		}
-		newp->curr_timeout = tout;
-		newp->timer_ent = dtq_add_entry( Dic_timer_q,
+			tout = timeout;
+			if(type != ONCE_ONLY)
+			{
+				if(tout < 10) 
+					tout = 10;
+				ftout = (float)tout * (float)1.5;
+				tout = (int)ftout;
+			}
+			newp->curr_timeout = tout;
+			newp->timer_ent = dtq_add_entry( Dic_timer_q,
 						newp->curr_timeout,
 						service_tmout, newp->serv_id );
+		}
 	}
-	else
-		newp->timer_ent = NULL;
 	newp->pending = pending;
 	newp->tmout_done = 0;
 	newp->stamped = stamped;

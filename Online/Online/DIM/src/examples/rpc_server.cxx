@@ -10,7 +10,12 @@ class RpcInt : public DimRpc
 	void rpcHandler()
 	{
 		val = getInt();
+		dim_print_date_time();
+		printf("Got RPC %d\n", val);
 		val++;
+//		sleep(4);
+		dim_print_date_time();
+		printf("Answering RPC %d\n", val);
 		setData(val);
 	}
 public:

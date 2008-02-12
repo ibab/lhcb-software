@@ -7,6 +7,7 @@
  *
  * Version history:
  * 20000911MJJ       First Released Version (Not 100% complete yet)
+ * 31-Oct-2007 Adjustments for 64bit platforms Joern Adamczewski, gsi
  * 
  *
  */
@@ -178,7 +179,7 @@ int dim_jni_attachThread(JNIEnv **env)
 #else
 	int tid = 0;
 #endif
-#endif
+#endif 
 
 	if(tid == MainThreadId)
 	{
@@ -232,8 +233,8 @@ JNI_OnLoad(JavaVM* jvm, void* reserved)
 
   NativeDataMemory                    = (*env)->FindClass(env, "dim/Memory");
   NativeDataMemory_new                = (*env)->GetMethodID (env, NativeDataMemory, "<init>", "()V");
-  NativeDataMemory_decodeData         = (*env)->GetMethodID (env, NativeDataMemory, "decodeData", "(IILdim/DataDecoder;)V");
-  NativeDataMemory_dataAddress        = (*env)->GetFieldID  (env, NativeDataMemory, "dataAddress", "I");
+  NativeDataMemory_decodeData         = (*env)->GetMethodID (env, NativeDataMemory, "decodeData", "(JILdim/DataDecoder;)V");
+  NativeDataMemory_dataAddress        = (*env)->GetFieldID  (env, NativeDataMemory, "dataAddress", "J");
   NativeDataMemory_dataSize           = (*env)->GetFieldID  (env, NativeDataMemory, "highWaterMark",    "I");
   NativeDataMemory                    = (*env)->NewGlobalRef(env, NativeDataMemory);
   if ((*env)->ExceptionOccurred(env)) {bugs++; (*env)->ExceptionDescribe(env);}
@@ -406,7 +407,7 @@ void send_callback(jobject* _theCompletionHandler, int* _status)
   JNIEnv* env;
   int doit;
 
-  DBGe(dim_Dbg_SEND_CALLBACK) printf("DimJNI: client SEND_CALLBACK status %08x:%d\n", (unsigned)_status, *_status);
+  DBGe(dim_Dbg_SEND_CALLBACK) printf("DimJNI: client SEND_CALLBACK status %08lx:%d\n", (unsigned long)_status, *_status);
 
   doit = dim_jni_attachThread(&env);
 //  (*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
@@ -793,10 +794,10 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
 /*
  * Class:     dim_Client
  * Method:    send
- * Signature: (Ljava/lang/String;Ldim/CompletionHandler;IIII)I
+ * Signature: (Ljava/lang/String;Ldim/CompletionHandler;IIJI)I
  */
-JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionHandler_2IIII
-  (JNIEnv *env, jclass This, jstring name, jobject theCompletionHandler, jint mode, jint timeout, jint nativeDataBlock, jint nativeDataSize)
+JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionHandler_2IIJI
+  (JNIEnv *env, jclass This, jstring name, jobject theCompletionHandler, jint mode, jint timeout, jlong nativeDataBlock, jint nativeDataSize)
 {
 
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "nativeDataBlock";
@@ -822,7 +823,7 @@ void decodeData(jobject* _theDataDecoder, void* dataAddress, int* _dataSize, int
   else
   {
     /* the decode method will further complete the Memory object and call the decodeData method of the DataDecoder object */
-    (*env)->CallVoidMethod(env, ourNativeMemoryObject, NativeDataMemory_decodeData, (jint) dataAddress, (jint) dataSize, theDataDecoder);
+    (*env)->CallVoidMethod(env, ourNativeMemoryObject, NativeDataMemory_decodeData, (jlong) dataAddress, (jint) dataSize, theDataDecoder);
   }
 
   /* and cleanup */
@@ -838,7 +839,7 @@ void decodeData(jobject* _theDataDecoder, void* dataAddress, int* _dataSize, int
 /* This call back is called when there is new data for a client subscription */
 void info_service_callback(jobject* _theDataDecoder, void* dataAddress, int* _dataSize)
 {
-	DBGe(dim_Dbg_INFO_CALLBACK) printf("DimJNI: INFO_CALLBACK(data: %08x(%08x))\n", (unsigned)dataAddress, *_dataSize);
+	DBGe(dim_Dbg_INFO_CALLBACK) printf("DimJNI: INFO_CALLBACK(data: %08lx(%08x))\n", (unsigned long) dataAddress, *_dataSize);
 
   decodeData(_theDataDecoder, dataAddress, _dataSize, 0);
 }
@@ -847,7 +848,7 @@ void info_service_callback(jobject* _theDataDecoder, void* dataAddress, int* _da
 /* This call back is called when a client once_only subscription completes (so we clean up) */
 void info_service_callback_with_cleanup(jobject* _theDataDecoder, void* dataAddress, int* _dataSize)
 {
-	DBGe(dim_Dbg_INFO_CALLBACK) printf("DimJNI: INFO_CALLBACK/ONCE_ONLY(data: %08x(%08x))\n", (unsigned)dataAddress, *_dataSize);
+	DBGe(dim_Dbg_INFO_CALLBACK) printf("DimJNI: INFO_CALLBACK/ONCE_ONLY(data: %08lx(%08x))\n", (unsigned long)dataAddress, *_dataSize);
 
   decodeData(_theDataDecoder, dataAddress, _dataSize, 1);
 
@@ -978,7 +979,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_infoService
 
 
   ret = request_service((char *)info, service_type, timeout, 0, 0, callback_function, (long)callback_param, &no_link, 0, stamped);
-  DBGx(dim_Dbg_INFO_SERVICE) printf("DimJNI: client infoService(%s, DataDecoder@0x%08x, mode=%d, timeout=%d ) returns %d\n", info, (unsigned)theNativeDataDecoder, mode, timeout, ret);
+  DBGx(dim_Dbg_INFO_SERVICE) printf("DimJNI: client infoService(%s, DataDecoder@0x%08lx, mode=%d, timeout=%d ) returns %d\n", info, (unsigned long)theNativeDataDecoder, mode, timeout, ret);
   (*env)->ReleaseStringUTFChars(env, name, info);
 
   if(mode & dim_Native_F_WAIT)
@@ -1198,11 +1199,11 @@ void server_getInfo_callback(jobject* _dataEncoder, void* *address, int *size)
 	}
 	else
 	{
-		*address  = (void*) (*env)->GetIntField(env, theMemory, NativeDataMemory_dataAddress);
+		*address  = (void*) (*env)->GetLongField(env, theMemory, NativeDataMemory_dataAddress);
 		*size     = (*env)->GetIntField(env, theMemory, NativeDataMemory_dataSize);
 //		printf("data address = %x, data size = %d\n",*address, *size);
 	}
-	DBGx(dim_Dbg_SERVICE_CALLBACK) printf("DimJNI: server_SERVICE_CALLBACK(dataEncoder=%08x)\n        ==>    data: %08x size %08x\n", (unsigned)dataEncoder, (unsigned)*address, *size);
+	DBGx(dim_Dbg_SERVICE_CALLBACK) printf("DimJNI: server_SERVICE_CALLBACK(dataEncoder=%08lx)\n        ==>    data: %08lx size %08x\n", (unsigned long)dataEncoder, (unsigned long) *address, *size); 
 
 	if ((*env)->ExceptionOccurred(env)) (*env)->ExceptionDescribe(env); // clear any possible exception, if we do not do this, all further methods will fail!!
 	if(doit)
@@ -1321,7 +1322,7 @@ JNIEXPORT jint JNICALL Java_dim_Server_addService
  	dataEncoder = (*env)->NewGlobalRef(env, dataEncoder);
 	sid = dis_add_service(serviceNameUTF, serviceTypeUTF, 0, 0, server_getInfo_callback, dataEncoder);
 
-	DBGx(dim_Dbg_ADD_SERVICE) printf("DimJNI: Server.addService(%s,%s, @%08x)=%d\n",serviceNameUTF, serviceTypeUTF, (unsigned)dataEncoder, sid);
+	DBGx(dim_Dbg_ADD_SERVICE) printf("DimJNI: Server.addService(%s,%s, @%08lx)=%d\n",serviceNameUTF, serviceTypeUTF, (unsigned long)dataEncoder, sid);
 
 	(*env)->ReleaseStringUTFChars(env, serviceName, serviceNameUTF);
 	(*env)->ReleaseStringUTFChars(env, serviceType, serviceTypeUTF);
@@ -1332,7 +1333,7 @@ JNIEXPORT jint JNICALL Java_dim_Server_addService
 void server_cmnd_callback(jobject* _theDataDecoder, void* dataAddress, int* _dataSize)
 {
 
-	DBGe(dim_Dbg_CMND_CALLBACK) printf("DimJNI: server CMND_CALLBACK(data: %08x(%08x))\n", (unsigned)dataAddress, *_dataSize);
+	DBGe(dim_Dbg_CMND_CALLBACK) printf("DimJNI: server CMND_CALLBACK(data: %08lx(%08x))\n", (unsigned long) dataAddress, *_dataSize);
 
   decodeData(_theDataDecoder, dataAddress, _dataSize, 0);
 }
@@ -1354,7 +1355,7 @@ JNIEXPORT jint JNICALL Java_dim_Server_addCommand
  	dataDecoder = (*env)->NewGlobalRef(env, dataDecoder);
 	sid = dis_add_cmnd(serviceNameUTF, serviceTypeUTF, server_cmnd_callback, dataDecoder);
 
-	DBGx(dim_Dbg_ADD_CMND) printf("DimJNI: Server.addCmnd(%s,%s, @%08x) = %d\n",serviceNameUTF, serviceTypeUTF, (unsigned)dataDecoder, sid);
+	DBGx(dim_Dbg_ADD_CMND) printf("DimJNI: Server.addCmnd(%s,%s, @%08lx) = %d\n",serviceNameUTF, serviceTypeUTF, (unsigned long) dataDecoder, sid);
 
 	(*env)->ReleaseStringUTFChars(env, serviceName, serviceNameUTF);
 	(*env)->ReleaseStringUTFChars(env, serviceType, serviceTypeUTF);
@@ -1657,11 +1658,11 @@ JNIEXPORT void JNICALL Java_dim_DimService_setTimestamp
  * Signature: (III)V
  */
 JNIEXPORT void JNICALL Java_dim_Memory_dumpInternalData
-  (JNIEnv *env, jclass dimNativeClass, jint internalDataAddress, jint internalDataSize, jint dumpOptions)
+  (JNIEnv *env, jclass dimNativeClass, jlong internalDataAddress, jint internalDataSize, jint dumpOptions)
 {
   {
     int* data = (int*) internalDataAddress;
-    int  leng = internalDataSize/sizeof(int);
+    int leng = internalDataSize/sizeof(int);
     int  i;
     for (i=0;i<leng;i++)
     {
@@ -1681,7 +1682,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_dumpInternalData
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_dim_Memory_getBoolean
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getBoolean\n");
 	return *(jboolean*)nativeDataAddress;
@@ -1693,7 +1694,7 @@ JNIEXPORT jboolean JNICALL Java_dim_Memory_getBoolean
  * Signature: (I)C
  */
 JNIEXPORT jchar JNICALL Java_dim_Memory_getChar
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getChar\n");
 	return *(jchar*)nativeDataAddress;
@@ -1705,7 +1706,7 @@ JNIEXPORT jchar JNICALL Java_dim_Memory_getChar
  * Signature: (I)B
  */
 JNIEXPORT jbyte JNICALL Java_dim_Memory_getByte
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getByte\n");
 	return *(jbyte*)nativeDataAddress;
@@ -1717,7 +1718,7 @@ JNIEXPORT jbyte JNICALL Java_dim_Memory_getByte
  * Signature: (I)S
  */
 JNIEXPORT jshort JNICALL Java_dim_Memory_getShort
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getShort\n");
 	return *(jshort*)nativeDataAddress;
@@ -1729,7 +1730,7 @@ JNIEXPORT jshort JNICALL Java_dim_Memory_getShort
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL Java_dim_Memory_getInt
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getInt\n");
 	return *(jint*)nativeDataAddress;
@@ -1741,7 +1742,7 @@ JNIEXPORT jint JNICALL Java_dim_Memory_getInt
  * Signature: (I)J
  */
 JNIEXPORT jlong JNICALL Java_dim_Memory_getLong
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getLong\n");
 	return *(jlong*)nativeDataAddress;
@@ -1753,7 +1754,7 @@ JNIEXPORT jlong JNICALL Java_dim_Memory_getLong
  * Signature: (I)F
  */
 JNIEXPORT jfloat JNICALL Java_dim_Memory_getFloat
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getFloat\n");
 	return *(jfloat*)nativeDataAddress;
@@ -1765,7 +1766,7 @@ JNIEXPORT jfloat JNICALL Java_dim_Memory_getFloat
  * Signature: (I)D
  */
 JNIEXPORT jdouble JNICALL Java_dim_Memory_getDouble
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getDouble\n");
 	return *(jdouble*)nativeDataAddress;
@@ -1778,7 +1779,7 @@ JNIEXPORT jdouble JNICALL Java_dim_Memory_getDouble
  * Signature: (I,I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_dim_Memory_getString
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jint maxSize)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jint maxSize)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getString\n");
 	return (*env)->NewStringUTF(env, (char*)nativeDataAddress);
@@ -1791,7 +1792,7 @@ JNIEXPORT jstring JNICALL Java_dim_Memory_getString
  * Signature: (I[ZII)V
  */
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoBooleanArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jbooleanArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jbooleanArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoBooleanArray\n");
 	(*env)->SetBooleanArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -1804,7 +1805,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoBooleanArray
  * Signature: (I[CII)V
  */
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoCharArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jcharArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jcharArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoCharArray\n");
 	(*env)->SetCharArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -1817,7 +1818,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoCharArray
  * Signature: (I[BII)V
  */
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoByteArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jbyteArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jbyteArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoByteArray\n");
 	(*env)->SetByteArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -1830,7 +1831,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoByteArray
  * Signature: (I[SII)V
  */
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoShortArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jshortArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jshortArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoShortArray\n");
 	(*env)->SetShortArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -1843,7 +1844,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoShortArray
  * Signature: (I[III)V
  */
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoIntArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jintArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jintArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoIntArray\n");
 	(*env)->SetIntArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -1856,7 +1857,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoIntArray
  * Signature: (I[JII)V
  */
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoLongArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jlongArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jlongArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoLongArray\n");
 	(*env)->SetLongArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -1869,7 +1870,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoLongArray
  * Signature: (I[FII)V
  */
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoFloatArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jfloatArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jfloatArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoFloatArray\n");
 	(*env)->SetFloatArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -1882,7 +1883,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoFloatArray
  * Signature: (I[DII)V
  */
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoDoubleArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jdoubleArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jdoubleArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoDoubleArray\n");
 	(*env)->SetDoubleArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -1899,14 +1900,13 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoDoubleArray
  * Method:    allocateNativeDataBlock
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_dim_MutableMemory_allocateNativeDataBlock
+JNIEXPORT jlong JNICALL Java_dim_MutableMemory_allocateNativeDataBlock
   (JNIEnv* env, jclass nativeClass, jint size)
 {
-  jint address;
+  jlong address;
 	DBGe(dim_Dbg_MEMORY_ALLOCATE) ; /* report only */
-  address = (jint) malloc(size);
-//printf("malloc %d, %08X\n", size, address);
-	DBGx(dim_Dbg_MEMORY_ALLOCATE) printf("DimJNI: MutableMemory.allocateNativeDataBlock of %d bytes at 0x%08x\n", size, address);
+  address = (jlong) malloc(size);
+	DBGx(dim_Dbg_MEMORY_ALLOCATE) printf("DimJNI: MutableMemory.allocateNativeDataBlock of %d bytes at 0x%08lx\n", size, address);
   return address;
 }
 
@@ -1916,11 +1916,11 @@ JNIEXPORT jint JNICALL Java_dim_MutableMemory_allocateNativeDataBlock
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_releaseNativeDataBlock
-  (JNIEnv* env, jclass nativeClass, jint desc)
+  (JNIEnv* env, jclass nativeClass, jlong desc)
 {
-	DBGe(dim_Dbg_MEMORY_ALLOCATE) printf("DimJNI: MutableMemory.releaseNativeDataBlock 0x%08x\n", desc);
-//printf("free %08X\n", desc);
-	free((void*)desc);
+	DBGe(dim_Dbg_MEMORY_ALLOCATE) printf("DimJNI: MutableMemory.releaseNativeDataBlock 0x%08lx\n", desc);
+ //printf("free %08X\n", desc);
+ 	free((void*)desc);
 	return;
 }
 
@@ -1930,9 +1930,9 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_releaseNativeDataBlock
  * Signature: (IZ)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setBoolean
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jboolean data)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jboolean data)
 {
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setBoolean(0x%08x, %02x)\n", nativeDataAddress, data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setBoolean(0x%08lx, %02x)\n", nativeDataAddress, data);
 	*(jboolean*)nativeDataAddress = data;
 }
 
@@ -1942,9 +1942,9 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setBoolean
  * Signature: (IC)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setChar
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jchar data)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jchar data)
 {
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setChar(0x%08x, %02x)\n", nativeDataAddress, data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setChar(0x%08lx, %02x)\n", nativeDataAddress, data);
 	*(jchar*)nativeDataAddress = data;
 }
 
@@ -1954,9 +1954,9 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setChar
  * Signature: (IB)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setByte
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jbyte data)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jbyte data)
 {
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setByte(0x%08x, %02x)\n", nativeDataAddress, data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setByte(0x%08lx, %02x)\n", nativeDataAddress, data);
 	*(jbyte*)nativeDataAddress = data;
 }
 
@@ -1966,9 +1966,9 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setByte
  * Signature: (IS)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setShort
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jshort data)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jshort data)
 {
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setShort(0x%08x, %04x)\n", nativeDataAddress, data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setShort(0x%08lx, %04x)\n", nativeDataAddress, data);
 	*(jshort*)nativeDataAddress = data;
 }
 
@@ -1978,9 +1978,9 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setShort
  * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setInt
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jint data)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jint data)
 {
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setInt(0x%08x, %08x)\n", nativeDataAddress, data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setInt(0x%08lx, %0x)\n", nativeDataAddress, data);
 	*(jint*)nativeDataAddress = data;
 }
 
@@ -1990,9 +1990,9 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setInt
  * Signature: (IJ)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setLong
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jlong data)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jlong data)
 {
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setLong(0x%08x, %08x)\n", nativeDataAddress, (unsigned)data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setLong(0x%08lx, %08x)\n", nativeDataAddress, (unsigned)data);
 	*(jlong*)nativeDataAddress = data;
 }
 
@@ -2002,9 +2002,9 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setLong
  * Signature: (IF)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setFloat
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jfloat data)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jfloat data)
 {
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setFloat(0x%08x, %f)\n", nativeDataAddress, data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setFloat(0x%08lx, %f)\n", nativeDataAddress, data);
 	*(jfloat*)nativeDataAddress = data;
 }
 
@@ -2014,9 +2014,9 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setFloat
  * Signature: (ID)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setDouble
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jdouble data)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jdouble data)
 {
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setDouble(0x%08x, %08x)\n", nativeDataAddress, (unsigned)data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setDouble(0x%08lx, %08x)\n", nativeDataAddress, (unsigned)data);
 	*(jdouble*)nativeDataAddress = data;
 }
 
@@ -2026,11 +2026,11 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setDouble
  * Signature: (ILjava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setString
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jstring data)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jstring data)
 {
 	const char* charData = (*env)->GetStringUTFChars(env, data, 0);
 
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setString(0x%08x, %s)\n", nativeDataAddress, charData);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setString(0x%08lx, %s)\n", nativeDataAddress, charData);
 
 	strcpy((char*)nativeDataAddress, charData);
 	(*env)->ReleaseStringUTFChars(env, data, charData);
@@ -2043,7 +2043,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setString
  * Signature: (I[ZII)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromBooleanArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jbooleanArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jbooleanArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromBooleanArray\n");
 	(*env)->GetBooleanArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -2056,7 +2056,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromBooleanArray
  * Signature: (I[CII)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromCharArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jcharArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jcharArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromCharArray\n");
 	(*env)->GetCharArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -2069,7 +2069,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromCharArray
  * Signature: (I[BII)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromByteArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jbyteArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jbyteArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromByteArray\n");
 	(*env)->GetByteArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -2082,7 +2082,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromByteArray
  * Signature: (I[SII)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromShortArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jshortArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jshortArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromShortArray\n");
 	(*env)->GetShortArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -2095,7 +2095,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromShortArray
  * Signature: (I[III)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromIntArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jintArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jintArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromIntArray\n");
 	(*env)->GetIntArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -2108,7 +2108,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromIntArray
  * Signature: (I[JII)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromLongArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jlongArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jlongArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromLongArray\n");
 	(*env)->GetLongArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -2121,7 +2121,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromLongArray
  * Signature: (I[FII)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromFloatArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jfloatArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jfloatArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromFloatArray\n");
 	(*env)->GetFloatArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -2134,7 +2134,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromFloatArray
  * Signature: (I[DII)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromDoubleArray
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jdoubleArray array, jint arrayOffset, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jdoubleArray array, jint arrayOffset, jint length)
 {
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromDoubleArray\n");
 	(*env)->GetDoubleArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
@@ -2147,7 +2147,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromDoubleArray
  * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyNativeDataBlock
-  (JNIEnv* env, jclass nativeClass, jint destinationDataAddress, jint sourceDataAddress, jint length)
+  (JNIEnv* env, jclass nativeClass, jlong destinationDataAddress, jlong sourceDataAddress, jint length)
 {
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyNativeDataBlock\n");
   memcpy((void *)destinationDataAddress, (void *)sourceDataAddress, length);
@@ -2192,7 +2192,7 @@ struct objectDescriptor_struct
  * Method:    newObjectDescriptor
  * Signature: (Ljava/lang/Class;I)I
  */
-JNIEXPORT jint JNICALL Java_dim_ObjectDescriptor_newObjectDescriptor
+JNIEXPORT jlong JNICALL Java_dim_ObjectDescriptor_newObjectDescriptor
   (JNIEnv* env, jclass nativeClass, jclass objectClass, jint maxEntries)
 {
 	objectDescriptor_type* descriptor;
@@ -2207,8 +2207,8 @@ JNIEXPORT jint JNICALL Java_dim_ObjectDescriptor_newObjectDescriptor
 	descriptor->entries = 0;
 	descriptor->maxEntries = maxEntries;
 
-	DBGx(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.newObjectDescriptor %08x\n", (int)descriptor);
-	return (int)descriptor;
+	DBGx(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.newObjectDescriptor %08lx\n", (long)descriptor);
+	return (long) descriptor;
 }
 
 objectDescriptorEntry_type* getNextDescriptorEntry(objectDescriptor_type* descriptor)
@@ -2233,7 +2233,7 @@ objectDescriptorEntry_type* getNextDescriptorEntry(objectDescriptor_type* descri
  * Signature: (ILjava/lang/String;Ljava/lang/String;I)I
  */
 JNIEXPORT jint JNICALL Java_dim_ObjectDescriptor_addFieldToObjectDescriptor
-  (JNIEnv* env, jclass nativeClass, jint desc, jstring fieldName, jstring fieldType, jint offset)
+  (JNIEnv* env, jclass nativeClass, jlong desc, jstring fieldName, jstring fieldType, jint offset)
 {
 //	FieldType field_type = f_int;
 	objectDescriptorEntry_type* entry = getNextDescriptorEntry((objectDescriptor_type*) desc);
@@ -2243,7 +2243,7 @@ JNIEXPORT jint JNICALL Java_dim_ObjectDescriptor_addFieldToObjectDescriptor
 
 	// TODO throw an error if there is no such FieldID
 
-	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.addFieldToObjectDescriptor %08x Field %s Type %s\n", (int)desc, name, type);
+	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.addFieldToObjectDescriptor %08lx Field %s Type %s\n", (long) desc, name, type);
 	// TODO: if(entry==NULL) throw out-of-memory exception, set length to 0
 
 	// TODO: if(fieldType == "I") field_type = f_int; etc
@@ -2335,11 +2335,11 @@ JNIEXPORT jint JNICALL Java_dim_ObjectDescriptor_addFieldToObjectDescriptor
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_dim_ObjectDescriptor_deleteObjectDescriptor
-  (JNIEnv* env, jclass nativeClass, jint desc)
+   (JNIEnv* env, jclass nativeClass, jlong desc)
 {
 	objectDescriptor_type* descriptor = (objectDescriptor_type*) desc;
-
-	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.deleteObjectDescriptor %08x\n", (int)desc);
+ 
+	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.deleteObjectDescriptor %08lx\n", (long)desc);
 	(*env)->DeleteGlobalRef(env, descriptor->objectClass);
 //printf("free descriptor\n");
 	free(descriptor->entry);
@@ -2353,8 +2353,9 @@ JNIEXPORT void JNICALL Java_dim_ObjectDescriptor_deleteObjectDescriptor
  * Method:    copyIntoObject
  * Signature: (ILjava/lang/Object;I)V
  */
+ 
 JNIEXPORT void JNICALL Java_dim_ObjectDescriptor_copyIntoObject
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jobject theObject, jint desc)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jobject theObject, jlong desc)
 {
 	int i;
 	objectDescriptorEntry_type* entry;
@@ -2362,7 +2363,7 @@ JNIEXPORT void JNICALL Java_dim_ObjectDescriptor_copyIntoObject
 	objectDescriptor_type* descriptor = (objectDescriptor_type*) desc;
 	jclass objectClass = descriptor->objectClass;
 
-	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.copyIntoObject %08x\n", (int)desc);
+	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.copyIntoObject %08lx\n", (long)desc);
 
 	// test if object can be cast to object class
 	if((*env)->IsInstanceOf(env, theObject, objectClass) != JNI_TRUE)
@@ -2425,7 +2426,7 @@ JNIEXPORT void JNICALL Java_dim_ObjectDescriptor_copyIntoObject
  * Signature: (ILjava/lang/Object;I)V
  */
 JNIEXPORT void JNICALL Java_dim_ObjectDescriptor_copyFromObject
-  (JNIEnv* env, jclass nativeClass, jint nativeDataAddress, jobject theObject, jint desc)
+  (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jobject theObject, jlong desc)
 {
 	int i;
 	objectDescriptorEntry_type* entry;

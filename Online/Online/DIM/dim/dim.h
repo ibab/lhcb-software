@@ -13,7 +13,7 @@
 
 #include "dim_common.h"
 
-#define DIM_VERSION_NUMBER 1613
+#define DIM_VERSION_NUMBER 1701
 
 #define MY_LITTLE_ENDIAN	0x1
 #define MY_BIG_ENDIAN 		0x2

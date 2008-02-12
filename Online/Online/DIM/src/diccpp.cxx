@@ -410,6 +410,7 @@ static void rpc_user_routine(void *tagp, void *bufp, int *sizep)
 	}
 	if(t->itsWaiting)
 	{
+		t->stop();
 		memcpy(t->itsData, buf, size);
 		t->itsSize = size;
 		t->wakeUp = 1;
@@ -428,6 +429,46 @@ static void rpc_user_routine(void *tagp, void *bufp, int *sizep)
 	wake_up();
 #endif
 }
+}
+
+void DimRpcInfo::timerHandler()
+{
+	char *buf;
+	int size;
+		
+	buf = (char *)itsNolinkBuf;
+	size = itsNolinkSize;
+
+	if(!itsDataSize)
+	{
+		itsData = new char[size];
+		itsDataSize = size;
+	}
+	else if(itsDataSize < size)
+	{
+		delete[] (char *)(itsData);
+		itsData = new char[size];
+		itsDataSize = size;
+	}
+	if(itsWaiting)
+	{
+		memcpy(itsData, buf, size);
+		itsSize = size;
+		wakeUp = 1;
+		if(itsInit)
+		{
+			itsWaiting = 1;
+			itsHandler->rpcInfoHandler();
+		}
+		if(itsWaiting != 2)
+			itsWaiting = 0;
+	}
+#ifdef __VMS
+	sys$wake(0,0);
+#endif
+#ifdef WIN32
+	wake_up();
+#endif
 }
 
 void DimRpcInfo::subscribe(char *name, void *data, int size,
@@ -463,7 +504,8 @@ void DimRpcInfo::subscribe(char *name, void *data, int size,
 
 //			itsId = dic_info_service_stamped(itsNameIn,MONIT_ONLY,itsTimeout, 
 			itsConnected = 0;
-			itsId = dic_info_service_stamped(itsNameIn,MONITORED,itsTimeout, 
+//			itsId = dic_info_service_stamped(itsNameIn,MONITORED,itsTimeout, 
+			itsId = dic_info_service_stamped(itsNameIn,MONIT_FIRST,itsTimeout, 
 				0, 0,
 //				rpc_user_routine, itsTagId, 
 				rpc_user_routine, (long)itsHandler, 
@@ -503,6 +545,11 @@ void DimRpcInfo::doIt(void *data, int size)
 	{
 //		rpc_user_routine((int *)&itsTagId, itsNolinkBuf, &itsNolinkSize);
 		rpc_user_routine((long *)&itsHandler, itsNolinkBuf, &itsNolinkSize);
+	}
+	else
+	{
+		if(itsTimeout)
+			start(itsTimeout);
 	}
 }
 

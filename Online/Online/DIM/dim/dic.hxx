@@ -333,8 +333,7 @@ private :
 	void subscribe(char *name, int time, void *nolink, int nolinksize);
 };
 
-class DllExp DimRpcInfo {
-
+class DllExp DimRpcInfo : public DimTimer {
 public :
 	int itsId;
 	int itsTagId;
@@ -412,6 +411,7 @@ private :
 	void subscribe(char *name, void *data, int size, 
 		void *nolink, int nolinksize, int timeout);
 	void doIt(void *data, int size);
+	void timerHandler();
 };
 
 class DllExp DimClient : public DimInfoHandler, public DimErrorHandler

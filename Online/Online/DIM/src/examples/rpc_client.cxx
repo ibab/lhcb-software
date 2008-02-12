@@ -6,9 +6,10 @@ class Rpc : public DimRpcInfo
 {
 public:
 	void rpcInfoHandler() {
+		dim_print_date_time();
 		cout << "Callback RPC Received : " << getInt() << endl;
 	}
-	Rpc(char *name) :	DimRpcInfo(name, -1) {};
+	Rpc(char *name) :	DimRpcInfo(name, 5, -1) {};
 };
 
 typedef struct tst{
@@ -45,15 +46,17 @@ int main()
 	myStruct.int1 = 1;
 	while(1)
 	{
+		dim_print_date_time();
 		cout << "Sending " << rpcValue << endl; 
 		rpcCB.setData(rpcValue);
 		rpcValue++;
+//		sleep(5);
 		rpcStruct.setData(&myStruct, sizeof(myStruct));
 		myStruct.int1++;
 //		rpc.setData(rpcValue);
 //		rpcValue = rpc.getInt();
 //		cout << "RPC Received : " << rpcValue << endl;
-		sleep(1);
+		sleep(10);
 	}
 	return 0;
 }
