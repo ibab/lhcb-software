@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.45 2008-02-11 17:16:28 jpalac Exp $
+! $Id: release.notes,v 1.46 2008-02-12 13:13:06 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2008-02-12 - Juan PALACIOS
+ - src/CopyRelatedMCParticles.cpp, CreateMicroDSTMCAlg.cpp, TestDST.cpp
+  . Adapt to future removal of Particle2MCLinker constructor taking simple
+    string as location of objects to associate. Pass a size 1 
+    std::vector<std::string> instead.
 
 ! 2008-02-11 - Juan PALACIOS
  - src/CopyRelatedMCParticles.h
