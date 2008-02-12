@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAAlgorithms.cpp,v 1.2 2008-02-12 16:44:34 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAAlgorithms.cpp,v 1.3 2008-02-12 18:16:28 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -11,8 +11,8 @@ OMAEfficiency::OMAEfficiency() : OMAHcreatorAlg("Efficiency") {
   m_doc = "Ratio of two histograms with binomial errors";
 }
 
-TH1* OMAEfficiency::exec( std::vector<TH1*> *sources,
-			  std::vector<float> *params,
+TH1* OMAEfficiency::exec( const std::vector<TH1*> *sources,
+			  const std::vector<float> *params,
 			  std::string outName,
 			  std::string outTitle,
 			  TH1* existingHisto) {

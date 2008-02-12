@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.1.1.1 2007-10-16 13:03:03 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.2 2008-02-12 18:16:28 ggiacomo Exp $
 #ifndef OMAALG_H
 #define OMAALG_H 1
 /** @class  OMAalg OMAalg.h OMAlib/OMAalg.h
@@ -66,8 +66,8 @@ class OMAHcreatorAlg : public OMAalg
   OMAHcreatorAlg(std::string Name) : OMAalg(Name) {setType("HCREATOR");}
   virtual ~OMAHcreatorAlg() {}
   
-  virtual TH1*  exec( std::vector<TH1*> *sources,
-		      std::vector<float> *params,
+  virtual TH1*  exec( const std::vector<TH1*> *sources,
+		      const std::vector<float> *params,
 		      std::string outName,
 		      std::string outTitle,
 		      TH1* existingHisto=0) =0;
