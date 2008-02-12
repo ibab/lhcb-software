@@ -1,3 +1,16 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MEPWindow.cpp,v 1.8 2008-02-12 17:15:24 frankb Exp $
+//  ====================================================================
+//  BankListWindow.cpp
+//  --------------------------------------------------------------------
+//
+//  Package   : MBMDump: Dump utility for MBM buffer events
+//
+//  Author    : Markus Frank
+//
+//  ====================================================================
+// $Id: MEPWindow.cpp,v 1.8 2008-02-12 17:15:24 frankb Exp $
+//
+// C++ include files
 #include "MBMDump/MBMDump.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MEPEvent.h"

@@ -1,6 +1,23 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/BankWindow.cpp,v 1.5 2008-02-12 17:13:47 frankb Exp $
+//  ====================================================================
+//  BankWindow.cpp
+//  --------------------------------------------------------------------
+//
+//  Package   : MBMDump: Dump utility for MBM buffer events
+//
+//  Author    : Markus Frank
+//
+//  ====================================================================
+// $Id: BankWindow.cpp,v 1.5 2008-02-12 17:13:47 frankb Exp $
+//
+// C++ include files
+#include <string>
+
+// Framework include files
 #include "Event/RawBank.h"
 #include "MDF/RawEventPrintout.h"
 #include "MBMDump/MBMDump.h"
+
 using namespace LHCb;
 using namespace MBMDump;
 

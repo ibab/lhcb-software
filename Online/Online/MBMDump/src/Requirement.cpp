@@ -1,3 +1,19 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/Requirement.cpp,v 1.5 2008-02-12 17:13:47 frankb Exp $
+//  ====================================================================
+//  Requirements.cpp
+//  --------------------------------------------------------------------
+//
+//  Package   : MBMDump: Dump utility for MBM buffer events
+//
+//  Author    : Markus Frank
+//
+//  ====================================================================
+// $Id: Requirement.cpp,v 1.5 2008-02-12 17:13:47 frankb Exp $
+// C++ include files
+#include <string>
+
+// Framework include files
+#include "Event/RawBank.h"
 #include "MBMDump/MBMDump.h"
 
 using namespace LHCb;

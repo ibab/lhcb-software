@@ -1,3 +1,16 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/PrintMenu.cpp,v 1.4 2008-02-12 17:15:24 frankb Exp $
+//  ====================================================================
+//  BankListWindow.cpp
+//  --------------------------------------------------------------------
+//
+//  Package   : MBMDump: Dump utility for MBM buffer events
+//
+//  Author    : Markus Frank
+//
+//  ====================================================================
+// $Id: PrintMenu.cpp,v 1.4 2008-02-12 17:15:24 frankb Exp $
+//
+// C++ include files
 #include "MBMDump/MBMDump.h"
 
 using namespace MBMDump;
