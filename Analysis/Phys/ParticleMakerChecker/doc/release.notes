@@ -4,6 +4,13 @@
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
 
+! 2008-02-12 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r1p2
+ - src/ParticleEffPurMoni.h
+  . Adapt to removal of Particle2MCLinker constructor with only one 
+    TES location. Use single-sized std::vector<std::string>.
+
 !========================== ParticleMakerChecker v1r1p1 2007-10-25 ============
 
 ! 2007-07-17 - Patrick Koppenburg
