@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.8 2008-02-05 21:38:13 wouter Exp $
+// $Id: DiagSolvTool.cpp,v 1.9 2008-02-12 11:04:24 ahicheur Exp $
 // Include files 
 
 #include <stdio.h>
@@ -56,9 +56,23 @@ DiagSolvTool::~DiagSolvTool() {}
 
 bool DiagSolvTool::compute(AlSymMat& m,AlVec& b) const
 {
-  const_cast<DiagSolvTool*>(this)->SolvDiag(m,b);
 
-  return true;
+
+const_cast<DiagSolvTool*>(this)->SolvDiag(m,b);
+
+
+ if(m.size() > 0) {
+   
+   const_cast<DiagSolvTool*>(this)->SolvDiag(m,b);
+
+   return true;
+ } else {
+   error() << "Error, null matrix size, don't call the solving!"<<endmsg;
+   return false;
+ }
+  
+
+  
 }
 
 

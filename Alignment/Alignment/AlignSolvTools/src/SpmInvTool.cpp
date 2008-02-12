@@ -47,9 +47,14 @@ SpmInvTool::~SpmInvTool() {}
 
 bool SpmInvTool::compute(AlSymMat& m,AlVec& b) const 
 {
+if(m.size() > 0) {
   const_cast<SpmInvTool*>(this)->SolvSpmInv(m,b);
-
   return true;
+} else {
+  error() << "Error, null matrix size, don't call the solving!"<<endmsg;
+  return false;
+}
+
 }
 
 
