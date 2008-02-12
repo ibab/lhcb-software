@@ -21,9 +21,9 @@ use GaudiUPI          v1r6     Online
 use HPDMonitor        v1r4     Online
 use InsertDB          v1r0     Online
 use MBMDump           v1r5     Online
-use OMAlib            v0r1     Online
+use OMAlib            v0r2     Online
 use OnlineDummyReader v1r4     Online
-use OnlineHistDB      v4r5     Online
+use OnlineHistDB      v4r6     Online
 use OnlineKernel      v1r12    Online
 use OnlineTasks       v1r8     Online
 use Presenter         v0r6     Online
