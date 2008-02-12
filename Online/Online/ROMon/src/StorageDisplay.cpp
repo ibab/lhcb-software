@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.4 2008-02-11 20:00:18 frankm Exp $
+// $Id: StorageDisplay.cpp,v 1.5 2008-02-12 08:05:13 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.4 2008-02-11 20:00:18 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.5 2008-02-12 08:05:13 frankm Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -120,19 +120,19 @@ void StorageDisplay::showLogging() {
   wi.space = wi.free_space = wi.open_files = wi.closed_files = wi.transferred_files = wi.deleted_files = 0;
   strcpy(wi.data_dir,"/daqarea/2008/RAW/LHCb/Physics/0123456789");
 
-  disp->draw_line_bold(  "  File Information for Run %-10                                         ",0);
-  disp->draw_line_normal("  Space:%9d MB [%4d TB] Free Space: %9d MB [%4d TB]", 
+  disp->draw_line_reverse("File Information for Run %-10                                         ",0);
+  disp->draw_line_normal("Space:%9d MB [%4d TB] Free Space: %9d MB [%4d TB]", 
 			 wi.space,wi.space/1024/1024,wi.free_space,wi.free_space/1024/1024);
-  disp->draw_line_normal("  Open:%5d  Closed:%5d Transferring:%5d Deleted:%5d Total:%5d     ",
+  disp->draw_line_normal("Open:%5d  Closed:%5d Transferring:%5d Deleted:%5d Total:%5d     ",
 			 wi.open_files,wi.closed_files,wi.transferred_files,wi.deleted_files,
 			 wi.open_files+wi.closed_files+wi.transferred_files+wi.deleted_files);
-  disp->draw_line_normal("  Directory:%s", wi.data_dir);
+  disp->draw_line_normal("Directory:%s", wi.data_dir);
 }
 
 /// Show the file information
 void StorageDisplay::showFiles() {
   MonitorDisplay* disp = m_files;
-  disp->draw_line_bold("  File                    Destination Size[Bytes]  Events     State           ");
+  disp->draw_line_reverse("File                    Destination Size[Bytes]  Events     State           ");
 }
 
 /// Display the Stream information
@@ -140,7 +140,7 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
   Streams streams;
   MonitorDisplay* disp = m_streams;
   std::string part = m_partName + "_";
-  disp->draw_line_bold("  Stream Information [# of Events]              Sent    Received     Written   ");
+  disp->draw_line_reverse("Stream         Source       Target              Sent    Received     Written   ");
 
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
@@ -179,7 +179,7 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
   for(std::map<std::string,Stream>::const_iterator i=streams.begin();i!=streams.end();++i) {
     const Stream& s = (*i).second;
     if ( s.node != "Monitoring" ) {
-      disp->draw_line_normal(" %-12s %12s->%-12s %11d %11d %11d",
+      disp->draw_line_normal("%-13s %12s->%-12s %11d %11d %11d",
 			     (*i).first.c_str(),s.source.c_str(),s.node.c_str(),
 			     s.sent,s.received,s.written);
       total.sent += s.sent;
@@ -188,13 +188,13 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
     }
   }
   disp->draw_line_normal("");
-  disp->draw_line_bold(" %-12s %12s->%-12s %11d %11d %11d","Total","Recv Layer","Stream Layer",
+  disp->draw_line_bold("%-13s %12s->%-12s %11d %11d %11d","Total","Recv Layer","Stream Layer",
 		       total.sent,total.received,total.written);
   disp->draw_line_normal("");
   for(std::map<std::string,Stream>::const_iterator i=streams.begin();i!=streams.end();++i) {
     const Stream& s = (*i).second;
     if ( s.node == "Monitoring" ) {
-      disp->draw_line_normal(" %-12s %12s->%-12s %11d",(*i).first.c_str(),s.source.c_str(),s.node.c_str(),s.sent);
+      disp->draw_line_normal("%-13s %12s->%-12s %11d",(*i).first.c_str(),s.source.c_str(),s.node.c_str(),s.sent);
     }
   }
 }
@@ -205,7 +205,7 @@ void StorageDisplay::showHLT(const Nodeset& ns) {
   std::string part = m_partName + "_";
   const Nodes& nodes = ns.nodes;
   long total_evts = 0;
-  disp->draw_line_bold("  Buffer Information:         Produced  Pending    Size[kB]   Free[kB]  Users ");
+  disp->draw_line_reverse("%-11s%8s MBM  ST","Source","Received");
   for (Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
     const Tasks* tasks = (*n).tasks();
     const Buffers& buffs = *(*n).buffers();
@@ -238,13 +238,13 @@ void StorageDisplay::showHLT(const Nodeset& ns) {
 /// Show the information about MBM buffers on the storage nodes
 void StorageDisplay::showBuffers(const Nodeset& ns) {
   MonitorDisplay* disp = m_buffers;
-  disp->draw_line_bold("  Buffer Information:         Produced Pending Size[kB] Free[kB] Slots Users ");
+  disp->draw_line_reverse("Buffer                        Produced Pending Size[kB] Free[kB] Slots Users ");
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
     for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       const MBMBuffer& b = *ib;
       const CONTROL& c = b.ctrl;
-      disp->draw_line_normal("%10s::%-12s %12d %7d %8d %8d %5d %5d ",
+      disp->draw_line_normal("%10s/%-13s %12d %7d %8d %8d %5d %5d ",
 			     n->name,b.name,c.tot_produced,c.i_events,
 			     (c.bm_size*c.bytes_p_Bit)/1024,(c.i_space*c.bytes_p_Bit)/1024,
 			     c.p_emax-c.i_events,c.i_users);
