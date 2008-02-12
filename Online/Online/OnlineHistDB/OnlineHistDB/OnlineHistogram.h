@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.19 2008-02-05 22:16:56 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.20 2008-02-12 09:52:13 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -59,10 +59,10 @@ class  OnlineHistogram : public OnlineHistDBEnv
     return out;
   }
   /// histogram name
-  inline std::string hname() const {return (m_subname == "" && m_nhs == 1) ? 
+  inline std::string hname() const {return (m_subname == "") ? 
       m_hsname : m_hsname + OnlineHistDBEnv_constants::m_SetSeparator + m_subname;}
   /// standard DB histogram title (not necessarly equal to the published ROOT title)
-  inline std::string htitle() const {return (m_subname == "" && m_nhs == 1) ? 
+  inline std::string htitle() const {return (m_subname == "") ? 
       m_hsname : m_hsname + " " + m_subname;} 
   /// histogram set name
   inline std::string hsname() const {return m_hsname;}
@@ -127,6 +127,9 @@ class  OnlineHistogram : public OnlineHistDBEnv
 			void* option);
   /// unsets a display option (in the current display mode)
   virtual bool unsetDisplayOption(std::string ParameterName);
+  /// returns true if the current option value is different from *option
+  virtual bool changedDisplayOption(std::string ParameterName, 
+				    void* option);
   /// saves current display options.  This is the recommended saving method, that
   /// chooses the most appropriate display option mode 
   /// (Histogram set, Histogram, or Histogram on Page) calling one of the next methods.
@@ -236,14 +239,18 @@ class  OnlineHistogram : public OnlineHistDBEnv
     void set(void* option);
     bool get(void* option);
     void unset();
-    inline bool isSet() { return (0 == *m_value_null);}     
-    
+    inline bool isSet() { return (0 == *m_value_null);
+    }     
+    bool differentfrom(void* option);
   private:
     std::string m_name;
     DisplayOptionType m_type;
     void* m_value;
     OCIInd* m_value_null;
     OnlineHistDBEnv* m_env;
+    std::string getStringValue();
+    int getIntValue();
+    float getFloatValue();
   };
 
   bool m_isAbort;

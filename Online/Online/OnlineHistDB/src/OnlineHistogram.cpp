@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.26 2007-11-29 11:22:22 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.27 2008-02-12 09:52:13 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -886,6 +886,7 @@ bool OnlineHistogram::setDisplayOption(std::string ParameterName,
   return out;
 }
 
+
 bool OnlineHistogram::unsetDisplayOption(std::string ParameterName) {
   bool out=true;
   OnlineDisplayOption* mydo= getDO(ParameterName);
@@ -898,6 +899,23 @@ bool OnlineHistogram::unsetDisplayOption(std::string ParameterName) {
   }
   return out;
 }
+
+bool OnlineHistogram::changedDisplayOption(std::string ParameterName, 
+					   void* option)
+{
+  bool out=false;
+  OnlineDisplayOption* mydo= getDO(ParameterName);
+  if (mydo) {
+    if ( mydo->isSet() ) {
+      out = mydo->differentfrom(option);
+    }
+  }
+  else {
+    warningMessage("parameter "+ParameterName+" is unknown");
+  }
+  return out;
+}
+
 
 
 // private OnlineDisplayOption class to ease handling of many display options
@@ -951,20 +969,35 @@ void OnlineHistogram::OnlineDisplayOption::set(void *option){
   }
 }
 
+
+std::string OnlineHistogram::OnlineDisplayOption::getStringValue()
+{return std::string( (const char*) OCIStringPtr(m_env->envhp(), (*((OCIString **) m_value))) );}
+
+float OnlineHistogram::OnlineDisplayOption::getFloatValue()
+{ float out;
+  OCINumberToReal(m_env->errhp(), (OCINumber *) m_value, sizeof(float), (void*) &out);
+  return out; }
+
+int OnlineHistogram::OnlineDisplayOption::getIntValue()
+{ int out;
+  OCINumberToInt(m_env->errhp(),  (OCINumber *) m_value, sizeof(int),
+		     OCI_NUMBER_SIGNED, (void*) &out );
+  return out;
+}
+
+
 bool OnlineHistogram::OnlineDisplayOption::get(void *option){
   bool out=isSet();
   if (out) {
     switch (m_type) {
     case STRING :
-      * (static_cast<std::string*>(option)) = 
-	(const char*) OCIStringPtr(m_env->envhp(), (*((OCIString **) m_value)) );
+      (* (static_cast<std::string*>(option)) ) = getStringValue();
       break;
     case FLOAT :
-      OCINumberToReal(m_env->errhp(), (OCINumber *) m_value, sizeof(float), option);
+      (* (static_cast<float*>(option)) ) = getFloatValue();
       break;
     case INT :
-      OCINumberToInt(m_env->errhp(),  (OCINumber *) m_value, sizeof(int),
-		     OCI_NUMBER_SIGNED, option);
+      (* (static_cast<int*>(option)) ) = getIntValue();
       break;
     }
   }
@@ -975,6 +1008,28 @@ void OnlineHistogram::OnlineDisplayOption::unset() {
   *m_value_null = -1;
 }
 
+bool OnlineHistogram::OnlineDisplayOption::differentfrom(void *option) {
+  bool out=true;
+  if (isSet()) {
+    switch (m_type) {
+    case STRING :
+      out = ( (*(static_cast<std::string*>(option))) !=  getStringValue() );
+      break;
+    case FLOAT :
+      out = ( fabs( (*(static_cast<float*>(option))) - getFloatValue()  ) 
+	      > 0.001 );
+      break;
+    case INT :
+      out = ( (*(static_cast<int*>(option))) != getIntValue() ) ;
+      break;
+    }
+  }
+  return out;
+}
+
+
+
+// ----------------------------------------------------------- //
 
 OnlineHistogram::OnlineDisplayOption* OnlineHistogram::getDO(std::string ParameterName) {
   OnlineDisplayOption* out=0;
