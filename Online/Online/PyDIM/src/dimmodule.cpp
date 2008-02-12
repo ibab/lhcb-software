@@ -1,3 +1,4 @@
+#define DIMC_MODULE
 extern "C" {
 #include <Python.h>
 #include "structmember.h"
@@ -19,30 +20,32 @@ using namespace std;
 static int server_active = 0;
 static char server_name[HOST_NAME_MAX + 1];
 
+PyObject* dim_buf_to_tuple(const char *schema, const char *buf, int len);
+
 static PyObject *
-dim_dis_start_serving(PyObject *self, PyObject *args)
+dim_dis_start_serving(PyObject* /* self */, PyObject *args)
 {
   char *name = NULL;
   if (server_active) 
-      Py_RETURN_NONE;
+    Py_RETURN_NONE;
   if (!PyArg_ParseTuple(args, "|s", &name)) 
-      return NULL;
+    return NULL;
   if (name) 
-      strncpy(server_name, name, HOST_NAME_MAX + 1);
+    strncpy(server_name, name, HOST_NAME_MAX + 1);
   else {
-      gethostname(server_name, HOST_NAME_MAX);
-      printf("No server name specified. Using machine hostname.\n");
+    gethostname(server_name, HOST_NAME_MAX);
+    printf("No server name specified. Using machine hostname.\n");
   }
   if (!dis_start_serving(server_name)) {
-      PyErr_SetString(PyExc_RuntimeError, "Failed to activate DIM server");
-      return NULL;
+    PyErr_SetString(PyExc_RuntimeError, "Failed to activate DIM server");
+    return NULL;
   }
   server_active=1;
   Py_RETURN_NONE; // no return values :-)
 }
 
 static PyObject *
-dim_dis_stop_serving(PyObject *self, PyObject *args) {
+dim_dis_stop_serving(PyObject* /* self */, PyObject* /* args */) {
   /* Call: void dis_stop_serving(void)
    */
   dis_stop_serving(); // no return values :-)
@@ -50,8 +53,7 @@ dim_dis_stop_serving(PyObject *self, PyObject *args) {
   Py_RETURN_NONE;
 }
 
-static PyObject*
-dim_dis_set_dns_node(PyObject* self, PyObject* args) {
+static PyObject* dim_dis_set_dns_node(PyObject* /* self */, PyObject* args) {
   /* calls dis_set_dns_node(char* node)
      return success or failure
   */
@@ -66,7 +68,7 @@ dim_dis_set_dns_node(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_get_dns_node(PyObject* self, PyObject* args) {
+dim_dis_get_dns_node(PyObject* /* self */, PyObject* /* args */) {
   /* calls dis_get_dns_node(char* node)
      the function should return the DNS node
   */
@@ -80,7 +82,7 @@ dim_dis_get_dns_node(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_set_dns_port(PyObject* self, PyObject* args) {
+dim_dis_set_dns_port(PyObject* /* self */, PyObject* args) {
   /* calls dis_set_dns_port(int port)
      return success or failure
   */
@@ -99,7 +101,7 @@ dim_dis_set_dns_port(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_get_dns_port(PyObject* self, PyObject* args) {
+dim_dis_get_dns_port(PyObject* /* self */, PyObject* /* args */) {
   /* calls dis_get_dns_port()
      the function should return the DNS port
   */
@@ -115,8 +117,8 @@ typedef struct {
 } PyCallback; //for Python callbacks
 
 static PyCallback dis_callbackExitHandler_func,
-                  dis_callbackErrorHandler_func,
-                  dis_callbackClientExitHandler_func;
+  dis_callbackErrorHandler_func,
+  dis_callbackClientExitHandler_func;
 
 static void
 dim_dis_callbackExitHandler(int* code) {
@@ -185,28 +187,28 @@ dim_dis_callbackClientExitHandler(int* tag) {
 
 static PyObject*
 dim_dis_add_exit_handler(PyObject* self, PyObject* args) {
-    PyObject *temp;
+  PyObject *temp;
   
-    if (PyArg_ParseTuple(args, "O:set_callback", &temp)) {
-        if (!PyCallable_Check(temp)) {
-          PyErr_SetString(PyExc_TypeError, "parameter must be callable");
-          return NULL;
-        }
-    
-        Py_XINCREF(temp); /* Adds a reference to the new callback */
-        Py_XINCREF(self);
-        Py_XDECREF(dis_callbackExitHandler_func.self);/* Dispose of previous callback */
-        Py_XDECREF(dis_callbackExitHandler_func.func);
-        dis_callbackExitHandler_func.self = self;
-        dis_callbackExitHandler_func.func = temp;
-        print("Got function pointer %p and obj pointer %p\n", temp, self);
-    } else {
-        PyErr_SetString(PyExc_TypeError, "Argument has to be a function or a bound method");
-        return NULL;
+  if (PyArg_ParseTuple(args, "O:set_callback", &temp)) {
+    if (!PyCallable_Check(temp)) {
+      PyErr_SetString(PyExc_TypeError, "parameter must be callable");
+      return NULL;
     }
-    dis_add_exit_handler(dim_dis_callbackExitHandler);
+    
+    Py_XINCREF(temp); /* Adds a reference to the new callback */
+    Py_XINCREF(self);
+    Py_XDECREF(dis_callbackExitHandler_func.self);/* Dispose of previous callback */
+    Py_XDECREF(dis_callbackExitHandler_func.func);
+    dis_callbackExitHandler_func.self = self;
+    dis_callbackExitHandler_func.func = temp;
+    print("Got function pointer %p and obj pointer %p\n", temp, self);
+  } else {
+    PyErr_SetString(PyExc_TypeError, "Argument has to be a function or a bound method");
+    return NULL;
+  }
+  dis_add_exit_handler(dim_dis_callbackExitHandler);
 
-    Py_RETURN_NONE;
+  Py_RETURN_NONE;
 }
 
 
@@ -266,7 +268,7 @@ dim_dis_add_client_exit_handler(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_selective_update_service(PyObject* self, PyObject* args) {
+dim_dis_selective_update_service(PyObject* /* self */, PyObject* args) {
   /* Calls: int dis_selective_update_service (int service_id, int** client_ids)
    */
   int* client_ids=NULL, res;
@@ -275,7 +277,7 @@ dim_dis_selective_update_service(PyObject* self, PyObject* args) {
 
   if ( !PyArg_ParseTuple(args, "iO;list or tuple", &service_id, &listOrTuple) ){
     PyErr_SetString(PyExc_TypeError, 
-                     "Arguments have to be an integer and a list/tuple of integers");
+		    "Arguments have to be an integer and a list/tuple of integers");
     return NULL;
   }
   if (!listOrTuple2Int(listOrTuple, &client_ids)) {
@@ -289,7 +291,7 @@ dim_dis_selective_update_service(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_set_quality(PyObject* self, PyObject* args) {
+dim_dis_set_quality(PyObject* /* self */, PyObject* args) {
   /*Calls: void dis_set_quality (service_id, quality)
    */
   unsigned int service_id;
@@ -305,7 +307,7 @@ dim_dis_set_quality(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_set_timestamp(PyObject* self, PyObject* args) {
+dim_dis_set_timestamp(PyObject* /* self */, PyObject* args) {
   /*Calls: void dis_set_timestamp(unsigned int service_id, int secs, int millisecs)
    */
   unsigned int service_id;
@@ -320,7 +322,7 @@ dim_dis_set_timestamp(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_remove_service(PyObject* self, PyObject* args) {
+dim_dis_remove_service(PyObject* /* self */, PyObject* args) {
   /*Calls: int dis_remove_service (unsigned int service_id)
    */
   unsigned int service_id;
@@ -335,12 +337,12 @@ dim_dis_remove_service(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_get_next_cmnd(PyObject* self, PyObject* args) {
+dim_dis_get_next_cmnd(PyObject* /* self */, PyObject* args) {
   /* Calls: int dis_get_next_cmnd (long* tag, int* buffer, int* size)
      Problem: the way the results are received is not done in a "pythonic" way.
      Better to return a tuple with all the results.
      INFO: the DIM function implementation does not define a value for buffer,
-           size or tag in case a command is not found.
+     size or tag in case a command is not found.
   */
   int res=0, *buffer, size;
   long tag=0;
@@ -360,7 +362,7 @@ dim_dis_get_next_cmnd(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_get_client(PyObject* self, PyObject* args) {
+dim_dis_get_client(PyObject* /* self */, PyObject* args) {
   /*Calls: int dis_get_client (char* name)
    */
   char* name; int res;
@@ -374,7 +376,7 @@ dim_dis_get_client(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_get_conn_id(PyObject* self, PyObject* args) {
+dim_dis_get_conn_id(PyObject* /* self */, PyObject* /* args */) {
   /*Calls: int dis_get_conn_id ()
    */
   int res;
@@ -383,7 +385,7 @@ dim_dis_get_conn_id(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_get_timeout(PyObject* self, PyObject* args) {
+dim_dis_get_timeout(PyObject* /* self */, PyObject* args) {
   /*Calls: int dis_get_timeout (unsigned int service_id, int client_id)
    */
   unsigned int service_id;
@@ -399,7 +401,7 @@ dim_dis_get_timeout(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_get_client_services(PyObject* self, PyObject* args) {
+dim_dis_get_client_services(PyObject* /* self */, PyObject* args) {
   /*Calls: char* dis_get_client_services (int conn_id)
     Info: what happens when the list is empty? None or empty string
   */
@@ -414,7 +416,7 @@ dim_dis_get_client_services(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_set_client_exit_handler(PyObject* self, PyObject* args) {
+dim_dis_set_client_exit_handler(PyObject* /* self */, PyObject* args) {
   /*Calls: void dis_set_client_exit_handler (int conn_id, int tag)
    */
   //char* res=NULL;
@@ -428,7 +430,7 @@ dim_dis_set_client_exit_handler(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_get_error_services(PyObject* self, PyObject* args) {
+dim_dis_get_error_services(PyObject* /* self */, PyObject* /* args */) {
   /*Calls: char* dis_get_error_services (int conn_id)
    */
   char* res=NULL;
@@ -480,8 +482,8 @@ struct _dic_info_service_callback{
 };
 
 struct _dic_cmnd_callback {
-     PyObject* func;
-     long tag;
+  PyObject* func;
+  long tag;
 };
 
 unsigned long _dic_cmnd_callback_ID;
@@ -499,7 +501,7 @@ void _dic_error_user_routine_dummy(int, int, char*);
 /******************************************************************************/
 
 static PyObject*
-dim_dis_add_cmnd(PyObject* self, PyObject* args) {
+dim_dis_add_cmnd(PyObject* /* self */, PyObject* args) {
   /* Arguments: name, description, py_function, tag
    * 
    * Implementation details: in order to preserve the C interface, unique 
@@ -524,11 +526,11 @@ dim_dis_add_cmnd(PyObject* self, PyObject* args) {
   string s;
 
   if (!PyArg_ParseTuple(args, "s#s#Ol", 
-		                &name, &sizeName, &format, &sizeFormat, &pyFunc, &tag) 
-	  || !PyCallable_Check(pyFunc) ) {
-      PyErr_SetString(PyExc_TypeError, 
-    		        "Invalid arguments: expected two strings, a function pointer and an integer");
-      return NULL;
+			&name, &sizeName, &format, &sizeFormat, &pyFunc, &tag) 
+      || !PyCallable_Check(pyFunc) ) {
+    PyErr_SetString(PyExc_TypeError, 
+		    "Invalid arguments: expected two strings, a function pointer and an integer");
+    return NULL;
   }
   Py_INCREF(pyFunc);
   //print("Adding command name %s, format %s and tag %d", name, format, tag);
@@ -543,7 +545,7 @@ dim_dis_add_cmnd(PyObject* self, PyObject* args) {
   callback->uniqueTag = uniqueTag;
   s = name;
   if (cmndName2PythonFunc[s])
-      free(cmndName2PythonFunc[s]);
+    free(cmndName2PythonFunc[s]);
   cmndName2PythonFunc[s] = callback;
   cmndUniqueTag2PythonFunc[uniqueTag] = callback;
   res = dis_add_cmnd(name, format, dim_callbackCommandFunc, uniqueTag);
@@ -552,7 +554,7 @@ dim_dis_add_cmnd(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dis_update_service(PyObject* self, PyObject* args) {
+dim_dis_update_service(PyObject* /* self */, PyObject* args) {
   /* Calls: int dis_update_service (int service_id)
    */
   int service_id, res;
@@ -570,37 +572,37 @@ dim_dis_update_service(PyObject* self, PyObject* args) {
     return NULL;
   }
   if (!svc_args and svc->func) {    
-      arg = Py_BuildValue("(i)", svc->tag);
-      gstate = PyGILState_Ensure();
-      svc_args = PyEval_CallObject(svc->func, arg);
-      PyGILState_Release(gstate);
-      if (!svc_args) {
-          print("Error in calling python function %p", svc->func);
-          PyErr_Print();      
-          return NULL;
-      }
-      Py_DECREF(arg);
+    arg = Py_BuildValue("(i)", svc->tag);
+    gstate = PyGILState_Ensure();
+    svc_args = PyEval_CallObject(svc->func, arg);
+    PyGILState_Release(gstate);
+    if (!svc_args) {
+      print("Error in calling python function %p", svc->func);
+      PyErr_Print();      
+      return NULL;
+    }
+    Py_DECREF(arg);
   }  
   if (svc_args && !iterator_to_buffer(svc_args, svc->buffer, 
-                                       svc->bufferSize, svc->format)) 
-  {
-       PyErr_SetString(PyExc_TypeError, 
-                       "Arguments do not match service format"
-                       );
-       return NULL;
-  }
+				      svc->bufferSize, svc->format)) 
+    {
+      PyErr_SetString(PyExc_TypeError, 
+		      "Arguments do not match service format"
+		      );
+      return NULL;
+    }
   
   Py_BEGIN_ALLOW_THREADS
-  res = dis_update_service(service_id);
+    res = dis_update_service(service_id);
   Py_END_ALLOW_THREADS
   
-  //print("Returning result %d", res);  
-  return Py_BuildValue("i", res);
+    //print("Returning result %d", res);  
+    return Py_BuildValue("i", res);
 }
 
 
 static PyObject*
-dim_dis_add_service(PyObject* self, PyObject* args) {
+dim_dis_add_service(PyObject* /* self */, PyObject* args) {
   /*Arguments: name, description, python function, tag
     Calls: unsigned int dis_add_service (char* name,
     char* description,
@@ -622,47 +624,47 @@ dim_dis_add_service(PyObject* self, PyObject* args) {
 
   if (!PyArg_ParseTuple(args, "s#s#Ol", &name, 
                         &name_size, &format, &format_size, &pyFunc, &tag)
-       || !PyCallable_Check(pyFunc))
-  {
+      || !PyCallable_Check(pyFunc))
+    {
       PyErr_SetString(PyExc_TypeError, 
                       "Invalid arguments: expected two strings and a callable object."
                       );
       return NULL;
-  }
+    }
   size = getSizeFromFormat(format); 
   if (!size) {
-        PyErr_SetString(PyExc_TypeError, "Invalid format of service parameters");
-        return NULL;
+    PyErr_SetString(PyExc_TypeError, "Invalid format of service parameters");
+    return NULL;
   }
   buffer = (char*)malloc(size);
   if (!buffer) {
-      PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
-      return NULL;
+    PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
+    return NULL;
   }
   memset(buffer, '\0', size);
   service_id = dis_add_service(name, format, buffer, size, NULL, tag);
   if (!service_id) {
-      PyErr_SetString(PyExc_RuntimeError, "Could not create service");
-      free(buffer);
-      return NULL;
+    PyErr_SetString(PyExc_RuntimeError, "Could not create service");
+    free(buffer);
+    return NULL;
   }
   Py_INCREF(pyFunc);
   svc = (ServiceCallbackPtr)malloc(sizeof(ServiceCallback));
   svc->name = (char*)malloc(sizeof(char)*name_size);
   if (!svc->name){
-      Py_DECREF(pyFunc);
-      PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
-      free(buffer);
-      return NULL;
+    Py_DECREF(pyFunc);
+    PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
+    free(buffer);
+    return NULL;
   }
   strcpy(svc->name, name);
   svc->format = (char*)malloc(sizeof(char)*format_size);
   if (!svc->name){
-      free(buffer);
-      free(svc->name);
-      Py_DECREF(pyFunc);
-      PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
-      return NULL;
+    free(buffer);
+    free(svc->name);
+    Py_DECREF(pyFunc);
+    PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
+    return NULL;
   }
   strcpy(svc->format, format);
   svc->tag = tag;
@@ -670,14 +672,14 @@ dim_dis_add_service(PyObject* self, PyObject* args) {
   svc->buffer = buffer;
   svc->bufferSize = size;
   if (serviceID2Callback[service_id]){
-      print("Replacing service %s",svc->name);
-      print("Old service struct pointer %p", serviceID2Callback[service_id]);
-      //a service with the same name added again?
-      Py_XDECREF(serviceID2Callback[service_id]->func);
-      free(serviceID2Callback[service_id]->name);
-      free(serviceID2Callback[service_id]->format);
-      free(serviceID2Callback[service_id]->buffer);
-      free(serviceID2Callback[service_id]);
+    print("Replacing service %s",svc->name);
+    print("Old service struct pointer %p", serviceID2Callback[service_id]);
+    //a service with the same name added again?
+    Py_XDECREF(serviceID2Callback[service_id]->func);
+    free(serviceID2Callback[service_id]->name);
+    free(serviceID2Callback[service_id]->format);
+    free(serviceID2Callback[service_id]->buffer);
+    free(serviceID2Callback[service_id]);
   }
   serviceID2Callback[service_id] = svc;
   print ("Service %s added successfully", svc->name);
@@ -699,14 +701,14 @@ dim_callbackCommandFunc(void* uTag, void* address, int* size) {
   pycall = cmndUniqueTag2PythonFunc[uniqueTag];
   args = dim_buf_to_tuple(pycall->format, (char*)address, *size);
   //printPyObject(args);
-//  print("dim_buf_to_list returned %s %d\n", 
-//        cmndUniqueTag2PythonFunc[uniqueTag]->format, len
-//        );
-//  printf("dim_callbackCommandFunc:: calling python func: %p\n", pyFunc);
+  //  print("dim_buf_to_list returned %s %d\n", 
+  //        cmndUniqueTag2PythonFunc[uniqueTag]->format, len
+  //        );
+  //  printf("dim_callbackCommandFunc:: calling python func: %p\n", pyFunc);
   if (!args) {
-	  /* convertion of the arguments failed */
-	  print ("Could not convert received DIM buffer to Python objects");
-	  return;
+    /* convertion of the arguments failed */
+    print ("Could not convert received DIM buffer to Python objects");
+    return;
   }
   /* performing the python callback */
   gstate = PyGILState_Ensure();
@@ -715,9 +717,9 @@ dim_callbackCommandFunc(void* uTag, void* address, int* size) {
   
   Py_DECREF(args);
   if (!res) {
-      PyErr_Print();
+    PyErr_Print();
   } else {
-      Py_DECREF(res);
+    Py_DECREF(res);
   }
 }
 
@@ -725,7 +727,7 @@ dim_callbackCommandFunc(void* uTag, void* address, int* size) {
 /* DIC interface functions */
 /******************************************************************************/
 static PyObject*
-dim_dic_set_dns_node(PyObject* self, PyObject* args) {
+dim_dic_set_dns_node(PyObject* /* self */, PyObject* args) {
   /* calls dic_set_dns_node(char* node)
      return success or failure
   */
@@ -741,7 +743,7 @@ dim_dic_set_dns_node(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dic_get_dns_node(PyObject* self, PyObject* args) {
+dim_dic_get_dns_node(PyObject* /* self */, PyObject* /* args */) {
   /* calls dic_get_dns_node(char* node)
      the function should return the DNS node
   */  
@@ -753,7 +755,7 @@ dim_dic_get_dns_node(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dic_set_dns_port(PyObject* self, PyObject* args) {
+dim_dic_set_dns_port(PyObject* /* self */, PyObject* args) {
   /* Calls dic_set_dns_port(int port).
      Return success or failure (1 or 0).
   */
@@ -771,7 +773,7 @@ dim_dic_set_dns_port(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dic_get_dns_port(PyObject* self, PyObject* args) {
+dim_dic_get_dns_port(PyObject* /* self */, PyObject* /* args */) {
   /* Calls dis_get_dns_port().
      Returns the DNS port.
   */
@@ -783,7 +785,7 @@ dim_dic_get_dns_port(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dic_get_id(PyObject* self, PyObject* args) {
+dim_dic_get_id(PyObject* /* self */, PyObject* /* args */) {
   /* Calls: int dic_get_id (char* name)
    * Returns the client name or an empty string if the command was not
    * successful
@@ -798,16 +800,16 @@ dim_dic_get_id(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dic_disable_padding(PyObject* self, PyObject* args) {
+dim_dic_disable_padding(PyObject* /* self */, PyObject* /* args */) {
   /* Calls: int dic_disable_padding(void)
    * Returns None.
-  */
+   */
   dic_disable_padding();
   Py_RETURN_NONE;
 }
 
 static PyObject*
-dim_dic_get_quality(PyObject* self, PyObject* args) {
+dim_dic_get_quality(PyObject* /* self */, PyObject* args) {
   /* Calls: int dic_get_quality (unsigned int service_id);
      Returns the service quality
   */
@@ -823,11 +825,11 @@ dim_dic_get_quality(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dic_get_timestamp(PyObject* self, PyObject* args) {
+dim_dic_get_timestamp(PyObject* /* self */, PyObject* args) {
   /* Calls int dic_get_timestamp (service_id, secs, milisecs).
      With: unsigned int service_id
-            int *secs
-            int *milisecs
+     int *secs
+     int *milisecs
      Returns: whether the command was successful
   */
   unsigned int service_id;
@@ -844,7 +846,7 @@ dim_dic_get_timestamp(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dic_get_format(PyObject* self, PyObject* args) {
+dim_dic_get_format(PyObject* /* self */, PyObject* args) {
   /*Calls: char *dic_get_format (unsigned int service_id)
     Returns a string containing the format
   */
@@ -862,7 +864,7 @@ dim_dic_get_format(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dic_release_service(PyObject* self, PyObject* args) {
+dim_dic_release_service(PyObject* /* self */, PyObject* args) {
   /* Calls: void dic_release_service (unsigned int service_id)
      Returns: void
   */
@@ -879,8 +881,8 @@ dim_dic_release_service(PyObject* self, PyObject* args) {
   dic_release_service(service_id);
   tmp = _dic_info_service_id2Callback[service_id];
   if ( !tmp ) {
-      print("Service with id %d is not known", service_id);
-      Py_RETURN_NONE;
+    print("Service with id %d is not known", service_id);
+    Py_RETURN_NONE;
   }
   _dic_info_service_buffer2Callback.erase(tmp->buffer);
   _dic_info_service_id2Callback.erase(service_id);
@@ -889,31 +891,31 @@ dim_dic_release_service(PyObject* self, PyObject* args) {
   free(tmp->name);
   Py_XDECREF(tmp->func);
   if (tmp->defaultArgument)
-      Py_XDECREF(tmp->defaultArgument);
+    Py_XDECREF(tmp->defaultArgument);
   free(tmp);
   
   Py_RETURN_NONE;
 }
 
 static PyObject*
-dim_dic_info_service(PyObject* self, PyObject* args) {
+dim_dic_info_service(PyObject* /* self */, PyObject* args) {
   /*Arguments: string name                 ,
-               string format               ,
-               PyObject* callbackFunction  ,
-               int service_type            , (optional, default=MONITORED:)
-               int timeout                 , (optional, default=0)
-               int tag                     , (optional, default=0)
-               PyObject* default_value       (optional, default=NULL)
+    string format               ,
+    PyObject* callbackFunction  ,
+    int service_type            , (optional, default=MONITORED:)
+    int timeout                 , (optional, default=0)
+    int tag                     , (optional, default=0)
+    PyObject* default_value       (optional, default=NULL)
 
-   Calls : unsigned int dic_info_service ( char* name         ,
-                                           int   type         ,
-                                           int   timeout      ,
-                                           int*  address      ,
-                                           int*  size         ,
-                                           void* user_routine ,
-                                           long  tag          ,
-                                           int*  fill_address ,
-                                           int   fill_size)
+    Calls : unsigned int dic_info_service ( char* name         ,
+    int   type         ,
+    int   timeout      ,
+    int*  address      ,
+    int*  size         ,
+    void* user_routine ,
+    long  tag          ,
+    int*  fill_address ,
+    int   fill_size)
     Returns: the id of the new created service
   */
   char* name, *format;
@@ -928,26 +930,26 @@ dim_dic_info_service(PyObject* self, PyObject* args) {
   _dic_info_service_callback* tmp;
 
   if (!PyArg_ParseTuple(args, "s#s#O|iiiO",&name,
-                                           &name_size,
-                                           &format,
-                                           &format_size,
-                                           &pyFunc ,
-                                           &service_type,
-                                           &timeout,
-                                           &tag,
-                                           &default_value) 
+			&name_size,
+			&format,
+			&format_size,
+			&pyFunc ,
+			&service_type,
+			&timeout,
+			&tag,
+			&default_value) 
       || !PyCallable_Check(pyFunc) )
-  {
-    goto invalid_args;
-  }
+    {
+      goto invalid_args;
+    }
   /* increasing the ref count of the python objects */
   Py_INCREF(pyFunc);
   if (default_value)
-      Py_INCREF(default_value);
+    Py_INCREF(default_value);
   /* creating a new service structure */
   tmp = (_dic_info_service_callback*)malloc(sizeof(_dic_info_service_callback));
   if (!tmp)
-      goto no_memory;
+    goto no_memory;
   buffer_size = getSizeFromFormat(format);
   tmp->tag = tag;
   tmp->size = buffer_size;
@@ -981,264 +983,264 @@ dim_dic_info_service(PyObject* self, PyObject* args) {
   return Py_BuildValue("i", service_id);
 
   //invalid arguments
-  invalid_args:
-    PyErr_SetString(PyExc_TypeError,
-          "Invalid parameters. Expected:string name               ,\
+ invalid_args:
+  PyErr_SetString(PyExc_TypeError,
+		  "Invalid parameters. Expected:string name               ,\
                                         string format             ,\
                                         int service_type          ,\
                                         int timeout               ,\
                                         PyObject* callbackFunction,\
                                         int tag                   ,\
                                         PyObject* default_value"
-                     );
-    return NULL;
+		  );
+  return NULL;
   //alocate memory problem
-  no_memory:
-    PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
-    Py_DECREF(pyFunc);
-    return NULL;
+ no_memory:
+  PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
+  Py_DECREF(pyFunc);
+  return NULL;
 
- //invalid service registering
+  //invalid service registering
  dealocate:
-    Py_XDECREF(tmp->func);
-    _dic_info_service_buffer2Callback.erase(tmp->buffer);
-    //_dic_info_service_id2Callback.erase(tmp->buffer);
-    free(tmp->buffer);
-    free(tmp->format);
-    free(tmp->name);
-    free(tmp);
-    return 0;
+  Py_XDECREF(tmp->func);
+  _dic_info_service_buffer2Callback.erase(tmp->buffer);
+  //_dic_info_service_id2Callback.erase(tmp->buffer);
+  free(tmp->buffer);
+  free(tmp->format);
+  free(tmp->name);
+  free(tmp);
+  return 0;
 }
 
 static PyObject*
 dim_dic_info_service_stamped(PyObject* self, PyObject* args){
-/* Delegates to dim_dic_info_service (PyObject* self, 
- *                                    PyObject* args, 
- *                                    PyObject* keywds
- *                                   )
- * Accepts same arguments and returns the new ID of the created service.
- */
-    return dim_dic_info_service(self, args);
+  /* Delegates to dim_dic_info_service (PyObject* self, 
+   *                                    PyObject* args, 
+   *                                    PyObject* keywds
+   *                                   )
+   * Accepts same arguments and returns the new ID of the created service.
+   */
+  return dim_dic_info_service(self, args);
 }
 
 static PyObject*
-dim_dic_get_server(PyObject* self, PyObject* args) {
-    /* Arguments : server name (string)
-     * Calls     : dic_get_server(char* name)
-     * Returns   : server id
-     */
-     int service_id;
-     char* server_name;
+dim_dic_get_server(PyObject* /* self */, PyObject* args) {
+  /* Arguments : server name (string)
+   * Calls     : dic_get_server(char* name)
+   * Returns   : server id
+   */
+  int service_id;
+  char* server_name;
      
-     if ( !PyArg_ParseTuple(args, "s", &server_name) ) {
-         goto invalid_arguments;
-     }
-     service_id = dic_get_server(server_name);
-     return Py_BuildValue("i", service_id);
+  if ( !PyArg_ParseTuple(args, "s", &server_name) ) {
+    goto invalid_arguments;
+  }
+  service_id = dic_get_server(server_name);
+  return Py_BuildValue("i", service_id);
     
-    invalid_arguments:
-        PyErr_SetString(PyExc_TypeError,
-          "Invalid parameters. Expected argument:string service_name");                                         
-        return NULL;      
+ invalid_arguments:
+  PyErr_SetString(PyExc_TypeError,
+		  "Invalid parameters. Expected argument:string service_name");                                         
+  return NULL;      
 } 
 
 static PyObject*
-dim_dic_get_conn_id(PyObject* self, PyObject* args) {
-    /* Arguments : None
-     * Calls     : dic_get_conn_id(char* name)
-     * Returns   : connection id
-     */
-     int service_id;     
+dim_dic_get_conn_id(PyObject* /* self */, PyObject* /* args */) {
+  /* Arguments : None
+   * Calls     : dic_get_conn_id(char* name)
+   * Returns   : connection id
+   */
+  int service_id;     
           
-     service_id = dic_get_conn_id();
-     return Py_BuildValue("i", service_id);
+  service_id = dic_get_conn_id();
+  return Py_BuildValue("i", service_id);
 } 
 
 static PyObject*
-dim_dic_get_server_services(PyObject* self, PyObject* args) {
-    /* Arguments : connection id
-     * Calls     : dic_get_server_services(int conn_id)
-     * Returns   : list of services
-     */
-    int conn_id;
-    char* server_names=NULL;
-    PyObject* ret;
+dim_dic_get_server_services(PyObject* /* self */, PyObject* args) {
+  /* Arguments : connection id
+   * Calls     : dic_get_server_services(int conn_id)
+   * Returns   : list of services
+   */
+  int conn_id;
+  char* server_names=NULL;
+  PyObject* ret;
     
-    if ( !PyArg_ParseTuple(args, "i", &conn_id) ){
-        goto invalid_arguments;
-    }
+  if ( !PyArg_ParseTuple(args, "i", &conn_id) ){
+    goto invalid_arguments;
+  }
      
-    server_names = dic_get_server_services(conn_id);
-    ret = stringList_to_tuple(server_names);    
-    return ret;
+  server_names = dic_get_server_services(conn_id);
+  ret = stringList_to_tuple(server_names);    
+  return ret;
     
-    invalid_arguments:
-        PyErr_SetString(PyExc_TypeError, 
-                       "Invalid parameters. Expected argument:int conn_id");                                                  
-        return NULL;    
+ invalid_arguments:
+  PyErr_SetString(PyExc_TypeError, 
+		  "Invalid parameters. Expected argument:int conn_id");                                                  
+  return NULL;    
 } 
         
 static PyObject*
-dim_dic_get_error_services(PyObject* self, PyObject* args) {
-    /* Arguments : None
-     * Calls     : dic_get_error_services(int conn_id)
-     * Returns   : list of the error services
-     * To be called inside the error handler to see what originated the error.
-     */    
-    char* server_names=NULL;
-    PyObject* ret;
+dim_dic_get_error_services(PyObject* /* self */, PyObject* args) {
+  /* Arguments : None
+   * Calls     : dic_get_error_services(int conn_id)
+   * Returns   : list of the error services
+   * To be called inside the error handler to see what originated the error.
+   */    
+  char* server_names=NULL;
+  PyObject* ret;
     
-    server_names = dic_get_error_services();
-    ret = stringList_to_tuple(server_names);
+  server_names = dic_get_error_services();
+  ret = stringList_to_tuple(server_names);
     
-    return args;        
+  return args;        
 } 
 
 static PyObject*
-dim_dic_add_error_handler(PyObject* self, PyObject* args) {
-    /* Arguments : python callback (callable object)
-     * Calls     : dic_add_error_handler ( void* error_routine(int, int, char*) )
-     * Returns   : None
-     */    
-    PyObject* pyFunc;
+dim_dic_add_error_handler(PyObject* /* self */, PyObject* args) {
+  /* Arguments : python callback (callable object)
+   * Calls     : dic_add_error_handler ( void* error_routine(int, int, char*) )
+   * Returns   : None
+   */    
+  PyObject* pyFunc;
     
-    if (!PyArg_ParseTuple(args, "O", &pyFunc)
-    	|| !PyCallable_Check(pyFunc)) 
+  if (!PyArg_ParseTuple(args, "O", &pyFunc)
+      || !PyCallable_Check(pyFunc)) 
     {
-        goto invalid_arguments;
+      goto invalid_arguments;
     }
       
-    dic_add_error_handler(_dic_error_user_routine_dummy);    
-    Py_RETURN_NONE;
+  dic_add_error_handler(_dic_error_user_routine_dummy);    
+  Py_RETURN_NONE;
     
-    invalid_arguments:
-        PyErr_SetString(PyExc_TypeError, 
-             "Invalid parameters. Expected argument: python callable object ");                                                  
-        return NULL;    
+ invalid_arguments:
+  PyErr_SetString(PyExc_TypeError, 
+		  "Invalid parameters. Expected argument: python callable object ");                                                  
+  return NULL;    
 } 
 
 static PyObject*
-dim_dic_cmnd_service(PyObject* self, PyObject* args) {
-    /* Arguments : service name (string),
-     *             command data (tuple),
-     *             format (string)
-     * Calls     : dic_cmnd_service(char* name, int* address, int size)
-     * Returns   : return code (1 for a successful request)
-     */
-    char *service_name, *format, *buffer;
-    int buffer_size, res;
-    PyObject* tuple;
+dim_dic_cmnd_service(PyObject* /* self */, PyObject* args) {
+  /* Arguments : service name (string),
+   *             command data (tuple),
+   *             format (string)
+   * Calls     : dic_cmnd_service(char* name, int* address, int size)
+   * Returns   : return code (1 for a successful request)
+   */
+  char *service_name, *format, *buffer;
+  int buffer_size, res;
+  PyObject* tuple;
     
-    if (!PyArg_ParseTuple(args, "sOs", &service_name, &tuple, &format) )
-        goto invalid_arguments;
-    /* creating dummy command request */
-    buffer_size = getSizeFromFormat(format);
-    buffer = (char*)malloc(sizeof(char)*buffer_size);
-    if (!buffer)
-        goto memory_error; 
-    if (!iterator_to_buffer(tuple, buffer, buffer_size, format))
-        goto error;    
-    Py_BEGIN_ALLOW_THREADS
+  if (!PyArg_ParseTuple(args, "sOs", &service_name, &tuple, &format) )
+    goto invalid_arguments;
+  /* creating dummy command request */
+  buffer_size = getSizeFromFormat(format);
+  buffer = (char*)malloc(sizeof(char)*buffer_size);
+  if (!buffer)
+    goto memory_error; 
+  if (!iterator_to_buffer(tuple, buffer, buffer_size, format))
+    goto error;    
+  Py_BEGIN_ALLOW_THREADS
     res = dic_cmnd_service(service_name, buffer, buffer_size);
-    Py_END_ALLOW_THREADS
+  Py_END_ALLOW_THREADS
     /* freeing allocated buffer */
     free(buffer);
     
-    return Py_BuildValue("i", res);    
+  return Py_BuildValue("i", res);    
     
-    invalid_arguments:
-        PyErr_SetString(PyExc_TypeError, 
-        		        "Invalid parameters. Expected: string service_name (string),\n\
+ invalid_arguments:
+  PyErr_SetString(PyExc_TypeError, 
+		  "Invalid parameters. Expected: string service_name (string),\n\
                                                        tuple data,\n\
                                                        string format" 
-                        );
-        return NULL;
+		  );
+  return NULL;
             
-    error:
-       PyErr_SetString(PyExc_RuntimeError, "Could not convert arguments to buffer");
-       free(buffer);                                                
-       return NULL;
+ error:
+  PyErr_SetString(PyExc_RuntimeError, "Could not convert arguments to buffer");
+  free(buffer);                                                
+  return NULL;
                 
-    memory_error:
-       PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
-        return NULL;    
+ memory_error:
+  PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
+  return NULL;    
 } 
 
 static PyObject*
-dim_dic_cmnd_callback(PyObject* self, PyObject* args) {
-    /* Arguments: service name (string),
-    *             command data (tuple),
-    *             format (string)
-    *             cmnd_callback (callable object)
-    *             tag (int)
-    * Calls     : dic_cmnd_service(char* name, 
-    *                              int* address, 
-    *                              int size, 
-    *                              void* cmd_callback, 
-    *                              long tag)
-    * Returns   : return code (int), 1 for successful request
-    */
-    char *service_name, *format, *buffer;
-    int buffer_size, res;
-    long tag; 
-    unsigned long uniqueTag;
-    PyObject *tuple, *pyFunc;
-    _dic_cmnd_callback *callback;
+dim_dic_cmnd_callback(PyObject* /* self */, PyObject* args) {
+  /* Arguments: service name (string),
+   *             command data (tuple),
+   *             format (string)
+   *             cmnd_callback (callable object)
+   *             tag (int)
+   * Calls     : dic_cmnd_service(char* name, 
+   *                              int* address, 
+   *                              int size, 
+   *                              void* cmd_callback, 
+   *                              long tag)
+   * Returns   : return code (int), 1 for successful request
+   */
+  char *service_name, *format, *buffer;
+  int buffer_size, res;
+  long tag; 
+  unsigned long uniqueTag;
+  PyObject *tuple, *pyFunc;
+  _dic_cmnd_callback *callback;
     
-    if (!PyArg_ParseTuple(args, "sOsOi",
-                           &service_name, &tuple, &format, &pyFunc, &tag)
-        || !PyCallable_Check(pyFunc)) 
+  if (!PyArg_ParseTuple(args, "sOsOi",
+			&service_name, &tuple, &format, &pyFunc, &tag)
+      || !PyCallable_Check(pyFunc)) 
     {
-        goto invalid_arguments;
+      goto invalid_arguments;
     }
-    /* saving callback */
-    Py_INCREF(pyFunc);
-    uniqueTag =  ++_dic_cmnd_callback_ID;
-    callback = (_dic_cmnd_callback*)malloc(sizeof(_dic_cmnd_callback));
-    if (!callback) 
-       goto memory_error;
-    callback->func = pyFunc;
-    callback->tag = tag;
-    _dic_cmnd_callback_tag2Callback[uniqueTag] = callback;
+  /* saving callback */
+  Py_INCREF(pyFunc);
+  uniqueTag =  ++_dic_cmnd_callback_ID;
+  callback = (_dic_cmnd_callback*)malloc(sizeof(_dic_cmnd_callback));
+  if (!callback) 
+    goto memory_error;
+  callback->func = pyFunc;
+  callback->tag = tag;
+  _dic_cmnd_callback_tag2Callback[uniqueTag] = callback;
     
-    /* creating dummy cmnd_callback request */
-    buffer_size = getSizeFromFormat(format);
-    buffer = (char*)malloc( sizeof(char)*buffer_size );
-    if ( !buffer )
-       goto memory_error; 
-    if ( !iterator_to_buffer(tuple, buffer, sizeof(buffer), format) )
-        goto error;
-    //print("Creating command callback %s: buffer size=%d, tag=%l, uniqueTag=%l",service_name, buffer_size, callback->tag, uniqueTag);            
-    res = dic_cmnd_callback(service_name, 
-                            buffer, 
-                            buffer_size, 
-                            _dic_cmnd_callback_dummy, 
-                            uniqueTag
-                            );
-    /* freeing temporary buffer and returning */
-    free(buffer);
+  /* creating dummy cmnd_callback request */
+  buffer_size = getSizeFromFormat(format);
+  buffer = (char*)malloc( sizeof(char)*buffer_size );
+  if ( !buffer )
+    goto memory_error; 
+  if ( !iterator_to_buffer(tuple, buffer, sizeof(buffer), format) )
+    goto error;
+  //print("Creating command callback %s: buffer size=%d, tag=%l, uniqueTag=%l",service_name, buffer_size, callback->tag, uniqueTag);            
+  res = dic_cmnd_callback(service_name, 
+			  buffer, 
+			  buffer_size, 
+			  _dic_cmnd_callback_dummy, 
+			  uniqueTag
+			  );
+  /* freeing temporary buffer and returning */
+  free(buffer);
     
-    return Py_BuildValue("i", res);
+  return Py_BuildValue("i", res);
     
-    invalid_arguments:
-        PyErr_SetString(PyExc_TypeError, 
-          "Invalid parameters. Expected: string service_name,\n\
+ invalid_arguments:
+  PyErr_SetString(PyExc_TypeError, 
+		  "Invalid parameters. Expected: string service_name,\n\
                                          tuple command_data,\n\
                                          string format, \n\
                                          Callable Object cmnd_callback \n\
                                          int tag");
-        return NULL;
+  return NULL;
     
-    error:
-        PyErr_SetString(PyExc_RuntimeError, 
-    	 	           "Could not convert arguments to buffer");
-        free(buffer);
-        free(callback);             
-        return NULL;
+ error:
+  PyErr_SetString(PyExc_RuntimeError, 
+		  "Could not convert arguments to buffer");
+  free(buffer);
+  free(callback);             
+  return NULL;
         
-    memory_error:
-        PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
-        return NULL;    
+ memory_error:
+  PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
+  return NULL;    
 } 
     
     
@@ -1246,49 +1248,49 @@ dim_dic_cmnd_callback(PyObject* self, PyObject* args) {
 /* DIC interface internal functions */
 /******************************************************************************/
 void _dic_cmnd_callback_dummy(void* uniqueTagPtr, int* ret_code) {
-   /* Stub function for passing the callback to the error handler to the Python
-    * layer. 
-    */
-    unsigned long uniqueTag = *(long*)uniqueTagPtr;
-    _dic_cmnd_callback* callback=NULL;
-    PyObject* res;
+  /* Stub function for passing the callback to the error handler to the Python
+   * layer. 
+   */
+  unsigned long uniqueTag = *(long*)uniqueTagPtr;
+  _dic_cmnd_callback* callback=NULL;
+  PyObject* res;
     
-    callback = _dic_cmnd_callback_tag2Callback[uniqueTag];
-    //print("Return code is %d tag %l and uniqueTag %l", 
-    //      *ret_code, callback->tag, *(long*)uniqueTagPtr );
-    if (!callback) {        
-        print("Could not find callback");
-        return;
-    }
-    res = pyCallFunction(callback->func, 
-                         Py_BuildValue("li", callback->tag, *ret_code) 
-                         );    
-    //deleting callback information
-    Py_DECREF(res);
-    Py_DECREF(callback->func);
-    _dic_cmnd_callback_tag2Callback.erase(uniqueTag);
-    free(callback);
+  callback = _dic_cmnd_callback_tag2Callback[uniqueTag];
+  //print("Return code is %d tag %l and uniqueTag %l", 
+  //      *ret_code, callback->tag, *(long*)uniqueTagPtr );
+  if (!callback) {        
+    print("Could not find callback");
+    return;
+  }
+  res = pyCallFunction(callback->func, 
+		       Py_BuildValue("li", callback->tag, *ret_code) 
+		       );    
+  //deleting callback information
+  Py_DECREF(res);
+  Py_DECREF(callback->func);
+  _dic_cmnd_callback_tag2Callback.erase(uniqueTag);
+  free(callback);
     
-    print("Callback successfully completed");
-    return;        
+  print("Callback successfully completed");
+  return;        
 }
 
 
 void _dic_error_user_routine_dummy(int severity, int error_code, char* message) {
-   /* Stub function for passing the callback to the error handler to the Python
-    * layer. 
-    */
-    if ( !_dic_callback_errorHandler ) {
-        print("Python callback does not exists");
-        PyErr_SetString(PyExc_RuntimeError, "Could not find python callback");
-        return;
-    }
-    pyCallFunction(_dic_callback_errorHandler, 
-                   Py_BuildValue("iis", severity, error_code, message)
-                   );
+  /* Stub function for passing the callback to the error handler to the Python
+   * layer. 
+   */
+  if ( !_dic_callback_errorHandler ) {
+    print("Python callback does not exists");
+    PyErr_SetString(PyExc_RuntimeError, "Could not find python callback");
+    return;
+  }
+  pyCallFunction(_dic_callback_errorHandler, 
+		 Py_BuildValue("iis", severity, error_code, message)
+		 );
 }
 
-void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
+void _dic_info_service_dummy (void* /* tag */, void* buffer, int* size) {
   /* Stub function for passing the received data from a service to a python
    *  callback. Receives tag, buffer, size
    */
@@ -1298,19 +1300,19 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
       
   svc = _dic_info_service_buffer2Callback[(char*)buffer];
   if (!svc) {
-      print("Invalid update service request");
-      return;
+    print("Invalid update service request");
+    return;
   }
   if (!(*size)) {
-      /* The service update request failed. Passing default argument */
-      args = svc->defaultArgument;
+    /* The service update request failed. Passing default argument */
+    args = svc->defaultArgument;
   } else {    
-      args = dim_buf_to_tuple(svc->format, (char*)buffer, *size);
+    args = dim_buf_to_tuple(svc->format, (char*)buffer, *size);
   }
   if (args) {      
-      gstate = PyGILState_Ensure();  
-      res = PyEval_CallObject(svc->func, args);
-      PyGILState_Release(gstate);
+    gstate = PyGILState_Ensure();  
+    res = PyEval_CallObject(svc->func, args);
+    PyGILState_Release(gstate);
   } else {
     //service failed and a default value was not specified
     print("Service error or could not get values from it");
@@ -1318,8 +1320,8 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
   }
 
   if (!res){
-      print("Callback to python function %p failed", svc->func);
-      return;
+    print("Callback to python function %p failed", svc->func);
+    return;
   }
   Py_DECREF(res);
   Py_XDECREF(args);  
@@ -1548,14 +1550,14 @@ static PyMethodDef DimMethods[] = {
 PyMODINIT_FUNC
 initdimc(void)
 {
-    PyObject *m;
-    printf("Initializing C DIM interface... \n");
-    m = Py_InitModule3("dimc", DimMethods, "DIM methods");
-    if (m == NULL)
-        return;
-    dic_disable_padding();
-    dis_disable_padding();
-    PyEval_InitThreads();
+  PyObject *m;
+  printf("Initializing C DIM interface... \n");
+  m = Py_InitModule3("dimc", DimMethods, "DIM methods");
+  if (m == NULL)
+    return;
+  dic_disable_padding();
+  dis_disable_padding();
+  PyEval_InitThreads();
 }
 
 
