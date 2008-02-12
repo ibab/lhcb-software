@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.11 2008-02-08 10:02:12 wouter Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.12 2008-02-12 10:05:52 wouter Exp $
 // Include files
 
 //from STL
@@ -264,8 +264,11 @@ const IGetElementsToBeAligned::Constraints& GetElementsToBeAligned::constraints(
 }
 
 const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::Measurement& meas) const {
-  // old code: return m_findElement(meas.lhcbID()) ;
+  // We'll do this differently with new brunel version
+  return findElement(meas.lhcbID()) ;
+}
 
+const AlignmentElement* GetElementsToBeAligned::findElement( LHCb::LHCbID id) const {
   // first get the detector element from the measurement. this is no
   // longer needed if we have a new version of brunel.
   const DetectorElement* element(0) ; // = meas.detectorElement() ;
@@ -275,7 +278,7 @@ const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::Measurem
     static DeSTDetector* it   = getDet<DeSTDetector>(DeSTDetLocation::IT);
     static DeOTDetector* ot   = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
     static DeMuonDetector* muon = getDet<DeMuonDetector>(DeMuonLocation::Default);
-    LHCb::LHCbID id = meas.lhcbID() ;
+
     switch( id.detectorType() ) {
     case LHCb::LHCbID::Velo:
       element = id.isVeloR() ? 

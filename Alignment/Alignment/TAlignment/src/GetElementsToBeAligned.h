@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.h,v 1.5 2008-02-08 10:02:12 wouter Exp $
+// $Id: GetElementsToBeAligned.h,v 1.6 2008-02-12 10:05:52 wouter Exp $
 #ifndef GETELEMENTSTOBEALIGNED_H
 #define GETELEMENTSTOBEALIGNED_H 1
 
@@ -53,6 +53,9 @@ public:
   const IGetElementsToBeAligned::Constraints& constraints() const;
 
   // Virtual in IGetElementsToBeAligned
+  // Return method that finds an alignment element for a given LHCb id
+  virtual const AlignmentElement* findElement(LHCb::LHCbID anLHCbID) const ;
+
   // Return method that finds an alignment element for a given Measuerment
   virtual const AlignmentElement* findElement(const LHCb::Measurement& meas) const;
 
