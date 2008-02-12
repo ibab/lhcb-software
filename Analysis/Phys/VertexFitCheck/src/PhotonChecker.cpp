@@ -1,4 +1,4 @@
-// $Id: PhotonChecker.cpp,v 1.1.1.1 2007-10-17 07:07:00 jpalac Exp $
+// $Id: PhotonChecker.cpp,v 1.2 2008-02-12 14:24:32 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -63,9 +63,8 @@ StatusCode PhotonChecker::initialize() {
   debug() << "==> Initialize" << endmsg;
   // For Particle -> MCParticle association
   m_pLinker = new Particle2MCLinker(this,
-//                                    Particle2MCMethod::Chi2,
-                                      Particle2MCMethod::Composite,
-                                      m_particlePath);
+                                    Particle2MCMethod::Composite,
+                                    std::vector<std::string>(1, m_particlePath));
 
 
   return StatusCode::SUCCESS;

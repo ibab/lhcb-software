@@ -1,4 +1,4 @@
-// $Id: ProperTimeChecker.cpp,v 1.5 2007-11-13 13:54:20 xieyu Exp $
+// $Id: ProperTimeChecker.cpp,v 1.6 2008-02-12 14:24:32 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -63,8 +63,8 @@ StatusCode ProperTimeChecker::initialize() {
   debug() << "==> Initialize" << endmsg;
   // For Particle -> MCParticle association
   m_pLinker = new Particle2MCLinker(this,
-                                      Particle2MCMethod::Composite,
-                                      m_particlePath);
+                                    Particle2MCMethod::Composite,
+                                    std::vector<std::string>(1,m_particlePath));
 
   m_timeFitter =  tool<ILifetimeFitter> ("PropertimeFitter" , this);
   if (!m_timeFitter) {
