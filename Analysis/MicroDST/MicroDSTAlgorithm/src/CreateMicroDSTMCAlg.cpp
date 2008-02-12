@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTMCAlg.cpp,v 1.8 2007-04-19 16:50:18 ukerzel Exp $
+// $Id: CreateMicroDSTMCAlg.cpp,v 1.9 2008-02-12 13:12:51 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -60,8 +60,14 @@ StatusCode CreateMicroDSTMCAlg::initialize() {
   info() << "clone product particles of vertices  " << m_CloneVertexProducts << endmsg;
 
   // initialise associator to MC
-  m_part2MCLinkerComposite = new Particle2MCLinker(this,Particle2MCMethod::Composite,"")  ;
-  m_part2MCLinkerLinks     = new Particle2MCLinker(this,Particle2MCMethod::Links,"")  ;
+  m_part2MCLinkerComposite = 
+    new Particle2MCLinker( this,
+                           Particle2MCMethod::Composite,
+                           std::vector<std::string>(1,"") )  ;
+  m_part2MCLinkerLinks     
+    = new Particle2MCLinker( this,
+                             Particle2MCMethod::Links,
+                             std::vector<std::string>(1,"") )  ;
 
   return StatusCode::SUCCESS;
 }

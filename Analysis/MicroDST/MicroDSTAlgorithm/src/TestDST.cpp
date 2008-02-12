@@ -1,4 +1,4 @@
-// $Id: TestDST.cpp,v 1.11 2007-06-18 13:21:31 ukerzel Exp $
+// $Id: TestDST.cpp,v 1.12 2008-02-12 13:12:51 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -61,8 +61,14 @@ StatusCode TestDST::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   // initialise associator to MC
-  m_part2MCLinkerComposite = new Particle2MCLinker(this,Particle2MCMethod::Composite, "");
-  m_part2MCLinkerLinks     = new Particle2MCLinker(this,Particle2MCMethod::Links    , rootInTES() + LHCb::TrackLocation::Default);
+  m_part2MCLinkerComposite = 
+    new Particle2MCLinker(this,
+                          Particle2MCMethod::Composite,
+                          std::vector<std::string>(1,"") );
+  m_part2MCLinkerLinks     = 
+    new Particle2MCLinker(this,
+                          Particle2MCMethod::Links, 
+                          std::vector<std::string>(1, rootInTES() + LHCb::TrackLocation::Default) );
 
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.8 2008-02-11 17:15:52 jpalac Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.9 2008-02-12 13:12:51 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -61,9 +61,11 @@ StatusCode CopyRelatedMCParticles::initialize() {
   m_cloner = tool<ICloneMCParticle>("MCParticleCloner", this);
 
    m_compositeLinker = new Particle2MCLinker(this,
-                                             Particle2MCMethod::Composite,"")  ;
+                                             Particle2MCMethod::Composite,
+                                             std::vector<std::string>(1,"") );
   m_linksLinker     = new Particle2MCLinker(this,
-                                            Particle2MCMethod::Links,"")  ;
+                                            Particle2MCMethod::Links,
+                                            std::vector<std::string>(1,""))  ;
 
   return StatusCode::SUCCESS;
 }
