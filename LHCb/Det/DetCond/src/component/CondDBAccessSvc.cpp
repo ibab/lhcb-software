@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.46 2008-01-26 15:47:46 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.47 2008-02-12 09:35:09 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -821,7 +821,7 @@ StatusCode CondDBAccessSvc::i_getObject(const std::string &path, const Gaudi::Ti
                                         bool use_numeric_chid, cool::ChannelId channel, const std::string &channelstr){
 
   cool::ValidityKey vk_when = timeToValKey(when);
-  cool::ValidityKey vk_since, vk_until;
+  cool::ValidityKey vk_since = 0, vk_until = 0;
     
   if (m_useCache) {
     

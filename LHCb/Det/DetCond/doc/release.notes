@@ -1,9 +1,14 @@
-# $Id: release.notes,v 1.119 2008-01-28 10:29:38 cattanem Exp $
+# $Id: release.notes,v 1.120 2008-02-12 09:35:09 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2008-02-12 - Marco Clemencic
+ - Fixed a problem occurring when trying to retrieve a folder which is not in
+   the database (typical case for CondDBLayeringSvc), due to an uninitialized
+   variable.
 
 !===================== Det/DetCond v11r8 2008-01-28 ==========================
                            NEEDS: LCGCMT >= 54
