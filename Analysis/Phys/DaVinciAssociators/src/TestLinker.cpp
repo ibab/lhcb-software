@@ -1,4 +1,4 @@
-// $Id: TestLinker.cpp,v 1.6 2007-06-15 16:05:37 pkoppenb Exp $
+// $Id: TestLinker.cpp,v 1.7 2008-02-12 15:10:30 jpalac Exp $
 #define TestLinker_CPP 
 
 // Include files
@@ -110,13 +110,13 @@ StatusCode TestLinker::initialize() {
 
   m_linkChargedPP = 
     new ProtoParticle2MCLinker( this, 
-                              Particle2MCMethod::ChargedPP,
-                              ProtoParticleLocation::Charged);
+                                Particle2MCMethod::ChargedPP,
+                                std::vector<std::string>(1,ProtoParticleLocation::Charged));
   
   m_linkNeutralPP = 
     new ProtoParticle2MCLinker( this, 
-                              Particle2MCMethod::NeutralPP,
-                              ProtoParticleLocation::Neutrals);
+                                Particle2MCMethod::NeutralPP,
+                                std::vector<std::string>(1,ProtoParticleLocation::Neutrals));
   
   
   // Initialization terminated
