@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAAlgorithms.cpp,v 1.1.1.1 2007-10-16 13:03:03 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAAlgorithms.cpp,v 1.2 2008-02-12 16:44:34 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -30,28 +30,28 @@ TH1* OMAEfficiency::exec(TH1* okH,
 			 TH1* existingHisto) {  
   TH1* outHist=0;
   if (existingHisto) {
-    outHist= dynamic_cast<TH1F*>(existingHisto);
+    outHist= dynamic_cast<TH1D*>(existingHisto);
     if (!outHist)
-      outHist= dynamic_cast<TH2F*>(existingHisto);
+      outHist= dynamic_cast<TH2D*>(existingHisto);
   }
   if (!outHist) {
-    if (dynamic_cast<TH1F*>(okH)) 
-      outHist = (TH1*) new TH1F (outName.data(), outTitle.data(), 
-			  okH->GetNbinsX(), 
-			  okH->GetXaxis()->GetXmin(),
-			  okH->GetXaxis()->GetXmax());  
-    else if(dynamic_cast<TH2F*>(okH))
-      outHist = (TH1*) new TH2F (outName.data(), outTitle.data(), 
-			  okH->GetNbinsX(), 
-			  okH->GetXaxis()->GetXmin(),
-			  okH->GetXaxis()->GetXmax(),
-			  okH->GetNbinsY(), 
-			  okH->GetYaxis()->GetXmin(),
-			  okH->GetYaxis()->GetXmax()); 
+    if (dynamic_cast<TH1D*>(okH)) 
+      outHist = (TH1*) ( new TH1D (outName.data(), outTitle.data(), 
+				   okH->GetNbinsX(), 
+				   okH->GetXaxis()->GetXmin(),
+				   okH->GetXaxis()->GetXmax()) );  
+    else if(dynamic_cast<TH2D*>(okH))
+      outHist = (TH1*) ( new TH2D (outName.data(), outTitle.data(), 
+				   okH->GetNbinsX(), 
+				   okH->GetXaxis()->GetXmin(),
+				   okH->GetXaxis()->GetXmax(),
+				   okH->GetNbinsY(), 
+				   okH->GetYaxis()->GetXmin(),
+				   okH->GetYaxis()->GetXmax()) ); 
   }
   if(outHist)
     outHist->Divide(okH, allH, 1., 1., "B");
-  return outHist;
+  return  outHist;
 }
 
 //----------------------------------------------------------------------//
