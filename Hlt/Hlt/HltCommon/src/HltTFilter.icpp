@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.2 2008-01-25 16:54:51 hernando Exp $
+// $Id: HltTFilter.icpp,v 1.3 2008-02-12 11:10:02 hernando Exp $
 // Include files
 
 #include "HltBase/EDictionary.h"
@@ -149,6 +149,7 @@ void HltTFilter<T>::saveConfiguration() {
 template <class T>
 StatusCode HltTFilter<T>::execute() {
 
+  StatusCode sc= StatusCode::SUCCESS;
   debug() << "==> Execute" << endmsg;
 
   // if the input is not a HltSelection but a container in TES
@@ -158,9 +159,17 @@ StatusCode HltTFilter<T>::execute() {
     zen::copy(*ttes,*m_tinput);
   }
 
+  // check size of the input container
+  if (m_tinput->size() == 0) {
+    debug() << " No data in TES " << m_inputSelectionName << endreq;    
+    return sc;
+  }
+
+  // if no filters, copy input container
   if (m_tfilters.size() == 0)
     zen::copy(*m_tinput,*m_toutput);
 
+  // loop in filters, and apply to the surviving objects
   size_t ncan = 0, i = 0;
   for (TFilterDataIterator it = m_tfilters.begin();
        it != m_tfilters.end(); ++it, ++i) {
@@ -214,7 +223,7 @@ StatusCode HltTFilter<T>::execute() {
   
   // if (m_debug) printInfo(" filtered  ", *m_toutput);
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 

@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-02-12 Jose A. Hernando
+  - small bug in HltTFilter.icpp when getting objs from TES
 
 ! 2008-02-11 - Gerhard Raven
   - add .cvsignore file to cmt directory to ignore cmt generated files
