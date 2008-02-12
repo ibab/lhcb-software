@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.27 2008-02-09 02:19:12 janos Exp $
+// $Id: AlignAlgorithm.cpp,v 1.28 2008-02-12 09:11:36 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -636,81 +636,88 @@ void AlignAlgorithm::update() {
   }
   
   size_t nDOFs = std::count(dofmask.begin(), dofmask.end(), true) ;
-  AlVec    derivatives(nDOFs);
-  AlSymMat matrix(nDOFs);
-
-  // Remove all parameters that are masked out.
-  unsigned insert_i = 0u;
-  unsigned insert_j = 0u;
-  typedef std::vector<bool>::const_iterator boolIter; 
-  for (std::vector<bool>::const_iterator i = dofmask.begin(), iEnd = dofmask.end(); i != iEnd; ++i) {
-    if (*i) {
-      const unsigned index_i = std::distance(boolIter(dofmask.begin()), i);
-      derivatives[insert_i] = tmpDerivatives[index_i];
-      for (std::vector<bool>::const_iterator j = i, jEnd = dofmask.end(); j != jEnd; ++j) {
-        if (*j) {
-          if (printVerbose()) {
-            verbose() << "insert_i = " << insert_i << " insert_j = " << insert_j 
-                    << " matrix[" << index_i << "][" << std::distance(boolIter(dofmask.begin()), j) << "]" 
-                    << tmpMatrix[index_i][std::distance(boolIter(dofmask.begin()), j)] << endmsg;
-          }
-          matrix[insert_i][insert_j++] = tmpMatrix[index_i][std::distance(boolIter(dofmask.begin()), j)];
-        }
-      }
-      insert_j = ++insert_i;
-    }
-  }
-
-  if (printDebug()) {
-    debug() << "Tmp AlVec Vector    = " << tmpDerivatives << endmsg;
-    debug() << "Tmp AlSymMat Matrix = " << tmpMatrix      << endmsg;
-  }
 
   logmessage << "Number of alignables with insufficient statistics: " << std::count(offsets.begin(),offsets.end(),-1) << std::endl
 	     << "Number of constraints: "                             << numConstraints << std::endl
 	     << "Number of active parameters: "                       << nDOFs-numConstraints << std::endl ;
   
-  if (nDOFs < 50 ) {
-    info() << "AlVec Vector    = " << derivatives << endmsg;
-    info() << "AlSymMat Matrix = " << matrix      << endmsg;
-  } else {
-    info() << "Matrices too big to dump to std" << endmsg ;
-  }
+  if( nDOFs > 0 ) {
 
-  // Tool returns H^-1 and alignment constants. Need to copy the 2nd derivative because we still need it.
-  AlSymMat halfDChi2dX = matrix ;
-  AlVec scale(halfDChi2dX.size()) ;
-  if (m_usePreconditioning) preCondition(derivatives,matrix, scale,offsets) ;
-  bool solved = m_matrixSolverTool->compute(matrix, derivatives);
-  if (m_usePreconditioning) postCondition(derivatives,matrix, scale) ;
-
-  if (solved) {
-    StatusCode sc = StatusCode::SUCCESS;
-    double deltaChi2 = derivatives * halfDChi2dX * derivatives ;
-    if(printDebug()) {
-      info() << "Solution = " << derivatives << endmsg ;
-      info() << "Covariance = " << matrix << endmsg ;
-    }
-    logmessage << "Alignment change chisquare/dof: " 
-	       << deltaChi2 << " / " << nDOFs-numConstraints << std::endl ;
-    m_dChi2AlignvsIterHisto->fill(m_iteration, deltaChi2) ;
-
-    if (numConstraints > 0) printCanonicalConstraints(derivatives,matrix,numConstraints,logmessage) ;
-
-    if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
-    size_t iElem(0u) ;
-    for (ElementRange::const_iterator it = m_rangeElements.begin(); it != m_rangeElements.end(); ++it, ++iElem) 
-      if( offsets[iElem] >= 0 ) {
-	AlParameters delta( derivatives, matrix, it->dofMask(), offsets[iElem] ) ;
-	logmessage << "Alignable: " << it->name() << std::endl
-		   << "Number of hits seen: " << m_equations->numHits(iElem) << std::endl
-		   << delta ;
-	StatusCode sc = it->updateGeometry(delta) ;
-	if(!sc.isSuccess()) error() << "Failed to set alignment condition for " << it->name() << endmsg ; 
+    AlVec    derivatives(nDOFs);
+    AlSymMat matrix(nDOFs);
+    
+    // Remove all parameters that are masked out.
+    unsigned insert_i = 0u;
+    unsigned insert_j = 0u;
+    typedef std::vector<bool>::const_iterator boolIter; 
+    for (std::vector<bool>::const_iterator i = dofmask.begin(), iEnd = dofmask.end(); i != iEnd; ++i) {
+      if (*i) {
+	const unsigned index_i = std::distance(boolIter(dofmask.begin()), i);
+	derivatives[insert_i] = tmpDerivatives[index_i];
+	for (std::vector<bool>::const_iterator j = i, jEnd = dofmask.end(); j != jEnd; ++j) {
+	  if (*j) {
+	    if (printVerbose()) {
+	      verbose() << "insert_i = " << insert_i << " insert_j = " << insert_j 
+			<< " matrix[" << index_i << "][" << std::distance(boolIter(dofmask.begin()), j) << "]" 
+			<< tmpMatrix[index_i][std::distance(boolIter(dofmask.begin()), j)] << endmsg;
+	    }
+	    matrix[insert_i][insert_j++] = tmpMatrix[index_i][std::distance(boolIter(dofmask.begin()), j)];
+	  }
+	}
+	insert_j = ++insert_i;
       }
+    }
+    
+    if (printDebug()) {
+      debug() << "Tmp AlVec Vector    = " << tmpDerivatives << endmsg;
+      debug() << "Tmp AlSymMat Matrix = " << tmpMatrix      << endmsg;
+    }
+    
+    if (nDOFs < 50 ) {
+      info() << "AlVec Vector    = " << derivatives << endmsg;
+      info() << "AlSymMat Matrix = " << matrix      << endmsg;
+    } else {
+      info() << "Matrices too big to dump to std" << endmsg ;
+    }
+    
+    // Tool returns H^-1 and alignment constants. Need to copy the 2nd derivative because we still need it.
+    AlSymMat halfDChi2dX = matrix ;
+    AlVec scale(halfDChi2dX.size()) ;
+    if (m_usePreconditioning) preCondition(derivatives,matrix, scale,offsets) ;
+    bool solved = m_matrixSolverTool->compute(matrix, derivatives);
+    if (m_usePreconditioning) postCondition(derivatives,matrix, scale) ;
+    
+    if (solved) {
+      StatusCode sc = StatusCode::SUCCESS;
+      double deltaChi2 = derivatives * halfDChi2dX * derivatives ;
+      if(printDebug()) {
+	info() << "Solution = " << derivatives << endmsg ;
+	info() << "Covariance = " << matrix << endmsg ;
+      }
+      logmessage << "Alignment change chisquare/dof: " 
+		 << deltaChi2 << " / " << nDOFs-numConstraints << std::endl ;
+      m_dChi2AlignvsIterHisto->fill(m_iteration, deltaChi2) ;
+      
+      if (numConstraints > 0) printCanonicalConstraints(derivatives,matrix,numConstraints,logmessage) ;
+      
+      if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
+      size_t iElem(0u) ;
+      for (ElementRange::const_iterator it = m_rangeElements.begin(); it != m_rangeElements.end(); ++it, ++iElem) 
+	if( offsets[iElem] >= 0 ) {
+	  AlParameters delta( derivatives, matrix, it->dofMask(), offsets[iElem] ) ;
+	  logmessage << "Alignable: " << it->name() << std::endl
+		     << "Number of hits seen: " << m_equations->numHits(iElem) << std::endl
+		     << delta ;
+	  StatusCode sc = it->updateGeometry(delta) ;
+	  if(!sc.isSuccess()) error() << "Failed to set alignment condition for " << it->name() << endmsg ; 
+	}
+    } else {
+      error() << "Failed to solve system" << endmsg ;
+    }
   } else {
-    error() << "Failed to solve system" << endmsg ;
+    logmessage << "No alignable degrees of freedom ... skipping solver tools and update." << std::endl ;
   }
+  
   logmessage << "********************* END OF ALIGNMENT LOG ************************" ;
   info() << logmessage.str() << endmsg ;
 }
