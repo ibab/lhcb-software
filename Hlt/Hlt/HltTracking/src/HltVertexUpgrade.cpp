@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.4 2008-01-22 10:04:25 hernando Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.5 2008-02-12 16:08:53 hernando Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -84,8 +84,10 @@ StatusCode HltVertexUpgrade::execute() {
     Track& seed1 = (Track&) *(*otracks.begin());
     Track& seed2 = (Track&) *(*(otracks.begin()+1));
     debug() << " -- updating vertex -- " << endreq;
-    printInfo(" seed1 ", seed1);
-    printInfo(" seed2 ", seed2);
+    if (m_debug) {
+      printInfo(" seed1 ", seed1);
+      printInfo(" seed2 ", seed2);
+    }
     m_tracks1.clear(); m_tracks2.clear();
     sc = m_tool->upgrade(seed1,m_tracks1);
     sc = m_tool->upgrade(seed2,m_tracks2);

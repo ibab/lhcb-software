@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2008-02-12 Jose A. Hernando
+ - HltVertexUpgreade, removinb info print out
+
 !========================== HltTracking v3r0 2008-02-05 ===================
 ! 2008-01-22 - Jose A. Hernando
  - HLT-clean
