@@ -91,7 +91,7 @@ HadSingleTRVelo.HistogramUpdatePeriod = 1;
 
 HadSingleTFVelo.InputSelection = "HadSingleTRVelo";
 HadSingleTFVelo.FilterDescriptor = {
-  "IP_PV2D,||[],0.1,3",
+  "IP_PV2D,||>,0.1",
   "Calo3DChi2_L0TriggerHadron,<,4"
 };
 HadSingleTFVelo.OutputLevel = 3;
@@ -143,7 +143,7 @@ HadTriggerSingle.HistoDescriptor = {
 
 HadCompanionTFVelo.InputSelection = "Velo";
 HadCompanionTFVelo.FilterDescriptor = {
-  "IP_PV2D,||[],0.1,3",
+  "IP_PV2D,||>,0.1",
   "MatchIDsFraction_HadPreTriggerSingle,<,0.9"
 };
 HadCompanionTFVelo.OutputLevel = 3;
@@ -166,7 +166,7 @@ HadDiHadronVelo.HistoDescriptor = {
 HadDiHadronFVelo.InputSelection = "HadDiHadronVelo";
 HadDiHadronFVelo.FilterDescriptor = { "VertexDz_PV2D,>,0."};
 HadDiHadronFVelo.OutputLevel = 3;
-HadTrigger.HistoDescriptor = {
+HadDiHadronFVelo.HistoDescriptor = {
   "VertexDz_PV2D":("VertexDz_PV2D",-3.,3.,100),
   "VertexDz_PV2DBest":("VertexDz_PV2D",-3.,3.,100)
 };
@@ -184,7 +184,7 @@ HadTrigger.OutputLevel = 3;
 HadTrigger.HistogramUpdatePeriod = 1;
 HadTrigger.HistoDescriptor = {
   "VertexMinPT":("VertexMinPT",0.,6000.,100),
-  "VertexMinPTBest":("VertexMinPT",0.,6000.,100),
+  "VertexMinPTBest":("VertexMinPTBest",0.,6000.,100),
   "VertexPointing_PV2D":("VertexPointing_PV2D",0.,1.,100),
   "VertexPointing_PV2DBest":("VertexPointing_PV2DBest",0.,1.,100)
 };
