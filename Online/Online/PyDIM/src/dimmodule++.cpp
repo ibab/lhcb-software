@@ -129,7 +129,7 @@ DimRpc_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     }                    
               
     return (PyObject *)self; 
-    // in case of errors self is NULL and the error string is already set
+    /* in case of errors self is NULL and the error string is already set */
 }
 
 
@@ -672,9 +672,8 @@ DimRpcInfo_getString (DimRpcInfo_Object * self)
     Py_BEGIN_ALLOW_THREADS
     cpp_res = self->cpp_dimRpcInfo->getString();
     Py_END_ALLOW_THREADS    
-   res = PyString_FromStringAndSize(cpp_res,size);
-//    res = PyString_FromFormat("%s",cpp_res); 
-   
+    res = PyString_FromString(cpp_res);
+    
     return res; /* res is a new reference and will be owned by the caller */
 }
 
@@ -786,7 +785,7 @@ DimRpcInfo_rpcInfoHandler (DimRpcInfo_Object * self)
      * Not really needed, provided just to make all the DimRpcInfo class
      * methods visible in Python
      */
-    print("RPC call received in C++\n");
+    //print("RPC call received in C++\n");
     Py_RETURN_NONE;    
 }
 

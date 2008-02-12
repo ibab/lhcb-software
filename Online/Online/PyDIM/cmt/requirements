@@ -2,33 +2,44 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           PyDIM 
-version           v2r0
+version           v3r0
 #============================================================================
 branches          cmt doc src python
 use GaudiPolicy   v*
 use DIM           v* Online
 use Python        v* LCG_Interfaces
 
-make_fragment pydimmodulebuilder
+make_fragment pydimmodulebuilder -header=pydimmodulebuilder_header
 
 pattern pydim_module \
   library <name> -import=Python <files> ;\
   macro <name>_shlibflags  "$(libraryshr_linkopts) $(use_linkopts)" ;\
-  document pydimmodulebuilder <name>_pymodule $(bin)<name>.so ;\
-  macro_remove constituents "" WIN32 "<name>_pymodule" ;\
-  macro_append <name>_cppflags " -ftemplate-depth-64" WIN32 "" ;\
-  path_remove PYTHONPATH "/<package>/" WIN32 "\<package>\" ;\
-  path_append PYTHONPATH $(<PACKAGE>ROOT)/$(tag); \
-  path_remove PYTHONPATH "/<package>/" WIN32 "\<package>\" ;\
-  path_append PYTHONPATH $(<PACKAGE>ROOT)/$(tag)
+  document pydimmodulebuilder <name>_pymodule name=<name> ;\
+  macro_append <name>_pymodule_dependencies " <name> " ; \
+  macro_append <name>_cppflags " -ftemplate-depth-64" WIN32 "" ;
+#  path_remove PYTHONPATH "/<package>/" WIN32 "\<package>\" ;\
+#  path_append PYTHONPATH $(<PACKAGE>ROOT)/$(tag);
 
-apply_pattern pydim_module name=dimc   files="dimmodule.cpp   pydim_utils.cpp"
-apply_pattern pydim_module name=dimcpp files="dimmodule++.cpp pydim_utils.cpp"
+cmtpath_pattern \
+   macro <project>_install_pymodule "" \
+         <project>_without_installarea "" \
+         <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/$(tag)/lib" \
+         <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix\$(tag)\lib" ; \
+    path_remove  PYTHONPATH ${<project>_install_pymodule} ; \ 
+    path_prepend PYTHONPATH ${<project>_install_pymodule}
+
+
+
+#  macro_remove constituents "" WIN32 "<name>_pymodule" ;\
+
+
+apply_pattern pydim_module name=dimc     files="dimmodule.cpp   pydim_utils.cpp"
+apply_pattern pydim_module name=dimcpp   files="dimmodule++.cpp pydim_utils.cpp"
 
 #application dim_test        -group=tests ../tests/test.c
-application dim_test_client -group=tests ../tests/test_client.c
-application dim_test_cpp    -group=tests ../tests/test.cpp
-application dim_test_utils  -group=tests ../tests/test_pydim_utils.cpp
+#application dim_test_client -group=tests ../tests/test_client.c
+#application dim_test_cpp    -group=tests ../tests/test.cpp
+#application dim_test_utils  -group=tests ../tests/test_pydim_utils.cpp
 
 apply_pattern install_python_modules
 

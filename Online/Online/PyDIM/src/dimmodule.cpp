@@ -3,133 +3,22 @@ extern "C" {
 #include "structmember.h"
 #include "dic.h"
 #include "dis.h"
+#include "dim_common.h"
+#include "pydim_utils.cpp"
 #include <ctype.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <stdio.h>
 }
-
 #include <map>
 #include <string>
 
-#ifndef Py_RETURN_NONE
-#define Py_RETURN_NONE do { Py_INCREF(Py_None); return Py_None; } while(0);
-#endif
-#define errmsg(x) do { fprintf(stderr, "%s: %s\n", __FUNCTION__, x); } while(0);
-
-#define print(...) printf("%s:%u ::%s: ", __FILE__, __LINE__, __FUNCTION__); printf(__VA_ARGS__); printf("\n");
-
 using namespace std;
 
-namespace DIM  {
-  static PyThreadState* s_mainThreadState = 0;
-};
-
-static void init_threading()  {
-  static bool firstInit = true;
-  if ( firstInit )  {
-    firstInit = false;
-    PyEval_InitThreads();
-    DIM::s_mainThreadState = PyThreadState_Get();
-		print("Threads initialized")
-  }
-}
-
-static void handlePythonError(PyThreadState* st)  {
-  if ( PyErr_Occurred() )   {
-    PyErr_Print(); 
-    PyErr_Clear();
-  }
-  if ( st )  {
-    ::PyEval_ReleaseThread(st);
-    ::PyThreadState_Clear(st);
-    ::PyThreadState_Delete(st);
-  }
-}
-
-
-int list_to_schema(PyObject *, char *);
-int tuple_to_schema(PyObject *, char *);
-
-int listOrTuple2Int(PyObject* pyObj, int** buffer) {
-  int size, i, res=1;
-  PyObject* tmp;
-
-  if ( PyTuple_Check(pyObj) ) { //tuple
-    size = PyTuple_Size(pyObj);
-    if (!size)
-      res = 0;
-    (*buffer) = (int*)malloc(size*sizeof(int)+1);
-    if ( !(*buffer) )
-      res = 0;
-    for (i=0; i<size; i++) {
-      tmp = PyTuple_GetItem(pyObj, i);
-      if (!tmp)
-        res = 0;
-      (*buffer)[i] = (int)PyInt_AsLong(tmp);
-    }
-  } else if ( PyList_Check(pyObj) ) { //list
-    size = PyList_Size(pyObj);
-    if (!size)
-      res = 0;
-    (*buffer) = (int*)malloc(size*sizeof(int)+1);
-    if ( !(*buffer) )
-      res = 0;
-    for (i=0; i<size; i++) {
-      tmp = PyList_GetItem(pyObj, i);
-      if (!tmp)
-        res = 0;
-      (*buffer)[i] = (int)PyInt_AsLong(tmp);
-    }
-  } else
-    res = 0;
-
-  if (res) {
-    (*buffer)[size] = 0;
-    return 1;
-  }
-  else {
-    free(*buffer);
-    buffer = NULL;
-    return 0;
-  }
-}
-#ifndef HOST_NAME_MAX
-#define HOST_NAME_MAX _POSIX_HOST_NAME_MAX
-#endif
 static int server_active = 0;
 static char server_name[HOST_NAME_MAX + 1];
 
-//static int
-//start_serving(void)
-//{
-//  int rc;
-//
-//  rc = dis_start_serving(server_name);
-//  if (rc) {
-//  server_active = 1;
-//  return 0;
-//  }
-//  server_active = 0;
-//  return -1;
-//}
-
-//static void
-//stop_serving(void)
-//{
-//  dis_stop_serving();
-//  server_active = 0;
-//}
-//
-//static void
-//update_publish(void)
-//{
-//  if (!server_active) return;
-//  //   stop_serving();
-//  start_serving();
-//}
-//
 static PyObject *
 dim_dis_start_serving(PyObject *self, PyObject *args)
 {
@@ -145,11 +34,11 @@ dim_dis_start_serving(PyObject *self, PyObject *args)
       printf("No server name specified. Using machine hostname.\n");
   }
   if (!dis_start_serving(server_name)) {
-      PyErr_SetString(PyExc_RuntimeError, "Failed to activate DIM serving");
+      PyErr_SetString(PyExc_RuntimeError, "Failed to activate DIM server");
       return NULL;
   }
   server_active=1;
-  Py_RETURN_NONE;
+  Py_RETURN_NONE; // no return values :-)
 }
 
 static PyObject *
@@ -197,7 +86,9 @@ dim_dis_set_dns_port(PyObject* self, PyObject* args) {
   */
   unsigned int port;
   if ( !PyArg_ParseTuple(args, "I", &port) ) {
-    PyErr_SetString(PyExc_TypeError, "Argument 'port' must be a pozitive integer");
+    PyErr_SetString(PyExc_TypeError, 
+                    "Argument 'port' must be a pozitive integer"
+                    );
     return NULL;
   }
   if ( !dis_set_dns_port(port) ) {
@@ -221,11 +112,11 @@ dim_dis_get_dns_port(PyObject* self, PyObject* args) {
 typedef struct {
   PyObject* self;
   PyObject* func;
-} PyCallback; //for callbacks
+} PyCallback; //for Python callbacks
 
 static PyCallback dis_callbackExitHandler_func,
-  dis_callbackErrorHandler_func,
-  dis_callbackClientExitHandler_func;
+                  dis_callbackErrorHandler_func,
+                  dis_callbackClientExitHandler_func;
 
 static void
 dim_dis_callbackExitHandler(int* code) {
@@ -254,7 +145,7 @@ dim_dis_callbackErrorHandler(int severity, int error_code, char* message) {
   if ( dis_callbackErrorHandler_func.self ) {
     //res = PyObject_CallMethod(dis_callbackErrorHandler_func.self,
     //                          dis_callbackErrorHandler_func.func,
-    //                           "i" ,code);
+    //                          "i" ,code);
     //Py_XDECREF(res);
   }
   else if (dis_callbackErrorHandler_func.func) {
@@ -270,8 +161,7 @@ dim_dis_callbackErrorHandler(int severity, int error_code, char* message) {
 
 static void
 dim_dis_callbackClientExitHandler(int* tag) {
-  /*Interface function with signature:
-    void client_exit_user_routine (int* tag)
+  /*Interface function with signature: void client_exit_user_routine (int* tag)
     Calls the associated Python function.
   */
   PyObject *arg, *res;
@@ -295,26 +185,28 @@ dim_dis_callbackClientExitHandler(int* tag) {
 
 static PyObject*
 dim_dis_add_exit_handler(PyObject* self, PyObject* args) {
-  //PyObject *result = NULL;
-  PyObject *temp;
-  if (PyArg_ParseTuple(args, "O:set_callback", &temp)) {
-    if (!PyCallable_Check(temp)) {
-      PyErr_SetString(PyExc_TypeError, "parameter must be callable");
-      return NULL;
+    PyObject *temp;
+  
+    if (PyArg_ParseTuple(args, "O:set_callback", &temp)) {
+        if (!PyCallable_Check(temp)) {
+          PyErr_SetString(PyExc_TypeError, "parameter must be callable");
+          return NULL;
+        }
+    
+        Py_XINCREF(temp); /* Adds a reference to the new callback */
+        Py_XINCREF(self);
+        Py_XDECREF(dis_callbackExitHandler_func.self);/* Dispose of previous callback */
+        Py_XDECREF(dis_callbackExitHandler_func.func);
+        dis_callbackExitHandler_func.self = self;
+        dis_callbackExitHandler_func.func = temp;
+        print("Got function pointer %p and obj pointer %p\n", temp, self);
+    } else {
+        PyErr_SetString(PyExc_TypeError, "Argument has to be a function or a bound method");
+        return NULL;
     }
-    Py_XINCREF(temp);         /* Add a reference to new callback */
-    Py_XINCREF(self);
-    Py_XDECREF(dis_callbackExitHandler_func.self);  /* Dispose of previous callback */
-    Py_XDECREF(dis_callbackExitHandler_func.func);
-    dis_callbackExitHandler_func.self = self;
-    dis_callbackExitHandler_func.func = temp;
-    printf("Exit handler: Got function pointer %p and obj pointer %p\n", temp, self);
-  } else {
-    PyErr_SetString(PyExc_TypeError, "Argument has to be a function or a bound method");
-    return NULL;
-  }
-  dis_add_exit_handler(dim_dis_callbackExitHandler);
-  Py_RETURN_NONE;
+    dis_add_exit_handler(dim_dis_callbackExitHandler);
+
+    Py_RETURN_NONE;
 }
 
 
@@ -322,11 +214,11 @@ typedef void* func(int*);
 
 static PyObject*
 dim_dis_add_error_handler(PyObject* self, PyObject* args) {
-  //PyObject *result = NULL;
   PyObject *temp;
+  
   if (PyArg_ParseTuple(args, "O:set_callback", &temp)) {
     if (!PyCallable_Check(temp)) {
-      PyErr_SetString(PyExc_TypeError, "parameter must be callable");
+      PyErr_SetString(PyExc_TypeError, "Parameter must be callable");
       return NULL;
     }
     Py_XINCREF(temp);         /* Add a reference to new callback */
@@ -335,18 +227,18 @@ dim_dis_add_error_handler(PyObject* self, PyObject* args) {
     Py_XDECREF(dis_callbackErrorHandler_func.func);
     dis_callbackErrorHandler_func.self = self;
     dis_callbackErrorHandler_func.func = temp;
-    printf("Error handler: Got function pointer %p and obj pointer %p\n", temp, self);
+    print("Got function pointer %p and obj pointer %p", temp, self);
   } else {
-    PyErr_SetString(PyExc_TypeError, "Argument has to be a function or a bound method");
+    PyErr_SetString(PyExc_TypeError, "Argument is not a function or a bound method");
     return NULL;
   }
   dis_add_error_handler( dim_dis_callbackErrorHandler);
+
   Py_RETURN_NONE;
 }
 
 static PyObject*
 dim_dis_add_client_exit_handler(PyObject* self, PyObject* args) {
-  //PyObject *result = NULL;
   PyObject *temp;
   if (PyArg_ParseTuple(args, "O:set_callback", &temp)) {
     if (!PyCallable_Check(temp)) {
@@ -359,12 +251,17 @@ dim_dis_add_client_exit_handler(PyObject* self, PyObject* args) {
     Py_XDECREF(dis_callbackClientExitHandler_func.func);
     dis_callbackClientExitHandler_func.self = self;
     dis_callbackClientExitHandler_func.func = temp;
-    printf("Client exit handler: Got function pointer %p and obj pointer %p\n", temp, self);
+    printf("Client exit handler: Got function pointer %p and obj pointer %p", 
+           temp, self
+           );
   } else {
-    PyErr_SetString(PyExc_TypeError, "Argument has to be a function or a bound method");
+    PyErr_SetString(PyExc_TypeError, 
+                    "Argument has to be a function or a bound method"
+                    );
     return NULL;
   }
   dis_add_client_exit_handler(dim_dis_callbackClientExitHandler);
+  
   Py_RETURN_NONE;
 }
 
@@ -378,11 +275,13 @@ dim_dis_selective_update_service(PyObject* self, PyObject* args) {
 
   if ( !PyArg_ParseTuple(args, "iO;list or tuple", &service_id, &listOrTuple) ){
     PyErr_SetString(PyExc_TypeError, 
-        "Arguments have to be an integer and a list/tuple of integers");
+                     "Arguments have to be an integer and a list/tuple of integers");
     return NULL;
   }
-  if ( !listOrTuple2Int(listOrTuple, &client_ids) ) {
-    PyErr_SetString(PyExc_TypeError, "Second argument must a list/tuple of integers");
+  if (!listOrTuple2Int(listOrTuple, &client_ids)) {
+    PyErr_SetString(PyExc_TypeError, 
+                    "Second argument must a list/tuple of integers"
+                    );
     return NULL;
   }
   res = dis_selective_update_service(service_id, client_ids);
@@ -396,8 +295,9 @@ dim_dis_set_quality(PyObject* self, PyObject* args) {
   unsigned int service_id;
   int quality;
 
-  if ( !PyArg_ParseTuple(args, "Ii", &service_id, &quality) ) {
-    PyErr_SetString(PyExc_TypeError, "Invalid arguments: expected an unsigned integer and an integer");
+  if (!PyArg_ParseTuple(args, "Ii", &service_id, &quality)) {
+    PyErr_SetString(PyExc_TypeError, 
+                    "Invalid arguments: expected an unsigned integer and an integer");
     return NULL;
   }
   dis_set_quality(service_id, quality);
@@ -439,15 +339,17 @@ dim_dis_get_next_cmnd(PyObject* self, PyObject* args) {
   /* Calls: int dis_get_next_cmnd (long* tag, int* buffer, int* size)
      Problem: the way the results are received is not done in a "pythonic" way.
      Better to return a tuple with all the results.
-     Info: the DIM function implementation does not define a value for buffer, size or tag
-     in case a command is not found.
+     INFO: the DIM function implementation does not define a value for buffer,
+           size or tag in case a command is not found.
   */
   int res=0, *buffer, size;
   long tag=0;
   PyObject* tmp;
 
   if ( !PyArg_ParseTuple(args, "I", &size) ) {
-    PyErr_SetString(PyExc_TypeError, "Invalid argument: expected an unsigned integer");
+    PyErr_SetString(PyExc_TypeError, 
+                    "Invalid argument: expected an unsigned integer"
+                    );
     return NULL;
   }
   buffer = (int*)malloc(size*sizeof(int));
@@ -487,7 +389,9 @@ dim_dis_get_timeout(PyObject* self, PyObject* args) {
   unsigned int service_id;
   int client_id, res;
   if ( !PyArg_ParseTuple(args, "Ii", &service_id, &client_id) ) {
-    PyErr_SetString(PyExc_TypeError, "Invalid argument: expected an unsigned int and an int");
+    PyErr_SetString(PyExc_TypeError, 
+                    "Invalid argument: expected an unsigned int and an int"
+                    );
     return NULL;
   }
   res = dis_get_timeout(service_id, client_id);
@@ -536,36 +440,6 @@ dim_dis_get_error_services(PyObject* self, PyObject* args) {
 /* DIS containers for callbacks*/
 /******************************************************************************/
 
-#define _DIM_INT 0
-#define _DIM_INT_LEN 4
-
-#define _DIM_LONG 6
-#define _DIM_LONG_LEN sizeof(long)
-//#define _DIM_INT_LEN sizeof(int)
-
-#define _DIM_FLOAT 1
-#define _DIM_FLOAT_LEN 4
-//#define _DIM_FLOAT_LEN sizeof(float)
-
-#define _DIM_DOUBLE 2
-#define _DIM_DOUBLE_LEN 8
-//#define _DIM_DOUBLE_LEN  sizeof(double)
-
-#define _DIM_XTRA 3
-#define _DIM_XTRA_LEN 8
-//#define _DIM_XTRA_LEN  sizeof(long double)
-
-#define _DIM_STRING 4
-#define _DIM_CHAR_LEN 1
-
-#define _DIM_SHORT 5
-#define _DIM_SHORT_LEN 2
-
-#define MUL_INFINITE -1
-/* multiplicity == MUL_INFINITE  means "...;I" arbitrary amount of Is */
-/* multiplicity ==  0 is an illegal value and will not be returned by this
-   function */
-
 typedef struct {
   char *name;
   char *format;
@@ -574,8 +448,10 @@ typedef struct {
   PyObject *func;
 } CmndCallback;
 typedef CmndCallback* CmndCallbackPtr;
+
 map <string,CmndCallbackPtr> cmndName2PythonFunc;
 map <long, CmndCallbackPtr> cmndUniqueTag2PythonFunc;
+
 static long commandCallbackNumber = 0;
 
 typedef struct {
@@ -583,18 +459,15 @@ typedef struct {
   char *format;
   long tag;
   char *buffer;
+  unsigned int bufferSize;
   PyObject *func;
 } ServiceCallback;
 typedef ServiceCallback *ServiceCallbackPtr;
 map<unsigned int, ServiceCallbackPtr> serviceID2Callback;
 
 static void dim_callbackCommandFunc(void*, void*, int*);
-static int next_element(const char*, int*, int*, int*);
-static int tuple2Buffer (char*, const char*, PyObject*);
-static int getSizeFromFormat(const char*);
-
 /******************************************************************************/
-/* DIC containers for callbacks and function prototypes*/
+/* DIC containers for callbacks and function prototypes                       */
 /******************************************************************************/
 struct _dic_info_service_callback{
   PyObject* func;
@@ -606,47 +479,42 @@ struct _dic_info_service_callback{
   int tag;
 };
 
-struct _dic_cmnd_service_callback{
-  PyObject* func;
-	PyObject* cmnd_callback;
-  char* name;
-  char* format;
-  PyObject* defaultArgument;
-  char* buffer;
-  int size;
-  int tag;
+struct _dic_cmnd_callback {
+     PyObject* func;
+     long tag;
 };
 
-static map<char*, _dic_info_service_callback*> _dic_info_service_buffer2Callback;
-static map<unsigned int, _dic_info_service_callback*> _dic_info_service_id2Callback;
+unsigned long _dic_cmnd_callback_ID;
+PyObject* _dic_callback_errorHandler=NULL;
 
-/*static map<char*, _dic_cmnd_service_callback*> _dic_cmnd_service_buffer2Callback;
-static map<unsigned int, _dic_cmnd_service_callback*> _dic_cmnd_service_id2Callback;*/
+static map<char*,_dic_info_service_callback*>_dic_info_service_buffer2Callback;
+static map<unsigned int,_dic_info_service_callback*>_dic_info_service_id2Callback;
+static map<unsigned int,_dic_cmnd_callback*>_dic_cmnd_callback_tag2Callback; 
 
+void _dic_error_user_routine_dummy(int, int, char*);
 void _dic_info_service_dummy (void*, void*, int*);
-//void _dic_cmnd_service_dummy (void*, void*, int*);
+void _dic_cmnd_callback_dummy(void*, int*);
+void _dic_error_user_routine_dummy(int, int, char*);
 
 /******************************************************************************/
 
 static PyObject*
 dim_dis_add_cmnd(PyObject* self, PyObject* args) {
   /* Arguments: name, description, py_function, tag
-
-  Implementation details: in order to preserve the C interface unique tags
-  are generated for each call. The original tags are preserved with the python
-  function pointer and passed back when doing a callback.
-
-  Calls: unsigned int dis_add_cmnd (name, description, cmnd_user_routine, tag)
-  Where:
-  char* name - the name of the command. Will be used for identifing the python callback
-  char* description
-  void cmnd_user_routine (long* tag, int* address, int* size) - The long pointer will be transformed
-  in long Python object for the callback. The address will become a string
-  long tag - will be passed back to the python callback
-  */
-
-	init_threading();
-
+   * 
+   * Implementation details: in order to preserve the C interface, unique 
+   * tags are generated for each call. The original tags are preserved with 
+   * the python function pointer and passed back when doing a callback.
+   * 
+   * Calls: unsigned int dis_add_cmnd(name,description,cmnd_user_routine,tag)
+   * Where: 
+   *  char* name - the name of the command. Will be used for identifing the python callback
+   *  char* description
+   *  void cmnd_user_routine (long* tag, int* address, int* size) - The long 
+   * pointer will be transformed in A long Python object for the callback. The
+   *  address will become a string long tag - will be passed back to the python 
+   * callback
+   */
   unsigned int res=0;
   char *name=NULL, *format=NULL;
   long tag, uniqueTag;
@@ -654,13 +522,16 @@ dim_dis_add_cmnd(PyObject* self, PyObject* args) {
   PyObject *pyFunc;
   CmndCallback *callback;
   string s;
-  if ( !PyArg_ParseTuple(args, "s#s#Ol", &name, &sizeName, &format, &sizeFormat, &pyFunc, &tag) /*&& PyCallable_Check(pyFunc)*/ ) {
-    PyErr_SetString(PyExc_TypeError, "Invalid argument: expected two strings, a function pointer and an integer");
-    return NULL;
-  }
 
+  if (!PyArg_ParseTuple(args, "s#s#Ol", 
+		                &name, &sizeName, &format, &sizeFormat, &pyFunc, &tag) 
+	  || !PyCallable_Check(pyFunc) ) {
+      PyErr_SetString(PyExc_TypeError, 
+    		        "Invalid arguments: expected two strings, a function pointer and an integer");
+      return NULL;
+  }
   Py_INCREF(pyFunc);
-  //print("Adding command %p with name %s, description %s and tag %l", pyFunc, name, format, tag);
+  //print("Adding command name %s, format %s and tag %d", name, format, tag);
   uniqueTag = ++commandCallbackNumber;
   callback = (CmndCallback*)malloc(sizeof(CmndCallback));
   callback->func = pyFunc;
@@ -671,11 +542,12 @@ dim_dis_add_cmnd(PyObject* self, PyObject* args) {
   callback->tag = tag;
   callback->uniqueTag = uniqueTag;
   s = name;
-  if ( cmndName2PythonFunc[s] )
-    free( cmndName2PythonFunc[s] );
+  if (cmndName2PythonFunc[s])
+      free(cmndName2PythonFunc[s]);
   cmndName2PythonFunc[s] = callback;
   cmndUniqueTag2PythonFunc[uniqueTag] = callback;
   res = dis_add_cmnd(name, format, dim_callbackCommandFunc, uniqueTag);
+  
   return Py_BuildValue("i", res);
 }
 
@@ -697,29 +569,32 @@ dim_dis_update_service(PyObject* self, PyObject* args) {
     PyErr_SetString(PyExc_RuntimeError, "ID doesn't match any service");
     return NULL;
   }
-  if ( !svc_args and svc->func ){
-    //print("Calling Python function %p for service id %d with tag %l", svc->func, service_id, svc->tag);
-    arg = Py_BuildValue("(i)", svc->tag);
-    gstate = PyGILState_Ensure();
-    svc_args = PyEval_CallObject(svc->func, arg);
-    PyGILState_Release(gstate);
-    if ( !svc_args ) {
-      print("Error in calling python function %p. Received pointer %p as result. ", svc->func, svc_args);
-      PyErr_Print();
-      print("Error ended");
-      return NULL;
-    }
-    Py_DECREF(arg);
-    print(" Received result from service %d callback", service_id);
+  if (!svc_args and svc->func) {    
+      arg = Py_BuildValue("(i)", svc->tag);
+      gstate = PyGILState_Ensure();
+      svc_args = PyEval_CallObject(svc->func, arg);
+      PyGILState_Release(gstate);
+      if (!svc_args) {
+          print("Error in calling python function %p", svc->func);
+          PyErr_Print();      
+          return NULL;
+      }
+      Py_DECREF(arg);
+  }  
+  if (svc_args && !iterator_to_buffer(svc_args, svc->buffer, 
+                                       svc->bufferSize, svc->format)) 
+  {
+       PyErr_SetString(PyExc_TypeError, 
+                       "Arguments do not match service format"
+                       );
+       return NULL;
   }
-  print("Converting arguments to a memory buffer");
-  if ( svc_args && !tuple2Buffer(svc->buffer, svc->format, svc_args) ) {
-    PyErr_SetString(PyExc_TypeError, "Arguments passed don't match the format of the service");
-    return NULL;
-  }
-  print("Calling dis_update_service");
+  
+  Py_BEGIN_ALLOW_THREADS
   res = dis_update_service(service_id);
-  print("Returning result %d", res);
+  Py_END_ALLOW_THREADS
+  
+  //print("Returning result %d", res);  
   return Py_BuildValue("i", res);
 }
 
@@ -736,7 +611,7 @@ dim_dis_add_service(PyObject* self, PyObject* args) {
     func = void user_routine(long* tag, int** address, int* size)
 
     Observation: the size of the command is calculated using the
-    description parameter so if a size is omitted it is considered 1.
+    description parameter so if size is omitted it is considered 1.
   */
 
   int size=0, name_size, format_size, service_id=0;
@@ -745,395 +620,110 @@ dim_dis_add_service(PyObject* self, PyObject* args) {
   PyObject *pyFunc;
   ServiceCallbackPtr svc;
 
-  if ( !PyArg_ParseTuple(args, "s#s#Ol", &name, &name_size, &format, &format_size, &pyFunc, &tag) ){
-    PyErr_SetString(PyExc_TypeError, "Invalid arguments. Expected two strings and a callable object.");
-    return NULL;
+  if (!PyArg_ParseTuple(args, "s#s#Ol", &name, 
+                        &name_size, &format, &format_size, &pyFunc, &tag)
+       || !PyCallable_Check(pyFunc))
+  {
+      PyErr_SetString(PyExc_TypeError, 
+                      "Invalid arguments: expected two strings and a callable object."
+                      );
+      return NULL;
   }
-  if ( !PyCallable_Check(pyFunc) ){
-    PyErr_SetString(PyExc_TypeError, "Invalid arguments. Expected a callable object as the third argument");
-    return NULL;
-  }
-  size = getSizeFromFormat(format);
-  if ( !size ){
-    PyErr_SetString(PyExc_TypeError, "Invalid format of service parameters");
-    return NULL;
+  size = getSizeFromFormat(format); 
+  if (!size) {
+        PyErr_SetString(PyExc_TypeError, "Invalid format of service parameters");
+        return NULL;
   }
   buffer = (char*)malloc(size);
   if (!buffer) {
-    PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
-    return NULL;
+      PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
+      return NULL;
   }
   memset(buffer, '\0', size);
   service_id = dis_add_service(name, format, buffer, size, NULL, tag);
   if (!service_id) {
-    PyErr_SetString(PyExc_RuntimeError, "Could not create service");
-    free(buffer);
-    return NULL;
+      PyErr_SetString(PyExc_RuntimeError, "Could not create service");
+      free(buffer);
+      return NULL;
   }
   Py_INCREF(pyFunc);
   svc = (ServiceCallbackPtr)malloc(sizeof(ServiceCallback));
   svc->name = (char*)malloc(sizeof(char)*name_size);
   if (!svc->name){
-    Py_DECREF(pyFunc);
-    PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
-    free(buffer);
-    return NULL;
+      Py_DECREF(pyFunc);
+      PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
+      free(buffer);
+      return NULL;
   }
   strcpy(svc->name, name);
   svc->format = (char*)malloc(sizeof(char)*format_size);
   if (!svc->name){
-    Py_DECREF(pyFunc);
-    PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
-    free(buffer);
-   free(svc->name);
-    return NULL;
+      free(buffer);
+      free(svc->name);
+      Py_DECREF(pyFunc);
+      PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
+      return NULL;
   }
   strcpy(svc->format, format);
   svc->tag = tag;
   svc->func = pyFunc;
   svc->buffer = buffer;
-  if ( serviceID2Callback[service_id] ){
-    print("Another service registered under the name %s. Replacing it.",svc->name);
-    print("Old service struct pointer %p", serviceID2Callback[service_id]);
-    //a service with the same name added again?
-    Py_XDECREF(serviceID2Callback[service_id]->func);
-    free(serviceID2Callback[service_id]->name);
-    free(serviceID2Callback[service_id]->format);
-    free(serviceID2Callback[service_id]->buffer);
-    free(serviceID2Callback[service_id]);
+  svc->bufferSize = size;
+  if (serviceID2Callback[service_id]){
+      print("Replacing service %s",svc->name);
+      print("Old service struct pointer %p", serviceID2Callback[service_id]);
+      //a service with the same name added again?
+      Py_XDECREF(serviceID2Callback[service_id]->func);
+      free(serviceID2Callback[service_id]->name);
+      free(serviceID2Callback[service_id]->format);
+      free(serviceID2Callback[service_id]->buffer);
+      free(serviceID2Callback[service_id]);
   }
   serviceID2Callback[service_id] = svc;
-  print ("Service %s added successfully. Callback address is %p and allocated buffer %p with size %d",
-         svc->name, svc->func, svc->buffer, size);
+  print ("Service %s added successfully", svc->name);
+  
   return Py_BuildValue("i", service_id);
-}
-
-static void printPyObject(PyObject* object) {
-   if ( !object ) return;
-   PyObject_Print(object, stdout, Py_PRINT_RAW);
-   print("\n");
-   return;
-}
-
-
-static PyObject*
-list2Tuple(PyObject* list) {
-  int size, i;
-  PyObject* tuple;
-  if ( !PyList_Check(list) ) return NULL;
-  size = PyList_Size(list);
-  tuple = PyTuple_New(size);
-//  print("Converting list to tuple. Found tuple elements:");
-  for(i=0; i<size; i++) {
-    PyTuple_SetItem(tuple, i, PyList_GetItem(list, i) );
-//    PyObject_Print( PyList_GetItem(list, i), stdout, Py_PRINT_RAW );
-//    printf(" ");
-  }
-  printf("\n");
-  printPyObject(list);
-  printPyObject(tuple);
-  return tuple;
-}
-
-
-static int
-next_element(const char *schema, int *p, int *type, int *mult)
-{
-  char *endptr;
-  if (schema[*p] == '\0') return 0;
-  switch (toupper(schema[*p])) {
-  case 'I':
-  case 'L': *type = _DIM_INT; break;
-  case 'C': *type = _DIM_STRING; break;
-  case 'F': *type = _DIM_FLOAT; break;
-  case 'D': *type = _DIM_DOUBLE; break;
-  case 'X': *type = _DIM_XTRA; break;
-  case 'S': *type = _DIM_SHORT; break;
-  default: print("bad character %c", schema[*p]);
-    *type = -1;
-    return 0;
-  }
-//  print("Type is %d", *type, *mult);
-  switch (schema[++(*p)]) {
-  case '\0': *mult = MUL_INFINITE; print("End of string"); break;
-  case ';': *mult = 1; ++(*p); print("Multiplicity 1");break;
-  case ':':
-    //printf("2 %c\n", schema[*p]);
-    (*p)++;
-    //printf("3 %c\n", schema[*p]);
-    *mult = strtoul(&schema[*p], &endptr, 10);
-    if (endptr == &schema[*p]) {
-      print("illegal number\n");
-      return 0;
-    }
-    //printf("4 %d %c\n", *endptr, *endptr);
-    *p += (endptr - &schema[*p]) + ((*endptr == ';') ? 1 : 0);
-    //printf("5 %c\n", schema[*p]);
-    break;
-  default:
-    printf("Bad character %c\n", schema[*p]);
-    return 0;
-  }
-  //print("Multiplicity is %d and internal pointer %d", *mult, *p);
-  return 1;
-}
-
-static PyObject *
-dim_buf_to_list(const char *schema, const char *buf, int len, int *n)
-{
-  /* TO DO: check for memory leaks. Not sure who owns the new reference after Py<type>_From<type>
-   */
-  int j = 0, m = 0;
-  int type=0, mult=0;
-  PyObject *list, *tmp;
-  float f;
-
-//  print("Converting buffer to a list. Using format %s", schema);
-  if (!(list = PyList_New(0))) return NULL;
-  while (next_element(schema, &m, &type, &mult)) {
-//    print("schema=%s m=%d type=%d mult=%d, len=%d n=%d", schema, m, type, mult, len , *n);
-    switch (type) {
-    case _DIM_INT:
-      if (mult == MUL_INFINITE)
-        mult = (len + _DIM_INT_LEN - 1 - *n) / _DIM_INT_LEN;
-      for (j = 0; j < mult; ++j)
-        if (*n + _DIM_INT_LEN <= len) {
-          PyList_Append(list, PyInt_FromLong( *(int *) &buf[*n]));
-          print(" --> Creating PyInteger %d", *(int*) &buf[*n]);
-          *n += _DIM_INT_LEN;
-        } else goto short_buffer;
-      break;
-    case _DIM_FLOAT:
-      if (mult == MUL_INFINITE) mult = (len + _DIM_FLOAT_LEN - 1 - *n) /
-        _DIM_FLOAT_LEN;
-      for (j = 0; j < mult; ++j)
-        if (*n + _DIM_FLOAT_LEN <= len) {
-          f = *(float *)(&buf[*n]);
-          PyList_Append(list, PyFloat_FromDouble(f));
-          print(" --> Creating Pyfloat %f", f);
-          *n += _DIM_FLOAT_LEN;
-        } else goto short_buffer;
-      break;
-    case _DIM_DOUBLE:
-      if (mult == MUL_INFINITE)
-        mult = (len + _DIM_DOUBLE_LEN - 1 - *n) / _DIM_DOUBLE_LEN;
-      for (j = 0; j < mult; ++j)
-        if (*n + _DIM_DOUBLE_LEN <= len) {
-          PyList_Append(list, PyFloat_FromDouble(*(double *)
-                                                 &buf[*n]));
-          *n += _DIM_DOUBLE_LEN;
-          print(" --> Creating Pydouble %f", *(double *)&buf[*n] );
-        } else goto short_buffer;
-      break;
-    case _DIM_XTRA:
-      if (mult == MUL_INFINITE) mult = (len + _DIM_XTRA_LEN - 1 - *n) /
-        _DIM_XTRA_LEN;
-      for (j = 0; j < mult; ++j)
-        if (*n + _DIM_XTRA_LEN <= len) {
-          PyList_Append(list, PyLong_FromLongLong(*(long long *)
-                                                  &buf[*n]));
-          *n += _DIM_XTRA_LEN;
-        } else goto short_buffer;
-      break;
-    case _DIM_STRING:
-      if (mult == MUL_INFINITE)  mult = len - *n - 1;
-      if (*n + mult < len) {
-        tmp = PyString_FromStringAndSize( &buf[*n], mult);
-        PyList_Append(list, tmp);
-        print(" --> Creating long PyString: '%s'", PyString_AsString(tmp) )
-        *n += mult;
-      } else {
-        tmp =  PyString_FromStringAndSize(&buf[*n], len - *n);
-        PyList_Append(list, tmp);
-        print(" --> Creating short PyString: '%s'", PyString_AsString(tmp) );
-        goto short_buffer;
-      }
-      break;
-    case _DIM_SHORT:
-      if (mult == MUL_INFINITE)
-        mult = (len + _DIM_SHORT_LEN - 1 - *n) / _DIM_SHORT_LEN;
-      for (j = 0; j < mult; ++j)
-        if (*n + _DIM_SHORT_LEN <= len) {
-          PyList_Append(list, PyInt_FromLong( *(short int *) &buf[*n]));
-          // print("adding short int %h", *(short int*) &buf[*n]);
-          *n += _DIM_SHORT_LEN;
-        } else goto short_buffer;
-      break;
-    default:
-      goto short_buffer;
-    }
-  }
- short_buffer:
-  return list;
-}
-
-
-static PyObject*
-dim_buf_to_tuple(const char *schema, const char *buf, int len, int *n) {
-  PyObject *list, *tuple;
-  list = dim_buf_to_list(schema, buf, len, n);
-  if ( !list ) {
-    print("Could not convert buffer to list");
-    return NULL;
-  }
-//  print("Converting list to tuple");
-  tuple = list2Tuple(list);
-  Py_DECREF(list);
-  return tuple;
-}
-
-static int
-getSizeFromFormat(const char* format) {
-  int ptr=0, type=0, mult=0, size=0;
-  while ( next_element(format, &ptr, &type, &mult) ) {
-    switch (type) {
-    case _DIM_LONG:size += mult * _DIM_LONG_LEN; break;
-    case _DIM_INT: size += mult * _DIM_INT_LEN; break;
-    case _DIM_STRING: size += mult * _DIM_CHAR_LEN; break;
-    case _DIM_FLOAT: size += mult * _DIM_FLOAT_LEN;  break;
-    case _DIM_DOUBLE: size += (mult * _DIM_DOUBLE_LEN); break;
-    case _DIM_XTRA: size += mult * _DIM_XTRA_LEN;  break;
-    case _DIM_SHORT: size += mult * _DIM_SHORT_LEN; break;
-    default: print("Bad type character extracted from character(%c). Type is %d\n", format[ptr], type);
-      return 0;
-    }
-//    print("Found element %d with multiplicity %d", type, mult);
-  }
-//  print("Size of buffer is %d", size);
-  return size;
-}
-
-static int
-tuple2Buffer (char *buffer, const char *format, PyObject *pyTuple){
-  int ptr=0, buf_ptr=0, type=0, mult=0, elem=0, j, str_size;
-  PyObject *tmp;
-
-  int i;
-  float f;
-  double d;
-  short s;
-  long l;
-  long long x;
-  char *str;
-
-
-  print("Copying Python values to a buffer. Format is %s", format );
-  while ( next_element(format, &ptr, &type, &mult) ){
-    print( "Got type %d, mult %d, ptr %d", type, mult, ptr);
-    for (j=0; j<mult; j++){
-      if ( PyTuple_Check(pyTuple) ) {
-        tmp = PyTuple_GetItem(pyTuple, elem++);
-      } else {
-        tmp = pyTuple;
-      }
-      if ( !tmp ) {
-        print("Could not get item for format char %c\n", format[ptr]);
-        return 0;
-      }
-      switch (type) {
-      case _DIM_INT : i = PyInt_AsLong(tmp);
-        memcpy(&buffer[buf_ptr], &i, _DIM_INT_LEN);
-        print("Adding int %d to buffer", i);
-        buf_ptr += _DIM_INT_LEN;
-        break;
-      case _DIM_LONG : l = PyInt_AsLong(tmp);
-        memcpy(&buffer[buf_ptr], &l, _DIM_LONG_LEN);
-        print("Adding long %ld to buffer", PyInt_AsLong(tmp));
-        buf_ptr += _DIM_LONG_LEN;
-        break;
-      case _DIM_STRING:
-        str = PyString_AsString(tmp);
-        if ( strlen(str) < (unsigned int)mult )
-          str_size = strlen(str)+1;
-        else
-          str_size = mult;
-        memcpy(&buffer[buf_ptr], str, str_size);
-        print("Adding string %s to buffer", PyString_AsString(tmp));
-        buf_ptr += _DIM_CHAR_LEN * mult;
-        mult = 0;
-        break;
-      case _DIM_FLOAT: f = PyFloat_AsDouble(tmp);
-        memcpy(&buffer[buf_ptr], &f, _DIM_FLOAT_LEN);
-        buf_ptr += _DIM_FLOAT_LEN;
-        print("Adding float %f to buffer", PyFloat_AsDouble(tmp));
-        break;
-      case _DIM_DOUBLE: d = PyFloat_AsDouble(tmp);
-        memcpy(&buffer[buf_ptr], &d, _DIM_DOUBLE_LEN);
-        buf_ptr += _DIM_DOUBLE_LEN;
-        print("Adding double %f to buffer", PyFloat_AsDouble(tmp));
-        break;
-      case _DIM_XTRA: x = PyLong_AsLongLong(tmp);
-        memcpy(&buffer[buf_ptr], &x, _DIM_XTRA_LEN);
-        buf_ptr += _DIM_XTRA_LEN;
-        print( "Adding extra long %Ld to buffer", PyLong_AsLongLong(tmp) );
-        break;
-      case _DIM_SHORT: s = PyInt_AsLong(tmp);
-        memcpy(&buffer[buf_ptr], &s, _DIM_SHORT_LEN);
-        buf_ptr += _DIM_SHORT_LEN;
-        print( "Adding short %hd to buffer", s );
-        break;
-      default: print("bad character %c. Type is %d\n", format[ptr], type);
-        return 0;
-      }
-    }
-  }
-  print("Succesfully converted arguments");
-  return 1;
 }
 
 static void
 dim_callbackCommandFunc(void* uTag, void* address, int* size) {
-  long tag, uniqueTag = *(long*)uTag;
-  PyObject *pyFunc, *arg, *res;
+  long uniqueTag = *(long*)uTag;
+  CmndCallbackPtr pycall;
+  PyObject *args, *res;
   char *cptr;
-  // char *buf = (char*)malloc( (*size) * sizeof(char));
   cptr  = (char*)address;
-  int len = *size;
-  PyGILState_STATE gstate;
-  // ServiceCallback *callback;
-  int n=0;
-
-	PyThreadState* st = 0;
-	try   {
-	// Let us try to handle the threadStates correctly 
-		st = PyThreadState_New(DIM::s_mainThreadState->interp);
-		PyEval_AcquireThread(st);
-	}
-	catch(std::exception& e)  {
-		print("Exception occurred: %s",e.what());
-		handlePythonError(st);
-	}
-	catch(...)  {
-		print("Unknown exception occurred....");
-		handlePythonError(st);
-	}
+  PyGILState_STATE gstate;    
 
   // printf("dim_callbackCommandFunc:: Got unique tag %l \n", uniqueTag);
   // printf("%d %d %d\n", sizeof(int), sizeof(long double), sizeof(char));
-  pyFunc = cmndUniqueTag2PythonFunc[uniqueTag]->func;
-  tag = cmndUniqueTag2PythonFunc[uniqueTag]->tag;
-  arg = dim_buf_to_tuple(cmndUniqueTag2PythonFunc[uniqueTag]->format,(char*)address, *size, &n);
-  printf("dim_callbackCommandFunc:: dim_buf_to_list returned %s %d\n", cmndUniqueTag2PythonFunc[uniqueTag]->format, len);
-  gstate = PyGILState_Ensure();
-  printf("dim_callbackCommandFunc:: calling python func: %p\n", pyFunc);
-  res = PyEval_CallObject(pyFunc, arg);
-  Py_DECREF(arg);
-  if (!res) {
-    PyErr_Print();
-  } else {
-    print("Got result %p", res);
-    Py_DECREF(res);
+  pycall = cmndUniqueTag2PythonFunc[uniqueTag];
+  args = dim_buf_to_tuple(pycall->format, (char*)address, *size);
+  //printPyObject(args);
+//  print("dim_buf_to_list returned %s %d\n", 
+//        cmndUniqueTag2PythonFunc[uniqueTag]->format, len
+//        );
+//  printf("dim_callbackCommandFunc:: calling python func: %p\n", pyFunc);
+  if (!args) {
+	  /* convertion of the arguments failed */
+	  print ("Could not convert received DIM buffer to Python objects");
+	  return;
   }
+  /* performing the python callback */
+  gstate = PyGILState_Ensure();
+  res = PyEval_CallObject(pycall->func, args);
   PyGILState_Release(gstate);
-  PyEval_ReleaseThread(st);
-  PyThreadState_Clear(st);
-  PyThreadState_Delete(st);
+  
+  Py_DECREF(args);
+  if (!res) {
+      PyErr_Print();
+  } else {
+      Py_DECREF(res);
+  }
 }
 
 /******************************************************************************/
 /* DIC interface functions */
 /******************************************************************************/
-
 static PyObject*
 dim_dic_set_dns_node(PyObject* self, PyObject* args) {
   /* calls dic_set_dns_node(char* node)
@@ -1171,7 +761,9 @@ dim_dic_set_dns_port(PyObject* self, PyObject* args) {
   int i;
 
   if ( !PyArg_ParseTuple(args, "I", &port) ) {
-    PyErr_SetString(PyExc_TypeError, "Argument 'port' must be a pozitive integer");
+    PyErr_SetString(PyExc_TypeError, 
+                    "Invalid argument: expected a pozitive integer"
+                    );
     return NULL;
   }
   i = dic_set_dns_port(port);
@@ -1193,8 +785,9 @@ dim_dic_get_dns_port(PyObject* self, PyObject* args) {
 static PyObject*
 dim_dic_get_id(PyObject* self, PyObject* args) {
   /* Calls: int dic_get_id (char* name)
-     Return the client name or an empty string if the command was not successful
-  */
+   * Returns the client name or an empty string if the command was not
+   * successful
+   */
   char name[256];
   int res;
 
@@ -1207,7 +800,7 @@ dim_dic_get_id(PyObject* self, PyObject* args) {
 static PyObject*
 dim_dic_disable_padding(PyObject* self, PyObject* args) {
   /* Calls: int dic_disable_padding(void)
-     Returns void.
+   * Returns None.
   */
   dic_disable_padding();
   Py_RETURN_NONE;
@@ -1235,13 +828,15 @@ dim_dic_get_timestamp(PyObject* self, PyObject* args) {
      With: unsigned int service_id
             int *secs
             int *milisecs
-     Returns: whether the command was successfully
+     Returns: whether the command was successful
   */
   unsigned int service_id;
   int secs, milisecs=0, res=0;
 
   if (! PyArg_ParseTuple(args, "Iii", &service_id) ) {
-    PyErr_SetString(PyExc_TypeError, "service id should be an unsigned integer");
+    PyErr_SetString(PyExc_TypeError, 
+                    "service id should be an unsigned integer"
+                    );
     return NULL;
   }
   res = dic_get_timestamp(service_id, &secs, &milisecs);
@@ -1257,7 +852,9 @@ dim_dic_get_format(PyObject* self, PyObject* args) {
   char* format=NULL;
 
   if (! PyArg_ParseTuple(args, "I", &service_id) ) {
-    PyErr_SetString(PyExc_TypeError, "Service id should be an unsigned integer");
+    PyErr_SetString(PyExc_TypeError, 
+                    "Service id should be an unsigned integer"
+                    );
     return NULL;
   }
   format = dic_get_format(service_id);
@@ -1265,23 +862,25 @@ dim_dic_get_format(PyObject* self, PyObject* args) {
 }
 
 static PyObject*
-dim_dic_release_service(PyObject* self, PyObject* args){
+dim_dic_release_service(PyObject* self, PyObject* args) {
   /* Calls: void dic_release_service (unsigned int service_id)
      Returns: void
   */
   unsigned int service_id;
   _dic_info_service_callback *tmp;
 
-  if ( !PyArg_ParseTuple(args, "I", &service_id) ) {
+  if (!PyArg_ParseTuple(args, "I", &service_id)) {
     print("Invalid service id specified");
-    PyErr_SetString(PyExc_TypeError, "Service id should be an unsigned integer");
+    PyErr_SetString(PyExc_TypeError, 
+                    "Service id should be an unsigned integer"
+                    );
     return NULL;
   }
   dic_release_service(service_id);
   tmp = _dic_info_service_id2Callback[service_id];
   if ( !tmp ) {
-    print("Service with id %d is not known", service_id);
-    Py_RETURN_NONE;
+      print("Service with id %d is not known", service_id);
+      Py_RETURN_NONE;
   }
   _dic_info_service_buffer2Callback.erase(tmp->buffer);
   _dic_info_service_id2Callback.erase(service_id);
@@ -1290,8 +889,9 @@ dim_dic_release_service(PyObject* self, PyObject* args){
   free(tmp->name);
   Py_XDECREF(tmp->func);
   if (tmp->defaultArgument)
-    Py_XDECREF(tmp->defaultArgument);
+      Py_XDECREF(tmp->defaultArgument);
   free(tmp);
+  
   Py_RETURN_NONE;
 }
 
@@ -1326,12 +926,8 @@ dim_dic_info_service(PyObject* self, PyObject* args) {
   unsigned int service_id;
   PyObject* pyFunc=NULL, *default_value=NULL ;
   _dic_info_service_callback* tmp;
-	// Init threading if needed
-	init_threading();
 
-  print("Registering service: ");
-  print("timeout = %d", timeout);
-  if ( !PyArg_ParseTuple(args, "s#s#O|iiiO",&name,
+  if (!PyArg_ParseTuple(args, "s#s#O|iiiO",&name,
                                            &name_size,
                                            &format,
                                            &format_size,
@@ -1339,36 +935,29 @@ dim_dic_info_service(PyObject* self, PyObject* args) {
                                            &service_type,
                                            &timeout,
                                            &tag,
-                                           &default_value) )
+                                           &default_value) 
+      || !PyCallable_Check(pyFunc) )
   {
     goto invalid_args;
   }
-  print("Callback is %p", pyFunc);
-  if ( !PyCallable_Check(pyFunc) ){
-    goto invalid_args;
-  }
-  //increasing the ref count of the python objects
+  /* increasing the ref count of the python objects */
   Py_INCREF(pyFunc);
-  if (default_value) {
+  if (default_value)
       Py_INCREF(default_value);
-  }
-  //creating a new service structure
+  /* creating a new service structure */
   tmp = (_dic_info_service_callback*)malloc(sizeof(_dic_info_service_callback));
-  if (!tmp) {
+  if (!tmp)
       goto no_memory;
-  }
   buffer_size = getSizeFromFormat(format);
   tmp->tag = tag;
   tmp->size = buffer_size;
-  print("Buffer size is %d", buffer_size);
   tmp->buffer = (char*)malloc(sizeof(char*)*buffer_size);
   tmp->format = (char*)malloc(sizeof(char)*format_size+1);
   tmp->name = (char*)malloc(sizeof(char)*name_size+1);
   tmp->defaultArgument = default_value;
   tmp->func = pyFunc;
-  if ( !tmp->format || !tmp->name || !tmp->buffer) {
+  if ( !tmp->format || !tmp->name || !tmp->buffer)
     goto no_memory;
-  }
   strcpy(tmp->name, name);
   strcpy(tmp->format, format);
   _dic_info_service_buffer2Callback[tmp->buffer] = tmp;
@@ -1385,22 +974,23 @@ dim_dic_info_service(PyObject* self, PyObject* args) {
                                 tmp->buffer,
                                 0);
   if ( !service_id ){
-    print("Creating service %s failed. Receive service ID %d", name, service_id);
+    print("Service %s creation failed. Received result %d", name, service_id);
     goto dealocate;
   }
-  print ("Service %s registered with id %d", name, service_id);
+  
   return Py_BuildValue("i", service_id);
 
   //invalid arguments
   invalid_args:
     PyErr_SetString(PyExc_TypeError,
-          "Invalid parameters. Expected arguments:string name               ,\
-                                                  string format             ,\
-                                                  int service_type          ,\
-                                                  int timeout               ,\
-                                                  PyObject* callbackFunction,\
-                                                  int tag                   ,\
-                                                  PyObject* default_value ");
+          "Invalid parameters. Expected:string name               ,\
+                                        string format             ,\
+                                        int service_type          ,\
+                                        int timeout               ,\
+                                        PyObject* callbackFunction,\
+                                        int tag                   ,\
+                                        PyObject* default_value"
+                     );
     return NULL;
   //alocate memory problem
   no_memory:
@@ -1420,235 +1010,320 @@ dim_dic_info_service(PyObject* self, PyObject* args) {
     return 0;
 }
 
-//static PyObject*
-//dim_dic_cmnd_callback(PyObject* self, PyObject* args) {
-  /*Arguments: string name                 ,
-               string format               ,
-               PyObject* callbackFunction  ,
-							 PyObject* cmd_callback			 ,
-               int tag                     , (optional, default=0)
-               PyObject* default_value       (optional, default=NULL)
-
-   Calls : unsigned int dic_info_service ( char* name         ,
-                                           int*  address      ,
-                                           int*  size         ,
-                                           void* cmd_callback ,
-                                           long  tag)
-
-    Returns 1 if the command was successfully requested (status variable)
-  */
-/*  char* name, *format;
-  long int tag=0;
-  int format_size;
-  int name_size;
-  int buffer_size;
-  unsigned int status;
-  PyObject* pyFunc=NULL, *cmnd_callback=NULL,*default_value=NULL ;
-  _dic_cmnd_service_callback* tmp;
-	// Init threading if needed
-	init_threading();
-
-	print("Sending command");
-  if ( !PyArg_ParseTuple(args, "s#s#OO|lO",	&name,
-                                            &name_size,
-                                            &format,
-                                            &format_size,
-                                            &pyFunc,
-                                            &cmnd_callback,
-                                            &tag,
-                                            &default_value) )
-  {
-    goto invalid_args;
-  }
-  print("Data filler is %p", pyFunc);
-  if ( !PyCallable_Check(pyFunc) ){
-    goto invalid_args;
-  }
-  //increasing the ref count of the python objects
-  Py_INCREF(pyFunc);
-  if (cmnd_callback) {
-      Py_INCREF(cmnd_callback);
-  }
-  if (default_value) {
-      Py_INCREF(default_value);
-  }
-  //creating a new command structure
-  tmp = (_dic_cmnd_service_callback*)malloc(sizeof(_dic_cmnd_service_callback));
-  if (!tmp) {
-      goto no_memory;
-  }
-  buffer_size = getSizeFromFormat(format);
-  tmp->tag = tag;
-  tmp->size = buffer_size;
-  print("Buffer size is %d", buffer_size);
-  tmp->buffer = (char*)malloc(sizeof(char*)*buffer_size);
-  tmp->format = (char*)malloc(sizeof(char)*format_size+1);
-  tmp->name = (char*)malloc(sizeof(char)*name_size+1);
-  tmp->defaultArgument = default_value;
-  tmp->func = pyFunc;
-	tmp->cmnd_callback=cmnd_callback; // We will see what we do with it
-  if ( !tmp->format || !tmp->name || !tmp->buffer) {
-    goto no_memory;
-  }
-  strcpy(tmp->name, name);
-  strcpy(tmp->format, format);
-  _dic_cmnd_service_buffer2Callback[tmp->buffer] = tmp;
-	_dic_cmnd_service_dummy(&tag,tmp->buffer,&buffer_size); //Is this correct? We fill the buffer before sending the command
-
-	print("Now issuing dic_cmnd_callback");
-  //sending the command
-  status = dic_cmnd_callback(	name,
-                            	tmp->buffer,
-                            	buffer_size,
-															NULL,  // Here comes the cmnd_callback
-                            	tag);
-  if ( status!=1 ){
-    print("Sending command %s failed. Received status %d", name, status);
-    goto dealocate;
-  }
-  print ("Command %s succesfully sent", name);
-  return Py_BuildValue("i", status);
-
-  //invalid arguments
-  invalid_args:
-    PyErr_SetString(PyExc_TypeError,
-          "Invalid parameters. Expected arguments: string name, string format, PyObject* callbackFunction, \
-PyObject* cmnd_callback, int tag, PyObject* default_value");
-    return NULL;
-  //alocate memory problem
-  no_memory:
-    PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
-    Py_DECREF(pyFunc);
-    return NULL;
-
- //invalid service registering
- dealocate:
-    Py_XDECREF(tmp->func);
-    _dic_info_service_buffer2Callback.erase(tmp->buffer);
-    //_dic_info_service_id2Callback.erase(tmp->buffer);
-    free(tmp->buffer);
-    free(tmp->format);
-    free(tmp->name);
-    free(tmp);
-    return 0;
+static PyObject*
+dim_dic_info_service_stamped(PyObject* self, PyObject* args){
+/* Delegates to dim_dic_info_service (PyObject* self, 
+ *                                    PyObject* args, 
+ *                                    PyObject* keywds
+ *                                   )
+ * Accepts same arguments and returns the new ID of the created service.
+ */
+    return dim_dic_info_service(self, args);
 }
-*/
+
+static PyObject*
+dim_dic_get_server(PyObject* self, PyObject* args) {
+    /* Arguments : server name (string)
+     * Calls     : dic_get_server(char* name)
+     * Returns   : server id
+     */
+     int service_id;
+     char* server_name;
+     
+     if ( !PyArg_ParseTuple(args, "s", &server_name) ) {
+         goto invalid_arguments;
+     }
+     service_id = dic_get_server(server_name);
+     return Py_BuildValue("i", service_id);
+    
+    invalid_arguments:
+        PyErr_SetString(PyExc_TypeError,
+          "Invalid parameters. Expected argument:string service_name");                                         
+        return NULL;      
+} 
+
+static PyObject*
+dim_dic_get_conn_id(PyObject* self, PyObject* args) {
+    /* Arguments : None
+     * Calls     : dic_get_conn_id(char* name)
+     * Returns   : connection id
+     */
+     int service_id;     
+          
+     service_id = dic_get_conn_id();
+     return Py_BuildValue("i", service_id);
+} 
+
+static PyObject*
+dim_dic_get_server_services(PyObject* self, PyObject* args) {
+    /* Arguments : connection id
+     * Calls     : dic_get_server_services(int conn_id)
+     * Returns   : list of services
+     */
+    int conn_id;
+    char* server_names=NULL;
+    PyObject* ret;
+    
+    if ( !PyArg_ParseTuple(args, "i", &conn_id) ){
+        goto invalid_arguments;
+    }
+     
+    server_names = dic_get_server_services(conn_id);
+    ret = stringList_to_tuple(server_names);    
+    return ret;
+    
+    invalid_arguments:
+        PyErr_SetString(PyExc_TypeError, 
+                       "Invalid parameters. Expected argument:int conn_id");                                                  
+        return NULL;    
+} 
+        
+static PyObject*
+dim_dic_get_error_services(PyObject* self, PyObject* args) {
+    /* Arguments : None
+     * Calls     : dic_get_error_services(int conn_id)
+     * Returns   : list of the error services
+     * To be called inside the error handler to see what originated the error.
+     */    
+    char* server_names=NULL;
+    PyObject* ret;
+    
+    server_names = dic_get_error_services();
+    ret = stringList_to_tuple(server_names);
+    
+    return args;        
+} 
+
+static PyObject*
+dim_dic_add_error_handler(PyObject* self, PyObject* args) {
+    /* Arguments : python callback (callable object)
+     * Calls     : dic_add_error_handler ( void* error_routine(int, int, char*) )
+     * Returns   : None
+     */    
+    PyObject* pyFunc;
+    
+    if (!PyArg_ParseTuple(args, "O", &pyFunc)
+    	|| !PyCallable_Check(pyFunc)) 
+    {
+        goto invalid_arguments;
+    }
+      
+    dic_add_error_handler(_dic_error_user_routine_dummy);    
+    Py_RETURN_NONE;
+    
+    invalid_arguments:
+        PyErr_SetString(PyExc_TypeError, 
+             "Invalid parameters. Expected argument: python callable object ");                                                  
+        return NULL;    
+} 
+
+static PyObject*
+dim_dic_cmnd_service(PyObject* self, PyObject* args) {
+    /* Arguments : service name (string),
+     *             command data (tuple),
+     *             format (string)
+     * Calls     : dic_cmnd_service(char* name, int* address, int size)
+     * Returns   : return code (1 for a successful request)
+     */
+    char *service_name, *format, *buffer;
+    int buffer_size, res;
+    PyObject* tuple;
+    
+    if (!PyArg_ParseTuple(args, "sOs", &service_name, &tuple, &format) )
+        goto invalid_arguments;
+    /* creating dummy command request */
+    buffer_size = getSizeFromFormat(format);
+    buffer = (char*)malloc(sizeof(char)*buffer_size);
+    if (!buffer)
+        goto memory_error; 
+    if (!iterator_to_buffer(tuple, buffer, buffer_size, format))
+        goto error;    
+    Py_BEGIN_ALLOW_THREADS
+    res = dic_cmnd_service(service_name, buffer, buffer_size);
+    Py_END_ALLOW_THREADS
+    /* freeing allocated buffer */
+    free(buffer);
+    
+    return Py_BuildValue("i", res);    
+    
+    invalid_arguments:
+        PyErr_SetString(PyExc_TypeError, 
+        		        "Invalid parameters. Expected: string service_name (string),\n\
+                                                       tuple data,\n\
+                                                       string format" 
+                        );
+        return NULL;
+            
+    error:
+       PyErr_SetString(PyExc_RuntimeError, "Could not convert arguments to buffer");
+       free(buffer);                                                
+       return NULL;
+                
+    memory_error:
+       PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
+        return NULL;    
+} 
+
+static PyObject*
+dim_dic_cmnd_callback(PyObject* self, PyObject* args) {
+    /* Arguments: service name (string),
+    *             command data (tuple),
+    *             format (string)
+    *             cmnd_callback (callable object)
+    *             tag (int)
+    * Calls     : dic_cmnd_service(char* name, 
+    *                              int* address, 
+    *                              int size, 
+    *                              void* cmd_callback, 
+    *                              long tag)
+    * Returns   : return code (int), 1 for successful request
+    */
+    char *service_name, *format, *buffer;
+    int buffer_size, res;
+    long tag; 
+    unsigned long uniqueTag;
+    PyObject *tuple, *pyFunc;
+    _dic_cmnd_callback *callback;
+    
+    if (!PyArg_ParseTuple(args, "sOsOi",
+                           &service_name, &tuple, &format, &pyFunc, &tag)
+        || !PyCallable_Check(pyFunc)) 
+    {
+        goto invalid_arguments;
+    }
+    /* saving callback */
+    Py_INCREF(pyFunc);
+    uniqueTag =  ++_dic_cmnd_callback_ID;
+    callback = (_dic_cmnd_callback*)malloc(sizeof(_dic_cmnd_callback));
+    if (!callback) 
+       goto memory_error;
+    callback->func = pyFunc;
+    callback->tag = tag;
+    _dic_cmnd_callback_tag2Callback[uniqueTag] = callback;
+    
+    /* creating dummy cmnd_callback request */
+    buffer_size = getSizeFromFormat(format);
+    buffer = (char*)malloc( sizeof(char)*buffer_size );
+    if ( !buffer )
+       goto memory_error; 
+    if ( !iterator_to_buffer(tuple, buffer, sizeof(buffer), format) )
+        goto error;
+    //print("Creating command callback %s: buffer size=%d, tag=%l, uniqueTag=%l",service_name, buffer_size, callback->tag, uniqueTag);            
+    res = dic_cmnd_callback(service_name, 
+                            buffer, 
+                            buffer_size, 
+                            _dic_cmnd_callback_dummy, 
+                            uniqueTag
+                            );
+    /* freeing temporary buffer and returning */
+    free(buffer);
+    
+    return Py_BuildValue("i", res);
+    
+    invalid_arguments:
+        PyErr_SetString(PyExc_TypeError, 
+          "Invalid parameters. Expected: string service_name,\n\
+                                         tuple command_data,\n\
+                                         string format, \n\
+                                         Callable Object cmnd_callback \n\
+                                         int tag");
+        return NULL;
+    
+    error:
+        PyErr_SetString(PyExc_RuntimeError, 
+    	 	           "Could not convert arguments to buffer");
+        free(buffer);
+        free(callback);             
+        return NULL;
+        
+    memory_error:
+        PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
+        return NULL;    
+} 
+    
+    
 /******************************************************************************/
 /* DIC interface internal functions */
 /******************************************************************************/
+void _dic_cmnd_callback_dummy(void* uniqueTagPtr, int* ret_code) {
+   /* Stub function for passing the callback to the error handler to the Python
+    * layer. 
+    */
+    unsigned long uniqueTag = *(long*)uniqueTagPtr;
+    _dic_cmnd_callback* callback=NULL;
+    PyObject* res;
+    
+    callback = _dic_cmnd_callback_tag2Callback[uniqueTag];
+    //print("Return code is %d tag %l and uniqueTag %l", 
+    //      *ret_code, callback->tag, *(long*)uniqueTagPtr );
+    if (!callback) {        
+        print("Could not find callback");
+        return;
+    }
+    res = pyCallFunction(callback->func, 
+                         Py_BuildValue("li", callback->tag, *ret_code) 
+                         );    
+    //deleting callback information
+    Py_DECREF(res);
+    Py_DECREF(callback->func);
+    _dic_cmnd_callback_tag2Callback.erase(uniqueTag);
+    free(callback);
+    
+    print("Callback successfully completed");
+    return;        
+}
+
+
+void _dic_error_user_routine_dummy(int severity, int error_code, char* message) {
+   /* Stub function for passing the callback to the error handler to the Python
+    * layer. 
+    */
+    if ( !_dic_callback_errorHandler ) {
+        print("Python callback does not exists");
+        PyErr_SetString(PyExc_RuntimeError, "Could not find python callback");
+        return;
+    }
+    pyCallFunction(_dic_callback_errorHandler, 
+                   Py_BuildValue("iis", severity, error_code, message)
+                   );
+}
 
 void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
-  /* Stub function for passing the received data from a service to a python callback.
-     Receives tag, buffer, size
-  */
+  /* Stub function for passing the received data from a service to a python
+   *  callback. Receives tag, buffer, size
+   */
   PyObject* args, *res;
   _dic_info_service_callback* svc;
-  int n=0;
-  PyThreadState* st = 0;
-  try   {
-// Let us try to handle the threadStates correctly 
-	st = PyThreadState_New(DIM::s_mainThreadState->interp);
-  PyEval_AcquireThread(st);
-	}
-  catch(std::exception& e)  {
-    print("Exception occurred: %s",e.what());
-    handlePythonError(st);
-  }
-  catch(...)  {
-    print("Unknown exception occurred....");
-    handlePythonError(st);
-  }
-//  print(">------------------------------------------------------------------>");
+  PyGILState_STATE gstate; 
+      
   svc = _dic_info_service_buffer2Callback[(char*)buffer];
-  if ( !svc ){
-    print("Invalid update service request");
-    return;
+  if (!svc) {
+      print("Invalid update service request");
+      return;
   }
-  if ( !(*size) ) {
-    /* The service update request failed. Passing default argument */
-    args = svc->defaultArgument;
-  } else {
-    print("Converting C buffer to python arguments. Size of the received buffer is %d and format '%s'", svc->size, svc->format);
-    args = dim_buf_to_tuple(svc->format, (char*)buffer, *size, &n);
+  if (!(*size)) {
+      /* The service update request failed. Passing default argument */
+      args = svc->defaultArgument;
+  } else {    
+      args = dim_buf_to_tuple(svc->format, (char*)buffer, *size);
   }
-  if (args) {
-      print("Executing callback %p for service %s with n %d", svc->func, svc->name,n);
+  if (args) {      
+      gstate = PyGILState_Ensure();  
       res = PyEval_CallObject(svc->func, args);
+      PyGILState_Release(gstate);
   } else {
     //service failed and a default value was not specified
     print("Service error or could not get values from it");
     return;
   }
 
-  if ( !res ){
-     print("Callback to python function %p failed", svc->func);
-     return;
+  if (!res){
+      print("Callback to python function %p failed", svc->func);
+      return;
   }
   Py_DECREF(res);
-  Py_XDECREF(args);
-  PyEval_ReleaseThread(st);
-  PyThreadState_Clear(st);
-  PyThreadState_Delete(st);
-//  print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+  Py_XDECREF(args);  
 }
-
-//void _dic_cmnd_service_dummy (void* tag, void* buffer, int* size) {
-  /* Stub function for passing the data that has to be sent to a python callback.
-     Receives tag, buffer, size
-  */
-/*  PyObject* args, *res;
-  _dic_cmnd_service_callback* cmd;
-  int n=0;
-//  PyThreadState* st = 0;
-//  try   {
-// Let us try to handle the threadStates correctly 
-//	print("Mark1");
-//	st = PyThreadState_New(DIM::s_mainThreadState->interp);
-//	print("Mark2");
-//  PyEval_AcquireThread(st);
-//	}
-//  catch(std::exception& e)  {
-//    print("Exception occurred: %s",e.what());
-//    handlePythonError(st);
-//  }
-//  catch(...)  {
-//    print("Unknown exception occurred....");
-//    handlePythonError(st);
-//  }
-  cmd = _dic_cmnd_service_buffer2Callback[(char*)buffer];
-  if ( !cmd ){
-    print("Invalid command request");
-    return;
-  }
-  if ( !(*size) ) {
-//    args = cmd->defaultArgument; 	
-		args=0;
-		print("No arguments specified");
-  } else {
-    print("Converting C buffer to python arguments. Size of the received buffer is %d and format '%s'", cmd->size, cmd->format);
-    args = dim_buf_to_tuple(cmd->format, (char*)buffer, *size, &n);
-  }
-//  if (args) {
-      print("Executing callback %p for command %s", cmd->func, cmd->name);
-      res = PyEval_CallObject(cmd->func, args);
-//  } else {
-    //service failed and a default value was not specified
-//    print("Command error or could not get values from it");
-//    return;
-//  }
-
-  if ( !res ){
-     print("Callback to python function %p failed", cmd->func);
-     return;
-  }
-  Py_DECREF(res);
-  Py_XDECREF(args);
-//  PyEval_ReleaseThread(st);
-//  PyThreadState_Clear(st);
-//  PyThreadState_Delete(st);
-//  print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-}*/
-
 
 static PyMethodDef DimMethods[] = {
   {    "dis_start_serving"          ,
@@ -1821,16 +1496,51 @@ static PyMethodDef DimMethods[] = {
        METH_VARARGS                    ,
        "Called by a client when a service is not needed anymore."
   },
-  {    "dic_info_service"              ,
-       dim_dic_info_service            ,
-       METH_VARARGS                    ,
-       "Request an information service from a server."
+  {    "dic_info_service"               ,
+       dim_dic_info_service,
+       METH_VARARGS | METH_KEYWORDS     ,
+       "Called by a client for subscribing to a service." 
   },
-/*  {    "dic_cmnd_callback"              ,
-       dim_dic_cmnd_callback            ,
-       METH_VARARGS                     ,
-       "Request the execution of a command by a server and register a completion callback."
-  },*/
+  {    "dic_cmnd_service"        ,
+       dim_dic_cmnd_service      ,
+       METH_VARARGS              ,
+       "Request the execution of a command by a server." 
+  },
+  {    "dic_cmnd_callback"       ,
+       dim_dic_cmnd_callback     ,
+       METH_VARARGS              ,
+       "Request the execution of a command by a server provind an asyncronious callback when the command is executed." 
+  },
+  {    "dic_info_service_stamped"       ,
+       dim_dic_info_service_stamped  ,
+       METH_VARARGS              ,
+       "TODO: add documentation" 
+  },
+  {    "dic_get_server"          ,
+       dim_dic_get_server        ,
+       METH_VARARGS              ,
+       "TODO: add documentation" 
+  }, 
+  {    "dic_get_conn_id"          ,
+       dim_dic_get_conn_id        ,
+       METH_VARARGS               ,
+       "TODO: add documentation" 
+  }, 
+  {    "dic_get_server_services"          ,
+       dim_dic_get_server_services     ,
+       METH_VARARGS              ,
+       "TODO: add documentation" 
+  }, 
+  {    "dic_get_error_services"          ,
+       dim_dic_get_error_services       ,
+       METH_VARARGS              ,
+       "TODO: add documentation" 
+  }, 
+  {    "dic_dic_add_error_handler"          ,
+       dim_dic_add_error_handler   ,
+       METH_VARARGS              ,
+       "TODO: add documentation" 
+  }, 
   {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
@@ -1847,4 +1557,8 @@ initdimc(void)
     dis_disable_padding();
     PyEval_InitThreads();
 }
+
+
+
+
 

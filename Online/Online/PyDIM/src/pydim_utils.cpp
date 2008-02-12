@@ -25,19 +25,21 @@ extern "C" {
  * **************************************************************************/
 #define print(...) printf("DIM Wrapper: %s:%u ::%s: ", __FILE__, __LINE__, __FUNCTION__); printf(__VA_ARGS__); printf("\n");
 
+#ifndef Py_RETURN_NONE
+#define Py_RETURN_NONE do { Py_INCREF(Py_None); return Py_None; } while(0);
+#endif
+#define errmsg(x) do { fprintf(stderr, "%s: %s\n", __FUNCTION__, x); } while(0);
+
 #define _DIM_INT 0
 #define _DIM_INT_LEN sizeof(int)
 
 #define _DIM_FLOAT 1
-// #define _DIM_FLOAT_LEN 4
 #define _DIM_FLOAT_LEN sizeof(float)
 
 #define _DIM_DOUBLE 2
-// #define _DIM_DOUBLE_LEN 8
 #define _DIM_DOUBLE_LEN sizeof(double)
 
 #define _DIM_XTRA 3
-// #define _DIM_XTRA_LEN 8
 #define _DIM_XTRA_LEN sizeof(long long)
 
 #define _DIM_STRING 4
@@ -48,20 +50,111 @@ extern "C" {
 
 #define _DIM_LONG 6
 #define _DIM_LONG_LEN sizeof(long)
-// #define _DIM_INT_LEN sizeof(int)
 
 #define MUL_INFINITE -1
-/* multiplicity == MUL_INFINITE  means an arbitrary amount of data types (e.g. ..;I)
+/* multiplicity == MUL_INFINITE  means an arbitrary amount of data types 
+ *                  (e.g. ..;I)
  * multiplicity == 0 is an illegal value and will not be returned by this
- * function 
+ *                 function 
  */
 
 /* **************************************************************************
  * Utility functions
  * *************************************************************************/
-static void printPyObject(PyObject *object) 
+int listOrTuple2Int(PyObject* pyObj, int** buffer) {
+    int size, i, res=1;
+    PyObject* tmp;
+
+    if ( PyTuple_Check(pyObj) ) { //tuple
+        size = PyTuple_Size(pyObj);
+    if (!size)
+        res = 0;
+    (*buffer) = (int*)malloc(size*sizeof(int)+1);
+    if ( !(*buffer) )
+      res = 0;
+    for (i=0; i<size; i++) {
+      tmp = PyTuple_GetItem(pyObj, i);
+      if (!tmp)
+        res = 0;
+      (*buffer)[i] = (int)PyInt_AsLong(tmp);
+    }
+  } else if ( PyList_Check(pyObj) ) { //list
+      size = PyList_Size(pyObj);
+      if (!size)
+          res = 0;
+      (*buffer) = (int*)malloc(size*sizeof(int)+1);
+      if ( !(*buffer) )
+          res = 0;
+      for (i=0; i<size; i++) {
+          tmp = PyList_GetItem(pyObj, i);
+          if (!tmp)
+              res = 0;
+          (*buffer)[i] = (int)PyInt_AsLong(tmp);
+      }
+  } else
+    res = 0;
+
+    if (res) {
+      (*buffer)[size] = 0;
+      return 1;
+  }
+  else {
+    free(*buffer);
+    buffer = NULL;
+    return 0;
+  }
+}
+
+PyObject* 
+stringList_to_tuple (char* services) {
+    /* Gets a list of null terminated char* and converts it to a python tuple
+     */
+    PyObject* tuple=NULL;
+    int i=0, size=0, start=0, cur=0;
+    
+    if (!services) 
+        return PyTuple_New(0); /* reference will be owned by the caller */
+    /* getting the number of serviecs */        
+    while (services[i] != '\0') {
+        if (services[i] == '\n')
+            ++size;
+    }
+    tuple = PyTuple_New(size);
+    i=0;
+    while (services[i] != '\0') {
+        if (services[i] == '\n') {
+            PyTuple_SetItem(tuple, cur++, PyString_FromStringAndSize(&services[start], i-start) );
+            start=i+1;
+        }
+    }
+    return tuple;
+} 
+                  
+PyObject* 
+pyCallFunction (PyObject* pyFunc, PyObject* args) {
+/*  Is the responsibility of the caller to handle the Ref count of both the 
+ * sentobject and the result.
+ */
+    PyGILState_STATE gstate;
+    PyObject* res;   
+    
+    gstate = PyGILState_Ensure();
+    res = PyEval_CallObject(pyFunc, args);
+    PyGILState_Release(gstate);
+    if (!res)
+        PyErr_Print();
+    
+    return res;
+}
+
+#ifndef HOST_NAME_MAX
+#define HOST_NAME_MAX _POSIX_HOST_NAME_MAX
+#endif
+ 
+void 
+printPyObject(PyObject *object) 
 {
-   if ( !object ) return;
+   if (!object) return;
    PyObject_Print(object, stdout, Py_PRINT_RAW);
    printf("\n");
    return;
@@ -69,11 +162,8 @@ static void printPyObject(PyObject *object)
 
 void
 printDimBuf(const char *buf, int size) {
-    int i;
-
-    for (i=0; i<size; i++) 
+    for (int i=0; i<size; i++) 
         printf("Byte %d: ASCII %c, CODE: %d\n", i, buf[i], buf[i]);
-
 }
 
 static int
@@ -237,14 +327,20 @@ dim_buf_to_list(const char *schema, const char *buf, unsigned int len)
                 if (mult == MUL_INFINITE)  
                     mult = (len - n) / _DIM_CHAR_LEN;
                 if ((unsigned int)(n + mult) <= len) { // ugly
-                    tmp = PyString_FromStringAndSize(&buf[n], mult);
-                    PyList_Append(list, tmp);                    
-                        n += mult;
+                	int p=mult-1;
+                    while (p && buf[n+p] == '\0')
+                    	--p;
+                    tmp = PyString_FromStringAndSize(&buf[n], p+1);
+                    n += mult;
                 } else {
-                    tmp =  PyString_FromStringAndSize(&buf[n], len - n);
-                    PyList_Append(list, tmp);                    
-                    goto short_buffer;
+                	int p=len-n-1;
+                    //goto short_buffer;
+                    while (p && buf[p] == '\0')
+                         --p;
+                    tmp = PyString_FromStringAndSize(&buf[n], p+1);
+                    n = len;
                 }
+                PyList_Append(list, tmp);
                 break;
             case _DIM_SHORT:
                 if (mult == MUL_INFINITE)
@@ -455,11 +551,11 @@ iterator_to_buffer(PyObject     *iter,   /* list or tuple PyObject */
                    unsigned int size,    /* maximum size of buffer */
                    const char   *format) /* the format to use */
 {
-    /* This function allocates a new buffer and converts the python
-     * iterator to it according to format specified.
+    /* This function gets buffer and converts the python iterator to a char* 
+     * according to format specified.
      */
     int type=0, mult=0, j;
-    PyObject *tmp;
+    PyObject *tmp, *tmp1;
     unsigned int ptr=0, buf_ptr=0, str_size=0, iter_size=0, elem=0;
     int i;
     float f;
@@ -484,60 +580,85 @@ iterator_to_buffer(PyObject     *iter,   /* list or tuple PyObject */
             switch (type) {
                 case _DIM_INT :
                     if (size < buf_ptr + _DIM_INT_LEN)
-                        goto shortbuffer; 
-                    i = PyInt_AsLong(tmp);
+                        goto shortbuffer;
+                    tmp1=PyNumber_Int(tmp);
+                    if (!tmp1) goto invalid_format;                    
+                    i = PyInt_AsLong(tmp1);
                     memcpy(&buffer[buf_ptr], &i, _DIM_INT_LEN);                        
-                    buf_ptr += _DIM_INT_LEN;
+                    buf_ptr += _DIM_INT_LEN;                    
                     break;
                 case _DIM_LONG :
                     if (size < buf_ptr + _DIM_LONG_LEN)
                         goto shortbuffer; 
-                    l = PyInt_AsLong(tmp);
+                    tmp1=PyNumber_Long(tmp);
+                    if (!tmp1) goto invalid_format;                        
+                    l = PyInt_AsLong(tmp1);
                     memcpy(&buffer[buf_ptr], &l, _DIM_LONG_LEN);                         
                     buf_ptr += _DIM_LONG_LEN;
                     break;
                 case _DIM_STRING:
-                         str = PyString_AsString(tmp);                         
-                         if ( strlen(str) < (unsigned int)mult || mult==-1 ) {
-                             str_size = strlen(str)+1;
-                             if ((buf_ptr+str_size)>size) {
-                                  // this means the python string is to 
-                                  // big to be completly converted
-                                  str_size=size-buf_ptr;
-                             }
-                         } else {
-                             // Truncating string
-                             str_size = mult;
-                         }
-                         memcpy(&buffer[buf_ptr], str, str_size);                         
-                         buf_ptr += _DIM_CHAR_LEN * str_size;
-                         mult = 0;
-                         break;
+                    tmp1 = PyObject_Str(tmp); 
+                    str = PyString_AsString(tmp1);
+                    str_size = strlen(str)+1;                                                                              
+                    if(mult==-1) {                            
+                        if ((buf_ptr+str_size)>size) {
+                            /* this means the python string is too 
+                             * big to be completly converted
+                             */                            
+                            memcpy(&buffer[buf_ptr], str, size-buf_ptr);                            
+                        } else {
+                            /* shorter string */
+                            memcpy(&buffer[buf_ptr], str, str_size);    
+                            memset(&buffer[buf_ptr+str_size], '\0', size-buf_ptr-str_size);
+                        }
+                        buf_ptr = size;
+                    } else {
+                        if (str_size < (unsigned int)mult) {
+                            /* we have a shorter string */
+                            memcpy(&buffer[buf_ptr], str, str_size);
+                            /* zeroing what can't be filled */
+                            memset(&buffer[buf_ptr+str_size], '\0', mult-str_size);
+                        } else
+                            /* String is to big to fit in its place. Truncating */
+                            memcpy(&buffer[buf_ptr], str, mult);
+                        buf_ptr += _DIM_CHAR_LEN * mult;
+                        j = mult;
+                    }
+                    break;
                 case _DIM_FLOAT: 
                     if (size < buf_ptr + _DIM_FLOAT_LEN)
-                        goto shortbuffer;                    
-                    f = PyFloat_AsDouble(tmp);
+                        goto shortbuffer;
+                    tmp1 = PyNumber_Float(tmp);
+                    if (!tmp1) goto invalid_format;
+                    f = PyFloat_AsDouble(tmp1);
                     memcpy(&buffer[buf_ptr], &f, _DIM_FLOAT_LEN);
                     buf_ptr += _DIM_FLOAT_LEN;                         
                     break;
                 case _DIM_DOUBLE:
                     if (size < buf_ptr + _DIM_DOUBLE_LEN)
-                        goto shortbuffer;                     
-                    d = PyFloat_AsDouble(tmp);
+                        goto shortbuffer;
+                    tmp1 = PyNumber_Float(tmp);
+                    if (!tmp1) goto invalid_format;              
+                    d = PyFloat_AsDouble(tmp1);
                     memcpy(&buffer[buf_ptr], &d, _DIM_DOUBLE_LEN);
                     buf_ptr += _DIM_DOUBLE_LEN;                          
                     break;
                 case _DIM_XTRA:
                     if (size < buf_ptr + _DIM_XTRA_LEN)
                         goto shortbuffer;
-                    x = PyLong_AsLongLong(tmp);
+                    tmp1 = PyNumber_Long(tmp);
+                    if (!tmp1) goto invalid_format; 
+                    x = PyLong_AsLongLong(tmp1);
                     memcpy(&buffer[buf_ptr], &x, _DIM_XTRA_LEN);
                     buf_ptr += _DIM_XTRA_LEN;                        
                     break;
                 case _DIM_SHORT: 
                     if (size < buf_ptr + _DIM_SHORT_LEN)
                         goto shortbuffer;
-                    s = PyInt_AsLong(tmp);
+                    tmp1 = PyNumber_Int(tmp);
+                    if (!tmp1) goto invalid_format;
+                    //printPyObject(tmp1);
+                    s = (short int)PyInt_AsLong(tmp1);
                     memcpy(&buffer[buf_ptr], &s, _DIM_SHORT_LEN);
                     buf_ptr += _DIM_SHORT_LEN;                         
                     break;
@@ -545,21 +666,29 @@ iterator_to_buffer(PyObject     *iter,   /* list or tuple PyObject */
                     print("bad character %c. Type is %d\n", format[ptr], type);
                     return 0;
             }
+            Py_DECREF(tmp);
+            Py_XDECREF(tmp1);
         }
     }    
     iter_size = PySequence_Size(iter);
-    if ( iter_size != elem ) {
+    if (iter_size != elem) {
         // Check to see if all the objects from the iterator were used
-        print("WARNING: Iterator object holds more objects than format specifies");           
+        print("WARNING: Iterator object holds more objects than format specifies");
+        print ("%d %d", iter_size, elem);
     }
-    // print("Converting iterator to buffer");
-    // printDimBuf(buffer, size);
-    // printPyObject(iter);
+    //printDimBuf(buffer, size);
+    //printPyObject(iter);
     return 1;
     
  shortbuffer:
      print(" WARNING: The provided buffer is not big enough to hold all the conversion objects. Truncating...");
      return 1;
+     
+ invalid_format:
+     print(" Python object does not match format");
+     Py_XDECREF(tmp);
+     Py_XDECREF(tmp1);
+     return 0;
 }
 
 
@@ -589,5 +718,5 @@ iterator_to_allocated_buffer(PyObject  *iter, /* list or tuple PyObject */
          return 1;
      } else {
          return 0;
-			}    
+     }    
 }
