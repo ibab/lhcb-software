@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.cpp,v 1.7 2007-06-16 10:50:06 pkoppenb Exp $
+// $Id: TutorialChecker.cpp,v 1.8 2008-02-12 13:18:30 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -48,7 +48,9 @@ StatusCode TutorialChecker::initialize() {
 
   m_background = tool<IBackgroundCategory>("BackgroundCategory",this);
   
-  m_pLinker = new Particle2MCLinker(this,Particle2MCMethod::Composite, ""); 
+  m_pLinker = new Particle2MCLinker(this,
+                                    Particle2MCMethod::Composite,
+                                    std::vector<std::string>(1,"") ); 
 
   debug() << "==> Initialize" << endmsg;
 
