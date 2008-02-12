@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.198 2008-02-05 14:04:43 jpalac Exp $
+! $Id: release.notes,v 1.199 2008-02-12 14:37:11 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-02-12 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v9r10p1
+ - src/BackgroundCategoryTool.cpp
+  . Use Particle2MCLinker constructor taking vector of locations, not
+    single location, as this has been deprecated.
 
 !========================== DaVinciMCTools v9r10 2008-02-05 ==================
 
