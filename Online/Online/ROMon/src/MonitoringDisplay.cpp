@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.cpp,v 1.2 2008-02-12 08:05:13 frankm Exp $
+// $Id: MonitoringDisplay.cpp,v 1.3 2008-02-12 18:18:49 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.2 2008-02-12 08:05:13 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.3 2008-02-12 18:18:49 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -209,6 +209,7 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
 	      streams[str].buffer    = &(*ib);
 	    }
 	    else if ( (typ=nullstr(nam,"_SND")) ) {
+	      str=typ+4;
 	      ptr = nullchr(typ+4,'_');
 	      streams[str].to[++ptr] = cl.events;
 	      streams[str].buffer    = &(*ib);
