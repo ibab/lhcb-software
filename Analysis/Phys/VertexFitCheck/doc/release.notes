@@ -1,9 +1,16 @@
-// $Id: release.notes,v 1.10 2007-11-15 08:28:57 jpalac Exp $
+// $Id: release.notes,v 1.11 2008-02-12 14:24:59 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFitCheck
 ! Responsible : Yuehong Xie
 ! Puspose     : A set of tests for components in the Phys/VertexFit package.
 !===========================================================================
+
+! 2008-02-12 - Juan PALACIOS
+ - cmt/requirements
+  . Increment version to v1r2p1
+ - src/PhotonChecker.cpp, ProperTimeChecker.cpp, VtxChecker.cpp
+  . Use Particle2MCLinker constructor taking vector of locations, not
+    single location, as this has been deprecated.
 
 !===================== VertexFitCheck v1r2 2007-11-15 ======================
 
