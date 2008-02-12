@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.cpp,v 1.7 2008-02-08 10:02:13 wouter Exp $
+// $Id: TrackFilterAlg.cpp,v 1.8 2008-02-12 10:05:12 wouter Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -137,9 +137,9 @@ void TrackFilterAlg::filterTrack(LHCb::Track* track, LHCb::Tracks* outputContain
     }
 
     unsigned nHits = 0u;
-    const Track::MeasurementContainer& wantedIds = clonedTrack->measurements();
-    for (Track::MeasurementContainer::const_iterator i = wantedIds.begin(), iEnd = wantedIds.end(); i != iEnd; ++i) {
-      const AlignmentElement* elem = m_elementsToBeAligned->findElement(**i);
+    const LHCBIDS& wantedIds = clonedTrack->lhcbIDs();
+    for (LHCBIDS::const_iterator i = wantedIds.begin(), iEnd = wantedIds.end(); i != iEnd; ++i) {
+      const AlignmentElement* elem = m_elementsToBeAligned->findElement((*i));
       if (!elem) {
         if (printDebug()) debug() << "==> Measurement not on a to-be-aligned DetElem" << endmsg;
         continue;
@@ -147,7 +147,7 @@ void TrackFilterAlg::filterTrack(LHCb::Track* track, LHCb::Tracks* outputContain
       ++nHits;
     }
     
-    if (nHits > m_nMinHits)  {
+    if (nHits >= m_nMinHits)  {
       if (printDebug()) {
         debug() << "Found track with " << nHits << " of type " << m_detector << endmsg;
       }
