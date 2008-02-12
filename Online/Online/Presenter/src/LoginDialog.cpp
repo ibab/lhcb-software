@@ -11,11 +11,15 @@
 #include "PresenterMainFrame.h"
 #include "LoginDialog.h"
 
+using namespace pres;
+
 ClassImp(LoginDialog)
 
-LoginDialog::LoginDialog(PresenterMainFrame* gui, Int_t Width, Int_t Height) :
-  TGTransientFrame(gClient->GetRoot(), gui, Width, Height),
+LoginDialog::LoginDialog(PresenterMainFrame* gui, int width, int height,
+                         const DatabaseMode databaseMode) :
+  TGTransientFrame(gClient->GetRoot(), gui, width, height),
   m_mainFrame(gui),
+  m_databaseMode(databaseMode),
   m_dbPasswdInput(NULL),
   m_dbPasswd(NULL),
   m_histogramDB(NULL),
@@ -23,10 +27,13 @@ LoginDialog::LoginDialog(PresenterMainFrame* gui, Int_t Width, Int_t Height) :
   m_loginButton(NULL),
   m_cancelButton(NULL)
 {
+  if (LoggedOut == m_databaseMode) { m_databaseMode = UserSelected; }
   SetCleanup(kDeepCleanup);
+  Connect("CloseWindow()", "LoginDialog", this, "CloseWindow()");
+  DontCallClose();
+
   SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputSystemModal);
   build();
-  CenterOnParent();
   MapWindow();
 }
 LoginDialog::~LoginDialog()
@@ -37,66 +44,69 @@ LoginDialog::~LoginDialog()
 void LoginDialog::build()
 {
   SetCleanup(kDeepCleanup);
-  SetLayoutBroken(kTRUE);
+  SetLayoutBroken(true);
 
   SetWindowName("Login to OnlineHistDB");
 
   m_histogramDB = new TGComboBox(this);
   //m_histogramDB = new TGComboBox(this, m_input);
-  m_histogramDB->AddEntry(TString("lbora01:1528/HISTOGRAMDB"), 0);
-  m_histogramDB->AddEntry(TString("ora01:1528/HISTOGRAMDB"), 1);
-  m_histogramDB->AddEntry(TString("oradev10.cern.ch:10520/D10"), 2);
-  m_histogramDB->AddEntry(TString("HISTOGRAMDB"), 3);
-  m_histogramDB->Select(1);
+  m_histogramDB->AddEntry(HISTDB, 0);
+  m_histogramDB->AddEntry(LBORA01, 1);
+  m_histogramDB->AddEntry(ORADEV10, 2);
+  m_histogramDB->Select(0);
   m_histogramDB->Resize(168, 22);
-  AddFrame(m_histogramDB, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX, 2, 2,
-    2, 2));
+  AddFrame(m_histogramDB,
+           new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX,
+                             2, 2, 2, 2));
   m_histogramDB->Move(88, 16);
 
   m_dbUsername = new TGComboBox(this,-1, kHorizontalFrame | kSunkenFrame |
-    kDoubleBorder | kOwnBackground);
-  
-  UserGroup_t* userInfo = gSystem->GetUserInfo(); //returns new...
+                                kDoubleBorder | kOwnBackground);
+
+  //returns new... and Admin on w32, not euid(?) 
+  UserGroup_t* userInfo = gSystem->GetUserInfo(gSystem->GetEffectiveUid()); 
   m_dbUsername->AddEntry(userInfo->fUser, 0);
   delete userInfo;
-  
-  m_dbUsername->AddEntry(TString("HIST_READER"), 1);
-  m_dbUsername->AddEntry(TString("HIST_WRITER"), 2);
-  m_dbUsername->AddEntry(TString("LHCB_MON_GIACOMO"), 3);
-  m_dbUsername->AddEntry(TString(""), 4);
-  m_dbUsername->Select(2);
+
+  m_dbUsername->AddEntry(HIST_READER, 1);
+  m_dbUsername->AddEntry(HIST_WRITER, 2);
+  m_dbUsername->AddEntry(LHCB_MON_GIACOMO, 3);
+  m_dbUsername->Select(1);
+//  m_dbUsername->AddEntry(TString(""), 4);
   m_dbUsername->Resize(168, 22);
-  AddFrame(m_dbUsername, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX, 2, 2, 2,
-    2));
+  AddFrame(m_dbUsername,
+          new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX,
+                            2, 2, 2, 2));
   m_dbUsername->MoveResize(88, 48, 168, 22);
-  m_dbUsername->Connect("ChangedBy(const char *)", "LoginDialog", this,
-    "defaultPw(const char *)");
+  m_dbUsername->Connect("Selected(Int_t)", "LoginDialog", this,
+    "defaultPw(Int_t)");
 
   m_loginButton = new TGTextButton(this,"&Login");
   m_loginButton->SetTextJustify(36);
   m_loginButton->Resize(90, 22);
-  AddFrame(m_loginButton, new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2,
-    2, 2));
+  AddFrame(m_loginButton,
+           new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   m_loginButton->MoveResize(64, 144, 90, 22);
   m_loginButton->Connect("Clicked()", "LoginDialog", this, "login()");
 
   m_cancelButton = new TGTextButton(this,"&Cancel");
   m_cancelButton->SetTextJustify(36);
   m_cancelButton->Resize(90, 22);
-  AddFrame(m_cancelButton, new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2,
-    2, 2));
+  AddFrame(m_cancelButton,
+           new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   m_cancelButton->MoveResize(168, 144, 90, 22);
-  m_cancelButton->Connect("Clicked()", "LoginDialog", this, "cancelLogin()");
+  m_cancelButton->Connect("Clicked()", "LoginDialog", this, "CloseWindow()");
 
-  m_dbPasswdInput = new TGTextEntry(this, m_dbPasswd = new TGTextBuffer(30),
-    -1);
+  m_dbPasswdInput = new TGTextEntry(this,
+                                    m_dbPasswd = new TGTextBuffer(30), -1);
   m_dbPasswdInput->SetMaxLength(255);
   m_dbPasswdInput->SetAlignment(kTextLeft);
-  m_dbPasswdInput->SetEchoMode(TGTextEntry::kPassword);
-  m_dbPasswdInput->SetText("histeggia194");
+  m_dbPasswdInput->SetEchoMode(TGTextEntry::kPassword);  
+  m_dbPasswdInput->SetText(HIST_READER_KRED.c_str());
   m_dbPasswdInput->Resize(168, m_dbPasswdInput->GetDefaultHeight());
-  AddFrame(m_dbPasswdInput, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX, 2, 2,
-    2, 2));
+  AddFrame(m_dbPasswdInput,
+           new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX,
+                             2, 2, 2, 2));
   m_dbPasswdInput->MoveResize(88, 80, 168, 22);
 
   TGLabel* fLabel747 = new TGLabel(this, "Database:");
@@ -115,39 +125,63 @@ void LoginDialog::build()
   AddFrame(fLabel761, new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   fLabel761->MoveResize(8, 80, 57, 18);
 
-  Resize(GetDefaultSize());
+   switch (m_databaseMode) {
+    case ReadOnly:
+      m_dbUsername->Select(1);
+      m_dbPasswdInput->SetText(HIST_READER_KRED.c_str());
+      break;
+    case ReadWrite:
+      m_dbUsername->Select(2);
+      m_dbPasswdInput->SetText(HIST_WRITER_KRED.c_str());
+      break;
+    case UserSelected:
+      m_dbUsername->Select(0);
+      m_dbPasswdInput->SetText("");
+      break;
+    default:
+      std::cout << "LoginDialog: something went wrong when setting database mode."
+          << std::endl;
+      break;
+   }
+//  Resize(GetDefaultSize());
   Resize(285, 208);
 
   MapSubwindows();
   MapWindow();
 }
-void LoginDialog::defaultPw(const char *)
+void LoginDialog::defaultPw(int account)
 {
   if(OnlineHistDBEnv_constants::ACCOUNT ==
        dynamic_cast<TGTextLBEntry*>(m_dbUsername->GetSelectedEntry())->
-       GetText()->GetString()) {
-    m_dbPasswdInput->SetText("histeggia194");
-  } else {
-    m_dbPasswdInput->SetText("histeggia194");
+                                    GetText()->GetString()) {
+    m_dbPasswdInput->SetText(HIST_READER_KRED.c_str());
+  } else if (account == 0){
+    m_dbPasswdInput->SetText("");    
+  } else if (HIST_WRITER ==
+       dynamic_cast<TGTextLBEntry*>(m_dbUsername->GetSelectedEntry())->
+                                    GetText()->GetString()) {
+    m_dbPasswdInput->SetText(HIST_WRITER_KRED.c_str());
   }
+  DoRedraw();
 }
 void LoginDialog::login()
 {
-  m_loginButton->SetEnabled(false);
+  m_loginButton->SetState(kButtonDisabled);
+  m_cancelButton->SetState(kButtonDisabled);
+
   if (m_mainFrame->connectToHistogramDB(m_dbPasswd->GetString(),
-                              dynamic_cast<TGTextLBEntry*>(m_dbUsername->
-                                GetSelectedEntry())->GetText()->GetString(),
-                              dynamic_cast<TGTextLBEntry*>(m_histogramDB->
-                                GetSelectedEntry())->GetText()->GetString())){
-    DeleteWindow();
+            dynamic_cast<TGTextLBEntry*>(m_dbUsername->GetSelectedEntry())->
+                                         GetText()->GetString(),
+            dynamic_cast<TGTextLBEntry*>(m_histogramDB->GetSelectedEntry())->
+                                         GetText()->GetString())){
+    CloseWindow();
   } else {
-      //TODO: remove DeleteWindow() ->  bug
-      DeleteWindow();
-//    m_loginButton->SetEnabled(true);
+    CloseWindow();
   }
 }
-void LoginDialog::cancelLogin()
-{
-  m_mainFrame->logoutFromHistogramDB();
+void LoginDialog::CloseWindow() {
+  // disabling is a beauty patch for crashes on double-click crash
+  m_loginButton->SetState(kButtonDisabled);
+  m_cancelButton->SetState(kButtonDisabled);
   DeleteWindow();
 }
