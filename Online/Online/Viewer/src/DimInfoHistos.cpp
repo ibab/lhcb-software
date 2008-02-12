@@ -4,6 +4,7 @@
 #include "TProfile.h"
 #include <iostream>
 #include <cstdlib>
+#include <cmath>
 #ifdef WIN32
 namespace win {
 #include <windows.h>
