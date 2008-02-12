@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+
+!- 2008-02-12 Jose A. Hernando
+ - HltHadAlleyConfSequence: two triggers in single and dihadron triggers, no optimized for eff vs ret jet, rate of the hadron has been duplicated in L0 10 kHz, while gaining all possible efficiency in the B-->hh.
  
 </PRE><H1><A NAME=v3r0>2008-03-05 HltSys v3r0</A></H1><PRE>
 This version uses LHCb v23r3. 
