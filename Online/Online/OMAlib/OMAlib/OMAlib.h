@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.2 2008-02-05 23:01:47 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.3 2008-02-12 14:04:32 ggiacomo Exp $
 #ifndef OMALIB_H
 #define OMALIB_H 1
 /** @class  OMAlib OMAlib.h OMAlib/OMAlib.h
@@ -16,6 +16,7 @@ using namespace std;
 
 namespace OMAconstants {
   static const int AlgListID = 2;
+  static const std::string version = "v0r2";
 }
 
 
