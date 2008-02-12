@@ -1,6 +1,7 @@
 <? if(isset($_POST["DBLogin"])) {
-  setcookie("user",$_POST["user"],time()+10000);
-  setcookie("password",$_POST["password"],time()+10000);
+  setcookie("user",$_POST["user"],time()+30000);
+  setcookie("password",$_POST["password"],time()+30000);
+  setcookie("histdb",$_POST["database"],time()+30000);
 }
 include 'util.php';
 ?>

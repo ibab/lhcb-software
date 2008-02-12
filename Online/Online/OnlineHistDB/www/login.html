@@ -12,7 +12,13 @@
 <form action="mainframe.php" METHOD='POST' name='LoginForm' >
 <table class="input_login_form" ALIGN="CENTER">
 	    <tr><td>Username:</td><td><input type='text' name='user' size='20' maxlength='80' value='HIST_READER'></td></tr>
-	     <tr><td>Password:</td><td><input type='password' name='password' size='20' maxlength='255' value='welcome'></td></tr>    
+	     <tr><td>Password:</td><td><input type='password' name='password' size='20' maxlength='255' value='reader'></td></tr>    
+	     <tr><td>Database:</td><td><select  name='database'>
+<option> HISTDB</option>
+<option> lbora01:1528/HISTOGRAMDB </option>
+<option> ora01:1528/HISTOGRAMDB </option>
+<option> devdb10</option>
+</select></td></tr>    
 	  <tr>
 	  <td align='center' valign='middle' colspan='2'>
 	    <input type='submit' name='DBLogin' value='Login'>

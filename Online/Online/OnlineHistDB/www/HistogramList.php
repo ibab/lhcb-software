@@ -19,7 +19,7 @@ if (!$conn) {
   print htmlentities($e['message']);
 }
 else {
-  $onlyset="WHERE VH.IHS=1";
+  $onlyset="WHERE ( VH.NHS = 1 or VH.IHS=(select min(ihs) from VIEWHISTOGRAM where HSID=VH.HSID) )";
   $conta="SELECT COUNT(*) FROM VIEWHISTOGRAM VH ";
   // the following query gives ordered results with an index (IORDER) allowing to take only part of the list
   $showvars="SELECT row_number() OVER (ORDER BY TASK,ALGO,TITLE) as IORDER,VH.HID,VH.HSID,VH.NHS,VH.TASK,VH.ALGO,VH.TITLE FROM VIEWHISTOGRAM VH ";
