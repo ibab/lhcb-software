@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.3 2007-06-15 16:32:17 jpalac Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.4 2008-02-12 13:32:15 jpalac Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -212,7 +212,7 @@ private: // methods
   inline Particle2MCLinker * particleLinker( const LHCb::Particle * /* part */ ) const
   {
     if ( !m_particleLinker )
-    { m_particleLinker = new Particle2MCLinker ( this, Particle2MCMethod::Composite, "" ); }
+    { m_particleLinker = new Particle2MCLinker ( this, Particle2MCMethod::Composite, std::vector<std::string>(1,"") ); }
     return m_particleLinker;
   }
 
@@ -220,8 +220,10 @@ private: // methods
   inline ProtoParticle2MCLinker * chargedProtoLinker() const
   {
     if ( !m_chargedProtoLinker )
-    { m_chargedProtoLinker = new ProtoParticle2MCLinker( this, Particle2MCMethod::ChargedPP, 
-                                                         LHCb::ProtoParticleLocation::Charged ); }
+    { m_chargedProtoLinker = new ProtoParticle2MCLinker( this, 
+                                                         Particle2MCMethod::ChargedPP, 
+                                                         
+                                                         std::vector<std::string>(1,LHCb::ProtoParticleLocation::Charged) ); }
     return m_chargedProtoLinker;
   }
 
@@ -230,7 +232,7 @@ private: // methods
   {
     if ( !m_neutralProtoLinker )
     { m_neutralProtoLinker = new ProtoParticle2MCLinker( this, Particle2MCMethod::NeutralPP, 
-                                                         LHCb::ProtoParticleLocation::Neutrals ); }
+                                                         std::vector<std::string>(1,LHCb::ProtoParticleLocation::Neutrals) ); }
     return m_neutralProtoLinker;
   }
 
