@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           PyDIM 
-version           v3r0
+version           v2r0
 #============================================================================
 branches          cmt doc src python
 use GaudiPolicy   v*
@@ -35,11 +35,6 @@ cmtpath_pattern \
 
 apply_pattern pydim_module name=dimc     files="dimmodule.cpp
 apply_pattern pydim_module name=dimcpp   files="dimmodule++.cpp
-
-#application dim_test        -group=tests ../tests/test.c
-#application dim_test_client -group=tests ../tests/test_client.c
-#application dim_test_cpp    -group=tests ../tests/test.cpp
-#application dim_test_utils  -group=tests ../tests/test_pydim_utils.cpp
 
 apply_pattern install_python_modules
 
