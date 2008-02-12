@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.32 2008-02-01 21:51:59 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.33 2008-02-12 14:35:58 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -1164,11 +1164,17 @@ StatusCode BackgroundCategory::initialize(){
   sc = service("ParticlePropertySvc", m_ppSvc);
   if (!sc) return sc;
 
-  m_pCPPAsct = new ProtoParticle2MCLinker( this, Particle2MCMethod::ChargedPP, "");
-  m_pNPPAsct = new ProtoParticle2MCLinker( this, Particle2MCMethod::NeutralPP, "");
+  m_pCPPAsct = new ProtoParticle2MCLinker( this, 
+                                           Particle2MCMethod::ChargedPP, 
+                                           std::vector<std::string>(1,"") );
+  m_pNPPAsct = new ProtoParticle2MCLinker( this, 
+                                           Particle2MCMethod::NeutralPP,
+                                           std::vector<std::string>(1,"") );
   //m_pCPPAsct = new Particle2MCLinker( this, Particle2MCMethod::Links, "");
   //m_pNPPAsct = new Particle2MCLinker( this, Particle2MCMethod::Links, "");
-  m_pChi2PPAsct = new Particle2MCLinker( this, Particle2MCMethod::Composite, "");
+  m_pChi2PPAsct = new Particle2MCLinker( this, 
+                                         Particle2MCMethod::Composite,
+                                         std::vector<std::string>(1,"") );
 
   //m_pCPPAsct = new Particle2MCLinker( this, "ChargedPP2MC", "/MyChargedPP2MC", "");
   //m_pNPPAsct = new Particle2MCLinker( this, "NeutralPP2MC", "/MyNeutralPP2MC", "");
