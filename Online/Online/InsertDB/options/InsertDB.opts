@@ -1,7 +1,7 @@
 // Job options file. Simple Online Saver example
 //==============================================================
 
-ApplicationMgr.ExtSvc = { "MonitorSvc" };
+ApplicationMgr.ExtSvc = { "EventSelector" };
 
 ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud", "Gaucho"};
 ApplicationMgr.DLLs += {"InsertDB"};

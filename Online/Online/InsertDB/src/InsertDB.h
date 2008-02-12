@@ -30,6 +30,7 @@ private:
   std::string m_nodename;
   std::string m_dimclientdns;
   std::string m_topleveltaskname;
+  std::string m_taskname;
   std::string command;
   
 

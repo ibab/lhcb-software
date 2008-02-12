@@ -1,7 +1,6 @@
 package InsertDB
-version v1r0
-# Package Manager: Eric v.Herwijnen
-#
+version v1r1
+
 branches cmt doc src
 
 use GaudiKernel  v* 
