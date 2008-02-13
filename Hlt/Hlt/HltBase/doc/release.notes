@@ -3,6 +3,13 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2008-02-13 Gerhard Raven
+ - split tree structure of configurations from the 'data' part;
+   add a 'label' field to the tree nodes which can be used to 
+   give a human-readable description of a given 'branch' of the tree;
+   add a 'kind' field to the 'data' so it is now known whether a 
+   configuration is for a Service, Tool or Algorithm
+   (warning: needs corresponding changes in HltCommon)
 
 ! 2008-02-13 - Patrick Koppenburg
  - Add RecVertex.h header as it is not included for HltSummary anymore
