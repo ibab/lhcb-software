@@ -20,8 +20,6 @@ macro ROOT_config_version "5.18.00"
 library OMAlib  *.cpp
 apply_pattern linker_library library=OMAlib
 
-application AutoAnalysis $(OMALIBROOT)/main/AutoAnalysis.cpp
-
 macro_append OMAlib_shlibflags " -lHist  -lGraf -lRIO  " WIN32 " libHist.lib libGraf.lib libRIO.lib"
 
 
