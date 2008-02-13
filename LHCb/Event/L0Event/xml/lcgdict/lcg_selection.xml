@@ -1,4 +1,10 @@
 <lcgdict>
+  <class name="std::map<std::string,LHCb::L0DUElementaryData*>"/>
+  <class pattern="std::map<std::string,LHCb::L0DUElementaryData*>::*iterator"/>
+  <class name="std::pair<const std::string,LHCb::L0DUElementaryData*>"/>
+  <class name="std::map<std::string,LHCb::L0DUElementaryCondition*>"/>
+  <class pattern="std::map<std::string,LHCb::L0DUElementaryCondition*>::*iterator"/>
+  <class name="std::pair<const std::string,LHCb::L0DUElementaryCondition*>"/>
   <exclusion>
     <class name = "KeyedObject<long>" />
   </exclusion>
