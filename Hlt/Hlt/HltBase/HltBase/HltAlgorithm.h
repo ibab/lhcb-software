@@ -1,9 +1,10 @@
-// $Id: HltAlgorithm.h,v 1.21 2008-01-25 16:55:03 hernando Exp $
+// $Id: HltAlgorithm.h,v 1.22 2008-02-13 09:15:49 pkoppenb Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
 // Include files
 #include "Event/HltSummary.h"
+#include "Event/RecVertex.h"
 #include "HltBase/HltTypes.h"
 #include "HltBase/HltBaseAlg.h"
 

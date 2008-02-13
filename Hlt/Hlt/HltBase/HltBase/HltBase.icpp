@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.2 2008-01-22 13:35:27 hernando Exp $
+// $Id: HltBase.icpp,v 1.3 2008-02-13 09:15:49 pkoppenb Exp $
 // Include files
 
 
@@ -6,6 +6,7 @@
 #include "HltBase/HltBase.h"
 #include "HltBase/EParser.h"
 #include "Event/HltSummary.h"
+#include "Event/RecVertex.h"
 #include "HltBase/HltConfigurationHelper.h"
 
 //-----------------------------------------------------------------------------
