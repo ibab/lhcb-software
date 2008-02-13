@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.cpp,v 1.8 2008-02-12 10:05:12 wouter Exp $
+// $Id: TrackFilterAlg.cpp,v 1.9 2008-02-13 18:03:36 janos Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -40,21 +40,21 @@ TrackFilterAlg::TrackFilterAlg( const std::string& name,
 {
   /// Map strings to track types
   m_stringToTrackTypeMap = map_list_of("Velo"      , Track::Velo      )
-				                              ("VeloR"     , Track::VeloR     )
-				                              ("Long"      , Track::Long      )
+                                      ("VeloR"     , Track::VeloR     )
+                                      ("Long"      , Track::Long      )
                                       ("Upstream"  , Track::Upstream  )
-				                              ("Downstream", Track::Downstream)
-				                              ("Ttrack"    , Track::Ttrack    )
-				                              ("Muon"      , Track::Muon      );
+                                      ("Downstream", Track::Downstream)
+                                      ("Ttrack"    , Track::Ttrack    )
+                                      ("Muon"      , Track::Muon      );
 
   /// And vice versa. I whish we had Boost::BiMap
   m_trackTypeToStringMap = map_list_of(Track::Velo      , "Velo"      )
-				                              (Track::VeloR     , "VeloR"     )
-				                              (Track::Long      , "Long"      )
+                                      (Track::VeloR     , "VeloR"     )
+                                      (Track::Long      , "Long"      )
                                       (Track::Upstream  , "Upstream"  )
                                       (Track::Downstream, "Downstream")
-				                              (Track::Ttrack    , "Ttrack"    )
-				                              (Track::Muon      , "Muon"      );
+                                      (Track::Ttrack    , "Ttrack"    )
+                                      (Track::Muon      , "Muon"      );
 
   m_lhcbDetChecks = map_list_of("Velo", boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isVelo,_1)))
                                ("TT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isTT  ,_1)))
@@ -67,7 +67,7 @@ TrackFilterAlg::TrackFilterAlg( const std::string& name,
   declareProperty("TrackSelector"                , m_trackSelectorName     = "AlignSelTool"            );
   declareProperty("StripUnwantedDetectorHits"    , m_strip                 = false                     );
   declareProperty("KeepDetectorHits"             , m_detector              = "OT"                      );
-  declareProperty("MinNHits"                     , m_nMinHits              = 5u                        );
+  declareProperty("MinNHits"                     , m_nMinHits              = 0u                        );
 
 }
 
@@ -136,6 +136,7 @@ void TrackFilterAlg::filterTrack(LHCb::Track* track, LHCb::Tracks* outputContain
       }
     }
 
+
     unsigned nHits = 0u;
     const LHCBIDS& wantedIds = clonedTrack->lhcbIDs();
     for (LHCBIDS::const_iterator i = wantedIds.begin(), iEnd = wantedIds.end(); i != iEnd; ++i) {
@@ -146,11 +147,11 @@ void TrackFilterAlg::filterTrack(LHCb::Track* track, LHCb::Tracks* outputContain
       }
       ++nHits;
     }
-    
     if (nHits >= m_nMinHits)  {
       if (printDebug()) {
         debug() << "Found track with " << nHits << " of type " << m_detector << endmsg;
       }
+      
       outputContainer->add(clonedTrack.release());
     }                                                                                     /// It's yours
     //if ((clonedTrack->lhcbIDs()).size() > m_nMinHits || !m_strip) outputContainer->add(clonedTrack.release());
