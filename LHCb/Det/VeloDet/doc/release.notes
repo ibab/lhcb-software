@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.187 2008-02-13 15:56:37 krinnert Exp $
+! $Id: release.notes,v 1.188 2008-02-13 16:50:26 krinnert Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2008-02-13 - Kurt Rinnert
+ - removed all explicit 2048 in sensor classes and replaced them with
+   m_numberOfStrips (or m_maxRouting line, where more suitable).
 
 ! 2008-02-13 - Kurt Rinnert
  - made accessors for strip capicitance and strip info inline.

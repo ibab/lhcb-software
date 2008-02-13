@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.31 2008-02-13 15:56:37 krinnert Exp $
+// $Id: DeVeloSensor.cpp,v 1.32 2008-02-13 16:50:26 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -137,7 +137,7 @@ StatusCode DeVeloSensor::channelDistance(const LHCb::VeloChannelID& start,
   unsigned int endStrip = end.strip();
 
   if(start.sensor() != end.sensor()) {
-    nOffset=2048;
+    nOffset=m_numberOfStrips;
     return StatusCode::FAILURE;
   }
 
@@ -233,7 +233,7 @@ StatusCode DeVeloSensor::updateStripCapacitanceCondition () {
   m_stripCapacitanceCondition = condition(m_stripCapacitanceConditionName.c_str());
   m_stripCapacitance = m_stripCapacitanceCondition->paramAsDoubleVect("StripCapacitance");
 
-  if (m_stripCapacitance.size() != 2048) {
+  if (m_stripCapacitance.size() != m_numberOfStrips) {
     MsgStream msg(msgSvc(), "DeVeloSensor");
     msg << MSG::ERROR << "Strip capacitance condition size does not match number of strips!" << endmsg;
     return StatusCode::FAILURE;
@@ -252,7 +252,7 @@ StatusCode DeVeloSensor::updateStripInfoCondition () {
                  m_stripInfos.begin(),
                  ConvertIntToStripInfo());
 
-  if (m_stripInfos.size() != 2048) {
+  if (m_stripInfos.size() != m_numberOfStrips) {
     MsgStream msg(msgSvc(), "DeVeloSensor");
     msg << MSG::ERROR << "Strip info condition size does not match number of strips!" << endmsg;
     return StatusCode::FAILURE;
