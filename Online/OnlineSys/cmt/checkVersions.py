@@ -1,11 +1,22 @@
 #!/usr/bin/python
-import os
+import os, sys
+
+with_versions = None
+for arg in sys.argv:
+  if arg.upper()[:2]=='-V':
+    with_versions = 1
+
 
 lines = os.popen('cmt show uses | grep -v "#" | grep "use "').readlines()
 curr_dir = os.getcwd()
 dir2 = curr_dir[0:curr_dir.rfind('/')]
-#dir2 = dir2[0:dir2.rfind('/')-1]
+if with_versions: dir2 = dir2[0:dir2.rfind('/')-1]
 dir2 = dir2[0:dir2.rfind('/')+1]
+if with_versions:
+  print 'Execution mode: WITH version directories'
+else:
+  print 'Execution mode: WITHOUT version directories'
+
 print dir2
 # print lines
 
@@ -23,7 +34,8 @@ for line in lines:
     dir = items[3][1:-1]
     path = dir+head+os.sep+package
     pkg = head+os.sep+package
-  #print dir,pkg,path
+  if with_versions: path = path+os.sep+version
+  # print dir,pkg,path
   if dir == dir2:
     last_tag = []
     lines = os.popen('cd '+path+'; cvs status -v cmt/requirements').readlines()
@@ -60,12 +72,13 @@ for line in lines:
 	  pass
         else:
           print 'Nothing abnormal:',n[:-1]
+    vsn = "%-8s"%version
     if changes:
       tag = version.replace('v','').replace('r',' ').replace('p',' ').split(' ')
-      print prefix,'========> HEAD differs from version '+version+' of package:',pkg
+      print prefix,'========> HEAD differs from version '+vsn+' of package:',pkg
       print prefix,'          Last tags:',last_tag
     else:
-      print prefix,'UNCHANGED Package version '+version+'    package:',pkg
+      print prefix,'UNCHANGED Version '+vsn+'    package:',pkg
       # print prefix,'          Last tags:',last_tag
   else:
     #print 'REJECT',package,version,dir,'Head:',head
