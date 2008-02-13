@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.199 2008-02-12 14:37:11 jpalac Exp $
+! $Id: release.notes,v 1.200 2008-02-13 18:23:30 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-02-13 - Patrick Koppenburg
+ - Remove obsolete DebugTool. Use Print(MC)DecayTree tools instead
 
 ! 2008-02-12 - Juan PALACIOS
  - cmt/requirements
