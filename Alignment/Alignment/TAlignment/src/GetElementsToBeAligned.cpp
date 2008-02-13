@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.12 2008-02-12 10:05:52 wouter Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.13 2008-02-13 18:09:12 janos Exp $
 // Include files
 
 //from STL
@@ -48,13 +48,11 @@ GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
     m_index(0),
     m_elements(),
     m_rangeElements(),
-    m_constraints(0),
-    m_findElement()
+    m_elementMap()
 {
   declareInterface<IGetElementsToBeAligned>(this);
   declareProperty("Elements"     , m_elemsToBeAligned);
   declareProperty("GroupElements", m_groupElems      );
-  declareProperty("Constraints"  , m_constraints     );
 }
 
 GetElementsToBeAligned::~GetElementsToBeAligned() {}
@@ -169,12 +167,11 @@ StatusCode GetElementsToBeAligned::initialize() {
   }
   
   m_rangeElements = ElementRange(m_alignElements.begin(), m_alignElements.end());
-  m_findElement   = FindAlignmentElement(Alignment::FindElement(m_elemsToBeAligned.begin()->first), m_rangeElements);
 
   // Fill the element map
-  for( Elements::const_iterator ialignable = m_alignElements.begin(); ialignable != m_alignElements.end(); ++ialignable) {
+  for (Elements::const_iterator ialignable = m_alignElements.begin(); ialignable != m_alignElements.end(); ++ialignable) {
     AlignmentElement::ElementContainer allelements = (*ialignable).elementsInTree() ;
-    for( AlignmentElement::ElementContainer::const_iterator ielement = allelements.begin() ; 
+    for (AlignmentElement::ElementContainer::const_iterator ielement = allelements.begin() ; 
 	 ielement != allelements.end(); ++ielement) {
       m_elementMap[*ielement] = &(*ialignable) ;
     }
@@ -183,29 +180,7 @@ StatusCode GetElementsToBeAligned::initialize() {
 
   /// Print list of detector elements that are going to be aligned
   info() << "   Going to align " << m_rangeElements.size() << " detector elements:" << endmsg;
-  for( ElementRange::const_iterator i = m_rangeElements.begin() ; i != m_rangeElements.end(); ++i)
-    info() <<  "        " << (*i) << endmsg;
-  
-  info() << "   With " << m_constraints.size() << " constraints:" << endmsg;
-  unsigned nC = 0u;
-  bool clear = false;
-  for (IGetElementsToBeAligned::Constraints::const_iterator i = m_constraints.begin(), iEnd = m_constraints.end(); i != iEnd;
-       ++i, ++nC) {
-    if (i->empty() || i->size()-1u !=  m_rangeElements.size()*6u) {
-      warning() << "Number of elements do not much total number of degrees of freedom!" << endmsg;
-      warning() << "Setting constraints to ZERO!" << endmsg;
-      clear = true;
-      break;
-    }
-    info() << "       " << nC << ": f = [ ";
-    for (std::vector<double>::const_iterator j = i->begin(), jEnd = i->end()-1u; j != jEnd; ++j) {
-      info()  << (*j) << " ";
-    }
-
-    info() << " ] ";
-    info() << " and f0 = " << i->back() << endmsg;
-  }
-  if (clear) m_constraints.clear();
+  for( ElementRange::const_iterator i = m_rangeElements.begin() ; i != m_rangeElements.end(); ++i) info() <<  "        " << (*i) << endmsg;
 
   info() << "==============================================================" << endmsg;
 
@@ -257,10 +232,6 @@ void GetElementsToBeAligned::getElements(const IDetectorElement* parent) {
 
 const IGetElementsToBeAligned::ElementRange& GetElementsToBeAligned::rangeElements() const {
   return m_rangeElements;
-}
-
-const IGetElementsToBeAligned::Constraints& GetElementsToBeAligned::constraints() const {
-  return m_constraints;
 }
 
 const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::Measurement& meas) const {
