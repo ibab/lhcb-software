@@ -4,6 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r9 2008-02-13 ============================
+! 2008-02-13 - Marco Cattaneo
+ - Move implementation of typeName( BankType ) to .ccp as it cannot be inlined
+ - Cleanup stl includes in RawBank.h
+
 !================ DAQEvent v7r8 2008-01-30 ============================
 ! 2008-01-30 Marco Clemencic
  - Fixed compilation warnings in ODIN.xml on Win32.  
