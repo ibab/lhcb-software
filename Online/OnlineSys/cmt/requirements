@@ -7,8 +7,8 @@ branches cmt doc
 # LHCb Online packages
 #=======================================================
 use Adder             v4r6     Online
-use confDB            v1r2     Online
-#use confDBpython      v1r3     Online
+use confDB            v1r5     Online
+use confDBpython      v1r5     Online
 use $(CCPCHist_use)
 macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
 use DIM               v17r1    Online
