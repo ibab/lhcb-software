@@ -15,30 +15,26 @@ public:
     typedef std::pair<std::string,std::string> Prop;
     typedef std::vector<Prop> Properties;
 
-    typedef std::pair<std::string,digest_type> Dep;
-    typedef std::vector<Dep> Dependencies;
-
-
 
     PropertyConfig() {} ;
 
-    PropertyConfig(const std::string& name, const IProperty& obj, const Dependencies& depRefs)
-      : m_depRefs(depRefs)
-      , m_type(System::typeinfoName(typeid(obj)))
+    PropertyConfig(const std::string& name, const IProperty& obj, const std::string& kind)
+      : m_type(System::typeinfoName(typeid(obj)))
       , m_name(name)
+      , m_kind(kind)
    { initProperties( obj ) ; }
 
-    PropertyConfig(const std::string& name, const std::string& type, const Dependencies& depRefs)
-      : m_depRefs(depRefs)
-      , m_type(type)
+    PropertyConfig(const std::string& name, const std::string& type, const std::string& kind)
+      : m_type(type)
       , m_name(name)
+      , m_kind(kind)
    {  }
 
     bool operator==(const PropertyConfig& rhs) const { 
-        return m_name == rhs.m_name 
-            && m_type == rhs.m_type 
-            && m_properties == rhs.m_properties
-            && m_depRefs == rhs.m_depRefs;
+        return m_type == rhs.m_type 
+            && m_name == rhs.m_name 
+            && m_kind == rhs.m_kind 
+            && m_properties == rhs.m_properties;
     }
 
     bool operator!=(const PropertyConfig& rhs) const { return !operator==(rhs); }
@@ -46,8 +42,9 @@ public:
 
     const std::string & name() const    { return m_name;}
     const std::string & type() const    { return m_type;}
+    const std::string & kind() const    { return m_kind;}
     const Properties& properties() const { return m_properties;}
-    const Dependencies& dependants() const { return m_depRefs;}
+
     std::ostream& print(std::ostream& os) const;
     std::istream& read(std::istream& is);
 
@@ -55,8 +52,7 @@ public:
 
 private:
     Properties   m_properties;
-    Dependencies m_depRefs;
-    std::string  m_type,m_name;
+    std::string  m_type,m_name,m_kind;
     void initProperties( const IProperty& obj );
 };
 

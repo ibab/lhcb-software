@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void PropertyConfig::initProperties( const IProperty& obj) {
+void PropertyConfig::initProperties(const IProperty& obj) {
     typedef vector<Property*> PropertyList;
     PropertyList items = obj.getProperties();
     for (PropertyList::const_iterator i = items.begin(); i!=items.end();++i) {
@@ -15,15 +15,12 @@ void PropertyConfig::initProperties( const IProperty& obj) {
 
 istream& PropertyConfig::read(istream& is) {
     bool parsing_properties = false;
-    bool parsing_deps = false;
     boost::regex name("^Name: (.*)$"),
                  type("^Type: (.*)$"),
+                 kind("^Kind: (.*)$"),
                  propstart("^Properties: \\\[$"),
                  propend("^\\\]$"),
                  property("^ ?'([^']+)':(.*)$"),
-                 depstart("^Dependencies: \\\[$"),
-                 depend("^\\\]$"),
-                 dep("^ ?'([^']+)':(.*)$"),
                  ignore("^$");
     while (!is.eof()) {
         string s; getline(is,s);
@@ -36,23 +33,15 @@ istream& PropertyConfig::read(istream& is) {
             } else {
                 cout << "parsing error while looking for properties!!! : [" << s << "]" << endl;
             }
-        } else if (parsing_deps) {
-            if (boost::regex_match(s,what,dep) ) { 
-                m_depRefs.push_back(make_pair(what[1],MD5::convertString2Digest(what[2])));
-            } else if (boost::regex_match(s,what,depend) ) { 
-                parsing_deps = false;
-            } else {
-                cout << "parsing error while looking for dependencies!!! : [" << s << "]" << endl;
-            }
         } else {
             if (boost::regex_match(s,what,name) ) { assert(m_name.empty());
                 m_name = what[1];
             } else if (boost::regex_match(s,what,type) ) { assert(m_type.empty());
                 m_type = what[1];
+            } else if (boost::regex_match(s,what,kind) ) { assert(m_kind.empty());
+                m_kind = what[1];
             } else if (boost::regex_match(s,what,propstart) ) { assert(m_properties.empty());
                 parsing_properties = true;
-            } else if (boost::regex_match(s,what,depstart) ) { assert(m_depRefs.empty());
-                parsing_deps = true;
             } else if (boost::regex_match(s,what,ignore)) { 
                 // do nothing
             } else {
@@ -65,16 +54,12 @@ istream& PropertyConfig::read(istream& is) {
 
 ostream& PropertyConfig::print(ostream& os) const {
     os << "Name: " << m_name << '\n'
+       << "Kind: " << m_kind << '\n'
        << "Type: " << m_type << '\n'
        << "Properties: [\n";
     for (Properties::const_iterator i=m_properties.begin();i!=m_properties.end();++i ) 
         os << " '"<< i->first << "':"<<i->second<<'\n';
-    os << "]\n" ;
-    os << "Dependencies: [\n";
-    for (Dependencies::const_iterator i = m_depRefs.begin(); i!= m_depRefs.end();++i)
-        os << " '"<< i->first << "':"<<i->second<<'\n';
-    os << "]\n";
-    return os << endl;
+    return os << "]" << endl;
 }
 
 std::ostream& operator<<(std::ostream& os, const PropertyConfig& x) { return x.print(os);}
