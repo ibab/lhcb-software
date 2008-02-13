@@ -128,7 +128,7 @@ function show_pagefolder($sel='') {
     while (OCIFetchInto($pstid, $page, OCI_ASSOC )) {
       $getp=toGet($page["PAGENAME"]);
       $p=PageSimpleName($page["PAGENAME"]);
-      echo "<a class=normal href=$PHP_SELF?page=${getp}> $p</a><br>\n";
+      echo "<a class=normal href=$_SERVER[PHP_SELF]?page=${getp}> $p</a><br>\n";
     }  
     ocifreestatement($pstid);
     show_pagefolder("WHERE PARENT='".$pagef["PAGEFOLDERNAME"]."'");
@@ -153,7 +153,7 @@ if (array_key_exists("page",$_GET)) {
     foreach (array("PAGENAME","NHISTO","PAGEDOC","FOLDER")
              as $field)
       $_POST[$field]=$mypage[$field];
-    $shtid = OCIParse($conn,"SELECT * from SHOWHISTO where PAGE='${page}' order by HISTO,INSTANCE");
+    $shtid = OCIParse($conn,"SELECT * from SHOWHISTO where PAGEFULLNAME(PAGE,PAGEFOLDER)='${page}' order by HISTO,INSTANCE");
     OCIExecute($shtid);
     $i=0;
     while( OCIFetchInto($shtid, $showhisto, OCI_ASSOC )) {

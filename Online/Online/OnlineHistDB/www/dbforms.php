@@ -36,9 +36,8 @@ function histo_header($id,$htype,$mode)
   global $debug;
   global $conn;
   global $fulllist;
-  global $PHP_SELF;
   global $Reference_home;
-  $script=$PHP_SELF;
+  $script=$_SERVER[PHP_SELF];
   if($mode == "display") {
     $script='write/histo_header.php';
     foreach (array("DESCR","DOC","TASKNAME","HSALGO","HSTYPE","HSTITLE","SUBTITLE","NHS","NAME") 
@@ -80,7 +79,7 @@ function histo_header($id,$htype,$mode)
     if ($htype == "HID") {
       $hsid=HistoSet($id);
       if ($nhs>1)
-	echo "<p>This Histogram is part of a <a href=${PHP_SELF}?hsid=${hsid}> Set </a> of $nhs identical histograms </p>\n";
+	echo "<p>This Histogram is part of a <a href=$_SERVER[PHP_SELF]?hsid=${hsid}> Set </a> of $nhs identical histograms </p>\n";
     }
     else {
       if($nhs>1) {
@@ -100,10 +99,10 @@ function histo_header($id,$htype,$mode)
 	  } 
 	  echo "</tbody></table></center>";
 	  ocifreestatement($lstid);
-	  echo "<a href='${PHP_SELF}?hsid=${id}'>hide histogram list</a><br>\n";
+	  echo "<a href='$_SERVER[PHP_SELF]?hsid=${id}'>hide histogram list</a><br>\n";
 	}
 	else 
-	  echo "<a href='${PHP_SELF}?hsid=${id}&fulllist=1'>see histogram list</a><br>\n";
+	  echo "<a href='$_SERVER[PHP_SELF]?hsid=${id}&fulllist=1'>see histogram list</a><br>\n";
       }
     }
   }
@@ -144,10 +143,9 @@ function histo_display($id,$htype,$mode)
   global $histo;
   global $debug;
   global $conn;
-  global $PHP_SELF;
   $cw_dis=  ($canwrite ? "" : "DISABLED");
   $cw_ro=  ($canwrite ? "" : "READONLY");
-  $script=$PHP_SELF;
+  $script=$_SERVER[PHP_SELF];
   $setlist=0;
   if($mode == "displaylist") {
     $mode = "display";
@@ -349,7 +347,7 @@ function histo_analysis($id,$htype,$mode) {
   global $histo;
   global $debug;
   global $conn;
-  $script=$PHP_SELF;
+  $script=$_SERVER[PHP_SELF];
   $firstana=$lastana=1;
   $showpars=1;
   if($mode == "display") {
@@ -483,10 +481,9 @@ function task_form($taskname,$mode)
   global $taskRec;
   global $canwrite;
   global $debug;
-  global $PHP_SELF;
   global $conn;
   global $Reference_home,$Installation;
-  $script=$PHP_SELF;
+  $script=$_SERVER[PHP_SELF];
   $ro=  ($canwrite ? "" : "DISABLED");
   if($mode == "display") {
     $script='write/task.php';

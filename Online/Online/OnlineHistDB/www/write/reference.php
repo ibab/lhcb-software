@@ -54,7 +54,7 @@ else {
   $task=$_GET["task"];
   echo "<center><H2> Upload Reference Histograms for Task <font color='red'> $task </font></H2>";
 
-  echo "<form action='${PHP_SELF}' method='POST' ENCTYPE='multipart/form-data'>\n"; 
+  echo "<form action='$_SERVER[PHP_SELF]' method='POST' ENCTYPE='multipart/form-data'>\n"; 
   echo "<input type='hidden' name='TASK' value='${task}'>\n";
   echo "Valid from Run &nbsp <input align='right' type='text'  name='STARTRUN' value='1' size=8><br>\n";
   echo "Data Type &nbsp  <select name='DATATYPE'>";

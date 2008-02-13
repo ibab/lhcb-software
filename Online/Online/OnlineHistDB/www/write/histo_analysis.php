@@ -91,7 +91,7 @@ else if (array_key_exists("Remove_Analysis",$_POST)) {
     echo "If you confirm, Analysis ".$_POST["a${ia}_alg"]." will be removed and settings of parameters will be lost<br>\n";
     if($_POST["NHS"]>1)
       echo "<B> for all the ".$_POST["NHS"]." histograms of set<br>\n";
-    echo "<form action='$PHP_SELF' method='post'>\n";
+    echo "<form action='$_SERVER[PHP_SELF]' method='post'>\n";
     echo "<input type='hidden' name='id' value='${id}'>\n";
     echo "<input type='hidden' name='htype' value='".$_POST["htype"],"'>\n";    
     echo "<input type='hidden' name='algo' value='".$_POST["a${ia}_alg"],"'>\n";
