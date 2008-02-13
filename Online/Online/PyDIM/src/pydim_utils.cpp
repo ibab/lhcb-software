@@ -629,7 +629,7 @@ iterator_to_buffer(PyObject     *iter,   /* list or tuple PyObject */
 	  goto shortbuffer;
 	tmp1 = PyNumber_Float(tmp);
 	if (!tmp1) goto invalid_format;
-	f = PyFloat_AsDouble(tmp1);
+	f = (float)PyFloat_AsDouble(tmp1);
 	memcpy(&buffer[buf_ptr], &f, _DIM_FLOAT_LEN);
 	buf_ptr += _DIM_FLOAT_LEN;                         
 	break;

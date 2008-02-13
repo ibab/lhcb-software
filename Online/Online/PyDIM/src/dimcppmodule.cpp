@@ -8,9 +8,6 @@ extern "C" {
 #include <cctype>
 #include <cstdlib>
 #include <cstdio>
-//#ifndef _WIN32
-//#include <unistd.h>
-//#endif
 
 #include "pydim_utils.cpp"
 
