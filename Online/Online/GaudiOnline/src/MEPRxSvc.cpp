@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.56 2007-12-20 20:35:28 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.57 2008-02-13 17:24:26 frankb Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -762,25 +762,25 @@ void MEPRxSvc::publishCounters()
 }
 
 void MEPRxSvc::clearCounters() {
-  memset(&m_rxOct.front(),  0, m_nCnt * sizeof(u_int64_t));
-  memset(&m_rxPkt.front(),  0, m_nCnt * sizeof(u_int64_t));
-  memset(&m_rxEvt.front(),  0, m_nCnt * sizeof(u_int64_t));
-  memset(&m_badPckFktPkt.front(), 0, m_nCnt * sizeof(u_int32_t));
-  memset(&m_badLenPkt.front(), 0, m_nCnt * sizeof(u_int32_t));
-  memset(&m_misPkt.front(), 0, m_nCnt * sizeof(u_int32_t));
-  memset(&m_truncPkt.front(), 0, m_nCnt * sizeof(u_int32_t));
+  memset(&m_rxOct.front(),  0, m_nSrc * sizeof(u_int64_t));
+  memset(&m_rxPkt.front(),  0, m_nSrc * sizeof(u_int64_t));
+  memset(&m_rxEvt.front(),  0, m_nSrc * sizeof(u_int64_t));
+  memset(&m_badPckFktPkt.front(), 0, m_nSrc * sizeof(u_int32_t));
+  memset(&m_badLenPkt.front(), 0, m_nSrc * sizeof(u_int32_t));
+  memset(&m_misPkt.front(), 0, m_nSrc * sizeof(u_int32_t));
+  memset(&m_truncPkt.front(), 0, m_nSrc * sizeof(u_int32_t));
   m_totRxOct = m_totRxPkt = m_incEvt = m_notReqPkt;
   m_totMEPReq = m_totMEPReqPkt = m_numMEPRecvTimeouts = m_notReqPkt = 0;
 } 
 
-int MEPRxSvc::setupCounters(int n) {
-  m_rxOct.resize(n,0);
-  m_rxPkt.resize(n,0);
-  m_rxEvt.resize(n,0);
-  m_badPckFktPkt.resize(n,0);
-  m_badLenPkt.resize(n,0);
-  m_misPkt.resize(n,0);
-  m_truncPkt.resize(n,0);
+int MEPRxSvc::setupCounters() {
+  m_rxOct.resize(m_nSrc,0);
+  m_rxPkt.resize(m_nSrc,0);
+  m_rxEvt.resize(m_nSrc,0);
+  m_badPckFktPkt.resize(m_nSrc,0);
+  m_badLenPkt.resize(m_nSrc,0);
+  m_misPkt.resize(m_nSrc,0);
+  m_truncPkt.resize(m_nSrc,0);
   m_totRxOct = m_totRxPkt = m_incEvt = m_totMEPReqPkt = m_numMEPRecvTimeouts = m_totMEPReq = 0;
   PUBCNT(totRxOct, "Total received bytes");
   PUBCNT(totRxPkt, "Total received packets");
@@ -793,7 +793,6 @@ int MEPRxSvc::setupCounters(int n) {
   PUBARRAYCNT(misPkt, "Missing MEPs");
   PUBARRAYCNT(badPckFktPkt, "MEPs with wrong packing (MEP) factor");
   PUBARRAYCNT(truncPkt, "Truncated MEPs");
-  m_nCnt = n;
   return 0;
 }
 
@@ -832,7 +831,7 @@ StatusCode MEPRxSvc::initialize()  {
       return error("Failed to access incident service.");
     }
     if (service("MonitorSvc", m_monSvc).isSuccess()) {
-      setupCounters(m_MEPBuffers);
+      setupCounters();
     } 
     else {
       return error("Failed to access monitor service.");
