@@ -1,4 +1,4 @@
-// $Id: lcgDict.h,v 1.7 2007-05-25 16:30:33 cattanem Exp $
+// $Id: lcgDict.h,v 1.8 2008-02-13 15:56:17 cattanem Exp $
 #ifndef MCEVENT_LCGDICT_H 
 #define MCEVENT_LCGDICT_H 1
 
@@ -14,6 +14,7 @@ namespace {
   struct _Instantiations {
     // begin instantiations
     std::vector<const LHCb::MCParticle*> _i1;
+    std::pair<LHCb::MCParticle*,double>  _i2;
     // end instantiations
   };
 }

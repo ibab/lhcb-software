@@ -1,6 +1,8 @@
 <lcgdict>
   <class name = "MCTrackInfo" />
   <class name = "std::vector<const LHCb::MCParticle*>" />
+  <class name = "std::pair<LHCb::MCParticle*,double>"/>
+  <class name = "std::map<LHCb::MCParticle*,unsigned int> "/>
 
   <exclusion>
     <class name = "KeyedObject<LHCb::CaloCellID>" />
