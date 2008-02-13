@@ -8,7 +8,9 @@ include '../util.php';
 $conn=HistDBconnect(1);
 $folder= ($_POST["NEWFOLDER"]) ? $_POST["NEWFOLDER"] : $_POST["FOLDER"];
 $page=RemoveSpaces($_POST["PAGENAME"]);
-$fullpage="$folder/$page";
+$newpagename="$folder/$page";
+$fullpage=$_POST["ORIGINALNAME"];
+
 
 $nh=0;
 for ($i=1;$i<=150;$i++) {
@@ -43,15 +45,33 @@ $r=OCIExecute($stid,OCI_DEFAULT);
 if ($r) {
   ocicommit($conn);
   ocifreestatement($stid);
+  
+  if ($newpagename != $fullpage && $newpagename != $outpage) { //also change page name
+    $command="begin :fn := OnlineHistDB.RenamePage(oldName => '${fullpage}', newName => '${newpagename}',".
+      "newFolder => :nf); end;";
+
+    $stid = OCIParse($conn,$command);
+    ocibindbyname($stid,":nf",$outfolder,500);
+    ocibindbyname($stid,":fn",$outpage,500);
+    $r=OCIExecute($stid,OCI_DEFAULT);
+    if ($r) {
+      ocicommit($conn);
+      ocifreestatement($stid);
+      $fullpage = $newpagename;
+    }
+    else {
+      echo "<font color=red> <B>Got errors from page.php when renaming page </B></font><br>Renaming aborted<br>\n";
+    }
+  }
   if ($outpage !=$fullpage) {
     echo "<font color=magenta> Warning: page name has been changed from <br> $fullpage to <br>$outpage<br>\n";
     $fullpage = $outpage;
   }
-  echo "Page $fullpage successfully defined<br>";
-}
-else
-  echo "<font color=red> <B>Got errors from page.php </B></font><br>Writing aborted<br>\n";
-
+  echo "Page $fullpage successfully updated<br>";
+ }
+ else {
+   echo "<font color=red> <B>Got errors from page.php when updating page </B></font><br>Writing aborted<br>\n";
+ }
 
 
 

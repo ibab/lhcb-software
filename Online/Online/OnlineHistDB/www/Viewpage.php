@@ -46,7 +46,6 @@ function page_form($page) {
   global $conn;
   echo "<form method='post' action='write/page.php'>\n";
   $readonly=$canwrite ? "" : "readonly";
-  $epreadonly= ($page=="new__") ? $readonly :  "readonly";
   echo "<table align=\"center\" border=0><tr><td>\n";
   
 
@@ -66,9 +65,10 @@ function page_form($page) {
     printf("or New Folder <input class='normal' type='text' size=40 name='NEWFOLDER' value='%s' $readonly ><br>\n",$_POST["NEWFOLDER"]);
   }
   else {
-     printf("Folder <input class='normal' type='text' size=40 name='FOLDER' value='%s' READONLY>\n",$_POST["FOLDER"]);
+     printf("Folder <input class='normal' type='text' size=40 name='FOLDER' value='%s'>\n",$_POST["FOLDER"]);
   }
-  printf("</td><td> &nbsp&nbsp Name <input class='normal' type='text' size=20 name='PAGENAME' value='%s' $epreadonly ><br>\n",PageSimpleName($_POST["PAGENAME"]));
+  printf("</td><td> &nbsp&nbsp Name <input class='normal' type='text' size=20 name='PAGENAME' value='%s' ><br>\n",PageSimpleName($_POST["PAGENAME"]));
+  echo "<input type='hidden' name='ORIGINALNAME'  value='".$_POST["PAGENAME"]."'>\n";
 
   echo "</td></tr></table>\n";
   echo "<table align=\"center\"><tr><td>Description <td><textarea valign='center' cols='50' rows='2' name='PAGEDOC'".
@@ -79,10 +79,10 @@ function page_form($page) {
   if ($canwrite) {
     for ($i=1;$i<=max(16,$_POST["NHISTO"]+5);$i++) {
       printf("<tr><td>Histogram ID <input type='text' size=7 name='HISTO_SH${i}' value='%s'>".
-	     "<td>X position <input type='text' size=5 name='CENTER_X_SH${i}' value='%.2f'></td>".
-	     "<td>Y position <input type='text' size=5 name='CENTER_Y_SH${i}' value='%.2f'></td>".
-	     "<td>X size <input type='text' size=5 name='SIZE_X_SH${i}' value='%.2f'></td>".
-	     "<td>Y size <input type='text' size=5 name='SIZE_Y_SH${i}' value='%.2f'></td>".
+	     "<td>X min <input type='text' size=5 name='CENTER_X_SH${i}' value='%.3f'></td>".
+	     "<td>Y min <input type='text' size=5 name='CENTER_Y_SH${i}' value='%.3f'></td>".
+	     "<td>X max <input type='text' size=5 name='SIZE_X_SH${i}' value='%.3f'></td>".
+	     "<td>Y max <input type='text' size=5 name='SIZE_Y_SH${i}' value='%.3f'></td>".
 	     ($i<=$_POST["NHISTO"] ?  "<td><B>Delete</B><input type='checkbox' name='REMOVE${i}' value=1> </td></tr>\n" : ""),
 	     $_POST["HISTO_SH${i}"],$_POST["CENTER_X_SH${i}"],$_POST["CENTER_Y_SH${i}"],
 	     $_POST["SIZE_X_SH${i}"],$_POST["SIZE_Y_SH${i}"]);
@@ -101,20 +101,28 @@ function page_form($page) {
   else {
     for ($i=1;$i<=$_POST["NHISTO"];$i++) {
       echo "<tr><td>Histogram ID <span class='normal' >".$_POST["HISTO_SH${i}"]."</span>".
-	"<td>&nbsp&nbsp&nbsp X position <span class='normal' >".$_POST["CENTER_X_SH${i}"]."</span></td>".
-	"<td>&nbsp&nbsp&nbsp Y position <span class='normal' >".$_POST["CENTER_Y_SH${i}"]."</span></td>".
-	"<td>&nbsp&nbsp&nbsp X size <span class='normal' >".$_POST["SIZE_X_SH${i}"]."</span></td>".
-	"<td>&nbsp&nbsp&nbsp Y size <span class='normal' >".$_POST["SIZE_Y_SH${i}"]."</span></td></tr>\n";    
+	"<td>&nbsp&nbsp&nbsp X min <span class='normal' >".$_POST["CENTER_X_SH${i}"]."</span></td>".
+	"<td>&nbsp&nbsp&nbsp Y min <span class='normal' >".$_POST["CENTER_Y_SH${i}"]."</span></td>".
+	"<td>&nbsp&nbsp&nbsp X max <span class='normal' >".$_POST["SIZE_X_SH${i}"]."</span></td>".
+	"<td>&nbsp&nbsp&nbsp Y max <span class='normal' >".$_POST["SIZE_Y_SH${i}"]."</span></td></tr>\n";    
       echo "<tr><td colspan=6>";
       showhisto_display($_POST["HISTO_SH${i}"],$_POST["SDISPLAY_SH${i}"],$_POST["INSTANCE_SH${i}"]);
       echo"</td></tr><tr><td colspan=6><hr></tr>\n";
     }
-  } 
+  }
+  echo "</form>";
+  if ($page != 'new__') {
+    echo "<hr><form method='post' action='write/deletePage.php'>\n";
+    echo "<input type='hidden' name=PAGETODELETE value='".$_POST["PAGENAME"]."'>\n";
+    echo "<input type='submit' class=bad name='Delete' value='Delete This Page'>\n";
+  }
+
+ 
 } 
 
 function show_pagefolder($sel='') {
   global $conn;
-  $stid = OCIParse($conn,"SELECT PAGEFOLDERNAME FROM PAGEFOLDER $sel");
+  $stid = OCIParse($conn,"SELECT PAGEFOLDERNAME FROM PAGEFOLDER $sel order by PAGEFOLDERNAME");
   OCIExecute($stid);
   $first=0;
   while (OCIFetchInto($stid, $pagef, OCI_ASSOC )) {
@@ -122,8 +130,8 @@ function show_pagefolder($sel='') {
       echo "<table rule=cols border=1 cellpadding=6><thead><tr><td><B>Folder</B></td><td><B>Page</B></td></tr></thead>";
       $first=1;
     }
-    echo "<tr><TD><span class='normal'>".$pagef["PAGEFOLDERNAME"],"</td> <td>\n";
-    $pstid = OCIParse($conn,"SELECT PAGENAME FROM PAGE where FOLDER='".$pagef["PAGEFOLDERNAME"]."'");
+    echo "<tr><TD><span class='normal'>".PageSimpleName($pagef["PAGEFOLDERNAME"]),"</td> <td>\n";
+    $pstid = OCIParse($conn,"SELECT PAGENAME FROM PAGE where FOLDER='".$pagef["PAGEFOLDERNAME"]."' order by PAGENAME");
     OCIExecute($pstid);
     while (OCIFetchInto($pstid, $page, OCI_ASSOC )) {
       $getp=toGet($page["PAGENAME"]);
