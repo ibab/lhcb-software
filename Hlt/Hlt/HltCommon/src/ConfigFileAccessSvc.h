@@ -1,4 +1,4 @@
-// $Id: ConfigFileAccessSvc.h,v 1.1 2008-02-06 14:57:05 graven Exp $
+// $Id: ConfigFileAccessSvc.h,v 1.2 2008-02-13 14:55:22 graven Exp $
 #ifndef CONFIGFILEACCESSSVC_H 
 #define CONFIGFILEACCESSSVC_H 1
 
@@ -6,6 +6,7 @@
 #include <string>
 #include <memory>
 #include "boost/optional.hpp"
+#include "boost/filesystem/path.hpp"
 // from Gaudi
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
@@ -31,9 +32,11 @@ public:
   virtual StatusCode initialize();    ///< Service initialization
   virtual StatusCode finalize();      ///< Service initialization
 
-  boost::optional<PropertyConfig>  read(const PropertyConfig::digest_type& ref);
-  PropertyConfig::digest_type      write(const PropertyConfig& config);
+  boost::optional<PropertyConfig>  readPropertyConfig(const PropertyConfig::digest_type& ref);
+  PropertyConfig::digest_type      writePropertyConfig(const PropertyConfig& config);
 
+  boost::optional<ConfigTreeNode>  readConfigTreeNode(const ConfigTreeNode::digest_type& ref);
+  ConfigTreeNode::digest_type      writeConfigTreeNode(const ConfigTreeNode& config);
 private:
   MsgStream& verbose() const { return msg(MSG::VERBOSE); }
   MsgStream& debug() const { return msg(MSG::DEBUG); }
@@ -45,6 +48,9 @@ private:
   
   mutable std::auto_ptr<MsgStream>     m_msg;
   std::string                          m_dir;   ///< where to read/write configurations from/to?
+
+  boost::filesystem::path propertyConfigPath( const PropertyConfig::digest_type& digest ) const;
+  boost::filesystem::path configTreeNodePath( const ConfigTreeNode::digest_type& digest ) const;
 
   MsgStream& msg(MSG::Level level) const;
 };

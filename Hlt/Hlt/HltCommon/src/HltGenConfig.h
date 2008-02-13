@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.h,v 1.1 2008-02-08 22:09:42 graven Exp $
+// $Id: HltGenConfig.h,v 1.2 2008-02-13 14:55:22 graven Exp $
 #ifndef HLTGENCONFIG_H 
 #define HLTGENCONFIG_H 1
 
@@ -42,7 +42,7 @@ private:
 
   StatusCode                generateConfig() const;
   
-  PropertyConfig::digest_type generateConfig(const INamedInterface& obj) const;
+  ConfigTreeNode::digest_type generateConfig(const INamedInterface& obj) const;
 
   // keep track of whom uses which tools
   typedef std::multimap<std::string,const IAlgTool*> Map_t;

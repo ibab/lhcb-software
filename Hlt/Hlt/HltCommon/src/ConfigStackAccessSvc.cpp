@@ -52,12 +52,12 @@ StatusCode ConfigStackAccessSvc::initialize() {
 }
 
 boost::optional<PropertyConfig> 
-ConfigStackAccessSvc::read(const PropertyConfig::digest_type& ref) {
+ConfigStackAccessSvc::readPropertyConfig(const PropertyConfig::digest_type& ref) {
     boost::optional<PropertyConfig> x;
     for (std::vector<IConfigAccessSvc*>::iterator i =m_svcs.begin();
                                                   i!=m_svcs.end()&&!x;
                                                   ++i)  {
-         x = (*i)->read(ref);
+         x = (*i)->readPropertyConfig(ref);
          debug() << "read of " << ref 
                  << " from " << (*i)->name() 
                  << ": " << (!x?"failed":"OK") << endmsg;
@@ -66,13 +66,40 @@ ConfigStackAccessSvc::read(const PropertyConfig::digest_type& ref) {
 }
 
 PropertyConfig::digest_type
-ConfigStackAccessSvc::write(const PropertyConfig& config) {
-    PropertyConfig::digest_type id = m_svcs.front()->write(config);
+ConfigStackAccessSvc::writePropertyConfig(const PropertyConfig& config) {
+    PropertyConfig::digest_type id = m_svcs.front()->writePropertyConfig(config);
     debug() << "write of " << config.name() 
             << " to " << m_svcs.front()->name() 
             << ": " << (id.invalid()?"failed":"OK") << endmsg;
     return id;
 }
+
+
+boost::optional<ConfigTreeNode> 
+ConfigStackAccessSvc::readConfigTreeNode(const ConfigTreeNode::digest_type& ref) {
+    boost::optional<ConfigTreeNode> x;
+    for (std::vector<IConfigAccessSvc*>::iterator i =m_svcs.begin();
+                                                  i!=m_svcs.end()&&!x;
+                                                  ++i)  {
+         x = (*i)->readConfigTreeNode(ref);
+         debug() << "read of " << ref 
+                 << " from " << (*i)->name() 
+                 << ": " << (!x?"failed":"OK") << endmsg;
+    }
+    return x;
+}
+
+ConfigTreeNode::digest_type
+ConfigStackAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config) {
+    ConfigTreeNode::digest_type id = m_svcs.front()->writeConfigTreeNode(config);
+    debug() << "write of " << config
+            << " to " << m_svcs.front()->name() 
+            << ": " << (id.invalid()?"failed":"OK") << endmsg;
+    return id;
+}
+
+
+
 
 MsgStream& ConfigStackAccessSvc::msg(MSG::Level level) const {
      if (m_msg.get()==0) m_msg.reset( new MsgStream( msgSvc(), name() ));

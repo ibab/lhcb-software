@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.cpp,v 1.1 2008-02-08 22:09:42 graven Exp $
+// $Id: HltGenConfig.cpp,v 1.2 2008-02-13 14:55:22 graven Exp $
 // Include files 
 #include <algorithm>
 #include "boost/assign/list_of.hpp"
@@ -11,6 +11,7 @@
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/IAuditor.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/Service.h"
@@ -67,24 +68,28 @@ StatusCode HltGenConfig::initialize() {
 }
 
 
-PropertyConfig::digest_type
+ConfigTreeNode::digest_type
 HltGenConfig::generateConfig(const INamedInterface& obj) const
 {
+  INamedInterface *ini = const_cast<INamedInterface*>(&obj); // we do treat obj logically const, 
+                                                             // even if we call code which seems
+                                                             // wants non-const version of obj
+
     //iterate over dependants, create config for them first (as we depend on them) ..
     // i.e. must go 'depth first', no choice here...
-  vector<pair<string,PropertyConfig::digest_type> > depRefs; 
+  vector<PropertyConfig::digest_type> depRefs; 
 
   // in case of Algorithms, do some extra work...
-  SmartIF<IAlgorithm> ia(const_cast<INamedInterface*>(&obj));
+  SmartIF<IAlgorithm> ia(ini);
   if (ia.isValid()) {
       vector<Algorithm*> *subs = dynamic_cast<const Algorithm&>(*ia).subAlgorithms();
       for (vector<Algorithm*>::const_iterator dep = subs->begin(); dep!=subs->end(); ++dep) {
-         debug() << "adding " << (*dep)->name() << " as dependant to " << obj.name() << endmsg;
-         PropertyConfig::digest_type digest = generateConfig(**dep);
+         debug() << "adding sub-algorithm " << (*dep)->name() << " as dependant to " << obj.name() << endmsg;
+         ConfigTreeNode::digest_type digest = generateConfig(**dep);
          if (digest.invalid()) {
             error() << "problem creating dependant configuration for " << (*dep)->name() << endmsg;
          }
-         depRefs.push_back(make_pair((*dep)->name(),digest));
+         depRefs.push_back(digest);
       }
   }
 
@@ -92,26 +97,37 @@ HltGenConfig::generateConfig(const INamedInterface& obj) const
   pair<Map_t::const_iterator,Map_t::const_iterator> range = findTools( obj.name() );
   for (Map_t::const_iterator i= range.first;i!=range.second;++i) {
        debug() << "adding tool " << i->second->name() << " as dependency of " << obj.name() << endmsg;
-       PropertyConfig::digest_type  digest = generateConfig(*i->second);
+       ConfigTreeNode::digest_type  digest = generateConfig(*i->second);
        if (digest.invalid()) {
           error() << "problem creating dependant configuration for " << i->second->name() << endmsg;
        }
-       depRefs.push_back(make_pair(i->second->name(),digest));
+       depRefs.push_back(digest);
   }
 
-  SmartIF<IProperty> ip(const_cast<INamedInterface*>(&obj));
-  PropertyConfig conf(obj.name(), *ip, depRefs);
+  // figure out whether we have a Service, Tool, Algorithm or Auditor...
+  string kind = "Unknown";
+  if      (SmartIF<IAlgorithm>(ini).isValid()) kind = "IAlgorithm";
+  else if (SmartIF<IService>(ini).isValid())   kind = "IService";
+  else if (SmartIF<IAlgTool>(ini).isValid())   kind = "IAlgTool";
+  else if (SmartIF<IAuditor>(ini).isValid())   kind = "IAuditor";
 
-  PropertyConfig::digest_type digest = m_accessSvc->write(conf);
-  if (digest.invalid()){  
-        error() << "problem creating config file " << endmsg;
+  SmartIF<IProperty> ip(ini);
+  PropertyConfig::digest_type propRef = m_accessSvc->writePropertyConfig( PropertyConfig( obj.name(), *ip, kind) );
+  if (propRef.invalid()){  
+        error() << "problem writing PropertyConfig" << endmsg;
+        return MD5::createInvalidDigest();
   }
-  return digest;
+
+  ConfigTreeNode::digest_type nodeRef = m_accessSvc->writeConfigTreeNode( ConfigTreeNode( propRef, depRefs )  );
+  if (nodeRef.invalid()){  
+        error() << "problem writing ConfigTreeNode" << endmsg;
+  }
+  return nodeRef;
 }
 
 
 StatusCode HltGenConfig::generateConfig( ) const {
-  vector<pair<string,PropertyConfig::digest_type> > depRefs; 
+  vector<ConfigTreeNode::digest_type> depRefs; 
 
   // services...
   for (vector<string>::const_iterator i= m_svcConfig.begin(); i!= m_svcConfig.end(); ++i) {
@@ -120,9 +136,9 @@ StatusCode HltGenConfig::generateConfig( ) const {
       if (!serviceLocator()->getService( *i, isvc ).isSuccess()) {
           return Error( string("Unable get IService ")+*i, StatusCode::FAILURE); 
       }
-      PropertyConfig::digest_type svcDigest = generateConfig(*isvc);
+      ConfigTreeNode::digest_type svcDigest = generateConfig(*isvc);
       info() << " id for this : " << svcDigest << endmsg;
-      depRefs.push_back(make_pair(isvc->name(),svcDigest));
+      depRefs.push_back(svcDigest);
   }
  
   // algorithms...
@@ -133,13 +149,13 @@ StatusCode HltGenConfig::generateConfig( ) const {
       if (sc.isFailure()) {
           return Error( string("Unable get algorithm ")+*i, StatusCode::FAILURE); 
       }
-      PropertyConfig::digest_type digest = generateConfig(*ialgo);
+      ConfigTreeNode::digest_type digest = generateConfig(*ialgo);
       info() << " id for this config: " << digest << endmsg;
-      depRefs.push_back(make_pair(ialgo->name(),digest));
+      depRefs.push_back(digest);
   }
   
-  PropertyConfig topConfig("top","metaconfig_dependencies_only",depRefs);
-  PropertyConfig::digest_type topDigest = m_accessSvc->write(topConfig);
+  ConfigTreeNode topConfig( MD5::createInvalidDigest(),depRefs,"head of ConfigTree generated by HltGenConfig");
+  ConfigTreeNode::digest_type topDigest = m_accessSvc->writeConfigTreeNode(topConfig);
   if (topDigest.invalid()){  
     error() << "problem creating config file " << endmsg;
   }

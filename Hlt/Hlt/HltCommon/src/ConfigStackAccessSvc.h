@@ -1,4 +1,4 @@
-// $Id: ConfigStackAccessSvc.h,v 1.1 2008-02-06 14:57:05 graven Exp $
+// $Id: ConfigStackAccessSvc.h,v 1.2 2008-02-13 14:55:22 graven Exp $
 #ifndef CONFIGFILEACCESSSVC_H 
 #define CONFIGFILEACCESSSVC_H 1
 
@@ -35,8 +35,11 @@ public:
   virtual StatusCode queryInterface(const InterfaceID& , void** );
   virtual StatusCode initialize();    ///< Service initialization
 
-  boost::optional<PropertyConfig>  read(const PropertyConfig::digest_type& ref);
-  PropertyConfig::digest_type      write(const PropertyConfig& config);
+  virtual boost::optional<PropertyConfig> readPropertyConfig(const PropertyConfig::digest_type& ref);
+  virtual PropertyConfig::digest_type    writePropertyConfig(const PropertyConfig& config);
+
+  virtual boost::optional<ConfigTreeNode> readConfigTreeNode(const ConfigTreeNode::digest_type& ref);
+  virtual ConfigTreeNode::digest_type    writeConfigTreeNode(const ConfigTreeNode& edge);
 
 private:
   MsgStream& verbose() const { return msg(MSG::VERBOSE); }

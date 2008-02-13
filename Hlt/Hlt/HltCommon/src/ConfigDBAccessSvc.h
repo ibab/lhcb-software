@@ -1,4 +1,4 @@
-// $Id: ConfigDBAccessSvc.h,v 1.1 2008-02-06 14:57:05 graven Exp $
+// $Id: ConfigDBAccessSvc.h,v 1.2 2008-02-13 14:55:22 graven Exp $
 #ifndef CONFIGDBACCESSSVC_H 
 #define CONFIGDBACCESSSVC_H 1
 
@@ -30,13 +30,16 @@ public:
   ConfigDBAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
   virtual ~ConfigDBAccessSvc( );     ///< Destructor
 
-  virtual StatusCode queryInterface(const InterfaceID& , void** );
+  StatusCode queryInterface(const InterfaceID& , void** );
 
-  virtual StatusCode initialize();    ///< Service initialization
-  virtual StatusCode finalize();      ///< Service initialization
+  StatusCode initialize();    ///< Service initialization
+  StatusCode finalize();      ///< Service initialization
 
-  boost::optional<PropertyConfig>  read(const PropertyConfig::digest_type& ref);
-  PropertyConfig::digest_type     write(const PropertyConfig& config);
+  boost::optional<PropertyConfig>  readPropertyConfig(const PropertyConfig::digest_type& ref);
+  PropertyConfig::digest_type     writePropertyConfig(const PropertyConfig& config);
+
+  boost::optional<ConfigTreeNode>  readConfigTreeNode(const ConfigTreeNode::digest_type& ref);
+  ConfigTreeNode::digest_type     writeConfigTreeNode(const ConfigTreeNode& config);
 
 private:
   MsgStream& msg(MSG::Level level) const;
@@ -51,19 +54,11 @@ private:
 
   StatusCode openConnection();
   StatusCode createSchema();
-  StatusCode createTopTable();
-
-  boost::optional<PropertyConfig> get(const PropertyConfig::digest_type& ref);
-  size_t prefetch(const PropertyConfig::digest_type& ref);
-
-  typedef std::map<PropertyConfig::digest_type,PropertyConfig>  cache_t;
 
   mutable std::auto_ptr<MsgStream>     m_msg;
   std::string                          m_connection;
   coral::ISessionProxy*                m_session;
-  cache_t                              m_cache;
   bool                                 m_createSchema;
-  bool                                 m_prefetch;
 
 };
 #endif // CONFIGDBACCESSSVC_H

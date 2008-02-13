@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.2 2008-02-11 14:56:10 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.3 2008-02-13 14:55:22 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -89,6 +89,7 @@ HltConfigSvc::configure(const TCK_t& tck) const {
         error() << " could not resolve " << tck << " to a configID " << endl;
         return StatusCode::FAILURE;
     }
+    // FIXME: we have an entire ConfigNodeTree here, configure assumes a single PropertyConfig...
     return PropertyConfigSvc::configure( MD5::convertString2Digest(i->second) );
 }
 
