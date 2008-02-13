@@ -63,29 +63,6 @@ DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
 1
 LANG:1 0 
-13 93
-"m_options"
-""
-1 233 398 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
- E E
-129 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
-0 ""
- 231 396 294 420
-
-T 
-1
-LANG:1 7 Options
-"main()  {  StreamControlPanel_showJobOptions();  }
-" 0
- E E E
 0
 LAYER, 1 
 1
@@ -700,6 +677,29 @@ LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,
 0 ""
 1
 LANG:1 2 ##
+13 93
+"m_options"
+""
+1 233 398 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+129 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 231 396 294 420
+
+T 
+1
+LANG:1 7 Options
+"main()  {  StreamControlPanel_showJobOptions();  }
+" 0
+ E E E
 0
 LAYER, 2 
 1

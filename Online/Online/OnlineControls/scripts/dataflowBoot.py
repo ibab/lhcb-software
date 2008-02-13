@@ -1,9 +1,15 @@
 import os, re, sys, time, socket
 
 dataFlowDirScripts = '/group/online/dataflow/cmtuser/Gaudi_v19r2/Online/OnlineControls/scripts'
+onlineScripts      = '/group/online/dataflow/scripts'
 default_exports    = 'export PATH=/opt/FMC/sbin:/opt/FMC/bin:$PATH;export LD_LIBRARY_PATH=/opt/FMC/lib;'
 top_logger_host    = 'ecs03'
 top_farm_host      = 'hlt01'
+
+use_tan = 1
+use_log = 1
+use_mbm = 1
+use_pub = 1
 
 #------------------------------------------------------------------------------
 def setupEnv():
@@ -11,32 +17,54 @@ def setupEnv():
 
 #------------------------------------------------------------------------------
 def stopProcessingNodeTasks(host):
-  print 'tmStop -m '+host+' TANServ_0;'
+  if use_tan is not None:
+    print 'tmStop -m '+host+' TANServ_'+host+';'
   print 'tmStop -m '+host+' MBMMON_0;'
-  print 'tmStop -m '+host+' MBMWeb_0;'
+  print 'tmStop -m '+host+' MBMWeb_'+host+';'
+  if use_pub is not None:
+    print 'tmStop -m '+host+' ROCollect_'+host+';'
+    print 'tmStop -m '+host+' ROPublish_'+host+';'
 
 #------------------------------------------------------------------------------
 def startProcessingNodeTasks(host):
-  print 'tmStart -m '+host+' -e -o -u TANServ_0 '+dataFlowDirScripts+os.sep+'tan_server.sh;'
-  print 'tmStart -m '+host+' -e -o -u MBMMON_0  '+dataFlowDirScripts+os.sep+'MBMMON.upi.sh;'
-  print 'tmStart -m '+host+' -e -o -u MBMWeb_0  '+dataFlowDirScripts+os.sep+'MBMMON.web.sh;'
+  dir = onlineScripts+os.sep
+  if use_tan is not None:
+    print 'tmStart -m '+host+' -e -o -u TANServ_'+host+'   '+dir+'tan_server.sh;'
+  if use_mbm is not None:
+    print 'tmStart -m '+host+' -e -o -u MBMMON_0           '+dir+'MBMMON.upi.sh;'
+    print 'tmStart -m '+host+' -e -o -u MBMWeb_'+host+'    '+dir+'MBMMON.web.sh;'
+  if use_pub is not None:
+    print 'tmStart -m '+host+' -e -o -u ROCollect_'+host+' '+dir+'ROMONCollect.sh;'
+    print 'tmStart -m '+host+' -e -o -u ROPublish_'+host+' '+dir+'ROMONPublish.sh;'
 
 #------------------------------------------------------------------------------
 def stopControlsNodeTasks(host,next_level_server=None):
-  print 'tmStop -m '+host+' TANServ_0;'
-  #print 'tmStop -m '+host+' FSMMON_0;'
-  print 'tmStop -m '+host+' LogCollect_0;'
+  if use_tan is not None:
+    print 'tmStop -m '+host+' TANServ_'+host+';'
+  if use_log is not None:
+    print 'tmStop -m '+host+' LogCollect_'+host+';'
+  if use_pub is not None:
+    print 'tmStop -m '+host+' RONodeCollect_'+host+';'
   if next_level_server is not None:
-    print 'tmStop -m '+host+' LogServer_0;'
+    if use_pub is not None:
+      print 'tmStop -m '+host+' RONodePublish_'+host+';'
+    if use_log is not None:
+      print 'tmStop -m '+host+' LogServer_'+host+';'
 
 #------------------------------------------------------------------------------
 def startControlsNodeTasks(host,next_level_server=None):
-  print 'tmStart -m '+host+' -e -o -u TANServ_0 '+dataFlowDirScripts+os.sep+'tan_server.sh;'
-  #print 'tmStart -m '+host+' -e -o -u FSMMON_0  '+dataFlowDirScripts+os.sep+'FSMMON.upi.sh;'
+  dir = onlineScripts+os.sep
+  if use_tan is not None:
+    print   'tmStart -m '+host+' -e -o -u TANServ_'+host+'       '+dir+'tan_server.sh;'
   if next_level_server is not None:
-    print 'tmStart -m '+host+' -e -o -u LogServer_0 '+dataFlowDirScripts+os.sep+'LogCollectSrv.sh '+next_level_server+';'
-    print 'sleep 1;'
-  print 'tmStart -m '+host+' -e -o -u LogCollect_0 '+dataFlowDirScripts+os.sep+'LogCollect.sh;'
+    if use_log is not None:
+      print 'tmStart -m '+host+' -e -o -u LogServer_'+host+'     '+dir+'LogCollectSrv.sh '+next_level_server+';'
+      print 'sleep 1;'
+      print 'tmStart -m '+host+' -e -o -u LogCollect_'+host+'    '+dir+'LogCollect.sh;'
+  if use_pub is not None:
+    print   'tmStart -m '+host+' -e -o -u RONodeCollect_'+host+' '+dir+'ROMONNodeCollect.sh;'
+    if next_level_server is not None:
+      print 'tmStart -m '+host+' -e -o -u RONodePublish_'+host+' '+dir+'ROMONNodePublish.sh '+next_level_server+';'
 
 #------------------------------------------------------------------------------
 def check(match,test):

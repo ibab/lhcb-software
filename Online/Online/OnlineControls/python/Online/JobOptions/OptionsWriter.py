@@ -291,12 +291,13 @@ class HLTOptionsWriter(OptionsWriter):
         opts.add('OnlineEnv.Tell1Boards         = {')
         err = None
         num = 0;
+        print 'New version of HLT options generator....'
         for b in self.run.tell1Boards.data:
           itms = b.split(':')
           try:
             board = itms[0]
             if len(itms)>1: board = itms[1]
-            opts.add('  "%s", "%s", "",'%(socket.gethostbyname(board+"-d1.data"),board))
+            opts.add('  "%s", "%s", "",'%(socket.gethostbyname(board+'-d1'),board))
             num = num + 1
           except Exception,X:
             error('Failed to retrieve TELL1 specs for '+str(b),timestamp=1)

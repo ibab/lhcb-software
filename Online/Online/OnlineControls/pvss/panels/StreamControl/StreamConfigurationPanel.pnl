@@ -73,8 +73,8 @@ createAllocPanelByRunInfo(string runInfoDP, string stream)  {
 }
 " 0
  2
-"CBRef""1"
-"EClose"E
+"CBRef" "1"
+"EClose" E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
@@ -126,7 +126,7 @@ LANG:1 19 Stream Slice Editor
 13 60
 "m_Ok"
 ""
-1 286 503 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 307 503 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 12 0 0 0 0 0
 E E E
@@ -138,7 +138,7 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 284 501 378 525
+ 305 501 378 525
 
 T 
 1
