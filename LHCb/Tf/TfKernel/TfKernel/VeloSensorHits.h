@@ -1,4 +1,4 @@
-// $Id: VeloSensorHits.h,v 1.7 2008-01-20 15:39:43 krinnert Exp $
+// $Id: VeloSensorHits.h,v 1.8 2008-02-13 16:01:09 krinnert Exp $
 #ifndef INCLUDE_TF_VELOSENSORHITS_H
 #define INCLUDE_TF_VELOSENSORHITS_H 1
 
@@ -487,7 +487,7 @@ namespace Tf {
     iterator it  = m_data[zone].begin();
     iterator end = m_data[zone].end();
     for ( ; it != end; ++it ) {
-      double coord = (*it)->sortCoordHalfBox() + m_sensor->halfBoxPhiOffset(zone,r);
+      double coord = (*it)->sortCoordHalfBox() + m_sensor->halfboxPhiOffset(zone,r);
       if ( mappedPos + tol < coord ) break;
       if ( mappedPos - tol < coord ) {
         tol = fabs( mappedPos - coord );

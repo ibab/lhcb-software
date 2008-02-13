@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2008-02-13 - Kurt Rinnert
+ - fixed typo in VeloSensorHits<>::closestHitAtRHalfBoxImp().  This went
+   undetected because the method was never instantiatet before.
+
 !============================ TfKernel v2r2 2008-01-21 =======================
 ! 2008-01-20 - Kurt Rinnert
  - added hit preparation on demand to the VELO hit managers. Client code that
