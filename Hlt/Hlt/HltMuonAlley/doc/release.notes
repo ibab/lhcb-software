@@ -3,6 +3,9 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
+! 2008-02-13 - Gerhard Raven
+  make a few cosmetic changes in HltMuonIDDistanceTool.cpp, and add comment
+  about modifying a 'const Track&' in this tool....
 
 ! 2008-02-11 - Gerhard Raven
   add .cvsignore file to ignore install.history and Makefile in cmt directory

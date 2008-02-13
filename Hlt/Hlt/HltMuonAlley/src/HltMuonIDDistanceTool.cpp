@@ -1,4 +1,4 @@
-// $Id: HltMuonIDDistanceTool.cpp,v 1.1 2007-12-06 16:16:45 hernando Exp $
+// $Id: HltMuonIDDistanceTool.cpp,v 1.2 2008-02-13 15:20:12 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,6 @@ HltMuonIDDistanceTool::HltMuonIDDistanceTool( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<ITrackFunctionTool>(this);
-
   declareProperty( "maxDist",m_maxdist=100);
 
 }
@@ -54,112 +53,100 @@ StatusCode HltMuonIDDistanceTool::initialize() {
 
 //=============================================================================
 
-double  HltMuonIDDistanceTool::function(const Track& ctrack)
+double  HltMuonIDDistanceTool::function(const Track& track)
 {
-
-  // A dirty trick!
-  Track* track = (Track*) &ctrack;
-  
   double distDLL=0;
-  std::vector< LHCb::LHCbID >  lista=   track->lhcbIDs ();
+  const std::vector< LHCb::LHCbID >&  lista = track.lhcbIDs ();
   MuonTileID tileM2;
   MuonTileID tileM3;
-  MuonTileID tileM4, tileM5;
-
       
-  std::vector<LHCbID>::iterator it;
-  for(it=lista.begin();it<lista.end();it++){ 
-    if(it->isMuon())
-    {
+  for(std::vector<LHCbID>::const_iterator it=lista.begin();it<lista.end();it++){
+    if(it->isMuon()) {
       MuonTileID tile=it->muonID();
-      if(tile.station()==1)tileM2=tile;
-      if(tile.station()==2)tileM3=tile;
-       
+      if (tile.station()==1) tileM2=tile;
+      if (tile.station()==2) tileM3=tile;
     }
-     
   }
   if(!(tileM2.isValid())||!(tileM3.isValid()))return 10000;
   
+  const State& stato= track.firstState();
+  double xpoint=stato.x();
+  double ypoint=stato.y();
+  double zpoint=stato.z();
+  double xslope=stato.slopes().x()/stato.slopes().z();
+  double yslope=stato.slopes().y()/stato.slopes().z();
+
   //M2 and M3
   double x,y,z,dx,dy,dz;
 
   m_iPosTool-> calcTilePos(tileM2,x, dx,y, dy,z, dz);  
-
-  State* stato=NULL;
-  stato=&(track->firstState());
-  float xpoint=stato->x();
-  float ypoint=stato->y();
-  float zpoint=stato->z();
-  float xslope=stato->slopes().x()/stato->slopes().z();
-  float yslope=stato->slopes().y()/stato->slopes().z();
-  float x_M2=xpoint+xslope*(z-zpoint);
-  float y_M2=ypoint+yslope*(z-zpoint); 
+  double x_M2=xpoint+xslope*(z-zpoint);
+  double y_M2=ypoint+yslope*(z-zpoint); 
   distDLL=((x_M2-x)/dx)*((x_M2-x)/dx)+
-    ((y_M2-y)/dy)*((y_M2-y)/dy);   
+          ((y_M2-y)/dy)*((y_M2-y)/dy);   
   debug()<<" dist M2 "<<distDLL<<" "<<x<<" "<<dx<<" "<<x_M2<<endreq;
   debug()<<" dist M2 "<<distDLL<<" "<<y<<" "<<dy<<" "<<y_M2<<endreq;
-  //info()<<
+
   m_iPosTool-> calcTilePos(tileM3,x, dx,y, dy,z, dz);
-  float x_M3=xpoint+xslope*(z-zpoint);
-  float y_M3=ypoint+yslope*(z-zpoint);
+  double x_M3=xpoint+xslope*(z-zpoint);
+  double y_M3=ypoint+yslope*(z-zpoint);
   distDLL+=((x_M3-x)/dx)*((x_M3-x)/dx)+
-    ((y_M3-y)/dy)*((y_M3-y)/dy);
+           ((y_M3-y)/dy)*((y_M3-y)/dy);
 
   debug()<<" dist M3 "<<distDLL<<endreq;
 
   //M4 and M5
 
   LHCb::MuonCoords* coords =  get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
-
-
   if ( coords==0 ) {
     err() << " Cannot retrieve MuonCoords " << endreq;
     return StatusCode::FAILURE;
   }
   // loop over the coords
-  float dist_tempM4=100000;
-  float dist_tempM5=100000;
+  double dist_tempM4=100000;
+  double dist_tempM5=100000;
   LHCb::MuonCoords::const_iterator iCoord;
+
+  MuonTileID tileM4, tileM5;
   for ( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
-    int region = (*iCoord)->key().region();
     int station = (*iCoord)->key().station();
     if(station==0||station==1||station==2)continue;
+    int region = (*iCoord)->key().region();
     if(region!=0&&(*iCoord)->uncrossed())continue;
+
     debug()<<station<<" "<<region<<endreq;
 
     m_iPosTool-> calcTilePos( (*iCoord)->key(),x, dx,y, dy,z, dz);
-    float dist_temp=0;
-    float x_Mi=xpoint+xslope*(z-zpoint);
-    float y_Mi=ypoint+yslope*(z-zpoint);
-    dist_temp=((x_Mi-x)/dx)*((x_Mi-x)/dx)+
-      ((y_Mi-y)/dy)*((y_Mi-y)/dy);
+    double x_Mi=xpoint+xslope*(z-zpoint);
+    double y_Mi=ypoint+yslope*(z-zpoint);
+    double dist_temp=((x_Mi-x)/dx)*((x_Mi-x)/dx)+
+                     ((y_Mi-y)/dy)*((y_Mi-y)/dy);
    
-    if(station==3){
-      if(float(dist_temp)<float(dist_tempM4)){
+    if(station==3 && dist_temp<dist_tempM4){
          dist_tempM4=dist_temp;
          tileM4 = (*iCoord)->key();
-      }
     }
-
-    if(station==4){
-      if(float(dist_temp)<float(dist_tempM5)){
+    if(station==4 && dist_temp<dist_tempM5){
          dist_tempM5=dist_temp;
          tileM5 = (*iCoord)->key();
-      }
     }
-    
-
-    
   }
 
   distDLL+=dist_tempM4;
   debug()<<" dist M4 "<<distDLL<<endreq;
   distDLL+=dist_tempM5;
   debug()<<" dist M5 "<<distDLL<<endreq;
-  track->addToLhcbIDs(tileM4);
-  track->addToLhcbIDs(tileM5);
+
+  // A dirty trick!
+  // FIXME: indeed. This implies that the interface is incorrect/abused
+  //        as it promises that the input track is not modified,
+  //        when it actually _is_ modified. 
+  //        This should get fixed.
+  Track& non_const_track = const_cast<Track&>(track);
+  //FIXME: shouldn't there be a check that tileM4 and tileM5
+  //       are actually valid tiles?
+  non_const_track.addToLhcbIDs(tileM4);
+  non_const_track.addToLhcbIDs(tileM5);
 
   return distDLL;
-
-      
 }  
