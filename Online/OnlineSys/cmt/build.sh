@@ -61,6 +61,8 @@ then
 	    | grep -v "/bin/genreflex" \
 	    | grep -v "gccxmlpath" \
 	    | grep -v " merge_genconfDb " \
+            | grep -v "::::" \
+            | grep -v "Copy '../../.." \
 	    | grep -v -x "Document[[:space:]]\+[a-zA-Z]*ConfDbMerge" \
 	    | grep -v -x "Document[[:space:]]\+[a-zA-Z]*RootMap" \
 	    | grep -v -x "Document[[:space:]]\+[a-zA-Z]*MergeMap" \

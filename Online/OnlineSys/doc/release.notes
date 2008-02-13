@@ -5,6 +5,13 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v4r0>2008-12-02 OnlineSys v4r6</A></H1><PRE>
+This is a new version built against LHCb v23r3.
+Updates in Presenter, OnlineHistDB, OMALib, UPI, Saver, 
+Adder, MBMDump, OnlineKernel, GaudiOnline and OnlineTasks.
+A new package ROMon was added to support basic farm monitoring
+based mostly on MBM information.
+
 </PRE><H1><A NAME=v4r0>2007-11-01 OnlineSys v4r5</A></H1><PRE>
 This is a new version built against LHCb v23r2.
 Updates in Presenter, OnlineHistDB, UPI, Saver, Adder and OnlineTasks.
