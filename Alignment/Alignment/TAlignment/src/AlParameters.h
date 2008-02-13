@@ -8,6 +8,7 @@
 #include "AlDofMask.h"
 #include "Math/Transform3D.h"
 #include "Math/SMatrix.h"
+#include "boost/array.hpp"
 
 class AlParameters
 {
@@ -21,20 +22,22 @@ public:
 
   /** Constructors */
   AlParameters(AlDofMask mask=AlDofMask()) ;
-  AlParameters(const Vector& parameters, const Covariance& covariance, AlDofMask mask=AlDofMask(), size_t offset=0) ;
+  AlParameters(const Vector& parameters, const Covariance& covariance, AlDofMask mask=AlDofMask(), size_t offset = 0u) ;
   
   size_t dim() const { return m_mask.nActive() ; }
   static std::string parName( int ) ;
   std::vector<double> translation() const ;
+  std::vector<double> errTranslation() const;
   std::vector<double> rotation() const ;
+  std::vector<double> errRotation() const;
   ROOT::Math::Transform3D transform() const ;
   // create the transform for a given delta
-  //static ROOT::Math::Transform3D transform(double delta[6]) ;
-  static ROOT::Math::Transform3D transform(const std::vector<double>& pars) ;
+  static ROOT::Math::Transform3D transform(const boost::array<double, 6>& pars) ;
   // compute the delta jacobian for a given coordinate transformation
-  static Matrix6x6 jacobian( const ROOT::Math::Transform3D& transform) ;
-  static Matrix6x6 jacobianNumeric( const ROOT::Math::Transform3D& transform) ;
+  static Matrix6x6 jacobian(const ROOT::Math::Transform3D& transform) ;
+  static Matrix6x6 jacobianNumeric(const ROOT::Math::Transform3D& transform) ;
   std::ostream& fillStream(std::ostream& s) const;
+
 private:
   AlDofMask   m_mask;
   Vector      m_parameters ;

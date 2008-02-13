@@ -1,5 +1,6 @@
 #include "AlParameters.h"
 #include <cmath>
+#include <algorithm>
 
 #include "Math/RotationX.h"
 #include "Math/RotationY.h"
@@ -15,9 +16,9 @@ AlParameters::AlParameters(AlDofMask mask)
 AlParameters::AlParameters(const Vector& parameters, const Covariance& covariance, AlDofMask mask, size_t offset) 
   : m_mask(mask), m_parameters(dim()), m_covariance(dim())
 {
-  for(unsigned int i=0; i<dim(); ++i) {
+  for (unsigned int i = 0u; i < dim(); ++i) {
     m_parameters[i] = parameters[i+offset] ;
-    for(unsigned int j=0; j<=i; ++j)
+    for (unsigned int j = 0u; j <= i; ++j)
       m_covariance[i][j] = covariance[offset+i][offset+j] ;
   }
 }
@@ -44,7 +45,7 @@ static inline double signedroot(double root)
 
 std::ostream& AlParameters::fillStream(std::ostream& os) const 
 {    
-  for(unsigned int iactive=0; iactive<dim(); ++iactive) {
+  for (unsigned int iactive = 0u; iactive < dim(); ++iactive) {
     os << std::setw(6)  << parName(m_mask.parIndex(iactive)) << ": " 
        << std::setw(12) << m_parameters[iactive] << " +/- "
        << std::setw(12) << signedroot(m_covariance[iactive][iactive]) << std::endl ;
@@ -54,58 +55,52 @@ std::ostream& AlParameters::fillStream(std::ostream& os) const
 
 std::vector<double> AlParameters::translation() const
 {
-  std::vector<double> rc(3,0) ;
+  std::vector<double> rc(3, 0.0) ;
   rc[Tx] = m_mask.isActive(Tx) ? m_parameters[m_mask.activeParIndex(Tx)] : 0 ;
   rc[Ty] = m_mask.isActive(Ty) ? m_parameters[m_mask.activeParIndex(Ty)] : 0 ;
   rc[Tz] = m_mask.isActive(Tz) ? m_parameters[m_mask.activeParIndex(Tz)] : 0 ;
   return rc ;
 }
 
+std::vector<double> AlParameters::errTranslation() const {
+  std::vector<double> errT(3, 0.0);
+  errT[Tx] = m_mask.isActive(Tx) ? signedroot(m_covariance[m_mask.activeParIndex(Tx)][m_mask.activeParIndex(Tx)]) : 0.0;
+  errT[Ty] = m_mask.isActive(Ty) ? signedroot(m_covariance[m_mask.activeParIndex(Ty)][m_mask.activeParIndex(Ty)]) : 0.0;
+  errT[Tz] = m_mask.isActive(Tz) ? signedroot(m_covariance[m_mask.activeParIndex(Tz)][m_mask.activeParIndex(Tz)]) : 0.0;
+  return errT;
+}
+
 std::vector<double> AlParameters::rotation() const
 {
-  std::vector<double> rc(3,0) ;
+  std::vector<double> rc(3, 0.0) ;
   rc[Rx-3] = m_mask.isActive(Rx) ? m_parameters[m_mask.activeParIndex(Rx)] : 0 ;
   rc[Ry-3] = m_mask.isActive(Ry) ? m_parameters[m_mask.activeParIndex(Ry)] : 0 ;
   rc[Rz-3] = m_mask.isActive(Rz) ? m_parameters[m_mask.activeParIndex(Rz)] : 0 ;
   return rc ;
 }
 
-// old
-// ROOT::Math::Transform3D AlParameters::transform() const
-// {
-//   double pars[6];
-//   for (size_t iactive = 0u; iactive < dim(); ++iactive) {
-//     std::cout << "iactive = " << iactive << " m_mask.parIndex(iactive) =  " << m_mask.parIndex(iactive) << " pars = " << pars[m_mask.parIndex(iactive)] << " m_parameters = " << m_parameters[iactive] <<  std::endl;
-//     pars[m_mask.parIndex(iactive)] = m_parameters[iactive] ;    std::cout << "iactive = " << iactive << " m_mask.parIndex(iactive) =  " << m_mask.parIndex(iactive) << " pars = " << pars[m_mask.parIndex(iactive)] << " m_parameters = " << m_parameters[iactive] <<  std::endl;
-    
-//   }
-//   return transform(pars) ;
-// }
-
-// old
-//ROOT::Math::Transform3D AlParameters::transform(double pars[6])
-// {
-//   ROOT::Math::Transform3D translation( ROOT::Math::XYZVector(pars[0],pars[1],pars[2]) ) ;
-//   ROOT::Math::Transform3D rotation( ROOT::Math::RotationX(pars[3])*
-//  				    ROOT::Math::RotationY(pars[4])*
-// 				    ROOT::Math::RotationZ(pars[5])
-//  				    ) ;
-//   return translation * rotation ;
-// }
+std::vector<double> AlParameters::errRotation() const {
+  std::vector<double> errR(3, 0.0);
+  errR[Rx-3] = m_mask.isActive(Rx) ? signedroot(m_covariance[m_mask.activeParIndex(Rx)][m_mask.activeParIndex(Rx)]) : 0.0;
+  errR[Ry-3] = m_mask.isActive(Ry) ? signedroot(m_covariance[m_mask.activeParIndex(Ry)][m_mask.activeParIndex(Ry)]) : 0.0;
+  errR[Rz-3] = m_mask.isActive(Rz) ? signedroot(m_covariance[m_mask.activeParIndex(Rz)][m_mask.activeParIndex(Rz)]) : 0.0;
+  return errR;
+}
 
 ROOT::Math::Transform3D AlParameters::transform() const
 {
-  std::vector<double> pars(6, 0.0);
-  for (size_t iactive = 0u; iactive < dim(); ++iactive) {
-    pars[m_mask.parIndex(iactive)] = m_parameters[iactive] ;
-  }
+  boost::array<double, 6> pars;
+  /// Initialise all elements to 0.0
+  std::fill(pars.begin(), pars.end(), 0.0);
+  /// Set unmasked parameters
+  for (size_t iactive = 0u; iactive < dim(); ++iactive) pars[m_mask.parIndex(iactive)] = m_parameters[iactive] ;
+
   return transform(pars) ;
 }
 
-ROOT::Math::Transform3D AlParameters::transform(const std::vector<double>& pars)
+ROOT::Math::Transform3D AlParameters::transform(const boost::array<double, 6>& pars)
 {
-  assert(pars.size() == 6);
-  ROOT::Math::Transform3D translation( ROOT::Math::XYZVector(pars[0],pars[1],pars[2]) ) ;
+  ROOT::Math::Transform3D translation( ROOT::Math::XYZVector(pars[0], pars[1], pars[2])) ;
   ROOT::Math::Transform3D rotation( ROOT::Math::RotationX(pars[3])*
  				    ROOT::Math::RotationY(pars[4])*
 				    ROOT::Math::RotationZ(pars[5])
@@ -204,8 +199,8 @@ AlParameters::Matrix6x6 AlParameters::jacobianNumeric( const ROOT::Math::Transfo
   ROOT::Math::Transform3D Tinv = T.Inverse() ;
   
   for(int j=0; j<6; ++j) {
-    //old: double delta[6] = {0,0,0,0,0,0} ;
-    std::vector<double> delta(6, 0.0);
+    boost::array<double, 6> delta;
+    std::fill(delta.begin(), delta.end(), 0.0);
     delta[j] += epsilon ;
     ROOT::Math::Transform3D Delta      = transform(delta) ;
     ROOT::Math::Transform3D DeltaPrime = T * Delta * Tinv ;
