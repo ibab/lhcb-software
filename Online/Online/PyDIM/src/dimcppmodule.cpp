@@ -2,15 +2,17 @@
 extern "C" {
 #include "Python.h"
 #include "structmember.h"
-#include <ctype.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <stdio.h>
-#include "pydim_utils.cpp"
+}
 #include "dis.hxx"
 #include "dic.hxx"
-}
+#include <cctype>
+#include <cstdlib>
+#include <cstdio>
+//#ifndef _WIN32
+//#include <unistd.h>
+//#endif
+
+#include "pydim_utils.cpp"
 
 /****************************************************************************
  * DimRpc Wrapper 
@@ -132,9 +134,7 @@ DimRpc_new(PyTypeObject *type, PyObject* /* args */, PyObject* /* kwds */)
 }
 
 
-static PyObject *
-DimRpc_name (DimRpc_Object *self)
-{
+static PyObject * DimRpc_name (DimRpc_Object *self)  {
   PyObject *res=NULL;
     
   if (!self->cpp_dimRpc) {
@@ -148,9 +148,7 @@ DimRpc_name (DimRpc_Object *self)
 }
 
 
-static PyObject *
-DimRpc_getInt (DimRpc_Object *self)
-{
+static PyObject *DimRpc_getInt (DimRpc_Object *self)  {
   PyObject *res=NULL;
   int cpp_res=0;
     
@@ -164,11 +162,8 @@ DimRpc_getInt (DimRpc_Object *self)
   res = PyInt_FromLong( (long)cpp_res );
   return res; // res is a new reference and will be owned by the caller    
 }
-
-       
-static PyObject *
-DimRpc_getFloat (DimRpc_Object *self)
-{
+      
+static PyObject *DimRpc_getFloat (DimRpc_Object *self)  {
   PyObject *res=NULL;
   float cpp_res=0;
     
@@ -183,10 +178,7 @@ DimRpc_getFloat (DimRpc_Object *self)
   return res; // res is a new reference and will be owned by the caller
 }
 
-
-static PyObject *
-DimRpc_getDouble (DimRpc_Object *self)
-{
+static PyObject *DimRpc_getDouble (DimRpc_Object *self)  {
   PyObject *res=NULL;
   double cpp_res=0;
     
@@ -201,10 +193,7 @@ DimRpc_getDouble (DimRpc_Object *self)
   return res; // res is a new reference and will be owned by the caller
 }
 
-
-static PyObject *
-DimRpc_getString (DimRpc_Object *self)
-{
+static PyObject *DimRpc_getString (DimRpc_Object *self)  {
   PyObject *res=NULL;
   char *cpp_res=NULL;
     
@@ -219,9 +208,7 @@ DimRpc_getString (DimRpc_Object *self)
   return res; // res is a new reference and will be owned by the caller
 }
 
-static PyObject *
-DimRpc_getSize (DimRpc_Object *self)
-{
+static PyObject *DimRpc_getSize (DimRpc_Object *self)  {
   PyObject *res=NULL;
   int cpp_res=0;
     
@@ -236,10 +223,7 @@ DimRpc_getSize (DimRpc_Object *self)
   return res; // res is a new reference and will be owned by the caller
 }
 
-
-static PyObject *
-DimRpc_getData(DimRpc_Object * self) 
-{    
+static PyObject *DimRpc_getData(DimRpc_Object * self)   {    
   PyObject *res=NULL, *tmp=NULL;
   char *buff=NULL;
   int buff_size=0;
@@ -253,7 +237,7 @@ DimRpc_getData(DimRpc_Object * self)
   buff_size = self->cpp_dimRpc->getSize();    
   res = dim_buf_to_tuple(self->format_in, buff, buff_size);    
     
-  if (res and PyTuple_Size(res)==1){
+  if (res && PyTuple_Size(res)==1){
     // in case there is only an object
     tmp = PyTuple_GetItem(res, 0);
     Py_INCREF(tmp);
@@ -263,10 +247,7 @@ DimRpc_getData(DimRpc_Object * self)
   return res; // res is a new reference and will be owned by the caller
 }
 
-
-static PyObject *
-DimRpc_setData (DimRpc_Object* self, PyObject* args)
-{
+static PyObject *DimRpc_setData (DimRpc_Object* self, PyObject* args)  {
   /* Gets some python objects and converts them to the appropiate C++ values.
    * The conversion is done based on the arguments supplied when the RPC 
    * command was created.
@@ -292,8 +273,7 @@ DimRpc_setData (DimRpc_Object* self, PyObject* args)
   Py_RETURN_NONE;
 }
 
-static PyObject *DimRpc_rpcHandler (DimRpc_Object* /* self */)
-{
+static PyObject *DimRpc_rpcHandler (DimRpc_Object* /* self */) {
   print("RPC call received in C++\n");
   Py_RETURN_NONE;    
 }
@@ -453,8 +433,7 @@ static void DimRpcInfo_dealloc(DimRpcInfo_Object *self) {
 
 
 static int 
-DimRpcInfo_init(DimRpcInfo_Object* self, PyObject* args, PyObject* kwds)
-{
+DimRpcInfo_init(DimRpcInfo_Object* self, PyObject* args, PyObject* kwds)  {
   /* Allocates a new DimRpcInfo_Object and a DimRpcInfoWrapper inside it.
    * The 
    */    
@@ -507,7 +486,6 @@ DimRpcInfo_init(DimRpcInfo_Object* self, PyObject* args, PyObject* kwds)
   return -1;
 }
 
-
 static PyObject *DimRpcInfo_new(PyTypeObject* type, PyObject* /* args */, PyObject* /* kwds */) {
   /* Allocates a new DimRpcInfo_Object and initialises the cpp_dimRpcInfo to NULL
    */
@@ -523,7 +501,6 @@ static PyObject *DimRpcInfo_new(PyTypeObject* type, PyObject* /* args */, PyObje
   return (PyObject *)self;     
 }
 
-
 static PyObject* DimRpcInfo_name (DimRpcInfo_Object * self)  {
   PyObject *res=NULL;
     
@@ -537,10 +514,7 @@ static PyObject* DimRpcInfo_name (DimRpcInfo_Object * self)  {
   return res; // res is a new reference and will be owned by the caller
 }
 
-
-static PyObject *
-DimRpcInfo_getInt (DimRpcInfo_Object * self)
-{
+static PyObject *DimRpcInfo_getInt (DimRpcInfo_Object * self)  {
   PyObject *res=NULL;
   int *cpp_res=NULL, size;    
     
@@ -571,10 +545,7 @@ DimRpcInfo_getInt (DimRpcInfo_Object * self)
   return res; /* res is a new reference and will be owned by the caller */    
 }
 
-       
-static PyObject *
-DimRpcInfo_getFloat (DimRpcInfo_Object * self)
-{
+static PyObject *DimRpcInfo_getFloat (DimRpcInfo_Object * self)  {
   PyObject *res=NULL;
   float *cpp_res=NULL;
   int size;
@@ -606,10 +577,7 @@ DimRpcInfo_getFloat (DimRpcInfo_Object * self)
   return res; /* res is a new reference and will be owned by the caller */    
 }
 
-
-static PyObject *
-DimRpcInfo_getDouble (DimRpcInfo_Object * self)
-{
+static PyObject *DimRpcInfo_getDouble (DimRpcInfo_Object * self)  {
   PyObject *res=NULL;
   double *cpp_res=NULL;
   int size;
@@ -641,9 +609,7 @@ DimRpcInfo_getDouble (DimRpcInfo_Object * self)
   return res; /* res is a new reference and will be owned by the caller */    
 }
 
-static PyObject *
-DimRpcInfo_getString (DimRpcInfo_Object * self)
-{
+static PyObject *DimRpcInfo_getString (DimRpcInfo_Object * self)  {
   PyObject *res=NULL;
   char * cpp_res=NULL;
   int size;
@@ -675,9 +641,7 @@ DimRpcInfo_getString (DimRpcInfo_Object * self)
   return res; /* res is a new reference and will be owned by the caller */
 }
 
-static PyObject *
-DimRpcInfo_getSize (DimRpcInfo_Object * self)
-{
+static PyObject *DimRpcInfo_getSize (DimRpcInfo_Object * self)  {
   /* From python point of view calling this procedure is useless. 
    * Proving it for the sake of completion
    */   
@@ -699,10 +663,7 @@ DimRpcInfo_getSize (DimRpcInfo_Object * self)
   return res; // res is a new reference and will be owned by the caller
 }
 
-
-static PyObject *
-DimRpcInfo_getData(DimRpcInfo_Object * self) 
-{    
+static PyObject *DimRpcInfo_getData(DimRpcInfo_Object * self)   {    
   PyObject *res=NULL, *tmp=NULL;
   char *buff=NULL;
   int buff_size=0;
@@ -726,7 +687,7 @@ DimRpcInfo_getData(DimRpcInfo_Object * self)
   res = dim_buf_to_tuple(self->format_out, buff, buff_size);    
     
   /* In case of a single object tuple, return the object not the tuple */
-  if (res and PyTuple_Size(res)==1){
+  if (res && PyTuple_Size(res)==1){
     // in case there is only an object
     tmp = PyTuple_GetItem(res, 0);
     Py_INCREF(tmp);
@@ -737,10 +698,7 @@ DimRpcInfo_getData(DimRpcInfo_Object * self)
   return res; // res is a new reference and will be owned by the caller
 }
 
-
-static PyObject *
-DimRpcInfo_setData (DimRpcInfo_Object* self, PyObject* args)
-{
+static PyObject *DimRpcInfo_setData (DimRpcInfo_Object* self, PyObject* args)  {
   /* Gets some python objects and converts them to the appropiate C++ values.
    * The conversion is done based on the arguments supplied when the RPC 
    * command was created.
@@ -775,7 +733,6 @@ DimRpcInfo_setData (DimRpcInfo_Object* self, PyObject* args)
   Py_RETURN_NONE;
 }
 
-
 static PyObject *DimRpcInfo_rpcInfoHandler (DimRpcInfo_Object* /* self */) {
   /* Dummy method for the python DimRpcInfo class.
    * Not really needed, provided just to make all the DimRpcInfo class
@@ -784,7 +741,6 @@ static PyObject *DimRpcInfo_rpcInfoHandler (DimRpcInfo_Object* /* self */) {
   //print("RPC call received in C++\n");
   Py_RETURN_NONE;    
 }
-
 
 static PyMethodDef DimRpcInfo_methods[] = {
   {"name"      , (PyCFunction)DimRpcInfo_name       , METH_NOARGS,

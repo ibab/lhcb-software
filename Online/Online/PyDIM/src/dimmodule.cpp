@@ -5,15 +5,22 @@ extern "C" {
 #include "dic.h"
 #include "dis.h"
 #include "dim_common.h"
-#include "pydim_utils.cpp"
-#include <ctype.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <stdio.h>
 }
+#include <cctype>
+#include <cstdlib>
+#include <cstdio>
 #include <map>
 #include <string>
+
+#ifndef _WIN32
+#include <unistd.h>
+#else
+#define HOST_NAME_MAX 256
+#include <winsock.h>
+#endif
+
+
+#include "pydim_utils.cpp"
 
 using namespace std;
 
@@ -22,9 +29,7 @@ static char server_name[HOST_NAME_MAX + 1];
 
 PyObject* dim_buf_to_tuple(const char *schema, const char *buf, int len);
 
-static PyObject *
-dim_dis_start_serving(PyObject* /* self */, PyObject *args)
-{
+static PyObject* dim_dis_start_serving(PyObject* /* self */, PyObject *args)  {
   char *name = NULL;
   if (server_active) 
     Py_RETURN_NONE;
@@ -44,8 +49,7 @@ dim_dis_start_serving(PyObject* /* self */, PyObject *args)
   Py_RETURN_NONE; // no return values :-)
 }
 
-static PyObject *
-dim_dis_stop_serving(PyObject* /* self */, PyObject* /* args */) {
+static PyObject* dim_dis_stop_serving(PyObject* /* self */, PyObject* /* args */) {
   /* Call: void dis_stop_serving(void)
    */
   dis_stop_serving(); // no return values :-)
@@ -67,8 +71,7 @@ static PyObject* dim_dis_set_dns_node(PyObject* /* self */, PyObject* args) {
   Py_RETURN_NONE;
 }
 
-static PyObject*
-dim_dis_get_dns_node(PyObject* /* self */, PyObject* /* args */) {
+static PyObject* dim_dis_get_dns_node(PyObject* /* self */, PyObject* /* args */) {
   /* calls dis_get_dns_node(char* node)
      the function should return the DNS node
   */
@@ -81,8 +84,7 @@ dim_dis_get_dns_node(PyObject* /* self */, PyObject* /* args */) {
   return Py_BuildValue("s", names);
 }
 
-static PyObject*
-dim_dis_set_dns_port(PyObject* /* self */, PyObject* args) {
+static PyObject* dim_dis_set_dns_port(PyObject* /* self */, PyObject* args) {
   /* calls dis_set_dns_port(int port)
      return success or failure
   */
@@ -100,8 +102,7 @@ dim_dis_set_dns_port(PyObject* /* self */, PyObject* args) {
   Py_RETURN_NONE;
 }
 
-static PyObject*
-dim_dis_get_dns_port(PyObject* /* self */, PyObject* /* args */) {
+static PyObject* dim_dis_get_dns_port(PyObject* /* self */, PyObject* /* args */) {
   /* calls dis_get_dns_port()
      the function should return the DNS port
   */
@@ -120,8 +121,7 @@ static PyCallback dis_callbackExitHandler_func,
   dis_callbackErrorHandler_func,
   dis_callbackClientExitHandler_func;
 
-static void
-dim_dis_callbackExitHandler(int* code) {
+static void dim_dis_callbackExitHandler(int* code) {
   PyObject *arg, *res;
 
   if ( dis_callbackExitHandler_func.self ) {
@@ -571,7 +571,7 @@ dim_dis_update_service(PyObject* /* self */, PyObject* args) {
     PyErr_SetString(PyExc_RuntimeError, "ID doesn't match any service");
     return NULL;
   }
-  if (!svc_args and svc->func) {    
+  if (!svc_args && svc->func) {    
     arg = Py_BuildValue("(i)", svc->tag);
     gstate = PyGILState_Ensure();
     svc_args = PyEval_CallObject(svc->func, arg);

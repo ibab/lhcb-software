@@ -11,9 +11,9 @@
 extern "C" {
 #include <Python.h>
 #include "structmember.h"
-#include <stdlib.h>
-#include <stdio.h>
 }
+#include <cstdlib>
+#include <cstdio>
 
 /* **************************************************************************
  * Various defines necesarry for converting between the dim buffers and Python
@@ -23,7 +23,14 @@ extern "C" {
  * between platforms that have different sizes for the basic types.
  * Anyway this I can't fix here if DIM doesn't support this.
  * **************************************************************************/
+#ifdef _WIN32
+#include <cstdarg>
+static inline void ___print(const char* fmt,...) 
+{   va_list args; va_start(args,fmt); vprintf(fmt,args); printf("\n"); va_end(args);   }
+#define print   printf("DIM Wrapper: %s:%u ::%s: ", __FILE__, __LINE__, __FUNCTION__); ___print
+#else
 #define print(...) printf("DIM Wrapper: %s:%u ::%s: ", __FILE__, __LINE__, __FUNCTION__); printf(__VA_ARGS__); printf("\n");
+#endif
 
 #ifndef Py_RETURN_NONE
 #define Py_RETURN_NONE do { Py_INCREF(Py_None); return Py_None; } while(0);

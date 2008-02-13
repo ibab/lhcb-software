@@ -17,14 +17,12 @@ pattern pydim_module \
   document pydimmodulebuilder <name>_pymodule name=<name> ;\
   macro_append <name>_pymodule_dependencies " <name> " ; \
   macro_append <name>_cppflags " -ftemplate-depth-64" WIN32 "" ;
-#  path_remove PYTHONPATH "/<package>/" WIN32 "\<package>\" ;\
-#  path_append PYTHONPATH $(<PACKAGE>ROOT)/$(tag);
 
 cmtpath_pattern \
    macro <project>_install_pymodule "" \
          <project>_without_installarea "" \
          <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/$(tag)/lib" \
-         <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix\$(tag)\lib" ; \
+         <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix)\$(tag)\lib" ; \
     path_remove  PYTHONPATH ${<project>_install_pymodule} ; \ 
     path_prepend PYTHONPATH ${<project>_install_pymodule}
 
@@ -34,7 +32,7 @@ cmtpath_pattern \
 
 
 apply_pattern pydim_module name=dimc     files="dimmodule.cpp
-apply_pattern pydim_module name=dimcpp   files="dimmodule++.cpp
+apply_pattern pydim_module name=dimcpp   files="dimcppmodule.cpp
 
 apply_pattern install_python_modules
 
