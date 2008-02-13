@@ -3,7 +3,8 @@
 show=;
 config=0;
 clean=0;
-quiet=0
+quiet=0;
+nobuild=0;
 args="";
 #
 #
@@ -12,6 +13,7 @@ do
   if test $i = "--clean"; then clean=1;
   elif test $i = "--config"; then config=1;
   elif test $i = "--quiet"; then quiet=1;
+  elif test $i = "--nobuild"; then nobuild=1;
   elif test $i = "--help"; then args=""; break;
   elif test $i = "-h"; then args=""; break;
   else args=`echo $args $i`;
@@ -36,6 +38,11 @@ then
         then
             $show ${CMTROOT}/${CMTBIN}/cmt.exe broadcast "${CMTROOT}/${CMTBIN}/cmt.exe config";
 	fi;
+        if test $nobuild = 1;
+        then 
+           echo "Do not build ..... ${i}"
+           continue;
+        fi;
         if test -e build_${CMTCONFIG}.log; then $show rm -f build_${CMTCONFIG}.log; fi;
         if test -e build_${CMTCONFIG}.log.tmp; then $show rm -f build_${CMTCONFIG}.log.tmp; fi;
 	$show ${CMTROOT}/${CMTBIN}/cmt.exe broadcast make -j 8 >build_${CMTCONFIG}.log.tmp 2>&1;
