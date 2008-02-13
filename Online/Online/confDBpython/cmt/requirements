@@ -4,23 +4,16 @@ package confDBpython
 
 branches confDBpython cmt src
 
-use GaudiPolicy  v*
 use Boost        v*  LCG_Interfaces
 use Python       v*  LCG_Interfaces
 use confDB       v*  Online
-use oracle      v* LCG_Interfaces
 
-# macro Boost_native_version "1.32.0"
-
-#macro CONFDBPYTHONROOT "/afs/cern.ch/user/l/labadie/cmtuser/confDBpython"
 macro CONFDBPYTHONINCL "$(CONFDBPYTHONROOT)/confDBpython"
 include_dirs "$(CONFDBPYTHONINCL)"
 
-macro oracle_linkopts "-L$(oracle_home)/lib -lclntsh" \
-      WIN32 "/LIBPATH:$(oracle_home)/lib oci.lib ociw32.lib"
+apply_pattern install_more_includes more=confDBpython
 
 # Linker library
-apply_pattern install_more_includes more=confDBpython
 library confDBpython  *.cpp 
 
 apply_pattern package_linkopts
@@ -30,14 +23,6 @@ apply_pattern ld_library_path
 private
 apply_pattern package_shlibflags
 macro_append confDBpython_shlibflags $(Boost_linkopts_python)
-path_append PATH ""  WIN32 "$(oracle_home)/bin"
 
-path_append PATH ""  WIN32 "$(oracle_home)/bin"
-
-
-application   test ../tests/test.cpp
-macro_append confDBpython_cppflags ' -I"$(oracle_home)/include" '
-
-
-
-
+application   confDBpython_test ../tests/test.cpp
+macro_append  confDBpython_test_dependencies " confDBpython "
