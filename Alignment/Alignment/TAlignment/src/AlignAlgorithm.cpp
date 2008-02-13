@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.28 2008-02-12 09:11:36 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.29 2008-02-13 18:10:13 janos Exp $
 // Include files
 // from std
 // #include <utility>
@@ -7,6 +7,10 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDetDataSvc.h"
+#include "GaudiUtils/Aida2ROOT.h"
+
+// from root
+#include "TH1D.h"
 
 // from DetDesc
 #include "DetDesc/DetectorElement.h"
@@ -42,19 +46,31 @@ namespace {
    Equations(size_t nElem)
      : m_nElem(nElem),
        m_v(nElem),
-       m_numHits(nElem,0), m_weight(nElem,0), m_numTracks(0), m_totalChiSquare(0), m_totalNumDofs(0), m_numExternalHits(0)
+       m_numHits(nElem, 0u), 
+       m_weight(nElem, 0.0), 
+       m_numTracks(0u), 
+       m_totalChiSquare(0.0), 
+       m_totalNumDofs(0u), 
+       m_numExternalHits(0u)
    {}
    void clear() ;
+   
    size_t nElem() const { return m_nElem; }
+   
    Gaudi::Vector6&       V(int i) { return m_v[i]; }
+   
    const Gaudi::Vector6& V(int i) const { return m_v[i]; }
+   
    Gaudi::Matrix6x6& M(int i, int j) { assert(i<=j); return m_m[std::make_pair(i,j)]; }
+   
    //FIXME: return proxy that fixes i<j...
    const Gaudi::Matrix6x6& M(int i, int j) const {
      assert(i<=j);
      return const_cast<Equations*>(this)->m_m[std::make_pair(i,j)];
    }
+   
    size_t numHits(int i) const { return m_numHits[i] ; }
+   
    double weight(int i) { return m_weight[i] ; }
   
    void addTrackSummary( double chisq, size_t ndof, size_t nexternal) {
@@ -63,6 +79,7 @@ namespace {
      m_numExternalHits+=nexternal ;
      ++m_numTracks;
    }
+   
    void addHitSummary(int index, double sigma) {
      ++m_numHits[index] ;
      m_weight[index] += 1/(sigma*sigma) ;
@@ -89,12 +106,12 @@ namespace {
  {
    m_v.clear(); m_v.resize(m_nElem); 
    m_m.clear(); 
-   m_numHits.clear() ; m_numHits.resize(m_nElem,0) ;
-   m_weight.clear() ; m_weight.resize(m_nElem,0) ;
-   m_totalChiSquare = 0 ;
-   m_numTracks = 0 ;
-   m_totalNumDofs = 0 ;
-   m_numExternalHits = 0 ;
+   m_numHits.clear(); m_numHits.resize(m_nElem, 0) ;
+   m_weight.clear() ; m_weight.resize(m_nElem, 0)  ;
+   m_totalChiSquare  = 0.0 ;
+   m_numTracks       = 0u ;
+   m_totalNumDofs    = 0u ;
+   m_numExternalHits = 0u ;
  }
 
  Gaudi::Vector6 convert(const Gaudi::Matrix1x6& m) {
@@ -102,8 +119,7 @@ namespace {
    for (int i = 0; i < 6; ++i) v(i) = m(0,i);
    return v;
  }
- 
- 
+
  class Data {
  public:
    Data(const LHCb::Node& node, unsigned index, double r, const Gaudi::Matrix1x6& d)
@@ -117,9 +133,9 @@ namespace {
    const Gaudi::Matrix1x6& d() const { return m_d; }
  private:
    const LHCb::Node* m_id ;
-   unsigned         m_index;
-   double           m_r;
-   Gaudi::Matrix1x6 m_d;
+   unsigned          m_index;
+   double            m_r;
+   Gaudi::Matrix1x6  m_d;
  };
  
  //FIXME: the next two stand-alone functions should move into AlVec & AlSymMat...
@@ -134,7 +150,14 @@ namespace {
      for (unsigned j = 0; j < T::kRows; ++j)
        lhs[col+i][row+j] = rhs(i,j);
  }
-
+ 
+ void fillHisto1D(IHistogram1D* histo1D, const size_t& bin, const double& value, const double& error) {
+   /// Get pointer to root histo
+   TH1D* rHisto1D = Gaudi::Utils::Aida2ROOT::aida2root(histo1D);
+   rHisto1D->SetBinContent(bin, value); rHisto1D->SetBinError(bin, error);
+ }
+ 
+   
 };
 
 using namespace LHCb;
@@ -153,21 +176,20 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
     m_align(0),
     m_projSelector(0),
     m_matrixSolverTool(0),
-    m_equations(0),
-    m_constraints()
+    m_equations(0)
 {
-  declareProperty("NumberOfIterations"          , m_nIterations                 = 10u                     );
-  declareProperty("TracksLocation"              , m_tracksLocation              = TrackLocation::Default  );
-  declareProperty("ProjectorSelector"           , m_projSelectorName            = "TrackProjectorSelector");
-  declareProperty("MatrixSolverTool"            , m_matrixSolverToolName        = "SpmInvTool"            );
-  declareProperty("UseCorrelations"             , m_correlation                 = true                    );
-  declareProperty("UpdateInFinalize"            , m_updateInFinalize            = false                   );
-  declareProperty("CanonicalConstraintStrategy" , m_canonicalConstraintStrategy = CanonicalConstraintAuto ); 
-  declareProperty("ConstrainZShearings"         , m_constrainZShearings         = false                   );
-  declareProperty("UseWeightedAverageConstraint", m_useWeightedAverageConstraint = false ) ;
-  declareProperty("MinNumberOfHits"             , m_minNumberOfHits             = 1u                      ); 
-  declareProperty("FillCorrelationsHistos"      , m_fillCorrelationHistos       = false                   );
-  declareProperty("UsePreconditioning"          , m_usePreconditioning          = false                   );
+  declareProperty("NumberOfIterations"          , m_nIterations                  = 10u                     );
+  declareProperty("TracksLocation"              , m_tracksLocation               = TrackLocation::Default  );
+  declareProperty("ProjectorSelector"           , m_projSelectorName             = "TrackProjectorSelector");
+  declareProperty("MatrixSolverTool"            , m_matrixSolverToolName         = "SpmInvTool"            );
+  declareProperty("UseCorrelations"             , m_correlation                  = true                    );
+  declareProperty("UpdateInFinalize"            , m_updateInFinalize             = false                   );
+  declareProperty("CanonicalConstraintStrategy" , m_canonicalConstraintStrategy  = CanonicalConstraintAuto ); 
+  declareProperty("ConstrainZShearings"         , m_constrainZShearings          = false                   );
+  declareProperty("UseWeightedAverageConstraint", m_useWeightedAverageConstraint = false                   );
+  declareProperty("MinNumberOfHits"             , m_minNumberOfHits              = 1u                      ); 
+  declareProperty("FillCorrelationsHistos"      , m_fillCorrelationHistos        = false                   );
+  declareProperty("UsePreconditioning"          , m_usePreconditioning           = false                   );
 }
 
 AlignAlgorithm::~AlignAlgorithm() {}
@@ -209,22 +231,6 @@ StatusCode AlignAlgorithm::initialize() {
   m_equations = new Equations(m_rangeElements.size());
   m_equations->clear() ;
 
-  // get constraints
-  m_constraints = m_align->constraints();
-  if (printDebug()) {
-    debug() << "Number of constraints = " << m_constraints.size() << endmsg;
-    unsigned nC = 0u;
-    for (std::vector<std::vector<double> >::const_iterator i = m_constraints.begin(), iEnd = m_constraints.end(); i != iEnd;
-         ++i, ++nC) {
-      debug() << nC << ": f = [ ";
-      for (std::vector<double>::const_iterator j = i->begin(), jEnd = i->end()-1; j != jEnd; ++j) {
-        info()  << (*j) << " ";
-      }
-      debug() << " ]" << endmsg;
-      debug() << "   f0 = " << i->back() << endmsg;
-    }
-  }
-
   /// Get projector selector tool
   m_projSelector = tool<ITrackProjectorSelector>(m_projSelectorName, "Projector", this);
   if (!m_projSelector) return Error("==> Failed to retrieve projector selector tool", StatusCode::FAILURE);
@@ -238,33 +244,50 @@ StatusCode AlignAlgorithm::initialize() {
   /// Residuals
   /// @todo: this should go into a monitoring tool
   info() << "booking histograms assuming " << m_nIterations << " iterations " << endmsg;
-  m_totChi2vsIterHisto    = bookProfile1D(10, "Total chi2 vs iteration"                  , -0.5, m_nIterations-0.5, m_nIterations);
-  m_norTotChi2vsIterHisto = bookProfile1D(20, "Total normalised chi2 vs iteration"       , -0.5, m_nIterations-0.5, m_nIterations);
+  m_trackChi2Histo        = book2D(10, "Track chi2 vs iteration", -0.5, m_nIterations-0.5, m_nIterations, -1.00, +100.00, 100);
+  m_trackNorChi2Histo     = book2D(11, "Track normalised chi2 vs iteration", -0.5, m_nIterations-0.5, m_nIterations, -1.00, +100.00, 100);
+  m_totChi2vsIterHisto    = bookProfile1D(20, "Total chi2 vs iteration"                  , -0.5, m_nIterations-0.5, m_nIterations);
+  m_norTotChi2vsIterHisto = bookProfile1D(21, "Total normalised chi2 vs iteration"       , -0.5, m_nIterations-0.5, m_nIterations);
   m_dChi2AlignvsIterHisto = bookProfile1D(30, "Chi2/dof of alignment change vs iteration", -0.5, m_nIterations-0.5, m_nIterations);
+  
   for(ElementRange::const_iterator i = m_rangeElements.begin(); i!= m_rangeElements.end(); ++i) {
-    const unsigned    indexI = i->index();
+    const unsigned    index_i = i->index();
     const std::string name   = i->name();
-    if (printDebug()) debug() << "Booking histograms for element " << name << " with index " << indexI <<endmsg;
-    m_resHistos[indexI]     = book2D(1000u+indexI, "residual vs iteration for " + name,
-                                     -0.5, m_nIterations-0.5, m_nIterations,
-                                     -1.00 , +1.00, 100);
-    m_pullHistos[indexI]     = book2D(2000u+indexI, "pull vs iteration for " + name,
+    if (printDebug()) debug() << "Booking histograms for element " << name << " with index " << index_i <<endmsg;
+    m_resHistos[index_i]     = book2D(1000u+index_i, "Residual vs iteration for " + name,
+                                      -0.5, m_nIterations-0.5, m_nIterations,
+                                      -1.00 , +1.00, 100);
+    m_pullHistos[index_i]    = book2D(2000u+index_i, "Pull vs iteration for " + name,
                                       -0.5, m_nIterations-0.5, m_nIterations,
                                       -5.00 , +5.00, 100);
-    m_nHitsHistos[indexI]     = book1D(3000u+indexI, "number of hits vs iteration for " + name,
-                                       -0.5, m_nIterations-0.5, m_nIterations);
+    m_nHitsHistos[index_i]   = book1D(3000u+index_i, "Number of hits vs iteration for " + name, 
+                                      -0.5, m_nIterations-0.5, m_nIterations);
+
+    m_deltaTxHisto[index_i]  = book1D(10000u+index_i, "Delta Tx vs iteration for " + name,
+                                      -0.5, m_nIterations-0.5, m_nIterations);
+    m_deltaTyHisto[index_i]  = book1D(20000u+index_i, "Delta Ty vs iteration for " + name,
+                                      -0.5, m_nIterations-0.5, m_nIterations);
+    m_deltaTzHisto[index_i]  = book1D(30000u+index_i, "Delta Tz vs iteration for " + name,
+                                      -0.5, m_nIterations-0.5, m_nIterations);
+    m_deltaRxHisto[index_i]  = book1D(40000u+index_i, "Delta Rx vs iteration for " + name,
+                                      -0.5, m_nIterations-0.5, m_nIterations);
+    m_deltaRyHisto[index_i]  = book1D(51000u+index_i, "Delta Ry vs iteration for " + name,
+                                      -0.5, m_nIterations-0.5, m_nIterations);
+    m_deltaRzHisto[index_i]  = book1D(60000u+index_i, "Delta Rz vs iteration for " + name,
+                                      -0.5, m_nIterations-0.5, m_nIterations);
+    
     if ( m_fillCorrelationHistos ) {
-      m_autoCorrHistos[indexI] = book2D(4000u+indexI, "hit autocorrelation in " + name + "  vs iteration ",
-					-0.5, m_nIterations-0.5, m_nIterations,
-					-0.5,+0.5,250);
-      unsigned(indexJ) = indexI; 
-      for(ElementRange::const_iterator j = i; j != m_rangeElements.end(); ++j, ++indexJ) {
-	m_corrHistos[std::make_pair(indexI, indexJ)] = book2D((10000 + indexI) * (100 + indexJ),
-							      "hit correlation of " + name + " with " + j->name()
-							      + " vs iteration "
-							      + ( i == j ? "(excluding autocorrelations!)" : "" ),
-							      -0.5, m_nIterations-0.5, m_nIterations,
-							      -1.0, +1.0, 250);
+      m_autoCorrHistos[index_i] = book2D(4000u+index_i, "hit autocorrelation in " + name + "  vs iteration ",
+                                         -0.5, m_nIterations-0.5, m_nIterations,
+                                         -0.5, +0.5, 250);
+      unsigned(index_j) = index_i; 
+      for (ElementRange::const_iterator j = i; j != m_rangeElements.end(); ++j, ++index_j) {
+	m_corrHistos[std::make_pair(index_i, index_j)] = book2D((10000 + index_i) * (100 + index_j),
+                                                                "hit correlation of " + name + " with " + j->name()
+                                                                + " vs iteration "
+                                                                + ( i == j ? "(excluding autocorrelations!)" : "" ),
+                                                                -0.5, m_nIterations-0.5, m_nIterations,
+                                                                -1.0, +1.0, 250);
       }
     }
   }
@@ -345,13 +368,6 @@ StatusCode AlignAlgorithm::execute() {
     }
     
     if (!data.empty()) {
-      // old 
-      // ResidualCovarianceTool cov;
-      //       cov.compute(*(*iTrack));
-      //       if(cov.error()) {
-      // 	warning() << "Error computing residual cov matrix. Skipping track of type "
-      // 		  << (*iTrack)->type() << endmsg ;
-      //       } else {
       for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
         m_equations->V(id->index())               -= convert(id->r()*id->d()) ;
         m_equations->M(id->index(), id->index())  += (Transpose(id->d())*id->d());
@@ -374,21 +390,12 @@ StatusCode AlignAlgorithm::execute() {
       }
       // keep some information about the tracks that we have seen
       m_equations->addTrackSummary( (*iTrack)->chi2(), (*iTrack)->nDoF(), numexternalhits ) ;
+      m_trackChi2Histo->fill(m_iteration, (*iTrack)->chi2());
+      m_trackNorChi2Histo->fill(m_iteration, (*iTrack)->chi2()/(*iTrack)->nDoF());
     }
   }
-  //}
 
   return StatusCode::SUCCESS;
-}
-
-inline std::ostream& operator<<(std::ostream& os, std::vector<bool>& mask) {
-  for (size_t i = 0u, iEnd = mask.size(); i < iEnd; ++i) os << " " << mask[i] ;
-  return os ;
-}
-
-inline std::ostream& operator<<(std::ostream& os, std::vector<double>& mask) {
-  for (size_t i = 0u, iEnd = mask.size(); i < iEnd; ++i) os << " " << mask[i] ;
-  return os ;
 }
 
 void AlignAlgorithm::preCondition(AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2,
@@ -456,11 +463,11 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
 
   // add extra rows/columns
   size_t size = halfDChi2DAlpha.size() ;
-  size_t numConstraints = 6 ;
-  if (m_constrainZShearings) numConstraints += 3 ;
+  size_t numConstraints = 6u;
+  if (m_constrainZShearings) numConstraints += 3u;
   
-  halfDChi2DAlpha.reSize(size + numConstraints ) ;
-  halfD2Chi2DAlpha2.reSize(size + numConstraints ) ;
+  halfDChi2DAlpha.reSize(size + numConstraints) ;
+  halfD2Chi2DAlpha2.reSize(size + numConstraints) ;
   // Set all new elements to 0
   for (size_t i = size; i < size+numConstraints; ++i) {
     halfDChi2DAlpha[i] = 0 ;
@@ -477,9 +484,9 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
     Gaudi::Transform3D trans = canonicalframeInv * it->alignmentFrame() ;
     Gaudi::Matrix6x6 jacobian = AlParameters::jacobian( trans ) ;
     double thisweight = m_useWeightedAverageConstraint ? m_equations->weight(iElem)/weight : 1./double( m_equations->nElem() ) ;
-    thisweight = 1./double( m_equations->nElem() ) ;
-    for(size_t i=0; i<6; ++i) {
-      for(size_t j=0; j<Derivatives::kCols; ++j) {
+    thisweight = 1.0/double( m_equations->nElem() ) ;
+    for (size_t i = 0u; i < 6; ++i) {
+      for (size_t j = 0; j < Derivatives::kCols; ++j) {
 	// and here comes the 2nd place we could do things entirely
 	// wrong, but I think that this is right.
 	halfD2Chi2DAlpha2[size+i][j+iElem*Derivatives::kCols] = thisweight * jacobian(i,j) ;
@@ -489,15 +496,15 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
       double deltaZ = it->pivotXYZPoint().z() - pivot.z() ;
       // the 3 constraints are in this order: zx-shearing, zy-shearing and z-scale ('zz-shearing')
       for (size_t i = 0u; i < 3u; ++i) {
-        for (size_t j = 0u; j <Derivatives::kCols; ++j) {
+        for (size_t j = 0u; j < Derivatives::kCols; ++j) {
           halfD2Chi2DAlpha2[size+i+6][j+iElem*Derivatives::kCols] = thisweight * deltaZ/(zmax-zmin) * jacobian(i,j) ;
         }
       }
     }
   }
   
-  if(printDebug()) debug() << "Full matrix after adding constraints: " << std::endl
-                           << halfD2Chi2DAlpha2 << endmsg ;
+  if (printDebug()) debug() << "Full matrix after adding constraints: " << std::endl
+                            << halfD2Chi2DAlpha2 << endmsg ;
   
   // we have now calculated everything for all constraints. However,
   // we may not want all of them:
@@ -526,7 +533,7 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
   // Finally, add some info to the log message
   assert( dofmask.size() == size + numConstraints) ;
   logmessage << "Added canonical constraints for (global) : " ;
-  for (size_t i = 0u; i < numConstraints; ++i) if ( dofmask[size+i] ) logmessage << constraintnames[i] << "," ;
+  for (size_t i = 0u; i < numConstraints; ++i) if ( dofmask[size+i] ) logmessage << constraintnames[i] << (i != numConstraints-1u ? ", " : "" );
   logmessage << std::endl ;
 
   return numConstraints - numRemovedConstraints ;
@@ -576,6 +583,16 @@ void AlignAlgorithm::update() {
     return ;
   }
   
+  info() << "\n";
+  info() << "==> iteration " << m_iteration << " : Initial alignment conditions  : [";
+  std::vector<double> deltas;
+  deltas.reserve(m_rangeElements.size()*6u);  
+  getAlignmentConstants(m_rangeElements, deltas);
+  for (std::vector<double>::const_iterator i = deltas.begin(), iEnd = deltas.end(); i != iEnd; ++i) {
+    info() << (*i) << (i != iEnd-1u ? ", " : "]");
+  }
+  info() << endmsg;
+
   info() << "==> Updating constants" << endmsg ;
   std::ostringstream logmessage ;
   logmessage << "********************* ALIGNMENT LOG ************************" << std::endl
@@ -631,18 +648,18 @@ void AlignAlgorithm::update() {
   size_t numConstraints(0) ;
   if ( m_canonicalConstraintStrategy == CanonicalConstraintOn ||
        (m_canonicalConstraintStrategy == CanonicalConstraintAuto && m_equations->numExternalHits() == 0u) ) {
-    numConstraints = addCanonicalConstraints(tmpDerivatives,tmpMatrix,dofmask, logmessage) ;
+    numConstraints = addCanonicalConstraints(tmpDerivatives, tmpMatrix, dofmask, logmessage) ;
     assert(dofmask.size() == tmpDerivatives.size() ) ;
   }
   
   size_t nDOFs = std::count(dofmask.begin(), dofmask.end(), true) ;
-
+  
   logmessage << "Number of alignables with insufficient statistics: " << std::count(offsets.begin(),offsets.end(),-1) << std::endl
 	     << "Number of constraints: "                             << numConstraints << std::endl
 	     << "Number of active parameters: "                       << nDOFs-numConstraints << std::endl ;
   
-  if( nDOFs > 0 ) {
-
+  if ( nDOFs > 0 ) {
+    
     AlVec    derivatives(nDOFs);
     AlSymMat matrix(nDOFs);
     
@@ -690,7 +707,7 @@ void AlignAlgorithm::update() {
     if (solved) {
       StatusCode sc = StatusCode::SUCCESS;
       double deltaChi2 = derivatives * halfDChi2dX * derivatives ;
-      if(printDebug()) {
+      if (printDebug()) {
 	info() << "Solution = " << derivatives << endmsg ;
 	info() << "Covariance = " << matrix << endmsg ;
       }
@@ -698,19 +715,25 @@ void AlignAlgorithm::update() {
 		 << deltaChi2 << " / " << nDOFs-numConstraints << std::endl ;
       m_dChi2AlignvsIterHisto->fill(m_iteration, deltaChi2) ;
       
-      if (numConstraints > 0) printCanonicalConstraints(derivatives,matrix,numConstraints,logmessage) ;
+      if (numConstraints > 0) printCanonicalConstraints(derivatives, matrix, numConstraints, logmessage) ;
       
       if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
       size_t iElem(0u) ;
       for (ElementRange::const_iterator it = m_rangeElements.begin(); it != m_rangeElements.end(); ++it, ++iElem) 
-	if( offsets[iElem] >= 0 ) {
+	if ( offsets[iElem] >= 0 ) {
 	  AlParameters delta( derivatives, matrix, it->dofMask(), offsets[iElem] ) ;
 	  logmessage << "Alignable: " << it->name() << std::endl
 		     << "Number of hits seen: " << m_equations->numHits(iElem) << std::endl
 		     << delta ;
 	  StatusCode sc = it->updateGeometry(delta) ;
-	  if(!sc.isSuccess()) error() << "Failed to set alignment condition for " << it->name() << endmsg ; 
-	}
+	  if (!sc.isSuccess()) error() << "Failed to set alignment condition for " << it->name() << endmsg ; 
+          fillHisto1D(m_deltaTxHisto[it->index()], m_iteration+1u, delta.translation()[0], delta.errTranslation()[0]);
+          fillHisto1D(m_deltaTyHisto[it->index()], m_iteration+1u, delta.translation()[1], delta.errTranslation()[1]);
+          fillHisto1D(m_deltaTzHisto[it->index()], m_iteration+1u, delta.translation()[2], delta.errTranslation()[2]);
+          fillHisto1D(m_deltaRxHisto[it->index()], m_iteration+1u, delta.rotation()[0]   , delta.errRotation()[0]);
+          fillHisto1D(m_deltaRyHisto[it->index()], m_iteration+1u, delta.rotation()[1]   , delta.errRotation()[1]);
+          fillHisto1D(m_deltaRzHisto[it->index()], m_iteration+1u, delta.rotation()[2]   , delta.errRotation()[2]);
+        }
     } else {
       error() << "Failed to solve system" << endmsg ;
     }
@@ -720,6 +743,14 @@ void AlignAlgorithm::update() {
   
   logmessage << "********************* END OF ALIGNMENT LOG ************************" ;
   info() << logmessage.str() << endmsg ;
+  info() << "\n";
+  info() << "==> iteration " << m_iteration << " : Updated alignment conditions  : [";
+  deltas.clear();
+  getAlignmentConstants(m_rangeElements, deltas);
+  for (std::vector<double>::const_iterator i = deltas.begin(), iEnd = deltas.end(); i != iEnd; ++i) {
+    info() << (*i) << (i != iEnd-1u ? ", " : "]");
+  }
+  info() << endmsg;
 }
 
 void AlignAlgorithm::reset() {

@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.22 2008-02-08 10:02:12 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.23 2008-02-13 18:10:13 janos Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -100,37 +100,44 @@ public:
 protected:
   
 private:
-  bool printDebug() const {return msgLevel(MSG::DEBUG);};
+  bool printDebug()   const {return msgLevel(MSG::DEBUG);};
   bool printVerbose() const {return msgLevel(MSG::VERBOSE);};
 
-  size_t                            m_iteration;            ///< Iteration counter
-  size_t                            m_nIterations;          ///< Number of iterations
-  ElementRange                      m_rangeElements;        ///< Detector elements
-  std::vector<double>               m_initAlignConstants;   ///< Initial alignment constants
-  IGetElementsToBeAligned*          m_align;                ///< Pointer to tool to align detector
-  std::string                       m_tracksLocation;       ///< Tracks location for alignment
-  std::string                       m_projSelectorName;     ///< Name of projector selector tool
-  ITrackProjectorSelector*          m_projSelector;         ///< Pointer to projector selector tool
-  std::string                       m_matrixSolverToolName; ///< Name of linear algebra solver tool
-  IAlignSolvTool*                   m_matrixSolverTool;     ///< Pointer to linear algebra solver tool
-  Equations*                        m_equations;            ///< Equations to solve
-  std::vector<std::vector<double> > m_constraints;
-  bool                              m_correlation ;         ///< do we take into account correlations between residuals?
-  bool                              m_updateInFinalize ;    ///< Call update from finalize
-  int                               m_canonicalConstraintStrategy ; ///< Constrain global dofs
-  bool                              m_constrainZShearings;  ///< Constrain z-shearings
+  size_t                            m_iteration;                     ///< Iteration counter
+  size_t                            m_nIterations;                   ///< Number of iterations
+  ElementRange                      m_rangeElements;                 ///< Detector elements
+  std::vector<double>               m_initAlignConstants;            ///< Initial alignment constants
+  IGetElementsToBeAligned*          m_align;                         ///< Pointer to tool to align detector
+  std::string                       m_tracksLocation;                ///< Tracks location for alignment
+  std::string                       m_projSelectorName;              ///< Name of projector selector tool
+  ITrackProjectorSelector*          m_projSelector;                  ///< Pointer to projector selector tool
+  std::string                       m_matrixSolverToolName;          ///< Name of linear algebra solver tool
+  IAlignSolvTool*                   m_matrixSolverTool;              ///< Pointer to linear algebra solver tool
+  Equations*                        m_equations;                     ///< Equations to solve
+  bool                              m_correlation ;                  ///< Do we take into account correlations between residuals?
+  bool                              m_updateInFinalize ;             ///< Call update from finalize
+  int                               m_canonicalConstraintStrategy ;  ///< Constrain global dofs
+  bool                              m_constrainZShearings;           ///< Constrain z-shearings
   bool                              m_useWeightedAverageConstraint ; ///< Flag to turn on weighting in constraint averages
-  size_t                            m_minNumberOfHits ;     ///< Minimum number of hits for an Alignable to be aligned
-  bool                              m_usePreconditioning ;   ///< Precondition the system of equations before calling solver
-  bool                              m_fillCorrelationHistos; ///< Flag to turn on filling of residual correlation histos
+  size_t                            m_minNumberOfHits ;              ///< Minimum number of hits for an Alignable to be aligned
+  bool                              m_usePreconditioning ;           ///< Precondition the system of equations before calling solver
+  bool                              m_fillCorrelationHistos;         ///< Flag to turn on filling of residual correlation histos
 
   /// Monitoring
   // @todo: Move this to a monitoring tool
   std::map<unsigned int, IHistogram2D*>                          m_resHistos;
   std::map<unsigned int, IHistogram2D*>                          m_pullHistos;
   std::map<unsigned int, IHistogram1D*>                          m_nHitsHistos;
+  std::map<unsigned int, IHistogram1D*>                          m_deltaTxHisto;
+  std::map<unsigned int, IHistogram1D*>                          m_deltaTyHisto;
+  std::map<unsigned int, IHistogram1D*>                          m_deltaTzHisto;
+  std::map<unsigned int, IHistogram1D*>                          m_deltaRxHisto;
+  std::map<unsigned int, IHistogram1D*>                          m_deltaRyHisto;
+  std::map<unsigned int, IHistogram1D*>                          m_deltaRzHisto;
   std::map<unsigned int, IHistogram2D*>                          m_autoCorrHistos;
   std::map<std::pair<unsigned int, unsigned int>, IHistogram2D*> m_corrHistos;
+  IHistogram2D*                                                  m_trackChi2Histo;
+  IHistogram2D*                                                  m_trackNorChi2Histo;
   IProfile1D*                                                    m_totChi2vsIterHisto;
   IProfile1D*                                                    m_norTotChi2vsIterHisto;
   IProfile1D*                                                    m_dChi2AlignvsIterHisto;
