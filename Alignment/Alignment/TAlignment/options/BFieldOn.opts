@@ -1,0 +1,8 @@
+FitTracks.Fitter.ErrorX2                                  = 16.0  ; //  Gaudi::Units::mm2 = 1*1; default: 4.0
+FitTracks.Fitter.ErrorY2                                  = 1600.0; //  Gaudi::Units::mm2 = 1*1; default: 400.0
+FitTracks.Fitter.ErrorTx2                                 = 6.e-5 ; //  default: 6e-5
+FitTracks.Fitter.ErrorTy2                                 = 1.e-4 ; //  default: 1e-4
+FitTracks.Fitter.ApplyMaterialCorrections                 = true;
+FitTracks.Fitter.Extrapolator.ApplyMultScattCorr          = true;
+FitTracks.Fitter.Extrapolator.ApplyEnergyLossCorr         = true;
+FitTracks.Fitter.Extrapolator.ApplyElectronEnergyLossCorr = true;
