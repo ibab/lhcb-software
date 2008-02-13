@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v30r6
+version v31r0
 
 #============================================================================
 #-- Structure
@@ -34,7 +34,7 @@ use HepMC              v*     LCG_Interfaces -no_auto_imports
 use GaudiSvc           v*                    -no_auto_imports
 use GaudiAud           v*                    -no_auto_imports
 use GaudiPoolDb        v*                    -no_auto_imports
-use GaudiPython        v*                    -no_auto_imports 
+use GaudiPython        v*                    
 use RootHistCnv        v*                    -no_auto_imports
  
 # From LHCB project
