@@ -3,6 +3,11 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-02-13 - Gerhard Raven
+  - split configuration into a 'tree' structure and 'data' items, i.e.
+    go from an 'intrusive' tree to an 'external' tree
+    (warning: depends on corresponding changes in HltBase)
+
 ! 2008-02-12 Jose A. Hernando
   - small bug in HltTFilter.icpp when getting objs from TES
 
