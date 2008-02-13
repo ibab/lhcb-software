@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+! 2008-02-12 Jose A. Hernando
+  - adding functions to the factory
+
 ! 2008-02-13 - Gerhard Raven
   - split configuration into a 'tree' structure and 'data' items, i.e.
     go from an 'intrusive' tree to an 'external' tree
