@@ -8,8 +8,8 @@ use Boost        v*  LCG_Interfaces
 use Python       v*  LCG_Interfaces
 use confDB       v*  Online
 
-macro CONFDBPYTHONINCL "$(CONFDBPYTHONROOT)/confDBpython"
-include_dirs "$(CONFDBPYTHONINCL)"
+include_path none
+include_dirs $(CONFDBPYTHONROOT)/confDBpython
 
 apply_pattern install_more_includes more=confDBpython
 
