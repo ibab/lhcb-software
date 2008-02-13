@@ -30,7 +30,7 @@ use Presenter         v0r6     Online
 ### PVSS Distribution only: use PVSS              v1r0    Online
 ### PVSS Distribution only: use PVSSInterface     v1r0    Online
 ### PVSS Distribution only: use PVSSManager       v1r0    Online
-use PyDIM             v1r4     Online
+use PyDIM             v2r1     Online
 use ROMon             v1r0     Online
 ### Obsolete: use RunDatabase       v1r2     Online
 use Saver             v1r5     Online
