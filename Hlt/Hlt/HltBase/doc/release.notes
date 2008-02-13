@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 ! 2008-02-13 Gerhard Raven
+  - remove a 'const' qualifier on the templated function 'extend' in ESequences 
+     as it forces an otherwise unneeded cast elsewhere...
+
+! 2008-02-13 Gerhard Raven
  - split tree structure of configurations from the 'data' part;
    add a 'label' field to the tree nodes which can be used to 
    give a human-readable description of a given 'branch' of the tree;

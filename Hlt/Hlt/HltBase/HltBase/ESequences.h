@@ -52,14 +52,14 @@ namespace zen {
   template <class INPUT> 
   size_t count(INPUT b1, const INPUT& e1, const INPUT& b2, const INPUT& e2) {
     size_t n = 0;
-    for (;b1 != e1; ++b1) {if (zen::find(b2,e2,*b1)) n+=1;}
+    for (;b1 != e1; ++b1) {if (zen::find(b2,e2,*b1)) ++n;}
     return n;
   }
 
   //--- sequences in containers ---------------------------
   
   template <class INPUT, class OBJECT>
-  inline bool extend(INPUT& cont, const OBJECT& obj) {
+  inline bool extend(INPUT& cont, OBJECT& obj) {
     if (std::find(cont.begin(),cont.end(),obj) != cont.end()) return false;
     cont.push_back(obj);
     return true;
