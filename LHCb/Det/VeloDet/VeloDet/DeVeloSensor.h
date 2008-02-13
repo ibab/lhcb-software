@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.37 2007-11-15 10:58:46 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.38 2008-02-13 15:56:37 krinnert Exp $
 #ifndef VELODET_DEVELOSENSOR_H
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -382,15 +382,15 @@ public:
    *  This information is based on CondDB, i.e. it can change
    *  with time.
    */
-  double stripCapacitance(unsigned int strip) const;
+  double stripCapacitance(unsigned int strip) const { return m_stripCapacitance[strip]; }
 
   /** Get info for this strip (cached condition).
    *  This information is based on CondDB, i.e. it can change
    *  with time.
    *  @see StripInfo
    */
-  StripInfo stripInfo(unsigned int strip) const;
-
+  StripInfo stripInfo(unsigned int strip) const { return m_stripInfos[strip]; }
+ 
   /// call back function for strip capacitance condition update
   StatusCode updateStripCapacitanceCondition();
 

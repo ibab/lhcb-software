@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.186 2007-11-15 15:22:26 cattanem Exp $
+! $Id: release.notes,v 1.187 2008-02-13 15:56:37 krinnert Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2008-02-13 - Kurt Rinnert
+ - made accessors for strip capicitance and strip info inline.
+ - moved sanity check for strip capacitance and strip info conditions
+   from accessors to update call back method.
+ - added accessors for phi strip impact parameters in all frames.
 
 !======================== VeloDet v12r3 2007-11-15 ===========================
 ! 2007-11-15 - Mark Tobin

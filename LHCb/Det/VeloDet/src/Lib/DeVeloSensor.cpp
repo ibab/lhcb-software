@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.30 2007-08-28 12:05:43 jonrob Exp $
+// $Id: DeVeloSensor.cpp,v 1.31 2008-02-13 15:56:37 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -190,28 +190,6 @@ void DeVeloSensor::initSensor()
 }
 
 //=========================================================================
-// non-inlined condition cache accessors    
-//=========================================================================
-
-double DeVeloSensor::stripCapacitance(unsigned int strip) const
-{
-  if (strip < m_stripCapacitance.size()) {
-    return m_stripCapacitance[strip];
-  } else {
-    return 0.0;
-  }
-}
-
-DeVeloSensor::StripInfo DeVeloSensor::stripInfo(unsigned int strip) const
-{
-  // Defaults to not read out and not bonded if there is no such strip.
-  // This behaviour is handled by the StripInfo default constructor.
-  if (strip >=  m_stripInfos.size()) return DeVeloSensor::StripInfo();
-
-  return m_stripInfos[strip];
-}
-
-//=========================================================================
 // members related to condition caching   
 //=========================================================================
 
@@ -255,6 +233,11 @@ StatusCode DeVeloSensor::updateStripCapacitanceCondition () {
   m_stripCapacitanceCondition = condition(m_stripCapacitanceConditionName.c_str());
   m_stripCapacitance = m_stripCapacitanceCondition->paramAsDoubleVect("StripCapacitance");
 
+  if (m_stripCapacitance.size() != 2048) {
+    MsgStream msg(msgSvc(), "DeVeloSensor");
+    msg << MSG::ERROR << "Strip capacitance condition size does not match number of strips!" << endmsg;
+    return StatusCode::FAILURE;
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -269,6 +252,11 @@ StatusCode DeVeloSensor::updateStripInfoCondition () {
                  m_stripInfos.begin(),
                  ConvertIntToStripInfo());
 
+  if (m_stripInfos.size() != 2048) {
+    MsgStream msg(msgSvc(), "DeVeloSensor");
+    msg << MSG::ERROR << "Strip info condition size does not match number of strips!" << endmsg;
+    return StatusCode::FAILURE;
+  }
   return StatusCode::SUCCESS;
 }
 
