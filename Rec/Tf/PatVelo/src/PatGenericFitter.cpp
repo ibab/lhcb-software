@@ -1,4 +1,4 @@
-// $Id: PatGenericFitter.cpp,v 1.1 2007-09-11 16:25:53 krinnert Exp $
+// $Id: PatGenericFitter.cpp,v 1.2 2008-02-13 16:10:19 krinnert Exp $
 // Include files 
 
 // from Gaudi
@@ -17,6 +17,7 @@
 // Implementation file for class : PatGenericFitter
 //
 // 2005-10-18 : Tomas LASTOVICKA
+// 2008-02-11 : Kurt Rinnert (port to Tf framework)
 //-----------------------------------------------------------------------------
 
 namespace Tf {
@@ -25,15 +26,12 @@ namespace Tf {
   //=============================================================================
   PatGenericFitter::PatGenericFitter( PatVeloRHitManager* rHitManager,
       PatVeloPhiHitManager* phiHitManager,
-      double inner, double outer,
       bool alignment ) 
     : m_rHitManager(rHitManager)
     , m_phiHitManager(phiHitManager)
     , m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
     , m_valid(true)
     , m_align(alignment)
-    , m_innerDTO(inner)
-    , m_outerDTO(outer)
     {
       m_rCoord.reserve(42);
       m_pCoord.reserve(42);
@@ -124,15 +122,15 @@ namespace Tf {
     return zmin;    
   }
 
-  int PatGenericFitter::lastSensorNumber() {
+  const DeVeloSensor* PatGenericFitter::lastSensor() {
     std::vector<PatVeloRHit*>::iterator itRC;
     double zmax = -1000.0;    
-    int sensor = -1;    
+    const DeVeloSensor* sensor = 0;    
     for (itRC = m_rCoord.begin(); m_rCoord.end() != itRC; ++itRC) {
       if ((*itRC) == 0) continue;
       if ((*itRC)->z() > zmax) { 
         zmax = (*itRC)->z(); 
-        sensor=(*itRC)->sensorNumber(); 
+        sensor=(*itRC)->sensor(); 
       }      
     }
     std::vector<PatVeloPhiHit*>::iterator itPC;
@@ -140,7 +138,7 @@ namespace Tf {
       if ((*itPC) == 0) continue;
       if ((*itPC)->z() > zmax) {
         zmax = (*itPC)->z();
-        sensor = (*itPC)->sensorNumber();        
+        sensor = (*itPC)->sensor();        
       }
     }    
     return sensor;    
@@ -196,10 +194,11 @@ namespace Tf {
       fillMatrix();
       bool sc = solve();            
       if ( !sc ) return StatusCode::FAILURE;            
+
       if ( 0.0001 >  maxVariation() ) break;            
       if ( m_maxIter < nIter ) return StatusCode::FAILURE;    
     }          
-
+    
     return StatusCode::SUCCESS;  
 
   }
@@ -228,7 +227,6 @@ namespace Tf {
       if ( 0 != (*itR) ) {
         PatVeloRHit* coordR = (*itR);
         z = coordR->z();
-        //err = coordR->error();
         if ( m_align ) {        
           cc = coordR->coordHalfBox();
         } else {
@@ -238,7 +236,7 @@ namespace Tf {
         b = m_par[1]+m_par[3]*z;
         R = sqrt(a*a+b*b);
         c = -cc*R;
-
+      
         multi = 1./R;      
         multi *= multi;
 
@@ -267,14 +265,17 @@ namespace Tf {
         xx = m_par[0]+m_par[2]*z;
         yy = m_par[1]+m_par[3]*z;
         if ( m_align ) {        
-          cc = coordP->coordHalfBox();
+          cc = pseudoPhi(coordP);
+          cc += coordP->coordHalfBox() - coordP->coordIdeal();
+          c   = coordP->sensor()->halfboxDistToOrigin(coordP->zone());
         } else {
-          cc = coordP->coordIdeal();
+          cc = pseudoPhi(coordP);
+          c  = coordP->sensor()->idealDistToOrigin(coordP->zone());
         }      
         a =  sin(cc);      
         b = -cos(cc);
 
-        multi = coordP->weight()*(xx*xx+yy*yy);
+        multi = 1.0/(coordP->hit()->variance()*(xx*xx+yy*yy));
         *(m_matrix.begin()+0) += multi*a*a;
         *(m_matrix.begin()+1) += multi*a*b;
         *(m_matrix.begin()+2) += multi*b*b;
@@ -286,6 +287,7 @@ namespace Tf {
         *(m_matrix.begin()+8) += multi*a*b*z*z; 
         *(m_matrix.begin()+9) += multi*b*b*z*z;
 
+        multi *= -c;
         m_vector[0] += multi*a;
         m_vector[1] += multi*b;
         m_vector[2] += multi*a*z;
@@ -298,6 +300,7 @@ namespace Tf {
   }
 
   bool PatGenericFitter::solve() {
+
     bool sc = m_matrix.Invert();
     if ( !sc ) return sc;
     m_par_old = m_par;  
@@ -324,5 +327,14 @@ namespace Tf {
     if ( max_x > max_y ) return max_x;
     return max_y;
   }
+
+  double PatGenericFitter::pseudoPhi(const PatVeloPhiHit* phiHit)
+  {
+    double pp = phiHit->sensor()->angleOfStrip(phiHit->hit()->strip(),phiHit->hit()->interStripFraction());
+    if ( phiHit->sensor()->isDownstream() ) pp  = -pp;
+    if ( phiHit->sensor()->isRight() )      pp += Gaudi::Units::pi;
+    return pp;
+  }
+
 }
 

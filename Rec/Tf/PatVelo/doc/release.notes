@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-02-13 - Kurt Rinnert
+ - finished port of PatVeloGeneric and PatGenericFitter to Tf framework.
+
 !========================== PatVelo v3r3p1 2008-02-08 ========================
 ! 2008-02-08 - Marco Cattaneo
  - Add a mising include

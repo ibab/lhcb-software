@@ -1,4 +1,4 @@
-// $Id: PatGenericFitter.h,v 1.1 2007-09-11 16:25:53 krinnert Exp $
+// $Id: PatGenericFitter.h,v 1.2 2008-02-13 16:10:19 krinnert Exp $
 #ifndef TF_PAT_PATGENERICFITTER_H 
 #define TF_PAT_PATGENERICFITTER_H 1
 
@@ -24,7 +24,7 @@ namespace Tf {
     public: 
 
       /// Standard constructor
-      PatGenericFitter( PatVeloRHitManager*,PatVeloPhiHitManager*, double, double, bool );  
+      PatGenericFitter( PatVeloRHitManager*, PatVeloPhiHitManager*, bool );  
       ~PatGenericFitter(); ///< Destructor
 
       /// The main fittig function
@@ -58,7 +58,7 @@ namespace Tf {
       /// Last sensor on track
       double lastSensorZ();
       double firstSensorZ();  
-      int lastSensorNumber();  
+      const DeVeloSensor* lastSensor();  
 
       /// All clusters are marked as used
       void markUsed();  
@@ -70,6 +70,10 @@ namespace Tf {
 
       double maxVariation();
 
+    private:
+
+      double pseudoPhi(const PatVeloPhiHit* hit);
+      
     private:
 
       PatVeloRHitManager*   m_rHitManager;
