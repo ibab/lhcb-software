@@ -1,4 +1,4 @@
-// $Id: RODimFSMListener.cpp,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Id: RODimFSMListener.cpp,v 1.2 2008-02-13 06:40:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.2 2008-02-13 06:40:26 frankb Exp $
 
 // Framework includes
 #include "dic.hxx"
@@ -22,8 +22,7 @@
 #include "ROMon/ROMonInfo.h"
 #include "ROMon/RODimFSMListener.h"
 #include "GaudiKernel/strcasecmp.h"
-//#include "GaudiOnline/DimTaskFSM.h"
-//  typedef LHCb::DimTaskFSM::FSMMonitoring FSMMonitoring;
+
 namespace {
   struct FSMMonitoring {
     unsigned long lastCmd, doneCmd;

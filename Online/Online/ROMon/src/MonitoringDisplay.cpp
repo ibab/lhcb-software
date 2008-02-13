@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.cpp,v 1.3 2008-02-12 18:18:49 frankb Exp $
+// $Id: MonitoringDisplay.cpp,v 1.4 2008-02-13 06:40:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,13 +11,14 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.3 2008-02-12 18:18:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.4 2008-02-13 06:40:26 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
 #include <iostream>
 
 // Framework include files
+#include "GaudiKernel/strcasecmp.h"
 #include "RTL/Lock.h"
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
