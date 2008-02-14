@@ -14,15 +14,15 @@ HltSummaryWriter.Save += {"L0TriggerElectron",
 };
 
 HltL0TriggerSequence.Members = {
-  "HltSequencer/PrepareL0TriggerElectronSeq",
-  "HltSequencer/PrepareL0TriggerPhotonSeq",
-  "HltSequencer/PrepareL0TriggerLocalPi0Seq",
-  "HltSequencer/PrepareL0TriggerGlobalPi0Seq",
-  "HltSequencer/PrepareL0TriggerHadronSeq" ,
-  "HltSequencer/PrepareL0AllMuonsSeq" , 
-  "HltSequencer/PrepareL0TriggerMuonSeq",
-  "HltSequencer/PrepareL0TriggerDiMuonSeq",
-  "HltSequencer/PrepareL0TriggerMuonNoGlobSeq"
+  "GaudiSequencer/PrepareL0TriggerElectronSeq",
+  "GaudiSequencer/PrepareL0TriggerPhotonSeq",
+  "GaudiSequencer/PrepareL0TriggerLocalPi0Seq",
+  "GaudiSequencer/PrepareL0TriggerGlobalPi0Seq",
+  "GaudiSequencer/PrepareL0TriggerHadronSeq" ,
+  "GaudiSequencer/PrepareL0AllMuonsSeq" , 
+  "GaudiSequencer/PrepareL0TriggerMuonSeq",
+  "GaudiSequencer/PrepareL0TriggerDiMuonSeq",
+  "GaudiSequencer/PrepareL0TriggerMuonNoGlobSeq"
 };
 HltL0TriggerSequence.ModeOr = true;
 HltL0TriggerSequence.ShortCircuit = false;

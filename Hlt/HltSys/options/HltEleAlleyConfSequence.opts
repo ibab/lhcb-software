@@ -29,14 +29,15 @@ HltEleAlleySequence.Members = {
   "GaudiSequencer/HltDecodeTT",
   "HltTrackUpgrade/EleSingleTRForward",
   "HltTrackFilter/ElePreTriggerSingle",
-  "HltSequencer/HltEleTriggers"
+  "GaudiSequencer/HltEleTriggers"
 };
 HltEleAlleySequence.MeasureTime = true;
 
 HltEleTriggers.ModeOr = true;
+HltEleTriggers.ShortCircuit = false;
 HltEleTriggers.MeasureTime = true;
 HltEleTriggers.Members += { "HltTrackFilter/EleTriggerSingle",
-                            "HltSequencer/EleTriggerEleTrkSeq"
+                            "GaudiSequencer/EleTriggerEleTrkSeq"
 };
 
 EleTriggerEleTrkSeq.Members += { 
