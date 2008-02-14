@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.cpp,v 1.3 2007-11-16 16:43:36 mneedham Exp $
+// $Id: STReadoutTool.cpp,v 1.4 2008-02-14 10:02:24 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -64,6 +64,15 @@ StatusCode STReadoutTool::initialize() {
 unsigned int STReadoutTool::nBoard() const {
   // number of boards
   return m_nBoard;
+}
+
+std::vector<STTell1ID> STReadoutTool::boardIDs() const{
+  std::vector<STTell1Board*>::const_iterator iterBoard = m_boards.begin();
+  std::vector<STTell1ID> ids; ids.reserve(m_boards.size());
+  for (;iterBoard != m_boards.end(); ++iterBoard){
+    ids.push_back((*iterBoard)->boardID());
+  } //iterBoard
+  return ids;
 }
 
 STDAQ::chanPair STReadoutTool::offlineChanToDAQ(const STChannelID aOfflineChan,
