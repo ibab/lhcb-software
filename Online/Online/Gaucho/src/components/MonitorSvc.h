@@ -12,19 +12,9 @@
 class ISvcLocator;
 class DimPropServer;
 class DimCmdServer;
-/*class MonObject;
-class MonInt;
-class MonDouble;
-class MonLong;
-class MonFloat;
-class MonBool;
-class MonPair;
-class MonString;
-class MonTProfile;
-class MonTH1F;
-class MonTH2F;*/
 class DimMonObjectManager;
 class MonTimer;
+
 
 namespace AIDA { class IBaseHistogram; }
 //class MonObjects;
@@ -76,7 +66,7 @@ public:
 
   // Begin MO
   void declareInfo(const std::string& name, const MonObject* var, const std::string& desc, const IInterface* owner) ;
-  void declareInfoMonObject(const std::string& name, MonObject* var, const std::string& desc, const IInterface* owner) ;
+  void declareInfoMonObject(const std::string& name, MonObject* var, const std::string& desc, const IInterface* owner, const bool putOwnerName) ;
   // End MO
 
 void declareInfo(const std::string& name, const std::string& format, const void * var, 
@@ -97,23 +87,22 @@ void declareInfo(const std::string& name, const std::string& format, const void 
       @param name Monitoring information name knwon to the external system
       @param owner Owner identifier of the monitoring information
   */
-  void updateSvc( const std::string& name, const IInterface* owner ) ;
+  void updateSvc( const std::string& name, bool endOfRun, const IInterface* owner ) ;
 
   /** Update all monitoring information
       @param owner Owner identifier of the monitoring information
   */
-  void updateAll( const IInterface* owner ) ;
+  void updateAll( bool endOfRun, const IInterface* owner ) ;
   void resetHistos( const IInterface* owner ) ;
 
   void setTimerElapsed(bool timerelapsed);
   bool getTimerElapsed();
   bool m_TimerElapsed;
-  
+
   /** Get the names for all declared monitoring informations for a given
       owner. If the owner is NULL, then it returns for all owners
   */
   std::set<std::string> * getInfos(const IInterface* owner = 0);
-
 
 private:
   // Map associating to each algorithm name a set with the info 
@@ -134,11 +123,10 @@ private:
   // In the case of MonObjects use its DimMonObjectManager instead of DimEngine...
   DimMonObjectManager* m_dimMonObjectManager;
   // End MO
+  
   MonTimer* m_dimtimer;
   int m_refreshTime;
   std::string infoOwnerName( const IInterface* owner );
-
-
 };
 
 #endif // GAUDIKERNEL_MONITORSVC_H

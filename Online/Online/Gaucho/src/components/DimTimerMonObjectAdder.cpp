@@ -1,8 +1,8 @@
-#include "DimTimerMonObjectAdder.h"
-#include "DimInfoMonObject.h"
-#include "DimServiceMonObject.h"
+#include "Gaucho/DimTimerMonObjectAdder.h"
+#include "Gaucho/DimInfoMonObject.h"
+#include "Gaucho/DimServiceMonObject.h"
 #include "Gaucho/MonObject.h"
-#include "DimMonObjectManager.h"
+#include "Gaucho/DimMonObjectManager.h"
 
 DimTimerMonObjectAdder::DimTimerMonObjectAdder (DimMonObjectManager* manager, int ttime, std::vector<std::vector<DimInfoMonObject*> > dimInfo2D, std::vector<DimServiceMonObject*> dimService1D) : DimTimer(ttime) {
   m_dimMonObjectManager  = manager;

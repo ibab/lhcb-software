@@ -1,7 +1,7 @@
-#include "DimMonObjectManager.h"
-#include "DimTimerMonObjectAdder.h"
-#include "DimServiceMonObject.h"
-#include "DimInfoMonObject.h"
+#include "Gaucho/DimMonObjectManager.h"
+#include "Gaucho/DimTimerMonObjectAdder.h"
+#include "Gaucho/DimServiceMonObject.h"
+#include "Gaucho/DimInfoMonObject.h"
 #include "Gaucho/MonH1F.h"
 #include "Gaucho/MonH1D.h"
 #include "Gaucho/MonH2F.h"
@@ -12,9 +12,13 @@
 #include "Gaucho/MonFloat.h"
 #include "Gaucho/MonString.h"
 #include "Gaucho/MonDouble.h"
-#include "Gaucho/MonPair.h"
+#include "Gaucho/MonPairDD.h"
+#include "Gaucho/MonPairII.h"
 #include "Gaucho/MonProfile.h"
 #include "Gaucho/MonHitMap2D.h"
+#include "Gaucho/MonStatEntity.h"
+#include "Gaucho/MonVectorI.h"
+#include "Gaucho/MonVectorD.h"
 
 DimMonObjectManager::DimMonObjectManager(IMessageSvc* msgSvc, const std::string& source)
 {
@@ -33,6 +37,11 @@ void DimMonObjectManager::setDimClientDns(std::string dimClientDns){
   DimClient::setDnsNode(dimClientDns.c_str());
   m_dimBrowser = new DimBrowser();
 }
+
+void DimMonObjectManager::deleteDimBrowser(){
+  if (0!=m_dimBrowser) delete m_dimBrowser;
+}
+
 void DimMonObjectManager::setDimBrowser(DimBrowser* dimBrowser){
   m_dimBrowser = dimBrowser;
 }
@@ -65,9 +74,19 @@ MonObject* DimMonObjectManager::createMonObject(std::string  monObjectTypeName){
   if (monObjectTypeName == "MonString") monObject = new MonString(m_msgSvc, m_source);
   if (monObjectTypeName == "MonLong") monObject = new MonLong(m_msgSvc, m_source);
   if (monObjectTypeName == "MonBool") monObject = new MonBool(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonPair") monObject = new MonPair(m_msgSvc, m_source);
+  if (monObjectTypeName == "MonPairDD") monObject = new MonPairDD(m_msgSvc, m_source);
+  if (monObjectTypeName == "MonPairII") monObject = new MonPairII(m_msgSvc, m_source);
+//  if (monObjectTypeName == "MonHitMap2D") monObject = new MonHitMap2D(m_msgSvc, m_source);
+  if (monObjectTypeName == "MonStatEntity") monObject = new MonStatEntity(m_msgSvc, m_source);
+  if (monObjectTypeName == "MonVectorI") monObject = new MonVectorI(m_msgSvc, m_source);
+  if (monObjectTypeName == "MonVectorD") monObject = new MonVectorD(m_msgSvc, m_source);
   return monObject;
 }
+
+void DimMonObjectManager::deleteMonObject(MonObject* monObject){
+  delete monObject;
+}
+
 
 int DimMonObjectManager::monObjectSize(MonObject* monObject){
   std::stringstream m_ss;
@@ -131,6 +150,7 @@ void DimMonObjectManager::undeclServiceMonObject(std::string infoName){
   m_dimMonObjectsIt = m_dimMonObjects.find(infoName);  
 
   if(m_dimMonObjectsIt != m_dimMonObjects.end()) {
+    (*m_dimMonObjectsIt).second->deleteMonObject();
     delete (*m_dimMonObjectsIt).second;
     m_dimMonObjects.erase(m_dimMonObjectsIt);
     msg("undeclSvc: Service " + infoName + " undeclared", m_name, MSG::INFO);
@@ -142,13 +162,13 @@ void DimMonObjectManager::undeclServiceMonObject(std::string infoName){
 }
 
 //MonitorSvc
-void DimMonObjectManager::updateServiceMonObject(std::string infoName){
+void DimMonObjectManager::updateServiceMonObject(std::string infoName, bool endOfRun){
   for (m_dimMonObjectsIt = m_dimMonObjects.begin(); m_dimMonObjectsIt != m_dimMonObjects.end(); m_dimMonObjectsIt++)
     msg((*m_dimMonObjectsIt).first, m_name, MSG::DEBUG);
   m_dimMonObjectsIt = m_dimMonObjects.find(infoName);  
   if(m_dimMonObjectsIt != m_dimMonObjects.end()) {
-    (*m_dimMonObjectsIt).second->updateService();
-    msg("updateSvc: Service " + infoName + " updated", m_name, MSG::INFO);    
+    (*m_dimMonObjectsIt).second->updateService(endOfRun);
+    msg("updateSvc: Service " + infoName + " updated", m_name, MSG::INFO);
     return;
   }
   msg("updateSvc: No DimServiceMonObject found with the name:" + infoName, m_name, MSG::WARNING);
@@ -166,7 +186,8 @@ void DimMonObjectManager::saverCreateDimNames(std::string nodeName, std::vector<
 
   for (int j=0; j<= (int)objectName.size()-1;j++) {
     //Ex--> MON/node00101_Test_1/GaudiExample/ExMonH1D
-    std::string svcName = "*/" + nodeName+"*"+taskName[j] +"*"+algorithmName[j]+"/"+objectName[j];
+//    std::string svcName = "*/" + nodeName+"*"+taskName[j] +"*"+algorithmName[j]+"/"+objectName[j];
+    std::string svcName = "*/" + nodeName+"*"+taskName[j] +"*"+"/"+objectName[j];
 
     msg("svcName=" + svcName, m_name, MSG::INFO);
 
@@ -207,33 +228,56 @@ void DimMonObjectManager::saverCreateDimNames(std::string nodeName, std::vector<
 
 //Saver
 void DimMonObjectManager::saverCreateMonObjects(int refreshTime) {
+  MsgStream mes(m_msgSvc, m_name);
+  mes << MSG::ERROR <<"A." << endreq;
+         if (0==m_msgSvc) {
+           mes.activate();
+           mes.doOutput();
+         }
   for (int k = 0; k < (int) m_dimInfoNamesVect2.size(); k++) {
+    mes << MSG::ERROR <<"B." << endreq;
     std::vector<MonObject*> tmpMonObjectVect1;
     for (int i = 0; i < (int) m_dimInfoNamesVect2[k].size(); i++) {
       
+      mes << MSG::ERROR <<"C." << endreq;
       DimInfoMonObject* tmpDimInfoMonObject = new DimInfoMonObject(this, m_dimInfoNamesVect2[k][i], refreshTime);
       
+      mes << MSG::ERROR <<"D." << endreq;
+
       MonObject *tmpMonObject;
       int ntries=0;
+
+      mes << MSG::ERROR <<"E." << endreq;
+
       while (1)
       {
-        tmpMonObject = tmpDimInfoMonObject->monObject();
-        if (tmpMonObject != 0) break;
+        mes << MSG::ERROR <<"F." << endreq;
+
+        if (tmpDimInfoMonObject->monObject() != 0){
+          mes << MSG::ERROR <<"F." << endreq;
+          tmpMonObject->copyFrom(tmpDimInfoMonObject->monObject());
+          break;
+        }
         ntries++;
 
-        MsgStream mes(m_msgSvc, m_name);
         mes << MSG::ERROR <<"No MonObject found after " << ntries << " attempts." << endreq;
-        if (0==m_msgSvc) {
-          mes.activate();
-          mes.doOutput();
-        }
+         if (0==m_msgSvc) {
+           mes.activate();
+           mes.doOutput();
+         }
 
         if(ntries==10) break;
         lib_rtl_sleep(500); 
       }
-      tmpMonObjectVect1.push_back(tmpMonObject);
-    }
+      mes << MSG::ERROR <<"G." << endreq;
 
+      tmpMonObjectVect1.push_back(tmpMonObject);
+        mes << MSG::ERROR <<"Antes de Deletar." << endreq;
+      tmpDimInfoMonObject->deleteMonObject();
+        mes << MSG::ERROR <<"Meio de Deletar." << endreq;
+      delete tmpDimInfoMonObject;
+        mes << MSG::ERROR <<"Depois de Deletar." << endreq;
+    }
     m_monObjectVect2.push_back(tmpMonObjectVect1);
   }
 }
@@ -245,6 +289,16 @@ void DimMonObjectManager::saverWriteMonObjects(){
       m_monObjectVect2[k][i]->write();
     }
   }
+}
+
+//Saver
+void DimMonObjectManager::saverDeleteMonObjects(){
+  for (int k = 0; k < (int) m_monObjectVect2.size(); k++) {
+    for (int i = 0; i < (int) m_monObjectVect2[k].size(); i++) {
+      deleteMonObject(m_monObjectVect2[k][i]);
+    }
+  }
+  m_monObjectVect2.clear();
 }
 
 // Adder
@@ -427,6 +481,18 @@ void DimMonObjectManager::adderCreateDimMonObjects(std::string procName, int ref
 }
 
 // Adder
+void DimMonObjectManager::adderDeleteDimMonObjects(){
+  for (int k = 0; k < (int) m_dimInfoMonObjectVect2.size(); k++) {
+    for (int i = 0; i < (int) m_dimInfoNamesVect2[k].size(); i++) {
+      m_dimInfoMonObjectVect2[k][i]->deleteMonObject();
+      delete m_dimInfoMonObjectVect2[k][i];
+    }
+    m_dimSvcMonObjectAdderVect1[k]->deleteMonObject();
+    delete m_dimSvcMonObjectAdderVect1[k];
+  }
+}
+
+// Adder
 void DimMonObjectManager::adderCreateDimTimerMonObject(int refreshTime){
   MsgStream mes(m_msgSvc, m_name);
   mes << MSG::INFO << "Init. completed. Starting DimTimerMonObjectAdder to add " << m_dimInfoMonObjectVect2.size() << " objects" << endreq;
@@ -435,6 +501,12 @@ void DimMonObjectManager::adderCreateDimTimerMonObject(int refreshTime){
     mes.doOutput();
   }
   m_dimTimerMonObjectAdder= new DimTimerMonObjectAdder(this, refreshTime, m_dimInfoMonObjectVect2, m_dimSvcMonObjectAdderVect1);
+}
+
+// Adder
+void DimMonObjectManager::adderDeleteDimTimerMonObject(){
+  if (0==m_dimTimerMonObjectAdder) return;
+  delete m_dimTimerMonObjectAdder;
 }
 
 // Presenter 

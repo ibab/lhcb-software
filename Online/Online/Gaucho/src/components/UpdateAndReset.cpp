@@ -71,7 +71,7 @@ StatusCode UpdateAndReset::execute() {
   { 
      //fast or other run change
      //update immediately and reset
-     updateAll();
+     updateAll(true);
      resetHistos();
      }
   else {  
@@ -79,7 +79,7 @@ StatusCode UpdateAndReset::execute() {
      msg << MSG::INFO << "getTimerElapsed " << m_timerElapsed << endreq;
      //check if update flag is set
      //update if so
-     if (m_timerElapsed) updateAll();
+     if (m_timerElapsed) updateAll(false);
   }
   m_runNumber = currentRunNumber;
   return StatusCode::SUCCESS;

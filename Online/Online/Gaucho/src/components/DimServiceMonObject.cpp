@@ -1,5 +1,5 @@
-#include "DimServiceMonObject.h"
-#include "DimMonObjectManager.h"
+#include "Gaucho/DimServiceMonObject.h"
+#include "Gaucho/DimMonObjectManager.h"
 #include "Gaucho/MonObject.h"
 #include "GaudiKernel/StatusCode.h"
 #include <iostream>
@@ -17,7 +17,8 @@ DimServiceMonObject::DimServiceMonObject(DimMonObjectManager* manager, std::stri
 DimServiceMonObject::~DimServiceMonObject() {
 }
 
-void DimServiceMonObject::updateService() {
+void DimServiceMonObject::updateService(bool endOfRun) {
+  m_monObject->setEndOfRun(endOfRun);
   DimService::updateService();
 }
 
@@ -33,3 +34,7 @@ void DimServiceMonObject::setDataFromMonObject() {
   setData(const_cast<void *>((const void*)m_ss.str().c_str()), m_ss.str().length());
 }
 
+void DimServiceMonObject::deleteMonObject(){
+  if (0==m_monObject) return;
+  delete m_monObject;
+}

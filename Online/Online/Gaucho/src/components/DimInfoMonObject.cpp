@@ -1,5 +1,5 @@
-#include "DimInfoMonObject.h"
-#include "DimMonObjectManager.h"
+#include "Gaucho/DimInfoMonObject.h"
+#include "Gaucho/DimMonObjectManager.h"
 #include "Gaucho/MonObject.h"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/MsgStream.h"
@@ -60,9 +60,14 @@ void DimInfoMonObject::createMonObject(){
   m_dimMonObjectManager->loadMonObject(c, m_StringSize, monObjectBase);
 
   std::string monObjectTypeName  = monObjectBase->typeName();
-
+  m_dimMonObjectManager->deleteMonObject(monObjectBase);
   m_monObject = m_dimMonObjectManager->createMonObject(monObjectTypeName);
   m_dimMonObjectManager->loadMonObject(c, m_StringSize, m_monObject);
+}
+
+void DimInfoMonObject::deleteMonObject(){
+  if (m_monObject==0) return;
+  m_dimMonObjectManager->deleteMonObject(m_monObject);
 }
 
 void DimInfoMonObject::loadMonObject(){

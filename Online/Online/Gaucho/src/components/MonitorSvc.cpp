@@ -10,14 +10,18 @@
 #include "Gaucho/MonLong.h"
 #include "Gaucho/MonFloat.h"
 #include "Gaucho/MonBool.h"
-#include "Gaucho/MonPair.h"
+#include "Gaucho/MonPairDD.h"
+#include "Gaucho/MonPairDI.h"
+#include "Gaucho/MonPairII.h"
 #include "Gaucho/MonString.h"
 #include "Gaucho/MonProfile.h"
 #include "Gaucho/MonH1D.h"
 #include "Gaucho/MonH2D.h"
 #include "Gaucho/MonH1F.h"
 #include "Gaucho/MonH2F.h"
-#include "DimMonObjectManager.h"
+#include "Gaucho/MonVectorI.h"
+#include "Gaucho/MonVectorD.h"
+#include "Gaucho/DimMonObjectManager.h"
 #include "MonitorSvc.h"
 #include "DimPropServer.h"
 #include "DimCmdServer.h"
@@ -77,12 +81,14 @@ StatusCode MonitorSvc::initialize() {
   m_dimcmdsvr = new DimCmdServer( (utgid+"/"), serviceLocator());
   msg << MSG::DEBUG << "DimCmdServer created with name " 
       << (utgid+"/") << endreq;
-  
+
   setTimerElapsed(false);   
   m_dimtimer = new MonTimer(m_refreshTime, serviceLocator(), this);
   msg << MSG::INFO << "MonTimer created. " << endreq; 
   msg << MSG::DEBUG << "Initialized successfully " << endreq;
   return StatusCode::SUCCESS;
+
+
 }
 
 
@@ -104,42 +110,42 @@ void MonitorSvc::declareInfo(const std::string& name, const bool&  var,
 {
   MonBool* monBool = new MonBool(msgSvc(),"MonitorSvc");
   monBool->setValue(var);
-  declareInfoMonObject(name, monBool, desc, owner);
+  declareInfoMonObject(name, monBool, desc, owner, true);
 }
 void MonitorSvc::declareInfo(const std::string& name, const int&  var, 
                              const std::string& desc, const IInterface* owner) 
 {
   MonInt* monInt = new MonInt(msgSvc(),"MonitorSvc");
   monInt->setValue(var);
-  declareInfoMonObject(name, monInt, desc, owner);
+  declareInfoMonObject(name, monInt, desc, owner, true);
 }
 void MonitorSvc::declareInfo(const std::string& name, const long&  var, 
                              const std::string& desc, const IInterface* owner) 
 {
   MonLong* monLong = new MonLong(msgSvc(),"MonitorSvc");
   monLong->setValue(var);
-  declareInfoMonObject(name, monLong, desc, owner);
+  declareInfoMonObject(name, monLong, desc, owner, true);
 }
 void MonitorSvc::declareInfo(const std::string& name, const double& var, 
                              const std::string& desc, const IInterface* owner) 
 {
   MonDouble* monDouble = new MonDouble(msgSvc(),"MonitorSvc");
   monDouble->setValue(var);
-  declareInfoMonObject(name, monDouble, desc, owner);
+  declareInfoMonObject(name, monDouble, desc, owner, true);
 }
 void MonitorSvc::declareInfo(const std::string& name, const std::string& var, 
                              const std::string& desc, const IInterface* owner) 
 {
   MonString* monString = new MonString(msgSvc(),"MonitorSvc");
   monString->setValue(var);
-  declareInfoMonObject(name, monString, desc, owner);
+  declareInfoMonObject(name, monString, desc, owner, true);
 }
 void MonitorSvc::declareInfo(const std::string& name, const std::pair<double,double>& var, 
                              const std::string& desc, const IInterface* owner) 
 {
-  MonPair* monPair = new MonPair(msgSvc(),"MonitorSvc");
+  MonPairDD* monPair = new MonPairDD(msgSvc(),"MonitorSvc");
   monPair->setValue(var);
-  declareInfoMonObject(name, monPair, desc, owner);
+  declareInfoMonObject(name, monPair, desc, owner, true);
 }
 void MonitorSvc::declareInfo(const std::string& name, const std::string& format, const void * var,
                              int size, const std::string& desc, const IInterface* owner) 
@@ -147,7 +153,7 @@ void MonitorSvc::declareInfo(const std::string& name, const std::string& format,
   //m_dimeng->declSvc(dimName, format, var, size );
   MonString* monString = new MonString(msgSvc(),"MonitorSvc");
   //monString->setValue(var);
-  declareInfoMonObject(name, monString, desc, owner);
+  declareInfoMonObject(name, monString, desc, owner, true);
 }
 void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram* var, 
                              const std::string& desc, const IInterface* owner) 
@@ -155,17 +161,17 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
   if( 0 != dynamic_cast<const AIDA::IProfile1D * >(var) ) { 
   	MonProfile* monPro = new MonProfile(msgSvc(),"MonitorSvc");
   	monPro->setAidaProfile(const_cast<AIDA::IProfile1D *>(dynamic_cast<const AIDA::IProfile1D *>(var)));
-  	declareInfoMonObject(name, monPro, desc, owner);
+  	declareInfoMonObject(name, monPro, desc, owner, false);
   }
   else if( 0 != dynamic_cast<const AIDA::IHistogram1D * >(var) ){ 
   	MonH1F* monH1F = new MonH1F(msgSvc(),"MonitorSvc");
   	monH1F->setAidaHisto(const_cast<AIDA::IHistogram1D *>(dynamic_cast<const AIDA::IHistogram1D *>(var)));
-  	declareInfoMonObject(name, monH1F, desc, owner);
+  	declareInfoMonObject(name, monH1F, desc, owner, false);
   }
   else if( 0 != dynamic_cast<const AIDA::IHistogram2D * >(var) ){ 
   	MonH2F* monH2F = new MonH2F(msgSvc(),"MonitorSvc");
   	monH2F->setAidaHisto(const_cast<AIDA::IHistogram2D *>(dynamic_cast<const AIDA::IHistogram2D *>(var)));
-  	declareInfoMonObject(name, monH2F, desc, owner);
+  	declareInfoMonObject(name, monH2F, desc, owner, false);
   }
   //else std::cout << "Unknown histogram type: " << diminfoname  << endreq;
 
@@ -177,13 +183,14 @@ void MonitorSvc::declareInfo(const std::string& name,
 			     const IInterface* owner) 
 {
 	MonObject *tmpvar = const_cast<MonObject *>(var);
-  	declareInfoMonObject(name, tmpvar, desc, owner);
+  	declareInfoMonObject(name, tmpvar, desc, owner, false);
 }
 
 void MonitorSvc::declareInfoMonObject(const std::string& name, 
                              MonObject* var, 
 			     const std::string& desc, 
-			     const IInterface* owner) 
+			     const IInterface* owner, 
+                             const bool putOwnerName) 
 {
 	MsgStream msg(msgSvc(),"MonitorSvc");
 	m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
@@ -201,7 +208,9 @@ void MonitorSvc::declareInfoMonObject(const std::string& name,
 		m_InfoNamesMap[owner].insert(name);
 	}
 
-	std::string dimName =ownerName+"/"+name;
+	std::string dimName = name;
+	if (putOwnerName) dimName = ownerName + "/" + dimName;
+
 	msg << MSG::DEBUG << "dimName: " << dimName << endreq;
 	
 	var->setComments(desc);
@@ -265,9 +274,9 @@ std::string MonitorSvc::infoOwnerName( const IInterface* owner )
 }
 
 //updateSvc and resetHistos methods are for fast run changes
-
-void MonitorSvc::updateSvc( const std::string& name, 
-                                const IInterface* owner )
+void MonitorSvc::updateSvc( const std::string& name, bool endOfRun, 
+                                const IInterface* owner 
+                                   )
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
   std::set<std::string> * infoNamesSet = getInfos( owner );
@@ -279,7 +288,7 @@ void MonitorSvc::updateSvc( const std::string& name,
   }
   std::string ownerName = infoOwnerName( owner );
   if( (*infoNamesSet).find( name) !=  (*infoNamesSet).end() ){
-    m_dimMonObjectManager->updateServiceMonObject( ownerName+"/"+name ) ;
+    m_dimMonObjectManager->updateServiceMonObject( ownerName+"/"+name, endOfRun ) ;
     msg << MSG::INFO << "update: " << name << " from owner " 
         << ownerName  << " updated" << endreq;
   }  
@@ -293,7 +302,7 @@ void MonitorSvc::updateSvc( const std::string& name,
   }
 }
 
-void MonitorSvc::undeclareAll( const IInterface* owner )
+void MonitorSvc::undeclareAll( const IInterface* owner)
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
   if( 0!=owner ){
@@ -327,7 +336,8 @@ void MonitorSvc::undeclareAll( const IInterface* owner )
   }
 }
 
-void MonitorSvc::updateAll( const IInterface* owner )
+void MonitorSvc::updateAll(  bool endOfRun, const IInterface* owner
+                               )
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
   if( 0!=owner ){
@@ -347,14 +357,14 @@ void MonitorSvc::updateAll( const IInterface* owner )
     msg << MSG::DEBUG << endreq;
     for( infoNamesIt = (*infoNamesSet).begin();
          infoNamesIt!=(*infoNamesSet).end();++infoNamesIt){
-      m_dimMonObjectManager->updateServiceMonObject( ownerName+"/"+(*infoNamesIt) ) ;
+      m_dimMonObjectManager->updateServiceMonObject( ownerName+"/"+(*infoNamesIt), endOfRun ) ;
       msg << MSG::INFO << "updateAll: Updated info " << (*infoNamesIt) 
           << " from owner " << ownerName << endreq;
     }
   } else { // Null pointer. Update for all owners
     for(m_InfoNamesMapIt = m_InfoNamesMap.begin();
         m_InfoNamesMapIt != m_InfoNamesMap.end();++m_InfoNamesMapIt)
-      updateAll( m_InfoNamesMapIt->first );
+      updateAll( endOfRun, m_InfoNamesMapIt->first );
   }
  // setLastUpdateTime();
   setTimerElapsed(false); 
