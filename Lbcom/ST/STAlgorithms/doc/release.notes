@@ -2,10 +2,10 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!======================= STAlgorithms v2r7 2008-02-14 ========================
 ! 2008-02-10 M Needham 
  - Correct path of next spill
 
-!======================= STAlgorithms v2r7 2008-02-07 ========================
 ! 2008-01-28 M Needham
  - Use Geant deposited energy in MCSTDepositCreator
 
