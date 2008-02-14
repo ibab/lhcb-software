@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.9 2008-01-08 16:07:22 cattanem Exp $
+! $Id: release.notes,v 1.10 2008-02-14 09:57:13 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2008-02-14 M Needham
+ - Extend readout tool interface to give list of board ids
 
 !====================== STKernel v1r1 2008-01-07 ============================
 ! 2008-01-08 M Needham

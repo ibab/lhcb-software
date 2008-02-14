@@ -1,4 +1,4 @@
-// $Id: ISTReadoutTool.h,v 1.2 2007-11-28 14:08:30 cattanem Exp $
+// $Id: ISTReadoutTool.h,v 1.3 2008-02-14 09:57:12 mneedham Exp $
 #ifndef _ISTReadoutTool_H
 #define _ISTReadoutTool_H
 
@@ -38,6 +38,10 @@ public:
 
   /// number of boards
   virtual unsigned int nBoard() const = 0;
+
+
+  ///return vector of Tell1IDs
+  virtual std::vector<STTell1ID> boardIDs() const = 0;
 
   /// convert STChannelID to DAQ ChannelID
   virtual STDAQ::chanPair offlineChanToDAQ(const LHCb::STChannelID aOfflineChan,
