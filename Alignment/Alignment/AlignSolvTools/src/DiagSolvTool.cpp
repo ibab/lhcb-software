@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.9 2008-02-12 11:04:24 ahicheur Exp $
+// $Id: DiagSolvTool.cpp,v 1.10 2008-02-14 08:42:01 ahicheur Exp $
 // Include files 
 
 #include <stdio.h>
@@ -56,9 +56,6 @@ DiagSolvTool::~DiagSolvTool() {}
 
 bool DiagSolvTool::compute(AlSymMat& m,AlVec& b) const
 {
-
-
-const_cast<DiagSolvTool*>(this)->SolvDiag(m,b);
 
 
  if(m.size() > 0) {
@@ -157,7 +154,7 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
       for (int j=0;j<par_modcut;j++) {
         m_bigmatrix[i][j]=0.;
         for (int k=0;k<N;k++) {
-          if (w[k]>threshold) m_bigmatrix[i][j]=m_bigmatrix[i][j]+(z[k][i]*z[k][j]/w[k]);
+          if (w[k]>threshold) m_bigmatrix[i][j]=m_bigmatrix[i][j]+(z[k][i]*z[k][j]/w[k]*m_scale);
           //with GSL convention:
           //   if (w[k]>threshold) m_bigmatrix[i][j]=m_bigmatrix[i][j]+(z[i][k]*z[j][k]/w[k]); 
         }
