@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.8 2007-12-11 09:20:32 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.9 2008-02-14 16:58:49 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -39,6 +39,7 @@ Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
   declareProperty( "UseAllCoords"     ,   m_allCoords        = false     );
   declareProperty( "stepError"        ,   m_stepError        = 0.002     );
   declareProperty( "forwardStepError" ,   m_forwardStepError = 0.00035   );
+  declareProperty( "MaxExtrapStations" ,   m_maxExtrapStat    = 3        );
 
   declareProperty( "AddSingleClusters",   m_useSingleClusters= false     );
   declareProperty( "SingleStationWin" ,   m_NStationSingle   = 2         );
@@ -438,6 +439,29 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
       trackPoints.points().push_back(&(*bestPoint));
       lastZ = bestPoint->z();
       lastSensor = GSL_MIN(bestPoint->rHit()->sensorNumber(),lastSensor);
+      usedRSensor.push_back(bestPoint->rHit()->sensorNumber());
+
+      if(trackPoints.points().size() > m_maxExtrapStat){
+	// subtract off the points we now want to ignore 
+	// i.e. current - m_maxExtrapStat point in list of points
+	PatVeloLocalPoint* removePoint = 
+	  *(trackPoints.points().rbegin()+m_maxExtrapStat);
+
+	if(m_isVerbose) verbose() 
+	  << " removed x: " << removePoint->x() 
+          << " y: " << removePoint->y()
+          << " from [" << removePoint->rHit()->sensorNumber() << "," 
+          << removePoint->rHit()->stripNumber() << "] and ["
+          << removePoint->phiHit()->sensorNumber() << "," 
+          << removePoint->phiHit()->stripNumber() << "]"
+          << endreq;	
+
+	xFit.increment(-1./gsl_pow_2(removePoint->deltaX()),
+		       removePoint->x(),removePoint->z());
+	yFit.increment(-1./gsl_pow_2(removePoint->deltaY()),
+		       removePoint->y(),removePoint->z());
+	
+      }
     }else{
       // protect against negative answer from unsigned int subtraction
       if( (static_cast<int>(lastSensor) - static_cast<int>(iPCont->first)) 

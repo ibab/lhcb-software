@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.h,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatVeloRTracking.h,v 1.2 2008-02-14 16:58:49 dhcroft Exp $
 #ifndef TF_PATVELORTRACKING_H 
 #define TF_PATVELORTRACKING_H 1
 
@@ -103,6 +103,8 @@ namespace Tf {
       bool m_isVerbose;         ///< is verbose output level 
       /// If true look for tracks crossing from outer to inner R sectors
       bool m_adjacentSectors;   
+      /// If true do not search for backward tracks 
+      bool m_onlyForward;   
       /// Minimum Z for first sensor when searching for forward triplets
       double m_zSensorSearchMin;
       /// Maximum Z for first sensor when searching for forward triplets

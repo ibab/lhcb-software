@@ -4,6 +4,14 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-02-14 - David Hutchcroft
+ - Added PatVeloFitLHCbIDs as a tool with the interface ITrackFitter to expose
+   the internal track fit from PatVelo.
+ - Added an option to PatVeloRTracking to turn off reconstruction of backward 
+   RZ tracks
+ - Retuned PatVeloGeneralTracking to pick up very long halo tracks better. 
+   Has no effect on normal tracking.
+
 !========================== PatVelo v3r4 2008-02-14 ==========================
 ! 2008-02-13 - Kurt Rinnert
  - finished port of PatVeloGeneric and PatGenericFitter to Tf framework.

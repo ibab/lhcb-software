@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.h,v 1.3 2007-11-12 15:14:07 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.h,v 1.4 2008-02-14 16:58:49 dhcroft Exp $
 #ifndef TF_PATVELOGENERALTRACKING_H 
 #define TF_PATVELOGENERALTRACKING_H 1
 
@@ -211,6 +211,9 @@ namespace Tf {
     int m_NSensorSingle;    
     /// Tolerance for matching singke clusters to tracks (in mm)
     double m_singleClusTol;   
+
+    /// when XZ and YZ extrapolating only consider this many prior points
+    unsigned int m_maxExtrapStat;
 
     double m_Num3DCreated;   ///< Number of 3D points created
     double m_NumEvt;         ///< Number of Events Processed

@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.cpp,v 1.2 2007-10-08 17:06:05 dhcroft Exp $
+// $Id: PatVeloRTracking.cpp,v 1.3 2008-02-14 16:58:49 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -45,7 +45,8 @@ namespace Tf {
           LHCb::TrackLocation::RZVelo     );
       declareProperty( "MergeTracks"     , m_mergeTracks      = false     );
       declareProperty( "NCommonToMerge"  , m_nCommonToMerge   = 2         );
-      declareProperty( "AdjacentSectors"  , m_adjacentSectors = false     );
+      declareProperty( "AdjacentSectors" , m_adjacentSectors  = false     );
+      declareProperty( "OnlyForward"     , m_onlyForward      = false     );
     }
   //=============================================================================
   // Destructor
@@ -82,6 +83,8 @@ namespace Tf {
       << "ChargeThreshold      = " << m_chargeThreshold          << endreq
       << "HighChargeFract      = " << m_highChargeFract          << endreq
       << "AdjacentSectors      = " << (m_adjacentSectors ? "True" : "False")
+      << endreq
+      << "OnlyForward          = " << (m_onlyForward     ? "True" : "False")
       << endreq
       << "======================================"                << endreq;
 
@@ -191,47 +194,48 @@ namespace Tf {
     //==========================================================================
     // Backwards tracks
     //==========================================================================
-    if(m_isDebug){debug() << "========= Backwards tracks ==========" << endreq;}
+    if(!m_onlyForward){
+      if(m_isDebug){debug() << "========= Backwards tracks ==========" << endreq;}
+      
+      //== Loop on velo halfs
+      for (unsigned int half=0; half<2; ++half) {
+	
+	//== Loop on R stations in reverse z order
+	//== stop when second station is at z < 0
+	StationIterator stationIter = m_hitManager->stationsHalfBegin(half); 
+	StationIterator stationsEnd = m_hitManager->stationsHalfEnd(half); 
+	for ( ; stationIter != stationsEnd; ++stationIter ) {
+	  
+	  //== Loop on zones
+	  for ( unsigned int zone = 0 ; zone<4; ++zone ) {
+	    
+	    //== stop when second sensor is at z > 0
 
-    //== Loop on velo halfs
-    for (unsigned int half=0; half<2; ++half) {
-
-      //== Loop on R stations in reverse z order
-      //== stop when second station is at z < 0
-      StationIterator stationIter = m_hitManager->stationsHalfBegin(half); 
-      StationIterator stationsEnd = m_hitManager->stationsHalfEnd(half); 
-      for ( ; stationIter != stationsEnd; ++stationIter ) {
-
-        //== Loop on zones
-        for ( unsigned int zone = 0 ; zone<4; ++zone ) {
-
-          //== stop when second sensor is at z > 0
-
-          StationIterator station0 = stationIter;
-
-          //== nothing to see here move along
-          if ( (*station0)->empty(zone) ) continue;
-
-          StationIterator station1 = station0; ++station1;
-          if ( station1 == stationsEnd ) continue;
-
-          // code to make "walk"  Velo stop at z=0 -ve -> 0
-          if ( (*station1)->z() > m_zSensorSearchMax ) break;
-          if ( (*station1)->empty(zone) ) continue;
-
-          StationIterator station2 = station1; ++station2;
-          if ( station2 == stationsEnd ) continue;
-          if ( (*station2)->empty(zone) ) continue;
-
-          seedInSectorTriplet(false,rzTracks, 0, zone,
-              station0, zone,
-              station1, zone,
-              station2, zone);
-
-        } // zone loop
-      } // station loop
-    } // velo half loop
-
+	    StationIterator station0 = stationIter;
+	    
+	    //== nothing to see here move along
+	    if ( (*station0)->empty(zone) ) continue;
+	    
+	    StationIterator station1 = station0; ++station1;
+	    if ( station1 == stationsEnd ) continue;
+	    
+	    // code to make "walk"  Velo stop at z=0 -ve -> 0
+	    if ( (*station1)->z() > m_zSensorSearchMax ) break;
+	    if ( (*station1)->empty(zone) ) continue;
+	    
+	    StationIterator station2 = station1; ++station2;
+	    if ( station2 == stationsEnd ) continue;
+	    if ( (*station2)->empty(zone) ) continue;
+	    
+	    seedInSectorTriplet(false,rzTracks, 0, zone,
+				station0, zone,
+				station1, zone,
+				station2, zone);
+	    
+	  } // zone loop
+	} // station loop
+      } // velo half loop
+    } // onlyForward 
     //==========================================================================
 
     //==========================================================================
