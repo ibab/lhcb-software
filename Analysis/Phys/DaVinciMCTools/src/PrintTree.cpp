@@ -1,10 +1,10 @@
-// $Id: PrintTree.cpp,v 1.6 2007-03-20 16:26:46 pkoppenb Exp $
+// $Id: PrintTree.cpp,v 1.7 2008-02-14 08:24:55 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 // from DaVinci
-#include "Kernel/IDebugTool.h"
+#include "Kernel/IPrintDecayTreeTool.h"
 
 // local
 #include "PrintTree.h"
@@ -43,7 +43,7 @@ StatusCode PrintTree::initialize() {
   if (!sc) return sc;
   
   debug() << "==> Initialize" << endmsg;
-  m_debug = tool<IDebugTool>( "DebugTool", this );
+  m_debug = tool<IPrintDecayTreeTool>( "PrintDecayTreeTool", this );
 
   return StatusCode::SUCCESS;
 };

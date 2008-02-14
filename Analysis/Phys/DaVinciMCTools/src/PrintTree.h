@@ -1,4 +1,4 @@
-// $Id: PrintTree.h,v 1.2 2005-01-11 12:36:08 pkoppenb Exp $
+// $Id: PrintTree.h,v 1.3 2008-02-14 08:24:55 pkoppenb Exp $
 #ifndef PRINTTREE_H 
 #define PRINTTREE_H 1
 
@@ -6,7 +6,7 @@
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "Kernel/DVAlgorithm.h"
 
-class IDebugTool;
+class IPrintMCDecayTreeTool;
 
 /** @class PrintTree PrintTree.h
  *  
@@ -29,7 +29,7 @@ public:
 protected:
 
 private:
-  IDebugTool *m_debug;
+  IPrintDecayTreeTool* m_debug;
 
 };
 #endif // PRINTTREE_H
