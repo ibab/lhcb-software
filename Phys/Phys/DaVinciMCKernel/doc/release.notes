@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.30 2008-02-13 18:25:29 pkoppenb Exp $
+! $Id: release.notes,v 1.31 2008-02-14 07:20:22 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+!====================== DaVinciMCKernel v2r6 2008-02-14 =====================
 ! 2008-02-13 - Patrick Koppenburg
  - Remove IDebugTool interface
 
-!====================== DaVinciMCKernel v2r6 2008-02-12 =====================
 ! 2008-02-11 - Juan PALACIOS
  - Kernel/IDebugTool.h, IPrintDecayTreeTool.h
   . revert cleaning up of includes from  2008-02-07. Kernel/Particle2MCLinker
