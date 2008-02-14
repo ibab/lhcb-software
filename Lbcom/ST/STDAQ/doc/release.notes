@@ -4,8 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r5 2008-02-14 =======================
 ! 2008-02-14 M Needham
- - Add functionality to readout tool
+ - Add functionality of readout tool to give list of board IDs
 
 !=============================== STDAQ v3r4 2008-01-09 =======================
 ! 2008-01-08 M Needham
