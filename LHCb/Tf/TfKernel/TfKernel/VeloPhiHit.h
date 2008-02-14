@@ -1,13 +1,15 @@
-// $Id: VeloPhiHit.h,v 1.5 2007-09-19 13:48:19 krinnert Exp $
+// $Id: VeloPhiHit.h,v 1.6 2008-02-14 16:17:00 cattanem Exp $
 #ifndef INCLUDE_VELOPHIHIT_H
 #define INCLUDE_VELOPHIHIT_H 1
 
 #include "GaudiKernel/PhysicalConstants.h"
+#include "TfKernel/VeloHit.h"
 
 #include "VeloDet/DeVeloPhiType.h"
-#include "Event/VeloLiteCluster.h"
 
-#include "TfKernel/VeloHit.h"
+namespace LHCb {
+  class VeloLiteCluster;
+}
 
 namespace Tf {
 

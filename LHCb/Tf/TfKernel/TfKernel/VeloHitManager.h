@@ -1,4 +1,4 @@
-// $Id: VeloHitManager.h,v 1.6 2008-01-20 15:39:43 krinnert Exp $
+// $Id: VeloHitManager.h,v 1.7 2008-02-14 16:17:00 cattanem Exp $
 #ifndef INCLUDE_TF_VELOHITMANAGER_H
 #define INCLUDE_TF_VELOHITMANAGER_H 1
 
@@ -15,8 +15,6 @@
 #include "TfKernel/RegionID.h"
 #include "TfKernel/VeloSensorHits.h"
 #include "TfKernel/TfIDTypes.h"
-
-class DeVelo;
 
 namespace Tf
 {

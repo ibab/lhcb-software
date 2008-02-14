@@ -1,12 +1,8 @@
-// $Id: DefaultVeloPhiHitManager.h,v 1.3 2007-08-25 16:55:01 jonrob Exp $
+// $Id: DefaultVeloPhiHitManager.h,v 1.4 2008-02-14 16:17:00 cattanem Exp $
 #ifndef INCLUDE_TF_DEFAULTVELOPHIHITMANAGER_H
 #define INCLUDE_TF_DEFAULTVELOPHIHITMANAGER_H 1
 
-#include "Event/VeloLiteCluster.h"
-#include "Event/VeloCluster.h"
-
 #include "TfKernel/DefaultVeloHitManager.h"
-
 
 namespace Tf {
 

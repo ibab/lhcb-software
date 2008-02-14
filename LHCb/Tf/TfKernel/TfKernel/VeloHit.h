@@ -1,9 +1,8 @@
-// $Id: VeloHit.h,v 1.4 2007-09-10 16:42:30 krinnert Exp $
+// $Id: VeloHit.h,v 1.5 2008-02-14 16:17:00 cattanem Exp $
 #ifndef INCLUDE_TF_VELOHIT_H
 #define INCLUDE_TF_VELOHIT_H 1
 
 #include "LoKi/Range.h"
-#include "VeloDet/DeVeloRType.h"
 #include "Event/VeloLiteCluster.h"
 
 #include "TfKernel/HitBase.h"
