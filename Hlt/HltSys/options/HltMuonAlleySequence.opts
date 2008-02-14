@@ -20,16 +20,17 @@ HltMuonAlley.Members = {   "L0Entry/L0MuonEntry",
                            "MatchPatVeloSpaceL0",
                            "MatchPatVeloSpaceMuonHits",
                            "HltTrackMerge/HltMuonMergeVeloSpaceMuon",
-                           "HltSequencer/HltMuonPreTrigger",
+                           "GaudiSequencer/HltMuonPreTrigger",
                            "GaudiSequencer/HltDecodeT",
                            "HltTracking/HltMuonForwardPartial",
                            "HltMuonRefine",
-                           "HltSequencer/HltMuonTrigger"
+                           "GaudiSequencer/HltMuonTrigger"
 };
 HltMuonAlley.MeasureTime = true;
 
 HltMuonPreTrigger.ModeOr = true;
-HltMuonPreTrigger.Members += {"HltSequencer/HltMuonPreTriggerSingleMuon",
+HltMuonPreTrigger.ShortCircuit = false;
+HltMuonPreTrigger.Members += {"GaudiSequencer/HltMuonPreTriggerSingleMuon",
                               "HltMuonPreTriggerDiMuons"
 };
 
@@ -38,7 +39,8 @@ HltMuonPreTriggerSingleMuon.Members +={"HltTrackIPSelection/HltTrackMuonIPSelect
 };
 
 HltMuonTrigger.ModeOr = true;
-HltMuonTrigger.Members += {"HltSequencer/HltMuonTriggerSingleMuon"
+HltMuonTrigger.ShortCircuit = false;
+HltMuonTrigger.Members += {"GaudiSequencer/HltMuonTriggerSingleMuon"
                            ,"HltMuonTriggerDiMuons"
 };
 

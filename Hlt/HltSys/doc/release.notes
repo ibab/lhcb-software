@@ -7,6 +7,10 @@ Purpose: LHCb High Level Trigger packages.
 
 !- 2008-02-14 Gerhard Raven
   - start migration from HltSequencer to the upgraded GaudiSequencer
+    (note that the # of entries in eg. DimuonFromL0Single drops, but the 
+     # of passed remains the same -- this is probably due to a bug in the
+     not-shortcircuit logic in OR mode of HltSequencer which is fixed 
+     in GaudiSequencer)
 
 !- 2008-02-12 Jose A. Hernando
   - HltHadAlleyConfSequence: 
