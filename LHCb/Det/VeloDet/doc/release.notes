@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.188 2008-02-13 16:50:26 krinnert Exp $
+! $Id: release.notes,v 1.189 2008-02-14 16:15:47 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+!======================== VeloDet v12r4 2008-02-14 ===========================
+! 2008-02-14 - Marco Cattaneo
+ - Cleaned up includes
 
 ! 2008-02-13 - Kurt Rinnert
  - removed all explicit 2048 in sensor classes and replaced them with

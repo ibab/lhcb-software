@@ -1,4 +1,4 @@
-// $Id: VeloDetChecker.cpp,v 1.4 2007-07-14 20:19:38 mtobin Exp $
+// $Id: VeloDetChecker.cpp,v 1.5 2008-02-14 16:15:47 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,8 @@
 
 // from Detector
 #include "VeloDet/DeVelo.h" 
+
+#include "Kernel/LHCbID.h"
 #include <boost/lexical_cast.hpp>
 
 // local

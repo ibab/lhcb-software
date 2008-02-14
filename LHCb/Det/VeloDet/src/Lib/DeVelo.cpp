@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.86 2007-11-15 10:58:46 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.87 2008-02-14 16:15:47 cattanem Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -16,7 +16,6 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 #include "DetDesc/Condition.h"
-
 
 // Local
 #include "VeloDet/DeVelo.h"

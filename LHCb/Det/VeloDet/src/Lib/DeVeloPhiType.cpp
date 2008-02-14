@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.38 2007-08-28 12:05:43 jonrob Exp $
+// $Id: DeVeloPhiType.cpp,v 1.39 2008-02-14 16:15:47 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -15,10 +15,13 @@
 
 // From LHCb
 #include "LHCbMath/LHCbMath.h"
+#include "Kernel/LineTraj.h"
+
 #include "gsl/gsl_math.h"
 
 // From Velo
 #include "VeloDet/DeVeloPhiType.h"
+#include "Kernel/VeloChannelID.h"
 
 namespace VeloDet {
   /** This function simply provides access to a local static

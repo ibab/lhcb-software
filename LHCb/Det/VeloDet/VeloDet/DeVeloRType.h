@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.27 2007-10-01 13:58:18 krinnert Exp $
+// $Id: DeVeloRType.h,v 1.28 2008-02-14 16:15:46 cattanem Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -7,20 +7,21 @@
 // Gaudi Math definitions
 #include "GaudiKernel/Point3DTypes.h"
 
-/// from VeloDet
+// from VeloDet
 #include "VeloDet/DeVeloSensor.h"
 
-/// From LHCb Kernel
-#include "Kernel/VeloChannelID.h"
-
 // get trajectory
-#include "Kernel/CircleTraj.h"
+#include "Kernel/Trajectory.h"
 
 // Unique class identifier
 static const CLID CLID_DeVeloRType = 1008102 ;
 
 // Forward declaration needed for link to associated sensor
 class DeVeloPhiType;
+
+namespace LHCb {
+  class VeloChannelID;
+}
 
 /** @class DeVeloRType DeVeloRType.h VeloDet/DeVeloRType.h
  *  

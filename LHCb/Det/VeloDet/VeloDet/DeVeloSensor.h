@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.39 2008-02-13 16:50:26 krinnert Exp $
+// $Id: DeVeloSensor.h,v 1.40 2008-02-14 16:15:46 cattanem Exp $
 #ifndef VELODET_DEVELOSENSOR_H
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -10,12 +10,9 @@
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
-/// from Det/DetDesc
+// from Det/DetDesc
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
-
-/// From LHCb Kernel
-#include "Kernel/VeloChannelID.h"
 
 // get LHCbID for trajectory
 #include "Kernel/Trajectory.h"
@@ -27,6 +24,10 @@ static const CLID CLID_DeVeloSensor = 1008101 ;
 class DeVelo;
 class DeVeloRType;
 class DeVeloPhiType;
+
+namespace LHCb {
+  class VeloChannelID;
+}
 
 /** @class DeVeloSensor DeVeloSensor.h VeloDet/DeVeloSensor.h
  *

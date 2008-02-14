@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.32 2008-02-13 16:50:26 krinnert Exp $
+// $Id: DeVeloSensor.cpp,v 1.33 2008-02-14 16:15:47 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -16,6 +16,7 @@
 
 // From Velo 
 #include "VeloDet/DeVeloSensor.h"
+#include "Kernel/VeloChannelID.h"
 
 /** @file DeVeloSensor.cpp
  *

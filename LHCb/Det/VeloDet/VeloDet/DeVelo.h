@@ -1,14 +1,15 @@
-// $Id: DeVelo.h,v 1.54 2007-07-23 01:08:54 krinnert Exp $
+// $Id: DeVelo.h,v 1.55 2008-02-14 16:15:46 cattanem Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
-/// from STL
-//#include <vector>
 
-/// Local
+// Local
 #include "VeloDet/DeVeloSensor.h"
 #include "VeloDet/DeVeloRType.h"
 #include "VeloDet/DeVeloPhiType.h"
+
+// From LHCb Kernel
+#include "Kernel/VeloChannelID.h"
 
 // get LHCbID for trajectory
 #include "Kernel/LHCbID.h"
