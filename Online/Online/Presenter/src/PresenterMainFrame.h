@@ -6,6 +6,9 @@
 #include <TColor.h>
 #include <vector>
 
+#include <iostream>
+
+
 #include "LoginDialog.h"
 #include "presenter.h"
 
@@ -13,11 +16,13 @@ class TObject;
 class TGDockableFrame;
 class TString;
 class TGButton;
+class TGPictureButton;
+class TGSplitButton;
 class TGFrame;
 class TGPopupMenu;
 class TGMenuBar;
 class TGToolBar;
-struct ToolBarData_t;
+//struct ToolBarData_t;
 class TGStatusBar;
 class TGPicture;
 class TGTab;
@@ -29,6 +34,8 @@ class TH1;
 class TList;
 class TGListTree;
 class TGListTreeItem;
+class TGVSplitter;
+class TObjArray; // for ROOT 5.17
 
 class DbRootHist;
 class TH1;
@@ -37,16 +44,16 @@ class DimBrowser;
 class OnlineHistDB;
 class OnlineHistogram;
 class OMAlib;
-
-using namespace pres;
+class Archive;
 
 class PresenterMainFrame : public TGMainFrame
 {
   public:
-
-    PresenterMainFrame(const char* name, UInt_t x, UInt_t y, UInt_t width,
-                       UInt_t height, MsgLevel verbosity);
-    //  PresenterMainFrame() {};
+    PresenterMainFrame(const char* name,
+                       const int & x,
+                       const int & y,
+                       const int & width,
+                       const int & height);
     virtual ~PresenterMainFrame();
 
     // Add button, menu etc. commands to this list (do not define elsewhere:
@@ -59,7 +66,6 @@ class PresenterMainFrame : public TGMainFrame
       LOGOUT_COMMAND,
       LOGIN_COMMAND,
       CLEAR_PAGE_COMMAND,
-      SAVE_PAGE_TO_FILE_COMMAND,
       SAVE_PAGE_TO_DB_COMMAND,
       REMOVE_HISTO_FROM_CANVAS_COMMAND,
       CLEAR_HISTOS_COMMAND,
@@ -69,7 +75,6 @@ class PresenterMainFrame : public TGMainFrame
       INSPECT_PAGE_COMMAND,
       START_COMMAND,
       STOP_COMMAND,
-      SET_UTGID_TASK_COMMAND,
       AUTO_LAYOUT_COMMAND,
       OVERLAY_REFERENCE_HISTO_COMMAND,
       SET_REFERENCE_HISTO_COMMAND,
@@ -83,6 +88,7 @@ class PresenterMainFrame : public TGMainFrame
       M_AddDimToDB_COMMAND,
       M_AddDimToPage_COMMAND,
       M_AddDBHistoToPage_COMMAND,
+      SET_DIM_SRC_COMMAND,
       M_DimCheckAllChildren_COMMAND,
       M_DimUnCheckAllChildren_COMMAND,
       M_DimCollapseAllChildren_COMMAND,
@@ -97,6 +103,9 @@ class PresenterMainFrame : public TGMainFrame
       M_LoadPage_COMMAND,
       M_DeletePage_COMMAND,
       M_DeleteFolder_COMMAND,
+      M_LAST_1_HOURS,
+      M_LAST_8_HOURS,
+      M_LAST_DEMO
     };
 
     struct BulkHistoOptions {
@@ -114,35 +123,50 @@ class PresenterMainFrame : public TGMainFrame
     };
 
     //slots
+    void about();
     void buildGUI();
     void CloseWindow();
+
+    void setPresenterMode(const pres::PresenterMode & presenterMode);
+    void setDatabaseMode(const pres::DatabaseMode & databaseMode);
+    void setVerbosity(const pres::MsgLevel & verbosity);
+    void setDimDnsNode(const std::string & dimDnsNode) {
+      m_dimDnsNode = dimDnsNode;
+    };
+    void setArchiveRoot(const std::string & archiveRoot);
+    void setReferencePath(const std::string & referencePath);
+    void setSavesetPath(const std::string & savesetPath);
+
+    void setStartupHistograms(const std::vector<std::string> & histogramList);
+
     void dockAllFrames();
     void handleCommand(Command id = X_ENIGMA_COMMAND);
     void savePageToHistogramDB();
-    void savePageToFile();
-    void printPage();
     void autoCanvasLayout();
     void loginToHistogramDB();
-    bool connectToHistogramDB(std::string dbPassword, std::string dbUsername,
-                              std::string dbName);
+    bool connectToHistogramDB(const std::string & dbPassword,
+                              const std::string & dbUsername,
+                              const std::string & dbName);
     OMAlib* analysisLib();
-    bool isConnectedToHistogramDB();
     OnlineHistDB* histogramDB();
     void logoutFromHistogramDB();
     void startPageRefresh();
     void stopPageRefresh();
     void clearHistos();
     void refreshPage();
+    void refreshClock();
     void listFromHistogramDB(TGListTree* listView,
-                             FilterCriteria filterCriteria,
+                             const FilterCriteria & filterCriteria,
                              bool histograms);
+
     void fillTreeNodeWithHistograms(TGListTree* listView,
-      TGListTreeItem* node, std::vector<std::string>*  localDatabaseIDS,
-      std::vector<std::string>* histogramTypes);
+                                    TGListTreeItem* node,
+                                    std::vector<std::string>* localDatabaseIDS,
+                                    std::vector<std::string>* histogramTypes);
     void changeDimDnsNode();
     std::string histogramDBName();
 
-    void setTreeNodeIcon(TGListTreeItem* node, std::string type);
+    void setTreeNodeIcon(TGListTreeItem* node, const std::string & type);
     void setStatusBarText(const char* text, int slice);
     void editHistogramProperties();
     void inspectHistogram();
@@ -160,14 +184,14 @@ class PresenterMainFrame : public TGMainFrame
                                    TGListTreeItem* node);
     void collapseTreeChildrenItemsChildren(TGListTree* treeList,
                                            TGListTreeItem* node);
-      
+
     void sortTreeChildrenItems(TGListTree* treeList,
                                TGListTreeItem* node);
     void sortTreeChildrenItemsChildren(TGListTree* treeList,
                                        TGListTreeItem* node);
-      
+
     void deleteTreeChildrenItemsUserData(TGListTreeItem* node);
-    void deleteTreeChildrenItemsUserDataChildren(TGListTreeItem* node);    
+    void deleteTreeChildrenItemsUserDataChildren(TGListTreeItem* node);
 
 
     void enableAutoCanvasLayoutBtn();
@@ -176,20 +200,21 @@ class PresenterMainFrame : public TGMainFrame
     TRootEmbeddedCanvas* mainEmbCanvas;
     TCanvas*             mainCanvas;
 
-    BulkHistoOptions   m_bulkHistoOptions;
+    BulkHistoOptions   bulkHistoOptions;
 
     void refreshHistoDBListTree();
     void refreshPagesDBListTree();
     void refreshDimSvcListTree();
     void hideDBTools();
-    void showDBTools();
+    void showDBTools(pres::DatabaseMode databasePermissions);
+    void reconfigureGUI();
 
     void enableHistogramClearing();
     void disableHistogramClearing();
 
     void enablePageRefresh();
     void disablePageRefresh();
-    
+
     void enablePageUndocking();
     void disablePageUndocking();
 
@@ -197,18 +222,22 @@ class PresenterMainFrame : public TGMainFrame
 
     void deleteSelectedHistoFromCanvas();
 
-    void clickedDimTreeItem(TGListTreeItem* item, MouseButton btn,
-                            Int_t x, Int_t y);
-    void clickedHistoDBTreeItem(TGListTreeItem* item, MouseButton btn,
-                                Int_t x, Int_t y);
-    void clickedPageTreeItem(TGListTreeItem* item, MouseButton btn,
-                             Int_t x, Int_t y);
+    void clickedDimTreeItem(TGListTreeItem* node,
+                            EMouseButton btn,
+                            int x, int y);
+    void clickedHistoDBTreeItem(TGListTreeItem* node,
+                                EMouseButton btn,
+                                int x, int y);
+    void clickedPageTreeItem(TGListTreeItem* node,
+                             EMouseButton btn,
+                             int x, int y);
 
     TGPopupMenu* getDimContextMenu() const { return m_dimContextMenu; }
 
     void addDimSvcToHistoDB();
     void addDimSvcToPage();
     void addDbHistoToPage();
+    void setHistogramDimSource();
     void dimCheckAllChildren();
     void dimUnCheckAllChildren();
     void dimCollapseAllChildren();
@@ -219,9 +248,11 @@ class PresenterMainFrame : public TGMainFrame
     void dbHistoCollapseAllChildren();
 
     void deleteSelectedHistoFromDB();
-    void loadSelectedPageFromDB();
+    void loadSelectedPageFromDB(const std::string & timePoint = "",
+                                const std::string & pastDuration = "");
     void deleteSelectedPageFromDB();
     void deleteSelectedFolderFromDB();
+    void setReferenceHistogram();
     void setHistogramParametersFromDB(TH1* histogram,
                                       OnlineHistogram* onlineHistogram);
     void paintHist(DbRootHist* histogram);
@@ -229,56 +260,59 @@ class PresenterMainFrame : public TGMainFrame
     void removeHistogramsFromPage();
     void EventInfo(int event, int px, int py, TObject *selected);
 
+    bool isConnectedToHistogramDB();
+    bool canWriteToHistogramDB();
+
     TCanvas* editorCanvas;
     TRootEmbeddedCanvas* editorEmbCanvas;
 
-    std::vector<DbRootHist*>      m_DbHistosOnPage;
-    std::vector<DbRootHist*>::iterator m_DbHistosOnPageIt;
+    std::vector<DbRootHist*>  dbHistosOnPage;
+    std::vector<DbRootHist*>::iterator  dbHistosOnPageIt;
 
   private:
 
-    MsgLevel            m_verbosity;
-    DimBrowser*         m_dimBrowser;
-    TGCompositeFrame*   m_ef;
-    TTimer*             m_refreshTimer;
-    bool                m_refreshing;
-    bool                m_clearedHistos;
-    OnlineHistDB*       m_histogramDB;
-    OMAlib*             m_analysisLib;
-    bool                m_connectedToHistogramDB;
-    int                 m_msgBoxReturnCode;
-    std::string         m_dbName;
-    std::string         m_message;
+    pres::MsgLevel    m_verbosity;
+    std::string       m_dimDnsNode;
+    std::string       m_archiveRoot;
+    std::string       m_referencePath;
+    std::string       m_savesetPath;
+    DimBrowser*       m_dimBrowser;
+    Archive*          m_archive;
+    pres::PresenterMode m_presenterMode;
+    pres::DatabaseMode  m_databaseMode;
+    TTimer*           m_pageRefreshTimer;
+    TTimer*           m_clockTimer;
+    bool              m_clearedHistos;
+    OnlineHistDB*     m_histogramDB;
+    OMAlib*           m_analysisLib;
+    int               m_msgBoxReturnCode;
+    std::string       m_dbName;
+    std::string       m_message;
 
-    int m_mainCanvasWidth;
-    int m_mainCanvasHeight;
-    
-    TGDockableFrame* m_menuDock;
-    TGDockableFrame* m_toolBarDock;
-    TGDockableFrame* m_databaseHistogramsDock;
-    TGDockableFrame* m_pageDock;
-    TGDockableFrame* m_mainCanvasInfoDock;
-    TGDockableFrame* m_dimBrowserDock;
-    TGDockableFrame* m_databasePagesDock;
+    TGDockableFrame*  m_menuDock;
+    TGDockableFrame*  m_toolBarDock;
+    TGDockableFrame*  m_databaseHistogramsDock;
+    TGDockableFrame*  m_pageDock;
+    TGDockableFrame*  m_mainCanvasInfoDock;
+    TGDockableFrame*  m_dimBrowserDock;
+    TGDockableFrame*  m_databasePagesDock;
 
-    TGStatusBar*        m_mainStatusBar;
-    TGStatusBar*        m_statusBarTop;
-
-    // icons
-    const TGPicture*    m_icon1;
+    TGStatusBar*      m_mainStatusBar;
+    TGStatusBar*      m_statusBarTop;
+    TGHorizontalFrame* m_intervalPickerFrame;
 
     // File menu
     TGToolBar*    m_toolBar;
     TGMenuBar*    m_menuBar;
     TGPopupMenu*  m_fileMenu;
       TGHotString*  m_fileText;
-      TGHotString*  m_filePrint;
+//      TGHotString*  m_filePrint;
       TGHotString*  m_fileNew;
       TGHotString*  m_fileSaveText;
       TGHotString*  m_fileLoginText;
       TGHotString*  m_fileLogoutText;
       TGHotString*  m_fileQuitText;
-    
+
     TGPopupMenu*  m_editMenu;
     TGHotString*  m_editText;
       TGHotString*  m_editHistogramPropertiesText;
@@ -297,43 +331,46 @@ class PresenterMainFrame : public TGMainFrame
       TGHotString*  m_viewClearHistosText;
       TGHotString*  m_viewUnDockPageText;
       TGHotString*  m_viewDockAllText;
-      
+
     TGPopupMenu*  m_toolMenu;
     TGHotString*  m_toolText;
       TGHotString*  m_toolMode;
       TGHotString*  m_toolPageEditor;
       TGHotString*  m_toolOnline;
       TGHotString*  m_toolOffline;
-      TGHotString*  m_toolSetUtgidTaskText;      
+      TGHotString*  m_toolSetUtgidTaskText;
       TGHotString*  m_toolSetDimDnsText;
-      
+
     TGPopupMenu*  m_helpMenu;
     TGHotString*  m_helpText;
       TGHotString*  m_helpContentsText;
       TGHotString*  m_helpAboutText;
 
     // Toolbar
-    ToolBarData_t*      m_toolbarElement;
-    TGButton*           m_loginButton;
-    TGButton*           m_logoutButton;
-    TGButton*           m_savePageToDatabaseButton;
-    TGButton*           m_newPageButton;
-    TGButton*           m_startRefreshButton;
-    TGButton*           m_stopRefreshButton;
-    TGButton*           m_clearHistoButton;
-    TGButton*           m_inspectHistoButton;
-    TGButton*           m_editHistoButton;
-    TGButton*           m_autoCanvasLayoutButton;
-    TGButton*           m_deleteHistoFromCanvasButton;
-    TGButton*           m_overlayReferenceHistoButton;
-    TGButton*           m_setReferenceHistoButton;
-    
+//    ToolBarData_t*      m_toolbarElement;
+    TGPictureButton*  m_loginButton;
+    TGPictureButton*  m_logoutButton;
+    TGPictureButton*  m_savePageToDatabaseButton;
+    TGPictureButton*  m_newPageButton;
+    TGPictureButton*  m_startRefreshButton;
+    TGPictureButton*  m_stopRefreshButton;
+    TGPictureButton*  m_clearHistoButton;
+    TGPictureButton*  m_inspectHistoButton;
+    TGPictureButton*  m_editHistoButton;
+    TGPictureButton*  m_autoCanvasLayoutButton;
+    TGPictureButton*  m_deleteHistoFromCanvasButton;
+    TGPictureButton*  m_overlayReferenceHistoButton;
+    TGPictureButton*  m_setReferenceHistoButton;
+    TGSplitButton*    m_historyIntervalQuickButton;
+    TGPopupMenu*      m_presetTimePopupMenu;
+
 
     //  TGButton*         m_quitButton;
     //  TGPicturePool*    m_picturePool;
     const TGPicture*  m_openedFolderIcon;
     const TGPicture*  m_closedFolderIcon;
-
+    const TGPicture*  m_databaseSourceIcon;
+    const TGPicture*  m_dimOnline16;
     const TGPicture*  m_iconH1D;
     const TGPicture*  m_iconH2D;
     const TGPicture*  m_iconProfile;
@@ -345,6 +382,10 @@ class PresenterMainFrame : public TGMainFrame
     const TGPicture*  m_iconAlgorithm;
     const TGPicture*  m_iconSet;
     const TGPicture*  m_iconLevel;
+
+    TGVerticalFrame* m_rightMiscFrame;
+    TGHorizontalFrame* m_mainHorizontalFrame;
+    TGVSplitter* m_rightVerticalSplitter;
 
     // vector of colours defined for own colour palette
     std::vector<TColor*>          m_RootColourVector;
@@ -376,10 +417,10 @@ class PresenterMainFrame : public TGMainFrame
     TObjArray* m_histogramIdItems;
     TIterator* m_histogramIdItemsIt;
     TObject*   m_histogramIdItem;
-    
-    std::string convDimToHistoID(std::string dimSvcName);
 
-    TGCompositeFrame*    m_editorCanvasMainFrame;
+    std::string convDimToHistoID(const std::string & dimSvcName);
+
+    TGCompositeFrame* m_editorCanvasMainFrame;
 
     int m_histoPadOffset;
 
@@ -405,7 +446,6 @@ class PresenterMainFrame : public TGMainFrame
 
     std::vector<OnlineHistogram*>      m_onlineHistosOnPage;
     std::vector<OnlineHistogram*>::const_iterator m_onlineHistosOnPageIt;
-
 
     ClassDef(PresenterMainFrame, 0) // main editor window
 };
