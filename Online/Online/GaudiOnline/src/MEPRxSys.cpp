@@ -244,6 +244,7 @@ unsigned long ms2k(void)
     const unsigned long sec2000 = 365 * 24 * 3600;
     gettimeofday(&tv, NULL);
     return ((tv.tv_sec - sec2000) * 1000 + tv.tv_usec / 1000);
+#endif
 }
 
 int rx_select(int sockfd, int sec)

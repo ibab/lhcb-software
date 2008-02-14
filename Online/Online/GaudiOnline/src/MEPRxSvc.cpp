@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.58 2008-02-14 09:39:01 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.59 2008-02-14 10:54:25 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -390,7 +390,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("InitialMEPReqs",    m_initialMEPReq = 1);
   declareProperty("MEPsPerMEPReq",     m_MEPsPerMEPReq = 1);
   declareProperty("MEPRecvTimeout",   m_MEPRecvTimeout = 10);
-  declareProperty("maxAgeEvent",      m_maxAgeEvent = 1000); // ms
+  declareProperty("maxEventAge",      m_maxEventAge = 1000); // ms
   declareProperty("dropIncompleteEvents", m_dropIncompleteEvents = false);
   declareProperty("nCrh", m_nCrh = 10);
   m_trashCan  = new u_int8_t[MAX_R_PACKET];
@@ -765,7 +765,7 @@ int MEPRxSvc::getSrcID(u_int32_t addr)  {
 void MEPRxSvc::ageEvents() {
     unsigned long ms = MEPRxSys::ms2k();
     for (RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w) {
-	if ( ++((*w)->age) > m_maxEventAge) forceEvent(w);
+	if ((ms - ((*w)->m_age)) > m_maxEventAge) forceEvent(w);
     }
 }
 
