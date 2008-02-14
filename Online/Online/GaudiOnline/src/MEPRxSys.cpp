@@ -31,6 +31,7 @@
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <arpa/inet.h>
+#include <sys/time.h> 
 #include <cerrno>
 #endif // ifndef _WIN32
 
@@ -229,6 +230,20 @@ void microsleep(int us)
   struct timespec t = { 0, 1000 * us }; // 0 s,  ns
   nanosleep(&t, &t);
 #endif
+}
+/*
+ * return the time in ms since (approx) Jan 1st 2000
+ */
+unsigned long ms2k(void)
+{
+#ifdef _WIN32
+    static unsigned long ms = 0;
+    return ms++; // Windows has neither future nor past...
+#else
+    struct timeval tv;
+    const unsigned long sec2000 = 365 * 24 * 3600;
+    gettimeofday(&tv, NULL);
+    return ((tv.tv_sec - sec2000) * 1000 + tv.tv_usec / 1000);
 }
 
 int rx_select(int sockfd, int sec)

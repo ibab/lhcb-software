@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.57 2008-02-13 17:24:26 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.58 2008-02-14 09:39:01 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -82,6 +82,7 @@ namespace LHCb  {
     int             m_refCount;
     int             m_spaceSize;
     int             m_age;
+    int             m_tick;
     int             m_nSrc;
     int             m_nrx;
     // run-time
@@ -333,8 +334,10 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid) {
     e->magic       = mep_magic_pattern();
     m_brx          = 0;
     m_pf           = hdr->m_nEvt;
+    m_age          = MEPRxSys::ms2k();
   }
-  int len = MEPRxSys::recv_msg(sockfd, (u_int8_t*)e->data + m_brx + 4, MAX_R_PACKET, 0);
+  int len = MEPRxSys::recv_msg(sockfd, (u_int8_t*)e->data + m_brx + 4, 
+			       MAX_R_PACKET, 0);
   if (len < 0) {
     ERRMSG(m_log,"failed to receive message");
     return MEP_ADD_ERROR;
@@ -387,6 +390,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("InitialMEPReqs",    m_initialMEPReq = 1);
   declareProperty("MEPsPerMEPReq",     m_MEPsPerMEPReq = 1);
   declareProperty("MEPRecvTimeout",   m_MEPRecvTimeout = 10);
+  declareProperty("maxAgeEvent",      m_maxAgeEvent = 1000); // ms
   declareProperty("dropIncompleteEvents", m_dropIncompleteEvents = false);
   declareProperty("nCrh", m_nCrh = 10);
   m_trashCan  = new u_int8_t[MAX_R_PACKET];
@@ -540,7 +544,7 @@ StatusCode MEPRxSvc::run() {
       /* We haven't received a MEP for quite some time. Update counter.
        */
       m_numMEPRecvTimeouts++;
-
+      
       static int ncrh = 1;
       if (m_state != RUNNING) {
         for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w)
@@ -548,11 +552,12 @@ StatusCode MEPRxSvc::run() {
         log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
         return StatusCode::SUCCESS;
       }
+      ageEvents();
       if (--ncrh == 0) {
-        log << MSG::DEBUG << "crhhh..." << m_freeDsc.size() << " free buffers";
+        log << MSG::DEBUG << "crhhh..." << m_freeDsc.size() << " free buffers. ";
 	log << MSG::DEBUG << endmsg;
         for(size_t i = 0; i < m_workDsc.size(); ++i) {
-	  log << MSG::DEBUG << "Waiting to complete event L0ID# " << m_workDsc[i]->m_l0ID << " missing ";
+	  log << MSG::DEBUG << "Event L0ID# " << m_workDsc[i]->m_l0ID << " is missing ";
           log << MSG::DEBUG << printnum(m_workDsc[i]->m_nSrc - m_workDsc[i]->m_nrx," MEP");
 	}
 	log << endmsg;
@@ -755,6 +760,13 @@ int MEPRxSvc::getSrcID(u_int32_t addr)  {
     return -1;
   }
   return i->second;
+}
+
+void MEPRxSvc::ageEvents() {
+    unsigned long ms = MEPRxSys::ms2k();
+    for (RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w) {
+	if ( ++((*w)->age) > m_maxEventAge) forceEvent(w);
+    }
 }
 
 void MEPRxSvc::publishCounters()

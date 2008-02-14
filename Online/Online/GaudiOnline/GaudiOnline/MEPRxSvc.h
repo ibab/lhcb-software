@@ -107,6 +107,7 @@ namespace LHCb  {
     u_int32_t                   m_partitionID;
     u_int32_t                   m_IPOdin;
     u_int32_t                   m_odinIPAddr;
+    int                         m_maxEventAge; // (in ms)
     u_int8_t                   *m_trashCan;
     std::string                 m_rxIPAddr;
     std::string                 m_IPNameOdin;
