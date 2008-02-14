@@ -91,7 +91,7 @@ StatusCode UpdateAndReset::finalize() {
   //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   msg << MSG::INFO << "finalizing...." << endreq;
-
+  updateAll(true);
   return StatusCode::SUCCESS;
 }
 
