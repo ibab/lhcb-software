@@ -1,4 +1,4 @@
-// $Id: BTaggingInclusive.cpp,v 1.5 2007-06-09 12:47:19 musy Exp $
+// $Id: BTaggingInclusive.cpp,v 1.6 2008-02-14 08:21:40 pkoppenb Exp $
 // local
 #include "BTaggingInclusive.h"
 
@@ -40,7 +40,7 @@ BTaggingInclusive::~BTaggingInclusive() {}
 //=============================================================================
 StatusCode BTaggingInclusive::initialize() {
 
-  m_debug = tool<IDebugTool> ( "DebugTool", this );
+  m_debug = tool<IPrintMCDecayTreeTool> ( "PrintMCDecayTreeTool", this );
   if( ! m_debug ) {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
     return StatusCode::FAILURE;

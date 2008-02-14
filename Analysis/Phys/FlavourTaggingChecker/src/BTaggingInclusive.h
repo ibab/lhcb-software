@@ -5,14 +5,14 @@
 // Include files
 #include "GaudiKernel/AlgFactory.h"
 #include "Event/FlavourTag.h"
-#include "Kernel/IDebugTool.h"
+#include "MCInterfaces/IPrintMCDecayTreeTool.h"
 
 #include "Event/HepMCEvent.h"
 #include "Event/GenCollision.h"
 #include "Event/GenHeader.h"
 #include "Kernel/IEvtTypeSvc.h"
 #include "MCInterfaces/IMCDecayFinder.h"
-#include "Kernel/IDebugTool.h"
+#include "MCInterfaces/IPrintMCDecayTreeTool.h"
 #include "MCInterfaces/IForcedBDecayTool.h"
 
 // from DaVinci
@@ -43,7 +43,7 @@ public:
   std::string m_tagslocation; 
   std::string m_ostagslocation;
 
-  IDebugTool* m_debug;
+  IPrintMCDecayTreeTool* m_debug;
 
   IForcedBDecayTool* m_forcedBtool;
   LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* ) ;

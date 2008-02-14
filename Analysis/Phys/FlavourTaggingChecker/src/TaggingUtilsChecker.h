@@ -6,7 +6,7 @@
 #include "GaudiKernel/ToolFactory.h"
 // from Event
 #include "Kernel/IGeomDispCalculator.h"
-#include "Kernel/IDebugTool.h"
+#include "MCInterfaces/IPrintMCDecayTreeTool.h"
 #include "ITaggingUtilsChecker.h"
 
 /** @class TaggingUtilsChecker TaggingUtilsChecker.h 
@@ -55,7 +55,7 @@ private:
   LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* );
 
   IGeomDispCalculator *m_Geom;
-  IDebugTool* m_debug;
+  IPrintMCDecayTreeTool* m_debug;
 
 };
 

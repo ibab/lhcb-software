@@ -1,4 +1,4 @@
-// $Id: DoubleTagCorrelation.cpp,v 1.4 2007-06-09 12:47:20 musy Exp $
+// $Id: DoubleTagCorrelation.cpp,v 1.5 2008-02-14 08:21:40 pkoppenb Exp $
 #include "DoubleTagCorrelation.h"
 
 //--------------------------------------------------------------------------
@@ -31,7 +31,7 @@ DoubleTagCorrelation::~DoubleTagCorrelation() {};
 //==========================================================================
 StatusCode DoubleTagCorrelation::initialize() {
   
-  m_debug = tool<IDebugTool> ( "DebugTool", this );
+  m_debug = tool<IPrintMCDecayTreeTool> ( "PrintMCDecayTreeTool", this );
   if( ! m_debug ) {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
     return StatusCode::FAILURE;

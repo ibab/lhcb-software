@@ -88,7 +88,7 @@ StatusCode BTaggingAnalysis::initialize() {
     fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
     return StatusCode::FAILURE;
   }
-  m_debug = tool<IDebugTool> ( "DebugTool", this );
+  m_debug = tool<IPrintMCDecayTreeTool> ( "PrintMCDecayTreeTool", this );
   if( ! m_debug ) {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
     return StatusCode::FAILURE;

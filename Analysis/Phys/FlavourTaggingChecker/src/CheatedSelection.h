@@ -1,4 +1,4 @@
-// $Id: CheatedSelection.h,v 1.7 2007-06-15 16:46:20 jpalac Exp $
+// $Id: CheatedSelection.h,v 1.8 2008-02-14 08:21:40 pkoppenb Exp $
 #ifndef USER_CheatedSelection_H 
 #define USER_CheatedSelection_H 1
 
@@ -8,7 +8,7 @@
 
 // from Gaudi
 #include "Kernel/DVAlgorithm.h"
-#include "Kernel/IDebugTool.h"
+#include "MCInterfaces/IPrintMCDecayTreeTool.h"
 #include "MCInterfaces/IForcedBDecayTool.h"
 
 // from Associators
@@ -42,7 +42,7 @@ class CheatedSelection : public DVAlgorithm {
 		   LHCb::MCParticle::Vector& , 
 		   LHCb::Particle::ConstVector& );
 
-  IDebugTool* m_debug;
+  IPrintMCDecayTreeTool* m_debug;
   Particle2MCLinker* m_linker; ///< Pointer to associator using links
 
   IForcedBDecayTool* m_forcedBtool;

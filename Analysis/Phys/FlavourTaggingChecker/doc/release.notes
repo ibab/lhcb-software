@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.27 2007-11-15 08:33:05 jpalac Exp $
+! $Id: release.notes,v 1.28 2008-02-14 08:21:39 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2008-02-14 - Patrick Koppenburg
+ - DebugTool replaced by Print(MC)DecayTreeTool
+ - v2r6p1
 
 !===================== FlavourTaggingChecker v2r6 2007-11-15 =================
 

@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.12 2007-10-16 10:35:43 musy Exp $
+// $Id: BTaggingAnalysis.h,v 1.13 2008-02-14 08:21:39 pkoppenb Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -15,7 +15,7 @@
 #include "GaudiKernel/INTupleSvc.h"
 #include "Kernel/ISecondaryVertexTool.h"
 #include "Kernel/IBTaggingTool.h"
-#include "Kernel/IDebugTool.h"
+#include "MCInterfaces/IPrintMCDecayTreeTool.h"
 #include "Kernel/Particle2MCLinker.h"
 #include "Kernel/IParticleDescendants.h"
 #include "Kernel/IBackgroundCategory.h"
@@ -49,7 +49,7 @@ class BTaggingAnalysis : public DVAlgorithm {
  private:
 
   std::string m_SVtype, m_veloChargeName, m_TagLocation;
-  IDebugTool*           m_debug;
+  IPrintMCDecayTreeTool*           m_debug;
   IGeomDispCalculator*  m_Geom;
   Particle2MCLinker*    m_linkLinks; 
   ICaloElectron*        m_electron;

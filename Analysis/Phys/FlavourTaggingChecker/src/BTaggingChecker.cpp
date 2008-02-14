@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.cpp,v 1.9 2007-06-21 10:40:15 musy Exp $
+// $Id: BTaggingChecker.cpp,v 1.10 2008-02-14 08:21:39 pkoppenb Exp $
 // local
 //#include "Kernel/StringUtils.h"
 
@@ -19,7 +19,9 @@ DECLARE_ALGORITHM_FACTORY( BTaggingChecker );
 //==========================================================================
 BTaggingChecker::BTaggingChecker( const std::string& name,
 				  ISvcLocator* pSvcLocator )
-  : DVAlgorithm ( name , pSvcLocator ), m_forcedBtool(0) 
+  : DVAlgorithm ( name , pSvcLocator ),
+    m_debug2(0)
+    , m_forcedBtool(0) 
 {
   declareProperty("TagsLocation", 
 		  m_tags_location = FlavourTagLocation::Default );
@@ -31,17 +33,8 @@ BTaggingChecker::~BTaggingChecker() {};
 //==========================================================================
 StatusCode BTaggingChecker::initialize() {
 
-  m_debug = tool<IDebugTool> ( "DebugTool", this );
-  if( ! m_debug ) {
-    fatal() << "Unable to retrieve Debug tool "<< endreq;
-    return StatusCode::FAILURE;
-  }
-
+  m_debug2 = tool<IPrintDecayTreeTool> ( "PrintDecayTreeTool", this );
   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
-  if( ! m_forcedBtool ) {
-    fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
-    return StatusCode::FAILURE;
-  }
 
   nsele=0;
   for(int i=0; i<50; ++i) { nrt[i]=0; nwt[i]=0; }
@@ -88,7 +81,7 @@ StatusCode BTaggingChecker::execute() {
 
     if( ! tagdecision ) continue;
 
-    m_debug->printTree( (*ti)->taggedB() );
+    m_debug2->printTree( (*ti)->taggedB() );
   }
 
   //count rights and wrongs
