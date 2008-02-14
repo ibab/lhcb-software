@@ -283,8 +283,8 @@ void MonH2D::combine(MonObject * H){
 }
 
 void MonH2D::copyFrom(MonObject * H){
-  if (H->typeName() != this->typeName()){
     MsgStream msgStream = createMsgStream();
+  if (H->typeName() != this->typeName()){
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     doOutputMsgStream(msgStream);
     return;
@@ -332,7 +332,6 @@ void MonH2D::copyFrom(MonObject * H){
   for (int i=0 ; i < m_fSumSize; ++i) {
     m_fSumw2[i] = HH->m_fSumw2[i];
   }
-
   isLoaded = true;
 }
 

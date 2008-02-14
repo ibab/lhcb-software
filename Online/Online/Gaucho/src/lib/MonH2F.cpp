@@ -282,14 +282,19 @@ void MonH2F::combine(MonObject * H){
 }
 
 void MonH2F::copyFrom(MonObject * H){
-  if (H->typeName() != this->typeName()){
     MsgStream msgStream = createMsgStream();
+    msgStream <<MSG::ERROR<<"1." << endreq;
+  if (H->typeName() != this->typeName()){
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     doOutputMsgStream(msgStream);
     return;
   }
 
+  msgStream <<MSG::ERROR<<"2." << endreq;
+
   MonH2F *HH = (MonH2F*)H;
+
+  msgStream <<MSG::ERROR<<"3." << endreq;
 
   m_comments=HH->comments();
 
@@ -302,8 +307,12 @@ void MonH2F::copyFrom(MonObject * H){
   nEntries = HH->nEntries;
   sTitle = HH->sTitle;
   
+  msgStream <<MSG::ERROR<<"4." << endreq;
+
   binCont = new float[(nbinsx+1)*(nbinsy+1)];
   
+  msgStream <<MSG::ERROR<<"5." << endreq;
+
   for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
     binCont[i] = HH->binCont[i];
   }
@@ -327,11 +336,12 @@ void MonH2F::copyFrom(MonObject * H){
 
   m_fSumSize = HH->m_fSumSize;
 
+  msgStream <<MSG::ERROR<<"6." << endreq;
   m_fSumw2 = new float[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
     m_fSumw2[i] = HH->m_fSumw2[i];
   }
-
+  msgStream <<MSG::ERROR<<"7." << endreq;
   isLoaded = true;
 }
 
