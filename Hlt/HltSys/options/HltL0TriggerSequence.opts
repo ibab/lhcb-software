@@ -25,6 +25,7 @@ HltL0TriggerSequence.Members = {
   "HltSequencer/PrepareL0TriggerMuonNoGlobSeq"
 };
 HltL0TriggerSequence.ModeOr = true;
+HltL0TriggerSequence.ShortCircuit = false;
 HltL0TriggerSequence.MeasureTime = true;
 
 

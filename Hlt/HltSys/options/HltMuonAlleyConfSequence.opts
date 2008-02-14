@@ -37,6 +37,7 @@ HltMuonAlleySequence.Members = {
   "HltSelectionFilter/HltMuonAlleys"
 };
 HltMuonAlleySequence.ModeOR=true;
+HltMuonAlleySequence.ShortCircuit=false;
 HltMuonAlleySequence.MeasureTime=true;
 
 HltMuonAlleys.InputSelections = {

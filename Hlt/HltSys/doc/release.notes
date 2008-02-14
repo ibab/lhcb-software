@@ -5,6 +5,8 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+!- 2008-02-14 Gerhard Raven
+  - start migration from HltSequencer to the upgraded GaudiSequencer
 
 !- 2008-02-12 Jose A. Hernando
   - HltHadAlleyConfSequence: 
