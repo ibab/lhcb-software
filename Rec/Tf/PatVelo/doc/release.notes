@@ -4,12 +4,12 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r4 2008-02-14 ==========================
 ! 2008-02-13 - Kurt Rinnert
  - finished port of PatVeloGeneric and PatGenericFitter to Tf framework.
 
-!========================== PatVelo v3r3p1 2008-02-08 ========================
 ! 2008-02-08 - Marco Cattaneo
- - Add a mising include
+ - Add a missing include
 
 !========================== PatVelo v3r3 2008-01-21 ==========================
 ! 2008-01-20 - Kurt Rinnert
