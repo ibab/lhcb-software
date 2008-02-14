@@ -21,9 +21,9 @@ HltAlleys.InputSelections += {"HadTriggerSingle","HadTrigger"};
 HltHadAlleySequence.MeasureTime = true;
 HltHadAlleySequence.Members = {
   "L0Entry/HadL0Entry",
-  "HltSequencer/HadPrepareMainHadron",
+  "GaudiSequencer/HadPrepareMainHadron",
   "HltTrackFilter/HadPreTriggerSingle",
-  "HltSequencer/HadTriggerSeq"
+  "GaudiSequencer/HadTriggerSeq"
 };
 HltHadAlleySequence.OutputLevel = 3;
 
@@ -41,9 +41,10 @@ HadPrepareMainHadron.Members = {
 
 HadTriggerSeq.MeasureTime = true;
 HadTriggerSeq.ModeOr = true;
+HadTriggerSeq.ShortCircuit = false;
 HadTriggerSeq.Members = {
   "HltTrackFilter/HadTriggerSingle",
-  "HltSequencer/HadDiHadronSeq",
+  "GaudiSequencer/HadDiHadronSeq",
   "HltSelectionFilter/HadAlleys"
 };
 
