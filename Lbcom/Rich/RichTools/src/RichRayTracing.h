@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::RayTracing
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.37 2008-02-08 20:57:59 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.38 2008-02-15 08:45:17 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -149,7 +149,8 @@ namespace Rich
       return m_deBeam[rich];
     }
 
-    /** Returns the appropriate detector element name name for the given RICH and panel
+    /** Returns the appropriate Rich HPD panel detector element name for 
+     *  the given RICH and panel.
      *  @param[in] rich  The RICH detector type
      *  @param[in] panel The RICH panel
      *  @return The RICH panel name in the XML description
@@ -166,9 +167,11 @@ namespace Rich
     std::vector< const DeRich* > m_rich;
 
     /// photodetector panels per rich
-    typedef boost::array<DeRichHPDPanel*, 2> HPDPanelsPerRich;
+    typedef boost::array<const DeRichHPDPanel*, Rich::NHPDPanelsPerRICH> HPDPanelsPerRich;
+    /// typedef for photodetector for each rich
+    typedef boost::array<HPDPanelsPerRich, Rich::NRiches> RichHPDPanels;
     /// photodetector for each rich
-    boost::array<HPDPanelsPerRich, Rich::NRiches> m_photoDetPanels;
+    RichHPDPanels m_photoDetPanels;
 
     std::vector<int> m_sphMirrorSegRows; ///< Number of primary mirror rows in each RICH
     std::vector<int> m_sphMirrorSegCols; ///< Number of primary mirror columns in each RICH

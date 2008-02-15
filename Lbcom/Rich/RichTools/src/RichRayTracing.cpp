@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.44 2008-02-08 20:57:59 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.45 2008-02-15 08:45:17 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -77,10 +77,10 @@ StatusCode Rich::RayTracing::initialize()
   m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocation::Rich1 );
   m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocation::Rich2 );
 
-  // loop over riches and photo detector panels
-  for ( unsigned int rich=0; rich<Rich::NRiches; ++rich )
+  // photo detector panels
+  for ( unsigned int rich=0; rich<m_photoDetPanels.size(); ++rich )
   {
-    for ( unsigned int panel=0; panel<Rich::NHPDPanelsPerRICH; ++panel )
+    for ( unsigned int panel=0; panel<m_photoDetPanels[rich].size(); ++panel )
     {
       m_photoDetPanels[rich][panel] =
         getDet<DeRichHPDPanel>( pdPanelName((Rich::DetectorType)rich,(Rich::Side)panel) );
@@ -137,7 +137,7 @@ StatusCode Rich::RayTracing::initialize()
 }
 
 //================================================================================
-// Returns the appropriate detector element name name for the given RICH and panel
+// The HPD panel location
 //================================================================================
 const std::string &
 Rich::RayTracing::pdPanelName( const Rich::DetectorType rich,
@@ -145,13 +145,7 @@ Rich::RayTracing::pdPanelName( const Rich::DetectorType rich,
 {
   if ( m_rich[rich]->exists("HPDPanelDetElemLocations") )
   {
-    const std::vector< std::string > & locs
-      = m_rich[rich]->paramVect<std::string>("HPDPanelDetElemLocations");
-    if ( locs.size() != Rich::NHPDPanelsPerRICH ) 
-    {
-      Exception( "Wrong number of HPDPanelDetElemLocations" );
-    }
-    return locs[panel];
+    return (m_rich[rich]->paramVect<std::string>("HPDPanelDetElemLocations"))[panel];
   }
   else
   {
@@ -375,7 +369,7 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
 
   // set primary mirror data
   photon.setSphMirReflectionPoint( tmpPos );
-  photon.setSphMirrorNum(sphSegment->mirrorNumber());
+  photon.setPrimaryMirror(sphSegment);
 
   // Are we ignoring the secondary mirrors ?
   if ( !m_ignoreSecMirrs )
@@ -449,7 +443,7 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
 
     // set secondary ("flat") mirror data
     photon.setFlatMirReflectionPoint( tmpPos );
-    photon.setFlatMirrorNum(secSegment->mirrorNumber());
+    photon.setSecondaryMirror(secSegment);
 
   } // ignore secondary mirrors
 
@@ -459,7 +453,6 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
 
   return true;
 }
-
 
 //==========================================================================
 // Raytraces from a point in the detector panel back to the spherical mirror

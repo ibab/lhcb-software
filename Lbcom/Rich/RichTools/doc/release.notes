@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2008-02-15 - Chris Jones
+ - Adapt to changes in RichGeomPhoton from Rich/RichKernel
+
 !=========================== RichTools v2r17p1 2008-02-11 ====================
 ! 2008-02-08 - Chris Jones
  - Add fix for bug (found via valgrind) due to a reference to temporary being

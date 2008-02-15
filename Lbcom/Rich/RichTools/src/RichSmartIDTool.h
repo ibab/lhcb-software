@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::SmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.25 2008-02-08 20:57:59 jonrob Exp $
+ *  $Id: RichSmartIDTool.h,v 1.26 2008-02-15 08:45:17 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -103,7 +103,7 @@ namespace Rich
 
   private:
 
-    /** Returns the appropriate detector element name name for the given RICH and panel
+    /** Returns the appropriate detector element name for the given RICH and panel
      *  @param[in] rich  The RICH detector type
      *  @param[in] panel The RICH panel
      *  @return The RICH panel name in the XML description
@@ -113,8 +113,12 @@ namespace Rich
 
   private:
 
-    typedef boost::array<DeRichHPDPanel*, 2> HPDPanelsPerRich;
-    boost::array<HPDPanelsPerRich, 2> m_photoDetPanels;
+    /// photodetector panels per rich
+    typedef boost::array<const DeRichHPDPanel*, Rich::NHPDPanelsPerRICH> HPDPanelsPerRich;
+    /// typedef for photodetector for each rich
+    typedef boost::array<HPDPanelsPerRich, Rich::NRiches> RichHPDPanels;
+    /// photodetector for each rich
+    RichHPDPanels m_photoDetPanels;
 
     /// List of active RichSmartIDs
     mutable LHCb::RichSmartID::Vector m_readoutChannels;
