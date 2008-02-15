@@ -322,9 +322,11 @@ int DimMonObjectManager::serviceParts(std::string serviceStr, std::string &svcty
 }
 
 // Adder
-void DimMonObjectManager::adderCreateDimNames(std::string nodeName, std::vector<std::string> taskName, std::vector<std::string> algorithmName, std::vector<std::string> objectName, std::string serverName){
+int DimMonObjectManager::adderCreateDimNames(std::string nodeName, std::vector<std::string> taskName, std::vector<std::string> algorithmName, std::vector<std::string> objectName, std::string serverName){
   
   MsgStream msgStream(m_msgSvc, m_name);
+  //this function returns the number of objects to be added that were found
+  //evh question: should we put the histogram prefix here MonH* instead of *
   std::string svcName = "*/" + nodeName + "*";
   m_dimBrowser->getServices(svcName.c_str());
   
@@ -393,6 +395,7 @@ void DimMonObjectManager::adderCreateDimNames(std::string nodeName, std::vector<
     }
   }
   
+  
   //creating DimInfoNames and DimServiceNamesAdder Arrays
   for (int k = 0; k < (int) objectUniqueVect1.size(); k++) {
     std::vector<std::string> dimInfoNamesVect1;
@@ -424,6 +427,7 @@ void DimMonObjectManager::adderCreateDimNames(std::string nodeName, std::vector<
   // for (int k = 0; k < (int) m_dimSvcNamesAdderVect1.size(); k++) {
   //   std::cout << "Service : " << m_dimSvcNamesAdderVect1[k] << std::endl;
   // }
+  return (int)objectFoundVect1.size();
 }
 
 // Adder
