@@ -4,9 +4,11 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v4r2 2008-02-15 ===========================
 ! 2008-02-15 - Chris Jones
  - Adapt to changes in RichGeomPhoton and RichRecPointOnRing
- - Rename RichTabulatedSignalDetectionEff RichNominalTabulatedSignalDetectionEff - Add new implementation of RichTabulatedSignalDetectionEff which instead
+ - Rename RichTabulatedSignalDetectionEff RichNominalTabulatedSignalDetectionEff
+ - Add new implementation of RichTabulatedSignalDetectionEff which instead
    of using the nominal HPD Q.E. and mirror reflectivies, determines on a
    track by track basis the a weighted average of those associated to the track
    (i.e. those, for a given mass hypothesis the photons would reflect off / be
