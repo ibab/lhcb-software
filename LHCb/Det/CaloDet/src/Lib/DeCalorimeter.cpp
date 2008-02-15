@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.44 2007-12-05 16:36:19 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.45 2008-02-15 18:06:59 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -590,9 +590,9 @@ StatusCode DeCalorimeter::buildCards( )  {
   
       
     msg << MSG::DEBUG
-        << format ("Card %3d (crate %2d slot %2d) has down %3d left %3d corner %3d previous %3d validation %2d Selection %2d #channels% 5d",
-                   card.number() , card.crate(), card.slot(), card.downNumber(), card.leftNumber(), card.cornerNumber(), 
-                   card.previousNumber(), card.validationNumber(),card.selectionType() ,card.ids().size() ) 
+        << format("Card %3d (crate %2d slot %2d) has down %3d left %3d corner %3d previous %3d validation %2d Selection %2d #channels% 5d",
+                  card.number() , card.crate(), card.slot(), card.downNumber(), card.leftNumber(),card.cornerNumber(),
+                  card.previousNumber(), card.validationNumber(),card.selectionType() ,card.ids().size() ) 
         << endreq;
     msg << MSG::VERBOSE << " >> boundaries : " 
         << cardFirstValidRow(card.number())    << " (" << cardFirstRow( card.number() )     << ") -> "   
@@ -744,9 +744,7 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
     LHCb::CaloCellID pinId(m_caloIndex, 
                            m_pinArea, 
                            m_feCards[iCard].firstRow() + pinRow, 
-                           m_feCards[iCard].firstColumn() + pinCol );    
-    
-
+                           m_feCards[iCard].firstColumn() + pinCol );
 
     CaloPin pin;
     if( 0 <=  m_pins.index(pinId) ) {      
@@ -775,9 +773,14 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
     }
     // update CaloRegion
     m_pins[pinId].addCaloRegion(area, fCol,fRow,lCol,lRow);
-    if( area2 >= 0)m_pins[pinId].addCaloRegion(area2,fCol2,fRow2,lCol2,lRow2); // Hcal Leds can be  distributed on 2 areas
+    if( area2 >= 0)m_pins[pinId].addCaloRegion(area2,fCol2,fRow2,lCol2,lRow2); 
+    // Hcal Leds can be  distributed on 2 areas
 
     msg << MSG::DEBUG << "-->"  << m_pins[pinId] << endreq;    
+
+
+    int nleds = m_pins[pinId].leds().size();
+    
 
     // Built the Led system
     int rSize = (lRow-fRow+1)/rLed;
@@ -803,7 +806,7 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
         int jr = rLed+1-ir;
         int jc = ic;
         if(0 == side)jc = cLed+1-ic;
-        int ledIndex = jc + (jr-1)*cLed;
+        int ledIndex = jc + (jr-1)*cLed  + nleds ;//increment !!
 
         int fColLed = fCol + (ic-1)*cSize ;
         int lColLed = fColLed + cSize -1 ;
@@ -836,14 +839,15 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
 
 
  
-    // Link to cell
+    // Link to cell (if not done yet)
     std::vector<int>& leds = m_pins[pinId].leds();
-    for(std::vector<int>::iterator iled=leds.begin() ; 
+    for(std::vector<int>::iterator iled=leds.begin() + nleds ; 
         iled != leds.end() ; ++iled ) {
       
-      int ledNum = (*iled);
+      int ledNum = (*iled); 
       CaloLed& led = m_leds[ ledNum ];
-      
+      msg << MSG::VERBOSE << " LED " << ledNum << endreq;
+
       for( unsigned int ireg = 0 ; ireg < led.areas().size();  ++ireg ){
         int ar = led.areas()[ireg];
         int fr = led.firstRows()[ireg];
@@ -869,7 +873,8 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
 
   // check all cells (including virtual) are connected to a Led
   for(CaloVector<CellParam>::iterator icel = m_cells.begin(); icel != m_cells.end() ; ++icel){
-    msg << MSG::VERBOSE << " Cell " << (*icel).cellID() << " <- Led " << (*icel).leds() << " -> Pin " << (*icel).pins() << endreq;
+    msg << MSG::VERBOSE << " Cell " << (*icel).cellID() 
+        << " <- Led " << (*icel).leds() << " -> Pin " << (*icel).pins() << endreq;
     if(  0 == (*icel).leds().size() ){
       msg << MSG::ERROR << "Cell id = " << (*icel).cellID() << " is not connect to the monitoring system."<< endreq;
       return StatusCode::FAILURE;
