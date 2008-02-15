@@ -1,4 +1,4 @@
-# $Id :$
+# $Id: requirements,v 1.9 2008-02-15 11:39:36 jpalac Exp $
 package MicroDST
 version v3r1
 
