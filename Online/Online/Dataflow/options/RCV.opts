@@ -1,0 +1,14 @@
+#include "$ONLINETASKS/options/SvcMapping.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+Runable.Wait                         = 3;  // noop
+ApplicationMgr.SvcOptMapping        += { "LHCb::MEPManager/MEPManager" };
+ApplicationMgr.ExtSvc               += {"LHCb::SocketDataReceiver/Receiver" };
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionBuffers          = true;
+MEPManager.Buffers                   = {"Events"};
+Receiver.Buffer                      = "Events";
+// Receiver.UseEventRequests         = true;
+#include "$ONLINETASKS/options/MessageSvc.opts"
+MessageSvc.OutputLevel = 1;

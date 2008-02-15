@@ -1,0 +1,4 @@
+#!/bin/bash
+. /group/online/dataflow/scripts/preamble.sh
+. /group/online/dataflow/scripts/exportDisplay.sh $*
+xterm  -ls -132 -geometry 132x65 -title ${HOST}/MBMMon -e "export UTGID=${HOST}/${MBMMon}_$$; exec -a ${HOST}/MBMMon `which gentest.exe` libOnlineKernel.so mbm_mon" &

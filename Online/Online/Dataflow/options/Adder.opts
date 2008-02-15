@@ -1,0 +1,6 @@
+ApplicationMgr.ExtSvc    = { "MonitorSvc" };
+//ApplicationMgr.TopAlg  = { "Adder" };
+//Adder.OutputLevel      = 1;
+ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
+ApplicationMgr.EvtSel    = "NONE"; // do not use any event input
+ApplicationMgr.Runable   = "LHCb::OnlineRunable/Runable";

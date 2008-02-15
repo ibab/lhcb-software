@@ -1,0 +1,3 @@
+// ApplicationMgr.SvcOptMapping        += { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+ApplicationMgr.SvcOptMapping        += { "LHCb::OnlineEvtSelector/EventSelector"};
+// ApplicationMgr.SvcOptMapping        += { "LHCb::DimDataReceiver/Receiver" };

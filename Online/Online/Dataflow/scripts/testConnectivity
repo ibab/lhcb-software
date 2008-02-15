@@ -1,0 +1,41 @@
+#!/usr/bin/python
+import sys, socket, xmlrpclib, SimpleXMLRPCServer
+class Reply:
+  def __init__(self):      pass
+  def answer(self,arg):    return str(arg)+'1234567890'
+
+def runServer(host=None):
+  if host is None: host=socket.gethostname().split('.')[0]+'-d1'
+  server = SimpleXMLRPCServer.SimpleXMLRPCServer((host, 8887))
+  server.register_instance(Reply())
+  print 'Server started. Interface:',host
+  server.serve_forever()
+
+def runClient(host):
+  h = 'http://'+host+':8887'
+  print 'Connecting to ',h
+  server = xmlrpclib.Server(h)
+  arg = '1234567890'
+  for i in xrange(100000):
+    res = server.answer(arg)
+    l = len(res)
+    if ((l%100)==0):
+      print 'Message length:',l
+    arg = res
+
+if __name__ == "__main__":
+  for j in xrange(len(sys.argv)):
+    i = sys.argv[j]
+    if i=='-s':
+      if len(sys.argv)==j+2:
+        runServer(sys.argv[j+1])
+      else:
+        runServer()
+    elif i=='-c':
+      runClient(sys.argv[j+1])
+    elif i == '-h':
+      print 'testConnectivity -option [-option]'
+      print 'test connectivity between data interfaces of nodes.'
+      print ''
+      print 'run server:  testConnectivity -s <interface name> default:',socket.gethostname().split('.')[0]+'-d1'
+      print 'run client:  testConnectivity -c <target interface name>'

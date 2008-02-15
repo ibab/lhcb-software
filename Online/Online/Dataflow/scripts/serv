@@ -1,0 +1,21 @@
+#!/bin/bash
+export UTGID=UpiServ_$$
+. /group/online/dataflow/scripts/preamble.sh
+. ${DATAFLOWDIR}/scripts/cleanEnviron.sh DISPLAY TERM HOST
+#
+export TAN_PORT=YES
+export TAN_NODE=${HOST}
+if test -z "${1}";
+then
+  export SERVER_CONFIG=~/SERVER_CONFIG
+  echo "export SERVER_CONFIG=~/SERVER_CONFIG"
+else
+  export SERVER_CONFIG=${1}
+  echo "SERVER_CONFIG=${SERVER_CONFIG}"
+fi;
+if test -z "${2}"; then
+  shift;
+  . `dirname $0`/exportDisplay.sh $*
+fi;
+export UTGID=${HOST}/Server_$$;
+xterm -ls -132 -geometry 180x65 -title "${UTGID}" -e "export UTGID=${UTGID}; exec -a ${UTGID} `which gentest.exe` libUPI.so upi_server" &

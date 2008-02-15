@@ -1,0 +1,21 @@
+#include "$ONLINETASKS/options/Main.opts"
+ApplicationMgr.ExtSvc                = {"LHCb::DimErrorLogger/ErrorServer"};
+#include "$ONLINETASKS/options/MessageSvc.opts"
+MessageSvc.Format = "% F%42W%S%7W%R%T %0W%M";
+ErrorServer.RefusedClients           = { "PVSS*", 
+                                         "*_SMI*",
+                                         "*task_manager*", 
+                                         "*logger*", 
+                                         "*power_manager*",
+                                         "*ErrSrv*",
+                                         "*ErrLog*"
+                                       };
+//ErrorServer.AcceptedClients          = {"*"};
+//MessageSvc.LoggerOnly = true;
+MessageSvc.OutputLevel               = 3;
+ErrorServer.PrintService             = true;  // Print
+ErrorServer.AcceptVerboseMessages    = false; // Forward VERBOSE messages
+ErrorServer.AcceptDebugMessages      = false; // Forward DEBUG messages
+ErrorServer.AcceptInfoMessages       = true;  // Forward INFO messages
+ErrorServer.MatchNodeName            = false; // Subscribed service names must contain node name!
+Runable.Wait                         = 3;     // 1 if runnign as daemon

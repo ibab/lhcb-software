@@ -1,0 +1,35 @@
+#!/bin/bash
+. /group/online/dataflow/scripts/preamble.sh
+export DIM_DNS_NODE=ecs03
+directory=`dirname $0`
+. ${directory}/cleanEnviron.sh DISPLAY TERM HOST DIM_DNS_NODE
+#
+eval `${directory}/internal/getMonOpts.sh $*`
+export UTGID=${HOST}_SubfarmMon_${subfarm}_$$;
+if test "${help}" = "1";
+    then
+    `which gentest.exe` libROMon.so romon_subfarm -help;
+elif test -z "${subfarm}";
+    then
+    echo "subfamrMon -subfarm=<controls node> -display=<display> -option [-option]";
+    `which gentest.exe` libROMon.so romon_subfarm -help;
+    echo "No controls node specified!";
+elif test "${terminal_type}" = "gnome";
+    then
+    export UTGID=${UTGID}
+    gnome-terminal \
+	--sm-disable \
+	--disable-factory \
+	--hide-menubar \
+	--geometry=128x55 \
+	--title="SubfarmMonitor ---- ${subfarm}  ----  UTGID:${UTGID} " \
+	-e "`which gentest.exe` libROMon.so romon_subfarm \
+	-service=RONodePublish_${subfarm} $*" &
+else
+    xterm \
+	-ls -geometry 128x55 \
+	-title "SubfarmMonitor ---- ${subfarm}  ----  UTGID:${UTGID} " \
+	-e "export UTGID=${UTGID}; \
+	exec -a ${UTGID} `which gentest.exe` \
+	libROMon.so romon_subfarm -service=RONodePublish_$subfarm $*" &
+fi;

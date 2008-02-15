@@ -1,0 +1,31 @@
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.TopAlg                = {"StoreExplorerAlg","LHCb::MDFWriterNet/WriterNet" };
+ApplicationMgr.ExtSvc               += {"IncidentSvc","LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.SvcOptMapping	     ={"LHCb::OnlineRunable/EmptyEventLoop",
+                                       "LHCb::OnlineRunable/Runable",
+					"LHCb::RawDataCnvSvc/RawDataCnvSvc"};
+//ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+MEPManager.PartitionID               = 333;
+MEPManager.Buffers                   = { "Events" };
+Runable.MEPManager                   = "";  // Do not use MEP manager to access MBM buffers
+StoreExplorerAlg.Load                = 0;
+StoreExplorerAlg.PrintFreq           = 0.001;
+WriterNet.Compress                   = 0;
+WriterNet.DataType                   = 1;
+WriterNet.GenerateMD5                = true;
+WriterNet.Connection                 = "file://mdfOutput.dat";
+EventSelector.Input                  = "Events";
+EventSelector.Decode                 = true;
+EventSelector.PartitionID            = 333;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
+
+WriterNet.StorageServerAddr          = "store02.lbdaq.cern.ch";
+WriterNet.StorageServerPort          = 45247;
+WriterNet.RunDBServiceURL            = "http://lbondiskdev.cern.ch:8080/";
+WriterNet.MaxFileSizeMB              = 100;
+WriterNet.SndRcvSizes                = 6553600;
+WriterNet.FilePrefix                 = "/daqarea/MDFWriterNet_File_";
+

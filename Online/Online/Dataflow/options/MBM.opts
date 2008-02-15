@@ -1,0 +1,12 @@
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.ExtSvc               += { "MonitorSvc/MonitorSvc" };
+ApplicationMgr.Dlls                 += { "Gaucho" };
+ApplicationMgr.ExtSvc               += { "LHCb::MEPManager/MBM" };
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+MBM.PartitionBuffers                 = true;
+MBM.PartitionID                      = @OnlineEnv.PartitionID;
+MBM.InitFlags = "-i=Events -s=8096 -e=128 -u=64 -f -c";
+Runable.Wait                         = 3;  // 1 of running as daemon
+#include "$ONLINETASKS/options/MessageSvc.opts"

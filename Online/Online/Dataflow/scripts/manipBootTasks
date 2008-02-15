@@ -1,0 +1,19 @@
+#!/bin/bash
+directory=`dirname ${0}`;
+. ${directory}/pvss_preamble.sh
+#
+if test -z "${1}" || test -z "${2}";
+then
+    echo "Usage `basename ${0}` option [option]";
+    echo "     0: -dns=<dns> DIM DNS node [optional]";
+    echo "     1: node set passed to tmStart";
+    echo "     2: start, stop, restart";
+else
+    eval `${directory}/internal/getMonOpts.sh $*`
+    if test -n "${dns}";
+	then
+	export DIM_DNS_NODE=${dns};
+    fi;
+    /opt/FMC/bin/tmStart -m ${1} -e -o ${directory}/internal/manipTasks.sh ${2}
+fi;
+

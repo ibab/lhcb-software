@@ -1,0 +1,2 @@
+// MessageSvc.LoggerOnly          = true;  // Set to false for stdout
+MessageSvc.OutputLevel         = 4;
