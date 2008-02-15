@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.h,v 1.7 2008-02-11 17:14:49 jpalac Exp $
+// $Id: CopyRelatedMCParticles.h,v 1.8 2008-02-15 11:36:46 jpalac Exp $
 #ifndef COPYRELATEDMCPARTICLES_H 
 #define COPYRELATEDMCPARTICLES_H 1
 
@@ -74,13 +74,6 @@ private:
   LHCb::MCParticle* storeMCParticle(const LHCb::MCParticle* mcp,
                                     bool storeOriginVertex = false);
 
-  /**
-   *
-   *
-   * @author Juan Palacios juancho@nikhef.nl
-   */
-  inline bool deepCloneMCVertex() { return m_deepCloneMCVertex; }  
-
 private:
 
   typedef LHCb::MCParticle::Container MCParticles;
@@ -96,8 +89,6 @@ private:
   Particle2MCLinker* m_compositeLinker; ///< Linker for composite particles
  
   Particle2MCLinker* m_linksLinker; ///< Linker for basic particles
-
-  bool m_deepCloneMCVertex; ///< control whether MCVertex's products should also be cloned
 
   ICloneMCParticle* m_cloner;
   
