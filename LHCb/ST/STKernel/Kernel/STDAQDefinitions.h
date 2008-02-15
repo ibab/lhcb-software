@@ -1,17 +1,12 @@
-// $Id: STDAQDefinitions.h,v 1.1.1.1 2007-11-16 16:15:15 mneedham Exp $
+// $Id: STDAQDefinitions.h,v 1.2 2008-02-15 06:28:51 cattanem Exp $
 #ifndef _STDAQDefinitions_H
 #define _STDAQDefinitions_H
 
-//#include <utility>  
-//#include <vector>
-
-#include "Event/RawBank.h"
-
+#include <utility>  
 
 class STTell1ID;
-class ITCluster;
 
-/** @namespace STDAQDefinitions STDAQDefinitions.h  STDAQ/STDefinitions
+/** @namespace STDAQDefinitions STDAQDefinitions.h  Kernel/STDAQDefinitions.h
  *
  *  Namespace for some useful type definitions and const
  *

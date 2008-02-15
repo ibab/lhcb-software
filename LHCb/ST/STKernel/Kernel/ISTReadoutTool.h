@@ -1,10 +1,11 @@
-// $Id: ISTReadoutTool.h,v 1.3 2008-02-14 09:57:12 mneedham Exp $
+// $Id: ISTReadoutTool.h,v 1.4 2008-02-15 06:28:51 cattanem Exp $
 #ifndef _ISTReadoutTool_H
 #define _ISTReadoutTool_H
 
 #include "GaudiKernel/IAlgTool.h"
 
 #include <string>
+#include <vector>
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/STTell1ID.h"
 #include "Event/STCluster.h"
@@ -12,7 +13,6 @@
 class STTell1Board;
 
 namespace LHCb{
- class STCluster;
  class STChannelID;
 };
 
