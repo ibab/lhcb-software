@@ -1,4 +1,4 @@
-// $Id: RecVertexClonerFunctors.h,v 1.1.1.1 2007-12-10 09:32:24 jpalac Exp $
+// $Id: RecVertexClonerFunctors.h,v 1.2 2008-02-15 13:05:57 jpalac Exp $
 #ifndef RECVERTEXCLONERFUNCTORS_H 
 #define RECVERTEXCLONERFUNCTORS_H 1
 
@@ -40,9 +40,6 @@ namespace MicroDST {
                                   const SmartRefVector<LHCb::Track>& tracks) 
     {
       pv->clearTracks();
-      std::cout << "RecVertexClonerShallowTracks PV clone has " 
-                << tracks.size() 
-                << " tracks" << std::endl;
       typedef SmartRefVector<LHCb::Track>::const_iterator tk_iterator;
       for (tk_iterator iTrack = tracks.begin(); 
            iTrack != tracks.end();

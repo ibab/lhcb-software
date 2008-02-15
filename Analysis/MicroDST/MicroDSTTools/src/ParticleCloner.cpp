@@ -1,4 +1,4 @@
-// $Id: ParticleCloner.cpp,v 1.2 2008-02-11 22:42:26 jpalac Exp $
+// $Id: ParticleCloner.cpp,v 1.3 2008-02-15 13:05:57 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -32,7 +32,7 @@ ParticleCloner::ParticleCloner( const std::string& type,
   m_vertexCloner(0),
   m_vertexClonerName("VertexCloner")
 {
-  std::cout << "In ParticleCloner constructor" << std::endl;
+
   declareInterface<ICloneParticle>(this);
 
   declareProperty("ICloneVertex", m_vertexClonerName);
