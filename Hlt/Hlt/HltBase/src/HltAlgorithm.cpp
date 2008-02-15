@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.27 2008-01-25 16:57:12 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.28 2008-02-15 15:33:11 graven Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -18,8 +18,6 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   : HltBaseAlg ( name , pSvcLocator )
 {
   
-  HltBaseAlg::create();
-
   declareProperty("PassPeriod", m_passPeriod = 0);  
   declareProperty("HistogramUpdatePeriod" , m_histogramUpdatePeriod = 0 );
   declareProperty("SaveConfiguration", m_saveConf = true);

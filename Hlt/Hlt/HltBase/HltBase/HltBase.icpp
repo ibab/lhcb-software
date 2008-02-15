@@ -1,10 +1,9 @@
-// $Id: HltBase.icpp,v 1.3 2008-02-13 09:15:49 pkoppenb Exp $
+// $Id: HltBase.icpp,v 1.4 2008-02-15 15:33:10 graven Exp $
 // Include files
 
 
 // local
 #include "HltBase/HltBase.h"
-#include "HltBase/EParser.h"
 #include "Event/HltSummary.h"
 #include "Event/RecVertex.h"
 #include "HltBase/HltConfigurationHelper.h"
@@ -52,24 +51,15 @@ StatusCode HltBase<EBASE>::initialize() {
 template <class EBASE>
 void HltBase<EBASE>::initializeMsg() {
 
-  m_verbose = false;
-  m_debug   = false;
-  m_info    = false;
-  m_warning = false;
-  m_error   = false;
+  m_verbose = EBASE::msgLevel(MSG::VERBOSE);             
+  m_debug   = EBASE::msgLevel(MSG::DEBUG)   || m_verbose ;
+  m_info    = EBASE::msgLevel(MSG::INFO)    || m_debug   ;
+  m_warning = EBASE::msgLevel(MSG::WARNING) || m_info    ;
+  m_error   = EBASE::msgLevel(MSG::ERROR)   || m_warning ;
   m_fatal   = true;
 
-  if (EBASE::msgLevel(MSG::ERROR)) {m_error = true;}
-  if (EBASE::msgLevel(MSG::WARNING)) {m_error = true; m_warning = true;}
-  if (EBASE::msgLevel(MSG::INFO)) 
-  {m_error = true; m_warning = true; m_info = true;}
-  if (EBASE::msgLevel(MSG::DEBUG)) 
-  {m_error = true; m_warning = true; m_info = true; m_debug = true;}
-  if (EBASE::msgLevel(MSG::VERBOSE)) 
-  {m_error=true; m_warning = true; m_info = true; m_debug = true; m_verbose=true;}
-
   EBASE::debug() << " msg level " 
-                << m_info << m_debug << m_verbose << endreq;
+                 << m_info << m_debug << m_verbose << endreq;
 }
 
 template <class EBASE>
@@ -90,7 +80,7 @@ template <class EBASE>
 void HltBase<EBASE>::infoCandidates(  int nTotCandidates, int  nTotEvts, 
                                       const std::string& comment)
 {
-  double f = (nTotEvts<=0? 0.: float(nTotCandidates)/float(nTotEvts) );
+  double f = (nTotEvts<=0? 0.: double(nTotCandidates)/double(nTotEvts) );
   EBASE::info() << " N  candidates " << comment << " \t" << f  << endreq;
 }
 
@@ -116,16 +106,14 @@ Hlt::Histo* HltBase<EBASE>::initializeHisto(const std::string& title,
   Hlt::Histo* histo = 0;
   if (!m_monitor) return histo;
 
-  Gaudi::Histo1DDef hd(title,x0,xf,nbins);
   const std::map<std::string,Gaudi::Histo1DDef>& values = 
-    m_histoDescriptor.value();
-  for (std::map<std::string,Gaudi::Histo1DDef >::const_iterator 
-         it = values.begin(); it != values.end(); ++it) {
-    if (it->first == title) { hd = it->second;}
-  }
-  histo = EBASE::book(hd);
+        m_histoDescriptor.value();
+  std::map<std::string,Gaudi::Histo1DDef>::const_iterator i = 
+        values.find(title);
+  Gaudi::Histo1DDef hd = (i!=values.end()) ? i->second 
+                                           : Gaudi::Histo1DDef(title,x0,xf,nbins);
   EBASE::debug() << " booking histo  " << hd << endreq;
-  return histo;
+  return EBASE::book(hd);
 };
 
 template <class EBASE>
@@ -170,7 +158,6 @@ template <class EBASE>
 IDataProviderSvc& HltBase<EBASE>::hltSvc() {
   if (m_hltSvc != 0) return *m_hltSvc;
   StatusCode sc = EBASE::serviceLocator()->service("HltSvc", m_hltSvc);
-  //  if (sc.isFailure() || !m_hltSvc) 
   EBASE::Assert( m_hltSvc != 0, " hltSvc() no HltDataSvc");
   return *m_hltSvc;
 }
@@ -196,7 +183,8 @@ Hlt::Configuration& HltBase<EBASE>::hltConf()
 {
   if (m_hltConf != 0) return *m_hltConf;
   std::string loca = "/Event/"+m_hltConfigurationLocation;
-  SmartDataPtr<Hlt::Configuration> obj(&hltSvc(),loca); m_hltConf = obj;
+  SmartDataPtr<Hlt::Configuration> obj(&hltSvc(),loca); 
+  m_hltConf = obj;
   EBASE::Assert( m_hltConf != 0, " hltConf() no Hlt::Configuration");
   return *m_hltConf;
 }
