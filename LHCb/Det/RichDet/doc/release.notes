@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v10r10 2008-02-15 ==========================
 ! 2008-02-15 - Chris Jones
  - Add a new public method to DeRichHPDPanel to return a pointer to the 
    DeRichHPD object associated to a given HPD as defined by a RichSmartID
