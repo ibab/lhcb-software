@@ -1,9 +1,14 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.86 2008-02-15 07:42:17 cattanem Exp $
+! $Id: release.notes,v 1.87 2008-02-15 17:36:33 pkoppenb Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2008-02-15 - Patrick Koppenburg
+ - VertexBase: two new methods returning the chi2/Dof and allowing to set
+   the chi2 and the dof at the same time/. The names are the same as the ones
+   used in Track.
 
 !========================= RecEvent v2r15 2008-02-06 =========================
 ! 2008-02-15 - Marco Cattaneo

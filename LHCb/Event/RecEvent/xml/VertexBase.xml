@@ -113,6 +113,28 @@
         init="-1"
 	/>
 
+      <method
+        type    = 'double'
+        name    = 'chi2PerDoF'
+        desc    = 'Retrieve the Chi^2/DoF of vertex'
+        const   = 'TRUE'>
+        <code>
+  return ( (m_nDoF > 0) ? m_chi2 / double(m_nDoF) : -1. );
+        </code>
+      </method>
+
+      <method
+        type    = 'void'
+        name    = 'setChi2AndDoF'
+        desc    = 'Set the Chi^2 and the DoF of the vertex (fit)'
+        argList = 'double chi2, int ndof'
+        const   = 'FALSE'>
+        <code>
+  m_chi2 = chi2 ;
+  m_nDoF = ndof ;
+        </code>
+      </method>
+
       <attribute
         name="extraInfo"
         desc="Some addtional user information. Don't use directly. Use *Info() methods."
