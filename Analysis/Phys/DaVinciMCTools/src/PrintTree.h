@@ -1,10 +1,11 @@
-// $Id: PrintTree.h,v 1.3 2008-02-14 08:24:55 pkoppenb Exp $
+// $Id: PrintTree.h,v 1.4 2008-02-15 14:57:07 pkoppenb Exp $
 #ifndef PRINTTREE_H 
 #define PRINTTREE_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "Kernel/DVAlgorithm.h"
+#include "Kernel/Particle2MCLinker.h"
 
 class IPrintMCDecayTreeTool;
 
@@ -30,6 +31,8 @@ protected:
 
 private:
   IPrintDecayTreeTool* m_debug;
-
+  bool m_link ; ///< print truth
+  Particle2MCLinker* m_linker ;
+  
 };
 #endif // PRINTTREE_H

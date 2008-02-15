@@ -1,4 +1,4 @@
-// $Id: PrintTree.cpp,v 1.7 2008-02-14 08:24:55 pkoppenb Exp $
+// $Id: PrintTree.cpp,v 1.8 2008-02-15 14:57:07 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -26,8 +26,9 @@ PrintTree::PrintTree( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
     , m_debug(0)
+    , m_linker(0)
 {
-
+  declareProperty("PrintTruth",m_link=false );
 }
 //=============================================================================
 // Destructor
@@ -44,7 +45,10 @@ StatusCode PrintTree::initialize() {
   
   debug() << "==> Initialize" << endmsg;
   m_debug = tool<IPrintDecayTreeTool>( "PrintDecayTreeTool", this );
-
+  if ( m_link ) {
+    m_linker      = new Particle2MCLinker( this, Particle2MCMethod::Links, "");
+  }
+  
   return StatusCode::SUCCESS;
 };
 
@@ -59,9 +63,9 @@ StatusCode PrintTree::execute() {
   LHCb::Particle::ConstVector parts = desktop()->particles();
   LHCb::Particle::ConstVector::iterator iL;
   for ( iL = parts.begin() ; iL != parts.end() ; iL++ ) {
-    debug() << "Will print a " << (*iL)->particleID().pid() << endmsg ;
-    
-    m_debug->printTree( (*iL) );
+    debug() << "Will print a " << (*iL)->particleID().pid() << endmsg ;  
+    if ( m_link) m_debug->printTree( (*iL), m_linker );
+    else m_debug->printTree( (*iL) );
   }// - loop
   if (!parts.empty()) setFilterPassed(true); 
   else {
