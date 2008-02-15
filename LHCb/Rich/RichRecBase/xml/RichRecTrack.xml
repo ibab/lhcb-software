@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecTrack.xml,v 1.16 2007-11-29 10:00:52 cattanem Exp $
+  * $Id: RichRecTrack.xml,v 1.17 2008-02-15 16:23:45 jonrob Exp $
   *****************************************************************************
   * XML-description of RichrecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -237,7 +237,7 @@
 		type        = "LHCb::RichRecTrack::FloatType"
 		compression = "FALSE" 
 		desc        = "Clone Distance variable" 
-		init        = "9e90" 
+		init        = "FLT_MAX" 
 	/>
             
         <method 
