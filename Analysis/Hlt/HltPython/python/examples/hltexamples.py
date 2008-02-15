@@ -45,9 +45,9 @@ def candidates(selection):
     """
     if (not HLTSUM.hasSelection(selection)): return None
     type = HLTSUM.confString(selection+"/SelectionType")
-    if (type == "Tracks"):
+    if (type == "Track"):
         return HLTSUM.selectionTracks(selection)
-    elif (type == "Vertices"):
+    elif (type == "Vertex"):
         return HLTSUM.selectionVertices(selection)
     return None
 
