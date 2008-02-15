@@ -5,7 +5,7 @@
  *  Header file for utility class : RichHypoData
  *
  *  CVS Log :-
- *  $Id: RichHypoData.h,v 1.18 2007-09-04 16:45:09 jonrob Exp $
+ *  $Id: RichHypoData.h,v 1.19 2008-02-15 14:11:03 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -15,8 +15,8 @@
 #ifndef RICHKERNEL_RICHHYPODATA_H
 #define RICHKERNEL_RICHHYPODATA_H 1
 
-// Gaudi
-#include "GaudiKernel/MsgStream.h"
+// STL
+#include <ostream>
 
 // LHCbKernel
 #include "Kernel/RichParticleIDType.h"

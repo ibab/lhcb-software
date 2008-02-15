@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.20 2007-12-03 13:47:49 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.21 2008-02-15 14:11:03 cattanem Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -16,10 +16,10 @@
 #define RICHKERNEL_RICHDAQDEFINITIONS_H 1
 
 // from STL
+#include <sstream>
 #include <vector>
 
 // GaudiKernel
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/HashMap.h"
 
 // Kernel

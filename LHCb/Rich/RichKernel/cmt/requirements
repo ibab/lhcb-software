@@ -2,17 +2,16 @@
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.67 2008-01-28 09:42:15 cattanem Exp $
+# $Id: requirements,v 1.68 2008-02-15 14:11:03 cattanem Exp $
 #============================================================================
 
 package RichKernel
-version v7r10
+version v7r11
 
 # ================ structure =================================================
 branches RichKernel cmt dict doc src
 
 # ================ dependencies ==============================================
-use DetDesc            v*   Det
 use DAQEvent           v*   Event
 use LHCbKernel         v*   Kernel
 use GaudiAlg           v*

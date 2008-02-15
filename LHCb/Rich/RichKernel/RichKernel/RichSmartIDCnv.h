@@ -5,7 +5,7 @@
  *  Header file for RichSmartID conversion utilities
  *
  *  CVS Log :-
- *  $Id: RichSmartIDCnv.h,v 1.2 2008-02-07 16:45:25 jonrob Exp $
+ *  $Id: RichSmartIDCnv.h,v 1.3 2008-02-15 14:11:03 cattanem Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008
@@ -15,12 +15,12 @@
 #ifndef RICHKERNEL_RichSmartIDCnv_H
 #define RICHKERNEL_RichSmartIDCnv_H 1
 
+// Gaudi
+#include "GaudiKernel/MsgStream.h"
+
 // Kernel
 #include "Kernel/RichSmartID.h"
 #include "RichKernel/RichDAQDefinitions.h"
-
-// forward declarations
-class MsgStream;
 
 namespace Rich
 {
