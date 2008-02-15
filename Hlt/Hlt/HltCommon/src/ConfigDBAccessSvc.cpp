@@ -332,7 +332,7 @@ StatusCode ConfigDBAccessSvc::openConnection() {
    m_context->query( v_msgSvc );
    if ( ! v_msgSvc.empty() ) {
         seal::Handle<seal::IMessageService>& msgSvc = v_msgSvc.front();
-        msgSvc->setOutputLevel( seal::Msg::Debug ); //FIXME: reduce outputlevel...
+        msgSvc->setOutputLevel( seal::Msg::Info ); //FIXME: reduce outputlevel...
    }
    loader->load("CORAL/Services/ConnectionService");
    seal::IHandle<coral::IConnectionService> iHandle =

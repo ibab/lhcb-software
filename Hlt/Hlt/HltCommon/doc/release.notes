@@ -6,6 +6,8 @@
 ! 2008-02-15 - Gerhard Raven
   - PropertyConfigSvc now inherits from IPropertyConfigSvc so it can expose
     some of its functionality to the rest of the world...
+  - reduce the output level of ConfigDBAccessSvc by setting the SEAL 
+    output level from Debug to Info
 
 ! 2008-02-12 Jose A. Hernando
   - adding functions to the factory
