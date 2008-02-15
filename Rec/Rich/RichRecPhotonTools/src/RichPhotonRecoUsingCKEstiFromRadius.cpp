@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.2 2008-01-25 13:33:29 jonrob Exp $
+ * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.3 2008-02-15 10:12:29 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -174,9 +174,9 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       gPhoton.setActiveSegmentFraction  ( fraction       );
       gPhoton.setDetectionPoint         ( pixel->globalPosition() );
       gPhoton.setSmartID                ( pixel->hpdPixelCluster().primaryID() );
-      gPhoton.setMirrorNumValid         ( unambigPhoton  );
-      //gPhoton.setSphMirrorNum           ( 0 );
-      //gPhoton.setFlatMirrorNum          ( 0 );
+      gPhoton.setUnambiguousPhoton      ( unambigPhoton  );
+      //gPhoton.setPrimaryMirror          ( 0 );
+      //gPhoton.setSecondaryMirror        ( 0 );
       // --------------------------------------------------------------------------------------
 
       // photon reco worked !

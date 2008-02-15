@@ -4,7 +4,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::AlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.2 2007-06-01 06:50:12 cattanem Exp $
+ *  $Id: RichAlignmentMonitor.h,v 1.3 2008-02-15 10:13:36 jonrob Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -35,6 +35,9 @@
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichTrackSelector.h"
 
+// RichDet
+#include "RichDet/DeRichSphMirror.h"
+
 // Kernel
 #include "RichKernel/BoostArray.h"
 
@@ -61,8 +64,8 @@ namespace Rich
 
       public:
 
-        /// type definition
-        typedef LHCb::RichGeomPhotonCode::ShortType MirrorNumber;
+        /// Mirror number definition
+        typedef unsigned int MirrorNumber;
 
         /// Standard constructor
         AlignmentMonitor( const std::string& name, ISvcLocator* pSvcLocator );

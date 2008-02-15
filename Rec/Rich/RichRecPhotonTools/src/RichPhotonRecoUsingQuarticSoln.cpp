@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.2 2008-01-25 13:33:29 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.3 2008-02-15 10:12:29 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -573,9 +573,9 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   gPhoton.setActiveSegmentFraction  ( fraction       );
   gPhoton.setDetectionPoint         ( detectionPoint );
   gPhoton.setSmartID                ( smartIDs.primaryID() );
-  gPhoton.setMirrorNumValid         ( unambigPhoton  );
-  gPhoton.setSphMirrorNum           ( sphSegment ? sphSegment->mirrorNumber() : 0 );
-  gPhoton.setFlatMirrorNum          ( secSegment ? secSegment->mirrorNumber() : 0 );
+  gPhoton.setUnambiguousPhoton      ( unambigPhoton  );
+  gPhoton.setPrimaryMirror          ( sphSegment );
+  gPhoton.setSecondaryMirror        ( secSegment );
   if ( msgLevel(MSG::VERBOSE) )
   {
     verbose() << "Created photon " << gPhoton << endreq;

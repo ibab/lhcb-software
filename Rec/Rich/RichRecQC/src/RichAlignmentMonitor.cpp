@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.2 2007-08-13 12:39:23 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.3 2008-02-15 10:13:36 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -210,8 +210,13 @@ StatusCode AlignmentMonitor::execute() {
       // Cherenkov angles
       const double thetaRec = gPhoton.CherenkovTheta();
       const double phiRec = gPhoton.CherenkovPhi();
-      const MirrorNumber sphMirNum = gPhoton.sphMirrorNum();
-      const MirrorNumber flatMirNum = gPhoton.flatMirrorNum();
+      if ( !gPhoton.primaryMirror() || !gPhoton.secondaryMirror() )
+      {
+        Error( "Mirror information not set in photon !" );
+        continue;
+      }
+      const MirrorNumber sphMirNum  = gPhoton.primaryMirror()->mirrorNumber();
+      const MirrorNumber flatMirNum = gPhoton.secondaryMirror()->mirrorNumber();
 
       double delTheta = thetaRec - thetaExpected;
       if ( fabs(delTheta) > m_deltaThetaRange ) continue;
@@ -223,7 +228,7 @@ StatusCode AlignmentMonitor::execute() {
         trueParent = ( NULL != m_richRecMCTruth->trueCherenkovPhoton( photon ) );
       }
 
-      bool unAmbiguousPhoton = photon->geomPhoton().mirrorNumValid();
+      const bool unAmbiguousPhoton = photon->geomPhoton().unambiguousPhoton();
       plot(static_cast<int>(unAmbiguousPhoton), "Un_Amb",
            "Ambigious/Unambigious photons",-0.5,1.5,2 );
 

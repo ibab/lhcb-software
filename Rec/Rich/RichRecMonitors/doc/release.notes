@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-02-15 - Chris Jones
+ - Adapt to changes in RichGeomPhoton
+
 ! 2008-02-07 - Chris Jones
  - Add more comparison histos to pixel position monitor
 

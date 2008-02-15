@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-02-15 - Chris Jones
+ - Adapt to changes in RichGeomPhoton
+
 !======================= RichRecPhotonTools v1r1 2008-01-28 ==================
 ! 2008-01-25 - Chris Jones
  - Improvements to ray tracing photon reconstruction.

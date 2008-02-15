@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::MC::PhotonRecoRayTraceTest
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoRayTraceTest.cpp,v 1.3 2008-01-25 13:27:00 jonrob Exp $
+ *  $Id: RichPhotonRecoRayTraceTest.cpp,v 1.4 2008-02-15 10:11:19 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   03/01/2008
@@ -94,7 +94,7 @@ StatusCode PhotonRecoRayTraceTest::execute()
           iPhot != photons.end(); ++iPhot )
     {
       // photon selection
-      if ( m_rejectAmbigPhots && !(*iPhot)->geomPhoton().mirrorNumValid() ) continue;
+      if ( m_rejectAmbigPhots && !(*iPhot)->geomPhoton().unambiguousPhoton() ) continue;
 
       // Make plots against reco photon
       makePlots( "Reco/",

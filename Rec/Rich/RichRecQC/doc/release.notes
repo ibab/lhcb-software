@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-02-15 - Chris Jones
+ - Adapt to changes in RichGeomPhoton
+
 !======================= RichRecQC v2r16 2008-02-01 ==========================
 ! 2008-02-01 - Chris Jones
  - Minor tweek to signal / background discrimination logic to work with
