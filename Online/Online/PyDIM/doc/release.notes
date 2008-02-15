@@ -1,17 +1,8 @@
-Package: PyDIM
-Author:  Markus Frank
+Requirements:
+   - DIM. The package has been developed using the v16rXX and v17rXX DIM versions. It has not been tested with older versions but I believe it has good chances to work.
+   - The package has been developed on 32 and 64 bits arhitectures.
 
-!=========================== PyDIM v1r3 2007-06-18 ===========================
-! 2007-06-18 - Marco Cattaneo
- - Add a hack to dim_dict.h to workarounc conflicting longlong definitions in
-   Reflex and DIM on amd64
+How to run:
+   - set up the environment and make sure the DIM_DNS_NODE variable is set
+   - execute tests from the PyDIM/tests directory. These can be used as starting examples for development
 
-! 2007-05-02  Markus Frank
- - Removed all python scripts
-
-!=========================== PyDIM v1r1 2006-10-20 ===========================
- 2006-10-10  Markus Frank
-  Upgrade to ROOT::Reflex and PyCintex
-
-!=========================== PyDIM v1r0 2005-05-13 ===========================
-  New Package.

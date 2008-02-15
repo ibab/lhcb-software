@@ -203,7 +203,8 @@ dim_dis_add_exit_handler(PyObject* self, PyObject* args) {
     dis_callbackExitHandler_func.func = temp;
     print("Got function pointer %p and obj pointer %p\n", temp, self);
   } else {
-    PyErr_SetString(PyExc_TypeError, "Argument has to be a function or a bound method");
+    PyErr_SetString(PyExc_TypeError, 
+                    "Argument has to be a function or a bound method");
     return NULL;
   }
   dis_add_exit_handler(dim_dis_callbackExitHandler);
@@ -223,18 +224,20 @@ dim_dis_add_error_handler(PyObject* self, PyObject* args) {
       PyErr_SetString(PyExc_TypeError, "Parameter must be callable");
       return NULL;
     }
-    Py_XINCREF(temp);         /* Add a reference to new callback */
+    /* Add a reference to new callback */
+    Py_XINCREF(temp);
     Py_XINCREF(self);
-    Py_XDECREF(dis_callbackErrorHandler_func.self);  /* Dispose of previous callback */
+    /* Dispose of previous callback */
+    Py_XDECREF(dis_callbackErrorHandler_func.self);  
     Py_XDECREF(dis_callbackErrorHandler_func.func);
     dis_callbackErrorHandler_func.self = self;
     dis_callbackErrorHandler_func.func = temp;
-    print("Got function pointer %p and obj pointer %p", temp, self);
+    //print("Got function pointer %p and obj pointer %p", temp, self);
   } else {
     PyErr_SetString(PyExc_TypeError, "Argument is not a function or a bound method");
     return NULL;
   }
-  dis_add_error_handler( dim_dis_callbackErrorHandler);
+  dis_add_error_handler(dim_dis_callbackErrorHandler);
 
   Py_RETURN_NONE;
 }
@@ -247,19 +250,19 @@ dim_dis_add_client_exit_handler(PyObject* self, PyObject* args) {
       PyErr_SetString(PyExc_TypeError, "parameter must be callable");
       return NULL;
     }
-    Py_XINCREF(temp);         /* Add a reference to new callback */
+    /* Add a reference to new callback */
+    Py_XINCREF(temp);
     Py_XINCREF(self);
-    Py_XDECREF(dis_callbackClientExitHandler_func.self);  /* Dispose of previous callback */
+    /* Dispose of previous callback */
+    Py_XDECREF(dis_callbackClientExitHandler_func.self);  
     Py_XDECREF(dis_callbackClientExitHandler_func.func);
     dis_callbackClientExitHandler_func.self = self;
     dis_callbackClientExitHandler_func.func = temp;
     printf("Client exit handler: Got function pointer %p and obj pointer %p", 
-           temp, self
-           );
+           temp, self);
   } else {
     PyErr_SetString(PyExc_TypeError, 
-                    "Argument has to be a function or a bound method"
-                    );
+                    "Argument has to be a function or a bound method");
     return NULL;
   }
   dis_add_client_exit_handler(dim_dis_callbackClientExitHandler);
@@ -275,9 +278,9 @@ dim_dis_selective_update_service(PyObject* /* self */, PyObject* args) {
   PyObject* listOrTuple;
   int service_id;
 
-  if ( !PyArg_ParseTuple(args, "iO;list or tuple", &service_id, &listOrTuple) ){
+  if (!PyArg_ParseTuple(args, "iO;list or tuple", &service_id, &listOrTuple)) {
     PyErr_SetString(PyExc_TypeError, 
-		    "Arguments have to be an integer and a list/tuple of integers");
+       "Invalid arguments: expected and integer and a list/tuple of integers");
     return NULL;
   }
   if (!listOrTuple2Int(listOrTuple, &client_ids)) {
@@ -287,6 +290,7 @@ dim_dis_selective_update_service(PyObject* /* self */, PyObject* args) {
     return NULL;
   }
   res = dis_selective_update_service(service_id, client_ids);
+ 
   return Py_BuildValue("i", res);
 }
 
@@ -299,7 +303,7 @@ dim_dis_set_quality(PyObject* /* self */, PyObject* args) {
 
   if (!PyArg_ParseTuple(args, "Ii", &service_id, &quality)) {
     PyErr_SetString(PyExc_TypeError, 
-                    "Invalid arguments: expected an unsigned integer and an integer");
+            "Invalid arguments: expected an unsigned integer and an integer");
     return NULL;
   }
   dis_set_quality(service_id, quality);
@@ -313,11 +317,13 @@ dim_dis_set_timestamp(PyObject* /* self */, PyObject* args) {
   unsigned int service_id;
   int secs, milisecs;
 
-  if ( !PyArg_ParseTuple(args, "Iii", &service_id, &secs, &milisecs) ) {
-    PyErr_SetString(PyExc_TypeError, "Invalid arguments: expected an unsigned integer and two integers");
+  if (!PyArg_ParseTuple(args, "Iii", &service_id, &secs, &milisecs)) {
+    PyErr_SetString(PyExc_TypeError, 
+           "Invalid arguments: expected an unsigned integer and two integers");
     return NULL;
   }
   dis_set_timestamp(service_id, secs, milisecs);
+  
   Py_RETURN_NONE;
 }
 
@@ -329,10 +335,12 @@ dim_dis_remove_service(PyObject* /* self */, PyObject* args) {
   int res;
 
   if ( !PyArg_ParseTuple(args, "I", &service_id) ) {
-    PyErr_SetString(PyExc_TypeError, "Invalid argument: expected an unsigned integer");
+    PyErr_SetString(PyExc_TypeError, 
+                    "Invalid argument: expected an unsigned integer");
     return NULL;
   }
   res = dis_remove_service(service_id);
+  
   return Py_BuildValue("i", res);
 }
 
@@ -350,14 +358,14 @@ dim_dis_get_next_cmnd(PyObject* /* self */, PyObject* args) {
 
   if ( !PyArg_ParseTuple(args, "I", &size) ) {
     PyErr_SetString(PyExc_TypeError, 
-                    "Invalid argument: expected an unsigned integer"
-                    );
+                    "Invalid argument: expected an unsigned integer");
     return NULL;
   }
   buffer = (int*)malloc(size*sizeof(int));
   res = dis_get_next_cmnd(&tag, buffer, &size);
   tmp = Py_BuildValue("(iis#)", res, tag, buffer, size);
   free(buffer);
+
   return tmp;
 }
 
@@ -372,6 +380,7 @@ dim_dis_get_client(PyObject* /* self */, PyObject* args) {
     return NULL;
   }
   res = dis_get_client(name);
+
   return Py_BuildValue("i", res);
 }
 
@@ -381,6 +390,7 @@ dim_dis_get_conn_id(PyObject* /* self */, PyObject* /* args */) {
    */
   int res;
   res = dis_get_conn_id();
+
   return Py_BuildValue("i", res);
 }
 
@@ -392,11 +402,11 @@ dim_dis_get_timeout(PyObject* /* self */, PyObject* args) {
   int client_id, res;
   if ( !PyArg_ParseTuple(args, "Ii", &service_id, &client_id) ) {
     PyErr_SetString(PyExc_TypeError, 
-                    "Invalid argument: expected an unsigned int and an int"
-                    );
+                    "Invalid argument: expected an unsigned int and an int");
     return NULL;
   }
   res = dis_get_timeout(service_id, client_id);
+
   return Py_BuildValue("i", res);
 }
 
@@ -412,6 +422,7 @@ dim_dis_get_client_services(PyObject* /* self */, PyObject* args) {
     return NULL;
   }
   res = dis_get_client_services(conn_id);
+
   return Py_BuildValue("s", res);
 }
 
@@ -426,6 +437,7 @@ dim_dis_set_client_exit_handler(PyObject* /* self */, PyObject* args) {
     return NULL;
   }
   dis_set_client_exit_handler(conn_id, tag);
+
   Py_RETURN_NONE;
 }
 
@@ -435,6 +447,7 @@ dim_dis_get_error_services(PyObject* /* self */, PyObject* /* args */) {
    */
   char* res=NULL;
   res = dis_get_error_services();
+
   return Py_BuildValue("s", res);
 }
 
@@ -593,11 +606,11 @@ dim_dis_update_service(PyObject* /* self */, PyObject* args) {
     }
   
   Py_BEGIN_ALLOW_THREADS
-    res = dis_update_service(service_id);
+  res = dis_update_service(service_id);
   Py_END_ALLOW_THREADS
   
-    //print("Returning result %d", res);  
-    return Py_BuildValue("i", res);
+  //print("Returning result %d", res);  
+  return Py_BuildValue("i", res);
 }
 
 
@@ -739,6 +752,7 @@ dim_dic_set_dns_node(PyObject* /* self */, PyObject* args) {
     return NULL;
   }
   i = dic_set_dns_node(name);
+  
   return Py_BuildValue("i",i);
 }
 
@@ -751,6 +765,7 @@ dim_dic_get_dns_node(PyObject* /* self */, PyObject* /* args */) {
 
   if ( !dic_get_dns_node(names) )
     names[0] = 0;
+  
   return Py_BuildValue("s", names);
 }
 
@@ -769,6 +784,7 @@ dim_dic_set_dns_port(PyObject* /* self */, PyObject* args) {
     return NULL;
   }
   i = dic_set_dns_port(port);
+  
   return Py_BuildValue("i", i);
 }
 
@@ -781,6 +797,7 @@ dim_dic_get_dns_port(PyObject* /* self */, PyObject* /* args */) {
   port = dim_get_dns_port();
   if ( !port )
     return Py_BuildValue("i", port);
+  
   return NULL;
 }
 
@@ -796,6 +813,7 @@ dim_dic_get_id(PyObject* /* self */, PyObject* /* args */) {
   res = dic_get_id(name);
   if (!res)
     name[0] = 0;
+  
   return Py_BuildValue("s", name);
 }
 
@@ -805,6 +823,7 @@ dim_dic_disable_padding(PyObject* /* self */, PyObject* /* args */) {
    * Returns None.
    */
   dic_disable_padding();
+  
   Py_RETURN_NONE;
 }
 
@@ -817,10 +836,12 @@ dim_dic_get_quality(PyObject* /* self */, PyObject* args) {
   int res;
 
   if ( !PyArg_ParseTuple(args, "I", &service_id) ) {
-    PyErr_SetString(PyExc_TypeError, "service id should be an unsigned integer");
+    PyErr_SetString(PyExc_TypeError, 
+                    "Invalid argument: expected an unsigned integer");
     return NULL;
   }
   res = dic_get_quality(service_id);
+  
   return Py_BuildValue("i", res);
 }
 
@@ -842,6 +863,7 @@ dim_dic_get_timestamp(PyObject* /* self */, PyObject* args) {
     return NULL;
   }
   res = dic_get_timestamp(service_id, &secs, &milisecs);
+  
   return Py_BuildValue("ii", secs, milisecs);
 }
 
@@ -860,6 +882,7 @@ dim_dic_get_format(PyObject* /* self */, PyObject* args) {
     return NULL;
   }
   format = dic_get_format(service_id);
+  
   return Py_BuildValue("s", format);
 }
 
@@ -985,17 +1008,18 @@ dim_dic_info_service(PyObject* /* self */, PyObject* args) {
   //invalid arguments
  invalid_args:
   PyErr_SetString(PyExc_TypeError,
-		  "Invalid parameters. Expected:string name               ,\
-                                        string format             ,\
-                                        int service_type          ,\
-                                        int timeout               ,\
-                                        PyObject* callbackFunction,\
-                                        int tag                   ,\
-                                        PyObject* default_value"
+		  "Invalid parameters. Expected:string name        ,"\
+                  "                      string format             ,"\
+                  "                      int service_type          ,"\
+                  "                      int timeout               ,"\
+                  "                      PyObject* callbackFunction,"\
+                  "                      int tag                   ,"\
+                  "                      PyObject* default_value"
 		  );
   return NULL;
+
   //alocate memory problem
- no_memory:
+no_memory:
   PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
   Py_DECREF(pyFunc);
   return NULL;
@@ -1036,9 +1060,10 @@ dim_dic_get_server(PyObject* /* self */, PyObject* args) {
     goto invalid_arguments;
   }
   service_id = dic_get_server(server_name);
-  return Py_BuildValue("i", service_id);
+  
+ return Py_BuildValue("i", service_id);
     
- invalid_arguments:
+invalid_arguments:
   PyErr_SetString(PyExc_TypeError,
 		  "Invalid parameters. Expected argument:string service_name");                                         
   return NULL;      
@@ -1069,9 +1094,9 @@ dim_dic_get_server_services(PyObject* /* self */, PyObject* args) {
   if ( !PyArg_ParseTuple(args, "i", &conn_id) ){
     goto invalid_arguments;
   }
-     
   server_names = dic_get_server_services(conn_id);
   ret = stringList_to_tuple(server_names);    
+
   return ret;
     
  invalid_arguments:
@@ -1115,7 +1140,7 @@ dim_dic_add_error_handler(PyObject* /* self */, PyObject* args) {
     
  invalid_arguments:
   PyErr_SetString(PyExc_TypeError, 
-		  "Invalid parameters. Expected argument: python callable object ");                                                  
+		  "Invalid parameters. Expected argument: callable object ");                                                
   return NULL;    
 } 
 
@@ -1141,18 +1166,18 @@ dim_dic_cmnd_service(PyObject* /* self */, PyObject* args) {
   if (!iterator_to_buffer(tuple, buffer, buffer_size, format))
     goto error;    
   Py_BEGIN_ALLOW_THREADS
-    res = dic_cmnd_service(service_name, buffer, buffer_size);
+  res = dic_cmnd_service(service_name, buffer, buffer_size);
   Py_END_ALLOW_THREADS
-    /* freeing allocated buffer */
-    free(buffer);
+  /* freeing allocated buffer */
+  free(buffer);
     
   return Py_BuildValue("i", res);    
     
  invalid_arguments:
   PyErr_SetString(PyExc_TypeError, 
-		  "Invalid parameters. Expected: string service_name (string),\n\
-                                                       tuple data,\n\
-                                                       string format" 
+		  "Invalid parameters. Expected: string service_name (string), \n"\
+                  "                              tuple data, \n"\
+                  "                              string format" 
 		  );
   return NULL;
             
@@ -1224,11 +1249,12 @@ dim_dic_cmnd_callback(PyObject* /* self */, PyObject* args) {
     
  invalid_arguments:
   PyErr_SetString(PyExc_TypeError, 
-		  "Invalid parameters. Expected: string service_name,\n\
-                                         tuple command_data,\n\
-                                         string format, \n\
-                                         Callable Object cmnd_callback \n\
-                                         int tag");
+	  "Invalid parameters. Expected: string service_name, \n"\
+          "                              tuple command_data, \n"\
+          "                              string format, \n"\
+          "                              Callable Object cmnd_callback \n"\
+          "                              int tag"
+                 );
   return NULL;
     
  error:
@@ -1263,16 +1289,15 @@ void _dic_cmnd_callback_dummy(void* uniqueTagPtr, int* ret_code) {
     return;
   }
   res = pyCallFunction(callback->func, 
-		       Py_BuildValue("li", callback->tag, *ret_code) 
-		       );    
+		       Py_BuildValue("li", callback->tag, *ret_code));    
   //deleting callback information
   Py_DECREF(res);
   Py_DECREF(callback->func);
   _dic_cmnd_callback_tag2Callback.erase(uniqueTag);
   free(callback);
-    
   print("Callback successfully completed");
-  return;        
+
+  return;   
 }
 
 
@@ -1286,8 +1311,7 @@ void _dic_error_user_routine_dummy(int severity, int error_code, char* message) 
     return;
   }
   pyCallFunction(_dic_callback_errorHandler, 
-		 Py_BuildValue("iis", severity, error_code, message)
-		 );
+		 Py_BuildValue("iis", severity, error_code, message));
 }
 
 void _dic_info_service_dummy (void* /* tag */, void* buffer, int* size) {
@@ -1314,7 +1338,7 @@ void _dic_info_service_dummy (void* /* tag */, void* buffer, int* size) {
     res = PyEval_CallObject(svc->func, args);
     PyGILState_Release(gstate);
   } else {
-    //service failed and a default value was not specified
+    /* service failed and a default value was not specified */
     print("Service error or could not get values from it");
     return;
   }
@@ -1559,8 +1583,4 @@ initdimc(void)
   dis_disable_padding();
   PyEval_InitThreads();
 }
-
-
-
-
 

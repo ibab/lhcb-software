@@ -11,9 +11,9 @@ extern "C" {
 
 #include "pydim_utils.cpp"
 
-/****************************************************************************
+/** **************************************************************************
  * DimRpc Wrapper 
- * **************************************************************************/
+ ** **************************************************************************/
 class DimRpcWrapper: public DimRpc
 /* This class is only a proxy to pass the call from the C++ rpcHandler
  * function to the Python implementation. For this a reference to the 
@@ -858,3 +858,4 @@ PyMODINIT_FUNC initdimcpp(void)  {
     
   PyEval_InitThreads();
 }
+

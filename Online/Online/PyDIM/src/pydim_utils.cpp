@@ -26,8 +26,8 @@ extern "C" {
 #ifdef _WIN32
 #include <cstdarg>
 static inline void ___print(const char* fmt,...) 
-{   va_list args; va_start(args,fmt); vprintf(fmt,args); printf("\n"); va_end(args);   }
-#define print   printf("DIM Wrapper: %s:%u ::%s: ", __FILE__, __LINE__, __FUNCTION__); ___print
+{ va_list args; va_start(args,fmt); vprintf(fmt,args); printf("\n"); va_end(args); }
+#define print printf("DIM Wrapper: %s:%u ::%s: ", __FILE__, __LINE__, __FUNCTION__); ___print
 #else
 #define print(...) printf("DIM Wrapper: %s:%u ::%s: ", __FILE__, __LINE__, __FUNCTION__); printf(__VA_ARGS__); printf("\n");
 #endif
@@ -69,7 +69,8 @@ static inline void ___print(const char* fmt,...)
  * Utility functions
  * *************************************************************************/
 #ifndef DIMCPP_MODULE
-static int listOrTuple2Int(PyObject* pyObj, int** buffer) {
+static int listOrTuple2Int(PyObject* pyObj, int** buffer) 
+{
   int size, i, res=1;
   PyObject* tmp;
 
@@ -115,7 +116,8 @@ static int listOrTuple2Int(PyObject* pyObj, int** buffer) {
 #endif
 
 #ifndef DIMCPP_MODULE
-static PyObject* stringList_to_tuple (char* services) {
+static PyObject* stringList_to_tuple (char* services) 
+{
   /* Gets a list of null terminated char* and converts it to a python tuple
    */
   PyObject* tuple=NULL;
@@ -132,16 +134,19 @@ static PyObject* stringList_to_tuple (char* services) {
   i=0;
   while (services[i] != '\0') {
     if (services[i] == '\n') {
-      PyTuple_SetItem(tuple, cur++, PyString_FromStringAndSize(&services[start], i-start) );
+      PyTuple_SetItem(tuple, cur++, 
+                      PyString_FromStringAndSize(&services[start], i-start));
       start=i+1;
     }
   }
+
   return tuple;
 } 
 #endif
 
 #ifndef DIMCPP_MODULE
-static PyObject* pyCallFunction (PyObject* pyFunc, PyObject* args) {
+static PyObject* pyCallFunction (PyObject* pyFunc, PyObject* args) 
+{
   /*  Is the responsibility of the caller to handle the Ref count of both the 
    * sentobject and the result.
    */
@@ -168,7 +173,6 @@ static void printPyObject(PyObject *object)
   if (!object) return;
   PyObject_Print(object, stdout, Py_PRINT_RAW);
   printf("\n");
-  return;
 }
 
 static void printDimBuf(const char *buf, int size) {
@@ -178,7 +182,8 @@ static void printDimBuf(const char *buf, int size) {
 #endif
 
 #ifndef DIMC_MODULE 
-static int verify_dim_format(const char *format)  {
+static int verify_dim_format(const char *format)  
+{
   /* Return True in case of success and False otherwise
    */
   int ptr=0, x, newptr;
@@ -189,46 +194,49 @@ static int verify_dim_format(const char *format)  {
     
   while (ptr<size) {        
     for (newptr=ptr; newptr<size && format[newptr]!=delimiter; newptr++);                 
-    // We have found a new group of parameters
+    /* We have found a new group of parameters */
     if (!strchr(itemtypes, format[ptr]))
-      // This means the type letter is unknown
+      /* This means the type letter is unknown */
       return 0;
     if (ptr+1 == newptr) {
-      /* This means we only have the item type letter. 
-       *  Checking to see if we are at the end
+      /* Here we only have the item type letter. Checking to see if we are 
+       * at the end
        */
       if (newptr == size)
-	// We are at the end, newptr is on the \0 string terminating char
+	/* We are at the end, newptr is on the \0 string terminating char */
 	return 1;
       else 
-	// in the middle of the format string the number of items is missing
+	/* in the middle of the format string the number of items is missing */
 	return 0;            
     } else {
-      // The multiplicity of the parameters is also specified
+      /* The multiplicity of the parameters is also specified */
       if (format[ptr+1] != ':')
 	/* We were expecting a colon separator between the type
 	 * and the multiplicity 
 	 */
 	return 0;
       if (ptr+2 == newptr) 
-	// This means that there is no digit after colon
+	/* This means that there is no digit after colon */
 	return 0; 
       for (x=ptr+2; x<=newptr-1; x++) {
 	if (!strchr(digits, format[x]))
-	  // We were expecting a digit
+	  /* We were expecting a digit */
 	  return 0;                
       }
     } // end if-else
     ptr=newptr+1;            
   } // end while
+
   return 1;
 } // end verify_dim_format
-
 #endif
-static int next_element(const char *schema, unsigned int *p, int *type, int *mult) {
+
+static int next_element(const char *schema, unsigned int *p, 
+                        int *type, int *mult)
+{
   char *endptr;
     
-  // check to see if we haven't gone pass the schema string limit
+  /* check to see if we haven't gone pass the schema string limit */
   if (*p >= strlen(schema))
     return 0;
      
@@ -249,7 +257,7 @@ static int next_element(const char *schema, unsigned int *p, int *type, int *mul
     
   switch (schema[++(*p)]) {
   case '\0': *mult = MUL_INFINITE; break;
-    // this is not stricly correct from DIM point of view.
+    /* this is not stricly correct from DIM point of view. */
   case ';': *mult = 1; ++(*p); break; 
   case ':':              
     (*p)++;              
@@ -261,20 +269,18 @@ static int next_element(const char *schema, unsigned int *p, int *type, int *mul
     *p += (endptr - &schema[*p]) + ((*endptr == ';') ? 1 : 0);              
     break;
   default:
-    printf("Bad multiplicity character %c\n", schema[*p]);
+    print("Bad multiplicity character %c\n", schema[*p]);
     return 0;
-  }    
+  }
   return 1;
 }
 
-static PyObject *dim_buf_to_list(const char *schema, const char *buf, unsigned int len)
+static PyObject *dim_buf_to_list(const char *schema, const char *buf, 
+                                 unsigned int len)
 {
-  /* TODO: check for memory leaks. 
-   * Not sure who owns the new reference after Py<type>_From<type>
-   * 
-   * NOTE: Compilers will pad structures to the arhitecture word size.
+  /* NOTE: Compilers will pad structures to the arhitecture word size.
    * It is NOT recommended to pass the lenght of the buffer using 
-   * strlen() if the last last type field of the format has multiplicity
+   * strlen() if the last type field of the format has multiplicity
    * unlimited. You will see garbage in the buffer after conversion!
    * Workarounds: disable padding from the declared structure and/or
    * specify the exact size of the buffer.
@@ -285,7 +291,7 @@ static PyObject *dim_buf_to_list(const char *schema, const char *buf, unsigned i
   float f;
     
   if ( !(list = PyList_New(0)) ) {
-    // could not create a new Python list
+    /* could not create a new Python list */
     print("Could not create list python object");      
     return NULL;
   }
@@ -315,8 +321,7 @@ static PyObject *dim_buf_to_list(const char *schema, const char *buf, unsigned i
 	mult = (len - n) / _DIM_DOUBLE_LEN;
       for (j = 0; j < mult; ++j)
 	if (n + _DIM_DOUBLE_LEN <= len) {
-	  PyList_Append(list, 
-			PyFloat_FromDouble(*(double *)&buf[n]) );
+	  PyList_Append(list, PyFloat_FromDouble(*(double *)&buf[n]));
 	  n += _DIM_DOUBLE_LEN;                        
 	} else goto short_buffer;
       break;
@@ -325,8 +330,7 @@ static PyObject *dim_buf_to_list(const char *schema, const char *buf, unsigned i
 	mult = (len - n) / _DIM_XTRA_LEN;
       for (j = 0; j < mult; ++j)
 	if (n + _DIM_XTRA_LEN <= len) {
-	  PyList_Append(list, 
-			PyLong_FromLongLong(*(long long *)&buf[n]));
+	  PyList_Append(list, PyLong_FromLongLong(*(long long *)&buf[n]));
 	  n += _DIM_XTRA_LEN;
 	} else goto short_buffer;
       break;
@@ -341,7 +345,7 @@ static PyObject *dim_buf_to_list(const char *schema, const char *buf, unsigned i
 	n += mult;
       } else {
 	int p=len-n-1;
-	//goto short_buffer;
+	/* goto short_buffer; */
 	while (p && buf[p] == '\0')
 	  --p;
 	tmp = PyString_FromStringAndSize(&buf[n], p+1);
@@ -355,7 +359,7 @@ static PyObject *dim_buf_to_list(const char *schema, const char *buf, unsigned i
       for (j = 0; j < mult; ++j)
 	if (n + _DIM_SHORT_LEN <= len) {
 	  // ugly
-	  PyList_Append( list, PyInt_FromLong( *(short int *)&buf[n]) );                         
+	  PyList_Append(list, PyInt_FromLong(*(short int *)&buf[n]));                         
 	  n += _DIM_SHORT_LEN;
 	} else goto short_buffer;
       break;
@@ -364,9 +368,9 @@ static PyObject *dim_buf_to_list(const char *schema, const char *buf, unsigned i
     } // end switch
   } // end while
 
-    // print("Converting DIM buffer to list");
-    // printDimBuf(buf, len);
-    // printPyObject(list);
+  // print("Converting DIM buffer to list");
+  // printDimBuf(buf, len);
+  // printPyObject(list);
   return list;
 
  short_buffer:
@@ -376,7 +380,8 @@ static PyObject *dim_buf_to_list(const char *schema, const char *buf, unsigned i
   return NULL;
 }
 
-static PyObject* list2Tuple(PyObject* list)  {
+static PyObject* list2Tuple(PyObject* list)  
+{
   int size, i;
   PyObject* tuple;
   
@@ -389,10 +394,12 @@ static PyObject* list2Tuple(PyObject* list)  {
   }  
   //  printPyObject(list);
   //  printPyObject(tuple);
+  
   return tuple;
 }
 
-static PyObject* dim_buf_to_tuple(const char *schema, const char *buf, int len)  {
+static PyObject* dim_buf_to_tuple(const char *schema, const char *buf, int len)  
+{
   PyObject *list, *tuple;    
     
   list = dim_buf_to_list(schema, buf, len);
@@ -401,12 +408,13 @@ static PyObject* dim_buf_to_tuple(const char *schema, const char *buf, int len) 
     return NULL;
   }    
   tuple = list2Tuple(list);
-  Py_DECREF(list);
+    Py_XDECREF(list);
+  
   return tuple;
 }
 
-static unsigned int
-getSizeFromFormat(const char* format) {
+static unsigned int getSizeFromFormat(const char* format) 
+{
   int type=0, mult=0, size=0;
   unsigned int ptr=0;
     
@@ -435,7 +443,8 @@ getSizeFromFormat(const char* format) {
 }
 
 #ifndef DIMC_MODULE 
-static unsigned int getElemNrFromFormat(const char *format)  {
+static unsigned int getElemNrFromFormat(const char *format)  
+{
   /* Receives a closed format string and returns the total number of 
    * elements expected from it.
    * In case of any errors returns 0.
@@ -464,6 +473,7 @@ static unsigned int getElemNrFromFormat(const char *format)  {
       return 0;
     }        
   }         
+     
   return total;
 } 
 #endif
@@ -535,7 +545,8 @@ getSizeFromFormatAndObjects(PyObject *iter, const char* format)
     return total_size;
     break;
   default: 
-    print("Bad type char (%c) extracted from %s.", format[format_size-1], format);
+    print("Bad type char (%c) extracted from %s", 
+          format[format_size-1], format);
     return 0;
   }            
   total_size = total_size + lastobj_size * (iter_size - obj_nr);
@@ -596,10 +607,10 @@ iterator_to_buffer(PyObject     *iter,   /* list or tuple PyObject */
 	buf_ptr += _DIM_LONG_LEN;
 	break;
       case _DIM_STRING:
-	tmp1 = PyObject_Str(tmp); 
-	str = PyString_AsString(tmp1);
-	str_size = strlen(str)+1;                                                                              
-	if(mult==-1) {                            
+        tmp1 = PyObject_Str(tmp); 
+        str = PyString_AsString(tmp1);
+        str_size = strlen(str)+1;                                                                              
+        if(mult==-1) {                            
 	  if ((buf_ptr+str_size)>size) {
 	    /* this means the python string is too 
 	     * big to be completly converted
@@ -695,8 +706,7 @@ static int
 iterator_to_allocated_buffer(PyObject  *iter, /* list or tuple PyObject */
 			     const char   *format,  /* the format to use */ 
 			     char         **buffer, /* buffer to perform conversion */
-			     unsigned int *size)    /* maximum size of buffer */
-                   
+			     unsigned int *size)    /* maximum size of buffer */ 
 {
   /* This function allocates a new buffer and converts the python
    * iterator objects according to 'format'.
