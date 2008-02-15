@@ -1,4 +1,4 @@
-// $Id: Functions.cpp,v 1.1.1.1 2007-12-10 09:12:42 jpalac Exp $
+// $Id: Functions.cpp,v 1.2 2008-02-15 11:57:41 jpalac Exp $
 // Include files 
 
 
@@ -15,7 +15,6 @@ namespace MicroDST
     const std::string::size_type loc       = tmp.find(tmpString);
     if ( loc != std::string::npos) {
       tmp.replace(loc, tmpString.length(), "");
-      std::cout << "TES location ID is now " << tmp << std::endl;
     }
     return tmp;
   }
