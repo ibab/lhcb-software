@@ -1,11 +1,25 @@
 <lcgdict>
   <class name="std::map<std::string,LHCb::L0DUElementaryData*>"/>
-  <class pattern="std::map<std::string,LHCb::L0DUElementaryData*>::*iterator"/>
+  <!-- <class pattern="std::map<std::string,LHCb::L0DUElementaryData*>::*iterator"/> -->
+  <class pattern="std::_Rb_tree_*iterator<std::pair<const std::string,LHCb::L0DUElementaryData*> >"/>
   <class name="std::pair<const std::string,LHCb::L0DUElementaryData*>"/>
+
   <class name="std::map<std::string,LHCb::L0DUElementaryCondition*>"/>
-  <class pattern="std::map<std::string,LHCb::L0DUElementaryCondition*>::*iterator"/>
+  <!-- <class pattern="std::map<std::string,LHCb::L0DUElementaryCondition*>::*iterator"/> -->
+  <class pattern="std::_Rb_tree_*iterator<std::pair<const std::string,LHCb::L0DUElementaryCondition*> >"/>
   <class name="std::pair<const std::string,LHCb::L0DUElementaryCondition*>"/>
+
   <exclusion>
     <class name = "KeyedObject<long>" />
+
+    <class name="std::pair<const std::string,LHCb::L0DUElementaryData*>">
+      <method name="swap"/>
+    </class>
+
+    <class name="std::pair<const std::string,LHCb::L0DUElementaryCondition*>">
+      <method name="swap"/>
+    </class>
+
   </exclusion>
+
 </lcgdict>

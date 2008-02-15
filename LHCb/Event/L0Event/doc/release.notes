@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.82 2008-02-13 13:28:31 cattanem Exp $
+! $Id: release.notes,v 1.83 2008-02-15 15:30:56 marcocle Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+! 2008-02-15 - Marco Clemencic
+ - Modified the selection file for missing dictionaries to avoid compilation
+   error on Windows (but the dictionary is not complete on that platform).
 
 !======================== L0Event v16r8 2008-02-13 ===========================
 ! 2008-02-13 - Marco Cattaneo
