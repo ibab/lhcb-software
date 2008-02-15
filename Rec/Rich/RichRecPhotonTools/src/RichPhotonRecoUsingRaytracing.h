@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingRaytracing
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.h,v 1.1 2008-02-15 14:12:35 buszello Exp $
+ *  $Id: RichPhotonRecoUsingRaytracing.h,v 1.2 2008-02-15 14:30:08 jonrob Exp $
  *
  *  @author Claus P Buszello
  *  @date   2008-11-01
@@ -16,6 +16,7 @@
 #define RICHRECTOOLS_RichPhotonRecoUsingRaytracing_H 1
 
 // STL
+#include <iostream>
 #include <sstream>
 
 // from Gaudi
@@ -56,27 +57,28 @@ namespace Rich
      *  Attempts to do this in a very fast way, by estimating the CK photon angle
      *  using the track and photon hit positions on the detector plane.
      *
-     *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
+     *  @author Claus Buszello Claus.Buszello@cern.ch
+     *  @date   2008-11-01
      */
     //-----------------------------------------------------------------------------
 
     class PhotonRecoUsingRaytracing : public Rich::Rec::ToolBase,
-                                            virtual public IPhotonReconstruction
+                                      virtual public IPhotonReconstruction
     {
 
     public: // Methods for Gaudi Framework
 
       /// Standard constructor
       PhotonRecoUsingRaytracing( const std::string& type,
-                                       const std::string& name,
-                                       const IInterface* parent);
+                                 const std::string& name,
+                                 const IInterface* parent);
 
       virtual ~PhotonRecoUsingRaytracing( ); ///< Destructor
 
       // Initialization of the tool after creation
       virtual StatusCode initialize();
       virtual StatusCode finalize();
-   
+
     public: // methods (and doxygen comments) inherited from interface
 
       // Reconstructs the geometrical photon candidate for a given RichTrackSegment
@@ -97,10 +99,6 @@ namespace Rich
 
     private: // data
 
-      //      Gaudi::XYZVector sv;
-      //Gaudi::XYZPoint hitpos;
-      //Gaudi::XYZPoint locpos;
-
       /// RichSmartID tool
       const ISmartIDTool* m_idTool;
 
@@ -109,21 +107,19 @@ namespace Rich
       const Rich::IRayTracing * m_raytrace; ///< raytracing tool
 
       float m_damping;
-      std::vector<double> m_ERLSet;  
+      std::vector<double> m_ERLSet;
       std::vector<float> m_maxdiff;
       std::vector<int> m_maxiter;
       std::vector<double> m_fudge;
-      
 
       float m_ERL;
 
       bool failiter;
       bool discard;
-      
+
       mutable int m_itersA[100];
       mutable int m_iters1[100];
       mutable int m_iters2[100];
-      
 
     };
 
