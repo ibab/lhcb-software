@@ -3,8 +3,12 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.4 2008-02-11 22:44:08 jpalac Exp $
+! $Id: release.notes,v 1.5 2008-02-15 13:06:23 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-02-15 - Juan PALACIOS
+ - src/RecVertexClonerFunctors.h, ParticleCloner.cpp
+  . Remove std::cout debug statements
 
 ! 2008-02-11 - Juan PALACIOS
 
