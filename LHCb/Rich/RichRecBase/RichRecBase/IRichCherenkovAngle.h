@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::ICherenkovAngle
  *
  *  CVS Log :-
- *  $Id: IRichCherenkovAngle.h,v 1.10 2007-09-04 16:46:57 jonrob Exp $
+ *  $Id: IRichCherenkovAngle.h,v 1.11 2008-02-15 10:08:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -60,11 +60,14 @@ namespace Rich
        *
        *  @param segment The RichRecSegment for which to coumpute the expected CK angle
        *  @param id      The mass hypothesis for which the angle should be calculated
+       *  @param useEmittedSpectrum Flag to turn on (true) the use of the emitted photon
+       *                            spectrum instead of the detected (false).
        *
        *  @return The expected average cherenkov angle
        */
       virtual double avgCherenkovTheta( LHCb::RichRecSegment * segment,
-                                        const Rich::ParticleIDType id ) const = 0;
+                                        const Rich::ParticleIDType id,
+                                        const bool useEmittedSpectrum = false ) const = 0;
 
       /** Computes the average Cherenkov angle for the current mass hypothesis
        *  assigned to the given segment

@@ -4,6 +4,13 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2008-02-15 - Chris Jones
+ - Add a flag to the IRichCherenkovAngle::avgCherenkovTheta method to force
+   the calculation to use the emitted photon spectra instead of the detected.
+ - Pass the mass hypothesis in IRichSignalDetection::photonDetEfficiency.
+ - Update the RichRecPointOnRing class to store pointers to the mirror 
+   segments.
+
 ! 2008-02-08 - Chris Jones
  - Improve pixel information for when clustering is activated
 

@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPointOnRing.xml,v 1.3 2007-02-06 15:01:22 cattanem Exp $
+  * $Id: RichRecPointOnRing.xml,v 1.4 2008-02-15 10:08:47 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPointOnRing class                               *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -13,13 +13,14 @@
 
 
 <class 
-        name             = "RichRecPointOnRing" 
-        author           = "Chris Jones   (Christopher.Rob.Jones@cern.ch)" 
-        desc             = "Ultility class to represent a point on a Cherenkov Ring" 
-        virtual          = "FALSE" >
+        name        = "RichRecPointOnRing" 
+        author      = "Chris Jones   (Christopher.Rob.Jones@cern.ch)" 
+        desc        = "Ultility class to represent a point on a Cherenkov Ring" 
+        virtual     = "FALSE" >
 
         <import name="GaudiKernel/Point3DTypes.h"/>
         <import name="Kernel/RichSmartID.h"/>
+        <import name="RichDet/DeRichSphMirror.h"/>
 
         <enum name="Acceptance" desc="Describes the how this position lies in the RICH acceptance" access="PUBLIC" >
           <enumval name="UndefinedAcceptance" value="0" desc="The acceptance is undefined"/>
@@ -30,11 +31,13 @@
 
         <constructor 
                 desc     = "Constructor from global position, location position, acceptance flag and RichSmartID" 
-                initList = "m_globalPosition(gPos), m_localPosition(lPos), m_smartID(id), m_acceptance(acc)">
+                initList = "m_globalPosition(gPos), m_localPosition(lPos), m_smartID(id), m_acceptance(acc), m_primaryMirror(const_cast&lt;DeRichSphMirror*&gt;(primMirr)), m_secondaryMirror(const_cast&lt;DeRichSphMirror*&gt;(secMirr))">
                 <arg const="TRUE"                  name="gPos" type="Gaudi::XYZPoint"/>
                 <arg const="TRUE"                  name="lPos" type="Gaudi::XYZPoint"/>
                 <arg const="TRUE"  inout="BYVALUE" name="id = LHCb::RichSmartID()" type="LHCb::RichSmartID"/>
                 <arg const="TRUE"  inout="BYVALUE" name="acc = LHCb::RichRecPointOnRing::UndefinedAcceptance"  type="LHCb::RichRecPointOnRing::Acceptance"/>
+                <arg const="TRUE"                  name="primMirr = NULL" type="DeRichSphMirror*"/>
+                <arg const="TRUE"                  name="secMirr = NULL"  type="DeRichSphMirror*"/>
                 <code>
                 </code>
         </constructor>
@@ -46,7 +49,7 @@
                 init = "0,0,0"
         />
 
-       <attribute 
+        <attribute 
                 desc = "Position on the ring in local coordinates" 
                 name = "localPosition" 
                 type = "Gaudi::XYZPoint"
@@ -72,6 +75,20 @@
 		def    = "Vector" 
 		type   = "std::vector&lt;RichRecPointOnRing&gt;"
 	/>
+
+        <attribute 
+                desc = "Pointer to the associated DeRichSphMirror object for the primary mirror" 
+                name = "primaryMirror" 
+                type = "DeRichSphMirror*"
+                init = "NULL"
+        />
+
+        <attribute 
+                desc = "Pointer to the associated DeRichSphMirror object for the secondary mirror" 
+                name = "secondaryMirror" 
+                type = "DeRichSphMirror*"
+                init = "NULL"
+        />
    
 </class>
 
