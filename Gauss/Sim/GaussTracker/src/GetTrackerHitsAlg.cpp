@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.cpp,v 1.13 2007-10-02 16:22:00 gcorti Exp $
+// $Id: GetTrackerHitsAlg.cpp,v 1.14 2008-02-15 15:07:52 mlieng Exp $
 // Include files 
 
 // from Gaudi
@@ -48,8 +48,7 @@ GetTrackerHitsAlg::GetTrackerHitsAlg( const std::string& name,
   declareProperty( "ExtendedInfo",   m_extendedInfo = false );
   declareProperty( "MCHitsLocation", m_hitsLocation = "" );
   declareProperty( "CollectionName", m_colName = "" );
-  declareProperty( "Detector",       m_detName = "" );
-
+  declareProperty( "Detector",       m_detName );
 }
 
 //=============================================================================
@@ -75,22 +74,29 @@ StatusCode GetTrackerHitsAlg::initialize() {
     fatal() << "Property CollectionName need to be set! " << endmsg;
     return StatusCode::FAILURE;
   }
-  if( "" == m_detName ) {
+  if( !m_detName.size() ) {
     fatal() << "Property Detector need to be set! " << endmsg;
     return StatusCode::FAILURE;
   }
 
+  std::vector<std::string>::iterator itDet;
   debug() << " The hits " << m_hitsLocation  << endmsg;
   debug() << " will be taken from G4 collection " << m_colName  << endmsg;
-  debug() << " for detector " << m_detName << endmsg;
-
+  debug() << " for detector(s) ";
+  for( itDet=m_detName.begin(); itDet!=m_detName.end(); itDet++ ){
+    debug() << *itDet << " ";
+  }
+  debug() << endmsg;
+  
   m_gigaSvc = svc<IGiGaSvc>( m_gigaSvcName ); // GiGa has to already exist!
 
   // get kineCnv service that hold the MCParticle/Geant4 table list
   m_gigaKineCnvSvc = svc<IGiGaKineCnvSvc>( m_kineSvcName );
 
   // get the detector element
-  m_detector = getDet<DetectorElement>(m_detName);
+  for( itDet=m_detName.begin(); itDet!=m_detName.end(); itDet++ ){
+    m_detector.push_back( getDet<DetectorElement>(*itDet) );
+  }
   
   return StatusCode::SUCCESS;
 };
@@ -193,7 +199,14 @@ void GetTrackerHitsAlg::fillHit( TrackerHit* g4Hit, LHCb::MCHit* mcHit ) {
   mcHit->setP( g4Hit->GetMomentum().mag() );
  
   // get sensitive detector identifier using mid point
-  int detID = m_detector->sensitiveVolumeID( mcHit->midPoint() );
+  int detID = -1;
+  std::vector<const DetectorElement*>::iterator itDet;
+  for( itDet=m_detector.begin(); itDet!=m_detector.end(); itDet++){
+    if( (*itDet)->isInside(mcHit->midPoint()) ){
+      detID = (*itDet)->sensitiveVolumeID( mcHit->midPoint() );
+      break;
+    }
+  }
   mcHit->setSensDetID(detID);
 
   // fill reference to MCParticle using the Geant4->MCParticle table

@@ -5,6 +5,13 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!======================= GaussTracker v6r1 2008-02-14 ========================
+! 2008-02-14 - Magnus LIENG
+ - Changed option "Detector" to accept an array of strings. The algorithm can
+   now deal with detectors splitt over several detector locations.
+   . src/TrackerHit.{h,cpp}
+   . options/TrackersHits.opts       
+
 !======================= GaussTracker v6r0p1 2007-10-02 ======================
 ! 2007-10-02 - Gloria Corti for Karl Harrison
  - Fix problem of compilation on Win32 reverving space only when number of
