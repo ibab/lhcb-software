@@ -39,7 +39,7 @@ HistogramIdentifier::HistogramIdentifier(const std::string & histogramUrl):
 //  $8 set switch: is "_$" if $3 is histogramSetName "" if histogramName
 //  $9 histogram name
 
-  TObjArray* histogramUrlMatchGroup = HistogramUrlRegexp.
+  TObjArray* histogramUrlMatchGroup = s_histogramUrlRegexp.
     MatchS(m_histogramUrlTS);
 
   if (!histogramUrlMatchGroup->IsEmpty()) {
@@ -59,7 +59,7 @@ HistogramIdentifier::HistogramIdentifier(const std::string & histogramUrl):
     TString setSwitch = ((TObjString *)histogramUrlMatchGroup->At(8))->
       GetString();
 
-    if (SET_SWITCH == setSwitch) {
+    if (s_setSwitch == setSwitch) {
       m_isFromHistogramSet = true;
       m_setName = (((TObjString *)histogramUrlMatchGroup->At(7))->
         GetString()).Data();
@@ -71,16 +71,16 @@ HistogramIdentifier::HistogramIdentifier(const std::string & histogramUrl):
       m_histogramName = (((TObjString *)histogramUrlMatchGroup->At(6))->
         GetString()).Data();
     }
-    m_identifier =  m_taskName + Slash + m_algorithmName +
-                    Slash + (((TObjString *)histogramUrlMatchGroup->
+    m_identifier =  m_taskName + s_slash + m_algorithmName +
+                    s_slash + (((TObjString *)histogramUrlMatchGroup->
                     At(6))->GetString()).Data();
     if (m_isPlausible && m_histogramType != "") {
       m_isDimFormat = true;
     }
-    m_gauchocommentBeat = histogramUrl + GAUCHOCOMMENT;
+    m_gauchocommentBeat = histogramUrl + s_gauchocomment;
     m_gauchocommentEric = histogramUrl.substr(m_histogramType.length() + 1,
                                               histogramUrl.length())
-                          + GAUCHOCOMMENT;
+                          + s_gauchocomment;
   }
   histogramUrlMatchGroup->Delete();
   delete histogramUrlMatchGroup;

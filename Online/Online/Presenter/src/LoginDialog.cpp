@@ -50,9 +50,9 @@ void LoginDialog::build()
 
   m_histogramDB = new TGComboBox(this);
   //m_histogramDB = new TGComboBox(this, m_input);
-  m_histogramDB->AddEntry(HISTDB, 0);
-  m_histogramDB->AddEntry(LBORA01, 1);
-  m_histogramDB->AddEntry(ORADEV10, 2);
+  m_histogramDB->AddEntry(s_histdb, 0);
+  m_histogramDB->AddEntry(s_lbora01, 1);
+  m_histogramDB->AddEntry(s_oradev10, 2);
   m_histogramDB->Select(0);
   m_histogramDB->Resize(168, 22);
   AddFrame(m_histogramDB,
@@ -68,9 +68,9 @@ void LoginDialog::build()
   m_dbUsername->AddEntry(userInfo->fUser, 0);
   delete userInfo;
 
-  m_dbUsername->AddEntry(HIST_READER, 1);
-  m_dbUsername->AddEntry(HIST_WRITER, 2);
-  m_dbUsername->AddEntry(LHCB_MON_GIACOMO, 3);
+  m_dbUsername->AddEntry(s_histReader, 1);
+  m_dbUsername->AddEntry(s_histWriter, 2);
+  m_dbUsername->AddEntry(s_lhcbMonGiacomo, 3);
   m_dbUsername->Select(1);
 //  m_dbUsername->AddEntry(TString(""), 4);
   m_dbUsername->Resize(168, 22);
@@ -102,7 +102,7 @@ void LoginDialog::build()
   m_dbPasswdInput->SetMaxLength(255);
   m_dbPasswdInput->SetAlignment(kTextLeft);
   m_dbPasswdInput->SetEchoMode(TGTextEntry::kPassword);  
-  m_dbPasswdInput->SetText(HIST_READER_KRED.c_str());
+  m_dbPasswdInput->SetText(s_histReaderPw.c_str());
   m_dbPasswdInput->Resize(168, m_dbPasswdInput->GetDefaultHeight());
   AddFrame(m_dbPasswdInput,
            new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX,
@@ -128,11 +128,11 @@ void LoginDialog::build()
    switch (m_databaseMode) {
     case ReadOnly:
       m_dbUsername->Select(1);
-      m_dbPasswdInput->SetText(HIST_READER_KRED.c_str());
+      m_dbPasswdInput->SetText(s_histReaderPw.c_str());
       break;
     case ReadWrite:
       m_dbUsername->Select(2);
-      m_dbPasswdInput->SetText(HIST_WRITER_KRED.c_str());
+      m_dbPasswdInput->SetText(s_histWriterPw.c_str());
       break;
     case UserSelected:
       m_dbUsername->Select(0);
@@ -154,13 +154,13 @@ void LoginDialog::defaultPw(int account)
   if(OnlineHistDBEnv_constants::ACCOUNT ==
        dynamic_cast<TGTextLBEntry*>(m_dbUsername->GetSelectedEntry())->
                                     GetText()->GetString()) {
-    m_dbPasswdInput->SetText(HIST_READER_KRED.c_str());
+    m_dbPasswdInput->SetText(s_histReaderPw.c_str());
   } else if (account == 0){
     m_dbPasswdInput->SetText("");    
-  } else if (HIST_WRITER ==
+  } else if (s_histWriter ==
        dynamic_cast<TGTextLBEntry*>(m_dbUsername->GetSelectedEntry())->
                                     GetText()->GetString()) {
-    m_dbPasswdInput->SetText(HIST_WRITER_KRED.c_str());
+    m_dbPasswdInput->SetText(s_histWriterPw.c_str());
   }
   DoRedraw();
 }

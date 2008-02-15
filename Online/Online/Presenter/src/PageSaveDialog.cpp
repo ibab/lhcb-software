@@ -75,7 +75,7 @@ void PageSaveDialog::build()
   m_pageFolderListTree = new TGListTree(fCanvas694, kHorizontalFrame);
   m_pageFolderListTree->AddRoot("Pages");
   m_mainFrame->listFromHistogramDB(m_pageFolderListTree,
-      FoldersAndPages, WithoutHistograms);
+      FoldersAndPages, s_withoutHistograms);
   m_pageFolderListTree->Connect(
     "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PageSaveDialog", this,
     "updateTextFields(TGListTreeItem*, Int_t, Int_t, Int_t)");
@@ -142,7 +142,7 @@ void PageSaveDialog::ok()
     std::string pageName = m_pageNameTextEntry->GetText();
 
     try {
-      OnlineHistPage* page = m_histogramDB->getPage(Slash+folderName+Slash+pageName);
+      OnlineHistPage* page = m_histogramDB->getPage(s_slash+folderName+s_slash+pageName);
       page->removeAllHistograms();
       double xlow, ylow, xup, yup;
 

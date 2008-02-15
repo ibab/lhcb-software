@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
     }
 
     if (startupSettings.count("version")) {
-      cout << "LHCb Presenter version: " << PRESENTER_VERSION << endl <<
+      cout << "LHCb Presenter version: " << s_presenterVersion << endl <<
               "Histogram Database version: " << OnlineHistDBEnv_constants::version << endl <<
               "Analysis Library version: " << OMAconstants::version << endl <<
               "Histogram Database schema: " << OnlineHistDBEnv_constants::DBschema << endl;
@@ -163,11 +163,11 @@ int main(int argc, char* argv[])
       presenterMainFrame.setPresenterMode(Online);
     }
     string groupMountPoint("");
-    const char* groupdirEnv = getenv(GROUPDIR.c_str());
+    const char* groupdirEnv = getenv(s_groupdir.c_str());
     if (NULL != groupdirEnv) {
       groupMountPoint = groupdirEnv;
       if (!groupMountPoint.empty()) {
-        groupMountPoint.append(Slash);
+        groupMountPoint.append(s_slash);
         presenterMainFrame.setArchiveRoot(groupMountPoint);
       }
     }

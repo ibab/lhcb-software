@@ -157,7 +157,7 @@ std::vector<path> Archive::listDirectory(const path & dirPath)
     directory_iterator end_itr;
     for (directory_iterator itr(dirPath); itr != end_itr; ++itr) {
       if (is_regular(itr->path()) &&
-          extension(itr->path()) == RootFileExtension ) {
+          extension(itr->path()) == s_rootFileExtension ) {
         foundRootFiles.push_back(itr->path());
       }
     }
@@ -219,7 +219,7 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
   if (!m_foundSavesets.empty()) {
     m_foundSavesetsIt = m_foundSavesets.end(); --m_foundSavesetsIt;
     while (m_foundSavesetsIt >= m_foundSavesets.begin()) {
-      fileDateMatchGroup = FileDateRegexp.MatchS((*m_foundSavesetsIt).leaf());
+      fileDateMatchGroup = s_fileDateRegexp.MatchS((*m_foundSavesetsIt).leaf());
       if (!fileDateMatchGroup->IsEmpty()) {
         taskNameFound = (((TObjString *)fileDateMatchGroup->At(1))->GetString()).Data();
         fileTimeFound = (((TObjString *)fileDateMatchGroup->At(2))->GetString()).Data();
