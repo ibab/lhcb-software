@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.46 2008-02-12 13:13:06 jpalac Exp $
+! $Id: release.notes,v 1.47 2008-02-15 11:40:11 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2008-02-15 - Juan PALACIOS
+ - src/CopyRelatedMCParticles.h
+  . Remove deepCloneMCVertex() method and associated boolean data member.
+ - src/CopyRelatedMCParticles.cpp
+  . Fix some problems with linkers.
+ - cmt/requirements
+  . Increase version to v3r1
 
 ! 2008-02-12 - Juan PALACIOS
  - src/CopyRelatedMCParticles.cpp, CreateMicroDSTMCAlg.cpp, TestDST.cpp
