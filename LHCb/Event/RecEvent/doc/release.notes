@@ -1,11 +1,14 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.85 2008-02-06 17:15:57 cattanem Exp $
+! $Id: release.notes,v 1.86 2008-02-15 07:42:17 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
-!========================= RecEvent v2r10 2008-02-06 =========================
+!========================= RecEvent v2r15 2008-02-06 =========================
+! 2008-02-15 - Marco Cattaneo
+ - Add dict for std::vector<const LHCb::VertexBase*>, previously in LoKiPhys
+
 ! 2008-02-06 - Marco Cattaneo
  - Cleanup includes, using forward declaration possibility in GaudiObjDesc v11r2
 
