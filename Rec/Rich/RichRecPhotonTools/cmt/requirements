@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones  Christopher.Rob.Jones@cern.ch
 #============================================================================
 package           RichRecPhotonTools
-version           v1r1
+version           v1r2
 
 #============================================================================
 # Structure

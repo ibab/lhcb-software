@@ -4,6 +4,7 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================= RichRecPhotonTools v1r2 2008-02-15 ==================
 ! 2008-02-15 - Claus P Buszello
  - Added new Photon reconstruction method using iterative raytracing
 
