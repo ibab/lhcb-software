@@ -1,42 +1,51 @@
 package Presenter
-version v0r5
+version v0r6
 
 branches cmt doc src test
 
-use DIM           v16r* Online
+use DIM           v*  Online
 
-use OnlineHistDB  v4r3  Online
-use OMAlib        v0r1  Online
+use OnlineHistDB  v*  Online
+use OMAlib        v*  Online
 
-use ROOT          v5r*  LCG_Interfaces
-use Python        v2r*  LCG_Interfaces
+use ROOT          v*  LCG_Interfaces
+use Python        v*  LCG_Interfaces
 #use GaudiOnline   v*    Online
-#use  Boost       v*    LCG_Interfaces
+use  Boost       v1r34*    LCG_Interfaces
 
-# Go for the latest and greatest ROOT:
-#macro ROOT_config_version "5.17.04"
+# Go for the latest and greatest ROOT
+macro ROOT_config_version "5.18.00"
+macro Boost_config_version "1.34.1"
+macro Boost_file_version "1_34_1"
 
 #path_remove LD_LIBRARY_PATH "$(ROOTSYS)/lib"
 #macro     ROOT_home     "/tmp/root"
 #path_prepend  LD_LIBRARY_PATH "$(ROOTSYS)/lib"
 
 # Build ROOT dictionary - cmt fragment accepts only(?) 1 header file...
+#macro rootcint='"$(ROOT_home)/bin/rootcint"
+#set cintBootstrap_cintflags " -I$(Boost_home)/include/boost-$(Boost_file_version) -p "
 document rootcint cintBootstrap cintBootstrap.h
 
-macro_append includes " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src"
+macro_append includes " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src" WIN32 " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src -Iz:cern.ch\sw\lcg/external/Boost/1.34.1/win32_vc71 -IE:\soft\lcg/external/Boost/1.34.1/win32_vc71 -IP:\lib\lcg\external\Boost\1.34.1\win32_vc71"
 
 macro_append ROOT_linkopts " -lThread -lGui -lGraf3d -lGed" \
   WIN32 " libThread.lib libGui.lib libGpad.lib libHist.lib libGraf.lib \
-               libGraf3d.lib libGed.lib"
+               libGraf3d.lib libGed.lib libRIO.lib"
 
-# Setup cppflags 
+#apply_tag ROOT_GE_5_17
+#macro_append Boost_linkopts $(Boost_linkopts_filesystem)
+macro_append Boost_linkopts " -lboost_filesystem-gcc34 -lboost_date_time-gcc34 -lboost_program_options-gcc34" \
+  WIN32 "boost_filesystem-vc71-mt-1_34_1.lib boost_date_time-vc71-mt-1_34_1.lib boost_program_options-vc71-mt-1_34_1.lib"
+
+# Setup cppflags
 #macro_append cppflags " -pedantic-errors -Wno-long-long -Weffc++ "
 
-# RegexpFrame.cpp 
+# RegexpFrame.cpp
 
 application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp \
                                      DbRootHist.cpp HistogramIdentifier.cpp \
-                                     LoginDialog.cpp HistoPropDialog.cpp \
-                                     PageSaveDialog.cpp SetUtgidTaskDialog.cpp \
-                                     SetDimDnsNodeDialog.cpp \
+                                     LoginDialog.cpp HistoPropDialog.cpp Archive.cpp\
+                                     PageSaveDialog.cpp SetDimDnsNodeDialog.cpp \
                                      PresenterMainFrame.cpp presenter.cpp "
+macro_append presenter_dependencies " cintBootstrap "
