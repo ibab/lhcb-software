@@ -4,18 +4,23 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.63 2008-01-09 11:01:37 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.64 2008-02-15 09:55:02 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
 //----------------------------------------------------------------------------
 
-// Include files
+// STL
+#include <sstream>
 #include <time.h>
+
+// Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/GaudiException.h"
 
+// local
 #include "RichDet/DeRichHPDPanel.h"
 #include "RichDet/DeRichSystem.h"
 
@@ -261,7 +266,7 @@ StatusCode DeRichHPDPanel::initialize()
 }
 
 //=========================================================================
-// convert a point on the silicon sensor to smartID
+// convert a point on the silicon sensor to a smartID
 //=========================================================================
 StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
                                      LHCb::RichSmartID& id ) const
@@ -277,6 +282,12 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
   if ( !m_deRichS->hpdIsActive( id ) ) return StatusCode::FAILURE;
 
   const unsigned int HPDNumber = hpdNumber(id);
+  if ( HPDNumber > m_HPDMax ) 
+  {
+    MsgStream msg ( msgSvc(), "DeRichHPDPanel" );
+    msg << MSG::ERROR << "Inappropriate HPDNumber : " << HPDNumber;
+    return StatusCode::FAILURE;
+  }
 
   const Gaudi::XYZPoint inSilicon( m_DeSiSensors[HPDNumber]->geometry()->toLocalMatrix()*globalPoint );
 
@@ -346,7 +357,7 @@ DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
   Gaudi::XYZPoint panelIntersection( pInPanel + distance*vInPanel );
 
   // Get HPD column and row numbers
-  if ( !findHPDColAndPos(panelIntersection,smartID) ) 
+  if ( !findHPDColAndPos(panelIntersection,smartID) )
     return LHCb::RichTraceMode::RayTraceFailed;
 
   // Find the correct DeRichHPD
@@ -597,7 +608,26 @@ const int DeRichHPDPanel::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) 
   // Create a RichSmartID for this RICH and panel
   LHCb::RichSmartID id( rich(), side() );
   // set the remaining fields from the position
-  return ( smartID(globalPoint,id).isSuccess() ? 
+  return ( smartID(globalPoint,id).isSuccess() ?
            id : LHCb::RichSmartID(rich(),side()) );
 }
 
+//=========================================================================
+// Returns the detector element for the given HPD number
+//=========================================================================
+const DeRichHPD* DeRichHPDPanel::DeHPD( const unsigned int HPDNumber ) const
+{
+  const DeRichHPD * deHPD = NULL;
+  if ( HPDNumber <= m_HPDMax ) // CRJ : should this just be < ??
+  {
+    deHPD = m_DeHPDs[HPDNumber];
+  }
+  else
+  {
+    std::ostringstream mess;
+    mess << "Inappropriate HPDNumber : " << HPDNumber;
+    deHPD = NULL;
+    throw GaudiException( mess.str(), "*DeRichHPDPanel*", StatusCode::FAILURE );
+  }
+  return deHPD;
+}

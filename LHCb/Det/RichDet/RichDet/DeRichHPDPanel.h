@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.51 2008-01-09 11:01:37 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.52 2008-02-15 09:55:02 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -14,14 +14,10 @@
 #ifndef RICHDET_DERICHHPDPANEL_H
 #define RICHDET_DERICHHPDPANEL_H 1
 
-// STL
-#include <sstream>
-
 // Gaudi
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
-#include "GaudiKernel/GaudiException.h"
 
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
@@ -37,8 +33,10 @@
 #include "RichDet/DeRichHPD.h"
 #include "RichDet/DeRichLocations.h"
 
-class DeRichSystem;
+// Boost
+#include "boost/array.hpp"
 
+class DeRichSystem;
 
 /** @class DeRichHPDPanel DeRichHPDPanel.h
  *
@@ -51,7 +49,8 @@ class DeRichSystem;
  *       DeRichHPDPanel::PDWindowPoint could be made the same. At the moment the
  *       hits obtained from these methods are on slightly different planes.
  */
-class DeRichHPDPanel: public DetectorElement {
+class DeRichHPDPanel: public DetectorElement
+{
 
 public:
 
@@ -242,11 +241,16 @@ public:
   /// The total number of HPDs in this panel
   inline unsigned int nHPDs() const { return m_HPDMax; }
 
+  /** Access the DeRichHPD object for a given HPD RichSmartID
+   *  @param[in] hpdID The HPD RichSmartID identifier
+   *  @return Pointer to the associated DeRichHPD object
+   */
+  const DeRichHPD * deHPD( const LHCb::RichSmartID hpdID ) const;
+
 private: // methods
 
-  /**
-   * Finds the HPD row and column that corresponds to the x,y coordinates
-   * of a point in the panel. The row and column are retuned in the smartID.
+  /** Finds the HPD row and column that corresponds to the x,y coordinates
+   *  of a point in the panel. The row and column are retuned in the smartID.
    *
    * @return Status of request
    * @retval true   HPD is found
@@ -259,37 +263,14 @@ private: // methods
    */
   inline const std::string & myName() const { return m_name; }
 
-
   /// Returns the HPD number for the given RichSmartID
-  inline unsigned int hpdNumber( const LHCb::RichSmartID smartID ) const
-  {
-    return smartID.hpdCol() * m_HPDNumInCol + smartID.hpdNumInCol();
-  }
+  unsigned int hpdNumber( const LHCb::RichSmartID smartID ) const;
 
   /// Returns the detector element for the given HPD number
-  inline const DeRichHPD* DeHPD( const unsigned int HPDNumber ) const
-  {
-    const DeRichHPD * deHPD = m_DeHPDs[HPDNumber];
-    if ( HPDNumber>m_HPDMax || !deHPD )
-    {
-      std::ostringstream mess;
-      mess << "DeHPD:: Inappropriate HPDNumber : " << HPDNumber;
-      deHPD = NULL;
-      throw GaudiException( mess.str(), "*DeRichHPDPanel*", StatusCode::FAILURE );
-    }
-    return deHPD;
-  }
+  const DeRichHPD* DeHPD( const unsigned int HPDNumber ) const;
 
   /// Check HPD panel acceptance
-  inline LHCb::RichTraceMode::RayTraceResult
-  checkPanelAcc( const Gaudi::XYZPoint & point ) const
-  {
-    const double u = ( rich() == Rich::Rich1 ? point.y() : point.x() );
-    const double v = ( rich() == Rich::Rich1 ? point.x() : point.y() );
-    return ( ( fabs(u) >= fabs(m_panelColumnSideEdge) ||
-               fabs(v) >= m_panelStartColPos ) ?
-             LHCb::RichTraceMode::OutsideHPDPanel : LHCb::RichTraceMode::InHPDPanel );
-  }
+  LHCb::RichTraceMode::RayTraceResult checkPanelAcc( const Gaudi::XYZPoint & point ) const;
 
 private: // data
 
@@ -321,7 +302,7 @@ private: // data
   Gaudi::XYZVector m_localPlaneNormal; ///< The normal vector of det plane in local coordinates
 
   /** Plane2 is defined going through all HPDs at the edge of photocathode coverage on
-   *  HPD window. It is used for HPD row/column purposes 
+   *  HPD window. It is used for HPD row/column purposes
    *  This plane is parrallel to m_localPlane, thus share the same normal vector
    */
   Gaudi::Plane3D m_localPlane2;
@@ -344,11 +325,29 @@ private: // data
 };
 
 //=========================================================================
+// Returns the HPD number for the given RichSmartID
+//=========================================================================
+inline unsigned int DeRichHPDPanel::hpdNumber( const LHCb::RichSmartID smartID ) const
+{
+  return ( smartID.rich() == rich() && smartID.panel() == side() ?
+           smartID.hpdCol() * m_HPDNumInCol + smartID.hpdNumInCol() :
+           m_HPDMax+1 );
+}
+
+//=========================================================================
+// Access the DeRichHPD object for a given HPD RichSmartID
+//=========================================================================
+inline const DeRichHPD * DeRichHPDPanel::deHPD( const LHCb::RichSmartID hpdID ) const
+{
+  return DeHPD(hpdNumber(hpdID));
+}
+
+//=========================================================================
 //  convert a SmartID to a point on the anode (global coord system)
 //=========================================================================
 inline Gaudi::XYZPoint DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID smartID ) const
 {
-  return DeHPD(hpdNumber(smartID))->detPointOnAnode(smartID);
+  return deHPD(smartID)->detPointOnAnode(smartID);
 }
 
 //=========================================================================
@@ -367,7 +366,20 @@ inline StatusCode DeRichHPDPanel::detectionPoint ( const LHCb::RichSmartID smart
                                                    Gaudi::XYZPoint& detectPoint,
                                                    bool photoCathodeSide ) const
 {
-  return DeHPD(hpdNumber(smartID))->detectionPoint(smartID,detectPoint,photoCathodeSide);
+  return deHPD(smartID)->detectionPoint(smartID,detectPoint,photoCathodeSide);
+}
+
+//=========================================================================
+// Check HPD panel acceptance
+//=========================================================================
+inline LHCb::RichTraceMode::RayTraceResult
+DeRichHPDPanel::checkPanelAcc( const Gaudi::XYZPoint & point ) const
+{
+  const double u = ( rich() == Rich::Rich1 ? point.y() : point.x() );
+  const double v = ( rich() == Rich::Rich1 ? point.x() : point.y() );
+  return ( ( fabs(u) >= fabs(m_panelColumnSideEdge) ||
+             fabs(v) >= m_panelStartColPos ) ?
+           LHCb::RichTraceMode::OutsideHPDPanel : LHCb::RichTraceMode::InHPDPanel );
 }
 
 #endif    // RICHDET_DERICHHPDPANEL_H
