@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.1.1.1 2008-02-15 13:18:48 cattanem Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.2 2008-02-15 14:49:05 cattanem Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -15,13 +15,13 @@
 #include "Kernel/ISiAmplifierResponse.h"
 #include "MCInterfaces/ISiDepositedCharge.h"
 #include "Kernel/ISTSignalToNoiseTool.h"
-#include "Kernel/ISharingTool.h"
 
 // xml geometry
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
 
 // local
+#include "ISTChargeSharingTool.h"
 #include "MCSTDepositCreator.h"
 
 using namespace LHCb;
@@ -85,8 +85,8 @@ StatusCode MCSTDepositCreator::initialize()
                                               m_sigNoiseToolName+m_detType);
 
   // charge sharing tool
-  m_chargeSharer = tool<ISharingTool>( m_chargeSharerName, 
-                                       m_chargeSharerName, this );
+  m_chargeSharer = tool<ISTChargeSharingTool>( m_chargeSharerName, 
+                                               m_chargeSharerName, this );
 
   // deposited charge 
   m_depositedCharge = tool<ISiDepositedCharge>(m_depChargeToolName,

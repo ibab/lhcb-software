@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.h,v 1.1.1.1 2008-02-15 13:18:48 cattanem Exp $
+// $Id: MCSTDepositCreator.h,v 1.2 2008-02-15 14:49:05 cattanem Exp $
 #ifndef MCSTDEPOSITCREATOR_H
 #define MCSTDEPOSITCREATOR_H 1
 
@@ -71,7 +71,7 @@ private:
                         const std::string& type);
 
   // Tools
-  ISharingTool*       m_chargeSharer;    ///< Charge sharing tool 
+  ISTChargeSharingTool* m_chargeSharer;  ///< Charge sharing tool 
   ISiDepositedCharge* m_depositedCharge; ///< Tool calculates accumulated charge
   ISTSignalToNoiseTool* m_sigNoiseTool;  ///< S/N tool
 
