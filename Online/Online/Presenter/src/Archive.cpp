@@ -140,10 +140,10 @@ void Archive::fillHistogram(DbRootHist* histogram,
                      (m_analysisLib->getAlg(histogram->creationAlgorithm()));
       if (creator && sourcesok) {
         histogram->rootHistogram = creator->exec(&sources,
-        histogram->anaParameters(),
-        histogram->identifier(),
-        histogram->onlineHistogram()->htitle(),
-        histogram->rootHistogram);
+                                      histogram->anaParameters(),
+                                      histogram->identifier(),
+                                      histogram->onlineHistogram()->htitle(),
+                                      histogram->rootHistogram);
       }
     }
     if (! (histogram->rootHistogram) ) { histogram->beEmptyHisto(); }
@@ -157,13 +157,14 @@ std::vector<path> Archive::listDirectory(const path & dirPath)
     directory_iterator end_itr;
     for (directory_iterator itr(dirPath); itr != end_itr; ++itr) {
       if (is_regular(itr->path()) &&
-          RootFileExtension == extension(itr->path())) {
+          extension(itr->path()) == RootFileExtension ) {
         foundRootFiles.push_back(itr->path());
       }
     }
   }
   sort(foundRootFiles.begin(), foundRootFiles.end());
-  if (m_verbosity >= Debug) {
+  if (m_verbosity >= Debug &&
+      !foundRootFiles.empty()) {
     m_foundFilesIt = foundRootFiles.begin();
     while (m_foundFilesIt != foundRootFiles.end()) {
       cout << "available file: " << *m_foundFilesIt << endl;
