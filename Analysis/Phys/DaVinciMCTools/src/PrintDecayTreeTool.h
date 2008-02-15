@@ -1,4 +1,4 @@
-// $Id: PrintDecayTreeTool.h,v 1.1 2007-10-10 13:40:44 jpalac Exp $
+// $Id: PrintDecayTreeTool.h,v 1.2 2008-02-15 17:10:25 pkoppenb Exp $
 #ifndef PRINTDECAYTREETOOL_H 
 #define PRINTDECAYTREETOOL_H 1
 
@@ -79,7 +79,7 @@ public:
 
 private:
   enum InfoKeys { Name, E, M, P, Pt, Px, Py, Pz, Vx, Vy, Vz,
-                  theta, phi, eta, idcl };
+                  theta, phi, eta, idcl, chi2 };
 
   void printHeader( MsgStream& log, 
                     bool mcfirst, 

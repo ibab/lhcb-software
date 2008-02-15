@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.201 2008-02-15 14:57:07 pkoppenb Exp $
+! $Id: release.notes,v 1.202 2008-02-15 17:10:25 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
@@ -6,6 +6,7 @@
 
 ! 2008-02-15 - Patrick Koppenburg
  - PrintTree : new option PrintTruth that also links MC truth to tree
+ - PrintDecayTreeTool : new variable chi2 for tracks and vertices
 
 ! 2008-02-13 - Patrick Koppenburg
  - Remove obsolete DebugTool. Use Print(MC)DecayTree tools instead
