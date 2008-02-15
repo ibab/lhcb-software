@@ -1,4 +1,4 @@
-// $Id: STChargeSharingTool.h,v 1.4 2007-01-09 15:34:34 jvantilb Exp $
+// $Id: STChargeSharingTool.h,v 1.5 2008-02-15 13:29:46 cattanem Exp $
 #ifndef STCHARGESHARINGTOOL_H
 #define STCHARGESHARINGTOOL_H 1
 
@@ -6,8 +6,8 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiMath/GaudiMath.h"
 
-// local interface
-#include "ISTChargeSharingTool.h"
+// From LHCbKernel
+#include "Kernel/ISharingTool.h"
 
 /** @class STChargeSharingTool STChargeSharingTool.h
  *
@@ -18,7 +18,7 @@
  */
 
 class STChargeSharingTool : public GaudiTool, 
-                            virtual public ISTChargeSharingTool {
+                            virtual public ISharingTool {
 
 public: 
 

@@ -2,6 +2,11 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!======================= STAlgorithms v3r0 2008-02-15 ========================
+! 2008-02-15 - Marco Cattaneo
+ - Remove digitisation algorithms, moved to new BOOLE STDigiAlgorithms package
+ - Adapt STChargeSharingTool to Kernel/ISharingTool interface
+
 !======================= STAlgorithms v2r7 2008-02-14 ========================
 ! 2008-02-10 M Needham 
  - Correct path of next spill
