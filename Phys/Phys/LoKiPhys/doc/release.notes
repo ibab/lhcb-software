@@ -1,34 +1,33 @@
-! $Id: release.notes,v 1.40 2008-02-11 10:11:11 ibelyaev Exp $ 
+! $Id: release.notes,v 1.41 2008-02-15 08:55:25 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
-
-!========================== LoKiPhys v7r1 2008-02-11 ==========================
+!========================== LoKiPhys v7r1 2008-02-15 ==========================
+! 2008-02-15 - Marco Cattaneo
+ - Remove generation of dictionary for std::vector<const LHCb::Particle*> and
+   std::vector<const LHCb::VertexBase*>, now in PhysEvent and RecEvent
+ - In Particles20.cpp constructors, invert initialisations of 
+   LoKi::BasicFunctors<const LHCb::Particle*>::Function () and
+   LoKi::AuxDesktopBase () to avoid compilation warnings
 
 ! 2008-02-11 - Vanya BELYAEV
-
  - many minor fixes due to new Gaudi/ROOT/Reflex
  - implement many shortcuts&aliases, proposed by Vava GLIGOROV
 
-
 ! 2008-01-25 - Vanya BELYAEV
-
   - LoKi/Particles19.h, 
     src/Particles19.cpp
-
-       various "lifetime" functors, which are using ILifetimeFitetr interface 
+       various "lifetime" functors, which are using ILifetimeFitter interface 
 
   - LoKi/ParticleContetxCuts.h, 
     LoKi/Particles20.h,
     src/Particles20.cpp
-
-        new "context-depet" funcntors 
+        new "context-depet" functors 
   
   - cmt/requirements
-
         version increment to v7r1 
 
 !========================== LoKiPhys v7r0 2007-12-09 ==========================

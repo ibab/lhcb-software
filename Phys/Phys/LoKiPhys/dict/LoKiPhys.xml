@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiPhys.xml,v 1.14 2007-12-09 18:39:47 ibelyaev Exp $ 
+     * $Id: LoKiPhys.xml,v 1.15 2008-02-15 08:55:25 cattanem Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiPhys package
@@ -87,9 +87,6 @@
   <class pattern   = "LoKi::Dicts::CutCalls<*LHCb::Ve*>"   />
   <class pattern   = "LoKi::Dicts::FunCalls<*LHCb::Pa*>"   />
   <class pattern   = "LoKi::Dicts::CutCalls<*LHCb::Pa*>"   />
-  
-  <class name = "std::vector<const LHCb::Particle*>"      />
-  <class name = "std::vector<const LHCb::VertexBase*>"    />
   
   <class name = "LoKi::SelectVertex"  />
   

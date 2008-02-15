@@ -1,4 +1,4 @@
-// $Id: Particles20.cpp,v 1.1 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: Particles20.cpp,v 1.2 2008-02-15 08:55:25 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -104,8 +104,8 @@ namespace
 // ============================================================================
 LoKi::Particles::CosineDirectionAngleWithTheBestPV::
 CosineDirectionAngleWithTheBestPV()
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase()
+  : LoKi::AuxDesktopBase()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_dira    ( s_VERTEX ) 
 {}
 // ============================================================================
@@ -146,8 +146,8 @@ std::ostream& LoKi::Particles::CosineDirectionAngleWithTheBestPV::fillStream
 // ============================================================================
 LoKi::Particles::ImpParWithTheBestPV::ImpParWithTheBestPV 
 ( const std::string& geo ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase()
+  : LoKi::AuxDesktopBase()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_ip  ( s_VERTEX , s_IPTOOL ) 
   , m_geo ( geo )   
 {}
@@ -194,8 +194,8 @@ std::ostream& LoKi::Particles::ImpParWithTheBestPV::fillStream
 // ============================================================================
 LoKi::Particles::ImpParChi2WithTheBestPV::ImpParChi2WithTheBestPV 
 ( const std::string& geo ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase()
+  : LoKi::AuxDesktopBase()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_ip  ( s_VERTEX , s_IPTOOL ) 
   , m_geo ( geo )   
 {}
@@ -506,8 +506,8 @@ std::ostream& LoKi::Particles::MinImpParChi2TES::fillStream
 // the default constructor 
 // ============================================================================
 LoKi::Particles::VertexDistanceDV::VertexDistanceDV ()
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase ()
+  : LoKi::AuxDesktopBase ()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( s_VERTEX ) 
 {}
 // ============================================================================
@@ -547,8 +547,8 @@ std::ostream& LoKi::Particles::VertexDistanceDV::fillStream
 // the default constructor 
 // ============================================================================
 LoKi::Particles::VertexSignedDistanceDV::VertexSignedDistanceDV ()
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase ()
+  : LoKi::AuxDesktopBase ()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( s_VERTEX ) 
 {}
 // ============================================================================
@@ -590,8 +590,8 @@ std::ostream& LoKi::Particles::VertexSignedDistanceDV::fillStream
 // the default constructor 
 // ============================================================================
 LoKi::Particles::VertexDotDistanceDV::VertexDotDistanceDV ()
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase ()
+  : LoKi::AuxDesktopBase ()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( s_VERTEX ) 
 {}
 // ============================================================================
@@ -632,8 +632,8 @@ std::ostream& LoKi::Particles::VertexDotDistanceDV::fillStream
 // the default constructor 
 // ============================================================================
 LoKi::Particles::VertexChi2DistanceDV::VertexChi2DistanceDV ()
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase ()
+  : LoKi::AuxDesktopBase ()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( s_VERTEX ) 
 {}
 // ============================================================================
@@ -675,8 +675,8 @@ std::ostream& LoKi::Particles::VertexChi2DistanceDV::fillStream
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeDV::LifeTimeDV() 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase ()
+  : LoKi::AuxDesktopBase ()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( s_LTIME , s_VERTEX                   ) 
   , m_fit ( "PropertimeFitter/properTime:PUBLIC" ) 
 {}
@@ -685,8 +685,8 @@ LoKi::Particles::LifeTimeDV::LifeTimeDV()
 // ============================================================================
 LoKi::Particles::LifeTimeDV::LifeTimeDV
 ( const std::string& fit ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase ()
+  : LoKi::AuxDesktopBase ()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( s_LTIME , s_VERTEX ) 
   , m_fit ( fit  ) 
 {}
@@ -734,8 +734,8 @@ std::ostream& LoKi::Particles::LifeTimeDV::fillStream
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV() 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase ()
+  : LoKi::AuxDesktopBase ()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( s_LTIME , s_VERTEX                   ) 
   , m_fit ( "PropertimeFitter/properTime:PUBLIC" ) 
 {}
@@ -744,8 +744,8 @@ LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV()
 // ============================================================================
 LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV
 ( const std::string& fit ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase ()
+  : LoKi::AuxDesktopBase ()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( s_LTIME , s_VERTEX ) 
   , m_fit ( fit  ) 
 {}
@@ -792,8 +792,8 @@ std::ostream& LoKi::Particles::LifeTimeChi2DV::fillStream
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV() 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase ()
+  : LoKi::AuxDesktopBase ()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( s_LTIME , s_VERTEX                   ) 
   , m_fit ( "PropertimeFitter/properTime:PUBLIC" ) 
 {}
@@ -802,8 +802,8 @@ LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV()
 // ============================================================================
 LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV
 ( const std::string& fit ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase ()
+  : LoKi::AuxDesktopBase ()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( s_LTIME , s_VERTEX ) 
   , m_fit ( fit  ) 
 {}
@@ -849,8 +849,8 @@ std::ostream& LoKi::Particles::LifeTimeSignedChi2DV::fillStream
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeFitChi2DV::LifeTimeFitChi2DV() 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase ()
+  : LoKi::AuxDesktopBase ()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( s_LTIME , s_VERTEX                   ) 
   , m_fit ( "PropertimeFitter/properTime:PUBLIC" ) 
 {}
@@ -859,8 +859,8 @@ LoKi::Particles::LifeTimeFitChi2DV::LifeTimeFitChi2DV()
 // ============================================================================
 LoKi::Particles::LifeTimeFitChi2DV::LifeTimeFitChi2DV
 ( const std::string& fit ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDesktopBase ()
+  : LoKi::AuxDesktopBase ()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( s_LTIME , s_VERTEX ) 
   , m_fit ( fit  ) 
 {}
