@@ -5,9 +5,6 @@
 !--------------------------------------------------------------------------
 
 !===================== LHCbKernel v8r2 2008-02-15 ========================
-! 2008-02-15 - Marco Cattaneo
- - Add ISharingTool interface, generalisation of ISTChargeShaingTool
-
 ! 2008-02-07 - Chris Jones
  - Add new method to Rich::Side enum, to convert side to text more precisely 
    when combined with the Rich::DetectorType enum.
