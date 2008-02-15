@@ -1,0 +1,42 @@
+# $Id: requirements,v 1.1.1.1 2008-02-15 13:35:24 mlieng Exp $
+# =========================================================================
+
+# Maintained by : Magnus Lieng
+package  BcmDet 
+version  v1r0
+
+# =============== structure ===============================================	
+branches         src cmt doc BcmDet dict
+
+# =============== used packages ===========================================
+use DetDesc     v*    Det
+use DetDescCnv  v*    Det
+use LHCbKernel  v*    Kernel
+use LHCbMath    v*    Kernel
+use GaudiAlg    v*
+use GSL         v*    LCG_Interfaces
+use Boost       v*    LCG_Interfaces
+
+# =============== own includes ============================================
+#apply_pattern install_more_includes more=BcmDet
+include_dirs      $(BCMDETROOT)
+
+# =============== link library (base classes) =============================
+library          BcmDetLib        Lib/*.cpp
+
+# =============== component library =======================================
+library          BcmDet           component/*.cpp
+
+#================ patterns ================================================
+apply_pattern component_library library=BcmDet
+apply_pattern linker_library    library=BcmDetLib
+
+# =============== LCG Dictionaries ============================================
+apply_pattern     reflex_dictionary                                 \
+                  dictionary=BcmDet                                \
+                  headerfiles=$(BCMDETROOT)/dict/BcmDetDict.h     \
+                  selectionfile=$(BCMDETROOT)/dict/BcmDetDict.xml \
+                  options="-U__MINGW32__"
+
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro BcmDetDict_use_linkopts $(use_linkopts)
