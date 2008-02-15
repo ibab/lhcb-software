@@ -1,0 +1,138 @@
+QL> insert into lhcb_lg_device_types(devicetypeid,devicetype,nbrofinput,nbrofoutput,description,rgb
+olor,system_name,author,terminal_name,user_update) select devicetypeid,devicetype,nbrofinput,nbrofo
+
+nsert into lhcb_lg_device_types(devicetypeid,devicetype,nbrofinput,nbrofoutput,description,rgbcolor
+                                                                                                   
+RROR at line 1:
+RA-00923: FROM keyword not found where expected
+
+
+QL> insert into lhcb_lg_device_types(devicetypeid,devicetype,nbrofinput,nbrofoutput,description,rgb
+olor,system_name,author,terminal_name,user_update) select t.devicetypeid,t.devicetype,t.nbrofinput,
+.nbrofoutput,t.description,t.rgbcolor,e.systemid,t.author,t.terminal_name,t.user_update from tfc_d
+vice_type@test t,lhcb_subsystemlist e where t.system_name=e.system_name;
+nsert into lhcb_lg_device_types(devicetypeid,devicetype,nbrofinput,nbrofoutput,description,rgbcolor
+                                                                                                   
+RROR at line 1:
+RA-00904: "T"."SYSTEM_NAME": invalid identifier
+
+
+QL>  insert into lhcb_lg_device_types(devicetypeid,devicetype,nbrofinput,nbrofoutput,description,rg
+color,system_name,author,terminal_name,user_update) select t.devicetypeid,t.devicetype,t.nbrofinput
+t.nbrofoutput,t.description,t.rgbcolor,e.systemid,t.author,t.terminal_name,t.user_update from all1_
+evice_type@test t,lhcb_subsystemlist e where t.subsystem_name=e.system_name;
+
+6 rows created.
+
+QL> commit;
+
+ommit complete.
+
+QL> update lhcb_lg_device_types set system_name=system_name*41 where system_name!=41 and devicetype
+d in (select devicetypeid from all1_device_type@test where part_daq=1 and subsystem_name!='DAQ');
+
+5 rows updated.
+
+QL> commit;
+
+ommit complete.
+
+QL> update lhcb_lg_device_types set system_name=system_name*43 where system_name!=43 and devicetype
+d in (select devicetypeid from all1_device_type@test where part_tfc=1 and subsystem_name!='TFC');
+
+4 rows updated.
+
+QL> commit;
+
+ommit complete.
+
+QL> desc lhcb_hw_devices;
+Name                                      Null?    Type
+----------------------------------------- -------- ----------------------------
+SERIALNB                                  NOT NULL VARCHAR2(500)
+DEVICE_STATUS                                      NUMBER
+RESPONSIBLE                                        VARCHAR2(100)
+USER_COMMENTS                                      VARCHAR2(1000)
+HWNAME                                             VARCHAR2(100)
+HWTYPE                                             VARCHAR2(200)
+LOCATION                                           VARCHAR2(200)
+
+QL> insert into lhcb_hw_devices(serialnb,device_status,responsible) select 'XX'||bar_code,1,'jacobs
+on' from all1_device@test;
+
+952 rows created.
+
+QL> commit;
+
+ommit complete.
+
+QL> desc lhcb_lg_devices;
+Name                                      Null?    Type
+----------------------------------------- -------- ----------------------------
+DEVICENAME                                NOT NULL VARCHAR2(100)
+DEVICETYPEID                                       NUMBER
+ACTIVE                                             NUMBER
+NODE                                      NOT NULL NUMBER
+NODEUSED                                           NUMBER
+PROMISCUOUS_MODE                                   NUMBER
+SERIALNB                                           VARCHAR2(500)
+LOCATION                                           VARCHAR2(200)
+DEVICEID                                  NOT NULL NUMBER
+SYSTEM_NAME                                        NUMBER
+CREATED                                            DATE
+AUTHOR                                             VARCHAR2(200)
+TERMINAL_NAME                                      VARCHAR2(200)
+LAST_UPDATE                                        DATE
+USER_UPDATE                                        VARCHAR2(100)
+
+QL> insert into lhcb_lg_devices (devicename,devicetypeid,active,node,nodeused,promiscuous_mode,seri
+lnb,location,deviceid,system_name,author,terminal_name,user_update) select t.devicename,t.devicetyp
+id,0,t.node,t.nodeused,t.promiscuous_mode,'XX'||t.bar_code,'DU'||t.bar_code,t.deviceid,e.systemID,t
+author,t.terminal_name,t.user_update from all1_device@test t, lhcb_subsystemlist e where e.system_n
+me=t.subsystem_name;
+
+952 rows created.
+
+QL> commit;
+
+ommit complete.
+
+QL> desc lhcb_device_history;
+Name                                      Null?    Type
+----------------------------------------- -------- ----------------------------
+HISTORYDEVICEID                           NOT NULL NUMBER
+SERIALNB                                           VARCHAR2(500)
+DEVICEID                                           NUMBER
+DEVICE_STATUS                                      VARCHAR2(50)
+USER_COMMENT                                       VARCHAR2(1000)
+LOCATION                                           VARCHAR2(200)
+STATUS_CHANGE                                      DATE
+SYSTEM_NAME                                        VARCHAR2(100)
+CREATED                                            DATE
+AUTHOR                                             VARCHAR2(200)
+TERMINAL_NAME                                      VARCHAR2(200)
+
+QL> insert into lhcb_device_history select lhcb_history_deviceseq.nextval,serialnb,deviceid,'IN_USE
+,'working',location,created;
+nsert into lhcb_device_history select lhcb_history_deviceseq.nextval,serialnb,deviceid,'IN_USE','wo
+                                                                                                   
+RROR at line 1:
+RA-00923: FROM keyword not found where expected
+
+
+QL> update lhcb_lg_devices set system_name=system_name*41 where system_name!=41 and deviceid in (se
+ect deviceid from all1_device@test where subsystem_name!='DAQ' and part_daq=1);
+
+61 rows updated.
+
+QL>  update lhcb_lg_devices set system_name=system_name*43 where system_name!=43 and deviceid in (s
+lect deviceid from all1_device@test where subsystem_name!='TFC' and part_tfc=1);
+
+45 rows updated.
+
+QL> commit;
+
+ommit complete.
+
+QL> insert into lhcb_device_history select lhcb_history_deviceseq.nextval,serialnb,deviceid,'IN_USE
+,'working',location,created,system_name,sysdate,'jacobsson','pclhcb115' from lhcb_lg_devices;

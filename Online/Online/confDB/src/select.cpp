@@ -8028,6 +8028,7 @@ extern "C" {
 				strcpy(ErrorMessage,"NO_ROWS_SELECTED");
 				GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 				rescode=0; //means no data found
+    		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				return rescode;
 			}
 		}

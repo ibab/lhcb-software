@@ -1,0 +1,11 @@
+--select min(deviceid) from lhcb_lg_devices where serialnb like 'CCC%';
+--select * from lhcb_port_properties where deviceid in (select deviceid from lhcb_lg_devices where devicename like '%L1FE%') and port_nbr='5' ;
+--select * from lhcb_hwport_properties where serialnb in (select serialnb from lhcb_lg_devices where devicename like '%L1FE%') and port_nbr='5';
+--select * from lhcb_macroscopic_connectivity where linkid>41383 and     bidirectional_link_used=1;
+--created>to_date('06/12/2006 17:26','MM/DD/YYYY HH24:MI');
+--select * from lhcb_lg_devices where devicename like 'DAQ_FLOW%';
+--select * from lhcb_pdetails where node1=1284836 and path_length=1;
+--select * from lhcb_routingtable where path_length=1 and nodeid_start0=1284836;
+--select * from lhcb_routingtable where path_length=2 and nodeid_start0=1284836;
+ --select * from lhcb_routingtable where path_length=3 and nodeid_start0=1284836;
+select * from lhcb_routingtable where pathused=1 and nodeid_start0=1284836;

@@ -1,0 +1,36 @@
+CREATE TYPE element_list IS TABLE OF VARCHAR2(50); 
+/ 
+
+SET SERVEROUTPUT ON 
+DECLARE 
+  tabname_list element_list := element_list('10', '20', '30', '40', '50'); 
+  sysname_list element_list := element_list('30', '40', '50', '60', '70'); 
+BEGIN 
+  FOR cur_rec IN (SELECT a.column_value 
+                  FROM   TABLE(CAST(tabname_list AS element_list)) a 
+                  INTERSECT 
+                  SELECT b.column_value 
+                  FROM   TABLE(CAST(sysname_list AS element_list)) b) 
+  LOOP 
+    DBMS_OUTPUT.put_line(cur_rec.column_value); 
+  END LOOP; 
+END; 
+/ 
+
+
+CREATE TYPE element_list IS TABLE OF VARCHAR2(50); 
+/ 
+
+SET SERVEROUTPUT ON 
+DECLARE 
+  tabname_list element_list := element_list('10', '20', '30', '40', '50'); 
+  sysname_list element_list := element_list('30', '40', '50', '60', '70'); 
+i number;
+BEGIN 
+
+  SELECT min(a.column_value) into i FROM   TABLE(CAST(tabname_list AS element_list)) a, TABLE(CAST(sysname_list AS element_list)) b where a.column_value=b.column_value;
+  
+    DBMS_OUTPUT.put_line(i); 
+  
+END; 
+/ 
