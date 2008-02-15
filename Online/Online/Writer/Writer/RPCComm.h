@@ -57,13 +57,15 @@ namespace LHCb {
        * "Confirms" that the file is completely written to, closed,
        * and ready for migration to tape.
        */
-      void confirmFile(char *fileName, unsigned int adlerSum, unsigned const char *md5Sum);
+      void confirmFile(char *fileName, unsigned int adlerSum, unsigned const char *md5Sum, unsigned long size, unsigned long events);
 
       /**
        * Creates an entry in the Run Database for the specified file,
        * associated with the specified Run Number and Stream.
        */
       void createFile(char *fileName, unsigned int runNumber);
+      
+      std::string createNewFile(unsigned int runNumber);
 
       /**Simple constructor.*/
       RPCComm(const char *serverURL) { m_serverURL = new URL(serverURL); }
@@ -88,7 +90,23 @@ namespace LHCb {
   "      <string>%s</string>\n" \
   "    </value></param>\n" \
   "    <param><value>\n" \
-  "      <int>%d</int>\n" \
+  "      <string>%u</string>\n" \
+  "    </value></param>\n" \
+  "  </params>\n"  \
+  "</methodCall>\n"
+
+#define NEWFILE_TEMPLATE  "<?xml version=\"1.0\"?>\n" \
+"<methodCall>\n" \
+  "  <methodName>getNewFileName</methodName>\n" \
+  "  <params>\n"   \
+  "    <param><value>\n" \
+  "      <string>%u</string>\n" \
+  "    </value></param>\n" \
+  "    <param><value>\n" \
+  "      <string>%s</string>\n" \
+  "    </value></param>\n" \
+  "    <param><value>\n" \
+  "      <string>%s</string>\n" \
   "    </value></param>\n" \
   "  </params>\n"  \
   "</methodCall>\n"
@@ -106,6 +124,12 @@ namespace LHCb {
   "    <param><value>\n" \
   "      <string>%s</string>\n" \
   "    </value></param>\n" \
+  "    <param><value>\n" \
+  "      <string>%lu</string>\n" \
+  "    </value></param>\n" \
+  "    <param><value>\n" \
+  "      <string>%lu</string>\n" \
+  "    </value></param>\n" \
   "  </params>\n"  \
   "</methodCall>\n"
 
@@ -113,7 +137,7 @@ namespace LHCb {
   "User-Agent: MDFWriterNet\n" \
   "Host: %s\n" \
   "Content-Type: text/xml\n" \
-  "Content-Length: %ld\n\n" \
+  "Content-Length: %d\n\n" \
 
 
 #endif /*RPCCOMM_H*/

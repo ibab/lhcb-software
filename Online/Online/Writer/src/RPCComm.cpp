@@ -20,7 +20,12 @@ using namespace LHCb;
  * @param adlerSum The Adler32 checksum of the entire file.
  * @param md5CSum   The MD5 checksum of the entire file.
  */
-void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned char *md5CSum)
+void RPCComm::confirmFile(char *fileName, 
+                          unsigned int adlerSum, 
+                          const unsigned char *md5CSum,
+                          unsigned long size,
+                          unsigned long events
+                          )
 {
   int ret;
   char headerData[1024];
@@ -43,9 +48,9 @@ void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned 
 
   /* Now we fill up templates. */
   snprintf(xmlData, sizeof(xmlData), CONFIRM_TEMPLATE,
-      fileName, adler32String, md5CharString);
+           fileName, adler32String, md5CharString, size, events);
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
-      "WriterHost", strlen(xmlData));
+           "WriterHost", (unsigned int)strlen(xmlData));
 
   memset(response, 0, sizeof(response));
   ret = requestResponse(headerData, xmlData, response, sizeof(response));
@@ -74,17 +79,16 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
   char xmlData[1024];
   char response[1024];
 
-  snprintf(xmlData, sizeof(xmlData), CREATE_TEMPLATE,
-      fileName, runNumber);
+  snprintf(xmlData, sizeof(xmlData), CREATE_TEMPLATE, fileName, runNumber);
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
-      "WriterHost", strlen(xmlData));
+          "WriterHost", strlen(xmlData));
 
   memset(response, 0, sizeof(response));
   ret = requestResponse(headerData, xmlData, response, sizeof(response));
 
-  if(ret < 0)
+  if (ret < 0)
     throw std::runtime_error("Could not run RPC call for create.");
-  if(isError(response))
+  if (isError(response))
     throw std::runtime_error(response);
 
   return;
@@ -136,20 +140,53 @@ int RPCComm::requestResponse(char *requestHeader, char *requestData, char *respo
 int RPCComm::isError(char *response)
 {
   std::string responseStr(response);
-  std::string::size_type loc;
+  char failedRPC[] = "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><array><data>\n<value><int>0</int></value>\n<value>";
+  size_t len;
+  len = responseStr.length();
 
-  /*First check for HTTP response status.*/
-  loc = responseStr.find("200 OK");
-  if(loc > responseStr.length())
+  /* First check for HTTP response status */
+  if(responseStr.find("200 OK") > len)
     return 1;
-
-  /*Then check for a fault string.*/
-  loc = responseStr.find("faultCode");
-  if(loc > responseStr.length())
+  /* Check for the return code from the function */
+  if (responseStr.find(failedRPC) < len) 
+    return 1;
+  /* Then check for a fault string */
+  if(responseStr.find("faultCode") > len)
     return 0;
-  return 1;
 
+  /* Check for the first value. Must be 1 */
+  return 1;
   /*Dump the whole response if fault found.*/
+}
+
+std::string RPCComm::createNewFile(unsigned int runNumber)
+{
+  char headerData[1024], xmlData[1024], response[1024];
+  int ret;
+  std::string file;
+  char startStr[] = "<string>";
+  char endStr[] = "</string>";
+  size_t start, end;
+
+  snprintf(xmlData, sizeof(xmlData), NEWFILE_TEMPLATE, runNumber, "physics", "2008");
+  snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
+          "WriterHost", strlen(xmlData));
+
+  memset(response, 0, sizeof(response));
+  ret = requestResponse(headerData, xmlData, response, sizeof(response));
+
+  if (ret < 0)
+    throw std::runtime_error("Could not run RPC call for create.");
+  if (isError(response))
+    throw std::runtime_error(response);
+
+  std::string res(response);
+
+  start = res.find(startStr) + sizeof(startStr) - 1;
+  end = res.find(endStr);
+  file = std::string(response, start, end-start);
+  
+  return file;
 }
 
 URL::URL(const char *url)

@@ -17,6 +17,7 @@ apply_pattern ld_library_path
 apply_pattern generate_rootmap library=Writer
 
 private
+use GaudiSvc v*
 macro_append lib_Writer_cppflags " -DBUILD_WRITER=1"\
  WIN32                           "" \
  slc3-ia32&gcc323                ""

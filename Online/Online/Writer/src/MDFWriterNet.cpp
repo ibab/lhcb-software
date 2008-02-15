@@ -25,12 +25,14 @@ using namespace LHCb;
 /**
  * Macro for initialising a close command.
  */
-#define INIT_CLOSE_COMMAND(h, fname, adler32, md5, seqno, rno) { \
-  (h)->cmd = CMD_CLOSE_FILE; \
-    (md5)->Final((h)->data.stop_data.md5_sum); \
-    (h)->data.stop_data.adler32_sum = (adler32); \
+#define INIT_CLOSE_COMMAND(h, fname, adler32, md5, seqno, rno, siz, events) { \
+    (h)->cmd = CMD_CLOSE_FILE; \
     (h)->run_no = rno;	\
     (h)->data.chunk_data.seq_num = seqno; \
+    (h)->data.stop_data.adler32_sum = (adler32); \
+    (md5)->Final((h)->data.stop_data.md5_sum); \
+    (h)->data.stop_data.size = siz; \
+    (h)->data.stop_data.events = events; \
     strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
 }
 
@@ -132,7 +134,7 @@ StatusCode MDFWriterNet::finalize(void)
   while(tmpFile) {
 
     if(tmpFile->isOpen()) {
-      *m_log << MSG:: INFO << "Closing file " << tmpFile->getFileName()
+      *m_log << MSG:: INFO << "Closing file " << *(tmpFile->getFileName())
 	     << " with run number " << tmpFile->getRunNumber() << endmsg;
       closeFile(tmpFile);
       File *toDelete = tmpFile;
@@ -167,8 +169,23 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
   struct cmd_header header;
   memset(&header, 0, sizeof(struct cmd_header));
 
-  currFile = new File(getNewFileName(runNumber), runNumber);
-  INIT_OPEN_COMMAND(&header, currFile->getFileName()->c_str(), currFile->getSeqNum(), runNumber);
+  /* The RunDb generates file names now */
+  try {
+    /* trying to get an 'official'file name from the RunDatabase 
+     * If there is any kinf of error generate one locally
+     */  
+    *m_log << MSG::INFO << "Getting a new file name for run " 
+           << runNumber << " ..." << endmsg;
+    currFile = new File(m_rpcObj->createNewFile(runNumber), runNumber);
+  } catch (...) {
+    currFile = new File(getNewFileName(runNumber), runNumber);
+    *m_log << MSG::WARNING 
+           << "Could not get new file name! Generating local filename: "
+           << *(currFile->getFileName()) << endmsg ;
+  }
+
+  INIT_OPEN_COMMAND(&header, currFile->getFileName()->c_str(), 
+                    currFile->getSeqNum(), runNumber);
   m_srvConnection->sendCommand(&header);
   currFile->open();
   currFile->incSeqNum();
@@ -181,6 +198,7 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
 void MDFWriterNet::closeFile(File *currFile)
 {
   struct cmd_header header;
+  unsigned long events=0;
   memset(&header, 0, sizeof(struct cmd_header));
 
   INIT_CLOSE_COMMAND(&header,
@@ -188,7 +206,19 @@ void MDFWriterNet::closeFile(File *currFile)
 		     currFile->getAdlerChecksum(),
 		     currFile->getMD5Checksum(),
 		     currFile->getSeqNum(),
-		     currFile->getRunNumber());
+		     currFile->getRunNumber(),
+                     currFile->getBytesWritten(),
+                     events);
+//  *m_log << MSG::INFO << " Command: " << header.cmd << " "
+//         << "Filename: "   << header.file_name << " " 
+//	 << "RunNumber: "  << header.run_no << " "
+//         << "Adler32: "    << header.data.stop_data.adler32_sum << " "
+//         << "MD5: "        << header.data.stop_data.md5_sum << " "
+//         << "Seq Nr: "     << header.data.chunk_data.seq_num << " "
+//         << "Size: "       << header.data.stop_data.size << " "
+//         << "Events: "     << header.data.stop_data.events << " "
+//         << "Command size is: " << sizeof(header)
+//         << endmsg;
   m_srvConnection->sendCommand(&header);
 }
 
@@ -225,9 +255,10 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   if(m_currFile == NULL || runNumber != m_currFile->getRunNumber()) {
     m_currFile = m_openFiles.getFile(runNumber);
     if(!m_currFile) {
+      *m_log << MSG::INFO << "No file exists for run " 
+             << runNumber << " Creating a new one." << endmsg;
       m_currFile = createAndOpenFile(runNumber);
       m_openFiles.addFile(m_currFile);
-      *m_log << MSG::INFO << "No file exists for run " << runNumber << " Creating a new one." << endmsg;
     }
 
     // This block is entered only in case an event from a previous run
@@ -340,7 +371,11 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
   try {
     m_rpcObj->confirmFile(cmd->file_name,
 			  cmd->data.stop_data.adler32_sum,
-			  cmd->data.stop_data.md5_sum);
+			  cmd->data.stop_data.md5_sum,
+                          cmd->data.stop_data.size,
+                          0 
+                          );
+    *m_log << MSG::INFO << "Confirmed file " << cmd->file_name << endmsg;
   } catch(std::exception& rte) {
     char md5buf[33];
     unsigned char *md5sum = cmd->data.stop_data.md5_sum;
