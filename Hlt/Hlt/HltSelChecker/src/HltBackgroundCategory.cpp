@@ -1,4 +1,4 @@
-// $Id: HltBackgroundCategory.cpp,v 1.1 2008-02-11 16:51:13 pkoppenb Exp $
+ // $Id: HltBackgroundCategory.cpp,v 1.2 2008-02-15 17:57:45 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -54,7 +54,7 @@ StatusCode HltBackgroundCategory::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
   m_summaryTool = tool<IHltSummaryTool>("HltSummaryTool",this);
   m_bkg         = tool<IBackgroundCategory>("BackgroundCategory",this);
@@ -64,11 +64,7 @@ StatusCode HltBackgroundCategory::initialize() {
     m_linker      = new Particle2MCLinker( this, Particle2MCMethod::Links, "");
   }
   
-  verbose() << "Got tools " << endmsg ;
-
   const std::map<int,std::string>& catMap = m_bkg->getCategoryMap() ;
-
-  verbose() << "Got map " << endmsg ;
 
   std::vector<std::string> cats ;
   for ( std::map<int, std::string>::const_iterator i = catMap.begin() ; 
@@ -96,7 +92,7 @@ StatusCode HltBackgroundCategory::initialize() {
 //=============================================================================
 StatusCode HltBackgroundCategory::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
   if ( !(m_summaryTool->decision())) return StatusCode::SUCCESS ;
 
@@ -159,15 +155,21 @@ StatusCode HltBackgroundCategory::execute() {
       
       if (m_fillAll){
         std::map<int, std::string>::const_iterator scat = catMap.find(cat) ;
+        if (msgLevel(MSG::DEBUG)) debug() << "Filling " << (*scat).second << " for " << *is << endmsg ;
         if (!m_algoCorr->fillResult((*scat).second, true )) return StatusCode::FAILURE;
-      } else if ( cat < mincat ) mincat = cat ;   
+      } else if ( cat < mincat ) {
+        if (msgLevel(MSG::DEBUG)) debug() << "New minimum " << cat << " for " << *is << endmsg ;
+        mincat = cat ;   
+      }
     }
     if (!m_fillAll){
       if ( mincat == IBackgroundCategory::LastGlobal ) mincat = IBackgroundCategory::Undefined ;
       std::map<int, std::string>::const_iterator scat = catMap.find(mincat) ;
+      if (msgLevel(MSG::DEBUG)) debug() << "Best category is " << (*scat).second << " for " << *is << endmsg ;
       if (!m_algoCorr->fillResult((*scat).second, true )) return StatusCode::FAILURE;
     }  
     if (!m_algoCorr->fillResult(*is, true )) return StatusCode::FAILURE; 
+    if (msgLevel(MSG::DEBUG)) debug() << "End for " << *is << endmsg ;
     if (!m_algoCorr->endEvent()) return StatusCode::FAILURE ;
   }
 
@@ -179,7 +181,7 @@ StatusCode HltBackgroundCategory::execute() {
 //=============================================================================
 StatusCode HltBackgroundCategory::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
   StatusCode sc = StatusCode::SUCCESS ;
   sc = m_algoCorr->printTable() ;
   if (!sc) return sc;

@@ -104,7 +104,7 @@ Bd2MuMuKstarTree.TupleToolTrigger.VerboseSelections = true ;
 //ApplicationMgr.TopAlg += { "HltBackgroundCategory" } ;
 //HltBackgroundCategory.AlgorithmCorrelations.UseNumbers = false ;
 //HltBackgroundCategory.AlgorithmCorrelations.Decimals = 3 ;
-HltBackgroundCategory.FillAll = true ;
+HltBackgroundCategory.FillAll = false ;
 //HltBackgroundCategory.AlgorithmCorrelations.OnlyNonZero = false ;
 //HltBackgroundCategory.AlgorithmCorrelations.OutputLevel = 1 ;
 

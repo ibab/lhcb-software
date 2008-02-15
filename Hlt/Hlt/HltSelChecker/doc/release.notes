@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-02-15 - Patrick Koppenburg
+ - src/HltBackgroundCategory.cpp : more verbose verbose()
+
 ! 2008-02-11 - Patrick Koppenburg
  - HltBackgroundCategory : new algorithm that prints correlation of background
    category and hlt selection. Note that it requires  LHCbKernel from 
