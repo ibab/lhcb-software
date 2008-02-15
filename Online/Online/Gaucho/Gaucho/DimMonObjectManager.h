@@ -85,7 +85,7 @@ public:
   void saverWriteMonObjects();
 
   //Adder
-  void adderCreateDimNames(std::string nodeName, std::vector<std::string> taskName, std::vector<std::string> algorithmName, std::vector<std::string> objectName, std::string serverName);
+  int adderCreateDimNames(std::string nodeName, std::vector<std::string> taskName, std::vector<std::string> algorithmName, std::vector<std::string> objectName, std::string serverName);
   void adderCreateDimMonObjects(std::string procName, int refreshTime);
   void adderDeleteDimMonObjects();
   void adderCreateDimTimerMonObject(int refreshTime);
