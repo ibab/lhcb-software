@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.169 2008-02-07 17:54:35 jonrob Exp $
+! $Id: release.notes,v 1.170 2008-02-15 10:01:04 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2008-02-15 - Chris Jones
+ - Update RichGeomPhoton to store a pointer to the associated 
+   DeRichSphMirror for the primary and secondary mirrors, instead of just
+   the mirror number.
+ - Update RichTrackSegment to have more reasonable guesses for the 
+   average photon energy in each radiator (previously was set to 0).
 
 ! 2008-02-07 - Chris Jones
  - Add new method to RichHistoID.h

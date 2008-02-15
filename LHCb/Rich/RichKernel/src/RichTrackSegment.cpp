@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.cpp,v 1.5 2007-04-23 12:44:04 jonrob Exp $
+ *  $Id: RichTrackSegment.cpp,v 1.6 2008-02-15 10:01:04 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @author  Antonis Papanestis
@@ -15,6 +15,16 @@
 
 // local
 #include "RichKernel/RichTrackSegment.h"
+
+// Gaudi
+#include "GaudiKernel/SystemOfUnits.h"
+
+// boost
+#include "boost/assign/list_of.hpp"
+
+// static data members
+std::vector<double> 
+LHCb::RichTrackSegment::s_avPhotEn = boost::assign::list_of(3.0)(4.25)(4.4); // Units are eV
 
 void LHCb::RichTrackSegment::updateState( const Gaudi::XYZPoint & rotPnt,
                                           const Gaudi::Transform3D & trans )

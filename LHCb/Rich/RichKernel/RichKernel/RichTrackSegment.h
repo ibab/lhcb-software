@@ -5,7 +5,7 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.4 2008-02-06 10:47:10 jonrob Exp $
+ *  $Id: RichTrackSegment.h,v 1.5 2008-02-15 10:01:04 jonrob Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
@@ -68,6 +68,11 @@ namespace LHCb
     {
       return Gaudi::XYZPoint ( p1.x()+p2.x(), p1.y()+p2.y(), p1.z()+p2.z() );
     }
+
+  private:
+
+    /// Static vector containing average photon energies for each of the three radiator types
+    static std::vector<double> s_avPhotEn;
 
   public: // helper classes
 
@@ -187,16 +192,16 @@ namespace LHCb
                       const StateErrors entryErrors  = StateErrors(), ///< The segment errors at the entry point
                       const StateErrors exitErrors   = StateErrors()  ///< The segment errors at the exit point
                       )
-      : m_type             ( t          ),
-        m_radIntersections ( intersects ),
-        m_radiator         ( rad  ),
-        m_rich             ( rich ),
+      : m_type             ( t            ),
+        m_radIntersections ( intersects   ),
+        m_radiator         ( rad          ),
+        m_rich             ( rich         ),
         m_errorsEntry      ( entryErrors  ),
         m_errorsMiddle     ( Rich::Rich1Gas == rad ? exitErrors : entryErrors ), // CRJ : Is this best ?
         m_errorsExit       ( exitErrors   ),
-        m_avPhotonEnergy   ( 0 ),
-        m_rotation         ( NULL ),
-        m_rotation2        ( NULL )
+        m_avPhotonEnergy   ( s_avPhotEn[rad] ),
+        m_rotation         ( NULL         ),
+        m_rotation2        ( NULL         )
     {
       if      ( RichTrackSegment::UseAllStateVectors    == type() )
       {
@@ -226,18 +231,18 @@ namespace LHCb
                       const StateErrors middleErrors = StateErrors(), ///< The segment errors at the mid point
                       const StateErrors exitErrors   = StateErrors()  ///< The segment errors at the exit point
                       )
-      : m_type             ( t          ),
-        m_radIntersections ( intersects ),
-        m_middlePoint      ( middP      ),
-        m_middleMomentum   ( middV      ),
-        m_radiator         ( rad   ),
-        m_rich             ( rich  ),
+      : m_type             ( t            ),
+        m_radIntersections ( intersects   ),
+        m_middlePoint      ( middP        ),
+        m_middleMomentum   ( middV        ),
+        m_radiator         ( rad          ),
+        m_rich             ( rich         ),
         m_errorsEntry      ( entryErrors  ),
         m_errorsMiddle     ( middleErrors ),
         m_errorsExit       ( exitErrors   ),
-        m_avPhotonEnergy   ( 0 ),
-        m_rotation         ( NULL ),
-        m_rotation2        ( NULL )
+        m_avPhotonEnergy   ( s_avPhotEn[rad] ),
+        m_rotation         ( NULL         ),
+        m_rotation2        ( NULL         )
     {
       if      ( RichTrackSegment::UseAllStateVectors == type() )
       {

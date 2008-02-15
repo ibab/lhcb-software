@@ -3,7 +3,7 @@
  *
  *  Header file for RICH utility class : LHCb::RichGeomPhoton
  *
- *  $Id: RichGeomPhoton.h,v 1.5 2008-01-11 11:46:35 jonrob Exp $
+ *  $Id: RichGeomPhoton.h,v 1.6 2008-02-15 10:01:04 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -24,51 +24,12 @@
 #include "RichKernel/RichPixelCluster.h"
 #include "Kernel/MemPoolAlloc.h"
 
+// Forward declarations
+class DeRichSphMirror;
+
 // General LHCb namespace
 namespace LHCb
 {
-
-  /** @namespace RichGeomPhotonCode
-   *
-   *  Namespace for definitions related to RichGeomPhoton
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  namespace RichGeomPhotonCode
-  {
-
-    /// Name of this class for messaging
-    static const std::string myName = "RichGeomPhoton";
-
-    /// Data type for internal storage
-    typedef unsigned int ShortType;
-
-    static const ShortType BitsFlatMirr    = 6; ///< number of bits for flat mirror
-    static const ShortType BitsSphMirr     = 6; ///< number of bits for spherical mirror
-    static const ShortType BitsFlatMirrOK  = 1; ///< number of bits for flat mirror OK
-    static const ShortType BitsSphMirrOK   = 1; ///< number of bits for spherical mirror OK
-    static const ShortType BitsMirrValid   = 1; ///< number of bits for mirror information is valid
-
-    // Shifts
-    static const ShortType ShiftFlatMirr   = 0;
-    static const ShortType ShiftSphMirr    = ShiftFlatMirr    + BitsFlatMirr;
-    static const ShortType ShiftFlatMirrOK = ShiftSphMirr     + BitsSphMirr;
-    static const ShortType ShiftSphMirrOK  = ShiftFlatMirrOK  + BitsFlatMirrOK;
-    static const ShortType ShiftMirrValid  = ShiftSphMirrOK   + BitsSphMirrOK;
-
-    // Masks
-    static const ShortType MaskFlatMirr    = ( ( 1 << BitsFlatMirr ) - 1 )   << ShiftFlatMirr;
-    static const ShortType MaskSphMirr     = ( ( 1 << BitsSphMirr ) - 1 )    << ShiftSphMirr;
-    static const ShortType MaskFlatMirrOK  = ( ( 1 << BitsFlatMirrOK ) - 1 ) << ShiftFlatMirrOK;
-    static const ShortType MaskSphMirrOK   = ( ( 1 << BitsSphMirrOK ) - 1 )  << ShiftSphMirrOK;
-    static const ShortType MaskMirrValid   = ( ( 1 << BitsMirrValid ) - 1 )  << ShiftMirrValid;
-
-    // Create the maximum allowed value for each data field
-    static const ShortType MaxFlatMirr     = ( 1 << BitsFlatMirr ) - 1; ///< Max value possible for flat mirror field
-    static const ShortType MaxSphMirr      = ( 1 << BitsSphMirr )  - 1; ///< Max value possible for spherical mirror field
-
-  }
 
   /** @class RichGeomPhoton RichGeomPhoton.h RichKernel/RichGeomPhoton.h
    *
@@ -95,7 +56,9 @@ namespace LHCb
                     const float activeFrac = 0 )
       : m_CherenkovTheta        ( theta      ),
         m_CherenkovPhi          ( phi        ),
-        m_dataWord              ( 0          ),
+        m_primaryMirror         ( NULL       ),
+        m_secondaryMirror       ( NULL       ),
+        m_unambiguousPhoton     ( false      ),
         m_activeSegmentFraction ( activeFrac ) { }
 
     /** Constructor from full photon information
@@ -126,11 +89,13 @@ namespace LHCb
         m_detectionPoint         ( detectionPoint    ),
         m_sphMirReflectionPoint  ( sphMirrReflPoint  ),
         m_flatMirReflectionPoint ( flatMirrReflPoint ),
-        m_dataWord               ( 0                 ),
         m_smartID                ( smartID           ),
+        m_primaryMirror          ( NULL              ),
+        m_secondaryMirror        ( NULL              ),
+        m_unambiguousPhoton      ( false             ),
         m_activeSegmentFraction  ( activeFrac        ) { }
 
-  /** Constructor from full photon information (without photon direction at emission).
+    /** Constructor from full photon information (without photon direction at emission).
      *
      *  @param theta Cherenkov angle theta
      *  @param phi   Cherenkov angle phi
@@ -155,8 +120,10 @@ namespace LHCb
         m_detectionPoint         ( detectionPoint    ),
         m_sphMirReflectionPoint  ( sphMirrReflPoint  ),
         m_flatMirReflectionPoint ( flatMirrReflPoint ),
-        m_dataWord               ( 0                 ),
         m_smartID                ( smartID           ),
+        m_primaryMirror          ( NULL              ),
+        m_secondaryMirror        ( NULL              ),
+        m_unambiguousPhoton      ( false             ),
         m_activeSegmentFraction  ( activeFrac        ) { }
 
     ~RichGeomPhoton( ) {} ///< Destructor
@@ -278,89 +245,40 @@ namespace LHCb
       return m_detectionPoint;
     }
 
-    /**
-     * Set accessor to spherical mirror number status
-     * @param OK status
-     */
-    inline void setMirrorNumValid( const bool OK )
+    /// Set the unambiguous photon flag
+    void setUnambiguousPhoton( const bool unambig )
     {
-      const RichGeomPhotonCode::ShortType i = ( OK ? 1 : 0 );
-      setDataWord( ((i << RichGeomPhotonCode::ShiftMirrValid) &
-                    RichGeomPhotonCode::MaskMirrValid) |
-                   (dataWord() & ~RichGeomPhotonCode::MaskMirrValid) );
+      m_unambiguousPhoton = unambig;
     }
 
-    /** The status of the mirror numbers
-     *  @return Boolean indicating if the mirror numbers are valid
-     */
-    inline bool mirrorNumValid() const
+    /// Access the unambiguous photon flag
+    bool unambiguousPhoton() const
     {
-      return ( ((dataWord() & RichGeomPhotonCode::MaskMirrValid)
-                >> RichGeomPhotonCode::ShiftMirrValid) != 0 );
+      return m_unambiguousPhoton;
     }
 
-    /**
-     * Set accessor to spherical mirror number
-     * @param num the new value for the spherical mirror number
-     */
-    inline bool setSphMirrorNum( const RichGeomPhotonCode::ShortType num )
+    /// Set the associated primary mirror detector element
+    inline void setPrimaryMirror( const DeRichSphMirror * mirror )
     {
-      return ( dataInRange(num,RichGeomPhotonCode::MaxSphMirr) ?
-               set( num,
-                    RichGeomPhotonCode::ShiftSphMirr,
-                    RichGeomPhotonCode::MaskSphMirr,
-                    RichGeomPhotonCode::MaskSphMirrOK ) : false );
+      m_primaryMirror = mirror;
     }
 
-    /**
-     * Get accessor to spherical mirror number
-     * @return the spherical mirror number
-     */
-    inline RichGeomPhotonCode::ShortType sphMirrorNum() const
+    /// Access the associated primary mirror detector element
+    inline const DeRichSphMirror * primaryMirror() const
     {
-      return (dataWord() & RichGeomPhotonCode::MaskSphMirr) >> RichGeomPhotonCode::ShiftSphMirr;
+      return m_primaryMirror;
     }
 
-    /**
-     * Test if the spherical mirror number has been set
-     * @return boolean indicating the status of the spherical mirror number
-     */
-    inline bool sphMirrorIsSet() const
+    /// Set the associated secondary mirror detector element
+    inline void setSecondaryMirror( const DeRichSphMirror * mirror )
     {
-      return ( ((dataWord() & RichGeomPhotonCode::MaskSphMirrOK)
-                >> RichGeomPhotonCode::ShiftSphMirrOK) != 0 );
+      m_secondaryMirror = mirror;
     }
 
-    /**
-     * Set accessor to flat mirror number (1-40).
-     * @param num the new value for the flat mirror number
-     */
-    inline bool setFlatMirrorNum( const RichGeomPhotonCode::ShortType num )
+    /// Access the associated secondary mirror detector element
+    inline const DeRichSphMirror * secondaryMirror() const
     {
-      return ( dataInRange(num,RichGeomPhotonCode::MaxFlatMirr) ?
-               set( num,
-                    RichGeomPhotonCode::ShiftFlatMirr,
-                    RichGeomPhotonCode::MaskFlatMirr,
-                    RichGeomPhotonCode::MaskFlatMirrOK ) : false );
-    }
-
-    /**
-     * Get accessor to flat mirror number
-     * @return the flat mirror number
-     */
-    inline RichGeomPhotonCode::ShortType flatMirrorNum () const
-    {
-      return (dataWord() & RichGeomPhotonCode::MaskFlatMirr) >> RichGeomPhotonCode::ShiftFlatMirr;
-    }
-
-    /**
-     * Test if the flat mirror number has been set
-     * @return boolean indicating the status of the flat mirror number
-     */
-    inline bool flatMirrorIsSet() const
-    {
-      return ( ((dataWord() & RichGeomPhotonCode::MaskFlatMirrOK)
-                >> RichGeomPhotonCode::ShiftFlatMirrOK) != 0 );
+      return m_secondaryMirror;
     }
 
     /**
@@ -461,24 +379,6 @@ namespace LHCb
       return m_activeSegmentFraction;
     }
 
-    /**
-     * Sets the raw data word
-     * @param data The new raw data word
-     */
-    inline void setDataWord( const RichGeomPhotonCode::ShortType data )
-    {
-      m_dataWord = data;
-    }
-
-    /**
-     * Returns the raw data word
-     * @return the bit packed data field
-     */
-    inline RichGeomPhotonCode::ShortType dataWord() const
-    {
-      return m_dataWord;
-    }
-
   public:
 
     /// Printout method
@@ -491,27 +391,6 @@ namespace LHCb
       return photon.fillStream(s);
     }
 
-  private: // methods
-
-    /// Set the data
-    inline bool set( const RichGeomPhotonCode::ShortType value, ///< The data value for field being set
-                     const RichGeomPhotonCode::ShortType shift, ///< The shift value for field being set
-                     const RichGeomPhotonCode::ShortType mask,  ///< The mask value for field being set
-                     const RichGeomPhotonCode::ShortType okMask ///< The "Data is OK" mask value for field being set
-                     )
-    {
-      setDataWord( ((value << shift) & mask) | (dataWord() & ~mask) | okMask );
-      return true;
-    };
-
-    /// Tests whether a given value is in range for a given data field
-    inline bool dataInRange( const RichGeomPhotonCode::ShortType value, ///< The data value to test
-                             const RichGeomPhotonCode::ShortType max    ///< The maximum value that can be stored
-                             ) const
-    {
-      return ( value <= max );
-    }
-
   private: // data
 
     float m_CherenkovTheta;                    ///< Cherenkov angle theta
@@ -519,10 +398,18 @@ namespace LHCb
     Gaudi::XYZPoint m_emissionPoint;           ///< The photon emission point
     Gaudi::XYZVector m_emissionDir;            ///< The photon direction at the emission point
     Gaudi::XYZPoint m_detectionPoint;          ///< The photon detection point on the HPD entrance window
-    Gaudi::XYZPoint m_sphMirReflectionPoint;   ///< The spherical mirror reflection point
-    Gaudi::XYZPoint m_flatMirReflectionPoint;  ///< The flat mirror relfection point
-    RichGeomPhotonCode::ShortType m_dataWord;  ///< Bit-pack data word
+    Gaudi::XYZPoint m_sphMirReflectionPoint;   ///< The primary mirror reflection point
+    Gaudi::XYZPoint m_flatMirReflectionPoint;  ///< The secondary mirror reflection point
     LHCb::RichSmartID m_smartID;               ///< The channel ID for the photon detection point
+
+    /// Pointer to the associated primary mirror detector element
+    const DeRichSphMirror * m_primaryMirror;
+
+    /// Pointer to the associated secondary mirror detector element
+    const DeRichSphMirror * m_secondaryMirror;
+
+    /// Flag to indicate if an unambiguous photon or not
+    bool m_unambiguousPhoton;
 
     /** The fraction of the RichTrackSegment trajectory this photon is associated
      *  with for which it is geometrically possible this photon was produced
