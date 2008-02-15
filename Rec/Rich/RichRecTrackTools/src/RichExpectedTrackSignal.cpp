@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::ExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.3 2008-01-25 13:46:14 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.4 2008-02-15 10:31:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -68,12 +68,6 @@ StatusCode ExpectedTrackSignal::initialize()
   return sc;
 }
 
-StatusCode ExpectedTrackSignal::finalize()
-{
-  // Execute base class method
-  return RichRecToolBase::finalize();
-}
-
 double ExpectedTrackSignal::nEmittedPhotons ( LHCb::RichRecSegment * segment,
                                               const Rich::ParticleIDType id ) const
 {
@@ -122,14 +116,14 @@ double ExpectedTrackSignal::nDetectablePhotons (  LHCb::RichRecSegment * segment
 
     // loop over energy bins
     double signal = 0;
-    Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & emitSpectra
+    const Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & emitSpectra
       = segment->emittedPhotonSpectra();
     Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & detSpectra
       = segment->detectablePhotonSpectra();
     for ( unsigned int iEnBin = 0; iEnBin < emitSpectra.energyBins(); ++iEnBin )
     {
       const double sig = (emitSpectra.energyDist(id))[iEnBin] *
-        m_sigDetEff->photonDetEfficiency( segment, emitSpectra.binEnergy(iEnBin) );
+        m_sigDetEff->photonDetEfficiency( segment, id, emitSpectra.binEnergy(iEnBin) );
       const double gasQuartzWinTrans =
         m_gasQuartzWin->photonTransProb(segment,emitSpectra.binEnergy(iEnBin));
       signal += ( (detSpectra.energyDist(id))[iEnBin] = sig*gasQuartzWinTrans );
@@ -153,8 +147,7 @@ ExpectedTrackSignal::nSignalPhotons (  LHCb::RichRecSegment * segment,
 
   if ( !segment->nSignalPhotons().dataIsValid( id ) )
   {
-    double signal  = 0;
-    double scatter = 0;
+    double signal(0), scatter(0);
 
     // compute detectable emitted photons
     double detectablePhots = nDetectablePhotons( segment, id );
@@ -205,8 +198,8 @@ double
 ExpectedTrackSignal::avgSignalPhotEnergy( LHCb::RichRecSegment * segment,
                                           const Rich::ParticleIDType id ) const
 {
-
-  // NB : If used often this method should cache information in segment
+  // First set a 'rough' guess using the emitted energy
+  //segment->trackSegment().setAvPhotonEnergy( avgEmitPhotEnergy(segment) );
 
   // make sure signal photons are calculated
   const double nSig = nSignalPhotons ( segment, id );
@@ -232,6 +225,7 @@ ExpectedTrackSignal::avgSignalPhotEnergy( LHCb::RichRecSegment * segment,
     debug() << "RichRecSegment " << segment->key() << " " << id
             << " avgSignalPhotEnergy = " << avgEnergy << endreq;
   }
+
   return avgEnergy;
 }
 
@@ -239,24 +233,24 @@ double
 ExpectedTrackSignal::avgEmitPhotEnergy( LHCb::RichRecSegment * segment,
                                         const Rich::ParticleIDType id ) const
 {
-  // NB : If used often this method should cache information in segment
 
-  // make sure signal photons are calculated
+  // make sure emitted photons are calculated
   const double nSig = nEmittedPhotons ( segment, id );
 
   double avgEnergy = 0;
   if ( nSig> 0 )
   {
-
     // loop over energy bins
-    Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & spectra = segment->emittedPhotonSpectra();
+    const Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & spectra = segment->emittedPhotonSpectra();
     double totalEnergy = 0;
-    for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin ) {
+    for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin ) 
+    {
       avgEnergy   += (spectra.energyDist(id))[iEnBin] * spectra.binEnergy(iEnBin);
       totalEnergy += (spectra.energyDist(id))[iEnBin];
     } // energy bin loop
-    avgEnergy = ( totalEnergy>0 ? avgEnergy/totalEnergy : 0 );
 
+    // normalise result
+    avgEnergy = ( totalEnergy>0 ? avgEnergy/totalEnergy : 0 );
   }
 
   if ( msgLevel(MSG::DEBUG) )
@@ -598,45 +592,6 @@ ExpectedTrackSignal::setThresholdInfo( LHCb::RichRecTrack * track,
     pid->setAboveThreshold(*hypo,aboveThreshold(track,*hypo));
   }
 
-  /*
-  // Assume all hypos are above threshold
-  pid->setElectronHypoAboveThres(true);
-  pid->setMuonHypoAboveThres(true);
-  pid->setPionHypoAboveThres(true);
-  pid->setKaonHypoAboveThres(true);
-  pid->setProtonHypoAboveThres(true);
-  // Now find those which aren't
-  for ( Rich::Particles::const_reverse_iterator hypo = Rich::particles().rbegin();
-        hypo != Rich::particles().rend(); ++hypo )
-  {
-    if ( aboveThreshold(track,*hypo)
-         //&& nTotalObservablePhotons(track,*hypo)>0
-         ) { break; }
-    pid->setAboveThreshold(*hypo,false);
-  }
-  */
-
-  /*
-  // first just check the threshold information
-  {
-  for ( Rich::Particles::const_iterator hypo = Rich::particles().begin();
-  hypo != Rich::particles().end(); ++hypo )
-  {
-  pid->setAboveThreshold(*hypo,aboveThreshold(track,*hypo));
-  }
-  }
-  // Now find those which aren't
-  {
-  for ( Rich::Particles::const_reverse_iterator hypo = m_pidTypes.rbegin();
-  hypo != m_pidTypes.rend(); ++hypo )
-  {
-  if ( pid->isAboveThreshold(*hypo) &&
-  nTotalObservablePhotons(track,*hypo)>0 ) { return; }
-  pid->setAboveThreshold(*hypo,false);
-  }
-  }
-  */
-
 }
 
 // Set the threshold information in a RichPID object for given segment
@@ -655,44 +610,5 @@ ExpectedTrackSignal::setThresholdInfo( LHCb::RichRecSegment * segment,
   {
     pid->setAboveThreshold(*hypo,aboveThreshold(segment,*hypo));
   }
-
-  /*
-  // Assume all hypos are above threshold
-  pid->setElectronHypoAboveThres(true);
-  pid->setMuonHypoAboveThres(true);
-  pid->setPionHypoAboveThres(true);
-  pid->setKaonHypoAboveThres(true);
-  pid->setProtonHypoAboveThres(true);
-  // Now find those which aren't
-  for ( Rich::Particles::const_reverse_iterator hypo = Rich::particles().rbegin();
-        hypo != Rich::particles().rend(); ++hypo )
-  {
-    if ( aboveThreshold(segment,*hypo)
-         //&& nTotalObservablePhotons(track,*hypo)>0
-         ) { break; }
-    pid->setAboveThreshold(*hypo,false);
-  }
-  */
-
-  /*
-  // first just check the threshold information
-  {
-  for ( Rich::Particles::const_iterator hypo = Rich::particles().begin();
-  hypo != Rich::particles().end(); ++hypo )
-  {
-  pid->setAboveThreshold(*hypo,aboveThreshold(segment,*hypo));
-  }
-  }
-  // Now find those which aren't
-  {
-  for ( Rich::Particles::const_reverse_iterator hypo = m_pidTypes.rbegin();
-  hypo != m_pidTypes.rend(); ++hypo )
-  {
-  if ( pid->isAboveThreshold(*hypo) &&
-  nTotalObservablePhotons(segment,*hypo)>0 ) { return; }
-  pid->setAboveThreshold(*hypo,false);
-  }
-  }
-  */
 
 }

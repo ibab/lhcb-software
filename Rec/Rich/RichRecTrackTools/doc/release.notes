@@ -4,6 +4,12 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-02-15 - Chris Jones
+ - Add flag to RichCherenkovAngle::avgCherenkovTheta to allow force the 
+   calculation to use the the emitted photon energy spectra instead of the
+   detected one (needed to prevent data race conditions where A depends on B
+   but B depends on A ...).
+
 !======================== RichRecTrackTools v1r1 2008-01-28 ==================
 ! 2008-01-25 - Chris Jones
  - Add new methods to average track signal tool.

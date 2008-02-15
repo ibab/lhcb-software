@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::CherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.h,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichCherenkovAngle.h,v 1.2 2008-02-15 10:31:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -77,7 +77,8 @@ namespace Rich
 
       // Returns average Cherenkov angle for given particle hypothesis
       double avgCherenkovTheta( LHCb::RichRecSegment * segment,
-                                const Rich::ParticleIDType id ) const;
+                                const Rich::ParticleIDType id,
+                                const bool useEmittedSpectrum = false ) const;
 
       // Returns average Cherenkov angle for the current mass hypothesis
       // Assigned to the segment

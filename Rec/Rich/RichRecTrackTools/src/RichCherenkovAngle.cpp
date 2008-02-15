@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::CherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.2 2008-01-25 13:46:14 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.3 2008-02-15 10:31:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -72,7 +72,8 @@ StatusCode CherenkovAngle::initialize()
 
 double
 CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment,
-                                   const Rich::ParticleIDType id ) const
+                                   const Rich::ParticleIDType id,
+                                   const bool useEmittedSpectrum ) const
 {
 
   if ( !segment->averageCKTheta().dataIsValid(id) )
@@ -80,40 +81,45 @@ CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment,
     double angle = 0;
 
     // total unscattered signal
-    const double unscat = m_signal->nSignalPhotons( segment, id );
-
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << "RichRecSegment " << segment->key() << " " << id
-              << " calculating avgCK theta : unscat = " << unscat << endreq;
-    }
-
+    const double unscat = ( !useEmittedSpectrum ? 
+                            m_signal->nSignalPhotons ( segment, id ) :
+                            m_signal->nEmittedPhotons( segment, id ) );
     if ( unscat > 0 )
     {
 
-      // which radiator
-      const Rich::RadiatorType rad = segment->trackSegment().radiator();
-
       // Beta for this segment
-      const double beta = m_richPartProp->beta( sqrt(segment->trackSegment().bestMomentum().mag2()), id);
-
-      // loop over energy bins
-      Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & sigSpectra = segment->signalPhotonSpectra();
-      for ( unsigned int iEnBin = 0; iEnBin < sigSpectra.energyBins(); ++iEnBin )
+      const double beta = m_richPartProp->beta( std::sqrt(segment->trackSegment().bestMomentum().mag2()), id);
+      if ( beta > 0 )
       {
-        const double temp = beta *
-          m_refIndex->refractiveIndex( rad, sigSpectra.binEnergy(iEnBin) );
-        angle += (sigSpectra.energyDist(id))[iEnBin] * ( temp>1 ? acos(1/temp) : 0 );
-      }
 
-      // normalise the angle
-      angle /= unscat;
+        // which radiator
+        const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
-    }
+        // loop over energy bins
+        const Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & sigSpectra 
+          = ( !useEmittedSpectrum ? segment->signalPhotonSpectra() : segment->emittedPhotonSpectra() );
+        for ( unsigned int iEnBin = 0; iEnBin < sigSpectra.energyBins(); ++iEnBin )
+        {
+          const double temp = beta *
+            m_refIndex->refractiveIndex( rad, sigSpectra.binEnergy(iEnBin) );
+          angle += (sigSpectra.energyDist(id))[iEnBin] * ( temp>1 ? acos(1/temp) : 0 );
+        }
 
-    segment->setAverageCKTheta( id, angle );
+        // normalise the angle
+        angle /= unscat;
+
+      } // beta > 0
+
+    } // unscat > 0
+
+    // Don't save in the segment if the emitted spectra was used
+    if ( !useEmittedSpectrum ) segment->setAverageCKTheta( id, angle );
+    
+    // return the newly calculated value
+    return angle;
   }
 
+  // return the cached value
   return segment->averageCKTheta( id );
 }
 
@@ -179,7 +185,7 @@ double CherenkovAngle::avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
 
   // ray tracing mode
   LHCb::RichTraceMode mode( LHCb::RichTraceMode::IgnoreHPDAcceptance );
-  mode.setAeroRefraction ( iRad == Rich::Aerogel ); 
+  mode.setAeroRefraction ( iRad == Rich::Aerogel );
 
   // send off virtual photons
   double ckPhi = 0.0;
@@ -195,7 +201,7 @@ double CherenkovAngle::avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
     const Gaudi::XYZVector photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, ckPhi );
 
     Gaudi::XYZPoint hitPointGlobal;
-    const LHCb::RichTraceMode::RayTraceResult result = 
+    const LHCb::RichTraceMode::RayTraceResult result =
       m_rayTrace->traceToDetector( segment->trackSegment().rich(),
                                    emissionPt,
                                    photDir,
