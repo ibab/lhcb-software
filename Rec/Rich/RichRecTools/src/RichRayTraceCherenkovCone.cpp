@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.22 2007-11-26 17:22:52 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.23 2008-02-15 10:21:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -58,6 +58,38 @@ StatusCode RayTraceCherenkovCone::initialize()
   info() << "# ray tracing attempts before bailout = " << m_nBailout << endreq;
 
   return sc;
+}
+
+// Trace a single photon
+LHCb::RichTraceMode::RayTraceResult
+RayTraceCherenkovCone::traceAphoton ( const Rich::DetectorType rich,
+                                      LHCb::RichRecRing * ring,
+                                      const Gaudi::XYZPoint & emissionPoint,
+                                      const Gaudi::XYZVector & photDir,
+                                      const LHCb::RichTraceMode mode ) const
+{
+  //if (msgLevel(MSG::VERBOSE))
+  //  verbose() << "  -> Ray-tracing " << photDir << endreq
+      
+  // do the ray tracing
+  const LHCb::RichTraceMode::RayTraceResult result =
+    m_rayTrace->traceToDetector( rich, emissionPoint, photDir, m_photon, mode, Rich::top,
+                                 ring->richRecSegment()->trackSegment().avPhotonEnergy() );
+
+  // Add a new point
+  const Gaudi::XYZPoint & gP = m_photon.detectionPoint();
+  ring->ringPoints().push_back
+    ( LHCb::RichRecPointOnRing(gP,
+                               m_geomTool->radCorrLocalPos(m_smartIDTool->globalToPDPanel(gP),
+                                                           ring->richRecSegment()->trackSegment().radiator()),
+                               m_photon.smartID(),
+                               (LHCb::RichRecPointOnRing::Acceptance)(result),
+                               m_photon.primaryMirror(),
+                               m_photon.secondaryMirror()
+                               )
+      );
+
+  return result;
 }
 
 StatusCode
@@ -121,6 +153,7 @@ RayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
       debug() << " -> emissionPoint = " << emissionPoint << endreq;
       debug() << " -> direction     = " << ring->richRecSegment()->trackSegment().bestMomentum() << endreq;
       debug() << " -> CK theta      = " << ring->radius() << endreq;
+      debug() << " -> Av. photon en = " << ring->richRecSegment()->trackSegment().avPhotonEnergy() << endreq;
       debug() << " -> " << mode << endreq;
     }
 
@@ -144,42 +177,9 @@ RayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
       // count raytraces that are in HPD panel
       if ( result >= LHCb::RichTraceMode::InHPDPanel ) ++nOK;
 
-      // test check
-      /*
-      if ( msgLevel(MSG::DEBUG) && ring->richRecSegment()->trackSegment().radiator() == Rich::Aerogel )
-      {
-        const Rich::DetectorType rich     = ring->richRecSegment()->trackSegment().rich();
-        const LHCb::RichRecPointOnRing & ptn = ring->ringPoints().back();
-        // Positions on the the local det plane
-        const Gaudi::XYZPoint & pixPRad  = ptn.localPosition();
-        // x,y differences
-        {
-          const Gaudi::XYZPoint * segPSide(NULL);
-          if ( rich == Rich::Rich1 )
-          {
-            const Rich::Side side = ( pixPRad.y() > 0 ? Rich::top : Rich::bottom );
-            segPSide = & ring->richRecSegment()->pdPanelHitPointLocal(side);
-          }
-          else
-          {
-            const Rich::Side side = ( pixPRad.x() > 0 ? Rich::right : Rich::left );
-            segPSide = & ring->richRecSegment()->pdPanelHitPointLocal(side);
-          }
-          const float diff_x = segPSide->x() - pixPRad.x();
-          const float diff_y = segPSide->y() - pixPRad.y();
-          // phi
-          const float phiCerenkov = Gaudi::Units::pi + Rich::Maths::atan2_f( diff_y, diff_x );
-          debug() << "Ray traced phi = " << ckPhi << " phi on local plane = " << phiCerenkov << endreq;
-        }
-      }
-      */
-
       // bailout check
       if ( 0 == nOK && iPhot >= m_nBailout[rad] ) break;
     }
-
-    //ring->ringPoints()
-
 
     // All was OK
     return StatusCode::SUCCESS;

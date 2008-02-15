@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::TabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.10 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.11 2008-02-15 10:21:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -68,9 +68,6 @@ namespace Rich
       // Initialize method
       StatusCode initialize();
 
-      // Finalize method
-      StatusCode finalize();
-
     public: // methods (and doxygen comments) inherited from public interface
 
       // Rayleigh scattering probability for given pathlength (segment) and photon energy
@@ -82,8 +79,8 @@ namespace Rich
       /// Pointers to RICHes
       std::vector<const DeRich*> m_riches;
 
-      /// Thickness of windows
-      double m_qWinZSize[Rich::NRiches];
+      /// Thickness of windows in each RICH
+      std::vector<double> m_qWinZSize;
 
     };
 

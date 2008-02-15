@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.h,v 1.15 2007-11-26 17:22:52 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.h,v 1.16 2008-02-15 10:21:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -134,35 +134,6 @@ namespace Rich
       mutable LHCb::RichGeomPhoton m_photon;
 
     };
-
-    // Trace a single photon
-    inline LHCb::RichTraceMode::RayTraceResult 
-    RayTraceCherenkovCone::traceAphoton ( const Rich::DetectorType rich,
-                                          LHCb::RichRecRing * ring,
-                                          const Gaudi::XYZPoint & emissionPoint,
-                                          const Gaudi::XYZVector & photDir,
-                                          const LHCb::RichTraceMode mode ) const
-    {
-      // do the ray tracing
-      const LHCb::RichTraceMode::RayTraceResult result =
-        m_rayTrace->traceToDetector( rich, emissionPoint, photDir, m_photon, mode, Rich::top,  
-                                     ring->richRecSegment()->trackSegment().avPhotonEnergy() );
-      // Add hit if tracing was OK
-      //if ( result != LHCb::RichTraceMode::RayTraceFailed )
-      {
-        // Add a new point
-        const Gaudi::XYZPoint & gP = m_photon.detectionPoint();
-        ring->ringPoints().push_back
-          ( LHCb::RichRecPointOnRing(gP,
-                                     //m_smartIDTool->globalToPDPanel(gP),
-                                     m_geomTool->radCorrLocalPos(m_smartIDTool->globalToPDPanel(gP),
-                                                                 ring->richRecSegment()->trackSegment().radiator()),
-                                     m_photon.smartID(),
-                                     (LHCb::RichRecPointOnRing::Acceptance)(result) ) 
-            );
-      }
-      return result;
-    }
 
   }
 }
