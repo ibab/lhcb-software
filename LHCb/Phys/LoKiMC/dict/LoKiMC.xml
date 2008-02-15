@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiMC.xml,v 1.15 2007-12-09 18:20:17 ibelyaev Exp $ 
+     * $Id: LoKiMC.xml,v 1.16 2008-02-15 07:32:03 cattanem Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiMC package
@@ -68,8 +68,6 @@
   <class pattern   = "LoKi::Dicts::PIDOps<LoKi::MC*>"       />
   <class pattern   = "LoKi::Dicts::FunCalls<LHCb::MC*>"     />
   <class pattern   = "LoKi::Dicts::CutCalls<LHCb::MC*>"     />
-
-  <class name = "std::vector<const LHCb::MCVertex*>"        /> 
   
   <class pattern   = "LoKi::Hybrid::*"          />
   <class pattern   = "LoKi::IMCHybrid*"         />

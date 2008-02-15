@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.35 2008-02-11 10:06:58 ibelyaev Exp $ 
+! $Id: release.notes,v 1.36 2008-02-15 07:32:03 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,7 +15,9 @@
 !
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiMC v7r1 2008-02-11 ============================
+!========================== LoKiMC v7r1 2008-02-15 ============================
+! 2008-02-15 - Marco Cattaneo
+ - Remove dict for std::vector<const LHCb::MCVertex*>, now in MCEvent
 
 ! 2008-02-11 - Vanya BELYAEV
  - various minor fixes for new Gaudi/ROOT/Reflex 
