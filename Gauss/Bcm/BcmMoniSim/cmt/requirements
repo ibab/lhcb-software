@@ -1,0 +1,36 @@
+#============================================================================
+# Created    : 2008-02-13
+# Maintainer : Magnus Lieng
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           BcmMoniSim
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process.
+#============================================================================
+branches          cmt doc src
+include_path      none
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use  MCEvent        v*       Event
+use  BcmDet         v*       Det
+use  GaudiAlg       v*
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          BcmMoniSim    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=BcmMoniSim
+

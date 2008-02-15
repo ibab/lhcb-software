@@ -1,0 +1,10 @@
+!----------------------------------------------------------------------------
+! Package     : BcmMoniSim
+! Responsible : Magnus Lieng
+! Purpose     : Histograming for the BCM stations
+!----------------------------------------------------------------------------
+
+!========================= BcmMoniSim v1r0 2008-02-15 =========================
+! 2008-02-15 - Magnus Lieng
+ - Created a new package BcmMoniSim.
+

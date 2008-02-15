@@ -1,0 +1,8 @@
+DetectorsMonitor.Members += { "BcmHitChecker/BcmHitCheckerUp" };
+BcmHitCheckerUp.BcmDetLocation = "/dd/Structure/LHCb/BeforeMagnetRegion/BcmUp";
+BcmHitCheckerUp.MonitorInDetail = false;
+
+DetectorsMonitor.Members += { "BcmHitChecker/BcmHitCheckerDown" };
+BcmHitCheckerDown.BcmDetLocation = "/dd/Structure/LHCb/MagnetRegion/BcmDown";
+BcmHitCheckerDown.MonitorInDetail = false;
+
