@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.83 2008-01-24 11:12:45 cattanem Exp $
+# $Id: requirements,v 1.84 2008-02-15 07:53:23 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
 package           PhysEvent
-version           v11r5
+version           v11r6
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -23,6 +23,11 @@ end_private
 #============================================================================
 apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
+
+# Make custom dictionary. Must be before GOD generation
+#============================================================================
+document customdict PhysEventCustomDict ../dict/lcgDict.h
+macro_append PhysEventObj2Dict_dependencies PhysEventCustomDict
 
 # Generate dictionaries with lcgdict via GOD
 #============================================================================

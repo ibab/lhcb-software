@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.133 2008-01-24 11:12:45 cattanem Exp $
+! $Id: release.notes,v 1.134 2008-02-15 07:53:23 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+!======================== PhysEvent v11r6 2008-02-15 ========================
+! 2008-02-15 - Marco Cattaneo
+ - Add generation of custom dictionary and make dict for 
+   std::vector<const LHCb::Particle*>, previously in LoKiPhys
 
 !======================== PhysEvent v11r5 2008-01-24 ========================
 ! 2008-01-11 - Vanya Belyaev
