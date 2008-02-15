@@ -4,6 +4,8 @@
   <class name = "std::pair<LHCb::MCParticle*,double>"/>
   <class name = "std::map<LHCb::MCParticle*,unsigned int> "/>
 
+  <class name = "std::vector<const LHCb::MCVertex*>" />
+
   <exclusion>
     <class name = "KeyedObject<LHCb::CaloCellID>" />
     <class name = "KeyedObject<LHCb::STChannelID>" />
