@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.3 2008-02-13 14:55:22 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.4 2008-02-15 08:20:01 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -14,6 +14,8 @@
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/IAuditor.h"
+#include "GaudiKernel/IAlgTool.h"
 
 // local
 #include "PropertyConfigSvc.h"
@@ -127,6 +129,37 @@ StatusCode PropertyConfigSvc::finalize() {
   return status;
 }
 
+//=============================================================================
+// implemenation of the IPropertyConfigSvc interface:
+//=============================================================================
+PropertyConfig 
+PropertyConfigSvc::currentConfiguration(const INamedInterface& obj) const {
+  //TODO: move the next blob into PropertyConfig c'tor itself???
+  INamedInterface *ini = const_cast<INamedInterface*>(&obj); // we do treat obj logically const, 
+                                                             // even if we call code which seems
+                                                             // wants non-const version of obj
+
+  // figure out whether we have a Service, Tool, Algorithm or Auditor...
+  string kind = "Unknown";
+  if      (SmartIF<IAlgorithm>(ini).isValid()) kind = "IAlgorithm";
+  else if (SmartIF<IService>(ini).isValid())   kind = "IService";
+  else if (SmartIF<IAlgTool>(ini).isValid())   kind = "IAlgTool";
+  else if (SmartIF<IAuditor>(ini).isValid())   kind = "IAuditor";
+
+  SmartIF<IProperty> ip(ini);
+  return PropertyConfig( obj.name(), *ip, kind);
+}
+
+PropertyConfig::digest_type 
+PropertyConfigSvc::findInTree(const ConfigTreeNode::digest_type& configTree, const std::string& name) const {
+   const vector<PropertyConfig::digest_type>& leafs = collectLeafRefs(configTree);
+   for( vector<PropertyConfig::digest_type>::const_iterator i = leafs.begin(); i!=leafs.end();++i) {
+        const PropertyConfig* pc = resolvePropertyConfig(*i);
+        assert(pc!=0);
+        if ( pc->name() == name ) return *i;
+   }
+   return MD5::createInvalidDigest();
+}
 
 //=============================================================================
 // Walk configuration trees (& cache the result)

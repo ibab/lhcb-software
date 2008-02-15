@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.h,v 1.2 2008-02-13 14:55:22 graven Exp $
+// $Id: PropertyConfigSvc.h,v 1.3 2008-02-15 08:20:01 graven Exp $
 #ifndef PROPERTYCONFIGSVC_H 
 #define PROPERTYCONFIGSVC_H 1
 
@@ -17,24 +17,37 @@
 
 // from HltBase
 #include "HltBase/IConfigAccessSvc.h"
+#include "HltBase/IPropertyConfigSvc.h"
 #include "HltBase/PropertyConfig.h"
 
 
-/** @class PropertyConfig PropertyConfig.h
+/** @class PropertyConfigSvc PropertyConfigSvc.h
  *  
  *  functionality:
- *         configure the HLT algorithms...
+ *         configure algorithms, services and tools...
+ *
+ *         TODO: split into two seperate svcs, 
+ *               one for getting configuration info (using the 
+ *               access svc for I/O) and navigating through it,
+ *               and a second, which uses the first,
+ *               to actually _use_ it to configure
+ *               an application..
  *
  *  @author Gerhard Raven
  *  @date   2007-10-24
  */
-class PropertyConfigSvc : public Service  {
+class PropertyConfigSvc : public Service,
+                          virtual public IPropertyConfigSvc {
 public:
   PropertyConfigSvc(const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~PropertyConfigSvc( ); ///< Destructor
   virtual StatusCode initialize();    ///< Service initialization
   virtual StatusCode finalize();    ///< Service initialization
+
+  virtual PropertyConfig currentConfiguration(const INamedInterface& obj) const;
+  virtual PropertyConfig::digest_type findInTree(const ConfigTreeNode::digest_type& configTree, const std::string& name) const;
+
 
 protected:
   // helper functions
