@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r11 2008-02-15 ==========================
+! 2008-02-15 - Marco Cattaneo
+ - Clean up includes
+
 ! 2008-02-15 - Chris Jones
  - Add a flag to the IRichCherenkovAngle::avgCherenkovTheta method to force
    the calculation to use the emitted photon spectra instead of the detected.

@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IRayTraceCherenkovCone
  *
- *  $Id: IRichRayTraceCherenkovCone.h,v 1.13 2007-04-23 12:56:12 jonrob Exp $
+ *  $Id: IRichRayTraceCherenkovCone.h,v 1.14 2008-02-15 14:32:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,9 +20,9 @@
 // Event model
 namespace LHCb
 {
+  class RichRecRing;
   class RichRecSegment;
 }
-#include "Event/RichRecRing.h"
 
 // Kernel
 #include "Kernel/RichTraceMode.h"

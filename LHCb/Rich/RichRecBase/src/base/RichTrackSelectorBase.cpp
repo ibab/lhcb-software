@@ -5,12 +5,15 @@
  *  Implementation file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.cpp,v 1.8 2007-09-17 12:50:46 jonrob Exp $
+ *  $Id: RichTrackSelectorBase.cpp,v 1.9 2008-02-15 14:32:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */
 //-----------------------------------------------------------------------------
+
+// GaudiKernel
+#include "GaudiKernel/IJobOptionsSvc.h"
 
 // local
 #include "RichRecBase/RichTrackSelectorBase.h"

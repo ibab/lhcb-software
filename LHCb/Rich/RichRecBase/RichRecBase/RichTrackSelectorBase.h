@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.h,v 1.5 2007-09-17 11:28:52 jonrob Exp $
+ *  $Id: RichTrackSelectorBase.h,v 1.6 2008-02-15 14:32:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -14,9 +14,6 @@
 
 #ifndef RICHRECTOOLS_RichTrackSelectorBase_H
 #define RICHRECTOOLS_RichTrackSelectorBase_H 1
-
-// Gaudi
-#include "GaudiKernel/IJobOptionsSvc.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -30,13 +27,17 @@
 
 // Event model
 #include "Event/RichRecTrack.h"
-#include "Event/Track.h"
 
 // boost
 #include "boost/assign/list_of.hpp"
 #include "boost/numeric/conversion/bounds.hpp"
 #include "boost/limits.hpp"
 #include "boost/format.hpp"
+
+namespace LHCb {
+  class Track;
+}
+
 
 namespace Rich
 {
