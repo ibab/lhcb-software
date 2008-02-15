@@ -16,7 +16,7 @@ use Boost v* LCG_Interfaces
 use DAQEvent v* Event
 
 
-apply_pattern install_more_includes more=Gaucho,Event
+apply_pattern install_more_includes more=Gaucho
 
 # build a component library
 library Gaucho  ../src/components/*.cpp 
