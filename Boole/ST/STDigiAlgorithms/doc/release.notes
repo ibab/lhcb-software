@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : ST/STDigiAlgorithms
+! Responsible : Matt Needham
+! Purpose     : Algorithms for ST Digitization
+!-----------------------------------------------------------------------------
+
+!========================= STDigiAlgorithms v1r0 2008-02-15 ==================
+! 2008-02-15 - Marco Cattaneo
+ - New package, split from STAlgorithms
