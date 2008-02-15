@@ -10,7 +10,7 @@ public:
     class Digest {
         public:
            typedef boost::uint8_t value_type[16];
-           std::string str() const { return hexit(m_value,m_value+sizeof(value_type)); }
+           std::string str() const; 
            bool invalid() const { value_type x; return memcmp(m_value,memset(x,0u,sizeof(value_type)),sizeof(value_type))==0;}
            bool operator< (const Digest& rhs) const { return memcmp(m_value,rhs.m_value,sizeof(value_type))<0;}
            bool operator> (const Digest& rhs) const { return memcmp(m_value,rhs.m_value,sizeof(value_type))>0;}
@@ -20,20 +20,13 @@ public:
            bool operator!=(const Digest& rhs) const { return !operator==(rhs);}
         private:
            friend class MD5;
-           explicit Digest(const std::string& val) { unhexit(val,m_value); }
-           explicit Digest(const value_type val) { memcpy(m_value,val,sizeof(value_type)); }
-
-           static std::string hexit(const boost::uint8_t *begin, const boost::uint8_t *end);
-           static void unhexit(const std::string& s,value_type& t);
+           explicit Digest(const std::string& val);
+           explicit Digest(const value_type& val) { memcpy(m_value,val,sizeof(value_type)); }
            value_type m_value;
     };
 
-    static Digest convertString2Digest(const std::string& s) {
-        return Digest(s);
-    }
-    static Digest createInvalidDigest() {
-       return Digest(std::string());
-    }
+    static Digest convertString2Digest(const std::string& s) { return Digest(s); }
+    static Digest createInvalidDigest() { return Digest(std::string()); }
 
 
     // the following two are the real 'guts' of this class...

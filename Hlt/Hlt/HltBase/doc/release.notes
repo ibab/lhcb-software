@@ -7,6 +7,7 @@
   - add IPropertyConfig interface for obtaining an configuration 'ID' given an 
     INamedInterface instance, and to search in a configuration tree for the 'ID'  
     of an object specified either by their name, or their INamedInterface-ness
+  - cosmetic changes to MD5 class
 
 ! 2008-02-13 Gerhard Raven
   - remove a 'const' qualifier on the templated function 'extend' in ESequences 
