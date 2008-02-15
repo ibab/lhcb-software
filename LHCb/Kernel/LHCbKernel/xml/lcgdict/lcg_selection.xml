@@ -34,6 +34,7 @@
   <class name = "IInAcceptance"        />
   <class name = "IMCVeloFEType"        />
   <class name = "INormalizeTool"       />
+  <class name = "ISharingTool"         />
   <class name = "ISiAmplifierResponse" />
   <class name = "ISTClusterPosition"   />
   <class name = "ITrajPoca"            />

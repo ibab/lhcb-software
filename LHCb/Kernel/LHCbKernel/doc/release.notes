@@ -4,8 +4,12 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v8r2 2008-02-15 ========================
+! 2008-02-15 - Marco Cattaneo
+ - Add ISharingTool interface, generalisation of ISTChargeShaingTool
+
 ! 2008-02-07 - Chris Jones
- - Add new method to Rich::Side enum, to convert side to textmore precisely 
+ - Add new method to Rich::Side enum, to convert side to text more precisely 
    when combined with the Rich::DetectorType enum.
 
 ! 2008-02-06 - Chris Jones
@@ -26,7 +30,6 @@
 ! 2008-01-23 - Gerhard Raven
  - Fix derivatives in AlignTraj (forgot to zero three numbers!).
    Credit goes to Wouter Hulsbergen for pointing out the mistake...
-
 
 !===================== LHCbKernel v8r0 2007-11-23 ========================
 ! 2007-11-23 - Marco Cattaneo
