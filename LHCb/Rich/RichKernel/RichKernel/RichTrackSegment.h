@@ -5,7 +5,7 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.6 2008-02-16 11:45:58 jonrob Exp $
+ *  $Id: RichTrackSegment.h,v 1.7 2008-02-16 11:51:55 jonrob Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
@@ -122,11 +122,11 @@ namespace LHCb
       inline float errTY2() const { return m_errTY2; }  ///< Access the ty error squared
       inline float errP2()  const { return m_errP2;  }  ///< Access the P error squared
 
-      inline float errX()  const { return sqrt(errX2());  }  ///< Access the x error
-      inline float errY()  const { return sqrt(errY2());  }  ///< Access the y error
-      inline float errTX() const { return sqrt(errTX2()); }  ///< Access the tx error
-      inline float errTY() const { return sqrt(errTY2()); }  ///< Access the ty error
-      inline float errP()  const { return sqrt(errP2());  }  ///< Access the P error
+      inline float errX()  const { return std::sqrt(errX2());  }  ///< Access the x error
+      inline float errY()  const { return std::sqrt(errY2());  }  ///< Access the y error
+      inline float errTX() const { return std::sqrt(errTX2()); }  ///< Access the tx error
+      inline float errTY() const { return std::sqrt(errTY2()); }  ///< Access the ty error
+      inline float errP()  const { return std::sqrt(errP2());  }  ///< Access the P error
 
       ///< send to std::ostream
       inline friend std::ostream& operator << ( std::ostream& s,
@@ -324,7 +324,8 @@ namespace LHCb
      */
     inline double pathLength() const
     {
-      return sqrt((entryPoint()-middlePoint()).mag2()) + sqrt((middlePoint()-exitPoint()).mag2());
+      return ( std::sqrt((entryPoint()-middlePoint()).mag2()) + 
+               std::sqrt((middlePoint()-exitPoint()).mag2())  );
     }
 
     /// Returns the segment entry point to the radiator
