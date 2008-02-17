@@ -1,7 +1,7 @@
 # =============================================================================
 """
 @namespace tracksAndVerticesClassifyTools
-@brief Functions to classify tracks and vertices in HLT according to ghosts, reason of trigger and presence of intruders and holes
+@brief Functions to classify tracks and vertices in HLT according to ghosts, reason of trigger and presence of intruders and holes. Includes one function of each type for tracks and vertices and makes use of low level modules ghostsClassifyTools, holesIntrudersTools and causeTools. Used in hadHLTpies.py
 @author Xabier Cid Vidal xabier.cid.vidal@cern.ch
 @author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
 @date 2008-05-02
@@ -13,9 +13,9 @@
 #! /usr/bin/env python
 
 
-from ghostsClassifyTools import *
-from holesIntrudersTools import *
-from causeTools import *
+import ghostsClassifyTools as gh
+import holesIntrudersTools as hi
+import causeTools as ca
 
 
 DEBUG=False
@@ -26,18 +26,7 @@ def classifyTrackByGhosts(TES,track):
 	"""classify tracks according to ghosts
 	@param TES Transient Event Store
 	@param track LHCb track
-	@returns 111,110,01,10,00, where
-                    VELO        TS    Same/Dif MC Particle
-            110      NG         NG              Dif
-	    111      NG         NG              Same
-	    01       G          NG
-	    10       NG         G
-	    00       G          G
-
-	  G  = Ghost
-	  NG = No Ghost
-
-	  Ghost: less than 70% of hits from the same MCparticle
+	@returns 111,110,01,10,00, where 111 is 70% of hits in VELO from MCP1,70% of hits in TS MPC1 (same)/ 110 is 70% of hits in VELO from MCP1, 70% of hits in TS MPC2 (different)/ 01 is ghost in VELO (less than 70 % of hits from same MCP), 70% of hits in TS from MCP1/ 10  is 70% of hits in VELO from MCP1, ghost in TS (less than 70 % of hits from same MCP)/ 00 is ghost in VELO (less than 70 % of hits from same MCP), ghost in TS (less than 70 % of hits from same MCP).
 
 	@author Xabier Cid Vidal xabier.cid.vidal@cern.ch
 	@author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
@@ -45,11 +34,11 @@ def classifyTrackByGhosts(TES,track):
 
 	## find IDs from TStations and VELO
 	lhcbIDs=track.lhcbIDs()
-	vID,tID=IDs(lhcbIDs)
+	vID,tID=gh.IDs(lhcbIDs)
 
 	## find wether there are ghosts in them and if not, associated particles
-	mcparVe,HVs = IsNotGhost(TES,vID,0.7)
-	mcparTs,HTs = IsNotGhost(TES,tID,0.7)	
+	mcparVe,HVs = gh.IsNotGhost(TES,vID,0.7)
+	mcparTs,HTs = gh.IsNotGhost(TES,tID,0.7)	
 
 	## stablish categories
 	if HVs:
@@ -74,6 +63,7 @@ def reasonOfTrigger(TES,track):
 	@param TES Transient Event Store
 	@param track LHCb track
 	@returns
+
 	   - ghost:          Has less than 70% of hits from same MC particle
 
 	   - phys:           Comes from a MCparticle which accomplishes the trigger conditions
@@ -96,25 +86,25 @@ def reasonOfTrigger(TES,track):
 	"""
 
 	## find mcpar associated to track
-	mcpar=track_to_mcp(TES,track)
+	mcpar=gh.track_to_mcp(TES,track)
 
 	## if there is no, is a ghost
 	if not mcpar: return "ghost"
 
 	## find both mc vertex and rc vertex
-	mcvertex=getmcvertex(mcpar)
-	rcvertex=getrcvertex(TES,track)
+	mcvertex=ca.getmcvertex(mcpar)
+	rcvertex=ca.getrcvertex(TES,track)
 
 	## define wether the track is physics
-	if isPhys(mcpar,mcvertex): return "phys"
+	if ca.isPhys(mcpar,mcvertex): return "phys"
 
 	else:
 		## if wrong ip causes triggering
-		if imppar1(mcpar,mcvertex)<=0.1:
+		if ca.imppar1(mcpar,mcvertex)<=0.1:
 			## find if we used a wrong vertex
-			if isVertex(mcvertex,rcvertex): return "vertex"
+			if ca.isVertex(mcvertex,rcvertex): return "vertex"
 			## if not, find element whose resolution caused the miscalculation
-			else: return whichIP(track,mcpar,rcvertex,mcvertex)
+			else: return ca.whichIP(track,mcpar,rcvertex,mcvertex)
 
 		## if it wasn't ip, it had to be pt
 		else: return "pt"
@@ -127,24 +117,24 @@ def hasHoles(TES,track,VELO):
 
 	@param TES Transient Event Store
 	@param track LHCb track
-	@param VELO VELO = det[\'/dd/Structure/LHCb/BeforeMagnetRegion/Velo\'], where det = gaudi.detsvc()
+	@param VELO VELO = det['/dd/Structure/LHCb/BeforeMagnetRegion/Velo'], where det = gaudi.detsvc()
 	@returns True if track has holes or False if not
 	@author Xabier Cid Vidal xabier.cid.vidal@cern.ch
 	@author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
 	"""
 	## find hits in velo
-	vID,tID=IDs(track.lhcbIDs())
+	vID,tID=gh.IDs(track.lhcbIDs())
 	## find mcpar associated to VELO track
-	mcpar=getmcparvelo(TES,track)
+	mcpar=gh.getmcparvelo(TES,track)
 	rel = TES["Hlt/Link/MCParticleLHCbID"]
 	## find sensors where we should find hits from this particle
-	sensho=sensors_should(mcpar,rel)
+	sensho=hi.sensors_should(mcpar,rel)
 	## find sensors where we actually find them
-	senhas=sensors_has(TES,vID,mcpar.key())
+	senhas=hi.sensors_has(TES,vID,mcpar.key())
 
 	cond=False
 	## compare both list of sensors
-	comp=compare(sensho,senhas,mcpar,VELO)
+	comp=hi.compare(sensho,senhas,mcpar,VELO)
 	## determine if we miss one amongst 8 first
 	for el in comp:
 		if not cond:
@@ -170,21 +160,21 @@ def hasIntruders(TES,track):
 	"""
 
 	## find velo hits
-	vID,tID=IDs(track.lhcbIDs())
+	vID,tID=gh.IDs(track.lhcbIDs())
 	## find mcpars associated to 8 first hits
-	mcpars8=getmcpars(TES,vID[:8])
+	mcpars8=gh.getmcpars(TES,vID[:8])
 	## find most popular amongst them
-	mcp8=getmcpar(TES,vID[:8])
+	mcp8=gh.getmcpar(TES,vID[:8])
 
 	## returns True if one these hits wasn't left by the most popular mcpar
-	return intruder(mcpars8,mcp8)
+	return hi.intruder(mcpars8,mcp8)
 
 #---------------------------------------------------
 
 def findHTvertices(HLTSUM):
 	"""Find vertices triggering HadTrigger after removing repeated ones
 
-	@param HLTSUM = gaudi.toolsvc().create(\"HltSummaryTool\",interface=\"IHltConfSummaryTool\")
+	@param HLTSUM = gaudi.toolsvc().create('HltSummaryTool',interface='IHltConfSummaryTool')
 
 	@returns vertices for HadTrigger removing repeated
 	@author Xabier Cid Vidal xabier.cid.vidal@cern.ch
@@ -231,8 +221,8 @@ def classifyVertexByGhosts(TES,vertex):
 	@param vertex LHCb vertex
 
 	@returns	
-	      - ghost:    There's at least one track linked to vertex non \"111\"
-	      - no_ghost: All tracks linked to vertex are \"111\"
+	      - ghost:    There's at least one track linked to vertex non '111'
+	      - no_ghost: All tracks linked to vertex are '111'
 
         @author Xabier Cid Vidal xabier.cid.vidal@cern.ch
         @author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
@@ -254,7 +244,7 @@ def classifyVertexByReasonOfTrigger(TES,vertex):
 
 	@returns	
 	
-	     - ghost:   There's at least one track linked to vertex non \"111\"
+	     - ghost:   There's at least one track linked to vertex non '111'
 	     - physics: All tracks linked to vertex are physics and come from same eve.
 	     - random_vertex: all tracks linked to vertex are physics but they don't come from same MC particle.
 	     - no_phys_other: there is at least one track linked to vertex being non physics
@@ -280,14 +270,14 @@ def classifyVertexByReasonOfTrigger(TES,vertex):
 	track_pt,track_ht=class_pt(tracks)
 
 	reasons.append(reasonOfTrigger(TES,track_pt))
-	reasons.append(reasonOfTriggerHT(TES,track_ht))
+	reasons.append(ca.reasonOfTriggerHT(TES,track_ht))
 
 	i=0
 	for r in reasons:
 		if r=="phys": i+=1
 
 	if i==len(reasons):
-		if same_eve(TES,track_pt,track_ht): return "phys"
+		if ca.same_eve(TES,track_pt,track_ht): return "phys"
 		else: return "random_vertex"
 
 	return "no_phys_other"

@@ -1,18 +1,17 @@
 # =============================================================================
-""" @namespace frequencyAndBpercentage
-@brief Functions to look for B percentage and output rate of different triggers
+"""
+@namespace frequencyAndBpercentage
+@brief Functions to look for B percentage and output rate of different triggers, given a configured job and an input rate. Includes one function to find out whether a certain quark is present in an event and another to test module by giving a set of datacards and configuring a job.
 @author Xabier Cid Vidal xabier.cid.vidal@cern.ch
 @author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
 @date 2008-05-02
 """
 # =============================================================================
 
-#! /usr/bin/env python
-
 import gaudimodule
-from ROOT import *
-from math import *
-from array import *
+import math
+import copy
+import drawPiesAndHistos as dph
 
 #---------------------------------------------------
 
@@ -20,13 +19,7 @@ def eventHasQuark(TES,quark):
 	"""find out wether there's a certain quark in an event
 
 	@param TES Transient Event Store
-	@param quark (char):
-	   u - up
-	   d - down
-	   s - strange
-	   c - charm
-	   b - bottom
-	   t - top
+	@param quark (char): u - up/ d - down/ s - strange/ c - charm/ b - bottom/ t - top
 	@returns True if quark is present or False if not
 	@author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
 	"""
@@ -123,49 +116,71 @@ def quarksAndFrequencyInfo(gaudimod=0, TRIGGERS=['L0TriggerHadron',"HadPreTrigge
 	## if no g_mode return only dictionary counters       	
 	if not g_mode: return counters
 
-	## Define labels
+	## Define labels and prepare newlabels for drawPieFromDict
 	labels=["b_inclusive","c_exclusive","nbc"]
-	newlabels=["Total b","Exclusive c","Others"]
+	newlabels_o=["Total b","Exclusive c","Others"]
+	newlabels={}
+	
+	for trig in TRIGGERS:
+		newlabels[trig]={}
+		j=0
+		for l in labels:
+			newlabels[trig][l]=newlabels_o[j]
+			j+=1
+	
 	freq={}
 	titles={}
 	f_unc={}
 
-	## Calculate output frequency of each trigger with its uncertainty. Define titles
+	##Prepare counters to use in drawPieFromDict
+	counters_c=copy.copy(counters)
+	all=counters.pop("all")
+
+	## Calculate output frequency of each trigger with its uncertainty. Define titles. Build pies
+	pies={}
 	for trig in TRIGGERS:
-		freq[trig]=counters[trig]["all_t"]*1.0/counters["all"]*input_f
+		all_t=counters[trig].pop("all_t")
+		freq[trig]=all_t*1.0/all*input_f
 		## uncertainty from error propagation in "a/b"
-		f_unc[trig]=sqrt(counters[trig]["all_t"]*counters["all"]*(counters[trig]["all_t"]+counters["all"]))/counters["all"]**2*input_f
+		f_unc[trig]=math.sqrt(all_t*all*(all_t+all))/all**2*input_f
 		## the information goes to "titles"
 		titles[trig]=trig+" purities. Output rate = ("+str(round(freq[trig],3))+"+-"+str(round(f_unc[trig],3))+") KHz)"
+		## Draw pies for each trigger. In titles we include output frequency info
+		pies[trig]=dph.drawPieFromDict(counters[trig],title=titles[trig],labels=newlabels[trig],sort=True)
+
 	
-	vals={}
-	colors={}
-	valsa={}
-	colorsa={}
-	pies={}
-
-	## Draw pies for each trigger. In titles we include output frequency info
-	for trig in TRIGGERS:
-		
-		colors[trig]=[]
-		vals[trig]=[]
-
-		for i in range(3):
-			vals[trig].append(float(counters[trig][labels[i]])/counters[trig]["all_t"])
-			colors[trig].append(i+2)
-
-		valsa[trig]=array("f",vals[trig])
-		
-		colorsa[trig]=array("i",colors[trig])
-
-		pies[trig]=TPie("Percentage in "+trig,titles[trig],3,valsa[trig],colorsa[trig])
-
-		for i in range(3):
-			pies[trig].SetEntryLabel(i,newlabels[i])
-
-		pies[trig].SetLabelFormat("#splitline{%perc}{%txt}")
-		pies[trig].SetRadius(0.25)
-
-
 	## return both counters and pies
-	return counters,pies
+	return counters_c,pies
+
+
+
+#---------------------------------------------------
+	
+def testForQuarksAndFrequencyInfo():
+	"""Test for quarksAndFrequencyInfo. Prepares job to run in a set of minbias events. Configuration includes Datacards, HltJob and HltMC options. 
+	@returns Returns a dictionary with information collected (number of events of each type) and corresponding pies for L0TriggerHadron,HadPreTriggerSingle and HadTrigger in selected datacards (running HltJob in minbias set of events).
+	@author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
+	"""
+
+	## set physical location for different options
+	HOMEDIR = "/afs/cern.ch/user/j/jcidvida/cmtuser/DaVinci_v19r5"
+
+	## options for HLT
+	HLTJOB    = HOMEDIR+"/opts/HltJob.opts"
+	## datacards to be read (min bias events)
+	DATACARDS = HOMEDIR+"/opts/dstL0_minbias_lumi2.opts"
+	## options to have access to montecarlo information
+	UNPACK    = HOMEDIR+"/opts/UnpackMC.opts"
+	MCOPTS = HOMEDIR+"/opts/HltMC.opts"
+
+	## prepare job configuration
+	FILES=[HLTJOB,DATACARDS,MCOPTS,UNPACK]
+	EOPTS=['HltSummaryWriter.SaveAll = true', 'HltSelectionDataToTes.CopyAll = true', 'HistogramPersistencySvc.OutputFile = "freq_and_bperc.root"']
+
+	## configure job to make it ready to quarksAndFrequencyInfo
+	gaudi = gaudimodule.AppMgr(outputlevel=3)
+	gaudi.config(files = FILES,options=EOPTS)
+
+	## return info and pies
+	return quarksAndFrequencyInfo(gaudi,g_mode=True,N=3000)
+

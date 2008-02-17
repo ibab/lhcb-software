@@ -4,12 +4,18 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
-! 2008-2-15
+! 2008-2-17 - Hugo Ruiz for Xabier Cid
+  - add to modules addDict, ghostClassifyTools, causeTools, 
+holesIntrudersTools, frequencyAndBpercentage, 
+tracksAndVerticesClassifyTools, drawPiesAndHistos
+
+
+! 2008-2-15 - Who?
   - remove examples/hltexamples.py
   - in python/examples/hltexamples.py
     bug solved: Vertices->Vertex, and Tracks->Track in candidates()
 
-! 2008-1-29
+! 2008-1-29 - Who?
 - python/examples/hltexamples.py
   - make the module a script and remove the HLTFAC factory tool
 
