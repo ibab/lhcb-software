@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2008-02-17 - Chris Jones
+ - Remove use of floor function in DeRichHPDPanel::findHPDColAndPos 
+   (surprisingly slow)
+
 !======================== RichDet v10r10 2008-02-15 ==========================
 ! 2008-02-15 - Chris Jones
  - Add a new public method to DeRichHPDPanel to return a pointer to the 
