@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.173 2008-02-17 13:29:48 jonrob Exp $
+! $Id: release.notes,v 1.174 2008-02-17 19:28:05 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
@@ -8,6 +8,7 @@
  - Update Ray Tracing interface to pass back booleans instead of
    StatusCodes. Slightly improves CPU performance (due to StatusCode 
    checks).
+ - Add method RichTrackSegment::vectorAtCosSinThetaPhi
 
 ! 2008-02-16 - Chris Jones
  - Some fixes for windows problems

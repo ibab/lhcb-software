@@ -5,7 +5,7 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.7 2008-02-16 11:51:55 jonrob Exp $
+ *  $Id: RichTrackSegment.h,v 1.8 2008-02-17 19:28:05 jonrob Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
@@ -319,6 +319,20 @@ namespace LHCb
     Gaudi::XYZVector vectorAtThetaPhi ( const double theta,
                                         const double phi ) const;
 
+    /** Creates a vector at an given angle and azimuth to the track segment
+     *
+     *  @param cosTheta Cosine of the angle between this track segment and the created vector
+     *  @param sinTheta Sine   of the angle between this track segment and the created vector
+     *  @param cosPhi   Cosine of the azimuthal angle of the vector to this track segment
+     *  @param sinPhi   Sine   of the azimuthal angle of the vector to this track segment
+     *
+     *  @return The vector at the given theta and phi angles to this track segment
+     */
+    Gaudi::XYZVector vectorAtCosSinThetaPhi ( const double cosTheta,
+                                              const double sinTheta,
+                                              const double cosPhi,
+                                              const double sinPhi ) const;
+
     /** Calculates the path lenth of a track segment.
      *  @returns The total length of the track inside the radiator
      */
@@ -581,10 +595,21 @@ inline Gaudi::XYZVector
 LHCb::RichTrackSegment::vectorAtThetaPhi( const double theta,
                                           const double phi ) const
 {
-  const double sinTheta = sin(theta);
-  return rotationMatrix2() * Gaudi::XYZVector( sinTheta*cos(phi),
-                                               sinTheta*sin(phi),
-                                               cos(theta) );
+  const double sinTheta = std::sin(theta);
+  return rotationMatrix2() * Gaudi::XYZVector( sinTheta*std::cos(phi),
+                                               sinTheta*std::sin(phi),
+                                               std::cos(theta) );
+}
+
+inline Gaudi::XYZVector 
+LHCb::RichTrackSegment::vectorAtCosSinThetaPhi ( const double cosTheta,
+                                                 const double sinTheta,
+                                                 const double cosPhi,
+                                                 const double sinPhi ) const
+{ 
+  return rotationMatrix2() * Gaudi::XYZVector( sinTheta*cosPhi,
+                                               sinTheta*sinPhi,
+                                               cosTheta );
 }
 
 inline void LHCb::RichTrackSegment::reset() const
