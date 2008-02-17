@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.2 2008-01-25 13:46:14 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.3 2008-02-17 13:38:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -206,7 +206,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
         LHCb::RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
 
         // Get PD panel impact point
-        if ( rayTraceHPDPanelPoints(**iSeg,newSegment).isSuccess() )
+        if ( rayTraceHPDPanelPoints(**iSeg,newSegment) )
         {
           // test if this segment has valid information
           if ( m_signal->hasRichInfo(newSegment) )

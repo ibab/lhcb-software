@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.16 2008-01-25 13:24:43 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.17 2008-02-17 13:37:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -277,7 +277,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
         LHCb::RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
 
         // Get PD panel impact point
-        if ( rayTraceHPDPanelPoints(**iSeg,newSegment).isSuccess() )
+        if ( rayTraceHPDPanelPoints(**iSeg,newSegment) )
         {
           // test if this segment has valid information
           if ( m_signal->hasRichInfo(newSegment) )
