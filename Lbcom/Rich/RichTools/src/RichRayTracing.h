@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::RayTracing
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.38 2008-02-15 08:45:17 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.39 2008-02-17 13:33:34 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -105,27 +105,27 @@ namespace Rich
     /// Raytraces from a point in the detector panel back to the spherical mirror
     /// returning the mirror intersection point and the direction a track would
     /// have in order to hit that point in the detector panel.
-    StatusCode traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
-                                       const Gaudi::XYZVector& startDir,
-                                       Gaudi::XYZPoint& endPoint,
-                                       Gaudi::XYZVector& endDir ) const;
+    bool traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
+                                 const Gaudi::XYZVector& startDir,
+                                 Gaudi::XYZPoint& endPoint,
+                                 Gaudi::XYZVector& endDir ) const;
 
     /// Intersection a given direction, from a given point with a given plane.
-    StatusCode intersectPlane( const Gaudi::XYZPoint& position,
-                               const Gaudi::XYZVector& direction,
-                               const Gaudi::Plane3D& plane,
-                               Gaudi::XYZPoint& intersection ) const;
+    bool intersectPlane( const Gaudi::XYZPoint& position,
+                         const Gaudi::XYZVector& direction,
+                         const Gaudi::Plane3D& plane,
+                         Gaudi::XYZPoint& intersection ) const;
 
     /// Reflect a given direction off a spherical mirror. Can be used for intersection.
-    StatusCode reflectSpherical ( Gaudi::XYZPoint& position,
-                                  Gaudi::XYZVector& direction,
-                                  const Gaudi::XYZPoint& CoC,
-                                  const double radius ) const;
+    bool reflectSpherical ( Gaudi::XYZPoint& position,
+                            Gaudi::XYZVector& direction,
+                            const Gaudi::XYZPoint& CoC,
+                            const double radius ) const;
 
     /// Ray trace from given position in given direction off flat mirrors
-    StatusCode reflectFlatPlane ( Gaudi::XYZPoint& position,
-                                  Gaudi::XYZVector& direction,
-                                  const Gaudi::Plane3D& plane ) const;
+    bool reflectFlatPlane ( Gaudi::XYZPoint& position,
+                            Gaudi::XYZVector& direction,
+                            const Gaudi::Plane3D& plane ) const;
 
   private: // methods
 
@@ -149,7 +149,7 @@ namespace Rich
       return m_deBeam[rich];
     }
 
-    /** Returns the appropriate Rich HPD panel detector element name for 
+    /** Returns the appropriate Rich HPD panel detector element name for
      *  the given RICH and panel.
      *  @param[in] rich  The RICH detector type
      *  @param[in] panel The RICH panel
@@ -160,7 +160,7 @@ namespace Rich
 
   private: // data
 
-     /// Snell's Law refraction tool
+    /// Snell's Law refraction tool
     const ISnellsLawRefraction * m_snellsLaw;
 
     /// Rich1 and Rich2 pointers

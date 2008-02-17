@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.45 2008-02-15 08:45:17 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.46 2008-02-17 13:33:34 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -459,7 +459,7 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
 // returning the mirror intersection point and the direction a track would
 // have in order to hit that point in the detector panel.
 //==========================================================================
-StatusCode
+bool
 Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
                                           const Gaudi::XYZVector& startDir,
                                           Gaudi::XYZPoint& endPoint,
@@ -485,7 +485,7 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
                           tmpStartDir,
                           m_rich[rich]->nominalPlane(side),
                           planeIntersection ) )
-    { return StatusCode::FAILURE; }
+    { return false; }
 
     // find secondary mirror segment
     const DeRichSphMirror* secSegment
@@ -494,7 +494,7 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
     if ( !reflectSpherical( tmpStartPoint, tmpStartDir,
                             secSegment->centreOfCurvature(),
                             secSegment->radius() ) )
-    { return StatusCode::FAILURE; }
+    { return false; }
 
   }
 
@@ -506,7 +506,7 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
   if ( !reflectSpherical( tmpStartPoint, tmpStartDir,
                           m_rich[rich]->nominalCentreOfCurvature(side),
                           m_rich[rich]->sphMirrorRadius() ) )
-  { return StatusCode::FAILURE; }
+  { return false; }
 
   // find primary mirror segment
   const DeRichSphMirror* sphSegment = m_mirrorSegFinder->
@@ -516,18 +516,18 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
   if ( !reflectSpherical( storePoint, storeDir,
                           sphSegment->centreOfCurvature(),
                           sphSegment->radius() ) )
-  { return StatusCode::FAILURE; }
+  { return false; }
 
   endPoint  = storePoint;
   endDir    = storeDir;
 
-  return StatusCode::SUCCESS;
+  return true;
 }
 
 //=========================================================================
 //  reflect from a spherical mirror
 //=========================================================================
-StatusCode
+bool
 Rich::RayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
                                      Gaudi::XYZVector& direction,
                                      const Gaudi::XYZPoint& CoC,
@@ -541,7 +541,7 @@ Rich::RayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
   const double b = 2. * direction.Dot( delta );
   const double c = delta.Mag2() - radius*radius;
   const double discr = b*b - 4.*a*c;
-  if ( discr < 0 ) return StatusCode::FAILURE;
+  if ( discr < 0 ) return false;
 
   const double distance1 = 0.5 * ( sqrt(discr) - b ) / a;
   // change position to the intersection point
@@ -552,13 +552,13 @@ Rich::RayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
   // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
   direction -= 2.0 * (normal.Dot(direction)) * normal;
 
-  return StatusCode::SUCCESS;
+  return true;
 }
 
 //=========================================================================
 //  reflect from a flat mirror
 //=========================================================================
-StatusCode
+bool
 Rich::RayTracing::reflectFlatPlane ( Gaudi::XYZPoint& position,
                                      Gaudi::XYZVector& direction,
                                      const Gaudi::Plane3D& plane ) const
@@ -567,8 +567,8 @@ Rich::RayTracing::reflectFlatPlane ( Gaudi::XYZPoint& position,
   Gaudi::XYZPoint intersection;
 
   // refect of the plane
-  const StatusCode sc = intersectPlane( position, direction, plane, intersection );
-  if ( sc.isFailure() ) { return sc; }
+  const bool sc = intersectPlane( position, direction, plane, intersection );
+  if ( !sc ) { return sc; }
 
   // plane normal
   const Gaudi::XYZVector normal( plane.Normal() );
@@ -587,19 +587,19 @@ Rich::RayTracing::reflectFlatPlane ( Gaudi::XYZPoint& position,
 //=========================================================================
 //  intersect a plane
 //=========================================================================
-StatusCode
+bool
 Rich::RayTracing::intersectPlane ( const Gaudi::XYZPoint& position,
                                    const Gaudi::XYZVector& direction,
                                    const Gaudi::Plane3D& plane,
                                    Gaudi::XYZPoint& intersection ) const
 {
   const double scalar = direction.Dot( plane.Normal() );
-  if ( fabs(scalar) < 1e-99 ) return StatusCode::FAILURE;
+  if ( fabs(scalar) < 1e-99 ) return false;
 
   const double distance = -(plane.Distance(position)) / scalar;
   intersection = position + distance*direction;
 
-  return StatusCode::SUCCESS;
+  return true;
 }
 
 //=========================================================================
