@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.h,v 1.11 2008-01-11 11:51:06 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.h,v 1.12 2008-02-17 13:31:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -170,8 +170,8 @@ namespace Rich
       }
 
       /// Stores the HPD panel ray traced impact points for the given segment
-      StatusCode rayTraceHPDPanelPoints( const LHCb::RichTrackSegment & trSeg,
-                                         LHCb::RichRecSegment * newSegment ) const;
+      bool rayTraceHPDPanelPoints( const LHCb::RichTrackSegment & trSeg,
+                                   LHCb::RichRecSegment * newSegment ) const;
 
     protected: // data
 

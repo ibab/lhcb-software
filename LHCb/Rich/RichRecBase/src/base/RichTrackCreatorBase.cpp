@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.15 2008-01-11 11:51:10 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.16 2008-02-17 13:31:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -165,7 +165,7 @@ namespace Rich
 
     void TrackCreatorBase::FinishEvent()
     {
-      if ( m_hasBeenCalled ) 
+      if ( m_hasBeenCalled )
       {
         ++m_Nevts;
         if ( msgLevel(MSG::DEBUG) )
@@ -234,7 +234,7 @@ namespace Rich
       return m_tracks;
     }
 
-    StatusCode
+    bool
     TrackCreatorBase::rayTraceHPDPanelPoints( const LHCb::RichTrackSegment & trSeg,
                                               LHCb::RichRecSegment * newSegment ) const
     {
@@ -246,13 +246,13 @@ namespace Rich
       //Gaudi::XYZPoint hitPoint;
       LHCb::RichGeomPhoton photon;
       const Gaudi::XYZPoint & hitPoint = photon.detectionPoint();
-      LHCb::RichTraceMode::RayTraceResult result 
+      LHCb::RichTraceMode::RayTraceResult result
         = rayTraceTool()->traceToDetector( trSeg.rich(),
                                            trackPtn,
                                            trackDir,
                                            photon,
                                            m_traceModeRad[trSeg.radiator()],
-                                           Rich::top, 
+                                           Rich::top,
                                            trSeg.avPhotonEnergy() );
       const bool OK = m_traceModeRad[trSeg.radiator()].traceWasOK(result);
       if ( OK )
@@ -307,7 +307,7 @@ namespace Rich
 
       }
 
-      return ( OK ? StatusCode::SUCCESS : StatusCode::FAILURE );
+      return OK;
     }
 
   }
