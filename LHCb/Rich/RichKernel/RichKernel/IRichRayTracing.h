@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : Rich::IRayTracing
  *
- *  $Id: IRichRayTracing.h,v 1.31 2008-01-11 11:46:35 jonrob Exp $
+ *  $Id: IRichRayTracing.h,v 1.32 2008-02-17 13:29:48 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -116,14 +116,14 @@ namespace Rich
      *  @param[out] endPoint   The required mirror intersection point
      *  @param[out] endDir     The required track direction
      *
-     *  @return Status of the ray tracing
-     *  @retval StatusCode::SUCCESS Ray tracing was successful
-     *  @retval StatusCode::FAILURE Ray tracing was unsuccessful
+     *  @return Boolean indicating the status of the ray tracing
+     *  @retval true  Ray tracing was successful
+     *  @retval false Ray tracing was unsuccessful
      */
-    virtual StatusCode traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
-                                               const Gaudi::XYZVector& startDir,
-                                               Gaudi::XYZPoint& endPoint,
-                                               Gaudi::XYZVector& endDir ) const = 0;
+    virtual bool traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
+                                         const Gaudi::XYZVector& startDir,
+                                         Gaudi::XYZPoint& endPoint,
+                                         Gaudi::XYZVector& endDir ) const = 0;
 
     /** Intersection a given direction, from a given point with a given plane.
      *
@@ -132,11 +132,11 @@ namespace Rich
      *  @param[in]  plane         The plane to intersect
      *  @param[out] intersection  The intersection point of the direction with the plane
      *
-     *  @return Status of the ray tracing
-     *  @retval StatusCode::SUCCESS Ray tracing was successful
-     *  @retval StatusCode::FAILURE Ray tracing was unsuccessful
+     *  @return Boolean indicating the status of the ray tracing
+     *  @retval true  Ray tracing was successful
+     *  @retval false Ray tracing was unsuccessful
      */
-    virtual StatusCode
+    virtual bool
     intersectPlane ( const Gaudi::XYZPoint& position,
                      const Gaudi::XYZVector& direction,
                      const Gaudi::Plane3D& plane,
@@ -151,11 +151,11 @@ namespace Rich
      *  @param[in] CoC        The centre of curvature of the spherical mirror
      *  @param[in] radius     The radius of curvature of the spherical mirror
      *
-     *  @return StatusCode indicating if the ray tracing was succesful
-     *  @retval StatusCode::SUCCESS Ray tracing was successful
-     *  @retval StatusCode::FAILURE Ray tracing was unsuccessful
+     *  @return Boolean indicating if the ray tracing was succesful
+     *  @retval true  Ray tracing was successful
+     *  @retval false Ray tracing was unsuccessful
      */
-    virtual StatusCode
+    virtual bool
     reflectSpherical ( Gaudi::XYZPoint& position,
                        Gaudi::XYZVector& direction,
                        const Gaudi::XYZPoint& CoC,
@@ -167,11 +167,11 @@ namespace Rich
      *  @param[in,out] direction On input the starting direction. On output the reflected direction.
      *  @param         plane     The plane to refect off
      *
-     *  @return StatusCode indicating if the ray tracing was succesful
-     *  @retval StatusCode::SUCCESS Ray tracing was successful
-     *  @retval StatusCode::FAILURE Ray tracing was unsuccessful
+     *  @return Boolean indicating if the ray tracing was succesful
+     *  @retval true  Ray tracing was successful
+     *  @retval false Ray tracing was unsuccessful
      */
-    virtual StatusCode
+    virtual bool
     reflectFlatPlane ( Gaudi::XYZPoint& position,
                        Gaudi::XYZVector& direction,
                        const Gaudi::Plane3D& plane ) const = 0;
