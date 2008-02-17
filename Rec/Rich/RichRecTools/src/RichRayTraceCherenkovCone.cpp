@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.23 2008-02-15 10:21:16 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.24 2008-02-17 19:26:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -68,9 +68,6 @@ RayTraceCherenkovCone::traceAphoton ( const Rich::DetectorType rich,
                                       const Gaudi::XYZVector & photDir,
                                       const LHCb::RichTraceMode mode ) const
 {
-  //if (msgLevel(MSG::VERBOSE))
-  //  verbose() << "  -> Ray-tracing " << photDir << endreq
-      
   // do the ray tracing
   const LHCb::RichTraceMode::RayTraceResult result =
     m_rayTrace->traceToDetector( rich, emissionPoint, photDir, m_photon, mode, Rich::top,
@@ -157,20 +154,24 @@ RayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
       debug() << " -> " << mode << endreq;
     }
 
-    // Set up cached parameters for photon tracing
-    const double incPhi = Gaudi::Units::twopi / static_cast<double>(nPoints);
+    // cos and sin values
+    const CosSinPhi::Vector & cosSinPhi = cosSinValues(nPoints);
+
+    // set number of points
+    ring->setNTotalPointSamples(nPoints);
 
     // loop around the ring
-    double ckPhi = 0.0;
-    unsigned int nOK(0);
-    ring->setNTotalPointSamples(nPoints);
-    for ( unsigned int iPhot = 0; iPhot < nPoints; ++iPhot, ckPhi+=incPhi )
+    unsigned int nOK(0), nPhot(0);
+    const double cosTheta(std::cos(ring->radius()));
+    const double sinTheta(std::sin(ring->radius()));
+    for ( CosSinPhi::Vector::const_iterator iP = cosSinPhi.begin();
+          iP != cosSinPhi.end(); ++iP, ++nPhot )
     {
-
       // Photon direction around loop
       const Gaudi::XYZVector photDir =
-        ring->richRecSegment()->trackSegment().vectorAtThetaPhi( ring->radius(), ckPhi );
-
+        ring->richRecSegment()->trackSegment().vectorAtCosSinThetaPhi( cosTheta,   sinTheta,
+                                                                      (*iP).cosPhi,(*iP).sinPhi );
+      
       // do the tracing for this photon
       const LHCb::RichTraceMode::RayTraceResult result =
         traceAphoton ( rich, ring, emissionPoint, photDir, mode );
@@ -178,7 +179,7 @@ RayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
       if ( result >= LHCb::RichTraceMode::InHPDPanel ) ++nOK;
 
       // bailout check
-      if ( 0 == nOK && iPhot >= m_nBailout[rad] ) break;
+      if ( 0 == nOK && nPhot >= m_nBailout[rad] ) break;
     }
 
     // All was OK
@@ -216,7 +217,7 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
     // to to allow the one from the track segment to be used.
     const Gaudi::XYZVector z = direction.unit();
     Gaudi::XYZVector y = z.Cross( Gaudi::XYZVector(0.,1.,0.) );
-    y /= sqrt(y.Mag2());
+    y /= std::sqrt(y.Mag2());
     const Gaudi::XYZVector x = y.Cross(z);
     Gaudi::Rotation3D rotation(x,y,z);
 
@@ -233,21 +234,23 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
     const Rich::DetectorType rich = ring->richRecSegment()->trackSegment().rich();
     const Rich::RadiatorType rad  = ring->richRecSegment()->trackSegment().radiator();
 
-    // Set up cached parameters for photon tracing
-    const double incPhi = Gaudi::Units::twopi / static_cast<double>(nPoints);
+    // cos and sin values
+    const CosSinPhi::Vector & cosSinPhi = cosSinValues(nPoints);
+
+    // set number of points
+    ring->setNTotalPointSamples(nPoints);
 
     // loop around the ring
-    const double sinCkTheta(sin(ckTheta)), cosCkTheta(cos(ckTheta));
-    double ckPhi = 0.0;
-    unsigned int nOK(0);
-    ring->setNTotalPointSamples(nPoints);
-    for ( unsigned int iPhot = 0; iPhot < nPoints; ++iPhot, ckPhi+=incPhi )
+    const double sinCkTheta = std::sin(ckTheta);
+    const double cosCkTheta = std::cos(ckTheta);
+    unsigned int nOK(0), nPhot(0);
+    for ( CosSinPhi::Vector::const_iterator iP = cosSinPhi.begin();
+          iP != cosSinPhi.end(); ++iP, ++nPhot )
     {
-
       // Photon direction around loop
       const Gaudi::XYZVector photDir =
-        rotation * Gaudi::XYZVector( sinCkTheta*cos(ckPhi),
-                                     sinCkTheta*sin(ckPhi),
+        rotation * Gaudi::XYZVector( sinCkTheta * (*iP).cosPhi,
+                                     sinCkTheta * (*iP).sinPhi,
                                      cosCkTheta );
 
       // do the tracing for this photon
@@ -257,7 +260,7 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
       if ( result >= LHCb::RichTraceMode::InHPDPanel ) ++nOK;
 
       // bailout check
-      if ( 0 == nOK && iPhot >= m_nBailout[rad] ) break;
+      if ( 0 == nOK && nPhot >= m_nBailout[rad] ) break;
     }
 
     // All was OK
@@ -288,7 +291,7 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
     // Define rotation matrix
     const Gaudi::XYZVector z = direction.unit();
     Gaudi::XYZVector y = z.Cross( Gaudi::XYZVector(0.,1.,0.) );
-    y /= sqrt(y.Mag2());
+    y /= std::sqrt(y.Mag2());
     const Gaudi::XYZVector x = y.Cross(z);
     Gaudi::Rotation3D rotation(x,y,z);
 
@@ -301,20 +304,21 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
       debug() << " -> " << mode << endreq;
     }
 
-    // Set up cached parameters for photon tracing
-    const double incPhi = Gaudi::Units::twopi / static_cast<double>(nPoints);
+    // cos and sin values
+    const CosSinPhi::Vector & cosSinPhi = cosSinValues(nPoints);
 
     // loop around the ring
-    const double sinCkTheta = sin(ckTheta);
-    const double cosCkTheta = cos(ckTheta);
-    double ckPhi = 0.0;
-    for ( unsigned int iPhot = 0; iPhot < nPoints; ++iPhot, ckPhi+=incPhi )
+    const double sinCkTheta = std::sin(ckTheta);
+    const double cosCkTheta = std::cos(ckTheta);
+ 
+    for ( CosSinPhi::Vector::const_iterator iP = cosSinPhi.begin();
+          iP != cosSinPhi.end(); ++iP )
     {
 
       // Photon direction around loop
       const Gaudi::XYZVector photDir =
-        rotation * Gaudi::XYZVector( sinCkTheta*cos(ckPhi),
-                                     sinCkTheta*sin(ckPhi),
+        rotation * Gaudi::XYZVector( sinCkTheta * (*iP).cosPhi,
+                                     sinCkTheta * (*iP).sinPhi,
                                      cosCkTheta );
 
       // Ray trace to detector plane
@@ -341,4 +345,17 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
     return StatusCode::FAILURE;
   }
 
+}
+
+void RayTraceCherenkovCone::fillCosSinValues( CosSinPhi::Vector & vect,
+                                              const unsigned int nPoints ) const
+{
+  // Set up cached parameters for photon tracing
+  vect.clear();
+  const double incPhi = Gaudi::Units::twopi / static_cast<double>(nPoints);
+  double ckPhi = 0.0;
+  for ( unsigned int iPhot = 0; iPhot < nPoints; ++iPhot, ckPhi+=incPhi )
+  {
+    vect.push_back( CosSinPhi( std::cos(ckPhi), std::sin(ckPhi) ) );
+  }
 }
