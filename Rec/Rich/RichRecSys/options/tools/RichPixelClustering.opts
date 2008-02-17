@@ -11,15 +11,16 @@ ToolSvc.Offline.RichPixelCreator.SuppressClusterFinding = false;
 // has its associated cluster assigned
 //                                                        RICH1   RICH2
 ToolSvc.Offline.RichPixelCreator.ApplyPixelClustering = { false,  false };
+//ToolSvc.Offline.RichPixelCreator.ApplyPixelClustering = { true,   true };
 
 // Cluster finding options
 //----------------------------------------------------------------------------------------
 // RICH1 options
-ToolSvc.Offline.RichPixelCreator.PixelClusteringRich1.AllowDiagonalsInClusters = true;
+ToolSvc.Offline.RichPixelCreator.PixelClusteringRich1.AllowDiagonalsInClusters = false;
 ToolSvc.Offline.RichPixelCreator.PixelClusteringRich1.MinClusterSize = 1;
 ToolSvc.Offline.RichPixelCreator.PixelClusteringRich1.MaxClusterSize = 9999;
 // RICH2 options
-ToolSvc.Offline.RichPixelCreator.PixelClusteringRich2.AllowDiagonalsInClusters = true;
+ToolSvc.Offline.RichPixelCreator.PixelClusteringRich2.AllowDiagonalsInClusters = false;
 ToolSvc.Offline.RichPixelCreator.PixelClusteringRich2.MinClusterSize = 1;
 ToolSvc.Offline.RichPixelCreator.PixelClusteringRich2.MaxClusterSize = 9999;
 //----------------------------------------------------------------------------------------

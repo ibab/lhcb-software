@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2008-02-17 - Chris Jones
+ - Add options for new photon reconstruction tool (C.Buszello)
+
 !====================== RichRecSys v3r8 2008-01-28 =====================
 ! 2008-01-25 - Chris Jones
  - Minor changes to tool options (ray tracing mode)
