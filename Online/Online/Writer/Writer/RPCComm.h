@@ -82,9 +82,9 @@ namespace LHCb {
  * out. It's probably alright since we have only two
  * very specific XML-RPC commands to send.
  */
-#define CREATE_TEMPLATE  "<?xml version=\"1.0\"?>\n" \
+#define OPEN_TEMPLATE  "<?xml version=\"1.0\"?>\n" \
 "<methodCall>\n" \
-  "  <methodName>createNewFile</methodName>\n" \
+  "  <methodName>openFile</methodName>\n" \
   "  <params>\n"   \
   "    <param><value>\n" \
   "      <string>%s</string>\n" \

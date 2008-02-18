@@ -105,7 +105,7 @@ StatusCode MDFWriterNet::initialize(void)
 
   m_currFile = NULL;
   m_srvConnection = new Connection(m_serverAddr, m_serverPort,
-				m_sndRcvSizes, m_log, this);
+				   m_sndRcvSizes, m_log, this);
   m_rpcObj = new RPCComm(m_runDBURL.c_str());
   try {
 

@@ -79,7 +79,7 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
   char xmlData[1024];
   char response[1024];
 
-  snprintf(xmlData, sizeof(xmlData), CREATE_TEMPLATE, fileName, runNumber);
+  snprintf(xmlData, sizeof(xmlData), OPEN_TEMPLATE, fileName, runNumber);
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
           "WriterHost", strlen(xmlData));
 
