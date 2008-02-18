@@ -90,6 +90,7 @@ void MDFWriterNet::constructNet()
   declareProperty("SndRcvSizes",        m_sndRcvSizes=6553600);
   declareProperty("FilePrefix",         m_filePrefix="MDFWriterNet_File_");
   declareProperty("Directory",          m_directory=".");
+  declareProperty("FileExtension",      m_fileExtension="raw");
   declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=30);
 
   m_log = new MsgStream(msgSvc(), name());
@@ -327,14 +328,14 @@ inline unsigned int MDFWriterNet::getRunNumber(const void *data, size_t /*len*/)
 std::string MDFWriterNet::getNewFileName(unsigned int runNumber)
 {
   char buf[MAX_FILE_NAME];
-  static unsigned long random;
+  static unsigned long random = 0;
   random++;
-  sprintf(buf, "%s/%s.%u.%lu.%lu",
+  sprintf(buf, "%s/%s%09u.%03lu%06lu.%s",
 	  m_directory.c_str(),
 	  m_filePrefix.c_str(),
 	  runNumber,
-	  random,
-	  time(NULL));
+	  random,time(NULL)&0xFFFFFF,
+	  m_fileExtension.c_str());
   return std::string(buf);
 }
 

@@ -217,6 +217,9 @@ namespace LHCb {
     /// Directory name to apply to all file names that are created.
     std::string m_directory;
 
+    /// File extension to apply to all file names that are created.
+    std::string m_fileExtension;
+
     /// The maximum amount of seconds to wait for events after which a file is closed.
     int m_runFileTimeoutSeconds;
 
