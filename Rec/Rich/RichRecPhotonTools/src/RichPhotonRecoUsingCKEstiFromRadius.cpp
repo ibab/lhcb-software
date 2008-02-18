@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.3 2008-02-15 10:12:29 jonrob Exp $
+ * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.4 2008-02-18 10:50:06 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -169,14 +169,14 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       // --------------------------------------------------------------------------------------
       // Set (remaining) photon parameters
       // --------------------------------------------------------------------------------------
-      gPhoton.setCherenkovTheta         ( thetaCerenkov  );
-      gPhoton.setCherenkovPhi           ( phiCerenkov    );
-      gPhoton.setActiveSegmentFraction  ( fraction       );
-      gPhoton.setDetectionPoint         ( pixel->globalPosition() );
+      gPhoton.setCherenkovTheta         ( thetaCerenkov            );
+      gPhoton.setCherenkovPhi           ( phiCerenkov              );
+      gPhoton.setActiveSegmentFraction  ( fraction                 );
+      gPhoton.setDetectionPoint         ( pixel->globalPosition()  );
       gPhoton.setSmartID                ( pixel->hpdPixelCluster().primaryID() );
-      gPhoton.setUnambiguousPhoton      ( unambigPhoton  );
-      //gPhoton.setPrimaryMirror          ( 0 );
-      //gPhoton.setSecondaryMirror        ( 0 );
+      gPhoton.setUnambiguousPhoton      ( unambigPhoton            );
+      gPhoton.setPrimaryMirror          ( point->primaryMirror()   );
+      gPhoton.setSecondaryMirror        ( point->secondaryMirror() );
       // --------------------------------------------------------------------------------------
 
       // photon reco worked !

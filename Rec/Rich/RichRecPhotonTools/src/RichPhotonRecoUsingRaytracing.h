@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingRaytracing
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.h,v 1.2 2008-02-15 14:30:08 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingRaytracing.h,v 1.3 2008-02-18 10:50:06 jonrob Exp $
  *
  *  @author Claus P Buszello
  *  @date   2008-11-01
@@ -117,9 +117,12 @@ namespace Rich
       bool failiter;
       bool discard;
 
-      mutable int m_itersA[100];
-      mutable int m_iters1[100];
-      mutable int m_iters2[100];
+      /// Cached working photon for ray-tracing
+      mutable LHCb::RichGeomPhoton m_photon;
+
+      //mutable int m_itersA[100];
+      //mutable int m_iters1[100];
+      //mutable int m_iters2[100];
 
     };
 

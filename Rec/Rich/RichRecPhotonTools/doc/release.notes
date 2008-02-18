@@ -4,6 +4,10 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-02-18 - Chris Jones
+ - Set pointers to photon mirrors in CKRing and Raytracing photon 
+   reconstruction tools
+
 !======================= RichRecPhotonTools v1r2 2008-02-15 ==================
 ! 2008-02-15 - Claus P Buszello
  - Added new Photon reconstruction method using iterative raytracing

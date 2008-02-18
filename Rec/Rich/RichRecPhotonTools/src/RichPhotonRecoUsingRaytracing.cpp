@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingRaytracing
  *
  * CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.3 2008-02-18 10:33:45 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.4 2008-02-18 10:50:06 jonrob Exp $
  *
  * @author Claus P Buszello
  * @date 2008-01-11
@@ -44,7 +44,7 @@ PhotonRecoUsingRaytracing( const std::string& type,
   m_fudge[Rich::Aerogel]  = -7e-5;
   m_fudge[Rich::Rich1Gas] = 1.66e-4;
   m_fudge[Rich::Rich2Gas] = -1.0524e-5;
-  for  (int i=0;i<20;++i) m_itersA[i] = m_iters1[i] = m_iters2[i] =0;
+  //for  (int i=0;i<20;++i) m_itersA[i] = m_iters1[i] = m_iters2[i] =0;
 
   declareProperty( "DampingFactor", m_damping = 1. );
   declareProperty( "ERL", m_ERL = 1. );
@@ -109,11 +109,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
   // track segment
   const LHCb::RichTrackSegment& trSeg = segment->trackSegment();
-
-  // Detector information (RICH, radiator and HPD panel)
-  //const Rich::DetectorType rich     = trSeg.rich();
   const Rich::RadiatorType radiator   = trSeg.radiator();
-  //  const Rich::Side side           = pixel->panel().panel();
 
   float maxdiff = m_maxdiff[radiator];
   int maxiter = m_maxiter[radiator];
@@ -140,7 +136,6 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   mode.setAeroRefraction(true);
   mode.setForcedSide (true);
 
-  Gaudi::XYZPoint hitpos;
   Gaudi::XYZPoint locpos;
   Gaudi::XYZVector sv;
   //naive phi
@@ -152,32 +147,31 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   //estimate the length of the photon path ERL
 
   float ERL;
-  if (m_ERL<0){
+  if (m_ERL<0)
+  {
     // is this necessary or can I just set it to some value
     //Rich::ParticleIDType hypo2 = static_cast<Rich::ParticleIDType>(2);
     //float predpi = m_ckAngle->avgCherenkovTheta(segment,hypo2);
     float predpi = 0.03; // a typical angle;
     if (radiator == Rich::Aerogel)  predpi = .15;
 
-
-
     sv = trSeg.vectorAtThetaPhi(predpi,tphi);
 
     const LHCb::RichTraceMode::RayTraceResult result
-      = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,hitpos,mode,
+      = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,m_photon,mode,
                                     (pixel->panel()).panel(),trSeg.avPhotonEnergy());
-    if ( result < LHCb::RichTraceMode::InHPDPanel ) {
-      info()<<"Error in raytracing "<<endreq;
-      return StatusCode::FAILURE;;
+    if ( result < LHCb::RichTraceMode::InHPDPanel ) 
+    {
+      return Warning( "Error in raytracing" );
     }
-    locpos =  m_idTool->globalToPDPanel(hitpos);
+    locpos = m_idTool->globalToPDPanel(m_photon.detectionPoint());
 
     float R2 = (locpos.y()-my )*(locpos.y()-my ) +  ( locpos.x()-mx )*( locpos.x()-mx );
 
     ERL = sqrt(R2)/tan(predpi);
 
   }
-  else ERL = m_ERLSet[trSeg.radiator()];
+  else { ERL = m_ERLSet[radiator]; }
 
   //naive theta
   float R= dx*dx+dy*dy;
@@ -272,7 +266,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
     sv = trSeg.vectorAtThetaPhi(ttheta,tphi);
     const LHCb::RichTraceMode::RayTraceResult result
-      = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,hitpos,mode,(pixel->panel()).panel(),trSeg.avPhotonEnergy());
+      = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,m_photon,
+                                    mode,(pixel->panel()).panel(),trSeg.avPhotonEnergy());
 
     if ( result < LHCb::RichTraceMode::InHPDPanel ) {
       tphi = 0.95 *tphi;
@@ -282,14 +277,14 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     }
 
 
-    locpos =  m_idTool->globalToPDPanel(hitpos);
+    locpos =  m_idTool->globalToPDPanel(m_photon.detectionPoint());
 
     // the hit pixel corresponds to what naive theta and phi
     float yi = locpos.y();
     float xi = locpos.x();
 
     //       if (isnan(xi)){
-    //  info() <<ii<<" nan "<<locpos.x()<<" "<<hitpos.x()<<" "<<ttheta<<" "<<tphi<<endreq;
+    //  info() <<ii<<" nan "<<locpos.x()<<" "<<m_photon.detectionPoint().x()<<" "<<ttheta<<" "<<tphi<<endreq;
     //  info() <<theta0<<" "<<theta1<<" "<<ERL<<endreq;
     //       }
     float R2 = (yi-my )*(yi-my ) +  ( xi-mx )*( xi-mx );
@@ -382,8 +377,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   gPhoton.setDetectionPoint         ( pixel->globalPosition() );
   gPhoton.setSmartID                ( pixel->hpdPixelCluster().primaryID() );
   gPhoton.setUnambiguousPhoton      ( unambigPhoton  );
-  //gPhoton.setSphMirrorNum           ( 0 );
-  //gPhoton.setFlatMirrorNum          ( 0 );
+  gPhoton.setPrimaryMirror          ( m_photon.primaryMirror()   );
+  gPhoton.setSecondaryMirror        ( m_photon.secondaryMirror() );
   // --------------------------------------------------------------------------------------
 
   // if (!sameSide(radiator,HP,HPp)) return StatusCode::FAILURE;
