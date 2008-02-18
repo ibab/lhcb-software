@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingRaytracing
  *
  * CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.2 2008-02-15 14:30:08 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.3 2008-02-18 10:33:45 jonrob Exp $
  *
  * @author Claus P Buszello
  * @date 2008-01-11
@@ -41,10 +41,12 @@ PhotonRecoUsingRaytracing( const std::string& type,
   // declare interface
   declareInterface<IPhotonReconstruction>(this);
 
+  m_fudge[Rich::Aerogel]  = -7e-5;
+  m_fudge[Rich::Rich1Gas] = 1.66e-4;
+  m_fudge[Rich::Rich2Gas] = -1.0524e-5;
+  for  (int i=0;i<20;++i) m_itersA[i] = m_iters1[i] = m_iters2[i] =0;
 
   declareProperty( "DampingFactor", m_damping = 1. );
-  declareProperty( "MaxIterations", m_maxiter );
-  declareProperty( "MaxDifference", m_maxdiff);
   declareProperty( "ERL", m_ERL = 1. );
   declareProperty( "IterFail", failiter=true );
   declareProperty( "IterDiscard", discard=false );
@@ -52,24 +54,17 @@ PhotonRecoUsingRaytracing( const std::string& type,
   m_ERLSet[Rich::Aerogel]  = 1440;
   m_ERLSet[Rich::Rich1Gas] = 1440;
   m_ERLSet[Rich::Rich2Gas] = 4400;
+  declareProperty( "LightPathLengths", m_ERLSet );
 
   m_maxdiff[Rich::Aerogel]  = 1.;
   m_maxdiff[Rich::Rich1Gas] = 1.;
   m_maxdiff[Rich::Rich2Gas] = 1.;
-
-  m_fudge[Rich::Aerogel]  = -7e-5;
-  m_fudge[Rich::Rich1Gas] = 1.66e-4;
-  m_fudge[Rich::Rich2Gas] = -1.0524e-5;
-
-  declareProperty( "LightPathLengths", m_ERLSet );
+  declareProperty( "MaxDifference", m_maxdiff);
 
   m_maxiter[Rich::Aerogel]  = 10;
   m_maxiter[Rich::Rich1Gas] = 10;
   m_maxiter[Rich::Rich2Gas] = 12;
-
-
-  for  (int i=0;i<20;++i) m_itersA[i] = m_iters1[i] = m_iters2[i] =0;
-  declareProperty( "LightPathLengths", m_ERLSet );
+  declareProperty( "MaxIterations", m_maxiter );
 
 }
 
@@ -93,13 +88,12 @@ StatusCode PhotonRecoUsingRaytracing::initialize()
 
   return sc;
 }
+
 StatusCode PhotonRecoUsingRaytracing::finalize()
 {
-  //   // initialise base class
-  const StatusCode sc = StatusCode::SUCCESS;
   //   for  (int i=0;i<50;++i)
   //     info() << "Iterations " << i <<": "<<m_itersA[i]<<"    "<<m_iters1[i]<<"   "<<m_iters2[i]<<endreq;
-  return sc;
+  return Rich::Rec::ToolBase::finalize();
 }
 
 //-------------------------------------------------------------------------
@@ -112,7 +106,6 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                     const LHCb::RichRecPixel * pixel,
                     LHCb::RichGeomPhoton& gPhoton ) const
 {
-
 
   // track segment
   const LHCb::RichTrackSegment& trSeg = segment->trackSegment();
@@ -170,7 +163,9 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
     sv = trSeg.vectorAtThetaPhi(predpi,tphi);
 
-    const LHCb::RichTraceMode::RayTraceResult result = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,hitpos,mode,(pixel->panel()).panel(),trSeg.avPhotonEnergy());
+    const LHCb::RichTraceMode::RayTraceResult result
+      = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,hitpos,mode,
+                                    (pixel->panel()).panel(),trSeg.avPhotonEnergy());
     if ( result < LHCb::RichTraceMode::InHPDPanel ) {
       info()<<"Error in raytracing "<<endreq;
       return StatusCode::FAILURE;;
@@ -311,7 +306,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     thetal3 = thetal2;
     thetal2 = thetal;
     thetal = theta1;
-    theta1 = (sqrt(R2)/ERL);  // assuming atan is identity for tiny angles.
+    theta1 = (std::sqrt(R2)/ERL);  // assuming atan is identity for tiny angles.
 
     tphil = tphi;
 
