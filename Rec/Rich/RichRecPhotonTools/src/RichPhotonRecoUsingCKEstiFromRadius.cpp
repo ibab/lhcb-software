@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.4 2008-02-18 10:50:06 jonrob Exp $
+ * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.5 2008-02-18 14:53:00 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -29,20 +29,15 @@ PhotonRecoUsingCKEstiFromRadius::
 PhotonRecoUsingCKEstiFromRadius( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
-  : Rich::Rec::ToolBase ( type, name, parent ),
+  : PhotonRecoBase  ( type, name, parent ),
     m_idTool        ( NULL ),
     m_massHypoRings ( NULL ),
     m_ckAngle       ( NULL ),
     m_richPartProp  ( NULL ),
     m_scale         ( Rich::NRadiatorTypes, 0 ),
     m_ckThetaMax    ( Rich::NRadiatorTypes, 0 ),
-    m_sepGMax       ( Rich::NRadiatorTypes, 0 ),
-    m_ckFudge       ( Rich::NRadiatorTypes, 0 )
+    m_sepGMax       ( Rich::NRadiatorTypes, 0 )
 {
-
-  // declare interface
-  declareInterface<IPhotonReconstruction>(this);
-
   m_ckThetaMax[Rich::Aerogel]  = 0.24;
   m_ckThetaMax[Rich::Rich1Gas] = 0.052;
   m_ckThetaMax[Rich::Rich2Gas] = 0.03;
@@ -52,9 +47,6 @@ PhotonRecoUsingCKEstiFromRadius( const std::string& type,
   m_sepGMax[Rich::Rich1Gas]  = 75;
   m_sepGMax[Rich::Rich2Gas]  = 130;
   declareProperty( "SepGMax", m_sepGMax );
-
-  declareProperty( "CKThetaQuartzRefractCorrections", m_ckFudge );
-
 }
 
 //=============================================================================
@@ -68,7 +60,7 @@ PhotonRecoUsingCKEstiFromRadius::~PhotonRecoUsingCKEstiFromRadius() { }
 StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
 {
   // initialise base class
-  const StatusCode sc = Rich::Rec::ToolBase::initialize();
+  const StatusCode sc = PhotonRecoBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   acquireTool( "RichSmartIDTool",     m_idTool, 0, true  );
@@ -86,12 +78,6 @@ StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
     const Rich::RadiatorType rad = *irad;
     // scale factor
     m_scale[rad] = m_ckThetaMax[rad] / m_sepGMax[rad];
-    // fudge factor warning
-    if ( fabs(m_ckFudge[rad]) > 1e-7 )
-    {
-      info() << "Applying " << Rich::text(rad)
-             << " CK theta correction factor : " << m_ckFudge[rad] <<endreq;
-    }
   }
 
   return sc;
@@ -144,9 +130,6 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // use fast atan2
   const float phiCerenkov = Gaudi::Units::pi + Rich::Maths::atan2_f( diff_y, diff_x );
 
-  // seg - pixel separation
-  const double sep2 = gsl_pow_2(diff_x) + gsl_pow_2(diff_y);
-
   // Start with CK fudge factor
   float thetaCerenkov( m_ckFudge[radiator] );
 
@@ -164,7 +147,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       // estimate CK theta from reference point
       const double sep2_tmp = ( gsl_pow_2(segPSide.x()-point->localPosition().x()) +
                                 gsl_pow_2(segPSide.y()-point->localPosition().y()) );
-      thetaCerenkov += ring->radius() * std::sqrt( sep2 / sep2_tmp );
+      thetaCerenkov += ring->radius() * std::sqrt( (gsl_pow_2(diff_x)+gsl_pow_2(diff_y)) / sep2_tmp );
 
       // --------------------------------------------------------------------------------------
       // Set (remaining) photon parameters

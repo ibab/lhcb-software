@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingRaytracing
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.h,v 1.3 2008-02-18 10:50:06 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingRaytracing.h,v 1.4 2008-02-18 14:53:00 jonrob Exp $
  *
  *  @author Claus P Buszello
  *  @date   2008-11-01
@@ -23,7 +23,7 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // Base class and interfaces
-#include "RichRecBase/RichRecToolBase.h"
+#include "RichPhotonRecoBase.h"
 #include "RichRecBase/IRichPhotonReconstruction.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichRecBase/IRichMassHypothesisRingCreator.h"
@@ -62,7 +62,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class PhotonRecoUsingRaytracing : public Rich::Rec::ToolBase,
+    class PhotonRecoUsingRaytracing : public PhotonRecoBase,
                                       virtual public IPhotonReconstruction
     {
 
@@ -87,16 +87,6 @@ namespace Rich
                                      const LHCb::RichRecPixel * pixel,
                                      LHCb::RichGeomPhoton& gPhoton ) const;
 
-    private: // methods
-
-      /// Check if the local coordinate hits a and b are on the same detector side
-      inline bool sameSide( const Rich::RadiatorType rad,
-                            const Gaudi::XYZPoint & a,
-                            const Gaudi::XYZPoint & b ) const
-      {
-        return ( Rich::Rich2Gas == rad ? a.x() * b.x() > 0 : a.y() * b.y() > 0 );
-      }
-
     private: // data
 
       /// RichSmartID tool
@@ -110,7 +100,6 @@ namespace Rich
       std::vector<double> m_ERLSet;
       std::vector<float> m_maxdiff;
       std::vector<int> m_maxiter;
-      std::vector<double> m_fudge;
 
       float m_ERL;
 

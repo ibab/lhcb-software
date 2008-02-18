@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.3 2008-02-15 10:12:29 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.4 2008-02-18 14:53:00 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -29,7 +29,7 @@ PhotonRecoUsingQuarticSoln::
 PhotonRecoUsingQuarticSoln( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  : Rich::Rec::ToolBase   ( type, name, parent ),
+  : PhotonRecoBase        ( type, name, parent ),
     m_mirrorSegFinder     ( NULL ),
     m_rayTracing          ( NULL ),
     m_idTool              ( NULL ),
@@ -39,17 +39,12 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
     m_rejectAmbigPhots    ( Rich::NRadiatorTypes, false ),
     m_useAlignedMirrSegs  ( Rich::NRadiatorTypes, true  ),
     m_nQits               ( Rich::NRadiatorTypes, 3     ),
-    m_ckFudge             ( Rich::NRadiatorTypes, 0     ),
     m_deBeam              ( Rich::NRiches               ),
     m_checkBeamPipe       ( Rich::NRadiatorTypes, true  ),
     m_checkPrimMirrSegs   ( Rich::NRadiatorTypes, false ),
-    m_checkPhotCrossSides ( Rich::NRadiatorTypes, false ),
     m_minActiveFrac       ( Rich::NRadiatorTypes, 0.2   ),
     m_minSphMirrTolIt     ( Rich::NRadiatorTypes        )
 {
-
-  // declare interface
-  declareInterface<IPhotonReconstruction>(this);
 
   // Initialise
   m_deBeam[Rich::Rich1] = NULL;
@@ -63,14 +58,7 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   declareProperty( "UseSecondaryMirrors",                m_useSecMirs = true  );
   declareProperty( "RejectAmbiguousPhotons",       m_rejectAmbigPhots         );
 
-  declareProperty( "CKThetaQuartzRefractCorrections", m_ckFudge );
-
   declareProperty( "CheckBeamPipe", m_checkBeamPipe );
-
-  m_checkPhotCrossSides[Rich::Aerogel]  = false;
-  m_checkPhotCrossSides[Rich::Rich1Gas] = true;
-  m_checkPhotCrossSides[Rich::Rich2Gas] = true;
-  declareProperty( "CheckSideCrossing", m_checkPhotCrossSides );
 
   declareProperty( "CheckPrimaryMirrorSegments", m_checkPrimMirrSegs );
 
@@ -94,7 +82,7 @@ PhotonRecoUsingQuarticSoln::~PhotonRecoUsingQuarticSoln() { }
 StatusCode PhotonRecoUsingQuarticSoln::initialize()
 {
   // initialise base class
-  const StatusCode sc = Rich::Rec::ToolBase::initialize();
+  const StatusCode sc = PhotonRecoBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // get the detector elements
@@ -124,24 +112,20 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
     if ( m_testForUnambigPhots[*rad] )
     {      info() << "Will test for unambiguous     " << *rad << " photons" << endreq; }
     else { info() << "Will not test for unambiguous " << *rad << " photons" << endreq; }
+
     if ( m_rejectAmbigPhots[*rad] )
     {      info() << "Will reject ambiguous " << *rad << " photons" << endreq; }
     else { info() << "Will accept ambiguous " << *rad << " photons" << endreq; }
+
     if ( m_useAlignedMirrSegs[*rad] )
     {      info() << "Will use fully alligned mirror segments for " << *rad << " reconstruction" << endreq;  }
     else { info() << "Will use nominal mirrors for " << *rad << " reconstruction" << endreq; }
-    if ( m_checkPhotCrossSides[*rad] )
-    {      info() << "Will reject photons that cross sides in " << *rad << endreq; }
+
     if ( m_checkBeamPipe[*rad] )
     {      info() << "Will check for " << *rad << " photons that hit the beam pipe" << endreq; }
+
     if ( m_checkPrimMirrSegs[*rad] )
     {      info() << "Will check for full intersecton with mirror segments for " << *rad << endreq; }
-
-    // fudge factor warning
-    if ( std::fabs(m_ckFudge[*rad]) > 1e-7 )
-    {
-      info() << "Applying " << *rad << " CK theta correction factor : " << m_ckFudge[*rad] << endreq;
-    }
 
     info() << "Minimum active " << *rad << " segment fraction = " << m_minActiveFrac[*rad] << endreq;
 
@@ -311,7 +295,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                                                    sphReflPoint1-emissionPoint1 ) ||
                           sphSegment2->intersects( emissionPoint2,
                                                    sphReflPoint2-emissionPoint2 ) );
-        if ( !ok ) 
+        if ( !ok )
         {
           //return Warning( Rich::text(radiator)+" : Failed mirror segment intersection checks" );
           return StatusCode::FAILURE;
@@ -383,7 +367,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                          virtDetPoint,emissionPoint,
                          sphSegment,secSegment,sphReflPoint,secReflPoint ) )
     {
-      //return Warning( Rich::text(radiator)+" : Failed backup photon reconstruction" ); 
+      //return Warning( Rich::text(radiator)+" : Failed backup photon reconstruction" );
       return StatusCode::FAILURE;
     }
   }
@@ -428,14 +412,14 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
         // Get secondary mirror reflection point,
         // using the best actual secondary mirror segment at this point
-        const StatusCode sc = m_rayTracing->intersectPlane( sphReflPoint,
-                                                            virtDetPoint - sphReflPoint,
-                                                            secSegment->centreNormalPlane(),
-                                                            secReflPoint );
-        if ( sc.isFailure() ) 
-        { 
+        const bool sc = m_rayTracing->intersectPlane( sphReflPoint,
+                                                      virtDetPoint - sphReflPoint,
+                                                      secSegment->centreNormalPlane(),
+                                                      secReflPoint );
+        if ( !sc )
+        {
           //return Warning( Rich::text(radiator)+" : Failed to intersect nominal secondary mirror plane" );
-          return sc; 
+          return StatusCode::FAILURE;
         }
         // (re)find the secondary mirror
         secSegment = m_mirrorSegFinder->findSecMirror( rich, side, secReflPoint );
@@ -483,32 +467,17 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
   // --------------------------------------------------------------------------------------
   // check that spherical mirror reflection point is on the same side as detection point
+  // and (if configured to do so) photon does not cross between detector sides
   // --------------------------------------------------------------------------------------
-  if ( rich == Rich::Rich2 )
+  if ( !sameSide(radiator,sphReflPoint,virtDetPoint) )
   {
-    if ( sphReflPoint.x() * virtDetPoint.x() < 0.0 )
-    {
-      //return Warning( Rich::text(radiator)+" : Reflection point on wrong side" );
-      return StatusCode::FAILURE;
-    }
-    if ( m_checkPhotCrossSides[radiator] && (sphReflPoint.x() * emissionPoint.x() < 0.0) )
-    {
-      //return Warning( Rich::text(radiator)+" : Photon cross between left and right sides" );
-      return StatusCode::FAILURE;
-    }
+    //return Warning( Rich::text(radiator)+" : Reflection point on wrong side" );
+    return StatusCode::FAILURE;
   }
-  else // RICH 1
+  if ( m_checkPhotCrossSides[radiator] && !sameSide(radiator,sphReflPoint,emissionPoint) )
   {
-    if ( sphReflPoint.y() * virtDetPoint.y() < 0.0 )
-    {
-      //return Warning( Rich::text(radiator)+" : Reflection point on wrong side" );
-      return StatusCode::FAILURE;
-    }
-    if ( m_checkPhotCrossSides[radiator] && (sphReflPoint.y() * emissionPoint.y() < 0.0) )
-    {
-      //return Warning( Rich::text(radiator)+" : Photon cross between top and bottom sides" );
-      return StatusCode::FAILURE;
-    }
+    //return Warning( Rich::text(radiator)+" : Photon cross between detector sides" );
+    return StatusCode::FAILURE;
   }
   // --------------------------------------------------------------------------------------
 
@@ -518,14 +487,14 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   if ( m_useSecMirs && m_useAlignedMirrSegs[radiator] )
   {
-    const StatusCode sc = m_rayTracing->intersectPlane( sphReflPoint,
-                                                        virtDetPoint - sphReflPoint,
-                                                        secSegment->centreNormalPlane(),
-                                                        secReflPoint );
-    if ( sc.isFailure() ) 
-    { 
+    const bool sc = m_rayTracing->intersectPlane( sphReflPoint,
+                                                  virtDetPoint - sphReflPoint,
+                                                  secSegment->centreNormalPlane(),
+                                                  secReflPoint );
+    if ( !sc )
+    {
       //return Warning( Rich::text(radiator)+" : Failed final secondary mirror plane intersection" );
-      return sc; 
+      return StatusCode::FAILURE;
     }
   }
   // --------------------------------------------------------------------------------------
@@ -588,7 +557,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 //=========================================================================
 // Find mirror segments and reflection points for given data
 //=========================================================================
-bool 
+bool
 PhotonRecoUsingQuarticSoln::
 findMirrorData( const Rich::DetectorType rich,
                 const Rich::Side side,

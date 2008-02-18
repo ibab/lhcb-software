@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.2 2008-01-25 13:33:29 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.3 2008-02-18 14:53:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -23,7 +23,7 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // Base class and interfaces
-#include "RichRecBase/RichRecToolBase.h"
+#include "RichPhotonRecoBase.h"
 #include "RichRecBase/IRichPhotonReconstruction.h"
 #include "RichKernel/IRichMirrorSegFinder.h"
 #include "RichKernel/IRichRayTracing.h"
@@ -87,7 +87,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class PhotonRecoUsingQuarticSoln : public Rich::Rec::ToolBase,
+    class PhotonRecoUsingQuarticSoln : public PhotonRecoBase,
                                        virtual public IPhotonReconstruction
     {
 
@@ -275,11 +275,6 @@ namespace Rich
        */
       bool m_useSecMirs;
 
-      /** Fudge factors to correct small bias in CK theta from quartz windows refration
-       *  correction in RichDet
-       */
-      std::vector<double> m_ckFudge;
-
       /// RICH beampipe object for each radiator
       mutable std::vector<const DeRichBeamPipe*> m_deBeam;
 
@@ -289,9 +284,6 @@ namespace Rich
       /** Turn on/off the checking of photon trajectories against the mirror segments
        *  to verify if the photon hit the real actiave area (and not, for instance, the gaps */
       std::vector<bool> m_checkPrimMirrSegs;
-
-      /// Check for photons that cross between the different RICH 'sides'
-      std::vector<bool> m_checkPhotCrossSides;
 
       /// Minimum active segment fraction in each radiator
       std::vector<double> m_minActiveFrac;

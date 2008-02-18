@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingRaytracing
  *
  * CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.4 2008-02-18 10:50:06 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.5 2008-02-18 14:53:00 jonrob Exp $
  *
  * @author Claus P Buszello
  * @date 2008-01-11
@@ -28,22 +28,19 @@ PhotonRecoUsingRaytracing::
 PhotonRecoUsingRaytracing( const std::string& type,
                            const std::string& name,
                            const IInterface* parent )
-  : Rich::Rec::ToolBase ( type, name, parent ),
+  : PhotonRecoBase  ( type, name, parent ),
     m_idTool        ( NULL ),
     m_ckAngle       ( NULL ),
     m_raytrace      ( NULL ),
     m_ERLSet  (Rich::NRadiatorTypes),
     m_maxdiff (Rich::NRadiatorTypes),
-    m_maxiter (Rich::NRadiatorTypes),
-    m_fudge   (Rich::NRadiatorTypes)
+    m_maxiter (Rich::NRadiatorTypes)
 {
 
-  // declare interface
-  declareInterface<IPhotonReconstruction>(this);
-
-  m_fudge[Rich::Aerogel]  = -7e-5;
-  m_fudge[Rich::Rich1Gas] = 1.66e-4;
-  m_fudge[Rich::Rich2Gas] = -1.0524e-5;
+  // Update default CK theta correction values
+  m_ckFudge[Rich::Aerogel]  = -7e-5;
+  m_ckFudge[Rich::Rich1Gas] = 1.66e-4;
+  m_ckFudge[Rich::Rich2Gas] = -1.0524e-5;
   //for  (int i=0;i<20;++i) m_itersA[i] = m_iters1[i] = m_iters2[i] =0;
 
   declareProperty( "DampingFactor", m_damping = 1. );
@@ -79,7 +76,7 @@ PhotonRecoUsingRaytracing::~PhotonRecoUsingRaytracing() { }
 StatusCode PhotonRecoUsingRaytracing::initialize()
 {
   // initialise base class
-  const StatusCode sc = Rich::Rec::ToolBase::initialize();
+  const StatusCode sc = PhotonRecoBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   acquireTool( "RichSmartIDTool",     m_idTool, 0, true  );
@@ -93,7 +90,7 @@ StatusCode PhotonRecoUsingRaytracing::finalize()
 {
   //   for  (int i=0;i<50;++i)
   //     info() << "Iterations " << i <<": "<<m_itersA[i]<<"    "<<m_iters1[i]<<"   "<<m_iters2[i]<<endreq;
-  return Rich::Rec::ToolBase::finalize();
+  return PhotonRecoBase::finalize();
 }
 
 //-------------------------------------------------------------------------
@@ -119,16 +116,15 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
 
   const Gaudi::XYZPoint & HP = segment->pdPanelHitPointLocal((pixel->panel()).panel());
-  float mx =  HP.x();
-  float my =  HP.y();
+  const float mx =  HP.x();
+  const float my =  HP.y();
 
   const Gaudi::XYZPoint & HPp = pixel->localPosition();
-  float x = HPp.x();
-  float y = HPp.y();
+  const float x = HPp.x();
+  const float y = HPp.y();
 
-  float dx = x - mx;
-  float dy = y - my;
-
+  const float dx = x - mx;
+  const float dy = y - my;
 
   //  Gaudi::XYZPoint emissionPoint = emissionPoint;
 
@@ -146,21 +142,20 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
   //estimate the length of the photon path ERL
 
-  float ERL;
+  float ERL(0);
   if (m_ERL<0)
   {
     // is this necessary or can I just set it to some value
     //Rich::ParticleIDType hypo2 = static_cast<Rich::ParticleIDType>(2);
     //float predpi = m_ckAngle->avgCherenkovTheta(segment,hypo2);
-    float predpi = 0.03; // a typical angle;
-    if (radiator == Rich::Aerogel)  predpi = .15;
+    const float predpi = ( radiator == Rich::Aerogel ? 0.15 : 0.03 );
 
     sv = trSeg.vectorAtThetaPhi(predpi,tphi);
 
     const LHCb::RichTraceMode::RayTraceResult result
       = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,m_photon,mode,
                                     (pixel->panel()).panel(),trSeg.avPhotonEnergy());
-    if ( result < LHCb::RichTraceMode::InHPDPanel ) 
+    if ( result < LHCb::RichTraceMode::InHPDPanel )
     {
       return Warning( "Error in raytracing" );
     }
@@ -168,7 +163,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
     float R2 = (locpos.y()-my )*(locpos.y()-my ) +  ( locpos.x()-mx )*( locpos.x()-mx );
 
-    ERL = sqrt(R2)/tan(predpi);
+    ERL = std::sqrt(R2) / std::tan(predpi);
 
   }
   else { ERL = m_ERLSet[radiator]; }
@@ -342,9 +337,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     //info()<<"===================================="<<endreq;
     ttheta = (ttheta+tthetal+tthetal2+tthetal3+tthetal4+tthetal5)/6.;
   }
-  float besttheta = ttheta-m_fudge[radiator];
+  float besttheta = ttheta-m_ckFudge[radiator];
   float bestphi = tphi;
-
 
   // Cannot set these yet - Could be done if needed, but at what CPU cost ?
   //Gaudi::XYZPoint & sphReflPoint = gPhoton.sphMirReflectionPoint();
@@ -358,30 +352,10 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // cannot determine this here so set to false
   const bool unambigPhoton(false);
 
-  // Positions on the the local det plane
-  // const Gaudi::XYZPoint & segPSide = segment->pdPanelHitPointLocal(side);
-  //const Gaudi::XYZPoint & pixPRad  = pixel->radCorrLocalPositions().position(radiator);
-
-
   // Check if the point is OK for uses as a reference
   // if (sameSide(radiator,HP,HPp))
 
   //if (i>0)
-
-  // --------------------------------------------------------------------------------------
-  // Set (remaining) photon parameters
-  // --------------------------------------------------------------------------------------
-  gPhoton.setCherenkovTheta         ( besttheta  );
-  gPhoton.setCherenkovPhi           ( bestphi    );
-  gPhoton.setActiveSegmentFraction  ( fraction       );
-  gPhoton.setDetectionPoint         ( pixel->globalPosition() );
-  gPhoton.setSmartID                ( pixel->hpdPixelCluster().primaryID() );
-  gPhoton.setUnambiguousPhoton      ( unambigPhoton  );
-  gPhoton.setPrimaryMirror          ( m_photon.primaryMirror()   );
-  gPhoton.setSecondaryMirror        ( m_photon.secondaryMirror() );
-  // --------------------------------------------------------------------------------------
-
-  // if (!sameSide(radiator,HP,HPp)) return StatusCode::FAILURE;
 
   // photon reco worked !
   // return StatusCode::SUCCESS;
@@ -394,9 +368,40 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   //  (m_iters2[ii])+=1;
   //     }
 
-  if ((ii==0) && failiter) // if we get here photon reco failed
+  if ( (ii==0) && failiter )
+  { // if we get here photon reco failed
     return StatusCode::FAILURE;
-  else
-    return StatusCode::SUCCESS;
+  }
+
+  // --------------------------------------------------------------------------------------
+  // CRJ : check that spherical mirror reflection point is on the same side as detection point
+  // --------------------------------------------------------------------------------------
+  const Gaudi::XYZPoint & sphReflPoint = m_photon.sphMirReflectionPoint();
+  if ( !sameSide(radiator,sphReflPoint,pixel->globalPosition()) )
+  {
+    //return Warning( Rich::text(radiator)+" : Reflection point on wrong side" );
+    return StatusCode::FAILURE;
+  }
+  if ( m_checkPhotCrossSides[radiator] && !sameSide(radiator,sphReflPoint,emissionPoint) )
+  {
+    //return Warning( Rich::text(radiator)+" : Photon cross between detector sides" );
+    return StatusCode::FAILURE;
+  }
+  // --------------------------------------------------------------------------------------
+
+  // --------------------------------------------------------------------------------------
+  // Set (remaining) photon parameters
+  // --------------------------------------------------------------------------------------
+  gPhoton.setCherenkovTheta         ( besttheta                  );
+  gPhoton.setCherenkovPhi           ( bestphi                    );
+  gPhoton.setActiveSegmentFraction  ( fraction                   );
+  gPhoton.setDetectionPoint         ( pixel->globalPosition()    );
+  gPhoton.setSmartID                ( pixel->hpdPixelCluster().primaryID() );
+  gPhoton.setUnambiguousPhoton      ( unambigPhoton              );
+  gPhoton.setPrimaryMirror          ( m_photon.primaryMirror()   );
+  gPhoton.setSecondaryMirror        ( m_photon.secondaryMirror() );
+  // --------------------------------------------------------------------------------------
+
+  return StatusCode::SUCCESS;
 
 }

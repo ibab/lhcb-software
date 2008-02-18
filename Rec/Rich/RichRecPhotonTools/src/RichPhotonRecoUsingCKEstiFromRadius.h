@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingCKEstiFromRadius.h,v 1.2 2008-01-25 13:33:29 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingCKEstiFromRadius.h,v 1.3 2008-02-18 14:53:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -23,7 +23,7 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // Base class and interfaces
-#include "RichRecBase/RichRecToolBase.h"
+#include "RichPhotonRecoBase.h"
 #include "RichRecBase/IRichPhotonReconstruction.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichRecBase/IRichMassHypothesisRingCreator.h"
@@ -60,7 +60,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class PhotonRecoUsingCKEstiFromRadius : public Rich::Rec::ToolBase,
+    class PhotonRecoUsingCKEstiFromRadius : public PhotonRecoBase,
                                             virtual public IPhotonReconstruction
     {
 
@@ -84,16 +84,6 @@ namespace Rich
                                      const LHCb::RichRecPixel * pixel,
                                      LHCb::RichGeomPhoton& gPhoton ) const;
 
-    private: // methods
-
-      /// Check if the local coordinate hits a and b are on the same detector side
-      inline bool sameSide( const Rich::RadiatorType rad,
-                            const Gaudi::XYZPoint & a,
-                            const Gaudi::XYZPoint & b ) const
-      {
-        return ( Rich::Rich2Gas == rad ? a.x() * b.x() > 0 : a.y() * b.y() > 0 );
-      }
-
     private: // data
 
       /// RichSmartID tool
@@ -113,11 +103,6 @@ namespace Rich
 
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;
-
-      /** Fudge factors to correct small bias in CK theta from quartz windows refration
-       *  correction in RichDet
-       */
-      std::vector<float> m_ckFudge;
 
     };
 

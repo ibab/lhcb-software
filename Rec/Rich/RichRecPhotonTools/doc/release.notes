@@ -6,11 +6,15 @@
 
 ! 2008-02-18 - Chris Jones
  - Set pointers to photon mirrors in CKRing and Raytracing photon 
-   reconstruction tools
+   reconstruction tools.
+ - Introduce base class for all geom. photon reconstruction tools that
+   contains all common functionality.
+ - Add checks for non-physical photons to iterative ray-tracing photon
+   reconstruction tool. Helps reject fake photons.
 
 !======================= RichRecPhotonTools v1r2 2008-02-15 ==================
 ! 2008-02-15 - Claus P Buszello
- - Added new Photon reconstruction method using iterative raytracing
+ - Added new Photon reconstruction method using iterative ray-tracing
 
 ! 2008-02-15 - Chris Jones
  - Adapt to changes in RichGeomPhoton
