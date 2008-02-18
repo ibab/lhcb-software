@@ -17,9 +17,10 @@
 //DDDB.DefaultTAG = "DC06";
 //LHCBCOND.DefaultTAG = "DC06";
 #include "$DDDBROOT/options/DC06.opts"
+#include "$STDOPTS/DC06Conditions.opts"
 
 // DC06 magnetic field
-MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+//MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 
 // Standard LHCb application setup
 #include "$STDOPTS/LHCbApplication.opts"
@@ -64,6 +65,10 @@ createITLiteClusters.detType = "IT";
 // Decode OT 
 DecodingSeq.Members += { "OTTimeCreator" };
 
+// Muon stuff
+DecodingSeq.Members += { "MuonRec", "MuonID" };
+#include "$MUONIDROOT/options/MuonID.opts"
+
 //**************************
 // Track fit:
 //**************************
@@ -95,3 +100,4 @@ DecodingSeq.Members += { "OTTimeCreator" };
 // FitTracks.TracksOutContainer           = "Alignment/AlignmentTracks";
 // //FitTracks.Fitter.NumberFitIterations = 3;
 ToolSvc.DetailedMaterialLocator.OutputLevel = 5;
+
