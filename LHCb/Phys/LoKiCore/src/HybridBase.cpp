@@ -1,4 +1,4 @@
-// $Id: HybridBase.cpp,v 1.4 2008-01-23 13:33:34 ibelyaev Exp $
+// $Id: HybridBase.cpp,v 1.5 2008-02-18 12:42:11 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -156,20 +156,24 @@ StatusCode LoKi::Hybrid::Base::executeCode ( const std::string& pycode ) const
     ( const_cast<char*> ( pycode.c_str() ) ,                // EXECUTE CODE 
       Py_file_input  , globals  , locals ) ;
   
-  if ( PyErr_Occurred()        ) { PyErr_Print() ; }
+  bool ok = true ;
+  if ( PyErr_Occurred()        ) { PyErr_Print() ; ok = false ; }
   
   if ( 0 != globals && globnew ) { Py_XDECREF( globals ) ; }
   
-  if ( 0 != result             ) { Py_XDECREF ( result ) ; }
-  else 
+  if ( 0 != result             ) { Py_XDECREF ( result )      ; }
+  else if ( PyErr_Occurred()   ) { PyErr_Print() ; ok = false ; }
+  else { ok = false ; }
+  
+  if ( !ok ) 
   {
-    if ( PyErr_Occurred() ) { PyErr_Print() ; }
     err () << " Error has occured in Python: the problematic code is : "
            << endreq 
            << pycode  
            << endreq ;
     return Error( " Error has occured in Python " ) ;
   }
+
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
