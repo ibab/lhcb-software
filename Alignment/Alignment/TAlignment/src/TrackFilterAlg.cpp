@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.cpp,v 1.9 2008-02-13 18:03:36 janos Exp $
+// $Id: TrackFilterAlg.cpp,v 1.10 2008-02-18 18:43:55 janos Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -67,6 +67,7 @@ TrackFilterAlg::TrackFilterAlg( const std::string& name,
   declareProperty("TrackSelector"                , m_trackSelectorName     = "AlignSelTool"            );
   declareProperty("StripUnwantedDetectorHits"    , m_strip                 = false                     );
   declareProperty("KeepDetectorHits"             , m_detector              = "OT"                      );
+  declareProperty("MaxNormTrackChi2"             , m_maxNormTrackChi2      = 20.0                      );
   declareProperty("MinNHits"                     , m_nMinHits              = 0u                        );
 
 }
@@ -136,7 +137,6 @@ void TrackFilterAlg::filterTrack(LHCb::Track* track, LHCb::Tracks* outputContain
       }
     }
 
-
     unsigned nHits = 0u;
     const LHCBIDS& wantedIds = clonedTrack->lhcbIDs();
     for (LHCBIDS::const_iterator i = wantedIds.begin(), iEnd = wantedIds.end(); i != iEnd; ++i) {
@@ -147,14 +147,15 @@ void TrackFilterAlg::filterTrack(LHCb::Track* track, LHCb::Tracks* outputContain
       }
       ++nHits;
     }
-    if (nHits >= m_nMinHits)  {
+    
+    if (nHits >= m_nMinHits && !(track->chi2PerDoF() > m_maxNormTrackChi2))  {
       if (printDebug()) {
-        debug() << "Found track with " << nHits << " of type " << m_detector << endmsg;
+        debug() << "Found track of type " << m_trackTypeToStringMap[track->type()] << " with a chi2/dof: " << track->chi2() << " / " << track->nDoF() 
+                << " and " << nHits << " hits of type " << m_detector << endmsg;
       }
-      
+                          /// It's yours              
       outputContainer->add(clonedTrack.release());
-    }                                                                                     /// It's yours
-    //if ((clonedTrack->lhcbIDs()).size() > m_nMinHits || !m_strip) outputContainer->add(clonedTrack.release());
+    }
   }
 }
 
