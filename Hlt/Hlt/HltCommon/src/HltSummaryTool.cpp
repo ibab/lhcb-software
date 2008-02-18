@@ -157,14 +157,21 @@ HltSummaryTool::selectionVertices(const std::string& name) {
   return Hlt::SummaryHelper::retrieve<RecVertex>(*m_summary,id);
 }
 
-std::vector<Particle*> 
-HltSummaryTool::selectionParticles(const std::string& name) {
-  std::vector<Particle*> particles;
+Particle::ConstVector HltSummaryTool::selectionParticles(const std::string& name) {
+  std::vector<const Particle*> particles;
   bool ok = checkSelection(name);
+  if (msgLevel(MSG::VERBOSE)) verbose () << "selectionParticles " << name << " OK: " << ok << endmsg ;
   if (!ok) return particles;
   int id = hltSelectionID(name);
-  return Hlt::SummaryHelper::retrieve<Particle>(*m_summary,id);
-
+  if (msgLevel(MSG::VERBOSE)) verbose() << "selectionParticles " << name << " ID: " << id << endmsg ;
+  /// @todo why can't the helper do this ?
+  for ( SmartRefVector<LHCb::Particle>::const_iterator ip = 
+          m_summary->selectionSummary(id).particles().begin() ; 
+        ip != m_summary->selectionSummary(id).particles().end() ; ++ip){
+    if (msgLevel(MSG::VERBOSE)) verbose () << "Part " << (*ip)->particleID().pid() << endmsg ; 
+    particles.push_back(*ip);
+  }
+  return particles;
 
 }
 
@@ -223,6 +230,6 @@ bool HltSummaryTool::checkSelection(const std::string& name) {
   getSummary();
   int id = hltSelectionID(name);
   bool ok =  m_summary->hasSelectionSummary(id);
-  if (!ok) debug() << " no selection in summary " << name << endreq;
+  if (!ok && msgLevel(MSG::DEBUG)) debug() << " no selection in summary " << name << endreq;
   return ok;
 }

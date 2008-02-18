@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+! 2008-02-18 - Patrick Koppenburg
+ - HltSummary tool: return Particle::ConstVector. Do not use helper 
+
 ! 2008-02-15 - Gerhard Raven
   - PropertyConfigSvc now inherits from IPropertyConfigSvc so it can expose
     some of its functionality to the rest of the world...
