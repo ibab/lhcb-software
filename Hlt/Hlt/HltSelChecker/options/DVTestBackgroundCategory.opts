@@ -9,6 +9,7 @@
 // #include "$DAVINCIROOT/options/DaVinciCommonDigi.opts"
 // *REPLACE* the above by the following when running on DST
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciMainSeqFixes.opts"
 //=================================================================
 //-----------------------------------------------------------
 // HLT
@@ -17,11 +18,6 @@
 #pragma print on
 #include "$HLTSYSROOT/options/Hlt.opts"
 HltMuonTriggerDiMuons.OutputLevel = 4 ;
-
-// Hlt.Members += { "PrintHeader/PassedHltGeneric" };
-PassedHlt.OutputLevel = 2 ;
-
-#include "$HLTSYSROOT/options/HltSelections.opts"
 
 //ApplicationMgr.TopAlg += { "IsBEvent"};
 
@@ -36,6 +32,34 @@ PassedHlt.OutputLevel = 2 ;
 ApplicationMgr.DLLs += { "RootHistCnv" };
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos.root";
+
+
+HltEnd.OnTES = true; // store all on TES
+
+//HltChargedProtoPAlg.OutputLevel = 1 ;
+//HltMuonPAlg.OutputLevel = 1 ;
+//----------------------------------------------------------------
+// Selections monitoring
+//----------------------------------------------------------------
+HltSelections.Members += { "PrintHeader/HltSelectionsAccepted" } ;
+
+ApplicationMgr.TopAlg += { "ReadHltSummary" };
+ReadHltSummary.OutputLevel = 3 ;
+
+DaVinciMainSeq.Members -= { "ProtoPRecalibration" };
+ProtoPRecalibration.Members = {};
+
+
+ApplicationMgr.TopAlg += { "HltBackgroundCategory" } ; 
+
+HltBackgroundCategory.OutputLevel = 3 ;
+
+HltBackgroundCategory.AlgorithmCorrelations.OutputLevel = 3 ;
+HltBackgroundCategory.BackgroundCategory.OutputLevel = 3 ;
+HltBackgroundCategory.HltSummaryTool.OutputLevel = 3 ;
+HltBackgroundCategory.Particle2MCLinks.OutputLevel = 1 ;
+HltBackgroundCategory.PrintTree = true ;
+
 
 // ToolSvc.RelatedPVFinder.OutputLevel =1 ;
 // Bu2LLKTuple.OutputLevel = 2 ;
@@ -54,48 +78,8 @@ MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 
 // DST
 //#include "$HLTSELECTIONSROOT/options/Bd2MuMuKstarPFN.opts"
-
-HltEnd.OnTES = true; // store all on TES
-
-//HltChargedProtoPAlg.OutputLevel = 1 ;
-//HltMuonPAlg.OutputLevel = 1 ;
-//----------------------------------------------------------------
-// Selections monitoring
-//----------------------------------------------------------------
-HltSelections.Members += { "PrintHeader/HltSelectionsAccepted" } ;
-
-ApplicationMgr.TopAlg += { "ReadHltSummary" };
-ReadHltSummary.OutputLevel = 3 ;
-
-/*
-ApplicationMgr.EvtMax = 1 ;
-EventSelector.FirstEvent = 86 ;
-HltNoPIDsKaons.OutputLevel = 1 ;
-HltChargedProtoPAlg.OutputLevel = 1 ;
-HltSelBs2PhiPhi.OutputLevel = 1 ;
-HltSharedPhi2KK.OutputLevel = 1 ;
-HltRecoForward.OutputLevel = 1 ;
-HltEnd.OutputLevel = 1 ;
-*/
-ApplicationMgr.EvtMax = 50000 ;
+ApplicationMgr.EvtMax = 1000 ;
 EventSelector.PrintFreq = 100 ;
 
 #include "$HLTSELECTIONSROOT/options/MinimumBiasPFN.opts"
-
-//#include "$DAVINCIROOT/options/DaVinciTestData.opts"
-//ReadHltSummary.OutputLevel = 1 ;
-// HltSelB2MuMu.Filter.MassFilterCriterion.OutputLevel = 1 ;
-
-// HltAlleysPassed.OutputLevel = 2 ;
-// EventSelector.PrintFreq = 1 ;
-// HltChargedProtoPAlg.OutputLevel = 2 ;
-
-//MessageSvc.OutputLevel = 2 ; 
-// L0MuonCandidatesFromRaw.ConfigFile =  "$PARAMFILESROOT/data/L0MuonKernel.xml";
-
-DaVinciMainSeq.Members -= { "ProtoPRecalibration" };
-ProtoPRecalibration.Members = {};
-
-
-ApplicationMgr.TopAlg += { "HltBackgroundCategory" } ; // not yet released
 

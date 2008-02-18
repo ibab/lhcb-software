@@ -1,4 +1,4 @@
- // $Id: HltBackgroundCategory.cpp,v 1.2 2008-02-15 17:57:45 pkoppenb Exp $
+ // $Id: HltBackgroundCategory.cpp,v 1.3 2008-02-18 14:32:03 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -11,7 +11,8 @@
 #include "Event/HltEnums.h"
 #include "Kernel/IBackgroundCategory.h"
 #include "Kernel/IAlgorithmCorrelations.h"            // Interface
-#include "Kernel/IDebugTool.h"            // Interface
+#include "Kernel/IPrintDecayTreeTool.h"            // Interface
+#include "MCInterfaces/IPrintMCDecayTreeTool.h"            // Interface
 #include "Kernel/Particle2MCLinker.h"
 
 // local
@@ -36,7 +37,8 @@ HltBackgroundCategory::HltBackgroundCategory( const std::string& name,
   ,   m_summaryTool()
   ,   m_bkg()
   ,   m_algoCorr()
-    , m_debug()
+    , m_print()
+    , m_printMC()
     , m_linker()
 {
   declareProperty("PrintTree",m_printTree=false );
@@ -60,7 +62,8 @@ StatusCode HltBackgroundCategory::initialize() {
   m_bkg         = tool<IBackgroundCategory>("BackgroundCategory",this);
   m_algoCorr    = tool<IAlgorithmCorrelations>("AlgorithmCorrelations",this);
   if (m_printTree ){
-    m_debug       = tool<IDebugTool>("DebugTool",this);
+    m_print       = tool<IPrintDecayTreeTool>("PrintDecayTreeTool",this);
+    m_printMC     = tool<IPrintMCDecayTreeTool>("PrintMCDecayTreeTool",this);
     m_linker      = new Particle2MCLinker( this, Particle2MCMethod::Links, "");
   }
   
@@ -141,7 +144,7 @@ StatusCode HltBackgroundCategory::execute() {
  
       if ((msgLevel(MSG::DEBUG)) || m_printTree ) {
         std::map<int, std::string>::const_iterator scat = catMap.find(cat) ;
-        info() << *is << " has a B " 
+        info() << *is << " has a candidate " 
                << (*ip)->particleID().pid() << " " 
                << (*ip)->momentum() 
                << " category: " 
@@ -149,8 +152,8 @@ StatusCode HltBackgroundCategory::execute() {
       }
       
       if ( m_printTree ){
-        m_debug->printTree(*ip,m_linker);
-        if (0!=m_bkg->origin(*ip)) m_debug->printTree(m_bkg->origin(*ip));
+        m_print->printTree(*ip,m_linker);
+        if (0!=m_bkg->origin(*ip)) m_printMC->printTree(m_bkg->origin(*ip));
       }
       
       if (m_fillAll){

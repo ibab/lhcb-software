@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-02-18 - Patrick Koppenburg
+ - HltBackgroundCategory : do not use DebugTool
+
 ! 2008-02-15 - Patrick Koppenburg
  - src/HltBackgroundCategory.cpp : more verbose verbose()
 

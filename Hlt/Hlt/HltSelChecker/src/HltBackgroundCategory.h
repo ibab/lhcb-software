@@ -1,4 +1,4 @@
-// $Id: HltBackgroundCategory.h,v 1.1 2008-02-11 16:51:13 pkoppenb Exp $
+// $Id: HltBackgroundCategory.h,v 1.2 2008-02-18 14:32:03 pkoppenb Exp $
 #ifndef HLTBACKGROUNDCATEGORY_H 
 #define HLTBACKGROUNDCATEGORY_H 1
 
@@ -25,6 +25,8 @@
  */
 class IHltSummaryTool ;
 class IBackgroundCategory ;
+class IPrintDecayTreeTool ;
+class IPrintMCDecayTreeTool ;
 
 class HltBackgroundCategory : public GaudiAlgorithm {
 public: 
@@ -45,7 +47,8 @@ private:
   IHltSummaryTool* m_summaryTool ; ///< HLT summary tool
   IBackgroundCategory* m_bkg     ; //< Background category tool
   IAlgorithmCorrelations* m_algoCorr ;  ///< Correlation tool
-  IDebugTool* m_debug ;
+  IPrintDecayTreeTool* m_print ;        ///< print Particles
+  IPrintMCDecayTreeTool* m_printMC ;    ///< print MCParticles
   Particle2MCLinker* m_linker ;
   
 };
