@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/DisplayMenu.cpp,v 1.9 2008-02-12 17:15:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/DisplayMenu.cpp,v 1.10 2008-02-18 16:01:20 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DisplayMenu.cpp,v 1.9 2008-02-12 17:15:24 frankb Exp $
+// $Id: DisplayMenu.cpp,v 1.10 2008-02-18 16:01:20 frankb Exp $
 //
 // C++ include files
 #include <map>
@@ -178,7 +178,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       if ( ptr )  {
         std::vector<RawBank*> b;
         BankListWindow::Banks banks;
-        if ( decodeRawBanks(ptr,ptr+m_evtData.length,b).isSuccess() )  {
+        if ( decodeRawBanks(ptr,ptr+m_evtData.length*sizeof(int),b).isSuccess() )  {
           for(std::vector<RawBank*>::iterator j=b.begin(); j!=b.end(); ++j)
             banks.push_back(std::make_pair(0,*j));
           if ( cmd_id == C_BTRAW )
@@ -191,7 +191,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       break;
     case C_CHECKRAW:
       ptr = (const char*)m_evtData.start;
-      checkRawBanks(ptr,ptr+m_evtData.length,true,false);
+      checkRawBanks(ptr,ptr+m_evtData.length*sizeof(int),true,false);
       output("Sanity check completed successfully.");
       break;
     case C_MDF:
@@ -202,7 +202,8 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       if ( ptr )  {
         std::vector<RawBank*> b;
         BankListWindow::Banks banks;
-        if ( decodeRawBanks(ptr,ptr+m_evtData.length,b).isSuccess() )  {
+	size_t len = m_evtData.length*sizeof(int)-sizeof(MDFHeader)-h->subheaderLength();
+        if ( decodeRawBanks(ptr,ptr+len,b).isSuccess() )  {
           for(std::vector<RawBank*>::iterator j=b.begin(); j!=b.end(); ++j)
             banks.push_back(std::make_pair(0,*j));
           if ( cmd_id == C_BTMDF )
