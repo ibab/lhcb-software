@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.10 2008-02-18 14:39:53 mschille Exp $
+// $Id: PatSeedingTool.cpp,v 1.11 2008-02-18 17:48:13 mschille Exp $
 // Include files
 
 #include <cmath>
@@ -1046,7 +1046,7 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region,
 
         PatSeedTrack track( x0, x1, x2, z0, z1, z2, m_zReference, m_dRatio );
 	// one more slope check to make sure our third hit is ok
-	if (0 != slope && fabs(track.xSlope(z1) - state->tx()) >
+	if (0 != state && fabs(track.xSlope(z1) - state->tx()) >
 			std::sqrt(state->errTx2()))
 		continue;
         track.setYParams( 0, 0);
@@ -1134,7 +1134,7 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region,
 
 	// one last check for the slope - just in case something was
 	// changed by the fit
-	if (0 != slope && fabs(track.xSlope(z1) - state->tx()) >
+	if (0 != state && fabs(track.xSlope(z1) - state->tx()) >
 			std::sqrt(state->errTx2()))
 		continue;
 	// candidates are first produced here, so we need not reserve
