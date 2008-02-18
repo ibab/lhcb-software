@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2008-02-18 - Patrick Koppenburg
+ - IHltConfSummary tool : must return const particles
+
 ! 2008-02-15 Gerhard Raven
   - add IPropertyConfig interface for obtaining an configuration 'ID' given an 
     INamedInterface instance, and to search in a configuration tree for the 'ID'  

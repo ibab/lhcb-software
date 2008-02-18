@@ -27,4 +27,5 @@
   <class name = "Hlt::Selection" />
   <class name = "Hlt::TrackSelection" />
   <class name = "Hlt::VertexSelection" />
+  <class name = "ISequencerTimerTool" />
 </lcgdict>

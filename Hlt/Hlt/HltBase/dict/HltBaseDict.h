@@ -18,6 +18,8 @@
 #include "HltBase/ERelations.h"
 #include "HltBase/HltTypes.h"
 
+#include "GaudiAlg/ISequencerTimerTool.h"
+
 // struct __Instantiations
 // {
 

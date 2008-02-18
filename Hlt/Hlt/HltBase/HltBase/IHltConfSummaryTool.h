@@ -1,4 +1,4 @@
-// $Id: IHltConfSummaryTool.h,v 1.6 2008-02-07 16:55:15 hernando Exp $
+// $Id: IHltConfSummaryTool.h,v 1.7 2008-02-18 18:03:17 pkoppenb Exp $
 #ifndef HLTBASE_IHLTCONFSUMMARYTOOL_H 
 #define HLTBASE_IHLTCONFSUMMARYTOOL_H 1
 
@@ -59,7 +59,7 @@ public:
 
   virtual std::vector<LHCb::RecVertex*> selectionVertices(const std::string& name)= 0;
 
-  virtual std::vector<LHCb::Particle*> selectionParticles(const std::string& name)= 0;
+  virtual std::vector<const LHCb::Particle*> selectionParticles(const std::string& name)= 0;
 
   virtual bool isInSelection(const std::string& name,
                              const LHCb::Track& track ) = 0;
