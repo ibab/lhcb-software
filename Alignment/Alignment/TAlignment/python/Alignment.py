@@ -5,7 +5,7 @@
 # import gaudi python module
 import FixGaudiOpts
 from GaudiPython import *
-from Gaudi.Configuration import* 
+from Gaudi.Configuration import*
 from GaudiPython import gbl
 from ROOT import *
 from array import array
@@ -69,52 +69,57 @@ def printdod(dod) :
 
 def run(filename, data, nEvents, nIter, CondTag, MagOff, OTHitsOnly, Constraints, UseCorrelations, UseDrift, ApplyMS, extraOpts, what, group) :
     print "==> Running job " + filename
-    #options = '''
-    #/// Include default Escher options
-    ##include "$TALIGNMENTROOT/options/Escher_nikhef.opts"
-    #'''
-
-    #options += extraOpts;
-    #print options
-
     # instantiate application manager
     # importOptions(writeToTmpFile(options))
     importOptions("$TALIGNMENTROOT/options/Escher_nikhef.opts")
 
+    #    from Configurables import UpdateManagerSvc
+    #    ums = UpdateManagerSvc()
+    #    ums.ConditionsOverride +=  [
+    #       "Conditions/Alignment/OT/T1Station := double_v dPosXYZ =  0.3 1.5 0.0 ; double_v dRotXYZ = 0.0  0.0001  0.0005 ;",
+    #       "Conditions/Alignment/OT/T2Station := double_v dPosXYZ = -0.1 1.0 0.0 ; double_v dRotXYZ = 0.0  0.0005  0.0001 ;",
+    #       "Conditions/Alignment/OT/T3Station := double_v dPosXYZ =  0.2 -1.0 0.0 ; double_v dRotXYZ = 0.0 -0.0001 -0.0005 ;"
+    #       ]
+
     # let's configure the alignment using python options. Ooohh Aaahhh
     # Tracking
     from Configurables import TrackFilterAlg, GetElementsToBeAligned, AlignSelTool
-    from Configurables import TrajOTProjector, TrackEventFitter, TrackMasterFitter, TrackMasterExtrapolator, TrackKalmanFilter, TrackSimpleExtraSelector   
-
+    from Configurables import TrajOTProjector, TrackEventFitter, TrackMasterFitter, TrackMasterExtrapolator, TrackKalmanFilter, TrackSimpleExtraSelector
+    from Configurables import TrackContainerCopy
+    #from Configurables import TrackSelector
+    
     trackFitSeq             = GaudiSequencer("TrackFitSeq")
     trackFitSeq.MeasureTime = True;
     allConfigurables["EscherMainSeq"].Members += [trackFitSeq.getFullName()]
 
     trackFilterAlg = TrackFilterAlg("FilterTracks",
-                                    OutputLevel               = DEBUG,
+                                    OutputLevel               = INFO,
                                     TracksInputContainer      = "Rec/Track/Best",
                                     TracksOutputContainer     = "Alignment/FilteredTracks",
                                     TrackType                 = "Long",
-                                    StripUnwantedDetectorHits = True,
+                                    StripUnwantedDetectorHits = False,
                                     KeepDetectorHits          = "OT",
-                                    MinNHits                  = 3)
-    trackFilterAlg.GetElementsToBeAligned = GetElementsToBeAligned(OutputLevel   = DEBUG,
+                                    MinNHits                  = 0)
+    
+    trackFilterAlg.GetElementsToBeAligned = GetElementsToBeAligned(OutputLevel   = INFO,
                                                                    GroupElements = group,
                                                                    Elements      = what)
-    trackFilterAlg.Selector               = AlignSelTool(OutputLevel  = DEBUG,
-                                                         BFieldStatus = False,
-                                                         TrackType    = "OT")
-    trackFilterAlg.TrackSelector          = trackFilterAlg.Selector.getType()
+    
+    trackFilterAlg.Selector               = AlignSelTool(OutputLevel  = INFO,
+                                                         BFieldStatus = True) #,
+                                                         #TrackType    = "OT")
 
-
-    trajOTProjector                  = TrajOTProjector(OutputLevel = DEBUG,
-                                                       UseDrift    = UseDrift)
-    trackFitAlg                      = TrackEventFitter("FitTracks",
-                                                        OutputLevel        = DEBUG,
-                                                        TracksInContainer  = "Alignment/FilteredTracks",
-                                                        TracksOutContainer = "Alignment/AlignmentTracks")
+    trajOTProjector                       = TrajOTProjector(OutputLevel = INFO,
+                                                            UseDrift    = UseDrift)
+    
+    trackFitAlg                           = TrackEventFitter("FitTracks",
+                                                             OutputLevel        = INFO,
+                                                             TracksInContainer  = "Alignment/FilteredTracks",
+                                                             TracksOutContainer = "Alignment/AlignmentTracks")
 
     
+                                                               
+
     trackFitAlg.addTool(TrackMasterFitter("Fitter"))
     trackMasterFitter = allConfigurables["FitTracks.Fitter"]
     trackMasterFitter.addTool(TrackMasterExtrapolator("Extrapolator"))
@@ -123,57 +128,57 @@ def run(filename, data, nEvents, nIter, CondTag, MagOff, OTHitsOnly, Constraints
     trackMasterNodeFitter = allConfigurables["FitTracks.Fitter.NodeFitter"]
     trackMasterNodeFitter.addTool(TrackMasterExtrapolator("Extrapolator"))
     trackMasterNodeFitterExtrapolator = allConfigurables["FitTracks.Fitter.NodeFitter.Extrapolator"]
-    
-    
+
+    if MagOff == False:
+       importOptions("$TALIGNMENTROOT/options/BFieldOn.opts")
+
     if MagOff == True:
        importOptions("$TALIGNMENTROOT/options/BFieldOff.opts")
-       #trackMasterFitter.ErrorP                       = [1e-3, 1e-8]
-       #trackMasterFitter.NumberFitIterations          = 4
-       #trackMasterExtrapolator.ApplyEnergyLossCorr    = False
-       ### The following doesn't work (i think it might be an 'inheritance' problem
-       #trackMasterExtrapolator.addTool(TrackSimpleExtraSelector("ExtraSelector"))
-       #trackMasterExtrapolatorExtraSelector = allConfigurables["FitTracks.Fitter.Extrapolator.ExtraSelector"]
-       #trackMasterExtrapolatorExtraSelector.ExtrapolatorName  = "TrackLinearExtrapolator"
-       #trackMasterNodeFitterExtrapolator.ApplyEnergyLossCorr  = False
-       #trackMasterNodeFitterExtrapolator.addTool(TrackSimpleExtraSelector("ExtraSelector"))
-       #trackMasterNodeFitterExtrapolatorExtraSelector = allConfigurables["FitTracks.Fitter.NodeFitter.Extrapolator.ExtraSelector"]
-       #trackMasterNodeFitterExtrapolatorExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator"
+
+    trackContainerCopy                    = TrackContainerCopy("CopyTracks",
+                                                               inputLocation = "Alignment/AlignmentTracks",
+                                                               outputLocation = "Alignment/CopiedAlignmentTracks",
+                                                               copyFailures  = False)
+    importOptions("$TALIGNMENTROOT/options/TrackContainerCopy.opts")
     
-    # These are magnet off options for the fitter
-    allConfigurables["TrackFitSeq"].Members = [trackFilterAlg, trackFitAlg]
-    
+    allConfigurables["TrackFitSeq"].Members = [trackFilterAlg, trackFitAlg, trackContainerCopy]
+
     # Alignment
-    from Configurables import AlignAlgorithm, GetElementsToBeAligned, gslSVDsolver
+    from Configurables import AlignAlgorithm, GetElementsToBeAligned, gslSVDsolver, DiagSolvTool
 
     alignSeq             = GaudiSequencer("AlignmentSeq")
-    alignSeq.MeasureTime = True                    
+    alignSeq.MeasureTime = True
     allConfigurables["EscherMainSeq"].Members += [alignSeq.getFullName()]
 
     alignAlg                        = AlignAlgorithm("Alignment",
-                                                     OutputLevel        = DEBUG,
-                                                     TracksLocation     = "Alignment/AlignmentTracks",
-                                                     NumberOfIterations = nIter,
-                                                     UseCorrelations    = UseCorrelations)
-    
+                                                     OutputLevel                 = INFO,
+                                                     TracksLocation              = "Alignment/CopiedAlignmentTracks",
+                                                     NumberOfIterations          = nIter,
+                                                     UseCorrelations             = UseCorrelations,
+                                                     CanonicalConstraintStrategy = 1,
+                                                     ConstrainZShearings         = True,
+                                                     MinNumberOfHits             = 10,
+                                                     UsePreconditioning          = True)
+
+#    alignAlg.MatrixSolver           = DiagSolvTool() # gslSVDsolver()
     alignAlg.MatrixSolver           = gslSVDsolver()
     alignAlg.MatrixSolverTool       = alignAlg.MatrixSolver.getType()
-    alignAlg.GetElementsToBeAligned = GetElementsToBeAligned(OutputLevel   = DEBUG,
+    alignAlg.GetElementsToBeAligned = GetElementsToBeAligned(OutputLevel   = INFO,
                                                              GroupElements = group,
                                                              Elements      = what)
     allConfigurables["AlignmentSeq"].Members = [alignAlg]
 
-    #return
-#     from Configurables import CondDBDispatcherSvc, CondDBAccessSvc
-#     myCondDB = CondDBAccessSvc("LHCBCOND").clone("MyLHCBCOND",
-#                                                  ConnectionString = "sqlite_file:/project/bfys/janos/AlignmentDev/Alignment_v2r0/Alignment/TAlignment/v3r1/python/LHCBCOND.db/LHCBCOND",
-#                                                  DefaultTAG = CondTag )
+    from Configurables import CondDBDispatcherSvc, CondDBAccessSvc
+    myCondDB = CondDBAccessSvc("LHCBCOND").clone("MyLHCBCOND",
+                                                 ConnectionString = "sqlite_file:/afs/cern.ch/user/j/janos/cmtuser/Alignment_v2r3/Alignment/TAlignment/v3r4/python/LHCBCOND.db/LHCBCOND",
+                                                 DefaultTAG = CondTag )
     
-#     mainDBReader = CondDBDispatcherSvc()
-#     mainDBReader.Alternatives.append("/Conditions/OT=%s"%myCondDB.getFullName())
-
-#     from pprint import PrettyPrinter
-#     PrettyPrinter().pprint(configurationDict())
-#     return
+    mainDBReader = CondDBDispatcherSvc()
+    mainDBReader.Alternatives.append("/Conditions/OT=%s"%myCondDB.getFullName())
+    
+    #     from pprint import PrettyPrinter
+    #     PrettyPrinter().pprint(configurationDict())
+    #     return
 
     appMgr = AppMgr()
     #appMgr.initialize()
@@ -194,17 +199,8 @@ def run(filename, data, nEvents, nIter, CondTag, MagOff, OTHitsOnly, Constraints
 
     # get pointer to event selector
     sel = appMgr.evtsel()
+    
     # open files
-    #-- For Event Type = 13144002 / Data type = DST 1
-    #--     Configuration = DC06 - phys-v2-lumi2
-    #--     DST 1 datasets produced by Brunel - v30r17
-    #--     From DIGI 1 datasets produced by Boole - v12r10
-    #--     From SIM 1 datasets produced by Gauss - v25r10
-    #--     Database version = v30r14
-    #--     Cards content = physical-physical
-    #--
-    #-- Datasets replicated at CERN
-    #-- 200 dataset(s) - NbEvents = 99368
     sel.open(data)
 
     # set print frequency
@@ -213,6 +209,8 @@ def run(filename, data, nEvents, nIter, CondTag, MagOff, OTHitsOnly, Constraints
     # get align elements
     elements = getElements(appMgr.detsvc(),'/dd/Structure/LHCb/AfterMagnetRegion/T/OT',['T1','T2','T3'])
     # elements = getElements(appMgr.detsvc(),'/dd/Structure/LHCb/AfterMagnetRegion/T',['OT'])
+    #elements = getElements(appMgr.detsvc(),'/dd/Structure/LHCb',['BeforeMagnetRegion/Velo', 'AfterMagnetRegion/T/IT', 'AfterMagnetRegion/T/OT'])
+#    elements = getElements(appMgr.detsvc(),'/dd/Structure/LHCb/AfterMagnetRegion/T/OT',['T1/X1layer','T1/Ulayer','T1/Vlayer','T1/X2layer', 'T2/X1layer','T2/Ulayer','T2/Vlayer','T2/X2layer', 'T3/X1layer','T3/Ulayer','T3/Vlayer','T3/X2layer'])
 
     # get initial constants
     deltaVsIter = [getAlignmentConstants(elements)]
@@ -222,15 +220,15 @@ def run(filename, data, nEvents, nIter, CondTag, MagOff, OTHitsOnly, Constraints
 
     # i iterations
     for i in range(nIter) :
-	oldDeltas = getAlignmentConstants(elements)
-	print "==> iteration " + str(i) #+ " : Initial alignment conditions  : " + str(oldDeltas)
+	#oldDeltas = getAlignmentConstants(elements)
+	#print "==> iteration " + str(i) + " : Initial alignment conditions  : " + str(oldDeltas)
 	appMgr.run(nEvents)
 	# trigger update of alignment parameters
 	update(alignAlg.name(),appMgr)
 	# print old and new deltas
-	newDeltas = getAlignmentConstants(elements)
-	print "==> iteration " + str(i) + " : Updated alignment conditions  : " + str(newDeltas)
-	deltaVsIter.append(newDeltas)
+	#newDeltas = getAlignmentConstants(elements)
+	#print "==> iteration " + str(i) + " : Updated alignment conditions  : " + str(newDeltas)
+	#deltaVsIter.append(newDeltas)
 	sel.rewind()
 
     print "==> Deltas per iterarion"
