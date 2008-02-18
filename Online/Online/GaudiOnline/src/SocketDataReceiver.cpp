@@ -24,8 +24,14 @@ namespace LHCb  {
   class SocketDataReceiver : public NetworkDataReceiver  {
   protected:
     bool m_finish;
-    static void handle_death(netentry_t* /* e */, const netheader_t& hdr, void* param)  
-    {  ((SocketDataReceiver*)param)->taskDead(hdr.name);               }
+    static void handle_death(netentry_t* /* e */, const netheader_t& hdr, void* param)  {
+      int sc = gauditask_task_trylock();
+      if ( sc == 1 ) {
+        SocketDataReceiver* p = (SocketDataReceiver*)param;
+	p->taskDead(hdr.name);
+        gauditask_task_unlock();
+      }
+    }
     static void handle_request(netentry_t* e, const netheader_t& hdr, void* param)  {
       int sc = gauditask_task_trylock();
       if ( sc == 1 ) {

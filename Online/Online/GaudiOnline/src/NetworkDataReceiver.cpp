@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.12 2008-01-17 17:23:58 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.13 2008-02-18 18:38:18 frankb Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -282,12 +282,13 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
 StatusCode NetworkDataReceiver::taskDead(const std::string& task_name)  {
   MsgStream info(msgSvc(), name());
   info << MSG::INFO << "Dead task:" << task_name << "...." << endmsg;
-  for(Receivers::iterator i=m_receivers.begin(); i!=m_receivers.end();++i)  {
+  for(Receivers::iterator i=m_receivers.begin(); i!=m_receivers.end(); ++i)  {
     if ( 0 == strcasecmp(task_name.c_str(),(*i).name.c_str()) )  {
       m_receivers.erase(i);
       break;
+      //i = m_receivers.begin();
     }
   }
-  error("Event provider:"+task_name+" died.");
+  // error("Event provider:"+task_name+" died.");
   return StatusCode::SUCCESS;
 }

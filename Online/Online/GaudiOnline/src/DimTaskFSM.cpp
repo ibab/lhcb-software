@@ -110,7 +110,7 @@ LHCb::DimTaskFSM::DimTaskFSM(IInterface*)
   m_fsmService = new DimService(svcname.c_str(),"L:2;I:1;C",&m_monitor,sizeof(m_monitor));
   propertyMgr().declareProperty("HaveEventLoop",m_haveEventLoop);
   propertyMgr().declareProperty("Name",m_procName);
-  //::lib_rtl_install_printer(printout,this);
+  ::lib_rtl_install_printer(printout,this);
 }
 
 LHCb::DimTaskFSM::~DimTaskFSM()  {
