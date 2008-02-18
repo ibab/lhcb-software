@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.29 2008-02-13 18:10:13 janos Exp $
+// $Id: AlignAlgorithm.cpp,v 1.30 2008-02-18 18:43:14 janos Exp $
 // Include files
 // from std
 // #include <utility>
@@ -171,6 +171,8 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   : GaudiHistoAlg( name , pSvcLocator ),
     m_iteration(0u),
     m_nIterations(0u),
+    m_nTracks(0u),
+    m_covFailure(0u),
     m_rangeElements(),
     m_initAlignConstants(),
     m_align(0),
@@ -244,12 +246,18 @@ StatusCode AlignAlgorithm::initialize() {
   /// Residuals
   /// @todo: this should go into a monitoring tool
   info() << "booking histograms assuming " << m_nIterations << " iterations " << endmsg;
-  m_trackChi2Histo        = book2D(10, "Track chi2 vs iteration", -0.5, m_nIterations-0.5, m_nIterations, -1.00, +100.00, 100);
-  m_trackNorChi2Histo     = book2D(11, "Track normalised chi2 vs iteration", -0.5, m_nIterations-0.5, m_nIterations, -1.00, +100.00, 100);
-  m_totChi2vsIterHisto    = bookProfile1D(20, "Total chi2 vs iteration"                  , -0.5, m_nIterations-0.5, m_nIterations);
-  m_norTotChi2vsIterHisto = bookProfile1D(21, "Total normalised chi2 vs iteration"       , -0.5, m_nIterations-0.5, m_nIterations);
-  m_dChi2AlignvsIterHisto = bookProfile1D(30, "Chi2/dof of alignment change vs iteration", -0.5, m_nIterations-0.5, m_nIterations);
-  
+  m_trackChi2Histo           = book2D(10, "11"      , -0.5, m_nIterations-0.5, m_nIterations, -1.00, 
+                                      +100.00, 100);
+  m_trackNorChi2Histo        = book2D(11, "Normalised track chi2 distribution vs iteration", 
+                                      -0.5, m_nIterations-0.5, m_nIterations, -1.00, 
+                                      +100.00, 100);
+  m_totNusedTracksvsIterHisto= bookProfile1D(20, "Total number of used tracks for alignment vs iteration" , -0.5, m_nIterations-0.5, m_nIterations);
+  m_totChi2vsIterHisto       = bookProfile1D(30, "Total sum of track chi2 vs iteration"            , -0.5, m_nIterations-0.5, m_nIterations);
+  m_avgChi2vsIterHisto       = bookProfile1D(31, "Average sum of track chi2 vs iteration"          , -0.5, m_nIterations-0.5, m_nIterations);
+  m_norTotChi2vsIterHisto    = bookProfile1D(32, "Normalised total sum of track chi2 vs iteration" , -0.5, m_nIterations-0.5, m_nIterations);
+  m_dAlignChi2vsIterHisto    = bookProfile1D(40, "Delta Alignment chi2 vs iteration"               , -0.5, m_nIterations-0.5, m_nIterations);
+  m_nordAlignChi2vsIterHisto = bookProfile1D(41, "Delta Alignment normalised chi2 vs iteration"    , -0.5, m_nIterations-0.5, m_nIterations);
+
   for(ElementRange::const_iterator i = m_rangeElements.begin(); i!= m_rangeElements.end(); ++i) {
     const unsigned    index_i = i->index();
     const std::string name   = i->name();
@@ -307,6 +315,7 @@ StatusCode AlignAlgorithm::execute() {
 
   // Get tracks
   Tracks* tracks = get<Tracks>(m_tracksLocation);
+  m_nTracks += tracks->size();
   if (printVerbose()) verbose() << "Number of tracks in container " + m_tracksLocation + ": " << tracks->size() << endmsg;
   /// Loop over tracks
   typedef Tracks::const_iterator TrackIter;
@@ -317,7 +326,8 @@ StatusCode AlignAlgorithm::execute() {
     // skip track
     if (cov.error()) {
       warning() << "Error computing residual cov matrix. Skipping track of type "
-                << (*iTrack)->type() << endmsg ;
+                << (*iTrack)->type() << " with key: " << (*iTrack)->key() << " and chi2 / dof: " << (*iTrack)->chi2() << "/" << (*iTrack)->nDoF() << endmsg ;
+      ++m_covFailure;
       continue;
     }
     std::vector<Data> data;
@@ -391,7 +401,7 @@ StatusCode AlignAlgorithm::execute() {
       // keep some information about the tracks that we have seen
       m_equations->addTrackSummary( (*iTrack)->chi2(), (*iTrack)->nDoF(), numexternalhits ) ;
       m_trackChi2Histo->fill(m_iteration, (*iTrack)->chi2());
-      m_trackNorChi2Histo->fill(m_iteration, (*iTrack)->chi2()/(*iTrack)->nDoF());
+      m_trackNorChi2Histo->fill(m_iteration, (*iTrack)->chi2PerDoF());
     }
   }
 
@@ -597,12 +607,18 @@ void AlignAlgorithm::update() {
   std::ostringstream logmessage ;
   logmessage << "********************* ALIGNMENT LOG ************************" << std::endl
 	     << "Iteration: " << m_iteration << std::endl
-	     << "Used " << m_equations->numTracks() << " tracks for alignment" << std::endl
-	     << "Total chisquare/dofs: " << m_equations->totalChiSquare() << " / " << m_equations->totalNumDofs() << std::endl
-	     << "Total number of hits in external detectors: " << m_equations->numExternalHits() << std::endl;
+	     << "Total number of tracks: " << m_nTracks << std::endl
+             << "Number of covariance calculation failures: " << m_covFailure << std::endl
+             << "Used " << m_equations->numTracks() << " tracks for alignment" << std::endl
+	     << "Total track chisquare/dofs: " << m_equations->totalChiSquare() << " / " << m_equations->totalNumDofs() << std::endl
+	     << "Average track chisquare: " << m_equations->totalChiSquare() / m_equations->numTracks() << std::endl
+             << "Normalised total track chisquare: " << m_equations->totalChiSquare() / m_equations->totalNumDofs() << std::endl
+             << "Total number of hits in external detectors: " << m_equations->numExternalHits() << std::endl;
 
+  m_totNusedTracksvsIterHisto->fill(m_iteration, m_equations->numTracks());
   m_totChi2vsIterHisto->fill(m_iteration, m_equations->totalChiSquare());
-  m_norTotChi2vsIterHisto->fill(m_iteration, m_equations->totalChiSquare()/m_equations->totalNumDofs());
+  m_avgChi2vsIterHisto->fill(m_iteration, m_equations->totalChiSquare() / m_equations->numTracks());
+  m_norTotChi2vsIterHisto->fill(m_iteration, m_equations->totalChiSquare() / m_equations->totalNumDofs());
 
   if (printDebug()) {
     for (size_t i = 0; i < m_equations->nElem(); ++i) {
@@ -712,8 +728,11 @@ void AlignAlgorithm::update() {
 	info() << "Covariance = " << matrix << endmsg ;
       }
       logmessage << "Alignment change chisquare/dof: " 
-		 << deltaChi2 << " / " << nDOFs-numConstraints << std::endl ;
-      m_dChi2AlignvsIterHisto->fill(m_iteration, deltaChi2) ;
+		 << deltaChi2 << " / " << nDOFs-numConstraints << std::endl
+                 << "Normalised alignment change chisquare: " << deltaChi2 / (nDOFs-numConstraints) << std::endl;
+      
+      m_dAlignChi2vsIterHisto->fill(m_iteration, deltaChi2) ;
+      m_nordAlignChi2vsIterHisto->fill(m_iteration, deltaChi2 / nDOFs-numConstraints);
       
       if (numConstraints > 0) printCanonicalConstraints(derivatives, matrix, numConstraints, logmessage) ;
       
@@ -757,6 +776,9 @@ void AlignAlgorithm::reset() {
   if (printDebug()) debug() << "increasing iteration counter and resetting accumulated data..." << endmsg;
   /// increment iteration counter
   ++m_iteration;
+  // set counters to zero
+  m_nTracks = 0u;
+  m_covFailure = 0u;
   // clear derivatives and H maps
   m_equations->clear();
 }

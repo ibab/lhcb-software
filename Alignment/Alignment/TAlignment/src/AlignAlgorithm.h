@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.23 2008-02-13 18:10:13 janos Exp $
+// $Id: AlignAlgorithm.h,v 1.24 2008-02-18 18:43:14 janos Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -105,6 +105,8 @@ private:
 
   size_t                            m_iteration;                     ///< Iteration counter
   size_t                            m_nIterations;                   ///< Number of iterations
+  size_t                            m_nTracks;                       ///< Number of tracks used
+  size_t                            m_covFailure;                    ///< Number of covariance calculation failures
   ElementRange                      m_rangeElements;                 ///< Detector elements
   std::vector<double>               m_initAlignConstants;            ///< Initial alignment constants
   IGetElementsToBeAligned*          m_align;                         ///< Pointer to tool to align detector
@@ -138,9 +140,13 @@ private:
   std::map<std::pair<unsigned int, unsigned int>, IHistogram2D*> m_corrHistos;
   IHistogram2D*                                                  m_trackChi2Histo;
   IHistogram2D*                                                  m_trackNorChi2Histo;
+  IProfile1D*                                                    m_totNusedTracksvsIterHisto;
   IProfile1D*                                                    m_totChi2vsIterHisto;
   IProfile1D*                                                    m_norTotChi2vsIterHisto;
-  IProfile1D*                                                    m_dChi2AlignvsIterHisto;
+  IProfile1D*                                                    m_avgChi2vsIterHisto;
+  IProfile1D*                                                    m_dAlignChi2vsIterHisto;
+  IProfile1D*                                                    m_nordAlignChi2vsIterHisto;
+
 };
 
 #endif // TALIGNMENT_ALIGNALGORITHM_H
