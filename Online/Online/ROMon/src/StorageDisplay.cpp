@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.5 2008-02-12 08:05:13 frankm Exp $
+// $Id: StorageDisplay.cpp,v 1.6 2008-02-18 20:01:54 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.5 2008-02-12 08:05:13 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.6 2008-02-18 20:01:54 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -238,16 +238,23 @@ void StorageDisplay::showHLT(const Nodeset& ns) {
 /// Show the information about MBM buffers on the storage nodes
 void StorageDisplay::showBuffers(const Nodeset& ns) {
   MonitorDisplay* disp = m_buffers;
+  std::string part = m_partName + "_";
   disp->draw_line_reverse("Buffer                        Produced Pending Size[kB] Free[kB] Slots Users ");
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
     for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-      const MBMBuffer& b = *ib;
-      const CONTROL& c = b.ctrl;
-      disp->draw_line_normal("%10s/%-13s %12d %7d %8d %8d %5d %5d ",
-			     n->name,b.name,c.tot_produced,c.i_events,
-			     (c.bm_size*c.bytes_p_Bit)/1024,(c.i_space*c.bytes_p_Bit)/1024,
-			     c.p_emax-c.i_events,c.i_users);
+      const Clients& clients = (*ib).clients;
+      for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
+	if (strncmp((*ic).name,part.c_str(),part.length())==0) {
+	  const MBMBuffer& b = *ib;
+	  const CONTROL& c = b.ctrl;
+	  disp->draw_line_normal("%10s/%-13s %12d %7d %8d %8d %5d %5d ",
+				 n->name,b.name,c.tot_produced,c.i_events,
+				 (c.bm_size*c.bytes_p_Bit)/1024,(c.i_space*c.bytes_p_Bit)/1024,
+				 c.p_emax-c.i_events,c.i_users);
+	  break;
+	}
+      }
     }
   }
 }
