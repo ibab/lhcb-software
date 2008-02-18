@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-02-18 - Jan Amoraal
+ - More monitoring and output
+
 ! 2008-02-13 - Jan AMORAAL
  - Added more monitoring
  - bug fix: Initialise array to 0 before constructing 3D transform.
