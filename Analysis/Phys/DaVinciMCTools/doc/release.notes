@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.202 2008-02-15 17:10:25 pkoppenb Exp $
+! $Id: release.notes,v 1.203 2008-02-18 07:58:35 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-02-18 - Patrick Koppenburg
+ - src/BackgroundCategory : indent properly.
+ - add protection in isStable()
+
+! 2008-02-18 - Patrick Koppenburg for Vladimir Gligorov
+ - src/BackgroundCatgeory: origin() returns "associated MC particle", not
+   top of decay tree. The latter was difficult to define.
 
 ! 2008-02-15 - Patrick Koppenburg
  - PrintTree : new option PrintTruth that also links MC truth to tree
