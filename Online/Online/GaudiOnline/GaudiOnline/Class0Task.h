@@ -27,6 +27,8 @@ namespace LHCb {
     virtual StatusCode configure();
     /// Callback on reset transition
     virtual StatusCode terminate();
+    /// Callback on unload (call terminate if not yet done)
+    virtual StatusCode unload();
   };
 }
 

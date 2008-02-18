@@ -43,3 +43,7 @@ StatusCode LHCb::Class0Task::terminate()  {
   return StatusCode::FAILURE;
 }
 
+StatusCode LHCb::Class0Task::unload()  {
+  if ( m_configured ) terminate();
+  return DimTaskFSM::unload();
+}
