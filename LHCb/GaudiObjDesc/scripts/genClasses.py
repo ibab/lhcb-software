@@ -178,7 +178,8 @@ class genClasses(genSrcUtils.genSrcUtils):
           s += 'm_%s' % attAtt['name'] 
           if attAtt.has_key('init')                        : s += '(%s),' % attAtt['init'] 
           elif self.tools.isIntegerT(attAtt['type']) or \
-               self.tools.isBitfieldT(attAtt['type'])      : s += '(0),'
+               self.tools.isBitfieldT(attAtt['type']) or \
+               attAtt['type'].strip()[-1] == '*'           : s += '(0),'
           elif self.tools.isFloatingPointT(attAtt['type']) : s += '(0.0),'
           else                                             : s += '(),'
         if s[-1] == ',' : s = s[:-1]                                             # strip off the last ','
@@ -272,7 +273,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     constF = ''
     if what == 'get_c' : 
       constF = ' const' 
-      if not self.tools.isFundamentalT(att['type']) : ret = 'const '
+      if not self.tools.isFundamentalT(att['type']) and att['type'].strip()[:6] != 'const ' : ret = 'const '
     if what == 'set'  : 
       ret = 'void '
       param = self.tools.genParamFromStrg(att['type']) + ' value'

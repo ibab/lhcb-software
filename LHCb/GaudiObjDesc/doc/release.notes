@@ -4,6 +4,12 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+! 2008-02-12 Stefan
+- changes for attribute types: 
+  - if the attribute type is a pointer type initialize it to 0 in GODs self
+    generated default constructor
+  - if the attribute type starts with "const " fix the return type of the get
+    method to "const <type>" (had an additional const before)
 !======================== GaudiObjDesc v11r2 2008-02-06 ======================
 ! 2008-02-04 Stefan
 - change for <import> element, so far it was not possible to forward declare a
