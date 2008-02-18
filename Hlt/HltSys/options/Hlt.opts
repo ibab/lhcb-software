@@ -71,3 +71,9 @@ HltEndSequence.Members += { "HltSummaryWriter"};
 // HltSummaryWriter.SaveAll = true;
 HltSummaryWriter.Save += {"HltAlleys"};
 HltSummaryWriter.OutputLevel=3;
+
+//
+// Hlt selections
+//
+#include "$HLTSYSROOT/options/HltSelections.opts"
+

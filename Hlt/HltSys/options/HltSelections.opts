@@ -65,3 +65,8 @@ HltSelections.Members += { "GaudiSequencer/HltExclusive" };
 HltSelections.Members += { "HltSelectionsDecision" } ;
 //HltSelectionsDecision.OutputLevel = 2 ;
 
+//-------------------------------------------------------------------
+// True MC matching (DoD Svc)
+//-------------------------------------------------------------------
+#include "$HLTSYSROOT/options/HltTrackAssociator.opts"
+

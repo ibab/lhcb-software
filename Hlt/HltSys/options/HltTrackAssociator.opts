@@ -1,0 +1,13 @@
+/** @file HltTrackAssociator.opts
+ *  
+ *  Creation of table for TrackAssociator
+ *
+ *  @author P. Koppenburg
+ *  @date 2008-02-18
+ */
+//--------------------------------------------------------------
+
+DataOnDemandSvc.Algorithms += {
+  "DATA='/Event/Link/Hlt/Track/ForwardCLEANED'     TYPE='TrackAssociator/HltTrackAssociator'"};
+
+HltTrackAssociator.TracksInContainer = "Hlt/Track/ForwardCLEANED" ;

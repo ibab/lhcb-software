@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-02-18 - Patrick Koppenburg
+ - Include HltSelections by default in Hlt.
+ - Declare Hlt tracks MC association to DoD svc
+
 !- 2008-02-14 Gerhard Raven
   - start migration from HltSequencer to the upgraded GaudiSequencer
     (note that the # of entries in eg. DimuonFromL0Single drops, but the 

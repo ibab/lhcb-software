@@ -35,3 +35,17 @@ use LoKiTrigger         v7r1   Phys   # Vanya Belyaev
 use TisTosTobbing       v2r2   Phys   # Tomasz Skwarnicki  
 
 
+# tmp
+# ls -1 */*LoKi*/v*/cmt/requirements | awk -F/ '{print "use "$2" "$3" "$1}'
+
+use LoKiAlgoMC v7r1 Phys
+use LoKiAlgo v7r1 Phys
+use LoKiArrayFunctors v7r1 Phys
+use LoKiCore v7r1 Phys
+use LoKiGenMC v7r1 Phys
+use LoKiGen v7r1 Phys
+use LoKiMC v7r1 Phys
+use LoKiNumbers v7r2 Phys
+use LoKiPhysMC v7r1 Phys
+use LoKiPhys v7r1 Phys
+use LoKi v7r1 Phys
