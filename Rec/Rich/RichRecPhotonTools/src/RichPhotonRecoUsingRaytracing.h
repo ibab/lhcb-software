@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingRaytracing
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.h,v 1.4 2008-02-18 14:53:00 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingRaytracing.h,v 1.5 2008-02-18 16:40:23 jonrob Exp $
  *
  *  @author Claus P Buszello
  *  @date   2008-11-01
@@ -77,6 +77,8 @@ namespace Rich
 
       // Initialization of the tool after creation
       virtual StatusCode initialize();
+
+      // tool finalization
       virtual StatusCode finalize();
 
     public: // methods (and doxygen comments) inherited from interface
@@ -101,6 +103,8 @@ namespace Rich
       std::vector<float> m_maxdiff;
       std::vector<int> m_maxiter;
 
+      std::vector<double> m_satCKtheta;
+
       float m_ERL;
 
       bool failiter;
@@ -108,6 +112,9 @@ namespace Rich
 
       /// Cached working photon for ray-tracing
       mutable LHCb::RichGeomPhoton m_photon;
+
+      /// cached ray tracing mode
+      LHCb::RichTraceMode m_mode;
 
       //mutable int m_itersA[100];
       //mutable int m_iters1[100];

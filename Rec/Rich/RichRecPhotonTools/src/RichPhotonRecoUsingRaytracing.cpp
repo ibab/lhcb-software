@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingRaytracing
  *
  * CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.5 2008-02-18 14:53:00 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.6 2008-02-18 16:40:23 jonrob Exp $
  *
  * @author Claus P Buszello
  * @date 2008-01-11
@@ -32,9 +32,10 @@ PhotonRecoUsingRaytracing( const std::string& type,
     m_idTool        ( NULL ),
     m_ckAngle       ( NULL ),
     m_raytrace      ( NULL ),
-    m_ERLSet  (Rich::NRadiatorTypes),
-    m_maxdiff (Rich::NRadiatorTypes),
-    m_maxiter (Rich::NRadiatorTypes)
+    m_ERLSet        (Rich::NRadiatorTypes),
+    m_maxdiff       (Rich::NRadiatorTypes),
+    m_maxiter       (Rich::NRadiatorTypes),
+    m_satCKtheta    (Rich::NRadiatorTypes)
 {
 
   // Update default CK theta correction values
@@ -79,9 +80,23 @@ StatusCode PhotonRecoUsingRaytracing::initialize()
   const StatusCode sc = PhotonRecoBase::initialize();
   if ( sc.isFailure() ) return sc;
 
+  // get tools
   acquireTool( "RichSmartIDTool",     m_idTool, 0, true  );
   acquireTool( "RichCherenkovAngle",  m_ckAngle          );
-  acquireTool( "RichRayTracing",  m_raytrace  );
+  acquireTool( "RichRayTracing",      m_raytrace         );
+
+  // loop over radiators
+  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
+        rad != Rich::radiators().end(); ++rad )
+  {
+    // Cache saturated CK theta values
+    m_satCKtheta[*rad]  = m_ckAngle->nominalSaturatedCherenkovTheta(*rad);
+  }
+
+  // ray tracing mode
+  m_mode.setAeroRefraction(true);
+  m_mode.setForcedSide (true);
+  info() << "Ray tracing mode " << m_mode << endreq;
 
   return sc;
 }
@@ -114,23 +129,14 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   Gaudi::XYZPoint & emissionPoint = gPhoton.emissionPoint();
   emissionPoint = trSeg.bestPoint();
 
-
   const Gaudi::XYZPoint & HP = segment->pdPanelHitPointLocal((pixel->panel()).panel());
   const float mx =  HP.x();
   const float my =  HP.y();
-
   const Gaudi::XYZPoint & HPp = pixel->localPosition();
   const float x = HPp.x();
   const float y = HPp.y();
-
   const float dx = x - mx;
   const float dy = y - my;
-
-  //  Gaudi::XYZPoint emissionPoint = emissionPoint;
-
-  LHCb::RichTraceMode mode;
-  mode.setAeroRefraction(true);
-  mode.setForcedSide (true);
 
   Gaudi::XYZPoint locpos;
   Gaudi::XYZVector sv;
@@ -145,15 +151,13 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   float ERL(0);
   if (m_ERL<0)
   {
-    // is this necessary or can I just set it to some value
-    //Rich::ParticleIDType hypo2 = static_cast<Rich::ParticleIDType>(2);
-    //float predpi = m_ckAngle->avgCherenkovTheta(segment,hypo2);
-    const float predpi = ( radiator == Rich::Aerogel ? 0.15 : 0.03 );
+    //const float predpi = ( radiator == Rich::Aerogel ? 0.15 : 0.03 );
+    const float predpi = m_satCKtheta[radiator];
 
-    sv = trSeg.vectorAtThetaPhi(predpi,tphi);
+    sv = trSeg.vectorAtThetaPhi( predpi, tphi );
 
     const LHCb::RichTraceMode::RayTraceResult result
-      = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,m_photon,mode,
+      = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,m_photon,m_mode,
                                     (pixel->panel()).panel(),trSeg.avPhotonEnergy());
     if ( result < LHCb::RichTraceMode::InHPDPanel )
     {
@@ -161,7 +165,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     }
     locpos = m_idTool->globalToPDPanel(m_photon.detectionPoint());
 
-    float R2 = (locpos.y()-my )*(locpos.y()-my ) +  ( locpos.x()-mx )*( locpos.x()-mx );
+    const float R2 = (locpos.y()-my)*(locpos.y()-my) + (locpos.x()-mx)*(locpos.x()-mx);
 
     ERL = std::sqrt(R2) / std::tan(predpi);
 
@@ -171,7 +175,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   //naive theta
   float R= dx*dx+dy*dy;
   //    float ttheta =  atan(sqrt(R)/ERL);
-  double ttheta =  (sqrt(R)/ERL);
+  double ttheta =  (std::sqrt(R)/ERL);
   double theta0 =  ttheta;
 
 
@@ -211,7 +215,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
   double tthetal=theta0;
 
-  for (ii  =maxiter;ii>0;--ii){
+  for ( ii = maxiter; ii>0; --ii )
+  {
 
     //start at estimated ttheta
     ttheta -= damp * (theta1-theta0);
@@ -222,17 +227,13 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       tphi = (tphil+tphi)/2;
       ii=1;
       //break;
-
     }
-
     if ((dtheta*lastdtheta < 0 ) &&fabs(lastdtheta+dtheta)<.00001 ){
       ttheta = (tthetal+ttheta)/2.;
       tphi = (tphil+tphi)/2.;
       ii=1;
       //break;
-
     }
-
     if (((maxiter-ii)> 5) && fabs(phil2-phi1)<.00001&& fabs(thetal2-theta1)<.00001 ){
       //info() << "its a trip hop" <<endreq;
       ttheta = (ttheta + tthetal) / 2.;
@@ -262,7 +263,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     sv = trSeg.vectorAtThetaPhi(ttheta,tphi);
     const LHCb::RichTraceMode::RayTraceResult result
       = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,m_photon,
-                                    mode,(pixel->panel()).panel(),trSeg.avPhotonEnergy());
+                                    m_mode,(pixel->panel()).panel(),trSeg.avPhotonEnergy());
 
     if ( result < LHCb::RichTraceMode::InHPDPanel ) {
       tphi = 0.95 *tphi;
@@ -275,14 +276,14 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     locpos =  m_idTool->globalToPDPanel(m_photon.detectionPoint());
 
     // the hit pixel corresponds to what naive theta and phi
-    float yi = locpos.y();
-    float xi = locpos.x();
+    const float yi = locpos.y();
+    const float xi = locpos.x();
 
     //       if (isnan(xi)){
     //  info() <<ii<<" nan "<<locpos.x()<<" "<<m_photon.detectionPoint().x()<<" "<<ttheta<<" "<<tphi<<endreq;
     //  info() <<theta0<<" "<<theta1<<" "<<ERL<<endreq;
     //       }
-    float R2 = (yi-my )*(yi-my ) +  ( xi-mx )*( xi-mx );
+    const float R2 = (yi-my )*(yi-my ) +  ( xi-mx )*( xi-mx );
     //theta1 = atan(sqrt(R2)/ERL);
 
     tthetal5 = tthetal4;
