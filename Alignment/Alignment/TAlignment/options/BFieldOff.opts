@@ -1,12 +1,11 @@
+FitTracks.Fitter.MaxNumberOutliers                           = 0;
+FitTracks.Fitter.ErrorP                                      = {1e-3,1e-8};
+FitTracks.Fitter.NumberFitIterations                         = 4;
+FitTracks.Fitter.ApplyMaterialCorrections                    = false;
+FitTracks.Fitter.Extrapolator.ExtraSelector                  = "TrackSimpleExtraSelector";
+FitTracks.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+FitTracks.Fitter.Extrapolator.ApplyMultScattCorr             = true;
+FitTracks.Fitter.Extrapolator.ApplyEnergyLossCorr            = false;
+FitTracks.Fitter.Extrapolator.ApplyElectronEnergyLossCorr    = true;
 
-FitTracks.Fitter.MaxNumberOutliers                                      = 0;
-FitTracks.Fitter.ErrorP                                                 = {1e-3,1e-8};
-FitTracks.Fitter.NumberFitIterations                                    = 4;
-FitTracks.Fitter.Extrapolator.ApplyEnergyLossCorr                       = false;
-FitTracks.Fitter.Extrapolator.ExtraSelector                             = "TrackSimpleExtraSelector";
-FitTracks.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName            = "TrackLinearExtrapolator";
-FitTracks.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr            = false;
-FitTracks.Fitter.NodeFitter.Extrapolator.ExtraSelector                  = "TrackSimpleExtraSelector";
-FitTracks.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
-
-MagneticFieldSvc.UseConstantField = true; // Constant (zero) field
+MagneticFieldSvc.UseConstantField                            = true; // Constant (zero) field
