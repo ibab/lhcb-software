@@ -8,6 +8,9 @@
 //--------------------------------------------------------------
 
 DataOnDemandSvc.Algorithms += {
-  "DATA='/Event/Link/Hlt/Track/ForwardCLEANED'     TYPE='TrackAssociator/HltTrackAssociator'"};
+  "DATA='/Event/Link/Hlt/Track/ForwardCLEANED'     TYPE='TrackAssociator/HltTrackAssociator'"
+,  "DATA='/Event/Link/Hlt/Track/MuonsFromAlley'     TYPE='TrackAssociator/HltMuonAssociator'"
+};
 
 HltTrackAssociator.TracksInContainer = "Hlt/Track/ForwardCLEANED" ;
+HltMuonAssociator.TracksInContainer = "Hlt/Track/MuonsFromAlley" ;
