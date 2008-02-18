@@ -29,10 +29,8 @@ HltExclusiveCorrs.Algorithms += { "AllTrueBu2D0K_KsHH" };
 /*
  *  Now for tracks
  */
-SeqTrueSignalTracks.Members = { "TrackAssociator/TrueSignalHltTracks",
-                                "FilterTrueTracks" };
+SeqTrueSignalTracks.Members = { "FilterTrueTracks" };
 
-TrueSignalHltTracks.TracksInContainer = "/Event/Hlt/Track/ForwardCLEANED" ;
 FilterTrueTracks.MCDecayFinder.Decay =  "[B+ -> (D~0 -> (KS0 -> ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^K+ {,gamma}{,gamma}]cc" ;
 FilterTrueTracks.TracksPath = { "Hlt/Track/ForwardCLEANED" } ;
 FilterTrueTracks.OutputPath = "Hlt/Track/Signal" ;

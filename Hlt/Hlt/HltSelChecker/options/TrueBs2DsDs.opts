@@ -28,10 +28,8 @@ HltExclusiveCorrs.Algorithms += { "AllTrueBs2DsDs" };
 /*
  *  Now for tracks
  */
-SeqTrueSignalTracks.Members = { "TrackAssociator/TrueSignalHltTracks",
-                                "FilterTrueTracks" };
+SeqTrueSignalTracks.Members = { "FilterTrueTracks" };
 
-TrueSignalHltTracks.TracksInContainer = "/Event/Hlt/Track/ForwardCLEANED" ;
 FilterTrueTracks.MCDecayFinder.Decay =  "[B_s0 -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...]cc, [B_s0 -> (D*_s+ -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) ... ) (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...]cc, [B_s0 -> (D*_s+ -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) ... ) (D*_s- -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...) ...]cc,  [B_s0 -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) (D*_s- -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...) ...]cc" ;
 FilterTrueTracks.TracksPath = { "Hlt/Track/ForwardCLEANED" } ;
 FilterTrueTracks.OutputPath = "Hlt/Track/Signal" ;

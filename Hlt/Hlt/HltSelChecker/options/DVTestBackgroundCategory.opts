@@ -51,13 +51,6 @@ ProtoPRecalibration.Members = {};
 
 
 ApplicationMgr.TopAlg += { "HltBackgroundCategory" } ; 
-
-HltBackgroundCategory.OutputLevel = 3 ;
-
-HltBackgroundCategory.AlgorithmCorrelations.OutputLevel = 3 ;
-HltBackgroundCategory.BackgroundCategory.OutputLevel = 3 ;
-HltBackgroundCategory.HltSummaryTool.OutputLevel = 3 ;
-HltBackgroundCategory.Particle2MCLinks.OutputLevel = 1 ;
 HltBackgroundCategory.PrintTree = true ;
 
 
