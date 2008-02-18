@@ -1,4 +1,4 @@
-// $Id: IPatSeedingTool.h,v 1.2 2007-09-07 16:03:34 smenzeme Exp $
+// $Id: IPatSeedingTool.h,v 1.3 2008-02-18 14:42:45 mschille Exp $
 #ifndef TRACKINTERFACES_IPATSEEDINGTOOL_H 
 #define TRACKINTERFACES_IPATSEEDINGTOOL_H 1
 
@@ -13,6 +13,11 @@
 
 static const InterfaceID IID_IPatSeedingTool ( "IPatSeedingTool", 1, 0 );
 
+// forward declaration
+namespace LHCb {
+  class State;
+}
+
 /** @class IPatSeedingTool IPatSeedingTool.h TrackInterfaces/IPatSeedingTool.h
  *  Interface to the forward pattern tool
  *
@@ -25,9 +30,13 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IPatSeedingTool; }
 
-  virtual StatusCode performTracking(LHCb::Tracks* output ) = 0; 
+  virtual StatusCode performTracking(
+		 LHCb::Tracks* output,
+		 const LHCb::State* state = 0 ) = 0; 
 
-  virtual StatusCode performTracking(std::vector<LHCb::Track*>& outputTracks ) = 0;
+  virtual StatusCode performTracking(
+		 std::vector<LHCb::Track*>& outputTracks,
+		 const LHCb::State* state = 0 ) = 0;
 
   virtual void prepareHits () = 0; 
 

@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2008-02-18 - Manuel Schiller
+ - added code needed for L0 confirmation to IPatSeedingTool
+
 !====================== TrackInterfaces v3r11 2007-12-10 =====================
 ! 2007-12-06 - Wouter Hulsbergen
  - added methods to IMaterialLocator
