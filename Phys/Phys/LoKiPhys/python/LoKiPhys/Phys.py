@@ -121,10 +121,10 @@ if not hasattr ( LHCb.Particle , '__descendants__' ) :
 
 
 # =============================================================================
-## Get the particles from the decay tree, whcih satisfy certrain criteria
+## Get the particles from the decay tree, which satisfy certain criteria
 def particles ( p , c ) :
     """
-    Get the particles from the decay tree, whcih satisfy certrain criteria
+    Get the particles from the decay tree, which satisfy certrain criteria
 
     >>> p = ...
     >>> pions = getParticles ( p , 'pi+' == ABSID )

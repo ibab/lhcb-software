@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.41 2008-02-15 08:55:25 cattanem Exp $ 
+! $Id: release.notes,v 1.42 2008-02-18 12:37:48 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiPhys v7r1 2008-02-15 ==========================
+!========================== LoKiPhys v7r1 2008-02-18 ==========================
+
+! 2008-02-18 - Vanya BELYAEV
+ - python/LoKiPhys/Phys.py
+   coupel of minor fixes 
+
 ! 2008-02-15 - Marco Cattaneo
  - Remove generation of dictionary for std::vector<const LHCb::Particle*> and
    std::vector<const LHCb::VertexBase*>, now in PhysEvent and RecEvent
