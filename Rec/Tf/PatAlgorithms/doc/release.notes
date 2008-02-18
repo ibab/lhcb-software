@@ -4,6 +4,18 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-02-18 - Manuel Schiller
+ - PatSeedingTool can now take an optional state giving a hint where a track
+   is to be found; this is useful for the HLT when confirming L0 candidates
+   a track is searched for in a +/- one sigma window which is derived from the
+   covariance matrix of the state which is extrapolated with a straight line
+   model into the T stations
+ - added job option which makes it possible to ignore hits used in a previous
+   run of PatSeedingTool; application is again in HLT when trying to confirm
+   several hypotheses in a combined window
+ - added some missing comments to PatSeedingTool.cpp and the corresponding
+   header file to better document member variables
+
 !========================== PatAlgorithms v3r3 2008-01-28 ====================
 ! 2008-01-28 - Manuel Schiller
  - added code to PatSeedingTool to perform better without magnetic field

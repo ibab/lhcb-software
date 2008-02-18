@@ -1,5 +1,8 @@
-// $Id: PatSeedingTool.cpp,v 1.9 2008-01-30 08:01:55 cattanem Exp $
+// $Id: PatSeedingTool.cpp,v 1.10 2008-02-18 14:39:53 mschille Exp $
 // Include files
+
+#include <cmath>
+#include <algorithm>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -86,6 +89,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "EnforceIsolation",	m_enforceIsolation = false );
   declareProperty( "ITIsolation",	m_ITIsolation	   = 15. );
   declareProperty( "OTIsolation",	m_OTIsolation	   = 20. );
+  declareProperty( "reusePatSeeding",	m_reusePatSeeding  = true );
 }
 //=============================================================================
 // Destructor
@@ -143,6 +147,9 @@ void PatSeedingTool::prepareHits() {
           PatFwdHit* hit = *itH;
 	  if ( m_useForward && hit->hit()->testStatus(Tf::HitBase::UsedByPatForward))
 	    hit->setIsUsed(true);
+	  else if (!m_reusePatSeeding &&
+			  hit->hit()->testStatus(Tf::HitBase::UsedByPatSeeding))
+	    hit->setIsUsed(true);
 	  else
 	    hit->setIsUsed(false);
           hit->setSelected( true );
@@ -164,7 +171,9 @@ void PatSeedingTool::prepareHits() {
   if ( m_measureTime ) m_timer->stop( m_timeInit );
 }
 
-StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTracks) {
+StatusCode PatSeedingTool::performTracking(
+		std::vector<LHCb::Track*>& outputTracks,
+		const LHCb::State* state ) {
 
   unsigned int lay;
   unsigned int region;
@@ -185,7 +194,7 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
 
       if ( m_measureTime ) m_timer->start( m_timeX );
 
-      findXCandidates( lay, region, candidates );
+      findXCandidates( lay, region, candidates, state );
 
       if ( msgLevel( MSG::DEBUG ) ) {
         debug() << "Found " << candidates.size() << " x candidates" << endreq;
@@ -214,7 +223,7 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
 
         PatFwdHits stereo;
 
-        collectStereoHits( track, region, stereo );
+        collectStereoHits( track, region, stereo, state );
 
         int minNbPlanes = m_minTotalPlanes - track.nPlanes();
 
@@ -265,6 +274,11 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
           if ( m_printing ) info() << "  -- yAtOrigin too big : " << yAtOrigin << endreq;
           continue;  // non pointing track -> garbage
         }
+
+	if ( 0 != state && std::abs(sl - state->ty()) > std::sqrt(state->errTy2()) ) {
+	  if ( m_printing ) info() << "  -- ty not compatible with state given" << endreq;
+	  continue;
+	}
 
         if ( m_printing ) {
           info() << "Fitted line y0 " << y0 << " sl " << sl << endreq;
@@ -398,20 +412,26 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
       }
 
 
-      double zScaling = ( m_tHitManager->region(sta,3,region)->z() - m_tHitManager->region(sta,0,region)->z() /
-                          ( m_tHitManager->region(sta, 0, region)->z() - m_zMagnet ));
+      double zref = m_tHitManager->region(sta, 3, region)->z();
+      double zScaling = ( zref - m_tHitManager->region(sta,0,region)->z() /
+		      ( m_tHitManager->region(sta, 0, region)->z() - m_zMagnet ));
 
       Tf::TStationHitManager<PatForwardHit>::HitRange rangeH0 = m_tHitManager->hits(sta,0,region);
       for ( PatFwdHits::const_iterator itH0 = rangeH0.begin();
             rangeH0.end() != itH0; ++itH0 ) {
         if ( (*itH0)->isUsed() ) continue;
-	if ( !isIsolated(itH0, rangeH0) ) continue;
+	if (m_enforceIsolation && !isIsolated(itH0, rangeH0)) continue;
         PatFwdHit* hit0 = *itH0;
 
         m_printing = msgLevel( MSG::VERBOSE );
 	if ( m_printing ) info() << "*IT* hit sta " << sta << " lay 0 x = " << hit0->x() << endreq;
-        double x3Min = hit0->x() + ( hit0->x() - m_xMagTol) * zScaling;
-        double x3Max = hit0->x() + ( hit0->x() + m_xMagTol) * zScaling;
+
+	// open search window into layer 3
+	double x3Min = hit0->x() + (hit0->x() - m_xMagTol) * zScaling;
+	double x3Max = hit0->x() + (hit0->x() + m_xMagTol) * zScaling;
+	// restrict search window if we have a state
+	if ( 0 != state ) updateSearchWindowX(zref, x3Min, x3Max, state);
+
         Tf::TStationHitManager<PatForwardHit>::HitRange rangeH3 = m_tHitManager->hitsWithMinX( x3Min,sta,3,region );
         for ( PatFwdHits::const_iterator itH3 = rangeH3.begin(); rangeH3.end() != itH3; ++itH3 ) {
 
@@ -419,19 +439,28 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
           PatFwdHit* hit3 = *itH3;
           if ( hit3->x() < x3Min ) continue;
           if ( hit3->x() > x3Max ) break;
-	  if ( !isIsolated(itH3, rangeH3) ) continue;
+	  if ( m_enforceIsolation && !isIsolated(itH3, rangeH3) ) continue;
           double z0 = hit0->z();
           double x0 = hit0->x();
           double sl = (hit3->x() - x0 ) / (hit3->z() - z0 );
-          double x1Min = m_tHitManager->region(sta,1,region)->ymin() * m_tHitManager->region(sta,1,region)->sinT();
-          double x1Max = m_tHitManager->region(sta,1,region)->ymax() * m_tHitManager->region(sta,1,region)->sinT();
-          if ( x1Min > x1Max ) {
-            double swap = x1Min;
-            x1Min = x1Max;
-            x1Max = swap;
-          }
-          x1Min = x1Min + x0 + ( m_tHitManager->region(sta,1,region)->z() - z0 ) *sl - m_tolCollect;
-          x1Max = x1Max + x0 + ( m_tHitManager->region(sta,1,region)->z() - z0 ) *sl + m_tolCollect;
+	  // check against slope from state if available
+	  if (state && std::abs(sl - state->tx()) > std::sqrt(state->errTx2()))
+		  continue;
+
+	  // open search window into first stereo layer
+	  double sinT = m_tHitManager->region(sta,1,region)->sinT();
+	  double x1Min = m_tHitManager->region(sta,1,region)->ymin() * sinT;
+	  double x1Max = m_tHitManager->region(sta,1,region)->ymax() * sinT;
+	  if ( x1Min > x1Max ) std::swap(x1Min, x1Max);
+	  double zref = m_tHitManager->region(sta,1,region)->z();
+	  double xref = x0 + ( zref - z0 ) * sl;
+	  x1Min += xref - m_tolCollect;
+	  x1Max += xref + m_tolCollect;
+	  // restrict search window if we have a state
+	  if (0 != state) updateSearchWindowY(zref, xref, m_tolCollect,
+			  m_tHitManager->region(sta, 1, region)->cosT(), sinT,
+			  x1Min, x1Max, state);
+
 	  if ( m_printing ) info() << "     hit sta " << sta << " lay 3 x = " << hit3->x()
                                    << " x1Min " << x1Min << " x1Max " << x1Max << endreq;
 
@@ -440,6 +469,7 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
             PatFwdHit* hit1 = *itH1;
 
             if ( hit1->isUsed() ) continue;
+	    // restore coordinates
             hit1->setX(hit1->hit()->xAtYEq0());
             hit1->setZ(hit1->hit()->zAtYEq0());
             const Tf::OTHit* otHit = hit1->hit()->othit();
@@ -447,9 +477,15 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
               hit1->setDriftDistance(otHit->untruncatedDriftDistance());
             if ( x1Min > hit1->x() ) continue;
             if ( x1Max < hit1->x() ) break;
-	    if ( !isIsolated(itH1, rangeH1) ) continue;
+	    if ( m_enforceIsolation && !isIsolated(itH1, rangeH1) ) continue;
+
+	    // open search window into second stereo layer
             double y = ( (x0 + ( hit1->z() - z0 )*sl) - hit1->x() ) / hit1->hit()->dxDy();
-            double pred = x0 + ( m_tHitManager->region(sta,2,region)->z() - z0 ) *sl + y * m_tHitManager->region(sta,2,region)->sinT();
+	    // check slope in y if we have a state
+	    double z2 = m_tHitManager->region(sta,2,region)->z();
+	    if (state && std::abs(y / z2) > std::sqrt(state->errTy2()))
+			    continue;
+            double pred = x0 + ( z2 - z0 ) * sl + y * m_tHitManager->region(sta,2,region)->sinT();
             double x2Min = pred - 1.5*m_tolCollect;
             double x2Max = pred + 1.5*m_tolCollect;
 
@@ -461,16 +497,21 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
 
               PatFwdHit* hit2 = *itH2;
               if ( hit2->isUsed() ) continue;
+	      // restore coordinates
               hit2->setX(hit2->hit()->xAtYEq0());
               hit2->setZ(hit2->hit()->zAtYEq0());
               const Tf::OTHit* otHit = hit2->hit()->othit();
               if(otHit)
                 hit2->setDriftDistance(otHit->untruncatedDriftDistance());
+
               if ( x2Min > hit2->x() ) continue;
               if ( x2Max < hit2->x() ) break;
-	      if ( !isIsolated(itH2, rangeH2) ) continue;
+	      if ( m_enforceIsolation && !isIsolated(itH2, rangeH2) ) continue;
+
 	      if ( m_printing )
                 info() << "     hit sta " << sta << " lay 2 x = " << hit2->x() << endreq;
+
+	      // ok, we have a seed
               PatSeedTrack track( hit0, hit1, hit2, hit3, m_zReference, m_dRatio, m_initialArrow );
               track.setYParams( 0, y/hit2->z() );
               if ( 3 > track.nbHighThreshold() ) {
@@ -516,6 +557,7 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
                 }
               }
 
+	      candidates.reserve(32);
               candidates.push_back( track );
               if ( m_printing ) {
                 info() << "--- IT point -- " << endreq;
@@ -549,15 +591,18 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
 
       //== Some data in OT ??
       for ( int sta = 0; 3 > sta; ++sta ) {
+	// skip station used to produce the seed (we used all hits there)
         if ( sta == ITSta ) continue;
         int nbPlanes = track.nPlanes();
 
         for ( lay = 0 ; 4 > lay ; ++lay ) {
+	  // skip layers which are too far away in y
           if ( track.yAtZ( m_tHitManager->region(sta,lay,otTyp)->z() ) <
                m_tHitManager->region(sta,lay,otTyp)->ymin() - m_tolExtrapolate ||
                track.yAtZ( m_tHitManager->region(sta,lay,otTyp)->z() ) >
                m_tHitManager->region(sta,lay,otTyp)->ymax() + m_tolExtrapolate    ) continue;
 
+	  // ok, check if we can pick up more hits
           double xPred = track.xAtZ( m_tHitManager->region(sta,lay,otTyp)->z() ) +
             track.yAtZ( m_tHitManager->region(sta,lay,otTyp)->z() ) * m_tHitManager->region(sta,lay,otTyp)->sinT();
           if ( m_printing ) {
@@ -572,7 +617,7 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
             updateHitForTrack( hit, track.yAtZ(hit->z()),0);
             if ( - m_tolExtrapolate > track.distance( hit ) ) continue;
             if (   m_tolExtrapolate < track.distance( hit ) ) break;
-	    if ( !isIsolated(itH, rangeXX) ) continue;
+	    if ( m_enforceIsolation && !isIsolated(itH, rangeXX) ) continue;
             if ( m_printing ) {
               info() << "Add coord ";
               debugFwdHit( hit, info() );
@@ -612,7 +657,7 @@ StatusCode PatSeedingTool::performTracking( std::vector<LHCb::Track*>& outputTra
               updateHitForTrack( hit, track.yAtZ(hit->z()), 0);
               if ( - m_tolExtrapolate > track.distance( hit ) ) continue;
               if (   m_tolExtrapolate < track.distance( hit ) ) break;
-	      if ( !isIsolated(itH, rangeYY) ) continue;
+	      if ( m_enforceIsolation && !isIsolated(itH, rangeYY) ) continue;
               if ( m_printing ) {
                 info() << "Add coord ";
                 debugFwdHit( hit, info() );
@@ -807,10 +852,59 @@ bool PatSeedingTool::addIfBetter (  PatSeedTrack& track, std::vector<PatSeedTrac
   return true;
 }
 
+//----------------------------------------------------------------------
+// return updated X search windows for the X search in case a state is
+// given
+// input: a pointer to a state
+// 	zref - z at which the search window extensions are needed
+// 	xmin, xmax - edges of window
+// output: intersection of previous window and window defined by state
+// the state is extrapolated linearly and a region of +/- 1 sigma
+// around it is kept
+// if the state pointer is 0, do nothing
+//----------------------------------------------------------------------
+void PatSeedingTool::updateSearchWindowX(double zref,
+		double& xmin, double& xmax, const LHCb::State* state)
+{
+	// how far do we need to propagate?
+	double dz = zref - state->z();
+	// work out expected uncertainty
+	double xtol = std::sqrt(state->covariance()(0, 0)
+			+ 2.0 * dz * state->covariance()(0, 2)
+			+ dz * dz * state->covariance()(2,2));
+	// intersect with present window
+	double xmi = state->x() + state->tx() * dz - xtol;
+	if ( xmi > xmin ) xmin = xmi;
+	double xma = state->x() + state->tx() * dz + xtol;
+	if ( xma < xmax ) xmax = xma;
+}
+
+void PatSeedingTool::updateSearchWindowY(double zref, double xref,
+		double xreftol, double cosT, double sinT,
+		double& xmin, double& xmax, const LHCb::State* state)
+{
+	// how far do we need to propagate?
+	double dz = zref - state->z();
+	// work out expected uncertainty
+	double ytol = std::sqrt(state->covariance()(1, 1)
+			+ 2.0 * dz * state->covariance()(1, 3)
+			+ dz * dz * state->covariance()(3,3));
+	double y = state->y() + state->ty() * dz;
+	// intersect with present window
+	double xmi = (y - ytol) * sinT;
+	double xma = (y + ytol) * sinT;
+	if (xmi > xma) std::swap(xmi, xma);
+	xmi += (xref - xreftol) * cosT;
+	xma += (xref + xreftol) * cosT;
+	if ( xmi > xmin ) xmin = xmi;
+	if ( xma < xmax ) xmax = xma;
+}
+
 //=========================================================================
 //  Find the x candidates in the specified layer and region. Results in candidates
 //=========================================================================
-void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, std::vector<PatSeedTrack>& candidates) {
+void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region,
+		std::vector<PatSeedTrack>& candidates, const LHCb::State* state) {
 
   //== restore default measure
 
@@ -832,9 +926,10 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
     }
   }
 
-  double zScaling  = ( m_tHitManager->region(2,lay,region)->z() -  m_tHitManager->region(0,lay,region)->z() ) /
+  double zref = m_tHitManager->region(2, lay, region)->z();
+  double zScaling  = ( zref -  m_tHitManager->region(0,lay,region)->z() ) /
     ( m_tHitManager->region(0,lay,region)->z() - m_zMagnet );
-  double zScaling2 = ( m_tHitManager->region(2,lay,region)->z() - m_tHitManager->region(0,lay,region)->z() ) /
+  double zScaling2 = ( zref - m_tHitManager->region(0,lay,region)->z() ) /
     m_tHitManager->region(0,lay,region)->z();
 
   bool matchIn0 = false;
@@ -860,7 +955,7 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
     }
 
     // isolation in station 0?
-    if ( !isIsolated(itH0, range) )
+    if ( m_enforceIsolation && !isIsolated(itH0, range) )
 	    continue;
 
     m_printing = matchIn0;
@@ -871,9 +966,12 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
     double x2Max2 = x0 + (x0 + m_maxImpact ) * zScaling2;
     if ( x2Min < x2Min2 ) x2Min = x2Min2;
     if ( x2Max > x2Max2 ) x2Max = x2Max2;
+    // if we know more because we have a state, make use of that knowledge
+    if (0 != state)
+	    updateSearchWindowX(zref, x2Min, x2Max, state);
 
-
-    Tf::TStationHitManager<PatForwardHit>::HitRange rangeX2 = m_tHitManager->hitsWithMinX( x2Min, 2, lay, region );
+    Tf::TStationHitManager<PatForwardHit>::HitRange rangeX2 =
+	    m_tHitManager->hitsWithMinX( x2Min, 2, lay, region );
 
     if ( m_printing ) info() << " x2Min " << x2Min << " x2Max " << x2Max << endreq;
 
@@ -897,17 +995,28 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
       }
 
       // isolation in station 2?
-      if ( !isIsolated(itH2, rangeX2) )
+      if ( m_enforceIsolation && !isIsolated(itH2, rangeX2) )
 	    continue;
 
       //== Check center of magnet compatibility
       double slope = ( x2 - x0 ) / ( z2 - z0 );
+      // check for compatibility with slope
+      if (0 != state && fabs(slope - state->tx()) >
+		      std::sqrt(state->errTx2()))
+	      continue;
+
       double intercept =  x0 - z0 * slope;
       double x1Pred = x0 + ( m_tHitManager->region(1,lay,region)->z() - z0 ) * slope
         + m_initialArrow * intercept;
 
+      double x1Min = x1Pred - m_curveTol;
+      double x1Max = x1Pred + m_curveTol;
+      // if we know more because we have a state, make use of that knowledge
+      if (0 != state)
+	      updateSearchWindowX(m_tHitManager->region(1, lay, region)->z(),
+			      x1Min, x1Max, state);
 
-      Tf::TStationHitManager<PatForwardHit>::HitRange rangeX1 = m_tHitManager->hitsWithMinX( x1Pred - m_curveTol, 1, lay, region );
+      Tf::TStationHitManager<PatForwardHit>::HitRange rangeX1 = m_tHitManager->hitsWithMinX( x1Min, 1, lay, region );
 
       if ( m_printing ) info() << " x1Pred " << x1Pred << " tol " << m_curveTol
                                << " linear " << x0 + ( m_tHitManager->region(1,lay,region)->z() - z0 ) * slope
@@ -917,8 +1026,8 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
         PatFwdHit* hit1 = *itH1;
 
         if ( hit1->isUsed() ) continue;
-        if ( x1Pred - m_curveTol > hit1->hit()->xAtYEq0() ) continue;
-        if ( x1Pred + m_curveTol < hit1->hit()->xAtYEq0() ) break;
+        if ( x1Min > hit1->hit()->xAtYEq0() ) continue;
+        if ( x1Max < hit1->hit()->xAtYEq0() ) break;
 
         double x1 = hit1->hit()->xAtYEq0();
         double z1 = hit1->hit()->zAtYEq0();
@@ -932,10 +1041,14 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
         }
 
 	// isolation in station 1?
-	if ( !isIsolated(itH1, rangeX1) )
+	if (m_enforceIsolation && !isIsolated(itH1, rangeX1))
 		continue;
 
         PatSeedTrack track( x0, x1, x2, z0, z1, z2, m_zReference, m_dRatio );
+	// one more slope check to make sure our third hit is ok
+	if (0 != slope && fabs(track.xSlope(z1) - state->tx()) >
+			std::sqrt(state->errTx2()))
+		continue;
         track.setYParams( 0, 0);
         int nbMissed = 0;
 
@@ -954,7 +1067,7 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
               xPred = track.xAtZ( hit->hit()->zAtYEq0() );
               if ( xPred - m_tolCollect - hit->driftDistance() > hit->hit()->xAtYEq0() ) continue;
               if ( xPred + m_tolCollect + hit->driftDistance() < hit->hit()->xAtYEq0() ) break;
-	      if ( !isIsolated(itH, rangeX2) )
+	      if ( m_enforceIsolation && !isIsolated(itH, rangeX2) )
 		      continue;
               track.addCoord( hit );
               ++found;
@@ -1019,6 +1132,14 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
           continue;
         }
 
+	// one last check for the slope - just in case something was
+	// changed by the fit
+	if (0 != slope && fabs(track.xSlope(z1) - state->tx()) >
+			std::sqrt(state->errTx2()))
+		continue;
+	// candidates are first produced here, so we need not reserve
+	// space earlier
+	candidates.reserve(128);
         bool ok = addIfBetter( track, candidates );
         if ( ok ) {
           if ( m_printing ) {
@@ -1054,7 +1175,9 @@ void PatSeedingTool::findXCandidates ( unsigned int lay, unsigned int region, st
 //=========================================================================
 //  Find all stereo hits compatible with the track.
 //=========================================================================
-void PatSeedingTool::collectStereoHits ( PatSeedTrack& track, unsigned int region, PatFwdHits& stereo ) {
+void PatSeedingTool::collectStereoHits ( PatSeedTrack& track,
+		unsigned int region, PatFwdHits& stereo,
+		const LHCb::State* state ) {
 
   PatFwdHits::const_iterator itH;
   for ( int sta = 0; 3 > sta; ++sta ) {
@@ -1077,38 +1200,48 @@ void PatSeedingTool::collectStereoHits ( PatSeedTrack& track, unsigned int regio
           }
         }
 
-        double xMin = m_tHitManager->region(sta, sLay, testRegion)->ymin() * 
-          m_tHitManager->region(sta, sLay, testRegion)->sinT();
-        double xMax = m_tHitManager->region(sta, sLay, testRegion)->ymax() * 
-          m_tHitManager->region(sta, sLay, testRegion)->sinT();
-        // Low number of coordinates in OT: Ask Y to be close to 0...
-        if ( 0 == testRegion && 7 > track.nCoords() ) xMin = -50 * m_tHitManager->region(sta, sLay, testRegion)->sinT();
-        if ( 1 == testRegion && 7 > track.nCoords() ) xMax =  50 * m_tHitManager->region(sta, sLay, testRegion)->sinT();
+	// get sin(stereo angle of layer)
+	double sinT = m_tHitManager->region(sta, sLay, testRegion)->sinT();
 
-        if ( xMin > xMax ) {
-          double swap = xMin;
-          xMin = xMax;
-          xMax = swap;
-        }
-        xMin = xMin + track.xAtZ( m_tHitManager->region(sta, sLay, testRegion)->z() ) - m_tolCollect;
-        xMax = xMax + track.xAtZ( m_tHitManager->region(sta, sLay, testRegion)->z() ) + m_tolCollect;
+	// work out range in x direction due to stereo angle
+	double xMin = m_tHitManager->region(sta, sLay, testRegion)->ymin() *
+		sinT;
+	double xMax = m_tHitManager->region(sta, sLay, testRegion)->ymax() *
+		sinT;
+	// Low number of coordinates in OT: Ask Y to be close to 0...
+	if ( 0 == testRegion && 7 > track.nCoords() ) xMin = -50 * sinT;
+	if ( 1 == testRegion && 7 > track.nCoords() ) xMax =  50 * sinT;
+	if ( xMin > xMax ) std::swap(xMin, xMax);
+	// cache track position at layer's z
+	double zref = m_tHitManager->region(sta, sLay, testRegion)->z();
+	double xref = track.xAtZ( zref );
+	// shift range xMin, xMax to track x position
+	xMin += xref - m_tolCollect;
+	xMax += xref + m_tolCollect;
+	// use additional info from state to narrow down the range further
+	// if such info is available
+	if (0 != state) updateSearchWindowY(zref, xref, m_tolCollect,
+			m_tHitManager->region(sta, sLay, testRegion)->cosT(), sinT,
+			xMin, xMax, state);
 
-        if ( m_printing ) info() << format( "Stereo in sta%2d lay%2d region%2d xMin %7.2f xmax %7.2f",
-                                            sta, sLay, testRegion, xMin, xMax ) << endreq;
+	if ( m_printing )
+		info() << format( "Stereo in sta%2d lay%2d region%2d xMin %7.2f xmax %7.2f",
+				sta, sLay, testRegion, xMin, xMax ) << endreq;
 
 	int found = 0;
 	int nDense[20];
 	for (int i = 0; i < 20; nDense[i++] = 0);
-        Tf::TStationHitManager<PatForwardHit>::HitRange rangeW = m_tHitManager->hitsWithMinX( xMin, sta, sLay, testRegion);
-        for ( itH = rangeW.begin(); rangeW.end() != itH; ++itH ) {
-          PatFwdHit* hit = *itH;
-          if ( hit->isUsed() ) continue;
+
+	Tf::TStationHitManager<PatForwardHit>::HitRange rangeW = m_tHitManager->hitsWithMinX( xMin, sta, sLay, testRegion);
+	for ( itH = rangeW.begin(); rangeW.end() != itH; ++itH ) {
+	  PatFwdHit* hit = *itH;
+	  if ( hit->isUsed() ) continue;
           if ( xMin > hit->x() ) continue;
           if ( xMax < hit->x() ) break;
           double y = ( hit->x() - track.xAtZ( hit->z() ) );
           y = y * ( m_zForYMatch / hit->z() ) /  m_tHitManager->region(sta, sLay, testRegion)->sinT();
 	  // check if the hit is isolated
-	  if ( !isIsolated(itH, rangeW) ) {
+	  if ( m_enforceIsolation && !isIsolated(itH, rangeW) ) {
 		  int idx = int(y * 20. / 3e3);
 		  if (idx < 0) idx = 0;
 		  if (idx >= 20) idx = 19;
@@ -1248,9 +1381,9 @@ bool PatSeedingTool::findBestRange ( unsigned int region, int minNbPlanes, PatFw
 //=========================================================================
 //  Fit a line in Y projection, returns the parameters.
 //=========================================================================
-bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl) {
+bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl )
+{
   double maxYDist = 20. * m_tolCollect;
-
 
   PatFwdHits::const_iterator itH;
   std::vector<double> largestDrift( 3, 0. );
@@ -1445,21 +1578,26 @@ void PatSeedingTool::processTracks ( std::string location, std::vector<LHCb::Tra
 }
 
 //=============================================================================
-StatusCode PatSeedingTool::tracksFromTrack(const LHCb::Track& /* seed */, 
+StatusCode PatSeedingTool::tracksFromTrack(const LHCb::Track& seed, 
                                            std::vector<LHCb::Track*>& tracks ){ 
-
-  performTracking(tracks);
+  // now that we have the possibility to use the state inside this algorithm,
+  // we use the state clostest to the middle of the T stations available on
+  // the track
+  // - Manuel 01-28-2008
+  performTracking(tracks, &(seed.closestState(StateParameters::ZMidT)));
   
   return StatusCode::SUCCESS;
 }
 
 
 //=============================================================================
-StatusCode PatSeedingTool::performTracking( LHCb::Tracks* outputTracks){ 
-					   
+StatusCode PatSeedingTool::performTracking( LHCb::Tracks* outputTracks,
+		const LHCb::State* state)
+{ 
   std::vector<LHCb::Track*> outvec;
+  outvec.reserve(256);
 
-  performTracking(outvec);
+  performTracking(outvec, state);
   
   for (unsigned i = 0; outvec.size() > i; ++i) {
     outputTracks->insert(outvec[i]);
@@ -1473,8 +1611,6 @@ bool PatSeedingTool::isIsolated(
 		PatFwdHits::const_iterator it,
 		const Tf::TStationHitManager<PatForwardHit>::HitRange& range)
 {
-	if ( !m_enforceIsolation )
-		return true;
 	double isolationRange = m_OTIsolation;
 	if ( (*it)->hit()->sthit() )
 		isolationRange = m_ITIsolation;
