@@ -37,11 +37,16 @@ namespace L0Muon {
     /// Destructor
     ~CtrlRawCnv();
     
+    LHCb::MuonTileID mid_BCSU(int iq, int ib);
+    
     void release();
 
     std::vector<PMuonCandidate> muonCandidates();
     std::vector<PMuonCandidate> muonCandidatesBCSU();
 
+    int status(int i){return m_candRegHandler[i].getStatus();}
+    int status_BCSU(int i,int ib){return m_candRegHandlerBCSU[i][ib].getStatus();}
+    
     void decodeBank(std::vector<unsigned int> raw, int version);
     std::vector<unsigned int> rawBank(int version);
 

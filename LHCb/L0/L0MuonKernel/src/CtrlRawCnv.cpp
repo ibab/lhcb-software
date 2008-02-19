@@ -46,6 +46,19 @@ L0Muon::CtrlRawCnv::CtrlRawCnv(int side){
 L0Muon::CtrlRawCnv::~CtrlRawCnv(){
 }
 
+LHCb::MuonTileID L0Muon::CtrlRawCnv::mid_BCSU(int iq, int ib){
+  MuonLayout lay(1,1);
+  LHCb::MuonTileID board = LHCb::MuonTileID(0);
+  board.setQuarter(m_side*2+iq);
+  board.setLayout(lay);
+  board.setRegion(ib/3);
+  board.setX( (((ib%3)+1)>>0)&1);
+  board.setY( (((ib%3)+1)>>1)&1);
+  return board;
+}
+
+
+
 void L0Muon::CtrlRawCnv::release(){
  
  for (int iq = 0; iq<2 ; ++iq) {
@@ -408,21 +421,21 @@ void L0Muon::CtrlRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
       int status = m_candRegHandlerBCSU[iq][ib].getStatus();
       int ncand = status&0x3;
       ncand = ncand<3 ? ncand : 2;
-      if (ncand!=m_candRegHandlerBCSU[iq][ib].numberOfCandidates()) {
-        m_candRegHandlerBCSU[iq][ib].clear();
-        m_candRegHandlerBCSU[iq][ib].setStatus(status);
-        ++m_decodingError[iq];
-        std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" T"<<std::endl;
-        std::cout<<"L0Muon::CtrlRawCnv::decodeBank ERROR : non empty candidate in contradiction with status !!!"
-                 << " Q"<<m_side*2+iq<<" BCSU rd# "<<ib
-                 <<std::hex<<" 0x"<<m_candRegHandlerBCSU[iq][ib].getStatus()<<std::dec<<std::endl;
-        m_candRegHandlerBCSU[iq][ib].dump();
-      } else {
+//       if (ncand!=m_candRegHandlerBCSU[iq][ib].numberOfCandidates()) {
+//         m_candRegHandlerBCSU[iq][ib].clear();
+//         m_candRegHandlerBCSU[iq][ib].setStatus(status);
+//         ++m_decodingError[iq];
+//         std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" T"<<std::endl;
+//         //         std::cout<<"L0Muon::CtrlRawCnv::decodeBank ERROR : non empty candidate in contradiction with status !!!"
+//         //                  << " Q"<<m_side*2+iq<<" BCSU rd# "<<ib
+//         //                  <<std::hex<<" 0x"<<m_candRegHandlerBCSU[iq][ib].getStatus()<<std::dec<<std::endl;
+//         m_candRegHandlerBCSU[iq][ib].dump();
+//       } else {
         for( int icand =0; icand<ncand;++icand){
           m_candRegHandlerBCSU[iq][ib].setCandBoard(ib,icand);
           m_candRegHandlerBCSU[iq][ib].setCandQuarter(m_side*2+iq,icand);
         }
-      }
+//       }
     
     }// End of loop over BCSU candidates
 
@@ -521,20 +534,20 @@ void L0Muon::CtrlRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
     int status =m_candRegHandler[iq].getStatus();
     int ncand = status&0x3;
     ncand = ncand<3 ? ncand : 2;
-    if (ncand!=m_candRegHandler[iq].numberOfCandidates()) {
-      m_candRegHandler[iq].clear();
-      m_candRegHandler[iq].setStatus(status);
-      ++m_decodingError[iq];
-      std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" AD"<<std::endl;
-      std::cout<<"L0Muon::CtrlRawCnv::decodeBank ERROR : non empty candidate in contradiction with status !!!"
-               << " Q"<<m_side*2+iq
-               <<std::hex<<" 0x"<<m_candRegHandler[iq].getStatus()<<std::dec<<std::endl;
-      m_candRegHandler[iq].dump();
-    } else {
+//     if (ncand!=m_candRegHandler[iq].numberOfCandidates()) {
+//       m_candRegHandler[iq].clear();
+//       m_candRegHandler[iq].setStatus(status);
+//       ++m_decodingError[iq];
+//       std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" AD"<<std::endl;
+//       std::cout<<"L0Muon::CtrlRawCnv::decodeBank ERROR : non empty candidate in contradiction with status !!!"
+//                << " Q"<<m_side*2+iq
+//                <<std::hex<<" 0x"<<m_candRegHandler[iq].getStatus()<<std::dec<<std::endl;
+//       m_candRegHandler[iq].dump();
+//     } else {
       for( int icand =0; icand<ncand;++icand) {
         m_candRegHandler[iq].setCandQuarter(m_side*2+iq,icand);
       }
-    }
+//     }
 
     if (m_decodingError[iq]>0){
       m_candRegHandler[iq].clear();
@@ -568,7 +581,7 @@ void L0Muon::CtrlRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
       for (int ib = 0; ib<12; ++ib) {
         m_candRegHandlerBCSU[iq][ib].clear();
       }
-      std::cout<<"\tL0Muon::ProcRawCnv::decodeBank !!! DECODING ERROR !!! Q"<<m_side*2+iq<<std::endl;
+      std::cout<<"\tL0Muon::CtrlRawCnv::decodeBank !!! DECODING ERROR !!! Q"<<m_side*2+iq<<std::endl;
     }
   }
   

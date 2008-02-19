@@ -9,6 +9,7 @@
   @date
 
 */
+#include "Kernel/MuonTileID.h"
 #include "L0MuonKernel/CandRegisterHandler.h"
 #include "L0MuonKernel/MuonCandidate.h"
 #include "ProcessorKernel/TileRegister.h"
@@ -38,6 +39,9 @@ namespace L0Muon {
 
     /// Destructor
     ~ProcRawCnv();
+
+    LHCb::MuonTileID mid_BCSU(int ib);
+    LHCb::MuonTileID mid_PU(int ib, int ipu);
     
     void release();
 
@@ -46,6 +50,9 @@ namespace L0Muon {
     std::vector<LHCb::MuonTileID> ols(LHCb::MuonTileID puid);    
     std::vector<LHCb::MuonTileID> neighs(LHCb::MuonTileID puid);
     std::vector<LHCb::MuonTileID> pus();
+
+    int status_BCSCU(int ib){return m_candRegHandlerBCSU[ib].getStatus();}
+    int status_PU(int ib,int ipu){return m_candRegHandlerPU[ib][ipu].getStatus();}
 
     void decodeBank(std::vector<unsigned int> raw, int version);
     std::vector<unsigned int> rawBank(int version);
@@ -73,6 +80,8 @@ namespace L0Muon {
     int decodingError(int ib){ return m_decodingError[ib];}
 
     void setEventCounters(int L0EventNum, int L0_B_Id);
+
+    
 
   private:
     
