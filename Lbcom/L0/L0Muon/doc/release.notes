@@ -1,8 +1,9 @@
-!  $Id: release.notes,v 1.46 2008-02-08 11:17:00 jucogan Exp $
+!  $Id: release.notes,v 1.47 2008-02-19 09:44:23 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev
 !-------------------------------------------------------------------------
 
+!========================= L0Muon v7r7 2008-02-19 ========================
 ! 2008-02-08 Julien Cogan
  - L0MuonFromRawTrans : new algorithm to decode the data with the format
    used at the pit during commissionning.
