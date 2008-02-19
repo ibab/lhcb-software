@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Phi_Makers.opts,v 1.3 2007-08-15 11:04:03 ibelyaev Exp $
+// $Id: LoKi_Phi_Makers.opts,v 1.4 2008-02-19 17:24:40 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Phi_Makers
@@ -37,9 +37,9 @@
 // ============================================================================
 ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
 // ============================================================================
-ApplicationMgr.ExtSvc += { "StagerSvc" } ;
-StagerSvc.BlockSize    = 20 ;
-StagerSvc.InitialStage = 5 ;
+//ApplicationMgr.ExtSvc += { "StagerSvc" } ;
+//StagerSvc.BlockSize    = 20 ;
+//StagerSvc.InitialStage = 5 ;
 // ============================================================================
 // Histograms & NTuples 
 // ============================================================================
@@ -52,7 +52,7 @@ HbookHistSvc.PrintHistos = true ;
 #pragma print OFF 
 #include "$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm.opts"  
 #pragma print ON
-PoolDbCacheSvc.Catalog = {
+FileCatalog.Catalogs = {
   "xmlcatalog_file:NewCatalog.xml" ,
   "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm_CERN.xml"  
 } ;

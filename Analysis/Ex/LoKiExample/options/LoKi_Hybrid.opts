@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Hybrid.opts,v 1.5 2007-12-04 14:30:13 ibelyaev Exp $
+// $Id: LoKi_Hybrid.opts,v 1.6 2008-02-19 17:24:40 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Hybrid
@@ -46,7 +46,7 @@ ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
 #pragma print OFF 
 #include "$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm.opts"  
 #pragma print ON
-PoolDbCacheSvc.Catalog = {
+FileCatalog.Catalogs = {
   "xmlcatalog_file:NewCatalog.xml" ,
   "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm_CERN.xml"  
 } ;
@@ -73,11 +73,14 @@ Hybrid.THIRD.Code  = " 'K+'  == ABSID " ;
 
 Hybrid.FIRST.Code  = "ADMASS('B0')<500" ;
 Hybrid.SECOND.Code = "ALL" ;
-Hybrid.THIRD.Code  = "(VFASPF(VCHI2)<30)" ;
+//Hybrid.THIRD.Code  = "(VFASPF(VCHI2)<30)" ;
+Hybrid.THIRD.Code  = "MIPCHI2DV('')>25" ;
 
 
 ApplicationMgr.EvtMax   =  100 ;
 EventSelector.PrintFreq =   10 ;
+
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
 
 // ============================================================================
 // The END 
