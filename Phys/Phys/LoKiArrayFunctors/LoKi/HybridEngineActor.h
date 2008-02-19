@@ -1,4 +1,4 @@
-// $Id: HybridEngineActor.h,v 1.2 2007-08-14 18:18:43 ibelyaev Exp $
+// $Id: HybridEngineActor.h,v 1.3 2008-02-19 16:13:07 ibelyaev Exp $
 // ===========================================================================
 #ifndef LOKI_HYBRID_ENGINE_ACTOR_H 
 #define LOKI_HYBRID_ENGINE_ACTOR_H 1
@@ -36,6 +36,10 @@ namespace LoKi
       StatusCode connectTool (       LoKi::IHybridTool* tool ) ;
       /// disconnect the tool 
       StatusCode releaseTool ( const LoKi::IHybridTool* tool ) ;
+    public:
+      // ======================================================================
+      // predicates 
+      // ======================================================================
       /// propagate the cut to the tool 
       StatusCode process
       ( const std::string&          name , 
@@ -52,6 +56,9 @@ namespace LoKi
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::Func&    cut  ) const ;    
+      // ======================================================================
+      // functions 
+      // ======================================================================
       /// propagate the function to the tool 
       StatusCode process
       ( const std::string&          name , 
@@ -60,6 +67,62 @@ namespace LoKi
       StatusCode process
       ( const std::string&          name , 
         const LoKi::Types::AFunc&   cut  ) const ;
+      // ======================================================================
+      // maps 
+      // ======================================================================
+      /// propagate the map to the tool 
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::Maps&    cut  ) const ;
+      /// propagate the map to the tool 
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::VMaps&   cut  ) const ;
+      // ======================================================================
+      // pipes
+      // ======================================================================
+      /// propagate the pipe to the tool 
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::Pipes&   cut  ) const ;
+      /// propagate the pipe to the tool 
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::VPipes&  cut  ) const ;
+      // ======================================================================
+      // fun-vals
+      // ======================================================================
+      /// propagate the fun-val to the tool 
+      StatusCode process
+      ( const std::string&           name , 
+        const LoKi::Types::FunVals&  cut  ) const ;
+      /// propagate the fun-val to the tool 
+      StatusCode process
+      ( const std::string&           name , 
+        const LoKi::Types::VFunVals& cut  ) const ;
+      // ======================================================================
+      // elements:
+      // ======================================================================
+      /// propagate the element to the tool 
+      StatusCode process
+      ( const std::string&            name , 
+        const LoKi::Types::Elements&  cut  ) const ;
+      /// propagate the element to the tool 
+      StatusCode process
+      ( const std::string&            name , 
+        const LoKi::Types::VElements& cut  ) const ;
+      // ======================================================================
+      // sources 
+      // ======================================================================
+      /// propagate the source to the tool 
+      StatusCode process
+      ( const std::string&            name , 
+        const LoKi::Types::Sources&   cut  ) const ;
+      /// propagate the source to the tool 
+      StatusCode process
+      ( const std::string&            name , 
+        const LoKi::Types::VSources&  cut  ) const ;
+      // ======================================================================
     protected:
       /// Standard constructor
       EngineActor() ;

@@ -1,4 +1,4 @@
-// $Id: IHybridTool.h,v 1.2 2007-08-14 18:18:43 ibelyaev Exp $
+// $Id: IHybridTool.h,v 1.3 2008-02-19 16:13:07 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHYBRIDTOOL_H 
 #define LOKI_IHYBRIDTOOL_H 1
@@ -42,18 +42,60 @@ namespace LoKi
     /// Return the unique interface ID
     static const InterfaceID& interfaceID() ;
   public:
+    // ========================================================================
+    // predicates:
+    // ========================================================================
     /// set the C++ predicate for LHCb::Particle
     virtual void set ( const LoKi::Types::Cuts&    cut ) = 0 ;    
     /// set the C++ predicate for LHCb::Vertex 
     virtual void set ( const LoKi::Types::VCuts&   cut ) = 0 ;    
     /// set the C++ predicate for arary of particles 
     virtual void set ( const LoKi::Types::ACuts&   cut ) = 0 ;    
+    // ========================================================================
+    // functions:
+    // ========================================================================
     /// set the C++ function for LHCb::Particle  
     virtual void set ( const LoKi::Types::Func&    cut ) = 0 ;
     /// set the C++ function for LHCb::Vertex 
     virtual void set ( const LoKi::Types::VFunc&   cut ) = 0 ;
     /// set the C++ function for arary of particles 
     virtual void set ( const LoKi::Types::AFunc&   cut ) = 0 ;    
+    // ========================================================================
+    // maps:
+    // ========================================================================
+    /// set the C++ "map" for LHCb::Particle  
+    virtual void set ( const LoKi::Types::Maps&    cut ) = 0 ;
+    /// set the C++ "map" for LHCb::Vertex 
+    virtual void set ( const LoKi::Types::VMaps&   cut ) = 0 ;
+    // ========================================================================
+    // pipes: 
+    // ========================================================================
+    /// set the C++ "pipe" for LHCb::Particle  
+    virtual void set ( const LoKi::Types::Pipes&   cut ) = 0 ;
+    /// set the C++ "pipe" for LHCb::Vertex 
+    virtual void set ( const LoKi::Types::VPipes&  cut ) = 0 ;
+    // ========================================================================
+    // fun-vals:
+    // ========================================================================
+    /// set the C++ "fun-val" for LHCb::Particle  
+    virtual void set ( const LoKi::Types::FunVals&  cut ) = 0 ;
+    /// set the C++ "fun-val" for LHCb::Vertex 
+    virtual void set ( const LoKi::Types::VFunVals& cut ) = 0 ;
+    // ========================================================================
+    // elements:
+    // ========================================================================
+    /// set the C++ "element" for LHCb::Particle  
+    virtual void set ( const LoKi::Types::Elements&  cut ) = 0 ;
+    /// set the C++ "element" for LHCb::Vertex 
+    virtual void set ( const LoKi::Types::VElements& cut ) = 0 ;
+    // ========================================================================
+    // sources:
+    // ========================================================================
+    /// set the C++ "source" for LHCb::Particle  
+    virtual void set ( const LoKi::Types::Sources&  cut ) = 0 ;
+    /// set the C++ "source" for LHCb::Vertex 
+    virtual void set ( const LoKi::Types::VSources& cut ) = 0 ;
+    // ========================================================================
   protected:
     /// destructor : virtual and protected 
     virtual ~IHybridTool() ;

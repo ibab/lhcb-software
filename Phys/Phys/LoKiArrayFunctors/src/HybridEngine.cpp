@@ -1,4 +1,4 @@
-// $Id: HybridEngine.cpp,v 1.1 2007-07-26 13:25:09 ibelyaev Exp $
+// $Id: HybridEngine.cpp,v 1.2 2008-02-19 16:13:07 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -41,6 +41,8 @@ namespace
   } ;
 }
 // ============================================================================
+// predicates:
+// ============================================================================
 // add the cut 
 // ============================================================================
 StatusCode LoKi::Hybrid::Engine::process 
@@ -59,6 +61,8 @@ StatusCode LoKi::Hybrid::Engine::process
 ( const std::string&          name , 
   const LoKi::Types::ACuts&   cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
+// functions 
+// ============================================================================
 // add the function 
 // ============================================================================
 StatusCode LoKi::Hybrid::Engine::process
@@ -76,6 +80,76 @@ StatusCode LoKi::Hybrid::Engine::process
 StatusCode LoKi::Hybrid::Engine::process
 ( const std::string&          name , 
   const LoKi::Types::AFunc&   cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// Maps 
+// ============================================================================
+// add the map
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&          name , 
+  const LoKi::Types::Maps&    cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// add the map
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&          name , 
+  const LoKi::Types::VMaps&   cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// Pipes
+// ============================================================================
+// add the pipe
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&          name , 
+  const LoKi::Types::Pipes&   cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// add the pipe 
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&          name , 
+  const LoKi::Types::VPipes&  cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// Fun-Vals
+// ============================================================================
+// add the fun-val
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&          name , 
+  const LoKi::Types::FunVals& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// add the fun-val
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&           name , 
+  const LoKi::Types::VFunVals& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// Elements
+// ============================================================================
+// add the element
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&           name , 
+  const LoKi::Types::Elements& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// add the element
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&            name , 
+  const LoKi::Types::VElements& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// Sources
+// ============================================================================
+// add the source
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&          name , 
+  const LoKi::Types::Sources& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// add the source
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&           name , 
+  const LoKi::Types::VSources& cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
 
 // ============================================================================

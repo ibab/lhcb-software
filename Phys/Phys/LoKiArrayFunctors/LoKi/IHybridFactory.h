@@ -1,4 +1,4 @@
-// $Id: IHybridFactory.h,v 1.1 2007-07-26 13:25:09 ibelyaev Exp $
+// $Id: IHybridFactory.h,v 1.2 2008-02-19 16:13:07 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHYBRIDFACTORY_H 
 #define LOKI_IHYBRIDFACTORY_H 1
@@ -33,56 +33,201 @@ namespace LoKi
     static const InterfaceID& interfaceID() ;
   public:
     // ========================================================================
-    /** "Factory": get the the object form python code 
-     *  @param pycode the python pseudo-code of the function
-     *  @param cuts the placeholder for the result 
-     *  @return StatusCode 
-     */
-    virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::Cut&  cuts ) = 0 ;
+    // predicates 
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param cuts the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::VCut&  cuts ) = 0 ;
+    ( const std::string& pycode       , 
+      LoKi::Types::Cut&  cuts         , 
+      const std::string& context = "" ) = 0 ;
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param cuts the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::ACut& cuts ) = 0 ;
+    ( const std::string& pycode       , 
+      LoKi::Types::VCut& cuts         ,
+      const std::string& context = "" ) = 0 ;
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param cuts the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string& pycode       , 
+      LoKi::Types::ACut& cuts         , 
+      const std::string& context = "" ) = 0 ;
+    // ========================================================================
+    // functions 
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::Fun& func ) = 0 ;
+    ( const std::string& pycode       , 
+      LoKi::Types::Fun&  func         ,
+      const std::string& context = "" ) = 0 ;
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::VFun&  func ) = 0 ;
+    ( const std::string& pycode       , 
+      LoKi::Types::VFun& func         , 
+      const std::string& context = "" ) = 0 ;
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::AFun& func ) = 0 ;
+    ( const std::string& pycode       ,
+      LoKi::Types::AFun& func         ,
+      const std::string& context = "" ) = 0 ;
+    // ========================================================================
+    // "maps"
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string& pycode       ,
+      LoKi::Types::Map&  func         ,
+      const std::string& context = "" ) = 0 ;    
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string& pycode       ,
+      LoKi::Types::VMap& func         ,
+      const std::string& context = "" ) = 0 ;    
+    // ========================================================================
+    // "pipes"
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string& pycode       ,
+      LoKi::Types::Pipe& func         ,
+      const std::string& context = "" ) = 0 ;    
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&  pycode       ,
+      LoKi::Types::VPipe& func         ,
+      const std::string&  context = "" ) = 0 ;    
+    // ========================================================================
+    // "fun-vals"
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&   pycode       ,
+      LoKi::Types::FunVal& func         ,
+      const std::string&   context = "" ) = 0 ;    
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&    pycode       ,
+      LoKi::Types::VFunVal& func         ,
+      const std::string&    context = "" ) = 0 ;    
+    // ========================================================================
+    // "elements"
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&    pycode       ,
+      LoKi::Types::Element& func         ,
+      const std::string&    context = "" ) = 0 ;    
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&     pycode       ,
+      LoKi::Types::VElement& func         ,
+      const std::string&     context = "" ) = 0 ;    
+    // ========================================================================
+    // "sources"
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&    pycode       ,
+      LoKi::Types::Source&  func         ,
+      const std::string&    context = "" ) = 0 ;    
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&     pycode       ,
+      LoKi::Types::VSource&  func         ,
+      const std::string&     context = "" ) = 0 ;    
     // ========================================================================
   protected:
+    // ========================================================================
+    // virtual & protected desctructor 
     virtual ~IHybridFactory( ); ///< Destructor
+    // ========================================================================
   } ;
 } // end of namespace LoKi
 // ============================================================================
