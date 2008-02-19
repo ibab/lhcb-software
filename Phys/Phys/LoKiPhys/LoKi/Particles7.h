@@ -1,4 +1,4 @@
-// $Id: Particles7.h,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles7.h,v 1.7 2008-02-19 16:11:25 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES7_H 
 #define LOKI_PARTICLES7_H 1
@@ -58,26 +58,27 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
-      /** constructor form "Vertex function"
+      /** The constructor from "Vertex function"
        *  
        *  @code 
        *
        *  Fun fun = VFunAsPFun( VCHI2 ) ;
        *  const Particle* particle = ... ;
        *
-       *  // evaluat evertex chi2 
+       *  // evaluate vertex chi2 
        *  double vxchi2 = fun( particle ) ;
        *
        *  @endcode 
        *
        *  @param vfun reference to "Vertex function"
-       *  @param bad the error valeu to be retirned for invalid particle 
+       *  @param bad the error value to be returned for 
+       *         the invalid particle 
        *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
        *  @date   2004-02-27
        */
       VFunAsPFun           
       ( const LoKi::Types::VFunc& vfun           , 
-        const double              bad  = -1000.0 ) ;
+        const double              bad  = -1.e+10 ) ;
       /// copy constructor 
       VFunAsPFun ( const VFunAsPFun&  fun ) ;
       /// virtual destructor

@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.42 2008-02-18 12:37:48 ibelyaev Exp $ 
+! $Id: release.notes,v 1.43 2008-02-19 16:11:25 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+
 !========================== LoKiPhys v7r1 2008-02-18 ==========================
+
+! 2008-02-18 - Vanya BELYAEV
+ - src/Particles7.cpp
+   modify the printout of VFASPF functor ( "[...]" --> "(...)" ) 
 
 ! 2008-02-18 - Vanya BELYAEV
  - python/LoKiPhys/Phys.py
