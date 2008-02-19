@@ -1,4 +1,4 @@
-// $Id: IHybridFactory.cpp,v 1.1 2007-07-26 13:25:09 ibelyaev Exp $
+// $Id: IHybridFactory.cpp,v 1.2 2008-02-19 15:06:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -28,7 +28,7 @@
 // ============================================================================
 namespace 
 {
-  const InterfaceID IID_IHybridFactory( "LoKi::IHybridFactory" , 1 , 0 ) ;
+  const InterfaceID IID_IHybridFactory( "LoKi::IHybridFactory" , 2 , 0 ) ;
 }
 // ============================================================================
 // Return the unique interface ID
@@ -38,7 +38,7 @@ LoKi::IHybridFactory::interfaceID() { return  IID_IHybridFactory ; }
 // ============================================================================
 // destructor : virtual and protected 
 // ============================================================================
-LoKi::IHybridFactory::~IHybridFactory () {}; 
+LoKi::IHybridFactory::~IHybridFactory () {}
 // ============================================================================
 
 // ============================================================================
