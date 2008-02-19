@@ -1,4 +1,4 @@
-// $Id: EFunctions.h,v 1.10 2008-01-22 09:34:58 hernando Exp $
+// $Id: EFunctions.h,v 1.11 2008-02-19 19:19:31 graven Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
@@ -372,7 +372,7 @@ namespace zen
     explicit logical_or() {}
     bool operator() (const T1& t1, const T2& t2) const 
     {return (t1 || t2) ;}
-    BiFilter* clone() const { return new logical_and<T1,T2>();}
+    BiFilter* clone() const { return new logical_or<T1,T2>();}
   };
 
   // composites - single
