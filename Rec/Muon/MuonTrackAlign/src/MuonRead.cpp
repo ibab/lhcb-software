@@ -1,4 +1,4 @@
-// $Id: MuonRead.cpp,v 1.4 2008-02-07 16:56:23 cattanem Exp $
+// $Id: MuonRead.cpp,v 1.5 2008-02-19 15:50:52 spozzi Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ StatusCode MuonRead::initialize() {
   debug() << "==> Initialize" << endmsg;
   m_muonDet=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
-  if(!m_muonBuffer)info()<<"error retriveing the toll "<<endreq;
+  if(!m_muonBuffer) info()<<"error retrieving MuonRawBuffer "<<endreq;
 
 
   return StatusCode::SUCCESS;
@@ -68,64 +68,69 @@ StatusCode MuonRead::execute() {
 
   LHCb::Tracks* muonTracks=get<LHCb::Tracks>(m_muonTracksName);
 
-  info()<<"muon track size "<<muonTracks->size()<<endreq;
+  debug()<<"muon track size "<<muonTracks->size()<<endreq;
 
-  m_muonDigit=m_muonBuffer->getTile();  //Restituisce un vettore di MuonTileID
+  m_muonDigit=m_muonBuffer->getTile();  //return a vector of  MuonTileID
   LHCb::Tracks::const_iterator it;
 
   for(it=muonTracks->begin();it!=muonTracks->end();it++){
-    info()<<" a muon track "<<endreq;
 
     double x,y,z,dx,dy,dz;
     std::vector<LHCb::LHCbID>  list_of_tile=(*it)->lhcbIDs () ;
     std::vector<LHCb::LHCbID>::const_iterator itTile;
 
-    std::vector<LHCb::State*>  list_of_states=(*it)->states () ;
-    std::vector<LHCb::State*>::const_iterator iStates;
-    
        
     std::vector<double> Fx,Fy,Fz,Fdx,Fdy,Ftx,Fty,Fdtx,Fdty,Fp;
-    std::vector<double> residual, residualerr, measurementerr ;
+    std::vector<double> residual, residualerr, measurementerr,nodez ;
 
-    std::vector<double> Vxm,Vym,Vzm,Vdxm,Vdym,Vdzm,region,station;
+    std::vector<double> Vxm,Vym,Vzm,Vdxm,Vdym,Vdzm,region,station,Chamber;
     std::vector <double> MCID,MCmothID,MCp,MCtx,MCty,MCVx,MCVy,MCVz;
     double Fchi2;
 
-    Fchi2=((*it)->chi2()); //it è un iteratore sulle tracce, punta alle tracce!!
-
-    for(iStates=list_of_states.begin();iStates!=list_of_states.end();iStates++){
-      Fx.push_back((*iStates)->x());
-      Fy.push_back((*iStates)->y());
-      Fz.push_back((*iStates)->z());
-      Fdx.push_back(sqrt((*iStates)->errX2()));
-      Fdy.push_back(sqrt((*iStates)->errY2()));
-
-      Ftx.push_back((*iStates)->tx());
-      Fty.push_back((*iStates)->ty());
-
-      Fdtx.push_back(sqrt((*iStates)->errTx2()));
-      Fdty.push_back(sqrt((*iStates)->errTy2())); 
-      Fp.push_back((*iStates)->qOverP());       
-    }
-    Simone->farray("Fx",Fx.begin(),Fx.end(),"Nstate",10);
-    Simone->farray("Fy",Fy.begin(),Fy.end(),"Nstate",10);
-    Simone->farray("Fz",Fz.begin(),Fz.end(),"Nstate",10);
-    Simone->farray("Fdx",Fdx.begin(),Fdx.end(),"Nstate",10);
-    Simone->farray("Fdy",Fdy.begin(),Fdy.end(),"Nstate",10);
-    Simone->farray("Ftx",Ftx.begin(),Ftx.end(),"Nstate",10);
-    Simone->farray("Fty",Fty.begin(),Fty.end(),"Nstate",10);
-    Simone->farray("Fdtx",Fdtx.begin(),Fdtx.end(),"Nstate",10);
-    Simone->farray("Fdty",Fdty.begin(),Fdty.end(),"Nstate",10);
-    Simone->farray("Fp",Fp.begin(),Fp.end(),"Nstate",10);
+    Fchi2=((*it)->chi2()); //it track iterator!!
 
     // loop over track nodes const std::vector<LHCb::Node*>
     const std::vector<LHCb::Node*>& nodes = (*it)->nodes() ; 
-    for( std::vector<LHCb::Node*>::const_iterator inode = nodes.begin() ;
-	 inode != nodes.end() ; ++inode) {
-      residual.push_back((*inode)->residual()) ;
-      residualerr.push_back(sqrt((*inode)->errResidual2())) ;
-      measurementerr.push_back(sqrt((*inode)->errMeasure2())) ;
+    for( std::vector<LHCb::Node*>::const_iterator inode = nodes.begin(); inode != nodes.end() ; ++inode) {
+      debug()<<" node information "<< (*inode)->z();
+      
+      if( (*inode)->z() > 11900 && (*inode)->type()!=LHCb::Node::Outlier  ) {
+        debug() << " ----  in the Muon detector "<< endreq;
+        const LHCb::State& state =(*inode)->state();
+
+        Fx.push_back(state.x());
+        Fy.push_back(state.y());
+        Fz.push_back(state.z());
+        Fdx.push_back(sqrt(state.errX2()));
+        Fdy.push_back(sqrt(state.errY2()));
+        
+        Ftx.push_back(state.tx());
+        Fty.push_back(state.ty());
+        
+        Fdtx.push_back(sqrt(state.errTx2()));
+        Fdty.push_back(sqrt(state.errTy2())); 
+        Fp.push_back(state.qOverP());       
+        
+        nodez.push_back((*inode)->z());
+        residual.push_back((*inode)->residual());
+        residualerr.push_back(sqrt((*inode)->errResidual2())) ;
+        measurementerr.push_back(sqrt((*inode)->errMeasure2())) ;
+      } else   debug() << " ---!!!!  not in the Muon detector"<<endreq;
     }
+    debug()<< " Nodes in the muon detector with residuals "<< residual.size()<<endreq;
+    
+    Simone->farray("Fx",Fx.begin(),Fx.end(),"Nnode",10);   // 10 is the maximum number of pads per track allowed
+    Simone->farray("Fy",Fy.begin(),Fy.end(),"Nnode",10);
+    Simone->farray("Fz",Fz.begin(),Fz.end(),"Nnode",10);
+    Simone->farray("Fdx",Fdx.begin(),Fdx.end(),"Nnode",10);
+    Simone->farray("Fdy",Fdy.begin(),Fdy.end(),"Nnode",10);
+    Simone->farray("Ftx",Ftx.begin(),Ftx.end(),"Nnode",10);
+    Simone->farray("Fty",Fty.begin(),Fty.end(),"Nnode",10);
+    Simone->farray("Fdtx",Fdtx.begin(),Fdtx.end(),"Nnode",10);
+    Simone->farray("Fdty",Fdty.begin(),Fdty.end(),"Nnode",10);
+    Simone->farray("Fp",Fp.begin(),Fp.end(),"Nnode",10);
+
+    Simone->farray("nodez",nodez.begin(),nodez.end(),"Nnode",10);
     Simone->farray("Fres",residual.begin(),residual.end(),"Nnode",10);
     Simone->farray("Freserr",residualerr.begin(),residualerr.end(),"Nnode",10);
     Simone->farray("Fmeaserr",measurementerr.begin(),measurementerr.end(),"Nnode",10);
@@ -136,47 +141,52 @@ StatusCode MuonRead::execute() {
     Simone->fill("status",float((*it)->fitStatus())) ;
 
     for(itTile=list_of_tile.begin();itTile!=list_of_tile.end();itTile++){
-      LHCb::MuonTileID tile=itTile->muonID();
-      
-      m_muonDet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
-      info()<<"*** tile position ***"<<tile<<endreq;
-      info()<<" x = "<<x<<" y = "<<y<<" z = "<<z<<endreq;
-      info()<<" dx = "<<dx<<" dy ="<<dy<<" dz = "<<dz<<endreq;
-      info()<<"*********************"<<tile<<endreq;
+      if((*itTile).isMuon()==true) {
+        LHCb::MuonTileID tile = itTile->muonID();
+        std::vector<DeMuonChamber*> vchambers;
 
-      Vxm.push_back(x);
-      Vym.push_back(y);
-      Vzm.push_back(z);
-      Vdxm.push_back(dx);
-      Vdym.push_back(dy);
-      Vdzm.push_back(dz);
-      region.push_back(tile.region());
-      station.push_back(tile.station());
-
-      LHCb::MCParticle* pp=NULL;
-      searchNature(tile,pp);
-      if(pp!=NULL){
-        info()<<pp->particleID().pid()<<endreq;
-        MCID.push_back(double(pp->particleID().pid()));
-        if(pp->mother()!=0) {
-          info()<< " found a mother "<<endreq;  
-          MCmothID.push_back(double(pp->mother()->particleID().pid()));
-        }
+        m_muonDet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
+        vchambers = m_muonDet->Tile2Chamber(tile);
+        Chamber.push_back(float(vchambers[0]->chamberNumber()));
+        debug()<<"*** tile position ***"<<tile<<endreq;
+        debug()<<" x = "<<x<<" y = "<<y<<" z = "<<z<<endreq;
+        debug()<<" dx = "<<dx<<" dy ="<<dy<<" dz = "<<dz<<endreq;
+        debug()<<" region "<<tile.region()<<" station "<<tile.station()<<endreq;
+        debug()<<"*********************"<<tile<<endreq;
         
-        MCp.push_back(pp->p());
-        info()<<"MCParticle momentum "<<pp->momentum()<<endreq;
+        Vxm.push_back(x);
+        Vym.push_back(y);
+        Vzm.push_back(z);
+        Vdxm.push_back(dx);
+        Vdym.push_back(dy);
+        Vdzm.push_back(dz);
+        region.push_back(float(tile.region()));
+        station.push_back(float(tile.station()));
         
-        MCtx.push_back(pp->momentum().px()/pp->momentum().pz());
-        MCty.push_back(pp->momentum().py()/pp->momentum().pz());
-        MCVx.push_back(pp->originVertex()->position().x());
-        MCVy.push_back(pp->originVertex()->position().y());
-        MCVz.push_back(pp->originVertex()->position().z());
-      }else info()<<" no part "<<endreq;
-
+        LHCb::MCParticle* pp=NULL;
+        searchNature(tile,pp);
+        if(pp!=NULL){
+          debug() << "MC particle linked to tile " << pp->particleID().pid() << endreq;
+          MCID.push_back(double(pp->particleID().pid()));
+          if(pp->mother()!=0) {
+            debug() << " found a mother "<<endreq;  
+            MCmothID.push_back(double(pp->mother()->particleID().pid()));
+          }
+          
+          MCp.push_back(pp->p());
+          debug() << "MCParticle momentum "<<pp->momentum()<<endreq;
+          
+          MCtx.push_back(pp->momentum().px()/pp->momentum().pz());
+          MCty.push_back(pp->momentum().py()/pp->momentum().pz());
+          MCVx.push_back(pp->originVertex()->position().x());
+          MCVy.push_back(pp->originVertex()->position().y());
+          MCVz.push_back(pp->originVertex()->position().z());
+        }else debug() << " No MC particle linked to tile" << endreq;
+      } else   debug()<<" this LHCbID is not a MuonTile "<<endreq;
       
     }
+    
 
-    Simone->farray("R",region.begin(),region.end(),"Npad",10);
     Simone->farray("x",Vxm.begin(),Vxm.end(),"Npad",10);
     Simone->farray("y",Vym.begin(),Vym.end(),"Npad",10);
     Simone->farray("z",Vzm.begin(),Vzm.end(),"Npad",10);
@@ -184,6 +194,8 @@ StatusCode MuonRead::execute() {
     Simone->farray("dy",Vdym.begin(),Vdym.end(),"Npad",10);
     Simone->farray("dz",Vdzm.begin(),Vdzm.end(),"Npad",10);
     Simone->farray("station",station.begin(),station.end(),"Npad",10);
+    Simone->farray("R",region.begin(),region.end(),"Npad",10);
+    Simone->farray("NCh",Chamber.begin(),Chamber.end(),"Npad",10);
     Simone->farray("MCID",MCID.begin(),MCID.end(),"Npad",10);
     Simone->farray("MCmothID",MCmothID.begin(),MCmothID.end(),"Npad",10);
     Simone->farray("MCtx",MCtx.begin(),MCtx.end(),"Npad",10);
@@ -206,7 +218,7 @@ StatusCode MuonRead::execute() {
         if((*iMc)->mcParticle()!=NULL){
           if(abs((*iMc)->mcParticle()->particleID().pid())==13) {
             
-            if((*iMc)->midPoint().z()>8000 && (*iMc)->midPoint().z()<14000) iMS=0;
+            if((*iMc)->midPoint().z()>10000 && (*iMc)->midPoint().z()<14000) iMS=0;
             if((*iMc)->midPoint().z()>15000 && (*iMc)->midPoint().z()<16000) iMS=1;
             if((*iMc)->midPoint().z()>16000 && (*iMc)->midPoint().z()<17000) iMS=2;
             if((*iMc)->midPoint().z()>17000 && (*iMc)->midPoint().z()<18000) iMS=3;
@@ -216,8 +228,8 @@ StatusCode MuonRead::execute() {
             x_hit[iMS] +=   (*iMc)->midPoint().x();
             y_hit[iMS] +=   (*iMc)->midPoint().y();
             z_hit[iMS] +=   (*iMc)->midPoint().z();
-	    tx_hit[iMS]= (*iMc)->dxdz(); 
-	    ty_hit[iMS]=  (*iMc)->dydz();
+            tx_hit[iMS] =   (*iMc)->dxdz(); 
+            ty_hit[iMS] =   (*iMc)->dydz();
             
             counter[iMS]++;
           }
@@ -241,7 +253,8 @@ StatusCode MuonRead::execute() {
     }
 
     Simone->write();
-
+    debug()<<" The muon track has "<<
+      list_of_tile.size()<<" Tiles and "<<  nodes.size()<<" nodes "<< endreq;
   }
  
   return StatusCode::SUCCESS;
@@ -291,7 +304,7 @@ StatusCode MuonRead::searchNature(LHCb::MuonTileID tile,LHCb::MCParticle*& pp)
          if(pp!=NULL&&pp==ppfirst)  return StatusCode::SUCCESS;
        }
     }else{
-      debug()<<"digitile.intercept(tile)).is NOT Valid"<<endreq;
+      debug()<<"digitile.intercept(tile)) is NOT Valid"<<endreq;
     }
     
 
@@ -303,7 +316,7 @@ StatusCode MuonRead::searchNature(LHCb::MuonTileID tile,LHCb::MCParticle*& pp)
     }
 
   }
-  info()<< "MCParticle not found"<<endreq;
+  debug() << "MCParticle not found" << endreq;
   
 
            
