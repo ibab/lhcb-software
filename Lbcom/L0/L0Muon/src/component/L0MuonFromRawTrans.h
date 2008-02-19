@@ -1,11 +1,10 @@
-// $Id: L0MuonFromRawTrans.h,v 1.3 2008-02-08 11:17:00 jucogan Exp $
+// $Id: L0MuonFromRawTrans.h,v 1.4 2008-02-19 09:40:15 jucogan Exp $
 #ifndef COMPONENT_L0MUONFROMRAWTRANS_H 
 #define COMPONENT_L0MUONFROMRAWTRANS_H 1
 
 // Include files
 // from Gaudi
-// #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/L0MuonCandidate.h"
 
 #include "L0MuonKernel/ProcRawCnv.h"
@@ -19,8 +18,7 @@
  *  @author Julien Cogan
  *  @date   2008-01-10
  */
-// class L0MuonFromRawTrans : public GaudiAlgorithm {
-class L0MuonFromRawTrans : public GaudiHistoAlg {
+class L0MuonFromRawTrans : public GaudiAlgorithm {
 public: 
   /// Standard constructor
   L0MuonFromRawTrans( const std::string& name, ISvcLocator* pSvcLocator );
@@ -42,7 +40,8 @@ protected:
 
 private:
   
-  void fillHisto();
+  int l0EventNumber();
+  int l0_B_Id();
   
   std::string  m_configfile;          // Config file name
 

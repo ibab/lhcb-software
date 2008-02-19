@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.cpp,v 1.5 2008-02-08 12:33:01 jucogan Exp $
+// $Id: L0MuonFromRawTrans.cpp,v 1.6 2008-02-19 09:40:15 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -8,6 +8,9 @@
 #include "Event/RecHeader.h"
 #include "Event/RawEvent.h"
 #include "Event/L0MuonData.h"
+#include "Event/L0MuonInfo.h"
+#include "Event/L0MuonProcError.h"
+#include "Event/L0MuonCtrlError.h"
 
 // local
 #include "L0MuonFromRawTrans.h"
@@ -30,7 +33,7 @@ DECLARE_ALGORITHM_FACTORY( L0MuonFromRawTrans );
 //=============================================================================
 L0MuonFromRawTrans::L0MuonFromRawTrans( const std::string& name,
                                         ISvcLocator* pSvcLocator) 
-  : GaudiHistoAlg ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
   m_configfile="L0MuonKernel.xml";
   declareProperty( "ConfigFile"     , m_configfile      );
@@ -48,8 +51,8 @@ L0MuonFromRawTrans::~L0MuonFromRawTrans() {}
 // Initialization
 //=============================================================================
 StatusCode L0MuonFromRawTrans::initialize() {
-  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
   L0Muon::RegisterFactory::selectInstance(1);
@@ -66,57 +69,6 @@ StatusCode L0MuonFromRawTrans::initialize() {
   for (int i= 0; i<4; ++i) {
     m_procRaw[i] = L0Muon::ProcRawCnv(i);
   }
-  
-  // Histos
-  setHistoDir("L0Muon/Decoding");
-  std::string name;
-  // Histogram the ref event number and BId
-  name = "L0EventNumber";
-  book1D(name,name,-0.5,-0.5+4096,4096);
-  name = "L0_B_Id";
-  book1D(name,name,-0.5,-0.5+3564,3564);
-  name = "Decoding_errors";
-  book1D(name,name,-0.5,-0.5+13*4,13*4);
-  
-  // Record errors : 
-  // * 1 bin per TELL1
-  name = "L0Muon_Error";
-  book1D(name,name,-0.5,-0.5+6.,6);
-
-  // Ctrl boards
-  // * 2 bins per quarter (1 for CU and 1 for SU) 
-  name = "CtrlError_L0EventNumber";
-  book1D(name,name,-0.5,-0.5+8.,8);
-  name = "CtrlError_L0_B_Id";
-  book1D(name,name,-0.5,-0.5+8.,8);
-  name = "CtrlError_BoardIndex";
-  book1D(name,name,-0.5,-0.5+8.,8);
-  name = "CtrlError_BCID_CU_SU";
-  book1D(name,name,-0.5,-0.5+8.,8);  
-  // * 2 bins per BCSU (1 for CU and 1 for SU) 
-  name = "CtrlError_BCID_BCSU";
-  book1D(name,name,-0.5,-0.5+96.,96);
-  name = "CtrlError_pb_link";
-  book1D(name,name,-0.5,-0.5+96.,96);
-  
-  // Proc boards
-  // * 2 bins per board (1 per frame)
-  name = "ProcError_L0EventNumber";
-  book1D(name,name,-0.5,-0.5+96.,96);
-  name = "ProcError_L0_B_Id";
-  book1D(name,name,-0.5,-0.5+96.,96);
-  name = "ProcError_BoardIndex";
-  book1D(name,name,-0.5,-0.5+96.,96);
-  name = "ProcError_BCID_BCSU";
-  book1D(name,name,-0.5,-0.5+48.,48);
-  name = "ProcError_BCID_PU";
-  book1D(name,name,-0.5,-0.5+192.,192);
-  name = "ProcError_opt_link";
-  book1D(name,name,-0.5,-0.5+192.,192);
-  name = "ProcError_ser_link";
-  book1D(name,name,-0.5,-0.5+192.,192);
-  name = "ProcError_par_link";
-  book1D(name,name,-0.5,-0.5+192.,192);
   
   return StatusCode::SUCCESS;
 }
@@ -141,19 +93,17 @@ StatusCode L0MuonFromRawTrans::execute() {
   StatusCode sc;
 
   sc = decodeRawBanks();
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   sc = writeOnTES(1);
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   //  m_procRaw[3].formattedDump(1,0);
   //m_procRaw[3].dump(1,0);
   //m_ctrlRaw[1].dump(1,0);
 
-  fillHisto();
-  
   sc = releaseRegisters();
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   return StatusCode::SUCCESS;
 }
@@ -165,7 +115,7 @@ StatusCode L0MuonFromRawTrans::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return GaudiHistoAlg::finalize();  // must be called after all other actions
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
@@ -176,7 +126,7 @@ StatusCode L0MuonFromRawTrans::finalize() {
 StatusCode L0MuonFromRawTrans::decodeRawBanks(){
 
   LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-  debug() << "decodeRawBanks:  ==> got rawEvt " << endmsg;
+  if (msgLevel( MSG::DEBUG )) debug() << "decodeRawBanks:  ==> got rawEvt " << endmsg;
 
   //   const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::L0Muon );
   const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::TT );
@@ -190,8 +140,6 @@ StatusCode L0MuonFromRawTrans::decodeRawBanks(){
       if (msgLevel( MSG::DEBUG ))
         debug() << "decodeRawBanks: L0Muon bank (version "<< bankVersion <<" ) found"
                 <<", sourceID is "<< srcID <<", size is "<< size <<endreq;
-      info() << "decodeRawBanks: evt# "<<m_ievt<<" L0Muon bank (version "<< bankVersion <<" ) found"
-             <<", sourceID is "<< srcID <<", size is "<< size <<endreq;
       for ( int k = 0; size > k; ++k ) {
         data.push_back( *body++ );
       }
@@ -223,165 +171,44 @@ StatusCode L0MuonFromRawTrans::decodeRawBanks(){
 
 }
 
-void L0MuonFromRawTrans::fillHisto()
+int L0MuonFromRawTrans::l0EventNumber()
 {
-  std::string name;
-  int ibin;
-
-  // Try to find a L0EvnetNumber and a L0_B_Id ans set it as a reference
   int L0EventNumber=-1;
-  int L0_B_Id = -1;
   for (int iside=0; iside<2; ++iside) {
     if (m_ctrlRaw[iside].isActiv()){
       L0EventNumber = m_ctrlRaw[iside].L0EventNumber(0,0);
-      L0_B_Id       = m_ctrlRaw[iside].L0_B_Id(0,0);
       break;
     }
   }
-  if ( (L0EventNumber==-1) || (L0_B_Id==-1) ) {
+  if ( L0EventNumber==-1) {
     for (int iq=0; iq<4; ++iq) {
-      if (m_procRaw[iq].isActiv()){
+      if (m_procRaw[iq].isActiv()){ 
         L0EventNumber = m_procRaw[iq].L0EventNumber(0,0);
-        L0_B_Id       = m_procRaw[iq].L0_B_Id(0,0);
         break;
       }
     }
   }
+  return L0EventNumber;
+}
 
-  name = "L0EventNumber";
-  fill(histo1D(name),L0EventNumber,1,name);
-  name = "L0_B_Id";
-  fill(histo1D(name),L0_B_Id,1,name);
-  
-  // If no reference has been found, return
-  if ( (L0EventNumber==-1) || (L0_B_Id==-1) ) return;
-
-  //  info()<<std::hex<<"L0_B_Id 0x"<<L0_B_Id<<std::dec<<" = "<<L0_B_Id<<endmsg;
-  name = "Decoding_errors";
-  for (int iside=0; iside<2; ++iside){ // Loop over side A and C
-    for (int ii=0; ii<2; ++ii){ // Loop over the 2 quarters of a side
-      int iq = iside*2+ii;
-      if (m_ctrlRaw[iside].isActiv() && m_ctrlRaw[iside].decodingError(ii)>0 )
-        fill(histo1D(name),iq*13+12,1,name);
-      for (int ib=0; ib<12; ++ib) { // Loop over the 12 processing boards
-        if (m_procRaw[iq].isActiv() && m_procRaw[iq].decodingError(ib)>0 )
-          fill(histo1D(name),iq*13+ib,1,name);
-      } // End of loop over the 12 processing boards
-    } // End of loop over the 2 quarters of a side
-  } // End of loop over side A and C
-  
-  // Ctrl
-  for (int iside=0; iside<2; ++iside){ // Loop over side A and C
-
-    if (!m_ctrlRaw[iside].isActiv()) continue;
-    
-    for (int ii=0; ii<2; ++ii){ // Loop over the 2 quarters of a side
-
-      if (m_ctrlRaw[iside].decodingError(ii)>0) continue;
-      
-      int iq = iside*2+ii;
-      for (int ich=0; ich<2; ++ich){ // Loop over the 2 frame sent by a controller board to the TELL1
-        ibin =ich*4+iq;
-        name = "CtrlError_L0EventNumber";
-        if (L0EventNumber!=m_ctrlRaw[iside].L0EventNumber(ii,ich)){
-          fill(histo1D(name),ibin,1,name);
-          info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<<" ch: "<<ich<< endmsg;
-        } 
-        name = "CtrlError_L0_B_Id";      
-        if (L0_B_Id!=m_ctrlRaw[iside].L0_B_Id(ii,ich)){
-          fill(histo1D(name),ibin,1,name);
-          info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<<" ch: "<<ich<< endmsg;
-        } 
-        name = "CtrlError_BoardIndex";   
-        if (m_ctrlRaw[iside].boardIndexError(ii,ich)){
-          fill(histo1D(name),ibin,1,name);
-          info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<<" ch: "<<ich<< endmsg;
-        } 
-        for (int ib=0; ib<12; ++ib) { // Loop over the 12 BCSU of this controller board
-          ibin = ich*48 + iq*12 + ib;
-          name = "CtrlError_BCID_BCSU";
-          if ((L0_B_Id&0xF)!=m_ctrlRaw[iside].BCID_BCSU(ii,ich,ib)){
-            fill(histo1D(name),ibin,1,name);
-            info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<<" ch: "<<ich<<" board "<<ib<< endmsg;
-          }
-          name = "CtrlError_pb_link";
-          if (m_ctrlRaw[iside].pb_link_error(ii,ich,ib)!=0){
-            fill(histo1D(name),ibin,1,name);
-            info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<<" ch: "<<ich<<" board "<<ib<< endmsg;
-          }
-        } // End of loop over the 12 BCSU of this controller board
-      } // End of loop over the 2 frame sent by a controller board to the TELL1
-      name = "CtrlError_BCID_CU_SU";   
-      if ((L0_B_Id&0xF)!=m_ctrlRaw[iside].BCID_SU(ii)){
-        fill(histo1D(name),iq,1,name); 
-        info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<< endmsg;
+int L0MuonFromRawTrans::l0_B_Id()
+{
+  int L0_B_Id=-1;
+  for (int iside=0; iside<2; ++iside) {
+    if (m_ctrlRaw[iside].isActiv()){
+      L0_B_Id = m_ctrlRaw[iside].L0_B_Id(0,0);
+      break;
+    }
+  }
+  if ( L0_B_Id==-1) {
+    for (int iq=0; iq<4; ++iq) {
+      if (m_procRaw[iq].isActiv()){ 
+        L0_B_Id = m_procRaw[iq].L0_B_Id(0,0);
+        break;
       }
-      if ((L0_B_Id&0xF)!=m_ctrlRaw[iside].BCID_SU(ii)){
-        fill(histo1D(name),iq+4,1,name); 
-        info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<< endmsg;
-      }
-    } // End of loop over the 2 quarters of a side
-  } // End of loop over side A and C
-
-  // Proc
-  for (int iq=0; iq<4; ++iq){ // Loop over the 4 quarters
-
-    if (!m_procRaw[iq].isActiv()) continue;
-    
-    for (int ib=0; ib<12; ++ib) { // Loop over the 12 proc. boards of a quarter
-
-      if ( m_procRaw[iq].decodingError(ib)>0) continue;
-      
-      for (int ich=0; ich<2; ++ich){ // Loop over the 2 frame sent by a proc board to the TELL1
-        ibin =ich*48 + iq*12 + ib;
-        name = "ProcError_L0EventNumber";
-        if (L0EventNumber!=m_procRaw[iq].L0EventNumber(ib,ich)){
-          fill(histo1D(name),ibin,1,name);
-          info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<<" board:"<<ib <<" ch: "<<ich<< endmsg;
-        }
-        name = "ProcError_L0_B_Id";
-        if (L0_B_Id!=m_procRaw[iq].L0_B_Id(ib,ich)){
-          fill(histo1D(name),ibin,1,name);
-          info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<<" board:"<<ib <<" ch: "<<ich<< endmsg;
-        }
-        name = "ProcError_BoardIndex";
-        if (m_procRaw[iq].boardIndexError(ib,ich)){
-          fill(histo1D(name),ibin,1,name);
-          info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<<" board:"<<ib <<" ch: "<<ich<< endmsg;
-        }
-      } // End of loop over the 2 frame sent by a proc board to the TELL1
-      ibin =iq*12 + ib;
-      name = "ProcError_BCID_BCSU";
-      if ((L0_B_Id&0xF)!=m_procRaw[iq].BCID_BCSU(ib)){
-        fill(histo1D(name),ibin,1,name);
-        info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<<" board "<<ib<< endmsg;
-      }
-      for (int ipu=0; ipu<4; ++ipu){ // Loop over the 4 PUs of a proc board
-        ibin = iq*48 + ib*4 + ipu;
-        name = "ProcError_BCID_PU";
-        if ((L0_B_Id&0xF)!=m_procRaw[iq].BCID_PU(ib,ipu)){
-          fill(histo1D(name),ibin,1,name);
-          info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<<" board "<<ib<<" PU"<<ipu<< endmsg;
-        }
-        name = "ProcError_opt_link";
-        if (m_procRaw[iq].opt_link_error(ib,ipu)!=0){
-          fill(histo1D(name),ibin,1,name);
-          info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<<" board "<<ib<<" PU"<<ipu<< endmsg;
-        }
-        name = "ProcError_ser_link";
-        if (m_procRaw[iq].ser_link_error(ib,ipu)!=0){
-          fill(histo1D(name),ibin,1,name);
-//           info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<<" board "<<ib<<" PU"<<ipu<< endmsg;
-        }
-        name = "ProcError_par_link";
-        if (m_procRaw[iq].par_link_error(ib,ipu)!=0){
-          fill(histo1D(name),ibin,1,name);
-//           info()<<"evt# "<<m_ievt<<" "<<name<<" "<<ibin<<" Q"<<iq+1<<" board "<<ib<<" PU"<<ipu<< endmsg;
-        }
-      } // End of loop over the 4 PUs of a proc board
-    } // End of loop over the 12 proc. boards of a quarter
-  } // end of loop over the 4 quarters
-  
+    }
+  }
+  return L0_B_Id;
 }
 
 
@@ -527,7 +354,97 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
       pdata->insert(l0muondata);
     }
   }
-  
+
+  int L0EventNumber= l0EventNumber();
+  int L0_B_Id      = l0_B_Id();
+  location = rootInTES() + LHCb::L0MuonInfoLocation::Default + extension;
+  LHCb::L0MuonInfo* pl0minfo = new LHCb::L0MuonInfo();
+  pl0minfo->setL0EventNumber(L0EventNumber);
+  pl0minfo->setL0_B_Id(L0_B_Id);
+  put(pl0minfo, location );
+  if (msgLevel( MSG::DEBUG )) {
+    debug() << "writeOnTES -------------------------"<< endreq;
+    debug() << "writeOnTES at "<< location << endreq;
+  }
+
+  location = rootInTES() + LHCb::L0MuonCtrlErrorLocation::Default + extension;
+  LHCb::L0MuonCtrlErrors* pl0mctrlerrors = new LHCb::L0MuonCtrlErrors();
+  put(pl0mctrlerrors, location );
+  if (msgLevel( MSG::DEBUG )) {
+    debug() << "writeOnTES -------------------------"<< endreq;
+    debug() << "writeOnTES at "<< location << endreq;
+  }
+  for (int i= 0; i<2; ++i) {
+    if (!m_ctrlRaw[i].isActiv()) continue;
+    for (int ii=0; ii<2; ++ii){
+      int quarter = i*2+ii;
+      LHCb::L0MuonCtrlError * l0mctrlerror = new LHCb::L0MuonCtrlError(quarter);
+      // Fill errors
+      if (m_ctrlRaw[i].decodingError(ii)>0 ) l0mctrlerror->setDecoding(true);
+      int header=0;
+      for (int ich=0; ich<2; ++ich){
+        if (L0EventNumber!=m_ctrlRaw[i].L0EventNumber(ii,ich)) header+=1<<(ich*3);
+        if (L0_B_Id      !=m_ctrlRaw[i].L0_B_Id(ii,ich)) header+=1<<(1+ich*3);
+        if (m_ctrlRaw[i].boardIndexError(ii,ich)) header+=1<<(2+ich*3);
+      }
+      l0mctrlerror->setHeader(header);
+      if ((L0_B_Id&0xF)!=m_ctrlRaw[i].BCID_CU(ii)) l0mctrlerror->setCu_bcid_error(m_ctrlRaw[i].BCID_CU(ii));
+      if ((L0_B_Id&0xF)!=m_ctrlRaw[i].BCID_SU(ii)) l0mctrlerror->setSu_bcid_error(m_ctrlRaw[i].BCID_SU(ii));
+      for (int ib=0; ib<12; ++ib) {
+        int bcid1=m_ctrlRaw[i].BCID_BCSU(ii,0,ib)==(L0_B_Id&0xF) ? -1 : m_ctrlRaw[i].BCID_BCSU(ii,0,ib);
+        int bcid2=m_ctrlRaw[i].BCID_BCSU(ii,1,ib)==(L0_B_Id&0xF) ? -1 : m_ctrlRaw[i].BCID_BCSU(ii,1,ib);
+        if ( (bcid1!=-1) || (bcid2!=-1) ){
+          l0mctrlerror->setBcsu_bcid_error(ib,bcid1,bcid2);
+        }
+        l0mctrlerror->setCu_link_error(ib,m_ctrlRaw[i].pb_link_error(ii,0,ib)) ;
+        l0mctrlerror->setSu_link_error(ib,m_ctrlRaw[i].pb_link_error(ii,1,ib)) ;
+        if(m_ctrlRaw[i].status_BCSU(ii,ib)>2) l0mctrlerror->setBcsu_status(ib,m_ctrlRaw[i].status(ib));
+      }
+      if(m_ctrlRaw[i].status(ii)>2) l0mctrlerror->setStatus(m_ctrlRaw[i].status(ii));
+      if (!l0mctrlerror->isEmpty()){
+        debug() << "before inserting Q"<<quarter+1<< endreq;
+        pl0mctrlerrors->insert(l0mctrlerror);
+        debug() << "... inserting Q"<<quarter+1<< " done"<<endreq;
+      }
+    }
+  }
+  location = rootInTES() + LHCb::L0MuonProcErrorLocation::Default + extension;
+  LHCb::L0MuonProcErrors* pl0mprocerrors = new LHCb::L0MuonProcErrors();
+  put(pl0mprocerrors, location );
+  if (msgLevel( MSG::DEBUG )) {
+    debug() << "writeOnTES -------------------------"<< endreq;
+    debug() << "writeOnTES at "<< location << endreq;
+  }
+  for (int iq= 0; iq<4; ++iq) {
+    if (!m_procRaw[iq].isActiv()) continue;
+    for (int ib=0; ib<12; ++ib){
+      LHCb::L0MuonProcError * l0mprocerror = new LHCb::L0MuonProcError(m_procRaw[iq].mid_BCSU(ib),ib);
+      // Fill errors
+      if (m_procRaw[iq].decodingError(ib)>0 ) l0mprocerror->setDecoding(true);
+      int header=0;
+      for (int ich=0; ich<2; ++ich){
+        if (L0EventNumber!=m_procRaw[iq].L0EventNumber(ib,ich)) header+=1<<(ich*3);
+        if (L0_B_Id      !=m_procRaw[iq].L0_B_Id(ib,ich)) header+=1<<(1+ich*3);
+        if (m_procRaw[iq].boardIndexError(ib,ich)) header+=1<<(2+ich*3);
+      }
+      l0mprocerror->setHeader(header);
+      if ((L0_B_Id&0xF)!=m_procRaw[iq].BCID_BCSU(ib)) l0mprocerror->setBcsu_bcid_error(m_procRaw[iq].BCID_BCSU(ib));
+      for (int ipu=0; ipu<4; ++ipu){
+        if ((L0_B_Id&0xF)!=m_procRaw[iq].BCID_PU(ib,ipu)) l0mprocerror->setPu_bcid_error(ipu,m_procRaw[iq].BCID_PU(ib,ipu));
+        l0mprocerror->setPu_opt_link_error(ipu,m_procRaw[iq].opt_link_error(ib,ipu));
+        l0mprocerror->setPu_ser_link_error(ipu,m_procRaw[iq].ser_link_error(ib,ipu));
+        l0mprocerror->setPu_par_link_error(ipu,m_procRaw[iq].par_link_error(ib,ipu));
+        if (m_procRaw[iq].status_PU(ib,ipu)>2) l0mprocerror->setPu_status(ipu,m_procRaw[iq].status_PU(ib,ipu));
+      }
+      if (m_procRaw[iq].status_BCSCU(ib)>2) l0mprocerror->setBcsu_status(m_procRaw[iq].status_BCSCU(ib));
+      
+      if (!l0mprocerror->isEmpty()){
+        debug() << "before inserting ib"<<ib<<" mid="<<m_procRaw[iq].mid_BCSU(ib)<< endreq;
+        pl0mprocerrors->insert(l0mprocerror);
+        debug() << "... inserting ib"<<ib<<" done"<< endreq;
+      }
+    }
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -548,7 +465,7 @@ LHCb::L0MuonCandidate* L0MuonFromRawTrans::l0muoncandidate(L0Muon::PMuonCandidat
                                                         cand->colM3(),cand->rowM3(), cand->offM2(),cand->offM1(),
                                                         procVersion,debug);
   std::vector<double> kine = L0Muon::kine(pads[0],pads[1],procVersion,debug);
-//   info()<<"l0muoncandidate Seed"<<pads[2].toString()<<" M2: "<<pads[1].toString()<<" M1: "<<pads[0].toString()<< endreq;
+//   debug()<<"l0muoncandidate Seed"<<pads[2].toString()<<" M2: "<<pads[1].toString()<<" M1: "<<pads[0].toString()<< endreq;
   LHCb::L0MuonCandidate *pl0muoncandidate = new LHCb::L0MuonCandidate(kine[0], kine[1], kine[2], pads,cand->pT());
   return pl0muoncandidate;
 }
