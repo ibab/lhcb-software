@@ -4,10 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!============================ L0MuonKernel v7r3 2008-02-19 ============== 
 ! 2008-02-08 - Julien Cogan
  - Upgrade decoding of transparent mode with ProcRawCnv and CtrlRawCnv
    o decodes the format used at the pit during the commissioning
    o allow error handling 
+
 !============================ L0MuonKernel v7r2 2007-11-30 ===============
 ! 2007-11-30
  - Bug fix: The ID of the L0BufferCnv was not properly defined for CU and SU.
