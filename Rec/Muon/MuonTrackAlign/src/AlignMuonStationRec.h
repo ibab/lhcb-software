@@ -1,4 +1,4 @@
-// $Id: AlignMuonStationRec.h,v 1.2 2007-07-23 09:37:23 cattanem Exp $
+// $Id: AlignMuonStationRec.h,v 1.3 2008-02-19 15:55:12 spozzi Exp $
 #ifndef ALIGNMUONSTATIONREC_H 
 #define ALIGNMUONSTATIONREC_H 1
 
@@ -124,7 +124,7 @@ public:
      int Pcounter =0;
      
      Vec_candidate.push_back(*candidate);
-     return;   // Remove if you want to add neighbour pads to the track
+     //     return;   // Remove if you want to add neighbour pads to the track
 
      
      for(int region=0;region<4;region++){
