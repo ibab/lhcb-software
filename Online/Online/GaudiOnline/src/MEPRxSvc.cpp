@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.59 2008-02-14 10:54:25 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.60 2008-02-19 13:33:12 frankb Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -30,7 +30,9 @@
 #include "MBM/MepProducer.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MDFHeader.h"
-#include "MDF/MEPEvent.h"
+#include "MDF/OnlineRunInfo.h"
+
+#include "MDF/MEPEvent.h" 
 #include "Event/RawBank.h"
 
 namespace LHCb {
@@ -71,9 +73,9 @@ namespace LHCb {
 static MEPReq mepreq;
 
 
-/* Event Source Flags */
-#define DOUBLE_ZERO_BUG    1   /* source will send two events with L0ID == 0 */
-
+// Event Source Flags 
+#define DOUBLE_ZERO_BUG    1   // source will send two events with L0ID == 0 
+#define ODIN               2   // this is the primary ODIN for MDF function 
 
 namespace LHCb  { 
   struct MEPRx  : public MEP::Producer {
@@ -96,8 +98,8 @@ namespace LHCb  {
     bool            m_dry;
     MsgStream       m_log;
     DAQErrorEntry   m_eEntry[MAX_SRC];
-    RawBank *m_rawBufHdr, *m_MDFBankHdr;
-
+    RawBank *m_rawBufHdr, *m_MDFBankHdr;  
+      u_int8_t        *m_odinMEP;
   public:
     MEPRx(const std::string &nam, MEPRxSvc *parent);
     virtual ~MEPRx();
@@ -154,7 +156,8 @@ namespace LHCb  {
     int createDAQErrorBankEntries();
     int setupDAQErrorBankHdr();
     int createDAQErrorMEP(u_int8_t *buf, int nEvt);
-    int setupMDFBank();
+    void addODINInfo(int);
+    void setupMDFBank(u_int32_t, u_int32_t, u_int32_t);
     int createMDFMEP(u_int8_t *buf, int nEvt);
     void incompleteEvent();
     int spaceAction();
@@ -175,7 +178,7 @@ MEPRx::MEPRx(const std::string &nam, MEPRxSvc *parent)
   m_log(parent->msgSvc(),nam)
 {
   m_flags = USE_MEP_BUFFER;
-  include();
+  include(); 
   m_bmid = m_mepID->mepBuffer;
   m_log << MSG::DEBUG << std::hex << std::showbase 
     << "MEP    buffer start: " << m_mepID->mepStart << endmsg
@@ -242,7 +245,7 @@ void MEPRx::incompleteEvent() {
   return;
 }
 
-int MEPRx::setupMDFBank() {
+void MEPRx::setupMDFBank(u_int32_t run, u_int32_t orbit, u_int32_t bunchID) {
   unsigned int mask[] = {~0,~0,~0,~0};
   MDFHeader* hdr = (MDFHeader *) m_MDFBankHdr->data();
   hdr->setHdr(0);
@@ -254,15 +257,29 @@ int MEPRx::setupMDFBank() {
   hdr->setSubheaderLength(sizeof(MDFHeader::Header1));
   MDFHeader::SubHeader h = hdr->subHeader();
   h.H1->setTriggerMask(mask);
-  h.H1->setRunNumber(0);
-  h.H1->setOrbitNumber(0);
-  h.H1->setBunchID(0);
-  return m_MDFBankHdr->totalSize();
+  h.H1->setRunNumber(run);
+  h.H1->setOrbitNumber(orbit);
+  h.H1->setBunchID(bunchID);
+  return;
+}
+
+void MEPRx::addODINInfo(int n) {
+    if (m_odinMEP == NULL) 
+	setupMDFBank(0, 0, 0);
+    else {
+	LHCb::RawBank *bank = (LHCb::RawBank *) (((u_int8_t *) m_odinMEP) + 
+						MEPHDRSIZ + MEPFHDRSIZ + 
+						n * (sizeof(LHCb::RawBank) + 
+						     sizeof(LHCb::OnlineRunInfo) +
+						     MEPFHDRSIZ));
+	LHCb::OnlineRunInfo *odin = bank->begin<LHCb::OnlineRunInfo>(); // raetselhaft
+	setupMDFBank(odin->Run, odin->Orbit, odin->bunchID);
+    }
 }
 
 int MEPRx::createMDFMEP(u_int8_t *buf, int nEvt) {
   struct MEPHdr *meph = (struct MEPHdr *) buf;
-  size_t banksize = setupMDFBank();
+  size_t banksize = m_MDFBankHdr->totalSize();
   meph->m_l0ID    = m_l0ID;
   meph->m_totLen  = MEPHDRSIZ +  nEvt * (MEPFHDRSIZ + banksize);
   meph->m_nEvt    = nEvt;
@@ -272,6 +289,7 @@ int MEPRx::createMDFMEP(u_int8_t *buf, int nEvt) {
     frgh->m_l0IDlow = 0xFFFF & (m_l0ID + i);
     frgh->m_len = banksize;
     buf += MEPFHDRSIZ;
+    addODINInfo(i);
     memcpy(buf, m_MDFBankHdr, banksize);
     buf += banksize;
   }
@@ -352,7 +370,9 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid) {
   if (m_pf == 0) 
     badPkt(DAQErrorEntry::EmptyMEP, srcid);
   if (m_pf != newhdr->m_nEvt) 
-    badPkt(DAQErrorEntry::WrongPackingFactor, srcid);    
+    badPkt(DAQErrorEntry::WrongPackingFactor, srcid);   
+  if (m_parent->m_srcFlags[srcid] & ODIN)
+      m_odinMEP = (u_int8_t *) newhdr;
   m_parent->m_rxEvt[srcid] += m_pf;
   return (m_nrx == m_nSrc) ? spaceAction() : MEP_ADDED;
 }
@@ -695,9 +715,12 @@ StatusCode MEPRxSvc::checkProperties() {
         nam = m_IPSrc[i + 1];
       }
     }
+
     m_srcFlags.push_back(0);
     if (m_IPSrc[i + 2] == "DOUBLE_ZERO_BUG") 
       m_srcFlags[i/3] |= DOUBLE_ZERO_BUG;
+    if (m_IPSrc[i + 2] == "ODIN")
+      m_srcFlags[i/3] |= ODIN;		
     m_srcAddr[addr] = i / 3; 
     m_srcDottedAddr.push_back(MEPRxSys::dotted_addr(addr));
     m_srcName.push_back(nam);
