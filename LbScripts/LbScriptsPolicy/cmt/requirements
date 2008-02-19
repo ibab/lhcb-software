@@ -156,3 +156,16 @@ apply_pattern source_shell_alias script=NoCMTPATH
 # remove CMTPATH from the environment
 setup_script ../scripts/NoCMTPATH
 
+#---------------------------------------------------
+# clean up of the different path
+#---------------------------------------------------
+
+apply_pattern python_alias script=PathStripper
+apply_pattern source_shell_alias script=StripPath
+
+macro strip_script "$(LBSCRIPTSPOLICYROOT)/scripts/StripPath" WIN32 "$(LBSCRIPTSPOLICYROOT)\scripts\StripPath" 
+
+cmtpath_pattern \
+    setup_script $(strip_script) ;
+
+

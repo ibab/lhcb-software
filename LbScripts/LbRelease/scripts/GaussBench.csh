@@ -21,10 +21,17 @@ cat > BenchMark.opts << EOF
 #include "\$GAUSSROOT/options/v200601.opts"
 
 #include "\$DECFILESROOT/options/30000000.opts"  // Min Bias
-ApplicationMgr.EvtMax     = 5 ;
+ApplicationMgr.EvtMax     = 3 ;
 
-ApplicationMgr.OutStream = [] ;
-ApplicationMgr.HistogramPersistency = "NONE" ;
-PoolDbCacheSvc.Catalog = [] ;
+//ApplicationMgr.OutStream = [] ;
+//ApplicationMgr.HistogramPersistency = "NONE" ;
+// PoolDbCacheSvc.Catalog = [] ;
 
 EOF
+
+Gauss.exe BenchMark.opts
+
+unsetenv LD_LIBRARY_PATH
+unsetenv PYTHONPATH
+
+# rm -rf $TMPDIR/*

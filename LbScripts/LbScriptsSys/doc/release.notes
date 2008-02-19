@@ -1,0 +1,13 @@
+2008-02-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbScriptsPolicy/scripts/PathStripper.py: New file.
+	* LbScriptsPolicy/scripts/StripPath.bat: New file.
+	* LbScriptsPolicy/scripts/StripPath.csh: New file.
+	* LbScriptsPolicy/scripts/StripPath.sh: New file.
+	* LbScriptsPolicy/cmt/requirements: added new script to in order to remove
+	non-valid path
+
+2008-02-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbRelease/scripts/GaussBench.csh: added clean up of the files in the used
+	directory
