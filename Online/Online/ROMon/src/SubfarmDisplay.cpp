@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.cpp,v 1.1 2008-02-11 20:00:43 frankm Exp $
+// $Id: SubfarmDisplay.cpp,v 1.2 2008-02-19 10:24:21 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.1 2008-02-11 20:00:43 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.2 2008-02-19 10:24:21 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -80,7 +80,7 @@ SubfarmDisplay::SubfarmDisplay(int argc, char** argv)   {
   m_nodes    = createSubDisplay(Position(0,hdr_height),                   Area(width,nodes_height),"Node Information");
   m_moores   = createSubDisplay(Position(0,m_nodes->bottom()-1),          Area(width,moores_height),"Moore Processes");
   m_builders = createSubDisplay(Position(0,m_moores->bottom()-1),         Area(eb_width,m_area.height-m_moores->bottom()+1),"Event builders");
-  m_holders  = createSubDisplay(Position(eb_width,m_moores->bottom()-1),  Area(eb_width,m_area.height-m_moores->bottom()+1),"Event Holders");
+  m_holders  = createSubDisplay(Position(eb_width,m_moores->bottom()-1),  Area(eb_width,m_area.height-m_moores->bottom()+1),"Event Producers");
   m_senders  = createSubDisplay(Position(2*eb_width,m_moores->bottom()-1),Area(width-2*eb_width,m_area.height-m_moores->bottom()+1),"Event Senders");
   end_update();
 }
@@ -228,8 +228,10 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
 	}
       }
     }
-    m_holders->draw_line_normal(" %-12s%9d%11d %3s %3s  ",prod_name.c_str(),prod.in,prod.out,
-				sstat[prod.st_in],sstat[prod.st_out]);
+    if ( !prod_name.empty() ) {
+      m_holders->draw_line_normal(" %-12s%9d%11d %3s %3s  ",prod_name.c_str(),prod.in,prod.out,
+				  sstat[prod.st_in],sstat[prod.st_out]);
+    }
   }
   ::memset(txt,' ',sizeof(txt));
   txt[m_area.width] = 0;
