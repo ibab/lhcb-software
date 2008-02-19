@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  :  -->
+<!--- Created : 2008-02-12 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='L0Event' >
+    <class name='L0MuonCtrlError' id='6008' author='J. Cogan' desc='L0Muon trigger controller board errors'>
+      <desc> *  representing the errors detected on a controller board.</desc>
+      <base name='KeyedObject&lt;int&gt;'/>
+      &KeyedObject;
+      <import name="Kernel/MuonTileID"/>
+      <location name="Default"  place="Trig/L0/MuonCtrlError"/>
+
+      <constructor
+        argList="int iq"
+        initList="KeyedObject&lt;int&gt;(iq),m_decoding(false),m_header(0),m_cu_bcid_error(-1),m_su_bcid_error(-1),m_bcsus_bcid_error(),m_cu_link_error(),m_su_link_error(),m_status(0),m_bcsus_status()"
+        desc="Constructor"/>
+      
+      <attribute name="decoding" type="bool" 
+        desc="data corruption flag"/>
+      <attribute name="header" type="int" 
+        desc="Error on frame header (6 bits : L0EventNumber + L0_B_ID + BoardIndex x 2 transmission channels)"/>
+
+      <attribute name="cu_bcid_error" type="int" 
+        desc="pathological CU BCID - 4 bits"/>
+      <attribute name="su_bcid_error" type="int" 
+        desc="pathological SU BCID - 4 bits"/>
+      <attribute name="bcsus_bcid_error" type="std::map&lt;int,std::pair&lt;int,int&gt; &gt;" 
+        desc="Map of BCSUs with pathological BCID - key= PU index, value = 4 bits BCID x 2 transmission channels" 
+        setMeth="FALSE" getMeth="FALSE"/>
+
+      <attribute name="cu_link_error" type="std::map&lt;int,int&gt;" 
+        desc="Map of PB with errors on CU links - key= BCSU index, value = 2 bits err. wd" 
+        setMeth="FALSE" getMeth="FALSE"/>
+      <attribute name="su_link_error" type="std::map&lt;int,int&gt;" 
+        desc="Map of PB with errors on SU links - key= BCSU index, value = 3 bits err. wd" 
+        setMeth="FALSE" getMeth="FALSE"/>
+
+      <attribute name="status" type="int" 
+        desc="Pathological status - 4 bits"/>
+      <attribute name="bcsus_status" type="std::map&lt;int,int&gt;" 
+        desc="Map of BCSUs with pathological status - key= BCSU index, value = 4 bits status"
+        setMeth="FALSE" getMeth="FALSE"/>
+
+      <method 
+        name = "isEmpty"
+        type = "bool"
+        desc = "Return true if no error was detected">
+        <code>
+          if (m_decoding) return false;
+          if (m_header>0) return false;
+
+          if (m_cu_bcid_error>=0) return false;
+          if (m_su_bcid_error>=0) return false;
+          if (m_bcsus_bcid_error.size()>0) return false;
+          
+          if (m_cu_link_error.size()>0) return false;
+          if (m_su_link_error.size()>0) return false;
+
+          if (m_status>0) return false;
+          if (m_bcsus_status.size()>0) return false;
+
+          return true;
+        </code>
+      </method>
+      
+      <method 
+        name = "setBcsu_bcid_error"
+        argList = "int ind_bcsu, int bcid1, int bcid2"
+        type = "void"
+        desc = "Add a BCSU with a pathological BCID">
+        <code>
+          m_bcsus_bcid_error[ind_bcsu]=std::pair&lt;int,int&gt;(bcid1,bcid2);
+        </code>
+      </method>
+
+      <method 
+        name = "setBcsu_status"
+        argList = "int ind_bcsu, int status"
+        type = "void"
+        desc = "Add a bcsu with a pathological STATUS">
+        <code>
+          m_bcsus_status[ind_bcsu]=status;
+        </code>
+      </method>
+
+      <method 
+        name = "setCu_link_error"
+        argList = "int ind_pb, int err"
+        type = "void"
+        desc = "Add a PB with a link error on CU">
+        <code>
+          m_cu_link_error[ind_pb]=err;
+        </code>
+      </method>
+      
+      <method 
+        name = "setSu_link_error"
+        argList = "int ind_pb, int err"
+        type = "void"
+        desc = "Add a PB with a link error on SU">
+        <code>
+          m_su_link_error[ind_pb]=err;
+        </code>
+      </method>
+            
+      <method 
+        name = "bcsu_bcid_error"
+        argList = "int ind_bcsu, int ich"
+        type = "int"
+        desc = "Return the BCSU pathological BCID">
+        <code>
+          if ( m_bcsus_bcid_error.find(ind_bcsu)!=m_bcsus_bcid_error.end()) {
+            switch (ich){
+              case 0:
+                return m_bcsus_bcid_error[ind_bcsu].first;
+              case 1:
+                return m_bcsus_bcid_error[ind_bcsu].second;
+              default:
+                return -1;
+            }
+          }
+          return -1;
+        </code>
+      </method>
+
+      <method 
+        name = "bcsu_status"
+        argList = "int ind_bcsu"
+        type = "int"
+        desc = "Return the bcsu pathological STATUS">
+        <code>
+          if ( m_bcsus_status.find(ind_bcsu)!=m_bcsus_status.end())
+           return m_bcsus_status[ind_bcsu];
+          return 0;
+        </code>
+      </method>
+
+      <method 
+        name = "cu_link_error"
+        argList = "int ind_pb"
+        type = "int"
+        desc = "Return the PB error on CU">
+        <code>
+          if ( m_cu_link_error.find(ind_pb)!=m_cu_link_error.end())
+           return m_cu_link_error[ind_pb];
+          return 0;
+        </code>
+      </method>
+      
+      <method 
+        name = "su_link_error"
+        argList = "int ind_pb"
+        type = "int"
+        desc = "Return the PB error on SU">
+        <code>
+          if ( m_su_link_error.find(ind_pb)!=m_su_link_error.end())
+           return m_su_link_error[ind_pb];
+          return 0;
+        </code>
+      </method>
+      
+    </class>  
+  </package>
+</gdd>

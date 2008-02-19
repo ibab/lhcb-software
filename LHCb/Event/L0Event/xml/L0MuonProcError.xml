@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  :  -->
+<!--- Created : 2008-02-12 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='L0Event' >
+    <class name='L0MuonProcError' id='6007' author='J. Cogan' desc='L0Muon trigger processing board errors'>
+      <desc> *  representing the errors detected on a processing board.</desc>
+      <base name='KeyedObject&lt;LHCb::MuonTileID&gt;'/>
+      &KeyedObject;
+      <import name="Kernel/MuonTileID"/>
+      <location name="Default"  place="Trig/L0/MuonProcError"/>
+
+      <constructor
+        argList="LHCb::MuonTileID mid, int ib"
+        initList="KeyedObject&lt;LHCb::MuonTileID&gt;(mid), m_board_index (ib), m_decoding(false), m_header(0),m_bcsu_bcid_error(-1),m_pus_bcid_error(),m_bcsu_link_error(0),m_pus_opt_link_error(),m_pus_par_link_error(),m_pus_ser_link_error(),m_bcsu_status(0),m_pus_status()"
+        desc="Constructor"/>
+      
+      <attribute name="board_index" type="int" 
+        desc="Index of the processing board"/>
+      <attribute name="decoding" type="bool" 
+        desc="data corruption flag"/>
+      <attribute name="header" type="int" 
+        desc="Error on frame header (6 bits : L0EventNumber + L0_B_ID + BoardIndex x 2 transmission channels)"/>
+
+      <attribute name="bcsu_bcid_error" type="int" 
+        desc="pathological BCSU BCID - 4 bits"/>
+      <attribute name="pus_bcid_error" type="std::map&lt;int,int&gt;" 
+        desc="Map of PUs with pathological BCID - key= PU index, value = 4 bits BCID" 
+        setMeth="FALSE" getMeth="FALSE"/>
+
+      <attribute name="bcsu_link_error" type="int" 
+        desc="Error on BCSU input links (4 bits for H types + 4 bits for F types)"/>
+      <attribute name="pus_opt_link_error" type="std::map&lt;int,int&gt;" 
+        desc="Map of PUs with errors on opt. links - key= PU index, value = 8 bits err. wd" 
+        setMeth="FALSE" getMeth="FALSE"/>
+      <attribute name="pus_par_link_error" type="std::map&lt;int,int&gt;" 
+        desc="Map of PUs with errors on par. links - key= PU index, value = 7 bits err. wd"
+        setMeth="FALSE" getMeth="FALSE"/>
+      <attribute name="pus_ser_link_error" type="std::map&lt;int,int&gt;" 
+        desc="Map of PUs with errors on ser. links - key= PU index, value = 6 bits err. wd"
+        setMeth="FALSE" getMeth="FALSE"/>
+
+      <attribute name="bcsu_status" type="int" 
+        desc="Pathological BCSU status - 4 bits"/>
+      <attribute name="pus_status" type="std::map&lt;int,int&gt;" 
+        desc="Map of PUs with pathological status - key= PU index, value = 4 bits status"
+        setMeth="FALSE" getMeth="FALSE"/>
+
+      <method 
+        name = "isEmpty"
+        type = "bool"
+        desc = "Return true if no error was detected">
+        <code>
+          if (m_decoding) return false;
+          if (m_header>0) return false;
+
+          if (m_bcsu_bcid_error>=0) return false;
+          if (m_pus_bcid_error.size()>0) return false;
+          
+          if (m_bcsu_link_error>0) return false; 
+          if (m_pus_opt_link_error.size()>0) return false;
+          if (m_pus_par_link_error.size()>0) return false;
+          if (m_pus_ser_link_error.size()>0) return false;
+
+          if (m_bcsu_status>0) return false;
+          if (m_pus_status.size()>0) return false;
+
+          return true;
+        </code>
+      </method>
+      
+      <method 
+        name = "setPu_bcid_error"
+        argList = "int ind_pu, int bcid"
+        type = "void"
+        desc = "Add a pu with a pathological BCID">
+        <code>
+          m_pus_bcid_error[ind_pu]=bcid;
+        </code>
+      </method>
+
+      <method 
+        name = "setPu_status"
+        argList = "int ind_pu, int status"
+        type = "void"
+        desc = "Add a pu with a pathological STATUS">
+        <code>
+          m_pus_status[ind_pu]=status;
+        </code>
+      </method>
+
+      <method 
+        name = "setPu_opt_link_error"
+        argList = "int ind_pu, int opt_link"
+        type = "void"
+        desc = "Add a pu with a opt link error">
+        <code>
+          m_pus_opt_link_error[ind_pu]=opt_link;
+        </code>
+      </method>
+      
+      <method 
+        name = "setPu_ser_link_error"
+        argList = "int ind_pu, int ser_link"
+        type = "void"
+        desc = "Add a pu with a ser link error">
+        <code>
+          m_pus_ser_link_error[ind_pu]=ser_link;
+        </code>
+      </method>
+      
+      <method 
+        name = "setPu_par_link_error"
+        argList = "int ind_pu, int par_link"
+        type = "void"
+        desc = "Add a pu with a par link error">
+        <code>
+          m_pus_par_link_error[ind_pu]=par_link;
+        </code>
+      </method>
+      
+      <method 
+        name = "pu_bcid_error"
+        argList = "int ind_pu"
+        type = "int"
+        desc = "Return the pu pathological BCID">
+        <code>
+          if ( m_pus_bcid_error.find(ind_pu)!=m_pus_bcid_error.end())
+           return m_pus_bcid_error[ind_pu];
+          return -1;
+        </code>
+      </method>
+
+      <method 
+        name = "pu_status"
+        argList = "int ind_pu"
+        type = "int"
+        desc = "Return the pu pathological STATUS">
+        <code>
+          if ( m_pus_status.find(ind_pu)!=m_pus_status.end())
+           return m_pus_status[ind_pu];
+          return 0;
+        </code>
+      </method>
+
+      <method 
+        name = "pu_opt_link_error"
+        argList = "int ind_pu"
+        type = "int"
+        desc = "Return the pu opt link error">
+        <code>
+          if ( m_pus_opt_link_error.find(ind_pu)!=m_pus_opt_link_error.end())
+           return m_pus_opt_link_error[ind_pu];
+          return 0;
+        </code>
+      </method>
+      
+      <method 
+        name = "pu_ser_link_error"
+        argList = "int ind_pu"
+        type = "int"
+        desc = "Return the pu ser link error">
+        <code>
+          if ( m_pus_ser_link_error.find(ind_pu)!=m_pus_ser_link_error.end())
+           return m_pus_ser_link_error[ind_pu];
+          return 0;
+        </code>
+      </method>
+      
+      <method 
+        name = "pu_par_link_error"
+        argList = "int ind_pu"
+        type = "int"
+        desc = "Return the pu par link error">
+        <code>
+          if ( m_pus_par_link_error.find(ind_pu)!=m_pus_par_link_error.end())
+           return m_pus_par_link_error[ind_pu];
+          return 0;
+        </code>
+      </method>
+      
+    </class>  
+  </package>
+</gdd>

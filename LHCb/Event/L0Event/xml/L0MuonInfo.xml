@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  :  -->
+<!--- Created : 2008-02-12 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='L0Event' >
+    <class name='L0MuonInfo' id='6009' author='J. Cogan' desc='L0Muon information'>
+      <desc> *  Contains info on the L0Muon trigger.</desc>
+      <base name='DataObject'/>
+      &DataObject;
+      <location name="Default"  place="Trig/L0/MuonInfo"/>
+
+      <constructor
+        argList="int L0EventNumber, int L0_B_Id"
+        initList="m_L0EventNumber(L0EventNumber), m_L0_B_Id(L0_B_Id)"
+        desc="Constructor"/>
+      
+      <attribute name="L0EventNumber" type="int" 
+        desc="Reference L0EventNumber used in the error detection"/>
+      <attribute name="L0_B_Id" type="int" 
+        desc="Reference L0_B_Id used in the error detection"/>
+       
+    </class>  
+  </package>
+</gdd>
