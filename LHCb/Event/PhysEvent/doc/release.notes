@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.134 2008-02-15 07:53:23 cattanem Exp $
+! $Id: release.notes,v 1.135 2008-02-19 15:25:22 ibelyaev Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+
+! 2008-02-19 - Vanya BELYAEV
+
+ - Particle.xml
+     : add the predefiend enum Chi2OfDirectionConstrainedFit
 
 !======================== PhysEvent v11r6 2008-02-15 ========================
 ! 2008-02-15 - Marco Cattaneo
