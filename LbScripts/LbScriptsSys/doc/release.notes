@@ -1,6 +1,7 @@
 2008-02-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* LbScriptsPolicy/scripts/PathStripper.py: New file.
+	* LbScriptsPolicy/scripts/PathStripper.py: New file. Fixed problems with file
+	output.
 	* LbScriptsPolicy/scripts/StripPath.bat: New file.
 	* LbScriptsPolicy/scripts/StripPath.csh: New file.
 	* LbScriptsPolicy/scripts/StripPath.sh: New file.
