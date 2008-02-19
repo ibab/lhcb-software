@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: selection.py,v 1.6 2007-11-27 13:41:38 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
-# =============================================================================
 ## @file
 #  Simple script to create proper selection files to buils relations
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -44,6 +40,8 @@ if "__main__" == __name__ :
     classes += [ Rels.RelW2D ('LHCb::Particle' , 'LHCb::MCParticle' ,'double' ) ]
     classes += [ Rels.Rel2D  ('LHCb::Particle' , 'LHCb::MCParticle'           ) ]
     
+    classes += [ Rels.RelW2D ('LHCb::L0CaloCandidate' , 'LHCb::MCParticle'  , 'double' ) ]
+    
     includes += ['Event/Particle.h'      ]
     includes += ['Event/MCParticle.h'    ]
     includes += ['Event/MCVertex.h'      ]
@@ -55,6 +53,7 @@ if "__main__" == __name__ :
     includes += ['Event/GenCollision.h'  ]
     includes += ['Event/RecVertex.h'     ]
     includes += ['HepMC/GenParticle.h'   ]
+    includes += ['Event/L0CaloCandidate.h' ]
     
     # make XML and C++ selction files:
     Rels.prepare ( classes , includes ) 
