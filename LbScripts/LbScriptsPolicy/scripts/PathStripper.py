@@ -33,7 +33,7 @@ def _check_output_options_cb(option, opt_str, value, parser):
         else : 
             parser.values.mktemp = True
             fd, outname = mkstemp()
-            parser.values.output = fdopen(fd,"w")
+            parser.values.output = fdopen(fd, "w")
             print outname
     elif opt_str == "--output" or opt_str == "-o" :
         if parser.values.mktemp:

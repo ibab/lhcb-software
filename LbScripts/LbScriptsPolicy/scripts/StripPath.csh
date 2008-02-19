@@ -1,19 +1,9 @@
 
+set scriptdir=$LBSCRIPTSPOLICYROOT/scripts
 
-set pth=`python $LBSCRIPTSPOLICYROOT/scripts/PathStripper.py $PATH`
-setenv PATH $pth
+set tmpfile = `python $scriptdir/PathStripper.py --shell=csh --mktemp -e PATH -e LD_LIBRARY_PATH -e PYTHONPATH -e JOBOPTSEARCHPATH -e HPATH `
+source $tmpfile
+rm -f $tmpfile
+unset tmpfile
+unset scriptdir
 
-set pth=`python $LBSCRIPTSPOLICYROOT/scripts/PathStripper.py $LD_LIBRARY_PATH`
-setenv LD_LIBRARY_PATH $pth
-
-set pth=`python $LBSCRIPTSPOLICYROOT/scripts/PathStripper.py $PYTHONPATH`
-setenv PYTHONPATH $pth
-
-set pth=`python $LBSCRIPTSPOLICYROOT/scripts/PathStripper.py $JOBOPTSEARCHPATH`
-setenv JOBOPTSEARCHPATH $pth
-
-set pth=`python $LBSCRIPTSPOLICYROOT/scripts/PathStripper.py $HPATH`
-setenv HPATH $pth
-
-
-unset pth
