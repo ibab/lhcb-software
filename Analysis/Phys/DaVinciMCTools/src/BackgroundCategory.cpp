@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.34 2008-02-18 07:58:35 pkoppenb Exp $
+// $Id: BackgroundCategory.cpp,v 1.35 2008-02-19 16:40:09 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -95,45 +95,46 @@ const LHCb::MCParticle* BackgroundCategory::origin(const LHCb::Particle* reconst
     Exception("Got NULL pointer").ignore();
   }
   
-	const LHCb::MCParticle* tmpmother;
-	const LHCb::MCParticle* newcommonmother;
+  //const LHCb::MCParticle* tmpmother;
+  //const LHCb::MCParticle* newcommonmother;
 
-	int backcategory = category(reconstructed_mother);
+  int backcategory = category(reconstructed_mother);
 
-	if (backcategory < 60) {
-		verbose() << "Getting the mother step 1" << endmsg;
-		if (m_commonMother) {
-			verbose() << "Getting the mother step 2" << endmsg;
-			if ( m_commonMother->mother() ) {
+  if (backcategory < 60) {
+	verbose() << "Getting the mother step 1" << endmsg;
+	if (m_commonMother) {
+		/*verbose() << "Getting the mother step 2" << endmsg;
+		if ( m_commonMother->mother() ) {
 
-				verbose() << "Getting the mother step 3" << endmsg;
+			verbose() << "Getting the mother step 3" << endmsg;
 
-				tmpmother = m_commonMother;
+			tmpmother = m_commonMother;
 
-				verbose() << "Getting the mother step 4" << endmsg;
+			verbose() << "Getting the mother step 4" << endmsg;
 
-				do {
-					verbose() << "Getting the mother step 5" << endmsg;
-					newcommonmother = tmpmother;
-					verbose() << "Getting the mother step 6" << endmsg;
-					tmpmother = newcommonmother->mother(); 
-					verbose() << "Getting the mother step 7" << endmsg;
-				} while (tmpmother != 0 && newcommonmother->particleID().abspid() != reconstructed_mother->particleID().abspid()); 
-				verbose() << "Getting the mother step 8" << endmsg;
+			do {
+				verbose() << "Getting the mother step 5" << endmsg;
+				newcommonmother = tmpmother;
+				verbose() << "Getting the mother step 6" << endmsg;
+				tmpmother = newcommonmother->mother(); 
+				verbose() << "Getting the mother step 7" << endmsg;
+			} while (tmpmother != 0 && newcommonmother->particleID().abspid() != reconstructed_mother->particleID().abspid()); 
+			verbose() << "Getting the mother step 8" << endmsg;
 
-				return newcommonmother;
-			} else	return m_commonMother; 
-		} else return 0;
+			return newcommonmother;
+		} else	return m_commonMother; */
+		return m_commonMother;
 	} else return 0;
+  } else return 0;
 }
 //=============================================================================
 bool BackgroundCategory::isStable(int pid)
   //A cheap and cheerful list of particles considered stable for the purposes of 
   //this tool. Not the cleverest way to do this, but works OK.
 {
-  if ( pid < 0 ) Error("isStable acts on abspid");
-  
-	if ( pid == 11 || //electron
+  if ( pid < 0 ) pid *= -1;
+
+  if ( pid == 11 || //electron
        pid == 22 || //photon
        pid == 13 || //muon
        pid == 12 || //neutrinos

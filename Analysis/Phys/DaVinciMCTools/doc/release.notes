@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.203 2008-02-18 07:58:35 pkoppenb Exp $
+! $Id: release.notes,v 1.204 2008-02-19 16:39:58 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-02-19 - V. Gligorov
+ - modified protection in isStable()
+ - modified origin() to return lowest common mother as advertised.  
 
 ! 2008-02-18 - Patrick Koppenburg
  - src/BackgroundCategory : indent properly.
