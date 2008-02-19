@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.44 2008-02-11 10:05:33 ibelyaev Exp $ 
+! $Id: release.notes,v 1.45 2008-02-19 13:16:25 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,7 +14,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
-!============================ LoKiGen v7r1 2008-02-11 =========================
+!============================ LoKiGen v7r1 2008-02-19 =========================
+
+! 2008-02-19 - Vanya BELYAEV
+ - All *Hybrid* stuff:  
+     everything is extended for "functional" functors also
+
 
 ! 2008-02-11 - Vanya BELYAEV
  - many small fixes for new Gaudi/ROOT/Reflex 

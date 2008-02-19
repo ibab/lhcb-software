@@ -1,4 +1,4 @@
-// $Id: IGenHybridFactory.cpp,v 1.1 2007-07-25 15:07:58 ibelyaev Exp $
+// $Id: IGenHybridFactory.cpp,v 1.2 2008-02-19 13:16:25 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -28,7 +28,7 @@
 // ============================================================================
 namespace 
 {
-  const InterfaceID IID_IGenHybridFactory( "LoKi::IGenHybridFactory" , 1 , 0 ) ;
+  const InterfaceID IID_IGenHybridFactory( "LoKi::IGenHybridFactory" , 2 , 0 ) ;
 }
 // ============================================================================
 // Return the unique interface ID

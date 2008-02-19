@@ -1,4 +1,4 @@
-// $Id: GenHybridEngine.h,v 1.1 2007-07-25 15:07:57 ibelyaev Exp $
+// $Id: GenHybridEngine.h,v 1.2 2008-02-19 13:16:25 ibelyaev Exp $
 // ===========================================================================
 #ifndef LOKI_GENHYBRIDENGINE_H 
 #define LOKI_GENHYBRIDENGINE_H 1
@@ -37,6 +37,10 @@ namespace LoKi
       GenEngine () ;
       /// destructor 
       virtual ~GenEngine( );
+    public:
+      // ======================================================================
+      // predicates 
+      // ======================================================================
       /// add the cut 
       StatusCode process 
       ( const std::string&          name , 
@@ -45,6 +49,11 @@ namespace LoKi
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::GVCuts&  cut  ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // functions 
+      // ======================================================================
       /// add the function 
       StatusCode process 
       ( const std::string&          name , 
@@ -53,6 +62,72 @@ namespace LoKi
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::GVFunc&  func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // maps 
+      // ======================================================================
+      /// add the map 
+      StatusCode process 
+      ( const std::string&          name , 
+        const LoKi::Types::GMaps&   func ) const ;
+      /// add the map
+      StatusCode process 
+      ( const std::string&          name , 
+        const LoKi::Types::GVMaps&  func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // pipes
+      // ======================================================================
+      /// add the pipe
+      StatusCode process 
+      ( const std::string&          name , 
+        const LoKi::Types::GPipes&  func ) const ;
+      /// add the pipe 
+      StatusCode process 
+      ( const std::string&          name , 
+        const LoKi::Types::GVPipes& func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // fun-vals
+      // ======================================================================
+      /// add the fun-val
+      StatusCode process 
+      ( const std::string&            name , 
+        const LoKi::Types::GFunVals&  func ) const ;
+      /// add the fun-val
+      StatusCode process 
+      ( const std::string&            name , 
+        const LoKi::Types::GVFunVals& func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // elements
+      // ======================================================================
+      /// add the element
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::GElements&  func ) const ;
+      /// add the element
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::GVElements& func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // sources
+      // ======================================================================
+      /// add the source  
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::GSources&   func ) const ;
+      /// add the source 
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::GVSources&  func ) const ;
+      // ======================================================================
     } ;  
   } // end of namespace LoKi::Hybrid 
 } // end of namespace LoKi

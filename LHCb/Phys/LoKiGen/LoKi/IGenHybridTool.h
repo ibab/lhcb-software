@@ -1,4 +1,4 @@
-// $Id: IGenHybridTool.h,v 1.2 2007-12-01 13:52:13 ibelyaev Exp $
+// $Id: IGenHybridTool.h,v 1.3 2008-02-19 13:16:25 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IGENHYBRIDTOOL_H 
 #define LOKI_IGENHYBRIDTOOL_H 1
@@ -42,18 +42,73 @@ namespace LoKi
     /// Return the unique interface ID
     static const InterfaceID& interfaceID() ;
   public:
+    // ========================================================================
+    // predicates:
+    // ========================================================================
     /// set the C++ predicate for HepMC::GenParticle
     virtual void set ( const LoKi::Types::GCuts&   cut ) = 0 ;    
     /// set the C++ predicate for HepMC::GenVertex
     virtual void set ( const LoKi::Types::GVCuts&  cut ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // functions
+    // ========================================================================
     /// set the C++ function for HepMC::GenParticle 
     virtual void set ( const LoKi::Types::GFunc&   cut ) = 0 ;
     /// set the C++ function for HepMC::GenVertex
     virtual void set ( const LoKi::Types::GVFunc&  cut ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // maps
+    // ========================================================================
+    /// set the C++ function for HepMC::GenParticle 
+    virtual void set ( const LoKi::Types::GMaps&   cut ) = 0 ;
+    /// set the C++ function for HepMC::GenVertex
+    virtual void set ( const LoKi::Types::GVMaps&  cut ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // pipes
+    // ========================================================================
+    /// set the C++ function for HepMC::GenParticle 
+    virtual void set ( const LoKi::Types::GPipes&   cut ) = 0 ;
+    /// set the C++ function for HepMC::GenVertex
+    virtual void set ( const LoKi::Types::GVPipes&  cut ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // fun-vals
+    // ========================================================================
+    /// set the C++ function for HepMC::GenParticle 
+    virtual void set ( const LoKi::Types::GFunVals&   cut ) = 0 ;
+    /// set the C++ function for HepMC::GenVertex
+    virtual void set ( const LoKi::Types::GVFunVals&  cut ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // elements
+    // ========================================================================
+    /// set the C++ function for HepMC::GenParticle 
+    virtual void set ( const LoKi::Types::GElements&   cut ) = 0 ;
+    /// set the C++ function for HepMC::GenVertex
+    virtual void set ( const LoKi::Types::GVElements&  cut ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // sources
+    // ========================================================================
+    /// set the C++ function for HepMC::GenParticle 
+    virtual void set ( const LoKi::Types::GSources&   cut ) = 0 ;
+    /// set the C++ function for HepMC::GenVertex
+    virtual void set ( const LoKi::Types::GVSources&  cut ) = 0 ;
+    // ========================================================================
   protected:
-    /// destructor : virtual and protected 
-    virtual ~IGenHybridTool() ;
-  private:
+    // ========================================================================
+    // destructor : virtual and protected 
+    virtual ~IGenHybridTool() ; ///< destructor : virtual and protected 
+    // ========================================================================
   };
   // ==========================================================================
 } // end of namespace LoKi 

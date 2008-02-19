@@ -1,4 +1,4 @@
-// $Id: GenHybridEngineActor.h,v 1.1 2007-07-25 15:07:57 ibelyaev Exp $
+// $Id: GenHybridEngineActor.h,v 1.2 2008-02-19 13:16:25 ibelyaev Exp $
 // ===========================================================================
 #ifndef LOKI_MCCUTSHOLDER_H 
 #define LOKI_MCCUTSHOLDER_H 1
@@ -30,12 +30,18 @@ namespace LoKi
     class GenEngineActor
     { 
     public:
+      // ======================================================================
       // get the static instance 
       static GenEngineActor& instance() ;
       /// connect the hybrid tool for code translation 
       StatusCode connectTool (       LoKi::IGenHybridTool* tool ) ;
       /// disconnect the tool 
       StatusCode releaseTool ( const LoKi::IGenHybridTool* tool ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // predicates 
+      // ======================================================================
       /// propagate the cut to the tool 
       StatusCode process
       ( const std::string&          name , 
@@ -44,14 +50,85 @@ namespace LoKi
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::GVCuts&  cut  ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // functions 
+      // ======================================================================
       /// propagate the function to the tool 
       StatusCode process
-    ( const std::string&          name , 
-      const LoKi::Types::GFunc&   func ) const ;
+      ( const std::string&          name , 
+        const LoKi::Types::GFunc&   func ) const ;
       /// propagate the function to the tool 
       StatusCode process
       ( const std::string&          name , 
         const LoKi::Types::GVFunc&  func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // maps 
+      // ======================================================================
+      /// propagate the map to the tool 
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::GMaps&   func ) const ;
+      /// propagate the map to the tool 
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::GVMaps&  func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // pipes
+      // ======================================================================
+      /// propagate the pipe to the tool 
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::GPipes&  func ) const ;
+      /// propagate the pipe to the tool 
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::GVPipes& func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // fun-vals 
+      // ======================================================================
+      /// propagate the fun-val to the tool 
+      StatusCode process
+      ( const std::string&            name , 
+        const LoKi::Types::GFunVals&  func ) const ;
+      /// propagate the fun-val to the tool 
+      StatusCode process
+      ( const std::string&            name , 
+        const LoKi::Types::GVFunVals& func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // elements
+      // ======================================================================
+      /// propagate the element to the tool 
+      StatusCode process
+      ( const std::string&             name , 
+        const LoKi::Types::GElements&  func ) const ;
+      /// propagate the element to the tool 
+      StatusCode process
+      ( const std::string&             name , 
+        const LoKi::Types::GVElements& func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // sources 
+      // ======================================================================
+      /// propagate the source to the tool 
+      StatusCode process
+      ( const std::string&            name , 
+        const LoKi::Types::GSources&  func ) const ;
+      /// propagate the source to the tool 
+      StatusCode process
+      ( const std::string&            name , 
+        const LoKi::Types::GVSources& func ) const ;
+      // ======================================================================
     protected:
       /// Standard constructor
       GenEngineActor() ;

@@ -1,4 +1,4 @@
-// $Id: GenHybridEngineActor.cpp,v 1.1 2007-07-25 15:07:57 ibelyaev Exp $
+// $Id: GenHybridEngineActor.cpp,v 1.2 2008-02-19 13:16:25 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -76,7 +76,7 @@ StatusCode LoKi::Hybrid::GenEngineActor::releaseTool
     m_tool = 0 ;
     return LoKi::Report::Error
       ("LoKi::Hybrid::GenEngineActor::releaseTool(): mismatch in tools " ) ;
-  } ;
+  } 
   // nullify the pointer 
   m_tool = 0 ;
   //
@@ -100,6 +100,8 @@ StatusCode LoKi::Hybrid::GenEngineActor::connectTool
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
+// predicates
+// ============================================================================
 // propagate the cut to the tool 
 // ============================================================================
 StatusCode LoKi::Hybrid::GenEngineActor::process
@@ -111,6 +113,8 @@ StatusCode LoKi::Hybrid::GenEngineActor::process
 StatusCode LoKi::Hybrid::GenEngineActor::process
 ( const std::string&          name , 
   const LoKi::Types::GVCuts&  cut  ) const { return _add ( name , cut ) ; }
+// ============================================================================
+// functions 
 // ============================================================================
 // propagate the function to the tool 
 // ============================================================================
@@ -124,7 +128,76 @@ StatusCode LoKi::Hybrid::GenEngineActor::process
 ( const std::string&          name , 
   const LoKi::Types::GVFunc&  func ) const { return _add ( name , func ) ; }
 // ============================================================================
-
+// maps
+// ============================================================================
+// propagate the map to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::GenEngineActor::process
+( const std::string&          name , 
+  const LoKi::Types::GMaps&   func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// propagate the map to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::GenEngineActor::process
+( const std::string&          name , 
+  const LoKi::Types::GVMaps&  func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// pipes
+// ============================================================================
+// propagate the pipe to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::GenEngineActor::process
+( const std::string&          name , 
+  const LoKi::Types::GPipes&   func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// propagate the pipe  to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::GenEngineActor::process
+( const std::string&          name , 
+  const LoKi::Types::GVPipes&  func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// fun-vals
+// ============================================================================
+// propagate the fun-val to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::GenEngineActor::process
+( const std::string&            name , 
+  const LoKi::Types::GFunVals&  func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// propagate the fun-val to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::GenEngineActor::process
+( const std::string&            name , 
+  const LoKi::Types::GVFunVals& func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// elements
+// ============================================================================
+// propagate the element to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::GenEngineActor::process
+( const std::string&             name , 
+  const LoKi::Types::GElements&  func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// propagate the element to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::GenEngineActor::process
+( const std::string&             name , 
+  const LoKi::Types::GVElements& func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// sources
+// ============================================================================
+// propagate the source to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::GenEngineActor::process
+( const std::string&             name , 
+  const LoKi::Types::GSources&  func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// propagate the source to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::GenEngineActor::process
+( const std::string&             name , 
+  const LoKi::Types::GVSources& func ) const { return _add ( name , func ) ; }
+// ============================================================================
 
 // ============================================================================
 // The END 
