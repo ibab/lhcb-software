@@ -7,29 +7,55 @@
 //This is needed to make the Muon Tracks
 
 RecoMUONSeq.Members += { "AlignMuonRec", "TrackEventFitter/MuonTrackFitter"};
+RecoMUON.OutputLevel = 5;
 
-AlignMuonRec.Bfield="true";
+AlignMuonRec.BField = true;
 AlignMuonRec.CloneKiller=true;
 AlignMuonRec.OutputLevel = 5;
 
-RecoMUON.OutputLevel = 5;
+//===============================
+// To fill the ntuple add "ProcessPhase/Align" between  "ProcessPhase/Check" and  
+// "ProcessPhase/Output" in BrunelSequencer.Members in $BRUNLEOPTS/Brunel.opts and 
+// uncomment the following lines
+
+// AlignMuonSeq.Members += {"MuonRead" };
+// AlignMuonSeq.OutputLevel = 5;
+// MuonRead.MuonTracksName = "/Event/Rec/Muon/MuonsTrackForAlignment"; 
+// MuonRead.OutputLevel = 5;
+
+//===============================
+// To store the states after the track fit in the dst file substitue this line
+// OutputDSTSeq.Members += { "TrackToDST" } in $BRUNELOPTS/DstContents.opts with
+// the following lines
+
+// OutputDSTSeq.Members += { "TrackToDST/MuonTrackToDST"};
+// MuonTrackToDST.TracksInContainer      =   "Rec/Muon/MuonsTrackForAlignment";
+// MuonTrackToDST.StoreAllStates = true;
+// MuonTrackToDST.OutputLevel = 5;
+
+// and add "MuonTrackFitter" in the DstWriter.RequireAlgs
 
 //============================================
 //This is needed to fit the Muon Tracks
 
-MuonTrackFitter.TracksInContainer = "/Event/Rec/Muon/MuonsForAlignment";
+MuonTrackFitter.TracksInContainer = "/Event/Rec/Muon/MuonsTrackForAlignment";
 MuonTrackFitter.OutputLevel = 5;
 MuonTrackFitter.Fitter.OutputLevel = 5;
 
-MuonTrackFitter.Fitter.ErrorP = {0., 1e-6};
-MuonTrackFitter.Fitter.ErrorX2 =   100000 ;
-MuonTrackFitter.Fitter.ErrorY2 = 10000000 ;
+MuonTrackFitter.Fitter.ErrorP   = {0., 1e-6};
+MuonTrackFitter.Fitter.ErrorX2  =   100000 ;
+MuonTrackFitter.Fitter.ErrorY2  = 10000000 ;
 MuonTrackFitter.Fitter.ErrorTx2 = 0.01 ;
 MuonTrackFitter.Fitter.ErrorTy2 = 0.01 ;
 
-MuonTrackFitter.Fitter.MaxNumberOutliers =0 ;
-MuonTrackFitter.Fitter.StatesAtMeasZPos = true ;
-MuonTrackFitter.Fitter.StateAtBeamLine=false;
+MuonTrackFitter.Fitter.ApplyMaterialCorrections = true ;
+MuonTrackFitter.Extrapolator.ApplyMultScattCorr = true;
+MuonTrackFitter.Extrapolator.ApplyEnergyLossCorr = true;
+MuonTrackFitter.Extrapolator.ApplyElectronEnergyLossCorr = true;
+
+
+MuonTrackFitter.Fitter.MaxNumberOutliers = 0 ;
+MuonTrackFitter.Fitter.StateAtBeamLine   = false;
 
 DstWriter.ItemList += 
 {
