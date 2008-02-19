@@ -1,6 +1,4 @@
-// $Id: RelationUtils.cpp,v 1.7 2007-03-23 16:40:18 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// $Id: RelationUtils.cpp,v 1.8 2008-02-19 15:26:10 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -19,8 +17,6 @@
 // ============================================================================
 #include "Relations/RelationUtils.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *  
  *  Implementation file for method from namespace Relation
@@ -29,11 +25,8 @@
  *  @date 28/01/2002 
  */
 // ============================================================================
-
-// ============================================================================
-/**
- *  Function to create the unique relation 
- *  interfaceID from interface name, CLIDs and types 
+/* Function to create the unique relation 
+ * interfaceID from interface name, CLIDs and types 
  *  
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date   28/01/2002
@@ -43,18 +36,16 @@
 // ============================================================================
 InterfaceID Relations::interfaceID 
 ( const std::string&  name     ) 
-{ return InterfaceID( name.c_str() , 1 , 0  ); };
-
+{ return InterfaceID( name.c_str() , 1 , 0  ); }
 // ============================================================================
-/**
- *  function to create the uniqie relation 
+/*  Function to create the uniqie relation 
  *  clid from object name, CLIDs and types 
  *  
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date   28/01/2002
  * 
  *  @param name       object name
-  */
+ */
 // ============================================================================
 CLID        Relations::clid        
 ( const std::string&  name     )
@@ -65,11 +56,9 @@ CLID        Relations::clid
   // set ObjectList   bit to NULL 
   cl = ~CLID_ObjectList   & cl ;
   return cl ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** Simple function to convert CLID (Gaudi unique class identifier) 
+/*  Simple function to convert CLID (Gaudi unique class identifier) 
  *  to GUID (POOL unique class identifier)
  *
  *  The actual code is stollen from Markus Frank's lines 
@@ -86,7 +75,7 @@ std::string Relations::guid ( const CLID& clID )
   char clid_txt[64];
   sprintf ( clid_txt ,"%08X-0000-0000-0000-000000000000", (int) clID );
   return std::string ( clid_txt , 64  ) ;
-};
+}
 // ============================================================================
 /** Simple function to convers CLID (Gaudi unique class identifier) 
  *  to GUID (POOL unique class identifier)
@@ -101,8 +90,8 @@ std::string Relations::guid ( const CLID& clID )
  */
 // ============================================================================
 std::string Relations::guid ( const std::string& name  )
-{ return Relations::guid( Relations::clid( name ) ) ; } ;
-
+{ return Relations::guid ( Relations::clid( name ) ) ; } 
+// ============================================================================
 
 // ============================================================================
 // The End 

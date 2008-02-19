@@ -1,11 +1,4 @@
-// $Id: IRelation.h,v 1.5 2006-06-11 19:37:02 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/06/11 15:23:45  ibelyaev
-//  The major  upgrade: see doc/release.notes
-//
+// $Id: IRelation.h,v 1.6 2008-02-19 15:26:09 ibelyaev Exp $
 // ============================================================================
 #ifndef RELATIONS_IRELATION_H
 #define RELATIONS_IRELATION_H 1
@@ -161,7 +154,6 @@ protected:
   /// destructor (virtual and protected)
   virtual ~IRelation() {};
 } ;
-
 // ============================================================================
 // The End
 // ============================================================================

@@ -1,11 +1,4 @@
-// $Id: Relation.h,v 1.11 2006-06-11 19:37:02 ibelyaev Exp $
-// =============================================================================
-// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.11 $ 
-// =============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.10  2006/06/11 15:23:45  ibelyaev
-//  The major  upgrade: see doc/release.notes
-//
+// $Id: Relation.h,v 1.12 2008-02-19 15:26:09 ibelyaev Exp $
 // =============================================================================
 #ifndef RELATIONS_Relation_H
 #define RELATIONS_Relation_H 1
@@ -26,9 +19,9 @@
 #include "Relations/IRelation.h"
 #include "Relations/RelationBase.h"
 // =============================================================================
-
 namespace Relations
 {  
+  // ==========================================================================
   /** @class Relation Relation.h Relations/Relation.h
    *
    *  @brief Implementation of ordinary unidirectional relations 
@@ -51,8 +44,7 @@ namespace Relations
    *  
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   25/01/2002
-   */
-  
+   */  
   template<class FROM,class TO>
   class Relation 
     : public BaseTable 
@@ -129,55 +121,55 @@ namespace Relations
       , m_inverse_aux ( 0             ) 
     {}
     /// destructor (virtual)
-    virtual ~Relation(){};
+    virtual ~Relation(){}
   public:  // major functional methods (fast, 100% inline)
     /// retrive all relations from the object (fast,100% inline)
     inline Range i_relations ( From_ object ) const
     {
       typename Base::IP ip = m_direct.i_relations( object );
       return Range( ip.first , ip.second );
-    };
+    }
     /// retrive all relations from ALL objects (fast,100% inline)
     inline   Range        i_relations () const
     {
       typename Base::IP ip = m_direct.i_relations();
       return Range( ip.first , ip.second );
-    };
+    }
     /// make the relation between 2 objects (fast,100% inline method) 
     inline   StatusCode i_relate ( From_ object1 , To_ object2 )
     {
       StatusCode sc = m_direct.    i_relate( object1 , object2 ) ;
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
       return m_inverse_aux  -> i_relate( object2 , object1 ); 
-    } ;
+    } 
     /// remove the concrete relation between objects (fast,100% inline method)
     inline   StatusCode i_remove ( From_ object1 , To_ object2 )
     { 
       StatusCode sc = m_direct.    i_remove( object1 , object2 ) ; 
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
       return m_inverse_aux  -> i_remove( object2 , object1 );
-    };
+    }
     /// remove all relations FROM the defined object (fast,100% inline method)
     inline   StatusCode i_removeFrom ( From_ object )
     { 
       StatusCode sc = m_direct.   i_removeFrom ( object ) ; 
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
       return m_inverse_aux -> i_removeTo   ( object ) ; 
-    };
+    }
     /// remove all relations TO the defined object (fast,100% inline method) 
     inline   StatusCode i_removeTo ( To_ object )
     { 
       StatusCode sc = m_direct.    i_removeTo   ( object ) ; 
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
       return m_inverse_aux -> i_removeFrom ( object ) ; 
-    };
+    }
     /// remove ALL relations form ALL  object to ALL objects (fast,100% inline)
     inline  StatusCode i_clear() 
     { 
       StatusCode sc = m_direct.    i_clear () ; 
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
       return m_inverse_aux -> i_clear () ; 
-    };
+    }
     /// rebuild ALL relations form ALL  object to ALL objects (fast,100% inline)
     inline  StatusCode i_rebuild ()
     { 
@@ -198,7 +190,7 @@ namespace Relations
       i_sort() ;
       //
       return StatusCode::SUCCESS  ;
-    };
+    }
     /** make the relation between 2 objects (fast,100% inline method) 
      *  - Call for i_sort() is mandatory! 
      */
@@ -207,7 +199,7 @@ namespace Relations
       m_direct.i_push( object1 , object2 ) ;
       if ( 0 != m_inverse_aux ) 
       { m_inverse_aux -> i_push ( object2 , object1 ) ; }
-    } ;
+    } 
     /** (re)sort of the table 
      *   mandatory to use after i_push 
      */
@@ -243,7 +235,7 @@ namespace Relations
     {
       if ( 0 == flag ) { return i_rebuild() ; }
       return StatusCode::SUCCESS ;
-    };
+    }
   public:
     /// query the interface
     virtual StatusCode queryInterface
@@ -258,7 +250,7 @@ namespace Relations
       ///
       addRef() ;
       return StatusCode::SUCCESS ;
-    };
+    }
     /// increase the reference counter (artificial)
     virtual unsigned long addRef  () { return 1 ; }    
     /// release the reference counter (artificial)
@@ -277,7 +269,7 @@ namespace Relations
     {
       if ( 0 != m_inverse_aux ) { m_inverse_aux->i_reserve( num ) ; }
       return m_direct.i_reserve( num ) ;
-    };
+    }
   private:
     /// assignement operator is private!
     Relation& operator= ( const OwnType& copy  );
@@ -285,9 +277,8 @@ namespace Relations
     Direct   m_direct  ;  ///< the holder of all direct relations
     Inverse* m_inverse_aux ;  ///< the pointer to inverse table
   };
-
-}; // end of namespace Relations
-
+  // ==========================================================================
+} // end of namespace Relations
 // =============================================================================
 // The End
 // =============================================================================

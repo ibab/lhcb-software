@@ -1,11 +1,4 @@
-// $Id: Get.h,v 1.4 2007-03-23 16:40:17 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/06/11 15:23:45  ibelyaev
-//  The major  upgrade: see doc/release.notes
-//
+// $Id: Get.h,v 1.5 2008-02-19 15:26:09 ibelyaev Exp $
 // ============================================================================
 #ifndef RELATIONS_GET_H 
 #define RELATIONS_GET_H 1
@@ -21,8 +14,6 @@
 #include "Relations/RelationTypeTraits.h"
 #include "Relations/RelationWeightedTypeTraits.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  The collection of trivial utilities to manipulate with 
@@ -33,9 +24,9 @@
  *  @date 2006-02-21
  */
 // ============================================================================
-
 namespace Relations 
 {  
+  // ==========================================================================
   /** simple function to extract all values of "TO" 
    *  from relation Ranges into the plain container
    *  
@@ -83,8 +74,8 @@ namespace Relations
       ++output;                   // ADVANCE OUTPUT ITERATOR
     }
     return output ;
-  } ;
-  
+  } 
+  // ==========================================================================
   /** simple function to extract all values of "TO" 
    *  from relation Ranges into the plain container
    *  
@@ -118,8 +109,8 @@ namespace Relations
   inline OUTPUT getTo
   ( LINKS  links  , 
     OUTPUT output )
-  { return getTo ( links.begin() , links.end() , output ) ; } ;
-  
+  { return getTo ( links.begin() , links.end() , output ) ; } 
+  // ==========================================================================  
   /** simple function to extract all values of "WEIGHT" 
    *  from relation Ranges into the plain container
    *  
@@ -164,8 +155,8 @@ namespace Relations
       ++output;                     // ADVANCE OUTPUT ITERATOR
     }
     return output ;
-  } ;
-  
+  } 
+  // ==========================================================================  
   /** Simple function to extract all values of "WEIGHT" 
    *  from relation Ranges into the plain container
    *  
@@ -199,8 +190,8 @@ namespace Relations
   inline OUTPUT getWeight
   ( LINKS  links  , 
     OUTPUT output )
-  { return getWeight ( links.begin() , links.end() , output ) ; } ;
-
+  { return getWeight ( links.begin() , links.end() , output ) ; } 
+  // ==========================================================================
   /** Trivial algorithm whcih allow to accumulate the
    *  "WEIGHT" from the relations ranges 
    * 
@@ -232,8 +223,8 @@ namespace Relations
     for ( ; first != last ; ++first )   
     { weight = _plus( weight , first->weight() ) ; }     // ACCUMULATE the weight 
     return weight ;
-  } ;
-
+  } 
+  // ==========================================================================
   /** Simple function to extract all *UNIQUE* values of "TO" 
    *  from relation Ranges into the plain container
    *  
@@ -297,7 +288,8 @@ namespace Relations
     if ( begin != end ) { cont.erase ( begin , end ) ; }
     // return the new container size 
     return cont.size() - size ;
-  } ;
+  } 
+  // ==========================================================================
   /** Simple function to extract all *UNIQUE* values of "TO" 
    *  from relation Ranges into the "std::set" container 
    *  (It is a partial specialization of gfeneric getUniqueTo function)
@@ -345,7 +337,8 @@ namespace Relations
     for ( ; first != last ; ++first ) { cont.insert( first->to() ) ; }
     // return number of newly added elements 
     return cont.size() - size ;
-  } ;
+  } 
+  // ==========================================================================
   /** Simple function to extract all *UNIQUE* values of "TO" 
    *  from relation Ranges into the "std::set" container 
    *  (It is a partial specialization of gfeneric getUniqueTo function)
@@ -384,8 +377,8 @@ namespace Relations
   inline size_t getUniqueTo
   ( LINKS      links  , 
     CONTAINER& cont   ) 
-  { return getUniqueTo ( links.begin() , links.end() , cont ) ; } ;
-
+  { return getUniqueTo ( links.begin() , links.end() , cont ) ; } 
+  // ==========================================================================
   /** Trivial algorithm whcih allow to accumulate the
    *  "WEIGHT" form relations ranges 
    * 
@@ -411,9 +404,8 @@ namespace Relations
   ( LINKS  links  , 
     WEIGHT weight ) 
   { return sumWeight( links.begin() , links.end() , weight ) ; } ;
-
-} ; // end of the namespace Relations
-
+  // ==========================================================================
+} // end of the namespace Relations
 // ============================================================================
 // The END 
 // ============================================================================

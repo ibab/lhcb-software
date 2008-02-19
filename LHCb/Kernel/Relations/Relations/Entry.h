@@ -1,6 +1,4 @@
-// $Id: Entry.h,v 1.2 2006-06-11 19:37:02 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// $Id: Entry.h,v 1.3 2008-02-19 15:26:09 ibelyaev Exp $
 // ============================================================================
 #ifndef RELATIONS_ENTRY_H 
 #define RELATIONS_ENTRY_H 1
@@ -16,9 +14,9 @@
 // ============================================================================
 #include "Relations/ObjectTypeTraits.h"
 // ============================================================================
-
 namespace Relations 
 {
+  // ==========================================================================
   /** @struct Entry_
    *  An auxillary class to implement the relations
    *  @see std::pair 
@@ -84,9 +82,8 @@ namespace Relations
     mutable FromInner m_from ;
     mutable ToInner   m_to   ;
   } ;
-
-} // end of namespace Relations 
-
+  // ==========================================================================
+} // end of namespace Relations
 // ============================================================================
 // The END 
 // ============================================================================

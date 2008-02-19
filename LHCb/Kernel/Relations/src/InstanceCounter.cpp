@@ -1,8 +1,4 @@
-// $Id: InstanceCounter.cpp,v 1.1 2006-02-07 09:22:24 ibelyaev Exp $ 
-// ======================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-// ======================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: InstanceCounter.cpp,v 1.2 2008-02-19 15:26:10 ibelyaev Exp $ 
 // ======================================================================
 // Include files 
 // ======================================================================
@@ -12,29 +8,23 @@
 // ======================================================================
 #include "Relations/RelationUtils.h"
 // ======================================================================
-
 /** @file
  *  implementation file forthe class Relations::InstanceCounter
  *  @see Relations:InstanceCounter
  *  @author Vanya BELYAEV ibelyaev@phsyics.syr.edu
  *  @date 2006-02-05
  */
-
 // ============================================================================
-/// constructor 
+// constructor 
 // ============================================================================
 Relations::InstanceCounter::InstanceCounter() : m_counters() {}
 // ============================================================================
-
-// ============================================================================
-/// destructor 
+// destructor 
 // ============================================================================
 Relations::InstanceCounter::~InstanceCounter() 
-{ report () ; m_counters.clear() ; };
+{ report () ; m_counters.clear() ; }
 // ============================================================================
-
-// ============================================================================
-/** make a report 
+/*  make a report 
  *  @return the total number of alive objects 
  */
 // ============================================================================
@@ -44,22 +34,20 @@ Relations::InstanceCounter::report () const
   counter total = 0 ;
   for( Counters::iterator record = m_counters.begin() ; 
        m_counters.end() != record ; ++record ) 
-    {
-      if ( 0 == record->second ) { continue ; }  
-      std::cout << "RelationUtils::InstanceCounter " 
-                << " INFO \t #" 
-                << record->second 
-                << " objects of type \t '"
-                << record->first 
-                << "' \t still alive " << std::endl ;
-      ++total ;
-    }
+  {
+    if ( 0 == record->second ) { continue ; }  
+    std::cout << "RelationUtils::InstanceCounter " 
+              << " INFO \t #" 
+              << record->second 
+              << " objects of type \t '"
+              << record->first 
+              << "' \t still alive " << std::endl ;
+    ++total ;
+  }
   return total ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** increment the counter
+/*  increment the counter
  *  @param type object type 
  *  @return the current value of counter
  */
@@ -68,9 +56,7 @@ Relations::InstanceCounter::counter
 Relations::InstanceCounter::increment ( const std::string& type ) 
 { return ++m_counters[type] ;}    
 // ============================================================================
-
-// ============================================================================
-/** decrement the counter
+/*  decrement the counter
  *  @param type object type 
  *  @return the current value of counter
  */
@@ -79,10 +65,7 @@ Relations::InstanceCounter::counter
 Relations::InstanceCounter::decrement ( const std::string& type ) 
 { return --m_counters[type] ;}    
 // ============================================================================
-
-
-// ============================================================================
-/** get the current value of the counter
+/*  get the current value of the counter
  *  @param type object type 
  *  @return the current value of counter
  */
@@ -91,8 +74,6 @@ Relations::InstanceCounter::counter
 Relations::InstanceCounter::count     ( const std::string& type ) const 
 { return   m_counters[type] ;}
 // ============================================================================
-
-// ============================================================================
 // the accessor to static instance
 // ============================================================================
 Relations::InstanceCounter&
@@ -100,7 +81,7 @@ Relations::InstanceCounter::instance()
 {
   static Relations::InstanceCounter s_counter ;
   return s_counter ;
-};
+}
 // ============================================================================
 
 

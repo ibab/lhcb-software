@@ -1,6 +1,4 @@
-// $Id: RelationUtils.h,v 1.7 2007-03-23 16:40:17 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// $Id: RelationUtils.h,v 1.8 2008-02-19 15:26:09 ibelyaev Exp $
 // ============================================================================
 #ifndef RELATIONS_RELATIONUTILS_H 
 #define RELATIONS_RELATIONUTILS_H 1
@@ -17,9 +15,9 @@
 #include "GaudiKernel/IInterface.h"    // definition of type InterfaceID 
 #include "GaudiKernel/ClassID.h"       // definition of type CLID 
 // ============================================================================
-
 namespace Relations
 {
+  // ============================================================================
   /** Function to create the uniqie relation 
    *  interfaceID from interface name, CLIDs and types 
    *  
@@ -36,7 +34,7 @@ namespace Relations
    *  @return unique(?) interface ID 
    */
   InterfaceID interfaceID ( const std::string& name ) ;
-  
+  // ============================================================================
   /** Function to create the unique relation clid from the object name
    *  
    *  @code
@@ -52,7 +50,7 @@ namespace Relations
    *  @return unique(?) interface ID 
    */
   CLID        clid   ( const std::string&  name  ) ;
-  
+  // ============================================================================  
   /** Simple function to convers CLID (Gaudi unique class identifier) 
    *  to GUID (POOL unique class identifier)
    *
@@ -65,7 +63,7 @@ namespace Relations
    *  @return POOL unique class identifier 
    */
   std::string guid ( const CLID& clID ) ;
-
+  // ============================================================================
   /** Simple funtion to convers CLID (Gaudi unique class identifier) 
    *  to GUID (POOL unique class identifier)
    *
@@ -78,41 +76,34 @@ namespace Relations
    *  @return POOL unique class identifier 
    */
   std::string guid ( const std::string& name ) ;
-  
-  ///
+  // ============================================================================  
   class InstanceCounter
-    {
-    public:
-      typedef long                          counter  ;
-      typedef std::map<std::string,counter> Counters ;
-    public:
-      
+  {
+  public:
+    typedef long                          counter  ;
+    typedef std::map<std::string,counter> Counters ;
+  public:
     /// the accessor to static istance 
-      static InstanceCounter& instance() ;
-      
-      /** increment the counter
-       *  @param type object type 
-       *  @return the current value of counter
-       */
-      counter increment ( const std::string& type )       ;
-    
+    static InstanceCounter& instance() ;
+    /** increment the counter
+     *  @param type object type 
+     *  @return the current value of counter
+     */
+    counter increment ( const std::string& type )       ;
     /** increment the counter
      *  @param type object type 
      *  @return the current value of counter
      */
     counter decrement ( const std::string& type )       ;
-    
     /** get the current value of the counter
      *  @param type object type 
      *  @return the current value of counter
      */
     counter count     ( const std::string& type ) const ;
-    
     /** make a report 
      *  @return total number  
      */
     counter report    () const ;
-
   protected:
     /// the default constructor is private 
     InstanceCounter();
@@ -124,9 +115,8 @@ namespace Relations
   private:
     mutable Counters m_counters ;
   };
-  
-}; // end of namespace Relations
-
+  // ==========================================================================
+} // end of namespace Relations
 // ============================================================================
 // The End 
 // ============================================================================

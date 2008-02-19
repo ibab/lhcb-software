@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.50 2007-11-28 13:50:12 cattanem Exp $ 
+! $Id: release.notes,v 1.51 2008-02-19 15:26:09 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+!====================== Relations v5r4 2008-02-19 ============================
+
+! 2008-02-19 - Vanya BELYAEV
+
+ - cmt/requirement 
+    1) remove the explicit manipulations with PYTHONPATH
+    2) version inrement to v5r4 
 
 !====================== Relations v5r3 2007-11-29 ============================
 ! 2007-11-27 - Vanya BELYAEV
