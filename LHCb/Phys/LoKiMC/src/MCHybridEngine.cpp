@@ -1,4 +1,4 @@
-// $Id: MCHybridEngine.cpp,v 1.1 2007-07-25 15:16:07 ibelyaev Exp $
+// $Id: MCHybridEngine.cpp,v 1.2 2008-02-19 15:04:01 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -38,8 +38,10 @@ namespace
   {
     LoKi::Hybrid::MCEngineActor& actor = LoKi::Hybrid::MCEngineActor::instance() ;
     return actor.process ( name , cut ) ;
-  } ;
+  } 
 }
+// ============================================================================
+// predicates: 
 // ============================================================================
 // add the cut 
 // ============================================================================
@@ -53,6 +55,8 @@ StatusCode LoKi::Hybrid::MCEngine::process
 ( const std::string&          name , 
   const LoKi::Types::MCVCuts& cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
+// functions:
+// ============================================================================
 // add the function 
 // ============================================================================
 StatusCode LoKi::Hybrid::MCEngine::process
@@ -64,6 +68,76 @@ StatusCode LoKi::Hybrid::MCEngine::process
 StatusCode LoKi::Hybrid::MCEngine::process
 ( const std::string&          name , 
   const LoKi::Types::MCVFunc& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// maps:
+// ============================================================================
+// add the map 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngine::process
+( const std::string&          name , 
+  const LoKi::Types::MCMaps&  cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// add the map 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngine::process
+( const std::string&          name , 
+  const LoKi::Types::MCVMaps& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// pipes:
+// ============================================================================
+// add the pipe 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngine::process
+( const std::string&          name , 
+  const LoKi::Types::MCPipes& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// add the pipe
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngine::process
+( const std::string&           name , 
+  const LoKi::Types::MCVPipes& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// fun-vals:
+// ============================================================================
+// add the fun-val 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngine::process
+( const std::string&            name , 
+  const LoKi::Types::MCFunVals& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// add the fun-val
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngine::process
+( const std::string&             name , 
+  const LoKi::Types::MCVFunVals& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// elements:
+// ============================================================================
+// add the element 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngine::process
+( const std::string&             name , 
+  const LoKi::Types::MCElements& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// add the element
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngine::process
+( const std::string&              name , 
+  const LoKi::Types::MCVElements& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// sources 
+// ============================================================================
+// add the source
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngine::process
+( const std::string&             name , 
+  const LoKi::Types::MCSources&  cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// add the source
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngine::process
+( const std::string&              name , 
+  const LoKi::Types::MCVSources&  cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: IMCHybridTool.cpp,v 1.1 2007-07-25 15:16:07 ibelyaev Exp $
+// $Id: IMCHybridTool.cpp,v 1.2 2008-02-19 15:04:01 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -28,7 +28,7 @@
 // ============================================================================
 namespace 
 {
-  const InterfaceID IID_IMCHybridTool ( "LoKi::IMCHybridTool" , 2 , 0 ) ;
+  const InterfaceID IID_IMCHybridTool ( "LoKi::IMCHybridTool" , 3 , 0 ) ;
 }
 // ============================================================================
 // Return the unique interface ID
@@ -38,7 +38,7 @@ LoKi::IMCHybridTool::interfaceID() { return  IID_IMCHybridTool ; }
 // ============================================================================
 // destructor : virtual and protected 
 // ============================================================================
-LoKi::IMCHybridTool::~IMCHybridTool() {}; 
+LoKi::IMCHybridTool::~IMCHybridTool() {} 
 // ============================================================================
 
 // ============================================================================

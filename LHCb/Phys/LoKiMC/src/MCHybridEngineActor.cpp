@@ -1,4 +1,4 @@
-// $Id: MCHybridEngineActor.cpp,v 1.1 2007-07-25 15:16:07 ibelyaev Exp $
+// $Id: MCHybridEngineActor.cpp,v 1.2 2008-02-19 15:04:02 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -37,15 +37,15 @@ inline StatusCode LoKi::Hybrid::MCEngineActor::_add
   {
     return LoKi::Report::Error
       ("LoKi::Hybrid::MCEngineActor::addCut/Fun(): LoKi::IMCHybridTool* is not connected!") ;  
-  };
+  }
   // one more check 
   if ( name != m_tool->name() )
   {
     return LoKi::Report::Error
       ("LoKi::Hybrid::MCEngineActor::addCut/Fun() : mismatch in LoKi::IMCHybridTool name!") ;  
-  };
+  }
   // set the cut for the tool 
-  m_tool->set ( cut ) ;
+  m_tool -> set ( cut ) ;
   // 
   return StatusCode::SUCCESS ;
 } 
@@ -60,11 +60,11 @@ LoKi::Hybrid::MCEngineActor& LoKi::Hybrid::MCEngineActor::instance()
 // ============================================================================
 // constructor 
 // ============================================================================
-LoKi::Hybrid::MCEngineActor::MCEngineActor() : m_tool ( 0 ) {} ;
+LoKi::Hybrid::MCEngineActor::MCEngineActor() : m_tool ( 0 ) {} 
 // ============================================================================
 // destructor
 // ============================================================================
-LoKi::Hybrid::MCEngineActor::~MCEngineActor() {} ;
+LoKi::Hybrid::MCEngineActor::~MCEngineActor() {} 
 // ============================================================================
 // disconnect the tool 
 // ============================================================================
@@ -100,6 +100,8 @@ StatusCode LoKi::Hybrid::MCEngineActor::connectTool
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
+// predicates:
+// ============================================================================
 // propagate the cut to the tool 
 // ============================================================================
 StatusCode LoKi::Hybrid::MCEngineActor::process
@@ -111,6 +113,8 @@ StatusCode LoKi::Hybrid::MCEngineActor::process
 StatusCode LoKi::Hybrid::MCEngineActor::process
 ( const std::string&          name , 
   const LoKi::Types::MCVCuts& cut  ) const { return _add ( name , cut ) ; }
+// ============================================================================
+// functions:
 // ============================================================================
 // propagate the function to the tool 
 // ============================================================================
@@ -124,6 +128,77 @@ StatusCode LoKi::Hybrid::MCEngineActor::process
 ( const std::string&          name , 
   const LoKi::Types::MCVFunc& func ) const { return _add ( name , func ) ; }
 // ============================================================================
+// maps:
+// ============================================================================
+// propagate the map to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngineActor::process
+( const std::string&          name , 
+  const LoKi::Types::MCMaps&  func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// propagate the maps to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngineActor::process
+( const std::string&          name , 
+  const LoKi::Types::MCVMaps& func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// pipes:
+// ============================================================================
+// propagate the pipe to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngineActor::process
+( const std::string&          name , 
+  const LoKi::Types::MCPipes& func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// propagate the pipe to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngineActor::process
+( const std::string&           name , 
+  const LoKi::Types::MCVPipes& func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// fun-vals:
+// ============================================================================
+// propagate the funval to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngineActor::process
+( const std::string&            name , 
+  const LoKi::Types::MCFunVals& func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// propagate the funval to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngineActor::process
+( const std::string&             name , 
+  const LoKi::Types::MCVFunVals& func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// elements:
+// ============================================================================
+// propagate the element to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngineActor::process
+( const std::string&             name , 
+  const LoKi::Types::MCElements& func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// propagate the element to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngineActor::process
+( const std::string&              name , 
+  const LoKi::Types::MCVElements& func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// sources
+// ============================================================================
+// propagate the source to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngineActor::process
+( const std::string&             name , 
+  const LoKi::Types::MCSources&  func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// propagate the source to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::MCEngineActor::process
+( const std::string&             name , 
+  const LoKi::Types::MCVSources& func ) const { return _add ( name , func ) ; }
+// ============================================================================
+
 
 // ============================================================================
 // The END 

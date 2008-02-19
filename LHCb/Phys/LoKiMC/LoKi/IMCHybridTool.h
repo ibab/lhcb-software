@@ -1,4 +1,4 @@
-// $Id: IMCHybridTool.h,v 1.1 2007-07-25 15:16:06 ibelyaev Exp $
+// $Id: IMCHybridTool.h,v 1.2 2008-02-19 15:04:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IMCHYBRIDTOOL_H 
 #define LOKI_IMCHYBRIDTOOL_H 1
@@ -40,19 +40,75 @@ namespace LoKi
   public:
     /// Return the unique interface ID
     static const InterfaceID& interfaceID() ;
+    // ========================================================================
   public:
+    // ========================================================================
+    // predicates:
+    // ========================================================================
     /// set the C++ predicate for LHCb::MCParticle
     virtual void set ( const LoKi::Types::MCCuts&  cut ) = 0 ;    
     /// set the C++ predicate for LHCb::MCVertex 
     virtual void set ( const LoKi::Types::MCVCuts& cut ) = 0 ;    
+    // ========================================================================
+  public:
+    // ========================================================================
+    // functions 
+    // ========================================================================
     /// set the C++ function for LHCb::MCParticle 
     virtual void set ( const LoKi::Types::MCFunc&  cut ) = 0 ;
     /// set the C++ function for LHCb::MCVertex 
     virtual void set ( const LoKi::Types::MCVFunc& cut ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // maps:
+    // ========================================================================
+    /// set the C++ map for LHCb::MCParticle 
+    virtual void set ( const LoKi::Types::MCMaps&  cut ) = 0 ;
+    /// set the C++ map for LHCb::MCVertex 
+    virtual void set ( const LoKi::Types::MCVMaps& cut ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // pipes:
+    // ========================================================================
+    /// set the C++ pipe for LHCb::MCParticle 
+    virtual void set ( const LoKi::Types::MCPipes&  cut ) = 0 ;
+    /// set the C++ pipe for LHCb::MCVertex 
+    virtual void set ( const LoKi::Types::MCVPipes& cut ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // fun-vals:
+    // ========================================================================
+    /// set the C++ fun-val for LHCb::MCParticle 
+    virtual void set ( const LoKi::Types::MCFunVals&  cut ) = 0 ;
+    /// set the C++ fun-val for LHCb::MCVertex 
+    virtual void set ( const LoKi::Types::MCVFunVals& cut ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // elements
+    // ========================================================================
+    /// set the C++ element for LHCb::MCParticle 
+    virtual void set ( const LoKi::Types::MCElements&  cut ) = 0 ;
+    /// set the C++ element for LHCb::MCVertex 
+    virtual void set ( const LoKi::Types::MCVElements& cut ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // sources
+    // ========================================================================
+    /// set the C++ source for LHCb::MCParticle 
+    virtual void set ( const LoKi::Types::MCSources&  cut ) = 0 ;
+    /// set the C++ source for LHCb::MCVertex 
+    virtual void set ( const LoKi::Types::MCVSources& cut ) = 0 ;
+    // ========================================================================
   protected:
-    /// destructor : virtual and protected 
-    virtual ~IMCHybridTool() ;
-  private:
+    // ========================================================================
+    // destructor : virtual and protected 
+    virtual ~IMCHybridTool() ; ///< destructor : virtual and protected 
+    // ========================================================================
   };
 } // end of namespace LoKi 
 // ============================================================================

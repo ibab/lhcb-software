@@ -1,4 +1,4 @@
-// $Id: MCTypes.h,v 1.10 2007-11-28 14:13:59 ibelyaev Exp $
+// $Id: MCTypes.h,v 1.11 2008-02-19 15:04:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCTYPES_H 
 #define LOKI_MCTYPES_H 1
@@ -78,7 +78,53 @@ namespace LoKi
     typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::PredicateFromPredicate MCVCut ;
     /// type of 'functions' for Vertices (assignable)
     typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::FunctionFromFunction   MCVFun ;
-    //
+    // ========================================================================
+    // "functional" types for LHCb::MCParticle
+    // ========================================================================
+    /// type of "map" for LHCb::MCParticle   (interface)
+    typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::Map     MCMaps     ;
+    /// type of "map" for LHCb::MCParticle   (assignable)
+    typedef LoKi::Assignable<MCMaps>::Type                        MCMap      ;
+    /// type of "pipe" for LHCb::MCParticle   (interface)
+    typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::Pipe    MCPipes    ;
+    /// type of "pipe" for LHCb::MCParticle   (assignable)
+    typedef LoKi::Assignable<MCPipes>::Type                       MCPipe     ;
+    /// type of "fun-val" for LHCb::MCParticle   (interface)
+    typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::FunVal  MCFunVals  ;
+    /// type of "fun-val" for LHCb::MCParticle   (assignable)
+    typedef LoKi::Assignable<MCFunVals>::Type                     MCFunVal   ;
+    /// type of "element" for LHCb::MCParticle   (interface)
+    typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::Element MCElements ;
+    /// type of "element" for LHCb::MCParticle   (assignable)
+    typedef LoKi::Assignable<MCElements>::Type                    MCElement  ;
+    /// type of "source" for LHCb::MCParticle   (interface)
+    typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::Source  MCSources  ;
+    /// type of "source" for LHCb::MCParticle   (assignable)
+    typedef LoKi::Assignable<MCSources>::Type                     MCSource   ;
+    // ========================================================================
+    // "functional" types for LHCb::MCVertex
+    // ========================================================================
+    /// type of "map" for LHCb::MCVertex   (interface)
+    typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::Map       MCVMaps     ;
+    /// type of "map" for LHCb::MCVertex   (assignable)
+    typedef LoKi::Assignable<MCVMaps>::Type                       MCVMap      ;
+    /// type of "pipe" for LHCb::MCVertex   (interface)
+    typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::Pipe      MCVPipes    ;
+    /// type of "pipe" for LHCb::MCVertex   (assignable)
+    typedef LoKi::Assignable<MCVPipes>::Type                      MCVPipe     ;
+    /// type of "fun-val" for LHCb::MCVertex   (interface)
+    typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::FunVal    MCVFunVals  ;
+    /// type of "fun-val" for LHCb::MCVertex   (assignable)
+    typedef LoKi::Assignable<MCVFunVals>::Type                    MCVFunVal   ;
+    /// type of "element" for LHCb::MCVertex   (interface)
+    typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::Element   MCVElements ;
+    /// type of "element" for LHCb::MCVertex   (assignable)
+    typedef LoKi::Assignable<MCVElements>::Type                   MCVElement  ;
+    /// type of "source" for LHCb::MCVertex   (interface)
+    typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::Source    MCVSources  ;
+    /// type of "source" for LHCb::MCVertex   (assignable)
+    typedef LoKi::Assignable<MCVSources>::Type                    MCVSource   ;
+    // ========================================================================
   } // end of namespace LoKi::MCTypes  
   namespace Types 
   { 
@@ -106,7 +152,53 @@ namespace LoKi
     typedef LoKi::RangeList_<MCRange>  MCRangeL  ;
     /// the actual type of the range list 
     typedef LoKi::RangeList_<MCVRange> MCVRangeL ; 
-    //
+    // ========================================================================
+    // "functional" types for LHCb::MCParticle
+    // ========================================================================
+    /// type of "map"     for LHCb::MCParticle   (interface)
+    typedef LoKi::MCTypes::MCMaps                MCMaps      ;
+    /// type of "map"     for LHCb::MCParticle   (assignable)
+    typedef LoKi::MCTypes::MCMap                 MCMap       ;
+    /// type of "pipe"    for LHCb::MCParticle   (interface)
+    typedef LoKi::MCTypes::MCPipes               MCPipes     ;
+    /// type of "pipe"    for LHCb::MCParticle   (assignable)
+    typedef LoKi::MCTypes::MCPipe                MCPipe      ;
+    /// type of "fun-val" for LHCb::MCParticle   (interface)
+    typedef LoKi::MCTypes::MCFunVals             MCFunVals   ;
+    /// type of "fun-val" for LHCb::MCParticle   (assignable)
+    typedef LoKi::MCTypes::MCFunVal              MCFunVal    ;
+    /// type of "element" for LHCb::MCParticle   (interface)
+    typedef LoKi::MCTypes::MCElements            MCElements  ;
+    /// type of "element" for LHCb::MCParticle   (assignable)
+    typedef LoKi::MCTypes::MCElement             MCElement   ;
+    /// type of "source"  for LHCb::MCParticle   (interface)
+    typedef LoKi::MCTypes::MCSources             MCSources   ;
+    /// type of "source"  for LHCb::MCParticle   (assignable)
+    typedef LoKi::MCTypes::MCSource              MCSource    ;
+    // ========================================================================
+    // "functional" types for LHCb::MCVertex
+    // ========================================================================
+    /// type of "map"     for LHCb::MCVertex     (interface)
+    typedef LoKi::MCTypes::MCVMaps               MCVMaps     ;
+    /// type of "map"     for LHCb::MCVertex     (assignable)
+    typedef LoKi::MCTypes::MCVMap                MCVMap      ;
+    /// type of "pipe"    for LHCb::MCVertex     (interface)
+    typedef LoKi::MCTypes::MCVPipes              MCVPipes    ;
+    /// type of "pipe"    for LHCb::MCVertex     (assignable)
+    typedef LoKi::MCTypes::MCVPipe               MCVPipe     ;
+    /// type of "fun-val" for LHCb::MCVertex     (interface)
+    typedef LoKi::MCTypes::MCVFunVals            MCVFunVals  ;
+    /// type of "fun-val" for LHCb::MCVertex     (assignable)
+    typedef LoKi::MCTypes::MCVFunVal             MCVFunVal   ;
+    /// type of "element" for LHCb::MCVertex     (interface)
+    typedef LoKi::MCTypes::MCVElements           MCVElements ;
+    /// type of "element" for LHCb::MCVertex     (assignable)
+    typedef LoKi::MCTypes::MCVElement            MCVElement  ;
+    /// type of "source"  for LHCb::MCVertex     (interface)
+    typedef LoKi::MCTypes::MCVSources            MCVSources  ;
+    /// type of "source"  for LHCb::MCVertex     (assignable)
+    typedef LoKi::MCTypes::MCVSource             MCVSource   ;
+    // ========================================================================
   } // end of namespace LoKi::Types  
 } // end of namespace LoKi
 // ============================================================================

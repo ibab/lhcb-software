@@ -1,4 +1,4 @@
-// $Id: IMCHybridFactory.h,v 1.1 2007-07-25 15:16:06 ibelyaev Exp $
+// $Id: IMCHybridFactory.h,v 1.2 2008-02-19 15:04:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IMCHYBRIDFACTORY_H 
 #define LOKI_IMCHYBRIDFACTORY_H 1
@@ -32,39 +32,190 @@ namespace LoKi
     static const InterfaceID& interfaceID() ;
   public:
     // ========================================================================
-    /** "Factory": get the the object form python code 
-     *  @param pycode the python pseudo-code of the function
-     *  @param cuts the placeholder for the result 
-     *  @return StatusCode 
-     */
-    virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::MCCut&  cuts ) = 0 ;
+    // predicates:
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param cuts the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::MCVCut&  cuts ) = 0 ;
+    ( const std::string&   pycode       ,
+      LoKi::Types::MCCut&  cuts         , 
+      const std::string&   context = "" ) = 0 ;
+    // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
-     *  @param func the placeholder for the result 
+     *  @param cuts the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::MCFun& func ) = 0 ;
+    ( const std::string&   pycode       , 
+      LoKi::Types::MCVCut& cuts         , 
+      const std::string&   context = "" ) = 0 ;
+  public:
+    // ========================================================================
+    // functions:
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function
      *  @param func the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
      *  @return StatusCode 
      */
     virtual StatusCode get
-    ( const std::string& pycode , LoKi::Types::MCVFun&  func ) = 0 ;
+    ( const std::string&   pycode       , 
+      LoKi::Types::MCFun&  func         ,
+      const std::string&   context = "" ) = 0 ;
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&   pycode       , 
+      LoKi::Types::MCVFun& func         , 
+      const std::string&   context = "" ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // maps:
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&   pycode       , 
+      LoKi::Types::MCMap&  func         ,
+      const std::string&   context = "" ) = 0 ;
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&   pycode       , 
+      LoKi::Types::MCVMap& func         , 
+      const std::string&   context = "" ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // pipes:
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&   pycode       , 
+      LoKi::Types::MCPipe& func         ,
+      const std::string&   context = "" ) = 0 ;
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&    pycode       , 
+      LoKi::Types::MCVPipe& func         , 
+      const std::string&    context = "" ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // fun-vals:
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&     pycode       , 
+      LoKi::Types::MCFunVal& func         ,
+      const std::string&     context = "" ) = 0 ;
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&      pycode       , 
+      LoKi::Types::MCVFunVal& func         , 
+      const std::string&      context = "" ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // elements:
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&      pycode       , 
+      LoKi::Types::MCElement& func         ,
+      const std::string&      context = "" ) = 0 ;
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&       pycode       , 
+      LoKi::Types::MCVElement& func         , 
+      const std::string&       context = "" ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // sources:
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&      pycode       , 
+      LoKi::Types::MCSource&  func         ,
+      const std::string&      context = "" ) = 0 ;
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&      pycode       , 
+      LoKi::Types::MCVSource& func         , 
+      const std::string&      context = "" ) = 0 ;
     // ========================================================================
   protected:
+    // ========================================================================
+    // virtual & protected destructor 
     virtual ~IMCHybridFactory( ); ///< Destructor
+    // ========================================================================
   } ;
 } // end of namespace LoKi
 // ============================================================================

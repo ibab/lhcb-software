@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.36 2008-02-15 07:32:03 cattanem Exp $ 
+! $Id: release.notes,v 1.37 2008-02-19 15:04:01 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,7 +15,12 @@
 !
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiMC v7r1 2008-02-15 ============================
+!========================== LoKiMC v7r1 2008-02-19 ============================
+
+! 2008-02-19 - Vanya BELYAEV
+
+ - update all *hybrid* stuff to cover all "functional" functors 
+
 ! 2008-02-15 - Marco Cattaneo
  - Remove dict for std::vector<const LHCb::MCVertex*>, now in MCEvent
 

@@ -1,4 +1,4 @@
-// $Id: MCHybridEngineActor.h,v 1.1 2007-07-25 15:16:06 ibelyaev Exp $
+// $Id: MCHybridEngineActor.h,v 1.2 2008-02-19 15:04:01 ibelyaev Exp $
 // ===========================================================================
 #ifndef LOKI_MCCUTSHOLDER_H 
 #define LOKI_MCCUTSHOLDER_H 1
@@ -30,12 +30,18 @@ namespace LoKi
     class MCEngineActor
     { 
     public:
+      // ======================================================================
       // get the static instance 
       static MCEngineActor& instance() ;
       /// connect the hybrid tool for code translation 
       StatusCode connectTool (       LoKi::IMCHybridTool* tool ) ;
       /// disconnect the tool 
       StatusCode releaseTool ( const LoKi::IMCHybridTool* tool ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // predicates:
+      // ======================================================================     
       /// propagate the cut to the tool 
       StatusCode process
       ( const std::string&          name , 
@@ -44,6 +50,11 @@ namespace LoKi
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::MCVCuts& cut  ) const ;
+      // ======================================================================     
+    public:
+      // ======================================================================
+      // functions: 
+      // ======================================================================     
       /// propagate the function to the tool 
       StatusCode process
       ( const std::string&          name , 
@@ -52,10 +63,78 @@ namespace LoKi
       StatusCode process
       ( const std::string&          name , 
         const LoKi::Types::MCVFunc& func ) const ;
+      // ======================================================================     
+    public:
+      // ======================================================================
+      // maps:
+      // ======================================================================     
+      /// propagate the map to the tool 
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::MCMaps&  func ) const ;
+      /// propagate the map to the tool 
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::MCVMaps& func ) const ;
+      // ======================================================================     
+    public:
+      // ======================================================================
+      // pipes:
+      // ======================================================================     
+      /// propagate the pipe to the tool 
+      StatusCode process
+      ( const std::string&           name , 
+        const LoKi::Types::MCPipes&  func ) const ;
+      /// propagate the pipe to the tool 
+      StatusCode process
+      ( const std::string&           name , 
+        const LoKi::Types::MCVPipes& func ) const ;
+      // ======================================================================     
+    public:
+      // ======================================================================
+      // fun-vals:
+      // ======================================================================     
+      /// propagate the funval to the tool 
+      StatusCode process
+      ( const std::string&             name , 
+        const LoKi::Types::MCFunVals&  func ) const ;
+      /// propagate the funval to the tool 
+      StatusCode process
+      ( const std::string&             name , 
+        const LoKi::Types::MCVFunVals& func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // elements:
+      // ======================================================================     
+      /// propagate the element to the tool 
+      StatusCode process
+      ( const std::string&              name , 
+        const LoKi::Types::MCElements&  func ) const ;
+      /// propagate the element to the tool 
+      StatusCode process
+      ( const std::string&              name , 
+        const LoKi::Types::MCVElements& func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // sources:
+      // ======================================================================     
+      /// propagate the source to the tool 
+      StatusCode process
+      ( const std::string&              name , 
+        const LoKi::Types::MCSources&   func ) const ;
+      /// propagate the source to the tool 
+      StatusCode process
+      ( const std::string&              name , 
+        const LoKi::Types::MCVSources&  func ) const ;
+      // ======================================================================
     protected:
+      // ======================================================================     
       /// Standard constructor
       MCEngineActor() ;
       virtual ~MCEngineActor( ); ///< Destructor
+      // ======================================================================     
     private:
       // just to save some lines 
       template <class TYPE>

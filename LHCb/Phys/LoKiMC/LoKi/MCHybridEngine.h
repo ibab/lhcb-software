@@ -1,4 +1,4 @@
-// $Id: MCHybridEngine.h,v 1.1 2007-07-25 15:16:06 ibelyaev Exp $
+// $Id: MCHybridEngine.h,v 1.2 2008-02-19 15:04:01 ibelyaev Exp $
 // ===========================================================================
 #ifndef LOKI_MCHYBRIDENGINE_H 
 #define LOKI_MCHYBRIDENGINE_H 1
@@ -33,10 +33,16 @@ namespace LoKi
     class MCEngine
     {
     public:
+      // ======================================================================
       /// constructor
       MCEngine () ;
       /// destructor 
       virtual ~MCEngine( );
+      // ======================================================================
+    public:
+      // ======================================================================
+      // predicates:
+      // ======================================================================
       /// add the cut 
       StatusCode process
       ( const std::string&          name , 
@@ -45,6 +51,11 @@ namespace LoKi
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::MCVCuts& cut  ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // functions:
+      // ======================================================================
       /// add the function 
       StatusCode process
       ( const std::string&          name , 
@@ -53,6 +64,72 @@ namespace LoKi
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::MCVFunc& func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // maps:
+      // ======================================================================
+      /// add the map
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::MCMaps&  func ) const ;
+      /// add the map 
+      StatusCode process 
+      ( const std::string&          name , 
+        const LoKi::Types::MCVMaps& func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // pipes:
+      // ======================================================================
+      /// add the pipe
+      StatusCode process
+      ( const std::string&           name , 
+        const LoKi::Types::MCPipes&  func ) const ;
+      /// add the pipe
+      StatusCode process 
+      ( const std::string&           name , 
+        const LoKi::Types::MCVPipes& func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // fun-vals:
+      // ======================================================================
+      /// add the fun-val
+      StatusCode process
+      ( const std::string&             name , 
+        const LoKi::Types::MCFunVals&  func ) const ;
+      /// add the fun-val
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::MCVFunVals& func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // elements 
+      // ======================================================================
+      /// add the element
+      StatusCode process
+      ( const std::string&              name , 
+        const LoKi::Types::MCElements&  func ) const ;
+      /// add the element
+      StatusCode process 
+      ( const std::string&              name , 
+        const LoKi::Types::MCVElements& func ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // sources 
+      // ======================================================================
+      /// add the source 
+      StatusCode process
+      ( const std::string&              name , 
+        const LoKi::Types::MCSources&   func ) const ;
+      /// add the source 
+      StatusCode process 
+      ( const std::string&              name , 
+        const LoKi::Types::MCVSources&  func ) const ;
+      // ======================================================================
     } ;  
   } // end of namespace LoKi::Hybrid 
 } // end of namespace LoKi
