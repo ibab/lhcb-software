@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.76 2008-02-18 12:42:11 ibelyaev Exp $ 
+! $Id: release.notes,v 1.77 2008-02-19 17:34:42 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,7 +15,12 @@
 ! 
 ! -----------------------------------------------------------------------------
 
-!=========================== LoKiCore v7r1 2008-02-18  ========================
+!=========================== LoKiCore v7r1 2008-02-19  ========================
+
+! 2008-02-19 - Vanya BELYAEV
+ - python/LoKiCore/functions.py
+    fix many tiny typos 
+
 
 ! 2008-02-18 - Vanya BELYAEV 
  - src/HybridBase.cpp
@@ -460,6 +465,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.76  2008/02/18 12:42:11  ibelyaev
+!  HybridBase.cpp: couple of minor fixes
+!
 ! Revision 1.75  2008/02/11 09:59:13  ibelyaev
 !  variosu minor fixes
 !

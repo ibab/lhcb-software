@@ -550,7 +550,7 @@ def decorateFunctions ( funcs , calls , opers ) :
             >>> fun = ...
             >>> vfun = yields ( fun )
 
-            The concept belongs to Gerghard 'The Great' Raven
+            The concept belongs to Gerhard 'The Great' Raven
             
             Uses:\n
             """
@@ -562,7 +562,7 @@ def decorateFunctions ( funcs , calls , opers ) :
             >>> fun = ...
             >>> vfun = process ( fun )
 
-            The concept belongs to Gerghard 'The Great' Raven
+            The concept belongs to Gerhard 'The Great' Raven
             
             Uses:\n
             """
@@ -574,7 +574,7 @@ def decorateFunctions ( funcs , calls , opers ) :
             >>> fun = ...
             >>> vfun = min_value ( fun )
 
-            The concept belongs to Gerghard 'The Great' Raven
+            The concept belongs to Gerhard 'The Great' Raven
             
             Uses:\n
             """
@@ -586,7 +586,7 @@ def decorateFunctions ( funcs , calls , opers ) :
             >>> fun = ...
             >>> vfun = max_value ( fun )
 
-            The concept belongs to Gerghard 'The Great' Raven
+            The concept belongs to Gerhard 'The Great' Raven
             
             Uses:\n
             """
@@ -598,7 +598,7 @@ def decorateFunctions ( funcs , calls , opers ) :
             >>> fun = ...
             >>> vfun = min_abs_value ( fun )
 
-            The concept belongs to Gerghard 'The Great' Raven
+            The concept belongs to Gerhard 'The Great' Raven
             
             Uses:\n
             """
@@ -610,7 +610,7 @@ def decorateFunctions ( funcs , calls , opers ) :
             >>> fun = ...
             >>> vfun = max_abs_value ( fun )
 
-            The concept belongs to Gerghard 'The Great' Raven
+            The concept belongs to Gerhard 'The Great' Raven
             
             Uses:\n
             """
@@ -622,7 +622,7 @@ def decorateFunctions ( funcs , calls , opers ) :
             >>> fun = ...
             >>> vfun = min_element ( fun )
 
-            The concept belongs to Gerghard 'The Great' Raven
+            The concept belongs to Gerhard 'The Great' Raven
             
             Uses:\n
             """
@@ -634,7 +634,7 @@ def decorateFunctions ( funcs , calls , opers ) :
             >>> fun = ...
             >>> vfun = max_element ( fun )
 
-            The concept belongs to Gerghard 'The Great' Raven
+            The concept belongs to Gerhard 'The Great' Raven
             
             Uses:\n
             """
@@ -646,7 +646,7 @@ def decorateFunctions ( funcs , calls , opers ) :
             >>> fun = ...
             >>> vfun = min_abs_element ( fun )
 
-            The concept belongs to Gerghard 'The Great' Raven
+            The concept belongs to Gerhard 'The Great' Raven
             
             Uses:\n
             """
@@ -658,7 +658,7 @@ def decorateFunctions ( funcs , calls , opers ) :
             >>> fun = ...
             >>> vfun = max_abs_element ( fun )
 
-            The concept belongs to Gerghard 'The Great' Raven
+            The concept belongs to Gerhard 'The Great' Raven
             
             Uses:\n
             """
@@ -801,8 +801,11 @@ def decoratePredicates ( cuts , calls , opers ) :
             >>> result = cut(arg)
             
             Uses:\n
-            """ 
-            return calls.__call__   (s,a)
+            """
+            result = calls.__call__ (s,a)
+            if result : return True
+            return False 
+
         # boolean operations:
         def _or_  (s,a) :
             """
@@ -1073,7 +1076,7 @@ def decorateFunInfo ( funcs , infos  ) :
             updates the extraInfo field
             
             >>> functor = ...
-            >>> smart = infor ( 15 , functor )
+            >>> smart = info ( 15 , functor )
             
             >>> particle = ...
             >>> value = smart ( particle )
@@ -1104,10 +1107,6 @@ def getAndDecoratePipes  ( name , base , opers ) :
     """ get all maps  and decorate them """
     funcs = getInherited ( name , base )
     return decorateMaps  ( funcs , opers )  ## RETURN 
-
-
-
-
 
 # =============================================================================
 ## import all dependent functions 
