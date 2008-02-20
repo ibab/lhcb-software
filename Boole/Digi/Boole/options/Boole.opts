@@ -120,8 +120,8 @@ DigiMUONSeq.Members += { "MuonDigitization" };
 DigiMUONSeq.Members += { "MuonDigitToRawBuffer" };
 
 // Silicon Tracker digitisation
-#include "$STALGORITHMSROOT/options/itDigi.opts"
-#include "$STALGORITHMSROOT/options/ttDigi.opts"
+#include "$STDIGIALGORITHMSROOT/options/itDigi.opts"
+#include "$STDIGIALGORITHMSROOT/options/ttDigi.opts"
 #include "$STDAQROOT/options/stDAQ.opts"
 
 DigiITSeq.Members += { "MCSTDepositCreator/MCITDepositCreator" };

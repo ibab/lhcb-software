@@ -3,6 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v14r10>2008-02-20 Boole v14r10</A></H1><PRE>
+ - In v200601.opts, TAE.opts, PilotRun.opts, adapt to new defaults in ST
+   digitization
+ - In Boole.opts, adapt to new name of ST digitization package
+ - In SuppressWarnings.opts, timestamp is printed in UTC
+
 </PRE><H1><A NAME=v14r9>2008-01-30 Boole v14r9</A></H1><PRE>
  - In valgrind.job, use the new ROOT suppressions file available from LCG_54 
  - In Boole.opts, DigiContent.opts, use AlgMap syntax to set up DataOnDemandSvc

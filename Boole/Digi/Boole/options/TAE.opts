@@ -23,6 +23,12 @@ InitMUONSeq.Members -= { "MuonBackground/MuonFlatSpillover" };
 #include "$DDDBROOT/options/DC06.opts"
 MagneticFieldSvc.UseConstantField = true; // Constant (zero) field
 
+// Do not use Geant deposited charge in DC06
+MCITDepositCreator.DepChargeTool = "SiDepositedCharge";
+MCTTDepositCreator.DepChargeTool = "SiDepositedCharge";
+MCITDepositCreatorPrev1.DepChargeTool = "SiDepositedCharge";
+MCTTDepositCreatorPrev1.DepChargeTool = "SiDepositedCharge";
+
 //---------------------------------------------------------------------------
 // Add one or more misaligned RawEvents
 //---------------------------------------------------------------------------

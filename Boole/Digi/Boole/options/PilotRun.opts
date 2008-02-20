@@ -21,6 +21,9 @@ MagneticFieldSvc.UseConstantField = true; // Constant (zero) field
 // Switch off muon background
 InitMUONSeq.Members -= { "MuonBackground/MuonLowEnergy" };
 InitMUONSeq.Members -= { "MuonBackground/MuonFlatSpillover" };
+// Do not use Geant deposited charge in DC06
+MCITDepositCreator.DepChargeTool = "SiDepositedCharge";
+MCTTDepositCreator.DepChargeTool = "SiDepositedCharge";
 
 //---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events

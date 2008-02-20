@@ -15,6 +15,11 @@
 //--------------------------------------------------------------------------- 
 #pragma print on
 #include "$DDDBROOT/options/DC06.opts"
+
+// Do not use Geant deposited charge in DC06
+MCITDepositCreator.DepChargeTool = "SiDepositedCharge";
+MCTTDepositCreator.DepChargeTool = "SiDepositedCharge";
+
 // By default, Boole uses G4 parameterisation for Muon background
 // Uncomment next two lines to use old GCALOR parameterisation instead
 //#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy-GCALOR.opts"
