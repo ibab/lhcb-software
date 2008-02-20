@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================== PatAlgorithms v3r4 2008-02-18 ====================
 ! 2008-02-18 - Manuel Schiller
  - PatSeedingTool can now take an optional state giving a hint where a track
    is to be found; this is useful for the HLT when confirming L0 candidates
