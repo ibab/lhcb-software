@@ -1,4 +1,4 @@
-// $Id: lcgDict.h,v 1.1 2007-10-19 15:39:03 cattanem Exp $
+// $Id: lcgDict.h,v 1.2 2008-02-20 14:13:18 ibelyaev Exp $
 #ifndef TRACKEVENT_LCGDICT_H 
 #define TRACKEVENT_LCGDICT_H 1
 
@@ -13,6 +13,7 @@ namespace {
   struct _Instantiations {
     // begin instantiations
     std::vector<const LHCb::Track*> _i1;
+    std::vector<LHCb::Track*>       _i2;
     // end instantiations
   };
 }
