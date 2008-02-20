@@ -5,6 +5,178 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v23r4>2008-02-20 LHCbSys v23r4</A></H1><PRE>
+This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
+
+- Packages removed: MDF_DCAP - Functionality now in MDF_ROOT
+                    MDF_GFAL - Functionality now in MDF_ROOT
+                    MDF_RFIO - Functionality now in MDF_ROOT
+- Packages modified: GaudiObjDesc v11r2, KernelSys v7r2, LHCbKernel v8r2,
+    Relations v5r4, RichKernel v7r11, DetSys v11r3, RichDet v10r10,
+    VeloDet v12r4, EventSys v24r1, DAQEvent v7r9, EventAssov v4r4, HltEvent v8r7,
+    L0Event v16r8, MCEvent v2r7, PhysEvent v11r6, RecEvent v2r10,
+    TrackEvent v4r2, CaloUtils v7r8, DaVinciMCKernel v2r6, LHCbAlgs v2r15,
+    LoKiAlgo v7r1, LoKiArrayFunctors v7r1, LoKiCore v7r1, LoKiGen v7r1,
+    LoKiMC v7r1, LoKiNumbers v7r2, LoKiPhys v7r1, MDF v3r3, MDF_ROOT v1r1,
+    RichRecBase v3r11, SimComponents v2r8p1, STKernel v1r2, TfKernel v2r3,
+    TrackInterfaces v3r12
+
+- In GaudiObjDesc v11r2
+  . Change for <import> element to allow forward declaration in global namespace,
+    by setting the attribute namespace='::'
+  . New feature for ONLY forward declarations (in contrast to including the
+    forward declared type after the class body). To do so set the <import> 
+    attribute soft="FORWARDONLY".
+  . Changes for attribute types: 
+    o if the attribute type is a pointer type initialize it to 0 in GODs self
+      generated default constructor
+    o if the attribute type starts with "const " fix the return type of the get
+      method to "const <type>" (had an additional const before)
+
+- In LHCbKernel v8r2
+  . Add new method to Rich::Side enum, to convert side to text more precisely 
+    when combined with the Rich::DetectorType enum.
+  . Slight tweek to RichSmartID fillStream method, to print panel in a
+    more human friendly way.
+
+- In Relations v5r4
+  . Remove explicit manipulations of PYTHONPATH
+
+- In RichKernel v7r11
+  . Update RichGeomPhoton to store a pointer to the associated DeRichSphMirror
+    for the primary and secondary mirrors, instead of just the mirror number.
+  . Update RichTrackSegment to have more reasonable guesses for the 
+    average photon energy in each radiator (previously was set to 0).
+  . Add new method to RichHistoID.h
+  . Add new utility (RichSmartIDCnv.h) to perform conversions of RichSmartIDs to
+    various schemes. Currently implemented is a global pixel ordering scheme
+  . Update Ray Tracing interface to pass back booleans instead of
+    StatusCodes. Slightly improves CPU performance (due to StatusCode checks).
+  . Add method RichTrackSegment::vectorAtCosSinThetaPhi
+
+- In RichDet v10r10
+  . Add a new public method to DeRichHPDPanel to return a pointer to the 
+    DeRichHPD object associated to a given HPD as defined by a RichSmartID
+
+- In VeloDet v12r4
+  . Removed all explicit 2048 in sensor classes and replaced them with
+    m_numberOfStrips (or m_maxRouting line, where more suitable).
+  . Made accessors for strip capicitance and strip info inline.
+  . Moved sanity check for strip capacitance and strip info conditions
+    from accessors to update call back method.
+  . Added accessors for phi strip impact parameters in all frames.
+
+- In DAQEvent v7r9
+  . In RawBank:
+    o Move implementation of typeName( BankType ) to .ccp as it cannot be inlined
+    o Cleanup stl includes
+
+- In EventAssoc v4r4
+  . Add dictionary for "L0CaloCandidate -> MCParticle with the weight=double" 
+	  relation table (bi-directional) 
+
+- In HltEvent v8r7
+  . HltEnums: accessor methods allowing to get the GaudiMap of enum and string.
+
+- In L0Event v16r8
+  . Add some missing dictionaries, but not on Windows
+  . Fix bug in L0DUBase.h (wrong mask/shift for BCID in the 2nd PileUp word)
+  . Add new classes to handle L0Muon information and errors :
+    o L0MuonInfo
+    o L0MuonCtrlError
+    o L0MuonProcError
+
+- In MCEvent v2r7
+  . Add some missing dicts
+
+- In PhysEvent v11r6
+  . Add generation of custom dictionary
+  . Particle.xml : Add predefined enum Chi2OfDirectionConstrainedFit
+
+- In RecEvent v2r10
+  . Add a missing dict
+  . Added function in TwoProngVertex to calculate the Armenteros-Podolanski
+    variables
+  . VertexBase: two new methods returning the chi2/Dof and allowing to set
+    the chi2 and the dof at the same time. The names are the same as the ones
+    used in Track.
+
+- In TrackEvent v4r2
+  . In Measurement class, added pointer to detector element
+
+- In CaloUtils v7r8
+  . Bug fix in Calo2Dview.cpp
+
+- In DaVinciMCKernel v2r6
+  . Remove obsolete IDebugTool interface
+  . Fix a couple of Doxygen warnings
+  . IBackgroundCategoryTool: getMap method not virtual.
+  . Kernel/Particle2MCLinker.h: fix some problems with MCAssociation class.
+  . Added method getDaughtersAndPartners(Particle*) to BackgroundCategory, which
+    returns a veector of <Particle*,MCParticle*> pairs giving the B daughters and
+    their associated MCParticles (if any).
+
+- In LHCbAlgs v2r15
+  . AlgorithmCorrelations : More functionality, allow non-square matrices, allow
+    to print efficiencies for conditions algorithms as well. 
+
+- In LoKiAlgo v7r1, LoKiArrayFunctors v7r1, LoKiGen v7r1, LoKiMC v7r1,
+     LoKiNumbers v7r2, LoKiPhys v7r1
+  . Minor fixes due to new Gaudi/ROOT/Reflex 
+
+- In LoKiArrayFunctors v7r1, LoKiGen v7r1, LoKiMC v7r1
+  . All *Hybrid* stuff: everything is extended for "functional" functors also
+
+- In LoKiCore v7r1
+  . Various minor fixes
+  . In python/LoKiCore/functions.py:  fix a typo in _iter_SRV_ function
+  . src/HybridBase.cpp: improve the (buggy) printout of "context" field..
+                        return Error in the case of errors.. 
+  . LoKi/Range.h: Fix the problem with reverse iterators.
+  . src/LoKiHybridBase.cpp: force the loading/initialization of LoKi Service
+  . python/LoKiCore/functions.py: fix many tiny typos 
+
+- In LoKiPhys v7r1
+  . Implement many shortcuts&aliases
+  . LoKi/Particles19.h, src/Particles19.cpp:
+       various "lifetime" functors, which are using ILifetimeFitter interface
+  . LoKi/ParticleContextCuts.h, LoKi/Particles20.h, src/Particles20.cpp
+       new "context-dependent" functors
+  . src/Particles7.cpp
+    modify the printout of VFASPF functor ( "[...]" --> "(...)" ) 
+  . python/LoKiPhys/Phys.py: couple of minor fixes 
+
+- In MDF v3r3
+  . Use ROOT as default for: rfio, castor, dcache, dcap, gsidcap and gfal
+
+- In MDF_ROOT v1r1
+  . Proper handling of URL options
+
+- In RichRecBase v3r11
+  . Add a flag to the IRichCherenkovAngle::avgCherenkovTheta method to force
+    the calculation to use the emitted photon spectra instead of the detected.
+  . Pass the mass hypothesis in IRichSignalDetection::photonDetEfficiency.
+  . Update the RichRecPointOnRing class to store pointers to the mirror segments.
+  . Improve pixel information for when clustering is activated
+  . Replace StatusCodes with booleans in returned codes.
+
+- In SimComponents v2r8p1
+  . Fix untested StatusCode
+
+- In STKernel v1r2
+  . Extend readout tool interface to give list of board ids
+
+- In TfKernel v2r3
+  . fixed typo in VeloSensorHits<>::closestHitAtRHalfBoxImp().
+
+- In TrackInterfaces v3r12
+  . Added code needed for L0 confirmation to IPatSeedingTool
+
+- In HltEvent v8r7, RecEvent v2r10, TrackEvent v4r2, CaloUtils v7r8,
+     DaVinciMCKernel v2r6, STKernel v1r2, TfKernel v2r3, VeloDet v12r4,
+     RichKernel v7r11, RichRecBase v3r11
+  . Cleanup public includes using forward declarations whenever possible
+
 </PRE><H1><A NAME=v23r3>2008-02-05 LHCbSys v23r3</A></H1><PRE>
 This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
 
