@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.7 2008-02-20 15:28:24 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.8 2008-02-20 16:10:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -84,6 +84,9 @@ namespace Rich
         typedef Rich::Map < const LHCb::MCParticle*, bool > TrackedMCPList;
         /// Get the map for tracked MCParticles for this event
         TrackedMCPList & trackedMCPs() const;
+
+        /// Reject trackless hits
+        bool rejectTrackless( const Rich::HPDPixelCluster& cluster ) const;
 
       private: // data
 

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromCheatedRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.6 2008-02-20 15:28:24 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.7 2008-02-20 16:10:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -48,39 +48,55 @@ StatusCode PixelCreatorFromCheatedRawBuffer::initialize()
 LHCb::RichRecPixel *
 PixelCreatorFromCheatedRawBuffer::buildPixel( const Rich::HPDPixelCluster& cluster ) const
 {
-  // Should here produce one pixel per true hit in the cluster ??
-
   // First run base class method to produce reconstructed pixel
   LHCb::RichRecPixel * pixel = Rich::Rec::PixelCreatorBase::buildPixel(cluster);
   if ( !pixel ) return NULL;
-
   // Now, update coords using MC information
-
-  // Find associated MCRichOpticalPhoton
-  SmartRefVector<LHCb::MCRichHit> mcRichHits;
-  m_mcTool->mcRichHits(cluster,mcRichHits);
-  if ( !mcRichHits.empty() )
-  {
-    // Just use first hit for the moment (should do better)
-    const LHCb::MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton( mcRichHits.front() );
-    if ( mcPhot )
-    {
-      // Update coordinates with cheated info
-      pixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
-      pixel->setLocalPosition( smartIDTool()->globalToPDPanel(pixel->globalPosition()) );
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        verbose() << "Pixel " << cluster
-                  << " MC cheated global pos " << pixel->globalPosition() << endreq;
-      }
-    }
-  }
-
+  addMCInfo( pixel );
+  // return
   return pixel;
 }
 
 LHCb::RichRecPixel *
-PixelCreatorFromCheatedRawBuffer::buildPixel( const LHCb::RichSmartID & id ) const
+PixelCreatorFromCheatedRawBuffer::buildPixel( const LHCb::RichSmartID& id ) const
 {
-  return this->buildPixel( Rich::HPDPixelCluster(id) );
+  // First run base class method to produce reconstructed pixel
+  LHCb::RichRecPixel * pixel = Rich::Rec::PixelCreatorBase::buildPixel(id);
+  if ( !pixel ) return NULL;
+  // Now, update coords using MC information
+  addMCInfo( pixel );
+  // return
+  return pixel;
+}
+
+void PixelCreatorFromCheatedRawBuffer::addMCInfo( LHCb::RichRecPixel * pixel ) const
+{
+  if ( pixel )
+  {
+    // Find associated MCRichOpticalPhoton
+    SmartRefVector<LHCb::MCRichHit> mcRichHits;
+    m_mcTool->mcRichHits( pixel->hpdPixelCluster(), mcRichHits );
+
+    // Loop over photons
+    for (  SmartRefVector<LHCb::MCRichHit>::const_iterator iHit = mcRichHits.begin();
+           iHit != mcRichHits.end(); ++iHit )
+    {
+      // Is this a true CK photon ?
+      const LHCb::MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton( *iHit );
+      if ( mcPhot )
+      {
+        // Update coordinates with cheated info
+        pixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
+        pixel->setLocalPosition( smartIDTool()->globalToPDPanel(mcPhot->pdIncidencePoint()) );
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose() << "Pixel " << pixel->hpdPixelCluster()
+                    << " MC cheated global pos " << pixel->globalPosition() << endreq;
+        }
+        // break out of loop (i.e. ignore any other associated hits)
+        break;
+      }
+    }
+
+  }
 }

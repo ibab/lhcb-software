@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.6 2008-02-20 15:28:24 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.7 2008-02-20 16:10:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -60,35 +60,47 @@ StatusCode PixelCreatorFromSignalRawBuffer::initialize()
   return sc;
 }
 
+bool PixelCreatorFromSignalRawBuffer::rejectTrackless( const Rich::HPDPixelCluster& cluster ) const
+{
+  bool OK = true;
+  // if requested, filter trackless hits
+  if ( m_trackFilter )
+  {
+    OK = false;
+    std::vector<const LHCb::MCParticle*> mcParts;
+    m_mcTool->mcParticles( cluster, mcParts );
+    for ( std::vector<const LHCb::MCParticle*>:: const_iterator iMP = mcParts.begin();
+          iMP != mcParts.end(); ++iMP )
+    {
+      if ( *iMP != NULL && trackedMCPs()[*iMP] ) { OK = true; break; }
+    }
+  } 
+  return OK;
+}
+
 // Forms a new RichRecPixel object from a RichDigit
 LHCb::RichRecPixel *
 PixelCreatorFromSignalRawBuffer::buildPixel( const LHCb::RichSmartID & id ) const
 {
-  return this->buildPixel( Rich::HPDPixelCluster(id) );
+  // Test if this is a background cluster
+  if ( m_rejBackHits && m_mcTool->isBackground(id) ) return NULL;
+
+  // reject trackless hits
+  if ( !rejectTrackless(Rich::HPDPixelCluster(id)) ) return NULL;
+
+  // Finally, delegate work to pixel creator
+  return RichPixelCreatorBase::buildPixel(id);
 }
 
 // Forms a new RichRecPixel object from a RichDigit
 LHCb::RichRecPixel *
 PixelCreatorFromSignalRawBuffer::buildPixel( const Rich::HPDPixelCluster& cluster ) const
 {
-
   // Test if this is a background cluster
   if ( m_rejBackHits && m_mcTool->isBackground(cluster) ) return NULL;
 
-  // if requested, filter trackless hits
-  if ( m_trackFilter )
-  {
-    std::vector<const LHCb::MCParticle*> mcParts;
-    m_mcTool->mcParticles( cluster, mcParts );
-    bool found = false;
-    for ( std::vector<const LHCb::MCParticle*>:: const_iterator iMP = mcParts.begin();
-          iMP != mcParts.end(); ++iMP )
-    {
-      if ( *iMP != NULL && trackedMCPs()[*iMP] ) { found = true; break; }
-    }
-    // If no associated tracked MCParticle found, return NULL
-    if ( !found ) return NULL;
-  }
+  // reject trackless hits
+  if ( !rejectTrackless(cluster) ) return NULL;
 
   // Finally, delegate work to pixel creator
   return RichPixelCreatorBase::buildPixel(cluster);
