@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackInterfaces
-version           v3r11
+version           v3r12
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -26,6 +26,3 @@ apply_pattern reflex_dictionary                                                 
               headerfiles=$(TRACKINTERFACESROOT)/dict/TrackInterfacesDict.h     \
               selectionfile=$(TRACKINTERFACESROOT)/dict/TrackInterfacesDict.xml \
               options="-U__MINGW32__"
-
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro TrackInterfacesDict_use_linkopts $(use_linkopts)
