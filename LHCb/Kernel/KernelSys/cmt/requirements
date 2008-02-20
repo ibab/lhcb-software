@@ -1,13 +1,13 @@
 package KernelSys
-version v7r1
+version v7r2
 
 branches doc cmt
 
-use LHCbKernel       v8r1   Kernel
+use LHCbKernel       v8r2   Kernel
 use LHCbMath         v2r5   Kernel
-use Relations        v5r3   Kernel
 use CaloKernel       v5r1   Calo
 use MuonKernel       v4r0   Muon
-use RichKernel       v7r10  Rich
 use L0MuonKernel     v7r2   L0
 use ProcessorKernel  v5r1   L0
+use Relations        v5r4   Kernel
+use RichKernel       v7r11  Rich
