@@ -4,13 +4,11 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!======================= TrackEvent v4r11 2008-02-20 =========================
 ! 2008-02-20 - Vanya BELYAEV
-
  - dict/lcgDict.h
     add explicitly the dictionary for std::vector<LHCb::Track*>
 
-
-!======================= TrackEvent v4r11 2008-02-06 =========================
 ! 2008-02-06 - Marco Cattaneo
  - Cleanup includes, using forward declaration possibility in GaudiObjDesc v11r2
 
