@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.6 2007-06-01 09:47:08 cattanem Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.7 2008-02-20 15:28:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -69,8 +69,11 @@ namespace Rich
 
       protected: // methods
 
-        /// Build a new RichRecPixel
+        /// Build a new RichRecPixel from an Rich::HPDPixelCluster
         virtual LHCb::RichRecPixel * buildPixel ( const Rich::HPDPixelCluster& cluster ) const;
+
+        /// Build a new RichRecPixel from a single LHCb::RichSmartID
+        virtual LHCb::RichRecPixel * buildPixel( const LHCb::RichSmartID & id ) const;
 
         /// Initialise for a new event. Re-implmented from base class version.
         virtual void InitNewEvent();

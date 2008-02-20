@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.5 2007-03-09 22:57:42 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.6 2008-02-20 15:28:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -36,11 +36,9 @@ PixelCreatorFromSignalRawBuffer( const std::string& type,
     m_rejBackHits         ( true  ),
     m_trackMCPsDone       ( false )
 {
-
   // Define job option parameters
   declareProperty( "FilterTracklessDigits", m_trackFilter );
   declareProperty( "RejectBackground", m_rejBackHits );
-
 }
 
 StatusCode PixelCreatorFromSignalRawBuffer::initialize()
@@ -60,6 +58,13 @@ StatusCode PixelCreatorFromSignalRawBuffer::initialize()
     info() << "Will reject non Cherenkoc signal hits" << endreq;
 
   return sc;
+}
+
+// Forms a new RichRecPixel object from a RichDigit
+LHCb::RichRecPixel *
+PixelCreatorFromSignalRawBuffer::buildPixel( const LHCb::RichSmartID & id ) const
+{
+  return this->buildPixel( Rich::HPDPixelCluster(id) );
 }
 
 // Forms a new RichRecPixel object from a RichDigit

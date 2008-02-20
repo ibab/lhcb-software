@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromCheatedRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.5 2007-04-23 13:23:54 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.6 2008-02-20 15:28:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -79,3 +79,8 @@ PixelCreatorFromCheatedRawBuffer::buildPixel( const Rich::HPDPixelCluster& clust
   return pixel;
 }
 
+LHCb::RichRecPixel *
+PixelCreatorFromCheatedRawBuffer::buildPixel( const LHCb::RichSmartID & id ) const
+{
+  return this->buildPixel( Rich::HPDPixelCluster(id) );
+}
