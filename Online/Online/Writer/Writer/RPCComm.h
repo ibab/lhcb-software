@@ -102,12 +102,6 @@ namespace LHCb {
   "    <param><value>\n" \
   "      <string>%u</string>\n" \
   "    </value></param>\n" \
-  "    <param><value>\n" \
-  "      <string>%s</string>\n" \
-  "    </value></param>\n" \
-  "    <param><value>\n" \
-  "      <string>%s</string>\n" \
-  "    </value></param>\n" \
   "  </params>\n"  \
   "</methodCall>\n"
 

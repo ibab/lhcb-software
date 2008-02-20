@@ -168,7 +168,7 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
   char endStr[] = "</string>";
   size_t start, end;
 
-  snprintf(xmlData, sizeof(xmlData), NEWFILE_TEMPLATE, runNumber, "physics", "2008");
+  snprintf(xmlData, sizeof(xmlData), NEWFILE_TEMPLATE, runNumber);
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
           "WriterHost", strlen(xmlData));
 
@@ -176,7 +176,7 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
   ret = requestResponse(headerData, xmlData, response, sizeof(response));
 
   if (ret < 0)
-    throw std::runtime_error("Could not run RPC call for create.");
+    throw std::runtime_error("Could not run RPC call for create");
   if (isError(response))
     throw std::runtime_error(response);
 
