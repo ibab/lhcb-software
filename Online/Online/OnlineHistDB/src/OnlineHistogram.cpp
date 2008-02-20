@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.27 2008-02-12 09:52:13 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.28 2008-02-20 16:47:16 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -172,9 +172,9 @@ void OnlineHistogram::load() {
   OCIStmt *stmt=NULL;
   m_StmtMethod = "OnlineHistogram::load";
   std::string command = 
-      "BEGIN :out := ONLINEHISTDB.GETHISTOGRAMDATA(:nm,:pg,:in,:hid,:hsd,:ihs,:nhs,:ty,:hst,:sub,:tk,:alg,:na,:des,:doc,:isa,:cre,:obs,:dis,:hdi,:shd, :dsn); END;";
+    "BEGIN :out := ONLINEHISTDB.GETHISTOGRAMDATA(:nm,:pg,:in,:hid,:hsd,:ihs,:nhs,:ty,:hst,:sub,:tk,:alg,:na,:des,:doc,:isa,:cre,:obs,:dis,:hdi,:shd, :dsn); END;";
   if (OCI_SUCCESS == prepareOCITaggedStatement(stmt, command.c_str(), "HLOAD") ) {
-
+    
     text  hid[VSIZE_HID]="";
     text  ty[VSIZE_TYPE]="";
     text  hst[VSIZE_HSTITLE]="";
@@ -210,30 +210,30 @@ void OnlineHistogram::load() {
     myOCIBindString(stmt,":dsn", dsn, VSIZE_SN, &m_dimServiceName_null);
 
     sword status=myOCIStmtExecute(stmt);
-
+    
     if (OCI_SUCCESS == status) {
       if (0 == out) {
-	m_isAbort=true;
+        m_isAbort=true;
       }
       else {
-	m_hid= std::string((const char *) hid);
-	m_hstype=std::string((const char *) ty);
-	m_type=OnlineHistDBEnv::H1D;
-	for (int it=0; it<NHTYPES; it++) {
-	  if (m_hstype == std::string(HistTypeName[it])) m_type=(OnlineHistDBEnv::HistType)it;
-	}
-	m_hsname=std::string((const char *) hst);
-	m_subname= m_subname_null ?  "" : std::string((const char *) sub);
-	m_task=std::string((const char *) tk);
-	m_algorithm=std::string((const char *) alg);
-	m_Descr= m_Descr_null ? "" : std::string((const char *) des);
-	m_Doc=m_Doc_null ? "" : std::string((const char *) doc);
-	if (m_obsoleteness_null) m_obsoleteness=0;
-	if (m_hdisp_null) m_hdisp = 0;
-	if (m_hsdisp_null) m_hsdisp = 0;
-	if (m_shdisp_null) m_shdisp = 0;
-	m_dimServiceName = m_dimServiceName_null ? "" : std::string((const char *) dsn);
-	m_isAnaHist = (isAnaHist>0);
+        m_hid= std::string((const char *) hid);
+        m_hstype=std::string((const char *) ty);
+        m_type=OnlineHistDBEnv::H1D;
+        for (int it=0; it<NHTYPES; it++) {
+          if (m_hstype == std::string(HistTypeName[it])) m_type=(OnlineHistDBEnv::HistType)it;
+        }
+        m_hsname=std::string((const char *) hst);
+        m_subname= m_subname_null ?  "" : std::string((const char *) sub);
+        m_task=std::string((const char *) tk);
+        m_algorithm=std::string((const char *) alg);
+        m_Descr= m_Descr_null ? "" : std::string((const char *) des);
+        m_Doc=m_Doc_null ? "" : std::string((const char *) doc);
+        if (m_obsoleteness_null) m_obsoleteness=0;
+        if (m_hdisp_null) m_hdisp = 0;
+        if (m_hsdisp_null) m_hsdisp = 0;
+        if (m_shdisp_null) m_shdisp = 0;
+        m_dimServiceName = m_dimServiceName_null ? "" : std::string((const char *) dsn);
+        m_isAnaHist = (isAnaHist>0);
       }
       
     }
@@ -245,7 +245,7 @@ void OnlineHistogram::load() {
     if (!m_isAbort) {
       // display options
       createDisplayOptions();
-
+      
     }
   }
   else {
@@ -1159,13 +1159,12 @@ bool OnlineHistogram::getCreationDirections(std::string &Algorithm,
       Algorithm = CreationAlgorithm;
       source_list.clear();
       if (!Sources.empty()) 
-	source_list.insert( source_list.begin(),  
-			    Sources.begin(), Sources.end() );
+        source_list.insert( source_list.begin(),  
+                            Sources.begin(), Sources.end() );
       parameters.clear();
       if(!SourcePar.empty()) 
-	parameters.insert( parameters.begin(),  
-			   SourcePar.begin(), SourcePar.end() );
-	
+        parameters.insert( parameters.begin(),  
+                           SourcePar.begin(), SourcePar.end() );
       out = true;
     }
   }

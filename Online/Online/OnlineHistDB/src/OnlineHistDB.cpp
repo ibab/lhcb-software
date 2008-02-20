@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.27 2007-12-20 13:58:11 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.28 2008-02-20 16:47:16 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -46,6 +46,8 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
   // needed initialization for OCI interface
   getOCITypes();
   m_TaggedStatement = new std::set<std::string>;
+  m_refRoot = new std::string(OnlineHistDBEnv_constants::StdRefRoot);
+  m_savesetsRoot = new std::string(OnlineHistDBEnv_constants::StdSavesetsRoot);
 
   // set up object cache to avoid object duplication
   m_TStorage = (OnlineTaskStorage*) this;
@@ -83,6 +85,8 @@ OnlineHistDB::~OnlineHistDB () {
   if (m_envhp)
     OCIHandleFree((dvoid *) m_envhp, OCI_HTYPE_ENV);
   if(m_TaggedStatement) delete m_TaggedStatement;
+  if(m_refRoot) delete m_refRoot;
+  if(m_savesetsRoot) delete m_savesetsRoot;
 }
 
 bool OnlineHistDB::commit() {

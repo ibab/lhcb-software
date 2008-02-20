@@ -1,9 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistTask.h,v 1.6 2007-11-23 17:58:55 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistTask.h,v 1.7 2008-02-20 16:47:16 ggiacomo Exp $
 #ifndef ONLINEHISTTASK_H
 #define ONLINEHISTTASK_H 1
 /** @class  OnlineHistTask OnlineHistTask.h OnlineHistDB/OnlineHistTask.h
  * 
- *  Task Class header for the C++ interface to the Online Monitoring Histogram DB
+ *  Task Class for the C++ interface to the Online Monitoring Histogram DB
  *  @author Giacomo Graziani (INFN Firenze)
  *  @date 27/06/2007
  */

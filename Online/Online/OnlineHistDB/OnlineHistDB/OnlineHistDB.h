@@ -1,9 +1,10 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.20 2008-02-05 22:16:56 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.21 2008-02-20 16:47:16 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
  * 
- *  header for the C++ interface to the Online Monitoring Histogram DB
+ *  C++ interface to the Online Monitoring Histogram DB:
+ *  DB Session class
  *  @author Giacomo Graziani (INFN Firenze)
  *  @date 1/12/2006
  */
@@ -78,6 +79,15 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   int getAlgListID() const {return m_AlgListID;}
   /// sets the algorithm list version (works only for DB admin account)
   bool setAlgListID(int algListID);
+
+  /// get reference histograms root directory 
+  inline std::string refRoot() {return *m_refRoot;}
+  /// get saveset root directory 
+  inline std::string savesetsRoot() {return *m_savesetsRoot;}
+  /// change reference histograms root directory (for testing)
+  void setRefRoot(std::string newroot) { *m_refRoot = newroot; }
+  /// change savesets root directory (for testing)
+  void setSavesetsRoot(std::string newroot) { *m_savesetsRoot = newroot; }
 
 
   // deleting methods (handle with care!)

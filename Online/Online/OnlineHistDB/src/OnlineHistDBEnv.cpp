@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.10 2007-12-06 15:51:51 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.11 2008-02-20 16:47:16 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 using namespace OnlineHistDBEnv_constants;
 
@@ -8,8 +8,8 @@ OnlineHistDBEnv::OnlineHistDBEnv(std::string User)
     m_TaggedStatement(NULL),
     m_TStorage(NULL), m_HStorage(NULL), m_PStorage(NULL), 
     m_user(toUpper(User)), m_debug(0), m_excLevel(1),
-    m_refRoot(OnlineHistDBEnv_constants::StdRefRoot),
-    m_savesetsRoot(OnlineHistDBEnv_constants::StdSavesetsRoot) {
+    m_refRoot(NULL),
+    m_savesetsRoot(NULL) {
     initOCIBinds();
   }
 
@@ -44,6 +44,7 @@ void OnlineHistDBEnv::checkCurBind() {
   if(m_curBind == 40) {
     std::string error("FATAL ERROR IN OnlineHistDBEnv::checkCurBind : maximum number of binds reached");
     cout << error<<endl;
+    resetTaggedStatements();
     throw error; 
   }
 }
@@ -92,6 +93,13 @@ void OnlineHistDBEnv::getOCITypes() {
 			 OCI_DURATION_SESSION,  OCI_TYPEGET_ALL,
 			 &OCIdispopt)); 
 }
+
+void OnlineHistDBEnv::resetTaggedStatements() 
+{
+  if(m_TaggedStatement)
+    m_TaggedStatement->clear();  
+}
+
 
 void OnlineHistDBEnv::warningMessage(std::string Error) const {
   if (m_debug > -1) {
@@ -418,13 +426,15 @@ sword OnlineHistDBEnv::checkerr(sword status,
     if (m_debug > -1)
       cout << message.str();
     if( (level == SEVERE && m_excLevel >0) ||
-	(m_excLevel >1  && level > NORMAL) )
+        (m_excLevel >1  && level > NORMAL) ) {
+      resetTaggedStatements();
       throw message.str();
+    }
   }
   else {
     if (m_debug > dboff && error.size() >0) {
       cout << "warning from "<<m_StmtMethod <<": "<<
-	error << endl;
+        error << endl;
     }
   }
 

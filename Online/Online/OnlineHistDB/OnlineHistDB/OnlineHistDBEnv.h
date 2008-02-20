@@ -1,9 +1,10 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.21 2008-02-12 10:13:39 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.22 2008-02-20 16:47:16 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
  * 
  *  environment class for C++ interface to the Online Monitoring Histogram DB
+ *  containing constants and common OCI-based tools
  *  @author Giacomo Graziani (INFN Firenze)
  *  @date 1/12/2006
  */
@@ -86,13 +87,7 @@ class OnlineHistDBEnv {
   inline OCIEnv *envhp() const {return m_envhp;}
   inline OCIError *errhp() const {return m_errhp;}
   inline OCISvcCtx *svchp() const {return m_svchp;}
-  /// get reference histograms root directory 
-  inline std::string refRoot() {return m_refRoot;}
-  inline std::string savesetsRoot() {return m_savesetsRoot;}
-  /// change reference histograms root directory (for testing)
-  void setRefRoot(std::string newroot) { m_refRoot = newroot; }
-  /// change savesets root directory (for testing)
-  void setSavesetsRoot(std::string newroot) { m_savesetsRoot = newroot; }
+  
 
  protected:
   OnlineHistDBEnv(std::string User); 
@@ -190,6 +185,8 @@ class OnlineHistDBEnv {
   OCIType *OCIdispopt;
 
   std::set<std::string> *m_TaggedStatement;
+  std::string *m_refRoot;
+  std::string *m_savesetsRoot;
 
   OnlineTaskStorage *m_TStorage;
   OnlineHistogramStorage *m_HStorage;
@@ -202,12 +199,10 @@ class OnlineHistDBEnv {
   unsigned int m_curBind;
 
   void checkCurBind();
+  void resetTaggedStatements();
   std::string toUpper(string str);
   int m_debug;
   int m_excLevel;
-
-  std::string m_refRoot;
-  std::string m_savesetsRoot;
 };
 
 #endif // ONLINEHISTDBENV_H
