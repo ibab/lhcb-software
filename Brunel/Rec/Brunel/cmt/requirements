@@ -1,5 +1,5 @@
 package Brunel
-version v32r3p1
+version v32r4
 
 branches doc cmt job options
 
@@ -37,11 +37,6 @@ use LbcomSys           v*                   -no_auto_imports
 # The whole REC project
 use RecSys             v*                   -no_auto_imports
 
-# Bug fixes for this patch
-use MDF       v3r3    DAQ
-use MDF_ROOT  v1r1    DAQ
-use RichTools v2r17p1 Rich -no_auto_imports
-#
 #===== build Brunel =========================
 application Brunel $(GAUDICONFROOT)/src/GaudiMain.cpp
 # ========================= set macros ============================

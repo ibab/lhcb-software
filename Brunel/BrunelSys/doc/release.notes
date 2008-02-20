@@ -3,6 +3,21 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v32r4>2008-02-15 Brunel v32r4</A></H1><PRE>
+This version uses projects Gaudi v19r7, LHCb v23r4, Lbcom v6r15, Rec v5r4
+ and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
+
+This is a development version with tracking pattern recognition based on the Tf
+framework.
+
+- New tuning
+  . Retuned PatVeloGeneralTracking to pick up very long halo tracks better. 
+    Has tiny effect on normal tracking (PatVelo v3r4)
+  . Add support for individual HPD Q.E. values and mirror segment reflectivities.
+    Determines on track by track and hypo by hypo basis the correct weighted
+    average to use (RichRecTools v4r2)
+  . In SuppressWarnings.opts, timestamp is printed in UTC
+
 </PRE><H1><A NAME=v32r3p1>2008-02-11 Brunel v32r3p1</A></H1><PRE>
 This version uses projects Gaudi v19r7, LHCb v23r3, Lbcom v6r14, Rec v5r3
  and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
