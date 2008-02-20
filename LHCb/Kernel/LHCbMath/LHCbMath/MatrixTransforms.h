@@ -1,4 +1,4 @@
-// $Id: MatrixTransforms.h,v 1.2 2008-01-16 07:22:26 cattanem Exp $
+// $Id: MatrixTransforms.h,v 1.3 2008-02-20 15:51:51 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_MATRIXTRANSFORMS_H 
 #define LHCBMATH_MATRIXTRANSFORMS_H 1
@@ -95,7 +95,7 @@ namespace Gaudi
       dest[1] = source.Y () ;
       dest[2] = source.Z () ;
       return dest ;
-    } 
+    }
     // ========================================================================
     /** fill  Linear Algebra - vector from 4D-vector 
      *
@@ -125,6 +125,36 @@ namespace Gaudi
       dest[1] = source.Y () ;
       dest[2] = source.Z () ;
       dest[3] = source.E () ;
+      return dest ;
+    } 
+    // ========================================================================
+    /** fill  Linear Algebra 3-vector from the spatial components of 4D-(Lorentz)vector 
+     *
+     *  @code
+     *   
+     *  const Gaudi::LorenztVector lorv = ... ;
+     *  Gaudi::Vector2 v3 ;
+     *  
+     *  // fill Linear Algebra vector from Lorenz Vector 
+     *  geo2LA ( lorv , v3 ) ; 
+     *
+     *  @endcode 
+     *  
+     *  @param source (input) Lorentz Vector 
+     *  @param dest   (output) Linear Algebra vector 
+     *  @return linear algebra vector 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-05-24
+     */
+    template <class C,class T>
+    inline ROOT::Math::SVector<T,3>& 
+    geo2LA 
+    ( const ROOT::Math::LorentzVector<C>& source , 
+      ROOT::Math::SVector<T,3>&           dest  ) 
+    {
+      dest[0] = source.X () ;
+      dest[1] = source.Y () ;
+      dest[2] = source.Z () ;
       return dest ;
     } 
     // ========================================================================
@@ -191,7 +221,7 @@ namespace Gaudi
       return dest ;
     } 
     // ========================================================================
-    /** fill  Lorentz vector from Linear Algebra vectgor 
+    /** fill  Lorentz vector from Linear Algebra vector 
      *
      *  @code
      *   
@@ -519,6 +549,222 @@ namespace Gaudi
     // ========================================================================
   } // end of namespace Gaudi::Math
 } // end of namespace Gaudi
+// ============================================================================
+namespace Gaudi
+{
+  namespace Math 
+  {
+    // ========================================================================
+    /** @namespace Gaudi::Math::Operators
+     *  The helper namespace which contains inline operators for 
+     *  various objects 
+     *  @author Vanya BELYAEV ibelyaev@itep.ru
+     *  @date 2008-02-14
+     */
+    namespace Operators 
+    {
+      // ======================================================================
+      /** addition of 3D-vector and the linear algebra vector 
+       *
+       *  @code
+       * 
+       *  const Gaudi::XYZPoint& p1 = ... ;
+       *  const Gaudi::Vector3&  v2 = ... ;
+       *
+       *  Gaudi::XYZPoint p = p1 + v2 ; 
+       *
+       *  @endcode 
+       *
+       *  @param  p1 the position vector (point) 
+       *  @param  v2 the linear algebra vector 
+       *  @return the effective position vector 
+       *
+       *  @author Vanya BELYAEV ibelyaev@itep.ru
+       *  @date   2008-02-14
+       */
+      template <class C, class T>
+      inline 
+      ROOT::Math::PositionVector3D<C>
+      operator+ 
+      ( const ROOT::Math::PositionVector3D<C>& p1 ,
+        const ROOT::Math::SVector<T,3>&        v2 )
+      {
+        ROOT::Math::PositionVector3D<C> result  ;
+        result.SetXYZ(  p1 . X () + v2 [0] , 
+                        p1 . Y () + v2 [1] ,
+                        p1 . Z () + v2 [2] ) ;
+        return result ;
+      }
+      // ========================================================================
+      /** addition of 3D-vector and the linear algebra vector 
+       *
+       *  @code
+       * 
+       *  const Gaudi::XYZVector& p1 = ... ;
+       *  const Gaudi::Vector3&   v2 = ... ;
+       *
+       *  Gaudi::XYZVector p = p1 + v2 ; 
+       *
+       *  @endcode 
+       *
+       *  @param  p1 the displacement vector  
+       *  @param  v2 the linear algebra vector 
+       *  @return the effective displacement vector 
+       *
+       *  @author Vanya BELYAEV ibelyaev@itep.ru
+       *  @date   2008-02-14
+       */
+      template <class C, class T>
+      inline 
+      ROOT::Math::DisplacementVector3D<C>
+      operator+ 
+      ( const ROOT::Math::DisplacementVector3D<C>& p1 ,
+        const ROOT::Math::SVector<T,3>&            v2 )
+      {
+        ROOT::Math::PositionVector3D<C> result  ;
+        result.SetXYZ(  p1 . X () + v2 [0] , 
+                        p1 . Y () + v2 [1] ,
+                        p1 . Z () + v2 [2] ) ;
+        return result ;
+      }
+      // ======================================================================
+      /** addition of Lorentz vector and the linear algebra vector 
+       *
+       *  @code
+       * 
+       *  const Gaudi::LorentzVector& p1 = ... ;
+       *  const Gaudi::Vector4&       v2 = ... ;
+       *
+       *  Gaudi::LorentzVector p = p1 + v2 ; 
+       *
+       *  @endcode 
+       *
+       *  @param  p1 Lorentz vector  
+       *  @param  v2 the linear algebra vector 
+       *  @return the effective Lorentz vector 
+       *
+       *  @author Vanya BELYAEV ibelyaev@itep.ru
+       *  @date   2008-02-14
+       */
+      template <class C, class T>
+      inline 
+      ROOT::Math::LorentzVector<C>
+      operator+ 
+      ( const ROOT::Math::LorentzVector<C>& p1 ,
+        const ROOT::Math::SVector<T,4>&     v2 )
+      {
+        ROOT::Math::LorentzVector<C> result  ;
+        result.SetXYZT 
+          (  p1 . Px () + v2 [0] , 
+             p1 . Py () + v2 [1] ,
+             p1 . Pz () + v2 [2] ,
+             p1 . E  () + v2 [3] ) ;
+        return result ;
+      }
+      // ======================================================================
+      /** addition of 3D-vector and the linear algebra vector 
+       *
+       *  @code
+       * 
+       *  const Gaudi::Vector3&  v2 = ... ;
+       *  const Gaudi::XYZPoint& p1 = ... ;
+       *
+       *  Gaudi::Vector3 p = v2 + p1 ; 
+       *
+       *  @endcode 
+       *
+       *  @param  v2 the linear algebra vector 
+       *  @param  p1 the position vector (point) 
+       *  @return the effective linear algebra vector 
+       *
+       *  @author Vanya BELYAEV ibelyaev@itep.ru
+       *  @date   2008-02-14
+       */
+      template <class C, class T>
+      inline 
+      ROOT::Math::SVector<T,3>
+      operator+ 
+      ( const ROOT::Math::SVector<T,3>&        v2 ,
+        const ROOT::Math::PositionVector3D<C>& p1 )
+      {
+        ROOT::Math::SVector<T,3> result ( v2 ) ;
+        result [0] += p1 . X () ;
+        result [1] += p1 . Y () ;
+        result [2] += p1 . Z () ;
+        return result ;
+      }
+      // ======================================================================
+      /** addition of 3D-vector and the linear algebra vector 
+       *
+       *  @code
+       * 
+       *  const Gaudi::Vector3&   v2 = ... ;
+       *  const Gaudi::XYZVector& p1 = ... ;
+       *
+       *  Gaudi::Vector3 p = v2 + p1 ; 
+       *
+       *  @endcode 
+       *
+       *  @param  v2 the linear algebra vector 
+       *  @param  p1 the displacement vector 
+       *  @return the effective linear algebra vector 
+       *
+       *  @author Vanya BELYAEV ibelyaev@itep.ru
+       *  @date   2008-02-14
+       */
+      template <class C, class T>
+      inline 
+      ROOT::Math::SVector<T,3>
+      operator+ 
+      ( const ROOT::Math::SVector<T,3>&            v2 ,
+        const ROOT::Math::DisplacementVector3D<C>& p1 )
+      {
+        ROOT::Math::SVector<T,3> result ( v2 ) ;
+        result [0] += p1 . X () ;
+        result [1] += p1 . Y () ;
+        result [2] += p1 . Z () ;
+        return result ;
+      }
+      // ======================================================================
+      /** addition of Lorentz vector and the linear algebra vector 
+       *
+       *  @code
+       * 
+       *  const Gaudi::Vector4&        v2 = ... ;
+       *  const Gaudi::LorentzVector&  p1 = ... ;
+       *
+       *  Gaudi::Vector4 p = v2 + p1 ; 
+       *
+       *  @endcode 
+       *
+       *  @param  v2 the linear algebra vector 
+       *  @param  p1 Lorentz vector 
+       *  @param  v2 the linear algebra vector 
+       *  @return the effective linear algebra vector 
+       *
+       *  @author Vanya BELYAEV ibelyaev@itep.ru
+       *  @date   2008-02-14
+       */
+      template <class C, class T>
+      inline 
+      ROOT::Math::SVector<T,4>
+      operator+ 
+      ( const ROOT::Math::SVector<T,3>&     v2 ,
+        const ROOT::Math::LorentzVector<C>& p1 )
+      {
+        ROOT::Math::SVector<T,4> result ( v2 ) ;
+        result [0] += p1 . Px () ;
+        result [1] += p1 . Py () ;
+        result [2] += p1 . Pz () ;
+        result [3] += p1 . E  () ;
+        return result ;
+      }
+      // ======================================================================
+    } // end of namespace Gaudi::Math::OPerators
+    // ========================================================================
+  } // end of namespace Gaudi::Math
+  // ==========================================================================
+} // end of namespace Gaudi::Math    
 // ============================================================================
 // The END
 // ============================================================================

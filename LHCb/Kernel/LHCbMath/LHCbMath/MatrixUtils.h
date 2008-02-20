@@ -1,4 +1,4 @@
-// $Id: MatrixUtils.h,v 1.6 2008-01-19 21:02:33 ibelyaev Exp $
+// $Id: MatrixUtils.h,v 1.7 2008-02-20 15:51:51 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_MATRIXUTILS_H
 #define LHCBMATH_MATRIXUTILS_H 1
@@ -1069,6 +1069,27 @@ namespace Gaudi
       }
     }
     // =========================================================================
+    /** update the symmetric matrix according to the rule m +=  s*v*v^T
+     *
+     *  @param left the symmetric matrix to be updated 
+     *  @param vect the vector 
+     *  @param scale the scale factor
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-10
+     */
+    template <class T, class B, class T2, unsigned int D>
+    void update 
+    ( ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> > & left  , 
+      const ROOT::Math::VecExpr<B,T2,D>&                       vect  , 
+      const double                                             scale ) 
+    {
+      for ( unsigned int i = 0 ; i < D ; ++i ) 
+      {
+        for ( unsigned int j = i ; j < D ; ++j ) 
+        { left ( i , j ) += scale * vect(i) * vect(j) ; }
+      }
+    }
+    // =========================================================================
     /** update the matrix according to the rule m +=  s*v1*v2^T
      *
      *  @param left the matrix to be updated 
@@ -1080,10 +1101,10 @@ namespace Gaudi
      */
     template <class T, class R, class T2, class T3, unsigned int D1,unsigned int D2>
     void update 
-    ( ROOT::Math::SMatrix<T,D1,D2,R>  & left  , 
-      const ROOT::Math::SVector<T2,D1>& vct1  , 
-      const ROOT::Math::SVector<T3,D2>& vct2  , 
-      const double                      scale ) 
+    ( ROOT::Math::SMatrix<T,D1,D2,R>  & left        , 
+      const ROOT::Math::SVector<T2,D1>& vct1        , 
+      const ROOT::Math::SVector<T3,D2>& vct2        , 
+      const double                      scale = 1.0 ) 
     {
       for ( unsigned int i = 0 ; i < D1 ; ++i ) 
       {
@@ -1105,18 +1126,52 @@ namespace Gaudi
     ( const ROOT::Math::SVector<T1,D1>&     vct1  ,
       const ROOT::Math::SMatrix<T,D1,D2,R>& mtrx  , 
       const ROOT::Math::SVector<T2,D2>&     vct2  ) 
-    {
-      T result = 0 ;
-      for ( unsigned int i = 0 ; i < D1 ; ++i ) 
-      {
-        for ( unsigned int j = 0 ; j < D2 ; ++j )
-        { result += vct1(i) * mtrx(i,j) * vct2(j) ; } 
-      }
-      return result ;
+    { 
+      return ROOT::Math::Dot ( vct1 , mtrx * vct2 ) ; 
     }
-    
-      
-
+    // =========================================================================
+    /** update the symmetric matrix according to the rule m +=  scale * ( m + m^T )  
+     *
+     *  @param left the matrix  to be updated 
+     *  @param right the matrix to be "symmetrized"  
+     *  @param scale the scale factor to be applied 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-10
+     */
+    template <class T, class T2, class R, unsigned int D>
+    void update 
+    ( ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >&   left        , 
+      const ROOT::Math::SMatrix<T2,D,D,R>&                      right       , 
+      const double                                              scale = 1.0 ) 
+    {
+      for ( unsigned int i = 0 ; i < D ; ++i ) 
+      {
+        for ( unsigned int j = i ; j < D ; ++j ) 
+        { left ( i , j ) += scale * ( right ( i , j ) + right ( j , i ) ) ; }
+      }
+    }
+    // =========================================================================
+    /** update the symmetric matrix according to the rule m +=  scale * ( m + m^T )  
+     *
+     *  @param left the matrix  to be updated 
+     *  @param right the matrix to be "symmetrized"  
+     *  @param scale the scale factor to be applied 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-10
+     */
+    template <class T, class T2, class B, class R, unsigned int D>
+    void update 
+    ( ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >&   left        , 
+      const ROOT::Math::Expr<B,T2,D,D,R>&                       right       , 
+      const double                                              scale = 1.0 ) 
+    {
+      for ( unsigned int i = 0 ; i < D ; ++i ) 
+      {
+        for ( unsigned int j = i ; j < D ; ++j ) 
+        { left ( i , j ) += scale * ( right ( i , j ) + right ( j , i ) ) ; }
+      }
+    }
+    // ========================================================================
   } // end of namespace Math  
 } // end of namespace Gaudi
 
