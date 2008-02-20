@@ -1,15 +1,13 @@
-! $Id: release.notes,v 1.135 2008-02-19 15:25:22 ibelyaev Exp $
+! $Id: release.notes,v 1.136 2008-02-20 07:56:52 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
-
+!======================== PhysEvent v11r6 2008-02-20 ========================
 ! 2008-02-19 - Vanya BELYAEV
-
  - Particle.xml
-     : add the predefiend enum Chi2OfDirectionConstrainedFit
+     : add predefined enum Chi2OfDirectionConstrainedFit
 
-!======================== PhysEvent v11r6 2008-02-15 ========================
 ! 2008-02-15 - Marco Cattaneo
  - Add generation of custom dictionary and make dict for 
    std::vector<const LHCb::Particle*>, previously in LoKiPhys
