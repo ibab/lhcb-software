@@ -3,6 +3,23 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v14r10>2008-02-20 Boole v14r10</A></H1><PRE>
+This version uses projects Gaudi v19r7, LHCb v23r4, Lbcom v6r15
+ and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
+
+It can process DC06 data, but output format is different from DC06, requires
+Brunel v32r1 or greater
+
+- New tuning
+  . In SuppressWarnings.opts, timestamp is printed in UTC
+
+- New packaging
+  . ST digiization algorithms move to new BOOLE STDigiAlgorithms v1r0 package
+
+- Bug fixes
+  . Fix TES path of 'Next' spill for spillover (STAlgorithms v2r7)
+  . Fix untested StatusCode (SimComponents v2r8p1)
+
 </PRE><H1><A NAME=v14r9>2008-02-04 Boole v14r9</A></H1><PRE>
 This version uses projects Gaudi v19r7, LHCb v23r3, Lbcom v6r14
  and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
