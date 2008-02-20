@@ -2,6 +2,11 @@
 ! package manager: Marco Cattaneo
 !-------------------------------------------------------------------------
 
+!======================== EventSys v24r1 2008-02-20 ======================
+! 2008-02-20 - Marco Cattaneo
+ - Use DAQEvent v7r9, EventAssoc v4r4, HltEvent v8r7, L0Event v16r8,
+       MCEvent v2r7, PhysEvent v11r6, RecEvent v2r10, TrackEvent v4r11
+
 !======================== EventSys v24r0 2008-02-02 ======================
 ! 2008-02-02 - Marco Cattaneo
  - Adapt copy_relax_rootmap pattern to new rootmap names in LCG_54
