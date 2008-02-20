@@ -1,7 +1,8 @@
-// $Id: ProperTimeChecker.cpp,v 1.6 2008-02-12 14:24:32 jpalac Exp $
+// $Id: ProperTimeChecker.cpp,v 1.7 2008-02-20 21:08:47 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
+#include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>

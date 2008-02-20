@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.204 2008-02-19 16:39:58 gligorov Exp $
+! $Id: release.notes,v 1.205 2008-02-20 21:07:56 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-02-20 - Patrick Koppenburg
+ - Include PhysicalConstants where needed
 
 ! 2008-02-19 - V. Gligorov
  - modified protection in isStable()
