@@ -985,8 +985,6 @@ dim_dic_info_service(PyObject* /* self */, PyObject* args) {
     goto no_memory;
   strcpy(tmp->name, name);
   strcpy(tmp->format, format);
-  _dic_info_service_buffer2Callback[tmp->buffer] = tmp;
-  _dic_info_service_id2Callback[service_id] = tmp;
 
   //registering the stub function
   service_id = dic_info_service(name,
@@ -998,6 +996,8 @@ dim_dic_info_service(PyObject* /* self */, PyObject* args) {
                                 tag,
                                 tmp->buffer,
                                 0);
+  _dic_info_service_buffer2Callback[tmp->buffer] = tmp;
+  _dic_info_service_id2Callback[service_id] = tmp;
   if ( !service_id ){
     print("Service %s creation failed. Received result %d", name, service_id);
     goto dealocate;
