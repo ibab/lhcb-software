@@ -1,16 +1,15 @@
-! $Id: release.notes,v 1.85 2008-02-19 09:21:34 jucogan Exp $
+! $Id: release.notes,v 1.86 2008-02-20 07:30:23 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
-
+!======================== L0Event v16r8 2008-02-20 ===========================
 ! 2008-02-19 - Julien Cogan
  - Add new classes to handle L0Muon informations and errors :
     o L0MuonInfo
     o L0MuonCtrlError
     o L0MuonProcError
           
-!======================== L0Event v16r8 2008-02-15 ===========================
 ! 2008-02-15 - Marco Clemencic
  - Modified the selection file for missing dictionaries to avoid compilation
    error on Windows (but the dictionary is not complete on that platform).
