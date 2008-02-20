@@ -5,10 +5,8 @@
 !-----------------------------------------------------------------------------
 
 !======================= EventAssoc v4r4 2008-02-19 ==========================
-
 ! 2008-02-19 - Vanya BELYAEV
-
- - add the dictionary for "LoCaloCandidate -> MCParticle with the weight=double" 
+ - add the dictionary for "L0CaloCandidate -> MCParticle with the weight=double" 
 	 relation table (bi-directional) 
  - cmt/requirements 
    version increment to v4r4 
