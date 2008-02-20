@@ -12,7 +12,6 @@
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MDFWriter.h"
 #include "MDF/MDFHeader.h"
-#include "MDF/MDFHeader.h"
 #include "Event/RawEvent.h"
 #include "Writer/Connection.h"
 #include "Writer/MDFWriterNet.h"
@@ -91,6 +90,7 @@ void MDFWriterNet::constructNet()
   declareProperty("FilePrefix",         m_filePrefix="MDFWriterNet_File_");
   declareProperty("Directory",          m_directory=".");
   declareProperty("FileExtension",      m_fileExtension="raw");
+  declareProperty("StreamID",           m_streamID=0);
   declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=30);
 
   m_log = new MsgStream(msgSvc(), name());
@@ -314,10 +314,13 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
  * @param len   The length of the data.
  * @return The run number.
  */
-inline unsigned int MDFWriterNet::getRunNumber(const void *data, size_t /*len*/)
-{
+inline unsigned int MDFWriterNet::getRunNumber(const void *data, size_t /*len*/)    {
   MDFHeader *mHeader;
-  mHeader = (MDFHeader*)data;
+  RawBank* b = (RawBank*)data;
+  if ( b->magic() == RawBank::MagicPattern )
+    mHeader = b->begin<MDFHeader>();
+  else
+    mHeader = (MDFHeader*)data;
   return mHeader->subHeader().H1->m_runNumber;
 }
 
@@ -330,11 +333,11 @@ std::string MDFWriterNet::getNewFileName(unsigned int runNumber)
   char buf[MAX_FILE_NAME];
   static unsigned long random = 0;
   random++;
-  sprintf(buf, "%s/%s%09u.%03lu%06lu.%s",
-	  m_directory.c_str(),
+  sprintf(buf, "%s/%u/%s%06u.%02u%08lu.%s",
+	  m_directory.c_str(),runNumber,
 	  m_filePrefix.c_str(),
-	  runNumber,
-	  random,time(NULL)&0xFFFFFF,
+	  runNumber,m_streamID,// random,
+       	  time(NULL)&0xFFFF,
 	  m_fileExtension.c_str());
   return std::string(buf);
 }

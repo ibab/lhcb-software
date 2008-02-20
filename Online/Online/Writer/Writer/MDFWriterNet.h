@@ -232,6 +232,9 @@ namespace LHCb {
     /// The current run number in progress.
     int m_currentRunNumber;
 
+    /// Property: The stream identifier
+    int m_streamID;
+
     /// A map of all current open files.
     FileList m_openFiles;
 
