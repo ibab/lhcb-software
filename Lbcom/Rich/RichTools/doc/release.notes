@@ -4,10 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r18 2008-02-20 ======================
 ! 2008-02-17 - Chris Jones
  - Changes in ray tracing tool interface
 
-!=========================== RichTools v2r18 2008-02-15 ======================
 ! 2008-02-15 - Chris Jones
  - Adapt to changes in RichGeomPhoton from Rich/RichKernel
 
