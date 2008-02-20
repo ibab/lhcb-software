@@ -10,7 +10,6 @@
       <desc> *  representing the errors detected on a controller board.</desc>
       <base name='KeyedObject&lt;int&gt;'/>
       &KeyedObject;
-      <import name="Kernel/MuonTileID"/>
       <location name="Default"  place="Trig/L0/MuonCtrlError"/>
 
       <constructor

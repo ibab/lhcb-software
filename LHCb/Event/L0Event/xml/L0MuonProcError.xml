@@ -6,7 +6,7 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd" >
 <gdd>
   <package name='L0Event' >
-    <class name='L0MuonProcError' id='6007' author='J. Cogan' desc='L0Muon trigger processing board errors'>
+    <class name='L0MuonProcError' id='6010' author='J. Cogan' desc='L0Muon trigger processing board errors'>
       <desc> *  representing the errors detected on a processing board.</desc>
       <base name='KeyedObject&lt;LHCb::MuonTileID&gt;'/>
       &KeyedObject;
