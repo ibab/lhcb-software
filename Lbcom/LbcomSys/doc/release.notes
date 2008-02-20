@@ -6,6 +6,28 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r15>2008-02-20 LbcomSys v6r15</A></H1><PRE>
+This version uses Gaudi v19r7 and LHCb v23r4
+
+- Packages modified: RichTools v2r18, SiTools v1r5, STAlgorithms v3r0,STDAQ v3r5
+
+- In RichTools v2r18, v2r17p1
+  . Changes in ray tracing tool interface
+  . Adapt to changes in RichGeomPhoton from Rich/RichKernel
+  . Add fix for bug (found via valgrind) due to a reference to temporary being
+    passed. Also tidy up similar code in other places.
+
+- In SiTools v1r5
+  . In SiGeantDepositedCharge, set default scalingFactor to 1.0
+
+- In STAlgorithms v3r0, v2r7
+  . Use Geant deposited energy in MCSTDepositCreator
+  . Correct path of next spill
+  . Remove digitisation algorithms, moved to new BOOLE STDigiAlgorithms package
+
+- In STDAQ v3r5
+  . Add functionality to readout tool to give list of board IDs
+
 </PRE><H1><A NAME=v6r14>2008-01-30 LbcomSys v6r14</A></H1><PRE>
 This version uses Gaudi v19r7 and LHCb v23r3
 
