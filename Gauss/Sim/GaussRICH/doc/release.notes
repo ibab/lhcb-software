@@ -4,6 +4,10 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+!========================= GaussRICH v8r0 2008-02-20 =========================
+! 2008-02-20 - Gloria CORTI
+ - Increase major version number since it does NOT work with DC06 geometry
+   but only staring with head-20080130.
 
 ! 2008-01-31 - Rob Lambert, Sajan Easo
  - Fixed a problem in RichG4StepAnalysis6.cpp which was preventing the flags
