@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.30 2008-02-18 18:43:14 janos Exp $
+// $Id: AlignAlgorithm.cpp,v 1.31 2008-02-20 18:02:51 janos Exp $
 // Include files
 // from std
 // #include <utility>
@@ -732,7 +732,7 @@ void AlignAlgorithm::update() {
                  << "Normalised alignment change chisquare: " << deltaChi2 / (nDOFs-numConstraints) << std::endl;
       
       m_dAlignChi2vsIterHisto->fill(m_iteration, deltaChi2) ;
-      m_nordAlignChi2vsIterHisto->fill(m_iteration, deltaChi2 / nDOFs-numConstraints);
+      m_nordAlignChi2vsIterHisto->fill(m_iteration, deltaChi2 / (nDOFs-numConstraints));
       
       if (numConstraints > 0) printCanonicalConstraints(derivatives, matrix, numConstraints, logmessage) ;
       
