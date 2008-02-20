@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.298 2008-02-05 10:57:25 jpalac Exp $
+! $Id: release.notes,v 1.299 2008-02-20 20:42:07 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2008-02-20 - Patrick Koppenburg
+ - Bd2KstarMuMu : include PhysicalConstants
 
 !======================== DaVinciTools v15r8 2008-02-05 =====================
 

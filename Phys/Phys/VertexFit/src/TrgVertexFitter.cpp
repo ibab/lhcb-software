@@ -1,5 +1,6 @@
-// $Id: TrgVertexFitter.cpp,v 1.22 2007-11-28 12:58:21 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.23 2008-02-20 20:43:11 pkoppenb Exp $
 // Include files 
+#include "gsl/gsl_sys.h"
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -13,7 +14,6 @@
 #include "TrgVertexFitter.h"
 
 using namespace LHCb ;
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrgVertexFitter
 //

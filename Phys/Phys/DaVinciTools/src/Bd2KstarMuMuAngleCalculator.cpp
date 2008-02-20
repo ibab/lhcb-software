@@ -1,8 +1,9 @@
-// $Id: Bd2KstarMuMuAngleCalculator.cpp,v 1.3 2008-01-15 18:05:10 pkoppenb Exp $
+// $Id: Bd2KstarMuMuAngleCalculator.cpp,v 1.4 2008-02-20 20:42:07 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 //#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "Event/Particle.h" 
 #include "Kernel/IParticleDescendants.h"

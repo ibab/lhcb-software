@@ -1,8 +1,9 @@
-// $Id: PropertimeFitter.cpp,v 1.6 2007-03-02 17:21:14 xieyu Exp $
+// $Id: PropertimeFitter.cpp,v 1.7 2008-02-20 20:43:11 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/PhysicalConstants.h"
 
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"

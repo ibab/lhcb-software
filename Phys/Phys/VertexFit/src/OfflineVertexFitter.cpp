@@ -1,8 +1,9 @@
-// $Id: OfflineVertexFitter.cpp,v 1.29 2007-11-02 17:08:52 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.30 2008-02-20 20:43:11 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/PhysicalConstants.h" 
 
 
 #include "Event/Vertex.h"
