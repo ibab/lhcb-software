@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecTrack.xml,v 1.17 2008-02-15 16:23:45 jonrob Exp $
+  * $Id: RichRecTrack.xml,v 1.18 2008-02-20 10:01:48 jonrob Exp $
   *****************************************************************************
   * XML-description of RichrecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -23,6 +23,7 @@
     	<base name="KeyedObject&lt;int&gt;"/>
         &KeyedObject;
 
+        <import name="float.h"/>
         <import name="GaudiKernel/ContainedObject"/>
 	<import name="Kernel/RichParticleIDType"/>  
         <import name="RichKernel/RichObjPtn"/>
