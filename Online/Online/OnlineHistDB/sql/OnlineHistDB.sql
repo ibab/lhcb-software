@@ -892,7 +892,7 @@ begin
      raise_application_error(-20012,'Algorithm '||TheAlg||' requires an Histogram Set as input');
    end if;
  else
-   if (theSources.COUNT != algonh) then
+   if (theSources.COUNT > algonh) then
       raise_application_error(-20003,'Algorithm '||TheAlg||' requires '||algonh||' input histograms and you provided '||theSources.COUNT);
    end if;
  end if;
@@ -988,9 +988,11 @@ begin
     end LOOP; 
    end if;
   else
-   Sources.EXTEND(Ninp);
    for i IN 1..Ninp LOOP
-    Sources(i) := GetName(sh(i));
+    if( sh(i) is not NULL ) then
+     Sources.EXTEND(1);
+     Sources(i) := GetName(sh(i));
+    end if;
    end LOOP; 
   end if;
 
