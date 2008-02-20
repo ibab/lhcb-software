@@ -1,17 +1,17 @@
-! $Id: release.notes,v 1.6 2008-02-20 09:41:01 spozzi Exp $
+! $Id: release.notes,v 1.7 2008-02-20 10:50:53 cattanem Exp $
 ! Package     : MuonTrackAlign
 ! Responsible : Alessia Satta
 ! Purpose     : Track reconstruction for Muon Alignment purposes
 !---------------------------------------------------------------------
 
-!=================== MuonTrackAlign v1r3 2008-02-19 ==================
+!=================== MuonTrackAlign v1r2 2008-02-20 ==================
 ! 2008-02-19 - Silvia Pozzi
- - Changes in AlignMuonRec.cpp + AlignMuonStation.h to reject events with cross talk in the muon
+ - Changes in AlignMuonRec.cpp + AlignMuonStation.h to reject events with 
+   cross talk in the muon
  - Assigned the long track momentum to the muon states
  - Changes in MuonRead.cpp to read the states from the nodes
  - Fix bug in option file
 
-!=================== MuonTrackAlign v1r2 2008-02-07 ==================
 ! 2008-02-07 - Marco Cattaneo
  - Add a missing include following changes to TrackEvent
  - Fix a compilation warning
