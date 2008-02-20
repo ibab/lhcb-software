@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.174 2008-02-17 19:28:05 jonrob Exp $
+! $Id: release.notes,v 1.175 2008-02-20 07:47:35 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r11 2008-02-20 ====================
 ! 2008-02-17 - Chris Jones
  - Update Ray Tracing interface to pass back booleans instead of
    StatusCodes. Slightly improves CPU performance (due to StatusCode 
@@ -13,7 +14,6 @@
 ! 2008-02-16 - Chris Jones
  - Some fixes for windows problems
 
-!====================== RichKernel v7r11 2008-02-15 ====================
 ! 2008-02-15 - Marco Cattaneo
  - Clean up some includes
 
