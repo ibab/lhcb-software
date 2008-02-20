@@ -6,11 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v2r6 2008-02-20 ==========================
 ! 2008-02-20 - Vanya BELYAEV 
- - add few more optimizations into MAtrixUtils.h & MatrixTransforms.h
+ - add few more optimizations into MatrixUtils.h & MatrixTransforms.h
    in particular the additon operators for "geometry" and "linear algebra" 
    objects.. They really saves a lot of lines in coding the various fitters
-   
 
 !========================= LHCbMath v2r5 2008-01-21 ==========================
 ! 2008-01-19 - Vanya BELYAEV
