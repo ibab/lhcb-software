@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingRaytracing
  *
  * CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.6 2008-02-18 16:40:23 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.7 2008-02-21 16:46:53 jonrob Exp $
  *
  * @author Claus P Buszello
  * @date 2008-01-11
@@ -45,9 +45,8 @@ PhotonRecoUsingRaytracing( const std::string& type,
   //for  (int i=0;i<20;++i) m_itersA[i] = m_iters1[i] = m_iters2[i] =0;
 
   declareProperty( "DampingFactor", m_damping = 1. );
-  declareProperty( "ERL", m_ERL = 1. );
-  declareProperty( "IterFail", failiter=true );
-  declareProperty( "IterDiscard", discard=false );
+  declareProperty( "ERL",           m_ERL = 1. );
+  declareProperty( "IterFail",      m_failiter = true );
 
   m_ERLSet[Rich::Aerogel]  = 1440;
   m_ERLSet[Rich::Rich1Gas] = 1440;
@@ -103,8 +102,8 @@ StatusCode PhotonRecoUsingRaytracing::initialize()
 
 StatusCode PhotonRecoUsingRaytracing::finalize()
 {
-  //   for  (int i=0;i<50;++i)
-  //     info() << "Iterations " << i <<": "<<m_itersA[i]<<"    "<<m_iters1[i]<<"   "<<m_iters2[i]<<endreq;
+  // for  (int i=0;i<50;++i)
+  //  debug() << "Iterations " << i <<": "<<m_itersA[i]<<"    "<<m_iters1[i]<<"   "<<m_iters2[i]<<endreq;
   return PhotonRecoBase::finalize();
 }
 
@@ -161,7 +160,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                                     (pixel->panel()).panel(),trSeg.avPhotonEnergy());
     if ( result < LHCb::RichTraceMode::InHPDPanel )
     {
-      return Warning( "Error in raytracing" );
+      debug() << "raytracing failed in " << radiator << " : " << result << endreq;
+      return StatusCode::FAILURE;
     }
     locpos = m_idTool->globalToPDPanel(m_photon.detectionPoint());
 
@@ -235,53 +235,53 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       //break;
     }
     if (((maxiter-ii)> 5) && fabs(phil2-phi1)<.00001&& fabs(thetal2-theta1)<.00001 ){
-      //info() << "its a trip hop" <<endreq;
+      //debug() << "its a trip hop" <<endreq;
       ttheta = (ttheta + tthetal) / 2.;
       ii = 1;
       //break;
     }
     if (((maxiter-ii)>5) && fabs(phil3-phi1)<.00001 && fabs(thetal3-theta1)<.00001){
-      //info() << "its a quad hop" <<endreq;
+      //debug() << "its a quad hop" <<endreq;
       ttheta = (ttheta + tthetal + tthetal2) / 3.;
       ii = 1;
       //break;
     }
     if (((maxiter-ii)> 5) && fabs(phil4-phi1)<.00001&& fabs(thetal4-theta1)<.00001 ){
-      //info() << "its a quint hop" <<endreq;
+      //debug() << "its a quint hop" <<endreq;
       ii = 1; ttheta = (ttheta + tthetal + tthetal2 + thetal3) / 4.;
       //break;
     }
     if (((maxiter-ii)>5) && fabs(phil5-phi1)<.00001&& fabs(thetal5-theta1)<.00001 ){
-      //info() << "its a sext hop" <<endreq;
+      //debug() << "its a sext hop" <<endreq;
       ii = 1; ttheta = (ttheta + tthetal + tthetal2+ thetal3+ thetal4) / 5.;
       //break;
     }
 
-    lastdphi = dphi;
+    lastdphi   = dphi;
     lastdtheta = dtheta;
 
     sv = trSeg.vectorAtThetaPhi(ttheta,tphi);
+
     const LHCb::RichTraceMode::RayTraceResult result
       = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,m_photon,
                                     m_mode,(pixel->panel()).panel(),trSeg.avPhotonEnergy());
 
     if ( result < LHCb::RichTraceMode::InHPDPanel ) {
-      tphi = 0.95 *tphi;
-      ttheta = 0.9 * ttheta;
-      info()<<"raytracing failed in "<<radiator<< " : "<<result<<endreq;
+      tphi   *= 0.95;
+      ttheta *= 0.90;
+      debug() << "raytracing failed in " << radiator << " : " << result << endreq;
       continue;
     }
 
-
-    locpos =  m_idTool->globalToPDPanel(m_photon.detectionPoint());
+    locpos = m_idTool->globalToPDPanel(m_photon.detectionPoint());
 
     // the hit pixel corresponds to what naive theta and phi
     const float yi = locpos.y();
     const float xi = locpos.x();
 
     //       if (isnan(xi)){
-    //  info() <<ii<<" nan "<<locpos.x()<<" "<<m_photon.detectionPoint().x()<<" "<<ttheta<<" "<<tphi<<endreq;
-    //  info() <<theta0<<" "<<theta1<<" "<<ERL<<endreq;
+    //  debug() <<ii<<" nan "<<locpos.x()<<" "<<m_photon.detectionPoint().x()<<" "<<ttheta<<" "<<tphi<<endreq;
+    //  debug() <<theta0<<" "<<theta1<<" "<<ERL<<endreq;
     //       }
     const float R2 = (yi-my )*(yi-my ) +  ( xi-mx )*( xi-mx );
     //theta1 = atan(sqrt(R2)/ERL);
@@ -325,21 +325,25 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
     //   if (ii<3) debug()<<"I used all but "<< ii << " of my iterations. Distance: "<<fabs(yi - y)<< " , "<<fabs(xi - x)<<endreq;
 
-    //       if (ii<10) info()<<ii<<" "<<radiator<<endreq;
-    //       if (ii<10) info()<<  phi0<<" "<<phi1<<" "<<tphi<<" "<<(phil+phi1)/2.<<endreq;
-    //       if (ii<10) info()<<theta0<<" "<<theta1<<" "<<ttheta<<" "<<(thetal+theta1)/2.<<endreq;
-    //       if (ii<10) info()<<yi<<" "<<y<<" "<<xi<<" "<<x<<" "<<my<<" "<<mx<<endreq;
+    //       if (ii<10) debug()<<ii<<" "<<radiator<<endreq;
+    //       if (ii<10) debug()<<  phi0<<" "<<phi1<<" "<<tphi<<" "<<(phil+phi1)/2.<<endreq;
+    //       if (ii<10) debug()<<theta0<<" "<<theta1<<" "<<ttheta<<" "<<(thetal+theta1)/2.<<endreq;
+    //       if (ii<10) debug()<<yi<<" "<<y<<" "<<xi<<" "<<x<<" "<<my<<" "<<mx<<endreq;
 
 
 
   }
 
   if (ii<1){
-    //info()<<"===================================="<<endreq;
+    //debug()<<"===================================="<<endreq;
     ttheta = (ttheta+tthetal+tthetal2+tthetal3+tthetal4+tthetal5)/6.;
   }
-  float besttheta = ttheta-m_ckFudge[radiator];
+  const float besttheta = ttheta-m_ckFudge[radiator];
   float bestphi = tphi;
+
+  // is phi out of 0 -> 2PI range ?
+  while ( bestphi <  0        ) { bestphi += 2.0*M_PI; }
+  while ( bestphi >= 2.0*M_PI ) { bestphi -= 2.0*M_PI; }
 
   // Cannot set these yet - Could be done if needed, but at what CPU cost ?
   //Gaudi::XYZPoint & sphReflPoint = gPhoton.sphMirReflectionPoint();
@@ -369,7 +373,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   //  (m_iters2[ii])+=1;
   //     }
 
-  if ( (ii==0) && failiter )
+  if ( (ii==0) && m_failiter )
   { // if we get here photon reco failed
     return StatusCode::FAILURE;
   }

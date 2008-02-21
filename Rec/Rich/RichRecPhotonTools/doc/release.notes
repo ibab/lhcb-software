@@ -4,6 +4,10 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-02-21 - Chris Jones
+ - Make sure CK phi values computed by iterative ray-tracing photon 
+   reconstruction tool lie in the range 0 to 2PI
+
 ! 2008-02-18 - Chris Jones
  - Set pointers to photon mirrors in CKRing and Raytracing photon 
    reconstruction tools.

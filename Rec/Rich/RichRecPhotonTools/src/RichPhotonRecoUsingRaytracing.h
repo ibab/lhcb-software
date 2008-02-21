@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingRaytracing
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.h,v 1.5 2008-02-18 16:40:23 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingRaytracing.h,v 1.6 2008-02-21 16:46:53 jonrob Exp $
  *
  *  @author Claus P Buszello
  *  @date   2008-11-01
@@ -39,6 +39,9 @@
 #include "RichKernel/RichTrackSegment.h"
 #include "RichKernel/RichGeomPhoton.h"
 #include "RichKernel/FastMaths.h"
+
+// RichDet
+#include "RichDet/Rich1DTabFunc.h"
 
 // GSL
 #include "gsl/gsl_math.h"
@@ -107,8 +110,7 @@ namespace Rich
 
       float m_ERL;
 
-      bool failiter;
-      bool discard;
+      bool m_failiter;
 
       /// Cached working photon for ray-tracing
       mutable LHCb::RichGeomPhoton m_photon;
