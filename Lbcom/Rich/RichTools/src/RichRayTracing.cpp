@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.46 2008-02-17 13:33:34 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.47 2008-02-21 16:38:30 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -535,22 +535,28 @@ Rich::RayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
 {
   // find intersection point
   // for line sphere intersection look at http://www.realtimerendering.com/int/
-  const Gaudi::XYZVector delta( position - CoC );
 
+  const Gaudi::XYZVector delta( position - CoC );
   const double a = direction.Mag2();
   const double b = 2. * direction.Dot( delta );
   const double c = delta.Mag2() - radius*radius;
   const double discr = b*b - 4.*a*c;
   if ( discr < 0 ) return false;
 
-  const double distance1 = 0.5 * ( sqrt(discr) - b ) / a;
+  const double distance1 = 0.5 * ( std::sqrt(discr) - b ) / a;
   // change position to the intersection point
   position += distance1 * direction;
 
-  const Gaudi::XYZVector normal( (position - CoC).Unit() );
   // reflect the vector
   // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
-  direction -= 2.0 * (normal.Dot(direction)) * normal;
+
+  // OLD
+  //const Gaudi::XYZVector normal( (position-CoC).Unit() );
+  //direction -= 2.0 * (normal.Dot(direction)) * normal;
+
+  // NEW
+  const Gaudi::XYZVector normal( position-CoC );
+  direction -= (2.0/normal.Mag2()) * (normal.Dot(direction)) * normal;
 
   return true;
 }
