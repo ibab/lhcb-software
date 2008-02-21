@@ -1,4 +1,4 @@
-// $Id: Particles20.h,v 1.2 2008-02-11 10:11:11 ibelyaev Exp $
+// $Id: Particles20.h,v 1.3 2008-02-21 20:23:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES20_H 
 #define LOKI_PARTICLES20_H 1
@@ -287,6 +287,24 @@ namespace LoKi
        *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
        */
       MinImpParDV  ( const std::string& geo = "" ) ;
+      /** the constructor form the vertex selection functot and 
+       *  the name/nickname of IGeomDispCalculator tool from DVAlgorithm
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParDV  
+      ( const LoKi::PhysTypes::VCuts& cuts     , 
+        const std::string&            geo = "" ) ;
+      /** the constructor form the vertex selection functot and 
+       *  the name/nickname of IGeomDispCalculator tool from DVAlgorithm
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParDV  
+      ( const std::string&            geo  , 
+        const LoKi::PhysTypes::VCuts& cuts ) ;
       /// MANDATORY: virtual destructor 
       virtual ~MinImpParDV () {};
       /// MANDATORY: clone method ("virtual constructor")
@@ -337,6 +355,72 @@ namespace LoKi
       MinImpParTES
       ( const std::vector<std::string>& path     , 
         const std::string&              geo = "" ) ;      
+      /** the constructor,
+       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  by full type/name
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param path the locations of vertices in TES 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParTES
+      ( const LoKi::PhysTypes::VCuts&   cuts     ,
+        const std::vector<std::string>& path     , 
+        const std::string&              geo = "" ) ;
+      /** the constructor,
+       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  by full type/name
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param path the location of vertices in TES 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParTES
+      ( const LoKi::PhysTypes::VCuts& cuts      ,
+        const std::string&            path      , 
+        const std::string&            geo  = "" ) ;
+      /** the constructor,
+       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  by full type/name
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param path the locations of vertices in TES 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParTES
+      ( const std::vector<std::string>& path     , 
+        const LoKi::PhysTypes::VCuts&   cuts     ,
+        const std::string&              geo = "" ) ;
+      /** the constructor,
+       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  by full type/name
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param path the location of vertices in TES 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParTES
+      ( const std::string&            path      , 
+        const LoKi::PhysTypes::VCuts& cuts      ,
+        const std::string&            geo  = "" ) ;
+      /** the constructor,
+       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  by full type/name
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param path the locations of vertices in TES 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParTES
+      ( const std::vector<std::string>& path , 
+        const std::string&              geo  , 
+        const LoKi::PhysTypes::VCuts&   cuts ) ;
+      /** the constructor,
+       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  by full type/name
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param path the location of vertices in TES 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParTES
+      ( const std::string&            path , 
+        const std::string&            geo  ,
+        const LoKi::PhysTypes::VCuts& cuts ) ;
       /// MANDATORY: virtual destructor 
       virtual ~MinImpParTES () {};
       /// MANDATORY: clone method ("virtual constructor")
@@ -344,8 +428,8 @@ namespace LoKi
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
     private:
-      // TES locations of Particles 
-      std::vector<std::string>  m_path ; ///< TES locations of vertices
+      // the list of TES locations 
+      std::vector<std::string> m_path ;
     } ;
     // ========================================================================
     /** @class MinImpParChi2WithSource
@@ -445,6 +529,24 @@ namespace LoKi
        *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
        */
       MinImpParChi2DV  ( const std::string& geo = "" ) ;
+      /** the constructor,
+       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  by full type/name
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParChi2DV  
+      ( const LoKi::PhysTypes::VCuts& cuts     , 
+        const std::string&            geo = "" ) ;
+      /** the  constructor,
+       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  by full type/name
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParChi2DV  
+      ( const std::string&            geo  , 
+        const LoKi::PhysTypes::VCuts& cuts ) ;
       /// MANDATORY: virtual destructor 
       virtual ~MinImpParChi2DV () {};
       /// MANDATORY: clone method ("virtual constructor")
@@ -494,7 +596,73 @@ namespace LoKi
        */
       MinImpParChi2TES
       ( const std::vector<std::string>& path     , 
-        const std::string&              geo = "" ) ;      
+        const std::string&              geo = "" ) ;
+      /** the constructor,
+       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  by full type/name
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param path the location of vertices in TES 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParChi2TES
+      ( const LoKi::PhysTypes::VCuts& cuts      , 
+        const std::string&            path      , 
+        const std::string&            geo  = "" ) ;      
+      /** the constructor,
+       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  by full type/name
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param path the locations of vertices in TES 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParChi2TES
+      ( const LoKi::PhysTypes::VCuts&   cuts     , 
+        const std::vector<std::string>& path     , 
+        const std::string&              geo = "" ) ;
+      /** the constructor,
+       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  by full type/name
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param path the location of vertices in TES 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParChi2TES
+      ( const std::string&            path      , 
+        const LoKi::PhysTypes::VCuts& cuts      , 
+        const std::string&            geo  = "" ) ;      
+      /** the constructor,
+       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  by full type/name
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param path the locations of vertices in TES 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParChi2TES
+      ( const std::vector<std::string>& path     , 
+        const LoKi::PhysTypes::VCuts& cuts      , 
+        const std::string&              geo = "" ) ;
+      /** the constructor,
+       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  by full type/name
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param path the location of vertices in TES 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParChi2TES
+      ( const std::string&            path , 
+        const std::string&            geo  , 
+        const LoKi::PhysTypes::VCuts& cuts ) ;
+      /** the constructor,
+       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  by full type/name
+       *  @see DVAlgorithm::geomDispCalculator 
+       *  @param path the locations of vertices in TES 
+       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       */
+      MinImpParChi2TES
+      ( const std::vector<std::string>& path , 
+        const std::string&              geo  , 
+        const LoKi::PhysTypes::VCuts&   cuts ) ;
       /// MANDATORY: virtual destructor 
       virtual ~MinImpParChi2TES () {};
       /// MANDATORY: clone method ("virtual constructor")
@@ -502,8 +670,8 @@ namespace LoKi
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
     private:
-      // TES locations of Particles 
-      std::vector<std::string>  m_path ; ///< TES locations of vertices
+      // the list of TES locations 
+      std::vector<std::string> m_path ;
     } ;
     // ========================================================================
     /** @class VertexDistanceDV 

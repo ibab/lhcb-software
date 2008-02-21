@@ -1,4 +1,4 @@
-// $Id: PhysSources.cpp,v 1.1 2007-12-09 18:25:33 ibelyaev Exp $
+// $Id: PhysSources.cpp,v 1.2 2008-02-21 20:23:42 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -275,7 +275,8 @@ LoKi::Particles::SourceDesktop::operator() () const
     if ( 0 != alg ) 
     {
       Warning 
-        ( "Use DVAlgorithm('" + alg->name() + "') to access IPhysDeskop" ) ;
+        ( "Use DVAlgorithm('" + alg->name() + "') to access IPhysDeskop" , 
+          StatusCode::SUCCESS ) ;
       m_desktop = alg->desktop() ; 
     }
     Assert ( m_desktop.validPointer ( )               ,
@@ -286,10 +287,11 @@ LoKi::Particles::SourceDesktop::operator() () const
   LHCb::Particle::ConstVector output ;
   output.reserve ( input.size() ) ;
   // use cuts:
-  LoKi::select ( input.begin () , 
-                 input.end   () , 
-                 std::back_inserter ( output ) , 
-                 m_cut.fun() ) ;
+  LoKi::select 
+    ( input.begin () , 
+      input.end   () , 
+      std::back_inserter ( output ) , 
+      m_cut.fun() ) ;
   //
   return output ;
 }
@@ -594,7 +596,8 @@ LoKi::Vertices::SourceDesktop::operator() () const
     if ( 0 != alg ) 
     {
       Warning 
-        ( "Use DVAlgorithm('" + alg->name() + "') to access IPhysDeskop" ) ;
+        ( "Use DVAlgorithm('" + alg->name() + "') to access IPhysDeskop" , 
+          StatusCode::SUCCESS ) ;
       m_desktop = alg->desktop() ; 
     }
     Assert ( m_desktop.validPointer ( )               ,
@@ -606,6 +609,9 @@ LoKi::Vertices::SourceDesktop::operator() () const
   const LHCb::RecVertex::ConstVector& input2 = 
     m_desktop -> primaryVertices   () ;
   //
+  if ( input1.empty() && input2.empty() ) 
+  { Warning ( "No input vertices (secondary&primary) from Desktop" ) ; }
+  
   LHCb::VertexBase::ConstVector output ;
   output.reserve ( input1.size() + input2.size() ) ;
   // use cuts:
@@ -617,6 +623,9 @@ LoKi::Vertices::SourceDesktop::operator() () const
                  input2.end   () , 
                  std::back_inserter ( output ) , 
                  m_cut.fun() ) ;
+  //
+  if ( output.empty() ) 
+  { Warning ("No vertices are selected by '" + m_cut.printOut() + "'" ) ; }
   //
   return output ;
 }

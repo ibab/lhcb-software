@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.43 2008-02-19 16:11:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.44 2008-02-21 20:23:42 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
@@ -7,6 +7,11 @@
 
 
 !========================== LoKiPhys v7r1 2008-02-18 ==========================
+
+! 2008-02-21 - Vanya BELYAEV
+ - add more printout for easier location of problems 
+   increment number of constructors for "MinImpPar" context-functions 
+   add more ticky check dinto LoKi::Vertices::IsPrimary 
 
 ! 2008-02-18 - Vanya BELYAEV
  - src/Particles7.cpp

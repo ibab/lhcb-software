@@ -1,4 +1,4 @@
-// $Id: Particles20.cpp,v 1.2 2008-02-15 08:55:25 cattanem Exp $
+// $Id: Particles20.cpp,v 1.3 2008-02-21 20:23:42 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -20,8 +20,8 @@
 #include "LoKi/Vertices0.h"
 #include "LoKi/Particles4.h"
 #include "LoKi/Particles16.h"
-#include "LoKi/PhysSources.h"
 #include "LoKi/Particles20.h"
+#include "LoKi/PhysSources.h"
 // ============================================================================
 /** @file 
  *  The implementation file for functions form the file LoKi/Particles20.h
@@ -98,6 +98,9 @@ namespace
     return fitter ;                                            // RETURN 
   }
   // ==========================================================================
+  /// the finder for the primary vertices:
+  const LoKi::Vertices::IsPrimary s_PRIMARY = LoKi::Vertices::IsPrimary () ;
+  // ==========================================================================
 } // end of anonymout namespace 
 // ============================================================================
 // the default constructor: create the object in invalid state
@@ -139,8 +142,6 @@ LoKi::Particles::CosineDirectionAngleWithTheBestPV::operator()
 // ============================================================================
 std::ostream& LoKi::Particles::CosineDirectionAngleWithTheBestPV::fillStream 
 ( std::ostream& s ) const { return s << "BPVDIRA" ; }
-// ============================================================================
-
 // ============================================================================
 // the default constructor, creates the object in invalid state 
 // ============================================================================
@@ -187,9 +188,6 @@ LoKi::Particles::ImpParWithTheBestPV::operator()
 std::ostream& LoKi::Particles::ImpParWithTheBestPV::fillStream 
 ( std::ostream& s ) const { return s << "BPVIP ('" <<  m_geo << "')"; }
 // ============================================================================
-
-
-// ============================================================================
 // the default constructor, creates the object in invalid state 
 // ============================================================================
 LoKi::Particles::ImpParChi2WithTheBestPV::ImpParChi2WithTheBestPV 
@@ -235,9 +233,6 @@ LoKi::Particles::ImpParChi2WithTheBestPV::operator()
 std::ostream& LoKi::Particles::ImpParChi2WithTheBestPV::fillStream 
 ( std::ostream& s ) const { return s << "BPVIPCHI2 ('" <<  m_geo << "')"; }
 // ============================================================================
-
-
-// ============================================================================
 /*  constructor from the source and nickname or full type/name of 
  *  IGeomDispCalculator tool
  *  @see DVAlgorithm::geomDispCalculator 
@@ -251,6 +246,7 @@ LoKi::Particles::MinImpParWithSource::MinImpParWithSource
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_mip    ( LHCb::VertexBase::ConstVector() , s_IPTOOL ) 
   , m_source ( source )   
+  , m_geo    ( geo    )
 {}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -281,6 +277,10 @@ LoKi::Particles::MinImpParWithSource::operator()
     LHCb::VertexBase::ConstVector primaries = m_source() ;
     // fill the functor with primary vertices:
     m_mip.addObjects ( primaries.begin() , primaries.end () ) ;
+    if ( m_mip.empty() ) 
+    { Error ( "Empty list of vertices is loaded!" ) ; }
+    // update the event:
+    setEvent () ;
   }
   // use the functor 
   return m_mip.mip ( p ) ;
@@ -292,8 +292,6 @@ std::ostream& LoKi::Particles::MinImpParWithSource::fillStream
 ( std::ostream& s ) const 
 { return s << "MIPSOURCE ('" <<  m_source << ", " << m_geo << "')"; }
 // ============================================================================
-
-// ============================================================================
 /* the "default" constructor,
  *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
@@ -303,8 +301,33 @@ std::ostream& LoKi::Particles::MinImpParWithSource::fillStream
 // ============================================================================
 LoKi::Particles::MinImpParDV::MinImpParDV 
 ( const std::string& geo    ) 
-  : LoKi::Particles::MinImpParWithSource 
-    ( LoKi::Vertices::SourceDesktop ( LoKi::Vertices::IsPrimary() ) , geo )  
+  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceDesktop ( s_PRIMARY ) , geo )  
+{}
+// ============================================================================
+/*  the constructor form the vertex selection functor and 
+ *  the name/nickname of IGeomDispCalculator tool from DVAlgorithm
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+// ============================================================================
+LoKi::Particles::MinImpParDV::MinImpParDV 
+( const LoKi::PhysTypes::VCuts& cuts , 
+  const std::string&            geo )
+  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceDesktop ( cuts ) , geo )
+{}
+// ============================================================================
+/*  the constructor form the vertex selection functor and 
+ *  the name/nickname of IGeomDispCalculator tool from DVAlgorithm
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+// ============================================================================
+LoKi::Particles::MinImpParDV::MinImpParDV 
+( const std::string&            geo , 
+  const LoKi::PhysTypes::VCuts& cuts ) 
+  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceDesktop ( cuts ) , geo )
 {}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -319,8 +342,6 @@ std::ostream& LoKi::Particles::MinImpParDV::fillStream
 ( std::ostream& s ) const 
 { return s << "MIPDV('" << geo() << "')"; }
 // ============================================================================
-
-// ============================================================================
 /* the constructor,
  *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
@@ -333,8 +354,8 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 ( const std::string& path   , 
   const std::string& geo    ) 
   : LoKi::Particles::MinImpParWithSource 
-    ( LoKi::Vertices::SourceTES ( path , LoKi::Vertices::IsPrimary() ) , geo )  
-  , m_path ( 1 , path )
+( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
+  , m_path ( 1 , path ) 
 {}
 // ============================================================================
 /* the constructor,
@@ -347,10 +368,105 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 // ============================================================================
 LoKi::Particles::MinImpParTES::MinImpParTES 
 ( const std::vector<std::string>& path   , 
-  const std::string& geo    ) 
-  : LoKi::Particles::MinImpParWithSource 
-    ( LoKi::Vertices::SourceTES ( path , LoKi::Vertices::IsPrimary() ) , geo )  
-  , m_path ( path )
+  const std::string&              geo    ) 
+  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
+  , m_path ( path ) 
+{}
+// ============================================================================
+/* the constructor,
+ *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  by full type/name
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param path the locations of vertices in TES 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+// ============================================================================
+LoKi::Particles::MinImpParTES::MinImpParTES 
+( const LoKi::PhysTypes::VCuts&   cuts ,
+  const std::vector<std::string>& path , 
+  const std::string&              geo  ) 
+  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
+    , m_path ( path ) 
+{}
+// ============================================================================
+/* the constructor,
+ *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  by full type/name
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param path the location of vertices in TES 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+// ============================================================================
+LoKi::Particles::MinImpParTES::MinImpParTES 
+( const LoKi::PhysTypes::VCuts& cuts ,
+  const std::string&            path , 
+  const std::string&            geo  ) 
+  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
+  , m_path ( 1 , path ) 
+{}
+// ============================================================================
+/*  the constructor,
+ *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  by full type/name
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param path the locations of vertices in TES 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+// ============================================================================
+LoKi::Particles::MinImpParTES::MinImpParTES 
+( const std::vector<std::string>& path , 
+  const LoKi::PhysTypes::VCuts&   cuts ,
+  const std::string&              geo  ) 
+  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
+  , m_path ( path ) 
+{}
+// ============================================================================
+/*  the constructor,
+ *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  by full type/name
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param path the location of vertices in TES 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+// ============================================================================
+LoKi::Particles::MinImpParTES::MinImpParTES 
+( const std::string&            path , 
+  const LoKi::PhysTypes::VCuts& cuts ,
+  const std::string&            geo  ) 
+  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
+    , m_path ( 1 , path ) 
+{}
+// ============================================================================
+/*  the constructor,
+ *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  by full type/name
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param path the locations of vertices in TES 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+// ============================================================================
+LoKi::Particles::MinImpParTES::MinImpParTES 
+( const std::vector<std::string>& path , 
+  const std::string&              geo  , 
+  const LoKi::PhysTypes::VCuts&   cuts ) 
+  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
+    , m_path ( path ) 
+{}
+// ============================================================================
+/** the constructor,
+ *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  by full type/name
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param path the location of vertices in TES 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+// ============================================================================
+LoKi::Particles::MinImpParTES::MinImpParTES 
+( const std::string&            path , 
+  const std::string&            geo  ,
+  const LoKi::PhysTypes::VCuts& cuts ) 
+  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
+  , m_path ( 1 , path ) 
 {}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -366,8 +482,6 @@ std::ostream& LoKi::Particles::MinImpParTES::fillStream
 { return s << "MIPTES(" << Gaudi::Utils::toString ( m_path ) 
            << "," << geo() << "')"; }
 // ============================================================================
-
-// ============================================================================
 /*  constructor from the source and nickname or full type/name of 
  *  IGeomDispCalculator tool
  *  @see DVAlgorithm::geomDispCalculator 
@@ -381,6 +495,7 @@ LoKi::Particles::MinImpParChi2WithSource::MinImpParChi2WithSource
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_mip    ( LHCb::VertexBase::ConstVector() , s_IPTOOL ) 
   , m_source ( source )   
+  , m_geo    ( geo    )
 {}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -411,6 +526,9 @@ LoKi::Particles::MinImpParChi2WithSource::operator()
     LHCb::VertexBase::ConstVector primaries = m_source() ;
     // fill the functor with primary vertices:
     m_mip.addObjects ( primaries.begin() , primaries.end () ) ;
+    if ( m_mip.empty() ) { Error ( "Empty list of vertices is loaded!" ) ; }
+    // update the event:
+    setEvent () ;
   }
   // use the functor 
   return m_mip.mipchi2 ( p ) ;
@@ -422,9 +540,6 @@ std::ostream& LoKi::Particles::MinImpParChi2WithSource::fillStream
 ( std::ostream& s ) const 
 { return s << "MIPCHI2SOURCE ('" <<  m_source << ", " << m_geo << "')"; }
 // ============================================================================
-
-
-// ============================================================================
 /* the "default" constructor,
  *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
@@ -434,8 +549,33 @@ std::ostream& LoKi::Particles::MinImpParChi2WithSource::fillStream
 // ============================================================================
 LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV 
 ( const std::string& geo    ) 
-  : LoKi::Particles::MinImpParChi2WithSource 
-    ( LoKi::Vertices::SourceDesktop ( LoKi::Vertices::IsPrimary() ) , geo )  
+  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceDesktop ( s_PRIMARY ) , geo )  
+{}
+// ============================================================================
+/*  the constructor,
+ *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  by full type/name
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+// ============================================================================
+LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV 
+( const LoKi::PhysTypes::VCuts& cuts , 
+  const std::string&            geo  ) 
+  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceDesktop ( cuts  ) , geo )  
+{}
+// ============================================================================
+/*  the  constructor,
+ *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  by full type/name
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+// ============================================================================
+LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV 
+( const std::string&            geo  , 
+  const LoKi::PhysTypes::VCuts& cuts ) 
+  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceDesktop ( cuts  ) , geo )  
 {}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -450,8 +590,6 @@ std::ostream& LoKi::Particles::MinImpParChi2DV::fillStream
 ( std::ostream& s ) const 
 { return s << "MIPCHI2DV('" << geo() << "')"; }
 // ============================================================================
-
-// ============================================================================
 /* the constructor,
  *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
@@ -463,9 +601,8 @@ std::ostream& LoKi::Particles::MinImpParChi2DV::fillStream
 LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
 ( const std::string& path   , 
   const std::string& geo    ) 
-  : LoKi::Particles::MinImpParChi2WithSource 
-    ( LoKi::Vertices::SourceTES ( path , LoKi::Vertices::IsPrimary() ) , geo )  
-  , m_path ( 1 , path )
+  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
+  , m_path ( 1 , path ) 
 {}
 // ============================================================================
 /* the constructor,
@@ -478,10 +615,103 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 // ============================================================================
 LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
 ( const std::vector<std::string>& path   , 
-  const std::string& geo    ) 
-  : LoKi::Particles::MinImpParChi2WithSource 
-    ( LoKi::Vertices::SourceTES ( path , LoKi::Vertices::IsPrimary() ) , geo )  
-  , m_path ( path )
+  const std::string&              geo    ) 
+  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
+  , m_path ( path ) 
+{}
+// ============================================================================
+/*  the constructor,
+ *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  by full type/name
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param path the location of vertices in TES 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+// ============================================================================
+LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
+( const LoKi::PhysTypes::VCuts& cuts , 
+  const std::string&            path , 
+  const std::string&            geo  ) 
+  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+    , m_path ( 1 , path ) 
+{}
+// ============================================================================
+/*  the constructor,
+ *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  by full type/name
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param path the locations of vertices in TES 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+// ============================================================================
+LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
+( const LoKi::PhysTypes::VCuts&   cuts , 
+  const std::vector<std::string>& path , 
+  const std::string&              geo  ) 
+  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  , m_path ( path ) 
+{}
+// ============================================================================
+/*  the constructor,
+ *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  by full type/name
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param path the location of vertices in TES 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+// ============================================================================
+LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
+( const std::string&            path , 
+  const LoKi::PhysTypes::VCuts& cuts , 
+  const std::string&            geo  ) 
+  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  , m_path ( 1 , path ) 
+{}
+// ============================================================================
+/*  the constructor,
+ *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  by full type/name
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param path the locations of vertices in TES 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
+( const std::vector<std::string>& path , 
+  const LoKi::PhysTypes::VCuts&   cuts , 
+  const std::string&              geo  )  
+  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  , m_path ( path ) 
+{}
+// ============================================================================
+/*  the constructor,
+ *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  by full type/name
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param path the location of vertices in TES 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+// ============================================================================
+LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
+( const std::string&            path , 
+  const std::string&            geo  ,
+  const LoKi::PhysTypes::VCuts& cuts ) 
+  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  , m_path ( 1 , path ) 
+{}
+// ============================================================================
+/*  the constructor,
+ *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  by full type/name
+ *  @see DVAlgorithm::geomDispCalculator 
+ *  @param path the locations of vertices in TES 
+ *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ */
+LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
+( const std::vector<std::string>& path , 
+  const std::string&              geo  , 
+  const LoKi::PhysTypes::VCuts&   cuts )
+  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  , m_path ( path ) 
 {}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -497,11 +727,6 @@ std::ostream& LoKi::Particles::MinImpParChi2TES::fillStream
 { return s << "MIPCHI2TES(" << Gaudi::Utils::toString ( m_path ) 
            << "," << geo() << "')" ; 
 }
-// ============================================================================
-
-
-
-
 // ============================================================================
 // the default constructor 
 // ============================================================================
@@ -542,8 +767,6 @@ LoKi::Particles::VertexDistanceDV::operator()
 std::ostream& LoKi::Particles::VertexDistanceDV::fillStream 
 ( std::ostream& s ) const { return s << "BPVVD" ; }
 // ============================================================================
-
-// ============================================================================
 // the default constructor 
 // ============================================================================
 LoKi::Particles::VertexSignedDistanceDV::VertexSignedDistanceDV ()
@@ -582,10 +805,6 @@ LoKi::Particles::VertexSignedDistanceDV::operator()
 // ============================================================================
 std::ostream& LoKi::Particles::VertexSignedDistanceDV::fillStream 
 ( std::ostream& s ) const { return s << "BPVVDSIGN" ; }
-// ============================================================================
-
- 
-
 // ============================================================================
 // the default constructor 
 // ============================================================================
@@ -626,9 +845,6 @@ LoKi::Particles::VertexDotDistanceDV::operator()
 std::ostream& LoKi::Particles::VertexDotDistanceDV::fillStream 
 ( std::ostream& s ) const { return s << "BPVVDDOT" ; }
 // ============================================================================
-
-
-// ============================================================================
 // the default constructor 
 // ============================================================================
 LoKi::Particles::VertexChi2DistanceDV::VertexChi2DistanceDV ()
@@ -667,10 +883,6 @@ LoKi::Particles::VertexChi2DistanceDV::operator()
 // ============================================================================
 std::ostream& LoKi::Particles::VertexChi2DistanceDV::fillStream 
 ( std::ostream& s ) const { return s << "BPVVDCHI2" ; }
-// ============================================================================
-
-
-
 // ============================================================================
 // constructor 
 // ============================================================================
@@ -727,10 +939,6 @@ LoKi::Particles::LifeTimeDV::operator()
 std::ostream& LoKi::Particles::LifeTimeDV::fillStream 
 ( std::ostream& s ) const { return s << "BPVLTIME('" << m_fit << "')" ; }
 // ============================================================================
-  
-
-
-// ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV() 
@@ -785,9 +993,6 @@ LoKi::Particles::LifeTimeChi2DV::operator()
 // ============================================================================
 std::ostream& LoKi::Particles::LifeTimeChi2DV::fillStream 
 ( std::ostream& s ) const { return s << "BPVLTCHI2('" << m_fit << "')" ; }
-// ============================================================================
-
-
 // ============================================================================
 // constructor 
 // ============================================================================

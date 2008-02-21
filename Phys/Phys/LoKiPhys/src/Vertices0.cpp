@@ -1,4 +1,4 @@
-// $Id: Vertices0.cpp,v 1.7 2007-11-28 14:39:31 ibelyaev Exp $
+// $Id: Vertices0.cpp,v 1.8 2008-02-21 20:23:42 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -49,9 +49,18 @@ LoKi::Vertices::IsPrimary::result_type
 LoKi::Vertices::IsPrimary::operator() 
   ( LoKi::Vertices::IsPrimary::argument v ) const 
 {
-  if ( 0 != v ) { return  v->isPrimary() ; } // RETURN 
-  Error ( " Invalid VertexBase, return 'false'" ) ;
-  return false ;                   // RETURN 
+  if ( 0 == v ) 
+  {
+    Error ( " Invalid VertexBase, return 'false'" ) ;
+    return false ;                   // RETURN 
+  }
+  if ( v -> isPrimary() ) { return true  ; }              // RETURN 
+  const LHCb::RecVertex* rv = dynamic_cast<const LHCb::RecVertex*>( v ) ;
+  if ( 0 == rv          ) { return false ; }              // RETURN 
+  if ( rv-> isPrimary() ) { return true  ; }              // RETURN
+  if ( LHCb::RecVertex::Primary == rv->technique() ) { return true ; } // RETURN 
+  Warning ( "non-primary LHCb::RecVertex, return 'false'" ) ;
+  return false ;
 }
 // ============================================================================
 std::ostream& 
