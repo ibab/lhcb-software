@@ -5,7 +5,7 @@
  *  Header file for tool base class : Rich::Rec::PixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.22 2008-02-08 14:30:22 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.23 2008-02-21 16:36:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -38,7 +38,6 @@
 #include "RichKernel/RichMap.h"
 #include "RichKernel/RichHashMap.h"
 #include "RichKernel/BoostArray.h"
-//#include "RichKernel/RichSmartIDSorter.h"
 
 // RichDet
 #include "RichDet/DeRichSystem.h"
