@@ -1,23 +1,16 @@
-! $Id: release.notes,v 1.84 2008-02-11 21:57:41 odescham Exp $
+! $Id: release.notes,v 1.85 2008-02-21 15:30:57 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
-
+!========================== L0DU v8r3 2008-02-21 =========================
 ! 2008-02-11 - Olivier Deschamps 
- - L0DUFromRawTool : fix redundant rootInTES in get<rawEvent>(rootInTES() + rawEventLocation )
-
+ - L0DUFromRawTool : 
+   fix redundant rootInTES in get<rawEvent>(rootInTES() + rawEventLocation )
 
 ! 2008-02-07 - Olivier Deschamps 
  - fix TCK string format (%4X -> %04X) 
  - L0DUFromRawTool : add protection against non-existing L0DU rawBank
-
-
-
-
-! 2008-01-30 - Marco Cattaneo
- - WriteETC.opts, ReadETC.opts
-  . Replace PoolDbCacheSvc.Catalog by FileCatalog.Catalogs, for Gaudi v19r7
 
 !========================== L0DU v8r2 2008-01-30 =========================
 ! 2008-01-30 - Marco Cattaneo
