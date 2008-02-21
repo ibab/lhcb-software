@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.13 2008-01-04 16:15:14 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.cpp,v 1.14 2008-02-21 16:44:51 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -39,6 +39,8 @@ CherenkovAngleMonitor::CherenkovAngleMonitor( const std::string& name,
   // number of bins
   declareProperty( "NumberBins1D",  m_nBins1D = 200 );
   declareProperty( "NumberBins2D",  m_nBins2D = 100 );
+  // # CK phi regions
+  declareProperty( "NumPhiRegions", m_nPhiRegions = 4 );
 }
 
 // Destructor
@@ -125,12 +127,18 @@ StatusCode CherenkovAngleMonitor::execute()
       const double phiRec   = photon->geomPhoton().CherenkovPhi();
       const double delTheta = thetaRec-thetaExpTrue;
 
+      // phi 'region'
+      const std::string phiRegionH = phiRegionString( phiRec );
+      const std::string phiRegionD = phiRegionDesc  ( phiRec );
+
       plot1D( thetaRec, hid(rad,"ckTheta"), "Reconstructed Cherenkov theta",
               minCkTheta[rad], maxCkTheta[rad], m_nBins1D );
       plot1D( thetaExpTrue, hid(rad,"ckThetaExp"), "Expected Cherenkov theta",
               minCkTheta[rad], maxCkTheta[rad], m_nBins1D );
       plot1D( phiRec, hid(rad,"ckPhi"), "Reconstructed Cherenkov phi", 0, 2*M_PI, m_nBins1D );
       plot1D( delTheta, hid(rad,"ckDiffAll"), "Rec-Exp CK theta all",
+              -ckRange[rad], ckRange[rad], m_nBins1D );
+      plot1D( delTheta, hid(rad,"ckDiffAll"+phiRegionH), "Rec-Exp CK theta all : "+phiRegionD,
               -ckRange[rad], ckRange[rad], m_nBins1D );
       plot2D( phiRec, delTheta, hid(rad,"ckDiffAllVPhi"), "Rec-Exp CK theta all V CK Phi",
               0, 2*M_PI, -ckRange[rad], ckRange[rad], m_nBins2D, m_nBins2D );
@@ -174,9 +182,10 @@ StatusCode CherenkovAngleMonitor::execute()
           plot1D( phiRec,   hid(rad,mcType,"ckPhiTrue"), "Cherenkov phi : true", 0, 2*M_PI, m_nBins1D );
           plot1D( delTheta, hid(rad,"ckDiffTrue"), "Rec-Exp CK theta all : true",
                   -ckRange[rad],ckRange[rad], m_nBins1D );
+          plot1D( delTheta, hid(rad,"ckDiffTrue"+phiRegionH), "Rec-Exp CK theta all : true : "+phiRegionD,
+                  -ckRange[rad],ckRange[rad], m_nBins1D );
           plot2D( phiRec, delTheta, hid(rad,"ckDiffTrueVPhi"), "Rec-Exp CK theta all V CK Phi : true",
                   0, 2*M_PI, -ckRange[rad], ckRange[rad], m_nBins2D, m_nBins2D );
-
           profile1D( pTot, delTheta, hid(rad,"ckDiffTrueVP"), "Rec-Exp CK theta Versus Ptot all : true",
                      minP, maxP, 50 );
 
@@ -221,7 +230,11 @@ StatusCode CherenkovAngleMonitor::execute()
                     minCkTheta[rad], maxCkTheta[rad], m_nBins1D );
             plot1D( delThetaMC, hid(rad,"mcckDiffTrue"), "Rec-MC CK theta true",
                     -ckRange[rad],ckRange[rad], m_nBins1D );
+            plot1D( delThetaMC, hid(rad,"mcckDiffTrue"+phiRegionH), "Rec-MC CK theta true : "+phiRegionD,
+                    -ckRange[rad],ckRange[rad], m_nBins1D );
             plot1D( delThetaExpMC, hid(rad,"mcExpDiff"), "MC-Exp CK theta true",
+                    -ckRange[rad],ckRange[rad], m_nBins1D );
+            plot1D( delThetaExpMC, hid(rad,"mcExpDiff"+phiRegionH), "MC-Exp CK theta true : "+phiRegionD,
                     -ckRange[rad],ckRange[rad], m_nBins1D );
             plot2D( phiMC, delThetaMC, hid(rad,"mcckDiffTrueVPhi"), "Rec-MC CK theta true V true CK Phi",
                     0, 2*M_PI, -ckRange[rad], ckRange[rad], m_nBins2D, m_nBins2D );
@@ -251,6 +264,8 @@ StatusCode CherenkovAngleMonitor::execute()
           plot1D( phiRec,   hid(rad,mcType,"ckPhiFake"), "Cherenkov phi : fake", 0, 2*M_PI, m_nBins1D );
           plot1D( delTheta, hid(rad,"ckDiffFake"), "Rec-Exp CK theta all : fake",
                   -ckRange[rad],ckRange[rad], m_nBins1D );
+          plot1D( delTheta, hid(rad,"ckDiffFake"+phiRegionH), "Rec-Exp CK theta all : fake : "+phiRegionD,
+                  -ckRange[rad],ckRange[rad], m_nBins1D );
           profile1D( pTot, delTheta, hid(rad,"ckDiffFakeVP"), "Rec-Exp CK theta Versus Ptot all : fake",
                      minP, maxP, 50 ); 
 
@@ -263,4 +278,17 @@ StatusCode CherenkovAngleMonitor::execute()
   } // loop over segments
 
   return StatusCode::SUCCESS;
+}
+
+std::string CherenkovAngleMonitor::phiRegionDesc( const double phi ) const
+{
+  const double phiInc = 2.0 / m_nPhiRegions;
+  const int region    = phiRegion(phi);
+  const double phimin = (phiInc*region     - (phiInc/2.0));
+  const double phimax = (phiInc*(region+1) - (phiInc/2.0));
+
+  std::ostringstream desc;
+  desc << "phi = " << boost::format("%6.2f PI -> %6.2f PI") % phimin % phimax;
+
+  return desc.str();
 }
