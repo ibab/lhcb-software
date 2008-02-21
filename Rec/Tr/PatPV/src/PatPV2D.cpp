@@ -1,4 +1,4 @@
-// $Id: PatPV2D.cpp,v 1.1.1.1 2007-10-09 18:46:14 smenzeme Exp $
+// $Id: PatPV2D.cpp,v 1.2 2008-02-21 23:01:33 witekma Exp $
 // Include files
  
 // from Gaudi
@@ -513,6 +513,7 @@ StatusCode PatPV2D::execute() {
 
     trVtx->setNDoF(itMyPv->multi-3);
     trVtx->setChi2(itMyPv->chi2);
+    trVtx->setTechnique(LHCb::RecVertex::Primary);
     m_outputVertices->insert(trVtx);
 
     if ( msgLevel( MSG::DEBUG ) ) {
@@ -553,6 +554,7 @@ void PatPV2D:: storeDummyVertices(std::vector<double> &zseeds) {
         trVtx->addToTracks(*itMyTr);
       }
     }
+    trVtx->setTechnique(LHCb::RecVertex::Primary);
     m_outputVertices->insert(trVtx);
 
   }

@@ -664,6 +664,7 @@ StatusCode PatPV3D::storeVertices(PatVertexStates& myTrgVertices) {
     }
     tVertex->setNDoF( (int) 2 * myTrgVertex->nbTracksUsedForVertexing() -3 );
     tVertex -> setChi2( myTrgVertex->chi2() );
+    tVertex->setTechnique(LHCb::RecVertex::Primary);
     m_outputVertices->insert(tVertex);
     
   }
@@ -742,6 +743,7 @@ void PatPV3D:: storeDummyVertices(std::vector<double> &zseeds) {
         tVertex -> addToTracks ( trk );
       }
     }
+    tVertex->setTechnique(LHCb::RecVertex::Primary);
     m_outputVertices->insert(tVertex);
   }
 }
