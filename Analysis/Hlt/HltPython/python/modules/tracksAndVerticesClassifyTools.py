@@ -148,19 +148,20 @@ def hasHoles(TES,track,VELO):
 
 #---------------------------------------------------
 
-def hasIntruders(TES,track):
+def hasIntruders(TES,track,VELO):
 	"""find out whether a track has hits amongst 8 first from different mcpars
 
 	@param TES Transient Event Store
 	@param track LHCb track
-
+	@param VELO VELO = det['/dd/Structure/LHCb/BeforeMagnetRegion/Velo'], where det = gaudi.detsvc()
+	
 	@returns True if track has intruders or False if not
 	@author Xabier Cid Vidal xabier.cid.vidal@cern.ch
 	@author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
 	"""
 
-	## find velo hits
-	vID,tID=gh.IDs(track.lhcbIDs())
+	## find velo hits sosrted according to z
+	vID,tID=gh.IDs_sorted(track.lhcbIDs(),VELO)
 	## find mcpars associated to 8 first hits
 	mcpars8=gh.getmcpars(TES,vID[:8])
 	## find most popular amongst them

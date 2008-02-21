@@ -67,10 +67,13 @@ def checkPieInputs(i_dict,title,labels,colors,opt,sort,leg):
 
     ## if label is not a dict or has a wrong number of elements, simply put it to dict keys 
     if not isinstance(labels,dict): labelsn=i_dict.keys()
-    elif len(labels)!=n_el:
-       print "WRONG NUMBER OF LABELS"
-       labelsn=i_dict.keys()
-    else: labelsn=labels.values()
+    else:
+        labelsn=[]
+        for i in i_dict:
+            if labels.has_key(i): labelsn.append(labels[i])
+            else:
+                print i+" NOT KEY IN LABELS"
+                labelsn.append(i)
 
 
     colorsn=[]
@@ -80,7 +83,8 @@ def checkPieInputs(i_dict,title,labels,colors,opt,sort,leg):
        colorsn=range(2,n_el+2)
        print "WRONG NUMBER OF COLORS"
     else:
-       for c in colors.values():
+       for i in i_dict:
+           c=colors[i]
            if c in COLOR_DICT: colorsn.append(COLOR_DICT[c])
            else: colorsn.append(0)
 

@@ -72,11 +72,10 @@ def getmcpar(TES,fIDs):
 
 
 #---------------------------------------------------
-
-
 def IDs(lhcbIDs):
 	"""find hits coming from Velo and TStations
 	"""
+
 	vID=[]
 	tID=[]
 
@@ -85,9 +84,28 @@ def IDs(lhcbIDs):
 			vID.append(lh)
 		elif lh.isST()or lh.isOT:
 			tID.append(lh)
-
-
 	return vID,tID
+
+#---------------------------------------------------
+def IDs_sorted(lhcbIDs,VELO):
+	"""find hits coming from Velo and TStations and return velo sorted
+	"""
+	vID=[]
+	tID=[]
+
+	for lh in lhcbIDs:
+		if lh.isVelo():
+			vID.append([VELO.sensor(lh.veloID()).z(),lh])
+		elif lh.isST()or lh.isOT:
+			tID.append(lh)
+
+	vID.sort()
+	vID_sorted=[]
+
+	for v in vID:
+		vID_sorted.append(v[1])
+		
+	return vID_sorted,tID
 
 
 

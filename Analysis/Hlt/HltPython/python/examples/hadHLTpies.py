@@ -275,7 +275,7 @@ def getInformationFromHPTtracks(gaudimod=0,classify_ghosts=[],intruders=[],holes
 
                             if searchi:
                                 condi=False
-                                if intruders==trve.hasIntruders(TES,track): condi=True
+                                if intruders==trve.hasIntruders(TES,track,VELO): condi=True
 
                             if searchh:
                                 condh=False
@@ -517,7 +517,7 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N
                                 condi=False
                                 condi_l=[]
                                 for track in vert.tracks():
-                                        condi_l.append(trve.hasIntruders(TES,track))
+                                        condi_l.append(trve.hasIntruders(TES,track,VELO))
                                 if intruders and (True in condi_l): condi=True
                                 if not intruders and not (True in condi_l): condi=True
 

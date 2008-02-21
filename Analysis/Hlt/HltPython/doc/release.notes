@@ -4,6 +4,9 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2008-2-21 - Hugo Ruiz for Xabier Cid
+  - Corrected bugs in the files added on 2008-2-17
+
 ! 2008-2-17 - Hugo Ruiz for Xabier Cid
   - add to modules addDict, ghostClassifyTools, causeTools, 
 holesIntrudersTools, frequencyAndBpercentage, 
