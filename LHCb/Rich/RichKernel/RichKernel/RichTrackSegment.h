@@ -5,7 +5,7 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.8 2008-02-17 19:28:05 jonrob Exp $
+ *  $Id: RichTrackSegment.h,v 1.9 2008-02-21 16:35:40 jonrob Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
@@ -13,8 +13,8 @@
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHEVENT_RICHTRACKSEGMENT_H
-#define RICHEVENT_RICHTRACKSEGMENT_H 1
+#ifndef RICHKERNEL_RichTrackSegment_H
+#define RICHKERNEL_RichTrackSegment_H 1
 
 // std include
 #include <iostream>
@@ -617,4 +617,4 @@ inline void LHCb::RichTrackSegment::reset() const
   cleanUpRotations();
 }
 
-#endif // RICHEVENT_RICHTRACKSEGMENT_H
+#endif // RICHKERNEL_RichTrackSegment_H
