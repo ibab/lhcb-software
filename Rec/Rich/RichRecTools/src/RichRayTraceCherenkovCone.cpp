@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.24 2008-02-17 19:26:22 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.25 2008-02-21 16:52:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -169,8 +169,8 @@ RayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
     {
       // Photon direction around loop
       const Gaudi::XYZVector photDir =
-        ring->richRecSegment()->trackSegment().vectorAtCosSinThetaPhi( cosTheta,   sinTheta,
-                                                                      (*iP).cosPhi,(*iP).sinPhi );
+        ring->richRecSegment()->trackSegment().vectorAtCosSinThetaPhi( cosTheta,     sinTheta,
+                                                                       (*iP).cosPhi, (*iP).sinPhi );
       
       // do the tracing for this photon
       const LHCb::RichTraceMode::RayTraceResult result =
@@ -214,7 +214,7 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
     ring->ringPoints().reserve(nPoints);
 
     // Define rotation matrix
-    // to to allow the one from the track segment to be used.
+    // todo to allow the one from the track segment to be used.
     const Gaudi::XYZVector z = direction.unit();
     Gaudi::XYZVector y = z.Cross( Gaudi::XYZVector(0.,1.,0.) );
     y /= std::sqrt(y.Mag2());
@@ -284,7 +284,6 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
                                   const unsigned int nPoints,
                                   const LHCb::RichTraceMode mode ) const
 {
-
   if ( ckTheta > 0 )
   {
 

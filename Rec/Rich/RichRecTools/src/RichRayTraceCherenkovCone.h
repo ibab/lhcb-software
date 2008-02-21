@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.h,v 1.17 2008-02-17 19:26:22 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.h,v 1.18 2008-02-21 16:52:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -146,7 +146,7 @@ namespace Rich
       inline const CosSinPhi::Vector & cosSinValues( const unsigned int nPoints ) const
       {
         CosSinPhi::Vector & vect = m_cosSinPhi[nPoints];
-        if ( vect.empty() ) fillCosSinValues( vect, nPoints );
+        if ( vect.empty() ) { fillCosSinValues( vect, nPoints ); }
         return vect;
       }
 
