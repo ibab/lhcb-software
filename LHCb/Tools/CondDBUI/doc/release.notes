@@ -1,9 +1,19 @@
 ! =============================================================================
-! $Id: release.notes,v 1.74 2008-01-28 10:38:41 cattanem Exp $
+! $Id: release.notes,v 1.75 2008-02-21 11:56:02 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+! 2008-02-21 - Marco Clemencic
+ - Added few member functions to CondDB:
+   + moveTagOnLocalTag
+     Move a tag to encompass the changes identified by another tag
+   + resolveTag
+     Return the local tag for a parent tag, or None if there is not relation
+   + findNodesWithTag
+     Return the list of folders (or foldersets) in which the local tag is
+     defined.
 
 !===================== Tools/CondDBUI v2r7 2008-01-28 =========================
 ! 2008-01-23 - Marco Clemencic

@@ -1136,6 +1136,87 @@ class CondDB:
         nodes_tags[basepath] = tag
         self._moveTagOnNodes_recursion(nodes_tags,basepath,tag,nodes_to_modify)
 
+    def moveTagOnLocalTag(self,basepath,tag,local_tag):
+        """
+        Move (or create) the tag "tag" on the folderset basepath using the tag
+        specified as local_tag.
+        It first collects the minimal set of folder(set)s under basepath in which
+        the local_tag can be resolved, then calls moveTagOnNodes.
+        """
+        nodes = self.findNodesWithTag(local_tag, base = basepath, leaves = False)
+        if not nodes:
+            # nothig to do
+            print "Warning: Tag '%s' not found"%local_tag
+            return
+        nodes_tags = {}
+        for n in nodes:
+            nodes_tags[n] = local_tag
+        self.moveTagOnNodes(basepath,tag,nodes_tags)
+
+    def resolveTag(self,path,tag):
+        """
+        Return the local tag associated with the parent tag given.
+        """
+        n = self.getCOOLNode(path)
+        try:
+            return n.resolveTag(tag)
+        except:
+            return None
+        
+    def findNodesWithTag(self, tag, base = "/", leaves = True):
+        """
+        Find all the nodes that have a local tag associated with provided parent tag.
+        
+        If leaves is True (the default), it returns a list of the folders (leaves).
+        If it is False, the list is reduced to a set of foldersets in which the tag
+        is completely defined and folders (in case a common folderset couldn be identified).
+        """
+        # this finds all the leaves in which a tag can be resolved
+        l = filter(lambda p: self.db.existsFolder(p) and self.resolveTag(p,tag), self.getAllChildNodes(base))
+        
+        if leaves:
+            # enough
+            return l
+
+        # let's try to find a minimal set of folder(set)s below "base"
+        if base == '/':
+            base = ['']
+        else:
+            base = base.split('/')
+        
+        base_count = len(base)
+        
+        newlist = [] # where to put the extracted bases
+        # compare one element with all the others until we exaust the list
+        while l:
+            current = l[0]
+            l.remove(current)
+            # do not have to compare something with the base because is guaranteed
+            # to be included in each element
+            curr_split = current.split('/')[base_count:]
+            
+            lcopy = l[:]
+            for elem in lcopy:
+                elem_split = elem.split('/')[base_count:]
+                # find common part between current and elem
+                i = 0
+                m = min(len(elem_split),len(curr_split))
+                while i < m and elem_split[i] == curr_split[i]: i += 1
+                if i: # check if they have any element in common
+                    candidate = '/'.join(base+curr_split[:i])
+                    # here we define the other constraints:
+                    #   - it can be a folder (probably overkilling as a check)
+                    #   - otherwise the tag must be defined in all the children
+                    if ( self.db.existsFolder(candidate) ) \
+                       or ( self.isTagReady(tag,candidate) ):
+                        l.remove(elem)
+                        curr_split = curr_split[:i]
+                        current = candidate
+            
+            newlist.append(current)
+        return newlist
+        
+
     #---------------------------------------------------------------------------------#
 
     #=============================#
@@ -1658,4 +1739,3 @@ def merge( sourceDB, targetDB,
                                        obj.payload(), obj.channelId())
             tgt_folder.flushStorageBuffer()
             
- 
