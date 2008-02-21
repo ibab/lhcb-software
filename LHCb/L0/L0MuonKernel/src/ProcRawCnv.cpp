@@ -216,6 +216,16 @@ std::vector<LHCb::MuonTileID> L0Muon::ProcRawCnv::neighs(LHCb::MuonTileID puid)
   return pads;
 }
 
+// int L0Muon::ProcRawCnv::checkMuonTiles(){
+//   int nBadTiles=0;
+//   std::map<LHCb::MuonTileID, TileRegister*>::iterator itregmap;
+  
+//   //   for (itregmap=m_olsMap.begin(); itregmap!=m_olsMap.end(); ++itregmap){
+//   //   }
+
+//   return nBadTiles;
+// }
+
 std::vector<LHCb::MuonTileID>  L0Muon::ProcRawCnv::pus()
 {
   std::vector<LHCb::MuonTileID> lpuids;
@@ -450,7 +460,7 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
       m_candRegHandlerPU[ib][ipu].setCandPT(    ( (word>>16)&0x7F ) ,1);
       m_candRegHandlerPU[ib][ipu].setCandCharge(( (word>>23)&0x01 ) ,1);
       m_candRegHandlerPU[ib][ipu].setCandPT(    ( (word>>24)&0x7F ) ,0);
-      m_candRegHandlerPU[ib][ipu].setCandCharge(( (word>>30)&0x01 ) ,0);
+      m_candRegHandlerPU[ib][ipu].setCandCharge(( (word>>31)&0x01 ) ,0);
     
       empty = (word>>15)&0x1;
       if (empty!=0) {

@@ -81,8 +81,8 @@ namespace L0Muon {
 
     void setEventCounters(int L0EventNum, int L0_B_Id);
 
+//     int checkMuonTiles();
     
-
   private:
     
     bool m_activ;
