@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromCheatedRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.8 2008-02-20 22:10:40 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.9 2008-02-21 16:40:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -30,8 +30,8 @@ PixelCreatorFromCheatedRawBuffer::
 PixelCreatorFromCheatedRawBuffer( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : Rich::Rec::PixelCreatorBase( type, name, parent ),
-    m_mcTool        ( NULL ) { }
+  : Rich::Rec::PixelCreatorBase ( type, name, parent ),
+    m_mcTool                    ( NULL               ) { }
 
 StatusCode PixelCreatorFromCheatedRawBuffer::initialize()
 {
@@ -40,7 +40,7 @@ StatusCode PixelCreatorFromCheatedRawBuffer::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichMCTruthTool", m_mcTool,      0, true );
+  acquireTool( "RichMCTruthTool", m_mcTool, 0, true );
 
   return sc;
 }
@@ -97,8 +97,9 @@ void PixelCreatorFromCheatedRawBuffer::addMCInfo( LHCb::RichRecPixel * pixel ) c
         }
         // break out of loop (i.e. ignore any other associated hits)
         break;
-      }
-    }
+      } // true photon
+
+    } // loop over mc hits
 
   } // pixel OK
 }
