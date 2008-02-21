@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.35 2007-11-26 17:33:38 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.36 2008-02-21 16:50:51 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -120,16 +120,16 @@ StatusCode RecoQC::execute()
     if ( mcTrackOK )
     {
       // True particle type
-      const Rich::ParticleIDType mcType = richRecMCTool()->mcParticleType( segment );
+      mcType = richRecMCTool()->mcParticleType( segment );
       if ( Rich::Unknown  == mcType ) continue; // skip tracks with unknown MC type
       if ( Rich::Electron == mcType ) continue; // skip electrons which are reconstructed badly..
-
-      // Expected Cherenkov theta angle for true particle type
-      thetaExpTrue = ckAngleTool()->avgCherenkovTheta( segment, mcType );
-
-      // Cherenkov angle resolution for true type
-      resExpTrue = ckResTool()->ckThetaResolution( segment, mcType );
     }
+
+    // Expected Cherenkov theta angle for 'true' particle type
+    thetaExpTrue = ckAngleTool()->avgCherenkovTheta( segment, mcType );
+    
+    // Cherenkov angle resolution for 'true' type
+    resExpTrue = ckResTool()->ckThetaResolution( segment, mcType );
 
     // beta
     const double beta = partPropTool()->beta( pTot, mcType );
