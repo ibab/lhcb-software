@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonCreatorCheatedTrackDir
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorCheatedTrackDir.cpp,v 1.4 2007-02-02 10:06:27 jonrob Exp $
+ *  $Id: RichPhotonCreatorCheatedTrackDir.cpp,v 1.5 2008-02-21 16:40:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -30,8 +30,12 @@ PhotonCreatorCheatedTrackDir::PhotonCreatorCheatedTrackDir( const std::string& t
                                                             const std::string& name,
                                                             const IInterface* parent )
   : PhotonCreatorBase ( type, name, parent ),
-    m_mcRecTool           ( NULL ),
-    m_recoPhotCr          ( NULL ) { }
+    m_mcRecTool       ( NULL ),
+    m_recoPhotCr      ( NULL ) 
+{
+  declareProperty( "CheatDirections", m_cheatDir = true  );
+  declareProperty( "CheatPositions",  m_cheatPos = true  );
+}
 
 StatusCode PhotonCreatorCheatedTrackDir::initialize()
 {
@@ -46,50 +50,42 @@ StatusCode PhotonCreatorCheatedTrackDir::initialize()
   return sc;
 }
 
-StatusCode PhotonCreatorCheatedTrackDir::finalize()
-{
-  // Execute base class method
-  return PhotonCreatorBase::finalize();
-}
-
 LHCb::RichRecPhoton *
 PhotonCreatorCheatedTrackDir::buildPhoton( LHCb::RichRecSegment * segment,
                                            LHCb::RichRecPixel * pixel,
                                            const RichRecPhotonKey key ) const
 {
-  // Store state information
-  const Gaudi::XYZPoint storedMidPoint = segment->trackSegment().middlePoint();
-  const Gaudi::XYZVector storedMidMom  = segment->trackSegment().middleMomentum();
-  const Gaudi::XYZPoint storedEntryPoint = segment->trackSegment().entryPoint();
-  const Gaudi::XYZVector storedEntryMom  = segment->trackSegment().entryMomentum();
-  const Gaudi::XYZPoint storedExitPoint = segment->trackSegment().exitPoint();
-  const Gaudi::XYZVector storedExitMom  = segment->trackSegment().exitMomentum();
-
-  // See if there is a true cherenkov photon for this segment/pixel pair
-  const LHCb::MCRichOpticalPhoton * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
-  bool updatedTk ( false );
-  if ( mcPhoton )
+  LHCb::RichRecPhoton * newPhoton            = NULL;
+  const LHCb::MCRichOpticalPhoton * mcPhoton = NULL;
+  
+  if ( (m_cheatDir || m_cheatPos) && 
+       (mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel)) != NULL )
   {
-    updatedTk = true;
-    segment->trackSegment().setEntryState ( storedEntryPoint,
-                                            mcPhoton->parentMomentum() );
-    segment->trackSegment().setMiddleState( /*mcPhoton->emissionPoint(),*/ storedMidPoint,
-                                            mcPhoton->parentMomentum() );
-    segment->trackSegment().setExitState  ( storedExitPoint,
-                                            mcPhoton->parentMomentum() );
+
+    // Store initial state information
+    const Gaudi::XYZPoint storedMidPoint   = segment->trackSegment().middlePoint();
+    const Gaudi::XYZVector storedMidMom    = segment->trackSegment().middleMomentum();
+    const Gaudi::XYZPoint storedEntryPoint = segment->trackSegment().entryPoint();
+    const Gaudi::XYZVector storedEntryMom  = segment->trackSegment().entryMomentum();
+    const Gaudi::XYZPoint storedExitPoint  = segment->trackSegment().exitPoint();
+    const Gaudi::XYZVector storedExitMom   = segment->trackSegment().exitMomentum();
+
+    // cheat track direction info
+    if ( m_cheatDir )
+    {
+      segment->trackSegment().setEntryState ( storedEntryPoint,
+                                              mcPhoton->parentMomentum() );
+      segment->trackSegment().setExitState  ( storedExitPoint,
+                                              mcPhoton->parentMomentum() );
+    }
+    segment->trackSegment().setMiddleState( (m_cheatPos ? mcPhoton->emissionPoint()  : storedMidPoint),
+                                            (m_cheatDir ? mcPhoton->parentMomentum() : storedMidMom)   );
     segment->trackSegment().reset();
-  }
 
-  // Reconstruct the photon (uses the cheated middle point)
-  //RichRecPhoton * newPhoton = ( mcPhoton ? m_recoPhotCr->reconstructPhoton(segment,pixel) : NULL );
-  LHCb::RichRecPhoton * newPhoton = m_recoPhotCr->reconstructPhoton(segment,pixel);
+    // Reconstruct the photon (uses the cheated track info)
+    newPhoton = m_recoPhotCr->reconstructPhoton(segment,pixel);
 
-  // Add to reference map
-  if ( bookKeep() ) m_photonDone[key] = true;
-
-  // Reset the track back to original settings
-  if ( updatedTk )
-  {
+    // Reset the track back to original settings
     segment->trackSegment().setEntryState ( storedEntryPoint,
                                             storedEntryMom );
     segment->trackSegment().setMiddleState( storedMidPoint,
@@ -97,9 +93,17 @@ PhotonCreatorCheatedTrackDir::buildPhoton( LHCb::RichRecSegment * segment,
     segment->trackSegment().setExitState  ( storedExitPoint,
                                             storedExitMom );
     segment->trackSegment().reset();
+
   }
+  else
+  {
+    // just reconstruct as per normal
+    newPhoton = m_recoPhotCr->reconstructPhoton(segment,pixel);
+  }
+
+  // Add to reference map
+  if ( bookKeep() ) m_photonDone[key] = true;
 
   // Return pointer to this photon
   return newPhoton;
-
 }

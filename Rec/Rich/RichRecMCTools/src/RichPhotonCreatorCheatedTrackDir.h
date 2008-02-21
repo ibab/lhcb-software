@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonCreatorCheatedTrackDir
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorCheatedTrackDir.h,v 1.5 2007-06-01 09:47:08 cattanem Exp $
+ *  $Id: RichPhotonCreatorCheatedTrackDir.h,v 1.6 2008-02-21 16:40:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -59,9 +59,6 @@ namespace Rich
         // Initialize method
         StatusCode initialize();
 
-        // Finalize method
-        StatusCode finalize();
-
       protected: // methods
 
         /// Form a Photon candidate from a Segment and a pixel.
@@ -76,6 +73,12 @@ namespace Rich
 
         /// Delegated photon creator for reco photons
         const IPhotonCreator * m_recoPhotCr;
+
+        /// Flag to turn on cheating of track directions
+        bool m_cheatDir;
+
+        /// Flag to turn on cheating of track positions
+        bool m_cheatPos;
 
       };
 
