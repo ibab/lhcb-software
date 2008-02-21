@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-02-21 - Julien Cogan
+ - Fix bug in decoding PU muon candidate charge in ProcRawCnv
+
 !============================ L0MuonKernel v7r3 2008-02-19 ============== 
 ! 2008-02-08 - Julien Cogan
  - Upgrade decoding of transparent mode with ProcRawCnv and CtrlRawCnv
