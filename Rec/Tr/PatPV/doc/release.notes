@@ -4,10 +4,11 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
-!============================= PatPV v3r1 2007-12-14 =========================
+!============================= PatPV v3r2 2008-02-22 =========================
 ! 2008-02-21 - Mariusz Witek
   - added missing setTechnique(LHCb::RecVertex::Primary) in PatPV2D and PatPV3D
 
+!============================= PatPV v3r1 2007-12-14 =========================
 ! 2007-12-14 - Mariusz Witek
   - Additional correction of PatPV3D for Tf framework
 
