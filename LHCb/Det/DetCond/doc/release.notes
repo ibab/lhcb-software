@@ -1,9 +1,13 @@
-# $Id: release.notes,v 1.120 2008-02-12 09:35:09 marcocle Exp $
+# $Id: release.notes,v 1.121 2008-02-22 13:08:37 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+!===================== Det/DetCond v11r9 2008-02-22 ==========================
+! 2008-02-22 - Marco Cattaneo
+ - Remove hacks in requirements no longer needed with Gaudi v19r7
 
 ! 2008-02-12 - Marco Clemencic
  - Fixed a problem occurring when trying to retrieve a folder which is not in
