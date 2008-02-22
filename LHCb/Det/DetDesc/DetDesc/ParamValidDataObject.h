@@ -1,4 +1,4 @@
-//$Id: ParamValidDataObject.h,v 1.9 2007-11-09 17:10:06 marcocle Exp $
+//$Id: ParamValidDataObject.h,v 1.10 2008-02-22 12:12:12 marcocle Exp $
 #ifndef DETDESC_PARAMVALIDDATAOBJECT_H
 #define DETDESC_PARAMVALIDDATAOBJECT_H 1
 
@@ -151,7 +151,7 @@ class ParamValidDataObject : public ValidDataObject {
   virtual std::string printParams() const ;
   
   /// Convert a parameter to a string (for xml representation).
-  virtual std::string paramToString(const std::string &name) const ;
+  virtual std::string paramToString(const std::string &name, int precision) const ;
  
 public:
 

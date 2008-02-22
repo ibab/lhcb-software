@@ -1,4 +1,4 @@
-//$Id: ParamValidDataObject.cpp,v 1.12 2007-11-09 17:10:07 marcocle Exp $
+//$Id: ParamValidDataObject.cpp,v 1.13 2008-02-22 12:12:12 marcocle Exp $
 #include <string>
 
 #include "GaudiKernel/System.h"
@@ -203,11 +203,8 @@ std::string ParamValidDataObject::printParams() const {
 
 //----------------------------------------------------------------------------
 /// Convert a parameter to a string (for xml representation).
-std::string ParamValidDataObject::paramToString(const std::string &name) const {
+std::string ParamValidDataObject::paramToString(const std::string &name, int precision) const {
   ParamList::const_iterator i = m_paramList.find(name);
   if ( i == m_paramList.end() ) throw ParamException(name);
-  std::ostringstream os;
-  os << i->second->toStr();
-  return os.str();
+  return i->second->toXMLStr(name,comment(name), precision);
 }
-

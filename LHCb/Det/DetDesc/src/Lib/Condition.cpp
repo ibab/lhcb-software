@@ -1,4 +1,4 @@
-//$Id: Condition.cpp,v 1.13 2006-10-25 13:45:01 marcocle Exp $
+//$Id: Condition.cpp,v 1.14 2008-02-22 12:12:12 marcocle Exp $
 #include <string> 
 
 #include "DetDesc/Condition.h"
@@ -31,54 +31,44 @@ void Condition::update ( ValidDataObject& obj )
 //=========================================================================
 //  Prepare an XML string representing the condition
 //=========================================================================
-std::string Condition::toXml(const std::string &name) const{
+std::string Condition::toXml(std::string name, bool header, int precision) const{
   std::ostringstream xml;
-  // XML header
-  xml << "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE DDDB SYSTEM \"structure.dtd\">";
-  // DDDB open
-  xml << "<DDDB>";
-  // condition open
+  if (header) {
+    // XML header
+    xml << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>"
+        << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">";
+    // DDDB open
+    xml << "<DDDB>";
+    // condition open
+  }
   xml << "<condition classID=\"" << this->clID() << "\" name=\"";
+  
   if (name.empty()) {
     if (registry()){
-      xml << registry()->name();
+      name = registry()->name();
     } else {
-      xml << "Condition";
+      name = "Condition";
     }
-  } else {
-    xml << name;
   }
-  xml <<"\">";
+  if ( name[0] == '/' ) {
+    name = name.substr(1);
+  }
+  xml << name << "\">";
 
   std::vector<std::string> pars;
   std::vector<std::string>::const_iterator i;
   // loop over parameters
   pars = paramNames();
   for ( i = pars.begin(); i != pars.end(); ++i ){
-  	xml << "<param";
-  	bool is_vect_param = isVector(*i);
-  	if ( is_vect_param ) xml << "Vector";
-    xml << " name=\"" << *i << "\" type=\"";
-    const std::type_info &curr_type = type(*i);
-    if ( curr_type == typeid(double) || curr_type == typeid(std::vector<double>) ) {
-      xml << "double";
-    } else if ( curr_type == typeid(int) || curr_type == typeid(std::vector<int>) ) {
-      xml << "int";
-    } else { // OTHER
-      xml << "other";
-    }
-    std::string comm = comment(*i);
-    if (!comm.empty()) xml << "\" comment=\"" << comm;
-
-    xml << "\">" << paramToString(*i) << "</param";
-  	if ( is_vect_param ) xml << "Vector";
-    xml << ">";
+    xml << paramToString(*i, precision);
   }
   
   // condition close
   xml << "</condition>";
-  // DDDB close
-  xml << "</DDDB>\n";
+  if (header) {
+    // DDDB close
+    xml << "</DDDB>";
+  }
   
   return xml.str();
 }

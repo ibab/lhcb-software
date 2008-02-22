@@ -1,4 +1,4 @@
-// $Id: DetDescDict.h,v 1.3 2007-12-20 10:44:14 cattanem Exp $
+// $Id: DetDescDict.h,v 1.4 2008-02-22 12:12:12 marcocle Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -99,6 +99,28 @@ namespace DetDescPython
   };
   
 };
+
+#define ParamValidDataObject_template_instantiation_base(Type) \
+  template void ParamValidDataObject::addParam(const std::string &, const Type &, const std::string &); \
+  template Type &ParamValidDataObject::param< Type >(const std::string &)
+
+#define ParamValidDataObject_template_instantiation_vect(Type) \
+  ParamValidDataObject_template_instantiation_base(std::vector< Type >); \
+  template std::vector< Type > &ParamValidDataObject::paramVect< Type >(const std::string &)
+
+#define ParamValidDataObject_template_instantiation_map(Key,Type) \
+  template void ParamValidDataObject::addParam(const std::string &, const std::map< Key , Type > &, const std::string &); \
+  template std::map< Key , Type > &ParamValidDataObject::param<std::map< Key , Type > >(const std::string &)
+
+#define ParamValidDataObject_template_instantiation(Type) \
+  ParamValidDataObject_template_instantiation_base(Type); \
+  ParamValidDataObject_template_instantiation_vect(Type); \
+  ParamValidDataObject_template_instantiation_map(std::string,Type); \
+  ParamValidDataObject_template_instantiation_map(int,Type)
+
+ParamValidDataObject_template_instantiation(int);
+ParamValidDataObject_template_instantiation(double);
+ParamValidDataObject_template_instantiation(std::string);
 
 // ============================================================================
 #endif // DETSYS_DETDICT_H

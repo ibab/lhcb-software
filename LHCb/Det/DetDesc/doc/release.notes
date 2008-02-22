@@ -1,9 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.356 2008-01-22 07:06:11 cattanem Exp $ 
+! $Id: release.notes,v 1.357 2008-02-22 12:12:12 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2008-02-22 - Marco Clemencic
+ - Clean up, fixes and improvements to Condition::toXml.
+   + Fixed the problem with the formatting of vectors
+   + Allow to specify the precision of the doubles
+   + Added support for std:map (only those supported in the converter)
+   + Disabled (by default) the HTML header and trailer (can be enabled with a flag)
+ - Improved Python bindings for Condition. 
 
 !====================== DetDesc v18r3 2008-01-22 ==============================
 ! 2008-01-15 - Juan PALACIOS

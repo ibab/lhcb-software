@@ -1,4 +1,4 @@
-// $Id: BasicParam.h,v 1.2 2005-11-17 16:30:17 marcocle Exp $
+// $Id: BasicParam.h,v 1.3 2008-02-22 12:12:12 marcocle Exp $
 #ifndef DETDESC_BASICPARAM_H 
 #define DETDESC_BASICPARAM_H 1
 
@@ -40,7 +40,12 @@ public:
   }
 
   ///  String representation for printout
-  virtual std::string toStr() = 0;
+  virtual std::string toStr() const = 0;
+  
+  ///  String representation for XML format
+  virtual std::string toXMLStr(const std::string &name,
+                               const std::string& comment = "",
+                               int precision = 16) const = 0;
 
   /// TypeId of the datum
   virtual const std::type_info &type() const = 0;
