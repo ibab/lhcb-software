@@ -1,13 +1,13 @@
-// $Id: IPVFitter.h,v 1.1 2007-12-04 08:46:52 witekma Exp $
+// $Id: IPVFitter.h,v 1.2 2008-02-22 10:09:49 cattanem Exp $
 #ifndef IPVFITTER_H 
 #define IPVFITTER_H 1
 
 // from STL
-#include <string>
 #include <vector>
 
 // from Gaudi
 #include "GaudiKernel/AlgTool.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 namespace LHCb {
   class Track;
