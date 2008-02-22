@@ -1,4 +1,4 @@
-// $Id: TrackCuts.h,v 1.4 2007-11-28 14:56:23 ibelyaev Exp $
+// $Id: TrackCuts.h,v 1.5 2008-02-22 08:40:29 graven Exp $
 // ============================================================================
 #ifndef LOKI_TRACKCUTS_H
 #define LOKI_TRACKCUTS_H 1
@@ -63,7 +63,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */     
-    const LoKi::Tracks::CheckFlag         TrBAKWARD ( LHCb::Track::Backward ) ;
+    const LoKi::Tracks::CheckFlag         TrBACKWARD ( LHCb::Track::Backward ) ;
     // ========================================================================
     /** @var TrCHI2
      *  the simple function which returns LHCb::Track::Chi2
