@@ -6,6 +6,7 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r4 2008-02-22 ===============================
 ! 2008-02-21 - Markus Frank
  - Set proper MDF header when writing TAE events. Use the MDF header information
    (triggermask, run, orbit and bunch counters) from central events.
