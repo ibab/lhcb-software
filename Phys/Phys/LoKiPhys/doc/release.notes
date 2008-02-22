@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.44 2008-02-21 20:23:42 ibelyaev Exp $ 
+! $Id: release.notes,v 1.45 2008-02-22 08:24:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
@@ -6,7 +6,14 @@
 ! -----------------------------------------------------------------------------
 
 
-!========================== LoKiPhys v7r1 2008-02-18 ==========================
+!========================== LoKiPhys v7r1 2008-02-22 ==========================
+
+! 2008-02-22 - Vanya BELYAEV
+ - dict/LoKiPhysDict.h
+      add missing #include "LoKi/SelectVertex.h"
+     (thanks to Marco)
+
+
 
 ! 2008-02-21 - Vanya BELYAEV
  - add more printout for easier location of problems 

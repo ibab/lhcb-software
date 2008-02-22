@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.10 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.11 2008-02-22 08:24:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -25,6 +25,7 @@
 #include "LoKi/PhysMoniDicts.h"
 #include "LoKi/Filters.h"
 #include "LoKi/Sources.h"
+#include "LoKi/SelectVertex.h"
 // ============================================================================
 #include "LoKi/ParticleContextCuts.h"
 // ============================================================================
