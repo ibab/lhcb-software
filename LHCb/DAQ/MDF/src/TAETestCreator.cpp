@@ -1,4 +1,4 @@
-// $Id: TAETestCreator.cpp,v 1.6 2008-02-05 16:44:18 frankb Exp $
+// $Id: TAETestCreator.cpp,v 1.7 2008-02-22 16:33:58 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
@@ -21,11 +21,13 @@ namespace LHCb  {
   class TAETestCreator : public Algorithm {
     /// Flag to test bank removal
     int m_numTAEEvents;
+    bool m_removeDAQStatus;
   public: 
     /// Standard constructor
     TAETestCreator( const std::string& name, ISvcLocator* pSvcLocator )
     : Algorithm(name, pSvcLocator), m_numTAEEvents(3) {
       declareProperty("TAEEvents",m_numTAEEvents);
+      declareProperty("RemoveDAQStatus",m_removeDAQStatus=false);
     }
 
     /// Destructor
@@ -37,13 +39,15 @@ namespace LHCb  {
       int nevts = abs(m_numTAEEvents)>7 ? 7 : abs(m_numTAEEvents);
       SmartDataPtr<RawEvent> raw(eventSvc(),RawEventLocation::Default);
       if ( raw )  {
-  // Need to remove all MDF header banks first
-  typedef std::vector<RawBank*> _V;
-  _V bnks = raw->banks(RawBank::DAQ);
-  for(_V::iterator ib=bnks.begin(); ib != bnks.end(); ++ib)  {
-    if ( (*ib)->version() == DAQ_STATUS_BANK )
-      raw->removeBank(*ib);
-  }
+        // Need to remove all MDF header banks first
+        typedef std::vector<RawBank*> _V;
+        if ( m_removeDAQStatus ) {
+          _V bnks = raw->banks(RawBank::DAQ);
+          for(_V::iterator ib=bnks.begin(); ib != bnks.end(); ++ib)  {
+            if ( (*ib)->version() == DAQ_STATUS_BANK )
+              raw->removeBank(*ib);
+          }
+        }
         change2TAEEvent(raw);
         for(int i=-nevts; i<=nevts; ++i)  {
           if ( i != 0 )  {

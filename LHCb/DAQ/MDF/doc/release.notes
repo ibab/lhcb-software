@@ -6,6 +6,13 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2008-02-21 - Markus Frank
+ - Set proper MDF header when writing TAE events. Use the MDF header information
+   (triggermask, run, orbit and bunch counters) from central events.
+   If central event has no MDF information take as fallback first other found.
+ - Fix bug in default MDF writer when doing format conversions between
+   MDF_BANKS, MDF_RECORDS and MDF_BANKS.
+
 !========================= MDF v3r3 2008-02-11 ===============================
 ! 2008-02-11 - Markus Frank
  - Use ROOT as default for: rfio, castor, dcache, dcap, gsidcap and gfal

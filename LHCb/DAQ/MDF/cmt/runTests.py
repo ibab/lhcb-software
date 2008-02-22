@@ -1,5 +1,5 @@
 import os, sys, string
-
+batch = False
 exe = os.popen('cmt show macro_value GAUDI_install_scripts').readlines()[0][:-1]
 exe = exe + os.sep + '..' + os.sep + os.environ['CMTCONFIG']+os.sep+'bin'+os.sep+'Gaudi.exe'
 mdf = os.environ['MDFROOT'].replace(os.sep,'/')
@@ -29,6 +29,8 @@ def execute(cmd):
   print '-->',c
   os.system(exe+" "+c)
 
+if len(sys.argv)>1:
+  batch=True
 print 'gaudi executable is:',exe
 tests = []
 tests.append(mdf+"/options/CreateMDF.opts")
@@ -41,5 +43,7 @@ tests.append(mdf+"/options/CreateTAE.opts")
 tests.append(mdf+"/options/ReadTAE.opts")
 tests.append(mdf+"/options/ReadTAEPOOL.opts")
 for i in tests:
-  if nextTest(i)>0:
+  if batch:
+    execute(i)
+  elif nextTest(i)>0:
     execute(i)

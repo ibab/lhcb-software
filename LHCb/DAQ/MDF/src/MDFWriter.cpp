@@ -1,4 +1,4 @@
-// $Id: MDFWriter.cpp,v 1.24 2008-02-11 07:40:14 frankb Exp $
+// $Id: MDFWriter.cpp,v 1.25 2008-02-22 16:33:58 frankb Exp $
 //  ====================================================================
 //  MDFWriter.cpp
 //  --------------------------------------------------------------------
@@ -122,9 +122,10 @@ StatusCode MDFWriter::execute()    {
     case MDFIO::MDF_BANKS:
       data = getDataFromAddress();
       if ( data.first )  {
+	RawBank* b = (RawBank*)data.first;
 	switch(m_dataType) {
 	case MDFIO::MDF_RECORDS:
-	  sc = writeBuffer(m_connection,data.first+2*sizeof(int), data.second-2*sizeof(int));
+	  sc = writeBuffer(m_connection,b->data(), data.second-b->hdrSize());
 	  sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
 	  return sc;
 	case MDFIO::MDF_BANKS:

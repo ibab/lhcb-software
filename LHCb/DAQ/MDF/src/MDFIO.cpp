@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.29 2008-02-11 07:27:47 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.30 2008-02-22 16:33:58 frankb Exp $
 //  ====================================================================
 //  MDFIO.cpp
 //  --------------------------------------------------------------------
@@ -151,13 +151,23 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
     std::vector<int> ctrlData;
     ctrlData.reserve(sizeCtrlBlock);
     size_t offset = 0;
+    RawBank *centerMDF=0;
     for ( int n = -7; 7 >= n; ++n ) {
       std::string loc = rootFromBxOffset(n)+"/"+location;
       SmartDataPtr<RawEvent> rawEvt(m_evtSvc, loc);
       if ( rawEvt ) {
         theRawEvents.push_back( rawEvt );
         ctrlData.push_back( n );               // BX offset
-        ctrlData.push_back( offset );          // offset in buffer, after end of this bank
+        ctrlData.push_back( offset );          // offset in buffer, after end of this bank 
+	if ( centerMDF == 0 || n == 0 ) {
+	  const _V& bnks = raw->banks(RawBank::DAQ);
+	  for(_V::const_iterator i=bnks.begin(); i != bnks.end(); ++i)  {
+	    if ( (*i)->version() == DAQ_STATUS_BANK )  {
+	      centerMDF = *i;
+	      break;
+	    }
+	  }
+	}
         size_t l = rawEventLengthTAE(rawEvt); 
         ctrlData.push_back(l);                 // size of this BX information
         offset += l;
@@ -170,6 +180,14 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
     // Create now the complete event header (MDF header) with complete length
     len = offset + ctrlBank->totalSize();
     RawBank* hdrBank = createDummyMDFHeader(&privateBank, len);
+    if ( centerMDF ) {
+      MDFHeader::SubHeader inf = hdrBank->begin<MDFHeader>()->subHeader();
+      MDFHeader::SubHeader center = centerMDF->begin<MDFHeader>()->subHeader();
+      inf.H1->setTriggerMask(center.H1->triggerMask());
+      inf.H1->setRunNumber(center.H1->runNumber());
+      inf.H1->setOrbitNumber(center.H1->orbitNumber());
+      inf.H1->setBunchID(center.H1->bunchID());
+    }
     len += hdrBank->totalSize();
 
     // Prepare the input to add these two banks to an output buffer
@@ -203,7 +221,7 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
         msg << MSG::ERROR << "Failed write data to output device." << endmsg;
       }
       msg << MSG::DEBUG << "Wrote TAE event of length:" << total 
-    << " bytes from " << theRawEvents.size() << " Bxs" << endmsg;
+          << " bytes from " << theRawEvents.size() << " Bxs" << endmsg;
       privateBank.removeBank( ctrlBank );
       privateBank.removeBank( hdrBank );
       return sc;
