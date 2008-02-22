@@ -4,10 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v4r2 2008-02-22 ===========================
 ! 2008-02-17 - Chris Jones
  - Optimise RichRayTraceCherenkovCone by caching cos and sin phi values
 
-!===================== RichRecTools v4r2 2008-02-15 ===========================
 ! 2008-02-15 - Chris Jones
  - Adapt to changes in RichGeomPhoton and RichRecPointOnRing
  - Rename RichTabulatedSignalDetectionEff RichNominalTabulatedSignalDetectionEff

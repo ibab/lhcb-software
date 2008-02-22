@@ -4,6 +4,7 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================= RichRecPhotonTools v1r2 2008-02-22 ==================
 ! 2008-02-21 - Chris Jones
  - Make sure CK phi values computed by iterative ray-tracing photon 
    reconstruction tool lie in the range 0 to 2PI
@@ -16,7 +17,6 @@
  - Add checks for non-physical photons to iterative ray-tracing photon
    reconstruction tool. Helps reject fake photons.
 
-!======================= RichRecPhotonTools v1r2 2008-02-15 ==================
 ! 2008-02-15 - Claus P Buszello
  - Added new Photon reconstruction method using iterative ray-tracing
 

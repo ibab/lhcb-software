@@ -4,6 +4,7 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!====================== RichRecMCTools v2r16 2008-02-22 =======================
 ! 2008-02-21 - Chris Jones
  - Update RichPhotonCreatorFromCheatedTrackDir to (optionally) also cheat 
    assumed photon emission point
@@ -12,7 +13,6 @@
  - Add missing implementations of buildPixel( const LHCb::RichSmartID & id )
    to pixel creator tools
 
-!====================== RichRecMCTools v2r16 2008-02-20 =======================
 ! 2008-02-17 - Chris Jones
  - Adapt to changes in track creator base class.
 

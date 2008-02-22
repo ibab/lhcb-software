@@ -4,11 +4,11 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!====================== RichRecMonitors v2r15 2008-02-22 =====================
 ! 2008-02-21 - Chris Jones
  - Add additional plots to photon angle monitor to give CK theta resolution
    in various bins of CK phi
 
-!====================== RichRecMonitors v2r15 2008-02-15 =====================
 ! 2008-02-15 - Chris Jones
  - Adapt to changes in RichGeomPhoton
 

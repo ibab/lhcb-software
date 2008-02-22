@@ -4,12 +4,12 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r17 2008-02-22 ==========================
 ! 2008-02-21 - Chris Jones
  - Fix little bug where expect CK theta and CK resolution values where not
    properly computed in the case where MC information was missing
- - Fix bug where MC particle yupr was not correctly being found.
+ - Fix bug where MC particle type was not correctly being found.
 
-!======================= RichRecQC v2r17 2008-02-15 ==========================
 ! 2008-02-15 - Chris Jones
  - Adapt to changes in RichGeomPhoton
 
