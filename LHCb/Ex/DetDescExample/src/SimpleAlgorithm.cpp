@@ -1,4 +1,4 @@
-// $Id: SimpleAlgorithm.cpp,v 1.20 2006-05-17 16:05:22 cattanem Exp $
+// $Id: SimpleAlgorithm.cpp,v 1.21 2008-02-22 16:17:06 marcocle Exp $
 
 /// Include files
 #include <vector>
@@ -64,15 +64,11 @@ StatusCode SimpleAlgorithm::initialize() {
   info() << "// Usage of parameters //" << endmsg;
   info() << "/////////////////////////" << endmsg;
   info() << "This is the list of parameters " 
-         << "defined on the Ecal detector element : " << endmsg;
+         << "defined on the Ecal detector element : \n";
 
   IDetectorElement* ecal = getDet<IDetectorElement>( DeCalorimeterLocation::Ecal );
 
-  std::vector<std::string> parameterList = ecal->params()->paramNames();
-  std::vector<std::string>::iterator it2;
-  for (it2 = parameterList.begin(); it2 != parameterList.end(); it2++) {
-    info() << *it2 << " = "  << ecal->params()->paramToString(*it2) << endmsg;
-  }
+  info() << ecal->params()->printParams() << endmsg;
   
   info()
       << "/////////////////////////////////////////////////////////////////"
