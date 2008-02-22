@@ -5,7 +5,7 @@
  *  Header file for RichSmartID conversion utilities
  *
  *  CVS Log :-
- *  $Id: RichSmartIDCnv.h,v 1.3 2008-02-15 14:11:03 cattanem Exp $
+ *  $Id: RichSmartIDCnv.h,v 1.4 2008-02-22 10:56:00 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008
@@ -140,23 +140,29 @@ namespace Rich
 
   public:
 
-    /// Returns the minimum 'global' pixel column number
+    /// Returns the minimum 'global' pixel y-coordinate
     inline int minGlobalPixelX() const
     {
       return ( 0 );
     }
 
-    /// Returns the maximum 'global' pixel column number
+    /// Returns the maximum 'global' pixel x-coordinate
     int maxGlobalPixelX() const;
 
-    /// Returns the minimum 'global' pixel row number
+    /// Returns the maximum 'global' pixel x-coordinate with a variable HPD size
+    int maxGlobalPixelX(int sizeX) const;
+
+    /// Returns the minimum 'global' pixel y-coordinate
     inline int minGlobalPixelY() const
     {
       return ( 0 );
     }
 
-    /// Returns the maximum 'global' pixel row number
+    /// Returns the maximum 'global' pixel y-coordinate
     int maxGlobalPixelY() const;
+
+    /// Returns the maximum 'glocal' pixel y-coordinate with a variable HPD size
+    int maxGlobalPixelY(int sizeY) const;
 
     /// The total number of 'global' pixel columns
     inline int totalNumInGlobalX() const
@@ -198,6 +204,18 @@ namespace Rich
 
     /// Returns a 'global' pixel row number
     int globalPixelY() const;
+
+    /// Returns a 'global' pixel column number from a given local coordinate with a variable HPD x size.
+    int globalPixelX(int localX, int sizeX) const;
+
+    /// Returns a 'global' pixel row number from a given local corrdinate with a variable HPD y size.
+    int globalPixelY(int localY, int sizeY) const;
+
+    /// Returns a 'local' pixel column number
+    int localPixelX() const;
+
+    /// Returns a 'local' pixel row number
+    int localPixelY() const;
 
   public:
 
