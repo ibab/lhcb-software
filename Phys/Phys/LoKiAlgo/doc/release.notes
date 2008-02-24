@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.27 2008-02-11 10:13:27 ibelyaev Exp $ 
+! $Id: release.notes,v 1.28 2008-02-24 19:43:06 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiAlgo v7r1 2008-02-11 ==========================
+!========================== LoKiAlgo v7r1 2008-02-24 ==========================
+
+! 2008-02-24 - Vanya BELYAEV
+
+ - LoKi/LoopObj.icpp 
+   src/LoopObj.cpp
+     : fix unchecked error codes
 
 ! 2008-02-11 - Vanya BELYAEV
  - minor fixes due to new Gaudi/ROOT/Reflex 

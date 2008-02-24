@@ -1,4 +1,4 @@
-// $Id: LoopObj.icpp,v 1.5 2007-08-14 12:53:08 ibelyaev Exp $ 
+// $Id: LoopObj.icpp,v 1.6 2008-02-24 19:43:06 ibelyaev Exp $ 
 // ============================================================================
 #ifndef LOKI_LOOPOBJ_ICPP
 #define LOKI_LOOPOBJ_ICPP 1
@@ -190,7 +190,7 @@ inline LHCb::Particle*
 LoKi::LoopObj::particle ( const IParticleCombiner* c ) const 
 {
   if ( !valid()        ) { return 0 ; }
-  if ( 0 == m_particle ) { create ( c ) ; }
+  if ( 0 == m_particle ) { create ( c ).ignore()  ; }
   return m_particle ;
 } 
 // ============================================================================
@@ -199,8 +199,8 @@ LoKi::LoopObj::particle ( const IParticleCombiner* c ) const
 inline LHCb::Vertex*
 LoKi::LoopObj::vertex  ( const IParticleCombiner* c ) const
 {
-  if ( !valid()      ) { return 0     ; }
-  if ( 0 == m_vertex ) { create ( c ) ; }
+  if ( !valid()      ) { return 0 ; }
+  if ( 0 == m_vertex ) { create ( c ).ignore() ; }
   return m_vertex ;      
 } 
 // ============================================================================

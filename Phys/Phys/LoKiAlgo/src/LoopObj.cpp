@@ -1,4 +1,4 @@
-// $Id: LoopObj.cpp,v 1.8 2007-08-14 12:53:08 ibelyaev Exp $
+// $Id: LoopObj.cpp,v 1.9 2008-02-24 19:43:06 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -142,7 +142,7 @@ LoKi::LoopObj::LoopObj
   , m_combination   (         )
   ///
   , m_valid         ( false   ) 
-  , m_status        ( StatusCode::SUCCESS ) 
+  , m_status        ( StatusCode::SUCCESS , true ) 
   ///
   , m_particle      ( 0       )
   , m_vertex        ( 0       )
@@ -254,7 +254,7 @@ LoKi::LoopObj& LoKi::LoopObj::resetCache()
   // clear the combination 
   m_combination.clear() ;
   //
-  m_status = StatusCode::SUCCESS ;
+  m_status = StatusCode ( StatusCode::SUCCESS , true ) ;
   ///
   return *this ;
 }
@@ -337,9 +337,9 @@ StatusCode LoKi::LoopObj::make ( const IParticleCombiner* comb ) const
   // valid combination ?
   if ( !valid() ) 
   {
-    m_status = StatusCode::FAILURE ;
+    m_status = StatusCode ( StatusCode::FAILURE , true )  ;
     return Error("make(): invalid combination" , m_status ); 
-  };
+  }
   // the most trivial case 
   if ( 1 == dim() ) 
   {
@@ -347,7 +347,7 @@ StatusCode LoKi::LoopObj::make ( const IParticleCombiner* comb ) const
     m_pOwner   = false ;
     if ( 0 == m_particle ) 
     { 
-      m_status = StatusCode::FAILURE ;
+      m_status = StatusCode ( StatusCode::FAILURE , true ) ;
       return Error ( "make(): the first particle is invalid " ) ;
     }
     m_vertex   = m_particle->endVertex() ;
@@ -364,9 +364,9 @@ StatusCode LoKi::LoopObj::make ( const IParticleCombiner* comb ) const
   { combiner = m_algo->particleCombiner() ; }
   if ( !combiner.validPointer() ) 
   { 
-    m_status = StatusCode::FAILURE ;
+    m_status = StatusCode ( StatusCode::FAILURE , true );
     return Error ( "make: no valid IParticlefCombiner tool is available " );
-  } ;
+  } 
   // create new particle 
   m_particle = new LHCb::Particle ()   ;
   m_pOwner   = true ;
@@ -390,7 +390,7 @@ StatusCode LoKi::LoopObj::make ( const IParticleCombiner* comb ) const
     // delete the particle  
     delete m_vertex   ; m_vertex   = 0 ;  // ATTENTION!
     //
-    return Error( "Error from IParticleCombiner" , m_status );
+    return Error ( "Error from IParticleCombiner" , m_status ) ;
   }
   return StatusCode::SUCCESS  ;
 }
@@ -410,7 +410,7 @@ StatusCode LoKi::LoopObj::make ( const std::string& nick ) const
     IParticleCombiner* combiner = m_algo->particleCombiner( nick ) ;
     return make ( combiner ) ;
   }
-  m_status = StatusCode::FAILURE ;
+  m_status = StatusCode ( StatusCode::FAILURE , true ) ;
   return Error ( "make('" + nick + "'): no valid IParticleCombiner is available " );
 } 
 // ============================================================================
@@ -477,7 +477,7 @@ StatusCode LoKi::LoopObj::reFit
     { return Error("reFit(): error    from make()", m_status ) ;}
     if ( 0 == m_particle || 0 == m_vertex ) 
     { 
-      m_status = StatusCode::FAILURE ; 
+      m_status = StatusCode ( StatusCode::FAILURE, true )  ; 
       return Error("reFit(): invalid  from make()" , m_status ) ;
     }
   }
@@ -488,7 +488,7 @@ StatusCode LoKi::LoopObj::reFit
   { fitter = m_algo->particleReFitter() ; }
   if ( !fitter.validPointer() ) 
   { 
-    m_status = StatusCode::FAILURE ;
+    m_status = StatusCode ( StatusCode::FAILURE, true )  ; 
     return Error ( "reFit: no valid IParticleReFitter tool is available " );
   }
   //
@@ -514,7 +514,7 @@ StatusCode LoKi::LoopObj::reFit
     IParticleReFitter* fitter = m_algo->particleReFitter( nick ) ;
     return reFit( fitter  ) ;
   }
-  m_status = StatusCode::FAILURE ;
+  m_status = StatusCode ( StatusCode::FAILURE , true ) ;
   return Error("reFit('" + nick + "'): no valid IParticleReFitter is available " );
 }
 // ============================================================================
@@ -544,7 +544,7 @@ LoKi::LoopObj& LoKi::LoopObj::addComponent
   }
   // backup the state of combiner 
   m_combiner.backup();
-  m_status = StatusCode::SUCCESS ;
+  m_status = StatusCode ( StatusCode::SUCCESS , true ) ;
   return *this ;
 }
 // ============================================================================
@@ -581,7 +581,7 @@ StatusCode LoKi::LoopObj::save ( const std::string& tag ) const
   //
   if ( 0 == m_particle || 0 == m_vertex ) 
   {
-    m_status = StatusCode::FAILURE ;
+    m_status = StatusCode ( StatusCode::FAILURE , true ) ;
     if ( 0 == m_particle ) 
     { Error ( "save('"+tag+"'): Particle* is NULL", status () ) ; }
     if ( 0 == m_vertex   ) 
