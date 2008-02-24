@@ -1,19 +1,24 @@
+// $Id: DVAlgorithm.h,v 1.26 2008-02-24 19:41:28 ibelyaev Exp $ 
+// ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
-
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/VectorMap.h"
-
+// ============================================================================
 // from EventSys
+// ============================================================================
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
 #include "Event/SelResult.h"
-
-// from DaVinciTools
+// ============================================================================
+// from DaVinciKernel
+// ============================================================================
 #include "Kernel/IPhysDesktop.h"
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IGeomDispCalculator.h"
@@ -23,10 +28,16 @@
 #include "Kernel/IBTaggingTool.h"
 #include "Kernel/IParticleDescendants.h"
 #include "Kernel/IWriteSelResult.h"
-
+// ============================================================================
+#include "Kernel/IMassFit.h"
+#include "Kernel/IMassVertexFit.h"
+#include "Kernel/ILifetimeFitter.h"
+#include "Kernel/IDirectionFit.h"
+// ============================================================================
 // from Boost
+// ============================================================================
 #include <boost/lexical_cast.hpp>
-
+// ============================================================================
 /** @class DVAlgorithm DVAlgorithm.h Kernel/DVAlgorithm.h
  *  Base Class for DaVinci Selection Algorithms:
  *  Does the retrieval of all necessary DaVinci Tools
@@ -182,6 +193,66 @@ public:
   }
 
 public:
+  // ==========================================================================
+  /** Accessor for IMassFit tools by name/typename/nickname
+   *  @see IMassFit
+   *  @param name the tool name/typename/nickname
+   *  @return pointer to aquired tool 
+   */
+  inline IMassFit* 
+  massFitter ( const std::string name = "" ) const 
+  {
+    return getTool<IMassFit>
+      ( name              , 
+        m_massFitterNames ,
+        m_massFitters     , this ) ; 
+  }
+  // ==========================================================================
+  /** Accessor for IMassVertexFit tools by name/typename/nickname
+   *  @see IMassVertexFit
+   *  @param name the tool name/typename/nickname
+   *  @return pointer to aquired tool 
+   */
+  inline IMassVertexFit* 
+  massVertexFitter ( const std::string name = "" ) const 
+  {
+    return getTool<IMassVertexFit>
+      ( name              , 
+        m_massVertexFitterNames ,
+        m_massVertexFitters     , this ) ; 
+  }
+  // ==========================================================================
+  /** Accessor for ILifetimeFitter tools by name/typename/nickname
+   *  @see ILifetimeFitter
+   *  @param name the tool name/typename/nickname
+   *  @return pointer to aquired tool 
+   */
+  inline ILifetimeFitter* 
+  lifetimeFitter ( const std::string name = "" ) const 
+  {
+    return getTool<ILifetimeFitter>
+      ( name                  , 
+        m_lifetimeFitterNames ,
+        m_lifetimeFitters     , this ) ; 
+  }
+  // ==========================================================================
+  /** Accessor for IDirectionFit tools by name/typename/nickname
+   *  @see IDirectionFit
+   *  @param name the tool name/typename/nickname
+   *  @return pointer to aquired tool 
+   */
+  inline IDirectionFit* 
+  directionFitter ( const std::string name = "" ) const 
+  {
+    return getTool<IDirectionFit>
+      ( name                   , 
+        m_directionFitterNames ,
+        m_directionFitters     , this ) ; 
+  }
+  // ==========================================================================
+  
+  
+public:
   
   /// Accessor for CheckOverlap Tool
   inline ICheckOverlap* checkOverlap()const
@@ -230,7 +301,7 @@ protected:
       t = tool<TYPE>( name, ptr )  ;// else get it
     }
     return t ;
-  } ;
+  } 
 
 protected:
   
@@ -333,6 +404,27 @@ protected:
   /// The actual map of "nickname -> tool" for Particle Refitters 
   mutable GaudiUtils::VectorMap<std::string,IParticleReFitter*> m_particleReFitters ;
   
+protected:
+  
+  /// Mapping of "nickname ->type/name" for mass-constrained fitters 
+  ToolMap                                              m_massFitterNames ;
+  /// The actual map of "nickname -> tool" for mass-constrained fitters 
+  mutable GaudiUtils::VectorMap<std::string,IMassFit*> m_massFitters     ;
+  
+  /// Mapping of "nickname ->type/name" for mass-vertex-constrained fitters 
+  ToolMap                                              m_massVertexFitterNames   ;
+  /// The actual map of "nickname -> tool" for mass-constrained fitters 
+  mutable GaudiUtils::VectorMap<std::string,IMassVertexFit*> m_massVertexFitters ;
+  
+  /// Mapping of "nickname ->type/name" for lifetime fitters 
+  ToolMap                                              m_lifetimeFitterNames   ;
+  /// The actual map of "nickname -> tool" for lifetime fitters 
+  mutable GaudiUtils::VectorMap<std::string,ILifetimeFitter*> m_lifetimeFitters ;
+
+  /// Mapping of "nickname ->type/name" for direction fitters 
+  ToolMap                                              m_directionFitterNames   ;
+  /// The actual map of "nickname -> tool" for direction fitters 
+  mutable GaudiUtils::VectorMap<std::string,IDirectionFit*> m_directionFitters ;
   
 protected: 
   

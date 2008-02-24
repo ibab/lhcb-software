@@ -3,6 +3,44 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-02-23 - Vanya BELYAEV
+
+ - Kernel/DVAlgorithm.h
+   src/Lib/DVAlgorithm.cpp
+  
+  add new accessors to the base class DVAlgorithm:
+  
+  inline IMassFit* 
+  massFitter       ( const std::string name = "" ) const ;
+
+  inline IMassVertexFit* 
+  massVertexFitter ( const std::string name = "" ) const ;
+
+  inline ILifetimeFitter* 
+  lifetimeFitter   ( const std::string name = "" ) const ;
+
+  inline IDirectionFit* 
+  directionFitter  ( const std::string name = "" ) const 
+
+  The "action" is defined in terms of DVAlgorithm::getTool<TYPE>
+  and therefore it is the same as for other "similar" accessors.
+
+  New properties are introduced for the actual mappings of 
+  nicknames, names and typenames for these tools: 
+
+   [all of them of the type DVAlgorithm::ToolMap, which is 
+    std::map<std::string, std::string>]
+ 
+  +----------------------+-----------------------------------+
+  |  The property        |       The default value           |
+  +----------------------+-----------------------------------+
+  | "MassFitters"        |      the empty map                |
+  | "MassVertexFitters"  |      the empty map                |
+  | "LifetimeFitters"    |   { '' : 'PropertimeFitter' }     |
+  | "DirectionFitters"   |   { '' : 'DirectionFitter'  }     | 
+  +----------------------+-----------------------------------+
+
+
 ! 2008-01-21 - Patrick Koppenburg for Rudolf Oldemann
  - New method calcProjectedFlightDistance in IGeomDispCalculator
 
@@ -12,7 +50,7 @@
 
     Few minor modification for dealing with Algorithm Context Service:
 
-    1) the property "RegisterForContexService" is setto be "true"
+    1) the property "RegisterForContexService" is set to be "true"
     2) initialize/finalize and sysExecute methods are equipped with 
        sentries/guards to register the algorithm for Algorithm ContextService
     3) there is warning message "intialize" methods if the registration 

@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.29 2008-01-19 10:35:16 ibelyaev Exp $
+// $Id: DVAlgorithm.cpp,v 1.30 2008-02-24 19:41:29 ibelyaev Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -24,7 +24,7 @@ DVAlgorithm::DVAlgorithm
   //
   , m_desktop               ( 0 )
   , m_desktopName           ( "PhysDesktop" )
-  //
+  // 
   , m_vertexFitNames        () 
   , m_vertexFits            () 
   //
@@ -42,6 +42,18 @@ DVAlgorithm::DVAlgorithm
   // 
   , m_particleReFitterNames ()
   , m_particleReFitters     ()
+  //
+  , m_massFitterNames       ()
+  , m_massFitters           ()
+  //
+  , m_massVertexFitterNames ()
+  , m_massVertexFitters     ()
+  //
+  , m_lifetimeFitterNames   ()
+  , m_lifetimeFitters       ()
+  //
+  , m_directionFitterNames  ()
+  , m_directionFitters      ()
   //
   , m_checkOverlapName      ( "CheckOverlap" ) 
   , m_checkOverlap          ( 0 )
@@ -90,7 +102,26 @@ DVAlgorithm::DVAlgorithm
   m_particleReFitterNames [ "Kalman"        ] = "BlindVertexFitter"   ;
   m_particleReFitterNames [ "Blind"         ] = "BlindVertexFitter"   ;
   m_particleReFitterNames [ "ParticleAdder" ] = "ParticleAdder"       ;
-  declareProperty ( "ParticleReFitters" , m_particleReFitterNames ) ;
+  declareProperty  ( "ParticleReFitters" , m_particleReFitterNames ) ;
+  //
+  declareProperty  
+    ( "MassFitters"       , m_massFitterNames       , 
+      "The mapping of nick/name/type for IMassFit tools"        ) ;
+  //
+  declareProperty  
+    ( "MassVertexFitters" , m_massVertexFitterNames , 
+      "The mapping of nick/name/type for IMassVertexFit tools"  ) ;
+  //
+  m_lifetimeFitterNames  [ "" ] = "PropertimeFitter" ;
+  declareProperty  
+    ( "LifetimeFitters"    , m_lifetimeFitterNames , 
+      "The mapping of nick/name/type for ILifetimeFitter tools" ) ;
+  //
+  m_directionFitterNames [ "" ] = "DirectionFitter" ;
+  declareProperty  
+    ( "DirectionFitters"    , m_directionFitterNames , 
+      "The mapping of nick/name/type for IDirectionFit tools"   ) ;
+  //
   //
   declareProperty ( "DecayDescriptor"   , m_decayDescriptor   = "not specified" ) ;
   declareProperty ( "AvoidSelResult"    , m_avoidSelResult    = false           ) ;
