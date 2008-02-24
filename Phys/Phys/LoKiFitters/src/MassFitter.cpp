@@ -1,4 +1,4 @@
-// $Id: MassFitter.cpp,v 1.1.1.1 2008-02-20 15:48:44 ibelyaev Exp $
+// $Id: MassFitter.cpp,v 1.2 2008-02-24 19:48:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -42,7 +42,87 @@ namespace LoKi
    *  The most simple implementation of abstract interface IMassFit
    *  The tool performs the mass-constrained fit
    *
+   *
+   *  The machinery from P.Avery's lectures is used 
+   *  @see http://www.phys.ufl.edu/~avery/fitting/kinematic.pdf
+   *
    *  @todo the tool LoKi::MassFitter is not properly tested yet!  
+   *
+   *
+   *  Let \f$\vec{\alpha}=\left( \vec{x}, \vec{p}\right)\f$  
+   *  be a 7-vector containing the parameters of the particle and 
+   *  let \f$V\f$ be the covariance matrix of these parameters, 
+   *
+   *  The constraint equation whcih forces the particle to have an invariant
+   *  mass \f$m_c\f$ is:
+   *
+   *   \f[ 0 = \mathbf{H} = E^2-\vec{p}^2 - m_c^2 = E^2-p_x^2-p_y^2-p_z^2 - m_c^2. \f]
+   *
+   *  The corresponding linear expansion near some 
+   *    point \f$\vec{\alpha}_A\f$ is :
+   *
+   *   \f[ 0 = \mathbf{H}\left(\vec{\alpha}\right) = 
+   *           \frac{\partial \mathbf{H} }{\partial \vec{\alpha}}
+   *            \left( \vec{\alpha} -\vec{\alpha}_A \right) 
+   *             + \mathbf{H}\left(\vec{\alpha}_A\right) = 
+   *             \mathbf{D}\delta\vec{\alpha} 
+   *            + \mathbf{d}, \f] 
+   *
+   *  where \f$\delta\vec{\alpha}=\vec{\alpha}-\vec{\alpha}_A\f$, 
+   *  \f$\mathbf{D}= \left.\frac{\partial \mathbf{H} }{\partial \vec{\alpha}}\right|_{\vec{\alpha}_A} \f$
+   *  and \f$\mathbf{d}= \mathbf{H}\left(\vec{\alpha}_A\right) \f$.
+   *  
+   *  Clearly we have:
+   *
+   *  - \f$ \mathbf{D} = \left( 0 , 0 , 0 , -2p_x , -2py , -2p_z, 2E \right) = 
+   *       \left( \mathbf{0} , \mathbf{D}_s \right) \f$ 
+   *  - \f$ \mathbf{d} =  E^2 - p_x^2 - p_y^2 - p_z^2 - m_c^2 \f$
+   *
+   *  The solution of the equations 
+   *    \f$ \frac{\partial\chi^2}{\partial\left(\vec{\alpha},\lambda\right)}\f$ is 
+   *  - \f$ \vec{\alpha} = \vec{\alpha}_0 - \mathbf{V}_0\mathbf{D}^T\lambda \f$ 
+   *  - \f$ \lambda = \mathbf{V}_D \left( \mathbf{D}\delta\vec{\alpha}_0 + \mathbf{d} \right) \f$ 
+   *  - \f$ \mathbf{V}_D = \left( \mathbf{D}\mathbf{V}_0\mathbf{D}^T\right)^{-1} \f$
+   *  - \f$ \mathbf{V} = \mathbf{V}_0 - \mathbf{V}_0\mathbf{D}^T\mathbf{V}_D\mathbf{D}\mathbf{V}_0\f$
+   *  - \f$ \chi^2 = \lambda^T\left( \mathbf{D}\delta\vec{\alpha}_0+\mathbf{d}\right) \f$ 
+   *
+   *  Taking into account so simple structure of the matrix 
+   *  \f$\mathbf{D}\f$, one gets the drastical simplification of all machinery:
+   *
+   *  Taking the covariance matrix of parameters to be  
+   *  \f$ \mathbf{V} = \bigl( \begin{smallmatrix} 
+   *       V_x  & V_{xp} \\ V^T_{xp} & V_{p} \end{smallmatrix}\bigr), \f$
+   *
+   *  One easily gets:
+   *   - \f$ \mathbf{V}_D = V_D = 
+   *     \left( \mathbf{D}_s\mathbf{V}_p\mathbf{D}_s^T\right)^{-1}\f$, where 
+   *      \f$ \mathbf{D}_s = \left( -2p_x , -2py , -2pz, 2E \right) \f$.
+   * 
+   *  The rest of computations is just trivial, since 
+   *   \f$ \mathbf{D}_s\mathbf{V}_p\mathbf{D}_s^T\f$ is a scalar value, 
+   *   and no matrix inversions are involved anymore.  
+   *
+   *  Using the initial measurement \f$\vec{\alpha}_0\f$ as the expansion 
+   *  point \f$\vec{\alpha}_A\f$, one gets \f$\delta\vec{\alpha}_0=\f$, 
+   *  and therefore:
+   *   -  \f$ \lambda = V_D\mathbf{d} \f$ 
+   *   -  \f$ \vec{p} = \vec{p}_0 - V_{p0}  \mathbf{D}_s\lambda \f$ 
+   *   -  \f$ \vec{x} = \vec{x}_0 - V_{xp0} \mathbf{D}_s\lambda \f$ 
+   *   -  \f$ \chi^2  = \lambda \mathbf{d} \f$ 
+   *
+   *
+   *  The tool has following properties:
+   *
+   *    - "MaxIterations" : The maximal allowed number of iterations.
+   *                        The default value is <b>10</b> 
+   *    - "Tolerance" : the stopping parameter \f$\delta\f$, 
+   *                    the maximal allowed deviation of the 
+   *                    invarinat mass from the nominal mass
+   *                    \f$\left|\mathrm{m}-\mathrm{m_c}\right|<\delta\f$.
+   *                    The default value is <b>0.1*Gaudi::Units::MeV</b> 
+   *    - "ChangeVertex" : the boolean flag to force the modification 
+   *                     the decay vertex of the particle.
+   *                     The default value is <b>true</b> 
    *
    *  @see IMassFit
    *  @see IParticleRefitter
@@ -56,6 +136,20 @@ namespace LoKi
     // ========================================================================
     // the friend factory (needed for instantiuation)
     friend class ToolFactory<LoKi::MassFitter> ; ///< needed for instantiation
+    // ========================================================================
+  public:    
+    // ========================================================================
+    enum 
+      {
+        // Invalid Particle 
+        InvalidParticle         = 801 , ///< Invalid Particle  
+        // Invalid Particle ID 
+        InvalidParticleID       = 802 , ///< Invalid Particle ID 
+        // No Particle Property Service  
+        InvalidParticlePSvc     = 803 , ///< No Particle Property Service  
+        // No Convergency
+        NoConvergency           = 810   ///< No Convergency is detected 
+      } ;
     // ========================================================================
   public:
     // ========================================================================
@@ -110,10 +204,10 @@ namespace LoKi
     virtual StatusCode fit ( LHCb::Particle* particle ) const 
     {
       if ( 0 == particle ) 
-      { return Error ( "LHCb::Particle* points to NULL" ) ; }
+      { return Error ( "LHCb::Particle* points to NULL" , InvalidParticle ) ; }
       const ParticleProperty* prop = pp ( particle->particleID() ) ;
       if ( 0 == prop     )
-      { return Error ( "Invalid LHCb::ParticleID" ) ; }
+      { return Error ( "Invalid LHCb::ParticleID" , InvalidParticleID ) ; }
       return fit ( particle , prop->mass() ) ;
     }
     // ========================================================================
@@ -163,7 +257,36 @@ namespace LoKi
      *  @return status code 
      */
     virtual StatusCode reFit ( LHCb::Particle& particle ) const 
-    { return fit ( &particle ) ; }
+    {
+      // play a bit with extra-info
+      if ( particle.hasInfo ( LHCb::Particle::Chi2OfParticleReFitter ) ) 
+      { particle.eraseInfo ( LHCb::Particle::Chi2OfParticleReFitter )  ; }
+      //
+      StatusCode sc = fit ( &particle ) ; 
+      if ( sc.isFailure() ) 
+      { return Error ("reFit(): the error from fit()" , sc ) ; }
+      //
+      // in the case of success update the extra-info:
+      if ( particle.hasInfo ( LHCb::Particle::Chi2OfMassConstrainedFit ) ) 
+      { 
+        particle.addInfo 
+          (  LHCb::Particle::Chi2OfParticleReFitter ,
+             particle.info ( LHCb::Particle::Chi2OfMassConstrainedFit , -1000 ) ) ;
+      }    
+      //
+      return StatusCode::SUCCESS ;
+    }
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// the standard initialization of the tool 
+    virtual StatusCode initialize() 
+    {
+      StatusCode sc = GaudiTool::initialize() ;
+      if ( sc.isFailure() ) { return sc ; }
+      svc<IService>( "LoKiSvc" , true ) ;
+      return StatusCode::SUCCESS ;
+    }
     // ========================================================================
   protected:
     // ========================================================================
@@ -177,8 +300,8 @@ namespace LoKi
       const std::string& name   ,
       const IInterface*  parent )
       : GaudiTool ( type, name , parent )
-      , m_ppSvc         ( 0 ) 
-      , m_iterMax       ( 5 )
+      , m_ppSvc         (  0 ) 
+      , m_iterMax       ( 10 )
       , m_tolerance     ( 0.1 * Gaudi::Units::MeV ) 
       , m_change_vertex ( true )
     {
@@ -219,12 +342,15 @@ namespace LoKi
       // locate the service (if needed)
       if ( 0 == m_ppSvc )  
       { m_ppSvc = svc<IParticlePropertySvc> ( "ParticlePropertySvc" , true ) ; }  
-      Assert ( 0 != m_ppSvc , "Unable to locate Particle Property Service" ) ;
+      Assert ( 0 != m_ppSvc , "Unable to locate Particle Property Service" , 
+               StatusCode ( InvalidParticlePSvc , true ) ) ;
       const ParticleProperty* p = m_ppSvc -> findByStdHepID( pid.pid() ) ;
       if ( 0 == p )
       {
-        Error ( "Invalid ParticleProperty for ID=" + 
-                boost::lexical_cast<std::string> ( pid.pid() ) ) ;
+        StatusCode sc = StatusCode ( InvalidParticleID , true ) ;
+        Error 
+          ( "Invalid ParticleProperty for ID=" + 
+            boost::lexical_cast<std::string> ( pid.pid() ) , sc ) ;
       }
       return p ;
     }  
@@ -285,9 +411,12 @@ namespace LoKi
 StatusCode LoKi::MassFitter::fit
 ( LHCb::Particle* particle , const double mass , double& chi2 ) const 
 {
-  if ( 0 == particle ) { return Error ( "LHCb::Particle* points to NULL" ) ; }
-  // check the mass
-  if ( massOK ( particle , mass ) ) { return StatusCode::SUCCESS ; }  // RETURN
+  if ( 0 == particle ) 
+  { return Error ( "LHCb::Particle* points to NULL" , InvalidParticle ) ; }
+  
+  // play a bit with extra-info
+  if ( particle->hasInfo ( LHCb::Particle::Chi2OfMassConstrainedFit ) ) 
+  { particle->eraseInfo ( LHCb::Particle::Chi2OfMassConstrainedFit )  ; }  
   
   // prepare the local static storage
   
@@ -320,11 +449,12 @@ StatusCode LoKi::MassFitter::fit
   
   // the product of D * V_p
   static Gaudi::Vector4    s_dvp  ;
+  
   // the product of D * V_px
   static Gaudi::Vector3    s_dvpx ;
   
   // perform the iterations
-  for ( unsigned int iter  = 0 ; iter < m_iterMax ; ++iter ) 
+  for ( unsigned int iter  = 1 ; iter <= m_iterMax ; ++iter ) 
   {
     // residual
     const double dmass2 = s_momentum1.M2() - mass * mass ;
@@ -371,8 +501,7 @@ StatusCode LoKi::MassFitter::fit
     Gaudi::Math::update ( s_vxx , s_dvpx ,          -v_D ) ;
     Gaudi::Math::update ( s_vpx , s_dvp  , s_dvpx , -v_D ) ;
     
-    // update (accumulate???) chi2 value 
-    // s_chi2 += lambda * dmass2 ;
+    // update chi2 value 
     s_chi2 = lambda * dmass2 ;
     
     if ( massOK ( s_momentum1 , mass ) ) 
@@ -384,10 +513,9 @@ StatusCode LoKi::MassFitter::fit
       particle -> setPosCovMatrix    ( s_vxx       ) ;
       particle -> setPosMomCovMatrix ( s_vpx       ) ; 
       //
-      if ( particle -> hasInfo ( LHCb::Particle::Chi2OfMassConstrainedFit ) )
-      { particle -> eraseInfo ( LHCb::Particle::Chi2OfMassConstrainedFit ) ; }
       // set chi2:
       chi2 = s_chi2 ;
+      // play a bit with extra-info
       particle -> addInfo ( LHCb::Particle::Chi2OfMassConstrainedFit , s_chi2 ) ;
       //
       if ( m_change_vertex ) 
@@ -398,9 +526,10 @@ StatusCode LoKi::MassFitter::fit
           vertex -> setPosition  ( particle -> referencePoint () ) ;
           vertex -> setCovMatrix ( particle -> posCovMatrix   () ) ;
         }
+        else { Warning ( "EndVertex points to NULL, ignore" ) ; }
       }
       //
-      if ( msgLevel( MSG::DEBUG ) ) { counter ("#iterations") += iter + 1 ; }
+      counter ( "#iterations" ) += iter ; 
       //
       return StatusCode::SUCCESS ;                                // RETURN
     }    
@@ -410,7 +539,8 @@ StatusCode LoKi::MassFitter::fit
   counter ( "dmass" ) += s_momentum1.M() - mass ;
   counter ( "chi2"  ) += s_chi2 ;
   //
-  return Warning ( "No convergency for mass-constraned fit, particle is unachanged") ;
+  return Error
+    ( "No convergency for mass-constrained fit" , NoConvergency ) ;
 }
 // ============================================================================
 /// the factory ( needed for instantiation)

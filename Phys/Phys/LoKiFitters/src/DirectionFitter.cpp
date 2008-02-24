@@ -1,4 +1,4 @@
-// $Id: DirectionFitter.cpp,v 1.1.1.1 2008-02-20 15:48:44 ibelyaev Exp $
+// $Id: DirectionFitter.cpp,v 1.2 2008-02-24 19:48:19 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -34,7 +34,13 @@ namespace LoKi
    *  The implementation follows the note by Paul AVERY 
    *    "Directly Determining Lifetime Using a 3-D Fit"
    *
-   *  @author Vanya BELYAEV
+   *  The actual algorithm si described in detail for 
+   *  the base class LoKi::DirectionFitBase
+   *
+   *  @see LoKi::DirectionFitBase 
+   *  @see IDirectionFit
+   *
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date   2008-02-17
    */
   class DirectionFitter 
@@ -105,6 +111,12 @@ namespace LoKi
      */
     virtual StatusCode reFit ( LHCb::Particle& particle ) const ;
     // ========================================================================
+  public:
+    // ========================================================================
+    /// the standard initialization of the tool 
+    virtual StatusCode initialize() 
+    { return LoKi::DirectionFitBase::initialize() ; }
+    // ========================================================================
   protected:
     // ========================================================================
     /** constructor 
@@ -145,6 +157,11 @@ namespace LoKi
 // ============================================================================
 StatusCode LoKi::DirectionFitter::reFit ( LHCb::Particle& particle ) const 
 {
+  
+  // play a bit with extra-info
+  if ( particle.hasInfo ( LHCb::Particle::Chi2OfParticleReFitter ) ) 
+  { particle.eraseInfo ( LHCb::Particle::Chi2OfParticleReFitter )  ; }
+  
   // try to get the associated primary vertex
   // 1) get the desktop from the parent
   IPhysDesktop* desktop = getDesktop ( parent() ) ;
@@ -161,7 +178,19 @@ StatusCode LoKi::DirectionFitter::reFit ( LHCb::Particle& particle ) const
   if ( 0 == primary ) 
   { return Error ( "No associated primary vertex is found!" , NoPrimaryVertex ) ; }
   // 3) use the regular "fit" method 
-  return fit ( *primary , particle ) ;
+  StatusCode sc = fit ( *primary , particle ) ;
+  if ( sc.isFailure () ) 
+  { return Error ( "reFit(): The errot from fit()" , sc ) ; }
+  
+  // in the case of success update the extra-info:
+  if ( particle.hasInfo ( LHCb::Particle::Chi2OfDirectionConstrainedFit ) ) 
+  { 
+    particle.addInfo 
+      (  LHCb::Particle::Chi2OfParticleReFitter ,
+         particle.info ( LHCb::Particle::Chi2OfDirectionConstrainedFit , -1000 ) ) ;
+  }    
+  
+  return StatusCode::SUCCESS ;
 }
 // ========================================================================
 // perform a "direction" fit for the particle.
@@ -170,9 +199,15 @@ StatusCode LoKi::DirectionFitter::fit
 ( const LHCb::VertexBase& primary  ,
   LHCb::Particle&         particle ) const 
 {
+  // play a bit with extra-info
+  if ( particle.hasInfo ( LHCb::Particle::Chi2OfDirectionConstrainedFit ) ) 
+  { particle.eraseInfo ( LHCb::Particle::Chi2OfDirectionConstrainedFit )  ; }
+  
   // get the end-vertex for the particle 
   LHCb::VertexBase* decay = particle.endVertex() ;
-  if ( 0 == decay ) { return Error ( "No valid endVertex is found!" , NoEndVertex ) ; }
+  if ( 0 == decay ) 
+  { return Error 
+      ( "No valid endVertex is found!" , StatusCode ( NoEndVertex , true ) ) ; }
   
   // backup the primary vertex:
   LHCb::VertexBase s_primary ( primary ) ;
@@ -184,6 +219,9 @@ StatusCode LoKi::DirectionFitter::fit
   // make the actual iterations 
   StatusCode sc = fit_ ( &s_primary  , &particle , decay , ctau , error , chi2 ) ;
   if ( sc.isFailure() ) { return Error ( "The error from fit_" , sc ) ; }
+  
+  // in the case of success update the extra-info:
+  particle.addInfo ( LHCb::Particle::Chi2OfDirectionConstrainedFit , chi2 ) ;
   
   return StatusCode::SUCCESS ;
 }

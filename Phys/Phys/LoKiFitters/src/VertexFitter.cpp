@@ -1,4 +1,4 @@
-// $Id: VertexFitter.cpp,v 1.1.1.1 2008-02-20 15:48:44 ibelyaev Exp $
+// $Id: VertexFitter.cpp,v 1.2 2008-02-24 19:48:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -56,32 +56,39 @@ namespace
 StatusCode LoKi::VertexFitter::_load 
 ( const LHCb::Particle::ConstVector& ds ) const 
 {
+  StatusCode sc = StatusCode::SUCCESS ;
   m_entries.resize ( ds.size() ) ;
   LHCb::Particle::ConstVector::const_iterator c = ds.begin()        ;
   Entries::iterator                           e = m_entries.begin() ;
   
-  for ( ; ds.end() != c ; ++c , ++e ) { _load ( *c , *e ) ; } ;
-  if ( m_entries.empty() ) { return Error("_load(): no valid data found") ; }
+  for ( ; ds.end() != c && sc.isSuccess() ; ++c , ++e ) 
+  { sc = _load ( *c , *e ) ; } ;
+  if ( sc.isFailure () ) 
+  { return Error ( "_load(): the error from _load:" , sc ) ; }        // RETURN 
+  if ( m_entries.empty() ) 
+  { return Error ( "_load(): no valid data found" , InvalidData ) ; } // RETURN 
   return StatusCode::SUCCESS ;
 } 
-// ============================================================================/
+// ============================================================================
 // load the data into internal representation 
-// ============================================================================/
+// ============================================================================
 StatusCode LoKi::VertexFitter::_load      
 ( const LHCb::Particle*     particle , 
   LoKi::VertexFitter::Entry& entry    ) const 
 {
-  if ( 0 == particle ) { return Error ( "_load(): invalid particle" ) ; }
+  if ( 0 == particle ) 
+  { return Error ( "_load(): invalid particle" , InvalidParticle ) ; } // RETURN 
   entry.m_p0 = particle    ;
   entry.m_p  = (*particle) ;
   return _update ( entry ) ;
 }
-// ============================================================================/
+// ============================================================================
 // update the representation 
-// ============================================================================/
+// ============================================================================
 StatusCode LoKi::VertexFitter::_update 
 ( LoKi::VertexFitter::Entry& entry ) const 
 {
+  bool basic = false ;
   const Gaudi::SymMatrix3x3& _pmcov = entry.m_p.posCovMatrix() ;
   if ( _pmcov ( 2 , 2 ) < 0.25 * ( _pmcov ( 0 , 0 ) + _pmcov ( 1 , 1 ) ) )
   {
@@ -90,8 +97,11 @@ StatusCode LoKi::VertexFitter::_update
     m_cixy ( 0 , 1 ) = _pmcov ( 0, 1 ) ;
     m_cixy ( 1 , 1 ) = _pmcov ( 1, 1 ) ;
     if ( !m_cixy.Invert() )  
-    { return Error ( "_update(): Error in C<xy> matrix inversion" ) ; }
-    // The most tricky part I 
+    { 
+      return Error 
+        ( "_update(): Error in C<xy> matrix inversion" , ErrorInMatrixInversion ) ;
+    }
+    // The most tricky part I
     entry.m_vxi ( 0 , 0 ) = m_cixy ( 0 , 0 ) ;
     entry.m_vxi ( 0 , 1 ) = m_cixy ( 0 , 1 ) ;
     entry.m_vxi ( 1 , 1 ) = m_cixy ( 1 , 1 ) ;
@@ -102,14 +112,20 @@ StatusCode LoKi::VertexFitter::_update
     entry.m_vxi ( 0 , 2 ) = -1 * cslope ( 0 ) ;
     entry.m_vxi ( 1 , 2 ) = -1 * cslope ( 1 ) ;
     entry.m_vxi ( 2 , 2 ) = ROOT::Math::Similarity ( slopes , m_cixy ) ;
+    //
+    basic = true ;
   }
   else
   {
-    // the regular particle
+    // the regular particle:
     entry.m_vxi = _pmcov ;
     if ( !entry.m_vxi.Invert() )
-    { return Error ( "_update(): Error in C<xyz> matrix inversion" ) ; }      
+    { return Error 
+        ( "_update(): Error in C<xyz> matrix inversion", ErrorInMatrixInversion ) ; 
+    }      
   }
+  // 
+  counter ("#basicAcc") += basic ;
   //
   Gaudi::Math::geo2LA ( entry.m_p.referencePoint () , entry.m_parx ) ;
   Gaudi::Math::geo2LA ( entry.m_p.momentum       () , entry.m_parq ) ;
@@ -124,8 +140,12 @@ StatusCode LoKi::VertexFitter::_add
   const double                       newZ      ) const
 {
   m_entries.push_back( Entry() ) ;
-  _load      ( child , m_entries.back() ) ;
-  _transport ( m_entries.back() , newZ ) ;
+  StatusCode sc = _load      ( child , m_entries.back() ) ;
+  if ( sc.isFailure() ) 
+  { Warning ("_add(): the error from _add()      , ignore", sc ) ; }
+  sc = _transport ( m_entries.back() , newZ ) ;
+  if ( sc.isFailure() ) 
+  { Warning ("_add(): the error from _transport(), ignore", sc ) ; }
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
@@ -152,7 +172,11 @@ StatusCode LoKi::VertexFitter::_transport
 ( const double newZ ) const 
 {
   for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
-  { _transport ( *entry , newZ ) ; }
+  { 
+    StatusCode sc = _transport ( *entry , newZ ) ; 
+    if ( sc.isFailure() ) 
+    { Warning ("_transport(): the error from _transport() , ignore", sc ) ; }
+  }
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
@@ -165,26 +189,33 @@ StatusCode LoKi::VertexFitter::_step
   const double               chi2  ) const 
 {
   // OK ! 
-  entry.m_ci = ci + entry.m_vxi  ;  /// NB !!!
+  /// \f$ C^{-1}_k=C^{-1}_{k-1}+A^TG_kA =  C^{-1}_{k-1}+ V^{-1}_{k} \f$
+  entry.m_ci = ci + entry.m_vxi  ; 
   // OK ! 
   int ifail = 0 ;
-  entry.m_c  = entry.m_ci.Inverse( ifail ) ;
+  /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
+  entry.m_c  = entry.m_ci.Inverse( ifail ) ; 
   if ( 0 != ifail ) 
-  { return Error ( "_step: Error in inversion of inverse covarinace matrix " ) ; }
+  { return Error 
+      ( "_step: Error in inversion of inverse covarinace matrix " , 
+        ErrorInMatrixInversion ) ; }
   // OK ! 
+  /// \f$\vec{x}_k\f$
   entry.m_x = entry.m_c * 
-    ( ci*x + entry.m_vxi * entry.m_parx  ) ;
+    ( ci*x + entry.m_vxi * entry.m_parx  ) ; 
   // OK ! 
   const Gaudi::Vector3 dx = entry.m_parx - entry.m_x ;  
   // OK !
-  entry.m_q = entry.m_parq - entry.m_p.posMomCovMatrix() * ( entry.m_vxi * dx ) ; 
+  entry.m_q = entry.m_parq - entry.m_p.posMomCovMatrix() * entry.m_vxi * dx ; 
   // OK ! 
   const double dchi2 = 
     ROOT::Math::Similarity ( entry.m_vxi  , dx            ) + 
     ROOT::Math::Similarity ( ci           , entry.m_x - x ) ;
   //
-  if ( 0 > dchi2 ) { Warning ( "_step: delta chi2 is negative!" ); }    
+  if ( 0 > dchi2 ) { Warning ( "_step: delta chi2 is negative!" ) ; }    
+  //
   entry.m_chi2 = chi2 + dchi2 ;
+  //
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
@@ -195,8 +226,12 @@ StatusCode LoKi::VertexFitter::_smooth() const
   const Entry& last = m_entries.back() ;
   for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
   {
-    entry->m_x = last.m_x ;
-    entry->m_q = last.m_q ;
+    /// \f$ \vec{x}^{n}_k = \vec{x}_{n}\f$ 
+    entry -> m_x  = last.m_x ;
+    const Gaudi::Vector3 dx = entry->m_parx - entry->m_x ;
+    /// \f$ \vec{q}^{n}_k = W_kB^T_{k}G_k\left[\vec{p}_k-A_k\vec{x}_{n}\right]\f$ 
+    entry -> m_q = entry -> m_parq 
+      - entry -> m_p.posMomCovMatrix() * entry -> m_vxi * dx ; 
   }
   return StatusCode::SUCCESS ;
 } 
@@ -206,18 +241,19 @@ StatusCode LoKi::VertexFitter::_smooth() const
 StatusCode LoKi::VertexFitter::_evalCov() const 
 {
   using namespace ROOT::Math ;
+  const Entry& last = m_entries.back() ;
   for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
   {
-    // OK ! 
-    entry->m_c = m_entries.back().m_c ;
-    // OK !  
+    /// \f$ C^n_k = C_n \f$  
+    entry -> m_c = last.m_c ;
+    /// \f$ F_k = G_{p}^{-1}G^T{xp} = - V^T_{xp}V^{-1}_x \f$ 
+    entry -> m_f = -1.0 * entry->m_p.posMomCovMatrix()*entry->m_vxi   ;
+    /// \f$ E_k = - F_k C_n \f$ 
+    entry -> m_e = -1.0 * entry->m_f * entry->m_c ;
+    /// \f$ D_k = W_k - E^{n}_kF^{T}_{k} = V_p - V^T_{xp}V^{-1}_{x}V_{xp} + F_kC_nF_k^T \f$ 
     entry->m_d = entry->m_p.momCovMatrix() 
-      - Similarity( entry->m_p.posMomCovMatrix() , entry->m_vxi ) 
-      + Similarity( entry->m_p.posMomCovMatrix() * entry->m_vxi , entry->m_c ) 
-      ;
-    // OK !
-    entry->m_f = -1.0 * entry->m_p.posMomCovMatrix()*entry->m_vxi   ;
-    entry->m_e = -1.0 * entry->m_f*entry->m_c ;
+      - Similarity ( entry -> m_p.posMomCovMatrix() , entry -> m_vxi ) 
+      + Similarity ( entry -> m_f                   , entry -> m_c   ) ;
   }
   return StatusCode::SUCCESS ;
 } 
@@ -236,7 +272,7 @@ StatusCode LoKi::VertexFitter::_iterate
   // inverse covariance matrix for the position  
   const Gaudi::SymMatrix3x3* ci = &m_seedci ;
   //
-  for ( size_t iIter = 0 ; iIter < nIterMax ; ++iIter ) 
+  for ( size_t iIter = 1 ; iIter <= nIterMax ; ++iIter ) 
   {    
     // make a proper transportation 
     const double newZ = (*x)(2) ;
@@ -277,23 +313,18 @@ StatusCode LoKi::VertexFitter::_iterate
     //      - either the absolute distance 
     //      - or chi2 distance (if at least one iteration is performed) 
     //
-    if ( d1 < m_DistanceMax || ( 0 < iIter && 0 <= d2 && d2 < m_DistanceChi2 ) )
+    if ( d1 < m_DistanceMax || ( 1 < iIter && 0 <= d2 && d2 < m_DistanceChi2 ) )
     {
       sc = _evalCov () ;
       if ( sc.isFailure() ) 
       { Warning ( "_iterate(): problems with covariances" , sc ) ; }
-      debug() << "_iterate: Convergency after #" 
-              << iIter << " iterations: " 
-              << " dist=" << d1 << "/" << m_DistanceMax 
-              << " chi2=" << d2 << "/" << m_DistanceChi2 
-              << endreq ; 
-      if ( msgLevel ( MSG::INFO ) ) { counter("#Iterations") += (1+iIter) ; }
-      break ;                                                  // BREAK 
-    }
-    if ( nIterMax == iIter ) 
-    { Error ( "No convergency has been reached after 'nIterMax' iterations" ) ; }
+      // 
+      counter ( "#iterations" ) += iIter ;
+      //
+      return StatusCode::SUCCESS ;                             // RETURN 
+    }    
   } // end of iterations
-  return StatusCode::SUCCESS ;
+  return Error ( "No convergency has been reached" , NoConvergency ) ; // RETURN 
 } 
 // ============================================================================
 // make a seed 
@@ -331,10 +362,6 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
   m_seed    = m_seedaux * seed ;
   if ( 0 != ifail ) 
   { 
-    std::cerr <<  " I am SEED " << m_seed  << std::endl 
-              << " #="          << m_entries.size() << std::endl 
-              << " m_seedci"    << m_seedci         << std::endl ;
-    
     m_seed[0] = 0.0 ; m_seed[1] = 0.0 ; m_seed [2] = 0.0 ;
     Gaudi::Math::setToUnit ( m_seedci , 1.0/s_middle2 ) ;
     m_seedci(2,2) = 1.0/s_large2 ;
@@ -378,12 +405,15 @@ StatusCode LoKi::VertexFitter::fit
 {
   // load the data 
   StatusCode sc = _load ( daughters ) ;
-  if ( sc.isFailure() ) { return Error ( "fit(): failure from _load() ", sc ) ; }
+  if ( sc.isFailure() ) 
+  { return Error ( "fit(): failure from _load() ", sc ) ; }      // RETURN 
   sc = _seed ( &vertex ) ; 
-  if ( sc.isFailure() ) { Warning  ( "fit(): failure from _seed()"     , sc ) ; }
+  if ( sc.isFailure() ) 
+  { Warning  ( "fit(): failure from _seed()"     , sc ) ; }
   // make "m_nIterMax" iterations 
   sc = _iterate ( m_nIterMaxI , m_seed ) ;
-  if ( sc.isFailure() ) { Error    ( "fit(): failrue from _iterate()"  , sc ) ; }
+  if ( sc.isFailure() ) 
+  { return Error ( "fit(): failure from _iterate()"  , sc ) ; } // RETURN 
   // get the data from filter 
   const Entry&               entry = m_entries.back() ;
   const Gaudi::Vector3&      x     = entry.m_x         ;
@@ -401,16 +431,16 @@ StatusCode LoKi::VertexFitter::fit
   // keep for future tracing
   m_vertex = &vertex ;
   if ( m_seedZmin > vertex.position().Z() ) 
-  { Warning ("fit():Vertex is outside of 'Zmin' fiducial volume ") ; }
+  { Warning ( "fit(): Vertex is outside of 'Zmin' fiducial volume " ) ; }
   if ( m_seedZmax < vertex.position().Z() ) 
-  { Warning ("fit():Vertex is outside of 'Zmax' fiducial volume ") ; }
+  { Warning ( "fit(): Vertex is outside of 'Zmax' fiducial volume " ) ; }
   if ( m_seedRho  < vertex.position().Rho() ) 
-  { Warning ("fit():Vertex is outside of 'Rho'  fiducial volume ") ; }
+  { Warning ( "fit(): Vertex is outside of 'Rho'  fiducial volume " ) ; }
   //
   return sc ;
 } 
 // ============================================================================
-// The vertex fitting method with creation of a Particle
+// The vertex fitting method with the creation of a Particle
 // ============================================================================
 StatusCode LoKi::VertexFitter::fit 
 ( const LHCb::Particle::ConstVector& daughters ,
@@ -418,15 +448,22 @@ StatusCode LoKi::VertexFitter::fit
   LHCb::Vertex&                      vertex    ) const 
 {
   using namespace ROOT::Math ;
+  //
+  // play a bit with extra-info
+  if ( particle.hasInfo ( LHCb::Particle::Chi2OfVertexConstrainedFit ) ) 
+  { particle.eraseInfo ( LHCb::Particle::Chi2OfVertexConstrainedFit )  ; }
+  
   // make a vertex fit 
   StatusCode sc = fit ( daughters , vertex ) ;
-  if ( sc.isFailure() ) { return Error("fit(): failure form fit", sc ) ; }
+  if ( sc.isFailure() ) { return Error ( "fit(): failure form fit", sc ) ; }
   // links:
   particle.clearDaughters() ;
   for ( LHCb::Particle::ConstVector::const_iterator dau = 
           daughters.begin() ; daughters.end() != dau ; ++dau ) 
   { particle.addToDaughters( *dau ) ; } ;
+  // 
   particle.setEndVertex( &vertex ) ;  
+  //
   // fill the particle with the proper information 
   // 1) reference point and proper covariance matrices
   particle.setReferencePoint ( vertex.position  () ) ;
@@ -447,7 +484,7 @@ StatusCode LoKi::VertexFitter::fit
     for ( EIT j = i + 1 ; m_entries.end() != j ; ++j ) 
     {	
       m_cmom1 += i->m_f * pos * Transpose( j->m_f ) ;
-      m_cmom1 += j->m_f * pos * Transpose( i->m_f ) ; /// chto ETO, BERRIMORE???? OVSYANKA ??? OTKUDA ???? 
+      m_cmom1 += j->m_f * pos * Transpose( i->m_f ) ; 
     } 
   }
   Gaudi::Math::add ( m_cmom , m_cmom1 ) ;
@@ -463,7 +500,11 @@ StatusCode LoKi::VertexFitter::fit
   if ( 0 > merr ) { Warning( "fit(): mass error is negative " ) ; }  
   particle.setMeasuredMass    ( mass             ) ;
   particle.setMeasuredMassErr ( ::sqrt ( ::fabs ( merr  ) ) ) ;
-  // 
+  //
+  // play a bit with extra-info:
+  particle.addInfo 
+    ( LHCb::Particle::Chi2OfVertexConstrainedFit , vertex.chi2() ) ;
+  //
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
@@ -473,7 +514,8 @@ StatusCode LoKi::VertexFitter::add
 ( const LHCb::Particle*  particle , 
   LHCb::Vertex&          vertex   ) const
 {
-  if ( 0 == particle ) { return Error ( "add: Particle* point to NULL!" ) ;}
+  if ( 0 == particle ) 
+  { return Error ( "add: Particle* point to NULL!" , InvalidParticle ) ;}
   //
   if ( &vertex != m_vertex ) 
   {
@@ -524,13 +566,13 @@ StatusCode LoKi::VertexFitter::add
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
-// remove the particle from the vertex and refit 
+// remove the particle from  the vertex and refit 
 // ============================================================================
 StatusCode LoKi::VertexFitter::remove
 ( const LHCb::Particle*  particle , 
   LHCb::Vertex&          vertex   ) const
 {
-  return Warning ( "remove(): not implemented (yet)!" ) ; // ATTENTION!!!
+  return Warning ( "remove(): not implemented (yet)!" , NotImplemented ) ; // ATTENTION!!!
   //
   const StatusCode OK = StatusCode::SUCCESS ;
   if ( 0 == particle ) 
@@ -543,7 +585,7 @@ StatusCode LoKi::VertexFitter::remove
       vFit->fit ( vertex.outgoingParticles().begin() , 
                   vertex.outgoingParticles().end  () , vertex ) ;
     if ( sc.isFailure() ) 
-    { return Error("remove: error from 'fit'", sc ) ;  }           // RETURN 
+    { return Error ( "remove: error from 'fit'", sc ) ;  }           // RETURN 
   }
   // remove the particle from the vertex 
   vertex.removeFromOutgoingParticles ( particle ) ;

@@ -1,0 +1,21 @@
+! $Id: release.notes,v 1.1 2008-02-24 19:48:19 ibelyaev Exp $ 
+! -----------------------------------------------------------------------------
+! Package     : Phys/LoKiFitters
+! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
+! Purpose     : collection of various kinematical LoKi-based fitters 
+! -----------------------------------------------------------------------------
+
+! 2008-02-24 - Vanya BELYAEV
+
+ - new package, currently it contains:
+
+    1) LoKi::VertexFitter & BlindVertexFitter 
+    2) LoKi::MassFitter 
+    3) LoKi::DirectionFitter 
+    4) LoKi::LifetimeFitter 
+
+ 
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------

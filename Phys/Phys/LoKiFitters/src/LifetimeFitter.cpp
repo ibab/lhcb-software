@@ -1,4 +1,4 @@
-// $Id: LifetimeFitter.cpp,v 1.1.1.1 2008-02-20 15:48:44 ibelyaev Exp $
+// $Id: LifetimeFitter.cpp,v 1.2 2008-02-24 19:48:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -24,7 +24,11 @@ namespace LoKi
    *
    *  The implementation follows the note by Paul AVERY 
    *    "Directly Determining Lifetime Using a 3-D Fit"
-   *  
+   *   
+   *  The actual algorithm si described in detail for 
+   *  the base class LoKi::DirectionFitBase
+   *
+   *  @see LoKi::DirectionFitBase 
    *  @see ILifetimeFitter
    *
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -74,6 +78,12 @@ namespace LoKi
       double&                 lifetime , 
       double&                 error    ,
       double&                 chi2     ) const ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// the standard initialization of the tool 
+    virtual StatusCode initialize() 
+    { return LoKi::DirectionFitBase::initialize() ; }
     // ========================================================================
   protected:
     // ========================================================================
