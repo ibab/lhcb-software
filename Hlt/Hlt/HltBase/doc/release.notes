@@ -3,7 +3,10 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
-! 2008-02-19 
+! 2008-02-24 - Gerhard Raven
+ - cosmetic changes to HltUtils
+
+! 2008-02-19 - Gerhard Raven
  - strip md5 to a minimum, and merge md5.cpp and md5.h into MD5.cpp (better for 
     systems with case-insensensitive file systems...)
  - fix copy/paste error in EFunctions::logical_or::clone: it had new logical_and...

@@ -1,6 +1,8 @@
 #include "HltBase/HltUtils.h"
 #include "HltBase/ESequences.h"
 
+#include <cassert>
+
 using namespace Gaudi;
 using namespace LHCb;
 
@@ -21,13 +23,13 @@ void Hlt::TrackMerge(const LHCb::Track& track, LHCb::Track& otrack) {
   const std::vector<LHCb::State*>& states = track.states();
   for (std::vector<LHCb::State*>::const_iterator it = states.begin();
        it != states.end(); ++it) 
-    otrack.addToStates(*(*it));
+    otrack.addToStates(**it);
   
   // adding ids
   const std::vector<LHCb::LHCbID>& ids = track.lhcbIDs();
   for (std::vector<LHCb::LHCbID>::const_iterator it = ids.begin();
        it != ids.end(); ++it) 
-    otrack.addToLhcbIDs((*it));
+    otrack.addToLhcbIDs(*it);
   
 
 }
@@ -37,11 +39,10 @@ void Hlt::TrackMerge(const LHCb::Track& track, LHCb::Track& otrack) {
 void Hlt::VertexCreator::operator() 
   (const LHCb::Track& track1, const LHCb::Track& track2,
    LHCb::RecVertex& ver) const {
-  EPoint pos = HltUtils::closestPoint(track1,track2);
   // EVector dis = HltUtils::closestDistance(track1,track2);
-  ver.setPosition(pos);
-  ver.addToTracks((Track*) &track1);
-  ver.addToTracks((Track*) &track2);
+  ver.setPosition(HltUtils::closestPoint(track1,track2));
+  ver.addToTracks(const_cast<Track*>(&track1));
+  ver.addToTracks(const_cast<Track*>(&track2));
   // std::cout << " vertex position " << pos << std::endl;
 }
 
@@ -78,9 +79,7 @@ double HltUtils::rImpactParameter(const RecVertex& vertex,
   double RR = Dr+tr*dz;
   double ZZ = Dz+dz;
   double rIP = sqrt(RR*RR+ZZ*ZZ);
-  if (ZZ<0.) rIP = -1.*rIP;
-
-  return rIP;
+  return (ZZ<0)? -rIP : rIP;
 }
 
 
@@ -110,11 +109,10 @@ double HltUtils::impactParameter (const RecVertex& vertex,
   double dz = -(Dx*tx+Dy*ty+Dz)/(1+tx*tx+ty*ty);
   double XX = Dx+tx*dz;
   double YY = Dy+ty*dz;
-  double ZZ = Dz+dz;
+  double ZZ = Dz+   dz;
   
   double IP = sqrt(XX*XX+YY*YY+ZZ*ZZ);
-  if (ZZ<0.) IP = -1.*IP;
-  return IP;
+  return (ZZ<0) ? -IP : IP;
 }
 
 double HltUtils::IPError(const Track& track)
@@ -141,9 +139,7 @@ double HltUtils::impactParameter(const EPoint& vertex,
                                  const EVector& direction)
 {
   EVector ipVector = impactParameterVector(vertex,point,direction);
-  double ip = sqrt(ipVector.mag2());
-  if (ipVector.z() < 0) ip = -ip;
-  return ip;
+  return (ipVector.z() < 0) ? -ipVector.R() : ipVector.R();
 }
 
 
@@ -170,19 +166,11 @@ bool HltUtils::closestPoints(const EPoint& ori1, const EVector& dir1,
   close1 = EPoint(0.,0.,0.);
   close2 = EPoint(0.,0.,0.);
   
-  EVector udir1 = dir1.unit();
-  EVector udir2 = dir2.unit();
-  
-  EPoint t1b = ori1;
-  EPoint t2b = ori2;
-  // EPoint t1e = ori1 + udir1;
-  // EPoint t2e = ori2 + udir2;
-  
   EVector v0 = ori1 - ori2;
-  EVector v1 = udir1;
+  EVector v1 = dir1.unit();
   if (fabs(v1.x())  < eps && fabs(v1.y())  < eps && fabs(v1.z())  < eps)
     return false;
-  EVector v2 = udir2;
+  EVector v2 = dir2.unit();
   if (fabs(v2.x())  < eps && fabs(v2.y())  < eps && fabs(v2.z())  < eps)
     return false;
   
@@ -192,28 +180,14 @@ bool HltUtils::closestPoints(const EPoint& ori1, const EVector& dir1,
   double d22 = v2.Dot(v2);
   double d11 = v1.Dot(v1);
   
-  // d02 = v0.x() * v2.x() + v0.y() * v2.y() + v0.z() * v2.z();
-  // d21 = v2.x() * v1.x() + v2.y() * v1.y() + v2.z() * v1.z();
-  // d01 = v0.x() * v1.x() + v0.y() * v1.y() + v0.z() * v1.z();
-  // d22 = v2.x() * v2.x() + v2.y() * v2.y() + v2.z() * v2.z();
-  // d11 = v1.x() * v1.x() + v1.y() * v1.y() + v1.z() * v1.z();
-  
   double denom = d11 * d22 - d21 * d21;
   if (fabs(denom) < eps) return false;
-  double numer = d02 * d21 - d01 * d22;
   
-  double mu1 = numer / denom;
+  double mu1 = (d02*d21 - d01*d22) / denom;
   double mu2 = (d02 + d21 * mu1) / d22;
   
-  close1 = t1b + mu1 * v1;  
-  close2 = t2b + mu2 * v2;
-  
-  // std::cout << " HltUtils closest points (1) pos " << ori1
-  // 	    << " dir " << udir1 << std::endl;
-  //   std::cout << " HltUtils closest points (2) pos " << ori2
-  // 	    << " dir " << udir2 << std::endl;
-  //   std::cout << " HltUtils closest points [1-2] "
-  // 	    << close1 << " : " << close2 << std::endl;
+  close1 = ori1 + mu1 * v1;  
+  close2 = ori2 + mu2 * v2;
   
   return true;
 }
@@ -252,11 +226,11 @@ EPoint HltUtils::closestPoint(const Track& track1,
 
 RecVertex* HltUtils::newRecVertex(const Track& t1, const Track& t2) 
 {
-  
   EPoint x1=t1.position();
   EVector p1=t1.momentum();
   EPoint x2=t2.position();
   EVector p2=t2.momentum();
+
   RecVertex* sv = new RecVertex();
   sv->addToTracks(&t1);
   sv->addToTracks(&t2);
@@ -281,8 +255,6 @@ RecVertex* HltUtils::newRecVertex(const Track& t1, const Track& t2)
   double num=d02*d21-d01*d22;
   double mu1=num/den;
   double mu2=(d02+d21*mu1)/d22;
-  // EPoint sv1=(x1+mu1*p1.Scale3D(mu1));
-  // EPoint sv2=(x2+mu2*p2.Scale3D(mu2));
   EPoint sv1=(x1+mu1*p1);
   EPoint sv2=(x2+mu2*p2);
   EPoint center(0.5*(sv1.x()+sv2.x()),
@@ -320,50 +292,23 @@ double HltUtils::FC(const LHCb::RecVertex& vertex1,
   double ptp = pp*stheta;
   double pt = track1.pt() + track2.pt();
   
-  double fc = ptp/(pt+ptp);
-  // std::cout << " dd  " << dd <<std::endl; 
-  // std::cout << " pp  " << pp <<std::endl; 
-  // std::cout << " ptp " << ptp <<std::endl; 
-  // std::cout << " pt  " << pt <<std::endl; 
-  // std::cout << " pt1,pt2  " << track1.pt() << " " << track2.pt() <<std::endl; 
-  // std::cout << " fc  " << fc <<std::endl; 
-  return fc;
+  return ptp/(pt+ptp);
 }
 
 double HltUtils::FC2(const LHCb::RecVertex& vertex1, 
                      const LHCb::RecVertex& vertex2) 
 {
-  double dx =  vertex1.position().x()-vertex2.position().x();
-  double dy =  vertex1.position().y()-vertex2.position().y();
-  double dz =  vertex1.position().z()-vertex2.position().z();
-
+  assert(vertex1.tracks().size()>1);
   const Track& track1 = *(vertex1.tracks()[0]);
   const Track& track2 = *(vertex1.tracks()[1]);
 
-  EVector dir(dx,dy,dz);
-  EVector udir = dir.unit();
-  EVector p1 = track1.momentum();
-  EVector p2 = track2.momentum();
-  EVector p = p1+p2;
-
-  EVector vv = udir.Cross(p);
-  EVector vdir = vv.unit();
-  EVector wdir = udir.Cross(vdir);
+  EVector udir = (vertex1.position() - vertex2.position()).unit();;
+  EVector p = track1.momentum() + track2.momentum();
+  EVector wdir = udir.Cross(udir.Cross(p).unit());
 
   double ptPerp = fabs(p.Dot(wdir));
   double pt     = track1.pt() + track2.pt();
-  double fc = ptPerp/(ptPerp+pt);
-
-
-  // stdout << " [2] ptp " << ptPerp <<std::endl;
-  // std::cout << " [2] pt  " << pt <<std::endl; 
-  // std::cout << " [2] wdir " << wdir << std::endl;
-  // std::cout << " [2] slope1 " << track1.slopes() << std::endl;
-  // std::cout << " [2] slope2 " << track2.slopes() << std::endl;
-  // std::cout << " [2] pt1,pt2  " << track1.pt() 
-  //           << " " << track2.pt() <<std::endl;
-  // std::cout << " [2] fc  " << fc <<std::endl; 
-  return fc;
+  return  ptPerp/(ptPerp+pt);
 }
 
 
@@ -381,7 +326,8 @@ double HltUtils::impactParameterError(double pt0)
 double HltUtils::closestDistanceMod(const LHCb::Track& track1,
                                     const LHCb::Track& track2) {
   EVector dis = closestDistance(track1,track2);
-  return sqrt(dis.Dot(dis));
+  assert( sqrt(dis.Dot(dis)) == dis.R() );
+  return closestDistance(track1,track2).R();
 } 
 
 
@@ -398,18 +344,19 @@ double HltUtils::invariantMass(const LHCb::Track& track1,
 
 double HltUtils::matchIDsFraction(const LHCb::Track& tref,
                                   const LHCb::Track& track) {
-  size_t n0 = tref.lhcbIDs().size();
-  if (n0 <=0) return false;
-  size_t n  = zen::count(tref.lhcbIDs(),track.lhcbIDs());
-  return double(n)/double(n0);
+  return (tref.lhcbIDs().empty()) ? 0. :
+             double(zen::count(tref.lhcbIDs(),track.lhcbIDs())) / 
+             double(tref.lhcbIDs().size());
 }
 
 double HltUtils::vertexMatchIDsFraction(const LHCb::RecVertex& vref,
                                         const LHCb::RecVertex& v) 
 {
+  assert(vref.tracks().size()==2);
   const LHCb::Track& rtrack1 = *(vref.tracks()[0]);
   const LHCb::Track& rtrack2 = *(vref.tracks()[1]);
   
+  assert(v.tracks().size()==2);
   const LHCb::Track& track1 = *(v.tracks()[0]);
   const LHCb::Track& track2 = *(v.tracks()[1]);
   
@@ -451,55 +398,54 @@ double HltUtils::deltaAngle(const LHCb::Track& track1,
   return sqrt ( deta*deta + dphi*dphi );
 }
 
+namespace {
+struct maxPT {
+    double operator()(double init,const LHCb::Track* t) { return std::max(init, t->pt()); }
+};
+struct minPT {
+    double operator()(double init,const LHCb::Track* t) { return std::min(init, t->pt()); }
+};
+};
+
 double HltUtils::VertexMinPT(const LHCb::RecVertex& vertex) {
   const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
-  double pt = 1e12;
-  for (SmartRefVector<LHCb::Track>::const_iterator it = tracks.begin();
-       it != tracks.end(); it++)
-    if ((*it)->pt() < pt) pt = (*it)->pt();
-  return pt;
+  return std::accumulate(tracks.begin(),tracks.end(),1e12,minPT());
 }
 
 double HltUtils::VertexMaxPT(const LHCb::RecVertex& vertex) {
   const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
-  double pt = -1e12;
-  for (SmartRefVector<LHCb::Track>::const_iterator it = tracks.begin();
-       it != tracks.end(); it++)
-    if ((*it)->pt() > pt) pt = (*it)->pt();
-  return pt;
+  return std::accumulate(tracks.begin(),tracks.end(),-1e12,maxPT());
 }
 
-bool HltUtils::doShareM3(const Track& itL0Mu, 
-                         const Track& itT){
-  bool L0Clone=false;
-  MuonTileID tileM3=0;
-  const std::vector<LHCbID>& muonTiles= (itT).lhcbIDs();
-  for( std::vector<LHCbID>::const_iterator itlhcbid = muonTiles.begin();
-       itlhcbid != muonTiles.end(); ++itlhcbid){
-    MuonTileID tileMuonSegment = itlhcbid->muonID();
-    if(tileMuonSegment.station() == 2) tileM3= tileMuonSegment;
-  }
-  // std::cout << "[doShareM3] tile ID from muon segment station " 
-  //          << tileM3.station() << " " << tileM3 << std::endl;
-  
+namespace {
+    struct isMuonStation {
+    public:
+       isMuonStation(unsigned int station) : m_station(station) {}
+       bool operator()(const LHCbID& id)  const { 
+           return (id.isMuon() && ( id.muonID().station()==m_station));
+       }
+    private:
+       unsigned int m_station;
+    };
+}
 
-  const std::vector<LHCb::LHCbID>& lista= (itL0Mu).lhcbIDs ();
-  MuonTileID L0tileM3;
-  for(std::vector<LHCbID>::const_iterator it=lista.begin();
-      it != lista.end(); ++it){
-    if(it->isMuon()){
-      MuonTileID tile=it->muonID();
-      if(tile.station()==2)L0tileM3=tile;
-    }
-  }  
-  // std::cout << " [doShareM3] tile M3 from T track "
-  //         << L0tileM3.station() << " " << L0tileM3 << std::endl;
+bool HltUtils::doShareM3(const Track& t1, 
+                         const Track& t2){
 
-  if (tileM3==L0tileM3){
-    L0Clone=true;
-  }
-  //std::cout << "is clone"<< L0Clone << std::endl;
-  return L0Clone;
+  const std::vector<LHCbID>& l1 = t1.lhcbIDs();
+  const std::vector<LHCbID>& l2 = t2.lhcbIDs ();
+  // TODO: check whether it makes sense to always do the
+  //       shortest list first...
+  // if (l1.size()>l2.size()) return doShareM3(t2,t1);
+  std::vector<LHCbID>::const_iterator i1 = find_if(l1.begin(),
+                                                   l1.end(),
+                                                   isMuonStation(2));
+  if (i1==l1.end()) return false;
+
+  std::vector<LHCbID>::const_iterator i2 = find_if(l2.begin(),
+                                                   l2.end(),
+                                                   isMuonStation(2));
+  return (i2==l2.end()) ?  false :  *i1 == *i2;
 }
 
 //=============================================================================
@@ -552,14 +498,7 @@ std::vector<LHCb::CaloCellID> HltUtils::get2x2CellIDs( const LHCb::CaloCellID& b
 bool HltUtils::matchCellIDs( const std::vector<LHCb::CaloCellID>& oncells, 
 						 	 const std::vector<LHCb::CaloCellID>& offcells )
 {
-    typedef std::vector<LHCb::CaloCellID>::const_iterator iter;
-	for (iter on = oncells.begin(); on != oncells.end(); ++on) {
-        if (std::find(offcells.begin(),
-                      offcells.end(),
-                      *on)  != offcells.end() ) return true;
-    }
-	return false;				
+    return std::find_first_of( oncells.begin(),oncells.end(),
+                               offcells.begin(),offcells.end() ) 
+           != oncells.end() ;
 }																			 
-
-
-
