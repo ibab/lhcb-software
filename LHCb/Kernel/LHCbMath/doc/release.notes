@@ -6,7 +6,13 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
-!========================= LHCbMath v2r6 2008-02-20 ==========================
+!========================= LHCbMath v2r6 2008-02-24 ==========================
+
+! 2008-02-24 - Vanya BELYAEV
+  
+ - LHCbMath/MatrixUtils.h
+	  add a bit more optimizations 
+
 ! 2008-02-20 - Vanya BELYAEV 
  - add few more optimizations into MatrixUtils.h & MatrixTransforms.h
    in particular the additon operators for "geometry" and "linear algebra" 

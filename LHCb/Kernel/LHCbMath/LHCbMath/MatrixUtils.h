@@ -1,4 +1,4 @@
-// $Id: MatrixUtils.h,v 1.7 2008-02-20 15:51:51 ibelyaev Exp $
+// $Id: MatrixUtils.h,v 1.8 2008-02-24 19:40:21 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_MATRIXUTILS_H
 #define LHCBMATH_MATRIXUTILS_H 1
@@ -602,7 +602,35 @@ namespace Gaudi
       T result = m(0,0) ;
       for ( unsigned int i = 1 ; i < D ; ++i ) { result += m(i,i) ; }
       return result ;
-    } 
+    }
+    /** evaluate the trace (sum of diagonal elements) of the square matrix 
+     *
+     *  @code 
+     *  
+     *  const Gaudi::Matrix4x4    mtrx1 = ... ;
+     *  const Gaudi::SymMatrix3x3 mtrx2 = ... ;
+     * 
+     *  // evaluate the trace of mtrx1:
+     *  const double trace1 = Gaudi::Math::trace ( mtrx1 ) ;
+     *  // evaluate the trace of mtrx2:
+     *  const double trace2 = Gaudi::Math::trace ( mtrx2 ) ;
+     *
+     *  @endcode 
+     *
+     *  @param m (input) matrix to be studied 
+     *  @return trace (sum of diagonal elements) of the matrix 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-05-24
+     */
+    template <class B, class T, unsigned int D, class R>
+    inline T 
+    trace 
+    ( ROOT::Math::Expr<B,T,D,D,R>& m ) 
+    {
+      T result = m(0,0) ;
+      for ( unsigned int i = 1 ; i < D ; ++i ) { result += m(i,i) ; }
+      return result ;
+    }
     // ========================================================================
     /** find the minimal diagonal element 
      *  @param   m (input) matrix to be studied 
