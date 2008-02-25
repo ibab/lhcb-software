@@ -4,7 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
-!===================== RichRecBase v3r11 2008-02-20 ==========================
+!===================== RichRecBase v3r11 2008-02-25 ==========================
+! 2008-02-25 - Marco Cattaneo
+ - Add missing includes to IRichRayTraceCherenkovCone.h
+
 ! 2008-02-17 - Chris Jones
  - Replace StatusCodes with booleans in returned codes.
 

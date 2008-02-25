@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IRayTraceCherenkovCone
  *
- *  $Id: IRichRayTraceCherenkovCone.h,v 1.14 2008-02-15 14:32:24 cattanem Exp $
+ *  $Id: IRichRayTraceCherenkovCone.h,v 1.15 2008-02-25 10:46:10 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,8 +14,12 @@
 #ifndef RICHRECBASE_IRICHRAYTRACECHERENKOVCONE_H
 #define RICHRECBASE_IRICHRAYTRACECHERENKOVCONE_H 1
 
+// from std
+#include <vector>
+
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // Event model
 namespace LHCb
