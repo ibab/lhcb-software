@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 
 </PRE><H1><A NAME=v23r4>2008-02-25 LHCbSys v23r4</A></H1><PRE>
-This version uses Gaudi v19r7 and LCG_54. Fully compatible with DC06 data
+This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
 
 - Packages removed: MDF_DCAP - Functionality now in MDF_ROOT
                     MDF_GFAL - Functionality now in MDF_ROOT
