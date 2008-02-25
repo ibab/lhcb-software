@@ -6,7 +6,7 @@
 
 !======================== KernelSys v7r2 2008-02-20 ==========================
 ! 2008-02-20 - Marco Cattaneo
- - Use LHCbKernel v8r2, Relations v5r4, RichKernel v7r11
+ - Use LHCbKernel v8r2, LHCbMath v2r6, Relations v5r4, RichKernel v7r11
 
 !======================== KernelSys v7r1 2008-01-28 ==========================
 ! 2008-01-28 - Marco Cattaneo
