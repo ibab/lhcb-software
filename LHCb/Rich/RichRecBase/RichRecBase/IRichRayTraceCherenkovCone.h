@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IRayTraceCherenkovCone
  *
- *  $Id: IRichRayTraceCherenkovCone.h,v 1.15 2008-02-25 10:46:10 cattanem Exp $
+ *  $Id: IRichRayTraceCherenkovCone.h,v 1.16 2008-02-25 12:42:51 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -30,6 +30,7 @@ namespace LHCb
 
 // Kernel
 #include "Kernel/RichTraceMode.h"
+#include "Kernel/RichParticleIDType.h"
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichRayTraceCherenkovCone( "Rich::Rec::IRayTraceCherenkovCone", 1, 0 );
