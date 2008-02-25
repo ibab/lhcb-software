@@ -3,6 +3,7 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v6r11 2008-02-25 ====================
 ! 2008-02-23 - Vanya BELYAEV
 
  - Kernel/DVAlgorithm.h
@@ -41,6 +42,7 @@
   +----------------------+-----------------------------------+
 
 
+!======================== DaVinciKernel v6r10 2008-01-21 ====================
 ! 2008-01-21 - Patrick Koppenburg for Rudolf Oldemann
  - New method calcProjectedFlightDistance in IGeomDispCalculator
 
@@ -56,7 +58,6 @@
     3) there is warning message "intialize" methods if the registration 
        for context service  is disabled.
 
-!======================== DaVinciKernel v6r10 2008-01-16 ====================
 ! 2008-01-16 - Patrick Koppenburg
  - DVAlgorithm: Declare all tools as protected instead of private.
 
