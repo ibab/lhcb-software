@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IRayTraceCherenkovCone
  *
- *  $Id: IRichRayTraceCherenkovCone.h,v 1.16 2008-02-25 12:42:51 cattanem Exp $
+ *  $Id: IRichRayTraceCherenkovCone.h,v 1.17 2008-02-25 16:24:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,6 +20,7 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 #include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 // Event model
 namespace LHCb
@@ -31,6 +32,7 @@ namespace LHCb
 // Kernel
 #include "Kernel/RichTraceMode.h"
 #include "Kernel/RichParticleIDType.h"
+#include "Kernel/RichDetectorType.h"
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichRayTraceCherenkovCone( "Rich::Rec::IRayTraceCherenkovCone", 1, 0 );
