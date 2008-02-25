@@ -43,7 +43,7 @@ use TrackMatching       v2r17   Tf    # Eduardo Rodrigues
 use TfTools             v1r3    Tf    # Stephanie Hansmann-Menzemer
 
 # Primary Vertex Finder
-use PatPV               v3r1    Tr   # Mariusz Witek
+use PatPV               v3r2    Tr   # Mariusz Witek
 
 # Muon
 #use MuonUtils		v1r0	Muon  # N.N.

@@ -5,14 +5,14 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r4>2008-02-20 RecSys v5r4</A></H1><PRE>
+</PRE><H1><A NAME=v5r4>2008-02-22 RecSys v5r4</A></H1><PRE>
 This version uses Gaudi v19r7 and LHCb v23r4.
 
-- Packages modified: MuonTrackAlign v1r2, PatAlgorithms v3r4, PatVelo v3r4,
-    RichRecMCTools v2r16, RichRecMonitors v2r15, RichRecPhotonTools v1r2,
-    RichRecQC v2r17, RichRecTools v4r2, RichRecTrackTools v1r2,
-    TrackCheckers v3r4p1, TrackExtrapolators v2r17p1, TrackFitEvent v3r12,
-    TrackMCTools v2r17, TrackTools v3r4
+- Packages modified: MuonTrackAlign v1r2, PatAlgorithms v3r4, PatPV v3r2, 
+    PatVelo v3r4, RichRecMCTools v2r16, RichRecMonitors v2r15,
+    RichRecPhotonTools v1r2, RichRecQC v2r17, RichRecTools v4r2,
+    RichRecTrackTools v1r2, TrackCheckers v3r4p1, TrackExtrapolators v2r17p1,
+    TrackFitEvent v3r12, TrackMCTools v2r17, TrackTools v3r4
 
 - In MuonTrackAlign v1r2
   . Add a missing include following changes to TrackEvent
@@ -29,6 +29,9 @@ This version uses Gaudi v19r7 and LHCb v23r4.
   . Added job option which makes it possible to ignore hits used in a previous
     run of PatSeedingTool
 
+- In PatPV v3r2
+  . Added missing setTechnique(LHCb::RecVertex::Primary) in PatPV2D and PatPV3D
+
 - In PatVelo v3r4
   . Finished port of PatVeloGeneric and PatGenericFitter to Tf framework.
   . Added PatVeloFitLHCbIDs as a tool with the interface ITrackFitter to expose
@@ -38,15 +41,35 @@ This version uses Gaudi v19r7 and LHCb v23r4.
   . Retuned PatVeloGeneralTracking to pick up very long halo tracks better. 
 
 - In RichRecMCTools v2r16
+  . Update RichPhotonCreatorFromCheatedTrackDir to (optionally) also cheat 
+    assumed photon emission point
+  . Add missing implementations of buildPixel( const LHCb::RichSmartID & id )
+    to pixel creator tools
   . Adapt to changes in track creator base class.
 
 - In RichRecMonitors v2r15
   . Add more comparison histos to pixel position monitor
+  . Add additional plots to photon angle monitor to give CK theta resolution
+    in various bins of CK phi
 
 - In RichRecPhotonTools v1r2
   . Added new Photon reconstruction method using iterative raytracing
+  . Make sure CK phi values computed by iterative ray-tracing photon 
+    reconstruction tool lie in the range 0 to 2PI
+  . Set pointers to photon mirrors in CKRing and Raytracing photon 
+    reconstruction tools.
+  . Introduce base class for all geom. photon reconstruction tools that
+    contains all common functionality.
+  . Add checks for non-physical photons to iterative ray-tracing photon
+    reconstruction tool. Helps reject fake photons.
+
+- In RichRecQC v2r17
+  . Fix little bug where expect CK theta and CK resolution values where not
+    properly computed in the case where MC information was missing
+  . Fix bug where MC particle type was not correctly being found.
 
 - In RichRecTools v4r2
+  . Optimise RichRayTraceCherenkovCone by caching cos and sin phi values
   . Adapt to changes in RichGeomPhoton and RichRecPointOnRing
   . Rename RichTabulatedSignalDetectionEff RichNominalTabulatedSignalDetectionEff
   . Add new implementation of RichTabulatedSignalDetectionEff which instead
