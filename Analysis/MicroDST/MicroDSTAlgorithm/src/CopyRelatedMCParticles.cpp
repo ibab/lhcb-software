@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.11 2008-02-26 15:44:49 jpalac Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.12 2008-02-26 16:02:00 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -87,7 +87,7 @@ StatusCode CopyRelatedMCParticles::execute() {
 
   verbose() << "Make Linker for " << inputTESLocation()  << endmsg;
 
-  const std::string relationsLoc = inputTESLocation() + "/Relations";
+  const std::string relationsLoc = inputTESLocation() + "/RelatedMCParticles";
 
   verbose() << "Storing relations table at " << relationsLoc << endmsg;
 
