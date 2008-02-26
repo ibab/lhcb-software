@@ -22,19 +22,50 @@ LoginDialog::LoginDialog(PresenterMainFrame* gui, int width, int height,
   m_databaseMode(databaseMode),
   m_dbPasswdInput(NULL),
   m_dbPasswd(NULL),
-  m_histogramDB(NULL),
+  m_histogramDbSelector(NULL),
   m_dbUsername(NULL),
   m_loginButton(NULL),
   m_cancelButton(NULL)
 {
   if (LoggedOut == m_databaseMode) { m_databaseMode = UserSelected; }
   SetCleanup(kDeepCleanup);
-  Connect("CloseWindow()", "LoginDialog", this, "CloseWindow()");
-  DontCallClose();
+  Connect("CloseWindow()", "LoginDialog", this, "DontCallClose()");
 
   SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputSystemModal);
   build();
   MapWindow();
+// IsMapped()  
+//  MapSubwindows();
+//
+//   width  = GetDefaultWidth();
+//   height = GetDefaultHeight();
+//
+//   Resize(width, height);  
+
+//   CenterOnParent();
+//
+//   // make the message box non-resizable
+//
+//   SetWMSize(width, height);
+//   SetWMSizeHints(width, height, width, height, 0, 0);
+//
+//   // set names
+//
+//   SetWindowName(title);
+//   SetIconName(title);
+//   SetClassHints("MsgBox", "MsgBox");
+//
+//   SetMWMHints(kMWMDecorAll | kMWMDecorResizeH  | kMWMDecorMaximize |
+//                              kMWMDecorMinimize | kMWMDecorMenu,
+//               kMWMFuncAll  | kMWMFuncResize    | kMWMFuncMaximize |
+//                              kMWMFuncMinimize,
+//               kMWMInputModeless);
+//
+//
+//   MapRaised();
+//   fClient->WaitFor(this);
+  
+  
 }
 LoginDialog::~LoginDialog()
 {
@@ -48,17 +79,17 @@ void LoginDialog::build()
 
   SetWindowName("Login to OnlineHistDB");
 
-  m_histogramDB = new TGComboBox(this);
-  //m_histogramDB = new TGComboBox(this, m_input);
-  m_histogramDB->AddEntry(s_histdb, 0);
-  m_histogramDB->AddEntry(s_lbora01, 1);
-  m_histogramDB->AddEntry(s_oradev10, 2);
-  m_histogramDB->Select(0);
-  m_histogramDB->Resize(168, 22);
-  AddFrame(m_histogramDB,
+  m_histogramDbSelector = new TGComboBox(this);
+  //m_histogramDbSelector = new TGComboBox(this, m_input);
+  m_histogramDbSelector->AddEntry(s_histdb, 0);
+  m_histogramDbSelector->AddEntry(s_lbora01, 1);
+  m_histogramDbSelector->AddEntry(s_oradev10, 2);
+  m_histogramDbSelector->Select(0);
+  m_histogramDbSelector->Resize(168, 22);
+  AddFrame(m_histogramDbSelector,
            new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX,
                              2, 2, 2, 2));
-  m_histogramDB->Move(88, 16);
+  m_histogramDbSelector->Move(88, 16);
 
   m_dbUsername = new TGComboBox(this,-1, kHorizontalFrame | kSunkenFrame |
                                 kDoubleBorder | kOwnBackground);
@@ -78,8 +109,8 @@ void LoginDialog::build()
           new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX,
                             2, 2, 2, 2));
   m_dbUsername->MoveResize(88, 48, 168, 22);
-  m_dbUsername->Connect("Selected(Int_t)", "LoginDialog", this,
-    "defaultPw(Int_t)");
+  m_dbUsername->Connect("Selected(Int_t)", "LoginDialog",
+                        this, "defaultPw(Int_t)");
 
   m_loginButton = new TGTextButton(this,"&Login");
   m_loginButton->SetTextJustify(36);
@@ -172,7 +203,7 @@ void LoginDialog::login()
   if (m_mainFrame->connectToHistogramDB(m_dbPasswd->GetString(),
             dynamic_cast<TGTextLBEntry*>(m_dbUsername->GetSelectedEntry())->
                                          GetText()->GetString(),
-            dynamic_cast<TGTextLBEntry*>(m_histogramDB->GetSelectedEntry())->
+            dynamic_cast<TGTextLBEntry*>(m_histogramDbSelector->GetSelectedEntry())->
                                          GetText()->GetString())){
     CloseWindow();
   } else {
@@ -180,7 +211,6 @@ void LoginDialog::login()
   }
 }
 void LoginDialog::CloseWindow() {
-  // disabling is a beauty patch for crashes on double-click crash
   m_loginButton->SetState(kButtonDisabled);
   m_cancelButton->SetState(kButtonDisabled);
   DeleteWindow();

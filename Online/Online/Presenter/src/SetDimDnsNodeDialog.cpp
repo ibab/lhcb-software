@@ -22,14 +22,15 @@ SetDimDnsNodeDialog::SetDimDnsNodeDialog(PresenterMainFrame* gui, int width,
     m_msgBoxReturnCode(0)
 {
   SetCleanup(kDeepCleanup);
-  Connect("CloseWindow()", "SetDimDnsNodeDialog", this, "CloseWindow()");
-  DontCallClose();
+  Connect("CloseWindow()", "SetDimDnsNodeDialog", this, "DontCallClose()");
   SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputSystemModal);
   build();
   MapWindow();
+  //fClient->WaitFor(this);
 }
 SetDimDnsNodeDialog::~SetDimDnsNodeDialog()
 {
+  if (IsZombie()) return;
   Cleanup();
 }
 void SetDimDnsNodeDialog::build()
@@ -90,7 +91,7 @@ void SetDimDnsNodeDialog::ok()
   DeleteWindow();
 }
 void SetDimDnsNodeDialog::CloseWindow() {
-  // disabling is a beauty patch for crashes on double-click crash
+  // delete pending...
   m_okButton->SetState(kButtonDisabled);
   m_cancelButton->SetState(kButtonDisabled);
   DeleteWindow();

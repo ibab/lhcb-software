@@ -34,8 +34,7 @@ PageSaveDialog::PageSaveDialog(PresenterMainFrame* gui, int width,
     m_msgBoxReturnCode(0)
 {
   SetCleanup(kDeepCleanup);
-  Connect("CloseWindow()", "PageSaveDialog", this, "CloseWindow()");
-  DontCallClose();
+  Connect("CloseWindow()", "PageSaveDialog", this, "DontCallClose()");
   SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputSystemModal);
   build();
   MapWindow();
@@ -61,9 +60,8 @@ void PageSaveDialog::build()
   AddFrame(m_folderNameTextEntry,
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   m_folderNameTextEntry->MoveResize(16, 32, 456, 22);
-  m_folderNameTextEntry->Connect("ReturnPressed()",
-    "PageSaveDialog", this,
-    "setOkButton()");
+  m_folderNameTextEntry->Connect("ReturnPressed()", "PageSaveDialog",
+                                 this, "setOkButton()");
 
   // canvas widget
   TGCanvas *fCanvas694 = new TGCanvas(this, 456, 192);
@@ -77,8 +75,8 @@ void PageSaveDialog::build()
   m_mainFrame->listFromHistogramDB(m_pageFolderListTree,
       FoldersAndPages, s_withoutHistograms);
   m_pageFolderListTree->Connect(
-    "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PageSaveDialog", this,
-    "updateTextFields(TGListTreeItem*, Int_t, Int_t, Int_t)");
+    "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PageSaveDialog",
+    this, "updateTextFields(TGListTreeItem*, Int_t, Int_t, Int_t)");
 
   fViewPort695->AddFrame(m_pageFolderListTree);
   m_pageFolderListTree->SetLayoutManager(
@@ -104,8 +102,8 @@ void PageSaveDialog::build()
   AddFrame(m_pageNameTextEntry,
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   m_pageNameTextEntry->MoveResize(96, 256, 376, 22);
-  m_pageNameTextEntry->Connect("ReturnPressed()", "PageSaveDialog", this,
-                             "setOkButton()");
+  m_pageNameTextEntry->Connect("ReturnPressed()", "PageSaveDialog",
+                               this, "setOkButton()");
 
   m_okButton = new TGTextButton(this,"OK");
   m_okButton->SetTextJustify(36);
@@ -122,8 +120,8 @@ void PageSaveDialog::build()
   AddFrame(m_cancelButton,
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   m_cancelButton->MoveResize(376, 288, 80, 24);
-  m_cancelButton->Connect("Clicked()", "PageSaveDialog", this,
-                          "CloseWindow()");
+  m_cancelButton->Connect("Clicked()", "PageSaveDialog",
+                          this, "CloseWindow()");
 
   MapSubwindows();
   Resize(GetDefaultSize());
@@ -152,7 +150,7 @@ void PageSaveDialog::ok()
           ((*m_DbHistosOnPageIt)->hostingPad)->GetPadPar(xlow, ylow, xup, yup);
           OnlineHistogram* onlineHistogram = page->addHistogram((*m_DbHistosOnPageIt)->onlineHistogram(),
               (float)xlow , (float)ylow, (float)xup, (float)yup);
-          if (onlineHistogram) {
+          if (0 != onlineHistogram) {
             (*m_DbHistosOnPageIt)->setOnlineHistogram(onlineHistogram);
           }
         }
@@ -164,7 +162,8 @@ void PageSaveDialog::ok()
         m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
         while (m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end()) {
           if((*m_DbHistosOnPageIt)->onlineHistogram()->page() == page->name()) {
-// TODO: get rid of ->cd() because it stealthily diverts gPad
+// TODO: get rid of ->cd() because it stealthly diverts gPad
+// TODO: should rather use hostingPad internally: no args
 (*m_DbHistosOnPageIt)->hostingPad->cd();
             (*m_DbHistosOnPageIt)->saveTH1ToDB((*m_DbHistosOnPageIt)->hostingPad);
           }
@@ -172,22 +171,22 @@ void PageSaveDialog::ok()
         }
       }
       m_histogramDB->commit();
-    } catch (std::string Exc) {
+    } catch (std::string sqlException) {
       // TODO: add error logging backend - MsgStream?
-      m_mainFrame->setStatusBarText(Exc.c_str(), 0);
-      if (m_verbosity >= Verbose) { std::cout << Exc << std::endl; }
+      m_mainFrame->setStatusBarText(sqlException.c_str(), 0);
+      if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
 
       new TGMsgBox(fClient->GetRoot(), this, "Database Error",
           Form("Could save the page to OnlineHistDB:\n\n%s\n",
-            Exc.c_str()), kMBIconExclamation,
-          kMBOk, &m_msgBoxReturnCode);
+               sqlException.c_str()),
+          kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
     }
     CloseWindow();
   }
 }
 void PageSaveDialog::updateTextFields(TGListTreeItem* node, int, int, int)
 {
-  if (node) {
+  if (0 != node) {
     char path[1024];
 
     m_pageFolderListTree->GetPathnameFromItem(node, path);
@@ -227,7 +226,6 @@ void PageSaveDialog::setOkButton() {
   }
 }
 void PageSaveDialog::CloseWindow() {
-  // disabling is a beauty patch for crashes on double-click crash
   m_okButton->SetState(kButtonDisabled);
   m_cancelButton->SetState(kButtonDisabled);
   DeleteWindow();

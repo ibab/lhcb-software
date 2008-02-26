@@ -77,7 +77,8 @@ class PresenterMainFrame : public TGMainFrame
       STOP_COMMAND,
       AUTO_LAYOUT_COMMAND,
       OVERLAY_REFERENCE_HISTO_COMMAND,
-      SET_REFERENCE_HISTO_COMMAND,
+      PICK_REFERENCE_HISTO_COMMAND,
+      SAVE_AS_REFERENCE_HISTO_COMMAND,
       HELP_CONTENTS_COMMAND,
       HELP_ABOUT_COMMAND,
       UNDOCK_PAGE_COMMAND,
@@ -108,7 +109,7 @@ class PresenterMainFrame : public TGMainFrame
       M_LAST_DEMO
     };
 
-    struct BulkHistoOptions {
+    struct obsolete_BulkHistoOptions {
       TString m_genericRootDrawOption;
       TString m_1DRootDrawOption;
       TString m_2DRootDrawOption;
@@ -130,10 +131,12 @@ class PresenterMainFrame : public TGMainFrame
     void setPresenterMode(const pres::PresenterMode & presenterMode);
     void setDatabaseMode(const pres::DatabaseMode & databaseMode);
     void setVerbosity(const pres::MsgLevel & verbosity);
+    pres::MsgLevel verbosity() const { return m_verbosity; }
     void setDimDnsNode(const std::string & dimDnsNode) {
       m_dimDnsNode = dimDnsNode;
     };
     void setArchiveRoot(const std::string & archiveRoot);
+    Archive* archive() const { return m_archive; }    
     void setReferencePath(const std::string & referencePath);
     void setSavesetPath(const std::string & savesetPath);
 
@@ -163,7 +166,6 @@ class PresenterMainFrame : public TGMainFrame
                                     TGListTreeItem* node,
                                     std::vector<std::string>* localDatabaseIDS,
                                     std::vector<std::string>* histogramTypes);
-    void changeDimDnsNode();
     std::string histogramDBName();
 
     void setTreeNodeIcon(TGListTreeItem* node, const std::string & type);
@@ -200,7 +202,7 @@ class PresenterMainFrame : public TGMainFrame
     TRootEmbeddedCanvas* mainEmbCanvas;
     TCanvas*             mainCanvas;
 
-    BulkHistoOptions   bulkHistoOptions;
+    obsolete_BulkHistoOptions   bulkHistoOptions;
 
     void refreshHistoDBListTree();
     void refreshPagesDBListTree();
@@ -221,6 +223,7 @@ class PresenterMainFrame : public TGMainFrame
     void enablePageLoading();
 
     void deleteSelectedHistoFromCanvas();
+    DbRootHist* selectedDbRootHistogram();
 
     void clickedDimTreeItem(TGListTreeItem* node,
                             EMouseButton btn,
@@ -232,7 +235,7 @@ class PresenterMainFrame : public TGMainFrame
                              EMouseButton btn,
                              int x, int y);
 
-    TGPopupMenu* getDimContextMenu() const { return m_dimContextMenu; }
+    TGPopupMenu* dimContextMenu() const { return m_dimContextMenu; }
 
     void addDimSvcToHistoDB();
     void addDimSvcToPage();
@@ -252,7 +255,9 @@ class PresenterMainFrame : public TGMainFrame
                                 const std::string & pastDuration = "");
     void deleteSelectedPageFromDB();
     void deleteSelectedFolderFromDB();
-    void setReferenceHistogram();
+    void pickReferenceHistogram();
+    void saveSelectedHistogramAsReference();
+    void toggleReferenceOverlay();
     void setHistogramParametersFromDB(TH1* histogram,
                                       OnlineHistogram* onlineHistogram);
     void paintHist(DbRootHist* histogram);
@@ -283,6 +288,7 @@ class PresenterMainFrame : public TGMainFrame
     TTimer*           m_pageRefreshTimer;
     TTimer*           m_clockTimer;
     bool              m_clearedHistos;
+    bool              m_referencesOverlayed;
     OnlineHistDB*     m_histogramDB;
     OMAlib*           m_analysisLib;
     int               m_msgBoxReturnCode;
@@ -316,7 +322,8 @@ class PresenterMainFrame : public TGMainFrame
     TGPopupMenu*  m_editMenu;
     TGHotString*  m_editText;
       TGHotString*  m_editHistogramPropertiesText;
-      TGHotString*  m_editSetReferenceHistogramText;
+      TGHotString*  m_editPickReferenceHistogramText;
+      TGHotString*  m_editSaveSelectedHistogramAsReferenceText;
       TGHotString*  m_editAutoLayoutText;
       TGHotString*  m_editPagePropertiesText;
       TGHotString*  m_editRemoveHistoText;
@@ -325,7 +332,7 @@ class PresenterMainFrame : public TGMainFrame
     TGHotString*  m_viewText;
       TGHotString*  m_viewStartRefreshText;
       TGHotString*  m_viewStopRefreshText;
-      TGHotString*  m_viewOverlayReferenceHistogramText;
+      TGHotString*  m_viewToggleReferenceOverlayText;
       TGHotString*  m_viewInspectHistoText;
       TGHotString*  m_viewInspectPageText;
       TGHotString*  m_viewClearHistosText;
@@ -360,7 +367,7 @@ class PresenterMainFrame : public TGMainFrame
     TGPictureButton*  m_autoCanvasLayoutButton;
     TGPictureButton*  m_deleteHistoFromCanvasButton;
     TGPictureButton*  m_overlayReferenceHistoButton;
-    TGPictureButton*  m_setReferenceHistoButton;
+    TGPictureButton*  m_pickReferenceHistoButton;
     TGSplitButton*    m_historyIntervalQuickButton;
     TGPopupMenu*      m_presetTimePopupMenu;
 

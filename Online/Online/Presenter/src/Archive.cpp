@@ -3,6 +3,7 @@
 
 #include "Archive.h"
 #include "DbRootHist.h"
+#include "PresenterMainFrame.h"
 
 #include <TFile.h>
 #include <TH1.h>
@@ -12,20 +13,25 @@
 #include <TPRegexp.h>
 #include <TObjString.h>
 #include <TObjArray.h>
+#include <TSystem.h>
+#include <TGMsgBox.h>
 
 using namespace pres;
 using namespace std;
 using namespace boost::filesystem;
 using namespace boost::posix_time;
 
-Archive::Archive(const std::string & archiveRoot,
+Archive::Archive(PresenterMainFrame* gui,
+                 const std::string & archiveRoot,
                  const std::string & savesetPath,
                  const std::string & referencePath) :
+  m_mainFrame(gui),
   m_archiveRoot(path(archiveRoot)),
   m_savesetPath(path(savesetPath)),
   m_referencePath(path(referencePath)),
   m_verbosity(Silent),
-  m_analysisLib(NULL)
+  m_analysisLib(NULL),
+  m_msgBoxReturnCode(0)
 {
 }
 Archive::~Archive()
@@ -55,6 +61,10 @@ void Archive::refreshDirectory(const DirectoryType & directoryType)
     default:
       break;
   }
+}
+std::string Archive::referenceFilePath(DbRootHist* histogram)
+{
+  return string("");
 }
 void Archive::fillHistogram(DbRootHist* histogram,
                             const std::string & timePoint,
@@ -173,7 +183,6 @@ std::vector<path> Archive::listDirectory(const path & dirPath)
   }
   return foundRootFiles;
 }
-
 path Archive::findFile(const path & dirPath, const string & fileName)
 {
   path foundFile("");
@@ -243,6 +252,54 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
   }
   return foundRootFiles;
 }
+TH1* Archive::referenceHistogram(const string & referenceDbEntry)
+{
+  return 0;
+}
+void Archive::saveAsReferenceHistogram(DbRootHist* histogram)
+{
+  path referenceFilePath(m_referencePath.file_string() + s_slash +
+                         histogram->taskName());
+    bool out;
+    try {
+      create_directories(referenceFilePath);
+    } catch (const filesystem_error & error) {
+      std::cout << "exception: "
+                << lookup_error_code(error.system_error())
+                << std::endl;
+    if (m_verbosity >= Verbose) {}
+    }
+
+    std::stringstream refFile;
+    refFile << referenceFilePath.file_string() << s_slash
+            << histogram->dataType() << s_savesetToken
+            << histogram->startRun() << s_rootFileExtension;
+
+    TH1* m_reference = (TH1*) (histogram->rootHistogram)->Clone(histogram->onlineHistogram()->hname().c_str());
+
+    const char* file =  refFile.str().c_str();
+    TFile* f = new TFile(file,"UPDATE");
+    if (f) {
+      if (false == f->IsZombie() ) {
+        // keeps old versions.. use Write("",TObject::kOverwrite) to
+        // overwrite them
+        m_reference->Write();
+        f->Write();
+        f->Close();
+        out = true;
+//        histogram->onlineHistogram()->getTask()->setReference(refFile.str());
+      }
+      delete f;
+      f = NULL;
+    }
+    m_reference->SetDirectory(0);
+
+    if (!out) {
+      std::cout << "ERROR in DbRootHist::setReference : could not save reference into file "
+                << refFile.str() << std::endl;
+    }
+}
+//void deleteReferenceHistogram(TH1* reference, int revision){}
 void Archive::closeRootFiles()
 {
 //  std::vector<path>::const_iterator foundRootFilesIt;

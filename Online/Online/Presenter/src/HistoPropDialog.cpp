@@ -11,14 +11,14 @@
 #include <TCanvas.h>
 #include <TColor.h>
 
-#include "TGListBox.h"
-#include "TGButtonGroup.h"
-#include "TGColorSelect.h"
-#include "TGedPatternSelect.h"
-#include "TGTextEdit.h"
-#include "TGButton.h"
-#include "TGFSComboBox.h"
-#include "TGLabel.h"
+#include <TGListBox.h>
+#include <TGButtonGroup.h>
+#include <TGColorSelect.h>
+#include <TGedPatternSelect.h>
+#include <TGTextEdit.h>
+#include <TGButton.h>
+#include <TGFSComboBox.h>
+#include <TGLabel.h>
 
 #include "HistoPropDialog.h"
 #include "PresenterMainFrame.h"
@@ -35,8 +35,7 @@ HistoPropDialog::HistoPropDialog(PresenterMainFrame* gui, int width,
       m_msgBoxReturnCode(0)
 {
   SetCleanup(kDeepCleanup);
-  Connect("CloseWindow()", "HistoPropDialog", this, "CloseWindow()");
-  DontCallClose();
+  Connect("CloseWindow()", "HistoPropDialog", this, "DontCallClose()");
   SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputSystemModal);
   build();
   MapWindow();
@@ -73,7 +72,7 @@ void HistoPropDialog::ok()
   m_mainFrame->bulkHistoOptions.m_lineColour =
     (int) TColor::GetColor(m_lineColourSelector->GetColor());
 
-  // m_bulkHistoOptions = new BulkHistoOptions;
+  // m_bulkHistoOptions = new obsolete_BulkHistoOptions;
   // return m_bulkHistoOptions;
   CloseWindow();
 }
@@ -272,7 +271,6 @@ void HistoPropDialog::build()
   m_1DRootDrawOptionComboBox->AddEntry("L", 11);
   m_1DRootDrawOptionComboBox->AddEntry("P", 12);
   m_1DRootDrawOptionComboBox->AddEntry("P0", 13);
-
   m_1DRootDrawOptionComboBox->AddEntry("PE", 14);
   m_1DRootDrawOptionComboBox->AddEntry("P0E", 15);
   m_1DRootDrawOptionComboBox->AddEntry("PE0", 16);
@@ -295,7 +293,7 @@ void HistoPropDialog::build()
   m_2DRootDrawOptionComboBox = new TGComboBox(fGroupFrame651,"COLZ",
     kHorizontalFrame | kSunkenFrame | kDoubleBorder | kOwnBackground);
 
-  m_2DRootDrawOptionComboBox->AddEntry("", 1);
+  m_2DRootDrawOptionComboBox->AddEntry("", 0);
   m_2DRootDrawOptionComboBox->AddEntry("ARR", 18);
   m_2DRootDrawOptionComboBox->AddEntry("BOX", 1);
   m_2DRootDrawOptionComboBox->AddEntry("BOX1", 2);
@@ -372,6 +370,5 @@ void HistoPropDialog::build()
   Resize(658, 434);
 }
 void HistoPropDialog::CloseWindow() {
-  // disabling is a beauty patch for crashes on double-click crash
   DeleteWindow();
 }

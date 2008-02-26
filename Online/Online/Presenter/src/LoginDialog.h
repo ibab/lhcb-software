@@ -29,7 +29,7 @@ class LoginDialog : public TGTransientFrame
     pres::DatabaseMode m_databaseMode;
     TGTextEntry*  m_dbPasswdInput;
     TGTextBuffer* m_dbPasswd;
-    TGComboBox*   m_histogramDB;
+    TGComboBox*   m_histogramDbSelector;
     TGComboBox*   m_dbUsername;
     char*         m_input;
     TGTextButton* m_loginButton;

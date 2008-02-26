@@ -11,12 +11,10 @@ use OMAlib        v*  Online
 use ROOT          v*  LCG_Interfaces
 use Python        v*  LCG_Interfaces
 #use GaudiOnline   v*    Online
-use  Boost       v1r34*    LCG_Interfaces
+use  Boost        v*  LCG_Interfaces
 
 # Go for the latest and greatest ROOT
 macro ROOT_config_version "5.18.00"
-macro Boost_config_version "1.34.1"
-macro Boost_file_version "1_34_1"
 
 #path_remove LD_LIBRARY_PATH "$(ROOTSYS)/lib"
 #macro     ROOT_home     "/tmp/root"
@@ -27,7 +25,7 @@ macro Boost_file_version "1_34_1"
 #set cintBootstrap_cintflags " -I$(Boost_home)/include/boost-$(Boost_file_version) -p "
 document rootcint cintBootstrap cintBootstrap.h
 
-macro_append includes " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src" WIN32 " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src -Iz:cern.ch\sw\lcg/external/Boost/1.34.1/win32_vc71 -IE:\soft\lcg/external/Boost/1.34.1/win32_vc71 -IP:\lib\lcg\external\Boost\1.34.1\win32_vc71"
+macro_append includes " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src" WIN32 " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src"
 
 macro_append ROOT_linkopts " -lThread -lGui -lGraf3d -lGed" \
   WIN32 " libThread.lib libGui.lib libGpad.lib libHist.lib libGraf.lib \
@@ -45,7 +43,8 @@ macro_append Boost_linkopts " -lboost_filesystem-gcc34 -lboost_date_time-gcc34 -
 
 application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp \
                                      DbRootHist.cpp HistogramIdentifier.cpp \
-                                     LoginDialog.cpp HistoPropDialog.cpp Archive.cpp\
+                                     ReferencePicker.cpp LoginDialog.cpp \
+                                     HistoPropDialog.cpp Archive.cpp\
                                      PageSaveDialog.cpp SetDimDnsNodeDialog.cpp \
                                      PresenterMainFrame.cpp presenter.cpp "
 macro_append presenter_dependencies " cintBootstrap "
