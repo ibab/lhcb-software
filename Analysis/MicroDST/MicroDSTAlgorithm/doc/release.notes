@@ -1,7 +1,20 @@
-! $Id: release.notes,v 1.49 2008-02-26 15:16:52 jpalac Exp $
+! $Id: release.notes,v 1.50 2008-02-26 15:49:15 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2008-02-26 - Juan PALACIOS
+ - src/CopyRelatedMCParticles.h
+  . Remove LinkerWithKey<LHCb::MCParticle, LHCb::Particle>* data member.
+    Use local automatic instance instead.
+  . include Relations/Relation2D.h and add 
+    LHCb::Relation2D<LHCb::Particle, LHCb::MCParticle>* data member.
+ - src/CopyRelatedMCParticles.cpp
+  . Use Relation2D<LHCb::Particle, LHCb::MCParticle> to store 
+    Particle->MCParticle relations in TES and MicroDST while problems with 
+    Linkers get ironed out.
+ - src/CopyParticle2PVLink.cpp
+  . Store an empty relations table when no table is found on the TES.
 
 ! 2008-02-26 - Juan PALACIOS
  - options/microDST.opts
