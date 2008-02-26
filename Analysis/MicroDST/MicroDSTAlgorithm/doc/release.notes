@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.47 2008-02-15 11:40:11 jpalac Exp $
+! $Id: release.notes,v 1.48 2008-02-26 14:51:50 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2008-02-26 - Juan PALACIOS
+ - options/microDST.opts
+  . Change DSTSream.ItemList for DSTStream.OptItemList to avoid job termination
+    when items to be written not present on the TES. This can happen as the
+    MicroDST code can run inside a selection sequence and therefore only write
+    to the TES for selected events.
 
 ! 2008-02-15 - Juan PALACIOS
  - src/CopyRelatedMCParticles.h
