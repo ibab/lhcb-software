@@ -1,4 +1,4 @@
-// $Id: CopyParticle2PVLink.cpp,v 1.7 2007-12-11 17:37:12 jpalac Exp $
+// $Id: CopyParticle2PVLink.cpp,v 1.8 2008-02-26 15:47:45 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -75,8 +75,10 @@ StatusCode CopyParticle2PVLink::execute() {
     }
     return StatusCode::FAILURE;
   } else {
-    verbose() << "Found no table at " << inputTESLocation() << endmsg;
-    return StatusCode::FAILURE;
+    verbose() << "Found no table at " << inputTESLocation() << ". storing empty table"<< endmsg;
+    Particle2Vertex::Table* cloneTable = new Particle2Vertex::Table();
+    put( cloneTable, fullOutputTESLocation() );
+    return StatusCode::SUCCESS;
   }
 
 }
