@@ -1,16 +1,8 @@
-// $Id: microDST.opt,v 1.5 2008-02-26 14:51:14 jpalac Exp $
-// ====================================================
-//                  LIBRARIES
-// ====================================================
-ApplicationMgr.DLLs    += { "MicroDST"};
-
-
+// $Id: microDST.opt,v 1.6 2008-02-26 15:16:35 jpalac Exp $
 // ====================================================
 //                  DICTIONARIES          
 // ====================================================
 //#include "$STDOPTS/SimDicts.opts"
-PoolDbCacheSvc.DLLs    += { "PhysEventDict"};
-
 
 // ====================================================
 //                  OUTPUT STREAM
@@ -19,7 +11,7 @@ ApplicationMgr.OutStream   += { "DSTStream"};
 
 DSTStream.RequireAlgs      = { "microDST"};
 DSTStream.OptItemList         = {"/Event/microDST#99",
-                              "/Event/Link/microDST#99"};
+	                         "/Event/Link/microDST#99"};
 
 
 DSTStream.Output           = "DATAFILE='microDST.dst' TYP='POOL_ROOTTREE' OPT='REC'";
