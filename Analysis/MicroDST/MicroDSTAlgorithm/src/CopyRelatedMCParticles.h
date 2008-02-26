@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.h,v 1.8 2008-02-15 11:36:46 jpalac Exp $
+// $Id: CopyRelatedMCParticles.h,v 1.9 2008-02-26 15:41:01 jpalac Exp $
 #ifndef COPYRELATEDMCPARTICLES_H 
 #define COPYRELATEDMCPARTICLES_H 1
 
@@ -9,6 +9,7 @@
 // from Gaudi
 #include "Event/Particle.h"
 // from LHCb
+#include "Relations/Relation2D.h"
 #include "Kernel/Particle2MCLinker.h"
 class MCParticle;
 class MCVertex;
@@ -82,7 +83,9 @@ private:
   typedef LHCb::MCVertex::Container MCVertices;
   typedef MicroDST::BasicItemCloner<LHCb::MCVertex> MCVertexItemCloner;
 
-  typedef  LinkerWithKey<LHCb::MCParticle, LHCb::Particle> MCLinker;
+  typedef LinkerWithKey<LHCb::MCParticle, LHCb::Particle> MCLinker;
+
+  typedef LHCb::Relation2D<LHCb::Particle, LHCb::MCParticle> MCRelations;
 
 private:
 
@@ -92,7 +95,8 @@ private:
 
   ICloneMCParticle* m_cloner;
   
-  MCLinker* m_linker;
+  MCRelations* m_relations;
+  
   
 };
 #endif // COPYRELATEDMCPARTICLES_H
