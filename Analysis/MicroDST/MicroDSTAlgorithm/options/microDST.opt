@@ -18,7 +18,7 @@ PoolDbCacheSvc.DLLs    += { "PhysEventDict"};
 ApplicationMgr.OutStream   += { "DSTStream"};
 
 DSTStream.RequireAlgs      = { "microDST"};
-DSTStream.ItemList         = {"/Event/microDST#99",
+DSTStream.OptItemList         = {"/Event/microDST#99",
                               "/Event/Link/microDST#99"};
 
 
