@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.48 2008-02-26 14:51:50 jpalac Exp $
+! $Id: release.notes,v 1.49 2008-02-26 15:16:52 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel
 !============================================================
 
 ! 2008-02-26 - Juan PALACIOS
+ - options/microDST.opts
+  . Remove all .Dlls +=, now taken care of by reflex.rootmap
  - options/microDST.opts
   . Change DSTSream.ItemList for DSTStream.OptItemList to avoid job termination
     when items to be written not present on the TES. This can happen as the
