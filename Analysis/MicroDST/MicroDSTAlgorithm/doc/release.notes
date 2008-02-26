@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.50 2008-02-26 15:49:15 jpalac Exp $
+! $Id: release.notes,v 1.51 2008-02-26 16:02:24 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel
 !============================================================
@@ -13,6 +13,8 @@
   . Use Relation2D<LHCb::Particle, LHCb::MCParticle> to store 
     Particle->MCParticle relations in TES and MicroDST while problems with 
     Linkers get ironed out.
+  . Set TES location of Particle->MCParticle relations table to
+    InputLocation + "/RelatedMCParticles"
  - src/CopyParticle2PVLink.cpp
   . Store an empty relations table when no table is found on the TES.
 
