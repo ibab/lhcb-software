@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.10 2008-02-15 11:37:48 jpalac Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.11 2008-02-26 15:44:49 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -7,7 +7,7 @@
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
-
+#include "Linker/LinkedTo.h"
 // local
 #include "CopyRelatedMCParticles.h"
 
@@ -28,8 +28,7 @@ CopyRelatedMCParticles::CopyRelatedMCParticles( const std::string& name,
                                                 ISvcLocator* pSvcLocator )
   : 
   MicroDSTAlgorithm ( name , pSvcLocator ),
-  m_cloner(0),
-  m_linker(0)
+  m_cloner(0)
 {
 }
 
@@ -82,22 +81,23 @@ StatusCode CopyRelatedMCParticles::execute() {
   const LHCb::Particle::Container* particles = 
     get<LHCb::Particle::Container>( inputTESLocation() );
 
+  m_relations = new MCRelations();
+
   verbose() << "Found " << particles->size() << " particles" << endmsg;
 
-  verbose() << "Make Linker for " << fullOutputTESLocation()  << endmsg;
+  verbose() << "Make Linker for " << inputTESLocation()  << endmsg;
 
-  m_linker = new MCLinker(evtSvc(),
-                          msgSvc(),
-                          fullOutputTESLocation());
+  const std::string relationsLoc = inputTESLocation() + "/Relations";
+
+  verbose() << "Storing relations table at " << relationsLoc << endmsg;
+
+  put(m_relations, relationsLoc);
 
   verbose() << "loopOnParticles" << endmsg;
 
-  StatusCode sc = loopOnParticles( particles->begin(),
-                                   particles->end()    );
-  
-  setFilterPassed(true);
+  StatusCode sc = loopOnParticles( particles->begin(), particles->end() );
 
-  verbose() << "Going to store to TES" << endmsg;
+  setFilterPassed(true);  
 
   return StatusCode::SUCCESS;
 
@@ -128,23 +128,36 @@ StatusCode
 CopyRelatedMCParticles::storeAssociatedMCParticles(const LHCb::Particle* particle)
 {
 
-  // Get a vector of associated particles
-
   Particle2MCLinker::ToRange assocMCPs;
+
+  const std::string location = MicroDST::objectLocation(particle->parent() );
 
   StatusCode sc = associatedMCParticles(particle, assocMCPs);
 
   debug() << "Going to clone " << assocMCPs.size() 
-          << " associated MCParticles" << endmsg;
+          << " associated MCParticles to particle from " 
+          << location << endmsg;
+
+//   debug() << "Make linker" << endmsg;
+
+//   MCLinker linker(evtSvc(), msgSvc(), location );
+
+//   debug() << "Linking "<<  assocMCPs.size()
+//           <<" MCParticles to Particle with location "<< location << endmsg;
 
   for (Particle2MCLinker::ToRange::iterator iMCP = assocMCPs.begin();
        iMCP != assocMCPs.end();
        ++iMCP) {
-    debug() << "CLONING MCParticle!" << endmsg;
+    verbose() << "CLONING MCParticle!" << endmsg;
     const LHCb::MCParticle* clonedMCParticle = (*m_cloner)(iMCP->to());
-    m_linker->link(particle, clonedMCParticle);
-    debug() << "CLONED MCParticle!" << endmsg;
-    //
+    verbose() << "CLONED MCParticle\n " << *clonedMCParticle << endmsg;
+    verbose() << "Link particle from "<< location 
+              <<" to MCParticle from " 
+              << MicroDST::objectLocation( clonedMCParticle->parent() ) 
+              << endmsg;
+//     linker.link(particle, clonedMCParticle);
+    verbose() << "Linked cloned MCParticle" << endmsg;
+    m_relations->relate(particle, clonedMCParticle);
   }
 
   return sc;
