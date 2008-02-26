@@ -1,4 +1,4 @@
-// $Id: CopyParticles.cpp,v 1.11 2007-12-11 17:37:12 jpalac Exp $
+// $Id: CopyParticles.cpp,v 1.12 2008-02-26 15:27:54 jpalac Exp $
 // Include files 
 
 // STL
@@ -85,22 +85,8 @@ StatusCode CopyParticles::execute() {
   if (!clones) return StatusCode::FAILURE;
   
   verbose() << "Found " << clones->size() << " particles" << endmsg;
-  
-//   for (Particles::const_iterator iPart = particles->begin();
-//        iPart != particles->end();
-//        ++iPart) {
-//     verbose() << "Storing particle" << endmsg;
-//     //    LHCb::Particle* clone = storeParticle( *iPart);
-//     LHCb::Particle* clone = (*m_particleCloner)( *iPart);
-//     if (clone) {
-//       verbose() << "Cloned and stored particle!" << endmsg;
-//     } else {
-//       verbose() << "Particle cloning failed!" << endmsg;
-//     }
-//   }
 
   return StatusCode::SUCCESS;
-  
 
 }
 //=============================================================================
