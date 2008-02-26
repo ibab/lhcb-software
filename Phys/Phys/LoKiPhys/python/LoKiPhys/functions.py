@@ -136,18 +136,26 @@ M        = LoKi.Particles.Mass           ()
 MM       = LoKi.Particles.MeasuredMass   () 
 ## @see LoKi::Cuts::MASS 
 MASS     = LoKi.Particles.InvariantMass     
+## @see LoKi::Cuts::M1
+M1       = MASS(1)
 ## @see LoKi::Cuts::M12  
 M12      = MASS(1,2)
 ## @see LoKi::Cuts::M13  
 M13      = MASS(1,3)
 ## @see LoKi::Cuts::M14  
 M14      = MASS(1,4)
+## @see LoKi::Cuts::M2  
+M2       = MASS(2)
 ## @see LoKi::Cuts::M23  
 M23      = MASS(2,3)
 ## @see LoKi::Cuts::M24  
 M124     = MASS(2,4)
+## @see LoKi::Cuts::M3  
+M3       = MASS(3)
 ## @see LoKi::Cuts::M34  
 M34      = MASS(3,4)
+## @see LoKi::Cuts::M4  
+M4       = MASS(4)
 ## @see LoKi::Cuts::DMASS 
 DMASS    = LoKi.Particles.DeltaMass         
 ## @see LoKi::Cuts::ADMASS 

@@ -1,12 +1,18 @@
-! $Id: release.notes,v 1.45 2008-02-22 08:24:13 ibelyaev Exp $ 
+! $Id: release.notes,v 1.46 2008-02-26 11:48:08 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhys v7r1 2008-02-26 ==========================
 
-!========================== LoKiPhys v7r1 2008-02-22 ==========================
+! 2008-02-26 - Vanya BELYAEV
+
+ - python/LoKiPhys/functions.py
+
+    import the symbols M1,M2,M3 and M4 from C++ 
+
 
 ! 2008-02-22 - Vanya BELYAEV
  - dict/LoKiPhysDict.h
