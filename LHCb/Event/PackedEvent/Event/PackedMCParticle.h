@@ -1,9 +1,10 @@
-// $Id: PackedMCParticle.h,v 1.3 2007-02-28 18:27:09 marcocle Exp $
+// $Id: PackedMCParticle.h,v 1.4 2008-02-27 14:36:18 jonrob Exp $
 #ifndef EVENT_PACKEDMCPARTICLE_H 
 #define EVENT_PACKEDMCPARTICLE_H 1
 
 // Include files
 #include "GaudiKernel/DataObject.h"
+#include <string>
 #include <vector>
 
 /** @class PackedMCParticles PackedMCParticle.h Event/PackedMCParticle.h

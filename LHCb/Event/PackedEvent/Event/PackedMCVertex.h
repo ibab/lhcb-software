@@ -1,9 +1,10 @@
-// $Id: PackedMCVertex.h,v 1.4 2007-02-28 18:27:09 marcocle Exp $
+// $Id: PackedMCVertex.h,v 1.5 2008-02-27 14:36:18 jonrob Exp $
 #ifndef EVENT_PACKEDMCVERTEX_H 
 #define EVENT_PACKEDMCVERTEX_H 1
 
 // Include files
 #include "GaudiKernel/DataObject.h"
+#include <string>
 #include <vector>
 
 /** @class PackedMCVertices PackedMCVertex.h Event/PackedMCVertex.h
