@@ -5,7 +5,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloCluster.xml,v 1.3 2006-06-27 16:20:53 odescham Exp $
+  * $Id: CaloCluster.xml,v 1.4 2008-02-27 10:42:30 jonrob Exp $
   *****************************************************************************
   * XML-description of CaloCluster class                                      *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -25,6 +25,7 @@
  *  collection of connected and tagged cells.
  *
  *</desc>
+<import name = "vector" std="TRUE"       />
 <import name = "Event/CaloClusterEntry"  />
 <import name = "Event/CaloPosition"      />
 

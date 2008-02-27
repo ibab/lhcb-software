@@ -4,7 +4,7 @@
 <package name="RecEvent">
 
 <!-- **************************************************************************
-  * $Id: RichSummaryRadSegment.xml,v 1.4 2007-11-29 09:31:36 cattanem Exp $
+  * $Id: RichSummaryRadSegment.xml,v 1.5 2008-02-27 10:42:30 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSummaryRadSegment class                            *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -18,6 +18,7 @@
 
         &StlVector;
 
+        <import name = "vector" std="TRUE"         />
         <import name = "Kernel/RichParticleIDType" />
         <import name = "Kernel/RichRadiatorType"   />
         <import name = "Event/RichSummaryPhoton"   />

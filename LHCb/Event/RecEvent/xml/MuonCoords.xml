@@ -9,6 +9,7 @@
       <base 
 	name="KeyedObject&lt;LHCb::MuonTileID&gt;"/>
       <import name="Kernel/MuonTileID"/>
+      <import name="vector" std="TRUE"/>
       &KeyedContainer;
       <attribute 
 	type="bool" 

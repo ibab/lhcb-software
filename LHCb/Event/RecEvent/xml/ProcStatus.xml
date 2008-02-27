@@ -11,6 +11,8 @@
       location = "Rec/Status" 
       id     = "5001" >
 
+      <import name="vector" std="TRUE"/>
+
       <base name = "DataObject" />
       &DataObject;
       <attribute 
