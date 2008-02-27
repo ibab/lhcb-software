@@ -1,9 +1,13 @@
-// $Id: StateZTraj.h,v 1.4 2008-02-07 16:13:25 cattanem Exp $
+// $Id: StateZTraj.h,v 1.5 2008-02-27 14:29:24 jonrob Exp $
 #ifndef TRACKFITEVENT_STATEZTRAJ_H
 #define TRACKFITEVENT_STATEZTRAJ_H 1
 
 // Include files
 // -------------
+
+// STL
+#include <cmath>
+#include <memory>
 
 // from LHCbKernel
 #include "Kernel/DifTraj.h"

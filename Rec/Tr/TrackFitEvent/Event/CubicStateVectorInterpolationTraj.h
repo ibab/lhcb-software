@@ -1,8 +1,10 @@
-// $Id: CubicStateVectorInterpolationTraj.h,v 1.3 2007-12-10 11:58:35 wouter Exp $
+// $Id: CubicStateVectorInterpolationTraj.h,v 1.4 2008-02-27 14:29:24 jonrob Exp $
 #ifndef LHCbKernel_CubicStateVectorInterpolationTraj_H
 #define LHCbKernel_CubicStateVectorInterpolationTraj_H 1
 
 // Includes
+#include <memory>
+#include <cmath>
 #include "Event/State.h"
 #include "Event/StateVector.h"
 #include "Event/ZTrajectory.h"

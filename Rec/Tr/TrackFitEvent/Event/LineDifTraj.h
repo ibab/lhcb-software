@@ -1,8 +1,10 @@
-// $Id: LineDifTraj.h,v 1.2 2007-10-16 12:16:31 wouter Exp $
+// $Id: LineDifTraj.h,v 1.3 2008-02-27 14:29:24 jonrob Exp $
 #ifndef LineDifTraj_H
 #define LineDifTraj_H 1
 
 // Include files
+#include <memory>
+#include <ostream>
 #include "Kernel/DifTraj.h"
 
 namespace LHCb

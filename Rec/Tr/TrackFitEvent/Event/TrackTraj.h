@@ -1,6 +1,9 @@
 #ifndef TrackFitEvent_TrackTraj_h
 #define TrackFitEvent_TrackTraj_h
 
+#include <memory>
+#include <vector>
+#include <algorithm>
 #include "Kernel/Trajectory.h"
 #include "Event/CubicStateInterpolationTraj.h"
 #include "Event/Track.h"

@@ -1,8 +1,9 @@
-// $Id: ZTrajectory.h,v 1.2 2007-12-10 08:20:46 wouter Exp $
+// $Id: ZTrajectory.h,v 1.3 2008-02-27 14:29:24 jonrob Exp $
 #ifndef EVENT_ZTRAJECTORY_H 
 #define EVENT_ZTRAJECTORY_H 1
 
 // Include files
+#include <vector>
 #include "Kernel/Trajectory.h"
 #include "Event/StateVector.h"
 #include "Event/State.h"

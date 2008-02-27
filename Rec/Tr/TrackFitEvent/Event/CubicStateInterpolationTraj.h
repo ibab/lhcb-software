@@ -1,7 +1,8 @@
-// $Id: CubicStateInterpolationTraj.h,v 1.1 2007-10-16 12:17:35 wouter Exp $
+// $Id: CubicStateInterpolationTraj.h,v 1.2 2008-02-27 14:29:23 jonrob Exp $
 #ifndef EVENT_CubicStateInterpolationTraj_H 
 #define EVENT_CubicStateInterpolationTraj_H 1
 
+#include <memory>
 #include "Event/State.h"
 #include "Event/CubicStateVectorInterpolationTraj.h"
 
