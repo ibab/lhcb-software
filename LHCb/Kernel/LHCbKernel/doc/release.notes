@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-02-27 - Chris Jones
+ - Force inclusion of #include<vector> in RichSmartID.h
+
 !===================== LHCbKernel v8r2 2008-02-15 ========================
 ! 2008-02-07 - Chris Jones
  - Add new method to Rich::Side enum, to convert side to text more precisely 
