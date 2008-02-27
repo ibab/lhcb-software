@@ -14,6 +14,8 @@
      info."
      location="Raw/Velo/InternalClusters">
       <import name="Kernel/VeloChannelID"/>
+      <import name="vector"  std="TRUE"/>
+      <import name="utility" std="TRUE"/>
       <template name="KeyedObjectDict" t1="LHCb::VeloChannelID"/>
       <base name="KeyedObject&lt;LHCb::VeloChannelID&gt;"/>
         &KeyedContainer;

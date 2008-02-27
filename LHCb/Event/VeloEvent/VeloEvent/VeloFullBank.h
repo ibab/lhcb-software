@@ -1,8 +1,11 @@
-// $Id: VeloFullBank.h,v 1.3 2007-09-18 09:10:46 cattanem Exp $
+// $Id: VeloFullBank.h,v 1.4 2008-02-27 14:43:18 jonrob Exp $
 #ifndef VELOFULLBANK_H 
 #define VELOFULLBANK_H 1
 
 // Include files
+#include <vector>
+#include <string>
+#include <ostream>
 #include "GaudiKernel/KeyedObject.h"
 #include "GaudiKernel/KeyedContainer.h"
 #include "Tell1Kernel/VeloDecodeConf.h"

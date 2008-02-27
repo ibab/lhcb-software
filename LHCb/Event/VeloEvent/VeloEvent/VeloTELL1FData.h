@@ -7,6 +7,9 @@
 #include "GaudiKernel/boost_allocator.h"
 #include "GaudiKernel/SerializeSTL.h"
 #include <ostream>
+#include <string>
+#include <utility>
+#include <vector>
 
 // Forward declarations
 

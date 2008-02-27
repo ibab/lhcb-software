@@ -1,9 +1,11 @@
-// $Id: VeloErrorBank.h,v 1.3 2007-09-18 09:10:46 cattanem Exp $
+// $Id: VeloErrorBank.h,v 1.4 2008-02-27 14:43:18 jonrob Exp $
 #ifndef VELOERRORBANK_H 
 #define VELOERRORBANK_H 1
 
 #include <stdexcept>
 #include <exception>
+#include <string>
+#include <ostream>
 
 // Include files
 #include "GaudiKernel/KeyedObject.h"

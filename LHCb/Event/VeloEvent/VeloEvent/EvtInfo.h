@@ -1,8 +1,9 @@
-// $Id: EvtInfo.h,v 1.3 2007-09-18 09:10:46 cattanem Exp $
+// $Id: EvtInfo.h,v 1.4 2008-02-27 14:43:18 jonrob Exp $
 #ifndef EVTINFO_H 
 #define EVTINFO_H 1
 
 // Include files
+#include <string>
 #include "GaudiKernel/KeyedObject.h"
 #include "GaudiKernel/KeyedContainer.h"
 #include "Tell1Kernel/VeloDecodeCore.h"

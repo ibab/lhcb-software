@@ -1,8 +1,10 @@
-// $Id: VeloProcessInfo.h,v 1.5 2007-12-10 00:28:19 szumlat Exp $
+// $Id: VeloProcessInfo.h,v 1.6 2008-02-27 14:43:18 jonrob Exp $
 #ifndef EVENT_VELOPROCESSINFO_H 
 #define EVENT_VELOPROCESSINFO_H 1
 
 // Include files
+#include <string>
+#include <ostream>
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectVector.h"
 #include "Tell1Kernel/VeloDecodeConf.h"

@@ -18,7 +18,8 @@
    on DAQ stream for all channels. Updated VeloFullDigit object contains 
    info. about ADC sample througout all stages of FPGA processing"
 	   location="Raw/Velo/FullDigits">
-  <import name="Kernel/VeloChannelID"/>
+  <import name="Kernel/VeloChannelID"/> 
+  <import name="string" std="TRUE"/>
   <template name="KeyedObjectDict" t1="LHCb::VeloChannelID"/>
   <base 
    name="KeyedObject&lt;LHCb::VeloChannelID&gt;"
