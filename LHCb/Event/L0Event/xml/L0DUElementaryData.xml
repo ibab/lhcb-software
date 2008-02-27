@@ -17,8 +17,10 @@
       <location name = "Default"   place = "Trig/L0/L0DUData"  />
       <location name = "Emulated"  place = "Emu/L0/L0DUData"  />
 
-      
+      <import name="string" std="TRUE"/>
+      <import name="vector" std="TRUE"/>
       <import name="sstream" std="TRUE"/>
+      <import name="map" std="TRUE"/>
 
       <typedef def    = "Map" 
         desc   = "std::map Container "

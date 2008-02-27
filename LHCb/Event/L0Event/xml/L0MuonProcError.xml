@@ -11,6 +11,8 @@
       <base name='KeyedObject&lt;LHCb::MuonTileID&gt;'/>
       &KeyedObject;
       <import name="Kernel/MuonTileID"/>
+      <import name="map" std="TRUE"/>
+      <import name="string" std="TRUE"/>
       <location name="Default"  place="Trig/L0/MuonProcError"/>
 
       <constructor

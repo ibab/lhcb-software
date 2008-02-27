@@ -14,6 +14,7 @@
       <base     name = "KeyedObject&lt;int&gt;"/>
       &KeyedObject;
       <import name="Kernel/CaloCellID"/>
+      <import name="string" std="TRUE"/>
       <location name="Ecal" place="Trig/L0/EcalRaw"/>
       <location name="Hcal" place="Trig/L0/HcalRaw"/>
       <location name="EcalPin" place="Trig/L0/EcalPin"/>

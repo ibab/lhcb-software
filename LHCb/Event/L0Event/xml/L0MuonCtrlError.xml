@@ -10,6 +10,10 @@
       <desc> *  representing the errors detected on a controller board.</desc>
       <base name='KeyedObject&lt;int&gt;'/>
       &KeyedObject;
+      <import name="string" std="TRUE"/>
+      <import name="map" std="TRUE"/>
+      <import name="utility" std="TRUE"/>
+
       <location name="Default"  place="Trig/L0/MuonCtrlError"/>
 
       <constructor

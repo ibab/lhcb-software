@@ -10,6 +10,7 @@
       <desc> *  Contains info on the L0Muon trigger.</desc>
       <base name='DataObject'/>
       &DataObject;
+      <import name="string" std="TRUE"/>
       <location name="Default"  place="Trig/L0/MuonInfo"/>
 
       <constructor

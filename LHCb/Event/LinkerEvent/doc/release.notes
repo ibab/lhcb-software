@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2008-02-27 - Chris Jones
+ - Add missing STL includes
+
 !======================= LinkerEvent v3r2 2007-09-04 =========================
 ! 2007-08-28 - Olivier Callot
  - Insert keys in keyRange using explicitly KEY( int value)

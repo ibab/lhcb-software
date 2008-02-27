@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.86 2008-02-20 07:30:23 cattanem Exp $
+! $Id: release.notes,v 1.87 2008-02-27 14:58:15 jonrob Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+! 2008-02-27 - Chris Jones
+ - Add missing STL includes
 
 !======================== L0Event v16r8 2008-02-20 ===========================
 ! 2008-02-19 - Julien Cogan

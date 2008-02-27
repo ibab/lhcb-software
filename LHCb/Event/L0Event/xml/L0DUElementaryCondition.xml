@@ -17,7 +17,8 @@
       <location name = "Emulated"  place = "Emu/L0/L0DUConditions"  />
 
       <import name="Event/L0DUElementaryData"/>
-
+      <import name="map" std="TRUE"/>
+      <import name="string" std="TRUE"/>
 
       <typedef def    = "Map" 
         desc   = "std::map Container "

@@ -12,6 +12,7 @@
       <import name="Kernel/CaloCellID"/>
       <import name="GaudiKernel/Point3DTypes.h"/>
       <import name="GaudiKernel/MsgStream"/>
+      <import name="string" std="TRUE"/>
 
       <location name="Default" place="Trig/L0/Calo"/>
       <location name="Full"    place="Trig/L0/FullCalo"/>

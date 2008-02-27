@@ -13,6 +13,7 @@
       <base     name = "KeyedObject&lt;int&gt;"/>
       &KeyedObject;
       <import name="Kernel/CaloCellID"/>
+      <import name="string" std="TRUE"/>
       <constructor 
 	argList  = "CaloCellID id" 
 	desc     = "Usual constructor, specifies the CellID" 

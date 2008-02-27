@@ -14,8 +14,10 @@
       <location name = "Emulated"  place = "Emu/L0/L0DUReport"  />
 
       <import name="sstream" std="TRUE"/>
+      <import name="map" std="TRUE"/>
+      <import name="utility" std="TRUE"/>
+      <import name="string" std="TRUE"/>
       <import name="Event/L0DUConfig"/>
-
 
       <copyconstructor/>
 

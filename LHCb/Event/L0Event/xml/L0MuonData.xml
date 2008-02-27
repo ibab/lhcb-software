@@ -11,6 +11,8 @@
       <base name='KeyedObject&lt;LHCb::MuonTileID&gt;'/>
       &KeyedObject;
       <import name="Kernel/MuonTileID"/>
+      <import name="string" std="TRUE"/>
+      <import name="vector" std="TRUE"/>
       <location name="Default"  place="Trig/L0/MuonData"/>
       <constructor 
         argList="LHCb::MuonTileID pu, std::vector&lt;LHCb::MuonTileID&gt; ols, std::vector&lt;LHCb::MuonTileID&gt; neighs" 

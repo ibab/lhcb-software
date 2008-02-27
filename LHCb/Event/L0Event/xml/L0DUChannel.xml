@@ -27,7 +27,8 @@
       <location name = "Emulated"  place = "Emu/L0/L0DUChannels"  />
 
 
-
+      <import name="string" std="TRUE"/>
+      <import name="map" std="TRUE"/>
       <import name="Event/L0DUElementaryCondition"/>
       <import name="Event/L0DUCounter"/>
 

@@ -11,7 +11,7 @@
 
       <base name="KeyedObject&lt;int&gt;"/>
        &KeyedObject;
-
+      <import name="string" std="TRUE"/>
 
       <location name = "Calo"      place = "Trig/L0/L0DUCaloData"    />
       <location name = "Muon"      place = "Trig/L0/L0DUMuonData"    />

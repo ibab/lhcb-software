@@ -8,6 +8,8 @@
       <base name='KeyedObject&lt;int&gt;'/>
       &KeyedObject;
       <import name="Kernel/MuonTileID"/>
+      <import name="string" std="TRUE"/>
+      <import name="vector" std="TRUE"/>
       <location name="Default"  place="Trig/L0/MuonCtrl"/>
       <location name="Ctrl"     place="Trig/L0/MuonCtrl"/>
       <location name="CtrlBCSU" place="Trig/L0/MuonCtrlBCSU"/>

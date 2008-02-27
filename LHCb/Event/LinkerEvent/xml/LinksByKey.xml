@@ -54,7 +54,9 @@ m_weight    = weight;
       <base   name = "DataObject"/>
       &DataObject;
       <import name = "Event/LinkReference"/>
-     <import name = "GaudiKernel/IDataProviderSvc" />
+      <import name = "GaudiKernel/IDataProviderSvc" />
+      <import name = "vector"  std="TRUE"/>
+      <import name = "utility" std="TRUE"/>
 
       <constructor 
         desc      = "Default constructor, reserve space" >
