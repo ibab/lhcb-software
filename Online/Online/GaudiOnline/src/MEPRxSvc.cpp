@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.60 2008-02-19 13:33:12 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.61 2008-02-27 19:53:12 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -353,6 +353,7 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid) {
     m_brx          = 0;
     m_pf           = hdr->m_nEvt;
     m_age          = MEPRxSys::ms2k();
+    m_odinMEP      = NULL;
   }
   int len = MEPRxSys::recv_msg(sockfd, (u_int8_t*)e->data + m_brx + 4, 
 			       MAX_R_PACKET, 0);
@@ -787,9 +788,13 @@ int MEPRxSvc::getSrcID(u_int32_t addr)  {
 
 void MEPRxSvc::ageEvents() {
     unsigned long ms = MEPRxSys::ms2k();
-    for (RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w) {
-	if ((ms - ((*w)->m_age)) > m_maxEventAge) forceEvent(w);
-    }
+ ageloop:
+    for (RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w) 
+      if ((ms - ((*w)->m_age)) > m_maxEventAge) { 
+	forceEvent(w);
+	freeRx(); // only if not in separate thread
+	goto ageloop;
+      }    
 }
 
 void MEPRxSvc::publishCounters()
