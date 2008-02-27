@@ -1,4 +1,4 @@
-// $Id: DefaultVeloHitManager.h,v 1.10 2008-01-20 15:39:43 krinnert Exp $
+// $Id: DefaultVeloHitManager.h,v 1.11 2008-02-27 15:41:37 krinnert Exp $
 #ifndef INCLUDE_TF_DEFAULTVELOHITMANAGER_H
 #define INCLUDE_TF_DEFAULTVELOHITMANAGER_H 1
 
@@ -147,7 +147,7 @@ namespace Tf {
   void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::prepareClusterRanges()
   {
     if ( m_fromClusters ) { // use full velo clusters as input
-      LHCb::VeloClusters* clusters = GaudiTool::get<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
+      LHCb::VeloClusters* clusters = GaudiTool::get<LHCb::VeloClusters>(m_clusterLocation);
 
       // invalidate all ranges
       std::fill(m_clusterRanges.begin(), m_clusterRanges.end(),ClusterRange(clusters->end(),clusters->end()));
@@ -175,7 +175,7 @@ namespace Tf {
       }
     } else { // the lite cluster case
       LHCb::VeloLiteCluster::FastContainer * liteClusters =
-        GaudiTool::get<LHCb::VeloLiteCluster::FastContainer>(LHCb::VeloLiteClusterLocation::Default);
+        GaudiTool::get<LHCb::VeloLiteCluster::FastContainer>(m_liteClusterLocation);
 
       // invalidate all ranges
       std::fill(m_liteClusterRanges.begin(), m_liteClusterRanges.end(),LiteClusterRange(liteClusters->end(),liteClusters->end()));
