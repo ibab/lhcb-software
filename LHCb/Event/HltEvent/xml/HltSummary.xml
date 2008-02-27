@@ -10,6 +10,8 @@
       author      = 'Jose Hernando'
       desc = "Enumerations for the Hlt Summary classes">
 
+      <import name="string" std="TRUE"/>
+
       <enum
         name   = 'HltDecisionType'
         desc   = 'Trigger type decision: muon, dimuon ,etc'
@@ -203,6 +205,7 @@
 
       <import name='GaudiKernel/VectorMap' />
       <import name='Event/Particle' />
+      <import name="vector" std="TRUE"/>
 
       <attribute
         type = 'bitfield'
@@ -317,6 +320,7 @@ return ok;
 
       <location name="Default"   place="Hlt/Summary"/>
  
+      <import name="vector" std="TRUE"/>
       <base name='DataObject' />
       &DataObject;
 
