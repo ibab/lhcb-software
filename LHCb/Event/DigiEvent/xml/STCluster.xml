@@ -15,6 +15,10 @@
      author="Matthew Needham"
      desc="A cluster as produced by the TELL1 with full ADC information."
      serializers="FALSE">
+
+     <import name="vector"  std="TRUE"/> 
+     <import name="utility" std="TRUE"/> 
+
      <location name="TTClusters"   place="Raw/TT/Clusters"   />
      <location name="ITClusters"   place="Raw/IT/Clusters"   />
 
