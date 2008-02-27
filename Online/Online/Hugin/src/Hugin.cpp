@@ -78,6 +78,25 @@ void HuginRPC::rpcHandler()
   string sdtyp(desttyp);
   std::vector<string> result;
   msk = 0;
+  int idev;
+  try
+  {
+    idev  =db->PyGetDeviceID_devicename(ssrc);
+    if (idev == -1)
+    {
+      printf("Source device does not exist...\n");
+      tells[0] = 0;
+      setData(tells,1);
+      return;
+    }
+  }
+  catch(...)
+  {
+    printf("Source device does not exist...\n");
+    tells[0] = 0;
+    setData(tells,1);
+    return;
+  }
   try
   {
     result = db->PyGetDetailedConnBetweenDeviceDevType(ssrc,sdtyp,1,1,1);
