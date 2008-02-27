@@ -1,12 +1,12 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.89 2008-02-27 10:42:30 jonrob Exp $
+! $Id: release.notes,v 1.90 2008-02-27 12:32:44 jonrob Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
 ! 2008-02-27 - Chris Jones
- - Force inclusion of '#include <vector>' where missing in G.O.D. classes
+ - Force inclusion of missing STL includes in G.O.D. classes
 
 !========================= RecEvent v2r15 2008-02-20 =========================
 ! 2008-02-15 - Patrick Koppenburg

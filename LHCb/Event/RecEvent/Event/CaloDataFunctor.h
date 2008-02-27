@@ -1,4 +1,4 @@
-// $Id: CaloDataFunctor.h,v 1.6 2007-02-06 12:58:16 cattanem Exp $
+// $Id: CaloDataFunctor.h,v 1.7 2008-02-27 12:32:44 jonrob Exp $
 // ============================================================================
 #ifndef EVENT_CALODATAFUNCTOR_H 
 #define EVENT_CALODATAFUNCTOR_H 1
@@ -34,7 +34,7 @@ class SmartRef  ;     // GaudiKernel
 
 /** @namespace CaloDataFunctor CaloDataFunctor.h Event/CaloDataFunctor.h
  *    
- *  collection of some  useful functors, which coudl be used for 
+ *  collection of some  useful functors, which could be used for 
  *  manipulation with CaloDigit, MCCaloDigit, MCCaloHit, 
  *  MCCaloSensPlaneHit, CaloCluster and CaloParticle objects 
  *
