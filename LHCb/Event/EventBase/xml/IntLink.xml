@@ -12,6 +12,8 @@
       <base name="DataObject"/> 
       &DataObject;
 
+      <import name="map" std="TRUE"/>
+
       <attribute
 	type      = "std::map&lt;int,int&gt;"
 	name      = "link"

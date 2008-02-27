@@ -11,6 +11,7 @@
       desc     = "Individual tagger decision on B flavour"  >
 
       &StlVector;
+      <import name="vector" std="TRUE"/>
 
      <enum
         name = "TaggerType"

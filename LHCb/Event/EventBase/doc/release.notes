@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.16 2007-06-08 14:26:26 cattanem Exp $
+! $Id: release.notes,v 1.17 2008-02-27 13:20:53 jonrob Exp $
 ! Package     : Event/EventBase
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model
 !---------------------------------------------------------------------------
+
+! 2008-02-27 - Chris Jones
+ - Add missing STL includes
 
 !========================== EventBase v2r4 2007-06-07 ======================
 ! 2007-06-07 - Marco Cattaneo

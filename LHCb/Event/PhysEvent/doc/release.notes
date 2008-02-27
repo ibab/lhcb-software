@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.137 2008-02-24 19:38:34 ibelyaev Exp $
+! $Id: release.notes,v 1.138 2008-02-27 13:25:15 jonrob Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+! 2008-02-27 - Chris Jones
+ - Add missing STL includes
 
 !======================== PhysEvent v11r6 2008-02-24 ========================
 
