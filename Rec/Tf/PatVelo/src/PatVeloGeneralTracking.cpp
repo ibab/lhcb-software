@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.9 2008-02-14 16:58:49 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.10 2008-02-27 14:37:37 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -29,6 +29,8 @@ Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
 
   declareProperty( "OutputTracksLocation" , 
       m_outputTracksLocation = LHCb::TrackLocation::Velo );
+  declareProperty( "RHitManagerName", m_rHitManagerName="PatVeloRHitManager");
+  declareProperty( "PhiHitManagerName", m_phiHitManagerName="PatVeloPhiHitManager");
   declareProperty( "PointErrorScale"  ,   m_ErrScale         = 1.1       );
   declareProperty( "PointErrorMin"    ,   m_ErrMin           = 
       0.250*Gaudi::Units::mm);
@@ -69,8 +71,8 @@ StatusCode Tf::PatVeloGeneralTracking::initialize() {
 
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
-  m_rHitManager   = tool<PatVeloRHitManager>  ( "Tf::PatVeloRHitManager" );
-  m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager" );
+  m_rHitManager   = tool<PatVeloRHitManager>  ( "Tf::PatVeloRHitManager", m_rHitManagerName );
+  m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager", m_phiHitManagerName );
 
   std::vector< DeVeloRType* >::const_iterator iRSens;
   for ( iRSens = m_velo->rSensorsBegin() ; iRSens != m_velo->rSensorsEnd() ;

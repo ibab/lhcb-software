@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneric.cpp,v 1.1 2008-02-13 16:10:19 krinnert Exp $
+// $Id: PatVeloGeneric.cpp,v 1.2 2008-02-27 14:37:37 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -42,6 +42,8 @@ namespace Tf {
       declareProperty( "ACDC",        m_acdc = false );  
       declareProperty( "DoNotRefit",  m_doNotRefit = false );  
       declareProperty( "Output",      m_outputTracksLocation = LHCb::TrackLocation::Velo);
+      declareProperty( "RHitManagerName", m_rHitManagerName="PatVeloRHitManager" );
+      declareProperty( "PhiHitManagerName", m_phiHitManagerName="PatVeloPhiHitManager" );
 
       declareProperty( "ErrorX2",  m_errorX2  = 40.0 );
       declareProperty( "ErrorY2",  m_errorY2  = 40.0 );
@@ -74,8 +76,8 @@ namespace Tf {
 
     debug() << "==> Initialize" << endmsg;
 
-    m_rHitManager   = tool<PatVeloRHitManager>  ( "Tf::PatVeloRHitManager" );
-    m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager" );
+    m_rHitManager   = tool<PatVeloRHitManager>  ( "Tf::PatVeloRHitManager", m_rHitManagerName );
+    m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager", m_phiHitManagerName );
 
     m_velo = getDet<DeVelo>( DeVeloLocation::Default );
     m_nEvt = 0;

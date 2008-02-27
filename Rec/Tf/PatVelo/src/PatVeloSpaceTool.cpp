@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.9 2008-01-20 15:46:37 krinnert Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.10 2008-02-27 14:37:38 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -49,6 +49,8 @@ namespace Tf {
       declareProperty( "MaxChiSqDof"     , m_chiSqDofMax      = 4.0       );
       declareProperty( "CleanOverlaps"   , m_cleanOverlaps    = true      );
       declareProperty( "NMissedFirst"    , m_NMissedFirst     = 4         );
+      declareProperty( "RHitManagerName" , m_rHitManagerName  = "PatVeloRHitManager" );
+      declareProperty( "PhiHitManagerName" , m_phiHitManagerName  = "PatVeloPhiHitManager" );
 
     }
   //=============================================================================
@@ -60,8 +62,8 @@ namespace Tf {
     StatusCode sc = GaudiTool::initialize();
     if(!sc) return sc;
 
-    m_rHitManager   = tool<PatVeloRHitManager>  ( "Tf::PatVeloRHitManager" );
-    m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager" );
+    m_rHitManager   = tool<PatVeloRHitManager>  ( "Tf::PatVeloRHitManager", m_rHitManagerName );
+    m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager", m_phiHitManagerName );
 
     //== Get detector element
     m_velo = getDet<DeVelo>( DeVeloLocation::Default );

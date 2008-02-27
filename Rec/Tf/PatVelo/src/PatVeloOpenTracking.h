@@ -1,4 +1,4 @@
-// $Id: PatVeloOpenTracking.h,v 1.3 2007-11-22 16:42:00 dhcroft Exp $
+// $Id: PatVeloOpenTracking.h,v 1.4 2008-02-27 14:37:37 krinnert Exp $
 #ifndef PATVELOOPENTRACKING_H
 #define PATVELOOPENTRACKING_H 1
 
@@ -94,5 +94,8 @@ private:
   double m_maxSlope;
   double m_maxChi2;
   int    m_maxMissedR;
+
+  std::string m_rHitManagerName; ///< name of the R hit manager instance
+  std::string m_phiHitManagerName; ///< name of the Phi hit manager instance
 };
 #endif // PATVELOOPENTRACKING_H

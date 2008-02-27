@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTracking.h,v 1.4 2007-10-08 17:06:05 dhcroft Exp $
+// $Id: PatVeloSpaceTracking.h,v 1.5 2008-02-27 14:37:38 krinnert Exp $
 #ifndef TF_PATVELOSPACETRACKING_H 
 #define TF_PATVELOSPACETRACKING_H 1
 
@@ -45,6 +45,7 @@ namespace Tf {
 
       std::string m_inputTracksLocation;
       std::string m_outputTracksLocation;
+      std::string m_spaceToolName;
       std::string m_trackSelectorName; /// name of the tool to accept tracks
 
       ITrackSelector* m_trackSelector; /// pointer to the tool to select tracks

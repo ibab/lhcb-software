@@ -1,6 +1,8 @@
-// $Id: PatVeloSpaceTool.h,v 1.3 2007-10-08 17:06:05 dhcroft Exp $
+// $Id: PatVeloSpaceTool.h,v 1.4 2008-02-27 14:37:38 krinnert Exp $
 #ifndef TF_PATVELOSPACETOOL_H 
 #define TF_PATVELOSPACETOOL_H 1
+
+#include <string>
 
 // Include files
 // from Gaudi
@@ -90,6 +92,10 @@ namespace Tf {
       /// Number of stations from the end of the RZ track in which to allow 
       /// a phi list to start [Note: Also counts station beyond RZ track]
       int m_NMissedFirst;
+      /// Name of the R hit manager instance
+      std::string m_rHitManagerName;
+      /// Name of the Phi hit manager instance
+      std::string m_phiHitManagerName;
 
       double           m_chiSqDofMax;  ///< Maximum chiSq/ndf for an offline track
       /// MS error between two Velo points

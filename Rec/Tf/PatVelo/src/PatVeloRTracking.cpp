@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.cpp,v 1.3 2008-02-14 16:58:49 dhcroft Exp $
+// $Id: PatVeloRTracking.cpp,v 1.4 2008-02-27 14:37:37 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -43,10 +43,13 @@ namespace Tf {
       declareProperty( "highChargeFract" , m_highChargeFract  = .5        );
       declareProperty( "OutputTracksName", m_outputLocation   =
           LHCb::TrackLocation::RZVelo     );
+      declareProperty( "HitManagerName", m_hitManagerName     =
+          "DefaultVeloRHitManager"     );
       declareProperty( "MergeTracks"     , m_mergeTracks      = false     );
       declareProperty( "NCommonToMerge"  , m_nCommonToMerge   = 2         );
       declareProperty( "AdjacentSectors" , m_adjacentSectors  = false     );
       declareProperty( "OnlyForward"     , m_onlyForward      = false     );
+      declareProperty( "OnlyBackward"    , m_onlyBackward     = false     );
     }
   //=============================================================================
   // Destructor
@@ -66,7 +69,7 @@ namespace Tf {
 
     if(m_isDebug){debug() << "==> Initialize" << endmsg;}
 
-    m_hitManager = tool<DefaultVeloRHitManager>( "Tf::DefaultVeloRHitManager" );
+    m_hitManager = tool<DefaultVeloRHitManager>( "Tf::DefaultVeloRHitManager", m_hitManagerName );
 
     //== Get detector element
     m_velo = getDet<DeVelo>( DeVeloLocation::Default );
@@ -85,6 +88,8 @@ namespace Tf {
       << "AdjacentSectors      = " << (m_adjacentSectors ? "True" : "False")
       << endreq
       << "OnlyForward          = " << (m_onlyForward     ? "True" : "False")
+      << endreq
+      << "OnlyBackward          = " << (m_onlyBackward     ? "True" : "False")
       << endreq
       << "======================================"                << endreq;
 
@@ -131,109 +136,111 @@ namespace Tf {
     std::vector<PatRZTrack> rzTracks; ///< working space to store tracks
     rzTracks.reserve( 400 );
 
-    //== Loop on velo halfs
-    for (unsigned int half=0; half<2; ++half) {
+    if(!m_onlyBackward){
+      //== Loop on velo halfs
+      for (unsigned int half=0; half<2; ++half) {
 
-      //== Loop on R stations in reverse z order
-      //== stop when second station is at z < 0
-      StationReverseIterator stationReverseIter = m_hitManager->stationsHalfReverseBegin(half); 
-      StationReverseIterator stationsReverseEnd = m_hitManager->stationsHalfReverseEnd(half); 
-      for ( ; stationReverseIter != stationsReverseEnd; ++stationReverseIter ) {
+        //== Loop on R stations in reverse z order
+        //== stop when second station is at z < 0
+        StationReverseIterator stationReverseIter = m_hitManager->stationsHalfReverseBegin(half); 
+        StationReverseIterator stationsReverseEnd = m_hitManager->stationsHalfReverseEnd(half); 
+        for ( ; stationReverseIter != stationsReverseEnd; ++stationReverseIter ) {
 
-        //== Loop on zones
-        for ( unsigned int zone = 0 ; zone<4; ++zone ) {
+          //== Loop on zones
+          for ( unsigned int zone = 0 ; zone<4; ++zone ) {
 
-          StationReverseIterator station0 = stationReverseIter;
+            StationReverseIterator station0 = stationReverseIter;
 
-          // nothing to see here, please move along 
-          if ((*station0)->empty(zone)) continue; 
+            // nothing to see here, please move along 
+            if ((*station0)->empty(zone)) continue; 
 
-          // code to make "walk" down Velo stop
-          // at last R sensor is before z=0 +ve -> 0
-          if ( (*station0)->z() < m_zSensorSearchMin ) break;
+            // code to make "walk" down Velo stop
+            // at last R sensor is before z=0 +ve -> 0
+            if ( (*station0)->z() < m_zSensorSearchMin ) break;
 
-          // are we at the end already?
-          StationReverseIterator station1 = station0; ++station1;
-          if ( station1 == stationsReverseEnd ) continue;
+            // are we at the end already?
+            StationReverseIterator station1 = station0; ++station1;
+            if ( station1 == stationsReverseEnd ) continue;
 
-          // are we at the end already?
-          StationReverseIterator station2 = station1; ++station2;
-          if ( station2 == stationsReverseEnd ) continue;
+            // are we at the end already?
+            StationReverseIterator station2 = station1; ++station2;
+            if ( station2 == stationsReverseEnd ) continue;
 
-          makeForwardSectorTriplets(station0, zone, station1, zone, station2, zone,
-              stationsReverseEnd, zone, rzTracks);
+            makeForwardSectorTriplets(station0, zone, station1, zone, station2, zone,
+                stationsReverseEnd, zone, rzTracks);
 
-          // geometrically only see tracks crossing from outer to inner zones 
-          // when VELO is open, not at all when VELO is closed
-          if(m_adjacentSectors && (zone == 1 || zone == 2)){
-            int outerZone = 0;
-            if( zone == 2 ){
-              outerZone = 3;
+            // geometrically only see tracks crossing from outer to inner zones 
+            // when VELO is open, not at all when VELO is closed
+            if(m_adjacentSectors && (zone == 1 || zone == 2)){
+              int outerZone = 0;
+              if( zone == 2 ){
+                outerZone = 3;
+              }
+
+              StationReverseIterator station0Outer = stationReverseIter;
+
+              // are we at the end already?
+              StationReverseIterator station1Outer = station0Outer; ++station1Outer;
+              if ( station1Outer == stationsReverseEnd ) continue;
+
+              // are we at the end already?
+              StationReverseIterator station2Outer = station1Outer; ++station2Outer;
+              if ( station2Outer == stationsReverseEnd ) continue;
+
+              // 1st of two combinations In-In-out and In-Out-Out
+              makeForwardSectorTriplets( station0, zone, station1, zone, station2Outer, outerZone,
+                  stationsReverseEnd, zone, rzTracks);
+              // 2nd of two combinations In-In-out and In-Out-Out
+              makeForwardSectorTriplets( station0, zone, station1Outer, outerZone, station2Outer, outerZone,
+                  stationsReverseEnd, zone, rzTracks);
             }
-
-            StationReverseIterator station0Outer = stationReverseIter;
-
-            // are we at the end already?
-            StationReverseIterator station1Outer = station0Outer; ++station1Outer;
-            if ( station1Outer == stationsReverseEnd ) continue;
-
-            // are we at the end already?
-            StationReverseIterator station2Outer = station1Outer; ++station2Outer;
-            if ( station2Outer == stationsReverseEnd ) continue;
-
-            // 1st of two combinations In-In-out and In-Out-Out
-            makeForwardSectorTriplets( station0, zone, station1, zone, station2Outer, outerZone,
-                stationsReverseEnd, zone, rzTracks);
-            // 2nd of two combinations In-In-out and In-Out-Out
-            makeForwardSectorTriplets( station0, zone, station1Outer, outerZone, station2Outer, outerZone,
-                stationsReverseEnd, zone, rzTracks);
-          }
-        } // zone loop
-      } // station loop
+          } // zone loop
+        } // station loop
+      }
     }
     //==========================================================================
     // Backwards tracks
     //==========================================================================
     if(!m_onlyForward){
       if(m_isDebug){debug() << "========= Backwards tracks ==========" << endreq;}
-      
+
       //== Loop on velo halfs
       for (unsigned int half=0; half<2; ++half) {
-	
-	//== Loop on R stations in reverse z order
-	//== stop when second station is at z < 0
-	StationIterator stationIter = m_hitManager->stationsHalfBegin(half); 
-	StationIterator stationsEnd = m_hitManager->stationsHalfEnd(half); 
-	for ( ; stationIter != stationsEnd; ++stationIter ) {
-	  
-	  //== Loop on zones
-	  for ( unsigned int zone = 0 ; zone<4; ++zone ) {
-	    
-	    //== stop when second sensor is at z > 0
 
-	    StationIterator station0 = stationIter;
-	    
-	    //== nothing to see here move along
-	    if ( (*station0)->empty(zone) ) continue;
-	    
-	    StationIterator station1 = station0; ++station1;
-	    if ( station1 == stationsEnd ) continue;
-	    
-	    // code to make "walk"  Velo stop at z=0 -ve -> 0
-	    if ( (*station1)->z() > m_zSensorSearchMax ) break;
-	    if ( (*station1)->empty(zone) ) continue;
-	    
-	    StationIterator station2 = station1; ++station2;
-	    if ( station2 == stationsEnd ) continue;
-	    if ( (*station2)->empty(zone) ) continue;
-	    
-	    seedInSectorTriplet(false,rzTracks, 0, zone,
-				station0, zone,
-				station1, zone,
-				station2, zone);
-	    
-	  } // zone loop
-	} // station loop
+        //== Loop on R stations in reverse z order
+        //== stop when second station is at z < 0
+        StationIterator stationIter = m_hitManager->stationsHalfBegin(half); 
+        StationIterator stationsEnd = m_hitManager->stationsHalfEnd(half); 
+        for ( ; stationIter != stationsEnd; ++stationIter ) {
+
+          //== Loop on zones
+          for ( unsigned int zone = 0 ; zone<4; ++zone ) {
+
+            //== stop when second sensor is at z > 0
+
+            StationIterator station0 = stationIter;
+
+            //== nothing to see here move along
+            if ( (*station0)->empty(zone) ) continue;
+
+            StationIterator station1 = station0; ++station1;
+            if ( station1 == stationsEnd ) continue;
+
+            // code to make "walk"  Velo stop at z=0 -ve -> 0
+            if ( (*station1)->z() > m_zSensorSearchMax ) break;
+            if ( (*station1)->empty(zone) ) continue;
+
+            StationIterator station2 = station1; ++station2;
+            if ( station2 == stationsEnd ) continue;
+            if ( (*station2)->empty(zone) ) continue;
+
+            seedInSectorTriplet(false,rzTracks, 0, zone,
+                station0, zone,
+                station1, zone,
+                station2, zone);
+
+          } // zone loop
+        } // station loop
       } // velo half loop
     } // onlyForward 
     //==========================================================================
@@ -298,8 +305,8 @@ namespace Tf {
         cov(0,0) =  tr->errR2();// set 0,0 to errR2
         cov(2,2) = tr->errSl2();// set 2,2 to errSl2
         track->addToStates( temp );
-	// set chi2 per dof from RZ fit
-	track->setChi2AndDoF(tr->chi2(),tr->nbCoords()-2);
+        // set chi2 per dof from RZ fit
+        track->setChi2AndDoF(tr->chi2(),tr->nbCoords()-2);
 
         // store details of hits on track
         for ( VeloRHits::iterator itC = tr->coords()->begin();

@@ -4,6 +4,12 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-02-27 - Kurt Rinnert
+ - added option to run RZ tracking in 'backward only' mode
+ - the names of all hit manager related tool instances are now configurable.
+   This allows to run two (or more) independent VELO tracking sequences in one
+   job.
+
 !========================== PatVelo v3r4 2008-02-14 ==========================
 ! 2008-02-14 - David Hutchcroft
  - Added PatVeloFitLHCbIDs as a tool with the interface ITrackFitter to expose

@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneric.h,v 1.1 2008-02-13 16:10:19 krinnert Exp $
+// $Id: PatVeloGeneric.h,v 1.2 2008-02-27 14:37:37 krinnert Exp $
 #ifndef TF_PAT_PATVELOGENERIC_H 
 #define TF_PAT_PATVELOGENERIC_H 1
 
@@ -47,6 +47,8 @@ namespace Tf {
       LHCb::Tracks* m_outputTracks;  ///< Container for output Space tracks
 
       std::string m_outputTracksLocation;
+      std::string m_rHitManagerName;
+      std::string m_phiHitManagerName;
 
       bool m_cleanSeeds;  ///< Cleaning track seeds flag
       bool m_privateBest; ///< Best candidate cluster selection flag

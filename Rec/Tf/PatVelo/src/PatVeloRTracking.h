@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.h,v 1.2 2008-02-14 16:58:49 dhcroft Exp $
+// $Id: PatVeloRTracking.h,v 1.3 2008-02-27 14:37:37 krinnert Exp $
 #ifndef TF_PATVELORTRACKING_H 
 #define TF_PATVELORTRACKING_H 1
 
@@ -43,7 +43,7 @@ namespace Tf {
       /** Take three sectors and set up the combinations to pass to 
         seedInSectorTriplet.
         */
-      void makeForwardSectorTriplets(	 StationReverseIterator station0, unsigned int zone0,
+      void makeForwardSectorTriplets(  StationReverseIterator station0, unsigned int zone0,
           StationReverseIterator station1, unsigned int zone1,
           StationReverseIterator station2, unsigned int zone2,
           StationReverseIterator rStationsEnd,
@@ -83,7 +83,8 @@ namespace Tf {
     private:
       DefaultVeloRHitManager*   m_hitManager;
 
-      std::string  m_outputLocation;    ///< name in PatDataStore for tracks
+      std::string  m_outputLocation;    ///< Location of track container on the TES
+      std::string  m_hitManagerName;    ///< Name of the hit manager instance 
       bool m_mergeTracks;               ///< If true, merge tracks sharung hits
       int  m_nCommonToMerge;            ///< Num of shared hits to merge the tracks
 
@@ -105,6 +106,8 @@ namespace Tf {
       bool m_adjacentSectors;   
       /// If true do not search for backward tracks 
       bool m_onlyForward;   
+      /// If true do not search for forward tracks 
+      bool m_onlyBackward;   
       /// Minimum Z for first sensor when searching for forward triplets
       double m_zSensorSearchMin;
       /// Maximum Z for first sensor when searching for forward triplets

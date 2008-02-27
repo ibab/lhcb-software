@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTracking.cpp,v 1.6 2007-09-17 17:40:54 krinnert Exp $
+// $Id: PatVeloSpaceTracking.cpp,v 1.7 2008-02-27 14:37:38 krinnert Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -26,6 +26,8 @@ namespace Tf {
           m_inputTracksLocation = LHCb::TrackLocation::RZVelo );
       declareProperty( "OutputTracksName",
           m_outputTracksLocation = LHCb::TrackLocation::Velo );
+      declareProperty( "SpaceToolName",
+          m_spaceToolName = "PatVeloSpaceTool" );
 
       declareProperty("TrackSelectorName",
           m_trackSelectorName = "None");
@@ -51,7 +53,7 @@ namespace Tf {
     if (m_trackSelectorName != "None")
       m_trackSelector = tool<ITrackSelector> ( m_trackSelectorName, this);
 
-    m_PatVeloSpaceTool = tool<ITracksFromTrack>("Tf::PatVeloSpaceTool","PatVeloSpaceTool");
+    m_PatVeloSpaceTool = tool<ITracksFromTrack>("Tf::PatVeloSpaceTool",m_spaceToolName);
 
     info() << " TrackSelectorName " << m_trackSelectorName << endreq;
     info() << "      InputTracks  " << m_inputTracksLocation << endreq;
