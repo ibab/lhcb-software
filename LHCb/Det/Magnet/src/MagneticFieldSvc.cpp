@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.23 2008-01-14 15:38:08 ahicheur Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.24 2008-02-27 11:27:34 wouter Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -234,11 +234,11 @@ StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
 
   ///  Linear interpolated field
   double z = r.z() - m_zOffSet;
-  if( z < m_min_FL[2] || z > m_max_FL[2] )  return StatusCode::SUCCESS;
+  if( !(z > m_min_FL[2] && z < m_max_FL[2]) )  return StatusCode::SUCCESS;
   double x = fabs( r.x() );  
-  if( x < m_min_FL[0] || x > m_max_FL[0] )  return StatusCode::SUCCESS;
+  if( !(x > m_min_FL[0] && x < m_max_FL[0]) )  return StatusCode::SUCCESS;
   double y = fabs( r.y() );
-  if( y < m_min_FL[1] || y > m_max_FL[1] )  return StatusCode::SUCCESS;
+  if( !(y > m_min_FL[1] && y < m_max_FL[1]) )  return StatusCode::SUCCESS;
   int i = int( x/m_Dxyz[0]);
   int j = int( y/m_Dxyz[1] );
   int k = int( z/m_Dxyz[2] );
