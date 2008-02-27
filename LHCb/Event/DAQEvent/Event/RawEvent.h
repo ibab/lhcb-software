@@ -5,6 +5,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "Event/RawBank.h"
 #include <stddef.h>
+#include <string>
 #include <vector>
 #include <map>
 

@@ -11,6 +11,7 @@
       id="202" >
       <base name="KeyedObject&lt;int&gt;"/>
       &KeyedObject;
+      <import name="string" std="TRUE"/>
       <location name="Signal"     place="Gen/SignalDecayTree"  />
       <enum
 	desc="Status code in HepMC::GenParticle"

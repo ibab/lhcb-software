@@ -2,6 +2,9 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+! 2008-02-27 - Chris Jones
+ - Add missing STL include
+
 !======================= GenEvent v5r1 2007-06-07 =============================
 ! 2007-06-07 - Marco Cattaneo
  - Adapt requirements to new GaudiObjDesc v10r0 patterns

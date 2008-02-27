@@ -42,8 +42,8 @@
       &KeyedObject;
 
       <import name="sstream" std="TRUE"/>
+      <import name="map"     std="TRUE"/>
       <import name="Event/RawBank"/>
-
 
       <typedef
         def    = "Base"
