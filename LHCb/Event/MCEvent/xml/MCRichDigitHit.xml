@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDigitHit.xml,v 1.1 2006-09-01 10:32:38 jonrob Exp $
+  * $Id: MCRichDigitHit.xml,v 1.2 2008-02-27 14:09:27 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichDigitHit class                                   *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -20,6 +20,7 @@
 
         <import name="Event/MCRichHit"/>
         <import name="Event/MCRichDigitHistoryCode"/>
+        <import name="vector" std="TRUE"/>
 
         <typedef
          type   = "std::vector&lt;LHCb::MCRichDigitHit&gt;"

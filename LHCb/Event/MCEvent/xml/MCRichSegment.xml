@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichSegment.xml,v 1.9 2007-09-05 16:07:01 cattanem Exp $
+  * $Id: MCRichSegment.xml,v 1.10 2008-02-27 14:09:27 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichSegment class                                    *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -22,6 +22,7 @@
         <base name="KeyedObject&lt;int&gt;"/>
         &KeyedContainer;
 
+        <import name="vector" std="TRUE"/>
         <import name="Event/MCParticle"/>
         <import name="Event/MCRichTrack"         soft="TRUE"/>
         <import name="Event/MCRichHit"           soft="TRUE"/>

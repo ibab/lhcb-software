@@ -15,6 +15,7 @@
      >
      <import name="Event/MCParticle"/>
      <import name="Event/MCEffParticle"/>
+     <import name="string" std="TRUE"/>
      &KeyedObject;
      <base name="KeyedObject&lt;int&gt;"/> 
 

@@ -17,7 +17,8 @@
       <import name="Event/PackMCMuonDigitInfo"/>
       <import name="Event/MCMuonHitHistory"/>
       <import name="Event/MCMuonDigitInfo"/>      
-      <import name="Event/MCHit"/>      
+      <import name="Event/MCHit"/>   
+      <import name="vector"  std="TRUE"/>
       <base name="KeyedObject&lt;LHCb::MuonTileID&gt;"/>
             &KeyedContainer;
       <location name="MCMuonDigit" 

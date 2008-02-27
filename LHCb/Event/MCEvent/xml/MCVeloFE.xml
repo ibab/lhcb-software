@@ -24,6 +24,7 @@
    <import name="GaudiKernel/SmartRef"/>
    <import name="Kernel/VeloChannelID"/>
    <import name="Event/MCHit"/>
+   <import name="vector" std="TRUE"/>
 
    <constructor desc="Constructor with key" 
     initList="KeyedObject&lt;LHCb::VeloChannelID&gt;(key),
