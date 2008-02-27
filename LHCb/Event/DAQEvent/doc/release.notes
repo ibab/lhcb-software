@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2008-02-27 - Olivier Deschamps
+ - new algorithm : src/components/OdinTypesFilter : filtering according TriggerTypes and/or BXTypes
+
 ! 2008-02-27 - Chris Jones
  - Add missing STL includes
 
