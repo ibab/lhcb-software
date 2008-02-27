@@ -35,7 +35,6 @@ FitTsa.Fitter.StateAtBeamLine     = false;
 FitTsa.Fitter.ErrorP              = {0.04,5e-8};
 FitTsa.Fitter.NumberFitIterations = 2;
 FitTsa.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
-FitTsa.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 
 // Match fit
 FitMatch.TracksInContainer = "Rec/Track/Match";
@@ -54,13 +53,11 @@ ToolSvc.OTNoDrifttimesProjector.UseDrift = false;
 // Downstream fit
 FitDownstream.TracksInContainer = "Rec/Track/Downstream";
 FitDownstream.Fitter.ZPositions      = { 990., 2165., 9450. };
-FitDownstream.Fitter.StateAtBeamLine = false;
 FitDownstream.Fitter.NumberFitIterations = 2;
 FitDownstream.Fitter.MakeNodes = false;
 
 PreFitDownstream.TracksInContainer = "Rec/Track/Downstream";
 PreFitDownstream.Fitter.ZPositions      = { 990., 2165., 9450. };
-PreFitDownstream.Fitter.StateAtBeamLine = false;
 PreFitDownstream.Fitter.NumberFitIterations = 2;
 PreFitDownstream.Fitter.MaxNumberOutliers = 0;
 PreFitDownstream.Fitter.ErrorX2 = 40.0;
@@ -76,7 +73,6 @@ FitVeloTT.Fitter.ErrorP              = {1.2, 5e-7};
 FitVeloTT.Fitter.NumberFitIterations = 2;
 FitVeloTT.Fitter.MaxNumberOutliers   = 1;
 FitVeloTT.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
-FitVeloTT.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 
 // Velo prefit and fit
 FitVelo.TracksInContainer = "Rec/Track/PreparedVelo";
@@ -84,6 +80,5 @@ FitVelo.Fitter.ZPositions          = {};
 FitVelo.Fitter.ErrorP              = {0.01,5e-8};
 FitVelo.Fitter.NumberFitIterations = 2;
 FitVelo.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
-FitVelo.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 FitVelo.Fitter.TrackSimpleExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 FitVelo.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
