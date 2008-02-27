@@ -1,6 +1,8 @@
-// $Id: ExtendedVeloRHitManager.h,v 1.2 2007-08-25 16:57:06 jonrob Exp $
+// $Id: ExtendedVeloRHitManager.h,v 1.3 2008-02-27 14:32:35 krinnert Exp $
 #ifndef INCLUDE_EXTENDENDVELORHITMANAGER_H
 #define INCLUDE_EXTENDENDVELORHITMANAGER_H 1
+
+#include <string>
 
 #include "TfKernel/DefaultVeloRHitManager.h"
 
@@ -48,6 +50,8 @@ namespace Tf {
       DefaultVeloRHitManager*   m_defaultHitManager;
 
     private:
+      
+      std::string m_defaultHitManagerName;
   };
 
   //=============================================================================
@@ -60,6 +64,8 @@ namespace Tf {
     : VeloHitManager<DeVeloRType,HITEXTENSION,4>(type, name, parent)
     {
       GaudiTool::declareInterface<ExtendedVeloRHitManager<HITEXTENSION> >(this);
+
+      GaudiTool::declareProperty("DefaultHitManagerName", m_defaultHitManagerName="DefaultVeloRHitManager");
     }
 
   //=============================================================================
@@ -73,7 +79,7 @@ namespace Tf {
 
     GaudiTool::debug() << "==> Initialize" << endmsg;
 
-    m_defaultHitManager = GaudiTool::tool<Tf::DefaultVeloRHitManager>( "Tf::DefaultVeloRHitManager" );
+    m_defaultHitManager = GaudiTool::tool<Tf::DefaultVeloRHitManager>( "Tf::DefaultVeloRHitManager", m_defaultHitManagerName );
 
     return StatusCode::SUCCESS;
   }
