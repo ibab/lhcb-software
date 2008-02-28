@@ -1,4 +1,4 @@
-// $Id: DirectionFitBase.cpp,v 1.2 2008-02-24 19:48:19 ibelyaev Exp $
+// $Id: DirectionFitBase.cpp,v 1.3 2008-02-28 15:54:38 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -182,7 +182,7 @@ StatusCode LoKi::DirectionFitBase::step
   m_vd1 = -m_vd ;
   Gaudi::Math::update ( m_vd1 , m_e * m_vd , V_ct ) ;
   
-  // some trick (dirty? hmm. lets compiler to decide... ) 
+  // some dirty trick (hmm. lets compiler to decide... ) 
   
   // update the momentum covarinace matrix 
   const_cast<Gaudi::SymMatrix4x4&> ( particle -> momCovMatrix() )
@@ -216,8 +216,6 @@ StatusCode LoKi::DirectionFitBase::fit_
   // make the fast evaluation of the particle lifetime 
   ctau = ctau0 ( primary  , particle , decay ) ; ///< the fast evaluation of lifetime 
   
-  std::cout << " seed: ctau0 = " << ctau << std::endl ;
-  
   // reset the initial values 
   error = -1.e+10 * Gaudi::Units::mm ;
   chi2  = -1.e+10                    ;
@@ -232,18 +230,10 @@ StatusCode LoKi::DirectionFitBase::fit_
     StatusCode sc = step ( primary  , particle , decay , ctau , error , chi2 ) ;
     if ( sc.isFailure() ) { ctau = 0  ; continue  ; }               // CONTINUE
     
-    std::cout << "#iter="  << iIter 
-              << " ctau="  << ctau 
-              << " err="   << error 
-              << " chi2="  << chi2 
-              << " dctau=" << (ctau-o_ctau)
-              << " dchi2=" << (chi2-o_chi2)
-              << std::endl ;
-    
     // check for the convergency: by the change in chi2 
-    //  *AND* by in the proper lifetime  
+    //  *OR* by in the proper lifetime  
     if ( ::fabs ( chi2 - o_chi2 ) < m_delta_chi2 
-         && 
+         || 
          ::fabs ( ctau - o_ctau ) < m_delta_ctau 
          )
     { 

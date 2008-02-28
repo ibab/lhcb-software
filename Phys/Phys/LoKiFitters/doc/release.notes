@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.1 2008-02-24 19:48:19 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2008-02-28 15:54:38 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+! =========================== LoKiFitters v1r0 2008-02-18 =====================
+
+! 2008-02-28 - Vanya BELYAEV
+
+ - src/VertexFitter.cpp
+
+      set properly nDoF for the fitted vertex 
+
 
 ! 2008-02-24 - Vanya BELYAEV
 

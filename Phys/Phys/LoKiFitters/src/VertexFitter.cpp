@@ -1,4 +1,4 @@
-// $Id: VertexFitter.cpp,v 1.2 2008-02-24 19:48:19 ibelyaev Exp $
+// $Id: VertexFitter.cpp,v 1.3 2008-02-28 15:54:38 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -423,6 +423,7 @@ StatusCode LoKi::VertexFitter::fit
   vertex.setPosition  ( Gaudi::XYZPoint ( x(0) , x(1) , x(2) ) ) ;
   vertex.setCovMatrix ( c    ) ;
   vertex.setChi2      ( chi2 ) ;
+  vertex.setNDoF      ( 2 * m_entries.sise() - 3 ) ;
   // fill the vertex 
   vertex.clearOutgoingParticles() ;
   for ( LHCb::Particle::ConstVector::const_iterator ip = daughters.begin() ; 
