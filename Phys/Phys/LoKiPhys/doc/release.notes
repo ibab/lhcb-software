@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.49 2008-02-28 15:10:44 ibelyaev Exp $ 
+! $Id: release.notes,v 1.50 2008-02-28 15:21:16 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
@@ -6,6 +6,13 @@
 ! -----------------------------------------------------------------------------
 
 !========================== LoKiPhys v7r1 2008-02-28 ==========================
+
+! 2008-02-28 - Vanya BELYAEV
+ - python/LoKiPhys/functions.py
+
+    add missing symbol ISMUON 
+    (thanks a lot to Celestino Rodrigues Cobo for spotting the problem)
+
 
 ! 2008-02-28 - Vanya BELYAEV
  - LoKi/Particles5.h

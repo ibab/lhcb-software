@@ -174,6 +174,8 @@ CL       = LoKi.Particles.ConfidenceLevel  ()
 WEIGHT   = LoKi.Particles.Weight           () 
 ## @see LoKi::Cuts::ISBASIC 
 ISBASIC  = LoKi.Particles.IsBasic          () 
+## @see LoKi::Cuts::ISMUON
+ISMUON   = LoKi.Particles.IsMuon           ()
 ## @see LoKi::Cuts::NDAUGS  
 NDAUGS   = LoKi.Particles.NumberOfDaughters  () 
 ## @see LoKi::Cuts::HASINFO
