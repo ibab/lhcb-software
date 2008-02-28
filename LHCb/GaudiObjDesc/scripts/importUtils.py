@@ -14,6 +14,7 @@ class importUtils:
 #--------------------------------------------------------------------------------
   def reset(self,godClass):
     self.typedefenums = []
+    self.verbatimLHCb = []
 #--------------------------------------------------------------------------------
   def addInclude(self, name, std=0):
     if std :
