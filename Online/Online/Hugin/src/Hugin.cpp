@@ -171,7 +171,7 @@ void HuginRPC::rpcHandler()
       }
     }
   }
-  char obuff[4096];
+  char obuff[1<<16];
   memset(obuff,0,sizeof(obuff));
   char *cptr = obuff;
   cptr  = oconns1[0]->appendsrc(cptr);
