@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.47 2008-02-28 13:59:30 ibelyaev Exp $ 
+! $Id: release.notes,v 1.48 2008-02-28 14:33:41 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
@@ -6,6 +6,13 @@
 ! -----------------------------------------------------------------------------
 
 !========================== LoKiPhys v7r1 2008-02-28 ==========================
+
+! 2008-02-28 - Ivan BELYAEV
+ - LoKi/Particles5.h
+   src/Particles5.cpp
+
+     - fix the invalid printout of "Tree" meta-functors,  
+     - fix the invalid start value of "MULTTREE" nmeta-f  unctor
 
 ! 2008-02-28 - Vanya BELYAEV
 

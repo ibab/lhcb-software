@@ -1,4 +1,4 @@
-// $Id: Particles5.cpp,v 1.5 2007-07-23 17:35:55 ibelyaev Exp $
+// $Id: Particles5.cpp,v 1.6 2008-02-28 14:33:41 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -36,7 +36,7 @@ LoKi::Particles::InTree::InTree
 ( const LoKi::PhysTypes::Cuts& cut ) 
   : LoKi::PhysTypes::Cuts() 
   , m_cut ( cut ) 
-{};
+{}
 // ============================================================================
 // copy constructor 
 // ============================================================================
@@ -45,7 +45,7 @@ LoKi::Particles::InTree::InTree
   : LoKi::AuxFunBase      ( right ) 
   , LoKi::PhysTypes::Cuts ( right ) 
   , m_cut                 ( right.m_cut ) 
-{};
+{}
 // ============================================================================
 //  MANDATORY: the only one essential method 
 // ============================================================================
@@ -58,7 +58,7 @@ LoKi::Particles::InTree::operator()
 // ============================================================================
 std::ostream& 
 LoKi::Particles::InTree::fillStream( std::ostream& s ) const 
-{ return s << "INTREE[" << m_cut << "]" ; }
+{ return s << "INTREE(" << m_cut << ")" ; }
 // ============================================================================
 
 
@@ -71,7 +71,7 @@ LoKi::Particles::NinTree::NinTree
 ( const LoKi::PhysTypes::Cuts& cut ) 
   : LoKi::PhysTypes::Func () 
   , m_cut ( cut ) 
-{};
+{}
 // ============================================================================
 // copy constructor 
 // ============================================================================
@@ -80,7 +80,7 @@ LoKi::Particles::NinTree::NinTree
   : LoKi::AuxFunBase      ( right ) 
   , LoKi::PhysTypes::Func ( right ) 
   , m_cut                 ( right.m_cut ) 
-{};
+{}
 // ============================================================================
 //  MANDATORY: the only one essential method 
 // ============================================================================
@@ -93,7 +93,7 @@ LoKi::Particles::NinTree::operator()
 // ============================================================================
 std::ostream& 
 LoKi::Particles::NinTree::fillStream( std::ostream& s ) const 
-{ return s << "NINTREE[" << m_cut << "]" ; }
+{ return s << "NINTREE(" << m_cut << ")" ; }
 // ============================================================================
 
 
@@ -106,7 +106,7 @@ LoKi::Particles::SumTree::SumTree
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::SumTree::SumTree
 ( const LoKi::PhysTypes::Cuts& cut ,
@@ -116,7 +116,7 @@ LoKi::Particles::SumTree::SumTree
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::SumTree::SumTree
 ( const LoKi::Particles::SumTree& right ) 
@@ -125,7 +125,7 @@ LoKi::Particles::SumTree::SumTree
   , m_fun ( right.m_fun ) 
   , m_cut ( right.m_cut )
   , m_res ( right.m_res ) 
-{};
+{}
 // ============================================================================
 //  MANDATORY: the only one essential method 
 // ============================================================================
@@ -135,13 +135,17 @@ LoKi::Particles::SumTree::operator()
 { 
   return  LoKi::PhysAlgs::accumulate
     ( p , m_fun , m_cut , m_res , std::plus<result_type>() ) ;
-} ;
+} 
 // ============================================================================
 //  OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::SumTree::fillStream( std::ostream& s ) const 
-{ return s << "SUMTREE[" << m_fun << "," << m_cut << "]" ; }
+{
+  s << "SUMTREE(" << m_fun << "," << m_cut ;
+  if ( 0 != m_res ) { s << "," << m_res ; }
+  return s << ")" ;
+}
 // ============================================================================
 
 // ============================================================================
@@ -153,7 +157,7 @@ LoKi::Particles::MultTree::MultTree
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::MultTree::MultTree
 ( const LoKi::PhysTypes::Cuts& cut ,
@@ -163,7 +167,7 @@ LoKi::Particles::MultTree::MultTree
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::MultTree::MultTree
 ( const LoKi::Particles::MultTree& right ) 
@@ -172,7 +176,7 @@ LoKi::Particles::MultTree::MultTree
   , m_fun ( right.m_fun ) 
   , m_cut ( right.m_cut )
   , m_res ( right.m_res ) 
-{};
+{}
 // ============================================================================
 //  MANDATORY: the only one essential method 
 // ============================================================================
@@ -186,7 +190,11 @@ LoKi::Particles::MultTree::operator()
 // ============================================================================
 std::ostream& 
 LoKi::Particles::MultTree::fillStream( std::ostream& s ) const 
-{ return s << "MULTTREE[" << m_fun << "," << m_cut << "]" ; }
+{ 
+  s << "MULTTREE(" << m_fun << "," << m_cut ;
+  if ( 1.0 != m_res ) { s << ","   << m_res ; }
+  return s << ")" ;
+}
 // ============================================================================
 
 
@@ -199,7 +207,7 @@ LoKi::Particles::MinTree::MinTree
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::MinTree::MinTree
 ( const LoKi::PhysTypes::Cuts& cut ,
@@ -209,7 +217,7 @@ LoKi::Particles::MinTree::MinTree
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::MinTree::MinTree
 ( const LoKi::Particles::MinTree& right ) 
@@ -218,20 +226,24 @@ LoKi::Particles::MinTree::MinTree
   , m_fun ( right.m_fun ) 
   , m_cut ( right.m_cut )
   , m_res ( right.m_res ) 
-{};
+{}
 // ============================================================================
 //  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::MinTree::result_type 
 LoKi::Particles::MinTree::operator() 
   ( LoKi::Particles::MinTree::argument p ) const 
-{ return LoKi::PhysAlgs::min_value ( p , m_fun , m_cut , m_res ) ; };
+{ return LoKi::PhysAlgs::min_value ( p , m_fun , m_cut , m_res ) ; }
 // ============================================================================
 //  OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::MinTree::fillStream( std::ostream& s ) const 
-{ return s << "MINTREE[" << m_fun << "," << m_cut << "]" ; }
+{ 
+  << "MINTREE(" << m_fun << "," << m_cut ; 
+  if ( LoKi::Constants::PositiveInfinity != m_res ) { s << "," << m_res ; }
+  return s << ")" ;
+}
 // ============================================================================
 
 // ============================================================================
@@ -243,7 +255,7 @@ LoKi::Particles::MaxTree::MaxTree
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::MaxTree::MaxTree
 ( const LoKi::PhysTypes::Cuts& cut ,
@@ -253,7 +265,7 @@ LoKi::Particles::MaxTree::MaxTree
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::MaxTree::MaxTree
 ( const LoKi::Particles::MaxTree& right ) 
@@ -262,20 +274,24 @@ LoKi::Particles::MaxTree::MaxTree
   , m_fun ( right.m_fun ) 
   , m_cut ( right.m_cut )
   , m_res ( right.m_res ) 
-{};
+{}
 // ============================================================================
 //  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::MaxTree::result_type 
 LoKi::Particles::MaxTree::operator() 
   ( LoKi::Particles::MaxTree::argument p ) const 
-{ return LoKi::PhysAlgs::max_value ( p , m_fun , m_cut , m_res ) ; };
+{ return LoKi::PhysAlgs::max_value ( p , m_fun , m_cut , m_res ) ; }
 // ============================================================================
 //  OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::MaxTree::fillStream( std::ostream& s ) const 
-{ return s << "MAXTREE[" << m_fun << "," << m_cut << "]" ; }
+{ 
+  s << "MAXTREE(" << m_fun << "," << m_cut ;
+  if ( LoKi::Constants::NegativeInfinity != m_res ) { s << "," << m_res ; }
+  return s << ")" ;
+}
 // ============================================================================
 
 

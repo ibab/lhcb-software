@@ -1,4 +1,4 @@
-// $Id: Particles5.h,v 1.5 2007-07-23 17:35:46 ibelyaev Exp $
+// $Id: Particles5.h,v 1.6 2008-02-28 14:33:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES5_H 
 #define LOKI_PARTICLES5_H 1
@@ -193,7 +193,7 @@ namespace LoKi
       MultTree
       ( const LoKi::PhysTypes::Func& fun       ,
         const LoKi::PhysTypes::Cuts& cut       ,
-        const double                 res = 0.0 ) ;
+        const double                 res = 1.0 ) ;
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
@@ -202,7 +202,7 @@ namespace LoKi
       MultTree
       ( const LoKi::PhysTypes::Cuts& cut       ,
         const LoKi::PhysTypes::Func& fun       ,
-        const double                 res = 0.0 ) ;
+        const double                 res = 1.0 ) ;
       /// copy constructor 
       MultTree ( const MultTree& right ) ;
       /// MANDATORY: virtual destructor 
