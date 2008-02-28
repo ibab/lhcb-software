@@ -1,4 +1,4 @@
-// $Id: PatVeloTrackTool.cpp,v 1.5 2008-01-20 15:46:37 krinnert Exp $
+// $Id: PatVeloTrackTool.cpp,v 1.6 2008-02-28 14:26:12 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -123,7 +123,10 @@ namespace Tf {
     for( iP = phiCoords->begin() ; iP != phiCoords->end() ; ++iP ){
       double z = (*iP)->z();
       double r = track->rInterpolated( z );      
-      double phi = m_angleUtils.add((*iP)->coordHalfBox(),(*iP)->sensor()->halfboxPhiOffset((*iP)->zone(),r));
+      double phi = (*iP)->coordHalfBox();
+      if( r > (*iP)->sensor()->innerRadius() ){ // check track is still in sensor...
+	phi = m_angleUtils.add(phi,(*iP)->sensor()->halfboxPhiOffset((*iP)->zone(),r));
+      }
       (*iP)->setRadiusAndPhi(r,phi);
     }
     return;

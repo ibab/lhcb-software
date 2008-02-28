@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-02-28 - David Hutchcroft
+ - Fix to avoid asking for phi of cluster at an r at smaller than the inner radius
+
 ! 2008-02-27 - Kurt Rinnert
  - added option to run RZ tracking in 'backward only' mode
  - the names of all hit manager related tool instances are now configurable.
