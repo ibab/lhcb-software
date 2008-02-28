@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.299 2008-02-20 20:42:07 pkoppenb Exp $
+! $Id: release.notes,v 1.300 2008-02-28 13:52:51 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-02-28 - Patrick Koppenburg
+ - TrgDisp : add verbose() printout
 
 ! 2008-02-20 - Patrick Koppenburg
  - Bd2KstarMuMu : include PhysicalConstants

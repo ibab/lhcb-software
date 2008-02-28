@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.h,v 1.4 2008-01-21 12:26:30 pkoppenb Exp $
+// $Id: TrgDispCalculator.h,v 1.5 2008-02-28 13:52:51 pkoppenb Exp $
 #ifndef TRGDISPCALCULATOR_H
 #define TRGDISPCALCULATOR_H 1
 
@@ -12,6 +12,17 @@
  *
  *  Fast geometrical displacements calculator. 
  *  Assumes there is no B field and that the errors are cylindrical.
+ *
+ *  Description: Calculation of impact parameter, distance between 
+ *  two vertices and distance of closest approach of two particles
+ *
+ *  THIS TOOL IS MEANT FOR HLT, WHERE TRACKS ARE ASSUMED TO HAVE A
+ *  'CYLINDRICAL' ERROR, THAT IS, THE COVARIANCE MATRIX HAS
+ *  COV(1,1)=COV(2,2)!=0 AND ZERO IN ANY OTHER ELEMENT
+ *  Could give reasonable approximations in other situations?
+ *
+ *  The closest thing to a documentation available by now is a talk at
+ *  http://agenda.cern.ch/fullAgenda.php?ida=a05940#2005-02-07
  *
  * @author Hugo Ruiz
  * @date 01/02/2005 

@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.cpp,v 1.12 2008-01-21 12:26:30 pkoppenb Exp $
+// $Id: TrgDispCalculator.cpp,v 1.13 2008-02-28 13:52:51 pkoppenb Exp $
 
 // Include files
 // from Gaudi
@@ -19,17 +19,6 @@
 //
 //  ClassName  : TrgDispCalculator
 // 
-//  Description: Calculation of impact parameter, distance between 
-//  two vertices and distance of closest approach of two particles
-//
-//  THIS TOOL IS MEANT FOR HLT, WHERE TRACKS ARE ASSUMED TO HAVE A
-//  'CYLINDRICAL' ERROR, THAT IS, THE COVARIANCE MATRIX HAS
-//  COV(1,1)=COV(2,2)!=0 AND ZERO IN ANY OTHER ELEMENT
-//  Could give reasonable approximations in other situations?
-//
-//  The closest thing to a documentation available by now is a talk at
-//  http://agenda.cern.ch/fullAgenda.php?ida=a05940#2005-02-07
-//
 //  Author     : Hugo Ruiz 
 //
 //--------------------------------------------------------------------
@@ -84,6 +73,13 @@ StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
   errMatrix(1,2) = 0.;
   errMatrix(1,3) = 0.;
   errMatrix(2,3) = 0.;
+
+  if ( msgLevel(MSG::VERBOSE)) verbose() << part.particleID().pid() << " with " 
+                                         << part.momentum() << " on " 
+                                         << vertex.position() << " has IP = "
+                                         << ip << " +/- " << ipErr << " (" 
+                                         << ip/ipErr << "sigma)" << endmsg ;
+                                 
 
   return StatusCode::SUCCESS;
 
@@ -180,6 +176,7 @@ StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
     return StatusCode::FAILURE;
   }
   
+                                 
   return StatusCode::SUCCESS;
 }
 
@@ -254,6 +251,13 @@ StatusCode TrgDispCalculator::calcCloseAppr( const LHCb::Particle& particle1,
 
   distErr = sqrt( projTrackErr1 + projTrackErr2 );
 
+  if ( msgLevel(MSG::VERBOSE)) verbose() << particle1.particleID().pid() << " with " 
+                                         << particle1.momentum() << " and " 
+                                         << particle2.particleID().pid() << " with " 
+                                         << particle2.momentum() << " have distance = "
+                                         << dist << " +/- " << distErr << " (" 
+                                         << dist/distErr << "sigma)" << endmsg ;
+                                 
   return StatusCode::SUCCESS;
 
 }
@@ -281,6 +285,11 @@ StatusCode TrgDispCalculator::calcVertexDis( const LHCb::VertexBase& vertex1,
 
   distErr = sqrt(std::fabs(ROOT::Math::Dot(errMatrix*derivDist,derivDist)));
   
+  if ( msgLevel(MSG::VERBOSE)) verbose() << vertex1.position() << " & "
+                                         << vertex2.position() << " have distance " 
+                                         << dist << " +/- " << distErr << " (" 
+                                         << dist/distErr << "sigma)" << endmsg ;
+                                 
   return StatusCode::SUCCESS;
 }
 //==================================================================
@@ -297,7 +306,7 @@ TrgDispCalculator::calcSignedFlightDistance( const LHCb::VertexBase& vertex,
 
   StatusCode sc = calcVertexDis(vertex, *endVertex, distance, distanceError);
 
-  if (sc == StatusCode::FAILURE) return sc;
+  if (!sc) return sc;
 
   if (particle.momentum().Pz() < 0) distance*= -1;
   
@@ -324,6 +333,12 @@ TrgDispCalculator::calcProjectedFlightDistance( const LHCb::VertexBase& vertex,
   const Gaudi::Vector3 deriv( phat.x(),  phat.y(),  phat.z() );
   
   distanceError = sqrt(std::fabs(ROOT::Math::Dot(deriv,Vr*deriv)));
+
+  if ( msgLevel(MSG::VERBOSE)) verbose() << particle.particleID().pid() << " with " 
+                                         << particle.momentum() << " on " 
+                                         << vertex.position() << " has flight distance = "
+                                         << distance << " +/- " << distanceError << " (" 
+                                         << distance/distanceError << "sigma)" << endmsg ;
   
   return StatusCode::SUCCESS;
 }
