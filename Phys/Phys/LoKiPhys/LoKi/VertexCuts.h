@@ -1,4 +1,4 @@
-// $Id: VertexCuts.h,v 1.8 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: VertexCuts.h,v 1.9 2008-02-28 13:59:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTEXCUTS_H 
 #define LOKI_VERTEXCUTS_H 1
@@ -223,7 +223,7 @@ namespace LoKi
     const LoKi::Vertices::VertexChi2                            VCHI2 ;
     // ========================================================================
     /** @var VDOF
-     *  evaluator of the Chi2 of the vertex  
+     *  evaluator of the number of degrees of freedom for the vertex 
      *  
      *  It relies on the method LHCb::Vertex::nDoF
      *
@@ -244,7 +244,7 @@ namespace LoKi
     const LoKi::Vertices::VertexDoF                             VDOF ;
     // ========================================================================
     /** @var VXNDOF
-     *  evaluator of the Chi2 of the vertex  
+     *  evaluator of the number of degrees of freedom for the vertex 
      *  
      *  It relies on the method LHCb::Vertex::nDoF
      *
@@ -264,6 +264,71 @@ namespace LoKi
      *  @date   2002-07-15
      */
     const LoKi::Vertices::VertexDoF                    VXNDOF = VDOF ;
+    // ========================================================================
+    /** @typedef VPCHI2N 
+     *  The evalutor of \f$\chi^2\f$-probability, tajing into account 
+     *  the number of degrees of freedom.
+     *
+     *  @code
+     *
+     *    // get the vertex
+     *    const LHCb:VertexBase* vertex = ... ;
+     *   
+     *    // create the fuctor:
+     *    const int dof = ... ; /
+     *    VPCHI2N fun ( dof ) ;
+     *
+     *    // use the functor
+     *    const double probability = fun ( vertex ) ;
+     *
+     *  @endcode 
+     *
+     *  The GSL routine <b>gsl_cdf_chisq_Q</b> is used for evaluation
+     *
+     *  @see LoKi::Vertics::Chi2Prob 
+     *  @see LoKi::Cuts::VPCHI2
+     *  @see LHCb::VertexBase::chi2 
+     *  @see LHCb::VertexBase::nDoF 
+     *  @see LHCb::VertexBase
+     *    
+     *  @attention: The "unphysical" values mean: 
+     *  <b>"get number of DoFs from the vertex itself"</b>
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-02-28
+     */
+    typedef LoKi::Vertices::Chi2Prob                   VPCHI2N ;
+    // ========================================================================
+    /** @var VPCHI2
+     *  The evalutor of \f$\chi^2\f$-probability, taking into account 
+     *  the number of degrees of freedom.
+     *  DoFs number is extarcted from the vertex itself
+     *
+     *  @code
+     *
+     *    // get the vertex
+     *    const LHCb:VertexBase* vertex = ... ;
+     *   
+     *    // use the functor
+     *    const double probability = VPCHI2 ( vertex ) ;
+     *
+     *  @endcode 
+     *
+     *  The GSL routine <b>gsl_cdf_chisq_Q</b> is used for evaluation
+     *
+     *  @see LoKi::Vertics::Chi2Prob 
+     *  @see LoKi::Cuts::VPCHI2N
+     *  @see LHCb::VertexBase::chi2 
+     *  @see LHCb::VertexBase::nDoF 
+     *  @see LHCb::VertexBase
+     *    
+     *  @attention: The "unphysical" values mean: 
+     *  <b>"get number of DoFs from the vertex itself"</b>
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-02-28
+     */
+    const LoKi::Vertices::Chi2Prob                   VPCHI2 ( -1) ;
     // ========================================================================
     /** @var VX 
      *  the trivial evaluator of X-position of the vertex 

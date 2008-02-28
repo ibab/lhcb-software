@@ -1,4 +1,4 @@
-// $Id: Vertices0.h,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Vertices0.h,v 1.7 2008-02-28 13:59:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES0_H 
 #define LOKI_VERTICES0_H 1
@@ -31,7 +31,7 @@ namespace LoKi
     /** @class IsPrimary
      *
      *  trivial predicate whcih evaluates to true for primary vertices 
-     *  it relies on th emethod LHCb::Vertex::isPrimary
+     *  it relies on th emethod LHCb::VertexBase::isPrimary
      *
      *  @see LoKi::Cuts::PRIMARY
      *  @see LoKi::Cuts::ISPRIMARY
@@ -57,10 +57,10 @@ namespace LoKi
     /** @class  Technique
      *  evaluator of the "technique" used for the vertex 
      *
-     *  It relies on the method LHCb::Vertex::technique
+     *  It relies on the method LHCb::VertexBase::technique
      *
      *  @see LoKi::Cuts::TECHNIQUE
-     *  @see LHCb::Vertex 
+     *  @see LHCb::VertexBase 
      *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
@@ -80,10 +80,10 @@ namespace LoKi
     /** @class VertexChi2
      *  evaluator of the Chi2 of the vertex  
      *  
-     *  It relies on the method LHCb::Vertex::chi2
+     *  It relies on the method LHCb::VertexBase::chi2
      *
      *  @see LoKi::Cuts::VCHI2
-     *  @see LHCb::Vertex 
+     *  @see LHCb::VertexBase 
      *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
@@ -101,13 +101,13 @@ namespace LoKi
     };
     // ========================================================================
     /** @class VertexDoF
-     *  evaluator of the Chi2 of the vertex  
+     *  Evaluator of the number of degrees of freedom for the vertex 
      *  
-     *  It relies on the method LHCb::Vertex::nDoF
+     *  It relies on the method LHCb::VertexBase::nDoF
      *
      *  @see LoKi::Cuts::VXDOF
      *  @see LoKi::Cuts::VXNDOF
-     *  @see LHCb::Vertex 
+     *  @see LHCb::VertexBase 
      *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
@@ -128,7 +128,7 @@ namespace LoKi
      *  the trivial evaluator of X-position of the vertex 
      *
      *  @see LoKi::Cuts::VX
-     *  @see LHCb::Vertex 
+     *  @see LHCb::VertexBase 
      *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
@@ -149,7 +149,7 @@ namespace LoKi
      *  the trivial evaluator of Y-position of the vertex 
      *
      *  @see LoKi::Cuts::VY
-     *  @see LHCb::Vertex 
+     *  @see LHCb::VertexBase 
      *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
@@ -170,7 +170,7 @@ namespace LoKi
      *  the trivial evaluator of Z-position of the vertex 
      *
      *  @see LoKi::Cuts::VZ
-     *  @see LHCb::Vertex 
+     *  @see LHCb::VertexBase
      *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
@@ -193,6 +193,7 @@ namespace LoKi
      *  It relies on the method LHCb::Vertex::outgoingParticles
      *  
      *  @see LoKi::Cuts::NPRONGS
+     *  @see LHCb::VertexBase
      *  @see LHCb::Vertex
      *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -214,7 +215,7 @@ namespace LoKi
      *  Trivial predicate which evaluates LHCb::Vertex::hasInfo
      *  function
      *
-     *  It relies on the method LHCb::Vertex::hasInfo
+     *  It relies on the method LHCb::VertexBase::hasInfo
      *
      *  @see LHCb::Vertex
      *  @see LoKi::Cuts::HASINFO 
@@ -250,9 +251,9 @@ namespace LoKi
     /** @class Info
      *  Trivial function which evaluates LHCb::Vertex::info
      *  
-     *  It relies on the method LHCb::Vertex::info
+     *  It relies on the method LHCb::VertexBase::info
      *
-     *  @see LHCb::Vertex
+     *  @see LHCb::VertexBase
      *  @see LoKi::Cuts::INFO 
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -300,9 +301,10 @@ namespace LoKi
     /** @class  NumberOfTracks
      *  The trivial function which evalautes to 
      *  number of outgoing particles 
-     *  It relies on the method LHCb::RecVertex::outgoingParticles
+     *  It relies on the method LHCb::RecVertex::tracks
      *  
      *  @see LoKi::Cuts::NTRACKS
+     *  @see LHCb::VertexBase
      *  @see LHCb::RecVertex
      *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -319,6 +321,50 @@ namespace LoKi
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
+    // ========================================================================
+    /** @class Chi2Prob 
+     *
+     *  The trival functor with evaluated the chi2 probability for certain 
+     *  \f$\chi^2\f$ values
+     *
+     *  The GSL routine <b>gsl_cdf_chisq_Q</b> is used for evaluation
+     *
+     *  @see LoKi::Cuts::VPCHI2N
+     *  @see LoKi::Cuts::VPCHI2
+     *  @see LHCb::VertexBase::chi2 
+     *  @see LHCb::VertexBase::nDoF 
+     *  @see LHCb::VertexBase
+     *
+     *  @attention: The "unphysical" values mean: 
+     *  <b>"get number of DoFs from the vertex itself"</b>
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-02-28
+     */  
+    class Chi2Prob 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
+    {
+    public:
+      /** constructor from number of degrees of freedom.
+       *  @attention: The "unphysical" values mean: 
+       *  <b>"get number of DoFs from the vertex itself"</b>
+       */
+      Chi2Prob ( const int dof = -1 ) ;  
+      /// MANDATORY: virtual destructor:
+      virtual ~Chi2Prob() { }
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Chi2Prob* clone() const ;
+      /// MANDATORY: the only one essential method:
+      virtual  result_type operator() ( argument v ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;      
+    public:
+      /// get number fo degrees of freedom 
+      int dof() const { return m_dof ; }
+    private:
+      /// number of degrees of freedom 
+      int m_dof ; // number of degrees of freedom
+     } ;
     // ========================================================================
   } // end of namespace LoKi::Vertices 
 } // end of namespace LoKi

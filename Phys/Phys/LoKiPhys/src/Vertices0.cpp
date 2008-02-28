@@ -1,4 +1,4 @@
-// $Id: Vertices0.cpp,v 1.8 2008-02-21 20:23:42 ibelyaev Exp $
+// $Id: Vertices0.cpp,v 1.9 2008-02-28 13:59:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -24,6 +24,10 @@
 #include "LoKi/PhysTypes.h"
 #include "LoKi/VertexCast.h"
 #include "LoKi/Vertices0.h"
+// ============================================================================
+// GSL
+// ============================================================================
+#include "gsl/gsl_cdf.h"
 // ============================================================================
 /** @file
  *
@@ -309,6 +313,55 @@ LoKi::Vertices::NumberOfTracks::fillStream
 ( std::ostream& s ) const 
 { return s << "NTRACKS" ; }
 // ============================================================================
+
+// ============================================================================
+/* constructor from number of degrees of freedom.
+ *  @attention: The "unphysical" values mean: 
+ *  <b>"get number of DoFs from the vertex itself"</b>
+ */
+// ============================================================================
+LoKi::Vertices::Chi2Prob::Chi2Prob ( const int dof ) 
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function() 
+  , m_dof ( dof ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor:
+// ============================================================================
+LoKi::Vertices::Chi2Prob*
+LoKi::Vertices::Chi2Prob::clone() const 
+{ return new LoKi::Vertices::Chi2Prob ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method:
+// ============================================================================
+LoKi::Vertices::Chi2Prob::result_type 
+LoKi::Vertices::Chi2Prob::operator() 
+  ( LoKi::Vertices::Chi2Prob::argument v ) const 
+{
+  if ( 0 == v ) 
+  {
+    Error ( "Invalid Vertex, return 'LoKi::Constants::InvaildChi2'" ) ;
+    return LoKi::Constants::InvalidChi2 ;                    // RETURN
+  }
+  //
+  int nDoF = m_dof ;
+  // get nDoF from the vertex intsef ?
+  if ( nDoF <= 0 ) { nDoF = v -> nDoF () ; }
+  // use GSL for computations:
+  return gsl_cdf_chisq_Q ( v -> chi2 ()  , nDoF ) ;
+}
+// ============================================================================
+// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Vertices::Chi2Prob::fillStream ( std::ostream& s ) const 
+{
+  if ( m_dof <= 0 ) { return s << "VPCHI2" ; }
+  return s << "VPCHI2N(" << m_dof << ")" ;
+}
+// ============================================================================
+
+
+
 
 // ============================================================================
 // The END 

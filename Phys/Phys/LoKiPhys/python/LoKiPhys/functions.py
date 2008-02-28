@@ -438,6 +438,10 @@ VINFO     = LoKi.Vertices.Info
 NTRACKS   = LoKi.Vertices.NumberOfTracks   ()
 ## @see LoKi::Cuts::NPRONGS 
 NPRONGS   = LoKi.Vertices.NumberOfOutgoing ()
+## @see LoKi::Cuts::VPCHI2N
+VPCHI2N   = LoKi.Vertices.Chi2Prob
+## @see LoKi::Cuts::VPCHI2
+VPCHI2    = VPCHI2N(-1)
 ## @see LoKi::Cuts::VVDIST
 VVDIST    = LoKi.Vertices.VertexDistance 
 ## @see LoKi::Cuts::VVD

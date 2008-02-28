@@ -1,11 +1,26 @@
-! $Id: release.notes,v 1.46 2008-02-26 11:48:08 ibelyaev Exp $ 
+! $Id: release.notes,v 1.47 2008-02-28 13:59:30 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiPhys v7r1 2008-02-26 ==========================
+!========================== LoKiPhys v7r1 2008-02-28 ==========================
+
+! 2008-02-28 - Vanya BELYAEV
+
+ - LoKi/Vertices0.h
+   LoKi/VertexCuts.h
+   src/Vertices0.cpp
+   python/LoKiPhys/functions.py
+
+    add new C++ type: LoKi::Vertices::Chi2Prob and 
+    the symbols for C++ and python:
+
+      VPCHI2N 
+      VPCHI2 
+
+
 
 ! 2008-02-26 - Vanya BELYAEV
 
