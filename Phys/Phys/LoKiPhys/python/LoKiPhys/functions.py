@@ -483,8 +483,8 @@ APPLYVERTEXFUNTOENDVERT = VFASPF
 # =============================================================================
 # CONTEXT-DEPENDENT FUNCTORS
 # =============================================================================
-BPVDIRA               = LoKi.Particles.CosineDirectionAngleWithTheBestPV
-BESTPVCOSPF           = LoKi.Particles.CosineDirectionAngleWithTheBestPV  ## by Vava GLIGOROV
+BPVDIRA               = LoKi.Particles.CosineDirectionAngleWithTheBestPV()
+BESTPVCOSPF           = LoKi.Particles.CosineDirectionAngleWithTheBestPV() ## by Vava GLIGOROV
 
 BPVIP                 = LoKi.Particles.ImpParWithTheBestPV
 BESTPVIP              = LoKi.Particles.ImpParWithTheBestPV                ## by Vava GLIGOROV
@@ -510,18 +510,18 @@ MINIPCHI2WITHDV       = LoKi.Particles.MinImpParChi2DV                    ## by 
 MIPCHI2TES            = LoKi.Particles.MinImpParChi2TES
 MINIPCHI2WITHTES      = LoKi.Particles.MinImpParChi2TES                   ## by Vava GLIGOROV 
 
-BPVVD                 = LoKi.Particles.VertexDistanceDV
-BESTPVVERTSEP         = LoKi.Particles.VertexDistanceDV                   ## by Vava GLIGOROV 
+BPVVD                 = LoKi.Particles.VertexDistanceDV ()
+BESTPVVERTSEP         = LoKi.Particles.VertexDistanceDV ()                ## by Vava GLIGOROV 
 
-BPVVDSIGN             = LoKi.Particles.VertexSignedDistanceDV
-BESTPVVERTSEPSIGN     = LoKi.Particles.VertexSignedDistanceDV             ## by Vava GLIGOROV 
+BPVVDSIGN             = LoKi.Particles.VertexSignedDistanceDV ()
+BESTPVVERTSEPSIGN     = LoKi.Particles.VertexSignedDistanceDV ()          ## by Vava GLIGOROV 
 
-BPVVDDOT              = LoKi.Particles.VertexDotDistanceDV
-BESTPVVERTSEPALONGMOM = LoKi.Particles.VertexDotDistanceDV                ## by Vava GLIGOROV 
+BPVVDDOT              = LoKi.Particles.VertexDotDistanceDV  ()
+BESTPVVERTSEPALONGMOM = LoKi.Particles.VertexDotDistanceDV  ()            ## by Vava GLIGOROV 
 
-BPVVDCHI2             = LoKi.Particles.VertexChi2DistanceDV
-BPVLTIME              = LoKi.Particles.LifeTimeDV
-BPVLT                 = LoKi.Particles.LifeTimeDV
+BPVVDCHI2             = LoKi.Particles.VertexChi2DistanceDV ()
+BPVLTIME              = LoKi.Particles.LifeTimeDV           
+BPVLT                 = LoKi.Particles.LifeTimeDV           
 BPVLTCHI2             = LoKi.Particles.LifeTimeChi2DV
 BPVLTSIGNCHI2         = LoKi.Particles.LifeTimeSignedChi2DV
 BPVLTFITCHI2          = LoKi.Particles.LifeTimeFitChi2DV
