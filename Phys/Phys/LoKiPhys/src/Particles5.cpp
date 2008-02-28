@@ -1,4 +1,4 @@
-// $Id: Particles5.cpp,v 1.6 2008-02-28 14:33:41 ibelyaev Exp $
+// $Id: Particles5.cpp,v 1.7 2008-02-28 14:45:27 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -240,7 +240,7 @@ LoKi::Particles::MinTree::operator()
 std::ostream& 
 LoKi::Particles::MinTree::fillStream( std::ostream& s ) const 
 { 
-  << "MINTREE(" << m_fun << "," << m_cut ; 
+  s << "MINTREE(" << m_fun << "," << m_cut ; 
   if ( LoKi::Constants::PositiveInfinity != m_res ) { s << "," << m_res ; }
   return s << ")" ;
 }
