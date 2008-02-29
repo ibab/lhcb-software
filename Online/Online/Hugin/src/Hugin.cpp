@@ -225,6 +225,7 @@ void HuginRPC::rpcHandler()
   free (oconns1);
 }
 
+#include "errno.h"
 int main(int argc, char* argv[])
 {
   CONFDB *db;
@@ -258,6 +259,11 @@ int main(int argc, char* argv[])
   while (1)
   {
     pause();
+    if ((errno == EINTR))
+      {
+	      printf("Errno = EINTR Exiting...\n");
+	      break;
+      }
   }
   return 0;
 }
