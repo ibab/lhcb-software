@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-02-28 - V. Gligorov
+ - Added two new packages for swimming: HltSelectTracksForSwimming.{h,cpp}
+   and HltMoveVerticesForSwimming.{h,cpp}.
+
 ! 2008-02-18 - Patrick Koppenburg
  - HltSummary tool: return Particle::ConstVector. Do not use helper 
 
