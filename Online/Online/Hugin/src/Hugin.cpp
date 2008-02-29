@@ -10,6 +10,18 @@
 #include "stdio.h"
 #include <stdlib.h>
 #include <ctype.h>
+#include <time.h>
+
+void printtime(void)
+{
+  struct tm *newtime;
+  time_t aclock;
+  time( &aclock );   // Get time in seconds
+  newtime = localtime( &aclock );   // Convert time to struct tm form 
+
+  /* Print local time as a string */
+  printf( "%s", asctime( newtime ) );
+}
 class connection
 {
 public:
@@ -53,7 +65,6 @@ HuginRPC::~HuginRPC(void)
 {
 }
 
-#include <time.h>
 void HuginRPC::rpcHandler()
 {
   char toksep[] = "|";
@@ -65,8 +76,6 @@ void HuginRPC::rpcHandler()
 
   char *srcdev;
   char *desttyp;
-  struct tm *newtime;
-  time_t aclock;
 
   memset(tells,0,sizeof(tells));
   clid  = DimServer::getClientId();
@@ -79,11 +88,7 @@ void HuginRPC::rpcHandler()
   for ( unsigned int jj=0;jj<strlen(srcdev);jj++) srcdev[jj]=toupper(srcdev[jj]);
   string ssrc(srcdev);
   string sdtyp(desttyp);
-  time( &aclock );   // Get time in seconds
-  newtime = localtime( &aclock );   // Convert time to struct tm form 
-
-   /* Print local time as a string */
-  printf( "%s", asctime( newtime ) );
+  printtime();
   printf("%s %s\n",srcdev,desttyp);
 
   std::vector<string> result;
@@ -94,11 +99,7 @@ void HuginRPC::rpcHandler()
     idev  =db->PyGetDeviceID_devicename(ssrc);
     if (idev == -1)
     {
-      time( &aclock );   // Get time in seconds
-      newtime = localtime( &aclock );   // Convert time to struct tm form 
-
-      /* Print local time as a string */
-      printf( "%s", asctime( newtime ) );
+      printtime();
       printf("Source device does not exist...\n");
       tells[0] = 0;
       setData(tells,1);
@@ -107,11 +108,7 @@ void HuginRPC::rpcHandler()
   }
   catch(...)
   {
-      time( &aclock );   // Get time in seconds
-      newtime = localtime( &aclock );   // Convert time to struct tm form 
-
-      /* Print local time as a string */
-      printf( "%s", asctime( newtime ) );
+    printtime();
     printf("Source device does not exist...\n");
     tells[0] = 0;
     setData(tells,1);
@@ -127,6 +124,7 @@ void HuginRPC::rpcHandler()
   }
   catch(...)
   {
+    printtime();
     printf("Exception during processing...\n");
     tells[0] = 0;
     setData(tells,1);
@@ -198,7 +196,7 @@ void HuginRPC::rpcHandler()
   *cptr = '|';
   cptr++;
   cptr  = oconns1[0]->appenddest(cptr);
-  oconns1[0]->print();
+  //oconns1[0]->print();
   for (i=1;i<ocidx;i++)
   {
     if (strcmp(oconns1[i-1]->src,oconns1[i]->src) != 0)
@@ -216,15 +214,10 @@ void HuginRPC::rpcHandler()
       cptr++;
       cptr  = oconns1[i]->appenddest(cptr);
     }
-    oconns1[i]->print();
+    //oconns1[i]->print();
   }
   *cptr++ = 0;
-  setData(obuff,strlen(obuff)+1);
-      time( &aclock );   // Get time in seconds
-      newtime = localtime( &aclock );   // Convert time to struct tm form 
-
-      /* Print local time as a string */
-      printf( "%s", asctime( newtime ) );
+  printtime();
   printf("end of processing\n");
   free (conns);
   free (oconns);
