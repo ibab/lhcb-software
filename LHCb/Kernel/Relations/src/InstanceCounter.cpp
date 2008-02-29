@@ -1,4 +1,4 @@
-// $Id: InstanceCounter.cpp,v 1.2 2008-02-19 15:26:10 ibelyaev Exp $ 
+// $Id: InstanceCounter.cpp,v 1.3 2008-02-29 17:46:30 ibelyaev Exp $ 
 // ======================================================================
 // Include files 
 // ======================================================================
@@ -37,7 +37,7 @@ Relations::InstanceCounter::report () const
   {
     if ( 0 == record->second ) { continue ; }  
     std::cout << "RelationUtils::InstanceCounter " 
-              << " INFO \t #" 
+              << " WARNING \t #" 
               << record->second 
               << " objects of type \t '"
               << record->first 

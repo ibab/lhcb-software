@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.52 2008-02-20 08:00:55 cattanem Exp $ 
+! $Id: release.notes,v 1.53 2008-02-29 17:46:30 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2008-02-29 - Vanya BELYAEV
+
+ - src/InstanceCounter.cpp
+
+     change the printout for non-deleted objects from INFO fro WARNING
 
 !====================== Relations v5r4 2008-02-19 ============================
 ! 2008-02-19 - Vanya BELYAEV
