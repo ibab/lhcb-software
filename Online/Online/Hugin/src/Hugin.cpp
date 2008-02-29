@@ -231,7 +231,7 @@ int main(int argc, char* argv[])
 //  int dum[21];
   std::vector<string> result;
 
-  char *cern=getenv("CERN");
+  char *cern=getenv("ATCERN");
   char  *pdbase,*puser,*ppassw;
   if (cern != 0)
   {
