@@ -4,6 +4,9 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2008-02-29 - Marco Clemencic
+ - Added Python option files DDDB.py (requires SQLDDDB.py) and DC06.py.
+
 !========================== DDDB v1r3 2008-01-28 =============================
 ! 2008-01-28 - Marco Cattaneo
  - Add oracle dependency to allow access to Oracle DDDB
