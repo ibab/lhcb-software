@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.12 2007-12-09 17:56:42 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.13 2008-02-29 16:09:11 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -168,6 +168,10 @@ namespace LoKi
       // ======================================================================
       // monitoring 
       // ======================================================================
+      static Fun __monitor__ ( const Func&                c ,
+                               const std::string& s = "\n"  , 
+                               const std::string& p = ""    ) 
+      { return LoKi::print ( c , std::cout , s , p ) ; }        
       static Fun __monitor__ ( const Func&              c , 
                                StatEntity*              e ) 
       { return LoKi::monitor ( c , e ) ; }
@@ -261,9 +265,16 @@ namespace LoKi
       static Cut __and__      ( const Cuts&  cut1 , 
                                 const Cuts&  cut2 ) { return cut1 && cut2 ; }
       static Cut __invert__   ( const Cuts&  cut  ) { return !cut ; }
+      //
+      static Cut __monitor__  ( const Cuts&        c        ,
+                                const std::string& s = "\n" , 
+                                const std::string& p = ""   ) 
+      { return LoKi::print ( c , std::cout , s , p ) ; }        
+      //
       static Cut __monitor__  ( const Cuts&         c , 
                                 StatEntity*         e )
       { return LoKi::monitor  ( c , e ) ; }
+      //
       static Fun __switch__   ( const Cuts&  cut  , 
                                 const Func&  fun1 ,
                                 const Func&  fun2 )

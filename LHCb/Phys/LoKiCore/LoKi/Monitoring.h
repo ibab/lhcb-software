@@ -1,4 +1,4 @@
-// $Id: Monitoring.h,v 1.3 2007-11-28 13:56:33 ibelyaev Exp $
+// $Id: Monitoring.h,v 1.4 2008-02-29 16:09:11 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MONITORING_H 
 #define LOKI_MONITORING_H 1
@@ -13,6 +13,7 @@
 // ============================================================================
 #include "GaudiKernel/StatEntity.h"
 #include "GaudiKernel/HistoDef.h"
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 // Local
 // ============================================================================
@@ -33,7 +34,7 @@ namespace LoKi
   {
     // ========================================================================
     /** @class Counter 
-     *  Simple predicate which decorates another predicate 
+     *  Simple functor which decorates another functor  
      *  with some "monitoring" features : it uses the generic 
      *  counter to monitor the performace.
      *
@@ -91,7 +92,7 @@ namespace LoKi
       /// OPTIONAL: just a nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return m_cut.fillStream ( s ) ; }
-      /// delegate ID:
+      /// OPTIONAL: delegate ID:
       virtual std::size_t id() const { return m_cut.id() ; }
     private: 
       // no default constructor
@@ -104,7 +105,7 @@ namespace LoKi
     };
     // ========================================================================
     /** @class Plot
-     *  Simple function which decorates another function 
+     *  Simple functor which decorates another functor
      *  with some "monitoring" features : it fills the monitoring histogram
      *
      *  @code
@@ -179,6 +180,100 @@ namespace LoKi
       // the histogram for monitoring 
       AIDA::IHistogram1D*              m_histo ; ///< the histogram for monitoring 
     };
+    // ========================================================================
+    /** @class Printer 
+     *  Simple functor, which decorates the another functor 
+     *  with simple printout abilities.
+     *  It is very useful for debugging purposes 
+     * 
+     *  @code
+     *
+     *  // some functor
+     *  const LoKi::Functor<TYPE1,TYPE2>& fun = ... ;
+     * 
+     *  // good "monitored" functor:
+     *  const LoKi::Monitoring::Printer<TYPE1,TYPE2> prnt = 
+     *     print ( fun , std::cout ) ;
+     *  
+     *  @endcode 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2008-06-14
+     */
+    template <class TYPE, class TYPE2> 
+    class Printer : public LoKi::Functor<TYPE,TYPE2>
+    {
+    public:
+      // ======================================================================
+      /** constructor from the functor, stream, suffix and prefix
+       *  @param fun the functor 
+       *  @param stream the stream 
+       *  @param suffix the suffix 
+       *  @param prefix the prefix 
+       */
+      Printer 
+      ( const LoKi::Functor<TYPE,TYPE2>& fun                , 
+        std::ostream&                    stream = std::cout ,
+        const std::string&               suffix = "\n"      , 
+        const std::string&               prefix = ""        ) 
+        : LoKi::Functor<TYPE,TYPE2>() 
+        , m_fun    ( fun    ) 
+        , m_stream ( stream )
+        , m_suffix ( suffix ) 
+        , m_prefix ( prefix ) {}
+      // ======================================================================
+      /** constructor from the functor, stream, suffix and prefix
+       *  @param fun the functor 
+       *  @param stream the stream 
+       *  @param suffix the suffix 
+       *  @param prefix the prefix 
+       */
+      Printer 
+      ( std::ostream&                    stream        ,
+        const LoKi::Functor<TYPE,TYPE2>& fun           , 
+        const std::string&               suffix = "\n" , 
+        const std::string&               prefix = ""   ) 
+        : LoKi::Functor<TYPE,TYPE2>() 
+        , m_fun    ( fun    ) 
+        , m_stream ( stream )
+        , m_suffix ( suffix ) 
+        , m_prefix ( prefix ) {}
+      // ======================================================================
+      /// MANDATORY: virtual destrcutor 
+      virtual ~Printer() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Printer* clone() const { return new Printer ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual typename LoKi::Functor<TYPE,TYPE2>::result_type operator() 
+        ( typename LoKi::Functor<TYPE,TYPE2>::argument a ) const 
+      {
+        // evaluat ethe underlying functor: 
+        const typename LoKi::Functor<TYPE,TYPE2>::result_type result = 
+          m_fun.fun ( a )        ;
+        // perform the actual printout 
+        m_stream << m_prefix << m_fun << "=" ;
+        Gaudi::Utils::toStream ( result , m_stream ) ; // print the result 
+        m_stream << m_suffix       ;
+        return result ;
+      }
+      /// OPTIONAL: just a nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return m_fun.fillStream ( s ) ; }
+      /// OPTIONAL: delegate ID:
+      virtual std::size_t id() const { return m_fun.id() ; }
+    private:
+      /// the default constructor is disabled 
+      Printer() ; // the default constructor is disabled 
+    private:
+      /// the "main" functor 
+      LoKi::FunctorFromFunctor<TYPE,TYPE2> m_fun ; // the "main" functor 
+      /// the reference for the stream 
+      std::ostream& m_stream ; // the reference for the stream 
+      /// the suffix
+      std::string   m_suffix ; // the suffix
+      /// the prefix 
+      std::string   m_prefix ; // the prefix 
+    } ;
     // ========================================================================
   } // end of namespace LoKi::Monitoring
   // ==========================================================================
@@ -393,6 +488,64 @@ namespace LoKi
          const Gaudi::Histo1DDef&         histo )
   { 
     return plot ( cut , LoKi::HistoBook::book ( dir, id , histo ) ) ;
+  }
+  // ==========================================================================
+  /** helper function to instantiate the monitored functor 
+   *  
+   *  @code 
+   * 
+   *  // some function
+   *  Fun fun = ... ;
+   * 
+   *  if  ( monitoring ) 
+   *   {
+   *     fun = print ( fun , std:cout , "\n" ) ;
+   *   }
+   *  @endcode 
+   *  
+   *  @see LoKi::Monitoring::Printer 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2008-02-29
+   */
+  template <class TYPE,class TYPE2>
+  inline 
+  LoKi::Monitoring::Printer<TYPE,TYPE2>
+  print ( const LoKi::Functor<TYPE,TYPE2>& fun                , 
+          std::ostream&                    stream = std::cout , 
+          const std::string&               suffix = "\n"      ,
+          const std::string&               prefix = ""        )
+  {
+    return LoKi::Monitoring::Printer<TYPE,TYPE2> 
+      ( fun , stream , suffix , prefix ) ;
+  }
+  // ==========================================================================
+  /** helper function to instantiate the monitored functor 
+   *  
+   *  @code 
+   * 
+   *  // some function
+   *  Fun fun = ... ;
+   * 
+   *  if  ( monitoring ) 
+   *   {
+   *     fun = monitor ( fun , std:cout , "\n" ) ;
+   *   }
+   *  @endcode 
+   *  
+   *  @see LoKi::Monitoring::Printer 
+   *  @see LoKi::print 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2008-02-29
+   */
+  template <class TYPE,class TYPE2>
+  inline 
+  LoKi::Monitoring::Printer<TYPE,TYPE2>
+  monitor ( const LoKi::Functor<TYPE,TYPE2>& fun                , 
+            std::ostream&                    stream = std::cout , 
+            const std::string&               suffix = "\n"      ,
+            const std::string&               prefix = ""        )
+  {
+    return print ( fun , stream , suffix , prefix ) ;
   }
   // ==========================================================================
 } // end of namespace LoKi

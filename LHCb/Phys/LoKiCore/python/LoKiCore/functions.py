@@ -15,6 +15,10 @@ def monitor ( o  , *m ) :
     """
     Create the monitored pedicate/function:
 
+    Make monitored function ( see LoKi::Monitoring::Printer )
+    >>>  counter = ...
+    >>>  fun = monitor ( fun , '\n' )
+    
     Make monitored function ( see LoKi::Monitoring::Stat )
     >>>  counter = ...
     >>>  fun = monitor ( fun , counter )

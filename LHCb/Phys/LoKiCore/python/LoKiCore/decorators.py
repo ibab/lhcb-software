@@ -517,7 +517,7 @@ def decorateFunctions ( funcs , calls , opers ) :
             Uses:\n
             """
             return opers.__max__ (s,a,*b)
-        def _monitor_ (s,m) :
+        def _monitor_ (s,*m) :
             """
             Contruct the monitored function:
 
@@ -525,13 +525,16 @@ def decorateFunctions ( funcs , calls , opers ) :
             >>>  counter = ...
             >>>  fun = monitor ( fun , counter )
 
+            Make monitored function ( see LoKi::Monitoring::Printer )
+            >>>  fun = monitor ( fun , '\n' )
+
             Make monitored function ( see LoKi::Monitoring::Plot )
             >>>  histogram = ...
             >>>  fun = monitor ( fun , histogram )
 
             Uses:\n
             """
-            return opers.__monitor__(s,m)
+            return opers.__monitor__(s,*m)
         def _equal_to_ (f,v) :
             """
             Create the predicate which efficiently checks the equality of the
@@ -848,7 +851,7 @@ def decoratePredicates ( cuts , calls , opers ) :
             Uses:\n
             """
             return opers.__invert__  (s)
-        def _monitor_ (s,m) :
+        def _monitor_ (s,*m) :
             """
             Contruct the monitored predicate:
 
@@ -858,7 +861,7 @@ def decoratePredicates ( cuts , calls , opers ) :
 
             Uses:\n
             """
-            return opers.__monitor__(s,m)            
+            return opers.__monitor__(s,*m)            
         def _switch_ (s,v1,v2) :
             """
             Contruct the function which acts according to the rule  ' s ? v1 : v2 '  
