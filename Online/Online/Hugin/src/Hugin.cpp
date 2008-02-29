@@ -217,6 +217,7 @@ void HuginRPC::rpcHandler()
     //oconns1[i]->print();
   }
   *cptr++ = 0;
+  setData(obuff,strlen(obuff)+1);
   printtime();
   printf("end of processing\n");
   free (conns);
