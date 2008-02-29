@@ -52,7 +52,9 @@ void ReferencePicker::build()
   m_normalizationSelector->Select(0);
   m_normalizationSelector->Resize(80, 22);
   fHorizontalFrame637->AddFrame(m_normalizationSelector,
-           new TGLayoutHints(kLHintsLeft | kLHintsBottom, 2, 2, 2, 2));
+                                new TGLayoutHints(kLHintsLeft |
+                                                  kLHintsBottom,
+                                                  2, 2, 2, 2));
   m_normalizationSelector->Move(310, 2);
   
   TGTextButton *fTextButton669 = new TGTextButton(fHorizontalFrame637,

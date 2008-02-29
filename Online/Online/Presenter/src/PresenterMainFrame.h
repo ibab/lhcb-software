@@ -90,12 +90,8 @@ class PresenterMainFrame : public TGMainFrame
       M_AddDimToPage_COMMAND,
       M_AddDBHistoToPage_COMMAND,
       SET_DIM_SRC_COMMAND,
-      M_DimCheckAllChildren_COMMAND,
-      M_DimUnCheckAllChildren_COMMAND,
       M_DimCollapseAllChildren_COMMAND,
       M_DeleteDBHisto_COMMAND,
-      M_DBHistoCheckAllChildren_COMMAND,
-      M_DBHistoUnCheckAllChildren_COMMAND,
       M_DBHistoCollapseAllChildren_COMMAND,
       M_SetHistoPropertiesInDB_COMMAND,
       M_RefreshHistoDBListTree_COMMAND,
@@ -179,9 +175,6 @@ class PresenterMainFrame : public TGMainFrame
     void checkedTreeItemsChildren(TGListTreeItem* node,
                                   TGListTree* selected);
 
-    void checkTreeChildrenItems(TGListTreeItem* node, bool check);
-    void checkTreeChildrenItemsChildren(TGListTreeItem* node, bool check);
-
     void collapseTreeChildrenItems(TGListTree* treeList,
                                    TGListTreeItem* node);
     void collapseTreeChildrenItemsChildren(TGListTree* treeList,
@@ -241,13 +234,9 @@ class PresenterMainFrame : public TGMainFrame
     void addDimSvcToPage();
     void addDbHistoToPage();
     void setHistogramDimSource();
-    void dimCheckAllChildren();
-    void dimUnCheckAllChildren();
     void dimCollapseAllChildren();
 
     void setHistogramPropertiesInDB();
-    void dbHistoCheckAllChildren();
-    void dbHistoUnCheckAllChildren();
     void dbHistoCollapseAllChildren();
 
     void deleteSelectedHistoFromDB();
