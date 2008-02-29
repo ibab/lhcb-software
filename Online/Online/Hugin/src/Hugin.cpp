@@ -53,6 +53,7 @@ HuginRPC::~HuginRPC(void)
 {
 }
 
+#include <time.h>
 void HuginRPC::rpcHandler()
 {
   char toksep[] = "|";
@@ -64,6 +65,8 @@ void HuginRPC::rpcHandler()
 
   char *srcdev;
   char *desttyp;
+  struct tm *newtime;
+  time_t aclock;
 
   memset(tells,0,sizeof(tells));
   clid  = DimServer::getClientId();
@@ -76,6 +79,13 @@ void HuginRPC::rpcHandler()
   for ( unsigned int jj=0;jj<strlen(srcdev);jj++) srcdev[jj]=toupper(srcdev[jj]);
   string ssrc(srcdev);
   string sdtyp(desttyp);
+  time( &aclock );   // Get time in seconds
+  newtime = localtime( &aclock );   // Convert time to struct tm form 
+
+   /* Print local time as a string */
+  printf( "%s", asctime( newtime ) );
+  printf("%s %s\n",srcdev,desttyp);
+
   std::vector<string> result;
   msk = 0;
   int idev;
@@ -84,6 +94,11 @@ void HuginRPC::rpcHandler()
     idev  =db->PyGetDeviceID_devicename(ssrc);
     if (idev == -1)
     {
+      time( &aclock );   // Get time in seconds
+      newtime = localtime( &aclock );   // Convert time to struct tm form 
+
+      /* Print local time as a string */
+      printf( "%s", asctime( newtime ) );
       printf("Source device does not exist...\n");
       tells[0] = 0;
       setData(tells,1);
@@ -92,6 +107,11 @@ void HuginRPC::rpcHandler()
   }
   catch(...)
   {
+      time( &aclock );   // Get time in seconds
+      newtime = localtime( &aclock );   // Convert time to struct tm form 
+
+      /* Print local time as a string */
+      printf( "%s", asctime( newtime ) );
     printf("Source device does not exist...\n");
     tells[0] = 0;
     setData(tells,1);
@@ -200,6 +220,11 @@ void HuginRPC::rpcHandler()
   }
   *cptr++ = 0;
   setData(obuff,strlen(obuff)+1);
+      time( &aclock );   // Get time in seconds
+      newtime = localtime( &aclock );   // Convert time to struct tm form 
+
+      /* Print local time as a string */
+      printf( "%s", asctime( newtime ) );
   printf("end of processing\n");
   free (conns);
   free (oconns);
@@ -212,10 +237,23 @@ int main(int argc, char* argv[])
 //  int dum[21];
   std::vector<string> result;
 
-
-  string dbase("devdb");
-  string user("lhcb_configuration_dev");
-  string passw("T_75_op_LbDB009");
+  char *cern=getenv("CERN");
+  char  *pdbase,*puser,*ppassw;
+  if (cern != 0)
+  {
+    /*string*/ pdbase="devdb";
+    /*string*/ puser="lhcb_configuration_dev";
+    /*string*/ ppassw="T_75_op_LbDB009";
+  }
+  else
+  {
+    /*string*/ pdbase="confdb";
+    /*string*/ puser="conf_con_writer";
+    /*string*/ ppassw="wr1ter";
+  }
+  string dbase(pdbase);
+  string user(puser);
+  string passw(ppassw);
   db = new CONFDB((char*)dbase.c_str(),(char*)user.c_str(),(char*)passw.c_str());
   db->PyDBConnexion();
   HuginRPC *rpc;
