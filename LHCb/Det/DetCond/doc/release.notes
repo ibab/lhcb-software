@@ -1,9 +1,15 @@
-# $Id: release.notes,v 1.121 2008-02-22 13:08:37 cattanem Exp $
+# $Id: release.notes,v 1.122 2008-02-29 19:11:56 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2008-02-29 - Marco Clemencic
+ - Added the Python module DetCond.Configuration to provide useful functions
+   for the configuration of the CondDB:
+   - addCondDBLayer
+   - addCondDBAlternative
 
 !===================== Det/DetCond v11r9 2008-02-22 ==========================
 ! 2008-02-22 - Marco Cattaneo

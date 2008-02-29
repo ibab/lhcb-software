@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.79 2008-02-22 13:08:37 cattanem Exp $
+# $Id: requirements,v 1.80 2008-02-29 19:11:56 marcocle Exp $
 # =============================================================================
 package       DetCond
 version       v11r9
@@ -42,7 +42,9 @@ library       DetCond           component/*.cpp
 apply_pattern component_library library=DetCond 
 apply_pattern linker_library    library=DetCondLib 
 
+apply_pattern install_python_modules
 
+# ==============================================================================
 private
 
 macro_append DetCond_use_linkopts " $(Boost_linkopts_thread) $(Boost_linkopts_filesystem_mt) "
