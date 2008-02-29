@@ -9,13 +9,16 @@ class DbRootHist;
 class Archive;
 class TGTextButton;
 
+class TCanvas;
+class TRootEmbeddedCanvas;
+
 class ReferencePicker : public TGTransientFrame
 {
 public:
-	ReferencePicker(PresenterMainFrame* gui);
+	ReferencePicker(PresenterMainFrame* gui, DbRootHist* histogram);
 	virtual ~ReferencePicker();
 
-  void ok();
+  void setSelectedAsRef();
   void build();
   void CloseWindow();
 
@@ -24,9 +27,11 @@ private:
   DbRootHist*   m_histogram;
   Archive*  m_archive;
   pres::MsgLevel  m_verbosity;
-  TGTextButton* m_okButton;
+  TGTextButton *m_setSelectedAsRefButton;
   TGTextButton* m_cancelButton;
   int m_msgBoxReturnCode;
+  TCanvas *c125;
+  TRootEmbeddedCanvas *fRootEmbeddedCanvas746;
   
   ClassDef(ReferencePicker, 0)  
   

@@ -31,9 +31,14 @@ public:
           const std::string & savesetPath,
           const std::string & referencePath);
   virtual ~Archive();
-  void setArchiveRoot(const std::string & archiveRoot);
-  void setSavesetPath(const std::string & savesetPath);
+  std::vector<boost::filesystem::path> listDirectory(const boost::filesystem::path & dirPath);
+  void setArchiveRoot(const std::string & archiveRoot);  
+  std::string archiveRoot() { return m_archiveRoot.file_string(); }  
+  void setSavesetPath(const std::string & savesetPath);  
+  std::string savesetPath() { return m_savesetPath.file_string(); }    
   void setReferencePath(const std::string & referencePath);
+  std::string referencePath() { return m_referencePath.file_string(); }
+  
   void setVerbosity(const pres::MsgLevel & verbosity) { m_verbosity = verbosity; }
   void setAnalysisLib(OMAlib* analib) { m_analysisLib = analib; }
   void refreshDirectory(const DirectoryType & directoryType);
@@ -47,7 +52,6 @@ public:
 //  void deleteReferenceHistogram(TH1* reference); 
 private:
   PresenterMainFrame* m_mainFrame;
-  std::vector<boost::filesystem::path> listDirectory(const boost::filesystem::path & dirPath);
   boost::filesystem::path findFile(const boost::filesystem::path & dirPath,
                                    const std::string & fileName);
   std::vector<boost::filesystem::path> findSavesets(const std::string & taskname,
