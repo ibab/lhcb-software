@@ -4,6 +4,9 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2008-02-03 - Vladimir Gligorov
+ - Added new StdTightD2KPiPi to StandardDplus.opts
+
 !========================== CommonParticles v3r10 2007-10-25 ==================
 
 ! 2007-10-01 - Patrick Spradlin for Jim Libby
