@@ -116,13 +116,13 @@ StatusCode SpdMonitor::initialize()
   hBook2("o_occupancy","Occupancy of the outer SPD", 6.,58.,52,0.,64.,64);
   hBook2("m_flat","Flat middle", 12.,52.,40,0.,64.,64); 
   hBook2("m_neigh","Avg occupancy of neighors (middle SPD)", 12.,52.,40,0.,64.,64);
-  hBook2("m_avgOcccupancy","Occupancy of the middle SPD", 12.,52.,40,0.,64.,64);	
+  hBook2("m_occupancy","Occupancy of the middle SPD", 12.,52.,40,0.,64.,64);	
   hBook2("i_flat" ,"Flat inner", 14.,50.,36,8.,56.,48);
   hBook2("i_neigh" ,"Avg occupancy of neighbors (inner SPD)",14.,50.,36,8.,56.,48);
   hBook2("i_occupancy" ,"Occupancy of the inner SPD", 14.,50.,36,8.,56.,48);
   hBook2("o_occupancyEcal","Occupancy: E_Ecal>Threshold (outer)",6.,58.,52,0.,64.,64);
   hBook2("o_ecal+spd","SPD 1's when E_Ecal>Threshold (outer)",6.,58.,52,0.,64.,64);
-  hBook2("m_avgOcccupancyEcal","Occupancy: E_Ecal>Threshold (middle)",12.,52,40,0.,64.,64); 
+  hBook2("m_occupancyEcal","Occupancy: E_Ecal>Threshold (middle)",12.,52,40,0.,64.,64); 
   hBook2("m_ecal+spd","SPD 1's when E_Ecal>Threshold (middle)",12.,52,40,0.,64.,64);
   hBook2("i_occupancyEcal","Occupancy: E_Ecal>Threshold (inner)",14.,50.,36,8.,56.,48);
   hBook2("i_ecal+spd","SPD 1's when E_Ecal>Threshold (inner)",14.,50.,36,8.,56.,48);  
