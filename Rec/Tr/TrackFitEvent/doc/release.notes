@@ -4,10 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v3r12 2008-02-27 ===================
 ! 2008-02-27 - Chris Jones
  - Add a few missing STL includes
 
-!========================== TrackFitEvent v3r12 2008-02-07 ===================
 ! 2008-02-07 - Marco Cattaneo
  - Clean up public includes, using new GaudiObjDesc forward declaration possibilities
 
