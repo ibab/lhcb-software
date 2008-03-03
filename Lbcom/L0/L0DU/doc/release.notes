@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.85 2008-02-21 15:30:57 cattanem Exp $
+! $Id: release.notes,v 1.86 2008-03-03 22:35:14 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2008-03-03 - Olivier Deschamps 
+ - L0DUFromRawTool : fix bug when decoding consecutive BX info 
+
 
 !========================== L0DU v8r3 2008-02-21 =========================
 ! 2008-02-11 - Olivier Deschamps 

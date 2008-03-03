@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.5 2008-02-11 21:57:41 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.6 2008-03-03 22:35:15 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -343,14 +343,17 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     for(unsigned int i = 0 ; i < itc ; i++){
       if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
       m_fcs[std::make_pair(0,i)] = *data;
+      verbose() << " Fired channel summary[" <<i<<"] = "<<*data<<endreq;
     }
     for(unsigned int i = 0 ; i < itc ; i++){
       if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
       m_tcs[std::make_pair(0,i)]=*data;
+      verbose() << " Trigger channel summary[" <<i<<"] = "<<*data<<endreq;
     }
     for(unsigned int i = 0 ; i < iec ; i++){
       if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
       m_ecs[std::make_pair(0,i)]=*data;
+      verbose() << " Elementary condition summary[" <<i<<"] = "<<*data<<endreq;
     }
     
     
@@ -393,51 +396,52 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     
     
     // Previous/Next BX
-    for(unsigned int im = nm ; im > 0 ; im--){
+    for(int im = nm ; im > 0 ; im--){
       for(unsigned int i = 0 ; i < itc ; i++){
         if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-        m_tcs[std::make_pair(im,i)] = *data;
+        m_tcs[std::make_pair(-im,i)] = *data;
+        verbose() << "Trigger Channel Summary("<< -im << "," <<i << ") = " << *data << endreq;
       }
       for(unsigned int i = 0 ; i < iec ; i++){
         if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-        m_ecs[std::make_pair(im,i)] = *data;
+        m_ecs[std::make_pair(-im,i)] = *data;
+        verbose() << "Elementary Condition Summary("<< -im << "," <<i << ") = " << *data << endreq;
       }
     }
     verbose() << nm << " Previous BX summaries decoded " << endreq;  
     
     
     // SumEt
-    for(unsigned int im = nm ; im > 0 ; im--){
-      int odd = im-int(im/2)*2;
+    for(int im = nm ; im > 0 ; im--){
+      int odd = (nm-im)%2;
       if(odd == 0 &&  NULL == ++data){error()<<"No more data in bank --> CORRUPTION" 
                                              <<endreq; return false;}
-      std::stringstream num("");
-      num << im;
-      m_sumEt[im]= (*data >> 16*odd) & 0x3FFF ;
+      m_sumEt[-im]= (*data >> 16*odd) & 0x3FFF ;
+      verbose() << " slot  Prev" << im << " Sum(Et) = " <<  m_sumEt[-im] << endreq;
     }
     verbose() << nm << " Previous BX sumET decoded " << endreq;
-    
 
     
     for(int ip = 0 ; ip < np ; ip++){
       for(unsigned int i = 0 ; i < itc ; i++){
         if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-        m_tcs[std::make_pair(ip,i)] = *data;
+        m_tcs[std::make_pair(ip+1,i)] = *data;
+        verbose() << "Trigger Channel Summary("<< ip+1 << "," <<i << ") = " << *data << endreq;
       }
       for(unsigned int i = 0 ; i < iec ; i++){
         if( NULL == ++data){error()<<"No more data in bank --> CORRUPTION" <<endreq; return false;}
-        m_ecs[std::make_pair(ip,i)] = *data;
+        m_ecs[std::make_pair(ip+1,i)] = *data;
+        verbose() << "Elementary Condition Summary("<< ip+1 << "," <<i << ") = " << *data << endreq;
       }
     }
     verbose() << np << " Next BX summaries decoded " << endreq;  
     
     for(int ip = 0 ; ip < np ; ip++){
-      int odd = ip-int(ip/2)*2;
+      int odd = ip%2;
       if(odd == 0 && NULL == ++data){error()<<"No more data in bank --> CORRUPTION" 
                                             <<endreq; return false;}
-      std::stringstream num("");
-      num << ip;
-      m_sumEt[ip]                        = (*data >> 16*odd) & 0x3FFF ;
+      m_sumEt[ip+1]                        = (*data >> 16*odd) & 0x3FFF ;
+      verbose() << " slot  Next" << ip+1 << " Sum(Et) = " <<  m_sumEt[ip+1] << endreq;
     }
     verbose() << nm << " Next BX sumET decoded " << endreq;
     

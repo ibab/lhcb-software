@@ -1,0 +1,18 @@
+//-------------------------------- TCK = 0xDC06
+ToolSvc.L0DUConfig.registerTCK += {"0x0000"};
+ToolSvc.L0DUConfig.TCK_0x0000.Description =" TCK = 0x0000 Calo Cosmics Trigger (feb. 2008)";
+
+//----------------------------------------------- Compound data
+
+//-----------------------------------------------
+// Elementary Conditions  
+ToolSvc.L0DUConfig.TCK_0x0000.Conditions = { 
+  { "name=[Electron]" , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[20]"   },  
+  { "name=[Hadron]"   , "data=[Hadron(Et)]"    , "comparator=[>]" , "threshold=[3]"   }
+};
+//------------------
+// L0-Channels 
+ToolSvc.L0DUConfig.TCK_0x0000.Channels ={ 
+  {"name=[CaloCosmicsTrigger]"       , "rate==[100]", "conditions= [Electron] && [Hadron]   "}
+};
+

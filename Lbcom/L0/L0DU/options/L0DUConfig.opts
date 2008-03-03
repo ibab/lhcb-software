@@ -14,3 +14,5 @@ L0DU.TCK = "0xFFFF";  // This is the default for L0DUAlg
 #include "$L0DUROOT/options/L0DUConfig_0xFFFA_alg0_set1_lumi5.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
 #include "$L0DUROOT/options/L0DUConfig_0xFFF9_alg0_set1_lumi6.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
 
+#include "$L0DUROOT/options/L0DUConfig_0x0000_CaloCosmics.opts"
+
