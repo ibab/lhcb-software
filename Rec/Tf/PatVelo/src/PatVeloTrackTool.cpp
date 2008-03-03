@@ -1,4 +1,4 @@
-// $Id: PatVeloTrackTool.cpp,v 1.6 2008-02-28 14:26:12 dhcroft Exp $
+// $Id: PatVeloTrackTool.cpp,v 1.7 2008-03-03 11:21:59 krinnert Exp $
 // Include files 
 
 // from Gaudi
@@ -36,6 +36,8 @@ namespace Tf {
       declareProperty( "PhiAngularTol"   , m_phiAngularTol    = 0.005     );
       declareProperty( "ChargeThreshold" , m_chargeThreshold  = 15        );
       declareProperty( "highChargeFract" , m_highChargeFract  = 0.7        );
+      declareProperty( "RHitManagerName", m_rHitManagerName = "PatVeloRHitManager");
+      declareProperty( "PhiHitManagerName", m_phiHitManagerName = "PatVeloPhiHitManager");
     }
   //=============================================================================
   // Destructor
@@ -47,8 +49,8 @@ namespace Tf {
     StatusCode sc = GaudiTool::initialize();
     if(!sc) return sc;
 
-    m_rHitManager   = tool<PatVeloRHitManager>  ( "Tf::PatVeloRHitManager" );
-    m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager" );
+    m_rHitManager   = tool<PatVeloRHitManager>  ( "Tf::PatVeloRHitManager", m_rHitManagerName );
+    m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager", m_phiHitManagerName );
 
     info() << "=== Tool " << name() << " param. ==="<< endreq
       << "PhiAngularTol        = " << m_phiAngularTol       << endreq

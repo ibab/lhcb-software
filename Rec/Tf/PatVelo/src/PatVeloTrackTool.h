@@ -1,4 +1,4 @@
-// $Id: PatVeloTrackTool.h,v 1.2 2007-09-14 13:20:29 dhcroft Exp $
+// $Id: PatVeloTrackTool.h,v 1.3 2008-03-03 11:21:59 krinnert Exp $
 #ifndef TF_PATVELOTRACKTOOL_H 
 #define TF_PATVELOTRACKTOOL_H 1
 
@@ -81,6 +81,9 @@ namespace Tf {
     double m_phiAngularTol; 
     double m_chargeThreshold; ///<High threshold for cluster to be signal like
     double m_highChargeFract; ///<Fraction of high clusters required on track
+
+    std::string m_rHitManagerName;   ///< the name of the R hit manager instance
+    std::string m_phiHitManagerName; ///< the name of the Phi hit manager instance
 
     /// utilities for dealing with angles
     CircularRangeUtils<double> m_angleUtils;

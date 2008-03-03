@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-03-03 - Kurt Rinnert
+ - the hit manager names in PatVeloTrackTool are now also configurable. This
+   somehow fell through the cracks during the last update.
+
 ! 2008-02-28 - David Hutchcroft
  - Fix to avoid asking for phi of cluster at an r at smaller than the inner radius
 
