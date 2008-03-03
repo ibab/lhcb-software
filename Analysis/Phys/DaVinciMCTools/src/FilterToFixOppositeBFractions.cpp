@@ -1,4 +1,4 @@
-// $Id: FilterToFixOppositeBFractions.cpp,v 1.9 2008-03-03 16:56:52 sposs Exp $
+// $Id: FilterToFixOppositeBFractions.cpp,v 1.10 2008-03-03 17:14:30 pkoppenb Exp $
 // Include files
 #include <sstream>
 
@@ -14,23 +14,6 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : FilterToFixOppositeBFractions
 //
-// This Filter is created to fix the Bug2 observed on DC06 data
-// and reported by Patrick Robbe on the 13 feb 2007.
-// This bug affects the B composition of the opposite side with respect to the
-// signal B. This filter will remove specific fraction of events where 
-// abs(BsigID) equal abs(BoppoID) depending on events type.
-// It checks for signal B, using HepMC, looks for opposite B using the MC
-// originVertex() method. The case with more than 2 B's coming from the same
-// vertex is not handled properly for the time being.
-// To use it, add in your job option:
-// ApplicationMgr.DLLs += { "DaVinciMCTools" };
-// and create a sequence with all the algorithms that have to be processed 
-// each events. The FilterToFixOppositeBFractions has to be the first in the
-// list. Example :
-// ApplicationMgr.DLLs += { "DaVinciMCTools" };
-// ApplicationMgr.TopAlg += { "GaudiSequencer/MySeq" };
-// MySeq.Members += { "FilterToFixOppositeBFractions" };
-// FilterToFixOppositeBFractions.ActivateCorrection = true;
 //
 // 2007-02-22 : Stephane Poss
 //-----------------------------------------------------------------------------
@@ -45,6 +28,37 @@ DECLARE_ALGORITHM_FACTORY( FilterToFixOppositeBFractions );
 FilterToFixOppositeBFractions::FilterToFixOppositeBFractions( const std::string& name,
                                                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+    , m_coutSameB(0)
+    ,m_coutBd(0)
+    ,m_coutBs(0)
+    ,m_coutBu(0)
+    ,m_coutOt(0)
+    ,m_rejected(0)
+    ,m_coutBdAC(0)
+    ,m_coutBsAC(0)
+    ,m_coutBuAC(0)
+    ,m_coutOtAC(0)
+    ,m_coutevt(0)
+    ,m_coutevtAC(0)
+    ,m_BsBC(0)
+    ,m_BdBC(0)
+    ,m_BuBC(0)
+    ,m_OtBC(0)
+    ,m_BsAC(0)
+    ,m_BdAC(0)
+    ,m_BuAC(0)
+    ,m_OtAC(0)
+    ,m_errBsBC(0)
+    ,m_errBdBC(0)
+    ,m_errBuBC(0)
+    ,m_errOtBC(0)
+    ,m_errBsAC(0)
+    ,m_errBdAC(0)
+    ,m_errBuAC(0)
+    ,m_errOtAC(0)
+    ,m_ievt(0)
+    ,m_print(0)
+    ,m_printevt(0)
 {
   declareProperty("ActivateCorrection",   m_activate=false);
 }

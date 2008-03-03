@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.206 2008-03-03 16:56:52 sposs Exp $
+! $Id: release.notes,v 1.207 2008-03-03 17:14:30 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-03-03 - Patrick Koppenburg
+ - FilterToFixOppositeBFractions :
+   . Fix doxygen, initialize all variables
 
 ! 2008-03-03 - Stephane Poss
  - FilterToFixOppositeBFractions : 

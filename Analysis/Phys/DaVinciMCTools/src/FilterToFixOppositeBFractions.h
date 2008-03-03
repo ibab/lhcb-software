@@ -1,4 +1,4 @@
-// $Id: FilterToFixOppositeBFractions.h,v 1.2 2007-02-28 09:49:44 sposs Exp $
+// $Id: FilterToFixOppositeBFractions.h,v 1.3 2008-03-03 17:14:30 pkoppenb Exp $
 #ifndef FILTERTOFIXOPPOSITEBFRACTIONS_H 
 #define FILTERTOFIXOPPOSITEBFRACTIONS_H 1
 
@@ -11,6 +11,23 @@
 #include "Event/MCParticle.h"
 /** @class FilterToFixOppositeBFractions FilterToFixOppositeBFractions.h
  *   
+ * This Filter is created to fix the Bug2 observed on DC06 data
+ * and reported by Patrick Robbe on the 13 feb 2007.
+ * This bug affects the B composition of the opposite side with respect to the
+ * signal B. This filter will remove specific fraction of events where 
+ * abs(BsigID) equal abs(BoppoID) depending on events type.
+ * It checks for signal B, using HepMC, looks for opposite B using the MC
+ * originVertex() method. The case with more than 2 B's coming from the same
+ * vertex is not handled properly for the time being.
+ * To use it, create a sequence with all the algorithms 
+ * that have to be processed 
+ * each events. The FilterToFixOppositeBFractions has to be the first in the
+ * list. Example :
+ * @code
+ * ApplicationMgr.TopAlg += { "GaudiSequencer/MySeq" };
+ * MySeq.Members += { "FilterToFixOppositeBFractions" };
+ * FilterToFixOppositeBFractions.ActivateCorrection = true;
+ * @endcode 
  *
  *  @author Stephane Poss
  *  @date   2007-02-22
