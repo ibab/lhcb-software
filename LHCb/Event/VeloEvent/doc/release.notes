@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.53 2008-02-27 14:43:18 jonrob Exp $
+! $Id: release.notes,v 1.54 2008-03-03 10:17:40 cattanem Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
 
+!====================== VeloEvent v16r3 2008-03-03 ======================
 ! 2008-02-27 - Chris Jones
  - Add a few missing STL includes
 
