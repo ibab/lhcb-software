@@ -1,4 +1,4 @@
-// $Id: MassFitter.cpp,v 1.2 2008-02-24 19:48:19 ibelyaev Exp $
+// $Id: MassFitter.cpp,v 1.3 2008-03-03 10:39:20 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -42,11 +42,8 @@ namespace LoKi
    *  The most simple implementation of abstract interface IMassFit
    *  The tool performs the mass-constrained fit
    *
-   *
    *  The machinery from P.Avery's lectures is used 
    *  @see http://www.phys.ufl.edu/~avery/fitting/kinematic.pdf
-   *
-   *  @todo the tool LoKi::MassFitter is not properly tested yet!  
    *
    *
    *  Let \f$\vec{\alpha}=\left( \vec{x}, \vec{p}\right)\f$  
@@ -119,10 +116,15 @@ namespace LoKi
    *                    the maximal allowed deviation of the 
    *                    invarinat mass from the nominal mass
    *                    \f$\left|\mathrm{m}-\mathrm{m_c}\right|<\delta\f$.
-   *                    The default value is <b>0.1*Gaudi::Units::MeV</b> 
+   *                    The default value is <b>0.2*Gaudi::Units::MeV</b> 
    *    - "ChangeVertex" : the boolean flag to force the modification 
    *                     the decay vertex of the particle.
    *                     The default value is <b>true</b> 
+   *
+   *
+   *  @attention For the current implementation the particle is 
+   *             not transported to the new position, which 
+   *             corresponds to the modified vertex 
    *
    *  @see IMassFit
    *  @see IParticleRefitter
@@ -284,7 +286,7 @@ namespace LoKi
     {
       StatusCode sc = GaudiTool::initialize() ;
       if ( sc.isFailure() ) { return sc ; }
-      svc<IService>( "LoKiSvc" , true ) ;
+      svc<IService> ( "LoKiSvc" , true ) ;
       return StatusCode::SUCCESS ;
     }
     // ========================================================================
@@ -301,8 +303,8 @@ namespace LoKi
       const IInterface*  parent )
       : GaudiTool ( type, name , parent )
       , m_ppSvc         (  0 ) 
-      , m_iterMax       ( 10 )
-      , m_tolerance     ( 0.1 * Gaudi::Units::MeV ) 
+      , m_iterMax       ( 20 )
+      , m_tolerance     ( 0.2  * Gaudi::Units::MeV ) 
       , m_change_vertex ( true )
     {
       //
@@ -375,14 +377,14 @@ namespace LoKi
     // ========================================================================
   private:
     // ========================================================================
-    // pointer to the particle property service 
-    mutable IParticlePropertySvc* m_ppSvc     ; ///< the particle property service 
-    // maximal number of iterations 
-    unsigned int                  m_iterMax   ; ///< maximal number of iterations 
-    // the tolerance
-    double                        m_tolerance ; ///< the tolerance 
-    // flag to control the modification of end-vertex
-    bool m_change_vertex ; ///< flag to control the modification of end-vertex
+    /// pointer to the particle property service 
+    mutable IParticlePropertySvc* m_ppSvc     ; // the particle property service 
+    /// maximal number of iterations 
+    unsigned int                  m_iterMax   ; // maximal number of iterations 
+    /// the tolerance
+    double                        m_tolerance ; // the tolerance 
+    /// flag to control the modification of end-vertex
+    bool m_change_vertex ; // flag to control the modification of end-vertex
     // ========================================================================
   } ;  
 } // end of namespace LoKi
@@ -411,6 +413,7 @@ namespace LoKi
 StatusCode LoKi::MassFitter::fit
 ( LHCb::Particle* particle , const double mass , double& chi2 ) const 
 {
+  
   if ( 0 == particle ) 
   { return Error ( "LHCb::Particle* points to NULL" , InvalidParticle ) ; }
   
@@ -453,7 +456,9 @@ StatusCode LoKi::MassFitter::fit
   // the product of D * V_px
   static Gaudi::Vector3    s_dvpx ;
   
+  // ==========================================================================
   // perform the iterations
+  // ==========================================================================
   for ( unsigned int iter  = 1 ; iter <= m_iterMax ; ++iter ) 
   {
     // residual
@@ -466,57 +471,63 @@ StatusCode LoKi::MassFitter::fit
     s_D [ 3 ] =  2 * s_momentum1.E  () ;
     
     // evaluate V_D     = (D*V*D^T)-1
-    const double v_D    = 1.0 / ROOT::Math::Similarity ( s_vpp, s_D ) ;
+    const double v_D    = 1.0 / ROOT::Math::Similarity ( s_D , s_vpp ) ;
+    
+    // evaluate D*delta_alpha0 
+    const double DAlpha0 = 
+      2 *  s_momentum1.Dot ( particle->momentum() - s_momentum1 ) ;
     
     // evaluate lambda  = V_D * ( D * delta_alpha + d ) 
-    const double lambda = v_D * dmass2 ;
+    const double lambda = v_D * (  DAlpha0 + dmass2 ) ;
     
     // product of D*lambda
     s_DL  = s_D ;
     s_DL *= lambda ;
     
+    // D*V 
+    s_dvp  = s_D * s_vpp ;
+    s_dvpx = s_D * s_vpx ;
+    
     // new momentum:
     
-    // copy the Lorentz Vector of the particle momentum into the linear algebra 4-vector  
-    Gaudi::Math::geo2LA ( s_momentum1 , s_momentum2 ) ;
+    // copy the Lorentz Vector of the particle momentum 
+    //   into the linear algebra 4-vector  
+    Gaudi::Math::geo2LA ( particle -> momentum() , s_momentum2 ) ;
     // calculate new momentum
-    s_momentum2 -= s_DL * s_vpp ;
+    s_momentum2 -= s_dvp * lambda ;    
     Gaudi::Math::la2geo ( s_momentum2 , s_momentum1 ) ;
     
     // new position:
     
     // copy the Vertex Position of the particle into linear algebra 3-vector  
-    Gaudi::Math::geo2LA ( s_position1 , s_position2 ) ;
+    Gaudi::Math::geo2LA ( particle->referencePoint() , s_position2 ) ;
     // calculate new position ;
-    s_position2 -= s_DL * s_vpx ;
+    s_position2 -= s_dvpx * lambda ;
     Gaudi::Math::la2geo ( s_position2 , s_position1 ) ;
     
-    // the updated covariance matrices
-    
-    s_dvp  = s_D * s_vpp  ;
-    s_dvpx = s_D * s_vpx  ;
-    
-    // update the covariance matrices 
-    Gaudi::Math::update ( s_vpp , s_dvp  ,          -v_D ) ;
-    Gaudi::Math::update ( s_vxx , s_dvpx ,          -v_D ) ;
-    Gaudi::Math::update ( s_vpx , s_dvp  , s_dvpx , -v_D ) ;
-    
     // update chi2 value 
-    s_chi2 = lambda * dmass2 ;
+    s_chi2 = lambda * ( DAlpha0 + dmass2 ) ;
     
-    if ( massOK ( s_momentum1 , mass ) ) 
+    // check the convergency: 
+    if ( massOK ( s_momentum1 , mass  ) ) // CONVERGENCY ? 
     {
+      
+      Gaudi::Math::update ( s_vpp , s_dvp  ,          -v_D ) ;
+      Gaudi::Math::update ( s_vxx , s_dvpx ,          -v_D ) ;
+      Gaudi::Math::update ( s_vpx , s_dvp  , s_dvpx , -v_D ) ;
+      
       // fill the particle
       particle -> setMomentum        ( s_momentum1 ) ;
       particle -> setReferencePoint  ( s_position1 ) ;
       particle -> setMomCovMatrix    ( s_vpp       ) ;
       particle -> setPosCovMatrix    ( s_vxx       ) ;
       particle -> setPosMomCovMatrix ( s_vpx       ) ; 
-      //
+      //      
+
       // set chi2:
       chi2 = s_chi2 ;
       // play a bit with extra-info
-      particle -> addInfo ( LHCb::Particle::Chi2OfMassConstrainedFit , s_chi2 ) ;
+      particle -> addInfo ( LHCb::Particle::Chi2OfMassConstrainedFit , chi2 ) ;
       //
       if ( m_change_vertex ) 
       {
@@ -528,19 +539,34 @@ StatusCode LoKi::MassFitter::fit
         }
         else { Warning ( "EndVertex points to NULL, ignore" ) ; }
       }
-      //
+      // 
       counter ( "#iterations" ) += iter ; 
       //
       return StatusCode::SUCCESS ;                                // RETURN
-    }    
-  }  // end of iterations
+    }
+    // ========================================================================
+  } // end of iterations
+  // ==========================================================================
   // 
   // we are here, looks like there is no convergency
   counter ( "dmass" ) += s_momentum1.M() - mass ;
   counter ( "chi2"  ) += s_chi2 ;
   //
-  return Error
-    ( "No convergency for mass-constrained fit" , NoConvergency ) ;
+  StatusCode sc = StatusCode ( NoConvergency , true ) ;
+  Error ( "No convergency for mass-constrained fit" , sc ).ignore() ;
+  // 
+  if ( msgLevel ( MSG::DEBUG ) ) 
+  {
+    MsgStream& log = debug() ;
+    log << " The error in Mass-conatined fit: "                 << std::endl ; 
+    log << "\tThe Particle    : "<< (*particle)                 << std::endl ;
+    log << "\tThe 4-momentum  : "<< particle->momentum()        << std::endl ;
+    log << "\tThe Matrix V_p  : "<< particle->momCovMatrix()    << std::endl ;
+    log << "\tThe Matrix V_px : "<< particle->posMomCovMatrix() << std::endl ;
+    log << "\tThe Matrix V_x  : "<< particle->posCovMatrix()    << endreq    ;
+  }
+  //
+  return sc ; 
 }
 // ============================================================================
 /// the factory ( needed for instantiation)

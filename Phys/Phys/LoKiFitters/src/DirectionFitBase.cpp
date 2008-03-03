@@ -1,4 +1,4 @@
-// $Id: DirectionFitBase.cpp,v 1.3 2008-02-28 15:54:38 ibelyaev Exp $
+// $Id: DirectionFitBase.cpp,v 1.4 2008-03-03 10:39:20 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -267,22 +267,27 @@ void LoKi::DirectionFitBase::wmatrix
   //
   // W = d(H)/d(p_mu)
   //
-  w ( 0 , 0 ) = ( 1.0 + v . Px () * v . Px () / m2 ) ; // dHx/dpx 
-  w ( 0 , 1 ) = (       v . Px () * v . Py () / m2 ) ; // dHx/dpy 
-  w ( 0 , 2 ) = (       v . Px () * v . Pz () / m2 ) ; // dHx/dpz 
+  const double p_x = v.Px () ;
+  const double p_y = v.Py () ;
+  const double p_z = v.Pz () ;
+  const double e   = v.E  () ;
+  //
+  w ( 0 , 0 ) = ( 1.0 + p_x * p_x / m2 ) ; // dHx/dpx 
+  w ( 0 , 1 ) = (       p_x * p_y / m2 ) ; // dHx/dpy 
+  w ( 0 , 2 ) = (       p_x * p_z / m2 ) ; // dHx/dpz 
   w ( 1 , 0 ) =  m_w(0,1) ;                            // dHy/dpx 
-  w ( 1 , 1 ) = ( 1.0 + v . Py () * v . Py () / m2 ) ; // dHy/dpy 
-  w ( 1 , 2 ) = (       v . Py () * v . Pz () / m2 ) ; // dHy/dpz 
+  w ( 1 , 1 ) = ( 1.0 + p_y * p_y / m2 ) ; // dHy/dpy 
+  w ( 1 , 2 ) = (       p_y * p_z / m2 ) ; // dHy/dpz 
   w ( 2 , 0 ) =  w(0,2) ;                              // dHz/dpx 
   w ( 2 , 1 ) =  w(1,2) ;                              // dHz/dpy 
-  w ( 2 , 2 ) = ( 1.0 + v . Pz () * v . Pz () / m2 ) ; // dHz/dpz
+  w ( 2 , 2 ) = ( 1.0 + p_z * p_z / m2 ) ; // dHz/dpz
   
-  w ( 0 , 3 ) = (     - v . Px () * v . E  () / m2 ) ; // dHx/de 
-  w ( 1 , 3 ) = (     - v . Py () * v . E  () / m2 ) ; // dHy/de 
-  w ( 2 , 3 ) = (     - v . Pz () * v . E  () / m2 ) ; // dHz/de 
+  w ( 0 , 3 ) = (     - p_x * e   / m2 ) ; // dHx/de 
+  w ( 1 , 3 ) = (     - p_y * e   / m2 ) ; // dHy/de 
+  w ( 2 , 3 ) = (     - p_z * e   / m2 ) ; // dHz/de 
   //
   w *= ctau / m ;
-
+  //
 }
 // ========================================================================
 
