@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r4>2008-02-25 LHCbSys v23r4</A></H1><PRE>
+</PRE><H1><A NAME=v23r4>2008-03-03 LHCbSys v23r4</A></H1><PRE>
 This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
 
 - Packages removed: MDF_DCAP - Functionality now in MDF_ROOT
@@ -13,9 +13,11 @@ This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
                     MDF_RFIO - Functionality now in MDF_ROOT
 - Packages modified: GaudiObjDesc v11r2, KernelSys v7r2, LHCbKernel v8r2,
     LHCbMath v2r6,Relations v5r4, RichKernel v7r11, DetSys v11r3, DetDesc v18r4,
-    RichDet v10r10, VeloDet v12r4, EventSys v24r1, DAQEvent v7r9,
-    EventAssoc v4r4, HltEvent v8r7, L0Event v16r8, MCEvent v2r7, PhysEvent v11r6,
-    RecEvent v2r10, TrackEvent v4r2, CaloUtils v7r8, CondDBUI v2r8,
+    Magnet v3r7, RichDet v10r10, VeloDet v12r4, EventSys v24r1, DAQEvent v7r9,
+    DigiEvent v2r4, EventAssoc v4r4, EventBase v2r5, GenEvent v5r2,
+    HltEvent v8r7, LinkerEvent v3r3, L0Event v16r8, MCEvent v2r7,
+    PackedEvent v3r3, PhysEvent v11r6, RecEvent v2r10, TrackEvent v4r2,
+    VeloEvent v16r3, CaloUtils v7r8, CondDBUI v2r8, DDDB v1r4,
     DetCond v11r9, DaVinciKernel v6r11, DaVinciMCKernel v2r6, LHCbAlgs v2r15,
     LoKiAlgo v7r1, LoKiArrayFunctors v7r1, LoKiCore v7r1, LoKiGen v7r1,
     LoKiMC v7r1, LoKiNumbers v7r2, LoKiPhys v7r1, MDF v3r4, MDF_ROOT v1r1,
@@ -33,6 +35,7 @@ This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
       generated default constructor
     o if the attribute type starts with "const " fix the return type of the get
       method to "const <type>" (had an additional const before)
+  . Fixed bug 33839: genClasses::reset() fix for multiple classes in one XML file
 
 - In LHCbKernel v8r2
   . Add new method to Rich::Side enum, to convert side to text more precisely 
@@ -46,6 +49,8 @@ This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
 
 - In Relations v5r4
   . Remove explicit manipulations of PYTHONPATH
+  . src/InstanceCounter.cpp
+     change the printout for non-deleted objects from INFO fro WARNING
 
 - In RichKernel v7r11
   . Update RichGeomPhoton to store a pointer to the associated DeRichSphMirror
@@ -68,6 +73,10 @@ This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
     o Disabled (by default, can enable with a flag) the HTML header and trailer
   . Improved Python bindings for Condition. 
 
+- In Magnet v3r7
+  . Add protections to MagneticFieldSvc to make it robust against crazy input
+    coordinates
+
 - In RichDet v10r10
   . Add a new public method to DeRichHPDPanel to return a pointer to the 
     DeRichHPD object associated to a given HPD as defined by a RichSmartID
@@ -84,6 +93,7 @@ This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
   . In RawBank:
     o Move implementation of typeName( BankType ) to .ccp as it cannot be inlined
     o Cleanup stl includes
+  . new algo OdinTypesFilter, filters according to TriggerTypes and/or BXTypes
 
 - In EventAssoc v4r4
   . Add dictionary for "L0CaloCandidate -> MCParticle with the weight=double" 
@@ -133,10 +143,15 @@ This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
       Return the list of folders (or foldersets) in which the local tag is
       defined.
 
+- In DDDB v1r4
+  . Added Python option files DDDB.py (requires SQLDDDB.py) and DC06.py.
+
 - In DetCond v11r9
   . Fixed a problem occurring when trying to retrieve a folder which is not in
     the database (typical case for CondDBLayeringSvc), due to an uninitialized
     variable.
+  . Added the Python module DetCond.Configuration to provide useful functions
+    for the configuration of the CondDB: addCondDBLayer, addCondDBAlternative
 
 - In DaVinciKernel v6r11
   . Add more accessors to DVAlgorithm:
@@ -181,16 +196,24 @@ This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
 
 - In LoKiPhys v7r1
   . Implement many shortcuts&aliases
-  . LoKi/Particles19.h, src/Particles19.cpp:
-       various "lifetime" functors, which are using ILifetimeFitter interface
-  . LoKi/ParticleContextCuts.h, LoKi/Particles20.h, src/Particles20.cpp
-       new "context-dependent" functors
-  . src/Particles7.cpp
-    modify the printout of VFASPF functor ( "[...]" --> "(...)" ) 
+  . Add various "lifetime" functors, which are using ILifetimeFitter interface
+  . Add new "context-dependent" functors
+  . Modify the printout of VFASPF functor ( "[...]" --> "(...)" ) 
   . python/LoKiPhys/Phys.py: couple of minor fixes 
   . add more printout for easier location of problems 
   . increment number of constructors for "MinImpPar" context-functions 
   . add more tricky check into LoKi::Vertices::IsPrimary 
+  . python/LoKiPhys/functions.py:
+    o Change "instance"<-->"type" for the symbols: BPVDIRA,BESTPVCOSPF,
+      BPVVD,BESTPVVETSEP, BPVVDSIGN,BESTPVVETSEPSIGN, BPVVDDOT,
+      BESTPVVETSEPALONGMOM, BPVVCHI2. All of them are now *INSTANCES*,
+      therefore no extra "()" is required for instantiation
+    o add missing symbol ISMUON 
+    o import the symbols M1,M2,M3 and M4 from C++ 
+  . fix invalid printout of "Tree" meta-functors
+  . fix invalid start value of "MULTTREE" meta-functor
+  . Add new C++ type: LoKi::Vertices::Chi2Prob and the symbols for C++ and
+    python: VPCHI2N, VPCHI2 
 
 - In MDF v3r3, v3r4
   . Use ROOT as default for: rfio, castor, dcache, dcap, gsidcap and gfal
@@ -219,14 +242,21 @@ This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
 
 - In TfKernel v2r3
   . fixed typo in VeloSensorHits<>::closestHitAtRHalfBoxImp().
+  . bug fix in DefaultVeloHitManager: the configurable cluster locations where
+    actually not used.
+  . The names of the default VELO hit manager instances used by the extended
+    VELO hit managers can now be configured via options.  
 
 - In TrackInterfaces v3r12
   . Added code needed for L0 confirmation to IPatSeedingTool
 
-- In HltEvent v8r7, RecEvent v2r10, TrackEvent v4r2, CaloUtils v7r8,
-     DaVinciMCKernel v2r6, STKernel v1r2, TfKernel v2r3, VeloDet v12r4,
-     RichKernel v7r11, RichRecBase v3r11
-  . Cleanup public includes using forward declarations whenever possible
+- In CaloUtils v7r8, DaVinciMCKernel v2r6, STKernel v1r2, TfKernel v2r3, 
+     VeloDet v12r4, RichKernel v7r11, RichRecBase v3r11, LHCbKernel v8r2,
+     DAQEvent v7r9, DigiEvent v2r4, EventBase v2r5, GenEvent v5r2, HltEvent v8r7,
+     LinkerEvent v3r3, L0Event v16r8, MCEvent v2r7, PackedEvent v3r3,
+     PhysEvent v11r6, RecEvent v2r10, TrackEvent v4r2,VeloEvent v16r3
+  . Cleanup public includes using forward declarations whenever possible, adding
+    missing includes where necessary
 
 - In DetDescExample v7r6
   . Adapt to changes in DetDesc
