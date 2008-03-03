@@ -1,4 +1,4 @@
-# $Id: release.notes,v 1.123 2008-03-03 09:13:43 cattanem Exp $
+# $Id: release.notes,v 1.124 2008-03-03 11:34:37 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
@@ -6,6 +6,11 @@
 !-----------------------------------------------------------------------------
 
 !===================== Det/DetCond v11r9 2008-03-03 ==========================
+! 2008-03-03 - Marco Clemencic
+ - Added the function "useCondDBLogger" to DetCond.Configuration.
+ - Modified DetCond.Configuration to expose the configurables provided by the
+   package when imported. 
+
 ! 2008-02-29 - Marco Clemencic
  - Added the Python module DetCond.Configuration to provide useful functions
    for the configuration of the CondDB:

@@ -1,7 +1,7 @@
 """
 High level configuration tools for Conditions Database.
 """
-__version__ = "$Id: Configuration.py,v 1.1 2008-02-29 19:11:56 marcocle Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2008-03-03 11:34:37 marcocle Exp $"
 __author__  = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
 from Gaudi.Configuration import allConfigurables
@@ -9,11 +9,24 @@ from Configurables import ( CondDBAccessSvc,
                             CondDBDispatcherSvc, 
                             CondDBLayeringSvc, 
                             CondDBCnvSvc,
-                            CondDBSQLiteCopyAccSvc )
+                            CondDBSQLiteCopyAccSvc,
+                            CondDBLogger )
 
 # Exported symbols
-__all__ = [ "addCondDBLayer", "addCondDBAlternative" ]
+__all__ = [ "addCondDBLayer", "addCondDBAlternative", "useCondDBLogger" ]
+# Configurables provided by the package
+__all__ += [ "CondDBAccessSvc",
+             "CondDBDispatcherSvc", "CondDBLayeringSvc",
+             "CondDBSQLiteCopyAccSvc", "CondDBLogger",
+             "CondDBCnvSvc" ]
 
+def _assertConfig(funcname):
+    """
+    Check if the default configuration has been loaded.
+    """
+    if "CondDBCnvSvc" not in allConfigurables:
+        raise RuntimeError("You cannot call '%s' before the standard CondDB configuration"%funcname)
+     
 def addCondDBLayer(accessSvc):
     """
     Add the given CondDBReader as a layer on top of the existing configuration.
@@ -30,8 +43,7 @@ def addCondDBLayer(accessSvc):
         raise TypeError("addCondDBLayer does not support '%s'"%accessSvc.__class__.__name__)
     
     # Check for basic configuration 
-    if "CondDBCnvSvc" not in allConfigurables:
-        raise RuntimeError("You cannot call 'addCondDBLayer' before the standard CondDB configuration")
+    _assertConfig('addCondDBLayer')
     cnvSvc = allConfigurables["CondDBCnvSvc"]
     
     originalReader = cnvSvc.CondDBReader
@@ -71,9 +83,8 @@ def addCondDBAlternative(accessSvc,path):
     else:
         accessSvcName = accessSvc.getFullName()
     
-    # Check for basic configuration 
-    if "CondDBCnvSvc" not in allConfigurables:
-        raise RuntimeError("You cannot call 'addCondDBAlternative' before the standard CondDB configuration")
+    # Check for basic configuration
+    _assertConfig('addCondDBAlternative')
     cnvSvc = allConfigurables["CondDBCnvSvc"]
     
     originalReader = cnvSvc.CondDBReader
@@ -102,3 +113,25 @@ def addCondDBAlternative(accessSvc,path):
                                                   MainAccessSvc = originalReader,
                                                   Alternatives = [ "%s=%s"%(path,accessSvcName) ]
                                                   )
+
+def useCondDBLogger(filename = None, logger = None):
+    """
+    Add the CondDBLogger to the chain of CondDBReaders.
+    
+    The simplest usage is to call the function without options (use defaults), or
+    pass a file name. 
+    """
+    _assertConfig('useCondDBLogger')
+    cnvSvc = allConfigurables["CondDBCnvSvc"]
+    if logger is None:
+        # use the default configuration
+        cnvSvc.CondDBReader = CondDBLogger(LoggedReader = cnvSvc.CondDBReader)
+    elif type(logger) is CondDBLogger:
+        # use the user-provided configurable
+        logger.LoggedReader = cnvSvc.CondDBReader
+        cnvSvc.CondDBReader = logger
+    else:
+        raise TypeError("useCondDBLogger does not support '%s'"%logger.__class__.__name__)
+    # Use the user specified filename, if any
+    if filename:
+        cnvSvc.CondDBReader.LogFile = filename
