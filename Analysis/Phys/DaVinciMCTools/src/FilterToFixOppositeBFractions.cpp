@@ -1,4 +1,4 @@
-// $Id: FilterToFixOppositeBFractions.cpp,v 1.8 2007-03-12 14:30:55 cattanem Exp $
+// $Id: FilterToFixOppositeBFractions.cpp,v 1.9 2008-03-03 16:56:52 sposs Exp $
 // Include files
 #include <sstream>
 
@@ -69,6 +69,8 @@ StatusCode FilterToFixOppositeBFractions::initialize() {
   m_coutBdAC=m_coutBsAC=m_coutBuAC=m_coutOtAC=0;
   m_print=false;
   m_printevt=false;
+  m_ievt = 0;
+  
 
   //initialize table
   //      Event type                               gx    fx 
@@ -247,7 +249,7 @@ StatusCode FilterToFixOppositeBFractions::execute() {
 //=============================================================================
 StatusCode FilterToFixOppositeBFractions::finalize() {
 
-  if(!m_activate) return GaudiAlgorithm::finalize();
+  if(!m_activate || 0 == m_ievt) return GaudiAlgorithm::finalize();
 
   m_BdBC=percent(m_coutBd,m_coutevt);
   m_BsBC=percent(m_coutBs,m_coutevt);

@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.205 2008-02-20 21:07:56 pkoppenb Exp $
+! $Id: release.notes,v 1.206 2008-03-03 16:56:52 sposs Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-03-03 - Stephane Poss
+ - FilterToFixOppositeBFractions : 
+  . initialize m_ievt to 0
+  . Don't print anything in finalize if filter not needed (m_ievt = 0)
 
 ! 2008-02-20 - Patrick Koppenburg
  - Include PhysicalConstants where needed
