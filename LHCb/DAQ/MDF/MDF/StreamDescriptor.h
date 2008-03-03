@@ -1,11 +1,11 @@
-// $Id: StreamDescriptor.h,v 1.6 2008-02-05 16:44:18 frankb Exp $
+// $Id: StreamDescriptor.h,v 1.7 2008-03-03 20:05:04 frankb Exp $
 //====================================================================
 //  StreamDescriptor.h
 //--------------------------------------------------------------------
 //
 //  Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/StreamDescriptor.h,v 1.6 2008-02-05 16:44:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/StreamDescriptor.h,v 1.7 2008-03-03 20:05:04 frankb Exp $
 #ifndef LHCb_STREAMDESCRIPTOR_H
 #define LHCb_STREAMDESCRIPTOR_H 1
 
@@ -50,16 +50,16 @@ namespace LHCb {
       PosixIO*  ioFuncs;
     private:
       /// Fast functions: read buffer into memory
-      bool (*m_read)     (const Access& con, void* buffer, int max_len);
+      int   (*m_read)     (const Access& con, void* buffer, int max_len);
       /// Fast functions: write buffer from memory
-      bool (*m_write)    (const Access& con, const void* buffer, int max_len);
+      bool  (*m_write)    (const Access& con, const void* buffer, int max_len);
       /// Fast functions: seek file location
       longlong (*m_seek) (const Access& con, long long offset, int where);
     public:
       Access() : ioDesc(-1), ioFuncs(0), m_read(0), m_write(0), m_seek(0){}      
       bool write(const void* data, int len)  const      
       { return (*m_write)(*this,data, len);               }
-      bool read(void* data, int len)  const             
+      int  read(void* data, int len)  const             
       { return (*m_read)(*this,data, len);                }
       long long seek(long long offset, int where) const 
       { return (*m_seek)(*this,offset, where);            }
@@ -107,7 +107,7 @@ namespace LHCb {
     static int close(Access& specs);
     static bool write(const Access& con, const void* data, int len)
     {   return (*con.m_write)(con, data, len);         }
-    static bool read(const Access& con, void* data, int len)
+    static int  read(const Access& con, void* data, int len)
     {   return (*con.m_read)(con, data, len);          }
     static long long seek(const Access& con, long long offset, int where)
     {   return (*con.m_seek)(con, offset, where);       }

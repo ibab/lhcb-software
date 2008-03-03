@@ -6,6 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r4 2008-03-03 ===============================
+! 2008-03-03 - Markus Frank
+ - Detector EOF when reading MDF files with ROOT.
+
 !========================= MDF v3r4 2008-02-22 ===============================
 ! 2008-02-21 - Markus Frank
  - Set proper MDF header when writing TAE events. Use the MDF header information

@@ -1,4 +1,4 @@
-// $Id: RawDataConnection.cpp,v 1.4 2008-02-05 16:18:19 frankb Exp $
+// $Id: RawDataConnection.cpp,v 1.5 2008-03-03 20:05:04 frankb Exp $
 #include "MDF/RawDataConnection.h"
 #include "MDF/StreamDescriptor.h"
 #include <iostream>
@@ -50,7 +50,8 @@ StatusCode RawDataConnection::connectWrite(IoType typ)  {
 /// Read raw byte buffer from input stream
 StatusCode RawDataConnection::read(void* const data, size_t len)  {
   resetAge();
-  return StreamDescriptor::read(m_access,data,len) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+  int sc = StreamDescriptor::read(m_access,data,len);
+  return sc==1 ? StatusCode::SUCCESS : StatusCode(sc);
 }
 
 /// Write raw byte buffer to output stream

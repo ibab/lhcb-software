@@ -6,7 +6,7 @@
 //
 //  Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.17 2008-02-11 07:56:50 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.18 2008-03-03 20:05:04 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -77,15 +77,16 @@ namespace FileIO {
 typedef LHCb::StreamDescriptor::Access Access;
 
 namespace {
-  bool file_read(const Access& con, void* buff, int len)  {
+  int file_read(const Access& con, void* buff, int len)  {
     int tmp = 0;
     char* p = (char*)buff;
     while ( tmp < len )  {
       int sc = FileIO::read(con.ioDesc,p+tmp,len-tmp);
-      if ( sc > 0 ) tmp += sc;
-      else          return false;
+      if ( sc >  0 ) tmp += sc;
+      else if ( sc == 0 ) return 0;
+      else                return -1;
     }
-    return true;
+    return 1;
   }
   bool file_write(const Access& con, const void* data, int len)  {
     const char* p = (const char*)data;
@@ -101,15 +102,15 @@ namespace {
   long long file_seek(const Access& con, long long offset, int where)  {
     return FileIO::lseek64(con.ioDesc,offset,where);
   }
-  bool ip_recv(const Access& con, void* buff, int len)  {
+  int ip_recv(const Access& con, void* buff, int len)  {
     int tmp = 0;
     char* p = (char*)buff;
     while ( tmp < len )  {
       int sc = Networking::recv(con.ioDesc,p+tmp,len-tmp,0);
       if ( sc > 0 ) tmp += sc;
-      else          return false;
+      else          return 0;
     }
-    return true;
+    return 1;
   }
   bool ip_send(const Access& con, const void* data, int len)  {
     char* p = (char*)data;
@@ -124,18 +125,31 @@ namespace {
   long long ip_seek(const Access& /* con */, long long /* offset */, int /* where */)  {
     return -1;
   }
-  bool posix_read(const Access& con, void* buff, int len)  {
+  long long posix_seek(const Access& con, long long offset, int where)  {
+    if ( con.ioFuncs && con.ioFuncs->lseek64 )  {
+      return con.ioFuncs->lseek64(con.ioDesc,offset,where);
+    }
+    return -1;
+  }
+  int posix_read(const Access& con, void* buff, int len)  {
     if ( con.ioFuncs && con.ioFuncs->read )  {
+      long long int end, cur;
       int tmp = 0;
       char* p = (char*)buff;
       while ( tmp < len )  {
         int sc = con.ioFuncs->read(con.ioDesc,p+tmp,len-tmp);
-        if ( sc > 0 ) tmp += sc;
-        else          return false;
+        if      ( sc > 0 )  {
+	  tmp += sc;
+	}
+	else   {
+	  end = posix_seek(con,0,SEEK_END);
+	  cur = posix_seek(con,0,SEEK_CUR);
+	  return (cur==end && cur>0 ) ? 0 : -1;
+	}
       }
-      return true;
+      return 1;
     }
-    return false;
+    return 0;
   }
   bool posix_write(const Access& con, const void* data, int len)  {
     if ( con.ioFuncs && con.ioFuncs->write )  {
@@ -150,12 +164,6 @@ namespace {
       return true;
     }
     return false;
-  }
-  long long posix_seek(const Access& con, long long offset, int where)  {
-    if ( con.ioFuncs && con.ioFuncs->lseek64 )  {
-      return con.ioFuncs->lseek64(con.ioDesc,offset,where);
-    }
-    return -1;
   }
   LHCb::PosixIO* getIOModule(const std::string& proto)    {
     typedef std::map<std::string,LHCb::PosixIO*> _M;

@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.18 2008-02-05 16:44:18 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.19 2008-03-03 20:05:04 frankb Exp $
 //====================================================================
 //  OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -113,12 +113,7 @@ StatusCode RawDataSelector::finalize()  {
 StatusCode RawDataSelector::next(Context& ctxt) const  {
   LoopContext* pCtxt = dynamic_cast<LoopContext*>(&ctxt);
   if ( pCtxt != 0 )   {
-    StatusCode sc = pCtxt->receiveData(msgSvc());
-    if ( !sc.isSuccess() ) {
-      MsgStream log(msgSvc(),name());
-      log << MSG::INFO << "Failed to receieve the next event from:" << pCtxt->specs() << endmsg;
-    }
-    return sc;
+    return pCtxt->receiveData(msgSvc());
   }
   return S_ERROR;
 }
