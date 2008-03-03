@@ -4,7 +4,10 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
-!======================== GaudiObjDesc v11r2 2008-02-20 ======================
+!======================== GaudiObjDesc v11r2 2008-03-03 ======================
+! 2008-03-03 - Stefan for Brett Viren
+ - Fixed bug 33839: genClasses::reset() fix for multiple classes in one XML file
+
 ! 2008-02-12 Stefan
 - changes for attribute types: 
   - if the attribute type is a pointer type initialize it to 0 in GODs self
