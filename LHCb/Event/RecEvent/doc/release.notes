@@ -1,14 +1,14 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.90 2008-02-27 12:32:44 jonrob Exp $
+! $Id: release.notes,v 1.91 2008-03-03 11:02:03 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r15 2008-03-03 =========================
 ! 2008-02-27 - Chris Jones
  - Force inclusion of missing STL includes in G.O.D. classes
 
-!========================= RecEvent v2r15 2008-02-20 =========================
 ! 2008-02-15 - Patrick Koppenburg
  - VertexBase: two new methods returning the chi2/Dof and allowing to set
    the chi2 and the dof at the same time. The names are the same as the ones
