@@ -1,19 +1,16 @@
-! $Id: release.notes,v 1.138 2008-02-27 13:25:15 jonrob Exp $
+! $Id: release.notes,v 1.139 2008-03-03 10:36:56 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+!======================== PhysEvent v11r6 2008-03-03 ========================
 ! 2008-02-27 - Chris Jones
  - Add missing STL includes
 
-!======================== PhysEvent v11r6 2008-02-24 ========================
-
 ! 2008-02-24 - Vanya BELYAEV
-
  - Particle.xml
      : add predefined enum Chi2OfVertexConstrainedFit 
      : add predefined enum Chi2OfParticleReFitter 
-
 
 ! 2008-02-19 - Vanya BELYAEV
  - Particle.xml
