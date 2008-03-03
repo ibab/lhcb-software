@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.24 2008-02-27 11:27:34 wouter Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.25 2008-03-03 10:04:02 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -29,8 +29,6 @@ DECLARE_SERVICE_FACTORY( MagneticFieldSvc );
 MagneticFieldSvc::MagneticFieldSvc( const std::string& name, 
             ISvcLocator* svc ) : Service( name, svc )
 {
-  //  m_Q.reserve(736278);
-
   m_constFieldVector.push_back( 0. );
   m_constFieldVector.push_back( 0. );
   m_constFieldVector.push_back( 0. );

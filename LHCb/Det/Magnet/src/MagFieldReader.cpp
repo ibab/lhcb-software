@@ -1,10 +1,9 @@
-// $Id: MagFieldReader.cpp,v 1.10 2008-01-14 15:45:48 ahicheur Exp $
+// $Id: MagFieldReader.cpp,v 1.11 2008-03-03 10:04:01 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
-#include "GaudiKernel/IChronoStatSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/RndmGenerators.h"
 
@@ -123,17 +122,6 @@ StatusCode MagFieldReader::execute() {
   // Return status code.
   return StatusCode::SUCCESS;
 }
-
-
-StatusCode MagFieldReader::finalize() {
-
-  StatusCode sc = GaudiTupleAlg::finalize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-if ( sc.isSuccess() )
-    info() << "Service finalized successfully" << endmsg;
-  return StatusCode::SUCCESS;
-};
-
 
 void MagFieldReader::TestBdl() 
 {

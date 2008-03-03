@@ -4,9 +4,13 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
-! 2007-10-05 - Marco Cattaneo
- - In BdlTool, objects created in initialize now deleted in finalize, not in
-   destructor (needed when generating configurables)
+!====================== Magnet v3r7 2008-03-03 ===============================
+! 2008-03-03 - Marco Cattaneo
+ - Remove pointless MagFieldReader::finalize method
+
+! 2008-02-28 - Wouter Hulsbergen
+ - Add protections to MagneticFieldSvc to make it robust against crazy input
+   coordinates
 
 ! 2007-08-28 - Adlene Hicheur
  - AnalyticFieldSvc: fixed derivation of B field values from odd/even symmetries
@@ -20,6 +24,12 @@
  - First import of AnalyticFieldSvc
  - Added Helper classes as well
  - Edited MagFieldReader and job options for the tests
+
+!====================== Magnet v3r6p1 2007-10-05 =============================
+! built on v3r6b branch
+! 2007-10-05 - Marco Cattaneo
+ - In BdlTool, objects created in initialize now deleted in finalize, not in
+   destructor (needed when generating configurables)
 
 !====================== Magnet v3r6 2007-03-19 ===============================
 ! 2007-03-19 - Marco Cattaneo

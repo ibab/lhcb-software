@@ -1,4 +1,4 @@
-// $Id: MagFieldReader.h,v 1.6 2008-01-14 15:45:49 ahicheur Exp $
+// $Id: MagFieldReader.h,v 1.7 2008-03-03 10:04:02 cattanem Exp $
 #ifndef MAGFIELDREADER_H 
 #define MAGFIELDREADER_H 1
 
@@ -31,7 +31,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize   ();    ///< Algorithm finalization
   void TestBdl();
 
 protected:
@@ -40,9 +39,6 @@ private:
   
   // Pointer to the magnetic field service
   IMagneticFieldSvc* m_pIMF;  
-
-
-  
 
   // range and steps in z to get the magnetic field 
   double m_zMin, m_zMax, m_step;
