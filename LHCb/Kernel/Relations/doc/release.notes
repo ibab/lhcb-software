@@ -1,17 +1,15 @@
-! $Id: release.notes,v 1.53 2008-02-29 17:46:30 ibelyaev Exp $ 
+! $Id: release.notes,v 1.54 2008-03-03 11:06:49 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+!====================== Relations v5r4 2008-02-29 ============================
 ! 2008-02-29 - Vanya BELYAEV
-
  - src/InstanceCounter.cpp
-
      change the printout for non-deleted objects from INFO fro WARNING
 
-!====================== Relations v5r4 2008-02-19 ============================
 ! 2008-02-19 - Vanya BELYAEV
  - cmt/requirements 
     1) remove the explicit manipulations of PYTHONPATH
