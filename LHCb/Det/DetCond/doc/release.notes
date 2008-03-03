@@ -1,17 +1,17 @@
-# $Id: release.notes,v 1.122 2008-02-29 19:11:56 marcocle Exp $
+# $Id: release.notes,v 1.123 2008-03-03 09:13:43 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!===================== Det/DetCond v11r9 2008-03-03 ==========================
 ! 2008-02-29 - Marco Clemencic
  - Added the Python module DetCond.Configuration to provide useful functions
    for the configuration of the CondDB:
    - addCondDBLayer
    - addCondDBAlternative
 
-!===================== Det/DetCond v11r9 2008-02-22 ==========================
 ! 2008-02-22 - Marco Cattaneo
  - Remove hacks in requirements no longer needed with Gaudi v19r7
 
