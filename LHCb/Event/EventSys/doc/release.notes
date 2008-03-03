@@ -2,10 +2,12 @@
 ! package manager: Marco Cattaneo
 !-------------------------------------------------------------------------
 
-!======================== EventSys v24r1 2008-02-20 ======================
-! 2008-02-20 - Marco Cattaneo
- - Use DAQEvent v7r9, EventAssoc v4r4, HltEvent v8r7, L0Event v16r8,
-       MCEvent v2r7, PhysEvent v11r6, RecEvent v2r10, TrackEvent v4r11
+!======================== EventSys v24r1 2008-03-03 ======================
+! 2008-03-03 - Marco Cattaneo
+ - Use DAQEvent v7r9, DigiEvent v2r4, EventAssoc v4r4, EventBase v2r5,
+       GenEvent v5r2, HltEvent v8r7, LinkerEvent v3r3, L0Event v16r8,
+       MCEvent v2r7, PackedEvent v3r3, PhysEvent v11r6, RecEvent v2r10,
+       TrackEvent v4r11, VeloEvent v16r3
 
 !======================== EventSys v24r0 2008-02-02 ======================
 ! 2008-02-02 - Marco Cattaneo
