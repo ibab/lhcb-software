@@ -1,4 +1,4 @@
-// $Id: MDF_ROOT_dll.cpp,v 1.4 2008-02-07 13:54:52 frankb Exp $
+// $Id: MDF_ROOT_dll.cpp,v 1.5 2008-03-03 20:07:38 frankb Exp $
 //  ====================================================================
 //  MDFIO.cpp
 //  --------------------------------------------------------------------
@@ -85,22 +85,6 @@ namespace {
     return kFALSE==gSystem->AccessPathName(nam, (mode&S_IWRITE) != 0 ? kWritePermission : kReadPermission) ? 0 : -1;
   }
   int root_unlink(const char*) {  return -1; }
-  int root_read(int fd, void *ptr, unsigned int size) {
-    FileMap::iterator i = fileMap().find(fd);
-    if ( i != fileMap().end() ) {
-      if ( (*i).second->ReadBuffer((char*)ptr,size)==0 )
-        return size;
-    }
-    return -1;
-  }
-  int root_write(int fd, const void *ptr, unsigned int size) {
-    FileMap::iterator i = fileMap().find(fd);
-    if ( i != fileMap().end() ) {
-      if ( (*i).second->WriteBuffer((const char*)ptr,size)==0 ) 
-        return size;
-    }
-    return -1;
-  }
   long long int root_lseek64(int fd, long long int offset, int how) {
     FileMap::iterator i = fileMap().find(fd);
     if ( i != fileMap().end() ) {
@@ -121,6 +105,27 @@ namespace {
   }
   long root_lseek(int s, long offset, int how) {
     return (long)root_lseek64(s,offset,how);
+  }
+  int root_read(int fd, void *ptr, unsigned int size) {
+    FileMap::iterator i = fileMap().find(fd);
+    if ( i != fileMap().end() ) {
+      TFile* f = (*i).second;
+      if ( f->GetBytesRead()+size > f->GetSize() ) {
+	//std::cout << "TFile:" << f->GetBytesRead() << " " << f->GetSize() << " " << std::endl;
+	return 0;
+      }
+      if ( f->ReadBuffer((char*)ptr,size)==0 )
+        return size;
+    }
+    return -1;
+  }
+  int root_write(int fd, const void *ptr, unsigned int size) {
+    FileMap::iterator i = fileMap().find(fd);
+    if ( i != fileMap().end() ) {
+      if ( (*i).second->WriteBuffer((const char*)ptr,size)==0 ) 
+        return size;
+    }
+    return -1;
   }
   int root_stat(const char*   /* path */, struct stat * /*statbuf */) {    return -1;  }
   int root_stat64(const char* /* path */, struct stat64 * /* statbuf */) { return -1; }
