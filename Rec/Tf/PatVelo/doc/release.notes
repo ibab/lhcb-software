@@ -4,12 +4,13 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r4 2008-03-03 ==========================
 ! 2008-03-03 - Kurt Rinnert
  - the hit manager names in PatVeloTrackTool are now also configurable. This
    somehow fell through the cracks during the last update.
 
 ! 2008-02-28 - David Hutchcroft
- - Fix to avoid asking for phi of cluster at an r at smaller than the inner radius
+ - Fix to avoid asking for phi of cluster at an r smaller than the inner radius
 
 ! 2008-02-27 - Kurt Rinnert
  - added option to run RZ tracking in 'backward only' mode
@@ -17,7 +18,6 @@
    This allows to run two (or more) independent VELO tracking sequences in one
    job.
 
-!========================== PatVelo v3r4 2008-02-14 ==========================
 ! 2008-02-14 - David Hutchcroft
  - Added PatVeloFitLHCbIDs as a tool with the interface ITrackFitter to expose
    the internal track fit from PatVelo.
