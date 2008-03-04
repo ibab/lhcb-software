@@ -11,6 +11,7 @@ class TGTextButton;
 
 class TCanvas;
 class TRootEmbeddedCanvas;
+class TGComboBox;
 
 class ReferencePicker : public TGTransientFrame
 {
@@ -30,6 +31,7 @@ private:
   TGTextButton *m_setSelectedAsRefButton;
   TGTextButton* m_cancelButton;
   int m_msgBoxReturnCode;
+  TGComboBox* m_normalizationSelector;
   TCanvas *c125;
   TRootEmbeddedCanvas *fRootEmbeddedCanvas746;
   

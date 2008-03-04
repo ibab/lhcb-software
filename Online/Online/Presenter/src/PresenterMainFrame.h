@@ -207,6 +207,9 @@ class PresenterMainFrame : public TGMainFrame
 
     void enableHistogramClearing();
     void disableHistogramClearing();
+    
+    void enableReferenceOverlay();
+    void disableReferenceOverlay();
 
     void enablePageRefresh();
     void disablePageRefresh();

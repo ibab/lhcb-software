@@ -12,6 +12,11 @@
 class DimInfo;
 //class TPad;
 
+enum ReferenceVisibility {
+    Show = 0,
+    Hide = 1
+};
+
 class DbRootHist : public HistogramIdentifier
 {
   public:
@@ -86,28 +91,26 @@ class DbRootHist : public HistogramIdentifier
     void setDrawOptionsFromDB(TPad* &pad);
     /// saves current ROOT display options to OnlineHistogram object and to Histogram DB
     bool saveTH1ToDB(TPad* pad = NULL);
-    /// save provided histogram as a reference in the standard file, with optional run period and data type
-    bool setReference(TH1 *ref,
-                      int startRun =1,
-                      std::string dataType = "default");
-    /// get reference histogram if available
-    TH1* getReference(int startRun = 1,
-                      std::string dataType = "default");
     // TH1 drawing methods
     /// calls TH1 Draw method, calls setDrawOptions()
     virtual void Draw(TPad* &pad);
     /// normalize reference (if existing and requested) to current plot
     void normalizeReference();
+    int startRun()  { return m_startRun;}
+    std::string dataType() { return m_dataType;}
+    
+    void referenceHistogram(ReferenceVisibility visibilty);
+    void setReferenceOption(std::string refOption) { m_refOption = refOption; }
 
   private:
     DimInfo*  m_gauchocommentDimInfo;
     // TODO: have a stack of offset for bracketing
     // state of histo @ clr/rst
-    TH1*      m_offsetHistogram;
+    TH1*  m_offsetHistogram;
 
 //    HistogramIdentifier m_histogramIdentifier;
 
-    bool      m_isAnaHist;
+    bool  m_isAnaHist;
     // source histograms for analysis histogram
     std::vector<DbRootHist*> m_anaSources;
     bool      m_anaLoaded;
@@ -117,9 +120,9 @@ class DbRootHist : public HistogramIdentifier
     std::vector<float> m_parameters;
 
     // DIM regular time interval
-    int       m_refreshTime;
+    int  m_refreshTime;
     // dimbuffer
-    float*    m_histoDimData;
+    float*  m_histoDimData;
     // overloaded from DimInfo
 //    void      infoHandler();
     // generated ROOT histo name for identification
@@ -129,7 +132,7 @@ class DbRootHist : public HistogramIdentifier
     // flag for refresh/static histo
 //    bool      m_toRefresh;
     // flag for clear/integrate
-    bool      m_cleared;
+    bool  m_cleared;
     std::string m_hstype;
     std::string m_hname;
     int m_instance;
@@ -155,7 +158,6 @@ class DbRootHist : public HistogramIdentifier
     void fillRootFromDim();
 
     bool updateDBOption(std::string opt, void* value, bool isDefault);
-    void drawReference();
 };
 
 #endif // DBROOTHIST_H
