@@ -4,6 +4,16 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2008-03-04 - Johan Blouw
+  - added functionality to TAConfigTool class, such that the Millepede alignment parameters
+    are now stored in a Transformation3D object which is subsequently stored in the transient
+    cond db per detector element. 
+  - Added code to TAConfigTool so that muon stations can also be aligned.
+  - changes to the way the doca is calculated in TAConfigTool class. It now works for both
+    OT/IT and Muon stations.
+  - added Matt's "WriteAlignmentConditions" class to AlignTrTools package.
+  
+
 ! 2008-02-06 - Louis Nicolas
  - Bug fix for the cut on the number of shared hits and close hits in AlignSelTool.cpp
  - Added Pt cut in AlignSelTool.cpp

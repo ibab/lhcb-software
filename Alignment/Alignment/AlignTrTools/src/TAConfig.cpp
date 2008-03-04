@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.14 2008-01-29 16:31:40 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.15 2008-03-04 09:37:51 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -13,6 +13,7 @@
 
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SmartRef.h"
 
 
 // Kernel
@@ -40,7 +41,7 @@
 // Conditions
 #include "DetDesc/IAlignment.h"
 #include "DetDesc/AlignmentCondition.h"
-
+#include "DetDesc/IGeometryInfo.h"
 //local header files
 #include "TAConfig.h"
 
@@ -367,7 +368,6 @@ StatusCode TAConfig::ConfigMuon( std::vector<Gaudi::Transform3D> &MUmap ) {
         if ( m_fix ) {
           if ( i == 0 && m_fix_first ) {// M1
             // fix all chambers...
-            info() << "Constrain chambers in M1:" << endreq;
             constrain_muon.insert(make_pair( m_MUChambers[j]->name(), rank ));
           }
           if ( i == 4 && m_fix_last ) {// M5
@@ -400,24 +400,29 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap ) {
   //  ot = OTmap.size();
   Gaudi::Rotation3D Rotation;
   Gaudi::XYZVector position;
-  m_deot->geometry()->toLocalMatrix().GetDecomposition( Rotation, position );
-  info() << "OT system name & position: " << m_deot->name() << " "
+  m_ot->geometry()->toLocalMatrix().GetDecomposition( Rotation, position );
+  info() << "OT system name & position: " << m_ot->name() << " "
          << position.x() << " " 
          << position.y() << " "
          << position.z() << endreq;
   if ( m_otSys && ! m_otStation && ! m_otLayer && ! m_otQuadrant && ! m_otModule ) {
-    OTmap.push_back( m_deot->geometry()->toLocalMatrix() );
+    OTmap.push_back( m_ot->geometry()->toLocalMatrix() );
     AlignmentCondition *ot_cond = const_cast<AlignmentCondition*>
-      (m_deot->geometry()->alignmentCondition() );
+      (m_ot->geometry()->alignmentCondition() );
     m_ALImap.push_back( ot_cond->offNominalMatrix() );
   }
   
   m_zmoy_ot = 0;
   int rank = m_rank.size();
-  m_OTStations = m_deot->childIDetectorElements();
+  m_OTStations = m_ot->childIDetectorElements();
   for ( unsigned int i = 0; i < m_OTStations.size(); i++ ) {
     m_OTLayers = m_OTStations[i]->childIDetectorElements();
     for ( unsigned int j = 0; j < m_OTLayers.size(); j++ ) {
+      info() << "-----------------------------" << endreq;
+      info() << "Layer name = " << m_OTLayers[j]->name() << endreq;
+      const AlignmentCondition *ot_cond = m_OTLayers[j]->geometry()->alignmentCondition();
+      debug() << "Alignment condition (1) = " << ot_cond->offNominalMatrix() << endreq;
+      debug() << "Alignment condition (2) = " << ot_cond->toNominalMatrix() << endreq;
       m_OTQuadrants = m_OTLayers[j]->childIDetectorElements();
       for ( unsigned int k = 0; k < m_OTQuadrants.size(); k++ ) {
         m_OTModules = m_OTQuadrants[k]->childIDetectorElements();
@@ -530,8 +535,11 @@ StatusCode TAConfig::ConfigIT( std::vector<Gaudi::Transform3D> &ITmap ) {
       //<< m_ITBoxes[j]->geometry()->matrixInv() << endreq;
       for ( unsigned int k = 0; k < m_ITLayers.size(); k++ ) { // Loop over layers
         //	info() << "Inv Matrix of De " << m_ITLayers[k]->name() << " = " 
-        //<< m_ITLayers[k]->geometry()->matrixInv() << endreq;
+        //<< m_ITLayer.s[k]->geometry()->matrixInv() << endreq;
         info() << "Align De " << m_ITLayers[k]->name() << endreq;
+        const AlignmentCondition *it_cond = m_ITLayers[k]->geometry()->alignmentCondition();
+        debug() << "Alignment condition (1) = " << it_cond->offNominalMatrix() << endreq;
+        debug() << "Alignment condition (2) = " << it_cond->toNominalMatrix() << endreq;
         m_ITLadders = m_ITLayers[k]->childIDetectorElements();
         for ( unsigned int l = 0; l < m_ITLadders.size(); l++ ) {
           if ( m_itLadder ) {
@@ -600,6 +608,75 @@ StatusCode TAConfig::ConfigIT( std::vector<Gaudi::Transform3D> &ITmap ) {
 }
 
 
+
+StatusCode TAConfig::PrintParameters( std::vector<double> &ali_par ) {
+  // Alternative:
+  std::vector<double>::iterator i = ali_par.begin();
+  std::map<std::string,int>::iterator t = m_C_pos.begin();
+  unsigned int msize = m_C_pos.size();
+  // loop over the detector elements we wanted to align.
+  // check for each element which degrees of freedom were determined.
+  for ( ; t != m_C_pos.end(); ++t ) {
+    info() << "Parameter " << t->first << " " << t->second  << " " << ali_par[t->second] << endreq;
+    IDetectorElement *det = getDet<IDetectorElement>(t->first);
+    IGeometryInfo *geo = det->geometry();
+    SmartRef<Condition> cond =  det->condition(t->first);
+    IAlignment *aliconst = dynamic_cast<IAlignment*>( cond.target() );
+    // Convert alignment parameters into
+    // a vector containing translations
+    // a vector containing rotations and
+    // a vector with the pivot point. 
+    // That vector should actually be obtained from the detector element!
+    std::vector<double> translation;
+    translation.push_back(0.0);
+    translation.push_back(0.0);
+    translation.push_back(0.0);
+    std::vector<double> rotation;
+    rotation.push_back(0.0);
+    rotation.push_back(0.0);
+    rotation.push_back(0.0);
+    std::vector<double> pivot;
+    // Get the translation, rotation and pivot vectors from
+    // the geometry object:
+    info() << "Get transformation matrix from detector element" << endreq;
+    Gaudi::Transform3D position = geo->toLocalMatrixNominal();
+    EulerAngles EuAng( 0.0, 0.0, 0.0 );
+    Gaudi::Rotation3D R( EuAng );
+    Gaudi::XYZVector P( 0.0, 0.0, 0.0 );
+    position.GetDecomposition( R, P );
+    pivot.push_back( P.X() );
+    pivot.push_back( P.Y() );
+    pivot.push_back( P.Z() );
+    // fill the translation & rotation vectors
+    // by looping over the number of degrees of freedom
+    // the vector m_align is filled according to the following scheme:
+    // first loop over detector elements, then loop over the degrees of 
+    // freedom.
+    for ( unsigned int d = 0; d < 3; d++ ) {
+      unsigned int pos1 = t->second + msize * d; // translations
+      unsigned int pos2 = t->second + msize * (d + 3); //rotations
+      if ( m_dof[d] ) translation[d] = ali_par[pos1];
+      if ( m_dof[d+3] ) rotation[d] = ali_par[pos2];
+    }
+
+    info() << "Translation vector: " << translation << "\n"
+	   << "Rotation vector   : " << rotation << "\n"
+	   << "pivot point       : " << pivot << endreq;
+
+    StatusCode sc = geo->ownToOffNominalParams(translation,
+    					       rotation,
+    					       pivot);
+    if ( sc.isFailure() ) {
+      error() << "Error storing translation, rotation and pivot vectors\n"
+	      << "from geometry object" << endreq;
+      error() << "Translation vector : " << translation << "\n"
+	      << "Rotation vector    : " << rotation << "\n"
+	      << "pivot vector       : " << pivot << endreq;
+      return StatusCode::FAILURE;
+    }
+  }
+  return StatusCode::SUCCESS;
+}
 
 void TAConfig::CreateMap( int & r,  IDetectorElement* id, double &m_zmoy ) {
   Gaudi::Rotation3D R;
@@ -887,10 +964,10 @@ StatusCode TAConfig::FillMatrix( const int &rank,
   m_derivatives->SetLocal( m_derLC, rank, referenceZ, 0.0, gamma );
   Gaudi::XYZVector origin( trPar[0], trPar[2], 0.0);
   Gaudi::XYZVector slopes( trPar[1], trPar[3], 0.0);
-  debug() << "Reference Z = " << referenceZ << " " << "Angle = " << gamma/(2*3.141592)*360 << endreq;
-  debug() << "Local derivatives: " << m_derLC << endreq;
+  info() << "Reference Z = " << referenceZ << " " << "Angle = " << gamma/(2*3.141592)*360 << endreq;
+  info() << "Local derivatives: " << m_derLC << endreq;
   StatusCode sc = m_derivatives->SetGlobal( slopes, origin, m_DETmap[rank], m_derGB, rank, referenceZ, gamma );
-  debug() << "Global derivatives: " << m_derGB << endreq;
+  info() << "Global derivatives: " << m_derGB << endreq;
   if ( sc == StatusCode::FAILURE ) {
     error() << "Error in calculating derivatives; will exit!" << endreq;
     return StatusCode::FAILURE;
@@ -982,6 +1059,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::Track &track,
   // find the poca between (linearized) hit trajectory and z-axis.
   sc = m_poca->minimize( (*linearhit), onstraw, false, (*ZaxisTraj), onZaxis, false, ZVec, 0.01);    
   if( sc.isFailure() ) return sc;
+  info() << "Direction of hit: " << linearhit->direction() << endreq;
   // get angle between x-axis and trajectory describing the hit:
   // First, calculate the product of the absolute values of the lengths of both vectors
   double l1 = sqrt( XaxisTraj->direction().Mag2() );
@@ -989,6 +1067,13 @@ StatusCode TAConfig::CalcResidual( const LHCb::Track &track,
   double dp = XaxisTraj->direction().Dot( linearhit->direction() );
   dp = dp / ( l1 * l2 );
   gamma = acos( dp );
+  Gaudi::XYZVector z_direction = XaxisTraj->direction().Cross( linearhit->direction() );
+  info() << "z-direction = " << z_direction << " z-axis = " << ZaxisTraj->direction() << endreq;
+  if ( z_direction.Dot( ZaxisTraj->direction() ) > 0 ) {
+    // the hit trajectory may point downward or upward, and hence
+    gamma =  - gamma;
+  }
+  gamma = 3.14159265359/2.0 - gamma;
   //  projection of wire on z Axis -> for XPLANES it gives right x&z value
   Gaudi::XYZPoint pointZonAxis = ZaxisTraj->position(onZaxis);
   direction = (ZVec.x() > 0 ) ? 1 : -1;  //get the right side
@@ -1056,8 +1141,7 @@ StatusCode TAConfig::Rank( LHCb::LHCbID &id, int & r ) {
   }
   std::map<std::string,int>::iterator t = m_C_pos.find( name );
   if ( t != m_C_pos.end() ) {
-    debug() << "key of map = " << (*t).first << endreq;
-    debug() << "value of map = Rank nr. = " << (*t).second << endreq;
+    info() << "key of map = " << (*t).first << " value of map = Rank nr. = " << (*t).second << endreq;
     r = (*t).second;
     return StatusCode::SUCCESS;
   } else {
@@ -1065,7 +1149,7 @@ StatusCode TAConfig::Rank( LHCb::LHCbID &id, int & r ) {
     error() << "Was trying to find the rank of element " << name << endreq;
     return StatusCode::FAILURE;
   }
-  error() << "Failure calculatin rank!" << endreq;
+  error() << "Failure calculating rank!" << endreq;
   return StatusCode::FAILURE;
 }
 
@@ -1107,7 +1191,7 @@ std::string TAConfig::MuonDetName( const unsigned int &lsta ) {
 
   //Getting stations
   IDetectorElement::IDEContainer::iterator itSt=m_muon->childBegin();
-  for(itSt=m_muon->childBegin(); itSt<m_muon->childEnd(); itSt++){
+  for(itSt=m_muon->childBegin(); itSt<m_muon->childEnd(); ++itSt){
     if((msta == lsta) && (lreg == -1) && (lchm == -1)) {
       myDet = *itSt;
       return myDet->name();
@@ -1115,7 +1199,7 @@ std::string TAConfig::MuonDetName( const unsigned int &lsta ) {
     //Getting regions
     mreg = 0;
     IDetectorElement::IDEContainer::iterator itRg=(*itSt)->childBegin();
-    for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
+    for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); ++itRg){
       if((msta == lsta) && (mreg == lreg) && (lchm == -1)) {
         myDet = *itRg; 
         return myDet->name(); 
@@ -1123,7 +1207,7 @@ std::string TAConfig::MuonDetName( const unsigned int &lsta ) {
       //Getting chambers
       mchm = 0;
       IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
-      for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
+      for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); ++itCh){
         
         if((msta == lsta) && (mreg == lreg) && (mchm == lchm)) {
           myDet = *itCh;
@@ -1138,6 +1222,31 @@ std::string TAConfig::MuonDetName( const unsigned int &lsta ) {
 
   return myDet->name();
 
+}
+
+StatusCode TAConfig::GlobalFit( std::vector<double> & parameter,
+                      std::vector<double> & error,
+                      std::vector<double> & pull) {
+  StatusCode sc = m_Centipede->MakeGlobalFit( parameter, error, pull );
+  if ( sc.isFailure() ) {
+    info() << "Error in Millepede's !";
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+}
+
+StatusCode TAConfig::LocalTrackFit( int &tr_cnt,
+                             std::vector<double> &trpar,
+                             const int & single_fit,
+                             std::vector<double> & estimated,
+                             double & chi2,
+                             double & residual) {
+  StatusCode sc = m_Centipede->FitLoc(tr_cnt, trpar, 0, estimated, chi2, residual);
+  if ( sc.isFailure() )
+    info() << "Millepede local fit returns " << sc.getCode() << endreq;
+     //     chi2 = tr_par[trpar.size()+1]; //decode chi2 from tracking parameters variable
+     //     residual = tr_par[trpar.size()+2]; //decode residual
+  return StatusCode::SUCCESS;
 }
 
 

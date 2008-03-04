@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.10 2008-01-29 16:31:40 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.11 2008-03-04 09:37:51 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -109,41 +109,19 @@ class TAConfig : public GaudiTupleTool,
 			  const double &);
    StatusCode CacheDetElements();
    StatusCode ResetGlVars();
-   StatusCode GlobalFit( std::vector<double> & parameter, 
-			 std::vector<double> & error, 
-			 std::vector<double> & pull) 
-   {
-     StatusCode sc = m_Centipede->MakeGlobalFit( parameter, error, pull );
-     if ( sc.isFailure() ) {
-       info() << "Error in Millepede's !";
-       return StatusCode::FAILURE;
-     }
-     return StatusCode::SUCCESS;
-   };
+   StatusCode GlobalFit( std::vector<double> &, std::vector<double> &, std::vector<double> & );
+ 
+   StatusCode LocalTrackFit( int &t, std::vector<double> &, const int &,  std::vector<double> &, double &, double & );
    
-   StatusCode LocalTrackFit( int &tr_cnt,
-                             std::vector<double> &trpar,
-                             const int & single_fit,
-                             std::vector<double> & estimated,
-                             double & chi2,
-                             double & residual) {
-     StatusCode sc = m_Centipede->FitLoc(tr_cnt, trpar, 0, estimated, chi2, residual);
-     if ( sc.isFailure() )
-       info() << "Millepede local fit returns " << sc.getCode() << endreq;
-     //     chi2 = tr_par[trpar.size()+1]; //decode chi2 from tracking parameters variable
-     //     residual = tr_par[trpar.size()+2]; //decode residual
-     return StatusCode::SUCCESS;
-   };
-
+   StatusCode PrintParameters( std::vector<double> & );
   
-  
-  bool AlignDetector( std::string &det ) {
-    if ( det == "Velo" )
-      return velo_detector;
-    else if ( det == "TT" )
-      return tt_detector;
-    else if ( det == "IT" ) 
-      return it_detector;
+   bool AlignDetector( std::string &det ) {
+     if ( det == "Velo" )
+       return velo_detector;
+     else if ( det == "TT" )
+       return tt_detector;
+     else if ( det == "IT" ) 
+       return it_detector;
      else if ( det == "OT" )
        return ot_detector;
      else if ( det == "MUON" || det == "Muon" )
@@ -179,6 +157,13 @@ class TAConfig : public GaudiTupleTool,
     m_trackpoints.clear();
   };
   
+  /*****************************
+   *  MD get detMap            *
+   *****************************/
+  std::vector<Gaudi::Transform3D> TAConfig::GetDetMap(){
+    return m_DETmap;
+  };
+
 
    StatusCode Rank( LHCb::LHCbID &, int & );
  private:
