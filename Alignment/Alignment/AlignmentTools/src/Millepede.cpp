@@ -972,7 +972,9 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
     
     for (i=0; i<nagb; i++)
     {
-      if (psigm[i] <= 0.0)   // fixed global param
+      // JB modifed the comparison from <= to ==.
+      // That way, in case psigm[i] < 0, mpede could ignore this psigm.
+      if (psigm[i] == 0.0)   // fixed global param
       {
 	nf++;
 
@@ -982,7 +984,11 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
 	  cgmat[j][i] = 0.0;
 	}			
       }
-      else if (psigm[i] > 0.0) {cgmat[i][i] += 1.0/(psigm[i]*psigm[i]);}
+      else if (psigm[i] > 0.0) {
+        cgmat[i][i] += 1.0/(psigm[i]*psigm[i]);
+      } else {
+        debug() << "Ignoring ParSig!" << endreq;
+      }
     }
         
     nvar = nagb;  // Current number of equations	

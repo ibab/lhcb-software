@@ -70,14 +70,16 @@ StatusCode Centipede::InitMille( bool DOF[],
   double Sigma[6];
   int n_fits = 1;
   info() << "Into  Centipede::InitMille" << endreq;
+  debug() << "Into  Centipede::InitMille" << endreq;
   // Need to set Sigma to an absurd value, such as not
   // to direct the global fit to a certain direction.
-  Sigma[0] = 10000000.0;
-  Sigma[1] = 10000000.0;
-  Sigma[2] = 10000000.0;
-  Sigma[3] = 10000000.0;
-  Sigma[4] = 10000000.0;
-  Sigma[5] = 10000000.0;
+  // M'pede was changed to ignore ParSig when sigma < 0
+  Sigma[0] = -10000000.0;
+  Sigma[1] = -10000000.0;
+  Sigma[2] = -10000000.0;
+  Sigma[3] = -10000000.0;
+  Sigma[4] = -10000000.0;
+  Sigma[5] = -10000000.0;
 
 
   debug() << "" << endmsg;
@@ -589,7 +591,8 @@ StatusCode Centipede::FitLoc( int n,
             loctot++; //although rej. it was fittet before !
           }
           indst.clear(); // reset stores and go to the next track 
-          arest.clear();	  
+          arest.clear();
+	  info() << "Rejecting track..." << endreq;
           return false;
         }
         
