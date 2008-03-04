@@ -6,7 +6,7 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r15>2008-02-25 LbcomSys v6r15</A></H1><PRE>
+</PRE><H1><A NAME=v6r15>2008-03-04 LbcomSys v6r15</A></H1><PRE>
 This version uses Gaudi v19r8 and LHCb v23r4
 
 - Packages modified: L0DU v8r3, RichTools v2r18, SiTools v1r5, STAlgorithms v3r0,
@@ -16,6 +16,7 @@ This version uses Gaudi v19r8 and LHCb v23r4
   . L0DUFromRawTool : 
     o fix redundant rootInTES in get<rawEvent>(rootInTES() + rawEventLocation )
     o add protection against non-existing L0DU rawBank
+    o fix bug when decoding consecutive BX info 
   . Fix TCK string format (%4X -> %04X) 
 
 - In RichTools v2r18, v2r17p1
