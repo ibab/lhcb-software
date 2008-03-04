@@ -275,9 +275,7 @@ void Archive::saveAsReferenceHistogram(DbRootHist* histogram)
             << histogram->startRun() << s_rootFileExtension;
 
     TH1* m_reference = (TH1*) (histogram->rootHistogram)->Clone(histogram->onlineHistogram()->hname().c_str());
-    std::cout << refFile.str().c_str() << std::endl;
-    const char* file =  refFile.str().c_str();
-    TFile* f = new TFile(file,"UPDATE");
+    TFile* f = new TFile(refFile.str().c_str(),"UPDATE");
     if (f) {
       if (false == f->IsZombie() ) {
         // keeps old versions.. use Write("",TObject::kOverwrite) to

@@ -92,7 +92,9 @@ void ReferencePicker::setSelectedAsRef()
 {
   try {
     if (0 != m_histogram->dbSession() &&
-        ReadWrite == m_mainFrame->databaseMode() ) {
+        0 != m_mainFrame->selectedHistogram() &&
+        0 != m_histogram->onlineHistogram()->getTask() &&
+        ReadWrite == m_mainFrame->databaseMode()) {
       std::string referenceEntry(m_mainFrame->selectedHistogram()->GetName());
       m_histogram->onlineHistogram()->getTask()->setReference(referenceEntry);
       m_histogram->dbSession()->commit();
@@ -104,11 +106,11 @@ void ReferencePicker::setSelectedAsRef()
       m_mainFrame->selectedHistogram()->GetName() << std::endl <<
       sqlException << std::endl;
     }
-  }
 //    new TGMsgBox(fClient->GetRoot(), this, "Database Error",
 //        Form("Could not set reference histogram:\n\n%s\n",
 //             sqlException.c_str()),
-//             kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+//             kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);    
+  }
   CloseWindow();
 }
 void ReferencePicker::build()
