@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ITAConfigTool
  *
  *  CVS Log :-
- *  $Id: ITAConfigTool.h,v 1.5 2008-01-31 11:41:03 jblouw Exp $
+ *  $Id: ITAConfigTool.h,v 1.6 2008-03-04 09:24:56 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -15,6 +15,7 @@
 
 
 #include "GaudiKernel/IAlgTool.h"
+#include "GaudiKernel/Transform3DTypes.h"
 
 #include <string>
 
@@ -70,12 +71,15 @@ class ITAConfigTool : virtual public IAlgTool {
 				    std::vector<double> &,
 				    double &,
 				    double & ) = 0;
+  virtual StatusCode PrintParameters( std::vector<double> & ) = 0;
   virtual int NumTrPars() = 0;
   virtual StatusCode GlobalFit( std::vector<double> &, 
 				std::vector<double> &, 
 				std::vector<double> & ) = 0;
   virtual StatusCode Rank( LHCb::LHCbID &, int & ) = 0;
   virtual int NumAlignPars() = 0;
+  virtual std::vector<Gaudi::Transform3D> GetDetMap() = 0;
+
 };
 
 #endif // ITACONFIGTOOL_H

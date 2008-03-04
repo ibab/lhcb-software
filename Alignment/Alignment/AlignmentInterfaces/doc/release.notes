@@ -3,6 +3,7 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+- J. Blouw: 04/03/09, added call to ITAConfig for storing aligment parameters in cond dbase
 - J. Blouw: 31/01/08, small changes to ITAconfigTool and IDerivatives classes
 
 </PRE><H1><A NAME=v2r3>2007-12-19 AlignmentInterfaces v2r4 </A></H1><PRE>
