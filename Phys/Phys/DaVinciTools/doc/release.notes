@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.300 2008-02-28 13:52:51 pkoppenb Exp $
+! $Id: release.notes,v 1.301 2008-03-04 10:18:17 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-03-04 - Patrick Koppenburg
+ - CombineParticles : protect debug() and verbose(). More verbose(), less debug().
 
 ! 2008-02-28 - Patrick Koppenburg
  - TrgDisp : add verbose() printout

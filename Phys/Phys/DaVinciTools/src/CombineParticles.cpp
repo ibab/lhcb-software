@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.4 2008-01-17 16:34:54 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.5 2008-03-04 10:18:17 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -76,7 +76,7 @@ StatusCode CombineParticles::initialize() {
   StatusCode sc = DVAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;
 
-  debug() << "==> Initialize" << endmsg;
+  if ( msgLevel( MSG::DEBUG )) debug() << "==> Initialize" << endmsg;
 
   // add default filtercriteria
   m_criteriaNames[ "Phase0Filter" ] =  "LoKi::Hybrid::FilterCriterion/FILTER0";
@@ -91,9 +91,9 @@ StatusCode CombineParticles::initialize() {
             << endmsg ;
       return StatusCode::FAILURE ;    
     }
-    verbose() << "Got overlap and particle descendants tools" << endmsg ;
+    if ( msgLevel( MSG::VERBOSE )) verbose() << "Got overlap and particle descendants tools" << endmsg ;
   }
-  debug() << "Going to createDecays()" << endmsg;
+  if ( msgLevel( MSG::DEBUG )) debug() << "Going to createDecays()" << endmsg;
   
   return initializePlotters() && createDecays();
 }
@@ -122,7 +122,7 @@ StatusCode CombineParticles::initializePlotter(IPlotTool*& plotter,
     if (plotsPath == "") plotsPath = name()+plotterName;
     else plotter->setPath(plotsPath);
     if (msgLevel(MSG::DEBUG)) debug() << plotterName <<" plots will be in " 
-           << plotsPath << endmsg ;
+                                      << plotsPath << endmsg ;
   }
   
   return StatusCode::SUCCESS;
@@ -133,7 +133,7 @@ StatusCode CombineParticles::initializePlotter(IPlotTool*& plotter,
 //=============================================================================
 StatusCode CombineParticles::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if ( msgLevel( MSG::DEBUG )) debug() << "==> Execute" << endmsg;
 
   // code goes here  
 
@@ -145,21 +145,21 @@ StatusCode CombineParticles::execute() {
 
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
   LHCb::Particle::ConstVector Daughters, Resonances ;
-  debug() << "Applying filter0 to " << desktop()->particles().size() 
-          << " particles" << endmsg;
+  if ( msgLevel( MSG::DEBUG )) debug() << "Applying filter0 to " << desktop()->particles().size() 
+                                       << " particles" << endmsg;
   StatusCode sc = applyFilter(desktop()->particles(),
                               Daughters,
                               m_filter0);
-  debug() << "Done with filter0" << endmsg;
+  if ( msgLevel( MSG::DEBUG )) debug() << "Done with filter0" << endmsg;
   if (!sc) {
     err() << "Unable to filter daughters" << endmsg;
     return StatusCode::FAILURE ;  
   }
   if (Daughters.empty()) {
-    debug() << "No daughters found at all" << endmsg ;
+    if ( msgLevel( MSG::DEBUG )) debug() << "No daughters found at all" << endmsg ;
     return StatusCode::SUCCESS;
   }
-  verbose() << "filter0 found " << Daughters.size() << " daughters" << endmsg;
+  if ( msgLevel( MSG::VERBOSE )) verbose() << "filter0 found " << Daughters.size() << " daughters" << endmsg;
 
   sc = makePlots(Daughters,m_plots0);
   if (!sc) return sc;
@@ -167,9 +167,9 @@ StatusCode CombineParticles::execute() {
   // The LOOP ///
   for ( Decays::iterator decay = m_decays.begin() ; 
         decay != m_decays.end() ; ++decay ){
-    verbose() << "New Decay loop" << endmsg ;
+    if ( msgLevel( MSG::VERBOSE )) verbose() << "New Decay loop" << endmsg ;
     if (!decay->fillPidParticles(Daughters)){
-      debug() << "Not all necessary particles found for decay" << endmsg ;
+      if ( msgLevel( MSG::DEBUG )) debug() << "Not all necessary particles found for decay" << endmsg ;
       continue ;
     }
     sc = applyDecay(*decay, Resonances); // make the resonances
@@ -180,8 +180,8 @@ StatusCode CombineParticles::execute() {
   if (!sc) return sc;
 
   LHCb::Particle::ConstVector Final ;
-  verbose() << "Applying filter2 to " << Resonances.size() 
-            << " resonances" << endmsg;
+  if ( msgLevel( MSG::VERBOSE )) verbose() << "Applying filter2 to " << Resonances.size() 
+                                           << " resonances" << endmsg;
   sc = applyFilter(Resonances, Final, m_filter2);
   if (!sc) {
     err() << "Unable to filter mothers" << endmsg;
@@ -190,8 +190,8 @@ StatusCode CombineParticles::execute() {
   sc = makePlots(Final,m_plots2);
   if (!sc) return sc;
 
-  if ( msgLevel(MSG::VERBOSE)) verbose() << "Saving " << Final.size() 
-                                         << " candidates " << endmsg ;
+  if ( msgLevel(MSG::VERBOSE)) if ( msgLevel( MSG::VERBOSE )) verbose() << "Saving " << Final.size() 
+                                                                        << " candidates " << endmsg ;
   sc = desktop()->saveTrees(Final);
   if (!sc) {
     err() << "Unable to save mothers" << endmsg;
@@ -217,16 +217,16 @@ StatusCode CombineParticles::applyFilter(const LHCb::Particle::ConstVector& vIn,
                                          LHCb::Particle::ConstVector& vOut, 
                                          IFilterCriterion* fc) const{
   if (fc==NULL) { // not possible yet
-    debug() << "Null filter criterion" << endmsg ;
+    if ( msgLevel( MSG::DEBUG )) debug() << "Null filter criterion" << endmsg ;
     vOut = vIn ;
     return StatusCode::SUCCESS;
   }
 
   for ( LHCb::Particle::ConstVector::const_iterator p = vIn.begin() ; 
         p!=vIn.end(); ++p){
-    verbose() << "applyFilter considering particle " << **p << endmsg;
+    if ( msgLevel( MSG::VERBOSE )) verbose() << "applyFilter considering particle " << **p << endmsg;
     if ( consideredPID((*p)->particleID().pid()) && fc->isSatisfied(*p) ) {
-        vOut.push_back(*p);
+      vOut.push_back(*p);
     }
     
   }
@@ -238,11 +238,11 @@ StatusCode CombineParticles::applyFilter(const LHCb::Particle::ConstVector& vIn,
 StatusCode CombineParticles::applyDecay(Decay& decay, 
                                         LHCb::Particle::ConstVector& Resonances){
   StatusCode sc = StatusCode::SUCCESS ;
-  verbose() << "In applyDecay" << endmsg ;
+  if ( msgLevel( MSG::VERBOSE )) verbose() << "In applyDecay" << endmsg ;
   LHCb::Particle::ConstVector DaughterVector ;
   bool inloop = decay.getFirstCandidates(DaughterVector); // get first daughter vector
   while (inloop){ 
-    verbose() << "In while loop " << DaughterVector.size() << endmsg ;
+    if ( msgLevel( MSG::VERBOSE )) verbose() << "In while loop " << DaughterVector.size() << endmsg ;
 
     // Find invariant mass
     LHCb::Particle candidateP;
@@ -251,10 +251,10 @@ StatusCode CombineParticles::applyDecay(Decay& decay,
                                             candidateP, 
                                             candidateV);
     if (sc) {
-      debug() << "Applying filter1 to particle " << candidateP 
-              << " with vertex " << candidateV << endmsg;
+      if ( msgLevel( MSG::VERBOSE )) verbose() << "Applying filter1 to particle " << candidateP 
+                                               << " with vertex " << candidateV << endmsg;
     } else {
-      debug() << "ParticleAdder failed" << endmsg;
+      if ( msgLevel( MSG::DEBUG )) debug() << "ParticleAdder failed" << endmsg;
     }
     
     if (sc && m_filter1->isSatisfied(&candidateP) ) {
@@ -265,8 +265,8 @@ StatusCode CombineParticles::applyDecay(Decay& decay,
         sc = Warning("Something failed in vertex fitting",
                      StatusCode::SUCCESS,1);
       } else {
-        verbose() << "Getting mother " << Mother->particleID().pid()
-                  << " " << Mother->momentum() << endmsg ;
+        if ( msgLevel( MSG::VERBOSE )) verbose() << "Getting mother " << Mother->particleID().pid()
+                                                 << " " << Mother->momentum() << endmsg ;
         Resonances.push_back(Mother);
       }
     }
@@ -274,8 +274,8 @@ StatusCode CombineParticles::applyDecay(Decay& decay,
   }
 
   
-  debug() << "Found " << Resonances.size() << " candidates with PID " 
-          << decay.getMotherPid().pid() << endmsg ;
+  if ( msgLevel( MSG::DEBUG )) debug() << "Found " << Resonances.size() << " candidates with PID " 
+                                       << decay.getMotherPid().pid() << endmsg ;
   return sc ;  
 }
 //=============================================================================
@@ -285,7 +285,7 @@ const LHCb::Particle*
 CombineParticles::makeMother(const LHCb::Particle::ConstVector& Daughters,
                              const LHCb::ParticleID& motherPid){
 
-  verbose() << "Will make particle with PID " << motherPid.pid() << endmsg ;
+  if ( msgLevel( MSG::VERBOSE )) verbose() << "Will make particle with PID " << motherPid.pid() << endmsg ;
 
   StatusCode sc = StatusCode::SUCCESS;
   LHCb::Vertex CandidateVertex(Gaudi::XYZPoint(0.,0.,0.)) ;
@@ -296,13 +296,13 @@ CombineParticles::makeMother(const LHCb::Particle::ConstVector& Daughters,
     Warning("Failed to fit vertex",StatusCode::SUCCESS,1).ignore();
     return NULL;
   }
-  debug() << "Fit vertex at " << CandidateVertex.position()
-          << " with chi^2 " << CandidateVertex.chi2() << endmsg;
+  if ( msgLevel( MSG::DEBUG )) debug() << "Fit vertex at " << CandidateVertex.position()
+                                       << " with chi^2 " << CandidateVertex.chi2() << endmsg;
   // may add a chi^2 cut here
   
   if (!sc) return NULL;
   
-  verbose() << "Calling desktop()->save(const LHCb::Particle*)" << endmsg ;
+  if ( msgLevel( MSG::VERBOSE )) verbose() << "Calling desktop()->save(const LHCb::Particle*)" << endmsg ;
   return desktop()->save(&Candidate);
 
 };
@@ -310,18 +310,18 @@ CombineParticles::makeMother(const LHCb::Particle::ConstVector& Daughters,
 StatusCode CombineParticles::makePlots(const LHCb::Particle::ConstVector& PV,
                                        IPlotTool* PT) {
 
-  debug() << "Welcome to makePlots " << endmsg;
+  if ( msgLevel( MSG::DEBUG )) debug() << "Welcome to makePlots " << endmsg;
   if (!produceHistos()) {
-    debug() << "!produceHistos()" << endmsg;
+    if ( msgLevel( MSG::DEBUG )) debug() << "!produceHistos()" << endmsg;
     return StatusCode::SUCCESS;
   }
   
   if (!PT) {
-    debug() << "No plot tool!" << endmsg;
+    if ( msgLevel( MSG::DEBUG )) debug() << "No plot tool!" << endmsg;
     return StatusCode::SUCCESS;
   }
   
-  debug() << "Plotting " << endmsg;
+  if ( msgLevel( MSG::DEBUG )) debug() << "Plotting " << endmsg;
 
   return PT->fillPlots(PV) ;
 }
@@ -330,7 +330,7 @@ StatusCode CombineParticles::makePlots(const LHCb::Particle::ConstVector& PV,
 //=============================================================================
 StatusCode CombineParticles::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if ( msgLevel( MSG::DEBUG )) debug() << "==> Finalize" << endmsg;
   info() << "Found " << m_nCandidates << " candidates in " 
          << m_nAccepted << " accepted events among " 
          << m_nEvents << " events" << endmsg ;
@@ -340,7 +340,7 @@ StatusCode CombineParticles::finalize() {
 // Create decays, Stolen from MakeResonances
 //=============================================================================
 StatusCode CombineParticles::createDecays(){
-  debug() << "In createDecays()" << endmsg;
+  if ( msgLevel( MSG::DEBUG )) debug() << "In createDecays()" << endmsg;
   // get string decoder
   IDecodeSimpleDecayString* dsds = 
     tool<IDecodeSimpleDecayString>("DecodeSimpleDecayString",this);
@@ -348,16 +348,16 @@ StatusCode CombineParticles::createDecays(){
   if ( !dsds ) return StatusCode::FAILURE ;
   
   if ( m_decayDescriptors.empty() ){
-    debug() << "No decay descriptors array defined. Pushing back " 
-            << getDecayDescriptor() << endmsg ;
+    if ( msgLevel( MSG::DEBUG )) debug() << "No decay descriptors array defined. Pushing back " 
+                                         << getDecayDescriptor() << endmsg ;
     m_decayDescriptors.push_back(getDecayDescriptor());
   }
-  debug() << "Decay descriptors are " << m_decayDescriptors << endmsg ;
+  if ( msgLevel( MSG::DEBUG )) debug() << "Decay descriptors are " << m_decayDescriptors << endmsg ;
 
   for ( std::vector<std::string>::const_iterator dd = m_decayDescriptors.begin() ;
         dd != m_decayDescriptors.end() ; ++dd ){
     
-    debug() << " setting up " << *dd << endmsg;
+    if ( msgLevel( MSG::DEBUG )) debug() << " setting up " << *dd << endmsg;
 
     // initialize string decode
     StatusCode sc = dsds->setDescriptor(*dd);
@@ -365,11 +365,11 @@ StatusCode CombineParticles::createDecays(){
 
     std::string mother;
     Strings daughters;
-    debug() << "Getting strings for " << dsds->getDescriptor() << endmsg;
+    if ( msgLevel( MSG::DEBUG )) debug() << "Getting strings for " << dsds->getDescriptor() << endmsg;
     sc = dsds->getStrings(mother, daughters);
     if (sc.isFailure()) return sc;  
     std::sort(daughters.begin(),daughters.end()); // helps a lot, and used to avoid duplication of mothers in cc
-    debug() << "Sorted daughters to " << daughters << endmsg ;
+    if ( msgLevel( MSG::DEBUG )) debug() << "Sorted daughters to " << daughters << endmsg ;
     sc = createDecay(mother, daughters);
     if (sc.isFailure()) return sc;
     
@@ -378,14 +378,14 @@ StatusCode CombineParticles::createDecays(){
       // LF : avoid duplication of mothers when using []cc
       strings daughtersBeforecc = daughters; // daughters have been sorted
       std::string motherBeforecc = mother ;
-      debug() << "Sorted before cc daughters to " 
-              << daughtersBeforecc << endmsg;
-      debug() << "Setting up cc for " 
-              << dsds->getDescriptor() << endmsg;
+      if ( msgLevel( MSG::DEBUG )) debug() << "Sorted before cc daughters to " 
+                                           << daughtersBeforecc << endmsg;
+      if ( msgLevel( MSG::DEBUG )) debug() << "Setting up cc for " 
+                                           << dsds->getDescriptor() << endmsg;
       sc = dsds->getStrings_cc(mother, daughters);
       if (sc.isFailure()) return sc;
       std::sort(daughters.begin(),daughters.end()); // needed to compare daughters for original and cc
-      debug() << "Sorted cc daughters to " << daughters << endmsg ;
+      if ( msgLevel( MSG::DEBUG )) debug() << "Sorted cc daughters to " << daughters << endmsg ;
 
       if(daughtersBeforecc == daughters){
         warning() << "You have chosen two charged-conjugated modes with identical final states: " 
@@ -396,15 +396,15 @@ StatusCode CombineParticles::createDecays(){
       sc = createDecay(mother, daughters);
       if (sc.isFailure()) return sc;
       
-    } else verbose() << dsds->getDescriptor() << " is not a cc mode" << endmsg ;
+    } else if ( msgLevel( MSG::VERBOSE )) verbose() << dsds->getDescriptor() << " is not a cc mode" << endmsg ;
   }
-  debug() << "createDecays() will return SUCCESS" << endmsg;
+  if ( msgLevel( MSG::DEBUG )) debug() << "createDecays() will return SUCCESS" << endmsg;
   
   return StatusCode::SUCCESS;
 }
 //=============================================================================
 StatusCode CombineParticles::createDecay(const std::string& mother, 
-                                       const Strings& daughters){
+                                         const Strings& daughters){
 
   if (msgLevel(MSG::DEBUG)) debug() << "Creating " << mother << " -> " << daughters << endmsg;
   
@@ -416,33 +416,33 @@ StatusCode CombineParticles::createDecay(const std::string& mother,
     err() << "Cannot find particle property for mother " << mother << endmsg ;
     return StatusCode::FAILURE;
   } else {
-    verbose() << "Found ParticleProperty " << pmother->pdgID() << endmsg ;
+    if ( msgLevel( MSG::VERBOSE )) verbose() << "Found ParticleProperty " << pmother->pdgID() << endmsg ;
   }
   
   const int pid = pmother->pdgID() ;
-  verbose() << "Found pid of " << mother << " = " << pid << endmsg ;
+  if ( msgLevel( MSG::VERBOSE )) verbose() << "Found pid of " << mother << " = " << pid << endmsg ;
   if (!consideredPID(pid)) m_allPids.push_back(pid) ;
   
   //daughters
   std::vector<int> daughterPIDs ;
   for (strings::const_iterator daughter=daughters.begin(); 
        daughter!=daughters.end(); ++daughter){
-  // mother
+    // mother
     ParticleProperty* pd = ppSvc()->find(*daughter);
     if (!pd){
       err() << "Cannot find particle property for daughter " 
             << *daughter << endmsg ;
       return StatusCode::FAILURE;
     }
-    verbose() << "Found pid of " << *daughter 
-              << " = " << (pd->pdgID()) << endmsg ;
+    if ( msgLevel( MSG::VERBOSE )) verbose() << "Found pid of " << *daughter 
+                                             << " = " << (pd->pdgID()) << endmsg ;
     daughterPIDs.push_back(pd->pdgID()) ;
     
     // add to list of all PIDs
     if (!consideredPID(pd->pdgID())) m_allPids.push_back(pd->pdgID()) ;
   }
-  verbose() << "Pushed back " << daughterPIDs.size() 
-            << " daughters" << endmsg ;
+  if ( msgLevel( MSG::VERBOSE )) verbose() << "Pushed back " << daughterPIDs.size() 
+                                           << " daughters" << endmsg ;
 
   // for slc3, need to build a const ParticleID explicitely.
   const LHCb::ParticleID _pid(pid);
