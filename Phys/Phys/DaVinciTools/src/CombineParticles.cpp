@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.8 2008-03-04 18:07:13 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.9 2008-03-04 19:23:12 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -244,8 +244,8 @@ StatusCode CombineParticles::applyFilter(const LHCb::Particle::ConstVector& vIn,
 StatusCode CombineParticles::applyDecay(Decay& decay, 
                                         LHCb::Particle::ConstVector& Resonances){
   StatusCode sc = StatusCode::SUCCESS ;
-  int nc = 0 ;
-  int nr = 0 ;
+  unsigned int nc = 0 ;
+  unsigned int nr = 0 ;
   if ( msgLevel( MSG::VERBOSE )) verbose() << "In applyDecay" << endmsg ;
   LHCb::Particle::ConstVector DaughterVector ;
 
