@@ -1,4 +1,4 @@
-// $Id: CombineParticles.h,v 1.1 2007-09-21 07:56:39 jpalac Exp $
+// $Id: CombineParticles.h,v 1.2 2008-03-04 16:52:47 pkoppenb Exp $
 #ifndef COMBINEPARTICLES_H 
 #define COMBINEPARTICLES_H 1
 
@@ -156,7 +156,8 @@ private:
 
   bool       m_killOverlap ;        ///< Kill candidates based on twice the same track
   std::string m_outputLocation ;    ///< Non-standard Output location, gets read by PhysDesktop
-  bool m_printStats ;               ///< Print number of daughters and mothers
+  bool m_printStats ;               ///< Print number of candidates
+  bool m_printMoreStats ;           ///< Print at each step
 
 
   int        m_nEvents ;            ///< Number of events
@@ -167,6 +168,7 @@ private:
   Decays m_decays;
 
   std::vector<int> m_allPids ; ///< all daughter PIDs in all decays
+
 
 //=============================================================================
 // Decay class

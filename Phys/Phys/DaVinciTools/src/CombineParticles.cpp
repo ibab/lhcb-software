@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.5 2008-03-04 10:18:17 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.6 2008-03-04 16:52:47 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -61,7 +61,8 @@ CombineParticles::CombineParticles( const std::string& name,
   declareProperty( "DecayDescriptors", m_decayDescriptors );  
   declareProperty( "KillOverlap", m_killOverlap );
   declareProperty( "OutputLocation" , m_outputLocation = "" ) ;
-  declareProperty( "PrintStats", m_printStats = false ) ;
+  declareProperty( "PrintStats", m_printMoreStats = false ) ;
+  declareProperty( "PrintMoreStats", m_printMoreStats = false ) ;
 }
 //=============================================================================
 // Destructor
@@ -145,22 +146,20 @@ StatusCode CombineParticles::execute() {
 
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
   LHCb::Particle::ConstVector Daughters, Resonances ;
-  if ( msgLevel( MSG::DEBUG )) debug() << "Applying filter0 to " << desktop()->particles().size() 
-                                       << " particles" << endmsg;
   StatusCode sc = applyFilter(desktop()->particles(),
                               Daughters,
                               m_filter0);
-  if ( msgLevel( MSG::DEBUG )) debug() << "Done with filter0" << endmsg;
   if (!sc) {
     err() << "Unable to filter daughters" << endmsg;
     return StatusCode::FAILURE ;  
   }
+  if ( msgLevel( MSG::DEBUG ) || m_printMoreStats ) 
+    always() << "Applyed FILTER0 to " << desktop()->particles().size() 
+             << " particles and found " << Daughters.size() << endmsg;
   if (Daughters.empty()) {
     if ( msgLevel( MSG::DEBUG )) debug() << "No daughters found at all" << endmsg ;
     return StatusCode::SUCCESS;
   }
-  if ( msgLevel( MSG::VERBOSE )) verbose() << "filter0 found " << Daughters.size() << " daughters" << endmsg;
-
   sc = makePlots(Daughters,m_plots0);
   if (!sc) return sc;
 
@@ -180,18 +179,17 @@ StatusCode CombineParticles::execute() {
   if (!sc) return sc;
 
   LHCb::Particle::ConstVector Final ;
-  if ( msgLevel( MSG::VERBOSE )) verbose() << "Applying filter2 to " << Resonances.size() 
-                                           << " resonances" << endmsg;
   sc = applyFilter(Resonances, Final, m_filter2);
-  if (!sc) {
-    err() << "Unable to filter mothers" << endmsg;
-    return StatusCode::FAILURE ;  
-  }
+  if (!sc) return Error("Unable to filter mothers");
+  if ( msgLevel( MSG::DEBUG ) || m_printMoreStats ) 
+    always() << "Applyed FILTER2 to " << Resonances.size() 
+            << " particles and found " << Final.size() << endmsg;
+
   sc = makePlots(Final,m_plots2);
   if (!sc) return sc;
 
-  if ( msgLevel(MSG::VERBOSE)) if ( msgLevel( MSG::VERBOSE )) verbose() << "Saving " << Final.size() 
-                                                                        << " candidates " << endmsg ;
+  if ( msgLevel(MSG::VERBOSE))  verbose() << "Saving " << Final.size() 
+                                          << " candidates " << endmsg ;
   sc = desktop()->saveTrees(Final);
   if (!sc) {
     err() << "Unable to save mothers" << endmsg;
@@ -238,8 +236,11 @@ StatusCode CombineParticles::applyFilter(const LHCb::Particle::ConstVector& vIn,
 StatusCode CombineParticles::applyDecay(Decay& decay, 
                                         LHCb::Particle::ConstVector& Resonances){
   StatusCode sc = StatusCode::SUCCESS ;
+  int nc = 0 ;
+  int nr = 0 ;
   if ( msgLevel( MSG::VERBOSE )) verbose() << "In applyDecay" << endmsg ;
   LHCb::Particle::ConstVector DaughterVector ;
+
   bool inloop = decay.getFirstCandidates(DaughterVector); // get first daughter vector
   while (inloop){ 
     if ( msgLevel( MSG::VERBOSE )) verbose() << "In while loop " << DaughterVector.size() << endmsg ;
@@ -253,6 +254,7 @@ StatusCode CombineParticles::applyDecay(Decay& decay,
     if (sc) {
       if ( msgLevel( MSG::VERBOSE )) verbose() << "Applying filter1 to particle " << candidateP 
                                                << " with vertex " << candidateV << endmsg;
+      nc++ ;
     } else {
       if ( msgLevel( MSG::DEBUG )) debug() << "ParticleAdder failed" << endmsg;
     }
@@ -268,14 +270,18 @@ StatusCode CombineParticles::applyDecay(Decay& decay,
         if ( msgLevel( MSG::VERBOSE )) verbose() << "Getting mother " << Mother->particleID().pid()
                                                  << " " << Mother->momentum() << endmsg ;
         Resonances.push_back(Mother);
+        nr++ ;
       }
     }
+    
     inloop = decay.getNextCandidates(DaughterVector);
   }
 
   
-  if ( msgLevel( MSG::DEBUG )) debug() << "Found " << Resonances.size() << " candidates with PID " 
-                                       << decay.getMotherPid().pid() << endmsg ;
+  if ( msgLevel( MSG::DEBUG ) || m_printMoreStats )
+    always() << "Applyed FILTER1 to " << nc << " candidates and found " << nr
+            << " candidates with PID " 
+            << decay.getMotherPid().pid() << endmsg ;
   return sc ;  
 }
 //=============================================================================
