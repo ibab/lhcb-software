@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-03-04 - Johan Blouw
+ - added possibility to align muon stations to GAlign class
+
 ! 2008-02-18 - Jan Amoraal
  - More monitoring and output
 

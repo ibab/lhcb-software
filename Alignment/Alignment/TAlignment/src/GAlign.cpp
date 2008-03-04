@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.9 2008-01-29 16:40:39 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.10 2008-03-04 09:40:29 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -127,6 +127,32 @@ StatusCode GAlign::initialize() {
   it_detector = m_taConfig->AlignDetector( s );
   s = "Muon";
   muon_detector = m_taConfig->AlignDetector( s );
+  //get detector map with Gaudi::Transform3D objects
+  std::vector<Gaudi::Transform3D> m_otmap = m_taConfig->GetDetMap();
+  EulerAngles EuAng( 0.,0., 0. );
+  Gaudi::Rotation3D Rotation(EuAng);
+  Gaudi::XYZVector position(0.,0.,0.);
+  double m_zmean;
+  for(int ra=0; ra< 12; ++ra){
+    
+    m_otmap[ra].GetDecomposition( Rotation, position );
+    double b11,b12,b13,b21,b22,b23,b31,b32,b33;
+    Rotation.GetComponents(b11,b12,b13,b21,b22,b23,b31,b32,b33);
+    double alpha = atan2(b21,b11);
+    double beta = atan2(-b31,sqrt(b32*b32+b33*b33));
+    double gamma = atan2(b32,b33);
+    info() << " use mod. 'SetLocal' for det with rank = " << ra <<endreq
+           << " and alpha--> " << alpha << endreq
+           << " and beta--> " << beta << endreq
+           << " and gamma--> " << gamma << endreq
+           << " and shifts--> " << position << endreq
+           << " and z pos --> " << position.z() << endreq;
+    m_zmean+=position.z();
+    info() << " and m_zmean = " << m_zmean << endreq;
+  }
+  m_zmean = m_zmean/12.;
+  info() << " m_zmean = " << m_zmean << endreq;
+
   // add listener to incident svc
   IIncidentSvc* incSvc = svc<IIncidentSvc>("IncidentSvc");
   if (!incSvc) {
@@ -334,7 +360,7 @@ StatusCode GAlign::execute() {
        *  the detector part one wants to align.
        **********************************************************************/
       if ( Z_position > 0.0 ) {
-	vector<double> trpar( 2 * m_taConfig->NumTrPars(), 0.0 );
+	std::vector<double> trpar( 2 * m_taConfig->NumTrPars(), 0.0 );
 	double chi2 = 0;
 	//local track fit
 	double residual = -99999.9;
@@ -376,6 +402,7 @@ StatusCode GAlign::GloFit() {
   add(m_estimated, cp , m_align);
   info() << "m_align = " << m_align << endreq;
   info() << "m_estimated =  " << m_estimated << endreq;
+  sc = m_taConfig->PrintParameters( m_align );
   // check various convergence criteria.
   // One criterium could be a check whether the values 
   // of the m_align vector are less than a certain minimum:
@@ -408,7 +435,7 @@ StatusCode GAlign::GloFit() {
 
 StatusCode GAlign::finalize(){
   debug() << "==> Finalize" << endreq;
-  //  StatusCode sc = this->GloFit();
+//  StatusCode sc = this->GloFit();
   //  info() << "Alignment parameters = " << m_align << endreq;
   return GaudiAlgorithm::finalize();
 }
