@@ -1,4 +1,4 @@
-// $Id: CombineParticles.h,v 1.2 2008-03-04 16:52:47 pkoppenb Exp $
+// $Id: CombineParticles.h,v 1.3 2008-03-04 17:33:07 pkoppenb Exp $
 #ifndef COMBINEPARTICLES_H 
 #define COMBINEPARTICLES_H 1
 
@@ -158,7 +158,7 @@ private:
   std::string m_outputLocation ;    ///< Non-standard Output location, gets read by PhysDesktop
   bool m_printStats ;               ///< Print number of candidates
   bool m_printMoreStats ;           ///< Print at each step
-
+  int  m_maxCandidates ;            ///< Maximal number of candidates accepted
 
   int        m_nEvents ;            ///< Number of events
   int        m_nAccepted ;          ///< Number of events accepted

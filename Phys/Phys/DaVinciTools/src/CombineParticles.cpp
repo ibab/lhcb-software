@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.6 2008-03-04 16:52:47 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.7 2008-03-04 17:33:07 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -63,6 +63,9 @@ CombineParticles::CombineParticles( const std::string& name,
   declareProperty( "OutputLocation" , m_outputLocation = "" ) ;
   declareProperty( "PrintStats", m_printMoreStats = false ) ;
   declareProperty( "PrintMoreStats", m_printMoreStats = false ) ;
+  declareProperty( "MaxCandidates", m_maxCandidates = 100000 ) ;
+  return ;
+  
 }
 //=============================================================================
 // Destructor
@@ -162,6 +165,11 @@ StatusCode CombineParticles::execute() {
   }
   sc = makePlots(Daughters,m_plots0);
   if (!sc) return sc;
+
+  if ( Daughters.size() > m_maxCandidates ){
+    Warning("Reached maximal number of daughters. Exiting");
+    return StatusCode::SUCCESS ;
+  }
 
   // The LOOP ///
   for ( Decays::iterator decay = m_decays.begin() ; 
@@ -271,17 +279,21 @@ StatusCode CombineParticles::applyDecay(Decay& decay,
                                                  << " " << Mother->momentum() << endmsg ;
         Resonances.push_back(Mother);
         nr++ ;
+        if ( nr > m_maxCandidates ){
+          Warning("Reached maximal number of candidates. Exiting");
+          return StatusCode::SUCCESS ;
+        }
       }
     }
     
     inloop = decay.getNextCandidates(DaughterVector);
   }
-
+  
   
   if ( msgLevel( MSG::DEBUG ) || m_printMoreStats )
     always() << "Applyed FILTER1 to " << nc << " candidates and found " << nr
-            << " candidates with PID " 
-            << decay.getMotherPid().pid() << endmsg ;
+             << " candidates with PID " 
+             << decay.getMotherPid().pid() << endmsg ;
   return sc ;  
 }
 //=============================================================================

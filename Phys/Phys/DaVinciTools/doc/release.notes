@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.302 2008-03-04 16:52:47 pkoppenb Exp $
+! $Id: release.notes,v 1.303 2008-03-04 17:33:07 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
@@ -7,6 +7,7 @@
 ! 2008-03-04 - Patrick Koppenburg
  - CombineParticles : protect debug() and verbose(). More verbose(), less debug().
  - Add option PrintMoreStats
+ - Limit the numebr of candiadtes to 100000. Can be changed by MaxCandidates option.
 
 ! 2008-02-28 - Patrick Koppenburg
  - TrgDisp : add verbose() printout
