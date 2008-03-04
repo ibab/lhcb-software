@@ -1,4 +1,4 @@
-// $Id: DefaultVeloHitManager.h,v 1.11 2008-02-27 15:41:37 krinnert Exp $
+// $Id: DefaultVeloHitManager.h,v 1.12 2008-03-04 10:12:36 krinnert Exp $
 #ifndef INCLUDE_TF_DEFAULTVELOHITMANAGER_H
 #define INCLUDE_TF_DEFAULTVELOHITMANAGER_H 1
 
@@ -146,11 +146,16 @@ namespace Tf {
   template <typename SENSORTYPE, typename HIT, int NZONES>
   void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::prepareClusterRanges()
   {
+    // the new event wil be loaded once this method returns
+    m_eventExpired = false;
+
     if ( m_fromClusters ) { // use full velo clusters as input
       LHCb::VeloClusters* clusters = GaudiTool::get<LHCb::VeloClusters>(m_clusterLocation);
 
       // invalidate all ranges
       std::fill(m_clusterRanges.begin(), m_clusterRanges.end(),ClusterRange(clusters->end(),clusters->end()));
+      
+      if (clusters->empty()) return; // nothing to see here, please move along
       
       LHCb::VeloClusters::iterator iClus = clusters->begin();
       LHCb::VeloClusters::iterator start = iClus;
@@ -180,6 +185,8 @@ namespace Tf {
       // invalidate all ranges
       std::fill(m_liteClusterRanges.begin(), m_liteClusterRanges.end(),LiteClusterRange(liteClusters->end(),liteClusters->end()));
       
+      if (liteClusters->empty()) return; // nothing to see here, please move along
+      
       LHCb::VeloLiteCluster::FastContainer::iterator iClus = liteClusters->begin();
       LHCb::VeloLiteCluster::FastContainer::iterator start = iClus;
       LHCb::VeloLiteCluster::FastContainer::iterator stop  = start;
@@ -202,8 +209,6 @@ namespace Tf {
         m_liteClusterRanges[currentSensorNumber] = LiteClusterRange(start,stop);
       }      
     }
-
-    m_eventExpired = false;
   }
 
   //=============================================================================

@@ -4,6 +4,11 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2008-03-04 - Kurt Rinnert
+ - fix in DefaultVeloHitManager: the hit preparation always tried to access
+   the first cluster in the cluster container to obtain a sensor number,
+   causing a crash on empty cluster containers.
+
 !============================ TfKernel v2r3 2008-03-03 =======================
 ! 2008-02-27 - Kurt Rinnert
  - bug fix in DefaultVeloHitManager: the configurable cluster locations where
