@@ -32,7 +32,7 @@ EventSelector.Input                 += {
   ,"DATA='castor:/castor/cern.ch/user/f/frankb/mdfData_13.dat'      SVC='LHCb::MDFSelector'"
 };
 #endif
-FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
+FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
 
 // To create a MDF file using the MDF writer:
 ApplicationMgr.TopAlg     = { "LHCb::RawEventTestCreator/RawEventGen", "StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };

@@ -16,7 +16,7 @@ EventSelector.PrintFreq              = 100;
 EventSelector.Input                  = {
   "DATA='file://taeData.dat' SVC='LHCb::MDFSelector'"
 };
-FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
+FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
 
 ApplicationMgr.OutStream  += { "TAEMini" };
 //  Setup for ROOT I/O System

@@ -14,9 +14,9 @@ EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
 EventSelector.PrintFreq              = 100;
 // Check legacy data:
 EventSelector.Input                  = {
-  "DATA='PFN:root:file://../cmt/mdfData_1.dat' SVC='LHCb::MDFSelector'"
+  "DATA='LFN:/user/frank/markus/mdf_1.dat'      SVC='LHCb::MDFSelector'"
   ,"DATA='PFN:root:file://mdfData_0.dat'        SVC='LHCb::MDFSelector'"
-  ,"DATA='root:file:mdfData_2.dat'              SVC='LHCb::MDFSelector'"
+  ,"DATA='LFN:/user/frank/markus/mdf_2.dat'     SVC='LHCb::MDFSelector'"
   ,"DATA='PFN:root:mdfData_3.dat'               SVC='LHCb::MDFSelector'"
   ,"DATA='root:mdfData_4.dat'                   SVC='LHCb::MDFSelector'"
   ,"DATA='PFN:root:file://$MDFROOT/cmt/mdfData_5.dat'        SVC='LHCb::MDFSelector'"

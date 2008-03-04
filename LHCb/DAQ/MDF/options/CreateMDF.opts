@@ -5,7 +5,7 @@ StoreExplorerAlg.Load     = 1;
 StoreExplorerAlg.PrintFreq= 0.01;
 EventDataSvc.ForceLeaves  = 1;
 EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
-FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
+FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
 Dump.CheckData                       = 1;
 Dump.CheckData                       = 0;
 Dump.DumpData                        = 0;
@@ -19,13 +19,13 @@ Writer_0.ItemList         = {"/Event#1" };
 
 // To create a MDF file using the MDF writer:
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_1" };
-Writer_1.Connection       = "PFN:file://../cmt/mdfData_1.dat";
+Writer_1.Connection       = "LFN:/user/frank/markus/mdf_1.dat";
 Writer_1.Compress         = 0;
 Writer_1.ChecksumType     = 0;
 Writer_1.GenerateMD5      = true;
 
 ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_2" };
-Writer_2.Connection       = "root:file:mdfData_2.dat";
+Writer_2.Connection       = "LFN:/user/frank/markus/mdf_2.dat";
 Writer_2.Compress         = 0;
 Writer_2.ChecksumType     = 1;
 Writer_2.GenerateMD5      = true;

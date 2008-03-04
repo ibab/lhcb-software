@@ -1,5 +1,5 @@
 ApplicationMgr.TopAlg                = { "StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };
-FileCatalog.Catalogs                 = {"xmlcatalog_file:Cnew.xml" };
+FileCatalog.Catalogs                 = {"xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
 ApplicationMgr.EvtMax                = 100000;
 ApplicationMgr.HistogramPersistency  = "NONE";
 Dump.CheckData                       = 1;

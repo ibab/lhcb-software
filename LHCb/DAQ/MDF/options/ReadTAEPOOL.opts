@@ -16,7 +16,7 @@ EventSelector.PrintFreq              = 100;
 //  Setup for ROOT I/O System
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 PoolDbCacheSvc.Dlls       += {"CLHEPRflx", "STLRflx", "GaudiKernelDict"};
-FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
+FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
 EventSelector.Input                  = {
   "DATA='PFN:taePOOL.dat' TYP='POOL_ROOTTREE' OPT='OLD'"
 };

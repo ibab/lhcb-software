@@ -33,7 +33,7 @@ EventSelector.Input                 += {
   ,"DATA='castor:/castor/cern.ch/user/f/frankb/mdfData_13.dat'      SVC='LHCb::MDFSelector'"
 };
 #endif
-FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
+FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
 ApplicationMgr.OutStream  += { "POOLMini" };
 //  Setup for ROOT I/O System
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
