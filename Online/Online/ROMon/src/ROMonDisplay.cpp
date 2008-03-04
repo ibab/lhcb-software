@@ -1,4 +1,4 @@
-// $Id: ROMonDisplay.cpp,v 1.4 2008-02-08 21:20:40 frankm Exp $
+// $Id: ROMonDisplay.cpp,v 1.5 2008-03-04 15:51:57 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.4 2008-02-08 21:20:40 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.5 2008-03-04 15:51:57 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -72,14 +72,14 @@ void ROMonDisplay::update()   {
   const Nodeset* ns = m_data.data<const Nodeset>();
   if ( ns && m_data.actual>0 ) {
     if ( ns->type == Nodeset::TYPE ) {
-      RTL::Lock lock(m_lock);
       dim_lock();
+      RTL::Lock lock(m_lock);
       updateDisplay(*ns);
       dim_unlock();
     }
     else if ( ns->type == Node::TYPE ) {
-      RTL::Lock lock(m_lock);
       dim_lock();
+      RTL::Lock lock(m_lock);
       updateDisplay(*m_data.data<const Node>());
       dim_unlock();
     }
@@ -118,7 +118,7 @@ void ROMonDisplay::infoHandler(void* tag, void* address, int* size) {
       return;
     }
     RTL::Lock lock(display->lock());
-   if ( d.length < len ) {
+    if ( d.length < len ) {
       d.length = len;
       d.reserve(size_t(1.2*len));
     }
