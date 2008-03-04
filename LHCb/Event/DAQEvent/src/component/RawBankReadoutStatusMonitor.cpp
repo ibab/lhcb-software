@@ -1,4 +1,4 @@
-// $Id: RawBankReadoutStatusMonitor.cpp,v 1.3 2008-01-30 14:39:15 odescham Exp $
+// $Id: RawBankReadoutStatusMonitor.cpp,v 1.4 2008-03-04 14:45:00 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -130,7 +130,7 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
     // 2D summary histogram as a function of the sourceID
     std::stringstream tit2D("");
     tit2D << "Status as a function of sourceID for " << typeName << " bank ";
-    double min = -1.;
+    double min = 0.;
     double max = m_nSources;
     if( m_nSources <= 0){
       max = -1.;
@@ -139,7 +139,7 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
       }
     }
     max += 1;
-    int bin = (int) max + 1;
+    int bin = (int) max ;
 
 
     for( std::map< int, long >::iterator imap = statusMap.begin() ; imap != statusMap.end() ; ++imap ){

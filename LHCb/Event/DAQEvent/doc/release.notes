@@ -4,6 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2008-03-03 - Olivier Deschamps
+ - RawBankReadoutStatusMonitoring : minor change in 2d histo bining
+
+
 !================ DAQEvent v7r9 2008-03-03 ============================
 ! 2008-02-27 - Olivier Deschamps
  - new algorithm : src/components/OdinTypesFilter :
