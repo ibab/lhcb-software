@@ -1,7 +1,10 @@
-// Set up an output stream for Raw data only
-// -----------------------------------------
+// Set up an output stream for Raw data only in MDF format
+// -------------------------------------------------------
 
-// Start by making sure that file will have no knowledge of other nodes
+// Set up the output persistency
+#include "$STDOPTS/RawDataIO.opts"
+
+// Make sure that file will have no knowledge of other nodes
 ApplicationMgr.OutStream += { "EventNodeKiller/EventNodeKiller" };
 EventNodeKiller.Nodes = { "Rec", "Trig", "MC", "Raw", "Gen", "Link", "pSim" };
 EventNodeKiller.Nodes+= { "Prev", "PrevPrev", "Next" };
@@ -9,8 +12,6 @@ EventNodeKiller.Nodes+= { "Prev", "PrevPrev", "Next" };
 RawWriter.Preload     = false;
 RawWriter.ItemList = 
 {
-  "/Event#1"
-, "/Event/DAQ#1"
-, "/Event/DAQ/RawEvent#1"
+  "/Event/DAQ/RawEvent#1"
 };
 ApplicationMgr.OutStream += { "RawWriter" };

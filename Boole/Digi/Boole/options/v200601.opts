@@ -81,8 +81,9 @@ DigiWriter.Output = "DATAFILE='PFN:00001820_00000001_4.digi' TYP='POOL_ROOTTREE'
 
 //---------------------------------------------------------------------------
 // Uncomment next two lines to enable second output stream emulating real Raw 
-// Data (i.e. no MC truth). Uncomment also third line to write only L0Selected events  
+// Data (i.e. no MC truth, MDF format). 
+// Uncomment also third line to write only L0Selected events  
 //---------------------------------------------------------------------------
 //#include "$BOOLEOPTS/RawWriter.opts"
-//RawWriter.Output = "DATAFILE='PFN:00001820_00000001_4.raw' TYP='POOL_ROOTTREE' OPT='REC'";
+//RawWriter.Output = "DATAFILE='file://RawData.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'";
 //RawWriter.RequireAlgs += { "L0Filter" }; // uncomment to write only L0Selected events

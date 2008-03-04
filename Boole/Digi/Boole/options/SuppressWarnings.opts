@@ -14,6 +14,7 @@ Boole.OutputLevel = 3;
 EventSelector.OutputLevel = 3;
 DigiWriter.OutputLevel = 3;
 TimingAuditor.OutputLevel = 3;
+EventLoopMgr.OutputLevel = 3;
 
 // Add a time stamp to the remaining messages
 MessageSvc.Format = "%u % F%18W%S%7W%R%T %0W%M";
