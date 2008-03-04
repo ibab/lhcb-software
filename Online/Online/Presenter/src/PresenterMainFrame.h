@@ -126,6 +126,7 @@ class PresenterMainFrame : public TGMainFrame
 
     void setPresenterMode(const pres::PresenterMode & presenterMode);
     void setDatabaseMode(const pres::DatabaseMode & databaseMode);
+    pres::DatabaseMode databaseMode() { return m_databaseMode; }
     void setVerbosity(const pres::MsgLevel & verbosity);
     pres::MsgLevel verbosity() const { return m_verbosity; }
     void setDimDnsNode(const std::string & dimDnsNode) {

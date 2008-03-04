@@ -31,92 +31,90 @@ ReferencePicker::ReferencePicker(PresenterMainFrame* gui, DbRootHist* histogram)
   Connect("CloseWindow()", "ReferencePicker", this, "DontCallClose()");
   build();
   CenterOnParent();
+  
+  if (0 != m_histogram && 0 != m_archive) {
+    path referenecePath(m_archive->referencePath() + s_slash +
+                        m_histogram->taskName());
+    if (exists(referenecePath)) {
+      std::vector<path> foundRootFiles = m_archive->listDirectory(referenecePath);
+      if (!foundRootFiles.empty()) {
+        if (m_verbosity >= Verbose) {
+          std::cout << "Found " << foundRootFiles.size() <<
+                       " reference file(s)" << std::endl;
+        }
+        std::vector<path>::const_iterator foundRootFilesIt;
+        foundRootFilesIt = foundRootFiles.begin();
+        TList* list = new TList;
+        while (foundRootFilesIt != foundRootFiles.end()) {
+//          TFile *f TFile::Open()...
+          TFile rootFile((*foundRootFilesIt).file_string().c_str());
+          if (rootFile.IsZombie()) {
+            cout << "Error opening Root file: " <<
+              (*foundRootFilesIt).file_string() << endl;
+          } else {
+            TH1* referenceHisto;
+            rootFile.GetObject((m_histogram->onlineHistogram()->hname()).append(";1").c_str(),
+                               referenceHisto);
+            if (referenceHisto) {
+              referenceHisto->SetName((*foundRootFilesIt).file_string().c_str());
+              referenceHisto->SetTitle((*foundRootFilesIt).leaf().c_str());
+              list->Add(referenceHisto);        
+            }
+          }
+          ++foundRootFilesIt;
+        }
+  
+        int numberOfRefs = list->GetSize(); 
+        int rows = (int) ceil(sqrt((double)numberOfRefs));
+        int columns(rows);
+        c125->Clear();
+        c125->Divide(rows,columns);
+
+        TH1* histo;
+        TIter next(list);      
+        while (histo = (TH1 *) next()) {
+          gPad = c125->GetPad(numberOfRefs);
+          histo->DrawCopy();
+          --numberOfRefs;
+          list->Remove(histo);
+          delete histo;
+        }
+        delete list;
+        c125->Update();
+      }
+    }
+  }
 }
 ReferencePicker::~ReferencePicker()
 {
 }
 void ReferencePicker::setSelectedAsRef()
 {
-  if (0 != m_histogram) {
-    std::cout << m_histogram->histoRootName() << std::endl;
-  }
-  if (0 != m_archive) {
-    std::cout << m_archive->referencePath() << std::endl;
-  }
-
-  path referenecePath(m_archive->referencePath() + s_slash +
-                       m_histogram->taskName());
-  if (exists(referenecePath)) {
-    std::vector<path> foundRootFiles = m_archive->listDirectory(referenecePath);
-    if (!foundRootFiles.empty()) {
-      if (m_verbosity >= Verbose) {
-        std::cout << "Found " << foundRootFiles.size() <<
-                     " reference file(s)" << std::endl;
-      }
-      std::vector<path>::const_iterator foundRootFilesIt;
-      foundRootFilesIt = foundRootFiles.begin();
-      TList* list = new TList;
-      while (foundRootFilesIt != foundRootFiles.end()) {
-        TFile rootFile((*foundRootFilesIt).file_string().c_str());
-        if (rootFile.IsZombie()) {
-          cout << "Error opening Root file: " <<
-            (*foundRootFilesIt).file_string() << endl;
-        } else {
-          TH1* referenceHisto;
-          rootFile.GetObject((m_histogram->onlineHistogram()->hname()).c_str(),
-                             referenceHisto);
-          if (referenceHisto) {
-            referenceHisto->SetName((*foundRootFilesIt).file_string().c_str());
-            list->Add(referenceHisto);            
-          }
-        }
-        ++foundRootFilesIt;
-      }
-
-      int numberOfRefs = list->GetSize(); 
-      int rows = (int) ceil(sqrt((double)numberOfRefs));
-      int columns(rows);
-      c125->Divide(rows,columns);
-      
-      TH1* histo;
-      TIter next(list);      
-      while (histo = (TH1 *) next()) {
-         std::cout << histo->GetName() << std::endl;
-        list->Remove(histo);
-        delete histo;
-      }
-      delete list;
+  try {
+    if (0 != m_histogram->dbSession() &&
+        pres::ReadWrite == m_mainFrame->databaseMode() ) {
+      std::string referenceEntry(m_mainFrame->selectedHistogram()->GetName());
+      m_histogram->onlineHistogram()->getTask()->setReference(referenceEntry);
+      m_histogram->dbSession()->commit();
+    }
+  } catch (std::string sqlException) {
+    // TODO: add error logging backend
+    if (m_verbosity >= Verbose) {
+      std::cout << "Could not set reference histogram: " <<
+      m_mainFrame->selectedHistogram()->GetName() << std::endl <<
+      sqlException << std::endl;
     }
   }
-//  ../test/x/  
-//  default-1.root  default-2.root  default-4.root  tttea-4.root
-
-  
-
-  
-//  try {
-//    if (0 != m_histogramDB) {
-//      OnlineHistTask* currentTask = m_histogramDB->getTask("EXAMPLE");
-//      if (0 != currentTask) {
-//        std::cout << "ref: "   << currentTask->reference() << std::endl;
-//        std::cout << "refRoot: " << currentTask->refRoot() << std::endl;
-//      }
-//    }
-//  } catch (std::string sqlException) {
-//    // TODO: add error logging backend
-//    if (m_verbosity >= Verbose) { std::cout << sqlException; }
-//
 //    new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-//        Form("OnlineHistDB server:\n\n%s\n",
+//        Form("Could not set reference histogram:\n\n%s\n",
 //             sqlException.c_str()),
 //             kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
-//  }
-  
   CloseWindow();
 }
 void ReferencePicker::build()
 {
   // horizontal frame
+  SetCleanup(kDeepCleanup);
   TGHorizontalFrame *fHorizontalFrame637 = new TGHorizontalFrame(this,
                                                                  618, 27,
                                                                  kHorizontalFrame);
@@ -148,9 +146,10 @@ void ReferencePicker::build()
   m_setSelectedAsRefButton->Resize(151,22);
   m_setSelectedAsRefButton->Connect("Clicked()", "ReferencePicker",
                                     this, "setSelectedAsRef()");  
-  fHorizontalFrame637->AddFrame(m_setSelectedAsRefButton, new TGLayoutHints(kLHintsRight |
-                                                                  kLHintsBottom,
-                                                                  2,2,2,2));
+  fHorizontalFrame637->AddFrame(m_setSelectedAsRefButton,
+                                new TGLayoutHints(kLHintsRight |
+                                                  kLHintsBottom,
+                                                  2,2,2,2));
   m_setSelectedAsRefButton->Move(413,2);
   
   m_cancelButton = new TGTextButton(fHorizontalFrame637, "Cancel");
@@ -173,8 +172,8 @@ void ReferencePicker::build()
 
   // embedded canvas
   fRootEmbeddedCanvas746 = new TRootEmbeddedCanvas(0, this, 399, 227);
-  Int_t wfRootEmbeddedCanvas746 = fRootEmbeddedCanvas746->GetCanvasWindowId();
-  c125 = new TCanvas("c125", 10, 10, wfRootEmbeddedCanvas746);
+  fRootEmbeddedCanvas746->SetCleanup(kDeepCleanup);
+  c125 = fRootEmbeddedCanvas746->GetCanvas();
   AddFrame(fRootEmbeddedCanvas746, new TGLayoutHints(kLHintsLeft |
                                                      kLHintsTop |
                                                      kLHintsExpandX |
@@ -192,7 +191,5 @@ void ReferencePicker::build()
 }
 void ReferencePicker::CloseWindow()
 {
-  if (0 != c125) {delete c125;}
-  if (0 != fRootEmbeddedCanvas746) {delete fRootEmbeddedCanvas746;}
   DeleteWindow();
 }
