@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r4>2008-03-03 LHCbSys v23r4</A></H1><PRE>
+</PRE><H1><A NAME=v23r4>2008-03-04 LHCbSys v23r4</A></H1><PRE>
 This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
 
 - Packages removed: MDF_DCAP - Functionality now in MDF_ROOT
@@ -193,6 +193,8 @@ This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
   . LoKi/Range.h: Fix the problem with reverse iterators.
   . src/LoKiHybridBase.cpp: force the loading/initialization of LoKi Service
   . python/LoKiCore/functions.py: fix many tiny typos 
+  . Introduce one more concept for "self-monitored" functors:
+    the meta-functor which prints the result of another functor 
 
 - In LoKiPhys v7r1
   . Implement many shortcuts&aliases
