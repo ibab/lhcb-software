@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By POOL -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+  <File ID="58AD91C1-1FEA-DC11-A5AA-000423D950B0">
+    <physical>
+      <pfn filetype="MDF" name="file://../cmt/mdfData_1.dat"/>
+    </physical>
+    <logical>
+      <lfn name="/user/frank/markus/mdf_1.dat"/>
+    </logical>
+  </File>
+  <File ID="E6C199C1-1FEA-DC11-A5AA-000423D950B0">
+    <physical>
+      <pfn filetype="MDF" name="root:file:mdfData_2.dat"/>
+    </physical>
+    <logical>
+      <lfn name="/user/frank/markus/mdf_2.dat"/>
+    </logical>
+  </File>
+
+</POOLFILECATALOG>
