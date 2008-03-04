@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.15 2008-03-04 09:37:51 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.16 2008-03-04 16:55:05 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007

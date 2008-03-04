@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.11 2008-03-04 09:37:51 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.12 2008-03-04 16:55:05 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007

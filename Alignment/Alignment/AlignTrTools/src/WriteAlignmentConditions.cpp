@@ -1,4 +1,4 @@
-// $Id: WriteAlignmentConditions.cpp,v 1.1 2008-03-04 09:37:51 jblouw Exp $
+// $Id: WriteAlignmentConditions.cpp,v 1.2 2008-03-04 16:55:05 jblouw Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
