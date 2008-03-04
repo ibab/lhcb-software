@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-03-04 - Patrick Koppenburg
+ - Adapted to LoKiHybrid for March 2008 tutorial
+ - Increment to v7r0
+
 ! 2008-02-12 - Juan PALACIOS
 
  - cmt/requirements

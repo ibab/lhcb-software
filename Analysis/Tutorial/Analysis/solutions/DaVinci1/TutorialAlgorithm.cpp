@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.3 2006-11-18 15:55:36 ibelyaev Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.4 2008-03-04 19:22:42 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -72,8 +72,8 @@ StatusCode TutorialAlgorithm::loopOnMuons(const LHCb::Particle::ConstVector& muo
 
   for ( LHCb::Particle::ConstVector::const_iterator im =  muons.begin() ;
         im != muons.end() ; ++im ){
-    plot((*im)->p(),  "Muon P",  0., 50.*Gaudi::Units::GeV);  // momentum
-    plot((*im)->pt(), "Muon Pt", 0., 5.*Gaudi::Units::GeV );  // Pt
+    plot((*im)->p(),  "P", "Muon P",  0., 50.*Gaudi::Units::GeV);  // momentum
+    plot((*im)->pt(), "Pt", "Muon Pt", 0., 5.*Gaudi::Units::GeV );  // Pt
     debug() << "Mu Momentum: " << (*im)->momentum() << endmsg ;
     for ( LHCb::RecVertex::ConstVector::const_iterator ipv = pvs.begin() ;
           ipv != pvs.end() ; ++ipv ){
@@ -81,8 +81,8 @@ StatusCode TutorialAlgorithm::loopOnMuons(const LHCb::Particle::ConstVector& muo
       debug() << (*ipv)->position() << endmsg ;
       sc = geomDispCalculator()->calcImpactPar(*(*im), *(*ipv), IP, IPE);
       if (sc){
-        plot(IP, "Muon IP", 0., 10.*Gaudi::Units::mm);
-        if (IPE>0.) plot(IP/IPE, "Muon IP/error", 0., 10.);
+        plot(IP, "IP", "Muon IP", 0., 10.*Gaudi::Units::mm);
+        if (IPE>0.) plot(IP/IPE, "IPS", "Muon IP/error", 0., 10.);
       } 
     }
   }

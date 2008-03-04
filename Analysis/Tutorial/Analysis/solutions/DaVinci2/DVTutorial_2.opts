@@ -6,8 +6,6 @@
  *  @date 2006-05-24
  */
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-//// load options for creation of "standard muons":
-#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
 //
 // Let's make it a sequence
 //
@@ -24,7 +22,7 @@ Jpsi2MuMu.OutputLevel = 3 ;
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos_2.root";
 
-ApplicationMgr.EvtMax = 500  ;
+ApplicationMgr.EvtMax = 1000  ;
 EventSelector.FirstEvent = 0 ;
 
 // load input data 

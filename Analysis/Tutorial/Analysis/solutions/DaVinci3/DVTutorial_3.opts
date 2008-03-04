@@ -6,10 +6,6 @@
  *  @date 2006-05-30
  */
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-//// load options for creation of "standard muons":
-#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
-//// load options for creation of "standard kaons":
-#include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
 //
 // Let's make it a sequence
 //
@@ -38,7 +34,7 @@ TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos_3.root";
 
-ApplicationMgr.EvtMax = 500 ;
+ApplicationMgr.EvtMax = 1000 ;
 
 // load input data 
 #include "$DAVINCITUTORIALDATA"

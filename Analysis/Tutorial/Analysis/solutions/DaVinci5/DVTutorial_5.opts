@@ -5,71 +5,17 @@
  *  @author P. Koppenburg
  *  @date 2006-12-21
  */
-#include "$DAVINCIROOT/options/DaVinciCommon.opts"
-/// load options for creation of "standard muons":
-#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
-/// load options for creation of "standard kaons":
-#include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
-//
-// Let's make it a sequence
-//
-ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
-//
-// TrueMCFilterCriterionSeq
-//
-TutorialSeq.Members += { "GaudiSequencer/FilterTrueBsSeq" };
-//
-// J/psi->mumu selection
-//
-TutorialSeq.Members += { "TutorialAlgorithm/Jpsi2MuMu" };
-Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
-Jpsi2MuMu.Particle = "J/psi(1S)" ;
-Jpsi2MuMu.MassWindow = 30*MeV ;
-Jpsi2MuMu.MaxChi2 = 20 ;
-Jpsi2MuMu.OutputLevel = 3 ;
-//
-// Phi->KK selection
-//
-TutorialSeq.Members += { "TutorialAlgorithm/Phi2KK" };
-Phi2KK.PhysDesktop.InputLocations = { "Phys/StdLooseKaons" } ;
-Phi2KK.Particle =  "phi(1020)" ;
-Phi2KK.MassWindow = 50*MeV ;
-Phi2KK.MaxChi2 = 100 ;
-Phi2KK.OutputLevel = 3 ;
-
-//
-// Bs : Use Standard algorithm
-//
-TutorialSeq.Members += { "MakeResonances/Bs2JpsiPhi" };
-Bs2JpsiPhi.PhysDesktop.InputLocations = { "Phys/Phi2KK", "Phys/Jpsi2MuMu" } ;
-Bs2JpsiPhi.DecayDescriptor = "B_s0 -> phi(1020) J/psi(1S)"; // mandatory
-Bs2JpsiPhi.DaughterFilter.Selections = { " K+ : PVIPFilterCriterion"  }; // Refine Kaons
-Bs2JpsiPhi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1 ; // 1 sigma IP for kaons from Phi
-Bs2JpsiPhi.DaughterFilter.FilterByDescendents = true ; /// to get the 1 sigma cut
-Bs2JpsiPhi.Window =  100 * MeV; // MeV
-Bs2JpsiPhi.MotherFilter.Selections = { "B_s0  : PVIPFilterCriterion,
-                                                VtxFilterCriterion,
-                                                FlightDistanceFilterCriterion"  };
-Bs2JpsiPhi.MotherFilter.VtxFilterCriterion.MaxChi2 = 30 ;  // Require 30 maximal B vertex Chi2
-Bs2JpsiPhi.MotherFilter.PVIPFilterCriterion.MaxIPsignif = 4 ; // Require 4 maximal B IP/IPE on best PV
-Bs2JpsiPhi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 5 ; // Require 5 minimal B flight distance significance
-//Bs2JpsiPhi.MakePlots=true;
-Bs2JpsiPhi.HistoProduce=true;
-Bs2JpsiPhi.DaughterPlots.Variables={"M","P","Pt","IP"};
-Bs2JpsiPhi.MotherPlots.Variables={"M", "P","Pt", "IP"};
-Bs2JpsiPhi.DaughterPlotsPath= "Bin" ;
-Bs2JpsiPhi.MotherPlotsPath= "Bout" ;
-
+#include "$ANALYSISROOT/solutions/DaVinci4/DVTutorial_4.opts"
 
 // Print reco Bs
 TutorialSeq.Members += { "PrintTree/PrintFoundBs" };
-PrintFoundBs.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFoundBs.PrintDecayTreeTool.Information = "Name M P Px Py Pz Pt chi2" ;
 PrintFoundBs.PhysDesktop.InputLocations = { "Phys/Bs2JpsiPhi" } ;
-PrintFoundBs.OutputLevel = 3 ;
+PrintFoundBs.PrintTruth = true ;
 
 // Print true Bs
 TutorialSeq.Members += { "PrintMCTree/PrintTrueBs" };
-PrintTrueBs.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintTrueBs.PrintMCDecayTreeTool.Information = "Name M P Px Py Pz Pt chi2" ;
 PrintTrueBs.ParticleNames = {  "B_s0", "B_s~0" } ;
 PrintTrueBs.OutputLevel = 3 ;
 PrintTrueBs.Depth = 2;  // down to the K and mu
@@ -77,7 +23,6 @@ PrintTrueBs.Depth = 2;  // down to the K and mu
 //TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 
 TutorialSeq.MeasureTime = true ;
-
 /*
 //
 // Optionally keep only true Bs daughters

@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.5 2006-12-07 12:19:14 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.6 2008-03-04 19:22:42 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -102,7 +102,7 @@ StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::ConstVector& daug
       // mass
       Gaudi::LorentzVector twoDa = (*imp)->momentum() + (*imm)->momentum() ;
       verbose() << "Two daughter mass is " << twoDa.M()/GeV << endmsg ;
-      plot(twoDa.M(),"TwoP mass",m_motherMass-3*m_motherMassWin,
+      plot(twoDa.M(), "Mass", "TwoP mass",m_motherMass-3*m_motherMassWin,
            m_motherMass+3*m_motherMassWin);
       if ( fabs ( twoDa.M() - m_motherMass ) > m_motherMassWin ) continue ; // mass cuts
       // vertex 
@@ -116,16 +116,16 @@ StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::ConstVector& daug
       }
       debug() << "Vertex fit at " << DaDaVertex.position()/cm
               << " with chi2 " << DaDaVertex.chi2() << endmsg;
-      plot(DaDaVertex.chi2(),"TwoP Chi^2",0.,200.);
+      plot(DaDaVertex.chi2(),"Chi2", "TwoP Chi^2",0.,200.);
       if ( DaDaVertex.chi2() > m_motherChi2 ) continue ; // chi2 cut
       // happy -> save
-      plot(twoDa.M(),"Selected TwoP mass",m_motherMass-m_motherMassWin,
+      plot(twoDa.M(),"SelChi2", "Selected TwoP mass",m_motherMass-m_motherMassWin,
            m_motherMass+m_motherMassWin);
       setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
       desktop()->save(&Mother);
       debug() << "Saved mother " << Mother.particleID().pid() << " to desktop" << endmsg ;
-      plotDaughter(*imp,"Selected ");
-      plotDaughter(*imm,"Selected ");
+      plotDaughter(*imp,"Selected");
+      plotDaughter(*imm,"Selected");
       ++m_nMothers ;
     }
   }
@@ -153,8 +153,8 @@ StatusCode TutorialAlgorithm::plotDaughter(const LHCb::Particle* da, const std::
 
   StatusCode sc = StatusCode::SUCCESS ;
 
-  plot(da->p(),  head+" Daughter P",  0., 50.*GeV);    // momentum
-  plot(da->pt(), head+" Daughter Pt", 0., 5.*GeV );  // Pt
+  plot(da->p(),  head+"P", head+" Daughter P",  0., 50.*GeV);    // momentum
+  plot(da->pt(), head+"Pt", head+" Daughter Pt", 0., 5.*GeV );  // Pt
   debug() << da->momentum() << endmsg ;
   const LHCb::RecVertex::ConstVector& prims = desktop()->primaryVertices() ;
   for ( LHCb::RecVertex::ConstVector::const_iterator ipv = prims.begin() ;
@@ -163,8 +163,8 @@ StatusCode TutorialAlgorithm::plotDaughter(const LHCb::Particle* da, const std::
     debug() << (*ipv)->position() << endmsg ;
     sc = geomDispCalculator()->calcImpactPar(*da, *(*ipv), IP, IPE);
     if (sc){
-      plot(IP, head+" Daughter IP", 0., 10.*mm);
-      if (IPE>0.) plot(IP/IPE,  head+" Daughter IP/error", 0., 10.);
+      plot(IP, head+"IP", head+" Daughter IP", 0., 10.*mm);
+      if (IPE>0.) plot(IP/IPE, head+"IPS",  head+" Daughter IP/error", 0., 10.);
     } 
   }
 

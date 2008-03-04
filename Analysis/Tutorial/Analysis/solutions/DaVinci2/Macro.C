@@ -1,21 +1,21 @@
-TCanvas* c1 = new TCanvas("c1","Edinburgh",800,800);
+TCanvas* c1 = new TCanvas("c1","DaVinci",600,600);
 c1->SetLogy();
 
 TFile* F = new TFile("DVHistos_2.root") 
 F->ls()
 F->cd("Jpsi2MuMu")               
 F->ls() 
-TH1D* H1 = F->Get("Jpsi2MuMu/1")
-TH1D* H2 = F->Get("Jpsi2MuMu/2")
-TH1D* H3 = F->Get("Jpsi2MuMu/3")
-TH1D* H4 = F->Get("Jpsi2MuMu/4")
-TH1D* H5 = F->Get("Jpsi2MuMu/5")
-TH1D* H6 = F->Get("Jpsi2MuMu/6")
-TH1D* H7 = F->Get("Jpsi2MuMu/7")
-TH1D* H8 = F->Get("Jpsi2MuMu/8")
-TH1D* H9 = F->Get("Jpsi2MuMu/9")
-TH1D* H10 = F->Get("Jpsi2MuMu/10")
-TH1D* H11 = F->Get("Jpsi2MuMu/11")
+TH1D* H1 = F->Get("Jpsi2MuMu/AllMuP")
+TH1D* H2 = F->Get("Jpsi2MuMu/AllMuPt")
+TH1D* H3 = F->Get("Jpsi2MuMu/AllMuIP")
+TH1D* H4 = F->Get("Jpsi2MuMu/AllMuIPS")
+TH1D* H5 = F->Get("Jpsi2MuMu/DiMuM")
+TH1D* H6 = F->Get("Jpsi2MuMu/DiMuChi2")
+TH1D* H7 = F->Get("Jpsi2MuMu/SelDiMuChi2")
+TH1D* H8 = F->Get("Jpsi2MuMu/SelectedMuP")
+TH1D* H9 = F->Get("Jpsi2MuMu/SelectedMuPt")
+TH1D* H10 = F->Get("Jpsi2MuMu/SelectedMuIP")
+TH1D* H11 = F->Get("Jpsi2MuMu/SelectedMuIPS")
 
 H5->SetLineColor(2)
 H5->SetLineWidth(3)

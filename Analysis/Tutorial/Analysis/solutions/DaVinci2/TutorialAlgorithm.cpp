@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.5 2006-11-20 11:34:16 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.6 2008-03-04 19:22:42 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -101,7 +101,7 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::ConstVector& muons)
       // mass
       Gaudi::LorentzVector twoMu = (*imp)->momentum() + (*imm)->momentum() ;
       verbose() << "Two muon mass is " << twoMu.M()/GeV << endmsg ;
-      plot(twoMu.M(),"DiMu mass",2.*GeV,4.*GeV);
+      plot(twoMu.M(), "DiMuM", "DiMu mass",2.*GeV,4.*GeV);
       if ( fabs ( twoMu.M() - m_jPsiMass ) > m_jPsiMassWin ) continue ; // mass cuts
       // vertex 
       LHCb::Vertex MuMuVertex;
@@ -113,14 +113,14 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::ConstVector& muons)
       }
       debug() << "Vertex fit at " << MuMuVertex.position()/cm
               << " with chi2 " << MuMuVertex.chi2() << endmsg;
-      plot(MuMuVertex.chi2(),"DiMu Chi^2",0.,200.);
+      plot(MuMuVertex.chi2(), "DiMuChi2", "DiMu Chi^2",0.,200.);
       if ( MuMuVertex.chi2() > m_jPsiChi2 ) continue ; // chi2 cut
       // happy -> save
-      plot(twoMu.M(),"Selected DiMu mass",m_jPsiMass-m_jPsiMassWin,m_jPsiMass+m_jPsiMassWin);
+      plot(twoMu.M(),"SelDiMuChi2", "Selected DiMu mass",m_jPsiMass-m_jPsiMassWin,m_jPsiMass+m_jPsiMassWin);
       setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
       desktop()->save(&Jpsi);
-      plotMuon(*imp,"Selected ");
-      plotMuon(*imm,"Selected ");
+      plotMuon(*imp,"Selected");
+      plotMuon(*imm,"Selected");
       ++m_nJPsis ;
     }
   }
@@ -148,8 +148,8 @@ StatusCode TutorialAlgorithm::plotMuon(const LHCb::Particle* mu, const std::stri
 
   StatusCode sc = StatusCode::SUCCESS ;
 
-  plot(mu->p(),  head+" Muon P",  0., 50.*GeV);    // momentum
-  plot(mu->pt(), head+" Muon Pt", 0., 5.*GeV );  // Pt
+  plot(mu->p(),  head+"MuP", head+" Muon P",  0., 50.*GeV);    // momentum
+  plot(mu->pt(), head+"MuPt", head+" Muon Pt", 0., 5.*GeV );  // Pt
   debug() << mu->momentum() << endmsg ;
 
   const LHCb::RecVertex::ConstVector& prims = desktop()->primaryVertices() ;
@@ -161,8 +161,8 @@ StatusCode TutorialAlgorithm::plotMuon(const LHCb::Particle* mu, const std::stri
     debug() << (*ipv)->position() << endmsg ;
     sc = geomDispCalculator()->calcImpactPar(*mu, *(*ipv), IP, IPE);
     if (sc){
-      plot(IP, head+" Muon IP", 0., 10.*mm);
-      if (IPE>0.) plot(IP/IPE,  head+" Muon IP/error", 0., 10.);
+      plot(IP, head+"MuIP", head+" Muon IP", 0., 10.*mm);
+      if (IPE>0.) plot(IP/IPE, head+"MuIPS",  head+" Muon IP/error", 0., 10.);
     } 
   }
 

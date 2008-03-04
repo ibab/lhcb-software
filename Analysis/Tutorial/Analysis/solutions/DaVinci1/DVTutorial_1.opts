@@ -6,8 +6,6 @@
  *  @date 2006-05-24
  */
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-// load options for creation of "standard muons":
-#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
 //
 // Let's make it a sequence
 //
