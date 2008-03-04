@@ -258,8 +258,7 @@ TH1* Archive::referenceHistogram(const string & referenceDbEntry)
 }
 void Archive::saveAsReferenceHistogram(DbRootHist* histogram)
 {
-  path referenceFilePath(m_referencePath.file_string() + s_slash +
-                         histogram->taskName());
+  path referenceFilePath(m_referencePath/histogram->taskName());
     bool out;
     try {
       create_directories(referenceFilePath);
@@ -276,7 +275,7 @@ void Archive::saveAsReferenceHistogram(DbRootHist* histogram)
             << histogram->startRun() << s_rootFileExtension;
 
     TH1* m_reference = (TH1*) (histogram->rootHistogram)->Clone(histogram->onlineHistogram()->hname().c_str());
-
+    std::cout << refFile.str().c_str() << std::endl;
     const char* file =  refFile.str().c_str();
     TFile* f = new TFile(file,"UPDATE");
     if (f) {
