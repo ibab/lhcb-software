@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.94 2008-02-07 12:25:55 cattanem Exp $
+! $Id: release.notes,v 1.95 2008-03-04 10:36:50 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2008-03-04 - Olivier Deschamps
+ - Calo2Dview : move HistoDir default to constructor - remove SplitHistoDir(true)
+
 
 !========================== CaloUtils v7r8 2008-02-07 =========================
 ! 2008-02-07 - Marco Cattaneo

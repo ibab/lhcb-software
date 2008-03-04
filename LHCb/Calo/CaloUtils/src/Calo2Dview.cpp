@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.3 2008-02-04 22:29:03 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.4 2008-03-04 10:36:50 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -36,6 +36,9 @@ Calo2Dview::Calo2Dview( const std::string& name,
   declareProperty( "Offset"        ,  m_offset  = 0 );
   declareProperty( "ActualSize"    ,  m_dim  = true );
   declareProperty( "L0ClusterView" ,  m_l0  = false );
+
+
+  setHistoDir( name );
 }
 //=============================================================================
 // Destructor
@@ -62,6 +65,7 @@ StatusCode Calo2Dview::initialize() {
   m_regMap[3]    = 2;
   m_xsizeMap[3]   = m_caloMap[3]->cellSize( refHcal ) ;
   m_ysizeMap[3]  = m_xsizeMap[3] ;
+
   // Ecal
   const LHCb::CaloCellID refEcal(2, 0, 8 ,4);
   m_caloMap[2]=getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
@@ -75,7 +79,7 @@ StatusCode Calo2Dview::initialize() {
   m_centreMap[1] = 32;
   m_regMap[1]    = 6;
   m_xsizeMap[1]   = m_caloMap[1]->cellSize( refPrs ) ;
-    m_ysizeMap[1]  = m_xsizeMap[1] ;
+  m_ysizeMap[1]  = m_xsizeMap[1] ;
   // Spd
   const LHCb::CaloCellID refSpd(0, 0, 8 ,4);
   m_caloMap[0]=getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
@@ -83,6 +87,9 @@ StatusCode Calo2Dview::initialize() {
   m_regMap[0]    = 6;
   m_xsizeMap[0]   = m_caloMap[0]->cellSize( refSpd ) ;
   m_ysizeMap[0]  = m_xsizeMap[0] ;
+
+
+
 
 
   return StatusCode::SUCCESS;
@@ -142,12 +149,6 @@ AIDA::IHistogram2D* Calo2Dview::bookCalo2D(const HistoID unit,const std::string 
     ymax = m_ysize * ymax / 2.;
     ymin = -ymax;
   }
-  
-      
-
-  setSplitHistoDir(true);
-  setHistoDir( name() );
-
 
   return book2D( unit , title , xmin , xmax, bin , ymin , ymax , bin);  
 }
@@ -245,6 +246,8 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
   unsigned int row = id.row();
   unsigned int col = id.col();
 
+
+
   // L0-cluster mode
   unsigned int icl = 1;
   if(m_l0)icl  = 2;
@@ -284,7 +287,6 @@ AIDA::IHistogram2D*  Calo2Dview::fillCaloPin2D(const HistoID unit, LHCb::CaloCel
   // filter PIN ADC
   if( m_calo->pinArea() != id.area() )return NULL;
 
-
   // set title and unit for PIN
   
   std::string name = (std::string) unit;
@@ -293,6 +295,7 @@ AIDA::IHistogram2D*  Calo2Dview::fillCaloPin2D(const HistoID unit, LHCb::CaloCel
   std::string suff = name.substr( index, name.length()  );
   std::stringstream lun("");
   lun << pref << "PIN/" <<  suff ;
+
 
   // book histo if not found 
   if( !histoExists( (HistoID) lun.str() ) ){
@@ -320,7 +323,9 @@ AIDA::IHistogram2D*  Calo2Dview::fillCaloPin2D(const HistoID unit, LHCb::CaloCel
   // book histo if not found
   // Fill the standard view for PIN-diode 
   std::vector<LHCb::CaloCellID>& cells = m_calo->caloPins()[id].cells();
+
   for( std::vector<LHCb::CaloCellID>::iterator icel = cells.begin() ; icel != cells.end() ; ++icel){    
+ 
     unsigned int row = (*icel).row();
     unsigned int col = (*icel).col();
     unsigned int area =(*icel).area();
