@@ -92,7 +92,7 @@ void ReferencePicker::setSelectedAsRef()
 {
   try {
     if (0 != m_histogram->dbSession() &&
-        pres::ReadWrite == m_mainFrame->databaseMode() ) {
+        ReadWrite == m_mainFrame->databaseMode() ) {
       std::string referenceEntry(m_mainFrame->selectedHistogram()->GetName());
       m_histogram->onlineHistogram()->getTask()->setReference(referenceEntry);
       m_histogram->dbSession()->commit();
