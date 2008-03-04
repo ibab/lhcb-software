@@ -23,4 +23,4 @@ macro MDFlib_linkopts  ' -L$(MDFROOT)/$(tag) -lMDF ' WIN32 ' /libpath:"$(MDFROOT
 
 private
 use GaudiSvc v*
-use GaudiPoolDb v*
+##use GaudiPoolDb v*
