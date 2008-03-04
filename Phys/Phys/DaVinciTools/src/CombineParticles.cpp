@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.7 2008-03-04 17:33:07 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.8 2008-03-04 18:07:13 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -180,7 +180,7 @@ StatusCode CombineParticles::execute() {
       continue ;
     }
     sc = applyDecay(*decay, Resonances); // make the resonances
-    if (!sc) return sc;
+    if (!sc) return StatusCode::SUCCESS; // exit silently
   }
 
   sc = makePlots(Resonances, m_plots1);
@@ -281,7 +281,7 @@ StatusCode CombineParticles::applyDecay(Decay& decay,
         nr++ ;
         if ( nr > m_maxCandidates ){
           Warning("Reached maximal number of candidates. Exiting");
-          return StatusCode::SUCCESS ;
+          return StatusCode::FAILURE ;
         }
       }
     }
