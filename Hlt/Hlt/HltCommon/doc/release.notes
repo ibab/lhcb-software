@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-03-05 - Gerhard Raven
+ - add missing PropertyConfigSvc::queryInterface
+ - add ConfigTreeEditor
 
 ! 2008-02-28 - V. Gligorov
  - Added two new packages for swimming: HltSelectTracksForSwimming.{h,cpp}

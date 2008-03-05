@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.h,v 1.3 2008-02-15 08:20:01 graven Exp $
+// $Id: PropertyConfigSvc.h,v 1.4 2008-03-05 08:06:30 graven Exp $
 #ifndef PROPERTYCONFIGSVC_H 
 #define PROPERTYCONFIGSVC_H 1
 
@@ -45,14 +45,19 @@ public:
   virtual StatusCode initialize();    ///< Service initialization
   virtual StatusCode finalize();    ///< Service initialization
 
+  virtual StatusCode queryInterface(const InterfaceID& riid,
+                                    void** ppvUnknown) ;
+
   virtual PropertyConfig currentConfiguration(const INamedInterface& obj) const;
   virtual PropertyConfig::digest_type findInTree(const ConfigTreeNode::digest_type& configTree, const std::string& name) const;
 
+  virtual const std::list<ConfigTreeNode::digest_type>& collectNodeRefs(const ConfigTreeNode::digest_type& nodeRef) const;
+  virtual const std::vector<PropertyConfig::digest_type>& collectLeafRefs(const ConfigTreeNode::digest_type& nodeRef) const;
 
+  virtual const PropertyConfig* resolvePropertyConfig(const PropertyConfig::digest_type& ref) const;
+  virtual const ConfigTreeNode* resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref) const;
 protected:
   // helper functions
-  const std::list<ConfigTreeNode::digest_type>& collectNodeRefs(const ConfigTreeNode::digest_type& nodeRef) const;
-  const std::vector<PropertyConfig::digest_type>& collectLeafRefs(const ConfigTreeNode::digest_type& nodeRef) const;
 
   bool loadConfig(const ConfigTreeNode::digest_type& nodeRef);
 
@@ -63,9 +68,6 @@ protected:
   // reconfigure: first configure, then call sysReinitialize on the top algorithm
   StatusCode reconfigure(const ConfigTreeNode::digest_type& top) const; 
 
-  // populate cache with specified objects, and return pointer to it
-  const PropertyConfig* resolvePropertyConfig(const PropertyConfig::digest_type& ref) const;
-  const ConfigTreeNode* resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref) const;
 
   // check validity of given config
   bool validateConfig(const PropertyConfig::digest_type& ref) const;

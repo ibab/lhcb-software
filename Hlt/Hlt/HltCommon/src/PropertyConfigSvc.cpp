@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.4 2008-02-15 08:20:01 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.5 2008-03-05 08:06:30 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -89,11 +89,25 @@ MsgStream& PropertyConfigSvc::msg(MSG::Level level) const {
      if (m_msg.get()==0) m_msg.reset( new MsgStream( msgSvc(), name() ));
      return *m_msg << level;
 }
+
+//=============================================================================
+// queryInterface
+//=============================================================================
+StatusCode PropertyConfigSvc::queryInterface(const InterfaceID& riid,
+                                               void** ppvUnknown) {
+  if ( IPropertyConfigSvc::interfaceID().versionMatch(riid) )   {
+    *ppvUnknown = (IPropertyConfigSvc*)this;
+    addRef();
+    return SUCCESS;
+  }
+  return Service::queryInterface(riid,ppvUnknown);
+}
 //=============================================================================
 // Initialization
 //=============================================================================
 StatusCode PropertyConfigSvc::initialize() {
-  StatusCode status = Service::initialize();
+   info() << "Initialize" << endmsg;
+   StatusCode status = Service::initialize();
    if ( !status.isSuccess() )   return status;
    status = service(s_accessSvc,m_accessSvc);
    if ( !status.isSuccess() )   return status;
