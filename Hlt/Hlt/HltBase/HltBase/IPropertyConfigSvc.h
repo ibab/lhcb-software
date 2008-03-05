@@ -1,8 +1,10 @@
-// $Id: IPropertyConfigSvc.h,v 1.1 2008-02-15 08:17:33 graven Exp $
+// $Id: IPropertyConfigSvc.h,v 1.2 2008-03-05 08:01:54 graven Exp $
 #ifndef IPROPERTYCONFIGSVC_H 
 #define IPROPERTYCONFIGSVC_H 1
 
 // Include files
+#include <vector>
+#include <list>
 #include "GaudiKernel/INamedInterface.h"
 #include "HltBase/ConfigTreeNode.h"
 #include "HltBase/PropertyConfig.h"
@@ -39,6 +41,13 @@ public:
   PropertyConfig::digest_type findInTree(const ConfigTreeNode::digest_type& configTree, const INamedInterface& iface) const
   { return findInTree(configTree,iface.name()); }
 
+  // populate cache with specified objects, and return pointer to it
+  // Note: the service remains the owner of these objects!!!
+  virtual const PropertyConfig* resolvePropertyConfig(const PropertyConfig::digest_type& ref) const = 0;
+  virtual const ConfigTreeNode* resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref) const = 0;
+
+  virtual const std::list<ConfigTreeNode::digest_type>& collectNodeRefs(const ConfigTreeNode::digest_type& nodeRef) const = 0;
+  virtual const std::vector<PropertyConfig::digest_type>& collectLeafRefs(const ConfigTreeNode::digest_type& nodeRef) const = 0;
 
 
 

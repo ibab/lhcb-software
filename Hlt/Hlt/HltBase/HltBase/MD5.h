@@ -5,15 +5,17 @@
 #include <iostream>
 #include <sstream>
 
+class md5;
+
 class MD5 {
 public:
     class Digest {
         public:
            typedef boost::uint8_t value_type[16];
-           explicit Digest(const value_type& val) { memcpy(m_value,val,sizeof(m_value)); }
 
            std::string str() const; 
            bool invalid() const { value_type x; return memcmp(m_value,memset(x,0u,sizeof(x)),sizeof(m_value))==0;}
+           bool valid() const { return !invalid(); }
            bool operator< (const Digest& rhs) const { return memcmp(m_value,rhs.m_value,sizeof(m_value))<0;}
            bool operator> (const Digest& rhs) const { return memcmp(m_value,rhs.m_value,sizeof(m_value))>0;}
            bool operator==(const Digest& rhs) const { return memcmp(m_value,rhs.m_value,sizeof(m_value))==0;}
@@ -22,7 +24,9 @@ public:
            bool operator!=(const Digest& rhs) const { return !operator==(rhs);}
         private:
            friend class MD5;
+           friend class md5;
            explicit Digest(const std::string& val);
+           explicit Digest(const value_type& val) { memcpy(m_value,val,sizeof(m_value)); }
 
            value_type m_value;
     };

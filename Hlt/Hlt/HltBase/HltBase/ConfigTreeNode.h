@@ -4,6 +4,7 @@
 #include "HltBase/MD5.h"
 #include <iostream>
 #include <vector>
+#include "boost/optional.hpp"
 
 class ConfigTreeNode {
 public:
@@ -46,6 +47,14 @@ public:
       , m_label(label)
     { }
 
+    ConfigTreeNode *clone(boost::optional<const LeafRef&> newLeaf = boost::optional<const LeafRef&>(), 
+                          boost::optional<const NodeRefs&> newNodes = boost::optional<const NodeRefs&>(), 
+                          boost::optional<const std::string&> newLabel = boost::optional<const std::string&>()) const {
+        return new ConfigTreeNode( newLeaf  ? newLeaf.get()  : m_leaf,
+                                   newNodes ? newNodes.get() : m_nodes,
+                                   newLabel ? newLabel.get() : m_label );
+    }
+
     bool operator==(const ConfigTreeNode& rhs) const { 
         return m_leaf == rhs.m_leaf 
             && m_label == rhs.m_label // should we require the labels to match as well???
@@ -56,7 +65,7 @@ public:
             && m_nodes == rhs.m_nodes; 
     }
 
-    digest_type digest() const        { return MD5::computeDigest(*this); }
+    digest_type digest() const;
 
     std::ostream& print(std::ostream& os) const;
     std::istream& read(std::istream& is);

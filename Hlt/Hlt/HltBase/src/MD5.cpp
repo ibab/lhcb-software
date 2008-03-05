@@ -300,7 +300,7 @@ MD5::Digest md5::digest(const char * a_data)
 
     // Store state in digest.
     MD5::Digest::value_type digest;
-    pack(digest, state, sizeof(MD5::Digest::value_type));
+    pack(digest, state, sizeof(digest));
     return MD5::Digest(digest);
 }
 

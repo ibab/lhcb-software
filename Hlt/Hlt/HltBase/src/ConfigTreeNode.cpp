@@ -49,5 +49,7 @@ ostream& ConfigTreeNode::print(ostream& os) const {
     return os << "]" << endl;
 }
 
+ConfigTreeNode::digest_type ConfigTreeNode::digest() const { return MD5::computeDigest(*this); }
+
 std::ostream& operator<<(std::ostream& os, const ConfigTreeNode& x) { return x.print(os);}
 std::istream& operator>>(std::istream& is, ConfigTreeNode& x)       { return x.read(is);}

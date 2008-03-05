@@ -2,11 +2,12 @@
 #define PROPERTYCONFIG_H 1
 #include <string>
 #include <vector>
+#include <iostream>
+#include "boost/optional.hpp"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/INamedInterface.h"
 #include "GaudiKernel/IProperty.h"
 #include "HltBase/MD5.h"
-#include <iostream>
 
 class PropertyConfig {
 public:
@@ -30,6 +31,13 @@ public:
       , m_kind(kind)
    {  }
 
+    PropertyConfig(const std::string& name, const std::string& type, const std::string& kind, const Properties& props)
+      : m_properties(props)
+      , m_type(type)
+      , m_name(name)
+      , m_kind(kind)
+   {  }
+
     bool operator==(const PropertyConfig& rhs) const { 
         return m_type == rhs.m_type 
             && m_name == rhs.m_name 
@@ -44,6 +52,11 @@ public:
     const std::string & type() const    { return m_type;}
     const std::string & kind() const    { return m_kind;}
     const Properties& properties() const { return m_properties;}
+
+    PropertyConfig* clone( boost::optional<const Properties&> properties = boost::optional<const Properties&>() )  const {
+        return new PropertyConfig(m_name,m_type,m_kind, 
+                                  properties ? properties.get() : m_properties);
+    }
 
     std::ostream& print(std::ostream& os) const;
     std::istream& read(std::istream& is);
