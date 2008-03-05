@@ -1,7 +1,7 @@
-# File for running Boole on data produced with DC06 geometry 
+# File for running Boole on data produced with Gauss v31r* or greater 
 
 # Syntax is:
-#   gaudirun.py ../options/BooleCommon.py ../options/v200601.py
+#   gaudirun.py ../options/BooleCommon.py ../options/v200801.py
 #
 from Gaudi.Configuration import *
 from Boole.Configuration import *
@@ -18,12 +18,12 @@ writeL0ETC   = False # set to True to write ETC of L0 selected events
 writeL0Only  = False # set to True to write only L0 selected events
 extendedDigi = False # set to True to add MCHits to .digi output file
 expertHistos = False # set to True to write out expert histos
-noWarnings   = False # suppress all messages with MSG::WARNING or below 
-datasetName  = '00001820_00000001' # name of input signal file
-condDBtag    = "DC06-latest" # conditions database tag
+noWarnings   = True  # suppress all messages with MSG::WARNING or below 
+datasetName  = '11144103-500ev-20080228' # name of input signal file
+condDBtag    = "head-20080130" # conditions database tag
 ##############################################################################
 # Default I/O file names
-outputName   = datasetName + '_4'  # name of output event data file
+outputName   = datasetName # name of output event data file
 if ( numEvents > 0 ): outputName += '-' + str(numEvents) + 'ev'
 if ( generateTAE )  : outputName += '-TAE'
 histosName   = outputName  # name of monitoring histograms file
@@ -50,13 +50,10 @@ BooleSaveHistos( histosName, expertHistos )
 FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
 
 #-- Main ('signal') event input
-EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/" + datasetName + "_1.sim' TYP='POOL_ROOTTREE' OPT='READ'"]
+EventSelector().Input = ["DATAFILE='PFN:rfio:/castor/cern.ch/user/g/gcorti/Gauss/2008/v31r0/" + datasetName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 #-- Spillover events
-EventSelector("SpilloverSelector").Input = [
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/" + datasetName + "_2.sim' TYP='POOL_ROOTTREE' OPT='READ'"
-   ,"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/" + datasetName + "_3.sim' TYP='POOL_ROOTTREE' OPT='READ'"
-    ]
+EventSelector("SpilloverSelector").Input = ["DATAFILE='PFN:rfio:/castor/cern.ch/user/g/gcorti/Gauss/2008/v31r0/30000000-1000ev-20080223.sim' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 #-- Possible output streams. Enabled by setting the corresponding output type
 # writeRawMDF = true:  Simulated raw data, in MDF format, without MC truth. 
