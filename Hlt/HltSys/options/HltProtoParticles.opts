@@ -8,12 +8,14 @@
 //---------------------------------------------------------------------
 // Charged ProtoParticles
 //---------------------------------------------------------------------
-HltSelections.Members += { "GaudiSequencer/SeqHltCharged" } ;
+HltSelections.Members += { "GaudiSequencer/SeqHltProtoParticles" } ;
+SeqHltProtoParticles.MeasureTime = true ;
+SeqHltProtoParticles.IgnoreFilterPassed = true ; // do all
+SeqHltProtoParticles.Members += { "GaudiSequencer/SeqHltCharged" } ;
 SeqHltCharged.MeasureTime = true ;
-SeqHltCharged.IgnoreFilterPassed = true ;
-
-/*
- * TEMPORARY clone killer - waiting to understand duplicated tracks
+SeqHltCharged.IgnoreFilterPassed = false ;
+/**
+ * @todo TEMPORARY clone killer - waiting to understand duplicated tracks
  */
 SeqHltCharged.Members += {
   "TrackEventCloneKiller/HltFullRecoTEMPORARYCloneKiller"} ;
@@ -21,6 +23,12 @@ HltFullRecoTEMPORARYCloneKiller.TracksInContainers = { "Hlt/Track/Forward" };
 HltFullRecoTEMPORARYCloneKiller.TracksOutContainer = "Hlt/Track/ForwardCLEANED" ;
 HltFullRecoTEMPORARYCloneKiller.SkipSameContainerTracks = false ;
 HltFullRecoTEMPORARYCloneKiller.CloneFinderTool.CompareAtLHCbIDsLevel = true ;
+/**
+ * @todo TEMPORARY kill huge events
+ */
+SeqHltCharged.Members += { "NumberOfTracksFilter" };
+NumberOfTracksFilter.TrackLocations = { "Hlt/Track/ForwardCLEANED" };
+NumberOfTracksFilter.MaxTracks = 1000 ;
 /*
  * MC truth associated tracks
  */
@@ -34,7 +42,7 @@ HltInsertTrackErrParam.InputLocation = "Hlt/Track/ForwardCLEANED" ;
 //---------------------------------------------------------------------
 // MuonID
 //---------------------------------------------------------------------
-SeqHltCharged.Members += { "GaudiSequencer/HltMuonIDSeq"} ;
+SeqHltProtoParticles.Members += { "GaudiSequencer/HltMuonIDSeq"} ;
 HltMuonIDSeq.Members += { "MuonRec", "MuonID/HltMuonID" };
 #include "$HLTSYSROOT/options/HltMuonID.opts"
 HltMuonID.TrackLocation = "Hlt/Track/ForwardCLEANED" ;
@@ -67,11 +75,11 @@ ToolSvc.HLT.RichTrackCreator.TracksLocation = "Hlt/Track/ForwardCLEANED";
 //---------------------------------------------------------------------
 // ChargedProtoPAlg
 //---------------------------------------------------------------------
-SeqHltCharged.Members += { "ChargedProtoPAlg/HltChargedProtoPAlg" } ;
+SeqHltProtoParticles.Members += { "ChargedProtoPAlg/HltChargedProtoPAlg" } ;
 HltChargedProtoPAlg.InputTrackLocation = "Hlt/Track/ForwardCLEANED" ; // Correct this
 // HltChargedProtoPAlg.InputTrackLocation = "Hlt/Track/Forward" ; // Correct this
 HltChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Charged" ;
-SeqHltCharged.Members += { "ChargedProtoCombineDLLsAlg/HltChargedProtoCombDLL" };
+SeqHltProtoParticles.Members += { "ChargedProtoCombineDLLsAlg/HltChargedProtoCombDLL" };
 HltChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/Charged" ;
 
 //---------------------------------------------------------------------
@@ -93,7 +101,7 @@ HltChargedProtoPAlg.UseVeloPID = false ;
 //---------------------------------------------------------------------
 // Charged Particles - Here make all to Pi and K
 //---------------------------------------------------------------------
-SeqHltCharged.Members += { "PreLoadParticles/HltNoPIDsPions",
+SeqHltProtoParticles.Members += { "PreLoadParticles/HltNoPIDsPions",
 	                         "PreLoadParticles/HltNoPIDsKaons" }; 
 
 HltNoPIDsPions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
@@ -120,7 +128,7 @@ HltNoPIDsKaons.DecayDescriptor = "Kaon" ;
 //---------------------------------------------------------------------
 // Kaons using RICH HLT reco results
 //---------------------------------------------------------------------
-SeqHltCharged.Members += { "PreLoadParticles/HltRichPIDsKaons" }; 
+SeqHltProtoParticles.Members += { "PreLoadParticles/HltRichPIDsKaons" }; 
 
 HltRichPIDsKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
@@ -133,7 +141,7 @@ HltRichPIDsKaons.DecayDescriptor = "Kaon" ;
 //---------------------------------------------------------------------
 // Muons sequence
 //---------------------------------------------------------------------
-SeqHltCharged.Members += { "GaudiSequencer/SeqHltMuons" } ;
+SeqHltProtoParticles.Members += { "GaudiSequencer/SeqHltMuons" } ;
 SeqHltMuons.IgnoreFilterPassed = true ;
 //---------------------------------------------------------------------
 // Muons from Long tracks
@@ -196,7 +204,7 @@ HltMuons.PhysDesktop.InputLocations = { "Phys/HltAlleyMuons", "Phys/HltForwardMu
 //---------------------------------------------------------------------
 // Special case for electrons - NO ELECTRON ID YET
 //---------------------------------------------------------------------
-//SeqHltCharged.Members += { "PreLoadParticles/HltElectrons"};
+//SeqHltProtoParticles.Members += { "PreLoadParticles/HltElectrons"};
 HltElectrons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 HltElectrons.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
 HltElectrons.PhysDesktop.NoPIDsParticleMaker.Particle =  "electron" ;

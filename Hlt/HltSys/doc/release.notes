@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-03-05 - Patrick Koppenburg
+ - Add new sequence HltProtoParticles. HltCharged is part of it.
+
 ! 2008-02-27 - Patrick Koppenburg
  - Add HltSys and HltSelections options to doxygen path
 
