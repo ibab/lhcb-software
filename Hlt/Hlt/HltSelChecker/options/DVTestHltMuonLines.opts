@@ -34,9 +34,6 @@ EventSelector.Input   = {
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
-ApplicationMgr.TopAlg += { "HltSelChecker/HltBd2MuMuKstarChecker" };
-HltBd2MuMuKstarChecker.PhysDesktop.InputLocations = { "Phys/HltSelBd2MuMuKstar" } ;
-
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                            
 NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bd2MuMuKstar.root' TYP='ROOT' OPT='NEW'" ] ;
 
@@ -46,25 +43,9 @@ HltBd2MuMuKstarChecker.Context = "HLT" ;
 OfflineChecker.OutputLevel = 3 ;
 //OfflineChecker.DoPrint = true ;
 
-ApplicationMgr.TopAlg += { "HltSelChecker/HltSingleMuonChecker" };
-HltSingleMuonChecker.PhysDesktop.InputLocations = { "Phys/HltSelSingleMuon" } ;
-
-ApplicationMgr.TopAlg += { "HltSelChecker/HltBiasedDiMuonChecker" };
-HltBiasedDiMuonChecker.PhysDesktop.InputLocations = { "Phys/HltSelBiasedDiMuon" } ;
-
-ApplicationMgr.TopAlg += { "HltSelChecker/HltUnbiasedDiMuonChecker" };
-HltUnbiasedDiMuonChecker.PhysDesktop.InputLocations = { "Phys/HltSelUnbiasedDiMuon" } ;
-
-ApplicationMgr.TopAlg += { "HltSelChecker/HltB2JpsiXChecker" };
-HltB2JpsiXChecker.PhysDesktop.InputLocations = { "Phys/HltSelB2JpsiX_MuMu" } ;
-
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;
 NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Muons.root' TYP='ROOT' OPT='NEW'" ] ;
 ApplicationMgr.EvtMax = 10000 ;
 EventSelector.FirstEvent = 1 ;
 EventSelector.PrintFreq = 100 ;
-HltBiasedDiMuonChecker.Context = "HLT" ;
-HltUnbiasedDiMuonChecker.Context = "HLT" ;
-HltSingleMuonChecker.Context = "HLT" ;
-HltB2JpsiXChecker.Context = "HLT" ;

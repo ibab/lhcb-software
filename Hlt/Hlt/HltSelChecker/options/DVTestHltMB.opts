@@ -20,10 +20,6 @@
 /*
  *  Something about all pi
  */
-ApplicationMgr.TopAlg += { "HltSelChecker/PionsChecker" };
-PionsChecker.PhysDesktop.InputLocations = { "Phys/HltNoPIDsPions" } ;
-PionsChecker.GeomTools = { "" : "TrgDispCalculator" };
-
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                             //GP: (45,1)
 NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-MB.root' TYP='ROOT' OPT='NEW'" ] ;//GP: (46,1)
 

@@ -36,18 +36,8 @@ EventSelector.Input   = {
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
-ApplicationMgr.TopAlg += { "HltSelChecker", "HltSelChecker/OfflineChecker" };
-HltSelChecker.PhysDesktop.InputLocations = { "Phys/HltSelBd2D0Kstar" } ;
-OfflineChecker.PhysDesktop.InputLocations = { "Phys/PreselBd2D0Kst_D02HH" } ;
-
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                            
 NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bd2D0Kstar.root' TYP='ROOT' OPT='NEW'" ] ;
-
-HltSelChecker.OutputLevel = 3 ;
-HltSelChecker.Context = "HLT" ;
-//HltSelChecker.DoPrint = true ;
-OfflineChecker.OutputLevel = 3 ;
-//OfflineChecker.DoPrint = true ;
 
 ApplicationMgr.EvtMax = -1 ;
 //EventSelector.FirstEvent = 815 ;
