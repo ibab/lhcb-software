@@ -705,24 +705,24 @@ int PubArea::DumpSlot(void* slot)   {
       if (size==0) return PA_SUCCESS; //.......................... No slot size
 
       int k = 0, j=0, l=0;
-      lib_rtl_printf(" *** Ascii Dump *** codes 0-31 are dots (.) 127-255 are wildcards (*)\n");
+      lib_rtl_output(LIB_RTL_ALWAYS," *** Ascii Dump *** codes 0-31 are dots (.) 127-255 are wildcards (*)\n");
       for (j=0;j<(size);j++)
       {
-        if (*tmp<32) lib_rtl_printf(".");
-        if ((*tmp>31)&&(*tmp<127)) lib_rtl_printf("%c",*tmp);
-        if (*tmp>126) lib_rtl_printf("*");
+        if (*tmp<32) lib_rtl_output(LIB_RTL_ALWAYS,".");
+        if ((*tmp>31)&&(*tmp<127)) lib_rtl_output(LIB_RTL_ALWAYS,"%c",*tmp);
+        if (*tmp>126) lib_rtl_output(LIB_RTL_ALWAYS,"*");
         k++;tmp++;
-        if (k>61) {lib_rtl_printf("\n");k=0;}
+        if (k>61) {lib_rtl_output(LIB_RTL_ALWAYS,"\n");k=0;}
       }
       k=0;l=0;
-      lib_rtl_printf("\n *** Hexadecimal Dump ***\n");
+      lib_rtl_output(LIB_RTL_ALWAYS,"\n *** Hexadecimal Dump ***\n");
       for (j=0;j<(size);j++)  {
-        lib_rtl_printf("%02x",*tmp2);
+        lib_rtl_output(LIB_RTL_ALWAYS,"%02x",*tmp2);
         k++; l++; tmp2++;
-        if (l>3) {lib_rtl_printf(" ");l=0;} //.... Prints spaces 
-        if (k>31) {lib_rtl_printf("\n");k=0;}
+        if (l>3) {lib_rtl_output(LIB_RTL_ALWAYS," ");l=0;} //.... Prints spaces 
+        if (k>31) {lib_rtl_output(LIB_RTL_ALWAYS,"\n");k=0;}
       }
-      lib_rtl_printf("\n");
+      lib_rtl_output(LIB_RTL_ALWAYS,"\n");
       return PA_SUCCESS;
     }      
   }
@@ -770,22 +770,22 @@ int PubArea::DumpSlot(int slot)  {
   if (size==0) return PA_SUCCESS; //.......................... No slot size
 
   int k = 0, j=0, l=0;
-  lib_rtl_printf(" *** Ascii Dump *** codes 0-31 are dots (.) 127-255 are wildcards (*)\n");
+  lib_rtl_output(LIB_RTL_ALWAYS," *** Ascii Dump *** codes 0-31 are dots (.) 127-255 are wildcards (*)\n");
   for (j=0;j<(size);j++)  {
-    if (*tmp<32) lib_rtl_printf(".");
-    if ((*tmp>31)&&(*tmp<127)) lib_rtl_printf("%c",*tmp);
-    if (*tmp>126) lib_rtl_printf("*");
+    if (*tmp<32) lib_rtl_output(LIB_RTL_ALWAYS,".");
+    if ((*tmp>31)&&(*tmp<127)) lib_rtl_output(LIB_RTL_ALWAYS,"%c",*tmp);
+    if (*tmp>126) lib_rtl_output(LIB_RTL_ALWAYS,"*");
     k++;tmp++;
-    if (k>63) {lib_rtl_printf("\n");k=0;}
+    if (k>63) {lib_rtl_output(LIB_RTL_ALWAYS,"\n");k=0;}
   }
   k=0;l=0;
-  lib_rtl_printf("\n *** Hexadecimal Dump ***\n");
+  lib_rtl_output(LIB_RTL_ALWAYS,"\n *** Hexadecimal Dump ***\n");
   for (j=0;(j<size);j++)  {
-    lib_rtl_printf("%02x",*tmp2);
+    lib_rtl_output(LIB_RTL_ALWAYS,"%02x",*tmp2);
     k++; l++; tmp2++;
-    if (l>3) {lib_rtl_printf(" ");l=0;} //.... Prints spaces 
-    if (k>31) {lib_rtl_printf("\n");k=0;}
+    if (l>3) {lib_rtl_output(LIB_RTL_ALWAYS," ");l=0;} //.... Prints spaces 
+    if (k>31) {lib_rtl_output(LIB_RTL_ALWAYS,"\n");k=0;}
   }
-  lib_rtl_printf("\n");
+  lib_rtl_output(LIB_RTL_ALWAYS,"\n");
   return PA_SUCCESS;
 }      

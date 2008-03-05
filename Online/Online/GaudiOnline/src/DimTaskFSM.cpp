@@ -76,18 +76,12 @@ namespace  {
   };
 
   /// Static printer (RTL overload)
-  static size_t printout(void* context, const char* fmt, va_list args)  {
+  static size_t printout(void* context, int level, const char* fmt, va_list args)  {
     std::string format = fmt;
     LHCb::DimTaskFSM* p = (LHCb::DimTaskFSM*)context;
     char buffer[2048];
-    size_t len = ::vsprintf(buffer, format.substr(0,format.length()-1).c_str(), args);
-    if ( len > sizeof(buffer) )  {
-      // !! memory corruption !!
-      p->output(MSG::ERROR,"Memory corruption...");
-      p->output(MSG::WARNING,buffer);
-      exit(0);
-    }
-    p->output(MSG::WARNING,buffer);
+    size_t len = ::vsnprintf(buffer, sizeof(buffer), format.substr(0,format.length()-1).c_str(), args);
+    p->output(level, buffer);
     return len;
   }
 }

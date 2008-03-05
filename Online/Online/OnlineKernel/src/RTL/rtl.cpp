@@ -297,23 +297,23 @@ int lib_rtl_signal_message(int action, const char* fmt, ...)  {
     case LIB_RTL_ERRNO:
       err = errno;
       if ( err != 0 )  {
-        ::lib_rtl_printf("RTL: %8d : %s\n",err, RTL::errorString(err));
+        ::lib_rtl_output(LIB_RTL_ERROR,"RTL: %8d : %s\n",err, RTL::errorString(err));
         ::vsnprintf(buff, sizeof(buff), fmt, args);
-        ::lib_rtl_printf("                %s\n",buff);
+        ::lib_rtl_output(LIB_RTL_ERROR,"                %s\n",buff);
         return 0;
       }
       return 1;
     case LIB_RTL_DEFAULT:
         ::vsnprintf(buff, sizeof(buff), fmt, args);
-        ::lib_rtl_printf("RTL: %s\n",buff);
+        ::lib_rtl_output(LIB_RTL_ERROR,"RTL: %s\n",buff);
       break;
     case LIB_RTL_OS:
     default:
       err = lib_rtl_get_error();
       if ( err != ERROR_SUCCESS )   {
-        ::lib_rtl_printf("RTL: %8d : %s\n",err, RTL::errorString(err));
+        ::lib_rtl_output(LIB_RTL_ERROR,"RTL: %8d : %s\n",err, RTL::errorString(err));
         ::vsnprintf(buff, sizeof(buff), fmt, args);
-        ::lib_rtl_printf("                %s\n",buff);
+        ::lib_rtl_output(LIB_RTL_ERROR,"                %s\n",buff);
         return 0;
       }
       return 1;
@@ -417,8 +417,21 @@ int lib_rtl_get_datainterface_name(char* node, size_t len)  {
   return 1;
 }
 
-static size_t (*s_rtl_printer)(void*, const char*, va_list args) = 0;
+static size_t (*s_rtl_printer)(void*, int, const char*, va_list args) = 0;
 static void*    s_rtl_printer_arg = 0;
+
+/// Printout redirection
+size_t lib_rtl_output(int level, const char* format, ...)   {
+  size_t result;
+  va_list args;
+  va_start( args, format );
+  result = (s_rtl_printer != 0)
+    ? (*s_rtl_printer)(s_rtl_printer_arg, level, format, args)
+    : ::vfprintf(stdout, format, args);
+  if ( !s_rtl_printer ) ::fflush(stdout);
+  va_end(args);
+  return result;
+}
 
 /// Printout redirection
 size_t lib_rtl_printf(const char* format, ...)   {
@@ -426,7 +439,7 @@ size_t lib_rtl_printf(const char* format, ...)   {
   va_list args;
   va_start( args, format );
   result = (s_rtl_printer != 0)
-    ? (*s_rtl_printer)(s_rtl_printer_arg, format, args)
+    ? (*s_rtl_printer)(s_rtl_printer_arg, LIB_RTL_ALWAYS, format, args)
     : ::vfprintf(stdout, format, args);
   if ( !s_rtl_printer ) ::fflush(stdout);
   va_end(args);
@@ -434,7 +447,7 @@ size_t lib_rtl_printf(const char* format, ...)   {
 }
 
 /// Install RTL printer 
-void lib_rtl_install_printer(size_t (*func)(void*, const char*, va_list args), void* param)  {
+void lib_rtl_install_printer(size_t (*func)(void*, int, const char*, va_list args), void* param)  {
   s_rtl_printer = func;
   s_rtl_printer_arg = param;
 }

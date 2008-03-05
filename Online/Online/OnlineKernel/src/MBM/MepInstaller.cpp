@@ -12,7 +12,7 @@ extern "C" int mep_install(int argc , char** argv) {
     if ( (argv[i][0] == '-' || argv[i][0] == '/') && ::toupper(argv[i][1]) == 'C' ) {
       int sc = mbm_install(opts.size(), &opts[0]);
       if ( sc != MBM_NORMAL )  {
-        ::lib_rtl_printf("Unable to install MBM buffers...\n");
+        ::lib_rtl_output(LIB_RTL_ERROR,"Unable to install MBM buffers...\n");
         return sc;
       }
       opts.clear();

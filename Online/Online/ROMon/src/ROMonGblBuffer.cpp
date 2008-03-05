@@ -1,4 +1,4 @@
-// $Id: ROMonGblBuffer.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Id: ROMonGblBuffer.cpp,v 1.2 2008-03-05 07:40:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonGblBuffer.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonGblBuffer.cpp,v 1.2 2008-03-05 07:40:20 frankb Exp $
 
 // Framework includes
 #include "ROMonDefs.h"
@@ -37,7 +37,7 @@ ROMonGblBuffer::ROMonGblBuffer(int argc, char** argv, void (*help_fun)())
     ? ::lib_rtl_map_section(m_section_name.c_str(),m_section_size,&m_gbl)
     : ::lib_rtl_create_section(m_section_name.c_str(),m_section_size,&m_gbl);
   if ( !lib_rtl_is_success(sc) ) {
-    ::lib_rtl_printf("Failed to %s ROMON global section:%s of size:%d bytes\n",
+    ::lib_rtl_output(LIB_RTL_ERROR,"Failed to %s ROMON global section:%s of size:%d bytes\n",
 		     m_mapOnly ? "map" : "create", m_section_name.c_str(), m_section_size);
     return;
   }
@@ -51,7 +51,7 @@ ROMonGblBuffer::ROMonGblBuffer(int argc, char** argv, void (*help_fun)())
   sc = ::lib_rtl_create_lock2(&((ROMonGBLData*)m_gbl->address)->lock,&m_lock);
 #endif
   if ( !lib_rtl_is_success(sc) ) {
-    ::lib_rtl_printf("Failed to create ROMON global lock:%s\n",m_section_name.c_str());
+    ::lib_rtl_output(LIB_RTL_ERROR,"Failed to create ROMON global lock:%s\n",m_section_name.c_str());
     return;
   }
   if ( m_verbose )    {
@@ -82,10 +82,10 @@ void* ROMonGblBuffer::data() const {
 
 /// Help printout in case of -h /? or wrong arguments
 void ROMonGblBuffer::help() {
-  ::lib_rtl_printf("    -g[bl]=<name>     Name of shared global section\n");
-  ::lib_rtl_printf("    -s[ize]=<number>  Size of the global section in kBytes\n");
-  ::lib_rtl_printf("    -d[elay]=<number> Delay in milliseconds between two updates of the information\n");
-  ::lib_rtl_printf("    -p[rint]=<number> Make printout to stdout\n");  
-  ::lib_rtl_printf("    -map[only         Only map the global section; do not create it.\n");
-  ::lib_rtl_printf("    -v[erbose]        Verbose mode.\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -g[bl]=<name>     Name of shared global section\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -s[ize]=<number>  Size of the global section in kBytes\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -d[elay]=<number> Delay in milliseconds between two updates of the information\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -p[rint]=<number> Make printout to stdout\n");  
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -map[only         Only map the global section; do not create it.\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -v[erbose]        Verbose mode.\n");
 }

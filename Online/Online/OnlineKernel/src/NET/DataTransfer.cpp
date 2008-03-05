@@ -176,13 +176,13 @@ NetErrorCode netentry_t::send(const void *buffer,size_t siz,u_int flag) {
   u_int already_sent = 0;
   for (size_t i = 0; i <= Npack; ++i )  {
     u_int tosend = i<Npack ? CHOP_SIZE : Nrest;
-    u_int sent  = 0;
-    while (sent != siz)    {
+    u_int sent   = 0;
+    while (tosend>0)  {
       int sent_now = ::send (chan, buff + already_sent, tosend, flag);
       if (sent_now == -1)  {
         errno = ::lib_rtl_socket_error();
-        ::lib_rtl_signal_message(LIB_RTL_OS,"NET: send error size:%d/%d/%d errno=%d",
-                                 siz,already_sent,tosend,errno);
+        ::lib_rtl_signal_message(LIB_RTL_OS,"NET: send error size:%d/%d/%d/%d errno=%d",
+                                 siz,already_sent,tosend,sent,errno);
         // lib_rtl_start_debugger();
         return NET_ERROR;
       }
@@ -361,7 +361,7 @@ void NET::sendShutdown(netentry_t *e)  {
     }
   }
   catch(...)  {
-    ::lib_rtl_printf("Exception during disconnect handling.\n");
+    ::lib_rtl_output(LIB_RTL_ERROR,"Exception during disconnect handling.\n");
   }
   disconnect(e);
 }

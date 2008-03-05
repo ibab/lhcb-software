@@ -1,4 +1,4 @@
-// $Id: ROMonPublish.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Id: ROMonPublish.cpp,v 1.2 2008-03-05 07:40:21 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonPublish.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonPublish.cpp,v 1.2 2008-03-05 07:40:21 frankb Exp $
 
 // Framework includes
 #include "dic.h"
@@ -28,7 +28,7 @@ ROMonPublish::ROMonPublish(int argc, char** argv)
 
 /// Help callback
 void ROMonPublish::help() {
-  ::lib_rtl_printf("romon_gbl_dump -opt [-opt]\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"romon_gbl_dump -opt [-opt]\n");
   ROMonGblBuffer::help();
 }
 

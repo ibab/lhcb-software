@@ -77,26 +77,26 @@ int MBM::Producer::spaceAction() {
   if ( m_bmid != MBM_INV_DESC ) {
     sc = ::mbm_declare_event(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
     if ( sc == MBM_REQ_CANCEL ) {
-      ::lib_rtl_printf("Failed to declare event for MBM buffer %s. Request was cancelled.\n",
+      ::lib_rtl_output(LIB_RTL_ERROR,"Failed to declare event for MBM buffer %s. Request was cancelled.\n",
         m_buffName.c_str());
       return sc;
     }
     else if ( sc == MBM_NORMAL )  {
       sc = ::mbm_send_space(m_bmid);
       if ( sc == MBM_REQ_CANCEL ) {
-        ::lib_rtl_printf("Failed to declare event for MBM buffer %s. Request was cancelled.\n",
+        ::lib_rtl_output(LIB_RTL_ERROR,"Failed to declare event for MBM buffer %s. Request was cancelled.\n",
           m_buffName.c_str());
         return sc;
       }
       else if ( sc == MBM_NORMAL )  {
         return sc;
       }
-      ::lib_rtl_printf("Failed to send space for MBM buffer %s. status = %d %08X.\n",
+      ::lib_rtl_output(LIB_RTL_ERROR,"Failed to send space for MBM buffer %s. status = %d %08X.\n",
         m_buffName.c_str(),sc,sc);
       throw std::runtime_error("Failed to send space for MBM buffer:"+m_buffName+" [Internal Error]");
     }
     else {
-      ::lib_rtl_printf("Failed to declare event for MBM buffer %s. status = %d %08X.\n",
+      ::lib_rtl_output(LIB_RTL_ERROR,"Failed to declare event for MBM buffer %s. status = %d %08X.\n",
         m_buffName.c_str(),sc,sc);
     }
     throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Internal Error]");

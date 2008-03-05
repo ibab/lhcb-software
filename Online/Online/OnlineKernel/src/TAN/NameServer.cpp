@@ -182,15 +182,15 @@ NameService::NameService(NetworkConnection* ptr, bool verbose)
 : m_tandb(TanDataBase::Instance()), m_connection(ptr), m_port(NAME_SERVICE_PORT)
 {
   if ( verbose )  {
-    ::lib_rtl_printf("+======================================================================+\n");
-    ::lib_rtl_printf("|         N A M E S E R V E R      S T A R T I N G                     |\n");
-    ::lib_rtl_printf("|         %32s                             |\n",timestr());
-    ::lib_rtl_printf("+======================================================================+\n");
+    ::lib_rtl_output(LIB_RTL_INFO,"+======================================================================+\n");
+    ::lib_rtl_output(LIB_RTL_INFO,"|         N A M E S E R V E R      S T A R T I N G                     |\n");
+    ::lib_rtl_output(LIB_RTL_INFO,"|         %32s                             |\n",timestr());
+    ::lib_rtl_output(LIB_RTL_INFO,"+======================================================================+\n");
     ::fflush(stdout);
   }
   if ( m_connection )  {
     if ( NetworkConnection::NETCONNECTION_SUCCESS != m_connection->Status() )  {
-      ::lib_rtl_printf("NameService> Error initializing the network connection!\n");
+      ::lib_rtl_output(LIB_RTL_ERROR,"NameService> Error initializing the network connection!\n");
       ::exit(ptr->Status());
     }
   }
@@ -215,12 +215,12 @@ static void _printEntry(const char* msg, TanDataBase::Entry* ent) {
   if ( msg ) {
     if ( ent ) {
       /*
-      ::lib_rtl_printf("%s> handle message: %s Name:%s Port=%d [%d] %p\n",
+      ::lib_rtl_output(LIB_RTL_DEBUG,"%s> handle message: %s Name:%s Port=%d [%d] %p\n",
 		       RTL::nodeName().c_str(),msg,ent->_Name(),ent->port(),
 		       ntohs(ent->port()),(void*)ent);
     }
     else {
-      ::lib_rtl_printf("%s> handle message: %s [No entry]\n",RTL::nodeName().c_str(),msg);
+      ::lib_rtl_output(LIB_RTL_DEBUG,"%s> handle message: %s [No entry]\n",RTL::nodeName().c_str(),msg);
       */
     }
   }
@@ -292,10 +292,10 @@ UdpNameService::UdpNameService(bool verbose) : NameService(0)  {
   m_port = UdpConnection::servicePort(NAME_SERVICE_NAME);
 #endif
   if ( verbose )  {
-    ::lib_rtl_printf("|         U D P         N A M E    S E R V I C E                       |\n");
-    ::lib_rtl_printf("|         Port(local): %6d %04X Network:%6d %04X                 |\n",
+    ::lib_rtl_output(LIB_RTL_INFO,"|         U D P         N A M E    S E R V I C E                       |\n");
+    ::lib_rtl_output(LIB_RTL_INFO,"|         Port(local): %6d %04X Network:%6d %04X                 |\n",
         m_port, m_port, htons(m_port), htons(m_port));
-    ::lib_rtl_printf("+======================================================================+\n");
+    ::lib_rtl_output(LIB_RTL_INFO,"+======================================================================+\n");
     ::fflush(stdout);
   }
 }
@@ -317,7 +317,7 @@ void UdpNameService::handle ()   {
 
   int status = conn.recvChannel().recv(&req,sizeof(req),0,0,&addr);
   if ( status != sizeof(req) )  {
-    lib_rtl_printf("NameService::handle> Error receiving message\n");
+    lib_rtl_output(LIB_RTL_ERROR,"NameService::handle> Error receiving message\n");
   }
   else  {      // handle the request....
     ent = 0;
@@ -327,10 +327,10 @@ void UdpNameService::handle ()   {
     // Swap port to reply connection
     addr.sin_port = htons(m_port+1);
 #endif
-    //lib_rtl_printf("send to port:%04X\n",addr.sin_port);
+    //lib_rtl_output(LIB_RTL_DEBUG,"send to port:%04X\n",addr.sin_port);
     status = snd.send(&rep,sizeof(rep),0,0,&addr);
     if ( status != sizeof(rep) )  {
-      ::lib_rtl_printf("NameService::handle> Error sending message to [%s] on port 0x%X\n",
+      ::lib_rtl_output(LIB_RTL_ERROR,"NameService::handle> Error sending message to [%s] on port 0x%X\n",
         inet_ntoa(rep.address()), rep.port());
     }
   }
@@ -347,10 +347,10 @@ TcpNameService::TcpNameService(bool verbose) : NameService(m_tcp=new TcpConnecti
 {
   m_port = m_tcp->port();
   if ( verbose )  {
-    ::lib_rtl_printf("|         T C P / I P   N A M E    S E R V I C E                       |\n");
-    ::lib_rtl_printf("|         Port(local): %6d %04X Network:%6d %04X                 |\n",
+    ::lib_rtl_output(LIB_RTL_INFO,"|         T C P / I P   N A M E    S E R V I C E                       |\n");
+    ::lib_rtl_output(LIB_RTL_INFO,"|         Port(local): %6d %04X Network:%6d %04X                 |\n",
         m_port, m_port, htons(m_port), htons(m_port));
-    ::lib_rtl_printf("+======================================================================+\n");
+    ::lib_rtl_output(LIB_RTL_INFO,"+======================================================================+\n");
   }
   m_pAccepthandler = new EventHandler(this);
   m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
@@ -363,10 +363,10 @@ TcpNameService::TcpNameService(bool verbose) : NameService(m_tcp=new TcpConnecti
 TcpNameService::TcpNameService(int port, bool verbose) : NameService(m_tcp=new TcpConnection(port), verbose)  {
   m_port = m_tcp->port();
   if ( verbose )  {
-    ::lib_rtl_printf("|         T C P / I P   N A M E    S E R V I C E                       |\n");
-    ::lib_rtl_printf("|         Port(local): %6d %04X Network:%6d %04X                 |\n",
+    ::lib_rtl_output(LIB_RTL_INFO,"|         T C P / I P   N A M E    S E R V I C E                       |\n");
+    ::lib_rtl_output(LIB_RTL_INFO,"|         Port(local): %6d %04X Network:%6d %04X                 |\n",
         m_port, m_port, htons(m_port), htons(m_port));
-    ::lib_rtl_printf("+======================================================================+\n");
+    ::lib_rtl_output(LIB_RTL_INFO,"+======================================================================+\n");
   }
   m_pAccepthandler = new EventHandler(this);
   m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
@@ -389,8 +389,8 @@ void TcpNameService::handle()   {
   void* par;
   unsigned int fac;
   int sub_status, status;
-  status = wtc_wait( &fac, &par, &sub_status );
-  lib_rtl_printf("Wait (%d,%d) -> %s\n", status, sub_status, lib_rtl_error_message(sub_status));
+  status = ::wtc_wait( &fac, &par, &sub_status );
+  ::lib_rtl_output(LIB_RTL_INFO,"Wait (%d,%d) -> %s\n", status, sub_status, lib_rtl_error_message(sub_status));
 }
 
 // ----------------------------------------------------------------------------
@@ -414,7 +414,7 @@ int TcpNameService::handleAcceptRequest ( EventHandler* handler )  {
   accept_error = m_pNetwork->error();                             //
   int status = m_pNetwork->queueAccept(m_port,handler);           // Rearm ACCEPT
   if ( !lib_rtl_is_success(status) )  {
-    lib_rtl_printf("handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s",
+    lib_rtl_output(LIB_RTL_ERROR,"handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s",
       m_pNetwork->error(),retry,                                  //
       m_pNetwork->errMsg());                                      //
   }                                                                //
@@ -467,7 +467,7 @@ int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
         if ( ntohl(reply.error()) == TAN_SS_SUCCESS )  {  // Only way to exit 
           status = chan->queueReceive (m_port, hand);     // with success!
           if ( !lib_rtl_is_success(status) ) {
-            ::lib_rtl_printf("Error rearming receive: %s",chan->errMsg());
+            ::lib_rtl_output(LIB_RTL_ERROR,"Error rearming receive: %s",chan->errMsg());
           }
           return status;
         }
@@ -477,7 +477,7 @@ int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
       }
     }
   }
-  //lib_rtl_printf("handleReceiveRequest> Close receive on %d %s\n",chan, strerror(status));
+  //lib_rtl_output(LIB_RTL_DEBUG,"handleReceiveRequest> Close receive on %d %s\n",chan, strerror(status));
   hand->_Delete();
   return status;
 }
@@ -502,7 +502,7 @@ New_allocation:
   m_connection = m_tcp = new TcpConnection(m_port);
   m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
   if ( m_pNetwork->error() != 0 && ++retry < 5 )  {
-    lib_rtl_printf("resume-Retry# %d> %s\n", retry, m_pNetwork->errMsg());
+    lib_rtl_output(LIB_RTL_INFO,"resume-Retry# %d> %s\n", retry, m_pNetwork->errMsg());
     goto New_allocation;
   }
   return m_pNetwork->queueAccept ( m_tcp->port(), m_pAccepthandler );
@@ -528,13 +528,13 @@ extern "C" int tan_nameserver (int argc, char* argv[]) {
          case 'd':  delgbl    = true;   break;
          default:
 Options:
-           lib_rtl_printf("NameServer -<opt>\n");
-           lib_rtl_printf("  -a(llocator)   listen and serve (DE)ALLOCATION requests\n");
-           lib_rtl_printf("  -i(nqquirer)   listen and serve INQUIRE        requests\n");
-           lib_rtl_printf("  -tcp           run service in tcp/ip mode (default:udp/INQUIRE tcp/ALLOCATE)\n");
-           lib_rtl_printf("  -udp           run service in udp mode    (default:udp/INQUIRE tcp/ALLOCATE)\n");
-           lib_rtl_printf("  -n(owait)      Continue execution after routine call. Requires wtc_wait later!\n");
-           lib_rtl_printf("  -v(erbose)     Print header at startup.\n");
+           ::lib_rtl_output(LIB_RTL_ALWAYS,"NameServer -<opt>\n");
+           ::lib_rtl_output(LIB_RTL_ALWAYS,"  -a(llocator)   listen and serve (DE)ALLOCATION requests\n");
+           ::lib_rtl_output(LIB_RTL_ALWAYS,"  -i(nqquirer)   listen and serve INQUIRE        requests\n");
+           ::lib_rtl_output(LIB_RTL_ALWAYS,"  -tcp           run service in tcp/ip mode (default:udp/INQUIRE tcp/ALLOCATE)\n");
+           ::lib_rtl_output(LIB_RTL_ALWAYS,"  -udp           run service in udp mode    (default:udp/INQUIRE tcp/ALLOCATE)\n");
+           ::lib_rtl_output(LIB_RTL_ALWAYS,"  -n(owait)      Continue execution after routine call. Requires wtc_wait later!\n");
+           ::lib_rtl_output(LIB_RTL_ALWAYS,"  -v(erbose)     Print header at startup.\n");
            return 0x1;
       }
     }
@@ -555,7 +555,7 @@ Options:
 #endif
     }
     if ( TanDataBase::initialize() != TAN_SS_SUCCESS )  {
-      lib_rtl_printf("TcpNameService> Error initializing the DataBase!\n");
+      lib_rtl_output(LIB_RTL_ERROR,"TcpNameService> Error initializing the DataBase!\n");
       return 0x0;
     }
     if ( udp ) srv = new UdpNameService(verbose);

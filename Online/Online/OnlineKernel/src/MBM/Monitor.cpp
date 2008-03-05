@@ -249,7 +249,7 @@ int MBM::Monitor::optparse (const char* c)  {
   case 'i':        /*      buffer_id        */  
     iret = sscanf(c+1,"=%s",m_buffID);
     if( iret != 1 )      {
-      ::lib_rtl_printf("Error reading Buffer identifier parameter\n");
+      ::lib_rtl_output(LIB_RTL_ERROR,"Error reading Buffer identifier parameter\n");
       ::exit(0);
     }
     m_bmid = m_buffID;
@@ -257,10 +257,10 @@ int MBM::Monitor::optparse (const char* c)  {
   case '?':
   case 'h':
   default:
-    ::lib_rtl_printf("mbm_mon - Buffer Manager Monitor\n");
-    ::lib_rtl_printf("Options:\n");
-    ::lib_rtl_printf("    -i=<bm_name>   Select Buffer Identifier\n");
-    ::lib_rtl_printf("    -s             Single update \n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"mbm_mon - Buffer Manager Monitor\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"Options:\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -i=<bm_name>   Select Buffer Identifier\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -s             Single update \n");
     exit(0);
   }
   return 1;
@@ -270,7 +270,7 @@ int MBM::Monitor::get_bm_list()   {
   m_numBM = 0;
   int status = ::mbm_map_global_buffer_info(&m_bm_all,false);
   if( !lib_rtl_is_success(status) )   {   
-    ::lib_rtl_printf("Cannot map global buffer information....\n");
+    ::lib_rtl_output(LIB_RTL_ERROR,"Cannot map global buffer information....\n");
     m_bm_all = 0;
     m_buffers = 0;
     m_bms = 0;

@@ -24,7 +24,7 @@ MBM::Consumer::~Consumer()
 void MBM::Consumer::setNonBlocking(int facility, bool subscribe) {
   Client::setNonBlocking(facility,false);
   if ( subscribe ) {
-    int sc = wtc_subscribe(facility, eventRearm, eventAction, this);
+    int sc = ::wtc_subscribe(facility, eventRearm, eventAction, this);
     if( sc != WT_SUCCESS ) {
       throw std::runtime_error("Failed to subscribe action:"+m_buffName+" [Internal Error]");
     }
@@ -38,7 +38,7 @@ int MBM::Consumer::eventAst(void* param) {
 
 // Ast to be called on event receival (may be overloaded by clients)
 int MBM::Consumer::eventAst() {
-  //::lib_rtl_printf("Consumer AST\n");
+  //::lib_rtl_output(LIB_RTL_INFO,"Consumer AST\n");
   int sc = ::mbm_get_event_ast((void*)m_bmid);
   if ( sc == MBM_NORMAL ) {
     if ( !m_blocking ) {
@@ -68,7 +68,7 @@ int MBM::Consumer::eventRearm(unsigned int facility, void* param) {
   if ( facility != cons->m_facility ) {
     // Error ?
   }
-  //::lib_rtl_printf("Consumer Rearm\n");
+  //::lib_rtl_output(LIB_RTL_INFO,"Consumer Rearm\n");
   return cons->eventRearm();
 }
 

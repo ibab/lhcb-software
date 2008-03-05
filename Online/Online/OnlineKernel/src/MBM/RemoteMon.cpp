@@ -100,7 +100,7 @@ int MBM::XMLMonitorServer::monitor() {
     unsigned int fac;
     int sub_status, status;
     status = wtc_wait( &fac, &par, &sub_status );
-    lib_rtl_printf("Wait (%d,%d) -> %s\n", status, sub_status, lib_rtl_error_message(sub_status));
+    lib_rtl_output(LIB_RTL_ALWAYS,"Wait (%d,%d) -> %s\n", status, sub_status, lib_rtl_error_message(sub_status));
   }
   return 1;
 }
@@ -120,7 +120,7 @@ int MBM::XMLMonitorServer::handleAcceptRequest ( EventHandler* handler )  {
   accept_error = m_pNetwork->error();                             //
   int status = m_pNetwork->queueAccept(m_port,handler);           // Rearm ACCEPT
   if ( !lib_rtl_is_success(status) )  {
-    lib_rtl_printf("handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s",
+    lib_rtl_output(LIB_RTL_ALWAYS,"handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s",
       m_pNetwork->error(),retry,m_pNetwork->errMsg());
   }
   if ( channel > 0 )   {
@@ -235,8 +235,8 @@ int MBM::XMLMonitorServer::optparse (const char* c)  {
   case '?':
   case 'h':
   default:
-    lib_rtl_printf("mbm_mon_serv - Buffer Manager XMLMonitorServer\n");
-    lib_rtl_printf("Options: None\n");
+    lib_rtl_output(LIB_RTL_ALWAYS,"mbm_mon_serv - Buffer Manager XMLMonitorServer\n");
+    lib_rtl_output(LIB_RTL_ALWAYS,"Options: None\n");
     exit(0);
   }
   return 1;
@@ -246,7 +246,7 @@ int MBM::XMLMonitorServer::get_bm_list()   {
   m_numBM = 0;
   int status = ::mbm_map_global_buffer_info(&m_bm_all,false);
   if( !lib_rtl_is_success(status) )   {   
-    lib_rtl_printf("Cannot map global buffer information....\n");
+    lib_rtl_output(LIB_RTL_ERROR,"Cannot map global buffer information....\n");
     m_bm_all = 0;
     m_buffers = 0;
     m_bms = 0;

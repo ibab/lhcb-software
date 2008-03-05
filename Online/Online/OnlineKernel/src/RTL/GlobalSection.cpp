@@ -13,7 +13,7 @@ RTL::GlobalSection::GlobalSection(const std::string& nam, int size, bool create)
   else
     m_status = lib_rtl_map_section(nam.c_str(), size, &m_address);
   if ( !lib_rtl_is_success(m_status) )  {
-    ::lib_rtl_printf("Failed to map global section:%s\n",nam.c_str());
+    ::lib_rtl_output(LIB_RTL_ERROR,"Failed to map global section:%s\n",nam.c_str());
   }
 }
 
@@ -23,6 +23,6 @@ RTL::GlobalSection::~GlobalSection()  {
     if ( lib_rtl_is_success(m_status) )  {
       return;
     }
-    ::lib_rtl_printf("Failed to unmap global section:%s\n",m_name.c_str());
+    ::lib_rtl_output(LIB_RTL_ERROR,"Failed to unmap global section:%s\n",m_name.c_str());
   }
 }

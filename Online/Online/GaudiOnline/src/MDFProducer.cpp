@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFProducer.cpp,v 1.2 2006-12-14 18:59:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFProducer.cpp,v 1.3 2008-03-05 07:39:56 frankb Exp $
 //  ====================================================================
 //  RawBufferCreator.cpp
 //  --------------------------------------------------------------------
@@ -56,14 +56,14 @@ again:
 
 namespace {
   static void help()  {
-    ::lib_rtl_printf("mep_prod_a -opt [-opt]\n");
-    ::lib_rtl_printf("    -n(ame)=<name>         buffer member name\n");
-    ::lib_rtl_printf("    -a(synchronous)        Asynchonous mode (default is synchronous)\n");
-    ::lib_rtl_printf("    -b=<name>      Buffer identifier \n");
-    ::lib_rtl_printf("    -f(ile)=<name>         Input file name\n");
-    ::lib_rtl_printf("    -s(pace)=<number>      Default space allocation in kBytes\n");
-    ::lib_rtl_printf("    -p(artition)=<number>  Partition ID\n");
-    ::lib_rtl_printf("    -d(ebug)               Invoke debugger\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"mep_prod_a -opt [-opt]\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -n(ame)=<name>         buffer member name\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -a(synchronous)        Asynchonous mode (default is synchronous)\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -b=<name>      Buffer identifier \n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -f(ile)=<name>         Input file name\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -s(pace)=<number>      Default space allocation in kBytes\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -p(artition)=<number>  Partition ID\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -d(ebug)               Invoke debugger\n");
   }
   struct MDFProducer  : public MBM::Producer  {
     std::string m_fname;

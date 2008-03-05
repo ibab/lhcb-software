@@ -31,7 +31,7 @@ extern "C" int lib_rtl_event_exithandler() {
     lib_rtl_event_map_t m = allEventFlags();
     lib_rtl_event_map_t::iterator i = m.begin();
     for( ; i != m.end(); ++i ) {
-      // ::lib_rtl_printf("Deleting event flag:%s\n",(*i).first.c_str());
+      // ::lib_rtl_output(LIB_RTL_ALWAYS,"Deleting event flag:%s\n",(*i).first.c_str());
       ::lib_rtl_delete_event((*i).second);
     }
     delete s_evtMap.release();
@@ -129,7 +129,7 @@ int lib_rtl_delete_event(lib_rtl_event_t handle)   {
       lib_rtl_event_map_t& m = allEventFlags();
       lib_rtl_event_map_t::iterator i = m.find(h->name);
       if ( i != m.end() ) {
-        // ::lib_rtl_printf("Deleting event: %s\n",(*i).first.c_str());
+        // ::lib_rtl_output(LIB_RTL_ALWAYS,"Deleting event: %s\n",(*i).first.c_str());
         m.erase(i);
       }
     }
@@ -269,8 +269,8 @@ int lib_rtl_wait_for_event_a(lib_rtl_event_t flag, lib_rtl_thread_routine_t acti
 }
 
 static void help_set_event()  {
-  ::lib_rtl_printf("rtl_set_event -opt [-opt]\n");
-  ::lib_rtl_printf("    -n=<name>      Event flag name \n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"rtl_set_event -opt [-opt]\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -n=<name>      Event flag name \n");
 }
 extern "C" int rtl_set_event(int argc, char** argv)  {
   lib_rtl_event_t flag;

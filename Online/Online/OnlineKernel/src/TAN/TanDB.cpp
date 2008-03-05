@@ -144,7 +144,7 @@ TanDataBase::TanDataBase() : m_lock(0) {
   while ( status != PA_SUCCESS )  {
     status = Pa.LinkPubArea(NAMESRV_PUBAREA_SIZE);  
     if ( status != PA_SUCCESS )       {
-      lib_rtl_printf("--1-- Waiting for Publishing area beeing valid!\n");
+      lib_rtl_output(LIB_RTL_INFO,"--1-- Waiting for Publishing area beeing valid!\n");
       lib_rtl_sleep(1000);
     }
   }
@@ -153,7 +153,7 @@ TanDataBase::TanDataBase() : m_lock(0) {
     int context = (-1);
     status = Pa.GetSlotofType(123,&context,slot);
     if ( status != PA_SUCCESS )       {
-      lib_rtl_printf("--2-- Waiting for Publishing area beeing valid!\n");
+      lib_rtl_output(LIB_RTL_INFO,"--2-- Waiting for Publishing area beeing valid!\n");
       lib_rtl_sleep(1000);
     }
   }
@@ -161,7 +161,7 @@ TanDataBase::TanDataBase() : m_lock(0) {
   _pData = (TanPaSlot*)slot;
   status = lib_rtl_create_lock ("TANDB", &m_lock);
   if ( !lib_rtl_is_success(status) )  {
-    ::lib_rtl_printf("Error creating TANDB lock!\n");
+    ::lib_rtl_output(LIB_RTL_ERROR,"Error creating TANDB lock!\n");
   }
 }
 // ----------------------------------------------------------------------------
@@ -184,10 +184,10 @@ int TanDataBase::initialize()  {
   if ( status != PA_SUCCESS )  {
     status = Pa.LinkPubArea(NAMESRV_PUBAREA_SIZE);  
     if ( status != PA_SUCCESS )  {
-      lib_rtl_printf("Nameserver failed to link publishing area:%s.\n",NAMESRV_PUBAREA_NAME);
+      lib_rtl_output(LIB_RTL_ERROR,"Nameserver failed to link publishing area:%s.\n",NAMESRV_PUBAREA_NAME);
       return TAN_SS_NOMEM;
     }
-    lib_rtl_printf("Nameserver linked to existing publishing area:%s.\n",NAMESRV_PUBAREA_NAME);
+    lib_rtl_output(LIB_RTL_ALWAYS,"Nameserver linked to existing publishing area:%s.\n",NAMESRV_PUBAREA_NAME);
   }
   status = Pa.GetSlotofType(123,&context,slot);
   if ( status != PA_SUCCESS )  {
@@ -207,7 +207,7 @@ int TanDataBase::initialize()  {
 #endif
     for ( int i = 0; i < TanPaSlot::NumEntries; i++ )
       data->_pEntry[i] = 0;
-    lib_rtl_printf("Nameserver Publishing area successfully initialized!\n");
+    lib_rtl_output(LIB_RTL_ALWAYS,"Nameserver Publishing area successfully initialized!\n");
     return TAN_SS_SUCCESS;
   }
   return TAN_SS_NOMEM;
@@ -301,14 +301,14 @@ Done:
       ports_availible = OS9_PORT_FLIP;
     }
     if ( numUsed == TanPaSlot::NumEntries )    {
-      lib_rtl_printf("ALL Slots are used up....PROBLEM!!!!!\n");
+      lib_rtl_output(LIB_RTL_ERROR,"ALL Slots are used up....PROBLEM!!!!!\n");
       first_free = 8;  // a guess
     }
     if ( ports_availible == 0 )     {
-      ::lib_rtl_printf("NO free range availible.....PROBLEM!!!!!\n");
+      ::lib_rtl_output(LIB_RTL_ERROR,"NO free range availible.....PROBLEM!!!!!\n");
       first_free = 8;  // a guess
     }
-    ::lib_rtl_printf("New start port %d -> %X slots availible:%d\n",
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"New start port %d -> %X slots availible:%d\n",
       first_free, NAMESERVICE_BASE_PORT+first_free, 
       ports_availible);
     current_port     = first_free-1;
@@ -418,11 +418,11 @@ TanDataBase::Entry* TanDataBase::_allocateEntry ( NetworkChannel::Channel chan )
       if ( getpeername( e->chan, (sockaddr *)&peer, &peerlen ) == 0 )
         e->m_iosb._pPort = peer.sin_port;
       else
-        ::lib_rtl_printf("Cannot determine peer of socket %d\n", e->chan);
+        ::lib_rtl_output(LIB_RTL_ERROR,"Cannot determine peer of socket %d\n", e->chan);
       if ( getsockname( e->m_chan, (sockaddr *)&peer, &peerlen ) == 0 )
         e->im_osb._lPort = peer.sin_port;
       else
-        ::lib_rtl_printf("Cannot determine sock of socket %d\n", e->chan);
+        ::lib_rtl_output(LIB_RTL_ERROR,"Cannot determine sock of socket %d\n", e->chan);
 #elif _VMS
       e->m_iosb.dev_info = e->m_iosb.status = e->m_iosb.count = 0;
       e->hl.next = e->hl.prev = e->al.next = e->al.prev = 0;

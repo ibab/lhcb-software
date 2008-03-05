@@ -41,7 +41,7 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
   h->addaux = h.get();
   h->size = siz;
   *address = 0;
-  //::lib_rtl_printf("Create global section %s of size:%d\n",h->name, h->size);
+  //::lib_rtl_output(LIB_RTL_DEBUG,"Create global section %s of size:%d\n",h->name, h->size);
 #if defined(__linux)
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
@@ -62,7 +62,7 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
     ::close(h->fd);
     h->fd = 0;
   }
-  // lib_rtl_printf("lib_rtl_create_section> Unlink section:%s\n",sec_name ? sec_name : "Unknown");
+  // lib_rtl_output(LIB_RTL_DEBUG,"lib_rtl_create_section> Unlink section:%s\n",sec_name ? sec_name : "Unknown");
   // ::shm_unlink(h->name);
 #elif defined(_WIN32)
   // Setup inherited security attributes (FIXME: merge somewhere else)
@@ -82,7 +82,7 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
   }
 #endif
   int err = lib_rtl_get_error();
-  ::lib_rtl_printf("Error creating section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
+  ::lib_rtl_output(LIB_RTL_ERROR,"Error creating section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
   return 0;
 }
 
@@ -92,7 +92,7 @@ int lib_rtl_delete_section(lib_rtl_gbl_t h)    {
   int sc = 0;
   if ( dsc.get() )  {
 #ifdef __linux
-    //::lib_rtl_printf("lib_rtl_delete_section> Unlink section:%s\n",dsc->name ? dsc->name : "Unknown");
+    //::lib_rtl_output(LIB_RTL_DEBUG,"lib_rtl_delete_section> Unlink section:%s\n",dsc->name ? dsc->name : "Unknown");
     sc = ::shm_unlink(dsc->name)==0 ? 1 : 0;
     lib_rtl_gbl_map_t& m = allSections();
     lib_rtl_gbl_map_t::iterator i=m.find(dsc->name);
@@ -116,7 +116,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
   h->addaux = h.get();
   h->size = siz;
   *address = 0;
-  //::lib_rtl_printf("Map global section %s of size:%d\n",h->name, h->size);
+  //::lib_rtl_output(LIB_RTL_DEBUG,"Map global section %s of size:%d\n",h->name, h->size);
 #if defined(__linux)
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
@@ -132,7 +132,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
     return 1;
   }
   //int err = lib_rtl_get_error();
-  //::lib_rtl_printf("Error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
+  //::lib_rtl_output(LIB_RTL_DEBUG,"Error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
   if ( h->fd ) ::close(h->fd);
   return 0;
 #elif defined(_WIN32)
@@ -146,7 +146,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
     }
   }
   int err = lib_rtl_get_error();
-  ::lib_rtl_printf("Error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
+  ::lib_rtl_output(LIB_RTL_ERROR,"Error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
   return 0;
 #endif
 }
@@ -161,7 +161,7 @@ int lib_rtl_unmap_section(lib_rtl_gbl_t handle)   {
     if ( h->fd >= 0 ) {
       //static int cnt = 0;
       /* int ret = */ ::close(h->fd);
-      /* ::lib_rtl_printf("%d Close FD:%d err=%d\n",++cnt,h->fd,ret); */
+      /* ::lib_rtl_output(LIB_RTL_DEBUG,"%d Close FD:%d err=%d\n",++cnt,h->fd,ret); */
     }
     h->fd = -1;
 #elif defined(_WIN32)

@@ -120,7 +120,7 @@ unsigned int RTL::TimerManager::check() {
     for(e=que.get(); e; e = que.get()) {
       try {
         nent++;
-        //lib_rtl_printf("%p [%d] Now: %lld Entry:%lld\n",e, nent, now, e->expire);
+        //lib_rtl_output(LIB_RTL_DEBUG,"%p [%d] Now: %lld Entry:%lld\n",e, nent, now, e->expire);
         if ( e->magic == 0xFEEDBABE ) {
           if ( now >= e->expire ) {
             lib_rtl_run_ast(e->ast, e->param, 0);
@@ -133,16 +133,16 @@ unsigned int RTL::TimerManager::check() {
           if ( next > (e->expire-now) ) next = e->expire-now;
         }
         else {  
-          lib_rtl_printf("FATAL ERROR: BAD timer entry: %p\n",(void*)e);
+          lib_rtl_output(LIB_RTL_ERROR,"FATAL ERROR: BAD timer entry: %p\n",(void*)e);
           lib_rtl_sleep(10000);
         }
       }
       catch(...) {
-        ::lib_rtl_printf("Exception in timer AST\n");
+        ::lib_rtl_output(LIB_RTL_ERROR,"Exception in timer AST\n");
       }
     }
   }
-  //lib_rtl_printf("Timer queue is %d entries long\n",nent);
+  //lib_rtl_output(LIB_RTL_DEBUG,"Timer queue is %d entries long\n",nent);
   std::vector<timer_entry_t*>::iterator i;
   for( i=to_remove.begin(); i != to_remove.end(); ++i) {
     e = *i;

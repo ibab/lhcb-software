@@ -25,8 +25,8 @@ void print_at(int x, int y, const char* fmt, ...)  {
   va_start( args, fmt );
   ::vsprintf( buff, fmt, args);
   printxy(x,y,buff);
-  //lib_rtl_printf(buff);
-  //lib_rtl_printf("\n");
+  //lib_rtl_output(LIB_RTL_ALWAYS,buff);
+  //lib_rtl_output(LIB_RTL_ALWAYS,"\n");
   refresh();
 }
 
@@ -133,7 +133,7 @@ extern "C" int wtc_test(int /* argc */, char** /* argv */)   {
     int sub_status;
     void* userpar;
     status = wtc_wait(&facility, &userpar, &sub_status);
-    lib_rtl_printf("Exited WAIT>>>> Facility = %d Status=%d Sub-Status = %d\n", 
+    lib_rtl_output(LIB_RTL_ALWAYS,"Exited WAIT>>>> Facility = %d Status=%d Sub-Status = %d\n", 
       facility, status, sub_status);
   }
 }

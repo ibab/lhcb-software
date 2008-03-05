@@ -1,4 +1,4 @@
-// $Id: ROMonTaskCollector.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Id: ROMonTaskCollector.cpp,v 1.2 2008-03-05 07:40:21 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonTaskCollector.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonTaskCollector.cpp,v 1.2 2008-03-05 07:40:21 frankb Exp $
 
 // Framework includes
 #include "dic.hxx"
@@ -35,9 +35,9 @@ ROMonTaskCollector::ROMonTaskCollector(int argc, char** argv)
 
 /// Help printout in case of -h /? or wrong arguments
 void ROMonTaskCollector::help() {
-  ::lib_rtl_printf("romon_collect -opt [-opt]\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"romon_collect -opt [-opt]\n");
   ROMonGblBuffer::help();
-  ::lib_rtl_printf("    -verbose          Make printouts to stdout.\n");  
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -verbose          Make printouts to stdout.\n");  
 }
 
 /// Start monitoring activity

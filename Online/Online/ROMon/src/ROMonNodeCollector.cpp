@@ -1,4 +1,4 @@
-// $Id: ROMonNodeCollector.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Id: ROMonNodeCollector.cpp,v 1.2 2008-03-05 07:40:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonNodeCollector.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonNodeCollector.cpp,v 1.2 2008-03-05 07:40:20 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -41,7 +41,7 @@ ROMonNodeCollector::ROMonNodeCollector(int argc, char** argv)
 
 /// Help printout in case of -h /? or wrong arguments
 void ROMonNodeCollector::help() {
-  ::lib_rtl_printf("romon_node_collect -opt [-opt]\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"romon_node_collect -opt [-opt]\n");
   ROMonGblBuffer::help();
 }
 

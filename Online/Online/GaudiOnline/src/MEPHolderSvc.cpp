@@ -121,7 +121,7 @@ StatusCode LHCb::MEPHolderSvc::run()  {
       const EventDesc& evt = m_consumer->event();
       MEPEVENT* e = (MEPEVENT*)(int*)evt.data;
       if ( e->magic != mep_magic_pattern() )  {
-        lib_rtl_printf("Bad magic MEP pattern !!!!\n");
+        error("Bad magic MEP pattern !!!!");
       }
       while ( 1 )  {
         if ( e->refCount <= 1 )    {

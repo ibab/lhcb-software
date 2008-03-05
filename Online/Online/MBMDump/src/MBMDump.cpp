@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MBMDump.cpp,v 1.6 2008-02-12 17:15:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MBMDump.cpp,v 1.7 2008-03-05 07:40:12 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: MBMDump.cpp,v 1.6 2008-02-12 17:15:24 frankb Exp $
+// $Id: MBMDump.cpp,v 1.7 2008-03-05 07:40:12 frankb Exp $
 //
 // C++ include files
 #include "MBMDump/MBMDump.h"
@@ -28,8 +28,8 @@ void MBMDump::rconv(char c[], int word)   {
 }
 
 static void help()  {
-    ::lib_rtl_printf("mbmdump -opt [-opt]");
-    ::lib_rtl_printf("    -d(ebug)               Invoke debugger.");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"mbmdump -opt [-opt]");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -d(ebug)               Invoke debugger.");
 }
 
 static size_t print_msg(void* /* env */, const char* fmt, va_list args)  {

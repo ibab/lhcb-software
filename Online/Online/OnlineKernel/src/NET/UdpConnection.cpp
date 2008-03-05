@@ -74,7 +74,7 @@ int UdpConnection::initialize( UdpConnection::Port port )  {
   ::memset(m_sin.m_addr.sin_zero,0,sizeof(m_sin.m_addr.sin_zero));
   //  Bind to that address...
   if ( m_channel.bind(m_sin.m_addr) < 0 ) {
-    ::lib_rtl_printf("%s UdpConnection> Error binding address:%s\n",timestr(),m_channel.errMsg());
+    ::lib_rtl_output(LIB_RTL_ERROR,"%s UdpConnection> Error binding address:%s\n",timestr(),m_channel.errMsg());
     return m_status;
   }
   return m_status = CONNECTION_SUCCESS;
@@ -104,8 +104,8 @@ int UdpConnection::receive(BasicRequest* req, NetworkAddress& origine)  {
   if ( status <= 0 )  {
     //  ----------------------------  D E B U G -----------------------------
     m_status = m_channel.error();
-    lib_rtl_printf("%s  UdpConnection::receive> Bad IO status. Status=0x%X %s\n",
-      timestr(),m_channel.error(),m_channel.errMsg());
+    ::lib_rtl_output(LIB_RTL_ERROR,"%s  UdpConnection::receive> Bad IO status. Status=0x%X %s\n",
+		   timestr(),m_channel.error(),m_channel.errMsg());
     return CONNECTION_ERROR;
   }
   return CONNECTION_SUCCESS;
@@ -126,8 +126,8 @@ int UdpConnection::send(BasicRequest* req, NetworkAddress& target)  {
   if ( status <= 0 )  {
     //  ----------------------------  D E B U G -----------------------------
     m_status = m_channel.error();
-    ::lib_rtl_printf("%s  UdpConnection::send> Bad IO status. Status=0x%X %s\n",
-      timestr(),m_channel.error(),m_channel.errMsg());
+    ::lib_rtl_output(LIB_RTL_ERROR,"%s  UdpConnection::send> Bad IO status. Status=0x%X %s\n",
+		     timestr(),m_channel.error(),m_channel.errMsg());
     return CONNECTION_ERROR;
   }
   return CONNECTION_SUCCESS;
@@ -180,7 +180,7 @@ UdpConnection::Family UdpConnection::family () const {
 int UdpConnection::servicePort(const char* service)   {
   struct servent* se = ::getservbyname( service, "udp");
   if ( se == 0 )   {
-    lib_rtl_printf("%s UdpConnection> Error getting service %s!\n",timestr(),service);
+    ::lib_rtl_output(LIB_RTL_ERROR,"%s UdpConnection> Error getting service %s!\n",timestr(),service);
     return -1;
   }
   return se->s_port;

@@ -13,15 +13,15 @@ UdpNetworkChannel::UdpNetworkChannel()  {
   m_errno = 0;
   m_socket = ::socket(PF_INET, SOCK_DGRAM, 0);
   if ( m_socket <= 0 )  {
-    ::lib_rtl_printf("UdpNetworkChannel> socket(AF_INET,SOCK_DGRAM):%s\n",errMsg());
+    ::lib_rtl_output(LIB_RTL_ERROR,"UdpNetworkChannel> socket(AF_INET,SOCK_DGRAM):%s\n",errMsg());
     m_errno = ::lib_rtl_socket_error();
   }
   else if (::setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, (char*)&on, sizeof(on)) < 0) {
-    ::lib_rtl_printf("UdpNetworkChannel> setsockopt(SO_REUSEADDR):%s\n",errMsg());
+    ::lib_rtl_output(LIB_RTL_ERROR,"UdpNetworkChannel> setsockopt(SO_REUSEADDR):%s\n",errMsg());
     m_errno = ::lib_rtl_socket_error();
   }
   else if (::setsockopt(m_socket, SOL_SOCKET, SO_DONTROUTE, (char*)&on, sizeof(on)) < 0) {
-    ::lib_rtl_printf("UdpNetworkChannel> setsockopt(SO_DONTROUTE):%s\n",errMsg());
+    ::lib_rtl_output(LIB_RTL_ERROR,"UdpNetworkChannel> setsockopt(SO_DONTROUTE):%s\n",errMsg());
     m_errno = ::lib_rtl_socket_error();
   }
   else  {

@@ -2,13 +2,13 @@
 #include "MBM/Producer.h"
 
 static void help()  {
-  ::lib_rtl_printf("mbm_prod -opt [-opt]\n");
-  ::lib_rtl_printf("    -n=<name>      buffer member name\n");
-  ::lib_rtl_printf("    -m=<number>    number of events\n");
-  ::lib_rtl_printf("    -s=<number>    event size [bytes]\n");
-  ::lib_rtl_printf("    -b=<name>      Buffer identifier \n");
-  ::lib_rtl_printf("    -l=<name>      Sweep lower limit  \n");
-  ::lib_rtl_printf("    -u=<name>      Sweep upper limit  \n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"mbm_prod -opt [-opt]\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -n=<name>      buffer member name\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -m=<number>    number of events\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -s=<number>    event size [bytes]\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -b=<name>      Buffer identifier \n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -l=<name>      Sweep lower limit  \n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -u=<name>      Sweep upper limit  \n");
 }
 
 extern "C" int mbm_prod(int argc,char **argv) {
@@ -24,7 +24,7 @@ extern "C" int mbm_prod(int argc,char **argv) {
   if ( lower > 4 ) len = lower;
   if ( lower < 4 ) len = lower;
   MBM::Producer p(buffer,name,0x103);
-  ::lib_rtl_printf("Producer \"%s\" (pid:%d) included in buffer:\"%s\" len=%d [%d,%d] nevt=%d\n",
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"Producer \"%s\" (pid:%d) included in buffer:\"%s\" len=%d [%d,%d] nevt=%d\n",
       name.c_str(), MBM::Producer::pid(), buffer.c_str(), len, lower, upper, nevt);
   while(nevt--)  {
     if ( p.getSpace(lower!=4 ? upper : len) == MBM_NORMAL ) {
@@ -42,14 +42,14 @@ extern "C" int mbm_prod(int argc,char **argv) {
         ++len;
         if ( len > upper )  {
           len = lower;
-          ::lib_rtl_printf("Max. event size of %d bytes reached. wrapping back to %d bytes.\n", upper, lower);
+          ::lib_rtl_output(LIB_RTL_ALWAYS,"Max. event size of %d bytes reached. wrapping back to %d bytes.\n", upper, lower);
         }
       }
       p.sendEvent();
       // lib_rtl_sleep(1);
    }
   }
-  ::lib_rtl_printf("Max. event size of %d bytes reached. wrapping back to %d bytes.\n", upper, lower);
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"Max. event size of %d bytes reached. wrapping back to %d bytes.\n", upper, lower);
   ::lib_rtl_sleep(1000);
   //::exit(0);
   return 1;

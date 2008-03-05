@@ -67,7 +67,7 @@ int mep_scan(MEPID dsc, int loop_delay)  {
           MEPEVENT* m = (MEPEVENT*)(id->mepStart + sevt->begin);
           if ( m->refCount <= 1 )    {
             if ( m->refCount != 1 )    {
-              ::lib_rtl_printf("MEP release [%d] Event@ %08X MEP@ %08X [%d] Pattern:%08X\n",
+              ::lib_rtl_output(LIB_RTL_ERROR,"MEP release [%d] Event@ %08X MEP@ %08X [%d] Pattern:%08X\n",
                 m->refCount,id->mepStart+m->begin,m,m->evID,m->magic);
             }
             e->umask0.clear(uid);
@@ -95,7 +95,7 @@ static int _mep_change_refcount(MEPDESC* dsc,MEP_SINGLE_EVT* evt, int change)  {
     {
       RTL::Lock lock(dsc->lockid);
       if ( !lock )  {
-        ::lib_rtl_printf("Failed to aquire lock:%s\n",dsc->mutexName);
+        ::lib_rtl_output(LIB_RTL_ERROR,"Failed to aquire lock:%s\n",dsc->mutexName);
       }
       switch(change) {
       case 2:
@@ -109,24 +109,24 @@ static int _mep_change_refcount(MEPDESC* dsc,MEP_SINGLE_EVT* evt, int change)  {
         cnt = --e->refCount;
         break;
       default:
-        ::lib_rtl_printf("Unknown MEP change request:%d\n",change);
+        ::lib_rtl_output(LIB_RTL_ERROR,"Unknown MEP change request:%d\n",change);
         break;
       }
     }
     //if ( (change < 0 && print_release) || (change>0 && print_addref) )  {
     if ( print_release )  {
-      ::lib_rtl_printf("MEP RefCount[%d] [%d, %d] %s [%d] Event at address %p MEP:%p [%d,%d] Pattern:%08X\n",
+      ::lib_rtl_output(LIB_RTL_ERROR,"MEP RefCount[%d] [%d, %d] %s [%d] Event at address %p MEP:%p [%d,%d] Pattern:%08X\n",
         ++counter, e->refCount, change, change > 0 ? "AddRef" : "DelRef", cnt, 
         (void*)evt, (void*)e, e->evID, evt->evID, e->magic);
     }
     if ( cnt < 1 || e->magic != MAGIC_PATTERN || e->valid != 1 )  {
-      ::lib_rtl_printf("MEP RefCount ERROR %s [%d] Event at address %p MEP:%p [%d,%d] Pattern:%08X\n",
+      ::lib_rtl_output(LIB_RTL_ERROR,"MEP RefCount ERROR %s [%d] Event at address %p MEP:%p [%d,%d] Pattern:%08X\n",
         change > 0 ? "AddRef" : "DelRef", cnt, 
         (void*)evt, (void*)e, e->evID, evt->evID, e->magic);
     }
     return MBM_NORMAL;
   }
-  ::lib_rtl_printf("MEP RefCount ERROR ----------------------------- NO EVT -----------------------------\n");
+  ::lib_rtl_output(LIB_RTL_ERROR,"MEP RefCount ERROR ----------------------------- NO EVT -----------------------------\n");
   // Error
   return MBM_ERROR;
 }
@@ -138,7 +138,7 @@ static int mep_free_mep(void* param)   {
   MEPEVENT* e = (MEPEVENT*)pars[2];
   MEPDESC* dsc = (MEPDESC*)pars[1];
   if ( e->refCount < 1 || e->magic != MAGIC_PATTERN )  {
-    lib_rtl_printf("MEP RefCount ERROR(2) [%d] Event at address %08X MEP:%p [%d] Pattern:%08X [Release MEP]\n",
+    lib_rtl_output(LIB_RTL_ERROR,"MEP RefCount ERROR(2) [%d] Event at address %08X MEP:%p [%d] Pattern:%08X [Release MEP]\n",
       e->refCount, dsc->mepStart+e->begin, (void*)e, e->evID, e->magic);
   }
   int cnt = 0;
@@ -149,14 +149,14 @@ static int mep_free_mep(void* param)   {
     lib_rtl_usleep(100);
 #endif
     {
-      lib_rtl_printf(".");
+      lib_rtl_output(LIB_RTL_ERROR,".");
       if ( (++cnt%50)==0 )  {
-        lib_rtl_printf("WAIT MEP release [%d] Event at address %08X MEP:%p [%d] Pattern:%08X\n",
+        lib_rtl_output(LIB_RTL_ERROR,"WAIT MEP release [%d] Event at address %08X MEP:%p [%d] Pattern:%08X\n",
           e->refCount, dsc->mepStart+e->begin, (void*)e, e->evID, e->magic);
       }
       RTL::Lock lock(dsc->lockid);
       if ( e->refCount <=1 )    {
-        lib_rtl_printf("MEP release [%d] Event at address %08X MEP:%p [%d] Pattern:%08X\n",
+        lib_rtl_output(LIB_RTL_ERROR,"MEP release [%d] Event at address %08X MEP:%p [%d] Pattern:%08X\n",
           e->refCount, dsc->mepStart+e->begin, (void*)e, e->evID, e->magic);
         e->valid = 0;
         e->refCount = 0;
@@ -190,7 +190,7 @@ static void _mep_pause(BMID id, int full_buffer)  {
 int mep_set_watch(MEPID dsc)   {
   MEPDESC* bm = (MEPDESC*)dsc;
   if ( bm && bm != MEP_INV_DESC && bm->owner != -1 )  {
-    return mbm_register_free_event(bm->mepBuffer, mep_free_mep, bm);
+    return ::mbm_register_free_event(bm->mepBuffer, mep_free_mep, bm);
   }
   return MBM_ERROR;
 }
@@ -212,8 +212,8 @@ MEPID mep_include (const char* name, int partid, int selection) {
   bm->selection = selection;
   // Map MEP buffer
   bm->mepBuffer = ( bm->selection&USE_MEP_BUFFER ) 
-    ? mbm_include(mep_buff_name.c_str(), name, partid)
-    : s_map_unused ? mbm_map_memory(mep_buff_name.c_str())
+    ? ::mbm_include(mep_buff_name.c_str(), name, partid)
+    : s_map_unused ? ::mbm_map_memory(mep_buff_name.c_str())
     : MBM_INV_DESC;
   if ( (bm->selection&USE_MEP_BUFFER || s_map_unused) && bm->mepBuffer == MBM_INV_DESC )  {
     lib_rtl_delete_lock(bm->lockid);
@@ -224,8 +224,8 @@ MEPID mep_include (const char* name, int partid, int selection) {
   }
   // Map EVENT buffer
   bm->evtBuffer = ( bm->selection&USE_EVT_BUFFER ) 
-    ? mbm_include(evt_buff_name.c_str(), name, partid)
-    : s_map_unused ? mbm_map_memory(evt_buff_name.c_str())
+    ? ::mbm_include(evt_buff_name.c_str(), name, partid)
+    : s_map_unused ? ::mbm_map_memory(evt_buff_name.c_str())
     : MBM_INV_DESC;
   if ( (bm->selection&USE_EVT_BUFFER || s_map_unused) && bm->evtBuffer == MBM_INV_DESC )  {
     _mep_exclude(bm->mepBuffer, bm->selection&USE_MEP_BUFFER);
@@ -234,13 +234,13 @@ MEPID mep_include (const char* name, int partid, int selection) {
   }
   else if ( bm->evtBuffer != MBM_INV_DESC )  {
     bm->evtStart = (long)bm->evtBuffer->buffer_add;
-    mbm_register_free_event(bm->evtBuffer, mep_free, bm.get());
-    mbm_register_alloc_event(bm->evtBuffer, mep_declare, bm.get());
+    ::mbm_register_free_event(bm->evtBuffer, mep_free, bm.get());
+    ::mbm_register_alloc_event(bm->evtBuffer, mep_declare, bm.get());
   }
   // Map RESULT buffer
   bm->resBuffer = (bm->selection&USE_RES_BUFFER) 
-    ? mbm_include(res_buff_name.c_str(), name, partid)
-    : s_map_unused ? mbm_map_memory(res_buff_name.c_str())
+    ? ::mbm_include(res_buff_name.c_str(), name, partid)
+    : s_map_unused ? ::mbm_map_memory(res_buff_name.c_str())
     : MBM_INV_DESC;
   if ( (bm->selection&USE_RES_BUFFER || s_map_unused) && bm->resBuffer == MBM_INV_DESC )  {
     _mep_exclude(bm->evtBuffer, bm->selection&USE_EVT_BUFFER);
@@ -250,8 +250,8 @@ MEPID mep_include (const char* name, int partid, int selection) {
   }
   else if ( bm->resBuffer != MBM_INV_DESC )  {
     bm->resStart = (long)bm->resBuffer->buffer_add;
-    mbm_register_free_event(bm->resBuffer, mep_free, bm.get());
-    mbm_register_alloc_event(bm->resBuffer, mep_declare, bm.get());
+    ::mbm_register_free_event(bm->resBuffer, mep_free, bm.get());
+    ::mbm_register_alloc_event(bm->resBuffer, mep_declare, bm.get());
   }
   bm->partitionID = partid;
   return bm.release();
@@ -284,9 +284,9 @@ int mep_pause (MEPID dsc)  {
 int mep_cancel_request(MEPID dsc)  {
   MEPDESC* bm = (MEPDESC*)dsc;
   if ( bm && bm != MEP_INV_DESC && bm->owner != -1 )  {
-    if ( bm->selection&USE_RES_BUFFER ) mbm_cancel_request(bm->resBuffer);
-    if ( bm->selection&USE_EVT_BUFFER ) mbm_cancel_request(bm->evtBuffer);
-    if ( bm->selection&USE_MEP_BUFFER ) mbm_cancel_request(bm->mepBuffer);
+    if ( bm->selection&USE_RES_BUFFER ) ::mbm_cancel_request(bm->resBuffer);
+    if ( bm->selection&USE_EVT_BUFFER ) ::mbm_cancel_request(bm->evtBuffer);
+    if ( bm->selection&USE_MEP_BUFFER ) ::mbm_cancel_request(bm->mepBuffer);
     return MBM_NORMAL;
   }
   return MBM_ILL_CONS;
@@ -298,7 +298,7 @@ int mep_decrement(MEPID dsc, MEPEVENT* e, int val)  {
     if ( bm && bm != MEP_INV_DESC && bm->owner != -1 )  {
       RTL::Lock lock(bm->lockid);
       if ( !lock )  {
-        ::lib_rtl_printf("Failed to aquire lock:%s\n",bm->mutexName);
+        ::lib_rtl_output(LIB_RTL_ERROR,"Failed to aquire lock:%s\n",bm->mutexName);
       }
       e->refCount -= val;
       return MBM_NORMAL;
@@ -313,7 +313,7 @@ int mep_increment(MEPID dsc, MEPEVENT* e, int val)  {
     if ( bm && bm != MEP_INV_DESC && bm->owner != -1 )  {
       RTL::Lock lock(bm->lockid);
       if ( !lock )  {
-        ::lib_rtl_printf("Failed to aquire lock:%s\n",bm->mutexName);
+        ::lib_rtl_output(LIB_RTL_ERROR,"Failed to aquire lock:%s\n",bm->mutexName);
       }
       e->refCount += val;
       return MBM_NORMAL;
@@ -325,8 +325,8 @@ int mep_increment(MEPID dsc, MEPEVENT* e, int val)  {
 int mep_check(MEPID dsc, MEPEVENT* e)  {
   MEPDESC* bm = (MEPDESC*)dsc;
   if ( bm && bm != MEP_INV_DESC && bm->owner != -1 )  {
-    lib_rtl_printf("MEPCheck: [%d] Event at address %08X MEP:%p [%d] Pattern:%08X [Release MEP]\n",
-      e->refCount, dsc->mepStart+e->begin, (void*)e, e->evID, e->magic);
+    ::lib_rtl_output(LIB_RTL_ERROR,"MEPCheck: [%d] Event at address %08X MEP:%p [%d] Pattern:%08X [Release MEP]\n",
+		     e->refCount, dsc->mepStart+e->begin, (void*)e, e->evID, e->magic);
     if ( e->refCount == 4 )  {
       RTL::Lock lock(bm->lockid);
       e->refCount -= 2;

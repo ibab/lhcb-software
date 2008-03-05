@@ -4,10 +4,10 @@
 
 namespace {
   static void help()  {
-    ::lib_rtl_printf("mbm_prod_a -opt [-opt]\n");
-    ::lib_rtl_printf("    -n=<name>              Buffer member name\n");
-    ::lib_rtl_printf("    -b=<name>              Buffer identifier \n");
-    ::lib_rtl_printf("    -p(artition)=<number>  Partition ID\n");
+    ::lib_rtl_output(LIB_RTL_INFO,"mbm_prod_a -opt [-opt]\n");
+    ::lib_rtl_output(LIB_RTL_INFO,"    -n=<name>              Buffer member name\n");
+    ::lib_rtl_output(LIB_RTL_INFO,"    -b=<name>              Buffer identifier \n");
+    ::lib_rtl_output(LIB_RTL_INFO,"    -p(artition)=<number>  Partition ID\n");
   }
   struct Prod  : public MBM::Producer  {
     int trnumber;
@@ -38,6 +38,6 @@ extern "C" int mbm_prod_a(int argc,char **argv) {
   cli.getopt("partitionid",1,partID);
   int status = wtc_init();
   if( status != WT_SUCCESS ) exit(status);
-  ::lib_rtl_printf("Asynchronous Producer \"%s\" (pid:%d) included in buffer:\"%s\"\n",name.c_str(),Prod::pid(),buffer.c_str());
+  ::lib_rtl_output(LIB_RTL_INFO,"Asynchronous Producer \"%s\" (pid:%d) included in buffer:\"%s\"\n",name.c_str(),Prod::pid(),buffer.c_str());
   return Prod(buffer,name,partID).run();
 }

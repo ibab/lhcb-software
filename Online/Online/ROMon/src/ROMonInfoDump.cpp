@@ -1,4 +1,4 @@
-// $Id: ROMonInfoDump.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Id: ROMonInfoDump.cpp,v 1.2 2008-03-05 07:40:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfoDump.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfoDump.cpp,v 1.2 2008-03-05 07:40:20 frankb Exp $
 // C++ include files
 #include <iostream>
 #include <iomanip>
@@ -45,8 +45,8 @@ ROMonInfoDump::~ROMonInfoDump() {
 
 /// Help printout in case of -h /? or wrong arguments
 void ROMonInfoDump::help() {
-  ::lib_rtl_printf("romon_dim_dump -opt [-opt]\n");
-  ::lib_rtl_printf("    -s[ervice]=<name> Name of DIM service providing the information\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"romon_dim_dump -opt [-opt]\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -s[ervice]=<name> Name of DIM service providing the information\n");
 }
 
 /// DimInfo overload to process messages

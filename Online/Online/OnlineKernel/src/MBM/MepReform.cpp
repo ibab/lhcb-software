@@ -6,11 +6,11 @@
 
 namespace {
   static void help()  {
-    ::lib_rtl_printf("mep_reform_a -opt [-opt]\n");
-    ::lib_rtl_printf("    -n=<name>      buffer member name\n");
-    ::lib_rtl_printf("    -i=<name>      input buffer name\n");
-    ::lib_rtl_printf("    -o=<name>      output buffer name\n");
-    ::lib_rtl_printf("    -a             Asynchonous mode (default is synchronous)\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"mep_reform_a -opt [-opt]\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -n=<name>      buffer member name\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -i=<name>      input buffer name\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -o=<name>      output buffer name\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -a             Asynchonous mode (default is synchronous)\n");
   }
   struct Cons  : public MEP::Consumer  {
     MBM::Producer* m_evtProd;
@@ -30,7 +30,7 @@ namespace {
           m_flags |= USE_RES_BUFFER;
           break;
         default:
-          lib_rtl_printf("Bad input buffer name given:\"%s\"\n",in.c_str());
+          lib_rtl_output(LIB_RTL_ERROR,"Bad input buffer name given:\"%s\"\n",in.c_str());
           help();
           exit(0);
       }
@@ -73,9 +73,9 @@ namespace {
       unsigned int trmask[4]   = {~0x0,~0x0,~0x0,~0x0};
       addRequest(EVENT_TYPE_EVENT,trmask,vetomask,BM_MASK_ANY,BM_REQ_ONE,BM_FREQ_PERC,100.);
       //setNonBlocking(WT_FACILITY_DAQ_EVENT, true);
-      ::lib_rtl_printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
-      ::lib_rtl_printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
-      ::lib_rtl_printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
+      ::lib_rtl_output(LIB_RTL_INFO," MEP    buffer start: %08X\n",m_mepID->mepStart);
+      ::lib_rtl_output(LIB_RTL_INFO," EVENT  buffer start: %08X\n",m_mepID->evtStart);
+      ::lib_rtl_output(LIB_RTL_INFO," RESULT buffer start: %08X\n",m_mepID->resStart);
       mbm_register_free_event(m_mepID->evtBuffer,  0, 0);
       mbm_register_alloc_event(m_mepID->resBuffer, 0, 0);
     }
@@ -95,7 +95,7 @@ namespace {
           m_evtProd->sendEvent();
         }
         else  {
-          lib_rtl_printf("Space error !\n");
+          lib_rtl_output(LIB_RTL_ERROR,"Space error !\n");
         }
       }
       //lib_rtl_sleep(1);
@@ -111,7 +111,7 @@ extern "C" int mep_reform_a(int argc,char **argv) {
   cli.getopt("name",1,name);
   cli.getopt("input",1,input);
   cli.getopt("output",1,output);
-  ::lib_rtl_printf("%synchronous Reformatter \"%s\" (pid:%d) included in buffers.\n",
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"%synchronous Reformatter \"%s\" (pid:%d) included in buffers.\n",
 	   async ? "As" : "S", name.c_str(),Cons::pid());
   Cons c(name,input,output);
   if ( async ) c.setNonBlocking(WT_FACILITY_DAQ_EVENT, true);

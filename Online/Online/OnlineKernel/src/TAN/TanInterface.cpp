@@ -281,7 +281,7 @@ int TanInterface::addressByName(const char* name, NetworkChannel::Address& sad) 
       int nbyte = snd.send(&msg,sizeof(msg),0,0,&sadd);
 #endif
       if ( nbyte == sizeof(msg) )  {
-        // lib_rtl_printf("receive on port: %04X\n",radd.sin_port);
+        // lib_rtl_output(LIB_RTL_DEBUG,"receive on port: %04X\n",radd.sin_port);
         nbyte = rcv.recv(&msg,sizeof(msg),Receive_TMO);
         if ( nbyte > 0 )  {
           msg.Convert();
@@ -346,7 +346,7 @@ int TanInterface::deallocatePort(const char* name)  {
       if      ( m_channel->isCancelled() )      return errorCode(TAN_SS_RECV_TMO);
       else if ( num_byte == sizeof(msg)  )      {
 	int scc= fatalError(TAN_SS_SUCCESS);
-	//::lib_rtl_printf("TAN connection closed. %p\n",(void*)m_channel);
+	//::lib_rtl_output(LIB_RTL_DEBUG,"TAN connection closed. %p\n",(void*)m_channel);
         return scc;
       }
       else                                      return fatalError(errorCode(TAN_SS_MADSRV));
@@ -425,7 +425,7 @@ int TanInterface::dumpDB (const char* node)   {
       int nbyte = snd.send(&msg,sizeof(msg),0,0,&sadd);
 #endif
       if ( nbyte == sizeof(msg) )  {
-        //lib_rtl_printf("receive on port: %04X\n",radd.sin_port);
+        //lib_rtl_output(LIB_RTL_DEBUG,"receive on port: %04X\n",radd.sin_port);
         nbyte = rcv.recv(&msg,sizeof(msg),Receive_TMO);
         if ( nbyte > 0 )  {
           msg.Convert();

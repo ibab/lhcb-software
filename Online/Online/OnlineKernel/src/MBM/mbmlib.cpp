@@ -36,7 +36,7 @@
 #define _mbm_return_err(err_code)  {  errno = err_code; return err_code; }
 
 static inline int mbm_error(const char* fn, int line)  {  
-  ::lib_rtl_printf("MBM Error:Bad!!!! %s Line:%d\n",fn,line);
+  ::lib_rtl_output(LIB_RTL_ERROR,"MBM Error:Bad!!!! %s Line:%d\n",fn,line);
   return MBM_ERROR;  
 }
 static inline int mbm_error_status()  {  
@@ -72,7 +72,7 @@ inline int _mbm_printf(const char* fmt, ...)  {
   va_list args;
   va_start(args, fmt);
   int len = vsnprintf(buff, sizeof(buff), fmt, args);
-  ::lib_rtl_printf(buff);
+  ::lib_rtl_output(LIB_RTL_ERROR,buff);
   return len;
 }
 #endif
@@ -94,12 +94,12 @@ void _mbm_check_memory(void* q,int c, size_t s)  {
   int bad = 0, *p = (int*)q;
   for(i=0; i<s/sizeof(int); ++i)  {
     if ( p[i] != c )  {
-      ::lib_rtl_printf("Bad memory:%08X[%d]=%08X %08X\n",p,i,&p[i],p[i]);
+      ::lib_rtl_output(LIB_RTL_ERROR,"Bad memory:%08X[%d]=%08X %08X\n",p,i,&p[i],p[i]);
       bad++;
     }
   }
   if ( bad )  {
-    lib_rtl_printf("Checked %d Bytes from %p to %p found %d bad words.\n",s, q, &p[i-1], bad);
+    lib_rtl_output(LIB_RTL_ERROR,"Checked %d Bytes from %p to %p found %d bad words.\n",s, q, &p[i-1], bad);
   }
   else  {
     _mbm_printf("Checked %d Bytes from %p to %p found %d bad words.\n",s, q, &p[i-1], bad);
@@ -115,7 +115,7 @@ void _mbm_instrument_lock(BMID bm)  {
     int val;
     lib_rtl_lock_value(bm->lockid,&val);
     if ( val != 0 ) {
-      ::lib_rtl_printf("%5d LOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
+      ::lib_rtl_output(LIB_RTL_ERROR,"%5d LOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
 \    }
 #endif
     if ( m_bm->_control()->spare1 != 0 )  {
@@ -134,7 +134,7 @@ void _mbm_deinstrument_lock(BMID bm)  {
     int val;
     lib_rtl_lock_value(bm->lockid,&val);
     if ( val != 0 ) {
-      ::lib_rtl_printf("%5d UNLOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
+      ::lib_rtl_output(LIB_RTL_ERROR,"%5d UNLOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
     }
 #endif
 }
@@ -158,10 +158,10 @@ void _mbm_update_rusage(USER* us) {
 template <class T> void print_queue(const char* format,const T* ptr, int type)  {
   switch (type)  {
   case 0:
-    lib_rtl_printf(format,*ptr,*ptr,add_ptr(ptr,*ptr));
+    lib_rtl_output(LIB_RTL_ERROR,format,*ptr,*ptr,add_ptr(ptr,*ptr));
     break;
   case 1:
-    lib_rtl_printf(format,*ptr,*ptr,add_ptr(ptr,(*ptr-4)));
+    lib_rtl_output(LIB_RTL_ERROR,format,*ptr,*ptr,add_ptr(ptr,(*ptr-4)));
     break;
   }
 }
@@ -1667,7 +1667,7 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
       }
       // This means a mbm_cancel_request came while waiting!
       if ( us->p_state == S_active )   {
-        ::lib_rtl_printf("MBM[%s]> I got hit by a cancel request!\n",us->name);
+        ::lib_rtl_output(LIB_RTL_ERROR,"MBM[%s]> I got hit by a cancel request!\n",us->name);
         _mbm_return_err(MBM_REQ_CANCEL);
       }
       ctrl->spare1 = sp;
@@ -1675,7 +1675,7 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
         ::lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
       }
       else  {
-        ::lib_rtl_printf("%s Failed lib_rtl_wait_for_event(bm->WES_event_flag)\n",bm->bm_name);
+        ::lib_rtl_output(LIB_RTL_ERROR,"%s Failed lib_rtl_wait_for_event(bm->WES_event_flag)\n",bm->bm_name);
       }
       if ( us->p_state != S_active )   {
         _mbm_return_err(MBM_REQ_CANCEL); // other reasons
@@ -1756,47 +1756,47 @@ int _mbm_send_space (BMID bm)  {
 int _mbm_lock_tables(BMID bm)  {
   if ( bm && bm != MBM_INV_DESC )  {
     if ( bm->lockid )  {
-      int status = lib_rtl_lock(bm->lockid);
+      int status = ::lib_rtl_lock(bm->lockid);
       if (!lib_rtl_is_success(status))    { 
-        lib_rtl_signal_message(LIB_RTL_OS,"error in unlocking tables. Status %d",status);
+        ::lib_rtl_signal_message(LIB_RTL_OS,"error in unlocking tables. Status %d",status);
       }
       return status;
     }
-    lib_rtl_signal_message(0,"Error in locking MBM tables [Invalid Mutex] %s",bm->mutexName);
+    ::lib_rtl_signal_message(0,"Error in locking MBM tables [Invalid Mutex] %s",bm->mutexName);
     return 0;
   }
-  lib_rtl_signal_message(0,"Error in locking MBM tables [Invalid BMID]");
+  ::lib_rtl_signal_message(0,"Error in locking MBM tables [Invalid BMID]");
   return 0;
 }
 
 int _mbm_unlock_tables(BMID bm)    {
   if ( bm && bm != MBM_INV_DESC )  {
     if ( bm->lockid )  {
-      int status = lib_rtl_unlock(bm->lockid);
+      int status = ::lib_rtl_unlock(bm->lockid);
       if (!lib_rtl_is_success(status))    { 
-        lib_rtl_signal_message(LIB_RTL_OS,"Error in unlocking tables %s. Status %d",bm->mutexName,status);
+        ::lib_rtl_signal_message(LIB_RTL_OS,"Error in unlocking tables %s. Status %d",bm->mutexName,status);
       }
       return status;
     }
-    lib_rtl_signal_message(0,"Error in unlocking tables %s [Invalid Mutex].",bm->mutexName);
+    ::lib_rtl_signal_message(0,"Error in unlocking tables %s [Invalid Mutex].",bm->mutexName);
     return 0;
   }
-  lib_rtl_signal_message(0,"Error in unlocking MBM tables [Invalid BMID]");
+  ::lib_rtl_signal_message(0,"Error in unlocking MBM tables [Invalid BMID]");
   return 0;
 }
 
 int _mbm_delete_lock(BMID bm)    {
   if ( bm->lockid )  {
-    int status = lib_rtl_delete_lock(bm->lockid);
+    int status = ::lib_rtl_delete_lock(bm->lockid);
     if (!lib_rtl_is_success(status))    { 
-      lib_rtl_signal_message(LIB_RTL_OS,"Error deleting lock %s. Status %d",bm->mutexName,status);
+      ::lib_rtl_signal_message(LIB_RTL_OS,"Error deleting lock %s. Status %d",bm->mutexName,status);
     }
     else  {
       bm->lockid = 0;
     }
     return status;
   }
-  lib_rtl_signal_message(0,"Error deleting lock %s [Invalid Mutex].", bm->mutexName);
+  ::lib_rtl_signal_message(0,"Error deleting lock %s [Invalid Mutex].", bm->mutexName);
   return 0;
 }
 
@@ -1805,7 +1805,7 @@ int _mbm_map_sections(BMID bm)  {
   char text[128];
   const char* bm_name = bm->bm_name;
   sprintf(text, "bm_ctrl_%s", bm->bm_name);
-  int len, status  = lib_rtl_map_section(text, sizeof(CONTROL), &bm->ctrl_add);
+  int len, status  = ::lib_rtl_map_section(text, sizeof(CONTROL), &bm->ctrl_add);
   if (!lib_rtl_is_success(status))    {
     lib_rtl_signal_message(LIB_RTL_OS,"Error mapping control section for %s.Status=%d",
                            bm_name,status);
@@ -1814,7 +1814,7 @@ int _mbm_map_sections(BMID bm)  {
   bm->ctrl = (CONTROL*)bm->ctrl_add->address;
   sprintf(text, "bm_event_%s",  bm_name);
   len = sizeof(EVENTDesc)+(bm->ctrl->p_emax-1)*sizeof(EVENT);
-  status  = lib_rtl_map_section(text, len, &bm->event_add);
+  status  = ::lib_rtl_map_section(text, len, &bm->event_add);
   if (!lib_rtl_is_success(status))  {
     lib_rtl_signal_message(LIB_RTL_OS,"Error mapping event section for %s. Status=%d",
                            bm_name,status);
@@ -1825,9 +1825,9 @@ int _mbm_map_sections(BMID bm)  {
   bm->event  = &bm->evDesc->events[0];
   sprintf(text, "bm_user_%s",   bm_name);
   len = sizeof(USERDesc)+(bm->ctrl->p_umax-1)*sizeof(USER);
-  status  = lib_rtl_map_section(text, len, &bm->user_add);
+  status  = ::lib_rtl_map_section(text, len, &bm->user_add);
   if (!lib_rtl_is_success(status))  {
-    lib_rtl_signal_message(LIB_RTL_OS,"Error mapping user section for %s. Status=%d",
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping user section for %s. Status=%d",
                            bm_name,status);
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
@@ -1836,26 +1836,26 @@ int _mbm_map_sections(BMID bm)  {
   bm->user   = &bm->usDesc->users[0];
   sprintf(text, "bm_bitmap_%s", bm_name);
   len = bm->ctrl->bm_size>>3;
-  status  = lib_rtl_map_section(text, len, &bm->bitm_add);
+  status  = ::lib_rtl_map_section(text, len, &bm->bitm_add);
   if (!lib_rtl_is_success(status))  {
-    lib_rtl_signal_message(LIB_RTL_OS,"Error mapping bit-map section for %s. Status=%d",
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping bit-map section for %s. Status=%d",
                            bm_name,status);
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }
   bm->bitmap = (char*)bm->bitm_add->address;
   sprintf(text, "bm_buffer_%s", bm_name);
-  status  = lib_rtl_map_section(text, bm->ctrl->buff_size, &bm->buff_add);
+  status  = ::lib_rtl_map_section(text, bm->ctrl->buff_size, &bm->buff_add);
   if (!lib_rtl_is_success(status))  {
-    lib_rtl_signal_message(LIB_RTL_OS,"Error mapping buffer section for %s. Status=%d",
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping buffer section for %s. Status=%d",
                            bm_name,status);
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }
-  //::lib_rtl_printf("Control: %p  %p\n",bm->ctrl,((char*)bm->ctrl)-((char*)bm->ctrl));
-  //::lib_rtl_printf("User:    %p  %p  %p\n",bm->user,((char*)bm->user)-((char*)bm->ctrl),bm->usDesc);
-  //::lib_rtl_printf("Event:   %p  %p  %p\n",bm->event,((char*)bm->event)-((char*)bm->ctrl),bm->evDesc);
-  //::lib_rtl_printf("Bitmap:  %p  %p\n",bm->bitmap,((char*)bm->bitmap)-((char*)bm->ctrl));
+  //::lib_rtl_output(LIB_RTL_DEBUG,"Control: %p  %p\n",bm->ctrl,((char*)bm->ctrl)-((char*)bm->ctrl));
+  //::lib_rtl_output(LIB_RTL_DEBUG,"User:    %p  %p  %p\n",bm->user,((char*)bm->user)-((char*)bm->ctrl),bm->usDesc);
+  //::lib_rtl_output(LIB_RTL_DEBUG,"Event:   %p  %p  %p\n",bm->event,((char*)bm->event)-((char*)bm->ctrl),bm->evDesc);
+  //::lib_rtl_output(LIB_RTL_DEBUG,"Bitmap:  %p  %p\n",bm->bitmap,((char*)bm->bitmap)-((char*)bm->ctrl));
   bm->buffer_add  = (char*)bm->buff_add->address;
   bm->bitmap_size = bm->ctrl->bm_size;
   bm->buffer_size = bm->ctrl->buff_size;

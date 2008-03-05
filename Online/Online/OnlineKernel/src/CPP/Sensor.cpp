@@ -57,8 +57,8 @@ int s_action(unsigned int facility, void* param) {
 Sensor::Sensor( unsigned int facility, const char* name, bool wtsubs) {
   int status;
   if ( !Initdone )  {
-    status = wtc_init();
-    if ( status != WT_SUCCESS ) lib_rtl_signal_message(LIB_RTL_ERRNO,"Failed wtc_init");
+    status = ::wtc_init();
+    if ( status != WT_SUCCESS ) ::lib_rtl_signal_message(LIB_RTL_ERRNO,"Failed wtc_init");
   } 
   Name = name;
   m_next = Head;
@@ -66,15 +66,15 @@ Sensor::Sensor( unsigned int facility, const char* name, bool wtsubs) {
   m_facility = facility;
 
   if( wtsubs )  {
-    status = wtc_subscribe( m_facility, s_rearm, s_action );
-    if ( status != WT_SUCCESS ) lib_rtl_signal_message(LIB_RTL_ERRNO,"Failed wtc_subscribe");
+    status = ::wtc_subscribe( m_facility, s_rearm, s_action );
+    if ( status != WT_SUCCESS ) ::lib_rtl_signal_message(LIB_RTL_ERRNO,"Failed wtc_subscribe");
   }
   m_rearmPending = true;
 }
 //------------------------------------------------------------------------------
 Sensor::~Sensor() {
-  int status = wtc_remove( m_facility );
-  if ( status != WT_SUCCESS ) lib_rtl_signal_message(LIB_RTL_ERRNO, "Failed wtc_remove");
+  int status = ::wtc_remove( m_facility );
+  if ( status != WT_SUCCESS ) ::lib_rtl_signal_message(LIB_RTL_ERRNO, "Failed wtc_remove");
 }
 //------------------------------------------------------------------------------
 int Sensor::run()  {
@@ -82,10 +82,10 @@ int Sensor::run()  {
   unsigned int facility;
   void* param;
   while(1)  {
-    status = wtc_wait( &facility, &param, &substatus );  
+    status = ::wtc_wait( &facility, &param, &substatus );  
     if ( status != WT_SUCCESS && status != WT_BADACTIONSTAT && status != WT_NOSUBSCRIBED) {
-      lib_rtl_printf (" exiting wt_wait status = %d param %p substat %d, fac %d \n",
-              status, param, substatus, facility);
+      ::lib_rtl_output(LIB_RTL_INFO," exiting wt_wait status = %d param %p substat %d, fac %d \n",
+		       status, param, substatus, facility);
     }
   } 
   return 1;

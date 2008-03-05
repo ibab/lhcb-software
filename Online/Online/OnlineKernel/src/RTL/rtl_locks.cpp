@@ -16,7 +16,7 @@ extern "C" int lib_rtl_lock_exithandler() {
     lib_rtl_lock_map_t m = allLocks();
     lib_rtl_lock_map_t::iterator i = m.begin();
     for( ; i != m.end(); ++i ) {
-      // ::lib_rtl_printf("Deleting lock: %s\n",(*i).first.c_str());
+      // ::lib_rtl_output(LIB_RTL_DEBUG,"Deleting lock: %s\n",(*i).first.c_str());
       ::lib_rtl_delete_lock((*i).second);
     }
     delete s_map.release();
@@ -51,7 +51,7 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   if (h->name[0] && !h->handle) {
     h->handle = ::i_sem_open(h->name, O_CREAT, 0666, 1);
     if ( !h->handle ) {
-      lib_rtl_signal_message(LIB_RTL_OS,"sem_open: error in creating lock %s %08X.",h->name,h->handle);
+      ::lib_rtl_signal_message(LIB_RTL_OS,"sem_open: error in creating lock %s %08X.",h->name,h->handle);
       // ::perror("SEVERE: sem_open: ");
       return 0;
     }
@@ -81,7 +81,7 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   }
 #endif
   if ( h->handle == 0 )   {
-    return lib_rtl_signal_message(LIB_RTL_OS,"error in creating lock %s %08X.",h->name,h->handle);
+    return ::lib_rtl_signal_message(LIB_RTL_OS,"error in creating lock %s %08X.",h->name,h->handle);
   }
   else if ( created && mutex_name != 0 )  {
     allLocks().insert(std::make_pair(h->name,h.get()));
@@ -130,15 +130,15 @@ int lib_rtl_delete_lock(lib_rtl_lock_t handle)   {
         lib_rtl_lock_map_t& m = allLocks();
         lib_rtl_lock_map_t::iterator i = m.find(h->name);
         if ( i != m.end() ) {
-          //::lib_rtl_printf("Deleting lock: %s\n",(*i).first.c_str());
+          //::lib_rtl_output(LIB_RTL_DEBUG,"Deleting lock: %s\n",(*i).first.c_str());
           m.erase(i);
         }
       }
       return 1;
     }
-    return lib_rtl_signal_message(LIB_RTL_OS,"error in deleting lock %s %08X.",h->name,h->handle);
+    return ::lib_rtl_signal_message(LIB_RTL_OS,"error in deleting lock %s %08X.",h->name,h->handle);
   }
-  return lib_rtl_signal_message(LIB_RTL_DEFAULT,"Cannot delete lock [INVALID HANDLE].");
+  return ::lib_rtl_signal_message(LIB_RTL_DEFAULT,"Cannot delete lock [INVALID HANDLE].");
 }
 
 int lib_rtl_cancel_lock(lib_rtl_lock_t h) {
@@ -152,14 +152,14 @@ int lib_rtl_cancel_lock(lib_rtl_lock_t h) {
       return status==0 ? 1 : 0;
     }
     else {
-      ::lib_rtl_printf("Cannot cancel lock [%s]. Semaphore count is:%d\n",h->name, val);
+      ::lib_rtl_output(LIB_RTL_ERROR,"Cannot cancel lock [%s]. Semaphore count is:%d\n",h->name, val);
     }
     return 0;
 #elif defined(_WIN32)
     return 1;
 #endif
   }
-  return lib_rtl_signal_message(LIB_RTL_DEFAULT,"Cannot cancel lock [INVALID HANDLE].");
+  return ::lib_rtl_signal_message(LIB_RTL_DEFAULT,"Cannot cancel lock [INVALID HANDLE].");
 }
 
 int lib_rtl_lock(lib_rtl_lock_t h) {
@@ -168,10 +168,10 @@ int lib_rtl_lock(lib_rtl_lock_t h) {
     int sc = ::i_sem_wait(h->handle);
     if ( sc != 0 ) {
       int val;
-      lib_rtl_lock_value(h, &val);
+      ::lib_rtl_lock_value(h, &val);
 #if 0
       if ( val != 0 ) {
-        ::lib_rtl_printf("Lock: Bad lock count [%s]:%d Held:%d\n",h->name,val,h->held);
+        ::lib_rtl_output(LIB_RTL_ERROR,"Lock: Bad lock count [%s]:%d Held:%d\n",h->name,val,h->held);
       }
 #endif
     }
@@ -192,20 +192,20 @@ int lib_rtl_lock(lib_rtl_lock_t h) {
         default:                                      break;
       }
       if ( opt )  {
-        lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X [%s]",
+        ::lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X [%s]",
           h->name,h->handle,opt);
       }
     }
     if ( sc == WAIT_FAILED )    
 #endif
     {
-      return lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X",
+      return ::lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X",
         h->name,h->handle);
     }
     h->held = 1;
     return 1;
   }
-  return lib_rtl_signal_message(LIB_RTL_DEFAULT,"Error in locking semaphore [INVALID MUTEX].");
+  return ::lib_rtl_signal_message(LIB_RTL_DEFAULT,"Error in locking semaphore [INVALID MUTEX].");
 }
 
 int lib_rtl_trylock(lib_rtl_lock_t h) {
@@ -222,7 +222,7 @@ int lib_rtl_trylock(lib_rtl_lock_t h) {
     else
 #endif
     {
-      return lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X",
+      return ::lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X",
         h->name,h->handle);
     }
     h->held = 1;
@@ -242,12 +242,12 @@ int lib_rtl_unlock(lib_rtl_lock_t h) {
         h->held = 0;
         return 1;
       }
-      return lib_rtl_signal_message(LIB_RTL_OS,"Error in unlocking semaphore [%s] %08X Held:%d",
+      return ::lib_rtl_signal_message(LIB_RTL_OS,"Error in unlocking semaphore [%s] %08X Held:%d",
         h->name,h->handle,h->held);
     }
 #if 0
     else {
-      lib_rtl_printf("Unlock: Bad lock count [%s]:%d\n",h->name,val);
+      ::lib_rtl_output(LIB_RTL_ERROR,"Unlock: Bad lock count [%s]:%d\n",h->name,val);
     }
 #endif
 #elif defined(_WIN32)
@@ -255,8 +255,8 @@ int lib_rtl_unlock(lib_rtl_lock_t h) {
       return 1;
     }
 #endif
-    return lib_rtl_signal_message(LIB_RTL_OS,"Error in unlocking semaphore [%s] %08X",h->name,h->handle);
+    return ::lib_rtl_signal_message(LIB_RTL_OS,"Error in unlocking semaphore [%s] %08X",h->name,h->handle);
   }
-  return lib_rtl_signal_message(LIB_RTL_DEFAULT,"Error in unlocking semaphore [INVALID MUTEX].");
+  return ::lib_rtl_signal_message(LIB_RTL_DEFAULT,"Error in unlocking semaphore [INVALID MUTEX].");
 }
 

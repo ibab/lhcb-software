@@ -52,11 +52,23 @@ extern "C" {
   typedef int (*lib_rtl_rundown_handler_t)(void*);
   inline bool lib_rtl_is_success(int status) { return status&1; }
 
+  /// Enumerations
   enum {
     LIB_RTL_DEFAULT = 0,
     LIB_RTL_ERRNO = 1,
     LIB_RTL_OS,
     LIB_RTL_INFINITE = 0
+  };
+
+  /// Enumeration of printout levels
+  enum {
+    LIB_RTL_VERBOSE = 1,
+    LIB_RTL_DEBUG,
+    LIB_RTL_INFO,
+    LIB_RTL_WARNING,
+    LIB_RTL_ERROR,
+    LIB_RTL_FATAL,
+    LIB_RTL_ALWAYS
   };
 
   /**RTL: Online runtime library wrapper for OS specific functions.
@@ -193,9 +205,11 @@ extern "C" {
   __CXX_CONST char* lib_rtl_error_message(int status);
   /// Printout redirection
   size_t lib_rtl_printf(__CXX_CONST char* fmt, ...);
+  /// Printout redirection
+  size_t lib_rtl_output(int level, __CXX_CONST char* fmt, ...);
   /// Install RTL printer 
 #if !defined(__GCCXML) 
-  void lib_rtl_install_printer(size_t (*func)(void*, __CXX_CONST char*, va_list args), void* param);
+  void lib_rtl_install_printer(size_t (*func)(void*, int, __CXX_CONST char*, va_list args), void* param);
 #endif
   /// Formatted time string
 #ifdef __cplusplus

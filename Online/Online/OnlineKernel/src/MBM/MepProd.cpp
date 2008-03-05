@@ -6,9 +6,9 @@
 #define PACKING_FACTOR 20
 namespace {
   static void help()  {
-    ::lib_rtl_printf("mep_prod_a -opt [-opt]\n");
-    ::lib_rtl_printf("    -n=<name>      buffer member name\n");
-    ::lib_rtl_printf("    -a             Asynchonous mode (default is synchronous)\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"mep_prod_a -opt [-opt]\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -n=<name>      buffer member name\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -a             Asynchonous mode (default is synchronous)\n");
   }
   struct Prod  : public MEP::Producer  {
     int mep_identifier;
@@ -21,9 +21,9 @@ namespace {
       m_evtProd = new MBM::Producer(m_mepID->evtBuffer, nam, partitionID());
       mbm_register_free_event(m_mepID->evtBuffer,  0, 0);
       mbm_register_alloc_event(m_mepID->evtBuffer, 0, 0);
-      ::lib_rtl_printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
-      ::lib_rtl_printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
-      ::lib_rtl_printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
+      ::lib_rtl_output(LIB_RTL_INFO," MEP    buffer start: %08X\n",m_mepID->mepStart);
+      ::lib_rtl_output(LIB_RTL_INFO," EVENT  buffer start: %08X\n",m_mepID->evtStart);
+      ::lib_rtl_output(LIB_RTL_INFO," RESULT buffer start: %08X\n",m_mepID->resStart);
     }
     ~Prod()  {
       delete m_evtProd;
@@ -62,7 +62,7 @@ namespace {
           m_evtProd->sendEvent();
         }
         else  {
-          lib_rtl_printf("Space error !\n");
+          lib_rtl_output(LIB_RTL_ERROR,"Space error !\n");
         }
       }
       declareEvent();
@@ -81,7 +81,7 @@ extern "C" int mep_prod_a(int argc,char **argv) {
   std::string name = "producer";
   bool async = cli.getopt("asynchronous",1) != 0;
   cli.getopt("name",1,name);
-  ::lib_rtl_printf("%synchronous MEP Producer \"%s\" (pid:%d) included in buffers.\n",
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"%synchronous MEP Producer \"%s\" (pid:%d) included in buffers.\n",
 	   async ? "As" : "S", name.c_str(),Prod::pid());
   Prod p(name);
   if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
