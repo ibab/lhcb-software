@@ -13,6 +13,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-03-05 - Patrick Koppenburg
+ - Remove HltSelChecker algorithm
+
+! 2008-03-05 - Patrick Koppenburg
  - FilterTrueTracks : Check for existance of location
  - Do not overwrite with truth
 

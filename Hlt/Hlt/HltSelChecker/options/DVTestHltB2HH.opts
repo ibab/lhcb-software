@@ -35,18 +35,9 @@ EventSelector.Input   = {
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
-ApplicationMgr.TopAlg += { "HltSelChecker", "HltSelChecker/OfflineChecker" };
-HltSelChecker.PhysDesktop.InputLocations = { "Phys/HltSelB2HH" } ;
-OfflineChecker.PhysDesktop.InputLocations = { "Phys/PreselB2HH" } ;
-
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                             //GP: (45,1)
 NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-B2HH.root' TYP='ROOT' OPT='NEW'" ] ;//GP: (46,1)
 
-HltSelChecker.OutputLevel = 3 ;
-HltSelChecker.Context = "HLT" ;
-HltSelChecker.DoPrint = false ;
-OfflineChecker.OutputLevel = 3 ;
-OfflineChecker.DoPrint = false ;
 /*
  *  Something about all pi
  */
