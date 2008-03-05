@@ -64,7 +64,7 @@ MBM::Monitor::~Monitor() {
   if ( m_display ) delete m_display;
 }
 
-size_t MBM::Monitor::print(void* ctxt, const char* format, va_list args) {
+size_t MBM::Monitor::print(void* ctxt, int, const char* format, va_list args) {
   char buffer[1024];
   Monitor* m = (Monitor*)ctxt;
   size_t res = ::vsnprintf(buffer, sizeof(buffer), format, args);

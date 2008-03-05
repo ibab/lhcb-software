@@ -33,7 +33,7 @@ namespace MBM {
     virtual int optparse (const char* c);
     int get_bm_list();
     int drop_bm_list();
-    static size_t print(void* ctxt, const char* format, va_list args);
+    static size_t print(void* ctxt, int level, const char* format, va_list args);
     virtual void handle(const Event& ev);
     Monitor(int argc, char** argv, MonitorDisplay* disp);
     virtual ~Monitor();
