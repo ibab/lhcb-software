@@ -30,5 +30,4 @@
   <class name = "ISequencerTimerTool" />
   <class name = "MD5" />
   <class name = "MD5::Digest" />
-  <class name = "IConfigTreeEditor" />
 </lcgdict>

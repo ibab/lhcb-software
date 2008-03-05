@@ -18,7 +18,6 @@
 #include "HltBase/ERelations.h"
 #include "HltBase/HltTypes.h"
 #include "HltBase/MD5.h"
-#include "HltBase/IConfigTreeEditor.h"
 
 #include "GaudiAlg/ISequencerTimerTool.h"
 
