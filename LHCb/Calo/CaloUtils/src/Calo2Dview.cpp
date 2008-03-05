@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.4 2008-03-04 10:36:50 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.5 2008-03-05 16:33:06 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -82,7 +82,7 @@ StatusCode Calo2Dview::initialize() {
   m_ysizeMap[1]  = m_xsizeMap[1] ;
   // Spd
   const LHCb::CaloCellID refSpd(0, 0, 8 ,4);
-  m_caloMap[0]=getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
+  m_caloMap[0]=getDet<DeCalorimeter>( DeCalorimeterLocation::Spd );
   m_centreMap[0] = 32;
   m_regMap[0]    = 6;
   m_xsizeMap[0]   = m_caloMap[0]->cellSize( refSpd ) ;
