@@ -26,7 +26,7 @@ HltExclusiveCorrs.Algorithms += { "PreselBs2DsH" };
 //
 // Overwrite input - uncomment to run HLT on true signal only
 //
-#include "$HLTSELCHECKERROOT/options/OverwriteWithTruth.opts"
+// #include "$HLTSELCHECKERROOT/options/OverwriteWithTruth.opts"
 //
 // Options
 //

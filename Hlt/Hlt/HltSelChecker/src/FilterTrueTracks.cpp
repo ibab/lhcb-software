@@ -1,4 +1,4 @@
-// $Id: FilterTrueTracks.cpp,v 1.1 2007-08-28 13:54:21 pkoppenb Exp $
+// $Id: FilterTrueTracks.cpp,v 1.2 2008-03-05 10:07:46 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -92,34 +92,38 @@ StatusCode FilterTrueTracks::execute() {
   for ( std::vector<std::string>::const_iterator p = m_tracksPath.begin() ;
         p!=m_tracksPath.end() ; ++p) {
    
-    LHCb::Track::Container* inTracks = get< LHCb::Track::Container>(*p);
-    if (msgLevel(MSG::DEBUG)) debug() << "Container " << *p << " contains " 
-                                      << inTracks->size() << " Tracks" << endmsg ;
-    Asct assoc(evtSvc(),*p);
-    const Table* table = assoc.direct();
-    if ( NULL==table) {
-      err() << "NO Table " << endmsg ;
-      return StatusCode::FAILURE ;
-    }
-
-    if (msgLevel(MSG::DEBUG)) nT += inTracks->size();
-    m_allTracks  += inTracks->size();
-    for ( LHCb::Track::Container::const_iterator t = inTracks->begin() ;
-          t != inTracks->end() ; ++t){
-      const Range range = table->relations( *t) ;
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Track " << (*t)->key() 
-                                            << " is associated to " 
-                                            << range.size() << " MCP" << endmsg ;
-      if ( isSignal(mcparts, range) ) {
-        if (msgLevel(MSG::DEBUG)) debug() << "Track " << (*t)->key() 
-                                          << " is associated to truth " << endmsg ;
-
-        LHCb::Track* newT = (*t)->clone();
-        if (msgLevel(MSG::VERBOSE)) verbose() << "Cloned Track " << (*t)->key() 
-                                              << endmsg ;
-        newTracks->insert(newT);
+    if ( !exist<LHCb::Track::Container>(*p)){
+      Warning("No tracks at "+(*p),1);
+    } else {
+      LHCb::Track::Container* inTracks = get< LHCb::Track::Container>(*p);
+      if (msgLevel(MSG::DEBUG)) debug() << "Container " << *p << " contains " 
+                                        << inTracks->size() << " Tracks" << endmsg ;
+      Asct assoc(evtSvc(),*p);
+      const Table* table = assoc.direct();
+      if ( NULL==table) {
+        err() << "NO Table " << endmsg ;
+        return StatusCode::FAILURE ;
       }
-    }
+
+      if (msgLevel(MSG::DEBUG)) nT += inTracks->size();
+      m_allTracks  += inTracks->size();
+      for ( LHCb::Track::Container::const_iterator t = inTracks->begin() ;
+            t != inTracks->end() ; ++t){
+        const Range range = table->relations( *t) ;
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Track " << (*t)->key() 
+                                              << " is associated to " 
+                                              << range.size() << " MCP" << endmsg ;
+        if ( isSignal(mcparts, range) ) {
+          if (msgLevel(MSG::DEBUG)) debug() << "Track " << (*t)->key() 
+                                            << " is associated to truth " << endmsg ;
+          
+          LHCb::Track* newT = (*t)->clone();
+          if (msgLevel(MSG::VERBOSE)) verbose() << "Cloned Track " << (*t)->key() 
+                                                << endmsg ;
+          newTracks->insert(newT);
+        }
+      } 
+    } 
   } 
   if (msgLevel(MSG::DEBUG)) debug() << "Saved " << newTracks->size() << " Tracks from "
                                     << nT << endmsg ;

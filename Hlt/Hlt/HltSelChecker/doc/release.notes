@@ -12,6 +12,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-03-05 - Patrick Koppenburg
+ - FilterTrueTracks : Check for existance of location
+ - Do not overwrite with truth
+
 ! 2008-02-18 - Patrick Koppenburg
  - HltBackgroundCategory : do not use DebugTool
  - DVTest*.opts : no need for track associator anymore (now DoD svc)

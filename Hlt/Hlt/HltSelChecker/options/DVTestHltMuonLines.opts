@@ -17,7 +17,7 @@
 //
 // True filter criterion
 //
-//#include "$HLTSELCHECKERROOT/options/TrueBd2MuMuKstar.opts"
+#include "$HLTSELCHECKERROOT/options/TrueBd2MuMuKstar.opts"
 //
 // Overwrite input - uncomment to run HLT on true signal only
 //

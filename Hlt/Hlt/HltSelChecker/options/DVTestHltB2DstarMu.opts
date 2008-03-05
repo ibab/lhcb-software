@@ -22,7 +22,7 @@ HltExclusiveCorrs.Algorithms += { "PreselBd2DstarMu" };
 //
 // True filter criterion - will only run HLT on true signal
 //
-#include "$HLTSELCHECKERROOT/options/TrueB2DstarMu.opts"
+// #include "$HLTSELCHECKERROOT/options/TrueB2DstarMu.opts"
 //
 // Options
 //

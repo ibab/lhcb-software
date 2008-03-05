@@ -40,9 +40,11 @@ FilterTrueTracks.OutputLevel = 3 ;
 /*
  *  Now for muons tracks
  */
+/*
 SeqTrueSignalMuons.Members = { "FilterTrueTracks/FilterTrueMuons" };
 
 FilterTrueMuons.MCDecayFinder.Decay =  "{[B+ -> ^K+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc, [B+ -> ^K+ ^e+ ^e- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc}" ;
 FilterTrueMuons.TracksPath = { "Hlt/Track/MuonsFromAlley" } ;
 FilterTrueMuons.OutputPath = "Hlt/Track/SignalMuons" ;
 FilterTrueMuons.OutputLevel = 3 ;
+*/
