@@ -1,4 +1,4 @@
-// $Id: MatrixTransforms.h,v 1.3 2008-02-20 15:51:51 ibelyaev Exp $
+// $Id: MatrixTransforms.h,v 1.4 2008-03-05 12:23:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_MATRIXTRANSFORMS_H 
 #define LHCBMATH_MATRIXTRANSFORMS_H 1
@@ -56,14 +56,15 @@ namespace Gaudi
      *  @date 2006-05-24
      */
     template <class C,class T>
-    inline ROOT::Math::SVector<T,3>& 
+    inline 
+    const ROOT::Math::SVector<T,3>& 
     geo2LA
     ( const ROOT::Math::PositionVector3D<C>& source , 
       ROOT::Math::SVector<T,3>&              dest   ) 
     {
-      dest[0] = source.X () ;
-      dest[1] = source.Y () ;
-      dest[2] = source.Z () ;
+      dest ( 0 ) = source.X () ;
+      dest ( 1 ) = source.Y () ;
+      dest ( 2 ) = source.Z () ;
       return dest ;
     } 
     // ========================================================================
@@ -86,14 +87,15 @@ namespace Gaudi
      *  @date 2006-05-24
      */
     template <class C,class T>
-    inline ROOT::Math::SVector<T,3>& 
+    inline 
+    const ROOT::Math::SVector<T,3>& 
     geo2LA 
     ( const ROOT::Math::DisplacementVector3D<C>& source , 
       ROOT::Math::SVector<T,3>&                  dest   ) 
     {
-      dest[0] = source.X () ;
-      dest[1] = source.Y () ;
-      dest[2] = source.Z () ;
+      dest ( 0 ) = source.X () ;
+      dest ( 1 ) = source.Y () ;
+      dest ( 2 ) = source.Z () ;
       return dest ;
     }
     // ========================================================================
@@ -116,24 +118,26 @@ namespace Gaudi
      *  @date 2006-05-24
      */
     template <class C,class T>
-    inline ROOT::Math::SVector<T,4>& 
+    inline 
+    const ROOT::Math::SVector<T,4>& 
     geo2LA 
     ( const ROOT::Math::LorentzVector<C>& source , 
       ROOT::Math::SVector<T,4>&           dest  ) 
     {
-      dest[0] = source.X () ;
-      dest[1] = source.Y () ;
-      dest[2] = source.Z () ;
-      dest[3] = source.E () ;
+      dest ( 0 ) = source.X () ;
+      dest ( 1 ) = source.Y () ;
+      dest ( 2 ) = source.Z () ;
+      dest ( 3 ) = source.E () ;
       return dest ;
     } 
     // ========================================================================
-    /** fill  Linear Algebra 3-vector from the spatial components of 4D-(Lorentz)vector 
+    /** fill  Linear Algebra 3-vector from the spatial 
+     *  components of 4D-(Lorentz)vector 
      *
      *  @code
      *   
      *  const Gaudi::LorenztVector lorv = ... ;
-     *  Gaudi::Vector2 v3 ;
+     *  Gaudi::Vector3 v3 ;
      *  
      *  // fill Linear Algebra vector from Lorenz Vector 
      *  geo2LA ( lorv , v3 ) ; 
@@ -147,21 +151,19 @@ namespace Gaudi
      *  @date 2006-05-24
      */
     template <class C,class T>
-    inline ROOT::Math::SVector<T,3>& 
+    inline 
+    const ROOT::Math::SVector<T,3>& 
     geo2LA 
     ( const ROOT::Math::LorentzVector<C>& source , 
       ROOT::Math::SVector<T,3>&           dest  ) 
     {
-      dest[0] = source.X () ;
-      dest[1] = source.Y () ;
-      dest[2] = source.Z () ;
+      dest ( 0 ) = source.X () ;
+      dest ( 1 ) = source.Y () ;
+      dest ( 2 ) = source.Z () ;
       return dest ;
     } 
     // ========================================================================
-
-
-    // ========================================================================
-    /** fill  3D-point from Linear Algebra vectgor 
+    /** fill  3D-point from Linear Algebra vector 
      *
      *  @code
      *   
@@ -180,18 +182,19 @@ namespace Gaudi
      *  @date 2006-05-24
      */
     template <class C,class T>
-    inline ROOT::Math::PositionVector3D<C>&
+    inline 
+    const ROOT::Math::PositionVector3D<C>&
     la2geo 
     ( const ROOT::Math::SVector<T,3>&  source , 
       ROOT::Math::PositionVector3D<C>& dest   ) 
     {
-      dest.SetX ( source[0] ) ;      
-      dest.SetY ( source[1] ) ;
-      dest.SetZ ( source[2] ) ;
+      dest.SetX ( source ( 0 ) ) ;      
+      dest.SetY ( source ( 1 ) ) ;
+      dest.SetZ ( source ( 2 ) ) ;
       return dest ;
     } 
     // ========================================================================
-    /** fill  3D-vector from Linear Algebra vectgor 
+    /** fill  3D-vector from Linear Algebra vector 
      *
      *  @code
      *   
@@ -210,14 +213,15 @@ namespace Gaudi
      *  @date 2006-05-24
      */
     template <class C,class T>
-    inline ROOT::Math::DisplacementVector3D<C>&
+    inline 
+    const ROOT::Math::DisplacementVector3D<C>&
     la2geo 
     ( const ROOT::Math::SVector<T,3>&      source , 
       ROOT::Math::DisplacementVector3D<C>& dest   ) 
     {
-      dest.SetX ( source[0] ) ;      
-      dest.SetY ( source[1] ) ;
-      dest.SetZ ( source[2] ) ;
+      dest.SetX ( source ( 0 ) ) ;      
+      dest.SetY ( source ( 1 ) ) ;
+      dest.SetZ ( source ( 2 ) ) ;
       return dest ;
     } 
     // ========================================================================
@@ -240,21 +244,18 @@ namespace Gaudi
      *  @date 2006-05-24
      */
     template <class C,class T>
-    inline ROOT::Math::LorentzVector<C>&  
+    inline 
+    const ROOT::Math::LorentzVector<C>&  
     la2geo 
     ( const ROOT::Math::SVector<T,4>& source , 
       ROOT::Math::LorentzVector<C>&   dest   )  
     {
-      dest.SetPx ( source[0] ) ;
-      dest.SetPy ( source[1] ) ;
-      dest.SetPz ( source[2] ) ;
-      dest.SetE  ( source[3] ) ;
+      dest.SetPx ( source ( 0 ) ) ;
+      dest.SetPy ( source ( 1 ) ) ;
+      dest.SetPz ( source ( 2 ) ) ;
+      dest.SetE  ( source ( 3 ) ) ;
       return dest ;
     }
-    // ========================================================================
-
-
-
     // ========================================================================
     /** construct similarity("chi2") using 3D-vector 
      *
@@ -394,9 +395,6 @@ namespace Gaudi
       const ROOT::Math::LorentzVector<C>&                            delta  ) 
     { return Similarity ( delta , matrix ) ; } 
     // ========================================================================
-
-
-    // ========================================================================
     /** increment  LorentzVector with 4-component linear vector 
      *  
      *  @code 
@@ -416,10 +414,12 @@ namespace Gaudi
      *  @date 2006-05-24
      */
     template <class C, class T>
-    inline ROOT::Math::LorentzVector<C>& 
+    inline 
+    const ROOT::Math::LorentzVector<C>& 
     add 
     ( ROOT::Math::LorentzVector<C>& v1 , const ROOT::Math::SVector<T,4> & v2 ) 
-    { return v1 += ROOT::Math::LorentzVector<C>( v2[0] , v2[1] , v2[2] , v2[3] ) ; }
+    { return v1 += ROOT::Math::LorentzVector<C>
+        ( v2 ( 0 )  , v2 ( 1 )  , v2 ( 2 ) , v2 ( 3 ) ) ; }
     // ========================================================================    
     /** increment the symmetric matrix with "symmetrized" part of other matrix
      * 
@@ -451,8 +451,6 @@ namespace Gaudi
       return matrix ;
     }
     // ========================================================================
-
-    // ========================================================================
     /** Fill Lorentz vector from 3D displacement vector + Mass
      *     
      *  @code
@@ -468,10 +466,12 @@ namespace Gaudi
      *  @date 2007-11-27
      */
     template<class T, class C, class M>
-    inline ROOT::Math::LorentzVector<C>&
+    inline 
+    const ROOT::Math::LorentzVector<C>&
     geo2LA 
-    ( const ROOT::Math::SVector<T, 3>& source , const M mass,
-      ROOT::Math::LorentzVector<C>& dest  ) 
+    ( const ROOT::Math::SVector<T, 3>& source , 
+      const M                          mass   ,
+      ROOT::Math::LorentzVector<C>&    dest   ) 
     {
       // first calculate momentum in carthesian coordinates:
       const double p = 1/fabs(source(2)) ;
@@ -555,9 +555,269 @@ namespace Gaudi
   namespace Math 
   {
     // ========================================================================
-    /** @namespace Gaudi::Math::Operators
+    /** @namespace Gaudi::Math::Operators LHCbMath/MatrixTransforms.h
+     *
      *  The helper namespace which contains inline operators for 
-     *  various objects 
+     *  various objects from the world of  "Geometry&Kinematics" 
+     *  and the object from the world of Linear Algebra 
+     *
+     *  The existence of thes e operator <b>drastically simplifies</b> 
+     *  the code, dealing with kinematical and/or topolofical 
+     *  calculations, in particular the implementation of various 
+     *  kinematical fitters
+     *
+     *  To make these operators vizible for the real code one 
+     *  needs to use <c>using</c> directive, e.g. 
+     *
+     *  @code 
+     *
+     *   StatusCode myFunction ( ... ) 
+     *   {
+     *       // get access to the useful operators:
+     *       using namespace Gaudi::Math::Operators ; // NB! 
+     *
+     *        ... use the operators ... 
+     *   } 
+     *
+     *  @endcode 
+     *
+     *  <table>
+     *
+     *  <tr>
+     *     <td align="center"> <b> The First Operand  Type </b> </td> 
+     *     <td align="center"> <b> The Operator            </b> </td>
+     *     <td align="center"> <b> The Second Operand Type </b> </td> 
+     *     <td align="center"> <b> The Result Type         </b> </td> 
+     *  </tr>
+     *
+     *  <tr>
+     *     <td>ROOT::Math::PositionVector3D<C>  </td>
+     *     <td align="center"><b>+</b></td>
+     *     <td>ROOT::Math::SVector&<T,3>        </td>
+     *     <td>ROOT::Math::PositionVector3D<C>  </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::PositionVector3D<C>  </td>
+     *     <td align="center"><b>+</b></td>
+     *     <td>ROOT::Math::VecExpr<B,T,3>;      </td>
+     *     <td>ROOT::Math::PositionVector3D<C>  </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::PositionVector3D<C> </td>
+     *     <td align="center"><b>-</b></td>
+     *     <td>ROOT::Math::SVector<T,3>        </td>
+     *     <td>ROOT::Math::PositionVector3D<C> </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::PositionVector3D<C> </td>
+     *     <td align="center"><b>-</b></td>
+     *     <td>ROOT::Math::VecExpr<B,T,3>      </td>
+     *     <td>ROOT::Math::PositionVector3D<C> </td>
+     *  </tr> 
+     *
+     *  <tr>
+     *     <td>ROOT::Math::DisplacementVector3D<C> </td>
+     *     <td align="center"><b>+</b></td>
+     *     <td>ROOT::Math::SVector<T,3>            </td>
+     *     <td>ROOT::Math::DisplacementVector3D<C> </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::DisplacementVector3D<C> </td>
+     *     <td align="center"><b>+</b></td>
+     *     <td>ROOT::Math::VecExpr<B,T,3>         </td>
+     *     <td>ROOT::Math::DisplacementVector3D<C></td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::DisplacementVector3D<C></td>
+     *     <td align="center"><b>-</b></td>
+     *     <td>ROOT::Math::SVector<T,3>       </td>
+     *     <td>ROOT::Math::DisplacementVector3D<C></td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::DisplacementVector3D<C></td>
+     *     <td align="center"><b>-</b></td>
+     *     <td>ROOT::Math::VecExpr<B,T,3>         </td>
+     *     <td>ROOT::Math::DisplacementVector3D<C></td>
+     *  </tr> 
+     *
+     *  <tr>
+     *     <td>ROOT::Math::LorentzVector<C> </td>
+     *     <td align="center"><b>+</b></td>
+     *     <td>ROOT::Math::SVector<T,4>     </td>
+     *     <td>ROOT::Math::LorentzVector<C> </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::LorentzVector<C> </td>
+     *     <td align="center"><b>+</b></td>
+     *     <td>ROOT::Math::VecExpr<B,T,4>   </td>
+     *     <td>ROOT::Math::LorentzVector<C> </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::LorentzVector<C> </td>
+     *     <td align="center"><b>-</b></td>
+     *     <td>ROOT::Math::SVector<T,4>     </td>
+     *     <td>ROOT::Math::LorentzVector<C> </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::LorentzVector<C> </td>
+     *     <td align="center"><b>-</b></td>
+     *     <td>ROOT::Math::VecExpr<B,T,4>   </td>
+     *     <td>ROOT::Math::LorentzVector<C> </td>
+     *  </tr> 
+     *
+     *  <tr>
+     *     <td>ROOT::Math::SVector<T,3>          </td>
+     *     <td align="center"><b>+</b></td>
+     *     <td>ROOT::Math::PositionVector3D<C>   </td>
+     *     <td>ROOT::Math::SVector<T,3>          </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::VecExpr<B,T,3>        </td>
+     *     <td align="center"><b>+</b></td>
+     *     <td>ROOT::Math::PositionVector3D<C>   </td>
+     *     <td>ROOT::Math::SVector<T,3>          </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::SVector<T,3>          </td>
+     *     <td align="center"><b>-</b></td>
+     *     <td>ROOT::Math::PositionVector3D<C>   </td>
+     *     <td>ROOT::Math::SVector<T,3>          </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::VecExpr<B,T,3>        </td>
+     *     <td align="center"><b>-</b></td>
+     *     <td>ROOT::Math::PositionVector3D<C>   </td>
+     *     <td>ROOT::Math::SVector<T,3>          </td>
+     *  </tr> 
+     *
+     *
+     *  <tr>
+     *     <td>ROOT::Math::SVector<T,3>           </td>
+     *     <td align="center"><b>+</b></td>
+     *     <td>ROOT::Math::DisplacementVector3D<C></td>
+     *     <td>ROOT::Math::SVector<T,3>           </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::VecExpr<B,T,3>         </td>
+     *     <td align="center"><b>+</b></td>
+     *     <td>ROOT::Math::DisplacementVector3D<C></td>
+     *     <td>ROOT::Math::SVector<T,3>           </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::SVector<T,3>           </td>
+     *     <td align="center"><b>-</b></td>
+     *     <td>ROOT::Math::DisplacementVector3D<C></td>
+     *     <td>ROOT::Math::SVector<T,3>           </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::VecExpr<B,T,3>         </td>
+     *     <td align="center"><b>-</b></td>
+     *     <td>ROOT::Math::DisplacementVector3D<C></td>
+     *     <td>ROOT::Math::SVector<T,3>           </td>
+     *  </tr> 
+     *
+     *  <tr>
+     *     <td>ROOT::Math::SVector<T,4>       </td>
+     *     <td align="center"><b>+</b></td>
+     *     <td>ROOT::Math::LorentzVector<C>   </td>
+     *     <td>ROOT::Math::SVector<T,4>       </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::VecExpr<B,T,4>     </td>
+     *     <td align="center"><b>+</b></td>
+     *     <td>ROOT::Math::LorentzVector<C>   </td>
+     *     <td>ROOT::Math::SVector<T,4>       </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::SVector<T,4>       </td>
+     *     <td align="center"><b>-</b></td>
+     *     <td>ROOT::Math::LorentzVector<C>   </td>
+     *     <td>ROOT::Math::SVector<T,4>       </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::VecExpr<B,T,4>     </td>
+     *     <td align="center"><b>-</b></td>
+     *     <td>ROOT::Math::LorentzVector<C>   </td>
+     *     <td>ROOT::Math::SVector<T,4>       </td>
+     *  </tr> 
+     *
+     *  <tr>
+     *     <td>ROOT::Math::SMatrix<T,D,3,R>    </td>
+     *     <td align="center"><b>*</b></td>
+     *     <td>ROOT::Math::PositionVector3D<C> </td>
+     *     <td>ROOT::Math::SVector<T,D>        </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::Expr<B,T,D,3,R>     </td>
+     *     <td align="center"><b>*</b></td>
+     *     <td>ROOT::Math::PositionVector3D<C> </td>
+     *     <td>ROOT::Math::SVector<T,D>        </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::PositionVector3D<C> </td>
+     *     <td align="center"><b>*</b></td>
+     *     <td>ROOT::Math::SMatrix<T,3,D,R>    </td>
+     *     <td>ROOT::Math::SVector<T,D>        </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::PositionVector3D<C> </td>
+     *     <td align="center"><b>*</b></td>
+     *     <td>ROOT::Math::Expr<B,T,3,D,R>     </td>
+     *     <td>ROOT::Math::SVector<T,D>        </td>
+     *  </tr> 
+     *
+     *  <tr>
+     *     <td>ROOT::Math::SMatrix<T,D,3,R>        </td>
+     *     <td align="center"><b>*</b></td>
+     *     <td>ROOT::Math::DisplacementVector3D<C> </td>
+     *     <td>ROOT::Math::SVector<T,D>            </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::Expr<B,T,D,3,R>         </td>
+     *     <td align="center"><b>*</b></td>
+     *     <td>ROOT::Math::DisplacementVector3D<C> </td>
+     *     <td>ROOT::Math::SVector<T,D>            </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::DisplacementVector3D<C> </td>
+     *     <td align="center"><b>*</b></td>
+     *     <td>ROOT::Math::SMatrix<T,3,D,R>        </td>
+     *     <td>ROOT::Math::SVector<T,D>            </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::DisplacementVector3D<C> </td>
+     *     <td align="center"><b>*</b></td>
+     *     <td>ROOT::Math::Expr<B,T,3,D,R>         </td>
+     *     <td>ROOT::Math::SVector<T,D>            </td>
+     *  </tr> 
+     *
+     *  <tr>
+     *     <td>ROOT::Math::SMatrix<T,D,4,R>        </td>
+     *     <td align="center"><b>*</b></td>
+     *     <td>ROOT::Math::LorentzVector<C>        </td>
+     *     <td>ROOT::Math::SVector<T,D>            </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::Expr<B,T,D,4,R>         </td>
+     *     <td align="center"><b>*</b></td>
+     *     <td>ROOT::Math::LorentzVector<C>        </td>
+     *     <td>ROOT::Math::SVector<T,D>            </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::LorentzVector<C>        </td>
+     *     <td align="center"><b>*</b></td>
+     *     <td>ROOT::Math::SMatrix<T,4,D,R>        </td>
+     *     <td>ROOT::Math::SVector<T,D>            </td>
+     *  </tr> 
+     *  <tr>
+     *     <td>ROOT::Math::LorentzVector<C>        </td>
+     *     <td align="center"><b>*</b></td>
+     *     <td>ROOT::Math::Expr<B,T,4,D,R>         </td>
+     *     <td>ROOT::Math::SVector<T,D>            </td>
+     *  </tr> 
+     *
+     *   </table>
+     *
      *  @author Vanya BELYAEV ibelyaev@itep.ru
      *  @date 2008-02-14
      */
@@ -579,8 +839,8 @@ namespace Gaudi
        *  @param  v2 the linear algebra vector 
        *  @return the effective position vector 
        *
-       *  @author Vanya BELYAEV ibelyaev@itep.ru
-       *  @date   2008-02-14
+       *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+       *  @date   2008-03-05
        */
       template <class C, class T>
       inline 
@@ -590,9 +850,23 @@ namespace Gaudi
         const ROOT::Math::SVector<T,3>&        v2 )
       {
         ROOT::Math::PositionVector3D<C> result  ;
-        result.SetXYZ(  p1 . X () + v2 [0] , 
-                        p1 . Y () + v2 [1] ,
-                        p1 . Z () + v2 [2] ) ;
+        result.SetXYZ(  p1 . X () + v2 ( 0 ) , 
+                        p1 . Y () + v2 ( 1 ) ,
+                        p1 . Z () + v2 ( 2 ) ) ;
+        return result ;
+      }
+      // ======================================================================
+      template <class C, class B, class T>
+      inline 
+      ROOT::Math::PositionVector3D<C>
+      operator+ 
+      ( const ROOT::Math::PositionVector3D<C>& p1 ,
+        const ROOT::Math::VecExpr<B,T,3>&      v2 )
+      {
+        ROOT::Math::PositionVector3D<C> result  ;
+        result.SetXYZ(  p1 . X () + v2 ( 0 ) , 
+                        p1 . Y () + v2 ( 1 ) ,
+                        p1 . Z () + v2 ( 2 ) ) ;
         return result ;
       }
       // ========================================================================
@@ -622,9 +896,23 @@ namespace Gaudi
         const ROOT::Math::SVector<T,3>&            v2 )
       {
         ROOT::Math::PositionVector3D<C> result  ;
-        result.SetXYZ(  p1 . X () + v2 [0] , 
-                        p1 . Y () + v2 [1] ,
-                        p1 . Z () + v2 [2] ) ;
+        result.SetXYZ(  p1 . X () + v2 ( 0 ) , 
+                        p1 . Y () + v2 ( 1 ) ,
+                        p1 . Z () + v2 ( 2 ) ) ;
+        return result ;
+      }
+      // ======================================================================
+      template <class C, class B, class T>
+      inline 
+      ROOT::Math::DisplacementVector3D<C>
+      operator+ 
+      ( const ROOT::Math::DisplacementVector3D<C>& p1 ,
+        const ROOT::Math::VecExpr<B,T,3>&          v2 )
+      {
+        ROOT::Math::PositionVector3D<C> result  ;
+        result.SetXYZ(  p1 . X () + v2 ( 0 ) , 
+                        p1 . Y () + v2 ( 1 ) ,
+                        p1 . Z () + v2 ( 2 ) ) ;
         return result ;
       }
       // ======================================================================
@@ -655,10 +943,26 @@ namespace Gaudi
       {
         ROOT::Math::LorentzVector<C> result  ;
         result.SetXYZT 
-          (  p1 . Px () + v2 [0] , 
-             p1 . Py () + v2 [1] ,
-             p1 . Pz () + v2 [2] ,
-             p1 . E  () + v2 [3] ) ;
+          (  p1 . Px () + v2 ( 0 ) , 
+             p1 . Py () + v2 ( 1 ) ,
+             p1 . Pz () + v2 ( 2 ) ,
+             p1 . E  () + v2 ( 3 ) ) ;
+        return result ;
+      }
+      // ======================================================================
+      template <class C, class B , class T>
+      inline 
+      ROOT::Math::LorentzVector<C>
+      operator+ 
+      ( const ROOT::Math::LorentzVector<C>& p1 ,
+        const ROOT::Math::VecExpr<B,T,4>&   v2 )
+      {
+        ROOT::Math::LorentzVector<C> result  ;
+        result.SetXYZT 
+          (  p1 . Px () + v2 ( 0 ) , 
+             p1 . Py () + v2 ( 1 ) ,
+             p1 . Pz () + v2 ( 2 ) ,
+             p1 . E  () + v2 ( 3 ) ) ;
         return result ;
       }
       // ======================================================================
@@ -688,9 +992,23 @@ namespace Gaudi
         const ROOT::Math::PositionVector3D<C>& p1 )
       {
         ROOT::Math::SVector<T,3> result ( v2 ) ;
-        result [0] += p1 . X () ;
-        result [1] += p1 . Y () ;
-        result [2] += p1 . Z () ;
+        result ( 0 ) += p1 . X () ;
+        result ( 1 ) += p1 . Y () ;
+        result ( 2 ) += p1 . Z () ;
+        return result ;
+      }
+      // ======================================================================
+      template <class C, class B, class T>
+      inline 
+      ROOT::Math::SVector<T,3>
+      operator+ 
+      ( const ROOT::Math::VecExpr<B,T,3>&      v2 ,
+        const ROOT::Math::PositionVector3D<C>& p1 )
+      {
+        ROOT::Math::SVector<T,3> result = v2 ;
+        result ( 0 ) += p1 . X () ;
+        result ( 1 ) += p1 . Y () ;
+        result ( 2 ) += p1 . Z () ;
         return result ;
       }
       // ======================================================================
@@ -720,9 +1038,23 @@ namespace Gaudi
         const ROOT::Math::DisplacementVector3D<C>& p1 )
       {
         ROOT::Math::SVector<T,3> result ( v2 ) ;
-        result [0] += p1 . X () ;
-        result [1] += p1 . Y () ;
-        result [2] += p1 . Z () ;
+        result ( 0 ) += p1 . X () ;
+        result ( 1 ) += p1 . Y () ;
+        result ( 2 ) += p1 . Z () ;
+        return result ;
+      }
+      // ======================================================================
+      template <class C, class B, class T>
+      inline 
+      ROOT::Math::SVector<T,3>
+      operator+ 
+      ( const ROOT::Math::VecExpr<B,T,3>&          v2 ,
+        const ROOT::Math::DisplacementVector3D<C>& p1 )
+      {
+        ROOT::Math::SVector<T,3> result = v2 ;
+        result ( 0 ) += p1 . X () ;
+        result ( 1 ) += p1 . Y () ;
+        result ( 2 ) += p1 . Z () ;
         return result ;
       }
       // ======================================================================
@@ -749,15 +1081,533 @@ namespace Gaudi
       inline 
       ROOT::Math::SVector<T,4>
       operator+ 
-      ( const ROOT::Math::SVector<T,3>&     v2 ,
+      ( const ROOT::Math::SVector<T,4>&     v2 ,
         const ROOT::Math::LorentzVector<C>& p1 )
       {
         ROOT::Math::SVector<T,4> result ( v2 ) ;
-        result [0] += p1 . Px () ;
-        result [1] += p1 . Py () ;
-        result [2] += p1 . Pz () ;
-        result [3] += p1 . E  () ;
+        result ( 0 ) += p1 . Px () ;
+        result ( 1 ) += p1 . Py () ;
+        result ( 2 ) += p1 . Pz () ;
+        result ( 3 ) += p1 . E  () ;
         return result ;
+      }
+      // ======================================================================
+      template <class C, class B, class T>
+      inline 
+      ROOT::Math::SVector<T,4>
+      operator+ 
+      ( const ROOT::Math::VecExpr<B,T,4>&   v2 ,
+        const ROOT::Math::LorentzVector<C>& p1 )
+      {
+        ROOT::Math::SVector<T,4> result = v2  ;
+        result ( 0 ) += p1 . Px () ;
+        result ( 1 ) += p1 . Py () ;
+        result ( 2 ) += p1 . Pz () ;
+        result ( 3 ) += p1 . E  () ;
+        return result ;
+      }
+      // ======================================================================
+      /** subtraction of 3D-vector and the linear algebra vector 
+       *
+       *  @code
+       * 
+       *  const Gaudi::XYZPoint& p1 = ... ;
+       *  const Gaudi::Vector3&  v2 = ... ;
+       *
+       *  Gaudi::XYZPoint p = p1 - v2 ; 
+       *
+       *  @endcode 
+       *
+       *  @param  p1 the position vector (point) 
+       *  @param  v2 the linear algebra vector 
+       *  @return the effective position vector 
+       *
+       *  @author Vanya BELYAEV ibelyaev@itep.ru
+       *  @date   2008-02-14
+       */
+      template <class C, class T>
+      inline 
+      ROOT::Math::PositionVector3D<C>
+      operator- 
+      ( const ROOT::Math::PositionVector3D<C>& p1 ,
+        const ROOT::Math::SVector<T,3>&        v2 )
+      {
+        ROOT::Math::PositionVector3D<C> result  ;
+        result.SetXYZ
+          (  p1 . X () - v2 ( 0 ) , 
+             p1 . Y () - v2 ( 1 ) ,
+             p1 . Z () - v2 ( 2 ) ) ;
+        return result ;
+      }
+     // ======================================================================
+      template <class C, class B , class T>
+      inline 
+      ROOT::Math::PositionVector3D<C>
+      operator- 
+      ( const ROOT::Math::PositionVector3D<C>& p1 ,
+        const ROOT::Math::VecExpr<B,T,3>&      v2 )
+      {
+        ROOT::Math::PositionVector3D<C> result  ;
+        result.SetXYZ
+          (  p1 . X () - v2 ( 0 ) , 
+             p1 . Y () - v2 ( 1 ) ,
+             p1 . Z () - v2 ( 2 ) ) ;
+        return result ;
+      }
+      
+      // ========================================================================
+      /** subtraction of 3D-vector and the linear algebra vector 
+       *
+       *  @code
+       * 
+       *  const Gaudi::XYZVector& p1 = ... ;
+       *  const Gaudi::Vector3&   v2 = ... ;
+       *
+       *  Gaudi::XYZVector p = p1 - v2 ; 
+       *
+       *  @endcode 
+       *
+       *  @param  p1 the displacement vector  
+       *  @param  v2 the linear algebra vector 
+       *  @return the effective displacement vector 
+       *
+       *  @author Vanya BELYAEV ibelyaev@itep.ru
+       *  @date   2008-02-14
+       */
+      template <class C, class T>
+      inline 
+      ROOT::Math::DisplacementVector3D<C>
+      operator- 
+      ( const ROOT::Math::DisplacementVector3D<C>& p1 ,
+        const ROOT::Math::SVector<T,3>&            v2 )
+      {
+        ROOT::Math::PositionVector3D<C> result  ;
+        result.SetXYZ
+          (  p1 . X () - v2 ( 0 ) , 
+             p1 . Y () - v2 ( 1 ) ,
+             p1 . Z () - v2 ( 2 ) ) ;
+        return result ;
+      }
+      // ======================================================================
+      template <class C, class B, class T>
+      inline 
+      ROOT::Math::DisplacementVector3D<C>
+      operator- 
+      ( const ROOT::Math::DisplacementVector3D<C>& p1 ,
+        const ROOT::Math::VecExpr<B,T,3>&          v2 )
+      {
+        ROOT::Math::PositionVector3D<C> result  ;
+        result.SetXYZ
+          (  p1 . X () - v2 ( 0 ) , 
+             p1 . Y () - v2 ( 1 ) ,
+             p1 . Z () - v2 ( 2 ) ) ;
+        return result ;
+      }      
+      // ======================================================================
+      /** subtraction of Lorentz vector and the linear algebra vector 
+       *
+       *  @code
+       * 
+       *  const Gaudi::LorentzVector& p1 = ... ;
+       *  const Gaudi::Vector4&       v2 = ... ;
+       *
+       *  Gaudi::LorentzVector p = p1 - v2 ; 
+       *
+       *  @endcode 
+       *
+       *  @param  p1 Lorentz vector  
+       *  @param  v2 the linear algebra vector 
+       *  @return the effective Lorentz vector 
+       *
+       *  @author Vanya BELYAEV ibelyaev@itep.ru
+       *  @date   2008-02-14
+       */
+      template <class C, class T>
+      inline 
+      ROOT::Math::LorentzVector<C>
+      operator- 
+      ( const ROOT::Math::LorentzVector<C>& p1 ,
+        const ROOT::Math::SVector<T,4>&     v2 )
+      {
+        ROOT::Math::LorentzVector<C> result  ;
+        result.SetXYZT 
+          (  p1 . Px () - v2 ( 0 ) , 
+             p1 . Py () - v2 ( 1 ) ,
+             p1 . Pz () - v2 ( 2 ) ,
+             p1 . E  () - v2 ( 3 ) ) ;
+        return result ;
+      }
+      // ======================================================================
+      template <class C, class B, class T>
+      inline 
+      ROOT::Math::LorentzVector<C>
+      operator- 
+      ( const ROOT::Math::LorentzVector<C>& p1 ,
+        const ROOT::Math::VecExpr<B,T,4>&   v2 )
+      {
+        ROOT::Math::LorentzVector<C> result  ;
+        result.SetXYZT 
+          (  p1 . Px () - v2 ( 0 ) , 
+             p1 . Py () - v2 ( 1 ) ,
+             p1 . Pz () - v2 ( 2 ) ,
+             p1 . E  () - v2 ( 3 ) ) ;
+        return result ;
+      }
+      // ======================================================================      
+      /** subtract the Lorentz Vector from the Linear Algebra -vector 
+       *
+       *  @code
+       * 
+       *   const Gaudi::Vector4&       vct1 = ... ;
+       *   const Gaudi::LorentzVector& vct2 = ... ;
+       *  
+       *   std::cout << " Delta is " << vct1-vct2 << std::endl ;
+       *
+       *  @endcode 
+       *
+       *  @author Vanya BEYAEV Ivan.Belyaev@nikhef.nl
+       *  @date 2008-03-03
+       */
+      template <class C, class T> 
+      inline 
+      ROOT::Math::SVector<T,4>
+      operator- 
+      ( const ROOT::Math::SVector<T,4>&     v1 , 
+        const ROOT::Math::LorentzVector<C>& v2 ) 
+      {
+        ROOT::Math::SVector<T,4> result = v1 ;
+        result ( 0 ) -= v2 . Px () ;
+        result ( 1 ) -= v2 . Py () ;
+        result ( 2 ) -= v2 . Pz () ;
+        result ( 3 ) -= v2 . E  () ;
+        return result ;
+      }
+      // ======================================================================
+      template <class C, class B, class T> 
+      inline 
+      ROOT::Math::SVector<T,4>
+      operator- 
+      ( const ROOT::Math::VecExpr<B,T,4>&   v1 , 
+        const ROOT::Math::LorentzVector<C>& v2 ) 
+      {
+        ROOT::Math::SVector<T,4> result = v1 ;
+        result ( 0 ) -= v2 . Px () ;
+        result ( 1 ) -= v2 . Py () ;
+        result ( 2 ) -= v2 . Pz () ;
+        result ( 3 ) -= v2 . E  () ;
+        return result ;
+      }
+      // ======================================================================      
+      /** subtract the 3D Vector from the Linear Algebra -vector 
+       *
+       *  @code
+       * 
+       *   const Gaudi::Vector3&  vct1 = ... ;
+       *   const Gaudi::XYZPoint& vct2 = ... ;
+       *  
+       *   std::cout << " Delta is " << vct1-vct2 << std::endl ;
+       *
+       *  @endcode 
+       *
+       *  @author Vanya BEYAEV Ivan.Belyaev@nikhef.nl
+       *  @date 2008-03-03
+       */
+      template <class C, class T> 
+      inline 
+      ROOT::Math::SVector<T,3>
+      operator- 
+      ( const ROOT::Math::SVector<T,3>&        v1 , 
+        const ROOT::Math::PositionVector3D<C>& v2 ) 
+      {
+        ROOT::Math::SVector<T,3> result = v1 ;
+        result ( 0 ) -= v2 . X () ;
+        result ( 1 ) -= v2 . Y () ;
+        result ( 2 ) -= v2 . Z () ;
+        return result ;
+      }
+      // ======================================================================
+      template <class C, class B, class T> 
+      inline 
+      ROOT::Math::SVector<T,3>
+      operator- 
+      ( const ROOT::Math::VecExpr<B,T,3>&      v1 , 
+        const ROOT::Math::PositionVector3D<C>& v2 ) 
+      {
+        ROOT::Math::SVector<T,3> result = v1 ;
+        result ( 0 ) -= v2 . X () ;
+        result ( 1 ) -= v2 . Y () ;
+        result ( 2 ) -= v2 . Z () ;
+        return result ;
+      }
+      // ======================================================================      
+      /** subtract the 3D Vector from the Linear Algebra -vector 
+       *    
+       *  @code
+       * 
+       *   const Gaudi::Vector3&   vct1 = ... ;
+       *   const Gaudi::XYZVector& vct2 = ... ;
+       *  
+       *   std::cout << " Delta is " << vct1-vct2 << std::endl ;
+       *
+       *  @endcode 
+       *
+       *  @author Vanya BEYAEV Ivan.Belyaev@nikhef.nl
+       *  @date 2008-03-03
+       */
+      template <class C, class T> 
+      inline 
+      ROOT::Math::SVector<T,3>
+      operator- 
+      ( const ROOT::Math::SVector<T,3>&            v1 , 
+        const ROOT::Math::DisplacementVector3D<C>& v2 ) 
+      {
+        ROOT::Math::SVector<T,3> result = v1 ;
+        result ( 0 ) -= v2 . X () ;
+        result ( 1 ) -= v2 . Y () ;
+        result ( 2 ) -= v2 . Z () ;
+        return result ;
+      }
+      // ======================================================================
+      template <class C, class B, class T> 
+      inline 
+      ROOT::Math::SVector<T,3>
+      operator- 
+      ( const ROOT::Math::VecExpr<B,T,3>&          v1 , 
+        const ROOT::Math::DisplacementVector3D<C>& v2 ) 
+      {
+        ROOT::Math::SVector<T,3> result = v1 ;
+        result ( 0 ) -= v2 . X () ;
+        result ( 1 ) -= v2 . Y () ;
+        result ( 2 ) -= v2 . Z () ;
+        return result ;
+      }
+      // ======================================================================      
+      /** multiply the matrix and the Lorenz vector 
+       *
+       *  @code 
+       *  
+       *  const Gaudi::SymMatrix4x4  mtrx  = ... ;
+       *  const Gaudi::LorentzVector vect  = ... ;
+       *
+       *  const Gaudi::Vector4 resut = mrtx * vect ;
+       *
+       *  @endcode 
+       *
+       *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+       *  @daet 2008-03-03
+       */
+      template <class T, class C, class R, unsigned int D>
+      inline 
+      ROOT::Math::SVector<T,D>
+      operator* 
+      ( const ROOT::Math::SMatrix<T,D,4,R>& mrtx , 
+        const ROOT::Math::LorentzVector<C>& vect ) 
+      {
+        const ROOT::Math::SVector<T,4> vct 
+          ( vect . Px () , vect . Py () , vect . Pz () , vect.E () ) ;
+        return mrtx * vct ;
+      } 
+      // ======================================================================
+      template <class T, class C, class B, class R, unsigned int D>
+      inline 
+      ROOT::Math::SVector<T,D>
+      operator* 
+      ( const ROOT::Math::Expr<B,T,D,4,R>&  mtrx , 
+        const ROOT::Math::LorentzVector<C>& vect ) 
+      {
+        const ROOT::Math::SVector<T,4> vct 
+          ( vect . Px () , vect . Py () , vect . Pz () , vect.E () ) ;
+        return mtrx * vct ;
+      }
+      // ======================================================================      
+      /** multiply the matrix and the Lorenz vector 
+       *
+       *  @code 
+       *  
+       *  const Gaudi::Matrix4x5  mtrx  = ... ;
+       *  const Gaudi::LorentzVector vect  = ... ;
+       *
+       *  const Gaudi::Vector5 result = vect * mrtx ;
+       *
+       *  @endcode 
+       *
+       *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+       *  @daet 2008-03-03
+       */
+      template <class T, class C, class R, unsigned int D>
+      inline 
+      ROOT::Math::SVector<T,D>
+      operator* 
+      ( const ROOT::Math::LorentzVector<C>& vect , 
+        const ROOT::Math::SMatrix<T,4,D,R>& mtrx )
+      {
+        const ROOT::Math::SVector<T,4> vct 
+          ( vect . Px () , vect . Py () , vect . Pz () , vect.E () ) ;
+        return vct * mtrx ;
+      }
+      // ======================================================================
+      template <class T, class C, class B, class R, unsigned int D>
+      inline 
+      ROOT::Math::SVector<T,D>
+      operator* 
+      ( const ROOT::Math::LorentzVector<C>& vect , 
+        const ROOT::Math::Expr<B,T,4,D,R>&  mtrx )
+      {
+        const ROOT::Math::SVector<T,4> vct 
+          ( vect . Px () , vect . Py () , vect . Pz () , vect.E () ) ;
+        return vct * mtrx ;
+      }
+      // ======================================================================      
+      /** multiply the matrix and 3D-vector 
+       *
+       *  @code 
+       *  
+       *  const Gaudi::SymMatrix3x3  mtrx  = ... ;
+       *  const Gaudi::XYZVector     vect  = ... ;
+       *
+       *  const Gaudi::Vector3 resut = mrtx * vect ;
+       *
+       *  @endcode 
+       *
+       *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+       *  @daet 2008-03-03
+       */
+      template <class T, class C, class R, unsigned int D>
+      inline 
+      ROOT::Math::SVector<T,D>
+      operator* 
+      ( const ROOT::Math::SMatrix<T,D,3,R>&        mtrx , 
+        const ROOT::Math::DisplacementVector3D<C>& vect ) 
+      {
+        const ROOT::Math::SVector<T,3> vct 
+          ( vect . X () , vect . Y () , vect . Z () ) ;
+        return mtrx * vct ;
+      } 
+      // ======================================================================
+      template <class T, class C, class B, class R, unsigned int D>
+      inline 
+      ROOT::Math::SVector<T,D>
+      operator* 
+      ( const ROOT::Math::Expr<B,T,D,3,R>&         mtrx , 
+        const ROOT::Math::DisplacementVector3D<C>& vect ) 
+      {
+        const ROOT::Math::SVector<T,3> vct 
+          ( vect . X () , vect . Y () , vect . Z () ) ;
+        return mtrx * vct ;
+      } 
+      // ======================================================================      
+      /** multiply the matrix and the 3D-vector 
+       *
+       *  @code 
+       *  
+       *  const Gaudi::SymMatrix3x3  mtrx  = ... ;
+       *  const Gaudi::XYZVector vect  = ... ;
+       *
+       *  const Gaudi::Vector3 resut = vect * mtrx ;
+       *
+       *  @endcode 
+       *
+       *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+       *  @daet 2008-03-03
+       */
+      template <class T, class C, class R, unsigned int D>
+      inline 
+      ROOT::Math::SVector<T,D>
+      operator* 
+      ( const ROOT::Math::DisplacementVector3D<C>& vect , 
+        const ROOT::Math::SMatrix<T,3,D,R>&        mtrx )
+      {
+        const ROOT::Math::SVector<T,3> vct 
+          ( vect . X () , vect . Y () , vect . Z () ) ;
+        return vct * mtrx ;
+      }
+      // ======================================================================      
+      template <class T, class C, class B, class R, unsigned int D>
+      inline 
+      ROOT::Math::SVector<T,D>
+      operator* 
+      ( const ROOT::Math::DisplacementVector3D<C>& vect , 
+        const ROOT::Math::Expr<B,T,3,D,R>&         mtrx )
+      {
+        const ROOT::Math::SVector<T,3> vct 
+          ( vect . X () , vect . Y () , vect . Z () ) ;
+        return vct * mtrx ;
+      }
+      // ======================================================================      
+      /** multiply the matrix and 3D-vector 
+       *
+       *  @code 
+       *  
+       *  const Gaudi::Matrix3x3     mtrx  = ... ;
+       *  const Gaudi::XYZPoint      vect  = ... ;
+       *
+       *  const Gaudi::Vector3 result = mrtx * vect ;
+       *
+       *  @endcode 
+       *
+       *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+       *  @daet 2008-03-03
+       */
+      template <class T, class C, class R, unsigned int D>
+      inline 
+      ROOT::Math::SVector<T,D>
+      operator* 
+      ( const ROOT::Math::SMatrix<T,D,3,R>&    mtrx , 
+        const ROOT::Math::PositionVector3D<C>& vect ) 
+      {
+        const ROOT::Math::SVector<T,3> vct 
+          ( vect . X () , vect . Y () , vect . Z () ) ;
+        return mtrx * vct ;
+      } 
+      // ======================================================================      
+      template <class T, class C, class B, class R, unsigned int D>
+      inline 
+      ROOT::Math::SVector<T,D>
+      operator* 
+      ( const ROOT::Math::Expr<B,T,D,3,R>&     mtrx , 
+        const ROOT::Math::PositionVector3D<C>& vect ) 
+      {
+        const ROOT::Math::SVector<T,3> vct 
+          ( vect . X () , vect . Y () , vect . X () ) ;
+        return mtrx * vct ;
+      } 
+      // ======================================================================      
+      /** multiply the matrix and the 3D-vector 
+       *
+       *  @code 
+       *  
+       *  const Gaudi::SymMatrix3x3  mtrx  = ... ;
+       *  const Gaudi::XYZPoint vect  = ... ;
+       *
+       *  const Gaudi::Vector3 resut = vect * mtrx ;
+       *
+       *  @endcode 
+       *
+       *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+       *  @daet 2008-03-03
+       */
+      template <class T, class C, class R, unsigned int D>
+      inline 
+      ROOT::Math::SVector<T,D>
+      operator* 
+      ( const ROOT::Math::PositionVector3D<C>& vect , 
+        const ROOT::Math::SMatrix<T,3,D,R>&    mtrx )
+      {
+        const ROOT::Math::SVector<T,3> vct 
+          ( vect . X () , vect . Y () , vect . Z () ) ;
+        return vct * mtrx ;
+      }
+      // ======================================================================      
+      template <class T, class C, class B, class R, unsigned int D>
+      inline 
+      ROOT::Math::SVector<T,D>
+      operator* 
+      ( const ROOT::Math::PositionVector3D<C>& vect , 
+        const ROOT::Math::Expr<B,T,3,D,R>&     mtrx )
+      {
+        const ROOT::Math::SVector<T,3> vct 
+          ( vect . X () , vect . Y () , vect . Z () ) ;
+        return vct * mtrx ;
       }
       // ======================================================================
     } // end of namespace Gaudi::Math::OPerators

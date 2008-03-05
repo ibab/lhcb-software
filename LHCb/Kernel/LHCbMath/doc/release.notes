@@ -6,6 +6,15 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-03-05 - Vanya BELYAEV
+  
+ - LHCbMath/MatrixTransforms.h
+    
+   Add many new operators into namespace Gaudi::Math::Operators 
+   The full list is availabel through the doxyen documentation of 
+   namespace Gaudi::Math::Operators. These operators  are really very
+   helpful and useful for coding of the kinamtical fitters.  
+
 !========================= LHCbMath v2r6 2008-02-24 ==========================
 
 ! 2008-02-24 - Vanya BELYAEV
