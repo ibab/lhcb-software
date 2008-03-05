@@ -86,8 +86,8 @@ use LoKiMC                v7r1   Phys    # Ivan Belyaev
 use LoKiNumbers           v7r2   Phys    # Ivan Belyaev
 use LoKiPhys              v7r1   Phys    # Ivan Belyaev
 use LoKiPhysMC            v7r0   Phys    # Ivan Belyaev
-use MDF                   v3r4   DAQ     # Markus Frank
-use MDF_ROOT              v1r1   DAQ     # Markus Frank
+use MDF                   v3r5   DAQ     # Markus Frank
+use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use Tell1Kernel           v1r1   DAQ     # Tomasz Szumlak
 use PatKernel             v2r0   Tf      # Stephanie Hansmann-Menzemer
 use RichRecBase           v3r11  Rich    # Chris Jones

@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r4>2008-03-04 LHCbSys v23r4</A></H1><PRE>
+</PRE><H1><A NAME=v23r4>2008-03-05 LHCbSys v23r4</A></H1><PRE>
 This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
 
 - Packages removed: MDF_DCAP - Functionality now in MDF_ROOT
@@ -20,7 +20,7 @@ This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
     VeloEvent v16r3, CaloUtils v7r8, CondDBUI v2r8, DDDB v1r4,
     DetCond v11r9, DaVinciKernel v6r11, DaVinciMCKernel v2r6, LHCbAlgs v2r15,
     LoKiAlgo v7r1, LoKiArrayFunctors v7r1, LoKiCore v7r1, LoKiGen v7r1,
-    LoKiMC v7r1, LoKiNumbers v7r2, LoKiPhys v7r1, MDF v3r4, MDF_ROOT v1r1,
+    LoKiMC v7r1, LoKiNumbers v7r2, LoKiPhys v7r1, MDF v3r5, MDF_ROOT v1r2,
     RichRecBase v3r11, SimComponents v2r8p1, STKernel v1r2, TfKernel v2r3,
     TrackInterfaces v3r12, DetDescExample v7r6
 
@@ -227,6 +227,9 @@ This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
 
 - In MDF_ROOT v1r1
   . Proper handling of URL options
+
+- In MDF v3r5, MDF_ROOT v1r2
+  . Detect EOF when reading MDF files with ROOT
 
 - In RichRecBase v3r11
   . Add a flag to the IRichCherenkovAngle::avgCherenkovTheta method to force
