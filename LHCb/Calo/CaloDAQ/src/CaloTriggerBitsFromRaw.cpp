@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.21 2008-01-10 13:56:13 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.22 2008-03-05 15:56:51 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -307,12 +307,15 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
         }
 
 
-        if ( 0 != isPrs ) m_data.first.push_back( id );
-        if ( 0 != isSpd ) {
-          LHCb::CaloCellID spdId( 0, id.area(), id.row(), id.col() );
-          m_data.second.push_back( spdId );
+        if ( 0 != id.index() ){
+          if ( 0 != isPrs ) m_data.first.push_back( id );
+          if ( 0 != isSpd ) {
+            LHCb::CaloCellID spdId( 0, id.area(), id.row(), id.col() );
+            m_data.second.push_back( spdId );
+          }
         }
       }
+      
       int nSkip = (lenAdc+1 ) / 2;  // Length in number of words
       size     -= nSkip;
       data     += nSkip;

@@ -298,12 +298,14 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
               size--;
             }
 
+            if( offset == 0)debug() << "Data word : " << lastData << endreq;
+
             LHCb::CaloCellID id = LHCb::CaloCellID();
             if(bitNum < chanID.size())id= chanID[ bitNum ];
-
+            
 
             int adc = ( lastData >> offset ) & 0xFF;
-
+            
             // event dump
             if ( msgLevel( MSG::VERBOSE) ) {
               verbose() << " |  SourceID : " << sourceID
@@ -510,17 +512,19 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
         }
 
 
-        
-        if ( "Spd" == m_detectorName) {
-          LHCb::CaloCellID spdId( 0, id.area(), id.row(), id.col() );
-          LHCb::L0CaloAdc temp( spdId, isSpd );
-          m_adcs.addEntry( temp , spdId);
-        }
-        else {
-          LHCb::L0CaloAdc temp( id, isPrs );
-          m_adcs.addEntry( temp, id );
+        if ( 0 != id.index() ){
+          if ( "Spd" == m_detectorName) {
+            LHCb::CaloCellID spdId( 0, id.area(), id.row(), id.col() );
+            LHCb::L0CaloAdc temp( spdId, isSpd );
+            m_adcs.addEntry( temp , spdId);
+          }
+          else {
+            LHCb::L0CaloAdc temp( id, isPrs );
+            m_adcs.addEntry( temp, id );
+          }
         }
       }
+      
       int nSkip = (lenAdc+1 ) / 2;  // Length in number of words
       size     -= nSkip;
       data     += nSkip;

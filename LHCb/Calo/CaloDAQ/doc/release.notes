@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+
+! 2008-03-15 - Olivier Deschamps
+ - fix small problem with decoding of incomplete Prs Front-End board
+
 !========================== CaloDAQ v4r3 2008-01-30 ==========================
 ! 2008-01-29 - Olivier Deschamps
  - bug fix in CaloL0DataProvider (for Prs trigger but decoding)
