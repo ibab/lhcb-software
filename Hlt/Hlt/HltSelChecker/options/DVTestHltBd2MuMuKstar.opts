@@ -87,15 +87,5 @@ Bd2MuMuKstarTree.TupleToolTrigger.VerboseL0 = true ;
 Bd2MuMuKstarTree.TupleToolTrigger.VerboseAlleys = true ;
 Bd2MuMuKstarTree.TupleToolTrigger.VerboseSelections = true ;
 
-//Bd2MuMuKstarTree.Head.TupleToolP2VV.OutputLevel = 2 ;
-
-//Bd2MuMuKstarTree.OutputLevel = 1 ;
-
-//ApplicationMgr.TopAlg += { "HltBackgroundCategory" } ;
-//HltBackgroundCategory.AlgorithmCorrelations.UseNumbers = false ;
-//HltBackgroundCategory.AlgorithmCorrelations.Decimals = 3 ;
 HltBackgroundCategory.FillAll = false ;
-//HltBackgroundCategory.AlgorithmCorrelations.OnlyNonZero = false ;
-//HltBackgroundCategory.AlgorithmCorrelations.OutputLevel = 1 ;
 
-//HltSelectionsCorrs.OutputLevel = 2 ;
