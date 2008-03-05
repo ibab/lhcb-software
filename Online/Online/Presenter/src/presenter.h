@@ -5,9 +5,9 @@
 #include <TPRegexp.h>
 #include <TString.h>
 
-static const std::string PRESENTER_VERSION("v0r6");
+static const std::string s_presenterVersion("v0r7");
 // environment variable for archive mount point (i.e. prefix to paths)
-static const std::string GROUPDIR("GROUPDIR");
+static const std::string s_groupdir("GROUPDIR");
 
 // 4 slots+signals: cint hates namespaces
 enum FilterCriteria
@@ -45,30 +45,30 @@ namespace pres
   enum PresenterMode {
     Online = 0,
     History = 1,
-    Editor = 2,
+    Editor = 2
   };
 
-  static const bool WithHistograms    = true;
-  static const bool WithoutHistograms = false;
+  static const bool s_withHistograms    = true;
+  static const bool s_withoutHistograms = false;
 
-  static const bool CheckTreeItems    = true;
-  static const bool UncheckTreeItems  = false;
+  static const bool s_checkTreeItems    = true;
+  static const bool s_uncheckTreeItems  = false;
 
   // Conventions (see HistogramIdentifier for parsing)
-  static const std::string H1D("H1D");
-  static const std::string H2D("H2D");
-  static const std::string P1D("P1D");
-  static const std::string HPD("HPD"); // legacy compat == P1D
-  static const std::string P2D("P2D");
-  static const std::string CNT("CNT");
-  static const std::string GAUCHOCOMMENT("/gauchocomment");
-  static const std::string PAGE("PAGE");
-  static const std::string TASK("TASK");
-  static const std::string ALGORITHM("ALGORITHM");
-  static const std::string SET("SET");
-  static const std::string LEVEL("LEVEL");
-  static const std::string SET_SWITCH("_$");
-  static const std::string Slash("/"); // also for DB folders...
+  static const std::string s_H1D("H1D");
+  static const std::string s_H2D("H2D");
+  static const std::string s_P1D("P1D");
+  static const std::string s_HPD("HPD"); // legacy compat == P1D
+  static const std::string s_P2D("P2D");
+  static const std::string s_CNT("CNT");
+  static const std::string s_gauchocomment("/gauchocomment");
+  static const std::string s_PAGE("PAGE");
+  static const std::string s_TASK("TASK");
+  static const std::string s_ALGORITHM("ALGORITHM");
+  static const std::string s_SET("SET");
+  static const std::string s_LEVEL("LEVEL");
+  static const std::string s_setSwitch("_$");
+  static const std::string s_slash("/"); // also for DB folders...
   // boost::filesystem::slash
 
 // ^(H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/_]+_)?([^/_]*)(_[^/]*)?/([^/]*)/(([^_]*)(_\\$)?(.*))$
@@ -82,28 +82,33 @@ namespace pres
 //  CC-PC/CCPCAlg/T3/L2/Q1/myTell1
 //  H2D/RichOnlAna/Ana_R21PixelRC/His_$tory_0
 //  H2D/RichiOnlAna/Ana_R20PixelRC/Histo/ry_diff_0
-  static TPRegexp HistogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/_]+_)?([^/_]*)(_[^/]*)?/([^/]*)/(([^_]*)(_\\$)?(.*))$");
+  static TPRegexp s_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/_]+_)?([^/_]*)(_[^/]*)?/([^/]*)/(([^_]*)(_\\$)?(.*))$");
 
-  static TPRegexp FileDateRegexp("(.*)-(\\d{8}T\\d{6})\\.root$");
+  static TPRegexp s_fileDateRegexp("(.*)-(\\d{8}T\\d{6})\\.root$");
 
   // Tunables:
-  static const int EstimatedDimServiceCount = 1000;
-  static const int EstimatedHistosOnPage = 200;
-  static const int TimeoutOfMainTimer = 2000;
-  static const int MaxWindowWidth = 32767;
-  static const int MaxWindowHeight = 32767;
+  static const int s_estimatedDimServiceCount = 1000;
+  static const int s_estimatedHistosOnPage = 200;
+  static const int s_timeoutOfMainTimer = 2000;
+  static const int s_maxWindowWidth = 32767;
+  static const int s_maxWindowHeight = 32767;
 
-  static const TString HIST_READER("HIST_READER");
-  static const std::string HIST_READER_KRED("reader");
-  static const TString HIST_WRITER("HIST_WRITER");
-  static const TString LHCB_MON_GIACOMO("LHCB_MON_GIACOMO");
-  static const std::string HIST_WRITER_KRED("histeggia194");
+  static const TString s_histReader("HIST_READER");
+  static const std::string s_histReaderPw("reader");
+  static const TString s_histWriter("HIST_WRITER");
+  static const std::string s_histWriterPw("histeggia194");  
+  static const TString s_lhcbMonGiacomo("LHCB_MON_GIACOMO");
 
-  static const TString LBORA01("lbora01:1528/HISTOGRAMDB");
-  static const TString ORADEV10("oradev10.cern.ch:10520/D10");
-  static const TString HISTDB("HISTDB");
+  static const TString s_lbora01("lbora01:1528/HISTOGRAMDB");
+  static const TString s_oradev10("oradev10.cern.ch:10520/D10");
+  static const TString s_histdb("HISTDB");
 
-  static const std::string RootFileExtension(".root");
-  static const std::string SavesetToken("-");
+  static const std::string s_rootFileExtension(".root");
+  static const std::string s_savesetToken("-");
+  
+  static const std::string s_Area("AREA");
+  static const std::string s_Entries("ENTR");
+  static const std::string s_NoReference("NOREF");
+  static const std::string s_NoNormalization("NONE");
 }
 #endif /*PRESENTER_H_*/

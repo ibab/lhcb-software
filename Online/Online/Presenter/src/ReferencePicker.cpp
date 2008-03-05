@@ -136,10 +136,10 @@ void ReferencePicker::build()
   fLabel747->Move(220, 2);
 
   m_normalizationSelector = new TGComboBox(fHorizontalFrame637);
-  m_normalizationSelector->AddEntry(s_refOptionArea, 0);
-  m_normalizationSelector->AddEntry(s_refOptionEntries, 1);
-  m_normalizationSelector->AddEntry(s_refOptionNoNormalization, 2);
-  m_normalizationSelector->AddEntry(s_refOptionNoReference, 3);
+  m_normalizationSelector->AddEntry(s_Area.c_str(), 0);
+  m_normalizationSelector->AddEntry(s_Entries.c_str(), 1);
+  m_normalizationSelector->AddEntry(s_NoNormalization.c_str(), 2);
+  m_normalizationSelector->AddEntry(s_NoReference.c_str(), 3);
   m_normalizationSelector->Select(0);
   m_normalizationSelector->Resize(80, 22);
   fHorizontalFrame637->AddFrame(m_normalizationSelector,
