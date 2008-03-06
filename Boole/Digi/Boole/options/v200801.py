@@ -18,17 +18,9 @@ writeL0ETC   = False # set to True to write ETC of L0 selected events
 writeL0Only  = False # set to True to write only L0 selected events
 extendedDigi = False # set to True to add MCHits to .digi output file
 expertHistos = False # set to True to write out expert histos
-noWarnings   = True  # suppress all messages with MSG::WARNING or below 
-datasetName  = '11144103-500ev-20080228' # name of input signal file
+noWarnings   = False # suppress all messages with MSG::WARNING or below 
 condDBtag    = "head-20080130" # conditions database tag
-##############################################################################
-# Default I/O file names
-outputName   = datasetName # name of output event data file
-if ( numEvents > 0 ): outputName += '-' + str(numEvents) + 'ev'
-if ( generateTAE )  : outputName += '-TAE'
-histosName   = outputName  # name of monitoring histograms file
-if ( writeL0Only ) : outputName += '-L0Yes'
-if ( extendedDigi ): outputName += '-extended'
+datasetName  = '11144103-500ev-20080228' # name used to build file names
 ##############################################################################
 
 #-- Choose a geometry
@@ -44,6 +36,7 @@ BooleSetOptions( generateTAE, useSpillover )
 BooleSetOutput( writeRawMDF, extendedDigi, writeL0Only, writeL0ETC, noWarnings )
 
 #-- Save the monitoring histograms, optionally fill and save also expert histos
+histosName = BooleHistosName( datasetName, numEvents, expertHistos, generateTAE )
 BooleSaveHistos( histosName, expertHistos )
 
 #-- File catalogs
@@ -56,7 +49,8 @@ EventSelector().Input = ["DATAFILE='PFN:rfio:/castor/cern.ch/user/g/gcorti/Gauss
 EventSelector("SpilloverSelector").Input = ["DATAFILE='PFN:rfio:/castor/cern.ch/user/g/gcorti/Gauss/2008/v31r0/30000000-1000ev-20080223.sim' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 #-- Possible output streams. Enabled by setting the corresponding output type
-# writeRawMDF = true:  Simulated raw data, in MDF format, without MC truth. 
+outputName = BooleOutputName( datasetName, numEvents, generateTAE, writeL0Only, extendedDigi )
+# writeRawMDF = true:  Simulated raw data, in MDF format, without MC truth.
 OutputStream("RawWriter").Output = "DATAFILE='file://" + outputName + ".mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'"
 # writeRawMDF = false: Standard .digi in POOL format. If extendedDigi = true includes also MCHits 
 OutputStream("DigiWriter").Output = "DATAFILE='PFN:" + outputName + ".digi' TYP='POOL_ROOTTREE' OPT='REC'"

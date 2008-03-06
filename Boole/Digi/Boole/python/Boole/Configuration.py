@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.1 2008-03-05 16:45:18 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2008-03-06 07:01:50 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -11,8 +11,9 @@ from Configurables import ( CondDBAccessSvc, MagneticFieldSvc,
 
 # Exported symbols
 __all__ = [ "BooleSetDB", "BooleSetEvents", "BooleSetOptions",
-            "BooleGenerateTAE", "BooleDisableSpillover", "BooleSaveHistos",
-            "BooleSetOutput" ]
+            "BooleGenerateTAE", "BooleDisableSpillover",
+            "BooleSaveHistos", "BooleHistosName",
+            "BooleSetOutput", "BooleOutputName" ]
 
 def BooleSetDB( condDBtag ):
 
@@ -61,10 +62,16 @@ def BooleSaveHistos( histosName, expertHistos ):
     """
     Save histograms. If expert, fill and save also the expert histograms
     """
-    if expertHistos:
-        importOptions( "$BOOLEOPTS/ExpertCheck.opts" )
-        histosName += '-expert'
-    HistogramPersistencySvc().OutputFile = histosName + '-histos.root'
+    if expertHistos: importOptions( "$BOOLEOPTS/ExpertCheck.opts" )
+    HistogramPersistencySvc().OutputFile = histosName
+
+def BooleHistosName( dataset, numEvents, expertHistos, generateTAE ):
+    histosName   = dataset
+    if ( numEvents > 0 ): histosName += '-' + str(numEvents) + 'ev'
+    if ( generateTAE )  : histosName += '-TAE'
+    if expertHistos     : histosName += '-expert'
+    histosName += '-histos.root'
+    return histosName
     
 def BooleSetOutput( mdf, extended, l0yes, l0etc, nowarn ):
     """
@@ -83,3 +90,13 @@ def BooleSetOutput( mdf, extended, l0yes, l0etc, nowarn ):
     if l0etc : ApplicationMgr().OutStream.append( "Sequencer/SeqWriteTag" )
     if nowarn: importOptions( "$BOOLEOPTS/SuppressWarnings.opts" )
 
+def BooleOutputName( dataset, numEvents, generateTAE, writeL0Only, extendedDigi ):
+    """
+    Build a name for the output file, based in input options
+    """
+    outputName = dataset
+    if ( numEvents > 0 ): outputName += '-' + str(numEvents) + 'ev'
+    if ( generateTAE )  : outputName += '-TAE'
+    if ( writeL0Only ) : outputName += '-L0Yes'
+    if ( extendedDigi ): outputName += '-extended'
+    return outputName
