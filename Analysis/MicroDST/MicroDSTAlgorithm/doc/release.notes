@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.51 2008-02-26 16:02:24 jpalac Exp $
+! $Id: release.notes,v 1.52 2008-03-06 14:20:57 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+!======================== MicroDST v3r1 2008-03-05 ====================
+
+! 2008-03-06 - Juan PALACIOS
+ - src/CopyRelatedMCParticles{.h, .cpp}
+  . Swap Relation2DD<LHCb::Particle, LHCb::MCParticle> for 
+    RelationWeighted2DD<LHCb::Particle, LHCb::MCParticle, double>
 
 ! 2008-02-26 - Juan PALACIOS
  - src/CopyRelatedMCParticles.h
