@@ -1,11 +1,11 @@
+#$Id: requirements,v 1.42 2008-03-06 15:47:48 jpalac Exp $
+#============================================================================
 # Created    : 23/08/2004
 # Maintainer : P. Koppenburg, Yuehong Xie, J. Palacios
 #
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
-
+#============================================================================
 package           VertexFit
-version           v4r5p1
+version           v5r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
