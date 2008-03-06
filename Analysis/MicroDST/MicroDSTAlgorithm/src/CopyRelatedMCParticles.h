@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.h,v 1.9 2008-02-26 15:41:01 jpalac Exp $
+// $Id: CopyRelatedMCParticles.h,v 1.10 2008-03-06 14:20:28 jpalac Exp $
 #ifndef COPYRELATEDMCPARTICLES_H 
 #define COPYRELATEDMCPARTICLES_H 1
 
@@ -9,7 +9,7 @@
 // from Gaudi
 #include "Event/Particle.h"
 // from LHCb
-#include "Relations/Relation2D.h"
+#include "Relations/RelationWeighted2D.h"
 #include "Kernel/Particle2MCLinker.h"
 class MCParticle;
 class MCVertex;
@@ -85,7 +85,7 @@ private:
 
   typedef LinkerWithKey<LHCb::MCParticle, LHCb::Particle> MCLinker;
 
-  typedef LHCb::Relation2D<LHCb::Particle, LHCb::MCParticle> MCRelations;
+  typedef LHCb::RelationWeighted2D<LHCb::Particle, LHCb::MCParticle, double> MCRelations;
 
 private:
 

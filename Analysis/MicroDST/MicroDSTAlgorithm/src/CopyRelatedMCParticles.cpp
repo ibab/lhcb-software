@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.12 2008-02-26 16:02:00 jpalac Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.13 2008-03-06 14:20:28 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -157,7 +157,7 @@ CopyRelatedMCParticles::storeAssociatedMCParticles(const LHCb::Particle* particl
               << endmsg;
 //     linker.link(particle, clonedMCParticle);
     verbose() << "Linked cloned MCParticle" << endmsg;
-    m_relations->relate(particle, clonedMCParticle);
+    m_relations->relate(particle, clonedMCParticle, 1.);
   }
 
   return sc;
