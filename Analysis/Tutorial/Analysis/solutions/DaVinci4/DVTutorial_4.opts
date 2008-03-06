@@ -12,9 +12,9 @@
 TutorialSeq.Members += { "CombineParticles/Bs2JpsiPhi" };
 Bs2JpsiPhi.PhysDesktop.InputLocations = { "Phys/Phi2KK", "Phys/Jpsi2MuMu" } ;
 Bs2JpsiPhi.DecayDescriptor = "B_s0 -> phi(1020) J/psi(1S)"; // mandatory
-Bs2JpsiPhi.FILTER0.Code = "((ABSID=='K+') and (MIPCHI2DV(PRIMARY)>9)) or ((ABSID=='mu-') and (PT>1000))";
+Bs2JpsiPhi.FILTER0.Code = "((ABSID=='K+') & (MIPCHI2DV(PRIMARY)>9)) | ((ABSID=='mu-') & (PT>1000))";
 Bs2JpsiPhi.FILTER1.Code = "ADMASS('B_s0')<2000";
-Bs2JpsiPhi.FILTER2.Code = "(VFASPF(VCHI2/VDOF)<10) and (BPVIPCHI2()<100)";
+Bs2JpsiPhi.FILTER2.Code = "(VFASPF(VCHI2/VDOF)<10) & (BPVIPCHI2()<100)";
 //Bs2JpsiPhi.MakePlots=true;
 Bs2JpsiPhi.HistoProduce=true;
 Bs2JpsiPhi.DaughterPlots.Variables={"M","P","Pt","IP"};
