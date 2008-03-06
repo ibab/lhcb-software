@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.31 2008-02-20 18:02:51 janos Exp $
+// $Id: AlignAlgorithm.cpp,v 1.32 2008-03-06 09:19:16 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -319,92 +319,108 @@ StatusCode AlignAlgorithm::execute() {
   if (printVerbose()) verbose() << "Number of tracks in container " + m_tracksLocation + ": " << tracks->size() << endmsg;
   /// Loop over tracks
   typedef Tracks::const_iterator TrackIter;
-  for (TrackIter iTrack = tracks->begin(), iTrackEnd = tracks->end(); iTrack != iTrackEnd; ++iTrack) {
-    // Compute covariance matrix for track
-    ResidualCovarianceTool cov;
-    cov.compute(*(*iTrack));
-    // skip track
-    if (cov.error()) {
-      warning() << "Error computing residual cov matrix. Skipping track of type "
-                << (*iTrack)->type() << " with key: " << (*iTrack)->key() << " and chi2 / dof: " << (*iTrack)->chi2() << "/" << (*iTrack)->nDoF() << endmsg ;
-      ++m_covFailure;
-      continue;
-    }
-    std::vector<Data> data;
-    // Get nodes. Need them for measurements, residuals and errors
-    const Nodes& nodes = (*iTrack)->nodes();
-    if (printVerbose()) verbose() << "==> Found " << nodes.size() << " nodes"<< endmsg;
-    // Loop over nodes and get measurements, residuals and errors
-    typedef Nodes::const_iterator NodeIter;
-    size_t numexternalhits(0) ;
-    for (NodeIter node = nodes.begin(), end = nodes.end(); node != end; ++node) {
-      if ((*node)->hasMeasurement()) {
-	// Get measurement
-	const Measurement& meas = (*node)->measurement();
-	// Get element that belongs to this measurment
-	const AlignmentElement* elem = m_align->findElement(meas);
-	if (!elem) {
-	  if (printVerbose()) verbose() << "==> Measurement not on a to-be-aligned DetElem " 
-					<< meas.lhcbID() << endmsg;
-	  ++numexternalhits ;
-	  continue;
-	}
-    	
-	const unsigned index = elem->index();
-	if (printVerbose()) verbose() << "==> measure = " << meas.measure() << " id = " << meas.lhcbID() << " -> index = " 
-				      << index << " -> " <<  elem->name() << endmsg;
-
-	// Project measurement
-	ITrackProjector* proj = m_projSelector->projector(meas);
-	if (!proj) {
-	  error() << "==> Could not get projector for selected measurement!" << endmsg;
-	  continue;
-	}
-	double res  = (*node)->residual();
-	double err  = (*node)->errMeasure();
-	
-	m_nHitsHistos[index]->fill(m_iteration);
-	m_resHistos[index]->fill(m_iteration, res);
-	m_pullHistos[index]->fill(m_iteration, res/(*node)->errResidual());
-	// Get alignment derivatives
-	LHCb::StateVector state((*node)->state().stateVector(),(*node)->state().z());
-	Derivatives der = proj->alignmentDerivatives(state, meas, elem->pivotXYZPoint());
-	// push back normalized residuals & derivatives;
-	res /= err;
-	der /= err;
-	data.push_back(Data(**node, index, res, der));
-	m_equations->addHitSummary( index, err ) ;
+  for (TrackIter iTrack = tracks->begin(), iTrackEnd = tracks->end(); iTrack != iTrackEnd; ++iTrack) 
+    // just a sanity check
+    if( (*iTrack)->fitStatus()==LHCb::Track::Fitted &&
+	(*iTrack)->nDoF() > 0 &&
+	!(*iTrack)->nodes().empty() ) {
+      
+      // Compute covariance matrix for track
+      ResidualCovarianceTool cov;
+      cov.compute(*(*iTrack));
+      // skip track
+      if (cov.error()) {
+	warning() << "Error computing residual cov matrix. Skipping track of type "
+		  << (*iTrack)->type() << " with key: " << (*iTrack)->key() << " and chi2 / dof: " << (*iTrack)->chi2() << "/" << (*iTrack)->nDoF() << endmsg ;
+	++m_covFailure;
+	continue;
       }
-    }
-    
-    if (!data.empty()) {
-      for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
-        m_equations->V(id->index())               -= convert(id->r()*id->d()) ;
-        m_equations->M(id->index(), id->index())  += (Transpose(id->d())*id->d());
-        
-        for (std::vector<Data>::const_iterator jd = data.begin(); jd != idEnd; ++jd) {
-          if ( id == jd || ( m_correlation && id->index() <= jd->index() )) {
-            double c = cov.HCH_norm(*id->id(),*jd->id());
-            m_equations->M(id->index(), jd->index()) -= c * (Transpose(id->d())*jd->d());
-	    
-            if ( m_fillCorrelationHistos ) {
-              if (!( id->id() == jd->id())) {
-                m_corrHistos[std::make_pair(id->index(), jd->index())]->
-                fill(m_iteration, c/std::sqrt(cov.HCH_norm(*id->id(), *id->id())*cov.HCH_norm(*jd->id(), *jd->id())));
-              } else {
-                m_autoCorrHistos[id->index()]->fill(m_iteration, c);
-              }
-            }
-          }
-        }
+      std::vector<Data> data;
+      // Get nodes. Need them for measurements, residuals and errors
+      const Nodes& nodes = (*iTrack)->nodes();
+      if (printVerbose()) verbose() << "==> Found " << nodes.size() << " nodes"<< endmsg;
+      // Loop over nodes and get measurements, residuals and errors
+      typedef Nodes::const_iterator NodeIter;
+      size_t numexternalhits(0) ;
+      for (NodeIter node = nodes.begin(), end = nodes.end(); node != end; ++node) {
+	if ((*node)->hasMeasurement()) {
+	  // Get measurement
+	  const Measurement& meas = (*node)->measurement();
+	  // Get element that belongs to this measurment
+	  const AlignmentElement* elem = m_align->findElement(meas);
+	  if (!elem) {
+	    if (printVerbose()) verbose() << "==> Measurement not on a to-be-aligned DetElem " 
+					  << meas.lhcbID() << endmsg;
+	    ++numexternalhits ;
+	    continue;
+	  }
+	  
+	  const unsigned index = elem->index();
+	  if (printVerbose()) verbose() << "==> measure = " << meas.measure() << " id = " << meas.lhcbID() << " -> index = " 
+					<< index << " -> " <<  elem->name() << endmsg;
+	  
+	  // Project measurement
+	  ITrackProjector* proj = m_projSelector->projector(meas);
+	  if (!proj) {
+	    error() << "==> Could not get projector for selected measurement!" << endmsg;
+	    continue;
+	  }
+	  double res  = (*node)->residual();
+	  double err  = (*node)->errMeasure();
+	  
+	  m_nHitsHistos[index]->fill(m_iteration);
+	  m_resHistos[index]->fill(m_iteration, res);
+	  m_pullHistos[index]->fill(m_iteration, res/(*node)->errResidual());
+	  // Get alignment derivatives
+	  LHCb::StateVector state((*node)->state().stateVector(),(*node)->state().z());
+	  // the projector calculates the derivatives in the global
+	  // frame. The jacobian corrects for the transformation to the
+	  // alignment frame.
+	  Derivatives der =  
+	    proj->alignmentDerivatives(state,meas,Gaudi::XYZPoint(0,0,0)) *
+	    elem->jacobian() ;
+	  
+	  // push back normalized residuals & derivatives;
+	  res /= err;
+	  der /= err;
+	  data.push_back(Data(**node, index, res, der));
+	  m_equations->addHitSummary( index, err ) ;
+	}
       }
-      // keep some information about the tracks that we have seen
-      m_equations->addTrackSummary( (*iTrack)->chi2(), (*iTrack)->nDoF(), numexternalhits ) ;
-      m_trackChi2Histo->fill(m_iteration, (*iTrack)->chi2());
-      m_trackNorChi2Histo->fill(m_iteration, (*iTrack)->chi2PerDoF());
+      
+      if (!data.empty()) {
+	for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
+	  m_equations->V(id->index())               -= convert(id->r()*id->d()) ;
+	  m_equations->M(id->index(), id->index())  += (Transpose(id->d())*id->d());
+	  
+	  for (std::vector<Data>::const_iterator jd = data.begin(); jd != idEnd; ++jd) {
+	    if ( id == jd || ( m_correlation && id->index() <= jd->index() )) {
+	      double c = cov.HCH_norm(*id->id(),*jd->id());
+	      m_equations->M(id->index(), jd->index()) -= c * (Transpose(id->d())*jd->d());
+	      
+	      if ( m_fillCorrelationHistos ) {
+		if (!( id->id() == jd->id())) {
+		  m_corrHistos[std::make_pair(id->index(), jd->index())]->
+		    fill(m_iteration, c/std::sqrt(cov.HCH_norm(*id->id(), *id->id())*cov.HCH_norm(*jd->id(), *jd->id())));
+		} else {
+		  m_autoCorrHistos[id->index()]->fill(m_iteration, c);
+		}
+	      }
+	    }
+	  }
+	}
+	// keep some information about the tracks that we have seen
+	m_equations->addTrackSummary( (*iTrack)->chi2(), (*iTrack)->nDoF(), numexternalhits ) ;
+	m_trackChi2Histo->fill(m_iteration, (*iTrack)->chi2());
+	m_trackNorChi2Histo->fill(m_iteration, (*iTrack)->chi2PerDoF());
+      }
+    } else {
+      warning() << "Skipping bad track:"
+		<< " fitstatus = " << (*iTrack)->fitStatus()
+		<< " nDoF = " << (*iTrack)->nDoF()
+		<< " #nodes = " << (*iTrack)->nodes().size() << endreq ;
     }
-  }
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -462,9 +478,9 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
   for (ElementRange::const_iterator it = m_rangeElements.begin(), itEnd = m_rangeElements.end(); it != itEnd; ++it, ++iElem) {
     double thisweight = m_equations->weight(iElem) ;
     weight += thisweight ;
-    pivot += thisweight * Gaudi::XYZVector( it->pivotXYZPoint() ) ;
-    zmin = std::min(it->pivotXYZPoint().z(),zmin) ;
-    zmax = std::min(it->pivotXYZPoint().z(),zmax) ;
+    pivot += thisweight * Gaudi::XYZVector( it->centerOfGravity() ) ;
+    zmin = std::min(it->centerOfGravity().z(),zmin) ;
+    zmax = std::min(it->centerOfGravity().z(),zmax) ;
   }
   if (weight>0) pivot *= 1/weight ;
   Gaudi::Transform3D canonicalframe( pivot ) ;
@@ -503,7 +519,7 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
       }
     }
     if (m_constrainZShearings) {
-      double deltaZ = it->pivotXYZPoint().z() - pivot.z() ;
+      double deltaZ = it->centerOfGravity().z() - pivot.z() ;
       // the 3 constraints are in this order: zx-shearing, zy-shearing and z-scale ('zz-shearing')
       for (size_t i = 0u; i < 3u; ++i) {
         for (size_t j = 0u; j < Derivatives::kCols; ++j) {
@@ -738,13 +754,16 @@ void AlignAlgorithm::update() {
       
       if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
       size_t iElem(0u) ;
-      for (ElementRange::const_iterator it = m_rangeElements.begin(); it != m_rangeElements.end(); ++it, ++iElem) 
-	if ( offsets[iElem] >= 0 ) {
+      for (ElementRange::iterator it = m_rangeElements.begin(); it != m_rangeElements.end(); ++it, ++iElem) {
+	logmessage << "Alignable: " << it->name() << std::endl
+		   << "Number of hits seen: " << m_equations->numHits(iElem) << std::endl ;
+	if( offsets[iElem] < 0 ) {
+	  logmessage << "Not enough hits for alignment. Skipping update." << std::endl ;
+	} else {
 	  AlParameters delta( derivatives, matrix, it->dofMask(), offsets[iElem] ) ;
-	  logmessage << "Alignable: " << it->name() << std::endl
-		     << "Number of hits seen: " << m_equations->numHits(iElem) << std::endl
-		     << delta ;
-	  StatusCode sc = it->updateGeometry(delta) ;
+	  logmessage << delta ;
+	  // need const_cast because loki range givess access only to const values 
+	  StatusCode sc = (const_cast<AlignmentElement&>(*it)).updateGeometry(delta) ;
 	  if (!sc.isSuccess()) error() << "Failed to set alignment condition for " << it->name() << endmsg ; 
           fillHisto1D(m_deltaTxHisto[it->index()], m_iteration+1u, delta.translation()[0], delta.errTranslation()[0]);
           fillHisto1D(m_deltaTyHisto[it->index()], m_iteration+1u, delta.translation()[1], delta.errTranslation()[1]);
@@ -753,6 +772,7 @@ void AlignAlgorithm::update() {
           fillHisto1D(m_deltaRyHisto[it->index()], m_iteration+1u, delta.rotation()[1]   , delta.errRotation()[1]);
           fillHisto1D(m_deltaRzHisto[it->index()], m_iteration+1u, delta.rotation()[2]   , delta.errRotation()[2]);
         }
+      }
     } else {
       error() << "Failed to solve system" << endmsg ;
     }
