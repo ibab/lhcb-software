@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.303 2008-03-04 17:33:07 pkoppenb Exp $
+! $Id: release.notes,v 1.304 2008-03-06 15:44:46 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!======================== DaVinciTools v15r8p1 2008-03-06 ===================
 
 ! 2008-03-04 - Patrick Koppenburg
  - CombineParticles : protect debug() and verbose(). More verbose(), less debug().
