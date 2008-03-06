@@ -3,18 +3,29 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r10>2008-02-25 Boole v14r10</A></H1><PRE>
+</PRE><H1><A NAME=v14r10>2008-03-06 Boole v14r10</A></H1><PRE>
 This version uses projects Gaudi v19r8, LHCb v23r4, Lbcom v6r15
  and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
 
 It can process DC06 data, but output format is different from DC06, requires
 Brunel v32r1 or greater
 
+- New features
+  . Added generic support for execution with gaudirun.py and python options:
+    o python/Boole/Configuration.py: functions to configure Boole
+    o options/BooleCommon.py: options shared by all configurations
+    o v200601.py: specific options for DC06 geometries
+    o v200801.py: specific options for 2008 geometry
+    The v200xxx.py scripts support all available configurations (TAE generation,
+    spillover removal, L0 filtering, L0 ETC writing, mdf writing, 
+    warnings suppression, expert histos etc.)
+  . Added support for post-DC06 geometries, only available via Python options
+
 - New tuning
-  . In SuppressWarnings.opts, timestamp is printed in UTC
+  . In SuppressWarnings.opts, timestamp is printed in UTC, keep EventLoopMgr msgs
 
 - New packaging
-  . ST digiization algorithms move to new BOOLE STDigiAlgorithms v1r0 package
+  . ST digitization algorithms move to new BOOLE STDigiAlgorithms v1r0 package
 
 - Bug fixes
   . Fix TES path of 'Next' spill for spillover (STAlgorithms v2r7)
