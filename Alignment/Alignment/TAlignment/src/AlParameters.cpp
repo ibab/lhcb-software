@@ -115,7 +115,7 @@ AlParameters::Matrix6x6 AlParameters::jacobian( const ROOT::Math::Transform3D& t
   // (see routine AlParameters::transform).  This routine returns the
   // jacobian for a transformation of f: if x' is the delta in frame 0
   // and x is the delta in frame 1 and A is the transform from frame 0
-  // to frame 1, then this return calculated dx/dx', by taking the
+  // to frame 1, then this returns the matrix Mij = dx_i / dx'_j, by taking the
   // derivative of
   //   f'(x')   =    A * f(x) * A^{-1}
   //
