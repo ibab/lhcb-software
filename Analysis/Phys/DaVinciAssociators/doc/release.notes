@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.121 2007-11-02 11:15:52 jpalac Exp $
+! $Id: release.notes,v 1.122 2008-03-06 16:47:36 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+! 2008-02-12 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v9r2p4
+ - src/TestLinker.cpp
+  . Use Particle2MCLinker constructor taking vector of locations, not
+    single location, as this has been deprecated.
 
 !========================== DaVinciAssociators v9r2p3 2007-11-02 ==============
 
