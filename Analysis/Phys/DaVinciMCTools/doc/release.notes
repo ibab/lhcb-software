@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.207 2008-03-03 17:14:30 pkoppenb Exp $
+! $Id: release.notes,v 1.208 2008-03-06 15:00:53 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r11 2008-03-06 ==================
+
+! 2008-03-06 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v9r11
 
 ! 2008-03-03 - Patrick Koppenburg
  - FilterToFixOppositeBFractions :
