@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+
+! 2008-03-06 - Wouter Hulsbergen
+ - added option to use local frame as alignment frame
+
 ! 2008-03-04 - Johan Blouw
  - added possibility to align muon stations to GAlign class
 
