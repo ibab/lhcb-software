@@ -24,7 +24,7 @@ PrintPreselBu2LLK.OutputLevel = 3 ;
 //
 // True filter criterion
 //
-#include "$HLTSELCHECKERROOT/options/TrueBu2LLK.opts"
+//#include "$HLTSELCHECKERROOT/options/TrueBu2LLK.opts"
 //
 // Overwrite input - uncomment to run HLT on true signal only
 //

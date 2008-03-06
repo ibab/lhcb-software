@@ -89,3 +89,4 @@ Bd2MuMuKstarTree.TupleToolTrigger.VerboseSelections = true ;
 
 HltBackgroundCategory.FillAll = false ;
 
+ApplicationMgr.EvtMax = -1 ;
