@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.2 2008-03-06 07:01:50 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2008-03-06 16:39:24 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -80,7 +80,7 @@ def BooleSetOutput( mdf, extended, l0yes, l0etc, nowarn ):
     if mdf:
         importOptions( "$BOOLEOPTS/RawWriter.opts" )
         MyWriter = OutputStream( "RawWriter" )
-        ApplicationMgr().OutStream.append( "RawWriter" )
+#       ApplicationMgr().OutStream.append( "RawWriter" ) # Already in RawWriter.opts
     else:
         if ( extended ): importOptions( "$STDOPTS/ExtendedDigi.opts" )
         MyWriter = OutputStream( "DigiWriter" )
