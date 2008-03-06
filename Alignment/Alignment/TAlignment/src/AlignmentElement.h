@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.10 2008-02-08 10:02:12 wouter Exp $
+// $Id: AlignmentElement.h,v 1.11 2008-03-06 09:15:08 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -9,6 +9,7 @@
 
 // from Gaudi
 #include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/GenericMatrixTypes.h"
 
 // from DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -64,7 +65,8 @@ public:
    *  which dofs to align for, Tx, Ty, Tz, Rx, Ry, and Rz. Default is all dofs
    */
   AlignmentElement(const DetectorElement* element, const unsigned int index, 
-                   const std::vector<bool>& dofMask = std::vector<bool>(6, true));
+                   const std::vector<bool>& dofMask = std::vector<bool>(6, true),
+		   bool useLocalFrame=false);
 
   /** Construct an alignment element from a group, i.e. vector, of
    *  detector elements and an index. The index is needed for bookkeeping
@@ -73,7 +75,8 @@ public:
    *  Rx, Ry, and Rz. Default is all dofs
    */
   AlignmentElement(const std::vector<const DetectorElement*>& elements, const unsigned int index, 
-                   const std::vector<bool>& dofMask = std::vector<bool>(6, true));
+                   const std::vector<bool>& dofMask = std::vector<bool>(6, true),
+		   bool useLocalFrame=false);
 
  public:
 
@@ -90,14 +93,6 @@ public:
   /** Method to get the index
    */
   unsigned int index() const;
-
-  /** Method to get the pivot point. The derivatives are taken w.r.t. this point
-   */
-  const Gaudi::XYZPoint& pivotXYZPoint() const;
-
-  /** Method to get the pivot point as a vector of doubles
-  */
-  const std::vector<double> pivot() const;
 
   /** Method to get the delta translations as a vector of doubles
    */
@@ -117,7 +112,7 @@ public:
   /** Method to update the parameters of the detector element. 
    * The delta translations and rotations are in the alignment frame (see above).
    */
-  StatusCode updateGeometry(const AlParameters& parameters) const ;
+  StatusCode updateGeometry(const AlParameters& parameters) ;
 
 
   /** Method to get the local delta transformation matrix (from global to local)
@@ -126,10 +121,9 @@ public:
   // const Gaudi::Transform3D localDeltaMatrix() const;
 
 
-  /** Get local centre of element. Note: local centre != pivot point
-   *
+  /** Get center of gravity of this element (which is the 'local' center for single elements)
    */
-  const Gaudi::XYZPoint localCentre() const;
+  const Gaudi::XYZPoint centerOfGravity() const { return m_centerOfGravity ; }
 
   /** operator ==. Is this AlignmentElement constructed from this DetectorElement?
    */
@@ -142,6 +136,9 @@ public:
   /** Transform from frame in which alignment parameters are defined to global frame */
   const Gaudi::Transform3D& alignmentFrame() const { return m_alignmentFrame; }
   
+  /** Jacobian for the transformation from the global frame to the alignment frame */
+  const Gaudi::Matrix6x6& jacobian() const { return m_jacobian ; }
+
   /** Return all elements that are served by this alignment element */
   ElementContainer elementsInTree() const ;
 
@@ -151,7 +148,7 @@ private:
 
   void validDetectorElement(const DetectorElement* element) const;
 
-  void setPivotPoint();
+  void initAlignmentFrame();
   
   double average(double n) const { return n/double(m_elements.size()); };
 
@@ -162,9 +159,12 @@ private:
   std::vector<const DetectorElement*>          m_elements;         ///< Vector of pointers to detector elements
   unsigned int                                 m_index;            ///< Index. Needed for bookkeeping
   AlDofMask                                    m_dofMask;          ///< d.o.f's we want to align for
-  Gaudi::XYZPoint                              m_pivot;            ///< Pivot point
-  Gaudi::Transform3D                           m_alignmentFrame;   ///< Frame in which delta-derivatives are calculated (will replace pivot point)
+  Gaudi::XYZPoint                              m_centerOfGravity ; ///< Center of gravity in the global frame
+  Gaudi::Transform3D                           m_alignmentFrame;   ///< Frame in which delta-derivatives are calculated
+  Gaudi::Matrix6x6                             m_jacobian ;        ///< Jacobian for going from global to alignment frame
+  bool                                         m_useLocalFrame;    ///< Use local frame as alignmentframe
 };
+
 
 inline std::ostream& operator<<(std::ostream& lhs, const AlignmentElement& element) {
   return element.fillStream(lhs);
@@ -174,10 +174,4 @@ inline std::ostream& operator<<(std::ostream& lhs, const AlignmentElement& eleme
 
 inline unsigned int AlignmentElement::index() const { return m_index; }
 
-inline const Gaudi::XYZPoint& AlignmentElement::pivotXYZPoint() const { return m_pivot; }
-
-inline const std::vector<double> AlignmentElement::pivot() const {
-  return boost::assign::list_of(m_pivot.x())(m_pivot.y())(m_pivot.z());
-}
-  
 #endif // ALIGNMENTELEMENT_H

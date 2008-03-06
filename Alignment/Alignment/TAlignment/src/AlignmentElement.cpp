@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.13 2008-02-09 02:30:22 janos Exp $
+// $Id: AlignmentElement.cpp,v 1.14 2008-03-06 09:15:08 wouter Exp $
 // Include files
 
 // from STD
@@ -24,27 +24,33 @@
 
 AlignmentElement::AlignmentElement(const DetectorElement* element, 
                                    const unsigned int index, 
-                                   const std::vector<bool>& dofMask)
+                                   const std::vector<bool>& dofMask,
+				   bool useLocalFrame)
   : m_elements(1u, element),
     m_index(index),
-    m_dofMask(dofMask) {
+    m_dofMask(dofMask),
+    m_useLocalFrame(useLocalFrame)
+{
 
   validDetectorElement(m_elements.at(0u));
   
-  setPivotPoint();
+  initAlignmentFrame();
 }
 
 AlignmentElement::AlignmentElement(const std::vector<const DetectorElement*>& elements, 
                                    const unsigned int index, 
-                                   const std::vector<bool>& dofMask)
+                                   const std::vector<bool>& dofMask,
+				   bool useLocalFrame)
   : m_elements(elements),
     m_index(index),
-    m_dofMask(dofMask) {
+    m_dofMask(dofMask),
+    m_useLocalFrame(useLocalFrame)
+{
 
   std::for_each(m_elements.begin(), m_elements.end(),
                 boost::lambda::bind(&AlignmentElement::validDetectorElement, this, boost::lambda::_1));
 
-  setPivotPoint();
+  initAlignmentFrame();
 }
 
 AlignmentElement::ElementContainer AlignmentElement::elementsInTree() const
@@ -75,17 +81,24 @@ void AlignmentElement::validDetectorElement(const DetectorElement* element) cons
   if (!(element->geometry()->alignmentCondition())) throw GeometryInfoException("AlignmentCondition* points to NULL!");
 }
 
-void AlignmentElement::setPivotPoint() {
-  /// Set pivot point
-  /// Here we take the average of the global centres of the elements as the pivot point
-  // const Gaudi::XYZPoint lhcbOrigin(0.0, 0.0, 0.0);
+void AlignmentElement::initAlignmentFrame() {
+  // Calculate the center of gravity (the 'local' center)
   Gaudi::XYZVector averageR(0.0, 0.0, 0.0);
   for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
     averageR += ((*i)->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 0.0, 0.0))) - Gaudi::XYZPoint(0.0, 0.0, 0.0);
   }
   averageR /= double(m_elements.size());
-  m_pivot = Gaudi::XYZPoint(0.0, 0.0, 0.0) + averageR;
-  m_alignmentFrame = Gaudi::Transform3D(averageR) ;
+  m_centerOfGravity = Gaudi::XYZPoint(0.0, 0.0, 0.0) + averageR;
+
+  // Initialize the alignment frame transform. For now, we'll only do
+  // something special for Velo modules. For all other modules the
+  // alignment frame is still just a translation to the cog.
+  if( m_useLocalFrame ) {
+    m_alignmentFrame = m_elements.front()->geometry()->toGlobalMatrix() ;
+  } else {
+    m_alignmentFrame = Gaudi::Transform3D(averageR) ;
+  }
+  m_jacobian = AlParameters::jacobian( m_alignmentFrame ) ;
 }
 
 const std::string AlignmentElement::name() const {
@@ -133,18 +146,9 @@ bool AlignmentElement::operator==(const DetectorElement* rhs) const {
   return (match != m_elements.end() ? true : false);
 }
 
-StatusCode AlignmentElement::updateGeometry( const AlParameters& parameters) const 
+StatusCode AlignmentElement::updateGeometry( const AlParameters& parameters) 
 {
   /// Construct global delta matrix from deltas
-  // const std::vector<double>& globalDeltaT = parameters.translation() ;
-//   const std::vector<double>& globalDeltaR = parameters.rotation() ;
-//   const Gaudi::Transform3D globalDeltaMatrix = DetDesc::localToGlobalTransformation(globalDeltaT,
-//                                                                                     globalDeltaR,
-//                                                                                     this->pivot()) ;
-  //   std::cout << "Juan's calculation: " << globalDeltaMatrix << std::endl ;
-  //   std::cout << "Mine: " 
-  // 	    << m_alignmentFrame * parameters.transform() * m_alignmentFrame.Inverse() << std::endl ;
-  
   // transform the delta to the global frame
   const Gaudi::Transform3D globalDeltaMatrix = m_alignmentFrame * parameters.transform() * m_alignmentFrame.Inverse() ;
   StatusCode sc;
@@ -158,24 +162,14 @@ StatusCode AlignmentElement::updateGeometry( const AlParameters& parameters) con
       break; ///< Break loop if sc is failure
     }
   }
+  // Update the transform of the alignment frame
+  initAlignmentFrame() ;
   return sc;
 }
 
 // inline const Gaudi::Transform3D AlignmentElement::localDeltaMatrix() const {
 //   return m_element->geometry()->ownToOffNominalMatrix();
 // }
-
-const Gaudi::XYZPoint AlignmentElement::localCentre() const {
-
-  Gaudi::XYZVector avgLocalCentre(0.0, 0.0, 0.0);
-  for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
-    avgLocalCentre += ((*i)->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 0.0, 0.0))) - Gaudi::XYZPoint(0.0, 0.0, 0.0);
-  }
-
-  avgLocalCentre /= double(m_elements.size());
-
-  return Gaudi::XYZPoint(0.0, 0.0, 0.0) + avgLocalCentre;
-}
 
 std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
   const std::string s = name();
@@ -189,7 +183,7 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
       << "* Index    : " << index() << "\n"
       << "* dPosXYZ  : " << Gaudi::XYZPoint(t[0], t[1], t[2]) << "\n"
       << "* dRotXYZ  : " << Gaudi::XYZPoint(r[0], r[1], r[2]) << "\n"
-      << "* PivotXYZ : " << pivotXYZPoint() << "\n"
+      << "* PivotXYZ : " << centerOfGravity() << "\n"
       << "* DoFs     : ";
   for (AlDofMask::const_iterator j = m_dofMask.begin(), jEnd = m_dofMask.end(); j != jEnd; ++j) {
     if ((*j)) lhs << dofs.at(std::distance(m_dofMask.begin(), j)) + " ";
