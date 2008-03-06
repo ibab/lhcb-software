@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.h,v 1.7 2008-02-13 18:09:12 janos Exp $
+// $Id: GetElementsToBeAligned.h,v 1.8 2008-03-06 09:07:16 wouter Exp $
 #ifndef GETELEMENTSTOBEALIGNED_H
 #define GETELEMENTSTOBEALIGNED_H 1
 
@@ -61,6 +61,7 @@ private:
   void getElements(const IDetectorElement* parent);
   
   bool                                                              m_groupElems;
+  bool                                                              m_useLocalFrame;    ///< Use local frame as alignmentframe
   std::map<std::string, std::vector<std::string> >                  m_elemsToBeAligned;           ///< Elemenst : Path to elements
   RegExs                                                            m_regexs;                     ///< List of regular expresions
   size_t                                                            m_depth;                      ///< How deep?

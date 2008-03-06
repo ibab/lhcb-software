@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.14 2008-02-20 10:12:12 spozzi Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.15 2008-03-06 09:07:16 wouter Exp $
 // Include files
 
 //from STL
@@ -43,6 +43,7 @@ GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
                                                 const IInterface* parent )
   : GaudiTool ( type, name , parent ),
     m_groupElems(false),
+    m_useLocalFrame(false),
     m_elemsToBeAligned(),
     m_depth(0),
     m_index(0),
@@ -53,6 +54,7 @@ GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
   declareInterface<IGetElementsToBeAligned>(this);
   declareProperty("Elements"     , m_elemsToBeAligned);
   declareProperty("GroupElements", m_groupElems      );
+  declareProperty("UseLocalFrame", m_useLocalFrame   );
 }
 
 GetElementsToBeAligned::~GetElementsToBeAligned() {}
@@ -153,12 +155,12 @@ StatusCode GetElementsToBeAligned::initialize() {
     }
 
     /// Loop over elements and create AlignmentElements
-    if (m_groupElems) m_alignElements.push_back(AlignmentElement(m_elements, m_index++, dofMask));
+    if (m_groupElems) m_alignElements.push_back(AlignmentElement(m_elements, m_index++, dofMask,m_useLocalFrame));
     else std::transform(m_elements.begin(), m_elements.end(), std::back_inserter(m_alignElements),
                         boost::lambda::bind(boost::lambda::constructor<AlignmentElement>(), 
                                             boost::lambda::_1, 
                                             boost::lambda::var(m_index)++, 
-                                            dofMask));
+                                            dofMask,m_useLocalFrame));
     
     m_regexs.clear();
     m_depth = 0u;
