@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+! 2008-03-06 - Patrick Koppenburg
+ - Remove ConfigTreeEditor as inteface has not been committed.
+
 ! 2008-03-05 - Gerhard Raven
  - add missing PropertyConfigSvc::queryInterface
  - add ConfigTreeEditor
