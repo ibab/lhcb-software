@@ -27,5 +27,5 @@ macro_append confDBpython_shlibflags $(Boost_linkopts_python)
 application   confDBpython_test ../tests/test.cpp
 macro_append  confDBpython_test_dependencies " confDBpython "
 
-macro Python_config_version          "2.4.2"
-macro Python_config_version_twodigit "2.4" WIN32 "24"
+#macro Python_config_version          "2.4.2"
+macro Python_config_version_twodigit "2.5" WIN32 "25"
