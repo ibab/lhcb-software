@@ -5,6 +5,9 @@
 !----------------------------------------------------------------------------
 
 ! 2008-03-06 - Patrick Koppenburg
+ - Restore them
+
+! 2008-03-06 - Patrick Koppenburg
  - Remove ConfigTreeEditor as inteface has not been committed.
 
 ! 2008-03-05 - Gerhard Raven
