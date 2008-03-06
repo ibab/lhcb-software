@@ -1,0 +1,20 @@
+package confDB_New
+branches cmt doc src
+use GaudiPolicy v*
+use oracle      v* LCG_Interfaces
+
+include_path none
+include_dirs "$(CONFDB_NEWROOT)/confDB_New"
+
+macro oracle_linkopts "-L$(oracle_home)/lib -lclntsh" \
+      WIN32 "/LIBPATH:$(oracle_home)/lib oci.lib ociw32.lib"
+
+apply_pattern install_more_includes more=confDB_New
+library confDB_New *.cpp
+apply_pattern linker_library library=confDB_New
+
+
+private 
+macro_append confDB_cppflags ' -I"$(oracle_home)/include" '
+path_append PATH ""  WIN32 "$(oracle_home)/bin"
+
