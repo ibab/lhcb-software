@@ -4,6 +4,8 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+!===================== DecayTreeTuple v1r1p1 2008-03-06 =====================
+
 ! 2008-02-20 - Patrick Koppenburg
  - Include physical constants
 
