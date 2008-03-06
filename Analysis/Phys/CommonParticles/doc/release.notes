@@ -1,8 +1,13 @@
+!$Id: release.notes,v 1.94 2008-03-06 15:09:00 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2008-03-06 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v3r11
 
 ! 2008-02-03 - Vladimir Gligorov
  - Added new StdTightD2KPiPi to StandardDplus.opts
