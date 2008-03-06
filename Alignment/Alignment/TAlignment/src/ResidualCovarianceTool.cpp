@@ -28,11 +28,13 @@ StatusCode ResidualCovarianceTool::compute(const LHCb::Track& track)
   const std::vector<LHCb::Node*> allnodes = track.nodes() ;
   std::vector<LHCb::Node*>::const_iterator begin = allnodes.end() ;
   std::vector<LHCb::Node*>::const_iterator end   = allnodes.begin() ;
-  for( std::vector<LHCb::Node*>::const_iterator it = allnodes.begin() ; it != allnodes.end(); ++it)  {
-    if( !(*it)->hasMeasurement() ) continue;
-    if( begin == allnodes.end() ) begin = it ;
-    end = it+1 ;
-  }
+  for( std::vector<LHCb::Node*>::const_iterator it = allnodes.begin() ;
+       it != allnodes.end(); ++it)
+    if( (*it)->hasMeasurement() && (*it)->type() != LHCb::Node::Outlier ) {
+      if( begin == allnodes.end() ) begin = it ;
+      end = it ;
+    }
+  ++end ;
   
   // put all these nodes in a new container, to make things easier
   std::vector<const LHCb::Node*> nodes ;
@@ -147,7 +149,8 @@ StatusCode ResidualCovarianceTool::compute(const LHCb::Track& track)
   std::vector<size_t> measurementnodes ;
   m_nodes.clear() ;
   for(size_t i=0; i<numnodes; ++i)
-    if( nodes[i]->hasMeasurement() ) {
+    if( nodes[i]->hasMeasurement() &&
+	nodes[i]->type() != LHCb::Node::Outlier ) {
       measurementnodes.push_back(i) ;
       m_nodes.push_back(nodes[i]);
     }
@@ -185,12 +188,16 @@ StatusCode ResidualCovarianceTool::compute(const LHCb::Track& track)
   for(size_t irow=0; irow<nummeasurements && !m_error; ++irow) {
     double c = m_HCH.fast(irow+1,irow+1) ;
     m_error = ! (0 <= c && c <=1) ;
+    if(m_error) std::cout << "found bad element on diagonal: "
+			  << c << std::endl ;
     diagroots.push_back(std::sqrt(c)) ;
   }
   for(size_t irow=0; irow<nummeasurements && !m_error; ++irow) 
     for(size_t icol=0; icol<irow && !m_error; ++icol) {
       double c = m_HCH.fast(irow+1,icol+1) / (diagroots[irow]*diagroots[icol]) ;
       m_error =  ! (-1 <= c && c <=1) ;
+      if(m_error) std::cout << "found bad element on offdiagonal: "
+			    << c << std::endl ;
     }
   return StatusCode::SUCCESS ;
 }
