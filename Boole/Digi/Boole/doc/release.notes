@@ -8,9 +8,14 @@ Purpose: LHCb Digitization program
    digitization
  - In Boole.opts, adapt to new name of ST digitization package
  - In SuppressWarnings.opts, timestamp is printed in UTC, keep EventLoopMgr msgs
- - Add python configuration module, used by python job options
- - Update v200601.py to use python configuration
- - Add v200801.py to process post DC04 data (only available from python)
+ - Added generic support for execution with gaudirun.py and python options:
+    o python/Boole/Configuration.py: functions to configure Boole
+    o options/BooleCommon.py: options shared by all configurations
+    o v200601.py: specific options for DC06 geometries
+    o v200801.py: specific options for 2008 geometry
+   The v200xxx.py scripts support all available configurations (TAE generation,
+   spillover removal, L0 filtering, L0 ETC writing, mdf writing, 
+   warnings suppression, expert histos etc.)
 
 </PRE><H1><A NAME=v14r9>2008-01-30 Boole v14r9</A></H1><PRE>
  - In valgrind.job, use the new ROOT suppressions file available from LCG_54 
