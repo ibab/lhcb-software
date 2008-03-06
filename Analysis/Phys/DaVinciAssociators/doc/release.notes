@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.122 2008-03-06 16:47:36 jpalac Exp $
+! $Id: release.notes,v 1.123 2008-03-06 16:48:38 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+!========================== DaVinciAssociators v9r2p4 2008-03-06 ==============
 
 ! 2008-02-12 - Juan PALACIOS
  - cmt/requirements
