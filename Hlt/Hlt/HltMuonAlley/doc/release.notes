@@ -3,6 +3,7 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
+!========================== HltMuonAlley v2r2 2008-03-07 ===================
 ! 2008-02-13 - Gerhard Raven
   make a few cosmetic changes in HltMuonIDDistanceTool.cpp, and add comment
   about modifying a 'const Track&' in this tool....
