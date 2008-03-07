@@ -4,6 +4,7 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+!========================== HltPython v1r4 2008-03-07 ===================
 ! 2008-2-21 - Hugo Ruiz for Xabier Cid
   - Corrected bugs in the files added on 2008-2-17
 
@@ -22,8 +23,8 @@ tracksAndVerticesClassifyTools, drawPiesAndHistos
 - python/examples/hltexamples.py
   - make the module a script and remove the HLTFAC factory tool
 
-!!========================== HltPython v1r2 2007-12-17 ===================
-!! 2008-02-07 - Hugo Ruiz for Xabier Cid
+!========================== HltPython v1r2 2007-12-17 ===================
+! 2008-02-07 - Hugo Ruiz for Xabier Cid
  - added hadHLTpies.py to examples
  - added frequencyAndBpercentage.py and tracksAndVerticesClassifyTools.py to modules
 
