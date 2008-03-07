@@ -25,10 +25,20 @@ PrintPreselBu2D0K_D02KsHH.OutputLevel = 3 ;
 //
 #include "$HLTSELCHECKERROOT/options/TrueBu2D0K_KsHH.opts"
 //
+// Set the following to false if you want only events with a signal
+// fully reconstructed in the HLT
+//
+SeqHltTruthFilter.IgnoreFilterPassed = true ; 
+//
 // Overwrite input - uncomment to run HLT on true signal only
 //
 // #include "$HLTSELCHECKERROOT/options/OverwriteWithTruth.opts"
-//
+/**
+ * Tuple
+ */
+#include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelBu2D0K_KsHH"};
+HltDecayTreeTuple.Decay = "[B+ -> (^D~0 -> (^KS0 -> ^pi+ ^pi-) ^pi+ ^pi-) ^K+]cc";//
 // Options
 //
 EventSelector.Input   = {

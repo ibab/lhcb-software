@@ -22,7 +22,18 @@ HltExclusiveCorrs.Algorithms += { "PreselBd2DstarMu" };
 //
 // True filter criterion - will only run HLT on true signal
 //
-// #include "$HLTSELCHECKERROOT/options/TrueB2DstarMu.opts"
+#include "$HLTSELCHECKERROOT/options/TrueB2DstarMu.opts"
+//
+// Set the following to false if you want only events with a signal
+// fully reconstructed in the HLT
+//
+SeqHltTruthFilter.IgnoreFilterPassed = true ; 
+/**
+ * Tuple
+ */
+#include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelB2DstarMu"};
+HltDecayTreeTuple.Decay = "[B0 -> ^mu+ (^D*(2010)- -> ^pi-  (^D~0 -> ^K+ ^pi-))]cc";
 //
 // Options
 //

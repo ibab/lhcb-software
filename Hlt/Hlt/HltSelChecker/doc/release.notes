@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-03-07 - Patrick KOPPENBURG
+ - Add DecayTreeTuple in all test files
+
 ! 2008-03-05 - Patrick Koppenburg
  - Remove HltSelChecker algorithm
 

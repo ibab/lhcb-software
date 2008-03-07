@@ -24,9 +24,20 @@ HltExclusiveCorrs.Algorithms += { "PreselB2HH" };
 //
 #include "$HLTSELCHECKERROOT/options/TrueB2HH.opts"
 //
+// Set the following to false if you want only events with a signal
+// fully reconstructed in the HLT
+//
+SeqHltTruthFilter.IgnoreFilterPassed = true ; 
+//
 // Overwrite input - uncomment to run HLT on true signal only
 //
 // #include "$HLTSELCHECKERROOT/options/OverwriteWithTruth.opts"
+/**
+ * Tuple
+ */
+#include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelB2HH"};
+HltDecayTreeTuple.Decay = "B0 -> ^pi+ ^pi-";
 //
 // Options
 //

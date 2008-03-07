@@ -1,0 +1,44 @@
+/** @file HltDecayTreeTuple.opts
+ *
+ *  Generic Tuple configuration
+ *  @warning Will not work without decay and input data
+ *  @code
+ *  #include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
+ *  HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelBd2MuMuKstar"};
+ *  HltDecayTreeTuple.Decay = "[B0 -> (^J/psi(1S) => ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc";
+ *  // optional additional tools fro head or other branches
+ *  HltDecayTreeTuple.Branches = {
+ *    "Head" : "[B0]cc : [B0 -> (J/psi(1S) => mu+ mu-) (K*(892)0 -> K+ pi-)]cc" 
+ *  };
+ *  HltDecayTreeTuple.Head.ToolList += { "TupleToolP2VV" };
+ *  @endcode
+ *
+ *  See DecayTreeTuple documentation
+ *
+ *  @author P. Koppenburg
+ *  @date 20080-03-07
+ */
+ApplicationMgr.TopAlg += { "DecayTreeTuple/HltDecayTreeTuple" };
+// HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelBd2MuMuKstar"}; // needs to be configured
+
+// HltDecayTreeTuple.Decay = "[B0 -> (^J/psi(1S) => ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"; // needs to be configured
+
+HltDecayTreeTuple.ToolList += {  
+      "TupleToolTrigger"
+    , "TupleToolMCTruth"
+    , "TupleToolMCBackgroundInfo"
+    , "TupleToolGeometry"
+    , "TupleToolKinematic"
+    , "TupleToolPropertime"
+    , "TupleToolPrimaries"
+    , "TupleToolEventInfo"
+};
+
+// Can be overwritten for special branches
+HltDecayTreeTuple.Branches = { };
+
+HltDecayTreeTuple.TupleToolMCTruth.StoreKineticInfo = true;
+HltDecayTreeTuple.TupleToolMCTruth.StoreVertexInfo = true;
+HltDecayTreeTuple.TupleToolTrigger.VerboseL0 = true ;
+HltDecayTreeTuple.TupleToolTrigger.VerboseAlleys = true ;
+HltDecayTreeTuple.TupleToolTrigger.VerboseSelections = true ;
