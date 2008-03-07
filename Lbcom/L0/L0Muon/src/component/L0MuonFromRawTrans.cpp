@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.cpp,v 1.6 2008-02-19 09:40:15 jucogan Exp $
+// $Id: L0MuonFromRawTrans.cpp,v 1.7 2008-03-07 15:34:42 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -218,7 +218,7 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
   std::vector<L0Muon::PMuonCandidate>::iterator itcand;
 
   std::string location;
-  location = rootInTES() + LHCb::L0MuonCandidateLocation::Default + extension;
+  location = LHCb::L0MuonCandidateLocation::Default + extension;
   LHCb::L0MuonCandidates* pl0mcands = new LHCb::L0MuonCandidates();
   put(pl0mcands , location );
   if (msgLevel( MSG::DEBUG )) {
@@ -245,7 +245,7 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
     }
   }
 
-  //   location = rootInTES() + LHCb::L0MuonCandidateLocation::BCSU + "Ctrl"+ extension;
+  //   location = LHCb::L0MuonCandidateLocation::BCSU + "Ctrl"+ extension;
   //   LHCb::L0MuonCandidates* pbcsucands = new LHCb::L0MuonCandidates();
   //   put(pbcsucands , location );
   //   if (msgLevel( MSG::DEBUG )) {
@@ -272,7 +272,7 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
   //     }
   //   }
 
-  location = rootInTES() + LHCb::L0MuonCandidateLocation::BCSU + extension;
+  location = LHCb::L0MuonCandidateLocation::BCSU + extension;
   LHCb::L0MuonCandidates* pbcsucands = new LHCb::L0MuonCandidates();
   put(pbcsucands , location );
   if (msgLevel( MSG::DEBUG )) {
@@ -299,7 +299,7 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
     }
   }
 
-  location = rootInTES() + LHCb::L0MuonCandidateLocation::PU  + extension;
+  location = LHCb::L0MuonCandidateLocation::PU  + extension;
   LHCb::L0MuonCandidates* ppucands = new LHCb::L0MuonCandidates();
   put(ppucands , location );
   if (msgLevel( MSG::DEBUG )) {
@@ -327,7 +327,7 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
   }
 
 
-  location = rootInTES() + LHCb::L0MuonDataLocation::Default + extension;
+  location = LHCb::L0MuonDataLocation::Default + extension;
   LHCb::L0MuonDatas* pdata = new LHCb::L0MuonDatas();
   put(pdata , location );
   if (msgLevel( MSG::DEBUG )) {
@@ -357,7 +357,7 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
 
   int L0EventNumber= l0EventNumber();
   int L0_B_Id      = l0_B_Id();
-  location = rootInTES() + LHCb::L0MuonInfoLocation::Default + extension;
+  location = LHCb::L0MuonInfoLocation::Default + extension;
   LHCb::L0MuonInfo* pl0minfo = new LHCb::L0MuonInfo();
   pl0minfo->setL0EventNumber(L0EventNumber);
   pl0minfo->setL0_B_Id(L0_B_Id);
@@ -367,7 +367,7 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
     debug() << "writeOnTES at "<< location << endreq;
   }
 
-  location = rootInTES() + LHCb::L0MuonCtrlErrorLocation::Default + extension;
+  location = LHCb::L0MuonCtrlErrorLocation::Default + extension;
   LHCb::L0MuonCtrlErrors* pl0mctrlerrors = new LHCb::L0MuonCtrlErrors();
   put(pl0mctrlerrors, location );
   if (msgLevel( MSG::DEBUG )) {
@@ -408,7 +408,7 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
       }
     }
   }
-  location = rootInTES() + LHCb::L0MuonProcErrorLocation::Default + extension;
+  location = LHCb::L0MuonProcErrorLocation::Default + extension;
   LHCb::L0MuonProcErrors* pl0mprocerrors = new LHCb::L0MuonProcErrors();
   put(pl0mprocerrors, location );
   if (msgLevel( MSG::DEBUG )) {

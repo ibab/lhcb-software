@@ -1,7 +1,10 @@
-!  $Id: release.notes,v 1.47 2008-02-19 09:44:23 jucogan Exp $
+!  $Id: release.notes,v 1.48 2008-03-07 15:34:42 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev
 !-------------------------------------------------------------------------
+
+! 2008-03-07 Julien Cogan
+ - Update decoding and monitoring of L0Muon data in transparent mode
 
 !========================= L0Muon v7r7 2008-02-19 ========================
 ! 2008-02-08 Julien Cogan

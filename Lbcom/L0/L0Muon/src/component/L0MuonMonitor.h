@@ -1,12 +1,15 @@
-// $Id: L0MuonMonitor.h,v 1.3 2008-02-08 11:17:00 jucogan Exp $
+// $Id: L0MuonMonitor.h,v 1.4 2008-03-07 15:34:42 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITOR_H 
 #define COMPONENT_L0MUONMONITOR_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
+#include "Kernel/IEventTimeDecoder.h"
 
 #include "MuonKernel/MuonSystemLayout.h"
+
+#include "MuonDAQ/IMuonRawBuffer.h"
 
 
 /** @class L0MuonMonitor L0MuonMonitor.h component/L0MuonMonitor.h
@@ -31,6 +34,15 @@ public:
 protected:
  
 private:
+
+  void bookHitMaps(std::string sid="");
+  void fillHitMaps(std::vector<LHCb::MuonTileID> tiles,std::string sid="");
+  
+  IEventTimeDecoder* m_odin;
+
+  // Interface to muon raw buffer 
+  IMuonRawBuffer* m_muonBuffer; 
+  std::vector<LHCb::MuonTileID> muonTiles();
   
   static inline std::string channelTypeName(L0MuonMonitor::Channel_type e)
   { 
@@ -76,9 +88,12 @@ private:
     };
   };
 
-  std::string histoName(L0MuonMonitor::Channel_type ch_type, int reg, int sta, int qua)
+  std::string histoName(L0MuonMonitor::Channel_type ch_type, int reg, int sta, int qua, std::string sid="")
   {
-    return quarterName(qua)+"_"+stationName(sta)+"_"+regionName(reg)+"_"+channelTypeName(ch_type);
+    std::string name= quarterName(qua)+"_"+stationName(sta)+"_"+regionName(reg)+"_"+channelTypeName(ch_type);
+    if (!sid.empty())
+      name+="_"+sid;
+    return name;
   };
   
   void setLayouts(); // Set the layouts in use

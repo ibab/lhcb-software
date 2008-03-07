@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.6 2008-01-17 13:28:43 graven Exp $
+// $Id: L0MuonAlg.cpp,v 1.7 2008-03-07 15:34:42 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -370,7 +370,8 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
         LHCb::MuonTileID mkey = (*itdata)->key();    
         std::vector<LHCb::MuonTileID> ols = (*itdata)->ols();
         if (ols.size()>0) {
-          if( msgLevel(MSG::DEBUG) ) debug()  <<"fillOLsfromDigits:    PU: "<<mkey.toString()<<" => "<<ols.size()<<" hits found"<<endmsg;;
+          if( msgLevel(MSG::DEBUG) ) debug()  <<"fillOLsfromDigits:    PU: "
+                                              <<mkey.toString()<<" => "<<ols.size()<<" hits found"<<endmsg;;
           for (std::vector<LHCb::MuonTileID>::iterator itol=ols.begin(); itol!=ols.end(); ++itol){
             if( msgLevel(MSG::DEBUG) )debug()  <<"fillOLsfromDigits:       "<<(*itol).toString()<<endmsg;
             ddigits.push_back(*itol);
@@ -407,7 +408,8 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
       }
     }
     //     debug() << "fillOLsfromDigits:  m_muonBuffer "<<m_muonBuffer<<endmsg;
-    ddigits=m_muonBuffer->getTile();
+    //    ddigits=m_muonBuffer->getTile();
+    m_muonBuffer->getTile(ddigits);
   }  
 
   debug() << "fillOLsfromDigits:  ddigits.size()= "<<ddigits.size()<<endmsg;

@@ -1,7 +1,7 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.8 2008-01-17 19:41:53 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.9 2008-03-07 15:34:42 jucogan Exp $
 #include <algorithm>
 #include <math.h>
-#include <set>/home/cogan/.emacs
+#include <set>
 #include <boost/dynamic_bitset.hpp>
 
 #include "L0MuonCandidatesFromRaw.h"
