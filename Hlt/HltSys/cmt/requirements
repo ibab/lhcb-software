@@ -12,7 +12,7 @@ use HltTracking         v3r1    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v3r1    Hlt   # Jose Angel Hernando-Morata
 use HltPython	        v1r4    Hlt   # Jose Angel Hernando-Morata
 
-use HltMuon             v3r1    Hlt   # Alessia Satta          
+use HltMuon             v3r0    Hlt   # Alessia Satta          
 
 use HltMuonAlley        v2r2    Hlt   # Sandra Amato 
 
@@ -21,9 +21,9 @@ use HltL0Conf           v1r5    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r0    Hlt   # Alessia Satta/Sandra Amato  
 
 use HltSelections       v6r0    Hlt   # Patrick Koppenburg
-use HltSelChecker       v5r5    Hlt   # Patrick Koppenburg
+use HltSelChecker       v6r0    Hlt   # Patrick Koppenburg
 
-use HltKshort           v1r0    Hlt   # Jaap Panman
+use HltKshort           v1r1    Hlt   # Jaap Panman
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
@@ -32,7 +32,7 @@ use HltKshort           v1r0    Hlt   # Jaap Panman
 use HltBase             v4r1   Hlt    # Jose Angel Hernando-Morata
 
 use LoKiTrigger         v7r2   Phys   # Vanya Belyaev
-use TisTosTobbing       v2r3   Phys   # Tomasz Skwarnicki  
+use TisTosTobbing       v2r2   Phys   # Tomasz Skwarnicki  
 
 
 

@@ -1,34 +1,40 @@
-// 
-// Define HltDataSvc 
-//
+/**
+ * Define HltDataSvc 
+ */
 // ApplicationMgr.SvcOptMapping += {"DataSvc/HltDataSvc"};
 HltSvc.ForceLeaves = true;
 
-//
-// defines online reconstruction parameters, does not add any algorithm!
-//
+/**
+ * defines online reconstruction
+ */
 #include "$HLTSYSROOT/options/HltRecoSequence.opts"
+/**
+ * Add Ks 
+ * @todo Make ProtoParticlea and articles with these Ks
+ * @todo See what to do with downstream Ks
+ */
+#include "$HLTKSHORTROOT/options/HltVzero.opts"
 
-//
-// main HLT sequencer
-//
+/**
+ * main HLT sequencer
+ */
 ApplicationMgr.TopAlg += {"GaudiSequencer/Hlt"};
 
 Hlt.ModeOr = true;
 Hlt.ShortCircuit = false;
 
-//
-// init the HLT sequencer
-//
+/**
+ * init the HLT sequencer
+ */
 Hlt.Members += { "GaudiSequencer/HltInitSequence" };
 HltInitSequence.Members = {"HltInit"};
 
 // now use the updated L0 channel configuration
 // HltInit.TCKName = "UpdatedL0";
 
-//
-// the Alleys sequencer
-//
+/**
+ * the Alleys sequencer
+ */
 Hlt.Members += { "GaudiSequencer/HltAllAlleysSequence" };
 
 HltAllAlleysSequence.ModeOr=true; 
@@ -56,9 +62,9 @@ HltAllAlleysSequence.Members += {  "HltSelectionFilter/HltAlleys" };
 
 
 
-//
-// end the Hlt sequencer: write in summary and copy to TES
-//
+/**
+ * end the Hlt sequencer: write in summary and copy to TES
+ */
 
 Hlt.Members += { "GaudiSequencer/HltEndSequence" };
 HltEndSequence.ModeOr = true;
@@ -72,8 +78,8 @@ HltEndSequence.Members += { "HltSummaryWriter"};
 HltSummaryWriter.Save += {"HltAlleys"};
 HltSummaryWriter.OutputLevel=3;
 
-//
-// Hlt selections
-//
+/**
+ * Hlt selections
+ */
 #include "$HLTSYSROOT/options/HltSelections.opts"
 
