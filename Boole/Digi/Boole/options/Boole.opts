@@ -68,7 +68,7 @@ Relations.DetectorList = {
                          };
 
 // Initialization
-InitBooleSeq.Members += { "BooleInit/Boole" };
+InitBooleSeq.Members += { "BooleInit" };
 
 // Spillover
 InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" };

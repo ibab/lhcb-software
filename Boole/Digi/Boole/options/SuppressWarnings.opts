@@ -4,13 +4,14 @@
 
 // Suppress Warnings and below by default
 MessageSvc.OutputLevel = 4;
+ToolSvc.OutputLevel = 4;
 
 // "Known" errors
-Boole.BooleMemory.OutputLevel = 4; // Because Boole.OutputLevel = 3;
-CompareMCVertex.OutputLevel = 5;   // Due to crazy vertices produced by Gauss
+BooleInit.BooleMemory.OutputLevel = 4; // Because BooleInit.OutputLevel = 3;
+CompareMCVertex.OutputLevel = 5;       // Due to crazy vertices produced by Gauss
 
 // Information to be kept
-Boole.OutputLevel = 3;
+BooleInit.OutputLevel = 3;
 EventSelector.OutputLevel = 3;
 DigiWriter.OutputLevel = 3;
 TimingAuditor.OutputLevel = 3;
