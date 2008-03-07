@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
+
+!========================== HltRecChecker v1r5 2008-03-07 ===================
 ! 2008-03-08 - Jose A. Hernando
   - removing printing into from HltLHCbIDMCParticleRelation.cpp
 
