@@ -1,4 +1,4 @@
-// $Id: HltLHCbIDMCParticleRelation.cpp,v 1.2 2008-01-22 11:04:05 hernando Exp $
+// $Id: HltLHCbIDMCParticleRelation.cpp,v 1.3 2008-03-07 11:24:20 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -72,10 +72,10 @@ StatusCode HltLHCbIDMCParticleRelation::execute() {
     }
   }
 
-  const std::vector<int>& keys = relation->keys();
-  debug() << " Keys " << keys.size() << " [1] " << keys[1] << endreq;
+  // const std::vector<int>& keys = relation->keys();
+  // debug() << " Keys " << keys.size() << " [1] " << keys[1] << endreq;
   
-  relation->info();
+  // relation->info();
 
   // LinkedFrom<DataObject,MCParticle,LHCbID> 
 //     linkIDs(evtSvc(),msgSvc(),"Pat/LHCbID");

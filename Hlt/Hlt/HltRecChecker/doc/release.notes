@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
+! 2008-03-08 - Jose A. Hernando
+  - removing printing into from HltLHCbIDMCParticleRelation.cpp
+
 ! 2008-02-11 - Gerhard Raven
   - add .cvsignore file to cmt directory to ignore cmt generated files
 
