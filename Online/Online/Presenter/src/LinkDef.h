@@ -8,6 +8,7 @@
 
 //#pragma link C++ class RegexpFrame;
 #pragma link C++ class LoginDialog;
+#pragma link C++ class IntervalPicker;
 #pragma link C++ class ReferencePicker;
 #pragma link C++ class PageSaveDialog;
 #pragma link C++ class PresenterMainFrame;

@@ -43,8 +43,8 @@ macro_append Boost_linkopts " -lboost_filesystem-gcc34 -lboost_date_time-gcc34 -
 
 application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp \
                                      DbRootHist.cpp HistogramIdentifier.cpp \
-                                     ReferencePicker.cpp LoginDialog.cpp \
-                                     HistoPropDialog.cpp Archive.cpp\
+                                     ReferencePicker.cpp IntervalPicker.cpp \
+                                     LoginDialog.cpp HistoPropDialog.cpp Archive.cpp \
                                      PageSaveDialog.cpp SetDimDnsNodeDialog.cpp \
                                      PresenterMainFrame.cpp presenter.cpp "
 macro_append presenter_dependencies " cintBootstrap "

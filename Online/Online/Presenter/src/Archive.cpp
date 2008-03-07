@@ -62,7 +62,7 @@ void Archive::refreshDirectory(const DirectoryType & directoryType)
       break;
   }
 }
-std::string Archive::referenceFilePath(DbRootHist* histogram)
+std::string Archive::referenceFilePath(DbRootHist* /*histogram*/)
 {
   return string("");
 }
@@ -252,14 +252,14 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
   }
   return foundRootFiles;
 }
-TH1* Archive::referenceHistogram(const string & referenceDbEntry)
+TH1* Archive::referenceHistogram(const string & /*referenceDbEntry*/)
 {
   return 0;
 }
 void Archive::saveAsReferenceHistogram(DbRootHist* histogram)
 {
   path referenceFilePath(m_referencePath/histogram->taskName());
-    bool out;
+    bool out(false);
     try {
       create_directories(referenceFilePath);
     } catch (const filesystem_error & error) {

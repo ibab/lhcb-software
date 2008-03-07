@@ -102,7 +102,8 @@ class PresenterMainFrame : public TGMainFrame
       M_DeleteFolder_COMMAND,
       M_LAST_1_HOURS,
       M_LAST_8_HOURS,
-      M_LAST_DEMO
+      M_LAST_DEMO,
+      M_IntervalPicker
     };
 
     struct obsolete_BulkHistoOptions {
@@ -224,7 +225,7 @@ class PresenterMainFrame : public TGMainFrame
 
     void clickedDimTreeItem(TGListTreeItem* node,
                             EMouseButton btn,
-                            int x, int y);
+                            int x, int y);                            
     void clickedHistoDBTreeItem(TGListTreeItem* node,
                                 EMouseButton btn,
                                 int x, int y);
