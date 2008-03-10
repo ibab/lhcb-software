@@ -4,6 +4,32 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2008-03-10 - Olivier Callot
+ - New header file "LocalLinker" to make a local linker table not on TES. This class
+   has a constructor with a single argument, the event service. It has the methods 
+   'link',  'setIncreasingWeight', 'setDecreasingWeight' from LinkerWithKey,
+   'first', 'next', and 'weight' from LinkedTo, and 'firstSource' and 'nextSource' 
+   similar to fist and next from LinkedFrom. The data (Linker table) is kept internally
+   and disappear when the object runs out of scope. Example of use:
+
+  LocalLinker<LHCb::Particle, LHCb::MCParticle> myLinker( evtSvc() );
+  ...
+  LHCb::Particle*     part = ...;
+  LHCb::MCParticle* mcPart = ...;
+  myLinker.link( part, mcPart );
+  ...
+  LHCb::MCParticle* mcPart2 = myLinker.first( part );
+  while ( 0 != mcPart2 ) {
+    ... 
+    mcPart2 = myLinker.next();
+  }
+
+  LHCb::Particle* part2 = myLinker.firstSource( mcPart );
+  while ( 0 != part2 ) {
+    ...
+    part2 = myLinker.nextSource();
+  }
+
 !======================= LinkerEvent v3r3 2008-03-03 =========================
 ! 2008-02-27 - Chris Jones
  - Add missing STL includes

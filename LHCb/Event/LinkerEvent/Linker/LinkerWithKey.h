@@ -1,4 +1,4 @@
-// $Id: LinkerWithKey.h,v 1.13 2006-08-01 06:31:06 cattanem Exp $
+// $Id: LinkerWithKey.h,v 1.14 2008-03-10 14:41:44 ocallot Exp $
 #ifndef LINKER_LINKERWITHKEY_H 
 #define LINKER_LINKERWITHKEY_H 1
 
@@ -23,7 +23,6 @@ public:
   LinkerWithKey( IDataProviderSvc* evtSvc,
                  IMessageSvc* msgSvc,
                  std::string containerName ) {
-    m_msgSvc        = msgSvc;
     std::string name = "Link/" + containerName;
     if ( "/Event/" == containerName.substr(0,7) ) {
       name = "Link/" + containerName.substr(7);
@@ -80,6 +79,5 @@ protected:
   
 private:
   LHCb::LinksByKey*  m_links;
-  IMessageSvc* m_msgSvc;
 };
 #endif // LINKER_LINKERWITHKEYNEW_H
