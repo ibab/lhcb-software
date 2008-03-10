@@ -3,7 +3,7 @@ rm -f /dev/shm/bm_*
 rm -f /dev/shm/sem.BM*
 rm -f /dev/shm/sem.bm*
 rm -f /dev/shm/sem.MEP*
-EXEC=../slc3_ia32_gcc323/test.exe
+EXEC=../${CMTCONFIG}/test.exe
 MINITERM='xterm -geometry 60x6 -e '
 $MINITERM "$EXEC mbm_install -s=8096 -e=5  -u=4 -i=MEP" &
 sleep 1

@@ -1,4 +1,4 @@
-#/bin/csh
+#!/bin/csh
 killall test.exe
 rm /dev/shm/bm_*
 rm /dev/shm/sem.BM*

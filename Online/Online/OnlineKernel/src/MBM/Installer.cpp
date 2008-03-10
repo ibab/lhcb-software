@@ -25,8 +25,9 @@ static int _mbm_installer_shutdown(void* param) {
   std::pair<void*,int>* p = (std::pair<void*,int>*)param;
   BUFFERS* b = (BUFFERS*)p->first;
   int id = p->second;
-  memset(&b->buffers[id],0,sizeof(BUFFERS::BUFF));
-  b->nbuffer--;
+  if ( b->buffers[id].used != 0 )
+    b->nbuffer--;
+  ::memset(&b->buffers[id],0,sizeof(BUFFERS::BUFF));
   delete p;
   return 1;
 }
@@ -295,7 +296,7 @@ int MBM::Installer::deinstall()  {
   for(int i=0; i<buffs->p_bmax; ++i)  {
     if ( ::strcmp(buffs->buffers[i].name,bm_id)==0 )  {
       buffs->buffers[i].used = 0;
-      buffs->nbuffer--;
+      buffs->nbuffer =  (buffs->nbuffer>0) ? buffs->nbuffer - 1 : 0;
       ::memset(buffs->buffers[i].name,0,sizeof(buffs->buffers[i].name));
       break;
     }
@@ -329,5 +330,10 @@ int mbm_install(int argc , char** argv) {
 
 int mbm_deinstall(int argc , char** argv) {
   MBM::Installer inst(argc, argv);
+  return inst.deinstall();
+}
+
+extern "C" int mbm_remove(int argc, char** argv) {
+  MBM::Installer inst(argc,argv);
   return inst.deinstall();
 }

@@ -1,4 +1,4 @@
-#/bin/csh
+#!/bin/csh
 killall test.exe
 setenv TAN_PORT YES
 set EXEC=$ONLINEKERNELROOT/$CMTCONFIG/test.exe

@@ -1,4 +1,4 @@
-#/bin/csh
+#!/bin/csh
 rm /dev/shm/sem.TAN_*
 rm /dev/shm/TAN_*
 set EXEC=$ONLINEKERNELROOT/$CMTCONFIG/test.exe

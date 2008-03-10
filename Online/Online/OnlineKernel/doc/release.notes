@@ -1,6 +1,10 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2008-03-09 Markus Frank
+  - Add application mbm_remove to clean up old unused buffers.
+    See "mbm_remove.exe -h" for mbm installer help.
+
 ! 2008-01-28 Markus Frank
   - Some improvements on monitoring displays to build generic displays.
 

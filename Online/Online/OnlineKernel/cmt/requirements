@@ -19,15 +19,17 @@ library       OnlineKernel ../src/WT/*.cpp      \
 
 macro_append  OnlineKernel_shlibflags ' -lpthread -lrt -lcurses ' WIN32 ' '
 apply_pattern ld_library_path
-apply_pattern linker_library       library=OnlineKernel
-application   test                 ../main/wt.cpp
-application   gentest              ../main/gentest.cpp
-macro_append  test_dependencies    " OnlineKernel "
-macro_append  gentest_dependencies " OnlineKernel "
-macro_append  use_includes         ' $(ppcmd)"$(OnlineKernel_cmtpath)/$(cmt_installarea_prefix)/include/OnlineKernel" '
-macro_append  use_linkopts         ' -ldl ' WIN32 ''
-path_remove PYTHONPATH             '/OnlineKernel/'    WIN32 '\OnlineKernel\'
-path_append PYTHONPATH             $(ONLINEKERNELROOT)/python
+apply_pattern linker_library          library=OnlineKernel
+application   test                    ../main/wt.cpp
+application   gentest                 ../main/gentest.cpp
+application   mbm_remove              ../main/mbm_remove.cpp
+macro_append  test_dependencies       " OnlineKernel "
+macro_append  gentest_dependencies    " OnlineKernel "
+macro_append  mbm_remove_dependencies " OnlineKernel "
+macro_append  use_includes            ' $(ppcmd)"$(OnlineKernel_cmtpath)/$(cmt_installarea_prefix)/include/OnlineKernel" '
+macro_append  use_linkopts            ' -ldl ' WIN32 ''
+path_remove PYTHONPATH                '/OnlineKernel/'    WIN32 '\OnlineKernel\'
+path_append PYTHONPATH                $(ONLINEKERNELROOT)/python
 
 ###  macro cpp 'gcc32 -m32 '
 ###  macro shlibbuilder 'g++32 -m32 $(cmt_installarea_linkopts) '
