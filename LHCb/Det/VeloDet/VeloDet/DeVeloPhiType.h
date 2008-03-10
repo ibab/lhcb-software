@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.29 2008-02-14 16:15:46 cattanem Exp $
+// $Id: DeVeloPhiType.h,v 1.30 2008-03-10 14:57:49 dhcroft Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -126,26 +126,6 @@ public:
 
   /// Return the length of a strip
   virtual double stripLength(const unsigned int strip) const;
-
-  /// The phi position of a strip at a given radius in the local frame
-  inline double phiOfStrip(unsigned int strip, double fraction, 
-                           const double radius) const {
-    double effectiveStrip=fraction+static_cast<double>(strip);
-    if (m_nbInner > strip) {
-      return (effectiveStrip*m_innerPitch) + phiOffset(radius);
-    } else {
-      effectiveStrip -= m_nbInner;
-      return (effectiveStrip*m_outerPitch) + phiOffset(radius);
-    }
-  }
-  
-  /// The phi position of a strip at a given radius using method of DeVelo v8r*
-  inline double trgPhiOfStrip(unsigned int strip, double fraction, 
-                              const double radius) const{
-    double phi=phiOfStrip(strip,fraction,radius);
-    if(isDownstream()) phi = -phi;
-    return phi;
-  }
   
   /// The angle of the strip wrt to the x axis in the local frame
   inline double angleOfStrip(unsigned int strip, double fraction=0.) const{
@@ -171,21 +151,21 @@ public:
   inline double globalPhiOffset(unsigned int zone, double radius) const {
     double c0 = m_globalOffsetAtR0[zone];
     double d0 = m_globalDistToOrigin[zone];
-    return asin(d0/radius) - c0;
+    return safePhiOffset(c0,d0,radius);
   }
   
   /// get the halfbox frame phi offset at a given radius in the given zone 
   inline double halfboxPhiOffset(unsigned int zone, double radius) const {
     double c0 = m_halfboxOffsetAtR0[zone];
     double d0 = m_halfboxDistToOrigin[zone];
-    return asin(d0/radius) - c0;
+    return safePhiOffset(c0,d0,radius);
   }
   
   /// get the ideal frame phi offset at a given radius in the given zone 
   inline double idealPhiOffset(unsigned int zone, double radius) const {
     double c0 = m_idealOffsetAtR0[zone];
     double d0 = m_idealDistToOrigin[zone];
-    return asin(d0/radius) - c0;
+    return safePhiOffset(c0,d0,radius);
   }
   
   /// get the global frame phi distance to origin 
@@ -215,8 +195,8 @@ public:
   inline double globalPhi(unsigned int strip, double fraction, double radius) const {
     double c0     = strip < m_nbInner? m_globalOffsetAtR0[0] : m_globalOffsetAtR0[1];
     double d0     = strip < m_nbInner? m_globalDistToOrigin[0] : m_globalDistToOrigin[1];
-    double offset = asin(d0/radius);
-    double phi    = m_globalPhi[strip] + fraction*globalPhiPitch(strip) + offset - c0;
+    double offset =  safePhiOffset(c0,d0,radius);
+    double phi    = m_globalPhi[strip] + fraction*globalPhiPitch(strip) + offset;
     phi = phi < -Gaudi::Units::pi ? phi + 2.0*Gaudi::Units::pi : phi;
     phi = phi >  Gaudi::Units::pi ? phi - 2.0*Gaudi::Units::pi : phi;
     return phi; 
@@ -234,8 +214,8 @@ public:
   inline double halfboxPhi(unsigned int strip, double fraction, double radius) const {
     double c0     = strip < m_nbInner? m_halfboxOffsetAtR0[0] : m_halfboxOffsetAtR0[1];
     double d0     = strip < m_nbInner? m_halfboxDistToOrigin[0] : m_halfboxDistToOrigin[1];
-    double offset = asin(d0/radius);
-    double phi    = m_halfboxPhi[strip] + fraction*globalPhiPitch(strip) + offset - c0;
+    double offset =  safePhiOffset(c0,d0,radius);
+    double phi    = m_halfboxPhi[strip] + fraction*globalPhiPitch(strip) + offset;
     phi = phi < -Gaudi::Units::pi ? phi + 2.0*Gaudi::Units::pi : phi;
     phi = phi >  Gaudi::Units::pi ? phi - 2.0*Gaudi::Units::pi : phi;
     return phi; 
@@ -253,8 +233,8 @@ public:
   inline double idealPhi(unsigned int strip, double fraction, double radius) const {
     double c0     = strip < m_nbInner? m_idealOffsetAtR0[0] : m_idealOffsetAtR0[1];
     double d0     = strip < m_nbInner? m_idealDistToOrigin[0] : m_idealDistToOrigin[1];
-    double offset = asin(d0/radius);
-    double phi    = m_idealPhi[strip] + fraction*globalPhiPitch(strip) + offset - c0;
+    double offset =  safePhiOffset(c0,d0,radius);
+    double phi    = m_idealPhi[strip] + fraction*globalPhiPitch(strip) + offset;
     phi = phi < -Gaudi::Units::pi ? phi + 2.0*Gaudi::Units::pi : phi;
     phi = phi >  Gaudi::Units::pi ? phi - 2.0*Gaudi::Units::pi : phi;
     return phi; 
@@ -272,15 +252,6 @@ public:
     } else {
       return m_outerTilt;
     } 
-  }
-
-  /// Returns the offset in phi for a given radius
-  inline double phiOffset(double radius) const {
-    if(m_middleRadius > radius){
-      return m_innerTilt - asin(m_innerDistToOrigin / radius);
-    } else {
-      return m_outerTilt - asin(m_outerDistToOrigin / radius);
-    }
   }
 
   /// The phi pitch in mm at a given radius
@@ -335,6 +306,27 @@ public:
 protected:
 
 private:
+  /// The phi position of a strip at a given radius in the local frame
+  inline double phiOfStrip(unsigned int strip, double fraction, 
+                           const double radius) const {
+    double effectiveStrip=fraction+static_cast<double>(strip);
+    if (m_nbInner > strip) {
+      return (effectiveStrip*m_innerPitch) + phiOffset(radius);
+    } else {
+      effectiveStrip -= m_nbInner;
+      return (effectiveStrip*m_outerPitch) + phiOffset(radius);
+    }
+  }
+
+  /// Returns the offset in phi for a given radius
+  inline double phiOffset(double radius) const {
+    if(m_middleRadius > radius){
+      return -1.*safePhiOffset(m_innerTilt,m_innerDistToOrigin,radius);
+    } else {
+      return -1.*safePhiOffset(m_outerTilt,m_outerDistToOrigin,radius);
+    }
+  }
+
   /// Calculate the equation of the line for each strip
   void calcStripLines();
   /// Calculate the equation of line for the corner cut-offs
@@ -469,6 +461,13 @@ private:
 
   // used to control initialization NEVER ACCESS THIS IN AN INLINED METHOD!
   static bool m_staticDataInvalid;
+
+  /// calculate the phi offset for a strip at radius given the 
+  /// d0 and the c0 of the strip: protected agains impossible radii values
+  inline double safePhiOffset(double const &c0, double const &d0, 
+			      double const & radius) const {
+    return (fabs(d0/radius) < 1.) ? (asin(d0/radius) - c0) : (asin(1.) - c0);
+  }
 
 };
 

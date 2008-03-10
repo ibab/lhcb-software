@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.39 2008-02-14 16:15:47 cattanem Exp $
+// $Id: DeVeloPhiType.cpp,v 1.40 2008-03-10 14:57:49 dhcroft Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -190,17 +190,9 @@ void DeVeloPhiType::calcStripLines()
     if(m_nbInner > strip) {
       rInner=innerRadius();
       rOuter=m_middleRadius-m_rGap/2;
-      //       x1 = innerRadius() * cos(phiOfStrip(strip,0.,innerRadius()));
-      //       y1 = innerRadius() * sin(phiOfStrip(strip,0.,innerRadius()));
-      //       x2 = (m_middleRadius-m_rGap/2) * cos(phiOfStrip(strip,0.,m_middleRadius-m_rGap/2));
-      //       y2 = (m_middleRadius-m_rGap/2) * sin(phiOfStrip(strip,0.,m_middleRadius-m_rGap/2));
     } else {
       rInner=m_middleRadius+m_rGap/2;
       rOuter=outerRadius();
-      //       x1 = (m_middleRadius+m_rGap/2) * cos(phiOfStrip(strip,0.,m_middleRadius+m_rGap/2));
-      //       y1 = (m_middleRadius+m_rGap/2) * sin(phiOfStrip(strip,0.,m_middleRadius+m_rGap/2));
-      //       x2 = outerRadius() * cos(phiOfStrip(strip,0.,outerRadius()));
-      //       y2 = outerRadius() * sin(phiOfStrip(strip,0.,outerRadius()));
     }
     x1 = rInner * cos(phiOfStrip(strip,0.,rInner));
     y1 = rInner * sin(phiOfStrip(strip,0.,rInner));
@@ -229,10 +221,6 @@ void DeVeloPhiType::calcStripLines()
       MsgStream msg(msgSvc(), "DeVeloPhiType");
       msg << MSG::VERBOSE << "Sensor " << sensorNumber() << " " << x1 << " " << y1 << " " << x2 << " " << y2 << std::endl;
     }
-    //Gaudi::XYZPoint begin;
-    //Gaudi::XYZPoint end;
-    //StatusCode sc=this->localToGlobal(Gaudi::XYZPoint(x1,y1,0),begin);
-    //sc=this->localToGlobal(Gaudi::XYZPoint(x2,y2,0),end);
     m_stripLimits.push_back(std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>(begin,end));
   }
 }
@@ -301,9 +289,6 @@ StatusCode DeVeloPhiType::pointToChannel(const Gaudi::XYZPoint& point,
 
   // Use symmetry to handle second stereo...
   double phi=localPoint.phi();
-  //   if(isDownstream()) {
-  //     //    phi = -phi;
-  //   }
 
   // Calculate nearest channel....
   unsigned int closestStrip;

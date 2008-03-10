@@ -1,4 +1,4 @@
-// $Id: VeloDetChecker.cpp,v 1.5 2008-02-14 16:15:47 cattanem Exp $
+// $Id: VeloDetChecker.cpp,v 1.6 2008-03-10 14:57:49 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -488,10 +488,7 @@ void VeloDetChecker::CheckPhiSensorGeometry() {
     phiTuple->column( "z",phiSensor->z());
     phiTuple->column( "routLine",phiSensor->StripToRoutingLine(strip));
     phiTuple->column( "chipChan",phiSensor->StripToChipChannel(strip));
-    phiTuple->column( "innerPhiOfStrip",phiSensor->phiOfStrip(strip,0.0,phiSensor->rMin(phiSensor->zoneOfStrip(strip))));
-    phiTuple->column( "outerPhiOfStrip",phiSensor->phiOfStrip(strip,0.0,phiSensor->rMax(phiSensor->zoneOfStrip(strip))));
-    phiTuple->column( "angleOfStrip",phiSensor->angleOfStrip(strip));
-    
+    phiTuple->column( "idealPhiOfStrip",phiSensor->idealPhiOfStrip(strip));
     phiTuple->column( "angleOfStrip",phiSensor->angleOfStrip(strip));
     phiTuple->column( "trgPhiDirectionOfStrip",phiSensor->trgPhiDirectionOfStrip(strip));
     phiTuple->column( "length",phiSensor->stripLength(strip));

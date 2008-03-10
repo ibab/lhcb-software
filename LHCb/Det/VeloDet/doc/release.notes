@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.189 2008-02-14 16:15:47 cattanem Exp $
+! $Id: release.notes,v 1.190 2008-03-10 14:57:49 dhcroft Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2008-03-10 - David Hutchcroft
+ - Removed nan returns when asking for phi offset at radius inside inner radius
+   for phi strips.
+ - Moved phiOffset and phiOfStrip to private in DeVeloPhiType, removed trgPhiOfStrip
+ - Removed monitoring code in DeVeloChecker that use the above calls
 
 !======================== VeloDet v12r4 2008-02-14 ===========================
 ! 2008-02-14 - Marco Cattaneo
