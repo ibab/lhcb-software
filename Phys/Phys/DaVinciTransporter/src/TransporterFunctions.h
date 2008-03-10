@@ -1,24 +1,32 @@
-// $Id: TransporterFunctions.h,v 1.9 2007-09-26 16:31:21 jpalac Exp $
+// $Id: TransporterFunctions.h,v 1.10 2008-03-10 11:55:17 ibelyaev Exp $
+// ============================================================================
 #ifndef TRANSPORTERFUNCTIONS_H 
 #define TRANSPORTERFUNCTIONS_H 1
-
+// ============================================================================
 // Include files
+// ============================================================================
+// GauduKernel
+// ============================================================================
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/GenericMatrixTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
-
+// ============================================================================
+// LHcbMath
+// ============================================================================
+#include "LHCbMath/MatrixUtils.h"
+#include "LHCbMath/MatrixTransforms.h"
+// ============================================================================
 /** @namespace DaVinciTransporter TransporterFunctions.h
  *  
  *
  *  @author Juan PALACIOS
  *  @date   2006-09-22
  */
-
-namespace DaVinciTransporter {
-
-  /**
-   *  Transport a composite Particle to specified z position, using linear
+namespace DaVinciTransporter 
+{
+  // ==========================================================================
+  /** Transport a composite Particle to specified z position, using linear
    *  extrapolation.
    *  The transformation on the state vector, v_0 -> v_1, is
    *  @code
@@ -86,9 +94,10 @@ namespace DaVinciTransporter {
    *
    *
    */
-  StatusCode transportComposite(const LHCb::Particle* particle, 
-                                const double zNew,
-                                LHCb::Particle& transParticle) 
+  StatusCode transportComposite_ 
+  ( const LHCb::Particle* particle, 
+    const double zNew,
+    LHCb::Particle& transParticle) 
   {
     using namespace Gaudi;
     
@@ -140,17 +149,241 @@ namespace DaVinciTransporter {
 
     // update reference point
     transParticle.setReferencePoint(refPoint);
-   
+
+
+    if ( 531 == particle->particleID().pid() ) 
+    {
+      std::cout 
+        << " particle matrix before " << std::endl << particle->posCovMatrix() 
+        << std::endl
+        << " vertex   matrix before " << std::endl << particle->endVertex()->covMatrix() 
+        << std::endl
+        << " particle matrix after  " << std::endl << transParticle.posCovMatrix() 
+        << std::endl ;
+    }
+    
+      
     return StatusCode::SUCCESS;
  
   }
+  // ==========================================================================
+  /** Transport a composite Particle to specified z position, 
+   *   using the linear extrapolation
+   *  
+   *  The transformation on the state vector, 
+   *   \f$\vec{\mathbf{v}}_0\to\vec{\mathbf{v}}_1\f$, is
+   *  \f[
+   *   \begin{pmatrix}
+   *      x_1 \\ y_1 \\ z_1 \\ p_{x1} \\ p_{y1} \\ p_{z1} \\ e_1 
+   *   \end{pmatrix} = 
+   *   \begin{pmatrix}
+   *     x_0 + p_{x0}\frac{\delta z}{p_{z0}} \\   
+   *     y_0 + p_{y0}\frac{\delta z}{p_{z0}} \\   
+   *     z_0 +\delta z \\   
+   *     p_{x0} \\
+   *     p_{y0} \\
+   *     p_{z0} \\
+   *     e_{0} 
+   *   \end{pmatrix} =
+   *   \begin{pmatrix}
+   *     x_0    \\   
+   *     y_0    \\   
+   *     z_0    \\   
+   *     p_{x0} \\
+   *     p_{y0} \\
+   *     p_{z0} \\
+   *     e_{0} 
+   *   \end{pmatrix} + \delta z 
+   *   \begin{pmatrix}
+   *     \frac{p_x}{p_z} \\   
+   *     \frac{p_x}{p_z} \\   
+   *     1 \\   
+   *     0 \\
+   *     0 \\
+   *     0 \\
+   *     0 
+   *   \end{pmatrix},  \f]
+   *  where \f$\delta z = z_1 - z_0\f$.
+   *
+   *  The transport matrix \f$\mathbf{D}\f$ is 
+   *  defined as \f$\mathbf{D}=\frac{\vec{\mathbf{v}}_1}{\vec{\mathbf{v}}_0}\f$:
+   *  \f[
+   *  \mathbf{D} = \frac{\vec{\mathbf{v}}_1}{\vec{\mathbf{v}}_0} = 
+   *  \begin{pmatrix}
+   *   1  & 0 & 0  & \frac{\delta z}{p_z} & 0                    & -\frac{\delta z p_x}{p^2_z} & 0 \\
+   *   0  & 1 & 0  & 0                    & \frac{\delta z}{p_z} & -\frac{\delta z p_y}{p^2_z} & 0 \\
+   *   0  & 0 & 1  & 0 & 0 & 0 & 0 \\
+   *   0  & 0 & 0  & 1 & 0 & 0 & 0 \\ 
+   *   0  & 0 & 0  & 0 & 1 & 0 & 0 \\ 
+   *   0  & 0 & 0  & 0 & 0 & 1 & 0 \\ 
+   *   0  & 0 & 0  & 0 & 0 & 0 & 1 
+   *  \end{pmatrix} =
+   *  \mathbf{1} + \frac{\delta z}{p_z} 
+   *  \begin{pmatrix} 
+   *   0  & 0 & 0  & 1 & 0 & -\frac{p_x}{p_z} & 0 \\
+   *   0  & 0 & 0  & 0 & 1 & -\frac{p_y}{p_z} & 0 \\
+   *   0  & 0 & 0  & 0 & 0 & 0                & 0 \\
+   *   0  & 0 & 0  & 0 & 0 & 0                & 0 \\ 
+   *   0  & 0 & 0  & 0 & 0 & 0                & 0 \\ 
+   *   0  & 0 & 0  & 0 & 0 & 0                & 0 \\ 
+   *   0  & 0 & 0  & 0 & 0 & 0                & 0 
+   *  \end{pmatrix}   =  
+   *  \begin{pmatrix} 
+   *     \frac{\partial\vec{\mathbf{x}}_1}{\partial\vec{\mathbf{x}}_0} & 
+   *     \frac{\partial\vec{\mathbf{x}}_1}{\partial         p^{\mu}_0} \\ 
+   *     \frac{\partial         p^{\mu}_1}{\partial\vec{\mathbf{x}}_0} & 
+   *     \frac{\partial         p^{\mu}_1}{\partial         p^{\mu}_0} 
+   *  \end{pmatrix} = 
+   *  \begin{pmatrix}
+   *      \mathbf{1}_{3\times3}  & \mathbf{F}_{3\times4} \\ 
+   *      \mathbf{0}_{4\times3}  & \mathbf{1}_{4\times4} 
+   *  \end{pmatrix},
+   *  \f]
+   *  where the 3x4-matrix \f$\mathbf{F}\f$ is defined as 
+   *  \f$    
+   *  \mathbf{F} = \frac{\partial\vec{\mathbf{x}}_1}{\partial p^{\mu}_0} = 
+   *  \frac{\delta z}{p_z}
+   *  \begin{pmatrix}
+   *    1  & 0 & -\frac{p_x}{p_z} & 0 \\
+   *    0  & 1 & -\frac{p_x}{p_z} & 0 \\
+   *    0  & 0 & 0                & 0 
+   *  \end{pmatrix}. \f$
+   *
+   * The transformation on the particle's 7x7 covariance matrix 
+   * \f$\mathbf{C}_0\f$ is given by
+   * \f$\mathbf{C}_1 = \mathbf{D} \mathbf{C}_0 \mathbf{D}^T \f$,
+   *  or, in block form,
+   *  \f[ 
+   *    \mathbf{C}_1 = 
+   *     \begin{pmatrix}
+   *      \mathbf{C}_{x1}  & \mathbf{C}^T_{px1} \\ 
+   *      \mathbf{C}_{px1} & \mathbf{C}_{p1}    
+   *     \end{pmatrix} =
+   *  \begin{pmatrix}
+   *      \mathbf{1}  & \mathbf{F} \\ 
+   *      \mathbf{0}  & \mathbf{1}  
+   *  \end{pmatrix} 
+   *     \begin{pmatrix}
+   *      \mathbf{C}_{x0}  & \mathbf{C}^T_{px0} \\ 
+   *      \mathbf{C}_{px0} & \mathbf{C}_{p0}    
+   *     \end{pmatrix} 
+   *  \begin{pmatrix}
+   *      \mathbf{1}   & \mathbf{0} \\ 
+   *      \mathbf{F}^T & \mathbf{1} 
+   *  \end{pmatrix} \f]
+   *  This results in the expressions:
+   *   \f[    
+   *    \mathbf{C}_1 = 
+   *     \begin{pmatrix}
+   *      \mathbf{C}_{x1}  & \mathbf{C}^T_{px1} \\ 
+   *      \mathbf{C}_{px1} & \mathbf{C}_{p1}    
+   *     \end{pmatrix} =
+   *    \begin{pmatrix}
+   *       \mathbf{C}_{x0} + \mathbf{F}\mathbf{C}_{p0}\mathbf{F}^T + 
+   *        \left( \mathbf{F}\mathbf{C}_{px0} + \mathbf{C}^{T}_{px0}\mathbf{F}^{T}\right) & 
+   *       \mathbf{C}^T+\mathbf{F}\mathbf{C}_{p0} \\ 
+   *       \mathbf{C}_{px0} + \mathbf{C}_{p0}\mathbf{F}^T &  \mathbf{C}_{p0} 
+   *    \end{pmatrix}   \f]
+   *
+   *  @author Juan  PALACIOS Juan.Palacios@cern.ch
+   *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
+   *  @date   2008-03-10
+   */
+  StatusCode transportComposite 
+  ( const LHCb::Particle* particle     , 
+    const double          zNew         ,
+    LHCb::Particle&       transported  ) 
+  {
+    // check the argument:
+    if ( 0 == particle ) { return StatusCode::FAILURE ; } // RETURN 
+    
+    const double zOld    = particle -> referencePoint().Z() ;
+    // no need to transport:
+    if ( zNew == zOld ) /// @toto add a real comparison of float values  
+    {
+      if ( &transported != particle ) { transported = *particle ; }
+      return StatusCode::SUCCESS ;
+    }
+    
+    const double deltaZ  = zNew - zOld ;
 
+
+    const Gaudi::LorentzVector& v = particle->momentum () ;
+    
+    // the only non-trivial component of the Jacobian
+    Gaudi::Matrix3x4 F ; 
+    const double coeff = deltaZ   / v.Pz () ; // delta(z)/p_z 
+    
+    F ( 0 , 0 ) =  coeff                   ;  // d(x_1)/d(p_x0) 
+    F ( 0 , 2 ) = -coeff * v.Px() / v.Pz() ;  // d(x_1)/d(p_z0)
+    F ( 1 , 1 ) =  coeff                   ;  // d(y_1)/d(p_y0) 
+    F ( 1 , 2 ) = -coeff * v.Py() / v.Pz() ;  // d(y_1)/d(p_z0)
+    
+    // Linear transformation:
+    
+    // redefine the quantities:
+    transported.setMomentum       
+      ( particle -> momentum()                                     ) ;
+    transported.setReferencePoint 
+      ( particle -> referencePoint() + deltaZ * particle -> slopes () ) ;
+    
+    // redefine the covarince matrices:
+    
+    // get C_0 matrix: 
+    
+    const Gaudi::SymMatrix4x4& C_p0  = particle -> momCovMatrix    () ;
+    const Gaudi::Matrix4x3&    C_px0 = particle -> posMomCovMatrix () ;
+    const Gaudi::SymMatrix3x3& C_x0  = particle -> posCovMatrix    () ;
+    
+    // we are modifying the same particle 
+    if ( &transported == particle )  
+    {
+      
+      //  C_x1              = C_x0 + ...      
+      Gaudi::SymMatrix3x3& C_x1 = const_cast<Gaudi::SymMatrix3x3&> ( C_x0 ) ;
+      //                    + F*C_p0*F^T + ...
+      C_x1 += ROOT::Math::Similarity ( F , C_p0 ) ;
+      //                    +  F*C_{px0} + C_{px0}^T*F^T 
+      Gaudi::Math::update ( C_x1 , F * C_px0 ) ;
+      
+      // C_px1 = C_px0 + C_{p0}*F^T
+      Gaudi::Matrix4x3& C_px1 = const_cast<Gaudi::Matrix4x3&>( C_px0 ) ;
+      C_px1 += C_p0 * ROOT::Math::Transpose ( F ) ;
+      
+      // no need to change C_p1 
+      
+    }
+    else  // we are dealing with different partcicles:
+    {      
+      //  C_x1              = C_x0 + ...      
+      Gaudi::SymMatrix3x3 C_x1 = C_x0 ;
+      //                    + F*C_p0*F^T + ...
+      C_x1 += ROOT::Math::Similarity ( F , C_p0 ) ;
+      //                    +  F*C_{px0} + C_{px0}^T*F^T 
+      Gaudi::Math::update ( C_x1 , F * C_px0 ) ;
+      
+      transported.setPosCovMatrix    ( C_x1 ) ;
+      
+      // C_p1 = C_p0
+      transported.setMomCovMatrix    ( C_p0 ) ;
+      
+      // C_px1 = C_px0 + C_{p0}*F^T
+      transported.setPosMomCovMatrix ( C_px0 + C_p0 * ROOT::Math::Transpose ( F ) ) ;
+    }
+    // 
+    return StatusCode::SUCCESS ;                                    // RETURN 
+  }
+  // ==========================================================================
   StatusCode transportNeutralBasic(const LHCb::Particle* particle, 
                                    const double zNew,
                                    LHCb::Particle& transParticle) 
   {
     return transportComposite(particle, zNew, transParticle);
   }
-  
-}
+  // ==========================================================================
+} // end of namespace DaVinciTransporter
+// ============================================================================
+// The END 
+// ============================================================================
 #endif // TRANSPORTERFUNCTIONS_H
+// ============================================================================

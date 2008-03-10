@@ -1,7 +1,23 @@
-! $Id: release.notes,v 1.55 2007-12-13 16:00:53 jpalac Exp $
+! $Id: release.notes,v 1.56 2008-03-10 11:55:17 ibelyaev Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+! 2008-03-10 - Vanya BELYAEV
+
+ - src/TransporterFunctions.h
+
+    fix the math-bug from the transport of composite particles, 
+    recode the function to reuse many of nice ROOT::Math 
+    and Gaudi::Math utilities. Hope to get the significant 
+    speed-up from matrix evaluations... (to be proved..).
+    The previos implementatioin is backed-up into  "name"_ 
+    function..
+ 
+ - src/ParticleTransporter.cpp
+
+    tiny fix to avoid the unnesessary self-assignement..
+
 
 !====================== DaVinciTransporter v3r7p2 2007-12-13 ==================
 

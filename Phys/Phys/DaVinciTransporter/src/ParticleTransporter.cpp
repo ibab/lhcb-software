@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.19 2007-11-27 18:21:30 pkoppenb Exp $
+// $Id: ParticleTransporter.cpp,v 1.20 2008-03-10 11:55:17 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -75,9 +75,11 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
   debug() << "Transport PID " << P->particleID().pid() 
           << " p " << P->momentum() << " from " 
           << P->referencePoint()  << " to " << znew << endmsg ;
-
-  transParticle = LHCb::Particle(*P);
-
+  
+  // avoid some "extra" self-assignements:
+  if ( &transParticle != P ) { transParticle = LHCb::Particle(*P) ; }
+  
+  
   if ( ! (P->isBasicParticle()) ) {
     verbose() << "Using DaVinciTransporter::transportComposite" << endmsg;
     sc = DaVinciTransporter::transportComposite(P, znew, transParticle);
