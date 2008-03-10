@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-03-10 - Gerhard Raven
+ - fix stupid bug in ConfigTreeEditor: find -> rfind...
 
 !========================== HltCommon v3r1 2008-03-07 ===================
 ! 2008-03-06 - Patrick Koppenburg

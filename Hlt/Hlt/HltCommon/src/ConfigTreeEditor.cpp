@@ -299,7 +299,7 @@ ConfigTreeEditor::updateAndWrite(const ConfigTreeNode::digest_type& in,
        string::size_type c = i->find(':');
        string lhs = i->substr(0,c);
        string rhs = i->substr(c+1,string::npos);
-       string::size_type d = lhs.find('.');
+       string::size_type d = lhs.rfind('.');
        string comp = lhs.substr(0,d);
        string key  = lhs.substr(d+1,string::npos);
        mm.insert( make_pair( comp, make_pair(key, rhs ) ) );
