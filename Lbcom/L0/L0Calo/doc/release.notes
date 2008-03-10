@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.92 2008-03-10 15:40:31 robbep Exp $
+! $Id: release.notes,v 1.93 2008-03-10 19:37:36 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
 ! 2008-03-11 - Patrick Robbe
- - src/L0CaloAlg.cpp: remove unnecessary debuging output.
+ - cmt/requirements: use Calo/CaloTools
+ - src/L0CaloAlg.cpp: remove unnecessary debuging output, add protection against
+    double counting in duplicate candidates.
+ - src/L0CaloMonit.cpp: use Calo2Dview base class.
+ - src/L0CaloNtpMonitor.cpp: new class to fill Ntuples with L0Calo quantities.
  - src/L0CaloCandidatesFromRawBank.cpp: verify output level in debugging messages
 
 !========================= L0Calo v9r11 2007-12-12 ========================
