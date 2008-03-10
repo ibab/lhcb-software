@@ -5,6 +5,7 @@
 #include "presenter.h"
 
 class PresenterMainFrame;
+class Archive;
 class TGTextButton;
 
 class IntervalPicker : public TGTransientFrame
@@ -17,7 +18,9 @@ public:
   
 private:
   PresenterMainFrame* m_mainFrame;
+  Archive*  m_archive;
   pres::MsgLevel  m_verbosity;
+  TGTextButton *m_cancelButton;
   
 ClassDef(IntervalPicker, 0) 
 };

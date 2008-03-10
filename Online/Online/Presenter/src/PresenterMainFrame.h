@@ -252,8 +252,6 @@ class PresenterMainFrame : public TGMainFrame
     void pickReferenceHistogram();
     void saveSelectedHistogramAsReference();
     void toggleReferenceOverlay();
-    void setHistogramParametersFromDB(TH1* histogram,
-                                      OnlineHistogram* onlineHistogram);
     void paintHist(DbRootHist* histogram);
 
     void removeHistogramsFromPage();
@@ -283,6 +281,7 @@ class PresenterMainFrame : public TGMainFrame
     TTimer*           m_clockTimer;
     bool              m_clearedHistos;
     bool              m_referencesOverlayed;
+    bool              m_pageRefresh;
     OnlineHistDB*     m_histogramDB;
     OMAlib*           m_analysisLib;
     int               m_msgBoxReturnCode;
