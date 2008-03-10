@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.47 2008-03-10 15:35:06 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.48 2008-03-10 19:39:07 robbep Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -384,7 +384,9 @@ StatusCode L0CaloAlg::execute() {
       }
     }
     
-    int etMax = m_hcalFe[hCard].addEcalEt( maxEcalEt );   // Add ECAL to HCAL
+//    int etMax = m_hcalFe[hCard].addEcalEt( maxEcalEt );   // Add ECAL to HCAL
+    
+    int etMax = m_hcalFe[hCard].etMax() + maxEcalEt ;   // Add ECAL to HCAL 
     sumEt  += etMax ;
     if(  hadron.et() < etMax ) {
       cardMax = hCard;
