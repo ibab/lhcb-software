@@ -1,5 +1,15 @@
+// $Id: GeomFun.icpp,v 1.11 2008-03-10 11:39:52 ibelyaev Exp $ 
+// ============================================================================
+// include files 
+// ============================================================================
+// GSL 
+// ============================================================================
 #include "gsl/gsl_math.h"
+// ============================================================================
+// ROOT
+// ============================================================================
 #include "Math/VectorUtil.h"
+// ============================================================================
 template<typename aLine, typename aPlane, typename aPoint>
 bool Gaudi::Math::intersection(const aLine& line,
                                const aPlane& plane,
@@ -72,77 +82,116 @@ bool Gaudi::Math::intersection(const aPlane& plane0,
   return true;
   
 }
-
-
-
+// ============================================================================
 template <typename aLine, typename aPoint>
-aPoint Gaudi::Math::closestPoint(const aPoint&  point ,
-                                 const aLine& line)
+inline double Gaudi::Math::closestPointParam
+( const aPoint&  point ,
+  const aLine&   line  )
 {
-  return line.position( line.direction().Unit().Dot( point-line.beginPoint() ) );
-
+  return line.direction().Dot( point - line.beginPoint() ) 
+    / line.direction().Mag2() ;
 }
-
+// ============================================================================
 template <typename aLine, typename aPoint>
-double Gaudi::Math::closestPointParam(const aPoint&  point ,
-                                      const aLine& line)
+inline aPoint 
+Gaudi::Math::closestPoint
+( const aPoint&  point ,
+  const aLine&   line  )
 {
-  return line.direction().Unit().Dot(point - line.beginPoint() );
+  return line.position ( closestPointParam ( point , line ) ) ;
 }
-
-
+// ============================================================================
 template<typename aPoint, typename aLine>
-double Gaudi::Math::impactParameter(const aPoint&  point ,
-                                    const aLine& line)
+double Gaudi::Math::impactParameter
+( const aPoint&  point ,
+  const aLine&   line  )
 {
-
-  const typename aLine::Vector v0 = point - Gaudi::Math::closestPoint(point, line);
-  return sqrt( v0.mag2() );
+  return ( point - Gaudi::Math::closestPoint ( point , line ) ) . R () ;
 }
-
+// ============================================================================
 template <typename aLine, typename bLine>
-bool Gaudi::Math::closestPointParams(const aLine& line0,
-                                     const bLine& line1,
-                                     double& mu0, double& mu1) {
+inline bool Gaudi::Math::closestPointParams
+(const aLine& line0 ,  
+ const bLine& line1 ,
+ double&      mu0   , 
+ double&      mu1   )   
+{  
+  if ( parallel(line0, line1) ) { return false ; }            // RETURN 
+  /** 
+   *  Let the points 
+   * \f$\vec{\mathbf{v}}_0=\vec{\mathbf{p}}_0+\mu_0\vec{\mathbf{d}}_0\f$ 
+   * and 
+   * \f$\vec{\mathbf{v}}_1=\vec{\mathbf{p}}_1+\mu_1\vec{\mathbf{d}}_1\f$ 
+   * be the closest points. It means that 
+   *  \f[
+   *   \begin{pmatrix}
+   *     \left(\vec{\mathbf{p}}_0-\vec{\mathbf{p}}_1\right)\vec{\mathbf{d}}_0 \\
+   *     \left(\vec{\mathbf{p}}_0-\vec{\mathbf{p}}_1\right)\vec{\mathbf{d}}_1 \\
+   *   \end{pmatrix} =  0
+   *  \f]
+   *  The final system is:
+   *  \f[ 
+   *   \begin{pmatrix}
+   *      \vec{\mathbf{d}}^2_0                 & - \vec{\mathbf{d}}_0\vec{\mathbf{d}}_1 \\
+   *      \vec{\mathbf{d}}_0\vec{\mathbf{d}}_1 & - \vec{\mathbf{d}}^2_1 
+   *   \end{pmatrix}
+   *   \begin{pmatrix}
+   *     \mu_0 \\  \mu_1 
+   *   \end{pmatrix} = 
+   *   \begin{pmatrix}
+   *       \vec{\mathbf{d}}_0 \left( \vec{\mathbf{p}}_1 - \vec{\mathbf{p}}_0 \right) \\
+   *       \vec{\mathbf{d}}_1 \left( \vec{\mathbf{p}}_1 - \vec{\mathbf{p}}_0 \right) 
+   *   \end{pmatrix}  
+   *  \f]
+   */
 
-  if ( parallel(line0, line1) ) return false;
-  const typename aLine::Point&  p0 = line0.beginPoint();
-  const typename aLine::Vector  v0 = line0.direction();
-  const typename bLine::Point&  p1 = line1.beginPoint();
-  const typename bLine::Vector  v1 = line1.direction();
-
-  const double v0Dotv1 = v0.Dot(v1);
-  const double v0mag2  = v0.Mag2();
-  const double v1mag2  = v1.Mag2();
-  const double dnom = gsl_pow_2(v0Dotv1) -  (v0mag2*v1mag2);
-
-  typename aLine::Vector p0_p1 = (p0 - p1);
-  mu0 = ( v1mag2*p0_p1.Dot(v0)      - v0Dotv1*( p0_p1.Dot(v1) ) ) / dnom;
-  mu1 = ( v0Dotv1*( p0_p1.Dot(v0) ) -   v0mag2*p0_p1.Dot(v1)  )   / dnom;
-  return true;
+  // lhs: 
+  
+  // the matrix: 
+  const double a00 =  line0.direction().Mag2() ;
+  const double a10 =  line0.direction().Dot( line1.direction() ) ;
+  const double a01 = -a10 ;
+  const double a11 = -line1.direction().Mag2() ;
+  
+  // the inverse determinant: 
+  const double detinv = 1.0 / ( a00 * a11 - a01 * a10 ) ;
+  
+  // rhs: 
+  typename aLine::Vector p1_p0 = line1.beginPoint() - line0.beginPoint() ; 
+  
+  const double b0  = p1_p0.Dot ( line0.direction() ) ;
+  const double b1  = p1_p0.Dot ( line1.direction() ) ;
+  
+  // get the Kramer solutions:
+  
+  mu0 =  ( b0  * a11 - b1  * a01 ) * detinv ;
+  mu1 =  ( a00 * b1  - a10 * b0  ) * detinv ;
+  
+  return true ;
 }
-
+// ============================================================================
 template <typename aLine, typename bLine, typename aPoint>
-bool Gaudi::Math::closestPoints(const aLine& line0,
-                                const bLine& line1,
-                                aPoint& p0,
-                                aPoint& p1)
+inline bool Gaudi::Math::closestPoints
+(const aLine& line0 ,
+ const bLine& line1 ,
+ aPoint&      p0    ,
+ aPoint&      p1    )
 {
   double mu0(0.);
   double mu1(0.);
-
+  
   if (!Gaudi::Math::closestPointParams(line0, line1, mu0, mu1) ) return false;
-
+  
   p0 = line0.position(mu0);
   p1 = line1.position(mu1);
-
-  return true;
   
+  return true;
 }
-
+// ============================================================================
 template <typename aLine, typename bLine>
-double Gaudi::Math::distance(const aLine& line0,
-                             const bLine& line1)
+inline double Gaudi::Math::distance
+( const aLine& line0 ,
+  const bLine& line1 )
 {
   
   typename aLine::Point p0;
@@ -150,19 +199,22 @@ double Gaudi::Math::distance(const aLine& line0,
   const bool goodLines = Gaudi::Math::closestPoints(line0, line1, p0, p1);
   if (!goodLines) {
     // lines are parallel
-    return impactParameter(line0.beginPoint(), line1);
+    return impactParameter ( line0.beginPoint() , line1 ) ;
   }  
-  return sqrt( typename aLine::Vector(p1-p0).mag2() );
+  return ( p0 - p1 ) . R () ;
 }
-
+// ============================================================================
 template <typename aLine, typename bLine>
-bool Gaudi::Math::parallel(const aLine& line0,
-                           const bLine& line1)
-{
-
+bool Gaudi::Math::parallel
+( const aLine& line0 ,
+  const bLine& line1 )
+{  
   const typename aLine::Vector& v0 = line0.direction();
   const typename bLine::Vector& v1 = line1.direction();
   const double cosTheta= v0.Dot(v1)/(v0.r()*v1.r());
   return 1. - fabs(cosTheta) < 1e-10;
 }
 
+// ============================================================================
+// The END 
+// ============================================================================

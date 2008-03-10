@@ -1,12 +1,13 @@
-// $Id: GeomFun.h,v 1.7 2007-10-16 12:07:25 wouter Exp $
+// $Id: GeomFun.h,v 1.8 2008-03-10 11:39:52 ibelyaev Exp $
+// ============================================================================
 #ifndef LHCBMATH_GEOMFUN_H
 #define LHCBMATH_GEOMFUN_H 1
-
-
-namespace Gaudi{
-
-  namespace Math{
-
+// ============================================================================
+namespace Gaudi
+{
+  namespace Math
+  {
+    // ========================================================================
     /** calculate intersection point between a aLine and aPlane.
      *
      *  aLine must satisfy point = line.beginPoint() + scalar*line.direction()
@@ -23,14 +24,14 @@ namespace Gaudi{
      *  @param   intersect: Intersection point
      *  @param   mu: scalar defining point on line which intersects plane
      *  @return  bool indicating whether intersection exists
-     *
      */
     template<typename aLine, typename aPlane, typename aPoint>
-    bool intersection(const aLine& line,
-                      const aPlane& plane,
-                      aPoint& intersect,
-                      double& mu);
-
+    bool intersection
+    ( const aLine&  line      ,
+      const aPlane& plane     ,
+      aPoint&       intersect ,
+      double&       mu        ) ;
+    // ========================================================================    
     /** Calculate aLine, the intersection of two aPlanes pane0 and
      *  plane1. 
      *
@@ -50,10 +51,11 @@ namespace Gaudi{
      *  @todo    test for planes being parallel
      */
     template<typename aLine, typename aPlane>
-    bool intersection(const aPlane& plane0,
-                      const aPlane& plane1,
-                      aLine& intersect);
-
+    bool intersection
+    ( const aPlane& plane0    ,
+      const aPlane& plane1    ,
+      aLine&        intersect ) ;
+    // ========================================================================
     /** Calculate aPoint, the intersection of three aPlanes.
      *
      *  aPlane must have methods Normal() and HesseDistance()
@@ -72,11 +74,12 @@ namespace Gaudi{
      *  @todo test for any two planes being parallel.
     */
     template<typename aPoint, typename aPlane>
-    bool intersection(const aPlane& plane0,
-                      const aPlane& plane1,
-                      const aPlane& plane2,
-                      aPoint& intersect);
-
+    bool intersection
+    ( const aPlane& plane0    ,
+      const aPlane& plane1    ,
+      const aPlane& plane2    ,
+      aPoint&       intersect ) ;
+    // ========================================================================
     /** Return the distance between point and line
      *
      *  @author  Juan Palacios Juan.Palacios@cern.ch
@@ -86,9 +89,10 @@ namespace Gaudi{
      *  @return  distance between point and line (double)
      */
     template<typename aPoint, typename aLine>
-    double impactParameter(const aPoint&  point ,
-                           const aLine& line);
-
+    double impactParameter
+    ( const aPoint&  point ,
+      const aLine&   line  ) ;
+    // ========================================================================
     /** Compute the distance between two lines
      *
      *  aLine and bLine must satisfy point = line.beginPoint() + scalar*line.direction()
@@ -102,11 +106,12 @@ namespace Gaudi{
      *  @return  distance between lines (double)
      */
     template <typename aLine, typename bLine>
-    double distance(const aLine& line0,
-                    const bLine& line1);
-
-
-    /** Get nearest aPoints p0 and p1 between aLines line0 and abd bLine line2 such that 
+    double distance
+    ( const aLine& line0 ,
+      const bLine& line1 );
+    // ========================================================================
+    /** Get nearest aPoints p0 and p1 between 
+     *  aLines line0 and abd bLine line2 such that 
      *  p0 = line0.beginPoint() + mu0 * line0.direction()
      *  p1 = line1.beginPoint() + mu1 * line1.direction()
      *
@@ -122,12 +127,12 @@ namespace Gaudi{
      *  @return  false if not numerically calculable
      */
     template <typename aLine, typename bLine, typename aPoint>
-    bool closestPoints(const aLine& line0,
-                       const bLine& line1,
-                       aPoint& p0,
-                       aPoint& p1);
-
-
+    bool closestPoints
+    ( const aLine& line0 ,
+      const bLine& line1 ,
+      aPoint&      p0    ,
+      aPoint&      p1    ) ;
+    // ========================================================================
     /** Return scalar parameter defining the point on aLine 
      *  which is closest to an aPoint, such that
      *  closest point = line.beginPoint() + scalar * line.direction()
@@ -143,9 +148,10 @@ namespace Gaudi{
      *  @return  scalar defining aPoint on line which is closest to point
      */
     template <typename aLine, typename aPoint>
-    double closestPointParam(const aPoint&  point ,
-                             const aLine& line);
-
+    double closestPointParam
+    ( const aPoint&  point ,
+      const aLine&   line  ) ;
+    // ========================================================================
     /** Return aPoint on aLine which is closest to an aPoint.
      *
      *  aLine must satisfy point = line.beginPoint() + scalar*line.direction()
@@ -163,7 +169,7 @@ namespace Gaudi{
     template <typename aLine, typename aPoint>
     aPoint closestPoint(const aPoint&  point ,
                         const aLine& line);
-
+    // ========================================================================
     /** Calculate scalar parameters defining points of nearest approach 
      *  between aLine line0 and bLine line1. If p0 and p1 are the points of closest
      *  approach, mu0 and mu1 satisfy
@@ -179,10 +185,12 @@ namespace Gaudi{
      *  @return  true
      */
     template <typename aLine, typename bLine>
-    bool closestPointParams(const aLine& line0,
-                            const bLine& line1,
-                            double& mu0, double& mu1);
-
+    bool closestPointParams
+    ( const aLine& line0 ,
+      const bLine& line1 ,
+      double&      mu0   , 
+      double&      mu1   ) ;
+    // ========================================================================
     /** Estimate whether two lines are parallel
      *  Use dot product of line0.direction() and line1.direction() = 1
      *
@@ -191,19 +199,19 @@ namespace Gaudi{
      *  @param   line0
      *  @param   line1
      *  @return  true if lines parallel
-    */
-
+     */
+    // ========================================================================
     template <typename aLine, typename bLine>
-    bool parallel(const aLine& line0,
-                  const bLine& line1);
-
-
-
-
-  }; // Math namespace
-
-}; // Gaudi namespace
-
+    bool parallel
+    ( const aLine& line0 ,
+      const bLine& line1 ) ;
+    // ========================================================================
+  } // end of namespace Gaudi::Math namespace
+} // end of namespace Gaudi namespace
+// ============================================================================
 #include "LHCbMath/GeomFun.icpp"
-
+// ============================================================================
+// The END 
+// ============================================================================
 #endif
+// ============================================================================
