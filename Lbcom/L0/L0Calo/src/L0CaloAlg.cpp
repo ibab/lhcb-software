@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.46 2007-12-11 18:26:50 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.47 2008-03-10 15:35:06 robbep Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -395,24 +395,22 @@ StatusCode L0CaloAlg::execute() {
     //
   } // hCard
 
-  
-  for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
-    if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
-    int type = m_hcal->selectionType( hCard );
-    std::string typeName ;
-    switch ( type ) {
-    case 0:  typeName = "Master"  ; break ;
-    case 1:  typeName = "Slave1"    ; break ;
-    case 2:  typeName = "Slave2"    ; break ;
-    default: typeName = "Unknown" ; break ;
-    }
-    debug()<<" hCard# "<<hCard<<" ID= "<<m_hcalFe[hCard].cellIdMax()
-           <<" type = "<<typeName<<endmsg;
-  }
-  
 
-  //  int nbHcalCards = m_hcal->nCards() ; 
-  //  int nbHcalCards = 50 ; 
+  if ( msgLevel( MSG::DEBUG ) ) {      
+    for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
+      if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
+      int type = m_hcal->selectionType( hCard );
+      std::string typeName ;
+      switch ( type ) {
+      case 0:  typeName = "Master"  ; break ;
+      case 1:  typeName = "Slave1"    ; break ;
+      case 2:  typeName = "Slave2"    ; break ;
+      default: typeName = "Unknown" ; break ;
+      }
+      debug()<<" hCard# "<<hCard<<" ID= "<<m_hcalFe[hCard].cellIdMax()
+            <<" type = "<<typeName<<endmsg;
+    }
+  }
 
   int allhcalFe_Slave1[50];
   int allhcalFe_Slave2[50];
@@ -442,7 +440,6 @@ StatusCode L0CaloAlg::execute() {
   debug()<<" #of hcal cards related to Master= "
          <<allMaster<<" related to Slave1= "
          <<allSlave1<<" related to Slave2= "<<allSlave2<<endmsg;
-
 
   // Compute the size of the array which will be saved in the SEL boads
   int nbSlave1SEL = 0 ; 
@@ -519,8 +516,6 @@ StatusCode L0CaloAlg::execute() {
   for ( int kk=0 ; nbMasterSEL > kk ; kk++ ) {
     allHadronsMaster.push_back( L0Candidate( m_hcal ) );
   }
-
-
 
   // process for Slave 1
   int etMaxEcalPerValNum[30];
