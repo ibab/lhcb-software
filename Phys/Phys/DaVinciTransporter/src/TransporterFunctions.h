@@ -1,4 +1,4 @@
-// $Id: TransporterFunctions.h,v 1.10 2008-03-10 11:55:17 ibelyaev Exp $
+// $Id: TransporterFunctions.h,v 1.11 2008-03-10 16:04:32 jpalac Exp $
 // ============================================================================
 #ifndef TRANSPORTERFUNCTIONS_H 
 #define TRANSPORTERFUNCTIONS_H 1
@@ -150,19 +150,6 @@ namespace DaVinciTransporter
     // update reference point
     transParticle.setReferencePoint(refPoint);
 
-
-    if ( 531 == particle->particleID().pid() ) 
-    {
-      std::cout 
-        << " particle matrix before " << std::endl << particle->posCovMatrix() 
-        << std::endl
-        << " vertex   matrix before " << std::endl << particle->endVertex()->covMatrix() 
-        << std::endl
-        << " particle matrix after  " << std::endl << transParticle.posCovMatrix() 
-        << std::endl ;
-    }
-    
-      
     return StatusCode::SUCCESS;
  
   }
