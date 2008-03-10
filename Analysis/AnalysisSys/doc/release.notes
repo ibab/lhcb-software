@@ -3,11 +3,208 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v1r11>2008-03-10 Analysis v1r11 - DC06 and Tf compatible analysis  version</A></H1><PRE>
+
+ - Uses LHCb v23r4 and Gaudi v19r8
+ - Tutorial adapted to use LoKiHybrid
+ - Developments in MicroDST
+ - Updates to some pre-selections
+
+#######################################MM######################################
+#                                  ANALYSIS v1r11                             #
+###############################################################################
+
+##################################### PHYSSEL #################################
+!========================== B2DplusX v1r2 2008-03-06 ===================
+
+! 2008-03-06 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version vo v1r2
+
+! 2008-02-03 - Vladimir Gligorov
+ - Added tight B->Dpi selection for trigger tuning. 
+
+!========================== B2D0X v1r12 2008-03-05 ==================
+
+! 2008-02-18 - Thomas Ruf
+ - removed tabs in PreselBu2D0K_D02KsPiPi confusing new joboption parser
+! 2008-02-18 - Patrick Koppenburg for Jacopo Nardulli
+ - New DC06 selection for B->D0K*
+ - Increment to v1r12
+
+!========================= PhysSelSys v10r8 2008-03-06 =====================
+
+! 2008-03-06 - Juan PALACIOS
+ - cmt/requirements
+  . Use new versions of B2D0X and B2DplusX
+  . Increase version to v10r8
+
+! 2008-02-05 - Juan PALACIOS
+ - Patches in B2uds and B2DstarX
+ - cmt/requirements
+  . Increase version to v10r7p2
+
+################################## MICRODST ###################################
+!====================== MicroDSTBase v1r0p1 2008-03-06 =======================
+
+! 2007-12-10 - Juan Palacios
+ - src/Lib/Functions.cpp
+  . Remove debug printout.
+ - cmt/requirements
+  . Increase version to v1r0p1
+
 </PRE><H1><A NAME=v1r9>2008-02-05 Analysis v1r10 - DC06 and Tf compatible analysis  version</A></H1><PRE>
 
  - Uses LHCb v23r3 and Gaudi v19r7
  - Bug fixes to pre-selections and FlavourTagging
  - Developments in DecayTreeTuple and DaVinciMCTools (BackgrondCategoryTool)
+
+!======================= MicroDSTTools v1r1 2008-03-06 =======================
+
+! 2008-02-15 - Juan PALACIOS
+ - src/RecVertexClonerFunctors.h, ParticleCloner.cpp
+  . Remove std::cout debug statements
+
+! 2008-02-11 - Juan PALACIOS
+
+ - src/MCParticleCloner{.h, .cpp}
+  . clone method now takes optional boolean to stop potential infinite loop
+    in clning MCParticles, their MCVertices, the MCParticles that come out of
+    the MCVertices, ad infinitum.
+
+ - src/MCVertexCloner.h
+  . Add finalize() method.
+
+ - src/MCVertexCloner.cpp
+  . Run finalize and initialize methods, which just call their
+    MicroDSTTool couterparts.
+
+ - src/ParticleCloner.cpp, VertexCloner.cpp
+  . Run MicroDST::initialize()
+
+ - cmt/requirements
+  . Increase version to v1r1
+
+##################################### PHYS ####################################
+
+!========================== DaVinciAssociators v9r2p4 2008-03-06 ==============
+
+! 2008-02-12 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v9r2p4
+ - src/TestLinker.cpp
+  . Use Particle2MCLinker constructor taking vector of locations, not
+    single location, as this has been deprecated.
+
+!========================== DaVinciUser v8r4 2008-03-06 ===================
+
+! 2008-02-14 - Patrick Koppenburg
+ - TestMCParticleFilters: dumpAsTree does not exist anymore
+ - v8r4
+
+!===================== DecayTreeTuple v1r1p1 2008-03-06 =====================
+
+! 2008-02-20 - Patrick Koppenburg
+ - Include physical constants
+
+! 2008-02-12 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r1p1
+ - src/TupleToolMCTruth.cpp
+  . Replace calls to deprecated Particle2MCLinker single-location 
+    constructor to calls to one with vector of locations.
+
+!===================== VertexFitCheck v1r2p1 2008-03-06 ====================
+
+! 2008-02-20 - Patrick Koppenburg
+ - Include physical constants
+
+! 2008-02-12 - Juan PALACIOS
+ - cmt/requirements
+  . Increment version to v1r2p1
+ - src/PhotonChecker.cpp, ProperTimeChecker.cpp, VtxChecker.cpp
+  . Use Particle2MCLinker constructor taking vector of locations, not
+    single location, as this has been deprecated.
+
+!========================== DaVinciMCTools v9r11 2008-03-06 ==================
+
+! 2008-03-06 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v9r11
+
+! 2008-03-03 - Patrick Koppenburg
+ - FilterToFixOppositeBFractions :
+   . Fix doxygen, initialize all variables
+
+! 2008-03-03 - Stephane Poss
+ - FilterToFixOppositeBFractions : 
+  . initialize m_ievt to 0
+  . Don't print anything in finalize if filter not needed (m_ievt = 0)
+
+! 2008-02-20 - Patrick Koppenburg
+ - Include PhysicalConstants where needed
+
+! 2008-02-19 - V. Gligorov
+ - modified protection in isStable()
+ - modified origin() to return lowest common mother as advertised.  
+
+! 2008-02-18 - Patrick Koppenburg
+ - src/BackgroundCategory : indent properly.
+ - add protection in isStable()
+
+! 2008-02-18 - Patrick Koppenburg for Vladimir Gligorov
+ - src/BackgroundCatgeory: origin() returns "associated MC particle", not
+   top of decay tree. The latter was difficult to define.
+
+! 2008-02-15 - Patrick Koppenburg
+ - PrintTree : new option PrintTruth that also links MC truth to tree
+ - PrintDecayTreeTool : new variable chi2 for tracks and vertices
+
+! 2008-02-13 - Patrick Koppenburg
+ - Remove obsolete DebugTool. Use Print(MC)DecayTree tools instead
+
+! 2008-02-12 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v9r10p1
+ - src/BackgroundCategoryTool.cpp
+  . Use Particle2MCLinker constructor taking vector of locations, not
+    single location, as this has been deprecated.
+
+!===================== FlavourTaggingChecker v2r6p1 2008-03-06 ===============
+
+! 2008-02-14 - Patrick Koppenburg
+ - DebugTool replaced by Print(MC)DecayTreeTool
+ - v2r6p1
+
+!========================== CommonParticles v3r11 2008-03-06 ==================
+
+! 2008-03-06 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v3r11
+
+! 2008-02-03 - Vladimir Gligorov
+ - Added new StdTightD2KPiPi to StandardDplus.opts
+
+
+############################ EXAMPLES AND TUTORIALS ###########################
+!===================== Tutorial/Analysis v7r0 2008-03-06 ======================
+
+! 2008-03-07 - Patrick KOPPENBURG
+ - Changed LFN data files. Bug found by Ulrik.
+
+! 2008-03-04 - Patrick Koppenburg
+ - Adapted to LoKiHybrid for March 2008 tutorial
+ - Increment to v7r0
+
+! 2008-02-12 - Juan PALACIOS
+
+ - cmt/requirements
+  . Increase version to v6r5p1
+
+ - solutions/DaVinci6/TutorialChecker.cpp
+  . Adapt to future removal of Particle2MCLinker constructor taking simple
+    string as location of objects to associate. Pass a size 1 
+    std::vector<std::string> instead.
 
 #######################################MM######################################
 #                                  ANALYSIS v1r10                             #
