@@ -9,6 +9,7 @@ ApplicationMgr.Runable               =   "LHCb::OnlineRunable/Runable";
 Runable.Wait                         = 3;
 Receiver.Buffer                      = "OUT";
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.Buffers                   = {"OUT"};
 MEPManager.PartitionBuffers          = true;
 MessageSvc.OutputLevel = 1;

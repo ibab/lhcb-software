@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.6 2008-01-17 17:41:04 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.7 2008-03-10 15:38:07 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -44,6 +44,8 @@ namespace LHCb    {
     std::string                m_initFlags;
     /// Property: partition identifier used to connect to buffer managers
     int                        m_partitionID;
+    /// Property: partition name used to connect to buffer managers (If set overrides partition identifier)
+    std::string                m_partitionName;
     /// Property: Flag to indicate if unused MEP buffers should be mapped
     bool                       m_mapUnused;
     /// Property: Flag to indicate if buffer names should contain partition ID
@@ -65,23 +67,26 @@ namespace LHCb    {
     /// Standard destructor
     virtual ~MEPManager();
 
-    /// Access to MEP identifier structure
-    MEPID  mepID() const  {  return m_mepID;   }
-
     /// Create producer
     MBM::Producer* createProducer(const std::string& buffer,const std::string& instance);
 
-    /// Access to optional MBM buffer identifiers
-    const std::map<std::string,BMID>& buffers()  const { return m_buffMap;}
+    /// Access to MEP identifier structure
+    MEPID  mepID() const                               { return m_mepID;    }
 
     /// Access to optional MBM buffer identifiers
-    const std::vector<BMID>& bmIDs()  const  {   return m_bmIDs;        }
+    const std::map<std::string,BMID>& buffers()  const { return m_buffMap;  }
+
+    /// Access to optional MBM buffer identifiers
+    const std::vector<BMID>& bmIDs()  const    {   return m_bmIDs;          }
 
     /// Access to partition ID as specified in the job options
-    int partitionID()  const                 {   return m_partitionID;  }
+    int partitionID()  const                   {   return m_partitionID;    }
+    
+    /// Access to partition name as specified in the job options
+    const std::string& partitionName() const   {   return m_partitionName;  }
     
     /// Access to process name
-    const std::string& processName()  const  {  return m_procName;      }
+    const std::string& processName()  const    {  return m_procName;        }
 
     /** Query interfaces of Interface
         @param riid       ID of Interface to be retrieved

@@ -8,6 +8,7 @@ ApplicationMgr.TopAlg               += {"StoreExplorerAlg" };
 Runable.MEPManager                   = "MEPManager";
 StoreExplorerAlg.Load                = 1;
 StoreExplorerAlg.PrintFreq           = 0.001;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = {"OUT"};
 MEPManager.PartitionBuffers          = true;

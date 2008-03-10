@@ -1,4 +1,4 @@
-// $Id: EventRunable.cpp,v 1.6 2006-11-27 13:46:37 frankb Exp $
+// $Id: EventRunable.cpp,v 1.7 2008-03-10 15:38:08 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -17,9 +17,9 @@ LHCb::EventRunable::EventRunable(const std::string& nam, ISvcLocator* svcLoc)
 : OnlineService(nam, svcLoc), m_mepMgr(0), m_dataSvc(0),
   m_receiveEvts(false), m_nerr(0), m_evtCount(0)
 {
-  declareProperty("EvtMax", m_evtMax=1);
-  declareProperty("NumErrorToStop", m_nerrStop=5);
-  declareProperty("MEPManager",  m_mepMgrName="LHCb::MEPManager/MEPManager");
+  declareProperty("EvtMax",        m_evtMax=1);
+  declareProperty("NumErrorToStop",m_nerrStop=-1);
+  declareProperty("MEPManager",    m_mepMgrName="LHCb::MEPManager/MEPManager");
 }
 
 // Standard Destructor
@@ -89,7 +89,7 @@ void LHCb::EventRunable::handle(const Incident& inc)    {
   }
 }
 
-// IRunable implementation : Run the class implementation
+/// IRunable implementation : Run the class implementation
 StatusCode LHCb::EventRunable::run()   {
   SmartIF<IAppMgrUI> ui(serviceLocator());
   if ( ui )    {
@@ -114,7 +114,7 @@ StatusCode LHCb::EventRunable::run()   {
       /// Consecutive errors: go into error state
       error("Failed to process event.");
       m_nerr++;
-      if ( m_nerr > m_nerrStop )  {
+      if ( (m_nerrStop > 0) && (m_nerr > m_nerrStop) )  {
         Incident incident(name(),"DAQ_FATAL");
         m_incidentSvc->fireIncident(incident);
         return StatusCode::FAILURE;

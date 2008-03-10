@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.17 2008-01-29 08:54:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.18 2008-03-10 15:38:08 frankb Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -27,6 +27,7 @@ LHCb::MEPManager::MEPManager(const std::string& nam, ISvcLocator* loc)
   declareProperty("Buffers",          m_buffers);
   declareProperty("ProcessName",      m_procName);
   declareProperty("PartitionID",      m_partitionID);
+  declareProperty("PartitionName",    m_partitionName="");
   declareProperty("InitFlags",        m_initFlags);
   declareProperty("PartitionBuffers", m_partitionBuffers=false);
   declareProperty("MapUnusedBuffers", m_mapUnused=true);
@@ -66,7 +67,10 @@ StatusCode LHCb::MEPManager::initializeBuffers()  {
         if(strcmp(tok+3,"MEP") && strcmp(tok+3,"EVENT") && strcmp(tok+3,"RESULT")) {
           std::string bm_name = tok;
           bm_name += "_";
-          bm_name += _itoa(m_partitionID,txt,16);
+          if ( m_partitionName.empty() )
+	    bm_name += _itoa(m_partitionID,txt,16);
+	  else
+	    bm_name += m_partitionName;
           items[ikey++] = strcpy(p=new char[bm_name.length()+1],bm_name.c_str());
           continue;
         }
@@ -93,7 +97,10 @@ StatusCode LHCb::MEPManager::connectBuffer(const std::string& nam)  {
   std::string bm_name = nam;
   if ( m_partitionBuffers ) {
     bm_name += "_";
-    bm_name += _itoa(m_partitionID,txt,16);
+    if ( m_partitionName.empty() )
+      bm_name += _itoa(m_partitionID,txt,16);
+    else
+      bm_name += m_partitionName;
   }
   if( m_buffMap.find(bm_name) == m_buffMap.end() ) {
     BMID bmid = ::mbm_include(bm_name.c_str(),m_procName.c_str(),m_partitionID);

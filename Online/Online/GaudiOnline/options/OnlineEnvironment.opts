@@ -1,5 +1,6 @@
 #pragma print on
-OnlineEnv.PartitionID   = 333;
+OnlineEnv.PartitionID       = 333;
+OnlineEnv.PartitionName     = "LHCb";
 OnlineEnv.MonitorSvcType    = "LHCb::MemMonitorSvc/MonitorSvc";
 ApplicationMgr.ExtSvc       = { "LHCb::MemMonitorSvc/MonitorSvc",
                                 "LHCb::DimMonitoringEngine/MonitoringEngine" };

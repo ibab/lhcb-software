@@ -1,6 +1,11 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2008-03-10 Markus Frank
+ - MEPManager: Allow to partition buffers by partition name.
+   If the MEPManager.PartitionName is not set partitioning (if requested) will 
+   be done by partition ID.
+
 ! 2008-01-19 Markus Frank
  - Add algorithm, which allows to merge Events from TES to output buffer:
    src/RawEvent2MBMMergerAlg.cpp

@@ -7,6 +7,7 @@ ApplicationMgr.TopAlg                = {"StoreExplorerAlg","LHCb::MDFWriter/Writ
 Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
 MEPManager.Buffers                   = { "OUT" };
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.PartitionBuffers          = true;
 StoreExplorerAlg.Load                = 0;
 StoreExplorerAlg.PrintFreq           = 0.001;

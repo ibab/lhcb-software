@@ -9,4 +9,5 @@ Runable.REQ = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;
 Runable.Input                        = "OUT";
 MEPManager.Buffers                   = { "OUT" };
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.PartitionBuffers          = true;
