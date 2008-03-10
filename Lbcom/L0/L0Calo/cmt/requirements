@@ -11,6 +11,7 @@ set L0CALOOPTS	$(L0CALOROOT)/options
 # ================ used packages =========================================
 use LinkerEvent	v*	Event
 use CaloDAQ	v*	Calo
+use CaloUtils   v*      Calo
 
 # ================ component library =====================================
 library		L0Calo	../src/*.cpp -import=AIDA
