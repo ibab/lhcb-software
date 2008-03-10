@@ -1,4 +1,4 @@
-// $Id: VeloSimMoni.cpp,v 1.11 2007-09-05 13:21:17 dhcroft Exp $
+// $Id: VeloSimMoni.cpp,v 1.12 2008-03-10 15:01:04 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -335,19 +335,13 @@ void VeloSimMoni::VeloFEMonitor()
     unsigned int zone=sens->zoneOfStrip(strip);
     const DeVeloPhiType* phiSens=dynamic_cast<const DeVeloPhiType*>(sens);
     double testRadius=phiSens->rMin(zone);
-    double testPhi=phiSens->phiOfStrip(strip, 0., testRadius);
-    double trgPhi=phiSens->trgPhiOfStrip(strip, 0., testRadius);
-    double testPhiDirec=phiSens->angleOfStrip(strip,0.);
-    double trgPhiDirec=phiSens->trgPhiDirectionOfStrip(strip,0.);
+    double testPhi=phiSens->globalPhi(strip, 0., testRadius);
     if(m_printInfo){
       info()<< "Sensor: " << channel.sensor()
             << ", type: " << (sens->type())
             << ", strip: " << channel.strip()
             << ", sensorZ: " << sensorZ
             << ", testPhi: " << testPhi/degree
-            << ", trgPhi: " << trgPhi/degree
-            << ", testPhiDirec: " << testPhiDirec/degree
-            << ", trgPhiDirec: " << trgPhiDirec/degree
             <<endmsg;
     }
     //
@@ -355,27 +349,9 @@ void VeloSimMoni::VeloFEMonitor()
       plot2D(sensorZ, testPhi/degree, 129,
              "MCVeloFE Phi position vs. Z (cm), Inner zone",
              -20., 80., -180., 180., 1000, 60);
-      plot2D(sensorZ, trgPhi/degree, 130,
-             "MCVeloFE Phi (trg) position vs. Z (cm), Inner zone",
-             -20., 80., -180., 180., 1000, 60);
-      plot2D(sensorZ, testPhiDirec/degree, 131,
-             "MCVeloFE Phi direction vs. Z (cm), Inner zone",
-             -20., 80., -180., 180., 1000, 60);
-      plot2D(sensorZ, trgPhiDirec/degree, 132,
-             "MCVeloFE Phi direction (trg) vs. Z (cm), Inner zone",
-             -20., 80., -180., 180., 1000, 60);
     }else{
       plot2D(sensorZ, testPhi/degree, 129,
              "MCVeloFE Phi position vs. Z (cm), Outer zone",
-             -20., 80., -180., 180., 1000, 60);
-      plot2D(sensorZ, trgPhi/degree, 130,
-             "MCVeloFE Phi (trg) position vs. Z (cm), Outer zone",
-             -20., 80., -180., 180., 1000, 60);
-      plot2D(sensorZ, testPhiDirec/degree, 131,
-             "MCVeloFE Phi direction vs. Z (cm), Outer zone",
-             -20., 80., -180., 180., 1000, 60);
-      plot2D(sensorZ, trgPhiDirec/degree, 132,
-             "MCVeloFE Phi direction (trg) vs. Z (cm), Outer zone",
              -20., 80., -180., 180., 1000, 60);
     }
    }

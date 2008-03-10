@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-03-10 - David Hutchcroft
+ - Removed calls to phiOfStrip and trgPhiOfStrip in VeloSimMoni.cpp and now
+   removed from DeVeloPhiType.h
+
 !===================== VeloSimulation v2r6 2007-09-07 ======================
 ! 2007-09-05 - David Hutchcroft
  - Modified the treatment of the timing of particle arrivals to correctly 
