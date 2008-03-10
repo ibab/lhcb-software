@@ -1,4 +1,4 @@
-// $Id: VertexFitter.h,v 1.2 2008-02-24 19:48:19 ibelyaev Exp $
+// $Id: VertexFitter.h,v 1.3 2008-03-10 18:24:43 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_VERTEXFITTER_H 
 #define LOKIFITTERS_VERTEXFITTER_H 1
@@ -38,7 +38,7 @@
 // ============================================================================
 // Local 
 // ============================================================================
-#include "FitterUtils.h"
+#include "KalmanFilter.h"
 // ============================================================================
 namespace LoKi
 {
@@ -49,7 +49,7 @@ namespace LoKi
    * 
    *  @todo proper implementation of IVertexFit:remove 
    *
-   *  "Vertex Fitter as Kalman Fitter":
+   *  <b>"Vertex Fitter as Kalman Filter"</b>
    *
    *  Let  \f$\vec{p}_k\f$ be a vector containing the parameters of the 
    *  \f$k\f$-track. Let  \f$V_k\f$ be the covariance matrix of these parameters, 
@@ -175,25 +175,24 @@ namespace LoKi
     friend class ToolFactory<VertexFitter> ;
   public:
     // ========================================================================
-    enum 
-      {
-        // Invalid Particle 
-        InvalidParticle         = 701 , ///< Invalid Particle 
-        // Invalid Data
-        InvalidData             = 702 , ///< Invalid Data 
-        // Error in Matrix Inversion 
-        ErrorInMatrixInversion  = 703 , ///< Error in Matrix Inversion
-        // No Convergency
-        NoConvergency           = 710 , ///< No Convergency is detected 
-        // Not Implemented Yet 
-        NotImplemented          = 720   ///< not yet implemented 
-      } ;
+    enum {
+      /// Invalid Particle 
+      InvalidParticle         = 701 , // Invalid Particle 
+      /// Invalid Data
+      InvalidData             = 702 , // Invalid Data 
+      /// Error in Matrix Inversion 
+      ErrorInMatrixInversion  = 703 , // Error in Matrix Inversion
+      /// No Convergency
+      NoConvergency           = 710 , // No Convergency is detected 
+      /// Not Implemented Yet 
+      NotImplemented          = 720   // not yet implemented 
+    } ;
     // ========================================================================
   protected:
     // ========================================================================
-    typedef FitterUtils::Entry  Entry    ;
-    typedef std::vector<Entry>  Entries  ;
-    typedef Entries::iterator   EIT      ;
+    typedef LoKi::KalmanFilter::Entry    Entry    ;
+    typedef LoKi::KalmanFilter::Entries  Entries  ;
+    typedef Entries::iterator            EIT      ;
     // ========================================================================
   public:  
     // ========================================================================
@@ -488,35 +487,33 @@ namespace LoKi
     /// load the data into internal representation 
     StatusCode _load      
     ( const LHCb::Particle* particle , Entry& entry ) const ;
-    /// update the internal representation
-    StatusCode _update ( Entry& entry        ) const ;
     /// load the data from the daughter particles into the internal structures 
     StatusCode _load ( const LHCb::Particle::ConstVector& daughters ) const ;
     /// add one particle at the end of the queue
     StatusCode _add 
     ( const LHCb::Particle* child , const double newZ ) const ;
     /// transport the data to a certain position 
-    StatusCode _transport ( Entry& entry , const double newZ ) const ;
+    StatusCode _transport ( Entry& entry , const double newZ ) const 
+    { return LoKi::KalmanFilter::transport ( entry , newZ , transporter() ) ; }
     /// transport all data to a certain position 
-    StatusCode _transport ( const double newZ ) const ;
-    /// make one Kalman filter step
-    StatusCode _step 
-    ( Entry&                entry   , 
-      const Gaudi::Vector3& x       , 
-      const Gaudi::SymMatrix3x3& ci , 
-      const double chi2             ) const  ;
-    /// run Kalman smoother 
-    StatusCode _smooth ()  const ;
+    StatusCode _transport ( const double newZ ) const 
+    {
+      for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
+      { 
+        StatusCode sc = _transport ( *entry , newZ ) ; 
+        if ( sc.isFailure() ) 
+        { Warning ("_transport(): the error from transport() , ignore", sc ) ; }
+      }
+      return StatusCode::SUCCESS ;
+    }
     /// make few Kalman filter iterations 
     StatusCode _iterate ( const size_t nMax , const Gaudi::Vector3& x ) const ;
-    /// evaluate the covariance ematrices
-    StatusCode _evalCov () const ;
     /// make a seed 
     StatusCode _seed ( const LHCb::Vertex* vertex  ) const ;
     // ========================================================================
   protected:
     // ========================================================================
-    /// get the tranbsporter 
+    /// get the transporter 
     inline IParticleTransporter* transporter() const 
     {
       if ( 0 != m_transporter ) { return m_transporter ; }
@@ -526,11 +523,11 @@ namespace LoKi
     // ========================================================================
   private:
     // ========================================================================
-    // maximal number of iteration for vertex fit 
+    // maximal number of iterations for the vertex fit 
     unsigned short m_nIterMaxI    ; ///< maximal number of iteration for vertex fit 
-    // maximal number of iteratio n for "add" 
+    // maximal number of iterations for "add" 
     unsigned short m_nIterMaxII   ; ///< maximal number of iteration for "add" 
-    // maximal number of iteration for "remove" 
+    // maximal number of iterations for "remove" 
     unsigned short m_nIterMaxIII  ; ///< maximal number of iteration for "remove" 
     // distance (stop-iteration criterion)
     double         m_DistanceMax  ; ///< distance (stop-iteration criterion)
@@ -555,7 +552,6 @@ namespace LoKi
     mutable Gaudi::SymMatrix4x4        m_cmom     ;
     mutable Gaudi::Matrix4x4           m_cmom1    ;
     mutable Gaudi::Matrix4x3           m_mpcov    ;
-    mutable Gaudi::SymMatrix3x3        m_seedaux  ;  
     // ========================================================================
   } ;
 } // end of namespace LoKi

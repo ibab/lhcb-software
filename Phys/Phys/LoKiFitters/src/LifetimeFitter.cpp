@@ -1,4 +1,4 @@
-// $Id: LifetimeFitter.cpp,v 1.3 2008-02-28 15:54:38 ibelyaev Exp $
+// $Id: LifetimeFitter.cpp,v 1.4 2008-03-10 18:24:43 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -125,7 +125,7 @@ StatusCode LoKi::LifetimeFitter::fit
   double&                 error    ,
   double&                 chi2     ) const 
 {
-  const LHCb::Vertex* decay = particle.endVertex() ;
+  const LHCb::VertexBase* decay = particle.endVertex() ;
   if ( 0 == decay ) 
   {
     lifetime = -1.e+10 * Gaudi::Units::nanosecond ;
@@ -134,19 +134,9 @@ StatusCode LoKi::LifetimeFitter::fit
     return Error ( "No valid end-vertex is found"  , NoEndVertex ) ;  
   }
   
-  // backup the primary vertex 
-  LHCb::VertexBase s_primary  ( primary  ) ;
-  
-  // backup the initial particle 
-  LHCb::Particle   s_particle ( particle ) ;
-  
-  // backup the decay vertex 
-  LHCb::Vertex     s_decay    ( *decay   ) ;
-  s_particle.setEndVertex ( &s_decay ) ;
-  
   // make the actual iterations 
-  StatusCode sc = fit_ 
-    ( &s_primary  , &s_particle , &s_decay , lifetime , error , chi2 ) ;  
+  StatusCode sc = fitConst_ 
+    ( &primary  , &particle , decay , lifetime , error , chi2 ) ;  
   if ( sc.isFailure() ) 
   { return Error ( "The error from LoKi::DirectionFitBase" , sc ) ;  }
   

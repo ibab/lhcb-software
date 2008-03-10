@@ -1,4 +1,4 @@
-// $Id: VertexFitter.cpp,v 1.4 2008-02-28 16:02:17 ibelyaev Exp $
+// $Id: VertexFitter.cpp,v 1.5 2008-03-10 18:24:43 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -35,7 +35,7 @@
 // ============================================================================
 // Local 
 // ============================================================================
-#include "FitterUtils.h"
+#include "KalmanFilter.h"
 #include "VertexFitter.h"
 // ============================================================================
 /// anonymous namespace to hide few technical constants
@@ -78,60 +78,8 @@ StatusCode LoKi::VertexFitter::_load
 {
   if ( 0 == particle ) 
   { return Error ( "_load(): invalid particle" , InvalidParticle ) ; } // RETURN 
-  entry.m_p0 = particle    ;
-  entry.m_p  = (*particle) ;
-  return _update ( entry ) ;
+  return LoKi::KalmanFilter::load ( *particle , entry ) ;
 }
-// ============================================================================
-// update the representation 
-// ============================================================================
-StatusCode LoKi::VertexFitter::_update 
-( LoKi::VertexFitter::Entry& entry ) const 
-{
-  bool basic = false ;
-  const Gaudi::SymMatrix3x3& _pmcov = entry.m_p.posCovMatrix() ;
-  if ( _pmcov ( 2 , 2 ) < 0.25 * ( _pmcov ( 0 , 0 ) + _pmcov ( 1 , 1 ) ) )
-  {
-    // basic particle? : use some tricks to 
-    m_cixy ( 0 , 0 ) = _pmcov ( 0, 0 ) ;
-    m_cixy ( 0 , 1 ) = _pmcov ( 0, 1 ) ;
-    m_cixy ( 1 , 1 ) = _pmcov ( 1, 1 ) ;
-    if ( !m_cixy.Invert() )  
-    { 
-      return Error 
-        ( "_update(): Error in C<xy> matrix inversion" , ErrorInMatrixInversion ) ;
-    }
-    // The most tricky part I
-    entry.m_vxi ( 0 , 0 ) = m_cixy ( 0 , 0 ) ;
-    entry.m_vxi ( 0 , 1 ) = m_cixy ( 0 , 1 ) ;
-    entry.m_vxi ( 1 , 1 ) = m_cixy ( 1 , 1 ) ;
-    // The most tricky part II 
-    const Gaudi::LorentzVector& mom = entry.m_p.momentum() ;
-    const Gaudi::Vector2 slopes ( mom.Px() / mom.Pz() , mom.Py() / mom.Pz() ) ;
-    const Gaudi::Vector2 cslope ( m_cixy * slopes )  ;
-    entry.m_vxi ( 0 , 2 ) = -1 * cslope ( 0 ) ;
-    entry.m_vxi ( 1 , 2 ) = -1 * cslope ( 1 ) ;
-    entry.m_vxi ( 2 , 2 ) = ROOT::Math::Similarity ( slopes , m_cixy ) ;
-    //
-    basic = true ;
-  }
-  else
-  {
-    // the regular particle:
-    entry.m_vxi = _pmcov ;
-    if ( !entry.m_vxi.Invert() )
-    { return Error 
-        ( "_update(): Error in C<xyz> matrix inversion", ErrorInMatrixInversion ) ; 
-    }      
-  }
-  // 
-  counter ("#basicAcc") += basic ;
-  //
-  Gaudi::Math::geo2LA ( entry.m_p.referencePoint () , entry.m_parx ) ;
-  Gaudi::Math::geo2LA ( entry.m_p.momentum       () , entry.m_parq ) ;
-  //
-  return StatusCode::SUCCESS ;
-} 
 // ============================================================================/
 // add one particle at the end of the queue
 // ============================================================================
@@ -146,115 +94,6 @@ StatusCode LoKi::VertexFitter::_add
   sc = _transport ( m_entries.back() , newZ ) ;
   if ( sc.isFailure() ) 
   { Warning ("_add(): the error from _transport(), ignore", sc ) ; }
-  return StatusCode::SUCCESS ;
-} 
-// ============================================================================
-// transport all internal data to new Z-position
-// ============================================================================
-StatusCode LoKi::VertexFitter::_transport
-( LoKi::VertexFitter::Entry& entry , 
-  const double              newZ ) const 
-{
-  // 
-  StatusCode sc = transporter()->transport 
-    ( entry.m_p0 , newZ , entry.m_p ) ;
-  if ( sc.isFailure() ) 
-  { 
-    Error ( "Could not transport the particle" , sc )  ; 
-    entry.m_p = *entry.m_p0 ;
-  }   
-  return _update ( entry ) ;
-}
-// ============================================================================
-// transport all internal data to new Z-position
-// ============================================================================
-StatusCode LoKi::VertexFitter::_transport
-( const double newZ ) const 
-{
-  for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
-  { 
-    StatusCode sc = _transport ( *entry , newZ ) ; 
-    if ( sc.isFailure() ) 
-    { Warning ("_transport(): the error from _transport() , ignore", sc ) ; }
-  }
-  return StatusCode::SUCCESS ;
-} 
-// ============================================================================
-// making one step of Kalman filter 
-// ============================================================================
-StatusCode LoKi::VertexFitter::_step
-( LoKi::VertexFitter::Entry&  entry , 
-  const Gaudi::Vector3&      x     , 
-  const Gaudi::SymMatrix3x3& ci    , 
-  const double               chi2  ) const 
-{
-  // OK ! 
-  /// \f$ C^{-1}_k=C^{-1}_{k-1}+A^TG_kA =  C^{-1}_{k-1}+ V^{-1}_{k} \f$
-  entry.m_ci = ci + entry.m_vxi  ; 
-  // OK ! 
-  int ifail = 0 ;
-  /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-  entry.m_c  = entry.m_ci.Inverse( ifail ) ; 
-  if ( 0 != ifail ) 
-  { return Error 
-      ( "_step: Error in inversion of inverse covarinace matrix " , 
-        ErrorInMatrixInversion ) ; }
-  // OK ! 
-  /// \f$\vec{x}_k\f$
-  entry.m_x = entry.m_c * 
-    ( ci*x + entry.m_vxi * entry.m_parx  ) ; 
-  // OK ! 
-  const Gaudi::Vector3 dx = entry.m_parx - entry.m_x ;  
-  // OK !
-  entry.m_q = entry.m_parq - entry.m_p.posMomCovMatrix() * entry.m_vxi * dx ; 
-  // OK ! 
-  const double dchi2 = 
-    ROOT::Math::Similarity ( entry.m_vxi  , dx            ) + 
-    ROOT::Math::Similarity ( ci           , entry.m_x - x ) ;
-  //
-  if ( 0 > dchi2 ) { Warning ( "_step: delta chi2 is negative!" ) ; }    
-  //
-  entry.m_chi2 = chi2 + dchi2 ;
-  //
-  return StatusCode::SUCCESS ;
-} 
-// ============================================================================
-// kalman smoothing  
-// ============================================================================
-StatusCode LoKi::VertexFitter::_smooth() const 
-{
-  const Entry& last = m_entries.back() ;
-  for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
-  {
-    /// \f$ \vec{x}^{n}_k = \vec{x}_{n}\f$ 
-    entry -> m_x  = last.m_x ;
-    const Gaudi::Vector3 dx = entry->m_parx - entry->m_x ;
-    /// \f$ \vec{q}^{n}_k = W_kB^T_{k}G_k\left[\vec{p}_k-A_k\vec{x}_{n}\right]\f$ 
-    entry -> m_q = entry -> m_parq 
-      - entry -> m_p.posMomCovMatrix() * entry -> m_vxi * dx ; 
-  }
-  return StatusCode::SUCCESS ;
-} 
-// ============================================================================
-// evaluate all covariances properly 
-// ============================================================================
-StatusCode LoKi::VertexFitter::_evalCov() const 
-{
-  using namespace ROOT::Math ;
-  const Entry& last = m_entries.back() ;
-  for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
-  {
-    /// \f$ C^n_k = C_n \f$  
-    entry -> m_c = last.m_c ;
-    /// \f$ F_k = G_{p}^{-1}G^T{xp} = - V^T_{xp}V^{-1}_x \f$ 
-    entry -> m_f = -1.0 * entry->m_p.posMomCovMatrix()*entry->m_vxi   ;
-    /// \f$ E_k = - F_k C_n \f$ 
-    entry -> m_e = -1.0 * entry->m_f * entry->m_c ;
-    /// \f$ D_k = W_k - E^{n}_kF^{T}_{k} = V_p - V^T_{xp}V^{-1}_{x}V_{xp} + F_kC_nF_k^T \f$ 
-    entry->m_d = entry->m_p.momCovMatrix() 
-      - Similarity ( entry -> m_p.posMomCovMatrix() , entry -> m_vxi ) 
-      + Similarity ( entry -> m_f                   , entry -> m_c   ) ;
-  }
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
@@ -289,7 +128,7 @@ StatusCode LoKi::VertexFitter::_iterate
     for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
     {
       // make one Kalman step 
-      sc = _step ( *entry , *x , *ci , *chi2 ) ;
+      sc = LoKi::KalmanFilter::step ( *entry , *x , *ci , *chi2 ) ;
       // skip on Failure
       if ( sc.isFailure() ) { continue ; }                    // CONTINUE 
       // update the parameters 
@@ -298,7 +137,7 @@ StatusCode LoKi::VertexFitter::_iterate
       chi2 = &entry->m_chi2 ;
     }
     // kalman smooth
-    sc = _smooth() ;
+    sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
     if ( sc.isFailure() ) 
     { Warning ( "_iterate(): problem with smoother", sc ) ; }
     // distance in the absolute position 
@@ -315,7 +154,7 @@ StatusCode LoKi::VertexFitter::_iterate
     //
     if ( d1 < m_DistanceMax || ( 1 < iIter && 0 <= d2 && d2 < m_DistanceChi2 ) )
     {
-      sc = _evalCov () ;
+      sc = LoKi::KalmanFilter::evalCov ( m_entries ) ;
       if ( sc.isFailure() ) 
       { Warning ( "_iterate(): problems with covariances" , sc ) ; }
       // 
@@ -349,26 +188,17 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
       return StatusCode::SUCCESS ;                            // RETURN 
     } 
   }
-  /// construct the seed from the data 
-  Gaudi::Math::setToScalar ( m_seedci , 0.0 ) ;
-  Gaudi::Vector3      seed ;
-  for ( EIT it = m_entries.begin() ; m_entries.end() != it ; ++it ) 
-  {
-    m_seedci += it->m_vxi ; 
-    seed     += it->m_vxi * it->m_parx ;
-  } 
-  int ifail = 0 ;
-  m_seedaux = m_seedci.Inverse( ifail ) ;
-  m_seed    = m_seedaux * seed ;
-  if ( 0 != ifail ) 
+  
+  StatusCode sc = LoKi::KalmanFilter::seed 
+    ( m_entries , m_seed , m_seedci , s_scale2 ) ;
+  
+  if ( sc.isFailure() ) 
   { 
     m_seed[0] = 0.0 ; m_seed[1] = 0.0 ; m_seed [2] = 0.0 ;
     Gaudi::Math::setToUnit ( m_seedci , 1.0/s_middle2 ) ;
     m_seedci(2,2) = 1.0/s_large2 ;
     Warning ( "_seed(): error in matrix inversion" ) ; 
   }
-  // properly scale the seed error matrix 
-  Gaudi::Math::scale ( m_seedci , s_scale2 ) ;
   /// check the validity of the seed 
   Gaudi::XYZPoint pnt ( m_seed[0] , m_seed[1] , m_seed[2] ) ;
   if ( m_seedZmin > pnt.Z() ) 
@@ -534,10 +364,10 @@ StatusCode LoKi::VertexFitter::add
   Entry& entry    =   m_entries.back()   ;
   const Entry& e0 = *(m_entries.end()-2) ;
   // make one Kalman step using the previos parameters as estimate
-  sc = _step  ( entry , e0.m_x , e0.m_ci , e0.m_chi2) ;
+  sc = LoKi::KalmanFilter::step  ( entry , e0.m_x , e0.m_ci , e0.m_chi2) ;
   if ( sc.isFailure() ) { Warning ("add(): failure from _step" , sc ) ; }
   // smooth it!
-  sc = _smooth() ;
+  sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
   if ( sc.isFailure() ) { Warning ("add(): failure from _smooth" , sc ) ; }
   // make few more full iterations 
   m_seedci = entry.m_ci ;

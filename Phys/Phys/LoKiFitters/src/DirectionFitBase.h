@@ -1,4 +1,4 @@
-// $Id: DirectionFitBase.h,v 1.2 2008-02-24 19:48:19 ibelyaev Exp $
+// $Id: DirectionFitBase.h,v 1.3 2008-03-10 18:24:43 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_DIRECTIONFITBASE_H 
 #define LOKIFITTERS_DIRECTIONFITBASE_H 1
@@ -14,10 +14,18 @@
 #include "LHCbMath/MatrixUtils.h"
 #include "LHCbMath/MatrixTransforms.h"
 // ============================================================================
+// DaVinciKernel
+// ============================================================================
+#include "Kernel/IParticleTransporter.h"
+// ============================================================================
 // Event
 // ============================================================================
 #include "Event/Particle.h"
 #include "Event/VertexBase.h"
+// ============================================================================
+// local
+// ============================================================================
+#include "FitterUtils.h"
 // ============================================================================
 namespace LoKi
 {
@@ -238,46 +246,52 @@ namespace LoKi
      *  \f$ \mathbf{W}=\frac{\partial}{\partial p^{\mu}}\mathbf{H} = 0  \f$ 
      *   and \f$ c\tau_0 = 0 \f$. 
      *
-     *  @param primary the primary vertex 
-     *  @param particle the particle
-     *  @param decay  the decay vertex 
+     *  @param primary  (input) the primary vertex 
+     *  @param particle (input) the particle
+     *  @param decay    (input) the decay vertex 
      *  @return fast evaluation of ctau 
      */
     double ctau0 
-    ( const LHCb::VertexBase* primary  , 
-      const LHCb::Particle*   particle , 
-      const LHCb::VertexBase* decay    ) const ;
+    ( const LHCb::VertexBase& primary  , 
+      const LHCb::Particle&   particle , 
+      const LHCb::VertexBase& decay    ) const ;
     // ========================================================================
-    /** make one iteration step
+    /** make few iteration steps 
      * 
      *  @attention input particle&vertices are modified!
      *
-     *  @param primary pointer to (non-const!) primary vertex (input/output) 
-     *  @param particle pointer to (non-const!) particle      (input/output) 
-     *  @param decay    pointer to (non-const!) decay vertex  (input/output) 
-     *  @param ctau     the estiamte of the proper time (c*tau) (input/output)
-     *  @param error    the estiamte of the error in the proper time (c*tau) (output)
-     *  @param chi2     the estiamte of the chi2 (output)
+     *  @param primary    pointer to primary vertex (input) 
+     *  @param particle   pointer to particle       (input) 
+     *  @param decay      pointer to decay vertex   (input) 
+     *  @param momentum   the expansion point for particle momentum (input/output) 
+     *  @param decvertex  the expansion point for decay   vertex      (input/output) 
+     *  @param primvertex the expansion point for primary vertex      (input/output) 
+     *  @param ctau       the estimate of the proper time (c*tau) (input/output)
+     *  @param error      the estimate of the error in the proper time (c*tau) (output)
+     *  @param chi2       the estimate of the chi2 (output)
      *  @return status code 
      */
-    StatusCode step 
-    ( LHCb::VertexBase* primary   , 
-      LHCb::Particle*   particle  , 
-      LHCb::VertexBase* decay     , 
-      double&           ctau      , 
-      double&           error     , 
-      double&           chi2      ) const ;
+    StatusCode iterate 
+    ( const LHCb::VertexBase* primary    , 
+      const LHCb::Particle*   particle   , 
+      const LHCb::VertexBase* decay      , 
+      Gaudi::LorentzVector&   momentum   ,
+      Gaudi::XYZPoint&        decvertex  , 
+      Gaudi::XYZPoint&        primvertex ,
+      double&                 ctau       , 
+      double&                 error      , 
+      double&                 chi2       ) const ;
     // ========================================================================
     /** make the real fit 
      *
-     *  @attention input particle&vertices are modified!
+     *  @attention the input particle&vertices are modified!
      *
-     *  @param primary pointer to (non-const!) primary vertex (input/output) 
+     *  @param primary  pointer to (non-const!) primary vertex (input/output) 
      *  @param particle pointer to (non-const!) particle      (input/output) 
      *  @param decay    pointer to (non-const!) decay vertex  (input/output) 
-     *  @param ctau     the estiamte of the proper time (c*tau) (input/output)
-     *  @param error    the estiamte of the error in the proper time (c*tau) (output)
-     *  @param chi2     the estiamte of the chi2 (output)
+     *  @param ctau     the estimate of the proper time (c*tau) (input/output)
+     *  @param error    the estimate of the error in the proper time (c*tau) (output)
+     *  @param chi2     the estimate of the chi2 (output)
      *  @return status code 
      */
     StatusCode fit_ 
@@ -288,29 +302,25 @@ namespace LoKi
       double&           error     , 
       double&           chi2      ) const ;
     // ========================================================================
-    /** calculate W-matrix: 
-     *  \f$ \mathbf{W} = \frac{\partial}{\partial p^{\mu}}   \mathbf{H} \f$ 
+    /** make the real fit 
      *
-     *  It is the only non-trivial component of 
-     *  the general matrix \f$\mathbf{D}\f$:
-     *    \f$ \mathbf{D} = 
-     *     \frac{\partial}
-     *          {\partial\vec{\alpha}}\mathbf{H} = 
-     *      \left(  
-     *       \frac{\partial}{\partial p^{\mu}}   \mathbf{H},
-     *       \frac{\partial}{\partial \vec{x}_d} \mathbf{H},
-     *       \frac{\partial}{\partial \vec{x}_p} \mathbf{H} \right) = 
-     *       \left( \mathbf{W} , -1 , 1 \right) \f$
+     *  @attention the input particle&vertices are *NOT* modified!
      *
-     *  @param v    the lorents-vector      (input) 
-     *  @param ctau the evaluation of c*tau (input) 
-     *  @param w    the w-matrix            (output) 
+     *  @param primary  pointer to primary vertex (input) 
+     *  @param particle pointer to particle       (input) 
+     *  @param decay    pointer to decay vertex   (input) 
+     *  @param ctau     the estiamte of the proper time (c*tau) (input/output)
+     *  @param error    the estiamte of the error in the proper time (c*tau) (output)
+     *  @param chi2     the estiamte of the chi2 (output)
+     *  @return status code 
      */
-    void wmatrix 
-    ( const Gaudi::LorentzVector& v    , 
-      const double                ctau , 
-      Gaudi::Matrix3x4&           w    ) const ;
-    // ========================================================================
+    StatusCode fitConst_ 
+    ( const LHCb::VertexBase* primary   , 
+      const LHCb::Particle*   particle  , 
+      const LHCb::VertexBase* decay     , 
+      double&                 ctau      , 
+      double&                 error     , 
+      double&                 chi2      ) const ;
   private:
     // ========================================================================
     // the default constructor is disabled
@@ -322,36 +332,49 @@ namespace LoKi
     // ========================================================================
   private:
     // ========================================================================
+    /// get the tranporter tool:
+    IParticleTransporter* transporter() const 
+    {
+      if ( 0 == m_transporter ) 
+      { m_transporter = tool<IParticleTransporter> ( m_transporterName ) ; }
+      return m_transporter ;
+    }
+    // ========================================================================
+    /// transport the particle into new position 
+    inline StatusCode transport
+    ( const LHCb::Particle* p1 , 
+      const double          z  , 
+      LHCb::Particle&       p2 ) const
+    {
+      if ( 0 == m_transporter ) 
+      { m_transporter = tool<IParticleTransporter> ( m_transporterName ) ; }
+      return m_transporter -> transport ( p1 , z , p2 ) ;
+    }
+    // ========================================================================
+    /// transport the particle into new position 
+    inline StatusCode transport 
+    ( const LHCb::Particle*  p1 , 
+      const Gaudi::XYZPoint& z  , 
+      LHCb::Particle&        p2 ) const { return transport ( p1 , z.Z() , p2 ) ; }
+    // ========================================================================
+  private:
+    // ========================================================================
     /// the maximal number of iterations
-    unsigned int m_max_iter ; // maximal number of iteration 
+    unsigned int m_max_iter   ; // maximal number of iteration 
     /// the convergency parameter 
-    double m_delta_chi2 ; // convergency parameter 
+    double       m_delta_chi2 ; // convergency parameter 
     /// the convergency parameter 
-    double m_delta_ctau ; // convergency parameter 
-    ///  \f$\mathbf{E}=\frac{\partial}{\partial c\tau}\mathbf{H}\f$
-    mutable ROOT::Math::SVector<double,3> m_e   ; // E = d(H)/d(ctau)
-    ///  \f$ \mathbf{V}_D = \left(\mathbf{D}^T\mathbf{V}\mathbf{D}\right)^{-1} \f$ 
-    mutable Gaudi::SymMatrix3x3           m_vd  ; // V_D = (D^T*V*D)^{-1}
-    /// \f$ \lambda_0  = \mathbf{V}_D\left(\mathbf{D}\vec{\alpha}+\mathbf{d}\right) \f$ 
-    mutable ROOT::Math::SVector<double,3> m_l0  ; // lambda_0 = V_D*(D*alpha+d) 
-    /// \f$ \lambda = \lambda_0 + \mathbf{V}_D\mathbf{E}\delta c\tau \f$ 
-    mutable ROOT::Math::SVector<double,3> m_l   ; // lambda   = lambda_0 + V*D*E*dctau 
-    /// \f$ \mathbf{d} = \mathbf{H}\left(\vec{\alpha}_0,c\tau_0\right) \f$ 
-    mutable ROOT::Math::SVector<double,3> m_d   ; // d = H( alpha=alpha0, ctau=ctau0) 
-    /// \f$ \mathbf{W} = \frac{\partial}{\partial p^{\mu}}   \mathbf{H} \f$ 
-    mutable Gaudi::Matrix3x4              m_w   ; // W = d(H)/d(p_mu)
-    /// \f$ \mathbf{D}_1^T = \mathbf{W}\mathbf{V_{p_{\mu}}} - \mathbf{V}_{ \left\{ p_{\mu},\vec{x}_d\right\}}^T \f$
-    mutable Gaudi::Matrix4x3              m_d1  ; // D_1
-    /// \f$ \mathbf{D}_2^T = \mathbf{W} \mathbf{V}_{ \left\{ p_{\mu},\vec{x}_d\right\}} -  \mathbf{V}_{\vec{x}_d} \f$ 
-    mutable Gaudi::Matrix3x3              m_d2  ; // D_2
-    /// \f$ -\mathbf{V}_D+\mathbf{V}_D\mathbf{E}^T\mathbf{V}_{c\tau}\mathbf{E}\mathbf{V}_D \f$   
-    mutable Gaudi::SymMatrix3x3           m_vd1 ; //  -V_D + V_D * E^T * V_ct * E * V_D  
-    /// \f$ \delta\vec{p}^{\mu} \f$ 
-    mutable Gaudi::Vector4                m_dp  ; // delta(p)
-    /// \f$ \delta \vec{x}_d \f$ 
-    mutable Gaudi::Vector3                m_dxd ; // delta(x_d) 
-    /// \f$ \delta \vec{x}_p \f$ 
-    mutable Gaudi::Vector3                m_dxp ; // delta(x_p)
+    double       m_delta_ctau ; // convergency parameter 
+    /// The name of particle transpoter tool 
+    std::string  m_transporterName ; // The name of particle transpoter tool    
+    /// The particle transporter itself 
+    mutable IParticleTransporter* m_transporter ; // The transporter itself
+    /// the actual fitter object
+    mutable LoKi::Fitters::Fitter1 m_fitter ; // the actual fitter object
+    /// the particle (needed for propagation) 
+    mutable LHCb::Particle         m_particle ; // the particle for propagation
+    /// helper matrix for evalaution of other covarinace matrices:
+    mutable Gaudi::SymMatrix3x3    m_vd1 ; // helper matrix
     // ========================================================================
   };
   // ==========================================================================
