@@ -3,6 +3,70 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v6r11>2008-03-10 Phys v6r11 - Third Tf framework compatible version</A></H1><PRE>
+
+- Based on LHCb v23r4 and Gaudi v19r8
+- Bug fixes (notably DaVinciTransporter)
+- Re-structuring of VertexFitters
+ 
+###############################################################################
+#                                  PHYS v6r11                                 #
+###############################################################################
+
+!====================== DaVinciTransporter v3r7p3 2008-03-10 ==================
+
+! 2008-03-10 - Juan PALACIOS
+ - src/TransporterFunctions.h
+  . Remove some debug printout.
+ - cmt/requirements
+  . Increase version to v3r7p3
+
+! 2008-03-10 - Vanya BELYAEV
+
+ - src/TransporterFunctions.h
+
+    fix the math-bug from the transport of composite particles, 
+    recode the function to reuse many of nice ROOT::Math 
+    and Gaudi::Math utilities. Hope to get the significant 
+    speed-up from matrix evaluations... (to be proved..).
+    The previos implementatioin is backed-up into  "name"_ 
+    function..
+ 
+ - src/ParticleTransporter.cpp
+
+    tiny fix to avoid the unnesessary self-assignement..
+
+!========================== VertexFit v5r0 2008-03-06 ===================
+
+! 2008-03-06 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v5r0
+
+! 2008-02-24 - Vanya BELYAEV
+
+ - src/BlindVertexFitter.cpp
+   src/FitterUtils.h
+   src/MassFitter.cpp
+
+     move these files into new packahe Phys/LoKiFitters
+
+! 2008-02-20 - Patrick Koppenburg
+ - Include Physical constants where needed
+
+!======================== DaVinciTools v15r8p1 2008-03-06 ===================
+
+! 2008-03-04 - Patrick Koppenburg
+ - CombineParticles : protect debug() and verbose(). More verbose(), less debug().
+ - Add option PrintMoreStats
+ - Limit the numebr of candiadtes to 100000. Can be changed by MaxCandidates option.
+
+! 2008-02-28 - Patrick Koppenburg
+ - TrgDisp : add verbose() printout
+
+! 2008-02-20 - Patrick Koppenburg
+ - Bd2KstarMuMu : include PhysicalConstants
+
+
 </PRE><H1><A NAME=v6r10>2008-02-05 Phys v6r10 - Second Tf framework compatible version</A></H1><PRE>
 
 - Based on LHCb v23r3 and Gaudi v19r7
