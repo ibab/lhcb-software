@@ -6,6 +6,13 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-03-10 - Vanya BELYAEV
+ -  LHCbMath/GeomFun.icpp
+    LHCbMath/GeomFun.h
+    LHCbMath/Line.h
+   fix a bug in Gaudi::Math::closestPointParam function, 
+   improve a bit the  doxygen comments... 
+
 !========================= LHCbMath v2r7 2008-03-07 ==========================
 ! 2008-03-05 - Vanya BELYAEV
  - LHCbMath/MatrixTransforms.h
