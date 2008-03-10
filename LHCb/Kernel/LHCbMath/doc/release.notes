@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v2r7 2008-03-10 ==========================
 ! 2008-03-10 - Vanya BELYAEV
  -  LHCbMath/GeomFun.icpp
     LHCbMath/GeomFun.h
@@ -13,7 +14,6 @@
    fix a bug in Gaudi::Math::closestPointParam function, 
    improve a bit the  doxygen comments... 
 
-!========================= LHCbMath v2r7 2008-03-07 ==========================
 ! 2008-03-05 - Vanya BELYAEV
  - LHCbMath/MatrixTransforms.h
    Add many new operators into namespace Gaudi::Math::Operators 
