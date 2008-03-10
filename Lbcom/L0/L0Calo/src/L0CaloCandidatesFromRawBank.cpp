@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.7 2007-12-11 18:26:50 robbep Exp $
+// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.8 2008-03-10 15:40:31 robbep Exp $
 // Include files
 
 // from Gaudi
@@ -128,14 +128,15 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
                                                  dummy , 0. );
 	  outFull -> add( myL0Cand ) ;
           bestCand[type] = myL0Cand ;
-          debug() << " outFull CaloSumEt = " <<*myL0Cand << endreq;
+          if ( msgLevel( MSG::DEBUG ) ) debug() << " outFull CaloSumEt = " <<*myL0Cand << endreq;
         } else {
           if ( m_doDebugDecoding ) { 
             myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
                                                    sumEt , sumEt * m_etScale , 
                                                    dummy , 0. );
             outFull->add( myL0Cand );
-            debug() << " outFull CaloSumEt = " << *myL0Cand << endreq ;
+            if ( msgLevel( MSG::DEBUG ) ) 
+              debug() << " outFull CaloSumEt = " << *myL0Cand << endreq ;
           }
         }
       } else if ( L0DUBase::CaloType::SpdMult == type ) {
@@ -155,7 +156,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
             myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
                                                    mult, 0., dummy, 0. );
             outFull->add( myL0Cand );
-            debug() << " outFull CaloSpdMult = " <<*myL0Cand << endreq;
+            if ( msgLevel( MSG::DEBUG ) ) debug() << " outFull CaloSpdMult = " <<*myL0Cand << endreq;
           }
         }
 
@@ -165,7 +166,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
           bestCand[type] = myL0Cand;
           outFull -> add( myL0Cand ) ;
         }
-        verbose() <<" Candidate SPD = " << *myL0Cand << endreq;
+        if ( msgLevel( MSG::VERBOSE ) ) verbose() <<" Candidate SPD = " << *myL0Cand << endreq;
         
       } else {
         int rawId =  ( cand >>8 ) & 0xFFFF;
@@ -260,8 +261,8 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
                                                  tol );
           if ( ( 0 == io ) || ( 0 == version ) ) {
             outFull -> add( myL0Cand ) ;
-            debug() << " outFull le reste type = " << type 
-                    << " " << *myL0Cand << endreq ;
+            if ( msgLevel( MSG::DEBUG ) ) debug() << " outFull le reste type = " << type 
+                      << " " << *myL0Cand << endreq ;
             if ( 0 == version ) {
               if ( 0 == bestCand[type] ) {
                 bestCand[type] = myL0Cand;
@@ -273,7 +274,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
             bestCand[ type ] = myL0Cand ;
           }
         }
-        verbose() << *myL0Cand << endreq;
+        if ( msgLevel( MSG::VERBOSE ) ) verbose() << *myL0Cand << endreq;
       }
     }
   }
@@ -297,7 +298,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
                                              cand->position(),
                                              cand->posTol() );
 
-      debug() << "out bestCand type = "<<type<<*myL0Cand << endreq;
+      if ( msgLevel( MSG::DEBUG ) ) debug() << "out bestCand type = "<<type<<*myL0Cand << endreq;
       out->add( myL0Cand );
     }
   }
