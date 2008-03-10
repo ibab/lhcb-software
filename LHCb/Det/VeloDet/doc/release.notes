@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.190 2008-03-10 14:57:49 dhcroft Exp $
+! $Id: release.notes,v 1.191 2008-03-10 15:15:24 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v12r5 2008-03-10 ===========================
 ! 2008-03-10 - David Hutchcroft
  - Removed nan returns when asking for phi offset at radius inside inner radius
    for phi strips.
