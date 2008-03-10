@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.24 2007-12-11 18:26:49 robbep Exp $
+// $Id: L0CaloAlg.h,v 1.25 2008-03-10 19:39:38 robbep Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -86,9 +86,9 @@ class L0CaloAlg : public GaudiAlgorithm {
 
   virtual ~L0CaloAlg();       ///< Standard destructor
 
-  StatusCode initialize();    ///< Algorithm initialization
-  StatusCode execute   ();    ///< Algorithm execution
-  StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
   
 protected:
 
