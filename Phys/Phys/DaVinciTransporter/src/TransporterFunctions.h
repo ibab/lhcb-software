@@ -1,4 +1,4 @@
-// $Id: TransporterFunctions.h,v 1.11 2008-03-10 16:04:32 jpalac Exp $
+// $Id: TransporterFunctions.h,v 1.12 2008-03-11 09:12:56 jpalac Exp $
 // ============================================================================
 #ifndef TRANSPORTERFUNCTIONS_H 
 #define TRANSPORTERFUNCTIONS_H 1
@@ -144,7 +144,7 @@ namespace DaVinciTransporter
     transParticle.setPosMomCovMatrix ( Cpx_1 );
 
     // calculate reference point
-    XYZPoint refPoint(particle->referencePoint());
+    Gaudi::XYZPoint refPoint(particle->referencePoint());
     refPoint += dZ*particle->slopes();
 
     // update reference point
@@ -272,7 +272,7 @@ namespace DaVinciTransporter
    *       \mathbf{C}_{px0} + \mathbf{C}_{p0}\mathbf{F}^T &  \mathbf{C}_{p0} 
    *    \end{pmatrix}   \f]
    *
-   *  @author Juan  PALACIOS Juan.Palacios@cern.ch
+   *  @author Juan  PALACIOS Juan.Palacios@nikhef.nl
    *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
    *  @date   2008-03-10
    */
