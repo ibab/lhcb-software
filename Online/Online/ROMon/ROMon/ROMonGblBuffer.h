@@ -1,4 +1,4 @@
-// $Id: ROMonGblBuffer.h,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Id: ROMonGblBuffer.h,v 1.2 2008-03-11 12:37:52 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonGblBuffer.h,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonGblBuffer.h,v 1.2 2008-03-11 12:37:52 frankb Exp $
 #ifndef ROMON_ROMONGBLBUFFER_H
 #define ROMON_ROMONGBLBUFFER_H 1
 
@@ -45,13 +45,23 @@ namespace ROMon {
 
   public:
     /// Standard constructor
+    ROMonGblBuffer();
+    /// Initializing constructor
     ROMonGblBuffer(int argc , char** argv, void (*help_fun)());
     /// Default destructor
     virtual ~ROMonGblBuffer();
+    /// Initialize the global section
+    int initialize();
+    /// Set section map-only flag
+    void setMapOnly(bool val)                   {  m_mapOnly=val;           }
+    /// Set section name
+    void setSectionName(const std::string& val) {  m_section_name=val;      }
     /// Access section name
-    const std::string& sectionName() const {  return m_section_name; }
-    /// Access section name
-    size_t sectionSize() const             {  return m_section_size; }
+    const std::string& sectionName() const      {  return m_section_name;   }
+    /// Set section size in KBytes
+    void setSectionSize(int val)                {  m_section_size=val*1024; }
+    /// Access section name in Bytes
+    size_t sectionSize() const                  {  return m_section_size;   }
     /// Access to shared memory data buffer
     void* data() const;
     /// Help printout in case of -h /? or wrong arguments

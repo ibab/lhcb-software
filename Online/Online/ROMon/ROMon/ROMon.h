@@ -1,4 +1,4 @@
-// $Id: ROMon.h,v 1.5 2008-02-11 20:00:18 frankm Exp $
+// $Id: ROMon.h,v 1.6 2008-03-11 12:37:52 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,132 +12,23 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.5 2008-02-11 20:00:18 frankm Exp $
-#ifndef GAUDIONLINE_ROMON_H
-#define GAUDIONLINE_ROMON_H 1
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.6 2008-03-11 12:37:52 frankb Exp $
+#ifndef ROMON_ROMON_H
+#define ROMON_ROMON_H 1
 
 // ++ include files
 #include <ctime>
 // Framework include files
 #include "MBM/bmdef.h"
 #include "MBM/bmstruct.h"
+#include "ROMon/Collections.h"
 
 /*
  *   ROMon namespace declaration
  */
 namespace ROMon {
 
-  /**@class FixItems ROMon.h GaudiOnline/ROMon.h
-   *
-   * Class to store fixed length items in a flat memory area.
-   *
-   * @author M.Frank
-   */
-  template <typename T> class FixItems {
-  public:
-    typedef T        item_type;
-    typedef T*       pointer_type;
-    typedef T*       iterator;
-    typedef const T* const_iterator;
-    typedef T        value_type;
-    typedef T&       reference;
-    typedef const T& const_reference;
-
-    /// Number of fixed size elements in the container
-    int  m_size;
-
-  public:    // Public data accessors
-    /// Reset object and return iterator to first element
-    iterator reset()
-      {  m_size = 0;  return begin();                  }
-    /// Return number of elements in the object
-    int size()  const
-      {  return m_size;                                }
-    /// Length of the object in bytes
-    int length() const
-      {  return sizeof(int)+size()*sizeof(T);          }
-    /// Length of the object's payload in bytes
-    int data_length() const
-      {  return size()*sizeof(T);                      }
-    /// Acces to opaque data buffer 
-    char* data() const                       
-      {  return ((char*)&m_size)+sizeof(m_size);       }
-    /// Iterator implementation: begin of object iteration
-    pointer_type begin()  const
-      {  return (pointer_type)data();                  }
-    /// Iterator implementation: end of object iteration
-    const pointer_type end() const 
-      {  return begin()+size();                        }
-    /// Iterator implementation: Next element of iteration
-    const_iterator next(const_iterator prev) const
-      {  return ++prev;                                }
-    /// Add new element to container and return pointer to next object
-    pointer_type add(pointer_type /* prev */)      
-      {  return begin()+(++m_size);                    }
-  };
-
-  /**@class VarItems ROMon.h GaudiOnline/ROMon.h
-   *
-   * Class to store variable length items in a flat memory area.
-   *
-   * @author M.Frank
-   */
-  template <typename T> class VarItems {
-  public:
-    typedef T        item_type;
-    typedef T*       pointer_type;
-    typedef T*       iterator;
-    typedef const T* const_iterator;
-    typedef T        value_type;
-    typedef T&       reference;
-    typedef const T& const_reference;
-
-    /// Number of variable size elements in the container
-    int  m_size;
-    /// Length of the data payload
-    int  m_length;
-
-  public:    // Public data accessors
-    /// Reset object and return iterator to first element
-    iterator reset()
-      {  m_size = m_length = 0;  return begin();                 }
-    /// Return number of elements in the object
-    int size()  const
-      {  return m_size;                                          }
-    /// Length of the object in bytes
-    int length() const
-      {  return 2*sizeof(int)+m_length;                          }
-    /// Length of the object's payload in bytes
-    int data_length() const
-      {  return m_length;                                        }
-    /// Acces to opaque data buffer 
-    char* data() const
-      {  return ((char*)&m_length)+sizeof(int);                  }
-    /// Iterator implementation: begin of object iteration
-    pointer_type begin()  const
-      {  return (pointer_type)data();                            }
-
-    /// Iterator implementation: end of object iteration
-    const pointer_type end()   const
-      {  return (pointer_type)(data()+data_length());            }
-
-    /// Iterator implementation: Next element of iteration
-    const_iterator next(const_iterator prev) const
-      {  return (const_iterator)(((char*)prev)+prev->length());}
-
-    /// Iterator implementation: Next element of iteration
-    iterator next(iterator prev) 
-      {  return (iterator)(((char*)prev)+prev->length());}
-
-    /// Add new element to container and return pointer to next object
-    pointer_type add(pointer_type prev)            {
-      m_size++;
-      m_length += prev->length();
-      return end()->reset();
-    }
-  };
-
-  /**@class MBMClient ROMon.h GaudiOnline/ROMon.h
+  /**@class MBMClient ROMon.h ROMon/ROMon.h
    *
    * Class which represents an MBM client in the ROMon monitoring structure.
    *
@@ -162,7 +53,7 @@ namespace ROMon {
     MBMClient* reset();
   };
 
-  /**@class MBMBuffer ROMon.h GaudiOnline/ROMon.h
+  /**@class MBMBuffer ROMon.h ROMon/ROMon.h
    *
    * Class which represents an MBM buffer in the ROMon monitoring structure.
    *
@@ -185,7 +76,7 @@ namespace ROMon {
     MBMBuffer* reset();
   };
 
-  /**@class FSMTask ROMon.h GaudiOnline/ROMon.h
+  /**@class FSMTask ROMon.h ROMon/ROMon.h
    *
    * Class which represents a FSM task in the ROMon monitoring structure.
    *
@@ -222,7 +113,7 @@ namespace ROMon {
     FSMTask* reset();
   };
 
-  /**@class Node ROMon.h GaudiOnline/ROMon.h
+  /**@class Node ROMon.h ROMon/ROMon.h
    *
    * Class which represents a node with MBM Buffers and 
    * FSM tasks in the ROMon monitoring structure.
@@ -263,7 +154,7 @@ namespace ROMon {
     int length()  const {  return totalSize; }
   };
 
-  /**@class Nodeset ROMon.h GaudiOnline/ROMon.h
+  /**@class Nodeset ROMon.h ROMon/ROMon.h
    *
    * Class which represents a set of nodes in the ROMon monitoring structure.
    *
@@ -303,5 +194,5 @@ namespace ROMon {
     int type() { return this->ptr ? *(int*)this->ptr : -1; }
   };
 }
-#endif /* GAUDIONLINE_ROMON_H */
+#endif /* ROMON_ROMON_H */
 

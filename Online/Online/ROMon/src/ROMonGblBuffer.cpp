@@ -1,4 +1,4 @@
-// $Id: ROMonGblBuffer.cpp,v 1.2 2008-03-05 07:40:20 frankb Exp $
+// $Id: ROMonGblBuffer.cpp,v 1.3 2008-03-11 12:37:52 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonGblBuffer.cpp,v 1.2 2008-03-05 07:40:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonGblBuffer.cpp,v 1.3 2008-03-11 12:37:52 frankb Exp $
 
 // Framework includes
 #include "ROMonDefs.h"
@@ -20,6 +20,13 @@
 using namespace ROMon;
 
 /// Standard constructor
+ROMonGblBuffer::ROMonGblBuffer() 
+  : m_gbl(0), m_delay(2000), m_print(0), m_mapOnly(false), m_lock(0),
+    m_section_name("ROMonitor"), m_section_size(64)
+{
+}
+
+/// Initializing constructor
 ROMonGblBuffer::ROMonGblBuffer(int argc, char** argv, void (*help_fun)()) 
   : m_gbl(0), m_delay(2000), m_print(0), m_lock(0),
     m_section_name("ROMonitor"), m_section_size(64)
@@ -33,13 +40,18 @@ ROMonGblBuffer::ROMonGblBuffer(int argc, char** argv, void (*help_fun)())
   m_verbose = cli.getopt("verbose",1) != 0;
 
   m_section_size *= 1024;
+  initialize();
+}
+
+/// Initialize the global section
+int ROMonGblBuffer::initialize() {
   int sc = m_mapOnly 
     ? ::lib_rtl_map_section(m_section_name.c_str(),m_section_size,&m_gbl)
     : ::lib_rtl_create_section(m_section_name.c_str(),m_section_size,&m_gbl);
   if ( !lib_rtl_is_success(sc) ) {
     ::lib_rtl_output(LIB_RTL_ERROR,"Failed to %s ROMON global section:%s of size:%d bytes\n",
 		     m_mapOnly ? "map" : "create", m_section_name.c_str(), m_section_size);
-    return;
+    return 0;
   }
   if ( m_verbose )    {
     log() << "Global section " << m_section_name << ((const char*)m_mapOnly ? " mapped" : " created")
@@ -52,11 +64,12 @@ ROMonGblBuffer::ROMonGblBuffer(int argc, char** argv, void (*help_fun)())
 #endif
   if ( !lib_rtl_is_success(sc) ) {
     ::lib_rtl_output(LIB_RTL_ERROR,"Failed to create ROMON global lock:%s\n",m_section_name.c_str());
-    return;
+    return 0;
   }
   if ( m_verbose )    {
     log() << "Global section lock " << m_section_name << " created successfully." << std::endl;
   }
+  return 1;
 }
 
 /// Default destructor
