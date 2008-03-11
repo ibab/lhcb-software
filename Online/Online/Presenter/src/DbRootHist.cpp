@@ -1,3 +1,5 @@
+// TH1::SetMaximum() and TH1::SetMinimum() 
+
 #include <TPad.h>
 #include <TH1D.h>
 #include <TH2D.h>
@@ -55,7 +57,7 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_refOption("NOREF"),
   m_reference(NULL),
   m_startRun(1),
-  m_dataType("default"),
+  m_dataType("default"),  
   m_dimServiceName(dimServiceName)
 {
   // Prevent ROOT booking
@@ -162,24 +164,23 @@ void DbRootHist::enableClear()
     if (!m_isAnaHist) {
       m_cleared = true;
       if (m_offsetHistogram) { delete m_offsetHistogram; m_offsetHistogram = 0;}
-      if (H1D == m_hstype) {
+      if (s_H1D == m_hstype) {
         m_offsetHistogram = new TH1D(*dynamic_cast<TH1D*>(rootHistogram));
         m_offsetHistogram->SetBit(kNoContextMenu);
 //      m_offsetHistogram->Reset(); //"ICE: Integral Contents, Errors"
 //    m_offsetHistogram = (TH1D*)rootHistogram->Clone("m_offsetHistogram");
-            } else if (H2D == m_hstype) {
+      } else if (s_H2D == m_hstype) {
         m_offsetHistogram = new TH2D(*dynamic_cast<TH2D*>(rootHistogram));
         m_offsetHistogram->SetBit(kNoContextMenu);
 //      m_offsetHistogram->Reset(); //"ICE: Integral Contents, Errors"
-            } else if (P1D == m_hstype || HPD == m_hstype) {
+      } else if (s_P1D == m_hstype || s_HPD == m_hstype) {
         m_offsetHistogram = new TH1D(*dynamic_cast<TH1D*>(rootHistogram));
         m_offsetHistogram->SetBit(kNoContextMenu);
 //      m_offsetHistogram->Reset(); //"ICE: Integral Contents, Errors"  
-            }
-          }
-          else { // analysis histogram
-            std::vector<DbRootHist*>::iterator hs;
-            for (hs = m_anaSources.begin(); hs != m_anaSources.end(); ++hs) {
+      }
+    } else { // analysis histogram
+      std::vector<DbRootHist*>::iterator hs;
+      for (hs = m_anaSources.begin(); hs != m_anaSources.end(); ++hs) {
         (*hs)->enableClear();
       }
     }
@@ -225,7 +226,7 @@ void DbRootHist::initHistogram()
     }
     // use ROOT cycle notion ";" for tracking instances
     m_histoRootName = TString(Form("%s;%i",
-                                   m_gauchocommentDimInfo->getString(),
+                                   histogramName().c_str(),
                                    m_instance));
     m_histoRootTitle = TString(Form("%s",
                                     m_gauchocommentDimInfo->getString()));
@@ -242,7 +243,7 @@ void DbRootHist::initHistogram()
     }
     if (-1.0 != m_dimInfo->getFloat()) {
       m_histoDimData = (float*) m_dimInfo->getData();
-      if (H1D == m_hstype) {
+      if (s_H1D == m_hstype) {
         const int   nBins   = (int) m_histoDimData[1];
         const double xMin   = (double) m_histoDimData[2];
         const double xMax   = (double) m_histoDimData[3];
@@ -252,7 +253,7 @@ void DbRootHist::initHistogram()
                                    m_histoRootTitle.Data(),
                                    nBins, xMin, xMax);
         }
-      } else if (H2D == m_hstype) {
+      } else if (s_H2D == m_hstype) {
         const int   nBinsX   = (int) m_histoDimData[1];
         const double xMin    = (double) m_histoDimData[2];
         const double xMax    = (double) m_histoDimData[3];
@@ -272,7 +273,7 @@ void DbRootHist::initHistogram()
 //              ((TH2F*)rootHistogram)->GetNbinsY() + 2); // , gHistImagePalette
 //        }
         }
-      } else if (P1D == m_hstype || HPD == m_hstype) {
+      } else if (s_P1D == m_hstype || s_HPD == m_hstype) {
         const int   nBins   = (int) m_histoDimData[1];
         const double xMin   = (double) m_histoDimData[2];
         const double xMax   = (double) m_histoDimData[3];
@@ -286,11 +287,11 @@ void DbRootHist::initHistogram()
                                    nBins, xMin, xMax);
 
         }
-      } else if (P2D == m_hstype) {
-      } else if (CNT == m_hstype) {
+      } else if (s_P2D == m_hstype) {
+      } else if (s_CNT == m_hstype) {
       }
     } else {
-        // cannot get sources from DIM
+      // cannot get sources from DIM
       beEmptyHisto();
     }
   } else if (m_isAnaHist && m_anaSources.size() > 0) {
@@ -303,10 +304,10 @@ void DbRootHist::initHistogram()
                  (m_analysisLib->getAlg(m_creationAlgorithm));
     if(creator)
       rootHistogram = creator->exec(&sources, &m_parameters,
-            identifier(),
-            onlineHistogram()->htitle(),
-            rootHistogram);
-    if (!rootHistogram) beEmptyHisto();
+                                    identifier(),
+                                    onlineHistogram()->htitle(),
+                                    rootHistogram);
+    if (!rootHistogram) { beEmptyHisto(); }
   }
   rootHistogram->SetBit(kNoContextMenu);
 }
@@ -316,21 +317,21 @@ void DbRootHist::beEmptyHisto()
   if (rootHistogram) { delete rootHistogram; rootHistogram = 0; }
   std::string dummyTitle = "ERROR: missing sources for ";
   dummyTitle += identifier();
-  if (H1D == m_hstype) {
+  if (s_H1D == m_hstype) {
     rootHistogram = new TH1D(m_histoRootName.Data(),
                              dummyTitle.c_str(),
-                              1, 0., 1.);
-  } else if (H2D == m_hstype) {
+                             1, 0., 1.);
+  } else if (s_H2D == m_hstype) {
     rootHistogram = new TH2D(m_histoRootName.Data(),
                              dummyTitle.c_str(),
-                              1, 0., 1.,
-                              1, 0., 1.);
-  } else if (P1D == m_hstype || HPD == m_hstype) {
+                             1, 0., 1.,
+                             1, 0., 1.);
+  } else if (s_P1D == m_hstype || s_HPD == m_hstype) {
     rootHistogram = new TH1D(m_histoRootName.Data(),
                              dummyTitle.c_str(),
-                              1, 0., 1.);
-  } else if (P2D == m_hstype) {
-  } else if (CNT == m_hstype) {
+                             1, 0., 1.);
+  } else if (s_P2D == m_hstype) {
+  } else if (s_CNT == m_hstype) {
   }
   if(rootHistogram) {
     rootHistogram->SetBit(kNoContextMenu);
@@ -354,7 +355,7 @@ void DbRootHist::fillHistogram()
     }
     if (-1.0 != m_dimInfo->getFloat()) {
       m_histoDimData = (float*) m_dimInfo->getData();
-      if (H1D == m_hstype) {
+      if (s_H1D == m_hstype) {
         const int   nBins   = (int) m_histoDimData[1];
 //        const float xMin    = m_histoDimData[2];
 //        const float xMax    = m_histoDimData[3];
@@ -376,7 +377,7 @@ void DbRootHist::fillHistogram()
                                      offsetError + i]);
         }
         rootHistogram->SetEntries(entries);
-      } else if (H2D == m_hstype) {
+      } else if (s_H2D == m_hstype) {
         const int   nBinsX   = (int) m_histoDimData[1];
 //        const float xMin     = m_histoDimData[2];
 //        const float xMax     = m_histoDimData[3];
@@ -408,7 +409,7 @@ void DbRootHist::fillHistogram()
 //          ((TH2F*)rootHistogram)->GetNbinsX() + 2,
 //          ((TH2F*)rootHistogram)->GetNbinsY() + 2); // , gHistImagePalette
 
-      } else if (P1D == m_hstype || HPD == m_hstype) {
+      } else if (s_P1D == m_hstype || s_HPD == m_hstype) {
         const int   nBins   = (int) m_histoDimData[1];
         //    const float xMin    = m_histoDimData[2];
         //    const float xMax    = m_histoDimData[3];
@@ -435,8 +436,9 @@ void DbRootHist::fillHistogram()
         // bin 0: underflow, nBins+1 overflow ?
         for (int i = 0; i <= nBins+2; i++) {
           yvalue = 0;
-          if (entriesPerBin[i] > 0)
+          if (entriesPerBin[i] > 0) {
             yvalue = sumWTPerBin[i]/entriesPerBin[i];  // mean in Y
+          }
           rootHistogram->SetBinContent(i, (double) yvalue);
 
           yerr = 0;
@@ -458,14 +460,14 @@ void DbRootHist::fillHistogram()
                                                             i]);
         }
         rootHistogram->SetEntries(entries);
-      } else if (P2D == m_hstype) {
-      } else if (CNT == m_hstype) {
+      } else if (s_P2D == m_hstype) {
+      } else if (s_CNT == m_hstype) {
       }
 
       if (m_cleared && m_offsetHistogram) {
 //        rootHistogram->Add(m_offsetHistogram,-1.0); - does not reset errors
-        if (H1D == m_hstype ||
-            P1D == m_hstype || HPD == m_hstype) {
+        if (s_H1D == m_hstype ||
+            s_P1D == m_hstype || s_HPD == m_hstype) {
           for (int i = 1; i <= rootHistogram->GetNbinsX(); ++i) {
             rootHistogram->SetBinContent(i, rootHistogram->GetBinContent(i)
               - m_offsetHistogram->GetBinContent(i));
@@ -473,7 +475,7 @@ void DbRootHist::fillHistogram()
               GetBinError(i), 2) - pow(m_offsetHistogram->
               GetBinError(i), 2)));
           }
-        } else if (H2D == m_hstype) {
+        } else if (s_H2D == m_hstype) {
           for (int i=1; i<= rootHistogram->GetNbinsX() ; ++i) {
             for (int j=1; j <= rootHistogram->GetNbinsY() ; ++j) {
               rootHistogram->SetBinContent(i, j,
@@ -486,9 +488,7 @@ void DbRootHist::fillHistogram()
           }
         }
       }
-      if (hostingPad) {
-        hostingPad->Modified();
-      }
+      if (hostingPad) { hostingPad->Modified(); }
     }
 //    m_toRefresh = false;
   } else if (m_isAnaHist && m_anaSources.size()>0)  {
@@ -499,13 +499,13 @@ void DbRootHist::fillHistogram()
     }
     OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>
       (m_analysisLib->getAlg(m_creationAlgorithm));
-    if(creator)
-      rootHistogram = creator->exec(&sources,&m_parameters, identifier(),
-            onlineHistogram()->htitle(), rootHistogram);
-    if (!rootHistogram) beEmptyHisto();
-    if (hostingPad) {
-      hostingPad->Modified();
+    if (creator) {
+      rootHistogram = creator->exec(&sources, &m_parameters, identifier(),
+                                    onlineHistogram()->htitle(),
+                                    rootHistogram);
     }
+    if (!rootHistogram) { beEmptyHisto(); }
+    if (hostingPad) { hostingPad->Modified(); }
   }
 }
 bool DbRootHist::setOnlineHistogram(OnlineHistogram* newOnlineHistogram)
@@ -597,7 +597,7 @@ void DbRootHist::setTH1FromDB()
       rootHistogram->SetStats(0 != iopt);
     }
     if (m_onlineHistogram->getDisplayOption("REF", &sopt)) {
-      m_refOption = sopt;
+      m_refOption = sopt;      
     }
     if (m_onlineHistogram->getDisplayOption("FILLSTYLE", &iopt)) {
       rootHistogram->SetFillStyle(iopt);
@@ -655,6 +655,7 @@ void DbRootHist::setTH1FromDB()
     }
   }
 }
+// TODO: should rather use hostingPad
 void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
 {
   if (m_onlineHistogram && rootHistogram) {
@@ -706,14 +707,14 @@ bool DbRootHist::updateDBOption(std::string opt, void* value, bool isDefault)
   if (m_onlineHistogram && rootHistogram) {
     if ( m_onlineHistogram->isSetDisplayOption(opt) ) {
       update = m_onlineHistogram->changedDisplayOption(opt, value);
-    }
-    else {
+    } else {
       if (!isDefault) { update=true; }
     }
     if (update) { out = m_onlineHistogram->setDisplayOption(opt, value); }
   }
   return out;
 }
+// TODO: should rather use hostingPad
 bool DbRootHist::saveTH1ToDB(TPad* pad)
 {
   bool out = false;
@@ -739,6 +740,10 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
       // 111110 seems to be hardcoded in root
       out |= updateDBOption("STATS", &iopt, iopt == 111110 );
     }
+    
+    sopt = m_refOption;
+    out |= updateDBOption("REF", &sopt, sopt.empty());
+    
     iopt = (int) rootHistogram->GetFillStyle();
     out |= updateDBOption("FILLSTYLE", &iopt,
                           iopt == (int) gStyle->GetHistFillStyle());
@@ -836,119 +841,78 @@ void DbRootHist::Draw(TPad* &pad)
     int iopt = 0;
     if (m_onlineHistogram) {
       if (m_onlineHistogram->getDisplayOption("STATS", &iopt)) {
-  if (0 != iopt) {
-    curStat = gStyle->GetOptStat();
-    gStyle->SetOptStat(iopt);
-  }
-      }
-      else {
+        if (0 != iopt) {
+          curStat = gStyle->GetOptStat();
+          gStyle->SetOptStat(iopt);
+        }
+      } else {
         gStyle->SetOptStat("emrou"); // seems to be hardcoded in root
       }
     }
     rootHistogram->Draw();
     setDrawOptionsFromDB(pad);
 
-    if ("NOREF" != m_refOption) {
-      if (getReference()) { drawReference(); }
+    if (s_NoReference != m_refOption) {
+//      if (getReference()) { drawReference(); }
     }
   }
 }
-bool DbRootHist::setReference(TH1* ref, int startRun, std::string dataType)
-{
-  bool out = false;
-  if (m_onlineHistogram) {
-    std::string refDir = m_onlineHistogram->refRoot() +
-                         Slash + m_onlineHistogram->task(); // ToLower() ;-)
-    std::string command = "mkdir -p " + refDir;
-    system(command.c_str());
 
-    std::stringstream refFile;
-    refFile << refDir << Slash << dataType << std::string("_") << startRun;
-
-    m_reference = (TH1*) ref->Clone(m_onlineHistogram->hname().c_str());
-    m_startRun = startRun;
-    m_dataType = dataType;
-
-    const char* file =  refFile.str().c_str();
-    TFile* f = new TFile(file,"UPDATE");
-    if (f) {
-      if (false == f->IsZombie() ) {
-        // keeps old versions.. use Write("",TObject::kOverwrite) to
-        // overwrite them
-        m_reference->Write();
-        f->Write();
-        f->Close();
-        out = true;
-        m_onlineHistogram->getTask()->setReference(refFile.str());
-      }
-      delete f;
-      f = NULL;
-    }
-    m_reference->SetDirectory(0);
-
-    if (!out) {
-      std::cout << "ERROR in DbRootHist::setReference : could not save reference into file "
-                << refFile.str() << std::endl;
-    }
-  }
-  return out;
-}
-TH1* DbRootHist::getReference(int startRun, std::string dataType)
-{
-  TH1* out = 0;
-  if (m_onlineHistogram) {
-    if (NULL != m_reference &&
-        startRun == m_startRun &&
-        dataType == m_dataType) {
-      out = m_reference;
-    } else {
-      std::stringstream refFile;
-      refFile << m_onlineHistogram->refRoot() << Slash
-              << m_onlineHistogram->task() << Slash << dataType << "_"
-              << startRun;
-      TFile* f = new TFile(refFile.str().c_str(), "READ");
-      if (f) {
-        if (false == f->IsZombie()) {
-          TH1* ref = (TH1*) f->Get(m_onlineHistogram->hname().c_str());
-          if (ref) {
-            if (m_reference) { delete m_reference; m_reference = 0; }
-            ref->SetDirectory(0);
-            m_reference = out = ref;
-            m_startRun = startRun;
-            m_dataType = dataType;
-          }
-          f->Close();
-        }
-      }
-      delete f;
-      f = NULL;
-    }
-  }
-  return out;
-}
 void DbRootHist::normalizeReference()
 {
   if (m_reference) {
+    //TODO: normFactor goes negative if refhisto "heavier" than cleared histo
     double normFactor = 0.0;
-    if ("ENTR" == m_refOption) {
+    if (s_Entries == m_refOption) {
       normFactor = rootHistogram->GetSumOfWeights();
-      if (m_offsetHistogram) { normFactor -= m_offsetHistogram->GetSumOfWeights(); }
+      if (m_cleared && m_offsetHistogram) {
+        normFactor -= m_offsetHistogram->GetSumOfWeights();
+      }
       m_reference->SetNormFactor(normFactor);
-    } else if ("AREA" == m_refOption) {
+    } else if (s_Area == m_refOption) {
       normFactor = rootHistogram->Integral();
-      if (m_offsetHistogram) { normFactor -= m_offsetHistogram->Integral(); }
+      if (m_cleared && m_offsetHistogram) {
+        normFactor -= m_offsetHistogram->Integral();
+      }
       m_reference->SetNormFactor(normFactor);
     }
   }
 }
-void DbRootHist::drawReference()
+void DbRootHist::referenceHistogram(ReferenceVisibility visibility)
 {
-  if (m_reference) {
+  if (0 == m_reference &&
+      s_NoReference != m_refOption) {
+    TFile* f = new TFile(m_onlineHistogram->getTask()->reference().c_str(),
+                         "READ");
+    if (f) {
+      if (false == f->IsZombie()) {
+        TH1* ref = (TH1*) f->Get(m_onlineHistogram->hname().c_str());
+        if (ref) {
+          if (m_reference) { delete m_reference; m_reference = 0; }
+          ref->SetDirectory(0);
+          m_reference = ref;
+        }
+        f->Close();
+      }
+    }
+    delete f;
+    f = NULL;
+  } 
+  if (0 != m_reference &&
+      Show == visibility) {
     // standard plot style
     m_reference->SetLineStyle(2);
     m_reference->SetLineColor(16);
     // normalization
     normalizeReference();
+    TVirtualPad *padsav = gPad;
+    hostingPad->cd();    
     m_reference->Draw("SAME");
+    m_reference->SetStats(0);
+//    m_reference->Draw();
+    hostingPad->Modified();
+    padsav->cd();
+  } else if (Hide == visibility) {
+    if (0 != m_reference) { delete m_reference; m_reference = NULL; }
   }
 }
