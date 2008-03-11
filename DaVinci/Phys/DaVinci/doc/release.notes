@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.214 2008-02-07 15:52:09 jpalac Exp $
+! $Id: release.notes,v 1.215 2008-03-11 12:19:21 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v19r11 2008-03-11 ===================
+
+! 2008-03-11 - Juan PALACIOS
+ - qmtest/davinci.qms/preselections.qms/test_bbstripping.qmt
+ - qmtest/davinci.qms/preselections.qms/test_bd2dstarpi.qmt
+ - qmtest/davinci.qms/preselections.qms/test_bu2d0k_d02kspipi.qmt
+  . Change correlation tables. Efficiencies changes slightly after bug fix to 
+    Phys/DaVinciTransporter
+! 2008-03-10 - Juan PALACIOS
+ - job/DaVinci_Ganga.py
+  . Set applicaiton version to 'v19r11'
 
 !========================== DaVinci v19r10 2008-02-07 ===================
 
