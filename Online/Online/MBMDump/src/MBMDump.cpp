@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MBMDump.cpp,v 1.7 2008-03-05 07:40:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MBMDump.cpp,v 1.8 2008-03-11 19:48:55 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: MBMDump.cpp,v 1.7 2008-03-05 07:40:12 frankb Exp $
+// $Id: MBMDump.cpp,v 1.8 2008-03-11 19:48:55 frankb Exp $
 //
 // C++ include files
 #include "MBMDump/MBMDump.h"
@@ -32,7 +32,7 @@ static void help()  {
     ::lib_rtl_output(LIB_RTL_ALWAYS,"    -d(ebug)               Invoke debugger.");
 }
 
-static size_t print_msg(void* /* env */, const char* fmt, va_list args)  {
+static size_t print_msg(void* /* env */, int /* lvl */, const char* fmt, va_list args)  {
   char buff[1024];
   size_t result = vsprintf(buff,fmt,args);
   ::upic_write_message(buff,"");
