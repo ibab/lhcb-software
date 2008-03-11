@@ -1,9 +1,12 @@
+// $Id: OMAalg.cpp,v 1.2 2008-03-11 18:23:26 ggiacomo Exp $
 #include "OMAlib/OMAalg.h"
 
-
-OMAalg::OMAalg(std::string Name) : m_name(Name),
-				   m_type(CHECK),
-				   m_npars(0){
+OMAalg::OMAalg(std::string Name) 
+  : OMAMsgInterface(),
+    m_name(Name),
+    m_type(CHECK),
+    m_npars(0)
+{
   m_parnames.clear(); 
 }
 
@@ -30,3 +33,21 @@ void OMAalg::setParNames(std::vector<std::string> &ParNames) {
     m_parnames.push_back(*i);  
 }
 
+void OMAalg::raiseMessage(OMAMsgLevel level,
+                          std::string message,
+                          std::string histogramName ) {
+  std::string msgstring;
+  switch (level) {
+  case WARNING:
+    msgstring = "WARNING";
+    break;
+  case ALARM:
+    msgstring = "ALARM";
+    break;
+  default:
+    msgstring = "message";
+    break;
+  }
+  msgstring += (" from "+ m_name + " : "+message);
+  OMAMsgInterface::raiseMessage(level, msgstring, histogramName);
+}

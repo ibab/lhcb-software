@@ -1,9 +1,71 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.3 2008-02-12 18:16:28 ggiacomo Exp $
-#ifndef OMAALGORITHMS_H
-#define OMAALGORITHMS_H 1
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.4 2008-03-11 18:23:26 ggiacomo Exp $
+#ifndef OMALIB_OMAALGORITHMS_H
+#define OMALIB_OMAALGORITHMS_H 1
 
 #include "OMAlib/OMAalg.h"
-#include <TH1.h>
+class TH1;
+class TH2D;
+class TF1;
+
+//----- Check Algorithms -----------------------------------//
+
+
+class OMACheckXRange : public OMACheckAlg
+{
+  public:
+  OMACheckXRange();
+  virtual void exec(TH1 &Histo,
+                    std::vector<float> & warn_thresholds,
+                    std::vector<float> & alarm_thresholds,
+                    std::vector<float> & input_pars);
+  void exec(TH1 &Histo,
+            float warn_min,
+            float warn_max,
+            float alarm_min,
+            float alarm_max);
+ private:
+  bool check(TH1 &Histo,
+             float min,
+             float max);
+};
+
+class OMACheckMeanAndSigma : public OMACheckAlg
+{
+  public:
+  OMACheckMeanAndSigma();
+  virtual void exec(TH1 &Histo,
+                    std::vector<float> & warn_thresholds,
+                    std::vector<float> & alarm_thresholds,
+                    std::vector<float> & input_pars);
+ private:
+  bool checkMean(TH1 &Histo,
+                 float min,
+                 float max,
+                 float sig);
+  bool checkSigma(TH1 &Histo,
+                 float min,
+                 float max,
+                 float sig);
+};
+
+class OMAGaussFit : public OMACheckAlg
+{
+ public:
+  OMAGaussFit();
+  virtual void exec(TH1 &Histo,
+                    std::vector<float> & warn_thresholds,
+                    std::vector<float> & alarm_thresholds,
+                    std::vector<float> & input_pars);
+ private:
+  bool checkParam( TF1* fit,
+                   int ipar,
+                   float min,
+                   float max,
+                   float sig);
+};
+
+
+//------ Histogram Creator Algorithms ------------------//
 
 class OMAEfficiency : public OMAHcreatorAlg
 {
@@ -11,37 +73,51 @@ class OMAEfficiency : public OMAHcreatorAlg
   OMAEfficiency();
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
-		     std::string outName,
-		     std::string outTitle,
-		     TH1* existingHisto=0);  
+                     std::string outName,
+                     std::string outTitle,
+                     TH1* existingHisto=0);  
   TH1* exec( TH1* okH,
-	     TH1* allH,
-	     std::string outName,
-	     std::string outTitle,
-	     TH1* existingHisto=0);
-
+             TH1* allH,
+             std::string outName,
+             std::string outTitle,
+             TH1* existingHisto=0);
 };
 
-class OMACheckXMinMax : public OMACheckAlg
+
+class OMAHMerge : public OMAHcreatorAlg
 {
-  public:
-  OMACheckXMinMax();
-  virtual void exec(TH1 &Histo,
-		    std::vector<float> & warn_thresholds,
-		    std::vector<float> & alarm_thresholds,
-		    std::ostream &outstream);
-  virtual void exec(TH1 &Histo,
-		    float warn_min,
-		    float warn_max,
-		    float alarm_min,
-		    float alarm_max,
-		    std::ostream &outstream);
+ public:
+  OMAHMerge();
+  virtual TH1* exec( const std::vector<TH1*> *sources,
+                     const std::vector<float> *params,
+                     std::string outName,
+                     std::string outTitle,
+                     TH1* existingHisto=0);  
  private:
-  bool check(TH1 &Histo,
-	     float min,
-	     float max);
+  bool approxeq(double x, 
+                double y ) ;
+  TH1* hMerge(const char* newname, 
+              const char* newtitle, 
+              const std::vector<TH1*> *in);
+  void fillMerged(TH1* newH, 
+                  const std::vector<TH1*> *in);
+
 };
 
+class OMAScale : public OMAHcreatorAlg
+{
+ public:
+  OMAScale();
+  virtual TH1* exec( const std::vector<TH1*> *sources,
+                     const std::vector<float> *params,
+                     std::string outName,
+                     std::string outTitle,
+                     TH1* existingHisto=0);  
+  TH1* exec( TH1* H,
+             TH1* scalefactorH,
+             std::string outName,
+             std::string outTitle,
+             TH1* existingHisto=0);
+};
 
-
-#endif // OMAALGORITHMS_H
+#endif // OMALIB_OMAALGORITHMS_H

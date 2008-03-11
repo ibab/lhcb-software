@@ -1,6 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.3 2008-02-12 14:04:32 ggiacomo Exp $
-#ifndef OMALIB_H
-#define OMALIB_H 1
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.4 2008-03-11 18:23:26 ggiacomo Exp $
+#ifndef OMALIB_OMALIB_H
+#define OMALIB_OMALIB_H 1
 /** @class  OMAlib OMAlib.h OMAlib/OMAlib.h
  * 
  *  Online Monitoring Analysis library
@@ -10,13 +10,13 @@
 #include <map>
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 #include "OMAlib/OMAalg.h"
-#include "OMAlib/OMAAlgorithms.h"
 class OnlineHistDB;
 using namespace std;
 
 namespace OMAconstants {
-  static const int AlgListID = 2;
-  static const std::string version = "v0r2";
+  static const int AlgListID = 3;
+  static const std::string version = "v1r0";
+  static const double epsilon = 1.e-10;
 }
 
 
@@ -37,7 +37,13 @@ class OMAlib
     return m_algorithms[Name];}
   inline OnlineHistDB* dbSession() {
     return m_histDB;}
-  
+  /// set where algorithms should send messages 
+  inline void setMessageMode(OMAMsgInterface::OMAMsgMode mode) {
+    std::map<std::string, OMAalg*>::iterator ia;
+    for (ia=m_algorithms.begin(); ia != m_algorithms.end(); ia++) {
+      ia->second->setMessageMode(mode);
+    }
+  }
 
  private:
   void doAlgList();
@@ -49,4 +55,4 @@ class OMAlib
 };
 
 
-#endif // OMALIB_H
+#endif // OMALIB_OMALIB_H

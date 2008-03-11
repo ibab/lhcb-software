@@ -1,6 +1,8 @@
-#ifndef DBDRIVENANALYSISTASK_H
-#define DBDRIVENANALYSISTASK_H
+// $Id: DBDrivenAnalysisTask.h,v 1.2 2008-03-11 18:23:26 ggiacomo Exp $
+#ifndef OMALIB_DBDRIVENANALYSISTASK_H
+#define OMALIB_DBDRIVENANALYSISTASK_H 1
 #include <map>
+#include <string>
 #include "OMAlib/AnalysisTask.h"
 class OnlineHistogram;
 class TH1;
@@ -8,9 +10,13 @@ class TFile;
 class DBDrivenAnalysisTask : public AnalysisTask 
 {
  public:
-  DBDrivenAnalysisTask() {};
-  virtual ~DBDrivenAnalysisTask ();  
-  virtual bool exec(std::string SaveSet);
+  DBDrivenAnalysisTask(const std::string& name, 
+                       ISvcLocator* pSvcLocator ) :
+    AnalysisTask( name, pSvcLocator ) {}
+  virtual ~DBDrivenAnalysisTask ();
+  virtual StatusCode initialize();
+  virtual StatusCode analyze(std::string SaveSet,
+                             std::string Task = "any");
 
  private:
   std::map<std::string, TH1*> m_ownedHisto;
@@ -20,4 +26,4 @@ class DBDrivenAnalysisTask : public AnalysisTask
 
 
 
-#endif
+#endif // OMALIB_DBDRIVENANALYSISTASK_H

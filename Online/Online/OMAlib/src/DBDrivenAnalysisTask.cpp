@@ -1,8 +1,12 @@
+// $Id: DBDrivenAnalysisTask.cpp,v 1.2 2008-03-11 18:23:26 ggiacomo Exp $
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAlib.h"
+#include "OMAlib/OMAalg.h"
 #include <TH1.h>
 #include <TFile.h>
+
+DECLARE_ALGORITHM_FACTORY( DBDrivenAnalysisTask );
 
 DBDrivenAnalysisTask::~DBDrivenAnalysisTask()
 {
@@ -12,71 +16,86 @@ DBDrivenAnalysisTask::~DBDrivenAnalysisTask()
   }
 }
 
+StatusCode DBDrivenAnalysisTask::initialize() 
+{
+  StatusCode sc = AnalysisTask::initialize(); 
+  if ( sc.isFailure() ) return sc;  
+  
+  return StatusCode::SUCCESS;
+}
 
-bool DBDrivenAnalysisTask::exec(std::string SaveSet)
+
+
+StatusCode DBDrivenAnalysisTask::analyze(std::string SaveSet,
+                                         std::string Task)
 {
   TFile* f = new TFile(SaveSet.c_str(),"READ");
   std::vector<int> anaIDs;
   std::vector<std::string> anaAlgs;
   std::vector<float> warningThr; 
   std::vector<float> alarmThr;
+  std::vector<float> inputs;
   bool mask;
   if (false == f->IsZombie()) {
     std::vector<OnlineHistogram*> hlist;
     m_histDB->getHistogramsWithAnalysis( &hlist);
-    
-    for (unsigned int i=0;i<hlist.size();i++) {
-      cout << "found histo with analysis: "<<hlist[i]->identifier() <<endl;
+    std::vector<OnlineHistogram*>::iterator ih;
+    for(ih = hlist.begin(); ih != hlist.end(); ih++) {
+      if( Task != "any" &&
+          Task != (*ih)->task() ) continue;
+      debug() << "histogram with analysis found in DB: "<<(*ih)->identifier() <<endmsg;
       TH1* rooth = NULL;
-      if ( hlist[i]->isAnaHist() ) { //load sources and produce ROOT histograms
-	rooth = onTheFlyHistogram( hlist[i], f);
+      if ( (*ih)->isAnaHist() ) { //load sources and produce ROOT histograms
+        rooth = onTheFlyHistogram( (*ih), f);
       }
       else {
-	rooth = (TH1*) f->Get((hlist[i]->hname()).c_str());
+        rooth = (TH1*) f->Get(((*ih)->hname()).c_str());
       }
       if (rooth) {
-	cout <<" OK"<<endl;
-	// get analysis options 
-	cout << "getting getAnalyses for "<<hlist[i]->identifier()<<endl;
-	hlist[i]->getAnalyses(anaIDs,anaAlgs);
-	for (unsigned int iana=0 ; iana<anaIDs.size() ;  iana++) {
-	  cout << "performing analysis "<<anaAlgs[iana]<<" on histo "<<hlist[i]->identifier()<<" ... ";
-	  if (hlist[i]->getAnaSettings(anaIDs[iana], &warningThr, &alarmThr, mask) ) {
-	    if (!mask) {
-	      OMAalg* thisalg=m_omalib->getAlg(anaAlgs[iana]);
-	      if (thisalg) {
-		if (OMACheckAlg* cka = dynamic_cast<OMACheckAlg*>(thisalg) )
-		  cka->exec(*(rooth),
-			    warningThr,
-			    alarmThr,
-			    cout);
-		else {
-		  cout<<"ERROR: alg "<<anaAlgs[iana]<< " not a check algorithm"<<endl;
-		}
-	      }
-	      else {
-		cout<<"ERROR: alg "<<anaAlgs[iana]<< " apparently not implemented in OMAlib"<<endl;
-	      }
-	    }
-	    else {
-	      cout << "Analysis "<< anaAlgs[iana] <<
-		" on histogram "<<hlist[i]->identifier()<<" is masked"<<endl;
-	    }
-	  }
-	  else {
-	    cout << " ERROR loading parameters"<<endl;
-	  }
-	} // end loop on analyses to be done on this histogram
+        debug() <<"   histogram found in source"<<endmsg;
+        (*ih)->getAnalyses(anaIDs,anaAlgs);
+        for (unsigned int iana=0 ; iana<anaIDs.size() ;  iana++) {
+          debug() << "performing analysis "<<anaAlgs[iana]<<
+            " on histo "<<(*ih)->identifier()<<" ... "<<endmsg;
+          warningThr.clear();
+          alarmThr.clear();
+          inputs.clear();
+          if ((*ih)->getAnaSettings(anaIDs[iana], &warningThr, &alarmThr, &inputs, mask) ) {
+            if (!mask) {
+              OMAalg* thisalg=m_omalib->getAlg(anaAlgs[iana]);
+              if (thisalg) {
+                if (OMACheckAlg* cka = dynamic_cast<OMACheckAlg*>(thisalg) )
+                  cka->exec(*(rooth),
+                            warningThr,
+                            alarmThr,
+                            inputs);
+                else {
+                  err()<<"algorithm "<<anaAlgs[iana]<< " is not a check algorithm"<<endmsg;
+                }
+              }
+              else {
+                err()<<"algorithm "<<anaAlgs[iana]<< " apparently not implemented in OMAlib"<<endmsg;
+              }
+            }
+            else {
+              info() << "Analysis "<< anaAlgs[iana] <<
+                " on histogram "<<(*ih)->identifier()<<" is masked"<<endmsg;
+            }
+          }
+          else {
+            err() << " error loading analysis parameters"<<endmsg;
+          }
+        } // end loop on analyses to be done on this histogram
       } // end check on root object existence
       else {
-	cout <<" NOT FOUND"<<endl;
+        err() << " histogram NOT FOUND in source"<<endmsg;
       }
     } // end loop on histograms to be analyzed
     f->Close();
   } // end check on file
   delete f;
   
-  return true;
+  return StatusCode::SUCCESS;
 }
 
 TH1* DBDrivenAnalysisTask::onTheFlyHistogram(OnlineHistogram* h,
@@ -84,57 +103,69 @@ TH1* DBDrivenAnalysisTask::onTheFlyHistogram(OnlineHistogram* h,
 {
   std::string Algorithm;
   std::vector<std::string> sourcenames;
+  std::vector<std::string>::iterator is;
   std::vector<TH1*> sources;
   std::vector<float> parameters;
   TH1* out=m_ownedHisto[h->identifier()];
   
   h->getCreationDirections(Algorithm,sourcenames,parameters);
-  cout << "  Got ana histo made with algo "<<Algorithm <<
+  verbose() << "  Got analysis histo made with algo "<<Algorithm <<
     " ,"<<sourcenames.size() << " sources and "<<parameters.size()
-       << " parameters"<<endl;
+            << " parameters"<<endmsg;
   bool loadok=true;
-  for (unsigned int js=0;js<sourcenames.size();js++) {
-    cout << "   trying to load "<<sourcenames[js]<<" ...";
-    TH1* hh =(TH1*) f->Get(sourcenames[js].c_str());
+  for (is= sourcenames.begin(); is != sourcenames.end() ; is++) {
+    verbose() << "   trying to load " << (*is) << endmsg;
+    TH1* hh=NULL;
+    OnlineHistogram* dbhh=m_histDB->getHistogram(is->c_str());
+    if(!dbhh) {
+      err() <<"histogram "<<(*is)<<" unknown to HistDB "<<endmsg;
+      loadok=false;
+      break;
+    }
+    else {
+      if( dbhh->isAnaHist() )
+        hh = onTheFlyHistogram(m_histDB->getHistogram(is->c_str()), f);
+      else
+        hh =(TH1*) f->Get(is->c_str());
+    }
     if (hh) {
-      cout <<" OK"<<endl;
+      verbose() <<"OK: histogram "<<(*is)<<" loaded"<<endmsg;
       sources.push_back(hh);
     }
     else {
-      cout <<" NOT FOUND"<<endl;
+      err() <<"histogram "<<(*is)<<" NOT FOUND"<<endmsg;
       loadok=false;
       break;
     }
   }
   if(!loadok) {
-    cout<<" ERROR loading sources"<<endl;
+    err()<<" ERROR loading sources"<<endmsg;
   }
   else {
-    cout << "   calling creation algorithm ...";
-	
+    verbose() << "   calling creation algorithm ..."<<endmsg;
+    
     OMAalg* thisalg=m_omalib->getAlg(Algorithm);
     
     if (thisalg) {
       if (OMAHcreatorAlg* hca = dynamic_cast<OMAHcreatorAlg*>(thisalg) ) {
-	out = hca->exec(&sources, 
-			&parameters,
-			h->identifier(), 
-			h->hname(),
-			out);
-	if (out) {
-	  m_ownedHisto[h->identifier()]=out;
-	  cout <<" OK"<<endl;
-	}
-	else {
-	  cout <<" SOMETHING WRONG"<<endl;
-	}
+        out = hca->exec(&sources, 
+                        &parameters,
+                        h->identifier(), 
+                        h->hname(),
+                        out);
+        if (out) {
+          m_ownedHisto[h->identifier()]=out;
+        }
+        else {
+          err() <<" SOMETHING WRONG calling creator algorithm "<< Algorithm<< endmsg;
+        }
       }
       else {
-	cout<<"ERROR: alg "<<Algorithm<< " not an Hcreator algorithm"<<endl;
+        err() <<"ERROR: "<<Algorithm<< " is not an Hcreator algorithm"<<endmsg;
       }
     }
     else {
-      cout<<"ERROR: alg "<<Algorithm<< " apparently not implemented in OMAlib"<<endl;
+      verbose()<<"ERROR: alg "<<Algorithm<< " apparently not implemented in OMAlib"<<endmsg;
     }
   }
   return out;

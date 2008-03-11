@@ -1,0 +1,27 @@
+
+
+ApplicationMgr.DLLs += { "OMAlib" };
+
+// for using Monitoring Service 
+ApplicationMgr.ExtSvc += { "MonitorSvc" };
+ApplicationMgr.DLLs += {"Gaucho"};
+// ----------------------------------------
+//ApplicationMgr.Runable = "LHCb::AnaTaskRunable";
+
+
+ApplicationMgr.TopAlg = { "DBDrivenAnalysisTask" , "ExampleAnalysisTask"};
+ApplicationMgr.EvtMax = 0;
+ApplicationMgr.EvtSel = "NONE";
+
+DBDrivenAnalysisTask.OutputLevel = 3;
+DBDrivenAnalysisTask.useHistDB   = true;
+DBDrivenAnalysisTask.InputFiles   = {
+  "/afs/cern.ch/user/g/ggiacomo/cmtuser/Online_v4r5/Muon/MuonMonitor/v2r0/options/pulseQ4_multibunch/monitor_ns.root",
+  "/afs/cern.ch/user/g/ggiacomo/cmtuser/Online_v4r5/Muon/MuonMonitor/v2r0/options/muoncosmics/monitor.root",
+  "/afs/cern.ch/user/g/ggiacomo/cmtuser/Online_v4r5/Muon/MuonMonitor/v2r0/options/monitor_bbmmX.root"
+};
+
+
+
+
+

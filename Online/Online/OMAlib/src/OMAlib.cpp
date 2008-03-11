@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.2 2008-02-05 23:01:47 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.3 2008-03-11 18:23:26 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -6,6 +6,7 @@
 */
 
 #include "OMAlib/OMAlib.h"
+#include "OMAlib/OMAAlgorithms.h"
 
 OMAlib::OMAlib(OnlineHistDB* HistDB) : m_histDB(HistDB), m_debug(2) { 
   m_localDBsession=false;
@@ -35,9 +36,13 @@ OMAlib::~OMAlib() {
 
 
 void OMAlib::doAlgList() {
-  m_algorithms["Efficiency"] = new OMAEfficiency();
-  m_algorithms["CheckXMinMax"] = new OMACheckXMinMax();
+  m_algorithms["CheckXRange"] = new OMACheckXRange();
+  m_algorithms["CheckMeanAndSigma"] = new OMACheckMeanAndSigma();
+  m_algorithms["GaussFit"] = new OMAGaussFit();
 
+  m_algorithms["Efficiency"] = new OMAEfficiency();
+  m_algorithms["HMerge"] = new OMAHMerge();
+  m_algorithms["Scale"] = new OMAScale();
   syncList();
 }
 
@@ -45,41 +50,51 @@ void OMAlib::doAlgList() {
 void OMAlib::syncList() {
   if (m_histDB) {
     if (m_histDB->getAlgListID() >= 0 &&
-	m_histDB->getAlgListID() < OMAconstants::AlgListID) {
+        m_histDB->getAlgListID() < OMAconstants::AlgListID) {
       // update DB
       bool ok = true;
       if (m_debug)
-	cout << "Sending new algoritm List #"<<OMAconstants::AlgListID <<" to DB"<<endl;
+        cout << "Sending new algoritm List #"<<OMAconstants::AlgListID <<" to DB"<<endl;
       std::map<std::string, OMAalg*>::iterator ialg;
       for (ialg=m_algorithms.begin(); ialg != m_algorithms.end(); ++ialg) {
-	OMAalg* alg=(*ialg).second;
-	bool algok;
-	if (m_debug>1) 
-	  cout << "  sending algorithm "<<alg->name() <<" ... ";
-	std::vector<std::string> parnames(alg->npars());
-	for (int ip=0 ; ip<alg->npars(); ip++)
-	  parnames[ip] = alg->parName(ip);
-	if ("HCREATOR" == alg->type() ) {
-	  OMAHcreatorAlg* hcalg = dynamic_cast<OMAHcreatorAlg*> (alg);
-	  algok=m_histDB->declareCreatorAlgorithm( hcalg->name(),
-						   hcalg->ninput(),
-						   hcalg->outHType(),
-						   hcalg->npars(),
-						   &parnames,
-						   hcalg->doc() );
-	}
-	else 
-	  algok=m_histDB->declareCheckAlgorithm(alg->name(),
-						alg->npars(),
-						&parnames,
-						alg->doc() ); 
-	
-	if (m_debug>1) cout << (algok ? " OK!" : " ERROR! ") <<endl;
-	ok &= algok;
+        OMAalg* alg=(*ialg).second;
+        bool algok;
+        if (m_debug>1) 
+          cout << "  sending algorithm "<<alg->name() <<" ... ";
+        std::vector<std::string> parnames(alg->npars());
+        for (int ip=0 ; ip<alg->npars(); ip++)
+          parnames[ip] = alg->parName(ip);
+        if ("HCREATOR" == alg->type() ) {
+          OMAHcreatorAlg* hcalg = dynamic_cast<OMAHcreatorAlg*> (alg);
+          algok=m_histDB->declareCreatorAlgorithm
+            ( hcalg->name(),
+              hcalg->ninput(),
+              hcalg->histSetFlag(),
+              hcalg->outHType(),
+              hcalg->npars(),
+              &parnames,
+              hcalg->doc() );
+        }
+        else {
+          OMACheckAlg* calg= dynamic_cast<OMACheckAlg*> (alg);
+          std::vector<std::string> inputnames(calg->ninput());
+          for (int ip=0 ; ip<calg->ninput(); ip++)
+            inputnames[ip] = calg->inputName(ip);
+          algok=m_histDB->declareCheckAlgorithm
+            (calg->name(),
+             calg->npars(),
+             &parnames,
+             calg->ninput(),
+             &inputnames,
+             calg->doc() ); 
+          
+          if (m_debug>1) cout << (algok ? " OK!" : " ERROR! ") <<endl;
+          ok &= algok;
+        }
       }
       if (ok) {
-	m_histDB->setAlgListID(OMAconstants::AlgListID);
-	m_histDB->commit();
+        m_histDB->setAlgListID(OMAconstants::AlgListID);
+        m_histDB->commit();
       }
     }
   }
