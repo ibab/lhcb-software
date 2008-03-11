@@ -3,7 +3,7 @@
 # Maintainer : Chris Parkes & Tomasz Szumlak
 #============================================================================
 package           VeloSimulation
-version           v2r6
+version           v2r7
 
 #============================================================================
 # Structure, i.e. directories to process. 

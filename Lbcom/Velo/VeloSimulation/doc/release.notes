@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!===================== VeloSimulation v2r7 2008-03-11 ======================
 ! 2008-03-10 - David Hutchcroft
  - Removed calls to phiOfStrip and trgPhiOfStrip in VeloSimMoni.cpp and now
    removed from DeVeloPhiType.h
