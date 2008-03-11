@@ -1,132 +1,21 @@
-//
-//   Example file to populate "standard" MBM buffer from MDF file
-//   /Event/DAQ/RawEvent is accessed, serialized and committed to MBM
-//
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.ExtSvc               += {"EventSelector" };
-ApplicationMgr.Dlls                 += {"GaudiOnline"};
-ApplicationMgr.EvtMax                = 30000;
-Runable.MEPManager                   = "";
+ApplicationMgr.EvtMax                = 200000000;
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+Runable.MEPManager                   = "MEPManager";
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
-EventDataSvc.RootCLID                = 1;
-EventDataSvc.EnableFaultHandler      = true;
-EventPersistencySvc.CnvServices      = {"LHCb::MBMCnvSvc/MBMCnvSvc", "LHCb::RawDataCnvSvc/RawDataCnvSvc"};
-// This serializes /Event/DAQ/RawEvent to MBM buffer
-MBMCnvSvc.DataType                   = 3;     // MDF_BANKS
-MBMCnvSvc.PartitionID                = @OnlineEnv.PartitionID;
-ApplicationMgr.OutStream             = { "Writer_0"};
-Writer_0.Output                      = "DATAFILE='mbm://OUT_14d' SVC='LHCb::MBMCnvSvc/MBMCnvSvc' OPT='REC'";
-Writer_0.ItemList         = {"/Event#1" };
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc"};
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.PartitionBuffers          = false;
+MEPManager.Buffers                   = { "READ" };
+ApplicationMgr.TopAlg               += { "LHCb::RawEvent2MBMMergerAlg/Writer"};
+Writer.Buffer                        = "READ";
+Writer.DataType                      = 1;
+Writer.Compress                      = 0;
 EventSelector.PrintFreq              = 1000;
-EventSelector.Input                  = { 
-  "DATA='file://mdfData_0.dat' SVC='LHCb::MDFSelector'"
- ,"DATA='file://mdfData_1.dat' SVC='LHCb::MDFSelector'"
- ,"DATA='file://mdfData_2.dat' SVC='LHCb::MDFSelector'"
- ,"DATA='file://mdfData_3.dat' SVC='LHCb::MDFSelector'"
-};
-EventSelector.Input                  = { 
- "DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdfData.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_0.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_1.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_2.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_3.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_4.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_5.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_6.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_7.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_8.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_9.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_10.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_11.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_12.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_13.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_14.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_15.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_16.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_17.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_18.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_19.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_20.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_21.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_22.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_23.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_24.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_25.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_26.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_27.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_28.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_29.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_30.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_31.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_32.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_33.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_34.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_35.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_36.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_37.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_38.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_39.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_40.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_41.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_42.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_43.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_44.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_45.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_46.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_47.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_48.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_49.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_50.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_51.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_52.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_53.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_54.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_55.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_56.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_57.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_58.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_59.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_60.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_61.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_62.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_63.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_64.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_65.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_66.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_67.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_68.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_69.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_70.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_71.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_72.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_73.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_74.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_75.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_76.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_77.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_78.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_79.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_80.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_81.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_82.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_83.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_84.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_85.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_86.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_87.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_88.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_89.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_90.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_91.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_92.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_93.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_94.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_95.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_96.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_97.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_98.dat' SVC='LHCb::MDFSelector'"
-,"DATA='file:///afs/cern.ch/user/f/frankb/scratch0/data/mdf_99.dat' SVC='LHCb::MDFSelector'"
-};
+//#pragma print off
+#include "data/data.opts"
 MessageSvc.OutputLevel = 3;
+

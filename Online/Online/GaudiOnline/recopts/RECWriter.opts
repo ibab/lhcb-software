@@ -1,0 +1,10 @@
+#include "$GAUDIONLINEROOT/options/DiskWR.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+MEPManager.Buffers                   = { "RECV" };
+MEPManager.PartitionBuffers          = false;
+EventSelector.Decode                 = false;
+EventSelector.Input                  = "RECV";
+Writer.Compress                      = 0;
+Writer.InputDataType                 = 1;
+Writer.DataType                      = 2;
+Writer.Connection                    = "file://recOutput.dat";

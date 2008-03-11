@@ -12,17 +12,7 @@ then
 fi
 
 cat >/tmp/CreateMEP.opts <<END-OF-OPTS
-ApplicationMgr.DLLs       = { "MDF" };
-ApplicationMgr.TopAlg     = { "LHCb::RawEventTestCreator/RawEventGen", "StoreExplorerAlg" };
-ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
-ApplicationMgr.EvtMax     = 2000;
-ApplicationMgr.EvtSel     = "NONE";
-StoreExplorerAlg.Load     = 1;
-StoreExplorerAlg.PrintFreq= 0.01;
-EventDataSvc.ForceLeaves  = 1;
-EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
-
-// To create a MEP file:
+#include "$MDFROOT/options/CreateMEP.opts"
 ApplicationMgr.OutStream  = { "LHCb::MEPWriter/Writer_0" };
 Writer_0.Compress       = 0;
 Writer_0.ChecksumType   = 0;

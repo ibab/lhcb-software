@@ -3,17 +3,17 @@
 #============================================================================
 # Internal helper package to reduce dependencies in GaudiOnline iteself
 #============================================================================
-use GaudiAud      v*
-use GaudiSvc      v*
-use GaudiAlg      v*
-use GaudiPoolDb   v*
-use Gaucho        v* Online
-use GaudiOnline   v* Online
-use MBMDump       v* Online
-use GaudiUPI      v* Online
-use LHCbMath      v* Kernel
-
-use Writer        v*   Online
+use  GaudiAud      v*
+use  GaudiSvc      v*
+use  GaudiAlg      v*
+use  GaudiPoolDb   v*
+#use Gaucho        v* Online
+use  GaudiOnline   v* Online
+use  MDF_ROOT     v* DAQ
+use  MBMDump       v* Online
+#use GaudiUPI      v* Online
+#use LHCbMath      v* Kernel
+#use Writer        v*   Online
 
 # apply_pattern ld_library_path library=LHCbMath
 apply_pattern ld_library_path

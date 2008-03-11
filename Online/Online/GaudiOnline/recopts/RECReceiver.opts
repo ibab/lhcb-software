@@ -1,0 +1,5 @@
+#include "$GAUDIONLINEROOT/options/MDFReceiver.opts"
+Receiver.Buffer                      = "Events";
+MEPManager.Buffers                   = {"Events"};
+MEPManager.PartitionBuffers          = false;
+MessageSvc.OutputLevel               = 1;

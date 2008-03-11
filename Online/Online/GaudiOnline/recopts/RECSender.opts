@@ -1,0 +1,6 @@
+#include "$GAUDIONLINEROOT/options/MDFSender.opts"
+MEPManager.Buffers                   = {"SEND"};
+EventSelector.Input                  = "SEND";
+EventSelector.Decode                 = false;
+Sender.DataSink                      = "$NODENAME/OUTReceiver";
+Sender.DataType                      = 3;
