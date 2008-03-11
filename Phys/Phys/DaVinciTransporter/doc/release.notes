@@ -1,7 +1,20 @@
-! $Id: release.notes,v 1.56 2008-03-10 11:55:17 ibelyaev Exp $
+! $Id: release.notes,v 1.57 2008-03-11 09:13:29 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+!====================== DaVinciTransporter v3r7p3 2008-03-11 ==================
+
+! 2008-03-11 - Juan PALACIOS
+ - src/TransporterFunctions.h
+  . Put Gaudi namespace in front of XYZPoint, otherwise compiler struggles to
+    resolve between Gaudi:: and ROOT::Math:: (actualy they are one and the same)
+
+! 2008-03-10 - Juan PALACIOS
+ - src/TransporterFunctions.h
+  . Remove some debug printout.
+ - cmt/requirements
+  . Increase version to v3r7p3
 
 ! 2008-03-10 - Vanya BELYAEV
 
