@@ -14,6 +14,7 @@
   <class name = "IDecayFinder"/>
   <class name = "IDecodeSimpleDecayString"/>
   <class name = "IDirectionFit"/>
+  <class name = "IDistanceCalculator"/>
   <class name = "IEventTupleTool"/>
   <class name = "IFilterCriteriaTESTool"/>
   <class name = "IFilterCriterion"/>

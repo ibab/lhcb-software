@@ -3,15 +3,14 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v6r12 2008-03-11 ====================
 ! 2008-03-10 - Vanya BELYAEV
  - Kernel/IDistanceCalculator.h
    src/Lib/IDistanceCalculator.cpp 
-
      add the new abstract interface for "distance calculator" tool  
 
 !======================== DaVinciKernel v6r11 2008-02-25 ====================
 ! 2008-02-23 - Vanya BELYAEV
-
  - Kernel/DVAlgorithm.h
    src/Lib/DVAlgorithm.cpp
   
