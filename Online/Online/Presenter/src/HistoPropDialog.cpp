@@ -139,10 +139,10 @@ void HistoPropDialog::build()
   // combo box
   m_statOptionComboBox = new TGComboBox(fGroupFrame651,-1, kHorizontalFrame |
     kSunkenFrame | kDoubleBorder | kOwnBackground);
+  m_statOptionComboBox->AddEntry("none", 0);    
   m_statOptionComboBox->AddEntry("default", 1);
-  m_statOptionComboBox->AddEntry("none", 0);
   m_statOptionComboBox->Resize(102, 22);
-  m_statOptionComboBox->Select(1);
+  m_statOptionComboBox->Select(0);
   fGroupFrame651->AddFrame(m_statOptionComboBox,
     new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   m_statOptionComboBox->MoveResize(112, 56, 102, 22);
