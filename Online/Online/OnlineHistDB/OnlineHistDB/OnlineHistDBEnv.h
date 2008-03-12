@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.22 2008-02-20 16:47:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.23 2008-03-12 12:29:55 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -83,6 +83,11 @@ class OnlineHistDBEnv {
   /// gets the name of parameter Ipar (starting from 1) of algorithm AlgName
   std::string getAlgParName(std::string AlgName,
 			    int Ipar);
+  /// get reference histograms root directory 
+  inline std::string refRoot() {return *m_refRoot;}
+  /// get saveset root directory 
+  inline std::string savesetsRoot() {return *m_savesetsRoot;}
+
   void warningMessage(std::string Error) const; 
   inline OCIEnv *envhp() const {return m_envhp;}
   inline OCIError *errhp() const {return m_errhp;}

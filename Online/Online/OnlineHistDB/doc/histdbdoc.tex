@@ -178,9 +178,11 @@ unique algorithm identifier
 \item{AlgType} \\
 'HCREATOR' or 'CHECK'
 \item{Ninput} (integer)\\
-number of input histograms (for 'HCREATOR' algorithms)
+for 'HCREATOR' algorithms : number of input histograms\\
+for 'CHECK' algorithms : number of input parameters
 \item{Npars} (integer)\\
-number of parameters
+for 'HCREATOR' algorithms : number of input parameters\\
+for 'CHECK' algorithms : number of output parameters to be checked
 \item{AlgPars} (array(any length) of string of max length 15)\\
 parameter names
 \item{HCTYPE}\\
@@ -390,7 +392,6 @@ propagated to all new objects created through the {\it getPage} and
 \section{Code Example}
 
 \begin{verbatim}
-#include <OnlineHistDB/OnlineRootHist.h>
 #include <OnlineHistDB/OnlineHistDB.h>
 
 int main ()

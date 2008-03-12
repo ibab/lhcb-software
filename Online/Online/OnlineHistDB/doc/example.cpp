@@ -1,6 +1,5 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/doc/example.cpp,v 1.8 2007-11-08 16:18:51 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/doc/example.cpp,v 1.9 2008-03-12 12:29:55 ggiacomo Exp $
 #include <stdio.h>
-#include <OnlineHistDB/OnlineRootHist.h>
 #include <OnlineHistDB/OnlineHistDB.h>
 
 int main ()
@@ -82,13 +81,6 @@ int main ()
      newh->saveDisplayOptions();
      newh->dump();
 
-     // link a DB histogram with a ROOT histogram
-     TH1F* rh = new TH1F("root histogram",
-                         "EXAMPLE/OccupancyMap/Hit_Map Region_M1R1",100,0,1);
-     OnlineRootHist* orh=new OnlineRootHist(newh);
-     orh->setrootHist(rh);
-     // display options are passed to the ROOT object
-     cout << "Line color of ROOT histo is  "<< orh->rootHist()->GetLineColor() <<endl;
    }
  }
 

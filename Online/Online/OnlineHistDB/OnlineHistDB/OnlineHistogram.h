@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.20 2008-02-12 09:52:13 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.21 2008-03-12 12:29:55 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -183,7 +183,8 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// true if the histogram is produced at analysis level
   bool isAnaHist() const {return m_isAnaHist;}
   /// declare an analysis to be performed on the histogram set. If the algorithm
-  /// requires some parameters, the warning and alarm values must be
+  /// requires some parameters, the input parameters and the warning and alarm 
+  /// thresholds for output parameters must be
   /// specified as vectors of floats and will be set for all histograms in
   /// set (then, you can specify values for single histograms with the {\it
   /// setAnalysis} method. 
@@ -192,21 +193,24 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// identified by Algorithm and instance already exists, parameters are
   /// updated. Returns the internal analysis ID.
   int declareAnalysis(std::string Algorithm, 
-		      std::vector<float>* warningThr=NULL, 
-		      std::vector<float>* alarmThr=NULL, 
-		      int instance=1); 
+                      std::vector<float>* warningThr=NULL, 
+                      std::vector<float>* alarmThr=NULL, 
+                      std::vector<float>* inputs=NULL, 
+                      int instance=1); 
   /// updates parameters for analysis with ID AnaID (for this histogram only). Returns true on success
   bool setAnalysis(int AnaID, 
-		   std::vector<float>* warningThr=NULL, 
-		   std::vector<float>* alarmThr=NULL);
+                   std::vector<float>* warningThr=NULL, 
+                   std::vector<float>* alarmThr=NULL, 
+                   std::vector<float>* inputs=NULL);
   /// gets parameters for analysis with ID AnaID. Returns true on success
   bool getAnaSettings(int AnaID,
-		      std::vector<float>* warn, 
-		      std::vector<float>* alarm,
-		      bool &mask); 
+                      std::vector<float>* warn, 
+                      std::vector<float>* alarm,
+                      std::vector<float>* inputs,
+                      bool &mask); 
   /// masks analysis with ID AnaID. Use Mask=false to unmask. Returns true on success
   bool maskAnalysis(int AnaID,
-		    bool Mask=true); 
+                    bool Mask=true); 
 
   // methods to force reloading of all or part of histogram variables
   void load();

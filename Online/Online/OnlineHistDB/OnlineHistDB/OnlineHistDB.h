@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.21 2008-02-20 16:47:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.22 2008-03-12 12:29:55 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -47,28 +47,34 @@ class  OnlineHistDB : public OnlineHistDBEnv,
 			HistType Type); 
   /// declares an histogram to be produced at analysis
   /// level using algorithm Algorithm. Name is the histogram name. Sources
-  /// must contain the pointers to the input histograms. Parameters is a
-  /// pointer to a parameter vector, optionally needed by the algorithm. If
-  /// the algorithm requires an histogram set as input, use any histogram of the
-  /// set. Returns the pointer to the new histogram object.
+  /// and/or InputSet must contain the pointers to the input histograms or set. 
+  /// Parameters is a
+  /// pointer to a parameter vector, optionally needed by the algorithm. 
+  /// Returns the pointer to the new histogram object.
   OnlineHistogram* declareAnalysisHistogram(std::string Algorithm,
-					    std::string Name,
-					    std::vector<OnlineHistogram*> &Sources,
-					    std::vector<float>* Parameters = NULL);
+                                            std::string Name,
+                                            std::vector<OnlineHistogram*> &Sources,
+                                            std::vector<float>* Parameters = NULL,
+                                            OnlineHistogram* InputSet = NULL);
   /// declares to the DB an Analysis algorithm implemented in the Analysis
-  /// library. Npars is the number of algorithm's parameters, pars should
-  /// point to an array containing the parameter names, doc is a short
-  /// description of the algorithm.
+  /// library. NoutPars is the number of algorithm's output parameters to be checked, 
+  /// while NinPars is the number of optional input parameters.
+  /// outPars and inPars should point to arrays containing the parameter names, 
+  /// doc is a short description of the algorithm.
   bool declareCheckAlgorithm(std::string Name, 
-			     int Npars, 
-			     std::vector<std::string> *pars=NULL, 
-			     std::string doc="NONE");
+                             int NoutPars, 
+                             std::vector<std::string> *outPars = NULL,
+                             int NinPars = 0, 
+                             std::vector<std::string> *inPars =NULL ,
+                             std::string doc="NONE");
   /// declares to the DB an available algorithm to produce histograms at
-  /// analysis time. Ninput is the number of input histograms, Npars the
+  /// analysis time. Ninput is the number of input histograms, SetAsInput
+  /// if input can be an histogramset, Npars the
   /// number of optional parameters (pars containing their names), doc is a short
   /// description of the algorithm.
   bool declareCreatorAlgorithm(std::string Name, 
-			       int Ninput=0, 
+			       int Ninput,
+             bool SetAsInput=false,
 			       HistType OutputType = H1D,
 			       int Npars=0, 
 			       std::vector<std::string> *pars=NULL,
@@ -79,11 +85,6 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   int getAlgListID() const {return m_AlgListID;}
   /// sets the algorithm list version (works only for DB admin account)
   bool setAlgListID(int algListID);
-
-  /// get reference histograms root directory 
-  inline std::string refRoot() {return *m_refRoot;}
-  /// get saveset root directory 
-  inline std::string savesetsRoot() {return *m_savesetsRoot;}
   /// change reference histograms root directory (for testing)
   void setRefRoot(std::string newroot) { *m_refRoot = newroot; }
   /// change savesets root directory (for testing)

@@ -9,13 +9,23 @@ function show_anahist($id) {
  echo "<p>This is a <B> Display Histogram </B> obtained automatically by Analysis Task<br>
   through Algorithm <span class=normal>".$hcreator["ALGORITHM"]."</span>\n ";
  if ($shsid=$hcreator["SOURCESET"]) 
-   echo " from histogram set <a href='Histogram.php?hsid=${shsid}'> ${shsid} </a><br>\n";
+   echo " from histogram set <a href='Histogram.php?hsid=${shsid}'> ${shsid} </a>\n";
+ $ssh=0;
+ $ih=0;
+ $ssh_string= " from histograms<br><center>\n"; 
+ while($ih++<8) {
+   if($shid=$hcreator["SOURCEH".$ih])  {
+     $ssh_string.="<a href='Histogram.php?hid=${shid}'> ${shid} </a><br>\n";
+     $ssh=1;
+   }
+ }
+ $ssh_string.="</center>";
+ if($ssh) {
+   if($shsid) echo " and ";
+   echo $ssh_string;
+ }
  else {
-   $ih=0;
-   echo " from histograms<br><center>\n"; 
-   while($ih++<8) 
-     if($shid=$hcreator["SOURCEH".$ih]) echo "<a href='Histogram.php?hid=${shid}'> ${shid} </a><br>\n";
-   echo "</center>";
+   echo "<br>\n";
  }
  get_ana_parameters($hcreator["ALGORITHM"],0,1,$id."/1",0,1,0,1);
  if(($np=$_POST["a1_np"])>0) {
@@ -44,7 +54,8 @@ function histo_header($id,$htype,$mode)
 	     as $field)
       $_POST[$field]=$histo[$field];
   }
-  $identifier= ($htype == "HID") ? $_POST["NAME"] : $_POST["TASKNAME"]."/".$_POST["HSALGO"]."/".$_POST["HSTITLE"];
+  $identifier= ($htype == "HSID" && $_POST["NHS"] > 1) ? $_POST["TASKNAME"]."/".$_POST["HSALGO"]."/".$_POST["HSTITLE"]
+    : $_POST["NAME"] ;
   echo "<form action='${script}' method='POST'>\n"; 
   echo " ID <span class=normal>$id</span> &nbsp&nbsp&nbsp Task <a class=normal href='Task.php?task=".$_POST["TASKNAME"]."'>".$_POST["TASKNAME"]."</a>".
     " &nbsp&nbsp&nbsp Algorithm <span class=normal>".$_POST["HSALGO"]."</span>".
@@ -72,18 +83,18 @@ function histo_header($id,$htype,$mode)
     if($histo["OBSOLETENESS"])
       echo "Obsolete from <span class=normal>".$histo["OBSOLETENESS"]."</span><br>\n";
 
-    if($histo["ISANALYSISHIST"]) {
+    if($histo["ISANALYSISHIST"] && $htype == "HID") {
       show_anahist($id);
     }
     $nhs=$histo["NHS"];
     if ($htype == "HID") {
       $hsid=HistoSet($id);
       if ($nhs>1)
-	echo "<p>This Histogram is part of a <a href=$_SERVER[PHP_SELF]?hsid=${hsid}> Set </a> of $nhs identical histograms </p>\n";
+	echo "<p>This Histogram is part of a <a href=$_SERVER[PHP_SELF]?hsid=${hsid}> Set </a> of $nhs similar histograms </p>\n";
     }
     else {
       if($nhs>1) {
-	echo "<p>This is a <B> Set of $nhs identical histograms:</B> &nbsp&nbsp&nbsp";
+	echo "<p>This is a <B> Set of $nhs similar histograms:</B> &nbsp&nbsp&nbsp";
 	if ($fulllist) {
 	  $query="select HID,SUBTITLE from HISTOGRAM  where HSET=:id order by IHS";
 	  $lstid = OCIParse($conn,$query);

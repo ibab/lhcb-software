@@ -12,13 +12,14 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
  function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  varchar2,  thetype  VIEWHISTOGRAM.HSTYPE%TYPE ) 
    return varchar2 ;
  function SetDimServiceName(theHID IN  HISTOGRAM.HID%TYPE, theDSN IN DIMSERVICENAME.SN%TYPE) return number;
- procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL);
+ procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL, nin integer :=0 );
  procedure DeclareCreatorAlgorithm(Name IN varchar2,Ninp IN number:=0,pars IN parameters,
-			thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL);
+			thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL, thegetset in ALGORITHM.GETSET%TYPE := 0);
 
- function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, instance IN integer:=1)
-	return number;
- procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN thresholds, alr IN thresholds);
+ function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
+	instance IN integer:=1, inputs IN thresholds:=thresholds()) return number;
+ procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN thresholds, alr IN thresholds,
+	inputs IN thresholds:=thresholds());
 
 
  function DeclareHistDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, theOptions IN dispopt) return number;
@@ -41,8 +42,9 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
  procedure GetAlgoNpar(theAlg IN varchar2, Npar OUT integer, Ninp OUT integer);
  procedure GetAlgoParname(theAlg IN varchar2, Ipar IN integer, name OUT varchar2);
  procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, Ipar IN integer, warn OUT float, alr OUT float);
+ procedure GetAnaInput(theAna IN integer, theHisto IN varchar2, Ipar IN integer, input OUT float);
  procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, warn OUT thresholds, alr OUT thresholds,
-	mask OUT int);
+	mask OUT int, inputs OUT thresholds);
  procedure GetHCSettings(theHID IN HISTOGRAM.HID%TYPE, Ipar IN integer, value OUT float);
  function GetHistoAnalysis(theHistoSet IN int, anaids OUT intlist, ananames OUT analist) return number;
  procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE := 0,
@@ -406,18 +408,19 @@ begin
 end SetDimServiceName;
 -----------------------
 
-procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL) is
+procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL, nin integer := 0) is
+-- pars must contain the names of output parameters, followed by input parameters
  cursor al is  select ALGNAME from ALGORITHM where ALGNAME=Name;	
  algo ALGORITHM.ALGNAME%TYPE;
- nin integer := pars.COUNT;
+ np integer := pars.COUNT - nin;
 begin
  savepoint beforeCKAwrite;
  open al;
  fetch al into  algo;
  if al%NOTFOUND then
-   insert into ALGORITHM(ALGNAME,ALGTYPE,NPARS,ALGPARS) VALUES(Name,'CHECK',nin,pars);
+   insert into ALGORITHM(ALGNAME,ALGTYPE,NINPUT,NPARS,ALGPARS) VALUES(Name,'CHECK',nin,np,pars);
  else
-   update ALGORITHM set ALGTYPE='CHECK',NPARS=nin,ALGPARS=pars where ALGNAME=Name;
+   update ALGORITHM set ALGTYPE='CHECK',NPARS=np,NINPUT=nin,ALGPARS=pars where ALGNAME=Name;
  end if;
  close al;
  if (LENGTH(doc) > 0 ) then
@@ -430,8 +433,9 @@ EXCEPTION
 end DeclareCheckAlgorithm;
 
 -----------------------
-procedure DeclareCreatorAlgorithm(Name IN varchar2,Ninp IN number:=0,pars IN parameters,
-		thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL) is
+procedure DeclareCreatorAlgorithm(Name IN varchar2,Ninp IN number:=0,
+	        pars IN parameters, thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL, 
+                thegetset in ALGORITHM.GETSET%TYPE := 0) is
  cursor al is  select ALGNAME from ALGORITHM where ALGNAME=Name;	
  algo ALGORITHM.ALGNAME%TYPE;
  nin integer := pars.COUNT;
@@ -442,7 +446,7 @@ begin
  open al;
  fetch al into  algo;
  if al%NOTFOUND then
-   insert into ALGORITHM(ALGNAME,ALGTYPE,NINPUT,HCTYPE) VALUES(Name,'HCREATOR',Ninp,thetype);
+   insert into ALGORITHM(ALGNAME,ALGTYPE,NINPUT,HCTYPE,GETSET) VALUES(Name,'HCREATOR',Ninp,thetype,thegetset);
  else
    update ALGORITHM set ALGTYPE='HCREATOR',NINPUT=Ninp,HCTYPE=thetype where ALGNAME=Name;
  end if;
@@ -462,15 +466,16 @@ end DeclareCreatorAlgorithm;
 -----------------------
 
 function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
-                         instance IN integer :=1) 
+                         instance IN integer :=1, inputs IN thresholds:=thresholds()) 
 	return number is
  cursor hs is  select NHS from HISTOGRAMSET where HSID=theSet;
  mynh HISTOGRAMSET.NHS%TYPE :=0;
- cursor al is  select ALGTYPE,NPARS from ALGORITHM where ALGNAME=Algo;	
+ cursor al is  select ALGTYPE,NPARS,NINPUT from ALGORITHM where ALGNAME=Algo;	
  algotype ALGORITHM.ALGTYPE%TYPE;
  algon ALGORITHM.NPARS%TYPE;
+ algonin ALGORITHM.NINPUT%TYPE;
  cursor ana is select AID from ANALYSIS where HSET=theSet and ALGORITHM=Algo order by AID;
- myid ANALYSIS.AID%TYPE;
+ myid ANALYSIS.AID%TYPE := 0;
  hid HISTOGRAM.HID%TYPE;
  ii int := 0;
 begin
@@ -494,18 +499,18 @@ begin
  end LOOP;
  if (ana%NOTFOUND) then -- create new analysis
    open al;
-   fetch al into algotype,algon;
+   fetch al into algotype,algon,algonin;
    if (al%NOTFOUND or algotype!='CHECK') then
      raise_application_error(-20002,'Algorithm '||Algo||' does not exist or is not a check histogram');
    else 
-    if (warn.COUNT != algon or alr.COUNT != algon) then
-        raise_application_error(-20003,'Algorithm '||Algo||' requires '||algon||' parameters');
+    if (warn.COUNT != algon or alr.COUNT != algon or inputs.COUNT > algonin ) then
+        raise_application_error(-20003,'Bad number of parameters for Algorithm '||Algo);
     else
      INSERT INTO ANALYSIS(AID,HSET,ALGORITHM) VALUES(Analysis_ID.NEXTVAL,theSet,Algo);
      UPDATE  HISTOGRAMSET set NANALYSIS=NANALYSIS+1 where HSID=theSet;
      for i IN 1..mynh LOOP
       hid := theSet||'/'||i;
-       INSERT INTO ANASETTINGS(ANA,HISTO,WARNINGS,ALARMS) VALUES(Analysis_ID.CURRVAL,hid,warn,alr);
+       INSERT INTO ANASETTINGS(ANA,HISTO,WARNINGS,ALARMS,INPUTPARS) VALUES(Analysis_ID.CURRVAL,hid,warn,alr,inputs);
        SELECT Analysis_ID.CURRVAL into myid  from ERGOSUM;
      end LOOP;
     end if;
@@ -513,7 +518,7 @@ begin
    close al;
  else
   -- analysis already exists: update parameters
-   UPDATE ANASETTINGS SET WARNINGS=warn,ALARMS=alr where ANA=myid and REGEXP_REPLACE(HISTO,'^(.*)/.*$','\1')=theSet;
+   UPDATE ANASETTINGS SET WARNINGS=warn,ALARMS=alr,INPUTPARS=inputs where ANA=myid and REGEXP_REPLACE(HISTO,'^(.*)/.*$','\1')=theSet;
  end if;
  close ana;
  return myid;
@@ -522,6 +527,34 @@ exception
   ROLLBACK TO beforeDAwrite;
   raise_application_error(-20050,SQLERRM);
 end DeclareAnalysis;
+
+-----------------------
+procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN thresholds, alr IN thresholds,
+	inputs IN thresholds:=thresholds()) is
+ cursor anaset(Xh HISTOGRAM.HID%TYPE) is select MASK from ANASETTINGS where ANA=theAna and HISTO=Xh;
+ mk ANASETTINGS.MASK%TYPE;
+begin
+ savepoint beforeSSAwrite;
+ open anaset(theHisto);
+ fetch anaset into mk;
+ if(anaset%NOTFOUND) then -- try with parent
+    open anaset(REGEXP_REPLACE(theHisto,'/.*$','/1'));
+    fetch anaset into mk;
+    if(anaset%NOTFOUND) then
+     raise_application_error(-20005,'Cannot find Analysis '||theAna||' for histogram'|| theHisto);
+    else
+     -- histogram has been added to set after analysis declaration: create new ANASETTINGS entry
+     INSERT INTO ANASETTINGS(ANA,HISTO,WARNINGS,ALARMS,INPUTPARS) VALUES(theAna,theHisto,warn,alr,inputs);
+    end if;
+ else
+  UPDATE ANASETTINGS SET WARNINGS=warn,ALARMS=alr,INPUTPARS=inputs WHERE ANA=theAna and HISTO=theHisto;
+ end if;
+ close anaset;
+EXCEPTION
+ when others then
+  ROLLBACK TO beforeSSAwrite;
+  raise_application_error(-20050,SQLERRM);
+end SetSpecialAnalysis;
 
 -----------------------
 
@@ -709,33 +742,6 @@ begin
  return doid;
 end GetBestDO;
 
------------------------
-procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN thresholds, alr IN thresholds) is
- cursor anaset(Xh HISTOGRAM.HID%TYPE) is select MASK from ANASETTINGS where ANA=theAna and HISTO=Xh;
- mk ANASETTINGS.MASK%TYPE;
-begin
- savepoint beforeSSAwrite;
- open anaset(theHisto);
- fetch anaset into mk;
- if(anaset%NOTFOUND) then -- try with parent
-    open anaset(REGEXP_REPLACE(theHisto,'/.*$','/1'));
-    fetch anaset into mk;
-    if(anaset%NOTFOUND) then
-     raise_application_error(-20005,'Cannot find Analysis '||theAna||' for histogram'|| theHisto);
-    else
-     -- histogram has been added to set after analysis declaration: create new ANASETTINGS entry
-     INSERT INTO ANASETTINGS(ANA,HISTO,WARNINGS,ALARMS) VALUES(theAna,theHisto,warn,alr);
-    end if;
- else
-  UPDATE ANASETTINGS SET WARNINGS=warn,ALARMS=alr WHERE ANA=theAna and HISTO=theHisto;
- end if;
- close anaset;
-EXCEPTION
- when others then
-  ROLLBACK TO beforeSSAwrite;
-  raise_application_error(-20050,SQLERRM);
-end SetSpecialAnalysis;
-
 
 -----------------------
 
@@ -823,13 +829,31 @@ EXCEPTION
   raise_application_error(-20050,SQLERRM);
 end GetAnaSettings;
 -----------------------
-
-procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, warn OUT thresholds, alr OUT thresholds,
-	mask OUT int) is
- cursor anaset is  select WARNINGS,ALARMS,MASK FROM ANASETTINGS WHERE ANA=theAna and HISTO=theHisto;
+procedure GetAnaInput(theAna IN integer, theHisto IN varchar2, Ipar IN integer, input OUT float) is
+ cursor anaset is  select INPUTPARS FROM ANASETTINGS WHERE ANA=theAna and HISTO=theHisto;
+ myinp thresholds;
 begin
  open anaset;
- fetch anaset into warn,alr,mask;
+ fetch anaset into myinp;
+ if(anaset%NOTFOUND) then
+     input := -999;
+     raise_application_error(-20005,'Cannot find Analysis '||theAna||' for histogram'|| theHisto);
+ end if;
+ input := myinp(Ipar);
+ close anaset;
+EXCEPTION
+ when others then
+  raise_application_error(-20050,SQLERRM);
+end GetAnaInput;
+
+------------------------------------------------------------------------------------------------------------
+
+procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, warn OUT thresholds, alr OUT thresholds,
+	mask OUT int , inputs OUT thresholds) is
+ cursor anaset is  select WARNINGS,ALARMS,MASK,INPUTPARS FROM ANASETTINGS WHERE ANA=theAna and HISTO=theHisto;
+begin
+ open anaset;
+ fetch anaset into warn,alr,mask,inputs;
  if(anaset%NOTFOUND) then
      warn := thresholds();
      alr := thresholds();
@@ -862,26 +886,26 @@ EXCEPTION
 end GetHCSettings;
 -------------------------
 
-procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE,
+procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE := 0,
 			           theSources sourceh, thePars IN thresholds := thresholds(),
 	                           theName OUT varchar2) is
- cursor histo(Xtask HISTOGRAMSET.HSTASK%TYPE) is select HSID from HISTOGRAMSET HS, HISTOGRAM H 
-     where HS.HSTITLE=theTitle AND H.ISANALYSISHIST=1 AND HS.HSALGO=theAlg AND HS.HSTASK=Xtask;
- myhsid HISTOGRAMSET.HSID%TYPE;
- cursor al(xAlg ALGORITHM.ALGNAME%TYPE) is  select ALGTYPE,NINPUT,NPARS,HCTYPE from ALGORITHM where ALGNAME=xAlg;	
+ myhid HISTOGRAM.HID%TYPE;
+ myhcid HCREATOR.HCID%TYPE;
+ cursor hc(xHID HISTOGRAM.HID%TYPE) is select HCID from HCREATOR where HCID=xHID;
+ cursor al(xAlg ALGORITHM.ALGNAME%TYPE) is  select ALGTYPE,NINPUT,NPARS,HCTYPE,GETSET from ALGORITHM where ALGNAME=xAlg;	
  algotype ALGORITHM.ALGTYPE%TYPE;
  algonh ALGORITHM.NINPUT%TYPE;
  algonp ALGORITHM.NPARS%TYPE;
+ algogs ALGORITHM.GETSET%TYPE;
  command varchar2(500);
  value varchar2(500);
  myhctype HISTOGRAMSET.HSTYPE%TYPE := 'H1D';
- myhcid HCREATOR.HCID%TYPE;
  anatk HISTOGRAMSET.HSTASK%TYPE := 'ANALYSIS';
 begin
  SAVEPOINT beforeHCwrite;
  -- check algorithm
  open al(theAlg);
- fetch al into algotype,algonh,algonp,myhctype;
+ fetch al into algotype,algonh,algonp,myhctype,algogs;
  if (al%NOTFOUND or algotype!='HCREATOR') then
    raise_application_error(-20002,'Algorithm '||TheAlg||' does not exist or is not a creator histogram');
  end if;
@@ -896,53 +920,50 @@ begin
       raise_application_error(-20003,'Algorithm '||TheAlg||' requires '||algonh||' input histograms and you provided '||theSources.COUNT);
    end if;
  end if;
- if (algonp != thePars.COUNT) then
-   raise_application_error(-20003,'Algorithm '||TheAlg||' requires '||algonp||' parameters');
+ if ( thePars.COUNT > algonp ) then
+   raise_application_error(-20003,'Algorithm '||TheAlg||' requires '||algonp||' parameters and you provided '||thePars.COUNT);
  end if;
  if (myhctype = 'SAM') then -- take type and task from source
-  if (algonh >0) then
+  if ( theSources.COUNT > 0) then
     select HSTYPE,TASK into myhctype,anatk from VIEWHISTOGRAM where HID=theSources(1);
   else
     select HSTYPE,TASK into myhctype,anatk from VIEWHISTOGRAM where HID=theSet||'/1';
   end if;
  else  -- take task from source
-  if (algonh >0) then
+  if (theSources.COUNT >0) then
     select TASK into anatk from VIEWHISTOGRAM where HID=theSources(1);
   else
     select TASK into anatk from VIEWHISTOGRAM where HID=theSet||'/1';
   end if;
  end if;
- anatk :=  anatk || '_ANALYSIS';
+ if ( REGEXP_SUBSTR(anatk,'_ANALYSIS') is NULL) then
+  anatk :=  anatk || '_ANALYSIS';
+ end if;
 
-
- -- CHECK IF THE HISTOGRAM IS ALREADY DEFINED
- open histo(anatk);
- fetch histo into myhsid;
- if (histo%NOTFOUND) then
-  -- create histogram entry
-  DeclareTask(anatk);
-  INSERT INTO HISTOGRAMSET(HSID,NHS,HSTASK,HSALGO,HSTITLE,HSTYPE) VALUES(HistogramSet_ID.NEXTVAL,1,anatk,theAlg,theTitle,myhctype);
-  INSERT INTO HISTOGRAM(HID,NAME,HSET,IHS,SUBTITLE,CREATION,ISANALYSISHIST) 
-        VALUES(HistogramSet_ID.CURRVAL||'/1',anatk||'/'||theAlg||'/'||theTitle,
-               HistogramSet_ID.CURRVAL,1,'',SYSTIMESTAMP,1);
+ myhid := DeclareHistByAttributes( tk => anatk, algo => theAlg, title => theTitle, thetype => myhctype);
+ update histogram set ISANALYSISHIST=1 where HID=myhid;
+ open hc(myhid);
+ fetch hc into myhcid;
+ if (hc%NOTFOUND) then
   -- create HCREATOR entry  
-  INSERT INTO HCREATOR(HCID,ALGORITHM) VALUES(HistogramSet_ID.CURRVAL||'/1',theAlg); 
-  select HistogramSet_ID.CURRVAL into myhsid from ERGOSUM;
- end if; -- end of new histogram creation
- -- update sources and parameters
- myhcid := myhsid||'/1';
- UPDATE HCREATOR set HCPARS=thePars where HCID=myhcid;
- if (algonh = 0) then
-  UPDATE HCREATOR set SOURCESET=theSet where HCID=myhcid;
- else
+  INSERT INTO HCREATOR(HCID,ALGORITHM) VALUES(myhid,theAlg); 
+ end if;
+
+ UPDATE HCREATOR set HCPARS=thePars where HCID=myhid;
+ if ( algogs = 1 and theSet > 0 ) then
+  UPDATE HCREATOR set SOURCESET=theSet where HCID=myhid;
+ end if;
+ if (algonh > 0) then
   command := 'UPDATE HCREATOR SET ALGORITHM='''||theAlg||'''';
   for i IN 1..algonh LOOP
-   command := command||',SOURCEH'||i||'='''||theSources(i)||'''';
+   if (theSources.COUNT >= i) then
+    command := command||',SOURCEH'||i||'='''||theSources(i)||'''';
+   end if;
   end LOOP;
-  command := command||' where HCID='''||myhcid||'''';
+  command := command||' where HCID='''||myhid||'''';
   EXECUTE IMMEDIATE command;
  end if;
- close histo;
+ close hc;
  theName := anatk||'/'||theAlg||'/'||theTitle;
 exception
  when OTHERS then  

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.28 2008-02-20 16:47:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.29 2008-03-12 12:29:55 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -150,21 +150,24 @@ void OnlineHistDB::declareHistogram(std::string TaskName,
 }
 
 
-OnlineHistogram* OnlineHistDB::declareAnalysisHistogram(std::string Algorithm,
-							std::string Title,
-							std::vector<OnlineHistogram*> &Sources,
-							std::vector<float>* Parameters)
+OnlineHistogram* OnlineHistDB::declareAnalysisHistogram
+         (std::string Algorithm,
+          std::string Title,
+          std::vector<OnlineHistogram*> &Sources,
+          std::vector<float>* Parameters,
+          OnlineHistogram* InputSet)
 {
   bool ok=true;
   OnlineHistogram* outh=0;
   int nin;
   int np=getAlgorithmNpar(Algorithm,&nin);
-  if (np<0 || (nin>0 && (int) Sources.size() < nin) || (nin==0 && Sources.size()<1)) ok=false;
+  if (np<0 || ((int) Sources.size() > nin) || 
+      (nin==0 && Sources.empty() && InputSet == NULL )) ok=false;
   if (np>0) {
     if (Parameters == NULL) 
       ok=false;
     else
-      if(Parameters->size() != (unsigned int)np) ok=false;
+      if(Parameters->size() > (unsigned int)np) ok=false;
   }
   if (!ok) {
     cout << "something wrong in your call to OnlineHistDB::declareAnalysisHistogram("<<
@@ -173,30 +176,26 @@ OnlineHistogram* OnlineHistDB::declareAnalysisHistogram(std::string Algorithm,
   else {
     std::stringstream command;
     command << "BEGIN ONLINEHISTDB.DECLAREANALYSISHISTOGRAM('"
-	    << Algorithm << "','" 
-	    << Title << "',";
-    if (nin == 0) { // input is a set
-      command << Sources[0]->hsid() << ",ONLINEHISTDB.SOURCEH()";
+            << Algorithm << "','" 
+            << Title << "',";
+    command << ( InputSet ? InputSet->hsid() : 0);
+    command <<",ONLINEHISTDB.SOURCEH(";
+    for (int ish=0 ; ish < nin ; ish++) {
+      command << "'" << Sources[ish]->hid() << "'";
+      if (ish < nin-1) command << ",";
     }
-    else { // input is a list of histograms
-      command <<"0,ONLINEHISTDB.SOURCEH(";
-      for (int ish=0 ; ish < nin ; ish++) {
-	command << "'" << Sources[ish]->hid() << "'";
-	if (ish < nin-1) command << ",";
-      }
-      command << ")";
-    }
+    command << ")";
     command << ",THRESHOLDS(";
     if (np > 0) {
       for (int ipp=0; ipp<np ;ipp++) {
-	command << Parameters->at(ipp);
-	if (ipp < np-1) command << ",";   
+        command << Parameters->at(ipp);
+        if (ipp < np-1) command << ",";   
       }
     }
     command << ")";
     command <<",:name); END;";
     
-
+    
     m_StmtMethod = "OnlineHistDB::declareAnalysisHistogram";
     OCIStmt *stmt=NULL;
     if ( OCI_SUCCESS == prepareOCIStatement(stmt, command.str().c_str()) ) {
@@ -214,23 +213,33 @@ OnlineHistogram* OnlineHistDB::declareAnalysisHistogram(std::string Algorithm,
 
 
 bool OnlineHistDB::declareCheckAlgorithm(std::string Name, 
-					 int Npars, 
-					 std::vector<std::string> *pars,
-					 std::string doc) {
+                                         int NoutPars, 
+                                         std::vector<std::string> *outPars,
+                                         int NinPars, 
+                                         std::vector<std::string> *inPars,
+                                         std::string doc) {
   bool out=true;
-  if(Npars>0) {
-    if (!pars) { out=false; }
+  if(NoutPars>0) {
+    if (!outPars) { out=false; }
     else {
-      if ((int) pars->size() != Npars)
-	out=false;
+      if ((int) outPars->size() != NoutPars)
+        out=false;
+    }
+  }
+  if(NinPars>0) {
+    if (!inPars) { out=false; }
+    else {
+      if ((int) inPars->size() != NinPars)
+        out=false;
     }
   }
   if (out) {
     out=false;
     std::stringstream statement;
-    statement << "BEGIN ONLINEHISTDB.DECLARECHECKALGORITHM(:x1,:par";
+    statement << "BEGIN ONLINEHISTDB.DECLARECHECKALGORITHM(Name => :x1,pars => :par";
     if (doc != "NONE")
-      statement << ",:d";
+      statement << ",doc => :d";
+    statement << ",nin => :nin";
     statement << "); END;";
     
     m_StmtMethod = "OnlineHistDB::declareCheckAlgorithm";
@@ -242,11 +251,19 @@ bool OnlineHistDB::declareCheckAlgorithm(std::string Name,
       checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
 			       OCIparameters, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
 			       (dvoid **) &parameters));
-      if (Npars>0)
-	stringVectorToVarray(*pars, parameters);
+
+      std::vector<std::string> allPars;
+      if (NoutPars>0)
+        allPars.insert(allPars.end(), outPars->begin(), outPars->end());
+      if (NinPars>0)
+        allPars.insert(allPars.end(), inPars->begin(), inPars->end());
+
+      stringVectorToVarray(allPars, parameters);
       myOCIBindObject(stmt, ":par",(void **) &parameters , OCIparameters);
       if (doc != "NONE") 
-	myOCIBindString(stmt, ":d", doc);
+        myOCIBindString(stmt, ":d", doc);
+      myOCIBindInt(stmt, ":nin", NinPars);
+
       out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
       checkerr(OCIObjectFree ( m_envhp, m_errhp, parameters, OCI_OBJECTFREE_FORCE) );
       releaseOCIStatement(stmt);
@@ -255,23 +272,26 @@ bool OnlineHistDB::declareCheckAlgorithm(std::string Name,
   return out;
 }
 bool OnlineHistDB::declareCreatorAlgorithm(std::string Name, 
-					   int Ninput, 
-					   OnlineHistDBEnv::HistType OutputType,
-					   int Npars, 
-					   std::vector<std::string> *pars, 
-					   std::string doc) {
+                                           int Ninput, 
+                                           bool SetAsInput,
+                                           OnlineHistDBEnv::HistType OutputType,
+                                           int Npars, 
+                                           std::vector<std::string> *pars, 
+                                           std::string doc) {
   bool out=false;
   std::stringstream statement;
-  statement << "BEGIN ONLINEHISTDB.DECLARECREATORALGORITHM(:x1,:x2,PARAMETERS(";
+  statement << "BEGIN ONLINEHISTDB.DECLARECREATORALGORITHM(Name =>:x1,Ninp=>:x2,pars=>PARAMETERS(";
   int ipar=0;
+  int setflag = (int)SetAsInput;
+  
   while (ipar++<Npars) {
     statement << ":p" << ipar;
     if(ipar<Npars) statement << ",";
   } 
-  statement << "),:type";
+  statement << "),thetype=>:type";
   if (doc != "NONE")
-    statement << ",:d";
-  statement << "); END;";
+    statement << ",doc=>:d";
+  statement << ",thegetset=>:setflag); END;";
 
   m_StmtMethod = "OnlineHistDB::declareCreatorAlgorithm";
   OCIStmt *stmt=NULL;
@@ -286,6 +306,7 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
     }
     std::string myType( HistTypeName[(int)OutputType] );
     myOCIBindString(stmt,":type",myType);
+    myOCIBindInt   (stmt,":setflag",setflag);    
     if (doc != "NONE") {
       myOCIBindString(stmt, ":d", doc);
     }
@@ -403,7 +424,7 @@ int OnlineHistDB::getHistogramsByPage(std::string Page,
       text Name[Nfetch][VSIZE_NAME];
       text HStype[Nfetch][VSIZE_TYPE];
       for (int k=0; k<Nfetch; k++) {
-	Name[k][0]= HStype[k][0]= '\0';
+        Name[k][0]= HStype[k][0]= '\0';
       }
       int instance[Nfetch];
       myOCIDefineString(stmt, 1, Name[0]  , VSIZE_NAME);
@@ -411,17 +432,17 @@ int OnlineHistDB::getHistogramsByPage(std::string Page,
       myOCIDefineInt   (stmt, 3, instance[0]);
       int xf = Nfetch;
       while ( xf == Nfetch) {
-	xf = myOCIFetch(stmt, Nfetch);
-	if(list) list->reserve(list->size()+xf);
-	if(ids) ids->reserve(ids->size()+xf);
-	if(types) types->reserve(types->size()+xf);
-	for(int j=0; j<xf ; j++) {
-	  if(list) list->push_back(getHistogram(std::string((const char*) Name[j]), 
-						Page, instance[j]));
-	  if(ids) ids->push_back(std::string((const char*) Name[j]));
-	  if(types) types->push_back(std::string((const char*) HStype[j]));
-	  nout++;     
-	}      
+        xf = myOCIFetch(stmt, Nfetch);
+        if(list) list->reserve(list->size()+xf);
+        if(ids) ids->reserve(ids->size()+xf);
+        if(types) types->reserve(types->size()+xf);
+        for(int j=0; j<xf ; j++) {
+          if(list) list->push_back(getHistogram(std::string((const char*) Name[j]), 
+                                                Page, instance[j]));
+          if(ids) ids->push_back(std::string((const char*) Name[j]));
+          if(types) types->push_back(std::string((const char*) HStype[j]));
+          nout++;     
+        }      
       }
       myOCIFetch(stmt, 0);
     }
@@ -507,16 +528,16 @@ int OnlineHistDB::genericStringQuery(std::string command, std::vector<string>& l
     if (OCI_SUCCESS == myOCISelectExecute(stmt) ) {
       text Name[Nfetch][VSIZE_NAME];
       for (int k=0; k<Nfetch; k++)
-	Name[k][0]='\0';
+        Name[k][0]='\0';
       myOCIDefineString(stmt, 1, Name[0]  ,VSIZE_NAME);
       int xf = Nfetch;
       while ( xf == Nfetch) {
-	xf = myOCIFetch(stmt, Nfetch);
-	list.reserve(list.size()+xf);
-	for(int j=0; j<xf ; j++) {
-	  list.push_back(std::string((const char*) Name[j] ) );
-	  nout++;     
-	}      
+        xf = myOCIFetch(stmt, Nfetch);
+        list.reserve(list.size()+xf);
+        for(int j=0; j<xf ; j++) {
+          list.push_back(std::string((const char*) Name[j] ) );
+          nout++;     
+        }      
       }
       myOCIFetch(stmt, 0);
     }
