@@ -250,7 +250,21 @@ int main(int argc, char* argv[])
   string user(puser);
   string passw(ppassw);
   db = new CONFDB((char*)dbase.c_str(),(char*)user.c_str(),(char*)passw.c_str());
-  db->PyDBConnexion();
+  int success=0;
+  while (success==0)
+  {
+    try
+    {
+      db->PyDBConnexion();
+      success=1;
+    }
+    catch(...)
+    {
+      printtime();
+      printf("Cannot connect to database. retrying...\n");
+      sleep(10);
+    }
+  }
   HuginRPC *rpc;
   rpc = new HuginRPC(db,"ConfDBHuginTells","C","C");
   DimServer *srvr  = new DimServer();
