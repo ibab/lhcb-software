@@ -1,4 +1,7 @@
-//-- GAUDI data cards generated on 8/14/07 1:58 PM
+// $Id: Bs2Jpsiphi_mm.opts,v 1.4 2008-03-12 17:14:49 ibelyaev Exp $ 
+// ============================================================================
+
+//-- GAUDI data cards generated on 3/12/08 11:52 AM
 //-- For Event Type = 13144002 / Data type = DST 1
 //--     Configuration = DC06 - phys-v2-lumi2
 //--     DST 1 datasets output 
@@ -213,4 +216,11 @@ EventSelector.Input   = {
 "DATAFILE='LFN:/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000177_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 "DATAFILE='LFN:/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000178_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
 };
+
+	
+
+
+// ============================================================================
+// The END 
+// ============================================================================
 

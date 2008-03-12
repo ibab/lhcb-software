@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Hybrid.opts,v 1.6 2008-02-19 17:24:40 ibelyaev Exp $
+// $Id: LoKi_Hybrid.opts,v 1.7 2008-03-12 17:14:49 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Hybrid
@@ -74,6 +74,11 @@ Hybrid.THIRD.Code  = " 'K+'  == ABSID " ;
 Hybrid.FIRST.Code  = "ADMASS('B0')<500" ;
 Hybrid.SECOND.Code = "ALL" ;
 //Hybrid.THIRD.Code  = "(VFASPF(VCHI2)<30)" ;
+Hybrid.THIRD.Code  = "M12-MASS(1)<150" ;
+Hybrid.THIRD.Code  = "M12-MAXTREE('D0'==ABSID,M)<150" ;
+Hybrid.THIRD.Code  = "M-MAXTREE('D0'==ABSID,M)<150" ;
+Hybrid.THIRD.Code  = "monitor(monitor(MIPCHI2DV(''))>25)" ;
+Hybrid.THIRD.Code  = "monitor(MIPCHI2DV(''))>25" ;
 Hybrid.THIRD.Code  = "MIPCHI2DV('')>25" ;
 
 
@@ -81,6 +86,14 @@ ApplicationMgr.EvtMax   =  100 ;
 EventSelector.PrintFreq =   10 ;
 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
+
+ToolSvc.HybridFactory.PropertiesPrint = true ;
+
+ToolSvc.HybridFactory.Modules += { 
+  "LoKiPhys.decorators" 
+  ,"LoKiArrayFunctors.decorators" 
+  ,"LoKiCore.functions" 
+} ;
 
 // ============================================================================
 // The END 

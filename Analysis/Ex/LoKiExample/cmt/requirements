@@ -1,9 +1,7 @@
-# $Id: requirements,v 1.36 2008-02-19 17:24:40 ibelyaev Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.36 $
+# $Id: requirements,v 1.37 2008-03-12 17:14:49 ibelyaev Exp $ 
 # =============================================================================
 package         LoKiExample
-version         v7r1
+version         v7r2
 
 # ============= structure =====================================================
 branches        cmt doc src options 
@@ -13,10 +11,13 @@ set LOKIEXAMPLEDOC    $(LOKIEXAMPLEROOT)/doc
 set LOKIEXAMPLEOPTS   $(LOKIEXAMPLEROOT)/options
 
 # ============= dependencies  =================================================
-use             Python   v* LCG_Interfaces -no_auto_imports 
-use             LoKi     v* Phys
-use             HbookCnv v* 
-  
+use             Python      v* LCG_Interfaces -no_auto_imports 
+use             LoKi        v* Phys
+use             HbookCnv    v* 
+use             LoKiFitters v* Phys 
+use             LHCbMath    v* Kernel  
+
+
 # ============= constituents ==================================================
 library         LoKiExample  *.cpp 
 

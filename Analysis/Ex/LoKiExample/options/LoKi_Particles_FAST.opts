@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Particles.opts,v 1.6 2008-03-12 17:14:49 ibelyaev Exp $
+// $Id: LoKi_Particles_FAST.opts,v 1.1 2008-03-12 17:14:49 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Phi
@@ -24,40 +24,19 @@
 // ============================================================================
 // Include files 
 // ============================================================================
-// Phys/DaVinci & Phys/CommonParticles
+// Ex/LoKiExample
 // ============================================================================
-#pragma print OFF 
-#include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
-#include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
-#include "$COMMONPARTICLESROOT/options/StandardPions.opts"
-#pragma print ON
-// ============================================================================
-// Needed Services 
-// ============================================================================
-ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
-// ============================================================================
-//ApplicationMgr.ExtSvc += { "StagerSvc" } ;
-//StagerSvc.BlockSize    = 20 ;
-//StagerSvc.InitialStage = 5 ;
+#include "$LOKIEXAMPLEOPTS/LoKi_Particles.opts"
 // ============================================================================
 // Input Data
 // ============================================================================
 #pragma print OFF 
-#include "$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm.opts"  
+#include "$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm_MCSELECTED.opts"  
 #pragma print ON
-FileCatalog.Catalogs = {
-  "xmlcatalog_file:NewCatalog.xml" ,
-  "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm_CERN.xml"  
-} ;
 // ============================================================================
 
 
-ApplicationMgr.TopAlg += { "LoKi_Particles/Particles" } ;
-Particles.PhysDesktop.InputLocations =  { 
-  "Phys/StdTightMuons" ,  
-  "Phys/StdTightKaons" 
-} ;
+ApplicationMgr.TopAlg = { "LoKi_Particles/Particles" } ;
 
 ApplicationMgr.EvtMax   = 100 ;
 EventSelector.PrintFreq =  10 ;

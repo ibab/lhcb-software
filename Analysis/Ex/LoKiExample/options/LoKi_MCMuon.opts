@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_MCMuon.opts,v 1.5 2008-02-19 17:24:40 ibelyaev Exp $
+// $Id: LoKi_MCMuon.opts,v 1.6 2008-03-12 17:14:49 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_MCMuon
@@ -41,25 +41,23 @@ ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
 // ============================================================================
 // Histograms & NTuples 
 // ============================================================================
-ApplicationMgr.HistogramPersistency = "HBOOK" ;
-HistogramPersistencySvc.OutputFile = "mcmuonshistos.hbook" ;
-NTupleSvc.Output += {"MCMU DATAFILE='mcmuons.hbook' TYP='HBOOK' OPT='NEW'"} ;
+HistogramPersistencySvc.OutputFile = "MCMuon_histos.root" ;
+NTupleSvc.Output += {"MCMU DATAFILE='MCMuon.root' TYP='ROOT' OPT='NEW'"} ;
 HbookHistSvc.PrintHistos = true ;
 // ============================================================================
 // Input Data
 // ============================================================================
 #pragma print OFF 
 #include "$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm.opts"  
-#pragma print ON
 FileCatalog.Catalogs = {
   "xmlcatalog_file:NewCatalog.xml" ,
   "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm_CERN.xml"  
 } ;
+#pragma print ON
 // ============================================================================
 
-
-ApplicationMgr.TopAlg            += { "LoKi_MCMuon/MCMuon" } ;
-MCMuon.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
+ApplicationMgr.TopAlg            += { "LoKi_MCMuon/MCMuon"  } ;
+MCMuon.PhysDesktop.InputLocations = { "Phys/StdTightMuons"  } ;
 MCMuon.PP2MCs            = { "Relations/Rec/ProtoP/Charged" } ;
 MCMuon.NTupleLUN = "MCMU" ;
 

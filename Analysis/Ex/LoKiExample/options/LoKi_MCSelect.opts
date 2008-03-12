@@ -1,9 +1,9 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Particles.opts,v 1.6 2008-03-12 17:14:49 ibelyaev Exp $
+// $Id: LoKi_MCSelect.opts,v 1.1 2008-03-12 17:14:49 ibelyaev Exp $
 // ============================================================================
 /** @file
- *  Configuration file to run LoKi-based algorithm LoKi_Phi
+ *  Configuration file to run LoKi-based algorithm LoKi_MCSelect
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -17,7 +17,6 @@
  *  with the campain of Dr.O.Callot et al.: 
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
- *  @see LoKi_Phi.cpp
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date  2007-03-22
  */
@@ -28,18 +27,15 @@
 // ============================================================================
 #pragma print OFF 
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
 #include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
-#include "$COMMONPARTICLESROOT/options/StandardPions.opts"
+#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
 #pragma print ON
 // ============================================================================
 // Needed Services 
 // ============================================================================
 ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
 // ============================================================================
-//ApplicationMgr.ExtSvc += { "StagerSvc" } ;
-//StagerSvc.BlockSize    = 20 ;
-//StagerSvc.InitialStage = 5 ;
+
 // ============================================================================
 // Input Data
 // ============================================================================
@@ -53,16 +49,72 @@ FileCatalog.Catalogs = {
 // ============================================================================
 
 
-ApplicationMgr.TopAlg += { "LoKi_Particles/Particles" } ;
-Particles.PhysDesktop.InputLocations =  { 
-  "Phys/StdTightMuons" ,  
+DaVinciMainSeq.Members += { "LoKi_MCSelect/Select" } ;
+Select.PhysDesktop.InputLocations =  { 
+  "Phys/StdTightMuons" , 
   "Phys/StdTightKaons" 
 } ;
+Select.PP2MCs = { "Relations/Rec/ProtoP/Charged" } ;
 
-ApplicationMgr.EvtMax   = 100 ;
-EventSelector.PrintFreq =  10 ;
+
+ApplicationMgr.OutStream +=  { "DstWriter"} ;
+#include "$STDOPTS/rDstContent.opts"
+#include "$STDOPTS/MCDstContent.opts"
+DstWriter.Output = "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_3.dst' TYP='POOL_ROOTTREE' OPT='RECREATE'";
+//DstWriter.Output = "DATAFILE='PFN:test.dst' TYP='POOL_ROOTTREE' OPT='RECREATE'";
+DstWriter.RequireAlgs = { "Select" } ;
+
+// Additional objects not on rDST
+DstWriter.ItemList +=  {
+  "/Event/DAQ/RawEvent#1"
+  , "/Event/Rec/Rich/RichOfflineSummaryTracks#1"
+};
+
+// If DST comes from stripping ETC, add also selection results
+DstWriter.OptItemList +=  {
+  "/Event/Phys/Selections#1" 
+  , "/Event/Rec/Track/Muon#1"
+};
+
+ 
+DstWriter.ItemList += { 
+  "/Event/Rec/Muon#1"
+  , "/Event/Rec/Muon/MuonPID#1"
+  , "/Event/Rec/Rich#1"
+  , "/Event/Rec/Rich/PIDs#1"
+};
+// =========================================================================
+DstWriter.ItemList += {
+  //
+  "/Event/Phys#1"
+  //
+  , "/Event/Phys/StdTightMuons#1"
+  , "/Event/Phys/StdTightMuons/Particles#1"
+  , "/Event/Phys/StdTightMuons/Vertices#1"
+  , "/Event/Phys/StdTightMuons/Particle2VertexRelations#1" 
+  //
+  , "/Event/Phys/StdTightKaons#1"
+  , "/Event/Phys/StdTightKaons/Particles#1"
+  , "/Event/Phys/StdTightKaons/Vertices#1"
+  , "/Event/Phys/StdTightKaons/Particle2VertexRelations#1" 
+  //
+  , "/Event/Rec#1"
+  , "/Event/Rec/ProtoP#1"
+  , "/Event/Rec/ProtoP/Charged#1"
+  // 
+  , "/Event/Relations#1"
+  , "/Event/Relations/Rec#1"
+  , "/Event/Relations/Rec/ProtoP#1"
+  , "/Event/Relations/Rec/ProtoP/Charged#1"
+};
+
+ApplicationMgr.EvtMax   =  25000 ;
+EventSelector.PrintFreq =    100 ;
+EventSelector.FirstEvent = 75000 ;
+
+// ApplicationMgr.TopAlg = { "LoKi_MCSelect/Select" } ;
+
 
 // ============================================================================
 // The END 
 // ============================================================================
-

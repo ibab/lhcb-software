@@ -1,4 +1,4 @@
-// $Id: LoKi_Bs2PsiPhi.cpp,v 1.5 2007-08-15 11:03:14 ibelyaev Exp $
+// $Id: LoKi_Bs2PsiPhi.cpp,v 1.6 2008-03-12 17:14:49 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -103,7 +103,7 @@ LOKI_MCALGORITHM(LoKi_Bs2PsiPhi)
     if ( mcMu ( mu1 ) && mcMu ( mu2 ) && mcPsi ( mm ) ) 
     { 
       plot ( mass , " mu mu  mass (MC) ", 2.5 , 3.5 ) ; 
-      mm->save("psi");                                         // SAVE "psi"
+      mm->save("psi").ignore() ;                          // SAVE "psi"
     }
   } // end of loop over di,uons
   
@@ -130,7 +130,7 @@ LOKI_MCALGORITHM(LoKi_Bs2PsiPhi)
     if( mcK ( k1 ) && mcK ( k2 ) && mcPhi ( phi ) ) 
     {
       plot ( mass , "K+K- mass (MC)" , 1. , 1.1 ) ;
-      phi->save("phi") ;                                          // SAVE "phi"
+      phi->save("phi").ignore() ;                                 // SAVE "phi"
     }
   } // end of loop over dikaons
   
@@ -145,7 +145,7 @@ LOKI_MCALGORITHM(LoKi_Bs2PsiPhi)
     const double m12 = b->mass(1,2) ;
     if ( 4 * GeV > m12 || 6 * GeV < m12 ) { continue ; }        // CONTINUE 
     plot ( m12 / GeV  , " psi phi mass " , 4 , 6 ) ;
-      // chi2 of vertex fit 
+    // chi2 of vertex fit 
     const double vchi2 = VCHI2 ( b ) ;
     if ( 0 > vchi2     || 49 < vchi2    ) { continue ; }        // CONTINUE 
     // presice mass evaluation
@@ -159,7 +159,7 @@ LOKI_MCALGORITHM(LoKi_Bs2PsiPhi)
     const bool psiMC = mcPsi ( psi ) ;
     const bool phiMC = mcPhi ( phi ) ;
     const bool bMC   = mcBs  ( b   ) ;
-
+    
     if ( psiMC ) 
     { plot ( mass , " psi(MC) phi     mass        " , 4 , 6 ) ; }
     if ( phiMC ) 
@@ -179,7 +179,7 @@ LOKI_MCALGORITHM(LoKi_Bs2PsiPhi)
     Fun dira = DIRA( *ipv ) ;
     plot ( dira( b ) , "Cosine Direction Angle" , 0.995 , 1.0 ) ;
     
-    b->save("Bs") ;                                            // SAVE "Bs"
+    b->save("Bs").ignore() ;                                  // SAVE "Bs"
     
   } // end of loop over psis and phis 
   

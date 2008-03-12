@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Bs2PsiPhi.opts,v 1.5 2008-02-19 17:24:40 ibelyaev Exp $
+// $Id: LoKi_Bs2PsiPhi.opts,v 1.6 2008-03-12 17:14:49 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Bs2PsiPhi
@@ -42,26 +42,25 @@ ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
 // ============================================================================
 // Histograms & NTuples 
 // ============================================================================
-ApplicationMgr.HistogramPersistency = "HBOOK" ;
-HistogramPersistencySvc.OutputFile = "bs2psiphihistos.hbook" ;
+// ApplicationMgr.HistogramPersistency = "HBOOK" ;
+// HistogramPersistencySvc.OutputFile = "bs2psiphihistos.hbook" ;
+HistogramPersistencySvc.OutputFile = "bs2psiphihistos.root" ;
 HbookHistSvc.PrintHistos = true ;
 // ============================================================================
 // Input Data
 // ============================================================================
 #pragma print OFF 
 #include "$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm.opts"  
-#pragma print ON
 FileCatalog.Catalogs = {
   "xmlcatalog_file:NewCatalog.xml" ,
   "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm_CERN.xml"  
 } ;
+#pragma print ON
 // ============================================================================
-
-
 ApplicationMgr.TopAlg += { "LoKi_Bs2PsiPhi/PsiPhi" } ;
 PsiPhi.PhysDesktop.InputLocations =  { 
-  "Phys/StdLooseMuons" , 
-  "Phys/StdLooseKaons" 
+  "Phys/StdTightMuons" , 
+  "Phys/StdTightKaons" 
 } ;
 PsiPhi.PP2MCs = { "Relations/Rec/ProtoP/Charged" } ;
 

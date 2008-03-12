@@ -1,0 +1,13 @@
+// $Id: Bs2Jpsiphi_mm_MCSELECTED.opts,v 1.1 2008-03-12 17:14:49 ibelyaev Exp $ 
+// ============================================================================
+// list of Bs->J/psi mumu signal events 
+// ============================================================================
+EventSelector.Input   = {
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi.dst'   TYP='POOL_ROOTTREE' OPT='READ'", 
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_3.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+// ============================================================================
+// The END 
+// ============================================================================

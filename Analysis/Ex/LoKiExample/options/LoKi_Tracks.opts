@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Tracks.opts,v 1.3 2008-02-19 17:24:40 ibelyaev Exp $
+// $Id: LoKi_Tracks.opts,v 1.4 2008-03-12 17:14:49 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Tracks
@@ -40,9 +40,7 @@ ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
 // ============================================================================
 // Histograms & NTuples 
 // ============================================================================
-ApplicationMgr.HistogramPersistency = "HBOOK" ;
-HistogramPersistencySvc.OutputFile = "phihistos.hbook" ;
-HbookHistSvc.PrintHistos = true ;
+HistogramPersistencySvc.OutputFile = "Tracks_histos.root" ;
 // ============================================================================
 // Input Data
 // ============================================================================
@@ -60,11 +58,9 @@ ApplicationMgr.TopAlg     = { "LoKi::SelectTracks/ALL" } ;
 ALL.TrackSelector         = "LoKi::Hybrid::TrackSelector/Selector" ;
 ALL.Selector.Code         = "TrALL" ;
 
-
 ApplicationMgr.TopAlg     += { "LoKi::SelectTracks/FASTandGOOD" } ;
 FASTandGOOD.TrackSelector  = "LoKi::Hybrid::TrackSelector/Selector" ;
 FASTandGOOD.Selector.Code  = "(TrP>5000)&(TrCHI2<100)" ;
-
 
 ApplicationMgr.TopAlg    += { "LoKi::SelectTracks/FASTandPOS" } ;
 FASTandPOS.TrackSelector = "LoKi::Hybrid::TrackSelector/Selector" ;
