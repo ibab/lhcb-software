@@ -3,8 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v32r4>2008-03-04 Brunel v32r4</A></H1><PRE>
+</PRE><H1><A NAME=v32r4>2008-03-12 Brunel v32r4</A></H1><PRE>
  - In SuppressWarnings.opts, timestamp is printed in UTC, keep EventLoopMgr msgs
+ - Add RealData-ETC.opts for processing from ETC referring to mdf file
 
 </PRE><H1><A NAME=v32r3p1>2008-02-11 Brunel v32r3p1</A></H1><PRE>
  - In requirements, use RichTool v2r17p1 (bug fix for this patch release)

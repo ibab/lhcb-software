@@ -3,7 +3,7 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v32r4>2008-03-04 Brunel v32r4</A></H1><PRE>
+</PRE><H1><A NAME=v32r4>2008-03-12 Brunel v32r4</A></H1><PRE>
 This version uses projects Gaudi v19r8, LHCb v23r4, Lbcom v6r15, Rec v5r4
  and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
 
@@ -17,6 +17,9 @@ framework.
     Determines on track by track and hypo by hypo basis the correct weighted
     average to use (RichRecTools v4r2)
   . In SuppressWarnings.opts, timestamp is printed in UTC, keep EventLoopMgr msgs
+
+- New options
+  . Add RealData-ETC.opts for processing from ETC referring to mdf file
 
 - Bug fixes
   . Fix to avoid asking for phi of cluster at an r smaller than the inner radius
