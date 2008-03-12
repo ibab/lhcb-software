@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.24 2008-02-18 18:43:14 janos Exp $
+// $Id: AlignAlgorithm.h,v 1.25 2008-03-12 15:02:13 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -42,9 +42,10 @@
 #include "IGetElementsToBeAligned.h"
 #include "AlignmentElement.h"
 
-namespace {
+namespace Al {
   class Equations;
 }
+
 
 /** @class AlignAlgorithm AlignAlgorithm.h
 *
@@ -115,7 +116,7 @@ private:
   ITrackProjectorSelector*          m_projSelector;                  ///< Pointer to projector selector tool
   std::string                       m_matrixSolverToolName;          ///< Name of linear algebra solver tool
   IAlignSolvTool*                   m_matrixSolverTool;              ///< Pointer to linear algebra solver tool
-  Equations*                        m_equations;                     ///< Equations to solve
+  Al::Equations*                    m_equations;                     ///< Equations to solve
   bool                              m_correlation ;                  ///< Do we take into account correlations between residuals?
   bool                              m_updateInFinalize ;             ///< Call update from finalize
   int                               m_canonicalConstraintStrategy ;  ///< Constrain global dofs

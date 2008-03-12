@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.32 2008-03-06 09:19:16 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.33 2008-03-12 15:02:13 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -32,6 +32,7 @@
 #include "AlignAlgorithm.h"
 #include "AlParameters.h"
 #include "ResidualCovarianceTool.h"
+#include "AlEquations.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlignAlgorithm
@@ -40,79 +41,6 @@
 //-----------------------------------------------------------------------------
 
 namespace {
-  
- class Equations {
- public:
-   Equations(size_t nElem)
-     : m_nElem(nElem),
-       m_v(nElem),
-       m_numHits(nElem, 0u), 
-       m_weight(nElem, 0.0), 
-       m_numTracks(0u), 
-       m_totalChiSquare(0.0), 
-       m_totalNumDofs(0u), 
-       m_numExternalHits(0u)
-   {}
-   void clear() ;
-   
-   size_t nElem() const { return m_nElem; }
-   
-   Gaudi::Vector6&       V(int i) { return m_v[i]; }
-   
-   const Gaudi::Vector6& V(int i) const { return m_v[i]; }
-   
-   Gaudi::Matrix6x6& M(int i, int j) { assert(i<=j); return m_m[std::make_pair(i,j)]; }
-   
-   //FIXME: return proxy that fixes i<j...
-   const Gaudi::Matrix6x6& M(int i, int j) const {
-     assert(i<=j);
-     return const_cast<Equations*>(this)->m_m[std::make_pair(i,j)];
-   }
-   
-   size_t numHits(int i) const { return m_numHits[i] ; }
-   
-   double weight(int i) { return m_weight[i] ; }
-  
-   void addTrackSummary( double chisq, size_t ndof, size_t nexternal) {
-     m_totalChiSquare +=chisq;
-     m_totalNumDofs   +=ndof ;
-     m_numExternalHits+=nexternal ;
-     ++m_numTracks;
-   }
-   
-   void addHitSummary(int index, double sigma) {
-     ++m_numHits[index] ;
-     m_weight[index] += 1/(sigma*sigma) ;
-   }
-   
-   size_t numTracks() const { return m_numTracks ; }
-   double totalChiSquare() const { return m_totalChiSquare ; }
-   size_t totalNumDofs() const { return m_totalNumDofs ; }
-   size_t numExternalHits() const { return m_numExternalHits ; }
-
-  private:
-   size_t                                         m_nElem ;
-   std::vector<Gaudi::Vector6>                    m_v;
-   std::map<std::pair<int,int>, Gaudi::Matrix6x6> m_m;
-   std::vector<size_t>                            m_numHits ;
-   std::vector<double>                            m_weight ;
-   size_t                                         m_numTracks ;
-   double                                         m_totalChiSquare ;
-   size_t                                         m_totalNumDofs ;
-   size_t                                         m_numExternalHits ;
- };
- 
- void Equations::clear() 
- {
-   m_v.clear(); m_v.resize(m_nElem); 
-   m_m.clear(); 
-   m_numHits.clear(); m_numHits.resize(m_nElem, 0) ;
-   m_weight.clear() ; m_weight.resize(m_nElem, 0)  ;
-   m_totalChiSquare  = 0.0 ;
-   m_numTracks       = 0u ;
-   m_totalNumDofs    = 0u ;
-   m_numExternalHits = 0u ;
- }
 
  Gaudi::Vector6 convert(const Gaudi::Matrix1x6& m) {
    Gaudi::Vector6 v;
@@ -230,7 +158,7 @@ StatusCode AlignAlgorithm::initialize() {
     }
   }
   
-  m_equations = new Equations(m_rangeElements.size());
+  m_equations = new Al::Equations(m_rangeElements.size());
   m_equations->clear() ;
 
   /// Get projector selector tool
