@@ -3,11 +3,13 @@
 int RecoFarm_createTree(string stream, string slice,int numSet,int numTasks,bool refresh=0)  {
   dyn_string sets;
   string name;
+  DebugN(stream+" "+slice+" "+numSet);
   for(int i=0; i<numSet; ++i)  {
-    sprintf(name,"TaskSet%02d",i);
+    sprintf(name,"%s%02d",slice,i);
     dynAppend(sets,name);
   }
-  ctrlUtils_createFsmTaskTree(stream,slice,sets,numTasks,refresh);
+  DebugN(sets);
+  // ctrlUtils_createFsmTaskTree(stream,slice,sets,numTasks,refresh);
 }
 //=============================================================================
 int RecoFarm_deleteTree(string stream, string slice_name, int refresh=1)  {
@@ -135,28 +137,28 @@ int RecoFarm_uninstallStreamTypes()  {
 // 
 //=============================================================================
 void  RecoFarm_setupWidgets()  {
-  m_ioFrame.toolTipText             = "Section to fill I/O parameters for data transfer to/from storage.";
-  m_storageReaderText.toolTipText   = "Enter here the storage reader task type.";
-  m_storageReader.toolTipText       = m_storageReaderText.toolTipText;
-  m_storageWriterText.toolTipText   = "Enter here the storage writer task type.";
-  m_storageWriter.toolTipText       = m_storageWriterText.toolTipText;
-  m_storageSenderText.toolTipText   = "Enter here the storage sender task type.";
-  m_storageSender.toolTipText       = m_storageSenderText.toolTipText;
-  m_storageReceiverText.toolTipText = "Enter here the storage receiver task type.";
-  m_storageReceiver.toolTipText     = m_storageReceiverText.toolTipText;
-  m_farmSenderText.toolTipText      = "Enter here the farm sender task type.";
-  m_farmSender.toolTipText          = m_farmSenderText.toolTipText;
-  m_farmReceiverText.toolTipText    = "Enter here the farm receiver task type.";
-  m_farmReceiver.toolTipText        = m_farmReceiverText.toolTipText;
+  m_ioFrame.toolTipText                = "Section to fill I/O parameters for data transfer to/from storage.";
+  m_storageReaderText.toolTipText      = "Enter here the storage reader task type.";
+  m_storageReader.toolTipText          = m_storageReaderText.toolTipText;
+  m_storageWriterText.toolTipText      = "Enter here the storage writer task type.";
+  m_storageWriter.toolTipText          = m_storageWriterText.toolTipText;
+  m_storageSenderText.toolTipText      = "Enter here the storage sender task type.";
+  m_storageSender.toolTipText          = m_storageSenderText.toolTipText;
+  m_storageReceiverText.toolTipText    = "Enter here the storage receiver task type.";
+  m_storageReceiver.toolTipText        = m_storageReceiverText.toolTipText;
+  m_farmSenderText.toolTipText         = "Enter here the farm sender task type.";
+  m_farmSender.toolTipText             = m_farmSenderText.toolTipText;
+  m_farmReceiverText.toolTipText       = "Enter here the farm receiver task type.";
+  m_farmReceiver.toolTipText           = m_farmReceiverText.toolTipText;
   m_farmInfrastructureText.toolTipText = "Enter here the infrastructure task types to execute on each node.";
-  m_farmInfrastructure.toolTipText  = m_farmInfrastructureText.toolTipText;
-  m_farmTasksText.toolTipText       = "Enter here the task types to execute on each farm node.";
-  m_farmTasks.toolTipText           = m_farmTasksText.toolTipText;
-  m_activityName.toolTipText        = "Currently selected activity";
-  m_Reset.toolTipText               = "Discard changes and reset to original values";
-  m_Cancel.toolTipText              = "Discard changes and close panel";
-  m_Save.toolTipText                = "Save changes to datapoints but keep panel open.";
-  m_Ok.toolTipText                  = "Save changes to datapoints and close panel.";
+  m_farmInfrastructure.toolTipText     = m_farmInfrastructureText.toolTipText;
+  m_farmTasksText.toolTipText          = "Enter here the task types to execute on each farm node.";
+  m_farmTasks.toolTipText              = m_farmTasksText.toolTipText;
+  m_activityName.toolTipText           = "Currently selected activity";
+  m_Reset.toolTipText                  = "Discard changes and reset to original values";
+  m_Cancel.toolTipText                 = "Discard changes and close panel";
+  m_Save.toolTipText                   = "Save changes to datapoints but keep panel open.";
+  m_Ok.toolTipText                     = "Save changes to datapoints and close panel.";
 }
 
 int RecoFarm_initEditor(string activity)  {
@@ -207,5 +209,3 @@ int RecoFarm_editorOk(string activity)  {
   RecoFarm_editorSave(activity);
   return 1;
 }
-
-
