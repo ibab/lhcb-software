@@ -1,4 +1,4 @@
-// $Id: Reporter.cpp,v 1.9 2007-08-14 12:35:33 ibelyaev Exp $
+// $Id: Reporter.cpp,v 1.10 2008-03-12 17:29:36 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -104,7 +104,7 @@ namespace LoKi
       if ( 0 == rep.reporter() ) { rep.setReporter ( this ).ignore() ; }
       // locate LoKi service 
       return StatusCode::SUCCESS ;
-    } ;
+    } 
     /** standard finalization  
      *  @see AlgTool
      *  @return status code 
@@ -114,10 +114,11 @@ namespace LoKi
       // check for global reporter 
       LoKi::ErrorReport& rep = LoKi::ErrorReport::instance();
       // owner for reporter?
-      if ( rep.reporter() == this ) { rep.report(); rep.setReporter( 0 ); }      
+      if ( rep.reporter() == this ) 
+      { rep.report().ignore() ; rep.setReporter( 0 ).ignore() ; }      
       // finalize the base class 
       return GaudiTool::finalize();
-    } ;
+    } 
   protected:
     /** Standard constructor for AlgTools
      *  @see AlgTool 
@@ -134,7 +135,7 @@ namespace LoKi
       // declare the interface 
       declareInterface<LoKi::IReporter> ( this ) ;
       declareInterface<IErrorTool>      ( this ) ;
-    } ;
+    } 
     /// virtual destructor 
     virtual ~Reporter(){} ;
   private:

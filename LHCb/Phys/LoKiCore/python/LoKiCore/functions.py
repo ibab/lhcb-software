@@ -31,9 +31,21 @@ def monitor ( o  , *m ) :
     >>>  counter = ...
     >>>  cut = monitor ( cut , counter )
     
+    The concept belongs to Jose Angel Hernado Morata, Hugo Ruiz Peres,
+                Gerhard 'The Great' Raven and Patrick Koppenburg
+                
     """
     return o.__monitor__ ( *m )
+# =============================================================================
+def debug  ( c ) :
+    """
+    Create 'debug'- predicate/function:
 
+    >>> obj = ...
+    >>> deb = debug ( obj )
+
+    """
+    return monitor ( c ) 
 # =============================================================================
 def switch ( c  , v1 , v2  ) :
     """
@@ -414,7 +426,7 @@ def select ( s ) :
     >>> cut = ...
     >>> selector = select ( cut )
         
-    The concept belongs to Gerghard 'The Great' Raven
+    The concept belongs to Gerhard 'The Great' Raven
             
     """
     return s.__select__() 
@@ -428,7 +440,7 @@ def process ( s ) :
     >>> functor = ...
     >>> processor = process ( functor )
         
-    The concept belongs to Gerghard 'The Great' Raven
+    The concept belongs to Gerhard 'The Great' Raven
             
     """
     return s.__process__() 
@@ -440,7 +452,7 @@ def tee ( s ) :
     >>> functor  = ...
     >>> functorT = tee ( functor )
         
-    The concept belongs to Gerghard 'The Great' Raven
+    The concept belongs to Gerhard 'The Great' Raven
             
     """
     return s.__tee__ () 
@@ -454,7 +466,7 @@ def yields ( s ) :
     >>> functor = ...
     >>> mapper = yields ( functor )
     
-    The concept belongs to Gerghard 'The Great' Raven
+    The concept belongs to Gerhard 'The Great' Raven
             
     """
     return s.__yields__() 

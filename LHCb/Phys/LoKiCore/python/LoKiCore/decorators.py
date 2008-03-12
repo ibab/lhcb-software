@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+!/usr/bin/env python
 # =============================================================================
 ## @file decorators.py LoKiCore/decorators.py
 #  The set of basic decorator for objects from LoKiCore library
@@ -878,7 +878,7 @@ def decoratePredicates ( cuts , calls , opers ) :
             >>> cut = ...
             >>> selector = select( cut )
 
-            The concept belongs to Gerghard 'The Great' Raven
+            The concept belongs to Gerhard 'The Great' Raven
             
             Uses:\n
             """
@@ -890,7 +890,7 @@ def decoratePredicates ( cuts , calls , opers ) :
             >>> cut = ...
             >>> processor = process( cut )
 
-            The concept belongs to Gerghard 'The Great' Raven
+            The concept belongs to Gerhard 'The Great' Raven
             
             Uses:\n
             """
@@ -1042,7 +1042,7 @@ def decorateMaps ( funcs , opers ) :
                 >>> functor1 = ...
                 >>> functor2 = tee ( functor )
                 
-                The concept belongs to Gerghard 'The Great' Raven
+                The concept belongs to Gerhard 'The Great' Raven
                 
                 Uses:\n
                 """
