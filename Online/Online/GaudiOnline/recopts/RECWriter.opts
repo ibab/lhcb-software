@@ -1,4 +1,5 @@
 #include "$GAUDIONLINEROOT/options/DiskWR.opts"
+ApplicationMgr.TopAlg               += {"removeFileID"};
 ApplicationMgr.HistogramPersistency  = "NONE";
 MEPManager.Buffers                   = { "RECV" };
 MEPManager.PartitionBuffers          = false;
