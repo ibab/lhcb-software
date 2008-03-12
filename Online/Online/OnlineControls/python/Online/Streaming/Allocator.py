@@ -616,11 +616,15 @@ class Allocator(StreamingDescriptor):
     existing = self.getPartition(partition)
     if existing is not None:
       error('[Partition already allocated] Cannot allocate partition for:'+partition)
-      return None
+      msg = '[WAS_ALRDY_ALLOCATED] Ignore Error on allocate on request from Clara'
+      PVSS.error(msg,timestamp=1,type=PVSS.UNEXPECTEDSTATE)
+      return 'WAS_ALRDY_ALLOCATED' # None    # Do not return error. Allocator must stay READY
     info_obj = self.infoInterface.create(rundp_name,partition).load()
     if not info_obj.doStreaming():
       warning('Use flag is not set. No need to allocate resources for partition:'+partition)
-      return None
+      msg = '[NO_STREAMFLG_SET] Ignore Error on allocate on request from Clara'
+      PVSS.error(msg,timestamp=1,type=PVSS.UNEXPECTEDSTATE)
+      return 'NO_STREAMFLG_SET' # None    # Do not return error. Allocator must stay READY
     
     self.load()
     nLayer1Slots = info_obj.numLayer1Slots()
@@ -631,7 +635,9 @@ class Allocator(StreamingDescriptor):
       return part_info.name
     self.free(rundp_name,partition)
     error('Failed to allocate slots of type:'+self.name+' for partition:'+partition,timestamp=1)
-    return None
+    msg = '[FAIL_ALLOC_SLOTS] Ignore Error on allocate on request from Clara'
+    PVSS.error(msg,timestamp=1,type=PVSS.UNEXPECTEDSTATE)
+    return 'FAIL_ALLOC_SLOTS' # None    # Do not return error. Allocator must stay READY
 
   # ===========================================================================
   def configure(self,rundp_name,partition):

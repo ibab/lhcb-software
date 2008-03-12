@@ -1,4 +1,4 @@
-import socket
+import socket, time
 import Online.Utils
 import Online.PVSS as PVSS
 import Online.SetupParams as Params
@@ -27,14 +27,16 @@ class Options:
   def __init__(self,msg=''):
     "Object constructor"
     self.value = msg
+    self.object = 'OnlineEnv'
     if len(self.value)>0: self.value = self.value+'\n'
   # ===========================================================================
   def add(self,name,value=None,operator='='):
     "Add a new options item"
-    if value:
+    if value is not None:
       v = str(value)
       if isinstance(value,str): v = '"'+v+'"'
-      s = 'OnlineEnv.%-16s %s %s;\n'%(name,operator,v.replace("'",'"').replace('[','{').replace(']','}'))
+      v = v.replace("'",'"').replace('[','{').replace(']','}')      
+      s = '%s.%-16s %s %s;\n'%(self.object,name,operator,v)
       self.value = self.value + s
     elif len(name)>0:
       self.value = self.value + name + '\n'
@@ -167,6 +169,38 @@ class OptionsWriter(Control.AllocatorClient):
           timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
 
+
+  # ===========================================================================
+  def _makeRunInfo(self,partition):
+    activity = self.activityName()
+    run_type = self.run.runType()
+    opts = Options('//  Auto generated RunInfo options for partition:'+partition+\
+                   ' activity:'+run_type+'  '+time.ctime())
+    opts.object = 'OnlineRunInfo'
+    rt = run_type.lower()
+    opts.add('//\n// ---------------- RunInfo:  ')
+    opts.add('general.PartitionID',           self.run.partitionID())
+    opts.add('general.PartitionName',         partition)
+    opts.add('general.PartitionIDName',       '%04X'%self.run.partitionID())
+    opts.add('general.RunType',               run_type)
+    opts.add('general.TAE',                   self.run.TAE())
+    opts.add('HLTFarm.nSubFarms',             self.run.nSubFarm.data)
+    opts.add('Storage.dataDirectory',         self.run.storageDir.data)
+    opts.add('Storage.storeFlag',             self.run.storeFlag.data)
+    opts.add('Storage.recvInfrastructure',    [i for i in self.run.rcvInfra.data])
+    opts.add('Storage.streamInfrastructure',  [i for i in self.run.strInfra.data])
+    opts.add('Storage.streamTypes',           [i for i in self.run.streams.data])
+    opts.add('Storage.streamMultiplicity',    [i for i in self.run.strMult.data])
+    opts.add('MonFarm.monFlag',               self.run.monFlag.data)
+    opts.add('MonFarm.monTypes',              [i for i in self.run.monTypes.data])
+    opts.add('MonFarm.monStreams',            [i for i in self.run.monStreams.data])
+    opts.add('MonFarm.monMultiplicity',       [i for i in self.run.monMult.data])
+    opts.add('MonFarm.monInfrastructure',     [i for i in self.run.monInfra.data])
+    opts.add('MonFarm.relayInfrastructure',   [i for i in self.run.relayInfra.data])
+    opts.add('SubDetectors.tell1List',        [i for i in self.run.tell1Boards.data])
+    #print opts.value
+    return self.writeOptionsFile(self.run.name, self.run.name+'_RunInfo', opts.value)
+  
   # ===========================================================================
   def _configure(self, partition):
     activity = self.activityName()
@@ -175,9 +209,10 @@ class OptionsWriter(Control.AllocatorClient):
       run_type = self.run.runType()
       for task in tasks:
         opts = Options('//  Auto generated options for partition:'+partition+\
-               ' activity:'+run_type+' task:'+task.name+'\n' +\
+               ' activity:'+run_type+' task:'+task.name+'  '+time.ctime()+'\n' +\
                '#include "$PREAMBLE_OPTS"')
         if task.defaults.data:
+          rt = run_type.lower()
           opts.add('//\n// ---------------- General partition information:  ')
           opts.add('PartitionID',    self.run.partitionID())
           opts.add('PartitionName',  partition)
@@ -186,6 +221,8 @@ class OptionsWriter(Control.AllocatorClient):
           opts.add('HostType',       self.hostType)
           opts.add('HostTypes',     [self.hostType])
           opts.add('TaskType',       task.name)
+          oloc = self.run.storageDir.data+'/lhcb/data/'+time.strftime('%Y')+'/RAW/'+partition+'/'+rt
+          opts.add('OutputLocation', oloc)
         else: opts.add('// ---------------- NO partition information')
         addOpts = self.additionalOptions(activity,task)
         if addOpts:
@@ -263,7 +300,8 @@ class HLTOptionsWriter(OptionsWriter):
           name = '%s_%s_SF%02d_HLT'%(partition,node,i)
           farm = farms[i]
           farm_names.append(farm)
-          opts = '// Auto generated options for partition:'+partition+' activity:'+run_type+'\n//\n'+\
+          opts = '// Auto generated options for partition:'+partition+' activity:'+run_type+\
+                 '  '+time.ctime()+'\n//\n'+\
                  '// ---------------- Data sending information for sub-farm:'+farm+'\n'+\
                  'OnlineEnv.Target  = "'+node+'-d1::'+name+'";\n'+\
                  'OnlineEnv.Target0 = { "'+node+'-d1::'+name+'" };\n'+\
@@ -274,19 +312,23 @@ class HLTOptionsWriter(OptionsWriter):
             return None
           log('      --> Farm:'+farm+' sends to slot:'+slots[i]+', Task:'+name,timestamp=1)
           
-        opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type)
+        opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
         opts.add('//\n// ---------------- General partition information:  ')
         opts.add('PartitionID',    self.run.partitionID())
         opts.add('PartitionIDName','%04X'%self.run.partitionID())
         opts.add('PartitionName',  partition)
         opts.add('Activity',       run_type)
         opts.add('SubFarms',       farm_names)
+        opts.add('OutputLevel',    self.run.outputLevel())
+        if self.run.acceptRate() is None:
+          print 'Rate is None!!!!!'
+        opts.add('AcceptRate',     self.run.acceptRate())
         
         fname = partition+'_Info'
         if self.writeOptionsFile(partition, fname, opts.value) is None:
           return None
 
-        opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type)
+        opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
         opts.add('//\n// ---------------- Tell1 board information:')
         opts.add('OnlineEnv.Tell1Boards         = {')
         err = None
@@ -318,7 +360,7 @@ class HLTOptionsWriter(OptionsWriter):
           host  = odin
           if odin != "None":
             host = socket.gethostbyname(odin)
-          opts.append('Tell1Boards',[host,odin,''])
+          opts.append('Tell1Boards',[host,odin,'ODIN'])
 
           odin  = self.run.odinRequest.data
           host  = odin
@@ -336,6 +378,7 @@ class HLTOptionsWriter(OptionsWriter):
         fname = partition+'_Tell1Boards'
         if self.writeOptionsFile(partition, fname, opts.value) is None:
           return None
+        self._makeRunInfo(partition)
         return self.run
     return None
 
@@ -403,8 +446,18 @@ class StreamingOptionsWriter(OptionsWriter):
                 s = s + '"'+str(val[0])+'"'
             else:
               s = s + '"'+str(val)+'"'
-          if len(eval_item)>1: s = '%-26s = {%s%s};\n'%('OnlineEnv.Opt0',s,prefix)
-          else:         s = '%-26s = {%s};\n%-26s = %s;\n'%('OnlineEnv.Opt0s',s,'OnlineEnv.Opt0',s)
+          if len(eval_item)>1:
+            s = '%-26s = {%s%s};\n'%('OnlineEnv.Opt0',s,prefix)
+          else:
+            tmp = s
+            s = '%-26s = {%s};\n%-26s = %s;\n'%('OnlineEnv.Opt0s',tmp,'OnlineEnv.Opt0',tmp)
+            try:
+              # print 'Stream identifier:',tmp,tmp.rfind('_')+1
+              if tmp.rfind('_')>0:
+                s = s + '%-26s = %d;\n'%('OnlineEnv.StreamID',int(tmp[tmp.rfind('_')+1:-1]))
+            except Exception,X:
+              pass
+              #print str(X)
           if len(s0)>0:
             if len(eval_item)==1: s = s + '%-26s = %s;\n%-26s = {%s};\n'%('OnlineEnv.Opt1',s0,'OnlineEnv.Opt1s',s0)
             else:          s = s + '%-26s = {%s%s};\n'%('OnlineEnv.Opt1',s0,prefix)

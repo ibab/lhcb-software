@@ -75,6 +75,8 @@ def _isDetectorInReadout(partid, name):
   for n,id in _detectors.items():
     if ( (partid&id)==id and name==n):
       return (n,id,)
+    elif ( (partid&id) != 0 ):
+      return (name,id,)
   return None
   
 # =============================================================================
@@ -96,11 +98,27 @@ class General:
     """
     self.manager     = manager
     self.name        = name
+    self.devMgr      = self.manager.deviceMgr()
     self.reader      = self.manager.devReader()
     self.runTyp      = self.dp('general.runType')
     self.partID      = self.dp('general.activePartId')
     self.partition   = self.dp('general.partName')
+
+    self.outputLvl   = None
+    self.acceptFrac  = None
+    self.tae         = None
+    dpn = self.manager.name()+':'+self.name+'_RunInfo.general.outputLevel'
+    if self.devMgr.exists(dpn):
+      self.outputLvl = self.dp('general.outputLevel')
+    dpn = self.manager.name()+':'+self.name+'_RunInfo.general.acceptRate'
+    if self.devMgr.exists(dpn):
+      self.acceptFrac = self.dp('general.acceptRate')
+    dpn = self.manager.name()+':'+self.name+'_RunInfo.general.TAE'
+    if self.devMgr.exists(dpn):
+      self.tae = self.dp('general.TAE')
+
     self.nSubFarm    = self.dp('HLTFarm.nSubFarms')
+    self.storageDir  = self.dp('Storage.dataDirectory')
     self.storeFlag   = self.dp('Storage.storeFlag')
     self.rcvInfra    = self.dp('Storage.recvInfrastructure')
     self.strInfra    = self.dp('Storage.streamInfrastructure')
@@ -116,11 +134,22 @@ class General:
 
     self.tell1Boards = self.dp('SubDetectors.tell1List')
 
+    # General run info 
     self.reader.add(self.runTyp)
     self.reader.add(self.partID)
     self.reader.add(self.partition)
+    if self.outputLvl is not None:
+      self.reader.add(self.outputLvl)
+    if self.acceptFrac is not None:
+      self.reader.add(self.acceptFrac)
+    if self.tae is not None:
+      self.reader.add(self.tae)
+
+    # HLT information
     self.reader.add(self.nSubFarm)
+
     # Storage information
+    self.reader.add(self.storageDir)
     self.reader.add(self.storeFlag)
     self.reader.add(self.streams)
     self.reader.add(self.strMult)
@@ -239,7 +268,7 @@ class General:
   # ===========================================================================
   def isDetectorUsed(self,detector):
     "Check if detector identified by its name is in use by the selected partition."
-    return 1 ### None
+    return 1
 
   # ===========================================================================
   def detectorsInReadout(self):
@@ -276,6 +305,30 @@ class General:
   def runType(self):
     "Access to the run type identifier."
     return self._dataItem(self.runTyp)
+
+  # ===========================================================================
+  def outputLevel(self):
+    "Access output level from RunInfo."
+    if self.outputLvl:
+      if self.outputLvl.data is None: self.load()
+      return int(self.outputLvl.data)
+    return 4
+
+  # ===========================================================================
+  def acceptRate(self):
+    "Access Accept rate in percent from RunInfo."
+    if self.acceptFrac:
+      if self.acceptFrac.data is None: self.load()
+      return int(self.acceptFrac.data)
+    return 100
+
+  # ===========================================================================
+  def TAE(self):
+    "Access TAE flag from run info."
+    if self.tae:
+      if self.tae.data is None: self.load()
+      return int(self.tae.data)
+    return 0
 
 # =============================================================================
 def create(rundp_name):

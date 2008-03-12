@@ -146,6 +146,16 @@ def defaultSystem():
   return (PVSS.defaultSystemID(),PVSS.defaultSystemName())
 
 # =============================================================================
+def defaultSystemName():
+  "Access PVSS default system name"
+  return PVSS.defaultSystemName()
+
+# =============================================================================
+def defaultSystemID():
+  "Access PVSS default system ID"
+  return PVSS.defaultSystemID()
+
+# =============================================================================
 class APIManager:
   """
       Wrapper around PVSS APIManager instance.

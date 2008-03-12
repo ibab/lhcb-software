@@ -1,18 +1,23 @@
 #!/bin/bash
-installation=/group/online/dataflow/cmtuser/Gaudi_v19r2/Online/OnlineControls/cmt
-#Tests only: installation=/home/frankm/cmtuser/Gaudi_v19r2/Online/OnlineControls/cmt
-cd $installation
-echo $0 `dirname $0`
+. /group/online/dataflow/scripts/pvss_preamble.sh $*
+cd $RELEASE_DIR/Online/OnlineControls/cmt
+. setup.vars
+export PVSS_II=/localdisk/pvss/${PVSS_system}/config/config
+export LD_PRELOAD=${PYTHONHOME}/lib/libpython2.4.so
 #
-. ./setup.vars
-PVSS_system=`python <<EOF
+# Clean runtime environment
+#
+. ${DATAFLOWDIR}/scripts/cleanEnviron.sh LD_PRELOAD DATAINTERFACE PYTHONPATH PYTHONHOME ROOTSYS PVSS_II PVSS00api UTGID
+#
+PVSSMGR_Num=0
+eval `python <<EOF
 args = '$*'.split(' ')
+num='0'
 for i in xrange(len(args)):
   if args[i].upper()[:5]=='-PROJ':
-    print args[i+1]
-    break
+    print 'PVSS_system='+str(args[i+1])+';'
+  elif args[i].upper()[:4]=='-NUM':
+    print 'PVSSMGR_Num='+str(args[i+1])+';'
 EOF`
-export PVSS_II=/localdisk/pvss/${PVSS_system}/config/config
-echo "PVSS_II : $PVSS_II "
-export LD_PRELOAD=${PYTHONHOME}/lib/libpython2.4.so
-exec -a $2 $PVSS00api $*
+# export UTGID=${2}${PVSSMGR_Num}
+exec -a ${2} ${PVSS00api} $*

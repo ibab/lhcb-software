@@ -424,7 +424,8 @@ int JobOptionsEditor_init()  {
   JobOptionsEditor_setToolTips();
   JobOptionsEditor_closeEditors();
   JobOptionsEditor_showCreator(0);
-  return JobOptionsEditor_showPartitions();
+  //return JobOptionsEditor_showPartitions();
+  return JobOptionsEditor_showTaskTypes();
 }
 /// Set tootips to all present graphics components
 void JobOptionsEditor_setToolTips()  {

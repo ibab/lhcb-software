@@ -1,4 +1,4 @@
-import os, sys, time
+import os, sys, time, socket
 import Online.PVSS as PVSS
 import Online.Utils
 import UPI as upi
@@ -19,6 +19,45 @@ def targetName(self):
 def targetHLT(self):
   return PVSS.defaultSystemName()+'_FSMDisplay.Tasks'
 
+class ReallyClose(upi.Interactor):
+  # ===========================================================================
+  def __init__(self,parent):
+    upi.Interactor.__init__(self,self)
+    self.id = 12345+upi.sensor().newID()
+    self.parent = parent
+    self.CMD_QUIT = 5
+    self.CMD_NOQUIT = 6
+    upi.open_window()
+    upi.open_detached_menu(self.id,0,0,'Confirm','Really quit the application?','Really quit the application?')
+    upi.add_comment(8,'-------------------------------------------------')
+    upi.add_comment(1,'  Please be very careful:                        ')
+    upi.add_comment(2,'  -- this is a PVSS application.                 ')
+    upi.add_comment(3,'  -- it should only be stopped from the console. ')
+    upi.add_comment(4,'-------------------------------------------------')
+    upi.add_command(5,'.                    YES                        .')
+    upi.add_command(6,'.                    NO                         .')
+    upi.add_comment(7,'-------------------------------------------------')
+    upi.close_menu()
+    upi.set_cursor(self.id,6,0)
+    upi.sensor().add(self,self.id)
+
+  # ===========================================================================
+  def __del__(self):
+    #log('Deleting menu '+str(self.id),timestamp=mk_timestamps)    
+    upi.sensor().remove(self,self.id)
+    upi.delete_menu(self.id)
+    
+  # ===========================================================================
+  def handleEvent(self):
+    ev = self.event()
+    if ev.eventtype == upi.EventType:
+      if ev.command_id==6:
+        upi.set_cursor(self.parent.mid,CMD_QUIT,0)
+        self.parent.reallyClose=None
+      elif ev.command_id==5:
+        upi.set_cursor(self.parent.mid,CMD_QUIT,0)
+        _iocSensor.send(self.parent,CMD_QUIT,CMD_QUIT)
+        self.parent.reallyClose=None
 
 class Display(upi.Interactor):
   # ===========================================================================
@@ -104,11 +143,17 @@ class Display(upi.Interactor):
       opt = {}
       all_lines = []
       for i in self.dp.data:
-        items = i.split('#')
+        items  = i.split('#')
+        #print items
+        node   = items[2]
+        task   = items[3]
+        state  = items[4]
         action = items[5]
-        node = items[2]
-        task = items[3]
-        state = items[4]
+        cmd    = items[6]
+        dp     = items[7]
+        fsm    = items[8]
+        label  = items[9]
+        if len(task)>0 and len(label)>0: task=label
         if node == self.name:
           node = task
           task = ''
@@ -174,18 +219,18 @@ class ManagerMenu(upi.Interactor):
     self.manager = manager
     self.name = self.manager.name()
     self.dispMgr = dispMgr
-    self.lines = CMD_QUIT
     self.mid = len(menus)+1
     menus[self.mid] = self
     upi.Interactor.__init__(self,self)
     upi.open_window()
-    upi.open_menu(self.mid,0,0,'Display Manager',self.name,self.name)
+    upi.open_menu(self.mid,0,0,'Display Manager',self.name,socket.gethostname())
     upi.add_command(CMD_QUIT,'Quit')
+    upi.add_comment(CMD_QUIT+1,'  ')
     #upi.resetANSI()
     for i in xrange(len(self.dispMgr.slices.container)):
       n = self.dispMgr.slices.container[i].name()
       n = n[:n.find('.')]
-      upi.add_command(CMD_QUIT+i+1,n)
+      upi.add_command(CMD_QUIT+i+2,n)
     upi.close_menu()
     upi.set_cursor(self.mid,CMD_QUIT,0)
     upi.sensor().add(self,self.mid)
@@ -195,10 +240,12 @@ class ManagerMenu(upi.Interactor):
     ev = self.event()
     if ev.eventtype == upi.EventType:  # UpiEvent
       if ev.command_id==CMD_QUIT:
-        upi.resetANSI()
-        sys.exit(0)
-      elif ev.command()<CMD_QUIT+1+len(self.dispMgr.slices.container):
-        cmd = ev.command()-CMD_QUIT-1
+        self.ReallyClose = None
+        self.reallyClose = ReallyClose(self)
+        #upi.resetANSI()
+        #sys.exit(0)
+      elif ev.command()<CMD_QUIT+2+len(self.dispMgr.slices.container):
+        cmd = ev.command()-CMD_QUIT-2
         nam = self.dispMgr.slices.container[cmd].name()
         n = nam[:nam.find('.')]
         if self.dispMgr.slices.container[cmd].data>0:
@@ -209,6 +256,11 @@ class ManagerMenu(upi.Interactor):
           log(self.name+'> The slice '+n+' is currently not used. No Display availible.',timestamp=mk_timestamps)
       else:
         log(self.name+'> UPI Event arrived.')
+    elif ev.eventtype == 3:            # IocEvent
+      if ev.iocType() == CMD_QUIT:
+        upi.quit()
+        upi.resetANSI()
+        sys.exit(0)
     else:
       log(self.name+'> Unknown event of type '+str(ev.eventtype)+' arrived')
 
@@ -293,9 +345,9 @@ def sleep(mgrs=[]):
 # =============================================================================
 def runDataflow():
   import Online.PVSSSystems as Systems
-  sto_mgr = DisplayManager(Systems.controlsMgr('STORAGE')).run()
-  mon_mgr = DisplayManager(Systems.controlsMgr('MONITORING')).run()
-  sleep([sto_mgr,mon_mgr])
+  mgr=DisplayManager(Systems.controlsMgr(PVSS.defaultSystemName())).run()
+  managers=[mgr]
+  sleep(managers)
 
 # =============================================================================
 def runHLT(with_server=1):

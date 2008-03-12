@@ -33,6 +33,7 @@ class DisplayServer(PVSS.PyDeviceListener):
     self.states   = self._fsmLookup('fsm.currentState',typ1,typ2)
     self.commands = self._fsmLookup('fsm.sendCommand',typ1,typ2)
     self.enabled  = self._fsmLookup('mode.enabled',typ1,typ2)
+    self.labels   = self._fsmLookup('ui.label',typ1,typ2)
     self.tnodes   = self._fsmLookup('tnode',typ1,typ2)
     self.fsmtypes = self._fsmLookup('type',typ1,typ2)
 
@@ -73,6 +74,7 @@ class DisplayServer(PVSS.PyDeviceListener):
     rdr.add(self.enabled)
     rdr.add(self.fsmtypes)
     rdr.add(self.commands)
+    rdr.add(self.labels)
     if rdr.execute():
       tasks = {}
       for j in xrange(len(self.enabled)):
@@ -80,38 +82,40 @@ class DisplayServer(PVSS.PyDeviceListener):
           i = self.enabled[j]
           enabled = i.data
           if enabled>0:
-            nam = i.name()
-            idx = nam.find(':')
-            sys = nam[:idx]
-            slice = nam[idx+1:nam.find('|')]
-            state = self.states[j].data
+            nam    = i.name()
+            idx    = nam.find(':')
+            sys    = nam[:idx]
+            slice  = nam[idx+1:nam.find('|')]
+            state  = self.states[j].data
             action = self.actions[j].data
-            cmd = self.commands[j].data
-            fsm = i.name()[:i.name().find('.')]
+            cmd    = self.commands[j].data
+            fsm    = i.name()[:i.name().find('.')]
             fsm_dp = self.tnodes[j].data
-            typ = self.fsmtypes[j].data 
+            typ    = self.fsmtypes[j].data
+            label  = self.labels[j].data
             if typ == 'FSM_DimTask':
               task = nam[idx+2*len(slice)+3:nam.find('.')]
               node = task[:task.find('_')]
               #print sys,slice,node,task,state,'"'+action+'"',cmd,sys+':'+slice+'_'+task
-              data = sys+'#'+slice+'#'+node+'#'+task+'#'+state+'#'+action+'#'+cmd+'#'+fsm_dp+'#'+fsm
+              data = sys+'#'+slice+'#'+node+'#'+task+'#'+state+'#'+action+'#'+cmd+'#'+fsm_dp+'#'+fsm+'#'+label
             elif typ == 'FSM_Tasks':
               task = nam[idx+2*len(slice)+3:]
               node = task[:task.find('.')]
               task = 'FSM_Tasks'
-              data = sys+'#'+slice+'#'+node+'#'+task+'#'+state+'#'+action+'#'+cmd+'#'+fsm_dp+'#'+fsm
+              data = sys+'#'+slice+'#'+node+'#'+task+'#'+state+'#'+action+'#'+cmd+'#'+fsm_dp+'#'+fsm+'#'+label
             elif typ == 'StreamConfigurator':
               node = slice
-              data = sys+'#'+slice+'#'+slice+'#StreamConfigurator#'+state+'#'+action+'#'+cmd+'#'+fsm_dp+'#'+fsm
+              data = sys+'#'+slice+'#'+slice+'#StreamConfigurator#'+state+'#'+action+'#'+cmd+'#'+fsm_dp+'#'+fsm+'#'+label
             elif typ == 'GaudiJob':
               task = fsm[fsm.rfind('/')+1:]
               node = task[:task.find('_')]
               #print sys,slice,node,task,state,'"'+action+'"',cmd,sys+':'+slice+'_'+task
-              data = sys+'#'+slice+'#'+node+'#'+task+'#'+state+'#'+action+'#'+cmd+'#'+fsm_dp+'#'+fsm
+              data = sys+'#'+slice+'#'+node+'#'+task+'#'+state+'#'+action+'#'+cmd+'#'+fsm_dp+'#'+fsm+'#'+label
             else:
               print typ,fsm,nam
               continue
             if not tasks.has_key(node): tasks[node] = []
+            ####print data
             tasks[node].append(data)
         except Exception,X:
           print X
