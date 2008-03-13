@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.cpp,v 1.3 2008-03-13 13:50:26 graven Exp $
+// $Id: HltGenConfig.cpp,v 1.4 2008-03-13 15:45:39 graven Exp $
 // Include files 
 #include <algorithm>
 #include "boost/assign/list_of.hpp"
@@ -179,6 +179,10 @@ void HltGenConfig::onCreate(const IAlgTool* tool) {
 }
 //=============================================================================
 //=============================================================================
+StatusCode HltGenConfig::execute() {
+  return StatusCode::SUCCESS;
+}
+
 StatusCode HltGenConfig::finalize() {
   static bool first(true);
   if (first) {

@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.h,v 1.3 2008-03-13 13:50:26 graven Exp $
+// $Id: HltGenConfig.h,v 1.4 2008-03-13 15:45:39 graven Exp $
 #ifndef HLTGENCONFIG_H 
 #define HLTGENCONFIG_H 1
 
@@ -27,7 +27,8 @@ public:
   virtual ~HltGenConfig( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode finalize();      ///< Algorithm execution
+  virtual StatusCode execute();       ///< Algorithm execution
+  virtual StatusCode finalize();      ///< Algorithm finalization
 
 
   virtual void onCreate(const IAlgTool* tool);
