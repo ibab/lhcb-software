@@ -4,6 +4,13 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2008-03-13 - Olivier Callot
+ - New header file 'LocalLinkerTool' that is like a LinkerTool, but doesn't store
+   the relation on TES. The links have to be created before being used. It has the same
+   method as LinkerTool (LHCb 2006-008 section 4) but the constructor has no argument,
+   plus a method 'newEvent' to clear possible existing relations, and a method 'link' 
+   like in LinkerWithKey.
+
 ! 2008-03-10 - Olivier Callot
  - New header file "LocalLinker" to make a local linker table not on TES. This class
    has a constructor with a single argument, the event service. It has the methods 
