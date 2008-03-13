@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.80 2008-03-12 17:29:36 ibelyaev Exp $ 
+! $Id: release.notes,v 1.81 2008-03-13 09:02:52 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,19 +15,15 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiCore v7r2 2008-03-12  ========================
 ! 2008-03-12 - Vanya BELYAEV
 
  - src/Components/Reporter.cpp
-
      fix the unchecked StatusCode
-
  - python/LoKiCore/functions.py 
-
      add alias "debug" for creation of monitored functors
-
  
 !=========================== LoKiCore v7r1 2008-02-29  ========================
-
 ! 2008-02-29 - Vanya BELYAEV
 
  - LoKi/FuncOps.h
