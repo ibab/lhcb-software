@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.cpp,v 1.2 2008-02-13 14:55:22 graven Exp $
+// $Id: HltGenConfig.cpp,v 1.3 2008-03-13 13:50:26 graven Exp $
 // Include files 
 #include <algorithm>
 #include "boost/assign/list_of.hpp"
@@ -104,6 +104,8 @@ HltGenConfig::generateConfig(const INamedInterface& obj) const
        depRefs.push_back(digest);
   }
 
+  //TODO: replace the following by the usage of PropertyConfigSvc...
+
   // figure out whether we have a Service, Tool, Algorithm or Auditor...
   string kind = "Unknown";
   if      (SmartIF<IAlgorithm>(ini).isValid()) kind = "IAlgorithm";
@@ -176,13 +178,12 @@ void HltGenConfig::onCreate(const IAlgTool* tool) {
   m_toolmap.insert( make_pair(key,tool) );
 }
 //=============================================================================
-// Main execution
 //=============================================================================
-StatusCode HltGenConfig::execute() {
+StatusCode HltGenConfig::finalize() {
   static bool first(true);
   if (first) {
      first = false;
      generateConfig();
   }
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();
 }

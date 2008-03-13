@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.h,v 1.2 2008-02-13 14:55:22 graven Exp $
+// $Id: HltGenConfig.h,v 1.3 2008-03-13 13:50:26 graven Exp $
 #ifndef HLTGENCONFIG_H 
 #define HLTGENCONFIG_H 1
 
@@ -12,7 +12,8 @@
 /** @class HltGenConfig HltGenConfig.h
  *  
  *  functionality:
- *         configure the HLT algorithms...
+ *         generate configurations by interrogating 
+ *         a Gaudi job...
  *
  *  @author Gerhard Raven
  *  @date   2007-10-24
@@ -26,7 +27,7 @@ public:
   virtual ~HltGenConfig( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize();      ///< Algorithm execution
 
 
   virtual void onCreate(const IAlgTool* tool);

@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-03-13 - Gerhard Raven
+ - in HltGenConfig, dump configurations in 'finalize' rather than in the
+   first call to 'execute'
+
 ! 2008-03-10 - Gerhard Raven
  - fix stupid bug in ConfigTreeEditor: find -> rfind...
 
