@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.33 2008-03-12 15:02:13 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.34 2008-03-14 14:34:06 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -525,6 +525,10 @@ void AlignAlgorithm::printCanonicalConstraints(const AlVec& parameters, const Al
   logmessage << "Canonical constraint chisquare: " << chisquare << std::endl ;
 }
 
+static inline double signedroot(double root)
+{
+  return root >= 0 ? std::sqrt(root) : - std::sqrt(root) ;
+}
 
 
 //=============================================================================
@@ -689,7 +693,14 @@ void AlignAlgorithm::update() {
 	  logmessage << "Not enough hits for alignment. Skipping update." << std::endl ;
 	} else {
 	  AlParameters delta( derivatives, matrix, it->dofMask(), offsets[iElem] ) ;
-	  logmessage << delta ;
+	  AlParameters refdelta = it->currentActiveDelta() ;
+	  //logmessage << delta ;
+	  for(unsigned int iactive = 0u; iactive < delta.dim(); ++iactive) 
+	    logmessage << std::setw(6)  << delta.activeParName(iactive) << ": " 
+		       << "cur= " << std::setw(12) << refdelta.parameters()[iactive]
+		       << "delta= " << std::setw(12) << delta.parameters()[iactive] << " +/- "
+		       << std::setw(12) << signedroot(delta.covariance()[iactive][iactive]) << std::endl ;
+	  
 	  // need const_cast because loki range givess access only to const values 
 	  StatusCode sc = (const_cast<AlignmentElement&>(*it)).updateGeometry(delta) ;
 	  if (!sc.isSuccess()) error() << "Failed to set alignment condition for " << it->name() << endmsg ; 

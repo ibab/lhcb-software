@@ -23,6 +23,13 @@ AlParameters::AlParameters(const Vector& parameters, const Covariance& covarianc
   }
 }
 
+AlParameters::AlParameters(double parameters[6], AlDofMask mask)
+  : m_mask(mask), m_parameters(dim()), m_covariance(dim())
+{
+  for( unsigned int i = 0u; i < dim(); ++i) 
+    m_parameters[i] = parameters[mask.parIndex(i)] ;
+}
+
 std::string AlParameters::parName(int parindex)
 {
   std::string rc ;

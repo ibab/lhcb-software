@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.11 2008-03-06 09:15:08 wouter Exp $
+// $Id: AlignmentElement.h,v 1.12 2008-03-14 14:34:06 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -138,12 +138,14 @@ public:
   
   /** Jacobian for the transformation from the global frame to the alignment frame */
   const Gaudi::Matrix6x6& jacobian() const { return m_jacobian ; }
-
+  
   /** Return all elements that are served by this alignment element */
   ElementContainer elementsInTree() const ;
-
+  
+  /** return the current delta (active parameters only) */
+  AlParameters currentActiveDelta() const ;
 private:
-
+  
   typedef std::vector<const DetectorElement*>::const_iterator ElemIter;
 
   void validDetectorElement(const DetectorElement* element) const;

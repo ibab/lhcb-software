@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.14 2008-03-06 09:15:08 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.15 2008-03-14 14:34:06 wouter Exp $
 // Include files
 
 // from STD
@@ -139,6 +139,23 @@ const std::vector<double> AlignmentElement::deltaRotations() const {
                  averageDeltaRotations.begin(), boost::lambda::bind(&AlignmentElement::average, this, boost::lambda::_1));
   
   return averageDeltaRotations;
+}
+
+AlParameters AlignmentElement::currentActiveDelta() const {
+  double par[6] = {0,0,0,0,0,0} ;
+  Gaudi::Transform3D alignmentFrameInv = alignmentFrame().Inverse() ;
+  for (ElemIter ielem = m_elements.begin(); ielem != m_elements.end(); ++ielem) {
+    Gaudi::Transform3D globalDeltaMatrix = DetDesc::globalDelta(*ielem) ;
+    Gaudi::Transform3D alignDeltaMatrix = alignmentFrameInv * globalDeltaMatrix * alignmentFrame();
+    std::vector<double> translations(3,0.0), rotations(3,0.0);
+    DetDesc::getZYXTransformParameters(alignDeltaMatrix, translations, rotations);//, it->pivot());
+    for(size_t i=0; i<3; ++i) {
+      par[i]   += translations[i] ;
+      par[i+3] += rotations[i] ;
+    }
+  }
+  for(size_t i=0; i<6; ++i) par[i] /= m_elements.size() ;
+  return AlParameters(par,m_dofMask ) ;
 }
 
 bool AlignmentElement::operator==(const DetectorElement* rhs) const {
