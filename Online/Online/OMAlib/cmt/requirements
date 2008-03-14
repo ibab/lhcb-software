@@ -11,7 +11,7 @@ branches src cmt doc OMAlib
 
 use   ROOT             v5*      LCG_Interfaces
 
-use   OnlineHistDB     v4r6     Online
+use   OnlineHistDB     v4*     Online
 use   GaudiAlg         v*
 use   DIM              v*  	Online
 

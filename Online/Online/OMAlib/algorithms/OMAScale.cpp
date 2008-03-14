@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.1 2008-03-11 18:23:26 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.2 2008-03-14 16:12:05 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -32,10 +32,10 @@ TH1* OMAScale::exec(TH1* H,
 			 TH1* existingHisto) {  
   TH1* scaledHist=existingHisto;
   bool copied=false;
-  int firstbin=1,shift=0;
+  int shift=0;
   if(!scaledHist) {
-    if(scalefactorH->GetName() != H->GetName() ||
-       dynamic_cast<TH2*>(H)) {
+    if( std::string(scalefactorH->GetName()) != std::string(H->GetName()) ||
+       (dynamic_cast<TH2*>(H) != NULL)) {
       scaledHist=(TH1*) H->Clone();
       scaledHist->SetNameTitle(outName.data(),outTitle.data() );
       copied = true;
@@ -47,13 +47,12 @@ TH1* OMAScale::exec(TH1* H,
                             H->GetXaxis()->GetBinLowEdge(2),
                             H->GetXaxis()->GetXmax()) );  
       scaledHist->Sumw2();
-      firstbin=2;
-      shift=-1;
     }
-  }
+  }  
   if (scaledHist && !copied) {
-    for (int ib=firstbin; ib<=H->GetNbinsX(); ib++) {
-      scaledHist->SetBinContent(ib+shift,  H->GetBinContent(ib));
+    shift=H->GetNbinsX()-scaledHist->GetNbinsX();
+    for (int ib=1+shift; ib<=H->GetNbinsX(); ib++) {
+      scaledHist->SetBinContent(ib-shift,  H->GetBinContent(ib));
     }
   }
   double normK= scalefactorH->GetBinContent(1);
@@ -63,4 +62,6 @@ TH1* OMAScale::exec(TH1* H,
   
   return  scaledHist;
 }
+
+
 
