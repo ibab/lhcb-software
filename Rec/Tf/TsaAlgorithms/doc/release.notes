@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2007-14-03 M Needham
+ - Changes for DeSTSensor in STDet
+
 !======================= TsaAlgorithms v3r2 2007-11-30 ======================
 ! 2007-12-08 - Manuel Schiller
  - modified tools using Seed(Parabola|Line)Fit to create the fit object in

@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.cpp,v 1.2 2007-08-28 10:46:35 jonrob Exp $
+// $Id: ITExpectedHits.cpp,v 1.3 2008-03-14 18:21:37 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -73,24 +73,22 @@ StatusCode ITExpectedHits::collect(const Parabola& parab,
                                   line,layer->globalCentre().z());
 
     const DeSTLayer::Sectors& tSectors = layer->sectors();
-    verbose() << "Found " << tSectors.size() << " Sectors" << endreq;
     for ( DeSTLayer::Sectors::const_iterator iterS = tSectors.begin(); iterS != tSectors.end() ; ++iterS){
 
       DeSTSector* aSector = *iterS;
 
-      const bool isInside = insideSector(aSector,aLine3D);
-      verbose() << " -> isInside = " << isInside << endreq;
-      if ( isInside )
+      const DeSTSensor* sensor = findSensor(aSector,aLine3D);
+      if ( sensor )
       {
 
-        Gaudi::XYZPoint globalEntry = intersection(aLine3D,aSector->entryPlane());
-        Gaudi::XYZPoint globalExit = intersection(aLine3D,aSector->exitPlane());
+        Gaudi::XYZPoint globalEntry = intersection(aLine3D,sensor->entryPlane());
+        Gaudi::XYZPoint globalExit = intersection(aLine3D,sensor->exitPlane());
 
-        Gaudi::XYZPoint localEntry = aSector->toLocal(globalEntry);
-        Gaudi::XYZPoint localExit = aSector->toLocal(globalExit);
+        Gaudi::XYZPoint localEntry = sensor->toLocal(globalEntry);
+        Gaudi::XYZPoint localExit = sensor->toLocal(globalExit);
 
-        unsigned int firstStrip = aSector->localUToStrip(localEntry.x());
-        unsigned int lastStrip =  aSector->localUToStrip(localExit.x());
+        unsigned int firstStrip = sensor->localUToStrip(localEntry.x());
+        unsigned int lastStrip =  sensor->localUToStrip(localExit.x());
 
         if ( msgLevel(MSG::VERBOSE) )
         {
@@ -105,8 +103,8 @@ StatusCode ITExpectedHits::collect(const Parabola& parab,
         if (firstStrip > lastStrip) std::swap(firstStrip, lastStrip);
 
         // allow for capacitive coupling....
-        if (aSector->isStrip(firstStrip-1) == true) --firstStrip;
-        if (aSector->isStrip(lastStrip+1) == true) ++lastStrip;
+        if (sensor->isStrip(firstStrip-1) == true) --firstStrip;
+        if (sensor->isStrip(lastStrip+1) == true) ++lastStrip;
 
         LHCb::STChannelID elemChan = (*iterS)->elementID();
 
@@ -119,7 +117,7 @@ StatusCode ITExpectedHits::collect(const Parabola& parab,
                                                       elemChan.detRegion(),
                                                       elemChan.sector(), iStrip);
 
-          verbose() << "  -> Creating ITPair " << (int)aChan << " " << iCount << endreq;
+
           hits.push_back(std::make_pair(aChan,double(iCount)));
 
         }  // iStrip
@@ -147,16 +145,20 @@ bool ITExpectedHits::insideLayer(const DeSTLayer* layer,
   return isIn;
 }
 
-bool ITExpectedHits::insideSector(const DeSTSector* sector,
-                                  const Line3D& line) const{
+DeSTSensor* ITExpectedHits::findSensor(const DeSTSector* sector,
+                                       const Line3D& line) const{
 
-  bool isIn = false;
-  Gaudi::XYZPoint point;
-  double mu;
-  if (Gaudi::Math::intersection(line, sector->plane() ,point, mu) == true){
-    isIn = sector->globalInActive(point);
-  }
-  return isIn;
+  DeSTSensor* sensor = 0;
+  const DeSTSector::Sensors& tsensors = sector->sensors();
+  DeSTSector::Sensors::const_iterator iter = tsensors.begin();
+  for (; iter != tsensors.end() && sensor == 0; ++iter){
+    Gaudi::XYZPoint point;
+    double mu;
+    if (Gaudi::Math::intersection(line, (*iter)->plane() ,point, mu) == true){
+      if ((*iter)->globalInActive(point) == true) sensor = *iter;    
+    }
+  } // loop sensors
+  return sensor;
 }
 
 Gaudi::XYZPoint ITExpectedHits::intersection(const Line3D& line,

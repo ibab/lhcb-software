@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.h,v 1.4 2007-10-10 18:48:10 smenzeme Exp $
+// $Id: ITExpectedHits.h,v 1.5 2008-03-14 18:21:37 mneedham Exp $
 #ifndef _ITExpectedHits_H
 #define _ITExpectedHits_H
 
@@ -21,6 +21,7 @@
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTLayer.h"
 #include "STDet/DeSTSector.h"
+#include "STDet/DeSTSensor.h"
 
 namespace Tf
 {
@@ -58,8 +59,8 @@ namespace Tf
 
     private:
 
-      bool insideSector(const DeSTSector* sector,
-                        const Line3D& line) const;
+      DeSTSensor* findSensor(const DeSTSector* sector,
+                             const Line3D& line) const;
 
       bool insideLayer(const DeSTLayer* sector,
                        const Line3D& line) const;
