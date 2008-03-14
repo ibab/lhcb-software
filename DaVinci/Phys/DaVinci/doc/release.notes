@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.215 2008-03-11 12:19:21 jpalac Exp $
+! $Id: release.notes,v 1.216 2008-03-14 10:51:33 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
+
+! 2008-03-14 - Patrick Koppenburg
+ - DVDC06TestStripping : opts : do not save MC when reading rdst.
 
 !========================== DaVinci v19r11 2008-03-11 ===================
 

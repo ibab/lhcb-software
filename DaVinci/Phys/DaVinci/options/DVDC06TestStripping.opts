@@ -18,8 +18,8 @@
  */
 #pragma print on
 #include "$STRIPPINGROOT/options/Presel.opts"
-#include "$STDOPTS/DstContent.opts" // remove for making rDST or when running on rDST
-#include "$STDOPTS/MCDstContent.opts" // remove for real data or when running on rDST
+//#include "$STDOPTS/DstContent.opts" // remove for making rDST or when running on rDST
+//#include "$STDOPTS/MCDstContent.opts" // remove for real data or when running on rDST
 EvtTupleSvc.Output =  [ "EVTTAGS DATAFILE='Presel_test.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " ] ;
 DSTOR.Output = "DATAFILE='Presel_test.dst' TYP='POOL_ROOTTREE' OPT='RECREATE'";
 /*
@@ -30,7 +30,7 @@ DSTOR.Output = "DATAFILE='Presel_test.dst' TYP='POOL_ROOTTREE' OPT='RECREATE'";
  * Job steering
  */
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
-ApplicationMgr.EvtMax = 10000 ;
+ApplicationMgr.EvtMax = 1000 ;
 EventSelector.PrintFreq  = 1;
 
 MessageSvc.OutputLevel = 3 ;
