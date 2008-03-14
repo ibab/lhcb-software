@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.29 2008-03-06 15:05:24 jpalac Exp $
+! $Id: release.notes,v 1.30 2008-03-14 17:02:16 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2008-03-14 - Patrick Koppenburg for Onuora Awunor
+ - TaggingTool to output tagging information from MC truth & Data in root files
+ - Test option file using taggingTool
+ - Macro using root file output from TaggingTool to calculate efficiencies, plots histograms
+   carry out fitting and projections.
+ - Increment to v2r7
+
 
 !===================== FlavourTaggingChecker v2r6p1 2008-03-06 ===============
 

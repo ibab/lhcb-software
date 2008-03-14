@@ -1,0 +1,129 @@
+//############################################################## 
+//  Option file to run the FlavourTagging Algorithm
+//  with pre-selection options on Data/Signal
+//  
+//  Output is TaggingTuplesSignal.root or TaggingTuplesData.root
+//  to be used as input in macro->DoubleTaggingAnalysis.C
+// 
+//  Author: Onuora Awunor
+//   01-02-2007
+//##############################################################
+
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+// Trigger
+#include "$HLTSYSROOT/options/L0.opts"
+//#include "$HLTSYSROOT/options/Hlt.opts"
+
+//////////////////////////////////////////////////
+//Define execution tree
+
+ApplicationMgr.DLLs   += { "FlavourTagging" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/MySeq" };
+
+/*
+//Example -> Bs->DsPi
+MySeq.Members += { "Sequencer/SeqPreselBs2DsH","Sequencer/SeqTagging" };
+#include "$B2DSXROOT/options/DoPreselBs2DsH.opts"
+*/
+
+// For Bs->DsMuNu MC Signal **********
+
+MySeq.Members += {"Sequencer/SeqPreselBs2DsMuX", "Sequencer/SeqTagging" };
+SeqPreselBs2DsMuX.Members = {"CheckPV", "MakeResonances/PreselBs2DsMuX"};
+#include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
+#include "$COMMONPARTICLESROOT/options/StandardDs.opts"
+#include "$B2DSXROOT/options/PreselBs2DsMuX.opts"
+PreselBs2DsMuX.OutputLevel = 6; 
+
+//////////////////////////////////////////////////
+ApplicationMgr.DLLs   += { "VeloDAQ" };
+SeqTagging.Members    += { "DecodeVeloRawBuffer" };
+ 
+SeqTagging.Members    += {"TaggingTuplesSignal"};
+TaggingTuplesSignal.PhysDesktop.InputLocations = { //"/Event/Phys/PreselBs2DsH"
+                                                   //,"/Event/Phys/StdLooseKaons"
+                                                   //, "/Event/Phys/StdLooseDs2KKPi" 
+                                                   //,"/Event/Phys/StdLoosePions" 
+  // For Bs->DsMuNu MC Signal  *************** 
+  "/Event/Phys/PreselBs2DsMuX"
+  ,"/Event/Phys/StdLooseMuons"
+  , "/Event/Phys/StdLooseDs2KKPi"
+};
+TaggingTuplesSignal.OutputLevel = 6;
+TaggingTuplesSignal.DebugTool.OutputLevel = 6;
+
+/*
+//For Data 
+SeqTagging.Members    += {"TaggingTuplesData"};
+TaggingTuplesData.PhysDesktop.InputLocations = {
+"/Event/Phys/PreselBs2DsMuX"
+ ,"/Event/Phys/StdLooseMuons"
+ , "/Event/Phys/StdLooseDs2KKPi"
+};
+TaggingTuplesData.BackgroundCategory.InclusiveDecay=1;
+TaggingTuplesData.BackgroundCategory.LowMassBackgroundCut = 3000.;
+TaggingTuplesData.OutputLevel = 3;
+TaggingTuplesData.DebugTool.OutputLevel = 3;
+*/
+//////////////////////////////////////////////////
+// Tagging
+#include "$FLAVOURTAGGINGOPTS/BTaggingTool.opts"
+
+ToolSvc.BTaggingTool.CombineTaggersName = "CombineTaggersTDR";
+ToolSvc.BTaggingTool.EnableMuonTagger = true;
+ToolSvc.BTaggingTool.EnableElectronTagger = true;
+ToolSvc.BTaggingTool.EnableKaonOSTagger = true;
+ToolSvc.BTaggingTool.EnablePionTagger = false;
+ToolSvc.BTaggingTool.EnableVertexChargeTagger = true;
+ToolSvc.BTaggingTool.EnableKaonSSTagger = true;
+ToolSvc.BTaggingTool.EnableJetSameTagger = false;
+ToolSvc.BTaggingTool.OutputLevel = 6;
+
+//////////////////////////////////////////////////
+ApplicationMgr.DLLs += { "FlavourTaggingChecker" };
+
+#include "$STDOPTS/RootHist.opts" 
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+// For MC Signal
+NTupleSvc.Output={"FILE1 DATAFILE='TaggingTuplesSignal.root' TYP='ROOT' OPT='NEW'"};
+// For Data e.g. bb-bar inclusive
+//NTupleSvc.Output={"FILE1 DATAFILE='TaggingTuplesData.root' TYP='ROOT' OPT='NEW'"};
+
+/////////////////////////////////////////////////
+// Reset output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL)
+ToolSvc.OutputLevel                            = 6;
+XmlParserSvc.OutputLevel                       = 6;
+MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";
+
+// Number of events to process, skip and printing frequency
+ApplicationMgr.EvtMax    = 1000;
+EventSelector.PrintFreq  = 1;
+//EventSelector.FirstEvent = 1;
+//ApplicationMgr.EvtMax    = -1;
+//EventSelector.PrintFreq  = 1000;
+EventSelector.Input   = {
+/*
+//For Bs->DsPi
+//DC06 SignalV31 Stripped
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002034/DST/0000/00002034_00000001_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002034/DST/0000/00002034_00000002_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+*/
+// For Bs->DsMuNu
+//DC06 Signal begin V31 (stripped)
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002035/DST/0000/00002035_00000005_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002035/DST/0000/00002035_00000007_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+
+/*
+//For Data
+//DC06 bb-bar Inclusive (stripped-v31-lumi2)
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000004_3.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000005_3.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000015_3.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000054_3.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000056_3.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000057_3.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000058_3.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+*/
+};
