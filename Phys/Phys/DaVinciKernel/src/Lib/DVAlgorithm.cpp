@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.30 2008-02-24 19:41:29 ibelyaev Exp $
+// $Id: DVAlgorithm.cpp,v 1.31 2008-03-14 11:56:41 pkoppenb Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -12,7 +12,7 @@
 #include "Kernel/IOnOffline.h"
 // ============================================================================
 /** @file
- *  The implementatinio fiel for class DVAlgorithm
+ *  The implementation for class DVAlgorithm
  */                                                                 
 // ============================================================================
 // Standard constructor
@@ -156,19 +156,21 @@ StatusCode DVAlgorithm::initialize ()
     Warning( mgs +  "Some tools/utilities could have the problems." );
   }
   
-  if ( m_avoidSelResult ) { info() << "Avoiding SelResult" << endmsg; }
+  if ( m_avoidSelResult ) { if (msgLevel(MSG::DEBUG)) debug() << "Avoiding SelResult" << endmsg; }
   
   
   // Load tools very
   sc = loadTools() ;
   if ( sc.isFailure() ) { return Error("Unable to load tools", sc ) ; }
   
-  if ( m_decayDescriptor == "not specified" )
-  { info() << "Decay Descriptor string not specified"   << endreq; } 
-  else
-  { info() << "Decay Descriptor: " << m_decayDescriptor << endreq; }
+  if (msgLevel(MSG::DEBUG)){
+    if ( m_decayDescriptor == "not specified" )
+    { debug() << "Decay Descriptor string not specified"   << endmsg; } 
+    else
+    { debug() << "Decay Descriptor: " << m_decayDescriptor << endmsg; }
+  }
   
-  debug() << "End of DVAlgorithm::initialize with " << sc << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "End of DVAlgorithm::initialize with " << sc << endmsg;
   
   return sc;
 }
@@ -181,9 +183,9 @@ StatusCode DVAlgorithm::loadTools()
   if ( !m_preloadTools ) 
   { return Warning( "Not preloading tools", StatusCode::SUCCESS ) ; }
   
-  debug() << ">>> Preloading tools" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading tools" << endmsg;
   
-  debug() << ">>> Preloading PhysDesktop" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading PhysDesktop" << endmsg;
   desktop();
   
   // vertex fitter
@@ -194,7 +196,7 @@ StatusCode DVAlgorithm::loadTools()
     m_vertexFitNames[""] = onof->vertexFitter() ;
   }
   
-  debug() << ">>> Preloading "
+  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading "
           << m_vertexFitNames[""] << " as IVertexFit " << endmsg;
   vertexFitter() ;
   
@@ -205,32 +207,32 @@ StatusCode DVAlgorithm::loadTools()
     m_geomToolNames[""] = onof->dispCalculator() ;
   }
   
-  debug() << ">>> Preloading " 
+  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading " 
           << m_geomToolNames[""] 
           << " as IGeomDispCalculator" << endmsg;
   geomDispCalculator();
   
-  debug() << ">>> Preloading CheckOverlap Tool" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading CheckOverlap Tool" << endmsg;
   checkOverlap();
   
-  debug() << ">>> Preloading WriteSelResults Tool" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading WriteSelResults Tool" << endmsg;
   writeSelResult();
   
   /*  Not preloading non-mandatory tools
   // particle filter
   for ( size_t i = 0; i < m_fileNames.size();++i) {
-  debug() << ">>> Preloading ParticleFilter " << m_filterName.at(i) << " as " << i << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading ParticleFilter " << m_filterName.at(i) << " as " << i << endmsg;
   particleFilter(i); 
   }
   
-  debug() << ">>> Preloading BTagging Tool" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading BTagging Tool" << endmsg;
   flavourTagging();
 
-  debug() << ">>> Preloading ParticleDescendants Tool" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading ParticleDescendants Tool" << endmsg;
   descendants();
   */
 
-  debug() << ">>> Preloading ParticlePropertySvc" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading ParticlePropertySvc" << endmsg;
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
   
   return StatusCode::SUCCESS;

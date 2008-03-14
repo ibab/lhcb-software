@@ -3,6 +3,9 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-03-14 - Patrick Koppenburg
+ - Less verbose initialisation of DVAlgorithm
+
 !======================== DaVinciKernel v6r12 2008-03-11 ====================
 ! 2008-03-10 - Vanya BELYAEV
  - Kernel/IDistanceCalculator.h
