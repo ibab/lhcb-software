@@ -1,5 +1,7 @@
 #include "STDet/DeITSector.h"
-#include "STDet/DeITLayer.h"
+#include "STDet/DeITSensor.h"
+#include "STDet/DeSTSensor.h"
+#include "STDet/DeITLadder.h"
 
 /** @file DeITSector.cpp
 *
@@ -7,6 +9,8 @@
 *
 *    @author Matthew Needham
 */
+
+
 
 using namespace LHCb;
 
@@ -45,7 +49,21 @@ StatusCode DeITSector::initialize() {
 
     // build the id
     setID(parentID.sector());
+    
+    std::vector<DeITSensor*> sensors = getChildren<DeITSector>();
+    std::vector<DeITSensor*>::iterator iterS = sensors.begin();  
+    for(; iterS != sensors.end(); ++iterS){
+      m_sensors.push_back(*iterS);
+    } // iterS    
 
+    m_thickness = m_sensors.front()->thickness();
+
+    sc = registerConditionsCallbacks();
+    if (sc.isFailure()){
+      msg << MSG::ERROR << "Failed to registerConditions call backs";
+      return sc;
+    }
+    cacheInfo();
   }
   return StatusCode::SUCCESS;
 }

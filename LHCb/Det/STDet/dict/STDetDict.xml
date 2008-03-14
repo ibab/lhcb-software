@@ -15,6 +15,9 @@
   <class name="DeTTLayer"         />
   <class name="DeTTSector"        />
   <class name="DeTTStation"       />
+  <class name = "DeSTSensor" />
+  <class name = "DeTTSensor" />
+  <class name = "DeITSensor" />
   <class name="std::vector<DeSTSector*>"             /> <!-- STSectors   typedef -->
   <class name="std::vector<DeSTLayer*>"              /> <!-- STLayers    typedef -->
   <class name="std::vector<DeSTStation*>"            /> <!-- STStations  typedef -->

@@ -1,5 +1,7 @@
 #include "STDet/DeTTSector.h"
 #include "STDet/DeTTHalfModule.h"
+#include "STDet/DeTTSensor.h"
+#include "STDet/DeSTSensor.h"
 
 /** @file DeTTSector.cpp
 *
@@ -76,6 +78,20 @@ StatusCode DeTTSector::initialize() {
     STChannelID chan(STChannelID::typeTT,parentID.station(),parentID.layer(), 
                      parentID.detRegion(),  id(), 0);
     setElementID(chan);
+
+    std::vector<DeTTSensor*> sensors = getChildren<DeTTSector>();
+    std::vector<DeTTSensor*>::iterator iterS = sensors.begin();  
+    for(; iterS != sensors.end(); ++iterS){
+      m_sensors.push_back(*iterS);
+    } // iterS    
+    m_thickness = m_sensors.front()->thickness();
+
+    sc = registerConditionsCallbacks();
+    if (sc.isFailure()){
+      msg << MSG::ERROR << "Failed to registerConditions call backs";
+      return sc;
+    }
+    cacheInfo();
 
   }
   return StatusCode::SUCCESS;

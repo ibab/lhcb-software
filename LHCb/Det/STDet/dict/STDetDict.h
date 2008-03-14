@@ -1,4 +1,4 @@
-// $Id: STDetDict.h,v 1.1 2007-04-10 14:35:37 cattanem Exp $
+// $Id: STDetDict.h,v 1.2 2008-03-14 18:26:39 mneedham Exp $
 // ============================================================================
 #ifndef STDET_STDETDICT_H 
 #define STDET_STDETDICT_H 1
@@ -19,6 +19,9 @@
 #include "STDet/DeTTLayer.h"
 #include "STDet/DeTTSector.h"
 #include "STDet/DeTTStation.h"
+#include "STDet/DeTTSensor.h"
+#include "STDet/DeITSensor.h"
+#include "STDet/DeSTSensor.h"
 
 // Needed to resolve forward declaration when making dictiobary
 #include "Kernel/Trajectory.h"

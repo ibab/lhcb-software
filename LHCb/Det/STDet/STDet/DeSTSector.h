@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.24 2008-01-08 10:20:20 mneedham Exp $
+// $Id: DeSTSector.h,v 1.25 2008-03-14 18:26:39 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -9,13 +9,12 @@
 
 #include "Kernel/STChannelID.h"
 #include "Kernel/LHCbConstants.h"
-
 #include "STDet/DeSTBaseElement.h"
 
 #include "GaudiKernel/Plane3DTypes.h"
 #include "LHCbMath/LineTypes.h"
 
-//#include "STDet/StatusMap.h"
+
 
 /** @class DeSTSector DeSTSector.h "STDet/DeSTSector.h"
  *
@@ -31,7 +30,10 @@
 
 namespace LHCb{
   class Trajectory;
+  class PiecewiseTrajectory;
 }
+
+class DeSTSensor;
 
 
 class DeSTSector : public DeSTBaseElement  {
@@ -50,6 +52,9 @@ public:
     OtherFault = 9,
     Dead = 10
   };
+
+  typedef std::vector<DeSTSensor*> Sensors;
+  typedef LHCb::PiecewiseTrajectory STTraj;
 
   /** Constructor */
   DeSTSector ( const std::string& name = "" ) ;
@@ -92,18 +97,6 @@ public:
    */
   bool isStrip(const unsigned int strip) const;
 
-  /** convert a local u to a strip
-   * @param  u local u
-   * @return bool strip
-   **/
-  unsigned int localUToStrip(const double u) const;
-
-  /** convert strip to local U
-   * @param strip
-   * @param offset
-   * @return local u
-   */
-  double localU(const unsigned int strip, double offset = 0.) const;
 
   /** trajectory
    * @return trajectory for the fit
@@ -124,70 +117,6 @@ public:
   /** Trajectory parameterized along y-axis */
   void trajectory(unsigned int strip, float offset, float& dxdy, float& dzdy,
                   float& xAtYEq0, float& zAtYEq0, float& ybegin, float& yend) const ;
-
-  /** plane corresponding to the sector
-   * @return the plane
-   */
-  Gaudi::Plane3D plane() const;
-
-  /** plane corresponding to the module entrance
-   * @return the plane
-   */
-  Gaudi::Plane3D entryPlane() const;
-
-  /** plane corresponding to the module exit
-   * @return the plane
-   */
-  Gaudi::Plane3D exitPlane() const;
-
-  /** localInActive
-   * @param  point point in local frame
-   * @param  tol   tolerance
-   * @return in active region
-   */
-  bool localInActive(const Gaudi::XYZPoint& point,
-                     Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
-
-  /** localInBondGap
-   * @param  v   v in local frame
-   * @param  tol tolerance
-   * @return in a bond gap - ie dead region
-   */
-  bool localInBondGap( const double v ,double tol = 0) const;
-
-  /** localInBox
-   * @param u    u in local frame
-   * @param v    v in local frame
-   * @param uTol
-   * @param vTol
-   * @return active region of box
-   */
-  bool localInBox(const double u, const double v,
-                  double uTol = 0, double vTol = 0) const;
-
-
-  /** globalInActive
-   * @param  point point in global frame
-   * @param  tol   tolerance
-   * @return bool in active region
-   */
-  bool globalInActive(const Gaudi::XYZPoint& point,
-                      Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
-
-  /** globalInBondGap
-   * @param  gpoint point in global frame
-   * @param  tol    tolerance
-   * @return bool in a bond gap - ie dead region
-   */
-  bool globalInBondGap(const Gaudi::XYZPoint& gpoint ,double tol = 0) const;
-
-  /** globalInBox
-   * @param  gpoint point in global frame
-   * @param  tol    vTol
-   * @return bool in active region of box
-   */
-  bool globalInBox(const Gaudi::XYZPoint& gpoint,
-                   Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
 
   /**
    * @return capacitance
@@ -272,29 +201,59 @@ public:
   */
   virtual unsigned int prodID() const = 0; 
 
+  /** version */
+  std::string versionString() const;
+
+  /** dead width */
+  double deadWidth() const;
+ 
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
 
   /** print to msgstream */
   MsgStream& printOut( MsgStream& os) const;
 
+  /** flat vector of sensors
+  * @return vector of sensors
+  */
+  const Sensors& sensors() const;
+
+  /** locate sensor based on a point  
+  * @return module */
+  DeSTSensor* findSensor(const Gaudi::XYZPoint& point) const;  
+
+  /** check if inside the active area  
+  * @param Gaudi::XYZPoint point in global frame
+  * @return bool isInside  
+  **/
+  bool globalInActive(const Gaudi::XYZPoint& point ) const;
+
+  /** globalInActive
+   * @param  point point in global frame
+   * @param  tol   tolerance
+   * @return bool in bondgap
+   */
+  bool globalInBondGap(const Gaudi::XYZPoint& point,
+                       double ol = 0) const;
+
+protected:
+
+  StatusCode registerConditionsCallbacks();
+  StatusCode cacheInfo();
+
+  Sensors m_sensors;
+  double m_thickness;
+
 private:
 
   typedef std::map<unsigned int,Status> StatusMap;
 
-  void clear();
-  void determineSense();
-  StatusCode cacheInfo();
-  StatusCode registerConditionsCallbacks();
+  //  void clear();
+  
   StatusCode updateStatusCondition();
   void toEnumMap(const std::map<int,int>& input, DeSTSector::StatusMap& output);
+  std::auto_ptr<LHCb::Trajectory> createTraj(const unsigned int strip, const double offset ) const; 
 
-  Gaudi::Plane3D m_plane;
-  Gaudi::Plane3D m_entryPlane;
-  Gaudi::Plane3D m_exitPlane;
-
-  Gaudi::XYZVector m_direction;
-  std::pair<double,double> m_range;
 
   unsigned int m_firstStrip;
   unsigned int m_id;
@@ -302,21 +261,9 @@ private:
   unsigned int m_nStrip;
   double m_capacitance;
   double m_stripLength;
-
-  double m_thickness;
-  double m_uMinLocal;
-  double m_uMaxLocal;
-  double m_vMinLocal;
-  double m_vMaxLocal;
-
-  LHCb::Trajectory* m_midTraj;
-
-
-  bool m_xInverted;
-  bool m_yInverted;
+  // std::pair<double, double> m_range;
 
   double m_deadWidth;
-  std::vector<double> m_deadRegions;
   std::string m_type;
 
   float m_dxdy ;
@@ -357,6 +304,14 @@ inline unsigned int DeSTSector::nStrip() const{
   return m_nStrip;
 }
 
+inline std::string DeSTSector::versionString() const{
+  return m_versionString;
+}
+
+inline double DeSTSector::deadWidth() const{
+  return m_deadWidth;
+}
+
 inline bool DeSTSector::isStrip(const unsigned int strip) const {
   return (strip >= m_firstStrip && strip < m_firstStrip + m_nStrip);
 }
@@ -375,18 +330,6 @@ inline double DeSTSector::thickness() const{
 
 inline std::string DeSTSector::type() const {
   return m_type;
-}
-
-inline Gaudi::Plane3D DeSTSector::plane() const {
-  return m_plane;
-}
-
-inline Gaudi::Plane3D DeSTSector::entryPlane() const {
-  return m_entryPlane;
-}
-
-inline Gaudi::Plane3D DeSTSector::exitPlane() const {
-  return m_exitPlane;
 }
 
 inline double DeSTSector::angle() const {
@@ -488,6 +431,11 @@ inline LHCb::STChannelID DeSTSector::stripToChan(const unsigned int strip) const
                                       elementID().sector(), strip)
                         : LHCb::STChannelID(0); 
 }
+
+inline const DeSTSector::Sensors& DeSTSector::sensors() const{
+  return m_sensors;
+}
+
 
 /** ouput operator for class DeSTSector
  *  @see DeSTSector

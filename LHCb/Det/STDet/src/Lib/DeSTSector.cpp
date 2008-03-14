@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.34 2008-01-08 10:20:22 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.35 2008-03-14 18:26:41 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -10,11 +10,17 @@
 // Kernel
 #include "Kernel/LineTraj.h"
 #include "Kernel/LHCbID.h"
-
+#include "Kernel/PiecewiseTrajectory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/GaudiException.h"
 
 #include "GaudiKernel/IUpdateManagerSvc.h"
+
+#include "STDet/DeSTSensor.h"
+
+// Boost
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
 
 /** @file DeSTSector.cpp
 *
@@ -23,14 +29,12 @@
 *    @author Matthew Needham
 */
 
+using namespace boost::lambda;
 using namespace LHCb;
 
 DeSTSector::DeSTSector( const std::string& name ) :
   DeSTBaseElement( name ),
   m_firstStrip(1),
-  m_midTraj(0),
-  m_xInverted(false),
-  m_yInverted(false),
   m_status(OK),
   m_statusString("Status"),
   m_versionString("DC06")
@@ -40,32 +44,18 @@ DeSTSector::DeSTSector( const std::string& name ) :
 
 DeSTSector::~DeSTSector() {
   // destructer
-  clear();
-}
-
-void DeSTSector::clear() {
-  
-  if (m_midTraj !=0 ) delete m_midTraj;
 }
 
 std::ostream& DeSTSector::printOut( std::ostream& os ) const{
 
   // stream to cout  
-
-   const ILVolume* lv = this->geometry()->lvolume();
-   const SolidBox* mainBox = dynamic_cast<const SolidBox*>(lv->solid());
-
-   os << " Sector :  "  << name()
+  os << " Sector :  "  << name()
       << "\n ID " << id() 
       << "\n layer " << elementID().layer()
      << "\n type  " << type() 
      << "\n pitch " << m_pitch 
      << "\n strip " << m_nStrip
      << "\n capacitance " << m_capacitance/Gaudi::Units::picofarad
-     << "\n active width" << m_uMaxLocal - m_uMinLocal
-     << "\n total width " << mainBox->xsize()
-     << "\n active height" << m_vMaxLocal - m_vMinLocal
-     << "\n total height " << mainBox->ysize()
      << "\n dead width " << m_deadWidth
      << "\n center " << globalCentre()
      << std::endl; 
@@ -81,10 +71,6 @@ MsgStream& DeSTSector::printOut( MsgStream& os ) const{
      << " pitch \n " << m_pitch 
      << "n strip \n " << m_nStrip
      << " capacitance \n " << m_capacitance/Gaudi::Units::picofarad
-     << " u min \n " << m_uMinLocal 
-     << " u max \n " << m_uMaxLocal
-     << " v min \n " << m_vMinLocal 
-     << " v max  \n " << m_vMaxLocal
      << "dead width \n " << m_deadWidth
      << "\n center " << globalCentre()
      << std::endl;
@@ -110,128 +96,21 @@ StatusCode DeSTSector::initialize() {
     m_nStrip =  param<int>("numStrips");
     m_capacitance = param<double>("capacitance");
     m_type = param<std::string>("type");
-    unsigned int nSensors = param<int>("nSensors");
 
     // guard ring
-    double guardRing = param<double>("verticalGuardRing");  
-    m_deadWidth = guardRing + 0.5*param<double>("bondGap");
-
-    // geometry: uMin, uMax
-    const ILVolume* lv = this->geometry()->lvolume();
-    const SolidBox* mainBox = dynamic_cast<const SolidBox*>(lv->solid());
-
-    m_uMaxLocal = 0.5*(m_pitch*m_nStrip);
-    m_uMinLocal = -m_uMaxLocal;
-
-    // and vMin, vMax
-    m_vMaxLocal = 0.5*mainBox->ysize() - guardRing;
-    m_vMinLocal = -m_vMaxLocal;
-
-    m_stripLength = fabs(m_vMaxLocal - m_vMinLocal);
-
-    double height = mainBox->ysize()/nSensors;
-    for (unsigned int iSensor = 1u ; iSensor < nSensors; ++iSensor){
-      double vDead = m_vMinLocal - m_deadWidth + (height*(double)iSensor);
-      m_deadRegions.push_back(vDead);
-    } //i
-
-    // thickness 
-    m_thickness = mainBox->zsize();
-
-    // sense in x and y...
-    determineSense();
-
-    sc = registerConditionsCallbacks();
-    if (sc.isFailure()){
-      msg << MSG::ERROR << "Failed to registerConditions call backs";
-      return sc;
-    }
+    m_deadWidth = param<double>("verticalGuardRing");  
+    if (m_versionString == "DCO6") m_deadWidth += 0.5*param<double>("bondGap");
+ 
+    if (m_versionString != "DC06"){
+      StatusCode sc = registerCondition(this,m_statusString,
+                                        &DeSTSector::updateStatusCondition);
+      if (sc.isFailure() ){
+        msg << MSG::ERROR << "Failed to register status conditions" << endreq;
+        return StatusCode::FAILURE; 
+      }
+    } // !DC06
   }
   return StatusCode::SUCCESS;
-}
-
-unsigned int DeSTSector::localUToStrip(const double u) const{
-
-  // convert local u to a strip
-  unsigned int strip;
-  if (m_xInverted == true){
-    strip = (unsigned int)floor(((m_uMaxLocal-u)/m_pitch) + 0.5);
-  }
-  else {
-    strip = (unsigned int)floor(((u-m_uMinLocal)/m_pitch) + 0.5 );
-  }
-
-  return (isStrip(strip) ? strip : 0);
-
-}
-
-double DeSTSector::localU(const unsigned int strip, 
-                          const double offset) const
-{ 
-  // strip to local  
-
-  double u = -999.;
-  if (isStrip(strip) == true){
-    double tStrip = strip + offset;
-    if (m_xInverted  == true){
-      u = m_uMaxLocal + m_pitch*(0.5 - tStrip );
-    }
-    else {
-      u = m_uMinLocal + m_pitch*( tStrip - 0.5);
-
-    }
-  } // strip
-  
-  return u;
-}
-
-bool DeSTSector::localInActive( const Gaudi::XYZPoint& point,
-                                Gaudi::XYZPoint tol) const 
-{
-  const double u = point.x();
-  const double v = point.y();
-  return(localInBox(u,v,tol.X(), tol.Y())&&(!localInBondGap(v, tol.Y())));
-}
-
-bool DeSTSector::globalInActive( const Gaudi::XYZPoint& gpoint,
-                                 Gaudi::XYZPoint tol) const
-{
-  Gaudi::XYZPoint lPoint = toLocal(gpoint);
-  return localInActive(lPoint,tol);
-};
-
-
-bool DeSTSector::globalInBondGap(const Gaudi::XYZPoint& gpoint, 
-                                 double tol) const
-{ 
-  Gaudi::XYZPoint lPoint = toLocal(gpoint);
-  return localInBondGap(lPoint.Y(),tol);
-};
-
-
-bool DeSTSector::globalInBox( const Gaudi::XYZPoint& gpoint,
-                              Gaudi::XYZPoint tol ) const
-{
-  Gaudi::XYZPoint lPoint = toLocal(gpoint);
-  return localInBox(lPoint.X(), lPoint.Y(),tol.X(), tol.Y());
-};
-
-bool DeSTSector::localInBondGap( const double v, double tol) const{
-
-  std::vector<double>::const_iterator iterD = m_deadRegions.begin();
-  while ( (iterD != m_deadRegions.end()) && 
-          (fabs(v-*iterD)> (tol + m_deadWidth)) ){
-    ++iterD;
-  }
-  return (iterD != m_deadRegions.end() ? true : false);
-}
-
-bool DeSTSector::localInBox( const double u, const double v, 
-                             double uTol, double vTol) const
-{
-  return ((u + uTol) <(m_uMaxLocal+(0.5*m_pitch)) &&
-          (u - uTol)>(m_uMinLocal-(0.5*m_pitch)) &&
-          ((v + vTol)<m_vMaxLocal) &&((v-vTol) > m_vMinLocal));
 }
 
 std::auto_ptr<LHCb::Trajectory> 
@@ -246,78 +125,65 @@ DeSTSector::trajectory(const STChannelID& aChan, const double offset) const
                            "DeSTSector.cpp", StatusCode::FAILURE );
   }
   
-  const double arclen = (offset + aChan.strip() - m_firstStrip)*m_pitch ;
-  
-  Gaudi::XYZPoint midPoint = m_midTraj->position( arclen + 
-                                                    m_midTraj->beginRange());
-  
-  return std::auto_ptr<LHCb::Trajectory>( new LineTraj(midPoint,m_direction,m_range, true));
+  return createTraj(aChan.strip(), offset);
 }
 
 std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectoryFirstStrip() const 
 {
-  Gaudi::XYZPoint begPoint = m_midTraj->position(m_midTraj->beginRange());
-  return std::auto_ptr<LHCb::Trajectory>( new LineTraj(begPoint,m_direction,m_range, true));
+  return createTraj(m_firstStrip,0.);
 }
 
 std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectoryLastStrip() const 
 {
-  Gaudi::XYZPoint endPoint = m_midTraj->position( m_midTraj->endRange() );
-  return std::auto_ptr<LHCb::Trajectory>( new LineTraj(endPoint,m_direction,m_range, true));
+  return createTraj(nStrip(), 0.);
 }
 
-void DeSTSector::determineSense()
-{
-  Gaudi::XYZPoint g1 = globalPoint(m_uMinLocal , m_vMinLocal, 0.);
-  Gaudi::XYZPoint g2 = globalPoint(m_uMaxLocal , m_vMinLocal, 0.);
-  if (g1.x() > g2.x()) { 
-    m_xInverted = true;
-  }
+std::auto_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip, 
+                                                      const double offset) const{
+ 
+  STTraj* traj = new STTraj(); 
 
-  Gaudi::XYZPoint g3 = globalPoint(m_uMinLocal , m_vMaxLocal, 0.);
-  if (g1.y() > g3.y()) {m_yInverted = true;}
+  // collect the individual traj
+  const Sensors& theSensors = sensors();
+  Sensors::const_iterator iterS = theSensors.begin();
+  for (; iterS != theSensors.end(); ++iterS) {
+    std::auto_ptr<LHCb::Trajectory> sensTraj = (*iterS)->trajectory(strip, offset);
+    traj->append(sensTraj.release()); 
+  }   
+  return std::auto_ptr<LHCb::Trajectory>(traj);
 }
 
 StatusCode DeSTSector::cacheInfo()
 {
 
-  clear();
+  std::auto_ptr<LHCb::Trajectory> firstTraj = createTraj(m_firstStrip,-0.5);
+  std::auto_ptr<LHCb::Trajectory> lastTraj = createTraj(nStrip(),0.5);
 
-  double yUpper =  m_vMaxLocal;
-  double yLower =  m_vMinLocal;
-  if ( m_yInverted ) std::swap(yUpper,yLower);
+  // get the start point
+  Gaudi::XYZPoint g1 = firstTraj->beginPoint();
+  Gaudi::XYZPoint g2 = firstTraj->endPoint();
 
-  double xUpper =  m_uMaxLocal - 0.5*m_pitch;
-  double xLower =  m_uMinLocal + 0.5*m_pitch;
-  if ( m_xInverted ) std::swap(xUpper,xLower);
-
+  const double activeWidth = m_sensors.front()->activeWidth();
 
   // direction
-  Gaudi::XYZPoint g1 = globalPoint(xLower, yLower, 0.);
-  Gaudi::XYZPoint g2 = globalPoint(xLower, yUpper, 0.);
-  m_direction = g2 - g1;
-  m_direction = m_direction.Unit();
+  Gaudi::XYZVector direction = g2 - g1;
+  m_stripLength = sqrt(direction.Mag2());
+  direction = direction.Unit();
+
+  // cross with normal along z
+  Gaudi::XYZVector zVec(0,0,1);
+  Gaudi::XYZVector norm = direction.Cross(zVec);
 
   // trajectory of middle  
-  Gaudi::XYZPoint g3 = globalPoint(xLower, 0., 0.);
-  Gaudi::XYZPoint g4 = globalPoint(xUpper, 0., 0.);
-  m_midTraj = new LineTraj(g3,g4);
-
-  // range ---> strip Length
-  m_range = std::make_pair(-0.5*m_stripLength,0.5*m_stripLength);
-
-  // plane
-  m_plane =  Gaudi::Plane3D(g1,g2,g4);
+  Gaudi::XYZPoint g3 = g1 + 0.5*(g2 - g1);
+  Gaudi::XYZPoint g4 = g3 + activeWidth*norm ;
   
-  m_entryPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0.,-0.5*m_thickness));
-  m_exitPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0., 0.5*m_thickness));
-
-  // For creating the 'fast' trajectories  
+  // creating the 'fast' trajectories  
   Gaudi::XYZVector vectorlayer = (g4-g3).unit() * m_pitch ;
-  Gaudi::XYZPoint p0 = g3-0.5*m_stripLength*m_direction ;
-  m_dxdy = m_direction.x()/m_direction.y() ;
-  m_dzdy = m_direction.z()/m_direction.y() ;
-  m_dy   = m_stripLength * m_direction.y() ;
+  Gaudi::XYZPoint p0 = g3-0.5*m_stripLength*direction ;
+  m_dxdy = direction.x()/direction.y() ;
+  m_dzdy = direction.z()/direction.y() ;
+  m_dy   = m_stripLength * direction.y() ;
   m_dp0di.SetX( vectorlayer.x() - vectorlayer.y() * m_dxdy ) ;
   m_dp0di.SetY( vectorlayer.y()  ) ;
   m_dp0di.SetZ( vectorlayer.z() - vectorlayer.y() * m_dzdy ) ;
@@ -326,7 +192,7 @@ StatusCode DeSTSector::cacheInfo()
   m_p0.SetZ( p0.z() - p0.y() * m_dzdy ) ;
   
   // Update the stereo angle. We correct by 'pi' if necessary.
-  Gaudi::XYZVector dir = m_direction ;
+  Gaudi::XYZVector dir = direction ;
   if(dir.y()<0) dir *= -1 ;
   m_angle    = atan2(-dir.x(),dir.y()) ;
   m_cosAngle = cos( m_angle ) ;
@@ -372,19 +238,23 @@ StatusCode DeSTSector::registerConditionsCallbacks(){
   // initialize method
   MsgStream msg(msgSvc(), name() );
 
-  StatusCode sc = registerCondition(this,this->geometry(),&DeSTSector::cacheInfo);
-  if (sc.isFailure() ){
-    msg << MSG::ERROR << "Failed to register geometry conditions" << endreq;
-    return StatusCode::FAILURE; 
+  if (sensors().empty()){
+    msg << MSG::ERROR << "Sterile detector element ! No conditions registered" << endreq;
+    return StatusCode::FAILURE;
   }
 
-  if (m_versionString != "DC06"){
-    sc = registerCondition(this,m_statusString,&DeSTSector::updateStatusCondition);
-    if (sc.isFailure() ){
-      msg << MSG::ERROR << "Failed to register status conditions" << endreq;
-      return StatusCode::FAILURE; 
-    }
+  StatusCode sc = registerCondition(this,sensors().front(),&DeSTSector::cacheInfo,true);
+  if (sc.isFailure() ){
+    msg << MSG::ERROR << "Failed to register geometry condition for first child" << endreq;
+     return StatusCode::FAILURE; 
   }
+
+  sc = registerCondition(this,sensors().back(),&DeSTSector::cacheInfo,true);
+  if (sc.isFailure() ){
+    msg << MSG::ERROR << "Failed to register geometry condition for first child" << endreq;
+     return StatusCode::FAILURE; 
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -417,4 +287,29 @@ void DeSTSector::toEnumMap(const std::map<int,int>& input, DeSTSector::StatusMap
   } // iterM
 
 }
+
+
+DeSTSensor* DeSTSector::findSensor(const Gaudi::XYZPoint& point) const{
+  // return pointer to the layer from point
+  std::vector<DeSTSensor*>::const_iterator iter = 
+    std::find_if( m_sensors.begin(), m_sensors.end(), 
+                 bind(&DeSTSensor::isInside, _1, point));
+  return (iter != m_sensors.end() ? *iter: 0);
+}
+
+bool DeSTSector::globalInActive(const Gaudi::XYZPoint& point) const{
+
+  const DeSTSensor* aSensor =  findSensor(point);
+  return (aSensor ?  aSensor->globalInActive(point) : false );
+}
+
+bool DeSTSector::globalInBondGap(const Gaudi::XYZPoint& point, 
+                                        double tol) const
+{ 
+  const DeSTSensor* aSensor =  findSensor(point);
+  return (aSensor ?  aSensor->globalInBondGap(point) : false ); 
+};
+
+
+
 

@@ -1,7 +1,13 @@
-!$Id: release.notes,v 1.122 2008-01-08 15:56:35 cattanem Exp $
+!$Id: release.notes,v 1.123 2008-03-14 18:26:40 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+! 2008-03-14 M Needham
+ - Changes to add new level (DeSTSensor and derived classes)
+   * These are major changes.
+   * Interface and functionality of DeSTSector has changed. 
+   * See talk in ST software meeting 13/03/08   
 
 !======================== STDet v3r9 2008-01-08 ==========================
 ! 2008-01-08 - Marco Cattaneo
