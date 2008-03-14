@@ -16,20 +16,26 @@ function update_histo_analysis() {
   global $conn,$id;
   $ia=$_POST["Iana"];
   $aid=$_POST["a${ia}_id"];
-  $warn=$alr=array();
+  $warn=$alr=$inps=array();
+  $out=0;
   for ($ip=1;$ip<=$_POST["a${ia}_np"];$ip++) {
     $warn[$ip]=$_POST["a${ia}_p${ip}_w"];
     $alr[$ip]=$_POST["a${ia}_p${ip}_a"];
   }
+  for ($ip=1;$ip<=$_POST["a${ia}_ni"];$ip++) {
+    $inps[$ip]=$_POST["a${ia}_i${ip}_v"];
+  }
   $warnings="thresholds(".implode(",",$warn).")";
   $alarms="thresholds(".implode(",",$alr).")";
+  $inputs= "thresholds(".implode(",",$inps).")";
 
   if (! $aid)  // new entry
-    $command="begin :out := OnlineHistDB.DeclareAnalysis(".$_POST["id"].",'".$_POST["a${ia}_alg"]."',$warnings,$alarms,1); end;";
+    $command="begin :out := OnlineHistDB.DeclareAnalysis(".$_POST["id"].",'".$_POST["a${ia}_alg"]."',$warnings,$alarms,999,$inputs); end;";
   else 
-    $command= "update ANASETTINGS set WARNINGS=$warnings,ALARMS=$alarms where ANA=$aid and ".
+    $command= "update ANASETTINGS set WARNINGS=$warnings,ALARMS=$alarms,INPUTPARS=$inputs where ANA=$aid and ".
       ( $_POST["htype"] == "HID" ? "HISTO='$id'" : "REGEXP_REPLACE(HISTO,'^(.*)/.*\$','\\1')=$id");
   
+  //echo "command is $command<br>\n";
   $stid = OCIParse($conn,$command);
   if (! $aid)
     ocibindbyname($stid,":out",$out,10);

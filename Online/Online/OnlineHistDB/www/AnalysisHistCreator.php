@@ -32,7 +32,7 @@ if (array_key_exists("Alg",$_POST)) {
   }
   if ($np>0) {
     echo "<table><tr><td>Input Parameter values: <td>";
-    get_ana_parameters($alg,0,1,0,0,1,0);
+    get_ana_parameters($alg,"HCREATOR",0,1,0,0,1,0);
     for ($ip=1; $ip<=$np; $ip++) {
       echo "&nbsp&nbsp&nbsp ".$_POST["a1_p${ip}_name"]."  &nbsp <input type=text name='a1_p${ip}' size=10><br>\n";
     }

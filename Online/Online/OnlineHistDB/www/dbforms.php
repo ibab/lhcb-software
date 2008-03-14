@@ -27,7 +27,7 @@ function show_anahist($id) {
  else {
    echo "<br>\n";
  }
- get_ana_parameters($hcreator["ALGORITHM"],0,1,$id."/1",0,1,0,1);
+ get_ana_parameters($hcreator["ALGORITHM"],"HCREATOR",0,1,SingleHist($id),0,1,0,1);
  if(($np=$_POST["a1_np"])>0) {
    $ip=0;
    echo " with parameters <br><center>\n"; 
@@ -83,10 +83,11 @@ function histo_header($id,$htype,$mode)
     if($histo["OBSOLETENESS"])
       echo "Obsolete from <span class=normal>".$histo["OBSOLETENESS"]."</span><br>\n";
 
-    if($histo["ISANALYSISHIST"] && $htype == "HID") {
+    $nhs=$histo["NHS"];
+    if($histo["ISANALYSISHIST"] && ($htype == "HID" || $nhs == 1)) {
       show_anahist($id);
     }
-    $nhs=$histo["NHS"];
+
     if ($htype == "HID") {
       $hsid=HistoSet($id);
       if ($nhs>1)
@@ -303,7 +304,7 @@ function histo_display($id,$htype,$mode)
   }
 }
 
-function get_ana_parameters($alg,$aid,$ia,$hhid,$mask=1,$names=1,$values=1,$hcvalues=0) {
+function get_ana_parameters($alg,$type,$aid,$ia,$hhid,$mask=1,$names=1,$values=1,$hcvalues=0) {
   global $conn;
   
   if($mask) {
@@ -327,6 +328,8 @@ function get_ana_parameters($alg,$aid,$ia,$hhid,$mask=1,$names=1,$values=1,$hcva
   }
   $ip=0;
   while ($ip++<$np){
+    //  parameters to be checked for check algorithms (names and values),
+    // input parameters for creator algorithms (names and $hcvalues)
     if($names) {
       $dstid = OCIParse($conn,"begin OnlineHistDB.GetAlgoParname('$alg',$ip,:pname); end;");
       ocibindbyname($dstid,":pname",$pname,500);
@@ -334,7 +337,7 @@ function get_ana_parameters($alg,$aid,$ia,$hhid,$mask=1,$names=1,$values=1,$hcva
       $_POST["a${ia}_p${ip}_name"]=$pname;
       ocifreestatement($dstid);
     }
-    if($values) {
+    if($values && $type == "CHECK") {
       $dstid = OCIParse($conn,"begin OnlineHistDB.GetAnaSettings(${aid},'${hhid}',$ip,:warn,:alr); end;");
       ocibindbyname($dstid,":warn",$warn,50);
       ocibindbyname($dstid,":alr",$alr,50);
@@ -343,12 +346,33 @@ function get_ana_parameters($alg,$aid,$ia,$hhid,$mask=1,$names=1,$values=1,$hcva
       $_POST["a${ia}_p${ip}_a"]=$alr;
       ocifreestatement($dstid);
     }
-    if($hcvalues) {
+    if($hcvalues && $type == "HCREATOR") {
       $dstid = OCIParse($conn,"begin OnlineHistDB.GetHCSettings('${hhid}',$ip,:value); end;");
       ocibindbyname($dstid,":value",$warn,50);
       OCIExecute($dstid);
       $_POST["a${ia}_p${ip}"]=$warn;
       ocifreestatement($dstid);
+    }
+  }
+  $ip=$np;
+  if ($type == "CHECK") {
+    while ($ip++<$np+$ni){
+      // input parameters for check algorithms (names and values)
+      $ipa=$ip-$np;
+      if($names) {
+        $dstid = OCIParse($conn,"begin OnlineHistDB.GetAlgoParname('$alg',$ip,:pname); end;");
+        ocibindbyname($dstid,":pname",$pname,500);
+        OCIExecute($dstid);
+        $_POST["a${ia}_i${ipa}_name"]=$pname;
+        ocifreestatement($dstid);
+      }
+      if($values) {
+        $dstid = OCIParse($conn,"begin OnlineHistDB.GetAnaInput(${aid},'${hhid}',$ipa,:inp); end;");
+        ocibindbyname($dstid,":inp",$inp,50);
+        OCIExecute($dstid);
+        $_POST["a${ia}_i${ipa}_v"]=$inp;
+        ocifreestatement($dstid);
+      }
     }
   }
 }
@@ -385,12 +409,12 @@ function histo_analysis($id,$htype,$mode) {
       $hhid= ($htype == "HID") ? $id : "${hsid}/1";
       $ia=0;
       while ($ia++<$lastana)
-	get_ana_parameters($_POST["a${ia}_alg"],$_POST["a${ia}_id"],$ia,$hhid);
+	get_ana_parameters($_POST["a${ia}_alg"],"CHECK",$_POST["a${ia}_id"],$ia,$hhid);
     }
     else {
       $ia=0;
       while ($ia++<$lastana)
-	get_ana_parameters($_POST["a${ia}_alg"],0,1,0,0,1,0);
+	get_ana_parameters($_POST["a${ia}_alg"],"CHECK",0,1,0,0,1,0);
     }
   }
   else if ($mode == "update") {
@@ -398,7 +422,7 @@ function histo_analysis($id,$htype,$mode) {
   }
   else if ($mode == "newana") {
     $_POST["a1_id"]=0;
-    get_ana_parameters($_POST["a1_alg"],0,1,0,0,1,0);
+    get_ana_parameters($_POST["a1_alg"],"CHECK",0,1,0,0,1,0);
   }
 
   for ($ia=$firstana; $ia<=$lastana; $ia++) {
@@ -412,6 +436,7 @@ function histo_analysis($id,$htype,$mode) {
     if ($mode != 'new') {
       echo "<input type='hidden' name='a${ia}_id' value='".$_POST["a${ia}_id"],"'>\n";
       echo "<input type='hidden' name='a${ia}_np' value='".$_POST["a${ia}_np"],"'>\n";
+      echo "<input type='hidden' name='a${ia}_ni' value='".$_POST["a${ia}_ni"],"'>\n";
       echo "<input type='hidden' name='a${ia}_mask' value='".$_POST["a${ia}_mask"],"'>\n";
       echo "Analysis <span class='normal'>". $_POST["a${ia}_alg"]." </span>\n";
       echo "<input type='hidden' name='a${ia}_alg' value='".$_POST["a${ia}_alg"],"'>\n";
@@ -446,21 +471,36 @@ function histo_analysis($id,$htype,$mode) {
 	  "To change options for a single histogram, select it from the 
            <a href='../Histogram.php?hsid=${id}&fulllist=1#LIST'> histogram list </a> </B><br>\n";
     }
-    if ($showpars && $_POST["a${ia}_np"]>0) {
-      echo "<table align='center'><thead><tr><td><B>Parameter</B><td><B>Warning</B><td><B>Alarm </B></tr></thead>\n";
-      $ip=0;
-      while ($ip++<$_POST["a${ia}_np"]){
-	printf("<tr><td> <input READONLY type='text' size=15 name='a${ia}_p${ip}_name' value='%s'>\n",$_POST["a${ia}_p${ip}_name"]);
-	$fw=myfloatformat($_POST["a${ia}_p${ip}_w"]); $fa=myfloatformat($_POST["a${ia}_p${ip}_a"]); 
-	printf("<td> <input type='text' size=8 name='a${ia}_p${ip}_w' value='$fw'>\n",$_POST["a${ia}_p${ip}_w"]);
-	printf("<td> <input type='text' size=8 name='a${ia}_p${ip}_a' value='$fa'></tr>\n",$_POST["a${ia}_p${ip}_a"]);
+    if ($showpars &&  ($_POST["a${ia}_np"]>0 || $_POST["a${ia}_ni"]>0) ) {
+      if ($_POST["a${ia}_ni"]>0) {
+        echo "<table align='center'><thead><tr><td><B>Input Parameter</B><td><B>Value</B></tr></thead>\n";
+        $ip=0;
+        while ($ip++<$_POST["a${ia}_ni"]){
+          printf("<tr><td> <input READONLY type='text' size=15 name='a${ia}_i${ip}_name' value='%s'>\n",$_POST["a${ia}_i${ip}_name"]);
+          $fw=myfloatformat($_POST["a${ia}_i${ip}_v"]); 
+          printf("<td> <input type='text' size=8 name='a${ia}_i${ip}_v' value='$fw'>\n",$_POST["a${ia}_i${ip}_v"]);
+        }
+        echo "</table>";
       }
-      echo "</table>";
+      if ($_POST["a${ia}_np"]>0) {
+        echo "<table align='center'><thead><tr><td><B>Parameter</B><td><B>Warning</B><td><B>Alarm </B></tr></thead>\n";
+        $ip=0;
+        while ($ip++<$_POST["a${ia}_np"]){
+          printf("<tr><td> <input READONLY type='text' size=15 name='a${ia}_p${ip}_name' value='%s'>\n",$_POST["a${ia}_p${ip}_name"]);
+          $fw=myfloatformat($_POST["a${ia}_p${ip}_w"]); $fa=myfloatformat($_POST["a${ia}_p${ip}_a"]); 
+          printf("<td> <input type='text' size=8 name='a${ia}_p${ip}_w' value='$fw'>\n",$_POST["a${ia}_p${ip}_w"]);
+          printf("<td> <input type='text' size=8 name='a${ia}_p${ip}_a' value='$fa'></tr>\n",$_POST["a${ia}_p${ip}_a"]);
+        }
+        echo "</table>";
+      }
     }
     else {
       $ip=0;
       while ($ip++<$_POST["a${ia}_np"])
 	printf("<input type='hidden' name='a${ia}_p${ip}_name' value='%s'>\n",$_POST["a${ia}_p${ip}_name"]);
+      $ip=0;
+      while ($ip++<$_POST["a${ia}_ni"])
+	printf("<input type='hidden' name='a${ia}_i${ip}_name' value='%s'>\n",$_POST["a${ia}_i${ip}_name"]);
     }
     if ($canwrite) {
       echo "<table align='center'><tr>";
