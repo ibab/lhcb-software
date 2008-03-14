@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.h,v 1.5 2007-03-21 14:24:44 jvantilb Exp $
+// $Id: STClusterResolution.h,v 1.6 2008-03-14 18:27:09 mneedham Exp $
 #ifndef STClusterResolution_H
 #define STClusterResolution_H 1
 
@@ -14,6 +14,7 @@ namespace LHCb{
 
 class DeSTDetector;
 class DeSTSector;
+class DeSTSensor;
 class AIDA::IHistogram1D;
 class STDetectionLayer;
 class IMCParticleSelector;
@@ -62,7 +63,7 @@ private:
   int histoId(const int clusterSize) const;
 
   double calculateUTrue( const LHCb::MCHit* aHit, 
-                         const DeSTSector* aSector) const;
+                         const DeSTSensor* aSector) const;
 
   std::string m_detType;
   std::string m_clusterLocation;

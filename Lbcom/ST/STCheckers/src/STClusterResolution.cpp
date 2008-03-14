@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.cpp,v 1.14 2008-01-18 10:15:10 mneedham Exp $
+// $Id: STClusterResolution.cpp,v 1.15 2008-03-14 18:27:08 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -13,6 +13,7 @@
 // xml geometry
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
+#include "STDet/DeSTSensor.h"
 
 // STTools interfaces from LHCbKernel and MCInterfaces
 #include "Kernel/STDetSwitch.h"
@@ -117,18 +118,19 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     // get true u - need stereoangle/z info from channel
     const STChannelID aChan = aCluster->channelID();
     const DeSTSector* aSector = m_tracker->findSector(aChan);
-    const double uTrue = this->calculateUTrue(aHit,aSector);
+    const DeSTSensor* aSensor = aSector->findSensor(aHit->midPoint());
+    const double uTrue = this->calculateUTrue(aHit,aSensor);
     
     // rec u - offline
     ISTClusterPosition::Info measVal = m_positionTool->estimate(aCluster);
-    const double uRec = aSector->localU( measVal.strip.strip(), 
+    const double uRec = aSensor->localU( measVal.strip.strip(), 
                                    measVal.fractionalPosition);
 
     // determine which histos to fill based on cluster size
     const int id = this->histoId((int)aCluster->size());
 
     // fill double error = measVal.second;
-    const double error = measVal.fractionalError * aSector->pitch();
+    const double error = measVal.fractionalError * aSensor->pitch();
 
     // Fill offline resolution and pull
     std::string histTitle = m_detType + " " + 
@@ -137,13 +139,13 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     plot( (uRec-uTrue)/error, 20+id, "Pull "+histTitle, -10., 10., 100 );
 
     // now the online version
-    double uOnline = aSector->localU( aChan.strip(),
+    double uOnline = aSensor->localU( aChan.strip(),
                                       aCluster->interStripFraction());
     plot( uOnline-uTrue, 30+id,"Online resolution "+histTitle, -0.5, 0.5, 100 );
 
     // Do the same with trajectories
     std::auto_ptr<Trajectory> tmpTraj = 
-      aSector->trajectory( measVal.strip, measVal.fractionalPosition );
+      aSensor->trajectory( measVal.strip.strip(), measVal.fractionalPosition );
     const Trajectory& clusTraj = *(tmpTraj.get());
 
     // Get the true trajectory
@@ -162,7 +164,7 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
 
     // Plot the residual versus the angle
     double angle = ROOT::Math::VectorUtil::Angle( distance, 
-                                                  aSector->plane().Normal() );
+                                                  aSensor->plane().Normal() );
     angle -= 0.5*M_PI;
     plot2D(angle, residual, 100, "residual vs angle",-0.35,0.35,
            -0.5,0.5,50,50);
@@ -182,8 +184,8 @@ int STClusterResolution::histoId( const int clusterSize ) const
 }
 
 double STClusterResolution::calculateUTrue( const MCHit* aHit,
-                                            const DeSTSector* aSector) const
+                                            const DeSTSensor* aSensor) const
 {
-  Gaudi::XYZPoint localPoint = aSector->toLocal(aHit->midPoint());
+  Gaudi::XYZPoint localPoint = aSensor->toLocal(aHit->midPoint());
   return localPoint.x();
 }

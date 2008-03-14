@@ -1,4 +1,4 @@
-// $Id: STEffChecker.cpp,v 1.5 2007-11-16 16:12:39 mneedham Exp $
+// $Id: STEffChecker.cpp,v 1.6 2008-03-14 18:27:09 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -232,7 +232,7 @@ StatusCode STEffChecker::finalize()
 void STEffChecker::layerEff(const MCParticle* aParticle)
 {
   // find all MC hits for this particle
-  HitTable::InverseType::Range hits = m_hitTable->relations( aParticle ) ;
+  HitTable::InverseType::Range hits = m_hitTable->relations(aParticle ) ;
   if (hits.empty()) return;
   
   std::vector<DeSTLayer*>::const_iterator iterLayer=m_tracker->layers().begin();
@@ -244,7 +244,7 @@ void STEffChecker::layerEff(const MCParticle* aParticle)
     while (iterHit != hits.end()){
       MCHit* aHit = const_cast<MCHit*>( iterHit->to() );
       STChannelID hitChan = aHit->sensDetID();
-      if( uniqueHistoID( hitChan ) == uniqueHistoID((*iterLayer)->elementID()) )
+      if( uniqueHistoID( hitChan ) == uniqueHistoID((*iterLayer)->elementID()) && isInside(*iterLayer,aHit) == true)
         layerHits.push_back(aHit);
       ++iterHit;
     } // iterHit
@@ -314,7 +314,7 @@ bool STEffChecker::isInside(const DeSTLayer* aLayer, const MCHit* aHit) const
   if (aLayer->isInside(aHit->midPoint()) == true){
     if (m_includeGuardRings == false){
       DeSTSector* aSector = m_tracker->findSector(aHit->midPoint());
-      isFound = aSector->globalInActive(aHit->midPoint());
+      if (aSector) isFound = aSector->globalInActive(aHit->midPoint());
     }
     else {
       isFound = true;
