@@ -4,6 +4,12 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2008-03-14 - Olivier Callot
+ - Fixed in LinkedFrom the test to not test the classID if the first template 
+   argument is 'ContainedObject' 
+ - New LinkedFromKey class to access LinkedFrom with only two templates, the TARGET
+   and the KEY type, the SOURCE being defaulted to ContainedObject
+
 ! 2008-03-13 - Olivier Callot
  - New header file 'LocalLinkerTool' that is like a LinkerTool, but doesn't store
    the relation on TES. The links have to be created before being used. It has the same
