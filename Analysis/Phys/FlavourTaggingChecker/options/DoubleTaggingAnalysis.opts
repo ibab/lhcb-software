@@ -38,8 +38,8 @@ SeqPreselBs2DsMuX.Members = {"CheckPV", "MakeResonances/PreselBs2DsMuX"};
 PreselBs2DsMuX.OutputLevel = 6; 
 
 //////////////////////////////////////////////////
-ApplicationMgr.DLLs   += { "VeloDAQ" };
-SeqTagging.Members    += { "DecodeVeloRawBuffer" };
+// ApplicationMgr.DLLs   += { "VeloDAQ" };
+// SeqTagging.Members    += { "DecodeVeloRawBuffer" };
  
 SeqTagging.Members    += {"TaggingTuplesSignal"};
 TaggingTuplesSignal.PhysDesktop.InputLocations = { //"/Event/Phys/PreselBs2DsH"
