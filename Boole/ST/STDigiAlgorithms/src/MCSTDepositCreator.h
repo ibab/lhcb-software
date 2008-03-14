@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.h,v 1.2 2008-02-15 14:49:05 cattanem Exp $
+// $Id: MCSTDepositCreator.h,v 1.3 2008-03-14 18:27:25 mneedham Exp $
 #ifndef MCSTDEPOSITCREATOR_H
 #define MCSTDEPOSITCREATOR_H 1
 
@@ -11,7 +11,8 @@
 
 class DeSTDetector;
 class DeSTSector;
-class ISharingTool;
+class DeSTSensor;
+class ISTChargeSharingTool;
 class ISiAmplifierResponse;
 class ISTSignalToNoiseTool;
 class ISiDepositedCharge;
@@ -63,7 +64,7 @@ private:
                         std::vector<double>& sites) const;
 
   void chargeSharing(const std::vector<double>& sites, 
-                     const DeSTSector* aSector,
+                     const DeSTSensor* aSensor,
                      std::map<unsigned int,double>& stripMap, double& possibleCollectedCharge) const;
 
 

@@ -4,6 +4,11 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+! 2008-03-14  M Needham
+ - Changes in MCSTDepositCreator to follow changes in DeSTDet
+   [introduction of DeSTSensor level]
+
+
 !========================= STDigiAlgorithms v1r0 2008-02-15 ==================
 ! 2008-02-15 - Marco Cattaneo
  - New package, split from STAlgorithms

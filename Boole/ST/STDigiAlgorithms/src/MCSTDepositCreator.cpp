@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.2 2008-02-15 14:49:05 cattanem Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.3 2008-03-14 18:27:25 mneedham Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -19,6 +19,8 @@
 // xml geometry
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
+#include "STDet/DeSTSensor.h"
+
 
 // local
 #include "ISTChargeSharingTool.h"
@@ -41,7 +43,7 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   declareProperty("MinDist", m_minDistance = 10.0e-3*Gaudi::Units::mm);
 
   declareProperty("ChargeSharerName",m_chargeSharerName ="STChargeSharingTool");
-  declareProperty("DepChargeTool", m_depChargeToolName = "SiGeantDepositedCharge");
+  declareProperty("DepChargeTool", m_depChargeToolName = "SiDepositedCharge");
 
   declareProperty("SiteSize", m_siteSize = 0.02*Gaudi::Units::mm);
   declareProperty("MaxNumSites", m_maxNumSites = 150);
@@ -57,7 +59,7 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   declareProperty("Scaling", m_scaling = 1.0);
   declareProperty("ResponseTypes", m_beetleResponseTypes);
   declareProperty("useStatusConditions", m_useStatusConditions = false);
-  declareProperty("useSensDetID", m_useSensDetID = true);
+  declareProperty("useSensDetID", m_useSensDetID = false);
 
 
   m_inputLocation = MCHitLocation::TT; 
@@ -85,8 +87,8 @@ StatusCode MCSTDepositCreator::initialize()
                                               m_sigNoiseToolName+m_detType);
 
   // charge sharing tool
-  m_chargeSharer = tool<ISTChargeSharingTool>( m_chargeSharerName, 
-                                               m_chargeSharerName, this );
+  m_chargeSharer = tool<ISTChargeSharingTool>(m_chargeSharerName, 
+                                              m_chargeSharerName,this);
 
   // deposited charge 
   m_depositedCharge = tool<ISiDepositedCharge>(m_depChargeToolName,
@@ -154,15 +156,17 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
     MCHit* aHit = *iterHit;
 
     DeSTSector* aSector = 0;    
-    if (m_useSensDetID == true){
-      aSector = m_tracker->findSector(aHit->sensDetID());
-    }
-    else {
-      aSector = m_tracker->findSector(aHit->midPoint());
-    }
+    // if (m_useSensDetID == true){
+    //  aSector = m_tracker->findSector(aHit->sensDetID());
+    // }
+    //else {
+     aSector = m_tracker->findSector(aHit->midPoint());
+      //std::cout << "Find point " << std::endl;
+    //}
 
     if (aSector == 0) {
       //std::cout << STChannelID(aHit->sensDetID()) << std::endl;
+      warning() << "point " << aHit->midPoint() << endreq;
       Warning("Failed to find sector", StatusCode::SUCCESS, 1);
       continue;
     }
@@ -172,11 +176,19 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
       if (m_useStatusConditions && aSector->sectorStatus() == DeSTSector::Dead ) continue;
 
       // global to local transformation
-      const Gaudi::XYZPoint entryPoint = aSector->toLocal(aHit->entry());
-      const Gaudi::XYZPoint exitPoint = aSector->toLocal(aHit->exit());
-      const Gaudi::XYZPoint midPoint = aSector->toLocal(aHit->midPoint());
+
+      // find the sensor
+      DeSTSensor* aSensor = aSector->findSensor(aHit->midPoint());
+      if (aSensor == 0){
+        Warning("Failed to find sensor", StatusCode::SUCCESS, 1);
+        continue;
+      } 
+
+      const Gaudi::XYZPoint entryPoint = aSensor->toLocal(aHit->entry());
+      const Gaudi::XYZPoint exitPoint = aSensor->toLocal(aHit->exit());
+      const Gaudi::XYZPoint midPoint = aSensor->toLocal(aHit->midPoint());
         
-      if (aSector->localInActive(midPoint) == true) {
+      if (aSensor->localInActive(midPoint) == true) {
 
         // Calculate the deposited charge on strip
         const double ionization = m_depositedCharge->charge(aHit);
@@ -188,7 +200,7 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
         // doing charge sharing + go to strips
         std::map<unsigned int,double> stripMap;
         double totWeightedCharge = 0.0;
-        chargeSharing(chargeSites,aSector,stripMap, totWeightedCharge);
+        chargeSharing(chargeSites,aSensor,stripMap, totWeightedCharge);
       
         if (totWeightedCharge > 1e-3 ){
 
@@ -302,7 +314,7 @@ void MCSTDepositCreator::distributeCharge(const double entryU,
 }
 
 void MCSTDepositCreator::chargeSharing(const std::vector<double>& sites,
-                                       const DeSTSector* aSector,
+                                       const DeSTSensor* aSensor,
                                        std::map<unsigned int,
                                        double>& stripMap, 
                                        double& possibleCollectedCharge) const 
@@ -318,21 +330,21 @@ void MCSTDepositCreator::chargeSharing(const std::vector<double>& sites,
   while (iterSite != sites.end()){
 
     // closest strips to site
-    firstStrip = aSector->localUToStrip(*iterSite);
+    firstStrip = aSensor->localUToStrip(*iterSite);
     secondStrip = firstStrip+1;
   
     // do the sharing: first Strip!
-    if (aSector->isStrip(firstStrip)){
-      frac = m_chargeSharer->sharing(fabs(*iterSite-aSector->localU(firstStrip))
-                                     /aSector->pitch());
+    if (aSensor->isStrip(firstStrip)){
+      frac = m_chargeSharer->sharing(fabs(*iterSite-aSensor->localU(firstStrip))
+                                     /aSensor->pitch());
       stripMap[firstStrip] += frac*chargeOnSite;
       possibleCollectedCharge += frac*chargeOnSite;
     }
 
     // second strip - if there is one
-    if (aSector->isStrip(secondStrip)){
-      frac =m_chargeSharer->sharing(fabs(*iterSite-aSector->localU(secondStrip))
-                                    /aSector->pitch());
+    if (aSensor->isStrip(secondStrip)){
+      frac =m_chargeSharer->sharing(fabs(*iterSite-aSensor->localU(secondStrip))
+                                    /aSensor->pitch());
       stripMap[secondStrip] += frac*chargeOnSite;
       possibleCollectedCharge += frac*chargeOnSite;
     }
@@ -346,12 +358,12 @@ void MCSTDepositCreator::chargeSharing(const std::vector<double>& sites,
   --lastIter;
 
   firstStrip = startIter->first;
-  if (aSector->isStrip(firstStrip-1)){
+  if (aSensor->isStrip(firstStrip-1)){
     stripMap[firstStrip-1] += 0.0;
   }
 
   const unsigned int lastStrip = lastIter->first;
-  if (aSector->isStrip(lastStrip+1)){
+  if (aSensor->isStrip(lastStrip+1)){
     stripMap[lastStrip+1] += 0.0;
   }
 }
