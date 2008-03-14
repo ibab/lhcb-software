@@ -23,6 +23,8 @@ public:
   /** Constructors */
   AlParameters(AlDofMask mask=AlDofMask()) ;
   AlParameters(const Vector& parameters, const Covariance& covariance, AlDofMask mask=AlDofMask(), size_t offset = 0u) ;
+  AlParameters(const Vector& parameters, const Covariance& covariance, const Covariance& weightmatrix,
+	       AlDofMask mask=AlDofMask(), size_t offset = 0u) ;
   AlParameters( double parameters[6], AlDofMask mask) ;
   
   size_t dim() const { return m_mask.nActive() ; }
@@ -42,11 +44,13 @@ public:
   std::string activeParName( int iactive ) const { return parName( m_mask.parIndex(iactive) ) ; }
   const Vector& parameters() const { return m_parameters ; }
   const Covariance& covariance() const { return m_covariance ; }
+  double globalCorrelationCoefficient(int iactive) const ; 
 
 private:
   AlDofMask   m_mask;
   Vector      m_parameters ;
   Covariance  m_covariance ;
+  Vector      m_weightmatrix ; /// diagonals only
 } ;
 
 inline  std::ostream& operator<<(std::ostream& os, const AlParameters& par) {

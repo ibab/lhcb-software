@@ -14,10 +14,22 @@ AlParameters::AlParameters(AlDofMask mask)
 }
 
 AlParameters::AlParameters(const Vector& parameters, const Covariance& covariance, AlDofMask mask, size_t offset) 
-  : m_mask(mask), m_parameters(dim()), m_covariance(dim())
+  : m_mask(mask), m_parameters(dim()), m_covariance(dim()), m_weightmatrix(dim())
 {
   for (unsigned int i = 0u; i < dim(); ++i) {
     m_parameters[i] = parameters[i+offset] ;
+    for (unsigned int j = 0u; j <= i; ++j)
+      m_covariance[i][j] = covariance[offset+i][offset+j] ;
+  }
+}
+
+AlParameters::AlParameters(const Vector& parameters, const Covariance& covariance, 
+			   const Covariance& weightmatrix, AlDofMask mask, size_t offset) 
+  : m_mask(mask), m_parameters(dim()), m_covariance(dim()), m_weightmatrix(dim())
+{
+  for (unsigned int i = 0u; i < dim(); ++i) {
+    m_parameters[i] = parameters[i+offset] ;
+    m_weightmatrix[i] = weightmatrix[offset+i][offset+i] ;
     for (unsigned int j = 0u; j <= i; ++j)
       m_covariance[i][j] = covariance[offset+i][offset+j] ;
   }
@@ -216,4 +228,11 @@ AlParameters::Matrix6x6 AlParameters::jacobianNumeric( const ROOT::Math::Transfo
     for(int i=0; i<6; ++i) jacobian(i,j) = deltaprime[i]/epsilon ;
   }
   return jacobian ;
+}
+
+
+double AlParameters::globalCorrelationCoefficient(int iactive) const 
+{
+  double varweight =  m_covariance[iactive][iactive] *  m_weightmatrix[iactive] ;
+  return varweight>1 ? std::sqrt(1 - 1/varweight) : 0  ;
 }

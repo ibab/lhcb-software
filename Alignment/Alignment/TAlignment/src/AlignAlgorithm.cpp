@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.34 2008-03-14 14:34:06 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.35 2008-03-14 22:15:49 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -623,9 +623,8 @@ void AlignAlgorithm::update() {
 	     << "Number of active parameters: "                       << nDOFs-numConstraints << std::endl ;
   
   if ( nDOFs > 0 ) {
-    
-    AlVec    derivatives(nDOFs);
-    AlSymMat matrix(nDOFs);
+    AlVec    halfDChi2dX(nDOFs);
+    AlSymMat halfD2Chi2dX2(nDOFs);
     
     // Remove all parameters that are masked out.
     unsigned insert_i = 0u;
@@ -634,15 +633,15 @@ void AlignAlgorithm::update() {
     for (std::vector<bool>::const_iterator i = dofmask.begin(), iEnd = dofmask.end(); i != iEnd; ++i) {
       if (*i) {
 	const unsigned index_i = std::distance(boolIter(dofmask.begin()), i);
-	derivatives[insert_i] = tmpDerivatives[index_i];
+	halfDChi2dX[insert_i] = tmpDerivatives[index_i];
 	for (std::vector<bool>::const_iterator j = i, jEnd = dofmask.end(); j != jEnd; ++j) {
 	  if (*j) {
 	    if (printVerbose()) {
 	      verbose() << "insert_i = " << insert_i << " insert_j = " << insert_j 
-			<< " matrix[" << index_i << "][" << std::distance(boolIter(dofmask.begin()), j) << "]" 
+			<< " halfD2Chi2dX2[" << index_i << "][" << std::distance(boolIter(dofmask.begin()), j) << "]" 
 			<< tmpMatrix[index_i][std::distance(boolIter(dofmask.begin()), j)] << endmsg;
 	    }
-	    matrix[insert_i][insert_j++] = tmpMatrix[index_i][std::distance(boolIter(dofmask.begin()), j)];
+	    halfD2Chi2dX2[insert_i][insert_j++] = tmpMatrix[index_i][std::distance(boolIter(dofmask.begin()), j)];
 	  }
 	}
 	insert_j = ++insert_i;
@@ -655,25 +654,26 @@ void AlignAlgorithm::update() {
     }
     
     if (nDOFs < 50 ) {
-      info() << "AlVec Vector    = " << derivatives << endmsg;
-      info() << "AlSymMat Matrix = " << matrix      << endmsg;
+      info() << "AlVec Vector    = " << halfDChi2dX << endmsg;
+      info() << "AlSymMat Matrix = " << halfD2Chi2dX2      << endmsg;
     } else {
       info() << "Matrices too big to dump to std" << endmsg ;
     }
     
     // Tool returns H^-1 and alignment constants. Need to copy the 2nd derivative because we still need it.
-    AlSymMat halfDChi2dX = matrix ;
-    AlVec scale(halfDChi2dX.size()) ;
-    if (m_usePreconditioning) preCondition(derivatives,matrix, scale,offsets) ;
-    bool solved = m_matrixSolverTool->compute(matrix, derivatives);
-    if (m_usePreconditioning) postCondition(derivatives,matrix, scale) ;
+    AlVec    scale(halfD2Chi2dX2.size()) ;
+    AlSymMat covmatrix = halfD2Chi2dX2 ;
+    AlVec    solution   = halfDChi2dX ;
+    if (m_usePreconditioning) preCondition(solution,covmatrix, scale,offsets) ;
+    bool solved = m_matrixSolverTool->compute(covmatrix, solution);
+    if (m_usePreconditioning) postCondition(solution,covmatrix, scale) ;
     
     if (solved) {
       StatusCode sc = StatusCode::SUCCESS;
-      double deltaChi2 = derivatives * halfDChi2dX * derivatives ;
+      double deltaChi2 = solution * halfDChi2dX ; //somewhere we have been a bit sloppy with two minus signs!
       if (printDebug()) {
-	info() << "Solution = " << derivatives << endmsg ;
-	info() << "Covariance = " << matrix << endmsg ;
+	info() << "Solution = " << solution << endmsg ;
+	info() << "Covariance = " << covmatrix << endmsg ;
       }
       logmessage << "Alignment change chisquare/dof: " 
 		 << deltaChi2 << " / " << nDOFs-numConstraints << std::endl
@@ -682,7 +682,7 @@ void AlignAlgorithm::update() {
       m_dAlignChi2vsIterHisto->fill(m_iteration, deltaChi2) ;
       m_nordAlignChi2vsIterHisto->fill(m_iteration, deltaChi2 / (nDOFs-numConstraints));
       
-      if (numConstraints > 0) printCanonicalConstraints(derivatives, matrix, numConstraints, logmessage) ;
+      if (numConstraints > 0) printCanonicalConstraints(solution, covmatrix, numConstraints, logmessage) ;
       
       if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
       size_t iElem(0u) ;
@@ -692,14 +692,15 @@ void AlignAlgorithm::update() {
 	if( offsets[iElem] < 0 ) {
 	  logmessage << "Not enough hits for alignment. Skipping update." << std::endl ;
 	} else {
-	  AlParameters delta( derivatives, matrix, it->dofMask(), offsets[iElem] ) ;
+	  AlParameters delta( solution, covmatrix, halfD2Chi2dX2, it->dofMask(), offsets[iElem] ) ;
 	  AlParameters refdelta = it->currentActiveDelta() ;
 	  //logmessage << delta ;
 	  for(unsigned int iactive = 0u; iactive < delta.dim(); ++iactive) 
-	    logmessage << std::setw(6)  << delta.activeParName(iactive) << ": " 
-		       << "cur= " << std::setw(12) << refdelta.parameters()[iactive]
-		       << "delta= " << std::setw(12) << delta.parameters()[iactive] << " +/- "
-		       << std::setw(12) << signedroot(delta.covariance()[iactive][iactive]) << std::endl ;
+	    logmessage << std::setw(6)  << delta.activeParName(iactive) << ":" 
+		       << " cur= " << std::setw(12) << refdelta.parameters()[iactive]
+		       << " delta= " << std::setw(12) << delta.parameters()[iactive] << " +/- "
+		       << std::setw(12) << signedroot(delta.covariance()[iactive][iactive]) 
+		       << " gcc= " << delta.globalCorrelationCoefficient(iactive) << std::endl ;
 	  
 	  // need const_cast because loki range givess access only to const values 
 	  StatusCode sc = (const_cast<AlignmentElement&>(*it)).updateGeometry(delta) ;
