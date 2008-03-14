@@ -1,4 +1,4 @@
-// $Id: L0ETC.cpp,v 1.4 2008-03-14 10:28:44 pkoppenb Exp $
+// $Id: L0ETC.cpp,v 1.5 2008-03-14 10:37:46 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -93,29 +93,29 @@ StatusCode L0ETC::execute() {
   // Retrieve informations about event
   if (exist<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default)){
     const LHCb::MCHeader *evtHeader = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default);
-    tup->column("event", (int)evtHeader->evtNumber() );
-    tup->column("run",   (int)evtHeader->runNumber() );
+    tup->column("event", (int)evtHeader->evtNumber() ).ignore();
+    tup->column("run",   (int)evtHeader->runNumber() ).ignore();
   } else {
     Warning("    not able to retrieve MCHeader");
-    tup->column("event", -1 );
-    tup->column("run",   -1 );
+    tup->column("event", -1 ).ignore();
+    tup->column("run",   -1 ).ignore();
   }
 
   // get L0 result
   if ( exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default)){
     LHCb::L0DUReport* L0 = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
-    tup->column ( "L0",  L0->decision() ) ;
+    tup->column ( "L0",  L0->decision() ).ignore() ;
     for ( std::vector<std::string>::const_iterator c = m_l0channels.begin();
           c != m_l0channels.end(); ++c){
       verbose() << *c << " says " << L0->channelDecisionByName(*c) << endmsg ;
-      tup->column ( (*c), L0->channelDecisionByName(*c)  ) ;
+      tup->column ( (*c), L0->channelDecisionByName(*c)  ).ignore() ;
     }
   } else {
     Warning("    not able to retrieve L0DUReport");
-    tup->column ( "L0", false ) ;
+    tup->column ( "L0", false ).ignore() ;
     for ( std::vector<std::string>::const_iterator c = m_l0channels.begin();
           c != m_l0channels.end(); ++c){
-      tup->column ( (*c), false ) ;
+      tup->column ( (*c), false ).ignore() ;
     }
   }
   //  tup->write(); // do not write out. This is done by evtcol svc
