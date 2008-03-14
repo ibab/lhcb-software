@@ -4,9 +4,12 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r10 2008-03-14 ===========================
+! 2008-03-14 - Beat Jost
+ - Add TestDet bank type, for DAQ tests
+
 ! 2008-03-03 - Olivier Deschamps
  - RawBankReadoutStatusMonitoring : minor change in 2d histo bining
-
 
 !================ DAQEvent v7r9 2008-03-03 ============================
 ! 2008-02-27 - Olivier Deschamps
