@@ -1,4 +1,4 @@
-// $Id: TaggingTuplesSignal.h,v 1.1 2008-03-14 17:02:16 pkoppenb Exp $
+// $Id: TaggingTuplesSignal.h,v 1.2 2008-03-14 17:41:30 pkoppenb Exp $
 #ifndef TAGGINGTUPLESSIGNAL_H 
 #define TAGGINGTUPLESSIGNAL_H 1
 
@@ -20,12 +20,22 @@
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "Kernel/DVAlgorithm.h"
 #include "Event/RecHeader.h"
-/** @class NTuples NTuples.h
+
+/** @class TaggingTuplesSignal TaggingTuplesSignal.h
  *  
+ * Implementation file for class :TaggingTuplesSignal
  *
- *  @author Patrick KOPPENBURG
- *  @date   2005-11-07
- */
+ * @author  Onuora Awunor
+ * @date    01-10-2007 
+ *
+ * To be run over MC truth Signal events.
+ * Algorithm called by ../options/DoubleTAggingAnalysis.opts to store tagging 
+ * decisions into NTUPLE to be used for DoubleTagging analysis
+ * NB: The ntuple is used as input in macro .../root/DoubleTaggingAnalysis.C
+ *
+ *  @author Onuora Awunor
+ *  @date   01-10-2008
+ **/
 class TaggingTuplesSignal : public DVAlgorithm {
 public: 
   /// Standard constructor

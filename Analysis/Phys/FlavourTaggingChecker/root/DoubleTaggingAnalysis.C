@@ -1,59 +1,57 @@
-//void plot()
-
 
 {
-
-/*
- *                Author : Onuora Awunor October 2007
- *
- * This Macro is designed to use the Ntuple information from the                
- * output of TuplesSignal.cpp and TuplesData.cpp in order to extract the        
- * FlavourTagging performance and estimate OmegaSS (Wss) of the same side       
- * kaon Tagger.
- *
- * Channels : Bs->DsPi and Bs->DsMuNu  (could also be used for other channels)
- *  Samples : Signal sample -> Monte Carlo truth
- *            Data sample -> data (for now we will use bb-bar inclusive sample)
- * 
- * The macro extracts the required information in 6 stages:                     
- *                                                                                
- *   First using MC Truth signal sample - "TaggingTuplesSignal.root";
- *                                                                                
- *   Stage 1: Extract the Inclusive Tagging Performance for                        
- *            muon, electron, kaon, and VertexCharge                              
- *                                                                                
- *   Stage 2: Extract the Opposite Side Tagging performance for                   
- *            muon, electron, kaon, muon+kaon, elec+kaon and VertexCharge         
- *                                                                                
- *   Stage 3: use Opposite Side Wrong-tag fraction (OmegaOS) from Stage 2 to      
- *            obtain Same Side Wrong-tag fraction (OmegaSS) using DoubleTagging   
- *            Formula (see LHCb Note 2007-127)                                    
- *                                                                                
- *   Next using output from Data sample i.e. "TaggingTuplesData.root",                      
- *                                                                                
- *   Stage 4: Obtain histograms of:                                               
- *            a - all candidate events                                            
- *            b - all DoubleTagged (DT) events                                    
- *            c - all DoubleTagged events that agree                              
- *            d - all DoubleTagged events that disagree                           
- *                                                                                
- *   Stage 5: Perform fit on the histograms to extract estimates of a,b,c and d   
- *            in Stage 4 including their errors after background subtraction.     
- *            Use numbers to recalculate F, and hence OmegaSS +/- ErrorOmegaSS.
- *            ( Note that in the instance of low statistics it is impractical to 
- *            racalculate OmegaSS for each Category, hence used F+/-Sigma(F) to
- *            obtain Sigma(OmegaSS) only.              
- *                                                                               
- *   Stage 6: Perform projection of ErrorOmegass/OmegaSS                          
- *            Note that in performing projection, the error of OmegaOS must be    
- *            scaled with luminosity. for Bs->DsPi and Bs->DsMuNu use info from   
- *            LHCb Note 2006-058, pg 9. This must be put in by hand(line 912-946) 
- * 
- * 
- *            Points To Remember:
- *            a - Make sure that you use the correct offline "Global Cuts" for
- *               the correct channel.
- */
+/** @file
+  * @author Onuora Awunor
+  * @date   March 2008
+  *
+  *
+  * This Macro is designed to use the Ntuple information from the                
+  * output of TuplesSignal.cpp and TuplesData.cpp in order to extract the        
+  * FlavourTagging performance and estimate OmegaSS (Wss) of the same side       
+  * kaon Tagger.
+  *
+  * Channels : Bs->DsPi and Bs->DsMuNu  (could also be used for other channels)
+  *  Samples : Signal sample -> Monte Carlo truth
+  *            Data sample -> data (for now we will use bb-bar inclusive sample)
+  * 
+  * The macro extracts the required information in 6 stages:                     
+  *                                                                                
+  *   First using MC Truth signal sample - "TaggingTuplesSignal.root";
+  *                                                                                
+  *   Stage 1: Extract the Inclusive Tagging Performance for                        
+  *            muon, electron, kaon, and VertexCharge                              
+  *                                                                                
+  *   Stage 2: Extract the Opposite Side Tagging performance for                   
+  *            muon, electron, kaon, muon+kaon, elec+kaon and VertexCharge         
+  *                                                                                
+  *   Stage 3: use Opposite Side Wrong-tag fraction (OmegaOS) from Stage 2 to      
+  *            obtain Same Side Wrong-tag fraction (OmegaSS) using DoubleTagging   
+  *            Formula (see LHCb Note 2007-127)                                    
+  *                                                                                
+  *   Next, using output from Data sample i.e. "TaggingTuplesData.root",                      
+  *                                                                                
+  *   Stage 4: Obtain histograms of:                                               
+  *            a - all candidate events                                            
+  *            b - all DoubleTagged (DT) events                                    
+  *            c - all DoubleTagged events that agree                              
+  *            d - all DoubleTagged events that disagree                           
+  *                                                                                
+  *   Stage 5: Perform fit on the histograms to extract estimates of a,b,c and d   
+  *            in Stage 4 including their errors after background subtraction.     
+  *            Use numbers to recalculate F, and hence OmegaSS +/- ErrorOmegaSS.
+  *            ( Note that in the instance of low statistics it is impractical to 
+  *            racalculate OmegaSS for each Category, hence used F+/-Sigma(F) to
+  *            obtain Sigma(OmegaSS) only.              
+  *                                                                               
+  *   Stage 6: Perform projection of ErrorOmegass/OmegaSS                          
+  *            Note that in performing projection, the error of OmegaOS must be    
+  *            scaled with luminosity. for Bs->DsPi and Bs->DsMuNu use info from   
+  *            LHCb Note 2006-058, pg 9. This must be put in by hand(line 912-946) 
+  * 
+  *            NB: Make sure that you use the correct offline "Global Cuts" for
+  *               the correct channel.
+  *            
+  **/
 
 ///  Plotting Parameters
 
@@ -115,8 +113,7 @@
   f.ls();
   t->Print();
 
- // Define global Ntuple cuts here! Remember to use appropriate global cut for appropriate channel
- // examples:
+ // Define global Ntuple cuts here!
  TCut Total_cut = "DsMass>1900 && BsMass>3000 && BsMass<5400"; // All Reconst. events
  TCut Global_Bs2DsPi_cut = "L0>0"; // For Bs2DsPi channel
  TCut Global_Bs2DsMuNu_cut = "DsMass>1944 && DsMass<1988 && BsMass>3000 && BsMass<5400 && L0>0";//for Bs2dsMuNu channel

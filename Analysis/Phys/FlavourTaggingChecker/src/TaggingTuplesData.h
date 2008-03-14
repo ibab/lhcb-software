@@ -1,4 +1,4 @@
-// $Id: TaggingTuplesData.h,v 1.1 2008-03-14 17:02:16 pkoppenb Exp $
+// $Id: TaggingTuplesData.h,v 1.2 2008-03-14 17:41:30 pkoppenb Exp $
 #ifndef TAGGINGTUPLESDATA_H 
 #define TAGGINGTUPLESDATA_H 1
 
@@ -22,12 +22,19 @@
 #include "Event/RecHeader.h"
 #include "Kernel/IBackgroundCategory.h"
 
-/** @class PlotTuplesbkg PlotTuplesbkg.h
- *  
+/**
+ * @file
+ * Implementation file for class :TaggingTuplesData
  *
- *  @author Patrick KOPPENBURG
- *  @date   2005-11-07
- */
+ * @author  Onuora Awunor
+ * @date    01-10-2007 
+ *
+ * To be run over DATA e.g bb-inclusive or real data .
+ * Algorithm called by ../options/DoubleTAggingAnalysis.opts to store tagging 
+ * decisions into NTUPLE to be used for DoubleTagging analysis
+ * NB: The ntuple is used as input in macro .../root/DoubleTaggingAnalysis.C
+**/
+
 class TaggingTuplesData : public DVAlgorithm {
 public: 
   /// Standard constructor

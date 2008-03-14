@@ -1,17 +1,5 @@
-// $Id: TaggingTuplesSignal.cpp,v 1.1 2008-03-14 17:02:16 pkoppenb Exp $
+// $Id: TaggingTuplesSignal.cpp,v 1.2 2008-03-14 17:41:30 pkoppenb Exp $
 // Include files 
-
-//############################################################################
-// Implementation file for class :TaggingTuplesSignal
-//
-// 01-02-2007 : Onuora Awunor
-// 
-// To be run over MC truth Signal events.
-// Algorithm called by ../options/DoubleTAggingAnalysis.opts to store Tagging 
-// Decisions into NTUPLES to be used for DoubleTagging analysis
-// NB: The ntuple is used as input in macro called ../options/DoubleTaggingAnalysis.C
-//#############################################################################
-
 // local
 #include "TaggingTuplesSignal.h"
 #include "Event/L0DUReport.h"

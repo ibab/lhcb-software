@@ -1,13 +1,14 @@
-//############################################################## 
-//  Option file to run the FlavourTagging Algorithm
-//  with pre-selection options on Data/Signal
-//  
-//  Output is TaggingTuplesSignal.root or TaggingTuplesData.root
-//  to be used as input in macro->DoubleTaggingAnalysis.C
-// 
-//  Author: Onuora Awunor
-//   01-02-2007
-//##############################################################
+
+/** @file
+*  Option file to run the FlavourTagging Algorithm
+*  with pre-selection options on Data/Signal
+*  
+*  Output is TaggingTuplesSignal.root or TaggingTuplesData.root
+*  to be used as input in macro->DoubleTaggingAnalysis.C
+* 
+*  @author  Onuora Awunor
+*  @date    15-03-2008
+**/
 
 #pragma print off
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"

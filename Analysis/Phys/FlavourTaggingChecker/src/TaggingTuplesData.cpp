@@ -1,16 +1,5 @@
-// $Id: TaggingTuplesData.cpp,v 1.1 2008-03-14 17:02:16 pkoppenb Exp $
+// $Id: TaggingTuplesData.cpp,v 1.2 2008-03-14 17:41:30 pkoppenb Exp $
 // Include files 
-
-//#############################################################################
-// Implementation file for class :PlotTuples
-//
-// 01-02-2007 : Onuora Awunor
-// 
-// To berun over Data e.e bb-inclusive or real data
-// Algorithm called by ../options/DoubleTAggingAnalysis.opts to store Tagging 
-// Decisions into NTUPLES to be used for DoubleTagging analysis
-// NB: The ntuple is used as input in macro called ../options/DoubleTaggingAnalysis.C
-//#############################################################################
 
 // from Gaudi
 #include "Event/L0DUReport.h"
