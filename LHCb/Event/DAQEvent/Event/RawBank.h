@@ -103,6 +103,7 @@ namespace LHCb
                    TAEHeader,       // 48
                    MuonFull,        // 49
                    MuonError,       // 50
+                   TestDet,         // 51
                    // Add new types here. Don't forget to update also RawBank.cpp
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };

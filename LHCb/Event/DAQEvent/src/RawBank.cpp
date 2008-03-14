@@ -1,4 +1,4 @@
-// $Id: RawBank.cpp,v 1.1 2008-02-13 13:11:34 cattanem Exp $
+// $Id: RawBank.cpp,v 1.2 2008-03-14 07:56:40 jost Exp $
 
 // local
 #include "Event/RawBank.h"
@@ -63,6 +63,7 @@ std::string LHCb::RawBank::typeName(LHCb::RawBank::BankType e){
   case LHCb::RawBank::TAEHeader       : return  "TAEHeader";       
   case LHCb::RawBank::MuonFull        : return  "MuonFull";        
   case LHCb::RawBank::MuonError       : return  "MuonError";
+  case LHCb::RawBank::TestDet         : return  "TestDet";
   default                             : return  "Undefined name";
   };
 }  
