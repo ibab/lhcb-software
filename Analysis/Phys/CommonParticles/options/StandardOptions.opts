@@ -1,6 +1,6 @@
-// $Id: StandardOptions.opts,v 1.10 2008-03-14 11:03:20 pkoppenb Exp $
+// $Id: StandardOptions.opts,v 1.11 2008-03-14 11:08:35 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
 // ============================================================================
 
 /** @file 
@@ -41,7 +41,6 @@
  *  @author P. Koppenburg
  *  @date 2006-01-30
  */
-#pragma print off
 #include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
 
 #include "$COMMONPARTICLESROOT/options/StandardD0.opts"
@@ -56,4 +55,3 @@
 #include "$COMMONPARTICLESROOT/options/StandardLambda.opts"
 #include "$COMMONPARTICLESROOT/options/StandardMergedPi0s.opts"
 #include "$COMMONPARTICLESROOT/options/StandardResolvedPi0s.opts"
-#pragma print on
