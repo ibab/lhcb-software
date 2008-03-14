@@ -1,4 +1,4 @@
-// $Id: L0ETC.cpp,v 1.3 2008-01-30 12:13:54 pkoppenb Exp $
+// $Id: L0ETC.cpp,v 1.4 2008-03-14 10:28:44 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -118,7 +118,7 @@ StatusCode L0ETC::execute() {
       tup->column ( (*c), false ) ;
     }
   }
-  tup->write();
+  //  tup->write(); // do not write out. This is done by evtcol svc
 
   return StatusCode::SUCCESS;
 }

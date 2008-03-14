@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.87 2008-03-04 08:07:19 cattanem Exp $
+! $Id: release.notes,v 1.88 2008-03-14 10:28:44 pkoppenb Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2008-03-14 - Patrick Koppenburg
+ - L0ETC: do not write out. This is done by evtcol svc.
 
 !========================== L0DU v8r3 2008-03-03 =========================
 ! 2008-03-03 - Olivier Deschamps 
