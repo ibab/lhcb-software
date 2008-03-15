@@ -1,6 +1,8 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
-""" 'Solution'-file for 'DataAccess/GetData' example (Bender Tutorial) """
+"""
+'Solution'-file for 'DataAccess/GetData' example (Bender Tutorial)
+"""
 # =============================================================================
 # @file
 #
@@ -11,10 +13,8 @@
 # =============================================================================
 __author__ = 'Vanya BELYAEV  ibelyaev@physics.syr.edu'
 # =============================================================================
-
 ## import everything from BENDER
 from Bender.MainMC import *
-
 # =============================================================================
 ## @class GetData
 #  solution for the first excersize 
@@ -22,13 +22,11 @@ class GetData(Algo):
     """
     It is a solution algorothm for the first excersize
     """
-
     ## the main method for analysis 
     def analyse( self ) :
         """
         The main method for analysis
-        """
-        
+        """ 
         ## get all MC vertices 
         mcvs = self.get( 'MC/Vertices' )
         
@@ -50,7 +48,7 @@ def configure() :
     The configurtaion of the job
     """
     
-    import data_tutorial as data 
+    import BenderTutor.data_tutorial as data 
     
     ## general configuration :
     gaudi.config ( files = [ '$DAVINCIROOT/options/DaVinciCommon.opts' ] )

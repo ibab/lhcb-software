@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 """
 'Solution'-file for 'MCmuons.py' example (Bender Tutorial)
@@ -13,11 +13,8 @@
 # =============================================================================
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
-
-# =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
-
 # =============================================================================
 ## @class MCMuons  
 #  the primitive algorithm
@@ -25,7 +22,6 @@ class MCMuons(AlgoMC):
     """
     The primitive algorithm
     """
-
     ## the main "analysis" mehtod 
     def analyse( self ) :
         """
@@ -62,7 +58,7 @@ def configure() :
     """
     The configuration of the job
     """
-    import data_tutorial as data 
+    import BenderTutor.data_tutorial as data 
     
     gaudi.config ( files = ['$DAVINCIROOT/options/DaVinciCommon.opts' ] )
     

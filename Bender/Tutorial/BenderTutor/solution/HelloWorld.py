@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 """
 Standard 'Hello, world!' example.
@@ -14,11 +14,8 @@ No way to avoid it!
 # =============================================================================
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
-
-# =============================================================================
 ## import everything from BENDER
 from Bender.Main import *
-
 # =============================================================================
 ## @class HelloWorld
 #  simple Python/Bender class for classical 'Hello,World!' example
@@ -46,7 +43,7 @@ class HelloWorld(Algo):
 ## The configuration of the job
 def configure() :
     
-    import data_tutorial as data 
+    import BenderTutor.data_tutorial as data 
 
     gaudi.config( files = ['$DAVINCIROOT/options/DaVinciCommon.opts' ] )
     

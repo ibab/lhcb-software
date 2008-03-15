@@ -1,11 +1,11 @@
-# $Id: Minimalistic_0.py,v 1.6 2007-09-29 13:46:18 ibelyaev Exp $
+# $Id: Minimalistic_0.py,v 1.7 2008-03-15 13:35:38 ibelyaev Exp $
 # =============================================================================
 
 
 # =============================================================================
 from Bender.Main import *
 
-import data_tutorial as data 
+import BenderTutor.data_tutorial as data 
 
 gaudi.config( files = ['$DAVINCIROOT/options/DaVinci.opts'] )
 

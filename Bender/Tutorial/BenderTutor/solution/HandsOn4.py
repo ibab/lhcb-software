@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 """
 'Solution'-file for 'RCMCselect.py' example (Bender Tutorial)
@@ -13,11 +13,8 @@
 # =============================================================================
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
-
-# =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
-
 # =============================================================================
 ## @class RCKaons
 #  solution for the fourth exersize 
@@ -25,13 +22,11 @@ class RCKaons(AlgoMC):
     """
     The solution for the fourth exersize
     """
-    
     ## the main analysis method 
     def analyse( self ) :
         """
         The main analysis method
         """
-
         ## helper MC object 
         finder = self.mcFinder()
         
@@ -101,44 +96,39 @@ def configure() :
     configure the job
     """
 
-    import data_tutorial as data 
+    import BenderTutor.data_tutorial as data 
 
-    line = 'NTupleSvc.Output += { "RC DATAFILE=\'%s\' TYP=\'%s\' OPT=\'NEW\'" }'
-    line = line % ( 'HandsOn4.hbook' , 'HBOOK' )
-    
     gaudi.config ( files = [
-        '$DAVINCIROOT/options/DaVinci.opts'                 ,
-        '$COMMONPARTICLESROOT/options/StandardKaons.opts' ] ,
-                   options = [ line ] )
+        '$DAVINCIROOT/options/DaVinciCommon.opts'           ,
+        '$COMMONPARTICLESROOT/options/StandardKaons.opts' ] )
     
     ## modify/update the configuration:
-    
+
     ## 1) create the algorithm
     alg = RCKaons( 'RCKaons' )
     
     ## 2) add algorithm to the list of TopLevel algorithms 
-    gaudi.addAlgorithm( alg )
+    # gaudi.addAlgorithm( alg )
+    gaudi.setAlgorithms( [alg] )
     
     ## 3) configure algorithm
     desktop = gaudi.tool('RCKaons.PhysDesktop')
     desktop.InputLocations = [
-        'Phys/StdLooseKaons' ,
-        'Phys/StdLooseMuons' 
+        'Phys/StdTightKaons' ,
+        'Phys/StdTightMuons' 
         ]
     
     ## configure the histograms:
-    if 'HbookCnv' not in gaudi.DLLs : gaudi.DLLs += ['HbookCnv']
-    gaudi.HistogramPersistency = "HBOOK"
     hsvc = gaudi.service('HistogramPersistencySvc')
-    hsvc.OutputFile =  'rskaons_histos.hbook' 
+    hsvc.OutputFile =  'HandsOn4_histos.root' 
     
-    ## add the printout of the histograms at the end of the job 
-    hsvc = gaudi.service( 'HbookHistSvc' )
-    hsvc.PrintHistos = True
-    
+    ## configure the N-Tuples:
+    ntsvc = gaudi.ntuplesvc()
+    ntsvc.Output = [ "MC DATAFILE='HandsOn4.root' OPT='NEW' TYP='ROOT'" ]     
+        
     ## configure own algorithm 
     alg.PP2MCs = ['Relations/Rec/ProtoP/Charged'] # only charged 
-    alg.NTupleLUN = 'RC'
+    alg.NTupleLUN = 'MC'
     
     # redefine input files 
     evtSel = gaudi.evtSel()

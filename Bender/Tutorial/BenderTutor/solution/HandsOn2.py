@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 """
 'Solution'-file for 'Hands-On 2' example (Bender Tutorial)
@@ -13,11 +13,8 @@
 # =============================================================================
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
-
-# =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
-
 # =============================================================================
 ## @class HandOn2
 #   solution for the second excersize 
@@ -25,22 +22,18 @@ class HandsOn2(AlgoMC):
     """
     Solution for the second excersize
     """
-    
     ## the main analysis method 
     def analyse( self ) :
         """
         The main analysis method
-        """
-        
+        """ 
         ## get *ALL* Monte Carlo B_s0 and B_s~0
         Bs   = self.mcselect ( 'Bs'  ,'B_s0' == MCABSID )
-        if Bs.empty()   :
-            self.Warning ( 'No B_s0 are found!') 
+        if Bs.empty()   : self.Warning ( 'No B_s0 are found!') 
         
         ## get all beauty baryions 
         lamb  = self.mcselect( 'beauty' , BARYON & BEAUTY )
-        if lamb.empty() :
-            self.Warning ( 'No beuty baryons are found!')
+        if lamb.empty() : self.Warning ( 'No beauty baryons are found!')
         
         nBs = self.counter("#Bs")
         nBs += Bs.size()
@@ -57,7 +50,7 @@ def configure() :
     """
     Configure the job
     """
-    import data_tutorial as data 
+    import BenderTutor.data_tutorial as data 
     
     ## general configuration :
     gaudi.config ( files = [ '$DAVINCIROOT/options/DaVinciCommon.opts' ] )

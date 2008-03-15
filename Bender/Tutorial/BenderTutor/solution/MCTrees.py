@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 """
 'Solution'-file for 'MCTrees.py' example (Bender Tutorial)
@@ -13,11 +13,8 @@
 # =============================================================================
 __author__ = 'Vanya BELYAEV  ibelyaev@physics.syr.edu'
 # =============================================================================
-
-# =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
-
 # =============================================================================
 ## @class MCTrees
 #  The algorthmm itself 
@@ -25,13 +22,11 @@ class MCTrees( AlgoMC ) :
     """
     The algorthmm itself
     """
-
     ## the main analysis method 
     def analyse( self ) :
         """
         The main analysis method
-        """
-        
+        """ 
         ## get the MCDecayFinder wrapper
         finder = self.mcFinder()
         
@@ -79,7 +74,7 @@ def configure() :
     Configure the job
     """
     
-    import data_tutorial as data
+    import BenderTutor.data_tutorial as data
     
     gaudi.config ( files = ['$DAVINCIROOT/options/DaVinciCommon.opts'] )
     
@@ -90,23 +85,16 @@ def configure() :
     gaudi.setAlgorithms ( [ alg ] ) 
 
     # configure the histograms 
-    gaudi.HistogramPersistency = "HBOOK"
     hps = gaudi.service('HistogramPersistencySvc')
-    hps.OutputFile = 'MTrees_histos.hbook'
+    hps.OutputFile = 'MCTrees_histos.root'
     
-    # add the printout of the histograms
-    hsvc = gaudi.service( 'HbookHistSvc' )
-    hsvc.PrintHistos = True
-
     # configure the N-Tuples:
     ntsvc = gaudi.ntuplesvc()
-    ntsvc.Output = [ "MC DATAFILE='MCTrees.hbook' OPT='NEW' TYP='HBOOK'" ]     
+    ntsvc.Output = [ "MC DATAFILE='MCTrees.root' OPT='NEW' TYP='ROOT'" ]     
     
     # configure my own algorithm
-    alg = gaudi.algorithm('McTree')
     alg.NTupleLUN = 'MC'
     alg.PP2MCs = []
-    
     
     ## redefine input files 
     evtSel = gaudi.evtSel()

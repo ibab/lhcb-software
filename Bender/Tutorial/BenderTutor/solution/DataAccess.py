@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 """
 'Solution'-file for 'DataAccess/GetData' example (Bender Tutorial)
@@ -13,16 +13,12 @@
 # =============================================================================
 __author__ = 'Vanya BELYAEV  ibelyaev@physics.syr.edu'
 # =============================================================================
-
-# =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
-
 # =============================================================================
 ## @class GetData
 #  Simple algotithm to access the data 
 class GetData(Algo):
-
     # =========================================================================
     ## standard constructor 
     def __init__ ( self , name = 'GetData' ) :
@@ -55,8 +51,10 @@ class GetData(Algo):
         i = 0
         for mcp in mcps :
             if i >= 5 : break
-            print " MCParticle name is '%s' " % LoKi.Particles.nameFromPID( mcp.particleID() ) 
-            print ' MCParticle:', `mcp`
+            print " MCParticle name is '%s' " % mcp.name()            
+            print ' The decay chain is  (decay only)   : ', mcp.decay ( True  ) 
+            print ' The decay chain is  (+inetratcions : ', mcp.decay ( False ) 
+            print ' MCParticle info: ', `mcp`
             i +=1 
             
         return SUCCESS
@@ -69,7 +67,7 @@ def configure( **args ) :
     The configuration of the job
     """
     
-    import data_tutorial as data 
+    import BenderTutor.data_tutorial as data 
     
     ## general configuration :
     gaudi.config ( files = [ '$DAVINCIROOT/options/DaVinciCommon.opts' ] )

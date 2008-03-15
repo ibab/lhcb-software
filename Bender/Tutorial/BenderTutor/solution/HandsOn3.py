@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 """
 'Solution'-file for 'HandsOn3.py' example (Bender Tutorial)
@@ -13,11 +13,8 @@
 # =============================================================================
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
-
-# =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
-
 # =============================================================================
 ## @class MCKaons
 #  the solution for the third excersize 
@@ -25,13 +22,11 @@ class MCKaons(AlgoMC) :
     """
     The solution for the third excersize
     """
-    
     ## the main analysus method 
     def analyse( self ) :
         """
         The main analysis method
-        """
-        
+        """ 
         ## get the helper object 
         finder = self.mcFinder()
         
@@ -69,7 +64,7 @@ def configure() :
     """
     Configure the job
     """ 
-    import data_tutorial as data 
+    import BenderTutor.data_tutorial as data 
     
     gaudi.config ( files =
                    [ '$DAVINCIROOT/options/DaVinciCommon.opts' ] )
@@ -84,25 +79,17 @@ def configure() :
     
 
     ## configure the histograms:
-    if 'HbookCnv' not in gaudi.DLLs : gaudi.DLLs += ['HbookCnv']
-    gaudi.HistogramPersistency = "HBOOK"
     hps = gaudi.service('HistogramPersistencySvc')
-    hps.OutputFile = 'HandOn3_histos.hbook'
-    
-    ## add the printout of the histograms
-    hsvc = gaudi.service( 'HbookHistSvc' )
-    hsvc.PrintHistos = True
+    hps.OutputFile = 'HandOn3_histos.root'
     
     ## configure the N-Tuples:
     ntsvc = gaudi.ntuplesvc()
-    ntsvc.Output = [ "MC DATAFILE='HandsOn3.hbook' OPT='NEW' TYP='HBOOK'" ]     
+    ntsvc.Output = [ "MC DATAFILE='HandsOn3.root' OPT='NEW' TYP='ROOT'" ]     
 
     ## configure own algorithm 
-    myAlg = gaudi.algorithm('MCKaons')
-    myAlg.NTupleLUN = 'MC'
-    myAlg.PP2MCs = []
-    
-    
+    alg.NTupleLUN = 'MC'
+    alg.PP2MCs = []
+        
     ## redefine input files 
     evtSel = gaudi.evtSel()
     evtSel.PrintFreq = 50

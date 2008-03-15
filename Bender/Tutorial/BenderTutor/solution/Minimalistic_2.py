@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 """
 Simple script to run 'DaVinci' job in Bender environment
@@ -11,18 +11,15 @@ Simple script to run 'DaVinci' job in Bender environment
 # =============================================================================
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
-
-# =============================================================================
 ## import everything from Bender 
 from Bender.Main import *
-
 # =============================================================================
 ## configure the application 
 def configure() :
     """
     This is the configuration method for module Minimalistic_1.py
     """
-    import data_tutorial as data
+    import BenderTutor.data_tutorial as data
     
     ## get the confgigurtaion for *.opts file
     gaudi.config( files = ['$DAVINCIROOT/options/DaVinci.opts'] )

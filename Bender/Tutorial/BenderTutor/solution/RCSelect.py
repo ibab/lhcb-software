@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 """
 'Solution'-file for 'RCselect.py' example (Bender Tutorial)
@@ -13,11 +13,8 @@
 # =============================================================================
 __author__ = 'Vanya BELYAEV  ibelyaev@physics.syr.edu'
 # =============================================================================
-
-# =============================================================================
 ## import everything from BENDER
 from Bender.Main import *
-
 # =============================================================================
 ## @class RCselect
 #  simple demo-algorithm 
@@ -25,13 +22,11 @@ class RCSelect(Algo):
     """
     The simple demo-algorithm
     """
-
     ## the main analysis algorithm 
     def analyse( self ) :
         """
         The main analysis algorithm
-        """
-        
+        """        
         ## select muons for J/Psi reconstruction 
         muons = self.select( "mu" , ( "mu+" == ABSID ) & ( PT > 500  ) )
         if muons.empty() : return SUCCESS
@@ -104,7 +99,7 @@ def configure() :
     The Job configuration
     """ 
     
-    import data_tutorial as data 
+    import BenderTutor.data_tutorial as data 
 
     gaudi.config ( files = [
         '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
@@ -118,25 +113,19 @@ def configure() :
     alg = RCSelect( 'RCSelect' )
     
     # 2) add the algorithm to the list of top-level algorithms 
-    gaudi.addAlgorithm( alg ) 
+    # gaudi.addAlgorithm( alg ) 
+    gaudi.setAlgorithms( [alg] ) 
     
     # 3) configure algorithm
     desktop = gaudi.tool('RCSelect.PhysDesktop')
     desktop.InputLocations = [
-        'Phys/StdLooseKaons' , 
-        'Phys/StdLooseMuons' ]
+        'Phys/StdTightKaons' , 
+        'Phys/StdTightMuons' ]
     
     ## configure the histograms:
-    gaudi.HistogramPersistency = "HBOOK"
     hps = gaudi.service('HistogramPersistencySvc')
-    hps.OutputFile = 'RCselect_histos.hbook'
+    hps.OutputFile = 'RCSelect_histos.root'
     
-    # add the printout of the histograms
-    hsvc = gaudi.service( 'HbookHistSvc' )
-    hsvc.PrintHistos = True
-
-    myAlg = gaudi.algorithm('RCSelect')
- 
     # redefine input files 
     evtSel = gaudi.evtSel()
     evtSel.PrintFreq = 20
@@ -153,7 +142,7 @@ if __name__ == '__main__' :
     configure()
 
     ## event loop 
-    gaudi.run(1000)
+    gaudi.run(5000)
 
 # =============================================================================
 # The END 

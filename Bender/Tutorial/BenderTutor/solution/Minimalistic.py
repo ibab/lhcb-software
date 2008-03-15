@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 """
 This is the simplest  Bender module to run the analysis job
@@ -12,19 +12,15 @@ using '*'.opts configuration
 # =============================================================================
 __author__ = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 # =============================================================================
-
-# =============================================================================
 ## get EVERYTHING from Bender
 from Bender.Main import *
-
 # =============================================================================
 ## Job configuration 
 def configure() :
     """
     The  basic configuration method
     """
-    
-    import data_tutorial as data 
+    import BenderTutor.data_tutorial as data 
 
     ## get the confgigurtaion for *.opts file
     gaudi.config( files = ['$DAVINCIROOT/options/DaVinci.opts'] )
@@ -32,8 +28,7 @@ def configure() :
     ## define input files 
     evtSel = gaudi.evtSel()    
     evtSel.open( data.FILEs ) 
-    
-    
+        
     return SUCCESS 
 # =============================================================================
 

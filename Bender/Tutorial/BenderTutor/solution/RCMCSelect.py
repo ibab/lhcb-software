@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 """
 'Solution'-file for 'RCMCselect.py' example (Bender Tutorial)
@@ -11,11 +11,8 @@
 # =============================================================================
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
-
-# =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
-
 # =============================================================================
 ## @class RCSelect
 #  my analysis algorithm 
@@ -23,7 +20,6 @@ class RCMCSelect(AlgoMC):
     """
     My analysis algorithm
     """
-    
     ## the main analysis method 
     def analyse( self ) :
         """
@@ -33,13 +29,13 @@ class RCMCSelect(AlgoMC):
         finder = self.mcFinder()
         ## find all MC trees  
         mcBs  = finder.find(
-            '[ B_s0 -> (  J/psi(1S) -> mu+  mu- )  phi(1020)]cc' )
+            '[ B_s0 -> (  J/psi(1S) -> mu+  mu- {,gamma} )  phi(1020)]cc' )
         ## get all MC phis from the tree :
         mcPhi = finder.find(
-            '[ B_s0 -> (  J/psi(1S) -> mu+  mu- ) ^phi(1020)]cc' )
+            '[ B_s0 -> (  J/psi(1S) -> mu+  mu- {,gamma} ) ^phi(1020)]cc' )
         ## get all MC psis from the tree :
         mcPsi = finder.find(
-            '[ B_s0 -> ( ^J/psi(1S) -> mu+  mu- )  phi(1020)]cc' )
+            '[ B_s0 -> ( ^J/psi(1S) -> mu+  mu- {,gamma} )  phi(1020)]cc' )
         ## get helper object for MC-match
         match = self.mcTruth( 'MCdecayMatch')
         # prepare "Monte-Carlo Cuts"
@@ -95,7 +91,7 @@ class RCMCSelect(AlgoMC):
         bs = self.loop( 'psi phi' , 'B_s0' )
         for B in bs :
             ## use *ONLY* Monte-Carlo cuts
-            if not mcCutBs( B ) : continue   ## ATTNETION: only true Bs
+            if not mcCutBs( B ) : continue   ## ATTENTION: only true Bs
             #
             m = B.mass(1,2) / 1000 
             if not 4.5 < m           < 6.5  : continue
@@ -119,7 +115,7 @@ def configure() :
     Job configuration
     """
     
-    import data_tutorial as data 
+    import BenderTutor.data_tutorial as data 
 
     gaudi.config ( files = [
         '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
@@ -131,26 +127,24 @@ def configure() :
     # 1) create the algorithm
     alg = RCMCSelect( 'RCMCSelect' )
     # 2) add the algorithm
-    gaudi.addAlgorithm( alg ) 
+    #gaudi.addAlgorithm( alg )
+    gaudi.setAlgorithms( [alg] )
+    
     # 3) configure algorithm
     desktop = gaudi.tool('RCMCSelect.PhysDesktop')
     desktop.InputLocations = [
-        'Phys/StdLooseKaons' , 
-        'Phys/StdLooseMuons'
+        'Phys/StdTightKaons' , 
+        'Phys/StdTightMuons'
         ]
     
     ## configure the histograms: 
-    gaudi.HistogramPersistency = "HBOOK"
     hps = gaudi.service('HistogramPersistencySvc')
-    hps.OutputFile = 'RCMCselect_histos.hbook'
+    hps.OutputFile = 'RCMCselect_histos.root'
     
     ## configure the N-Tuples:
     ntsvc = gaudi.ntuplesvc()
-    ntsvc.Output = [ "RCMC DATAFILE='RCMCselect_tuples.hbook' OPT='NEW' TYP='HBOOK'" ]
+    ntsvc.Output = [ "RCMC DATAFILE='RCMCselect.root' OPT='NEW' TYP='ROOT'" ]
     
-    ## add the printout of the histograms
-    hsvc = gaudi.service( 'HbookHistSvc' )
-    hsvc.PrintHistos = True
     ## configure the desktop:
     alg.PP2MCs = ['Relations/Rec/ProtoP/Charged']
     alg.NTupleLUN = 'RCMC'
@@ -170,7 +164,7 @@ if __name__ == '__main__' :
     ## job configuration
     configure()
     ## event loop 
-    gaudi.run(1000)
+    gaudi.run(2000)
 
 # =============================================================================
 # The END 
