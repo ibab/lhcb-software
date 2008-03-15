@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.35 2008-03-14 22:15:49 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.36 2008-03-15 11:35:33 lnicolas Exp $
 // Include files
 // from std
 // #include <utility>
@@ -174,7 +174,8 @@ StatusCode AlignAlgorithm::initialize() {
   /// Residuals
   /// @todo: this should go into a monitoring tool
   info() << "booking histograms assuming " << m_nIterations << " iterations " << endmsg;
-  m_trackChi2Histo           = book2D(10, "11"      , -0.5, m_nIterations-0.5, m_nIterations, -1.00, 
+  m_trackChi2Histo           = book2D(10, "Track chi2 distribution vs iteration",
+				      -0.5, m_nIterations-0.5, m_nIterations, -1.00, 
                                       +100.00, 100);
   m_trackNorChi2Histo        = book2D(11, "Normalised track chi2 distribution vs iteration", 
                                       -0.5, m_nIterations-0.5, m_nIterations, -1.00, 

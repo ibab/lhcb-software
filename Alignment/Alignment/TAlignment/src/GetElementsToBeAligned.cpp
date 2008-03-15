@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.15 2008-03-06 09:07:16 wouter Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.16 2008-03-15 11:35:33 lnicolas Exp $
 // Include files
 
 //from STL
@@ -267,9 +267,9 @@ const AlignmentElement* GetElementsToBeAligned::findElement( LHCb::LHCbID id) co
     case LHCb::LHCbID::OT:
       element = ot->findModule( id.otID() ) ;
       break ;
-    case LHCb::LHCbID::Muon:
-      element = muon->getChmbPtr(id.muonID().station(), id.muonID().region(), (muon->Tile2Chamber(id.muonID()))[0]->chamberNumber() ) ;
-      break ;
+//     case LHCb::LHCbID::Muon:
+//       element = muon->getChmbPtr(id.muonID().station(), id.muonID().region(), (muon->Tile2Chamber(id.muonID()))[0]->chamberNumber() ) ;
+//       break ;
     default:
       error() << "LHCbID from non-tracking detector"  << endmsg ;
     }

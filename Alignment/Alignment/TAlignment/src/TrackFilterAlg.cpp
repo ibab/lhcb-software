@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.cpp,v 1.10 2008-02-18 18:43:55 janos Exp $
+// $Id: TrackFilterAlg.cpp,v 1.11 2008-03-15 11:35:33 lnicolas Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -61,14 +61,14 @@ TrackFilterAlg::TrackFilterAlg( const std::string& name,
                                ("IT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isIT  ,_1)))
                                ("OT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isOT  ,_1)));
 
-  declareProperty("TracksInputContainer"         , m_tracksInputContainer  = TrackLocation::Default    );
-  declareProperty("TracksOutputContainer"        , m_tracksOutputContainer = "Alignment/FilteredTracks");
-  declareProperty("TrackType"                    , m_trackType             = "Long"                    );
-  declareProperty("TrackSelector"                , m_trackSelectorName     = "AlignSelTool"            );
-  declareProperty("StripUnwantedDetectorHits"    , m_strip                 = false                     );
-  declareProperty("KeepDetectorHits"             , m_detector              = "OT"                      );
-  declareProperty("MaxNormTrackChi2"             , m_maxNormTrackChi2      = 20.0                      );
-  declareProperty("MinNHits"                     , m_nMinHits              = 0u                        );
+  declareProperty("TracksInputContainer"     , m_tracksInputContainer  = TrackLocation::Default    );
+  declareProperty("TracksOutputContainer"    , m_tracksOutputContainer = "Alignment/FilteredTracks");
+  declareProperty("TrackType"                , m_trackType             = "Long"                    );
+  declareProperty("TrackSelector"            , m_trackSelectorName     = "AlignSelTool"            );
+  declareProperty("StripUnwantedDetectorHits", m_strip                 = false                     );
+  declareProperty("KeepDetectorHits"         , m_detector              = "OT"                      );
+  declareProperty("MaxNormTrackChi2"         , m_maxNormTrackChi2      = 999999.0                  );
+  declareProperty("MinNHits"                 , m_nMinHits              = 0u                        );
 
 }
 
@@ -147,8 +147,9 @@ void TrackFilterAlg::filterTrack(LHCb::Track* track, LHCb::Tracks* outputContain
       }
       ++nHits;
     }
-    
-    if (nHits >= m_nMinHits && !(track->chi2PerDoF() > m_maxNormTrackChi2))  {
+
+    if (nHits >= m_nMinHits && 
+	!(track->chi2PerDoF() > m_maxNormTrackChi2))  {
       if (printDebug()) {
         debug() << "Found track of type " << m_trackTypeToStringMap[track->type()] << " with a chi2/dof: " << track->chi2() << " / " << track->nDoF() 
                 << " and " << nHits << " hits of type " << m_detector << endmsg;
