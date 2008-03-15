@@ -1,11 +1,36 @@
 <PRE>
-! $Id: release.notes,v 1.13 2007-09-30 13:50:44 ibelyaev Exp $ 
+! $Id: release.notes,v 1.14 2008-03-15 13:55:00 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
-! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
+! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
 </PRE>
+
+<H1>
+<A NAME=v8r1>2008-03-15 Bender v8r1 based on the DaVinci v19r11 </A>
+</H1>	
+
+<PRE>		
+This version is based on DaVinci v19r11 and essentially it carries no major new functionality. 
+It is build atop of  
+DaVinci  v19r11,
+Analysis v1r11,
+Phys v6r11,
+Rec v5r4,
+Lbcom v6r15,
+LHCb v23r4
+Gaudi v19r8 
+and LCGCMT 54b.
+
+The concept of "Configurables" is not used yet. 
+
+The project containe temporary the version pf Phys/LoKiAlgo v7r1p1 to 
+pick up the latest bug-fix.
+
+
+</PRE>
+
 
 <H1>
 <A NAME=v8r0>2007-09-29 Bender v8r0. New DC06 version </A>
