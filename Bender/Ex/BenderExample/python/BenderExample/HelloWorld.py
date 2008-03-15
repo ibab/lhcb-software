@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 ## The most trivial Bender-based : HelloWorld example
 #
@@ -20,16 +20,14 @@
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-""" The most trivial Bender-based : HelloWorld example """
+"""
+The most trivial Bender-based : HelloWorld example
+"""
 # =============================================================================
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
-
-# =============================================================================
 ## import everything from bender 
 from Bender.Main import * 
-# =============================================================================
-
 # =============================================================================
 ## the most primitive algorithm 
 class HelloWorld(Algo) :
@@ -42,7 +40,6 @@ class HelloWorld(Algo) :
         self.setFilterPassed( True ) 
         return SUCCESS                                     # RETURN 
     
-
 # =============================================================================
 ## configure the job
 def configure ( **args ) :
@@ -56,25 +53,19 @@ def configure ( **args ) :
     ## read external configruation files
     gaudi.config (
         files = [
-        '$BENDEREXAMPLEROOT/options/HistorySvcFix.opts' ,
         '$DAVINCIROOT/options/DaVinciCommon.opts'      ,
         '$DAVINCIROOT/options/DaVinciTestData.opts'    ] )
-    
-    ## gaudi.ActivateHistory = True
-    ## gaudi.ExtSvc += [ "HistorySvc" , "ToolSvc" , "LoKiSvc" ]
     
     ## create local algorithm:
     hello = HelloWorld('Hello')
 
     ## set it as main algorithm toebexecuted 
     gaudi.setAlgorithms ( hello )
-
     
     ## get input data 
     evtSel = gaudi.evtSel()    
     evtSel.open ( input.FILEs ) 
-    evtSel.PrintFreq = 1
-    
+    evtSel.PrintFreq = 1    
 
     return SUCCESS                                          # RETURN 
     

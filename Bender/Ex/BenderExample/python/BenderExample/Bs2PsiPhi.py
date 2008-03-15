@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 ## The simple Bender-based example for Bs-> Jpsi phi selection
 #
@@ -20,16 +20,14 @@
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-""" The simple Bender-based example for Bs-> Jpsi phi selection """
+"""
+The simple Bender-based example for Bs-> Jpsi phi selection
+"""
 # =============================================================================
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
-
-# =============================================================================
 ## import everything form bender 
 from Bender.All import * 
-# =============================================================================
-
 # =============================================================================
 ## Simple class for Bs -> Jpsi Phi selection 
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -185,17 +183,15 @@ def configure ( **args ) :
         '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
         '$COMMONPARTICLESROOT/options/StandardKaons.opts' ,
         '$COMMONPARTICLESROOT/options/StandardMuons.opts' ] )
-    
-    ## I am old-fashioned person - I like HBOOK 
-    gaudi.HistogramPersistency = "HBOOK"
-    hps = gaudi.service('HistogramPersistencySvc')
-    hps.OutputFile = args.get('histos','Bs2PsiPhi.hbook')
-
-    
+        
     ## create local algorithm:
     alg = Bs2PsiPhi()
 
-    gaudi.addAlgorithm( alg )
+    ## print histos 
+    alg.HistoPrint = True
+
+    ## if runs locally at CERN lxplus 
+    gaudi.setAlgorithms( [alg] ) ## gaudi.addAlgorithm ( alg ) 
 
     alg=gaudi.algorithm('Bs2PsiPhi')
     alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
@@ -203,21 +199,9 @@ def configure ( **args ) :
     ## configure the desktop
     desktop = gaudi.tool ( 'Bs2PsiPhi.PhysDesktop' )
     desktop.InputLocations = [
-        '/Event/Phys/StdLooseKaons' ,
-        '/Event/Phys/StdLooseMuons' 
+        '/Event/Phys/StdTightKaons' ,
+        '/Event/Phys/StdTightMuons' 
         ]
-    
-    ## StagerSvc at CERN
-    if 'CERN' == os.environ.get('CMTSITE',None) and \
-           os.environ.has_key('GAUDISITESVCROOT') :
-        stager = gaudi.service('StagerSvc')
-        stager.BlockSize    = 20
-        stager.InitialStage =  5 
-        if not 'StagerSvc'    in gaudi.ExtSvc : gaudi.ExtSvc += [ 'StagerSvc'   ]
-            
-    # add the printout of the histograms
-    hsvc = gaudi.service( 'HbookHistSvc' )
-    hsvc.PrintHistos = True
     
     ## get input data 
     evtSel = gaudi.evtSel()    

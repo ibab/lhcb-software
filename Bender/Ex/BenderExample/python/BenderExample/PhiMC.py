@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 ## The simple Bender-based example: plot dikaon mass peak with MC-truth
 #
@@ -20,16 +20,15 @@
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-""" The simple Bender-based example plot dikaon mass peak with MC-truth"""
+"""
+The simple Bender-based example plot dikaon mass peak with MC-truth
+"""
 # =============================================================================
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
-# =============================================================================
-
 # =============================================================================
 ## import everything form bender 
 from Bender.MainMC import * 
 # =============================================================================
-
 ## Simple class for access MC-truth 
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2006-10-13
@@ -37,7 +36,6 @@ class PhiMC(AlgoMC) :
     """
     Simple class to plot dikaon mass peak
     """
-    
     ## standard constructor
     def __init__ ( self , name = 'PhiMC' ) :
         """
@@ -94,43 +92,27 @@ def configure ( **args ) :
     ## get the input data
     import data_Bs2Jpsiphi_mm as input 
     
-
     ## read external configruation files
     gaudi.config (
         files = [
         '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
         '$COMMONPARTICLESROOT/options/StandardKaons.opts' ] )
   
-    ## I am old-fashioned person - I like HBOOK 
-    gaudi.HistogramPersistency = "HBOOK"
-    hps = gaudi.service('HistogramPersistencySvc')
-    hps.OutputFile = args.get('histos','PhiMC.hbook')
-    
-    ## StagerSvc at CERN
-    if 'CERN' == os.environ.get('CMTSITE',None) and \
-           os.environ.has_key('GAUDISITESVCROOT') :
-        stager = gaudi.service('StagerSvc')
-        stager.BlockSize    = 20
-        stager.InitialStage =  5 
-        if not 'StagerSvc'    in gaudi.ExtSvc : gaudi.ExtSvc += [ 'StagerSvc'   ]
-        
     ## create local algorithm:
     alg = PhiMC()
     
-    gaudi.addAlgorithm( alg )
-
-    alg=gaudi.algorithm('PhiMC')
+    ## if runs locally at CERN lxplus 
+    gaudi.setAlgorithms( [alg] ) ## gaudi.addAlgorithm ( alg ) 
+   
     alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
-    
+    ## print histos 
+    alg.HistoPrint = True
+   
     ## configure the desktop
     desktop = gaudi.tool ( 'PhiMC.PhysDesktop' )
-    desktop.InputLocations = [ '/Event/Phys/StdLooseKaons' ]
+    desktop.InputLocations = [ '/Event/Phys/StdTightKaons' ]
     desktop.PropertiesPrint = True
-    
-    # add the printout of the histograms
-    hsvc = gaudi.service( 'HbookHistSvc' )
-    hsvc.PrintHistos = True
-    
+        
     ## get input data 
     evtSel = gaudi.evtSel()    
     evtSel.open ( input.FILEs ) 
@@ -149,7 +131,7 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    gaudi.run(1000)
+    gaudi.run(5000)
     
 
 # =============================================================================

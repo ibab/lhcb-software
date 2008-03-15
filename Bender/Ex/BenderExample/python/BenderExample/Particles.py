@@ -20,16 +20,14 @@
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-""" The simple Bender-based example: count the particles """
+"""
+The simple Bender-based example: count the particles
+"""
 # =============================================================================
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
-
-# =============================================================================
 ## import everything form bender 
 from Bender.Main import * 
-# =============================================================================
-
 # =============================================================================
 ## Simple class to count particles 
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -37,8 +35,7 @@ from Bender.Main import *
 class Particles(Algo) :
     """
     Simple class to count particles
-    """
-    
+    """    
     ## standard constructor
     def __init__ ( self , name = 'Particles' ) :
         """
@@ -95,25 +92,20 @@ def configure ( **args ) :
         '$COMMONPARTICLESROOT/options/StandardPions.opts' ,
         '$COMMONPARTICLESROOT/options/StandardMuons.opts' ] )
     
-    ## StagerSvc at CERN
-    if 'CERN' == os.environ.get('CMTSITE',None) and \
-           os.environ.has_key('GAUDISITESVCROOT') :
-        stager = gaudi.service('StagerSvc')
-        stager.BlockSize    =  20
-        stager.InitialStage =   5 
-        if not 'StagerSvc'    in gaudi.ExtSvc : gaudi.ExtSvc += [ 'StagerSvc'   ]    
-        
     ## create local algorithm:
     alg = Particles()
+    
+    ## print histos 
+    alg.HistoPrint = True
 
-    gaudi.addAlgorithm ( alg ) 
-
+    ## if runs locally at CERN lxplus 
+    gaudi.setAlgorithms( [alg] ) ## gaudi.addAlgorithm ( alg ) 
+    
     ## configure the desktop
     desktop = gaudi.tool ( 'Particles.PhysDesktop' )
     desktop.InputLocations = [
-        '/Event/Phys/StdLooseKaons' ,
-        '/Event/Phys/StdLooseMuons' ,
-        '/Event/Phys/StdLoosePions' ]
+        '/Event/Phys/StdTightKaons' ,
+        '/Event/Phys/StdTightMuons' ]
     
     
     ## get input data 
