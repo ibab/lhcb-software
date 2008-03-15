@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.9 2008-02-11 10:13:27 ibelyaev Exp $ 
+# $Id: decorators.py,v 1.10 2008-03-15 11:52:17 ibelyaev Exp $ 
 # =============================================================================
 ## @file decorators.py LoKiAlgo/decorators.py
 #  The set of basic decorator for objects from LoKiAlgo library
@@ -381,9 +381,10 @@ def _decorateAlg ( alg ) :
     Decorate LoKi::Algo class
     """
     import GaudiPython.GaudiAlgs
+    from   GaudiPython import iAlgorithm 
     _Alg = LoKi.Dicts.Alg( alg )
     ## the major LoKi object - algorithm 
-    class Algo( _Alg ) :
+    class Algo( _Alg , iAlgorithm ) :
         """
         The major LoKi object - algorithm
         """

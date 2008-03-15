@@ -1,4 +1,4 @@
-// $Id: Algo.cpp,v 1.16 2007-08-14 12:35:51 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.17 2008-03-15 11:52:17 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -94,9 +94,12 @@ LoKi::Algo::Algo
   , m_cutValues ( ) 
 {
   //
-  declareProperty ( "Cuts"            , m_cutValues ) ;
+  declareProperty 
+    ( "Cuts"  , m_cutValues , 
+      "The map of 'named-cuts': { 'cut' : value } " ) ;
   // 
-  setProperty     ( "PropertiesPrint" , "true" ).ignore() ;
+  setProperty ( "HistoPrint"  , true ) . ignore () ;
+  setProperty ( "NTuplePrint" , true ) . ignore () ;
 } 
 // ============================================================================
 // virtual and protected destructor 
