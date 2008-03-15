@@ -1,4 +1,4 @@
-// $Id: AlignSaveTuple.h,v 1.3 2007-10-31 10:57:26 lnicolas Exp $
+// $Id: AlignSaveTuple.h,v 1.4 2008-03-15 12:17:22 lnicolas Exp $
 #ifndef _AlignSaveTuple_H_
 #define _AlignSaveTuple_H_
 
@@ -25,6 +25,7 @@
 #include "Event/MCParticle.h"
 #include "Event/Track.h"
 #include "Event/STLiteCluster.h"
+#include "Event/STCluster.h"
 #include "Event/OTTime.h"
 #include "Event/ODIN.h"
 #include "Event/FitNode.h"
@@ -35,7 +36,7 @@
 //===========================================================================
 class ITrackExtrapolator;
 class IMagneticFieldSvc;
-class ITrackCloneFinder;
+/* class ITrackCloneFinder; */
 class ITrackGhostClassification;
 class GhostTrackInfo;
 
@@ -127,12 +128,12 @@ private:
   std::string m_itClustersPath;
   std::string m_otTimesPath;
 
-  std::string m_cloneFinderName;
+/*   std::string m_cloneFinderName; */
   std::string m_ghostToolName;
   //======================================================================
 
   ITrackExtrapolator* m_extrapolator; ///< Interface to track extrapolator
-  ITrackCloneFinder* m_cloneFinder; ///< Interface to clone finder tool
+/*   ITrackCloneFinder* m_cloneFinder; ///< Interface to clone finder tool */
   IMagneticFieldSvc* m_pIMF; ///< Pointer to the magn. field service
   ITrackGhostClassification* m_ghostClassification;  ///< Pointer to ghost tool 
 

@@ -1,4 +1,4 @@
-// $Id: AlignSaveTuple.cpp,v 1.4 2007-12-10 14:42:56 lnicolas Exp $
+// $Id: AlignSaveTuple.cpp,v 1.5 2008-03-15 12:17:22 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -17,7 +17,7 @@
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
 // Interfaces
-#include "TrackInterfaces/ITrackCloneFinder.h"
+// #include "TrackInterfaces/ITrackCloneFinder.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "MCInterfaces/ITrackGhostClassification.h"
 
@@ -56,8 +56,8 @@ AlignSaveTuple::AlignSaveTuple ( const std::string& name,
   m_sharedHits.reserve ( 1000 );
 
   // Clone finder
-  this -> declareProperty ( "CloneFinderTool",
-                            m_cloneFinderName = "TrackCloneFinder" );
+//   this -> declareProperty ( "CloneFinderTool",
+//                             m_cloneFinderName = "TrackCloneFinder" );
 
   // Ghost classification
   this -> declareProperty( "GhostClassification",
@@ -113,8 +113,8 @@ StatusCode AlignSaveTuple::initialize ( ) {
   m_extrapolator = tool<ITrackExtrapolator>( "TrackFastParabolicExtrapolator" );
 
   // Retrieve the clone finder tool
-  m_cloneFinder = tool<ITrackCloneFinder>( m_cloneFinderName,
-                                           "CloneFinderTool", this );
+//   m_cloneFinder = tool<ITrackCloneFinder>( m_cloneFinderName,
+//                                            "CloneFinderTool", this );
 
   // Retrieve the ghost classification tool
   m_ghostClassification = tool<ITrackGhostClassification>( m_ghostToolName,
@@ -188,12 +188,6 @@ StatusCode AlignSaveTuple::execute ( ) {
   AsctTool associator( evtSvc(), m_tracksPath );
   m_directTable = associator.direct();
 
-  if ( msgLevel( MSG::DEBUG ) ) {
-    debug() << "Retrieved " << m_eventMultiplicity << " tracks." << endmsg;
-    debug() << "Retrieved " << m_itClusters->size() << " IT clusters." << endmsg;
-    debug() << "Retrieved " << m_otTimes->size() << " OT times." << endmsg;
-  }
-
   //**********************************************************************
   // Global Variables
   //**********************************************************************
@@ -202,6 +196,12 @@ StatusCode AlignSaveTuple::execute ( ) {
   ++m_iEvent;
   m_eventMultiplicity = m_tracks->size();
   //**********************************************************************
+
+  if ( msgLevel( MSG::DEBUG ) ) {
+    debug() << "Retrieved " << m_eventMultiplicity << " tracks." << endmsg;
+    debug() << "Retrieved " << m_itClusters->size() << " IT clusters." << endmsg;
+    debug() << "Retrieved " << m_otTimes->size() << " OT times." << endmsg;
+  }
 
   // Loop over tracks - select some and make some plots
   LHCb::Tracks::const_iterator iTracks = m_tracks->begin();
@@ -215,15 +215,15 @@ StatusCode AlignSaveTuple::execute ( ) {
       else
         m_ghostRate = 0;
 
-    bool isAClone = false;
+//     bool isAClone = false;
     // Do not run code on clones
     LHCb::Tracks::const_iterator iTracks2 = iTracks+1;
     for ( ; iTracks2 != m_tracks->end(); ++iTracks2 ) {
       LHCb::Track& tr2 = **iTracks2;
-      if ( m_cloneFinder->areClones( aTrack, tr2 ) ) {
-        isAClone = true;
-        break;
-      }
+//       if ( m_cloneFinder->areClones( aTrack, tr2 ) ) {
+//         isAClone = true;
+//         break;
+//       }
       
       // Compute ghost rate
       if ( iTracks == m_tracks->begin() )
@@ -231,11 +231,11 @@ StatusCode AlignSaveTuple::execute ( ) {
           m_ghostRate += (double)1/m_eventMultiplicity;
 
     }
-    if ( isAClone ) {
-      if ( msgLevel( MSG::DEBUG ) )
-        debug() << "Track is a clone! Skipping track!" << endmsg;
-      continue;
-    }
+//     if ( isAClone ) {
+//       if ( msgLevel( MSG::DEBUG ) )
+//         debug() << "Track is a clone! Skipping track!" << endmsg;
+//       continue;
+//     }
 
     if ( msgLevel( MSG::DEBUG ) )     
       debug() << "******************************************************" << endmsg
@@ -631,7 +631,7 @@ bool AlignSaveTuple::isNeighbouringHit ( LHCb::STChannelID clusID,
   // Not a TELL1 artefact at beetles boundaries
   if ( (hitID.strip()+clusID.strip())%(2*m_nStrips) <= 3 ) return false;
 
-  // Same ladder within 2 strips aside
+  // Same ladder within N strips aside
   if ( (hitID.uniqueSector() == clusID.uniqueSector()) &&
        (abs(int(hitID.strip()-clusID.strip())) <= m_nStripsTol) ) return true;
   
