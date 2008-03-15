@@ -1,27 +1,24 @@
-# $Id: requirements,v 1.11 2007-09-29 13:59:53 ibelyaev Exp $ 
+# $Id: requirements,v 1.12 2008-03-15 14:10:30 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2004-02-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 package          BenderUser
 author           Vanya BELYAEV
-version          v8r0
+version          v8r1
 
 # ============== structure ====================================================
-branches         cmt doc python template 
+branches         cmt doc 
 
 # ============== environment ==================================================
-set              BENDERUSERPYTHON  $(BENDERUSERROOT)/python
 
 # ============== dependencies =================================================
 use              Bender      v*   Phys 
 
-# ============== nesessary paths ==============================================
-path_remove      PYTHONPATH "/BenderUser/"  WIN32  "\BenderUser\"
-path_prepend     PYTHONPATH "$(BENDERUSERROOT)/python"
 
 # ============== patterns =====================================================
-apply_pattern    application_path
+apply_pattern install_python_modules 
+
 
 # =============================================================================
 # The END 
