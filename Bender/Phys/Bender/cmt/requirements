@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.48 2007-09-29 13:38:02 ibelyaev Exp $ 
+# $Id: requirements,v 1.49 2008-03-15 12:08:15 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2002-11-02
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           Bender
-version           v8r0
+version           v8r1
 
 # ============================================================================
 branches          cmt doc python
@@ -14,37 +14,9 @@ branches          cmt doc python
 use               DaVinci      v*  Phys 	
 use               GaudiPython  v*  	
 
-macro ROOT_config_version "5.14.00f"
-macro ROOT_native_version "5.14.00f" 
-
-# ============== temporary ===================================================
-
-path_remove  PYTHONPATH "LoKiCore/" 
-path_prepend PYTHONPATH $(LOKICOREROOT)/python
-path_remove  PYTHONPATH "LoKiPhys/" 
-path_prepend PYTHONPATH $(LOKIPHYSROOT)/python
-path_remove  PYTHONPATH "LoKiTrigger/" 
-path_prepend PYTHONPATH $(LOKITRIGGERROOT)/python
-path_remove  PYTHONPATH "LoKiAlgo/" 
-path_prepend PYTHONPATH $(LOKIALGOROOT)/python
-path_remove  PYTHONPATH "LoKiArrayFunctors/" 
-path_prepend PYTHONPATH $(LOKIARRAYFUNCTORSROOT)/python
-path_remove  PYTHONPATH "LoKiGen/" 
-path_prepend PYTHONPATH $(LOKIGENROOT)/python
-path_remove  PYTHONPATH "LoKiMC/" 
-path_prepend PYTHONPATH $(LOKIMCROOT)/python
-path_remove  PYTHONPATH "LoKiGenMC/" 
-path_prepend PYTHONPATH $(LOKIGENMCROOT)/python
-path_remove  PYTHONPATH "LoKiPhysMC/" 
-path_prepend PYTHONPATH $(LOKIPHYSMCROOT)/python
-path_remove  PYTHONPATH "LoKiAlgoMC/" 
-path_prepend PYTHONPATH $(LOKIALGOMCROOT)/python
-
-path_remove  PYTHONPATH "Bender/" 
-path_prepend PYTHONPATH $(BENDERROOT)/python
 
 # =============== standard patterns ===========================================
-apply_pattern     application_path 
+apply_pattern install_python_modules 
 
 # =============================================================================
 # The END

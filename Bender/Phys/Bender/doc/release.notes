@@ -1,14 +1,23 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.27 2007-09-29 13:38:02 ibelyaev Exp $
+! $Id: release.notes,v 1.28 2008-03-15 12:08:15 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.27 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.28 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : The package is a result of "pythonization procedure"
 !                of the LoKi package
 ! -----------------------------------------------------------------------------
+
+! ==================== Phys/Bender v8r1 2008-03-15 ============================
+
+! 2008-03-15 - Vanya BELYAEV
+
+ - prepare the version, based on DaVinci v19r11
+   simplify the structure of environment variables 
+   use the standard patterns
+
 
 ! ==================== Phys/Bender v8r0 2007-09-29 ============================
 

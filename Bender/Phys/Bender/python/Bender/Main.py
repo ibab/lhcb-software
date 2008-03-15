@@ -38,22 +38,16 @@ try:
 except:
     pass
 
-import sets 
-import gaudimodule
+import sets
 
-
-## temporary fix 
-gaudimodule._loadDict ('TrackEventDict')
-
-## keep the application maner  
-AppMgr = gaudimodule.AppMgr 
+## get the application maner  
+from GaudiPython import AppMgr
 
 ## get the global namespace
-gbl    = gaudimodule.gbl 
+from GaudiPython import gbl as cpp 
 
 ## create Gaudi application manager (if not done yet)  
-gaudi  = gaudimodule.gaudi
-if not gaudi : gaudi = AppMgr() 
+gaudi  = AppMgr() 
 
 ## use some shortcuts 
 appMgr = gaudi     #
@@ -63,7 +57,7 @@ g      = gaudi     # for 'backward compatibility'
 if not "LoKiSvc" in gaudi.ExtSvc : gaudi.ExtSvc += [ "LoKiSvc" ]
 
 
-## massive imports of everythiong 
+## massive imports of everything 
 from LoKiCore.decorators          import *
 from LoKiPhys.decorators          import *
 from LoKiArrayFunctors.decorators import *
@@ -73,19 +67,19 @@ from LoKiAlgo.decorators          import *
 from LoKiCore.functions           import *
 
 ## @var LoKi   : define namespace LoKi 
-LoKi   = gaudimodule.gbl.LoKi
+LoKi   = cpp.LoKi
 ## @var Bender : define namespace Bender 
-Bender = gaudimodule.gbl.Bender
-## @var Bender : define namespace Bender 
-LHCb   = gaudimodule.gbl.LHCb
+Bender = cpp.Bender
+## @var LHCb   : define namespace LHCb
+LHCb   = cpp.LHCb
 ## @var Gaudi  : define namespace Gaudi
-Gaudi  = gaudimodule.gbl.Gaudi
+Gaudi  = cpp.Gaudi
 
-_SC=gbl.StatusCode
+_SC=cpp.StatusCode
 SUCCESS = _SC(_SC.SUCCESS)
 FAILURE = _SC(_SC.FAILURE)
 
-_SE = gbl.StatEntity
+_SE = cpp.StatEntity
 _iadd_old_ = _SE.__iadd__
 def _iadd_new_ (s,v) : _iadd_old_(s,float(v))
 _SE.__iadd__ = _iadd_new_
