@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.118 2008-01-25 11:42:45 robbep Exp $
+! $Id: release.notes,v 1.119 2008-03-16 20:18:24 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2008-03-16 - Patrick Robbe
+ - src/Lib/pyr.F: move to GENSER package
 
 ! 2008-01-25 - Patrick Robbe
  - Special.cpp: set pile-up generation tool as a private tool
