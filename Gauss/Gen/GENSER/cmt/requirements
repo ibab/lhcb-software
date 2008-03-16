@@ -13,6 +13,16 @@ macro pythia6_native_version "411.2"
 use pythia6  v* LCG_GeneratorsInterfaces
 macro_remove pythia6_linkopts " -lpythia6_pdfdummy " \
                         WIN32 " pythia6_pdfdummy.lib "
+library      pythia6forgauss   pythia6/*.F 
+apply_pattern linker_library library=pythia6forgauss
+apply_pattern linker_stamps  library=pythia6forgauss
+macro_append pythia6forgauss_shlibflags " -lnsl -lcrypt -ldl -lg2c"
+
+private
+macro_remove libraryshr_linkopts "-Wl,--no-undefined"
+
+public
+set LD_PRELOAD $(GENSERDir)/libpythia6forgauss.so
 
 #-- Photos
 macro photos_native_version "215.2"
