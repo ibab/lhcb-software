@@ -4,6 +4,12 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2008-03-16 - Patrick Robbe
+ - src/pythia6: new repository to contain Pythia Gauss specific Fortran
+   functions
+ - cmt/requirements: compilation of pythia6forgauss library for routines
+   used in Gauss
+
 !========================== GENSER v3r3 2007-12-07 ===========================
 ! 2007-11-08 - Gloria Corti for Karl Harrison
  - Introduce linking for pythia6 and GENSER for WIN32
