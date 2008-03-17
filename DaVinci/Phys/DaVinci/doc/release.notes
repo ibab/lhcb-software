@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.216 2008-03-14 10:51:33 pkoppenb Exp $
+! $Id: release.notes,v 1.217 2008-03-17 15:13:00 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v19r11p1 2008-03-17 =================
+
+! 2008-03-17 - Juan PALACIOS
+ - cmt/requirements
+  . Use ParamFiles v7r1 to be able to re-run the reconstruction.
 
 ! 2008-03-14 - Patrick Koppenburg
  - DVDC06TestStripping : opts : do not save MC when reading rdst.
