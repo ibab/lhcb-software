@@ -1,4 +1,4 @@
-// $Id: HltMatchTVeloTracks.cpp,v 1.1 2008-01-22 10:00:48 hernando Exp $
+// $Id: HltMatchTVeloTracks.cpp,v 1.2 2008-03-17 15:04:22 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -200,7 +200,9 @@ StatusCode HltMatchTVeloTracks::match3dVelo(const LHCb::Track& veloTrack,
   y_dist=yVelo_mag-yT;
   if(fabs(x_dist)<m_x_cut&&fabs(y_dist)<m_y_cut){
     //fill output track parameter
-    matchedTrack.copy(veloTrack);
+    Hlt::TrackMerge(veloTrack,matchedTrack);
+    Hlt::TrackMerge(Ttrack,matchedTrack);
+    // matchedTrack.copy(veloTrack);
     
     double zMidT =  StateParameters::ZMidT;
 
@@ -217,11 +219,11 @@ StatusCode HltMatchTVeloTracks::match3dVelo(const LHCb::Track& veloTrack,
     matchedTrack.firstState().setQOverP(qOverP);   
     matchedTrack.setHistory( Track::TrackMatching );
 
-    matchedTrack.addToAncestors(veloTrack);
-    matchedTrack.addToAncestors(Ttrack);
+    // matchedTrack.addToAncestors(veloTrack);
+    // matchedTrack.addToAncestors(Ttrack);
 
-    Hlt::TrackMerge(Ttrack,matchedTrack);
 
+    
     // transfer the momentum
     const std::vector<LHCb::State*>& allStates = matchedTrack.states();
     debug() << " N states " << allStates.size() << endmsg;
