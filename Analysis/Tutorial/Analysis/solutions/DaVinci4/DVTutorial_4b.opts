@@ -16,7 +16,7 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
 TutorialSeq.Members += { "CombineParticles/Jpsi2MuMu" };
 Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
 Jpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-" ;
-Jpsi2MuMu.FILTER0.Code = "TRUE" ;
+Jpsi2MuMu.FILTER0.Code = "ALL" ;
 Jpsi2MuMu.FILTER1.Code = "ADMASS('J/psi(1S)')<30" ;
 Jpsi2MuMu.FILTER2.Code = "(VFASPF(VCHI2/VDOF)<100)" ;
 //
@@ -25,7 +25,7 @@ Jpsi2MuMu.FILTER2.Code = "(VFASPF(VCHI2/VDOF)<100)" ;
 TutorialSeq.Members += { "CombineParticles/Phi2KK" };
 Phi2KK.PhysDesktop.InputLocations = { "Phys/StdLooseKaons" } ;
 Phi2KK.DecayDescriptor  =  "phi(1020) -> K+ K-" ;
-Phi2KK.FILTER0.Code = "TRUE" ;
+Phi2KK.FILTER0.Code = "ALL" ;
 Phi2KK.FILTER1.Code = "ADMASS('phi(1020)')<50" ;
 Phi2KK.FILTER2.Code = "(VFASPF(VCHI2/VDOF)<100)";
 //

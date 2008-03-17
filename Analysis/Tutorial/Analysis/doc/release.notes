@@ -7,6 +7,11 @@
 !   Read README.txt !
 !
 !-----------------------------------------------------------------------------
+
+! 2008-03-17 - Patrick Koppenburg
+ - Use ALL instaed of TRUE
+
+
 !===================== Tutorial/Analysis v7r0 2008-03-06 ======================
 
 ! 2008-03-07 - Patrick KOPPENBURG
