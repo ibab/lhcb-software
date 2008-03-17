@@ -1,4 +1,4 @@
-// $Id: VeloFullDecoder.cpp,v 1.1 2007-09-19 15:06:17 szumlat Exp $
+// $Id: VeloFullDecoder.cpp,v 1.2 2008-03-17 14:26:10 krinnert Exp $
 // Include files
 
 // local
@@ -17,8 +17,7 @@
 
 using namespace VeloTELL1;
 
-VeloFullDecoder::VeloFullDecoder(const int decoderType):
-  m_decodedData ()
+VeloFullDecoder::VeloFullDecoder(const int decoderType)
 {
   decoderIni(decoderType);
 }
@@ -27,12 +26,12 @@ VeloFullDecoder::VeloFullDecoder(const int decoderType):
 //=============================================================================
 VeloFullDecoder::~VeloFullDecoder() {}
 //=============================================================================
-dataVec& VeloFullDecoder::decode(VeloFullBank* inData)
+void VeloFullDecoder::decode(VeloFullBank* inData, VeloTELL1::sdataVec& decodedData)
 {
   dataVec::iterator secIt;
   unsigned int decodedWord=0;
-  m_decodedData.clear();
-  //                                             
+  decodedData.clear();
+    //                                             
   int NumberOfPPFPGA=VeloTELL1::NumberOfPPFPGA;
   int SectionsPerBlock=VeloTELL1::SectionsPerBlock;
   //                                          
@@ -40,28 +39,30 @@ dataVec& VeloFullDecoder::decode(VeloFullBank* inData)
     for(int aSection=0; aSection<SectionsPerBlock; aSection++){
       dataVec section=inData->getSection(aBlock, aSection);
       for(int stream=0; stream<VeloTELL1::DataStreamPerSection; stream++){
-        int ADCBitShift=stream*VeloTELL1::ADCShift;
-        for(int aLink=0; aLink<VeloTELL1::ALinkPerDataStream; aLink++){
-          int analogChanShift=aLink*m_dataLenght;
-          int beginDecode=m_initialShift+analogChanShift;
-          int endDecode=m_wordsToDecode+beginDecode;
-          int count=0;
-          if(aBlock==10&&aSection==0&&stream==0&&aLink==0){
-            std::cout<< "chanShift: " << analogChanShift 
-                     << ", beginDecode: " << beginDecode
-                     << ", endDecode: " << endDecode 
-                     << ", steram: " << stream <<std::endl;
-          }
-          //
-          for(secIt=(section.begin()+beginDecode);
-              secIt!=(section.begin()+endDecode); secIt++){
-            decodedWord=(((*secIt)>>ADCBitShift)&VeloTELL1::ADCMask);
-            if(!((aSection==EmptyData)&&(stream==EmptyData))){
-              // skip the empty space in C section                    
-              m_decodedData.push_back(decodedWord);
+        // skip the empty space in C section                    
+        if(!((aSection==EmptyData)&&(stream==EmptyData))){
+          int ADCBitShift=stream*VeloTELL1::ADCShift;
+          for(int aLink=0; aLink<VeloTELL1::ALinkPerDataStream; aLink++){
+            int analogChanShift=aLink*m_dataLenght;
+            int beginDecode=m_initialShift+analogChanShift;
+            int endDecode=m_wordsToDecode+beginDecode;
+            int count=0;
+            if(aBlock==10&&aSection==0&&stream==0&&aLink==0){
+              std::cout<< "chanShift: " << analogChanShift 
+                << ", beginDecode: " << beginDecode
+                << ", endDecode: " << endDecode 
+                << ", steram: " << stream <<std::endl;
+            }
+            //
+            for(secIt=(section.begin()+beginDecode);
+                secIt!=(section.begin()+endDecode); ++secIt){
+              decodedWord=(((*secIt)>>ADCBitShift)&VeloTELL1::ADCMask);
+              // from now on we must be prepared for negative values, hence
+              // the cast to int.
+              decodedData.push_back(static_cast<int>(decodedWord));
               if(aBlock==10&&aSection==0&&stream==0&&aLink==0){
                 std::cout<< "counter: " << count << ", decoded ADC: "
-                         << decodedWord <<std::endl;
+                  << decodedWord <<std::endl;
               }
               count++;
             }
@@ -70,8 +71,10 @@ dataVec& VeloFullDecoder::decode(VeloFullBank* inData)
       }     // loop over coded int
     }       // Sections loop
   }         // FPGA loop
-  //
-  return ( m_decodedData );
+  
+  if (decodedData.size() != VeloTELL1::SENSOR_CHANNELS) { 
+    decodedData.resize(VeloTELL1::SENSOR_CHANNELS,0);
+  }
 }
 //==============================================================================
 // to make the decoder universal one the code below to execute inside
@@ -95,5 +98,6 @@ void VeloFullDecoder::decoderIni(const int decoderType)
     m_dataLenght=ALinkShift;
     m_wordsToDecode=ADCHeaders;
   }
+
 }
 //

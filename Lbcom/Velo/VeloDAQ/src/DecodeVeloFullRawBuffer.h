@@ -1,4 +1,4 @@
-// $Id: DecodeVeloFullRawBuffer.h,v 1.2 2007-09-19 13:43:38 cattanem Exp $
+// $Id: DecodeVeloFullRawBuffer.h,v 1.3 2008-03-17 14:26:10 krinnert Exp $
 #ifndef DECODEVELOFULLRAWBUFFER_H 
 #define DECODEVELOFULLRAWBUFFER_H 1
 
@@ -12,6 +12,7 @@
 #include "VeloEvent/EvtInfo.h"
 #include "Tell1Kernel/VeloDecodeCore.h"
 #include "Tell1Kernel/VeloDecodeConf.h"
+#include "VeloFullDecoder.h"
 
 /** @class DecodeVeloFullRawBuffer DecodeVeloFullRawBuffer.h
  *  
@@ -74,6 +75,21 @@ private:
   bool m_adcDataPresent;
   bool m_pedDataPresent;  
   bool m_sectorCorrection;
-
+  bool m_isDebug;
+  // data buffers
+  sdataVec m_signADC;
+  sdataVec m_signADCReordered;
+  sdataVec m_signHeader;
+  sdataVec m_signHeaderReordered;
+  sdataVec m_signPed;
+  sdataVec m_signPedReordered;
+  // decoders
+  VeloFullDecoder m_ADCDecoder;
+  VeloFullDecoder m_HeaderDecoder;
+  VeloFullDecoder m_PedDecoder;
+  // cable order
+  std::vector<unsigned int> m_cableOrder;
+  
+  
 };
 #endif // DECODEVELOFULLRAWBUFFER_H

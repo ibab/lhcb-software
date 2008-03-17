@@ -1,4 +1,4 @@
-// $Id: VeloFullDecoder.h,v 1.1 2007-09-19 15:06:18 szumlat Exp $
+// $Id: VeloFullDecoder.h,v 1.2 2008-03-17 14:26:10 krinnert Exp $
 #ifndef VELOTELL1ALGORITHM_VELOFULLDECODER_H 
 #define VELOTELL1ALGORITHM_VELOFULLDECODER_H 1
 
@@ -27,7 +27,7 @@ public:
   /// Standard constructor
   VeloFullDecoder(const int decoderType);
   virtual ~VeloFullDecoder( ); ///< Destructor
-  VeloTELL1::dataVec& decode(VeloFullBank* inData);
+  void decode(VeloFullBank* inData, VeloTELL1::sdataVec& decodedData);
   
 protected:
 
@@ -38,7 +38,6 @@ private:
   int m_initialShift;  // if decoding adcs skip headers
   int m_dataLenght;    // lenght of the ALink
   int m_wordsToDecode; // words to decode
-  VeloTELL1::dataVec m_decodedData;    
 
 };
 #endif // VELOTELL1ALG_VELOFULLDECODER_H
