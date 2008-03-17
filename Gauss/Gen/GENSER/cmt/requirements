@@ -17,6 +17,7 @@ library      pythia6forgauss   pythia6/*.F
 apply_pattern linker_library library=pythia6forgauss
 apply_pattern linker_stamps  library=pythia6forgauss
 macro_append pythia6forgauss_shlibflags " -lnsl -lcrypt -ldl -lg2c"
+include_dirs $(GENSERROOT)/src/pythia6
 
 private
 macro_remove libraryshr_linkopts "-Wl,--no-undefined"
