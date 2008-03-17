@@ -1,4 +1,4 @@
-// $Id: WriteAlignmentConditions.cpp,v 1.2 2008-03-04 16:55:05 jblouw Exp $
+// $Id: WriteAlignmentConditions.cpp,v 1.3 2008-03-17 16:44:49 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -63,7 +63,7 @@ void WriteAlignmentConditions::children(DetectorElement* parent, std::ofstream& 
   if (parent != 0){
     const Condition* aCon = parent->geometry()->alignmentCondition();
     if (aCon) {
-      std::string temp = strip(aCon->toXml());
+      std::string temp = strip(aCon->toXml("", false, 16));
       replaceChars(temp);
       out << temp << std::endl;
     }
@@ -90,8 +90,11 @@ StatusCode WriteAlignmentConditions::finalize()
 
   const Condition* aCon = det->geometry()->alignmentCondition();
   if (aCon) { 
-    outputFile << header(aCon->toXml()) << std::endl; 
-    children(det,outputFile);
+    info() << "Writing header" << endmsg;
+    outputFile << header(aCon->toXml("", true, 16)) << std::endl; 
+    info() << "Writing conditions" << endmsg;
+    children(det, outputFile);
+    info() << "Writing footer" << endmsg;
     outputFile << footer() << std::endl;
   }
   else {
@@ -109,11 +112,10 @@ std::string WriteAlignmentConditions::header(const std::string& conString) const
   // get the header
   std::string::size_type startpos = conString.find(m_startTag);
   std::string temp = conString.substr(0,startpos);
-
   // correct the location of the DTD
   std::string location;
-  for (unsigned int i =0 ; i<m_depth; ++i) location +="../";
-  location += "DTD/";
+  //for (unsigned int i =0 ; i<m_depth; ++i) location +="../";
+  //location += "DTD/";
   std::string::size_type pos = temp.find("structure");
   temp.insert(pos,location);
   return temp;
