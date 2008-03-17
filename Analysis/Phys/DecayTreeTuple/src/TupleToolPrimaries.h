@@ -1,4 +1,4 @@
-// $Id: TupleToolPrimaries.h,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolPrimaries.h,v 1.2 2008-03-17 08:59:06 sposs Exp $
 #ifndef JBOREL_TUPLETOOLEVENTINFO_H
 #define JBOREL_TUPLETOOLEVENTINFO_H 1
 
@@ -11,11 +11,14 @@ class IContextTool;
 
 /** @class TupleToolPrimaries TupleToolPrimaries.h jborel/TupleToolPrimaries.h
  *
- * \brief Event and Run number for DecayTreeTuple
+ * \brief Primary vertices properties for DecayTreeTuple
  *
  * Tuple columns:
- * - runNumber: well, the run number
- * - eventNumber: 
+ * - coordinates PVX, PVY, PVZ
+ * - errors PVXERR, PVYERR, PVZERR
+ * - vertex chi2 PVCHI@
+ * - vertex ndf PVNDOF
+ * - Nb of tracks used to do the vertex PVNTRACKS
  *
  * \sa DecayTreeTuple
  *  @author Jeremie Borel

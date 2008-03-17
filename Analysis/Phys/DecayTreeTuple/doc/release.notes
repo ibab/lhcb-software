@@ -4,6 +4,17 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-03-17 - Stephane Poss
+ - TupleToolPrimaries
+  . Correct documentation (was TupleTooEventInfo documentation)
+ - TupleToolTagging
+  . Add tagger type number
+ - TupleToolMCHierarchy
+  . Gives MC mother, MC grand mother and MC grand grand mother IDs
+    for particles, useful as complement to Background Category Tool
+ - TupleToolTrackInfo
+	. Track chi2 and track ndof for basic particles
+
 !===================== DecayTreeTuple v1r1p1 2008-03-06 =====================
 
 ! 2008-02-20 - Patrick Koppenburg

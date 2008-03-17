@@ -1,4 +1,4 @@
-// $Id: TupleToolTagging.cpp,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolTagging.cpp,v 1.2 2008-03-17 08:59:06 sposs Exp $
 // Include files
 
 // from Gaudi
@@ -121,6 +121,21 @@ StatusCode TupleToolTagging::fill( const Particle* mother
   test &= tuple->column( head+"_TAGCAT" , cat );
   test &= tuple->column( head+"_TAGOMEGA" , omega );
   
+  int taggers_code = 0;
+  std::vector<Tagger> taggers = theTag.taggers();
+  for(size_t i=0; i<taggers.size(); ++i) {
+    int tdec = taggers[i].decision();
+    if(tdec) switch ( taggers[i].type() ) {
+    case Tagger::OS_Muon     : taggers_code += 10000 *(tdec+2); break;
+    case Tagger::OS_Electron : taggers_code +=  1000 *(tdec+2); break;
+    case Tagger::OS_Kaon     : taggers_code +=   100 *(tdec+2); break;
+    case Tagger::SS_Kaon     : taggers_code +=    10 *(tdec+2); break;
+    case Tagger::SS_Pion     : taggers_code +=    10 *(tdec+2); break;
+    case Tagger::VtxCharge   : taggers_code +=     1 *(tdec+2); break;
+    }
+  }
+  test &= tuple->column( head+"_TAGGER" , taggers_code );
+
   if( msgLevel( MSG::DEBUG ) ){
     debug() << "Tagging summary: decision: " << dec 
 	    << ", category: " << cat 
