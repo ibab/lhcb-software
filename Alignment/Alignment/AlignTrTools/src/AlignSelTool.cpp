@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.14 2008-03-15 12:17:22 lnicolas Exp $
+// $Id: AlignSelTool.cpp,v 1.15 2008-03-17 14:07:04 janos Exp $
 // Include files 
 
 // local
@@ -9,6 +9,9 @@
 #include "OTDet/DeOTDetector.h"
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeITDetector.h"
+
+// GSL
+#include "gsl/gsl_math.h"
 
 // Boost
 #include <boost/lambda/bind.hpp>
