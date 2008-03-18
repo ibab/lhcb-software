@@ -22,7 +22,7 @@ GlobalOR.Algorithms = @TagCreator.ToLookAt;
 DSTOR.ItemList = @DstWriter.ItemList;                                   
 
 ApplicationMgr.EvtMax = 100 ;
-PoolDbCacheSvc.Catalog =  { "xmlcatalog_file:pool_xml_catalog.xml" } ;  
+FileCatalog.Catalogs =  { "xmlcatalog_file:pool_xml_catalog.xml" } ;  
 
 //SeqWriteTag.OutputLevel = 1 ;
 //WR.OutputLevel = 1 ;

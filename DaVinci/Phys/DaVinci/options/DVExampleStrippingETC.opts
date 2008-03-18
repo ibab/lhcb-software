@@ -19,5 +19,5 @@ EventSelector.Input   = {
 };
 ApplicationMgr.ExtSvc  += { "TagCollectionSvc/EvtTupleSvc" };
 
-PoolDbCacheSvc.Catalog = { "xmlcatalog_file:options/DVExampleStripping.xml" } ;
+FileCatalog.Catalogs = { "xmlcatalog_file:options/DVExampleStripping.xml" } ;
 
