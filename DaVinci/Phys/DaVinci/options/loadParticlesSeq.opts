@@ -1,3 +1,4 @@
+#pragma print off
 DaVinciMainSeq.Members += { "GaudiSequencer/SeqLoadStdParticles" } ;
 //
 SeqLoadStdParticles.Members += {"PreLoadParticles/LoadStdLooseMuons",
@@ -75,3 +76,4 @@ LoadStdLooseD02KKPiPiNoCCCloned.PhysDesktop.InputLocations = {"Phys/StdLooseD02K
 LoadStdLooseD02KPiPiPiCACloned.PhysDesktop.InputLocations = {"Phys/StdLooseD02KPiPiPiCACloned"};
 
 SeqLoadStdParticles.MeasureTime  = true ;
+#pragma print on

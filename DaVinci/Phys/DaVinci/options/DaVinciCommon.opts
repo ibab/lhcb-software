@@ -6,6 +6,7 @@
  *  @date 2003-03-14
  */
 //--------------------------------------------------------------
+#pragma print off
 // Main initialisation
 #include "$PHYSSYSROOT/options/DaVinciInit.opts"
 // POOL Persistency
@@ -74,3 +75,9 @@ ApplicationMgr.ExtSvc +=  [ "ToolSvc" , "AuditorSvc" ] ;
 ApplicationMgr.AuditAlgorithms = 1;  
 AuditorSvc.Auditors +=  [ "TimingAuditor/TIMER" ] ;   
 ToolSvc.SequencerTimerTool.OutputLevel = 4;          
+/**
+ * This suppresses print of DoD and initialisation
+ */
+DataOnDemandSvc.OutputLevel = 4 ;
+
+#pragma print on
