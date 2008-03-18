@@ -1,4 +1,4 @@
-// $Id: WriteAlignmentConditions.cpp,v 1.3 2008-03-17 16:44:49 janos Exp $
+// $Id: WriteAlignmentConditions.cpp,v 1.4 2008-03-18 07:37:34 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -29,12 +29,8 @@ WriteAlignmentConditions::WriteAlignmentConditions( const std::string& name,
   declareProperty("footer", m_footer = "</DDDB>");
   declareProperty("startTag", m_startTag = "<condition");
   declareProperty("outputFile",m_outputFileName = "alignment.xml");
-  declareProperty("depth", m_depth = 3);
-  info() << "topElement = " << m_topElement << "\n"
-	 << "footer     = " << m_footer << "\n"
-	 << "startTag   = " << m_startTag << "\n"
-	 << "outputFile = " << m_outputFileName << "\n"
-	 << "depth      = " << m_depth << endreq; 
+  declareProperty("depth", m_depth = 3u);
+  declareProperty("precision", m_precision = 16u);
 }
 
 WriteAlignmentConditions::~WriteAlignmentConditions()
@@ -50,11 +46,14 @@ StatusCode WriteAlignmentConditions::execute()
 
 StatusCode WriteAlignmentConditions::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
-  info() << "2: topElement = " << m_topElement << "\n"
-	 << "   footer     = " << m_footer << "\n"
-	 << "   startTag   = " << m_startTag << "\n"
-	 << "   outputFile = " << m_outputFileName << "\n"
-	 << "   depth      = " << m_depth << endreq; 
+  
+  info() << "topElement = " << m_topElement << "\n"
+	 << "footer     = " << m_footer << "\n"
+	 << "startTag   = " << m_startTag << "\n"
+	 << "outputFile = " << m_outputFileName << "\n"
+	 << "depth      = " << m_depth << "\n"
+         << "precision  = " << m_precision << endreq;
+  
   return sc;
 }
 
@@ -63,7 +62,7 @@ void WriteAlignmentConditions::children(DetectorElement* parent, std::ofstream& 
   if (parent != 0){
     const Condition* aCon = parent->geometry()->alignmentCondition();
     if (aCon) {
-      std::string temp = strip(aCon->toXml("", false, 16));
+      std::string temp = strip(aCon->toXml("", false, m_precision));
       replaceChars(temp);
       out << temp << std::endl;
     }
@@ -89,12 +88,9 @@ StatusCode WriteAlignmentConditions::finalize()
   }
 
   const Condition* aCon = det->geometry()->alignmentCondition();
-  if (aCon) { 
-    info() << "Writing header" << endmsg;
-    outputFile << header(aCon->toXml("", true, 16)) << std::endl; 
-    info() << "Writing conditions" << endmsg;
+  if (aCon) {
+    outputFile << header(aCon->toXml("", true, m_precision)) << std::endl;
     children(det, outputFile);
-    info() << "Writing footer" << endmsg;
     outputFile << footer() << std::endl;
   }
   else {
@@ -114,8 +110,6 @@ std::string WriteAlignmentConditions::header(const std::string& conString) const
   std::string temp = conString.substr(0,startpos);
   // correct the location of the DTD
   std::string location;
-  //for (unsigned int i =0 ; i<m_depth; ++i) location +="../";
-  //location += "DTD/";
   std::string::size_type pos = temp.find("structure");
   temp.insert(pos,location);
   return temp;
