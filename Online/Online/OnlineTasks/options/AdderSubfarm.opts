@@ -16,12 +16,13 @@ ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
 ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 
+//from $SUBFARM
 Adder.nodenames=@Subfarm.Name;
-Adder.servername=@Subfarm.Name;
+Adder.servername=@Subfarm.ServerName;
 //Adder.histogramname={"1Da*","2D*","1Db*","Prof*"};
 //Adder.algorithmname={"GaudiExample","GaudiExample","GaudiExample","GaudiExample"};
 Adder.histogramname={"banktype*","eventsize*"};
 Adder.algorithmname={"OnlineDummyReader","OnlineDummyReader"};
 Adder.taskname={"GauchoJob","GauchoJob"};
 Adder.refreshtime=20;
-Adder.dimclientdns=@Subfarm.Name;
+Adder.dimclientdns=@Subfarm.ClientName;

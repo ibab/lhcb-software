@@ -23,4 +23,4 @@ Saver.histogramname={"banktype*","eventsize*"};
 Saver.algorithmname={"OnlineDummyReader","OnlineDummyReader"};
 Saver.dimclientdns="hlt01";
 Saver.taskname="GauchoJob";
-Saver.savedir="/home/online";
+Saver.savedir="/group/online/Histograms/Savesets";

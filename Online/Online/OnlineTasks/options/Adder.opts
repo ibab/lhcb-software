@@ -17,14 +17,10 @@ ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
 ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 
-<<<<<<< Adder.opts
 //from $OPTIONS
 Adder.nodenames=@OnlineEnv.SubFarms;
 
 //from $PARTOPTIONS
-=======
-Adder.nodenames=@OnlineEnv.SubFarms;
->>>>>>> 1.2
 Adder.servername=@PartEnv.servername;
 //Adder.histogramname={"1Da*","2D*","1Db*","Prof*"};
 //Adder.algorithmname={"GaudiExample","GaudiExample","GaudiExample","GaudiExample"};
