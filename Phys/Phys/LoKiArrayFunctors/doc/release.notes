@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.13 2008-03-18 16:26:13 ibelyaev Exp $ 
+$Id: release.notes,v 1.14 2008-03-18 16:29:32 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
@@ -11,6 +11,16 @@ $Id: release.notes,v 1.13 2008-03-18 16:26:13 ibelyaev Exp $
 
     add new tool: LoKi::Hybrid::PlotTool, 
     the implementation of IPlotTool abstract interface
+
+    ATTENTION:
+
+    For the default configuration the tool produces crash 
+    at the end of the job. The crash required the fix in ToolSvc.
+    Th etemporary solution: one needs to disable the printout 
+    of the histogram summary:
+
+       MyAlg.MyPlotTool.HistoPrint = False ;
+
 
  - cmt/requirements 
 
