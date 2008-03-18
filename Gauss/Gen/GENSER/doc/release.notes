@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2008-03-18 - Gloria CORTI
+ - cmt/requirements: force linking of routines in pythia6_dummy
+
 ! 2008-03-16 - Patrick Robbe
  - src/pythia6: new repository to contain Pythia Gauss specific Fortran
    functions
