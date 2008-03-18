@@ -42,8 +42,7 @@ void PatTStationHitManager::prepareHitsInWindow(const Tf::IStationSelector & sel
 
   Tf::TStationHitManager<PatForwardHit>::prepareHitsInWindow(selector);
 
-  if ( !allHitsPrepared() )   
-    sortMyHits();
+  sortMyHits();
 }
 
 void PatTStationHitManager::sortMyHits() const
@@ -73,13 +72,12 @@ void PatTStationHitManager::sortMyHits() const
         }
       
 	this->sortHits < Tf::increasingByXAtYEq0<PatForwardHit> > (sta,lay,t);
-
-	Tf::OTHitRange othits = this->otHitCreator()->hits(sta,lay,t) ;
       }
 
       for (Tf::ITRegionID t=0; t<maxITRegions(); t++)
       {
         const int index = t+maxOTRegions();
+	Tf::TStationHitManager<PatForwardHit>::HitRange range = hits(sta,lay,index);
         this->sortHits < Tf::increasingByXAtYEq0<PatForwardHit> > (sta,lay,index);
       }
     }

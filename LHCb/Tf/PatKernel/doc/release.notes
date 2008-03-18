@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-03-18 - Stephanie Hansmann-Menzemer
+ - fix bug for decoding on demand (no effects on standard tracking)
+
 !============================= PatKernel v2r0 2007-10-12 =====================
 ! 2007-10-12 - Marco Cattaneo
  - Change major version to v2r0
