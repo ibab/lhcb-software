@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-03-18 M Needham
+ - update PiecewiseTrajectory, with changes of Gerhard
+
+
 !===================== LHCbKernel v8r2 2008-03-03 ========================
 ! 2008-02-27 - Chris Jones
  - Force inclusion of #include<vector> in RichSmartID.h

@@ -1,4 +1,4 @@
-// $Id: PiecewiseTrajectory.h,v 1.1 2008-01-26 13:31:19 mneedham Exp $
+// $Id: PiecewiseTrajectory.h,v 1.2 2008-03-18 13:02:35 mneedham Exp $
 #ifndef LHCbKernel_PiecewiseTrajectory_H
 #define LHCbKernel_PiecewiseTrajectory_H 1
 
@@ -43,6 +43,7 @@ namespace LHCb
 
     /// Second derivative of the trajectory at mu
     Vector curvature( double mu ) const;
+
     /// Create a parabolic approximation to the trajectory
     /// at mu 
     void expansion( double arclength,
@@ -67,21 +68,31 @@ namespace LHCb
      
     // note: we _will_ assume ownership of the passed Trajectory!
     void append(Trajectory*); 
-    // void prepend(Trajectory*); 
+    void prepend(Trajectory*); 
     
     /// Distance, along the Trajectory, between position(mu1) and
     /// position(mu2). .
     virtual double arclength(double mu1, double mu2) const { return mu2 - mu1 ; }
 
   private:
-     typedef std::pair<Trajectory*,double> Elem;
+     typedef std::pair<Trajectory*,double> Elem; // Traj, global mu for start for Traj
      typedef std::deque<Elem>         Trajs;
      Trajs                            m_traj; // note: (we assume that) we OWN the Trajectory*!
-     mutable Trajs::iterator          m_last;      // (cached) starting point for searches
-                                                        // speeds up access when staying in a small
-                                                        // local area...
+
+     // global -> local mapping
+     std::pair<const Trajectory*, double> loc(double mu) const;
+
      // generic forwarding to local trajectories
-     template <typename RET, typename FUNC> RET local(double arclen, FUNC f) const;
+     template <typename RET, typename FUN> RET local(double mu, FUN fun) const {
+        std::pair<const LHCb::Trajectory*, double> j = loc(mu);
+        return fun(j.first,j.second);
+     };
+
+     typedef double (LHCb::Trajectory::*distFun)(double,double,int) const;
+
+     double distToError( double s, double tolerance, int pathDirection, 
+                         distFun fun) const;
+
   };
  
 }
