@@ -1,19 +1,23 @@
 #!/bin/bash
-#export node=$1
-test -n $1 ; export TOPLEVEL=$1
-test -n $2 ; export UTGID=$2
-test -n $3 ; export PART_NAME=$3
+#need to cd incase script is launched outside the taskmanager
+#get online version
 
-while [ $# -ne 0 ]; do
-  shift 
-done
+pathofthisfile=`which $0`
+first=${pathofthisfile#*_}
+export onlineversion=${first%%/*}
+second=${first#*/*/*/}
+export onlinetasksversion=${second%%/*}
+
+cd /home/online/Online_${onlineversion}/Online/OnlineTasks/${onlinetasksversion}/job
+export DEBUGGING=YES
+
+export $1="NOTAN"$1 
+
+. ./setupOnline.sh $*
 
 if test -n "$PARTNAME" 
    then export DIM_DNS_NODE=hlt01;
 fi
 
-cd /home/online/Online_v4r5/Online/OnlineTasks/v1r8/job
-. /home/online/Online_v4r5/Online/OnlineTasks/v1r8/job/setupOnline.sh NOTAN
-#${gaudi_exe3} -options=../options/Saver$node.opts -loop &
 ${gaudi_exe3} -options=../options/Saver.opts -loop &
 
