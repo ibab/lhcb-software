@@ -5,6 +5,12 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-03-18 - Sandra Amato
+  - In HltMuonAlleyConfSequence.opts:
+    fixed abs value in the cut of RZVelo Matching with T 
+    changed the filter in L0PT : 
+    L0MuonSingle.FilterDescriptor = {"PT0,||>,1300"}
+
 </PRE><H1><A NAME=v3r1>2008-02-06 HltSys v3r1</A></H1><PRE>
  This version uses LHCb v23r4. 
  - First release of HLT using LoKi::Hybrid. Users can start tuning their cuts now! 

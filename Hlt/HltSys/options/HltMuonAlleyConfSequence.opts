@@ -108,7 +108,7 @@ MuonEntry.L0ChannelsName = {"Muon" ,"MuonNoGlob"};
 MuonEntry.OutputLevel = 3;
 
 L0MuonSingle.InputSelection ="L0AllMuons";
-L0MuonSingle.FilterDescriptor = {"PT,||>,1300"};
+L0MuonSingle.FilterDescriptor = {"PT0,||>,1300"};
 L0MuonSingle.OutputLevel = 3;
 
 L0MuonConfirmedWithT.InputSelection = "L0MuonSingle";
@@ -120,7 +120,7 @@ L0MuonAndTConfirmed.FilterDescriptor = {"IsMuon,>,0."};
 L0MuonAndTConfirmed.OutputLevel = 3;
 
 RZMuon.InputSelection = "RZVelo";
-RZMuon.FilterDescriptor = {"RZVeloTMatch_L0MuonAndTConfirmed,<,80."};
+RZMuon.FilterDescriptor = {"RZVeloTMatch_L0MuonAndTConfirmed,||<,80."};
 RZMuon.OutputLevel = 3;
 
 VeloMuonConf.InputSelection = "RZMuon";
@@ -190,7 +190,7 @@ DiMuonAndTConfirmed.FilterDescriptor = {"IsMuon,>,0."};
 DiMuonAndTConfirmed.OutputLevel = 3;
 
 RZDiMuon.InputSelection = "RZVelo";
-RZDiMuon.FilterDescriptor = {"RZVeloTMatch_DiMuonAndTConfirmed,<,80."};
+RZDiMuon.FilterDescriptor = {"RZVeloTMatch_DiMuonAndTConfirmed,||<,80."};
 RZDiMuon.OutputLevel = 3;
 
 VeloDiMuonConf.InputSelection = "RZDiMuon";
@@ -283,7 +283,7 @@ MuonTAndTConfirmed.FilterDescriptor = {"IsMuon,>,0."};
 MuonTAndTConfirmed.OutputLevel = 3;
 
 RZMuonSeg.InputSelection = "RZVelo";
-RZMuonSeg.FilterDescriptor = {"RZVeloTMatch_MuonTAndTConfirmed,<,80."};
+RZMuonSeg.FilterDescriptor = {"RZVeloTMatch_MuonTAndTConfirmed,||<,80."};
 RZMuonSeg.OutputLevel = 3;
 
 VeloMuonFromMuonSeg.InputSelection = "RZMuonSeg";
