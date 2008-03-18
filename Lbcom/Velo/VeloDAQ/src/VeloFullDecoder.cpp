@@ -1,4 +1,4 @@
-// $Id: VeloFullDecoder.cpp,v 1.2 2008-03-17 14:26:10 krinnert Exp $
+// $Id: VeloFullDecoder.cpp,v 1.3 2008-03-18 08:40:15 krinnert Exp $
 // Include files
 
 // local
@@ -71,11 +71,8 @@ void VeloFullDecoder::decode(VeloFullBank* inData, VeloTELL1::sdataVec& decodedD
       }     // loop over coded int
     }       // Sections loop
   }         // FPGA loop
-  
-  if (decodedData.size() != VeloTELL1::SENSOR_CHANNELS) { 
-    decodedData.resize(VeloTELL1::SENSOR_CHANNELS,0);
-  }
 }
+
 //==============================================================================
 // to make the decoder universal one the code below to execute inside
 // VeloFullDecoder constructor is provided

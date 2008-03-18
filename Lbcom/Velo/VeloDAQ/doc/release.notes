@@ -3,6 +3,12 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2008-03-18 - Kurt Rinnert
+ - minor bug fix introduced in latest update of VeloFullDecoder: a size check
+   in the decoding method assumed ADC encoding.  This was removed, there was
+   no check before anyway.  Need to decide whether we want a smart check or 
+   rather issue an error message.
+
 ! 2008-03-13 - Kurt Rinnert
  - changes in DecodeVeloFullRawBuffer and VeloFullDecoder:
  - avoid unnecessary copies of large vectors 
