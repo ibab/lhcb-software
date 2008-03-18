@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-03-18 - Sandra Amato
+ - in HltFunctionFactories.cpp, added a new functor named "PT0"
+ 
 ! 2008-03-13 - Gerhard Raven
  - in HltGenConfig, dump configurations in 'finalize' rather than in the
    first call to 'execute'

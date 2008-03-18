@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.3 2008-02-13 16:32:21 hernando Exp $
+// $Id: HltFunctionFactories.cpp,v 1.4 2008-03-18 18:00:08 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -38,6 +38,7 @@ StatusCode HltTrackFunctionFactory::initialize() {
   StatusCode sc = HltTFunctionFactory<LHCb::Track>::initialize();
 
   declare<Hlt::PT>("PT");
+  declare<Hlt::PT>("PT0");
   declare<Hlt::TrackFlag>("IsBackward");
 
   declare<Hlt::rIP,zen::abs_min,LHCb::RecVertex>("rIP");
