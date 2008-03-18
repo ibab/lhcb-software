@@ -1,9 +1,20 @@
-$Id: release.notes,v 1.12 2008-02-19 16:13:07 ibelyaev Exp $ 
+$Id: release.notes,v 1.13 2008-03-18 16:26:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2008-03-18 - Vanya BELYAEV
+
+ - src/Component/PlotTool.cpp
+
+    add new tool: LoKi::Hybrid::PlotTool, 
+    the implementation of IPlotTool abstract interface
+
+ - cmt/requirements 
+
+   version increment to v7r2 
 
 !======================== LoKiArrayFunctors v7r1 2008-02-19 ===================
 
