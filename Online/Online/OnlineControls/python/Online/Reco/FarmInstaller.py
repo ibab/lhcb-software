@@ -30,8 +30,6 @@ class Installer(Online.InstallerBase.InstallerBase):
     self.numFarm          = FarmSetup.numFarm
     self.numSubFarm       = FarmSetup.numSubFarm
     self.subFarms         = FarmSetup.subFarms
-    self.sendNodes        = FarmSetup.storageSenderNodes
-    self.recvNodes        = FarmSetup.storageReceiverNodes
     self.typeMgr          = self.manager.typeMgr()
     self.devMgr           = self.manager.deviceMgr()
 
@@ -39,12 +37,12 @@ class Installer(Online.InstallerBase.InstallerBase):
   def create(self):
     sf  = self.subFarms
     mgr = self.manager
-    typ = self.typeMgr.type('StreamControl')
-    dev = self.devMgr.createDevice(self.name+'Alloc',typ,1)
-    if dev.get() is None:
-      warning('Failed to create farm allocator for "'+self.name+'"',timestamp=1)
+    #typ = self.typeMgr.type('StreamControl')
+    #dev = self.devMgr.createDevice(self.name+'Alloc',typ,1)
+    #if dev.get() is None:
+    #  warning('Failed to create farm allocator for "'+self.name+'"',timestamp=1)
 
-    typ = self.typeMgr.type('RecoFarmInfo')
+    typ = self.typeMgr.type('FarmInfo')
     dev = self.devMgr.createDevice(self.name,typ,1)
     if dev.get() is None:
       warning('Failed to create farm device for "'+self.name+'"',timestamp=1)
@@ -54,7 +52,8 @@ class Installer(Online.InstallerBase.InstallerBase):
     self.set('SubFarms',sf.keys())
     self.set('InUse',['' for i in xrange(len(sf))])
     self.set('State','NOT_READY')
-    typ = self.typeMgr.type('RecoSubFarmInfo')
+    typ = self.typeMgr.type('FarmSubInfo')
+    v = std.vector('std::string')()
     for k,n in sf.items():
       nam = self.myName+'_'+k
       dev = self.devMgr.createDevice(nam,typ,1)
@@ -63,8 +62,10 @@ class Installer(Online.InstallerBase.InstallerBase):
       log('Accessing subfarm device '+nam,timestamp=1)
       self.name = nam
       self.set('Name',k)
-      self.set('Nodes',n[0])
-      self.set('NodesCPU',n[1])
+      for i in xrange(len(n[0])):
+        v.push_back(n[0][i]+'/'+str(n[1][i]))
+      self.set('Nodes',v)
+      v.clear()
     self.name = self.myName
     return self.write(prefix='FarmInstaller('+self.name+'): ')
 
@@ -73,8 +74,6 @@ class Installer(Online.InstallerBase.InstallerBase):
     if manager is None: manager = self.manager
     inst = Online.Streaming.StreamInstaller.Installer(manager,self.name+'IO')
     inst.numPartition     = self.numFarm
-    inst.recvNodes        = self.recvNodes
-    inst.strmNodes        = self.sendNodes
     inst.numRecvSlices    = self.numSubFarm
     inst.numStreamSlices  = self.numSubFarm
     inst.create()
@@ -82,30 +81,23 @@ class Installer(Online.InstallerBase.InstallerBase):
     
   # ===========================================================================
   def createActivity(self, name):
-    nam = 'RecoFarmActivity_'+name
-    typ = self.typeMgr.type('RecoFarmActivity')
+    nam = 'FarmActivity_'+name
+    typ = self.typeMgr.type('FarmActivity')
     dev = self.devMgr.createDevice(nam,typ,1)
     if dev.get() is None:
       warning('Failed to create farm activity "'+nam+'"',timestamp=1)
     log('Accessing farm activity '+nam,timestamp=1)
     self.name = nam
     self.set('Name',name)
-    self.set('Farm.Infrastructure',  ['MBMReco'])
-    self.set('Farm.TaskTypes',       ['Brunel'])
-    self.set('Farm.ReceiverType',    'RecvReco')
-    self.set('Farm.SenderType',      'SendReco')
-    self.set('Storage.streamInfrastructure', ['MBMReco'])
-    self.set('Storage.streamTypes',          ['SendToFarm','FileRDR'])
-    self.set('Storage.strmStrategy',         2)
-    self.set('Storage.recvInfrastructure',   ['MBMReco'])
-    self.set('Storage.recvTypes',            ['RecvFromFarm','DiskWR'])
-    self.set('Storage.recvStrategy',         2)
+    self.set('Farm.Infrastructure',   ['MBM/Class0','Receiver/Class1','Sender/Class2'])
+    self.set('Farm.Worker',            'Brunel/Class1')
+    self.set('Control.Infrastructure',['Adder/Class1'])
     self.name = self.myName
     return self.write(prefix='FarmInstaller('+self.name+'): ')
   
   # ===========================================================================
   def createSlices(self):
-    typ = self.typeMgr.type('RecoFarmSlice')
+    typ = self.typeMgr.type('FarmSlice')
     for i in xrange(self.numFarm):
       nam = '%s_Slice%02X'%(self.myName,i)
       dev = self.devMgr.createDevice(nam,typ,1)
@@ -113,25 +105,52 @@ class Installer(Online.InstallerBase.InstallerBase):
         warning('Failed to create farm Slice "'+nam+'"',timestamp=1)
       log('Accessing farm Slice '+nam,timestamp=1)
       self.name = nam
-      self.set('Name',nam)
       self.set('InUse',0)
-      self.set('Activity','')
-      self.set('Command','')
-      self.set('State','NOT_READY')
-      self.set('SubFarms',std.vector('std::string')())
-      self.set('Tasks',std.vector('std::string')())
+      self.set('FSMSlice','')
+      self.set('RunInfo','')
+    self.name = self.myName
+    return self.write(prefix='FarmInstaller('+self.name+'): ')
+
+  # ===========================================================================
+  def createPartitions(self):
+    typ = self.typeMgr.type('FarmRunInfo')
+    for i in xrange(16):
+      nam = '%s_Farm%02X'%(self.myName,i)
+      dev = self.devMgr.createDevice(nam,typ,1)
+      if dev.get() is None:
+        warning('Failed to create farm Slice "'+nam+'"',timestamp=1)
+      log('Accessing farm Slice '+nam,timestamp=1)
+      self.name = nam
+      self.set('general.partName','')
+      self.set('general.partId',1<<i)
+      self.set('general.activePartId',1<<i)
+      self.set('HLTFarm.nSubFarms',0)
+      self.set('HLTFarm.subFarms',std.vector('std::string')())
     self.name = self.myName
     return self.write(prefix='FarmInstaller('+self.name+'): ')
     
+  # ===========================================================================
+  def createFMC(self):
+    typ = self.typeMgr.type('StreamTaskCreator')
+    for k,n in self.subFarms.items():
+      for i in xrange(len(n[0])):
+        nam = n[0][i]+'_StreamTaskCreator'
+        dev = self.devMgr.createDevice(nam,typ,1)
+        if dev.get() is None:
+          warning('Failed to FMC device "'+nam+'"',timestamp=1)
+    return self
+
 # =============================================================================
 def install(name=FarmSetup.Name,system=FarmSetup.pvss_system):
   inst = Installer(Online.PVSSSystems.controlsMgr(system),name)
   inst.create()
   inst.createSlices()
+  inst.createPartitions()
   inst.createActivity('REPRO_1')
   inst.createActivity('REPRO_2')
   inst.createActivity('REPRO_3')
-  inst.createIO()
+  inst.createFMC()
+  #inst.createIO()
   return inst.manager
 
 # =============================================================================

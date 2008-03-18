@@ -151,12 +151,8 @@ class FarmSliceInfo(DatapointLoader):
     "Access to the use-flag"
     return True
   # ===========================================================================
-  def numLayer1Slots(self):
+  def numSlots(self):
     "Access the number of slices required for stream layer 1"
-    return len(self.subFarms.data)
-  # ===========================================================================
-  def numLayer2Slots(self):
-    "Access the number of slices required for stream layer 2"
     return len(self.subFarms.data)
   # ===========================================================================
   def show(self, prefix=''):
