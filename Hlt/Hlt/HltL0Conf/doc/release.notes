@@ -3,6 +3,10 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
+!2008-03-19 - Stephanie Hansmann-Menzemer
+              - src/PatConfirmTool.cpp
+              - src/TsaConfirmTool.cpp
+                add hitManager clearHits() method at end of pattern reco
 
 !========================== HltL0Conf v1r5 2007-12-17 ===================
 !2007-12-11 - Jose A. Hernando

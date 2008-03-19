@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.cpp,v 1.13 2007-12-19 14:28:08 hmdegaud Exp $
+// $Id: TsaConfirmTool.cpp,v 1.14 2008-03-19 10:00:24 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -238,6 +238,9 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
    
   if( msgLevel(MSG::INFO) ) 
     debug()<<"tracks found sofar in TsaSearch Tool: "<<outputTracks.size()<<endmsg;
+
+
+  m_hitMan->clearHits();
 
   return StatusCode::SUCCESS;
   

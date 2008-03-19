@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.cpp,v 1.2 2007-12-19 14:28:08 hmdegaud Exp $
+// $Id: PatConfirmTool.cpp,v 1.3 2008-03-19 10:00:24 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -114,6 +114,8 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     info()<<"tTracking.eTotalTime() "<< tTracking.eTotalTime()+tDecoding.eTotalTime()<<endmsg;
     
   }
+
+  m_tHitManager->clearHits();
  
   return StatusCode::SUCCESS;
   
