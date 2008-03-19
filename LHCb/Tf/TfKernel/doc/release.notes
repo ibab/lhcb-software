@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfKernel v2r4 2008-03-19 =======================
 ! 2008-03-19 - Stephanie Hansmann-Menzemer
  - make clearHits() methode of TStationHitManager public. Needed to run after
    decoding on demand.
