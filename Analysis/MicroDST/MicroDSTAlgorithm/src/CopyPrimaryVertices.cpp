@@ -1,13 +1,13 @@
-// $Id: CopyPrimaryVertices.cpp,v 1.6 2007-12-11 17:37:12 jpalac Exp $
+// $Id: CopyPrimaryVertices.cpp,v 1.7 2008-03-19 14:14:47 jpalac Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-// from LHCb
-#include "Event/RecVertex.h"
 // from MicroDST
 #include <MicroDST/ICloneRecVertex.h>
 #include <MicroDST/MicroDSTTool.h>
+// from LHCb
+#include <Event/RecVertex.h>
 // local
 #include "CopyPrimaryVertices.h"
 
