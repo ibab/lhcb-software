@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.19 2008-01-11 14:23:00 jpalac Exp $
+// $Id: AlignmentCondition.cpp,v 1.20 2008-03-19 00:41:33 janos Exp $
 // Include files
 #include <algorithm>
 
@@ -63,7 +63,7 @@ StatusCode AlignmentCondition::initialize() {
 void AlignmentCondition::offNominalMatrix(const Gaudi::Transform3D& newMatrix) 
 {
   m_matrix=newMatrix.Inverse();
-  m_matrixInv=m_matrix;
+  m_matrixInv=newMatrix;  
   updateParams();
 }
 //=============================================================================
