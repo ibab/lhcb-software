@@ -1,4 +1,4 @@
-// $Id: CopyPrimaryVertices.h,v 1.6 2008-03-19 14:14:47 jpalac Exp $
+// $Id: CopyPrimaryVertices.h,v 1.7 2008-03-19 18:59:53 jpalac Exp $
 #ifndef COPYPRIMARYVERTICES_H 
 #define COPYPRIMARYVERTICES_H 1
 
@@ -10,8 +10,8 @@ class ICloneRecVertex;
 
 /** @class CopyPrimaryVertices CopyPrimaryVertices.h
  *  
- * Class to clone LHCb::RecVertex and related objects from one TES location
- * to a parallel one.
+ * MicroDSTAlgorithm to clone LHCb::RecVertex and related objects 
+ * from one TES location to a parallel one.
  * It inherits the std::string properties InputLocation and OutputPrefix from
  * MicroDSTCommon. The LHCb::RecVertex are taken from the TES location 
  * defined by InputLocation, and are cloned and put in TES location 
@@ -38,7 +38,7 @@ class ICloneRecVertex;
  *  @endcode
  * 
  *
- *  @author Juan PALACIOS
+ *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2007-10-15
  */
 class CopyPrimaryVertices : public MicroDSTAlgorithm {
