@@ -1,7 +1,17 @@
-! $Id: release.notes,v 1.54 2008-03-19 13:18:46 jpalac Exp $
+! $Id: release.notes,v 1.55 2008-03-19 19:00:06 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2008-03-19 - Juan PALACIOS
+ - src/CopyPrimaryVertices.h
+ - src/CopyMCHeader.h
+ - src/CopyODIN.h
+ - src/CopyRecHeader.h
+  . Add doxygen documentation.
+
+ - src/CopyPrimaryVertices.h
+  . Move MicroDST interface headers to .cpp file.
 
 ! 2008-03-19 - Juan PALACIOS
  
