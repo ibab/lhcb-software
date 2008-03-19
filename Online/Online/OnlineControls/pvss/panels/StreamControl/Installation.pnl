@@ -542,7 +542,7 @@ LANG:1 0
 E E 0 1 1 2 1 E 1 0 0.9930313588850174 38 -49.96515679442507 1 E 92 292 148 306
 0 2 2 "0s" 0 0 0 192 0 0  92 292 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 10 Receiving:
@@ -741,7 +741,7 @@ LANG:1 0
 E E 0 1 1 2 1 E 1 0 0.9930313588850174 2 -47.97909407665503 1 E 172 359.0000000000002 231 373
 0 2 2 "0s" 0 0 0 192 0 0  172 359.0000000000002 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 11 # of Tasks:

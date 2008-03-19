@@ -1,132 +1,162 @@
 V 10
 1
 LANG:1 3 TOP
-PANEL,-1 -1 842 539 N "_3DFace" 2
+PANEL,-1 -1 824 677 N "_3DFace" 2
 "$node"
 "$obj"
-"int MAX_OBJS = 1000;
+"//string id;
+int MAX_OBJS = 1000;
 
-main()   {
-  dyn_string children;
-  int flag, last_x, last_y, next_x, next_y;
-  dyn_int child_flags;
-  string node_name = $node, obj_name = $obj;
-  
-  fwFsmUi_init(node_name, obj_name);
-  if(fwFsm_isCU(node_name, obj_name))  {
-    //setValue(\"topLabel1\",\"text\",\"System\");
-    flag = 1;
-  }
-  else if(fwFsm_isDU(node_name, obj_name))  {
-    setValue(\"topLabel1\",\"text\",\"[Device]\");
-    setValue(\"topLabel1\",\"visible\",1);
-    flag = 2;
-  }
-  else  {
-    //setValue(\"topLabel1\",\"text\",\"Object\");
-    flag = 0;
-  }
+//dyn_string FsmDisplayObjTypes;
+//dyn_string FsmDisplayObjs;
+//dyn_int FsmDisplayObjsType;
 
-  panelSize(\"\",last_x, last_y);
-  dyn_string sys = strsplit(myModuleName(),\"_\");
-  if ( dynlen(sys) >= 2 && strpos(sys[2],\"Slice\")==0 )  {
-    setValue(\"m_description\",\"text\",\"LHCb \"+sys[1]+\" System\");
-    setValue(\"m_description\",\"visible\",1);
-  }
-  else  {
-    setValue(\"m_description\",\"visible\",0);
-  }
-  setValue(\"m_online\",\"visible\",1);
-  setValue(\"m_close\",\"text\",\"Close\");
-  setValue(\"m_close\",\"position\",last_x-95,last_y-100);
-  fwFsmUi_addClock(last_x-210, 0);
-  fwFsmUi_addUserLogin(last_x-210, 30);
-  //fwFsmUi_addMessageBox(0, last_y-95, last_x-105, node_name);
-  //fwFsmUi_addCloseButton(node_name, obj_name, last_x-110,last_y-100);
 
-  next_x = 130;
-  if(flag == 1)    
-    next_x = fwFsmUi_addObjWithLock(node_name, obj_name, next_x, 30);
-  else if(flag == 2)    
-    next_x = fwFsmUi_addObjWithDevLock(node_name, obj_name, next_x, 30);
-  else
-    next_x = fwFsmUi_addObjWithDevLock(node_name, obj_name, next_x, 30);
+main()
+{
+dyn_string children;
+int i, count, flag;
+int last_x, last_y, next_x;
+dyn_int child_flags;
 
-  // fwFsmUi_addAlarmButton(node_name, obj_name, next_x, 30);
+	fwFsmUi_init($node, $obj);
+	if(fwFsm_isCU($node, $obj))
+	{
+		setValue(\"topLabel1\",\"text\",\"System\");
+		flag = 1;
+	}
+	else if(fwFsm_isDU($node, $obj))
+	{
+		setValue(\"topLabel1\",\"text\",\"Device\");
+		flag = 2;
+	}
+	else
+	{
+		setValue(\"topLabel1\",\"text\",\"Object\");
+		flag = 0;
+	}
 
-  // Add children ordered according to Editor Navigator TREE
-  children = fwFsmUi_getAllChildren(node_name, obj_name, child_flags);
-  int row = 100;
-  for(int i=1; i<=dynlen(children); i++)  {
-    if(child_flags[i] == 1)
-      fwFsmUi_addObjWithLock(node_name, children[i], 0, row, obj_name);
-    else if(child_flags[i] == 2)    
-      fwFsmUi_addObjWithDevLock(node_name, children[i], 0, row, obj_name);
-    else
-      fwFsmUi_addObjWithDevLock(node_name, children[i], 0, row, obj_name);
-    row += 25;
-    if(i == MAX_OBJS)
-      break;
-  }
-  bool has_kids = dynlen(children)>0;
-  setValue(\"label1\",\"visible\",has_kids);
-  setValue(\"label2\",\"visible\",has_kids);
-  fwFsmUi_addUserPanel(node_name, obj_name, has_kids ? 360 : 25, 100);
+	panelSize(\"\",last_x, last_y);
+	
+	fwFsmUi_addLogo(\"CERN\", 5, 5);
+//	fwFsmUi_addClock(last_x-170, 0);
+	fwFsmUi_addClock(last_x-210, 0);
+//	fwFsmUi_addUserLogin(last_x-170+10, 30+10);
+//	fwFsmUi_addUserLogin(last_x-170+41, 30+23);
+	fwFsmUi_addUserLogin(last_x-210, 30);
+//	fwFsmUi_addUserLogin(last_x-170, 30);
+	fwFsmUi_addMessageBox(0, last_y-95, last_x-105, $node);
+	fwFsmUi_addCloseButton($node, $obj, last_x-90,last_y-45);
+
+	next_x = 130;
+	if(flag == 1)		
+		next_x = fwFsmUi_addObjWithLock($node, $obj, next_x, 30);
+	else if(flag == 2)		
+		next_x = fwFsmUi_addObjWithDevLock($node, $obj, next_x, 30);
+	else
+		next_x = fwFsmUi_addObjWithDevLock($node, $obj, next_x, 30);
+//	if(flag)
+	fwFsmUi_addAlarmButton($node, $obj, next_x, 30);
+
+	count = 0;
+	
+//Add children ordered according to Editor Navigator TREE
+	  children = fwFsmUi_getAllChildren($node, $obj, child_flags);
+		addMixChildren(children, count, child_flags);
+//Add children ordered by type: CUs, then local objects, then DUs
+/*
+	if($node == $obj)
+	{
+		children = fwFsmUi_getChildrenCUs($node);
+		addChildren(children, count, 1);
+	}
+	children = fwFsmUi_getChildrenObjs($node, $obj);
+	addChildren(children, count, 0);
+	children = fwFsmUi_getChildrenDUs($node, $obj);
+	addChildren(children, count, 2);
+*/
+	if(count)
+	{
+		setValue(\"label1\",\"visible\",1);
+		setValue(\"label2\",\"visible\",1);
+		fwFsmUi_addUserPanel($node, $obj, 360, 100);
+	}
+	else
+	{
+		fwFsmUi_addUserPanel($node, $obj, 10, 100);
+	}
 }
+
+addChildren(dyn_string children, int &count, int flag)
+{
+int i, row;
+
+	row = 100 + count*28;
+	for(i=1; i<=dynlen(children); i++)
+	{
+		if(flag == 1)		
+			fwFsmUi_addObjWithLock($node, children[i], 0, row);
+		else if(flag == 2)		
+			fwFsmUi_addObjWithDevLock($node, children[i], 0, row);
+		else
+			fwFsmUi_addObjWithDevLock($node, children[i], 0, row);
+
+		row += 28;
+		count++;
+		if(count == MAX_OBJS)
+			break;
+	}
+}
+
+addMixChildren(dyn_string children, int &count, dyn_int flags)
+{
+int i, row;
+
+	row = 100 + count*28;
+	for(i=1; i<=dynlen(children); i++)
+	{
+		if(flags[i] == 1)		
+			fwFsmUi_addObjWithLock($node, children[i], 0, row, $obj);
+		else if(flags[i] == 2)		
+			fwFsmUi_addObjWithDevLock($node, children[i], 0, row, $obj);
+		else
+			fwFsmUi_addObjWithDevLock($node, children[i], 0, row, $obj);
+
+		row += 28;
+		count++;
+		if(count == MAX_OBJS)
+			break;
+	}
+}
+
 " 0
- E "main()    {
-  PanelOffPanel(\"Modes\");
-  PanelOffPanel(\"Description\");
+ "main()
+{
+	int i;
+}" 0
+ "main()
+{
+		PanelOffPanel(\"Modes\");
+		PanelOffPanel(\"Description\");
 }" 0
  E E 1 -1 -1 0  0 0
 ""0  1
-E "int closeFSMPanel()  {
-  if($node == $obj)
-    fwUi_releaseTree($node, $obj);
-  if(isModuleOpen($obj))
-    ModuleOff($obj);
-  else
-    PanelOff();
-  return 1;
-}
-" 0
- 2
+E E 2
 "CBRef""0"
-"EClose"E
+"EClose""main()
+{
+	int i;
+}" 0
+
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
 1
 LANG:1 6 Layer1
-2 9
-"m_description"
-""
-1 10 90 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
- E E
-12 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-1
-"dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 98 10 326 72
-0 2 2 "0s" 0 0 0 64 0 0  98 10 2
-1
-LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
-0 ""
-1
-LANG:1 11 Description
-1
-LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
-0 ""
-1
-LANG:1 0 
 2 1
 "topLabel1"
 ""
-1 142 22 E E E 1 E 0 E N "_3DText" E N "_3DFace" E E
+1 142 22 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
  E E
 1 0 0 0 0 0
 E E E
@@ -136,13 +166,13 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  1 E 141 30 185 44
-0 2 2 "0s" 0 0 0 192 0 0  141 30 1
+E E 0 1 1 0 1 E U  1 E 200 20 257 40
+0 2 2 "0s" 0 0 0 192 0 0  200 20 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 87 -*-Arial-bold-r-normal-*-16-*-100-100-*-*-iso8859-1|-16,0,0,0,758,0,0,0,0,0,0,0,0,Arial
 0 ""
 1
-LANG:1 8 [Device]
+LANG:1 6 System
 2 3
 "topLabel2"
 ""
@@ -156,10 +186,10 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  1 E 360 20 388 34
+E E 0 1 1 0 1 E U  1 E 360 20 399 40
 0 2 2 "0s" 0 0 0 192 0 0  360 20 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 87 -*-Arial-bold-r-normal-*-16-*-100-100-*-*-iso8859-1|-16,0,0,0,758,0,0,0,0,0,0,0,0,Arial
 0 ""
 1
 LANG:1 5 State
@@ -176,13 +206,13 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  1 E 50 90 51 107
+E E 0 1 1 0 1 E U  1 E 50 90 143 110
 0 2 2 "0s" 0 0 0 192 0 0  50 90 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 87 -*-Arial-bold-r-normal-*-16-*-100-100-*-*-iso8859-1|-16,0,0,0,758,0,0,0,0,0,0,0,0,Arial
 0 ""
 1
-LANG:1 0 
+LANG:1 10 Sub-System
 2 6
 "label2"
 ""
@@ -196,72 +226,13 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  1 E 230 90 258 104
+E E 0 1 1 0 1 E U  1 E 230 90 269 110
 0 2 2 "0s" 0 0 0 192 0 0  230 90 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-80-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+LANG:1 87 -*-Arial-bold-r-normal-*-16-*-100-100-*-*-iso8859-1|-16,0,0,0,758,0,0,0,0,0,0,0,0,Arial
 0 ""
 1
 LANG:1 5 State
-6 7
-"m_logo"
-""
-1 -2 70 E E E 1 E 1 E N {0,0,0} E N {255,255,255} E E
- E "main(int x, int y)    {   closeFSMPanel(); }
-" 0
-
-8 0 0 0 0 0
-E E E
-0
-1
-LANG:1 47 Yeah - that's us! Double click to close window.
-
-1
-"dashclr"N "_Transparent"
-E E 0 1 1 0 1 E 1 0 1 -1 -1 2  0 3  "pictures/logo_lhcb.bmp" 13434828 E 10 10 95 70
-2 8
-"m_online"
-""
-1 10.02352941176471 71 E E E 1 E 1 E N "white" E N "red" E E
- E E
-10 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-1
-"dashclr"N "_Transparent"
-E E 0 1 1 2 1 E 1.023529411764706 0 1 0.8117647058823541 6 1 E 8 63 93 84
-1 0 2 "0s" 0 0 0 65 0 0  8 63 1
-1
-LANG:1 115 -*-Bitstream Vera Sans-bold-i-normal-*-20-*-100-100-*-*-iso8859-1|-20,0,0,0,758,1,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
-LANG:1 6 Online
-13 10
-"m_close"
-""
-1 658 468 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
- E E
-13 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 656 466 741 492
-
-T 
-1
-LANG:1 5 Close
-"main(int x, int y)    {   closeFSMPanel(); }
-" 0
- E E E
 0
 LAYER, 1 
 1

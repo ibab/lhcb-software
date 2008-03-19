@@ -157,7 +157,7 @@ class Control(PVSS.PyDeviceListener):
       nam = self.dp().name()
       cmd = self.dp().value().data()
       itms = cmd.split('/')
-      print nam,cmd
+      #print nam,cmd
       if len(itms) >= 5:
         command   = itms[0]
         storage   = itms[1][:-len(self.postfix)]

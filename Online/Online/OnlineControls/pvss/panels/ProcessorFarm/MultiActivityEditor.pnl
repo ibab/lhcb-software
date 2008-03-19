@@ -1,0 +1,144 @@
+V 10
+1
+LANG:1 26 Setup Stream Configuration
+PANEL,-1 -1 437 419 N "_3DFace" 1
+"$1"
+"main()  {
+  string match = \"*:FarmActivity_*\";
+  if ( substr($1,0,6) == \"MATCH:\" ) match = \"*:FarmActivity_\"+substr($1,7,strlen($1)-7);
+  DebugN(\"Match=\",match);
+  dyn_string dpn = dpNames(match,\"FarmActivity\");
+  int num = dynlen(dpn);
+  string name;
+  m_activitySelector.deleteAllItems();
+  for(int i=1; i<=num; ++i)
+    m_activitySelector.appendItem(dpn[i]);
+  if ( num >= 1 ) {
+    m_activitySelector.selectedPos(1);
+    m_activitySelector.text = dpn[1];
+    name = dpn[1];
+  }
+  setValue(\"m_Ok\",\"visible\",1);
+  setValue(\"m_Ok\",\"text\",\"Quit\");
+  createActivityPanel(name);  
+}
+" 0
+ E E E E 1 -1 -1 0  0 0
+""0  1
+E "createActivityPanel(string name)  {
+  string activity_name = dpSubStr(name,DPSUB_DP);
+  DebugN(\"createActivityPanel> Building panel using:\"+name);
+  addSymbol(myModuleName(),myPanelName(),\"ProcessorFarm/ActivityEditor.pnl\",\"m_configPanel\",
+            makeDynString(\"$1:NONE\",\"$2:\"+name),5,35,0,0,0);
+  LayerOff(5);
+  LayerOn(6);
+}
+" 0
+ 2
+"CBRef" "1"
+"EClose" E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 0 
+2 59
+"PRIMITIVE_TEXT1"
+""
+1 9 5 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+10 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 7 5 367 25
+0 2 2 "0s" 0 0 0 64 0 0  7 5 1
+1
+LANG:1 115 -*-Bitstream Vera Sans-bold-r-normal-*-17-*-100-100-*-*-iso8859-1|-17,0,0,0,758,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 20 Farm Activity Editor
+13 60
+"m_Ok"
+""
+1 364 383 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+12 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 362 381 423 405
+
+T 
+1
+LANG:1 4 Quit
+"main()  {  PanelOff();  }
+" 0
+ E E E
+0
+LAYER, 1 
+1
+LANG:1 0 
+0
+LAYER, 2 
+1
+LANG:1 0 
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+0
+LAYER, 5 
+1
+LANG:1 0 
+22 28
+"m_activitySelector"
+""
+1 203 4 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+4 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 201 2 415 26
+0
+
+E
+"main() {  
+  removeSymbol(myModuleName(),myPanelName(),\"m_configPanel\");
+  createActivityPanel(m_activitySelector.text);   
+}
+" 0
+
+E
+ 1 0
+0
+LAYER, 6 
+1
+LANG:1 0 
+0
+LAYER, 7 
+1
+LANG:1 0 
+0
+0

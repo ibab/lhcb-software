@@ -1,0 +1,715 @@
+V 10
+1
+LANG:1 0 
+PANEL,-1 -1 435 382 N "_3DFace" 1
+"$1"
+"main()  {
+  ProcessorFarmAlloc_startAllocPanel($1,strsplit($1,'_')[1]);
+}" 0
+ E E E E 1 -1 -1 0  0 0
+""0  1
+E "//#uses \"ProcessorFarm.cpp\"
+#uses \"ctrlUtils.cpp\"
+
+//=============================================================================
+//
+//  ALLOCATION DISPLAY
+//
+//=============================================================================
+void ProcessorFarmAlloc_CheckAllocPanel(string dp, string value)  {
+  string partition;
+  if ( dpExists(\"FarmActivity_\"+value) )  {
+    string info = m_runInfoDP.text;
+    if ( 0 == dpGet(info+\".UsedBy\",partition) )  {
+      if ( strlen(partition)>0 )  {
+        ProcessorFarmAlloc_initAllocPanel(m_farmName.text,partition);
+        return;
+      }
+    }
+  }
+  DebugN(\"ProcessorFarmAlloc_CheckAllocPanel>\",dp,value);
+  m_farmNotInUse.text=\"The farm\\n\"+m_farmName.text+\" in\\n\"+dp+\"\\nis currently not used.\";
+  LayerOff(2);
+  LayerOn(3);
+}
+
+//=============================================================================
+void ProcessorFarmAlloc_startAllocPanel(string farm, string partition)  {
+  string info, sys = strtoupper(partition), sysId = getSystemId(sys+\":\");
+  if ( getSystemId(sys+\":\") < 0 )  {
+    sys = getSystemName();
+    sys = substr(sys,0,strlen(sys)-1);
+  }
+  info = sys+\":\"+farm;
+  m_farmName.text = farm;
+  m_runInfoDP.text = info;
+  m_Ok.visible = 0;
+  m_Cancel.visible = 0;
+  if ( dpExists(info+\".Activity\") )  {
+    dpConnect(\"ProcessorFarmAlloc_CheckAllocPanel\",info+\".Activity\");
+    return;
+  }
+  m_farmNotInUse.text=\"The farm \\n\"+farm+\"\\nin system \"+sys+\"\\nis currently not used.\";
+  LayerOff(2);
+  LayerOn(3);
+}
+//=============================================================================
+void ProcessorFarmAlloc_initAllocPanel(string name, string partition)  {
+  string font = \"Arial,8,-1,5,50,0,0,0,0,0\";
+  m_farmName.text = name;
+  m_partition.text = partition;
+  ProcessorFarmAlloc_setupAllocWidgets();
+  m_partition.visible       = 0;
+  m_farmName.visible        = 1;
+  m_farmName.backCol        = \"yellow\";
+  m_partition.visible       = 1;
+  m_partition.backCol       = \"yellow\";
+  m_partitionName.visible   = 1;
+  m_partitionName.text      = \"Partition:\"+partition;
+  m_farmNotInUse.foreCol    =\"red\";
+  m_farmNotInUse.backCol    =\"_Transparent\";
+  m_ctrlInfra.font          = font;
+  m_farmInfra.font          = font;
+  m_farmWorker.font         = font;
+  m_newDpName.font          = font;
+  m_newDpName.visible       = 0;
+  m_newDpNameText.visible   = 0;
+  m_farmWorkerText.visible  = 1;
+  m_newDpNameText.text      = \"Enter new activity name:\\nThen press save to fill values.\";
+  m_ctrlInfraText.text      = \"Controls processes      \\nForm: Type/Class:\\n[Example: Adder/Class1]\";
+  m_farmInfraText.text      = \"Infrastructure processes\\nForm: Type/Class:\\n[Example: MBM/Class0]\";
+  m_farmWorkerText.text     = \"Farm Worker process     \\nForm: Type/Class:\\n[Example: Brunel/Class1]\";
+  ProcessorFarmAlloc_initAllocData(name,partition);
+  LayerOff(3);
+  LayerOn(2);
+}
+//=============================================================================
+void ProcessorFarmAlloc_setupAllocWidgets()  {
+  m_ctrlFrame.toolTipText         = \"Input parameters define tasks in the Controls PC.\";
+  m_ctrlInfraText.toolTipText     = \"Task types to be started in the Controls PC.\";
+  m_ctrlInfra.toolTipText         = m_ctrlInfraText.toolTipText;
+  m_farmFrame.toolTipText         = \"Input parameters to start tasks on the farm nodes.\";
+  m_farmInfraText.toolTipText     = \"Task types to be started on the farm node infrastructure.\";
+  m_farmInfra.toolTipText= m_farmInfraText.toolTipText;
+  m_farmWorkerText.toolTipText    = \"Farm Worker process type. Form: Type/Class\";
+  m_farmWorker.toolTipText        = m_farmWorkerText.toolTipText;
+  m_Reset.toolTipText             = \"Discard changes and reset to original values\";
+  m_Cancel.toolTipText            = \"Discard changes and close panel\";
+  m_Save.toolTipText              = \"Save changes to datapoints but keep panel open.\";
+  m_Ok.toolTipText                = \"Save changes to datapoints and close panel.\";
+}
+//=============================================================================
+void ProcessorFarmAlloc_initAllocData(string farm, string partition)  {
+  string worker_type, dp = m_runInfoDP.text;
+  dyn_int strmMult;
+  dyn_string farmInfra, ctrlInfra, strmTypes, streams;
+  int res = dpGet(dp+\".Activity\",dp);
+  dp = \"FarmActivity_\"+dp;
+  if ( 0 == res && dpExists(dp) )  {
+    res = dpGet(dp+\".Control.Infrastructure\",ctrlInfra,
+                dp+\".Farm.Infrastructure\",farmInfra,
+                dp+\".Farm.Worker\",worker_type);
+  }
+  if ( 0 != res )  {
+    ctrlUtils_checkErrors(res);
+    return;
+  }
+  m_farmWorker.text = worker_type;
+  string s= \"\";
+  for(int i=1, n=dynlen(farmInfra); i<=n; ++i)  {
+    s = s + farmInfra[i];
+    if ( i < n ) s = s+ \"\\n\";
+  }
+  m_farmInfra.text = s;
+  s = \"\";
+  for(int i=1, n=dynlen(ctrlInfra); i<=n; ++i)  {
+    s = s + ctrlInfra[i];
+    if ( i < n ) s = s+ \"\\n\";
+  }
+  m_ctrlInfra.text = s;
+  m_partitionName.text = \"Partition:\"+partition;
+}
+//=============================================================================
+void ProcessorFarmAlloc_showJobOptions()  {
+  ChildPanelOn(\"JobOptions/JobOptions\",\"JobOptions\",makeDynString(),100,100);
+}
+//=============================================================================
+int ProcessorFarmAlloc_Save(string farm, string partition)  {
+  string newDp = m_newDpName.text;
+  m_newDpName.text = \"\";
+  m_newDpName.visible = 0;
+  m_newDpNameText.visible = 0;  
+  if ( ctrlUtils_confirm(\"Are you sure you want to save the parameters ?\") )   {
+    string dp, farmWorker = m_farmWorker.text, s1 = m_ctrlInfra.text, s2 = m_farmInfra.text;
+    strreplace(s1,\"\\n\",\" \");
+    while ( strpos(s1,\"  \")>0 ) strreplace(s1,\"  \",\" \");
+    strreplace(s2,\"\\n\",\" \");
+    while ( strpos(s2,\"  \")>0 ) strreplace(s2,\"  \",\" \");
+    dyn_string ctrlInfra = strsplit(s1,\" \");
+    dyn_string farmInfra = strsplit(s2,\" \");
+
+    if ( ctrlUtils_checkTasks(ctrlInfra,2) &&
+         ctrlUtils_checkTasks(farmInfra,2) &&
+         ctrlUtils_checkTask(farmWorker,2) &&
+         dpExists(m_runInfoDP.text+\".Activity\") &&
+         0 == dpGet(m_runInfoDP.text+\".Activity\", dp) )  {
+      int res = 0;
+      if ( strlen(newDp)>0 )  {
+        dp = \"FarmActivity_\"+newDp;
+        if ( !dpExists(dp) ) res = dpCreate(dp,\"FarmActivity\");
+      }
+      else  {
+        dp = \"FarmActivity_\"+dp;
+      }
+      res = dpSet(dp+\".Control.Infrastructure\",ctrlInfra,
+                  dp+\".Farm.Infrastructure\",farmInfra,
+                  dp+\".Farm.Worker\",farmWorker);
+      ctrlUtils_checkErrors(res);
+      ProcessorFarmAlloc_initAllocData(farm,partition);
+      return res;
+    }
+  }
+  return 0;
+}
+//=============================================================================
+int ProcessorFarmAlloc_Ok(string farm, string partition)  {
+  int res = ProcessorFarmAlloc_AllocSave(farm,partition);  
+  if ( res == 0 )  {
+    PanelOff();
+  }
+}
+//=============================================================================
+void ProcessorFarmAlloc_Cancel(string farm, string partition)  {
+  ProcessorFarmAlloc_initAllocData(farm, partition);
+  PanelOff();
+}
+//=============================================================================
+void ProcessorFarmAlloc_Reset(string farm, string partition)  {
+  ProcessorFarmAlloc_initAllocData(farm, partition);
+}
+" 0
+ 2
+"CBRef" "1"
+"EClose" E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 0 
+2 19
+"m_sliceNotInUse"
+""
+1 553 86 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+37 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 553 86 912 372
+0 2 2 "0s" 0 0 0 64 0 0  553 86 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-28-*-100-100-*-*-iso8859-1|-28,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 8 Not Used
+0
+LAYER, 1 
+1
+LANG:1 0 
+30 15
+"FRAME2"
+""
+1 3 51 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+30 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 1.129973474801061 0 1.146788990825688 0.6100795755968181 -58.48623853211007 0 E 3 51 381 379
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 16 Parameter Editor
+2 5
+"m_farmName"
+""
+1 342.9999999999999 8.999999999999932 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+10 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 265.9999999999999 22.99999999999993 375.9999999999999 32.99999999999993
+0 2 2 "0s" 0 0 0 64 0 0  265.9999999999999 22.99999999999993 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 0 
+2 6
+"m_partition"
+""
+1 342.9999999999999 77.99999999999991 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+12 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E 1 0 0.9999999999999998 2.999999999999967 18.99999999999993 1 E 264 24 374 34
+0 2 2 "0s" 0 0 0 64 0 0  264 24 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 0 
+2 11
+"m_runInfoDP"
+""
+1 210.9999999999999 29 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+22 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 17 43 126.9999999999999 53
+0 2 2 "0s" 0 0 0 64 0 0  17 43 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 0 
+29 7
+"m_ctrlInfra"
+""
+1 213 88 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+14 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+ 213 88 417.9999999999999 139
+15 PVSS.TextEdit.1
+5
+0 "TextChanged" "()"
+""
+0 "ReturnPressed" "()"
+""
+0 "ModificationChanged" "(bool mod)"
+""
+0 "Clicked" "(int para, int pos)"
+""
+0 "CursorPositionChanged" "(int para, int pos)"
+""
+E30 20
+"m_ctrlFrame"
+""
+1 10 43 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+39 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.7208267243451085 0 0.7835051546391777 3.920499879836585 34.30927835051535 0 E 10 43 581 141
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 31 Steaming Layer Input Parameters
+29 8
+"m_farmInfra"
+""
+1 213 165 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+16 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+ 213 165 417.9999999999999 233
+15 PVSS.TextEdit.1
+5
+0 "TextChanged" "()"
+""
+0 "ReturnPressed" "()"
+""
+0 "ModificationChanged" "(bool mod)"
+""
+0 "Clicked" "(int para, int pos)"
+""
+0 "CursorPositionChanged" "(int para, int pos)"
+""
+E14 17
+"m_farmWorker"
+""
+1 213.0000000000001 236 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+33 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 211.0000000000001 234 417.8000000000002 258
+3 "0s" 0 0 0 0 0 -1  E E E
+13 4
+"m_Ok"
+""
+1 362.9999999999999 348 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+8 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 360.9999999999999 346 423.9999999999999 370
+
+T 
+1
+LANG:1 2 Ok
+"main()  {  ProcessorFarmAlloc_Ok(m_farmName.text,m_partition.text);  }
+" 0
+ E E E
+13 16
+"m_options"
+""
+1 293.0000000000001 348 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+32 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 291.0000000000001 346 353.9999999999999 370
+
+T 
+1
+LANG:1 7 Options
+"main()  {  ProcessorFarmAlloc_showJobOptions();  }
+" 0
+ E E E
+13 10
+"m_Save"
+""
+1 224.0000000000001 348 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+20 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 222.0000000000001 346 285.0000000000001 370
+
+T 
+1
+LANG:1 4 Save
+"main()  {  ProcessorFarmAlloc_Save(m_farmName.text,m_partition.text);  }
+" 0
+ E E E
+13 9
+"m_Reset"
+""
+1 86 348 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+18 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 84 346 147.0000000000001 370
+
+T 
+1
+LANG:1 5 Reset
+"main()  {  ProcessorFarmAlloc_Reset(m_farmName.text,m_partition.text);  }
+" 0
+ E E E
+13 3
+"m_Cancel"
+""
+1 17 348 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+6 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 15 346 78 370
+
+T 
+1
+LANG:1 6 Cancel
+"main()  {  ProcessorFarmAlloc_Cancel(m_farmName.text,m_partition.text);  }
+" 0
+ E E E
+30 1
+"m_farmFrame"
+""
+1 10 43 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+2 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.7228070175438588 0 1.453608247422685 2.771929824561412 84.49484536082456 0 E 10 43 581 141
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 31 Steaming Layer Input Parameters
+2 14
+"m_farmInfraText"
+""
+1 13.99999999999999 146.9999999999998 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+28 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 17.99999999999999 166.9999999999998 199 231.9999999999998
+0 2 2 "0s" 0 0 0 64 0 0  17.99999999999999 166.9999999999998 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 25 Farm node infrastructure:
+2 21
+"m_farmWorkerText"
+""
+1 16.99999999999999 216.9999999999998 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+41 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 20.99999999999999 236.9999999999998 202 301.9999999999998
+0 2 2 "0s" 0 0 0 64 0 0  20.99999999999999 236.9999999999998 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 12 Farm Worker:
+2 2
+"m_ctrlInfraText"
+""
+1 21.99999999999996 -61.00000000000024 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+4 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 17.99999999999996 89.9999999999998 178 109.9999999999998
+0 2 2 "0s" 0 0 0 64 0 0  17.99999999999996 89.9999999999998 2
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 27 Controls PC infrastructure:
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 0 
+2 12
+"m_partitionName"
+""
+1 342.9999999999999 28.99999999999993 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+24 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 13.99999999999996 15.99999999999993 124 25.99999999999993
+0 2 2 "0s" 0 0 0 64 0 0  13.99999999999996 15.99999999999993 1
+1
+LANG:1 115 -*-Bitstream Vera Sans-bold-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,758,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 10 Partition:
+14 23
+"m_newDpName"
+""
+1 217 295 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+45 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 215 293 421.8000000000001 317
+3 "0s" 0 0 0 0 0 -1  E E E
+13 25
+"m_SaveAs"
+""
+1 155 349 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+49 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 153 347 216 371
+
+T 
+1
+LANG:1 10 Save As...
+"main()  {  
+  m_newDpName.visible = 1;
+  m_newDpNameText.visible = 1;
+}
+" 0
+ E E E
+2 24
+"m_newDpNameText"
+""
+1 11.99999999999999 274.9999999999998 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+47 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 15.99999999999999 294.9999999999998 197 359.9999999999998
+0 2 2 "0s" 0 0 0 64 0 0  15.99999999999999 294.9999999999998 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 19 New Datapoint name:
+0
+LAYER, 2 
+1
+LANG:1 0 
+2 22
+"m_farmNotInUse"
+""
+1 41 55 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+43 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 41 55 400 341
+0 2 2 "0s" 0 0 0 64 0 0  41 55 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-28-*-100-100-*-*-iso8859-1|-28,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 8 Not Used
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+0
+LAYER, 5 
+1
+LANG:1 0 
+0
+LAYER, 6 
+1
+LANG:1 0 
+0
+LAYER, 7 
+1
+LANG:1 0 
+0
+0

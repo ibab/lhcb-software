@@ -172,6 +172,18 @@ class FSMmanip:
       commit = commit + 1
       dpv.clear()
     return self
+
+  # ===========================================================================
+  def printSlots(self):
+    for i in self.tasks.keys():
+      log('Task: %s -- %s'%(str(i),str(self.tasks[i])),timestamp=None)
+      for j in self.tasks[i]:
+        log('    Item: %s'%(self.enabled.container[j].name(),),timestamp=None)
+    for i in self.taskSlots.keys():
+      log('Slot: %s -- %s'%(str(i),str(self.taskSlots[i])),timestamp=None)
+      for j in self.taskSlots[i].keys():
+        log('    Item: %s'%(self.enabled.container[j].name(),),timestamp=None)
+ 
   # ===========================================================================
   def addNodeObject(self,name):
     self.enabled.container.push_back(DataPoint(self.manager,DataPoint.original(name+'.mode.enabled')))
@@ -353,6 +365,10 @@ class FSMmanip:
     if self.startupInfoData.has_key(task_typ):
       return self.startupInfoData[task_typ]
     return (script,account,detector)
+
+  # ===========================================================================
+  def setStartupInfoData(self,info):
+    self.startupInfoData = info
     
   # ===========================================================================
   def _configureTask(self, fsm_node, item, task):

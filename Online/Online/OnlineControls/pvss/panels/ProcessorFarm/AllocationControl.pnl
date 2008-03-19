@@ -1,0 +1,384 @@
+V 10
+1
+LANG:1 24 Farm Allocation Overview
+PANEL,-1 -1 404 354 N "_3DFace" 3
+"$1"
+"$2"
+"$3"
+"void FarmAllocationPanel_CheckPartitionDisplay(string dp, string value)  {
+  FarmAllocationPanel_updatePartitionDisplay(m_sysName.text);
+}
+void FarmAllocationPanel_updatePartitionDisplay(string stream)  {
+  dyn_string cols = makeDynString(\"Slice\",\"Used\",\"Activity\",\"Farm Name\");
+  dyn_dyn_string rcvSlots, strmSlots, rcvNodes, strmNodes;
+  dyn_string items, names, activities, runinfo;
+  dyn_string used;
+  int pos1, pos2, stat = -1, res = -1;
+  items = dpNames(stream+\"_HLT???.UsedBy\",\"FarmSubInfo\");
+  DebugN(\"FarmAllocationPanel_updatePartitionDisplay> Read data from \"+stream+\" Len:\"+dynlen(items));
+  if ( dynlen(items)<=0 )   {
+    res = dpGet(dpNames(stream+\"_HLT???.UsedBy\"),used);
+    if ( 0 == res ) res = dpGet(dpNames(stream+\"_HLT???.Name\"),names);
+  }
+  else {
+    res = dpGet(items,used);
+    if ( 0 == res ) res = dpGet(dpNames(stream+\"_HLT???.Name\",\"FarmSubInfo\"),names,
+                                dpNames(stream+\"_HLT???.Activity\",\"FarmSubInfo\"),activities,
+                                dpNames(stream+\"_HLT???.RunInfo\",\"FarmSubInfo\"),runinfo);
+  }
+  DebugN(\"FarmAllocationPanel_updatePartitionDisplay> Read data from \"+stream);
+  if ( 0 == res )  {
+    string a1, a2;
+    for(int i=1; i<=dynlen(used); i++) {
+      if ( strlen(used[i])>0 )  {
+        a1 = activities[i];
+        a2 = runinfo[i];
+        pos1 = strpos(a1,\"_\")+1;
+        pos2 = strpos(a2,\":\")+1;
+        m_table.cellValueRC(i-1,cols[2],used[i]);
+        m_table.cellValueRC(i-1,cols[3],substr(a1,pos1,strlen(a1)-pos1));
+        m_table.cellValueRC(i-1,cols[4],substr(a2,pos2,strlen(a2)-pos2));
+        m_table.cellBackColRC(i-1,cols[1],\"{255,255,0}\");
+        m_table.cellBackColRC(i-1,cols[2],\"{255,255,0}\");
+        m_table.cellForeColRC(i-1,cols[1],\"{0,0,0}\");
+        m_table.cellForeColRC(i-1,cols[2],\"{0,0,0}\");
+      }
+      else  {
+        m_table.cellValueRC(i-1,cols[2],\"FREE\");
+        m_table.cellValueRC(i-1,cols[3],\"\");
+        m_table.cellValueRC(i-1,cols[4],\"\");
+        m_table.cellBackColRC(i-1,cols[1],\"{255,255,255}\");
+        m_table.cellBackColRC(i-1,cols[2],\"{0,150,50}\");
+        m_table.cellForeColRC(i-1,cols[1],\"{0,0,0}\");
+        m_table.cellForeColRC(i-1,cols[2],\"{255,255,255}\");
+      }
+    }
+    for(int j=0; j<dynlen(cols); ++j)  {
+      m_table.adjustColumn(j);
+    }
+    return;
+  }
+  DebugN(\"FarmAllocationPanel_updatePartitionDisplay> Cannot read data from \"+stream);
+}
+
+void FarmAllocationPanel_initPartitionDisplay(string stream)  {
+  dyn_string cols = makeDynString(\"Slice\",\"Used\",\"Activity\",\"Farm Name\");
+  dyn_string values = dpNames(stream+\"_HLT???.UsedBy\",\"FarmSubInfo\");
+  string font = \"Arial,8,-1,5,50,0,0,0,0,0\";
+  if ( dynlen(values)<=0 )   {
+    values = dpNames(stream+\"_HLT???.UsedBy\");
+    m_table.enabled = 0;
+  }
+  m_table.font = font;
+  m_table.rowHeight = 15;
+  m_table.deleteAllLines();
+  for( int j=m_table.columnCount()-1; j>=0; j-- )
+    m_table.deleteColumn(j);
+  for(int j=0; j<dynlen(cols); ++j )  {
+    m_table.insertColumn(m_table.columnCount());
+    m_table.columnHeader(j,cols[j+1]);
+    m_table.columnName(j,cols[j+1]);
+  }
+  for(int j=1; j<=dynlen(values); ++j )  {
+    m_table.appendLine(cols[1],dpSubStr(values[j],DPSUB_DP),cols[2],\"\",cols[3],\"\",cols[4],\"\");
+  }
+  for(int j=0; j<dynlen(cols); ++j)  {
+    m_table.adjustColumn(j);
+  }
+}
+
+main()  {
+  string stream = substr($1,4);
+  string dp = stream+\"Alloc.State\";
+  string sysdp = strtoupper(stream)+\":\"+dp;
+  DebugN(\"1:\",$1,\"2:\",$2,\"Stream:\",stream,\"DP:\",dp,\"SysDP:\",sysdp);
+  m_sysName.text = stream;
+  m_sysName.backCol = \"_Transparent\";
+  m_sysText.backCol = \"_Transparent\";
+  m_sysText.text = \"System:\";
+  m_close.visible = isPanelOpen(\"StreamOverview\");
+  m_activityEditor.visible = !m_close.visible;
+  if ( dpExists(dp) )  {
+    DebugN(\"Exists:\"+dp);
+    FarmAllocationPanel_initPartitionDisplay(m_sysName.text);
+    dpConnect(\"FarmAllocationPanel_CheckPartitionDisplay\",dp);
+  }
+  else if ( dpExists(sysdp) )  {
+    DebugN(\"Exists:\"+sysdp);
+    m_sysName.text = strtoupper(stream)+\":\"+stream;
+    FarmAllocationPanel_initPartitionDisplay(m_sysName.text);
+    dpConnect(\"FarmAllocationPanel_CheckPartitionDisplay\",sysdp);
+  }
+  else  {
+    FarmAllocationPanel_initPartitionDisplay(m_sysName.text);
+  }
+}
+" 0
+ E E "main()    {
+  if ( isPanelOpen(\"StreamOverview\")  )  {
+    PanelOffPanel(\"StreamOverview\");
+  }  
+}" 0
+ E 1 -1 -1 0  0 0
+""0  1
+E "#uses \"ProcessorFarm.cpp\"
+#uses \"JobOptions.cpp\"" 0
+ 2
+"CBRef" "1"
+"EClose" E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 0 
+25 13
+"m_table"
+""
+1 2.999999999999975 4 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ "main(int row, string column)    {
+  string typ = m_table.cellValueRC(row,\"Used\");
+  if ( isPanelOpen(\"StreamOverview\")  )  {
+    PanelOffPanel(\"StreamOverview\");
+  }
+  else if ( typ == \"FREE\" )    {
+    ChildPanelOn(\"vision/MessageInfo1\",\"Unused streaming slice\",makeDynString(\"This slice is not in use.\"),50,50);
+  }
+  else  {
+    typ = m_table.cellValueRC(row,\"Slice\");
+    ChildPanelOn(\"StreamControl/FSM_Control\",\"StreamOverview\",makeDynString(typ),100,100);    
+  }
+}
+" 0
+ "main(int row, string column)    {
+  string typ = m_table.cellValueRC(row,\"Used\");
+  if ( isPanelOpen(\"ActivityEditor\")  )  {
+    PanelOffPanel(\"ActivityEditor\");
+  }
+  else if ( typ == \"FREE\" )    {
+    string slice = m_table.cellValueRC(row,\"Slice\");
+    ChildPanelOn(\"vision/MessageInfo1\",
+                 \"Unused streaming slice\",
+                 makeDynString(\"The slice '\"+slice+\"' is not in use.\"),50,50);
+  }
+  else  {
+    //typ = \"MATCH:\"+m_table.cellValueRC(row,\"Slice\");
+    //ChildPanelOn(\"ProcessorFarm/MultiActivityEditor\",\"ActivityEditor\",makeDynString(typ),100,100);
+  }
+}
+" 0
+
+17 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-15-*-100-100-*-*-iso8859-1|-15,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 0.9999999999999756 2 398 277
+EE 1 0 1 3 0 "#3" 4 1 0 "s" 1
+LANG:1 4 Used
+E
+1
+LANG:1 0 
+
+60 "#2" 4 1 0 "s" 1
+LANG:1 5 Slice
+E
+1
+LANG:1 0 
+
+60 "#1" 4 1 0 "s" 1
+LANG:1 2 #1
+E
+1
+LANG:1 0 
+
+60 
+19 19 10 10
+1
+LANG:1 82 -*-Sans-*-r-normal-*-15-*-100-100-*-*-iso8859-1|-15,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+0 1 1 1 7
+1 0
+2 15
+"m_sysText"
+""
+1 22 31 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+20 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 1 321 191 348
+0 2 2 "0s" 0 0 0 64 0 0  1 321 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-17-*-100-100-*-*-iso8859-1|-17,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 0 
+13 17
+"m_close"
+""
+1 316 327 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+21 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 314 325 398 349
+
+T 
+1
+LANG:1 5 Close
+"main()    {  PanelOff();      }" 0
+ E E E
+13 18
+"PUSH_BUTTON1"
+""
+1 311 282 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ "main()    {
+  if ( isPanelOpen(\"StreamOverview\")  )  {
+    PanelOffPanel(\"StreamOverview\");
+  }  
+}" 0
+ E
+21 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 309 280 400.2891566265061 305
+
+T 
+1
+LANG:1 11 Job options
+"main()   {   ChildPanelOn(\"JobOptions/JobOptions\",\"JobOptions\",makeDynString(),100,100);  }
+" 0
+ E E E
+13 19
+"m_activityEditor"
+""
+1 192.289156626506 282 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ "main()    {
+  if ( isPanelOpen(\"StreamOverview\")  )  {
+    PanelOffPanel(\"StreamOverview\");
+  }  
+}" 0
+ E
+23 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 190.289156626506 280 281.289156626506 305
+
+T 
+1
+LANG:1 15 Activity editor
+"main()   {   ChildPanelOn(\"ProcessorFarm/MultiActivityEditor\",\"MultiActivityEditor\",makeDynString($1,$2),100,100);  }
+" 0
+ E E E
+2 20
+"m_sysName"
+""
+1 121 31 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+25 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 100 321 290 348
+0 2 2 "0s" 0 0 0 64 0 0  100 321 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-17-*-100-100-*-*-iso8859-1|-17,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 0 
+13 21
+"PUSH_BUTTON2"
+""
+1 72 282 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ "main()    {
+  if ( isPanelOpen(\"StreamOverview\")  )  {
+    PanelOffPanel(\"StreamOverview\");
+  }  
+}" 0
+ E
+27 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 70 280 161 305
+
+T 
+1
+LANG:1 14 RunInfo editor
+"main()   {   
+  DebugN(\"MultiRunInfoEditor>\",$1,$2,$3);
+  ProcessorFarmRunInfo_openMultiPanel($2);
+}
+" 0
+ E E E
+0
+LAYER, 1 
+1
+LANG:1 0 
+0
+LAYER, 2 
+1
+LANG:1 0 
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+0
+LAYER, 5 
+1
+LANG:1 0 
+0
+LAYER, 6 
+1
+LANG:1 0 
+0
+LAYER, 7 
+1
+LANG:1 0 
+0
+0

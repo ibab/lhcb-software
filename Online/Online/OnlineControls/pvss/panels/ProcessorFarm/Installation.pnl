@@ -1,0 +1,1277 @@
+V 10
+1
+LANG:1 22 ProcessorFarmInstaller
+PANEL,-1 -1 518 483 N "_3DFace" 0
+"main()      {
+  string name;
+  for(int i=0; i<6;++i) {
+    sprintf(name,\"Slice%02X\",i);
+    sprintf(name,\"HLT%03X\",i);
+    m_sliceName.appendItem(name);
+    m_ioName.appendItem(name);
+  }
+  m_streamName.appendItem(\"Trigger\");
+  m_streamName.appendItem(\"Calibration\");
+  m_streamName.appendItem(\"Reco\");
+  m_streamName.appendItem(\"RecoTest\");
+  
+  m_sliceName.selectedPos(1);
+  m_ioName.selectedPos(1);
+  m_streamName.selectedPos(1);
+  m_numSlices.text = 3;
+  m_useSlicing.state(0,false);
+  m_farmLoop.state(0,false);
+  m_numTasksPerNode.text = 5;
+  m_fileMenu.visible = 0;
+  m_helpMenu.visible = 0;
+}
+" 0
+ E E E E 1 -1 -1 0  0 0
+""0  1
+E "#uses \"StreamTaskMgr.cpp\"
+#uses \"ProcessorFarm.cpp\"
+#uses \"ctrlUtils.cpp\"
+" 0
+ 2
+"CBRef" "1"
+"EClose" E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 0 
+13 0
+"PUSH_BUTTON1"
+""
+1 199 32 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+0 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 197 30 271 54
+
+T 
+1
+LANG:1 7 Install
+"main()  {  
+  ProcessorFarm_installDataTypes();  
+}
+" 0
+ E E E
+13 1
+"PUSH_BUTTON2"
+""
+1 279 32 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+2 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 277 30 351 54
+
+T 
+1
+LANG:1 9 Uninstall
+"main()  {  ProcessorFarm_uninstallDataTypes();  }
+" 0
+ E E E
+30 2
+"m_sliceFrame"
+""
+1 30 71 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+3 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.2666666666666667 0 2.247191011235955 1.999999999999998 56.44943820224721 0 E 30 71 481 161
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 9 Rec Slice
+22 4
+"m_sliceName"
+""
+1 19.99999999999999 236 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+5 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 17.99999999999999 234 122 258
+0
+
+E
+E
+E
+ 1 0
+13 5
+"m_createSlice"
+""
+1 20 265 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+6 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 18 263 122 287
+
+T 
+1
+LANG:1 6 Create
+"main()   {  ProcessorFarmInstallation_createSlice(m_sliceName.text,1);    }
+
+" 0
+ E E E
+13 6
+"m_deleteSlice"
+""
+1 20 296 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+8 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 18 294 122 318
+
+T 
+1
+LANG:1 6 Delete
+"main()  {  ProcessorFarm_deleteTree(m_streamName.text,m_sliceName.text);  }" 0
+ E E E
+13 7
+"m_generateSlice"
+""
+1 19 326 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+10 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 17 324 121 348
+
+T 
+1
+LANG:1 12 Generate FSM
+"main()   {  StreamTaskMgr_genFSM(m_streamName.text,m_sliceName.text);    }" 0
+ E E E
+13 8
+"m_createAll"
+""
+1 277 266 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+12 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 275 264 379 288
+
+T 
+1
+LANG:1 10 Create All
+"main()  {
+  string name;
+  int num_slice = m_numSlices.text;
+  DebugN(\"Creating \"+num_slice+\" slices with \"+m_numSlices.text+
+         \" task sets of \"+m_numTaskPerNode.text+\"tasks\");
+  for(int i=0; i<num_slice;++i) {
+    sprintf(name,\"Slice%02d\",i);
+    ProcessorFarmInstallation_createSlice(name,0);
+    ProcessorFarmInstallation_createIOSlice(name,0);
+  }
+  ctrlUtils_refreshDEN();
+}
+" 0
+ E E E
+13 9
+"m_deleteAll"
+""
+1 277 296 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+14 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 275 294 379 318
+
+T 
+1
+LANG:1 10 Delete All
+"main()    {  ctrlUtils_deleteAllTree();  }" 0
+ E E E
+13 10
+"m_generateAll"
+""
+1 277 326 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+16 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 275 324 379 348
+
+T 
+1
+LANG:1 12 Generate All
+"main()    {  ctrlUtils_genAllFSM();  }" 0
+ E E E
+13 11
+"m_startSlice"
+""
+1 20 356 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+18 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 18 354 122 378
+
+T 
+1
+LANG:1 5 Start
+"main()   {  StreamTaskMgr_startTree(m_streamName.text,m_sliceName.text);    }" 0
+ E E E
+13 12
+"m_stopSlice"
+""
+1 20 386 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+20 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 18 384 122 408
+
+T 
+1
+LANG:1 4 Stop
+"main()   {  StreamTaskMgr_stopTree(m_streamName.text,m_sliceName.text);    }" 0
+ E E E
+13 13
+"m_startAll"
+""
+1 277 356 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+22 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 275 354 379 378
+
+T 
+1
+LANG:1 9 Start All
+"main()    {  ctrlUtils_startAllTree();  }" 0
+ E E E
+13 14
+"m_stopAll"
+""
+1 277 386 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+24 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 275 384 378.9999999999999 408
+
+T 
+1
+LANG:1 8 Stop All
+"main()  {  ctrlUtils_stopAllTree();  }" 0
+ E E E
+22 15
+"m_ioName"
+""
+1 150 236 E E E 1 E 0 E N "_WindowText" E N "_Window" E E
+ E E
+26 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 148 234 252 258
+0
+
+E
+E
+E
+ 1 0
+13 16
+"m_createIO"
+""
+1 150 265 E E E 1 E 0 E N "_ButtonText" E N "_Button" E E
+ E E
+28 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 148 263 252 287
+
+T 
+1
+LANG:1 6 Create
+"main()  {  ProcessorFarmInstallation_createIOSlice(m_ioName.text,1); }
+" 0
+ E E E
+13 17
+"m_deleteIO"
+""
+1 150 296 E E E 1 E 0 E N "_ButtonText" E N "_Button" E E
+ E E
+30 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 148 294 252 318
+
+T 
+1
+LANG:1 6 Delete
+"main()   {
+  StreamTaskMgr_deleteTree(m_streamName.text+\"IO\",m_ioName.text,1);
+}" 0
+ E E E
+13 18
+"m_genIO"
+""
+1 150 326 E E E 1 E 0 E N "_ButtonText" E N "_Button" E E
+ E E
+32 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 148 324 252 348
+
+T 
+1
+LANG:1 12 Generate FSM
+"main()   {  StreamTaskMgr_genFSM(m_streamName.text+\"IO\",m_ioName.text);    }" 0
+ E E E
+13 19
+"m_startIO"
+""
+1 150 356 E E E 1 E 0 E N "_ButtonText" E N "_Button" E E
+ E E
+34 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 148 354 252 378
+
+T 
+1
+LANG:1 5 Start
+"main()   {  StreamTaskMgr_startTree(m_streamName.text+\"IO\",m_ioName.text,1);    }" 0
+ E E E
+13 20
+"m_stopIO"
+""
+1 150 386 E E E 1 E 0 E N "_ButtonText" E N "_Button" E E
+ E E
+36 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 148 384 252 408
+
+T 
+1
+LANG:1 4 Stop
+"main()   {
+  StreamTaskMgr_stopTree(m_streamName.text+\"IO\",m_ioName.text,1);
+}" 0
+ E E E
+30 21
+"FRAME2"
+""
+1 30 71 E E E 1 E 0 E N "_WindowText" E N {0,0,0} E E
+ E E
+38 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.2666666666666667 0 2.247191011235955 132 56.44943820224721 0 E 30 71 481 161
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 9 I/O Slice
+30 22
+"FRAME3"
+""
+1 30 71 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+40 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.2666666666666667 0 2.247191011235955 259 56.44943820224721 0 E 30 71 481 161
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 10 All Slices
+6 23
+"m_logo"
+""
+1 -2 70 E E E 1 E 1 E N {0,0,0} E N {255,255,255} E E
+ E "main(int x, int y)    {   PanelOff(); }
+" 0
+
+42 0 0 0 0 0
+E E E
+0
+1
+LANG:1 47 Yeah - that's us! Double click to close window.
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 0 1 E 1 0 1 -2.999999999999997 0 2  0 3  "pictures/logo_lhcb.bmp" 13434828 E 10 10 95 70
+2 24
+"m_online"
+""
+1 29.14663983429317 122 E E E 1 E 1 E N "white" E N "red" E E
+ E E
+44 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E 1.023529411764706 0 1 -1.188235294117648 7 1 E 8 63 93 84
+1 0 2 "0s" 0 0 0 65 0 0  8 63 1
+1
+LANG:1 115 -*-Bitstream Vera Sans-bold-i-normal-*-20-*-100-100-*-*-iso8859-1|-20,0,0,0,758,1,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 6 Online
+22 25
+"m_streamName"
+""
+1 147 130 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+46 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 145 128 299 152
+0
+
+E
+E
+E
+ 1 0
+2 26
+"PRIMITIVE_TEXT1"
+""
+1 29.00000000000001 132 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+47 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 29.00000000000001 132 169 152
+0 2 2 "0s" 0 0 0 64 0 0  29.00000000000001 132 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 12 System Name:
+21 30
+"m_numTasksPerNode"
+""
+1 328 178 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+53 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 326 176 370 200
+0
+
+E
+E
+E
+
+N 0 100 1 0 1 1
+2 32
+"PRIMITIVE_TEXT5"
+""
+1 199 180 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+57 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 199 180 339 200
+0 2 2 "0s" 0 0 0 64 0 0  199 180 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 22 No. of Tasks per node:
+2 33
+"PRIMITIVE_TEXT6"
+""
+1 119 31.99999999999999 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+59 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 119 31.99999999999999 259 52
+0 2 2 "0s" 0 0 0 64 0 0  119 31.99999999999999 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 11 Data types:
+21 36
+"m_numSlices"
+""
+1 149 177 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+65 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 147 175 191 199
+0
+
+E
+E
+E
+
+N 0 100 1 0 1 1
+2 37
+"PRIMITIVE_TEXT8"
+""
+1 29 177 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+67 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 29 177 169 197
+0 2 2 "0s" 0 0 0 64 0 0  29 177 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 15 No. of Slices::
+30 38
+"FRAME4"
+""
+1 30 71 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+69 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.8444444444444446 0 1.089887640449438 -18.33333333333334 35.61797752808987 0 E 30 71 481 161
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 16 Setup Parameters
+13 39
+"PUSH_BUTTON3"
+""
+1 277 452 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+71 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 275 450 379 474
+
+T 
+1
+LANG:1 5 Close
+"main()   {  PanelOff();  }
+" 0
+ E E E
+30 40
+"FRAME5"
+""
+1 30 71 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+73 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.6222222222222222 0 0.8988764044943822 88.33333333333333 -53.82022471910113 0 E 30 71 481 161
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 22 Data Type Manipulation
+26 41
+"m_fileMenu"
+""
+1 12 452 E E E 1 E 1 E N "_ButtonText" E N "_3DFace" E E
+ E E
+74 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 10 450 70 474
+ 0 1
+LANG:1 4 File
+"" 0 0 0 0 0
+ 1 1 1
+LANG:1 5 Close
+"1" 1 0 0 268435523 0
+ E "main(string id)
+{
+  if ( id==\"1\" ) PanelOff();
+}" 0
+0 
+26 42
+"m_helpMenu"
+""
+1 69 452 E E E 1 E 1 E N "_ButtonText" E N "_3DFace" E E
+ E E
+76 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 67 450 127 474
+ 0 1
+LANG:1 4 Help
+"" 0 0 0 0 0
+ 2 1 1
+LANG:1 5 About
+"1" 1 0 0 268435521 0
+ 1 1
+LANG:1 10 About PVSS
+"2" 1 0 0 268435536 0
+ E "main(string id)
+{
+  if ( id == \"1\" )  {
+    string text = \"Processor farm setup:\\n\\n\"+
+                  \"Smart utilities for data streaming applications\\n\"+
+                  \"in the LHCb experiment.\\n\"+
+                  \"\\n\\n\"+
+                  \"Copyright by CERN/LHCb\";
+    ChildPanelOnModal(\"visionUtils/AboutBox\",
+                      \"About\",
+                      makeDynString(text),50,50);
+  }
+  else if ( id == \"2\" )  {
+    ChildPanelOnModal(\"about\",
+                      \"About\",
+                      makeDynString(),50,50);
+  }
+}" 0
+0 
+13 43
+"PUSH_BUTTON4"
+""
+1 149 452 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+78 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 147 450 251 474
+
+T 
+1
+LANG:1 5 About
+"main()   {  ProcessorFarmInstallation_AboutBox();  }
+" 0
+ E E E
+13 44
+"PUSH_BUTTON5"
+""
+1 278 236 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+80 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 276 234 380 258
+
+T 
+1
+LANG:1 11 Connect FMC
+"int ProcessorFarmInstallation_connectTaskManager(string stream)  {
+  if ( dpExists(stream) )  {
+    string cfg = \"DimStorage\";
+    dyn_string subFarms, inUse;
+    int res = dpGet(stream+\".SubFarms\",subFarms,stream+\".InUse\",inUse);
+    if ( res == 0 )  {
+      dyn_string allNodes, nodes;
+      for (int i=1; i<=dynlen(subFarms); ++i)  {
+        string dp = stream+\"_\"+subFarms[i]+\".Nodes\";
+        res = dpGet(dp,nodes);
+        if ( 0 == res )  {
+          dynAppend(allNodes,nodes);
+        }
+        else  {
+          ctrlUtils_checkErrors(res,\"Failed to access DP:\"+dp);
+          return 0;
+        }
+      }
+      dynUnique(allNodes);
+      fwDim_createConfig(cfg);
+      for (int i=1; i<=dynlen(allNodes); ++i)  {
+        string name = strtoupper(allNodes[i]);
+        string dp_name = name+\"_StreamTaskCreator\";
+        string svc_name = \"/\" + name + \"/task_manager\";
+        if ( !dpExists(dp_name) ) dpCreate(dp_name,\"StreamTaskCreator\");
+        fwDim_unSubscribeCommandsByDp(cfg,dp_name+\"*\");
+        fwDim_unSubscribeServicesByDp(cfg,dp_name+\"*\");
+        dpSet(dp_name+\".Name\",name);
+        fwDim_subscribeCommand(cfg,svc_name+\"/start\",dp_name+\".Start\");
+        fwDim_subscribeCommand(cfg,svc_name+\"/stop\",dp_name+\".Stop\");
+        fwDim_subscribeCommand(cfg,svc_name+\"/kill\",dp_name+\".Kill\");
+        DebugN(\"Connect \"+svc_name+\" to \"+dp_name);
+      }
+      DebugN(\"All Done.\");
+      return 1;
+    }
+  }
+  ctrlUtils_checkErrors(-1,\"Failed to access DP:\"+stream);
+  return 0;    
+}
+
+main()  {    ProcessorFarmInstallation_connectTaskManager(m_streamName.text);    }
+" 0
+ E E E
+20 46
+"m_useSlicing"
+""
+1 148 152 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+82 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 146 150 165 175
+1
+T 
+1
+LANG:1 0 
+
+0 
+1
+LANG:1 0 
+E E
+0 0 0 0 0
+1
+E E
+EE2 47
+"PRIMITIVE_TEXT9"
+""
+1 29 154 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+84 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 29 154 169 174
+0 2 2 "0s" 0 0 0 64 0 0  29 154 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 12 Use Slicing:
+13 48
+"PUSH_BUTTON6"
+""
+1 401 266.9999999999999 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+86 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 399 264.9999999999999 503 288.8
+
+T 
+1
+LANG:1 6 Create
+"main()   {
+  if ( m_farmLoop.state(0) )  {
+    for(int i=0; i<m_numSlices.text;++i)
+      ProcessorFarmInstallation_createFarm(m_streamName.text,i,1);
+  }
+  else  {
+    ProcessorFarmInstallation_createFarm(m_streamName.text,m_numSlices.text,1);
+  }
+}" 0
+ E E E
+30 49
+"FRAME6"
+""
+1 30 71 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+88 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.2666666666666667 0 2.224719101123596 384 60.04494382022472 0 E 30 71 481 161
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 13 Farm Creation
+13 50
+"PUSH_BUTTON7"
+""
+1 401 295.71 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+90 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 399 293.71 503 317.5099999999999
+
+T 
+1
+LANG:1 6 Delete
+"main()  {  
+  string name;
+  if ( m_farmLoop.state(0) )  {
+    m_farmLoop.state(0,false);
+    for(int i=0; i<m_numSlices.text;++i)  {
+      sprintf(name,\"Farm%02X\",i);
+      ProcessorFarm_deleteTree(m_streamName.text,name);
+    }
+    m_farmLoop.state(0,true);
+    return;
+  }
+  sprintf(name,\"Farm%02X\",m_numSlices.text);
+  ProcessorFarm_deleteTree(m_streamName.text,name);  
+}" 0
+ E E E
+13 51
+"PUSH_BUTTON8"
+""
+1 401 324.42 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+92 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 399 322.42 503 346.22
+
+T 
+1
+LANG:1 12 Generate FSM
+"main()   {
+  string name;
+  if ( m_farmLoop.state(0) )  {
+    for(int i=0; i<m_numSlices.text;++i)  {
+      sprintf(name,\"Farm%02X\",i);
+      StreamTaskMgr_genFSM(m_streamName.text,name);  
+    }
+    return;
+  }
+  sprintf(name,\"Farm%02X\",m_numSlices.text);
+  StreamTaskMgr_genFSM(m_streamName.text,name);  
+}
+" 0
+ E E E
+13 52
+"PUSH_BUTTON9"
+""
+1 401 354.1199999999999 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+94 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 399 352.1199999999999 503 375.92
+
+T 
+1
+LANG:1 5 Start
+"main()   {
+  string name;
+  if ( m_farmLoop.state(0) )  {
+    for(int i=0; i<m_numSlices.text;++i)  {
+      sprintf(name,\"Farm%02X\",i);
+      StreamTaskMgr_startTree(m_streamName.text,name);  
+    }
+    return;
+  }
+  sprintf(name,\"Farm%02X\",m_numSlices.text);
+  StreamTaskMgr_startTree(m_streamName.text,name);  
+}
+" 0
+ E E E
+13 53
+"PUSH_BUTTON10"
+""
+1 401 383.8199999999999 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+96 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 399 381.8199999999999 503 405.6199999999999
+
+T 
+1
+LANG:1 4 Stop
+"main()   {
+  string name;
+  if ( m_farmLoop.state(0) )  {
+    for(int i=0; i<m_numSlices.text;++i)  {
+      sprintf(name,\"Farm%02X\",i);
+      StreamTaskMgr_stopTree(m_streamName.text,name);  
+    }
+    return;
+  }
+  sprintf(name,\"Farm%02X\",m_numSlices.text);
+  StreamTaskMgr_stopTree(m_streamName.text,name);  
+}
+" 0
+ E E E
+20 54
+"m_farmLoop"
+""
+1 283 153 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+98 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 281 151 300 176
+1
+T 
+1
+LANG:1 0 
+
+0 
+1
+LANG:1 0 
+E E
+0 0 0 0 0
+1
+E E
+EE2 55
+"PRIMITIVE_TEXT10"
+""
+1 200 157 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+99 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 200 157 274 171
+0 2 2 "0s" 0 0 0 64 0 0  200 157 1
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 5 Loop:
+13 56
+"PUSH_BUTTON13"
+""
+1 403 120 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+101 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 401 118 495 142
+
+T 
+1
+LANG:1 17 Install Allocator
+"main() {  ProcessorFarm_installAllocator(m_streamName.selectedText);  }" 0
+ E E E
+0
+LAYER, 1 
+1
+LANG:1 0 
+0
+LAYER, 2 
+1
+LANG:1 0 
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+0
+LAYER, 5 
+1
+LANG:1 0 
+0
+LAYER, 6 
+1
+LANG:1 0 
+0
+LAYER, 7 
+1
+LANG:1 0 
+0
+0

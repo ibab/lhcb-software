@@ -58,6 +58,32 @@ dyn_string ctrlUtils_getStringVectors(string dp,string type)  {
   return values;
 }
 //=============================================================================
+bool ctrlUtils_checkTask(string task,int numItems)  {
+  if ( dynlen(strsplit(task,"/")) != numItems )  {
+    ChildPanelOn("vision/MessageInfo1","Bad input",makeDynString("Parameter 'Task Types' is incorrect"),50,50);
+    return false;
+  }
+  return true;
+}
+//=============================================================================
+bool ctrlUtils_checkTasks(dyn_string tasks,int numItems)  {
+  for(int i=1, n=dynlen(tasks); i<=n; ++i)  {
+    if ( !ctrlUtils_checkTask(tasks[i],numItems) ) return false;
+  }
+  return true;
+}
+//=============================================================================
+bool ctrlUtils_confirm(string msg)   {
+  dyn_float df;
+  dyn_string ds;
+  ChildPanelOnReturn("vision/MessageInfo","Please Confirm",
+                     makeDynString("$1:"+msg,"$2:Cancel","$3:Ok"),50,50,ds,df);
+  if ( ds[1] == 0 )   {
+    return true;
+  }
+  return false;
+}
+//=============================================================================
 int ctrlUtils_installDataType(dyn_dyn_string& names, dyn_dyn_int& types)  {
   string type=names[1][1];
   if ( dynlen(dpTypes(type)) ==0 ) {
@@ -115,11 +141,15 @@ void ctrlUtils_refreshDEN()  {
   fwFsmTree_refreshTree();
 }
 //=============================================================================
-int ctrlUtils_createFsmTaskTree(string stream, string slice, dyn_string sets, int tasks_per_set, bool refresh=1, bool have_config=1)  {
-  string name, node  = stream+"_"+slice;
+int ctrlUtils_createFsmTaskTree(string stream, string slice, dyn_string sets, int tasks_per_set, bool refresh=1, bool have_config=1, bool have_slices=1)  {
+  string name, node  = stream;
   string slices_node = stream+"_Slices";
-  if ( 0 == fwFsmTree_isNode(slices_node) ) {
-    slices_node  = ctrlUtils_addFsmTreeNode("FSM", slices_node, "FSM_Holder", 1);
+  if ( strlen(slice)>0 ) node = node +"_"+slice;
+  if ( have_slices > 0 && 0 == fwFsmTree_isNode(slices_node) ) {
+    slices_node = ctrlUtils_addFsmTreeNode("FSM", slices_node, "FSM_Holder", 1);
+  }
+  else  {
+    slices_node = "FSM";
   }
   if ( 0 == fwFsmTree_isNode(node) ) {
     node = ctrlUtils_addFsmTreeNode(slices_node, node, "FSM_Slice", 1);
@@ -127,8 +157,13 @@ int ctrlUtils_createFsmTaskTree(string stream, string slice, dyn_string sets, in
   DebugN("Slices:"+slices_node+" Stream:"+node,sets,tasks_per_set);
   if ( node != "" )   {
     if ( have_config )  {
-      ctrlUtils_addFsmTreeNode(node, node+"_Config", "StreamConfigurator", 0);
-      fwFsmTree_setNodeLabel(node+"_Config","Configurator");
+      string dev = node+"_Config";
+      ctrlUtils_addFsmTreeNode(node, dev, "StreamConfigurator", 0);
+      fwFsmTree_setNodeLabel(dev,"Configurator");
+      if ( !dpExists(dev) )  {
+        dpCreate(dev,"StreamConfigurator");
+      }  
+      dpSet(dev+".State","NOT_READY");
     }
     for(int i=1; i<=dynlen(sets); ++i)  {
       name = node+"_"+sets[i];

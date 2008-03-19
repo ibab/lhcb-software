@@ -1,0 +1,108 @@
+V 10
+1
+LANG:1 13 Setup RunInfo
+PANEL,-1 -1 437 323 N "_3DFace" 0
+"main()  {
+  dyn_string dpn = dpNames(\"*\",\"FarmRunInfo\");
+  int num = dynlen(dpn);
+  string name;
+  m_runInfoSelector.deleteAllItems();
+  for(int i=1; i<=num; ++i)
+    m_runInfoSelector.appendItem(dpn[i]);
+  if ( num >= 1 ) {
+    m_runInfoSelector.selectedPos(1);
+    m_runInfoSelector.text = dpn[1];
+    name = dpn[1];
+  }
+  ProcessorFarmRunInfo_createPanel(m_runInfoSelector.text);   
+}
+" 0
+ E E E E 1 -1 -1 0  0 0
+""0  1
+E "#uses \"ProcessorFarm.cpp\"
+" 0
+ 2
+"CBRef" "1"
+"EClose" E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 0 
+2 59
+"PRIMITIVE_TEXT1"
+""
+1 9 5 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+10 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 7 5 367 25
+0 2 2 "0s" 0 0 0 64 0 0  7 5 1
+1
+LANG:1 115 -*-Bitstream Vera Sans-bold-r-normal-*-17-*-100-100-*-*-iso8859-1|-17,0,0,0,758,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+1
+LANG:1 15 Run Info Editor
+0
+LAYER, 1 
+1
+LANG:1 0 
+0
+LAYER, 2 
+1
+LANG:1 0 
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+0
+LAYER, 5 
+1
+LANG:1 0 
+22 28
+"m_runInfoSelector"
+""
+1 203 4 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+4 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 201 2 415 26
+0
+
+E
+"main() {  
+  removeSymbol(myModuleName(),myPanelName(),\"m_runInfoPanel\");
+  ProcessorFarmRunInfo_createPanel(m_runInfoSelector.text);   
+}
+" 0
+
+E
+ 1 0
+0
+LAYER, 6 
+1
+LANG:1 0 
+0
+LAYER, 7 
+1
+LANG:1 0 
+0
+0
