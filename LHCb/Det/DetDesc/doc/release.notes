@@ -1,10 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.358 2008-02-22 13:00:11 cattanem Exp $ 
+! $Id: release.notes,v 1.359 2008-03-19 00:41:58 janos Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+! 2008-03-19 - Jan Amoraal
+ - Bug fix in AlignmentCondition.cpp
+  + m_matrixInv was set to m_matrix in the method offNominalMatrix which 
+    meant that both were actually set to newMatrx.Inverse(), while 
+    m_matrixInv should be set to newMatrix.
+   
 !====================== DetDesc v18r4 2008-02-22 ==============================
 ! 2008-02-22 - Marco Clemencic
  - Clean up, fixes and improvements to Condition::toXml.
