@@ -6,6 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r6 2008-03-19 ===============================
+! 2008-03-19 - Markus Frank
+ - Fix bug in RawDataCnvSvc: Fail object creation if data is not accessible.
+
 !========================= MDF v3r5 2008-03-03 ===============================
 ! 2008-03-03 - Markus Frank
  - Detector EOF when reading MDF files with ROOT.
