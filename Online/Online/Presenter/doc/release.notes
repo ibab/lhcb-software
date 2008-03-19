@@ -4,10 +4,23 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v0r7 2008-03-19 =============
+! 2008-03-19
+o Root-style multiple selection on trees
++ references can be saved in editor mode and be selected
+  through the GUI (selection is one-by-one)
++ overlay display is steered by a reference button
+  and the HistoDB entry 
+- navigation panel in history mode does not work
+o savesets and references need to be parametrized via
+  command-line or config file (defaults in the pit
+  don't work yet)
+
 !============ Presenter v0r6 2008-01-30 =============
 ! 2008-01-30
  o based on Root 5.18.00 and Boost 1.34.1
- + modes of operation switchable between Online, History and Page Editor
+ + modes of operation switchable between Online,
+   History and Page Editor
  + new configuration: command-line and via file
  icon theme: GNOME Art "Gnome 2.18 icon theme By aneglus"
 
@@ -16,7 +29,8 @@
  + updated to OnlineHistDB v4
  + new GUI layout
  + minor bugfixes, improvements
- + initial reference histogram support (no setting through GUI)
+ + initial reference histogram support
+   (no setting through GUI)
 
 !============ Presenter v0r4 2007-10-29 =============
 ! 2007-10-29
