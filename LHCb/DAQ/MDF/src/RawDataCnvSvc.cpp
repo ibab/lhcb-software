@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.cpp,v 1.25 2008-03-19 09:21:03 frankb Exp $
+// $Id: RawDataCnvSvc.cpp,v 1.26 2008-03-19 09:27:50 frankb Exp $
 //  ====================================================================
 //  RawDataCnvSvc.cpp
 //  --------------------------------------------------------------------
@@ -119,7 +119,7 @@ StatusCode RawDataCnvSvc::finalize()    {
   long typ = repSvcType();
   for(FileMap::iterator i=m_fileMap.begin(); i != m_fileMap.end(); ++i)  {
     if ( typ == RAWDATA_StorageType && (*i).second )  {
-      closeIO((*i).second);
+      closeIO((*i).second).ignore();
     }
   }
   m_fileMap.clear();
