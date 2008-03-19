@@ -1,16 +1,4 @@
-ApplicationMgr.TopAlg                = { "StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };
+#include "$MDFROOT/options/MDFdata.opts"
+#include "$MDFROOT/options/MDFCheck.opts"
 ApplicationMgr.EvtMax                = 100000;
 ApplicationMgr.HistogramPersistency  = "NONE";
-Dump.CheckData                       = 1;
-Dump.CheckData                       = 0;
-Dump.DumpData                        = 0;
-Dump.FullDump                        = 0;
-Dump.OutputLevel                     = 3;
-StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 0.002;
-EventDataSvc.RootCLID                = 1;
-EventDataSvc.EnableFaultHandler      = true;
-EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
-#include "$MDFROOT/options/MDFdata.opts"
-FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
-StoreExplorerAlg.OutputLevel = 3;

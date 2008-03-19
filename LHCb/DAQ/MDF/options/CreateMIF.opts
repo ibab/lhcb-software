@@ -1,20 +1,9 @@
-ApplicationMgr.TopAlg                = { "StoreExplorerAlg","LHCb::RawEventTestDump/Dump","LHCb::MIFWriter/Writer" };
+#include "$MDFROOT/options/MDFCheck.opts"
+#include "$MDFROOT/options/MDFdata.opts"
+ApplicationMgr.TopAlg               += { "LHCb::MIFWriter/Writer" };
 ApplicationMgr.EvtMax                = 100000;
 ApplicationMgr.HistogramPersistency  = "NONE";
-FileCatalog.Catalogs                 = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
-//
-Dump.CheckData                       = 1;
-Dump.CheckData                       = 0;
-Dump.DumpData                        = 0;
-Dump.FullDump                        = 0;
-Dump.OutputLevel                     = 3;
-StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 0.002;
-EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
-EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
-IODataManager.AgeLimit=1;
-IODataManager.OutputLevel=1;
-#include "$MDFROOT/options/MDFdata.opts"
+IODataManager.AgeLimit               = 1;
+IODataManager.OutputLevel            = 1;
 Writer.Connection = "file://mifData.dat";
-IODataManager.OutputLevel = 1;

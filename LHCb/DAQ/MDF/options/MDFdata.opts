@@ -1,3 +1,4 @@
+
 EventSelector.PrintFreq              = 200;
 EventSelector.Input                  = {
    "DATA='PFN:root:file://../cmt/mdfData_1.dat' SVC='LHCb::MDFSelector'"

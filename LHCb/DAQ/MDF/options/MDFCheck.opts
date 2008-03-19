@@ -1,0 +1,16 @@
+ApplicationMgr.TopAlg               += { "LHCb::RawEventTestDump/Dump","StoreExplorerAlg" };
+Dump.CheckData                       = 1;
+Dump.CheckData                       = 0;
+Dump.DumpData                        = 0;
+Dump.FullDump                        = 0;
+Dump.OutputLevel                     = 3;
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 0.002;
+StoreExplorerAlg.AccessForeign       = true;
+StoreExplorerAlg.OutputLevel         = 3;
+//
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.ForceLeaves             = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices     += { "LHCb::RawDataCnvSvc" };
+FileCatalog.Catalogs                 = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };

@@ -1,28 +1,12 @@
-ApplicationMgr.TopAlg                = { "LHCb::RawEventTestDump/Dump","StoreExplorerAlg" };
+#include "$MDFROOT/options/MDFCheck.opts"
 ApplicationMgr.EvtMax                = 100000;
 ApplicationMgr.HistogramPersistency  = "NONE";
-Dump.CheckData                       = 1;
-Dump.CheckData                       = 0;
-Dump.DumpData                        = 0;
-Dump.FullDump                        = 0;
-Dump.OutputLevel                     = 3;
-StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 0.002;
-EventDataSvc.RootCLID                = 1;
-EventDataSvc.ForceLeaves             = true;
-EventDataSvc.EnableFaultHandler      = true;
-EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
 EventSelector.PrintFreq              = 200;
-EventSelector.Input                  = {
-  "DATA='file://taeData.dat' SVC='LHCb::MDFSelector'"
-};
-FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
-
-ApplicationMgr.OutStream  += { "TAEMini" };
+EventSelector.Input                  = {"DATA='file://taeData.dat' SVC='LHCb::MDFSelector'" };
 //  Setup for ROOT I/O System
+ApplicationMgr.OutStream  += { "TAEMini" };
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 PoolDbCacheSvc.Dlls       += {"CLHEPRflx", "STLRflx", "GaudiKernelDict"};
 TAEMini.ItemList          = { "/Event#1", "/Event/DAQ#1", "/Event/Prev1/DAQ", "/Event/Prev2", "/Event/Next1/DAQ/RawEvent" };
 TAEMini.Output            = "DATAFILE='PFN:taePOOL.dat' TYP='POOL_ROOTTREE' OPT='RECREATE'";
-ReadAlg.OutputLevel        = 2;
 PoolDbCacheSvc.OutputLevel = 1;
