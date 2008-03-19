@@ -1,0 +1,59 @@
+/** Test options for PV association. Assume we have 
+ *  Bd -> J/Psi(1S) (mu+ mu-) Ks events
+ *
+ *  @author P. Koppenburg
+ *  @date 2006-09-05
+ */
+
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
+#include "$COMMONPARTICLESROOT/options/StandardJpsi.opts"
+#include "$COMMONPARTICLESROOT/options/StandardKs.opts"
+
+ApplicationMgr.DLLs += { "DaVinciUser" } ;
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqTestPVAssoc" } ;
+SeqTestPVAssoc.MeasureTime = true ;
+
+// Re-run J/psi->mumu 
+SeqTestPVAssoc.Members += { "FilterDesktop/MoreBiasedJpsi2MuMu" };
+MoreBiasedJpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdLooseBiasedJpsi2MuMu" };
+MoreBiasedJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-";
+MoreBiasedJpsi2MuMu.Filter.Selections = {"J/psi(1S) : FlightDistanceFilterCriterion"};
+MoreBiasedJpsi2MuMu.Filter.FlightDistanceFilterCriterion.MinFSPV = 2.5; // hlt presel: 2
+
+/* Does not work yet
+// make a B->J/psi Ks
+SeqTestPVAssoc.Members += { "MakeResonances/Bd2JpsiKs" };
+Bd2JpsiKs.PhysDesktop.InputLocations = { "Phys/StdLooseBiasedJpsi2MuMu",
+                                         "Phys/StdLooseKsLL"};
+	  
+Bd2JpsiKs.DecayDescriptor = "B0 -> J/psi(1S) KS0" ;
+Bd2JpsiKs.Window = 1000*MeV ; //
+//Bd2JpsiKs.OutputLevel = 1 ;
+SeqTestPVAssoc.Members += { "PrintHeader/FoundBd" };
+FoundBd.OutputLevel = 2 ;
+//Bd2JpsiKs.OutputLevel = 2 ; //
+
+*/
+
+SeqTestPVAssoc.Members += { "TestPVAssociation" };
+SeqTestPVAssoc.Members += { "TestPVAssociation/ReTestPVAssociation" };
+//TestPVAssociation.PhysDesktop.InputLocations += { "Phys/StdLooseBiasedJpsi2MuMu" } ;
+TestPVAssociation.PhysDesktop.InputLocations += { "Phys/MoreBiasedJpsi2MuMu" } ;
+//TestPVAssociation.RelatedPV.OutputLevel = 3 ;
+ReTestPVAssociation.PhysDesktop.InputLocations += { "Phys/TestPVAssociation" } ;
+//ReTestPVAssociation.RelatedPV.OutputLevel = 3 ;
+
+//#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+ApplicationMgr.EvtMax = 10 ;
+EventSelector.Input   = {
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/davinci/vol1/jpalac/Brunel/v30r6/0601-11144100.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+
+//ToolSvc.Particle2State.OutputLevel = 1 ;
+/*
+StdLooseBiasedJpsi2MuMu.Filter.FlightDistanceFilterCriterion.OutputLevel = 1 ;
+StdLooseBiasedJpsi2MuMu.PhysDesktop.OutputLevel = 1 ;
+MoreBiasedJpsi2MuMu.Filter.FlightDistanceFilterCriterion.OutputLevel = 1 ;
+MoreBiasedJpsi2MuMu.PhysDesktop.OutputLevel = 1 ;
+*/

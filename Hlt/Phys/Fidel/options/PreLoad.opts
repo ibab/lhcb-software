@@ -1,0 +1,19 @@
+/** @file 
+ * 
+ *  Configuration file to run PreLoadParticles algorithm to load
+ *  particles with the Combined Particle Maker in default configuration  
+ * 
+ *  @author G.Corti
+ *  @date 2003-06-03
+ */
+
+//Algorithm to execute
+//ApplicationMgr.TopAlg += { "PreLoadParticles" };
+
+ApplicationMgr.TopAlg += { "PreLoadParticles"};
+
+// Set to use the CombinedParticleMaker
+PreLoadParticles.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+PreLoadParticles.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+
+PreLoadParticles.OutputLevel            = 4;

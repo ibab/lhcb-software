@@ -1,0 +1,11 @@
+
+ApplicationMgr.TopAlg += { "LoopOnParticles"};
+
+LoopOnParticles.HistogramFlag = true ;
+
+LoopOnParticles.PhysDesktop.InputLocations = { "/Event/Phys/PreLoadParticles"};
+
+LoopOnParticles.OutputLevel                        = 3;
+LoopOnParticles.PhysDesktop.OutputLevel            = 4;
+LoopOnParticles.LeptonFilter.OutputLevel           = 4 ;
+

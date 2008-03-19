@@ -1,0 +1,166 @@
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+#pragma print off
+#include "$HLTSYSROOT/options/L0.opts"
+#pragma print off
+#include "$HLTSYSROOT/options/Hlt.opts"
+#pragma print off
+#include "$HLTSYSROOT/options/HltSelections.opts"
+#pragma print off
+
+/** @file 
+ *
+ *  Hlt exclusive selections shared particles for FIDEL
+ *  
+ *  @author S.Furcas
+ *  @date 2008-02-07
+ */
+
+
+//////////////////////////////
+//      JPSI                //
+//////////////////////////////
+HltShared.Members += { "MakeResonances/HltSharedMyJpsi" } ;
+HltSharedMyJpsi.PhysDesktop.InputLocations  = {"Phys/HltForwardMuons"} ;
+HltSharedMyJpsi.DecayDescriptor = "J/psi(1S) -> mu+ mu-";
+HltSharedMyJpsi.MotherFilter.Selections = { "J/psi(1S) :  VtxFilterCriterion" };
+HltSharedMyJpsi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25 ;
+HltSharedMyJpsi.Window = 100 * MeV ;
+//////////////////////////////
+//      Dstar               //
+//////////////////////////////
+HltShared.Members += { "MakeResonances/HltSharedMyDstar" } ;
+HltSharedMyDstar.PhysDesktop.InputLocations = { "Phys/HltSharedD02KPi", "Phys/HltNoPIDsPions", "Phys/HltSharedVTTPions" };
+HltSharedMyDstar.DecayDescriptors = {"[D*(2010)+ -> pi+ D0]cc"};
+// Cuts for daughters
+HltSharedMyDstar.DaughterFilter.Selections = {"pi+ : PVIPFilterCriterion"};
+HltSharedMyDstar.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1.0; 
+// Cuts for combination
+HltSharedMyDstar.Window = 50.0 * MeV; 
+HltSharedMyDstar.MinPt  = 2000.0 * MeV;
+// Cuts for mother
+HltSharedMyDstar.MotherFilter.Selections = {"D*(2010)+ : VtxFilterCriterion, MassDifferenceFilterCriterion"}; 
+HltSharedMyDstar.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0;
+HltSharedMyDstar.MotherFilter.MassDifferenceFilterCriterion.Window = 20.0 * MeV; 
+HltSharedMyDstar.MotherFilter.MassDifferenceFilterCriterion.DaughterName = "D0";
+HltSharedMyDstar.MotherFilter.MassDifferenceFilterCriterion.MotherName = "D*(2010)+";
+/////////////////////
+//  Dplus          //   
+/////////////////////
+HltShared.Members += { "MakeResonances/HltSharedMyDplus" };
+HltSharedMyDplus.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltNoPIDsPions" };
+HltSharedMyDplus.DecayDescriptor = "[D+ -> K- pi+ pi+]cc";
+HltSharedMyDplus.KillOverlap=true;
+HltSharedMyDplus.DaughterFilter.Selections = {"K+ : KinFilterCriterion, PVIPFilterCriterion",
+                                             "pi+ : KinFilterCriterion, PVIPFilterCriterion"};
+HltSharedMyDplus.DaughterFilter.KinFilterCriterion.MinPt = 300.0 * MeV;
+HltSharedMyDplus.DaughterFilter.KinFilterCriterion.MinMomentum = 2000.0 * MeV;
+HltSharedMyDplus.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1.0;
+HltSharedMyDplus.Window = 50.0 * MeV;
+HltSharedMyDplus.MinPt  = 500.0 * MeV;
+HltSharedMyDplus.MotherFilter.Selections = {"D+ : VtxFilterCriterion, PVIPFilterCriterion"};
+HltSharedMyDplus.MotherFilter.PVIPFilterCriterion.MinIPsignif = 2.0;
+HltSharedMyDplus.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0;
+//////////////////////
+//  Lambda_b        //
+//////////////////////
+
+//////////////////////
+//    Kstar +       //
+//////////////////////
+HltShared.Members += { "MakeResonances/HltSharedMyKstarPlus" };
+HltSharedMyKstarPlus.PhysDesktop.InputLocations = { "Phys/HltNoPIDsPions", "Phys/HltSharedKsLL" };
+HltSharedMyKstarPlus.DecayDescriptor = "[K*(892)+ -> KS0 pi+ ]cc";
+HltSharedMyKstarPlus.KillOverlap = true;
+HltSharedMyKstarPlus.DaughterFilter.Selections = {"pi+ : KinFilterCriterion, PVIPFilterCriterion"};
+HltSharedMyKstarPlus.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 3.0;
+HltSharedMyKstarPlus.Window = 250.0 * MeV;
+HltSharedMyKstarPlus.MotherFilter.Selections = {"K*(892)+ : VtxFilterCriterion, PVIPFilterCriterion"};
+HltSharedMyKstarPlus.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0;
+//////////////////////
+//  Lambda_c        //
+//////////////////////
+
+
+
+
+/******************************************************************************/
+ApplicationMgr.TopAlg += { "FilterDesktop/TightRes","GaudiSequencer/SeqSelBmake"};
+
+TightRes.PhysDesktop.InputLocations  = 
+{"Phys/HltSharedMyJpsi","Phys/HltForwardMuons","Phys/HltNoPIDsPions","Phys/HltNoPIDsKaons","Phys/HltSharedPhi2KK","Phys/HltSharedDs2KKPi","Phys/HltSharedD02KPi","Phys/HltSharedKstar2KPi","Phys/HltSharedKsLL","Phys/HltSharedMyDstar","Phys/HltSharedMyDplus"}; 
+
+TightRes.Filter.Selections = { "J/psi(1S) : MassFilterCriterion/massJpsi,
+	   				                     KinFilterCriterion/KinJpsi",
+                               "phi(1020) : MassFilterCriterion/massPhi,
+	   				                     KinFilterCriterion/KinPhi",
+                               "KS0 : MassFilterCriterion/massKS,
+                                 FlightDistanceFilterCriterion/FSKS,
+                                 KinFilterCriterion/KinKS",
+                               "K*(892)0 : MassFilterCriterion/massKstar,
+                                 PVIPFilterCriterion/PVIPKstar,
+                                 KinFilterCriterion/KinKstar",
+                               "D_s- : MassFilterCriterion/massDs,
+					                       KinFilterCriterion/KinDs",
+                               "D0 : MassFilterCriterion/massD0,
+	                               KinFilterCriterion/KinD0",
+                               "D- : MassFilterCriterion/massD,
+                                     KinFilterCriterion/KinD",
+                               "K- :KinFilterCriterion/KinK,
+                                    PVIPFilterCriterion/PVIPK",
+                               "mu-:KinFilterCriterion/Kinmu,
+                                    PVIPFilterCriterion/PVIPmu",
+                               "pi-:KinFilterCriterion/KinPi,
+                                    PVIPFilterCriterion/PVIPPi"
+};
+
+
+TightRes.Filter.PVIPK.MinIPsignif = 3.;
+TightRes.Filter.PVIPmu.MinIPsignif = 3.;
+TightRes.Filter.PVIPPi.MinIPsignif = 3.;
+TightRes.Filter.KinK.MinPt = 2000.;
+TightRes.Filter.Kinmu.MinPt = 2000.;
+TightRes.Filter.KinPi.MinPt = 2000.;
+
+TightRes.Filter.massJpsi.Window = 100. * MeV;//hlt 3000
+TightRes.Filter.KinJpsi.MinPt = 1000. * MeV;
+TightRes.Filter.massPhi.Window = 30. * MeV;//hlt 50
+TightRes.Filter.KinPhi.MinPt = 1000. * MeV;
+TightRes.Filter.massKstar.Window = 100. * MeV;//hlt 300
+TightRes.Filter.KinKstar.MinPt = 2500. * MeV;
+TightRes.Filter.massDs.Window = 50. * MeV;//hlt 200
+TightRes.Filter.KinDs.MinPt = 2000. * MeV;
+TightRes.Filter.massD0.Window = 35. * MeV;//hlt 50
+TightRes.Filter.KinD0.MinPt = 2500. * MeV;
+TightRes.Filter.massKS.Window = 50. * MeV;//hlt 50
+TightRes.Filter.KinKS.MinPt = 1000. * MeV;
+
+
+SeqSelBmake.Members += {"Fidel/HltSelFidel"};
+HltSelFidel.PhysDesktop.InputLocations  = {"Phys/TightRes"};
+HltSelFidel.VertexFitters += { "" : "TrgVertexFitter" };
+HltSelFidel.chi2Vtx = 40;
+HltSelFidel.minMass = 5000.0;
+HltSelFidel.maxMass = 7000.0;
+HltSelFidel.minPt = 0;
+HltSelFidel.pid = 511;
+
+HltSelFidel.OutputLevel = 3;
+
+HltSelectionsDecision.TemporarySelections += { "Fidel/HltSelFidel" };
+
+
+
+
+//to remove
+ApplicationMgr.ExtSvc += {"NTupleSvc"};
+NTupleSvc.Output = {"FILE1 DATAFILE = 'testFidel.root' TYP='ROOT' OPT='NEW'"};
+
+EventSelector.PrintFreq = 1;
+ApplicationMgr.EvtMax = 100;
+
+#include "$HOME/cmtuser/DaVinci_v19r7/Phys/DaVinci/v19r7/options/DatiJpsiPhi.opts"
+
+
