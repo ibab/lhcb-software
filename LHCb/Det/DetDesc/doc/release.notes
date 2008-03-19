@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.359 2008-03-19 00:41:58 janos Exp $ 
+! $Id: release.notes,v 1.360 2008-03-19 07:10:02 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2008-03-19 - Juan Palacios
+ - cmt/requirements
+  . Increase version to v18r4p1
 
 ! 2008-03-19 - Jan Amoraal
  - Bug fix in AlignmentCondition.cpp
