@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.360 2008-03-19 07:10:02 jpalac Exp $ 
+! $Id: release.notes,v 1.361 2008-03-19 08:42:24 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r4p1 2008-03-19 ============================
 ! 2008-03-19 - Juan Palacios
  - cmt/requirements
   . Increase version to v18r4p1
@@ -12,7 +13,7 @@
 ! 2008-03-19 - Jan Amoraal
  - Bug fix in AlignmentCondition.cpp
   + m_matrixInv was set to m_matrix in the method offNominalMatrix which 
-    meant that both were actually set to newMatrx.Inverse(), while 
+    meant that both were actually set to newMatrix.Inverse(), while 
     m_matrixInv should be set to newMatrix.
    
 !====================== DetDesc v18r4 2008-02-22 ==============================
