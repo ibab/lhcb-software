@@ -1,14 +1,13 @@
-$Id: release.notes,v 1.14 2008-03-18 16:29:32 ibelyaev Exp $ 
+$Id: release.notes,v 1.15 2008-03-19 08:55:09 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!======================== LoKiArrayFunctors v7r2 2008-03-19 ===================
 ! 2008-03-18 - Vanya BELYAEV
-
  - src/Component/PlotTool.cpp
-
     add new tool: LoKi::Hybrid::PlotTool, 
     the implementation of IPlotTool abstract interface
 
@@ -16,27 +15,22 @@ $Id: release.notes,v 1.14 2008-03-18 16:29:32 ibelyaev Exp $
 
     For the default configuration the tool produces crash 
     at the end of the job. The crash required the fix in ToolSvc.
-    Th etemporary solution: one needs to disable the printout 
+    The temporary solution: one needs to disable the printout 
     of the histogram summary:
 
        MyAlg.MyPlotTool.HistoPrint = False ;
 
-
  - cmt/requirements 
-
    version increment to v7r2 
 
 !======================== LoKiArrayFunctors v7r1 2008-02-19 ===================
-
 ! 2008-02-19 - Vanya BELYAEV
  - enhancement of all "hybrid" stuff to take care about 'functional' functors 
-
 
 ! 2008-02-11 - Vanya BELYAEV
  - many tiny fixes for new Gaudi/ROOT/Reflex
  - cmt/requirements
    version increment to v7r1
-
 
 !======================== LoKiArrayFunctors v7r0 2007-12-02 ===================
 ! 2007-12-02 - Vanya BELYAEV
