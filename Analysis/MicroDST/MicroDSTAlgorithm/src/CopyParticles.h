@@ -1,4 +1,4 @@
-// $Id: CopyParticles.h,v 1.8 2008-03-19 13:18:12 jpalac Exp $
+// $Id: CopyParticles.h,v 1.9 2008-03-19 14:19:02 jpalac Exp $
 #ifndef COPYPARTICLES_H 
 #define COPYPARTICLES_H 1
 
@@ -9,7 +9,7 @@
 
 /** @class CopyParticles CopyParticles.h
  *  
- * Class to colone LHCb::Particles and related objects from one TES location
+ * Class to clone LHCb::Particles and related objects from one TES location
  * to a parallel one.
  * It inherits the std::string properties InputLocation and OutputPrefix from
  * MicroDSTCommon. The LHCb::Particles are taken from the TES location 
