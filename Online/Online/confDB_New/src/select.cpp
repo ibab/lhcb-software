@@ -42,7 +42,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetDeviceTypeRow(char* devitype,int &len_devtype,char* devtype_result,char* ErrorMessage)
+		int _GetDeviceTypeRow(char* devitype,int &len_devtype,char* devtype_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetDeviceTypeRow";
 		int i = 0;
@@ -399,7 +399,7 @@ extern "C" {
 	*/
 
 	EXTERN_CONFDB
-		int GetDeviceRow_devicename(char* functionaldeviname,int &len_device, char* device_result,char* ErrorMessage)
+		int _GetDeviceRow_devicename(char* functionaldeviname,int &len_device, char* device_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetDeviceRow_devicename";
 		int i = 0;
@@ -850,7 +850,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetDeviceRow_devid(int deviceID,int &len_device, char* device_result,char* ErrorMessage)
+		int _GetDeviceRow_devid(int deviceID,int &len_device, char* device_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetDeviceRow_devid";
 		int i = 0;
@@ -1299,7 +1299,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetPortRow_pid(int portID, int &len_port,char* port_row_result,char* ErrorMessage)
+		int _GetPortRow_pid(int portID, int &len_port,char* port_row_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetPortRow_pid";
 		int i = 0;
@@ -2092,7 +2092,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetPortRow_devname(char* devicename, char* port_nb,int port_way, char* port_type,int &len_port, char* port_row_result,char* ErrorMessage)
+		int _GetPortRow_devname(char* devicename, char* port_nb,int port_way, char* port_type,int &len_port, char* port_row_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetPortRow_devname";
 		int i = 0;
@@ -2947,7 +2947,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetPortRow_devid(int deviceid, char* port_nb,int port_way,char* port_type,int &len_port, char* port_row_result,char* ErrorMessage)
+		int _GetPortRow_devid(int deviceid, char* port_nb,int port_way,char* port_type,int &len_port, char* port_row_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetPortRow_devid";
 		int i = 0;
@@ -3801,7 +3801,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetMacroConnectivityRow_lkid(int lkID, int &len_conn,char* Conn_row,char* ErrorMessage)
+		int _GetMacroConnectivityRow_lkid(int lkID, int &len_conn,char* Conn_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetMacroConnectivityRow_lkid";
 		int i = 0;
@@ -4291,7 +4291,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetMacroConnectivityRow_node(int nodeID, char* port_nb, int port_way,char* port_type,int &len_conn, char* Conn_row,char* ErrorMessage)
+		int _GetMacroConnectivityRow_node(int nodeID, char* port_nb, int port_way,char* port_type,int &len_conn, char* Conn_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetMacroConnectivityRow_node";
 		int i = 0;
@@ -4806,7 +4806,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetMacroConnectivityRow_nodename(char* node_name, char* port_nb, int port_way,char* port_type,int &len_conn, char* Conn_row,char* ErrorMessage)
+		int _GetMacroConnectivityRow_nodename(char* node_name, char* port_nb, int port_way,char* port_type,int &len_conn, char* Conn_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetMacroConnectivityRow_nodename";
 		int i = 0;
@@ -5312,7 +5312,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetIPInfoRow(char* ip_address,int &len_ip, char*  IP_row,char* ErrorMessage)
+		int _GetIPInfoRow(char* ip_address,int &len_ip, char*  IP_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetIPInfoRow";
 		int i = 0;
@@ -5584,7 +5584,7 @@ extern "C" {
 	*/
 
 	EXTERN_CONFDB
-		int GetLkTypeRow_lkname(char* lktype_name,int &len_lktype,char* LkType_row,char* ErrorMessage)
+		int _GetLkTypeRow_lkname(char* lktype_name,int &len_lktype,char* LkType_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetLkTypeRow_lkname";
 		int i = 0;
@@ -5785,7 +5785,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetLkTypeRow_lknb(int lktype_nbr,int &len_lktype,char* LkType_row,char* ErrorMessage)
+		int _GetLkTypeRow_lknb(int lktype_nbr,int &len_lktype,char* LkType_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetLkTypeRow_lknb";
 		int i = 0;
@@ -5985,7 +5985,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetLkTypeDecomposition_lknb(int lktype_nbr,int &len_array,char* LkType_row,char* ErrorMessage)
+		int _GetLkTypeDecomposition_lknb(int lktype_nbr,int &len_array,char* LkType_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetLkTypeDecomposition_lknb";
 		int i = 0;
@@ -6193,7 +6193,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetDeviceNamesPerType(char* devitype, int &len_array, char* devIDs_list,char* ErrorMessage)
+		int _GetDeviceNamesPerType(char* devitype, int &len_array, char* devIDs_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetDeviceNamesPerType";
 		int i = 0;
@@ -6398,7 +6398,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetDeviceIDsPerType(char* devitype, int &len_array, int* devIDs_list,char* ErrorMessage)
+		int _GetDeviceIDsPerType(char* devitype, int &len_array, int* devIDs_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetDeviceIDsPerType";
 		int i = 0;
@@ -6575,7 +6575,7 @@ extern "C" {
 
 
 	EXTERN_CONFDB
-		int GetLkFromDevID(int node_from, int &len_array, int* lkfrom_list,char* ErrorMessage)
+		int _GetLkFromDevID(int node_from, int &len_array, int* lkfrom_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetLkFromDevID";
 		int i = 0;
@@ -6745,7 +6745,7 @@ extern "C" {
 	*/
 
 	EXTERN_CONFDB
-		int GetLkToDevID(int node_to, int &len_array, int* lkfrom_list,char* ErrorMessage)
+		int _GetLkToDevID(int node_to, int &len_array, int* lkfrom_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetLkToDevID";
 		int i =0;
@@ -6911,7 +6911,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetPortIDPerDevID(int devID, int &len_array, int* portID_list,char* ErrorMessage)
+		int _GetPortIDPerDevID(int devID, int &len_array, int* portID_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetPortIDPerDevID";
 		int i = 0;
@@ -7076,7 +7076,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetPortInfoPerSpare(char* serialnb, int &len_array, char* port_list,char* ErrorMessage)
+		int _GetPortInfoPerSpare(char* serialnb, int &len_array, char* port_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetPortInfoPerSpare";
 		int i = 0;
@@ -7270,7 +7270,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetMacIPAddPerDevID(int devID, int &len_mac,char* MacAdd_list,char* ErrorMessage)
+		int _GetMacIPAddPerDevID(int devID, int &len_mac,char* MacAdd_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetMacIPAddPerDevID";
 		int i = 0;
@@ -7485,7 +7485,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetDestinationNamePerDevPort(char* devname,char* port_nb,char* port_type, int &len_Destin_list,char* Destin_list,char* ErrorMessage)
+		int _GetDestinationNamePerDevPort(char* devname,char* port_nb,char* port_type, int &len_Destin_list,char* Destin_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetDestinationNamePerDevPort";
 		int i = 0;
@@ -7720,7 +7720,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetFreeDeviceNamesPerType(char* devitype, int &len_array, char* devIDs_list,char* ErrorMessage)
+		int _GetFreeDeviceNamesPerType(char* devitype, int &len_array, char* devIDs_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetFreeDeviceNamesPerType";
 		int i = 0;
@@ -7926,7 +7926,7 @@ extern "C" {
 	*/
 
 	EXTERN_CONFDB
-		int GetDeviceID_devicename(char* deviname,int &deviceID,char* ErrorMessage)
+		int _GetDeviceID_devicename(char* deviname,int &deviceID,char* ErrorMessage)
 	{
 		char appliName[100]="GetDeviceID_devicename";
 		int i = 0;
@@ -8064,7 +8064,7 @@ extern "C" {
 	*/
 
 	EXTERN_CONFDB
-		int GetPortID_portinfo(int deviceID,char* port_nb,char* port_type,int port_way,int &portID,char* ErrorMessage)
+		int _GetPortID_portinfo(int deviceID,char* port_nb,char* port_type,int port_way,int &portID,char* ErrorMessage)
 	{
 		char appliName[100]="GetPortID_portinfo";
 		int i = 0;
@@ -8215,7 +8215,7 @@ extern "C" {
 	*/
 
 	EXTERN_CONFDB
-		int GetDeviceName_deviceid(int deviceID,char* devicename,char* ErrorMessage)
+		int _GetDeviceName_deviceid(int deviceID,char* devicename,char* ErrorMessage)
 	{
 		char appliName[100]="GetDeviceName_deviceid";
 		int i = 0;
@@ -8380,7 +8380,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetDeviceNamesPerLocation(char* location, int &len_array, char* devnames_list,char* ErrorMessage)
+		int _GetDeviceNamesPerLocation(char* location, int &len_array, char* devnames_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetDeviceNamesPerLocation";
 		int i = 0;
@@ -8584,7 +8584,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetDeviceNamesPerFunction(char* function, int &len_array, char* devnames_list,char* ErrorMessage)
+		int _GetDeviceNamesPerFunction(char* function, int &len_array, char* devnames_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetDeviceNamesPerFunction";
 		int i = 0;
@@ -8798,7 +8798,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetSpareHWPerLocation(char* location, int &len_array, char* devnames_list,char* ErrorMessage)
+		int _GetSpareHWPerLocation(char* location, int &len_array, char* devnames_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetSpareHWPerLocation";
 		int i = 0;
@@ -9001,7 +9001,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetSpareHWPerType(char* hwtype, int &len_array, char* devnames_list,char* ErrorMessage)
+		int _GetSpareHWPerType(char* hwtype, int &len_array, char* devnames_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetSpareHWPerPerType";
 		int i = 0;
@@ -9211,7 +9211,7 @@ extern "C" {
 	*/
 
 	EXTERN_CONFDB
-		int GetHWDeviceRow_serialnb(char* serialnb,int &len_device, char* device_result,char* ErrorMessage)
+		int _GetHWDeviceRow_serialnb(char* serialnb,int &len_device, char* device_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetHWDeviceRow_serialnb";
 		int i = 0;
@@ -9821,7 +9821,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetIPAliasesPerIPName(char* ipname, int &len_array, char* ipaliases_list,char* ErrorMessage)
+		int _GetIPAliasesPerIPName(char* ipname, int &len_array, char* ipaliases_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetIPAliasesPerIPName";
 		int i = 0;
@@ -10025,7 +10025,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetAvailableFunctions(int &len_array, char* function_list,char* ErrorMessage)
+		int _GetAvailableFunctions(int &len_array, char* function_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetAvailableFunctions";
 		int i = 0;
@@ -10224,7 +10224,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetIPAliasRow(char* ipalias,int &len_ipalias,char* ipalias_result,char* ErrorMessage)
+		int _GetIPAliasRow(char* ipalias,int &len_ipalias,char* ipalias_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetIPAliasRow";
 		int i = 0;
@@ -10514,7 +10514,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetLkIDsPerLkInfo(char* lkinfo, int &len_array, int* lkIDs_list,char* ErrorMessage)
+		int _GetLkIDsPerLkInfo(char* lkinfo, int &len_array, int* lkIDs_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetLkIDsPerLkInfo";
 		int i = 0;
@@ -10685,7 +10685,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetListOfSubsystems(int &len_array, char* sysname_list,char* ErrorMessage)
+		int _GetListOfSubsystems(int &len_array, char* sysname_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetListOfSubsystems";
 		int i = 0;
@@ -10877,7 +10877,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetSpareHWTypeList(int &len_array, char* hwtypes_list,char* ErrorMessage)
+		int _GetSpareHWTypeList(int &len_array, char* hwtypes_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetSpareHWTypeList";
 		int i = 0;
@@ -11077,7 +11077,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetSparePortRow_snb(char* serialnb, char* port_nb,int port_way, char* port_type,int &len_port, char* port_row_result,char* ErrorMessage)
+		int _GetSparePortRow_snb(char* serialnb, char* port_nb,int port_way, char* port_type,int &len_port, char* port_row_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetSparePortRow_snb";
 		int i = 0;

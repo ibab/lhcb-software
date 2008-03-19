@@ -491,12 +491,11 @@ int GetDeviceStatus(int devstatus,char* device_status)
 	}
 
 }
-//////////////////////////////test:
+
 int DefineByPos(OCIStmt* stmthp,OCIDefine** def, OCIError* ociError, int pos, char* valuep, sb4 value_sz, int indp, sword* status){
 	Error err;
 	*status =OCIDefineByPos(stmthp, &def[pos-1], ociError,pos, (ub1 *) (valuep), value_sz,SQLT_STR, (dvoid *)&indp,(ub2 *) 0,0, OCI_DEFAULT);
-	//status=OCIDefineByPos(stmthp, &def[4], ociError, 5,port_nbrto,ptolen+1, SQLT_STR, &pto_null, 0, 0, OCI_DEFAULT);
-		if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
+	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
 		err.ociError=ociError;
 		sprintf(err.log,"OCIDefineByPos (pos %i) unsuccessful",pos);
 		err.msg=" ";
@@ -518,6 +517,17 @@ int DefineByPos(OCIStmt* stmthp,OCIDefine** def, OCIError* ociError, int pos, in
 int BindByName(OCIStmt* stmthp,OCIBind** bnd1p, OCIError* ociError, char* placeholder, char* valuep, sword* status){
 	Error err;
 	*status=OCIBindByName(stmthp, bnd1p, ociError,(text*)placeholder,-1,(dvoid*) valuep,strlen(valuep)+1, SQLT_STR, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0, OCI_DEFAULT);
+	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
+		err.ociError=ociError;
+		sprintf(err.log,"OCIBindByName unsuccessful");
+		err.msg=" ";
+		throw err;
+	}
+	return *status;
+}
+int BindByName(OCIStmt* stmthp,OCIBind** bnd1p, OCIError* ociError, char* placeholder, int* valuep, sword* status){
+	Error err;
+   	*status=OCIBindByName(stmthp, bnd1p, ociError,(text*)placeholder,-1,(dvoid*) valuep,sizeof(*valuep), SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0, OCI_DEFAULT);
 	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
 		err.ociError=ociError;
 		sprintf(err.log,"OCIBindByName unsuccessful");
@@ -562,7 +572,6 @@ int StmtExecute(OCISvcCtx* ociHdbc, OCIStmt* stmthp, OCIError* ociError, sword* 
 int ParamGet(OCIStmt* stmthp, OCIError* ociError, OCIParam** parmdp, int pos, sword* status){
 	Error err;
 	*status=OCIParamGet(stmthp, OCI_HTYPE_STMT, ociError,(dvoid **)parmdp, (ub4) pos);
-	
 	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
 		err.ociError=ociError;
 		sprintf(err.log,"OCIParamGet unsuccessful");	
@@ -571,13 +580,23 @@ int ParamGet(OCIStmt* stmthp, OCIError* ociError, OCIParam** parmdp, int pos, sw
 	}	
 	return *status;
 }
-int AttrGet(OCIParam* parmdp, sb4 attrval, OCIError* ociError, sword* status){
+int AttrGet(OCIParam* parmdp, sb4* attrval, OCIError* ociError, sword* status){
 	Error err;
-	*status=OCIAttrGet((dvoid*) parmdp, (ub4) OCI_DTYPE_PARAM,(dvoid*) &attrval, (ub4 *) 0, (ub4) OCI_ATTR_DATA_SIZE,(OCIError *) ociError);
-
+	*status=OCIAttrGet((dvoid*) parmdp, (ub4) OCI_DTYPE_PARAM,(dvoid*) attrval, (ub4 *) 0, (ub4) OCI_ATTR_DATA_SIZE,(OCIError *) ociError);
 	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
 		err.ociError=ociError;
 		sprintf(err.log,"OCIAttrGet unsuccessful");
+		err.msg=" ";
+		throw err;
+	}	
+	return *status;
+}
+int AttrSet (OCIStmt* stmthp,int* attributep,OCIError* ociError, sword* status){
+	Error err;
+	*status=OCIAttrSet (stmthp,OCI_HTYPE_STMT,attributep,0,OCI_ATTR_PREFETCH_ROWS,ociError);
+	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
+		err.ociError=ociError;
+		sprintf(err.log,"OCIAttrSet unsuccessful");
 		err.msg=" ";
 		throw err;
 	}	

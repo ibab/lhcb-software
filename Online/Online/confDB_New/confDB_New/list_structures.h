@@ -34,11 +34,13 @@ int DecomposeSysID_bis(int sysID,char* sysIDlist);
 int DefineByPos(OCIStmt* stmthp,OCIDefine** def, OCIError* ociError, int pos, char* valuep, sb4 value_sz, int indp, sword* status);
 int DefineByPos(OCIStmt* stmthp,OCIDefine** def, OCIError* ociError, int pos, int* valuep, sword* status);
 int BindByName(OCIStmt* stmthp,OCIBind** bnd1p, OCIError* ociError, char* placeholder, char* valuep, sword* status);
+int BindByName(OCIStmt* stmthp,OCIBind** bnd1p, OCIError* ociError, char* placeholder, int* valuep, sword* status);
 int HandleAlloc(OCIEnv* ociEnv,OCIStmt** stmthp,OCIError* ociError, sword* status);
 int StmtPrepare(OCIStmt* stmthp,OCIError* ociError, char* stmt, sword* status);
 int StmtExecute(OCISvcCtx* ociHdbc, OCIStmt* stmthp, OCIError* ociError, sword* status);
 int ParamGet(OCIStmt* stmthp, OCIError* ociError, OCIParam** parmdp, int pos, sword* status);
-int AttrGet(OCIParam* parmdp, sb4 attrval, OCIError* ociError, sword* status);
+int AttrGet(OCIParam* parmdp, sb4* attrval, OCIError* ociError, sword* status);
+int AttrSet (OCIStmt* stmthp,int* attributep,OCIError* ociError, sword* status);
 
 class Error
 {
