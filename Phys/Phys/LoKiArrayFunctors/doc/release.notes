@@ -1,9 +1,18 @@
-$Id: release.notes,v 1.15 2008-03-19 08:55:09 cattanem Exp $ 
+$Id: release.notes,v 1.16 2008-03-19 13:14:35 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+
+! 2008-03-19 - Vanya BELYAEV
+
+ - src/Component/TupleTool.cpp
+
+    add new tool: LoKi::Hybrid::TupleTool, 
+    the implementation of IParticleTupleTool abstract interface 
+
 
 !======================== LoKiArrayFunctors v7r2 2008-03-19 ===================
 ! 2008-03-18 - Vanya BELYAEV
