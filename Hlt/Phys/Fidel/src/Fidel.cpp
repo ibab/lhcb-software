@@ -1,4 +1,4 @@
-// $Id: Fidel.cpp,v 1.1.1.1 2008-03-19 11:11:46 pkoppenb Exp $ // Include files
+// $Id: Fidel.cpp,v 1.2 2008-03-19 11:23:24 pkoppenb Exp $ // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
@@ -25,33 +25,32 @@
 
 using namespace LHCb;
 using namespace Gaudi::Units;
-
-
-class Matrix{
-public:            
-  Matrix(double a1,double a2,double a3, double b1,double b2, double b3, double c1, double c2, double c3){
-    a[0]=a1;
-    a[1]=a2;
-    a[2]=a3;
-    b[0]=b1;
-    b[1]=b2;
-    b[2]=b3;
-    c[0]=c1;
-    c[1]=c2;
-    c[2]=c3;
-  }
-  double a[3]; 
-  double b[3];
-  double c[3];
   
-  double det(){
-    double det1=b[1]*c[2]-b[2]*c[1];
-    double det2=-1*(b[0]*c[2]-b[2]*c[0]);
-    double det3=b[0]*c[1]-b[1]*c[0];    
-    double d=a[0]*det1+a[1]*det2+a[2]*det3;
-    return d;
-  }			
-};//class
+  class Matrix{
+  public:            
+    Matrix(double a1,double a2,double a3, double b1,double b2, double b3, double c1, double c2, double c3){
+      a[0]=a1;
+      a[1]=a2;
+      a[2]=a3;
+      b[0]=b1;
+      b[1]=b2;
+      b[2]=b3;
+      c[0]=c1;
+      c[1]=c2;
+      c[2]=c3;
+    }
+    double a[3]; 
+    double b[3];
+    double c[3];
+    
+    double det(){
+      double det1=b[1]*c[2]-b[2]*c[1];
+      double det2=-1*(b[0]*c[2]-b[2]*c[0]);
+      double det3=b[0]*c[1]-b[1]*c[0];    
+      double d=a[0]*det1+a[1]*det2+a[2]*det3;
+      return d;
+    }			
+  };//class
 
 // local
 #include "Fidel.h"
@@ -268,8 +267,8 @@ StatusCode Fidel::execute() {
       n=n.Unit();
       double d3 = -1*((n.X()*pos1.X())+(n.Y()*pos1.Y())+(n.Z()*pos1.Z()));
       double d4 = -1*((n.X()*pos2.X())+(n.Y()*pos2.Y())+(n.Z()*pos2.Z()));
-      double DetDen = n1.X()*((n2.Y()*n.Z()-n2.Z()*n.Y()))-n1.Y()*((n2.X()*n.Z()-n2.Z()*n.X()))+
-        n1.Z()*((n2.X()*n.Y()-n2.Y()*n.X()));
+      //      double DetDen = n1.X()*((n2.Y()*n.Z()-n2.Z()*n.Y()))-n1.Y()*((n2.X()*n.Z()-n2.Z()*n.X()))+
+      //        n1.Z()*((n2.X()*n.Y()-n2.Y()*n.X()));
       Matrix Det(n1.X(),n1.Y(),n1.Z(),n2.X(),n2.Y(),n2.Z(),n.X(),n.Y(),n.Z());
       double den = Det.det();
       Matrix X1_matrix(-1*d1, n1.Y(), n1.Z(), -1*d2, n2.Y(), n2.Z(), -1*d3, n.Y(), n.Z());

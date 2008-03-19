@@ -1,4 +1,4 @@
-// $Id: Fidel.h,v 1.1.1.1 2008-03-19 11:11:46 pkoppenb Exp $
+// $Id: Fidel.h,v 1.2 2008-03-19 11:23:24 pkoppenb Exp $
 #ifndef FIDEL_H 
 #define FIDEL_H 1
 
@@ -14,7 +14,8 @@ class IRelatedPV;
 
 /** @class Fidel Fidel.h
  *  
- *
+ *  Add some doc here
+ *  
  *  @author Sara Furcas
  *  @date   2007-11-12
  */
