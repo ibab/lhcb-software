@@ -1,8 +1,48 @@
 import Online.AllocatorControl, Online.DatapointLoader, Online.Utils, Online.PVSS, Online.PVSSSystems
 from   Online.Streaming.Allocator import FSMmanip as FSMmanip
+std    = Online.PVSS.gbl.std
 log    = Online.Utils.log
 error  = Online.Utils.error
 debug  = None
+
+# =============================================================================
+class FarmSlice(Online.DatapointLoader.DatapointLoader):
+  """ @class FarmActivity
+  
+
+      @author  M.Frank
+      @version 1.0
+  """
+  # ===========================================================================
+  def __init__(self,manager,name):
+    """ Default constructor
+        @param  manager       Reference to PVSS ControlManager
+        @param  name          Name of the datapoint
+
+        @return reference to initialized object
+    """
+    Online.DatapointLoader.DatapointLoader.__init__(self,manager,name)
+    self.dpName               = self.name
+    self.inuse                = self.dp('InUse')
+    self.slice                = self.dp('FSMSlice')
+    self.info                 = self.dp('RunInfo')
+    self.addDp(self.reader)
+
+  # ===========================================================================
+  def addDp(self,deviceIO):
+    "Add all datapoints to deviceIO object"
+    deviceIO.add(self.inuse)
+    deviceIO.add(self.slice)
+    deviceIO.add(self.info)
+    return self
+
+  # ===========================================================================
+  def reset(self):
+    "Add all datapoints to deviceIO object"
+    self.inuse.data = 0
+    self.slice.data = ''
+    self.info.data = ''
+    return self
 
 # =============================================================================
 class FarmRunInfo(Online.DatapointLoader.DatapointLoader):
@@ -55,6 +95,15 @@ class FarmRunInfo(Online.DatapointLoader.DatapointLoader):
     self.partitionID.data   = fr.partitionID.data
     self.nSubFarm.data      = fr.nSubFarm.data
     self.subfarms.data      = fr.subfarms.data
+    return self
+    
+  # ===========================================================================
+  def reset(self):
+    self.runType.data       = ''
+    self.partitionName.data = ''
+    self.partitionID.data   = 0
+    self.nSubFarm.data      = 0
+    self.subfarms.data      = std.vector('std::string')()
     return self
     
   # ===========================================================================
@@ -467,18 +516,20 @@ class FarmConfigurator(FarmDescriptor):
     setup = 'RECO'
     setup = 'ONLINE'
     if setup=='RECO':
-      self.runInfo_type = 'FarmRunInfo'
       self.allocatePartition = self.allocRecoPartition
-      self.loadRunInfo = self.loadRecoRunInfo
-      self.getPartition = self.getRecoPartition
-      info_typ = self.typeMgr.type(self.runInfo_type)
+      self.getPartition      = self.getRecoPartition
+      self.freePartition     = self.freeRecoPartition
+      self.loadRunInfo       = self.loadRecoRunInfo
+      self.runInfo_type      = self.typeMgr.type('RunFarmInfo')
       self.runinfos = Online.PVSS.DpVectorActor(self.manager)
-      self.runinfos.lookupOriginal(self.name+'_Farm??.general.partName',info_typ)
+      self.runinfos.lookupOriginal(self.name+'_Farm??.general.partName',self.runInfo_type)
     else:
-      self.runInfo_type = 'FarmRunInfo'
       self.allocatePartition = self.allocateSlice
-      self.loadRunInfo = self.loadRecoRunInfo
-      self.getPartition = self.allocateSlice
+      self.getPartition      = self.getSlice
+      self.freePartition     = self.freeSlice
+      self.loadRunInfo       = self.loadRecoRunInfo
+      self.sliceType         = self.typeMgr.type('FarmSlice')
+      self.runInfo_type      = self.typeMgr.type('FarmRunInfo')
     
     self.writer   = self.manager.devWriter()
     self.fsm_typ  = self.typeMgr.type('_FwFsmDevice')
@@ -486,74 +537,88 @@ class FarmConfigurator(FarmDescriptor):
     self.allsubfarms = Online.PVSS.DpVectorActor(self.manager)
     self.allsubfarms.lookupOriginal(self.name+'_*.UsedBy',subinfo_typ)
 
-  def allocateSlice(self,rundp_name,partition):
-    rundp_name = 'RECOTEST:LHCb_RunInfo'
+  # ===========================================================================
+  def freeSlice(self,context,rundp_name,partition):
+    slice,runinfo,farm = context
+    if runinfo.partitionName.data != partition:
+      print 'Inconsistent partition names:',slice.partitionName.data,partition
+    log('Reset:'+slice.name+' farm:'+farm.name+' for partition:'+partition,timestamp=1)
     wr = self.manager.devWriter()
+    slice.reset().addDp(wr)
+    farm.reset().addDp(wr)
+    if wr.execute():
+      return 'SUCCESS'
+    return self.error('Failed to save slice information '+slice.name+' for partition:'+partition,timestamp=1)
+
+  # ===========================================================================
+  def getSlice(self,rundp_name,partition):
+    rdr = self.manager.devReader()
+    infos = Online.PVSS.DpVectorActor(self.manager)
+    infos.lookupOriginal(self.name+'_Slice??.RunInfo',self.sliceType)
+    rdr.add(infos.container)
+    if rdr.execute():
+      for info in infos.container:
+        if info.data==rundp_name:
+          nam = self.manager.dpSysElementName(info.name())
+          slice = FarmSlice(self.manager,nam).load()
+          rinfo = FarmRunInfo(self.manager,slice.info.data).load()
+          farm  = FarmRunInfo(self.manager,slice.slice.data).load()
+          if rinfo.partitionName.data != partition:
+            print 'Inconsistent partition names:',rinfo.partitionName.data,partition
+          log('Got partition:'+info.name()+' '+info.data,timestamp=1)
+          return (slice.slice.data,(slice,rinfo,farm))
+      return None
+    return self.error('Failed to load slice information for partition:'+partition,timestamp=1)
+
+  # ===========================================================================
+  def allocateSlice(self,rundp_name,partition):
+    #rundp_name = 'RECOTEST:LHCb_RunInfo'
+    res = self.getPartition(rundp_name,partition)
+    if res:
+      return self.error('[ALREADY_ALLOCATED] Failed to allocate subfarms for partition:'+partition,timestamp=1)
+
     rdr = self.manager.devReader()
 
-    typ = self.typeMgr.type(self.runInfo_type)
     infos = Online.PVSS.DpVectorActor(self.manager)
-    infos.lookupOriginal('*.general.partName',typ)
-
-    typ = self.typeMgr.type('FarmSlice')
+    infos.lookupOriginal(self.name+'_Farm??.general.partName',self.runInfo_type)
     inuse = Online.PVSS.DpVectorActor(self.manager)
-    inuse.lookupOriginal(self.name+'_Slice??.InUse',typ)
-    slices = Online.PVSS.DpVectorActor(self.manager)
-    slices.lookupOriginal(self.name+'_Slice??.FSMSlice',typ)
+    inuse.lookupOriginal(self.name+'_Slice??.InUse',self.sliceType)
 
-    rinf = Online.PVSS.DataPoint(self.manager,Online.PVSS.DataPoint.original(rundp_name+'.general.partName'))
-    rdr.add(rinf)
     rdr.add(inuse.container)
     rdr.add(infos.container)
-    rdr.add(slices.container)
     rdr.execute()
 
-    print 'SIZE:',rundp_name,self.name,partition,len(infos.container),len(inuse.container)
-    print rinf.name(), rinf.data
-    """
-    for dp in infos.container:
-      nam = self.manager.dpElementName(dp.name())
-      print 'INFO:',dp.name(),nam
-    for dp in inuse.container:
-      nam = self.manager.dpElementName(dp.name())
-      print 'INFO:',dp.name(),nam,dp.data
-    """
-    for i in xrange(len(inuse.container)):
-      dp = inuse.container[i]
-      if dp.data == 0:
-        nam = self.manager.dpElementName(dp.name())
-        sys = self.manager.dpSystemName(dp.name())
-        print 'INUSE:',dp.name(),nam,dp.data
-        found = None
-        for i in infos.container:
-          if i.data == partition:
-            found = i
-            break
-        if not found:
-          for i in infos.container:
-            if len(i.data) == 0:
-              found = i
-              break
-        if found:
-          d = self.manager.dpElementName(found.name())
-          s = self.manager.dpSystemName(found.name())
-          slname = s+":"+d
+    found = None
+    for j in infos.container:
+      if j.data == partition:
+        found = j
+        break
+      elif found is None and len(j.data)==0:
+        found = j
+    if found:
+      for i in xrange(len(inuse.container)):
+        dp = inuse.container[i]
+        if dp.data == 0:
+          wr = self.manager.devWriter()
+          nam = self.manager.dpSysElementName(dp.name())
+          slname = self.manager.dpSysElementName(found.name())
           dp.data = 1
           wr.add(dp)
-          slice=Online.PVSS.DataPoint(self.manager,Online.PVSS.DataPoint.original(sys+":"+nam+'.RunInfo'))
-          slice.data = runinfo_dp
-          wr.add(slice)            
-          slice=Online.PVSS.DataPoint(self.manager,Online.PVSS.DataPoint.original(sys+":"+nam+'.FSMSlice'))
-          slice.data = slname
-          wr.add(slice)
-          slinfo = FarmRunInfo(self.manager,slname)
-          slinfo.copyFrom(FarmRunInfo(self.manager,runinfo_dp).load())
+          slice = FarmSlice(self.manager,nam).load()
+          slice.info.data  = rundp_name
+          slice.slice.data = slname
+          slice.addDp(wr)
+          slinfo = FarmRunInfo(self.manager,slname).load()
+          slinfo.copyFrom(FarmRunInfo(self.manager,rundp_name).load())
           slinfo.addDp(wr)
           wr.execute()
-          print 'WE are using ',sys,nam,d
-          return (slname,slice)
+          return (slname,found)
     return None
 
+  # ===========================================================================
+  def loadRecoRunInfo(self,manager,dp):
+    return FarmRunInfo(manager,dp).load()
+  
   # ===========================================================================
   def getRecoPartition(self,rundp_name,partition):
     rdr = self.manager.devReader()
@@ -565,12 +630,13 @@ class FarmConfigurator(FarmDescriptor):
     return None
 
   # ===========================================================================
-  def loadRecoRunInfo(self,manager,dp):
-    return FarmRunInfo(manager,dp).load()
-  
+  def freeRecoPartition(self,name,rundp_name,partition):
+    print 'freePartition:',name,rundp_name,partition
+    pass
+
   # ===========================================================================
   def allocRecoPartition(self,rundp_name,partition):
-    res = self.getPartition(partition)
+    res = self.getPartition(rundp_name,partition)
     return res
 
   # ===========================================================================
@@ -631,17 +697,18 @@ class FarmConfigurator(FarmDescriptor):
           if self.configureFSM(name,partition,'ENABLE'):
             return 'SUCCESS'
           return self.error('Failed to configure subfarm FSMs for partitionn:'+partition,timestamp=1)
-        return self.error('Failed to load run-type for partitionn:'+partition,timestamp=1)
-      return self.error('Failed to allocate subfarms for partitionn:'+partition,timestamp=1)
+        return self.error('Failed to load run-type for partition:'+partition,timestamp=1)
+      return self.error('Failed to allocate subfarms for partition:'+partition,timestamp=1)
     return self.error('Failed to access run info for partition:'+partition,timestamp=1)
   
   # ===========================================================================
   def free(self,rundp_name,partition):
     res = self.getPartition(rundp_name,partition)
     if res:
-      name,dp = res
+      name,context = res
       if FarmDescriptor.free(self,partition,name):
         if self.configureFSM(name,partition,'DISABLE'):
+          self.freePartition(context,rundp_name,partition)
           return 'SUCCESS'
         return self.error('Failed to reset subfarm FSMs for partitionn:'+partition,timestamp=1)
       return self.error('Failed to free subfarms for partitionn:'+partition,timestamp=1)
