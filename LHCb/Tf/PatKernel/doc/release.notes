@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!============================= PatKernel v2r1 2008-03-19 =====================
 ! 2007-03-18 - Stephanie Hansmann-Menzemer
  - fix bug for decoding on demand (no effects on standard tracking)
 
