@@ -1,7 +1,17 @@
-! $Id: release.notes,v 1.52 2008-03-06 14:20:57 jpalac Exp $
+! $Id: release.notes,v 1.53 2008-03-19 12:34:59 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2008-03-19 - Juan PALACIOS
+
+ - src/CopyParticles{.cpp, .h}
+  . Remove all private methods. These were not used anymore. Functionality
+    now in the IParticleCloner and IVertexCloner implementations.
+  . Remove un-necessary typedefs.
+
+ - cmt/requirements
+  . Increase version to v3r2
 
 !======================== MicroDST v3r1 2008-03-05 ====================
 
