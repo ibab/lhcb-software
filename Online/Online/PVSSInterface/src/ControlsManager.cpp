@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ControlsManager.cpp,v 1.7 2007-10-01 14:46:55 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ControlsManager.cpp,v 1.8 2008-03-19 08:07:47 frankm Exp $
 //  ====================================================================
 //  ControlsManager.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: ControlsManager.cpp,v 1.7 2007-10-01 14:46:55 frankm Exp $
+// $Id: ControlsManager.cpp,v 1.8 2008-03-19 08:07:47 frankm Exp $
 //#define _UseSpecializedManip
 
 // Framework include files
@@ -174,12 +174,17 @@ std::string ControlsManager::dpSystemName(const std::string& dp)   {
 /// Extract system name of datapoint from online/original name
 std::string ControlsManager::dpElementName(const std::string& dp)   {
   std::string::size_type id1 = dp.find(":");
-  std::string::size_type id2 = dp.rfind(":",id1+1);
+  std::string::size_type id2 = dp.find(".",id1+1);
   if ( id1 == std::string::npos && id2 == std::string::npos )
     return dp;
   else if ( id2 == id1 )
     return dp.substr(id1+1);
-  return dp.substr(id1+1,id2-id1);
+  return dp.substr(id1+1,id2-id1-1);
+}
+
+/// Extract system name of datapoint from online/original name
+std::string ControlsManager::dpSysElementName(const std::string& dp)   {
+  return dpSystemName(dp)+":"+dpElementName(dp);
 }
 
 /// Extract system name of datapoint from online/original name

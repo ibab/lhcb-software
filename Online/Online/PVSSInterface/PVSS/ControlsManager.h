@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/ControlsManager.h,v 1.3 2007-09-10 09:39:50 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/ControlsManager.h,v 1.4 2008-03-19 08:07:47 frankm Exp $
 //  ====================================================================
 //  ControlsManager.h
 //  --------------------------------------------------------------------
@@ -87,6 +87,8 @@ namespace PVSS {
     static std::string dpSystemName(const std::string& dp);
     /// Extract system name of datapoint from online/original name
     static std::string dpElementName(const std::string& dp);
+    /// Extract system and element name of datapoint from online/original name
+    static std::string dpSysElementName(const std::string& dp);
 
   };
 }      // End namespace PVSS
