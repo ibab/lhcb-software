@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2008-03-19 - Stephanie Hansmann-Menzemer
+ - make clearHits() methode of TStationHitManager public. Needed to run after
+   decoding on demand.
+
 ! 2008-03-04 - Kurt Rinnert
  - fix in DefaultVeloHitManager: the hit preparation always tried to access
    the first cluster in the cluster container to obtain a sensor number,

@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.21 2007-09-10 08:54:31 wouter Exp $
+ *  $Id: TStationHitManager.h,v 1.22 2008-03-19 09:53:58 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -317,10 +317,13 @@ namespace Tf
       std::sort ( m_hits_all.begin(), m_hits_all.end(), SORTER() );
     }
 
+    
+    /// Clear the hit containers for a new event or for running on 
+    /// full event after decoding on demand
+    void clearHits () const;
+  
   protected:
 
-    /// Clear the hit containers for a new event
-    void clearHits () const;
 
     /** Set the hits ready flag for all hits
      *  @param[in] ok     The status flag (true means hits ready, false means not ready)
