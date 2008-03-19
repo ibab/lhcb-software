@@ -31,7 +31,7 @@ use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v4r6     Online
 use OnlineKernel      v1r13    Online
 use OnlineTasks       v1r9     Online
-use Presenter         v0r6     Online
+use Presenter         v0r7     Online
 ### PVSS Distribution only: use PVSS              v1r0    Online
 ### PVSS Distribution only: use PVSSInterface     v1r0    Online
 ### PVSS Distribution only: use PVSSManager       v1r0    Online
