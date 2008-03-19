@@ -1,14 +1,16 @@
-! $Id: release.notes,v 1.53 2008-03-19 12:34:59 jpalac Exp $
+! $Id: release.notes,v 1.54 2008-03-19 13:18:46 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel
 !============================================================
 
 ! 2008-03-19 - Juan PALACIOS
-
+ 
  - src/CopyParticles{.cpp, .h}
   . Remove all private methods. These were not used anymore. Functionality
     now in the IParticleCloner and IVertexCloner implementations.
   . Remove un-necessary typedefs.
+  . Move LHCb event model class includes from .h to .cpp
+  . Add some doxygen documentation.
 
  - cmt/requirements
   . Increase version to v3r2
