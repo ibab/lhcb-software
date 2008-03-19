@@ -1,10 +1,13 @@
-// $Id: CopyParticles.cpp,v 1.13 2008-03-19 12:34:42 jpalac Exp $
+// $Id: CopyParticles.cpp,v 1.14 2008-03-19 13:18:12 jpalac Exp $
 // Include files 
 
 // STL
 #include <functional>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+// from LHCb
+#include <Event/Particle.h>
+#include <Event/Vertex.h>
 // local
 #include "CopyParticles.h"
 //

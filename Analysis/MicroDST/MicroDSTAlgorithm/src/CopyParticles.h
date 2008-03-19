@@ -1,4 +1,4 @@
-// $Id: CopyParticles.h,v 1.7 2008-03-19 12:34:42 jpalac Exp $
+// $Id: CopyParticles.h,v 1.8 2008-03-19 13:18:12 jpalac Exp $
 #ifndef COPYPARTICLES_H 
 #define COPYPARTICLES_H 1
 
@@ -6,12 +6,32 @@
 // from Gaudi
 #include <MicroDST/MicroDSTAlgorithm.h>
 #include <MicroDST/ICloneParticle.h>
-#include <Event/Particle.h>
-#include <Event/Vertex.h>
 
 /** @class CopyParticles CopyParticles.h
  *  
+ * Class to colone LHCb::Particles and related objects from one TES location
+ * to a parallel one.
+ * It inherits the std::string properties InputLocation and OutputPrefix from
+ * MicroDSTCommon. The LHCb::Particles are taken from the TES location 
+ * defined by InputLocation, and are cloned and put in TES location 
+ * "/Event" + OutputPrefix + InputLocation. If InputLocation already contains
+ * a leading "/Event" it is removed.
+ * The actual cloning of individual LHCb::Particles is performed by the 
+ * IParticleCloner, the implementation of which is set by the property 
+ * ICloneParticle (default ParticleCloner)
+ * @see ICloneParticle
+ * @see ParticleCloner
  *
+ * <b>Example</b>: Clone particles from "/Event/Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles" to 
+ * "/Event/MyLocation/Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles" using a ParticleCloner
+ *  @code
+ *
+ *  // Add a CopyParticles instance to a selection sequence
+ *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"CopyParticles"};
+ *  CopyParticles.OutputPrefix = "MyLocation"; // Default.
+ *  CopyParticles.InputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles";
+ *  CopyParticles.ICloneParticle = "ParticleCloner"
+ *  @endcode
  * 
  *  @author Juan PALACIOS
  *  @date   2007-10-16
