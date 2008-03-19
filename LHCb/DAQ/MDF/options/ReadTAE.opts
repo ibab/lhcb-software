@@ -7,12 +7,12 @@ Dump.DumpData                        = 0;
 Dump.FullDump                        = 0;
 Dump.OutputLevel                     = 3;
 StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 0.01;
+StoreExplorerAlg.PrintFreq           = 0.002;
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.ForceLeaves             = true;
 EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
-EventSelector.PrintFreq              = 100;
+EventSelector.PrintFreq              = 200;
 EventSelector.Input                  = {
   "DATA='file://taeData.dat' SVC='LHCb::MDFSelector'"
 };
