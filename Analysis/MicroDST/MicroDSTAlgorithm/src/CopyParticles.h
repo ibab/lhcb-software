@@ -1,4 +1,4 @@
-// $Id: CopyParticles.h,v 1.10 2008-03-19 18:59:53 jpalac Exp $
+// $Id: CopyParticles.h,v 1.11 2008-03-20 13:39:02 jpalac Exp $
 #ifndef COPYPARTICLES_H 
 #define COPYPARTICLES_H 1
 
@@ -28,7 +28,7 @@
  *
  *  // Add a CopyParticles instance to a selection sequence
  *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"CopyParticles"};
- *  CopyParticles.OutputPrefix = "MyLocation"; // Default.
+ *  CopyParticles.OutputPrefix = "MyLocation";
  *  CopyParticles.InputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles";
  *  CopyParticles.ICloneParticle = "ParticleCloner"
  *  @endcode

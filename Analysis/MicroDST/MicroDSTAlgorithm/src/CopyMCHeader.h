@@ -1,4 +1,4 @@
-// $Id: CopyMCHeader.h,v 1.3 2008-03-19 18:59:53 jpalac Exp $
+// $Id: CopyMCHeader.h,v 1.4 2008-03-20 13:39:02 jpalac Exp $
 #ifndef COPYMCHEADER_H 
 #define COPYMCHEADER_H 1
 
@@ -33,7 +33,7 @@
  * 
  *  @todo This code needs to be tested.
  *
- *  @author Juan PALACIOS
+ *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2007-11-02
  */
 class CopyMCHeader : public MicroDSTAlgorithm {

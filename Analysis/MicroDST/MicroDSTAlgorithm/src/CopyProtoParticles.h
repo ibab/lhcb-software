@@ -1,4 +1,4 @@
-// $Id: CopyProtoParticles.h,v 1.4 2007-12-11 17:37:12 jpalac Exp $
+// $Id: CopyProtoParticles.h,v 1.5 2008-03-20 13:39:02 jpalac Exp $
 #ifndef COPYPROTOPARTICLES_H 
 #define COPYPROTOPARTICLES_H 1
 
@@ -13,7 +13,9 @@
  *  of particles given by option InputLocation plus 
  *  ProtoParticles corresponding to all the daughters.
  *
- *  @author Juan PALACIOS
+ *  @todo Fully revise this and add ICloneProtoParticle 
+ *        implementation once it exists.
+ *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2007-10-23
  */
 class CopyProtoParticles : public MicroDSTAlgorithm {
