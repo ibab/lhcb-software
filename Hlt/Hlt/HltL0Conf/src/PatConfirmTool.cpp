@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.cpp,v 1.3 2008-03-19 10:00:24 smenzeme Exp $
+// $Id: PatConfirmTool.cpp,v 1.4 2008-03-20 14:20:32 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -8,11 +8,12 @@
 // event
 #include "Event/Track.h"
 #include "Event/State.h"
+#include "Event/StateParameters.h"
 
 // local
 #include "PatConfirmTool.h"
 #include "TrackParabel.h"
-
+#include "ParabolaHypothesis.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatConfirmTool
 //
@@ -36,9 +37,9 @@ PatConfirmTool::PatConfirmTool( const std::string& type,
   declareInterface<ITrackConfirmTool>(this);
  
   //variables to be defined in job options
-  declareProperty("nSigma",m_nsigma=5);
+  declareProperty("nSigma",m_nsigma=5.);
   declareProperty("debugMode", m_debugMode = false);
-  
+  declareProperty("minHitsInOT", m_minHitsInOT = 14 );
 }
 //=============================================================================
 // Destructor
@@ -67,57 +68,75 @@ StatusCode PatConfirmTool::initialize(){
     //tool for debug information
     m_DataStore = tool<L0ConfDataStore>("L0ConfDataStore");
   }
+
+  m_l0ConfExtrapolator = tool<IL0ConfExtrapolator>("L0ConfExtrapolator");
   
   return StatusCode::SUCCESS;
 
 }
 
-
 //=============================================================================
 StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Track*>& outputTracks ) 
 {
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"--> execute"<<endmsg;
   ChronoEntity tDecoding, tTracking;
-  if(m_debugMode) tDecoding.start();
-  
-  /*
-   *    Define track hypothesis from seed state (parabola model) and 
-   *    decode IT and OT hits in search window
-   */
-  TrackParabel tp(seedState, m_nsigma); 
+  if (m_debugMode) tDecoding.start();
+
+  // Define track hypothesis from seed state (parabola model) and
+  // decode IT and OT hits in search window
+  ParabolaHypothesis tp = m_l0ConfExtrapolator->getParabolaHypothesis( seedState, m_nsigma );
   m_tHitManager->prepareHitsInWindow(tp);
 
-  if( msgLevel(MSG::DEBUG) ) 
-    debug()<<" number of decoded hits: "<<m_tHitManager->hits().size()<<endmsg;
-
-  /*
-   *    Prepare (sort) hits for PatSeeding tool and perform track search on
-   *    seelcted hits
-   */
-  if(m_debugMode) {
+  if (m_debugMode) {
     tDecoding.stop();
-    tTracking.start();
-  }
- 
-  m_patSeedingTool->prepareHits();
-  m_patSeedingTool->performTracking(outputTracks);
-
-  if( msgLevel(MSG::DEBUG) ) 
-    debug()<<"tracks found sofar in PatSearch Tool: "<<outputTracks.size()<<endmsg;
-  
-  if(m_debugMode) {
-    tTracking.stop();
-    info()<<"Pat: #decoded hits"<<m_tHitManager->hits().size() <<endmsg;
-    
+    debug()<<"--> write dec time"<<endmsg;
     m_DataStore->nTHits.push_back( m_tHitManager->hits().size() ) ;
     m_DataStore->decodingTime.push_back( tDecoding.eTotalTime() );
-    m_DataStore->trackingTime.push_back( tTracking.eTotalTime() );    
-    info()<<"tTracking.eTotalTime() "<< tTracking.eTotalTime()+tDecoding.eTotalTime()<<endmsg;
-    
+    m_DataStore->trackHypo.push_back(new ParabolaHypothesis(tp));
+    debug() << " number of decoded hits: " << m_tHitManager->hits().size() << endreq;
+    tTracking.start();
   }
 
-  m_tHitManager->clearHits();
- 
-  return StatusCode::SUCCESS;
+  unsigned minHits = m_minHitsInOT;
+  // work out if we're likely to hit the IT - if so, we're satisfied with
+  // half the number of hits
+  double x = seedState.x() + seedState.tx() *
+	  (StateParameters::ZBegT - seedState.z());
+  double y = seedState.y() + seedState.ty() *
+	  (StateParameters::ZBegT - seedState.z());
+  if (std::abs(x) < 700. && std::abs(y) < 250.) minHits /= 2;
+  else {
+    x += seedState.tx() * (StateParameters::ZMidT - StateParameters::ZBegT);
+    y += seedState.ty() * (StateParameters::ZMidT - StateParameters::ZBegT);
+    if (std::abs(x) < 700. && std::abs(y) < 250.) minHits /= 2;
+    else {
+      x += seedState.tx() * (StateParameters::ZEndT - StateParameters::ZMidT);
+      y += seedState.ty() * (StateParameters::ZEndT - StateParameters::ZMidT);
+      if (std::abs(x) < 700. && std::abs(y) < 250.) minHits /= 2;
+    }
+  }
+
+  if ( m_tHitManager->hits().size() >= minHits ) {
+    m_patSeedingTool->prepareHits();
+    // modify the covariance matrix, as PatSeedingTool will search in the one
+    // sigma range per default
+    LHCb::State state(seedState);
+    state.covariance() *= m_nsigma * m_nsigma;
+    m_patSeedingTool->performTracking(outputTracks, &state);
+  }
+
+  if (m_debugMode) {
+    tTracking.stop();
+    m_DataStore->trackingTime.push_back( tTracking.eTotalTime() );    
+    if (msgLevel(MSG::DEBUG) ) {
+      debug() << "tTracking.eTotalTime() "
+              << tTracking.eTotalTime() + tDecoding.eTotalTime() << endreq;
+      debug() << "tracks found sofar in PatSearch Tool: " << outputTracks.size() << endreq;
+    }
+  }
   
+  //FIXME add hit cleaning when committed
+  //m_tHitManager->cleanHits();
+  return StatusCode::SUCCESS;
 }
 

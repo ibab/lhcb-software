@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.h,v 1.1 2007-11-16 11:44:02 albrecht Exp $
+// $Id: PatConfirmTool.h,v 1.2 2008-03-20 14:23:38 albrecht Exp $
 #ifndef PATCONFIRMTOOL_H 
 #define PATCONFIRMTOOL_H 1
 
@@ -14,7 +14,7 @@
 #include "TfKernel/TStationHitManager.h"
 #include "PatKernel/PatForwardHit.h"
 
-
+#include "IL0ConfExtrapolator.h"
 #include "L0ConfDataStore.h"
 
 namespace LHCb{
@@ -44,22 +44,22 @@ public:
   // Initialize method
   virtual StatusCode initialize();
 
-  StatusCode tracks(const LHCb::State& seedState, std::vector<LHCb::Track*>& outputTracks );
+  StatusCode tracks(const LHCb::State& seedState, std::vector<LHCb::Track*>& outputTracks);
   
 protected:
   
 private:
   //variables declared in job options
-  int m_nsigma;
+  double m_nsigma;
   bool m_debugMode;
+  unsigned m_minHitsInOT;
 
   Tf::TStationHitManager <PatForwardHit> *  m_tHitManager;
   
   IPatSeedingTool*  m_patSeedingTool;
-  
+  IL0ConfExtrapolator* m_l0ConfExtrapolator;
+
   //debug information
   L0ConfDataStore* m_DataStore;
-
-
 };
 #endif // PATCONFIRMTOOL_H
