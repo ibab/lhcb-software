@@ -5,7 +5,7 @@
 \title{Histogram DB for Online Monitoring -- User's Manual}
 \doctyp{}
 \dociss{4}
-\docrev{6}
+\docrev{7}
 \doccre{March 21, 2007}
 \docmod{\today}
 \docref{}
@@ -229,14 +229,17 @@ set of needed parameters
 A first prototype of the DB has been implemented under Oracle on the
 CERN Oracle server and is available for tests.
 	
-In June 2007 the DB has migrated to the LHCb Oracle server at point8,
-that can be seen from the cern network only.
+Since June 2007 the DB is available at the pit:\\
+a first version, sitting on the oracle server lbora01 and having TNS identifier
+``HISTOGRAMDB'',  is still available for tests;\\
+the {\bf production DB} is available on the main Oracle server (RAC cluster)
+since October 2007. Its TNS identifier is {\bf HISTDB}. This is the DB to be
+used for real histograms produced by the Online system.
 
-The connection string is \\
-\centerline{$<$account$>$/$<$password$>$@lbora01:1528/HISTOGRAMDB}
-where $<$account$>$ is \\
-{HIST\_READER}   (read--only, password=''welcome'') or \\
-{HIST\_WRITER} 
+Two accounts are available:
+
+{HIST\_READER}   (read--only, password=''reader'') or \\
+{HIST\_WRITER}  (ask the password to DB mantainer)
 
 The DB can be accessed through a C++ API or interactively through a
 Web interface written in PHP. In order to minimize client load and
@@ -246,13 +249,17 @@ precompiled on the Oracle server.
 
 \section{Web interface}
 
-It is available for test at the address\\
-{\it https://www.cern.ch/ggrazian/lhcb/OnlineHistDB/index.php}
+It is available at the address\\
+{\it http://lbhistogramdb.cern.ch }
 
-while the production address (visible only from the CERN network)
-will be \\
-\centerline{ \it http://lbweb01:8090/histogramdb}  
-(or { \it http://web01:8090/histogramdb} from the pit).
+world-wide, and at 
+{\it http://histogramdb}
+
+from the LHCb online network at the pit.
+
+{ \small For the old test DB at CERN you can still use\\
+{\it https://www.cern.ch/ggrazian/lhcb/OnlineHistDB/index.php}}
+
 
 It is intended to be the most suitable tool to browse available
 histograms, edit the display options and the automatic analysis, including
@@ -265,13 +272,11 @@ most suitable tool for that task.
 It is also suited for uploading {\bf reference histograms}. Users should
 provide ROOT files containing all the reference histograms of a given
 task, that could be simply a saveset files. \\
-These can be uploaded through the ``Task Editor'' link at \\
-{ \it http://lbweb01:8090/histogramdb} \\
-A tool is provided to check the file content for missing or unknown histograms.
-According to the convention of \cite{dbdesign}, files are saved as \\
-$<$Reference\_root$>$/$<$task name$>$/$<$datatype$>$\_$<$startrun$>$.\\
-where the fields $<$datatype$>$ and $<$startrun$>$ allow to define
-different reference for different run condition and time range. 
+These can be uploaded through the ``Task Editor'' link on the web interface.
+A tool is provided to check the file content for missing or unknown histograms,
+and save the files according to the correct convention. It is possible to define
+different reference histograms for different time ranges and run condition.
+
 
 \section{C++ Interface}
 

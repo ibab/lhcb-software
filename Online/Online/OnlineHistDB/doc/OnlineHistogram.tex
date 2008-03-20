@@ -287,12 +287,14 @@
 
 
 \item    int {\bf declareAnalysis}(std::string Algorithm,\\\mbox{}~~~~~~~~~ 
-		      std::vector$<$float$>$* warningThr=NULL,\\\mbox{}~~~~~~~~~ 
-		      std::vector$<$float$>$* alarmThr=NULL,\\\mbox{}~~~~~~~~~ 
-		      int instance=1);
+                      std::vector$<$float$>$* warningThr=NULL,\\\mbox{}~~~~~~~~~ 
+                      std::vector$<$float$>$* alarmThr=NULL,\\\mbox{}~~~~~~~~~ 
+                      std::vector$<$float$>$* inputs=NULL,\\\mbox{}~~~~~~~~~ 
+                      int instance=1);
 
  declare an analysis to be performed on the histogram set. If the algorithm
- requires some parameters, the warning and alarm values must be
+ requires some parameters, the input parameters and the warning and alarm 
+ thresholds for output parameters must be
  specified as vectors of floats and will be set for all histograms in
  set (then, you can specify values for single histograms with the {\it
  setAnalysis} method. 
@@ -303,22 +305,24 @@
 
 
 \item    bool {\bf setAnalysis}(int AnaID,\\\mbox{}~~~~~~~~~ 
-		   std::vector$<$float$>$* warningThr=NULL,\\\mbox{}~~~~~~~~~ 
-		   std::vector$<$float$>$* alarmThr=NULL);
+                   std::vector$<$float$>$* warningThr=NULL,\\\mbox{}~~~~~~~~~ 
+                   std::vector$<$float$>$* alarmThr=NULL,\\\mbox{}~~~~~~~~~ 
+                   std::vector$<$float$>$* inputs=NULL);
 
  updates parameters for analysis with ID AnaID (for this histogram only). Returns true on success
 
 
 \item    bool {\bf getAnaSettings}(int AnaID,\\\mbox{}~~~~~~~~~
-		      std::vector$<$float$>$* warn,\\\mbox{}~~~~~~~~~ 
-		      std::vector$<$float$>$* alarm,\\\mbox{}~~~~~~~~~
-		      bool \&mask);
+                      std::vector$<$float$>$* warn,\\\mbox{}~~~~~~~~~ 
+                      std::vector$<$float$>$* alarm,\\\mbox{}~~~~~~~~~
+                      std::vector$<$float$>$* inputs,\\\mbox{}~~~~~~~~~
+                      bool \&mask);
 
  gets parameters for analysis with ID AnaID. Returns true on success
 
 
 \item    bool {\bf maskAnalysis}(int AnaID,\\\mbox{}~~~~~~~~~
-		    bool Mask=true);
+                    bool Mask=true);
 
  masks analysis with ID AnaID. Use Mask=false to unmask. Returns true on success
 
