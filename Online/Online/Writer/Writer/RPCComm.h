@@ -131,7 +131,7 @@ namespace LHCb {
   "User-Agent: MDFWriterNet\n" \
   "Host: %s\n" \
   "Content-Type: text/xml\n" \
-  "Content-Length: %d\n\n" \
+  "Content-Length: %zd\n\n" \
 
 
 #endif /*RPCCOMM_H*/
