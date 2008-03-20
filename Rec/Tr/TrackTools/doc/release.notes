@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2008-03-20 - Manuel Tobias Schiller
+ - fixed bug in FastMomentumEstimate.cpp: sigmaQOverP used to be negative
+   for qOverP negative
+
 !======================== TrackTools v3r4 2008-02-08 ========================
 ! 2008-02-08 - Marco Cattaneo
  - Add missing includes following changes in event model includes

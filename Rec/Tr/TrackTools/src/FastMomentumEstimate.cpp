@@ -1,5 +1,6 @@
 
 // Include files
+#include <cmath>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -88,7 +89,7 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* tState, double& q
   }
    
   qOverP = x0/(p*1000000);
-  sigmaQOverP = m_tResolution*qOverP;
+  sigmaQOverP = m_tResolution * std::fabs(qOverP);
 
   return StatusCode::SUCCESS;
 }
@@ -124,7 +125,7 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* veloState, const 
   double proj = sqrt( ( 1. + txV*txV + tyV*tyV ) / ( 1. + txV*txV ) );
 
   qOverP = (txV-txT)/( coef * Gaudi::Units::GeV * proj );
-  sigmaQOverP = m_veloPlusTResolution*qOverP;
+  sigmaQOverP = m_veloPlusTResolution * std::fabs(qOverP);
   
   return StatusCode::SUCCESS;
 }
