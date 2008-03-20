@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.5 2007-12-10 18:02:35 albrecht Exp $
+// $Id: MuonSeedTool.cpp,v 1.6 2008-03-20 11:42:01 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -74,6 +74,15 @@ StatusCode MuonSeedTool::initialize()
 
   //tool for debug information
   m_DataStore = tool<L0ConfDataStore>("L0ConfDataStore");
+
+  //check vectors set by job options
+  if( 4!=m_sigmaX2.size() || 4!=m_sigmaY2.size() 
+      || 4!=m_sigmaTx2.size() || 4!=m_sigmaTy2.size() 
+      || 4!=m_sigmaX2NoM1.size() || 4!=m_sigmaY2NoM1.size() 
+      || 4!=m_sigmaTx2NoM1.size() || 4!=m_sigmaTy2NoM1.size() ){
+    error()<<"Size of search winow vectors is not valid, check you options!"<<endmsg;
+    return StatusCode::FAILURE;
+  }
   
   return StatusCode::SUCCESS;
 }
@@ -97,13 +106,11 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
 
   MuonTileID tileM2 = lhcbIDs[0].muonID();
   MuonTileID tileM3 = lhcbIDs[1].muonID();
-  // always()<<"station of m2: "<<tileM2.station() <<endmsg;
-  //   always()<<"station of m3: "<<tileM3.station() <<endmsg;
 
   int muonRegion;
   if (tileM2){
     muonRegion = tileM2.region();
-    //always()<<"muonRegion "<< muonRegion<<endmsg;
+    if(msgLevel(MSG::DEBUG)) debug()<<"muonRegion "<< muonRegion<<endmsg;
   }
   else{
     err()<<"No valid Muon Tile in M2, quit loop"<<endmsg;
