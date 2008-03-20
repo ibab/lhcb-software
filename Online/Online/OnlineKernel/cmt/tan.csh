@@ -13,4 +13,3 @@ $MIDITERM "setenv PROCESSNAME INQUIRETST_0; $EXEC rtl_tan_inquire_test -c -q" &
 sleep 2
 xterm -e "setenv PROCESSNAME TANMON_0;      $EXEC tanmon -c" &
 setenv PROCESSNAME TANDBDUMP_0; $EXEC rtl_tandb_dump
-
