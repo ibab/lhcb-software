@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.cpp,v 1.4 2008-02-13 06:40:26 frankb Exp $
+// $Id: MonitoringDisplay.cpp,v 1.5 2008-03-20 17:10:22 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.4 2008-02-13 06:40:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.5 2008-03-20 17:10:22 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -120,7 +120,7 @@ void MonitoringDisplay::showTasks(const Nodeset& ns) {
 	    else if ( (typ=nullstr(nam,"_RCV")) ) {}
 	    else if ( (typ=nullchr(node,'_')) && c.type=='C' ) {
 	      *typ = 0;
-	      float perc=(*ib).ctrl.tot_produced>0 ? c.events/(*ib).ctrl.tot_produced : 0;
+	      float perc=(*ib).ctrl.tot_produced>0 ? 100*(c.events/(*ib).ctrl.tot_produced) : 0;
 	      sprintf(txt[nTsk++],fmt,++typ,sstat[size_t(c.state)],c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],c.events,perc);
 	      if ( nTsk==2 ) {
 		disp->draw_line_normal("%-50s%-50s",txt[0],txt[1]);
