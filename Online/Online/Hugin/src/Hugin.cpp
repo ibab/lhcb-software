@@ -134,7 +134,6 @@ void HuginRPC::rpcHandler()
   connection *conns = (connection *)malloc(len*sizeof(connection));
   connection **oconns = (connection **)malloc(len*sizeof(connection*));
   connection **oconns1 = (connection **)malloc(len*sizeof(connection*));
-  int tellpos=0;
   int i;
   for (i=0;i<len;i++)
   {
@@ -226,7 +225,7 @@ void HuginRPC::rpcHandler()
 }
 
 #include "errno.h"
-int main(int argc, char* argv[])
+int main(/*int argc, char* argv[]*/)
 {
   CONFDB *db;
 //  int dum[21];

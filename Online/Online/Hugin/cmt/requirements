@@ -10,7 +10,6 @@ use DIM v* Online
 
 
 application   Hugin Hugin.cpp
-application   Test rpc_client.cpp
 
 apply_pattern package_shlibflags
 macro_append confDBpython_shlibflags $(Boost_linkopts_python)
