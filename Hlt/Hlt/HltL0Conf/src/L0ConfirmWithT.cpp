@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.cpp,v 1.5 2007-12-11 09:51:22 hernando Exp $
+// $Id: L0ConfirmWithT.cpp,v 1.6 2008-03-20 14:18:11 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -31,6 +31,8 @@ L0ConfirmWithT::L0ConfirmWithT( const std::string& type,
 {
   declareInterface<ITracksFromTrack>(this);
   declareProperty("trackingTool", m_trackingTool = "TsaConfirmTool");
+  declareProperty("debugMode",m_debugMode = false );
+  declareProperty("particleType", m_particleTypeTMP = 0 );
 }
 //=============================================================================
 // Destructor
@@ -46,100 +48,71 @@ StatusCode L0ConfirmWithT::initialize()
   }
   debug() << " Initialize L0ConfirmWithT" << endmsg;
 
-  // m_TrackConfirmTool=tool<ITrackConfirmTool>( m_trackingTool , this );
-  m_TrackConfirmTool=tool<ITrackConfirmTool>( m_trackingTool );
+  // check if particle type is valid
+  if ( m_particleTypeTMP < Muon || m_particleTypeTMP >= Last) {
+	fatal() << "Unknown particle type " << m_particleTypeTMP << endreq
+		<< "Can't continue." << endreq;
+	return StatusCode::FAILURE;
+  }
+  m_particleType = static_cast<ParticleType>(m_particleTypeTMP);
+
+  // Pattern recognition tool
+  m_TrackConfirmTool=tool<ITrackConfirmTool>( m_trackingTool , this );
+
+  // to store debug information
+  m_DataStore = tool<L0ConfDataStore>("L0ConfDataStore");
+
+  // tool to extrapolate states
+  m_l0ConfExtrapolator = tool<IL0ConfExtrapolator>("L0ConfExtrapolator");
+
+  info() << "Selected particle type " << m_particleType << endmsg;
 
   return sc;
 }
 
-
-
-StatusCode L0ConfirmWithT::tracksFromTrack( const LHCb::Track& seed,
-                                            std::vector<LHCb::Track*>& tracks )
+StatusCode L0ConfirmWithT::tracksFromTrack(
+		const LHCb::Track& seed,
+		std::vector<LHCb::Track*>& tracks )
 {
-  if(msgLevel(MSG::DEBUG)) debug()<<"enter tracksFromTrack method"<<endmsg;
-  
-  LHCb::State* seedStatePos = seed.firstState().clone();
-  LHCb::State* seedStateNeg = seed.firstState().clone();
-  StatusCode sc = extrapolateToT3( *seedStatePos, *seedStateNeg );
-  
-  //do the tracks
-  m_TrackConfirmTool->tracks( *seedStatePos , tracks );
-
-  if( 0 != seedStateNeg->x() ){
-    //is only set for calo seed, set to 0 for muon
-    //preliminary solution JA 2007-07-04
-    m_TrackConfirmTool->tracks( *seedStateNeg , tracks );
+  if ( msgLevel(MSG::DEBUG) )
+	  debug() << "enter tracksFromTrack method" << endmsg;
+  if ( seed.nStates() < 1 ) {
+    error() << "No states on track - skipping" << endreq;
+    if ( m_debugMode ) {
+      m_DataStore->nTHits.push_back( 0 );
+      m_DataStore->decodingTime.push_back( 0 );
+      m_DataStore->trackingTime.push_back( 0 );
+    }
+    return StatusCode::SUCCESS;
   }
-
-  delete seedStateNeg;
-  delete seedStatePos;
+  
+  // get state(s) for the track search which we want to confirm
+  // the L0 decision
+  LHCb::State seedStates[2];
+  int nStates = 1;
+  switch (m_particleType) {
+	  case Muon:
+		  m_l0ConfExtrapolator->muon2T( seed , seedStates[0] );
+		  break;
+	  case Hadron:
+		  m_l0ConfExtrapolator->hcal2T( seed , seedStates[0] , seedStates[1] );
+		  ++nStates;
+		  break;
+	  case Electron:
+		  m_l0ConfExtrapolator->ecal2T( seed , seedStates[0] , seedStates[1] );
+		  ++nStates;
+		  break;
+	  default:
+		  // Unknown particle type, complain
+      error()<<"unknown particle type, return.."<<endmsg;
+      return StatusCode::FAILURE;
+  }
+  
+  StatusCode sc;
+  while (nStates--) {
+    sc = m_TrackConfirmTool->tracks( seedStates[nStates], tracks );
+	  if (sc.isFailure()) break;
+  }
+  
   return sc;
-}
-
-StatusCode L0ConfirmWithT::extrapolateToT3( LHCb::State& statePos, LHCb::State& stateNeg )
-{
-
-  double zT3 = 9315.;//middle T3
-  double zState = statePos.z();
-  double deltaZ = zState - zT3;
-  double xT3Pos = 0;double xT3Neg = 0;double yT3 = 0;
-  double txPos = 0;double txNeg =0;double ty = 0;
-  
-  /*
-   *  this is a preliminary solution, if track types for muon and calo 
-   *  tracks are availble the algorithm will choose depending on this type! 
-   *  JA 2007-07-04
-   */
-  if( zState > 13700 ){
-    //muon seed, has sensible tx,ty
-
-    xT3Pos = statePos.x() - statePos.tx() * deltaZ;
-    yT3 = statePos.y() - statePos.ty() * deltaZ;
-    txPos = statePos.tx();
-    ty = statePos.ty();
-  }
-  else if(zState == 12700){
-    //ecal seeding, extrapolate according to parametrized cluster energy
-   
-    double alpha = 1536443.236032;
-    double eCluster = 1./double(statePos.qOverP());
-    
-    xT3Pos = statePos.x() * zT3 / zState - alpha/eCluster;
-    yT3 = statePos.y() * zT3 / zState;
-    txPos = (statePos.x()-xT3Pos)/deltaZ;
-    ty = (statePos.y()-yT3)/deltaZ;
-
-    xT3Neg = statePos.x() * zT3 / zState + alpha/eCluster;
-    txNeg = (statePos.x()-xT3Neg)/deltaZ;
-    
-  }
-  else if( 12830 == zState ){
-    //HCal seeding with enough energy in ECal
-    double eCluster = 1./double(statePos.qOverP());
-
-    xT3Pos  = statePos.x()*zT3/zState - ( 11.5+1.585e6/eCluster );
-    yT3  = statePos.y()*zT3/zState;
-    txPos = (statePos.x()-xT3Pos)/deltaZ;
-    ty = (statePos.y()-yT3)/deltaZ;
-    xT3Neg  = statePos.x()*zT3/zState + ( 11.5+1.585e6/eCluster );
-    txNeg = (statePos.x()-xT3Neg)/(deltaZ);
-  }
-  else if( 13690 == zState ){
-    //HCal seeding only
-    double eCluster = 1./double(statePos.qOverP());
-    
-    xT3Pos  = statePos.x()*zT3/zState - ( 17.+1.712e6/eCluster );
-    yT3  = statePos.y()*zT3/zState;
-    txPos = (statePos.x()-xT3Pos)/deltaZ;
-    ty = (statePos.y()-yT3)/deltaZ;
-    xT3Neg  = statePos.x()*zT3/zState + ( 17.+1.712e6/eCluster );
-    txNeg = (statePos.x()-xT3Neg)/(deltaZ);
-
-  }
-  
-  statePos.setState( xT3Pos , yT3 , zT3 , txPos , ty , statePos.qOverP()); 
-  stateNeg.setState( xT3Neg , yT3 , zT3 , txNeg , ty , stateNeg.qOverP());
-
-  return StatusCode::SUCCESS;
 }

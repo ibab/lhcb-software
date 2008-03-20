@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.h,v 1.2 2007-11-16 11:10:54 albrecht Exp $
+// $Id: L0ConfirmWithT.h,v 1.3 2008-03-20 14:18:06 albrecht Exp $
 #ifndef L0CONFIRMWITHT_H 
 #define L0CONFIRMWITHT_H 1
 
@@ -7,6 +7,8 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "TrackInterfaces/ITracksFromTrack.h"            // Interface
 
+#include "L0ConfDataStore.h"
+#include "IL0ConfExtrapolator.h"
 class ITrackConfirmTool;
 
 /** @class L0ConfirmWithT L0ConfirmWithT.h
@@ -38,10 +40,23 @@ protected:
 
 private:
 
-  StatusCode extrapolateToT3( LHCb::State& statePos, LHCb::State& stateNeg );
+  bool m_debugMode;
+  
+  IL0ConfExtrapolator* m_l0ConfExtrapolator;
   
   ITrackConfirmTool* m_TrackConfirmTool;
- std::string m_trackingTool;
+  std::string m_trackingTool;
+
+  //debug information
+  L0ConfDataStore* m_DataStore;
+  // select particle type:
+  //	0 = muon
+  //	1 = hadron
+  //	2 = electron
+  typedef enum { Muon = 0, Hadron, Electron, Last } ParticleType;
+  ParticleType m_particleType;
+  // temporary particle type - verified to be valid in initialize
+  int m_particleTypeTMP;
 
 };
 #endif // L0CONFIRMWITHT_H
