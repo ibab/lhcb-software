@@ -1,0 +1,6 @@
+<lcgdict>
+  <selection>
+    <class pattern="ROMon::*"/>
+    <function pattern="ROMon::*"/>
+  </selection>
+</lcgdict>

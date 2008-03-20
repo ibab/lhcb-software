@@ -333,7 +333,7 @@ std::string MDFWriterNet::getNewFileName(unsigned int runNumber)
   char buf[MAX_FILE_NAME];
   static unsigned long random = 0;
   random++;
-  sprintf(buf, "%s/%u/%s%06u.%02u%08lu.%s",
+  sprintf(buf, "%s/%u/%s%09u.%02u%06lu.%s",
 	  m_directory.c_str(),runNumber,
 	  m_filePrefix.c_str(),
 	  runNumber,m_streamID,// random,
