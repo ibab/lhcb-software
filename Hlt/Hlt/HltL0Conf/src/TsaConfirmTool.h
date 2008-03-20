@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.h,v 1.4 2007-11-16 11:22:31 albrecht Exp $
+// $Id: TsaConfirmTool.h,v 1.5 2008-03-20 14:24:05 albrecht Exp $
 #ifndef TSACONFIRMTOOL_H 
 #define TSACONFIRMTOOL_H 1
 
@@ -13,7 +13,7 @@
 #include "TsaKernel/ITsaSeedTrackCnvTool.h"
 
 #include "L0ConfDataStore.h"
-
+#include "IL0ConfExtrapolator.h"
 /** @class TsaConfirmTool TsaConfirmTool.h
  *  
  *
@@ -39,7 +39,7 @@ namespace LHCb{
 }
 
 class TsaConfirmTool : public GaudiTool, virtual public ITrackConfirmTool {
- public: 
+public: 
   /// Standard constructor
   TsaConfirmTool( const std::string& type, 
                   const std::string& name,
@@ -52,11 +52,11 @@ class TsaConfirmTool : public GaudiTool, virtual public ITrackConfirmTool {
 
   StatusCode tracks(const LHCb::State& seedState, std::vector<LHCb::Track*>& outputTracks );
      
- protected:
+protected:
 
- private:
+private:
   //variables declared in job options
-  int m_nsigma;
+  double m_nsigma;
   bool m_debugMode;
   bool m_restrictTx;
   bool m_restrictTy;
@@ -67,6 +67,8 @@ class TsaConfirmTool : public GaudiTool, virtual public ITrackConfirmTool {
 
   std::string m_selectorType;
   bool m_calcLikelihood; 
+
+  IL0ConfExtrapolator* m_l0ConfExtrapolator;
 
   //TStationHitManager does decoding on demand
   Tf::Tsa::TStationHitManager* m_hitMan;
@@ -87,5 +89,6 @@ class TsaConfirmTool : public GaudiTool, virtual public ITrackConfirmTool {
   //debug information
   L0ConfDataStore* m_DataStore;
 
+  unsigned m_minHitsInOT;
 };
 #endif // TSACONFIRMTOOL_H
