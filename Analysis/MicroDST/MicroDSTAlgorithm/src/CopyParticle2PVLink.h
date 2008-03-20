@@ -1,4 +1,4 @@
-// $Id: CopyParticle2PVLink.h,v 1.4 2008-03-20 13:39:02 jpalac Exp $
+// $Id: CopyParticle2PVLink.h,v 1.5 2008-03-20 14:00:06 jpalac Exp $
 #ifndef COPYPARTICLE2PVLINK_H 
 #define COPYPARTICLE2PVLINK_H 1
 
@@ -41,11 +41,11 @@
  *  <b>Example</b>: Clone LHCb::Particle -> LHCb::recVertex associations
  *  from "/Event/Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particle2VertexRelations"
  *  to "/Event/MyLocation/Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particle2VertexRelations"
- *  <code>
+ *  @code
  *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"CopyParticle2PVLink"};
  *  CopyParticle2PVLink.InputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particle2VertexRelations";
  *  CopyParticle2PVLink.OutputPrefix = "MyLocation";
- *  </endcode>
+ *  @endcode
  *
  *  @todo The dependencies locations of two other algorithms are a bit annoying. Try to fix this.
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
