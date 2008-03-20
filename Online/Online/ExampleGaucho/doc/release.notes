@@ -1,11 +1,8 @@
 package ExampleGaucho
-version v2r5
-
 ! Example code to run and test Gaucho  online publishing services
 
-! 20080117 = ExampleGaucho v2r5 - Eric van Herwijnen
-  - remove HelloWorld, ParentAlg and SubAlg as they conflict with algorithm names in
-  the gaudi tutorial
+! 20080320 = ExampleGaucho v3r0 - Jose Helder Lopes
+  - Updated to use MonObjects
 
 ! 20070820 = ExampleGaucho v2r4 - Eric van Herwijnen
   - added some code to easily generate arbitrary # of histograms
@@ -23,3 +20,10 @@ version v2r5
 ! 20050611 - ExampleGaucho v1r0 - Jose Helder Lopes
   - New package to separate testing code from the main deirectory of 
     GauchoJob application.
+
+! 20080319 - ExampleGaucho v2r4 - Jose Helder Lopes
+  - Include examples of MonObjects use 
+  - Moved startgaudijob script to cmt and deleted the job directory. Dropped job directory
+  - Included in startgaudijob script instructions on how to run GaudiExample
+  - Drop reference to a general c-struct service. This doesn't fit into the present MonObject setup
+  - Added property SleepTime to control interval between events from options file

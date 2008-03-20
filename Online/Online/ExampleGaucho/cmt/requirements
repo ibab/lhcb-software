@@ -1,6 +1,6 @@
 #============================================================================
 package           ExampleGaucho
-version           v2r4
+version           v3r0
 
 #============================================================================
 # Structure, i.e. directories to process
@@ -12,17 +12,23 @@ include_path      none
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 
-use GaudiKernel v*
+use GaudiKernel v*  
 use CLHEP v1 LCG_Interfaces
+use Boost v* LCG_Interfaces
 use OnlineKernel v* Online
-use GaudiOnline v* Online
+#use GaudiOnline v* Online
 use GaudiSvc v*
-
+use Gaucho v* Online
+use GaudiUtils v*
 
 #============================================================================
 # Component library building rule
 #============================================================================
 library          ExampleGaucho  ../src/*.cpp
+
+private
+macro_append ExampleGaucho_shlibflags "-lboost_serialization-gcc"
+
 
 #============================================================================
 # define component library link options
