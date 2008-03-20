@@ -13,7 +13,7 @@ branches cmt doc
 use Adder             v4r6     Online
 use confDB            v1r5     Online
 ### Note: confDBPython is internally forced to python 2.5
-use confDBpython      v1r5p1   Online
+use confDBpython      v1r5p2   Online
 use $(CCPCHist_use)
 macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
 use DIM               v17r1    Online
