@@ -5,6 +5,13 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v4r6>2008-03-20 OnlineSys v4r7</A></H1><PRE>
+New version v4r7 built against LHCb v23r4.
+Changes and bug fixes in confDBpython, GaudiOnline, InsertDB, 
+OMAlib, OnlineHistDB, Presenter, MBMDump, OnlineKernel,
+OnlineTasks, PyDIM, ROMon and Writer.
+New package: Hugin (Beat)
+
 </PRE><H1><A NAME=v4r6p1>2008-03-06 OnlineSys v4r6p1</A></H1><PRE>
 This version is identical to v4r6 but built against LHCb v23r4.
 ConfDBPython updated to use python 2.5
