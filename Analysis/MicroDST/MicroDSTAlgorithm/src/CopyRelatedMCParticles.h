@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.h,v 1.11 2008-03-20 13:21:58 jpalac Exp $
+// $Id: CopyRelatedMCParticles.h,v 1.12 2008-03-20 13:38:36 jpalac Exp $
 #ifndef COPYRELATEDMCPARTICLES_H 
 #define COPYRELATEDMCPARTICLES_H 1
 
@@ -79,7 +79,8 @@ private:
   ICloneMCParticle* m_cloner;
   
   MCRelations* m_relations;
-  
+
+  std::string m_mcParticleClonerName;
   
 };
 #endif // COPYRELATEDMCPARTICLES_H
