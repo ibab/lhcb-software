@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpHelpers.cpp,v 1.7 2007-10-01 14:46:55 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpHelpers.cpp,v 1.8 2008-03-20 20:50:44 frankb Exp $
 //  ====================================================================
 //  DpHelpers.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpHelpers.cpp,v 1.7 2007-10-01 14:46:55 frankm Exp $
+// $Id: DpHelpers.cpp,v 1.8 2008-03-20 20:50:44 frankb Exp $
 
 // PVSS include files
 #include "Manager.hxx"
@@ -38,8 +38,8 @@ static void visitDpElement(PVSS::DevTypeManager* m, PVSS::DevType* t, const DpTy
     DpElementId eid = n->getId();
     DpElement elt(eid);
     DpElementType elTyp = elt.getType(&p);
-    DpElementType eTyp  = n->getElementType();
     dpIdent->getElementName(p.getName(), eid, elname,s_system);
+    //DpElementType eTyp  = n->getElementType();
     //sprintf(txt,"  %d got elem: par:[%s] elname:\"%s\" pid:%d eid:%d typ=%d %d",
     //	    (int)s_system,par.c_str(),elname ? elname : "None",p.getName(),eid, elTyp,eTyp);
     //pvss_print(PVSS::PRIO_SEVERE,36,txt);
@@ -98,7 +98,7 @@ int PVSS::pvss_load_configurations(CfgManager* m, int id,
     for(size_t j=0; j<attrNum; ++j)  {
       const DpAttributeNrType att = attrs[j];
       n = ConfigsMapper::getAttributeName(cfg,att);
-      if ( pvss_debug() ) ::printf("PVSS>         Adding attribute [%d]:%s\n",att,n);
+      if ( pvss_debug() ) ::printf("PVSS>         Adding attribute [%ld]:%s\n",att,n);
       addAttr(m, att, n);
     }
     // Forget about details....only very few configs have named details.
