@@ -17,11 +17,10 @@ Sender.Compress                      = 0;
 // Data type: banks from TES=1, 
 //  	      compressed records data from address = 2
 //            banks data from address (MDF bank first) = 3
-Sender.DataType                      = 2;
+Sender.DataType                      = 3;
 EventSelector.Decode                 = false;
 EventSelector.Input                  = "SEND";
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true ;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
-Sender.OutputLevel = 1;

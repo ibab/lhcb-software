@@ -4,7 +4,7 @@
 export NODENAME=`python -c "print '$HOST'.split('.')[0]"`
 #
 $MINITERM TAEinit@${HOST}   -e "export UTGID=${NODENAME}/TAEBuffers;exec -a \${UTGID} $gaudi_task -opts=$OPTS/TAEBuffers.opts"&
-$MINITERM MBMOutput@${HOST} -e "export UTGID=${NODENAME}/MBMOutput; exec -a \${UTGID} $gaudi_task -opts=$OPTS/MBMinit.opts"&
+$MINITERM MBMInit@${HOST}   -e "export UTGID=${NODENAME}/MBMInit;   exec -a \${UTGID} $gaudi_task -opts=$OPTS/MBMinit.opts"&
 $MINITERM TanServer@${HOST} -e "export UTGID=${NODENAME}/TANServer; exec -a \${UTGID} $gaudi_run libOnlineKernel.so tan_nameserver -a -tcp -d"&
 #
 sleep 4
