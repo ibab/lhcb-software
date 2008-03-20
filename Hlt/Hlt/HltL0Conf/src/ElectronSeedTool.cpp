@@ -84,6 +84,13 @@ StatusCode ElectronSeedTool::initialize()
   sParOP[0] = tan(  cellSize[2]*0.5 / parOP[0] );
   sParOP[1] = tan( -cellSize[2]*0.5 / parOP[0] );
 
+//check vectors set by job options
+  if( 3!=m_sigmaX2.size() || 3!=m_sigmaY2.size() 
+      || 3!=m_sigmaTx2.size() || 3!=m_sigmaTy2.size() ){
+    error()<<"Size of search winow vectors is not valid, check you options!"<<endmsg;
+    return StatusCode::FAILURE;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -220,7 +227,11 @@ StatusCode ElectronSeedTool::makeTrack( const LHCb::L0CaloCandidate& eL0Cand,
 
   seedState.setCovariance(stateCov);
 
-  if(m_debugMode) m_DataStore->region.push_back( ecalRegion );
+  if(m_debugMode) {
+    m_DataStore->region.push_back( ecalRegion );
+    m_DataStore->region.push_back( ecalRegion );
+  }
+  
 
   seedTrack.addToStates(seedState);
     
