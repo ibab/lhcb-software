@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v9r1 2008-03-20 ===========================
+! 2008-03-20 - Gloria CORTI
+ - Pythia.F: Remove dummy routine calling PYTIME. This requires changes in
+   GENSER requirement file to resolve all symbols in libpythia6_dummy.so
+   even when not called directly.
+
 !========================== EvtGen v9r0 2008-02-08 ===========================
 ! 2008-01-08 - Patrick Robbe
  - Pythia.F: Add dummy subroutine calling PYTIME to force loading of 
