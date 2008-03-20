@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.h,v 1.10 2008-03-06 14:20:28 jpalac Exp $
+// $Id: CopyRelatedMCParticles.h,v 1.11 2008-03-20 13:21:58 jpalac Exp $
 #ifndef COPYRELATEDMCPARTICLES_H 
 #define COPYRELATEDMCPARTICLES_H 1
 
@@ -18,7 +18,7 @@ class MCVertex;
 /** @class CopyRelatedMCParticles CopyRelatedMCParticles.h
  *  
  *
- *  @author Juan PALACIOS
+ *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2007-11-02
  */
 class CopyRelatedMCParticles : public MicroDSTAlgorithm {
@@ -42,15 +42,6 @@ private:
    */
   StatusCode storeAssociatedMCParticles(const LHCb::Particle* particle);
 
-
-
-  /**
-   *
-   *
-   * @author Juan Palacios juancho@nikhef.nl
-   */
-  LHCb::MCVertex* storeMCVertex(const LHCb::MCVertex* vertex);
-
   /**
    *
    *
@@ -66,14 +57,6 @@ private:
    */
   template <class IT>
   StatusCode loopOnParticles(IT begin, IT end);
-
-  /**
-   *
-   *
-   * @author Juan Palacios juancho@nikhef.nl
-   */
-  LHCb::MCParticle* storeMCParticle(const LHCb::MCParticle* mcp,
-                                    bool storeOriginVertex = false);
 
 private:
 
