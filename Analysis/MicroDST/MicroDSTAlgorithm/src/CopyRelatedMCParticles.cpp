@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.13 2008-03-06 14:20:28 jpalac Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.14 2008-03-20 13:37:57 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -28,8 +28,10 @@ CopyRelatedMCParticles::CopyRelatedMCParticles( const std::string& name,
                                                 ISvcLocator* pSvcLocator )
   : 
   MicroDSTAlgorithm ( name , pSvcLocator ),
-  m_cloner(0)
+  m_cloner(0),
+  m_mcParticleClonerName("MCParticleCloner")
 {
+  declareProperty( "ICloneMCParticle", m_mcParticleClonerName );
 }
 
 //=============================================================================
@@ -57,7 +59,7 @@ StatusCode CopyRelatedMCParticles::initialize() {
 
   const std::vector<std::string> location(1, inputTESLocation() );
 
-  m_cloner = tool<ICloneMCParticle>("MCParticleCloner", this);
+  m_cloner = tool<ICloneMCParticle>(m_mcParticleClonerName, this);
 
   m_compositeLinker = new Particle2MCLinker(this,
                                             Particle2MCMethod::Composite,
