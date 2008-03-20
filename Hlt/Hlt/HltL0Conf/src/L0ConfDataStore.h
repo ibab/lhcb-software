@@ -1,4 +1,4 @@
-// $Id: L0ConfDataStore.h,v 1.3 2007-11-16 11:08:47 albrecht Exp $
+// $Id: L0ConfDataStore.h,v 1.4 2008-03-20 11:38:07 albrecht Exp $
 #ifndef L0CONFDATASTORE_H 
 #define L0CONFDATASTORE_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "Event/State.h"
+#include "TfKernel/TStationHitManager.h"
 
 /** @class L0ConfDataStore L0ConfDataStore.h
  *  
@@ -39,6 +40,7 @@ public:
   StatusCode initialize();
   
   void clearStore();  
+  bool checkConsistency();
 
   int nL0Candidates;
   std::vector<double> seedingTime;
@@ -46,14 +48,14 @@ public:
   std::vector<double> trackingTime;
   std::vector<double> nTHits;
   std::vector<double> region;
-  std::vector<LHCb::State> refinedStatePos;
-  std::vector<LHCb::State> refinedStateNeg;
-  
+  std::vector<Tf::IStationSelector*> trackHypo;
+ 
 protected:
 
 private:
   void handle ( const Incident& incident );
-
+  
+  
 
 };
 #endif // L0CONFDATASTORE_H

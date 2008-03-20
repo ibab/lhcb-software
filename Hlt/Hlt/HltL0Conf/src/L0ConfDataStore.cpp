@@ -1,4 +1,4 @@
-// $Id: L0ConfDataStore.cpp,v 1.3 2007-11-16 11:08:50 albrecht Exp $
+// $Id: L0ConfDataStore.cpp,v 1.4 2008-03-20 11:38:10 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -60,9 +60,37 @@ StatusCode L0ConfDataStore::initialize()
   trackingTime.clear();
   nTHits.clear();
   region.clear();
-  refinedStatePos.clear();
-  refinedStateNeg.clear();
-   
+  
+  std::vector<Tf::IStationSelector*>::iterator it;
+  for( it=trackHypo.begin();it!=trackHypo.end();it++)delete *it;
+  trackHypo.clear();
+  
+}
+
+bool L0ConfDataStore::checkConsistency()
+{
+  bool consistent = true;
+  
+  const unsigned int n=nL0Candidates+1;
+  
+  if( n != seedingTime.size() ) consistent = false;
+  if( n !=  decodingTime.size() ) consistent = false;
+  if( n !=  trackingTime.size() ) consistent = false;
+  if( n !=  nTHits.size() ) consistent = false;
+  if( n !=  region.size() ) consistent = false;
+  if( n !=  trackHypo.size() ) consistent = false;
+
+  if( !consistent ){
+    warning()<<"nL0Candidates          "<<nL0Candidates <<" (should be one less)"<<endmsg;
+    warning()<<"seedingTime.size()     "<<seedingTime.size()<<endmsg;
+    warning()<<" decodingTime.size()   "<<decodingTime.size() <<endmsg;
+    warning()<<"trackingTime.size()    "<<trackingTime.size() <<endmsg;
+    warning()<<"nTHits.size()          "<<nTHits.size() <<endmsg;
+    warning()<<"region.size()          "<<region.size() <<endmsg;
+    warning()<<"trackHypo.size()       "<<trackHypo.size() <<endmsg;
+    
+  }
+  return consistent;
 }
 
 
