@@ -1,4 +1,4 @@
-// $Id: HadronSeedTool.h,v 1.1 2007-07-17 14:05:08 albrecht Exp $
+// $Id: HadronSeedTool.h,v 1.2 2008-03-20 14:17:07 albrecht Exp $
 #ifndef HADRONSEEDTOOL_H 
 #define HADRONSEEDTOOL_H 1
 
@@ -7,8 +7,15 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "HltBase/ICaloSeedTool.h"            // Interface
 
+#include "IL0ConfExtrapolator.h"
+
 //local
 #include "L0ConfDataStore.h"
+
+// forward declaration
+namespace LHCb {
+  class CaloCellID;
+}
 
 /** @class HadronSeedTool HadronSeedTool.h
  *  
@@ -46,13 +53,14 @@ protected:
 
 private:
   //calculate the position of a 2x2 HCal cluster around the L0Cand
-  StatusCode getHCalBarycenter( const LHCb::L0CaloCandidate& cand, double& clusterEnergy , 
-                                double& xBarycenter , double& yBarycenter , int& reg );
+  StatusCode getHCalBarycenter(const LHCb::L0CaloCandidate& cand,
+                               double&x, double& y, double& e, int& region ) const;
 
-  StatusCode getECalBarycenter( double xHCal , double yHCal , double& nCells , 
-                                double&  clusterEnergy, double& xECal, double& yECal , int& region  );
-  
-  int ECALpart( double x , double y );
+  StatusCode getECalBarycenter(double& x, double& y, double& z, double& e,
+                               int minCells, int& region ) const;
+
+  int ECALpart( double x , double y ) const;
+  int HCALpart ( const LHCb::CaloCellID& cell ) const;
   
   //calorimneters
   DeCalorimeter* m_ecal;
@@ -61,6 +69,8 @@ private:
   //calo data on demand tools 
   ICaloDataProvider* m_ecalDaq;
   ICaloDataProvider* m_hcalDaq;
+  IL0ConfExtrapolator* m_l0ConfExtrapolator;
+  
 
   //tool to store debug information
   L0ConfDataStore* m_DataStore;  
@@ -70,18 +80,20 @@ private:
    *  first three are Ecal (IP,MP,OP) , last two HCal (IP,MP)
    *  x,y windows are in mm, tx, ty in rad
    */
+  //resolution w/o decoded calo cells
+  std::vector<double> m_l0SigmaX2;
+  std::vector<double> m_l0SigmaY2;
+  std::vector<double> m_l0SigmaTx2;
+  std::vector<double> m_l0SigmaTy2;
+  //better resolution with decoded calo cells
   std::vector<double> m_sigmaX2;
   std::vector<double> m_sigmaY2;
   std::vector<double> m_sigmaTx2;
   std::vector<double> m_sigmaTy2;
+ 
   
   //boolean if information in dataStore tool should be saved
-  bool m_debugMode;
-
-  double cellSizeECal[3];
-  double zECal, zHCal, zT3;
-  
-
-
+  bool m_debugMode, m_decodeCalos;
+  static const double zECal, zHCal, zT3;
 };
 #endif // HADRONSEEDTOOL_H
