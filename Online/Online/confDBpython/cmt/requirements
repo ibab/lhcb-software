@@ -8,6 +8,10 @@ use Boost        v*  LCG_Interfaces
 use Python       v*  LCG_Interfaces
 use confDB       v*  Online
 
+use oracle      v* LCG_Interfaces
+use cx_Oracle v* LCG_Interfaces
+macro cx_Oracle_native_version "4.1.2"
+
 include_path none
 include_dirs $(CONFDBPYTHONROOT)/confDBpython
 

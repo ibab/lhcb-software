@@ -4802,7 +4802,7 @@ int nto_len=500000;
 int lkinfo_len=5000000;
 int pfrom_len1=pfrom_len;
 int pto_len1=pto_len;
-int lkinfo_len1=lkinfo_len;
+//int lkinfo_len1=lkinfo_len;
 int nfrom_len1=nfrom_len;
 int nto_len1=nto_len;
 int nt1,pt1,nf1,pf1,pf0,pt0,nf0,nt0,lkin0,lkin1;
@@ -5387,7 +5387,7 @@ vector<string> CONFDB::PyGetDestinationNamePerDevPort(string devicename,string  
 	int c=0;
 	int c1=0;
 	
-	int actual_len=0;
+//	int actual_len=0;
 	int pos1,pos2;
 	int len_dto=500;
 	int len_array=50000;
@@ -5535,11 +5535,11 @@ vector<string>  CONFDB::PyGetAllPathsPerDevice(string systemname,string devicena
   int res=0;
   int res1=0;
   int pos=0;
-  int pos2=0;
+//  int pos2=0;
   int *lkid_list1=new int[len_array];
   int *pid_list1=new int[len_array];
   int *lkpos_list1=new int[len_array];
-  int len_array2=50000;
+//  int len_array2=50000;
   
   char* resline=new char[500];
   string row_concat;
@@ -7621,7 +7621,7 @@ int rescode=0;
 string res_code;
 
 char* ErrMess=new char[1000];
-rescode=UpdateHWSerialNB((char*)old_serialnb.c_str(),(char*)old_serialnb.c_str(),  ErrMess);
+rescode=UpdateHWSerialNB((char*)old_serialnb.c_str(),(char*)new_serialnb.c_str(),  ErrMess);
 if(rescode==0)
 	res_code="Successful update"; 
 else
@@ -7650,7 +7650,7 @@ int rescode=0;
 string res_code;
 
 char* ErrMess=new char[1000];
-rescode=UpdateDeviceFunctionName((char*)old_function_name.c_str(),(char*)old_function_name.c_str(),  ErrMess);
+rescode=UpdateDeviceFunctionName((char*)old_function_name.c_str(),(char*)new_function_name.c_str(),  ErrMess);
 if(rescode==0)
 	res_code="Successful update"; 
 else
