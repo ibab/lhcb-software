@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.cpp,v 1.4 2008-03-20 14:20:32 albrecht Exp $
+// $Id: PatConfirmTool.cpp,v 1.5 2008-03-20 14:22:46 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -134,9 +134,9 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
       debug() << "tracks found sofar in PatSearch Tool: " << outputTracks.size() << endreq;
     }
   }
+
+  m_tHitManager->clearHits();
   
-  //FIXME add hit cleaning when committed
-  //m_tHitManager->cleanHits();
   return StatusCode::SUCCESS;
 }
 
