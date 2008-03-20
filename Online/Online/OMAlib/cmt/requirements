@@ -5,12 +5,9 @@
 package          OMAlib
 version          v1r0
 
-
 branches src cmt doc OMAlib
 
-
 use   ROOT             v5*      LCG_Interfaces
-
 use   OnlineHistDB     v4*     Online
 use   GaudiAlg         v*
 use   DIM              v*  	Online
@@ -24,11 +21,11 @@ macro ROOT_config_version "5.18.00"
 library OMAlib  $(OMALIBROOT)/src/*.cpp  $(OMALIBROOT)/algorithms/*.cpp
 #apply_pattern component_library library=OMAlib
 apply_pattern linker_library  library=OMAlib
+apply_pattern generate_rootmap library=OMAlib
 
 macro_append OMAlib_shlibflags " -lHist  -lGraf -lRIO  " WIN32 " libHist.lib libGraf.lib libRIO.lib"
 
 #macro_remove Boost_linkopts " $(Boost_linkopts_regex) $(Boost_linkopts_thread) -lboost_filesystem-gcc-mt " 
-
 
 private
 use   GaudiOnline      v*       Online -no_auto_imports
