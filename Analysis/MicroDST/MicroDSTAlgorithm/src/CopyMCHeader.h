@@ -1,4 +1,4 @@
-// $Id: CopyMCHeader.h,v 1.4 2008-03-20 13:39:02 jpalac Exp $
+// $Id: CopyMCHeader.h,v 1.5 2008-03-20 14:10:57 jpalac Exp $
 #ifndef COPYMCHEADER_H 
 #define COPYMCHEADER_H 1
 
@@ -7,7 +7,7 @@
 #include "MicroDST/MicroDSTAlgorithm.h"
 
 
-/** @class CopyRecHeader CopyRecHeader.h
+/** @class CopyMCHeader CopyMCHeader.h
  *  
  *
  *  MicroDSTAlgorithm to clone an LHCb::MCHeader from one TES location to 
