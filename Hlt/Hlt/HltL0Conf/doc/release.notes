@@ -1,8 +1,39 @@
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltL0Conf
 ! Responsible : Johannes Albrecht
-! Purpose     : L0-Tsa Confirmation algorithms
+! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
+!2008-03-20 - Johannes Albrecht
+
+		- src/HadronSeedTool.h/.cpp
+			-add option to run tool without calo decoding & set search windows accordingly		
+			-add catch for vector size set in jop-options
+			- tidy up the code
+		- src/L0ConfExtrapolator: new tool 
+			- does the extrapolation from muon, ECal and HCal to T3
+			- provides the parametrization to get the track hypothesis
+		- src/L0ConfirmWithT.h/cpp
+			- introduce job option: particleType to perform correct extrapolations
+			- extrapolations now done in L0ConfExtrapolator
+			- tidy up the code
+		- PatConfirmTool.cpp, .h 
+			- call PatSeedingTool with state to restrict track search	
+			- require minimun number of hits to start track search
+			- tidy up code & use new tools	
+		- TsaConfirmTool.h, .cpp
+			- require minimun number of hits to start track search
+			- tidy up code & use new tools
+
+		- Add simple classes to hold the track hypothesis and transport it in the 
+			T-stations for the Tf::TStationHitManager: 
+			LineHypothesis, ParabolaHypothesis, FwdHypothesis
+		- src/CombinedHypothesis.h: Add simple class to merge a vector of track hypotheses
+		- src/MuonSeedTool.cpp: add catch for vector size set in jop-options
+		- src/ElectronSeedTool.cpp: add catch for vector size set in jop-options, 
+																add debug info
+		- src/L0ConfDataStore.h/.cpp: update of debug information
+
+
 !2008-03-19 - Stephanie Hansmann-Menzemer
               - src/PatConfirmTool.cpp
               - src/TsaConfirmTool.cpp
