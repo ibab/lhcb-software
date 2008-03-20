@@ -6,5 +6,5 @@ MEPInit.PartitionID        = @OnlineEnv.PartitionID;
 //Runable.Dll              = "OnlineKernel";
 //Runable.Call             = "tan_nameserver";
 //Runable.InitFlags        = "-a -tcp -n -d";
-MessageSvc.OutputLevel     = 1;
+MessageSvc.OutputLevel     = 4;
 Runable.Wait               = 1;  // 1 if daemon; 3 if in main

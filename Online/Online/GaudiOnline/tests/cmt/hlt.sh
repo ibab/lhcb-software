@@ -23,7 +23,7 @@ $MINITERM Moore_0@${HOST}   -e "export UTGID=${NODENAME}/Moore_0;   exec -a \${U
 $MINITERM Moore_1@${HOST}   -e "export UTGID=${NODENAME}/Moore_1;   exec -a \${UTGID} $gaudi_task -opt=$OPTS/ReadMBM.opts"&
 $MINITERM Moore_2@${HOST}   -e "export UTGID=${NODENAME}/Moore_2;   exec -a \${UTGID} $gaudi_task -opt=$OPTS/ReadMBM.opts"&
 $MINITERM Receiver@${HOST}  -e "export UTGID=${NODENAME}/Receiver;  exec -a \${UTGID} $gaudi_task -opt=$OPTS/MDFReceiver.opts"&
-$MINITERM DiskWR@${HOST}  -e "export UTGID=${NODENAME}/DiskWR;    exec -a \${UTGID} $gaudi_task -opt=$OPTS/DiskWR.opts"&
+#$MINITERM DiskWR@${HOST}  -e "export UTGID=${NODENAME}/DiskWR;    exec -a \${UTGID} $gaudi_task -opt=$OPTS/DiskWR.opts"&
 $MINITERM EvtServ@${HOST}   -e "export UTGID=${NODENAME}/EvtServ;   exec -a \${UTGID} $gaudi_task -opt=$OPTS/EventServer.opts"&
 #
 sleep 4
