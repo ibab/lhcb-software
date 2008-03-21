@@ -1,0 +1,230 @@
+//---------------------------
+// HLT Reconstruction
+//--------------------------
+
+#include "$HLTSYSROOT/options/HltRecoSequence.opts"
+
+//---------------------------
+// HLT Had Alley
+//--------------------------
+HltSummaryWriter.Save += {
+  "PV2D",
+  "L0EntryTriggerHadron",
+  "L0TriggerHadron",
+  "HadPreTriggerSingle",
+  "HadTriggerSingle",
+  "HadTrigger"
+};
+
+HltAlleys.InputSelections += {"HadTriggerSingle","HadTrigger"};
+
+HltHadAlleySequence.MeasureTime = true;
+HltHadAlleySequence.Members = {
+  "L0Entry/HadL0Entry",
+  "GaudiSequencer/HadPrepareMainHadron",
+  "HltTrackFilter/HadPreTriggerSingle",
+  "GaudiSequencer/HadTriggerSeq"
+};
+HltHadAlleySequence.OutputLevel = 3;
+
+HadPrepareMainHadron.MeasureTime = true;
+HadPrepareMainHadron.Members = {
+  "GaudiSequencer/HltRecoVeloRZSeq" ,
+  "HltTrackFromParticle/GetBdaughterTracks",
+  "HltSelectTracksForSwimming/SelectBtracks",
+  "HltMoveVerticesForSwimming/SwimPVS",
+  "HltTrackFilter/HadSingleTFRZVelo",
+  "HltTrackUpgrade/HadSingleTRVelo",
+  "HltTrackFilter/HadSingleTFVelo",
+  "HltTrackMatch/HadSingleTMVeloCalo",
+  "GaudiSequencer/HltDecodeT",
+  "GaudiSequencer/HltDecodeTT",
+  "HltTrackUpgrade/HadSingleTRForward"
+};
+
+HadTriggerSeq.MeasureTime = true;
+HadTriggerSeq.ModeOr = true;
+HadTriggerSeq.ShortCircuit = false;
+HadTriggerSeq.Members = {
+  "HltTrackFilter/HadTriggerSingle",
+  "GaudiSequencer/HadDiHadronSeq",
+  "HltSelectionFilter/HadAlleys"
+};
+
+HadAlleys.InputSelections = {"HadTriggerSingle","HadTrigger"};
+HadAlleys.OutputLevel = 3;
+
+HadDiHadronSeq.MeasureTime = true;
+HadDiHadronSeq.Members = {
+  "HltTrackUpgrade/HltRecoVelo",
+  "HltSelectTracksForSwimming/SelectBtracksForCompanion",
+  "HltTrackFilter/HadCompanionTFVelo",
+  "HltVertexMaker/HadDiHadronVelo",
+  "HltVertexFilter/HadDiHadronFVelo",
+  "HltVertexUpgrade/HadDiHadronForward",
+  "HltVertexFilter/HadTrigger"
+};
+
+//-------------------------------------------------------------------------
+// HLT HadAlley options
+//-------------------------------------------------------------------------
+
+//
+// Enter if there is a L0Hadron yes
+//
+HadL0Entry.L0ChannelsName = {"Hadron"};
+HadL0Entry.OutputLevel = 3;
+
+// HadL0Calos.MinEt = 3500.;
+// HadL0Calos.CaloType = 2;
+// HadL0Calos.OutputLevel = 3;
+// HadL0Calos.HistogramUpdatePeriod = 1;
+// HadL0Calos.HistoDescriptor = {"HadL0Calos":("HadL0Calos",0.,10.,10)};
+
+//
+//Get the B daughter tracks
+//
+GetBdaughterTracks.ParticlesName    = "/Event/Phys/PreselBd2DPi/Particles";
+GetBdaughterTracks.InputTracksName  = "RZVelo";
+GetBdaughterTracks.OutputTracksName = "TracksFromTheB";
+GetBdaughterTracks.OutputLevel = 3;
+
+//
+//Swim the vertices
+//
+SwimPVS.InputVerticesName   = "PV2D";
+SwimPVS.OutputVerticesName  = "PV2DSW";
+SwimPVS.ParticlesName       = "/Event/Phys/PreselBd2DPi/Particles";
+SwimPVS.OutputLevel = 3;
+
+//
+//Swim the selected B, if any
+//
+SelectBtracks.InputTracksName     = "RZVelo";
+SelectBtracks.InputTracks2Name    = "TracksFromTheB";
+SelectBtracks.OutputTracksName    = "RZVelo_SW";
+SelectBtracks.ParticlesName       = "/Event/Phys/PreselBd2DPi/Particles";
+SelectBtracks.OutputLevel = 3;
+
+HadSingleTFRZVelo.InputSelection = "RZVelo_SW";
+HadSingleTFRZVelo.FilterDescriptor = {"Calo2DChi2_L0TriggerHadron,<,4"};
+HadSingleTFRZVelo.OutputLevel = 3;
+HadSingleTFRZVelo.HistogramUpdatePeriod = 1;
+HadSingleTFRZVelo.HistoDescriptor = {
+  "Calo2DChi2_L0TriggerHadron":("Calo2DChi2_L0TriggerHadron",0.,100.,100)
+};
+
+HadSingleTRVelo.InputSelection = "HadSingleTFRZVelo";
+HadSingleTRVelo.RecoName = "Velo";
+HadSingleTRVelo.OutputLevel = 3;
+HadSingleTRVelo.HistogramUpdatePeriod = 1;
+
+HadSingleTFVelo.InputSelection = "HadSingleTRVelo";
+HadSingleTFVelo.FilterDescriptor = {
+  "IP_PV2DSW,||>,0.1",
+  "Calo3DChi2_L0TriggerHadron,<,4"
+};
+HadSingleTFVelo.OutputLevel = 3;
+HadSingleTFVelo.HistogramUpdatePeriod = 1;
+HadSingleTFVelo.HistoDescriptor = {
+  "IP_PV2D":("IP_PV2D",0.,3.,100),
+  "IP_PV2DBest":("IP_PV2DBest",0.,3.,100),
+  "Calo3DChi2_L0TriggerHadron":("Calo3DChi2_L0TriggerHadron",0.,50.,100),
+  "Calo3DChi2_L0TriggerHadronBest":("Calo3DChi2_L0TriggerHadronBest",0.,50.,100)
+};
+
+HadSingleTMVeloCalo.InputSelection = "HadSingleTRVelo";
+HadSingleTMVeloCalo.InputSelection2 = "L0TriggerHadron";
+HadSingleTMVeloCalo.MatchName = "VeloCalo";
+HadSingleTMVeloCalo.OutputLevel = 3;
+HadSingleTMVeloCalo.HistogramUpdatePeriod = 1;
+
+HadSingleTRForward.InputSelection  = "HadSingleTFVelo";
+HadSingleTRForward.RecoName = "Forward";
+HadSingleTRForward.OutputLevel = 3;
+HadSingleTRForward.HistogramUpdatePeriod = 1;
+
+
+HadPreTriggerSingle.InputSelection  = "HadSingleTRForward";
+HadPreTriggerSingle.FilterDescriptor = {"PT,>,2500."};
+HadPreTriggerSingle.OutputLevel = 3;
+HadPreTriggerSingle.HistogramUpdatePeriod = 1;
+HadPreTriggerSingle.HistoDescriptor = {
+  "PT":("PT",0.,6000.,100),
+  "PTBest":("PTBest",0.,6000.,100)
+};
+
+SelectBtracksForCompanion.InputTracksName     = "Velo";
+SelectBtracksForCompanion.InputTracks2Name    = "TracksFromTheB";
+SelectBtracksForCompanion.OutputTracksName    = "Velo_SW";
+SelectBtracksForCompanion.ParticlesName       = "/Event/Phys/PreselBd2DPi/Particles";
+SelectBtracksForCompanion.OutputLevel = 3;
+
+//-------------------------------------------
+// Single Trigger
+//-------------------------------------------
+
+HadTriggerSingle.InputSelection  = "HadPreTriggerSingle";
+HadTriggerSingle.FilterDescriptor = {"PT,>,5000."};
+HadTriggerSingle.OutputLevel = 3;
+HadTriggerSingle.HistogramUpdatePeriod = 1;
+HadTriggerSingle.HistoDescriptor = {
+  "PT":("PT",0.,6000.,100),
+  "PTBest":("PTBest",0.,6000.,100)
+};
+
+//-------------------------------------------
+// DiHadron Trigger
+//-------------------------------------------
+
+HadCompanionTFVelo.InputSelection = "Velo_SW";
+HadCompanionTFVelo.FilterDescriptor = {
+  "IP_PV2DSW,||>,0.1",
+  "MatchIDsFraction_HadPreTriggerSingle,<,0.9"
+};
+HadCompanionTFVelo.OutputLevel = 3;
+HadCompanionTFVelo.HistogramUpdatePeriod = 1;
+HadCompanionTFVelo.HistoDescriptor = {
+  "IP_PV2D":("IP_PV2D",0.,3.,100),
+  "IP_PV2DBest":("IP_PV2DBest",0.,3.,100)
+};
+
+
+HadDiHadronVelo.InputSelection = "HadPreTriggerSingle";
+HadDiHadronVelo.InputSelection2 = "HadCompanionTFVelo";
+HadDiHadronVelo.FilterDescriptor = { "DOCA,<,0.2"};
+HadDiHadronVelo.OutputLevel = 3;
+HadDiHadronVelo.HistoDescriptor = { 
+  "DOCA":("DOCA",0.,3.,100),
+  "DOCABest":("DOCABest",0.,3.,100)
+};
+
+HadDiHadronFVelo.InputSelection = "HadDiHadronVelo";
+HadDiHadronFVelo.FilterDescriptor = { "VertexDz_PV2DSW,>,0."};
+HadDiHadronFVelo.OutputLevel = 3;
+HadDiHadronFVelo.HistoDescriptor = {
+  "VertexDz_PV2D":("VertexDz_PV2D",-3.,3.,100),
+  "VertexDz_PV2DBest":("VertexDz_PV2D",-3.,3.,100)
+};
+
+HadDiHadronForward.InputSelection = "HadDiHadronFVelo";
+HadDiHadronForward.RecoName = "Forward";
+HadDiHadronForward.OutputLevel = 3;
+
+HadTrigger.InputSelection = "HadDiHadronForward";
+HadTrigger.FilterDescriptor = {
+  "VertexMinPT,>,1000.",
+  "VertexPointing_PV2DSW,<,0.4"
+};
+HadTrigger.OutputLevel = 3;
+HadTrigger.HistogramUpdatePeriod = 1;
+HadTrigger.HistoDescriptor = {
+  "VertexMinPT":("VertexMinPT",0.,6000.,100),
+  "VertexMinPTBest":("VertexMinPTBest",0.,6000.,100),
+  "VertexPointing_PV2D":("VertexPointing_PV2D",0.,1.,100),
+  "VertexPointing_PV2DBest":("VertexPointing_PV2DBest",0.,1.,100)
+};
+
+
+
+
