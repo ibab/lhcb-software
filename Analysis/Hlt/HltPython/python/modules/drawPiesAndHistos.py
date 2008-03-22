@@ -36,7 +36,7 @@ COLOR_DICT={
 
 #---------------------------------------------------
 
-def checkPieInputs(i_dict,title,labels,colors,opt,sort,leg):
+def checkPieInputs(i_dict,title,labels,colors,opt,sort,leg,oth):
     """
     check wether inputs for drawPieFromDict function have been correctly stablished
     
@@ -47,7 +47,8 @@ def checkPieInputs(i_dict,title,labels,colors,opt,sort,leg):
     @param opt 'both': show both percentages and labels in pie/'perc': show only percentages in pie/'lab': show only labels
     @param sort (Bool) If true sorts out sectors from biggest to smallest
     @param leg (Bool) If true also return a legend with relation labels-colors
-    @returns title, labels, colors,opt, sort and leg ready to be used in drawPieFromDict 
+    @param oth (Bool) Puts label 'oth' in last position and sets it to 'Others'
+    @returns title, labels, colors,opt,sort,leg and oth ready to be used in drawPieFromDict 
     @author Xabier Cid Vidal xabier.cid.vidal@cern.ch
     """
     cont=True
@@ -72,7 +73,7 @@ def checkPieInputs(i_dict,title,labels,colors,opt,sort,leg):
         for i in i_dict:
             if labels.has_key(i): labelsn.append(labels[i])
             else:
-                print i+" NOT KEY IN LABELS"
+                if i!="oth": print i+" NOT KEY IN LABELS"
                 labelsn.append(i)
 
 
@@ -102,8 +103,14 @@ def checkPieInputs(i_dict,title,labels,colors,opt,sort,leg):
         leg=False
         print "LEG IS NOT BOOL"
 
+    ## check oth. If not bool, set it to False
+    if not isinstance(oth,bool):
+        oth=False
+        print "OTH IS NOT BOOL"
+
+
     ## return correct values (prepared for function)
-    return cont, title,labelsn,colorsn,opt,sort,leg
+    return cont, title,labelsn,colorsn,opt,sort,leg,oth
 
 #---------------------------------------------------
 
@@ -174,13 +181,14 @@ def checkHistInputs(i_list,title,name,nbins,fbin,lbin,color,xtitle,ytitle):
     
 #---------------------------------------------------
 
-def legFromPie(pie,els,sort=False):
+def legFromPie(pie,els,sort=False,oth=False):
 
     """
     Returns Tlegend explaining pie entries
     @param pie TPie you want to extract legend from
     @param els (int) Number of slices of pie
     @param sort (Bool) Sort legend entries according to size of slices
+    @param oth (Bool) Put 'Others' label in last position
     @returns a list. First element is the legend, second is a list of TBoxes needed for the legend to be drawed
     @author Xabier Cid Vidal xabier.cid.vidal@cern.ch
     """
@@ -190,9 +198,18 @@ def legFromPie(pie,els,sort=False):
     for o in range(els):
         vals.append([pie.GetEntryVal(o),pie.GetEntryFillColor(o),pie.GetEntryLabel(o)])
 
+
+    ## if oth, keep oth to add it later in last position
+    if oth:
+        for v in vals:
+            if v[2]=="Others": v_oth=vals.pop(vals.index(v))
+        
     ## if sort, sort them out according to value (sector size)
     if sort: vals.sort(reverse=True)
 
+    ## if oth, add now oth in last position
+    if oth: vals.append(v_oth)
+    
     ## initialize legend and boxes
     legend = ROOT.TLegend(0.04,0.7,0.2,0.95)
     boxes=[]
@@ -203,13 +220,14 @@ def legFromPie(pie,els,sort=False):
         boxes[o].SetFillColor(vals[o][1])
         legend.AddEntry(boxes[o],vals[o][2],"F")
 
+
     ## return legend and boxes drawed in it
     return [legend,boxes]
 
 
 #---------------------------------------------------
 
-def drawPieFromDict(i_dict,title="",labels=0,colors=0,opt="both",sort=False,leg=False):
+def drawPieFromDict(i_dict,title="",labels=0,colors=0,opt="both",sort=False,leg=False,oth=False):
     """
     Draw pie from a dict
     @param i_dict Input dictionary. Must have format {'a':1,'b':2,...}
@@ -219,12 +237,13 @@ def drawPieFromDict(i_dict,title="",labels=0,colors=0,opt="both",sort=False,leg=
     @param opt 'both': show both percentages and labels in pie/'perc': show only percentages in pie/'lab': show only labels. Default 'both'
     @param sort (Bool) If true sorts sectors from biggest to smallest. Default False
     @param leg (Bool) If true also returns a list having a legend with relation labels-colors. Legend is first element of this list. Second is a list of boxes needed to draw legend. Default false
+    @param oth (Bool) If true looks for 'oth' label to put it last position
     @returns Pie with information and, if leg, also list with legend
     @author Xabier Cid Vidal xabier.cid.vidal@cern.ch
     """
 
     ##check inputs
-    cont,title,labels,colors,opt,sort,leg=checkPieInputs(i_dict,title,labels,colors,opt,sort,leg)
+    cont,title,labels,colors,opt,sort,leg,oth=checkPieInputs(i_dict,title,labels,colors,opt,sort,leg,oth)
     
     if not cont:
         if leg: return None,None
@@ -254,7 +273,13 @@ def drawPieFromDict(i_dict,title="",labels=0,colors=0,opt="both",sort=False,leg=
     ## if sort, sort them out according to percentages
     if sort: vals_a.sort(reverse=True)
 
-    ## draw arrays to call TPie
+
+    ## if oth and label "oth" in input dict, put it away to add it later in last position
+    if oth:
+        for v in vals_a:
+            if v[1]=="oth": v_oth=vals_a.pop(vals_a.index(v))
+
+    ## make arrays to call TPie
     vals=[]
     colors=[]
     labels=[]
@@ -264,6 +289,13 @@ def drawPieFromDict(i_dict,title="",labels=0,colors=0,opt="both",sort=False,leg=
         labels.append(v[1])
         colors.append(v[2])
 
+    ## if oth, add oth in last position and change label to "Others"
+    if oth:
+        vals.append(v_oth[0])
+        labels.append("Others")
+        colors.append(v_oth[2])
+
+    ## finally, build arrays
     valsa=array.array("f",vals)
     colorsa=array.array("i",colors)
 
@@ -283,7 +315,7 @@ def drawPieFromDict(i_dict,title="",labels=0,colors=0,opt="both",sort=False,leg=
 
     ## if leg return pie and leg. If not, only leg
     if not leg: return pie
-    return pie, legFromPie(pie,n_el,sort)
+    return pie, legFromPie(pie,n_el,sort,oth)
 
 
 #---------------------------------------------------
@@ -339,16 +371,14 @@ def drawPieLessElements(i_dict,els=0,title="",labels=0,colors=0,opt="perc",leg=T
         for c in COLOR_DICT:
             if c not in o_colors.values() and isinstance(c,str): o_colors["oth"]=c
 
-    ## set label to "Others"
-    if labels!=0: o_labels["oth"]="Others"
-
+    
     ## if leg, return both pie and legend
     if leg:
-        pie,legend= drawPieFromDict(o_dict,title,o_labels,o_colors,opt,True,leg)
+        pie,legend= drawPieFromDict(o_dict,title,o_labels,o_colors,opt,True,leg,True)
         return pie,legend
 
     ## else, return only pie
-    return drawPieFromDict(o_dict,title,o_labels,o_colors,opt,True,leg)
+    return drawPieFromDict(o_dict,title,o_labels,o_colors,opt,True,leg,True)
 
 
 #---------------------------------------------------

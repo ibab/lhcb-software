@@ -2,9 +2,9 @@
 # =============================================================================
 """
 @namespace hadHLTpies
-@brief Build pies and extract information of events triggering Hadronic HLT. Includes functions to test inputs (check if job was correctly configured), two functions to classify tracks triggering HadPreTriggerSingle depending on ghosts' category and reason of trigger, and another to do the same with vertices from HadTrigger. There's one extra function to test module including one job ready to be used and return some info in the form of plots.
+@brief Build pies and extract information of events triggering Hadronic HLT. Includes functions to test inputs (check if job was correctly configured), two functions to classify tracks triggering HadPreTriggerSingle depending on ghosts' category and reason of trigger, and another to do the same with vertices from HadTrigger. Also includes functions to draw output of just mentioned functions.  There's one extra function to test module including one job ready to be used and return some info in the form of plots.
 @author Xabier Cid Vidal xabier.cid.vidal@cern.ch
-@date 2008-\05-02
+@date 2008-\17-03
 """
 # =============================================================================
 
@@ -18,6 +18,9 @@ import causeTools as ca
 import addDict as add
 import tracksAndVerticesClassifyTools as trve
 import drawPiesAndHistos as dph
+import oqTools as oq
+
+off_q=oq.HPTtracksOfflineQuality
 
 DEBUG=False
 
@@ -59,17 +62,16 @@ def checkGaudiModule(gaudimod):
     return gaudi,HLTSUM,TES
 
 
-def classifyHPTtracksByGhosts(gaudimod=0,N=100000000,g_mode=False):
+def classifyHPTtracksByGhosts(gaudimod=0,g_mode=False,oq_mode=False,N=10000000):
 
     """Classify tracks triggering in HLT according to the presence of ghosts. Need to input:
 
     @param gaudimod Configuration of the analysis (DATACARDS and extra opts).
+    @param g_mode Boolean. Return or not Pie with information. Default False.
+    @param oq_mode Boolean. Use offline counterpart to HPT online tracks if they exist and still trigger. Default False.
     @param N Number of events you want to check. Default all.
-    @param g_mode Boolean. Return or not Pie with information. Default True
-
     @returns numeric information and, if 'g_mode', also TPie with percentage of 111,110,10,01,00 tracks, where: 111 is 70% of hits in VELO from MCP1,70% of hits in TS MPC1 (same)/ 110 is 70% of hits in VELO from MCP1, 70% of hits in TS MPC2 (different)/ 01 is ghost in VELO (less than 70 % of hits from same MCP), 70% of hits in TS from MCP1/ 10  is 70% of hits in VELO from MCP1, ghost in TS (less than 70 % of hits from same MCP)/ 00 is ghost in VELO (less than 70 % of hits from same MCP), ghost in TS (less than 70 % of hits from same MCP).
 
-        Also prints same data with uncertainties.
 
     @author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
     """
@@ -104,14 +106,19 @@ def classifyHPTtracksByGhosts(gaudimod=0,N=100000000,g_mode=False):
                     if trig in sels:
 
                             ## count events of a certain track
-                            types["events"]+=1
+                            if not oq_mode: types["events"]+=1
 
-                            ## find tracks
-                            tracks=HLTSUM.selectionTracks(trig)
+                            ## get online or offline tracks depending on oq_mode
+                            if oq_mode: tracks=off_q(TES,HLTSUM)
+                            else: tracks=HLTSUM.selectionTracks(trig)
+                            
+                            ## count number of events depending on oq_mode
+                            if len(tracks) == 0:
+                                if DEBUG: types["anomaly"]+=1
 
+                            elif oq_mode: types["events"]+=1
 
-                            if len(tracks) == 0 and DEBUG: types["anomaly"]+=1
-
+                            
                             ## classify them and add it to output dictionary
                             for track in tracks:
 
@@ -145,22 +152,46 @@ def classifyHPTtracksByGhosts(gaudimod=0,N=100000000,g_mode=False):
     print "\n\n OUT=",out
     print "\n\n"
 
-    out_copy=copy.copy(out)        
-
+    out_copy=copy.copy(out)
+    
     ## if not g_mode return only dict
     if not g_mode: return out_copy
 
     #else, draw Pie and return both
-    tracks=out.pop("tracks")
-    events=out.pop("events")
-    pie=dph.drawPieFromDict(out,title="Percentage of each kind in "+str(tracks)+" tracks for "+TRIG,sort=True)
-    return out_copy,pie
-    
+    return out_copy,drawHPTtracksByGhosts(out,oq_mode)
+
 
 #---------------------------------------------------
 
 
-def getInformationFromHPTtracks(gaudimod=0,classify_ghosts=[],intruders=[],holes=[],g_mode=False,N=100000000):
+def drawHPTtracksByGhosts(out,oq_mode=False):
+    """Draw output of classifyHPTtracksByGhosts (in same module). Provides with a pie classifying tracks triggering in HLT according to the presence of ghosts. Need to input:
+
+    @param out Dictionary being the 'classify' function
+    @param oq_mode Mention in titles you're using 'offline quality' tracks. Default False.
+    @returns TPie with percentage of 111,110,10,01,00 tracks, where: 111 is 70% of hits in VELO from MCP1,70% of hits in TS MPC1 (same)/ 110 is 70% of hits in VELO from MCP1, 70% of hits in TS MPC2 (different)/ 01 is ghost in VELO (less than 70 % of hits from same MCP), 70% of hits in TS from MCP1/ 10  is 70% of hits in VELO from MCP1, ghost in TS (less than 70 % of hits from same MCP)/ 00 is ghost in VELO (less than 70 % of hits from same MCP), ghost in TS (less than 70 % of hits from same MCP).
+    @author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
+    """
+
+
+
+    TRIG="HadPreTriggerSingle"
+    ## prepare input to drawPie function
+    out_c=copy.copy(out)
+    tracks=out_c.pop("tracks")
+    events=out_c.pop("events")
+    ## set title depending on oq_mode
+    if oq_mode: tit="Percentage of each kind in "+str(tracks)+" 'offline quality' tracks for "+TRIG
+    else: tit="Percentage of each kind in "+str(tracks)+" tracks for "+TRIG
+    pie=dph.drawPieFromDict(out_c,title=tit,sort=True)
+    return pie
+    
+
+
+#---------------------------------------------------
+
+
+def getInformationFromHPTtracks(gaudimod=0,classify_ghosts=[],intruders=[],holes=[],g_mode=False,oq_mode=False,N=10000000):
 
     """
     Build pies with information about forward tracks triggering in HadPreTrigger Single. 
@@ -169,7 +200,8 @@ def getInformationFromHPTtracks(gaudimod=0,classify_ghosts=[],intruders=[],holes
     @param classify_ghosts (string): 111,110,10,01,00; where 111 is 70% of hits in VELO from MCP1,70% of hits in TS MPC1 (same)/ 110 is 70% of hits in VELO from MCP1, 70% of hits in TS MPC2 (different)/ 01 is ghost in VELO (less than 70 % of hits from same MCP), 70% of hits in TS from MCP1/ 10  is 70% of hits in VELO from MCP1, ghost in TS (less than 70 % of hits from same MCP)/ 00 is ghost in VELO (less than 70 % of hits from same MCP), ghost in TS (less than 70 % of hits from same MCP).
     @param Intruders (boolean): 8 first mcpar hits are 8 first used in track reconstruction  
     @param Holes (boolean): track has hits amongst 8 first from different mcpars
-    @param g_mode (boolean) Graphical mode. If true returns three groups of pies. First histogram of delta p. Second dict with info of physics tracks when they don't come from b or c (histogram of decay radio, histogram of decay z and pie with most popular eves). Third list of main pies. Default false
+    @param g_mode (boolean) Graphical mode. If true returns three groups of pies. First histogram of delta p. Second dict with info of physics tracks when they don't come from b or c (histogram of decay radio, histogram of decay z and pie with most popular eves). Third list of main pies. Default False.
+    @param oq_mode Boolean. Use offline counterpart to HPT online tracks if they exist and still trigger. Default False.
     @param N (int) Number of events to be analysed. Default all
 
     @returns
@@ -206,7 +238,7 @@ def getInformationFromHPTtracks(gaudimod=0,classify_ghosts=[],intruders=[],holes
                             - IP_both:        Both elements resolution
                             - IP_combination: Combination of both elements
 
-      If  'g_mode' also returns one histogram, one dictionary and one list with the same info in the form of histograms and pies. Particularly plots_nbc['eves'] is a list where first element is a pie an second another list keeping a legend for this pie and boxes used in this legend. Just need to type plots_nbc['eves'][0].Draw() and plots_nbc['eves'][1][0].Draw() to see everything
+      If  'g_mode' also returns one histogram, one dictionary and one list with the same info in the form of histograms and pies. Particularly plots_nbc['eves'] is a list where first element is a pie an second another list keeping a legend for this pie and boxes used in this legend. Just need to type 'plots_nbc['eves'][0].Draw()' and 'plots_nbc['eves'][1][0].Draw()' to see everything
 
     @author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
     """
@@ -249,18 +281,24 @@ def getInformationFromHPTtracks(gaudimod=0,classify_ghosts=[],intruders=[],holes
     out_nbc={"eves":{},"decay_radio":[],"decay_z":[]}
     out_deltap=[]
 
+
+    ## make sure we run from first event
+    gaudi.evtsel().rewind()
+
     ## run the N events
     for i in range(N):
 
             gaudi.run(1)
             if DEBUG: print "\n  EVENT NUMB=",j
             try: sels = HLTSUM.selections()
-            except:
-                    break
+            except: break
+
             ## make sure our event triggers our TRIG
             if TRIG in sels:
-
-                    tracks = HLTSUM.selectionTracks(TRIG)
+                
+                    ## get online or offline tracks depending on oq_mode
+                    if oq_mode: tracks=off_q(TES,HLTSUM)
+                    else: tracks = HLTSUM.selectionTracks(TRIG)
 
                     for track in tracks:
 
@@ -334,98 +372,155 @@ def getInformationFromHPTtracks(gaudimod=0,classify_ghosts=[],intruders=[],holes
             return out_pies,out_nbc,out_deltap
 
 
-    ## build names
-    name_tracks=str(tracks_numb)+" forward tracks from "+TRIG
-    name_tracks_s="forward tracks from "+TRIG
+    ## ELSE, RETURN ALL
 
-    #################################################################
-    ## BUILD HISTOGRAM OF DELTA P OVER P ##
-
-    hist_deltap=dph.histFromList(out_deltap,title="Resolution in momentum using "+name_tracks,name="\Deltap/p",nbins=100,fbin=-0.5,lbin=0.5,xtitle="\Deltap/p")
-
+    pies_all,nbc_plots,deltap_plots=drawInformationFromHPTtracks(out_pies,out_nbc,out_deltap,oq_mode)
     
-    ##############################################################################
-    ## BUILD HISTOGRAMS DECAY POS ##
-
-    plots_nbc={}
-    plots_nbc["decay_radio"]=dph.histFromList(out_nbc["decay_radio"],title="Radio of decay of non B or C eves using "+name_tracks,name="Radio of decay",nbins=100,fbin=0,lbin=20,xtitle="Radio of Decay (mm)")
-    plots_nbc["decay_z"]=dph.histFromList(out_nbc["decay_z"],title="Z position in decay of non B or C eves  using "+name_tracks,name="Position of decay",nbins=100,fbin=-300,lbin=1000,xtitle="Z Position of Decay (mm)")
-
-
-    ## BUILD PIE OF NON B OR C EVES
-    
-    if len(out_nbc["eves"])>8: hm=8
-    else: hm=len(out_nbc["eves"])
-    
-    pie_e,leg_e=dph.drawPieLessElements(out_nbc["eves"],els=hm,title=" Eves from Physics forward tracks from "+TRIG+" not having B or C quarks",opt="perc",leg=True)
-
-    plots_nbc["eves"]=[pie_e,leg_e]
-
-
-    #######################################################################3
-    ## BUILD A LIST WITH FIVE MAIN PIES ##
-
-    labels=[]
-    
-    labels.append(["phys","non_phys","ghost"])
-    labels.append(["isB","isC","others"])
-    labels.append(["pt","ip"])
-    labels.append(["vertex","ip_resol"])
-    labels.append(["IP_vertex","IP_slope","IP_both","IP_combination"])
-
-    ## If one of the labels is not there, add its value as 0. Calculate total numbers for percentages
-    for i in range(5):
-            total=0
-            for el in labels[i]:
-                    if not out_pies[i].has_key(el): out_pies[i][el]=0
-
-    ## Define new labels
-    labelsnew_p=[]
-    labelsnew_p.append(["Physics","Non physics","Ghosts"])
-    labelsnew_p.append(["Has B","Has C","#splitline{Does not have}{neither B nor C}"])
-    labelsnew_p.append(["We can blame RC pt","We can blame RC IP"])
-    labelsnew_p.append(["#splitline{We have used a}{wrong vertex}","Resolution effect"])
-    labelsnew_p.append(["Resolution of vertices","Slopes resolution","Resolution of both","Combination of both"])
-
-    ## Build dict for drawPieFromDict
-    labelsnew=[]
-    for i in range(5):
-        labelsnew.append({})
-        j=0
-        for el in labels[i]:
-            labelsnew[i][el]=labelsnew_p[i][j]
-            j+=1
-
-    ## Define titles of pies
-    titles_o=[]
-    titles_o.append("Percentage of physics and non physics in ")
-    titles_o.append("Quarks in eves of physics ")
-    titles_o.append("Cause of triggering in non physics ")
-    titles_o.append("Check who gave an IP to the non physics ")
-    titles_o.append("Elements whose resolution gave an IP to the non physics ")
-
-    titles=[]
-
-    for t in titles_o:
-            titles.append(t+name_tracks_s)
-
-
-    ## Build TPies
-    pies=[]
-    for i in range(5):
-        pies.append(dph.drawPieFromDict(out_pies[i],title=titles[i],labels=labelsnew[i],sort=True))
-
-    ##########################################################################################
-
-    ## RETURN
-
-    return out_pies,out_nbc,out_deltap,pies,plots_nbc,hist_deltap
+    return out_pies,out_nbc,out_deltap,pies_all,nbc_plots,deltap_plots
 
 
 #---------------------------------------------------
 
 
-def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N=100000000):
+def drawInformationFromHPTtracks(out_pies=0,out_nbc=0,out_deltap=0,oq_mode=False):
+    
+    """ Build pies with information about forward tracks triggering in HadPreTrigger Single. Uses info from getInformationFromHPTtracks, in this module. There's one output for each input from it.
+    @param out_pies First output of getInformationFromHPTtracks. Dictionary with all the info about 'reason of trigger'.
+    @param out_nbc Second output of getInformationFromHPTtracks. List of with all the info about 'physics' tracks not coming from a B or a C.
+    @param out_pies Third output of getInformationFromHPTtracks. List with deltap/p for tracks analysed in the function.
+    @param oq_mode Mention in titles you're using 'offline quality' tracks. Default False.
+    
+    @returns
+      Graphic information with one set of plots per each set of info in the input.
+      If all three possible inputs present, returns one histogram, one dictionary and one list with the same info in the form of histograms and pies. Particularly plots_nbc['eves'] is a list where first element is a pie an second another list keeping a legend for this pie and boxes used in this legend. Just need to type 'plots_nbc['eves'][0].Draw()' and 'plots_nbc['eves'][1][0].Draw()' to see everything.
+      For more info of classification introduced, type 'help(getInformationFromHPTtracks)' in this module.
+    @author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
+    """
+
+
+    
+    if out_pies==0 and out_nbc==0 and out_deltap==0:
+        print "ERROR: NO INPUT"
+        return None
+
+    TRIG="HadPreTriggerSingle"
+
+    
+    if out_pies!=0: tracks_numb=out_pies[0]["phys"]+out_pies[0]["non_phys"]
+    elif out_deltap!=0: tracks_numb=len(out_deltap)
+    else: tracks_numb=""
+
+    
+    ## build names accordin to oq_mode
+    if oq_mode:
+        name_tracks=str(tracks_numb)+" 'offline quality' tracks from "+TRIG
+        name_tracks_s="'offline quality' tracks from "+TRIG
+    else:
+        name_tracks=str(tracks_numb)+" tracks from "+TRIG
+        name_tracks_s="forward tracks from "+TRIG
+
+    #################################################################
+    ## BUILD HISTOGRAM OF DELTA P OVER P ##
+
+    if out_deltap!=0: hist_deltap=dph.histFromList(out_deltap,title="Resolution in momentum using "+name_tracks,name="\Deltap/p",nbins=100,fbin=-0.5,lbin=0.5,xtitle="\Deltap/p")
+
+    
+    ##############################################################################
+    ## BUILD HISTOGRAMS DECAY POS ##
+
+    if out_nbc!=0:
+        plots_nbc={}
+        plots_nbc["decay_radio"]=dph.histFromList(out_nbc["decay_radio"],title="Radio of decay of non B or C physics eves using "+name_tracks,name="Radio of decay",nbins=100,fbin=0,lbin=20,xtitle="Radio of Decay (mm)")
+        plots_nbc["decay_z"]=dph.histFromList(out_nbc["decay_z"],title="Z position in decay of non B or C physics eves using "+name_tracks,name="Position of decay",nbins=100,fbin=-300,lbin=1000,xtitle="Z Position of Decay (mm)")
+
+
+        ## BUILD PIE OF NON B OR C EVES
+        
+        if len(out_nbc["eves"])>8: hm=8
+        else: hm=len(out_nbc["eves"])
+        
+        pie_e,leg_e=dph.drawPieLessElements(out_nbc["eves"],els=hm,title=" Eves from Physics "+name_tracks_s+" not having B or C quarks",opt="perc",leg=True)
+
+        plots_nbc["eves"]=[pie_e,leg_e]
+
+
+    #######################################################################3
+    ## BUILD A LIST WITH FIVE MAIN PIES ##
+
+    if out_pies!=0:
+        labels=[]
+        
+        labels.append(["phys","non_phys","ghost"])
+        labels.append(["isB","isC","others"])
+        labels.append(["pt","ip"])
+        labels.append(["vertex","ip_resol"])
+        labels.append(["IP_vertex","IP_slope","IP_both","IP_combination"])
+
+        ## If one of the labels is not there, add its value as 0. Calculate total numbers for percentages
+        for i in range(5):
+                total=0
+                for el in labels[i]:
+                        if not out_pies[i].has_key(el): out_pies[i][el]=0
+
+        ## Define new labels
+        labelsnew_p=[]
+        labelsnew_p.append(["Physics","Non physics","Ghosts"])
+        labelsnew_p.append(["Has B","Has C","#splitline{Does not have}{neither B nor C}"])
+        labelsnew_p.append(["We can blame RC pt","We can blame RC IP"])
+        labelsnew_p.append(["#splitline{We have used a}{wrong vertex}","Resolution effect"])
+        labelsnew_p.append(["Resolution of vertices","Slopes resolution","Resolution of both","Combination of both"])
+
+        ## Build dict for drawPieFromDict
+        labelsnew=[]
+        for i in range(5):
+            labelsnew.append({})
+            j=0
+            for el in labels[i]:
+                labelsnew[i][el]=labelsnew_p[i][j]
+                j+=1
+
+        ## Define titles of pies
+        titles_o=[]
+        titles_o.append("Percentage of physics and non physics in ")
+        titles_o.append("Quarks in eves of physics ")
+        titles_o.append("Cause of triggering in non physics ")
+        titles_o.append("Check who gave an IP to the non physics ")
+        titles_o.append("Elements whose resolution gave an IP to the non physics ")
+
+        titles=[]
+
+        for t in titles_o:
+                titles.append(t+name_tracks_s)
+
+
+        ## Build TPies
+        pies=[]
+        for i in range(5):
+            pies.append(dph.drawPieFromDict(out_pies[i],title=titles[i],labels=labelsnew[i],sort=True))
+
+    ##########################################################################################
+
+    ## RETURN ACCORDING TO WHAT'S THERE IN INPUT
+
+    if out_pies==0:
+        if out_nbc==0: return hist_deltap
+        else:
+            if out_deltap==0: return plots_nbc 
+            else: return plots_nbc,hist_deltap
+            
+    else:
+        if out_nbc==0:
+            if out_deltap==0: return pies
+            else: return pies,hist_deltap
+        else:
+            if out_deltap==0: return pies,plots_nbc
+            else: return pies,plots_nbc,hist_deltap
+
+
+#---------------------------------------------------
+
+
+def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,oq_mode=False,N=10000000):
 
     """
     Build pies with information about vertices triggering in HadTrigger. 
@@ -434,6 +529,7 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N
 
     @param Intruders (boolean): 8 first mcpar hits are 8 first used in track reconstruction (for tracks linked to vertices)  
     @param Holes (boolean): track has hits amongst 8 first from different mcpars (for tracks linked to vertices)
+    @param oq_mode Boolean. Use offline counterpart to HT online tracks (those forming vertices) if they exist and still trigger. Default False.
     @param g_mode (boolean) Graphical mode. If true returns a list of 4 pies. First, percentage of ghost and no ghost vertices. Second, percentage of physics and no physics no ghost vertices. Third, percentage of physics vertices coming from B and C. Fourth, percentage of non physics vertices types. Default false
     @param N (int) Number of events to be analysed. Default all
 
@@ -456,8 +552,8 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N
                     - random_vertex: all tracks linked to vertex are physics but they don't come from same MC particle.
                     - no_phys_other: there is at least one track linked to vertex being non physics
 
-      To see explanation of types of tracks mentioned here type help(trackPies) in tracks_HPT_pies.
-      If  'g_mode' also returns 4 pies.
+      To see explanation of types of tracks mentioned here type 'help(getInformationFromHPTtracks)' and 'help(classifyHPTtracksByGhosts)' in same module.
+      If  'g_mode' also returns list with 4 pies.
 
     @author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
     """
@@ -492,7 +588,8 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N
     for i in range(4):
             out_pies.append({})
 
-
+    ## make sure we run from first event
+    gaudi.evtsel().rewind()
     ## run the N events
     for i in range(N):
 
@@ -503,8 +600,9 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N
                     break
             ## make sure our event triggers our TRIG
             if TRIG in sels:
-                    ## find vertices triggering HadTrigger
-                    vertices=trve.findHTvertices(HLTSUM)
+                    ## find vertices triggering HadTrigger according to oq_mode
+                    if oq_mode: vertices=oq.HPVerticesOfflineQuality(TES,HLTSUM)
+                    else: vertices=trve.findHTvertices(HLTSUM)
 
                     for vert in vertices:
 
@@ -517,7 +615,9 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N
                                 condi=False
                                 condi_l=[]
                                 for track in vert.tracks():
-                                        condi_l.append(trve.hasIntruders(TES,track,VELO))
+                                        if oq_mode: condi_l.append(trve.hasIntruders(TES,oq.getOfflineTrack(TES,track),VELO))
+                                        else: condi_l.append(trve.hasIntruders(TES,track,VELO))
+                                        
                                 if intruders and (True in condi_l): condi=True
                                 if not intruders and not (True in condi_l): condi=True
 
@@ -525,7 +625,8 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N
                                 condh=False
                                 condh_l=[]
                                 for track in vert.tracks():
-                                        condh_l.append(trve.hasHoles(TES,track,VELO))
+                                        if oq_mode: condh_l.append(trve.hasHoles(TES,oq.getOfflineTrack(TES,track),VELO))
+                                        else: condh_l.append(trve.hasHoles(TES,track,VELO))
                                 if holes and (True in condh_l): condh=True
                                 if not holes and not (True in condh_l): condh=True
 
@@ -535,7 +636,8 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N
 
                                     vert_numb+=1
 
-                                    reason=trve.classifyVertexByReasonOfTrigger(TES,vert)
+                                    if oq_mode: reason=oq.classifyVertexByReasonOfTriggerOfflineQuality(TES,vert)
+                                    else: reason=trve.classifyVertexByReasonOfTrigger(TES,vert)
 
                                     ## first pie: ghost/no_ghost
                                     if reason=="ghost":
@@ -547,7 +649,8 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N
                                             if reason=="phys":
                                                     add.add_elto_dic(out_pies[1],reason)
                                                     ## third pie: physics tracks origin b/c/neither b nor c
-                                                    add.add_elto_dic(out_pies[2],ca.origin_quark(TES,vert.tracks()[0]))
+                                                    if oq_mode: add.add_elto_dic(out_pies[2],ca.origin_quark(TES,oq.getOfflineTrack(TES,vert.tracks()[0])))
+                                                    else: add.add_elto_dic(out_pies[2],ca.origin_quark(TES,vert.tracks()[0]))
 
                                             else:
                                                     add.add_elto_dic(out_pies[1],"non_phys")
@@ -572,7 +675,26 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N
             return out_pies
 
 
-    #######################################################################3
+    ## ELSE, RETURN ALL
+        
+    return out_pies,drawInformationFromHTvertices(out_pies,oq_mode)
+
+
+#---------------------------------------------------
+
+def drawInformationFromHTvertices(out_pies,oq_mode=False):
+    """ Build pies with information about 'reason of trigger' in vertices from HadTrigger. Uses output from getInformationFromHTvertices, in this module.
+
+    @param out_pies First output of getInformationFromHPTtracks. Dictionary with all the info about 'reason of trigger'.
+    @param out_pies Output of getInformationFromHTvertices.
+    @param oq_mode Mention in titles you're using 'offline quality' tracks. Default False.
+    @returns Returns list with 4 pies.
+      For more info on classification introduced, type 'help(getInformationFromHTvertices)' in this module.
+    @author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
+    """
+
+    TRIG="HadTrigger"
+
     ## BUILD A LIST WITH 4 MAIN PIES
     piesn=[2,2,3,2]
 
@@ -584,7 +706,7 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N
     labels.append(["isB","isC","others"])
     labels.append(["random_vertex","no_phys_other"])
 
-    ## If one of the labels is not there, add its value as 0. Calculate total numbers for percentages
+    ## If one of the labels is not there, add its value as 0.
     for i in range(4):
             for el in labels[i]:
                     if not out_pies[i].has_key(el): out_pies[i][el]=0
@@ -618,8 +740,8 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N
     titles=[]
 
     for t in titles_o:
-            titles.append(t+"vertices from HadTrigger")
-
+            if oq_mode: titles.append(t+"'offline quality' vertices from HadTrigger")
+            else: titles.append(t+"vertices from HadTrigger")
 
     
     ## Build TPies
@@ -630,7 +752,10 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,N
     ##########################################################################################
     ## RETURN
 
-    return out_pies,pies
+    return pies
+
+
+#---------------------------------------------------
 
 
 def testForHadHLTpies():
@@ -676,5 +801,6 @@ def testForHadHLTpies():
 
         ## return 3 groups of pies only with most relevant information
         return pie_tracks_ghosts,pies_tracks_reason,pies_vertices
+
 
 

@@ -130,7 +130,7 @@ def hasHoles(TES,track,VELO):
 	## find sensors where we should find hits from this particle
 	sensho=hi.sensors_should(mcpar,rel)
 	## find sensors where we actually find them
-	senhas=hi.sensors_has(TES,vID,mcpar.key())
+	senhas=hi.sensors_have(TES,vID,mcpar.key())
 
 	cond=False
 	## compare both list of sensors
@@ -258,27 +258,31 @@ def classifyVertexByReasonOfTrigger(TES,vertex):
 	"""
 
 	def class_pt(tracks):
+		## small tool to return from a set of tracks two with biggest pt
 		out=[]
 		for t in tracks: out.append([t.pt(),t])
 		out.sort(reverse=True)
 		return out[0][1],out[1][1]
-			
 
+			
+	## if vertex is ghost, return so
 	if classifyVertexByGhosts(TES,vertex)=="ghost": return "ghost"
 
+	## get vertex tracks
 	tracks=vertex.tracks()
 	reasons=[]
+	## classify them according to pt (HadPreTrig-High pt, Confirmed -Low pt)
 	track_pt,track_ht=class_pt(tracks)
 
+	## find reason of Trigger in both cases
 	reasons.append(reasonOfTrigger(TES,track_pt))
 	reasons.append(ca.reasonOfTriggerHT(TES,track_ht))
 
-	i=0
-	for r in reasons:
-		if r=="phys": i+=1
-
-	if i==len(reasons):
+	## if both tracks are physics
+	if reasons.count("phys")==2:
+		## if they come from same eve, return phys
 		if ca.same_eve(TES,track_pt,track_ht): return "phys"
+		## if not,
 		else: return "random_vertex"
-
+	## if one of the tracks is not physics	
 	return "no_phys_other"

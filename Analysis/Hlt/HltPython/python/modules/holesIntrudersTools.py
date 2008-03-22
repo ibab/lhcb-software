@@ -47,7 +47,7 @@ def sensors_should(mcpar,rel):
 
 #---------------------------------------------------
 
-def sensors_has(TES,vID,mkey):
+def sensors_have(TES,vID,mkey):
     """find sensors whose hits were used to make the track
     """
     out=[]
@@ -85,7 +85,7 @@ def compare(sho,has,mcpar,VELO):
 
 
     pz=mcpar.momentum().z()
-    sortz(sho,pz)
+    sho=sortz(sho,pz)
     j=1
     out=[]
     for s in sho:

@@ -82,7 +82,7 @@ def IDs(lhcbIDs):
 	for lh in lhcbIDs:
 		if lh.isVelo():
 			vID.append(lh)
-		elif lh.isST()or lh.isOT:
+		elif lh.isIT() or lh.isOT():
 			tID.append(lh)
 	return vID,tID
 
@@ -96,7 +96,7 @@ def IDs_sorted(lhcbIDs,VELO):
 	for lh in lhcbIDs:
 		if lh.isVelo():
 			vID.append([VELO.sensor(lh.veloID()).z(),lh])
-		elif lh.isST()or lh.isOT:
+		elif lh.isIT() or lh.isOT():
 			tID.append(lh)
 
 	vID.sort()
