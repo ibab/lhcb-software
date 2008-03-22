@@ -5,6 +5,13 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltPython v1r4 2008-03-07 ===================
+! 2008-3-22 - Xabier Cid
+  - Add oqTools to modules. Module to deal with 'offline quality' tracks being counterpart to online hadronic HLT ones.
+  - Correct frequencyAndBpercentages module and hadHLTpies in examples to have the option to use offline tracks. New functions added also in both to draw output of other functions (previosly everything in same function).
+  - Modify behaviour of drawPieLessElements in drawPiesAndHistos module. Now 'Others' category always added in last position.
+  - Correct bugs in the files added on 2008-2-17
+
+
 ! 2008-2-21 - Hugo Ruiz for Xabier Cid
   - Corrected bugs in the files added on 2008-2-17
 
