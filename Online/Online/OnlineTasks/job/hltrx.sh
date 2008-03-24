@@ -13,7 +13,8 @@ fi
 pkill Gaudi.exe
 pkill test.exe
 pkill gentest.exe
-rm -f /dev/shm/bm_*  /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
+#pkill logViewer
+sudo rm -f /dev/shm/bm_*  /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 HOST=/$(hostname --short | awk '{ print toupper($1) }')
 # message are send via the DIM Messageservice
 #export MSGSVC=LHCb::MessageSvc
@@ -24,8 +25,8 @@ export TAN_PORT YES
 export TAN_NODE=$(hostname -f)
 
 export BIGTERM='xterm  -ls -132 -geometry 132x45 -title ' 
-export WIDETERM='xterm  -sl 10000 -ls -132 -geometry 160x50 -title '
-export MINITERM='xterm -sl 100000 -ls -132 -geometry 132x10 -title '
+export WIDETERM='xterm -vb -j -sl 10000 -ls -132 -geometry 160x40-0-0 -title '
+export MINITERM='xterm -iconic -sl 10000 -ls -132 -geometry 132x10 -title '
 
 # shortcuts for starting jobs
 export gaudi_run="${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe libGaudiOnline.so OnlineStart "
@@ -35,7 +36,7 @@ export gaudi_exe2="${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe libGaudiOnline.so O
 # Online tasks - be careful when changing the startup order 
 #
 # ErrorLogger (not required for running)
-$WIDETERM ErrorLogger@${HOST}    -e "export UTGID=${HOST}/ErrLog; /opt/FMC/bin/logViewer " &
+#$WIDETERM ErrorLogger@${HOST}    -e "export UTGID=${HOST}/ErrLog; /opt/FMC/bin/logViewer -N hlte06 " &
 sleep 1
 # 
 # MBMInit initializes the shared memory
@@ -54,14 +55,16 @@ $MINITERM EvtHolder@${HOST} -e "export UTGID=${HOST}/EvtHolder ; ${gaudi_exe} -o
 # At least one Consumer is needed - for example the (dummy) Moore process
 #
 $MINITERM Moore_0@${HOST}   -e "export UTGID=${HOST}/Moore_0  ; ${gaudi_exe} -opt=$GAUDIONLINEROOT/options/ReadMBM.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
-$MINITERM Moore_1@${HOST}   -e "export UTGID=${HOST}/Moore_1  ; ${gaudi_exe} -opt=$GAUDIONLINEROOT/options/ReadMBM.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
+#$MINITERM Moore_1@${HOST}   -e "export UTGID=${HOST}/Moore_1  ; ${gaudi_exe} -opt=$GAUDIONLINEROOT/options/ReadMBM.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
 #$MINITERM Moore_2@${HOST}   -e "export UTGID=${HOST}/Moore_2  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/ReadMBM.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
 # $MINITERM Moore_3@${HOST}   -e "export UTGID=${HOST}/Moore_3  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/ReadMBM.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
 #
 # Optional if you want write the data
 #
-$MINITERM DiskWR@${HOST}    -e "export UTGID=${HOST}/DiskWR   ; ${gaudi_exe} -opt=$ONLINETASKSROOT/options/DiskWR.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
+#$MINITERM DiskWR@${HOST}    -e "export UTGID=${HOST}/DiskWR   ; ${gaudi_exe} -opt=$ONLINETASKSROOT/options/DiskWR.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
 #
 # Last not least the event-builder
 #
-#$BIGTERM MEPRx@${HOST} -e "export UTGID=${HOST}/MEPRx ; ${gaudi_exe} -opt=$ONLINETASKSROOT/options/MEPRxSvc.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
+pid=$(ps waux | awk "/[0-9]+ ${WIDETERM}.*meprx/ { print \$2 }")
+[ -z $pid ] && $WIDETERM MEPRx@${HOST} -e "/opt/FMC/bin/logViewer | grep -i meprx" &
+$MINITERM MEPRx@${HOST} -e "export UTGID=${HOST}/MEPRx ; ${gaudi_exe} -opt=$ONLINETASKSROOT/options/MEPRxSvc.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
