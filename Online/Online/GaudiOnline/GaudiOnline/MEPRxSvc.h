@@ -22,8 +22,12 @@
 #include "GaudiKernel/Message.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IMonitorSvc.h"
+
+// Online stuff
 #include "RTL/rtl.h"
 #include "RTL/types.h"
+#include "NET/IPHeader.h"
+#include "GaudiOnline/MEPHdr.h"
 #include "dis.hxx"
 
 
@@ -84,6 +88,7 @@ namespace LHCb  {
     typedef Workers::iterator          RXIT;
     friend struct MEPRx;
   protected:
+    char                       *m_allNames;
     int                         m_dataSock; /* Raw socket for receiving data.*/
     int                         m_mepSock;  /* Raw socket to send MEP requests.*/
     enum { NOT_READY, READY, RUNNING, STOPPED } m_state;
@@ -91,6 +96,7 @@ namespace LHCb  {
     bool                        m_RTTCCompat;
     bool                        m_dynamicMEPRequest;
     bool                        m_dropIncompleteEvents;	
+    bool                        m_checkPartitionID;
     int                         m_MEPBuffers; 
     int                         m_maxMsForGetSpace;
     int                         m_pktSamplingCount; 
@@ -107,7 +113,7 @@ namespace LHCb  {
     u_int32_t                   m_partitionID;
     u_int32_t                   m_IPOdin;
     u_int32_t                   m_odinIPAddr;
-    unsigned int                m_maxEventAge; // (in ms)
+    unsigned int                m_maxEventAge; // (in millis)
     u_int8_t                   *m_trashCan;
     std::string                 m_rxIPAddr;
     std::string                 m_IPNameOdin;
@@ -123,7 +129,6 @@ namespace LHCb  {
     Workers                     m_usedDsc; 
     lib_rtl_lock_t              m_freeDscLock;
     lib_rtl_lock_t              m_usedDscLock;
-
     MEPRQCommand                *m_mepRQCommand;
 
     IIncidentSvc*               m_incidentSvc; 
@@ -135,15 +140,24 @@ namespace LHCb  {
     /* Counters per source */ 
     std::vector<int> m_rxOct, m_rxPkt, m_rxEvt;
     /* Global counters */
-    int m_totRxPkt, m_totRxOct;
+
     int m_numMEPRecvTimeouts, m_numMEPReq, m_totMEPReq, m_totMEPReqPkt;
     // Error counters
     //
-    std::vector<int> m_badLenPkt, m_misPkt, m_badPckFktPkt, m_truncPkt;
-    // u_int64_t m_notReqPkt, m_incEvt; // 64-bit not yet supported in IMonitorSvc
-    int m_notReqPkt, m_incEvt;
-  public:
 
+    // u_int64_t m_notReqPkt, m_incEvt; // 64-bit not yet supported in IMonitorSvc
+
+  public:
+    int m_totRxPkt, m_totRxOct;
+    int m_notReqPkt, m_incEvt;
+    int                         m_totBadMEP;
+    int                         m_totWrongPartID;
+    unsigned long               m_timer;
+    int                         m_maxErrors;
+    int                         m_nErrorSamples;
+    int                         m_errorCheckInterval; // (in millis)
+    bool                        m_cryError;
+    std::vector<int> m_badLenPkt, m_misPkt, m_badPckFktPkt, m_truncPkt;
     /// Standard Constructor
     MEPRxSvc(const std::string& name, ISvcLocator* svc);
     /// Standard Destructor
@@ -165,7 +179,7 @@ namespace LHCb  {
     int       sourceID() const              {  return m_sourceID;     }
     int       sourceAddr(u_int32_t i)       {  return m_srcAddr[i];   }
     int       addIncompleteEvent()          {  return m_incEvt++;     }
-  
+    int       totWrongPartID()              {  return m_totWrongPartID;  }   
     RXIT ageRx();
     static bool cmpL0ID(MEPRx *r, u_int32_t id);
     void removePkt(void);
@@ -179,12 +193,15 @@ namespace LHCb  {
     StatusCode allocRx();
     StatusCode releaseRx();
     int openSocket(int protocol);
-    // counter functions
+    int setupTimer(void);
     void clearCounters();
     int setupCounters();
     void publishCounters(void);
-    void handle(const Incident& inc); 
+    void handle(const Incident&); 
     void ageEvents(void);
+    int checkPartitionID(u_int32_t addr, struct MEPHdr *);
+    void cryError(void);
+    void truncatedPkt(struct RTL::IPHeader *);
   };
 
   /**

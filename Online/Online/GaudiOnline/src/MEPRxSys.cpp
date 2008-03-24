@@ -34,6 +34,11 @@
 #include <sys/time.h> 
 #include <cerrno>
 #endif // ifndef _WIN32
+// Like the Windows and Unix syscalls
+// *all* functions return 0 on success and > 0 on a failure 
+// this differs from OnlineKernel, which provides a (sentimental) mimickry
+// of VMS syscalls (which IMHO is not a good idea).
+
 
 namespace MEPRxSys {
 #ifndef _WIN32
@@ -193,7 +198,9 @@ int parse_addr(const std::string &straddr, u_int32_t &addr)
   return rc ? 0 : 1; // inet_aton returns 1 on success!
 #endif
 }
-
+/**
+ if successful hname will contain the trimmed (up to the first dot) hostname
+ */
 int 
 name_from_addr(u_int32_t addr, std::string &hname, std::string &msg)
 {
@@ -204,6 +211,7 @@ name_from_addr(u_int32_t addr, std::string &hname, std::string &msg)
     return 1;
   } 
   hname = h->h_name;
+  hname = hname.substr(0, hname.find_first_of("."));
   msg = "";
   return 0;
 }

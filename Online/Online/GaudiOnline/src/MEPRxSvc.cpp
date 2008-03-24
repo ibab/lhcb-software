@@ -8,13 +8,14 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.61 2008-02-27 19:53:12 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.62 2008-03-24 14:52:56 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
 #define snprintf _snprintf
 #endif
 #include <cstdlib>
+#include <cstring>
 #include <algorithm>
 #include <iostream>
 
@@ -25,7 +26,7 @@
 #include "GaudiOnline/MEPRxSvc.h"
 #include "GaudiOnline/MEPHdr.h"
 #include "GaudiOnline/MEPRxSys.h"
-#include "RTL/Lock.h"
+#include "RTL/Lock.h"   // RTL funny VMS-like wrappers for Unix sys-calls :-)
 #include "NET/IPHeader.h"
 #include "MBM/MepProducer.h"
 #include "MDF/RawEventHelpers.h"
@@ -35,10 +36,6 @@
 #include "MDF/MEPEvent.h" 
 #include "Event/RawBank.h"
 
-namespace LHCb {
-  class MEPEvent;
-  StatusCode RTTC2Current( const MEPEvent* me );
-}
 
 #define MAX_R_PACKET (0x10000 + 20)
 #define MEP_SENT  MBM_NORMAL
@@ -112,6 +109,7 @@ namespace LHCb  {
       return 1;
     }
 #define FULLNAME(id) m_parent->m_srcName[id] + " (" + m_parent->m_srcDottedAddr[id] + ")"
+#define HOSTNAME(id) m_parent->m_srcName[id]
     
     int spaceRearm(int) {
       m_eventType = EVENT_TYPE_MEP;
@@ -134,7 +132,7 @@ namespace LHCb  {
     void badPkt(DAQErrorEntry::DAQErrorType type , int srcid ) {
       m_eventType = EVENT_TYPE_ERROR;
       m_log << MSG::ERROR << "Bad packet from " <<
-	m_parent->m_srcName[srcid] << " (" << m_parent->m_srcDottedAddr[srcid] << ")  [";
+	HOSTNAME(srcid) << " [";
       switch (type) {
       case DAQErrorEntry::EmptyMEP: m_parent->m_truncPkt[srcid]++; 
 	m_log << "empty MEP"; break;
@@ -145,7 +143,7 @@ namespace LHCb  {
       default: m_log << "Mysterious error: " << type;
       }
       m_log << "]" << endmsg;
-      
+      (m_parent->m_totBadMEP)++;
     }
 
 #define RAWBHDRSIZ (sizeof(RawBank) - 4)
@@ -229,10 +227,11 @@ int MEPRx::setupDAQErrorBankHdr() {
 void MEPRx::incompleteEvent() {
   MEPEVENT* e = (MEPEVENT*)event().data;
   m_parent->addIncompleteEvent();
-  m_log << MSG::ERROR << "Incomplete Event! No packet from: ";
+  m_log << MSG::ERROR << "Incomplete Event #" << e->evID 
+	<< "  No packet from: ";
   for (int i = 0; i < m_nSrc; ++i) 
     if (!m_seen[i]) { 
-      m_log << FULLNAME(i) << " "; 
+      m_log << HOSTNAME(i) << " "; 
       m_parent->m_misPkt[i]++;
     }
   m_log << endmsg;
@@ -334,13 +333,12 @@ int MEPRx::spaceAction() {
   dsc.mask[0] = dsc.mask[1] = dsc.mask[2] = dsc.mask[3] = 0xffffffff;
   dsc.type    = m_eventType;    
   m->setSize(m_brx);
-  if (m_parent->m_RTTCCompat) RTTC2Current(m);
   declareEvent();
   return sendSpace();
 }
 
 int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid) {
-  MEPEVENT* e = (MEPEVENT*)event().data;
+  MEPEVENT *e = (MEPEVENT *)event().data;
   if (m_seen[srcid]) multipleSrc(srcid);
   m_seen[srcid] = 1;       
   if (m_nrx == 0) {
@@ -406,14 +404,18 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("MEPBufSize",       m_MEPBufSize = -1);
   declareProperty("bufName",          m_bufName = "MEPRX");
   declareProperty("ownAddress",       m_ownAddress = 0xFFFFFFFF);
-  declareProperty("RTTCCompat",       m_RTTCCompat = false);
   declareProperty("RxIPAddr",         m_rxIPAddr = "0.0.0.0");
   declareProperty("InitialMEPReqs",    m_initialMEPReq = 1);
   declareProperty("MEPsPerMEPReq",     m_MEPsPerMEPReq = 1);
   declareProperty("MEPRecvTimeout",   m_MEPRecvTimeout = 10);
   declareProperty("maxEventAge",      m_maxEventAge = 1000); // ms
+  declareProperty("checkPartitionID",      m_checkPartitionID = false);
   declareProperty("dropIncompleteEvents", m_dropIncompleteEvents = false);
   declareProperty("nCrh", m_nCrh = 10);
+  declareProperty("maxErrors", m_maxErrors = 50);
+  declareProperty("nErrorSamples", m_nErrorSamples = 10);
+  declareProperty("errorCheckInterval", m_errorCheckInterval = -1); // ms
+  declareProperty("RTTCCompat", m_RTTCCompat = false);
   m_trashCan  = new u_int8_t[MAX_R_PACKET];
 
   m_mepRQCommand = new MEPRQCommand(this, msgSvc(), RTL::processName());
@@ -423,6 +425,42 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
 MEPRxSvc::~MEPRxSvc(){
   delete [] (u_int8_t*) m_trashCan;
   delete m_mepRQCommand;
+}
+
+void MEPRxSvc::cryError() {
+  MsgStream log(msgSvc(),"MEPRx");
+  log << MSG::DEBUG << "Excessive errors: Going to state DAQ_ERROR" << endmsg;
+  Incident inc(name(), "DAQ_ERROR");
+  m_incidentSvc->fireIncident(inc); // note that name - this is very safely chosen
+                                    // just in case you want to fire something 
+                                    // else than an incident!
+  m_cryError = false;
+}
+
+void MEPRxSvc::truncatedPkt(RTL::IPHeader *iphdr) 
+{
+  MsgStream log(msgSvc(), "MEPRx");
+  std::string hname, mesg;
+  log << MSG::ERROR << "received packet with truncated MEP-header from " << 
+    (MEPRxSys::name_from_addr(iphdr->saddr, hname, mesg) ? mesg : hname) <<
+    endmsg;
+}
+// 0 if partition ID matches 
+// 1 if it does not match
+int MEPRxSvc::checkPartitionID(u_int32_t addr, struct MEPHdr *mephdr)
+{
+  if (mephdr->m_partitionID != m_partitionID) {
+    MsgStream log(msgSvc(),"MEPRx");
+    std::string hname, mesg;
+    log << MSG::ERROR << "received MEP from " << 
+      (MEPRxSys::name_from_addr(addr, hname, mesg) ? mesg : hname) <<
+      " with wrong partitionID: 0x" << 
+      std::hex << mephdr->m_partitionID  << ". I want 0x" << 
+      m_partitionID << endmsg;
+    m_totWrongPartID++;
+    return 1;
+}
+  return 0;
 }
 
 void MEPRxSvc::removePkt()   {
@@ -435,6 +473,25 @@ void MEPRxSvc::removePkt()   {
   }
 }
 
+static int errorCheck(void *context) {
+  MEPRxSvc *svc = (MEPRxSvc *) context;
+  static int n_high = 0;
+  static int old_errors = 0;
+  int new_errors;
+   
+  new_errors = svc->m_incEvt + svc->m_notReqPkt + svc->m_totBadMEP + 
+    svc->totWrongPartID();
+  if (new_errors - old_errors > svc->m_maxErrors) {
+    n_high++;
+    if (n_high > svc->m_nErrorSamples) svc->cryError();
+  } else n_high = 0;
+  old_errors = new_errors;
+  /* rearm */
+  lib_rtl_set_timer(svc->m_errorCheckInterval, errorCheck, svc, 
+		    &(svc->m_timer));
+  return 1; /* uaexxxx */
+}
+    
 // age all workDsc and return the oldest
 MEPRxSvc::RXIT MEPRxSvc::ageRx() {
   if ( !m_workDsc.empty() )  {
@@ -528,7 +585,7 @@ StatusCode MEPRxSvc::run() {
   RXIT rxit;
   MEPRx *rx;
   u_int8_t hdr[HDR_LEN];
-  RTL::IPHeader *iphdr  = (RTL::IPHeader*)hdr;
+  RTL::IPHeader *iphdr  = (RTL::IPHeader *)hdr;
   MEPHdr        *mephdr = (MEPHdr*) &hdr[IP_HEADER_LEN];;
   int srcid;
 
@@ -593,10 +650,21 @@ StatusCode MEPRxSvc::run() {
         ERRMSG(log,"recvmsg");
       continue;
     }
-    m_totRxPkt++;  
+    m_totRxPkt++; 
     m_numMEPRecvTimeouts = 0;
+    if (len < (int) HDR_LEN) {
+      // somebody sends us a badly truncated packet 
+      truncatedPkt(iphdr);
+      removePkt();
+      continue;
+    }	
     if ((srcid = getSrcID(iphdr->saddr)) == - 1) {
-      /* we do not expect nor want this */
+      // we do not expect nor want this 
+      removePkt();
+      continue;
+    }
+    if (m_checkPartitionID && checkPartitionID(iphdr->saddr, mephdr)) {
+      // we do not want this either 
       removePkt();
       continue;
     }
@@ -778,8 +846,10 @@ int MEPRxSvc::openSocket(int protocol) {
 
 int MEPRxSvc::getSrcID(u_int32_t addr)  {
   std::map<u_int32_t, int>::iterator i = m_srcAddr.find(addr);
-  if(i == m_srcAddr.end()) {
-    error("received unexpected packet from "+MEPRxSys::dotted_addr(addr));
+  if (i == m_srcAddr.end()) {
+    std::string hname, mesg;
+    error("received unexpected packet from " + (
+	    MEPRxSys::name_from_addr(addr, hname, mesg) ? mesg : hname));
     m_notReqPkt++;
     return -1;
   }
@@ -809,11 +879,15 @@ void MEPRxSvc::clearCounters() {
   memset(&m_badLenPkt.front(), 0, m_nSrc * sizeof(u_int32_t));
   memset(&m_misPkt.front(), 0, m_nSrc * sizeof(u_int32_t));
   memset(&m_truncPkt.front(), 0, m_nSrc * sizeof(u_int32_t));
-  m_totRxOct = m_totRxPkt = m_incEvt = m_notReqPkt;
   m_totMEPReq = m_totMEPReqPkt = m_numMEPRecvTimeouts = m_notReqPkt = 0;
+  m_totRxOct = m_totRxPkt = m_incEvt = m_totMEPReqPkt = 0;
+  m_numMEPRecvTimeouts = m_totMEPReq = 0;
+  m_totBadMEP =  m_totWrongPartID = 0;
+
 } 
 
 int MEPRxSvc::setupCounters() {
+  MsgStream log(msgSvc(), "MEPRx");
   m_rxOct.resize(m_nSrc,0);
   m_rxPkt.resize(m_nSrc,0);
   m_rxEvt.resize(m_nSrc,0);
@@ -821,18 +895,30 @@ int MEPRxSvc::setupCounters() {
   m_badLenPkt.resize(m_nSrc,0);
   m_misPkt.resize(m_nSrc,0);
   m_truncPkt.resize(m_nSrc,0);
-  m_totRxOct = m_totRxPkt = m_incEvt = m_totMEPReqPkt = m_numMEPRecvTimeouts = m_totMEPReq = 0;
   PUBCNT(totRxOct, "Total received bytes");
   PUBCNT(totRxPkt, "Total received packets");
   PUBCNT(incEvt,   "Incomplete events");
+  PUBCNT(totBadMEP, "Total bad MEPs");
   PUBCNT(totMEPReq, "Total requested MEPs");
   PUBCNT(totMEPReqPkt, "Total Sent MEP-request packets");
   PUBCNT(numMEPRecvTimeouts, "MEP-receive Timeouts");
   PUBCNT(notReqPkt, "Total unsolicited packets");
+  PUBCNT(totWrongPartID, "Packets with wrong partition-ID");
   PUBARRAYCNT(badLenPkt, "MEPs with mismatched length");
   PUBARRAYCNT(misPkt, "Missing MEPs");
   PUBARRAYCNT(badPckFktPkt, "MEPs with wrong packing (MEP) factor");
   PUBARRAYCNT(truncPkt, "Truncated MEPs");
+  // create cstring for source names
+  std::string all_names = "";
+  
+  for (unsigned i = 0; i < m_srcName.size(); ++i)  all_names = all_names + '\0' + m_srcName[i];
+  if (!(m_allNames = new char[all_names.size()+1]))
+    return 1;
+   ::memcpy(m_allNames, (const char *) all_names.data(), all_names.size() +1);
+  
+  m_monSvc->declareInfo("srcName", "C:", m_allNames, sizeof(m_srcName), "Source IP names", this);
+  log << MSG::INFO << all_names << all_names.size() << endmsg;
+  clearCounters();
   return 0;
 }
 
@@ -845,6 +931,16 @@ void  MEPRxSvc::handle(const Incident& inc)    {
   else if (inc.type() == "DAQ_ENABLE")  {
     m_state = RUNNING;
   }
+}
+
+int MEPRxSvc::setupTimer(void) {
+  unsigned long t;
+  if (m_errorCheckInterval <= 0) return 0;
+  if (lib_rtl_set_timer(m_errorCheckInterval, errorCheck, this, &t)) {
+    m_timer = t;
+    return 0; // in the weird world of the OnlineKernel 0 = 1 and 1 = 0 ...
+  }
+  return 1;
 }
 
 StatusCode MEPRxSvc::initialize()  {
@@ -860,33 +956,38 @@ StatusCode MEPRxSvc::initialize()  {
   if ( !allocRx().isSuccess()         )  return StatusCode::FAILURE;
 
   if (lib_rtl_create_lock(0, &m_usedDscLock) != 1 || 
-    lib_rtl_create_lock(0, &m_freeDscLock) != 1) {
-      return error("Failed to create locks.");
+      lib_rtl_create_lock(0, &m_freeDscLock) != 1) {
+    return error("Failed to create locks.");
+  }
+  if (service("IncidentSvc", m_incidentSvc).isSuccess()) {
+    m_incidentSvc->addListener(this, "DAQ_CANCEL");
+    m_incidentSvc->addListener(this, "DAQ_ENABLE");
+  }    
+  else { 
+    return error("Failed to access incident service.");
+  }
+  if (service("MonitorSvc", m_monSvc).isSuccess()) {
+    if (setupCounters()) {
+      return error("Failed to setup counters");
     }
-    if (service("IncidentSvc", m_incidentSvc).isSuccess()) {
-      m_incidentSvc->addListener(this, "DAQ_CANCEL");
-      m_incidentSvc->addListener(this, "DAQ_ENABLE");
-    } 
-    else { 
-      return error("Failed to access incident service.");
-    }
-    if (service("MonitorSvc", m_monSvc).isSuccess()) {
-      setupCounters();
-    } 
-    else {
-      return error("Failed to access monitor service.");
-    }
-
+  } 
+  else {
+    return error("Failed to access monitor service.");
+  }
+  if (setupTimer()) 
+    return error("Failed to initialize timer.");
 //    /*Send some MEP requests to start with.*/
 ///    if(!sendMEPReq(m_initialMEPReq).isSuccess()) {
 //      log << MSG::WARNING << "Could not send " << m_initialMEPReq
 //        << " initial MEP requests." << endmsg;
 //    }
-    m_state = READY;
-    return StatusCode::SUCCESS;
+  m_state = READY;
+  return StatusCode::SUCCESS;
 }
 
 StatusCode MEPRxSvc::finalize()  {
+  if (m_errorCheckInterval > 0) 
+    lib_rtl_kill_timer(m_timer);
   MsgStream log(msgSvc(),"MEPRx");
   log << MSG::DEBUG << "Entering finalize....." << endmsg;
   releaseRx();
