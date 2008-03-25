@@ -47,6 +47,7 @@ namespace Al
     m_elements.resize(nelem) ;
     m_totalChiSquare  = 0.0 ;
     m_numTracks       = 0u ;
+    m_numVertices     = 0u ;
     m_totalNumDofs    = 0u ;
     m_numExternalHits = 0u ;
   }
@@ -56,7 +57,8 @@ namespace Al
     std::ofstream file(filename,std::ios::out | std::ios::binary);
     file << m_elements
 	 << m_numTracks
-	 << m_totalChiSquare
+	 << m_numVertices
+      	 << m_totalChiSquare
 	 << m_totalNumDofs
 	 << m_numExternalHits ;
     file.close() ;
@@ -67,6 +69,7 @@ namespace Al
     std::ifstream file(filename,std::ios::in | std::ios::binary);
     file >> m_elements
 	 >> m_numTracks
+	 >> m_numVertices
 	 >> m_totalChiSquare
 	 >> m_totalNumDofs
 	 >> m_numExternalHits ;
@@ -80,10 +83,19 @@ namespace Al
     for( ElementContainer::const_iterator rhsit = rhs.m_elements.begin() ;
 	 rhsit != rhs.m_elements.end(); ++rhsit, ++it) (*it).add( *rhsit ) ;
     m_numTracks       += rhs.m_numTracks ;
+    m_numVertices     += rhs.m_numVertices ;
     m_totalChiSquare  += m_totalChiSquare ;
     m_totalNumDofs    += m_totalNumDofs ;
     m_numExternalHits += m_numExternalHits ;
   }
   
+  size_t Equations::numHits() const
+  {
+    size_t rc(0) ;
+    for( ElementContainer::const_iterator it = m_elements.begin() ;
+	 it != m_elements.end(); ++it )
+      rc += it->m_numHits ;
+    return rc ;
+  }
 
 }

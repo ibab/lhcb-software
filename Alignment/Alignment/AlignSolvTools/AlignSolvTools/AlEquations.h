@@ -1,12 +1,12 @@
 #ifndef ALIGNSOLVTOOLS_ALEQUATIONS_H
 #define ALIGNSOLVTOOLS_ALEQUATIONS_H
 
-
 #include <vector>
 #include <map>
 #include "GaudiKernel/GenericMatrixTypes.h"
 #include "GaudiKernel/GenericVectorTypes.h"
-#include "AlignSolvTools/PersistSolv.h"
+
+class PersistSolv;
 
 namespace Al
 {
@@ -42,19 +42,25 @@ namespace Al
     size_t numHits(int i) const { return m_elements[i].m_numHits ; }
     double weight(int i) const { return m_elements[i].m_weight ; }
     
-    void addTrackSummary( double chisq, size_t ndof, size_t nexternal) {
+    void addChi2Summary( double chisq, size_t ndof, size_t nexternal) {
       m_totalChiSquare +=chisq;
       m_totalNumDofs   +=ndof ;
       m_numExternalHits+=nexternal ;
-      ++m_numTracks;
     }
     
     void addHitSummary(int index, double sigma) {
       m_elements[index].m_numHits += 1 ;
       m_elements[index].m_weight  += 1/(sigma*sigma) ;
     }
-    
+
+    void addEventSummary( size_t numtracks, size_t numvertices ) {
+      m_numTracks += numtracks ;
+      m_numVertices += numvertices ;
+    }
+
     size_t numTracks() const { return m_numTracks ; }
+    size_t numVertices() const { return m_numVertices ; }
+    size_t numHits() const ;
     double totalChiSquare() const { return m_totalChiSquare ; }
     size_t totalNumDofs() const { return m_totalNumDofs ; }
     size_t numExternalHits() const { return m_numExternalHits ; }
@@ -66,12 +72,12 @@ namespace Al
     typedef std::vector<ElementData> ElementContainer  ;
     ElementContainer m_elements ;
     size_t           m_numTracks ;
+    size_t           m_numVertices ;
     double           m_totalChiSquare ;
     size_t           m_totalNumDofs ;
     size_t           m_numExternalHits ;
     friend class PersistSolv;
   };
   
-} 
-
+} ;
 #endif // ALIGNSOLVTOOLS_ALEQUATIONS_H
