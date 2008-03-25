@@ -1,7 +1,7 @@
 //== Options obtained by the fit of the MC track parameters 
 //=== Fit for DC06, updated position, 5 parameters for zMagnet.
 
-ToolSvc.PatFwdTool.zMagnetParams = { 5199.31, 334.725, -1283.86, 9.59486e-06, -413.281 };
+ToolSvc.PatFwdTool.ZMagnetParams = { 5199.31, 334.725, -1283.86, 9.59486e-06, -413.281 };
 ToolSvc.PatFwdTool.xParams = { 16.8238, -6.35556 };
 ToolSvc.PatFwdTool.yParams = { -970.89,  -0.686028 };
 ToolSvc.PatFwdTool.momentumParams = { 1.21909, 0.627841, -0.235216, 0.433811, 2.92798, -21.3909 };
