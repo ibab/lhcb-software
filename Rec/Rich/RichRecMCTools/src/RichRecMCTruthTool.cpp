@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.30 2007-11-26 16:51:31 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.31 2008-03-25 16:46:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -374,17 +374,20 @@ Rich::ParticleIDType
 MCTruthTool::mcParticleType( const LHCb::RichRecSegment * richSegment,
                              const double minWeight ) const
 {
-  return ( richSegment ? mcParticleType(richSegment->richRecTrack(),minWeight) : Rich::Unknown );
+  return ( richSegment ? 
+           mcParticleType(richSegment->richRecTrack(),minWeight) : 
+           Rich::Unknown );
 }
 
 const LHCb::MCParticle *
 MCTruthTool::mcParticle( const LHCb::RichRecSegment * richSegment,
                          const double minWeight ) const
 {
-  return ( richSegment ? mcParticle( richSegment->richRecTrack(), minWeight ) : NULL );
+  return ( richSegment ? 
+           mcParticle( richSegment->richRecTrack(), minWeight ) :
+           NULL );
 }
 
-// CRJ : Update to remove use of MCRichHits ?
 bool
 MCTruthTool::mcRichOpticalPhoton( const LHCb::RichRecPixel * richPixel,
                                   SmartRefVector<LHCb::MCRichOpticalPhoton> & phots ) const
