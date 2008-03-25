@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::IMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.1.1.1 2007-05-25 16:24:33 cattanem Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.2 2008-03-25 15:49:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -194,6 +194,28 @@ namespace Rich
        */
       virtual bool isBackground ( const LHCb::RichSmartID id ) const = 0;
 
+      /** Checks if the given RichSmartID is the result of a photon which
+       *  underwent reflections inside the HPD
+       *
+       *  @param id RichSmartID
+       *
+       *  @return Boolean indicating if the digit is an HPD reflection
+       *  @retval true  RichSmartID originated from a reflection hit
+       *  @retval false RichSmartID did not undergo reflection
+       */
+      virtual bool isHPDReflection ( const LHCb::RichSmartID id ) const = 0;
+
+      /** Checks if the given RichSmartID is the result of backscattering
+       *   of the HPD silicon sensor
+       *
+       *  @param id RichSmartID
+       *
+       *  @return Boolean indicating if the digit is from backscattering
+       *  @retval true  RichSmartID originated from back-scattering
+       *  @retval false RichSmartID did not originate from back-scattering
+       */
+      virtual bool isSiBackScatter ( const LHCb::RichSmartID id ) const = 0;
+
       /** Checks if the given RichSmartID is the result of true Cherenkov
        *  radiation from the given radiator
        *
@@ -213,13 +235,35 @@ namespace Rich
        *
        *  @param cluster Cluster of RichSmartIDs
        *
-       *  @return Boolean indicating if the digit is background
-       *  @retval true  RichSmartID originated from a background hit
-       *  @retval false RichSmartID originated from Cherenkov Radiation
+       *  @return Boolean indicating if the cluster is background
+       *  @retval true  RichSmartIDs originated from a background hit
+       *  @retval false RichSmartIDs originated from Cherenkov Radiation
        */
       virtual bool isBackground ( const Rich::HPDPixelCluster& cluster ) const = 0;
 
-      /** Checks if the given RichSmartID is the result of true Cherenkov
+      /** Checks if the given cluster of RichSmartIDs is the result of a photon which
+       *  underwent reflections inside the HPD
+       *
+       *  @param cluster Cluster of RichSmartIDs
+       *
+       *  @return Boolean indicating if the cluster is an HPD reflection
+       *  @retval true  RichSmartIDs originated from a reflection hit
+       *  @retval false RichSmartIDs did not undergo reflection
+       */
+      virtual bool isHPDReflection ( const Rich::HPDPixelCluster& cluster ) const = 0;
+
+      /** Checks if the given cluster of RichSmartIDs is the result of backscattering
+       *   of the HPD silicon sensor
+       *
+       *  @param cluster Cluster of RichSmartIDs
+       *
+       *  @return Boolean indicating if the cluster is from backscattering
+       *  @retval true  RichSmartIDs originated from back-scattering
+       *  @retval false RichSmartIDs did not originate from back-scattering
+       */
+      virtual bool isSiBackScatter ( const Rich::HPDPixelCluster& cluster ) const = 0;
+
+      /** Checks if the given cluster of RichSmartIDs is the result of true Cherenkov
        *  radiation from the given radiator. I.e. At least of of the associated
        *  hits came from a true Cherenkov hit in the correct radiator.
        *
