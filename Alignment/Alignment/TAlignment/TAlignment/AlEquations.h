@@ -1,7 +1,12 @@
+#ifndef TALIGNMENT_ALEQUATIONS_H
+#define TALIGNMENT_ALEQUATIONS_H
+
+
 #include <vector>
 #include <map>
 #include "GaudiKernel/GenericMatrixTypes.h"
 #include "GaudiKernel/GenericVectorTypes.h"
+#include "AlignSolvTools/PersistSolv.h"
 
 namespace Al
 {
@@ -64,6 +69,9 @@ namespace Al
     double           m_totalChiSquare ;
     size_t           m_totalNumDofs ;
     size_t           m_numExternalHits ;
+    friend class PersistSolv;
   };
   
-} ;
+} 
+
+#endif // TALIGNMENT_ALEQUATIONS_H

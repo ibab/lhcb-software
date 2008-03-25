@@ -1,5 +1,5 @@
-#include "AlEquations.h"
-#include "AlFileIO.h"
+#include "TAlignment/AlEquations.h"
+#include "TAlignment/AlFileIO.h"
 
 namespace Al
 {   
