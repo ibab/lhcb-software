@@ -22,5 +22,5 @@ use  LinkerEvent  v*     Event
 
 # Component library building rule
 #============================================================================
-library          VeloAlgorithms      ../src/*.cpp
+library          VeloAlgorithms      ../src/*.cpp -import=AIDA
 apply_pattern component_library library=VeloAlgorithms

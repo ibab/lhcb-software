@@ -2,6 +2,9 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2008-25-03 M Needham
+ - Add algorithm to monitor the velo sensor efficiency in MC
+
 !===================== VeloAlgorithms v4r6p1 2007-10-08 ===================
 ! 2007-10-06 - Tomasz Szumlak
  - ultimate unchecked StatusCode fix
