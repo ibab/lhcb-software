@@ -1,0 +1,28 @@
+
+// Set tool context
+ToolSvc.RichPIDTool.Context = "Offline";
+ToolSvc.Offline.RichPIDTool.Context = "Offline";
+
+// turn on book-keeping
+ToolSvc.Offline.RichTrackCreator.DoBookKeeping  = true;
+ToolSvc.Offline.RichPhotonCreator.DoBookKeeping = true;
+
+// Number of likelihood iterations
+ToolSvc.Offline.RichPIDTool.NSteps = 2;
+
+// First iteration
+ToolSvc.Offline.RichPIDTool.Likelihood1.TrackFreezeOutDLL        = 2;
+ToolSvc.Offline.RichPIDTool.Likelihood1.TrackForceChangeDLL      = -1;
+ToolSvc.Offline.RichPIDTool.Likelihood1.LikelihoodThreshold      = -1e-2;
+ToolSvc.Offline.RichPIDTool.Likelihood1.MaxTrackChangesPerIt     = 5;
+ToolSvc.Offline.RichPIDTool.Likelihood1.MinSignalForNoLLCalc     = 1e-3;
+
+// Second iteration
+ToolSvc.Offline.RichPIDTool.Likelihood2.TrackFreezeOutDLL        = 4;
+ToolSvc.Offline.RichPIDTool.Likelihood2.TrackForceChangeDLL      = -2;
+ToolSvc.Offline.RichPIDTool.Likelihood2.LikelihoodThreshold      = -1e-3;
+ToolSvc.Offline.RichPIDTool.Likelihood2.MaxTrackChangesPerIt     = 5;
+ToolSvc.Offline.RichPIDTool.Likelihood2.MinSignalForNoLLCalc     = 1e-3;
+
+// Final iteration must have this option set
+//ToolSvc.Offline.RichPIDTool.Likelihood2.FinalDLLCheck = true;

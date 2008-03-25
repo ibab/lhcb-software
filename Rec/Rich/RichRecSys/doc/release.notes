@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2008-03-25 - Chris Jones
+ - Rework options to adapt to new 'tool' based reconstruction
+
 ! 2008-02-17 - Chris Jones
  - Add options for new photon reconstruction tool (C.Buszello)
 

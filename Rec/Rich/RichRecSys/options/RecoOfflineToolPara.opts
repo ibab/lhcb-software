@@ -76,11 +76,11 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackSelector/TrackSelec
 // photon reonstruction tool (Default)
 #include "$RICHRECSYSOPTS/tools/RichPhotonsFromReco.opts"
 
-// Fast hoton reconstruction using reconstructed but estimates CK angles using
+// Fast photon reconstruction using reconstructed but estimates CK angles using
 // track and hit positions on the local HPD plane and CK rings as callibration points
 //#include "$RICHRECSYSOPTS/tools/RichPhotonsFromReco-CKRing.opts"
 
-// Fast hoton reconstruction using reconstructed but estimates CK angles using
+// Fast photon reconstruction using reconstructed but estimates CK angles using
 // an iterative ray tracing approach (C.Buszello)
 //#include "$RICHRECSYSOPTS/tools/RichPhotonsFromReco-IterRayTrace.opts"
 
@@ -129,6 +129,8 @@ ToolSvc.Offline.RichRayTraceCKCone.BailoutTries = { 50,  50,  50  };
 // CK ring creator
 ToolSvc.Offline.RichMassHypoRings.MaxRingPoints = { 100,  100,  100  }; 
 ToolSvc.Offline.RichMassHypoRings.MinRingPoints = { 100,  100,  100  }; 
+//ToolSvc.Offline.RichMassHypoRings.MaxRingPoints = { 200,  200,  200  }; 
+//ToolSvc.Offline.RichMassHypoRings.MinRingPoints = { 200,  200,  200  }; 
 ToolSvc.Offline.RichMassHypoRings.CheckBeamPipe = true;
 ToolSvc.Offline.RichMassHypoRings.UseDetailedHPDsInRayTracing = false;
 

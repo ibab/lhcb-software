@@ -9,7 +9,13 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::PixelCreatorFromSign
 ToolSvc.Offline.RichPixelCreatorReco.UseDetectors = {  true,   true   };
 
 // Turn on/off the filtering of hits that do not associated to tracked MCParticles
-ToolSvc.Offline.RichPixelCreator.FilterTracklessDigits = true;
+ToolSvc.Offline.RichPixelCreator.FilterTracklessDigits = false;
 
-// reject background  hits ?
-ToolSvc.Offline.RichPixelCreator.RejectBackground = false;
+// reject ALL background hits ?
+ToolSvc.Offline.RichPixelCreator.RejectAllBackgrounds = false;
+
+// reject HPD reflections
+ToolSvc.Offline.RichPixelCreator.RejectHPDReflections = true;
+
+// reject SI back-scatter
+ToolSvc.Offline.RichPixelCreator.RejectBackScatter = true;

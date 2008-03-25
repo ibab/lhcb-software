@@ -72,12 +72,16 @@ RichGlobalPIDSeq.Members += { "GaudiSequencer/RichGlobalPIDLikelihoodSeq" };
 RichGlobalPIDLikelihoodSeq.MeasureTime   = true;
 
 // First iteration of background estimation then Global PID iteration
-RichGlobalPIDLikelihoodSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEstPreIt",
-                                        "Rich::Rec::GlobalPID::Likelihood/RichGloPIDPreIt" };
+RichGlobalPIDLikelihoodSeq.Members += { 
+  "Rich::Rec::PixelBackgroundAlg/RichBckEstPreIt",
+  "Rich::Rec::GlobalPID::Likelihood/RichGloPIDPreIt" 
+};
 
 // Second iteration of background estimation then Global PID iteration
-RichGlobalPIDLikelihoodSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEstFinalIt",
-                                        "Rich::Rec::GlobalPID::Likelihood/RichGloPIDFinalIt" };
+RichGlobalPIDLikelihoodSeq.Members += { 
+  "Rich::Rec::PixelBackgroundAlg/RichBckEstFinalIt",
+  "Rich::Rec::GlobalPID::Likelihood/RichGloPIDFinalIt" 
+};
 
 // Finalise Global PID algorithm each event
 RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Finalize/RichGloPIDFin" };
@@ -134,24 +138,23 @@ RichGloPIDTrSel.ResetTracksToPion         = false;
 //RichGloPIDTrSel.FrozenTrackMassHypo = 0;
 
 // Global Algorithm parameters - phase 1
-RichGloPIDPreIt.TrackFreezeOutDLL           = 2;
-RichGloPIDPreIt.TrackForceChangeDLL         = -1;
-RichGloPIDPreIt.LikelihoodThreshold         = -1e-2;
-RichGloPIDPreIt.MaxTrackChangesPerIt        = 5;
-RichGloPIDPreIt.MinSignalForNoLLCalc        = 1e-3;
+RichGloPIDPreIt.GPIDLikelihoodTool.TrackFreezeOutDLL           = 2;
+RichGloPIDPreIt.GPIDLikelihoodTool.TrackForceChangeDLL         = -1;
+RichGloPIDPreIt.GPIDLikelihoodTool.LikelihoodThreshold         = -1e-2;
+RichGloPIDPreIt.GPIDLikelihoodTool.MaxTrackChangesPerIt        = 5;
+RichGloPIDPreIt.GPIDLikelihoodTool.MinSignalForNoLLCalc        = 1e-3;
 
 // Global Algorithm parameters - phase 2
-RichGloPIDFinalIt.TrackFreezeOutDLL         = 4;
-RichGloPIDFinalIt.TrackForceChangeDLL       = -2;
-RichGloPIDFinalIt.LikelihoodThreshold       = -1e-3;
-RichGloPIDFinalIt.MaxTrackChangesPerIt      = 5;
-RichGloPIDFinalIt.MinSignalForNoLLCalc      = 1e-3;
+RichGloPIDFinalIt.GPIDLikelihoodTool.TrackFreezeOutDLL         = 4;
+RichGloPIDFinalIt.GPIDLikelihoodTool.TrackForceChangeDLL       = -2;
+RichGloPIDFinalIt.GPIDLikelihoodTool.LikelihoodThreshold       = -1e-3;
+RichGloPIDFinalIt.GPIDLikelihoodTool.MaxTrackChangesPerIt      = 5;
+RichGloPIDFinalIt.GPIDLikelihoodTool.MinSignalForNoLLCalc      = 1e-3;
 
 // Final iteration must have this option set
-RichGloPIDFinalIt.FinalDLLCheck = true;
+RichGloPIDFinalIt.GPIDTool.FinalDLLCheck = true;
 
 // PID merging
-//MergeRichPIDs.UseRingRefitPIDs = false; // disabled for the moment
 MergeRichPIDs.UseLocalPIDs     = false;
 MergeRichPIDs.UseGlobalPIDs    = true;
 //MergeRichPIDs.OutputPIDLocation = "Rec/Rich/NewPIDs";
