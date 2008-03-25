@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::CherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.h,v 1.11 2008-02-21 16:44:51 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.h,v 1.12 2008-03-25 16:48:55 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -35,6 +35,9 @@
 
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
+
+// RichKernel
+#include "RichKernel/RichMap.h"
 
 // boost
 #include "boost/lexical_cast.hpp"
@@ -80,14 +83,10 @@ namespace Rich
           return (int)( (phi+(0.5*phiInc)) / phiInc );
         }
 
-        /// Returns the phi region as a string
-        inline std::string phiRegionString( const double phi ) const
-        {
-          return boost::lexical_cast<std::string>( phiRegion(phi) );
-        }
+        typedef std::pair<std::string,std::string> PhiDesc;
 
         /// Returns the phi regions 'description'
-        std::string phiRegionDesc( const double phi ) const;
+        const PhiDesc & phiRegionDesc( const double phi ) const;
 
       private: // data
 
@@ -108,6 +107,9 @@ namespace Rich
 
         /// Number of phi regions to use
         unsigned int m_nPhiRegions;
+
+        /// Cahced region descriptions
+        mutable Rich::Map<int,PhiDesc> m_rDesc;
 
       };
 
