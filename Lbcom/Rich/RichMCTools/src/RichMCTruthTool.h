@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::MC::MCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.34 2007-05-29 15:11:53 cattanem Exp $
+ *  $Id: RichMCTruthTool.h,v 1.35 2008-03-25 15:41:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -126,6 +126,14 @@ namespace Rich
       // Checks if the given RichSmartID is the result of a background hit
       bool isBackground ( const LHCb::RichSmartID id ) const;
 
+      // Checks if the given RichSmartID is the result of a photon which
+      // underwent reflections inside the HPD
+      bool isHPDReflection ( const LHCb::RichSmartID id ) const;
+
+      // Checks if the given RichSmartID is the result of backscattering
+      // of the HPD silicon sensor
+      bool isSiBackScatter ( const LHCb::RichSmartID id ) const;
+
       // Checks if the given RichSmartID is the result of true Cherenkov
       bool isCherenkovRadiation( const LHCb::RichSmartID id,
                                  const Rich::RadiatorType rad ) const;
@@ -142,7 +150,7 @@ namespace Rich
       void
       mcRichHits( const Rich::HPDPixelCluster& cluster,
                   SmartRefVector<LHCb::MCRichHit> & hits ) const;
-      
+
       // Access the bit-pack history objects for the given cluster of RichSmartIDs
       bool
       getMcHistories( const Rich::HPDPixelCluster& cluster,
@@ -150,6 +158,14 @@ namespace Rich
 
       // Checks if the given cluster of RichSmartIDs is the result of a background
       bool isBackground ( const Rich::HPDPixelCluster& cluster ) const;
+
+      // Checks if the given cluster of RichSmartIDs is the result of a photon which
+      // underwent reflections inside the HPD
+      bool isHPDReflection ( const Rich::HPDPixelCluster& cluster ) const;
+
+      // Checks if the given cluster of RichSmartIDs is the result of backscattering
+      // of the HPD silicon sensor
+      bool isSiBackScatter ( const Rich::HPDPixelCluster& cluster ) const;
 
       // Checks if the given RichSmartID is the result of true Cherenkov
       bool isCherenkovRadiation( const Rich::HPDPixelCluster& cluster,

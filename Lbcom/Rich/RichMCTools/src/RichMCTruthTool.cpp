@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.35 2008-02-01 14:17:59 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.36 2008-03-25 15:41:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -185,6 +185,26 @@ bool MCTruthTool::isBackground ( const Rich::HPDPixelCluster& cluster ) const
   return true;
 }
 
+bool MCTruthTool::isHPDReflection ( const Rich::HPDPixelCluster& cluster ) const
+{
+  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
+        iS != cluster.smartIDs().end(); ++iS )
+  {
+    if ( !isHPDReflection(*iS) ) return false;
+  }
+  return true;
+}
+
+bool MCTruthTool::isSiBackScatter ( const Rich::HPDPixelCluster& cluster ) const
+{
+  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
+        iS != cluster.smartIDs().end(); ++iS )
+  {
+    if ( !isSiBackScatter(*iS) ) return false;
+  }
+  return true;
+}
+
 bool MCTruthTool::isBackground ( const LHCb::RichSmartID id ) const
 {
   // try via summary objects
@@ -209,6 +229,52 @@ bool MCTruthTool::isBackground ( const LHCb::RichSmartID id ) const
   
   // if all else fails, assume background
   return true;
+}
+
+bool MCTruthTool::isHPDReflection ( const LHCb::RichSmartID id ) const
+{
+  // try via summary objects
+  bool isSignal(false), isHPDRefl(false);
+  MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
+  if ( iEn != mcRichDigSumMap().end() )
+  {
+    // loop over summaries
+    for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
+          iSum != (*iEn).second.end(); ++iSum )
+    {
+      if ( (*iSum)->history().isSignal()      ) isSignal  = true;
+      if ( (*iSum)->history().hpdReflection() ) isHPDRefl = true;
+    }
+  }
+  else if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Failed to find MC history for " << id << endreq;
+  }
+  
+  return (!isSignal && isHPDRefl);
+}
+
+bool MCTruthTool::isSiBackScatter ( const LHCb::RichSmartID id ) const
+{
+  // try via summary objects
+  bool isSignal(false), isSiRefl(false);
+  MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
+  if ( iEn != mcRichDigSumMap().end() )
+  {
+    // loop over summaries
+    for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
+          iSum != (*iEn).second.end(); ++iSum )
+    {
+      if ( (*iSum)->history().isSignal()         ) isSignal = true;
+      if ( (*iSum)->history().hpdSiBackscatter() ) isSiRefl = true;
+    }
+  }
+  else if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Failed to find MC history for " << id << endreq;
+  }
+  
+  return (!isSignal && isSiRefl);
 }
 
 bool MCTruthTool::isCherenkovRadiation( const Rich::HPDPixelCluster& cluster,

@@ -4,6 +4,9 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2008-03-25 - Chris Jones
+ - Add new methods (isHPDReflection and isSiBackScatter) to MCTruthTool
+
 !========================== RichMCTools v3r8 2008-02-01 =====================
 ! 2008-02-01 - Chris Jones
  - Minor tweek to signal / background discrimination logic to work with
