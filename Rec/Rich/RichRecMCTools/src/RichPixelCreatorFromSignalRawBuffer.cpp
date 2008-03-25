@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.7 2008-02-20 16:10:33 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.8 2008-03-25 16:46:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -31,14 +31,14 @@ PixelCreatorFromSignalRawBuffer( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
   : Rich::Rec::PixelCreatorBase ( type, name, parent ),
-    m_mcTool              ( 0 ),
-    m_trackFilter         ( false ),
-    m_rejBackHits         ( true  ),
+    m_mcTool              ( NULL  ),
     m_trackMCPsDone       ( false )
 {
   // Define job option parameters
-  declareProperty( "FilterTracklessDigits", m_trackFilter );
-  declareProperty( "RejectBackground", m_rejBackHits );
+  declareProperty( "FilterTracklessDigits", m_trackFilter   = false );
+  declareProperty( "RejectAllBackgrounds", m_rejAllBackHits = true  );
+  declareProperty( "RejectHPDReflections", m_rejHPDReflHits = true  );
+  declareProperty( "RejectBackScatter", m_rejHPDBackScatter = true  );
 }
 
 StatusCode PixelCreatorFromSignalRawBuffer::initialize()
@@ -54,8 +54,17 @@ StatusCode PixelCreatorFromSignalRawBuffer::initialize()
   if ( m_trackFilter )
     info() << "Will remove hits that do not come from tracked particles" << endreq;
 
-  if ( m_rejBackHits )
-    info() << "Will reject non Cherenkoc signal hits" << endreq;
+  if ( m_rejAllBackHits )
+  {
+    info() << "Will reject ALL non Cherenkov signal hits" << endreq;
+  }
+  else
+  {
+    if ( m_rejHPDReflHits )
+      info() << "Will reject HPD reflections" << endreq;
+    if ( m_rejHPDBackScatter )
+      info() << "Will reject back-scattered hits" << endreq;
+  }
 
   return sc;
 }
@@ -74,7 +83,7 @@ bool PixelCreatorFromSignalRawBuffer::rejectTrackless( const Rich::HPDPixelClust
     {
       if ( *iMP != NULL && trackedMCPs()[*iMP] ) { OK = true; break; }
     }
-  } 
+  }
   return OK;
 }
 
@@ -83,7 +92,13 @@ LHCb::RichRecPixel *
 PixelCreatorFromSignalRawBuffer::buildPixel( const LHCb::RichSmartID & id ) const
 {
   // Test if this is a background cluster
-  if ( m_rejBackHits && m_mcTool->isBackground(id) ) return NULL;
+  if ( m_rejAllBackHits && m_mcTool->isBackground(id) ) return NULL;
+
+  // HPD reflection ?
+  if ( m_rejHPDReflHits && m_mcTool->isHPDReflection(id) ) return NULL;
+
+  // Si back-scatter ?
+  if ( m_rejHPDBackScatter && m_mcTool->isSiBackScatter(id) ) return NULL;
 
   // reject trackless hits
   if ( !rejectTrackless(Rich::HPDPixelCluster(id)) ) return NULL;
@@ -97,8 +112,13 @@ LHCb::RichRecPixel *
 PixelCreatorFromSignalRawBuffer::buildPixel( const Rich::HPDPixelCluster& cluster ) const
 {
   // Test if this is a background cluster
-  if ( m_rejBackHits && m_mcTool->isBackground(cluster) ) return NULL;
+  if ( m_rejAllBackHits && m_mcTool->isBackground(cluster) ) return NULL;
 
+  // HPD reflection ?
+  if ( m_rejHPDReflHits && m_mcTool->isHPDReflection(cluster) ) return NULL;
+
+  // Si back-scatter ?
+  if ( m_rejHPDBackScatter && m_mcTool->isSiBackScatter(cluster) ) return NULL;
   // reject trackless hits
   if ( !rejectTrackless(cluster) ) return NULL;
 

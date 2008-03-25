@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2008-03-25 - Chris Jones
+ - Update RichPixelCreatorFromSignalRawBuffer to reject specific typres of 
+   backgrounds
+
 !====================== RichRecMCTools v2r16 2008-02-22 =======================
 ! 2008-02-21 - Chris Jones
  - Update RichPhotonCreatorFromCheatedTrackDir to (optionally) also cheat 

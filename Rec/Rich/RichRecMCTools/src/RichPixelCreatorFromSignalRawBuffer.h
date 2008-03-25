@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.8 2008-02-20 16:10:33 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.9 2008-03-25 16:46:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -100,8 +100,14 @@ namespace Rich
             associated to any reconstructed RichRecTrack */
         bool m_trackFilter;
 
-        /// Reject background hits
-        bool m_rejBackHits;
+        /// Reject all background hits
+        bool m_rejAllBackHits;
+
+        /// Reject HPD reflection hits
+        bool m_rejHPDReflHits;
+
+        /// Reject back-scattered hits
+        bool m_rejHPDBackScatter;
 
         /// List of tracked MCParticles
         mutable TrackedMCPList m_trackedMCPs;
