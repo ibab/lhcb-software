@@ -4,7 +4,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Initialize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDInitialize.cpp,v 1.14 2007-12-14 14:21:18 jonrob Exp $
+ *  $Id: RichGlobalPIDInitialize.cpp,v 1.15 2008-03-25 16:26:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -49,9 +49,6 @@ StatusCode Initialize::execute()
 {
   // Set event status to OK for start of GlobalPID processing
   richStatus()->setEventOK( true );
-
-  // create the TES event
-  createGPIDEvent();
 
   return StatusCode::SUCCESS;
 }

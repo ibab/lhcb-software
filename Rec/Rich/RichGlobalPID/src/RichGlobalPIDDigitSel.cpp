@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::DigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.cpp,v 1.21 2007-12-14 14:21:18 jonrob Exp $
+ *  $Id: RichGlobalPIDDigitSel.cpp,v 1.22 2008-03-25 16:26:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -45,7 +45,7 @@ StatusCode DigitSel::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // trick to force pre-loading of various tools. Avoids loading
-  // during first processed event and thus biased any timing numbers
+  // during first processed event and thus biasing any timing numbers
   pixelCreator();  // pre-load the pixel creator
 
   return sc;

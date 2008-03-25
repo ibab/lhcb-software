@@ -5,15 +5,15 @@
  *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.h,v 1.21 2007-12-14 14:21:18 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.h,v 1.22 2008-03-25 16:26:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
  */
 //--------------------------------------------------------------------------
 
-#ifndef RICHGLOBALPID_RICHGLOBALPIDTRTRACKSEL_H
-#define RICHGLOBALPID_RICHGLOBALPIDTRTRACKSEL_H 1
+#ifndef RICHGLOBALPID_RichGlobalPIDTrTrackSel_H
+#define RICHGLOBALPID_RichGlobalPIDTrTrackSel_H 1
 
 // Base class
 #include "RichGlobalPIDAlgBase.h"
@@ -22,8 +22,8 @@
 #include "RichRecBase/RichRecProcCode.h"
 
 // interfaces
-#include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichRecBase/IRichTrackSelector.h"
+#include "IRichGlobalPIDTrackCreator.h"
 
 namespace Rich
 {
@@ -72,14 +72,14 @@ namespace Rich
 
       private: // data members
 
-        /// Pointer to RichExpectedTrackSignal
-        const IExpectedTrackSignal * m_tkSignal;
-
         /// Primary Track selector
         const ITrackSelector * m_trSelector;
 
         /// 'Frozen' Track selector
         const ITrackSelector * m_frozenTrSel;
+
+        /// RichGlobalPIDTrack creator
+        const ITrackCreator * m_gtkCreator;
 
         // Selection cuts
         double m_minPhysPtot; ///< Minimum momentum for physics quality tracks
@@ -104,4 +104,4 @@ namespace Rich
   }
 }
 
-#endif // RICHGLOBALPID_RICHGLOBALPIDTRTRACKSEL_H
+#endif // RICHGLOBALPID_RichGlobalPIDTrTrackSel_H

@@ -2,17 +2,6 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 <gdd>
     <package name="RichGlobalPID">
-        <class author="Chris Jones    (Christopher.Rob.Jones@cern.ch)" desc="Summary object for RICH Global PID analysis" id="12431" location="Rec/Rich/GlobalPID/Summary" name="RichGlobalPIDSummary">
-            <base name="DataObject"/>
-            <method desc="Push back this value in event LL vector" name="addToEventLL">
-                <arg name="logL" type="double"/>
-                <code>m_eventLL.push_back( logL );</code>
-            </method>
-            <!--aComment-->
-            <attribute nonconstaccessor = "TRUE" desc="History of overall event LogLikelihood values" name="eventLL" type="std::vector&lt;double&gt;"/>
-            <location name="Offline" place="Rec/Rich/GlobalPID/OfflineSummary"/>
-            <location name="HLT"     place="Rec/Rich/GlobalPID/HltSummary"/>
-        </class>
         <class author="Chris Jones     Christopher.Rob.Jones@cern.ch" desc="Working track object for Rich Global PID" id="12432" keyedContTypeDef="TRUE" location="Rec/Rich/GlobalPID/Tracks" name="RichGlobalPIDTrack" serializers="TRUE" stdVectorTypeDef="TRUE">
             <import name="Event/RichRecTrack"/>
             <import name="Event/RichGlobalPID"/>

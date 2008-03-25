@@ -1,0 +1,112 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichGlobalPIDCommonBase.icpp
+ *
+ *  Implementation file for RICH base class : Rich::Rec::GlobalPID::CommonBase
+ *
+ *  CVS Log :-
+ *  $Id: RichGlobalPIDCommonBase.icpp,v 1.1 2008-03-25 16:26:44 jonrob Exp $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2005-08-27
+ */
+//-----------------------------------------------------------------------------
+
+// local
+#include "RichGlobalPIDCommonBase.h"
+
+//=============================================================================
+// Destructor
+//=============================================================================
+template <class PBASE>
+Rich::Rec::GlobalPID::CommonBase<PBASE>::~CommonBase() {}
+
+//=============================================================================
+// Constructor Initialisation
+//=============================================================================
+template <class PBASE>
+void Rich::Rec::GlobalPID::CommonBase<PBASE>::initConstructor()
+{
+  m_GPIDtracks   = NULL;
+  m_GPIDs        = NULL;
+  m_procStat     = NULL;
+  m_richPartProp = NULL;
+  if      ( this->context() == "Offline" )
+  {
+    m_richGPIDName = "RichGloPID";
+    m_richGPIDTrackLocation   = LHCb::RichGlobalPIDTrackLocation::Offline;
+    m_richGPIDLocation        = LHCb::RichGlobalPIDLocation::Offline;
+  }
+  else if ( this->context() == "HLT" )
+  {
+    m_richGPIDName = "RichGloHltPID";
+    m_richGPIDTrackLocation   = LHCb::RichGlobalPIDTrackLocation::HLT;
+    m_richGPIDLocation        = LHCb::RichGlobalPIDLocation::HLT;
+  }
+  else
+  {
+    m_richGPIDTrackLocation   = LHCb::RichGlobalPIDTrackLocation::Default;
+    m_richGPIDLocation        = LHCb::RichGlobalPIDLocation::Default;
+    m_richGPIDName            = "RichGloPID";
+  }
+
+  this->declareProperty( "RichGlobalPIDTrackLocation", m_richGPIDTrackLocation );
+  this->declareProperty( "RichGlobalPIDLocation", m_richGPIDLocation );
+  this->declareProperty( "GlobalName", m_richGPIDName );
+  this->declareProperty( "ProcStatusLocation",
+                         m_procStatLocation = LHCb::ProcStatusLocation::Default );
+}
+
+//=============================================================================
+// Initialisation
+//=============================================================================
+template <class PBASE>
+StatusCode Rich::Rec::GlobalPID::CommonBase<PBASE>::initialize()
+{
+  // Execute the base class initialize
+  const StatusCode sc = PBASE::initialize();
+  if ( sc.isFailure() )
+  { return this -> Error( "Failed to initialise Gaudi Base class", sc ); }
+
+  // get tools
+  this -> acquireTool( "RichParticleProperties",  m_richPartProp );
+
+  // PID types
+  m_pidTypes = m_richPartProp->particleTypes();
+  this->debug() << "Particle types considered                 = " << m_pidTypes << endreq;
+
+  return sc;
+}
+//=============================================================================
+
+//=============================================================================
+// Finalisation
+//=============================================================================
+template <class PBASE>
+StatusCode Rich::Rec::GlobalPID::CommonBase<PBASE>::finalize()
+{
+  // Finalise base class and return
+  return PBASE::finalize();
+}
+//=============================================================================
+
+// Clean up GPID TES objects
+template <class PBASE>
+void Rich::Rec::GlobalPID::CommonBase<PBASE>::deleteGPIDEvent()
+{
+  //this->richStatus()->setEventOK( false );
+  // Tidy up incase of event abort
+  /*
+  if ( m_GPIDtracks && !m_GPIDtracks->empty() )
+  {
+    m_GPIDtracks->clear();
+  }
+  if ( m_GPIDs      && !m_GPIDs->empty()      )
+  {
+    m_GPIDs->clear();
+  }
+  */
+  m_GPIDtracks  = NULL;
+  m_GPIDs       = NULL;
+  m_procStat    = NULL;
+}

@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Finalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.h,v 1.11 2007-10-23 10:43:08 jonrob Exp $
+ *  $Id: RichGlobalPIDFinalize.h,v 1.12 2008-03-25 16:26:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -21,8 +21,8 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-// GSL
-#include "gsl/gsl_sf_erf.h"
+// interfaces
+#include "IRichGlobalPIDTrackCreator.h"
 
 namespace Rich
 {
@@ -38,9 +38,6 @@ namespace Rich
        *
        *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
        *  @date   12/12/2002
-       *
-       *  @todo Remove temporary hack "correcting" final DLL values once
-       *        likelihood algorithm is rewritten
        */
       //--------------------------------------------------------------------------
 
@@ -55,8 +52,14 @@ namespace Rich
 
         virtual ~Finalize();   ///< Destructor
 
-        virtual StatusCode execute (); // Algorithm execution
+        virtual StatusCode initialize(); // Algorithm initialize
+        virtual StatusCode execute();    // Algorithm execution
 
+      private:
+        
+        /// RichGlobalPIDTrack creator
+        const ITrackCreator * m_gtkCreator;
+        
       };
 
     }

@@ -4,6 +4,21 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2008-03-25 - Chris Jones
+ - Large reworking of Global PID package to allow for tool based tack-by track
+   particle ID
+  + Introduce local base class for tools and algorithms
+  + Add new tool RichGlobalPIDLIkelihoodTool that performs the event 
+    likelihood minimisation previously performed by the RichGlobalPIDLikelihood
+    algorithm.
+  + Add new tool 'RichGlobalPIDMultiStepTool' that performs multiple iterations
+    of the Global PID likelihood minisation and background estimation steps.
+    This functionality is the same as that currently achieved using the 
+    algorithm sequencing options in RichRecSys but allows for this to be called
+    on a track by track basis using the tool interface.
+  + Updating the existing algorithms to use the new tools, so that the previous 
+    functionality and algorithm sequencing in Brunel is maintained.
+
 !======================= RichGlobalPID v3r7 2008-02-04 =======================
 ! 2007-12-14 - Chris Jones
  - Improve handling of Global PID TES data objects. Fixes crash observed when
