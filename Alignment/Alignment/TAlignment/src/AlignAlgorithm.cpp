@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.37 2008-03-25 18:37:25 ahicheur Exp $
+// $Id: AlignAlgorithm.cpp,v 1.38 2008-03-25 22:02:09 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -31,7 +31,6 @@
 // local
 #include "AlignAlgorithm.h"
 #include "AlParameters.h"
-#include "ResidualCovarianceTool.h"
 #include "AlignSolvTools/AlEquations.h"
 
 //-----------------------------------------------------------------------------
@@ -50,17 +49,17 @@ namespace {
 
  class Data {
  public:
-   Data(const LHCb::Node& node, unsigned index, double r, const Gaudi::Matrix1x6& d)
-     : m_id(&node),
+   Data(unsigned nodeindex, unsigned index, double r, const Gaudi::Matrix1x6& d)
+     : m_nodeindex(nodeindex),
        m_index(index),
        m_r(r),
        m_d(d) {}
-   const LHCb::Node* id() const { return m_id ; }
    unsigned index() const { return m_index; }
    double r() const { return m_r; }
    const Gaudi::Matrix1x6& d() const { return m_d; }
+   size_t nodeindex() const { return m_nodeindex ; }
  private:
-   const LHCb::Node* m_id ;
+   size_t            m_nodeindex;
    unsigned          m_index;
    double            m_r;
    Gaudi::Matrix1x6  m_d;
@@ -106,10 +105,13 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
     m_align(0),
     m_projSelector(0),
     m_matrixSolverTool(0),
+    m_trackresidualtool("Al::TrackResidualTool"),
+    m_vertexresidualtool("Al::VertexResidualTool"),
     m_equations(0)
 {
   declareProperty("NumberOfIterations"          , m_nIterations                  = 10u                     );
   declareProperty("TracksLocation"              , m_tracksLocation               = TrackLocation::Default  );
+  declareProperty("VertexLocation"              , m_vertexLocation               = ""  );
   declareProperty("ProjectorSelector"           , m_projSelectorName             = "TrackProjectorSelector");
   declareProperty("MatrixSolverTool"            , m_matrixSolverToolName         = "SpmInvTool"            );
   declareProperty("UseCorrelations"             , m_correlation                  = true                    );
@@ -140,6 +142,12 @@ StatusCode AlignAlgorithm::initialize() {
   /// Get tool to align detector
   m_align = tool<IGetElementsToBeAligned>("GetElementsToBeAligned", this);
   if (!m_align) return Error("==> Failed to retrieve detector selector tool!", StatusCode::FAILURE);
+
+  sc = m_trackresidualtool.retrieve() ;
+  if ( sc.isFailure() ) return sc;
+
+  sc = m_vertexresidualtool.retrieve() ;
+  if ( sc.isFailure() ) return sc;
 
   /// Get range  detector elements
   m_rangeElements = m_align->rangeElements();
@@ -234,7 +242,10 @@ StatusCode AlignAlgorithm::initialize() {
 
 StatusCode AlignAlgorithm::finalize() {
   if (m_updateInFinalize) update() ;
-  return GaudiHistoAlg::finalize();
+  return  
+    m_trackresidualtool.release() && 
+    m_vertexresidualtool.release() && 
+    GaudiHistoAlg::finalize();
 }
 
 //=============================================================================
@@ -242,116 +253,150 @@ StatusCode AlignAlgorithm::finalize() {
 //=============================================================================
 StatusCode AlignAlgorithm::execute() {
 
-  // Get tracks
-  Tracks* tracks = get<Tracks>(m_tracksLocation);
-  m_nTracks += tracks->size();
+  // Get tracks. Copy them into a vector, because that's what we need for dealing with vertices.
+  const Tracks* tracks = get<Tracks>(m_tracksLocation);
   if (printVerbose()) verbose() << "Number of tracks in container " + m_tracksLocation + ": " << tracks->size() << endmsg;
-  /// Loop over tracks
-  typedef Tracks::const_iterator TrackIter;
-  for (TrackIter iTrack = tracks->begin(), iTrackEnd = tracks->end(); iTrack != iTrackEnd; ++iTrack) 
+  std::vector<const LHCb::Track*> selectedtracks ;
+  for( Tracks::const_iterator iTrack = tracks->begin(), iTrackEnd = tracks->end(); iTrack != iTrackEnd; ++iTrack) 
     // just a sanity check
     if( (*iTrack)->fitStatus()==LHCb::Track::Fitted &&
 	(*iTrack)->nDoF() > 0 &&
 	!(*iTrack)->nodes().empty() ) {
-      
-      // Compute covariance matrix for track
-      ResidualCovarianceTool cov;
-      cov.compute(*(*iTrack));
-      // skip track
-      if (cov.error()) {
-	warning() << "Error computing residual cov matrix. Skipping track of type "
-		  << (*iTrack)->type() << " with key: " << (*iTrack)->key() << " and chi2 / dof: " << (*iTrack)->chi2() << "/" << (*iTrack)->nDoF() << endmsg ;
-	++m_covFailure;
-	continue;
-      }
-      std::vector<Data> data;
-      // Get nodes. Need them for measurements, residuals and errors
-      const Nodes& nodes = (*iTrack)->nodes();
-      if (printVerbose()) verbose() << "==> Found " << nodes.size() << " nodes"<< endmsg;
-      // Loop over nodes and get measurements, residuals and errors
-      typedef Nodes::const_iterator NodeIter;
-      size_t numexternalhits(0) ;
-      for (NodeIter node = nodes.begin(), end = nodes.end(); node != end; ++node) {
-	if ((*node)->hasMeasurement()) {
-	  // Get measurement
-	  const Measurement& meas = (*node)->measurement();
-	  // Get element that belongs to this measurment
-	  const AlignmentElement* elem = m_align->findElement(meas);
-	  if (!elem) {
-	    if (printVerbose()) verbose() << "==> Measurement not on a to-be-aligned DetElem " 
-					  << meas.lhcbID() << endmsg;
-	    ++numexternalhits ;
-	    continue;
-	  }
-	  
-	  const unsigned index = elem->index();
-	  if (printVerbose()) verbose() << "==> measure = " << meas.measure() << " id = " << meas.lhcbID() << " -> index = " 
-					<< index << " -> " <<  elem->name() << endmsg;
-	  
-	  // Project measurement
-	  ITrackProjector* proj = m_projSelector->projector(meas);
-	  if (!proj) {
-	    error() << "==> Could not get projector for selected measurement!" << endmsg;
-	    continue;
-	  }
-	  double res  = (*node)->residual();
-	  double err  = (*node)->errMeasure();
-	  
-	  m_nHitsHistos[index]->fill(m_iteration);
-	  m_resHistos[index]->fill(m_iteration, res);
-	  m_pullHistos[index]->fill(m_iteration, res/(*node)->errResidual());
-	  // Get alignment derivatives
-	  LHCb::StateVector state((*node)->state().stateVector(),(*node)->state().z());
-	  // the projector calculates the derivatives in the global
-	  // frame. The jacobian corrects for the transformation to the
-	  // alignment frame.
-	  Derivatives der =  
-	    proj->alignmentDerivatives(state,meas,Gaudi::XYZPoint(0,0,0)) *
-	    elem->jacobian() ;
-	  
-	  // push back normalized residuals & derivatives;
-	  res /= err;
-	  der /= err;
-	  data.push_back(Data(**node, index, res, der));
-	  m_equations->addHitSummary( index, err ) ;
-	}
-      }
-      
-      if (!data.empty()) {
-	for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
-	  m_equations->V(id->index())               -= convert(id->r()*id->d()) ;
-	  m_equations->M(id->index(), id->index())  += (Transpose(id->d())*id->d());
-	  
-	  for (std::vector<Data>::const_iterator jd = data.begin(); jd != idEnd; ++jd) {
-	    if ( id == jd || ( m_correlation && id->index() <= jd->index() )) {
-	      double c = cov.HCH_norm(*id->id(),*jd->id());
-	      m_equations->M(id->index(), jd->index()) -= c * (Transpose(id->d())*jd->d());
-	      
-	      if ( m_fillCorrelationHistos ) {
-		if (!( id->id() == jd->id())) {
-		  m_corrHistos[std::make_pair(id->index(), jd->index())]->
-		    fill(m_iteration, c/std::sqrt(cov.HCH_norm(*id->id(), *id->id())*cov.HCH_norm(*jd->id(), *jd->id())));
-		} else {
-		  m_autoCorrHistos[id->index()]->fill(m_iteration, c);
-		}
-	      }
-	    }
-	  }
-	}
-	// keep some information about the tracks that we have seen
-	m_equations->addTrackSummary( (*iTrack)->chi2(), (*iTrack)->nDoF(), numexternalhits ) ;
-	m_trackChi2Histo->fill(m_iteration, (*iTrack)->chi2());
-	m_trackNorChi2Histo->fill(m_iteration, (*iTrack)->chi2PerDoF());
-      }
+      selectedtracks.push_back( *iTrack ) ;
     } else {
       warning() << "Skipping bad track:"
 		<< " fitstatus = " << (*iTrack)->fitStatus()
 		<< " nDoF = " << (*iTrack)->nDoF()
 		<< " #nodes = " << (*iTrack)->nodes().size() << endreq ;
     }
+  m_nTracks += selectedtracks.size();
+
+  // Now deal with vertices, if there are any.
+  size_t numusedvertices(0) ;
+  if( !m_vertexLocation.empty() ) {
+    const LHCb::RecVertices* vertices = get<LHCb::RecVertices>(m_vertexLocation);
+    if(vertices ) {
+      for( LHCb::RecVertices::const_iterator ivertex = vertices->begin() ;
+	   ivertex != vertices->end(); ++ivertex ) {
+	// used tracks are automatically removed from the output list
+	const Al::MultiTrackResiduals* res = m_vertexresidualtool->get(**ivertex,selectedtracks) ;
+	if (res ) {
+	  accumulate( *res ) ;
+	  // need some histogramming here
+	  ++numusedvertices ;
+	} else {
+	  warning() << "Error computing residual cov matrix for vertex." << endmsg;
+	  ++m_covFailure;
+	}
+      }
+    }
+  }	
   
+  // Loop over the remaining tracks
+  info() << "Number of tracks left after processing vertices: " << selectedtracks.size() << endreq ;
+  for( std::vector<const LHCb::Track*>::const_iterator iTrack = selectedtracks.begin() ;
+       iTrack != selectedtracks.end(); ++iTrack ) {
+    
+    const Al::Residuals* res = m_trackresidualtool->get(**iTrack) ;
+    if( res ) {
+      accumulate( *res ) ;
+      m_trackChi2Histo->fill(m_iteration, (*iTrack)->chi2());
+      m_trackNorChi2Histo->fill(m_iteration, (*iTrack)->chi2PerDoF());
+    } else {
+      warning() << "Error computing residual cov matrix. Skipping track of type "
+		<< (*iTrack)->type() << " with key: " << (*iTrack)->key() << " and chi2 / dof: " << (*iTrack)->chi2() << "/" << (*iTrack)->nDoF() << endmsg ;
+      ++m_covFailure;
+    }
+  } 
+
+  m_equations->addEventSummary( selectedtracks.size(), numusedvertices ) ;
+
   return StatusCode::SUCCESS;
 }
+
+void AlignAlgorithm::accumulate( const Al::Residuals& residuals )
+{
+  if (printVerbose()) verbose() << "==> Found " << residuals.nodes().size() << " nodes"<< endmsg;
+  std::vector<Data> data;
+  // Loop over nodes and get measurements, residuals and errors
+  typedef Al::Residuals::NodeContainer::const_iterator NodeIter;
+  size_t numexternalhits(0) ;
+  size_t nodeindex(0) ;
+  for (Al::Residuals::NodeContainer::const_iterator node = residuals.nodes().begin(); 
+       node != residuals.nodes().end();++node, ++nodeindex) {
+    assert( (*node)->hasMeasurement() ) ;
+
+    // Get measurement
+    const Measurement& meas = (*node)->measurement();
+    // Get element that belongs to this measurment
+    const AlignmentElement* elem = m_align->findElement(meas);
+    if (!elem) {
+      if (printVerbose()) verbose() << "==> Measurement not on a to-be-aligned DetElem " 
+				    << meas.lhcbID() << endmsg;
+      ++numexternalhits ;
+      continue;
+    }
+      
+    const unsigned index = elem->index();
+    if (printVerbose()) verbose() << "==> measure = " << meas.measure() << " id = " << meas.lhcbID() << " -> index = " 
+				  << index << " -> " <<  elem->name() << endmsg;
+    
+    // Project measurement
+    const ITrackProjector* proj = m_projSelector->projector(meas);
+    if (!proj) {
+      error() << "==> Could not get projector for selected measurement!" << endmsg;
+      continue;
+    }
+    double res  = residuals.r(nodeindex) ;
+    double err  = std::sqrt(residuals.V(nodeindex)) ;
+    
+    m_nHitsHistos[index]->fill(m_iteration);
+    m_resHistos[index]->fill(m_iteration, res);
+    m_pullHistos[index]->fill(m_iteration, res/(*node)->errResidual());
+    // Get alignment derivatives
+    LHCb::StateVector state((*node)->state().stateVector(),(*node)->state().z());
+    // the projector calculates the derivatives in the global
+    // frame. The jacobian corrects for the transformation to the
+    // alignment frame.
+    Derivatives der =  
+      proj->alignmentDerivatives(state,meas,Gaudi::XYZPoint(0,0,0)) *
+      elem->jacobian() ;
+    
+    // push back normalized residuals & derivatives;
+    res /= err;
+    der /= err;
+    data.push_back(Data(nodeindex, index, res, der));
+    m_equations->addHitSummary( index, err ) ;
+  }
+  
+  if (!data.empty()) {
+    for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
+      m_equations->V(id->index())               -= convert(id->r()*id->d()) ;
+      m_equations->M(id->index(), id->index())  += (Transpose(id->d())*id->d());
+      
+      for (std::vector<Data>::const_iterator jd = data.begin(); jd != idEnd; ++jd) {
+	if ( id == jd || ( m_correlation && id->index() <= jd->index() )) {
+	  double c = residuals.HCH_norm( id->nodeindex(), jd->nodeindex() ) ;
+	  m_equations->M(id->index(), jd->index()) -= c * (Transpose(id->d())*jd->d());
+	  
+	  if ( m_fillCorrelationHistos ) {
+	    if (!( id->nodeindex() == jd->nodeindex())) {
+	      m_corrHistos[std::make_pair(id->index(), jd->index())]->
+		fill(m_iteration, c/std::sqrt(residuals.HCH_norm(id->nodeindex(),id->nodeindex()) *
+					      residuals.HCH_norm(jd->nodeindex(),jd->nodeindex())) ) ;
+	    } else {
+	      m_autoCorrHistos[id->index()]->fill(m_iteration, c);
+	    }
+	  }
+	}
+      }
+    }
+    // keep some information about the tracks that we have seen
+    m_equations->addChi2Summary( residuals.chi2(), residuals.nDoF(), numexternalhits ) ;
+  }
+}
+
+
 
 void AlignAlgorithm::preCondition(AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2,
 				  AlVec& scale, const std::vector<int>& offsets) const
@@ -557,11 +602,13 @@ void AlignAlgorithm::update() {
   logmessage << "********************* ALIGNMENT LOG ************************" << std::endl
 	     << "Iteration: " << m_iteration << std::endl
 	     << "Total number of tracks: " << m_nTracks << std::endl
-             << "Number of covariance calculation failures: " << m_covFailure << std::endl
+	     << "Number of covariance calculation failures: " << m_covFailure << std::endl
+	     << "Used " << m_equations->numVertices() << " vertices for alignment" << std::endl
              << "Used " << m_equations->numTracks() << " tracks for alignment" << std::endl
 	     << "Total track chisquare/dofs: " << m_equations->totalChiSquare() << " / " << m_equations->totalNumDofs() << std::endl
 	     << "Average track chisquare: " << m_equations->totalChiSquare() / m_equations->numTracks() << std::endl
              << "Normalised total track chisquare: " << m_equations->totalChiSquare() / m_equations->totalNumDofs() << std::endl
+	     << "Used " << m_equations->numHits() << " hits for alignment" << std::endl
              << "Total number of hits in external detectors: " << m_equations->numExternalHits() << std::endl;
 
   m_totNusedTracksvsIterHisto->fill(m_iteration, m_equations->numTracks());
@@ -664,7 +711,7 @@ void AlignAlgorithm::update() {
     // Tool returns H^-1 and alignment constants. Need to copy the 2nd derivative because we still need it.
     AlVec    scale(halfD2Chi2dX2.size()) ;
     AlSymMat covmatrix = halfD2Chi2dX2 ;
-    AlVec    solution   = halfDChi2dX ;
+    AlVec    solution  = halfDChi2dX ;
     if (m_usePreconditioning) preCondition(solution,covmatrix, scale,offsets) ;
     bool solved = m_matrixSolverTool->compute(covmatrix, solution);
     if (m_usePreconditioning) postCondition(solution,covmatrix, scale) ;

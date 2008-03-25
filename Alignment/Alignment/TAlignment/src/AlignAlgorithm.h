@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.25 2008-03-12 15:02:13 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.26 2008-03-25 22:02:09 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -16,10 +16,12 @@
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/GenericMatrixTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/ToolHandle.h"
 
 // from TrackEvent
 #include "Event/Track.h"
 #include "Event/Node.h"
+#include "Event/RecVertex.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackProjectorSelector.h"
@@ -40,12 +42,14 @@
 // from local
 // @todo: this should be moved to the interfaces package
 #include "IGetElementsToBeAligned.h"
+#include "ITrackResidualTool.h"
+#include "IVertexResidualTool.h"
 #include "AlignmentElement.h"
 
 namespace Al {
   class Equations;
+  class Residuals ;
 }
-
 
 /** @class AlignAlgorithm AlignAlgorithm.h
 *
@@ -103,6 +107,7 @@ protected:
 private:
   bool printDebug()   const {return msgLevel(MSG::DEBUG);};
   bool printVerbose() const {return msgLevel(MSG::VERBOSE);};
+  void accumulate( const Al::Residuals& residuals ) ;
 
   size_t                            m_iteration;                     ///< Iteration counter
   size_t                            m_nIterations;                   ///< Number of iterations
@@ -111,11 +116,14 @@ private:
   ElementRange                      m_rangeElements;                 ///< Detector elements
   std::vector<double>               m_initAlignConstants;            ///< Initial alignment constants
   IGetElementsToBeAligned*          m_align;                         ///< Pointer to tool to align detector
-  std::string                       m_tracksLocation;                ///< Tracks location for alignment
+  std::string                       m_tracksLocation;                ///< Tracks for alignment
+  std::string                       m_vertexLocation;                ///< Vertices for alignment
   std::string                       m_projSelectorName;              ///< Name of projector selector tool
   ITrackProjectorSelector*          m_projSelector;                  ///< Pointer to projector selector tool
   std::string                       m_matrixSolverToolName;          ///< Name of linear algebra solver tool
   IAlignSolvTool*                   m_matrixSolverTool;              ///< Pointer to linear algebra solver tool
+  ToolHandle<Al::ITrackResidualTool>  m_trackresidualtool ;
+  ToolHandle<Al::IVertexResidualTool> m_vertexresidualtool ;
   Al::Equations*                    m_equations;                     ///< Equations to solve
   bool                              m_correlation ;                  ///< Do we take into account correlations between residuals?
   bool                              m_updateInFinalize ;             ///< Call update from finalize
@@ -125,7 +133,7 @@ private:
   size_t                            m_minNumberOfHits ;              ///< Minimum number of hits for an Alignable to be aligned
   bool                              m_usePreconditioning ;           ///< Precondition the system of equations before calling solver
   bool                              m_fillCorrelationHistos;         ///< Flag to turn on filling of residual correlation histos
-
+  
   /// Monitoring
   // @todo: Move this to a monitoring tool
   std::map<unsigned int, IHistogram2D*>                          m_resHistos;
