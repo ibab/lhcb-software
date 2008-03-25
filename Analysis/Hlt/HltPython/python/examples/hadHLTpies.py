@@ -601,7 +601,7 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,o
             ## make sure our event triggers our TRIG
             if TRIG in sels:
                     ## find vertices triggering HadTrigger according to oq_mode
-                    if oq_mode: vertices=oq.HPVerticesOfflineQuality(TES,HLTSUM)
+                    if oq_mode: vertices=oq.HPverticesOfflineQuality(TES,HLTSUM)
                     else: vertices=trve.findHTvertices(HLTSUM)
 
                     for vert in vertices:

@@ -142,12 +142,12 @@ def trackTriggersCF(TES,track):
 #---------------------------------------------------
 
 def HPTtracksOfflineQuality(TES,HLTSUM):
-    """ Get only those tracks used in HadPreTriggerSingle linked to a good 'offline quality' track. 'Good' meaning existing and accomplishing trigger conditions
+    """ Get offline counterpart to 'good'  tracks used in HadPreTriggerSingle. 'Good' meaning existing offline and still accomplishing trigger conditions for that quality level. Works per event.
     
     @param TES Transient Event Store
     @param HLTSUM = gaudi.toolsvc().create('HltSummaryTool',interface='IHltConfSummaryTool')
     
-    @returns List with these vertices	
+    @returns List with these tracks
     
     @author Xabier Cid Vidal xabier.cid.vidal@cern.ch
     
@@ -166,8 +166,8 @@ def HPTtracksOfflineQuality(TES,HLTSUM):
 
 #---------------------------------------------------
 
-def HPVerticesOfflineQuality(TES,HLTSUM):
-    """ Get only those vertices used in HadTrigger linked to two good 'offline quality' tracks. 'Good' meaning existing and accomplishing trigger conditions
+def HPverticesOfflineQuality(TES,HLTSUM):
+    """ Get only those vertices used in HadTrigger linked to two good online tracks.'Good' meaning having offline counterpart which still triggers.
     
     @param TES Transient Event Store
     @param HLTSUM = gaudi.toolsvc().create('HltSummaryTool',interface='IHltConfSummaryTool')
@@ -230,7 +230,7 @@ def eventTriggersOfflineQuality(TES,HLTSUM,trig):
 
     ## if HadTrigger, look for any vertex whose linked tracks still exist and trigger offline.  If there's at least one, return True
     if trig=="HadTrigger":
-        vertices_q=HPVerticesOfflineQuality(TES,HLTSUM)
+        vertices_q=HPverticesOfflineQuality(TES,HLTSUM)
         if len(vertices_q)>0: return True
         return False
 
