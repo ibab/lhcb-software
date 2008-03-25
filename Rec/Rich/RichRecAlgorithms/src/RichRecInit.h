@@ -5,15 +5,15 @@
  *  Header file for algorithm class : Rich::Rec::Initialise
  *
  *  CVS Log :-
- *  $Id: RichRecInit.h,v 1.7 2007-09-04 16:50:36 jonrob Exp $
+ *  $Id: RichRecInit.h,v 1.8 2008-03-25 16:43:41 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
  */
 //---------------------------------------------------------------------------
 
-#ifndef RICHRECALGORITHMS_RICHRECBACKGROUNDESTI_H
-#define RICHRECALGORITHMS_RICHRECBACKGROUNDESTI_H 1
+#ifndef RICHRECALGORITHMS_RichRecInit_H
+#define RICHRECALGORITHMS_RichRecInit_H 1
 
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
@@ -77,4 +77,4 @@ namespace Rich
   }
 }
 
-#endif // RICHRECALGORITHMS_RICHRECBACKGROUNDESTI_H
+#endif // RICHRECALGORITHMS_RichRecInit_H

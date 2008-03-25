@@ -1,0 +1,72 @@
+
+//--------------------------------------------------------------------------
+/** @file RichRecPixelBackgroundAlg.cpp
+ *
+ *  Implementation file for algorithm class : RichRecInit
+ *
+ *  CVS Log :-
+ *  $Id: RichRecPixelBackgroundAlg.cpp,v 1.1 2008-03-25 16:43:41 jonrob Exp $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   17/04/2002
+ */
+//--------------------------------------------------------------------------
+
+// local
+#include "RichRecPixelBackgroundAlg.h"
+
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
+
+//--------------------------------------------------------------------------
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( PixelBackgroundAlg );
+
+// Standard constructor, initializes variables
+PixelBackgroundAlg::PixelBackgroundAlg( const std::string& name,
+                                        ISvcLocator* pSvcLocator )
+  : Rich::Rec::AlgBase ( name, pSvcLocator ),
+    m_bkgTool          ( NULL              )
+{
+}
+
+// Destructor
+PixelBackgroundAlg::~PixelBackgroundAlg() {}
+
+StatusCode PixelBackgroundAlg::initialize()
+{
+  const StatusCode sc = RichRecAlgBase::initialize();
+  if ( sc.isFailure() ) return sc;
+
+  // load tools
+  acquireTool( "PixelBackgroundTool", m_bkgTool );
+
+  // pre-cache tools
+  statusCreator();
+  pixelCreator();
+  segmentCreator();
+
+  return sc;
+}
+
+StatusCode PixelBackgroundAlg::execute()
+{
+  // Event Status
+  if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
+
+  // Check segments and pixels
+  if ( !richSegments() ) return Error( "Failed to access RichRecSegments" );
+  if ( !richPixels()   ) return Error( "Failed to access RichRecPixels"   );
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Found " << richSegments()->size() << " RichRecSegments" << endreq
+            << "Found " << richPixels()->size() << " RichRecPixels" << endreq;
+  }
+
+  // compute backgrounds
+  m_bkgTool->computeBackgrounds();
+
+  // return
+  return StatusCode::SUCCESS;
+}
