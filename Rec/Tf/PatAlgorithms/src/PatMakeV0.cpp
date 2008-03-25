@@ -1,4 +1,4 @@
-// $Id: PatMakeV0.cpp,v 1.2 2008-01-31 16:45:56 ocallot Exp $
+// $Id: PatMakeV0.cpp,v 1.3 2008-03-25 17:31:54 janos Exp $
 // Include files
 
 // from Gaudi
@@ -59,7 +59,7 @@ PatMakeV0::PatMakeV0( const std::string& name,
   declareProperty( "CutPT",              m_cutPt     =   0.01 * Gaudi::Units::GeV );   // minimum pt of the V0 in GeV, 0 = no cut
   declareProperty( "Chi2VTXLim",         m_chi2VtxLim        =  10. );  //  max chi2 for V0 vertex fit      (histos 5 to 7
   declareProperty( "Chi2VTXPrimLim",     m_primVtxOKLim      =   5. ); //  min chi2 for Prim vertex normalized dist.(h 17 to 19
-  declareProperty( " impactCurrentNorm", m_impactCurNormLim  =   4. ); //  minimum V0 impact parameter at origin (histos 127/128
+  declareProperty( "impactCurrentNorm", m_impactCurNormLim  =   4. ); //  minimum V0 impact parameter at origin (histos 127/128
 }
 //=============================================================================
 // Destructor
