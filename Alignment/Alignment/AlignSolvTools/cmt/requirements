@@ -12,11 +12,17 @@ use GaudiAlg       v*
 use GaudiGSL       v*
 use SolvKernel     v* Alignment
 use AlignmentInterfaces   v* Alignment
+use TAlignment  v* Alignment
 
-# build link library
+#============================================================================
+# include directories
+#============================================================================
+apply_pattern	install_more_includes	more=AlignSolvTools
+#=============================================================================
+# build component/link library
 library AlignSolvTools *.cpp
 apply_pattern component_library library=AlignSolvTools
-
+#apply_pattern    linker_library	library=AlignSolvTools
 
 # Needed to force creation of cblas_dnrm2 symbol
 private 
