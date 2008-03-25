@@ -9,6 +9,7 @@
  - Remove a couple of warnings
  - Add AlignSolvTools directory for include
  - update requirements accordingly
+ - Import AlEquations and AlFileIO here 
 
 ! 2008-02-05 Wouter Hulsbergen
  - make sure gslSVDsolver returns the cov matrix as well

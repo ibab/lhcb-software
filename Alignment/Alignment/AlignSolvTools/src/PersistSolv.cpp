@@ -7,8 +7,8 @@
 #include <string>
 
 #include "AlignSolvTools/PersistSolv.h"
-#include "TAlignment/AlEquations.h"
-#include "TAlignment/AlFileIO.h"
+#include "AlignSolvTools/AlEquations.h"
+#include "AlignSolvTools/AlFileIO.h"
 
 typedef std::vector<Al::ElementData> ElementContainer;
 
