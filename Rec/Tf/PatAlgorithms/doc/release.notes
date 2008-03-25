@@ -4,6 +4,12 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-03-25 - Jan Amoraal
+ - Removed white space from property impactCurrentNorm in PatMakeV0. 
+   Python doesn't like it.
+ - Fixed option in PatFwdTool.opts
+  +  zMagnetParams -> ZMagnetParams
+ 
 !========================== PatAlgorithms v3r4 2008-02-18 ====================
 ! 2008-02-18 - Manuel Schiller
  - PatSeedingTool can now take an optional state giving a hint where a track
