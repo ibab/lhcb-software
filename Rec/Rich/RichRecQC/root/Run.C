@@ -32,6 +32,10 @@
   //RICH::performance( "/usera/jonesc/RootFiles/NewOffline-Add_25pcMCTracks.histos.root", "Offline-25pcAddMCTks", " | Offline | +25% Missing Tracks | All Rads" );
   //RICH::performance( "/usera/jonesc/RootFiles/NewOffline-Add_50pcMCTracks.histos.root", "Offline-50pcAddMCTks", " | Offline | +50% Missing Tracks | All Rads" );
   //RICH::performance( "/usera/jonesc/RootFiles/NewOffline-Add_75pcMCTracks.histos.root", "Offline-75pcAddMCTks", " | Offline | +75% Missing Tracks | All Rads" );
-  RICH::performance( "/usera/jonesc/RootFiles/NewOffline-Add_100pcMCTracks.histos.root", "Offline-100pcAddMCTks", " | Offline | +75% Missing Tracks | All Rads" );
+  //RICH::performance( "/usera/jonesc/RootFiles/NewOffline-Add_100pcMCTracks.histos.root", "Offline-100pcAddMCTks", " | Offline | +75% Missing Tracks | All Rads" );
+
+  RICH::performance( "/usera/jonesc/NFS/RootFiles/Brunelv32r3-Gaussv30r5.histos.root", "gv30r5-standard", " | Standard Gauss v30r5" );
+  //RICH::performance( "/usera/jonesc/NFS/RootFiles/Brunelv32r3-Gaussv30r5-HPDReflBkgs.histos.root", "gv30r5-newsim", " | New RICH Simulation" );
+  //RICH::performance( "/usera/jonesc/NFS/RootFiles/Brunelv32r3-Gaussv30r5-HPDRefls-MCRej.histos.root", "gv30r5-newsim-mcBkgPurge", " | New RICH Simulation + MC remove background" );
 
 }

@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-03-25 - Chris Jones
- - Large reworking of Global PID package to allow for tool based tack-by track
+ - Large reworking of Global PID package to allow for tool based track-by track
    particle ID
   + Introduce local base class for tools and algorithms
   + Add new tool RichGlobalPIDLIkelihoodTool that performs the event 
