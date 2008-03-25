@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.16 2008-02-17 13:31:56 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.17 2008-03-25 16:01:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -50,7 +50,7 @@ namespace Rich
       {
         m_richRecTrackLocation = LHCb::RichRecTrackLocation::Offline;
       }
-      else if ( context() == "HLT" )
+      else if ( context() == "HLT" || context() == "Hlt" )
       {
         m_richRecTrackLocation = LHCb::RichRecTrackLocation::HLT;
       }

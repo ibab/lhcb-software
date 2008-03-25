@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IPixelCreator
  *
  *  CVS Log :-
- *  $Id: IRichPixelCreator.h,v 1.13 2007-08-13 12:41:32 jonrob Exp $
+ *  $Id: IRichPixelCreator.h,v 1.14 2008-03-25 16:01:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 #ifndef RICHRECTOOLS_IRICHPIXELCREATOR_H
 #define RICHRECTOOLS_IRICHPIXELCREATOR_H 1
+
+// STL
+#include <vector>
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
@@ -27,6 +30,9 @@ namespace LHCb
 {
   class RichDigit;
 }
+
+// Kernel
+#include "Kernel/RichDetectorType.h"
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichPixelCreator( "Rich::Rec::IPixelCreator" , 1 , 0 );

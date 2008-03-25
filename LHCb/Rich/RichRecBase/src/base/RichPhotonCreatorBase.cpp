@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : Rich::Rec::PhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.24 2008-01-11 11:51:09 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.25 2008-03-25 16:01:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -44,7 +44,7 @@ namespace Rich
         m_photPredName          ( "RichPhotonPredictor" ),
         m_photCount             ( Rich::NRadiatorTypes, 0 ),
         m_photCountLast         ( Rich::NRadiatorTypes, 0 )
-        //m_useNearHPD            ( Rich::NRadiatorTypes )
+      //m_useNearHPD            ( Rich::NRadiatorTypes )
     {
 
       // Define the interface
@@ -130,7 +130,7 @@ namespace Rich
         m_hpdPanels[Rich::Rich2][Rich::left]   = getDet<DeRichHPDPanel>(DeRichLocations::Rich2LeftPanel);
         m_hpdPanels[Rich::Rich2][Rich::right]  = getDet<DeRichHPDPanel>(DeRichLocations::Rich2RightPanel);
       }
-      
+
 
       // Setup incident services
       incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -261,68 +261,27 @@ namespace Rich
 
               if ( !segment->allPhotonsDone() )
               {
+                // search all hits in associated RICH/panel
 
-                // useNearHPD option not yet available - Under development
-                /*
-                if ( m_useNearHPD[segment->trackSegment().radiator()] )
+                // Which Rich
+                const Rich::DetectorType rich = segment->trackSegment().rich();
+
+                // get appropriate pixel range
+                const bool has1 = segment->hasPhotonsIn(Rich::top);
+                const bool has2 = segment->hasPhotonsIn(Rich::bottom);
+                IPixelCreator::PixelRange range = ( has1 && has2 ?
+                                                    pixelCreator()->range(rich) :
+                                                    has1 ? pixelCreator()->range(rich,Rich::top) :
+                                                    pixelCreator()->range(rich,Rich::bottom) );
+                for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
+                      iPixel != range.end(); ++iPixel )
                 {
-                  // iterator over HPDs pixels near to the one associated to this segment
-
-                  // loop over active mass hypos
-                  typedef std::set<LHCb::RichSmartID> SelectedHPDs;
-                  SelectedHPDs hpdIDs;
-                  for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
-                        hypo != m_pidTypes.end(); ++hypo )
-                  {
-                    const LHCb::RichRecSegment::PDGeomEffs & hypoMap 
-                      = segment->geomEfficiencyPerPD( *hypo );
-                    for ( LHCb::RichRecSegment::PDGeomEffs::const_iterator iPD = hypoMap.begin();
-                          iPD != hypoMap.end(); ++iPD )
-                    {
-                      hpdIDs.insert(LHCb::RichSmartID(iPD->first));
-                    }
-                  }
-                  
-                  // create photons for selected HPDs
-                  for ( SelectedHPDs::const_iterator iHPD = hpdIDs.begin();
-                        iHPD != hpdIDs.end(); ++iHPD )
-                  {
-                    IPixelCreator::PixelRange range = pixelCreator()->range(*iHPD);
-                    for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
-                          iPixel != range.end(); ++iPixel )
-                    { 
-                      reconstructPhoton( segment, *iPixel );
-                    }
-                  }
-
-                }
-                else
-                {
-                */
-                  // search all hits in associated RICH/panel
-
-                  // Which Rich
-                  const Rich::DetectorType rich = segment->trackSegment().rich();
-
-                  // get appropriate pixel range
-                  //IPixelCreator::PixelRange range = pixelCreator()->range(rich);
-                  const bool has1 = segment->hasPhotonsIn(Rich::top);
-                  const bool has2 = segment->hasPhotonsIn(Rich::bottom);
-                  IPixelCreator::PixelRange range = ( has1 && has2 ?
-                                                      pixelCreator()->range(rich) :
-                                                      has1 ? pixelCreator()->range(rich,Rich::top) :
-                                                      pixelCreator()->range(rich,Rich::bottom) );
-                  for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
-                        iPixel != range.end(); ++iPixel )
-                  {
-                    //if ( msgLevel(MSG::VERBOSE) )
-                    //{
-                    //  verbose() << " -> Trying pixel " << (*iPixel)->key() << endreq;
-                    //}
-                    reconstructPhoton( segment, *iPixel );
-                  } // pixel loop
-
+                  //if ( msgLevel(MSG::VERBOSE) )
+                  //{
+                  //  verbose() << " -> Trying pixel " << (*iPixel)->key() << endreq;
                   //}
+                  reconstructPhoton( segment, *iPixel );
+                } // pixel loop
 
                 segment->setAllPhotonsDone(true);
               }
@@ -443,8 +402,9 @@ namespace Rich
     const LHCb::RichRecTrack::Photons &
     PhotonCreatorBase::reconstructPhotons( LHCb::RichRecTrack * track ) const
     {
-      if ( !track->allPhotonsDone() )
+      if ( !track->allPhotonsDone() && track->inUse() )
       {
+        debug() << "Reconstructing all photons for track " << track->key() << endreq;
 
         // Iterate over segments
         for ( LHCb::RichRecTrack::Segments::iterator segment =
@@ -463,16 +423,25 @@ namespace Rich
     const LHCb::RichRecSegment::Photons &
     PhotonCreatorBase::reconstructPhotons( LHCb::RichRecSegment * segment ) const
     {
-      if ( !segment->allPhotonsDone() )
+      if ( !segment->allPhotonsDone() && segment->richRecTrack()->inUse() )
       {
+        debug() << "Reconstructing all photons for segment " << segment->key() << endreq;
 
-        // Iterate over pixels
-        for ( LHCb::RichRecPixels::iterator pixel =
-                pixelCreator()->richPixels()->begin();
-              pixel != pixelCreator()->richPixels()->end();
-              ++pixel )
+        // Which Rich
+        const Rich::DetectorType rich = segment->trackSegment().rich();
+
+        // get appropriate pixel range
+        const bool has1 = segment->hasPhotonsIn(Rich::top);
+        const bool has2 = segment->hasPhotonsIn(Rich::bottom);
+        IPixelCreator::PixelRange range = ( has1 && has2 ?
+                                            pixelCreator()->range(rich) :
+                                            has1 ? pixelCreator()->range(rich,Rich::top) :
+                                            pixelCreator()->range(rich,Rich::bottom) );
+        debug() << " -> Found " << range.size() << " pixels" << endreq;
+        for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
+              iPixel != range.end(); ++iPixel )
         {
-          reconstructPhoton( segment, *pixel );
+          reconstructPhoton( segment, *iPixel );
         }
 
         segment->setAllPhotonsDone(true);

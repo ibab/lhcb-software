@@ -5,7 +5,7 @@
  *  Header file for tool base class : Rich::Rec::PixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.23 2008-02-21 16:36:40 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.24 2008-03-25 16:01:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -17,6 +17,7 @@
 
 // STL
 #include <functional>
+#include <vector>
 
 // Gaudi
 #include "GaudiKernel/IIncidentListener.h"
@@ -26,8 +27,8 @@
 #include "RichRecBase/RichRecToolBase.h"
 
 // interfaces
-#include "RichRecBase/IRichPixelCreator.h"
 #include "RichKernel/IRichPixelSuppressionTool.h"
+#include "RichRecBase/IRichPixelCreator.h"
 #include "RichKernel/IRichPixelClusteringTool.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"

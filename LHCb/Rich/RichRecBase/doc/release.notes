@@ -4,6 +4,15 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2008-03-25 - Chris Jones
+ - Add new Tool interface classes
+  + IRichPID for track-by-track PID access on-demand
+  + IRichPixelBackgroundEsti for computing background estimates for given sets 
+    of HPD pixels
+ - Add some missing include statements
+ - Some minor improvements related to reconstucting photons on demand 
+   track-by-track, instead of the more commonly used all at once approach.
+
 !===================== RichRecBase v3r11 2008-02-25 ==========================
 ! 2008-02-25 - Marco Cattaneo
  - Add missing includes to IRichRayTraceCherenkovCone.h
