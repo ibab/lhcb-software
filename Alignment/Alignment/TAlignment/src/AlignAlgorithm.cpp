@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.36 2008-03-15 11:35:33 lnicolas Exp $
+// $Id: AlignAlgorithm.cpp,v 1.37 2008-03-25 18:37:25 ahicheur Exp $
 // Include files
 // from std
 // #include <utility>
@@ -32,7 +32,7 @@
 #include "AlignAlgorithm.h"
 #include "AlParameters.h"
 #include "ResidualCovarianceTool.h"
-#include "AlEquations.h"
+#include "AlignSolvTools/AlEquations.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlignAlgorithm

@@ -6,6 +6,7 @@ Purpose	: collection of alignment algorithms
 ! 2008-03-24 - Adlene Hicheur
  - Moved AlFileIO.h and AlEquations.h to TAlignment/ for include (put the appropriate ifndef stuff, etc...
  - Added PersistSolv as a friend class in AlEquations.h 
+ - Change after discussion: move  AlFileIO.h and AlEquations.{cpp,h} to AlignSolvTools
 
 ! 2008-03-06 - Wouter Hulsbergen
  - added option to use local frame as alignment frame
