@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.177 2008-02-22 13:14:13 cattanem Exp $
+! $Id: release.notes,v 1.178 2008-03-25 15:55:03 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2008-03-25 - Chris Jones
+ - Add doxygen documentation for Rich::Mon namspace (online monitoring)
+ - add missing STL includes
+ - Fix a few doxygen comments
 
 !====================== RichKernel v7r11 2008-02-22 ====================
 ! 2008-02-22 - Chris Jones

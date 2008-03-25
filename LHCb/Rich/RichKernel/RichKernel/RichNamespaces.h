@@ -48,3 +48,14 @@
  *  @date   02/09/2007
  */
 //-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+/** @namespace Rich::Mon
+ *
+ *  Namespace for RICH (online) monitoring software
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @author Ulrich Kerzel Ulrich.Kerzel@cern.ch
+ *  @date   02/09/2007
+ */
+//-----------------------------------------------------------------------------

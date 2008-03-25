@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichCommonBase.icpp
  *
- *  Implementation file for RICH base class : RichCommonBase
+ *  Implementation file for RICH base class : Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.icpp,v 1.10 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: RichCommonBase.icpp,v 1.11 2008-03-25 15:55:03 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -34,6 +34,10 @@ StatusCode Rich::CommonBase<PBASE>::initialize()
   const StatusCode sc = PBASE::initialize();
   if ( sc.isFailure() )
   { return this -> Error( "Failed to initialise Gaudi Base class", sc ); }
+
+  // Printout from initialize
+  if ( this -> msgLevel(MSG::DEBUG) )
+    this -> debug() << "Initialize" << endreq;
 
   return sc;
 }

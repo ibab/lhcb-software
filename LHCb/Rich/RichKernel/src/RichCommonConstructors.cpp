@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichCommonConstructors.cpp
  *
- *  Implementation of templated constructors for RiochCommonBase
+ *  Implementation of templated constructors for Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonConstructors.cpp,v 1.4 2007-02-01 17:24:55 jonrob Exp $
+ *  $Id: RichCommonConstructors.cpp,v 1.5 2008-03-25 15:55:03 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-09-18
