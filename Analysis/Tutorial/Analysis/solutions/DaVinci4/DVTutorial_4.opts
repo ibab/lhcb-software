@@ -1,4 +1,4 @@
-/** @file 
+-/** @file 
  * 
  *  Options for exercise 4
  *
@@ -12,7 +12,7 @@
 TutorialSeq.Members += { "CombineParticles/Bs2JpsiPhi" };
 Bs2JpsiPhi.PhysDesktop.InputLocations = { "Phys/Phi2KK", "Phys/Jpsi2MuMu" } ;
 Bs2JpsiPhi.DecayDescriptor = "B_s0 -> phi(1020) J/psi(1S)"; // mandatory
-Bs2JpsiPhi.FILTER0.Code = "((ABSID=='K+') & (MIPCHI2DV(PRIMARY)>9)) | ((ABSID=='mu-') & (PT>1000))";
+Bs2JpsiPhi.FILTER0.Code = "ALL";
 Bs2JpsiPhi.FILTER1.Code = "ADMASS('B_s0')<2000";
 Bs2JpsiPhi.FILTER2.Code = "(VFASPF(VCHI2/VDOF)<10) & (BPVIPCHI2()<100)";
 //Bs2JpsiPhi.MakePlots=true;
@@ -25,7 +25,7 @@ TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos_4.root";
 
-ApplicationMgr.EvtMax = 1000 ;
+ApplicationMgr.EvtMax = 900 ;
 
 Bs2JpsiPhi.OutputLevel = 3 ;
 
