@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.cpp,v 1.6 2008-03-20 14:18:11 albrecht Exp $
+// $Id: L0ConfirmWithT.cpp,v 1.7 2008-03-26 13:11:27 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -57,7 +57,7 @@ StatusCode L0ConfirmWithT::initialize()
   m_particleType = static_cast<ParticleType>(m_particleTypeTMP);
 
   // Pattern recognition tool
-  m_TrackConfirmTool=tool<ITrackConfirmTool>( m_trackingTool , this );
+  m_TrackConfirmTool=tool<ITrackConfirmTool>( m_trackingTool  );
 
   // to store debug information
   m_DataStore = tool<L0ConfDataStore>("L0ConfDataStore");
