@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================== PatAlgorithms v3r4p1 2008-03-25 ==================
 ! 2008-03-25 - Jan Amoraal
  - Removed white space from property impactCurrentNorm in PatMakeV0. 
    Python doesn't like it.
