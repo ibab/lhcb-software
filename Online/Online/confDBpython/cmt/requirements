@@ -1,7 +1,7 @@
 package confDBpython
 #version v2r0
 #author "Lana"
-
+#setup_script mysetup
 branches confDBpython cmt src
 
 use Boost        v*  LCG_Interfaces
@@ -9,8 +9,11 @@ use Python       v*  LCG_Interfaces
 use confDB       v*  Online
 
 use oracle      v* LCG_Interfaces
-use cx_Oracle v* LCG_Interfaces
-macro cx_Oracle_native_version "4.1.2"
+use cx_oracle v* LCG_Interfaces
+macro cx_oracle_native_version "4.1.2"
+pattern pythpath \
+  path_append PYTHONPATH "$(<package>_cmtpath)/InstallArea/$(tag)/lib" WIN32 "U:\Public\Confdbscripts;$(<package>_cmtpath)\InstallArea\$(tag)\lib"
+
 
 include_path none
 include_dirs $(CONFDBPYTHONROOT)/confDBpython
@@ -30,3 +33,4 @@ macro_append confDBpython_shlibflags $(Boost_linkopts_python)
 
 application   confDBpython_test ../tests/test.cpp
 macro_append  confDBpython_test_dependencies " confDBpython "
+apply_pattern pythpath
