@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.h,v 1.13 2008-03-26 13:46:37 jpalac Exp $
+// $Id: CopyRelatedMCParticles.h,v 1.14 2008-03-26 13:57:46 jpalac Exp $
 #ifndef COPYRELATEDMCPARTICLES_H 
 #define COPYRELATEDMCPARTICLES_H 1
 
@@ -35,7 +35,7 @@ class MCVertex;
  * LHCb::Particle and the cloned LHCb::MCParticles. This is stored in the form 
  * of an LHCb::RelationWeighted2D<LHCb::Particle, LHCb::MCParticle, double> in
  * a TES location defined by InputLocation + "/RelatedMCParticles".
- * @see IMCCloneParticle
+ * @see ICloneMCParticle
  * @see MCParticleCloner
  *
  * <b>Example</b>: Clone LHCb::MCParticles associated to LHCb::Particles in 
