@@ -1,7 +1,19 @@
-! $Id: release.notes,v 1.55 2008-03-19 19:00:06 jpalac Exp $
+! $Id: release.notes,v 1.56 2008-03-26 13:46:56 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
-! Responsible : Ulrich Kerzel
+! Responsible : Ulrich Kerzel, Juan Palacios
 !============================================================
+
+! 2008-03-26 - Juan PALACIOS
+ - src/CopyRelatedMCParticles.h
+  . Add doxygen documentation.
+
+! 2008-03-20 - Juan PALACIOS
+ - src/CopyRelatedMCParticles.h
+  . Remove obsolete private methods.
+  . Add std::string m_mcParticleClonerName to control ICloneMCParticle via 
+    properties.
+ - src/CopyRelatedMCParticles.cpp
+  . Add property ICloneMCParticle to control implementation to be used.
 
 ! 2008-03-19 - Juan PALACIOS
  - src/CopyPrimaryVertices.h
