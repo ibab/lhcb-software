@@ -1,7 +1,7 @@
 #============================================================================
-# $Id: requirements,v 1.18 2008-02-05 16:11:00 pkoppenb Exp $
+# $Id: requirements,v 1.19 2008-03-26 10:56:39 pkoppenb Exp $
 # Created    : 03/06/2005 by P. Koppenburg
-# Maintainer : J.A. Hernando & P. Koppenburg & M. Cattaneo
+# Maintainer : P. Koppenburg & M. Cattaneo
 #============================================================================
 
 #============================================================================
@@ -25,7 +25,7 @@ use HepMC              v*    LCG_Interfaces -no_auto_imports
 
 # Databases
 use DDDB               v1r*  Det            -no_auto_imports
-use ParamFiles         v7r0                 -no_auto_imports
+use ParamFiles         v7r1                 -no_auto_imports
 use FieldMap           v4r7                 -no_auto_imports
 
 # The rest are needed only to set up environment variables for job options
@@ -54,6 +54,7 @@ use HltSys		v*	     -no_auto_imports
 use PhysSys		v*	     -no_auto_imports
 
 #-- Online ??
+use OnlineSys           v*           -no_auto_imports
 
 #============================================================================
 application Moore $(GAUDICONFROOT)/src/GaudiMain.cpp

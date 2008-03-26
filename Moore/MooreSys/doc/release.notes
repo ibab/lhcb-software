@@ -1,7 +1,10 @@
 <PRE>
 Package     : MooreSys
-Package Coordinator : J. Hernando, P. Koppenburg, M. Cattaneo
+Package Coordinator : P. Koppenburg, M. Cattaneo
 Purpose     : LHCb HLT application
+
+</PRE><H1><A NAME=v4r0>2008-03-26 Moore v4r0</A></H1><PRE>
+ - Based on Hlt v3r1 with LoKi::Hybrid and big alleys cleanup. Depends on Online v4r7.
 
 </PRE><H1><A NAME=v3r0>2007-12-17 Moore v3r0</A></H1><PRE>
 Tf framework version
