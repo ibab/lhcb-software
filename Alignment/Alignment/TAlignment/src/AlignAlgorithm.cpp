@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.38 2008-03-25 22:02:09 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.39 2008-03-26 10:51:41 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -311,6 +311,10 @@ StatusCode AlignAlgorithm::execute() {
 
   m_equations->addEventSummary( selectedtracks.size(), numusedvertices ) ;
 
+  
+
+
+
   return StatusCode::SUCCESS;
 }
 
@@ -573,7 +577,7 @@ void AlignAlgorithm::printCanonicalConstraints(const AlVec& parameters, const Al
 
 static inline double signedroot(double root)
 {
-  return root >= 0 ? std::sqrt(root) : - std::sqrt(root) ;
+  return root > 0 ? std::sqrt(root) : ( root < 0  ? - std::sqrt(-root) : (std::isfinite(root) ? 0 : root ) ) ;
 }
 
 

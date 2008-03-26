@@ -28,6 +28,8 @@ use 	STDet			v*	Det
 use     MuonDet                 v*      Det
 use     LHCbKernel              v*      Kernel
 use     LoKiCore        	v*      Phys
+use   LinkerEvent	v*	Event
+
 #============================================================================
 # include directories
 #============================================================================

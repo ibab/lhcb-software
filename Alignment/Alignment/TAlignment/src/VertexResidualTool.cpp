@@ -226,7 +226,7 @@ namespace Al
 	totalchisq += vchi2 ;
 	totalndof  += vertex.nDoF() ;
 	rc = new Al::MultiTrackResiduals( allnodes, totalchisq, totalndof, vchi2, vertex.nDoF()  ) ;
-	std::cout << "created the vertex: " << allnodes.size() << std::endl ;
+	debug() << "created the vertex: " << allnodes.size() << endreq ;
 
 	// calculate all new residuals and all correlations
 	for(size_t i = 0; i<states.size(); ++i) {
@@ -279,14 +279,6 @@ namespace Al
 					      LHCb::State& state,
 					      Al::TrackResiduals::ProjectionMatrix& dResidualdState ) const
   {
-    // for now, this only works upstream
-    if( z > track.state().z() ) {
-      error() << "Cannot yet deal with upstream track in vertex" << endmsg ;
-      return StatusCode::FAILURE ;
-    }
-
-    assert( z < track.state().z() ) ;
-
     // Just to remind you, this is the covariance matrix for a state and its extrapolated state
     //
     //             C1          C1 F^T
@@ -325,7 +317,7 @@ namespace Al
       // calculate the correlation
       // stateResidualCorrelation = convertToCLHEP(F) * track.m_stateResCov ;
       
-      // invert the weigth matrix
+      // invert the covariance matrix
       Gaudi::TrackSymMatrix Cinv = state.covariance() ;
       bool OK = Cinv.Invert() ;
       if(!OK) {
