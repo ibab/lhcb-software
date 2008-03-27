@@ -1,7 +1,20 @@
-! $Id: release.notes,v 1.88 2008-03-03 10:26:48 cattanem Exp $
+! $Id: release.notes,v 1.89 2008-03-27 16:33:59 odescham Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+
+! 2008-03-25 - Olivier Deschamps
+ - Change L0DUCounter::Scale from 100 to 1000 (adapt to firmware change)
+ - L0DUConfig.xml/L0DUChannel.xml/L0DUElementaryConditions.xml : 
+    - change few method naming
+    - e.g.  'decision()' -> 'emulatedDecision()' ; 'value()' -> 'emulatedValue()' ; 'fired()' -> 'emulatedTrigger()'
+      to avoid confusion with actual decision from raw
+    - L0DUReport 'fired' -> 'triggered'
+ - add few new methods in L0DUChannel and L0DUConfig
+    -   getter method for emulatedDecision (incl downscaling) and emulatedTrigger (w/o dowscaling)
+    -   isDownscaled() method returning emulatedDecision() == emulatedTrigger()
+    - L0DUConfig.xml : in(de)crementCounters() method to allow to replay the same event with same downscaling counters
 
 !======================== L0Event v16r8 2008-03-03 ===========================
 ! 2008-02-27 - Chris Jones

@@ -1,4 +1,4 @@
-// $Id: L0DUConfig.cpp,v 1.1 2007-10-31 14:31:15 odescham Exp $
+// $Id: L0DUConfig.cpp,v 1.2 2008-03-27 16:33:59 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -26,7 +26,7 @@ std::string LHCb::L0DUConfig::summary(){
   }
   s << " " << std::endl
     << " <-----  L0DUConfig (" << key()   << " ) " << " --------------->" <<std::endl
-    << "   Decision : " << decision() << std::endl
+    << "   Decision : " << emulatedDecision() << std::endl
     << "   Algorithm description : " << m_definition << std::endl
     << oscond.str();
   return s.str();

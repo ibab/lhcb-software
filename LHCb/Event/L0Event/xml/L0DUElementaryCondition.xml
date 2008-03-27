@@ -39,8 +39,8 @@
       <attribute name = "threshold" desc = "threshold value (digit)"type = "unsigned long" />
 
 
-      <method name      = "value" 
-        desc = "Condition value = comparion(data,comparator,threshold)" type  = "bool" >
+      <method name      = "emulatedValue" 
+        desc = "Condition value = comparison(data,comparator,threshold)" type  = "bool" >
         <code> return comparison( m_data->digit()  ,m_comparator , m_threshold ); </code>
       </method>
 

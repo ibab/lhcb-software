@@ -1,4 +1,4 @@
-// $Id: L0DUElementaryCondition.cpp,v 1.3 2007-10-31 14:31:15 odescham Exp $
+// $Id: L0DUElementaryCondition.cpp,v 1.4 2008-03-27 16:33:59 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -30,7 +30,7 @@ std::string LHCb::L0DUElementaryCondition::summary(){
   s << "Condition [ " << m_name << " : "
     << m_data->summary()
     << " "   << m_comparator  
-    << " "   << m_threshold << ss.str() <<"] ?  ==> " << value() ;
+    << " "   << m_threshold << ss.str() <<"] ?  ==> " << emulatedValue() ;
   return s.str(); 
 
 }

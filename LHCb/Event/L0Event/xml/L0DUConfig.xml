@@ -31,7 +31,7 @@
 
       <constructor
         desc     = "Default constructor"
-        initList = "Base ( 0xFFFF   )  , m_definition(),m_data(),m_conditions(),m_channels()"
+        initList = "Base ( 0x0000   )  , m_definition(),m_data(),m_conditions(),m_channels()"
         > <code/></constructor>
 
       <constructor
@@ -53,6 +53,7 @@
       <attribute name = "data" desc = " L0DU Elementary condition" type = "LHCb::L0DUElementaryData::Map" nonconstaccessor='TRUE' />
       <attribute name = "conditions" desc = " L0DU Elementary condition" type = "LHCb::L0DUElementaryCondition::Map"  nonconstaccessor='TRUE'/>
       <attribute name = "channels" desc = " L0DU channels" type = "LHCb::L0DUChannel::Map"  nonconstaccessor='TRUE'/>      
+
 
 
       <method desc   = "return Trigger Configuration Key @alias of key() " name   = "tck" type   = "long" const = 'TRUE'><code>return key();</code></method>
@@ -85,6 +86,24 @@
           }
         </code>
       </method>
+
+      <method name  = "incrementCounters" desc = "increment all channels counter" type  = "void" >
+        <code>
+          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
+          int count = ((*it).second)->counter() + ((*it).second)->rate();
+          ((*it).second)->setCounter(count);
+          }
+        </code>
+      </method>
+      <method name  = "decrementCounters" desc = "decrement all channels counter" type  = "void" >
+        <code>
+          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
+          int count = ((*it).second)->counter() - ((*it).second)->rate();
+          ((*it).second)->setCounter(count);
+          }
+        </code>
+      </method>
+
       <method name  = "resetEmulated" desc = "reset all channels emulation flags" type  = "void" argList="bool value=false" >
         <code>
           for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
@@ -121,16 +140,35 @@
       </method>
 
 
-      <method name  = "decision" desc = "emulated global decision" type  = "bool" >
+      <method name  = "emulatedDecision" desc = "global emulated decision" type  = "bool" >
         <code>
-          emulate();
           for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
            LHCb::L0DUChannel* channel = (*it).second;
-           if( channel->decision() &amp;&amp; channel->enable() )return true;
+           if( channel->emulatedDecision() &amp;&amp; channel->enable() )return true;
           }
 	  return false;
         </code>
       </method>
+
+
+      <method name  = "emulatedTrigger" desc = "global emulated decision (without downscaling)" type  = "bool" >
+        <code>
+          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
+           LHCb::L0DUChannel* channel = (*it).second;
+           if( channel->emulatedTrigger() &amp;&amp; channel->enable() )return true;
+          }
+	  return false;
+        </code>
+      </method>
+
+      <method name  = "isDownscaled" desc = "return true if the L0 decision would be yes without any downscaling" type  = "bool" >
+        <code>
+          return (emulatedTrigger() == emulatedDecision() );
+        </code>
+      </method>
+
+
+
 
 
     </class>

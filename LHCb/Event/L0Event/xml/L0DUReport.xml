@@ -23,7 +23,7 @@
 
       <constructor 
         desc = "Default constructor" 
-        initList= "m_configuration(NULL), m_tck(0xFFFF)">
+        initList= "m_tck(0xFFFF) , m_configuration(NULL)">
         <code>
            clear();
         </code>
@@ -40,10 +40,12 @@
       </constructor>
         
 
-      <attribute  desc=" global decision"                       name="decision"                 type="bool"                               />
+      <attribute  desc=" global decision"          name="decision"           type="bool"/>
+      <attribute  desc=" Timing Trigger Decision"  name="timingTriggerBit"   type="bool" />
+      <attribute  desc=" Force Bit"                name="forceBit"           type="bool" />
+      <attribute  desc=" L0DU algorithm configuration Key" name="tck"        type="long" />
       <attribute  desc=" L0DU algorithm configuration"          name="configuration"            type="LHCb::L0DUConfig*" setMeth = 'FALSE' nonconstaccessor='TRUE'/>
-      <attribute  desc=" L0DU algorithm configuration Key"      name="tck"                      type="long" />
-      <attribute  desc="'Fired channels' Summaries   (FCS)"     name="firedChannelsSummaries"   type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;"/>
+      <attribute  desc="'Triggered channels' Summaries   (FCS)"     name="triggeredChannelsSummaries"   type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;"/>
       <attribute  desc="'Channel decisions' Summaries  (TCS)"   name="channelsDecisionSummaries"type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
       <attribute  desc="'Elementary conditions' Summaries (ECS)"name="conditionsValueSummaries" type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
       <attribute  desc=" sum(Et) value over several BX"         name="sumEt"                    type="std::map&lt;int , unsigned int&gt;" getMeth='FALSE'/>
@@ -56,7 +58,7 @@
         type="void">
         <code> 
           m_channelsDecisionSummaries.clear();
-          m_firedChannelsSummaries.clear();
+          m_triggeredChannelsSummaries.clear();
           m_conditionsValueSummaries.clear();
           m_sumEt.clear();
           m_decision=false;
@@ -135,13 +137,13 @@
 
 
       <method  
-        name   = "setFiredChannelsSummary"
+        name   = "setTriggeredChannelsSummary"
         desc   = "add a 32-bit L0DUChannels firing summary (FCS)"
         argList= "const unsigned int summary,  unsigned int loc=0, int bx=0"
         type   = "void"> 
         <code>
           std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,loc);
-          m_firedChannelsSummaries[key]=summary;
+          m_triggeredChannelsSummaries[key]=summary;
         </code>
       </method>
 
@@ -166,9 +168,9 @@
         </code>
       </method>
       <method  
-        name   = "setFiredChannel"
-        desc   = "add a fired channel bit in the FCS summary"
-        argList= "std::string name , bool fired, int  bx=0 "
+        name   = "setTriggeredChannel"
+        desc   = "add a triggered channel bit in the FCS summary"
+        argList= "std::string name , bool triggered, int  bx=0 "
         type   = "void"> 
         <code>
           if(NULL == m_configuration)return;
@@ -179,10 +181,10 @@
           unsigned int pos = ((*it).second)->id();
           unsigned int index = pos / 32;
           std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index); 
-          unsigned int summary = m_firedChannelsSummaries[key];
+          unsigned int summary = m_triggeredChannelsSummaries[key];
           unsigned int loc   = pos - index *32;
-          fired ? summary |= (1 &lt;&lt; loc) : summary &amp;= ~(1 &lt;&lt; loc);
-          m_firedChannelsSummaries[key] = summary;
+          triggered ? summary |= (1 &lt;&lt; loc) : summary &amp;= ~(1 &lt;&lt; loc);
+          m_triggeredChannelsSummaries[key] = summary;
         </code>
       </method>
 
@@ -247,15 +249,15 @@
 
 
       <method
-        name="firedChannelsSummary"
-        desc="32-bit summary for the fired channels"
+        name="triggeredChannelsSummary"
+        desc="32-bit summary for the triggered channels"
         argList="unsigned int index=0, int bx=0"
         const = "TRUE"
         type="const unsigned int">
         <code> 
           std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index); 
-          std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_firedChannelsSummaries.find( key );
-          if(it == m_firedChannelsSummaries.end())return 0;
+          std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_triggeredChannelsSummaries.find( key );
+          if(it == m_triggeredChannelsSummaries.end())return 0;
           return (*it).second;
         </code>
       </method>
@@ -293,7 +295,7 @@
         </code>
       </method>
       <method
-        name="firedChannel"
+        name="triggeredChannel"
         argList="const unsigned int channel, int bx=0"
         desc="return the channel decision by channel number (NOT incl. the downscaling decision)"
         type="bool"
@@ -301,8 +303,8 @@
         <code> 
           unsigned int index = channel / 32;
           std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index);
-          std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_firedChannelsSummaries.find(key);
-          if( it == m_firedChannelsSummaries.end())return 0;
+          std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_triggeredChannelsSummaries.find(key);
+          if( it == m_triggeredChannelsSummaries.end())return 0;
           unsigned int summary = (*it).second;
           unsigned int loc   = channel - index *32;
           return ( 1 &amp; (summary >> loc));
@@ -330,7 +332,7 @@
 
                                                           
       <method
-        name="firedChannelByName"
+        name="triggeredChannelByName"
         argList="const std::string name, int bx=0"
         desc="return channel firing by channel name"
         type="bool"
@@ -341,7 +343,7 @@
           LHCb::L0DUChannel::Map::iterator it = channels.find( name );
           if( it == channels.end() )return false;
           const unsigned int pos = ((*it).second)->id();
-          return firedChannel( pos,bx );
+          return triggeredChannel( pos,bx );
         </code>
       </method>
       <method

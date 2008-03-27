@@ -11,7 +11,7 @@
         desc="Scale of the downscaling counter" 
         name="Scale" 
         type="static const unsigned int" 
-        init="100"/>
+        init="1000"/>
     </namespace>
     
     <class 
@@ -42,11 +42,11 @@
       <constructor 
         desc = "non-default constructor"
         argList   = "int id, const std::string name, const count rate, bool enable=true" 
-        initList  = "m_id(id),m_name(name),m_rate(rate),m_enable(enable),m_counter(0),m_decision(false),m_fired(false),m_emulated(false)">
+        initList  = "m_id(id),m_name(name),m_rate(rate),m_enable(enable),m_counter(0),m_emulatedDecision(false),m_emulatedTrigger(false),m_emulated(false)">
       </constructor>
       <constructor 
         desc = "default constructor"
-        initList  = "m_id(0),m_name(),m_rate(100),m_enable(true),m_counter(0),m_decision(false),m_fired(false),m_emulated(false)">
+        initList  = "m_id(0),m_name(),m_rate(100),m_enable(true),m_counter(0),m_emulatedDecision(false),m_emulatedTrigger(false),m_emulated(false)">
       </constructor>
 
  
@@ -57,10 +57,33 @@
 
       <attribute name = "elementaryConditions" desc = " L0DU Elementary condition" type = "LHCb::L0DUElementaryCondition::Map" />
       <attribute name = "counter"   desc = " counter value" type = "unsigned int" init = "0" />     
-      <attribute name = "decision"  desc = "L0DU Channel decision"        type = "bool" init = "false" setMeth = "FALSE"/>     
-      <attribute name = "fired"     desc = "L0DU Channel"type = "bool" init = "false" setMeth="FALSE"/>
-      <attribute name = "emulated"  desc = "L0DU Channel emulation flag"  type = "bool" />
+      <attribute name = "emulatedDecision"  desc = "L0DU Channel emulated Decision (trigger value + downscaling)"  
+                 type = "bool" init = "false" setMeth = "FALSE" getMeth="FALSE"/>  
+      <attribute name = "emulatedTrigger"   desc = "L0DU Channel emulated trigger value "   
+                 type = "bool" init = "false" setMeth="FALSE" getMeth="FALSE"/>
+      <attribute name = "emulated"  desc = "L0DU Channel emulation flag"  type = "bool" init = "false" />
+
       
+
+      <method name      = "emulatedDecision" desc = "get the channel emulated decision (trigger value + downscaling)" type  = "bool" >
+        <code> 
+          return emulate()->m_emulatedDecision;
+        </code>
+      </method>
+      <method name      = "emulatedTrigger" desc = "get the channel emulated trigger value" type  = "bool" >
+        <code> 
+          emulate();
+          return emulate()->m_emulatedTrigger;
+        </code>
+      </method>
+      <method name      = "isDownscaled" desc = "return emulatedDecision == emulatedTrigger" type  = "bool" >
+        <code>
+          return emulatedDecision() == emulatedTrigger();
+        </code>
+      </method>
+
+
+
 
       <method name      = "addElementaryCondition" desc = "push_back Elementary Condition"
         type  = "void" argList   = "LHCb::L0DUElementaryCondition* condition">
@@ -80,7 +103,7 @@
       </method>
 
 
-      <method name      = "emulate" desc = "Process Channel decision" type  = "LHCb::L0DUChannel*" >
+      <method name      = "emulate" desc = "Process Channel emulated Decision" type  = "LHCb::L0DUChannel*" >
       </method>
 
       <method name  = "description" desc = "L0DUChannel short description" type  = "std::string" ></method>
