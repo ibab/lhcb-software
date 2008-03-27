@@ -1,4 +1,4 @@
-// $Id: RawBankReadoutStatusMonitor.cpp,v 1.4 2008-03-04 14:45:00 odescham Exp $
+// $Id: RawBankReadoutStatusMonitor.cpp,v 1.5 2008-03-27 18:36:59 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,7 @@ RawBankReadoutStatusMonitor::RawBankReadoutStatusMonitor( const std::string& nam
     ,m_counter(0)
 {
 
-  declareProperty( "bankTypes", m_bankTypes );
+  declareProperty( "bankNames", m_bankTypes );
   declareProperty( "NumberOfSources", m_nSources=-1 );// Number Of Source in the StatusMap
 
 }
