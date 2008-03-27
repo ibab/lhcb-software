@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.cpp,v 1.5 2008-03-20 14:22:46 albrecht Exp $
+// $Id: PatConfirmTool.cpp,v 1.6 2008-03-27 10:44:59 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -12,8 +12,7 @@
 
 // local
 #include "PatConfirmTool.h"
-#include "TrackParabel.h"
-#include "ParabolaHypothesis.h"
+#include "HltBase/ParabolaHypothesis.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatConfirmTool
 //
@@ -37,7 +36,10 @@ PatConfirmTool::PatConfirmTool( const std::string& type,
   declareInterface<ITrackConfirmTool>(this);
  
   //variables to be defined in job options
-  declareProperty("nSigma",m_nsigma=5.);
+  declareProperty("nSigmaX",m_nSigmaX=5.);
+  declareProperty("nSigmaY",m_nSigmaY=5.);
+  declareProperty("nSigmaTx",m_nSigmaTx=5.);
+  declareProperty("nSigmaTy",m_nSigmaTy=5.);
   declareProperty("debugMode", m_debugMode = false);
   declareProperty("minHitsInOT", m_minHitsInOT = 14 );
 }
@@ -84,7 +86,7 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
 
   // Define track hypothesis from seed state (parabola model) and
   // decode IT and OT hits in search window
-  ParabolaHypothesis tp = m_l0ConfExtrapolator->getParabolaHypothesis( seedState, m_nsigma );
+  ParabolaHypothesis tp = m_l0ConfExtrapolator->getParabolaHypothesis( seedState, m_nSigmaX , m_nSigmaY );
   m_tHitManager->prepareHitsInWindow(tp);
 
   if (m_debugMode) {
@@ -121,7 +123,12 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     // modify the covariance matrix, as PatSeedingTool will search in the one
     // sigma range per default
     LHCb::State state(seedState);
-    state.covariance() *= m_nsigma * m_nsigma;
+    Gaudi::TrackSymMatrix stateCov = state.covariance();
+    stateCov(0,0) *= m_nSigmaX * m_nSigmaX;
+    stateCov(1,1) *= m_nSigmaY * m_nSigmaY;
+    stateCov(2,2) *= m_nSigmaTx * m_nSigmaTx;
+    stateCov(3,3) *= m_nSigmaTy * m_nSigmaTy;
+    state.setCovariance(stateCov);
     m_patSeedingTool->performTracking(outputTracks, &state);
   }
 

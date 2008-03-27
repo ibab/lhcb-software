@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.h,v 1.2 2008-03-20 14:23:38 albrecht Exp $
+// $Id: PatConfirmTool.h,v 1.3 2008-03-27 10:44:56 albrecht Exp $
 #ifndef PATCONFIRMTOOL_H 
 #define PATCONFIRMTOOL_H 1
 
@@ -14,7 +14,7 @@
 #include "TfKernel/TStationHitManager.h"
 #include "PatKernel/PatForwardHit.h"
 
-#include "IL0ConfExtrapolator.h"
+#include "HltBase/IL0ConfExtrapolator.h"
 #include "L0ConfDataStore.h"
 
 namespace LHCb{
@@ -50,7 +50,8 @@ protected:
   
 private:
   //variables declared in job options
-  double m_nsigma;
+  double m_nSigmaX, m_nSigmaY, m_nSigmaTx, m_nSigmaTy ;
+
   bool m_debugMode;
   unsigned m_minHitsInOT;
 
