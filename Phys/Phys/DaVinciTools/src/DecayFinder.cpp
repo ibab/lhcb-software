@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.21 2007-11-07 17:21:57 jpalac Exp $
+// $Id: DecayFinder.cpp,v 1.22 2008-03-27 11:03:10 pkoppenb Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -68,6 +68,7 @@ StatusCode DecayFinder::initialize()
   if( serviceLocator() ) {
     StatusCode sc = StatusCode::FAILURE;
     sc = serviceLocator()->service("ParticlePropertySvc",m_ppSvc);
+    if (!sc) return sc ;
   }
   if( !m_ppSvc ) {
     throw GaudiException( "ParticlePropertySvc not found",

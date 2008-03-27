@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.304 2008-03-06 15:44:46 jpalac Exp $
+! $Id: release.notes,v 1.305 2008-03-27 11:03:10 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-03-27 - Patrick Koppenburg
+ - DecayFinder : check StatusCode
+ - Increment to v15r8p2
 
 !======================== DaVinciTools v15r8p1 2008-03-06 ===================
 

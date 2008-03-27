@@ -1,4 +1,4 @@
-// $Id: PropertimeFitter.cpp,v 1.7 2008-02-20 20:43:11 pkoppenb Exp $
+// $Id: PropertimeFitter.cpp,v 1.8 2008-03-27 11:04:18 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -70,7 +70,6 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV, const LHCb::Partic
                                   double& propertime, double& error,
                                   double& chisq) const 
 {
-  StatusCode sc = StatusCode::SUCCESS;
 
   Gaudi::XYZPoint PVposition = PV.position();
   Gaudi::SymMatrix3x3 CovPV = PV.covMatrix();
@@ -241,5 +240,5 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV, const LHCb::Partic
 
   chisq =  chi2Fit;
 
-  return sc;
+  return StatusCode::SUCCESS ;
 }

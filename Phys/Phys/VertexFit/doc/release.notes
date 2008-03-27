@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.133 2008-03-06 15:48:01 jpalac Exp $
+! $Id: release.notes,v 1.134 2008-03-27 11:04:18 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2008-03-27 - Patrick Koppenburg
+ - PropertTimeFitter: check statuscodes
+ - Increment to v5r0p1
 
 !========================== VertexFit v5r0 2008-03-06 ===================
 
