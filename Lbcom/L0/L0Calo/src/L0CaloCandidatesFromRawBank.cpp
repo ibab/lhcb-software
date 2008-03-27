@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.8 2008-03-10 15:40:31 robbep Exp $
+// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.9 2008-03-27 23:42:11 robbep Exp $
 // Include files
 
 // from Gaudi
@@ -66,17 +66,19 @@ StatusCode L0CaloCandidatesFromRawBank::initialize ( ) {
 void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<unsigned int> >& data,
                                                        std::string& nameFullInTES,
                                                        std::string& nameInTES,
-						       const int version){
+                                                       const int version){
 
-  debug() << "L0CaloCandidatesFromRawBank ... entering conversion" << endreq;
-
+  if ( msgLevel( MSG::DEBUG ) ) 
+    debug() << "L0CaloCandidatesFromRawBank ... entering conversion" << endreq;
+  
   // Assume that full path (including rootInTES) is given in nameInTES etc.
   LHCb::L0CaloCandidates* outFull = new LHCb::L0CaloCandidates();
   put( outFull, nameFullInTES, IgnoreRootInTES );
   LHCb::L0CaloCandidates* out     = new LHCb::L0CaloCandidates();
 
   put( out, nameInTES, IgnoreRootInTES );
-  debug() << "L0CaloCandidatesFromRawBank Registered output in TES" << endreq;
+  if ( msgLevel( MSG::DEBUG ) ) 
+    debug() << "L0CaloCandidatesFromRawBank Registered output in TES" << endreq;
   
   Gaudi::XYZPoint dummy( 0., 0., 0.);
   Gaudi::XYZPoint center( 0., 0., 0.);
@@ -92,17 +94,19 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
         data.end() != itBnk; ++itBnk ) {
     unsigned int* ptData = &(*(*itBnk).begin());
     int bankSize = (*itBnk).size();  //== is in bytes...
-    debug() << " L0CaloCandidatesFromRawBank Bank " << itBnk-data.begin() 
-            << " size " << bankSize << " words " << endreq ;
+    if ( msgLevel( MSG::DEBUG ) ) 
+      debug() << " L0CaloCandidatesFromRawBank Bank " << itBnk-data.begin() 
+              << " size " << bankSize << " words " << endreq ;
     while ( 0 < bankSize-- ){
       int cand = (*ptData++);
       unsigned short type  = ( cand & 0x0F000000 ) >> 24 ;
       unsigned short slave = ( cand & 0x60000000 ) >> 29 ;
       unsigned short io    = ( cand & 0x80000000 ) >> 31 ;
       
-      debug() << " io= "<< io << " slave= " << slave 
-              << " type= " << type << endreq ;
-
+      if ( msgLevel( MSG::DEBUG ) )
+        debug() << " io= "<< io << " slave= " << slave 
+                << " type= " << type << endreq ;
+      
       while ( bestCand.size() <= (unsigned int)type ) bestCand.push_back( 0 );
       if ( msgLevel( MSG::VERBOSE ) ) verbose() << format( "Data %8x ", cand )<<endreq;
       
@@ -110,8 +114,8 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
         // CaloSumEt Case 
         int sumEt = cand & 0xFFFFFF;
 
-	if ( version > 0 ) {
-	  if ( 0 == slave ) {
+        if ( version > 0 ) {
+          if ( 0 == slave ) {
             if ( 1 == io ) type = L0DUBase::CaloType::SumEt ;
           } else if ( 1 == slave ) {
             if ( 1 == io ) type = L0DUBase::CaloType::SumEtSlave1Out ;
@@ -123,18 +127,24 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
         }
 
         if ( L0DUBase::CaloType::SumEt == type ) {
-          myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
-                                                 sumEt , sumEt * m_etScale , 
-                                                 dummy , 0. );
-	  outFull -> add( myL0Cand ) ;
-          bestCand[type] = myL0Cand ;
-          if ( msgLevel( MSG::DEBUG ) ) debug() << " outFull CaloSumEt = " <<*myL0Cand << endreq;
+          if ( 0 == bestCand[ type ] ) { 
+            myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
+                                                   sumEt , sumEt * m_etScale , 
+                                                   dummy , 0. ) ;
+            // Do not include Sum Et in OutFull, only in default
+            //          outFull -> add( myL0Cand ) ;
+            bestCand[type] = myL0Cand ;
+            if ( msgLevel( MSG::DEBUG ) )
+              debug() << " outFull CaloSumEt = " << *myL0Cand << endreq ;
+          } else {
+            warning() << "SumEt candidate already filled" << endreq ;
+          }
         } else {
           if ( m_doDebugDecoding ) { 
             myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
                                                    sumEt , sumEt * m_etScale , 
                                                    dummy , 0. );
-            outFull->add( myL0Cand );
+            outFull -> add( myL0Cand );
             if ( msgLevel( MSG::DEBUG ) ) 
               debug() << " outFull CaloSumEt = " << *myL0Cand << endreq ;
           }
@@ -155,18 +165,23 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
           if (io == 0 ) { 
             myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
                                                    mult, 0., dummy, 0. );
-            outFull->add( myL0Cand );
+            outFull -> add( myL0Cand );
             if ( msgLevel( MSG::DEBUG ) ) debug() << " outFull CaloSpdMult = " <<*myL0Cand << endreq;
           }
         }
 
         if ( ( 1 == io ) || ( 0 == version ) ) { 
-          myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
-                                                 mult, 0., dummy, 0. );
-          bestCand[type] = myL0Cand;
-          outFull -> add( myL0Cand ) ;
+          if ( 0 == bestCand[ type ] ) {
+            myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
+                                                   mult, 0., dummy, 0. ) ;
+            bestCand[ type ] = myL0Cand ;
+            // Do not include in outFull, only in Default
+            //          outFull -> add( myL0Cand ) ;
+            if ( msgLevel( MSG::VERBOSE ) ) verbose() <<" Candidate SPD = " << *myL0Cand << endreq;
+          } else {
+            warning() << "SPD Multiplicity candidate is already filled !" << endreq ;
+          }
         }
-        if ( msgLevel( MSG::VERBOSE ) ) verbose() <<" Candidate SPD = " << *myL0Cand << endreq;
         
       } else {
         int rawId =  ( cand >>8 ) & 0xFFFF;
@@ -210,8 +225,14 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
           if ( ( ( 1 == io ) && ( 0 == slave ) ) || ( 0 == version ) )  { 
             myL0Cand = new LHCb::L0CaloCandidate ( type, id, et, et * m_etScale,
                                                    center, tol );
-            if ( version > 0 ) bestCand[ type ] = myL0Cand ;
-            else { 
+            if ( version > 0 ) { 
+              if ( 0 == bestCand[ type ] ) {
+                bestCand[ type ] = myL0Cand ;
+              } else {
+                warning() << "Hadron candidate already filled !" << endreq ;
+                delete myL0Cand ;
+              }
+            } else { 
               outFull -> add( myL0Cand ) ;
               if ( 0 == bestCand[type] ) {
                 bestCand[type] = myL0Cand;
@@ -262,7 +283,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
           if ( ( 0 == io ) || ( 0 == version ) ) {
             outFull -> add( myL0Cand ) ;
             if ( msgLevel( MSG::DEBUG ) ) debug() << " outFull le reste type = " << type 
-                      << " " << *myL0Cand << endreq ;
+                                                  << " " << *myL0Cand << endreq ;
             if ( 0 == version ) {
               if ( 0 == bestCand[type] ) {
                 bestCand[type] = myL0Cand;
@@ -271,7 +292,12 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
               }
             }      
           } else {
-            bestCand[ type ] = myL0Cand ;
+            if ( 0 == bestCand[ type ] ) {
+              bestCand[ type ] = myL0Cand ;
+            } else {
+              warning() << "Electromagnetic candidate already filled !" << endreq ;
+              delete myL0Cand ;
+            }
           }
         }
         if ( msgLevel( MSG::VERBOSE ) ) verbose() << *myL0Cand << endreq;
@@ -290,16 +316,26 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
 
   for ( unsigned int type = 0 ; bestCand.size() > type ; type++ ) {
     if ( 0 != bestCand[type] ) {
-      LHCb::L0CaloCandidate* cand = bestCand[type];
-      myL0Cand = new LHCb::L0CaloCandidate ( cand->type(),
-                                             cand->id(),
-                                             cand->etCode(),
-                                             cand->et(),
-                                             cand->position(),
-                                             cand->posTol() );
-
-      if ( msgLevel( MSG::DEBUG ) ) debug() << "out bestCand type = "<<type<<*myL0Cand << endreq;
-      out->add( myL0Cand );
+      if ( 0 == version ) {
+        if ( ( L0DUBase::CaloType::SumEt != type ) && 
+             ( L0DUBase::CaloType::SpdMult != type ) ) {
+          LHCb::L0CaloCandidate* cand = bestCand[type];
+          myL0Cand = new LHCb::L0CaloCandidate ( cand->type(),
+                                                 cand->id(),
+                                                 cand->etCode(),
+                                                 cand->et(),
+                                                 cand->position(),
+                                                 cand->posTol() );
+        
+          if ( msgLevel( MSG::DEBUG ) ) 
+            debug() << "out bestCand type = "<<type<<*myL0Cand << endreq;
+          out -> add( myL0Cand );
+        } else {
+          out -> add( bestCand[ type ] ) ;
+        }
+      } else {
+        out -> add( bestCand[ type ] ) ;
+      }
     }
   }
 }
