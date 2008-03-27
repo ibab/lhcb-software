@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.25 2008-02-21 16:52:05 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.26 2008-03-27 11:03:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -30,7 +30,7 @@ DECLARE_TOOL_FACTORY( RayTraceCherenkovCone );
 RayTraceCherenkovCone::RayTraceCherenkovCone( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
-  : RichRecToolBase ( type, name, parent ),
+  : Rich::Rec::ToolBase ( type, name, parent ),
     m_rayTrace      ( NULL ),
     m_ckAngle       ( NULL ),
     m_smartIDTool   ( NULL ),
@@ -43,10 +43,13 @@ RayTraceCherenkovCone::RayTraceCherenkovCone( const std::string& type,
   declareProperty( "BailoutTries", m_nBailout );
 }
 
+// Destructor
+RayTraceCherenkovCone::~RayTraceCherenkovCone() {}
+
 StatusCode RayTraceCherenkovCone::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = Rich::Rec::ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools

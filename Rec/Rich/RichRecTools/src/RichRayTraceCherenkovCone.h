@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.h,v 1.18 2008-02-21 16:52:05 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.h,v 1.19 2008-03-27 11:03:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -64,7 +64,7 @@ namespace Rich
                              const IInterface* parent );
 
       /// Destructor
-      virtual ~RayTraceCherenkovCone(){}
+      virtual ~RayTraceCherenkovCone();
 
       // Initialize method
       StatusCode initialize();
