@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.93 2008-03-10 19:37:36 robbep Exp $
+! $Id: release.notes,v 1.94 2008-03-27 21:05:11 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2008-03-27 - Patrick Robbe
+ - src/L0CaloMonit.cpp: change binning for slot in crates
 
 ! 2008-03-11 - Patrick Robbe
  - cmt/requirements: use Calo/CaloTools
