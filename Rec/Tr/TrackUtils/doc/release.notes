@@ -3,6 +3,11 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
+! 2008-03-27 - Louis Nicolas
+ - Moved algorithm TrackRemoveDoubleITHits to TrackRemoveDoubleHits:
+   now removes all double hits: in IT, OT and TT (two kinds: same sector and
+   different sectors)
+
 ! 2008-01-29 - Stephanie Hansmann-Menzemer
  - Add list of states to be written out for muon tracks in TrackToDST
 
