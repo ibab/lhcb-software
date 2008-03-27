@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r15p1 2008-03-27 ====================
 ! 2008-03-27 - Patrick Koppenburg
  - MuonPIDsFromProtoParticlesAlg : Check StatusCodes.
 
