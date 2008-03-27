@@ -1,11 +1,11 @@
-// $Id: L0ConfExtrapolator.h,v 1.1 2008-03-20 14:15:07 albrecht Exp $
+// $Id: L0ConfExtrapolator.h,v 1.2 2008-03-27 10:46:53 albrecht Exp $
 #ifndef L0CONFEXTRAPOLATOR_H 
 #define L0CONFEXTRAPOLATOR_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "IL0ConfExtrapolator.h"            // Interface
+#include "HltBase/IL0ConfExtrapolator.h"            // Interface
 
 #include "Event/Track.h"
 #include "GaudiKernel/Point3DTypes.h"
@@ -34,6 +34,9 @@ public:
 
   ParabolaHypothesis getParabolaHypothesis( const LHCb::State& aState, 
                                             double nSigma ) const;
+
+  ParabolaHypothesis getParabolaHypothesis( const LHCb::State& aState, 
+                                            double nSigmaX, double nSigmaY ) const;
 
   void muon2T( const LHCb::Track& muonTrack, LHCb::State& stateAtT ) const;
   

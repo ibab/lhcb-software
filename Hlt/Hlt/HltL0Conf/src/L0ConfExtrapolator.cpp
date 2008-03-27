@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.cpp,v 1.1 2008-03-20 14:15:47 albrecht Exp $
+// $Id: L0ConfExtrapolator.cpp,v 1.2 2008-03-27 10:46:56 albrecht Exp $
 // Include files 
 
 #include <cmath>
@@ -7,8 +7,8 @@
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 
 #include "LineHypothesis.h"
-#include "ParabolaHypothesis.h"
-#include "FwdHypothesis.h"
+#include "HltBase/ParabolaHypothesis.h"
+#include "HltBase/FwdHypothesis.h"
 
 //boost
 #include <boost/assign/list_of.hpp>
@@ -135,9 +135,15 @@ ParabolaHypothesis L0ConfExtrapolator::getParabolaHypothesis(const LHCb::Track& 
   return getParabolaHypothesis( seedTrack.firstState(), nSigma );
 }
 
-
 ParabolaHypothesis L0ConfExtrapolator::getParabolaHypothesis(const LHCb::State& aState, 
                                                              double nSigma ) const
+{
+  return getParabolaHypothesis( aState , nSigma , nSigma);
+}
+
+
+ParabolaHypothesis L0ConfExtrapolator::getParabolaHypothesis(const LHCb::State& aState, 
+                                                             double nSigmaX, double nSigmaY ) const
 {
   double z = aState.z();
   
@@ -146,8 +152,8 @@ ParabolaHypothesis L0ConfExtrapolator::getParabolaHypothesis(const LHCb::State& 
   double cx = aState.x() - z * (bx + ax * z);
   
   return ParabolaHypothesis(aState.ty(), aState.y() - aState.ty() * z,
-                            ax, bx, cx, nSigma * std::sqrt(aState.errX2()),
-                            nSigma * std::sqrt(aState.errY2()));
+                            ax, bx, cx, nSigmaX * std::sqrt(aState.errX2()),
+                            nSigmaY * std::sqrt(aState.errY2()));
 }
 
 FwdHypothesis L0ConfExtrapolator::getFwdHypothesis( const LHCb::Track& veloTrack,
