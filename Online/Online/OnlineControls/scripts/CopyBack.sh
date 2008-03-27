@@ -1,4 +1,5 @@
 #/bin/sh
+none=1
 checkFiles()
 {
   for i in `ls $2/$3`; 
@@ -10,12 +11,18 @@ checkFiles()
     elif test -z "`diff $1/$i $i`";
 	then 
 	echo "---> Unchanged [File]: $i";
-	rm $1/$i
-	ln -s ${ONLINECONTROLSROOT}/pvss/$i $1/$i
+	if test "${none}" = 0;
+	    then
+	    rm $1/$i;
+	    ln -s ${ONLINECONTROLSROOT}/pvss/$i $1/$i;
+	fi;
     elif test $1/$i -nt $i;
 	then 
 	echo "---> CHANGED:   $i";
-	cp --preserve=context $1/$i $i; 
+	if test "${none}" = 0;
+	    then
+	    cp --preserve=context $1/$i $i; 
+	fi;
     else
 	echo "---> Unchanged: $i";
     fi;
@@ -88,7 +95,11 @@ checkFiles ${PVSS_PROJECT_BASE} panels/visionUtils *.pnl
 checkFiles ${PVSS_PROJECT_BASE} panels/fwFSMuser *.pnl
 checkFiles ${PVSS_PROJECT_BASE} panels/fwFSM/ui *.pnl
 #
-if test "${PVSS_INSTALL_NAME}" = JOBOPTIONS;
+
+if test "${none}" = 0;
+    then
+    echo "No-work flag switched on....";
+elif test "${PVSS_INSTALL_NAME}" = JOBOPTIONS;
     then
     echo "Executing PVSS setup controller";
     echo "Extracting FSM types for project ${PVSS_PROJECT_NAME}"
