@@ -1,4 +1,4 @@
-// $Id: IL0DUEmulatorTool.h,v 1.1.1.1 2007-10-31 13:38:04 odescham Exp $
+// $Id: IL0DUEmulatorTool.h,v 1.2 2008-03-27 16:35:05 odescham Exp $
 #ifndef IL0DUEMULATORTOOL_H 
 #define IL0DUEMULATORTOOL_H 1
 
@@ -12,7 +12,7 @@
 #include "Event/L0DUConfig.h"
 #include "Event/L0DUReport.h"
 
-static const InterfaceID IID_IL0DUEmulatorTool ( "IL0DUEmulatorTool", 1, 0 );
+static const InterfaceID IID_IL0DUEmulatorTool ( "IL0DUEmulatorTool", 1, 1 );
 
 /** @class IL0DUEmulatorTool IL0DUEmulatorTool.h
  *  
@@ -30,7 +30,7 @@ public:
 
   virtual StatusCode process(LHCb::L0DUConfig* config,  LHCb::L0ProcessorDatas* datas)=0;
   virtual StatusCode process(LHCb::L0DUConfig* config,  std::vector<std::string> dataLocs)=0;
-  virtual const LHCb::L0DUReport report()=0;
+  virtual const LHCb::L0DUReport emulatedReport()=0;
   virtual const std::vector<unsigned int> bank(unsigned int version)=0;  
 
 protected:

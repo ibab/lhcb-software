@@ -3,6 +3,11 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2008-03-25 - Olivier Deschamps 
+  - IL0DUEmulatorTool : 
+      - change method name : 'report()' -> emulatedReport() to avoid confusion with actual L0DUReport from Raw
+      -change release -> v1r1
+
 !====================== L0Interfaces v1r0 2007-11-01 ==========================
 ! 2007-10-25 - Olivier Deschamps 
  - NEW PACKAGE 
