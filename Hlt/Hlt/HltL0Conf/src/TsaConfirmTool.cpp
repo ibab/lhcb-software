@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.cpp,v 1.15 2008-03-20 14:26:42 albrecht Exp $
+// $Id: TsaConfirmTool.cpp,v 1.16 2008-03-27 10:42:54 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -30,7 +30,7 @@
 #include "TsaConfirmTool.h"
 #include "TrackParabel.h"
 
-#include "ParabolaHypothesis.h"
+#include "HltBase/ParabolaHypothesis.h"
 #include "TfKernel/TStationHitManager.h"
 
 //-----------------------------------------------------------------------------
