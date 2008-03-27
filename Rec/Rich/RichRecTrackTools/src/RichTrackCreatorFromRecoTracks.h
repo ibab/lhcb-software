@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.h,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.h,v 1.2 2008-03-27 11:49:04 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -110,6 +110,9 @@ namespace Rich
 
       /// Flag to turn on the creation of the RichRecRings for the segment mass hypotheses
       bool m_buildHypoRings;
+
+      /// Debug object to force creator to only make one track per event
+      bool m_makeOneTrack;
 
     };
 

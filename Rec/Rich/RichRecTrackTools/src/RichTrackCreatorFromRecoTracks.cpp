@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.3 2008-02-17 13:38:56 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.4 2008-03-27 11:49:04 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -42,7 +42,7 @@ TrackCreatorFromRecoTracks( const std::string& type,
   declareInterface<ITrackCreator>(this);
 
   // Context specific track locations
-  if ( context() == "HLT" )
+  if ( context() == "HLT" || context() == "Hlt" )
   {
     m_trTracksLocation = LHCb::TrackLocation::HltForward;
   }
@@ -51,6 +51,8 @@ TrackCreatorFromRecoTracks( const std::string& type,
   declareProperty( "TracksLocation",           m_trTracksLocation   );
   declareProperty( "BuildMassHypothesisRings", m_buildHypoRings     );
   declareProperty( "TrackSegmentTool",         m_trSegToolNickName  );
+
+  declareProperty( "MakeOneTrack", m_makeOneTrack = false );
 
 }
 
@@ -85,7 +87,8 @@ const StatusCode TrackCreatorFromRecoTracks::newTracks() const
     for ( LHCb::Tracks::const_iterator track = tracks->begin();
           track != tracks->end(); ++track )
     {
-      newTrack( *track );
+      LHCb::RichRecTrack * tmpTrack = newTrack( *track );
+      if ( m_makeOneTrack && tmpTrack ) { Warning("Only making ONE track"); break; }
     }
 
   }

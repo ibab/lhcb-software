@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::BaseTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichBaseTrSegMakerFromRecoTracks.cpp,v 1.1 2007-12-11 14:17:42 jonrob Exp $
+ * $Id: RichBaseTrSegMakerFromRecoTracks.cpp,v 1.2 2008-03-27 11:49:04 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -77,7 +77,10 @@ StatusCode BaseTrSegMakerFromRecoTracks::initialize()
   }
 
   info() << "Beam pipe intersection test (Aero/R1Gas/R2Gas) = " << m_checkBeamP << endreq;
-
+  if ( m_checkBeamP[Rich::Aerogel]  ) deBeam(Rich::Aerogel);
+  if ( m_checkBeamP[Rich::Rich1Gas] ) deBeam(Rich::Rich1Gas);
+  if ( m_checkBeamP[Rich::Rich2Gas] ) deBeam(Rich::Rich2Gas);
+  
   return sc;
 }
 

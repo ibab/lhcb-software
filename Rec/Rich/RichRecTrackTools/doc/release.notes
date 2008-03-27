@@ -4,6 +4,12 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-03-27 - Chris Jones
+ - Pre-load beam pipe objects during initialisation of track creator, if 
+   needed, to avoid initialisation during first event
+ - Add a debug option to track creator to only make one track per event 
+   (disabled by default)
+
 !======================== RichRecTrackTools v1r2 2008-02-20 ==================
 ! 2008-02-17 - Chris Jones
  - Adapt to changes in track creator base class.
