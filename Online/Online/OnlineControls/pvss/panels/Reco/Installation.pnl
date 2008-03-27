@@ -2,13 +2,28 @@ V 10
 1
 LANG:1 8 RecoFarm
 PANEL,-1 -1 394 483 N "_3DFace" 0
-"main()      {
-  string name;
-  for(int i=0; i<16;++i) {
-    sprintf(name,\"Slice%02d\",i);
-    m_sliceName.appendItem(name);
-    m_ioName.appendItem(name);
-  }
+"void createSliceNames(string name)  {
+  m_sliceName.appendItem(name);
+  m_ioName.appendItem(name);
+}
+main()      {
+  createSliceNames(\"MONA06\");
+  createSliceNames(\"MONA07\");
+  createSliceNames(\"MONA08\");
+  createSliceNames(\"MONA09\");
+  createSliceNames(\"MONB06\");
+  createSliceNames(\"MONB07\");
+  createSliceNames(\"MONB08\");
+  createSliceNames(\"MONB09\");
+  createSliceNames(\"MONC06\");
+  createSliceNames(\"MONC07\");
+  createSliceNames(\"MONC08\");
+  createSliceNames(\"MONC09\");
+  createSliceNames(\"MOND06\");
+  createSliceNames(\"MOND07\");
+  createSliceNames(\"MOND08\");
+  createSliceNames(\"MOND09\");
+
   m_streamName.appendItem(\"Reco\");
   m_streamName.appendItem(\"RecoTest\");
   
@@ -18,7 +33,7 @@ PANEL,-1 -1 394 483 N "_3DFace" 0
   m_numSlices.text = 3;
   m_numStorageSlices.text = 45;
   m_numTaskSet.text = 5;
-  m_numTasksPerSet.text = 25;
+  m_numTasksPerSet.text = 15;
   m_fileMenu.visible = 0;
   m_helpMenu.visible = 0;
 }
@@ -700,7 +715,7 @@ E E 0 1 1 2 1 E U  1 E 29.00000000000001 182 169 202
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
-LANG:1 16 No. of Tasksets:
+LANG:1 13 No. of Nodes:
 2 32
 "PRIMITIVE_TEXT5"
 ""
@@ -720,7 +735,7 @@ E E 0 1 1 2 1 E U  1 E 199 157 339 177
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
-LANG:1 21 No. of Tasks per set:
+LANG:1 21 No.of Tasks per node:
 2 33
 "PRIMITIVE_TEXT6"
 ""
