@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.63 2007-11-28 16:30:27 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.64 2008-03-27 13:13:26 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -13,7 +13,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/Chrono.h"
 // local
 #include "ChargedProtoPAlg.h"
 

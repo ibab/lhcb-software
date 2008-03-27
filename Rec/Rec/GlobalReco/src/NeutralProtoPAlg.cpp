@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.13 2007-12-20 13:37:07 odescham Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.14 2008-03-27 13:13:26 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -141,7 +141,8 @@ StatusCode NeutralProtoPAlg::execute()
       continue;
     }
     const LHCb::CaloHypos* hypos = get<LHCb::CaloHypos>( *location );
-    debug() << "CaloHypo loaded at " << *location  << " (# " << hypos->size()<<")"<< endreq ;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "CaloHypo loaded at " << *location  << " (# " << hypos->size()<<")"<< endmsg;
     m_counts[(*location).substr(9) ] = 0;
 
     for ( LHCb::CaloHypos::const_iterator ihypo = hypos->begin() ;
@@ -169,21 +170,22 @@ StatusCode NeutralProtoPAlg::execute()
       ++m_counts["All"];
       ++m_counts[(*location).substr(9) ] ;
 
-      verbose() << "Neutral ProtoParticle created " << (*(proto->calo().begin() ))-> hypothesis() << endreq;
-      verbose() << "Estimator Chi2    =" << proto -> info(LHCb::ProtoParticle::CaloTrMatch ,-1.) << endreq;
-      verbose() << "Estimator Deposit = " << proto -> info(LHCb::ProtoParticle::CaloDepositID ,-1.) << endreq;
-      verbose() << "Estimator ShShape = " << proto -> info(LHCb::ProtoParticle::ShowerShape,-1.) << endreq;
-      verbose() << "Estimator ClMass  = " << proto -> info(LHCb::ProtoParticle::ClusterMass,-1.) << endreq;
-      verbose() << "Estimator Ph ID   = " << proto -> info(LHCb::ProtoParticle::PhotonID    ,-1.) << endreq;
-      verbose() << "Spd Digit         = " << proto -> info(LHCb::ProtoParticle::CaloNeutralSpd ,0.) << endreq;
-      verbose() << "Prs Digit         = " << proto -> info(LHCb::ProtoParticle::CaloNeutralPrs ,0.) << endreq;
-      verbose() << "Ecal Cluster      = " << proto -> info(LHCb::ProtoParticle::CaloNeutralEcal ,0.) << endreq;
-
+      if ( msgLevel(MSG::VERBOSE) ) {
+        verbose() << "Neutral ProtoParticle created " << (*(proto->calo().begin() ))-> hypothesis() << endmsg;
+        verbose() << "Estimator Chi2    =" << proto -> info(LHCb::ProtoParticle::CaloTrMatch ,-1.) << endmsg;
+        verbose() << "Estimator Deposit = " << proto -> info(LHCb::ProtoParticle::CaloDepositID ,-1.) << endmsg;
+        verbose() << "Estimator ShShape = " << proto -> info(LHCb::ProtoParticle::ShowerShape,-1.) << endmsg;
+        verbose() << "Estimator ClMass  = " << proto -> info(LHCb::ProtoParticle::ClusterMass,-1.) << endmsg;
+        verbose() << "Estimator Ph ID   = " << proto -> info(LHCb::ProtoParticle::PhotonID    ,-1.) << endmsg;
+        verbose() << "Spd Digit         = " << proto -> info(LHCb::ProtoParticle::CaloNeutralSpd ,0.) << endmsg;
+        verbose() << "Prs Digit         = " << proto -> info(LHCb::ProtoParticle::CaloNeutralPrs ,0.) << endmsg;
+        verbose() << "Ecal Cluster      = " << proto -> info(LHCb::ProtoParticle::CaloNeutralEcal ,0.) << endmsg;
+      }
 
     } // loop over CaloHypos
   } // loop over HyposLocations
 
-  debug() << "# Neutral ProtoParticles created : " << protos -> size() << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "# Neutral ProtoParticles created : " << protos -> size() << endmsg;
 
   return StatusCode::SUCCESS;
 }
