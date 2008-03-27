@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2008-03-27 - Patrick Koppenburg
+ - MuonPIDsFromProtoParticlesAlg : Check StatusCodes.
+
 !========================== GlobalReco v6r15 2007-12-20 ======================
 ! 2007-12-20 Olivier Deschamps
  - protect against NaN in NeutralProtoPAlg::finalize()

@@ -5,7 +5,7 @@
  * Implementation file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.8 2007-07-13 15:25:24 jonrob Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.9 2008-03-27 11:06:24 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -78,7 +78,7 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
                                 get<Tracks>(m_muonTrackLoc) );
   if ( !muonTracks )
   {
-    Warning( "Muon Tracks unavailable at " + m_muonTrackLoc, StatusCode::SUCCESS );
+    Warning( "Muon Tracks unavailable at " + m_muonTrackLoc, StatusCode::SUCCESS ).ignore();
   }
   else if ( msgLevel(MSG::DEBUG) )
   {
@@ -98,7 +98,7 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
     const Track * track = (*iP)->track();
     if ( !track )
     {
-      Warning( "Charged ProtoParticle has NULL Track pointer" );
+      Warning( "Charged ProtoParticle has NULL Track pointer" ).ignore();
       continue;
     }
 
