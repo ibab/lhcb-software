@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.h,v 1.3 2008-03-20 14:18:06 albrecht Exp $
+// $Id: L0ConfirmWithT.h,v 1.4 2008-03-27 10:42:11 albrecht Exp $
 #ifndef L0CONFIRMWITHT_H 
 #define L0CONFIRMWITHT_H 1
 
@@ -8,7 +8,7 @@
 #include "TrackInterfaces/ITracksFromTrack.h"            // Interface
 
 #include "L0ConfDataStore.h"
-#include "IL0ConfExtrapolator.h"
+#include "HltBase/IL0ConfExtrapolator.h"
 class ITrackConfirmTool;
 
 /** @class L0ConfirmWithT L0ConfirmWithT.h

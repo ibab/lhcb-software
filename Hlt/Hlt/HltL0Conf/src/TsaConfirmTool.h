@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.h,v 1.5 2008-03-20 14:24:05 albrecht Exp $
+// $Id: TsaConfirmTool.h,v 1.6 2008-03-27 10:43:09 albrecht Exp $
 #ifndef TSACONFIRMTOOL_H 
 #define TSACONFIRMTOOL_H 1
 
@@ -13,7 +13,7 @@
 #include "TsaKernel/ITsaSeedTrackCnvTool.h"
 
 #include "L0ConfDataStore.h"
-#include "IL0ConfExtrapolator.h"
+#include "HltBase/IL0ConfExtrapolator.h"
 /** @class TsaConfirmTool TsaConfirmTool.h
  *  
  *
