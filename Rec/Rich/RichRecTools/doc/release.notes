@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2008-03-27 - Chris Jones
+ - Add new background tools (previously algorithms in RichRecAlgorithms)
+ - Add support for missing mirror segments in RichTabulatedSignalDetectionEff
+
 !===================== RichRecTools v4r2 2008-02-22 ===========================
 ! 2008-02-17 - Chris Jones
  - Optimise RichRayTraceCherenkovCone by caching cos and sin phi values

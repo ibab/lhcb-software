@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.14 2008-02-15 10:21:16 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.15 2008-03-27 11:06:01 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -46,7 +46,7 @@ TabulatedSignalDetectionEff ( const std::string& type,
   declareInterface<ISignalDetectionEff>(this);
   // JOs
   declareProperty( "UseDetailedHPDsInRayTracing", m_useDetailedHPDsForRayT = false );
-  declareProperty( "RadiatorRingPoints", m_nPoints ); 
+  declareProperty( "RadiatorRingPoints", m_nPoints );
 }
 
 StatusCode TabulatedSignalDetectionEff::initialize()
@@ -102,7 +102,7 @@ const LHCb::RichRecRing *
 TabulatedSignalDetectionEff::ckRing( LHCb::RichRecSegment * segment,
                                      const Rich::ParticleIDType hypo ) const
 {
-  // Make a CK ring for this segment and hypo. Used to work out which mirrors 
+  // Make a CK ring for this segment and hypo. Used to work out which mirrors
   // and HPDs we need to sample the reflectivities and Q.E. values from
 
   LHCb::RichRecRing * newRing = NULL;
@@ -111,7 +111,7 @@ TabulatedSignalDetectionEff::ckRing( LHCb::RichRecSegment * segment,
   // using emitted photon spectra (to avoid a circular information dependency)
   const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, hypo, true );
   debug() << " -> Making new CK ring : theta = " << ckTheta << endreq;
-  if ( ckTheta > 0 ) 
+  if ( ckTheta > 0 )
   {
     // make a ring object
     newRing = new LHCb::RichRecRing( segment, ckTheta, hypo );
@@ -140,7 +140,7 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
                                                   const Rich::ParticleIDType hypo,
                                                   const double energy ) const
 {
-  debug() << "Computing detection efficiency for " << segment << " " << hypo 
+  debug() << "Computing detection efficiency for " << segment << " " << hypo
           << " photon energy=" << energy << endreq;
 
   // Get a (local) ring for this segment/hypo
@@ -158,57 +158,79 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
 
   HPDCount hpdCount;
   MirrorCount primMirrCount, secMirrCount;
-  unsigned int totalInHPD(0);
   for ( LHCb::RichRecPointOnRing::Vector::const_iterator iP = m_last_ring->ringPoints().begin();
         iP != m_last_ring->ringPoints().end(); ++iP )
   {
     if ( (*iP).acceptance() == LHCb::RichRecPointOnRing::InHPDTube )
     {
-      // Count hits in HPD
-      ++totalInHPD;
       // Count HPDs hit by this ring
-      ++hpdCount      [ (*iP).smartID()         ];
+      ++hpdCount [ (*iP).smartID() ];
       // Count primary mirrors
-      ++primMirrCount [ (*iP).primaryMirror()   ];
+      if ( (*iP).primaryMirror()   ) { ++primMirrCount [ (*iP).primaryMirror()   ]; }
       // Count secondary mirrors
-      ++secMirrCount  [ (*iP).secondaryMirror() ];
+      if ( (*iP).secondaryMirror() ) { ++secMirrCount  [ (*iP).secondaryMirror() ]; }
     }
   }
-  debug() << " -> Found " << totalInHPD << " usable ring points out of " 
-          << m_last_ring->ringPoints().size() << endreq;
-  if ( 0 == totalInHPD ) { return 0; }
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << " -> Found " << hpdCount.size() << " usable ring points out of "
+            << m_last_ring->ringPoints().size() << endreq;
+  if ( hpdCount.empty() ) { return 0; }
 
   // Get weighted average HPD Q.E.
   double hpdQEEff(0);
-  for ( HPDCount::const_iterator iHPD = hpdCount.begin();
-        iHPD != hpdCount.end(); ++iHPD )
+  if ( !hpdCount.empty() )
   {
-    // get pointer to HPD
-    const DeRichHPD * hpd = deHPD( iHPD->first );
-    // add up Q.E. eff
-    hpdQEEff += (double)(iHPD->second) * (*(hpd->hpdQuantumEff()))[energy*Gaudi::Units::eV]/100 ;
+    for ( HPDCount::const_iterator iHPD = hpdCount.begin();
+          iHPD != hpdCount.end(); ++iHPD )
+    {
+      // get pointer to HPD
+      const DeRichHPD * hpd = deHPD( iHPD->first );
+      // add up Q.E. eff
+      hpdQEEff += (double)(iHPD->second) * (*(hpd->hpdQuantumEff()))[energy*Gaudi::Units::eV]/100 ;
+    }
+    hpdQEEff /= (double)(hpdCount.size());
   }
-  hpdQEEff /= (double)(totalInHPD);
+  else
+  {
+    hpdQEEff = 1;
+    Warning( "No HPDs found -> Assuming Av. HPD Q.E. of 1", StatusCode::SUCCESS );
+  }
 
   // Weighted primary mirror reflectivity
   double primMirrRefl(0);
-  for ( MirrorCount::const_iterator iPM = primMirrCount.begin();
-        iPM != primMirrCount.end(); ++iPM )
+  if ( !primMirrCount.empty() )
   {
-    primMirrRefl +=
-      (double)(iPM->second) * (*(iPM->first->reflectivity()))[energy*Gaudi::Units::eV];
+    for ( MirrorCount::const_iterator iPM = primMirrCount.begin();
+          iPM != primMirrCount.end(); ++iPM )
+    {
+      primMirrRefl +=
+        (double)(iPM->second) * (*(iPM->first->reflectivity()))[energy*Gaudi::Units::eV];
+    }
+    primMirrRefl /= (double)(primMirrCount.size());
   }
-  primMirrRefl /= (double)(totalInHPD);
+  else
+  {
+    primMirrRefl = 1;
+    Warning( "No primary mirrors found -> Assuming Av. reflectivity of 1", StatusCode::SUCCESS );
+  }
 
   // Weighted secondary mirror reflectivity
   double secMirrRefl(0);
+  if ( !secMirrCount.empty() )
+  {
   for ( MirrorCount::const_iterator iSM = secMirrCount.begin();
         iSM != secMirrCount.end(); ++iSM )
   {
     secMirrRefl +=
       (double)(iSM->second) * (*(iSM->first->reflectivity()))[energy*Gaudi::Units::eV];
   }
-  secMirrRefl /= (double)(totalInHPD);
+  secMirrRefl /= (double)(secMirrCount.size());
+  }
+  else
+  {
+    secMirrRefl = 1;
+    Warning( "No secondary mirrors found -> Assuming Av. reflectivity of 1", StatusCode::SUCCESS );
+  }
 
   // return overall efficiency
   debug() << " -> Av. HPD Q.E. = " << hpdQEEff << " Prim. Mirr Refl. = " << primMirrRefl
