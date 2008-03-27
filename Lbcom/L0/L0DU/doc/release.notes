@@ -1,7 +1,29 @@
-! $Id: release.notes,v 1.89 2008-03-14 10:37:46 pkoppenb Exp $
+! $Id: release.notes,v 1.90 2008-03-27 16:32:13 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+<<<<<<< release.notes
+! 2008-03-26 - Olivier Deschamps 
+ - L0DUFromRawTool improvement :
+     - fix bug when decoding consecutive BX info
+     - better print out
+
+ - fix bug in options/L0DUBankSwap.opts
+ 
+ - Monitoring  : 
+	  - remove L0Monitor algorithm (obsolete)
+    - complete  'L0DUReportMonitoring'  : add histograming (performance, conditions, decisions, ...)
+    - new alg : 'L0DURawBankMonitoring' : full monitoring of L0DU Bank (data, error status, emulator check, ...)
+
+ - Filtering :
+   	 - 'L0Filter' : add the possibility to filter according to 'extra L0 decision' (timing trigger and force decision) 
+     - new algorithm : 'L0TCKFilter' : configuration filtering
+
+ - New algorithm : 'L0Pattern' : produce RAM pattern to feed L0DU board test benches (expert use)
+	
+ 
+ - Add few minor improvements along the code & adapt to changes in L0Event
 
 ! 2008-03-14 - Patrick Koppenburg
  - L0ETC: do not write out. This is done by evtcol svc. Add some .ignore()
@@ -9,6 +31,9 @@
 !========================== L0DU v8r3 2008-03-03 =========================
 ! 2008-03-03 - Olivier Deschamps 
  - L0DUFromRawTool : fix bug when decoding consecutive BX info 
+ 
+
+!========================== L0DU v8r3 2008-02-21 =========================
 
 ! 2008-02-11 - Olivier Deschamps 
  - L0DUFromRawTool : 

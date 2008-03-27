@@ -7,8 +7,8 @@
 ApplicationMgr.TopAlg += { "GaudiSequencer/L0DUBankSwap" };
 
 
-L0DUBankSwap.Members   = { "RemoveL0Banks",                          // remove L0 banks (except L0PU which can only be produced via MC in Boole)
-                           "GaudiSequencer/ReRunL0"};                // and re-run the whole L0 stuff
+L0DUBankSwap.Members   = { "bankKiller/RemoveL0Banks",    // remove L0 banks (except L0PU which can only be produced via MC in Boole)
+                           "GaudiSequencer/ReRunL0"};    // and re-run the whole L0 stuff
 
 ReRunL0.Members      = {"L0CaloAlg/L0Calo",       // Produce (NEW) rawBank
                         "L0MuonAlg/L0Muon",       // Produce NEW rawBanks

@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.h,v 1.3 2008-01-29 16:02:30 odescham Exp $
+// $Id: L0DUFromRawTool.h,v 1.4 2008-03-27 16:32:13 odescham Exp $
 #ifndef L0DUFROMRAWTOOL_H 
 #define L0DUFROMRAWTOOL_H 1
 
@@ -12,6 +12,7 @@
 #include "L0Interfaces/IL0CondDBProvider.h"
 // from Event
 #include "Event/RawEvent.h"
+#include "Event/RawBankReadoutStatus.h"
 
 
 /** @class L0DUFromRawTool L0DUFromRawTool.h
@@ -53,7 +54,8 @@ private:
   void encode(unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]);
   void fillProcessorData();
   const double scale(unsigned int base);
-  
+  bool nextData();
+  void putStatusOnTES();
   //
   std::string m_rawLocation;
   std::string m_emulatorType;
@@ -74,8 +76,8 @@ private:
   unsigned int m_rsda;
   unsigned int m_muCleanPattern;
   std::map<std::pair<int , unsigned int>, unsigned int > m_ecs;
+  std::map<std::pair<int , unsigned int>, unsigned int > m_cds;
   std::map<std::pair<int , unsigned int>, unsigned int > m_tcs;
-  std::map<std::pair<int , unsigned int>, unsigned int > m_fcs;
   std::map<int , unsigned int> m_sumEt;
   
   //  std::map<std::string, LHCb::L0DUReport> m_report;
@@ -85,6 +87,9 @@ private:
   unsigned int m_tck;  
   bool m_warning;
   unsigned int m_size;
-  
+  LHCb::RawBankReadoutStatus m_roStatus;
+  //
+  unsigned int* m_data;
+  unsigned int  m_source;
 };
 #endif // L0DUFROMRAWTOOL_H

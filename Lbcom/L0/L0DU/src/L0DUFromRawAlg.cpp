@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawAlg.cpp,v 1.2 2008-01-29 16:02:29 odescham Exp $
+// $Id: L0DUFromRawAlg.cpp,v 1.3 2008-03-27 16:32:13 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -71,8 +71,11 @@ StatusCode L0DUFromRawAlg::execute() {
 
 
   // decode the bank
-  m_fromRaw->decodeBank();  
-
+  if(!m_fromRaw->decodeBank()){
+    Error("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
+    return StatusCode::SUCCESS;  
+  }
+  
   LHCb::L0DUReport rep = m_fromRaw->report();
   // put the report and processor data on TES
   LHCb::L0DUReport* report = new LHCb::L0DUReport( rep );
@@ -111,8 +114,10 @@ StatusCode L0DUFromRawAlg::execute() {
     }
     // This works only with L0DU rawBank version > 0
     if(m_fromRaw->version() != 0){
-      debug() << "_________________ EMULATION using data from raw_________________ L0-yes = " 
-              << m_fromRaw->report().configuration()->emulate()->decision () << endreq;
+      bool emul = m_fromRaw->report().configuration()->emulatedDecision ();
+      debug() << "_________________ EMULATION using data from raw_________________ L0-yes = " << emul ;
+      
+      if( !emul) debug() << "(Downscaled ? " << m_fromRaw->report().configuration()->isDownscaled() << ") " << endreq;
       verbose() << m_fromRaw->report().configuration()->emulate()->summary()  << endreq;
     }
    }

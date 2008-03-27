@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.cpp,v 1.4 2008-01-29 16:02:29 odescham Exp $
+// $Id: L0DUAlg.cpp,v 1.5 2008-03-27 16:32:13 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -113,12 +113,15 @@ StatusCode L0DUAlg::execute() {
   // process the emulator
   debug() << "Emulator processing ( Data = " << m_dataLocations << ", TCK = " << m_tck << " )" <<endreq;
   StatusCode sc = m_emulator->process(m_config, m_dataLocations );
-  if(sc.isFailure())return sc;
-
+  if(sc.isFailure()){
+    Error("Cannot process the emulator").ignore();
+    return sc;
+  }
+  
   // push Report and Config on TES
   if(m_writeOnTES){
     debug() <<"Push L0DUReport on TES" << endreq;
-    LHCb::L0DUReport* report = new LHCb::L0DUReport(m_emulator->report());
+    LHCb::L0DUReport* report = new LHCb::L0DUReport(m_emulator->emulatedReport());
     put (report   , rootInTES() + m_reportLocation );//non-const
   }
   

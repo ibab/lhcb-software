@@ -1,4 +1,4 @@
-// $Id: L0Filter.cpp,v 1.2 2007-10-31 15:04:46 odescham Exp $
+// $Id: L0Filter.cpp,v 1.3 2008-03-27 16:32:14 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -30,6 +30,7 @@ L0Filter::L0Filter( const std::string& name,
   m_l0channels.clear();
   declareProperty("L0DULocation", m_l0Location = LHCb::L0DUReportLocation::Default );
   declareProperty("OrChannels", m_l0channels );
+  declareProperty("TriggerBit", m_trig = "L0" );
 
 }
 //=============================================================================
@@ -45,18 +46,30 @@ StatusCode L0Filter::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   debug() << "==> Initialize" << endmsg;
 
-  info() << "Will require that any " ;
-  if ( !m_l0channels.empty()) {
-    info() << "of " ;
-    for ( std::vector<std::string>::const_iterator c = m_l0channels.begin() ; 
-          c != m_l0channels.end() ; ++c ) {
-      info() << *c << " " ;
+  if( "Timing" == m_trig){
+    info() << "Will require that L0DU 'Timing Trigger Bit' is fired " << endreq;
+  }else if( "Force" == m_trig) { 
+    info() << "Will require that the L0DU 'Force Bit' is fired " << endreq;
+  }else if( "L0" == m_trig){
+    info() << "Will require that any " ;
+    if ( !m_l0channels.empty()) {
+      info() << "of " ;
+      for ( std::vector<std::string>::const_iterator c = m_l0channels.begin() ; 
+            c != m_l0channels.end() ; ++c ) {
+        info() << *c << " " ;
+      }
     }
+    info() << "L0 channel(s) is passed" << endmsg ;
   }
-  info() << "channel(s) is passed" << endmsg ;
-  
+  else{
+    error() << "The 'TriggerBit' property must be either : " << endreq;
+    error() << "   - 'L0'     : standard L0DU decision " <<endreq;
+    error() << "   - 'Timing' : L0DU timing trigger bit decision" <<endreq;
+    error() << "   - 'Force'  : L0DU force bit decision " <<endreq;
+    return StatusCode::FAILURE;
+  }
   return StatusCode::SUCCESS;
-}
+} 
 
 //=============================================================================
 // Main execution
@@ -69,6 +82,19 @@ StatusCode L0Filter::execute() {
 
   setFilterPassed(false); // switch off by default
 
+  // Timing Trigger decision
+  if( "Timing" == m_trig  ){
+    if( l0->timingTriggerBit() )setFilterPassed(true);
+    return StatusCode::SUCCESS;
+  }
+  // Force decision
+  if( "Force" == m_trig  ){
+    if( l0->forceBit() )setFilterPassed(true);
+    return StatusCode::SUCCESS;
+  }
+  
+  if( "L0" != m_trig)return StatusCode::FAILURE;
+  // standard L0DU decision
   if (l0->decision()){ 
     if ( !m_l0channels.empty()) {
       for ( std::vector<std::string>::const_iterator c = m_l0channels.begin() ; 

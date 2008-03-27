@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.h,v 1.1 2007-10-31 15:04:45 odescham Exp $
+// $Id: L0DUEmulatorTool.h,v 1.2 2008-03-27 16:32:13 odescham Exp $
 #ifndef L0DUEMULATORTOOL_H 
 #define L0DUEMULATORTOOL_H 1
 
@@ -30,12 +30,13 @@ public:
   StatusCode process(LHCb::L0DUConfig* config, LHCb::L0ProcessorDatas* datas);
   StatusCode process(LHCb::L0DUConfig* config, std::vector<std::string> dataLocs);  
   const std::vector<unsigned int> bank(unsigned int version);
-  const LHCb::L0DUReport report();
+  const LHCb::L0DUReport emulatedReport();
   
 protected:
 private:
   const unsigned long digit(const unsigned int   base[L0DUBase::Index::Size]);
   const double scale (const unsigned int   base[L0DUBase::Index::Size]);
+  const long   max   (const unsigned int   base[L0DUBase::Index::Size]);
   void setDataValue(LHCb::L0DUElementaryData* data, 
                     const unsigned int  base[L0DUBase::Index::Size]);
   StatusCode processing();

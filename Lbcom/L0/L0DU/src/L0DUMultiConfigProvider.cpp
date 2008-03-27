@@ -1,4 +1,4 @@
-// $Id: L0DUMultiConfigProvider.cpp,v 1.2 2008-02-07 17:24:52 odescham Exp $
+// $Id: L0DUMultiConfigProvider.cpp,v 1.3 2008-03-27 16:32:13 odescham Exp $
 // Include files 
 
 #include<iostream>
@@ -117,10 +117,10 @@ LHCb::L0DUConfig*  L0DUMultiConfigProvider::loadConfig( std::string tck ){
     if( tck == *itck){ ok = true ; break;  }
   
   }  
-  if(!ok)warning() << "The requested TCK = " << tck << " is not registered " 
-                   << " ... will try to load it with no garantee " << endreq;
-
-
+  if(!ok){
+    Error("The requested TCK = " + tck + " is not registered ", StatusCode::SUCCESS ).ignore();
+    return NULL;
+  }
 
   std::stringstream s("");
   s <<  "TCK_" << tck ;

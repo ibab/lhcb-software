@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.5 2008-02-07 17:24:52 odescham Exp $
+// $Id: L0DUConfigProvider.cpp,v 1.6 2008-03-27 16:32:13 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -342,7 +342,7 @@ StatusCode L0DUConfigProvider::createData(){
     if(values.size() != 1){
       error() << "The DATA definied via option (num = " << iconfig-m_data.begin() 
               << ") should have an unique name (found " << values.size() << ")" << endreq;
-      info() << "The syntax is ToolSvc.L0DUConfig.Data +={ {''name=[DataName]'', "
+      info() << "The syntax is ToolSvc.L0DUConfig.TCK_0xXXXXX.Data +={ {''name=[DataName]'', "
              <<" ''operator=[+/-/&/^]'', ''data=[OperandName1]'', ''data=[OperandName2]'' , ...}};" << endreq;
 
       return StatusCode::FAILURE;  
@@ -455,7 +455,7 @@ StatusCode L0DUConfigProvider::createConditions(){
     if(values.size() != 1){
       error() << "The CONDITION defined via option (num = " << iconfig-m_conditions.begin() 
               << ") should have an unique name (found " << values.size() << ")" << endreq;
-      info() << "The syntax is ToolSvc.L0DUConfig.Conditions +={ {''name=[DataName]'', "
+      info() << "The syntax is ToolSvc.L0DUConfig.TCK_0xXXXX.Conditions +={ {''name=[DataName]'', "
              <<" ''data=[dataName]'', ''comparator=[>/</=/!=]'', ''threshold=[value]''} };" << endreq;
 
       return StatusCode::FAILURE;  
@@ -610,7 +610,7 @@ StatusCode L0DUConfigProvider::createChannels(){
     if(values.size() != 1){
       error() << "The CHANNEL defined via option (num = " << iconfig-m_channels.begin() 
               << ") should have an unique name (found " << values.size() << ")" << endreq;
-      info() << "The syntax is ToolSvc.L0DUConfig.Channel +={ {''name=[DataName]'', "
+      info() << "The syntax is ToolSvc.L0DUConfig.TCK_0xXXXX.Channels +={ {''name=[DataName]'', "
              <<" ''rate=[value]'', ''condition=[conditionName1],[conditionName2], ...'', ''disable=[FALSE]'' } };" << endreq;
 
       return StatusCode::FAILURE;  

@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.1 2007-10-31 15:04:45 odescham Exp $
+// $Id: L0DUEmulatorTool.cpp,v 1.2 2008-03-27 16:32:13 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -59,13 +59,13 @@ StatusCode L0DUEmulatorTool::initialize(){
 //=============================================================================
 StatusCode L0DUEmulatorTool::process(LHCb::L0DUConfig* config,  LHCb::L0ProcessorDatas* datas){
   m_config = config;
-  m_decoder -> setL0ProcessorData(datas);
+  if(!m_decoder -> setL0ProcessorData(datas))return StatusCode::FAILURE;
   return processing();
 }
 
 StatusCode L0DUEmulatorTool::process(LHCb::L0DUConfig* config,  std::vector<std::string> dataLocs){
   m_config = config;
-  m_decoder -> setL0ProcessorData(dataLocs);
+  if(!m_decoder -> setL0ProcessorData(dataLocs))return StatusCode::FAILURE;
   return processing();
 }
 
@@ -165,15 +165,18 @@ StatusCode L0DUEmulatorTool::fillData(){
     numax << imax;
     m_muonMaxIndices.push_back(imax);
     //
-    dataMap["Muon"+num.str()+"(Pt)"]->setOperand(m_muonMap["M"+numax.str()] , scale(L0DUBase::Muon1::Pt)  );
-    dataMap["Muon"+num.str()+"(Add)"]->setOperand(m_muonMap["M"+numax.str()+"(Add)"], scale(L0DUBase::Muon1::Address) );
-    dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(m_muonMap["M"+numax.str()+"(Sgn)"], scale(L0DUBase::Muon1::Sign) );
-  }
+    dataMap["Muon"+num.str()+"(Pt)"]->setOperand(m_muonMap["M"+numax.str()] , scale(L0DUBase::Muon1::Pt) 
+                                                 ,max(L0DUBase::Muon1::Pt) );
+    dataMap["Muon"+num.str()+"(Add)"]->setOperand(m_muonMap["M"+numax.str()+"(Add)"], scale(L0DUBase::Muon1::Address) 
+                                                  ,max(L0DUBase::Muon1::Address));
+    dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(m_muonMap["M"+numax.str()+"(Sgn)"], scale(L0DUBase::Muon1::Sign) 
+                                                  ,max(L0DUBase::Muon1::Sign) );
+}
 
   verbose() << "Muon sorted " << endreq;
 
   const unsigned long dimuon = dataMap["Muon1(Pt)"]->digit()+dataMap["Muon2(Pt)"]->digit();
-  dataMap["DiMuon(Pt)"]->setOperand( dimuon , scale( L0DUBase::Muon1::Pt)  );
+  dataMap["DiMuon(Pt)"]->setOperand( dimuon , scale( L0DUBase::Muon1::Pt)  , max(L0DUBase::Muon1::Pt)*2+1);
 
   verbose() << "DiMuon OK " << endreq;
 
@@ -203,7 +206,7 @@ StatusCode L0DUEmulatorTool::fillData(){
 //===========================================================================================================
 void L0DUEmulatorTool::setDataValue(LHCb::L0DUElementaryData* l0Data, 
                                     const unsigned int  base[L0DUBase::Index::Size]){
-  l0Data->setOperand( digit( base ) , scale(base)  );
+  l0Data->setOperand( digit( base ) , scale(base) , max(base)  );
   verbose() << "Set Data digit " << l0Data->name() << " << " <<digit(base) << " : scale to MeV = " << scale(base) << endreq;
 }
 //===========================================================================================================
@@ -223,6 +226,7 @@ StatusCode  L0DUEmulatorTool::dataTree(LHCb::L0DUElementaryData* data, LHCb::L0D
       data->setScale( scale );
     }
     data->addOperand( preData->digit() );
+    data->setSaturation( preData->saturation() + data->saturation() );
     // check the scale is the same for the other operands
     if( scale != preData->scale() ){ 
       error() << "Cannot combine data with different scales in the compound data "<< *iop << endreq;
@@ -244,7 +248,7 @@ StatusCode L0DUEmulatorTool::processing(){
   return StatusCode::SUCCESS;
 }
 //===========================================================================================================
-const LHCb::L0DUReport L0DUEmulatorTool::report(){
+const LHCb::L0DUReport L0DUEmulatorTool::emulatedReport(){
   m_report.setConfiguration(m_config);
   m_report.clear();
   
@@ -253,7 +257,7 @@ const LHCb::L0DUReport L0DUEmulatorTool::report(){
     return m_report;
   }
   
-  m_report.setDecision( m_config->decision()  );
+  m_report.setDecision( m_config->emulatedDecision()  );
   m_report.setSumEt( digit(L0DUBase::Sum::Et) );
 
   
@@ -262,13 +266,13 @@ const LHCb::L0DUReport L0DUEmulatorTool::report(){
 
   for( LHCb::L0DUChannel::Map::iterator ichan = channelMap.begin() ; ichan != channelMap.end() ; ichan++){
     LHCb::L0DUChannel* channel = (*ichan).second ;
-    m_report.setChannelDecision(channel->name(), channel->decision() );
-    m_report.setFiredChannel(channel->name(), channel->fired() );
+    m_report.setChannelDecision(channel->name(), channel->emulatedDecision() );
+    m_report.setTriggeredChannel(channel->name(), channel->emulatedTrigger() );
   }
 
   for( LHCb::L0DUElementaryCondition::Map::iterator icond = conditionMap.begin() ; icond != conditionMap.end() ; icond++){
     LHCb::L0DUElementaryCondition* condition = (*icond).second ;
-    m_report.setConditionValue(condition->name(), condition->value() );
+    m_report.setConditionValue(condition->name(), condition->emulatedValue() );
   }
 
   return m_report;
@@ -293,6 +297,16 @@ const double L0DUEmulatorTool::scale(const unsigned int base[L0DUBase::Index::Si
   return m_condDB->scale(base[L0DUBase::Index::Scale]);
 }
 
+const long L0DUEmulatorTool::max(const unsigned int base[L0DUBase::Index::Size]){
+  long  w1 = base[L0DUBase::Index::Mask] >> base[L0DUBase::Index::Shift];
+  long  w2 = base[L0DUBase::Index::Mask2] >> base[L0DUBase::Index::Shift2];
+  long  w  = w1 | (w2 << base[L0DUBase::Index::Offset]);
+  return  w;
+}
+
+
+
+
 //=============================================================================
 const std::vector<unsigned int> L0DUEmulatorTool::bank(unsigned int version){
 
@@ -303,7 +317,7 @@ const std::vector<unsigned int> L0DUEmulatorTool::bank(unsigned int version){
     return l0Block;
   }
 
-  report(); // build the report
+  emulatedReport(); // emulate the report
   
 
   // Version 0 : preliminary version used for DC06 simulated data
@@ -413,8 +427,8 @@ const std::vector<unsigned int> L0DUEmulatorTool::bank(unsigned int version){
 
     l0Block.push_back( ( rsda | status << 16 | nBxm << 28 |  nBxp <<30)  ); // header
     // PGA2-Block
-    for(unsigned int ifc = 0 ; ifc <tc_size ; ++ifc ){
-      l0Block.push_back( m_report.firedChannelsSummary(ifc)  & 0xFFFFFFFF ); // Channel summary
+    for(unsigned int itc = 0 ; itc <tc_size ; ++itc ){
+      l0Block.push_back( m_report.triggeredChannelsSummary(itc)  & 0xFFFFFFFF ); // Channel summary
     }
     for(unsigned int itc = 0 ; itc < tc_size ; ++itc ){
       l0Block.push_back( m_report.channelsDecisionSummary(itc)  & 0xFFFFFFFF ); // Channel summary
