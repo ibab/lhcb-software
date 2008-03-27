@@ -12,7 +12,7 @@ use GaudiAlg       v*
 use GaudiGSL       v*
 use SolvKernel     v* Alignment
 use AlignmentInterfaces   v* Alignment
-use TAlignment  v* Alignment
+
 
 #============================================================================
 # include directories
