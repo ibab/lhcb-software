@@ -1,4 +1,4 @@
-// $Id: HadronSeedTool.h,v 1.2 2008-03-20 14:17:07 albrecht Exp $
+// $Id: HadronSeedTool.h,v 1.3 2008-03-27 10:48:20 albrecht Exp $
 #ifndef HADRONSEEDTOOL_H 
 #define HADRONSEEDTOOL_H 1
 
@@ -6,8 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "HltBase/ICaloSeedTool.h"            // Interface
-
-#include "IL0ConfExtrapolator.h"
+#include "HltBase/IL0ConfExtrapolator.h"
 
 //local
 #include "L0ConfDataStore.h"
