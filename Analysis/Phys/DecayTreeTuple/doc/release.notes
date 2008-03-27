@@ -4,6 +4,10 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-03-27 - Patrick Koppenburg
+ - DecayTreeTuple: fix an unchecked StatusCode
+ - Increment to v1r2
+
 ! 2008-03-17 - Stephane Poss
  - TupleToolPrimaries
   . Correct documentation (was TupleTooEventInfo documentation)

@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.cpp,v 1.2 2008-01-31 18:13:07 pkoppenb Exp $
+// $Id: DecayTreeTuple.cpp,v 1.3 2008-03-27 11:01:36 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -479,10 +479,10 @@ StatusCode DecayTreeTuple::fillTuple( Tuples::Tuple& tuple
     row.insert( row.begin(), *pit ); // must insert the head as it cant be flagged.
 
     if( fillParticles( tuple, row ) ){
-      tuple->column( "nCandidate", nCandidates );
+      tuple->column( "nCandidate", nCandidates ).ignore();
       ++nCandidates;
     } else {
-      Warning("Failed to fill a candidate. Will skip it.");
+      Warning("Failed to fill a candidate. Will skip it.").ignore();
       continue;
     }
 
