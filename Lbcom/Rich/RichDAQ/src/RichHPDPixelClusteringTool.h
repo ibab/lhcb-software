@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::HPDPixelClusteringTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusteringTool.h,v 1.9 2008-01-31 17:22:26 jonrob Exp $
+ *  $Id: RichHPDPixelClusteringTool.h,v 1.10 2008-03-27 15:03:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
@@ -100,7 +100,7 @@ namespace Rich
       /// Sort the RichSmartIDs into the correct order for this algorithm
       void sortIDs( LHCb::RichSmartID::Vector & smartIDs ) const
       {
-        if ( smartIDs.front().pixelSubRowDataIsValid() )
+        if ( !smartIDs.empty() && smartIDs.front().pixelSubRowDataIsValid() )
         {
           // use own method for ALICE mode
           std::sort( smartIDs.begin(), smartIDs.end(), SortALICEIDs() );
@@ -111,7 +111,7 @@ namespace Rich
           SmartIDSorter::sortByRegion(smartIDs);
         }
       }
-
+      
     private: // data members
 
       /// Minimum cluster size

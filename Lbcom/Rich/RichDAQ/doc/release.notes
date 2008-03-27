@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2008-03-27 - Chris Jones
+ - Add protection into clustering code to protect against empty vectors of
+   RichSmartIDs
+
 !========================== RichDAQ v3r14 2008-02-02 =========================
 ! 2008-01-31 - Chris Jones
  - Fix bug in Pixel sorting of clustering when in ALICE mode
