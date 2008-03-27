@@ -3,8 +3,16 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
-!2008-03-20 - Johannes Albrecht
+!2008-03-27 - Johannes Albrecht
+			- move IL0ConfExtrapolator.h, FwdHypothesis.h and ParabolaHypothesis.h to HltBase
+			  and change includes
+			-	L0ConfExtrapolator.h/.cpp
+				add possibility to change search window size independently in x and y
+			- PatConfirmTool.h/.cpp
+				add possibility to change search window size independently in x, y, tx, ty
+			
 
+!2008-03-20 - Johannes Albrecht
 		- src/HadronSeedTool.h/.cpp
 			-add option to run tool without calo decoding & set search windows accordingly		
 			-add catch for vector size set in jop-options
