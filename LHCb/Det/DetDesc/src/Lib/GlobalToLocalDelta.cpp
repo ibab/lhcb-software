@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.cpp,v 1.17 2008-01-14 13:23:01 jpalac Exp $
+// $Id: GlobalToLocalDelta.cpp,v 1.18 2008-03-28 09:40:38 gersabec Exp $
 // Include files 
 #include "DetDesc/IDetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
@@ -101,7 +101,7 @@ const Gaudi::Transform3D localDeltaFromAnyFrameDelta(const Gaudi::Transform3D& f
                                                      const IDetectorElement* DE,
                                                      const Gaudi::Transform3D& deltaInFrame) {
 
-  return localDeltaFromAnyFrame(frame, DE->geometry(), deltaInFrame);
+  return localDeltaFromAnyFrameDelta(frame, DE->geometry(), deltaInFrame);
   
 }
   
@@ -110,7 +110,6 @@ const Gaudi::Transform3D localDeltaFromAnyFrameDelta(const Gaudi::Transform3D& f
                                                      const Gaudi::Transform3D& deltaInFrame) {
 
   const Gaudi::Transform3D d_0 = GI->ownToOffNominalMatrix();
-  const Gaudi::Transform3D T_k2n_inv   = GI->toLocalMatrix() * frame;
   return d_0 * frame.Inverse() * deltaInFrame * frame;  
   
 }
