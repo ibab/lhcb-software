@@ -1,28 +1,31 @@
-! $Id: release.notes,v 1.91 2008-03-27 16:32:53 odescham Exp $
+! $Id: release.notes,v 1.92 2008-03-28 14:22:33 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
+!========================== L0DU v8r4 2008-03-28 =========================
 ! 2008-03-26 - Olivier Deschamps 
  - L0DUFromRawTool improvement :
      - fix bug when decoding consecutive BX info
      - better print out
-
  - fix bug in options/L0DUBankSwap.opts
  
  - Monitoring  : 
 	  - remove L0Monitor algorithm (obsolete)
-    - complete  'L0DUReportMonitoring'  : add histograming (performance, conditions, decisions, ...)
-    - new alg : 'L0DURawBankMonitoring' : full monitoring of L0DU Bank (data, error status, emulator check, ...)
+    - complete  'L0DUReportMonitoring'  : 
+	    add histograming (performance, conditions, decisions, ...)
+    - new alg : 'L0DURawBankMonitoring' : 
+      full monitoring of L0DU Bank (data, error status, emulator check, ...)
 
  - Filtering :
-   	 - 'L0Filter' : add the possibility to filter according to 'extra L0 decision' (timing trigger and force decision) 
+   	 - 'L0Filter' : add possibility to filter according to 'extra L0 decision'
+                    (timing trigger and force decision) 
      - new algorithm : 'L0TCKFilter' : configuration filtering
 
- - New algorithm : 'L0Pattern' : produce RAM pattern to feed L0DU board test benches (expert use)
+ - New algorithm : 'L0Pattern' : 
+   produce RAM pattern to feed L0DU board test benches (expert use)
 	
- 
- - Add few minor improvements along the code & adapt to changes in L0Event
+  - Add few minor improvements along the code & adapt to changes in L0Event
 
 ! 2008-03-14 - Patrick Koppenburg
  - L0ETC: do not write out. This is done by evtcol svc. Add some .ignore()
