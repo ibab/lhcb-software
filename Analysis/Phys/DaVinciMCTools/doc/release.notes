@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.208 2008-03-06 15:00:53 jpalac Exp $
+! $Id: release.notes,v 1.209 2008-03-28 08:42:52 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-03-28 - Patrick Koppenburg
+ - DecayChainNTuple : Removed. Please use DecayTreeTuple instead.
+ - increment to v9r12
 
 !========================== DaVinciMCTools v9r11 2008-03-06 ==================
 
