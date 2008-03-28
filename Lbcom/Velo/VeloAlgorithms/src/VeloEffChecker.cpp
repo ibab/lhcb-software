@@ -1,4 +1,4 @@
-// $Id: VeloEffChecker.cpp,v 1.1 2008-03-25 12:11:51 mneedham Exp $
+// $Id: VeloEffChecker.cpp,v 1.2 2008-03-28 14:33:52 cattanem Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -6,8 +6,6 @@
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/MsgStream.h"
 #include "VeloEffChecker.h"
 #include "GaudiKernel/PhysicalConstants.h"
 

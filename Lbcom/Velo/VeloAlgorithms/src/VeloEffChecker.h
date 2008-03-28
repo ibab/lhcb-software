@@ -1,13 +1,13 @@
-// $Id: VeloEffChecker.h,v 1.1 2008-03-25 12:11:51 mneedham Exp $
+// $Id: VeloEffChecker.h,v 1.2 2008-03-28 14:33:52 cattanem Exp $
 #ifndef _VeloEffChecker_H_
 #define _VeloEffChecker_H_
 
-/** @class VeloEffChecker VeloEffChecker Tsa/VeloEffChecker.h
+/** @class VeloEffChecker VeloEffChecker.h
  *
- *  To monitor Tsa performance
+ *  Algorithm to check monitor sensor efficiency in MC
  *
  *  @author M.Needham
- *  @date   30/04/2004
+ *  @date   25/03/2008
  */
 
 #include "GaudiAlg/GaudiHistoAlg.h"
@@ -69,11 +69,3 @@ private:
 };
 
 #endif // _VeloEffChecker_H_
-
-
-
-
-
-
-
-
