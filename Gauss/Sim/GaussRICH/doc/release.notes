@@ -3,12 +3,16 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-
+!2008-03-27 - Sajan Easo
+  - Made changes to accomodate the recent changes in xml geometry for RICH, which created 
+   one logical volume per hpd. This was to simulate the Silicon chip shifts inside the hpd.
+   The changes are in RichG4GaussPathNames.h and RichG4StepAnalysis3.cpp and in the part
+   making a test analysis reconstruction of data from hpds.
+  - cleanup of the way the sensitive detector name is used in RichSensDet
 !========================= GaussRICH v8r0 2008-02-20 =========================
 ! 2008-02-20 - Gloria CORTI
  - Increase major version number since it does NOT work with DC06 geometry
    but only staring with head-20080130.
-
 ! 2008-01-31 - Rob Lambert, Sajan Easo
  - Fixed a problem in RichG4StepAnalysis6.cpp which was preventing the flags
    for the various hpd reflections from being recorded into the userparameters
