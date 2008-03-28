@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.362 2008-03-28 09:40:38 gersabec Exp $ 
+! $Id: release.notes,v 1.363 2008-03-28 12:39:59 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r4p1 2008-03-28 ============================
 ! 2008-03-28 - Marco Gersabeck
  - Bug fix in GlobalToLocalDelta.cpp
   + localDeltaFromAnyFrameDelta(...IDetectorElement...) was calling
@@ -12,7 +13,6 @@
     localDeltaFromAnyFrameDelta(...IGeometryInfo...)
   + remove unused line in localDeltaFromAnyFrameDelta(...IGeometryInfo...)
    
-!====================== DetDesc v18r4p1 2008-03-19 ============================
 ! 2008-03-19 - Juan Palacios
  - cmt/requirements
   . Increase version to v18r4p1
