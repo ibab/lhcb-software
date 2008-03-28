@@ -4,10 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r10 2008-03-28 ===========================
 ! 2008-03-26 - Olivier Deschamps
- - New monitoring algorithm : RawBankSizeMonitor : produce 2d histo bankSize.vs.sourceID
+ - New monitoring algorithm : RawBankSizeMonitor : 
+   produce 2d histo bankSize.vs.sourceID
 
-!================ DAQEvent v7r10 2008-03-14 ===========================
 ! 2008-03-14 - Beat Jost
  - Add TestDet bank type, for DAQ tests
 
