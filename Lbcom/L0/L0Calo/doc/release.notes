@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.96 2008-03-28 14:12:35 cattanem Exp $
+! $Id: release.notes,v 1.97 2008-03-28 17:09:53 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2008-03-28 - Patrick Robbe
+ - src/L0CaloMonit.cpp: add an option (false by default) not to produce
+   detailed histograms.
 
 !========================= L0Calo v9r12 2007-03-28 ========================
 ! 2008-03-27 - Patrick Robbe
