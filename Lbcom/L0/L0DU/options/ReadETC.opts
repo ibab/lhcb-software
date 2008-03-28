@@ -22,6 +22,7 @@
 // Standard application setup
 //---------------------------------------------------------------------------
 #include "$STDOPTS/LHCbApplication.opts"
+#include "$STDOPTS/DC06Conditions.opts"
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 
 //---------------------------------------------------------------------------
