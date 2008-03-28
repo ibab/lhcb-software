@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.1 2008-01-22 10:04:24 hernando Exp $
+// $Id: HltTrackMatch.cpp,v 1.2 2008-03-28 11:05:09 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -78,7 +78,7 @@ void HltTrackMatch::recoConfiguration() {
   m_recoConf.add("VeloCalo/TransferIDs",true);
   m_recoConf.add("VeloCalo/TransferAncestor",true);
   m_recoConf.add("VeloCalo/TrackType", (int) LHCb::Track::Velo);
-  m_recoConf.add("VeloCalo/TESOutput", std::string("Hlt/Track/VeloCalo"));
+  m_recoConf.add("VeloCalo/TESOutput", std::string("Hlt/Track/VeloCalo/Alleys"));
   m_recoConf.add("VeloCalo/Quality",std::string("VeloCalo3DChi2"));
   m_recoConf.add("VeloCalo/Quality2",std::string(""));
   
@@ -87,7 +87,7 @@ void HltTrackMatch::recoConfiguration() {
   m_recoConf.add("VeloT/TransferIDs",true);
   m_recoConf.add("VeloT/TransferAncestor",true);
   m_recoConf.add("VeloT/TrackType", (int) LHCb::Track::Long);
-  m_recoConf.add("VeloT/TESOutput", std::string("Hlt/Velo/VeloT"));
+  m_recoConf.add("VeloT/TESOutput", std::string("Hlt/Velo/VeloT/Alleys"));
   m_recoConf.add("VeloT/Quality",std::string("deltaX"));
   m_recoConf.add("VeloT/Quality2",std::string("deltaY"));
 }
@@ -110,9 +110,11 @@ StatusCode HltTrackMatch::setReco(const std::string& key)
 
   m_qualityName = 
     m_recoConf.retrieve<std::string>(m_matchName+"/Quality");
+  m_qualityID = 0;
   if (!m_qualityName.empty()) m_qualityID = hltInfoID(m_qualityName);
   m_quality2Name = 
     m_recoConf.retrieve<std::string>(m_matchName+"/Quality2");
+  m_quality2ID = 0;
   if (!m_quality2Name.empty()) m_quality2ID = hltInfoID(m_quality2Name);
   
   info() << " Reco: " << m_matchName 
@@ -160,11 +162,11 @@ StatusCode HltTrackMatch::execute() {
 
       Track otrack(track1.key());
 
-      double quality = 0;
-      double quality2 = 0;
+      double quality = 0.;
+      double quality2 = 0.;
       sc = m_tool->match(track1,track2,otrack,quality,quality2);
       if (sc.isFailure()) {
-        Warning(" matching failed ",1);
+        Warning(" matching failed ",0);
         continue;
       }
       if (m_verbose) {
@@ -176,8 +178,8 @@ StatusCode HltTrackMatch::execute() {
       if ((quality<m_maxQuality) && (quality2 < m_maxQuality2)) {
         verbose() << " accepted track [1+2] " << endreq;
         LHCb::Track* track3 = otrack.clone();
-        if (m_qualityID>0) track3->addInfo(m_qualityID,quality);
-        if (m_quality2ID>0) track3->addInfo(m_quality2ID,quality2);
+        if (m_qualityID != 0) track3->addInfo(m_qualityID,quality);
+        if (m_quality2ID != 0) track3->addInfo(m_quality2ID,quality2);
         otracks->insert( track3 );
         m_outputTracks->push_back( track3);
       }

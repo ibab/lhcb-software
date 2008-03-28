@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.9 2008-01-22 10:04:25 hernando Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.10 2008-03-28 11:05:09 hernando Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -49,7 +49,7 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("TConf/TransferAncestor",true);
   m_recoConf.add("TConf/TrackType", (int) LHCb::Track::Ttrack);
   m_recoConf.add("TConf/TESInput",std::string("none"));
-  m_recoConf.add("TConf/TESOutput",LHCb::TrackLocation::HltTsa);
+  m_recoConf.add("TConf/TESOutput",LHCb::TrackLocation::HltTsa+"_Alleys");
 
   m_recoConf.add("Velo/Tool",std::string("Tf::PatVeloSpaceTool"));
   m_recoConf.add("Velo/RecoID", (int) HltEnums::VeloKey);
@@ -58,7 +58,7 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("Velo/TransferAncestor",false);
   m_recoConf.add("Velo/TrackType", (int) LHCb::Track::Velo);
   m_recoConf.add("Velo/TESInput",LHCb::TrackLocation::HltRZVelo);
-  m_recoConf.add("Velo/TESOutput",LHCb::TrackLocation::HltVelo);
+  m_recoConf.add("Velo/TESOutput",LHCb::TrackLocation::HltVelo+"_Alleys");
   
   m_recoConf.add("VeloTT/Tool",std::string("Tf::PatVeloTTTool"));
   m_recoConf.add("VeloTT/RecoID", (int) HltEnums::VeloTTKey);
@@ -66,8 +66,8 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("VeloTT/TransferIDs",false);
   m_recoConf.add("VeloTT/TransferAncestor",false);
   m_recoConf.add("VeloTT/TrackType", (int) LHCb::Track::Upstream);
-  m_recoConf.add("VeloTT/TESInput",LHCb::TrackLocation::HltVelo);
-  m_recoConf.add("VeloTT/TESOutput", LHCb::TrackLocation::HltVeloTT);
+  m_recoConf.add("VeloTT/TESInput",LHCb::TrackLocation::HltVelo+"_Alleys");
+  m_recoConf.add("VeloTT/TESOutput", LHCb::TrackLocation::HltVeloTT+"_Alleys");
 
   m_recoConf.add("Forward/Tool",std::string("PatForwardTool"));
   m_recoConf.add("Forward/RecoID", (int) HltEnums::ForwardKey);
@@ -75,8 +75,8 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("Forward/TransferIDs",false);
   m_recoConf.add("Forward/TransferAncestor",false);
   m_recoConf.add("Forward/TrackType", (int) LHCb::Track::Long);
-  m_recoConf.add("Forward/TESInput",LHCb::TrackLocation::HltVelo);
-  m_recoConf.add("Forward/TESOutput", LHCb::TrackLocation::HltForward);
+  m_recoConf.add("Forward/TESInput",LHCb::TrackLocation::HltVelo+"_Alleys");
+  m_recoConf.add("Forward/TESOutput", LHCb::TrackLocation::HltForward+"_Alleys");
 
 }
 //=============================================================================
@@ -119,10 +119,10 @@ StatusCode HltTrackUpgradeTool::setReco(const std::string& key)
   if (m_recoID <= HltEnums::VeloKey) m_orderByPt = false;
 
   info() << " Reco: " << m_recoName 
-          << " Tool: " << toolName 
-          << " Input: " << TESInput 
-          << " Output: " << m_TESOutput << endreq;
-
+         << " Tool: " << toolName 
+         << " Input: " << TESInput 
+         << " Output: " << m_TESOutput << endreq;
+  
   debug() << " reco ID " << m_recoID
           << " owner " << m_owner << " transfers IDs " << m_transferIDs 
           << " transfer ancestor " << m_transferAncestor
@@ -183,7 +183,7 @@ StatusCode HltTrackUpgradeTool::upgrade(LHCb::Track& seed,
     sc = m_tool->tracksFromTrack(seed,tracks);
     m_timer->stop(m_timerTool);
     if (sc.isFailure()) {
-      Warning(" reconstruction failure ",1);
+      Warning(" reconstruction failure ",0);
       return sc;
     }
     recoDone(seed,tracks);
