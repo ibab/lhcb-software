@@ -28,5 +28,8 @@
 // Previously in DaVinciMCTools
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
 
+// New since merge
+#include "MCInterfaces/IMCReconstructed.h"
+
 #endif // DICT_MCINTERFACESDICT_H
 

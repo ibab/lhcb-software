@@ -6,6 +6,7 @@
   <class name = "ILHCbIDsToMCHits"            />
   <class name = "IMCDecayFinder"              />
   <class name = "IMCParticleSelector"         />
+  <class name = "IMCReconstructed"            />
   <class name = "IMCReconstructible"          />
   <class name = "IMuonPad2MCTool"             />
   <class name = "IPrintMCDecayTreeTool"       />

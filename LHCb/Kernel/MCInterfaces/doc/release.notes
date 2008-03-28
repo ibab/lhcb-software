@@ -4,6 +4,10 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+!==================== MCInterfaces v1r5 2008-03-28 ===========================
+! 2008-03-28 - Marco Cattaneo for Patrick Spradlin
+ - Add IMCReconstructed interface
+
 ! 2008-03-25 - Chris Jones
  - Add new methods to MCTruth tool interface ( isHPDReflection() and 
    isSiBackScatter() )
