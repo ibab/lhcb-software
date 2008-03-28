@@ -1,15 +1,16 @@
-! $Id: release.notes,v 1.95 2008-03-27 23:42:11 robbep Exp $
+! $Id: release.notes,v 1.96 2008-03-28 14:12:35 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v9r12 2007-03-28 ========================
 ! 2008-03-27 - Patrick Robbe
  - src/L0CaloMonit.cpp: change binning for slot in crates
  - src/L0CaloCandidatesFromRaw.cpp: fix memory leaks in default container
    filling
 
 ! 2008-03-11 - Patrick Robbe
- - cmt/requirements: use Calo/CaloTools
+ - cmt/requirements: use Calo/CaloUtils
  - src/L0CaloAlg.cpp: remove unnecessary debuging output, add protection against
     double counting in duplicate candidates.
  - src/L0CaloMonit.cpp: use Calo2Dview base class.
