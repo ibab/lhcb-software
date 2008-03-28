@@ -26,14 +26,12 @@ VeloDataProcessor::VeloDataProcessor( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_inputContainer ( LHCb::MCVeloFELocation::Default ),
-    m_outputVeloDigit ( LHCb::VeloDigitLocation::Default ),
-    m_ADCFullScale ( 256. ),
-    m_electronsFullScale ( 200000. )
+    m_outputVeloDigit ( LHCb::VeloDigitLocation::Default )
   {
   declareProperty("InputContainer", m_inputContainer);
   declareProperty("OutputVeloDigit", m_outputVeloDigit );
-  declareProperty("ADCFullScale", m_ADCFullScale);
-  declareProperty("ElectronsFullScale", m_electronsFullScale);
+  declareProperty("ADCFullScale", m_ADCFullScale = 256. );
+  declareProperty("ElectronsFullScale", m_electronsFullScale = 113216.0 );
 }
 
 //=========================================================================

@@ -32,14 +32,6 @@ class VeloClusterMaker : public GaudiAlgorithm {
   virtual StatusCode initialize();
   /// Algorithm execution - Make Clusters
   virtual StatusCode execute   ();
-  /// get S/N cut of individual hits in a detector
-  float  signalToNoiseCut(int detID) const;
-  /// set S/N cut of individual hits in a detector
-/*    void   setSignalToNoiseCut(int detID, float newSN); */
-  // get cluster S/N cut in a detector
-  float  clusterSignalToNoiseCut(int detID) const;
-  // get cluster S/N cut in a detector
-/*    void   setClusterSignalToNoiseCut(int detID, float newSN); */
 
 //////////////////////////////////////////////////////////////////////////////
 // Private member functions
@@ -51,31 +43,29 @@ class VeloClusterMaker : public GaudiAlgorithm {
   StatusCode VeloClusterMaker::storeClusters();
   /// Try to make a cluster using currentDigit as the central hit
   LHCb::InternalVeloCluster* makeClusterFromDigit(
-           LHCb::VeloDigit* currentDigit, float& currentClusterSTN);
+           LHCb::VeloDigit* currentDigit, double& currentClusterSTN);
   /// Try to add a neighbouring channel to the cluster
   bool TryToAddChannel(LHCb::InternalVeloCluster* currentCluster, 
-                       float& currentClusterSTN,
+                       double& currentClusterSTN,
                        LHCb::VeloDigit* currentDigit,
                        int offset);
+  /// Try to start a cluster with this digit, set currentClusterSTN on return
   bool TryToAddCentralChannel(LHCb::InternalVeloCluster* currentCluster, 
-                              float& currentClusterSTN,
+                              double& currentClusterSTN,
                               LHCb::VeloDigit* currentDigit);
   /// increase the size of a cluster by adding an extra digit
   void addDigit(LHCb::InternalVeloCluster* currentCluster, 
-                float& currentClusterSTN,
+                double& currentClusterSTN,
                 LHCb::VeloDigit* nearbyDigit,
                 signed int offset);
-  /// perform final check that cluster is OK (S/N cut)
-  bool checkCluster(LHCb::InternalVeloCluster* currentCluster,
-                    float& currentClusterSTN);
   /// rejected a cluster allowing the hits in it to be used in other clusters
   void unmarkCluster(LHCb::InternalVeloCluster* currentCluster);
   ///
   std::pair<LHCb::VeloDigits::iterator, LHCb::VeloDigits::iterator> 
           getVeloDigitsOfSensor(int detId);
 
-  // very temporary solution to calculate signal/noise ratio
-  double signalToNoise(int adcValue);
+  /// get the S/N for this digit
+  double signalToNoise(LHCb::VeloDigit* digit);
   
 private:
 
@@ -87,22 +77,13 @@ private:
   int m_sensor; // current sensor
   LHCb::InternalVeloClusters* m_clusters; ///< vector to store clusters
   /// S/N cut to apply to all detectors from job opts
-  float  m_defaultSignalToNoiseCut;
+  double  m_signalToNoiseCut;
   /// S/N cut for clusters to apply to all detectors from job opts
-  float  m_defaultClusterSignalToNoiseCut;
-  /// S/N cut for individual strips for each detector
-  std::map<unsigned int,float>  m_signalToNoiseCut;
-  /// S/N cut for clusters for each detector
-  std::map<unsigned int,float>  m_clusterSignalToNoiseCut;
+  double  m_clusterSignalToNoiseCut;
   int m_maxClusters; ///< maximum number of clusters to make per event
-  float m_inclusionThreshold; ///< for adding strips to the cluster
+  double m_inclusionThreshold; ///< for adding strips to the cluster
   double m_highThreshold; ///< Spillover Threshold 
   DeVelo* m_velo;
-  double m_noiseConstant;
-  double m_noiseCapacitance;
-  double m_stripCapacitance;
-  double m_electronsFullScale;
-  double m_ADCFullScale;
 
   // output control
   bool m_isDebug;

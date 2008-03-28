@@ -2,6 +2,10 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2008-03-28 David Hutchcroft
+ - Changed scaling in VeloDataProcessor to increase ADC values of clusters
+ - Changed VeloClusterMaker to set strip thresholds from noise levels per strip
+
 !===================== VeloAlgorithms v4r7 2008-03-28 =====================
 ! 2008-03-25 M Needham
  - Add VeloEffChecker: algorithm to monitor the velo sensor efficiency in MC
