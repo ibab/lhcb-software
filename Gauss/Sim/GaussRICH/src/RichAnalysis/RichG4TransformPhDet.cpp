@@ -1,4 +1,4 @@
-// $Id: RichG4TransformPhDet.cpp,v 1.2 2007-10-02 12:54:51 gcorti Exp $
+// $Id: RichG4TransformPhDet.cpp,v 1.3 2008-03-28 13:24:20 seaso Exp $
 // Include files 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -61,10 +61,13 @@ void RichG4TransformPhDet::initialise()
   m_Rich1MagShPvName1 = "pvRich1MagShH1:1";
   m_Rich1PhotDetSupPvIndex=1;
   m_HpdSMasterIndex=0;
-  m_Rich2HpdPanelIndex0=3;
-  m_Rich2HpdPanelIndex1=4;
+  //  m_Rich2HpdPanelIndex0=0;
+  // m_Rich2HpdPanelIndex1=0;
+  m_Rich2HpdN2EnclName0="pvRich2HPDN2Encl0";
+  m_Rich2HpdN2EnclName1="pvRich2HPDN2Encl1";
   m_Rich2HpdPanelName0="pvRich2HPDPanel:0";
   m_Rich2HpdPanelName1="pvRich2HPDPanel:1";
+
  
   
 }
@@ -226,9 +229,9 @@ RichG4TransformPhDet::RichG4TransformPhDet(int aRichDetNum , int aSectorNum) {
         
        const IPVolume* bpva = (aSectorNum ==2 )?
          aRich2MasterLogVol->
-         pvolume(m_Rich2HpdPanelIndex0):
+         pvolume(m_Rich2HpdN2EnclName0):
          aRich2MasterLogVol->
-         pvolume(m_Rich2HpdPanelIndex1);
+         pvolume(m_Rich2HpdN2EnclName1);
 
 
 
@@ -240,11 +243,21 @@ RichG4TransformPhDet::RichG4TransformPhDet(int aRichDetNum , int aSectorNum) {
         const Gaudi::Transform3D & bpvaTrans = bpva->matrix();
         const Gaudi::Transform3D & bpvaTransInv = bpva->matrixInv();
 
-	      m_PhDetGlobalToLocal = bpvaTrans * aRich2MasterTrans;
 
-	      m_PhDetLocalToGlobal = aRich2MasterTransInv*bpvaTransInv;        
+        const IPVolume* bpvb = (aSectorNum ==2  )?
+          bpva->lvolume()->pvolume(m_Rich2HpdPanelName0):
+          bpva->lvolume()->pvolume(m_Rich2HpdPanelName1);
+        if(bpvb) {
 
-      }}}
+
+          const Gaudi::Transform3D & bpvbTrans = bpvb->matrix();
+          const Gaudi::Transform3D & bpvbTransInv = bpvb->matrixInv();
+
+	      m_PhDetGlobalToLocal =  bpvbTrans * bpvaTrans * aRich2MasterTrans;
+
+	      m_PhDetLocalToGlobal = aRich2MasterTransInv*bpvaTransInv*bpvbTransInv;        
+
+      }}}}
   }
 
 }

@@ -1,4 +1,4 @@
-// $Id: RichSensDet.cpp,v 1.21 2008-01-31 14:15:41 seaso Exp $
+// $Id: RichSensDet.cpp,v 1.22 2008-03-28 13:25:32 seaso Exp $
 // Include files 
 
 // from CLHEP
@@ -33,6 +33,9 @@
 #include "RichPEInfo.h"
 #include "RichPhotoElectron.h"
 
+
+
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichSensDet
 //
@@ -66,10 +69,13 @@ RichSensDet::RichSensDet
     m_RichHC.reserve(m_NumberOfHCInRICH);
 
     G4String HCName;
+    
+
     for(int ihc=0; ihc<m_RichG4HCName->RichHCSize(); ++ihc ) {
-      HCName=m_RichG4HCName->RichHCName(ihc);
+      HCName=(m_RichG4HCName->RichHCName(ihc));
       collectionName.push_back(HCName);
       m_HpdHCID.push_back(-1);
+
     }
 
   }
@@ -397,9 +403,12 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
 
   if ( CurrentRichCollectionSet >= 0 ) {
     int NumHitsInCurHC =m_RichHC[CurrentRichCollectionSet] ->insert( newHit );
-    log << MSG::DEBUG
+
+
+    log << MSG::VERBOSE
         << "RichSensdet: Current collection set and Hit number stored = "
         << CurrentRichCollectionSet << "  " << NumHitsInCurHC << endreq;
+
   }
 
   return true;
@@ -423,46 +432,59 @@ void RichSensDet::PrintAll() {  }
 //=============================================================================
 //  (G4VSensitiveDetector method)
 //=============================================================================
-void RichSensDet::Initialize(G4HCofThisEvent* ) {
+void RichSensDet::Initialize(G4HCofThisEvent*  HCE) {
 
   MsgStream log( msgSvc() , name() );
 
-  log << MSG::DEBUG << "Richsensdet: Initialize. SensDetName, colName: "
+   log << MSG::DEBUG << "Richsensdet: Initialize. SensDetName, colName: "
       <<SensitiveDetectorName<<"  "<<collectionName[0]
       <<"  "<<collectionName[1]<<"  "
-      <<collectionName[2]<<"  "<<collectionName[3]<<endreq;
+  	      <<collectionName[2]<<"  "<<collectionName[3]<<endreq;
 
   // G4String CurCollName;
   RichG4HitsCollection* CurColl;
   m_RichHC.clear();
-  for(int ihhc=0; ihhc<m_RichG4HCName->RichHCSize(); ++ihhc ) {
-    //    CurCollName=collectionName[ihhc];
-    CurColl =
-      new  RichG4HitsCollection(SensitiveDetectorName,collectionName[ihhc]);
+    
+     for(int ihhc=0; ihhc<m_RichG4HCName->RichHCSize(); ++ihhc ) {
 
-    m_RichHC.push_back( CurColl);
-  }
+      CurColl =
+         new  RichG4HitsCollection(SensitiveDetectorName,collectionName[ihhc]);
 
+         m_RichHC.push_back(CurColl);
 
-}
+      if(m_HpdHCID[ihhc] < 0  ){
+         m_HpdHCID[ihhc] = G4SDManager::GetSDMpointer()->
+         GetCollectionID(collectionName[ihhc]);
+      }
 
-//=============================================================================
-// EndOfEvent (G4VSensitiveDetector method)
-//=============================================================================
-void RichSensDet::EndOfEvent(G4HCofThisEvent* HCE) {
-
-  for(int ihid=0; ihid<m_RichG4HCName->RichHCSize(); ++ihid ) {
-
-    if(m_HpdHCID[ihid] < 0  )
-    {
-      m_HpdHCID[ihid] = G4SDManager::GetSDMpointer()->
-        GetCollectionID(collectionName[ihid]);
-    }
-
-    HCE->AddHitsCollection( m_HpdHCID[ihid] , m_RichHC[ihid]  );
-  }
+        HCE->AddHitsCollection( m_HpdHCID[ihhc] , m_RichHC[ihhc]  );
+     }
 
 }
+
+
+//=============================================================================
+// EndOfEvent (G4VSensitiveDetector method) commented out and moved all the contents to initialize
+//=============================================================================
+//void RichSensDet::EndOfEvent(G4HCofThisEvent* HCE) {
+
+  //  for(int ihid=0; ihid<m_RichG4HCName->RichHCSize(); ++ihid ) {
+  //  G4cout<<" richsensdet collectionname endevent "<<ihid<<"  "<<collectionName[ihid]<<"  "<< ihid
+  //   <<"  "<< m_HpdHCID[ihid] << G4endl;
+  //  
+  //
+  //  if(m_HpdHCID[ihid] < 0  )
+  //  {
+  //    m_HpdHCID[ihid] = G4SDManager::GetSDMpointer()->
+  //      GetCollectionID(collectionName[ihid]);
+  //  }
+  //  G4cout<<" richsensdet collectionname "<<ihid<<"  "<<collectionName[ihid]<<"   "<< m_HpdHCID[ihid]<< G4endl;
+  //  
+  //
+  //    HCE->AddHitsCollection( m_HpdHCID[ihid] , m_RichHC[ihid]  );
+  // }
+
+//}
 
 //=============================================================================
 

@@ -1,4 +1,4 @@
-// $Id: RichG4TransformPhDet.h,v 1.1 2006-02-21 17:05:27 seaso Exp $
+// $Id: RichG4TransformPhDet.h,v 1.2 2008-03-28 13:24:20 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4TRANSFORMPHDET_H 
 #define RICHANALYSIS_RICHG4TRANSFORMPHDET_H 1
 
@@ -49,10 +49,13 @@ private:
   std::string   m_Rich1MagShPvName1;
   int   m_Rich1PhotDetSupPvIndex;
   int   m_HpdSMasterIndex;
-  int   m_Rich2HpdPanelIndex0;
-  int   m_Rich2HpdPanelIndex1;
+  // int   m_Rich2HpdPanelIndex0;
+  // int   m_Rich2HpdPanelIndex1;
+  std::string m_Rich2HpdN2EnclName0;
+  std::string  m_Rich2HpdN2EnclName1;
+
   std::string m_Rich2HpdPanelName0;
-  std::string  m_Rich2HpdPanelName1;
+  std::string m_Rich2HpdPanelName1;
  
 
 

@@ -79,10 +79,17 @@ static const G4String LogVolCF4NameAnalysis=
                              "/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2Gas";
 static const G4String LogVolHpdSMasterNameAnalysis =
                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichHPDSMaster";
+static const G4String LogVolHpdSMasterNameAnalysisListStrPrefix =
+                      "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1HPDSMasterLogList";
+static const G4String LogVolHpdSMasterNameAnalysisStrPrefix [] =
+                     {"/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1HPDSMasterLogList/lvRich1HPDSMaster",
+                      "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich2HPDSMasterLogList/lvRich2HPDSMaster"};
 static const G4String LogVolHpdQWindowNameAnalysis =
                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichHPDQuartzWindow";
 static const G4String LogVolSiDetNameAnalysis =
                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichHPDSiDet";
+static const G4String LogVolSiDetNameAnalysisStrPrefix =
+                     "/dd/Geometry/BeforeMagnetRegion/Rich1/RichHPDSiDetLogList/lvRichHPDSiDet";
 static const G4String Rich1FilterGenericMatName=
                              "/dd/Materials/RichMaterials/Rich1FilterGenericMaterial" ;
 static const G4String Rich1FilterD263MatName=
@@ -120,5 +127,6 @@ static const G4String Rich2DeStructurePathName = DeRichLocation::Rich2 ;
 
 static const G4String RichHpdQwDeSubPathName="/Rich1FirstHpdQW";
 static const G4String RichHpdPaCathDeSubPathname="/Rich1FirstHpdPhCathode";
+static const G4String RichHpdSiDetSensDetNamePrefix="HpdSiliconSensDet";
 
 #endif // MISC_RICHG4GAUSSPATHNAMES_H

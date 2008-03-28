@@ -24,6 +24,11 @@ public:
   int numHpdTotRich1() const {return  m_numHpdTotRich[0]; }
   int numHpdTotRich2() const {return  m_numHpdTotRich[1]; }
 
+  //  int hpdNumBegInHitCollection(int aCollBeg) 
+  // {return m_hpdNumBegInHitCollection[aCollBeg];}
+  // int hpdNumEndInHitCollection(int aCollEnd) 
+  // {return m_hpdNumEndInHitCollection[aCollEnd];}
+
   const std::vector<int> & numHpdTotRich() const {return m_numHpdTotRich; }
   const std::vector<RichHpdQE*> & RichHpdQEList(int richdetnum) const
   {return m_RichHpdQEList[richdetnum]; }
@@ -80,6 +85,9 @@ public:
     m_numberOfRichDetectors=numberOfRichdet;
   }
 
+  int numberOfRichHitCollections() const 
+  {    return m_numberOfRichHitCollections;}
+  
   double HpdPhCathodeInnerRadius() const {return  m_HpdPhCathodeInnerRadius; }
 
   void setHpdPhCathodeInnerRadius(const double phCaInnRad )
@@ -141,6 +149,10 @@ private:
   //here the first vector has a dimension of 2
   // which is the number of rich detectors in lhcb.
   std::vector<int>m_numHpdTotRich;
+
+  //  std::vector<int>m_hpdNumBegInHitCollection;
+  // std::vector<int>m_hpdNumEndInHitCollection; 
+ 
   std::vector<std::vector<RichHpdQE*> >m_RichHpdQEList;
   std::vector<std::vector<RichHpdPSF*> >m_RichHpdPSFList;
   std::vector<std::vector<RichHpdDeMag*> >m_RichHpdDeMagList;
@@ -150,6 +162,7 @@ private:
   std::string m_HpdQWLogVolName;
   std::string m_HpdPhCathodeLogVolName;
   int m_numberOfRichDetectors;
+  int m_numberOfRichHitCollections;
   double m_HpdPhCathodeInnerRadius;
   int m_HpdVerboseLevel;
   double m_HpdMaxQuantumEff;

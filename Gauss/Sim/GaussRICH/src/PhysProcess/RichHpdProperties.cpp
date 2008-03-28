@@ -31,6 +31,8 @@ RichHpdProperties::RichHpdProperties( )
     m_RichHpdDeMagList(2,std::vector<RichHpdDeMag*>(200)),
     m_HpdVerboseLevel(0)
 { }
+//    m_hpdNumBegInHitCollection(std::vector<int>(4)),
+//    m_hpdNumEndInHitCollection(std::vector<int>(4)),
 
 void  RichHpdProperties::setHpdPropertiesVerboseLevel(int aLevel ) {
   m_HpdVerboseLevel=aLevel;
@@ -49,6 +51,12 @@ void RichHpdProperties::InitializeHpdProperties( ) {
   m_numberOfRichDetectors=2;
   if((int)m_numHpdTotRich.size() != m_numberOfRichDetectors)
     m_numHpdTotRich.resize(m_numberOfRichDetectors);
+  m_numberOfRichHitCollections=4;
+  // if((int)  m_hpdNumBegInHitCollection.size() != m_numberOfRichHitCollections)
+  //  m_hpdNumBegInHitCollection.resize(m_numberOfRichHitCollections);
+  // if((int)  m_hpdNumEndInHitCollection.size() != m_numberOfRichHitCollections)
+  //  m_hpdNumEndInHitCollection.resize(m_numberOfRichHitCollections);
+  
 
   // RichHpdlog << MSG::INFO
   //           << " Test of Printout from RichHpdProperties" << endreq;
@@ -68,11 +76,20 @@ void RichHpdProperties::InitializeHpdProperties( ) {
 
     m_numHpdTotRich[0]= Rich1DE->param<int>("Rich1TotNumHpd");
 
-    //    m_numHpdTotRich[0]= Rich1DE->userParameterAsInt("Rich1TotNumHpd");
+    // m_hpdNumBegInHitCollection = Rich1DE->paramVect<int>("RichHpdNumBeginInPanels");
+    // m_hpdNumEndInHitCollection = Rich1DE->paramVect<int>("RichHpdNumEndInPanels");
+
 
     RichHpdlog << MSG::INFO << "Total Number of hpds in Rich1 = "
                << m_numHpdTotRich[0] << endreq;
 
+    //  RichHpdlog << MSG::DEBUG<<" Rich Hpd Copy Num In Panels Begin Values  "<<m_hpdNumBegInHitCollection[0]
+    //           <<"  "<<m_hpdNumBegInHitCollection[1]<<"   "<<m_hpdNumBegInHitCollection[2]<<"  "
+    //            <<m_hpdNumBegInHitCollection[3]<<endreq;
+    //  RichHpdlog << MSG::DEBUG<<" Rich Hpd Copy Num In Panels End Values  "<<m_hpdNumEndInHitCollection[0]
+    //           <<"  "<<m_hpdNumEndInHitCollection[1]<<"   "<<m_hpdNumEndInHitCollection[2]<<"  "
+    //           <<m_hpdNumEndInHitCollection[3]<<endreq;
+    
     //following line modified to be compatible with recent DetDesc. SE 16-6-2005. 
     m_HpdMaxQuantumEff=  Rich1DE->param<double>("RichHpdMaxQE");
     //    m_HpdMaxQuantumEff=  Rich1DE->userParameterAsDouble("RichHpdMaxQE");

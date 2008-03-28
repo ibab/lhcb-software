@@ -1,4 +1,4 @@
-// $Id: RichG4ReconTransformHpd.h,v 1.4 2006-02-21 17:05:27 seaso Exp $
+// $Id: RichG4ReconTransformHpd.h,v 1.5 2008-03-28 13:24:20 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4RECONTRANSFORMHPD_H
 #define RICHANALYSIS_RICHG4RECONTRANSFORMHPD_H 1
 // Include files
@@ -52,17 +52,23 @@ private:
   std::string   m_Rich1MagShPvName1;
   int   m_Rich1PhotDetSupPvIndex;
   int   m_HpdSMasterIndex;
-  int   m_Rich2HpdPanelIndex0;
-  int   m_Rich2HpdPanelIndex1;
+  // int   m_Rich2HpdPanelIndex0;
+  // int   m_Rich2HpdPanelIndex1;
 
   int m_Rich1HpdArrayMaxH0;
   int m_Rich2HpdArrayMaxH0;
 
+  //  int m_Rich2N2EnclIndex0;
+  // int m_Rich2N2EnclIndex1;
+
   std::string m_Rich2HpdPanelName0;
   std::string  m_Rich2HpdPanelName1;
+  std::string m_Rich2HpdN2EnclName0;
+  std::string m_Rich2HpdN2EnclName1;
 
-  int  m_Rich1MagShPvIndexH0;
-  int   m_Rich1MagShPvIndexH1;
+
+  //  int  m_Rich1MagShPvIndexH0;
+  // int   m_Rich1MagShPvIndexH1;
 
 };
 #endif // RICHANALYSIS_RICHG4RECONTRANSFORMHPD_H

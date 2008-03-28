@@ -1,4 +1,4 @@
-// $Id: RichSensDet.h,v 1.4 2007-01-12 15:32:20 ranjard Exp $
+// $Id: RichSensDet.h,v 1.5 2008-03-28 13:25:32 seaso Exp $
 #ifndef       RichSensDet_H
 #define       RichSensDet_H 1
 
@@ -46,7 +46,7 @@ public:
    *  @param history  pointert to touchable history
    */
   virtual void Initialize(G4HCofThisEvent* HCE);
-  virtual void EndOfEvent(G4HCofThisEvent* HCE);
+  // virtual void EndOfEvent(G4HCofThisEvent* HCE);
   virtual bool ProcessHits
   ( G4Step* step                ,
     G4TouchableHistory* history ) ;

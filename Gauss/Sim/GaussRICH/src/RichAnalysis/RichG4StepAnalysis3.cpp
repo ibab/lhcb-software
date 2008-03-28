@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis3.cpp,v 1.9 2007-01-17 17:49:14 ranjard Exp $
+// $Id: RichG4StepAnalysis3.cpp,v 1.10 2008-03-28 13:24:20 seaso Exp $
 // Include files
 
 #include "G4Track.hh"
@@ -267,9 +267,12 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
               }
             }
             // now for photon hitting the HpdQW
+            std::string::size_type iHpdSMStrPos=
+                      aPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix);
+            
 
-
-            if(aPreVolName == LogVolHpdSMasterNameAnalysis &&
+            if( ((aPreVolName == LogVolHpdSMasterNameAnalysis) || 
+                 (iHpdSMStrPos !=  std::string::npos  ) ) &&
                aPostVolName ==  LogVolHpdQWindowNameAnalysis ){
 
               if(PhotCurDir.z() > 0.0 ) {
@@ -302,7 +305,11 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
         const G4String & aelnPreVolName=
           aPreStepPoint->GetPhysicalVolume()->GetLogicalVolume()->GetName();
-        if( aelnPreVolName == LogVolHpdSMasterNameAnalysis) {
+         std::string::size_type jHpdSMStrPos=
+                      aelnPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix);
+
+        if( (aelnPreVolName == LogVolHpdSMasterNameAnalysis) ||
+            (jHpdSMStrPos !=  std::string::npos)  ) {
 
           const G4String & aelnPostVolName=
             aPostStepPoint->GetPhysicalVolume()
@@ -315,8 +322,11 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
 
             if(aParticleKE > 0.0 ) {
-              if(  aelnPreVolName == LogVolHpdSMasterNameAnalysis &&
-                   aelnPostVolName == LogVolSiDetNameAnalysis ){
+              if(  ( (aelnPreVolName == LogVolHpdSMasterNameAnalysis) ||
+                     (jHpdSMStrPos !=  std::string::npos)  ) &&
+                   ( (aelnPostVolName == LogVolSiDetNameAnalysis) ||
+                     (aelnPostVolName.find(LogVolSiDetNameAnalysisStrPrefix) 
+                      != std::string::npos ))){
 
 
                 G4int   aPeRadiatorNumber =  -1;

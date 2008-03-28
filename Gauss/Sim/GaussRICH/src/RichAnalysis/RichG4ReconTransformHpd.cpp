@@ -1,4 +1,4 @@
-// $Id: RichG4ReconTransformHpd.cpp,v 1.8 2007-10-02 12:54:51 gcorti Exp $
+// $Id: RichG4ReconTransformHpd.cpp,v 1.9 2008-03-28 13:24:20 seaso Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -59,14 +59,18 @@ void RichG4ReconTransformHpd::initialise() {
   m_HpdSMasterIndex=0;
   m_Rich2HpdPanelName0="pvRich2HPDPanel:0";
   m_Rich2HpdPanelName1="pvRich2HPDPanel:1";
-  m_Rich2HpdPanelIndex0=3;
-  m_Rich2HpdPanelIndex1=4;
+  m_Rich2HpdN2EnclName0="pvRich2HPDN2Encl0";
+  m_Rich2HpdN2EnclName1="pvRich2HPDN2Encl1";  
+  // m_Rich2N2EnclIndex0=3;
+  // m_Rich2N2EnclIndex1=4;
+  // m_Rich2HpdPanelIndex0=0;
+  // m_Rich2HpdPanelIndex1=0;
   m_Rich1HpdArrayMaxH0=98;
   m_Rich2HpdArrayMaxH0=144;
 
   // the following 2 not used for now.
-  m_Rich1MagShPvIndexH0=20;
-  m_Rich1MagShPvIndexH1=21;
+  //  m_Rich1MagShPvIndexH0=20;
+  // m_Rich1MagShPvIndexH1=21;
 
 
 }
@@ -294,9 +298,9 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
 
         const IPVolume* bpva = (aHpdNumber< m_Rich2HpdArrayMaxH0)?
         aRich2MasterLogVol->
-        pvolume(m_Rich2HpdPanelName0):
+        pvolume(m_Rich2HpdN2EnclName0):
         aRich2MasterLogVol->
-        pvolume(m_Rich2HpdPanelName1);
+        pvolume(m_Rich2HpdN2EnclName1);
 
 
       if(bpva) {
@@ -314,30 +318,42 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
         const Gaudi::Transform3D & bpvaTrans = bpva->matrix();
         const Gaudi::Transform3D & bpvaTransInv = bpva->matrixInv();
 
-        const IPVolume* bpvb =
-          bpva->lvolume()->pvolume(aHpdIndexR2);
+
+        const IPVolume* bpvb = (aHpdNumber< m_Rich2HpdArrayMaxH0)?
+          bpva->lvolume()->pvolume(m_Rich2HpdPanelName0):
+          bpva->lvolume()->pvolume(m_Rich2HpdPanelName1);
         if(bpvb) {
+
           const Gaudi::Transform3D & bpvbTrans = bpvb->matrix();
           const Gaudi::Transform3D & bpvbTransInv = bpvb->matrixInv();
-          const IPVolume* bpvf =  bpvb->lvolume()
-            ->pvolume(m_HpdSMasterIndex);
-          if(bpvf ) {
-            const Gaudi::Transform3D & bpvfTrans = bpvf->matrix();
-            const Gaudi::Transform3D & bpvfTransInv = bpvf->matrixInv();
+
+
+          const IPVolume* bpvc =
+               bpvb->lvolume()->pvolume(aHpdIndexR2);
+          if(bpvc) {
+              const Gaudi::Transform3D & bpvcTrans = bpvc->matrix();
+              const Gaudi::Transform3D & bpvcTransInv = bpvc->matrixInv();
+              const IPVolume* bpvf =  bpvc->lvolume()
+                  ->pvolume(m_HpdSMasterIndex);
+             if(bpvf ) {
+              const Gaudi::Transform3D & bpvfTrans = bpvf->matrix();
+              const Gaudi::Transform3D & bpvfTransInv = bpvf->matrixInv();
 
             m_HpdGlobalToLocal =
-              bpvfTrans*  bpvbTrans *
+              bpvfTrans* bpvcTrans * bpvbTrans *
               bpvaTrans * aRich2MasterTrans;
             m_HpdLocalToGlobal =
               aRich2MasterTransInv*bpvaTransInv*
-              bpvbTransInv* bpvfTransInv;
+              bpvbTransInv *  bpvcTransInv * bpvfTransInv;
 
           }
 
 
         }
-
-
+          
+        
+      }
+        
 
       }
 
@@ -350,8 +366,9 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
   }
 
 
-
+  
 }
+
 
 
 
