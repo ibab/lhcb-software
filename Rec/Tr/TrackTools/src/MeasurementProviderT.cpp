@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.9 2008-01-24 09:27:45 wouter Exp $
+// $Id: MeasurementProviderT.cpp,v 1.10 2008-03-28 11:41:21 wouter Exp $
 // Include files
 
 //=============================================================================
@@ -120,13 +120,8 @@ void MeasurementProviderT<T>::handle ( const Incident& incident )
 template <typename T>
 const typename T::ClusterContainerType* MeasurementProviderT<T>::clusters() const
 {
-  if( !m_clusters ) {
-    if ( exist<typename T::ClusterContainerType>( T::defaultClusterLocation() ) ) {
-      m_clusters = get<typename T::ClusterContainerType>( T::defaultClusterLocation() );
-    }  
-    else
-      error() << T::defaultClusterLocation() << " asked to be loaded but not present!" << endreq;
-  }
+  if( !m_clusters )
+    m_clusters = get<typename T::ClusterContainerType>( T::defaultClusterLocation() );
   return m_clusters ;
 }
 
