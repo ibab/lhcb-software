@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.9 2008-03-04 19:23:12 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.10 2008-03-28 09:30:49 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -61,7 +61,7 @@ CombineParticles::CombineParticles( const std::string& name,
   declareProperty( "DecayDescriptors", m_decayDescriptors );  
   declareProperty( "KillOverlap", m_killOverlap );
   declareProperty( "OutputLocation" , m_outputLocation = "" ) ;
-  declareProperty( "PrintStats", m_printMoreStats = false ) ;
+  declareProperty( "PrintStats", m_printStats = false ) ;
   declareProperty( "PrintMoreStats", m_printMoreStats = false ) ;
   declareProperty( "MaxCandidates", m_maxCandidates = 100000 ) ;
   return ;
