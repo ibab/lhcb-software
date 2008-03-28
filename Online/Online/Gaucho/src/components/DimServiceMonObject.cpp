@@ -38,3 +38,4 @@ void DimServiceMonObject::deleteMonObject(){
   if (0==m_monObject) return;
   delete m_monObject;
 }
+

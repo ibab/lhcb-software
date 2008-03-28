@@ -5,7 +5,7 @@
 MonH2F::MonH2F(IMessageSvc* msgSvc, const std::string& source, int version):
 MonObject(msgSvc, source, version)
 {
-  m_typeName="MonH2F";
+  m_typeName=s_monH2F;
   m_dimPrefix="MonH2F";
   isLoaded = false;
   objectCreated = false;
@@ -13,6 +13,17 @@ MonObject(msgSvc, source, version)
 }
   
 MonH2F::~MonH2F(){
+  MsgStream msgStream = createMsgStream();
+  msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
+  delete binCont;
+  msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
+  delete binErr;
+  msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
+  delete binLabelX;
+  msgStream <<MSG::DEBUG<<"deleting binLabelY" << endreq;
+  delete binLabelY;
+  msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
+  delete m_fSumw2;
 }
 
 void MonH2F::setAidaHisto(AIDA::IHistogram2D* iHistogram2D){
@@ -42,17 +53,33 @@ void MonH2F::load2(boost::archive::binary_iarchive  & ar){
   ar & nEntries;
   ar & sName;
   ar & sTitle;
-  
-  binCont = new float[(nbinsx+1)*(nbinsy+1)];
-    
-  for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
+  ar & bBinLabelX;
+  ar & bBinLabelY;
+
+  binCont = new float[(nbinsx+2)*(nbinsy+2)];
+
+  for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     ar & binCont[i];
   }
-  
-  binErr = new float[(nbinsx+1)*(nbinsy+1)];
-  
-  for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
+
+  binErr = new float[(nbinsx+2)*(nbinsy+2)];
+
+  for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     ar & binErr[i];
+  }
+
+  if (bBinLabelX){
+    binLabelX = new std::string[(nbinsx+2)];
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      ar & binLabelX[i];
+    }
+  }
+
+  if (bBinLabelY){
+    binLabelY = new std::string[(nbinsy+2)];
+    for (int i = 0; i < (nbinsy+2) ; ++i){
+      ar & binLabelY[i];
+    }
   }
 
   ar & m_fDimension;
@@ -94,14 +121,25 @@ void MonH2F::save3(boost::archive::binary_oarchive  & ar){
   ar & nEntries;
   ar & sName;
   ar & sTitle;
-  
-  for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
+  ar & bBinLabelX;
+  ar & bBinLabelY;
+
+  for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     ar & binCont[i];
   }
-  for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     ar & binErr[i];
   }
-
+  if (bBinLabelX){
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      ar & binLabelX[i];
+    }
+  }
+  if (bBinLabelY){
+    for (int i = 0; i < (nbinsy+2) ; ++i){
+      ar & binLabelY[i];
+    }
+  }
   ar & m_fDimension;
   //ar & m_fIntegral;
   ar & m_fMaximum;
@@ -155,14 +193,25 @@ void MonH2F::loadObject(){
   m_hist->Reset();
   FriendOfTH2F * fot = (FriendOfTH2F *)m_hist; 
   
-  for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     m_hist->SetBinContent(i, binCont[i]);
   }
   
   m_hist->SetEntries(nEntries);
   
-  for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     m_hist->SetBinError(i, binErr[i]);
+  }
+
+  if (bBinLabelX){
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      m_hist->GetXaxis()->SetBinLabel(i, binLabelX[i].c_str());
+    } 
+  }
+  if (bBinLabelY){
+    for (int i = 0; i < (nbinsy+2) ; ++i){
+      m_hist->GetYaxis()->SetBinLabel(i, binLabelY[i].c_str());
+    }
   }
 
   fot->fDimension = m_fDimension;
@@ -201,15 +250,47 @@ void MonH2F::splitObject(){
   const char *cTitle  = m_hist->GetTitle();
   sTitle  = std::string(cTitle);
 
-  binCont = new float[(nbinsx+1)*(nbinsy+1)];
-  binErr = new float[(nbinsx+1)*(nbinsy+1)];
+  binCont = new float[(nbinsx+2)*(nbinsy+2)];
+  binErr = new float[(nbinsx+2)*(nbinsy+2)];
+  binLabelX = new std::string[(nbinsx+2)];
+  binLabelY = new std::string[(nbinsy+2)];
 
-  for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     binCont[i] = ((float) (m_hist->GetBinContent(i))); 
   }
 
-  for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     binErr[i] = ((float) (m_hist->GetBinError(i))); 
+  }
+
+  bBinLabelX = false;
+  for (int i = 0; i < (nbinsx+2) ; ++i){
+    std::string binLab = m_hist->GetXaxis()->GetBinLabel(i);
+    if (binLab.length() > 0 ){
+      bBinLabelX = true;
+      break;
+    }
+  }
+  if (bBinLabelX){
+    binLabelX = new std::string[(nbinsx+2)];
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      binLabelX[i] = m_hist->GetXaxis()->GetBinLabel(i);
+    }
+  }
+
+  bBinLabelY = false;
+  for (int i = 0; i < (nbinsy+2) ; ++i){
+    std::string binLab = m_hist->GetYaxis()->GetBinLabel(i);
+    if (binLab.length() > 0 ){
+      bBinLabelY = true;
+      break;
+    }
+  }
+  if (bBinLabelY){
+    binLabelY = new std::string[(nbinsy+2)];
+    for (int i = 0; i < (nbinsy+2) ; ++i){
+      binLabelY[i] = m_hist->GetYaxis()->GetBinLabel(i);
+    }
   }
 
   m_fDimension = fot->fDimension;
@@ -273,28 +354,37 @@ void MonH2F::combine(MonObject * H){
     return;
   }
 
-  for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     binCont[i] += HH->binCont[i];
     binErr[i] = sqrt(pow(binErr[i],2)+pow(HH->binErr[i],2));
   }
 
   nEntries += HH->nEntries;
+
+  m_fTsumw += HH->m_fTsumw;
+  m_fTsumw2 += HH->m_fTsumw2;
+  m_fTsumwx += HH->m_fTsumwx;
+  m_fTsumwx2 += HH->m_fTsumwx2;
+  m_fTsumwxy += HH->m_fTsumwxy;
+  m_fTsumwy += HH->m_fTsumwy;
+  m_fTsumwy2 += HH->m_fTsumwy2;
+
+  if (m_fSumSize == HH->m_fSumSize){
+    for (int i=0 ; i < m_fSumSize; ++i) {
+      m_fSumw2[i] += HH->m_fSumw2[i];
+    }
+  }
 }
 
 void MonH2F::copyFrom(MonObject * H){
     MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"1." << endreq;
   if (H->typeName() != this->typeName()){
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     doOutputMsgStream(msgStream);
     return;
   }
 
-  msgStream <<MSG::ERROR<<"2." << endreq;
-
   MonH2F *HH = (MonH2F*)H;
-
-  msgStream <<MSG::ERROR<<"3." << endreq;
 
   m_comments=HH->comments();
 
@@ -306,21 +396,35 @@ void MonH2F::copyFrom(MonObject * H){
   Ymax = HH->Ymax;
   nEntries = HH->nEntries;
   sTitle = HH->sTitle;
-  
-  msgStream <<MSG::ERROR<<"4." << endreq;
 
-  binCont = new float[(nbinsx+1)*(nbinsy+1)];
-  
-  msgStream <<MSG::ERROR<<"5." << endreq;
+  binCont = new float[(nbinsx+2)*(nbinsy+2)];
 
-  for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     binCont[i] = HH->binCont[i];
   }
-  
-  binErr = new float[(nbinsx+1)*(nbinsy+1)];
-  
-  for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
+
+  binErr = new float[(nbinsx+2)*(nbinsy+2)];
+
+  for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     binErr[i] = HH->binErr[i];
+  }
+
+  bBinLabelX = HH->bBinLabelX;
+
+  if (bBinLabelX){
+    binLabelX = new std::string[(nbinsx+2)];
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      binLabelX[i] = HH->binLabelX[i];
+    }
+  }
+
+  bBinLabelY = HH->bBinLabelY;
+
+  if (bBinLabelY){
+    binLabelY = new std::string[(nbinsy+2)];
+    for (int i = 0; i < (nbinsy+2) ; ++i){
+      binLabelY[i] = HH->binLabelY[i];
+    }
   }
 
   m_fDimension = HH->m_fDimension;
@@ -336,12 +440,10 @@ void MonH2F::copyFrom(MonObject * H){
 
   m_fSumSize = HH->m_fSumSize;
 
-  msgStream <<MSG::ERROR<<"6." << endreq;
   m_fSumw2 = new float[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
     m_fSumw2[i] = HH->m_fSumw2[i];
   }
-  msgStream <<MSG::ERROR<<"7." << endreq;
   isLoaded = true;
 }
 
@@ -353,7 +455,7 @@ void MonH2F::reset(){
     return;
   }
 
-  for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     binCont[i] = 0;
     binErr[i] = 0; 
   }
@@ -378,17 +480,33 @@ void MonH2F::print(){
   msgStream <<MSG::INFO<<"Ymax="<<Ymax<<endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
   msgStream <<MSG::INFO<<"BinContents:"<<endreq;
-  for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     msgStream << binCont[i]<<" ";
   }
   msgStream << endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
   msgStream <<MSG::INFO<<"BinErrors:"<<endreq;
-  for (int i = 0; i < (nbinsx+1)*(nbinsy+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     msgStream << binErr[i] << " ";
   }
   msgStream << endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
+  if (bBinLabelX){
+    msgStream <<MSG::INFO<<"BinLabelsX:"<<endreq;
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      msgStream <<binLabelX[i]<<" ";
+    }
+    msgStream << endreq;
+    msgStream <<MSG::INFO<<"*************************************"<<endreq;
+  }
+  if (bBinLabelY){
+    msgStream <<MSG::INFO<<"BinLabelsY:"<<endreq;
+    for (int i = 0; i < (nbinsy+2) ; ++i){
+      msgStream <<binLabelY[i]<<" ";
+    }
+    msgStream << endreq;
+    msgStream <<MSG::INFO<<"*************************************"<<endreq;
+  }
   msgStream <<MSG::INFO<<"Dimension="<< m_fDimension << endreq;
   //msgStream <<MSG::INFO <<"Integral="<< m_fIntegral << endreq;
   msgStream <<MSG::INFO<<"Maximum="<< m_fMaximum << endreq;

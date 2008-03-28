@@ -66,7 +66,7 @@ public:
 
   // Begin MO
   void declareInfo(const std::string& name, const MonObject* var, const std::string& desc, const IInterface* owner) ;
-  void declareInfoMonObject(const std::string& name, MonObject* var, const std::string& desc, const IInterface* owner, const bool putOwnerName) ;
+  void declareInfoMonObject(const std::string& name, MonObject* var, const std::string& desc, const IInterface* owner) ;
   // End MO
 
 void declareInfo(const std::string& name, const std::string& format, const void * var, 
@@ -87,12 +87,12 @@ void declareInfo(const std::string& name, const std::string& format, const void 
       @param name Monitoring information name knwon to the external system
       @param owner Owner identifier of the monitoring information
   */
-  void updateSvc( const std::string& name, bool endOfRun, const IInterface* owner ) ;
+  void updateSvc( const std::string& name, const IInterface* owner, bool endOfRun ) ;
 
   /** Update all monitoring information
       @param owner Owner identifier of the monitoring information
   */
-  void updateAll( bool endOfRun, const IInterface* owner ) ;
+  void updateAll( const IInterface* owner, bool endOfRun ) ;
   void resetHistos( const IInterface* owner ) ;
 
   void setTimerElapsed(bool timerelapsed);

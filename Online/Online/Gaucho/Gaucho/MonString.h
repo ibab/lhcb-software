@@ -6,7 +6,7 @@
 class MonString: public MonObject {
 
 protected:
-  std::string m_string;
+  std::string *m_string;
 
 public:
   BOOST_SERIALIZATION_SPLIT_MEMBER()
@@ -17,12 +17,12 @@ public:
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
   virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
 
-  void setValue(std::string s){m_string = s;}
-  std::string value(){return m_string;}
+  void setValue(const std::string& s){m_string = const_cast<std::string *>(&s);}
+  std::string value(){return (*m_string);}
 
   virtual void combine(MonObject * monString);
   virtual void copyFrom(MonObject* monObject);
-  virtual void reset(){m_string="";}
+  virtual void reset(){(*m_string)="";}
   virtual void add(MonString * monString);
   virtual void print();
   virtual void write(){};

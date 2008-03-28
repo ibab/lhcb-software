@@ -6,7 +6,7 @@
 class MonFloat: public MonObject {
 
 protected:
-  float m_float;
+  float *m_float;
 
 public:
   BOOST_SERIALIZATION_SPLIT_MEMBER()
@@ -17,12 +17,12 @@ public:
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
   virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
 
-  void setValue(float f){m_float = f;}
-  float value(){return m_float;}
+  void setValue(const float& f){m_float = const_cast<float *>(&f);}
+  float value(){return (*m_float);}
 
   virtual void combine(MonObject * monFloat);  
   virtual void copyFrom(MonObject* monFloat);  
-  virtual void reset(){m_float=0.00;}
+  virtual void reset(){(*m_float)=0.00;}
   virtual void add(MonFloat * monFloat);
   virtual void print();
   virtual void write(){};

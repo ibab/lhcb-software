@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.10 2007-07-19 07:22:44 evh Exp $
+! $Id: release.notes,v 1.11 2008-03-28 10:59:12 evh Exp $
 ! Package     : Online/Gaucho	
 ! Responsible : Eric.van.Herwijnen@cern.ch
+!======================== Gaucho v6r0 2008-03-25 ==========================
+! 2008-03-25 - Eric van Herwijnen
+ - New version by Juan Otalora & Helder Lopes using MonObjects (Claus Buszello)
 !======================== Gaucho v5r6 2007-07-19 ==========================
 ! 2007-07-19 - Eric van Herwijnen
  - Fix bug with histogram services remaining after receiving stop dim command

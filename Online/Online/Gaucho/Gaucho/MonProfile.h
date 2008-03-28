@@ -64,12 +64,15 @@ public:
 
   std::string sName;
   std::string sTitle;
-  std::string sXTitle;
-  std::string sYTitle;
+
+  bool bBinLabelX;
+  bool bBinLabelY;
 
   double *binCont;
   double *binErr;
   double *binEntries;
+  std::string *binLabelX;
+  std::string *binLabelY;
 
   int m_fDimension;
   //double m_fIntegral;

@@ -6,7 +6,7 @@
 class MonDouble: public MonObject {
 
 protected:
-  double m_double;
+  double *m_double;
 
 public:
   BOOST_SERIALIZATION_SPLIT_MEMBER()
@@ -17,12 +17,12 @@ public:
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
   virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
 
-  void setValue(double d){m_double = d;}
-  double value(){return m_double;}
+  void setValue(const double& d){m_double = const_cast<double *>(&d);}
+  double value(){return (*m_double);}
 
   virtual void combine(MonObject * monDouble);  
   virtual void copyFrom(MonObject* monDouble);  
-  virtual void reset(){m_double=0.00;}
+  virtual void reset(){(*m_double)=0.00;}
   virtual void add(MonDouble * monDouble);
   virtual void print();
   virtual void write(){};

@@ -64,8 +64,13 @@ public:
   std::string sName;
   std::string sTitle;
 
+  bool bBinLabelX;
+  bool bBinLabelY;
+
   float *binCont;
   float *binErr;
+  std::string *binLabelX;
+  std::string *binLabelY;
 
   int m_fDimension;
   //float m_fIntegral;

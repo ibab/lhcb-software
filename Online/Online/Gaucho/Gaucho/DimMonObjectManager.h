@@ -85,8 +85,8 @@ public:
   void saverWriteMonObjects();
 
   //Adder
-  int adderCreateDimNames(std::string nodeName, std::vector<std::string> taskName, std::vector<std::string> algorithmName, std::vector<std::string> objectName, std::string serverName);
-  void adderCreateDimMonObjects(std::string procName, int refreshTime);
+  int adderCreateDimNames(std::vector<std::string> nodeNames, std::vector<std::string> taskName, std::vector<std::string> algorithmName, std::vector<std::string> objectName, std::string serverName);
+  int adderCreateDimMonObjects(std::string procName, int refreshTime);
   void adderDeleteDimMonObjects();
   void adderCreateDimTimerMonObject(int refreshTime);
   void adderDeleteDimTimerMonObject();
@@ -95,6 +95,9 @@ public:
   int  presenterGetDimMonObjectSvcList(std::vector<std::string> &dimMonObjectServicesList);
   TH1* presenterInitHistogram(DimInfoMonObject* dimInfoMonObject, int localInstance);
   void presenterFillHistogram(DimInfoMonObject* dimInfoMonObject);
+
+  //MonObjectTextPrinter 
+  MonObject *monObjectTextPrinterGetMonObject(int refreshTime, std::string svcName);
 
 };
 

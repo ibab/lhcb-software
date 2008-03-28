@@ -12,7 +12,7 @@ MonStatEntity(msgSvc, source, version)
 MonHitMap2D::MonHitMap2D(IMessageSvc* msgSvc, const std::string& source, std::string name, int fromX, int toX,int fromY, int toY):
 MonStatEntity(msgSvc, source, 0)
 {
-  m_typeName="MonHitMap2D";
+  m_typeName=s_monHitMap2D;
   m_dimPrefix="MonHM2D";
   m_name = name;
   m_fromX = fromX;

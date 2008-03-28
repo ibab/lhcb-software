@@ -19,8 +19,10 @@ namespace win {
 
 
 DimInfoMonObject::DimInfoMonObject(DimMonObjectManager* manager, std::string svcName): DimInfo((svcName).c_str(),-1.0){
-  m_name = "DimInfoMO";
-  manager->msg("DimInfoMonObject(" + svcName + ") called with no refresh time. Using 5 s", m_name, MSG::INFO);
+  m_name = "DimInfoMonObject";
+  IMessageSvc* msgSvc = manager->msgSvc();
+  MsgStream mes(msgSvc, m_name);
+  mes << MSG::INFO << "DimInfoMonObject(" + svcName + ") called with no refresh time. Using 5 s" << endreq;
   DimInfoMonObject(manager, svcName, 5);
 }
 
@@ -30,7 +32,6 @@ DimInfoMonObject::DimInfoMonObject(DimMonObjectManager* manager, std::string svc
   char buffer[3];
   sprintf(buffer, "%d", refreshTime);
   std::string strRefreshTime(buffer);
-  manager->msg("DimInfoMonObject constructor called " + svcName + " refresh time: " + strRefreshTime + " seconds", m_name, MSG::INFO);
 
   m_svcname = svcName;
   m_rtime = refreshTime;

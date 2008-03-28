@@ -6,7 +6,7 @@
 MonStatEntity::MonStatEntity(IMessageSvc* msgSvc, const std::string& source, int version):
 MonObject(msgSvc, source, version)
 {
-  m_typeName="MonStatEntity";
+  m_typeName=s_monStatEntity;
   m_dimPrefix="MonSE";
   m_sumX=0;
   m_sumXw2=0;

@@ -61,9 +61,12 @@ public:
   std::string sName;
   std::string sTitle;
 
+  bool bBinLabel;
+
   double *binCont;
   double *binErr;
-
+  std::string *binLabel;
+  
   int m_fDimension;
   //double m_fIntegral;
   double m_fMaximum;

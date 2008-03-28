@@ -42,7 +42,10 @@ void MonTimer::timerHandler()
       m_timerElapsed=m_MonitorSvc->getTimerElapsed();
       // if timerElapsed is true, we're probably waiting for triggers
       // update immediately
-      if (m_timerElapsed) m_MonitorSvc->updateAll(true, m_owner);     
+      if (m_timerElapsed) {
+        if(m_MonitorSvc == m_owner) m_MonitorSvc->updateAll(0,true);     
+        else m_MonitorSvc->updateAll( m_owner, true);
+      }
       // if timerElapsed false, set it to true
       else m_MonitorSvc->setTimerElapsed(true);
       // update will occur start of next event 

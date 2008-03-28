@@ -60,10 +60,12 @@ public:
 
   std::string sName;
   std::string sTitle;
-  std::string sXTitle;
+
+  bool bBinLabel;
 
   float *binCont;
   float *binErr;
+  std::string *binLabel;
 
   int m_fDimension;
   //float m_fIntegral;

@@ -6,7 +6,7 @@
 class MonPairDD: public MonObject {
 
 protected:
-  std::pair<double,double> m_pair;
+  std::pair<double,double> *m_pair;
 
 public:
   BOOST_SERIALIZATION_SPLIT_MEMBER()
@@ -17,12 +17,12 @@ public:
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
   virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
 
-  void setValue(std::pair<double,double> p){m_pair = p;}
-  std::pair<double,double> value(){return m_pair;}
+  void setValue(const std::pair<double,double>& p){m_pair = const_cast<std::pair<double,double> *>(&p);}
+  std::pair<double,double> value(){return (*m_pair);}
 
   virtual void combine(MonObject * monPair);  
   virtual void copyFrom(MonObject* monPair);  
-  virtual void reset(){m_pair.first=0.00;m_pair.second=0.00;}
+  virtual void reset(){(*m_pair).first=0.00;(*m_pair).second=0.00;}
   virtual void add(MonPairDD * monPair);
   virtual void print();
   virtual void write(){};

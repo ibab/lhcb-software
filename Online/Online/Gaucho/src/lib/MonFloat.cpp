@@ -3,9 +3,9 @@
 MonFloat::MonFloat(IMessageSvc* msgSvc, const std::string& source, int version):
 MonObject(msgSvc, source, version)
 {
-  m_typeName="MonFloat";
+  m_typeName=s_monFloat;
   m_dimPrefix="MonF";
-  //m_float = NULL;
+  m_float = new float();
 }
   
 MonFloat::~MonFloat(){
@@ -13,13 +13,13 @@ MonFloat::~MonFloat(){
 
 void MonFloat::save(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar,version);
-  ar & m_float;
+  ar & (*m_float);
 }
 
 void MonFloat::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
-  ar & m_float;
+  ar & (*m_float);
 }
 
 void MonFloat::combine(MonObject * monFloat){
@@ -30,7 +30,7 @@ void MonFloat::combine(MonObject * monFloat){
     return;
   }
   add((MonFloat*) monFloat);
-  if (m_comments.find("combine=average") != std::string::npos) m_float = m_float/2.00;
+  if (m_comments.find("combine=average") != std::string::npos) (*m_float) = (*m_float)/2.00;
 }
 
 void MonFloat::copyFrom(MonObject * monFloat){
@@ -41,19 +41,19 @@ void MonFloat::copyFrom(MonObject * monFloat){
     return;
   }
   MonFloat *mo = (MonFloat*)monFloat;
-  m_float = mo->value();
+  (*m_float) = mo->value();
   m_comments = mo->comments();
 }
 
 void MonFloat::add(MonFloat * monFloat){
-  m_float = m_float + monFloat->value();
+  (*m_float) = (*m_float) + monFloat->value();
 }
 
 void MonFloat::print(){
   MonObject::print();
   MsgStream msgStream = createMsgStream();
   msgStream << MSG::INFO << "*************************************"<<endreq;
-  msgStream << MSG::INFO << m_typeName << " value=" << m_float << endreq;
+  msgStream << MSG::INFO << m_typeName << " value=" << (*m_float) << endreq;
   msgStream << MSG::INFO << "*************************************"<<endreq;
   doOutputMsgStream(msgStream);
 }

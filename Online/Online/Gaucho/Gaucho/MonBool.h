@@ -6,7 +6,7 @@
 class MonBool: public MonObject {
 
 protected:
-  bool m_bool;
+  bool *m_bool;
 
 public:
   BOOST_SERIALIZATION_SPLIT_MEMBER()
@@ -17,12 +17,12 @@ public:
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
   virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
 
-  void setValue(bool b){m_bool = b;}
-  bool value(){return m_bool;}
+  void setValue(const bool& b){m_bool = const_cast<bool *>(&b);}
+  bool value(){return (*m_bool);}
 
   virtual void combine(MonObject * monBool);
   virtual void copyFrom(MonObject* monBool);
-  virtual void reset(){m_bool=false;}
+  virtual void reset(){(*m_bool)=false;}
   virtual void add(MonBool * monBool);
   virtual void print();
   virtual void write(){};

@@ -1,5 +1,5 @@
 package Gaucho
-version v5r6
+version v6r0
 
 branches Gaucho src cmt doc
 
@@ -26,7 +26,7 @@ library GauchoLib  ../src/lib/*.cpp
 apply_pattern component_library library="Gaucho"
 apply_pattern linker_library library="GauchoLib" 
 
-macro_append  Gaucho_shlibflags ' -lboost_serialization-gcc -lpthread -lrt -lcurses ' WIN32 ' '
-macro_append  GauchoLib_shlibflags ' -lboost_serialization-gcc -lpthread -lrt -lcurses ' WIN32 ' '
+macro_append  Gaucho_shlibflags ' -lboost_serialization-gcc34 -lpthread -lrt -lcurses ' WIN32 ' '
+macro_append  GauchoLib_shlibflags ' -lboost_serialization-gcc34 -lpthread -lrt -lcurses ' WIN32 ' '
 macro_append ROOT_linkopts ' -lHist'
 

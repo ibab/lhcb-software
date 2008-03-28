@@ -5,13 +5,25 @@
 MonProfile::MonProfile(IMessageSvc* msgSvc, const std::string& source, int version):
 MonObject(msgSvc, source, version)
 {
-  m_typeName="MonProfile";
+  m_typeName=s_monProfile;
   m_dimPrefix="MonP1";
   isLoaded = false;
   objectCreated = false;
+  m_profile = 0;
 }
 
 MonProfile::~MonProfile(){
+  MsgStream msgStream = createMsgStream();
+  msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
+  delete binCont;
+  msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
+  delete binErr;
+  msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
+  delete binLabelX;
+  msgStream <<MSG::DEBUG<<"deleting binLabelY" << endreq;
+  delete binLabelY;
+  msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
+  delete m_fSumw2;
 }
 
 void MonProfile::setAidaProfile(AIDA::IProfile1D* iProfile1D){
@@ -40,23 +52,39 @@ void MonProfile::load2(boost::archive::binary_iarchive  & ar){
   ar & nEntries;
   ar & sName;
   ar & sTitle;
+  ar & bBinLabelX;
+  ar & bBinLabelY;
 
-  binCont = new double[(nbinsx+1)];
+  binCont = new double[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binCont[i];
   }
 
-  binErr = new double[(nbinsx+1)];
+  binErr = new double[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binErr[i];
   }
 
-  binEntries = new double[(nbinsx+1)];
+  binEntries = new double[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binEntries[i];
+  }
+
+  if (bBinLabelX){
+    binLabelX = new std::string[(nbinsx+2)];
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      ar & binLabelX[i];
+    }
+  }
+
+  if (bBinLabelY){
+    binLabelY = new std::string[(nbinsy+1)];
+    for (int i = 0; i < (nbinsy+1) ; ++i){
+      ar & binLabelY[i];
+    }
   }
 
   ar & m_fDimension;
@@ -98,17 +126,28 @@ void MonProfile::save3(boost::archive::binary_oarchive  & ar) {
   ar & nEntries;
   ar & sName;
   ar & sTitle; 
+  ar & bBinLabelX;
+  ar & bBinLabelY;
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binCont[i];
   }
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binErr[i];
   }
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binEntries[i];
   }
-
+  if (bBinLabelX){
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      ar & binLabelX[i];
+    }
+  }
+  if (bBinLabelY){
+    for (int i = 0; i < (nbinsy+1) ; ++i){
+      ar & binLabelY[i];
+    }
+  }
   ar & m_fDimension;
   //ar & m_fIntegral;
   ar & m_fMaximum;
@@ -162,19 +201,30 @@ void MonProfile::loadObject(){
   m_profile->Reset();
   FriendOfTProfile * fot = (FriendOfTProfile *)m_profile; 
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     m_profile->SetBinContent(i, binCont[i]);
   }
 
   //SetEntries must be after SetBinContents
   m_profile->SetEntries(nEntries);
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     m_profile->SetBinError(i, binErr[i]);
   }
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     m_profile->SetBinEntries(i, binEntries[i]);
+  }
+
+  if (bBinLabelX){
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      m_profile->GetXaxis()->SetBinLabel(i, binLabelX[i].c_str());
+    } 
+  }
+  if (bBinLabelY){
+    for (int i = 0; i < (nbinsy+1) ; ++i){
+      m_profile->GetYaxis()->SetBinLabel(i, binLabelY[i].c_str());
+    }
   }
 
   fot->fDimension = m_fDimension;
@@ -211,20 +261,50 @@ void MonProfile::splitObject(){
   const char *cTitle  = m_profile->GetTitle();
   sTitle  = std::string(cTitle);
 
-  binCont = new double[(nbinsx+1)];
-  binErr = new double[(nbinsx+1)];
-  binEntries = new double[(nbinsx+1)];
+  binCont = new double[(nbinsx+2)];
+  binErr = new double[(nbinsx+2)];
+  binEntries = new double[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     binCont[i] = ((double) (m_profile->GetBinContent(i))); 
   }
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     binErr[i] = ((double) (m_profile->GetBinError(i))); 
   }
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     binEntries[i] = ((double) (m_profile->GetBinEntries(i))); 
+  }
+
+  bBinLabelX = false;
+  for (int i = 0; i < (nbinsx+2) ; ++i){
+    std::string binLab = m_profile->GetXaxis()->GetBinLabel(i);
+    if (binLab.length() > 0 ){
+      bBinLabelX = true;
+      break;
+    }
+  }
+  if (bBinLabelX){
+    binLabelX = new std::string[(nbinsx+2)];
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      binLabelX[i] = m_profile->GetXaxis()->GetBinLabel(i);
+    }
+  }
+
+  bBinLabelY = false;
+  for (int i = 0; i < (nbinsy+1) ; ++i){
+    std::string binLab = m_profile->GetYaxis()->GetBinLabel(i);
+    if (binLab.length() > 0 ){
+      bBinLabelY = true;
+      break;
+    }
+  }
+  if (bBinLabelY){
+    binLabelY = new std::string[(nbinsy+1)];
+    for (int i = 0; i < (nbinsy+1) ; ++i){
+      binLabelY[i] = m_profile->GetYaxis()->GetBinLabel(i);
+    }
   }
 
   m_fDimension = fot->fDimension;
@@ -245,7 +325,6 @@ void MonProfile::splitObject(){
   }
 
   isLoaded = true;
-
 }
 
 void MonProfile::combine(MonObject * H){
@@ -285,7 +364,7 @@ void MonProfile::combine(MonObject * H){
     return;
   }
 
-  for (int i = 0; i < (nbinsx+1); ++i){
+  for (int i = 0; i < (nbinsx+2); ++i){
     binCont[i] += HH->binCont[i];
     binEntries[i] += HH->binEntries[i];
     binErr[i] = sqrt(pow(binErr[i],2)+pow(HH->binErr[i],2));
@@ -312,22 +391,40 @@ void MonProfile::copyFrom(MonObject * H){
   nEntries = HH->nEntries;
   sTitle = HH->sTitle;
 
-  binCont = new double[(nbinsx+1)];
+  binCont = new double[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     binCont[i] = HH->binCont[i];
   }
 
-  binErr = new double[(nbinsx+1)];
+  binErr = new double[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     binErr[i] = HH->binErr[i];
   }
 
-  binEntries = new double[(nbinsx+1)];
+  binEntries = new double[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     binEntries[i] = HH->binEntries[i];
+  }
+
+  bBinLabelX = HH->bBinLabelX;
+
+  if (bBinLabelX){
+    binLabelX = new std::string[(nbinsx+2)];
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      binLabelX[i] = HH->binLabelX[i];
+    }
+  }
+
+  bBinLabelY = HH->bBinLabelY;
+
+  if (bBinLabelY){
+    binLabelY = new std::string[(nbinsy+1)];
+    for (int i = 0; i < (nbinsy+1) ; ++i){
+      binLabelY[i] = HH->binLabelY[i];
+    }
   }
 
   m_fDimension = HH->m_fDimension;
@@ -358,7 +455,7 @@ void MonProfile::reset(){
     return;
   }
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     binCont[i] = 0;
     binErr[i] = 0; 
     binEntries[i] = 0; 
@@ -383,23 +480,39 @@ void MonProfile::print(){
   msgStream <<MSG::INFO<<"Ymax="<<Ymax<<endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
   msgStream <<MSG::INFO<<"BinContents:"<<endreq;
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     msgStream <<binCont[i]<<" ";
   }
   msgStream << endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
   msgStream <<MSG::INFO<<"BinErrors:"<<endreq;
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     msgStream << binErr[i]<<" ";
   }
   msgStream << endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
   msgStream <<MSG::INFO<<"BinEntries:"<<endreq;
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     msgStream << binEntries[i]<<" ";
   }
   msgStream << endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
+  if (bBinLabelX){
+    msgStream <<MSG::INFO<<"BinLabelsX:"<<endreq;
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      msgStream <<binLabelX[i]<<" ";
+    }
+    msgStream << endreq;
+    msgStream <<MSG::INFO<<"*************************************"<<endreq;
+  }
+  if (bBinLabelY){
+    msgStream <<MSG::INFO<<"BinLabelsY:"<<endreq;
+    for (int i = 0; i < (nbinsy+1) ; ++i){
+      msgStream <<binLabelY[i]<<" ";
+    }
+    msgStream << endreq;
+    msgStream <<MSG::INFO<<"*************************************"<<endreq;
+  }
   msgStream <<MSG::INFO<<"Dimension="<< m_fDimension << endreq;
   //msgStream <<MSG::INFO<<"Integral="<< m_fIntegral << endreq;
   msgStream <<MSG::INFO<<"Maximum="<< m_fMaximum << endreq;

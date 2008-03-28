@@ -5,7 +5,7 @@
 MonH1F::MonH1F(IMessageSvc* msgSvc, const std::string& source, int version):
 MonObject(msgSvc, source, version)
 {
-  m_typeName="MonH1F";
+  m_typeName=s_monH1F;
   m_dimPrefix="MonH1F";
   isLoaded = false;
   objectCreated = false;
@@ -13,6 +13,15 @@ MonObject(msgSvc, source, version)
 }
 
 MonH1F::~MonH1F(){
+  MsgStream msgStream = createMsgStream();
+  msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
+  delete binCont;
+  msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
+  delete binErr;
+  msgStream <<MSG::DEBUG<<"deleting binLabel" << endreq;
+  delete binLabel;
+  msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
+  delete m_fSumw2;
 }
 
 void MonH1F::setAidaHisto(AIDA::IHistogram1D* iHistogram1D){
@@ -39,17 +48,26 @@ void MonH1F::load2(boost::archive::binary_iarchive  & ar){
   ar & nEntries;
   ar & sName;
   ar & sTitle;
+  ar & bBinLabel;
 
-  binCont = new float[(nbinsx+1)];
+  binCont = new float[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binCont[i];
   }
 
-  binErr = new float[(nbinsx+1)];
+  binErr = new float[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binErr[i];
+  }
+
+  if (bBinLabel){
+    binLabel = new std::string[(nbinsx+2)];
+
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      ar & binLabel[i];
+    }
   }
 
   ar & m_fDimension;
@@ -84,12 +102,18 @@ void MonH1F::save3(boost::archive::binary_oarchive  & ar){
   ar & nEntries;
   ar & sName;
   ar & sTitle;
+  ar & bBinLabel;
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binCont[i];
   }
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binErr[i];
+  }
+  if (bBinLabel){
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      ar & binLabel[i];
+    }
   }
 
   ar & m_fDimension;
@@ -142,14 +166,20 @@ void MonH1F::loadObject(){
   m_hist->Reset();
   FriendOfTH1F * fot = (FriendOfTH1F *)m_hist; 
   
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     m_hist->SetBinContent(i, binCont[i]);
   }
   
   m_hist->SetEntries(nEntries);
-  
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     m_hist->SetBinError(i, binErr[i]);
+  }
+
+  if (bBinLabel){
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      m_hist->GetXaxis()->SetBinLabel(i, binLabel[i].c_str());
+    } 
   }
 
   fot->fDimension = m_fDimension;
@@ -182,15 +212,31 @@ void MonH1F::splitObject(){
   const char *cTitle  = m_hist->GetTitle();
   sTitle  = std::string(cTitle);
 
-  binCont = new float[(nbinsx+1)];
-  binErr = new float[(nbinsx+1)];
-  
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  binCont = new float[(nbinsx+2)];
+  binErr = new float[(nbinsx+2)];
+
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     binCont[i] = ((float) (m_hist->GetBinContent(i))); 
   }
-    
-  for (int i = 0; i < (nbinsx+1) ; ++i){
-    binErr[i] = ((float) (m_hist->GetBinError(i))); 
+
+  for (int i = 0; i < (nbinsx+2) ; ++i){
+    binErr[i] = ((float) (m_hist->GetBinError(i)));
+  }
+
+  bBinLabel = false;
+  for (int i = 0; i < (nbinsx+2) ; ++i){
+    std::string binLab = m_hist->GetXaxis()->GetBinLabel(i);
+    if (binLab.length() > 0 ){
+      bBinLabel = true;
+      break;
+    }
+  }
+
+  if (bBinLabel){
+    binLabel = new std::string[(nbinsx+2)];
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      binLabel[i] = m_hist->GetXaxis()->GetBinLabel(i);
+    }
   }
 
   m_fDimension = fot->fDimension;
@@ -242,12 +288,23 @@ void MonH1F::combine(MonObject * H){
     return;
   }
 
-  for (int i = 0; i < (nbinsx+1); ++i){
+  for (int i = 0; i < (nbinsx+2); ++i){
     binCont[i] += HH->binCont[i];
     binErr[i] = sqrt(pow(binErr[i],2)+pow(HH->binErr[i],2));
   }
 
   nEntries += HH->nEntries;
+
+  m_fTsumw += HH->m_fTsumw;
+  m_fTsumw2 += HH->m_fTsumw2;
+  m_fTsumwx += HH->m_fTsumwx;
+  m_fTsumwx2 += HH->m_fTsumwx2;
+  
+  if (m_fSumSize == HH->m_fSumSize){
+    for (int i=0 ; i < m_fSumSize; ++i) {
+      m_fSumw2[i] += HH->m_fSumw2[i];
+    }
+  }
 }
 
 void MonH1F::copyFrom(MonObject * H){
@@ -268,16 +325,25 @@ void MonH1F::copyFrom(MonObject * H){
   nEntries = HH->nEntries;
   sTitle = HH->sTitle;
 
-  binCont = new float[(nbinsx+1)];
+  binCont = new float[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     binCont[i] = HH->binCont[i];
   }
 
-  binErr = new float[(nbinsx+1)];
+  binErr = new float[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     binErr[i] = HH->binErr[i];
+  }
+
+  bBinLabel = HH->bBinLabel;
+
+  if (bBinLabel){
+    binLabel = new std::string[(nbinsx+2)];
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      binLabel[i] = HH->binLabel[i];
+    }
   }
 
   m_fDimension = HH->m_fDimension;
@@ -305,7 +371,7 @@ void MonH1F::reset(){
     return;
   }
 
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     binCont[i] = 0;
     binErr[i] = 0; 
   }
@@ -327,17 +393,25 @@ void MonH1F::print(){
   msgStream <<MSG::INFO<<"Xmax="<<Xmax<<endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
   msgStream <<MSG::INFO<<"BinContents:"<<endreq;
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     msgStream <<binCont[i]<<" ";
   }
   msgStream << endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
   msgStream <<MSG::INFO<<"BinErrors:"<<endreq;
-  for (int i = 0; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     msgStream <<binErr[i]<<" ";
   }
   msgStream << endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
+  if (bBinLabel){
+    msgStream <<MSG::INFO<<"BinLabels:"<<endreq;
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      msgStream <<binLabel[i]<<" ";
+    }
+    msgStream << endreq;
+    msgStream <<MSG::INFO<<"*************************************"<<endreq;
+  }
   msgStream <<MSG::INFO<<"Dimension="<< m_fDimension << endreq;
   //msgStream << MSG::INFO<<"Integral="<< m_fIntegral << endreq;
   msgStream <<MSG::INFO<<"Maximum="<< m_fMaximum << endreq;

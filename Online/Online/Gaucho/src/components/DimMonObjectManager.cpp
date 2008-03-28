@@ -14,6 +14,7 @@
 #include "Gaucho/MonDouble.h"
 #include "Gaucho/MonPairDD.h"
 #include "Gaucho/MonPairII.h"
+#include "Gaucho/MonPairDI.h"
 #include "Gaucho/MonProfile.h"
 #include "Gaucho/MonHitMap2D.h"
 #include "Gaucho/MonStatEntity.h"
@@ -23,7 +24,7 @@
 DimMonObjectManager::DimMonObjectManager(IMessageSvc* msgSvc, const std::string& source)
 {
   m_msgSvc=msgSvc;
-  m_name="DimMOManager";
+  m_name="DimMonObjectManager";
   m_source=source;
   int outputLevel = m_msgSvc->outputLevel(m_source);
   m_msgSvc->setOutputLevel(m_name, outputLevel); 
@@ -50,36 +51,27 @@ void DimMonObjectManager::dimWait(){
   dim_wait();
 }
 
-void DimMonObjectManager::msg(std::string msg, std::string name, int msgLevel){
-    if (0==m_msgSvc) {
-      std::cout << msg << std::endl;
-    }
-    else{
-      MsgStream msgStream(m_msgSvc, name);
-      msgStream << msgLevel << msg << endreq;
-    }
-}
-
 MonObject* DimMonObjectManager::createMonObject(std::string  monObjectTypeName){
   MonObject* monObject=0;
-  if (monObjectTypeName == "MonObject") monObject = new MonObject(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonH1F") monObject = new MonH1F(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonH1D") monObject = new MonH1D(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonH2F") monObject = new MonH2F(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonH2D") monObject = new MonH2D(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonProfile") monObject = new MonProfile(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonInt") monObject = new MonInt(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonDouble") monObject = new MonDouble(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonFloat") monObject = new MonFloat(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonString") monObject = new MonString(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonLong") monObject = new MonLong(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonBool") monObject = new MonBool(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonPairDD") monObject = new MonPairDD(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonPairII") monObject = new MonPairII(m_msgSvc, m_source);
-//  if (monObjectTypeName == "MonHitMap2D") monObject = new MonHitMap2D(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonStatEntity") monObject = new MonStatEntity(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonVectorI") monObject = new MonVectorI(m_msgSvc, m_source);
-  if (monObjectTypeName == "MonVectorD") monObject = new MonVectorD(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monObject) monObject = new MonObject(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monH1F) monObject = new MonH1F(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monH1D) monObject = new MonH1D(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monH2F) monObject = new MonH2F(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monH2D) monObject = new MonH2D(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monProfile) monObject = new MonProfile(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monInt) monObject = new MonInt(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monDouble) monObject = new MonDouble(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monFloat) monObject = new MonFloat(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monString) monObject = new MonString(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monLong) monObject = new MonLong(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monBool) monObject = new MonBool(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monPairDD) monObject = new MonPairDD(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monPairII) monObject = new MonPairII(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monPairDI) monObject = new MonPairDI(m_msgSvc, m_source);
+  //  if (monObjectTypeName == s_monHitMap2D) monObject = new MonHitMap2D(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monStatEntity) monObject = new MonStatEntity(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monVectorI) monObject = new MonVectorI(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monVectorD) monObject = new MonVectorD(m_msgSvc, m_source);
   return monObject;
 }
 
@@ -115,6 +107,7 @@ void DimMonObjectManager::saveMonObject(char* c, int& size, MonObject *monObject
 //MonitorSvc
 void DimMonObjectManager::declServiceMonObject(std::string infoName, const MonObject* monObject){
 
+  MsgStream mes(m_msgSvc, m_name);
   std::string typeName = monObject->typeName();
   std::string dimPrefix = monObject->dimPrefix();
 
@@ -133,19 +126,20 @@ void DimMonObjectManager::declServiceMonObject(std::string infoName, const MonOb
     // int size = monObjectSize(monObjectAux);
     m_dimMonObjects[infoName]=new DimServiceMonObject(this, dimSvcName, monObjectAux, size);
 
-    msg("New DimMonObject: " + dimSvcName, m_name, MSG::INFO);
+    mes << MSG::DEBUG << "New DimMonObject: " + dimSvcName << endreq;
 
   }
   else {
-    msg("Already exist DimMonObject: " + dimSvcName, m_name, MSG::ERROR);
+    mes << MSG::ERROR << "Already existing DimMonObject: " + dimSvcName << endreq;
   }
 }
 
 //MonitorSvc
 void DimMonObjectManager::undeclServiceMonObject(std::string infoName){
 
+  MsgStream mes(m_msgSvc, m_name);
   for (m_dimMonObjectsIt = m_dimMonObjects.begin(); m_dimMonObjectsIt != m_dimMonObjects.end(); m_dimMonObjectsIt++)
-    msg((*m_dimMonObjectsIt).first, m_name, MSG::DEBUG);
+    mes << MSG::DEBUG << (*m_dimMonObjectsIt).first << endreq;
 
   m_dimMonObjectsIt = m_dimMonObjects.find(infoName);  
 
@@ -153,25 +147,26 @@ void DimMonObjectManager::undeclServiceMonObject(std::string infoName){
     (*m_dimMonObjectsIt).second->deleteMonObject();
     delete (*m_dimMonObjectsIt).second;
     m_dimMonObjects.erase(m_dimMonObjectsIt);
-    msg("undeclSvc: Service " + infoName + " undeclared", m_name, MSG::INFO);
+    mes << MSG::DEBUG << "undeclSvc: Service " + infoName + " undeclared" << endreq;
     return;
   }
 
-  msg("undeclSvc: No DimServiceMonObject found with the name:" + infoName, m_name, MSG::ERROR);
+  mes << MSG::ERROR << "undeclSvc: No DimServiceMonObject found with the name:" + infoName << endreq;
 
 }
 
 //MonitorSvc
 void DimMonObjectManager::updateServiceMonObject(std::string infoName, bool endOfRun){
-  for (m_dimMonObjectsIt = m_dimMonObjects.begin(); m_dimMonObjectsIt != m_dimMonObjects.end(); m_dimMonObjectsIt++)
-    msg((*m_dimMonObjectsIt).first, m_name, MSG::DEBUG);
+  MsgStream mes(m_msgSvc, m_name);
+  //for (m_dimMonObjectsIt = m_dimMonObjects.begin(); m_dimMonObjectsIt != m_dimMonObjects.end(); m_dimMonObjectsIt++)
+  //  mes << MSG::DEBUG << (*m_dimMonObjectsIt).first << endreq;
   m_dimMonObjectsIt = m_dimMonObjects.find(infoName);  
   if(m_dimMonObjectsIt != m_dimMonObjects.end()) {
     (*m_dimMonObjectsIt).second->updateService(endOfRun);
-    msg("updateSvc: Service " + infoName + " updated", m_name, MSG::INFO);
+    mes << MSG::DEBUG << "updateSvc: Service " + infoName + " updated" << endreq;
     return;
   }
-  msg("updateSvc: No DimServiceMonObject found with the name:" + infoName, m_name, MSG::WARNING);
+  mes << MSG::WARNING << "updateSvc: No DimServiceMonObject found with the name:" + infoName << endreq;
 }
 
 //Saver
@@ -186,11 +181,9 @@ void DimMonObjectManager::saverCreateDimNames(std::string nodeName, std::vector<
 
   for (int j=0; j<= (int)objectName.size()-1;j++) {
     //Ex--> MON/node00101_Test_1/GaudiExample/ExMonH1D
-//    std::string svcName = "*/" + nodeName+"*"+taskName[j] +"*"+algorithmName[j]+"/"+objectName[j];
-    std::string svcName = "*/" + nodeName+"*"+taskName[j] +"*"+"/"+objectName[j];
+    std::string svcName = "*/" + nodeName+"*"+taskName[j] +"*"+algorithmName[j]+"/"+objectName[j];
 
-    msg("svcName=" + svcName, m_name, MSG::INFO);
-
+    mes << MSG::INFO << "svcName=" + svcName  << endreq;
     m_dimBrowser->getServices(svcName.c_str());
 
     char *service;
@@ -205,7 +198,7 @@ void DimMonObjectManager::saverCreateDimNames(std::string nodeName, std::vector<
       while (type = m_dimBrowser->getNextService(service, format))
       {
         std::string  serviceStr = service;//Ex--> MON/node00101_Test_1/GaudiExample/ExMonH1D
-        msg("Service found: " + serviceStr, m_name, MSG::INFO);
+        mes << MSG::INFO << "Service found: " + serviceStr << endreq;
         dimInfoNamesVect1.push_back(serviceStr);
         count++;
       } 
@@ -218,49 +211,37 @@ void DimMonObjectManager::saverCreateDimNames(std::string nodeName, std::vector<
     /************************************************/
   }
   // print for test
-/*  std::cout << "PRINTING DIM NAMES : " << std::endl;
-  for (int k = 0; k < (int) m_dimInfoNamesVect2.size(); k++) {
-    for (int j = 0; j < (int) m_dimInfoNamesVect2[k].size(); j++) {
-      std::cout << "Info : " << m_dimInfoNamesVect2[k][j] << std::endl;
+  if(m_msgSvc->outputLevel(m_name) >= MSG::DEBUG){
+    mes << MSG::DEBUG << "PRINTING DIM NAMES : " << endreq;
+    for (int k = 0; k < (int) m_dimInfoNamesVect2.size(); k++) {
+      for (int j = 0; j < (int) m_dimInfoNamesVect2[k].size(); j++) {
+        mes << MSG::DEBUG << "	Info : " << m_dimInfoNamesVect2[k][j] << endreq;
+      }
     }
-  }*/
+  }
 }
 
 //Saver
 void DimMonObjectManager::saverCreateMonObjects(int refreshTime) {
   MsgStream mes(m_msgSvc, m_name);
-  mes << MSG::ERROR <<"A." << endreq;
-         if (0==m_msgSvc) {
-           mes.activate();
-           mes.doOutput();
-         }
   for (int k = 0; k < (int) m_dimInfoNamesVect2.size(); k++) {
-    mes << MSG::ERROR <<"B." << endreq;
     std::vector<MonObject*> tmpMonObjectVect1;
     for (int i = 0; i < (int) m_dimInfoNamesVect2[k].size(); i++) {
-      
-      mes << MSG::ERROR <<"C." << endreq;
       DimInfoMonObject* tmpDimInfoMonObject = new DimInfoMonObject(this, m_dimInfoNamesVect2[k][i], refreshTime);
-      
-      mes << MSG::ERROR <<"D." << endreq;
 
       MonObject *tmpMonObject;
       int ntries=0;
-
-      mes << MSG::ERROR <<"E." << endreq;
-
       while (1)
       {
-        mes << MSG::ERROR <<"F." << endreq;
-
         if (tmpDimInfoMonObject->monObject() != 0){
-          mes << MSG::ERROR <<"F." << endreq;
-          tmpMonObject->copyFrom(tmpDimInfoMonObject->monObject());
+          //tmpMonObject = tmpDimInfoMonObject->monObject();
+          tmpMonObject = createMonObject(tmpDimInfoMonObject->monObject()->typeName());
+	  tmpMonObject->copyFrom(tmpDimInfoMonObject->monObject());
           break;
         }
         ntries++;
 
-        mes << MSG::ERROR <<"No MonObject found after " << ntries << " attempts." << endreq;
+        mes << MSG::WARNING <<"No MonObject found after " << ntries << " attempts." << endreq;
          if (0==m_msgSvc) {
            mes.activate();
            mes.doOutput();
@@ -269,14 +250,10 @@ void DimMonObjectManager::saverCreateMonObjects(int refreshTime) {
         if(ntries==10) break;
         lib_rtl_sleep(500); 
       }
-      mes << MSG::ERROR <<"G." << endreq;
-
       tmpMonObjectVect1.push_back(tmpMonObject);
-        mes << MSG::ERROR <<"Antes de Deletar." << endreq;
+
       tmpDimInfoMonObject->deleteMonObject();
-        mes << MSG::ERROR <<"Meio de Deletar." << endreq;
       delete tmpDimInfoMonObject;
-        mes << MSG::ERROR <<"Depois de Deletar." << endreq;
     }
     m_monObjectVect2.push_back(tmpMonObjectVect1);
   }
@@ -302,99 +279,127 @@ void DimMonObjectManager::saverDeleteMonObjects(){
 }
 
 // Adder
-int DimMonObjectManager::serviceParts(std::string serviceStr, std::string &svctype, std::string &task, std::string &utgid, std::string &algo, std::string &object){
-
+int DimMonObjectManager::serviceParts(std::string serviceStr, std::string &svctype, std::string &task,                                          std::string &utgid, std::string &algo, std::string &object){
   std::string::size_type first = serviceStr.find("/");
   std::string::size_type second = serviceStr.find("/",first+1);
   std::string::size_type third = serviceStr.find("/",second+1);
   std::string::size_type first_us = serviceStr.find("_",first+1);
   std::string::size_type second_us = serviceStr.find("_",first_us+1);
-  
+
   if (first == std::string::npos) return 0;
-  if ((second <= first)||(third <= second )||(first_us == std::string::npos)||(second_us == std::string::npos)) return -1;
-  
-  svctype  = serviceStr.substr(0, first_us - 1);
-  task  = serviceStr.substr(first_us + 1, second_us - first_us - 1);
-  utgid  = serviceStr.substr(first_us, second_us - first_us);
-  algo  = serviceStr.substr(second + 1, third - second - 1);
-  object = serviceStr.substr(third + 1);
+  if ((first_us == std::string::npos)||(second_us == std::string::npos)) return -1;
+
+  svctype = serviceStr.substr(0, first);
+  task    = serviceStr.substr(first_us + 1, second_us - first_us - 1);
+  if (second <= first)  return - 1;
+
+  utgid   = serviceStr.substr(first + 1, second - first - 1);
+  if (third <= second) return - 1;
+
+  algo    = serviceStr.substr(second + 1, third - second - 1);
+  object  = serviceStr.substr(third + 1);
+
   return 1;
 }
 
 // Adder
-int DimMonObjectManager::adderCreateDimNames(std::string nodeName, std::vector<std::string> taskName, std::vector<std::string> algorithmName, std::vector<std::string> objectName, std::string serverName){
-  
-  MsgStream msgStream(m_msgSvc, m_name);
-  //this function returns the number of objects to be added that were found
-  //evh question: should we put the histogram prefix here MonH* instead of *
-  std::string svcName = "*/" + nodeName + "*";
-  m_dimBrowser->getServices(svcName.c_str());
-  
+int DimMonObjectManager::adderCreateDimNames(std::vector<std::string> nodeNames,
+                                              std::vector<std::string> taskName, 
+                                              std::vector<std::string> algorithmName,
+                                              std::vector<std::string> objectName, 
+                                              std::string serverName){
+  MsgStream mes(m_msgSvc, m_name);
+
   char *service;
   char *format;
   int type;
-  
+
   std::vector<std::string> svcFoundVect1;
   std::vector<std::string> objectUniqueVect1; 
   std::vector<std::string> objectFoundVect1; 
   std::vector<std::string> algoFoundVect1; 
   std::vector<std::string> taskFoundVect1; 
   std::vector<std::string> svctypeFoundVect1; 
-  
-  while (type = m_dimBrowser->getNextService(service, format))
-  {
-    std::string serviceStr = service; //Ex--> MON/node00101_Test_1/GaudiExample/ExMonH1D
-    
-    if (serviceStr.find(nodeName+"_Adder_",0) != std::string::npos ) continue;
-   
-    std::string svctype;
-    std::string task;
-    std::string utgid;
-    std::string algo;
-    std::string object;
-    
-    int matchRes = DimMonObjectManager::serviceParts(serviceStr, svctype, task, utgid, algo, object);
-    
-    if (matchRes <= 0){ 
-      if (matchRes < 0)
-        msg("Service: " + serviceStr + " doesn't match whit MON/node_task_x/algoritm/histo and. Ignoring.", m_name, MSG::ERROR);
-      continue;
-    }
-    
-    for (int i = 0;i < (int) objectName.size(); i++) {//Ex --> ExMonH1D* or ExMonH1D
-    
-      if (task != taskName[i]) continue;
-      if (algo != algorithmName[i]) continue;
-    
-      std::string::size_type foundStar = objectName[i].find("*", 0);
-    
-      if (foundStar == std::string::npos ) { // No wildcard, then histo must be equal to m_histogramname[i] ? ask Eric
-        if (objectName[i] != object) continue;
-      }
-      else { // Wildcard, it works only when * is at the end of objectName[i]
-        std::string::size_type objectfound = object.find(objectName[i].substr(0, foundStar));
-        if (objectfound == std::string::npos) continue;
-      }
+
+  for(int iNode=0; iNode!=(int)nodeNames.size();++iNode){  
+    std::string svcName = "*/" + nodeNames[iNode] + "*";
+    m_dimBrowser->getServices(svcName.c_str());
+    while (type = m_dimBrowser->getNextService(service, format))
+    {
+      std::string serviceStr = service; //Ex--> MON/node00101_Test_1/GaudiExample/ExMonH1D
+
+      mes << MSG::DEBUG << "iNode : " << iNode << " nodename: " << nodeNames[iNode] 
+          << " serviceStr : " << serviceStr << endreq;
+
+      if (serviceStr.find(nodeNames[iNode]+"_Adder_",0) != std::string::npos ) continue;
+
+      std::string svctype;
+      std::string task;
+      std::string utgid;
+      std::string algo;
+      std::string object;
       
-      objectFoundVect1.push_back(object);
-      algoFoundVect1.push_back(algo);
-      taskFoundVect1.push_back(task); 
-      svctypeFoundVect1.push_back(svctype); 
-      svcFoundVect1.push_back(serviceStr);
-    
-      // After that, there are breaks. ask Eric if one service belong to only one histo. If not, break must be changed to continue
-      bool unique = true;
-      for (int k = 0; k < (int) objectUniqueVect1.size(); k++){
-        if (object == objectUniqueVect1[k]){
-          unique = false;
-          break; 
-        }
+      int matchRes = DimMonObjectManager::serviceParts(serviceStr, svctype, task, utgid, algo, object);
+
+      mes << MSG::DEBUG << "	svctype    : " << svctype << endreq;
+      mes << MSG::DEBUG << "	task       : " << task << endreq;
+      mes << MSG::DEBUG << "	utgid      : " << utgid << endreq;
+      mes << MSG::DEBUG << "	algo       : " << algo << endreq;
+      mes << MSG::DEBUG << "	object     : " << object << endreq;
+
+      if (matchRes <= 0){ 
+        if (matchRes < 0)
+          mes << MSG::ERROR << "Service: " + serviceStr + " doesn't match whit MON/node_task_x/algoritm/histo and. Ignoring." 
+              << endreq;
+        continue;
       }
-      if (unique) objectUniqueVect1.push_back(object);
-      break; 
+
+      for (int i = 0;i < (int) objectName.size(); i++) {//Ex --> ExMonH1D* or ExMonH1D
+        mes << MSG::DEBUG << "	adderCreateDimNames: objectName " << i << " Request " + taskName[i] + " " +  algorithmName[i] + " " + objectName[i] + " " + serverName << endreq;
+
+        if (task != taskName[i]) continue;
+        
+        if ("" != algo) {
+          if (algo != algorithmName[i]) continue;
+        }
+        
+        std::string::size_type foundStar = objectName[i].find("*", 0);
+        if (foundStar == std::string::npos ) { // No wildcard, then histo must be equal to m_histogramname[i] ? ask Eric
+          if (objectName[i] != object) {
+            mes << MSG::DEBUG  << "              Don't find object " << objectName[i] << " in " << object << endreq;
+            continue;
+          }
+        }
+        else { // Wildcard, it works only when * is at the end of objectName[i]
+          std::string::size_type objectfound = object.find(objectName[i].substr(0, foundStar));
+          if (objectfound == std::string::npos) {
+            mes << MSG::DEBUG  << "		Don't find object " << objectName[i].substr(0, foundStar) << " in " << object << endreq;
+            continue;
+          }
+        }
+        
+        mes << MSG::DEBUG  << "		objectFoundVect1: Adding object " + object << endreq;
+        objectFoundVect1.push_back(object);
+        algoFoundVect1.push_back(algo);
+        taskFoundVect1.push_back(task); 
+        svctypeFoundVect1.push_back(svctype); 
+        svcFoundVect1.push_back(serviceStr);
+        
+        // After that, there are breaks. ask Eric if one service belong to only one histo. 
+        // If not, break must be changed to continue
+        bool unique = true;
+        for (int k = 0; k < (int) objectUniqueVect1.size(); k++){
+          if (object == objectUniqueVect1[k]){
+            unique = false;
+            break; 
+          }
+        }
+        if (unique) objectUniqueVect1.push_back(object);
+        break; 
+      }
     }
+    //mes << MSG::DEBUG << "objectUniqueVect1[" << k << "] = " << objectUniqueVect1[k] << endreq;
   }
-  
   
   //creating DimInfoNames and DimServiceNamesAdder Arrays
   for (int k = 0; k < (int) objectUniqueVect1.size(); k++) {
@@ -407,32 +412,48 @@ int DimMonObjectManager::adderCreateDimNames(std::string nodeName, std::vector<s
       svctype = svctypeFoundVect1[i];
       task = taskFoundVect1[i];
       algo = algoFoundVect1[i];
-      dimInfoNamesVect1.push_back(svcFoundVect1[i]);
+      // Add only if new (unique)
+      bool unique = true;
+      for(unsigned int j=0; j!=dimInfoNamesVect1.size(); j++){
+        if(dimInfoNamesVect1[j]==svcFoundVect1[i]) {
+          unique = false;
+          break;
+        }          
+      }
+      if (unique)dimInfoNamesVect1.push_back(svcFoundVect1[i]);    
     }
-    std::string dimSvcNameAdder = svctype + "/" + serverName + "_Adder_1/" + task + "/" + algo + "/" + objectUniqueVect1[k];
-    
+    std::string dimSvcNameAdder = svctype + "/" + serverName + "_Adder_1/" + task + "/";
+
+    if (("MonH1F"==svctype)||("MonH2F"==svctype)||("MonH1D"==svctype)||("MonH2D"==svctype)||("MonP1"==svctype))
+      dimSvcNameAdder = dimSvcNameAdder + algo + "/" + objectUniqueVect1[k];
+    else
+      dimSvcNameAdder = dimSvcNameAdder + objectUniqueVect1[k];
+
     /************************************************/
     m_dimInfoNamesVect2.push_back(dimInfoNamesVect1);
     m_dimSvcNamesAdderVect1.push_back(dimSvcNameAdder);
     /************************************************/
+    mes << MSG::DEBUG << "Added " << dimSvcNameAdder << " to m_dimSvcNamesAdderVect1" << endreq;
   }
   
-  // print for test
-  // std::cout << "PRINTING DIM NAMES : " << std::endl;
-  // for (int k = 0; k < (int) m_dimInfoNamesVect2.size(); k++) {
-  //   for (int j = 0; j < (int) m_dimInfoNamesVect2[k].size(); j++) {
-  //     std::cout << "Info : " << m_dimInfoNamesVect2[k][j] << std::endl;
-  //   }
-  // }
-  // for (int k = 0; k < (int) m_dimSvcNamesAdderVect1.size(); k++) {
-  //   std::cout << "Service : " << m_dimSvcNamesAdderVect1[k] << std::endl;
-  // }
-  return (int)objectFoundVect1.size();
+  //print for test
+  mes << MSG::DEBUG << endreq;
+  mes << MSG::DEBUG  << "PRINTING DIM NAMES : " << endreq;
+  for (int k = 0; k < (int) m_dimInfoNamesVect2.size(); k++) {
+    for (int j = 0; j < (int) m_dimInfoNamesVect2[k].size(); j++) {
+      mes << MSG::DEBUG << "\tInfo :    " << m_dimInfoNamesVect2[k][j] << endreq;
+    }
+  }
+  for (int k = 0; k < (int) m_dimSvcNamesAdderVect1.size(); k++) {
+    mes << MSG::DEBUG << "\tService : " << m_dimSvcNamesAdderVect1[k] << endreq;
+  }
+
+  return m_dimSvcNamesAdderVect1.size();
 }
 
 // Adder
-void DimMonObjectManager::adderCreateDimMonObjects(std::string procName, int refreshTime){
-  
+int DimMonObjectManager::adderCreateDimMonObjects(std::string procName, int refreshTime){
+  int contAddersOk = 0;
   MsgStream msgStream(m_msgSvc, m_name);
   //update the DNS only once, when all new DimServices have been made
   DimServer::autoStartOff();
@@ -465,6 +486,14 @@ void DimMonObjectManager::adderCreateDimMonObjects(std::string procName, int ref
       if(ntries==10) break;
       lib_rtl_sleep(500); 
     }
+    
+    if (ntries==10) {
+      MsgStream mes(m_msgSvc, m_name);
+      mes << MSG::ERROR <<"After " << ntries << " attempts we didn't find the Service:"<<m_dimInfoNamesVect2[k][0]<< ". It might to be crashed." << endreq;
+      continue;
+    }
+
+    contAddersOk ++ ;
 
     std::string monObjectTypeName = monObjectTest->typeName();
 
@@ -482,6 +511,7 @@ void DimMonObjectManager::adderCreateDimMonObjects(std::string procName, int ref
   }
 
   DimServer::start(procName.c_str());
+  return contAddersOk;
 }
 
 // Adder
@@ -520,7 +550,7 @@ TH1* DimMonObjectManager::presenterInitHistogram(DimInfoMonObject* dimInfoMonObj
   TString histoRootName;
   TString histoRootTitle;
 
-  if (monObjectTypeName == "MonH1F"){
+  if (monObjectTypeName == s_monH1F){
     MonH1F* monTH1F = (MonH1F*) dimInfoMonObject->monObject();
     histoRootName = TString(Form("%s__instance__%i", monTH1F->histName().c_str(), localInstance));
     histoRootTitle = TString(Form("%s", monTH1F->histTitle().c_str()));
@@ -528,7 +558,7 @@ TH1* DimMonObjectManager::presenterInitHistogram(DimInfoMonObject* dimInfoMonObj
     monTH1F->hist()->SetTitle(histoRootTitle);
     return monTH1F->hist();
   }
-  if (monObjectTypeName == "MonH2F"){
+  if (monObjectTypeName == s_monH2F){
     MonH2F* monTH2F = (MonH2F*) dimInfoMonObject->monObject();
     histoRootName = TString(Form("%s__instance__%i", monTH2F->histName().c_str(), localInstance));
     histoRootTitle = TString(Form("%s", monTH2F->histTitle().c_str()));
@@ -536,7 +566,7 @@ TH1* DimMonObjectManager::presenterInitHistogram(DimInfoMonObject* dimInfoMonObj
     monTH2F->hist()->SetTitle(histoRootTitle);
     return monTH2F->hist();
   }
-  if (monObjectTypeName == "MonH1D"){
+  if (monObjectTypeName == s_monH1D){
     MonH1D* monTH1D = (MonH1D*) dimInfoMonObject->monObject();
     histoRootName = TString(Form("%s__instance__%i", monTH1D->histName().c_str(), localInstance));
     histoRootTitle = TString(Form("%s", monTH1D->histTitle().c_str()));
@@ -544,7 +574,7 @@ TH1* DimMonObjectManager::presenterInitHistogram(DimInfoMonObject* dimInfoMonObj
     monTH1D->hist()->SetTitle(histoRootTitle);
     return monTH1D->hist();
   }
-  if (monObjectTypeName == "MonH2D"){
+  if (monObjectTypeName == s_monH2D){
     MonH2D* monTH2D = (MonH2D*) dimInfoMonObject->monObject();
     histoRootName = TString(Form("%s__instance__%i", monTH2D->histName().c_str(), localInstance));
     histoRootTitle = TString(Form("%s", monTH2D->histTitle().c_str()));
@@ -555,30 +585,32 @@ TH1* DimMonObjectManager::presenterInitHistogram(DimInfoMonObject* dimInfoMonObj
   return 0;
 }
 
+// Presenter 
 void DimMonObjectManager::presenterFillHistogram(DimInfoMonObject* dimInfoMonObject){
        
   dimInfoMonObject->loadMonObject();
   
   std::string  monObjectTypeName = dimInfoMonObject->monObject()->typeName();
   
-  if (monObjectTypeName == "MonH1F"){
+  if (monObjectTypeName == s_monH1F){
     MonH1F* monTH1F = (MonH1F*) dimInfoMonObject->monObject();
     monTH1F->loadObject();
   }
-  if (monObjectTypeName == "MonH2F"){
+  if (monObjectTypeName == s_monH2F){
     MonH2F* monTH2F = (MonH2F*) dimInfoMonObject->monObject();
     monTH2F->loadObject();
   }
-  if (monObjectTypeName == "MonH1D"){
+  if (monObjectTypeName == s_monH1D){
     MonH1D* monTH1D = (MonH1D*) dimInfoMonObject->monObject();
     monTH1D->loadObject();
   }
-  if (monObjectTypeName == "MonH2D"){
+  if (monObjectTypeName == s_monH2D){
     MonH2D* monTH2D = (MonH2D*) dimInfoMonObject->monObject();
     monTH2D->loadObject();
   }
 }
 
+// Presenter 
 int DimMonObjectManager::presenterGetDimMonObjectSvcList(std::vector<std::string> &dimMonObjectServicesList)
 {
   char* dimDnsServerNode;
@@ -628,11 +660,47 @@ int DimMonObjectManager::presenterGetDimMonObjectSvcList(std::vector<std::string
     if (!dimServerName.BeginsWith("DIS_DNS")) {
       while(dimType = m_dimBrowser->getNextServerService(dimService, dimFormat)) {
         if (TString(dimService).BeginsWith("Mon")) {
+          mes << MSG::DEBUG << "presenterGetDimMonObjectSvcList: Adding dimService " << dimService 
+              << " from server " << dimServerName << " to list" << endreq;
           dimMonObjectServicesList.push_back(std::string(dimService));
         }
       }
     }
-        }
+  }
   return nDimServers;
 }
 
+//MonObjectTextPrinter 
+MonObject *DimMonObjectManager::monObjectTextPrinterGetMonObject(int refreshTime, std::string svcName) {
+  MsgStream mes(m_msgSvc, m_name);
+  if (0==m_msgSvc) {
+     mes.activate();
+     mes.doOutput();
+  }
+  DimInfoMonObject* tmpDimInfoMonObject = new DimInfoMonObject(this, svcName, refreshTime);
+  MonObject *tmpMonObject=0;
+  int ntries=0;
+  while (1)
+  {
+    if (tmpDimInfoMonObject->monObject() != 0){
+      tmpMonObject = createMonObject(tmpDimInfoMonObject->monObject()->typeName());
+      tmpMonObject->copyFrom(tmpDimInfoMonObject->monObject());
+      tmpMonObject->print();
+      break;
+    }
+    ntries++;
+
+    mes << MSG::WARNING <<"No MonObject found after " << ntries << " attempts." << endreq;
+    if (0==m_msgSvc) {
+      mes.activate();
+      mes.doOutput();
+    }
+    if(ntries==10) break;
+    lib_rtl_sleep(500); 
+  }
+  mes << MSG::DEBUG <<"Deleting MonObjects." << endreq; 
+  tmpDimInfoMonObject->deleteMonObject();
+  mes << MSG::DEBUG <<"Deleting DimInfo." << endreq; 
+  delete tmpDimInfoMonObject;
+  return tmpMonObject;
+}

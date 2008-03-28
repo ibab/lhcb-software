@@ -6,8 +6,7 @@
 class MonInt: public MonObject {
 
 protected:
-  int m_int;
-
+  int *m_int;
 public:
   BOOST_SERIALIZATION_SPLIT_MEMBER()
 
@@ -17,12 +16,12 @@ public:
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
   virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
 
-  void setValue(int i){m_int = i;}
-  int value(){return m_int;}
+  void setValue(const int& i){m_int = const_cast<int *>(&i);}
+  int value(){return (*m_int);}
 
   virtual void combine(MonObject * monInt);  
   virtual void copyFrom(MonObject* monInt);  
-  virtual void reset(){m_int=0;}
+  virtual void reset(){(*m_int)=0;}
   virtual void add(MonInt * monInt);
   virtual void print();
   virtual void write(){};

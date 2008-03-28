@@ -3,9 +3,9 @@
 MonLong::MonLong(IMessageSvc* msgSvc, const std::string& source, int version):
 MonObject(msgSvc, source, version)
 {
-  m_typeName="MonLong";
+  m_typeName=s_monLong;
   m_dimPrefix="MonL";
-  //m_long = NULL;
+  m_long = new long();
 }
   
 MonLong::~MonLong(){
@@ -13,13 +13,13 @@ MonLong::~MonLong(){
 
 void MonLong::save(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar,version);
-  ar & m_long;
+  ar & (*m_long);
 }
 
 void MonLong::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
-  ar & m_long;
+  ar & (*m_long);
 }
 
 void MonLong::combine(MonObject * monLong){
@@ -30,7 +30,7 @@ void MonLong::combine(MonObject * monLong){
     return;
   }
   add((MonLong*) monLong);
-  if (m_comments.find("combine=average") != std::string::npos) m_long = m_long/2;
+  if (m_comments.find("combine=average") != std::string::npos) (*m_long) = (*m_long)/2;
 }
 
 void MonLong::copyFrom(MonObject * monLong){
@@ -41,20 +41,19 @@ void MonLong::copyFrom(MonObject * monLong){
     return;
   }
   MonLong *mo = (MonLong*)monLong;
-  m_long = mo->value();
+  (*m_long) = mo->value();
   m_comments = mo->comments();
 }
 
 void MonLong::add(MonLong * monLong){
-  //if (m_long !=NULL)
-  m_long = m_long + monLong->value();
+  (*m_long) = (*m_long) + monLong->value();
 }
   
 void MonLong::print(){
   MonObject::print();
   MsgStream msgStream = createMsgStream();
   msgStream << MSG::INFO << "*************************************"<<endreq;
-  msgStream << MSG::INFO << m_typeName << " value=" << m_long << endreq;
+  msgStream << MSG::INFO << m_typeName << " value=" << (*m_long) << endreq;
   msgStream << MSG::INFO << "*************************************"<<endreq;
   doOutputMsgStream(msgStream);
 }

@@ -6,7 +6,7 @@
 class MonVectorD: public MonObject {
 
 protected:
-  std::vector<double> m_vect;
+  std::vector<double> *m_vect;
   std::vector<double>::const_iterator it;
 
 public:
@@ -18,13 +18,13 @@ public:
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
   virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
 
-  void setValue(std::vector<double> v){m_vect = v;}
-  std::vector<double> value(){return m_vect;}
+  void setValue(std::vector<double>& v){m_vect = (&v);}
+  std::vector<double> value(){return (*m_vect);}
 
-  virtual void combine(MonObject * monObject);  
-  virtual void copyFrom(MonObject* monObject);  
+  virtual void combine(MonObject * monObject);
+  virtual void copyFrom(MonObject* monObject);
   virtual void reset();
-  virtual void add(MonVectorD * monVectorD);
+  virtual void add(MonVectorD* monVectorD);
   virtual void print();
   virtual void write(){};
 

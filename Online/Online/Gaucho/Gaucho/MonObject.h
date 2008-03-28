@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.1 2008-01-22 14:53:37 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.2 2008-03-28 10:59:12 evh Exp $
 #ifndef GAUCHO_MONOBJECT_H
 #define GAUCHO_MONOBJECT_H 1
 
@@ -27,15 +27,36 @@
  *  @date 08/01/2008
  */
 
+  static const std::string s_monObject("MonObject");
+  static const std::string s_monH1F("MonH1F");
+  static const std::string s_monH1D("MonH1D");
+  static const std::string s_monH2F("MonH2F");
+  static const std::string s_monH2D("MonH2D");
+  static const std::string s_monProfile("MonProfile");
+  static const std::string s_monInt("MonInt");
+  static const std::string s_monDouble("MonDouble");
+  static const std::string s_monFloat("MonFloat");
+  static const std::string s_monString("MonString");
+  static const std::string s_monLong("MonLong");
+  static const std::string s_monBool("MonBool");
+  static const std::string s_monPairDD("MonPairDD");
+  static const std::string s_monPairII("MonPairII");
+  static const std::string s_monPairDI("MonPairDI");
+  static const std::string s_monHitMap2D("MonHitMap2D");
+  static const std::string s_monStatEntity("MonStatEntity");
+  static const std::string s_monVectorI("MonVectorI");
+  static const std::string s_monVectorD("MonVectorD");
+
 class MonObject{
 
-public:
+protected:
   std::string m_typeName;
   std::string m_comments;
   std::string m_dimPrefix;
   unsigned int m_version;
   bool m_endOfRun;
 
+public:
   MonObject(IMessageSvc* msgSvc, const std::string& source, int version=0);
   virtual ~MonObject();
 

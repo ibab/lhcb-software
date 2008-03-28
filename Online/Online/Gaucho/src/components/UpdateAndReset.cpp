@@ -71,15 +71,15 @@ StatusCode UpdateAndReset::execute() {
   { 
      //fast or other run change
      //update immediately and reset
-     updateAll(true);
-     resetHistos();
+     //updateAll();
+     //resetHistos();
      }
   else {  
-     m_timerElapsed=getTimerElapsed();
+     //m_timerElapsed=getTimerElapsed();
      msg << MSG::INFO << "getTimerElapsed " << m_timerElapsed << endreq;
      //check if update flag is set
      //update if so
-     if (m_timerElapsed) updateAll(false);
+     //if (m_timerElapsed) updateAll();
   }
   m_runNumber = currentRunNumber;
   return StatusCode::SUCCESS;
@@ -91,7 +91,7 @@ StatusCode UpdateAndReset::finalize() {
   //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   msg << MSG::INFO << "finalizing...." << endreq;
-  updateAll(true);
+
   return StatusCode::SUCCESS;
 }
 
