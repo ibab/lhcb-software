@@ -32,9 +32,11 @@ macro_append ROOT_linkopts " -lThread -lGui -lGraf3d -lGed" \
                libGraf3d.lib libGed.lib libRIO.lib"
 
 #apply_tag ROOT_GE_5_17
-#macro_append Boost_linkopts $(Boost_linkopts_filesystem)
-macro_append Boost_linkopts " -lboost_filesystem-gcc34 -lboost_date_time-gcc34 -lboost_program_options-gcc34 " \
-  WIN32 " boost_filesystem-vc71-mt-1_34_1.lib boost_date_time-vc71-mt-1_34_1.lib boost_program_options-vc71-mt-1_34_1.lib "
+macro_append Boost_linkopts $(Boost_linkopts_filesystem)
+macro_append Boost_linkopts $(Boost_linkopts_date_time)
+macro_append Boost_linkopts $(Boost_linkopts_program_options)
+#macro_append Boost_linkopts " -lboost_filesystem-gcc34 -lboost_date_time-gcc34 -lboost_program_options-gcc34 " \
+#  WIN32 " boost_filesystem-vc71-mt-1_34_1.lib boost_date_time-vc71-mt-1_34_1.lib boost_program_options-vc71-mt-1_34_1.lib "
 
 # Setup cppflags
 #macro_append cppflags " -pedantic-errors -Wno-long-long -Weffc++ "
