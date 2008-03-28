@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.h,v 1.3 2008-03-27 16:32:53 odescham Exp $
+// $Id: L0DUReportMonitor.h,v 1.4 2008-03-28 16:53:11 odescham Exp $
 #ifndef L0DUREPORTMONITOR_H 
 #define L0DUREPORTMONITOR_H 1
 
@@ -53,7 +53,10 @@ private:
   std::map<unsigned int, LHCb::L0DUConfig*> m_configs;
   int m_prevTCK;
   std::string m_reportLocation;
-  bool m_histo;
+  bool m_data;
+  bool m_cond;
+  bool m_chan;
+  bool m_dec;
   int m_bin;
   bool m_split;
 };

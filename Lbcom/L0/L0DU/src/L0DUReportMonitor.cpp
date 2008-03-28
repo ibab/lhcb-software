@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.7 2008-03-28 16:53:11 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.8 2008-03-28 16:56:40 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -34,7 +34,7 @@ L0DUReportMonitor::L0DUReportMonitor( const std::string& name,
   declareProperty( "ReportLocation"    , m_reportLocation =  LHCb::L0DUReportLocation::Default );
   declareProperty( "DataMonitor"       , m_data = false );
   declareProperty( "ConditionsMonitor" , m_cond = false );
-  declareProperty( "ChannelsMonitor"   , m_chan = false );
+  declareProperty( "ChannelsMonitor"   , m_chan = true );
   declareProperty( "DecisionMonitor"   , m_dec  = true );
   declareProperty( "DataReBinFactor"   , m_bin = 1);
   declareProperty( "SplitConfig"       , m_split = true);
