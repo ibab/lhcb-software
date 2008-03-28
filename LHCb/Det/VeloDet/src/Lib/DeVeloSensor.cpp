@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.33 2008-02-14 16:15:47 cattanem Exp $
+// $Id: DeVeloSensor.cpp,v 1.34 2008-03-28 16:31:15 dhcroft Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -31,7 +31,7 @@
 //==============================================================================
 DeVeloSensor::DeVeloSensor(const std::string& name) : 
   DetectorElement(name),
-  m_stripCapacitanceConditionName("StripCapacitance"),
+  m_stripNoiseConditionName("StripNoise"),
   m_stripInfoConditionName("StripInfo"),
   m_readoutConditionName("Readout"),
   m_isReadOut(true),
@@ -201,8 +201,8 @@ StatusCode DeVeloSensor::registerConditionCallBacks() {
 
   // strip capacitance condition
   updMgrSvc()->registerCondition(this,
-                                 condition(m_stripCapacitanceConditionName.c_str()).path(),
-                                 &DeVeloSensor::updateStripCapacitanceCondition);
+                                 condition(m_stripNoiseConditionName.c_str()).path(),
+                                 &DeVeloSensor::updateStripNoiseCondition);
   
   // strip info condition 
   updMgrSvc()->registerCondition(this,
@@ -229,14 +229,14 @@ StatusCode DeVeloSensor::registerConditionCallBacks() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode DeVeloSensor::updateStripCapacitanceCondition () {
+StatusCode DeVeloSensor::updateStripNoiseCondition () {
 
-  m_stripCapacitanceCondition = condition(m_stripCapacitanceConditionName.c_str());
-  m_stripCapacitance = m_stripCapacitanceCondition->paramAsDoubleVect("StripCapacitance");
+  m_stripNoiseCondition = condition(m_stripNoiseConditionName.c_str());
+  m_stripNoise = m_stripNoiseCondition->paramAsDoubleVect("StripNoise");
 
-  if (m_stripCapacitance.size() != m_numberOfStrips) {
+  if (m_stripNoise.size() != m_numberOfStrips) {
     MsgStream msg(msgSvc(), "DeVeloSensor");
-    msg << MSG::ERROR << "Strip capacitance condition size does not match number of strips!" << endmsg;
+    msg << MSG::ERROR << "Strip noise condition size does not match number of strips!" << endmsg;
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;

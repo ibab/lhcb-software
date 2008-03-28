@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.191 2008-03-10 15:15:24 cattanem Exp $
+! $Id: release.notes,v 1.192 2008-03-28 16:31:15 dhcroft Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2008-03-28 - David Hutchcroft
+ - Changed stored condition from strip capactiance to strip noise in DeVeloSensor
 
 !======================== VeloDet v12r5 2008-03-10 ===========================
 ! 2008-03-10 - David Hutchcroft

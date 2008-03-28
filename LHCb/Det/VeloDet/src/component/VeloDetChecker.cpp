@@ -1,4 +1,4 @@
-// $Id: VeloDetChecker.cpp,v 1.6 2008-03-10 14:57:49 dhcroft Exp $
+// $Id: VeloDetChecker.cpp,v 1.7 2008-03-28 16:31:15 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -413,7 +413,7 @@ void VeloDetChecker::CheckAllSensorGeometry() {
       sensorTuple->column( "isPileUp",sensor->isPileUp());
       sensorTuple->column( "routLine",sensor->StripToRoutingLine(strip));
       sensorTuple->column( "chipChan",sensor->StripToChipChannel(strip));
-      sensorTuple->column( "stripCapacitance",sensor->stripCapacitance(strip));
+      sensorTuple->column( "stripNoise",sensor->stripNoise(strip));
       std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> stripLimits;
       // Strip co-ordinates in the global frame
       stripLimits=sensor->globalStripLimits(strip);

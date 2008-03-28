@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.40 2008-02-14 16:15:46 cattanem Exp $
+// $Id: DeVeloSensor.h,v 1.41 2008-03-28 16:31:15 dhcroft Exp $
 #ifndef VELODET_DEVELOSENSOR_H
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -379,11 +379,11 @@ public:
    */
   bool tell1WithoutSensor() const { return m_tell1WithoutSensor; }
 
-  /** The capacitance of a strip (cached condition).
+  /** The Noise of a strip (cached condition).
    *  This information is based on CondDB, i.e. it can change
    *  with time.
    */
-  double stripCapacitance(unsigned int strip) const { return m_stripCapacitance[strip]; }
+  double stripNoise(unsigned int strip) const { return m_stripNoise[strip]; }
 
   /** Get info for this strip (cached condition).
    *  This information is based on CondDB, i.e. it can change
@@ -392,8 +392,8 @@ public:
    */
   StripInfo stripInfo(unsigned int strip) const { return m_stripInfos[strip]; }
  
-  /// call back function for strip capacitance condition update
-  StatusCode updateStripCapacitanceCondition();
+  /// call back function for strip noise condition update
+  StatusCode updateStripNoiseCondition();
 
   /// call back function for strip info condition update
   StatusCode updateStripInfoCondition();
@@ -401,11 +401,11 @@ public:
   /// call back function for readout condition update
   StatusCode updateReadoutCondition();
 
-  /** direct access to strip capacitance condition.
+  /** direct access to strip noise condition.
    *  This is for expert/testing purposes only.  All production
    *  client code should use the interface to the cached conditions.
    */
-  const Condition* stripCapacitanceCondition() const { return m_stripCapacitanceCondition; }
+  const Condition* stripNoiseCondition() const { return m_stripNoiseCondition; }
 
   /** direct access to strip info condition.
    *  This is for expert/testing purposes only.  All production
@@ -462,15 +462,15 @@ private:
   double m_outerRadius;
 
   // condition cache
-  std::string m_stripCapacitanceConditionName;
+  std::string m_stripNoiseConditionName;
   std::string m_stripInfoConditionName;
   std::string m_readoutConditionName;
 
-  const Condition* m_stripCapacitanceCondition;
+  const Condition* m_stripNoiseCondition;
   const Condition* m_stripInfoCondition;
   const Condition* m_readoutCondition;
 
-  std::vector<double> m_stripCapacitance;
+  std::vector<double> m_stripNoise;
   std::vector<StripInfo> m_stripInfos;
   bool m_isReadOut;
   bool m_tell1WithoutSensor;
