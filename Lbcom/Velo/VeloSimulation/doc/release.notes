@@ -4,6 +4,16 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-03-28 - David Hutchcroft
+ - Update to VeloSim
+ - Use ST charge deposite tool to correct GEANT dEdx
+ - Use ST amplifier response tool to simulate amplifier response verse time
+ - Allow a list of input containers via options with time offsets
+ - Default to prev, main and next in VeloSim.opts
+ - Allow a list of output locations (for the PileUp modules which write to two)
+ - Simulate noise from the DeVeloSensor->stripNoise() distribution per strip
+ - Added options to convert from noise in ADC to noise in electrons
+
 !===================== VeloSimulation v2r7 2008-03-11 ======================
 ! 2008-03-10 - David Hutchcroft
  - Removed calls to phiOfStrip and trgPhiOfStrip in VeloSimMoni.cpp and now

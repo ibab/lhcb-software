@@ -1,51 +1,64 @@
-///
-VeloSim.NoiseSim = true;
-VeloSim.coupling = true;
-VeloSim.SpillOver = true;
-VeloSim.InhomogeneousCharge = true;
-VeloSim.TestSimulation =  false;
-VeloSim.PileUp= true;
-///
-// in electrons, only MCVeloFEs above this value will be stored on TDS
-// also used in some calculations to decide whether process are worth
-// including (usually if say 10% of this value)
-VeloSim.Threshold=4500.;
-// noise sigma constant in electrons
-// (capacitance term is added to make total sigma)
-VeloSim.NoiseConstant=500.;
-// boltzmann Temp in eV
-VeloSim.kT=0.025;
-// in V, sensor assumed fully depleted
-VeloSim.BiasVoltage=105.;
-// conversion factor between energy in eV and number of electron-hole pairs
-VeloSim.eVPerElectron=3.6;
-// fraction of charge from spillOver event left 25 ns later
-//VeloSim.SpillOverChargeFraction=0.3;
-// number of points per strip to use in diffusion calculation
-VeloSim.SimulationPointsPerStrip=3;
-// amount of charge to distribute uniformly along particle path in
-// electrons/(um of si thickness)
-VeloSim.ChargeUniform=70.;
-// min. energy (eV) of delta rays
-// sensible values will be greater than gaussian stat. fluctuations on
-// energy of a point, but less than typical total
-// delta ray charge/ num.  simulated points on path
-VeloSim.DeltaRayMinEnergy=1000.;
-// capacitive coupling between strips. Neighbouring strips
-// receive this fraction of the charge of the middle strip
-VeloSim.CapacitiveCoupling=0.05;
-// average capacitance of strips
-VeloSim.AverageStripCapacitance=20.;
-// noise sigma in electrons/pF of channel capacitance
-VeloSim.NoiseCapacitance=50.;
-/// fit parameters vector
-VeloSim.FitParams={ 5.265199e-1,   // p0
-                       -1.602129e-1,   // p1
-                        1.811698e-2,   // p2
-                       -6.733501e-4,   // p3
-                        1.125563e-5,   // p4
-                       -8.898185e-8,   // p5
-                        2.726524e-10   // p6
-                       };
-VeloSim.OffPeakSamplingTime=0.;     // ns
+VeloSim.InputContainers = { "MC/Velo/Hits", 
+    "Prev/MC/Velo/Hits", "Next/MC/Velo/Hits" };
+VeloSim.InputTimeOffsets = { 0*ns, -25*ns, 25*ns };
+VeloSim.OutputContainers = { "MC/Velo/FE" };
+VeloSim.SimNoisePileUp = false;
 
+// Note times here are relative to the pulse shape peaking time (~30.7ns)
+// so used time  = 30.7 + sample time offset + bunch offset - time of flight
+VeloSim.SiTimeTool.times = 
+  { 5.7848 ,  6.7848 ,  7.7848 ,  8.7848 ,  9.7848 , 10.7848 , 11.7848 , 
+   12.7848 , 13.7848 , 14.7848 , 15.7848 , 16.7848 , 17.7848 , 18.7848 , 
+   19.7848 , 20.7848 , 21.7848 , 22.7848 , 23.7848 , 24.7848 , 25.7848 , 
+   26.7848 , 27.7848 , 28.7848 , 29.7848 , 30.7848 , 31.7848 , 32.7848 , 
+   33.7848 , 34.7848 , 35.7848 , 36.7848 , 37.7848 , 38.7848 , 39.7848 , 
+   40.7848 , 41.7848 , 42.7848 , 43.7848 , 44.7848 , 45.7848 , 46.7848 , 
+   47.7848 , 48.7848 , 49.7848 , 50.7848 , 51.7848 , 52.7848 , 53.7848 , 
+   54.7848 , 55.7848 , 56.7848 , 57.7848 , 58.7848 , 59.7848 , 60.7848 , 
+   61.7848 , 62.7848 , 63.7848 , 64.7848 };
+
+// fraction of signal seen in amplifier for this time offset
+// setup so that if sample time offset = 0 and TOF = |z/c| value = 1.0
+VeloSim.SiTimeTool.values = 
+  {0.00000 , 0.15806 , 0.15806 , 0.15806 , 0.15806 , 0.20094 , 0.25009 , 
+   0.30388 , 0.36084 , 0.41966 , 0.47915 , 0.53827 , 0.59612 , 0.65188 , 
+   0.70488 , 0.75452 , 0.80034 , 0.84192 , 0.87897 , 0.91124 , 0.93859 , 
+   0.96090 , 0.97816 , 0.99037 , 0.99761 , 0.99999 , 0.99766 , 0.99082 , 
+   0.97967 , 0.96446 , 0.94545 , 0.92292 , 0.89718 , 0.86852 , 0.83726 , 
+   0.80371 , 0.76819 , 0.73101 , 0.69249 , 0.65292 , 0.61261 , 0.57183 , 
+   0.53085 , 0.48992 , 0.44930 , 0.40919 , 0.36981 , 0.33133 , 0.29392 , 
+   0.25774 , 0.22289 , 0.18949 , 0.15763 , 0.12736 , 0.09874 , 0.07179 , 
+   0.04652 , 0.02293 , 0.00100 , 0.00000};
+
+VeloPUSim.InputContainers = { "MC/PuVeto/Hits", 
+    "Prev/MC/PuVeto/Hits", "Next/MC/PuVeto/Hits" };
+VeloPUSim.InputTimeOffsets = { 0*ns, -25*ns, 25*ns };
+// PU hits end up in two containers.
+VeloPUSim.OutputContainers = { "MC/Velo/FE", "MC/Velo/PuFE" };
+VeloPUSim.SimNoisePileUp = true;
+
+// Note times here are relative to the pulse shape peaking time (~30.7ns)
+// so used time  = 30.7 + sample time offset + bunch offset - time of flight
+VeloPUSim.SiTimeTool.times = 
+  { 5.7848 ,  6.7848 ,  7.7848 ,  8.7848 ,  9.7848 , 10.7848 , 11.7848 , 
+   12.7848 , 13.7848 , 14.7848 , 15.7848 , 16.7848 , 17.7848 , 18.7848 , 
+   19.7848 , 20.7848 , 21.7848 , 22.7848 , 23.7848 , 24.7848 , 25.7848 , 
+   26.7848 , 27.7848 , 28.7848 , 29.7848 , 30.7848 , 31.7848 , 32.7848 , 
+   33.7848 , 34.7848 , 35.7848 , 36.7848 , 37.7848 , 38.7848 , 39.7848 , 
+   40.7848 , 41.7848 , 42.7848 , 43.7848 , 44.7848 , 45.7848 , 46.7848 , 
+   47.7848 , 48.7848 , 49.7848 , 50.7848 , 51.7848 , 52.7848 , 53.7848 , 
+   54.7848 , 55.7848 , 56.7848 , 57.7848 , 58.7848 , 59.7848 , 60.7848 , 
+   61.7848 , 62.7848 , 63.7848 , 64.7848 };
+
+// fraction of signal seen in amplifier for this time offset
+// setup so that if sample time offset = 0 and TOF = |z/c| value = 1.0
+VeloPUSim.SiTimeTool.values = 
+  {0.00000 , 0.15806 , 0.15806 , 0.15806 , 0.15806 , 0.20094 , 0.25009 , 
+   0.30388 , 0.36084 , 0.41966 , 0.47915 , 0.53827 , 0.59612 , 0.65188 , 
+   0.70488 , 0.75452 , 0.80034 , 0.84192 , 0.87897 , 0.91124 , 0.93859 , 
+   0.96090 , 0.97816 , 0.99037 , 0.99761 , 0.99999 , 0.99766 , 0.99082 , 
+   0.97967 , 0.96446 , 0.94545 , 0.92292 , 0.89718 , 0.86852 , 0.83726 , 
+   0.80371 , 0.76819 , 0.73101 , 0.69249 , 0.65292 , 0.61261 , 0.57183 , 
+   0.53085 , 0.48992 , 0.44930 , 0.40919 , 0.36981 , 0.33133 , 0.29392 , 
+   0.25774 , 0.22289 , 0.18949 , 0.15763 , 0.12736 , 0.09874 , 0.07179 , 
+   0.04652 , 0.02293 , 0.00100 , 0.00000};

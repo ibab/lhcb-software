@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.19 2007-09-05 13:21:17 dhcroft Exp $
+// $Id: VeloSim.cpp,v 1.20 2008-03-28 16:51:53 dhcroft Exp $
 // Include files
 // STL
 #include <string>
@@ -18,11 +18,15 @@
 // from LHCbKernel
 #include "LHCbMath/LHCbMath.h"
 #include "Kernel/VeloEventFunctor.h"
+#include "Kernel/ISiAmplifierResponse.h"
 
 // from MCEvent
 #include "Event/MCHit.h"
 #include "Event/MCVeloFE.h"
 #include "Event/MCParticle.h"
+
+// from MCInterfaces
+#include "MCInterfaces/ISiDepositedCharge.h"
 
 // VeloDet
 #include "VeloDet/DeVelo.h"
@@ -31,56 +35,35 @@
 #include "VeloSim.h"
 #include "VeloChargeThreshold.h"
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------
 // Implementation file for class : VeloSim
 //
 // 16/01/2002 : Chris Parkes, update Tomasz Szumlak
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( VeloSim );
 
-namespace VeloSimConst{
-  static const double k_spillOverTime=25.;
-  static const double k_pulseShapePeakTime=30.7848;
-};
 
-//=============================================================================
+//===========================================================================
 // Standard creator, initializes variables
-//=============================================================================
+//===========================================================================
 VeloSim::VeloSim( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_veloDet ( 0 ),
-    m_fitParams( 7, 0. ),
-    m_adc2Electrons ( 800000. ),
-    m_adcScale ( 1024. )
+    m_veloDet ( 0 )
 {
-  declareProperty("InputContainer",
-		  m_inputContainer = LHCb::MCHitLocation::Velo );
-  declareProperty("SpillOverInputData",
-		  m_spillOverInputContainer = "Prev/" + m_inputContainer );
-  declareProperty("PileUpInputContainer",
-		  m_pileUpInputContainer = LHCb::MCHitLocation::PuVeto );
-  declareProperty("PileUpSpillOverInputData",
-		  m_pileUpSpillOverInputContainer =
-		  "Prev/" + m_pileUpInputContainer );
-  declareProperty("OutputContainer",
-		  m_outputContainer = LHCb::MCVeloFELocation::Default );
-  declareProperty("PileUpOutputContainer",
-		  m_pileUpOutputContainer = LHCb::MCVeloFELocation::PuVeto );
+  declareProperty("InputContainers", m_inputContainers );
+  declareProperty("InputTimeOffsets", m_inputTimeOffsets );
+  declareProperty("OutputContainers", m_outputContainers );
+  declareProperty("SimNoisePileUp", m_simNoisePileUp = false);
   declareProperty("InhomogeneousCharge", m_inhomogeneousCharge = true );
   declareProperty("Coupling", m_coupling = true );
   declareProperty("NoiseSim", m_noiseSim = true );
   declareProperty("PedestalSim", m_pedestalSim = true );
   declareProperty("CMSim", m_CMSim = true );
   declareProperty("StripInefficiency", m_stripInefficiency = 0.0 );
-  declareProperty("SpillOver", m_spillOver = true );
-  declareProperty("PileUp", m_pileUp = true );
-  declareProperty("TestSimulation", m_testSim = false );
-  declareProperty("SmearPosition", m_smearPosition = 0.0 );
-  declareProperty("Threshold", m_threshold = 4500. );
-  declareProperty("NoiseConstant", m_noiseConstant = 500. );
+  declareProperty("ThresholdADC", m_thresholdADC = 5.8 );  
   declareProperty("kT", m_kT = 0.025 );
   declareProperty("BiasVoltage", m_biasVoltage = 105. );
   declareProperty("eVPerElectron", m_eVPerElectron = 3.6 );
@@ -88,26 +71,33 @@ VeloSim::VeloSim( const std::string& name,
   declareProperty("ChargeUniform", m_chargeUniform = 70. );
   declareProperty("DeltaRayMinEnergy", m_deltaRayMinEnergy = 1000. );
   declareProperty("CapacitiveCoupling", m_capacitiveCoupling = 0.05 );
-  declareProperty("AverageStripCapacitance", m_averageStripCapacitance = 20. );
-  declareProperty("NoiseCapacitance", m_noiseCapacitance = 50. );
-  declareProperty("FitParams", m_fitParams );
+  declareProperty("AverageStripNoise", m_averageStripNoise = 2.3 );
+  // 442. is equivalent to 113216. at full range in VeloDataProcessor
+  // 113216/256 = 442.
+  declareProperty("ElectronsPerADC", m_electronsPerADC = 442.);
   declareProperty("OffPeakSamplingTime", m_offPeakSamplingTime = 0. );
   declareProperty("MakeNonZeroSuppressedData",
 		  m_makeNonZeroSuppressedData=false );
   declareProperty("PedestalConst", m_pedestalConst=512);
   declareProperty("PedestalVariation", m_pedestalVariation=0.05);
+  declareProperty("DepChargeTool", 
+		  m_depChargeToolType = "SiGeantDepositedCharge");
+  declareProperty("UseDepTool", m_useDepTool = true);
+  declareProperty("SiAmplifierResponse",     
+		  m_SiTimeToolType = "SiAmplifierResponse");
+  declareProperty("PulseShapePeakTime",m_pulseShapePeakTime=30.7848);
 
   Rndm::Numbers m_gaussDist;
   Rndm::Numbers m_uniformDist;
 }
 
-//=============================================================================
+//===========================================================================
 // Destructor
-//=============================================================================
+//===========================================================================
 VeloSim::~VeloSim() {};
-//=============================================================================
+//===========================================================================
 // Initialisation. Check parameters
-//=============================================================================
+//===========================================================================
 StatusCode VeloSim::initialize() {
   //
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
@@ -118,74 +108,80 @@ StatusCode VeloSim::initialize() {
 
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
 
+  if( m_inputContainers.size() != m_inputTimeOffsets.size() ){
+    Error("Size of InputContainters and InputTimeOffsets  do not match");
+    return StatusCode::FAILURE;
+  }
+
   m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
   m_baseDiffuseSigma=sqrt(2*m_kT/m_biasVoltage);
 
   // random number initialisation
   StatusCode sc1=m_gaussDist.initialize( randSvc(), Rndm::Gauss(0.,1.0));
   StatusCode sc2=m_uniformDist.initialize( randSvc(), Rndm::Flat(0.,1.0));
-  if(!(sc1&sc2)){
+  if(!( sc1 && sc2  )){
     error() << "Random number init failure" << endmsg;
     return (StatusCode::FAILURE);
   }
-  //
-  info()<< "============================================" <<endmsg;
-  info()<< "Initialization of the pulse shape parameters" <<endmsg;
-  info()<< "--------------------------------------------" <<endmsg;
-  info()<< "|    par0: " << m_fitParams[0] <<endmsg;
-  info()<< "|    par1: " << m_fitParams[1] <<endmsg;
-  info()<< "|    par2: " << m_fitParams[2] <<endmsg;
-  info()<< "|    par3: " << m_fitParams[3] <<endmsg;
-  info()<< "|    par4: " << m_fitParams[4] <<endmsg;
-  info()<< "|    par5: " << m_fitParams[5] <<endmsg;
-  info()<< "|    par6: " << m_fitParams[6] <<endmsg;
-  info()<< "============================================" <<endmsg;
-  //
+
+  // Front end time tool
+  m_SiTimeTool = tool<ISiAmplifierResponse>(m_SiTimeToolType,
+					    "SiTimeTool",this);
+
+  // deposited charge 
+  m_depositedCharge = tool<ISiDepositedCharge>(m_depChargeToolType,
+					       "DepCharge",this);
+
+  // convert threshold into electrons
+  m_threshold = m_thresholdADC*m_electronsPerADC;
+  // precalulate the probability of adding noise to a strip
+  m_noiseTailProb = gsl_sf_erf_Q(m_threshold/ 
+				 (m_averageStripNoise*m_electronsPerADC));
+  info() <<"Probability to add noise to empty strips " << m_noiseTailProb
+	 << endmsg;
+
+
   return StatusCode::SUCCESS;
 };
-//=============================================================================
+//===========================================================================
 // Main execution
-//=============================================================================
+//===========================================================================
 StatusCode VeloSim::execute() {
-  //
-  if(m_isDebug) debug() << "==> Execute" << endmsg;
-  //
-  getInputData(); // get Velo MCHits, pile-up MCHits and spillOver data
-  //
-  // velo simulation
-  m_hits = m_veloHits;
-  if(m_isDebug) debug()<< "hits cont: " << m_veloHits <<endmsg;
-  m_spillOverHits=NULL;
-  if (0!=m_veloSpillOverHits) m_spillOverHits = m_veloSpillOverHits;
-  if(m_isDebug) debug()<< "spill over cont: " << m_spillOverHits <<endmsg;
 
-  m_FEs  = m_veloFEs;
-  m_simMode="velo";
-  StatusCode sc = simulation();
-  if(!sc) return(sc);
-  // pile-up stations simulation
-  if (m_pileUp){
-    m_hits = m_pileUpHits;
-    m_spillOverHits = m_pileUpSpillOverHits;
-    m_FEs  = m_pileUpFEs;
-    m_simMode="pileUp";
-    sc = simulation();
+  if(m_isDebug) debug() << "==> Execute" << endmsg;
+
+  m_FEs = new LHCb::MCVeloFEs();
+
+  std::vector<std::string>::const_iterator iCont;
+  for ( iCont = m_inputContainers.begin() ; 
+	iCont != m_inputContainers.end() ; ++ iCont ){
+    unsigned int timeIndex = iCont - m_inputContainers.begin();
+    
+    if( !exist<LHCb::MCHits>( *iCont ) ){
+      if(m_isDebug) debug() << "Could not find container " 
+			    << *iCont << endmsg;
+      continue;
+    }
+    
+    LHCb::MCHits * veloHits=get<LHCb::MCHits>( *iCont );
+    if(m_isDebug) debug()<< "Input " << *iCont
+			 << " has " << veloHits->size() 
+			 << " MCHits" << endmsg;
+
+    StatusCode sc = simulation(veloHits,m_inputTimeOffsets[timeIndex]);
     if(!sc) return(sc);
   }
   if(m_isDebug) debug() << "let's go to the output data" << endmsg;
-
-  sc = storeOutputData(); // add MCFEs to TDS
+  StatusCode sc = storeOutputData(); // add MCFEs to TDS
   //
   return (sc);
 }
-//==============================================================================
-StatusCode VeloSim::simulation() {
+//============================================================================
+StatusCode VeloSim::simulation(LHCb::MCHits * veloHits, double timeOffset) {
   // perform simulation
-  StatusCode sc;
+
   // simulate signals in strips from GEANT hits of current event
-  chargeSim(false);
-  // simulate signals in strips from GEANT hits of spillOver event
-  if (m_spillOver) chargeSim(true);
+  chargeSim(veloHits,timeOffset);
   // charge sharing from capacitive coupling of strips
   if (m_coupling) coupling();
   // add noise
@@ -197,96 +193,18 @@ StatusCode VeloSim::simulation() {
     if (m_CMSim) CMSim();
   }
   // dead strips / channels
-  if (sc&&(m_stripInefficiency>0.)) sc=deadStrips();
+  if (m_stripInefficiency>0.) deadStrips();
   // remove any unwanted elements and sort
-  if (sc) sc=finalProcess();
+  finalProcess();
   //
-  return (sc);
+  return StatusCode::SUCCESS;
 }
-//=========================================================================
-void VeloSim::getInputData() {
-  //
-  if(m_isDebug) debug()<< " ==> getInputData() " <<endmsg;
-  // get the velo input data
-  if(m_isDebug) debug()<< "Retrieving MCHits from "
-		       << m_inputContainer <<endmsg;
-  m_veloHits=get<LHCb::MCHits>( m_inputContainer );
-  if(m_isDebug) debug()<< " Size of MCHits: " << m_veloHits->size() <<endmsg;
-  //
-  if(m_isDebug) debug() << m_veloHits->size() << " hits retrieved" <<endmsg;
-  // get the pile-up input data
-  if (m_pileUp) {
-    if(m_isDebug) debug()<< "Retrieving MCHits from "
-			 << m_pileUpInputContainer <<endmsg;
-    //
-    m_pileUpHits=get<LHCb::MCHits>( m_pileUpInputContainer );
-    //
-    if(m_isDebug) debug()<< m_pileUpHits->size()
-			 << " pile-up hits retrieved" <<endmsg;
-  }
-  // get the velo Spillver
-  if (m_spillOver){
-    if(m_isDebug) debug() << "Retrieving MCHits of SpillOver Event from "
-			<< m_spillOverInputContainer <<endmsg;
-    if(!exist<LHCb::MCHits>( m_spillOverInputContainer )){
-      if(m_isDebug) debug()
-	<<"Spill over event not present unable to retrieve input container="
-	<< m_spillOverInputContainer <<endmsg;
-      m_veloSpillOverHits = 0;
-    } else {
-      SmartDataPtr<LHCb::MCHits> spillOverHits( eventSvc(),
-                                 m_spillOverInputContainer );
-      m_veloSpillOverHits=spillOverHits;
-      //
-      if(m_isDebug) debug()<< m_veloSpillOverHits->size()
-			   << " spill over hits retrieved" <<endmsg;
-    }
-  }
-  // get the pileUp SpillOver input data
-  if (m_spillOver&&m_pileUp){
-    if(m_isDebug) debug()<<"Retrieving MCHits of Pile Up SpillOver Event from "
-			 << m_pileUpSpillOverInputContainer <<endmsg;
-
-    if( !exist<LHCb::MCHits>(m_pileUpSpillOverInputContainer) ){
-      if(m_isDebug) debug()
-	<< "Spill over event for PileUp not present unable to retrieve "
-	<< "input data container=" << m_spillOverInputContainer <<endmsg;
-      m_pileUpSpillOverHits=0;
-    }else{
-      SmartDataPtr<LHCb::MCHits> pileUpSpillOverHits( eventSvc(),
-                                 m_pileUpSpillOverInputContainer );
-      m_pileUpSpillOverHits=pileUpSpillOverHits;
-      if(m_isDebug) debug()<< m_pileUpSpillOverHits->size()
-			   << " PileUp Spill over hits retrieved" <<endmsg;
-    }
-  }
-  // make vectors for output
-  if (m_pileUp) {m_pileUpFEs=new LHCb::MCVeloFEs();}
-  else          {m_pileUpFEs=NULL;}
-  m_veloFEs = new LHCb::MCVeloFEs();
-  //
-  return;
-}
-//=========================================================================
+//=======================================================================
 // loop through hits allocating the charge to strips
-//=========================================================================
-void VeloSim::chargeSim(bool spillOver) {
+//=======================================================================
+void VeloSim::chargeSim(LHCb::MCHits * hits, double timeOffset) {
   //
   if(m_isDebug) debug() << " ==> chargeSim() " <<endmsg;
-  //
-  if (spillOver) if(m_isDebug) debug()<< " for spill over Event" <<endmsg;
-  //
-  LHCb::MCHits* hits;
-  if (!spillOver){
-    // hits from current event
-    hits=m_hits;
-  }else{
-    // hits from spill Over Event. Return if no spillover
-    if(0 == m_spillOverHits){
-      return;
-    }
-    hits=m_spillOverHits;
-  }
   if(m_isVerbose) verbose()
     << "Number of hits to simulate=" << hits->size() << endmsg;
   //loop over input hits
@@ -294,7 +212,7 @@ void VeloSim::chargeSim(bool spillOver) {
       hits->end() != hitIt ; hitIt++ ){
     LHCb::MCHit* hit = (*hitIt);
     if(!checkConditions(hit)){
-      if(m_isDebug) debug()<< " the sensor is not read-out" <<endmsg;
+      if(m_isVerbose) verbose()<< " the sensor is not read-out" <<endmsg;
       continue;
     }
     // calculate a set of points in the silicon
@@ -306,9 +224,9 @@ void VeloSim::chargeSim(bool spillOver) {
       // calculate charge to assign to each point
       // taking account of delta ray inhomogeneities
       std::vector<double> sPoints(NPoints);
-      chargePerPoint(*hitIt,NPoints,sPoints,spillOver);
+      chargePerPoint(*hitIt,sPoints,timeOffset);
       // diffuse charge from points to strips
-      diffusion(*hitIt,NPoints,sPoints,spillOver);
+      diffusion(*hitIt,sPoints);
     }
   }
   if(m_isDebug) debug()<< "Number of MCVeloFEs " << m_FEs->size() <<endmsg;
@@ -316,9 +234,9 @@ void VeloSim::chargeSim(bool spillOver) {
   return;
 }
 
-//=========================================================================
+//=======================================================================
 // calculate how many points in the silicon the simulation will be performed at
-//=========================================================================
+//=======================================================================
 int VeloSim::simPoints(LHCb::MCHit* hit){
   //
   if(m_isDebug) debug()<< " ==> simPoints() " <<endmsg;
@@ -378,49 +296,37 @@ int VeloSim::simPoints(LHCb::MCHit* hit){
   return (int(ceil(NPoints)*m_simulationPointsPerStrip));
 }
 
-//=========================================================================
+//=======================================================================
 // allocate charge to points
-//=========================================================================
-void VeloSim::chargePerPoint(LHCb::MCHit* hit, int Npoints,
-                             std::vector<double>& Spoints, bool spillOver){
+//=======================================================================
+void VeloSim::chargePerPoint(LHCb::MCHit* hit,
+                             std::vector<double>& Spoints, double timeOffset){
   //
   if(m_isDebug) debug()<< " ==> chargePerPoint() " <<endmsg;
   // total charge in electrons
-  double charge=(hit->energy()/Gaudi::Units::eV)/m_eVPerElectron;
-  if(m_isDebug) debug()<< "Number of electron-hole pairs: " << charge <<endmsg;
-  // correction for Z of sensor (c = 300 mm ns^-1)
-  double deltaTime = (hit->time()/Gaudi::Units::ns) - 
-    (fabs(hit->entry().z()/Gaudi::Units::mm)/300.); 
-  if(m_isDebug) debug() << " T " << hit->time()/Gaudi::Units::ns 
-			<< " |z| " << fabs(hit->entry().z()/Gaudi::Units::mm)
-			<<" deltaT " << deltaTime 
-			<< endmsg;
-  if( !spillOver ){
-    charge*=chargeTimeFactor(deltaTime,0.);
-    if(m_isDebug) debug() << "Charge after time correction of " << 0.
-			  << " is " << charge << endmsg;
+  double charge;
+  if( m_useDepTool ) {
+    charge = m_depositedCharge->charge(hit);
   }else{
-    charge*=chargeTimeFactor(deltaTime,VeloSimConst::k_spillOverTime);
-    if(m_isDebug) debug() << "Charge after time correction of " 
-			  << VeloSimConst::k_spillOverTime
-			  << " is " << charge << endmsg;
+    charge = (hit->energy()/Gaudi::Units::eV)/m_eVPerElectron;
   }
+  if(m_isVerbose) verbose()
+    << "Number of electron-hole pairs: " << charge <<endmsg;
+  
+  charge*=chargeTimeFactor(hit->time(),timeOffset,hit->entry().z());
+  if(m_isVerbose) verbose() << "Charge after time correction of " 
+			    << timeOffset << " is " << charge << endmsg;
+
   // charge to divide equally
   double chargeEqual;
   if(m_inhomogeneousCharge){
     // some of charge allocated by delta ray algorithm
     double thickness=m_veloDet->sensor(hit->sensDetID())->siliconThickness();
     chargeEqual=m_chargeUniform*thickness/Gaudi::Units::micrometer;
-    if( !spillOver ){
-      chargeEqual*=chargeTimeFactor(deltaTime,0.);
-      if(m_isDebug) debug() << "Charge equal after time correction of " << 0.
-			    << " is " << charge << endmsg;
-    }else{
-      chargeEqual*=chargeTimeFactor(deltaTime,VeloSimConst::k_spillOverTime);
-      if(m_isDebug) debug() << "Charge equal after time correction of " 
-			    << VeloSimConst::k_spillOverTime
-			    << " is " << charge << endmsg;
-    }    
+    chargeEqual*=chargeTimeFactor(hit->time(),timeOffset,hit->entry().z());
+    if(m_isVerbose) verbose() 
+      << "Charge equal after time correction of " << timeOffset
+      << " is " << charge << endmsg;
     if(chargeEqual>charge)  chargeEqual=charge;
   }else{
     // all of charge allocated equally to points
@@ -430,33 +336,34 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit, int Npoints,
     << "total charge " << charge
     << " charge for equal allocation " << chargeEqual <<endmsg;
   // divide equally
-  double chargeEqualN=chargeEqual/static_cast<double>(Npoints);
+  double chargeEqualN=chargeEqual/static_cast<double>(Spoints.size());
   double fluctuate=0.;
-  for (int i=0; i<Npoints; i++){
+  std::vector<double>::iterator iPoint;
+  for (iPoint = Spoints.begin(); iPoint != Spoints.end(); ++iPoint){
     // gaussian fluctuations
     if (m_inhomogeneousCharge) fluctuate=m_gaussDist()*sqrt(chargeEqualN);
-    Spoints[i]=chargeEqualN+fluctuate;
-    if(m_isVerbose) verbose()<< "charge for pt" << i << " is " << Spoints[i]
-			     << endmsg;
+    *iPoint = chargeEqualN+fluctuate;
+    if(m_isVerbose) verbose()<< "charge for pt" << iPoint-Spoints.begin() 
+			     << " is " << *iPoint << endmsg;
   }
   // inhomogeneous charge dist from delta rays
   if(m_inhomogeneousCharge){
-    deltaRayCharge(charge-chargeEqual, 0.001*charge, Npoints, Spoints);
+    deltaRayCharge(charge-chargeEqual, 0.001*charge, Spoints);
     // ensure total charge is allocated
     double total=0.;
-    for(int i=0; i<Npoints; i++){
-      total+=Spoints[i];
+    for (iPoint = Spoints.begin(); iPoint != Spoints.end(); ++iPoint){
+      total += (*iPoint);
     }
     if(m_isVerbose) verbose()<< "charge distributed: " << total <<endmsg;
     // normalize the chrge each time
     double adjust=charge/total;
-    for(int j=0; j<Npoints; j++){
-      Spoints[j]*=adjust;
+    for (iPoint = Spoints.begin(); iPoint != Spoints.end(); ++iPoint){
+      (*iPoint) *= adjust;
     }
   }
   double totalCharge=0.;
-  for(unsigned int i=0; i<Spoints.size(); i++){
-    totalCharge+=Spoints[i];
+  for (iPoint = Spoints.begin(); iPoint != Spoints.end(); ++iPoint){
+    totalCharge+= (*iPoint);
   }
   if(m_isVerbose) verbose()
     << "total charge after correction: " << totalCharge <<endmsg;
@@ -470,11 +377,11 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit, int Npoints,
   //
   return;
 }
-//=========================================================================
+//=======================================================================
 // allocate remaining charge from delta ray distribution
-//=========================================================================
+//=======================================================================
 void VeloSim::deltaRayCharge(double charge, double tol,
-                             int Npoints, std::vector<double>& Spoints){
+			     std::vector<double>& Spoints){
   //
   if(m_isDebug) debug()<< " ==> deltaRayCharge() " <<endmsg;
   //
@@ -491,39 +398,42 @@ void VeloSim::deltaRayCharge(double charge, double tol,
     // not truly correct
     double charge=ran_inv_E2(Tmin,Tmax);
     // choose pt at random to add delta ray
-    int ipt=int(LHCbMath::round(m_uniformDist()*(Npoints-1)));
+    int ipt=int(LHCbMath::round(m_uniformDist()*(Spoints.size()-1)));
     //
     if(m_isVerbose) verbose()<< " delta ray charge added to point " << ipt
-		         << "/" << Npoints <<endmsg;
+			     << "/" << Spoints.size() <<endmsg;
     //
     Spoints[ipt]+=charge;
     Tmax-=charge;
   }
   return;
 }
-//=========================================================================
+//=======================================================================
 // allocate the charge to the collection strips
-//=========================================================================
-void VeloSim::diffusion(LHCb::MCHit* hit,int Npoints,
-                        std::vector<double>& Spoints,bool spillOver){
+//=======================================================================
+void VeloSim::diffusion(LHCb::MCHit* hit,std::vector<double>& Spoints){
   //
   if(m_isDebug) debug()<< " ==> diffusion " <<endmsg;
   //
   Gaudi::XYZVector path=hit->displacement();
-  path/=(Npoints*2); // distance between steps on path
+  path/=static_cast<double>(Spoints.size()*2);// distance between steps on path
   Gaudi::XYZPoint point= hit->entry() + path;
   //
   const DeVeloSensor* sens=m_veloDet->sensor(hit->sensDetID());
   double thickness = sens->siliconThickness()/Gaudi::Units::micrometer;
   double ZDiffuse = thickness;
   // assume strips are at opposite side of Si to entry point
-  double dz=ZDiffuse/(double(Npoints)*2.); // distance between steps on path
+  // distance between steps on path
+  double dz=ZDiffuse/static_cast<double>(Spoints.size()*2); 
   ZDiffuse-=dz;
   //
-  for (int ipt=0; ipt<Npoints; ipt++){ //loop over points on path
+  std::vector<double>::iterator iPoint;
+  //loop over points on path
+  for (iPoint = Spoints.begin() ; iPoint != Spoints.end() ; ++iPoint){ 
     double fraction,pitch;
     //
-    if(m_isVerbose) verbose()<< " ipt " << ipt << " point " << point <<endmsg;
+    if(m_isVerbose) verbose()<< " ipt " << iPoint - Spoints.begin() 
+			     << " point " << point <<endmsg;
     //calculate point on path
     LHCb::VeloChannelID entryChan;
     StatusCode valid=sens->pointToChannel(point,entryChan,fraction,pitch);
@@ -532,86 +442,78 @@ void VeloSim::diffusion(LHCb::MCHit* hit,int Npoints,
       // as it lies in say a bias rail dead area.
       // charge from this point is considered lost
       if(m_isVerbose) verbose()<< " point is not in active silicon " << point
-               << " entry " << hit->entry() << " exit "
-               <<  hit->exit() << " detID " << hit->sensDetID() <<endmsg;
+			       << " entry " << hit->entry() << " exit "
+			       <<  hit->exit() << " detID " << hit->sensDetID() <<endmsg;
+      continue;
     }
     //
-    if(valid){
-      if(m_isVerbose) verbose()<< "chan " << entryChan.strip() << " fraction "
-			       << fraction << " pitch " << pitch << " valid "
-			       << valid <<endmsg;
-      //
-      const int neighbs=1; // only consider +/- this many neighbours
-      double chargeFraction[2*neighbs+1];
-      double totalFraction=0.;
-      // loop over neighbours per point
-      int iNg;
-      for(iNg=-neighbs; iNg<=+neighbs; iNg++){
-        double diffuseDist1=((iNg-0.5)-fraction)*pitch/
-	  Gaudi::Units::micrometer;
-        double diffuseDist2=((iNg+0.5)-fraction)*pitch/
-	  Gaudi::Units::micrometer;
-        if(m_isVerbose) verbose()<< "dif1: " << diffuseDist1 << ", dif2: "
-				 << diffuseDist2 <<endmsg;
+    if(m_isVerbose) verbose()<< "chan " << entryChan.strip() << " fraction "
+			     << fraction << " pitch " << pitch << " valid "
+			     << valid <<endmsg;
+    //
+    const int neighbs=1; // only consider +/- this many neighbours
+    double chargeFraction[2*neighbs+1];
+    double totalFraction=0.;
+    // loop over neighbours per point
+    int iNg;
+    for(iNg=-neighbs; iNg<=+neighbs; iNg++){
+      double diffuseDist1=((iNg-0.5)-fraction)*pitch/
+	Gaudi::Units::micrometer;
+      double diffuseDist2=((iNg+0.5)-fraction)*pitch/
+	Gaudi::Units::micrometer;
+      if(m_isVerbose) verbose()<< "dif1: " << diffuseDist1 << ", dif2: "
+			       << diffuseDist2 <<endmsg;
 
-        //      double diffuseDist1=((iNg)-fraction)*pitch/micrometer;
-        //      double diffuseDist2=((iNg+1.)-fraction)*pitch/micrometer;
-        double diffuseSigma=m_baseDiffuseSigma*sqrt(thickness*ZDiffuse);
-        //
-        if(m_isVerbose) verbose()
-	  << "diffuseDist1 " << diffuseDist1
-	  <<   " diffuseDist2 " << diffuseDist2 << " diffuseSigma "
-	  << diffuseSigma << " base " << m_baseDiffuseSigma
-	  << " zdiff " << ZDiffuse <<endmsg;
-        //
-        double prob1= gsl_sf_erf_Q(diffuseDist1/diffuseSigma);
-        double prob2= gsl_sf_erf_Q(diffuseDist2/diffuseSigma);
-        //
-        if(m_isVerbose) verbose() << " prob1+2 " <<  prob1 
-				  << " " << prob2 <<endmsg;
-        //
-        int i= (iNg<0) ? neighbs+abs(iNg) : iNg;
-        chargeFraction[i]=fabs(prob1-prob2);
-        totalFraction+= fabs(prob1-prob2);
-        //
-        if(m_isVerbose) verbose()<< " iNg " << iNg << " cfrac "
-                 << chargeFraction[i]  << " tot " << totalFraction <<endmsg;
+      double diffuseSigma=m_baseDiffuseSigma*sqrt(thickness*ZDiffuse);
+      //
+      if(m_isVerbose) verbose()
+	<< "diffuseDist1 " << diffuseDist1
+	<<   " diffuseDist2 " << diffuseDist2 << " diffuseSigma "
+	<< diffuseSigma << " base " << m_baseDiffuseSigma
+	<< " zdiff " << ZDiffuse <<endmsg;
+      //
+      double prob1= gsl_sf_erf_Q(diffuseDist1/diffuseSigma);
+      double prob2= gsl_sf_erf_Q(diffuseDist2/diffuseSigma);
+      //
+      if(m_isVerbose) verbose() << " prob1+2 " <<  prob1 
+				<< " " << prob2 <<endmsg;
+      //
+      int i= (iNg<0) ? neighbs+abs(iNg) : iNg;
+      chargeFraction[i]=fabs(prob1-prob2);
+      totalFraction+= fabs(prob1-prob2);
+      //
+      if(m_isVerbose) verbose()<< " iNg " << iNg << " cfrac "
+			       << chargeFraction[i]  << " tot " 
+			       << totalFraction <<endmsg;
+    }
+    // renormalise allocated fractions to 1., and update strip signals
+    for(iNg=-neighbs; iNg<=+neighbs; iNg++ ){
+      int i= (iNg<0) ? neighbs+abs(iNg) : iNg;
+      //
+      if(m_isDebug) debug()<< i << " iNg " << iNg 
+			   << " ipt " << iPoint - Spoints.begin()
+			   << " " <<endmsg;
+      //
+      double charge=(*iPoint)*(chargeFraction[i]/totalFraction);
+      //
+      if(m_isDebug) debug()<< i << " ipt " 
+			   << iPoint - Spoints.begin() << " charge "
+			   << charge <<endmsg;
+      if (charge>m_threshold*0.1){
+	// ignore if below 10% of threshold
+	// calculate index of this strip
+	LHCb::VeloChannelID stripKey;
+	valid=sens->neighbour(entryChan,iNg,stripKey);
+	//
+	if(m_isDebug) debug()<< " neighbour " << entryChan.strip() << " "
+			     << stripKey.strip() << " iNg " << iNg <<endmsg;
+	// update charge and MCHit list
+	if (valid){
+	  LHCb::MCVeloFE* myFE = findOrInsertFE(stripKey);
+	  fillFE(myFE,hit,charge); // update and add MC link
+	}
       }
-      // renormalise allocated fractions to 1., and update strip signals
-      for(iNg=-neighbs; iNg<=+neighbs; iNg++ ){
-        int i= (iNg<0) ? neighbs+abs(iNg) : iNg;
-        //
-        if(m_isDebug) debug()<< i << " iNg " << iNg << " ipt " << ipt
-               << " " <<endmsg;
-        //
-        double charge=Spoints[ipt]*(chargeFraction[i]/totalFraction);
-        //
-        if(m_isDebug) debug()<< i << " ipt " << ipt << " charge "
-               << charge <<endmsg;
-        if (charge>m_threshold*0.1){
-          // ignore if below 10% of threshold
-          // calculate index of this strip
-          LHCb::VeloChannelID stripKey;
-          valid=sens->neighbour(entryChan,iNg,stripKey);
-          //
-          if(m_isDebug) debug()<< " neighbour " << entryChan.strip() << " "
-                 << stripKey.strip() << " iNg " << iNg <<endmsg;
-          // update charge and MCHit list
-          if (valid){
-            LHCb::MCVeloFE* myFE = findOrInsertFE(stripKey);
-            if(spillOver){
-              if(m_isDebug) debug()<< " entry chan strip: " 
-				   << entryChan.strip() <<endmsg;
-              if(m_isDebug) debug()<< " fe strip: " 
-				   << myFE->key().strip() <<endmsg;
-            }
-	    if (!spillOver)
-	      fillFE(myFE,hit,charge); // update and add MC link
-	    else fillFE(myFE, charge); // update, no MC link
-          }
-        }
-      } // neighbours loop
-    } // valid point
+    } // neighbours loop
     point+=2*path; // update to look at next point on path
     ZDiffuse-=2.*dz;
 
@@ -619,9 +521,9 @@ void VeloSim::diffusion(LHCb::MCHit* hit,int Npoints,
   //
   return;
 }
-//=========================================================================
+//=======================================================================
 // update signal and list of MCHits
-//=========================================================================
+//=======================================================================
 void VeloSim::fillFE(LHCb::MCVeloFE* myFE,
                      LHCb::MCHit* hit, double charge){
   //
@@ -641,7 +543,7 @@ void VeloSim::fillFE(LHCb::MCVeloFE* myFE,
 	<< "hit number " << i << " / " << size
 	<< " charge " << charge << " hit " << hit <<endmsg;
       hitChk=myFE->mcHit(i);
-    i++;
+      i++;
     };
     i--;
     if(hit==hitChk){
@@ -653,7 +555,7 @@ void VeloSim::fillFE(LHCb::MCVeloFE* myFE,
       myFE->setMCHitCharge(i,sig);
       //
       if(m_isVerbose) verbose()<< " new signal value " << sig << " for hit "
-             << hit << " hit check " << hitChk << endmsg;
+			       << hit << " hit check " << hitChk << endmsg;
     }
     else{
       if(m_isVerbose) verbose()<< "hit added" << endmsg;
@@ -663,11 +565,11 @@ void VeloSim::fillFE(LHCb::MCVeloFE* myFE,
   return;
 }
 
-//=========================================================================
+//=======================================================================
 // add a % of signal in strip to the two neighbouring strips
 // it is assumed that this is a small % and hence it doesn't matter
 // in what order this procedure is applied to the strip list.
-//=========================================================================
+//=======================================================================
 void VeloSim::coupling(){
   //
   if(m_isDebug) debug()<< " ==> coupling() " <<endmsg;
@@ -678,7 +580,7 @@ void VeloSim::coupling(){
   m_FEs_coupling=new LHCb::MCVeloFEs();
   //
   for(LHCb::MCVeloFEs::iterator FEIt = m_FEs->begin() ;
-        m_FEs->end() != FEIt ; FEIt++ ){
+      m_FEs->end() != FEIt ; FEIt++ ){
     // calculate signal to couple to neighbouring strips
     double coupledSignal=(*FEIt)->addedSignal()*m_capacitiveCoupling;
     //
@@ -719,7 +621,7 @@ void VeloSim::coupling(){
   if(m_isDebug) debug()<< "FEs created by coupling routine "
 		       << m_FEs_coupling->size() <<endmsg;
   for(LHCb::MCVeloFEs::iterator coupIt=m_FEs_coupling->begin();
-       coupIt<m_FEs_coupling->end(); coupIt++){
+      coupIt<m_FEs_coupling->end(); coupIt++){
     LHCb::MCVeloFE* myFE=m_FEs->object((*coupIt)->key());
     if( 0 != myFE ) {
       myFE->setAddedSignal( myFE->addedSignal() + (*coupIt)->addedSignal() );
@@ -739,16 +641,16 @@ void VeloSim::coupling(){
   delete m_FEs_coupling;
   //
   if(m_isDebug) debug()<< "Number of FEs after coupling simulation "
-         << m_FEs->size() << endmsg;
+		       << m_FEs->size() << endmsg;
   //
   return;
 }
-//=========================================================================
+//=======================================================================
 // From an originally sorted list, find the strip with the previous key,
 // or create a new one.
-//=========================================================================
+//=======================================================================
 LHCb::MCVeloFE* VeloSim::findOrInsertPrevStrip(
-                LHCb::MCVeloFEs::iterator FEIt, bool& valid, bool& create){
+					       LHCb::MCVeloFEs::iterator FEIt, bool& valid, bool& create){
   //
   if(m_isDebug) debug()<< " ==> findOrInsertPrevStrip() " <<endmsg;
   // try previous entry in container
@@ -762,7 +664,7 @@ LHCb::MCVeloFE* VeloSim::findOrInsertPrevStrip(
   int checkDistance;
   const DeVeloSensor* sens=m_veloDet->sensor((*FEIt)->key().sensor());
   StatusCode sc=sens->channelDistance((*FEIt)->key(),prevStrip->key(),
-                                        checkDistance);
+				      checkDistance);
   valid = sc.isSuccess();
   bool exists=(-1 == checkDistance && valid);
   if(exists) return prevStrip;
@@ -787,7 +689,7 @@ LHCb::MCVeloFE* VeloSim::findOrInsertPrevStrip(
       if ( 0 != prevStrip ) return prevStrip;
       //
       if(m_isVerbose) verbose()<< " create strip" << stripKey.strip() << " "
-		           << stripKey.sensor() <<endmsg;
+			       << stripKey.sensor() <<endmsg;
       //
       prevStrip = new LHCb::MCVeloFE(stripKey);
       m_FEs_coupling->insert(prevStrip);
@@ -803,11 +705,11 @@ LHCb::MCVeloFE* VeloSim::findOrInsertPrevStrip(
   //
   return (prevStrip);
 }
-//=========================================================================
+//=======================================================================
 //
-//=========================================================================
+//=======================================================================
 LHCb::MCVeloFE* VeloSim::findOrInsertNextStrip(
-                LHCb::MCVeloFEs::iterator FEIt, bool& valid, bool& create){
+					       LHCb::MCVeloFEs::iterator FEIt, bool& valid, bool& create){
   // From an originally sorted list, find the strip with the previous key,
   // or create a new one.
   if(m_isDebug) debug()<< " ==> findOrInsertNextStrip() " <<endmsg;
@@ -823,7 +725,7 @@ LHCb::MCVeloFE* VeloSim::findOrInsertNextStrip(
   const DeVeloSensor* sens=m_veloDet->sensor((*FEIt)->key().sensor());
   int checkDistance;
   StatusCode sc=sens->channelDistance((*FEIt)->key(),nextStrip->key(),
-                                           checkDistance);
+				      checkDistance);
   valid = sc.isSuccess();
   bool exists=(1 == checkDistance && valid);
   if(exists) return nextStrip;
@@ -837,7 +739,7 @@ LHCb::MCVeloFE* VeloSim::findOrInsertNextStrip(
       if ( 0 != nextStrip ) return nextStrip;
       //
       if(m_isVerbose) verbose()<< " create strip" << stripKey.strip() << " "
-		           << stripKey.sensor() <<endmsg;
+			       << stripKey.sensor() <<endmsg;
       //
       nextStrip = new LHCb::MCVeloFE(stripKey);
       m_FEs_coupling->insert(nextStrip);
@@ -853,9 +755,9 @@ LHCb::MCVeloFE* VeloSim::findOrInsertNextStrip(
   //
   return nextStrip;
 }
-//=========================================================================
+//=======================================================================
 // add pedestal
-//=========================================================================
+//=======================================================================
 void VeloSim::pedestalSim(){
   if(m_isDebug) debug()<< " ==> pedestalSim() " <<endmsg;
   // add pedestals to all created FEs
@@ -866,15 +768,15 @@ void VeloSim::pedestalSim(){
     // change adc counts to electrons
     pedestalValue=m_uniformDist()*m_pedestalConst*m_pedestalVariation;
     pedestalValue+=m_pedestalConst;
-    pedestalValue*=(m_adc2Electrons/m_adcScale);
+    pedestalValue*=m_electronsPerADC;
     (*FEIt)->setAddedPedestal(pedestalValue);
   }
   //
   return;
 }
-//=========================================================================
+//=======================================================================
 //
-//=========================================================================
+//=======================================================================
 void VeloSim::noiseSim(){
   //
   if(m_isDebug) debug()<< " ==> noiseSim() " <<endmsg;
@@ -895,11 +797,10 @@ void VeloSim::noiseSim(){
   // loop through already allocated hits adding noise (if none already added)
   // should be capacitance of each strip, currently just typical value
   for(LHCb::MCVeloFEs::iterator FEIt = m_FEs->begin() ;
-        m_FEs->end() != FEIt ; FEIt++ ){
+      m_FEs->end() != FEIt ; FEIt++ ){
     if((*FEIt)->addedNoise()==0){
       const DeVeloSensor* sens=m_veloDet->sensor((*FEIt)->sensor());
-      double stripCapacitance=sens->stripCapacitance((*FEIt)->strip());
-      double noise=noiseValue(stripCapacitance);
+      double noise=noiseValue(sens->stripNoise((*FEIt)->strip()));
       (*FEIt)->setAddedNoise(noise);
       //
       if(m_isVerbose) verbose()<< " noise added to existing strip "
@@ -911,10 +812,10 @@ void VeloSim::noiseSim(){
   std::vector<DeVeloSensor*>::const_iterator sensBegin;
   std::vector<DeVeloSensor*>::const_iterator sensEnd;
 
-  if (m_simMode=="velo") {
+  if (!m_simNoisePileUp) { // simulation of main VELO
     sensBegin = m_veloDet->rPhiSensorsBegin();
     sensEnd   = m_veloDet->rPhiSensorsEnd();
-  } else if (m_simMode=="pileUp") {
+  } else { // simulation of PileUp Sensors 
     sensBegin = m_veloDet->pileUpSensorsBegin();
     sensEnd   = m_veloDet->pileUpSensorsEnd();
   }
@@ -923,17 +824,15 @@ void VeloSim::noiseSim(){
       ++iSens) {
     const DeVeloSensor* sens = *iSens;
     if(sens->isReadOut()){
-      double noiseSig=noiseSigma(m_averageStripCapacitance);
-      // use average capacitance of sensor, should be adequate if variation in
-      // cap. not too large.
+      // use average noise of sensor, should be adequate if variation in
+      // noise not too large.
       // number of hits to add noise to (i.e. fraction above threshold)
       // add both large +ve and -ve noise.
       int hitNoiseTotal=-999;
       int maxStrips= sens->numberOfStrips();
       if(!m_makeNonZeroSuppressedData){
-        hitNoiseTotal=
-          int(LHCbMath::round(2.*gsl_sf_erf_Q(m_threshold/noiseSig) *
-			      float(maxStrips)));
+        hitNoiseTotal= 
+	  int(LHCbMath::round(2.*m_noiseTailProb)*float(maxStrips));
         Rndm::Numbers poisson(randSvc(), Rndm::Poisson(hitNoiseTotal));
         hitNoiseTotal = int(poisson());
       }else{
@@ -945,9 +844,10 @@ void VeloSim::noiseSim(){
 	<< "Number of strips to add noise to " << hitNoiseTotal
 	<< " sensor Number " << sensorNo
 	<< " maxStrips " << maxStrips
-	<< " sigma of noise " << noiseSig
+	<< " sigma of noise " << m_averageStripNoise*m_electronsPerADC
 	<< " threshold " << m_threshold
-	<< " tail probability " << gsl_sf_erf_Q(m_threshold/noiseSig)
+	<< " tail probability " 
+	<< m_noiseTailProb
 	<< endmsg;
       //
       for(int noiseHit=0; noiseHit<hitNoiseTotal; noiseHit++){
@@ -960,14 +860,13 @@ void VeloSim::noiseSim(){
           // find strip in list.
           LHCb::MCVeloFE* myFE = findOrInsertFE(stripKey);
           if (myFE->addedNoise()==0){
-	    double stripCapacitance=sens->stripCapacitance(stripArrayIndex);
-            double noise=noiseValueTail(stripCapacitance);
+            double noise=noiseValueTail(sens->stripNoise(stripArrayIndex));
             myFE->setAddedNoise(noise);
             //
             if(m_isVerbose) verbose()<< "hit from tail of noise created "
 				     << myFE->addedNoise() << endmsg;
           }else{
-          // already added noise here - so generate another strip number
+	    // already added noise here - so generate another strip number
             noiseHit--;
           }
         }else{
@@ -976,8 +875,7 @@ void VeloSim::noiseSim(){
           LHCb::VeloChannelID stripKey(sensorNo, noiseHit);
           LHCb::MCVeloFE* myFE=findOrInsertFE(stripKey);
           if(myFE->addedNoise()==0){
-	    double stripCapacitance=sens->stripCapacitance(noiseHit);
-            double noise=noiseValueTail(stripCapacitance);
+            double noise=noiseValueTail(sens->stripNoise(noiseHit));
             myFE->setAddedNoise(noise);
             if(m_isVerbose) verbose()<< "hit from noise created " 
 				     << myFE->addedNoise() <<endmsg;
@@ -990,50 +888,45 @@ void VeloSim::noiseSim(){
   return;
 }
 //=========================================================================
-// sigma of noise to generate
-//=========================================================================
-double VeloSim::noiseSigma(double stripCapacitance){
-  //
-  if(m_isDebug) debug()<< " ==> noiseSigma() " <<endmsg;
-  //
-  double noiseSigma=stripCapacitance*m_noiseCapacitance+
-    m_noiseConstant;
-  //
-  return noiseSigma;
-}
-//=========================================================================
 // generate some noise
 //=========================================================================
-double VeloSim::noiseValue(double stripCapacitance){
+double VeloSim::noiseValue(double noiseSigma){
   //
   if(m_isDebug) debug()<< " ==> noiseValue() " <<endmsg;
   //
-  double noise=m_gaussDist()*noiseSigma(stripCapacitance);
+  double noise=m_gaussDist()*noiseSigma*m_electronsPerADC;
   return noise;
 }
 //=========================================================================
 // generate some noise from tail of distribution
 //=========================================================================
-double VeloSim::noiseValueTail(double stripCapacitance){
+double VeloSim::noiseValueTail(double noiseSigma){
   //
   if(m_isDebug) debug()<< "noiseValueTail() " <<endmsg;
-  //
-  double noiseSig=noiseSigma(stripCapacitance);
-  double noise=ran_gaussian_tail(m_threshold,noiseSig);
+  //-----------------------------------------------------
+  //Seems too slow to create and destroy random generators
+  // make a tempoary random number generator to get tail above threshold
+  //  Rndm::Numbers ranGaussTail(randSvc(), 
+  //			     Rndm::GaussianTail(m_threshold,
+  //						noiseSigma*m_electronsPerADC));
+  //double noise=ranGaussTail();
+  //-----------------------------------------------------
+  
+  double noise = ran_gaussian_tail(m_threshold,noiseSigma*m_electronsPerADC);  
   double sign=m_uniformDist();
   if (sign > 0.5) noise*=-1.; // noise negative or positive
   return noise;
 }
-//=========================================================================
+//=======================================================================
 // common mode - not yet implemented
-//=========================================================================
+//=======================================================================
 void VeloSim::CMSim(){
   return;
 }
-//=========================================================================
+//=======================================================================
 // dead strips
-//=========================================================================
-StatusCode VeloSim::deadStrips(){
+//=======================================================================
+void VeloSim::deadStrips(){
   //
   if(m_isDebug) debug()<< " ==> deadStrips() " <<endmsg;
   // Add some strip inefficiency
@@ -1041,18 +934,18 @@ StatusCode VeloSim::deadStrips(){
   // threshold cut in final process.
   // e.g. set stripInefficiency to 0.01 for 1% dead channels
   for(LHCb::MCVeloFEs::iterator itF1 = m_FEs->begin(); m_FEs->end() != itF1;
-        itF1++){
+      itF1++){
     double cut =  m_uniformDist();
     if ( m_stripInefficiency > cut ) {
       (*itF1)->setAddedSignal( 0. );
     }
   }
   //
-  return (StatusCode::SUCCESS);
+  return;
 }
-//=========================================================================
+//=======================================================================
 // find a strip in list of FEs, or if it does not currently exist create it
-//=========================================================================
+//=======================================================================
 LHCb::MCVeloFE* VeloSim::findOrInsertFE(LHCb::VeloChannelID& stripKey){
   //
   if(m_isDebug) debug()<< " ==> findOrInsertFE() " <<endmsg;
@@ -1063,7 +956,7 @@ LHCb::MCVeloFE* VeloSim::findOrInsertFE(LHCb::VeloChannelID& stripKey){
     myFE = new LHCb::MCVeloFE(stripKey);
     //
     if(m_isVerbose) verbose()<< " -- Add FE " << stripKey.sensor() << ","
-		         << stripKey.strip() << endmsg;
+			     << stripKey.strip() << endmsg;
     //
     if(m_isDebug) debug()<< "size of FEs: " << m_FEs->size() <<endmsg;
     m_FEs->insert(myFE);
@@ -1073,10 +966,10 @@ LHCb::MCVeloFE* VeloSim::findOrInsertFE(LHCb::VeloChannelID& stripKey){
   //
   return (myFE);
 }
-//=========================================================================
+//=======================================================================
 // remove any MCFEs with charge below abs(threshold)
 //=========================================================================
-StatusCode VeloSim::finalProcess(){
+void VeloSim::finalProcess(){
   //
   if(m_isDebug) debug()<< " ==> finalProcess() " <<endmsg;
   // cannot do this by remove_if, erase as storing/erasing pointers.
@@ -1087,8 +980,8 @@ StatusCode VeloSim::finalProcess(){
               VeloEventFunctor::Less_by_charge<const LHCb::MCVeloFE*>());
     std::reverse(m_FEs->begin(),m_FEs->end());
     LHCb::MCVeloFEs::iterator
-    it1=std::find_if(m_FEs->begin(), m_FEs->end(),
-                     VeloChargeThreshold(m_threshold));
+      it1=std::find_if(m_FEs->begin(), m_FEs->end(),
+		       VeloChargeThreshold(m_threshold));
     LHCb::MCVeloFEs::iterator it2=m_FEs->end();
     m_FEs->erase(it1, it2);
     // sort FEs into order of ascending sensor + strip
@@ -1097,52 +990,48 @@ StatusCode VeloSim::finalProcess(){
   std::sort(m_FEs->begin(),m_FEs->end(),
             VeloEventFunctor::Less_by_key<const LHCb::MCVeloFE*>());
   //
-  return (StatusCode::SUCCESS);
+  return;
 }
-//=========================================================================
+//=======================================================================
 // store MCFEs
-//=========================================================================
+//=======================================================================
 StatusCode VeloSim::storeOutputData(){
   //
   if(m_isDebug) debug()<< " ==> storeOutputData() " <<endmsg;
-  //
-  // velo FEs
-  // update FEs container adding the pileup FEs
-  //  sc = eventSvc()->registerObject(m_outputContainer,m_veloFEs);
-  if(m_isDebug) debug() << " size of m_veloFE before update: " 
-			<< m_veloFEs->size() << endmsg;
-  //
-  if(m_pileUp){
-    LHCb::MCVeloFEs::const_iterator feIt;
-    for(feIt=m_pileUpFEs->begin(); feIt!=m_pileUpFEs->end(); feIt++){
-      m_veloFEs->insert(*feIt);
-    }
-    if(m_isDebug) debug()<< " size after update: " << m_veloFEs->size() 
-			 <<endmsg;
-  }
-  //
-  put(m_veloFEs, m_outputContainer);
-  if(m_isDebug) debug()<< "Stored " << m_veloFEs->size() << " MCVeloFEs at "
-         << m_outputContainer <<endmsg;
+  
+  std::vector<std::string>::const_iterator iCont;
+  for ( iCont = m_outputContainers.begin(); 
+	iCont != m_outputContainers.end(); ++iCont ){
 
-  // pileup FEs
-  if (m_pileUp){
-    //    sc = eventSvc()->registerObject(m_pileUpOutputContainer,m_pileUpFEs);
-    put(m_pileUpFEs, m_pileUpOutputContainer);
-    if(m_isDebug) debug()
-      << "Stored " << m_pileUpFEs->size() << " MCVeloFEs at "
-           << m_pileUpOutputContainer << endmsg;
+    if(m_isDebug) debug() 
+      << "Writing " << m_FEs->size() << " MCVeloFEs to " << *iCont << endmsg;
+
+    LHCb::MCVeloFEs *outputCont;
+    if(exist<LHCb::MCVeloFEs>(*iCont)){
+      outputCont = get<LHCb::MCVeloFEs>(*iCont);
+      if(m_isVerbose) verbose() 
+	<< "Size of " << *iCont << " before update " << outputCont->size()
+	<< endmsg;      	
+      LHCb::MCVeloFEs::const_iterator feIt;
+      for(feIt=m_FEs->begin(); feIt!=m_FEs->end(); ++feIt){
+	outputCont->insert(*feIt);
+      }
+      if(m_isVerbose) verbose() 
+	<< "Size of " << *iCont << " after update " << outputCont->size()
+	<< endmsg;  
+    }else{
+      put(m_FEs, *iCont); //push local container into TES
+    }
   }
-  //
   return StatusCode::SUCCESS;
 }
-//=========================================================================
+//=======================================================================
 // delta ray tail random numbers
 // dN/DE=k*1/E^2 for relativistic incident particle
 // E(r)=1/r, where r is uniform in range 1/Tmin < r < 1/Tmax
 // but Tmax bounded by energy left to allocate, so following is
 // not truly correct
-//=========================================================================
+//=======================================================================
 double VeloSim:: ran_inv_E2(double Tmin,double Tmax){
   //
   if(m_isDebug) debug()<< " ==> ran_inv_E2() " <<endmsg;
@@ -1178,47 +1067,43 @@ double VeloSim::ran_gaussian_tail(const double a, const double sigma) {
       while (x < s);
       return x * sigma;
     }else{
-      /* Use the "supertail" deviates from the last two steps
-       * of Marsaglia's rectangle-wedge-tail method, as described
-       * in Knuth, v2, 3rd ed, pp 123-128.  (See also exercise 11, p139,
-       * and the solution, p586.)
-       */
-      double u, v, x;
-      do
-        {
-          u = m_uniformDist();
-          do
-            {
-              v = m_uniformDist();
-            }
-          while (v == 0.0);
-          x = sqrt (s * s - 2 * log (v));
-        }
-      while (x * u > s);
-      return x * sigma;
-    }
+    /* Use the "supertail" deviates from the last two steps
+     * of Marsaglia's rectangle-wedge-tail method, as described
+     * in Knuth, v2, 3rd ed, pp 123-128.  (See also exercise 11, p139,
+     * and the solution, p586.)
+     */
+    double u, v, x;
+    do
+      {
+	u = m_uniformDist();
+	do
+	  {
+	    v = m_uniformDist();
+	  }
+	while (v == 0.0);
+	x = sqrt (s * s - 2 * log (v));
+      }
+    while (x * u > s);
+    return x * sigma;
+  }
 }
-//==============================================================================
-double VeloSim::chargeTimeFactor(double TOF, double bunchOffset)
+//============================================================================
+double VeloSim::chargeTimeFactor(double TOF, double bunchOffset, double z)
 {
   if(m_isDebug) debug()<< " ==> VeloSim::spillOverReminder " <<endmsg;
-  //
-  pulseShapeFunctor pulseShape;
-  double correctedFlightTime = TOF - bunchOffset;
-  // protect against mad trajectories
-  if(correctedFlightTime < -25) correctedFlightTime = -25;
-  if(correctedFlightTime > 5) correctedFlightTime = 5;
-  double time=VeloSimConst::k_pulseShapePeakTime+m_offPeakSamplingTime-
-    correctedFlightTime;
-  double chargeReminder=pulseShape(time, m_fitParams);
-  //
+
+  // correction for Z of sensor, assume timed to have z/c as T0 for sensors
+  TOF -=  fabs(z/Gaudi::Units::c_light); 
+
+  double time=m_pulseShapePeakTime + m_offPeakSamplingTime + bunchOffset - TOF;
+  double chargeReminder = m_SiTimeTool->response(time);
   if(m_isDebug) debug()<< "spillOverReminder= " << chargeReminder 
 		       << " from time " << time 
 		       << " bunch offset " << bunchOffset<<endmsg;
   //
   return ( chargeReminder );
 }
-//==============================================================================
+//============================================================================
 bool VeloSim::checkConditions(LHCb::MCHit* aHit)
 {
   if(m_isDebug) debug()<< " ==> checkConditions(Hit) " <<endmsg;

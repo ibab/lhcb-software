@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.9 2007-09-05 13:21:17 dhcroft Exp $
+#// $Id: VeloSim.h,v 1.10 2008-03-28 16:51:53 dhcroft Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -14,13 +14,12 @@
 // from Velo
 #include "Event/MCVeloFE.h"
 
-// local
-#include "pulseShapeFunctor.h"
 
 class DeVelo;
 class MCHit;
 class VeloChannelID;
-class pulseShapeFunctor;
+class ISiAmpliferResponse;
+class ISiDepositedCharge;
 
 /** @class VeloSim VeloSim.h VeloAlgs/MCVeloSim.h
  *
@@ -52,29 +51,25 @@ private:
     return ( (fe->charge()<m_threshold)?true:false );
   }
 
-  /// Load the event and spillover from the TES
-  void getInputData(); 
-
   /// process requested simulation steps
-  StatusCode simulation();
+  StatusCode simulation(LHCb::MCHits * veloHits, double timeOffset);
   
   /// Simulation of charge deposition between entry and exit of MCHit
-  void chargeSim(bool spillOver);
+  void chargeSim(LHCb::MCHits * hits, double timeOffset);
 
   /// Number of points to deposite charge along the trajectory of the hit
   int simPoints(LHCb::MCHit* hit);
 
   /// spread the charge over the points to simulate
-  void chargePerPoint(LHCb::MCHit* hit, int Npoints,
-                      std::vector<double>& Spoints, bool SpillOver);
+  void chargePerPoint(LHCb::MCHit* hit,
+                      std::vector<double>& Spoints, double timeOffset);
 
   /// add delta ray charges if required
-  void deltaRayCharge(double charge, double tol,
-                      int Npoints, std::vector<double>& Spoints);
+  void deltaRayCharge(double charge, double tol, std::vector<double>& Spoints);
 
   /// allow the deposited charge points to diffuse to the strips
-  void diffusion(LHCb::MCHit* hit, int Npoints,
-                 std::vector<double>& Spoints, bool SpillOver);
+  void diffusion(LHCb::MCHit* hit,
+                 std::vector<double>& Spoints);
 
   /// add the charge to a front end channel with MChit link (if not 0)
   void fillFE(LHCb::MCVeloFE* myFE, LHCb::MCHit* hit, double charge);
@@ -99,88 +94,82 @@ private:
 
   void pedestalSim(); ///< add a pedestal value to the FEs
   void noiseSim();    ///< Add noise to the strips 
-  /// sigma of the noise from strip capacitance
-  double noiseSigma(double stripCapacitance); 
   /// Added noise of a strip from strip capacitance
-  double noiseValue(double stripCapacitance);
+  double noiseValue(double noiseSigma);
   /// Noise to add to an otherwise empty strip from strip capacitance
-  double noiseValueTail(double stripCapacitance);
+  double noiseValueTail(double noiseSigma);
   void CMSim(); ///< Common mode simulation
-  StatusCode VeloSim::deadStrips();
-  StatusCode finalProcess();
-  StatusCode storeOutputData();
+  void VeloSim::deadStrips(); ///< Simulate random dead strips
+  void finalProcess(); ///<remove any MCFEs with charge below abs(threshold)
+  StatusCode storeOutputData(); ///< put the data on the TES
   LHCb::MCVeloFE* findOrInsertFE(LHCb::VeloChannelID& stripKey);
 
-  double chargeTimeFactor(double TOF, double bunchOffset);
+  /// gets the effective charge fraction for this hit 
+  /// compared to an in time main bunch hit
+  double chargeTimeFactor(double TOF, double bunchOffset, double z);
 
   // check conditions Data Base
   bool checkConditions(LHCb::MCHit* aHit);
   // data members
-  std::string m_inputContainer;       ///< Name of input container  
-  std::string m_spillOverInputContainer; ///< Name of spill Over event input container
-  std::string m_pileUpInputContainer;  ///< Name of pileUp input container
-  std::string m_pileUpSpillOverInputContainer;  ///< Name of spill Over event input cont
-  std::string m_outputContainer;      ///< Name of output container
-  std::string m_pileUpOutputContainer;      ///< Name of output container
+  std::vector<std::string> m_inputContainers; ///< Name of input containers
+  std::vector<double> m_inputTimeOffsets; ///< delta T0 of the input containers
+  std::vector<std::string> m_outputContainers;///< Name of output containers
   //
   DeVelo* m_veloDet; ///< Detector Element
-  LHCb::MCHits* m_hits; ///< vector of input hits
-  LHCb::MCHits* m_spillOverHits; ///< vector of input hits from spill over event
   LHCb::MCVeloFEs* m_FEs; ///< vector of FE output  signals
   LHCb::MCVeloFEs* m_FEs_coupling; ///< vector of coupled FE output signals
-  // 
-  LHCb::MCHits* m_veloHits; // vector of input hits
-  LHCb::MCHits* m_pileUpHits; // vector of input hits from pileUp
-  LHCb::MCHits* m_veloSpillOverHits; // vector of input hits
-  LHCb::MCHits* m_pileUpSpillOverHits; // vector of input hits from pileUp
-  LHCb::MCVeloFEs* m_veloFEs; ///< vector of FE output  signals
-  LHCb::MCVeloFEs* m_pileUpFEs; ///< vector of FE output  signals
-  //
-  //  double m_baseDiffuseSigma; // diffusion sigma in microns/sqrt(thickness)
-  // control simulation sections
 
-  bool m_inhomogeneousCharge;
-  bool m_coupling;
-  bool m_noiseSim;
-  bool m_pedestalSim;
-  bool m_CMSim;
-  double m_stripInefficiency; 
-  // if strip Ineff. > 0 then that fraction of strips have charge removed.
-  bool m_spillOver;
-  bool m_pileUp;
-  bool m_testSim;
-  double m_smearPosition;
+  bool m_inhomogeneousCharge; ///< simulate unequal charge along track
+  bool m_coupling;            ///< Simulate capactive coupling
+  bool m_noiseSim;            ///< Simulate noise in the sensor
+  bool m_pedestalSim;         ///< Simulate pedestal variations
+  bool m_CMSim;               ///< Simulate common mode effects
+  double m_stripInefficiency; ///< Fraction of strips to randomly kill
   // allows resolution to be degraded for robustness studies
   Gaudi::XYZPoint m_movePosition; // used when degrading resolution
-  std::string m_simMode; // velo or pileup
-  //gaussian random numbers
-  Rndm::Numbers m_gaussDist;
-  //uniform random numbers
-  Rndm::Numbers m_uniformDist;
-  /// random numbers from upper tail of gaussian > a
+  bool m_simNoisePileUp;      ///< velo or pileup for noise simulation
+  Rndm::Numbers m_gaussDist;  ///< gaussian random numbers
+  Rndm::Numbers m_uniformDist;///< uniform random numbers
+
+  double ran_inv_E2(double Emin, double Emax); ///<random numbers from 1/E^2
+  /// Random numbers from a gaussian tail
   double ran_gaussian_tail(const double a, const double sigma);
-  /// random numbers from 1/E^2
-  double ran_inv_E2(double Emin, double Emax);
-  // previously in Velo/VeloKernel package
+  /// threshold charge to make VeloFE from strip in ADC counts
+  double m_thresholdADC;
+  /// threshold charge in electrons = m_thresholdADC*m_electronsPerADC
   double m_threshold;
-  double m_noiseConstant;
+  /// probability to add noise tail to otherwise empty strip
+  double m_noiseTailProb;
+  /// sqrt(2*m_kT/m_biasVoltage) is the expected diffusion width
   double m_kT;
+  /// voltage applied to (over)depleted the sensor
   double m_biasVoltage;
+  /// Amount of energy required to make an e/hole pair in silicon
   double m_eVPerElectron;
-  long m_simulationPointsPerStrip;
+  /// Number of points to distribute charge on per strip
+  int m_simulationPointsPerStrip;
+  /// Use same charge along strip at each seeding centre
   double m_chargeUniform;
   double m_deltaRayMinEnergy;
+  /// fraction next strip charge sharing due to capacitive coupling to simulate
   double m_capacitiveCoupling;
-  double m_averageStripCapacitance;
-  double m_noiseCapacitance;
-  double m_baseDiffuseSigma;
-  std::vector<double> m_fitParams;
-  double m_pedestalConst;
-  double m_pedestalVariation;
-  double m_adc2Electrons;
-  double m_adcScale;
-  double m_offPeakSamplingTime;
-  bool m_makeNonZeroSuppressedData;
+  /// to estimate how many strips to simulate noise in
+  double m_averageStripNoise;
+  double m_baseDiffuseSigma;    ///< base size of charge diffusion 
+  double m_electronsPerADC;     ///< convert noise sources in ADC to electrons
+  double m_pulseShapePeakTime;  ///< Time of the peak amplifier response
+  double m_offPeakSamplingTime; ///< Time offset of sample to peak time
+  double m_pedestalConst;       ///< Simulated pedestal 
+  double m_pedestalVariation;   ///< Simulated pedestal variation 
+  /// make a VeloFE for every strip (default false)
+  bool m_makeNonZeroSuppressedData; 
+
+  std::string m_SiTimeToolType; ///< normally "SiAmpliferResponse" from STTools
+  ISiAmplifierResponse* m_SiTimeTool;
+
+  ISiDepositedCharge* m_depositedCharge;///< Tool calculates accumulated charge
+  std::string  m_depChargeToolType;     ///< Name of tool to calculate charge
+  bool m_useDepTool; ///< Allows to use GEANT energy directly if false
 
   bool m_isDebug; ///< debug level for output
   bool m_isVerbose; ///< debug level for output
