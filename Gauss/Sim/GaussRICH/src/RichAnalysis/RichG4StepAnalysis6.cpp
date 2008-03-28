@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis6.cpp,v 1.3 2008-01-31 13:50:51 seaso Exp $
+// $Id: RichG4StepAnalysis6.cpp,v 1.4 2008-03-28 14:30:45 seaso Exp $
 // Include files 
 
 #include "G4Track.hh"
@@ -124,8 +124,20 @@ void RichG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
              const G4Material* Material2 = aPostStepPoint -> GetMaterial();
              const G4String & aMaterial1Name =  Material1 ->GetName();
              const G4String & aMaterial2Name =  Material2 ->GetName();
+
+             std::string::size_type iHpdSiDetPrePos=
+                      aPreVolName.find(LogVolSiDetNameAnalysisStrPrefix);
+             std::string::size_type iHpdSiDetPostPos=
+                      aPostVolName.find(LogVolSiDetNameAnalysisStrPrefix);
+             std::string::size_type iHpdSMStrPrePos=
+                      aPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix);
+            
+
+
              if(aPreVolName  ==  LogVolSiDetNameAnalysis ||
-                aPostVolName ==  LogVolSiDetNameAnalysis) {
+                aPostVolName ==  LogVolSiDetNameAnalysis || 
+                iHpdSiDetPrePos != std::string::npos ||
+                iHpdSiDetPostPos != std::string::npos ) {
                  RichG4HpdReflectionTag ( (*aTrack),  aRichG4HpdReflectionFlag->HpdSiliconRefl()); 
              }
              if(  (aMaterial1Name == RichHpdKovarMaterialName) || 
@@ -142,7 +154,7 @@ void RichG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
              }             
              // now for the Hpd Quartz Window incidence location
              
-            if(aPreVolName == LogVolHpdSMasterNameAnalysis &&
+            if( (aPreVolName == LogVolHpdSMasterNameAnalysis || iHpdSMStrPrePos != std::string::npos)  &&
                aPostVolName ==  LogVolHpdQWindowNameAnalysis ){
               if(PhotCurDir.z() > 0.0 ) {
 
