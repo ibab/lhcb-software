@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.92 2008-03-28 14:22:33 cattanem Exp $
+! $Id: release.notes,v 1.93 2008-03-28 16:53:11 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
+
+! 2008-03-27 - Olivier Deschamps 
+ - split histogram production in L0DUReportMonitoring
+
 !========================== L0DU v8r4 2008-03-28 =========================
+
+
 ! 2008-03-26 - Olivier Deschamps 
  - L0DUFromRawTool improvement :
      - fix bug when decoding consecutive BX info
