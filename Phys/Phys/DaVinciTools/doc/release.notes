@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.306 2008-03-28 09:30:49 pkoppenb Exp $
+! $Id: release.notes,v 1.307 2008-03-30 18:05:28 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-03-30 - Vanya BELYAEV
+
+ - src/PrintDecayTree.cpp
+  new algoruthm (simplified,MC-free version of PrintTree)
+ 
 
 ! 2008-03-28 - Patrick Koppenburg
  - CombineParticles : Fix uninitialised m_printStats
