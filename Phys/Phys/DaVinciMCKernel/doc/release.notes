@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.31 2008-02-14 07:20:22 cattanem Exp $
+! $Id: release.notes,v 1.32 2008-03-30 18:00:53 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2008-03-30 - Vanya BELYAEV
+
+ - make the minor (compatible!) 
+   modification of IPrintDecayTreeTool interface 
+   
 
 !====================== DaVinciMCKernel v2r6 2008-02-14 =====================
 ! 2008-02-13 - Patrick Koppenburg
