@@ -1,4 +1,4 @@
-// $Id: Services.cpp,v 1.7 2007-11-28 14:08:51 ibelyaev Exp $
+// $Id: Services.cpp,v 1.8 2008-03-30 13:31:28 ibelyaev Exp $
 // ===========================================================================
 // Include files 
 // ===========================================================================
@@ -9,6 +9,7 @@
 #include "GaudiKernel/IAlgContextSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IRndmGenSvc.h"
 // ============================================================================
 // GaudiAlg
 // ============================================================================
@@ -52,6 +53,7 @@ LoKi::Services::Services()
   : m_lokiSvc    ( 0 ) 
   , m_ppSvc      ( 0 ) 
   , m_contextSvc ( 0 ) 
+  , m_randSvc    ( 0 ) 
   , m_histoSvc   ( 0 ) 
 {
   LoKi::Welcome::instance() ;
@@ -69,6 +71,8 @@ StatusCode LoKi::Services::releaseAll()
   if ( 0 != m_histoSvc   ) { m_histoSvc   -> release () ; m_histoSvc   = 0 ; }
   // release services 
   if ( 0 != m_ppSvc      ) { m_ppSvc      -> release () ; m_ppSvc      = 0 ; }
+  // release services 
+  if ( 0 != m_randSvc    ) { m_randSvc    -> release () ; m_randSvc    = 0 ; }
   // 'release' the service 
   if ( 0 != m_contextSvc ) { m_contextSvc -> release () ; m_contextSvc = 0 ; }
   // 'release' the service 
@@ -147,7 +151,7 @@ IAlgContextSvc* LoKi::Services::contextSvc () const
   return 0 ;
 }
 // ===========================================================================
-// accessor to historgam service
+// accessor to histogram service
 // ===========================================================================
 IHistogramSvc* LoKi::Services::histoSvc () const 
 {
@@ -176,6 +180,35 @@ IHistogramSvc* LoKi::Services::histoSvc () const
   return m_histoSvc  ;
 }
 // ===========================================================================
+// accessor to Random Numbers Service
+// ===========================================================================
+IRndmGenSvc* LoKi::Services::randSvc () const 
+{
+  if ( 0 != m_randSvc ) { return m_randSvc ; }
+  if ( 0 == m_lokiSvc  ) 
+  {
+    Error ( " randSvc(): LoKi::ILoKiSvc* points to NULL, return NULL" ) ;
+    return 0 ;
+  }
+  ISvcLocator* loc = m_lokiSvc -> svcLoc () ;
+  if ( 0 == loc ) 
+  {
+    Error ( " randSvc(): ISvcLocator* points to NULL, return NULL" ) ;
+    return 0 ;
+  }
+  StatusCode sc = loc->service( "RndmGenSvc" , m_randSvc ) ;
+  if ( sc.isFailure() ) 
+  {
+    Error ( " randSvc(): Could not locate 'RndmGenSvc', return NULL" , sc ) ;
+  }
+  if ( 0 == m_randSvc ) 
+  {
+    Error ( " IRndmGenSvc points to NULL, return NULL" , sc ) ;
+    return 0 ;
+  }
+  return m_randSvc  ;
+}
+// ===========================================================================
 // accessor to Event Data Service 
 // ===========================================================================
 IDataProviderSvc* LoKi::Services::evtSvc     () const 
@@ -184,7 +217,7 @@ IDataProviderSvc* LoKi::Services::evtSvc     () const
   IAlgContextSvc* ctx = contextSvc() ;
   if ( 0 == ctx ) 
   {
-    Error ( "evtSvc(): no vaild context is established, return NULL" ) ;
+    Warning ( "contextSvc(): no vaild context is established" ) ;
     return 0 ;
   }
   { /// get the last GaudiAlgorithm

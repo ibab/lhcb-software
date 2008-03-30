@@ -165,7 +165,7 @@ def ancestors ( o ) :
 
 # =============================================================================
 ## Get children:
-def children ( o ) :
+def children ( o , *a ) :
     """
     Get the children :
 
@@ -174,7 +174,7 @@ def children ( o ) :
     ...   print p
     
     """
-    return o.__children__ ()
+    return o.__children__ ( *a )
 
 # =============================================================================
 # Get the daughter :

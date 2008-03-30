@@ -1,4 +1,4 @@
-// $Id: LoKiSvc.cpp,v 1.12 2007-12-05 09:37:45 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.13 2008-03-30 13:31:28 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -175,6 +175,7 @@ public:
    *  @return the sequential event number 
    */
   virtual long                 event       () const { return m_event ; }
+  // ==========================================================================
 public:
   // ==========================================================================
   /// Inform that a new incident has occured
@@ -291,10 +292,10 @@ public:
       isvc -> removeListener ( this ) ; 
     }
     //
-    if ( 0 != m_toolSvc      ) { m_toolSvc     -> release() ; m_toolSvc     = 0 ; }    
-    if ( 0 != m_ppSvc        ) { m_ppSvc       -> release() ; m_ppSvc       = 0 ; }
-    if ( 0 != m_contextSvc   ) { m_contextSvc  -> release() ; m_contextSvc  = 0 ; }
-    if ( 0 != m_incidentSvc  ) { m_incidentSvc -> release() ; m_incidentSvc = 0 ; }
+    if ( 0 != m_toolSvc      ) { m_toolSvc     -> release () ; m_toolSvc     = 0 ; }    
+    if ( 0 != m_ppSvc        ) { m_ppSvc       -> release () ; m_ppSvc       = 0 ; }
+    if ( 0 != m_contextSvc   ) { m_contextSvc  -> release () ; m_contextSvc  = 0 ; }
+    if ( 0 != m_incidentSvc  ) { m_incidentSvc -> release () ; m_incidentSvc = 0 ; }
     //
     {
       /// subscribe the incident:
@@ -329,14 +330,38 @@ public:
   virtual StatusCode queryInterface 
   ( const InterfaceID& iid, void** ppI ) 
   {
-    if      ( 0 == ppI ) 
-    { return StatusCode::FAILURE ; }
-    else if ( LoKi::ILoKiSvc::interfaceID    () == iid  ) 
+    if      ( 0 == ppI ) { return StatusCode::FAILURE ; }
+    //
+    *ppI = 0 ;
+    if      ( LoKi::ILoKiSvc::interfaceID    () == iid  ) 
     { *ppI = static_cast<LoKi::ILoKiSvc*>    ( this ) ; }
     else if ( IIncidentListener::interfaceID () == iid  ) 
     { *ppI = static_cast<IIncidentListener*> ( this ) ; }
     else if ( IService::interfaceID          () == iid  ) 
     { *ppI = static_cast<IService*>          ( this ) ; }
+    else if ( IProperty::interfaceID         () == iid  ) 
+    { *ppI = static_cast<IService*>          ( this ) ; }
+    //
+    // dispatch to the concrete service: 
+    //
+    // Tool Service 
+    else if ( IToolSvc::interfaceID             () == iid && 0 != toolSvc     () )
+    { return toolSvc()     -> queryInterface ( iid , ppI ) ;}
+    // Particle Property Service 
+    else if ( IParticlePropertySvc::interfaceID () == iid && 0 != ppSvc       () ) 
+    { return ppSvc()       -> queryInterface ( iid , ppI ) ; }
+    // Algorithm  Context Service 
+    else if ( IAlgContextSvc::interfaceID       () == iid && 0 != contextSvc  () ) 
+    { return contextSvc()  -> queryInterface ( iid , ppI ) ; }
+    // Incident Service 
+    else if ( IIncidentSvc::interfaceID         () == iid && 0 != incidentSvc () ) 
+    { return incidentSvc() -> queryInterface ( iid , ppI ) ; }
+    // ServiceLocator  
+    else if ( ISvcLocator::interfaceID          () == iid && 0 != svcLoc      () ) 
+    { return svcLoc()      -> queryInterface ( iid , ppI ) ; }
+    // a bit more fun with the reporter 
+    else if ( LoKi::IReporter::interfaceID      () == iid && 0 != svcLoc      () ) 
+    { return svcLoc()      -> queryInterface ( iid , ppI ) ; }
     else 
     { return    Service::queryInterface ( iid , ppI ) ; }
     //
@@ -346,7 +371,6 @@ public:
   } ; 
   // ==========================================================================
 protected:  
-protected:
   // ==========================================================================
   /** standard constructor 
    *  @param name service instance name 
@@ -399,12 +423,7 @@ private:
   long                          m_event        ;
 };
 // ============================================================================
-
-// ============================================================================
 DECLARE_SERVICE_FACTORY(LoKiSvc)
-// ============================================================================
-
-
 // ============================================================================
 // The END 
 // ============================================================================

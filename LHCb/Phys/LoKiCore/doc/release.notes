@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.81 2008-03-13 09:02:52 cattanem Exp $ 
+! $Id: release.notes,v 1.82 2008-03-30 13:31:28 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,7 +15,30 @@
 ! 
 ! -----------------------------------------------------------------------------
 
-!=========================== LoKiCore v7r2 2008-03-12  ========================
+! =========================== LoKiCore v7r2 2008-03-30  ========================
+
+! 2008-03-30 - Vanya BELYAEV
+
+ - many small changes & fixes:
+
+   - introduce the specialized printout for boolean constants 
+   - add __rshift__ stremer operators for the functors 
+   - add random number service into Services
+   - implements the proper interface dispatches for LoKi-service
+      from now, SmartIF<...> allows to extract 
+      many othe rinterfaces from LoKi::ILoKiSvc
+   - remove the empty file LoKi/Maths.h 
+   - add "HugeChi2"and "HugeDistance" into LoKi/Constants.h
+   - add LoKi/Random.h and src/Random.cpp files
+      new "random" functors:
+      1. LoKi::Random::Numbers 
+      2. LoKi::Random::Uniform 
+      3. LoKi::Random::Gaussian
+      4  LoKi::Random::Rand 
+
+
+   
+
 ! 2008-03-12 - Vanya BELYAEV
 
  - src/Components/Reporter.cpp

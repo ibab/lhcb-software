@@ -1,4 +1,4 @@
-// $Id: Calls.h,v 1.4 2007-12-03 12:03:22 ibelyaev Exp $
+// $Id: Calls.h,v 1.5 2008-03-30 13:31:28 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CALLS_H 
 #define LOKI_CALLS_H 1
@@ -19,7 +19,12 @@ namespace LoKi
   namespace Dicts 
   {
     // ========================================================================
-    /** @class FunCalls Calls.h LoKi/Calls.h
+    /** @class FunCalls LoKi/Calls.h
+     *
+     *  @attention The "generic" implementation fits nicely only 
+     *             to few classes, for all other cases one needs to 
+     *             look for template specializations 
+     *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-29
      */
@@ -36,20 +41,42 @@ namespace LoKi
       static typename Fun::result_type __call__ 
       ( const Fun& fun  , const SmartRef<Type>& o ) { return fun ( o ) ; }
       // ======================================================================
+    public:
+      // ======================================================================
+      // __rrshift__ 
       static std::vector<typename Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const typename Type::ConstVector& o ) 
       { return o >> fun  ; }
+      // __rrshift__ 
       static std::vector<typename Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const typename Type::Vector&      o ) 
       { return o >> fun  ; }
+      // __rrshift__ 
       static typename Fun::result_type              __rrshift__ 
       ( const Fun& fun  , const Type*           o ) { return fun ( o ) ; }
+      // __rrshift__ 
       static typename Fun::result_type              __rrshift__ 
       ( const Fun& fun  , const SmartRef<Type>& o ) { return fun ( o ) ; }
-      //
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<const Type*,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<const Type*,bool>   __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class CutCalls Calls.h LoKi/Calls.h
+     *
+     *  @attention The "generic" implementation fits nicely only 
+     *             to few classes, for all other cases one needs to 
+     *             look for template specializations 
+     *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-29
      */

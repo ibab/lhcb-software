@@ -1,4 +1,4 @@
-// $Id: apply.h,v 1.2 2007-12-03 12:03:23 ibelyaev Exp $
+// $Id: apply.h,v 1.3 2008-03-30 13:31:28 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APPLY_H 
 #define LOKI_APPLY_H 1
@@ -277,16 +277,24 @@ namespace LoKi
     operator() ( ARGUMENT a ) const 
     { return LoKi::apply ( *m_functor , a ) ; }
     /// the only one essential method 
+    inline typename LoKi::Functor<TYPE,TYPE2>::result_type 
+    operator() ( typename LoKi::Functor<TYPE,TYPE2>::argument a ) const 
+    { return LoKi::apply ( *m_functor , a ) ; }
+    /// the only one essential method 
     template <class ARGUMENT>
     inline typename LoKi::Functor<TYPE,TYPE2>::result_type 
     eval       ( ARGUMENT a ) const 
     { return LoKi::apply ( *m_functor , a ) ; }
+    /// the only one essential method 
+    inline typename LoKi::Functor<TYPE,TYPE2>::result_type 
+    eval       ( typename LoKi::Functor<TYPE,TYPE2>::argument a ) const 
+    { return LoKi::apply ( *m_functor , a ) ; }    
   private:
     // the default constructor is disabled 
     Apply() ; ///< the default constructor is disabled
   private:
-    // the functor itself 
-    const LoKi::Functor<TYPE,TYPE2>* m_functor ; ///< the functor itself 
+    /// the functor itself 
+    const LoKi::Functor<TYPE,TYPE2>* m_functor ; // the functor itself 
   } ;
   // ==========================================================================
 } // end of namespace LoKi

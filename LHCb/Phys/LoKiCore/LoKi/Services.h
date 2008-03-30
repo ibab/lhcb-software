@@ -1,4 +1,4 @@
-// $Id: Services.h,v 1.6 2007-11-28 13:56:33 ibelyaev Exp $
+// $Id: Services.h,v 1.7 2008-03-30 13:31:28 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SERVICES_H 
 #define LOKI_SERVICES_H 1
@@ -15,6 +15,7 @@ class IParticlePropertySvc ;
 class IAlgContextSvc       ;
 class IHistogramSvc        ;
 class IDataProviderSvc     ;
+class IRndmGenSvc          ;
 // ============================================================================
 /** @file
  *
@@ -60,6 +61,8 @@ namespace LoKi
     IHistogramSvc*        histoSvc   () const ;
     /// accessor to Event Data Service 
     IDataProviderSvc*     evtSvc     () const ;
+    /// accessor to Random Number Service 
+    IRndmGenSvc*          randSvc    () const ;
     /// destructor (virtual) 
     virtual ~Services() ;
   protected:
@@ -90,10 +93,16 @@ namespace LoKi
     // assignement operator is disabled 
     Services& operator=( const Services& ) ;
   private:
-    LoKi::ILoKiSvc*        m_lokiSvc    ;
-    IParticlePropertySvc*  m_ppSvc      ;
-    IAlgContextSvc*        m_contextSvc ;
-    mutable IHistogramSvc* m_histoSvc   ;
+    /// The major service : LoKi service 
+    LoKi::ILoKiSvc*        m_lokiSvc    ; // the major service for LoKi 
+    // The source of particle properties 
+    IParticlePropertySvc*  m_ppSvc      ; // the source of particle properties 
+    // The algorithm context service: needed for "context" services
+    IAlgContextSvc*        m_contextSvc ; // algorithm context 
+    // The source of random numbers 
+    mutable IRndmGenSvc*   m_randSvc    ; // the source of random numbers 
+    // The histogram storage 
+    mutable IHistogramSvc* m_histoSvc   ; // the histogram storage 
   };
   // ==========================================================================
 } // end of namespace LoKi

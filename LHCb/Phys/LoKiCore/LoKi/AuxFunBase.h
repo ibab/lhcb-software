@@ -1,4 +1,4 @@
-// $Id: AuxFunBase.h,v 1.8 2007-12-09 17:56:39 ibelyaev Exp $
+// $Id: AuxFunBase.h,v 1.9 2008-03-30 13:31:28 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_AUXFUNBASE_H 
 #define LOKI_AUXFUNBASE_H 1
@@ -50,36 +50,39 @@ namespace LoKi
   {   
   protected:
   public:    // to please Visual C++ compiler
+    // ========================================================================
     /// constructor from LoKi Service
     AuxFunBase  ( const LoKi::ILoKiSvc* svc = 0 ) ; 
     // copy consructor 
     AuxFunBase  ( const AuxFunBase&     right ) ; //</ copy consructor 
     // destructor 
     virtual ~AuxFunBase (); ///< destructor 
+    // ========================================================================
   protected:
   public:    // to please Visual C++ compiler
+    // ========================================================================
     /** print error message 
      *  @param msg  error message 
      *  @param sc   status code 
      */
     virtual void Error
-    ( const std::string& msg                       , 
-      const StatusCode&  sc  = StatusCode::FAILURE ) const ;
+    ( const std::string& msg                                             , 
+      const StatusCode&  sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
     /** print warning message 
      *  @param msg  warning message 
      *  @param sc   status code 
      */
     virtual void Warning
-    ( const std::string& msg                       , 
-      const StatusCode&  sc  = StatusCode::FAILURE ) const ;
+    ( const std::string& msg                                             , 
+      const StatusCode&  sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
     /** thrown an exception 
      *  @param msg  warning message 
      *  @param sc   status code 
      *  @return status code  (fictive)
      */
     virtual void Exception
-    ( const std::string& msg                       , 
-      const StatusCode&  sc  = StatusCode::FAILURE ) const ;
+    ( const std::string& msg                                             , 
+      const StatusCode&  sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
     /** assert the condition 
      *  @param condition the condition to be asserted 
      *  @param message the message to be associated with the exception
@@ -87,21 +90,23 @@ namespace LoKi
      */
     inline  
     void Assert 
-    ( const bool         condition                      , 
-      const std::string& message                        ,  
-      const StatusCode&  sc       = StatusCode::FAILURE ) const 
-    { if ( !condition ) { Exception ( message , sc ) ; } ;  sc.ignore() ; }
+    ( const bool         condition                                      , 
+      const std::string& message                                        ,  
+      const StatusCode&  sc = StatusCode ( StatusCode::FAILURE , true ) ) const 
+    { if ( !condition ) { Exception ( message , sc ) ; } ; sc.ignore() ; }
     /** assert the condition 
      *  @param condition the condition to be asserted 
      *  @param message the message to be associated with the exception
      *  @param sc status code 
      */
     inline void Assert 
-    ( const bool         condition                      , 
-      const char*        message                        ,  
-      const StatusCode&  sc       = StatusCode::FAILURE ) const 
-    { if ( !condition ) { Exception ( message , sc ) ; } ;  sc.ignore() ; }    
+    ( const bool         condition                                            , 
+      const char*        message                                              ,  
+      const StatusCode&  sc       = StatusCode ( StatusCode::FAILURE , true ) ) const 
+    { if ( !condition ) { Exception ( message , sc ) ; } ; sc.ignore() ; }    
+    // ========================================================================
   public:
+    // ========================================================================
     /** (virtual) printout to std::ostream 
      *  @param s output stream 
      *  @return reference to the stream 
@@ -115,16 +120,21 @@ namespace LoKi
     virtual std::string   objType   () const ;
     /// unique function ID (hash); see LoKi::genericID 
     virtual std::size_t   id        () const ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// get the event-ID 
     long event    ()           const { return m_event ; }
     /// set the event-ID 
     void setEvent ( long evt ) const { m_event = evt  ; }
     /// set the event-ID from LoKi service 
     void setEvent (          ) const ; 
+    // ========================================================================
   public:
+    // ========================================================================
     /// check the data for the same event 
     bool sameEvent() const ;
+    // ========================================================================
   public:
     // ========================================================================
     /// get LoKi service 
@@ -139,10 +149,12 @@ namespace LoKi
     ( const LoKi::Interface<LoKi::ILoKiSvc>& svc ) const { m_lokiSvc = svc ; }
     // ========================================================================
   private:
+    // ========================================================================
     // the event ID 
     mutable long m_event ; ///< the event ID 
     // LoKi service
     mutable LoKi::Interface<LoKi::ILoKiSvc> m_lokiSvc ; ///< LoKi service
+    // ========================================================================
   };
   // ==========================================================================
   /** simple fuctiin to generate the default generic 

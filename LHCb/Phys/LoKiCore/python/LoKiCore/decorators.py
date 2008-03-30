@@ -1,4 +1,4 @@
-!/usr/bin/env python
+#!/usr/bin/env python
 # =============================================================================
 ## @file decorators.py LoKiCore/decorators.py
 #  The set of basic decorator for objects from LoKiCore library
@@ -282,6 +282,17 @@ def decorateFunctions ( funcs , calls , opers ) :
             
             """
             return calls.__rrshift__ ( s , a ) 
+        # streamers
+        def _rshift_ ( s , a ) :
+            """
+            Streamer (map here)
+            
+            >>> a =
+            >>> function =
+            >>> result = a >> function
+            
+            """
+            return calls.__rshift__ ( s , a ) 
         # other:
         def _neg_  (s)   :
             """
@@ -685,6 +696,7 @@ def decorateFunctions ( funcs , calls , opers ) :
         _rmul_ . __doc__  += opers.__rsub__ . __doc__
         _rdiv_ . __doc__  += opers.__rdiv__ . __doc__
         _rrshift_ . __doc__  += calls.__rrshift__ . __doc__
+        _rshift_  . __doc__  += calls.__rshift__  . __doc__
         _neg_  . __doc__  += opers.__neg__  . __doc__
         _abs_  . __doc__  += opers.__abs__  . __doc__
         _pow_  . __doc__  += opers.__pow__  . __doc__
@@ -748,6 +760,7 @@ def decorateFunctions ( funcs , calls , opers ) :
         fun . __rmul__   = _rmul_  # operator*
         fun . __rdiv__   = _rdiv_  # operator/
         fun . __rrshift__ = _rrshift_  # (right) operator>> 
+        fun . __rshift__ = _rshift_    # (right) operator>> 
         fun . __neg__    = _neg_   # 
         fun . __abs__    = _abs_   # 
         fun . __pow__    = _pow_   # 

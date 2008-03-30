@@ -1,4 +1,4 @@
-// $Id: Functor.h,v 1.2 2007-12-03 12:03:22 ibelyaev Exp $
+// $Id: Functor.h,v 1.3 2008-03-30 13:31:28 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCTOR_H 
 #define LOKI_FUNCTOR_H 1
@@ -213,8 +213,7 @@ namespace LoKi
     virtual typename LoKi::Functor<TYPE,TYPE2>::result_type operator() 
       ( typename LoKi::Functor<TYPE,TYPE2>::argument ) const { return m_value ; }
     /// the basic printout method  
-    virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return  s << m_value ; };
+    virtual std::ostream& fillStream( std::ostream& s ) const ;
   private:
     /// no default constructor 
     Constant() ; ///< no default constructor 
@@ -406,8 +405,7 @@ namespace LoKi
       ( /* typename LoKi::Functor<TYPE,TYPE2>::argument */ ) const 
     { return m_value ; }
     /// the basic printout method  
-    virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return  s << m_value ; };
+    virtual std::ostream& fillStream( std::ostream& s ) const ;
   private:
     /// no default constructor 
     Constant() ; ///< no default constructor 
@@ -415,6 +413,27 @@ namespace LoKi
     // the constant itself 
     TYPE2 m_value ; ///< the constant itself 
   } ;
+  // ==========================================================================
+  // the generic printout method 
+  // ==========================================================================
+  template <class TYPE,class TYPE2>
+  inline std::ostream&
+  Constant<TYPE,TYPE2>::fillStream( std::ostream& s ) const 
+  { return Gaudi::Utils::toStream ( this->m_value , s ) ; }
+  // ==========================================================================
+  // the basic printout method  
+  // ==========================================================================
+  template <class TYPE2>
+  inline std::ostream& 
+  Constant<void,TYPE2>::fillStream( std::ostream& s ) const 
+  { return  Gaudi::Utils::toStream ( this->m_value , s ) ; }
+  // ==========================================================================
+  // the basic printout method  
+  // ==========================================================================
+  template <>
+  inline std::ostream& 
+  Constant<double,bool>::fillStream( std::ostream& s ) const 
+  { return s << ( this->m_value ? "XALL" : "XNONE" ) ; } 
   // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: Constants.h,v 1.10 2007-07-23 17:07:37 ibelyaev Exp $
+// $Id: Constants.h,v 1.11 2008-03-30 13:31:28 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CONSTANTS_H 
 #define LOKI_CONSTANTS_H 1
@@ -63,6 +63,8 @@ namespace LoKi
     const double InvalidMass         =  -100 * Gaudi::Units::TeV ;    
     /// representation of invalid sine/cosine/angle, etc 
     const double InvalidAngle        =  -1000      ;
+    /// representation of HUGE distance 
+    const double HugeDistance        =   1000 * Gaudi::Units::km ;
     /// representation of HUGE chi2 
     const double HugeChi2            = 1.e+10      ;
     /// representation of positive INFINITY 

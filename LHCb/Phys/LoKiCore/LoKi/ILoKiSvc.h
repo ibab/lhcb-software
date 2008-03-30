@@ -1,4 +1,4 @@
-// $Id: ILoKiSvc.h,v 1.6 2007-12-05 09:37:45 ibelyaev Exp $
+// $Id: ILoKiSvc.h,v 1.7 2008-03-30 13:31:28 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ILOKISVC_H 
 #define LOKI_ILOKISVC_H 1
@@ -94,6 +94,7 @@ namespace LoKi
      *  @return the sequential event number 
      */
     virtual long                 event       () const = 0 ;
+    // ========================================================================
   public:
     // ========================================================================
     /** Retrieve interface ID
