@@ -1,4 +1,4 @@
-// $Id: TrackTypes.h,v 1.3 2007-12-11 18:56:21 ibelyaev Exp $
+// $Id: TrackTypes.h,v 1.4 2008-03-30 13:48:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKTYPES_H 
 #define LOKI_TRACKTYPES_H 1
@@ -20,6 +20,7 @@ namespace LHCb
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /** @namespace LoKi::TrackTypes 
    *  helper namespace  to collect the types neede for "Track"-functions
    *  @author Vanya BELAYEV ibelyaev@physics.syr.edu
@@ -216,8 +217,24 @@ namespace LoKi
   // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
-
-
+namespace LoKi 
+{
+  // ==========================================================================
+  // the specialized printout 
+  // ==========================================================================
+  template <>
+  inline std::ostream& 
+  Constant<LHCb::Track,bool>::fillStream( std::ostream& s ) const 
+  { return s << ( this->m_value ? "TrALL" : "TrNONE" ) ; }
+  // ==========================================================================
+  // the specialized printout 
+  // ==========================================================================  
+  template <>
+  inline std::ostream& 
+  Constant<LHCb::RecVertex,bool>::fillStream  ( std::ostream& s ) const 
+  { return s << ( this->m_value ? "RVALL" : "RVNONE" ) ; }
+  // ==========================================================================  
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

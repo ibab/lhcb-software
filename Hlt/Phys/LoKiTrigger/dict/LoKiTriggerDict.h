@@ -1,4 +1,4 @@
-// $Id: LoKiTriggerDict.h,v 1.8 2007-12-09 19:04:41 ibelyaev Exp $
+// $Id: LoKiTriggerDict.h,v 1.9 2008-03-30 13:48:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -36,6 +36,7 @@ namespace LoKi
       typedef LHCb::Track                         Type ;
       typedef LoKi::BasicFunctors<Type>::Function Fun  ;
     public:
+      // ======================================================================
       // __call__
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type&           o ) { return fun ( o ) ; }
@@ -45,7 +46,9 @@ namespace LoKi
       // __call__
       static Fun::result_type __call__ 
       ( const Fun& fun  , const SmartRef<Type>& o ) { return fun ( *o.target() ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __rrshift__
       static std::vector<Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const LHCb::Track::Vector&          o ) 
@@ -88,6 +91,18 @@ namespace LoKi
       // __rrshift__
       static Fun::result_type __rrshift__ 
       ( const Fun& fun  , const SmartRef<Type>& o ) { return fun ( *o.target() ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,bool>   __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      // ======================================================================
     } ;
     // ========================================================================
     template <>
@@ -150,6 +165,17 @@ namespace LoKi
       static Fun::result_type __rrshift__ 
       ( const Fun& fun  , const SmartRef<Type>& o ) 
       { return fun ( *o.target() ) ; }
+    public:
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,bool>   __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      // ======================================================================
     } ;
     // ========================================================================
     template <>
@@ -168,6 +194,17 @@ namespace LoKi
       // __rrshift__ 
       static Fun::result_type __rrshift__ 
       ( const Fun& fun , Fun::argument  o ) { return fun ( o ) ; }
+    public:
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,bool>   __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      // ======================================================================
     } ;
     // ========================================================================
     template <>
@@ -185,6 +222,17 @@ namespace LoKi
       // __rrshift__ 
       static Fun::result_type __rrshift__ 
       ( const Fun& fun , Fun::argument  o ) { return fun ( o ) ; }
+    public:
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,bool>   __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      // ======================================================================
     } ;    
     // ========================================================================
     template <>
@@ -199,9 +247,22 @@ namespace LoKi
         Fun::first_argument  a1 , 
         Fun::second_argument a2 ) { return fun ( a1 , a2 ) ; }
     public:
+      // ======================================================================
       // __rrshift__ 
       static Fun::result_type __rrshift__ 
       ( const Fun& fun , Fun::argument  o ) { return fun ( o ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,bool>   __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      // ======================================================================
     } ;
     // ========================================================================
     template <>

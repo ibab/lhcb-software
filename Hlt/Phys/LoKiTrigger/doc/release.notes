@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.8 2008-02-11 10:18:56 ibelyaev Exp $
+! $Id: release.notes,v 1.9 2008-03-30 13:48:13 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2008-03-30 - Vanya BELYAEV
+
+ - new stremers/shift __rshift__ operators 
+ - better prinptu of boolean constants 
+ - cmt/requirements 
+    version increment to v7r3 
 
 !========================== LoKiTrigger v7r2 2008-02-11 ===================
 
