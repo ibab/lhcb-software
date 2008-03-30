@@ -1,4 +1,4 @@
-// $Id: HybridTool.cpp,v 1.2 2008-02-19 16:13:07 ibelyaev Exp $
+// $Id: HybridTool.cpp,v 1.3 2008-03-30 13:45:03 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -490,6 +490,8 @@ LoKi::Hybrid::Tool::Tool
   //
   m_modules.push_back ( "LoKiPhys.decorators"          ) ;
   m_modules.push_back ( "LoKiArrayFunctors.decorators" ) ;
+  m_modules.push_back ( "LoKiCore.functions"           ) ;
+  m_modules.push_back ( "LoKiCore.math"                ) ;
   declareProperty ( "Modules" , m_modules , "Python modules to be imported" ) ;
   declareProperty ( "Actor"   , m_actor   , "The processing engine"         ) ;
   declareProperty ( "Lines"   , m_lines   , "Additional python lines"       ) ;
