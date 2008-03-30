@@ -1,4 +1,4 @@
-// $Id: MCTypes.h,v 1.11 2008-02-19 15:04:01 ibelyaev Exp $
+// $Id: MCTypes.h,v 1.12 2008-03-30 13:38:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCTYPES_H 
 #define LOKI_MCTYPES_H 1
@@ -36,6 +36,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   /** @namespace  LoKi::MCTypes MCTypes.h LoKi/MCTypes.h
    *  
    *  Helper namespace to collect some useful MC data types 
@@ -48,6 +49,7 @@ namespace LoKi
    */
   namespace MCTypes 
   {
+    // ========================================================================
     /// the basic imported type for the sequence of MC-particles 
     typedef LHCb::MCParticle::ConstVector   MCContainer      ;
     /// the basic imported type for the sequence of MC-vertices 
@@ -125,9 +127,11 @@ namespace LoKi
     /// type of "source" for LHCb::MCVertex   (assignable)
     typedef LoKi::Assignable<MCVSources>::Type                    MCVSource   ;
     // ========================================================================
-  } // end of namespace LoKi::MCTypes  
+  } // end of namespace LoKi::MCTypes
+  // ==========================================================================
   namespace Types 
   { 
+    // ========================================================================
     /// the actual type of the sequence of MC-particles 
     typedef LoKi::MCTypes::MCRange  MCRange ;
     /// the actual type of the sequence of MC-vertices  
@@ -199,7 +203,27 @@ namespace LoKi
     /// type of "source"  for LHCb::MCVertex     (assignable)
     typedef LoKi::MCTypes::MCVSource             MCVSource   ;
     // ========================================================================
-  } // end of namespace LoKi::Types  
+  } // end of namespace LoKi::Types
+  // ==========================================================================
+} // end of namespace LoKi
+// ============================================================================
+namespace LoKi 
+{
+  // ==========================================================================
+  // the specialized printout 
+  // ==========================================================================
+  template <>
+  inline std::ostream& 
+  Constant<const LHCb::MCParticle*,bool>::fillStream( std::ostream& s ) const 
+  { return s << ( this->m_value ? "MCALL" : "MCNONE"  ) ; }
+  // ==========================================================================
+  // the specialized printout 
+  // ==========================================================================  
+  template <>
+  inline std::ostream& 
+  Constant<const LHCb::MCVertex*,bool>::fillStream  ( std::ostream& s ) const 
+  { return s << ( this->m_value ? "MCVALL" : "MCVNONE" ) ; }
+  // ==========================================================================  
 } // end of namespace LoKi
 // ============================================================================
 // The END 

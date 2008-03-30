@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.45 2008-02-19 13:16:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.46 2008-03-30 13:36:01 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,14 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2008-03-30 - Vanya BELYAEV
+
+  - introduce the proper shift-operators __rshift__ (streamers) 
+  - add the proper specialization for prinotut of boolean constants 
+  - cmt/requirements
+     version increment to v7r2 
+
 
 !============================ LoKiGen v7r1 2008-02-19 =========================
 

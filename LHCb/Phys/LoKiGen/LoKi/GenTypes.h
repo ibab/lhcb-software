@@ -1,4 +1,4 @@
-// $Id: GenTypes.h,v 1.10 2008-02-19 13:16:25 ibelyaev Exp $
+// $Id: GenTypes.h,v 1.11 2008-03-30 13:36:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENTYPES_H 
 #define LOKI_GENTYPES_H 1
@@ -35,12 +35,14 @@ namespace HepMC { class GenVertex   ; }
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   /** @namespace LoKi::GenTypes GenTypes.h LoKi/GenTypes.h
    *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
    *  @date   2005-03-27
    */
   namespace GenTypes 
   {
+    // ========================================================================
     /// the basic imported type for the sequence of HepMC-particles 
     typedef std::vector<const HepMC::GenParticle*>  GenContainer      ;
     /// the basic imported type for the sequence of HepMC-vertices 
@@ -117,9 +119,12 @@ namespace LoKi
     // type of "source" for HepMCGenVertex   (assignable)
     typedef LoKi::Assignable<GVSources>::Type                       GVSource   ;
     //
-  }  // end of namespace GenTypes
+    // ========================================================================
+  } // end of namespace GenTypes
+  // ==========================================================================
   namespace Types
   {
+    // ========================================================================
     /// type of 'cuts' for HepMC::GenParticle       (interface)
     typedef LoKi::GenTypes::GCuts     GCuts ;
     /// type of 'functions' for HepMC::GenParticle  (interface)
@@ -191,9 +196,28 @@ namespace LoKi
     typedef LoKi::GenTypes::GVSources     GVSources  ;
     // type of "source" for HepMC::GenVertex  (assignable)
     typedef LoKi::GenTypes::GVSource      GVSource   ;
-
-    
-  }  // end of namespace Types
+    // ========================================================================
+  } // end of namespace Types
+  // ==========================================================================
+} // end of namespace LoKi
+// ============================================================================
+namespace LoKi 
+{
+  // ==========================================================================
+  // the specialized printout 
+  // ==========================================================================
+  template <>
+  inline std::ostream& 
+  Constant<const HepMC::GenParticle*,bool>::fillStream( std::ostream& s ) const 
+  { return s << ( this->m_value ? "GALL" : "GNONE" ) ; }
+  // ==========================================================================
+  // the specialized printout 
+  // ==========================================================================  
+  template <>
+  inline std::ostream& 
+  Constant<const HepMC::GenVertex*,bool>::fillStream  ( std::ostream& s ) const 
+  { return s << ( this->m_value ? "GVALL" : "GVNONE" ) ; }
+  // ==========================================================================  
 } // end of namespace LoKi
 // ============================================================================
 // The END 

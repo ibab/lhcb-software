@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.37 2008-02-19 15:04:01 ibelyaev Exp $ 
+! $Id: release.notes,v 1.38 2008-03-30 13:38:00 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,14 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2008-03-30 - Vanya BELYAEV
+
+ - new stremers/shift __rshift__ operators 
+ - better prinotu of boolean constants 
+ - cmt/requirements
+     version increment to v7r2 
+
 
 !========================== LoKiMC v7r1 2008-02-19 ============================
 

@@ -1,4 +1,4 @@
-// $Id: LoKiGenDict.h,v 1.7 2007-12-09 18:08:01 ibelyaev Exp $
+// $Id: LoKiGenDict.h,v 1.8 2008-03-30 13:36:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -52,11 +52,14 @@ namespace LoKi
       typedef HepMC::GenParticle          Type ;
       typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;
     public:
+      // ======================================================================
       // __call__ 
       static Fun::result_type              
       __call__    ( const Fun& fun  , const Type*           o ) 
       { return fun ( o ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __rrshift__ 
       static Fun::result_type              
       __rrshift__ ( const Fun& fun  , const Type*           o ) 
@@ -65,6 +68,18 @@ namespace LoKi
       static std::vector<Fun::result_type> 
       __rrshift__ ( const Fun& fun  , const LoKi::GenTypes::GenContainer& o ) 
       { return o >> fun  ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      // _rshift_ 
+      static LoKi::FunctorFromFunctor<const Type*,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // _rshift_ 
+      static LoKi::FunctorFromFunctor<const Type*,bool>   __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      // ======================================================================
     } ;
     // ========================================================================
     template <>
@@ -74,11 +89,14 @@ namespace LoKi
       typedef HepMC::GenParticle           Type ;
       typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;
     public:
+      // ======================================================================
       // __call__
       static Fun::result_type 
       __call__    ( const Fun& fun  , const Type*           o ) 
       { return fun ( o ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __rrshift__ 
       static Fun::result_type              
       __rrshift__ ( const Fun& fun  , const Type*           o ) 
@@ -87,11 +105,14 @@ namespace LoKi
       static const LoKi::GenTypes::GenContainer 
       __rrshift__ ( const Fun& fun  , const LoKi::GenTypes::GenContainer& o ) 
       { return o >> fun  ; }      
+      // ======================================================================
     public:
+      // ======================================================================
       // __rshift__ 
       static LoKi::FunctorFromFunctor<const Type*,bool>
       __rshift__ ( const Fun& fun  , const Fun& o ) 
       { return fun >> o   ; }      
+      // ======================================================================
     } ;
     // ========================================================================
     template <>
@@ -105,6 +126,7 @@ namespace LoKi
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type*           o ) { return fun ( o ) ; }
     public:
+      // ======================================================================
       // __rrshift__ 
       static Fun::result_type              
       __rrshift__ ( const Fun& fun  , const Type*           o ) 
@@ -113,6 +135,18 @@ namespace LoKi
       static std::vector<Fun::result_type> 
       __rrshift__ ( const Fun& fun  , const LoKi::GenTypes::GenVContainer& o ) 
       { return o >> fun  ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      // _rshift_ 
+      static LoKi::FunctorFromFunctor<const Type*,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // _rshift_ 
+      static LoKi::FunctorFromFunctor<const Type*,bool>   __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      // ======================================================================
     } ;
     // ========================================================================
     template <>
@@ -122,11 +156,14 @@ namespace LoKi
       typedef HepMC::GenVertex             Type ;
       typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;
     public:
+      // ======================================================================
       // __call__
       static Fun::result_type 
       __call__    ( const Fun& fun  , const Type*           o ) 
       { return fun ( o ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __rrshift__ 
       static Fun::result_type              
       __rrshift__ ( const Fun& fun  , const Type*           o ) 
@@ -135,11 +172,14 @@ namespace LoKi
       static const LoKi::GenTypes::GenVContainer 
       __rrshift__ ( const Fun& fun  , const LoKi::GenTypes::GenVContainer& o ) 
       { return o >> fun  ; }      
+      // ======================================================================
     public:
+      // ======================================================================
       // __rrshift__ 
       static LoKi::FunctorFromFunctor<const Type*,bool>
       __rshift__ ( const Fun& fun  , const Fun& o ) 
       { return fun >> o  ; }      
+      // ======================================================================
     } ;
     // ========================================================================
   } 
