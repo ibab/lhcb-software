@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.3 2008-02-11 10:03:58 ibelyaev Exp $ 
+# $Id: functions.py,v 1.4 2008-03-30 13:40:40 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiNumbers/functions.py
 #  The full set of useful objects from LoKiNumbers library 
@@ -62,7 +62,17 @@ XID       = X
 XV        = LoKi.Identity ( _v , _v   ) ()
 XVID      = XV
 
+
 XVector   = std.vector(_d)
+
+
+# random numbers:
+XRANDOM   = LoKi.Random.Numbers
+XRND      = LoKi.Random.Uniform
+XRNDM     = XRND  ( 0 , 1 )
+XGAUS     = LoKi.Random.Gaussian
+XGAUSS    = XGAUS ( 0 , 1 ) 
+XRAND     = LoKi.Random.Rand ( )
 
 # =============================================================================
 ## The iterator function for the vector of something

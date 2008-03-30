@@ -1,4 +1,4 @@
-// $Id: LoKiNumbersDict.h,v 1.3 2008-01-22 19:21:19 ibelyaev Exp $
+// $Id: LoKiNumbersDict.h,v 1.4 2008-03-30 13:40:40 ibelyaev Exp $
 // ============================================================================
 #ifndef DICT_LOKINUMBERSDICT_H 
 #define DICT_LOKINUMBERSDICT_H 1
@@ -10,6 +10,7 @@
 #include "LoKi/Dicts.h"
 #include "LoKi/FuncOps.h"
 #include "LoKi/BasicFunctors.h"
+#include "LoKi/Random.h"
 // ============================================================================
 /** @file
  *  Simpe file to build the dictionaries for LoKi's functors, which 
@@ -36,15 +37,32 @@ namespace LoKi
       typedef double                                Type ;
       typedef LoKi::BasicFunctors<double>::Function Fun  ;
     public:
-      //
+      // ======================================================================
+      // __call__
       static Fun::result_type __call__ 
       ( const Fun& fun  , const double           o ) { return fun ( o ) ; }
       // ======================================================================
+    public:
+      // ======================================================================
+      // __rrshift__
       static std::vector<Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const std::vector<double>& o ) 
       { return o >> fun  ; }
+      // __rrshift__
       static Fun::result_type              __rrshift__ 
       ( const Fun& fun  , const double           o ) { return fun ( o ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<double,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<double,bool>   __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** the explicit full template specialzation of  LoKi::Dicts::CutCalls

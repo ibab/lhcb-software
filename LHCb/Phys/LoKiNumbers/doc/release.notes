@@ -4,6 +4,13 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2008-03-30 - Vanya BELYAEV
+
+ - intorducet the symbold for "random" cuts
+ - new streamers/shift __rshift__ 
+ - cmt/requirements 
+    version increment to v7r3 
+
 ! =========================== LoKiNumbers v7r2 2008-02-11 =====================
 
 ! 2008-02-11 - Vanya BELYAEV

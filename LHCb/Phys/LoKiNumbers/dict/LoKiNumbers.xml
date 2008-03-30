@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiNumbers.xml,v 1.2 2008-01-22 19:21:19 ibelyaev Exp $ 
+     * $Id: LoKiNumbers.xml,v 1.3 2008-03-30 13:40:40 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -29,6 +29,8 @@
   
   <class pattern   = "LoKi::Dicts::*Ops<*>"        />
   <class pattern   = "LoKi::Dicts::*Calls<*>"      />
+
+  <class pattern   = "LoKi::Random::*"      />
   
   <class name = "std::unary_function<const double,bool>"                              />
   <class name = "std::unary_function<const double,double>"                            />
