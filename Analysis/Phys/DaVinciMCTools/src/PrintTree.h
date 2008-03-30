@@ -1,4 +1,4 @@
-// $Id: PrintTree.h,v 1.4 2008-02-15 14:57:07 pkoppenb Exp $
+// $Id: PrintTree.h,v 1.5 2008-03-30 18:02:14 ibelyaev Exp $
 #ifndef PRINTTREE_H 
 #define PRINTTREE_H 1
 
@@ -7,7 +7,7 @@
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/Particle2MCLinker.h"
 
-class IPrintMCDecayTreeTool;
+class IPrintMCDecayTreeTool ;
 
 /** @class PrintTree PrintTree.h
  *  

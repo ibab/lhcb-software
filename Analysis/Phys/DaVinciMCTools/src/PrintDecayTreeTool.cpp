@@ -1,4 +1,4 @@
-// $Id: PrintDecayTreeTool.cpp,v 1.2 2008-02-15 17:10:25 pkoppenb Exp $
+// $Id: PrintDecayTreeTool.cpp,v 1.3 2008-03-30 18:02:14 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -44,8 +44,9 @@ PrintDecayTreeTool::PrintDecayTreeTool( const std::string& type,
     m_lengthUnitName("mm")
 {
 
-  declareInterface<IPrintDecayTreeTool>(this);
-
+  declareInterface<IPrintDecayTreeTool> (this);
+  declareInterface<IPrintDecay>         (this);
+  
   declareProperty( "PrintDepth", m_depth = 999 );
   declareProperty( "TreeWidth", m_treeWidth = 20 );
   declareProperty( "FieldWidth", m_fWidth = 10 );

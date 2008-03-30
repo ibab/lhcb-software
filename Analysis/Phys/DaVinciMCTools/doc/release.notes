@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.209 2008-03-28 08:42:52 pkoppenb Exp $
+! $Id: release.notes,v 1.210 2008-03-30 18:02:14 ibelyaev Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-03-30 - Vanya BELYAEV
+ - src/PrintDecayTreeTool.cpp:    
+     allow the tool to be used through IPrintDecay interface 
 
 ! 2008-03-28 - Patrick Koppenburg
  - DecayChainNTuple : Removed. Please use DecayTreeTuple instead.
