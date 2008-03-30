@@ -1,4 +1,4 @@
-// $Id: PhysSources.h,v 1.2 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: PhysSources.h,v 1.3 2008-03-30 13:43:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSSOURCES_H 
 #define LOKI_PHYSSOURCES_H 1
@@ -29,9 +29,11 @@ namespace LoKi
 {
   namespace Particles 
   {
+    // ========================================================================
     /** @class SourceTES 
      * 
      *  @see LoKi::Cuts::SOURCE
+     *  @see LoKi::Cuts::SOURCETES
      *  simple "source for the particles in TES"
      *  @author Vanya BELYAEV ibelyav@physics.syr.edu
      *  @date 2006-12-07
@@ -129,6 +131,7 @@ namespace LoKi
     /** @class SourceDesktop
      * 
      *  @see LoKi::Cuts::SOURCEDESKTOP
+     *  @see LoKi::Cuts::SOURCEDV
      *  simple "source for the particles from desktop"
      *  @author Vanya BELYAEV ibelyav@physics.syr.edu
      *  @date 2006-12-07
@@ -352,6 +355,155 @@ namespace LoKi
   // ==========================================================================
   namespace Cuts 
   {
+    // ========================================================================
+    /** @typedef SOURCE 
+     *  simple "source"-functor to get the particle form TES
+     * 
+     *  @code
+     *
+     *  const SOURCE source = SOURCE ( "SomeLocationInTES" , ALL ) ;
+     *
+     *  // get the particles:
+     *  const LHCb::Particle::ConstVector result = source() ;
+     *
+     *  @endcode 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */
+    typedef LoKi::Particles::SourceTES                                 SOURCE ;
+    // ========================================================================
+    /** @typedef SOURCETES 
+     *  simple "source"-functor to get the particle form TES
+     * 
+     *  @code
+     *
+     *  const SOURCETES source = SOURCETES ( "SomeLocationInTES" , ALL ) ;
+     *
+     *  // get the particles:
+     *  const LHCb::Particle::ConstVector result = source() ;
+     *
+     *  @endcode 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */
+    typedef LoKi::Particles::SourceTES                              SOURCETES ;
+    // ========================================================================
+    /** @typedef SOURCEDESKTOP 
+     *  Somiple "source"-functor which gets the particles from 
+     *  desktop 
+     *
+     *  @code 
+     *    
+     *  const SOURCEDESKTOP source ( "pi+" == ABSID ) ;
+     *
+     *  // get the pions from desktop:
+     *  const LHCb::Particle::ConstVector result = source() ;
+     *
+     *  @endcode 
+     *
+     *  @see IPhysDekstop 
+     *  
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */
+    typedef LoKi::Particles::SourceDesktop                      SOURCEDESKTOP ;
+    // ========================================================================
+    /** @typedef SOURCEDV
+     *  Somiple "source"-functor which gets the particles from 
+     *  desktop 
+     *
+     *  @code 
+     *    
+     *  const SOURCEDV source ( "pi+" == ABSID ) ;
+     *
+     *  // get the pions from desktop:
+     *  const LHCb::Particle::ConstVector result = source() ;
+     *
+     *  @endcode 
+     *
+     *  @see IPhysDekstop 
+     *  
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */
+    typedef LoKi::Particles::SourceDesktop                          SOURCEDV ;
+    // ========================================================================
+    /** @typedef VSOURCE 
+     *  simple "source"-functor to get the vertices from TES
+     * 
+     *  @code
+     *
+     *  const VSOURCE source = VSOURCE ( "SomeLocationInTES" , PRIMARY ) ;
+     *
+     *  // get the vertices
+     *  const LHCb::VertexBase::ConstVector result = source() ;
+     *
+     *  @endcode 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */
+    typedef LoKi::Vertices::SourceTES                                 VSOURCE ;
+    // ========================================================================
+    /** @typedef VSOURCETES 
+     *  simple "source"-functor to get the vertices from TES
+     * 
+     *  @code
+     *
+     *  const VSOURCETES source ( "SomeLocationInTES" , PRIMARY ) ;
+     *
+     *  // get the primary vertices:
+     *  const LHCb::VertexBase::ConstVector result = source() ;
+     *
+     *  @endcode 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */
+    typedef LoKi::Vertices::SourceTES                              VSOURCETES ;
+    // ========================================================================
+    /** @typedef VSOURCEDESKTOP 
+     *  Somiple "source"-functor which gets the vertices from 
+     *  desktop 
+     *
+     *  @code 
+     *    
+     *  const VSOURCEDESKTOP source ( PRIMARY  ) ;
+     *
+     *  // get the primary vertices from desktop:
+     *  const LHCb::VertexBase::ConstVector result = source() ;
+     *
+     *  @endcode 
+     *
+     *  @see IPhysDekstop 
+     *  
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */
+    typedef LoKi::Vertices::SourceDesktop                      VSOURCEDESKTOP ;
+    // ========================================================================
+    /** @typedef VSOURCEDV
+     *  Somiple "source"-functor which gets the vertices from 
+     *  desktop 
+     *
+     *  @code 
+     *    
+     *  const VSOURCEDV source ( PRIMARY ) ;
+     *
+     *  // get the primiaries from desktop:
+     *  const LHCb::VertexBase::ConstVector result = source() ;
+     *
+     *  @endcode 
+     *
+     *  @see IPhysDekstop 
+     *  
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */
+    typedef LoKi::Vertices::SourceDesktop                          VSOURCEDV ;
+    // ========================================================================
   } // end of namespace LoKi::Cuts 
   // ==========================================================================
 } // end of namespace LoKi

@@ -1,4 +1,4 @@
-// $Id: ParticleContextCuts.h,v 1.2 2008-02-11 10:11:10 ibelyaev Exp $
+// $Id: ParticleContextCuts.h,v 1.3 2008-03-30 13:43:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLECONTEXTCUTS_H 
 #define LOKI_PARTICLECONTEXTCUTS_H 1
@@ -1063,6 +1063,266 @@ namespace LoKi
      *  @date 2008-01-17
      */
     typedef LoKi::Particles::LifeTimeFitChi2DV                   BPVLTFITCHI2 ;
+    // ========================================================================
+    /** @var BPVVDZ 
+     *
+     *  The functor which evaluates Delta(Z) for the end-vertex of the 
+     *  particle and "the best primary vertex" from the Desktop
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* B = ... ;
+     * 
+     *  const double deltaZ = BPVVDZ ( B ) ;
+     *
+     *  @endcode
+     *
+     *  The concept and the name come 
+     *     from Sean BRISBANE s.brisbane1@physics.ox.ac.uk
+     * 
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */
+    const LoKi::Particles::VertexZDistanceWithTheBestPV                BPVVDZ ;
+    // ========================================================================
+    /** @var BPVVDRHO
+     *
+     *  The functor which evaluates Delta(Rho) (cylindrical) 
+     *  for the end-vertex of the 
+     *  particle and "the best primary vertex" from the Desktop
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* B = ... ;
+     * 
+     *  const double deltaRho = BPVVDRHO ( B ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Cuts::BPVVDR
+     * 
+     *  The concept and the name come 
+     *     from Sean BRISBANE s.brisbane1@physics.ox.ac.uk
+     * 
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */
+    const LoKi::Particles::VertexRhoDistanceWithTheBestPV           BPVVDRHO  ;
+    // ========================================================================
+    /** @var BPVVDR
+     *
+     *  The functor which evaluates Delta(Rho) (cylindrical) 
+     *  for the end-vertex of the 
+     *  particle and "the best primary vertex" from the Desktop
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* B = ... ;
+     * 
+     *  const double deltaRho = BPVVDR ( B ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Cuts::BPVVDRHO 
+     *
+     *  The concept and the name come 
+     *     from Sean BRISBANE s.brisbane1@physics.ox.ac.uk
+     * 
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */
+    const LoKi::Particles::VertexRhoDistanceWithTheBestPV             BPVVDR ;
+    // ========================================================================
+    /** @typedef MINVDSOURCE 
+     *  The simlpe functor which  evaluates the minimal distance 
+     *  between the end=verted of the particle and any vertex from 
+     *  list (presumably the primary vertex). The vertices are extracted 
+     *  from the "source":
+     *
+     *  @code 
+     *  
+     *   const MINVDSOURCE minVD ( VSOURCEDV ( PRIMARY ) ) ;
+     *  
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   const double minDistance = minVD ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::VMINVDSOURCE 
+     *  @see LoKi::Cuts::MINVDDV 
+     *  @see LoKi::Cuts::MINVDTES
+     * 
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */ 
+    typedef LoKi::Particles::MinVertexDistanceWithSource         MINVDSOURCE ;
+    // ========================================================================
+    /** @typedef MINVDDV 
+     *  The simlpe functor which  evaluates the minimal distance 
+     *  between the end=verted of the particle and any vertex from 
+     *  list (presumably the primary vertex). The vertices are extracted 
+     *  from the desktop.
+     *
+     *  @code 
+     *  
+     *   const MINVDDV minVD ( PRIMARY ) ;
+     *  
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   const double minDistance = minVD ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::VMINVDDV
+     *  @see LoKi::Cuts::MINVDSOURCE 
+     * 
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */ 
+    typedef LoKi::Particles::MinVertexDistanceDV                     MINVDDV ;
+    // ========================================================================
+    /** @typedef MINVDTES
+     *  The simlpe functor which  evaluates the minimal distance 
+     *  between the end=verted of the particle and any vertex from 
+     *  list (presumably the primary vertex). The vertices are extracted 
+     *  from the TES
+     *
+     *  @code 
+     *  
+     *   const MINVDTES minVD ("SomeLocationInTES", PRIMARY ) ;
+     *  
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   const double minDistance = minVD ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::VMINVDTES
+     *  @see LoKi::Cuts::MINVDSOURCE 
+     * 
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */
+    typedef LoKi::Particles::MinVertexDistanceTES                   MINVDTES ;
+    // ========================================================================
+    /** @typedef MINVDCHI2SOURCE 
+     *  The simple functor which  evaluates the minimal chi2-distance 
+     *  between the end=verted of the particle and any vertex from 
+     *  list (presumably the primary vertex). The vertices are extracted 
+     *  from the "source":
+     *
+     *  @code 
+     *  
+     *   const MINVDCHI2SOURCE minCHI2 ( VSOURCEDV ( PRIMARY ) ) ;
+     *  
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   const double minChi2 = minCHI2 ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::VMINVDCHI2SOURCE 
+     *  @see LoKi::Cuts::MINVDCHI2DV 
+     *  @see LoKi::Cuts::MINVDCHI2TES
+     * 
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */ 
+    typedef LoKi::Particles::MinVertexChi2DistanceWithSource MINVDCHI2SOURCE ;
+    // ========================================================================
+    /** @typedef MINVDCHI2DV
+     *  The simlpe functor which  evaluates the minimal chi2-distance 
+     *  between the end-vertex of the particle and any vertex from 
+     *  list (presumably the primary vertex). The vertices are extracted 
+     *  from the desktop.
+     *
+     *  @code 
+     *  
+     *   const MINVDCHI2DV minCHI2 ( PRIMARY ) ;
+     *  
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   const double minChi2 = minCHI2 ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::VMINVDCHI2DV
+     *  @see LoKi::Cuts::MINVDCHI2SOURCE 
+     * 
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */ 
+    typedef LoKi::Particles::MinVertexChi2DistanceDV             MINVDCHI2DV ;
+    // ========================================================================
+    /** @typedef MINVDCHI2TES
+     *  The simlpe functor which  evaluates the minimal chi2-distance 
+     *  between the end-vertex of the particle and any vertex from 
+     *  list (presumably the primary vertex). The vertices are extracted 
+     *  from the TES
+     *
+     *  @code 
+     *  
+     *   const MINVDCHI2TES minCHI2 ("SomeLocationInTES", PRIMARY ) ;
+     *  
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   const double minChi2 = minCHI2 ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::VMINVDCHI2TES
+     *  @see LoKi::Cuts::MINVDCHI2SOURCE 
+     * 
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-29
+     */
+    typedef LoKi::Particles::MinVertexChi2DistanceTES           MINVDCHI2TES ;
     // ========================================================================
   } // end of namespace LoKi::Cuts 
 } // end of namespace LoKi

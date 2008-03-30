@@ -1,4 +1,4 @@
-// $Id: Child.h,v 1.10 2007-08-11 20:20:38 ibelyaev Exp $
+// $Id: Child.h,v 1.11 2008-03-30 13:43:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CHILD_H 
 #define LOKI_CHILD_H 1
@@ -129,6 +129,37 @@ namespace LoKi
     LHCb::Particle::ConstVector 
     children 
     ( const LHCb::Particle* particle ) ;
+    // ========================================================================
+    /** trivial function to access all children particles at the given level 
+     *  @attention: level 0 corresponds to the particle itself 
+     *              level 1 corresponds to daughters , etc... 
+     *  @see LHCb::Particle::daughters
+     *  @param particle pointer to particle 
+     *  @param level  the level
+     *  @param return vector of children at the given level 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-06-04
+     */    
+    LHCb::Particle::ConstVector 
+    children 
+    ( const LHCb::Particle* particle , 
+      const unsigned int    level    ) ;
+    // ========================================================================
+    /** trivial function to access all children particles at the given level 
+     *  @attention: level 0 corresponds to the particle itself 
+     *              level 1 corresponds to daughters , etc... 
+     *  @see LHCb::Particle::daughters
+     *  @param particle pointer to particle 
+     *  @param level  the level
+     *  @param result vector of particles 
+     *  @return number of children found 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-06-04
+     */    
+    unsigned int children 
+    ( const LHCb::Particle*        particle , 
+      const unsigned int           level    , 
+      LHCb::Particle::ConstVector& result   ) ;
     // ========================================================================
     /** trivial function to access all descendants particles 
      *  @param particle pointer to particle 

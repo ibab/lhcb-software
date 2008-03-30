@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.11 2008-02-22 08:24:13 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.12 2008-03-30 13:43:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -28,6 +28,7 @@
 #include "LoKi/SelectVertex.h"
 // ============================================================================
 #include "LoKi/ParticleContextCuts.h"
+#include "LoKi/VertexContextCuts.h"
 // ============================================================================
 /** @file
  *  The dictionaries for the package Phys/LoKiPhys
@@ -70,6 +71,8 @@ namespace LoKi
       static Fun::result_type __call__ 
       ( const Fun& fun  , const SmartRef<LHCb::VertexBase>& o ) { return fun ( o ) ; }
       // ======================================================================
+    public:
+      // ======================================================================
       static std::vector<Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const LHCb::VertexBase::ConstVector&    o ) 
       { return o >> fun  ; }
@@ -79,6 +82,18 @@ namespace LoKi
       static std::vector<Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const LHCb::Vertex::ConstVector&        o ) 
       { return o >> fun  ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rshift__ 
+      static LoKi::FunctorFromFunctor<const Type*,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // __rshift__ 
+      static LoKi::FunctorFromFunctor<const Type*,bool>   __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      //
       // ======================================================================
     } ;
     // ========================================================================

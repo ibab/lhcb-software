@@ -53,7 +53,7 @@ if not hasattr ( LHCb.Particle , '__nDaughters__' ) :
 
 # =============================================================================
 ## Get all children from the given LHCb::Particle 
-def children ( o ) :
+def children ( o , *a ) :
     """
     Get all children from the given LHCb::Particle
 
@@ -62,7 +62,7 @@ def children ( o ) :
     ...    print p
     
     """
-    return LoKi.Child.children ( o  )
+    return LoKi.Child.children ( o , *a )
 
 if not hasattr ( LHCb.Particle ,   'children'    ) :
     LHCb.Particle .   children    =  children

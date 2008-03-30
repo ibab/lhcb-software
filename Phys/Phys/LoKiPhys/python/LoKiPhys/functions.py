@@ -29,8 +29,8 @@ A.Golutvin, P.Koppenburg have been used in the design.
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
-import LoKiCore.decorators as      _LoKiCore
-from   LoKiCore.functions  import equal_to 
+import LoKiCore.decorators    as      _LoKiCore
+from   LoKiCore.functions     import  equal_to 
 
 # Namespaces:
 _global  = _LoKiCore._global
@@ -367,6 +367,12 @@ DELTAR2  = LoKi.Particles.DeltaR2
 ## @see LoKi::Cuts::DR2
 DR2      = LoKi.Particles.DeltaR2
 
+# meta-functions requested by Patrick KOPPENBURG:
+## @see LoKi::Cuts::INGENERATION 
+INGENERATION  = LoKi.Particles.InGeneration
+## @see LoKi::Cuts::NINGENERATION 
+NINGENERATION = LoKi.Particles.NinGeneration
+
 
 
 ## @see LoKi::Cuts::LIFETIME
@@ -440,10 +446,8 @@ VINFO     = LoKi.Vertices.Info
 NTRACKS   = LoKi.Vertices.NumberOfTracks   ()
 ## @see LoKi::Cuts::NPRONGS 
 NPRONGS   = LoKi.Vertices.NumberOfOutgoing ()
-## @see LoKi::Cuts::VPCHI2N
-VPCHI2N   = LoKi.Vertices.Chi2Prob
 ## @see LoKi::Cuts::VPCHI2
-VPCHI2    = VPCHI2N(-1)
+VPCHI2    = LoKi.Vertices.Chi2Prob()
 ## @see LoKi::Cuts::VVDIST
 VVDIST    = LoKi.Vertices.VertexDistance 
 ## @see LoKi::Cuts::VVD
@@ -460,7 +464,6 @@ MINVVDCHI2 = LoKi.Vertices.MinVertexChi2Distance
 VIP        = LoKi.Vertices.ImpPar
 ## @see LoKi::Vertices::ImpParChi2
 VIPCHI2    = LoKi.Vertices.ImpParChi2
-
 
 # =============================================================================
 # Aliases from Vava GLIGOROV
@@ -525,6 +528,36 @@ BPVLT                 = LoKi.Particles.LifeTimeDV
 BPVLTCHI2             = LoKi.Particles.LifeTimeChi2DV
 BPVLTSIGNCHI2         = LoKi.Particles.LifeTimeSignedChi2DV
 BPVLTFITCHI2          = LoKi.Particles.LifeTimeFitChi2DV
+
+# vertex separation (for particles) with respect to *all* vertices
+
+MINVDSOURCE           = LoKi.Particles.MinVertexDistanceWithSource
+MINVDDV               = LoKi.Particles.MinVertexDistanceDV
+MINVDTES              = LoKi.Particles.MinVertexDistanceTES
+
+MINVDCHI2SOURCE       = LoKi.Particles.MinVertexChi2DistanceWithSource
+MINVDCHI2DV           = LoKi.Particles.MinVertexChi2DistanceDV
+MINVDCHI2TES          = LoKi.Particles.MinVertexChi2DistanceTES
+
+# vertex separation (for vertices) with respect to *all* vertices
+
+VMINVDSOURCE          = LoKi.Vertices.MinVertexDistanceWithSource
+VMINVDDV              = LoKi.Vertices.MinVertexDistanceDV
+VMINVDTES             = LoKi.Vertices.MinVertexDistanceTES
+
+VMINVDCHI2SOURCE      = LoKi.Vertices.MinVertexChi2DistanceWithSource
+VMINVDCHI2DV          = LoKi.Vertices.MinVertexChi2DistanceDV
+VMINVDCHI2TES         = LoKi.Vertices.MinVertexChi2DistanceTES
+
+
+# the functors, required by Sean BRISBANE :
+
+## @see LoKi::Cuts::BPVVDZ 
+BPVVDZ                = LoKi.Particles.VertexZDistanceWithTheBestPV   ()
+## @see LoKi::Cuts::BPVVDRHO 
+BPVVDRHO              = LoKi.Particles.VertexRhoDistanceWithTheBestPV ()
+## @see LoKi::Cuts::BPVVDR
+BPVVDR                = LoKi.Particles.VertexRhoDistanceWithTheBestPV ()
 
 
 # =============================================================================

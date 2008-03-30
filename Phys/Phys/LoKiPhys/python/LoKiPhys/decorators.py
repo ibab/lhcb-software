@@ -29,6 +29,14 @@ A.Golutvin, P.Koppenburg have been used in the design.
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
+from GaudiKernel.SystemOfUnits import MeV,GeV,micrometer,millimeter,centimeter,meter,picosecond,femtosecond,nanosecond,perCent
+um = micrometer
+mm = millimeter
+cm = centimeter 
+ns = picosecond
+ps = picosecond
+fs = femtosecond
+
 from   LoKiPhys.functions  import *
 
 _name = __name__ 
@@ -129,6 +137,18 @@ def _decorate ( name = _name ) :
 ## perform the ctual decoration
 _decorated = _decorate()                                     ## ATTENTION
 # =============================================================================
+
+# play a bit with random cuts
+import LoKiNumbers.decorators as     _LoKiNumbers
+RNDM   =  ONE>>_LoKiNumbers.XRNDM
+GAUSS  =  ONE>>_LoKiNumbers.XGAUSS
+RAND   =  ONE>>_LoKiNumbers.XRAND
+VRNDM  = VONE>>_LoKiNumbers.XRNDM
+VGAUSS = VONE>>_LoKiNumbers.XGAUSS
+VRAND  = VONE>>_LoKiNumbers.XRAND
+
+
+
 
 # =============================================================================
 if '__main__' == __name__ :

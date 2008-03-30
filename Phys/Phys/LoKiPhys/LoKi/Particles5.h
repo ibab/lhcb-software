@@ -1,4 +1,4 @@
-// $Id: Particles5.h,v 1.6 2008-02-28 14:33:41 ibelyaev Exp $
+// $Id: Particles5.h,v 1.7 2008-03-30 13:43:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES5_H 
 #define LOKI_PARTICLES5_H 1
@@ -338,6 +338,90 @@ namespace LoKi
       double               m_res ;
     };
     // ========================================================================
+    /** @class InGeneration 
+     *
+     *  Simple meta-functor which checks the presence of the certain particles
+     *  at the given level of decay tree structure.
+     *  
+     *  The concept belongs to Patrick KOPPENBURG (Patrick.Koppenburg@cern.ch)
+     *
+     *  @see LoKi::Cuts::INGENERATION
+     *  @see LoKi::Algs::find_if 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-28
+     */
+    class InGeneration : public LoKi::PhysTypes::Cuts 
+    {
+    public:
+      /// the constructor from the predicate and the generation level
+      InGeneration 
+      ( const LoKi::PhysTypes::Cuts& cut   , 
+        const unsigned int           level ) ;      
+      /// the constructor from the generation level and the prediate 
+      InGeneration 
+      ( const unsigned int           level ,
+        const LoKi::PhysTypes::Cuts& cut   ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~InGeneration(){} ;
+      /// MANDATORY: clone method ("virtual constructor") ;
+      virtual  InGeneration* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+    private:
+      /// the default constructor is disabled 
+      InGeneration(); // the default constructor is disabled 
+    private:
+      /// the predicate to be checked 
+      LoKi::PhysTypes::Cut  m_cut   ; // the predicate to be checked
+      /// the generation level 
+      unsigned int          m_level ; // the generation level 
+    };
+    // ========================================================================
+    /** @class NinGeneration 
+     *
+     *  Simple meta-functor which checks the presence of the certain particles
+     *  at the given level of decay tree structure.
+     *  
+     *  The concept belongs to Patrick KOPPENBURG (Patrick.Koppenburg@cern.ch)
+     *
+     *  @see LoKi::Cuts::NINGENERATION
+     *  @see LoKi::Algs::count_if 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-28
+     */
+    class NinGeneration : public LoKi::PhysTypes::Func 
+    {
+    public:
+      /// the constructor from the predicate and the generation level
+      NinGeneration 
+      ( const LoKi::PhysTypes::Cuts& cut   , 
+        const unsigned int           level ) ;      
+      /// the constructor from the generation level and the prediate 
+      NinGeneration 
+      ( const unsigned int           level ,
+        const LoKi::PhysTypes::Cuts& cut   ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~NinGeneration(){} ;
+      /// MANDATORY: clone method ("virtual constructor") ;
+      virtual  NinGeneration* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+    private:
+      /// the default constructor is disabled 
+      NinGeneration(); // the default constructor is disabled 
+    private:
+      /// the predicate to be checked 
+      LoKi::PhysTypes::Cut  m_cut   ; // the predicate to be checked
+      /// the generation level 
+      unsigned int          m_level ; // the generation level 
+    };
+    // ========================================================================    
   }  // end of namespace LoKi::Particles
 } // end of namespace LoKi
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: PhysTypes.h,v 1.9 2008-02-19 16:11:25 ibelyaev Exp $
+// $Id: PhysTypes.h,v 1.10 2008-03-30 13:43:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSTYPES_H 
 #define LOKI_PHYSTYPES_H 1
@@ -16,7 +16,8 @@
 // ============================================================================
 namespace LoKi 
 {
-  /** @namespace LoKi::PhysTypes PhysTypes.h LoKi/PhysTypes.h
+  // ==========================================================================
+  /** @namespace LoKi::PhysTypes LoKi/PhysTypes.h
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu 
    *  @date   2006-02-11
    */
@@ -163,6 +164,25 @@ namespace LoKi
     typedef LoKi::PhysTypes::VSource                            VSource   ;
 
   }  // end of namespace LoKi::Types 
+} // end of namespace LoKi
+// ============================================================================
+namespace LoKi 
+{
+  // ==========================================================================
+  // the specialized printout 
+  // ==========================================================================
+  template <>
+  inline std::ostream& 
+  Constant<const LHCb::Particle*,bool>::fillStream   ( std::ostream& s ) const 
+  { return s << ( this->m_value ? "ALL" : "NONE" ) ; }
+  // ==========================================================================
+  // the specialized printout 
+  // ==========================================================================  
+  template <>
+  inline std::ostream& 
+  Constant<const LHCb::VertexBase*,bool>::fillStream ( std::ostream& s ) const 
+  { return s << ( this->m_value ? "VALL" : "VNONE" ) ; }
+  // ==========================================================================  
 } // end of namespace LoKi
 // ============================================================================
 // The END 

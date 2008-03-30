@@ -1,4 +1,4 @@
-// $Id: Child.cpp,v 1.7 2007-08-11 20:20:38 ibelyaev Exp $
+// $Id: Child.cpp,v 1.8 2008-03-30 13:43:37 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -97,8 +97,9 @@ LoKi::Child::children
 ( const LHCb::Particle* particle ) 
 {
   if ( 0 == particle ) { return LHCb::Particle::ConstVector() ; } /// RETURN 
-  return LHCb::Particle::ConstVector ( particle -> daughters() . begin () , 
-                                       particle -> daughters() . end   () ) ;
+  return LHCb::Particle::ConstVector 
+    ( particle -> daughters() . begin () , 
+      particle -> daughters() . end   () ) ;
 }
 // ============================================================================
 /*  trivial function to access all descendants particles 
@@ -121,6 +122,103 @@ LoKi::Child::descendants
   LHCb::Particle::ConstVector::iterator self = 
     std::remove ( result.begin() , result.end () , particle ) ;
   result.erase ( self , result.end() ) ;
+  return result ;
+}
+// ========================================================================
+/*  trivial function to access all children particles at the given level 
+ *  @attention: level 0 corresponds to the particle itself 
+ *              level 1 corresponds to daughters , etc... 
+ *  @see LHCb::Particle::daughters
+ *  @param particle pointer to particle 
+ *  @param level  the level
+ *  @param return vector of children at the given level 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date   2008-03-28
+ */    
+// ========================================================================
+namespace 
+{
+  // ==========================================================================
+  /** trivial function to access all children particles at the given level 
+   *  @attention: level 0 corresponds to the particle itself 
+   *              level 1 corresponds to daughters , etc... 
+   *  @see LHCb::Particle::daughters
+   *  @param particle pointer to particle 
+   *  @param level  the level
+   *  @param result vector of particles 
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date   2008-03-28
+   */
+  inline void _children 
+  ( const LHCb::Particle*        particle , 
+    const unsigned int           level    , 
+    LHCb::Particle::ConstVector& result   ) 
+  {
+    if ( 0 == particle ) {                                 return ; } // RETURN 
+    if ( 0 == level    ) { result.push_back ( particle ) ; return ; } // RETURN
+    // loop over all daughters:
+    typedef SmartRefVector<LHCb::Particle> Daughters ;
+    const Daughters& daugs = particle->daughters() ;
+    // easy explicit action for the explicit 1st level daughters. 
+    // it is not nesessary but it speeds up a bit the execution
+    if ( 1 == level ) 
+    {
+      result.insert ( result.end() , daugs.begin() , daugs.end() ) ;
+      return ;                                                         // RETURN   
+    }
+    // explicit recursion:
+    for ( Daughters::const_iterator idau = daugs.begin() ; 
+          daugs.end() != idau ; ++idau )
+    { 
+      _children ( *idau , level - 1 , result ) ;  // RECURSION HERE  
+    }  
+  }
+  // ==========================================================================
+} // end of anonymous namespace 
+// ============================================================================
+/* trivial function to access all children particles at the given level 
+ *  @attention: level 0 corresponds to the particle itself 
+ *              level 1 corresponds to daughters , etc... 
+ *  @see LHCb::Particle::daughters
+ *  @param particle pointer to particle 
+ *  @param  level  the level
+ *  @param  result vector of particles 
+ *  @return number of particles added
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date   2008-03-28
+ */    
+// ============================================================================
+unsigned int 
+LoKi::Child::children 
+( const LHCb::Particle*        particle , 
+  const unsigned int           level    , 
+  LHCb::Particle::ConstVector& result   ) 
+{
+  result.clear() ;
+  result.reserve ( 10 ) ;
+  _children ( particle , level , result ) ;
+  return result.size() ;
+}
+// ============================================================================
+/*  trivial function to access all children particles at the given level 
+ *  @attention: level 0 corresponds to the particle itself 
+ *              level 1 corresponds to daughters , etc... 
+ *  @see LHCb::Particle::daughters
+ *  @param particle pointer to particle 
+ *  @param level  the level
+ *  @param return vector of children at the given level 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2007-06-04
+ */    
+// ============================================================================
+LHCb::Particle::ConstVector 
+LoKi::Child::children 
+( const LHCb::Particle* particle , 
+  const unsigned int    level    ) 
+{
+  LHCb::Particle::ConstVector result ;
+  result.reserve ( 10 ) ;
+  _children ( particle , level , result ) ;
   return result ;
 }
 // ============================================================================

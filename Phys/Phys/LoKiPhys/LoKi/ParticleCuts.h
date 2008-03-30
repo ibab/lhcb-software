@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.23 2008-02-11 10:11:11 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.24 2008-03-30 13:43:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -1854,6 +1854,30 @@ namespace LoKi
      */
     typedef LoKi::Particles::ProtoInfo                                 INFOPP ;
     // ========================================================================
+    /** @typedef INGENERATION 
+     *  Simple predicate which checks the  presence of the certain particles
+     *  at the fixed level of the decay chain
+     *  
+     *  @code
+     *
+     *  const LHCb::Particle* B = ... ;
+     * 
+     *  const Cut cut = INGENERATION ( "pi+"== ABSID && PT > 1 * GeV , 2 ) ;
+     *  // Check the presence of energetic pion as grand-daughter (level 2) 
+     *  // in the decay tree of the particle:
+     *  const bool OK = cut ( B ) ;
+     *  
+     *  @endcode 
+     *
+     *  @attention Level 0 corresponds to the particle itself!
+     *
+     *  The concept belongs to Patrick KOPPENBURG Patrick.Koppenburg@cern.ch
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-28
+     */
+    typedef LoKi::Particles::InGeneration                        INGENERATION ;
+    // ========================================================================    
     /** @typedef INTES 
      *
      *  Simple predicate to check if the particle is 
@@ -3329,6 +3353,30 @@ namespace LoKi
      *  @date 2006-02-15
      */
     const LoKi::Particles::NumberOfDaughters                           NDAUGS ;
+    // ========================================================================
+    /** @typedef NINGENERATION 
+     *  Simple functon which counts the certain particles
+     *  at the fixed level of the decay chain
+     *  
+     *  @code
+     *
+     *  const LHCb::Particle* B = ... ;
+     * 
+     *  const Cut cut = 2 == NINGENERATION ( "pi+"== ABSID && PT > 1 * GeV , 2 ) ;
+     *  // Check the presence of exctly two energetic pions as 
+     *  // grand-daughters (level 2) in the decay tree of the particle:
+     *  const bool OK = cut ( B ) ;
+     *  
+     *  @endcode 
+     *
+     *  @attention Level 0 corresponds to the particle itself!
+     *
+     *  The concept belongs to Patrick KOPPENBURG Patrick.Koppenburg@cern.ch
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-28
+     */
+    typedef LoKi::Particles::NinGeneration                      NINGENERATION ;
     // ========================================================================
     /** @typedef NINTREE 
      *  The simple function which evaluates the number 

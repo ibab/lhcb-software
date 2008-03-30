@@ -1,4 +1,4 @@
-// $Id: Particles20.h,v 1.3 2008-02-21 20:23:42 ibelyaev Exp $
+// $Id: Particles20.h,v 1.4 2008-03-30 13:43:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES20_H 
 #define LOKI_PARTICLES20_H 1
@@ -13,6 +13,7 @@
 #include "LoKi/Particles16.h"
 #include "LoKi/Particles19.h"
 #include "LoKi/PhysSources.h"
+#include "LoKi/Vertices5.h"
 #include "LoKi/AuxDesktopBase.h"
 // ============================================================================
 /** @file
@@ -492,12 +493,12 @@ namespace LoKi
       // no default constructor 
       MinImpParChi2WithSource () ; ///< no default constructor
     private:
-      // the underlying functor 
-      mutable LoKi::Particles::MinImpParChi2 m_mip    ; ///< the underlying functor 
-      // the source 
-      LoKi::Assignable<_Source>::Type    m_source ; ///< the source 
-      // the nickname or type/name of IGeomDispCalculator tool 
-      std::string                        m_geo    ; ///< IGeomDispCalculator tool
+      /// the underlying functor 
+      mutable LoKi::Particles::MinImpParChi2 m_mip ; // the underlying functor 
+      /// the source 
+      LoKi::Assignable<_Source>::Type    m_source ; // the source 
+      /// the nickname or type/name of IGeomDispCalculator tool 
+      std::string                        m_geo    ; // IGeomDispCalculator tool
     } ;
     // ========================================================================
     /** @class MinImpParChi2DV
@@ -672,7 +673,7 @@ namespace LoKi
     private:
       // the list of TES locations 
       std::vector<std::string> m_path ;
-    } ;
+    } ; 
     // ========================================================================
     /** @class VertexDistanceDV 
      *  The special version of LoKi::Particles::VertexDistance functor
@@ -710,7 +711,7 @@ namespace LoKi
       // the actual evaluator 
       LoKi::Particles::VertexDistance m_fun ; ///< the actual evaluator
     } ;
-    // ========================================================================
+   // ========================================================================
     /** @class VertexSignedDistanceDV 
      *  The special version of LoKi::Particles::VertexSignedDistance functor
      *  which gets "the best primary vertex" from IPhysDesktop
@@ -990,6 +991,336 @@ namespace LoKi
       std::string                   m_fit ;  ///< the tool type/name 
     } ;
     // ========================================================================
+    /** @class VertexZDistanceWithTheBestPV
+     *  The functor which evaluates Delta(Z) for the end-vertex of the 
+     *  particle and "the best primary vertex" from the Desktop
+     *
+     *  @see LoKi::Cuts::BPVVDZ 
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *
+     *  The concept and the name come 
+     *     from Sean BRISBANE s.brisbane1@physics.ox.ac.uk
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-17
+     */
+    class VertexZDistanceWithTheBestPV
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
+      , public virtual LoKi::AuxDesktopBase
+    {
+    public:
+      /// the default constructor 
+      VertexZDistanceWithTheBestPV  () ;
+      /// MANDATORY: virtual destructor
+      virtual ~VertexZDistanceWithTheBestPV() {} 
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  VertexZDistanceWithTheBestPV* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+    } ;
+    // ========================================================================
+    /** @class VertexRhoDistanceWithTheBestPV
+     *  The functor which evaluates Delta(Z) for the end-vertex of the 
+     *  particle and "the best primary vertex" from the Desktop
+     *
+     *  @see LoKi::Cuts::BPVVDR
+     *  @see LoKi::Cuts::BPVVDRHO
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *
+     *  The concept and the name come 
+     *     from Sean BRISBANE s.brisbane1@physics.ox.ac.uk
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-17
+     */
+    class VertexRhoDistanceWithTheBestPV
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
+      , public virtual LoKi::AuxDesktopBase
+    {
+    public:
+      /// the default constructor 
+      VertexRhoDistanceWithTheBestPV  () ;
+      /// MANDATORY: virtual destructor
+      virtual ~VertexRhoDistanceWithTheBestPV() {} 
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  VertexRhoDistanceWithTheBestPV* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+    } ;
+    // ========================================================================
+    /** @class MinVertexDistanceWithSource
+     *  The simple functor which evaluates the minimal distance 
+     *  between the vertex and vertices from the "source"
+     *  @see LoKi::Vertices::MinVertexDistanceWithSource  
+     *  @see LoKi::Vertices::MinVertexDistance
+     *  @see LoKi::Cuts::MINVDSOURCE
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-28
+     */
+    class MinVertexDistanceWithSource
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+      // the source of vertices 
+      typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source _Source ;
+    public:
+      typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source  Source ;
+    public:
+      /// constructor from the source 
+      MinVertexDistanceWithSource ( const _Source& source ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MinVertexDistanceWithSource () {};
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  MinVertexDistanceWithSource* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument v ) const ; 
+      /// OPTIONAL: the specific printout
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      MinVertexDistanceWithSource() ; // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// get the underlying functor 
+      mutable LoKi::Vertices::MinVertexDistanceWithSource m_fun ; // the evaluator 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class MinVertexDistanceDV
+     *  The special functor
+     *  which gets all the primary vertices from the Desktop
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @see LoKi::Cuts::MINVDDV 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-28
+     */
+    class MinVertexDistanceDV 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      /// the default constructor 
+      MinVertexDistanceDV () ;
+      /// the constructor from the vertex filter
+      MinVertexDistanceDV ( const LoKi::PhysTypes::VCuts& cut ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MinVertexDistanceDV () {};
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  MinVertexDistanceDV* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument v ) const ; 
+      /// OPTIONAL: the specific printout
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+    private:
+      /// the actual functor 
+      LoKi::Vertices::MinVertexDistanceDV m_fun ; // the actual functor 
+    } ;
+    // ========================================================================
+    /** @class MinVertexDistanceTES
+     *  The functor
+     *  which gets all the primary vertices from Transient Event Store 
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @see LoKi::Cuts::MINVDTES
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-28
+     */
+    class MinVertexDistanceTES
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      /// the constructor from the TES location  
+      MinVertexDistanceTES ( const std::string& path ) ;
+      /// the constructor from the TES locations 
+      MinVertexDistanceTES ( const std::vector<std::string>& path ) ;
+      /// the constructor from the TES location  & selector 
+      MinVertexDistanceTES 
+      ( const std::string&            path , 
+        const LoKi::PhysTypes::VCuts& cut  ) ;
+      /// the constructor from the TES locations and the vertex selector 
+      MinVertexDistanceTES
+      ( const std::vector<std::string>& path ,
+        const LoKi::PhysTypes::VCuts&   cut  ) ;
+      /// the constructor from the TES location  & selector 
+      MinVertexDistanceTES 
+      ( const LoKi::PhysTypes::VCuts& cut  ,
+        const std::string&            path ) ;
+      /// the constructor from the TES locations and the vertex selector 
+      MinVertexDistanceTES
+      ( const LoKi::PhysTypes::VCuts&   cut  ,
+        const std::vector<std::string>& path ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MinVertexDistanceTES () {};
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  MinVertexDistanceTES* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument v ) const ; 
+      /// OPTIONAL: the specific printout
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+    private:
+      /// the default constructor is disabled 
+      MinVertexDistanceTES() ; // the default constructor is disabled 
+    private:
+      /// The actual functor 
+      LoKi::Vertices::MinVertexDistanceTES m_fun ; // The actual functor 
+    } ;
+    // ========================================================================
+    /** @class MinVertexChi2DistanceWithSource
+     *  The simple functor which evaluates the minimal distance 
+     *  between the vertex and vertices from the "source"
+     *  @see LoKi::Vertices::MinVertexChi2DistanceWithSource  
+     *  @see LoKi::Vertices::MinVertexChi2Distance
+     *  @see LoKi::Cuts::MINVDCHI2SOURCE
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-28
+     */
+    class MinVertexChi2DistanceWithSource
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+      // the source of vertices 
+      typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source _Source ;
+    public:
+      typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source  Source ;
+    public:
+      /// constructor from the source 
+      MinVertexChi2DistanceWithSource ( const _Source& source ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MinVertexChi2DistanceWithSource () {};
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  MinVertexChi2DistanceWithSource* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument v ) const ; 
+      /// OPTIONAL: the specific printout
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      MinVertexChi2DistanceWithSource() ; // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// get the underlying functor 
+      mutable LoKi::Vertices::MinVertexChi2DistanceWithSource m_fun ; // the evaluator 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class MinVertexChi2DistanceDV
+     *  The special functor
+     *  which gets all the primary vertices from the Desktop
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @see LoKi::Cuts::MINVDCHI2DV 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-28
+     */
+    class MinVertexChi2DistanceDV 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      /// the default constructor 
+      MinVertexChi2DistanceDV () ;
+      /// the constructor from the vertex filter
+      MinVertexChi2DistanceDV ( const LoKi::PhysTypes::VCuts& cut ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MinVertexChi2DistanceDV () {};
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  MinVertexChi2DistanceDV* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument v ) const ; 
+      /// OPTIONAL: the specific printout
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+    private:
+      /// the actual functor 
+      LoKi::Vertices::MinVertexChi2DistanceDV m_fun ; // the actual functor 
+    } ;
+    // ========================================================================
+    /** @class MinVertexChi2DistanceTES
+     *  The functor
+     *  which gets all the primary vertices from Transient Event Store 
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @see LoKi::Cuts::MINVDCHI2TES 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-28
+     */
+    class MinVertexChi2DistanceTES
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      /// the constructor from the TES location  
+      MinVertexChi2DistanceTES ( const std::string& path ) ;
+      /// the constructor from the TES locations 
+      MinVertexChi2DistanceTES ( const std::vector<std::string>& path ) ;
+      /// the constructor from the TES location  & selector 
+      MinVertexChi2DistanceTES 
+      ( const std::string&            path , 
+        const LoKi::PhysTypes::VCuts& cut  ) ;
+      /// the constructor from the TES locations and the vertex selector 
+      MinVertexChi2DistanceTES
+      ( const std::vector<std::string>& path ,
+        const LoKi::PhysTypes::VCuts&   cut  ) ;
+      /// the constructor from the TES location  & selector 
+      MinVertexChi2DistanceTES 
+      ( const LoKi::PhysTypes::VCuts& cut  ,
+        const std::string&            path ) ;
+      /// the constructor from the TES locations and the vertex selector 
+      MinVertexChi2DistanceTES
+      ( const LoKi::PhysTypes::VCuts&   cut  ,
+        const std::vector<std::string>& path ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MinVertexChi2DistanceTES () {};
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  MinVertexChi2DistanceTES* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument v ) const ; 
+      /// OPTIONAL: the specific printout
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+    private:
+      /// the default constructor is disabled 
+      MinVertexChi2DistanceTES() ; // the default constructor is disabled 
+    private:
+      /// The actual functor 
+      LoKi::Vertices::MinVertexChi2DistanceTES m_fun ; // The actual functor 
+    } ;
   } // end of namespace LoKi::Particles    
 } // end of namespace LoKi   
 // ============================================================================

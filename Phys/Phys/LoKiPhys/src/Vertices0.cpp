@@ -1,4 +1,4 @@
-// $Id: Vertices0.cpp,v 1.9 2008-02-28 13:59:30 ibelyaev Exp $
+// $Id: Vertices0.cpp,v 1.10 2008-03-30 13:43:37 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -315,16 +315,6 @@ LoKi::Vertices::NumberOfTracks::fillStream
 // ============================================================================
 
 // ============================================================================
-/* constructor from number of degrees of freedom.
- *  @attention: The "unphysical" values mean: 
- *  <b>"get number of DoFs from the vertex itself"</b>
- */
-// ============================================================================
-LoKi::Vertices::Chi2Prob::Chi2Prob ( const int dof ) 
-  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function() 
-  , m_dof ( dof ) 
-{}
-// ============================================================================
 // MANDATORY: virtual destructor:
 // ============================================================================
 LoKi::Vertices::Chi2Prob*
@@ -339,13 +329,11 @@ LoKi::Vertices::Chi2Prob::operator()
 {
   if ( 0 == v ) 
   {
-    Error ( "Invalid Vertex, return 'LoKi::Constants::InvaildChi2'" ) ;
+    Error ( "Invalid Vertex, return 'LoKi::Constants::InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;                    // RETURN
   }
   //
-  int nDoF = m_dof ;
-  // get nDoF from the vertex intsef ?
-  if ( nDoF <= 0 ) { nDoF = v -> nDoF () ; }
+  const int nDoF = v -> nDoF () ; 
   // use GSL for computations:
   return gsl_cdf_chisq_Q ( v -> chi2 ()  , nDoF ) ;
 }
@@ -354,10 +342,7 @@ LoKi::Vertices::Chi2Prob::operator()
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::Chi2Prob::fillStream ( std::ostream& s ) const 
-{
-  if ( m_dof <= 0 ) { return s << "VPCHI2" ; }
-  return s << "VPCHI2N(" << m_dof << ")" ;
-}
+{ return s << "VPCHI2" ; }
 // ============================================================================
 
 

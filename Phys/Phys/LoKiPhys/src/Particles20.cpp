@@ -1,4 +1,4 @@
-// $Id: Particles20.cpp,v 1.3 2008-02-21 20:23:42 ibelyaev Exp $
+// $Id: Particles20.cpp,v 1.4 2008-03-30 13:43:37 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -92,7 +92,7 @@ namespace
     DVAlgorithm* alg = Gaudi::Utils::getDVAlgorithm ( loki -> contextSvc() ) ;
     if ( 0 == alg  ) { return 0 ; }                            // RETURN 
     // get the tool from DValgorithm
-    const ILifetimeFitter* fitter = alg->tool<ILifetimeFitter> ( name , alg ) ;
+    const ILifetimeFitter* fitter = alg -> lifetimeFitter ( name ) ;
     // set the functor 
     func.setTool ( fitter ) ;
     return fitter ;                                            // RETURN 
@@ -100,6 +100,9 @@ namespace
   // ==========================================================================
   /// the finder for the primary vertices:
   const LoKi::Vertices::IsPrimary s_PRIMARY = LoKi::Vertices::IsPrimary () ;
+  // ==========================================================================
+  /// the defautl name of Lifetime fiteter:
+  const std::string s_LIFETIME = "PropertimeFitter/properTime:PUBLIC" ;
   // ==========================================================================
 } // end of anonymout namespace 
 // ============================================================================
@@ -434,7 +437,7 @@ LoKi::Particles::MinImpParTES::MinImpParTES
   const LoKi::PhysTypes::VCuts& cuts ,
   const std::string&            geo  ) 
   : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
-    , m_path ( 1 , path ) 
+  , m_path ( 1 , path ) 
 {}
 // ============================================================================
 /*  the constructor,
@@ -844,6 +847,7 @@ LoKi::Particles::VertexDotDistanceDV::operator()
 // ============================================================================
 std::ostream& LoKi::Particles::VertexDotDistanceDV::fillStream 
 ( std::ostream& s ) const { return s << "BPVVDDOT" ; }
+
 // ============================================================================
 // the default constructor 
 // ============================================================================
@@ -889,8 +893,8 @@ std::ostream& LoKi::Particles::VertexChi2DistanceDV::fillStream
 LoKi::Particles::LifeTimeDV::LifeTimeDV() 
   : LoKi::AuxDesktopBase ()
   , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_LTIME , s_VERTEX                   ) 
-  , m_fit ( "PropertimeFitter/properTime:PUBLIC" ) 
+  , m_fun ( s_LTIME , s_VERTEX ) 
+  , m_fit ( s_LIFETIME         ) 
 {}
 // ============================================================================
 // constructor 
@@ -944,8 +948,8 @@ std::ostream& LoKi::Particles::LifeTimeDV::fillStream
 LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV() 
   : LoKi::AuxDesktopBase ()
   , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_LTIME , s_VERTEX                   ) 
-  , m_fit ( "PropertimeFitter/properTime:PUBLIC" ) 
+  , m_fun ( s_LTIME , s_VERTEX ) 
+  , m_fit ( s_LIFETIME         ) 
 {}
 // ============================================================================
 // constructor 
@@ -999,8 +1003,8 @@ std::ostream& LoKi::Particles::LifeTimeChi2DV::fillStream
 LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV() 
   : LoKi::AuxDesktopBase ()
   , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_LTIME , s_VERTEX                   ) 
-  , m_fit ( "PropertimeFitter/properTime:PUBLIC" ) 
+  , m_fun ( s_LTIME , s_VERTEX  ) 
+  , m_fit ( s_LIFETIME          ) 
 {}
 // ============================================================================
 // constructor 
@@ -1056,8 +1060,8 @@ std::ostream& LoKi::Particles::LifeTimeSignedChi2DV::fillStream
 LoKi::Particles::LifeTimeFitChi2DV::LifeTimeFitChi2DV() 
   : LoKi::AuxDesktopBase ()
   , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_LTIME , s_VERTEX                   ) 
-  , m_fit ( "PropertimeFitter/properTime:PUBLIC" ) 
+  , m_fun ( s_LTIME , s_VERTEX ) 
+  , m_fit ( s_LIFETIME         ) 
 {}
 // ============================================================================
 // constructor 
@@ -1107,6 +1111,498 @@ std::ostream& LoKi::Particles::LifeTimeFitChi2DV::fillStream
 ( std::ostream& s ) const { return s << "BPVLTFITCHI2('" << m_fit << "')" ; }
 // ============================================================================
 
+
+// ============================================================================
+// the default constructor 
+// ============================================================================
+LoKi::Particles::VertexZDistanceWithTheBestPV::VertexZDistanceWithTheBestPV ()
+  : LoKi::AuxDesktopBase ()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+{}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::VertexZDistanceWithTheBestPV*
+LoKi::Particles::VertexZDistanceWithTheBestPV::clone() const 
+{ return new LoKi::Particles::VertexZDistanceWithTheBestPV ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::VertexZDistanceWithTheBestPV::result_type
+LoKi::Particles::VertexZDistanceWithTheBestPV::operator() 
+  ( LoKi::Particles::VertexZDistanceWithTheBestPV::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, return InvalidDistance" ) ;
+    return LoKi::Constants::InvalidDistance ;                    // RETURN 
+  }
+  const LHCb::VertexBase* ev = p->endVertex() ;
+  if ( 0 == ev ) 
+  {
+    Error ( "LHCb::Particle::endVertex points to NULL, return InvalidDistance" ) ;
+    return LoKi::Constants::InvalidDistance ;                    // RETURN 
+  }
+  // load the desktop if needed 
+  if ( !validDesktop() ) { loadDesktop() ; }
+  // check it!
+  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
+  // get the best vertex from desktop and use it 
+  const LHCb::VertexBase* bpv = desktop() -> relatedVertex ( p ) ; 
+  if ( 0 == bpv ) 
+  {
+    Error ( "Related points to NULL, return InvalidDistance" ) ;
+    return LoKi::Constants::InvalidDistance ;                    // RETURN 
+  }
+  // 
+  return ev->position().Z() - bpv->position().Z() ;    // RETURN 
+}
+// ============================================================================
+// OPTIONAL: the specific printout
+// ============================================================================
+std::ostream& LoKi::Particles::VertexZDistanceWithTheBestPV::fillStream 
+( std::ostream& s ) const { return s << "BPVVDZ" ; }
+
+
+// ============================================================================
+// the default constructor 
+// ============================================================================
+LoKi::Particles::VertexRhoDistanceWithTheBestPV::VertexRhoDistanceWithTheBestPV ()
+  : LoKi::AuxDesktopBase ()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+{}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::VertexRhoDistanceWithTheBestPV*
+LoKi::Particles::VertexRhoDistanceWithTheBestPV::clone() const 
+{ return new LoKi::Particles::VertexRhoDistanceWithTheBestPV ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::VertexRhoDistanceWithTheBestPV::result_type
+LoKi::Particles::VertexRhoDistanceWithTheBestPV::operator() 
+  ( LoKi::Particles::VertexRhoDistanceWithTheBestPV::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, return InvalidDistance" ) ;
+    return LoKi::Constants::InvalidDistance ;                    // RETURN 
+  }
+  const LHCb::VertexBase* ev = p->endVertex() ;
+  if ( 0 == ev ) 
+  {
+    Error ( "LHCb::Particle::endVertex points to NULL, return InvalidDistance" ) ;
+    return LoKi::Constants::InvalidDistance ;                    // RETURN 
+  }
+  // load the desktop if needed 
+  if ( !validDesktop() ) { loadDesktop() ; }
+  // check it!
+  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
+  // get the best vertex from desktop and use it 
+  const LHCb::VertexBase* bpv = desktop() -> relatedVertex ( p ) ; 
+  if ( 0 == bpv ) 
+  {
+    Error ( "Related points to NULL, return InvalidDistance" ) ;
+    return LoKi::Constants::InvalidDistance ;                    // RETURN 
+  }
+  // 
+  return ( ev->position() - bpv->position() ) . Rho() ;    // RETURN 
+}
+// ============================================================================
+// OPTIONAL: the specific printout
+// ============================================================================
+std::ostream& LoKi::Particles::VertexRhoDistanceWithTheBestPV::fillStream 
+( std::ostream& s ) const { return s << "BPVVDRHO" ; }
+
+
+// ============================================================================
+// constructor from the source
+// ============================================================================
+LoKi::Particles::MinVertexDistanceWithSource::MinVertexDistanceWithSource
+( const LoKi::Particles::MinVertexDistanceWithSource::_Source& s ) 
+  :  LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_fun ( s ) 
+{}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::MinVertexDistanceWithSource*
+LoKi::Particles::MinVertexDistanceWithSource::clone() const 
+{ return new LoKi::Particles::MinVertexDistanceWithSource(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::MinVertexDistanceWithSource::result_type
+LoKi::Particles::MinVertexDistanceWithSource::operator() 
+  ( LoKi::Particles::MinVertexDistanceWithSource::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, return 'HugeDistance'") ;
+    return LoKi::Constants::HugeDistance ;                            // RETURN 
+  }
+  const LHCb::VertexBase* v = p -> endVertex() ;
+  if ( 0 == v ) 
+  {
+    Error ( "LHCb::VertexBase* points to NULL, return 'HugeDistance'") ;
+    return LoKi::Constants::HugeDistance ;                             // RETURN 
+  }
+  // use the functor!
+  return m_fun.minvd ( v ) ;                                           // RETURN 
+}
+// ============================================================================
+// OPTIONAL: the specific printout
+// ============================================================================
+std::ostream& LoKi::Particles::MinVertexDistanceWithSource::fillStream 
+( std::ostream& s ) const 
+{ return s << "MINVDSOURCE(" << m_fun.source() << ")" ; }
+// ============================================================================
+
+
+// ============================================================================
+// constructor from the source
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceWithSource::MinVertexChi2DistanceWithSource
+( const LoKi::Particles::MinVertexChi2DistanceWithSource::_Source& s ) 
+  :  LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_fun ( s ) 
+{}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceWithSource*
+LoKi::Particles::MinVertexChi2DistanceWithSource::clone() const 
+{ return new LoKi::Particles::MinVertexChi2DistanceWithSource(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceWithSource::result_type
+LoKi::Particles::MinVertexChi2DistanceWithSource::operator() 
+  ( LoKi::Particles::MinVertexChi2DistanceWithSource::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, return 'HugeChi2'") ;
+    return LoKi::Constants::HugeChi2 ;                            // RETURN 
+  }
+  const LHCb::VertexBase* v = p -> endVertex() ;
+  if ( 0 == v ) 
+  {
+    Error ( "LHCb::VertexBase* points to NULL, return 'HugeChi2'") ;
+    return LoKi::Constants::HugeChi2 ;                             // RETURN 
+  }
+  // use the functor!
+  return m_fun.minvdchi2 ( v ) ;                                    // RETURN 
+}
+// ============================================================================
+// OPTIONAL: the specific printout
+// ============================================================================
+std::ostream& LoKi::Particles::MinVertexChi2DistanceWithSource::fillStream 
+( std::ostream& s ) const 
+{ return s << "MINVDCHI2SOURCE(" << m_fun.source() << ")" ; }
+// ============================================================================
+
+ 
+
+// ============================================================================
+// the default constructor
+// ============================================================================
+LoKi::Particles::MinVertexDistanceDV::MinVertexDistanceDV ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  , m_fun ( s_PRIMARY ) 
+{}
+// ============================================================================
+// the constructor from the vertex filter
+// ============================================================================
+LoKi::Particles::MinVertexDistanceDV::MinVertexDistanceDV 
+( const LoKi::PhysTypes::VCuts& cut )
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  , m_fun ( cut ) 
+{}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::MinVertexDistanceDV*
+LoKi::Particles::MinVertexDistanceDV::clone() const 
+{ return new LoKi::Particles::MinVertexDistanceDV(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::MinVertexDistanceDV::result_type 
+LoKi::Particles::MinVertexDistanceDV::operator()
+  ( LoKi::Particles::MinVertexDistanceDV::argument p ) const
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, return 'HugeDistance'") ;
+    return LoKi::Constants::HugeDistance ;                            // RETURN 
+  }
+  const LHCb::VertexBase* v = p -> endVertex() ;
+  if ( 0 == v ) 
+  {
+    Error ( "LHCb::VertexBase* points to NULL, return 'HugeDistance'") ;
+    return LoKi::Constants::HugeDistance ;                             // RETURN 
+  }
+  // use the functor!
+  return m_fun.minvd ( v ) ;                                           // RETURN 
+}
+// ============================================================================
+// OPTIONAL: the specific printout
+// ============================================================================
+std::ostream& LoKi::Particles::MinVertexDistanceDV::fillStream 
+( std::ostream& s ) const 
+{ return s << "MINVDDV(" << m_fun.cut() << ")" ; }
+// ============================================================================
+
+
+// ============================================================================
+// the default constructor
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceDV::MinVertexChi2DistanceDV ()
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  , m_fun ( s_PRIMARY ) 
+{}
+// ============================================================================
+// the constructor from the vertex filter
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceDV::MinVertexChi2DistanceDV 
+( const LoKi::PhysTypes::VCuts& cut )
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  , m_fun ( cut ) 
+{}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceDV*
+LoKi::Particles::MinVertexChi2DistanceDV::clone() const 
+{ return new LoKi::Particles::MinVertexChi2DistanceDV(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceDV::result_type 
+LoKi::Particles::MinVertexChi2DistanceDV::operator()
+  ( LoKi::Particles::MinVertexChi2DistanceDV::argument p ) const
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, return 'HugeChi2'") ;
+    return LoKi::Constants::HugeChi2 ;                            // RETURN 
+  }
+  const LHCb::VertexBase* v = p -> endVertex() ;
+  if ( 0 == v ) 
+  {
+    Error ( "LHCb::VertexBase* points to NULL, return 'HugeChi2'") ;
+    return LoKi::Constants::HugeChi2 ;                             // RETURN 
+  }
+  // use the functor!
+  return m_fun.minvdchi2 ( v ) ;                                    // RETURN 
+}
+// ============================================================================
+// OPTIONAL: the specific printout
+// ============================================================================
+std::ostream& LoKi::Particles::MinVertexChi2DistanceDV::fillStream 
+( std::ostream& s ) const 
+{ return s << "MINVDCHI2DV(" << m_fun.cut() << ")" ; }
+// ============================================================================
+
+
+// ============================================================================
+// the constructor from the TES location
+// ============================================================================
+LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
+( const std::string& path ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_fun ( path ) 
+{}
+// ============================================================================
+// the constructor from the TES locations
+// ============================================================================
+LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
+( const std::vector<std::string>& path ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_fun ( path ) 
+{}
+// ============================================================================
+// the constructor from the TES location  & selector 
+// ============================================================================
+LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
+( const std::string&            path , 
+  const LoKi::PhysTypes::VCuts& cut  ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_fun ( path , cut ) 
+{}
+// ============================================================================
+// the constructor from the TES locations & selector 
+// ============================================================================
+LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
+( const std::vector<std::string>& path , 
+  const LoKi::PhysTypes::VCuts&   cut  ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_fun ( path , cut ) 
+{}
+// ============================================================================
+// the constructor from the TES location  & selector 
+// ============================================================================
+LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
+( const LoKi::PhysTypes::VCuts& cut  ,
+  const std::string&            path ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_fun ( cut , path ) 
+{}
+// ============================================================================
+// the constructor from the TES locations & selector 
+// ============================================================================
+LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
+( const LoKi::PhysTypes::VCuts&   cut  ,
+  const std::vector<std::string>& path ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_fun ( cut , path ) 
+{}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::MinVertexDistanceTES*
+LoKi::Particles::MinVertexDistanceTES::clone() const 
+{ return new LoKi::Particles::MinVertexDistanceTES(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::MinVertexDistanceTES::result_type 
+LoKi::Particles::MinVertexDistanceTES::operator() 
+  ( LoKi::Particles::MinVertexDistanceTES::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, return 'HugeDistance'") ;
+    return LoKi::Constants::HugeDistance ;                            // RETURN 
+  }
+  const LHCb::VertexBase* v = p -> endVertex() ;
+  if ( 0 == v ) 
+  {
+    Error ( "LHCb::VertexBase* points to NULL, return 'HugeDistance'") ;
+    return LoKi::Constants::HugeDistance ;                             // RETURN 
+  }
+  // use the functor!
+  return m_fun.minvd ( v ) ;                                           // RETURN 
+}
+// ============================================================================
+// OPTIONAL: the specific printout
+// ============================================================================
+std::ostream& LoKi::Particles::MinVertexDistanceTES::fillStream 
+( std::ostream& s ) const 
+{ 
+  s << "MINVDTES("  ;
+  //
+  if ( 1 == m_fun.path().size() ) 
+  { s << Gaudi::Utils::toString ( m_fun.path().front() ) ; }
+  else 
+  { s << Gaudi::Utils::toString ( m_fun.path()         ) ; }
+  //
+  return s << "," << m_fun.cut() << ")" ;
+}
+// ============================================================================
+
+
+// ============================================================================
+// the constructor from the TES location
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
+( const std::string& path ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_fun ( path ) 
+{}
+// ============================================================================
+// the constructor from the TES locations
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
+( const std::vector<std::string>& path ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_fun ( path ) 
+{}
+// ============================================================================
+// the constructor from the TES location  & selector 
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
+( const std::string&            path , 
+  const LoKi::PhysTypes::VCuts& cut  ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_fun ( path , cut ) 
+{}
+// ============================================================================
+// the constructor from the TES locations & selector 
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
+( const std::vector<std::string>& path , 
+  const LoKi::PhysTypes::VCuts&   cut  ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_fun ( path , cut ) 
+{}
+// ============================================================================
+// the constructor from the TES location  & selector 
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
+( const LoKi::PhysTypes::VCuts& cut  ,
+  const std::string&            path ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_fun ( cut , path ) 
+{}
+// ============================================================================
+// the constructor from the TES locations & selector 
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
+( const LoKi::PhysTypes::VCuts&   cut  ,
+  const std::vector<std::string>& path ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_fun ( cut , path ) 
+{}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceTES*
+LoKi::Particles::MinVertexChi2DistanceTES::clone() const 
+{ return new LoKi::Particles::MinVertexChi2DistanceTES(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::MinVertexChi2DistanceTES::result_type 
+LoKi::Particles::MinVertexChi2DistanceTES::operator() 
+  ( LoKi::Particles::MinVertexDistanceTES::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, return 'HugeChi2'") ;
+    return LoKi::Constants::HugeChi2 ;                            // RETURN 
+  }
+  const LHCb::VertexBase* v = p -> endVertex() ;
+  if ( 0 == v ) 
+  {
+    Error ( "LHCb::VertexBase* points to NULL, return 'HugeChi2'") ;
+    return LoKi::Constants::HugeChi2 ;                             // RETURN 
+  }
+  // use the functor!
+  return m_fun.minvdchi2 ( v ) ;                                    // RETURN 
+}
+// ============================================================================
+// OPTIONAL: the specific printout
+// ============================================================================
+std::ostream& LoKi::Particles::MinVertexChi2DistanceTES::fillStream 
+( std::ostream& s ) const 
+{ 
+  s << "MINVDCHI2TES("  ;
+  //
+  if ( 1 == m_fun.path().size() ) 
+  { s << Gaudi::Utils::toString ( m_fun.path().front() ) ; }
+  else 
+  { s << Gaudi::Utils::toString ( m_fun.path()         ) ; }
+  //
+  return s << "," << m_fun.cut() << ")" ;
+}
+// ============================================================================
+
+
+
+ 
 
 
 

@@ -1,4 +1,4 @@
-// $Id: Vertices0.h,v 1.7 2008-02-28 13:59:30 ibelyaev Exp $
+// $Id: Vertices0.h,v 1.8 2008-03-30 13:43:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES0_H 
 #define LOKI_VERTICES0_H 1
@@ -345,11 +345,6 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {
     public:
-      /** constructor from number of degrees of freedom.
-       *  @attention: The "unphysical" values mean: 
-       *  <b>"get number of DoFs from the vertex itself"</b>
-       */
-      Chi2Prob ( const int dof = -1 ) ;  
       /// MANDATORY: virtual destructor:
       virtual ~Chi2Prob() { }
       /// MANDATORY: clone method ("virtual constructor")
@@ -358,12 +353,6 @@ namespace LoKi
       virtual  result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;      
-    public:
-      /// get number fo degrees of freedom 
-      int dof() const { return m_dof ; }
-    private:
-      /// number of degrees of freedom 
-      int m_dof ; // number of degrees of freedom
      } ;
     // ========================================================================
   } // end of namespace LoKi::Vertices 
