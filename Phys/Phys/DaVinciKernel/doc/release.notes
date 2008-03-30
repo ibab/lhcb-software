@@ -3,6 +3,12 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-03-30 - Vanya BELYAEV
+
+ - Kernel/IPRintDecay.h, src/Lib/IPrintDecay.cpp	
+    add new abstract interface for orintout of dec	ay tree   
+    (essentially it is MC-free version of IPrintDeca	yTreeTool) 
+
 ! 2008-03-14 - Patrick Koppenburg
  - Less verbose initialisation of DVAlgorithm
 
