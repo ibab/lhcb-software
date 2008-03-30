@@ -1,4 +1,4 @@
-// $Id: IReporter.cpp,v 1.4 2007-07-23 17:07:43 ibelyaev Exp $
+// $Id: IReporter.cpp,v 1.5 2008-03-30 17:55:52 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -28,7 +28,7 @@ namespace
   /** @var IID_ILoKiReporter 
    *  unique static identifier of ILoKiReporter interface 
    */
-  const InterfaceID IID_ILoKiReporter ( "LoKi::IReporter" , 2 , 1 ) ;
+  const InterfaceID IID_ILoKiReporter ( "LoKi::IReporter" , 3 , 1 ) ;
   // ==========================================================================
 } 
 // ============================================================================
@@ -39,8 +39,7 @@ namespace
  *  @return unique interface identifier 
  */
 // ============================================================================
-const InterfaceID& LoKi::IReporter::interfaceID() 
-{ return IID_ILoKiReporter ; } 
+const InterfaceID& LoKi::IReporter::interfaceID() { return IID_ILoKiReporter ; } 
 // ============================================================================
 // destructor 
 // ============================================================================

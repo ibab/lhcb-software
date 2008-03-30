@@ -1,4 +1,4 @@
-// $Id: ILoKiSvc.cpp,v 1.5 2008-03-30 13:31:28 ibelyaev Exp $
+// $Id: ILoKiSvc.cpp,v 1.6 2008-03-30 17:55:52 ibelyaev Exp $
 // ============================================================================
 // include files 
 // ============================================================================
@@ -26,7 +26,7 @@ namespace
   /** @var IID_ILoKiSvc 
    *  unique static identifier of ILoKiSvc interface 
    */
-  const InterfaceID IID_ILoKiSvc ( "LoKi::ILoKiSvc" , 3 , 1 ) ; 
+  const InterfaceID IID_ILoKiSvc ( "LoKi::ILoKiSvc" , 4 , 1 ) ; 
   // ==========================================================================
 }
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: ErrorReport.h,v 1.7 2007-07-23 17:07:37 ibelyaev Exp $
+// $Id: ErrorReport.h,v 1.8 2008-03-30 17:55:52 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ERRORREPORT_H 
 #define LOKI_ERRORREPORT_H 1
@@ -62,7 +62,7 @@ namespace LoKi
      */
     StatusCode Error     
     ( const std::string&  msg                       , 
-      const StatusCode    st  = StatusCode::FAILURE ,
+      const StatusCode    st  = StatusCode ( StatusCode::FAILURE , true ) ,
       const size_t        mx  = 10                  ) const  ;
     /** Print the warning  message, return status code 
      *  @param msg    warning message 
@@ -72,7 +72,7 @@ namespace LoKi
      */
     StatusCode Warning   
     ( const std::string&  msg                       , 
-      const StatusCode    st  = StatusCode::FAILURE , 
+      const StatusCode    st  = StatusCode ( StatusCode::FAILURE , true ) , 
       const size_t        mx  = 10                  ) const  ;
     /** Print the message and return status code 
      *  @param msg    warning message 
@@ -82,7 +82,7 @@ namespace LoKi
      */
     StatusCode Print     
     ( const std::string& msg                       , 
-      const StatusCode   st  = StatusCode::FAILURE ,
+      const StatusCode   st  = StatusCode ( StatusCode::FAILURE , true ) ,
       const MSG::Level   lev = MSG::INFO           ) const ;
     /** Assertion - throw exception, if condition is not fulfilled 
      *  @see GaudiException
@@ -97,7 +97,7 @@ namespace LoKi
     inline StatusCode Assert 
     ( const bool         ok                            , 
       const std::string& message = ""                  , 
-      const StatusCode   sc      = StatusCode::FAILURE ) const 
+      const StatusCode   sc      = StatusCode ( StatusCode::FAILURE , true ) ) const 
     {
       return ( ok ? StatusCode::SUCCESS : Exception( message , sc ) ) ;
     } 
@@ -112,7 +112,7 @@ namespace LoKi
     StatusCode Exception 
     ( const std::string    & msg                        ,  
       const GaudiException & exc                        , 
-      const StatusCode       sc  = StatusCode::FAILURE  ) const ;
+      const StatusCode       sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
     /** Create and (re)-throw the exception  
      *  @see GaudiException
      *  @exception GaudiException always!
@@ -124,7 +124,7 @@ namespace LoKi
     StatusCode Exception 
     ( const std::string    & msg                        ,  
       const std::exception & exc                        , 
-      const StatusCode       sc  = StatusCode::FAILURE  ) const ;
+      const StatusCode       sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
     /** Create and throw the exception  
      *  @see GaudiException
      *  @exception GaudiException always!
@@ -134,7 +134,7 @@ namespace LoKi
      */
     StatusCode Exception 
     ( const std::string& msg = "no message"        ,  
-      const StatusCode   sc  = StatusCode::FAILURE ) const ;
+      const StatusCode   sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
   private:
     /// private destructor 
     ~ErrorReport( );
@@ -146,11 +146,11 @@ namespace LoKi
   private:
     typedef GaudiUtils::HashMap<std::string,unsigned long> Counter ;   
     /// counter of errorr 
-    mutable Counter m_errors     ; ///< counter of errorr 
+    mutable Counter m_errors     ; // counter of errorr 
     /// counter of warnings 
-    mutable Counter m_warnings   ; ///< counter of warnings 
+    mutable Counter m_warnings   ; // counter of warnings 
     /// counter of exception
-    mutable Counter m_exceptions ; ///< counter of exceptions
+    mutable Counter m_exceptions ; //  counter of exceptions
     //
     const LoKi::IReporter* m_reporter ;    
   };
