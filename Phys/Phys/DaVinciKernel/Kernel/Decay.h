@@ -1,4 +1,4 @@
-// $Id: Decay.h,v 1.2 2008-03-31 14:33:06 ibelyaev Exp $
+// $Id: Decay.h,v 1.3 2008-03-31 14:48:45 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_DECAY_H 
 #define DAVINCIKERNEL_DECAY_H 1
@@ -159,19 +159,19 @@ namespace DaVinci
     /// set the daughters 
     void setDaughters ( const std::vector<int>&                     daugs ) ;
     /// set the daughters 
-    void setChildren  ( const Items& daugs ) { setDaughters ( daus ) ; }
+    void setChildren  ( const Items& daugs ) { setDaughters ( daugs ) ; }
     /// set the daughters  
     void setChildren  ( const std::vector<const ParticleProperty*>& daugs ) 
-    { setDaughters ( daus ) ; }
+    { setDaughters ( daugs ) ; }
     /// set the daughters  
     void setChildren  ( const std::vector<std::string>&             daugs ) 
-    { setDaughters ( daus ) ; }
+    { setDaughters ( daugs ) ; }
     /// set the daughters  
     void setChidlren  ( const std::vector<LHCb::ParticleID>&        daugs ) 
-    { setDaughters ( daus ) ; }
+    { setDaughters ( daugs ) ; }
     /// set the daughters  
-    void setDaughters ( const std::vector<int>&                     daugs ) 
-    { setDaughters ( daus ) ; }
+    void setChildren  ( const std::vector<int>&                     daugs ) 
+    { setDaughters ( daugs ) ; }
     // ========================================================================    
   public:    
     // ========================================================================    

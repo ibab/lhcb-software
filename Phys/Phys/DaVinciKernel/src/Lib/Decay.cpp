@@ -1,4 +1,4 @@
-// $Id: Decay.cpp,v 1.2 2008-03-31 14:33:07 ibelyaev Exp $
+// $Id: Decay.cpp,v 1.3 2008-03-31 14:48:45 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -123,7 +123,7 @@ DaVinci::Decay::Decay
   : m_mother    ( mother ) 
   , m_daughters (        ) 
 {
-  setDaughters ( daughters )
+  setDaughters ( daughters ) ;
 }
 // ============================================================================
 // the constructor from mother and daughters 
@@ -207,7 +207,7 @@ void DaVinci::Decay::setDaughters
 {
   m_daughters.clear() ;
   for ( std::vector<const ParticleProperty*>::const_iterator ipp  = 
-          daughters.begin() ; daughters.end() != ipp ; ++ipp ) 
+          daugs.begin() ; daugs.end() != ipp ; ++ipp ) 
   {
     Item child ( *ipp ) ;
     m_daughters.push_back ( child ) ;
@@ -221,7 +221,7 @@ void DaVinci::Decay::setDaughters
 {
   m_daughters.clear() ;
   for ( std::vector<std::string>::const_iterator ipp  = 
-          daughters.begin() ; daughters.end() != ipp ; ++ipp ) 
+          daugs.begin() ; daugs.end() != ipp ; ++ipp ) 
   {
     Item child ( *ipp ) ;
     m_daughters.push_back ( child ) ;
@@ -235,7 +235,7 @@ void DaVinci::Decay::setDaughters
 {
   m_daughters.clear() ;
   for ( std::vector<LHCb::ParticleID>::const_iterator ipp  = 
-          daughters.begin() ; daughters.end() != ipp ; ++ipp ) 
+          daugs.begin() ; daugs.end() != ipp ; ++ipp ) 
   {
     Item child ( *ipp ) ;
     m_daughters.push_back ( child ) ;
@@ -249,7 +249,7 @@ void DaVinci::Decay::setDaughters
 {
   m_daughters.clear() ;
   for ( std::vector<int>::const_iterator ipp  = 
-          daughters.begin() ; daughters.end() != ipp ; ++ipp ) 
+          daugs.begin() ; daugs.end() != ipp ; ++ipp ) 
   {
     Item child ( *ipp ) ;
     m_daughters.push_back ( child ) ;
