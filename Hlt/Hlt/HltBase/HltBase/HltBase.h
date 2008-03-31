@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.3 2008-01-25 16:55:03 hernando Exp $
+// $Id: HltBase.h,v 1.4 2008-03-31 13:29:42 hernando Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -131,6 +131,10 @@ protected:
   // print info from vertex
   void printInfo(const std::string& title, const LHCb::RecVertex& ver);
 
+  // print info from extraInfo
+  void printInfo(const std::string& title,
+                 const GaudiUtils::VectorMap<int,double>& info);
+
 protected:
 
   // bool about the msg level
@@ -260,6 +264,9 @@ protected:
 
   // returns the ID of the extraInfo by name
   int hltInfoID(const std::string& name);
+
+  // returns the ID of the extraInfo by name
+  std::string hltInfoName(int id);
 
   // return the location of the data
   const std::string& hltDataLocation() 

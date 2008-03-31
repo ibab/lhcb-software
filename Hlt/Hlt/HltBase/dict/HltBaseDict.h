@@ -22,14 +22,15 @@
 
 #include "GaudiAlg/ISequencerTimerTool.h"
 
-// struct __Instantiations
-// {
+namespace {
+  
+  struct _hltbase_instantiations 
+  {
+    Hlt::Configuration py_hlt_00;
+    zen::IntRelation py_hlt_05; 
+    Hlt::IntRelation py_hlt_06;
+  };  
+}
 
-//   Hlt::HolderTrackContainer m_105;
-//   Hlt::HolderVertexContainer m_106;
-//   Hlt::HolderConfiguration m_e110;
-
-//   __Instantiations();  
-// };
 #endif // DICT_HLTBASEDICT_H
 

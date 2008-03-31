@@ -3,6 +3,11 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+! 2008-03-31 - Jose Angel
+ - printing info of the extraInfo of track and vertices in HltBase.icpp
+ - instanciation of some clases to create the dictionary
+
 ! 2008-03-27 Johannes Albrecht
 	- add FwdHypothesis.h, ParabolaHypothesis.h:
 		helper classes to hold search window information for Tf decoding on demand 

@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.4 2008-02-15 15:33:10 graven Exp $
+// $Id: HltBase.icpp,v 1.5 2008-03-31 13:29:42 hernando Exp $
 // Include files
 
 
@@ -215,6 +215,12 @@ int HltBase<EBASE>::hltInfoID(const std::string& infoname)
 }
 
 template <class EBASE>
+std::string HltBase<EBASE>::hltInfoName(int id) 
+{
+  return Hlt::ConfigurationHelper::getName(hltConf(),"InfoID",id);
+}
+
+template <class EBASE>
 void HltBase<EBASE>::printInfo(const std::string& title,
                                const LHCb::Track& track) {
   EBASE::info() << title << " track  " << track.key() 
@@ -224,6 +230,7 @@ void HltBase<EBASE>::printInfo(const std::string& title,
                 << " ids " << track.lhcbIDs().size() 
                 << " states " << track.states().size()
                 << endreq;
+  printInfo(title+" Info: ",track.extraInfo());
 }
 
 template <class EBASE>
@@ -231,7 +238,20 @@ void HltBase<EBASE>::printInfo(const std::string& title,
                              const LHCb::RecVertex& vertex) {
   EBASE::info() << title << " vertex  " << vertex.key() << " position " 
                << vertex.position()  << endreq;
+  printInfo(title+" Info: ",vertex.extraInfo());
   printInfo(title,vertex.tracks());
 }
+
+template<class EBASE>
+void HltBase<EBASE>::printInfo(const std::string& title,
+                               const GaudiUtils::VectorMap<int,double>& vmap) {
+  EBASE::info() << title;
+  for (GaudiUtils::VectorMap<int,double>::const_iterator it = vmap.begin(); 
+       it != vmap.end(); it++)
+    EBASE::info() << hltInfoName(it->first) << " = " 
+                  << it->second << "; \t";
+  EBASE::info() << endreq;
+}
+
 
 
