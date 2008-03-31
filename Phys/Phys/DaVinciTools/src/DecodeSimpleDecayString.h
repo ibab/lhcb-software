@@ -1,23 +1,37 @@
-// $Id: DecodeSimpleDecayString.h,v 1.6 2005-04-20 14:08:39 pkoppenb Exp $
+// $Id: DecodeSimpleDecayString.h,v 1.7 2008-03-31 13:03:01 ibelyaev Exp $
+// ============================================================================
 #ifndef DECODESIMPLEDECAYSTRING_H 
 #define DECODESIMPLEDECAYSTRING_H 1
-
+// ============================================================================
 // Include files
-// from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+// ============================================================================
+// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/AlgTool.h"
+// ============================================================================
+// GaudiAlg
+// ============================================================================
+#include "GaudiAlg/GaudiTool.h"
+// ============================================================================
+// DaVinciKernel
+// ============================================================================
+#include "Kernel/Decay.h"            
 #include "Kernel/IDecodeSimpleDecayString.h"            // Interface
+// ============================================================================
+// forwarde declaration
+// ============================================================================
 class IParticlePropertySvc;
-
-
+// ============================================================================
 /** @class DecodeSimpleDecayString DecodeSimpleDecayString.h
  *  
  *
  *  @author Patrick KOPPENBURG
  *  @date   2004-06-30
  */
-class DecodeSimpleDecayString : public GaudiTool, 
-                                virtual public IDecodeSimpleDecayString {
+class DecodeSimpleDecayString
+  : public GaudiTool, 
+    virtual public IDecodeSimpleDecayString 
+{
 public: 
   /// Standard constructor
   DecodeSimpleDecayString( const std::string& type, 
@@ -34,6 +48,31 @@ public:
   StatusCode getPIDs(int&, ints&) const;
   StatusCode getPIDs_cc(int&, ints&) const;
   bool is_cc(void) const;
+  
+public:
+  
+  // ==========================================================================
+  /** get the decay form the descriptor 
+   *  @param decay (output) the decay 
+   *  @return status code 
+   */
+  virtual StatusCode getDecay    
+  ( DaVinci::Decay& decay ) const  ;
+  // ==========================================================================
+  /** get the charge conjugated decay form the descriptor 
+   *  @param decay (output) the decay 
+   *  @return status code 
+   */
+  virtual StatusCode getDecay_cc 
+  ( DaVinci::Decay& decay ) const ;
+  // ==========================================================================
+  /** get all decays form the descriptor 
+   *  @param decays (output) the vector of decays
+   *  @return status code 
+   */
+  virtual StatusCode getDecays   
+  ( std::vector<DaVinci::Decay>& decays ) const ;
+  // ==========================================================================
   
 protected:
   StatusCode reset();

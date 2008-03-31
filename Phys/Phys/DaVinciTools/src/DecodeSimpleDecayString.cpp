@@ -1,6 +1,7 @@
-// $Id: DecodeSimpleDecayString.cpp,v 1.8 2007-07-20 13:54:06 pkoppenb Exp $
+// $Id: DecodeSimpleDecayString.cpp,v 1.9 2008-03-31 13:03:01 ibelyaev Exp $
+// ============================================================================
 // Include files 
-
+// ============================================================================
 // from ANSI C++
 //#include <math.h>
 //#include <assert.h>
@@ -261,3 +262,65 @@ StatusCode DecodeSimpleDecayString::strip_cc(void)
 
   return StatusCode::SUCCESS;  
 }
+// ============================================================================
+
+// ==========================================================================
+/*  get the decay form the descriptor 
+ *  @param decay (output) the decay 
+ *  @return status code 
+ */
+// ==========================================================================
+StatusCode DecodeSimpleDecayString::getDecay    
+( DaVinci::Decay& decay ) const  
+{
+  //
+  decay = DaVinci::Decay ( m_mother , m_daughters  ) ;
+  //
+  return decay.validate ( m_ppSvc ) ;
+}
+// ==========================================================================
+/*  get the charge conjugate decay form the descriptor 
+ *  @param decay (output) the decay 
+ *  @return status code 
+ */
+// ==========================================================================
+StatusCode DecodeSimpleDecayString::getDecay_cc    
+( DaVinci::Decay& decay ) const  
+{
+  if ( !m_iscc ) { return StatusCode::FAILURE ; }  
+  //
+  decay = DaVinci::Decay ( m_mother_cc , m_daughters_cc ) ;
+  //
+  return decay.validate ( m_ppSvc ) ;
+}
+// ==========================================================================
+/*  get all decays form the descriptor 
+ *  @param decays (output) the vector of decays
+ *  @return status code 
+ */
+StatusCode DecodeSimpleDecayString::getDecays    
+( std::vector<DaVinci::Decay>& decays ) const 
+{
+  decays.clear() ;
+  // the main decay:
+  DaVinci::Decay decay1 ( m_mother , m_daughters ) ;
+  StatusCode sc = decay1.validate ( m_ppSvc ) ;
+  if ( sc.isFailure() ) { return sc ; }
+  decays.push_back ( decay1 ) ;
+  if ( m_iscc ) 
+  {
+    DaVinci::Decay decay2 ( m_mother_cc , m_daughters_cc ) ;
+    sc = decay2.validate ( m_ppSvc ) ;
+    if ( sc.isFailure() ) { return sc ; }
+    decays.push_back ( decay2 ) ;
+  }
+  return StatusCode::SUCCESS ;
+}
+// ==========================================================================
+
+
+
+
+// ============================================================================
+// The END 
+// ============================================================================
