@@ -8,6 +8,14 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-03-32 - Ulrich Kerzel
+ - added files for GaudiPython / MicroDST tutorial
+   - InitGaudi.py          : initialise Gaudi
+   - Analysis.py           : run a J/Psi -> MuMu vertex fit in GaudiPython
+   - AnalysisMicroDST.py   : run over a microDST and analyse the particles
+   - JPsiMuMuMicroDST.opts : small options file to create a J/Psi->MuMu microDST,
+                             to be used with AnalysisMicroDST.py
+
 ! 2008-03-26 - Patrick Koppenburg
  - Some typos fixed thanks to Roel Aaij
 
