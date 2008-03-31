@@ -2,6 +2,9 @@
 ! Package manager : J. Amoraal
 !---------------------------------------------------------------------------
 
+! 2008-03-31 Jan Amoraal
+- Added OTTime to expert moni
+ 
 ! 2007-07-02 Jan Amoraal
 - Minor changes to reflect changes in OTAssociators. Note code is still compatible
   with DC06 data since the MC information is retrieved via the channelIDs(keys).

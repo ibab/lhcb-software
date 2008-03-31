@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.42 2007-07-02 16:15:29 janos Exp $
+! $Id: release.notes,v 1.43 2008-03-31 16:33:38 janos Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg & Jacopo Nardulli
+
+! 2008-03-31 - Jan Amoraal
+ - Some minor clean-up and more doxygen
 
 ! 2007-07-02 - Jan Amoraal
  - Added new assocciator algorithms. The deposits, hits and particles are linked to the
