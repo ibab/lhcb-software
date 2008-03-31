@@ -1,4 +1,4 @@
-// $Id: ITrackFitter.h,v 1.7 2006-01-12 15:24:26 erodrigu Exp $
+// $Id: ITrackFitter.h,v 1.8 2008-03-31 07:12:00 mneedham Exp $
 #ifndef TRACKINTERFACES_ITRACKFITTER_H 
 #define TRACKINTERFACES_ITRACKFITTER_H 1
 
@@ -9,6 +9,8 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+// from LHCbKernel
+#include "Kernel/ParticleID.h"
 
 // Forward declarations
 namespace LHCb {
@@ -34,7 +36,8 @@ public:
   static const InterfaceID& interfaceID() { return IID_ITrackFitter; }
 
   //! fit a track 
-  virtual StatusCode fit( LHCb::Track& track ) = 0;
+  virtual StatusCode fit(LHCb::Track& track,
+                         LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
 };
 #endif // TRACKINTERFACES_ITRACKFITTER_H

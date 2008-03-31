@@ -4,6 +4,11 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2008-03-31 M Needham
+ - Modify state correction and fitter interfaces to 
+   accept optional pid argument. 
+
+
 !====================== TrackInterfaces v3r12 2008-02-20 =====================
 ! 2008-02-18 - Manuel Schiller
  - added code needed for L0 confirmation to IPatSeedingTool
