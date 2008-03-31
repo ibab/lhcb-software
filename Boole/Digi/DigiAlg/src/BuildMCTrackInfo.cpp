@@ -1,4 +1,4 @@
-// $Id: BuildMCTrackInfo.cpp,v 1.7 2007-04-30 08:27:10 mneedham Exp $
+// $Id: BuildMCTrackInfo.cpp,v 1.8 2008-03-31 18:07:58 janos Exp $
 // Include files 
 
 // from Gaudi
@@ -8,7 +8,8 @@
 #include "Event/MCHit.h"
 #include "Event/VeloCluster.h"
 #include "Event/STCluster.h"
-#include "Event/OTTime.h"
+#include "Event/OTTime.h" /// Needed for path of table
+#include "Event/MCOTTime.h"
 
 #include "Linker/LinkedTo.h"
 #include "Event/MCProperty.h"
@@ -87,10 +88,17 @@ StatusCode BuildMCTrackInfo::execute() {
                                      LHCb::STClusterLocation::ITClusters );
   if( itLink.notFound() ) return StatusCode::FAILURE;
   
-  LinkedTo<LHCb::MCParticle, LHCb::OTTime> otLink( eventSvc(), msgSvc(), 
-                                     LHCb::OTTimeLocation::Default );
+  /*** Old ***/
+  // LinkedTo<LHCb::MCParticle, LHCb::OTTime> otLink( eventSvc(), msgSvc(), 
+  //                                                    LHCb::OTTimeLocation::Default );
+  // if( otLink.notFound() ) return StatusCode::FAILURE;
+  /***********/
+
+  /*** New ***/
+  LinkedTo<LHCb::MCParticle> otLink( eventSvc(), msgSvc(), LHCb::OTTimeLocation::Default );
   if( otLink.notFound() ) return StatusCode::FAILURE;
-  
+  /***********/
+
   LHCb::MCParticles* mcParts = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
 
   LHCb::MCProperty* trackInfo = new LHCb::MCProperty();
@@ -184,8 +192,19 @@ StatusCode BuildMCTrackInfo::execute() {
   }
   
   //== OT Times -> particle associaton
-  LHCb::OTTimes* OTTim = get<LHCb::OTTimes>( LHCb::OTTimeLocation::Default);
-  for ( LHCb::OTTimes::const_iterator timIt = OTTim->begin() ;
+  /*** Old ***/
+  // LHCb::OTTimes* OTTim = get<LHCb::OTTimes>( LHCb::OTTimeLocation::Default);
+  /**********/
+  
+  /// There should be a 1-to-1 correspondence. MCOTTimes are encoded and put in the
+  /// RawBuffer which is then decoded to create OTTimes. The channelID of the two objects
+  /// should be the same
+  /*** New ***/
+  const LHCb::MCOTTimes* OTTim = get<LHCb::MCOTTimes>(LHCb::MCOTTimeLocation::Default);
+  /***********/
+
+  ///Old: for ( LHCb::OTTimes::const_iterator timIt = OTTim->begin() ;
+  for ( LHCb::MCOTTimes::const_iterator timIt = OTTim->begin() ;
         OTTim->end() != timIt ; timIt++ ) {
     // OT stations should be 2-4 in this numbering, 0,1 are TT stations
     int sta   = (*timIt)->channel().station() + 1;
