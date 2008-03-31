@@ -116,7 +116,7 @@ class Package(object):
         self._usedpackagelist[binary] = set()
         for pak in packagelist :
             if  pak.hasConstituents(binary):
-               self._usedpackagelist[binary].add(pak) 
+                self._usedpackagelist[binary].add(pak) 
         return self._usedpackagelist[binary]
     
     def binaryUsedPackages(self, binary):
