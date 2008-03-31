@@ -1,4 +1,4 @@
-// $Id: Decay.cpp,v 1.1 2008-03-31 11:53:03 ibelyaev Exp $
+// $Id: Decay.cpp,v 1.2 2008-03-31 14:33:07 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -48,11 +48,19 @@ DaVinci::Decay::Item::Item ( const LHCb::ParticleID& pid  )
   , m_pid  ( pid ) 
   , m_pp   (  0  )
 {}
+// ============================================================================
+// the constructor from the particle PID
+// ============================================================================
+DaVinci::Decay::Item::Item ( const int               pid  )
+  : m_name (     ) 
+  , m_pid  ( pid ) 
+  , m_pp   (  0  )
+{}
 // ============================================================================    
 // validate the item using the service 
 // ============================================================================    
 StatusCode DaVinci::Decay::Item::validate 
-(       IParticlePropertySvc* svc  ) 
+(       IParticlePropertySvc* svc  ) const
 {
   if ( 0 != m_pp ) 
   { 
@@ -82,7 +90,7 @@ StatusCode DaVinci::Decay::Item::validate
 // validate the item using the particle property object
 // ============================================================================    
 StatusCode DaVinci::Decay::Item::validate 
-( const ParticleProperty* pp  ) 
+( const ParticleProperty* pp  ) const
 {
   if      ( 0 != m_pp && 0 == pp ) 
   {
@@ -100,6 +108,13 @@ StatusCode DaVinci::Decay::Item::validate
   return StatusCode::FAILURE ;                                     // RETURN  
 }
 // ============================================================================
+// the default constructor 
+// ============================================================================
+DaVinci::Decay::Decay ()
+  : m_mother    () 
+  , m_daughters ()
+{}
+// ============================================================================
 // the constructor from mother and daughters 
 // ============================================================================
 DaVinci::Decay::Decay 
@@ -108,12 +123,7 @@ DaVinci::Decay::Decay
   : m_mother    ( mother ) 
   , m_daughters (        ) 
 {
-  for ( std::vector<const ParticleProperty*>::const_iterator ipp  = 
-          daughters.begin() ; daughters.end() != ipp ; ++ipp ) 
-  {
-    Item child ( *ipp ) ;
-    m_daughters.push_back ( child ) ;
-  }
+  setDaughters ( daughters )
 }
 // ============================================================================
 // the constructor from mother and daughters 
@@ -123,13 +133,8 @@ DaVinci::Decay::Decay
   const std::vector<std::string>&             daughters )   // the daughters 
   : m_mother    ( mother ) 
   , m_daughters (        ) 
-{
-  for ( std::vector<std::string>::const_iterator ipp  = 
-          daughters.begin() ; daughters.end() != ipp ; ++ipp ) 
-  {
-    Item child ( *ipp ) ;
-    m_daughters.push_back ( child ) ;
-  }
+{ 
+  setDaughters ( daughters ) ;
 }
 // ============================================================================
 // the constructor from mother and daughters 
@@ -139,22 +144,29 @@ DaVinci::Decay::Decay
   const std::vector<LHCb::ParticleID>&        daughters )   // the daughters 
   : m_mother    ( mother ) 
   , m_daughters (        ) 
-{
-  for ( std::vector<LHCb::ParticleID>::const_iterator ipp  = 
-          daughters.begin() ; daughters.end() != ipp ; ++ipp ) 
-  {
-    Item child ( *ipp ) ;
-    m_daughters.push_back ( child ) ;
-  }
+{ 
+  setDaughters ( daughters ) ;
+}
+// ============================================================================
+// the constructor from mother and daughters 
+// ============================================================================
+DaVinci::Decay::Decay 
+( const             int   mother    ,   // the mother 
+  const std::vector<int>& daughters )   // the daughters 
+  : m_mother    ( mother )
+  , m_daughters (        ) 
+{ 
+  setDaughters ( daughters ) ;
 }
 // ============================================================================
 // validate the decay using the service 
 // ============================================================================
-StatusCode DaVinci::Decay::validate ( IParticlePropertySvc* svc ) 
+StatusCode DaVinci::Decay::validate ( IParticlePropertySvc* svc ) const
 {
   // validate the mother
   StatusCode sc = m_mother.validate ( svc ) ;
   if ( sc.isFailure() ) { return sc ; }                         // RETURN 
+  if ( m_daughters.empty() ) { return StatusCode::FAILURE ; }   // RETURN   
   // loop over daughters 
   for ( Items::iterator idau = m_daughters.begin() ; 
         m_daughters.end() != idau ;  ++idau )
@@ -188,9 +200,62 @@ std::string DaVinci::Decay::toString () const
   return result + " ";
 }
 // ============================================================================
-
-
-
+// set daughters 
+// ============================================================================
+void DaVinci::Decay::setDaughters 
+( const std::vector<const ParticleProperty*>& daugs ) 
+{
+  m_daughters.clear() ;
+  for ( std::vector<const ParticleProperty*>::const_iterator ipp  = 
+          daughters.begin() ; daughters.end() != ipp ; ++ipp ) 
+  {
+    Item child ( *ipp ) ;
+    m_daughters.push_back ( child ) ;
+  }
+}
+// ============================================================================
+// set daughters 
+// ============================================================================
+void DaVinci::Decay::setDaughters 
+( const std::vector<std::string>& daugs ) 
+{
+  m_daughters.clear() ;
+  for ( std::vector<std::string>::const_iterator ipp  = 
+          daughters.begin() ; daughters.end() != ipp ; ++ipp ) 
+  {
+    Item child ( *ipp ) ;
+    m_daughters.push_back ( child ) ;
+  }
+}
+// ============================================================================
+// set daughters 
+// ============================================================================
+void DaVinci::Decay::setDaughters 
+( const std::vector<LHCb::ParticleID>& daugs ) 
+{
+  m_daughters.clear() ;
+  for ( std::vector<LHCb::ParticleID>::const_iterator ipp  = 
+          daughters.begin() ; daughters.end() != ipp ; ++ipp ) 
+  {
+    Item child ( *ipp ) ;
+    m_daughters.push_back ( child ) ;
+  }
+}
+// ============================================================================
+// set daughters 
+// ============================================================================
+void DaVinci::Decay::setDaughters 
+( const std::vector<int>& daugs ) 
+{
+  m_daughters.clear() ;
+  for ( std::vector<int>::const_iterator ipp  = 
+          daughters.begin() ; daughters.end() != ipp ; ++ipp ) 
+  {
+    Item child ( *ipp ) ;
+    m_daughters.push_back ( child ) ;
+  }
+}
+// ============================================================================
 
 
 

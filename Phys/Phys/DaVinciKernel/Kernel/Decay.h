@@ -1,4 +1,4 @@
-// $Id: Decay.h,v 1.1 2008-03-31 11:53:03 ibelyaev Exp $
+// $Id: Decay.h,v 1.2 2008-03-31 14:33:06 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_DECAY_H 
 #define DAVINCIKERNEL_DECAY_H 1
@@ -47,6 +47,8 @@ namespace DaVinci
       Item ( const std::string&      name   ) ;
       /// the constructor from the particle PID
       Item ( const LHCb::ParticleID& pid    ) ;
+      /// the constructor from the particle PID
+      Item ( const int               pid    ) ;
       /// the destructor 
       ~Item() {} // the destructor 
       // ======================================================================
@@ -62,18 +64,18 @@ namespace DaVinci
     public:
       // ======================================================================    
       /// validate the item using the service 
-      StatusCode validate (       IParticlePropertySvc* svc  ) ;
+      StatusCode validate (       IParticlePropertySvc* svc  ) const ;
       /// validate the item using the particle property object
-      StatusCode validate ( const  ParticleProperty*    prop ) ;
+      StatusCode validate ( const  ParticleProperty*    prop ) const ;
       // ======================================================================      
     private:
       // ======================================================================    
       /// the particle name 
-      std::string              m_name ; // the particle name 
+      mutable std::string              m_name ; // the particle name 
       /// the particle PID 
-      LHCb::ParticleID         m_pid  ; // the particle PID 
+      mutable LHCb::ParticleID         m_pid  ; // the particle PID 
       /// the source of properties 
-      const ParticleProperty*  m_pp   ; // the source of all properties 
+      mutable const ParticleProperty*  m_pp   ; // the source of all properties 
       // ======================================================================    
     } ;
     // ========================================================================
@@ -82,6 +84,9 @@ namespace DaVinci
     // ========================================================================
   public:
     // ========================================================================
+    /// the default constructor 
+    Decay () ;
+    // ========================================================================    
     /// the constructor from mother and daughters 
     Decay 
     ( const                   ParticleProperty*   mother    ,   // the mother 
@@ -94,6 +99,10 @@ namespace DaVinci
     Decay 
     ( const             LHCb::ParticleID&         mother    ,   // the mother 
       const std::vector<LHCb::ParticleID>&        daughters ) ; // the daughters 
+    /// the constructor from mother and daughters 
+    Decay 
+    ( const             int                       mother    ,   // the mother 
+      const std::vector<int>&                     daughters ) ; // the daughters 
     /// virtual destructor 
     virtual ~Decay( ); // virtual destructor
     // ========================================================================
@@ -103,6 +112,8 @@ namespace DaVinci
     const Item&  mother     () const { return m_mother    ; }
     /// get all daughters 
     const Items& daughters  () const { return m_daughters ; }
+    /// get all daughters 
+    const Items& children   () const { return daughters() ; }
     /// get the number of daughters
     size_t       nDaughters () const { return m_daughters.size() ; }
     /// get the number of daughters
@@ -127,8 +138,45 @@ namespace DaVinci
     // ========================================================================    
   public:    
     // ========================================================================    
+    /// set the mother 
+    void setMother    ( const Item&             mom ) { m_mother =        mom   ; }
+    /// set the mother 
+    void setMother    ( const ParticleProperty* mom ) { m_mother = Item ( mom ) ; }
+    /// set the mother 
+    void setMother    ( const std::string&      mom ) { m_mother = Item ( mom ) ; }
+    /// set the mother 
+    void setMother    ( const LHCb::ParticleID& mom ) { m_mother = Item ( mom ) ; }
+    /// set the mother 
+    void setMother    ( const int               mom ) { m_mother = Item ( mom ) ; }
+    /// set the daughters 
+    void setDaughters ( const Items& daugs )  { m_daughters = daugs ;  }
+    /// set the daughters 
+    void setDaughters ( const std::vector<const ParticleProperty*>& daugs ) ;
+    /// set the daughters 
+    void setDaughters ( const std::vector<std::string>&             daugs ) ;
+    /// set the daughters
+    void setDaughters ( const std::vector<LHCb::ParticleID>&        daugs ) ;
+    /// set the daughters 
+    void setDaughters ( const std::vector<int>&                     daugs ) ;
+    /// set the daughters 
+    void setChildren  ( const Items& daugs ) { setDaughters ( daus ) ; }
+    /// set the daughters  
+    void setChildren  ( const std::vector<const ParticleProperty*>& daugs ) 
+    { setDaughters ( daus ) ; }
+    /// set the daughters  
+    void setChildren  ( const std::vector<std::string>&             daugs ) 
+    { setDaughters ( daus ) ; }
+    /// set the daughters  
+    void setChidlren  ( const std::vector<LHCb::ParticleID>&        daugs ) 
+    { setDaughters ( daus ) ; }
+    /// set the daughters  
+    void setDaughters ( const std::vector<int>&                     daugs ) 
+    { setDaughters ( daus ) ; }
+    // ========================================================================    
+  public:    
+    // ========================================================================    
     /// validate the decay using the service 
-    StatusCode validate ( IParticlePropertySvc* svc ) ;
+    StatusCode validate ( IParticlePropertySvc* svc ) const ;
     // ========================================================================    
   public:    
     // ========================================================================    
@@ -140,9 +188,9 @@ namespace DaVinci
   private:
     // ========================================================================
     /// the head of the decay
-    Item  m_mother    ; // the head of the decay
+    mutable Item  m_mother    ; // the head of the decay
     /// the daughter particles 
-    Items m_daughters ; // the daughter particles 
+    mutable Items m_daughters ; // the daughter particles 
     // ========================================================================
   };  
   // ==========================================================================

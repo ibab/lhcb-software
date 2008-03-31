@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.308 2008-03-31 13:03:00 ibelyaev Exp $
+! $Id: release.notes,v 1.309 2008-03-31 14:33:50 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-03-31 - Vanya BELYAEV
+ - make use of new setters for DaVinci::Decay 
 
 ! 2008-03-31 - Vanya BELYAEV
  - src/DecodeSimpleDecayString.h,.cpp

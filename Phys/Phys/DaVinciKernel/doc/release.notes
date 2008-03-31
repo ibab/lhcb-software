@@ -4,6 +4,10 @@
 !============================================================================
 
 ! 2008-03-31 - Vanya BELYAEV
+ - Kernel/Decay.h
+    add few simple setters
+
+! 2008-03-31 - Vanya BELYAEV
  - modify a bit IDecodeSimpleDecayString interface to be abel to get the 
    decay descriptor in a form of DaVinci::Decay
 
