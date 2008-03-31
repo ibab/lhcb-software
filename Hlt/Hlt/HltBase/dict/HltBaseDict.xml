@@ -20,8 +20,8 @@
   <class name = "Hlt::VertexFilter" />
   <class name = "Hlt::TrackBiFunction" />
   <class name = "Hlt::VertexBiFunction" />
-  <class name = "Estd::IntRelation" />
-  <class name = "Hlt::KeyRelation" />
+  <class name = "zen::IntRelation" />
+  <class name = "Hlt::IntRelation" />
   <class name = "Hlt::Data" />
   <class name = "Hlt::Configuration" />
   <class name = "Hlt::Selection" />

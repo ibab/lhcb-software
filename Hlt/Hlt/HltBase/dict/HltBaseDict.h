@@ -29,6 +29,7 @@ namespace {
     Hlt::Configuration py_hlt_00;
     zen::IntRelation py_hlt_05; 
     Hlt::IntRelation py_hlt_06;
+    _hltbase_instantiations(){}
   };  
 }
 
