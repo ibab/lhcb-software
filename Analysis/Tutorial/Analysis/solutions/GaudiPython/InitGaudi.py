@@ -1,98 +1,119 @@
 #!/usr/bin/env python
 
-import gaudimodule
+import GaudiPython
 import PyCintex
 
 import ROOT
 
-#
-# setup some ROOT things
-#
-rootCanvas = ROOT.TCanvas('rootCanvas', 'Canvas', 200, 10, 700, 500 )
-
 
 #
-# load the dictionaries which hold information
-# about the LHC classes, etc.
+# from Pere Mato
+# (to loop over C++ containers)
 #
-gaudimodule.loaddict('PhysEventDict')
-gaudimodule.loaddict('PhysDict')
+class irange(object) :
+  def __init__(self, b, e ):
+    self.begin, self.end  = b, e
+  def __iter__(self):
+    it = self.begin
+    while it != self.end :
+      yield it.__deref__()
+      it.__postinc__(1)
 
-#
-# get namespaces
-#
-std  = gaudimodule.gbl.std
-LHCb = gaudimodule.gbl.LHCb
 
 
-#
-# initialise Gaudi
-#
-# N.B. the above DLLs are needed for the following:
-# ParticleMaker       : for 'ParticleStuffer'
-# DaVinciTransporter  : for 'ParticleMaker'
-# DaVinciTools        : for 'Particle2State'
-# DaVinciKernel       : for 'PhysDesktop'
-# Tracktools          : for 'TrackSelector'
-# ProtoParticleFilter : for 'ProtoParticleCALOFilter'
-#
-#
-# N.B.. the output levels are:
-# Fatal (6), Error (5), Warning(4), Infomative (3), Debug (2), Verbose (1)
-appMgr = gaudimodule.AppMgr(outputlevel=3)
+##
+## ROOT init
+##
+rootFile   = ROOT.TFile("ntuple.root", "RECREATE")
+
+#rootCanvas = ROOT.TCanvas('rootCanvas', 'Canvas', 200, 10, 700, 500 )
+
+
+##
+## get namespaces: read C++ namespaces into Python
+##
+std  = GaudiPython.gbl.std
+LHCb = GaudiPython.gbl.LHCb
+
+##
+## define some standard vectors
+##
+particleVector      = std.vector('LHCb::Particle *')
+particleConstVector = std.vector('const LHCb::Particle *')
+intVector           = std.vector('int')
+doubleVector        = std.vector('double')
+
+
+##
+## initialise Gaudi
+##
+## - read in standard option files (include DaVinci)
+## - add special options, override standards settings, etc
+##
+appMgr = GaudiPython.AppMgr(outputlevel=3)
 appMgr.config( files   = ['$STDOPTS/LHCbApplication.opts'
                           ,'$STDOPTS/DstDicts.opts'
+                          ,'$DAVINCIROOT/options/DaVinciCommon.opts'
+                          ,'$CERN_DATA'
                           ],
-               options = ['EventSelector.PrintFreq        =   100 '
-                          ,'ApplicationMgr.ExtSvc        += { "ParticlePropertySvc"}'
-                          ,'ApplicationMgr.DLLs          += { "VertexFit" }'
-                          ,'ApplicationMgr.DLLs          += { "DaVinciKernel" }'
-                          ,'ApplicationMgr.DLLs          += { "ParticleMaker" }'
-                          ,'ApplicationMgr.DLLs          += { "DaVinciTransporter" }'
-                          ,'ApplicationMgr.DLLs          += { "TrackExtrapolators" }'
-                          ,'ApplicationMgr.DLLs          += { "DaVinciTools" }'
-                          ,'ApplicationMgr.DLLs          += { "TrackTools" }'
-                          ,'ApplicationMgr.DLLs          += { "ProtoParticleFilter" }'
-                          ,'MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf"'
-                          ,'DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml"'
-                          ,'ApplicationMgr.TopAlg        += {"PreLoadParticles/PreLoadMuons"}'
-                          ,'PreLoadMuons.PhysDesktop.ParticleMakerType                              = "CombinedParticleMaker"'
-                          ,'PreLoadMuons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection       = false'
-                          ,'PreLoadMuons.PhysDesktop.CombinedParticleMaker.Particles                = {"muon"}'
-                          ,'PreLoadMuons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"}'
-                          ,'PreLoadMuons.PhysDesktop.CombinedParticleMaker.Muon.Selection           = {"RequiresDet=\'MUON\' "}'
-                          ,'PreLoadMuons.PhysDesktop.OutputLevel                                    = 4'
-                          ] )
+                options = ['EventSelector.PrintFreq   =  10 '
+                           ,'EventSelector.OutputLevel = 1'
+                           ,'ApplicationMgr.TopAlg.OutputLevel = 1 '
+                           #,'ApplicationMgr.TopAlg.RootInTES = "/Event/microDST" '
+                           #,'DaVinciMainSeq.RootInTES = "/Event/microDST" '
+                           #,'ApplicationMgr.TopAlg                += { "StoreExplorerAlg" }'
+                           #,'StoreExplorerAlg.Load                = 1'
+                           #,'StoreExplorerAlg.PrintFreq           = 1.0'
+                           #,'StoreExplorerAlg.Outputlevel         = 1'
+                           ,'ApplicationMgr.ExtSvc += {"ParticlePropertySvc"}'
+                           ,'ApplicationMgr.ExtSvc += { "DataOnDemandSvc" }'
+                           ,'DataOnDemandSvc.Nodes += { "DATA=\'/Event/MC\' TYPE=\'DataObject\'" }'
+                           ,'DataOnDemandSvc.Algorithms += {"DATA=\'/Event/MC/Particles\'  TYPE=\'UnpackMCParticle\'",  "DATA=\'/Event/MC/Vertices\' TYPE=\'UnpackMCVertex\'"}'
+                           ] )
 
-#
-# N.B. for 'tight muon', add: CombDLL(mu-pi)>\'0.0\'
-#
-
-#
-# define some standard vectors
-#
-particleVector = std.vector('LHCb::Particle *')
-intVector      = std.vector('int')
-doubleVector   = std.vector('double')
+GaudiPython.loaddict('PhysEventDict') 
 
 
-#
-# open file and get access to event
-#
+##
+## access to the EventService, EventSelector 
+##
 sel  = appMgr.evtsel()
-# use a local copy of a DST
-# sel.open(['PFN:/afs/cern.ch/lhcb/scratch/week/kerzel/00001438_00000001_5.dst'])
-
-# use a (pre-staged) file from CASTOR
-sel.open(['PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001438/DST/0000/00001438_00000001_5.dst'])
 evt  = appMgr.evtsvc()
 
-
-#
-# create some tools
-#
-
-# vertex fitter
-OfflineVertexFitter = appMgr.toolsvc().create('OfflineVertexFitter', interface='IVertexFit')
+##
+## access to tools, etc
+##
+OfflineVertexFitter = appMgr.toolsvc().create('OfflineVertexFitter',interface='IVertexFit')
 
 
+##
+## open microDST
+##
+#sel.open(['PFN:microDST.dst'])
+
+##
+## define a small ROOT tree to write as a plain ntuple
+##
+ROOT.gROOT.ProcessLine(
+    "struct EventStruct { \
+    Double_t  runNr;              \
+    Double_t  eventNr;            \
+    };" );               
+
+
+ROOT.gROOT.ProcessLine(
+    "struct ParticleStruct {           \
+    Double_t  mass;              \
+    Double_t  chi2;              \
+    };" );
+
+from ROOT import EventStruct
+from ROOT import ParticleStruct
+
+EventInfo = EventStruct()
+JPsiInfo  = ParticleStruct()
+
+rootTree = ROOT.TTree("rootTree","ROOT tree")
+rootTree.Branch( 'Event' , EventInfo , 'runNr/D:eventNr')
+rootTree.Branch( 'JPsi'  , JPsiInfo  , 'mass/D:chi2')
+                            
