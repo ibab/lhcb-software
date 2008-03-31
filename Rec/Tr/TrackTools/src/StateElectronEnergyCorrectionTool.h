@@ -1,4 +1,4 @@
-// $Id: StateElectronEnergyCorrectionTool.h,v 1.3 2007-12-06 14:53:55 wouter Exp $
+// $Id: StateElectronEnergyCorrectionTool.h,v 1.4 2008-03-31 07:13:28 mneedham Exp $
 #ifndef TRACKTOOLS_STATEELECTRONENERGYCORRECTIONTOOL_H 
 #define TRACKTOOLS_STATEELECTRONENERGYCORRECTIONTOOL_H 1
 
@@ -29,7 +29,8 @@ public:
   void correctState( LHCb::State& state,
                      const Material* material,
                      double wallThickness = 0,
-                     bool upstream = true ) const ;
+                     bool upstream = true, 
+                     LHCb::ParticleID pid = LHCb::ParticleID(211) ) const ;
   
   /// Standard constructor
   StateElectronEnergyCorrectionTool( const std::string& type, 

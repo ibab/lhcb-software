@@ -1,4 +1,4 @@
-// $Id: StateThinMSCorrectionTool.cpp,v 1.5 2007-12-06 14:53:55 wouter Exp $
+// $Id: StateThinMSCorrectionTool.cpp,v 1.6 2008-03-31 07:13:28 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -47,7 +47,8 @@ StateThinMSCorrectionTool::StateThinMSCorrectionTool( const std::string& type,
 void StateThinMSCorrectionTool::correctState( LHCb::State& state,
                                               const Material* material,
                                               double wallThickness,
-                                              bool ) const
+                                              bool, 
+                                              LHCb::ParticleID  ) const
 {
   const double t          = wallThickness / material -> radiationLength();
   const double norm2      = 1.0 + gsl_pow_2(state.tx()) + gsl_pow_2(state.ty());
