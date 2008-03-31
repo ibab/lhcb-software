@@ -3,6 +3,9 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-03-31 - Patrick Koppenburg
+ - ParticlesFilterBase : no DECLARE_TOOL_FACTORY in linker library
+
 ! 2008-03-30 - Vanya BELYAEV
 
  - Kernel/IPRintDecay.h, src/Lib/IPrintDecay.cpp	
