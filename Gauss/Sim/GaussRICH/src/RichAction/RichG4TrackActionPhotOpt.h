@@ -1,4 +1,4 @@
-// $Id: RichG4TrackActionPhotOpt.h,v 1.3 2007-01-12 15:32:07 ranjard Exp $
+// $Id: RichG4TrackActionPhotOpt.h,v 1.4 2008-03-31 13:22:44 seaso Exp $
 #ifndef RICHACTION_RICHG4TRACKACTIONPHOTOPT_HH 
 #define RICHACTION_RICHG4TRACKACTIONPHOTOPT_HH 1
 
@@ -57,7 +57,7 @@ private:
   RichG4TrackActionPhotOpt (const  RichG4TrackActionPhotOpt& );
   RichG4TrackActionPhotOpt& operator=(const  RichG4TrackActionPhotOpt& );
   
-  G4double  m_MaxHpdQuantumEff;
+  G4double  m_MaxHpdQuantumEffFromDB;
   G4double  m_MaxRich1Mirror1Reflect;
   G4double  m_MaxRich1Mirror2Reflect;
   G4double  m_MaxRich2Mirror1Reflect;
@@ -65,6 +65,8 @@ private:
   G4double  m_ZDownstreamOfRich1;
   G4double  m_Rich1TotPhotonSuppressFactor;
   G4double  m_Rich2TotPhotonSuppressFactor;
+  G4bool    m_RichHpdMaxQEOverRideDB;
+  G4double  m_RichHpdMaxQEValueWhenOverRideDB;
   
 };
 

@@ -95,7 +95,12 @@ public:
     m_HpdPhCathodeInnerRadius = phCaInnRad;
   }
 
-  void setHpdMaxQuantumEff(const double aMaxQE)
+  double HpdMaxQuantumEffFromDB() const
+  {
+    return  m_HpdMaxQuantumEffFromDB;
+  }
+
+ void setHpdMaxQuantumEff(const double aMaxQE)
   {
     m_HpdMaxQuantumEff= aMaxQE;
   }
@@ -104,6 +109,22 @@ public:
   {
     return  m_HpdMaxQuantumEff;
   }
+
+ 
+  void setHpdActivateOverRideMaxQEFromDB(bool abval)
+  { m_HpdActivateOverRideMaxQEFromDB=abval;}
+  
+  bool HpdActivateOverMaxQEFromDB()
+  {    return m_HpdActivateOverRideMaxQEFromDB;}
+
+  void setHpdDBOverRideMaxQEValue(double aqe) 
+  {m_HpdDBOverRideMaxQEValue=aqe;}
+  
+  double HpdDBOverRideMaxQEValue()
+  {  return m_HpdDBOverRideMaxQEValue;}
+  
+  void setHpdMaximumQuantumEfficiency();
+  
 
 
   G4double  MinPhotonEnergyInRICH() 
@@ -165,7 +186,13 @@ private:
   int m_numberOfRichHitCollections;
   double m_HpdPhCathodeInnerRadius;
   int m_HpdVerboseLevel;
+  double m_HpdMaxQuantumEffFromDB;
   double m_HpdMaxQuantumEff;
+
+  bool m_HpdActivateOverRideMaxQEFromDB;
+  double m_HpdDBOverRideMaxQEValue;
+
+
   G4double  m_MinPhotonEnergyInRICH;
   G4double  m_MaxPhotonEnergyInRICH;
   

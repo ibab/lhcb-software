@@ -1,8 +1,9 @@
-// $Id: RichG4TrackActionPhotOpt.cpp,v 1.5 2008-01-21 16:56:27 seaso Exp $
+// $Id: RichG4TrackActionPhotOpt.cpp,v 1.6 2008-03-31 13:22:44 seaso Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/IMessageSvc.h"
 
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"
@@ -35,6 +36,7 @@
 #include "RichG4GaussPathNames.h"
 #include "RichG4TrackActionPhotOpt.h"
 #include "RichG4SvcLocator.h"
+#include "RichHpdProperties.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4TrackActionPhotOpt
@@ -53,12 +55,18 @@ RichG4TrackActionPhotOpt::RichG4TrackActionPhotOpt
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
-  : GiGaTrackActionBase( type , name , parent ), m_MaxHpdQuantumEff(0),
+  : GiGaTrackActionBase( type , name , parent ), m_MaxHpdQuantumEffFromDB(0),
      m_MaxRich1Mirror1Reflect(0), m_MaxRich1Mirror2Reflect(0),
      m_MaxRich2Mirror1Reflect(0),  m_MaxRich2Mirror2Reflect(0),
       m_ZDownstreamOfRich1(0), m_Rich1TotPhotonSuppressFactor(0), 
-      m_Rich2TotPhotonSuppressFactor(0)  
-{ }
+    m_Rich2TotPhotonSuppressFactor(0),
+    m_RichHpdMaxQEOverRideDB(false),
+    m_RichHpdMaxQEValueWhenOverRideDB(0.45)  
+{ 
+  declareProperty("RichHpdMaxQEOverRideDB",m_RichHpdMaxQEOverRideDB);
+  declareProperty("RichHpdMaxQEValueWhenOverRideDB",m_RichHpdMaxQEValueWhenOverRideDB);  
+
+}
 
 //=============================================================================
 // Destructor
@@ -73,9 +81,13 @@ StatusCode RichG4TrackActionPhotOpt::initialize()
 
  // initialize the base 
   StatusCode status = GiGaTrackActionBase::initialize() ; 
+
  if( status.isFailure() ) 
     { return Error("Could not intialize base class GiGaTrackActionBase!", 
                    status ) ; } 
+  IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
+  MsgStream log( msgSvc , "RichG4TrackActionPhotOpt" );
+
 
  //the following may be extracted from gigabase in the future.
   IDataProviderSvc* detSvc = RichG4SvcLocator:: RichG4detSvc ();
@@ -88,7 +100,7 @@ StatusCode RichG4TrackActionPhotOpt::initialize()
      } 
      else {
 
-       m_MaxHpdQuantumEff=Rich1DE->param<double>("RichHpdMaxQE");
+       m_MaxHpdQuantumEffFromDB=Rich1DE->param<double>("RichHpdMaxQE");
        m_MaxRich1Mirror1Reflect=
                  Rich1DE->param<double>("Rich1Mirror1MaxReflect");
        m_MaxRich1Mirror2Reflect=
@@ -115,14 +127,28 @@ StatusCode RichG4TrackActionPhotOpt::initialize()
        //     m_ZDownstreamOfRich1 = 
        //  Rich1DE->userParameterAsDouble("RichZDownstreamOfRich1");
        
-       m_Rich1TotPhotonSuppressFactor=  m_MaxHpdQuantumEff;
+       m_Rich1TotPhotonSuppressFactor=  m_MaxHpdQuantumEffFromDB;
+       if(m_RichHpdMaxQEOverRideDB) {
+         m_Rich1TotPhotonSuppressFactor= m_RichHpdMaxQEValueWhenOverRideDB;
+         RichHpdProperties* aRichHpdProperties = RichHpdProperties::getRichHpdPropertiesInstance();
+         aRichHpdProperties->setHpdActivateOverRideMaxQEFromDB(m_RichHpdMaxQEOverRideDB);
+         aRichHpdProperties->setHpdDBOverRideMaxQEValue(m_RichHpdMaxQEValueWhenOverRideDB);
+         aRichHpdProperties-> setHpdMaximumQuantumEfficiency();
+       }
+       
+       log <<MSG::INFO<<" Rich HPD Max QE from DB and UsedInThisRun are  "
+                <<m_MaxHpdQuantumEffFromDB<<"    "<< m_Rich1TotPhotonSuppressFactor<<endreq;
        
 
        //       m_Rich1TotPhotonSuppressFactor=   
        //  (m_MaxHpdQuantumEff * m_MaxRich1Mirror1Reflect
        //   * m_MaxRich1Mirror2Reflect);
        
-       m_Rich2TotPhotonSuppressFactor=   m_MaxHpdQuantumEff;
+       m_Rich2TotPhotonSuppressFactor=   m_MaxHpdQuantumEffFromDB;
+       if(m_RichHpdMaxQEOverRideDB) {
+        m_Rich2TotPhotonSuppressFactor= m_RichHpdMaxQEValueWhenOverRideDB;  
+       }
+       
        
 
      }

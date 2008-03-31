@@ -29,7 +29,8 @@ RichHpdProperties::RichHpdProperties( )
     m_RichHpdQEList(2,std::vector<RichHpdQE*>(200)),
     m_RichHpdPSFList(2,std::vector<RichHpdPSF*>(200)),
     m_RichHpdDeMagList(2,std::vector<RichHpdDeMag*>(200)),
-    m_HpdVerboseLevel(0)
+    m_HpdVerboseLevel(0),m_HpdActivateOverRideMaxQEFromDB(false),
+    m_HpdDBOverRideMaxQEValue(0.45)
 { }
 //    m_hpdNumBegInHitCollection(std::vector<int>(4)),
 //    m_hpdNumEndInHitCollection(std::vector<int>(4)),
@@ -91,8 +92,11 @@ void RichHpdProperties::InitializeHpdProperties( ) {
     //           <<m_hpdNumEndInHitCollection[3]<<endreq;
     
     //following line modified to be compatible with recent DetDesc. SE 16-6-2005. 
-    m_HpdMaxQuantumEff=  Rich1DE->param<double>("RichHpdMaxQE");
-    //    m_HpdMaxQuantumEff=  Rich1DE->userParameterAsDouble("RichHpdMaxQE");
+    m_HpdMaxQuantumEffFromDB=  Rich1DE->param<double>("RichHpdMaxQE");
+    
+    setHpdMaximumQuantumEfficiency();
+    
+    //if( m_HpdActivateOverRideMaxQEFromDB) m_HpdMaxQuantumEff=m_HpdDBOverRideMaxQEValue;
 
      m_MinPhotonEnergyInRICH=  Rich1DE->param<double> ("RichMinPhotonEnergy");
      m_MaxPhotonEnergyInRICH=  Rich1DE->param<double> ("RichMaxPhotonEnergy");
@@ -309,6 +313,16 @@ void RichHpdProperties::InitializeSiDetParam() {
     m_siDetYSize= Rich1DE->param<double>("RichHpdSiliconDetectorYSize");
     m_siDetZSize= Rich1DE->param<double>("RichHpdSiliconDetectorZSize");    
   }  
+}
+void  RichHpdProperties::setHpdMaximumQuantumEfficiency(){
+
+  if( m_HpdActivateOverRideMaxQEFromDB) {
+    m_HpdMaxQuantumEff=m_HpdDBOverRideMaxQEValue;
+  }else {
+    m_HpdMaxQuantumEff= m_HpdMaxQuantumEffFromDB;    
+  }
+  
+  
 }
 
 RichHpdProperties::~RichHpdProperties() { ; }
