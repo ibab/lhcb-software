@@ -3,6 +3,14 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-03-31 - Vanya BELYAEV 
+ - New class DaVinci::Decay, which is able 
+   to represent the simle 1-step decay
+   new files: Kernel/Decay.h, src/Lib/Decay.cpp
+   The primary goal fo thie class is to acs as an argument for LoKi-loops,
+   but it can also acs as some base class for CombineParticle::Decay
+
+
 ! 2008-03-31 - Patrick Koppenburg
  - ParticlesFilterBase : no DECLARE_TOOL_FACTORY in linker library
 
