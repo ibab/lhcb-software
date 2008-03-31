@@ -1,9 +1,26 @@
-! $Id: release.notes,v 1.29 2008-03-15 11:52:17 ibelyaev Exp $ 
+! $Id: release.notes,v 1.30 2008-03-31 15:06:00 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2008-03-31 - Vanya BELYAEV 
+
+ - LoKi/Algo.h, src/Algo.cpp
+
+   make a possibility to define the loop in term of "decays":
+
+   const DaVinci::Decay& decay = ... ;
+
+    for ( Loop B = loop ( decay ) ; B ; ++B )
+    {
+       ...
+    } 
+
+ - cmt/requiremens
+    version increment to v7r2
+
 
 !========================== LoKiAlgo v7r1p1 2008-03-15 ========================
 

@@ -1,4 +1,4 @@
-// $Id: Algo.h,v 1.11 2007-06-04 20:22:21 ibelyaev Exp $
+// $Id: Algo.h,v 1.12 2008-03-31 15:06:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
@@ -33,6 +33,8 @@
 #include "LoKi/AlgoTypes.h"
 #include "LoKi/Loop.h"
 #include "LoKi/LoopObj.h"
+// ============================================================================
+namespace DaVinci { class Decay ; }
 // ============================================================================
 /** @file
  *
@@ -694,7 +696,17 @@ namespace LoKi
     ( const LoKi::Types::RangeList& formula      , 
       const ParticleProperty*       pid      = 0 , 
       const IParticleCombiner*      combiner = 0 ) ;
-    // ========================================================================    
+    // ========================================================================
+    /** Create the loop object from "decay"
+     *  @see DaVinci::Decay
+     *  @param decay the decay desctrptor
+     *  @param combined the combiner
+     *  @return the valid looping-object
+     */
+    LoKi::Loop loop 
+    ( const DaVinci::Decay&    decay        , 
+      const IParticleCombiner* combiner = 0 ) ;
+    // ========================================================================
   public:
     /** shortcut for the following symbolic expression:
      * 

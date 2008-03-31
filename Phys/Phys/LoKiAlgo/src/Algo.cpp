@@ -1,4 +1,4 @@
-// $Id: Algo.cpp,v 1.17 2008-03-15 11:52:17 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.18 2008-03-31 15:06:00 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -7,6 +7,10 @@
 #include "LoKi/Tokens.h"
 #include "LoKi/IReporter.h"
 #include "LoKi/ILoKiSvc.h"
+// ============================================================================
+// DaVinciKernel
+// ============================================================================
+#include "Kernel/Decay.h"
 // ============================================================================
 // LoKiAlgo
 // ============================================================================
@@ -306,6 +310,41 @@ LoKi::Loop LoKi::Algo::loop
   // return valid object 
   return LoKi::Loop( object ) ;
 } 
+// ============================================================================
+/* Create the loop object from "decay"
+ *  @see DaVinci::Decay
+ *  @param decay the decay desctrptor
+ *  @param combined the combiner
+ *  @return the valid looping-object
+ */
+LoKi::Loop LoKi::Algo::loop 
+( const DaVinci::Decay&    decay    , 
+  const IParticleCombiner* combiner ) 
+{
+  // verify the decay descriptor
+  StatusCode sc = decay.validate ( ppSvc() ) ;
+  // get the string:
+  const std::string& d = decay.toString() ;
+  Assert ( sc.isFailure() , "loop(" + d + "): invalid decay descriptor " ) ;
+  // 
+  const std::string _nam = "Loop:" + d ;
+  // get the proper error reporter 
+  const LoKi::IReporter* rep = reporter ( _nam ) ;
+  // create the loop object
+  LoKi::LoopObj* object = new LoKi::LoopObj( _nam , rep , this , combiner ) ;
+  // configure the loop object
+  object -> setPID ( decay.mother().pp() ) ;
+  // feed the data
+  const DaVinci::Decay::Items& children = decay.children() ;
+  for ( DaVinci::Decay::Items::const_iterator ic = 
+          children.begin() ; children.end() != ic ; ++ic ) 
+  {
+    const std::string& c = ic->name()  ;
+    object -> addComponent ( c , m_selected ( c ) ) ;
+  }
+  // return valid object 
+  return LoKi::Loop( object ) ;
+}
 // ============================================================================
 /*  save the particle into LoKi storage
  *  @param  tag particle tag (only for LoKi)
