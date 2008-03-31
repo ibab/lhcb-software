@@ -1,9 +1,15 @@
 /// Turn on full detail
 MCOTDepositMonitor.fullDetail = true;
-OTTimeMonitor.fullDetail = true;
-OTTimeChecker.fullDetail = true;
+OTTimeMonitor.fullDetail      = true;
+OTTimeChecker.fullDetail      = true;
 
 /// Following is need for OTTimeClassification
 /// Swithc on mc linking for spill over
 OTMCHitLinker.LinkSpillOver = true;
-MoniOTSeq.Members += { "OTTimeClassification" };
+
+MoniOTSeq.Members += { 
+  "OTTimeCreator",       /// Needed for checking/monitoring/classification of OTTimes
+  "OTTimeChecker", 
+  "OTTimeMonitor",       /// Should give the same as Brunel
+  "OTTimeClassification"
+};
