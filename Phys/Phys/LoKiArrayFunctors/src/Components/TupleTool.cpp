@@ -1,4 +1,4 @@
-// $Id: TupleTool.cpp,v 1.1 2008-03-19 13:14:35 ibelyaev Exp $
+// $Id: TupleTool.cpp,v 1.2 2008-03-31 07:05:21 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -32,7 +32,7 @@ namespace LoKi
   namespace Hybrid 
   {
     // ========================================================================
-    /** @class TupelTool
+    /** @class TupleTool
      *  The simple "hybrid"-based implementation of 
      *  the abstract interface IParticleTupleTool
      *  @see IParticleTupleTool 

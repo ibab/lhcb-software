@@ -1,10 +1,16 @@
-$Id: release.notes,v 1.17 2008-03-30 13:45:03 ibelyaev Exp $ 
+$Id: release.notes,v 1.18 2008-03-31 07:05:21 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2008-03-31 - Vanya BELYAEV
+ - src/Component/PrintTool.cpp
+    the simple "LoKi::Hybrid" based implementation on IPrintDecay interface 
+    as PlotTool & TupleTool, it is suposed to be very useful debugging tool
+    for LoKi::Hybrid 
+ 
 ! 2008-03-30 - Vanya BELYAEV
  - new default list of modules to be loaded 
 
