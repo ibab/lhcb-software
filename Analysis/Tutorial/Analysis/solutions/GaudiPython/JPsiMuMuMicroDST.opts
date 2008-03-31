@@ -1,0 +1,42 @@
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+
+
+//
+// Let's make it a sequence
+//
+ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
+
+//
+// J/psi->mumu selection
+//
+TutorialSeq.Members                += { "CombineParticles/JPsiMuMu" };
+JPsiMuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
+JPsiMuMu.DecayDescriptor            = "J/psi(1S) -> mu+ mu-"; // mandatory
+JPsiMuMu.FILTER0.Code               = "((ABSID=='mu-') & (P>100))";
+JPsiMuMu.FILTER1.Code               = "ADMASS('J/psi(1S)')<2000";
+JPsiMuMu.FILTER2.Code               = "(VFASPF(VCHI2/VDOF)<20)";
+
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "JPsiMuMuHistos.root";
+
+ApplicationMgr.EvtMax = 100 ;
+
+// load input data 
+#include "$ANALYSISROOT/options/Bs2Jpsiphi_mm_CERN.opts"
+
+//
+// create microDST
+//
+#include "$MICRODSTALGORITHMROOT/options/microDST.opt"
+
+// write out microDST
+TutorialSeq.Members                      += {"CreateMicroDSTAlg/microDST"};
+microDST.PhysDesktop.InputLocations      = {"/Event/Phys/JPsiMuMu"};
+// microDST.OutputLevel                     = 1;
+
+
+TutorialSeq.Members                          += {"CreateMicroDSTMCAlg/microDSTMC"};
+microDSTMC.PhysDesktop.InputLocations    = {"/Event/Phys/JPsiMuMu"};
+// microDSTMC.OutputLevel                = 1;
+
+
