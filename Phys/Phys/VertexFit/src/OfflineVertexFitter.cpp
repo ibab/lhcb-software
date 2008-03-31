@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.30 2008-02-20 20:43:11 pkoppenb Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.31 2008-03-31 15:24:32 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -1474,7 +1474,7 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
       f(0)=(vfit(6)-vfit(0))*(vfit(9)*vfit(4)-vfit(3)*vfit(10))-
            (vfit(7)-vfit(1))*(vfit(8)*vfit(4)-vfit(2)*vfit(10));
 
-      verbose() << "constraint values   " << f << endmsg;
+      verbose() << "constraint values   " << f(0) << endmsg;
 
       //D is the derivative matrix
       ROOT::Math::SMatrix<double, 1, 12> D;

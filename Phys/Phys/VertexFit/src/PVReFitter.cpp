@@ -1,4 +1,4 @@
-// $Id: PVReFitter.cpp,v 1.9 2007-11-13 15:01:29 xieyu Exp $
+// $Id: PVReFitter.cpp,v 1.10 2008-03-31 15:24:32 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -349,7 +349,7 @@ StatusCode PVReFitter::seedPV(LHCb::RecVertex* PV,
       f(0)=(vfit(5)-vfit(0))*(vfit(8)*vfit(4)-vfit(3)*vfit(9))-
            (vfit(6)-vfit(1))*(vfit(7)*vfit(4)-vfit(2)*vfit(9));
 
-      verbose() << "constraint values   " << f << endreq;
+      verbose() << "constraint values   " << f(0) << endreq;
 
       //D is the derivative matrix
       ROOT::Math::SMatrix<double, 1, 10> D;

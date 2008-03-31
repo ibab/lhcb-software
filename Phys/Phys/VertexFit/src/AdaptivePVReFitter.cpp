@@ -293,8 +293,6 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
       pk[2] = statetr.tx();
       pk[3] = statetr.ty();
 
-      double zref = statetr.z();
-
       ROOT::Math::SVector<double, 2> qk0 = aFitTrack.getFittedSlopes();
       if(Iter==0) {
          qk0[0] = pk[2];
@@ -360,8 +358,6 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
       pk[1] = statetr.y();
       pk[2] = statetr.tx();
       pk[3] = statetr.ty();
-
-      double zref = statetr.z();
 
       ROOT::Math::SVector<double, 2> qk0 = aFitTrack.getFittedSlopes();
       if(Iter==0) {

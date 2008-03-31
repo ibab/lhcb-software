@@ -57,8 +57,8 @@ private:
   std::vector<double> m_temperatures;
   double m_criticalPoint;
   double m_maxDeltaChi2;
-  int m_minTrNumber;
-  
+  unsigned m_minTrNumber;  
+
   ITrackExtrapolator* m_fullExtrapolator;
   std::string m_fullExtrapolatorName;
   ITrackExtrapolator* m_veloExtrapolator;

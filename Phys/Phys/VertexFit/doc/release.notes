@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.134 2008-03-27 11:04:18 pkoppenb Exp $
+! $Id: release.notes,v 1.135 2008-03-31 15:24:32 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2008-03-27 - Yuehong Xie
+ - PVReFitter.cpp, OfflineVertexFitter.cpp, AdaptivePVReFitter.h: 
+   fix compilation warnings
 
 ! 2008-03-27 - Patrick Koppenburg
  - PropertTimeFitter: check statuscodes
