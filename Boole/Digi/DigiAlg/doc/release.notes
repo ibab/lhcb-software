@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-03-31 - Jan Amoraal
+ - Some changes in BuildMCTrackInfo.cpp to reflect changes in OT linkers
+
 !========================== DigiAlg v4r8 2007-06-05 ==========================
 ! 2007-06-05 - Marco Cattaneo
  - Adapt to Gaudi v19r4 convention for rootInTES
