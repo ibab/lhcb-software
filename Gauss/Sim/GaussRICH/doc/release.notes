@@ -3,7 +3,13 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-!2008-03-27 - Sajan Easo
+!2008-03-31 - Sajan Easo
+  - Added a switch to Rich.opts to override the Hpd maxQE value in the DB.
+    The RichG4TrackActionPhotOpt is modified to use this. The default of the
+    switch is 'false', which means the DB value is used. 
+    To override this, in Rich.opts, set RichHpdMaxQEOverRideDB=true and 
+    assign the new value to RichHpdMaxQEValueWhenOverRideDB
+!2008-03-27 - Sajan Easo  
   - Made changes to accomodate the recent changes in xml geometry for RICH, which created 
    one logical volume per hpd. This was to simulate the Silicon chip shifts inside the hpd.
    The changes are in RichG4GaussPathNames.h and RichG4StepAnalysis3.cpp and in the part

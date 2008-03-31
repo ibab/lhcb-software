@@ -39,6 +39,10 @@ GiGa.StepSeq.Members  += { "RichG4StepAnalysis6/RichStepHpdRefl" } ;
 GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" } ;
 GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" } ;
 GiGa.TrackSeq.Members      += { "RichG4TrackActionAerogelPhoton/RichG4AgelPhot" };
+
+//GiGa.TrackSeq.RichG4PhotOpt.RichHpdMaxQEOverRideDB=false;
+//GiGa.TrackSeq.RichG4PhotOpt.RichHpdMaxQEValueWhenOverRideDB=1.0;
+
 //GiGa.TrackSeq.RichG4AgelPhot.ActivateAerogelFilter=true;
 
 // in the following the units are in MeV
