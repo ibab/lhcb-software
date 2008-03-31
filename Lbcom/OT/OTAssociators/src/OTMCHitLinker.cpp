@@ -1,4 +1,4 @@
-// $Id: OTMCHitLinker.cpp,v 1.1 2007-07-02 16:15:29 janos Exp $
+// $Id: OTMCHitLinker.cpp,v 1.2 2008-03-31 16:31:20 janos Exp $
 // Include files 
 
 // from Gaudi
@@ -39,9 +39,9 @@ OTMCHitLinker::OTMCHitLinker( const std::string& name,
     m_inputLocation(""),
     m_spillOver(false)
 {
-  declareProperty("OutputLocation", m_outputLocation = LHCb::OTTimeLocation::Default + "2MCHits");
-  declareProperty("InputputLocation", m_inputLocation = LHCb::OTTimeLocation::Default + "2MCDeposits");
-  declareProperty("LinkSpillOver", m_spillOver = false);
+  declareProperty("OutputLocation"  , m_outputLocation = LHCb::OTTimeLocation::Default + "2MCHits"    );
+  declareProperty("InputputLocation", m_inputLocation  = LHCb::OTTimeLocation::Default + "2MCDeposits");
+  declareProperty("LinkSpillOver"   , m_spillOver      = false                                        );
 }
 
 //=============================================================================
@@ -74,16 +74,16 @@ StatusCode OTMCHitLinker::execute() {
   LinkerWithKey<LHCb::MCHit> channelToHit(evtSvc(), msgSvc(), outputLocation());
   
   /// loop over MCOTTimes and get hits
-  LHCb::MCOTTimes::const_iterator iMCTime = mcTimes->begin();
-  for ( ; iMCTime != mcTimes->end(); ++iMCTime) {
+  for (LHCb::MCOTTimes::const_iterator iMCTime = mcTimes->begin(), iMCTimeEnd = mcTimes->end(); 
+       iMCTime != iMCTimeEnd; ++iMCTime) {
     const LHCb::MCOTTime* mcTime = (*iMCTime);
-    const unsigned int key = unsigned(mcTime->channel());
+    const unsigned int key       = unsigned(mcTime->channel());
     OTMCHitLinker::Hits hits;
     StatusCode sc = hitsToLink(mcTime, mcHits, hits);
     if (sc.isFailure()) return Error("Failed to find hits to link to!", StatusCode::FAILURE);
-    OTMCHitLinker::Hits::const_iterator iHit = hits.begin();
     /// loop over hits
-    for ( ; iHit != hits.end();  ++iHit) channelToHit.link(key, (*iHit));
+    for (OTMCHitLinker::Hits::const_iterator iHit = hits.begin(), iHitEnd = hits.end(); 
+         iHit != iHitEnd;  ++iHit) channelToHit.link(key, (*iHit));
   }
   
   return StatusCode::SUCCESS;
@@ -106,8 +106,8 @@ StatusCode OTMCHitLinker::hitsToLink(const LHCb::MCOTTime* aTime, const LHCb::MC
   if (range.empty()) {
     if (msgLevel(MSG::DEBUG)) debug() << "There are no deposits associated to this channel: " <<  key << endmsg;
   } else {
-    Range::const_iterator iDeposit = range.begin();
-    for ( ; iDeposit != range.end(); ++iDeposit) {
+    for (Range::const_iterator iDeposit = range.begin(), iDepositEnd = range.end();  
+         iDeposit != iDepositEnd; ++iDeposit) {
       const LHCb::MCHit* mcHit = (*iDeposit)->mcHit();
       if ((0 != mcHit) && (m_spillOver || (mcHits == mcHit->parent()))) hits.push_back(mcHit);
     }

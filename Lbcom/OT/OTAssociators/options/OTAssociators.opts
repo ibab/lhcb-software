@@ -1,15 +1,5 @@
-// $Id: OTAssociators.opts,v 1.9 2007-07-02 16:15:29 janos Exp $
-ApplicationMgr.DLLs += { "OTAssociators" };
+// $Id: OTAssociators.opts,v 1.10 2008-03-31 16:31:38 janos Exp $
 
-/// Old linkers
-// DataOnDemandSvc.Algorithms +={ "DATA='/Event/Link/Raw/OT/Times' 
-//                                 TYPE='OTTime2MCParticleLinker/OTTime2MCParticle'" };
-// DataOnDemandSvc.Algorithms +={ "DATA='/Event/Link/OTTimes2MCDeposits' 
-//                                 TYPE='OTTime2MCDepositLinker/OTTime2MCDeposit'" };
-// DataOnDemandSvc.Algorithms +={ "DATA='/Event/Link/OTTimes2MCHits'
-//                                 TYPE='OTTime2MCHitLinker'" };
-
-/// New linkers
 DataOnDemandSvc.Algorithms +={ "DATA='/Event/Link/Raw/OT/Times' 
                                 TYPE='OTMCParticleLinker/OTTime2MCParticle'" };
 DataOnDemandSvc.Algorithms +={ "DATA='/Event/Link/OTTimes2MCDeposits' 
