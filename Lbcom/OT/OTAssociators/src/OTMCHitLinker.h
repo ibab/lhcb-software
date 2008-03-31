@@ -1,4 +1,4 @@
-// $Id: OTMCHitLinker.h,v 1.1 2007-07-02 16:15:29 janos Exp $
+// $Id: OTMCHitLinker.h,v 1.2 2008-03-31 16:30:52 janos Exp $
 #ifndef OTASSOCIATORS_OTMCHITLINKER_H 
 #define OTASSOCIATORS_OTMCHITLINKER_H 1
 
@@ -20,7 +20,7 @@
  *  spill over hits by setting the option SpillOver to true. 
  *  
  *  @code
- *  OTMCHitLinker.SpillOver = true; // default == false
+ *  OTMCHitLinker.LinkSpillOver = true; // default == false
  *  @endcode
  *
  *  The MC linked hits for a given channelID(key) can be retrieved, for example, in the following way 
@@ -53,6 +53,27 @@
  *    } 
  *    ...
  *   }
+ *  @endcode
+ *
+ *  For the reverse one can do
+ *
+ *  @code
+ *  #include "Linker/LinkedFromKey.h"
+ *  ...
+ * 
+ *  typedef LinkedFromKey<MCHit, OTChannelID> LinkerTable;
+ *  LinkerTable aLinkerTable(evtSvc(), msgSvc(), LHCb::OTTimeLocation::Default+"2MCHits");
+ *  if (aLinkerTable.notFound()) Error( "Failed to find OT MCHits linker table", StatusCode::FAILURE );
+ *
+ *  ...
+ *
+ *  for (MCHits::const_iterator iMCHit = mcHitCont->begin(); iMCHit != mcHitCont->end(); ++iMCHit) {
+ *    std::vector<OTChannelID> channels = aLinkerTable.keyRange((*iMCHit));
+ *    for (std::vector<OTChannelID>::const_iterator iChannel = channels.begin(); 
+ *          iChannel != channels.end(); ++iChannel) {
+ *      ...
+ *    }
+ *  }
  *  @endcode
  *
  *  @author Jan Amoraal

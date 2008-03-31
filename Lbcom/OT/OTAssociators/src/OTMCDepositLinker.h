@@ -1,4 +1,4 @@
-// $Id: OTMCDepositLinker.h,v 1.1 2007-07-02 16:15:29 janos Exp $
+// $Id: OTMCDepositLinker.h,v 1.2 2008-03-31 16:30:52 janos Exp $
 #ifndef OTASSOCIATORS_OTMCDEPOSITLINKER_H 
 #define OTASSOCIATORS_OTMCDEPOSITLINKER_H 1
 
@@ -54,6 +54,25 @@
  *    } 
  *    ...
  *   }
+ *  @endcode
+ *
+ *  For the reverse one can do
+ *
+ *  @code
+ *  #include "Linker/LinkedFromKey.h"
+ *  ...
+ * 
+ *  typedef LinkedFromKey<MCOTDeposit, OTChannelID> LinkerTable;
+ *  LinkerTable aLinkerTable(evtSvc(), msgSvc(), LHCb::OTTimeLocation::Default+"2MCDeposits");
+ *  if (aLinkerTable.notFound()) Error( "Failed to find OT MCDeposits linker table", StatusCode::FAILURE );
+ *
+ *  for (MCOTDeposits::const_iterator iMCDeposit = mcDepCont->begin(); iMCDeposit != mcDepCont->end(); ++iMCDeposit) {
+ *    std::vector<OTChannelID> channels = aLinkerTable.keyRange((*iMCDeposit));
+ *    for (std::vector<OTChannelID>::const_iterator iChannel = channels.begin(); 
+ *          iChannel != channels.end(); ++iChannel) {
+ *      ...
+ *    }
+ *  }
  *  @endcode
  *
  *  @author Jan Amoraal

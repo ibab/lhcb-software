@@ -1,4 +1,4 @@
-// $Id: OTMCParticleLinker.h,v 1.1 2007-07-02 16:15:29 janos Exp $
+// $Id: OTMCParticleLinker.h,v 1.2 2008-03-31 16:30:52 janos Exp $
 #ifndef OTASSOCIATORS_OTMCPARTICLELINKER_H 
 #define OTASSOCIATORS_OTMCPARTICLELINKER_H 1
 
@@ -50,6 +50,25 @@
  *   }
  *  @endcode
  *  
+ *  For the reverse one can do
+ *
+ *  @code
+ *  #include "Linker/LinkedFromKey.h"
+ *  ...
+ * 
+ *  typedef LinkedFromKey<MCParticle, OTChannelID> LinkerTable;
+ *  LinkerTable aLinkerTable(evtSvc(), msgSvc(), LHCb::OTTimeLocation::Default);
+ *  if (aLinkerTable.notFound()) Error( "Failed to find OT MCParticle linker table", StatusCode::FAILURE );
+ *
+ *  for (MCParticles::const_iterator iMCParticle = mcParCont->begin(); iMCParticle != mcParCont->end(); ++iMCParticle) {
+ *    std::vector<OTChannelID> channels = aLinkerTable.keyRange((*iMCParticle));
+ *    for (std::vector<OTChannelID>::const_iterator iChannel = channels.begin(); 
+ *          iChannel != channels.end(); ++iChannel) {
+ *      ...
+ *    }
+ *  }
+ *  @endcode
+ *
  *  @author Jan Amoraal
  *  @date   2007-07-02
  */
