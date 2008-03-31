@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.56 2008-01-29 12:01:11 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.57 2008-03-31 07:07:59 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -227,7 +227,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
 //=========================================================================
 // Fit the track
 //=========================================================================
-StatusCode TrackKalmanFilter::fit( Track& track ) 
+StatusCode TrackKalmanFilter::fit( Track& track, LHCb::ParticleID ) 
 {
   StatusCode sc(StatusCode::SUCCESS, true); 
   

@@ -1,4 +1,4 @@
-// $Id: TrackTrajFitter.cpp,v 1.1 2007-04-17 15:22:13 graven Exp $
+// $Id: TrackTrajFitter.cpp,v 1.2 2008-03-31 07:07:59 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -66,7 +66,7 @@ StatusCode TrackTrajFitter::initialize()
 //=========================================================================
 // Fit the track
 //=========================================================================
-StatusCode TrackTrajFitter::fit( Track& track )
+StatusCode TrackTrajFitter::fit( Track& track, LHCb::ParticleID )
 {
   StatusCode sc;
   // grab the (OT,Velo,...) measurements from the input track and clone them.

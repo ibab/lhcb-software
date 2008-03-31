@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.45 2008-01-29 14:33:27 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.46 2008-03-31 07:07:59 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -82,7 +82,6 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "MaterialLocator", m_materialLocatorName="DetailedMaterialLocator") ;
   declareProperty( "UpdateTransport", m_updateTransport=false) ;
   declareProperty( "ApplyMaterialCorrections", m_applyMaterialCorrections=true) ;
-  declareProperty( "ParticleID", m_particleID=211) ; 
   declareProperty( "TransverseMomentumForScattering", m_scatteringPt = 400.*Gaudi::Units::MeV);
 }
 
@@ -138,7 +137,7 @@ StatusCode TrackMasterFitter::failure( const std::string& comment ) const {
 //=========================================================================
 // Fit the track
 //=========================================================================
-StatusCode TrackMasterFitter::fit( Track& track )
+StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
 {
   StatusCode sc;
   if ( track.nStates() == 0 )
@@ -146,7 +145,7 @@ StatusCode TrackMasterFitter::fit( Track& track )
   
   // Make the nodes from the measurements
   if( track.nodes().empty() || m_makeNodes ) {
-    sc = makeNodes( track );
+    sc = makeNodes( track,pid );
     if ( sc.isFailure() )
       return failure( "unable to make nodes from the measurements" );
   }
@@ -229,7 +228,7 @@ StatusCode TrackMasterFitter::fit( Track& track )
   }
 
   // determine the track states at user defined z positions
-  sc = determineStates( track );
+  sc = determineStates( track, pid );
   if ( sc.isFailure() )  {
     track.clearNodes() ;
     debug() << "fit failed" << endmsg ;
@@ -245,7 +244,7 @@ StatusCode TrackMasterFitter::fit( Track& track )
 //=============================================================================
 // 
 //=============================================================================
-StatusCode TrackMasterFitter::determineStates( Track& track ) const
+StatusCode TrackMasterFitter::determineStates( Track& track, ParticleID pid ) const
 {
   StatusCode sc = StatusCode::SUCCESS ;
 
@@ -259,7 +258,7 @@ StatusCode TrackMasterFitter::determineStates( Track& track ) const
     State closeState = track.closestState( 0. );
     // Get the z-position of the "intersection" with the beam line
     double z = closestToBeamLine( closeState );    
-    sc = m_extrapolator -> propagate( closeState , z );
+    sc = m_extrapolator -> propagate( closeState , z, pid );
     if ( sc.isFailure() ) {
       debug() << "Extrapolating to z = " << z << endmsg;
       Warning("State closest to beam line not added, extrapolation failed",StatusCode::FAILURE,1).ignore() ;
@@ -307,7 +306,7 @@ StatusCode TrackMasterFitter::determineStates( Track& track ) const
     if( fabs(closestnode->z() - z) > TrackParameters::propagationTolerance ) {
       // this is wrong for interpolations. we need to work on that, 
       // but we anyway plan to remove filling states from the fit.
-      thissc = m_extrapolator -> propagate(state,z);
+      thissc = m_extrapolator -> propagate(state,z, pid);
       state.setLocation( State::LocationUnknown ) ;
     }
     if ( thissc.isFailure() ) {
@@ -443,7 +442,7 @@ unsigned int TrackMasterFitter::nNodesWithMeasurement( const Track& track )
 //=============================================================================
 // Create the nodes from the measurements
 //=============================================================================
-StatusCode TrackMasterFitter::makeNodes( Track& track ) const 
+StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) const 
 {
   // Clear the nodes
   track.clearNodes() ;
@@ -514,7 +513,7 @@ StatusCode TrackMasterFitter::makeNodes( Track& track ) const
   
   // add all the noise, if required
   if(m_applyMaterialCorrections && sc.isSuccess()) {
-    sc = updateMaterialCorrections( track ) ;
+    sc = updateMaterialCorrections( track, pid ) ;
     if(!sc.isSuccess())
       error() << "Problem setting material corrections." << endreq ;
   }
@@ -630,7 +629,7 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
 }
 
 
-StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track) const
+StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb::ParticleID pid) const
 {
   // the noise in each node is the noise in the propagation between
   // the previous node and this node.
@@ -668,7 +667,7 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track) cons
       Gaudi::TrackSymMatrix noise ;
       Gaudi::TrackVector delta;
       m_materialLocator->computeMaterialCorrection(noise,delta,intersections,zorigin,ztarget,
-                                                   scatteringMomentum,LHCb::ParticleID(m_particleID)) ;
+                                                   scatteringMomentum, pid) ;
       node->setNoiseMatrix( noise ) ;
       double deltaE = 1 / ( 1/scatteringMomentum + delta(4) ) - scatteringMomentum ;
       node->setDeltaEnergy( applyenergyloss ? deltaE : 0 ) ;
@@ -690,7 +689,7 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track) cons
       Gaudi::TrackSymMatrix noise ;
       Gaudi::TrackVector delta;
       m_materialLocator->computeMaterialCorrection(noise,delta,intersections,zorigin,ztarget,
-                                                   scatteringMomentum,LHCb::ParticleID(m_particleID)) ;
+                                                   scatteringMomentum,pid ;
       node->setNoiseMatrix( noise ) ;
       double deltaE = 1 / ( 1/scatteringMomentum + delta(4) ) - scatteringMomentum ;
       node->setDeltaEnergy( applyenergyloss ? deltaE : 0 ) ;

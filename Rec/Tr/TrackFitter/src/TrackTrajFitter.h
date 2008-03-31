@@ -1,4 +1,4 @@
-// $Id: TrackTrajFitter.h,v 1.1 2007-04-17 15:22:13 graven Exp $
+// $Id: TrackTrajFitter.h,v 1.2 2008-03-31 07:07:59 mneedham Exp $
 #ifndef TRACKFITTER_TRACKTRAJFITTER_H 
 #define TRACKFITTER_TRACKTRAJFITTER_H 1
 
@@ -37,7 +37,7 @@ public:
   StatusCode initialize();
 
   //! fit a track 
-  StatusCode fit( LHCb::Track& track ) ;
+  StatusCode fit( LHCb::Track& track,  LHCb::ParticleID pid = LHCb::ParticleID(211)  ) ;
 
 private:
   const ITrajFitter*      m_trajfitter;

@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.25 2008-01-29 12:01:11 wouter Exp $
+// $Id: TrackKalmanFilter.h,v 1.26 2008-03-31 07:07:59 mneedham Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -42,7 +42,7 @@ public:
   StatusCode initialize();
 
   //! fit a track
-  StatusCode fit( LHCb::Track& track ) ;
+  StatusCode fit( LHCb::Track& track,  LHCb::ParticleID pid = LHCb::ParticleID(211)  ) ;
 
 protected:
   typedef std::vector<LHCb::Node*> NodeContainer ;

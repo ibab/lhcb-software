@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2008-03-31 M Needham 
+ - Follow changes in fitter interface 
+
 !=========================== TrackFitter v2r23 2008-01-30 ===================
 ! 2008-01-29 Wouter Hulsbergen
  - changes in TrackKalmanFilter to improve fit stability

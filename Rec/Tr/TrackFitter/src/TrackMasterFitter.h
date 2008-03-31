@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.14 2008-01-29 14:33:27 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.15 2008-03-31 07:07:59 mneedham Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -43,12 +43,12 @@ public:
   StatusCode initialize();
 
   //! fit a track 
-  StatusCode fit( LHCb::Track& track ) ;
+  StatusCode fit( LHCb::Track& track, LHCb::ParticleID pid = LHCb::ParticleID(211)  ) ;
 
 private:
   
   //! determine track state at various z positions
-  StatusCode determineStates( LHCb::Track& track ) const;
+  StatusCode determineStates( LHCb::Track& track, LHCb::ParticleID pid ) const;
 
   //! remove outliers from the node vector
   bool outlierRemoved( LHCb::Track& track ) const;
@@ -64,13 +64,13 @@ private:
   unsigned int nNodesWithMeasurement( const LHCb::Track& track ) const;
 
   //! Create the nodes from the measurements
-  StatusCode makeNodes( LHCb::Track& track ) const;
+  StatusCode makeNodes( LHCb::Track& track, LHCb::ParticleID pid ) const;
 
   //! Add info from fitter as extrainfo to track
   void fillExtraInfo( LHCb::Track& track ) const ;
 
   //! Update material corrections stored in nodes
-  StatusCode updateMaterialCorrections( LHCb::Track& track ) const ;
+  StatusCode updateMaterialCorrections( LHCb::Track& track, LHCb::ParticleID pid ) const ;
 
   //! Update transport matrices stored in nodes
   StatusCode updateTransport( LHCb::Track& track ) const ;
@@ -102,7 +102,7 @@ private:
   bool m_makeNodes;
   bool m_updateTransport ;          ///< Update the transport matrices between iterations
   bool m_applyMaterialCorrections ; ///< Apply material corrections
-  int m_particleID ;                ///< PID value used for material corrections
+
   double m_scatteringPt ;           ///< transverse momentum used for scattering if track has no good momentum estimate
     
   //! helper to print a failure comment
