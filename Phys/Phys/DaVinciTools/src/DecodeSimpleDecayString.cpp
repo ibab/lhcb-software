@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.cpp,v 1.10 2008-03-31 14:33:50 ibelyaev Exp $
+// $Id: DecodeSimpleDecayString.cpp,v 1.11 2008-03-31 14:57:43 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -217,19 +217,19 @@ const{
   std::string answer; 
   std::string mother;
   strings daughters;
-  StatusCode sc = splitDescriptor(descriptor,mother ,daughters);
-  if (sc.isFailure()) return std::string();
+  StatusCode sc = splitDescriptor(descriptor, mother ,daughters);
+  if (sc.isFailure()) Exception("Cannot split descriptor "+descriptor);
   ParticleProperty* part = m_ppSvc->find( mother );
   if (NULL==part) Exception("Cannot find ParticleProperty for "+mother);
-  ParticleProperty* cc   = m_ppSvc->findByStdHepID( -part->jetsetID() );
-  if (cc==0) cc = part;
+  const ParticleProperty* cc = part->antiParticle();
+  if (cc==0) Exception("Particle "+mother+" does not have an antiparticle!");
   answer += cc->particle();
   answer += " -> ";
   for (strings::iterator i = daughters.begin(); i != daughters.end(); ++i) {
     ParticleProperty* part = m_ppSvc->find( *i );
-    if (NULL==part) Exception("Cannot find ParticleProperty for "+mother);
-    ParticleProperty* cc   = m_ppSvc->findByStdHepID( -part->jetsetID() );
-    if (cc==0) cc = part;
+    if (NULL==part) Exception("Cannot find ParticleProperty for "+(*i));
+    const ParticleProperty* cc = part->antiParticle();
+    if (cc==0) Exception("Particle "+(*i)+" does not have an antiparticle!");
     answer += " " ;
     answer += cc->particle();
   }
