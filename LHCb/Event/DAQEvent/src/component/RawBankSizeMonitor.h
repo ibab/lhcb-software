@@ -1,4 +1,4 @@
-// $Id: RawBankSizeMonitor.h,v 1.1 2008-03-27 18:36:59 odescham Exp $
+// $Id: RawBankSizeMonitor.h,v 1.2 2008-04-01 16:49:41 odescham Exp $
 #ifndef COMPONENT_RAWBANKSIZEMONITOR_H 
 #define COMPONENT_RAWBANKSIZEMONITOR_H 1
 
@@ -35,5 +35,6 @@ private:
   std::map<std::string,int> m_max;
   int m_def;
   int m_bin;
+  bool m_prof;
 };
 #endif // COMPONENT_RAWBANKSIZEMONITOR_H

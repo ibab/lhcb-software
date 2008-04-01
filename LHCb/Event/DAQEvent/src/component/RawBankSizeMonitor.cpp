@@ -1,4 +1,4 @@
-// $Id: RawBankSizeMonitor.cpp,v 1.1 2008-03-27 18:36:59 odescham Exp $
+// $Id: RawBankSizeMonitor.cpp,v 1.2 2008-04-01 16:49:41 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,7 @@ RawBankSizeMonitor::RawBankSizeMonitor( const std::string& name,
    declareProperty( "MaxSizeMap"  , m_max);
    declareProperty( "MaxSizeDef"  , m_def=500);
    declareProperty( "Bins"        , m_bin=100);
+   declareProperty( "Profile"     , m_prof=true);
 
    // default bank types list == all banks !
    for(int i = 0 ; i != (int) LHCb::RawBank::LastType; i++){
@@ -103,12 +104,19 @@ StatusCode RawBankSizeMonitor::execute() {
     }
 
     for(std::map<int,int>::iterator is = size.begin();is!=size.end();is++){
-      plot2D( (double) (*is).first , (double) (*is).second
-              , name + "/1" 
-              , name + " bank size (bytes) as a function of sourceID"
-              , s_min , s_max+1
-              , 0. , (double) max 
-              , s_max-s_min , m_bin);
+      if(m_prof){
+        profile1D( (double) (*is).first , (double) (*is).second
+                   , name + "/1" 
+                   , name + " bank size (bytes) as a function of sourceID (profile)"
+                   , s_min , s_max+1, s_max-s_min);
+      }else{
+        plot2D( (double) (*is).first , (double) (*is).second
+                , name + "/2" 
+                , name + " bank size (bytes) as a function of sourceID"
+                , s_min , s_max+1
+                , 0. , (double) max 
+                , s_max-s_min , m_bin);
+      } 
     }
   }
   return StatusCode::SUCCESS;
