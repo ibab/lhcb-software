@@ -1,4 +1,4 @@
-// $Id: CopyParticles.cpp,v 1.14 2008-03-19 13:18:12 jpalac Exp $
+// $Id: CopyParticles.cpp,v 1.15 2008-04-01 14:14:32 jpalac Exp $
 // Include files 
 
 // STL
@@ -31,8 +31,6 @@ CopyParticles::CopyParticles( const std::string& name,
   m_particleCloner(0),
   m_particleClonerName("ParticleCloner")
 {
-  std::cout << "CopyParticles constructor" << std::endl;
-  
   declareProperty( "ICloneParticle", m_particleClonerName );
 }
 //=============================================================================
@@ -56,9 +54,9 @@ StatusCode CopyParticles::initialize() {
   m_particleCloner = tool<ICloneParticle>(m_particleClonerName, this);
 
   if (m_particleCloner) {
-    debug() << "Found ParticleCloner" << endmsg;
+    debug() << "Found ICloneParticle" << endmsg;
   } else {
-    error() << "Failed to find ParticleCloner" << endmsg;
+    error() << "Failed to find ICloneParticle" << endmsg;
   }
 
   if (inputTESLocation()=="")  {
