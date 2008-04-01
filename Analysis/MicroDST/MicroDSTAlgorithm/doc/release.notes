@@ -1,7 +1,21 @@
-! $Id: release.notes,v 1.56 2008-03-26 13:46:56 jpalac Exp $
+! $Id: release.notes,v 1.57 2008-04-01 15:44:25 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !============================================================
+
+! 2008-04-01 - Juan PALACIOS
+ 
+ - Add src/CopyRelatedProtoParticles{.cpp, .h}
+  . This has the old funcitonality of CopyProtoParticles. It takes as input
+    a location of LHCb::Particles from the property InputLocation, and clones
+    the LHCb::ProtoParticles related to them and all their daughters and 
+    outgoing particles. Internally it uses an implementation of 
+    ICloneProtoParticle, set by default to ProtoParticleCloner.
+
+ - src/CopyProtoParticles{.h, .cpp}
+  . Change logic. Algorithm now takes all ProtoParticles in InputLocation and 
+    clones them. Internally it now uses an implementation of 
+    ICloneProtoParticle, set by default to ProtoParticleCloner.
 
 ! 2008-03-26 - Juan PALACIOS
  - src/CopyRelatedMCParticles.h
