@@ -1,4 +1,4 @@
-// $Id: RawBankSizeMonitor.cpp,v 1.2 2008-04-01 16:49:41 odescham Exp $
+// $Id: RawBankSizeMonitor.cpp,v 1.3 2008-04-01 22:44:04 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -108,14 +108,14 @@ StatusCode RawBankSizeMonitor::execute() {
         profile1D( (double) (*is).first , (double) (*is).second
                    , name + "/1" 
                    , name + " bank size (bytes) as a function of sourceID (profile)"
-                   , s_min , s_max+1, s_max-s_min);
+                   , s_min , s_max+1, s_max-s_min+1);
       }else{
         plot2D( (double) (*is).first , (double) (*is).second
                 , name + "/2" 
                 , name + " bank size (bytes) as a function of sourceID"
                 , s_min , s_max+1
                 , 0. , (double) max 
-                , s_max-s_min , m_bin);
+                , s_max-s_min+1 , m_bin);
       } 
     }
   }
