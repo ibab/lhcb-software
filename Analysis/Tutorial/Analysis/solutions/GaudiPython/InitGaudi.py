@@ -55,7 +55,7 @@ appMgr.config( files = ['$STDOPTS/LHCbApplication.opts'
                         ,'$STDOPTS/SimDicts.opts'
                         ,'$DDDBROOT/options/DC06.opts'
                         ,'$DAVINCIROOT/options/DaVinciCommon.opts'
-                        ,'$CERN_DATA'
+                        ,'$ANALYSISROOT/options/Bs2Jpsiphi_mm_CERN.opts'
                         ,],
                 options = ['EventSelector.PrintFreq   =  10 '
                            ,'EventSelector.OutputLevel = 1'
