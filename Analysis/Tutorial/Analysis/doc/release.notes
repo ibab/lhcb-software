@@ -9,6 +9,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-03-32 - Ulrich Kerzel
+- change options file to use new microDST code, adopt InitGaudi accordingly 
+
+! 2008-03-32 - Ulrich Kerzel
  - added files for GaudiPython / MicroDST tutorial
    - InitGaudi.py          : initialise Gaudi
    - Analysis.py           : run a J/Psi -> MuMu vertex fit in GaudiPython

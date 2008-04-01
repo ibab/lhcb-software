@@ -29,14 +29,18 @@ ApplicationMgr.EvtMax = 100 ;
 //
 #include "$MICRODSTALGORITHMROOT/options/microDST.opt"
 
-// write out microDST
-TutorialSeq.Members                      += {"CreateMicroDSTAlg/microDST"};
-microDST.PhysDesktop.InputLocations      = {"/Event/Phys/JPsiMuMu"};
-// microDST.OutputLevel                     = 1;
+TutorialSeq.Members              += {"CopyODIN"};
+CopyODIN.InputLocation            = "";
+CopyODIN.OutputPrefix             = "microDST";
 
+TutorialSeq.Members              += {"CopyRecHeader"};
+CopyRecHeader.InputLocation       = "";
+CopyRecHeader.OutputPrefix        = "microDST";
 
-TutorialSeq.Members                          += {"CreateMicroDSTMCAlg/microDSTMC"};
-microDSTMC.PhysDesktop.InputLocations    = {"/Event/Phys/JPsiMuMu"};
-// microDSTMC.OutputLevel                = 1;
+TutorialSeq.Members              += {"CopyParticles"};
+CopyParticles.InputLocation       = "Phys/JPsiMuMu/Particles";
+CopyParticles.OutputPrefix        = "microDST";
 
-
+TutorialSeq.Members              += {"CopyProtoParticles"};
+CopyProtoParticles.InputLocation  = "Phys/JPsiMuMu/Particles";
+CopyProtoParticles.OutputPrefix   = "microDST";

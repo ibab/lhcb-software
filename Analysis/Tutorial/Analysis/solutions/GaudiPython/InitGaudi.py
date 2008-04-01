@@ -51,16 +51,16 @@ doubleVector        = std.vector('double')
 ## - add special options, override standards settings, etc
 ##
 appMgr = GaudiPython.AppMgr(outputlevel=3)
-appMgr.config( files   = ['$STDOPTS/LHCbApplication.opts'
-                          ,'$STDOPTS/DstDicts.opts'
-                          ,'$DAVINCIROOT/options/DaVinciCommon.opts'
-                          ,'$CERN_DATA'
-                          ],
+appMgr.config( files = ['$STDOPTS/LHCbApplication.opts'
+                        ,'$STDOPTS/SimDicts.opts'
+                        ,'$DDDBROOT/options/DC06.opts'
+                        ,'$DAVINCIROOT/options/DaVinciCommon.opts'
+                        ,'$CERN_DATA'
+                        ,],
                 options = ['EventSelector.PrintFreq   =  10 '
                            ,'EventSelector.OutputLevel = 1'
                            ,'ApplicationMgr.TopAlg.OutputLevel = 1 '
                            #,'ApplicationMgr.TopAlg.RootInTES = "/Event/microDST" '
-                           #,'DaVinciMainSeq.RootInTES = "/Event/microDST" '
                            #,'ApplicationMgr.TopAlg                += { "StoreExplorerAlg" }'
                            #,'StoreExplorerAlg.Load                = 1'
                            #,'StoreExplorerAlg.PrintFreq           = 1.0'
