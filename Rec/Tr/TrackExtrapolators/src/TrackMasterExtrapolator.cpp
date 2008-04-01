@@ -1,4 +1,4 @@
-// $Id: TrackMasterExtrapolator.cpp,v 1.32 2007-11-09 10:24:35 cattanem Exp $
+// $Id: TrackMasterExtrapolator.cpp,v 1.33 2008-04-01 06:36:22 mneedham Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -220,22 +220,22 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
 	// multiple scattering
 	if ( m_applyMultScattCorr ) {
 	  if ( tWall >= m_thickWall ) {
-	    m_thickmstool -> correctState( state, it->material, tWall, isUpstream );
+	    m_thickmstool -> correctState( state, it->material, tWall, isUpstream, partId );
 	  } else {
-	    m_thinmstool -> correctState( state, it->material, tWall, isUpstream );
+	    m_thinmstool -> correctState( state, it->material, tWall, isUpstream , partId);
 	  }
 	}
 	
 	// dE/dx energy loss
 	if ( m_applyEnergyLossCorr ) 
-	  m_dedxtool -> correctState( state, it->material, tWall, isUpstream );
+	  m_dedxtool -> correctState( state, it->material, tWall, isUpstream, partId );
 		
 	// electron energy loss
 	if ( ( 11 == partId.abspid() ) && 
 	     m_applyElectronEnergyLossCorr &&
 	     (state.z() > m_startElectronCorr) &&
 	     (state.z() < m_stopElectronCorr) ) {
-	  m_elecdedxtool -> correctState( state, it->material, tWall, isUpstream );
+	  m_elecdedxtool -> correctState( state, it->material, tWall, isUpstream, partId );
 	}
       } // loop over walls
     }

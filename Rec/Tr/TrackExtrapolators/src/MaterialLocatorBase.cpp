@@ -257,8 +257,8 @@ MaterialLocatorBase::computeMaterialCorrection(Gaudi::TrackSymMatrix& noise,
       state.setTy( it->ty ) ;
       
       // now add the wall
-      m_scatteringtool->correctState( state, it->material, thickness, upstream );
-      dedxtool->correctState( state, it->material, thickness, upstream );
+      m_scatteringtool->correctState( state, it->material, thickness, upstream, pid );
+      dedxtool->correctState( state, it->material, thickness, upstream, pid );
       
       // extract the energy loss
       delta(4) += state.qOverP() - qop ;
