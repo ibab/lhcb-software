@@ -3,8 +3,19 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.6 2008-03-06 14:27:42 jpalac Exp $
+! $Id: release.notes,v 1.7 2008-04-01 12:37:06 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-04-01 - Juan PALACIOS
+
+ - Add src/ProtoParticleCloner{.cpp, .h} implementation of ICloneProtoParticle.
+   Contains property ICloneTrack allowing to chose which implementation of
+   ICloneTrack to use to clone the related LHCb::Track.
+
+ - Add src/TrackCloner{.cpp, .h} simplest implementation of ICloneTrack.
+
+ - cmt/requirements
+  . Increase version to v1r2
 
 !======================= MicroDSTTools v1r1 2008-03-06 =======================
 
