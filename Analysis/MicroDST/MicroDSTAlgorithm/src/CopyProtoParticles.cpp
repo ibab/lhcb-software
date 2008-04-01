@@ -1,10 +1,12 @@
-// $Id: CopyProtoParticles.cpp,v 1.5 2007-12-11 17:37:12 jpalac Exp $
+// $Id: CopyProtoParticles.cpp,v 1.6 2008-04-01 14:43:52 jpalac Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include <GaudiKernel/AlgFactory.h> 
 // from LHCb
-#include "Event/RecVertex.h"
+#include <Event/ProtoParticle.h>
+// from MicroDST
+#include <MicroDST/ICloneProtoParticle.h>
 // local
 #include "CopyProtoParticles.h"
 
@@ -23,8 +25,12 @@ DECLARE_ALGORITHM_FACTORY( CopyProtoParticles );
 //=============================================================================
 CopyProtoParticles::CopyProtoParticles( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : MicroDSTAlgorithm ( name , pSvcLocator )
+  : 
+  MicroDSTAlgorithm ( name , pSvcLocator ),
+  m_cloner(0),
+  m_clonerName("ProtoParticleCloner")
 {
+  declareProperty( "ICloneProtoParticle", m_clonerName );
 }
 //=============================================================================
 // Destructor
@@ -44,6 +50,20 @@ StatusCode CopyProtoParticles::initialize() {
 
   verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
 
+  m_cloner = tool<ICloneProtoParticle>(m_clonerName, this);
+
+  if (m_cloner) {
+    debug() << "Found ICloneProtoParticle" << endmsg;
+  } else {
+    error() << "Failed to find IClonerProtoParticle" << endmsg;
+  }
+
+  if (inputTESLocation()=="")  {
+    error() << "No TES location " << endmsg;
+    return StatusCode::FAILURE;
+  }
+  verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
+
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -55,74 +75,14 @@ StatusCode CopyProtoParticles::execute() {
   verbose() << "Going to store ProtoParticles starting from " 
             << inputTESLocation() << endmsg;
 
-  const LHCb::Particle::Container* particles = 
-    get<LHCb::Particle::Container>( inputTESLocation() );
-
-  scanParticleSet<LHCb::Particle::Container>( particles->begin(), 
-                                              particles->end()   );
-
-  return StatusCode::SUCCESS;
-
-}
-//=============================================================================
-void CopyProtoParticles::scanParticleTree(const LHCb::Particle* particle) 
-{
-
-  storeProtoParticle(particle);
-
-  typedef SmartRefVector<LHCb::Particle> ParticleVector;
-
-  const ParticleVector& daughters = particle->daughters();
-
-  scanParticleSet<ParticleVector>( daughters.begin(), daughters.end() );
+  const ProtoParticles* pp = 
+    copyKeyedContainer<ProtoParticles, ICloneProtoParticle>(inputTESLocation(),
+                                                            m_cloner     );
   
-  if ( ! particle->endVertex() ) return;
+  setFilterPassed(true);
   
-  const ParticleVector& outParticles = 
-    particle->endVertex()->outgoingParticles();
+  return (0!=pp) ? StatusCode::SUCCESS : StatusCode::FAILURE;
 
-  scanParticleSet<ParticleVector>( outParticles.begin(), outParticles.end() );
-  
-}
-//=============================================================================
-template <class T>
-void CopyProtoParticles::scanParticleSet(typename T::const_iterator begin,
-                                         typename T::const_iterator end) 
-{
-
-  if ( begin==end ) return;
-
-  for (typename T::const_iterator iPart = begin; iPart != end; ++iPart ) {
-    scanParticleTree(*iPart);
-  }
-
-}
-//=============================================================================
-const LHCb::ProtoParticle* CopyProtoParticles::storeProtoParticle(const LHCb::Particle* particle)
-{
-  // JPP. Here we make the assumption that something might be wrong with the
-  // ProtoParticle of the cloned Particle, so we get it from the original,
-  // clone it, and then pass it to the cloned Particle. 
-  // Should check if this is really necessary.
-
-  const LHCb::ProtoParticle* proto = particle->proto();
-  LHCb::Particle* particleClone = getStoredClone<LHCb::Particle>(particle);
-
-  if ( proto && particleClone ) {
-
-    const LHCb::ProtoParticle* ppClone = 
-      cloneKeyedContainerItem<LHCb::ProtoParticle, PPCloneFunctor>(particle->proto() );
-    
-    particleClone->setProto(ppClone);
-
-    // loop over daughters.
-
-    return ppClone;
-
-  } else {
-    return 0;
-  }
-   
 }
 //=============================================================================
 //  Finalize

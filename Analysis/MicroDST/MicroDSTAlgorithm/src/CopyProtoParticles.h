@@ -1,20 +1,47 @@
-// $Id: CopyProtoParticles.h,v 1.5 2008-03-20 13:39:02 jpalac Exp $
+// $Id: CopyProtoParticles.h,v 1.6 2008-04-01 14:43:52 jpalac Exp $
 #ifndef COPYPROTOPARTICLES_H 
 #define COPYPROTOPARTICLES_H 1
 
 // Include files
-// from Gaudi
+// from MicroDST
 #include "MicroDST/MicroDSTAlgorithm.h"
+class ICloneProtoParticle;
+
+// from LHCb
 #include "Event/ProtoParticle.h"
 #include "Event/Particle.h"
 /** @class CopyProtoParticles CopyProtoParticles.h
  *  
- *  Store the Protoparticles corresponding to a container
- *  of particles given by option InputLocation plus 
- *  ProtoParticles corresponding to all the daughters.
+ * MicroDSTAlgorithm to clone LHCb::ProtoParticles from one TES location 
+ * to a parallel one.
+ * It inherits the std::string properties InputLocation and OutputPrefix from
+ * MicroDSTCommon. The LHCb::ProtoParticles are taken from the TES location 
+ * defined by InputLocation, and are cloned and put in TES location 
+ * "/Event" + OutputPrefix + InputLocation. If InputLocation already contains
+ * a leading "/Event" it is removed.
+ * The actual cloning of individual LHCb::ProtoParticles is performed by the 
+ * IProtoParticleCloner, the implementation of which is set by the property 
+ * ICloneParticle (default ParticleCloner). It is the ICloneParticle that
+ * controls the depth of the cloning, ie what is done with related elements
+ * like LHCb::Tracks etc.
  *
- *  @todo Fully revise this and add ICloneProtoParticle 
- *        implementation once it exists.
+ * @see ICloneProtoParticle
+ * @see ProtoParticleCloner
+ *
+ * <b>Example</b>: Clone particles from "/Event/Rec/ProtoP/Charged" to 
+ * "/Event/MyLocation/Rec/ProtoP/Charged" using a ProtoParticleCloner
+ *  @code
+ *
+ *  // Add a CopyProtoParticles instance to a selection sequence
+ *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"CopyProtoParticles"};
+ *  CopyProtoParticles.OutputPrefix = "MyLocation";
+ *  CopyProtoParticles.InputLocation = "Rec/ProtoP/Charged";
+ *  CopyProtoParticles.ICloneProtoParticle = "ProtoParticleCloner"
+ *  @endcode
+ * 
+ *
+ *  @todo Test.
+ *
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2007-10-23
  */
@@ -33,19 +60,14 @@ protected:
 
 private:
 
-  const LHCb::ProtoParticle* storeProtoParticle(const LHCb::Particle* particle);
-
-  void scanParticleTree(const LHCb::Particle* particle);
-
-  template <class T>
-  void scanParticleSet(typename T::const_iterator begin,
-                       typename T::const_iterator end     );
-
   typedef LHCb::ProtoParticle::Container ProtoParticles;
   typedef MicroDST::BasicItemCloner<LHCb::ProtoParticle> PPCloneFunctor;
   typedef MicroDST::CloneKeyedContainerItem<LHCb::ProtoParticle, PPCloneFunctor> BasicPPCloner;
 
 private:
+
+  ICloneProtoParticle* m_cloner;
+  std::string m_clonerName;
 
 };
 #endif // COPYPROTOPARTICLES_H
