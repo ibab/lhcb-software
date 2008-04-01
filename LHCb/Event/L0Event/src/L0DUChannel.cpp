@@ -1,4 +1,4 @@
-// $Id: L0DUChannel.cpp,v 1.4 2008-03-27 16:33:59 odescham Exp $
+// $Id: L0DUChannel.cpp,v 1.5 2008-04-01 15:36:07 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -28,10 +28,10 @@ LHCb::L0DUChannel*  LHCb::L0DUChannel::emulate(){
   }
   // Cyclic counter ('downscaling' procedure)
   bool accept = false ;  
-  if( m_emulatedTrigger )m_counter += m_rate;
+  if( m_emulatedTrigger)m_counter += m_rate;
   if( m_counter >= LHCb::L0DUCounter::Scale){
     accept = true ;
-    m_counter -= LHCb::L0DUCounter::Scale; 
+    m_counter -= LHCb::L0DUCounter::Scale; //cyclic counter
   }
   // the downscaling procedure takes the final decision
   m_emulatedDecision = false ;

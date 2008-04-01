@@ -90,7 +90,8 @@
       <method name  = "incrementCounters" desc = "increment all channels counter" type  = "void" >
         <code>
           for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
-          int count = ((*it).second)->counter() + ((*it).second)->rate();
+          unsigned int count = ((*it).second)->counter() + ((*it).second)->rate();
+          if(count &gt;=  LHCb::L0DUCounter::Scale)count -= LHCb::L0DUCounter::Scale;
           ((*it).second)->setCounter(count);
           }
         </code>
@@ -99,6 +100,7 @@
         <code>
           for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
           int count = ((*it).second)->counter() - ((*it).second)->rate();
+          if(count &lt; 0 )count += LHCb::L0DUCounter::Scale;
           ((*it).second)->setCounter(count);
           }
         </code>

@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.90 2008-03-28 13:21:33 cattanem Exp $
+! $Id: release.notes,v 1.91 2008-04-01 15:36:07 odescham Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+! 2008-04-01 - Olivier Deschamps
+ - fix uncorrect cyclic counter in increment/decrementCounter() method in L0DUConfig.xml
 
 !======================== L0Event v16r9 2008-03-28 ===========================
 ! 2008-03-25 - Olivier Deschamps
