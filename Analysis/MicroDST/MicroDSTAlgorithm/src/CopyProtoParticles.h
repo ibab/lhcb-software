@@ -1,4 +1,4 @@
-// $Id: CopyProtoParticles.h,v 1.6 2008-04-01 14:43:52 jpalac Exp $
+// $Id: CopyProtoParticles.h,v 1.7 2008-04-01 15:39:19 jpalac Exp $
 #ifndef COPYPROTOPARTICLES_H 
 #define COPYPROTOPARTICLES_H 1
 
@@ -43,7 +43,7 @@ class ICloneProtoParticle;
  *  @todo Test.
  *
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
- *  @date   2007-10-23
+ *  @date   2008-04-01
  */
 class CopyProtoParticles : public MicroDSTAlgorithm {
 public: 
