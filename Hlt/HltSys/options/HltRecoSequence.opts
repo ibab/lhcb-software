@@ -79,7 +79,7 @@ HltRecoVeloSeq.Members += {
   "HltTrackUpgrade/HltRecoVelo",
   "PatPV3D/HltPatPV3D"
 };
-HltPatPV3D.InputTracksName = "Hlt/Track/Velo";
+HltPatPV3D.InputTracksName = "Hlt/Track/Velo_Alleys";
 
 // Decode TT
 //-------------
