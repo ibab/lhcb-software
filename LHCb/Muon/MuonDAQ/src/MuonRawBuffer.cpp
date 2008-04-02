@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.9 2007-11-20 13:04:00 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.10 2008-04-02 11:52:05 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -11,7 +11,10 @@
 #include "MuonDet/MuonODEBoard.h"
 #include "MuonDet/MuonTSMap.h"
 #include "Event/RawBank.h"
+#include "Event/MuonBankVersion.h"
 #include "MuonRawBuffer.h"
+#include "GaudiKernel/IIncidentSvc.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonRawBuffer
 //
@@ -31,11 +34,9 @@ MuonRawBuffer::MuonRawBuffer( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IMuonRawBuffer>(this);
-  basePath[0]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M1/";
-  basePath[1]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M2/";
-  basePath[2]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M3/";
-  basePath[3]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M4/";
-  basePath[4]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M5/";
+  m_NLink=24;
+  m_ODEWord=35;
+  
 
 }
 //=============================================================================
@@ -51,493 +52,1003 @@ StatusCode MuonRawBuffer::initialize()
 {
   StatusCode sc = GaudiTool::initialize() ;
   if (!sc) return sc;
-
-  //how many tell1
-  m_TotTell1=0;  
-  for(int station=0;station<5;station++){
-    debug()<<"station number "<<station<<endreq;    
-    std::string cablingBasePath=getBasePath(station);    
-    std::string cablingPath=cablingBasePath+"Cabling";
-    SmartDataPtr<MuonStationCabling>  cabling(detSvc(), cablingPath);
-    if( 0 == cabling ) {
-      error() << cablingPath << " not found in XmlDDDB" << endmsg;
-      return StatusCode::FAILURE;
-    }    
-    m_TotTell1=m_TotTell1+cabling->getNumberOfL1Board();
-  }
-  //how many and which odes in each Tell1
-  unsigned int countL1=0;
-  
-  for(int station=0;station<5;station++){
-    debug()<<"station number "<<station<<endreq;    
-    std::string cablingBasePath=getBasePath(station);    
-    std::string cablingPath=cablingBasePath+"Cabling";
-    SmartDataPtr<MuonStationCabling>  cabling(detSvc(), cablingPath);
-    if( 0 == cabling ) {
-      error() << cablingPath << " not found in XmlDDDB" << endmsg;
-      return StatusCode::FAILURE;
-    }    
-    if(station==0)m_M1Tell1=cabling->getNumberOfL1Board();
+  m_muonDet=getDet<DeMuonDetector>(DeMuonLocation::Default);
+  m_M1Tell1=(m_muonDet->getDAQInfo())->M1TellNumber(); 
+  incSvc()->addListener( this, IncidentType::EndEvent ); 
+  for (unsigned int i=0;i<MuonDAQHelper_maxTell1Number;i++){
+    m_counter_invalid_hit[i]=0;
+    m_processed_bank[i]=0;
+    m_NZScounter_invalid_hit[i]=0;
+    m_NZSprocessed_bank[i]=0;
+    m_pad_checkSize[i]=0;
+    m_hit_checkSize[i]=0;
     
-    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){    
-      debug()<<"L1 number "<<cabling->getL1Name(0)<<endreq;
-      std::string L1path=cablingBasePath+
-        cabling->getL1Name(L1Board);
-      SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
-      unsigned totODE=0;
-      
-      for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
-        std::string ODEpath=cablingBasePath
-          +l1->getODEName(ODEBoard);
-        //info()<<"ODE number "<<L1Board<<" "<<l1->getODEName(ODEBoard)<<endmsg;
-        SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);
-        if( 0 == ode ) {
-          err() << ODEpath << " not found in XmlDDDB" << endmsg;
-          return StatusCode::FAILURE;
-        }
-        long odenum=ode->getODESerialNumber();
-        m_ODEInTell1[countL1].push_back(odenum);        
-        //build LUT with ode ID --> MuonTileID
-        unsigned int region=ode->region();      
-        totODE++;
-        
-        for(int TS=0;TS<ode->getTSNumber();TS++){
-        
-          std::string  TSPath= cablingBasePath+
-            ode->getTSName(TS);          
-          unsigned int quadrant= ode->getTSQuadrant(TS);
-          unsigned int TSLayoutX=ode->getTSLayoutX();
-          unsigned int TSLayoutY=ode->getTSLayoutY();
-          unsigned int TSGridX=ode->getTSGridX(TS);
-          unsigned int TSGridY=ode->getTSGridY(TS);
-          unsigned int digitOffSetX=0;
-          unsigned int digitOffSetY=0;          
-          SmartDataPtr<MuonTSMap>  TSMap(detSvc(),TSPath);
-          for(int i=0;i<TSMap->numberOfOutputSignal();i++){
-            //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endreq;
-            unsigned int layout=TSMap->layoutOutputChannel(i);
-            unsigned int  layoutX=TSMap->gridXLayout(layout);
-            unsigned int  layoutY=TSMap->gridYLayout(layout);            
-            digitOffSetX=layoutX*TSGridX;
-            digitOffSetY=layoutY*TSGridY;
-            unsigned int digitX=digitOffSetX+TSMap->gridXOutputChannel(i);
-            unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i);
-            MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY);
-            MuonTileID muontile(station,lay,region,
-                                quadrant,digitX,digitY);
-            m_mapTileInODE[odenum-1].push_back(muontile);
-            
-          }          
-        }        
-      }
-      m_ODENumberInTell1[countL1]=totODE;      
-      countL1++;      
-    }
   }
-  sc=initializeLUTCrossing();
-  if(sc.isFailure())debug()<<"error in LUT crossing initialization"<<endmsg;  
+  
+  
+  clearData();
   return StatusCode::SUCCESS ;
 };
 
-std::string MuonRawBuffer::getBasePath(int station)
-{
-  return basePath[station];
+
+void MuonRawBuffer::handle ( const Incident& incident )
+{ 
+  if ( IncidentType::EndEvent == incident.type() ) clearData() ;
+}
+
+
+void MuonRawBuffer::clearData(){
+  debug()<<" reset all buffers "<<endreq;
   
+  for (unsigned int i=0;i<MuonDAQHelper_maxTell1Number;i++){
+    m_storage[i].clear();
+    m_alreadyDecoded[i]=false;
+    m_padStorage[i].clear();
+    m_padAlreadyDecoded[i]=false;
+    m_ODEAlreadyDecoded[i]=false;
+    m_eventHeader[i]=0;    
+    for(int j=0;j<24;j++)m_hitNumInLink[i*24+j]=0;
+    for(int j=0;j<4;j++)m_hitNumInLink[i*4+j]=0;    
+  }
+  for (unsigned int i=0;i<MuonDAQHelper_maxODENumber;i++){
+    m_ODEData[i].resetODEData();    
+  }
 };
 
 
-
-
 StatusCode MuonRawBuffer::finalize() {
-  //if( m_DDS )      m_DDS->release();
-  //if( m_tileTool ) toolSvc()->releaseTool( m_tileTool ); 
+
+  bool print_ZS=false;
+  for (unsigned int i=0;i<MuonDAQHelper_maxTell1Number;i++){
+    if(  m_counter_invalid_hit[i]>0)print_ZS=true; 
+    if(m_pad_checkSize[i]>0)print_ZS=true;
+    if(m_hit_checkSize[i]>0)print_ZS=true;
+    //info()<<" in Tell1 " <<i<<" invalid hit address "<<  
+    //    m_counter_invalid_hit[i]<<" processed banks # "<<
+    //    m_processed_bank[i]<<endreq;
+        // break;
+    
+  }
+  bool print_NZS=false;
+
+  for (unsigned int i=0;i<MuonDAQHelper_maxTell1Number;i++){
+    if(  m_NZScounter_invalid_hit[i]>0)print_NZS=true;
+    //info()<<" in Tell1 " <<i<<" invalid hit address "<<  
+    //    m_counter_invalid_hit[i]<<" processed banks # "<<
+    //    m_processed_bank[i]<<endreq;
+    // break;
+    
+  }
+
+  if(print_ZS||print_NZS){
+    
+    info()<<" Summary of Muon banks decoding errors "<<endreq;
+  }
+  
+  if(print_ZS)
+  {  
+    info()<<" Zero suppressed part "<<endreq;
+    for (unsigned int i=0;i<MuonDAQHelper_maxTell1Number;i++){
+      if(  m_counter_invalid_hit[i]>0){
+        
+        info()<<" in Tell1 " <<i<<" invalid hit address "<<  
+          m_counter_invalid_hit[i]<<" processed banks # "<<
+          m_processed_bank[i]<<endreq;
+      } 
+      if(  m_pad_checkSize[i]>0){ 
+        info()<<" in Tell1 pad decoding " <<i<<" invalid bank size "<<  
+          m_pad_checkSize[i]<<" processed banks # "<<
+          m_processed_bank[i]<<endreq;
+      }
+      if(  m_hit_checkSize[i]>0){ 
+        info()<<" in Tell1 hit decoding " <<i<<" invalid bank size "<<  
+          m_hit_checkSize[i]<<" processed banks # "<<
+          m_processed_bank[i]<<endreq;
+      }
+      
+  
+    }
+  }
+  if(print_NZS){
+    
+    info()<<" Non Zero suppressed part "<<endreq;
+    for (unsigned int i=0;i<MuonDAQHelper_maxTell1Number;i++){
+      info()<<" in Tell1 " <<i<<" invalid hit address "<<  
+        m_NZScounter_invalid_hit[i]<<" processed banks # "<<
+        m_NZSprocessed_bank[i]<<endreq;
+      
+    }
+  }
+  
   return GaudiTool::finalize() ;
 };
 
 
-std::vector<MuonTileID>  MuonRawBuffer::getTile(){
+StatusCode MuonRawBuffer::getTile(std::vector<LHCb::MuonTileID>& storage)
+{
 
-  std::vector<MuonTileID> storage;
-  
   LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
-  const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
-  std::vector<RawBank*>::const_iterator itB;  
-  for( itB = b.begin(); itB != b.end(); itB++ ) {    
-    const RawBank* r = *itB;
-    //info()<<"start of the bank "<<(*itB)->sourceID()<<endmsg;
-    //char* it;
-    //skip the tell1 corresponding to M1
-    const unsigned char* it=r->begin<unsigned char>();   
-    short skip=0;
-    
-    if((unsigned int)(*itB)->sourceID()>=m_M1Tell1){
-      //how many pads ?
-      const short * itPad=r->begin<short>();
-      short nPads=*itPad;
-      if((nPads+1)%2==0){
-        skip=(nPads+1)/2;
-      }else {
-        skip=(nPads+1)/2+1;
-      }
-    }
-    
-    it=it+4*skip;
-    debug()<<" skipping "<< skip <<" bytes words "<<endreq;
-    
-    // how many ODE in this tell1?
-    unsigned int nODE=m_ODENumberInTell1[(*itB)->sourceID()];
-    //info()<<" number of ODE "<<nODE<<endmsg;    
-    std::vector<unsigned int> firedInODE;
-    firedInODE.resize(nODE) ;    
-    unsigned int itODE=0;
-    //const unsigned char* it=r->begin<unsigned char>();    
-    for(itODE=0; itODE < nODE ; itODE++) {
-      //first decode the header
-        firedInODE[itODE]=(unsigned int)(*it);
-        //   info()<<"channels in ODE "<<(unsigned int)(*it)<<endmsg;        
-        it++;
-    }
-    for(itODE=0;itODE<nODE;itODE++){
-      unsigned int channels=0;
-      
-      unsigned int odenumber=(m_ODEInTell1[(*itB)->sourceID()])[itODE];      
-      for(channels=0;channels<firedInODE[itODE];channels++){
-        unsigned int address=(unsigned int)(*it);
-        //info()<<"address "<<address<<" "<<odenumber<<endmsg;        
-        MuonTileID tile=(m_mapTileInODE[odenumber-1])[address];
-        //info()<<"tile in tiol "<<tile.layout()<<" "<<tile.station()<<" "<<
-        // tile.region()<<" "<<tile.nX()<<" "<<tile.nY()<<endmsg;
-        
-        storage.push_back(tile);
-        //        info()<<" qui "<<(unsigned int) tile<<endmsg;       
-        it++;
-        //channels++;        
-      }
-    }  
-  }      
-return storage;
-};
-
-std::vector<std::pair<MuonTileID,unsigned int> > MuonRawBuffer::getTileAndTDC(){
-
-  std::vector<std::pair<MuonTileID, unsigned int> > storage;
+  StatusCode sc=StatusCode::SUCCESS;
+  sc= getTile(raw,storage);
   
+  return sc;
+  
+}
+
+StatusCode MuonRawBuffer::getTileAndTDC(std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & storage)
+{
   LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
-  const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
-  std::vector<RawBank*>::const_iterator itB;  
-  unsigned int chIterator=0;
+  StatusCode sc=StatusCode::SUCCESS;
+  sc= getTileAndTDC(raw,storage);  
+  return sc;
+}
+
+
+
+
+
+
+StatusCode  MuonRawBuffer::decodeTileAndTDCDC06(const RawBank* rawdata){
+
+   unsigned int chIterator=0;
+  const unsigned char* it=rawdata->begin<unsigned char>();    
+  short skip=0;
   
-  for( itB = b.begin(); itB != b.end(); itB++ ) {    
-    const RawBank* r = *itB;
-    debug()<<"start of the bank "<<(*itB)->sourceID()<<endmsg;
-   //char* it;
-    const unsigned char* it=r->begin<unsigned char>();    
-    short skip=0;
+  unsigned int tell1Number=(rawdata)->sourceID();
+   if(tell1Number>=m_M1Tell1){
+    //how many pads ?
+    const short * itPad=rawdata->begin<short>();
+    short nPads=*itPad;
+    if((nPads+1)%2==0){
+      skip=(nPads+1)/2;
+    }else {
+      skip=(nPads+1)/2+1;
+    }
+  }    
+  for(int k=0;k<4*skip;k++){      
+    it++;
+  }
+  
+  // how many ODE in this tell1?
+  
+  unsigned int nODE=(m_muonDet->getDAQInfo())->ODEInTell1((rawdata)->sourceID());
+  std::vector<unsigned int> firedInODE;
+  firedInODE.resize(nODE) ;    
+  unsigned int itODE=0;
+  unsigned int channelsInTell1=0;    
+  for(itODE=0; itODE < nODE ; itODE++) {
+    //first decode the header
+    firedInODE[itODE]=(unsigned int)(*it);
+    channelsInTell1=channelsInTell1+(unsigned int)(*it);
+    it++;
     
-    if((unsigned int)(*itB)->sourceID()>=m_M1Tell1){
-      //how many pads ?
-      const short * itPad=r->begin<short>();
-      short nPads=*itPad;
-      if((nPads+1)%2==0){
-        skip=(nPads+1)/2;
-      }else {
-        skip=(nPads+1)/2+1;
-      }
-    }    
-    for(int k=0;k<4*skip;k++){      
+  }
+  for(itODE=0;itODE<nODE;itODE++){
+    unsigned int channels=0;     
+    unsigned int odenumber=(m_muonDet->getDAQInfo())->
+      getODENumberInTell1((rawdata)->sourceID(),itODE);     
+    for(channels=0;channels<firedInODE[itODE];channels++){
+      unsigned int address=(unsigned int)(*it);
+      MuonTileID tile=(m_muonDet->getDAQInfo())->
+        getADDInODENoHole(odenumber-1,address);     
+      std::pair<MuonTileID,unsigned int> tileAndTDC;
+      tileAndTDC.first=tile;        
+      m_storage[tell1Number].push_back(tileAndTDC);
       it++;
     }
+  }
+  
+  //then decode the TDC info
+  
+  //first skip the byte required for padding
+  //how many? 
+  int padding=0;
+  if((channelsInTell1+nODE)%4){
+    padding=4-(channelsInTell1+nODE)%4;      
+  }
+  for(int ipad=0;ipad<padding;ipad++){
+    it++;     
+  }    
+  
+  
+  unsigned int TDCword=0;    
+  if(channelsInTell1%2==0) TDCword=channelsInTell1/2;
+  else TDCword=channelsInTell1/2+1;
+  unsigned int countChannels=0;
+  
+  for(unsigned int ch=0;ch<TDCword;ch++){
+     unsigned int time1 = (*it)&((unsigned char)15 );
+    unsigned int time2 = ((*it)>>4)&((unsigned char) 15);   
+    MuonTileID tile=   (m_storage[tell1Number])[chIterator].first;
+    MuonTileID tile1=   (m_storage[tell1Number])[chIterator+1].first;
+     
+    (m_storage[tell1Number])[chIterator].second=time1;
+    chIterator++;
     
-    debug()<<" skipping a pad number  of "<<*((*itB)->begin<short>())<<" then skip "
-          <<skip<<" 4 byte words "<<endreq;
-    
+    if(countChannels+1<channelsInTell1) {
+      (m_storage[tell1Number])[chIterator].second=time2;
+      chIterator++;        
+    }      
+    countChannels=countChannels+2;      
+      it++;
+      
+  }  
+  
+  return StatusCode::SUCCESS;
 
-    // how many ODE in this tell1?
-    unsigned int nODE=m_ODENumberInTell1[(*itB)->sourceID()];
-    debug()<<"tell1 "<<(*itB)->sourceID()<<" number of ODE "<<nODE<<endmsg;    
-    std::vector<unsigned int> firedInODE;
-    firedInODE.resize(nODE) ;    
-    unsigned int itODE=0;
-    unsigned int channelsInTell1=0;    
-    for(itODE=0; itODE < nODE ; itODE++) {
-      //first decode the header
-        firedInODE[itODE]=(unsigned int)(*it);
-        debug()<<"channels in ODE "<<itODE<<" "<<
-          (unsigned int)(*it)<<endmsg;        
-        
-        channelsInTell1=channelsInTell1+(unsigned int)(*it);
-        it++;
-        
+};
+
+
+
+StatusCode  MuonRawBuffer::decodeTileAndTDCV1(const RawBank* rawdata){
+
+
+  StatusCode sc=checkBankSize(rawdata);
+  unsigned int tell1Number=(rawdata)->sourceID();
+  if(sc.isFailure()){
+    m_hit_checkSize[tell1Number]++;
+    
+    return sc;
+  }
+  
+  bool print_bank=false;
+  
+  bool muon_spec_header=true;
+  
+  const unsigned short* it=rawdata->begin<unsigned short>();    
+  short skip=0;
+
+  //printout
+  if(print_bank)
+  {    
+    int bank_size=rawdata->size();
+    //    int read_data=0;
+
+    int count_word=0;
+    info()<<"Tell1 "<<tell1Number<<" "<<"bank length "<<bank_size<<endreq;
+    
+    for (it=rawdata->begin<unsigned short>();it<rawdata->end<unsigned short>();it++)
+    {
+      info()<<count_word<<" "<<((*it)&(0xFFF))<<" "<<(((*it)>>12)&(0xF))<<endreq;
+      
+      count_word++;
+      
     }
-    for(itODE=0;itODE<nODE;itODE++){
-      unsigned int channels=0;      
-      unsigned int odenumber=(m_ODEInTell1[(*itB)->sourceID()])[itODE];      
-      for(channels=0;channels<firedInODE[itODE];channels++){
-        unsigned int address=(unsigned int)(*it);
-        //info()<<"address "<<address<<" "<<odenumber<<endmsg;        
-        MuonTileID tile=(m_mapTileInODE[odenumber-1])[address];
-        // info()<<"tile in tiol "<<tile.layout()<<" "<<tile.station()<<" "<<
-        // tile.region()<<" "<<tile.nX()<<" "<<tile.nY()<<endmsg;
+    it=rawdata->begin<unsigned short>();    
+  }
+  
+
+  
+
+
+
+  m_processed_bank[tell1Number]++;
+
+  
+
+  if(muon_spec_header)
+  {
+
+    
+    //how many pads ?
+    //const unsigned short * itPad=rawdata->begin<unsigned short>();
+   
+    unsigned  short nPads=*it;
+  
+    if((nPads+2)%2==0){
+      skip=(nPads+2)/2;
+    }else {
+      skip=(nPads+2)/2+1;
+    }
+    for(int k=0;k<2*skip;k++){      
+      if(k==1)m_eventHeader[tell1Number]=*it;    
+      //      if(k==1)info()<<tell1Number<<" "<<((*it)&(0xFF))<<endreq;
+      
+      it++;
+    }
+  }
+  
+    
+  unsigned int hit_link_cnt[24];
+  for(int i=0;i<24;i++){
+    hit_link_cnt[i]=0;    
+  }
+  
+  for(int i=0;i<4;i++){
+    //now go to the single pp counter 
+    unsigned int pp_cnt=*it; 
+    m_hitNumInPP[tell1Number*4+i]=pp_cnt;
+    
+    if ( msgLevel(MSG::VERBOSE) ){
+      verbose()<<" hit in PP "<<pp_cnt<<endreq;
+    }    
+    it++;
+    
+    for (unsigned int loop=0;loop<pp_cnt;loop++){
+      unsigned int add=(*it)&(0x0FFF);
+      unsigned int tdc_value=(((*it)&(0xF000))>>12);
+      MuonTileID tile=(m_muonDet->getDAQInfo())->getADDInTell1(tell1Number,add);
+      verbose()<<" add "<<add<<" "<<tile <<endreq;
+      if(tile.isValid())
+      {   debug()<<" valid  add "<<add<<" "<<tile <<endreq;
         std::pair<MuonTileID,unsigned int> tileAndTDC;
         tileAndTDC.first=tile;        
-        storage.push_back(tileAndTDC);
-        //        info()<<" qui "<<(unsigned int) tile<<endmsg;       
-        it++;
-        //channels++;        
+        tileAndTDC.second=tdc_value;   
+        m_storage[tell1Number].push_back(tileAndTDC);
+      }else {
+//        info()<<" "<<add<<" "<<tdc_value<<" "<<i<<endreq;
+        
+        m_counter_invalid_hit[tell1Number]++;
       }
-    }
-    
-    //then decode the TDC info
-
-    //first skip the byte required for padding
-    //how many? 
-    int padding=0;
-    if((channelsInTell1+nODE)%4){
-      padding=4-(channelsInTell1+nODE)%4;      
-    }
-    for(int ipad=0;ipad<padding;ipad++){
-      it++;     
-    }    
-
-
-    unsigned int TDCword=0;    
-    if(channelsInTell1%2==0) TDCword=channelsInTell1/2;
-    else TDCword=channelsInTell1/2+1;
-    unsigned int countChannels=0;
-    
-    for(unsigned int ch=0;ch<TDCword;ch++){
-      //info()<<" qui "<< (unsigned int) (*it)<<" "<<channelsInTell1<<endmsg;
-      //unsigned int time1  ( ( ( (unsigned int) 1 ) << bitTimeStamp  ) - 1  ) << shiftTimeStamp;
-      unsigned int time1 = (*it)&((unsigned char)15 );
-      //      unsigned int time2 = (((*it)&(unsigned char) 240) >> 4 );   
-      unsigned int time2 = ((*it)>>4)&((unsigned char) 15);   
-      MuonTileID tile=   storage[chIterator].first;
-      
-      //info()<<"tile in tiol "<<tile.layout()<<" "<<tile.station()<<" "<<
-      //  tile.region()<<" "<<tile.nX()<<" "<<tile.nY()<<" "<<time1<<endmsg;
-      MuonTileID tile1=   storage[chIterator+1].first;
-//      info()<<"tile in tiol "<<tile1.layout()<<" "<<tile1.station()<<" "<<
-//        tile1.region()<<" "<<tile1.nX()<<" "<<tile1.nY()<<" "<<time2<<endmsg;
-
-      //info()<<" tempo "<< chIterator<<" "<<time1 <<" "<<time2<<endmsg;
-
-      storage[chIterator].second=time1;
-      chIterator++;
-      
-      if(countChannels+1<channelsInTell1) {
-        storage[chIterator].second=time2;
-        chIterator++;        
-      }      
-      countChannels=countChannels+2;      
+      //update the hitillink counter
+      unsigned int link=add/192;
+      hit_link_cnt[link]++;        
       it++;
-        //channels++;        
-    
-    }  
-  }  
-  return storage;
+    }    
+  }
+  int active_link_counter=0;
+  
+  for(int i=0;i<24;i++){
+    if((m_muonDet->getDAQInfo())->getODENumberInLink(tell1Number,i)==0){
+      m_hitNumInLink[tell1Number*24+i]=0;      
+   }else{
+     m_hitNumInLink[tell1Number*24+i]= hit_link_cnt[active_link_counter];    
+     active_link_counter++;      
+    }    
+  }
+  
+  return StatusCode::SUCCESS;
 
 };
 
 
-StatusCode MuonRawBuffer::initializeLUTCrossing()
-{
-  //skip M1
-  int countTell1=m_M1Tell1; 
- 
-  for(int station=1;station<5;station++){
-    debug()<<"station number "<<station<<endreq;    
-    std::string cablingBasePath=getBasePath(station);    
-    std::string cablingPath=cablingBasePath+"Cabling";
-    SmartDataPtr<MuonStationCabling>  cabling(detSvc(), cablingPath);   
-    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){    
-      debug()<<"L1 number "<<cabling->getL1Name(0)<<endreq;
-      std::string L1path=cablingBasePath+
-        cabling->getL1Name(L1Board);
-      SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
-      //      unsigned totODE=0;      
-      for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
-        std::string ODEpath=cablingBasePath
-          +l1->getODEName(ODEBoard);
-        SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);
-        //build LUT with ode ID --> MuonTileID
-        unsigned int region=ode->region();        
-        for(int TS=0;TS<ode->getTSNumber();TS++){        
-          std::string  TSPath= cablingBasePath+
-            ode->getTSName(TS);          
-          unsigned int quadrant= ode->getTSQuadrant(TS);
-          unsigned int TSLayoutX=ode->getTSLayoutX();
-          unsigned int TSLayoutY=ode->getTSLayoutY();
-          unsigned int TSGridX=ode->getTSGridX(TS);
-          unsigned int TSGridY=ode->getTSGridY(TS);
-          unsigned int digitOffSetX=0;
-          unsigned int digitOffSetY=0;          
-          SmartDataPtr<MuonTSMap>  TSMap(detSvc(),TSPath);
-          debug()<<"trigger sector "<<TSPath<<endreq;
-          
-          std::vector<LHCb::MuonTileID> digitInTS;          
-          for(int i=0;i<TSMap->numberOfOutputSignal();i++){
-            //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endreq;
-            unsigned int layout=TSMap->layoutOutputChannel(i);
-            unsigned int  layoutX=TSMap->gridXLayout(layout);
-            unsigned int  layoutY=TSMap->gridYLayout(layout);            
-            digitOffSetX=layoutX*TSGridX;
-            digitOffSetY=layoutY*TSGridY;
-            unsigned int digitX=digitOffSetX+TSMap->gridXOutputChannel(i);
-            unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i);
-            MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY);
-            MuonTileID muontile(station,lay,region,
-                                quadrant,digitX,digitY);
-            digitInTS.push_back(muontile);            
-          }
-          std::vector<LHCb::MuonTileID> crossAddress=DoPad(digitInTS,TSMap);  
-          std::vector<LHCb::MuonTileID>::iterator itPad;
-          for(itPad=crossAddress.begin();itPad<crossAddress.end();itPad++){
-            m_mapPad[countTell1].push_back(*itPad);
-          }        
-        }
-      }
-      countTell1++;      
-    }    
-  }  
-  return StatusCode::SUCCESS;  
-}
-
-std::vector<LHCb::MuonTileID> MuonRawBuffer::DoPad(std::vector<
-                                                   LHCb::MuonTileID> digit,
-                                                   MuonTSMap* TS)
-{
-  
-  std::vector<LHCb::MuonTileID> list_of_pads;
-  if(TS->numberOfLayout()==2){
-    //how many subsector????
-    int NX=TS->gridXLayout(1);    
-    int NY=TS->gridYLayout(0);
-    int Nsub=NX*NY;
-
-    debug()<<"number NX NY "<<NX<<" "<<NY<<endreq;   
-    int maxPads=TS->gridXLayout(0)*TS->gridYLayout(1);   
-    list_of_pads.reserve(maxPads);
-    LHCb::MuonTileID t;    
-    for(int i=0;i<maxPads;i++){
-      list_of_pads.push_back(t);      
-    }    
-    // work on sub sector 
-    if(Nsub>8){
-      err()<<"error the dimensioning of the TS subsector is wrong "<<endreq;
-      return list_of_pads;
-      
-    }
-    std::vector<unsigned int> horiz[8];
-    std::vector<unsigned int> hvert[8];
-    // clear the memory;    
-    // start fill the sub sector matrices
-    std::vector<LHCb::MuonTileID>::iterator it;
-    int index=0;
-    for(it=digit.begin();it<digit.end();it++,index++){
-      //also zero must be set
-      // which subsector?
-      int mx=TS->gridXOutputChannel(index)/
-        (TS->gridXLayout(TS->layoutOutputChannel(index))/NX);
-      int my=TS->gridYOutputChannel(index)/
-        (TS->gridYLayout(TS->layoutOutputChannel(index))/NY);
-      debug()<<" digit "<<index<<" "<<mx<<" "<<my<<" "<<*it<<endreq;     
-      int Msub=mx+my*NX;
-      // horizntal o vertical?
-      bool horizontal=false;
-      if(TS->layoutOutputChannel(index)==0)horizontal=true;
-      if(horizontal)horiz[Msub].push_back(*it);
-      else hvert[Msub].push_back(*it);
-      debug()<<" horizontal ? "<<     horizontal<<endreq;      
-    }
-    // now the address of fired pads..
-    for(int i=0;i<Nsub;i++){
-      // cross only local to each sub matrix
-      std::vector<unsigned int>::iterator itx;
-      std::vector<unsigned int>::iterator ity;
-      //debug 
-      debug()<<" sub matrix "<<i<<endreq;
-      debug()<<" horizontal sequence ";
-      for(itx=horiz[i].begin();
-          itx<horiz[i].end();itx++){
-        debug()<<*itx<<" ";
-      }
-      debug()<<endreq;
-      debug()<<" vertical sequence ";     
-      for(ity=hvert[i].begin();ity<hvert[i].end();ity++){
-        debug()<<*ity<<" ";        
-      }
-      debug()<<endreq;      
-      //end debug
-      unsigned int y_index=0;
-      unsigned int subY=i/NX;
-      unsigned int subX=i-subY*NX;      
-      unsigned int offsetY=subY*(TS->gridYLayout(1)/NY);
-      unsigned int offsetX=subX*(TS->gridXLayout(0)/NX);      
-      for(ity=hvert[i].begin();
-          ity<hvert[i].end();ity++,y_index++){                  
-        unsigned int x_index=0;
-        LHCb::MuonTileID tileY=*ity;
-        
-        for(itx=horiz[i].begin();
-            itx<horiz[i].end();itx++,x_index++){          
-            unsigned int address=offsetX+x_index+
-              (offsetY+y_index)*(TS->gridXLayout(0));             
-            debug()<<" result of the address "<<address<<endreq;   
-            LHCb::MuonTileID padTile=tileY.intercept(*itx);            
-            list_of_pads[address]=padTile; 
-            debug()<<" TS dec "<<address<<" "<<
-                  padTile.layout()<<" "<<padTile.station()<<" "<<
-              padTile.region()<<" "<<padTile.quarter()<<" "<<
-              padTile.nX()<<" "<<padTile.nY()<<" "<<endreq;
-            
-        }     
-      }            
-    }   
-  }else{    
-    //easy only zero suppression
-    int maxPads=TS->gridXLayout(0)*TS->gridYLayout(0);   
-    list_of_pads.reserve(maxPads);
-    LHCb::MuonTileID t;    
-    for(int i=0;i<maxPads;i++){
-      list_of_pads.push_back(t);      
-    }
-
-    std::vector<LHCb::MuonTileID>::iterator it;
-    unsigned int index=0;    
-    for(it=digit.begin();it<digit.end();it++,index++){
-      unsigned int address=index;
-      list_of_pads[address]=*it;
-      debug()<<" result of the address "<<address<<endreq; 
-    }    
-  }
-  return list_of_pads;  
 
 
-}
-
-
-std::vector<LHCb::MuonTileID> MuonRawBuffer::getPads()
-{
-  std::vector<MuonTileID> storage;
-  
+StatusCode MuonRawBuffer::getPads(std::vector<LHCb::MuonTileID>& storage)
+{  
   LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
   const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
   std::vector<RawBank*>::const_iterator itB;  
+  storage.clear();
   
+
+
+ //first decode data and insert in buffer
   for( itB = b.begin(); itB != b.end(); itB++ ) {    
-    const RawBank* r = *itB;
-    debug()<<"start of the bank "<<(*itB)->sourceID()<<endmsg;   
-    const short * it=r->begin<short>();    
-    if((unsigned int)(*itB)->sourceID()>=m_M1Tell1){
-      unsigned int tell=(unsigned int)(*itB)->sourceID();      
-      unsigned int pads=*it;
-      it++;      
-      for(unsigned int loop=0;loop<pads;loop++){
-        unsigned int address=*it;
-        storage.push_back(m_mapPad[tell][address]);        
-        it++;        
-      }      
+    const RawBank* r = *itB;   
+    StatusCode sc=DecodeDataPad(r);
+    if(sc.isFailure())return sc; 
+  }
+
+  //compact data  in one container
+ 
+  for( itB = b.begin(); itB != b.end(); itB++ ) {  
+    unsigned int tell1Number=(*itB)->sourceID();
+ 
+     std::vector<LHCb::MuonTileID>::iterator itStorage;
+     for(itStorage=(m_padStorage[tell1Number]).begin();
+         itStorage<(m_padStorage[tell1Number]).end();itStorage++){
+       storage.push_back(*itStorage);
+     }
+  }
+
+
+  
+  return StatusCode::SUCCESS;
+  
+}
+
+
+StatusCode MuonRawBuffer::decodePadsV1(const LHCb::RawBank* r)
+{
+  unsigned int tell=(unsigned int)(r)->sourceID(); 
+  StatusCode sc=checkBankSize(r);
+  if(sc.isFailure()){    
+    m_pad_checkSize[tell]++;
+    return sc;
+  }
+  
+  const short * it=r->begin<short>();    
+  if((unsigned int)(r)->sourceID()>=m_M1Tell1){
+  
+    unsigned int pads=*it;
+//info()<<"pads inside "<<*it<<endreq;
+    it++;      
+    //skip/fill  event header
+    m_eventHeader[tell]=*it;
+//info()<<" header inside "<<*it<<" "<<((*it)&(0xFF))<<endreq;
+    it++;
+    
+    for(unsigned int loop=0;loop<pads;loop++){
+      unsigned int address=*it;
+      MuonTileID tile =(m_muonDet->getDAQInfo())->getPadInTell1V1(tell, address);
+//      info()<<" pad "<<address<<" "<<tile<<endreq;
+      
+      (m_padStorage[tell]).push_back(tile);        
+      it++;        
+    }      
+  }
+  return StatusCode::SUCCESS;
+}
+
+StatusCode MuonRawBuffer::decodePadsDC06(const LHCb::RawBank* r)
+{
+  const short * it=r->begin<short>();    
+  if((unsigned int)(r)->sourceID()>=m_M1Tell1){
+    unsigned int tell=(unsigned int)(r)->sourceID();      
+    unsigned int pads=*it;
+    it++;      
+    for(unsigned int loop=0;loop<pads;loop++){
+      unsigned int address=*it;
+      MuonTileID tile =(m_muonDet->getDAQInfo())->getPadInTell1DC06(tell, address);
+      (m_padStorage[tell]).push_back(tile);        
+      it++;        
+    }      
+  }
+  return StatusCode::SUCCESS;
+}
+
+StatusCode MuonRawBuffer::getTile(const LHCb::RawBank* r,std::vector<LHCb::MuonTileID>& tile)
+{
+  tile.clear();
+  
+  unsigned int tell1Number=(r)->sourceID(); 
+  StatusCode sc=DecodeData(r);
+  if(sc.isFailure())return sc;
+  
+  //copy in output container
+  int output_size=m_storage[tell1Number].size();
+  
+  tile.reserve(output_size);
+  std::vector<std::pair<LHCb::MuonTileID, unsigned int> >::const_iterator itData;
+  for(itData=m_storage[tell1Number].begin();itData<m_storage[tell1Number].end();itData++)
+  {
+    tile.push_back((*itData).first);
+    
+  }
+  return StatusCode::SUCCESS;
+  
+};
+
+StatusCode MuonRawBuffer::getTile( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& storage)
+{
+  storage.clear();
+  
+  const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
+  std::vector<RawBank*>::const_iterator itB;
+  if ( msgLevel(MSG::VERBOSE) )  verbose()<<" tell1 "<<b.size()<<endreq;
+
+
+ //first decode data and insert in buffer
+  for( itB = b.begin(); itB != b.end(); itB++ ) {    
+    const RawBank* r = *itB;  
+    StatusCode sc=DecodeData(r);
+    if(sc.isFailure())return sc;    
+   }
+  //compact storage in one container
+  
+  for( itB = b.begin(); itB != b.end(); itB++ ) {  
+    unsigned int tell1Number=(*itB)->sourceID();    
+    std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator itStorage;
+    for(itStorage=(m_storage[tell1Number]).begin();
+        itStorage<(m_storage[tell1Number]).end();itStorage++){
+      storage.push_back(itStorage->first);
+     }
+  }
+  return StatusCode::SUCCESS;
+  
+}
+
+
+StatusCode MuonRawBuffer::getTileAndTDC(LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & storage)
+{
+  
+  storage.clear();
+ 
+  
+  const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
+  std::vector<RawBank*>::const_iterator itB;  
+ 
+  //first decode data and insert in buffer
+  for( itB = b.begin(); itB != b.end(); itB++ ) {    
+    const RawBank* r = *itB;   
+    StatusCode sc=DecodeData(r);
+    if(sc.isFailure())return sc; 
+  }
+
+  //compact data  in one container
+ 
+  for( itB = b.begin(); itB != b.end(); itB++ ) {  
+    unsigned int tell1Number=(*itB)->sourceID();
+ 
+     std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator itStorage;
+     for(itStorage=(m_storage[tell1Number]).begin();
+         itStorage<(m_storage[tell1Number]).end();itStorage++){
+       storage.push_back(*itStorage);
+     }
+  }
+  return StatusCode::SUCCESS;
+}
+
+
+
+
+
+
+
+StatusCode MuonRawBuffer::getTileAndTDC(const LHCb::RawBank* r,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tile)
+
+{ 
+  tile.clear();
+  
+  StatusCode sc=DecodeData(r);
+  if(sc.isFailure())return sc;
+  unsigned int tell1Number=(r)->sourceID();
+
+  //copy in output container
+  int output_size=m_storage[tell1Number].size();
+  
+  tile.reserve(output_size);
+  std::vector<std::pair<LHCb::MuonTileID, unsigned int> >::const_iterator itData;
+  for(itData=m_storage[tell1Number].begin();itData<m_storage[tell1Number].end();itData++)
+  {
+    tile.push_back((*itData));
+    
+  }
+  return StatusCode::SUCCESS;
+  
+};
+
+
+
+StatusCode MuonRawBuffer::getPads(LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID> & pads)
+{
+  
+  pads.clear();
+  
+  const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
+  std::vector<RawBank*>::const_iterator itB;  
+
+ //first decode data and insert in buffer
+  for( itB = b.begin(); itB != b.end(); itB++ ) {    
+    const RawBank* r = *itB;   
+    StatusCode sc=DecodeDataPad(r);
+    if(sc.isFailure())return sc; 
+  }
+
+  //compact data  in one container
+ 
+  for( itB = b.begin(); itB != b.end(); itB++ ) {  
+    unsigned int tell1Number=(*itB)->sourceID();
+ 
+     std::vector<LHCb::MuonTileID>::iterator itStorage;
+     for(itStorage=(m_padStorage[tell1Number]).begin();
+         itStorage<(m_padStorage[tell1Number]).end();itStorage++){
+       pads.push_back(*itStorage);
+     }
+  }
+  return StatusCode::SUCCESS;
+}
+
+
+
+
+
+StatusCode MuonRawBuffer::getPads(const LHCb::RawBank* r,std::vector<LHCb::MuonTileID>& pads)
+{
+  pads.clear();
+  StatusCode sc=DecodeDataPad(r);
+  if(sc.isFailure())return sc; 
+  
+  unsigned int tell=(r)->sourceID();    
+  std::vector<MuonTileID>::iterator itStorage;
+  for(itStorage=(m_padStorage[tell]).begin();itStorage<(m_padStorage[tell]).end();itStorage++){
+    MuonTileID tile=*itStorage;
+    pads.push_back(tile);        
+    
+  } 
+  return StatusCode::SUCCESS;
+}
+
+
+
+StatusCode MuonRawBuffer::DecodeData(const LHCb::RawBank* r)
+{
+  unsigned int tell1Number=(r)->sourceID();
+  if(tell1Number>MuonDAQHelper_maxTell1Number)return StatusCode::FAILURE; 
+ 
+  if(!m_alreadyDecoded[tell1Number]){
+    if(r->version()==MuonBankVersion::DC06){
+      
+      decodeTileAndTDCDC06(r);
+      }else if(r->version()==MuonBankVersion::v1){
+        
+        decodeTileAndTDCV1(r);
+      }m_alreadyDecoded[tell1Number]=true;
+  }
+  
+  
+  return StatusCode::SUCCESS;
+}
+
+StatusCode MuonRawBuffer::DecodeDataPad(const LHCb::RawBank* r)
+{
+  StatusCode sc=StatusCode::FAILURE;
+  
+  unsigned int tell=(r)->sourceID();
+  if(tell>MuonDAQHelper_maxTell1Number)return StatusCode::FAILURE;
+  //  debug()<<tell<<" "<<m_padAlreadyDecoded[tell]<<endreq; 
+  if((unsigned int)(r)->sourceID()>=m_M1Tell1){
+    if(!m_padAlreadyDecoded[tell]){
+      if(r->version()==MuonBankVersion::DC06){
+        
+        sc=decodePadsDC06(r);
+      }else if(r->version()==MuonBankVersion::v1){
+        
+        sc=decodePadsV1(r);
+      }
+      
+      m_padAlreadyDecoded[tell]=true;  
+      if(sc.isFailure())return sc;
+    }  
+  }else m_alreadyDecoded[tell]=true;
+  return StatusCode::SUCCESS;
+}
+
+
+StatusCode MuonRawBuffer::decodeNZSupp(unsigned int tell1Number)
+{ 
+  LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
+  StatusCode sc=StatusCode::SUCCESS;
+  const std::vector<RawBank*>& b = raw->banks(RawBank::MuonFull);
+  std::vector<RawBank*>::const_iterator itB;
+  if ( msgLevel(MSG::VERBOSE) )  verbose()<<" tell1 "<<b.size()<<endreq;
+  if( b.size()==0)
+  {
+    info()<<" you have request NZS bank for muon detectorct ---> "<<
+      "such bank are not presente in input file "<<endreq;
+  }
+  
+   
+  for( itB = b.begin(); itB != b.end(); itB++ ) {  
+    unsigned int tell1BankNumber=(*itB)->sourceID();   
+    if(tell1Number==tell1BankNumber)
+    {
+
+      sc=decodeNZSupp(*itB);
+      return sc;
+      
+      
+      
     }
   }
-  return storage;  
+  return sc;
+  
+};
+
+
+
+
+StatusCode  MuonRawBuffer::decodeNZSupp(const LHCb::RawBank* r){
+
+  verbose()<<" start decoding "<<endreq;
+  unsigned int tell1Num=(r)->sourceID();
+
+  
+  if(tell1Num>MuonDAQHelper_maxTell1Number)return StatusCode::FAILURE;
+  
+  unsigned int data[24][35];
+  const unsigned int * it=r->begin<unsigned int>(); 
+  
+  //loop on PP 
+  for (int pp_num=0;pp_num<4;pp_num++){
+    unsigned int off=pp_num*6;
+    verbose()<<" pp 0 "<<pp_num<<endreq;
+    
+  //skip first 6 words ... always set to zero
+    for(int i=0;i<6;i++){
+      it++;
+    }
+
+  //now the  data      
+    for(unsigned int i=0;i<m_ODEWord*6;i++){
+      unsigned int data1 = (*it)&(0xFFFF );
+      //      unsigned int time2 = (((*it)&(unsigned char) 240) >> 4 );   
+      unsigned int data2 = ((*it)>>16)&(0xFFFF);
+      unsigned int ODE=i%3;
+      unsigned int wordNum=i/6;
+      //first or second data part?
+      if(i%6<3){
+        data[off+ODE*2][wordNum]=data1&0xFFFF;
+        data[off+ODE*2+1][wordNum]=data2&0xFFFF;
+      }else{
+        data[off+ODE*2][wordNum]|=((data1<<16)&0xFFFF0000);
+        data[off+ODE*2+1][wordNum]|=((data2<<16)&0xFFFF0000);
+      }
+      it++;      
+    }
+    // }
+    
+    //now the trailer
+    for(int i=0;i<8;i++){
+      //      unsigned int dd=(*it)&(0x0FFF);
+      m_PPEventInfo[tell1Num*4+pp_num].setWord(i,*it);
+      it++;
+    }
+    
+  }
+  verbose()<<" now fill the buffer "<<endreq;
+  //now copy the data to the buffer
+  for(int i=0;i<24;i++){
+    m_ODEData[tell1Num*24+i].setData(data[i]);
+  }
+  return StatusCode::SUCCESS;
+};
+
+StatusCode MuonRawBuffer::dumpNZSupp(const LHCb::RawBank* r,unsigned int ode_num)
+{
+  unsigned int tell1Number=(r)->sourceID();
+  //info()<<" t1 "<<tell1Number<<endreq;
+  if(tell1Number>MuonDAQHelper_maxTell1Number)return StatusCode::FAILURE;
+  if(!m_ODEAlreadyDecoded[tell1Number]){
+      decodeNZSupp( r);
+  }  
+  for(int iLink=0;iLink<24;iLink++)
+  {
+    unsigned int ODE_num=(m_muonDet->getDAQInfo())
+      ->getODENumberInLink(tell1Number,iLink);
+    if(ODE_num==ode_num)
+    {
+      
+      info()<<" ODE words for link # "<<iLink<<endreq;    
+      for( unsigned int w=0;w<m_ODEWord;w++){
+        
+      info()<<(m_ODEData[tell1Number*24+iLink]).getWord(w)<<endreq;      
+      }
+    }
+    
+  }   
+  return StatusCode::SUCCESS;
+}
+   
+
+
+StatusCode MuonRawBuffer::getNZSupp(const LHCb::RawBank* r,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC)
+{  
+  unsigned int tell1Number=(r)->sourceID(); 
+  m_NZSprocessed_bank[tell1Number]++;
+  debug()<<" t1 "<<tell1Number<<endreq;
+  int fix_size=(m_NLink*36+8*4)*4;
+   if(r->size()!=fix_size)return StatusCode::FAILURE;
+   
+   if(!m_ODEAlreadyDecoded[tell1Number]){
+     decodeNZSupp( r);
+   }
+
+   //now copy the ODE info in a more suitable format
+   //first loop on ODE
+   for (unsigned int iLink=0;iLink<m_NLink;iLink++){
+     
+     unsigned int ODE_num=(m_muonDet->getDAQInfo())
+       ->getODENumberInLink(tell1Number,iLink);
+     if(ODE_num>0){
+       debug()<<" ODE "<<ODE_num<<endreq;
+       
+       unsigned int ch=0;     
+       for(unsigned int iData=1;iData<m_NLink+1;iData++){
+         for (int iTDC=0;iTDC<8;iTDC++){         
+           unsigned int TDC_value=(m_ODEData[m_NLink*tell1Number+iLink]).
+             getTDC(iData,iTDC);           
+           if(TDC_value>0){
+             MuonTileID tile=(m_muonDet->getDAQInfo())->
+               getADDInODE(ODE_num-1, ch);
+             if(tile.isValid()){
+               std::pair<LHCb::MuonTileID,unsigned int>  ODE_info;
+               ODE_info.first=tile;
+               ODE_info.second=TDC_value;
+               tileAndTDC.push_back(ODE_info);
+             }else{
+               m_NZScounter_invalid_hit[tell1Number]++;
+             }
+           }          
+           ch++;           
+         }         
+       }       
+     }     
+   }
+   return StatusCode::SUCCESS;
+   
+}
+
+MuonPPEventInfo MuonRawBuffer::getPPInfo(const LHCb::RawBank* r,unsigned int pp_num){
+
+  unsigned int tell1Number=r->sourceID();
+  if(!m_ODEAlreadyDecoded[tell1Number]){
+    StatusCode sc= decodeNZSupp( r);
+    if(sc.isFailure())debug()<<"error in decoding NZSP bank"<<endreq;   
+  } 
+  return m_PPEventInfo[tell1Number*4+pp_num];
+  
+};
+
+MuonPPEventInfo MuonRawBuffer::getPPInfo(unsigned int tell1Number,unsigned int pp_num){
+  if(!m_ODEAlreadyDecoded[tell1Number]){
+    //serach for bank and decode it 
+    StatusCode sc= decodeNZSupp( tell1Number);
+    if(sc.isFailure())debug()<<"error in decoding NZSP bank"<<endreq;   
+  }
+
+  return m_PPEventInfo[tell1Number*4+pp_num];
+  
+
+};
+
+MuonODEData MuonRawBuffer::getODEData(const LHCb::RawBank* r,
+                                      unsigned int link){
+  MuonODEData empty_data;
+  
+  if(link>23)return empty_data;
+  
+  unsigned int tell1Number=(r)->sourceID();  
+  if(!m_ODEAlreadyDecoded[tell1Number]){
+    decodeNZSupp( r);
+  }
+  return (m_ODEData[tell1Number*24+link]);
+  
+
+}
+
+
+
+unsigned int  MuonRawBuffer::BXCounter(unsigned int tell1Number)
+{
+  if( m_alreadyDecoded[ tell1Number]){
+    return m_eventHeader[tell1Number]&(0xFF);
+    
+  }else{
+    info()<<" the bank has not been decode yet "<<endreq;
+    return 0;
+    
+
+    
+  }
+  
+    
+}
+
+StatusCode MuonRawBuffer::getNZSupp(std::vector<std::pair<LHCb::MuonTileID,
+                                    unsigned int> > & tileAndTDC)
+{
+  LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
+  StatusCode sc=StatusCode::SUCCESS;
+  sc= getNZSupp(raw,tileAndTDC);
+  
+  return sc;
+   
+}
+
+
+StatusCode MuonRawBuffer::getNZSupp( LHCb::RawEvent* raw,
+                                     std::vector<std::pair<LHCb::MuonTileID,
+                                     unsigned int> > & tileAndTDC)
+{
+  
+  const std::vector<RawBank*>& b = raw->banks(RawBank::MuonFull);
+  std::vector<RawBank*>::const_iterator itB;
+  if ( msgLevel(MSG::VERBOSE) )  verbose()<<" tell1 "<<b.size()<<endreq;
+  if( b.size()==0)
+  {
+    info()<<" you have request NZS bank for muon detectorct ---> "<<
+      "such bank ar enot presente in input file "<<endreq;
+  }
+  
+   
+  for( itB = b.begin(); itB != b.end(); itB++ ) {  
+    unsigned int tell1Number=(*itB)->sourceID();    
+    std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator 
+      itStorage;    
+    std::vector<std::pair<LHCb::MuonTileID,unsigned int> > bank_container;    
+    StatusCode sc=getNZSupp(*itB,bank_container);
+     
+    for(itStorage=bank_container.begin();
+        itStorage<bank_container.end();itStorage++){
+           tileAndTDC.push_back(*itStorage);
+    }
+  }
+  return StatusCode::SUCCESS;
+}
+
+
+StatusCode MuonRawBuffer::checkBankSize(const LHCb::RawBank* rawdata)
+{  
+  const unsigned short * it=rawdata->begin<unsigned short>();
+  unsigned int tell1Number=(rawdata)->sourceID();
+  int bank_size=rawdata->size();
+  int read_data=0;  
+  //minimum length is 3 words --> 12 bytes
+  if(bank_size<12){
+    err()<< " muon bank "<<tell1Number<<" is too short "<<
+      bank_size<<endreq;    
+    return StatusCode::FAILURE;
+  }  
+  //how many pads ?
+  //const unsigned short * itPad=rawdata->begin<unsigned short>();
+  unsigned short nPads=*it;  
+  if ( msgLevel(MSG::VERBOSE) ){
+//    verbose()<< " pad # "<<nPads<<endreq;
+  }
+
+  int skip=0;
+  
+  if((nPads+2)%2==0){
+    skip=(nPads+2)/2;
+  }else {
+    skip=(nPads+2)/2+1;
+  }
+
+  if((bank_size-skip*4)<0){
+    err()<<"bank_size "<<bank_size<<" pad size to read "<<nPads*4<<endreq;
+    err()<< "so muon bank "<<tell1Number<<" is too short in pad part "<<endreq;    
+    return StatusCode::FAILURE;
+    
+  }
+  
+  it=it+2*skip;  
+  read_data=read_data+skip*2;  
+  if(read_data<0)info()<<nPads<<" "<<skip<<" "<<
+                   bank_size<<" "<<read_data<<endreq;
+  
+  for(int i=0;i<4;i++){
+    //now go to the single pp counter 
+    unsigned int pp_cnt=*it; 
+    if ( msgLevel(MSG::VERBOSE) ){
+  //    verbose()<<" hit in PP "<<pp_cnt<<endreq;
+    }    
+    it++;
+    read_data++;
+    
+    //check size before start looping
+    if(bank_size-read_data*2<pp_cnt*2){
+      err()<<"bank_size "<<bank_size<<"read data "<<read_data<<" hit size to read "<<pp_cnt*2<<endreq;
+      err()<< "so muon bank "<<tell1Number<<" is too short in hit part "<<endreq;   
+      break;
+      
+      return StatusCode::FAILURE;
+    }
+    it=it+pp_cnt;
+    
+  }
+
+  return StatusCode::SUCCESS;
+  
+}
+
+
+bool MuonRawBuffer::PPReachedHitLimit(unsigned int Tell1Number,int pp_num)
+{
+  if(!m_alreadyDecoded[Tell1Number]){ 
+    std::vector<LHCb::MuonTileID> tile;    
+    StatusCode sc=getTile(tile);
+    if(sc.isFailure())return true;
+  }
+  
+
+  if(m_hitNumInPP[Tell1Number*4+pp_num]>262)return true;
+  
+  return false;
+  
+}
+
+bool MuonRawBuffer::LinkReachedHitLimit(unsigned int Tell1Number,int link_num)
+{
+
+  if(!m_alreadyDecoded[Tell1Number]){ 
+    std::vector<LHCb::MuonTileID> tile;    
+    StatusCode sc=getTile(tile);
+    if(sc.isFailure())return true;
+  }
+  if(m_hitNumInLink[Tell1Number*24+link_num]>62)return true;
+  
+  return false;
+  
 }

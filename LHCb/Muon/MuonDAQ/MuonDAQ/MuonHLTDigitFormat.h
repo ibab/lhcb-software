@@ -1,4 +1,4 @@
-// $Id: MuonHLTDigitFormat.h,v 1.1 2004-08-31 10:06:10 asatta Exp $
+// $Id: MuonHLTDigitFormat.h,v 1.2 2008-04-02 11:52:05 asatta Exp $
 #ifndef MUONHLTDIGITFORMAT_H 
 #define MUONHLTDIGITFORMAT_H 1
 
@@ -14,8 +14,8 @@
 class MuonHLTDigitFormat {
 public: 
   /// Standard constructor
-  MuonHLTDigitFormat( ); 
-  MuonHLTDigitFormat(unsigned int num );
+  MuonHLTDigitFormat(unsigned int type ); 
+  MuonHLTDigitFormat(unsigned int num ,unsigned int type);
   virtual ~MuonHLTDigitFormat( ); ///< Destructor
   inline void setData(unsigned int num){m_data=num;};
   void setAddress(unsigned int num);
@@ -28,6 +28,7 @@ protected:
 
 private:
   unsigned int m_data;
+  unsigned int m_type;
   
 
 };

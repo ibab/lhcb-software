@@ -1,11 +1,11 @@
-// $Id: MuonHLTDigitFormat.cpp,v 1.2 2004-08-31 10:06:10 asatta Exp $
+// $Id: MuonHLTDigitFormat.cpp,v 1.3 2008-04-02 11:52:05 asatta Exp $
 // Include files 
 
 
 
 // local
 #include "MuonDAQ/MuonHLTDigitFormat.h"
-
+#include "Event/MuonBankVersion.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonHLTDigitFormat
 //
@@ -15,11 +15,13 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MuonHLTDigitFormat::MuonHLTDigitFormat(  ) {
+MuonHLTDigitFormat::MuonHLTDigitFormat(unsigned int type  ) {
 m_data=0;
+m_type=type;
 }
-MuonHLTDigitFormat::MuonHLTDigitFormat(unsigned int num ){
+MuonHLTDigitFormat::MuonHLTDigitFormat(unsigned int num ,unsigned int type){
 m_data=num;
+m_type=type;
 };
 
 //=============================================================================
@@ -31,29 +33,57 @@ MuonHLTDigitFormat::~MuonHLTDigitFormat() {};
 void MuonHLTDigitFormat::setAddress(unsigned int num)
 {
  unsigned int tmp1 , tmp2 ;
- tmp1 = ( num << MuonHLTBase::ShiftAddress ) & MuonHLTBase::MaskAddress ;
- tmp2 = m_data & ~MuonHLTBase::MaskAddress ;
+ if(m_type==MuonBankVersion::DC06)
+ {
+   
+   tmp1 = ( num << MuonHLTBaseDC06::ShiftAddress ) & MuonHLTBaseDC06::MaskAddress ;
+   tmp2 = m_data & ~MuonHLTBaseDC06::MaskAddress ;
+ }
+ else if(m_type==MuonBankVersion::v1)
+ {
+   tmp1 = ( num << MuonHLTBaseV1::ShiftAddress ) & MuonHLTBaseV1	::MaskAddress ;
+   tmp2 = m_data & ~MuonHLTBaseV1::MaskAddress ;
+ }
  m_data = ( tmp1 | tmp2 ) ;
 };
 
 void MuonHLTDigitFormat::setTime(unsigned int num)
 {
- unsigned int tmp1 , tmp2 ;
- tmp1 = ( num << MuonHLTBase::ShiftTime ) & MuonHLTBase::MaskTime ;
- tmp2 = m_data & ~MuonHLTBase::MaskTime ;
- m_data = ( tmp1 | tmp2 ) ;
+  unsigned int tmp1 , tmp2 ; 
+  if(m_type==MuonBankVersion::DC06){
+    tmp1 = ( num << MuonHLTBaseDC06::ShiftTime ) & MuonHLTBaseDC06::MaskTime ;
+    tmp2 = m_data & ~MuonHLTBaseDC06::MaskTime ; 
+  }else if(m_type==MuonBankVersion::v1)
+  {
+    tmp1 = ( num << MuonHLTBaseV1::ShiftTime ) & MuonHLTBaseV1::MaskTime ;
+    tmp2 = m_data & ~MuonHLTBaseV1::MaskTime ; 
+  }
+  
+  
+  m_data = ( tmp1 | tmp2 ) ;
 };
 
 unsigned int MuonHLTDigitFormat::getTime()
-{
- return  ( m_data & MuonHLTBase::MaskTime ) >> 
-   MuonHLTBase::ShiftTime ;
+{  if(m_type==MuonBankVersion::DC06){
+    return  ( m_data & MuonHLTBaseDC06::MaskTime ) >> 
+      MuonHLTBaseDC06::ShiftTime ;
+  }else if(m_type==MuonBankVersion::v1)
+  { return  ( m_data & MuonHLTBaseV1::MaskTime ) >> 
+      MuonHLTBaseV1::ShiftTime ;
+  }
+  
+  
 };
 
 unsigned int MuonHLTDigitFormat::getAddress()
-{
- return  ( m_data & MuonHLTBase::MaskAddress ) >> 
-   MuonHLTBase::ShiftAddress ;
+{ if(m_type==MuonBankVersion::DC06){
+  return  ( m_data & MuonHLTBaseDC06::MaskAddress ) >> 
+    MuonHLTBaseDC06::ShiftAddress ;  
+  }else if(m_type==MuonBankVersion::v1)
+  {return  ( m_data & MuonHLTBaseV1::MaskAddress ) >> 
+    MuonHLTBaseV1::ShiftAddress ;
+  }
+  
 };
 
 unsigned int  MuonHLTDigitFormat::getWord()

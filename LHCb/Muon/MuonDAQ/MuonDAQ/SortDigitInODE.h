@@ -1,4 +1,4 @@
-// $Id: SortDigitInODE.h,v 1.1 2006-01-31 15:22:33 asatta Exp $
+// $Id: SortDigitInODE.h,v 1.2 2008-04-02 11:52:05 asatta Exp $
 #ifndef SORTDIGITINODE_H 
 #define SORTDIGITINODE_H 1
 
@@ -21,8 +21,10 @@ public :
 inline bool SortDigitInODE::operator()(const unsigned int first,
 const unsigned int second )const
 {
-  return (( first & MuonHLTBase::MaskAddress ) >> MuonHLTBase::ShiftAddress) 
-    <(( second & MuonHLTBase::MaskAddress ) >>MuonHLTBase::ShiftAddress);
+  return (( first & MuonHLTBaseDC06::MaskAddress ) >> 
+MuonHLTBaseDC06::ShiftAddress) 
+    <(( second & MuonHLTBaseDC06::MaskAddress ) 
+>>MuonHLTBaseDC06::ShiftAddress);
   };
 
 

@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.h,v 1.5 2006-03-24 11:03:22 asatta Exp $
+// $Id: MuonDigitToRawBuffer.h,v 1.6 2008-04-02 11:52:05 asatta Exp $
 #ifndef MUONDIGITTORAWBUFFER_H 
 #define MUONDIGITTORAWBUFFER_H 1
 
@@ -8,7 +8,7 @@
 
 #include "MuonKernel/MuonTile.h"
 #include "Kernel/MuonTileID.h"
-
+#include "MuonDet/DeMuonDetector.h"
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
@@ -28,39 +28,32 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
+  StatusCode ProcessDC06(); 
+  StatusCode ProcessV1();
+  StatusCode ProcessDigitDC06();  
+  StatusCode ProcessDigitV1();  
+  StatusCode ProcessPads();
+  
 
 protected:
 
-private:
-void TilePrintOut(LHCb::MuonTileID digitTile);
-  LHCb::MuonTileID findTS(LHCb::MuonTileID digit);
-  unsigned int findDigitInTS(std::string TSPath, LHCb::MuonTileID TSTile,
-                     LHCb::MuonTileID digit);  
-  unsigned int findODENumber(std::string odePath);
-  unsigned int findODEPosition(std::string L1Path, long odeNumber);  
-  std::string findODEPath(LHCb::MuonTileID TS);
-  std::string findL1(LHCb::MuonTileID TS);
-  unsigned int findTSPosition(std::string ODEPath, LHCb::MuonTileID TSTile);
-  std::string findTSPath(std::string ODEPath, long TSPosition,int station); 
-  long channelsInL1BeforeODE(std::string L1Path,long ODENumber);	
-  unsigned int DAQaddress(LHCb::MuonTileID digitTile, long& L1Number, long& ODENumber);
-  std::string getBasePath(int station);  
-  std::vector<unsigned int> padsinTS(std::vector<unsigned int>& TSDigit, 
-                                   std::string TSPath);
-  std::vector<std::string> m_L1Name;
-  std::vector<std::string> m_ODEName;
-  std::vector<std::string> m_TELL1Name;
-  unsigned int m_ODENameStart[5][4][4];
-  unsigned int m_ODENameEnd[5][4][4];
-  std::vector<unsigned int> m_digitsInODE[180];
-  unsigned int firedInODE[180];
-  std::vector<unsigned int> m_ODEInL1[20];
-  std::vector<unsigned int> m_padInL1[20];  
+private: 
+  DeMuonDetector* m_muonDet;
+
+  std::vector<unsigned int> m_digitsInODE[MuonDAQHelper_maxODENumber];
+  std::vector<unsigned int> m_digitsInL1[MuonDAQHelper_maxTell1Number];
+  unsigned int firedInODE[MuonDAQHelper_maxODENumber];
+  unsigned int firedInPP[MuonDAQHelper_maxTell1Number*4];
+
+
+  std::vector<unsigned int> m_padInL1[MuonDAQHelper_maxTell1Number];  
+
+
   long m_TotL1Board;
-  long m_TotODEBoard;  
-  std::string basePath[5] ;
   unsigned int m_M1Tell1;
-  //unsigned int m_maxSubSectorInTS;
+
+  unsigned int m_vtype;
+  
   
 };
 #endif // MUONDIGITTORAWBUFFER_H

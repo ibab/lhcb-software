@@ -1,4 +1,4 @@
-// $Id: MuonDAQTest.cpp,v 1.3 2006-10-16 08:12:10 cattanem Exp $
+// $Id: MuonDAQTest.cpp,v 1.4 2008-04-02 11:52:05 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -64,7 +64,8 @@ StatusCode MuonDAQTest::execute() {
           <<  digitTile.nY() << "]" <<"time "<<(*idigit)->TimeStamp()<<
       endmsg;
   }
-    std::vector<LHCb::MuonTileID> decodingTile=m_MuonBuffer->getTile();
+    std::vector<LHCb::MuonTileID> decodingTile;
+	m_MuonBuffer->getTile(decodingTile);
     std::vector<LHCb::MuonTileID>::iterator jitile;
     for(jitile=decodingTile.begin();jitile<decodingTile.end();jitile++){
       LHCb::MuonTileID digitTile=(*jitile);
@@ -82,7 +83,7 @@ StatusCode MuonDAQTest::execute() {
     std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator ji;
     
     std::vector<std::pair<LHCb::MuonTileID,unsigned int> > 
-      decoding=m_MuonBuffer->getTileAndTDC();
+      decoding;m_MuonBuffer->getTileAndTDC(decoding);
     for(ji=decoding.begin();ji<decoding.end();ji++){
       std::pair<LHCb::MuonTileID,unsigned int> digit=(*ji);
       LHCb::MuonTileID digitTile=digit.first;

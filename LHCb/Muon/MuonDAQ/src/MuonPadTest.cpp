@@ -1,4 +1,4 @@
-// $Id: MuonPadTest.cpp,v 1.2 2006-10-16 08:12:10 cattanem Exp $
+// $Id: MuonPadTest.cpp,v 1.3 2008-04-02 11:52:05 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -51,7 +51,8 @@ StatusCode MuonPadTest::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  std::vector<LHCb::MuonTileID> decodingTile=m_MuonBuffer->getPads();
+  std::vector<LHCb::MuonTileID> decodingTile;
+	m_MuonBuffer->getPads(decodingTile);
   std::vector<LHCb::MuonTileID>::iterator ipad;
   SmartDataPtr<LHCb::MuonCoords> coord(eventSvc(),
                                  LHCb::MuonCoordLocation::MuonCoords);

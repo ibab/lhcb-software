@@ -1,4 +1,4 @@
-// $Id: MuonRec.h,v 1.1 2006-10-16 08:12:10 cattanem Exp $
+// $Id: MuonRec.h,v 1.2 2008-04-02 11:52:05 asatta Exp $
 #ifndef MUONREC_MUONREC_H 
 #define MUONREC_MUONREC_H 1
 
@@ -39,13 +39,15 @@ private:
 
   /// Copy MuonTileID from digits to coords with no logical map (1:1 copy)
   StatusCode addCoordsNoMap(LHCb::MuonCoords *coords, 
-                            std::vector<LHCb::MuonTileID>& tiles,
+                            std::vector<std::pair<LHCb::MuonTileID ,
+                            unsigned int> > & digit,
                             const int & station,
                             const int & region);
 
   /// Copy MuonTileID from digits to coord by crossing the digits
   StatusCode addCoordsCrossingMap(LHCb::MuonCoords *coords, 
-                                  std::vector<LHCb::MuonTileID>& tiles,
+                                  std::vector<std::pair<LHCb::MuonTileID, 
+                                  unsigned int> > &digit,
                                   const int & station,
                                   const int & region);
 
@@ -58,8 +60,9 @@ private:
   int m_NStation;
   // Number of regions
   int m_NRegion;
-DeMuonDetector* m_muonDetector;
-IMuonRawBuffer* m_muonBuffer;  
-
+  DeMuonDetector* m_muonDetector;
+  IMuonRawBuffer* m_muonBuffer;  
+  bool m_forceResetDAQ;
+  
 };
 #endif // MUONREC_MUONREC_H

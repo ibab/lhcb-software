@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.17 2007-06-06 14:26:10 cattanem Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.18 2008-04-02 11:52:05 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,7 @@
 
 // local
 #include "MuonDAQ/SortDigitInODE.h"
+#include "MuonDAQ/SortDigitInL1.h"
 #include "MuonDigitToRawBuffer.h"
 #include "MuonDAQ/MuonHLTDigitFormat.h"
 #include "MuonDet/MuonTSMap.h"
@@ -16,7 +17,7 @@
 #include "Event/RawBank.h"
 #include "Event/BankWriter.h"
 #include "Event/MuonDigit.h" 
-
+#include "Event/MuonBankVersion.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonDigitToRawBuffer
 //
@@ -34,12 +35,7 @@ MuonDigitToRawBuffer::MuonDigitToRawBuffer( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  basePath[0] = "/dd/Conditions/ReadoutConf/Muon/Cabling/M1/";
-  basePath[1] = "/dd/Conditions/ReadoutConf/Muon/Cabling/M2/";
-  basePath[2] = "/dd/Conditions/ReadoutConf/Muon/Cabling/M3/";
-  basePath[3] = "/dd/Conditions/ReadoutConf/Muon/Cabling/M4/";
-  basePath[4] = "/dd/Conditions/ReadoutConf/Muon/Cabling/M5/";
-
+  declareProperty("VType" , m_vtype=1) ;
 }
 //=============================================================================
 // Destructor
@@ -55,127 +51,25 @@ StatusCode MuonDigitToRawBuffer::initialize() {
 
 
   debug() << "==> Initialise" << endmsg;
+  m_muonDet=getDet<DeMuonDetector>(DeMuonLocation::Default);
+  m_TotL1Board=(m_muonDet->getDAQInfo())->TotTellNumber();
+  m_M1Tell1=(m_muonDet->getDAQInfo())->M1TellNumber();
 
-
- 
-  unsigned int ODEStart=0;
-  unsigned int ODEEnd=1;  
-  m_L1Name.resize(80);  
-  m_TotL1Board=0;
-  unsigned int L1Count=0;
-  m_TotODEBoard=0;
-  
-  for(int station=0;station<5;station++){
-    debug()<<"station number "<<station<<endmsg;
-    
-    std::string cablingBasePath=getBasePath(station);    
-    std::string cablingPath=cablingBasePath+"Cabling";
-    SmartDataPtr<MuonStationCabling>  cabling(detSvc(),
-                                              cablingPath);
-    if( 0 == cabling ) {
-      err() << cablingPath << " not found in XmlDDDB" << endmsg;
-      return StatusCode::FAILURE;
-    }
-    
-    m_TotL1Board=m_TotL1Board+cabling->getNumberOfL1Board();
-    if(station==0)m_M1Tell1=cabling->getNumberOfL1Board();
-    
-    
-    debug()<<"station path "<<cablingPath<<endmsg;    
-    debug()<<"station number "<<station<<" "<<
-      "L1number "<<  cabling->getNumberOfL1Board()<<endmsg;
-    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
-    
-      debug()<<"L1 number "<<cabling->getL1Name(L1Board)<<endmsg;
-      std::string L1path=cablingBasePath+
-        cabling->getL1Name(L1Board);
-      SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
-      m_TotODEBoard=m_TotODEBoard+l1->numberOfODE();
-      m_TELL1Name.push_back(L1path);      
-    }
-    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){      
-      //info()<<"L1 number "<<L1Board<<" "<<cabling->getL1Name(L1Board)<<endmsg;
-      L1Count++;
-      
-      std::string L1path=cablingBasePath+
-        cabling->getL1Name(L1Board);
-      SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);      
-      for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
-        std::string ODEpath=cablingBasePath
-          +l1->getODEName(ODEBoard);
-        //info()<<"ODE number "<<L1Board<<" "<<l1->getODEName(ODEBoard)<<endmsg;
-        SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);
-        if( 0 == ode ) {
-          err() << ODEpath << " not found in XmlDDDB" << endmsg;
-          return StatusCode::FAILURE;
-        }
-        long odenum=ode->getODESerialNumber();
-        m_ODEInL1[L1Count-1].push_back(odenum);        
-        long region=ode->region();  
-        debug()<<"ODE region "<<region<<endmsg;        
-        for(int quadrant=0;quadrant<4;quadrant++){
-          unsigned int index=station*16+region*4+quadrant; 
-          debug()<<" ode in quarter " <<quadrant 
-                 <<" "<<ode->isQuadrantContained(quadrant)<<endmsg;          
-          if(ode->isQuadrantContained(quadrant)){            
-            debug()<<"quadrant number "<<quadrant<<endmsg;
-            m_L1Name[index]=L1path; 
-            debug()<<"index "<<index<<" "<<L1path<<endmsg;
-          }          
-        }        
-      } 
-    }    
-  }
-  
-  
-  for(int station=0;station<5;station++){
-    std::string cablingBasePath=getBasePath(station);  
-    for(int region=0;region<4;region++){
-      for(int quadrant=0;quadrant<4;quadrant++){
-        int numODE=0;        
-        unsigned int index=station*16+region*4+quadrant; 
-        std::string L1path=m_L1Name[index];
-        SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
-        debug()<<"number of L1 "<<l1->numberOfODE()<<endmsg;  
-         debug()<<station<<" "<<region<<" "<<quadrant<<" "<<
-           L1path<<endmsg;
-         
-         for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
-           std::string ODEpath=cablingBasePath+
-             l1->getODEName(ODEBoard);
-           debug()<<" ode path "<<ODEpath<<endmsg;          
-           SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);          
-           if(ode->region()==region){
-             debug()<<" ode quadrant "<<
-              ode->isQuadrantContained(quadrant)<<endmsg;            
-             if(ode->isQuadrantContained(quadrant)){
-               debug()<<station<<" "<<region<<" "<<quadrant<<" "<<
-                 ODEpath<<endmsg;               
-               numODE++;
-               m_ODEName.push_back(ODEpath);               
-             }            
-             debug()<<numODE<<endmsg;             
-           }           
-         }         
-         m_ODENameStart[station][region][quadrant]=ODEStart;      
-         ODEEnd=ODEStart+numODE;
-         m_ODENameEnd[station][region][quadrant]=ODEEnd;
-         ODEStart=ODEEnd;
-      }
-      
-      
-    }    
-  }
   for(int i=0;i<m_TotL1Board;i++){
-    std::vector<unsigned int> listOfODE=m_ODEInL1[i];
-    std::vector<unsigned int>::iterator iODE;    
-     for(iODE=listOfODE.begin();iODE<listOfODE.end();iODE++){
-      unsigned int odenumber=(*iODE)-1;
+    unsigned int ODE_in_L1=(m_muonDet->getDAQInfo())->ODEInTell1(i);
+    
+    //std::vector<unsigned int> listOfODE=m_ODEInL1[i];
+    unsigned int iODE=0;    
+    for(iODE=0;iODE<ODE_in_L1;iODE++){
+      unsigned int odenumber=(m_muonDet->getDAQInfo())->getODENumberInTell1(i,iODE)-1;
+      
       m_digitsInODE[odenumber].resize(0);
       firedInODE[odenumber]=0;
-     }
+    }
+    for(int j=0;j<4;j++)firedInPP[i*4+j]=0;
+    
   }
-
+  
   debug()<<"board number "<<m_TotL1Board<<endmsg;
   
   
@@ -185,308 +79,19 @@ StatusCode MuonDigitToRawBuffer::initialize() {
 // Main execution
 //=============================================================================
 StatusCode MuonDigitToRawBuffer::execute() {
-
+ 
 
   debug() << "==> Execute" << endmsg;
  
-  LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-  LHCb::MuonDigits* digit = get<LHCb::MuonDigits>( LHCb::MuonDigitLocation::MuonDigit );
-  LHCb::MuonDigits::iterator idigit;
-  for(idigit=digit->begin();idigit<digit->end();idigit++){    
-    LHCb::MuonTileID digitTile=(*idigit)->key();
- //    debug()<<"digit tile "<<digitTile<<endmsg;	    
-//     debug()<<" digit tile "<<digitTile.layout()<<" "<<digitTile.station()
-//             <<" "<<digitTile.region()<<" "<<
-//        digitTile.quarter()<<" "<<digitTile.nX()<<" "<<digitTile.nY()<<endmsg;
-    unsigned int time=(*idigit)->TimeStamp();    
-    //time=0;    
-    long L1Number=0;
-    long ODENumber=0;    
-    long DigitOutputPosition=DAQaddress(digitTile,L1Number,ODENumber); 
-    debug()<<"L1Number "<<L1Number<<" "<<ODENumber<<endmsg;
-    debug()<<" digitOutputPosition "<<DigitOutputPosition<<endmsg;    
-    unsigned int digitInDAQ=0;
-    MuonHLTDigitFormat temp;
-    temp.setAddress(DigitOutputPosition);
-    temp.setTime(time);
-    digitInDAQ=temp.getWord();
-//     debug()<<" digit word "<<L1Number-1<<" "<<ODENumber-1<<" "<<
-//       temp.getAddress()<<endmsg;    
-    m_digitsInODE[ODENumber-1].push_back(digitInDAQ);  
-    firedInODE[ODENumber-1]++; 
-  }  
-  //  debug()<<" tot ODE "<<m_TotODEBoard<<endreq;
-  
-  for(int i=0;i<m_TotODEBoard;i++){
-    std::stable_sort(m_digitsInODE[i].begin(),
-                     m_digitsInODE[i].end(),SortDigitInODE());    
-  }
-  std::vector<unsigned  int>::iterator itDigit;
-  //now the pads can be defined....skip M1 whichis already in pads..
-  for(unsigned int i=m_M1Tell1;i<(unsigned int) m_TotL1Board;i++){
-    //get Tell1 information 
-    std::string L1path=m_TELL1Name[i];
-    SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
-    int station=l1->getStation();    
-    std::string cablingBasePath=getBasePath(station);
-    unsigned int padsInTell1=0;
-    //    debug()<<" tell1 "<<L1path<<" "<<station<<" "<<i<<endreq;    
-    //get ODE info
-    std::vector<unsigned int> listOfODE=m_ODEInL1[i];
-    std::vector<unsigned int>::iterator iODE; 
-    //unsigned int TSNumberInTell1=0;    
-    unsigned int maxPads=0;
-    unsigned int ODEBoard=0;
-    unsigned int TSInODE=0;
-    
-    //loop on ODE
-    for(iODE=listOfODE.begin();iODE<listOfODE.end();iODE++,ODEBoard++){
-      //      debug()<<i<<" ode board "<<ODEBoard<<" "<<listOfODE.size()<<endreq;
-      
-      std::string ODEpath=cablingBasePath
-        +l1->getODEName(ODEBoard);
-      SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);
-      //debug()<<" odename "<<ODEpath<<endreq;
-      
-      unsigned int odenumber=(*iODE)-1;
-      // how many digit in the TS?
-      TSInODE=ode->getTSNumber();
-      
-      std::string  TSPath= cablingBasePath+ode->getTSName(0);
-      SmartDataPtr<MuonTSMap>  TS(detSvc(),TSPath);
-      long channelInTS=TS->numberOfOutputSignal();
-      if(TS->numberOfLayout()==2){
-        maxPads=TS->gridXLayout(0)*TS->gridYLayout(1);         
-      }
-      else{
-        maxPads=channelInTS;         
-      }
-      
-      std::vector<unsigned int> list_input(channelInTS,0); 
-      //debug()<<" channelInTS "<<channelInTS<<endreq;      
-      //build header == channels fired for each ode
-      unsigned int TSnumberInODE=0;
-      for(itDigit=m_digitsInODE[odenumber].begin();
-          itDigit<m_digitsInODE[odenumber].end();
-          itDigit++){
-        MuonHLTDigitFormat temp(*itDigit);
-        unsigned int address=temp.getAddress();
-        if(itDigit==m_digitsInODE[odenumber].begin()){
-           TSnumberInODE=address/channelInTS;
-        }
-        //debug()<<" address "<<address<<" "<<TSnumberInODE<<endreq;
-        bool swap=true;
-        
-        if(channelInTS*(TSnumberInODE+1)<=address||
-           itDigit==m_digitsInODE[odenumber].end()-1){
-          // info()<<" entra qui "<<TSnumberInODE<<endreq;
-          if(itDigit==(m_digitsInODE[odenumber].end()-1)&&
-             address<channelInTS*(TSnumberInODE+1)) {            
-              list_input[address-channelInTS*TSnumberInODE]=1;
-              swap=false;              
-          }          
-          std::string TSPath=cablingBasePath+
-            ode->getTSName(TSnumberInODE);     
-          // debug()<<" TSPath "<<  TSPath <<endreq;          
-          std::vector<unsigned int> resultsAddress=
-            padsinTS(list_input, 
-                     TSPath);
-          //store the output
-          if(resultsAddress.size()){            
-            for(std::vector<unsigned int>::iterator itpad=
-                  resultsAddress.begin();itpad<resultsAddress.end();
-                itpad++){              
-              m_padInL1[i].push_back(padsInTell1+maxPads*TSnumberInODE+
-                                     (*itpad));              
-            }
-          }
-          
-          //add te offset padsInTell1;
-          //padsInTell1=padsInTell1+maxPads;          
-          //clear the area
-          std::vector<unsigned int>::iterator itClear;          
-          for(itClear= list_input.begin();itClear<list_input.end();itClear++){
-            *itClear=0;            
-          }          
-          TSnumberInODE=address/channelInTS;
-          if(swap) {  
-            //  debug()<<"adding in position "<<
-            //address-channelInTS*TSnumberInODE
-            //     <<" "<<address<<endreq;
-            
-             list_input[address-channelInTS*TSnumberInODE]=1;
-             //add the pads mechanism....
-             if(itDigit==m_digitsInODE[odenumber].end()-1){               
-                std::vector<unsigned int> resultsAddress=
-               padsinTS(list_input, 
-                        TSPath);
-                if(resultsAddress.size()){            
-                  for(std::vector<unsigned int>::iterator itpad=
-                        resultsAddress.begin();
-                      itpad<resultsAddress.end();itpad++){          
-                    m_padInL1[i].push_back(padsInTell1+
-                                           maxPads*TSnumberInODE+
-                                           (*itpad));              
-                  }
-                }
-             }
-          }          
-        }else{
-          list_input[address-channelInTS*TSnumberInODE]=1;          
-        }        
-      }
-      padsInTell1=padsInTell1+maxPads*TSInODE;
-      
-      //info()<<" eccoci "<<endreq;      
-    }    
-  }
-  
-  
-  
-  for(unsigned int i=0;i<(unsigned int) m_TotL1Board;i++){
-    std::vector<unsigned int> listOfODE=m_ODEInL1[i];
-    std::vector<unsigned int>::iterator iODE;    
-    unsigned int totalChInL1=0;    
-    unsigned int odeInTell1=0;    
-    for(iODE=listOfODE.begin();iODE<listOfODE.end();iODE++){
-      unsigned int odenumber=(*iODE);      
-      //build header == channels fired for each ode
-      unsigned int firedChannels=firedInODE[odenumber-1];     
-      //fill in bank.....
-      totalChInL1=totalChInL1+firedChannels;
-      odeInTell1++;      
-    }
-    // now the dimension of the bank can be fixed....
-    //the algo if (odeInTell1+2*totalChInL1+0.5*totalChInL1)/4
-    unsigned int bankLenght=0;
-    unsigned int bankLenPad=0;
-    //  info()<<" pad lenght "<<i<<" "<<m_padInL1[i].size()<<endreq;    
-    if(i>=m_M1Tell1)bankLenPad=(m_padInL1[i].size()+1)*16;
-    
-    unsigned int bankLenAdd=odeInTell1*8+8*totalChInL1;
-    unsigned int bankLenTime=4*totalChInL1;
+  //MuonBankVersion::versions v;
+  // v=m_vtype;
+  if(m_vtype==MuonBankVersion::DC06) {
+    ProcessDC06();
+  }else if(m_vtype==MuonBankVersion::v1){
+    ProcessV1();
 
-
-    //info()<<"ode in Tell1 "<<odeInTell1<<" tot ch "<<totalChInL1<<endmsg  ;
-     if(bankLenPad%32!=0){
-      bankLenght=bankLenght+bankLenPad/32+1;
-    }else{
-      bankLenght=bankLenght+bankLenPad/32;      
-    }
-    if(bankLenAdd%32!=0){
-      bankLenght=bankLenght+bankLenAdd/32+1;
-    }else{
-      bankLenght=bankLenght+bankLenAdd/32;      
-    }
-    if(bankLenTime%32!=0){
-      bankLenght=bankLenght+bankLenTime/32+1;
-    }else{
-      bankLenght=bankLenght+bankLenTime/32;      
-    }
-
-    //    info()<<"Tell 1 "<<i<<" "<<bankLenPad<<" "
-    //<<bankLenAdd<<" "<<bankLenTime<<" "<<bankLenght<<endmsg;  
-    LHCb::BankWriter bank(bankLenght);
-    if(i>=m_M1Tell1){
-      short padSize=m_padInL1[i].size();      
-      bank<<padSize;
-      for(std::vector<unsigned int>::iterator itPad=m_padInL1[i].begin();
-          itPad<m_padInL1[i].end();itPad++){
-        
-        //fill the pad address
-        short padADD=*itPad;
-        bank<<padADD;
-      }     
-    }
-    //padding at the end
-    short nullWord=0;    
-    if(bankLenPad%32!=0)bank<<nullWord; 
-    //  info()<<"after creation "<<sizeof(int)<<" "<<sizeof(char)<<endmsg;
-    for(iODE=listOfODE.begin();iODE<listOfODE.end();iODE++){
-      unsigned int odenumber=(*iODE);
-      //build header == channels fired for each ode
-      unsigned int firedChannels=firedInODE[odenumber-1];     
-      //info()<<" fired channels "<<firedChannels<<" "<<odenumber<<endmsg;
-      // //fill in bank.....
-      unsigned char fired=(unsigned char) firedChannels;
-      bank<<fired;      
-    }
-    //info()<<"after fired "<<bank.dataBank().size()<<endmsg;
-    
-    for(iODE=listOfODE.begin();iODE<listOfODE.end();iODE++){
-      unsigned int odenumber=(*iODE)-1;
-      //      unsigned int firedChannels=firedInODE[odenumber];
-      for(itDigit=m_digitsInODE[odenumber].begin();
-          itDigit<m_digitsInODE[odenumber].end();
-          itDigit++){            
-        MuonHLTDigitFormat temp(*itDigit);
-        unsigned int adress=temp.getAddress();
-        unsigned char chad=(unsigned char) adress;        
-        bank<< chad;        
-      }
-    }
-    // padding if needed 
-    if(bankLenAdd%32!=0){
-      unsigned int padding=(bankLenAdd%32)/8;
-      for(unsigned int addpad=0;addpad<4-padding;addpad++){  
-        //the padding is set to zero 
-        unsigned char chad=(unsigned char) 0;
-        bank<< chad;  
-      }      
-    }
-    
-    //verbose()<<" after address "<<endmsg;
-    bool even=false;
-    unsigned char time=0;
-    unsigned int timetemp=0;
-    
-    for(iODE=listOfODE.begin();iODE<listOfODE.end();iODE++){
-      unsigned int odenumber=(*iODE)-1;
-      //      unsigned int firedChannels=firedInODE[odenumber];    
-      for(itDigit=m_digitsInODE[odenumber].begin();
-          itDigit<m_digitsInODE[odenumber].end();
-          itDigit++){
-        MuonHLTDigitFormat temp1(*itDigit);        
-        unsigned int time1=temp1.getTime();
-        if(even){
-          timetemp=timetemp+(time1<<4);          
-        }else{
-          timetemp=time1;          
-        }
-        //        info()<<" time .."<<even <<" "<<(unsigned int )time1<<" "<<
-        //  (unsigned int)time<<endmsg;
-        time=(unsigned char) timetemp;
-      
-        if(even)bank<<time;  
-        even=!even;
-        //  info()<<" time .."<<even <<" "<<(unsigned int )time1<<" "<<
-        // (unsigned int)time<<endmsg;
-      }
-    }
-    if(even)bank<<time;
-    //fill with zeros the padding
-    if(bankLenTime%32!=0){
-      unsigned int padding=(bankLenTime%32)/8;
-      for(unsigned int addpad=0;addpad<padding;addpad++){  
-        //the padding is set to zero 
-        unsigned char chad=(unsigned char) 0;
-        bank<< chad;  
-      }      
-    }
-    
-    raw->addBank(i,RawBank::Muon,1,bank.dataBank());
   }
-    
-  for(int i=0;i<m_TotL1Board;i++){
-    std::vector<unsigned int> listOfODE=m_ODEInL1[i];
-    std::vector<unsigned int>::iterator iODE;    
-    m_padInL1[i].clear();    
-     for(iODE=listOfODE.begin();iODE<listOfODE.end();iODE++){
-      unsigned int odenumber=(*iODE)-1;
-      m_digitsInODE[odenumber].resize(0);
-      firedInODE[odenumber]=0;
-     }
-  }
+  
   debug()<<" exit "<<endmsg;
   return StatusCode::SUCCESS;
 };
@@ -502,300 +107,7 @@ StatusCode MuonDigitToRawBuffer::finalize() {
 
 }
 
-//=============================================================================
-
-
-LHCb::MuonTileID  MuonDigitToRawBuffer::findTS(LHCb::MuonTileID digit)
-{
-  unsigned int station=digit.station();
-  
-  unsigned int region=digit.region();
-  
- // get TS layout in region from L1
-  unsigned int index=station*16+region*4;  
-  std::string L1path=m_L1Name[index];
-  //debug()<<L1path<<" "<<station<<" "<<region<<endmsg;
-  SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
-  unsigned int TSLayoutX=(unsigned int)l1->getTSLayoutX(region);
-  unsigned int TSLayoutY=(unsigned int)l1->getTSLayoutY(region);
-  MuonLayout TSLayout(TSLayoutX,TSLayoutY);
-  //  debug()<<"TS Layout "<<TSLayoutX<<" "<<TSLayoutY<<endmsg;  
-  LHCb::MuonTileID TSTile=TSLayout.contains(digit);
-  //TilePrintOut(TSTile);  
-  return TSTile;  
-};
-
-
-std::string MuonDigitToRawBuffer::findODEPath(LHCb::MuonTileID TS)
-{
- 
-  unsigned int station=TS.station();  
-  unsigned int region=TS.region();
-  unsigned int quadrant=TS.quarter();
-  int odeStart=m_ODENameStart[station][region][quadrant];
-  int odeEnd=m_ODENameEnd[station][region][quadrant];
-  //verbose()<<station<<" "<<region<<" "<<quadrant<<endmsg;
-  //verbose()<<odeStart<<" "<<odeEnd<<" "<<m_ODEName[odeStart]<<endmsg;
-  //TilePrintOut(TS);
-  
-  for(int ode=odeStart;ode<odeEnd;ode++){
-    std::string odePath=m_ODEName[ode];
-    //verbose()<<odePath<<endmsg;    
-    //std::cout<<odePath<<std::endl;    
-    SmartDataPtr<MuonODEBoard>  odeBoard(detSvc(),odePath);
-    //verbose()<<odeBoard->isTSContained(TS)<<endmsg;  
-    if(odeBoard->isTSContained(TS))return odePath;
-  }
-  return NULL;
-  
-};
-
-
-unsigned int MuonDigitToRawBuffer::findODENumber(std::string odePath)
-{
-  SmartDataPtr<MuonODEBoard>  ode(detSvc(),odePath);
-  unsigned int ODENumber=ode->getODESerialNumber();
-  return ODENumber;
-  
-
-}
-
-
-unsigned int MuonDigitToRawBuffer::findODEPosition(std::string L1Path, long odeNumber)
-{
-  SmartDataPtr<MuonL1Board>  l1(detSvc(),L1Path);
-  return l1->getODEPosition(odeNumber);
-}
-
-std::string MuonDigitToRawBuffer::findL1(LHCb::MuonTileID TS)
-{
-  unsigned int station=TS.station();
-  unsigned int region=TS.region();
-  unsigned int quadrant=TS.quarter();
-  unsigned int index=station*16+region*4+quadrant;
-  std::string L1Path=m_L1Name[index];
-  return L1Path;  
-};
-
-
-
-unsigned int MuonDigitToRawBuffer::findTSPosition(std::string ODEPath, 
-                                          LHCb::MuonTileID TSTile)
-{
-  unsigned int quadrant=TSTile.quarter();
-  unsigned int gridx=TSTile.nX();
-  unsigned int gridy=TSTile.nY();
-  
-  SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEPath);
-  //info()<<gridx<<" "<<gridy<<endmsg;
-  
-  for(int TS=0;TS<ode->getTSNumber();TS++){
-    //  info()<<TS<<" "<<ode->getTSGridX(TS)<<endmsg;
-    if((unsigned int)ode->getTSQuadrant(TS)==quadrant){
-      if((unsigned int)ode->getTSGridX(TS)==gridx){
-        if((unsigned int)ode->getTSGridY(TS)==gridy){
-
-          return TS;
-          
-        }          
-      }      
-    }    
-  } 
-  
-  err()<<"error in finding TS postion "<<endmsg;
-  
-  return 100000;  
-};
-std::string MuonDigitToRawBuffer::findTSPath(std::string ODEPath, 
-                                              long TSPosition,int station){
-  
-  
-  SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEPath);
-  std::string base=getBasePath(station); 
-   std::string  TSPath=ode->getTSName(TSPosition);
-  //info()<<TSPosition<<ode->name()<<endmsg;
-  
-  //std::string base="/dd/Cabling/Muon/M4/";
-  
-  //info()<<base<<" "<<TSPosition<<TSPath<<endmsg;
-  std::string out=base+TSPath;    
-  return out;
-}; 
-
-
-unsigned int MuonDigitToRawBuffer::findDigitInTS(std::string TSPath,
-                                         LHCb::MuonTileID TSTile, 
-                                         LHCb::MuonTileID digit){
-    
-  SmartDataPtr<MuonTSMap>  TS(detSvc(),TSPath);
-  unsigned int TSLayoutX=TSTile.layout().xGrid(); 
-  unsigned int TSLayoutY=TSTile.layout().yGrid(); 
-
-  unsigned int layoutX=digit.layout().xGrid();  
-  unsigned int layoutY=digit.layout().yGrid();
-
-  //unsigned int gridx=digit.nX();
-  //unsigned int gridy=digit.nY();
-
-  // calculate the relative position of the digit in the TS
-  unsigned int xScaleFactor=layoutX/TSLayoutX;
-  unsigned int yScaleFactor=layoutY/TSLayoutY;
-  
-  unsigned int gridx=digit.nX()- xScaleFactor*TSTile.nX();
-  unsigned int gridy=digit.nY()- yScaleFactor*TSTile.nY();
-
-  //  info()<<"ale "<<TSLayoutX<<" "<<layoutX<<" "<<digit.nX()
-  // <<" "<<gridx<<endmsg;
-  //info()<<"ale "<<TSLayoutY<<" "<<layoutY<<" "<<digit.nY()
-  // <<" "<<gridy<<endmsg;
-  
-  int layout=-1;
-
-  // calculate the relative position of the digit in the TS
-
-  
-  for(int i=0;i<TS->numberOfLayout();i++){
-    if((unsigned int)TS->gridXLayout(i)==xScaleFactor&&
-       (unsigned int)TS->gridYLayout(i)==yScaleFactor){
-      layout=i;      
-    }    
-  }
-  // info()<<"layout "<<layout<<endmsg;
-  
-  for(int i=0;i<TS->numberOfOutputSignal();i++){
-    if(TS->layoutOutputChannel(i)==layout){
-      if((unsigned int)TS->gridXOutputChannel(i)==gridx){
-        if((unsigned int)TS->gridYOutputChannel(i)==gridy){
-          //                 info()<<"digit in ts "<<i<<endmsg;
-          return i;
-          
-        }
-      }      
-    }    
-  }
-  err()<<" error in findging digit in TS "<<endmsg;
-  err()<<" position in  TS should be "<<gridx<<" "<<
-    gridy<<" "<<layout<<endmsg;
-  err()<<" lauoyt should be  "<<xScaleFactor<<" "<<
-    yScaleFactor<<endmsg;
-
-  
-  return 100000;
-  
-};  
-
-
-
-long MuonDigitToRawBuffer::channelsInL1BeforeODE(std::string L1Path,
-                                                 long ODENumber)
-{
-  
-  SmartDataPtr<MuonL1Board>  l1(detSvc(),L1Path);
-  long station=l1->getStation();
-  
-  std::string base=getBasePath(station);  
-  long stop=findODEPosition(L1Path, ODENumber);  
-  long channels=0;
-  //  info()<<"stop "<<station<<" "<<
-  //stop<<" "<<ODENumber<<l1->getODEName(0)<<endmsg;  
-  for(int ODEBoard=0;ODEBoard<stop;ODEBoard++){    
-    std::string ODEpath=base+l1->getODEName(ODEBoard);
-    //debug()<< ODEpath <<endmsg;
-    
-    SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);
-    long TSnumber=ode->getTSNumber();
-    std::string TSPath=base+ode->getTSName(0);
-    SmartDataPtr<MuonTSMap>  TS(detSvc(),TSPath);
-    long channelInTS=TS->numberOfOutputSignal();
-    long channelInODE=channelInTS*TSnumber;   
-    //debug()<<"channel in ODE "<<channelInODE<<endmsg;
-    
-    channels=channels+channelInODE;    
-  } 
-  return channels;  
-};
-
-
-
-
-std::string MuonDigitToRawBuffer::getBasePath(int station)
-{
-  return basePath[station];
-  
-};
-
-
-unsigned int MuonDigitToRawBuffer::DAQaddress(LHCb::MuonTileID digitTile, long& L1Number, 
-                                      long& ODENumber)
-{
-  
-  debug()<<"************** start coding a digit "<<endmsg; 
-  //digitTile.printOut(info()<<"digit tile ")<<endmsg;  
-  bool print=false;
-   if(print)
-  TilePrintOut(digitTile);
-  long station=digitTile.station();
-  LHCb::MuonTileID TS=findTS(digitTile);
-  if(print){
-    debug()<<"digit is contained in TS "<<endmsg;
-    TilePrintOut(TS);
-  }
-  
-  std::string L1Path=findL1(TS);
-  if(print)debug()<<"the TS is contained in L1 "<<L1Path<<endmsg;
-  // return 1;
-  SmartDataPtr<MuonL1Board>  l1(detSvc(),L1Path);
-  if(print)debug()<<"l1 "<<endmsg;
-  //return 1;
-  
-  if(print)debug()<<" station "<<l1->getStation()<<endmsg;
-  //long 
-  L1Number=l1->L1Number();
-  std::string ODEPath= findODEPath(TS);
-
-  if(print)
-    debug()<<"the TS is contained in ODE "<<ODEPath<<endmsg;      
-  SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEPath);
-  ODENumber=findODENumber(ODEPath);
-  unsigned int ODESerialNumber=findODEPosition(L1Path, ODENumber); 
-  if(print)debug()<<"ODE= "<<ODENumber<<" "<<ODESerialNumber<<endmsg;
-  unsigned int TSSerialNumber=findTSPosition(ODEPath,TS);
-  if(print)
-    debug()<<"the TS position is ODE is = "<<TSSerialNumber<<endmsg;
-  std::string TSPath= findTSPath(ODEPath,TSSerialNumber,station);  
-  //  debug()<<"the TS map is located in  "<<TSPath<<endmsg;
-  // debug()<<" station "<<l1->getStation()<<endmsg;
-      
-  unsigned int DigitPosition=findDigitInTS(TSPath,TS,digitTile); 
-  SmartDataPtr<MuonTSMap>  TSMap(detSvc(),TSPath);    
-  unsigned int digitInODE=TSSerialNumber*TSMap->numberOfOutputSignal();
-  //debug()<<" the channels in ODE before the TS are "<<
-  //  digitInODE<<endmsg;
-  unsigned int DigitOutputPosition=digitInODE+DigitPosition;
-  if(print)
-    info()<<" the output position in L1 of the digit is "<<
-      DigitOutputPosition<<endmsg;
-  return DigitOutputPosition;  
-};
-
-
-
-void MuonDigitToRawBuffer::TilePrintOut(LHCb::MuonTileID digitTile)
-{
-  
-  info()<< "["  <<  digitTile.layout() << ","
-       <<  digitTile.station() << ","
-       <<  digitTile.region() << ","
-       <<  digitTile.quarter() << ","
-       <<  digitTile.nX() << ","
-     <<  digitTile.nY() << "]" <<endmsg;
-};
-
-
-
-
-
-std::vector<unsigned int> MuonDigitToRawBuffer::padsinTS(
+/*std::vector<unsigned int> MuonDigitToRawBuffer::padsinTS(
                                                          std::vector<unsigned 
                                                          int>& TSDigit,
                                                          std::string TSPath){
@@ -908,3 +220,590 @@ std::vector<unsigned int> MuonDigitToRawBuffer::padsinTS(
   return list_of_pads;  
 }
 
+*/
+
+
+
+
+
+
+///
+StatusCode MuonDigitToRawBuffer::ProcessDC06()
+{
+
+  StatusCode sc=StatusCode::FAILURE;
+  
+  LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+
+  sc=ProcessDigitDC06();
+  
+  sc=ProcessPads();
+  
+  
+  for(unsigned int i=0;i<(unsigned int) m_TotL1Board;i++){   
+    unsigned int ODE_in_L1=(m_muonDet->getDAQInfo())->ODEInTell1(i);
+    unsigned int totalChInL1=0;    
+    unsigned int odeInTell1=0;    
+    
+    //std::vector<unsigned int> listOfODE=m_ODEInL1[i];
+    unsigned int iODE=0;    
+    for(iODE=0;iODE<ODE_in_L1;iODE++){
+      unsigned int odenumber=(m_muonDet->getDAQInfo())->getODENumberInTell1(i,iODE);
+      //build header == channels fired for each ode
+      unsigned int firedChannels=firedInODE[odenumber-1];     
+      //fill in bank.....
+      totalChInL1=totalChInL1+firedChannels;
+      odeInTell1++;      
+    }
+    // now the dimension of the bank can be fixed....
+    //the algo if (odeInTell1+2*totalChInL1+0.5*totalChInL1)/4
+    unsigned int bankLenght=0;
+    unsigned int bankLenPad=0;
+    //  info()<<" pad lenght "<<i<<" "<<m_padInL1[i].size()<<endreq;    
+    if(i>=m_M1Tell1)bankLenPad=(m_padInL1[i].size()+1)*16;
+    
+    unsigned int bankLenAdd=odeInTell1*8+8*totalChInL1;
+    unsigned int bankLenTime=4*totalChInL1;
+
+
+    //info()<<"ode in Tell1 "<<odeInTell1<<" tot ch "<<totalChInL1<<endmsg  ;
+     if(bankLenPad%32!=0){
+      bankLenght=bankLenght+bankLenPad/32+1;
+    }else{
+      bankLenght=bankLenght+bankLenPad/32;      
+    }
+    if(bankLenAdd%32!=0){
+      bankLenght=bankLenght+bankLenAdd/32+1;
+    }else{
+      bankLenght=bankLenght+bankLenAdd/32;      
+    }
+    if(bankLenTime%32!=0){
+      bankLenght=bankLenght+bankLenTime/32+1;
+    }else{
+      bankLenght=bankLenght+bankLenTime/32;      
+    }
+
+    //    info()<<"Tell 1 "<<i<<" "<<bankLenPad<<" "
+    //<<bankLenAdd<<" "<<bankLenTime<<" "<<bankLenght<<endmsg;  
+    LHCb::BankWriter bank(bankLenght);
+    if(i>=m_M1Tell1){
+      short padSize=m_padInL1[i].size();      
+      bank<<padSize;
+      for(std::vector<unsigned int>::iterator itPad=m_padInL1[i].begin();
+          itPad<m_padInL1[i].end();itPad++){
+        
+        //fill the pad address
+        short padADD=*itPad;
+        bank<<padADD;
+      }     
+    }
+    //padding at the end
+    short nullWord=0;    
+    if(bankLenPad%32!=0)bank<<nullWord; 
+    //  info()<<"after creation "<<sizeof(int)<<" "<<sizeof(char)<<endmsg;
+    for(iODE=0;iODE<ODE_in_L1;iODE++){
+      unsigned int odenumber=(m_muonDet->getDAQInfo())->getODENumberInTell1(i,iODE);
+      
+      //build header == channels fired for each ode
+      unsigned int firedChannels=firedInODE[odenumber-1];     
+      // //fill in bank.....
+      unsigned char fired=(unsigned char) firedChannels;
+      bank<<fired;      
+    }
+    std::vector<unsigned int>::iterator itDigit;
+    
+
+    for(iODE=0;iODE<ODE_in_L1;iODE++){
+      unsigned int odenumber=(m_muonDet->getDAQInfo())->getODENumberInTell1(i,iODE)-1;   
+      
+
+      for(itDigit=m_digitsInODE[odenumber].begin();
+          itDigit<m_digitsInODE[odenumber].end();
+          itDigit++){            
+        MuonHLTDigitFormat temp(*itDigit,MuonBankVersion::DC06);
+        unsigned int adress=temp.getAddress();
+        unsigned char chad=(unsigned char) adress;        
+        bank<< chad;        
+      }
+    }
+    // padding if needed 
+    if(bankLenAdd%32!=0){
+      unsigned int padding=(bankLenAdd%32)/8;
+      for(unsigned int addpad=0;addpad<4-padding;addpad++){  
+        //the padding is set to zero 
+        unsigned char chad=(unsigned char) 0;
+        bank<< chad;  
+      }      
+    }
+    
+
+    bool even=false;
+    unsigned char time=0;
+    unsigned int timetemp=0;
+  
+    for(iODE=0;iODE<ODE_in_L1;iODE++){
+      unsigned int odenumber=(m_muonDet->getDAQInfo())->getODENumberInTell1(i,iODE)-1; 
+
+
+      for(itDigit=m_digitsInODE[odenumber].begin();
+          itDigit<m_digitsInODE[odenumber].end();
+          itDigit++){
+        MuonHLTDigitFormat temp1(*itDigit,MuonBankVersion::DC06);        
+        unsigned int time1=temp1.getTime();
+        if(even){
+          timetemp=timetemp+(time1<<4);          
+        }else{
+          timetemp=time1;          
+        }
+
+        time=(unsigned char) timetemp;
+      
+        if(even)bank<<time;  
+        even=!even;
+
+      }
+    }
+    if(even)bank<<time;
+    //fill with zeros the padding
+    if(bankLenTime%32!=0){
+      unsigned int padding=(bankLenTime%32)/8;
+      for(unsigned int addpad=0;addpad<padding;addpad++){  
+        //the padding is set to zero 
+        unsigned char chad=(unsigned char) 0;
+        bank<< chad;  
+      }      
+    }
+    
+    raw->addBank(i,RawBank::Muon,1,bank.dataBank());
+  }
+    
+  for(int i=0;i<m_TotL1Board;i++){
+    unsigned int iODE=0;    
+    m_padInL1[i].clear();
+    unsigned int ODE_in_L1=(m_muonDet->getDAQInfo())->ODEInTell1(i);
+
+    for(iODE=0;iODE<ODE_in_L1;iODE++){
+      unsigned int odenumber=(m_muonDet->getDAQInfo())->getODENumberInTell1(i,iODE)-1; 
+      m_digitsInODE[odenumber].resize(0);
+      firedInODE[odenumber]=0;
+    }
+  }
+  return StatusCode::SUCCESS;
+  
+}
+StatusCode MuonDigitToRawBuffer::ProcessV1()
+{
+
+  StatusCode sc=StatusCode::FAILURE;
+  
+  LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+
+  sc=ProcessDigitV1();
+  
+  sc=ProcessPads();
+  unsigned int pp_counter[4];
+  
+  
+  
+  for(unsigned int i=0;i<(unsigned int) m_TotL1Board;i++){   
+    for(int pp=0;pp<4;pp++)pp_counter[pp]=firedInPP[i*4+pp];
+    unsigned int totHit=0;
+    for(int pp=0;pp<4;pp++)totHit=totHit+pp_counter[pp];
+    
+    unsigned int totalChInL1=0;    
+    unsigned int odeInTell1=0;    
+    
+    // now the dimension of the bank can be fixed....
+    //the algo if (odeInTell1+2*totalChInL1+0.5*totalChInL1)/4
+    unsigned int bankLenght=0;
+    unsigned int bankLenPad=0;
+    //  info()<<" pad lenght "<<i<<" "<<m_padInL1[i].size()<<endreq;    
+    bankLenPad=(m_padInL1[i].size()+1)*16+16;
+    totalChInL1=(m_digitsInL1[i].size());
+    unsigned int bankLenHit=16*totalChInL1+16*4;
+    
+    if(totHit!= totalChInL1){
+      err()<< " wrong # hit in L1: cross check failed"<<endreq;
+      err()<<totHit<<" "<<totalChInL1<<endreq;
+      
+      return StatusCode::FAILURE;
+    }
+    
+    
+    //info()<<"ode in Tell1 "<<odeInTell1<<" tot ch "<<totalChInL1<<endmsg  ;
+    if(bankLenPad%32!=0){
+      bankLenght=bankLenght+bankLenPad/32+1;
+    }else{
+      bankLenght=bankLenght+bankLenPad/32;      
+    }
+    if(bankLenHit%32!=0){
+      bankLenght=bankLenght+bankLenHit/32+1;
+    }else{
+      bankLenght=bankLenght+bankLenHit/32;      
+    }
+
+
+    //    info()<<"Tell 1 "<<i<<" "<<bankLenPad<<" "
+    //<<bankLenAdd<<" "<<bankLenTime<<" "<<bankLenght<<endmsg;  
+    LHCb::BankWriter bank(bankLenght);
+
+    short padSize=m_padInL1[i].size();  
+    short evt=0;
+    
+    bank<<padSize;
+    bank<<evt;
+    debug()<< i<<" pad size "<<padSize<<" "<<bankLenPad<<endreq;
+    
+    for(std::vector<unsigned int>::iterator itPad=m_padInL1[i].begin();
+        itPad<m_padInL1[i].end();itPad++){
+      
+      //fill the pad address
+      short padADD=*itPad;
+        bank<<padADD;
+    }     
+    
+    //padding at the end
+    short nullWord=0;    
+    if(bankLenPad%32!=0)bank<<nullWord; 
+
+    std::vector<unsigned int>::iterator itHit;
+    
+
+    //  info()<<"after creation "<<sizeof(int)<<" "<<sizeof(char)<<endmsg;
+    for(unsigned int pp_data=0;pp_data<4;pp_data++)
+    {
+        bank<<(short)pp_counter[pp_data];
+        unsigned int hit_counter=0;
+        if(pp_data==0) itHit=m_digitsInL1[i].begin();
+        for(hit_counter;  hit_counter<pp_counter[pp_data];hit_counter++)
+          {
+             short hit=(short) (*itHit);
+             debug()<<"'digit written "<<(hit&0x0FFF)<<endreq;
+             bank<<hit;
+             itHit++;
+             
+          }
+              
+
+    }
+    
+
+    
+//     bank<<(short)pp_counter[0];
+//     unsigned int hit_counter=1;
+//     unsigned int pp_data=0;
+//     info()<<" pp data "<<pp_counter[0]<<" "<<pp_counter[1]<<" "<<pp_counter[2]<<" "<<pp_counter[3]<<endreq;
+//     info()<<" data in bank "<<(bank.dataBank())[1]<<endreq;
+    
+//     for(std::vector<unsigned int>::iterator itHit=m_digitsInL1[i].begin();
+//         itHit<m_digitsInL1[i].end();itHit++){
+//       short hit=(short) (*itHit);
+//       // hit_counter++;
+//       if(hit_counter<=pp_counter[pp_data])
+//       {
+//         bank<<hit;
+//       }else if(hit_counter>pp_counter[pp_data]){
+//         for(int ppl=pp_data+1;ppl<4;ppl++)
+//         {
+//           pp_data++;
+//           bank<<(short)pp_counter[ppl];
+//           if(pp_counter[ppl]>0) {
+//             bank<<hit; 
+//             hit_counter=1;
+//             break;
+//           }
+          
+//         }
+        
+        
+//         /*pp_data++;
+//         bank<<(short)pp_counter[pp_data];
+//         hit_counter=0; 
+//         if(pp_counter[pp_data]>0) bank<<hit;*/
+//       }
+      
+      
+      
+//       hit_counter++;
+    
+//     }
+    
+    
+    if(bankLenHit%32!=0)bank<<nullWord; 
+    raw->addBank(i,RawBank::Muon,MuonBankVersion::v1,bank.dataBank());
+  }
+  
+    
+  for(int i=0;i<m_TotL1Board;i++){
+    unsigned int iODE=0;    
+    //  m_padInL1[i].clear();
+    //m_digitsInL1[i].clear();
+     m_padInL1[i].resize(0);
+    m_digitsInL1[i].resize(0);
+    
+    unsigned int ODE_in_L1=(m_muonDet->getDAQInfo())->ODEInTell1(i);
+
+    for(iODE=0;iODE<ODE_in_L1;iODE++){
+      unsigned int odenumber=(m_muonDet->getDAQInfo())->getODENumberInTell1(i,iODE)-1; 
+      m_digitsInODE[odenumber].resize(0);
+      firedInODE[odenumber]=0;
+     
+      
+    }
+    for(int j=0;j<4;j++){
+      firedInPP[i*4+j]=0;
+      
+    }
+  }
+  return StatusCode::SUCCESS;
+  
+}
+
+
+
+
+
+StatusCode MuonDigitToRawBuffer::ProcessDigitDC06()
+{
+  
+  LHCb::MuonDigits* digit = get<LHCb::MuonDigits>( LHCb::MuonDigitLocation::MuonDigit );
+  LHCb::MuonDigits::iterator idigit;
+  for(idigit=digit->begin();idigit<digit->end();idigit++){    
+    LHCb::MuonTileID digitTile=(*idigit)->key();
+    unsigned int time=(*idigit)->TimeStamp();    
+    //time=0;    
+    long L1Number=0;
+    long ODENumber=0;    
+    long DigitOutputPosition=(m_muonDet->getDAQInfo())->DAQaddressInODE(digitTile,L1Number,ODENumber,false); 
+    if( DigitOutputPosition>=192)info()<<" che diavolo succede "<<endreq;
+    
+    debug()<<"L1Number "<<L1Number<<" "<<ODENumber<<endmsg;
+    debug()<<" digitOutputPosition "<<DigitOutputPosition<<endmsg;    
+    unsigned int digitInDAQ=0;
+    MuonHLTDigitFormat temp(MuonBankVersion::DC06);
+    temp.setAddress(DigitOutputPosition);
+    temp.setTime(time);
+    digitInDAQ=temp.getWord();
+    //     debug()<<" digit word "<<L1Number-1<<" "<<ODENumber-1<<" "<<
+    //       temp.getAddress()<<endmsg;    
+    m_digitsInODE[ODENumber-1].push_back(digitInDAQ);  
+    firedInODE[ODENumber-1]++; 
+  }  
+  //  debug()<<" tot ODE "<<m_TotODEBoard<<endreq;
+  
+  for(int i=0;i<MuonDAQHelper_maxODENumber;i++){
+    std::stable_sort(m_digitsInODE[i].begin(),
+                     m_digitsInODE[i].end(),SortDigitInODE());    
+  }
+  return StatusCode::SUCCESS;
+  
+}
+
+
+StatusCode MuonDigitToRawBuffer::ProcessPads()
+{
+   for(unsigned int i=m_M1Tell1;i<(unsigned int) m_TotL1Board;i++){
+    //get Tell1 information 
+     std::string L1path=(m_muonDet->getDAQInfo())->Tell1Name(i);
+    SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
+    int station=l1->getStation();    
+    std::string cablingBasePath=(m_muonDet->getDAQInfo())->getBasePath(station);
+    unsigned int padsInTell1=0; 
+    unsigned int ODE_in_L1=(m_muonDet->getDAQInfo())->ODEInTell1(i);    
+    unsigned int maxPads=0;
+    unsigned int TSInODE=0;
+    
+    //loop on ODE
+    unsigned int iODE=0;
+    for(iODE=0;iODE<ODE_in_L1;iODE++){
+
+      debug()<<" start a new ODE "<<endreq;
+      
+      unsigned int odenumber=(m_muonDet->getDAQInfo())->getODENumberInTell1(i,iODE)-1;;
+      
+      std::string ODEpath=cablingBasePath
+        +l1->getODEName(iODE);
+      SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);  
+      // how many digit in the TS?
+      TSInODE=ode->getTSNumber();
+      debug()<<"TS "<<TSInODE<<endreq;
+      
+      std::string  TSPath= cablingBasePath+ode->getTSName(0);
+      SmartDataPtr<MuonTSMap>  TS(detSvc(),TSPath);
+      long channelInTS=TS->numberOfOutputSignal();
+      if(TS->numberOfLayout()==2){
+        maxPads=TS->gridXLayout(0)*TS->gridYLayout(1);         
+      }
+      else{
+        maxPads=channelInTS;         
+      }
+      debug()<<" max pad "<<maxPads<<" "<<channelInTS<<endreq;
+      
+      std::vector<unsigned int> list_input(channelInTS,0); 
+      //debug()<<" channelInTS "<<channelInTS<<endreq;      
+      //build header == channels fired for each ode
+      unsigned int TSnumberInODE=0;
+      std::vector<unsigned int>::iterator itDigit;
+      for(itDigit=m_digitsInODE[odenumber].begin();
+          itDigit<m_digitsInODE[odenumber].end();
+          itDigit++){
+        MuonHLTDigitFormat temp(*itDigit,MuonBankVersion::DC06);
+        unsigned int address=temp.getAddress();
+        debug()<<address<<" "<<channelInTS<<" "<<TSInODE<<" "<<TSnumberInODE<<endreq;
+        
+        if(itDigit==m_digitsInODE[odenumber].begin()){
+           TSnumberInODE=address/channelInTS;
+        }
+        //debug()<<" address "<<address<<" "<<TSnumberInODE<<endreq;
+        bool swap=true;
+        
+        if(channelInTS*(TSnumberInODE+1)<=address||
+           itDigit==m_digitsInODE[odenumber].end()-1){
+          // info()<<" entra qui "<<TSnumberInODE<<endreq;
+          if(itDigit==(m_digitsInODE[odenumber].end()-1)&&
+             address<channelInTS*(TSnumberInODE+1)) {            
+              list_input[address-channelInTS*TSnumberInODE]=1;
+              swap=false;              
+          }          
+          std::string TSPath=cablingBasePath+
+            ode->getTSName(TSnumberInODE);     
+          // debug()<<" TSPath "<<  TSPath <<endreq;          
+          std::vector<unsigned int> resultsAddress=
+            (m_muonDet->getDAQInfo())->padsinTS(list_input, 
+                     TSPath);
+          //store the output
+          debug()<<"size "<<resultsAddress.size()<<endreq;
+          
+          if(resultsAddress.size()){            
+            for(std::vector<unsigned int>::iterator itpad=
+                  resultsAddress.begin();itpad<resultsAddress.end();
+                itpad++){              
+              m_padInL1[i].push_back(padsInTell1+maxPads*TSnumberInODE+
+                                     (*itpad));              
+            }
+          }
+          
+          //add te offset padsInTell1;
+          //padsInTell1=padsInTell1+maxPads;          
+          //clear the area
+          std::vector<unsigned int>::iterator itClear;          
+          for(itClear= list_input.begin();itClear<list_input.end();itClear++){
+            *itClear=0;            
+          } 
+          debug()<<" qui qui "<<swap<<endreq;
+          
+          TSnumberInODE=address/channelInTS;
+          if(swap) {  
+              debug()<<"adding in position "<<
+            address-channelInTS*TSnumberInODE
+                 <<" "<<address<<endreq;
+              debug()<< list_input.size()<<endreq;
+              
+             list_input[address-channelInTS*TSnumberInODE]=1;
+             //add the pads mechanism....
+             if(itDigit==m_digitsInODE[odenumber].end()-1){
+               debug()<<" before "<<endreq;
+               
+                std::vector<unsigned int> resultsAddress=
+               (m_muonDet->getDAQInfo())->padsinTS(list_input, 
+                        TSPath); 
+                debug()<<" after "<<endreq;
+                if(resultsAddress.size()){            
+                  for(std::vector<unsigned int>::iterator itpad=
+                        resultsAddress.begin();
+                      itpad<resultsAddress.end();itpad++){          
+                    m_padInL1[i].push_back(padsInTell1+
+                                           maxPads*TSnumberInODE+
+                                           (*itpad));              
+                  }
+                }
+             }
+          }          
+        }else{
+          list_input[address-channelInTS*TSnumberInODE]=1;          
+        }        
+      }
+      padsInTell1=padsInTell1+maxPads*TSInODE;
+      
+      debug()<<" eccoci "<<endreq;      
+    }    
+  }
+   return StatusCode::SUCCESS;
+   
+};
+
+
+StatusCode MuonDigitToRawBuffer::ProcessDigitV1()
+{
+  
+  LHCb::MuonDigits* digit = get<LHCb::MuonDigits>( LHCb::MuonDigitLocation::MuonDigit );
+  LHCb::MuonDigits::iterator idigit;
+  for(idigit=digit->begin();idigit<digit->end();idigit++){    
+    LHCb::MuonTileID digitTile=(*idigit)->key();
+    unsigned int time=(*idigit)->TimeStamp();    
+    //time=0;    
+    long L1Number=0;
+    long ODENumber=0;
+    unsigned int ODEAdd=0;
+    
+    long DigitOutputPosition=(m_muonDet->getDAQInfo())->DAQaddressInL1(digitTile,L1Number,ODENumber,ODEAdd);   
+    debug()<<" L1 add "<<L1Number<<" "<<ODENumber<<endreq;
+    
+    long DigitOutputPositionInODE=(m_muonDet->getDAQInfo())->DAQaddressInODE(digitTile,L1Number,ODENumber,false); 
+    debug()<<"L1Number "<<L1Number<<" "<<ODENumber<<endmsg;
+    debug()<<" digitOutputPosition "<<DigitOutputPosition<<endmsg;    
+unsigned int pp_num=(m_muonDet->getDAQInfo())->getPPNumber(L1Number,ODENumber);
+    unsigned int digitInDAQ=0;
+    MuonHLTDigitFormat temp(MuonBankVersion::v1);
+    temp.setAddress(DigitOutputPosition);
+    temp.setTime(time);
+    digitInDAQ=temp.getWord();
+    m_digitsInL1[L1Number].push_back(digitInDAQ); 
+    firedInPP[L1Number*4+pp_num]++;
+    debug()<<" pp "<<pp_num<<" "<<L1Number<<endreq;
+    //     debug()<<" digit word "<<L1Number-1<<" "<<ODENumber-1<<" "<<
+    //       temp.getAddress()<<endmsg;    
+    MuonHLTDigitFormat tempode(MuonBankVersion::v1);
+    tempode.setAddress(DigitOutputPositionInODE);
+    tempode.setTime(time);
+    digitInDAQ=tempode.getWord();
+
+    m_digitsInODE[ODENumber-1].push_back(digitInDAQ);
+
+    firedInODE[ODENumber-1]++;
+
+    
+  }  
+  //  debug()<<" tot ODE "<<m_TotODEBoard<<endreq;
+ 
+  
+  for(int i=0;i<MuonDAQHelper_maxTell1Number;i++){
+ debug()<<" start sorting "<<m_digitsInL1[i].size()<<endreq;
+    std::stable_sort(m_digitsInL1[i].begin(),
+                     m_digitsInL1[i].end(),SortDigitInL1());    
+  } 
+  for(int i=0;i<MuonDAQHelper_maxODENumber;i++){
+    debug()<<" start sorting "<<m_digitsInODE[i].size()<<endreq;
+    std::stable_sort(m_digitsInODE[i].begin(),
+                     m_digitsInODE[i].end(),SortDigitInODE());    
+  }
+  return StatusCode::SUCCESS;
+  
+}
+
+/*StatusCode MuonDigitToRawBuffer::setDigitLimit()
+{
+
+
+  for (int ode=0;ode<MuonDAQHelper_maxODENumber;ode++)
+  {
+    unsigned int max=63;
+    if(m_digitsInODE[ode].size()>max)
+    {
+    }
+    
+  }
+  
+  
+}
+*/
