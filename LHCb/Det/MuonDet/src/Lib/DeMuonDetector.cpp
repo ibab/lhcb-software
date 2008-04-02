@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.40 2007-12-21 08:09:40 cattanem Exp $
+// $Id: DeMuonDetector.cpp,v 1.41 2008-04-02 11:47:48 asatta Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
@@ -13,6 +13,7 @@
 
 // Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 /** @file DeMuonDetector.cpp
  * 
@@ -76,7 +77,13 @@ StatusCode DeMuonDetector::initialize()
 
   //Initialize vectors containing Detector informations
   CountDetEls();
-  //  delete tLay;
+  //  delete tLay;  
+  updMgrSvc()->registerCondition(&m_daqHelper, 
+                                 "/dd/Conditions/ReadoutConf/Muon/Cabling/M1/Cabling", 
+                                 &MuonDAQHelper::updateLUT);
+  m_daqHelper.initSvc(dataSvc(),msgSvc());
+  m_daqHelper.initDAQMaps();
+
   return sc;
 }
 

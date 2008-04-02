@@ -1,4 +1,4 @@
-// $Id: MuonL1Board.h,v 1.2 2007-02-28 18:33:18 marcocle Exp $
+// $Id: MuonL1Board.h,v 1.3 2008-04-02 11:47:48 asatta Exp $
 #ifndef MUONDET_MUONL1BOARD_H 
 #define MUONDET_MUONL1BOARD_H 1
 #include <vector>
@@ -32,12 +32,22 @@ public:
 
   inline long numberOfODE(){return m_numberOfODE;};
   inline void setNumberOfODE(long ode){m_numberOfODE=ode;};
+    inline void setLinkConnection(long link,long ode)
+  {m_linkConnection[link]=ode;};  
+  inline long getLinkConnection(long link){return m_linkConnection[link];};
+  //inline long getLinkConnection(){return 1;);
+  //inline long getLinkConnection(long link){return m_linkConnection[link]);
+   bool isLinkConnected(long link){
+	if(m_linkConnection[link]<=0)return false;
+        return true;
+  };
+  
   void addODE(long number, std::string name);
   void addLayout(long region, long X,long Y);  
   inline std::string getODEName(int i){return m_ODEName[i];};
   inline long getTSLayoutX(long i){return m_regionLayout[i][0];}  ;
   inline long getTSLayoutY(long i){return m_regionLayout[i][1];}  ;
-  long getODEPosition(long number);  
+  long getODEPosition(long number,bool hole=true);  
   inline int getStation(){return m_station;};
 protected:
 
@@ -48,7 +58,8 @@ private:
   std::vector<long> m_ODENumberList;
   std::vector<std::string> m_ODEName;
   long m_regionLayout[4][2]  ;
-  
+  long m_linkConnection[24];  
+
   
 
 };

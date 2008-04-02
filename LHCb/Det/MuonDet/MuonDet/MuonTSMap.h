@@ -1,4 +1,4 @@
-// $Id: MuonTSMap.h,v 1.1 2004-02-03 11:40:27 asatta Exp $
+// $Id: MuonTSMap.h,v 1.2 2008-04-02 11:47:48 asatta Exp $
 #ifndef MUONDET_MUONTSMAP_H 
 #define MUONDET_MUONTSMAP_H 1
 #include <vector>
@@ -27,7 +27,8 @@ public:
   StatusCode initialize(long num, long gridx[2],long gridy[2]);
   
   StatusCode update(long output,std::vector<long> lay,
-                    std::vector<long> gridx,std::vector<long> gridy);
+                    std::vector<long> gridx,std::vector<long> gridy,
+                    std::vector<long> synch);
   inline long numberOfLayout(){return m_NumberLogLayout;};
   inline long gridXLayout(int i){return m_GridXLayout[i];};
   inline long gridYLayout(int i){return m_GridYLayout[i];};
@@ -35,7 +36,10 @@ public:
   inline long layoutOutputChannel(int i){return m_OutputLayoutSequence[i];};
   inline long gridXOutputChannel(int i){return m_OutputGridXSequence[i];};
   inline long gridYOutputChannel(int i){return m_OutputGridYSequence[i];};
-  
+  inline long synchChSize(){return m_OutputSynchSequence.size();};
+  inline bool synchChUsed(int i){return m_OutputSynchSequence[i];};
+  inline long numberOfPad(){return m_pad;};
+
 protected:
 
 private:
@@ -46,6 +50,9 @@ private:
   std::vector<long> m_OutputLayoutSequence;
   std::vector<long> m_OutputGridXSequence;
   std::vector<long> m_OutputGridYSequence;
+  std::vector<long> m_OutputSynchSequence;
+  long m_pad;
+
 };
 
 

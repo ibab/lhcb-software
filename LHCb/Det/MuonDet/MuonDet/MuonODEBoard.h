@@ -1,4 +1,4 @@
-// $Id: MuonODEBoard.h,v 1.2 2005-12-16 14:53:20 asarti Exp $
+// $Id: MuonODEBoard.h,v 1.3 2008-04-02 11:47:48 asatta Exp $
 #ifndef MUONDET_MUONODEBOARD_H 
 #define MUONDET_MUONODEBOARD_H 1
 
@@ -44,6 +44,10 @@ public:
   void setQuadrants();
   bool isQuadrantContained(long quadrant);
   bool isTSContained(LHCb::MuonTileID TSTile);	 
+  void setECSName(std::string name){m_ECSName=name;};
+  
+  inline std::string ECSName()  {return m_ECSName;}
+  
 protected:
 
 private:
@@ -57,6 +61,7 @@ private:
   std::vector<long> m_TSGridY;
   std::vector<long> m_TSQuadrant;
   std::vector<std::string> m_TSName;
+  std::string m_ECSName;  
   long m_quadrant[4];
 };
 #endif // MUONDET_MUONODEBOARD_H

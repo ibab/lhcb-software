@@ -1,4 +1,4 @@
-// $Id: XmlMuonTSMapCnv.cpp,v 1.6 2007-11-20 07:48:58 asatta Exp $
+// $Id: XmlMuonTSMapCnv.cpp,v 1.7 2008-04-02 11:47:48 asatta Exp $
 // Include files 
 
 #include <vector>
@@ -64,7 +64,8 @@ private:
   const XMLCh* OutputSignalString;  
   const XMLCh* OutputLayoutSeqString; 
   const XMLCh* OutputGridXSeqString;  
-  const XMLCh* OutputGridYSeqString;  
+  const XMLCh* OutputGridYSeqString;   
+  const XMLCh* OutputSynchSeqString;
 }; 
 
 // -----------------------------------------------------------------------
@@ -95,7 +96,7 @@ OutputSignalString=xercesc::XMLString::transcode("OutputSignal");
 OutputLayoutSeqString=xercesc::XMLString::transcode("OutputLayoutSeq");
 OutputGridXSeqString=xercesc::XMLString::transcode("OutputGridXSeq");
 OutputGridYSeqString=xercesc::XMLString::transcode("OutputGridYSeq");
-
+OutputSynchSeqString=xercesc::XMLString::transcode("OutputSynchCh");
 }
 
 //=============================================================================
@@ -109,7 +110,8 @@ XmlMuonTSMapCnv::~XmlMuonTSMapCnv() {
   xercesc::XMLString::release((XMLCh**)&OutputSignalString);      
   xercesc::XMLString::release((XMLCh**)&OutputLayoutSeqString);   
   xercesc::XMLString::release((XMLCh**)&OutputGridXSeqString);    
-  xercesc::XMLString::release((XMLCh**)&OutputGridYSeqString);
+  xercesc::XMLString::release((XMLCh**)&OutputGridYSeqString);  
+  xercesc::XMLString::release((XMLCh**)&OutputSynchSeqString);
 }; 
 
 
@@ -160,9 +162,12 @@ XmlMuonTSMapCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
        dom2Std (childElement->getAttribute (OutputGridYSeqString));
      std::vector<long> outputGridYSeq;
      sc=splitList(outputGridYSeqString,outputGridYSeq);
-     if(sc.isFailure())return sc;
+     std::string outputSynchSeqString =
+       dom2Std (childElement->getAttribute (OutputSynchSeqString));
+     std::vector<long> outputSynchSeq;
+     sc=splitList(outputSynchSeqString,outputSynchSeq);
      sc=dataObj->update(outputSignalValue,outputLayoutSeq,
-            outputGridXSeq,outputGridYSeq);
+			outputGridXSeq,outputGridYSeq,outputSynchSeq);
      if(sc.isFailure())return sc;
 
   }

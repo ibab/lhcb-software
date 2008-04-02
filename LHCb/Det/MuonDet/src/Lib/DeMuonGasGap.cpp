@@ -1,4 +1,4 @@
-// $Id: DeMuonGasGap.cpp,v 1.13 2007-10-17 11:24:04 asatta Exp $
+// $Id: DeMuonGasGap.cpp,v 1.14 2008-04-02 11:47:48 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -52,7 +52,7 @@ StatusCode DeMuonGasGap::initialize()
   int start=(DeMuonLocation::Default).size();  
   std::string substring;
   substring.assign(name,start,len);
-  char patt[400]; 
+//  char patt[400]; 
   std::string stanum;
   stanum.assign(name,start,3);
   sscanf(stanum.c_str(),"/M%d",&sta);

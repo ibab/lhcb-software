@@ -1,4 +1,4 @@
-// $Id: XmlMuonODECnv.cpp,v 1.7 2007-11-20 07:48:58 asatta Exp $
+// $Id: XmlMuonODECnv.cpp,v 1.8 2008-04-02 11:47:48 asatta Exp $
 // Include files 
 
 #include <vector>
@@ -60,6 +60,7 @@ StatusCode splitList( std::string &stringList,
 private:
  const XMLCh* ODEString;
  const XMLCh* ODENumberString;
+ const XMLCh* ODEECSNameString;            
  const XMLCh* RegionString;
  const XMLCh* TSLayoutXString;
  const XMLCh* TSLayoutYString;
@@ -68,7 +69,7 @@ private:
  const XMLCh* TSGridYListString;
  const XMLCh* TSQuadrantListString;
  const XMLCh* TSMapString;
- const XMLCh* TSMapRefString;            
+ const XMLCh* TSMapRefString;
 }; 
 
 // -----------------------------------------------------------------------
@@ -93,6 +94,7 @@ XmlMuonODECnv::XmlMuonODECnv(ISvcLocator* svc):
 
 ODEString=xercesc::XMLString::transcode("ODEBoard");             
 ODENumberString=xercesc::XMLString::transcode("ODESerialNumber");       
+ODEECSNameString=xercesc::XMLString::transcode("ODEECSName");       
 RegionString=xercesc::XMLString::transcode("RegionNumber"); 
 TSLayoutXString=xercesc::XMLString::transcode("TSLayoutX");       
 TSLayoutYString=xercesc::XMLString::transcode("TSLayoutY");       
@@ -111,6 +113,7 @@ XmlMuonODECnv::~XmlMuonODECnv() {
   xercesc::XMLString::release((XMLCh**)&ODEString);           
   xercesc::XMLString::release((XMLCh**)&RegionString); 
   xercesc::XMLString::release((XMLCh**)&ODENumberString);     
+  xercesc::XMLString::release((XMLCh**)&ODEECSNameString);     
   xercesc::XMLString::release((XMLCh**)&TSLayoutXString);     
   xercesc::XMLString::release((XMLCh**)&TSLayoutYString);     
   xercesc::XMLString::release((XMLCh**)&TSNumberString);      
@@ -133,12 +136,19 @@ XmlMuonODECnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     const std::string odeNumberString =
       dom2Std (childElement->getAttribute (ODENumberString));
     long ODENumberValue=atol(odeNumberString.c_str());
+    const std::string odeECSNameString =
+      dom2Std (childElement->getAttribute (ODEECSNameString));
+    //   long ODEECSNameValue=(odeECSNameString.c_str());
+    std::string ODEECSNameValue=(odeECSNameString.c_str());
+
     const std::string regionNumberString =
       dom2Std (childElement->getAttribute (RegionString));
     long regionNumberValue=atol(regionNumberString.c_str());
     dataObj->initialize(ODENumberValue,regionNumberValue);    
     //if(sc.isFailure())return sc;
-
+    dataObj->setECSName(ODEECSNameValue);
+    //msg<<MSG::INFO<<" ECS Name "<<ODEECSNameValue<<endreq;
+    
     const std::string tsLayoutXString =
       dom2Std (childElement->getAttribute (TSLayoutXString));
     long tsLayoutXValue=atol(tsLayoutXString.c_str());

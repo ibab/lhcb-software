@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.26 2007-12-21 08:09:40 cattanem Exp $
+// $Id: DeMuonDetector.h,v 1.27 2008-04-02 11:47:48 asatta Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -19,6 +19,7 @@
 #include "MuonDet/MuonStationCabling.h"
 #include "MuonDet/MuonODEBoard.h"
 #include "MuonDet/MuonTSMap.h"
+#include "MuonDet/MuonDAQHelper.h"
 
 #include "MuonDet/MuonNamespace.h"
 
@@ -272,6 +273,9 @@ public:
 // unsigned int getReadoutType(int station, int region,MuonLayout lay);  
 // MuonODEBoard* getODEContainingTile(LHCb::MuonTileID digit);  
 // MuonL1Board* getL1ContainingTile(LHCb::MuonTileID digit);
+  inline MuonDAQHelper* getDAQInfo(){
+    return &(m_daqHelper);
+  };
 
 private:
 
@@ -317,6 +321,8 @@ private:
   float m_sensitiveAreaZ[partition];  
   double m_stationBox[5][4];
   double m_stationZ[5];
+  MuonDAQHelper m_daqHelper;
+
 };
 
 // -----------------------------------------------------------------------------
