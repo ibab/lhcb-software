@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.h,v 1.4 2008-02-19 09:40:15 jucogan Exp $
+// $Id: L0MuonFromRawTrans.h,v 1.5 2008-04-02 12:56:13 jucogan Exp $
 #ifndef COMPONENT_L0MUONFROMRAWTRANS_H 
 #define COMPONENT_L0MUONFROMRAWTRANS_H 1
 
@@ -18,6 +18,8 @@
  *  @author Julien Cogan
  *  @date   2008-01-10
  */
+
+
 class L0MuonFromRawTrans : public GaudiAlgorithm {
 public: 
   /// Standard constructor
@@ -37,21 +39,49 @@ protected:
   StatusCode writeOnTES(int procVersion, std::string extension="");
   /// Reset the registers used by the converters
   StatusCode releaseRegisters();
+  /// Print out errors
+  StatusCode dumpErrors();
 
 private:
   
-  int l0EventNumber();
-  int l0_B_Id();
-  
-  std::string  m_configfile;          // Config file name
 
-  unsigned int m_ievt;
+  static inline std::string timeSlot(int bx)
+  {
+    std::string ts;
+    switch (bx) {
+    case -7 : return "Prev7/";
+    case -6 : return "Prev6/";
+    case -5 : return "Prev5/";
+    case -4 : return "Prev4/";
+    case -3 : return "Prev3/";
+    case -2 : return "Prev2/";
+    case -1 : return "Prev1/";
+    case  0 : return "";
+    case  1 : return "Next1/";
+    case  2 : return "Next2/";
+    case  3 : return "Next3/";
+    case  4 : return "Next4/";
+    case  5 : return "Next5/";
+    case  6 : return "Next6/";
+    case  7 : return "Next7/";
+    default : return "Unknown";
+    };
+    
+  };
+    
+
+  int m_l0EventNumber;
+  int m_l0_B_Id;
+
+  std::string  m_configfile;          // Config file name
+  bool m_dumpError  ;
   
   LHCb::L0MuonCandidate* l0muoncandidate(L0Muon::PMuonCandidate cand, int procVersion);
 
   L0Muon::CtrlRawCnv  m_ctrlRaw[2];
   L0Muon::ProcRawCnv  m_procRaw[4];
-
-  int m_bankEventCounter;
+    
 };
+ 
+
 #endif // COMPONENT_L0MUONFROMRAWTRANS_H
