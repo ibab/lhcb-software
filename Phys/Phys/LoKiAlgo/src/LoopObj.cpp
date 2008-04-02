@@ -1,4 +1,4 @@
-// $Id: LoopObj.cpp,v 1.9 2008-02-24 19:43:06 ibelyaev Exp $
+// $Id: LoopObj.cpp,v 1.10 2008-04-02 11:37:16 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -15,6 +15,7 @@
 #include "LoKi/LoopObj.h"
 #include "LoKi/LoopObj.icpp"
 #include "LoKi/Algo.h"
+#include "LoKi/CompareParticles.h"
 // ============================================================================
 /** @file
  *
@@ -31,98 +32,6 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-19
  */
-// ============================================================================
-namespace
-{
-  // ==========================================================================
-  /** helper function which allows to effectively avoid the 
-   *  double counting in the loops with identical particles, 
-   *  e.g. D0 -> K-(pi+pi+)pi- 
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2006-03-19
-   */
-  inline bool cloneCompare 
-  ( const LHCb::Particle* p1 , 
-    const LHCb::Particle* p2 ) 
-  {
-    // the same object? 
-    if ( p1 == p2 ) { return false ; }
-    // NULL is less than everything else 
-    if (  0 == p1 ) { return true  ; }
-    // NULL is less than everything else 
-    if (  0 == p2 ) { return false ; } 
-    // compare by PID
-    { 
-      const long pid1 = p1->particleID().pid() ;
-      const long pid2 = p2->particleID().pid() ;
-      if      ( pid1 < pid2 ) { return true  ; }
-      else if ( pid2 < pid1 ) { return false ; }
-    }
-    // compare by transverse momentum    
-    {
-      const double pt1 = p1->momentum().Pt() ;
-      const double pt2 = p2->momentum().Pt() ;
-      if      ( pt1 < pt2 ) { return true  ; }
-      else if ( pt2 < pt1 ) { return false ; }
-    }
-    // compare by energy!    
-    {
-      const double e1 = p1->momentum().E() ;
-      const double e2 = p2->momentum().E() ;
-      if      ( e1 < e2 ) { return true  ; }
-      else if ( e2 < e1 ) { return false ; }
-    }
-    // compare by z-momentum    
-    {
-      const double pz1 = p1->momentum().Z() ;
-      const double pz2 = p2->momentum().Z() ;
-      if      ( pz1 < pz2 ) { return true  ; }
-      else if ( pz2 < pz1 ) { return false ; }
-    }
-    // compare by x-momentum
-    {
-      const double px1 = p1->momentum().X() ;
-      const double px2 = p2->momentum().X() ;
-      if      ( px1 < px2 ) { return true  ; }
-      else if ( px2 < px1 ) { return false ; }
-    }
-    // compare by y-momentum
-    {
-      const double py1 = p1->momentum().Y() ;
-      const double py2 = p2->momentum().Y() ;
-      if      ( py1 < py2 ) { return true  ; }
-      else if ( py2 < py1 ) { return false ; }
-    }
-    // try to compare by key    
-    {
-      const bool key1 = p1->hasKey() ;
-      const bool key2 = p2->hasKey() ;
-      if ( key1 && key2 )
-      {
-        if ( p1->key() < p2->key() ) { return true  ; }
-        if ( p1->key() > p2->key() ) { return false ; }       
-      }
-      // object with    key is not "LESS"
-      else if ( key1 ) { return false ; }
-      // object with no key is     "LESS"
-      else if ( key2 ) { return true  ; }
-    }
-    // as last points: compare the raw  C++ pointers 
-    return p1 < p2 ;
-  }
-  // ==========================================================================  
-  //  dereference & copy
-  template <class INPUT, class OUTPUT> 
-  inline OUTPUT deref_copy 
-  ( INPUT  first , 
-    INPUT  last  , 
-    OUTPUT out   )
-  {
-    for ( ; first != last ; ++first ) { *out = **first ; ++out ; }
-    return out ;
-  } 
-  // ==========================================================================  
-} // end of anonymous namespace
 // ============================================================================
 //  default constructor 
 // ============================================================================
@@ -193,15 +102,15 @@ LoKi::LoopObj& LoKi::LoopObj::next      ()
   // set validity flag
   m_valid        = true ;
   m_combination  = LHCb::Particle::ConstVector( current().size() ) ;
-  deref_copy ( current().begin() , current().end() , m_combination.begin() ) ;
+  // fill the combination from the combiner 
+  m_combiner.current ( m_combination.begin() ) ;
   // return 
   return *this ;
 }
 // ============================================================================
 //  backup the current state of the loop 
 // ============================================================================
-LoKi::LoopObj& LoKi::LoopObj::backup  () 
-{ m_combiner.backup(); return *this ; }
+LoKi::LoopObj& LoKi::LoopObj::backup  () { m_combiner.backup(); return *this ; }
 // ============================================================================
 //  restore the loop from the last saved/backup state
 // ============================================================================
@@ -291,6 +200,9 @@ bool LoKi::LoopObj::clonesOrdered () const
 {
   // HOW IT WORKS ??? I am not able to understand  these lines :-((( 
   
+  // the comparison criteria: pid+kinematics
+  const LoKi::Particles::FullCompare compare ;
+  
   // check for clones 
   for ( Clones::const_iterator iclone = m_clones.begin() ; 
         m_clones.end() != iclone ; ++iclone ) 
@@ -318,7 +230,7 @@ bool LoKi::LoopObj::clonesOrdered () const
         const LHCb::Particle* p2 = *(current()[index2]);
         if ( 0 == p2 )
         { Error ( "clonesOrdered(): invalid particle " ) ;     return false ; }
-        if ( !cloneCompare ( p1 ,p2 ) ) {                      return false ; }
+        if ( !compare ( p1 ,p2 ) )   {                         return false ; }
       }
     }
   }
