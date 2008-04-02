@@ -1,4 +1,4 @@
-// $Id: LoKiPhys.cpp,v 1.7 2008-03-30 13:43:37 ibelyaev Exp $
+// $Id: LoKiPhys.cpp,v 1.8 2008-04-02 11:36:43 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -17,6 +17,7 @@
 #include "LoKi/LoKiPhys.h"
 #include "LoKi/ParticleContextCuts.h"
 #include "LoKi/VertexContextCuts.h"
+#include "LoKi/CompareParticles.h"
 // ============================================================================
 /** @file
  *
