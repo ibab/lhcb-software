@@ -1,4 +1,4 @@
-// $Id: Combiner.h,v 1.5 2007-07-23 17:07:36 ibelyaev Exp $
+// $Id: Combiner.h,v 1.6 2008-04-02 11:35:57 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_Combiner_H 
 #define LOKI_Combiner_H 1
@@ -43,8 +43,8 @@ namespace LoKi
    *  GCombiner package
    *
    *  The class allows combine "everything" - the content of the 
-   *  containers is irelevant, it coudl be objects, pointers, etc., 
-   *  evenbt the primitive scalars are allowed. 
+   *  containers is irelevant, it could be objects, pointers, etc., 
+   *  even the primitive scalars are allowed. 
    *  E.g the examples below shows the loop over all unique
    *  combinations of integers from 2 containers ("double loop").
    *
@@ -137,9 +137,9 @@ namespace LoKi
     typedef typename Ranges::iterator          rit       ;
     /// iterator over the Combiner_ (cont version) 
     typedef typename Ranges::const_iterator    rcit      ;
-    //
+    // ========================================================================
   public:
-    //
+    // ========================================================================
     /** default constructor, constructs empty Combiner_
      *  the state in "invalid"!
      */
@@ -148,17 +148,20 @@ namespace LoKi
       , m_current (       ) 
       , m_size    ( 0     ) 
       , m_index   ( 0     )
-      , m_unique  ( false ) 
       , m_backups (       )
     { 
       backup();  // make the backup of initial empty state 
-    };
+    }
+    // ========================================================================
     /// destructor
-    ~Combiner_() { clear(); }
+    ~Combiner_() { clear(); } // destructor
+    // ========================================================================
     /// current dimentions (=number of components)  of the Combiner_ 
-    size_t  dim  () const { return m_ranges.size() ; } ;
+    size_t  dim  () const { return m_ranges.size() ; } 
+    // ========================================================================
     /// current size of the Combiner_  (include ALL combinations)
-    size_t  size () const { return m_size          ; } ;
+    size_t  size () const { return m_size          ; } 
+    // ========================================================================
     /** add one more "container" to the existing Combiner_.
      *  @param range  the sequence range  
      *  return self reference 
@@ -178,7 +181,8 @@ namespace LoKi
       backup ();
       //
       return *this ;
-    };
+    }
+    // ========================================================================
     /** pre-increment operator for the Combiner_ (advance current iterator)
      *  @return self reference 
      */
@@ -187,12 +191,14 @@ namespace LoKi
       /// advance the 'current' iterator  
       next() ;
       return *this ;
-    };
+    }
+    // ========================================================================
     /** post-increment operator for the Combiner_ (advance current iterator)
      *  @attention the same as pre-increment 
      *  @return self reference 
      */
-    Combiner_& operator++( int ) { return ++(*this) ; };
+    Combiner_& operator++( int ) { return ++(*this) ; }
+    // ========================================================================
     /** clear the Combiner
      *  @return self reference 
      */
@@ -204,8 +210,6 @@ namespace LoKi
       m_current .clear();
       // size 
       m_size = 0 ;
-      // unique?
-      checkUnique();
       // index 
       m_index = 0 ;
       // clear the backups 
@@ -213,7 +217,8 @@ namespace LoKi
       backup();
       // return
       return *this;
-    };
+    }
+    // ========================================================================
     /** reset current (multy)iterator 
      *  @return self-reference
      */
@@ -226,24 +231,20 @@ namespace LoKi
       { *select = range->begin() ; }
       // reset the current index
       m_index = 0 ;
-      // unique?
-      checkUnique();
       // return 
       return *this;
-    };
+    }
+    // ========================================================================
     /** access to the current (multy)iterator (const version)
      *  @return 'current' (multy)iterator 
      */
     const Select& current () const { return m_current ; }
+    // ========================================================================
     /** end 
      *  @return true if there is no more combinatios 
      */
     bool end    () const { return !( m_index < m_size ); }
-    /** unique 
-     *  @return tru if current combination  is 'unique'
-     *  @attention ut has no sence fro invalid combinations!
-     */
-    bool unique () const  { return m_unique ; }
+    // ========================================================================
     /** check the validity of current (multy)iterator 
      *  @return true if no "actual" sub-iterators are invalid 
      */  
@@ -252,7 +253,8 @@ namespace LoKi
       return 
         0       == m_size ? false :                    // valid size? 
         m_index <  m_size ? true  : false ;            // valid index?
-    };
+    }
+    // ========================================================================
     /** advance 'current' (multy)iterator.
      *  I guess it the most tricky funtion of the whole class.
      *  It is the most primitive one, but I've spent few hours 
@@ -275,11 +277,58 @@ namespace LoKi
         prev         *= range->size() ;
         *curr         = range->begin() + index ;
       }
-      // unique?
-      checkUnique();
       // the end 
       return m_current ;  
-    };
+    }
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// copy the content of current iterator (with dereferencing!)
+    template <class OUTPUT>
+    OUTPUT current ( OUTPUT out )  const 
+    {
+      // copy only the valid combinations
+      if ( !valid() ) { return out ;}
+      for ( typename Select::const_iterator i = m_current.begin() ; 
+            m_current.end() != i ; ++i ) { *out = **i ; ++out ; } 
+      return out ;                                                  // REUTURN 
+    }
+    // ========================================================================
+    /** check the validity/uniquiness/ordering of the objects using the external 
+     *  comparison criteria
+     *  @param cmp the comparions criteria
+     */ 
+    template <class CMP>
+    bool unique ( const CMP& cmp ) const 
+    {
+      // check only "valid" combinations
+      if ( !valid() ) { return false ; }
+      // double loop over the combination
+      for ( typename Select::const_iterator it1 = m_current.begin() ; 
+            m_current.end() != it1 ; ++it1 ) 
+      {
+        for ( typename Select::const_iterator it2 = it1 + 1 ; 
+              m_current.end() != it2 ; ++it2 ) 
+        { 
+          if ( !cmp ( **it1 , **it2 ) ) { return false ; }         // RETURN 
+        } 
+      }
+      return true ;
+    }
+    // ========================================================================
+    /** unique 
+     *  @return true if current combination  is 'unique'
+     *  @attention ut has no sence fro invalid combinations!
+     */
+    bool unique () const  
+    {
+      // get the proper uniquiness criteria:
+      const std::not_equal_to<typename CONTAINER::value_type> cmp ;
+      return unique ( cmp ) ;
+    }
+    // ========================================================================
+  public:
+    // ========================================================================
     /** save ('back-up')the current state of the combiner 
      *  (could be restored later)
      *  @return number of backups 
@@ -288,7 +337,7 @@ namespace LoKi
     { 
       m_backups.push_back( BackUp( m_current , m_index ) ) ; 
       return m_backups.size();
-    };
+    }
     /** restore the combiner from backup 
      *  The method could be used several 
      *  times to go to previous-previous-...-previous state  
@@ -301,16 +350,13 @@ namespace LoKi
       // restore the current index 
       m_index   = m_backups.back().second ;
       // remove the last backup state 
-      if( m_backups.size() > 1 ) { m_backups.pop_back() ; }
-      // evaluate all flags 
-      checkUnique() ;
-      valid()       ;
+      if ( m_backups.size() > 1 ) { m_backups.pop_back() ; }
       // return 
       return *this  ; 
-    };
-    //
+    }
+    // ========================================================================
   private:
-    //
+    // ========================================================================
     /** invalidate the current iterator (and index) 
      *  @return corrent iterator 
      */
@@ -325,44 +371,21 @@ namespace LoKi
         { *select = range->end() ; }
       // return invalid iterator 
       return m_current ;
-    };
-    /** check if the combination is unique 
-     *  @return true if current combination is unique 
-     */
-    bool checkUnique() 
-    { 
-      // "default"
-      m_unique = true ;
-      // invalid combination IS NOT UNIQUE!
-      if( m_index >= m_size       ) { m_unique = false ; return unique () ; }
-      // double loop over combination
-      for ( typename Select::const_iterator it1 = m_current.begin() ; 
-            m_current.end() != it1 ; ++it1 ) 
-      {
-        for ( typename Select::const_iterator it2 = it1 + 1 ; 
-              m_current.end() != it2 ; ++it2 ) 
-        {
-          if ( **it1 == **it2 ) { m_unique = false ; return unique () ; }
-        }
-      }
-      // 
-      return unique();
-    };
-    //
+    }
+    // ========================================================================
   private:
-    //
-    // Combiner_ itself 
-    Ranges              m_ranges   ;
-    // "current" iterator 
-    Select              m_current  ;
-    // total number of combinations 
-    size_t              m_size     ;
-    // index of current combination
-    size_t              m_index    ;
-    // unique combination flag 
-    bool                m_unique   ;
-    // 'State' of the combiner 
-    BackUps             m_backups  ;
+    // ========================================================================
+    /// Combiner_ itself 
+    Ranges              m_ranges   ; // Combiner_ itself 
+    /// "current" iterator 
+    Select              m_current  ; // "current" iterator 
+    /// total number of combinations 
+    size_t              m_size     ; // total number of combinations 
+    /// index of current combination
+    size_t              m_index    ; // index of current combination
+    /// 'State' of the combiner 
+    BackUps             m_backups  ; // 'State' of the combiner 
+    // ========================================================================
   }; // end of class Combiner_
 } // end of namespace LoKi
 // ============================================================================
