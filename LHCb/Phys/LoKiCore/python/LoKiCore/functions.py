@@ -389,7 +389,7 @@ def _iter_SRV_ ( self ) :
     index = 0
     while index < size :
         o = vct[index]
-        if hassattr ( o , '__deref__' ) : o = o.__deref__()
+        if hasattr ( o , '__deref__' ) : o = o.__deref__()
         yield o
         index += 1
 
