@@ -1,4 +1,4 @@
-// $Id: CopyRelatedProtoParticles.h,v 1.1 2008-04-01 15:43:57 jpalac Exp $
+// $Id: CopyRelatedProtoParticles.h,v 1.2 2008-04-02 09:37:50 jpalac Exp $
 #ifndef COPYRELATEDPROTOPARTICLES_H 
 #define COPYRELATEDPROTOPARTICLES_H 1
 
@@ -25,10 +25,10 @@ class Particle;
  * decay tree, taken from the daughters and the outgoing particles when these
  * do not overlap.
  * The actual cloning of individual LHCb::ProtoParticles is performed by the 
- * IProtoParticleCloner, the implementation of which is set by the property 
- * ICloneParticle (default ParticleCloner). It is the ICloneParticle that
- * controls the depth of the cloning, ie what is done with related elements
- * like LHCb::Tracks etc.
+ * ICloneProtoParticle, the implementation of which is set by the property 
+ * ICloneProtoParticle (default ProtoParticleCloner). It is the 
+ * ICloneProtoParticle that controls the depth of the cloning, ie 
+ * what is done with related elements like LHCb::Tracks etc.
  *
  * @see ICloneProtoParticle
  * @see ProtoParticleCloner

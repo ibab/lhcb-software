@@ -1,4 +1,4 @@
-// $Id: CopyProtoParticles.h,v 1.7 2008-04-01 15:39:19 jpalac Exp $
+// $Id: CopyProtoParticles.h,v 1.8 2008-04-02 09:37:50 jpalac Exp $
 #ifndef COPYPROTOPARTICLES_H 
 #define COPYPROTOPARTICLES_H 1
 
@@ -20,15 +20,15 @@ class ICloneProtoParticle;
  * "/Event" + OutputPrefix + InputLocation. If InputLocation already contains
  * a leading "/Event" it is removed.
  * The actual cloning of individual LHCb::ProtoParticles is performed by the 
- * IProtoParticleCloner, the implementation of which is set by the property 
- * ICloneParticle (default ParticleCloner). It is the ICloneParticle that
- * controls the depth of the cloning, ie what is done with related elements
- * like LHCb::Tracks etc.
+ * ICloneProtoParticle, the implementation of which is set by the property 
+ * ICloneProtoParticle (default ProtoParticleCloner). It is the 
+ * ICloneProtoParticle that controls the depth of the cloning, ie 
+ * what is done with related elements like LHCb::Tracks etc.
  *
  * @see ICloneProtoParticle
  * @see ProtoParticleCloner
  *
- * <b>Example</b>: Clone particles from "/Event/Rec/ProtoP/Charged" to 
+ * <b>Example</b>: Clone ProtoParticles from "/Event/Rec/ProtoP/Charged" to 
  * "/Event/MyLocation/Rec/ProtoP/Charged" using a ProtoParticleCloner
  *  @code
  *
