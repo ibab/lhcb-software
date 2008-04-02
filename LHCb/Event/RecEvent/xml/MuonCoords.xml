@@ -20,6 +20,48 @@
 	name="digitTile" 
 	type="std::vector&lt;LHCb::MuonTileID&gt;" 
 	desc="list of address of MuonDgit used to cretate this MuonCoord" />
+      <attribute 
+	name="digitTDC1" 
+	type="unsigned int" 
+	desc="TDC time of the first digit" />
+      <attribute 
+	name="digitTDC2" 
+	type="unsigned int" 
+	desc="TDC time of the second (if present) digit" />
+      <method
+	desc   = "Average Time of the coord in TDC bit unit "
+	name   = "AverageTime"
+	type   = "float"
+	access = "PUBLIC" >
+	<code> if(uncrossed()){return digitTDC1() ;}else{
+	  return (digitTDC1()+digitTDC2())/2.0;} </code>
+      </method>
+      <method
+	desc   = "Average Time of the coord in ns "
+	name   = "AverageTime_ns"
+	type   = "float"
+	access = "PUBLIC" >
+	<code> if(uncrossed()){return 25.0/16*digitTDC1() ;}else{
+	  return 25.0/16.0*(digitTDC1()+digitTDC2())/2.0;} </code>
+      </method>
+      <method
+	desc   = "Time spread of the coord in TDC bit unit "
+	name   = "timeSpread"
+	type   = "float"
+	access = "PUBLIC" >
+	<code> if(uncrossed()){return 0 ;}else{
+	  return ((digitTDC1()-digitTDC2())/2.0);} </code>
+      </method>
+      <method
+	desc   = "Time spread of the coord in ns "
+	name   = "timeSpread_ns"
+	type   = "float"
+	access = "PUBLIC" >
+	<code> if(uncrossed()){return 0 ;}else{
+	  return (25.0/16.0*(digitTDC1()-digitTDC2())/2.0);} </code>
+      </method>
+
+
       <location 
 	name="MuonCoords" 
 	place="Raw/Muon/Coords"/>
