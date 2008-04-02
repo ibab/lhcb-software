@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.62 2008-03-24 14:52:56 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.63 2008-04-02 14:00:54 frankb Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -73,6 +73,12 @@ static MEPReq mepreq;
 // Event Source Flags 
 #define DOUBLE_ZERO_BUG    1   // source will send two events with L0ID == 0 
 #define ODIN               2   // this is the primary ODIN for MDF function 
+
+template <typename T> static void resetCounter(T& cnt) { cnt = 0; }
+template <typename T> static void resetCounters(T& cnt,size_t len) {
+  cnt.resize(len,0);
+  std::for_each(cnt.begin(),cnt.end(),resetCounter<typename T::value_type>);
+}
 
 namespace LHCb  { 
   struct MEPRx  : public MEP::Producer {
@@ -180,8 +186,6 @@ MEPRx::MEPRx(const std::string &nam, MEPRxSvc *parent)
   m_bmid = m_mepID->mepBuffer;
   m_log << MSG::DEBUG << std::hex << std::showbase 
     << "MEP    buffer start: " << m_mepID->mepStart << endmsg
-    << "EVENT  buffer start: " << m_mepID->evtStart << endmsg
-    << "RESULT buffer start: " << m_mepID->resStart << endmsg
     << "Buffer space:        " << m_spaceSize << " bytes" << endmsg;
   m_eventType  = EVENT_TYPE_MEP;
   m_rawBufHdr  = (class RawBank*)new u_int8_t[sizeof(RawBank)+16];
@@ -388,7 +392,7 @@ void MEPRQCommand::commandHandler(void) {
 
 // Standard Constructor
 MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
-: Service(nam, svc), m_state(NOT_READY), m_incidentSvc(0)
+: Service(nam, svc), m_ebState(NOT_READY), m_incidentSvc(0)
 {
   declareProperty("MEPBuffers",       m_MEPBuffers = 4);
   declareProperty("ethInterface",     m_ethInterface);
@@ -430,7 +434,7 @@ MEPRxSvc::~MEPRxSvc(){
 void MEPRxSvc::cryError() {
   MsgStream log(msgSvc(),"MEPRx");
   log << MSG::DEBUG << "Excessive errors: Going to state DAQ_ERROR" << endmsg;
-  Incident inc(name(), "DAQ_ERROR");
+  Incident inc("MEPRx", "DAQ_ERROR");
   m_incidentSvc->fireIncident(inc); // note that name - this is very safely chosen
                                     // just in case you want to fire something 
                                     // else than an incident!
@@ -550,26 +554,20 @@ StatusCode MEPRxSvc::sendMEPReq(int m) {
 }
 
 void MEPRxSvc::freeRx() {
-  int rc;  
-  lib_rtl_lock(m_usedDscLock);
-  if (m_usedDsc.empty()) {
-    lib_rtl_unlock(m_usedDscLock);
-    return;
+  RTL::Lock lock1(m_usedDscLock);
+  if (!m_usedDsc.empty()) {
+    MEPRx *rx = *(--m_usedDsc.end());
+    m_usedDsc.pop_back();
+    int rc = rx->spaceRearm(0);  
+    if (rc == MBM_NORMAL) {
+      RTL::Lock lock2(m_freeDscLock);
+      m_freeDsc.push_back(rx);
+      sendMEPReq(m_MEPsPerMEPReq);
+    }
+    else if (rc != MBM_REQ_CANCEL) {
+      error("timeout on getting space.");
+    }
   }
-  MEPRx *rx = *(--m_usedDsc.end());
-  m_usedDsc.pop_back();
-  lib_rtl_unlock(m_usedDscLock);
-  if ((rc = rx->spaceRearm(0)) == MBM_NORMAL) {
-    lib_rtl_lock(m_freeDscLock);
-    m_freeDsc.push_back(rx);
-    lib_rtl_unlock(m_freeDscLock);
-    sendMEPReq(m_MEPsPerMEPReq);
-    return; 
-  }
-  else if (rc == MBM_REQ_CANCEL) {
-    return;
-  } 
-  error("timeout on getting space.");
 }
 
 void MEPRxSvc::forceEvent(RXIT &dsc) {
@@ -590,8 +588,8 @@ StatusCode MEPRxSvc::run() {
   int srcid;
 
   // we are ready - wait for start
-  while (m_state != RUNNING) {
-    switch(m_state) {
+  while (m_ebState != RUNNING) {
+    switch(m_ebState) {
     case STOPPED:
     case NOT_READY:
       log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
@@ -624,7 +622,7 @@ StatusCode MEPRxSvc::run() {
       m_numMEPRecvTimeouts++;
       
       static int ncrh = 1;
-      if (m_state != RUNNING) {
+      if (m_ebState != RUNNING) {
         for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w)
           forceEvent(w);
         log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
@@ -732,37 +730,28 @@ StatusCode MEPRxSvc::error(const std::string& msg) {
 
 StatusCode MEPRxSvc::checkProperties() {
   std::ostringstream log;
-  if (m_ethInterface < 0) {
+  if (m_ethInterface < 0)
     return error("ethDevIn must be >= 0");
-  }
-  if (m_maxMsForGetSpace < 1) {
+  else if (m_maxMsForGetSpace < 1)
     return error("maxMsForGetSpace must be > 0");
-  }
-  if (m_MEPBuffers < 1 || m_MEPBuffers > 256) {
+  else if (m_MEPBuffers < 1 || m_MEPBuffers > 256)
     return error("MEPBuffers must be > 0 and < 256");
-  }
-  if (m_pktSamplingCount < 0) {
+  else if (m_pktSamplingCount < 0)
     return error("pktSamplingCount must be >= 0");
-  }
-  if (m_maxBadPktRatio <= 0) {
+  else if (m_maxBadPktRatio <= 0)
     return error("maxBadPktRatio must be > 0");
-  }
-  if (m_sockBuf < 0x10000 || m_sockBuf > 0x4000000) {
+  else if (m_sockBuf < 0x10000 || m_sockBuf > 0x4000000)
     return error("sockBuf must be >= 64 kB and less than 64 MB");
-  }
-  if (m_IPProtoIn < 0 || m_IPProtoIn > 255) {
+  else if (m_IPProtoIn < 0 || m_IPProtoIn > 255)
     return error("IPProtoIn is an unsigned 8 bit quantity");
-  }
-  if (m_MEPBufSize < 0) {
+  else if ((m_IPSrc.size() % 3) != 0)
+    return error("Malformed source list (length is odd)");
+  else if (m_MEPBufSize < 0) {
     log << "Illegal value for MEPBufSize " << m_MEPBufSize;
     return error(log.str());
   }      
-  if ( !setupMEPReq(m_IPNameOdin).isSuccess() ) {
-    log << "Bad address IPNameOdin " << m_IPNameOdin;
-    return error(log.str());
-  }
-  if ((m_IPSrc.size() % 3) != 0) {
-    return error("Malformed source list (length is odd)");
+  else if ( !setupMEPReq(m_IPNameOdin).isSuccess() ) {
+    return error("Bad address IPNameOdin "+m_IPNameOdin);
   }
   for (unsigned int i = 0; i < m_IPSrc.size(); i += 3) {
     std::string nam, msg;
@@ -800,12 +789,11 @@ StatusCode MEPRxSvc::checkProperties() {
 }
 
 StatusCode MEPRxSvc::allocRx() {
-  std::string nam = "MEPRx";
-  MsgStream log(msgSvc(),nam);
+  char num[32];
+  MsgStream log(msgSvc(),"MEPRx");
   for(int i = 0; i < m_MEPBuffers; ++i) {
-    char num[10];
-    ::sprintf(num, "%03d", i);      
-    MEPRx *rx = new MEPRx(nam + num, this);
+    ::sprintf(num, "MEPRx%03d", i);      
+    MEPRx *rx = new MEPRx(num, this);
     if (rx->spaceRearm(0) != MBM_NORMAL)  {
       return StatusCode::FAILURE;
     }
@@ -849,7 +837,7 @@ int MEPRxSvc::getSrcID(u_int32_t addr)  {
   if (i == m_srcAddr.end()) {
     std::string hname, mesg;
     error("received unexpected packet from " + (
-	    MEPRxSys::name_from_addr(addr, hname, mesg) ? mesg : hname));
+          MEPRxSys::name_from_addr(addr, hname, mesg) ? mesg : hname));
     m_notReqPkt++;
     return -1;
   }
@@ -857,14 +845,15 @@ int MEPRxSvc::getSrcID(u_int32_t addr)  {
 }
 
 void MEPRxSvc::ageEvents() {
-    unsigned long ms = MEPRxSys::ms2k();
+  unsigned long ms = MEPRxSys::ms2k();
  ageloop:
-    for (RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w) 
-      if ((ms - ((*w)->m_age)) > m_maxEventAge) { 
-	forceEvent(w);
-	freeRx(); // only if not in separate thread
-	goto ageloop;
-      }    
+  for (RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w) {
+    if ((ms - ((*w)->m_age)) > m_maxEventAge) { 
+      forceEvent(w);
+      freeRx(); // only if not in separate thread
+      goto ageloop;
+    }    
+  }
 }
 
 void MEPRxSvc::publishCounters()
@@ -872,45 +861,45 @@ void MEPRxSvc::publishCounters()
 }
 
 void MEPRxSvc::clearCounters() {
-  memset(&m_rxOct.front(),  0, m_nSrc * sizeof(u_int64_t));
-  memset(&m_rxPkt.front(),  0, m_nSrc * sizeof(u_int64_t));
-  memset(&m_rxEvt.front(),  0, m_nSrc * sizeof(u_int64_t));
-  memset(&m_badPckFktPkt.front(), 0, m_nSrc * sizeof(u_int32_t));
-  memset(&m_badLenPkt.front(), 0, m_nSrc * sizeof(u_int32_t));
-  memset(&m_misPkt.front(), 0, m_nSrc * sizeof(u_int32_t));
-  memset(&m_truncPkt.front(), 0, m_nSrc * sizeof(u_int32_t));
-  m_totMEPReq = m_totMEPReqPkt = m_numMEPRecvTimeouts = m_notReqPkt = 0;
-  m_totRxOct = m_totRxPkt = m_incEvt = m_totMEPReqPkt = 0;
-  m_numMEPRecvTimeouts = m_totMEPReq = 0;
-  m_totBadMEP =  m_totWrongPartID = 0;
-
+  resetCounters(m_rxOct, m_nSrc);
+  resetCounters(m_rxPkt, m_nSrc);
+  resetCounters(m_rxEvt, m_nSrc);
+  resetCounters(m_badPckFktPkt, m_nSrc);
+  resetCounters(m_badLenPkt, m_nSrc);
+  resetCounters(m_misPkt, m_nSrc);
+  resetCounters(m_truncPkt, m_nSrc);
+  m_totMEPReq          = 0;
+  m_totMEPReqPkt       = 0;
+  m_numMEPRecvTimeouts = 0;
+  m_notReqPkt          = 0;
+  m_totRxOct           = 0;
+  m_totRxPkt           = 0;
+  m_incEvt             = 0;
+  m_totMEPReqPkt       = 0;
+  m_numMEPRecvTimeouts = 0;
+  m_totMEPReq          = 0;
+  m_totBadMEP          = 0;
+  m_totWrongPartID     = 0;
 } 
 
 int MEPRxSvc::setupCounters() {
-  MsgStream log(msgSvc(), "MEPRx");
-  m_rxOct.resize(m_nSrc,0);
-  m_rxPkt.resize(m_nSrc,0);
-  m_rxEvt.resize(m_nSrc,0);
-  m_badPckFktPkt.resize(m_nSrc,0);
-  m_badLenPkt.resize(m_nSrc,0);
-  m_misPkt.resize(m_nSrc,0);
-  m_truncPkt.resize(m_nSrc,0);
-  PUBCNT(totRxOct, "Total received bytes");
-  PUBCNT(totRxPkt, "Total received packets");
-  PUBCNT(incEvt,   "Incomplete events");
-  PUBCNT(totBadMEP, "Total bad MEPs");
-  PUBCNT(totMEPReq, "Total requested MEPs");
-  PUBCNT(totMEPReqPkt, "Total Sent MEP-request packets");
+  MsgStream log(msgSvc(),"MEPRx");
+  clearCounters();
+  PUBCNT(totRxOct,           "Total received bytes");
+  PUBCNT(totRxPkt,           "Total received packets");
+  PUBCNT(incEvt,             "Incomplete events");
+  PUBCNT(totBadMEP,          "Total bad MEPs");
+  PUBCNT(totMEPReq,          "Total requested MEPs");
+  PUBCNT(totMEPReqPkt,       "Total Sent MEP-request packets");
   PUBCNT(numMEPRecvTimeouts, "MEP-receive Timeouts");
-  PUBCNT(notReqPkt, "Total unsolicited packets");
-  PUBCNT(totWrongPartID, "Packets with wrong partition-ID");
-  PUBARRAYCNT(badLenPkt, "MEPs with mismatched length");
-  PUBARRAYCNT(misPkt, "Missing MEPs");
-  PUBARRAYCNT(badPckFktPkt, "MEPs with wrong packing (MEP) factor");
-  PUBARRAYCNT(truncPkt, "Truncated MEPs");
+  PUBCNT(notReqPkt,          "Total unsolicited packets");
+  PUBCNT(totWrongPartID,     "Packets with wrong partition-ID");
+  PUBARRAYCNT(badLenPkt,     "MEPs with mismatched length");
+  PUBARRAYCNT(misPkt,        "Missing MEPs");
+  PUBARRAYCNT(badPckFktPkt,  "MEPs with wrong packing (MEP) factor");
+  PUBARRAYCNT(truncPkt,      "Truncated MEPs");
   // create cstring for source names
   std::string all_names = "";
-  
   for (unsigned i = 0; i < m_srcName.size(); ++i)  all_names = all_names + '\0' + m_srcName[i];
   if (!(m_allNames = new char[all_names.size()+1]))
     return 1;
@@ -923,13 +912,13 @@ int MEPRxSvc::setupCounters() {
 }
 
 void  MEPRxSvc::handle(const Incident& inc)    {
-  MsgStream log(msgSvc(), "MEPRx");
+  MsgStream log(msgSvc(),"MEPRx");
   log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
   if (inc.type() == "DAQ_CANCEL")  {
-    m_state = STOPPED;
+    m_ebState = STOPPED;
   }
   else if (inc.type() == "DAQ_ENABLE")  {
-    m_state = RUNNING;
+    m_ebState = RUNNING;
   }
 }
 
@@ -945,55 +934,56 @@ int MEPRxSvc::setupTimer(void) {
 
 StatusCode MEPRxSvc::initialize()  {
   StatusCode sc = Service::initialize();
-  MsgStream log(msgSvc(),"MEPRx");
-  if (sc != StatusCode::SUCCESS)  {
+  if (!sc.isSuccess())
     return error("Failed to initialize service base class.");
-  }
-  log << MSG::DEBUG << "Entering initialize....." << endmsg;
-  if ( !checkProperties().isSuccess() )  return StatusCode::FAILURE;
-  if((m_mepSock = openSocket(MEP_REQ_TOS)) < 0) return StatusCode::FAILURE;
-  if((m_dataSock = openSocket(m_IPProtoIn)) < 0) return StatusCode::FAILURE;
-  if ( !allocRx().isSuccess()         )  return StatusCode::FAILURE;
-
-  if (lib_rtl_create_lock(0, &m_usedDscLock) != 1 || 
-      lib_rtl_create_lock(0, &m_freeDscLock) != 1) {
-    return error("Failed to create locks.");
-  }
-  if (service("IncidentSvc", m_incidentSvc).isSuccess()) {
+  else if ( !checkProperties().isSuccess() )  
+    return error("Failed to check properties.");
+  else if ((m_mepSock = openSocket(MEP_REQ_TOS)) < 0)
+    return error("Failed to open socket: MEP_REQ_TOS");
+  else if ((m_dataSock = openSocket(m_IPProtoIn)) < 0)
+    return error("Failed to open socket: IPProtoIn");
+  else if ( !allocRx().isSuccess()         )
+    return error("Failed to allocate RX");
+  else if (lib_rtl_create_lock(0, &m_usedDscLock) != 1)
+    return error("Failed to create lock m_usedDscLock.");
+  else if (lib_rtl_create_lock(0, &m_freeDscLock) != 1)
+    return error("Failed to create lock m_freeDscLock.");
+  else if (!service("IncidentSvc", m_incidentSvc).isSuccess())
+    return error("Failed to access incident service.");
+  else {
     m_incidentSvc->addListener(this, "DAQ_CANCEL");
     m_incidentSvc->addListener(this, "DAQ_ENABLE");
-  }    
-  else { 
-    return error("Failed to access incident service.");
   }
   if (service("MonitorSvc", m_monSvc).isSuccess()) {
     if (setupCounters()) {
       return error("Failed to setup counters");
     }
-  } 
+  }
   else {
     return error("Failed to access monitor service.");
   }
   if (setupTimer()) 
     return error("Failed to initialize timer.");
+//    MsgStream log(msgSvc(),"MEPRx");
 //    /*Send some MEP requests to start with.*/
 ///    if(!sendMEPReq(m_initialMEPReq).isSuccess()) {
 //      log << MSG::WARNING << "Could not send " << m_initialMEPReq
 //        << " initial MEP requests." << endmsg;
 //    }
-  m_state = READY;
+  m_ebState = READY;
   return StatusCode::SUCCESS;
 }
 
 StatusCode MEPRxSvc::finalize()  {
+  MsgStream log(msgSvc(),"MEPRx");
+
+  log << MSG::INFO << "Entering finalize....." << endmsg;
   if (m_errorCheckInterval > 0) 
     lib_rtl_kill_timer(m_timer);
-  MsgStream log(msgSvc(),"MEPRx");
-  log << MSG::DEBUG << "Entering finalize....." << endmsg;
   releaseRx();
   if (m_incidentSvc) {
     m_incidentSvc->removeListener(this);
-    //m_incidentSvc->release();
+    m_incidentSvc->release();
     m_incidentSvc = 0;
   }
   if (m_monSvc) {
@@ -1001,6 +991,6 @@ StatusCode MEPRxSvc::finalize()  {
     m_monSvc->release();
     m_monSvc = 0;
   }
-  m_state = NOT_READY;
+  m_ebState = NOT_READY;
   return Service::finalize();
 }
