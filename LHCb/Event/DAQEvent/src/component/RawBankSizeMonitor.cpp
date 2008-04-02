@@ -1,4 +1,4 @@
-// $Id: RawBankSizeMonitor.cpp,v 1.3 2008-04-01 22:44:04 odescham Exp $
+// $Id: RawBankSizeMonitor.cpp,v 1.4 2008-04-02 18:53:09 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -35,6 +35,9 @@ RawBankSizeMonitor::RawBankSizeMonitor( const std::string& name,
      std::string name = LHCb::RawBank::typeName( (LHCb::RawBank::BankType) i );
      m_bankNames.push_back( name );
    }
+
+  setHistoDir( name );
+
 }
 //=============================================================================
 // Destructor

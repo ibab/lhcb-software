@@ -1,4 +1,4 @@
-// $Id: RawBankReadoutStatusMonitor.cpp,v 1.5 2008-03-27 18:36:59 odescham Exp $
+// $Id: RawBankReadoutStatusMonitor.cpp,v 1.6 2008-04-02 18:53:09 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -31,6 +31,7 @@ RawBankReadoutStatusMonitor::RawBankReadoutStatusMonitor( const std::string& nam
   declareProperty( "bankNames", m_bankTypes );
   declareProperty( "NumberOfSources", m_nSources=-1 );// Number Of Source in the StatusMap
 
+  setHistoDir( name );
 }
 //=============================================================================
 // Destructor
@@ -47,8 +48,6 @@ StatusCode RawBankReadoutStatusMonitor::initialize() {
   debug() << "==> Initialize" << endmsg;
 
 
-  setSplitHistoDir(true);
-  setHistoDir( name() );
 
   m_degree = 0;
 
