@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-02-28 - V. Gligorov
+ - Ressurected HltTrackFromParticle.{h,cpp}
+
 ! 2008-03-18 - Sandra Amato
  - in HltFunctionFactories.cpp, added a new functor named "PT0"
  
