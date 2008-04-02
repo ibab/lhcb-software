@@ -1,4 +1,4 @@
-// $Id: LoopObj.cpp,v 1.10 2008-04-02 11:37:16 ibelyaev Exp $
+// $Id: LoopObj.cpp,v 1.11 2008-04-02 21:05:21 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -452,7 +452,7 @@ LoKi::LoopObj& LoKi::LoopObj::addComponent
   if ( valid() ) 
   {
     m_combination  = LHCb::Particle::ConstVector( current().size() ) ;
-    deref_copy ( current().begin() , current().end() , m_combination.begin() ) ;
+    m_combiner.current ( m_combination.begin() ) ;
   }
   // backup the state of combiner 
   m_combiner.backup();
