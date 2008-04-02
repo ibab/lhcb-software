@@ -1,4 +1,4 @@
-// $Id: ATypes.h,v 1.3 2007-12-02 17:10:39 ibelyaev Exp $
+// $Id: ATypes.h,v 1.4 2008-04-02 21:10:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ATYPES_H 
 #define LOKI_ATYPES_H 1
@@ -44,6 +44,18 @@ namespace LoKi
     typedef LoKi::ATypes::AFun                                      AFun  ;
   } // end of namespace LoKi::Types 
 } // end of namespace LoKi 
+// ============================================================================
+namespace LoKi
+{
+  // ==========================================================================
+  // the specialized printout 
+  // ==========================================================================
+  template <>
+  inline std::ostream& 
+  Constant<LoKi::ATypes::Combination,bool>::fillStream   ( std::ostream& s ) const 
+  { return s << ( this->m_value ? "AALL" : "ANONE" ) ; }
+  // ==========================================================================
+}
 // ============================================================================
 // The END 
 // ============================================================================
