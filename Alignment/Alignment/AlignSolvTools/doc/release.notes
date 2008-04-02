@@ -2,7 +2,13 @@
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
 !-----------------------------------------------------------------------------
 
+
+! 2008-04-02 Adlene Hicheur
+! Tagging the head as v2r3 to avoid conflicts with old v2r2
+
+
 ! 2008-04-01 Johan Blouw: tag head as v2r2
+
 
 ! This is a test... try to make v2r2 the head- JB
 
