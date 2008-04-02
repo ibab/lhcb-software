@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.17 2008-03-28 17:09:54 robbep Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.18 2008-04-02 11:04:33 robbep Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -223,6 +223,11 @@ StatusCode L0CaloMonit::execute() {
 
   debug() << "Execute will read " << LHCb::L0CaloCandidateLocation::Default + m_inputDataSuffix << endreq;
 
+  if ( ! exist< LHCb::L0CaloCandidates >( LHCb::L0CaloCandidateLocation::Default + m_inputDataSuffix ) ) {
+    debug() << "No data at " <<  LHCb::L0CaloCandidateLocation::Default + m_inputDataSuffix << endreq ;
+    return StatusCode::SUCCESS ;
+  }
+
   LHCb::L0CaloCandidates* candidates = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Default + m_inputDataSuffix );
   LHCb::L0CaloCandidates::const_iterator cand;
   int nPhotonL0Cand = 0 ; 
@@ -411,39 +416,43 @@ StatusCode L0CaloMonit::execute() {
   } 
 
   if (m_fullMonitoring) {
-   
-    LHCb::L0CaloCandidates* candidatesF = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+m_inputDataSuffix );
-    LHCb::L0CaloCandidates::const_iterator candF;
-
-    for ( candF = candidatesF->begin() ; candidatesF->end() != candF ; ++candF ) {
-      if ( L0DUBase::CaloType::Electron == (*candF)->type()  ) {
-        m_histElectronFull  -> fill( (*candF)->etCode(), 1. );
-      } else if ( L0DUBase::CaloType::Photon == (*candF)->type()  ) {
-        m_histPhotonFull    -> fill( (*candF)->etCode(), 1. );
-      } else if ( L0DUBase::CaloType::Hadron == (*candF)->type()  ) {
-        m_histHadronFull    -> fill( (*candF)->etCode(), 1. );
-      } else if ( L0DUBase::CaloType::Pi0Local == (*candF)->type()  ) {
-        m_histPi0LocalFull  -> fill( (*candF)->etCode(), 1. );
-      } else if ( L0DUBase::CaloType::Pi0Global == (*candF)->type()  ) {
-        m_histPi0GlobalFull-> fill( (*candF)->etCode(), 1. );
-      } else if ( L0DUBase::CaloType::SumEt == (*candF)->type()  ) {
-        m_histSumEtFull     -> fill( (*candF)->etCode(), 1. );
-      } else if ( L0DUBase::CaloType::HadronSlave1Out == (*candF)->type()  ) {
-        m_histHadronSlave1OutFull   -> fill( (*candF)->etCode(), 1. );
-      } else if ( L0DUBase::CaloType::HadronSlave2Out == (*candF)->type()  ) {
-        m_histHadronSlave2OutFull   -> fill( (*candF)->etCode(), 1. );
-      } else if ( L0DUBase::CaloType::HadronSlave1In == (*candF)->type()  ) {
-        m_histHadronSlave1InFull   -> fill( (*candF)->etCode(), 1. );
-      } else if ( L0DUBase::CaloType::HadronSlave2In == (*candF)->type()  ) {
-        m_histHadronSlave2InFull   -> fill( (*candF)->etCode(), 1. );
-      } else if ( L0DUBase::CaloType::SumEtSlave1Out == (*candF)->type()  ) {
-        m_histSumEtSlave1OutFull   -> fill( (*candF)->etCode(), 1. );
-      } else if ( L0DUBase::CaloType::SumEtSlave2Out == (*candF)->type()  ) {
-        m_histSumEtSlave2OutFull   -> fill( (*candF)->etCode(), 1. );
-      } else if ( L0DUBase::CaloType::SumEtSlave1In == (*candF)->type()  ) {
-        m_histSumEtSlave1InFull   -> fill( (*candF)->etCode(), 1. );
-      } else if ( L0DUBase::CaloType::SumEtSlave2In == (*candF)->type()  ) {
-        m_histSumEtSlave2InFull   -> fill( (*candF)->etCode(), 1. );
+    
+    if ( ! exist< LHCb::L0CaloCandidates >( LHCb::L0CaloCandidateLocation::Full+m_inputDataSuffix ) ) {
+      debug() << "No data at " << LHCb::L0CaloCandidateLocation::Full+m_inputDataSuffix << endreq ;
+    } else {
+      LHCb::L0CaloCandidates* candidatesF = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+m_inputDataSuffix );
+      LHCb::L0CaloCandidates::const_iterator candF;
+      
+      for ( candF = candidatesF->begin() ; candidatesF->end() != candF ; ++candF ) {
+        if ( L0DUBase::CaloType::Electron == (*candF)->type()  ) {
+          m_histElectronFull  -> fill( (*candF)->etCode(), 1. );
+        } else if ( L0DUBase::CaloType::Photon == (*candF)->type()  ) {
+          m_histPhotonFull    -> fill( (*candF)->etCode(), 1. );
+        } else if ( L0DUBase::CaloType::Hadron == (*candF)->type()  ) {
+          m_histHadronFull    -> fill( (*candF)->etCode(), 1. );
+        } else if ( L0DUBase::CaloType::Pi0Local == (*candF)->type()  ) {
+          m_histPi0LocalFull  -> fill( (*candF)->etCode(), 1. );
+        } else if ( L0DUBase::CaloType::Pi0Global == (*candF)->type()  ) {
+          m_histPi0GlobalFull-> fill( (*candF)->etCode(), 1. );
+        } else if ( L0DUBase::CaloType::SumEt == (*candF)->type()  ) {
+          m_histSumEtFull     -> fill( (*candF)->etCode(), 1. );
+        } else if ( L0DUBase::CaloType::HadronSlave1Out == (*candF)->type()  ) {
+          m_histHadronSlave1OutFull   -> fill( (*candF)->etCode(), 1. );
+        } else if ( L0DUBase::CaloType::HadronSlave2Out == (*candF)->type()  ) {
+          m_histHadronSlave2OutFull   -> fill( (*candF)->etCode(), 1. );
+        } else if ( L0DUBase::CaloType::HadronSlave1In == (*candF)->type()  ) {
+          m_histHadronSlave1InFull   -> fill( (*candF)->etCode(), 1. );
+        } else if ( L0DUBase::CaloType::HadronSlave2In == (*candF)->type()  ) {
+          m_histHadronSlave2InFull   -> fill( (*candF)->etCode(), 1. );
+        } else if ( L0DUBase::CaloType::SumEtSlave1Out == (*candF)->type()  ) {
+          m_histSumEtSlave1OutFull   -> fill( (*candF)->etCode(), 1. );
+        } else if ( L0DUBase::CaloType::SumEtSlave2Out == (*candF)->type()  ) {
+          m_histSumEtSlave2OutFull   -> fill( (*candF)->etCode(), 1. );
+        } else if ( L0DUBase::CaloType::SumEtSlave1In == (*candF)->type()  ) {
+          m_histSumEtSlave1InFull   -> fill( (*candF)->etCode(), 1. );
+        } else if ( L0DUBase::CaloType::SumEtSlave2In == (*candF)->type()  ) {
+          m_histSumEtSlave2InFull   -> fill( (*candF)->etCode(), 1. );
+        }
       }
     }
   }

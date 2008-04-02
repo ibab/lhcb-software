@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.97 2008-03-28 17:09:53 robbep Exp $
+! $Id: release.notes,v 1.98 2008-04-02 11:04:33 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2008-04-02 - Patrick Robbe
+ - src/L0CaloMonit.cpp and src/L0CaloNtpMonitor.cpp: protect against non
+   existing input data
+ - src/L0CaloCandidateFromRaw.cpp: protect against non existing input data
+   and change output level of debugging messages
 
 ! 2008-03-28 - Patrick Robbe
  - src/L0CaloMonit.cpp: add an option (false by default) not to produce

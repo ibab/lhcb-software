@@ -1,4 +1,4 @@
-// $Id: L0CaloNtpMonitor.cpp,v 1.1 2008-03-10 19:38:36 robbep Exp $
+// $Id: L0CaloNtpMonitor.cpp,v 1.2 2008-04-02 11:04:33 robbep Exp $
 // Include files
 
 // from Gaudi
@@ -83,13 +83,11 @@ StatusCode L0CaloNtpMonitor::execute( ) {
     info() << " Emtpy location for ODIN " << endreq;
   }
 
-  LHCb::L0CaloCandidates* candidates = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+m_inputDataSuffix );
-
   std::vector< int > etCodeEle, etCodePho, etCodePil, etCodePig, etCodeHad ;
   int etCodeSumH = -999 ;
   std::vector< double > etEle, etPho, etPil, etPig, etHad ;
   double etSumH = -999. ;  
-
+  
   std::vector< int > rowEle, rowPho, rowPil, rowPig, rowHad ;
   std::vector< int > colEle, colPho, colPil, colPig, colHad ;
   std::vector< int > cellIdEle, cellIdPho, cellIdPil, cellIdPig, cellIdHad ;
@@ -97,107 +95,114 @@ StatusCode L0CaloNtpMonitor::execute( ) {
   std::vector< int > crateEle, cratePho, cratePil, cratePig, crateHad ;
   std::vector< int > slotEle, slotPho, slotPil, slotPig, slotHad ;
   
-  LHCb::L0CaloCandidates::const_iterator cand;
-  for ( cand = candidates->begin() ; candidates->end() != cand ; ++cand ) {
-    int card  = -1 ; 
-    int crate = -1 ; 
-    int slot = -1 ; 
-    switch ( (*cand)->type() ) {
+  if ( exist< LHCb::L0CaloCandidates >( LHCb::L0CaloCandidateLocation::Full+m_inputDataSuffix ) ) {
+    
+    LHCb::L0CaloCandidates* candidates = 
+      get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+m_inputDataSuffix );
+    
+    LHCb::L0CaloCandidates::const_iterator cand;
+    for ( cand = candidates->begin() ; candidates->end() != cand ; ++cand ) {
+      int card  = -1 ; 
+      int crate = -1 ; 
+      int slot = -1 ; 
+      switch ( (*cand)->type() ) {
       case L0DUBase::CaloType::Electron:
         etCodeEle.push_back( (*cand) -> etCode() ) ;
         etEle.push_back( (*cand) -> et() / Gaudi::Units::GeV ) ;
-	colEle.push_back((*cand) -> id().col()) ; 
-	rowEle.push_back((*cand) -> id().row()) ; 
-	areaEle.push_back((*cand) -> id().area()) ; 
-	cellIdEle.push_back((*cand) -> id().all()) ; 
-	card  = m_ecal->cardNumber((*cand) -> id()) ; 
-	crate = m_ecal->cardCrate(card); 
-	slot = m_ecal->cardSlot(card); 
-	slotEle.push_back(slot) ; 
-	crateEle.push_back(crate) ; 
-	debug() << " etCode electron " << (*cand) -> etCode() << " slot = "<<slot<<" crate= "<<crate<<endreq;
+        colEle.push_back((*cand) -> id().col()) ; 
+        rowEle.push_back((*cand) -> id().row()) ; 
+        areaEle.push_back((*cand) -> id().area()) ; 
+        cellIdEle.push_back((*cand) -> id().all()) ; 
+        card  = m_ecal->cardNumber((*cand) -> id()) ; 
+        crate = m_ecal->cardCrate(card); 
+        slot = m_ecal->cardSlot(card); 
+        slotEle.push_back(slot) ; 
+        crateEle.push_back(crate) ; 
+        debug() << " etCode electron " << (*cand) -> etCode() << " slot = "<<slot<<" crate= "<<crate<<endreq;
         break ;
       case L0DUBase::CaloType::Photon:
         etCodePho.push_back( (*cand) -> etCode() ) ;
         etPho.push_back( (*cand) -> et() / Gaudi::Units::GeV ) ;
-	colPho.push_back((*cand) -> id().col()) ; 
-	rowPho.push_back((*cand) -> id().row()) ; 
-	areaPho.push_back((*cand) -> id().area()) ; 
-	cellIdPho.push_back((*cand) -> id().all()) ; 
-	card  = m_ecal->cardNumber((*cand) -> id()) ; 
-	crate = m_ecal->cardCrate(card); 
-	slot = m_ecal->cardSlot(card); 
-	slotPho.push_back(slot) ; 
-	cratePho.push_back(crate) ; 
+        colPho.push_back((*cand) -> id().col()) ; 
+        rowPho.push_back((*cand) -> id().row()) ; 
+        areaPho.push_back((*cand) -> id().area()) ; 
+        cellIdPho.push_back((*cand) -> id().all()) ; 
+        card  = m_ecal->cardNumber((*cand) -> id()) ; 
+        crate = m_ecal->cardCrate(card); 
+        slot = m_ecal->cardSlot(card); 
+        slotPho.push_back(slot) ; 
+        cratePho.push_back(crate) ; 
         break ;
       case L0DUBase::CaloType::Hadron:
         etCodeHad.push_back( (*cand) -> etCode() ) ;
         etHad.push_back( (*cand) -> et() / Gaudi::Units::GeV ) ;
-	colHad.push_back((*cand) -> id().col()) ; 
-	rowHad.push_back((*cand) -> id().row()) ; 
-	areaHad.push_back((*cand) -> id().area()) ; 
-	cellIdHad.push_back((*cand) -> id().all()) ; 
-	card  = m_hcal->cardNumber((*cand) -> id()) ; 
-	crate = m_hcal->cardCrate(card); 
-	slot = m_hcal->cardSlot(card); 
-	slotHad.push_back(slot) ; 
-	crateHad.push_back(crate) ; 
-	debug() << " etCode hadron " << (*cand) -> etCode() << endreq;
+        colHad.push_back((*cand) -> id().col()) ; 
+        rowHad.push_back((*cand) -> id().row()) ; 
+        areaHad.push_back((*cand) -> id().area()) ; 
+        cellIdHad.push_back((*cand) -> id().all()) ; 
+        card  = m_hcal->cardNumber((*cand) -> id()) ; 
+        crate = m_hcal->cardCrate(card); 
+        slot = m_hcal->cardSlot(card); 
+        slotHad.push_back(slot) ; 
+        crateHad.push_back(crate) ; 
+        debug() << " etCode hadron " << (*cand) -> etCode() << endreq;
         break ;
       case L0DUBase::CaloType::Pi0Local:
         etCodePil.push_back( (*cand) -> etCode() ) ;
         etPil.push_back( (*cand) -> et() / Gaudi::Units::GeV ) ;
-	colPil.push_back((*cand) -> id().col()) ; 
-	rowPil.push_back((*cand) -> id().row()) ; 
-	areaPil.push_back((*cand) -> id().area()) ; 
-	cellIdPil.push_back((*cand) -> id().all()) ; 
-	card  = m_ecal->cardNumber((*cand) -> id()) ; 
-	crate = m_ecal->cardCrate(card); 
-	slot = m_ecal->cardSlot(card); 
-	slotPil.push_back(slot) ; 
-	cratePil.push_back(crate) ; 
+        colPil.push_back((*cand) -> id().col()) ; 
+        rowPil.push_back((*cand) -> id().row()) ; 
+        areaPil.push_back((*cand) -> id().area()) ; 
+        cellIdPil.push_back((*cand) -> id().all()) ; 
+        card  = m_ecal->cardNumber((*cand) -> id()) ; 
+        crate = m_ecal->cardCrate(card); 
+        slot = m_ecal->cardSlot(card); 
+        slotPil.push_back(slot) ; 
+        cratePil.push_back(crate) ; 
         break ;
       case L0DUBase::CaloType::Pi0Global:
         etCodePig.push_back( (*cand) -> etCode() ) ;
         etPig.push_back( (*cand) -> et() / Gaudi::Units::GeV ) ;
-	colPig.push_back((*cand) -> id().col()) ; 
-	rowPig.push_back((*cand) -> id().row()) ; 
-	areaPig.push_back((*cand) -> id().area()) ; 
-	cellIdPig.push_back((*cand) -> id().all()) ; 
-	card  = m_ecal->cardNumber((*cand) -> id()) ; 
-	crate = m_ecal->cardCrate(card); 
-	slot = m_ecal->cardSlot(card); 
-	slotPig.push_back(slot) ; 
-	cratePig.push_back(crate) ; 
+        colPig.push_back((*cand) -> id().col()) ; 
+        rowPig.push_back((*cand) -> id().row()) ; 
+        areaPig.push_back((*cand) -> id().area()) ; 
+        cellIdPig.push_back((*cand) -> id().all()) ; 
+        card  = m_ecal->cardNumber((*cand) -> id()) ; 
+        crate = m_ecal->cardCrate(card); 
+        slot = m_ecal->cardSlot(card); 
+        slotPig.push_back(slot) ; 
+        cratePig.push_back(crate) ; 
         break ;
       case L0DUBase::CaloType::SumEt:
         etCodeSumH = (*cand) -> etCode() ;
         etSumH = (*cand) -> et() / Gaudi::Units::GeV ;
         break ;        
-    }       
+      }       
+    }
   }
 
   debug()<<" apres decodage FULL"<<endmsg ; 
-  LHCb::L0CaloCandidates* candidatesDef = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Default+m_inputDataSuffix );
 
-  int etCodeEleDef( -999 ) , etCodePhoDef( -999 ) , etCodePilDef( -999 ) , etCodePigDef( -999 ) , etCodeHadDef( -999 ) ;
+  int etCodeEleDef( -999 ) , etCodePhoDef( -999 ) , etCodePilDef( -999 ) , 
+    etCodePigDef( -999 ) , etCodeHadDef( -999 ) ;
   int etCodeSumHDef = -999 ;
-  double  etEleDef( -999. ) , etPhoDef( -999. ) , etPilDef( -999. ) , etPigDef( -999. ) , etHadDef( -999. ) ;
+  double  etEleDef( -999. ) , etPhoDef( -999. ) , etPilDef( -999. ) , 
+    etPigDef( -999. ) , etHadDef( -999. ) ;
   double etSumHDef = -999. ;  
-
+  
   int areaEleDef, areaPhoDef, areaPilDef, areaPigDef, areaHadDef ;
   int rowEleDef, rowPhoDef, rowPilDef, rowPigDef, rowHadDef ;
   int  colEleDef, colPhoDef, colPilDef, colPigDef, colHadDef ;
   int cardEleDef, cardPhoDef, cardPilDef, cardPigDef, cardHadDef ;
   int slotEleDef, slotPhoDef, slotPilDef, slotPigDef, slotHadDef ;
   int crateEleDef, cratePhoDef, cratePilDef, cratePigDef, crateHadDef ;
-
+  
   areaEleDef = -999 ; 
   areaPhoDef = -999 ; 
   areaPilDef = -999 ; 
   areaPigDef = -999 ; 
   areaHadDef = -999 ; 
-
+  
   slotEleDef = -999 ; 
   slotPhoDef = -999 ; 
   slotPilDef = -999 ; 
@@ -208,7 +213,7 @@ StatusCode L0CaloNtpMonitor::execute( ) {
   cratePilDef = -999 ; 
   cratePigDef = -999 ; 
   crateHadDef = -999 ; 
-
+  
   rowEleDef = -999 ; 
   rowPhoDef = -999 ; 
   rowPilDef = -999 ; 
@@ -224,74 +229,78 @@ StatusCode L0CaloNtpMonitor::execute( ) {
   int cellIdPhoDef = -999 ; 
   int cellIdPilDef = -999 ; 
   int cellIdPigDef = -999 ; 
-  int cellIdHadDef = -999 ; 
-
-  LHCb::L0CaloCandidates::const_iterator candDef;
-  for ( candDef = candidatesDef->begin() ; candidatesDef->end() != candDef ; ++candDef ) {
-    switch ( (*candDef)->type() ) {
+  int cellIdHadDef = -999 ;
+  
+  if ( exist< LHCb::L0CaloCandidates >( LHCb::L0CaloCandidateLocation::Default+m_inputDataSuffix ) ) {
+    LHCb::L0CaloCandidates* candidatesDef = 
+      get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Default+m_inputDataSuffix );
+    
+    LHCb::L0CaloCandidates::const_iterator candDef;
+    for ( candDef = candidatesDef->begin() ; candidatesDef->end() != candDef ; ++candDef ) {
+      switch ( (*candDef)->type() ) {
       case L0DUBase::CaloType::Electron:
         etCodeEleDef =  (*candDef) -> etCode()  ;
         etEleDef =  (*candDef) -> et() / Gaudi::Units::GeV  ;
-	colEleDef = (*candDef) -> id().col() ; 
-	rowEleDef = (*candDef) -> id().row() ; 
-	areaEleDef = (*candDef) -> id().area() ; 
-	cellIdEleDef = (*candDef) -> id().all() ; 
-	cardEleDef  = m_ecal->cardNumber((*candDef) -> id()) ; 
-	crateEleDef = m_ecal->cardCrate(cardEleDef); 
-	slotEleDef = m_ecal->cardSlot(cardEleDef); 
+        colEleDef = (*candDef) -> id().col() ; 
+        rowEleDef = (*candDef) -> id().row() ; 
+        areaEleDef = (*candDef) -> id().area() ; 
+        cellIdEleDef = (*candDef) -> id().all() ; 
+        cardEleDef  = m_ecal->cardNumber((*candDef) -> id()) ; 
+        crateEleDef = m_ecal->cardCrate(cardEleDef); 
+        slotEleDef = m_ecal->cardSlot(cardEleDef); 
         break ;
       case L0DUBase::CaloType::Photon:
         etCodePhoDef =  (*candDef) -> etCode() ;
         etPhoDef =  (*candDef) -> et() / Gaudi::Units::GeV ;
-	colPhoDef = (*candDef) -> id().col(); 
-	rowPhoDef = (*candDef) -> id().row(); 
-	areaPhoDef = (*candDef) -> id().area(); 
-	cellIdPhoDef = (*candDef) -> id().all() ; 
-	cardPhoDef  = m_ecal->cardNumber((*candDef) -> id()) ; 
-	cratePhoDef = m_ecal->cardCrate(cardPhoDef);
-	slotPhoDef = m_ecal->cardSlot(cardPhoDef);  
+        colPhoDef = (*candDef) -> id().col(); 
+        rowPhoDef = (*candDef) -> id().row(); 
+        areaPhoDef = (*candDef) -> id().area(); 
+        cellIdPhoDef = (*candDef) -> id().all() ; 
+        cardPhoDef  = m_ecal->cardNumber((*candDef) -> id()) ; 
+        cratePhoDef = m_ecal->cardCrate(cardPhoDef);
+        slotPhoDef = m_ecal->cardSlot(cardPhoDef);  
         break ;
       case L0DUBase::CaloType::Hadron:
         etCodeHadDef =  (*candDef) -> etCode() ;
         etHadDef =  (*candDef) -> et() / Gaudi::Units::GeV ;
-	colHadDef = (*candDef) -> id().col(); 
-	rowHadDef = (*candDef) -> id().row(); 
-	areaHadDef = (*candDef) -> id().area(); 
-	cellIdHadDef = (*candDef) -> id().all() ; 
-	cardHadDef  = m_hcal->cardNumber((*candDef) -> id()) ; 
-	crateHadDef = m_hcal->cardCrate(cardHadDef);
-	slotHadDef = m_ecal->cardSlot(cardHadDef);   
+        colHadDef = (*candDef) -> id().col(); 
+        rowHadDef = (*candDef) -> id().row(); 
+        areaHadDef = (*candDef) -> id().area(); 
+        cellIdHadDef = (*candDef) -> id().all() ; 
+        cardHadDef  = m_hcal->cardNumber((*candDef) -> id()) ; 
+        crateHadDef = m_hcal->cardCrate(cardHadDef);
+        slotHadDef = m_ecal->cardSlot(cardHadDef);   
         break ;
       case L0DUBase::CaloType::Pi0Local:
         etCodePilDef =  (*candDef) -> etCode() ;
         etPilDef =  (*candDef) -> et() / Gaudi::Units::GeV ;
-	colPilDef = (*candDef) -> id().col(); 
-	rowPilDef = (*candDef) -> id().row(); 
-	areaPilDef = (*candDef) -> id().area(); 
-	cellIdPilDef = (*candDef) -> id().all() ; 
-	cardPilDef  = m_ecal->cardNumber((*candDef) -> id()) ; 
-	cratePilDef = m_ecal->cardCrate(cardPilDef);
-	slotPilDef = m_ecal->cardSlot(cardPilDef);   
+        colPilDef = (*candDef) -> id().col(); 
+        rowPilDef = (*candDef) -> id().row(); 
+        areaPilDef = (*candDef) -> id().area(); 
+        cellIdPilDef = (*candDef) -> id().all() ; 
+        cardPilDef  = m_ecal->cardNumber((*candDef) -> id()) ; 
+        cratePilDef = m_ecal->cardCrate(cardPilDef);
+        slotPilDef = m_ecal->cardSlot(cardPilDef);   
         break ;
       case L0DUBase::CaloType::Pi0Global:
         etCodePigDef =  (*candDef) -> etCode() ;
         etPigDef =  (*candDef) -> et() / Gaudi::Units::GeV ;
-	colPigDef = (*candDef) -> id().col(); 
-	rowPigDef = (*candDef) -> id().row(); 
-	areaPigDef = (*candDef) -> id().area(); 
-	cellIdPigDef = (*candDef) -> id().all() ; 
-	cardPigDef  = m_ecal->cardNumber((*candDef) -> id()) ; 
-	cratePigDef = m_ecal->cardCrate(cardPigDef);
-	slotPigDef = m_ecal->cardSlot(cardPigDef);   
+        colPigDef = (*candDef) -> id().col(); 
+        rowPigDef = (*candDef) -> id().row(); 
+        areaPigDef = (*candDef) -> id().area(); 
+        cellIdPigDef = (*candDef) -> id().all() ; 
+        cardPigDef  = m_ecal->cardNumber((*candDef) -> id()) ; 
+        cratePigDef = m_ecal->cardCrate(cardPigDef);
+        slotPigDef = m_ecal->cardSlot(cardPigDef);   
         break ;
       case L0DUBase::CaloType::SumEt:
         etCodeSumHDef = (*candDef) -> etCode() ;
         etSumHDef = (*candDef) -> et() / Gaudi::Units::GeV ;
         break ;        
-    }       
+      }       
+    }
   }
-
-    
+  
   ntp -> farray( "etCodeEle" , etCodeEle , "NEle" , 28 ) ;
   ntp -> farray( "etEle"     , etEle     , "NEle" , 28 ) ;
   ntp -> farray( "areaEle"    , areaEle    , "NEle" , 28 ) ;

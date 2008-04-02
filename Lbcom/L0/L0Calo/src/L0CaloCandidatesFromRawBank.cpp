@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.9 2008-03-27 23:42:11 robbep Exp $
+// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.10 2008-04-02 11:04:33 robbep Exp $
 // Include files
 
 // from Gaudi
@@ -199,7 +199,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
           center.SetX( center.x() + tol );
           center.SetY( center.y() + tol );
         } else {
-          info() << "Non valid CELL Id" << endreq ;
+          debug() << "Non valid CELL Id" << endreq ;
           LHCb::CaloCellID tmp( id.calo(), id.area(), id.row()+1, id.col()+1);
           center = det->cellCenter( tmp );
           tol    = det->cellSize( tmp ) * .5;

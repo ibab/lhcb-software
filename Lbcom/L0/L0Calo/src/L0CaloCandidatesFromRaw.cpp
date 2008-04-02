@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.12 2007-12-11 18:26:50 robbep Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.13 2008-04-02 11:04:33 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -71,25 +71,28 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
   
   if ( "" != m_extension ) {
     //== Compare 
-    LHCb::L0CaloCandidates* ref     = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full );
-    LHCb::L0CaloCandidates* outFull = get<LHCb::L0CaloCandidates>( nameFull, IgnoreRootInTES );
-    LHCb::L0CaloCandidates::const_iterator itOld = ref->begin();
-    LHCb::L0CaloCandidates::const_iterator itNew = outFull->begin();
-    while ( ref->end() != itOld && outFull->end() != itNew ) {
-      if ( (*itOld)->type()     != (*itNew)->type()   ||
-           //(*itOld)->id()       != (*itNew)->id()     ||
-           (*itOld)->etCode()   != (*itNew)->etCode() ||
-           (*itOld)->et()       != (*itNew)->et()     ||
-           (*itOld)->posTol()   != (*itNew)->posTol() ||
-           (*itOld)->position() != (*itNew)->position() ) {
-        info() << "Error : old " << (*itOld) << endreq
-               << "        new " << (*itNew) << endreq;
-      } else {
-        debug() << "Entry OK " << itNew-outFull->begin() 
-                << " type " << (*itNew)->type() << endreq;
+    if ( ( exist< LHCb::L0CaloCandidates >( LHCb::L0CaloCandidateLocation::Full ) )  &&
+         ( exist< LHCb::L0CaloCandidates >( nameFull ) ) ) {
+      LHCb::L0CaloCandidates* ref     = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full );
+      LHCb::L0CaloCandidates* outFull = get<LHCb::L0CaloCandidates>( nameFull );
+      LHCb::L0CaloCandidates::const_iterator itOld = ref->begin();
+      LHCb::L0CaloCandidates::const_iterator itNew = outFull->begin();
+      while ( ref->end() != itOld && outFull->end() != itNew ) {
+        if ( (*itOld)->type()     != (*itNew)->type()   ||
+             //(*itOld)->id()       != (*itNew)->id()     ||
+             (*itOld)->etCode()   != (*itNew)->etCode() ||
+             (*itOld)->et()       != (*itNew)->et()     ||
+             (*itOld)->posTol()   != (*itNew)->posTol() ||
+             (*itOld)->position() != (*itNew)->position() ) {
+          debug() << "Error : old " << (*itOld) << endreq
+                  << "        new " << (*itNew) << endreq;
+        } else {
+          debug() << "Entry OK " << itNew-outFull->begin() 
+                  << " type " << (*itNew)->type() << endreq;
+        }
+        itOld++;
+        itNew++;
       }
-      itOld++;
-      itNew++;
     }
   }
   
