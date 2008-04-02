@@ -87,11 +87,14 @@ namespace LHCb  {
     typedef std::vector<LHCb::MEPRx *> Workers;
     typedef Workers::iterator          RXIT;
     friend struct MEPRx;
+
   protected:
+    enum EvtBuilderState { NOT_READY, READY, RUNNING, STOPPED };
+
     char                       *m_allNames;
     int                         m_dataSock; /* Raw socket for receiving data.*/
     int                         m_mepSock;  /* Raw socket to send MEP requests.*/
-    enum { NOT_READY, READY, RUNNING, STOPPED } m_state;
+    EvtBuilderState             m_ebState;
     bool                        m_forceStop;
     bool                        m_RTTCCompat;
     bool                        m_dynamicMEPRequest;
@@ -136,20 +139,24 @@ namespace LHCb  {
 
     int                         m_sourceID;
 
-    u_int32_t m_ownAddress;
+    u_int32_t                   m_ownAddress;
+
     /* Counters per source */ 
-    std::vector<int> m_rxOct, m_rxPkt, m_rxEvt;
+    std::vector<int>            m_rxOct;
+    std::vector<int>            m_rxPkt;
+    std::vector<int>            m_rxEvt;
+
     /* Global counters */
-
     int m_numMEPRecvTimeouts, m_numMEPReq, m_totMEPReq, m_totMEPReqPkt;
-    // Error counters
-    //
 
+    // Error counters
     // u_int64_t m_notReqPkt, m_incEvt; // 64-bit not yet supported in IMonitorSvc
 
   public:
-    int m_totRxPkt, m_totRxOct;
-    int m_notReqPkt, m_incEvt;
+    int                         m_totRxPkt;
+    int                         m_totRxOct;
+    int                         m_notReqPkt;
+    int                         m_incEvt;
     int                         m_totBadMEP;
     int                         m_totWrongPartID;
     unsigned long               m_timer;
@@ -157,7 +164,11 @@ namespace LHCb  {
     int                         m_nErrorSamples;
     int                         m_errorCheckInterval; // (in millis)
     bool                        m_cryError;
-    std::vector<int> m_badLenPkt, m_misPkt, m_badPckFktPkt, m_truncPkt;
+    std::vector<int>            m_badLenPkt;
+    std::vector<int>            m_misPkt;
+    std::vector<int>            m_badPckFktPkt;
+    std::vector<int>            m_truncPkt;
+
     /// Standard Constructor
     MEPRxSvc(const std::string& name, ISvcLocator* svc);
     /// Standard Destructor
