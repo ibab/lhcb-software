@@ -7,45 +7,26 @@
 
 #include "L0MuonKernel/BankUtilities.h"
 
+#include "L0MuonKernel/ProcRawErrors.h"
+
+
 /**
    Constructor.
 */
 L0Muon::ProcRawCnv::ProcRawCnv(){
 
   m_activ = false;
-  
-  for (int ib=0;ib<12;++ib){
-    for (int ich=0;ich<2;++ich){
-      m_L0_B_Id[ib][ich]=0;
-      m_L0EventNumber[ib][ich]=0;
-    }
-    for (int ipu=0;ipu<4;++ipu){
-      m_BCID_PU[ib][ipu]=0;
-    }
-    m_BCID_BCSU[ib]=0;
-  }
-  
   m_quarter=0;
+  m_n_decoded_banks=0;
 };
 /**
    Constructor.
 */
 L0Muon::ProcRawCnv::ProcRawCnv(int quarter){
 
-  m_activ = false;
-  
-  for (int ib=0;ib<12;++ib){
-    for (int ich=0;ich<2;++ich){
-      m_L0_B_Id[ib][ich]=0;
-      m_L0EventNumber[ib][ich]=0;
-    }
-    for (int ipu=0;ipu<4;++ipu){
-      m_BCID_PU[ib][ipu]=0;
-    }
-    m_BCID_BCSU[ib]=0;
-  }
-  
+  m_activ = false;  
   m_quarter=quarter;
+  m_n_decoded_banks=0;  
 
   char buf[4096];
   char* format ;
@@ -149,7 +130,7 @@ std::vector<L0Muon::PMuonCandidate>  L0Muon::ProcRawCnv::muonCandidatesPU(){
   std::vector<L0Muon::PMuonCandidate> cands;
   for (int ib = 0; ib<12 ; ++ib){
     for (int ipu= 0; ipu<4 ;++ipu) {
-//       int ncand= m_candRegHandlerPU[ib][ipu].numberOfCandidates();
+      //       int ncand= m_candRegHandlerPU[ib][ipu].numberOfCandidates();
       int status =m_candRegHandlerPU[ib][ipu].getStatus();
       int ncand = status&0x3;
       ncand = ncand<3 ? ncand : 2;
@@ -165,7 +146,7 @@ std::vector<L0Muon::PMuonCandidate>  L0Muon::ProcRawCnv::muonCandidatesPU(){
 std::vector<L0Muon::PMuonCandidate>  L0Muon::ProcRawCnv::muonCandidatesBCSU(){
   std::vector<L0Muon::PMuonCandidate> cands;
   for (int ib = 0; ib<12 ; ++ib){
-//     int ncand= m_candRegHandlerBCSU[ib].numberOfCandidates();
+    //     int ncand= m_candRegHandlerBCSU[ib].numberOfCandidates();
     int status =m_candRegHandlerBCSU[ib].getStatus();
     int ncand = status&0x3;
     ncand = ncand<3 ? ncand : 2;
@@ -181,7 +162,7 @@ std::vector<LHCb::MuonTileID> L0Muon::ProcRawCnv::ols(LHCb::MuonTileID puid)
 {
   std::vector<LHCb::MuonTileID> pads;
 
-//   std::cout <<"L0Muon::ProcRawCnv::ols input PU "<<puid.toString()<<std::endl;
+  //   std::cout <<"L0Muon::ProcRawCnv::ols input PU "<<puid.toString()<<std::endl;
   
   std::map<LHCb::MuonTileID, TileRegister*>::iterator it = m_olsMap.find(puid);
   if (it!=m_olsMap.end()) {
@@ -189,17 +170,17 @@ std::vector<LHCb::MuonTileID> L0Muon::ProcRawCnv::ols(LHCb::MuonTileID puid)
       pads = ((*it).second)->firedTiles();
     }    
   }
-//   if (it==m_olsMap.end()) {
-//     std::cout <<"L0Muon::ProcRawCnv::ols PU not found in ol map"<<std::endl;
-//     return pads;
-//   } 
-//   if ((*it).second==0) {
-//     std::cout <<"L0Muon::ProcRawCnv::ols no tile register associated"<<std::endl;
-//     return pads;
-//   }
+  //   if (it==m_olsMap.end()) {
+  //     std::cout <<"L0Muon::ProcRawCnv::ols PU not found in ol map"<<std::endl;
+  //     return pads;
+  //   } 
+  //   if ((*it).second==0) {
+  //     std::cout <<"L0Muon::ProcRawCnv::ols no tile register associated"<<std::endl;
+  //     return pads;
+  //   }
   
-//   pads = ((*it).second)->firedTiles();
-//   std::cout <<"L0Muon::ProcRawCnv::ols "<<pads.size()<<" pads found"<<std::endl;
+  //   pads = ((*it).second)->firedTiles();
+  //   std::cout <<"L0Muon::ProcRawCnv::ols "<<pads.size()<<" pads found"<<std::endl;
   return pads;
 }
 
@@ -237,20 +218,12 @@ std::vector<LHCb::MuonTileID>  L0Muon::ProcRawCnv::pus()
   return lpuids;
 }
     
-void L0Muon::ProcRawCnv::dump(int bankVersion) 
-{
-  std::string tab="";
-  dump(bankVersion,tab);
-}
-
-void L0Muon::ProcRawCnv::dump(int bankVersion, std::string tab)
+void L0Muon::ProcRawCnv::dump(const std::vector<unsigned int> &raw) 
 {
 
-  std::vector<unsigned int> raw = rawBank(bankVersion);
-
-  std::cout <<"__ "<<tab<<" - Q"<<m_quarter+1<<" ; bank size: "<<raw.size()<<std::endl;
+  std::cout <<"__ "<<" - Q"<<m_quarter+1<<" ; bank size: "<<raw.size()<<std::endl;
     
-  std::cout <<"__ "<<tab;
+  std::cout <<"__ ";
   std::cout <<"  ";
   for (int ib=0; ib<12; ++ib) {
     std::cout <<"     "<<std::setw(2)<<ib<<"    ";
@@ -261,7 +234,7 @@ void L0Muon::ProcRawCnv::dump(int bankVersion, std::string tab)
 
   for (unsigned int iline=0; iline<L0Muon::ProcRawCnv::board_full_data_size; ++iline) {
     
-    std::cout <<"__ "<<tab;
+    std::cout <<"__ ";
     std::cout <<std::setw(2)<<iline;
     std::cout<<std::hex;
     for (int ib=0; ib<12; ++ib) {
@@ -275,54 +248,19 @@ void L0Muon::ProcRawCnv::dump(int bankVersion, std::string tab)
   std::cout.unsetf(std::ios::uppercase);
 }
 
-void L0Muon::ProcRawCnv::formattedDump(int bankVersion) 
-{
-  std::string tab="";
-  formattedDump(bankVersion,tab);
-}
-
-void L0Muon::ProcRawCnv::formattedDump(int bankVersion,std::string tab)
-{
-
-  std::vector<unsigned int> raw = rawBank(bankVersion);
-
-  // Re-order the bank such that the second frame of each processing board is read first
-  raw =reorderOLChannels(raw);
-
-  std::cout <<"++ "<<tab<<" - Q"<<m_quarter+1<<" ; bank size: "<<raw.size()<<std::endl;
-    
-  std::cout <<"__ "<<tab;
-  std::cout <<"   ";
-  for (int ib=0; ib<12; ++ib) {
-    std::cout <<"    "<<std::setw(2)<<ib<<" ";
-  }
-  std::cout <<std::endl;
-
-  std::cout.setf(std::ios::uppercase) ;
-
-  int line_count=0;
-  for (unsigned int iline=0; iline<L0Muon::ProcRawCnv::board_full_data_size; ++iline) {
-    for (int ipart=0; ipart<2; ++ipart) {
-      std::cout <<"__ "<<tab;
-      std::cout <<std::setw(3)<<line_count;
-      std::cout<<std::hex;
-      for (int ib=0; ib<12; ++ib) {
-        int word = (raw[L0Muon::ProcRawCnv::board_full_data_size*ib+iline]>>((1-ipart)*16))&0xFFFF;
-        std::cout <<" 0x"<<std::setw(4)<<std::setfill('0')<<word;
-      }
-      std::cout<<std::dec;
-      std::cout <<std::endl;
-      ++line_count;
-    }
-  }
+void L0Muon::ProcRawCnv::dumpErrorCounters(std::string &os) {
+  int sum = 0;
+  for (int ib=0; ib<12; ++ib) sum+=m_errors[ib].sumCounters();  
+  os+=(boost::format("%d errors found\n") % sum ).str();
   
-  std::cout <<"__ ----"<<std::endl;  
-  std::cout.unsetf(std::ios::uppercase);
+  for (int ib=0; ib<12; ++ib) 
+    m_errors[ib].printCounters( os , (boost::format("\tPB%2d ") % ib ).str());
 }
 
 
-void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersion){
-
+void L0Muon::ProcRawCnv::decodeBank(const std::vector<unsigned int> &original, int bankVersion,
+                                    int &Refl0EventNumber, int &Refl0_B_Id){
+  
   if (bankVersion<1) return;
 
   unsigned int word;
@@ -339,19 +277,19 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
   //   std::cout<<std::dec;
   //   std::cout.unsetf(std::ios::uppercase);
  
-  // temporary !!!
-  std::vector<unsigned int> original = raw;
 
   // Clear the registers first
   release();
   m_activ = true;
   
+  int decodingError[12];
   for (int ib=0; ib<12; ++ib){
-    m_decodingError[ib]=0;
+    decodingError[ib]=0;
   }
   
   // Re-order the bank such that the second frame of each processing board is read first
-  raw =reorderOLChannels(raw);
+  std::vector<unsigned int> raw;
+  reorderOLChannels(original,raw);
   
   // Remove  words at the beginning and end of each frame
   std::vector<unsigned int>::iterator itraw;
@@ -360,9 +298,10 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
   for (int ifr=24; ifr>0; --ifr) {
     int pos = ifr*L0Muon::ProcRawCnv::board_full_frame_size-1;
     empty = raw[pos];
+    
     if (empty!=0) {
       int ib = (ifr-1)/2;
-      ++m_decodingError[ib];
+      ++decodingError[ib];
       std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" I "<<std::endl;
       std::cout <<" ifr= "<<ifr<<" pos= "<<pos<<" wd=0x"<<std::hex<<empty<<std::dec<<std::endl;
     }
@@ -370,21 +309,30 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
     raw.erase(itraw);
   }
   
-  // Get and Remove the L0EventNumber and the L0_B_Id at the beginning of each frame
+  // Get and Remove the l0EventNumber and the l0_B_Id at the beginning of each frame
   for (int ib=11; ib>-1; --ib) {
     for (int ich=1; ich>-1; --ich){
       int pos = (ib*2+ich)*(L0Muon::ProcRawCnv::board_full_frame_size-1);
       word = raw[pos];
       empty                    = ((word>>28)&0xF);
       if (empty!=0) {
-        ++m_decodingError[ib];
+        ++decodingError[ib];
         std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" A"<<std::endl;
       }
-      m_L0_B_Id[ib][ich]       = ((word>> 0)&0xFFF);
-      m_L0EventNumber[ib][ich] = ((word>>16)&0xFFF);
-      m_boardIndex[ib][ich]    = ((word>>12)&0xF) ;
+    
+      int l0_B_Id = ((word>> 0)&0xFFF);
+      Refl0_B_Id  = Refl0_B_Id==-1 ? l0_B_Id : Refl0_B_Id;
+      m_errors[ib].l0_B_Id[ich].set(l0_B_Id,Refl0_B_Id);
+  
+      int l0EventNumber = ((word>>16)&0xFFF);
+      Refl0EventNumber  = Refl0EventNumber==-1 ? l0EventNumber : Refl0EventNumber;      
+      m_errors[ib].l0EventNumber[ich].set(l0EventNumber,Refl0EventNumber);
+      
+      m_errors[ib].board_index[ich].set(((word>>12)&0xF),ib);
+
       itraw=raw.begin()+pos;
       raw.erase(itraw);
+  
     }
   }
 
@@ -406,12 +354,12 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
 
     empty = (word>>15)&0x1;
     if (empty!=0) {
-      ++m_decodingError[ib];
+      ++decodingError[ib];
       std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" B"<<std::endl;
     }
 
     word = raw[ib*L0Muon::ProcRawCnv::board_data_size + 1 ];
-    m_BCID_BCSU[ib]=(word>> 0)&0x0F;
+    m_errors[ib].bcsu_bcid.set((word>> 0)&0x0F,Refl0_B_Id);
 
     m_candRegHandlerBCSU[ib].setStatus(    ( (word>> 4)&0x0F ) );
     m_candRegHandlerBCSU[ib].setCandPU(    ( (word>> 8)&0x03 ) ,1);
@@ -423,35 +371,38 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
 
     empty = (word>>31)&0x1;
     if (empty!=0) {
-      ++m_decodingError[ib];
+      ++decodingError[ib];
       std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" C"<<std::endl;
     }
-
+    
     int status =m_candRegHandlerBCSU[ib].getStatus();
+    
+    m_errors[ib].bcsu_status.set(status);
+    
     int ncand = status&0x3;
     ncand = ncand<3 ? ncand : 2;
-//     if (ncand!=m_candRegHandlerBCSU[ib].numberOfCandidates()) {
-
-//       std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" D"<<std::endl;
-//       std::cout<<"L0Muon::ProcRawCnv::decodeBank ERROR : non empty candidate in contradiction with status !!!"
-//                << " BCSU board# "<<ib
-//                <<std::hex<<" status = 0x"<<m_candRegHandlerBCSU[ib].getStatus()<<std::dec
-//                << "ncand= "<<ncand<<" numberOfCandidates()= "<<m_candRegHandlerBCSU[ib].numberOfCandidates()<<std::endl;
-//       m_candRegHandlerBCSU[ib].dump();
-
-//       ++m_decodingError[ib];
-//       m_candRegHandlerBCSU[ib].clear();
-//       m_candRegHandlerBCSU[ib].setStatus(status);
-//     } else {
-      for( int icand =0; icand<ncand;++icand){
-        m_candRegHandlerBCSU[ib].setCandBoard( ib ,icand);
-        m_candRegHandlerBCSU[ib].setCandQuarter( m_quarter ,icand);
-      }
-//     }
+    //     if (ncand!=m_candRegHandlerBCSU[ib].numberOfCandidates()) {
+    
+    //       std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" D"<<std::endl;
+    //       std::cout<<"L0Muon::ProcRawCnv::decodeBank ERROR : non empty candidate in contradiction with status !!!"
+    //                << " BCSU board# "<<ib
+    //                <<std::hex<<" status = 0x"<<m_candRegHandlerBCSU[ib].getStatus()<<std::dec
+    //                << "ncand= "<<ncand<<" numberOfCandidates()= "<<m_candRegHandlerBCSU[ib].numberOfCandidates()<<std::endl;
+    //       m_candRegHandlerBCSU[ib].dump();
+    
+    //       ++decodingError[ib];
+    //       m_candRegHandlerBCSU[ib].clear();
+    //       m_candRegHandlerBCSU[ib].setStatus(status);
+    //     } else {
+    for( int icand =0; icand<ncand;++icand){
+      m_candRegHandlerBCSU[ib].setCandBoard( ib ,icand);
+      m_candRegHandlerBCSU[ib].setCandQuarter( m_quarter ,icand);
+    }
+    //     }
     
     // Loop over PUs candidates
     for (int ipu = 0; ipu<4; ++ipu) {
-
+      
       word = raw[ib*L0Muon::ProcRawCnv::board_data_size +2 +ipu*2 ];
       m_candRegHandlerPU[ib][ipu].setCandOffM1( ( (word>> 0)&0x0F ) ,0);
       m_candRegHandlerPU[ib][ipu].setCandOffM2( ( (word>> 4)&0x0F ) ,0);
@@ -461,57 +412,60 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
       m_candRegHandlerPU[ib][ipu].setCandCharge(( (word>>23)&0x01 ) ,1);
       m_candRegHandlerPU[ib][ipu].setCandPT(    ( (word>>24)&0x7F ) ,0);
       m_candRegHandlerPU[ib][ipu].setCandCharge(( (word>>31)&0x01 ) ,0);
-    
+      
       empty = (word>>15)&0x1;
       if (empty!=0) {
-        ++m_decodingError[ib];
+        ++decodingError[ib];
         std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" E"<<std::endl;
       }
-
+      
       word = raw[ib*L0Muon::ProcRawCnv::board_data_size+3+ipu*2];
-      m_BCID_PU[ib][ipu]=(word>> 0)&0x0F;
-
+      m_errors[ib].pus_bcid[ipu].set((word>> 0)&0x0F,Refl0_B_Id);
+      
       empty = (word>>8)&0xFF;
       if (empty!=0) {
-        ++m_decodingError[ib];
+        ++decodingError[ib];
         std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" F"<<std::endl;
       }
-
+      
       m_candRegHandlerPU[ib][ipu].setStatus(    ( (word>> 4)&0x0F ) );
       m_candRegHandlerPU[ib][ipu].setCandOffM1( ( (word>>16)&0x0F ) ,1);
       m_candRegHandlerPU[ib][ipu].setCandOffM2( ( (word>>20)&0x0F ) ,1);
       m_candRegHandlerPU[ib][ipu].setCandColM3( ( (word>>24)&0x1F ) ,1);
       m_candRegHandlerPU[ib][ipu].setCandRowM3( ( (word>>29)&0x03 ) ,1);
-
+      
       int status = m_candRegHandlerPU[ib][ipu].getStatus();
+
+      m_errors[ib].pus_status[ipu].set(status);
+
       int ncand = status&0x3;
       ncand = ncand<3 ? ncand : 2;
-//       if (ncand!=m_candRegHandlerPU[ib][ipu].numberOfCandidates()) {
+      //       if (ncand!=m_candRegHandlerPU[ib][ipu].numberOfCandidates()) {
 
-//         std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" G"<<std::endl;
-//         std::cout<<"L0Muon::ProcRawCnv::decodeBank ERROR : non empty candidate in contradiction with status !!!"
-//                  << " board# "<<ib<<" PU# "<<ipu
-//                  <<std::hex<<" 0x"<<m_candRegHandlerPU[ib][ipu].getStatus()<<std::dec<<std::endl;
-//         m_candRegHandlerPU[ib][ipu].dump();
+      //         std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" G"<<std::endl;
+      //         std::cout<<"L0Muon::ProcRawCnv::decodeBank ERROR : non empty candidate in contradiction with status !!!"
+      //                  << " board# "<<ib<<" PU# "<<ipu
+      //                  <<std::hex<<" 0x"<<m_candRegHandlerPU[ib][ipu].getStatus()<<std::dec<<std::endl;
+      //         m_candRegHandlerPU[ib][ipu].dump();
 
-//         m_candRegHandlerPU[ib][ipu].clear();
-//         m_candRegHandlerPU[ib][ipu].setStatus(status);
-//         ++m_decodingError[ib];
+      //         m_candRegHandlerPU[ib][ipu].clear();
+      //         m_candRegHandlerPU[ib][ipu].setStatus(status);
+      //         ++decodingError[ib];
 
-//       } else {
-        for( int icand =0; icand<ncand;++icand){
-          m_candRegHandlerPU[ib][ipu].setCandPU( ipu ,icand);
-          m_candRegHandlerPU[ib][ipu].setCandBoard( ib ,icand);
-          m_candRegHandlerPU[ib][ipu].setCandQuarter( m_quarter ,icand);
-        }
-//       }
+      //       } else {
+      for( int icand =0; icand<ncand;++icand){
+        m_candRegHandlerPU[ib][ipu].setCandPU( ipu ,icand);
+        m_candRegHandlerPU[ib][ipu].setCandBoard( ib ,icand);
+        m_candRegHandlerPU[ib][ipu].setCandQuarter( m_quarter ,icand);
+      }
+      //       }
       
     }// End of loop over PUs candidates
 
     int iwd = ib*L0Muon::ProcRawCnv::board_data_size+10;
     // Loop over PUs input data
     for (int ipu = 0; ipu<4; ++ipu) {
-
+      
       boost::dynamic_bitset<> rawbitset;
       int rawsize ;
       
@@ -521,10 +475,10 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
         // Error signalization field
         // 
         word = raw[iwd];
-        m_add_link_error[ib][ipu]= ( (word>>24)&0xFF);
-        m_opt_link_error[ib][ipu]= ( (word>>16)&0xFF);
-        m_ser_link_error[ib][ipu]= ( (word>> 8)&0x3F);
-        m_par_link_error[ib][ipu]= ( (word>> 0)&0xFF);
+        m_errors[ib].add_link[ipu].set( (word>>24)&0xFF);
+        m_errors[ib].opt_link[ipu].set( (word>>16)&0xFF);
+        m_errors[ib].ser_link[ipu].set( (word>> 8)&0x3F);
+        m_errors[ib].par_link[ipu].set( (word>> 0)&0xFF);
         
         ++iwd; // iwd = 11 (%68)
 
@@ -576,14 +530,14 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
         // Error signalization field
         // 
         word = raw[iwd];
-        m_add_link_error[ib][ipu]= ( (word>> 8)&0xFF);
-        m_opt_link_error[ib][ipu]= ( (word>> 0)&0xFF);
+        m_errors[ib].add_link[ipu].set( (word>> 8)&0xFF);
+        m_errors[ib].opt_link[ipu].set( (word>> 0)&0xFF);
         ++iwd;
         word = raw[iwd];
-        m_ser_link_error[ib][ipu]= ( (word>>24)&0x3F);
-        m_par_link_error[ib][ipu]= ( (word>>16)&0xFF);
+        m_errors[ib].ser_link[ipu].set( (word>>24)&0x3F);
+        m_errors[ib].par_link[ipu].set( (word>>16)&0xFF);
         // iwd = 25 (%68)
-
+        
         //
         // OL data field
         // 
@@ -652,16 +606,18 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
 
     }// End of loop over PUs input data
 
+
   }// End of loop over processing boards
 
   // temporary check
-  std::vector<unsigned int> tmp = rawBank(bankVersion);
+  std::vector<unsigned int> tmp;
+  rawBank(tmp, bankVersion);
   for (int ib=0; ib<12;++ib){
     for (unsigned int i=0; i<L0Muon::ProcRawCnv::board_full_data_size; ++i){
       unsigned int iw=ib*L0Muon::ProcRawCnv::board_full_data_size+i;
       if (tmp[iw]!=original[iw]) {
-        if (m_decodingError[ib]==0){
-          ++m_decodingError[ib];
+        if (decodingError[ib]==0){
+          ++decodingError[ib];
           std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" H"<<std::endl;
           std::cout<<"\t !!! L0Muon::ProcRawCnv::decodeBank !!! ERROR !!! line "<<iw<<" board "<<ib
                    <<std::hex<<" rebuild= 0x"<<tmp[iw]<<" VS original= 0x"<<original[iw]<<std::dec<<std::endl;
@@ -670,9 +626,12 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
     }
   }
 
+  
+  for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decodingError[ib]);
+  
   // Reset registers of a board if a decoding error has been detected
   for (int ib=0; ib<12; ++ib){
-    if (m_decodingError[ib]>0) {
+    if (decodingError[ib]>0) {
       m_candRegHandlerBCSU[ib].clear();
       for (int ipu = 0; ipu<4; ++ipu) {
         m_candRegHandlerPU[ib][ipu].clear();
@@ -682,22 +641,30 @@ void L0Muon::ProcRawCnv::decodeBank(std::vector<unsigned int> raw, int bankVersi
       std::cout<<"\tL0Muon::ProcRawCnv::decodeBank decodingError !!! DECODING ERROR !!! board "<<ib<<std::endl;
     }
   }
+
+  raw = original;
+  ++m_n_decoded_banks;
+  
+
 }
 
-void L0Muon::ProcRawCnv::setEventCounters(int L0EventNum, int L0_B_Id){
-  for (int ib=0; ib<12; ++ib){
-    for (int ich=0; ich<2; ++ich){
-      m_L0EventNumber[ib][ich]=L0EventNum&0xFFF;
-      m_L0_B_Id[ib][ich]=L0_B_Id&0xFFF;
-    }
-    m_BCID_BCSU[ib]=L0_B_Id&0xF;
-    for (int ipu=0; ipu<4; ++ipu){
-      m_BCID_PU[ib][ipu]=L0_B_Id&0xF;
-    }
-  }
-}
 
-std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion){
+
+// void L0Muon::ProcRawCnv::setErrors(int l0EventNum, int l0_B_Id){
+//   for (int ib=0; ib<12; ++ib){
+//     for (int ich=0; ich<2; ++ich){
+//       m_errors[ib].board_index[ich].set(ib,ib);
+//       m_errors[ib].l0EventNumber[ich].set(l0EventNum,l0EventNum);
+//       m_errors[ib].l0_B_Id[ich].set(l0_B_Id,l0_B_Id);
+//     }
+//     m_errors[ib].bcsu_bcid.set(l0_B_Id,l0_B_Id);
+//     for (int ipu=0; ipu<4; ++ipu){
+//       m_errors[ib].pus_bcid[ipu].set(l0_B_Id,l0_B_Id);
+//     }
+//   }
+// }
+
+void L0Muon::ProcRawCnv::rawBank(std::vector<unsigned int> &data, int bankVersion){
   std::vector<unsigned int> raw;
   int event_number;
   int l0_bid;
@@ -705,14 +672,14 @@ std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion){
   unsigned int event_num_word;
   int bcid;
 
-  if (bankVersion<1) return raw;
+  if (bankVersion<1) return;
 
   // Loop over processing boards 
   for (int ib=0; ib<12; ++ib) {
 
-    event_number   = m_L0EventNumber[ib][0];
-    l0_bid         = m_L0_B_Id[ib][0];
-    board_index    = m_boardIndex[ib][0];
+    event_number   = m_errors[ib].l0EventNumber[0].value();
+    l0_bid         = m_errors[ib].l0_B_Id[0].value();
+    board_index    = m_errors[ib].board_index[0].value();   
     event_num_word = ((event_number<<16)&0xFFF0000 ) + ((board_index<<12)&0xF000) + ( l0_bid&0xFFF );
     raw.push_back(event_num_word);
 
@@ -739,7 +706,7 @@ std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion){
     word = ( ( (pt[0]<<24)&0xFF000000 ) + ( (pt[1]<<16)&0xFF0000 ) + ( (add[0])&0x7FFF ) );
     raw.push_back(word);
 
-    bcid = m_BCID_BCSU[ib];
+    bcid = m_errors[ib].bcsu_bcid.value();
     word = ( (add[1]<<16)&0x7FFF0000 ) + ( (pu[0]<<10)&0xC00 ) + ( (pu[1]<<8)&0x200 ) + ( (status<<4)&0xF0 ) + (bcid&0xF);
     raw.push_back(word);
  
@@ -759,7 +726,7 @@ std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion){
         pu[icand]  = m_candRegHandlerPU[ib][ipu].getCandPU(icand);
       }
       int status = m_candRegHandlerPU[ib][ipu].getStatus();
-      bcid = m_BCID_PU[ib][ipu];
+      bcid = m_errors[ib].pus_bcid[ipu].value();
 
       word = ( ( (pt[0]<<24)&0xFF000000 ) + ( (pt[1]<<16)&0xFF0000 ) + ( (add[0])&0x7FFF ) );
       raw.push_back(word);
@@ -782,10 +749,10 @@ std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion){
       boost::dynamic_bitset<> bitset;
       
       if (ipu%2==0) {
-        int add = m_add_link_error[ib][ipu];
-        int opt = m_opt_link_error[ib][ipu];
-        int ser = m_ser_link_error[ib][ipu];
-        int par = m_par_link_error[ib][ipu];
+        int add = m_errors[ib].add_link[ipu].value();
+        int opt = m_errors[ib].opt_link[ipu].value();
+        int ser = m_errors[ib].ser_link[ipu].value();
+        int par = m_errors[ib].par_link[ipu].value();
         word=( ((add<<24)&0xFF000000) + ((opt<<16)&0xFF0000) + ((ser<<8)&0x3F00) + ((par<<0)&0xFF) );
         raw.push_back(word); // Signalization field
 
@@ -819,10 +786,10 @@ std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion){
         
       } else {
 
-        int add = m_add_link_error[ib][ipu];
-        int opt = m_opt_link_error[ib][ipu];
-        int ser = m_ser_link_error[ib][ipu];
-        int par = m_par_link_error[ib][ipu];
+        int add = m_errors[ib].add_link[ipu].value();
+        int opt = m_errors[ib].opt_link[ipu].value();
+        int ser = m_errors[ib].ser_link[ipu].value();
+        int par = m_errors[ib].par_link[ipu].value();
         word+= ((add<<8)&0xFF00) + (opt&0x00FF);
         raw.push_back(word); //  bits[0-15] are the last bits from previous PU 
         word=( ((ser<<24)&0x3F000000) + ((par<<16)&0xFF0000) );
@@ -878,9 +845,9 @@ std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion){
 
     // Insert the line with the event numbers
     itraw= raw.begin() + ib*L0Muon::ProcRawCnv::board_full_data_size+L0Muon::ProcRawCnv::board_full_frame_size;
-    event_number   = m_L0EventNumber[ib][1];
-    l0_bid         = m_L0_B_Id[ib][1];
-    board_index    = m_boardIndex[ib][1];
+    event_number   = m_errors[ib].l0EventNumber[1].value(); 
+    l0_bid         = m_errors[ib].l0_B_Id[1].value();       
+    board_index    = m_errors[ib].board_index[1].value();   
     event_num_word = ((event_number<<16)&0xFFF0000 )+ ((board_index<<12)&0xF000) + ( l0_bid&0xFFF );
     raw.insert(itraw,event_num_word);
 
@@ -888,7 +855,7 @@ std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion){
   
 
   // Re-order the bank such that the second frame of each processing board is written first
-  raw = reorderOLChannels(raw);
+  reorderOLChannels(raw,data);
 
   //   std::cout.setf(std::ios::uppercase) ;
   //   std::cout<<"\t=> L0Muon::ProcRawCnv::rawBank -- dump raw bank of size: "<<raw.size()<<std::endl;
@@ -900,117 +867,21 @@ std::vector<unsigned int> L0Muon::ProcRawCnv::rawBank(int bankVersion){
   //   std::cout<<std::dec;
   //   std::cout.unsetf(std::ios::uppercase);
   
-  return raw;
 }
 
-std::vector<unsigned int> L0Muon::ProcRawCnv::reorderOLChannels(std::vector<unsigned int> raw){
+void L0Muon::ProcRawCnv::reorderOLChannels(const std::vector<unsigned int> &raw, std::vector<unsigned int> &reordered){
 
-  std::vector<unsigned int> tmp;
   std::vector<unsigned int>::iterator itpos;
-  std::vector<unsigned int>::iterator itstart;
-  std::vector<unsigned int>::iterator itstop;
+  std::vector<unsigned int>::const_iterator itstart;
+  std::vector<unsigned int>::const_iterator itstop;
   
   for (int ib=0; ib<12; ++ib) {
     for (int ich=1; ich>-1; --ich){
       itstart = raw.begin()+(ib*2+ich)*L0Muon::ProcRawCnv::board_full_frame_size;
       itstop  = itstart+L0Muon::ProcRawCnv::board_full_frame_size;
-      itpos   = tmp.end();
-      tmp.insert(itpos,itstart,itstop);
+      itpos   = reordered.end();
+      reordered.insert(itpos,itstart,itstop);
     }
   }
-  return tmp;
 }
 
-bool L0Muon::ProcRawCnv::inError(bool verbose)
-{
-  bool error = false;
-
-  int l0_b_id    = m_L0_B_Id[0][0];
-  int l0_evt_num = m_L0EventNumber[0][0];
-
-  for (int ib=0; ib<12;++ib){ // Loop over processing boards
-
-    if (m_decodingError[ib]>0){
-      error = true;
-      if (verbose) std::cout<<"L0Muon::ProcRawCnv::inError : "<<m_quarter
-                            <<" ib= "<<ib
-                            <<" decoding error "
-                            <<std::dec<<std::endl;
-    }
-    
-    for (int ich =0; ich<2; ++ich){
-      if (boardIndexError(ib,ich)){
-        error = true;
-        if (verbose) std::cout<<"L0Muon::ProcRawCnv::inError : "<<m_quarter
-                              <<" ib= "<<ib<<" ich= "<<ich
-                              <<" boardIndexError "
-                              <<std::dec<<std::endl;
-      }
-    }
-    for (int ipu=0;ipu<4;++ipu){
-      if ( m_opt_link_error[ib][ipu]>0 ) {
-        error = true;
-        if (verbose) std::cout<<"L0Muon::ProcRawCnv::inError : "<<m_quarter
-                              <<" ib= "<<ib<<" ipu= "<<ipu
-                              <<" opt_link_error Ox"<<std::hex<<m_opt_link_error[ib][ipu]
-                              <<std::dec<<std::endl;
-      }
-      if ( m_ser_link_error[ib][ipu]>0 ) {
-//         error = true;
-//         if (verbose) std::cout<<"L0Muon::ProcRawCnv::inError : "<<m_quarter
-//                               <<" ib= "<<ib<<" ipu= "<<ipu
-//                               <<" ser_link_error Ox"<<std::hex<<m_ser_link_error[ib][ipu]
-//                               <<std::dec<<std::endl;
-      }
-      if ( m_par_link_error[ib][ipu]>0 ) {
-//         error = true;
-//         if (verbose) std::cout<<"L0Muon::ProcRawCnv::inError : "<<m_quarter
-//                               <<" ib= "<<ib<<" ipu= "<<ipu
-//                               <<" par_link_error 0x"<<std::hex<<m_par_link_error[ib][ipu]
-//                               <<std::dec<<std::endl;
-      }
-    }
-
-    for (int ich =0; ich<2; ++ich){
-      if (m_L0_B_Id[ib][ich]!=l0_b_id){
-        error = true;
-        if (verbose) std::cout<<"L0Muon::ProcRawCnv::inError : "<<m_quarter
-                              <<" ib= "<<ib<<" ich= "<<ich
-                              <<" L0_B_Id Ox"<<std::hex<<m_L0_B_Id[ib][ich]<<" -VS- ref: Ox"<<l0_b_id
-                              <<std::dec<<std::endl;
-      }
-    }
-    
-    if ((m_BCID_BCSU[ib]&0xF)!=(l0_b_id&0xF)){
-      error = true;
-      if (verbose) std::cout<<"L0Muon::ProcRawCnv::inError : "<<m_quarter
-                            <<" ib= "<<ib
-                            <<" BCID_BCSU 0x"<<std::hex<<m_BCID_BCSU[ib]<<" -VS- ref: 0x"<<l0_b_id
-                            <<std::dec<<std::endl;
-    }
-    for (int ipu=0;ipu<4;++ipu){
-      if ((m_BCID_PU[ib][ipu]&0xF)!=(l0_b_id&0xF)){
-        error = true;
-        if (verbose) std::cout<<"L0Muon::ProcRawCnv::inError : "<<m_quarter
-                              <<" ib= "<<ib<<" ipu= "<<ipu
-                              <<" BCID_PU 0x"<<std::hex<<m_BCID_PU[ib][ipu]<<" -VS- ref: 0x"<<l0_b_id
-                              <<std::dec<<std::endl;
-      }
-    }
-
-    for (int ich =0; ich<2; ++ich){
-      if (m_L0EventNumber[ib][ich]!=l0_evt_num){
-        error = true;
-        if (verbose) std::cout<<"L0Muon::ProcRawCnv::inError : "<<m_quarter
-                              <<" ib= "<<ib<<" ich= "<<ich
-                              <<" L0EventNumber 0x"<<std::hex<<m_L0EventNumber[ib][ich]<<" -VS- ref: 0x"<<l0_evt_num
-                              <<std::dec<<std::endl;
-      }
-    }
-  }
-
-  if (verbose) std::cout<<"L0Muon::ProcRawCnv::inError : "<<m_quarter
-                        <<" return "<<error<<std::dec<<std::endl;
-  
-  return error;
-}

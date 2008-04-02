@@ -11,6 +11,7 @@
 */
 #include "Kernel/MuonTileID.h"
 #include "L0MuonKernel/CandRegisterHandler.h"
+#include "L0MuonKernel/ProcRawErrors.h"
 #include "L0MuonKernel/MuonCandidate.h"
 #include "ProcessorKernel/TileRegister.h"
 #include <boost/dynamic_bitset.hpp>
@@ -19,6 +20,7 @@
 #include <vector>
 
 namespace L0Muon {
+
   
   class ProcRawCnv  {
 
@@ -54,42 +56,33 @@ namespace L0Muon {
     int status_BCSCU(int ib){return m_candRegHandlerBCSU[ib].getStatus();}
     int status_PU(int ib,int ipu){return m_candRegHandlerPU[ib][ipu].getStatus();}
 
-    void decodeBank(std::vector<unsigned int> raw, int version);
-    std::vector<unsigned int> rawBank(int version);
+    void decodeBank(const std::vector<unsigned int> &raw, int version, int &RefL0EventNumber, int &RefL0_B_Id);
+    void rawBank(std::vector<unsigned int> &raw, int version);
 
-    void dump(int version, std::string tab);
-    void dump(int version);
-    void formattedDump(int version, std::string tab);
-    void formattedDump(int version);
+    void dump(const std::vector<unsigned int> &raw);
     
-    int L0_B_Id(int iboard, int ichannel) {return m_L0_B_Id[iboard][ichannel];}
-    int L0EventNumber(int iboard, int ichannel) {return m_L0EventNumber[iboard][ichannel];}
-    int BCID_BCSU(int iboard) {return m_BCID_BCSU[iboard];}
-    int BCID_PU(int iboard, int ipu) {return m_BCID_PU[iboard][ipu];}
+    bool inError(int ib){ return m_errors[ib].inError();}
+    bool decodingError(int ib){ return m_errors[ib].decodingError();}
+    void dumpErrorHeader(int iq, std::string tab="") {std::cout<<m_errors[iq].header(tab)<<std::endl;}
+    void dumpErrorField(int iq, std::string tab="") {std::cout<<tab<<m_errors[iq]<<std::endl;}
+    void dumpErrorCounters(std::string &os) ;
     
-    int opt_link_error(int iboard, int ipu) {return m_opt_link_error[iboard][ipu];}
-    int ser_link_error(int iboard, int ipu) {return m_ser_link_error[iboard][ipu];}
-    int par_link_error(int iboard, int ipu) {return m_par_link_error[iboard][ipu];}
-  
-    int boardIndexError(int iboard, int ichannel) {return m_boardIndex[iboard][ichannel]!=iboard;}
-    
-    bool inError(bool verbose=false);
   
     bool isActiv(){return m_activ;}
 
-    int decodingError(int ib){ return m_decodingError[ib];}
-
-    void setEventCounters(int L0EventNum, int L0_B_Id);
+    int numberOfDecodedBanks() {return m_n_decoded_banks;}
 
 //     int checkMuonTiles();
     
   private:
     
     bool m_activ;
+    int m_n_decoded_banks;
+    
     
     int m_quarter;
 
-    std::vector<unsigned int> reorderOLChannels(std::vector<unsigned int> raw);
+    void reorderOLChannels(const std::vector<unsigned int> &raw, std::vector<unsigned int> &reordered);
     
     // Candidate registers
     CandRegisterHandler m_candRegHandlerBCSU[12];
@@ -103,21 +96,11 @@ namespace L0Muon {
     std::map<LHCb::MuonTileID, TileRegister*> m_olsMap;
     std::map<LHCb::MuonTileID, TileRegister*> m_neighsMap;
 
-    int m_L0_B_Id[12][2];
-    int m_L0EventNumber[12][2];
-    int m_BCID_PU[12][4];
-    int m_BCID_BCSU[12];
 
-    int m_boardIndex[12][2];
-    
-    int m_add_link_error[12][4];
-    int m_opt_link_error[12][4];
-    int m_ser_link_error[12][4];
-    int m_par_link_error[12][4];
-
-    int m_decodingError[12];
+    ProcRawErrors m_errors[12];
     
   };
 }; // namespace L0Muon
+
  
 #endif    // L0MUONKERNEL_PROCRAWCNV_H

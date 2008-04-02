@@ -10,12 +10,14 @@
 
 */
 #include "L0MuonKernel/CandRegisterHandler.h"
+#include "L0MuonKernel/CtrlRawErrors.h"
 #include "L0MuonKernel/MuonCandidate.h"
 #include <string>
 #include <map>
 #include <vector>
 
 namespace L0Muon {
+
   
   class CtrlRawCnv  {
     
@@ -47,36 +49,27 @@ namespace L0Muon {
     int status(int i){return m_candRegHandler[i].getStatus();}
     int status_BCSU(int i,int ib){return m_candRegHandlerBCSU[i][ib].getStatus();}
     
-    void decodeBank(std::vector<unsigned int> raw, int version);
-    std::vector<unsigned int> rawBank(int version);
+    void decodeBank(const std::vector<unsigned int> &raw, int version, int &RefL0EventNumber, int &RefL0_B_Id);
+    void rawBank(std::vector<unsigned int> &raw, int version);
 
-    void dump(int version, std::string tab);
-    void dump(int version);
-    void formattedDump(int version, std::string tab);
-    void formattedDump(int version);
+    void dump(const std::vector<unsigned int> &raw);
 
-    int L0_B_Id(int iboard, int ichannel)      {return m_L0_B_Id[iboard][ichannel];}
-    int L0EventNumber(int iboard, int ichannel){return m_L0EventNumber[iboard][ichannel];}
-    int BCID_SU(int iboard) {return m_BCID_SU[iboard];}
-    int BCID_CU(int iboard) {return m_BCID_CU[iboard];}
-    int BCID(int iboard, int ichannel) {return m_BCID[iboard][ichannel];}
-    int BCID_BCSU(int iboard, int ichannel, int ibcsu) {return m_BCID_BCSU[iboard][ichannel][ibcsu];}
-
-    int pb_link_error(int iboard, int ichannel, int ibcsu) {return m_pb_link_error[iboard][ichannel][ibcsu];}
-    bool boardIndexError(int iboard, int ichannel) {return m_boardIndex[iboard][ichannel]!=(m_side*2+iboard);}
-
-    bool inError(bool verbose=false);
+    bool inError(int iq){ return m_errors[iq].inError();}
+    bool decodingError(int iq){ return m_errors[iq].decodingError();}
+    void dumpErrorHeader(int ib, std::string tab="") {std::cout<<m_errors[ib].header(tab)<<std::endl;}
+    void dumpErrorField(int ib, std::string tab="") {std::cout<<tab<<m_errors[ib]<<std::endl;}
+    void dumpErrorCounters(std::string &os);
     
     bool isActiv(){return m_activ;}
     
-    int decodingError(int iq){ return m_decodingError[iq];}
-
-    void setEventCounters(int L0EventNum, int L0_B_Id);
+    int numberOfDecodedBanks() {return m_n_decoded_banks;}
+    
+      
 
   private:
     
     bool m_activ;
-    
+    int m_n_decoded_banks;    
     int m_side;
 
     enum fpgas {CU,SU};
@@ -85,17 +78,20 @@ namespace L0Muon {
     CandRegisterHandler m_candRegHandler[2];
     CandRegisterHandler m_candRegHandlerBCSU[2][12];
 
-    int m_L0_B_Id[2][2];
-    int m_L0EventNumber[2][2];
-    int m_BCID[2][2];
-    int m_BCID_BCSU[2][2][12];
-    int m_BCID_SU[2];
-    int m_BCID_CU[2];
-    int m_pb_link_error[2][2][12];
-    int m_error[2];
-    int m_boardIndex[2][2];
+    //     int m_L0_B_Id[2][2];
+    //     int m_L0EventNumber[2][2];
+    //     int m_BCID[2][2];
+    //     int m_BCID_BCSU[2][2][12];
+    //     int m_BCID_SU[2];
+    //     int m_BCID_CU[2];
+    //     int m_pb_link_error[2][2][12];
+    //     int m_error[2];
+    //     int m_boardIndex[2][2];
+    
+    //     int m_decodingError[2];
 
-    int m_decodingError[2];
+    CtrlRawErrors m_errors[2];
+    
     
   };
 }; // namespace L0Muon
