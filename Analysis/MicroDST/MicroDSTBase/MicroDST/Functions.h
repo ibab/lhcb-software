@@ -1,4 +1,4 @@
-// $Id: Functions.h,v 1.2 2007-12-11 16:44:37 jpalac Exp $
+// $Id: Functions.h,v 1.3 2008-04-03 14:35:22 jpalac Exp $
 #ifndef MICRODST_FUNCTIONS_H 
 #define MICRODST_FUNCTIONS_H 1
 
@@ -6,8 +6,10 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include <GaudiKernel/DataObject.h>
-#include <GaudiKernel/IRegistry.h>
+#include <GaudiKernel/StatusCode.h>
+
+class IInterface;
+class DataObject;
 
 /** @namespace MicroDST Functions MicroDST/Functions.h
  *  
@@ -38,6 +40,14 @@ namespace MicroDST {
    */
   const std::string niceLocationName(const std::string& location);
 
+  /**
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
+  StatusCode synchroniseProperty(const IInterface* parent,
+                                 IInterface* daughter,
+                                 const std::string& name  );
+  
 
 }
 #endif // MICRODST_FUNCTIONS_H
