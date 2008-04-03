@@ -1,4 +1,4 @@
-// $Id: Decay.cpp,v 1.3 2008-03-31 14:48:45 ibelyaev Exp $
+// $Id: Decay.cpp,v 1.4 2008-04-03 12:19:21 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -11,6 +11,7 @@
 // LHCbKernel
 // ============================================================================
 #include "Kernel/ParticleID.h"
+#include "Kernel/IDecodeSimpleDecayString.h"
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
@@ -259,6 +260,76 @@ void DaVinci::Decay::setDaughters
 
 
 
+// ============================================================================
+/*  create decay object from the descriptor
+ *  @attention only "main" decay is created!
+ *  @param descriptor the decay descriptor 
+ *  @param decode the decoder tool
+ *  @return the constructed decay
+ */
+// ============================================================================
+DaVinci::Decay DaVinci::decay 
+( const std::string&        descriptor , 
+  IDecodeSimpleDecayString* decoder    ) 
+{
+  if ( 0 == decoder   ) { return DaVinci::Decay () ; }      // RETURN 
+  StatusCode sc = decoder -> setDescriptor ( descriptor ) ;
+  if ( sc.isFailure() ) { return DaVinci::Decay () ;  }     // RETURN 
+  DaVinci::Decay dec ;
+  sc = decoder -> getDecay ( dec ) ;
+  if ( sc.isFailure() ) { return DaVinci::Decay () ;  }     // RETURN
+  return dec ;
+}
+// ============================================================================
+/*  create all decay objects from the descriptor
+ *  @param descriptor the decay descriptor 
+ *  @param decode the decoder tool
+ *  @return the constructed decay
+ */
+// ============================================================================
+DaVinci::Decays DaVinci::decays
+( const std::string&        descriptor , 
+  IDecodeSimpleDecayString* decoder    ) 
+{
+  if ( 0 == decoder   ) { return DaVinci::Decays () ; }      // RETURN 
+  StatusCode sc = decoder -> setDescriptor ( descriptor ) ;
+  if ( sc.isFailure() ) { return DaVinci::Decays () ;  }     // RETURN 
+  DaVinci::Decay dec ;
+  sc = decoder -> getDecay ( dec ) ;
+  if ( sc.isFailure() ) { return DaVinci::Decays () ;  }     // RETURN
+  DaVinci::Decays result ( 1 , dec ) ;
+  if ( decoder->is_cc()  )
+  {
+    DaVinci::Decay dec_cc ;
+    sc = decoder -> getDecay_cc ( dec_cc ) ;
+    if ( sc.isFailure() ) { return DaVinci::Decays () ;  }    // RETURN 
+    result.push_back ( dec_cc ) ;
+  }
+  return result ;
+}
+// ============================================================================
+/* create all decay objects from the descriptor
+ *  @param descriptors the decay descriptors 
+ *  @param decode the decoder tool
+ *  @return the constructed decay
+ */
+// ============================================================================
+DaVinci::Decays DaVinci::decays
+( const std::vector<std::string>& descriptors , 
+  IDecodeSimpleDecayString*       decoder     ) 
+{
+  if ( 0 == decoder ) { return DaVinci::Decays () ; }             // RETURN 
+  //
+  DaVinci::Decays result ;
+  for ( std::vector<std::string>::const_iterator idesc = descriptors.begin() ;
+        descriptors.end() != idesc ; ++idesc ) 
+  {
+    DaVinci::Decays res = decays ( *idesc , decoder ) ;
+    if ( res.empty() ) { return DaVinci::Decays () ; }           // RETURN
+    result.insert ( result.end() , res.begin() , res.end() ) ;
+  }
+  return result ;
+}
 
 // ============================================================================
 // The END

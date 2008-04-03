@@ -1,4 +1,4 @@
-// $Id: Decay.h,v 1.3 2008-03-31 14:48:45 ibelyaev Exp $
+// $Id: Decay.h,v 1.4 2008-04-03 12:19:20 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_DECAY_H 
 #define DAVINCIKERNEL_DECAY_H 1
@@ -16,8 +16,9 @@
 // ============================================================================
 /// forward decalrations 
 // ============================================================================
-class IParticlePropertySvc ;
-class  ParticleProperty    ;
+class IDecodeSimpleDecayString ;
+class IParticlePropertySvc     ;
+class  ParticleProperty        ;
 // ============================================================================
 namespace DaVinci
 {
@@ -103,6 +104,9 @@ namespace DaVinci
     Decay 
     ( const             int                       mother    ,   // the mother 
       const std::vector<int>&                     daughters ) ; // the daughters 
+    // ========================================================================
+  public:
+    // ========================================================================
     /// virtual destructor 
     virtual ~Decay( ); // virtual destructor
     // ========================================================================
@@ -192,7 +196,10 @@ namespace DaVinci
     /// the daughter particles 
     mutable Items m_daughters ; // the daughter particles 
     // ========================================================================
-  };  
+  };
+  // ==========================================================================
+  /// the actual type for the vector of decays 
+  typedef std::vector<DaVinci::Decay>                                  Decays ;
   // ==========================================================================
   namespace Utils
   {
@@ -267,6 +274,33 @@ namespace DaVinci
     // ========================================================================
   } // end of namespace DaVinci::Utils
   // ==========================================================================
+  /** create decay object from the descriptor
+   *  @attention only "main" decay is created!
+   *  @param descriptor the decay descriptor 
+   *  @param decode the decoder tool
+   *  @return the constructed decay
+   */
+  DaVinci::Decay decay 
+  ( const std::string&        descriptor , 
+    IDecodeSimpleDecayString* decoder    ) ;
+  // ========================================================================    
+  /** create all decay objects from the descriptor
+   *  @param descriptor the decay descriptor 
+   *  @param decode the decoder tool
+   *  @return the constructed decay
+   */
+  DaVinci::Decays decays
+  ( const std::string&        descriptor , 
+    IDecodeSimpleDecayString* decoder    ) ;
+  /** create all decay objects from the descriptor
+   *  @param descriptors the decay descriptors 
+   *  @param decode the decoder tool
+   *  @return the constructed decay
+   */
+  DaVinci::Decays decays
+  ( const std::vector<std::string>& descriptors , 
+    IDecodeSimpleDecayString*       decoder     ) ;
+  // ========================================================================    
 } // end of namespace DaVinci
 // ============================================================================
 /// the printout operator to the stream 
