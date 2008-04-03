@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2008-03-31 Jan Amoraal
+ - Remove whitespace from property iWeight of TrackSelector. Python doesn't
+   like it.
+ 
 ! 2008-03-31 M Needham
  - Follow interface adaption in IStateCorrection tool
 
