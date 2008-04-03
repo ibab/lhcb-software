@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.cpp,v 1.12 2008-02-01 08:43:06 mneedham Exp $
+ *  $Id: TrackSelector.cpp,v 1.13 2008-04-03 02:13:45 janos Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -60,7 +60,7 @@ TrackSelector::TrackSelector( const std::string& type,
 
   declareProperty( "vWeight", m_vWeight     = 1.0 );
   declareProperty( "oWeight", m_oWeight     = 0.5 );
-  declareProperty(" iWeight", m_iWeight     = 1.0 );
+  declareProperty( "iWeight", m_iWeight     = 1.0 );
 
 }
 
