@@ -6,7 +6,13 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
-!========================= LHCbMath v2r7 2008-03-10 ==========================
+!========================= LHCbMath v2r7 2008-04-02 ==========================
+! 2008-04-02 - Marco Cattaneo
+ - In LHCbMath.h:
+   . Change namespace from LHCbMath to LHCb::Math
+   . Add floating point comparison constructs previously in LoKi::StdMath
+ - In requirements: Clean up link options for MathCore
+
 ! 2008-03-10 - Vanya BELYAEV
  -  LHCbMath/GeomFun.icpp
     LHCbMath/GeomFun.h
