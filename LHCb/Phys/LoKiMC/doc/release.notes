@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.38 2008-03-30 13:38:00 ibelyaev Exp $ 
+! $Id: release.notes,v 1.39 2008-04-03 11:28:31 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,16 +15,14 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiMC v7r2 2008-04-03 ============================
 ! 2008-03-30 - Vanya BELYAEV
-
- - new stremers/shift __rshift__ operators 
- - better prinotu of boolean constants 
+ - new streamers/shift __rshift__ operators 
+ - better printout of boolean constants 
  - cmt/requirements
      version increment to v7r2 
 
-
 !========================== LoKiMC v7r1 2008-02-19 ============================
-
 ! 2008-02-19 - Vanya BELYAEV
 
  - update all *hybrid* stuff to cover all "functional" functors 

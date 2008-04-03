@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.46 2008-03-30 13:36:01 ibelyaev Exp $ 
+! $Id: release.notes,v 1.47 2008-04-03 11:28:05 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,29 +14,24 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!============================ LoKiGen v7r2 2008-04-03 =========================
 ! 2008-03-30 - Vanya BELYAEV
-
   - introduce the proper shift-operators __rshift__ (streamers) 
-  - add the proper specialization for prinotut of boolean constants 
+  - add the proper specialization for printout of boolean constants 
   - cmt/requirements
      version increment to v7r2 
 
-
 !============================ LoKiGen v7r1 2008-02-19 =========================
-
 ! 2008-02-19 - Vanya BELYAEV
  - All *Hybrid* stuff:  
      everything is extended for "functional" functors also
-
 
 ! 2008-02-11 - Vanya BELYAEV
  - many small fixes for new Gaudi/ROOT/Reflex 
  - cmt/requirements 
      version increment to v7r1
 
-
 !============================ LoKiGen v7r0 2007-12-09 =========================
-
 ! 2007-12-09 - Vanya BELYAEV
 
  - implement sources ( on Gerhard's request )
