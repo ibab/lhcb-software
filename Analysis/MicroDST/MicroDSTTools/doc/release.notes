@@ -3,8 +3,14 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.7 2008-04-01 12:37:06 jpalac Exp $
+! $Id: release.notes,v 1.8 2008-04-03 14:45:26 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-04-03 - Juan PALACIOS
+ - src/RecVertexCloner.h
+  . Add method StatusCode initialize()
+ - src/RecVertexCloner.cpp
+  . Implement StatusCode initialize(): simple return MicroDSTTool::initialize()
 
 ! 2008-04-01 - Juan PALACIOS
 
