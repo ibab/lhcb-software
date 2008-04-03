@@ -1,4 +1,4 @@
-// $Id: MicroDSTTool.cpp,v 1.1.1.1 2007-12-10 09:12:42 jpalac Exp $
+// $Id: MicroDSTTool.cpp,v 1.2 2008-04-03 14:35:58 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,16 @@ MicroDSTTool::MicroDSTTool( const std::string& type,
 {
   declareInterface<MicroDSTTool>(this);
 }
+//=============================================================================
+StatusCode MicroDSTTool::initialize() 
+{
+  StatusCode sc = MicroDSTCommon<GaudiTool>::initialize();
+  if (sc.isFailure()) return sc;
+  sc = MicroDST::synchroniseProperty(this->parent(), this, "InputPrefix");
+  sc = MicroDST::synchroniseProperty(this->parent(), this, "OutputPrefix");
+  return sc;
+}
+
 //=============================================================================
 // Destructor
 //=============================================================================

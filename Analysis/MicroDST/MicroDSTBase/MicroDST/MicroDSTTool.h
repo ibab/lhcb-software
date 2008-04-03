@@ -1,4 +1,4 @@
-// $Id: MicroDSTTool.h,v 1.1.1.1 2007-12-10 09:12:42 jpalac Exp $
+// $Id: MicroDSTTool.h,v 1.2 2008-04-03 14:35:58 jpalac Exp $
 #ifndef MICRODST_MICRODSTTOOL_H 
 #define MICRODST_MICRODSTTOOL_H 1
 
@@ -25,6 +25,8 @@ public:
   MicroDSTTool( const std::string& type, 
                 const std::string& name,
                 const IInterface* parent);
+
+  virtual StatusCode initialize();
 
   virtual ~MicroDSTTool( ); ///< Destructor
 
