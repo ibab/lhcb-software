@@ -4,6 +4,11 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 
+!========================== VeloTools v3r1 2008-04-03 ========================
+! 2008-04-03 - Marco Cattaneo
+ - Adapt to change in namespace LHCbMath -> LHCb::Math
+ - Protect debug() messages with test on msgLevel(MSG::DEBUG)
+
 !========================== VeloTools v3r0 2007-12-04 ========================
 ! 2007-12-04 - Marco Cattaneo
  - Fix for configurables: objects created in initialize must be deleted in

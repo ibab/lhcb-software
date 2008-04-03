@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.17 2007-12-04 16:40:01 cattanem Exp $
+// $Id: VeloClusterPosition.cpp,v 1.18 2008-04-03 15:21:27 cattanem Exp $
 // Include files
 
 // stl
@@ -49,13 +49,13 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
   : GaudiTool(type, name, parent),
     m_veloDet ( 0 ),
     m_projAngles ( 24, 0. ),
+    m_p0(0),
+    m_p1(0),
     m_minAngle ( 0. ),
     m_maxAngle ( 0. ),
     m_trackDir ( ),
     m_gloPoint ( ),
-    m_fracPos ( 0. ),
-	m_p0(0),
-	m_p1(0)
+    m_fracPos ( 0. )
 {
   declareInterface<IVeloClusterPosition>(this);
   // default paramertrizations are of form error=slope*pitch+const
@@ -133,7 +133,7 @@ StatusCode VeloClusterPosition::finalize() {
 //=============================================================================
 double VeloClusterPosition::meanResolution(const double& pitch) const
 { 
-  debug()<< " ==> resolution() " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> resolution() " <<endmsg;
   //
   double p_0=m_defaultResolution[0];
   double p_1=m_defaultResolution[1];
@@ -145,7 +145,7 @@ double VeloClusterPosition::meanResolution(const double& pitch) const
 //=========================================================================
 double VeloClusterPosition::fracPosLA(const LHCb::VeloCluster* cluster) const
 {
-  debug()<< " ==> fracPosLA()" <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> fracPosLA()" <<endmsg;
   //
   double centre=0., sum=0., fractionalPos;
   int intDistance=0;
@@ -164,7 +164,7 @@ double VeloClusterPosition::fracPosLA(const LHCb::VeloCluster* cluster) const
     fractionalPos=0.0;
   }else{
     centre=centre/sum;
-    intDistance=int(LHCbMath::round(centre));
+    intDistance=int(LHCb::Math::round(centre));
     fractionalPos=centre-intDistance;
   }
   // redefine fractional position accordingly - tell1 raw bank format
@@ -175,7 +175,7 @@ double VeloClusterPosition::fracPosLA(const LHCb::VeloCluster* cluster) const
 //=========================================================================
 toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster) const
 {
-  debug()<< " ==> position(cluster) " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> position(cluster) " <<endmsg;
   //
   toolInfo myInfo;
   // calculate fractional position in units of 'strip'
@@ -219,7 +219,8 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
                                        const Gaudi::XYZPoint& aGlobalPoint,
                                        const Direction& aDirection) const
 {
-  debug()<< " ==> position(cluster, point, direction) " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) 
+    debug() << " ==> position(cluster, point, direction) " <<endmsg;
   // this struct will be returned as output
   toolInfo anInfo;
   // get information about sensor form passed cluster
@@ -257,7 +258,7 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
 double VeloClusterPosition::angleOfTrack(const Direction& localSlopes,
                                   Gaudi::XYZVector& parallel2Track) const
 {
-  debug()<< " ==> trackAngle() " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << " ==> trackAngle() " <<endmsg;
   // vectors
   Gaudi::XYZVector perpPi1(1., 0., -(localSlopes.first));
   Gaudi::XYZVector perpPi2(0., 1., -(localSlopes.second));
@@ -279,7 +280,7 @@ double VeloClusterPosition::angleOfTrack(const Direction& localSlopes,
 double VeloClusterPosition::errorEstimate(const double projAngle,
                                           const double pitch) const
 {
-  debug()<< " ==> errorEstimate() " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << " ==> errorEstimate() " <<endmsg;
   //
   double angle=projAngle;
   double error=0.;
@@ -312,7 +313,7 @@ double VeloClusterPosition::errorEstimate(const double projAngle,
 //============================================================================
 double VeloClusterPosition::projectedAngle() const
 {
-  debug()<< " ==> projectedAngle() " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << " ==> projectedAngle() " << endmsg;
   //
   return ( m_projectedAngle/Gaudi::Units::degree );
 }
@@ -320,7 +321,7 @@ double VeloClusterPosition::projectedAngle() const
 toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
                                        const LHCb::StateVector& aState) const
 {
-  debug()<< " ==> position (VectorState) " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> position (VectorState) " <<endmsg;
   unsigned int sensorNumber=cluster->channelID().sensor();
   const DeVeloSensor* sensor=m_veloDet->sensor(sensorNumber);
   double z=sensor->z();
@@ -335,7 +336,7 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
 //============================================================================
 GaudiMath::Interpolation::Type VeloClusterPosition::splineType() const
 {
-  debug()<< " splineType() " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " splineType() " <<endmsg;
   //
   GaudiMath::Interpolation::Type aType;
   using namespace GaudiMath::Interpolation;
@@ -355,7 +356,7 @@ GaudiMath::Interpolation::Type VeloClusterPosition::splineType() const
 Pair VeloClusterPosition::projectedAngle(const DeVeloSensor* sensor,
                           const LHCb::VeloChannelID centreChan) const
 {
-  debug()<< " ==> projectedAngle(sensor) " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> projectedAngle(sensor) " <<endmsg;
   //-- returned pair consists of projected angle and local pitch
   //-- both values are needed to estimate error
   double projectedAngle=0., localPitch=0.;
@@ -438,7 +439,7 @@ Direction VeloClusterPosition::localTrackDirection(
           const Gaudi::XYZVector& gloTrackDir,
           const DeVeloSensor* sensor) const
 {
-  debug()<< " ==> localTrackDirection " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> localTrackDirection " <<endmsg;
   //-- translate global slopes into local
   using namespace std;
   Direction locTrackDir;
