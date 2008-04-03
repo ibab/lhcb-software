@@ -1,4 +1,4 @@
-// $Id: Combiner.h,v 1.6 2008-04-02 11:35:57 ibelyaev Exp $
+// $Id: Combiner.h,v 1.7 2008-04-03 09:59:08 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_Combiner_H 
 #define LOKI_Combiner_H 1
@@ -323,8 +323,7 @@ namespace LoKi
     bool unique () const  
     {
       // get the proper uniquiness criteria:
-      const std::not_equal_to<typename CONTAINER::value_type> cmp ;
-      return unique ( cmp ) ;
+      return unique ( std::not_equal_to<typename CONTAINER::value_type>() ) ;
     }
     // ========================================================================
   public:
