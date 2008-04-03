@@ -31,7 +31,7 @@ namespace STFun{
 }
 
 inline double STFun::stripFraction(const double interStripPos){
-  return (LHCbMath::round((1<<STBitsPolicy::interStripPrecision)*interStripPos))/double(1<<STBitsPolicy::interStripPrecision);
+  return (LHCb::Math::round((1<<STBitsPolicy::interStripPrecision)*interStripPos))/double(1<<STBitsPolicy::interStripPrecision);
 }
 
 #endif //_STKernel_STFun_H
