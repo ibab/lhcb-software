@@ -3,13 +3,13 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v6r12 2008-04-03 ====================
 ! 2008-04-03 - Vanya BELYAEV 
  - Kernel/Decay.h
-     - add few very simle functions, which simplify the manipulations 
-       with DaVinci::Decay class and IDecodeSimpleDecayStrinh interface
+     - add few very simple functions, which simplify the manipulations 
+       with DaVinci::Decay class and IDecodeSimpleDecayString interface
     - also add a typedef for "std::vector<DaVinci::Decay>" as "DaVinci::Decays"
 
-!======================== DaVinciKernel v6r12 2008-04-03 ====================
 ! 2008-03-31 - Vanya BELYAEV
  - Kernel/Decay.h:  add few simple setters
  - modify a bit IDecodeSimpleDecayString interface to be able to get the 
