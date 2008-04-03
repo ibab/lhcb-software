@@ -1,4 +1,4 @@
-// $Id: RecVertexCloner.cpp,v 1.1.1.1 2007-12-10 09:32:24 jpalac Exp $
+// $Id: RecVertexCloner.cpp,v 1.2 2008-04-03 14:45:08 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +29,15 @@ RecVertexCloner::RecVertexCloner( const std::string& type,
   : MicroDSTTool ( type, name , parent )
 {
   declareInterface<ICloneRecVertex>(this);
+}
+//=============================================================================
+StatusCode RecVertexCloner::initialize() 
+{
+
+  debug() << "==> Initialize" << endmsg;
+
+  return MicroDSTTool::initialize();
+
 }
 //=============================================================================
 LHCb::RecVertex* RecVertexCloner::operator() (const LHCb::RecVertex* vertex)
