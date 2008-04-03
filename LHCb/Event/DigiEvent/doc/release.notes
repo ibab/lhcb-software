@@ -4,6 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================== DigiEvent v2r5 2008-04-03 ========================
+! 2008-04-02 - Marco Cattaneo
+ - Adapt to new LHCb::Math namespace
+
 !========================== DigiEvent v2r4 2008-03-03 ========================
 ! 2008-02-27 - Chris Jones
  - Add missing STL includes in various GOD classes

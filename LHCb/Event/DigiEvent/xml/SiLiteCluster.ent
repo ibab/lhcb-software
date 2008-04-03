@@ -29,7 +29,7 @@
                 unsigned int size, bool secondThres'>
        <code>
 
- unsigned int tFrac = LHCbMath::round(fracStrip * (1&lt;&lt;(sizeBits - interStripFractionBits)));
+ unsigned int tFrac = LHCb::Math::round(fracStrip * (1&lt;&lt;(sizeBits - interStripFractionBits)));
  unsigned int pseudoSize;
  size &lt; 3 ? pseudoSize = 0 : pseudoSize = 1;
  unsigned int tThres;
