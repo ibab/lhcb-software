@@ -1,20 +1,19 @@
-! $Id: release.notes,v 1.52 2008-03-30 13:43:37 ibelyaev Exp $ 
+! $Id: release.notes,v 1.53 2008-04-03 11:29:13 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhys v7r2 2008-04-03 ==========================
 ! 2008-03-30 - Vanay BELYAEV
-
- - add new context functors on requestfd from Patrick, Sean & Vava 
+ - add new context functors on requested by Patrick, Sean & Vava 
  - new streamers/shift __rshift__
  - better printout of boolean constants 
  - cmt/requirements 
     version increment to v7r2 
 
 !========================== LoKiPhys v7r1 2008-02-28 ==========================
-
 ! 2008-02-28 - Vanya BELYAEV
  - python/LoKiPhys/functions.py
 
