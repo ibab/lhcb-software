@@ -3,28 +3,20 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v6r12 2008-04-03 ====================
 ! 2008-03-31 - Vanya BELYAEV
- - Kernel/Decay.h
-    add few simple setters
-
-! 2008-03-31 - Vanya BELYAEV
- - modify a bit IDecodeSimpleDecayString interface to be abel to get the 
+ - Kernel/Decay.h:  add few simple setters
+ - modify a bit IDecodeSimpleDecayString interface to be able to get the 
    decay descriptor in a form of DaVinci::Decay
-
-
-! 2008-03-31 - Vanya BELYAEV 
- - New class DaVinci::Decay, which is able 
-   to represent the simle 1-step decay
+ - New class DaVinci::Decay, which is able to represent the simple 1-step decay
    new files: Kernel/Decay.h, src/Lib/Decay.cpp
-   The primary goal fo thie class is to acs as an argument for LoKi-loops,
+   The primary goal fo thie class is to act as an argument for LoKi-loops,
    but it can also acs as some base class for CombineParticle::Decay
-
 
 ! 2008-03-31 - Patrick Koppenburg
  - ParticlesFilterBase : no DECLARE_TOOL_FACTORY in linker library
 
 ! 2008-03-30 - Vanya BELYAEV
-
  - Kernel/IPRintDecay.h, src/Lib/IPrintDecay.cpp	
     add new abstract interface for orintout of dec	ay tree   
     (essentially it is MC-free version of IPrintDeca	yTreeTool) 
@@ -32,7 +24,6 @@
 ! 2008-03-14 - Patrick Koppenburg
  - Less verbose initialisation of DVAlgorithm
 
-!======================== DaVinciKernel v6r12 2008-03-11 ====================
 ! 2008-03-10 - Vanya BELYAEV
  - Kernel/IDistanceCalculator.h
    src/Lib/IDistanceCalculator.cpp 
