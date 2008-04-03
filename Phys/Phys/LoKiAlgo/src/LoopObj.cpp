@@ -1,4 +1,4 @@
-// $Id: LoopObj.cpp,v 1.11 2008-04-02 21:05:21 ibelyaev Exp $
+// $Id: LoopObj.cpp,v 1.12 2008-04-03 09:59:23 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -201,7 +201,7 @@ bool LoKi::LoopObj::clonesOrdered () const
   // HOW IT WORKS ??? I am not able to understand  these lines :-((( 
   
   // the comparison criteria: pid+kinematics
-  const LoKi::Particles::FullCompare compare ;
+  const LoKi::Particles::FullCompare compare = LoKi::Particles::FullCompare() ;
   
   // check for clones 
   for ( Clones::const_iterator iclone = m_clones.begin() ; 
