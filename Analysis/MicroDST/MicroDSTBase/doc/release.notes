@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.6 2008-03-06 14:26:01 jpalac Exp $
+!$Id: release.notes,v 1.7 2008-04-03 14:36:14 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
@@ -6,6 +6,27 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+! 2008-04-03 - Juan PALACIOS
+ - MicroDST/Functions.h, src/Lib/Functions.cpp
+  . Add function 
+
+  StatusCode synchroniseProperty(const IInterface* parent,
+                                 IInterface* daughter,
+                                 const std::string& name  );
+
+    intended for use in MicroDSTTools and anything else that might have a 
+    MicroDSTAlgorithm as a parent. The purpose is to allow easy synchronisation
+    of properties of the parent and child.    
+
+ - MicroDST/MicroDSTTool.h
+  . Add method virtual StatusCode initialize()
+ - src/Lib/MicroDSTTool.cpp
+  . Implement  virtual StatusCode initialize(): 
+    call MicroDSTCommon<GaudiTool>::initialize()
+    synchronise "InputPrefix" and "OutputPrefix" properties.
+
+ - cmt/requirements
+  . Increase version to v1r1
 !====================== MicroDSTBase v1r0p1 2008-03-06 =======================
 
 ! 2007-12-10 - Juan Palacios
