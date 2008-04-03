@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.83 2008-04-02 18:55:04 ibelyaev Exp $ 
+! $Id: release.notes,v 1.84 2008-04-03 11:27:10 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,18 +15,18 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v7r2 2008-04-02  ========================
+! 2008-04-02 - Marco Cattaneo
+ - Remove LoKi/StdMath.h and LoKi/EqualTo.h. 
+   Functionality moved to LHCbMath/LHCbMath.h, in LHCb::Math namespace.
+
 ! 2008-04-02 - Vanya BELYAEV
  - python/LoKiCore/functions.py
     fix a type in the iteration method for SmartRefVectors
     many thanks to Tristan du Pree for spoting the problem.
 
-
-! =========================== LoKiCore v7r2 2008-03-30  ========================
-
 ! 2008-03-30 - Vanya BELYAEV
-
  - many small changes & fixes:
-
    - introduce the specialized printout for boolean constants 
    - add __rshift__ stremer operators for the functors 
    - add random number service into Services
@@ -42,11 +42,7 @@
       3. LoKi::Random::Gaussian
       4  LoKi::Random::Rand 
 
-
-   
-
 ! 2008-03-12 - Vanya BELYAEV
-
  - src/Components/Reporter.cpp
      fix the unchecked StatusCode
  - python/LoKiCore/functions.py 

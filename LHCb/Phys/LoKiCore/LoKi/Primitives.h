@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.6 2007-12-09 17:56:42 ibelyaev Exp $
+// $Id: Primitives.h,v 1.7 2008-04-03 11:27:10 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -9,6 +9,10 @@
 // ============================================================================
 #include <functional>
 // ============================================================================
+// LHCb 
+// ============================================================================
+#include "LHCbMath/LHCbMath.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Functions.h"
@@ -18,7 +22,6 @@
 #include "LoKi/valid.h"
 #include "LoKi/same.h"
 #include "LoKi/apply.h"
-#include "LoKi/EqualTo.h"
 // ============================================================================
 /** @file
  *
@@ -453,7 +456,7 @@ namespace LoKi
     inline result_type equal ( argument a ) const 
     { 
       //std::equal_to<TYPE2> cmp ;
-      LoKi::StdMath::Equal_To<TYPE2> cmp  ( m_eps ) ;
+      LHCb::Math::Equal_To<TYPE2> cmp  ( m_eps ) ;
       return cmp ( m_two.fun1 ( a ) , m_two.fun2 ( a ) ) ; 
     }
   public:
@@ -1738,7 +1741,7 @@ namespace LoKi
     inline result_type equal_to ( argument a ) const
     {
       //std::equal_to<TYPE2> cmp ;
-      LoKi::StdMath::Equal_To<TYPE2> cmp ( m_eps ) ;
+      LHCb::Math::Equal_To<TYPE2> cmp ( m_eps ) ;
       return cmp ( m_fun.fun ( a ) , m_val ) ;
     }    
   public:

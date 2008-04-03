@@ -1,4 +1,4 @@
-// $Id: Dicts.h,v 1.3 2007-12-03 12:51:12 ibelyaev Exp $
+// $Id: Dicts.h,v 1.4 2008-04-03 11:27:10 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_DICTS_H 
 #define LOKI_DICTS_H 1
@@ -19,7 +19,6 @@
 #include "LoKi/Funcs.h"
 #include "LoKi/FuncOps.h"
 #include "LoKi/PIDOps.h"
-#include "LoKi/Maths.h"
 #include "LoKi/Calls.h"
 // ============================================================================
 // The END 

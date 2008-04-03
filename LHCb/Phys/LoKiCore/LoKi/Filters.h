@@ -1,4 +1,4 @@
-// $Id: Filters.h,v 1.2 2007-12-03 12:03:22 ibelyaev Exp $
+// $Id: Filters.h,v 1.3 2008-04-03 11:27:10 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_FILTERS_H 
 #define LOKI_FILTERS_H 1
@@ -9,13 +9,16 @@
 // ============================================================================
 #include <algorithm>
 // ============================================================================
+// LHCb
+// ============================================================================
+#include "LHCbMath/LHCbMath.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Functor.h"
 #include "LoKi/Functions.h"
 #include "LoKi/select.h"
 #include "LoKi/Algs.h"
-#include "LoKi/StdMath.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -384,7 +387,7 @@ namespace LoKi
         LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum ( a.begin() , a.end() , app , 
-                                 LoKi::StdMath::abs_greater<TYPE1>() ) ;
+                                 LHCb::Math::abs_greater<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return res.second ;
       }
@@ -487,7 +490,7 @@ namespace LoKi
         LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
-          ( a.begin() , a.end() , app , LoKi::StdMath::abs_less<TYPE1>() ) ;
+          ( a.begin() , a.end() , app , LHCb::Math::abs_less<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return res.second ;
       }
@@ -640,7 +643,7 @@ namespace LoKi
         const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
-          ( a.begin() , a.end() , app , LoKi::StdMath::abs_greater<TYPE1>() ) ;
+          ( a.begin() , a.end() , app , LHCb::Math::abs_greater<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return *(res.first);
       }
@@ -692,7 +695,7 @@ namespace LoKi
         const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
-          ( a.begin() , a.end() , app , LoKi::StdMath::abs_less<TYPE1>() ) ;
+          ( a.begin() , a.end() , app , LHCb::Math::abs_less<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return *(res.first);
       }
