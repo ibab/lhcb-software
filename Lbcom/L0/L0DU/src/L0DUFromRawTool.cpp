@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.7 2008-03-27 16:32:13 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.8 2008-04-04 13:36:05 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -125,7 +125,7 @@ bool L0DUFromRawTool::decodeBank(int ibank){
   std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
   LHCb::RawBank* bank = *itB+ibank;  
   if(NULL == bank){
-    error() << "Bank point to NULL " << endreq;
+    Error("Bank point to NULL ").ignore();
     return false;
   }
 
@@ -354,10 +354,12 @@ bool L0DUFromRawTool::decodeBank(int ibank){
                                           << " matches the actual bank size ________________ <** OK **> " <<endreq;
     }else{
       std::stringstream msg("");
-      msg << "   -> The total expected size " << allSize 
+      msg << "   -> The total expected size "  
           << " does NOT match the bank size __________________  <** POSSIBLE DATA CORRUPTION **>";
-      Error(msg.str() , StatusCode::SUCCESS).ignore();
-      m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Corrupted );
+      if ( msgLevel( MSG::DEBUG) )
+        debug() << " Expected size : " << allSize << " Actual size : " << m_size << " DO NOT MATCH" << endreq;
+      Error(msg.str() , StatusCode::SUCCESS).ignore(); 
+      m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Corrupted ); 
     }
     
     if ( (0x7F & m_bcid2) == m_bcid3){
@@ -366,8 +368,9 @@ bool L0DUFromRawTool::decodeBank(int ibank){
         << endreq;
     }else{
       std::stringstream msg("");
-      msg <<"   -> The PGA3 and PGA2 data are NOT aligned   : BCIDs (MSB)= " 
-          << (m_bcid2 & 0x7F) << " /"  << m_bcid3 ;
+      msg <<"   -> The PGA3 and PGA2 data are NOT aligned " ;
+      if ( msgLevel( MSG::DEBUG) )
+        debug() << " BCIDs PGA2 (LSB)= " << (m_bcid2 & 0x7F) << " /"  << m_bcid3 << " NOT ALIGNED " << endreq;
       Error(msg.str(), StatusCode::SUCCESS).ignore();
     }
     
@@ -531,7 +534,8 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     //---------------------------------------------------------
     
   }  else{
-    error() << " Unknown bank version " << m_vsn << endreq;
+    Error(" Unknown bank version ").ignore();
+    if ( msgLevel( MSG::DEBUG) )debug() << " Unknown bank version : " << m_vsn << endreq;
     return false;
   }
 
