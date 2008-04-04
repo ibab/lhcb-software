@@ -1,4 +1,4 @@
-// $Id: PatVeloFitLHCbIDs.h,v 1.1 2008-02-14 16:58:49 dhcroft Exp $
+// $Id: PatVeloFitLHCbIDs.h,v 1.2 2008-04-04 06:36:13 mneedham Exp $
 #ifndef TF_PATVELOFITLHCBIDS_H 
 #define TF_PATVELOFITLHCBIDS_H 1
 
@@ -45,7 +45,8 @@ namespace Tf {
     StatusCode initialize(); ///< initialize
 
     /// fit the track using the LHCbIDs on it with the PatVelo internal fit
-    virtual StatusCode fit ( LHCb::Track & track );
+    virtual StatusCode fit ( LHCb::Track & track, 
+                             LHCb::ParticleID pid = LHCb::ParticleID(211) );
 
   private:
 

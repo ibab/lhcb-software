@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-03-04 M. Needham 
+ - Update PatVeloFitLHCbIDs for fitter interface change 
+
 !========================== PatVelo v3r4 2008-03-03 ==========================
 ! 2008-03-03 - Kurt Rinnert
  - the hit manager names in PatVeloTrackTool are now also configurable. This

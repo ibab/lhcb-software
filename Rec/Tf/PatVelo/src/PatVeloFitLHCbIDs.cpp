@@ -1,4 +1,4 @@
-// $Id: PatVeloFitLHCbIDs.cpp,v 1.1 2008-02-14 16:58:49 dhcroft Exp $
+// $Id: PatVeloFitLHCbIDs.cpp,v 1.2 2008-04-04 06:36:13 mneedham Exp $
 // Include files
 
 // from Gaudi
@@ -58,7 +58,7 @@ StatusCode Tf::PatVeloFitLHCbIDs::initialize(){
   return StatusCode::SUCCESS;
 }
 
-StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track){
+StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
   PatVeloSpaceTrack * patVeloTrack = new  PatVeloSpaceTrack();
    std::vector<LHCb::LHCbID>::const_iterator iID;
   for( iID = track.lhcbIDs().begin() ; iID != track.lhcbIDs().end() ; ++iID){
