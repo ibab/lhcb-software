@@ -4,7 +4,8 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
-! 2008-03-04 M. Needham 
+!========================== PatVelo v3r5 2008-04-04 ==========================
+! 2008-04-03 M. Needham 
  - Update PatVeloFitLHCbIDs for fitter interface change 
 
 !========================== PatVelo v3r4 2008-03-03 ==========================
