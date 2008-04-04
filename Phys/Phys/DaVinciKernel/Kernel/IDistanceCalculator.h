@@ -1,4 +1,4 @@
-// $Id: IDistanceCalculator.h,v 1.1 2008-03-10 18:16:22 ibelyaev Exp $
+// $Id: IDistanceCalculator.h,v 1.2 2008-04-04 06:38:56 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_IDISTANCECALCULATOR_H 
 #define DAVINCIKERNEL_IDISTANCECALCULATOR_H 1
@@ -524,6 +524,24 @@ public:
     double&                 path     ,
     double&                 errror   , 
     double&                 chi2     ) const = 0 ;
+  // ==========================================================================
+  /** Calculate the projected distance 
+   *
+   *  \$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
+   *     \right)}{\left|\vec{\mathbf{p}}\right|}\f$,
+   *  where vector \f$\vec{\mathbf{v}}\f$ is a vector from 
+   *  the primary to the secondary vertex: 
+   *    \f$\vec{\mathbf{v}}=\vec{\mathbf{x}}_{d}-\vec{\mathbf{x}}_{pv}\f$,
+   *
+   * @param particle (input)  the pointer to the particle 
+   * @param primary  (input)  the pointer to the production vertex 
+   * @param dist     (output) the projected distance
+   * @return status code 
+   */
+  virtual StatusCode projectedDistance   
+  ( const LHCb::Particle*   particle , 
+    const LHCb::VertexBase* primary  , 
+    double&                 dist     ) const = 0 ;
   // ==========================================================================
   /** Calculate the projected distance 
    *
