@@ -4,6 +4,10 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatChecker v3r2 2008-04-04 =======================
+! 2008-04-04 - Marco Cattaneo
+ - Adapt to new OT linkers produced by Boole v15r0 (backward compatible change)
+
 !========================== PatChecker v3r1 2007-10-23 =======================
 ! 2007-10-22 - Olivier Callot
  - Adapt to the new name of Downstream track container (was KShort)

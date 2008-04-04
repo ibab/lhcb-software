@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.cpp,v 1.14 2007-07-06 15:25:11 ebos Exp $
+// $Id: TrackAssociator.cpp,v 1.15 2008-04-04 15:17:45 cattanem Exp $
 // Include files
 
 // local
@@ -122,7 +122,7 @@ StatusCode TrackAssociator::execute() {
   }
 
   // Get the linker table OTCluster => MCParticle
-  LinkedTo<MCParticle,OTTime>
+  LinkedTo<LHCb::MCParticle>
     otLink(evtSvc(),msgSvc(),LHCb::OTTimeLocation::Default);
   if( otLink.notFound() ) {
     error() << "Unable to retrieve OTCluster to MCParticle linker table."

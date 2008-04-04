@@ -1,4 +1,4 @@
-// $Id: PatLHCbID2MCParticle.cpp,v 1.1.1.1 2007-10-09 18:41:19 smenzeme Exp $
+// $Id: PatLHCbID2MCParticle.cpp,v 1.2 2008-04-04 15:18:27 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -203,7 +203,7 @@ StatusCode PatLHCbID2MCParticle::execute() {
 
   //== OT coordinates
   if (m_linkOT) {
-    LinkedTo<LHCb::MCParticle,LHCb::OTTime> 
+    LinkedTo<LHCb::MCParticle> 
       otLink( evtSvc(), msgSvc(),LHCb::OTTimeLocation::Default );
 
     OTHitRange othits = m_othitcreator->hits();
