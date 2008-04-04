@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.26 2008-03-25 22:02:09 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.27 2008-04-04 13:57:09 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -128,11 +128,13 @@ private:
   bool                              m_correlation ;                  ///< Do we take into account correlations between residuals?
   bool                              m_updateInFinalize ;             ///< Call update from finalize
   int                               m_canonicalConstraintStrategy ;  ///< Constrain global dofs
-  bool                              m_constrainZShearings;           ///< Constrain z-shearings
+  std::vector<std::string>          m_constraints;                   ///< Names of constrains
   bool                              m_useWeightedAverageConstraint ; ///< Flag to turn on weighting in constraint averages
   size_t                            m_minNumberOfHits ;              ///< Minimum number of hits for an Alignable to be aligned
   bool                              m_usePreconditioning ;           ///< Precondition the system of equations before calling solver
   bool                              m_fillCorrelationHistos;         ///< Flag to turn on filling of residual correlation histos
+  std::string                       m_logFileName ;
+  std::string                       m_outputDataFileName ;
   
   /// Monitoring
   // @todo: Move this to a monitoring tool

@@ -1,8 +1,10 @@
-// $Id: AlignAlgorithm.cpp,v 1.39 2008-03-26 10:51:41 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.40 2008-04-04 13:57:08 wouter Exp $
 // Include files
 // from std
 // #include <utility>
 #include <algorithm>
+#include <iterator>
+#include <fstream>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -31,7 +33,7 @@
 // local
 #include "AlignAlgorithm.h"
 #include "AlParameters.h"
-#include "AlignSolvTools/AlEquations.h"
+#include "SolvKernel/AlEquations.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlignAlgorithm
@@ -83,8 +85,27 @@ namespace {
    TH1D* rHisto1D = Gaudi::Utils::Aida2ROOT::aida2root(histo1D);
    rHisto1D->SetBinContent(bin, value); rHisto1D->SetBinError(bin, error);
  }
- 
-   
+
+  class Constraints
+  {
+  public:
+    enum EConstraints { Tx, Ty, Tz, Rx, Ry, Rz, Szx, Szy, Szz, Cur, NumConstraints } ;
+    static std::vector<std::string> all()  { return names ; }
+    static std::vector<std::string> global()  { 
+      return std::vector<std::string>( names.begin(), names.begin()+6) ;
+    }
+    static std::string name(size_t i)  { return names[i] ; }
+    static size_t index(const std::string& aname) {
+      std::vector<std::string>::const_iterator it = std::find( names.begin(), names.end(), aname) ;
+      return size_t( it - names.begin() ) ;
+      //return std::distance( names.begin(),it) ; // doesn't exist for random access iterator ?!
+    }
+  private:
+    static const std::vector<std::string> names ;
+  } ;
+  
+  const std::vector<std::string> Constraints::names = 
+    boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz")("Szx")("Szy")("Szz")("Cur");
 };
 
 using namespace LHCb;
@@ -116,12 +137,14 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("MatrixSolverTool"            , m_matrixSolverToolName         = "SpmInvTool"            );
   declareProperty("UseCorrelations"             , m_correlation                  = true                    );
   declareProperty("UpdateInFinalize"            , m_updateInFinalize             = false                   );
-  declareProperty("CanonicalConstraintStrategy" , m_canonicalConstraintStrategy  = CanonicalConstraintAuto ); 
-  declareProperty("ConstrainZShearings"         , m_constrainZShearings          = false                   );
+  declareProperty("CanonicalConstraintStrategy" , m_canonicalConstraintStrategy  = CanonicalConstraintAuto );
+  declareProperty("Constraints"                 , m_constraints = Constraints::global() ) ;
   declareProperty("UseWeightedAverageConstraint", m_useWeightedAverageConstraint = false                   );
   declareProperty("MinNumberOfHits"             , m_minNumberOfHits              = 1u                      ); 
   declareProperty("FillCorrelationsHistos"      , m_fillCorrelationHistos        = false                   );
   declareProperty("UsePreconditioning"          , m_usePreconditioning           = false                   );
+  declareProperty("OutputDataFile"              , m_outputDataFileName           = "" ) ;
+  declareProperty("LogFile"                     , m_logFileName                  = "alignlog.txt" ) ;
 }
 
 AlignAlgorithm::~AlignAlgorithm() {}
@@ -168,6 +191,8 @@ StatusCode AlignAlgorithm::initialize() {
   
   m_equations = new Al::Equations(m_rangeElements.size());
   m_equations->clear() ;
+  assert( m_rangeElements.size() == m_equations->nElem() ) ;
+
 
   /// Get projector selector tool
   m_projSelector = tool<ITrackProjectorSelector>(m_projSelectorName, "Projector", this);
@@ -241,6 +266,8 @@ StatusCode AlignAlgorithm::initialize() {
 }
 
 StatusCode AlignAlgorithm::finalize() {
+  if(!m_outputDataFileName.empty()) 
+    m_equations->writeToFile( m_outputDataFileName.c_str() ) ;
   if (m_updateInFinalize) update() ;
   return  
     m_trackresidualtool.release() && 
@@ -293,7 +320,7 @@ StatusCode AlignAlgorithm::execute() {
   }	
   
   // Loop over the remaining tracks
-  info() << "Number of tracks left after processing vertices: " << selectedtracks.size() << endreq ;
+  if (printVerbose()) verbose() << "Number of tracks left after processing vertices: " << selectedtracks.size() << endreq ;
   for( std::vector<const LHCb::Track*>::const_iterator iTrack = selectedtracks.begin() ;
        iTrack != selectedtracks.end(); ++iTrack ) {
     
@@ -310,10 +337,6 @@ StatusCode AlignAlgorithm::execute() {
   } 
 
   m_equations->addEventSummary( selectedtracks.size(), numusedvertices ) ;
-
-  
-
-
 
   return StatusCode::SUCCESS;
 }
@@ -394,6 +417,15 @@ void AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 	  }
 	}
       }
+
+      // compute the derivative of the curvature, used for one of the
+      // canonical constraints. we should cache the inverse in the
+      // residuals:
+      Gaudi::TrackSymMatrix invC = residuals.nodes()[id->nodeindex()]->state().covariance() ;
+      invC.Invert() ;
+      const Gaudi::TrackProjectionMatrix& H = residuals.nodes()[id->nodeindex()]->projectionMatrix() ;
+      double drdomega = (H*invC)(0,4) ;
+      m_equations->dOmegaDAlpha(id->index()) += convert(drdomega*id->d()) ;
     }
     // keep some information about the tracks that we have seen
     m_equations->addChi2Summary( residuals.chi2(), residuals.nDoF(), numexternalhits ) ;
@@ -447,9 +479,24 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
   // which is is calculated. We will calculate a single 'pivot' point
   // to define the transform to the frame in which we apply the
   // constraint.
-  //
+  
+  // To make the bookkeeping easy, we add all possible constraints and
+  // then 'disable' those we don't need with the 'dofmask'.
+  // 
+  // This is the numbering:
+  // 0 -> Tx
+  // 1 -> Ty
+  // 2 -> Tz
+  // 3 -> Rx
+  // 4 -> Ry
+  // 5 -> Rz
+  // 6 -> Sx  (zx shearing)
+  // 7 -> Sy  (zy shearing)
+  // 8 -> Sz  (zz shearing == s-scale)
+  // 9 -> Curvature (Curvature constraint)
   info() << "Adding canonical constraints." << endmsg ;
   double weight(0) ;
+  size_t numhits(0) ;
   Gaudi::XYZVector pivot ;
   double zmin(9999999), zmax(-999999) ;
   size_t iElem(0u) ;
@@ -459,6 +506,7 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
     pivot += thisweight * Gaudi::XYZVector( it->centerOfGravity() ) ;
     zmin = std::min(it->centerOfGravity().z(),zmin) ;
     zmax = std::min(it->centerOfGravity().z(),zmax) ;
+    numhits += m_equations->numHits(iElem) ;
   }
   if (weight>0) pivot *= 1/weight ;
   Gaudi::Transform3D canonicalframe( pivot ) ;
@@ -467,13 +515,12 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
 
   // add extra rows/columns
   size_t size = halfDChi2DAlpha.size() ;
-  size_t numConstraints = 6u;
-  if (m_constrainZShearings) numConstraints += 3u;
-  
-  halfDChi2DAlpha.reSize(size + numConstraints) ;
-  halfD2Chi2DAlpha2.reSize(size + numConstraints) ;
+  halfDChi2DAlpha.reSize(size + Constraints::NumConstraints) ;
+  halfD2Chi2DAlpha2.reSize(size + Constraints::NumConstraints) ;
+  dofmask.resize( size + Constraints::NumConstraints, 0 ) ;
+
   // Set all new elements to 0
-  for (size_t i = size; i < size+numConstraints; ++i) {
+  for (size_t i = size; i < size+Constraints::NumConstraints; ++i) {
     halfDChi2DAlpha[i] = 0 ;
     for (size_t j = 0u; j <= i; ++j) halfD2Chi2DAlpha2[i][j] = 0 ;
   }
@@ -496,51 +543,67 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
 	halfD2Chi2DAlpha2[size+i][j+iElem*Derivatives::kCols] = thisweight * jacobian(i,j) ;
       }
     }
-    if (m_constrainZShearings) {
-      double deltaZ = it->centerOfGravity().z() - pivot.z() ;
-      // the 3 constraints are in this order: zx-shearing, zy-shearing and z-scale ('zz-shearing')
-      for (size_t i = 0u; i < 3u; ++i) {
-        for (size_t j = 0u; j < Derivatives::kCols; ++j) {
-          halfD2Chi2DAlpha2[size+i+6][j+iElem*Derivatives::kCols] = thisweight * deltaZ/(zmax-zmin) * jacobian(i,j) ;
-        }
+  
+    // Shearing constraints
+    double deltaZ = it->centerOfGravity().z() - pivot.z() ;
+    for (size_t i = 0u; i < 3u; ++i) {
+      for (size_t j = 0u; j < Derivatives::kCols; ++j) {
+	halfD2Chi2DAlpha2[size+i+6][j+iElem*Derivatives::kCols] = thisweight * deltaZ/(zmax-zmin) * jacobian(i,j) ;
       }
     }
+
+    // Curvature constraint (normalized with total number of hits?!)
+    for (size_t j = 0u; j < Derivatives::kCols; ++j)
+      halfD2Chi2DAlpha2[size+9][j+iElem*Derivatives::kCols] = m_equations->dOmegaDAlpha(iElem)(j)/numhits ;
   }
   
   if (printDebug()) debug() << "Full matrix after adding constraints: " << std::endl
                             << halfD2Chi2DAlpha2 << endmsg ;
-  
+
   // we have now calculated everything for all constraints. However,
   // we may not want all of them:
+  // * only activate costraints that we asked for
   // * remove constraints that have no active non-zero derivative 
   // * remove constraints if the dof is effectively constrained by inactive parameters
   // this is pretty tricky. need to replace the following with something more sensible:
-  const std::vector<std::string> constraintnames = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz")("Szx")("Szy")("Szz");
-  const double threshold = FLT_MIN ;
-  size_t numRemovedConstraints(0) ;
-  for (size_t i = 0u; i < numConstraints; ++i) {
-    bool hasNonZeroDerivativeToActive(false) ;
-    bool hasNonZeroDerivativeToInactive(false) ;
-    for (size_t j = 0u; j < size && !(hasNonZeroDerivativeToActive && hasNonZeroDerivativeToInactive); ++j) {
-      // check that derivative is non-zero
-      if ( std::abs(halfD2Chi2DAlpha2[size+i][j]) > threshold ) {
-	if ( dofmask[j] ) hasNonZeroDerivativeToActive = true ;
-	// the logic fails because rotations cannot 'constrain' translations. need to think of something else.
-	// if( !dofmask[j] ) hasNonZeroDerivativeToInactive = true ;
+  size_t numActiveConstraints(0) ;
+  for( std::vector<std::string>::const_iterator iname = m_constraints.begin();
+       iname != m_constraints.end(); ++iname) {
+    size_t i = Constraints::index(*iname) ;
+    if( i == Constraints::NumConstraints ) {
+      logmessage << "Warning: unknown constraint " << *iname << std::endl ;
+    } else {
+      dofmask[ size + i ] = true ; 
+      const double threshold = FLT_MIN ;
+      bool hasNonZeroDerivativeToActive(false) ;
+      bool hasNonZeroDerivativeToInactive(false) ;
+      for (size_t j = 0u; j < size && !(hasNonZeroDerivativeToActive && hasNonZeroDerivativeToInactive); ++j) {
+	// check that derivative is non-zero
+	if ( std::abs(halfD2Chi2DAlpha2[size+i][j]) > threshold ) {
+	  if ( dofmask[j] ) hasNonZeroDerivativeToActive = true ;
+	  // the logic fails because rotations cannot 'constrain' translations. need to think of something else.
+	  // if( !dofmask[j] ) hasNonZeroDerivativeToInactive = true ;
+	}
+      }
+      bool useConstraint = hasNonZeroDerivativeToActive && !hasNonZeroDerivativeToInactive ;
+      if( !useConstraint) {
+	dofmask[ size + i ] = false ;
+	logmessage << "Warning: removing constraint " << *iname << std::endl ;
+      } else {
+	++numActiveConstraints ;
       }
     }
-    bool useConstrained = hasNonZeroDerivativeToActive && !hasNonZeroDerivativeToInactive ;
-    dofmask.push_back( useConstrained ) ;
-    numRemovedConstraints += useConstrained ? 0 : 1 ;
   }
 
   // Finally, add some info to the log message
-  assert( dofmask.size() == size + numConstraints) ;
+  assert( dofmask.size() == size + Constraints::NumConstraints) ;
   logmessage << "Added canonical constraints for (global) : " ;
-  for (size_t i = 0u; i < numConstraints; ++i) if ( dofmask[size+i] ) logmessage << constraintnames[i] << (i != numConstraints-1u ? ", " : "" );
+  for (size_t i = 0u; i < Constraints::NumConstraints; ++i) 
+    if ( dofmask[size+i] ) 
+      logmessage << Constraints::name(i) << (i != Constraints::NumConstraints-1u ? ", " : "" );
   logmessage << std::endl ;
-
-  return numConstraints - numRemovedConstraints ;
+  
+  return numActiveConstraints ;
 }
 
 
@@ -782,6 +845,10 @@ void AlignAlgorithm::update() {
     info() << (*i) << (i != iEnd-1u ? ", " : "]");
   }
   info() << endmsg;
+  if(!m_logFileName.empty()) {
+    std::ofstream logfile(m_logFileName.c_str()) ;
+    logfile << logmessage.str() << std::endl ;
+  }
 }
 
 void AlignAlgorithm::reset() {
