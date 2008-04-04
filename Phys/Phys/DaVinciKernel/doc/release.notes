@@ -3,10 +3,9 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v6r12 2008-04-04 ====================
 ! 2008-04-04 - Vanya BELYAEV
-
  - Kernel/IDistanceCalculator.h
-
     Add a counterpartner for the method "projectedDistance" 
      *without* evaluation of the error in the projected-distance 
     (could be a bit more more efficient, if the error is not required):
@@ -31,7 +30,6 @@
     const LHCb::VertexBase* primary  , 
     double&                 dist     ) const = 0 ;
 
-!======================== DaVinciKernel v6r12 2008-04-03 ====================
 ! 2008-04-03 - Vanya BELYAEV 
  - Kernel/Decay.h
      - add few very simple functions, which simplify the manipulations 
