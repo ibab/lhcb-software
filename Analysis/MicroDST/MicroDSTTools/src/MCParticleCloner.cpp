@@ -1,4 +1,4 @@
-// $Id: MCParticleCloner.cpp,v 1.2 2008-02-11 22:37:16 jpalac Exp $
+// $Id: MCParticleCloner.cpp,v 1.3 2008-04-04 14:07:31 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -29,10 +29,14 @@ MCParticleCloner::MCParticleCloner( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
   : 
-  MicroDSTTool ( type, name , parent )
+  MicroDSTTool ( type, name , parent ),
+  m_vertexClonerName("MCVertexCloner"),
+  m_cloneDecayVertices(false)
 {
   declareInterface<ICloneMCParticle>(this);
-
+  declareProperty("ICloneMCVertex", m_vertexClonerName);
+  declareProperty("CloneDecayVertices", m_cloneDecayVertices);
+  
 }
 //=============================================================================
 StatusCode MCParticleCloner::initialize()
@@ -44,7 +48,7 @@ StatusCode MCParticleCloner::initialize()
   
   if (! sc.isSuccess() ) return sc;
 
-  m_vertexCloner = this->tool<ICloneMCVertex>( "MCVertexCloner", 
+  m_vertexCloner = this->tool<ICloneMCVertex>( m_vertexClonerName, 
                                                this->parent()    );
 
   return StatusCode::SUCCESS;
@@ -79,6 +83,24 @@ LHCb::MCParticle* MCParticleCloner::clone(const LHCb::MCParticle* mcp,
       debug() << "No originVertex found"<< endmsg;
     }
   }
+
+  clone->clearEndVertices();
+
+  const SmartRefVector< LHCb::MCVertex >& endVtx = mcp->endVertices();
+
+  for (SmartRefVector<LHCb::MCVertex>::const_iterator iEndVtx =endVtx.begin(); 
+       iEndVtx!=endVtx.end(); 
+       ++iEndVtx) {
+    if (m_cloneDecayVertices && (*iEndVtx)->isDecay() ) {
+      LHCb::MCVertex* decayVertexClone = (*m_vertexCloner)(*iEndVtx);
+      clone->addToEndVertices(decayVertexClone);
+    } else {
+      clone->addToEndVertices(*iEndVtx);
+    }
+    
+  }
+  
+
 
   return clone;
 
