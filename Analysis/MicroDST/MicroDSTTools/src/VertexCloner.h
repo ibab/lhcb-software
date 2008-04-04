@@ -1,4 +1,4 @@
-// $Id: VertexCloner.h,v 1.1.1.1 2007-12-10 09:32:24 jpalac Exp $
+// $Id: VertexCloner.h,v 1.2 2008-04-04 14:07:49 jpalac Exp $
 #ifndef MICRODST_VERTEXCLONER_H 
 #define MICRODST_VERTEXCLONER_H 1
 
@@ -10,6 +10,10 @@
 
 /** @class VertexCloner VertexCloner.h src/VertexCloner.h
  *  
+ *
+ *  Implementation of the ICloneVertex interface.
+ *  
+ *  Clone an LHCb::Vertex and it's outgoing LHCb::Particles.
  *
  *  @author Juan PALACIOS
  *  @date   2007-11-30
