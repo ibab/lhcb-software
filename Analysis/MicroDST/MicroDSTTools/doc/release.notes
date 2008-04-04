@@ -3,8 +3,19 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.8 2008-04-03 14:45:26 jpalac Exp $
+! $Id: release.notes,v 1.9 2008-04-04 14:08:06 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-04-04 - Juan PALACIOS
+ - src/VertexCloner.h
+  . Start adding some doxygen.
+ - src/MCParticleCloner.h
+  . Add properties "ICloneMCVertex": m_vertexClonerName and 
+    "CloneDecayVertices": m_cloneDecayVertices.
+  . Add doxygen description.
+ - src/MCParticleCloner.cpp
+  . Add copying of LHCb::Particle::endVertices() SmartRefs and possibility to 
+    clone and store end vertices that are decay vertices.
 
 ! 2008-04-03 - Juan PALACIOS
  - src/RecVertexCloner.h
