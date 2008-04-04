@@ -1,6 +1,5 @@
-// $Id: Functions.cpp,v 1.3 2008-04-03 14:35:22 jpalac Exp $
+// $Id: Functions.cpp,v 1.4 2008-04-04 11:55:21 jpalac Exp $
 // Include files 
-
 
 
 // local
@@ -39,10 +38,9 @@ namespace MicroDST
     StatusCode sc(StatusCode::FAILURE);
     if (Gaudi::Utils::hasProperty(parent, name) )
     {
-      
       sc = Gaudi::Utils::setProperty(daughter, 
                                      name, 
-                                     Gaudi::Utils::getProperty(parent, name));
+                                     *Gaudi::Utils::getProperty(parent, name));
     }
     return sc;
   }
