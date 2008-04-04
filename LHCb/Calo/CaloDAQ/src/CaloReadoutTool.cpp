@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.24 2008-01-25 14:43:41 cattanem Exp $
+// $Id: CaloReadoutTool.cpp,v 1.25 2008-04-04 13:50:37 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -147,8 +147,9 @@ bool CaloReadoutTool::checkCards(int nCards, std::vector<int> feCards ){
                                           << "  - Is it a PinDiode readout FE-Card ? " 
                                           << m_calo->isPinCard( feCards[iFe] ) << endreq;
       if ( !m_calo->isPinCard( feCards[iFe] ) ){
-        warning() << " The standard FE-Card " << m_calo->cardCode( feCards[iFe] )  
-                 << " expected in TELL1 bank has not been read !!"<< endreq;
+        std::stringstream s("");
+        s << m_calo->cardCode( feCards[iFe] )  ;
+        Warning(" The standard FE-Card " + s.str() + " expected in TELL1 bank has not been read !!").ignore();
         check = false;
       }
     }    

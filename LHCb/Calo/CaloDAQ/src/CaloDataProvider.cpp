@@ -303,10 +303,13 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        error() << " FE-Card w/ [code : " << code 
-                << " ] not associated with TELL1 bank sourceID : " << sourceID
-                << " in condDB :  Cannot read that bank" << endreq;
-        error() << "Warning : previous data may be corrupted" << endreq;
+        std::stringstream s("");
+        s<<sourceID;
+        std::stringstream c("");
+        c<<code;
+        Error(" FE-Card w/ [code : " + c.str() + " ] is not associated with TELL1 bank sourceID : " +s.str()
+              + " in condDB :  Cannot read that bank").ignore();
+        Error("Warning : previous data may be corrupted").ignore();
         if(m_cleanCorrupted)cleanData(prevCard);
         m_status.addStatus(sourceID, LHCb::RawBankReadoutStatus::Corrupted || LHCb::RawBankReadoutStatus::Incomplete);
         return false;
@@ -401,10 +404,13 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        error() << " FE-Card w/ [code : " << code 
-                << " ] is not associated with TELL1 bank sourceID : " << sourceID
-                << " in condDB :  Cannot read that bank" << endreq;
-        error() << "Warning : previous data may be corrupted" << endreq;
+        std::stringstream s("");
+        s<<sourceID;
+        std::stringstream c("");
+        c<<code;
+        Error(" FE-Card w/ [code : " + c.str() + " ] is not associated with TELL1 bank sourceID : " +s.str()
+              + " in condDB :  Cannot read that bank").ignore();
+        Error("Warning : previous data may be corrupted").ignore();
         if(m_cleanCorrupted)cleanData(prevCard);
         m_status.addStatus( sourceID, LHCb::RawBankReadoutStatus::Corrupted || LHCb::RawBankReadoutStatus::Incomplete);
         return false;
@@ -592,10 +598,13 @@ bool CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        error() << " FE-Card w/ [code : " << code 
-                << " ] is not associated with TELL1 bank sourceID : " << sourceID
-                << " in condDB :  Cannot read that bank" << endreq;
-        error() << "WARNING : previous data may be corrupted" << endreq;
+        std::stringstream s("");
+        s<<sourceID;
+        std::stringstream c("");
+        c<<code;
+        Error(" FE-Card w/ [code : " + c.str() + " ] is not associated with TELL1 bank sourceID : " +s.str()
+              + " in condDB :  Cannot read that bank").ignore();
+        Error("Warning : previous data may be corrupted").ignore();
         if(m_cleanCorrupted)cleanData(prevCard);
         m_status.addStatus( sourceID,   LHCb::RawBankReadoutStatus::Corrupted || LHCb::RawBankReadoutStatus::Incomplete);
         return false;

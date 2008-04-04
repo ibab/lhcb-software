@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.22 2008-03-05 15:56:51 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.23 2008-04-04 13:50:37 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -269,9 +269,13 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        error() << " FE-Card w/ [code : " << code << "] not associated with TELL1 bank " << sourceID
-                << " in condDB :  Cannot read that bank" << endreq;
-        error() << "Warning : previous data may be corrupted" << endreq;
+        std::stringstream s("");
+        s<<sourceID;
+        std::stringstream c("");
+        c<<code;
+        Error(" FE-Card w/ [code : " + c.str() + " ] is not associated with TELL1 bank sourceID : " +s.str()
+              + " in condDB :  Cannot read that bank").ignore();
+        Error("Warning : previous data may be corrupted").ignore();
         if(m_cleanCorrupted)cleanData(prevCard);
         m_status.addStatus( sourceID,   LHCb::RawBankReadoutStatus::Corrupted || LHCb::RawBankReadoutStatus::Incomplete);
         return false;
