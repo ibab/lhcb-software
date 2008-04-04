@@ -87,12 +87,12 @@ void declareInfo(const std::string& name, const std::string& format, const void 
       @param name Monitoring information name knwon to the external system
       @param owner Owner identifier of the monitoring information
   */
-  void updateSvc( const std::string& name, const IInterface* owner, bool endOfRun ) ;
+  void updateSvc( const std::string& name,  bool endOfRun , const IInterface* owner) ;
 
   /** Update all monitoring information
       @param owner Owner identifier of the monitoring information
   */
-  void updateAll( const IInterface* owner, bool endOfRun ) ;
+  void updateAll( bool endOfRun ,  const IInterface* owner) ;
   void resetHistos( const IInterface* owner ) ;
 
   void setTimerElapsed(bool timerelapsed);

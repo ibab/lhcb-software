@@ -5,6 +5,10 @@
 //	Package   : Gaucho
 //
 //	Author    : Eric van Herwijnen
+//      Should be run as first algorithm in TopAlg
+//      Checks:
+//      1) If the run number has changed. If so, updateAll(true) and resetHistos
+//      2) If timerelapsed flag is true. If so, updateAll(false)   
 //
 //	====================================================================
 
@@ -71,15 +75,15 @@ StatusCode UpdateAndReset::execute() {
   { 
      //fast or other run change
      //update immediately and reset
-     //updateAll();
-     //resetHistos();
+     updateAll(true);
+     resetHistos();
      }
   else {  
-     //m_timerElapsed=getTimerElapsed();
+     m_timerElapsed=getTimerElapsed();
      msg << MSG::INFO << "getTimerElapsed " << m_timerElapsed << endreq;
      //check if update flag is set
      //update if so
-     //if (m_timerElapsed) updateAll();
+     if (m_timerElapsed) updateAll(false);
   }
   m_runNumber = currentRunNumber;
   return StatusCode::SUCCESS;

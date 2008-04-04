@@ -275,9 +275,8 @@ std::string MonitorSvc::infoOwnerName( const IInterface* owner )
 }
 
 //updateSvc and resetHistos methods are for fast run changes
-void MonitorSvc::updateSvc( const std::string& name, 
-                                const IInterface* owner, 
-                                   bool endOfRun)
+void MonitorSvc::updateSvc( const std::string& name, bool endOfRun, 
+                                const IInterface* owner )
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
   std::set<std::string> * infoNamesSet = getInfos( owner );
@@ -339,8 +338,8 @@ void MonitorSvc::undeclareAll( const IInterface* owner)
   }
 }
 
-void MonitorSvc::updateAll( const IInterface* owner,
-                               bool endOfRun )
+void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner
+                               )
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
   if( 0!=owner ){
@@ -369,7 +368,7 @@ void MonitorSvc::updateAll( const IInterface* owner,
   } else { // Null pointer. Update for all owners
     for(m_InfoNamesMapIt = m_InfoNamesMap.begin();
         m_InfoNamesMapIt != m_InfoNamesMap.end();++m_InfoNamesMapIt)
-      updateAll( m_InfoNamesMapIt->first, endOfRun );
+      updateAll(endOfRun, m_InfoNamesMapIt->first );
   }
  // setLastUpdateTime();
   setTimerElapsed(false); 
