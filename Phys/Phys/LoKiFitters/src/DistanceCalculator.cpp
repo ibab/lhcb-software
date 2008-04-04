@@ -1,4 +1,4 @@
-// $Id: DistanceCalculator.cpp,v 1.1 2008-03-10 18:24:43 ibelyaev Exp $
+// $Id: DistanceCalculator.cpp,v 1.2 2008-04-04 08:58:28 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -41,8 +41,8 @@ LoKi::DistanceCalculator::DistanceCalculator
   /// The tarnsported tool itself 
   , m_transporter ( 0 ) // The transporter tool itself 
   /// the local storages of particles
-  , m_particle1 ( ) 
-  , m_particle2 ( )
+  , m_particle1 ( LHCb::ParticleID ( 511 ) ) 
+  , m_particle2 ( LHCb::ParticleID ( 511 ) )
 {
   //
   declareInterface<IDistanceCalculator> ( this ) ;
@@ -308,7 +308,7 @@ StatusCode LoKi::DistanceCalculator::_distance
     if ( sc.isFailure() ) 
     { 
       Warning ( "_distance(III): error from KalmanFilter::seed" , sc ) ; 
-      // set manually the seed to be equal to th emiddle position 
+      // set manually the seed to be equal to the middle position 
       Gaudi::Math::geo2LA ( point1 + 0.5 * ( point2 - point1 ) , x ) ;
       // set the gain matrix to be "small enought" 
       const double sc = std::max ( 5 * ( point1 - point2 ).R() , Gaudi::Units::cm ) ;
@@ -348,7 +348,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   const LHCb::Particle&   particle , // the particle 
   const LHCb::VertexBase& decay    , // the decay vertex   
   double&                 path     , // the estimate of path-distance
-  double&                 error    , // the errr in  path-distance 
+  double&                 error    , // the error in  path-distance 
   double&                 chi2     ) const 
 {
   
@@ -359,7 +359,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   // propagate particle into its own decay vertex:
   StatusCode sc = transport ( &particle , decay.position() , m_particle1 ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "The error from IParticleTransporter, ignore" , sc ) ; }
+  { return Error ( "The error from IParticleTransporter" , sc ) ; }
 
   
   const LHCb::Particle* good = &m_particle1 ;// the properly transported particle
@@ -407,7 +407,7 @@ StatusCode LoKi::DistanceCalculator::_distance
          || 
          ::fabs ( path  - o_path ) < m_delta_path ) 
     {
-      // get the error c*tau 
+      // get the error in "path" 
       error = ::sqrt ( m_fitter.m_Vvar ) ;
       //
       counter ( "#iterations-IV" ) += iIter ;
@@ -418,6 +418,77 @@ StatusCode LoKi::DistanceCalculator::_distance
   return Error ( "There is no convergency" , NoConvergency ) ;
 }
 // ============================================================================ 
+/* Calculate the projected distance 
+ * @param primary  (input)  the production vertex 
+ * @param particle (input)  the particle 
+ * @param decay    (input)  the decay particle 
+ * @param dist     (output) the projected distance
+ * @param error    (output) the estimate of the error in the distance 
+ * @return status code 
+ */
+// ============================================================================ 
+StatusCode LoKi::DistanceCalculator::_distance   
+( const LHCb::VertexBase& primary  ,         // the production vertex 
+  const LHCb::Particle&   particle ,         // the particle  
+  const LHCb::VertexBase& decay    ,         // the production vertex 
+  double&                 dist     ,         // the distance 
+  double*                 error    ) const   // the error in distance 
+{
+  
+  using namespace Gaudi::Math::Operators ;
+  
+  // propagate the particle into its own decay vertex:
+  StatusCode sc = transport ( &particle , decay.position() , m_particle1 ) ;
+  if ( sc.isFailure() ) 
+  { return Error ( "The error from IParticleTransporter" , sc ) ; }
+  
+  const LHCb::Particle* good = &m_particle1 ; // the properly transported particle
+  
+  // evaluate the projected distance 
+  dist = i_distance ( primary  , *good , decay ) ;
+  // evaluate the error? 
+  if ( 0 == error ) { return StatusCode::SUCCESS ; }         // RETURN 
+  //
+  const Gaudi::XYZPoint& vd   = decay    . position() ;
+  const Gaudi::XYZPoint& vpv  = primary  . position() ;
+  const Gaudi::XYZVector  p   = good     -> momentum() . Vect () ;
+  //
+  //  H = (vd-vp)*p - s* |p|
+  //
+  // get dH/d(p4)
+  Gaudi::Vector4 dHdp4 ;
+  const Gaudi::XYZVector delta = vd - vpv - dist * p.Unit() ;
+  dHdp4 ( 0 ) = delta.X () ; // dH/d(px) 
+  dHdp4 ( 1 ) = delta.Y () ; // dH/d(py)
+  dHdp4 ( 2 ) = delta.Z () ; // dH/d(pz) 
+  dHdp4 ( 3 ) = 0          ; // dH/d(E) 
+  //
+  // get dH/d(vd) 
+  const Gaudi::XYZVector& dHdvd =  p ; // dH/d(vd) 
+  // get dH/d(vp) 
+  // const Gaudi::XYZVector  dHdvp = -p ; // dH/d(vp) 
+  //
+  // V_D = ( D^T * V * D ) ^{-1}
+  const double V_D = 1.0 /
+    ( ROOT ::Math::Similarity ( dHdp4 , good ->    momCovMatrix ()     ) + 
+      2 * ROOT::Math::Dot     ( dHdp4 , good -> posMomCovMatrix () * p ) + 
+      Gaudi::Math::Similarity ( dHdvd , decay    .    covMatrix ()     ) + 
+      Gaudi::Math::Similarity ( dHdvd , primary  .    covMatrix ()     ) );
+  
+  // v_s = ( E^T * V_D * E ) ^ {-1}
+  //  where E = d(H)/d(s) = -|p|  
+  const double V_s = 1.0 / ( V_D * p.Mag2() ) ;
+  //
+  if ( 0 <= V_s ) { *error = ::sqrt ( V_s ) ; }
+  else 
+  {
+    *error = -1 ;
+    return Error ( "The negative covarinace, return error=-1" ) ;    // RETURN 
+  }
+  //
+  return StatusCode::SUCCESS ;                                       // RETURN
+}
+// ============================================================================
 // The functions from the interface 
 // ============================================================================
 // Particle - Vertex 
@@ -617,8 +688,26 @@ LoKi::DistanceCalculator::pathDistance
   sc = check ( decay ) ;
   if ( sc.isFailure() ) { return sc ; }                     // RETURN 
   // make the real evaluation:
-  //return _distance ( *primary  , *particle , *decay , path , error , chi2 ) ;
-  return Warning("pathDistance: not yet imeplmented", NotImplemented ) ;
+  return _distance ( *primary  , *particle , *decay , path , error , chi2 ) ;
+}
+// ============================================================================
+// Calculate the projected distance 
+// ============================================================================
+StatusCode 
+LoKi::DistanceCalculator::projectedDistance   
+( const LHCb::Particle*   particle , 
+  const LHCb::VertexBase* primary  , 
+  double&                 dist     ) const 
+{
+  // check the input data 
+  StatusCode sc = check ( particle , primary ) ;
+  if ( sc.isFailure() ) { return sc ; }                     // RETURN 
+  // check the end-vertex
+  const LHCb::VertexBase* decay = particle->endVertex() ;
+  sc = check ( decay ) ;
+  if ( sc.isFailure() ) { return sc ; }                     // RETURN 
+  // make the real evaluation:
+  return _distance ( *primary  , *particle , *decay , dist , 0 ) ;
 }
 // ============================================================================
 // Calculate the projected distance 
@@ -638,9 +727,9 @@ LoKi::DistanceCalculator::projectedDistance
   sc = check ( decay ) ;
   if ( sc.isFailure() ) { return sc ; }                     // RETURN 
   // make the real evaluation:
-  //return _distance ( *primary  , *particle , *decay , path , error ) ;
-  return Warning("pathDistance: not yet imeplmented", NotImplemented ) ;
+  return _distance ( *primary  , *particle , *decay , dist , &error ) ;
 }
+// ============================================================================
 
 
 

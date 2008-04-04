@@ -1,4 +1,4 @@
-// $Id: DistanceCalculator.h,v 1.1 2008-03-10 18:24:43 ibelyaev Exp $
+// $Id: DistanceCalculator.h,v 1.2 2008-04-04 08:58:28 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_DISTANCECALCULATOR_H 
 #define LOKIFITTERS_DISTANCECALCULATOR_H 1
@@ -27,8 +27,8 @@ namespace LoKi
    *  It is the simplest implementation of the basic math, 
    *  needed for the real implementation 
    *  on the abstract interface IDistanceCalculator 
-   *  Essentially it relies on many nice functions, coded 
-   *  
+   *  Essentially it relies on many nice functions, 
+   *  coded by Juan & Matt  
    *  
    *  @see IDistanceCalculator 
    *
@@ -258,6 +258,24 @@ namespace LoKi
      *  where vector \f$\vec{\mathbf{v}}\f$ i a vector from 
      *  the primary to the secondary vertex: 
      *    \f$\vec{\mathbf{v}}=\vec{\mathbf{x}}_{d}-\vec{\mathbf{x}}_{pv}\f$,
+     *
+     * @param particle (input)  the pointer to the particle 
+     * @param primary  (input)  the pointer to the production vertex 
+     * @param dist     (output) the projected distance
+     * @return status code 
+     */
+    virtual StatusCode projectedDistance   
+    ( const LHCb::Particle*   particle , 
+      const LHCb::VertexBase* primary  , 
+      double&                 dist     ) const ;
+    // ========================================================================
+    /** Calculate the projected distance 
+     *
+     *  \f$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
+     *     \right)}{\left|\vec{\mathbf{p}}\right|}\f,$
+     *  where vector \f$\vec{\mathbf{v}}\f$ i a vector from 
+     *  the primary to the secondary vertex: 
+     *    \f$\vec{\mathbf{v}}=\vec{\mathbf{x}}_{d}-\vec{\mathbf{x}}_{pv}\f$,
      *  and its error 
      *
      * @param particle (input)  the pointer to the particle 
@@ -384,6 +402,39 @@ namespace LoKi
       double&                 path     ,
       double&                 error    ,
       double&                 chi2     ) const ;  
+    // ========================================================================
+    /** Calculate the projected distance 
+     *
+     *  \f$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
+     *     \right)}{\left|\vec{\mathbf{p}}\right|}\f,$
+     *  where vector \f$\vec{\mathbf{v}}\f$ is a vector from 
+     *  the primary to the secondary vertex: 
+     *    \f$\vec{\mathbf{v}}=\vec{\mathbf{x}}_{d}-\vec{\mathbf{x}}_{pv}\f$,
+     *  and its error 
+     *
+     * The simplest way to evaluate the error it to considner formally 
+     * the problem as a constrained minimization with the constraint:
+     *  
+     * \f$ H = \left(\vec{\mathbf{v}}\vec{\mathbf{p}}\right) - 
+     *    \mathbf{s}\left|\vec{\mathbf{p}}\right| = 0 
+     * \f$
+     * Of course there is no need to perform the actual minimiation 
+     * The solution is known in advance!), but formalizm is easy to reuse 
+     * for evaluation of \f$\mathbf{C_s}\f$
+     *  
+     * @param primary  (input)  the production vertex 
+     * @param particle (input)  the particle 
+     * @param decay    (input)  the decay particle 
+     * @param dist     (output) the projected distance
+     * @param error    (output) the estimate of the error in the distance 
+     * @return status code 
+     */
+    StatusCode _distance   
+    ( const LHCb::VertexBase& primary      , 
+      const LHCb::Particle&   particle     , 
+      const LHCb::VertexBase& decay        , 
+      double&                 dist         , 
+      double*                 error    = 0 ) const ;
     // ========================================================================
   private:
     /// the maximal number of iterations 

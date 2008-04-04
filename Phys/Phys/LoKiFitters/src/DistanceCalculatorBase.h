@@ -1,4 +1,4 @@
-// $Id: DistanceCalculatorBase.h,v 1.1 2008-03-10 18:24:43 ibelyaev Exp $
+// $Id: DistanceCalculatorBase.h,v 1.2 2008-04-04 08:58:28 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_DISTANCECALCULATORBASE_H 
 #define LOKIFITTERS_DISTANCECALCULATORBASE_H 1
@@ -120,7 +120,7 @@ namespace LoKi
     /**  evaluate the  distance between the vertex and the fixed point point 
      *   @param vertex (input) the vertex 
      *   @param point  (input) the fixed point
-     *   @param dist   (output) the disatnce between vertices 
+     *   @param dist   (output) the distance between vertices 
      *   @param chi2   (output,optional) the chi2 separation significance 
      */
     inline StatusCode i_distance 
@@ -128,6 +128,25 @@ namespace LoKi
       const Gaudi::XYZPoint&  point    , 
       double&                 dist     , 
       double*                 chi2 = 0 ) const ;
+    // ========================================================================
+    /* evalute the "projected" distance 
+     * 
+     *  \f$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
+     *     \right)}{\left|\vec{\mathbf{p}}\right|}\f,$
+     *  where vector \f$\vec{\mathbf{v}}\f$ is a vector from 
+     *  the primary to the secondary vertex: 
+     *    \f$\vec{\mathbf{v}}=\vec{\mathbf{x}}_{d}-\vec{\mathbf{x}}_{pv}\f$,
+     *
+     * @param primary  (input)  the production vertex 
+     * @param particle (input)  the particle 
+     * @param decay    (input)  the decay particle 
+     * @param return the projected distance
+     * @return status code 
+     */ 
+    inline double i_distance 
+    ( const LHCb::VertexBase& primary  , 
+      const LHCb::Particle&   particle , 
+      const LHCb::VertexBase& decay    ) const ;
     // ========================================================================
   protected:
     // ========================================================================
@@ -305,9 +324,9 @@ inline void LoKi::DistanceCalculatorBase::i_distance
   point1 = line1 ( mu1 ) ; // the point on the first tarjectory
   point2 = line2 ( mu2 ) ; // the point on the second trajectory  
 }
-// ========================================================================
+// ============================================================================
 //  evaluate the  distance (and chi^2) between two vertices 
-// ========================================================================
+// ============================================================================
 inline 
 StatusCode 
 LoKi::DistanceCalculatorBase::i_distance 
@@ -324,14 +343,14 @@ LoKi::DistanceCalculatorBase::i_distance
   Gaudi::SymMatrix3x3 cov ( vx1.covMatrix() + vx2.covMatrix() ) ;
   if ( !cov.Invert() ) 
   { return Error ( "Error in matrix inversion" , ErrorInMatrixInversion ); }
-  //
-  *chi2 = Gaudi::Math::Similarity ( delta , cov ) ;
+  // evaluate the chi2 
+  *chi2 = Gaudi::Math::Similarity ( delta , cov ) ; 
   //
   return StatusCode::SUCCESS ;
 }
-// ========================================================================
+// ============================================================================
 //  evaluate the  distance (and chi^2) between 
-// ========================================================================
+// ============================================================================
 inline 
 StatusCode 
 LoKi::DistanceCalculatorBase::i_distance 
@@ -348,11 +367,32 @@ LoKi::DistanceCalculatorBase::i_distance
   Gaudi::SymMatrix3x3 cov ( v.covMatrix() ) ;
   if ( !cov.Invert() ) 
   { return Error ( "Error in matrix inversion" , ErrorInMatrixInversion ) ; }  
-  // 
-  *chi2 = Gaudi::Math::Similarity ( delta , cov ) ;
+  // evaluate the chi2 
+  *chi2 = Gaudi::Math::Similarity ( delta , cov ) ; 
   //
   return StatusCode::SUCCESS ;
 }
+// ============================================================================
+// evalute the "projected" distance 
+// ============================================================================
+inline 
+double 
+LoKi::DistanceCalculatorBase::i_distance 
+( const LHCb::VertexBase& primary  , 
+  const LHCb::Particle&   particle , 
+  const LHCb::VertexBase& decay    ) const 
+{
+  // decay position
+  const Gaudi::XYZPoint&  vd = decay   . position () ;
+  // origin position 
+  const Gaudi::XYZPoint&  vp = primary . position () ;
+  // the unit vector along the momentum 
+  const Gaudi::XYZVector   p  = particle.momentum().Vect().Unit() ;
+  //
+  return ( vd  - vp ).Dot ( p ) ;
+}
+// ============================================================================
+
 // ============================================================================
 // The END 
 // ============================================================================
