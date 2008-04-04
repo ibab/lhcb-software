@@ -1,10 +1,17 @@
-!$Id: release.notes,v 1.7 2008-04-03 14:36:14 jpalac Exp $
+!$Id: release.notes,v 1.8 2008-04-04 11:56:42 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2008-04-04 - Juan PALACIOS
+ - src/Lib/Functions.cpp
+  . Fix bug in synchroniseProperty. Pointer to Property was baing passed to 
+    Gaudi::Utils::setProperty.
+ - src/Lib/MicroDSTTool.cpp
+  . Remove synchronisation of InputLocation: clearly not necessary.
 
 ! 2008-04-03 - Juan PALACIOS
  - MicroDST/Functions.h, src/Lib/Functions.cpp
