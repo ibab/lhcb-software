@@ -183,8 +183,9 @@ namespace Al
     // the last) node. Once we have the gain matrices, the rest is
     // trivial, though still CPU intensive.
 
+    bool error = false ;
     std::vector< Gaudi::TrackMatrix > smoothergainmatrix(numnodes-1) ;
-    for(size_t k=1; k<numnodes; ++k) {
+    for(size_t k=1; k<numnodes && !error; ++k) {
       //std::cout << "k, size: " << k << " " << offdiagcov[k].size() << std::endl ;
       const LHCb::FitNode* node     = dynamic_cast<const LHCb::FitNode*>(nodes[k]) ;
       const LHCb::FitNode* prevnode = dynamic_cast<const LHCb::FitNode*>(nodes[k-1]) ;
@@ -217,11 +218,20 @@ namespace Al
       // wrong. (The correlation is then essentially 'zero'.) Let's
       // hope that this does not happen.
       
-      // Gaudi::TrackSymMatrix upstreamfiltered = predcov - Q ;
-      // do some test
+      // let's do some test
+      Gaudi::TrackSymMatrix predcovMinusQ = predcov - Q ;
+      for(size_t irow=0; irow<Gaudi::TrackSymMatrix::kRows && !error; ++irow) 
+	if( (error = !(0<=predcovMinusQ(irow,irow)) ) )
+	  warning() << "Predicted covariance has negative element on diagonal. Skipping track." << endreq ;
+      for(size_t irow=0; irow<Gaudi::TrackSymMatrix::kRows && !error; ++irow) 
+	for(size_t icol=0; icol<irow && !error; ++icol) {
+	  double c2 = predcovMinusQ(irow,icol)*predcovMinusQ(irow,icol)/( predcovMinusQ(irow,irow)*predcovMinusQ(icol,icol)) ;
+	  if( ( error = !( -1<=c2 && c2<=1) ) ) 
+	    warning() << "Predicted covariance has negative correlation. Skipping track." << endreq ;
+	}
       
       // continue
-      smoothergainmatrix[k-1] = invF * ( predcov - Q ) * invpredcov ;
+      smoothergainmatrix[k-1] = invF * predcovMinusQ * invpredcov ;
       
       // Now calculate the diagonal (k-1,k). This matrix represents
       // the covariance of the statvectors of k-1 and k. (multiply
@@ -244,92 +254,94 @@ namespace Al
     // probably to do it on demand, but the following should also work. Note that
     // this is also where things become really slow.
     
-    for(size_t l=2; l<numnodes; ++l) {
-      for(size_t k=l-1; k>0; --k) {
-	assert( offdiagcov[l][k] != 0 ) ;
-	offdiagcov[l][k-1] = new Gaudi::TrackMatrix( (*(offdiagcov[l][k])) * Transpose(smoothergainmatrix[k-1]) ) ;
+    Al::TrackResiduals* residuals(0) ;
+
+    if( !error ) {
+
+      for(size_t l=2; l<numnodes; ++l) {
+	for(size_t k=l-1; k>0; --k) {
+	  assert( offdiagcov[l][k] != 0 ) ;
+	  offdiagcov[l][k-1] = new Gaudi::TrackMatrix( (*(offdiagcov[l][k])) * Transpose(smoothergainmatrix[k-1]) ) ;
+	}
       }
-    }
     
-    
-    // for now, just check that every element is filled
-    for( size_t irow = 1; irow<numnodes; ++irow) for(size_t icol = 0; icol<irow; ++icol)
-      if( offdiagcov[irow][icol] == 0 )
-        std::cout << "element not filled: " << irow << " " << icol << " " << numnodes << std::endl ;
-    
-    
-    // now it is time to calculate the covariance matrix for the
-    // residuals. First we need to know which nodes correspond to
-    // measurements. After that, we fill the matrix.
-    std::vector<size_t> measurementnodeindices ;
-    Al::TrackResiduals::NodeContainer measurementnodes ;
-    SelectSortAndMap(nodes,measurementnodes,measurementnodeindices,
-		     track.checkFlag( LHCb::Track::Backward)) ;
-    
-    Al::TrackResiduals* residuals = new Al::TrackResiduals(track,measurementnodes) ;
-    // correlation with the reference state, which is the most
-    // upstream node.
-    size_t refnodeindex = measurementnodeindices[0] ;
-    
-    // allocate the H C H^T matrix
-    // NOTE: we normalize H C H^T relative to V
-    size_t nummeasurements = measurementnodeindices.size() ;
-    residuals->m_HCH = CLHEP::HepSymMatrix(nummeasurements,0) ;
-    CLHEP::HepSymMatrix V = CLHEP::HepSymMatrix(nummeasurements,0) ;
-    for(size_t irow=0; irow<nummeasurements; ++irow) {
-      size_t k = measurementnodeindices[irow] ;
-      assert(measurementnodes[irow]==nodes[k]);
-      const Gaudi::TrackProjectionMatrix& Hk = nodes[k]->projectionMatrix() ;
-      // first the off-diagonal elements
-      for(size_t icol=0; icol<irow; ++icol) {
-	size_t l = measurementnodeindices[icol] ;
-	assert(measurementnodes[icol]==nodes[l]) ;
-	const Gaudi::TrackProjectionMatrix& Hl = nodes[l]->projectionMatrix() ;
-	residuals->m_HCH.fast(irow+1,icol+1) = l < k ? 
-	  (Hk * *(offdiagcov[k][l]) * Transpose(Hl))(0,0) :
-	  (Hl * *(offdiagcov[l][k]) * Transpose(Hk))(0,0) ;
-      }
-      // now the diagonal element
-      residuals->m_HCH.fast(irow+1,irow+1) = ROOT::Math::Similarity(Hk,*(diagcov[k]))(0,0) ;
+      // for now, just check that every element is filled
+      for( size_t irow = 1; irow<numnodes; ++irow) for(size_t icol = 0; icol<irow; ++icol)
+	if( offdiagcov[irow][icol] == 0 )
+	  std::cout << "element not filled: " << irow << " " << icol << " " << numnodes << std::endl ;
+            
+      // now it is time to calculate the covariance matrix for the
+      // residuals. First we need to know which nodes correspond to
+      // measurements. After that, we fill the matrix.
+      std::vector<size_t> measurementnodeindices ;
+      Al::TrackResiduals::NodeContainer measurementnodes ;
+      SelectSortAndMap(nodes,measurementnodes,measurementnodeindices,
+		       track.checkFlag( LHCb::Track::Backward)) ;
       
-      // and finally the column for the correlation with the reference state
-      Gaudi::Matrix1x5 correlationmatrix ;
-      if( refnodeindex == k )
-	correlationmatrix = Hk * *(diagcov[k]) ;
-      else if( refnodeindex < k )
-	correlationmatrix = Hk * *(offdiagcov[k][refnodeindex]) ;
-      else
-	correlationmatrix = Hk * Transpose(*(offdiagcov[refnodeindex][k])) ;
-      // now copy it into the trackresidual. need to be very carefull
-      // with signs here. use H = - dres/dstate. in fact, this the
-      // only place we need to know what the sign of the residual is.
-      residuals->m_residualStateCov[irow] = - correlationmatrix ;
+      residuals = new Al::TrackResiduals(track,measurementnodes) ;
+      // correlation with the reference state, which is the most
+      // upstream node.
+      size_t refnodeindex = measurementnodeindices[0] ;
+      
+      // allocate the H C H^T matrix
+      // NOTE: we normalize H C H^T relative to V
+      size_t nummeasurements = measurementnodeindices.size() ;
+      residuals->m_HCH = CLHEP::HepSymMatrix(nummeasurements,0) ;
+      CLHEP::HepSymMatrix V = CLHEP::HepSymMatrix(nummeasurements,0) ;
+      for(size_t irow=0; irow<nummeasurements; ++irow) {
+	size_t k = measurementnodeindices[irow] ;
+	assert(measurementnodes[irow]==nodes[k]);
+	const Gaudi::TrackProjectionMatrix& Hk = nodes[k]->projectionMatrix() ;
+	// first the off-diagonal elements
+	for(size_t icol=0; icol<irow; ++icol) {
+	  size_t l = measurementnodeindices[icol] ;
+	  assert(measurementnodes[icol]==nodes[l]) ;
+	  const Gaudi::TrackProjectionMatrix& Hl = nodes[l]->projectionMatrix() ;
+	  residuals->m_HCH.fast(irow+1,icol+1) = l < k ? 
+	    (Hk * *(offdiagcov[k][l]) * Transpose(Hl))(0,0) :
+	    (Hl * *(offdiagcov[l][k]) * Transpose(Hk))(0,0) ;
+	}
+	// now the diagonal element
+	residuals->m_HCH.fast(irow+1,irow+1) = ROOT::Math::Similarity(Hk,*(diagcov[k]))(0,0) ;
+	
+	// and finally the column for the correlation with the reference state
+	Gaudi::Matrix1x5 correlationmatrix ;
+	if( refnodeindex == k )
+	  correlationmatrix = Hk * *(diagcov[k]) ;
+	else if( refnodeindex < k )
+	  correlationmatrix = Hk * *(offdiagcov[k][refnodeindex]) ;
+	else
+	  correlationmatrix = Hk * Transpose(*(offdiagcov[refnodeindex][k])) ;
+	// now copy it into the trackresidual. need to be very carefull
+	// with signs here. use H = - dres/dstate. in fact, this the
+	// only place we need to know what the sign of the residual is.
+	residuals->m_residualStateCov[irow] = - correlationmatrix ;
+      }
+      
+      // Let's check the result. Keep track of the roots.
+      const double tol = 1e-3 ;
+      std::vector<double> diagroots ;
+      for(size_t irow=0; irow<nummeasurements && !error; ++irow) {
+	double c = residuals->m_HCH.fast(irow+1,irow+1) ;
+	error = ! (0<=c) ;
+	if(error) warning() << "found bad element on diagonal: " << c << endreq ;
+	diagroots.push_back(std::sqrt(c)) ;
+      }
+      for(size_t irow=0; irow<nummeasurements && !error; ++irow) 
+	for(size_t icol=0; icol<irow && !error; ++icol) {
+	  double c = residuals->m_HCH.fast(irow+1,icol+1) / (diagroots[irow]*diagroots[icol]) ;
+	  error =  ! (-1-tol < c && c <1+tol) ;
+	  if(error) warning() << "found bad element on offdiagonal: " << c << endreq ;
+	}
+      if(error) { delete residuals ; residuals = 0 ; }
+      
     }
 
     // let's clean up:
-    for( size_t irow = 0; irow<numnodes; ++irow) {
+    for( size_t irow = 0; irow<numnodes; ++irow)
       for( size_t icol = 0; icol < irow; ++icol)
 	delete offdiagcov[irow][icol] ;
-    }
     
-    // Let's check the result. Keep track of the roots.
-    bool error = false ;
-    const double tol = 1e-3 ;
-    std::vector<double> diagroots ;
-    for(size_t irow=0; irow<nummeasurements && !error; ++irow) {
-      double c = residuals->m_HCH.fast(irow+1,irow+1) ;
-      error = ! (0-tol < c && c <1+tol) ;
-      if(error) warning() << "found bad element on diagonal: " << c << endreq ;
-      diagroots.push_back(std::sqrt(c)) ;
-    }
-    for(size_t irow=0; irow<nummeasurements && !error; ++irow) 
-      for(size_t icol=0; icol<irow && !error; ++icol) {
-	double c = residuals->m_HCH.fast(irow+1,icol+1) / (diagroots[irow]*diagroots[icol]) ;
-	error =  ! (-1-tol < c && c <1+tol) ;
-	if(error) warning() << "found bad element on offdiagonal: " << c << endreq ;
-      }
-    if(error) { delete residuals ; residuals = 0 ; }
-
     debug() << "End of TrackResidualTool::Compute " << residuals << endreq ;
 
     return residuals ;
