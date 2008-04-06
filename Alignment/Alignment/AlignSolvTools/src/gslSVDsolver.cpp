@@ -1,4 +1,4 @@
-// $Id: gslSVDsolver.cpp,v 1.4 2008-02-05 21:38:40 wouter Exp $
+// $Id: gslSVDsolver.cpp,v 1.5 2008-04-06 07:52:47 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -83,12 +83,26 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
   debug() << "==> Vector S  = " << (*vectorS) << endmsg;
   debug() << "==> Matrix V  = " << (*matrixV) << endmsg;
 
-  std::ostringstream logmessage ;
-  logmessage << "Smallest eigen values: [ " << std::setprecision(4) ;
-  for(size_t ipar = std::max(0,int(size) - int(m_numberOfPrintedEigenvalues)); ipar<size; ++ipar) 
-    logmessage << gsl_vector_get(vectorS,ipar) << ", " ;
-  logmessage << "]" ;
-  info() << logmessage.str() << endmsg ;
+  {
+    // print the eigenvalues, but make sure to insert minus signs where needed
+    std::vector<double> eigenvalues ;
+    eigenvalues.reserve(size) ;
+    for(size_t ipar = size-1 ; ipar<size; --ipar) {
+      // A = U S V^T
+      // take inner product of column of U with row of V^T
+      double prod(0) ;
+      for(size_t k=0; k<size; ++k)
+	prod += gsl_matrix_get(matrixA,k,ipar) * gsl_matrix_get(matrixV,k,ipar) ;
+      eigenvalues.push_back( (prod > 0 ? 1 : -1) * gsl_vector_get(vectorS,ipar)) ;
+    }
+    std::sort( eigenvalues.begin(), eigenvalues.end() ) ;
+    std::ostringstream logmessage ;
+    logmessage << "Smallest eigen values: [ " << std::setprecision(4) ;
+    for( size_t ipar=0; ipar <m_numberOfPrintedEigenvalues; ++ipar)
+      logmessage << eigenvalues[ipar] << ", " ;
+    logmessage << "]" ;
+    info() << logmessage.str() << endmsg ;
+  }
   
   /// Regularise by zeroing singular values below threshold
   if (m_svdEpsilon > 0) {
