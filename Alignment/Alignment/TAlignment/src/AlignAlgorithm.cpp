@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.40 2008-04-04 13:57:08 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.41 2008-04-06 19:22:57 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -419,13 +419,13 @@ void AlignAlgorithm::accumulate( const Al::Residuals& residuals )
       }
 
       // compute the derivative of the curvature, used for one of the
-      // canonical constraints. we should cache the inverse in the
-      // residuals:
-      Gaudi::TrackSymMatrix invC = residuals.nodes()[id->nodeindex()]->state().covariance() ;
-      invC.Invert() ;
+      // canonical constraints:
+      //   dx/dalpha = - dchi^2/dalphadx * ( dchi^2/dx^2)^{-1}
+      //             = - 2 * dr/dalpha * V^{-1} * H * C
+      const Gaudi::TrackSymMatrix& C = residuals.nodes()[id->nodeindex()]->state().covariance() ;
       const Gaudi::TrackProjectionMatrix& H = residuals.nodes()[id->nodeindex()]->projectionMatrix() ;
-      double drdomega = (H*invC)(0,4) ;
-      m_equations->dOmegaDAlpha(id->index()) += convert(drdomega*id->d()) ;
+      double normalized_drdomega = (H*C)(0,4) / std::sqrt(residuals.V(id->nodeindex())) ;
+      m_equations->dOmegaDAlpha(id->index()) += convert(normalized_drdomega*id->d()) ;
     }
     // keep some information about the tracks that we have seen
     m_equations->addChi2Summary( residuals.chi2(), residuals.nDoF(), numexternalhits ) ;
@@ -505,7 +505,7 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
     weight += thisweight ;
     pivot += thisweight * Gaudi::XYZVector( it->centerOfGravity() ) ;
     zmin = std::min(it->centerOfGravity().z(),zmin) ;
-    zmax = std::min(it->centerOfGravity().z(),zmax) ;
+    zmax = std::max(it->centerOfGravity().z(),zmax) ;
     numhits += m_equations->numHits(iElem) ;
   }
   if (weight>0) pivot *= 1/weight ;
@@ -545,16 +545,17 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
     }
   
     // Shearing constraints
-    double deltaZ = it->centerOfGravity().z() - pivot.z() ;
+    double deltaZ = it->centerOfGravity().z() - zmin ;
     for (size_t i = 0u; i < 3u; ++i) {
       for (size_t j = 0u; j < Derivatives::kCols; ++j) {
 	halfD2Chi2DAlpha2[size+i+6][j+iElem*Derivatives::kCols] = thisweight * deltaZ/(zmax-zmin) * jacobian(i,j) ;
       }
     }
 
-    // Curvature constraint (normalized with total number of hits?!)
+    // Curvature constraint. The constraint is on the average per
+    // track.
     for (size_t j = 0u; j < Derivatives::kCols; ++j)
-      halfD2Chi2DAlpha2[size+9][j+iElem*Derivatives::kCols] = m_equations->dOmegaDAlpha(iElem)(j)/numhits ;
+      halfD2Chi2DAlpha2[size+9][j+iElem*Derivatives::kCols] = m_equations->dOmegaDAlpha(iElem)(j)/m_equations->numTracks() ;
   }
   
   if (printDebug()) debug() << "Full matrix after adding constraints: " << std::endl
