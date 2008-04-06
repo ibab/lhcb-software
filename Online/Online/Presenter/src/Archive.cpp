@@ -133,22 +133,22 @@ void Archive::fillHistogram(DbRootHist* histogram,
       histogram->beEmptyHisto();
     }
   } else { //analysis histogram
-    if(m_analysisLib) {
+    if (m_analysisLib) {
       unsigned int ns= (histogram->anaSources())->size();
       std::vector<TH1*> sources(ns);
-      bool sourcesok = true;
+      bool sourcesOk = true;
       for (unsigned int i=0; i< ns ; ++i) {
         fillHistogram((histogram->anaSources())->at(i),
                       timePoint,
                       pastDuration);
         sources[i]= ((histogram->anaSources())->at(i))->rootHistogram;
         if ( ((histogram->anaSources())->at(i))->isEmptyHisto() ) {
-          sourcesok = false;
+          sourcesOk = false;
         }
       }
       OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>
                      (m_analysisLib->getAlg(histogram->creationAlgorithm()));
-      if (creator && sourcesok) {
+      if (creator && sourcesOk) {
         histogram->rootHistogram = creator->exec(&sources,
                                       histogram->anaParameters(),
                                       histogram->identifier(),
@@ -167,7 +167,7 @@ std::vector<path> Archive::listDirectory(const path & dirPath)
     directory_iterator end_itr;
     for (directory_iterator itr(dirPath); itr != end_itr; ++itr) {
       if (is_regular(itr->path()) &&
-          extension(itr->path()) == s_rootFileExtension ) {
+          s_rootFileExtension == extension(itr->path()) ) {
         foundRootFiles.push_back(itr->path());
       }
     }
@@ -232,7 +232,7 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
       if (!fileDateMatchGroup->IsEmpty()) {
         taskNameFound = (((TObjString *)fileDateMatchGroup->At(1))->GetString()).Data();
         fileTimeFound = (((TObjString *)fileDateMatchGroup->At(2))->GetString()).Data();
-        fileTime = (from_iso_string(fileTimeFound));
+        fileTime = from_iso_string(fileTimeFound);
         if (taskNameFound == taskname && !fileTime.is_not_a_date_time()) {
           if (fileTime <= endTime &&
               fileTime >= startTime) {

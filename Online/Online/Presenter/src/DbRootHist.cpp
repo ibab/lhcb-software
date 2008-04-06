@@ -3,8 +3,10 @@
 #include <TPad.h>
 #include <TH1D.h>
 #include <TH2D.h>
+#include <TProfile.h>
 #include <TStyle.h>
 #include <TSystem.h>
+#include <TMath.h>
 
 #include <TFile.h>
 #include <TPaveStats.h>
@@ -174,7 +176,7 @@ void DbRootHist::enableClear()
         m_offsetHistogram->SetBit(kNoContextMenu);
 //      m_offsetHistogram->Reset(); //"ICE: Integral Contents, Errors"
       } else if (s_P1D == m_hstype || s_HPD == m_hstype) {
-        m_offsetHistogram = new TH1D(*dynamic_cast<TH1D*>(rootHistogram));
+        m_offsetHistogram = new TH1F(*dynamic_cast<TH1F*>(rootHistogram));        
         m_offsetHistogram->SetBit(kNoContextMenu);
 //      m_offsetHistogram->Reset(); //"ICE: Integral Contents, Errors"  
       }
@@ -275,17 +277,16 @@ void DbRootHist::initHistogram()
         }
       } else if (s_P1D == m_hstype || s_HPD == m_hstype) {
         const int   nBins   = (int) m_histoDimData[1];
-        const double xMin   = (double) m_histoDimData[2];
-        const double xMax   = (double) m_histoDimData[3];
+        const float xMin    = m_histoDimData[2];
+        const float xMax    = m_histoDimData[3];
 //      const int   entries = (int) m_histoDimData[4];
 //      float* entriesPerBin;
 //      float* sumWTPerBin;
 //      float* sumWT2PerBin;
         if (!rootHistogram) {
-          rootHistogram = new TH1D(m_histoRootName.Data(),
-                                   m_histoRootTitle.Data(),
-                                   nBins, xMin, xMax);
-
+          rootHistogram = new TH1F(m_histoRootName.Data(),
+                                       m_histoRootTitle.Data(),
+                                       nBins, xMin, xMax);
         }
       } else if (s_P2D == m_hstype) {
       } else if (s_CNT == m_hstype) {
@@ -327,9 +328,9 @@ void DbRootHist::beEmptyHisto()
                              1, 0., 1.,
                              1, 0., 1.);
   } else if (s_P1D == m_hstype || s_HPD == m_hstype) {
-    rootHistogram = new TH1D(m_histoRootName.Data(),
-                             dummyTitle.c_str(),
-                             1, 0., 1.);
+    rootHistogram = new TH1F(m_histoRootName.Data(),
+                                 dummyTitle.c_str(),
+                                 1, 0., 1.);
   } else if (s_P2D == m_hstype) {
   } else if (s_CNT == m_hstype) {
   }
@@ -410,54 +411,39 @@ void DbRootHist::fillHistogram()
 //          ((TH2F*)rootHistogram)->GetNbinsY() + 2); // , gHistImagePalette
 
       } else if (s_P1D == m_hstype || s_HPD == m_hstype) {
+//        rootHistogram->Reset();
         const int   nBins   = (int) m_histoDimData[1];
-        //    const float xMin    = m_histoDimData[2];
-        //    const float xMax    = m_histoDimData[3];
+//        const float xMin    = m_histoDimData[2];
+//        const float xMax    = m_histoDimData[3];
         const int   entries = (int) m_histoDimData[4];
-        float* entriesPerBin;
-        float* sumWTPerBin;
-        float* sumWT2PerBin;
-
-        int offsetData  = 5;
-        int offsetError = 5+nBins+1;
-        // N.B. bin 0: underflow, bin nBins+1 overflow
+        float *entriesPerBin;
+        float *sumWTPerBin;
+        float *sumWT2PerBin;
 
         const int offsetEntries = 5;
-        const int offsetWT      = 5 + nBins + 2;
-        const int offsetWT2     = 5 + nBins+2 + nBins + 2;
-
+        const int offsetWT      = 5 + nBins+2;
+        const int offsetWT2     = 5 + nBins+2 + nBins+2;
+      
         entriesPerBin = &m_histoDimData[offsetEntries];
         sumWTPerBin  = &m_histoDimData[offsetWT];
         sumWT2PerBin  = &m_histoDimData[offsetWT2];
 
-        float yvalue = 0;
+        float yvalue = 0; 
         float yerr = 0;
-
         // bin 0: underflow, nBins+1 overflow ?
         for (int i = 0; i <= nBins+2; i++) {
-          yvalue = 0;
-          if (entriesPerBin[i] > 0) {
-            yvalue = sumWTPerBin[i]/entriesPerBin[i];  // mean in Y
-          }
-          rootHistogram->SetBinContent(i, (double) yvalue);
-
+          yvalue = 0;    
+          if (entriesPerBin[i] > 0)
+            yvalue = sumWTPerBin[i]/entriesPerBin[i];
+          // mean in Y                
+          rootHistogram->SetBinContent(i, yvalue);    
+      
           yerr = 0;
-          if (entriesPerBin[i] > 0) {
-            // RMS = sqrt(E[x**2]-E[x]**2)
-            yerr = sqrt(sumWT2PerBin[i]/entriesPerBin[i]-yvalue * yvalue);
-          }
-          rootHistogram->SetBinError(i, (double) yerr);
-        }
-        // set underflows and overflows:
-        rootHistogram->SetBinContent(0, (double) m_histoDimData[5]);
-        rootHistogram->SetBinContent(nBins+1 , m_histoDimData[5 + nBins +
-                                                              1]);
-        for (int i = 1; i <= nBins; ++i) {
-          rootHistogram->SetBinContent(i, (double) m_histoDimData[
-                                       offsetData + i]);
-          rootHistogram->SetBinError(i,
-                                    (double) m_histoDimData[offsetError +
-                                                            i]);
+          if (entriesPerBin[i] > 0)
+            yerr = TMath::Sqrt(sumWT2PerBin[i]/entriesPerBin[i]-yvalue*yvalue);
+          // RMS = sqrt(E[x**2]-E[x]**2)
+          rootHistogram->SetBinError(i, yerr);
+          
         }
         rootHistogram->SetEntries(entries);
       } else if (s_P2D == m_hstype) {
@@ -516,12 +502,13 @@ bool DbRootHist::setOnlineHistogram(OnlineHistogram* newOnlineHistogram)
     if (newOnlineHistogram->identifier() == m_identifier &&
         false == newOnlineHistogram->isAbort()) {
       m_onlineHistogram = newOnlineHistogram;
-      if ( newOnlineHistogram->isAnaHist() )
-  m_hstype = newOnlineHistogram->hstype();
+      if ( newOnlineHistogram->isAnaHist() ) {
+        m_hstype = newOnlineHistogram->hstype();
+      }
       if (rootHistogram && isInit) { setTH1FromDB(); }
       out = true;
     } else {
-//  oh->errorMessage("provided OnlineHistogram object is not compatible");
+      newOnlineHistogram->warningMessage("provided OnlineHistogram object is not compatible");
     }
   }
   loadAnaSources();
