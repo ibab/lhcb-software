@@ -1,0 +1,10 @@
+! $Id: release.notes,v 1.1.1.1 2008-04-07 11:42:30 robbep Exp $
+! Package     : GenTests
+! Responsible : 
+! Purpose     : Package holding options and scripts to run generator level
+!               tests with Gauss
+
+! 2008-04-07 - Patrick Robbe
+  - First version of the package
+! ====================================================================
+ 

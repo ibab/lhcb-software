@@ -1,0 +1,44 @@
+// $Id: GaussMonitoringMinBias.opts,v 1.1.1.1 2008-04-07 11:42:30 robbep Exp $ 
+
+/** @file 
+ * 
+ *  Job option for checking Pythia generator for Minimum Bias production
+ *
+ */
+
+#include "$GAUSSOPTS/Common.opts"    // Necessary for any Gauss executable
+
+ApplicationMgr.TopAlg += { "GaudiSequencer/Generator"  };
+
+Generator.Members         = { "GenInit/GaussGen" };
+
+GaussGen.FirstEventNumber = 1;
+GaussGen.RunNumber        = 1;
+EventClockSvc.FakeEventTime.StartTime   = 0;
+EventClockSvc.FakeEventTime.TimeStep    = 25*ns;
+
+#include "$GAUSSOPTS/Generator.opts"
+Generator.MeasureTime = true;
+#include "$GAUSSOPTS/GenStandAlone.opts"
+
+Generator.Members       += { "GaudiSequencer/GenMonitor" };
+GenMonitor.MeasureTime = true;
+
+ApplicationMgr.OutStream +=  { "GaussTape" };
+
+ApplicationMgr.EvtMax     = 1000;
+
+// The monitor part
+GenMonitor.Members += { "GeneratorAnalysis" } ;
+GeneratorAnalysis.NeutralParticleHistos = true ;
+
+GaussTape.Output = "DATAFILE='PFN:Gauss.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'";
+PoolDbCacheSvc.Catalog = { "xmlcatalog_file:NewCatalog.xml" };
+
+ApplicationMgr.HistogramPersistency = "ROOT" ;
+HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
+
+#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
+
+Generation.MinimumBias.PythiaProduction.Commands +=
+{ "pydat1 mstu 12 1" } ;

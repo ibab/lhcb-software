@@ -1,0 +1,8 @@
+package GenTests
+version v1r0
+
+
+# ================ structure =========================================
+branches python cmt doc options
+use Python    v* LCG_Interfaces
+use ROOT      v* LCG_Interfaces
