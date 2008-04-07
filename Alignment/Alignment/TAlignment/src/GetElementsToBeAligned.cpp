@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.17 2008-03-15 11:39:15 lnicolas Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.18 2008-04-07 17:35:44 janos Exp $
 // Include files
 
 //from STL
@@ -67,7 +67,12 @@ StatusCode GetElementsToBeAligned::initialize() {
   if (m_elemsToBeAligned.empty()) return Error("Please specify which elements to align!", sc);
 
   /// Get pointer to detector svc
-  IDataProviderSvc* detectorSvc = svc<IDataProviderSvc>("DetectorDataSvc", true);
+  IDataProviderSvc* detectorSvc = 0;
+  sc = service("DetectorDataSvc", detectorSvc, true);
+  if ( sc.isFailure() ) {
+    error() << "Something went wrong with retrieving detector data svc" << endmsg;
+    return sc;
+  }
 
   /// Retrieve LHCb detector in Transient store
   const std::string lhcbDetectorPath = "/dd/Structure/LHCb";
