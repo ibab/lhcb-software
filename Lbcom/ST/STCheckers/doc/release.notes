@@ -2,13 +2,14 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
-! 2008-04-01
+!=========================== STCheckers v2r5 2008-04-08 =======================
+! 2008-04-01 M Needham
+ - check for valid pointers in STClusterResolution
 
 ! 2008-03-14  M Needham
  - Follow changes in DeSTDet
    [introduction of DeSTSensor level]
  - Add back functionality to exclude guard rings in eff calculation
-
 
 !=========================== STCheckers v2r4 2008-01-18 =======================
 ! 2008-01-18 M Needham
