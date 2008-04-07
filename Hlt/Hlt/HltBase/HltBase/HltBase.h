@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.4 2008-03-31 13:29:42 hernando Exp $
+// $Id: HltBase.h,v 1.5 2008-04-07 15:23:05 hernando Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -183,6 +183,10 @@ public:
   // retrieve a selection with no candidates
   Hlt::Selection& retrieveSelection(const std::string& selname) {
     BASE::debug() << " retrieveSelection " << selname << endreq;
+    if (!validHltSelectionName(selname)) {
+      BASE::error() << " No valid selection name " << selname << endreq;
+      BASE::Assert(0," retrieveSelection, no valid name!");
+    }
     int id = hltSelectionID(selname);
     Hlt::Selection& sel = hltData().selection(id);
     setInputSelection(sel,selname);
@@ -196,6 +200,10 @@ public:
   Hlt::TSelection<T>& retrieveTSelection(const std::string& selname) {
     Assert(!selname.empty()," retrieveTSelection() no selection name");
     BASE::debug() << " retrieveTSelection " << selname << endreq;
+    if (!validHltSelectionName(selname)) {
+      BASE::error() << " No valid selection name " << selname << endreq;
+      BASE::Assert(0," retrieveSelection, no valid name!");
+    }
     int id = hltSelectionID(selname);
     Hlt::Selection* sel = &(hltData().selection(id));
     typedef typename Hlt::TSelection<T> TSelection;

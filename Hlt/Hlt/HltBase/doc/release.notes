@@ -4,7 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
-! 2008-03-31 - Jose Angel
+! 2008-04-07 - Jose A. Hernando
+ - HltBase.icpp assert error if no selection valid, printout the missing selection name
+
+! 2008-03-31 - Jose A. Henando
  - printing info of the extraInfo of track and vertices in HltBase.icpp
  - instanciation of some clases to create the dictionary
 
