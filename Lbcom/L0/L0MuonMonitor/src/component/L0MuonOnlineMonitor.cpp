@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.1.1.1 2008-04-02 12:41:15 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.2 2008-04-08 11:31:03 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -15,6 +15,7 @@
 #include "Event/L0MuonCtrlError.h"
 
 // local
+#include "L0MuonMonUtils.h"
 #include "L0MuonOnlineMonitor.h"
 
 //-----------------------------------------------------------------------------
@@ -32,23 +33,8 @@ DECLARE_ALGORITHM_FACTORY( L0MuonOnlineMonitor );
 //=============================================================================
 L0MuonOnlineMonitor::L0MuonOnlineMonitor( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg ( name , pSvcLocator )
+  : L0MuonMonitorBase ( name , pSvcLocator )
 {
-  std::vector<int> time_slots;
-  for (int i=-7;i<=7;++i) time_slots.push_back(i);
-  declareProperty( "TimeSlots"  , m_time_slots = time_slots);
-
-  std::vector<int> quarters;
-  for (int i=0;i<4;++i) quarters.push_back(i);
-  declareProperty( "Quarters"  , m_quarters = quarters);
-  
-  std::vector<int> stations;
-  for (int i=0;i<5;++i) stations.push_back(i);
-  declareProperty( "Stations"  , m_stations = stations);
-
-  std::vector<int> regions;
-  for (int i=0;i<5;++i) regions.push_back(i);
-  declareProperty( "Regions"  , m_regions = regions);
 
 }
 //=============================================================================
@@ -60,63 +46,51 @@ L0MuonOnlineMonitor::~L0MuonOnlineMonitor() {}
 // Initialization
 //=============================================================================
 StatusCode L0MuonOnlineMonitor::initialize() {
-  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  StatusCode sc = L0MuonMonitorBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
 
-  setLayouts();
-
-  std::string name;
 
   debug() << "==> Initialize" << endmsg;
 
-  // Book histos:
-  for (int iq=0; iq<4;++iq){
-    for (int i=0; i<3; ++i) m_decoding_status[iq][i]=NULL;
-  }
-  
+  // Tools
+  m_padsMaps =  tool<LogicalPads2DMaps>( "LogicalPads2DMaps" , "Pads" , this );
+  m_channelHist = tool<PhysicalChannelsHist>( "PhysicalChannelsHist", "Channels", this);
   
   setHistoDir("L0Muon/Online");
 
   // Decoding
+  std::string name;
+  for (int iq=0; iq<4;++iq){
+    for (int i=0; i<3; ++i) m_decoding_status[iq][i]=NULL;
+  }
   for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
     int iq = (*itq);
-    name="Decoding_errors_"+quarterName(iq);
+    name="Decoding_errors_"+L0MuonMonUtils::quarterName(iq);
     m_decoding_status[iq][2]=book1D(name,name,-0.5,-0.5+16,16);
-    name="Inconsistencies_"+quarterName(iq);
+    name="Inconsistencies_"+L0MuonMonUtils::quarterName(iq);
     m_decoding_status[iq][1]=book1D(name,name,-0.5,-0.5+16,16);
-    name="Valid_"+quarterName(iq);
+    name="Valid_"+L0MuonMonUtils::quarterName(iq);
     m_decoding_status[iq][0]=book1D(name,name,-0.5,-0.5+16,16);
   }
   
   // Physical channels
+  m_channelHist->setHistoDir("L0Muon/Online");
   for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
     int iq = (*itq);
     for (std::vector<int>::iterator itr=m_regions.begin(); itr<m_regions.end(); ++itr){
       int reg = (*itr);
       for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
         int sta = (*its);
-        for (Channel_type type=Pad; type<nb_channel_types; type++){
-          name = "Hits_"+quarterName(iq)+"_"+stationName(sta)+"_"+regionName(reg)+"_"+channelTypeName(type);
-          MuonLayout lay = m_channel_layout[type].stationLayout(sta).regionLayout(reg);
-          if (lay.isDefined()){  
-            int nbins=lay.xGrid()*lay.yGrid()*3;
-            book1D(name,name,-0.5,nbins-0.5,nbins);
-          }
-        }
+        m_channelHist->bookHistos(iq,reg,sta);
       }
     }
   }
-
+  
   // Logical channels
+  m_padsMaps->setHistoDir("L0Muon/Online");
   for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
     int sta = (*its);
-    MuonLayout lay =m_pad_layout.stationLayout(sta).regionLayout(0);
-    int xgrid=lay.xGrid();
-    int ygrid=lay.yGrid();
-    int nx=xgrid*16;
-    int ny=ygrid*16;
-    name = "Pads_"+stationName(sta);
-    book2D(name,name,-nx,nx,2*nx,-ny,ny,2*ny);
+    m_padsMaps->bookHistos(sta);
   }
 
   // Candidates
@@ -140,7 +114,7 @@ StatusCode L0MuonOnlineMonitor::execute() {
 
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
-    setProperty("RootInTes",timeSlot(*it_ts));
+    setProperty("RootInTes",L0MuonMonUtils::timeSlot(*it_ts));
     //     if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
     
     std::string location;
@@ -207,32 +181,14 @@ StatusCode L0MuonOnlineMonitor::execute() {
     
 
     // Physical channels
-    std::vector<LHCb::MuonTileID>::iterator itl0muontiles;
-    for (itl0muontiles=l0muontiles.begin();itl0muontiles<l0muontiles.end();++itl0muontiles){
-      int sta = itl0muontiles->station();
-      int reg = itl0muontiles->region();
-      MuonLayout lay = itl0muontiles->layout();
-      for (Channel_type type =Pad; type<nb_channel_types; type++){
-        if (lay==m_channel_layout[type].stationLayout(sta).regionLayout(reg)) {
-          int xgrid=lay.xGrid();
-          int ygrid=lay.yGrid();
-          int x = itl0muontiles->nX();
-          int y = itl0muontiles->nY();
-          int qua = itl0muontiles->quarter();
-          int offset = (int)(x/xgrid) +  ( ( ((int)(y/ygrid)) <<1)&2 ) -1;
-          int ind = (x%xgrid) + (y%ygrid)*xgrid + offset*xgrid*ygrid;
+    m_channelHist->fillHistos(l0muontiles);
 
-//           debug()<<"x: "<<x<<" y: "<<y<< " offset: "<<offset<<" ind: "<<ind
-//                  <<" max: "<<xgrid*ygrid*3<<" xGrid: "<<xgrid<<" yGrid: "<<ygrid
-//                  <<endmsg;
-          
-          std::string hname = "Hits_"+quarterName(qua)+"_"+stationName(sta)+"_"+regionName(reg)+"_"+channelTypeName(type);
-          AIDA::IHistogram1D *h = histo1D(hname);
-          if (h!=NULL) fill(h,ind,1,name);
-        }
-      }
-    }
+    // Logical channels
+    std::vector<LHCb::MuonTileID> l0muonpads;
+    L0MuonMonUtils::makePads(l0muontiles,l0muonpads);
+    m_padsMaps->fillHistos(l0muonpads);
 
+    // Candidates
     location = LHCb::L0MuonCandidateLocation::Default ;
     if (  exist<LHCb::L0MuonCandidates>(location ) ) {
       LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
@@ -241,29 +197,6 @@ StatusCode L0MuonOnlineMonitor::execute() {
       ncand+=cands->size();
     }
 
-    // Logical channels
-    std::vector<LHCb::MuonTileID> l0muonpads;
-    sc = makePads(l0muontiles,l0muonpads);
-    std::vector<LHCb::MuonTileID>::iterator itl0muonpads;
-    for (itl0muonpads=l0muonpads.begin();itl0muonpads<l0muonpads.end();++itl0muonpads){
-      int sta = itl0muonpads->station();
-      std::string hname = "Pads_"+stationName(sta);
-      AIDA::IHistogram2D *hpad2 = histo2D(hname);
-      if (hpad2==NULL) continue;
-      int qua = itl0muonpads->quarter();
-      int X  =itl0muonpads->nX();
-      int Y  =itl0muonpads->nY();
-      int reg=itl0muonpads->region();
-      int f=1<<reg;
-      for (int ix=X*f; ix<X*f+f; ++ix){
-        for (int iy=Y*f; iy<Y*f+f; ++iy){
-          int x= ix;
-          int y= iy;
-          flipCoord(x,y,qua);
-          fill(hpad2,x,y,1);
-        }
-      }
-    }
     
   } // End of loop over time slots
   
@@ -280,96 +213,6 @@ StatusCode L0MuonOnlineMonitor::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return GaudiHistoAlg::finalize();  // must be called after all other actions
+  return L0MuonMonitorBase::finalize();  // must be called after all other actions
 }
 
-//=============================================================================
-void L0MuonOnlineMonitor::setLayouts()
-{
-
-
-  MuonSystemLayout pad_layout =MuonSystemLayout(MuonStationLayout(MuonLayout(24,8)),
-                                                MuonStationLayout(MuonLayout(0,0)),
-                                                MuonStationLayout(MuonLayout(0,0)),
-                                                MuonStationLayout(MuonLayout(12,8),
-                                                                  MuonLayout(0,0),
-                                                                  MuonLayout(0,0),
-                                                                  MuonLayout(0,0)),
-                                                MuonStationLayout(MuonLayout(12,8),
-                                                                  MuonLayout(0,0),
-                                                                  MuonLayout(0,0),
-                                                                  MuonLayout(0,0)));
-  
-  MuonSystemLayout stripH_layout =MuonSystemLayout(MuonStationLayout(MuonLayout(0,0)),
-                                                   MuonStationLayout(MuonLayout(8,8),
-                                                                     MuonLayout(4,8),
-                                                                     MuonLayout(2,8),
-                                                                     MuonLayout(2,8)),
-                                                   MuonStationLayout(MuonLayout(8,8),
-                                                                     MuonLayout(4,8),
-                                                                     MuonLayout(2,8),
-                                                                     MuonLayout(2,8)),
-                                                   MuonStationLayout(MuonLayout(0,0),
-                                                                     MuonLayout(4,8),
-                                                                     MuonLayout(2,8),
-                                                                     MuonLayout(2,8)),
-                                                   MuonStationLayout(MuonLayout(0,0),
-                                                                     MuonLayout(4,8),
-                                                                     MuonLayout(2,8),
-                                                                     MuonLayout(2,8)));
-  
-  MuonSystemLayout stripV_layout =MuonSystemLayout(MuonStationLayout(MuonLayout(0,0)),
-                                                   MuonStationLayout(MuonLayout(48,1),
-                                                                     MuonLayout(48,2),
-                                                                     MuonLayout(48,2),
-                                                                     MuonLayout(48,2)),
-                                                   MuonStationLayout(MuonLayout(48,1),
-                                                                     MuonLayout(48,2),
-                                                                     MuonLayout(48,2),
-                                                                     MuonLayout(48,2)),
-                                                   MuonStationLayout(MuonLayout(0,0),
-                                                                     MuonLayout(12,2),
-                                                                     MuonLayout(12,2),
-                                                                     MuonLayout(12,2)),
-                                                   MuonStationLayout(MuonLayout(0,0),
-                                                                     MuonLayout(12,2),
-                                                                     MuonLayout(12,2),
-                                                                     MuonLayout(12,2)));
-
-  m_channel_layout[Pad]=pad_layout;
-  m_channel_layout[StripV]=stripV_layout;
-  m_channel_layout[StripH]=stripH_layout;
-
-  m_pad_layout =MuonSystemLayout(MuonStationLayout(MuonLayout(24,8)),
-                                 MuonStationLayout(MuonLayout(48,8)),
-                                 MuonStationLayout(MuonLayout(48,8)),
-                                 MuonStationLayout(MuonLayout(12,8)),
-                                 MuonStationLayout(MuonLayout(12,8)));
-  
-
-}
-StatusCode L0MuonOnlineMonitor::makePads(std::vector<LHCb::MuonTileID>& strips,std::vector<LHCb::MuonTileID>& pads)
-{
-
-  pads.clear();
-
-  std::vector<LHCb::MuonTileID>::iterator i1;
-  std::vector<LHCb::MuonTileID>::iterator i2;
-  for (i1=strips.begin(); i1<strips.end(); ++i1){
-    if (i1->station()==0) {
-      pads.push_back(*i1);// M1 contains pads already
-    } else if ((i1->region()==0) & (i1->station()==3 || i1->station()==4)){
-      pads.push_back(*i1);// M4 and M5 contains pads already in R1
-    } else {
-      for (i2=i1+1; i2<strips.end(); ++i2){
-        LHCb::MuonTileID pad = (*i1).intercept(*i2);
-        if (pad.isValid()){
-          pads.push_back(pad);
-        }
-      }
-    }
-  }
-
-  return StatusCode::SUCCESS;
-
-}
