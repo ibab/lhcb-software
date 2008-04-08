@@ -1,13 +1,15 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.92 2008-04-02 12:46:57 asatta Exp $
+! $Id: release.notes,v 1.93 2008-04-08 15:56:46 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
-! 2008-04-02 - Alessoa Satta
+
+!========================= RecEvent v2r11 2008-04-09 =========================
+! 2008-04-02 - Alessia Satta
  - add tdc info in MuonCoord class
 
-!========================= RecEvent v2r15 2008-03-03 =========================
+!========================= RecEvent v2r10 2008-03-03 =========================
 ! 2008-02-27 - Chris Jones
  - Force inclusion of missing STL includes in G.O.D. classes
 
