@@ -40,6 +40,11 @@ Hlt.Members += { "GaudiSequencer/HltAllAlleysSequence" };
 HltAllAlleysSequence.ModeOr=true; 
 HltAllAlleysSequence.ShortCircuit=false; 
 
+//
+// NOTE:
+// To switch off an alley, please comment out the sequencer and the options
+//
+
 HltAllAlleysSequence.Members += {  "GaudiSequencer/HltL0TriggerSequence" };
 #include "$HLTSYSROOT/options/HltL0TriggerSequence.opts"
 
