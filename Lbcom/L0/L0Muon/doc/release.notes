@@ -1,7 +1,12 @@
-!  $Id: release.notes,v 1.48 2008-03-07 15:34:42 jucogan Exp $
+!  $Id: release.notes,v 1.49 2008-04-08 11:21:30 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev
 !-------------------------------------------------------------------------
+
+! 2008-04-08 - Julien Cogan
+ - L0MuonAlg : Allow to run from  data coming from several time bunch
+   crossing (TAE mode)
+ - L0MuonFromRawTrans :Upgrade and minor bug fix 
 
 ! 2008-03-07 Julien Cogan
  - Update decoding and monitoring of L0Muon data in transparent mode
