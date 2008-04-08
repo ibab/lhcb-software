@@ -4,7 +4,10 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
-!========================= STDigiAlgorithms v1r1 2008-04-09 ==================
+!========================= STDigiAlgorithms v1r1 2008-04-08 ==================
+! 2008-04-08 - Marco Cattaneo
+ - Follow change from LHCbMath to LHCb::Math namespace
+
 ! 2008-03-14  M Needham
  - Changes in MCSTDepositCreator to follow changes in DeSTDet
    [introduction of DeSTSensor level]

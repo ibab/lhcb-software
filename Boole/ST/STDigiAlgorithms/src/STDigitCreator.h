@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.h,v 1.1.1.1 2008-02-15 13:18:48 cattanem Exp $
+// $Id: STDigitCreator.h,v 1.2 2008-04-08 05:32:12 cattanem Exp $
 #ifndef STDigitCreator_H
 #define STDigitCreator_H 1
 
@@ -106,9 +106,7 @@ private:
 
 inline double STDigitCreator::adcValue( double value ) const
 {
-  return GSL_MIN(LHCbMath::round(value), m_saturation);
+  return GSL_MIN(LHCb::Math::round(value), m_saturation);
 }
-
-
 
 #endif // STDigitCreator_H

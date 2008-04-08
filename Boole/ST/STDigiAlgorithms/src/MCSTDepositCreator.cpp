@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.3 2008-03-14 18:27:25 mneedham Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.4 2008-04-08 05:32:12 cattanem Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -276,7 +276,7 @@ bool MCSTDepositCreator::hitToDigitize(const MCHit* aHit) const
   }
 
   // check if entry and exit point are at the same z-position
-  if (fabs(aHit->entry().z() - aHit->exit().z()) < LHCbMath::lowTolerance) { 
+  if (fabs(aHit->entry().z() - aHit->exit().z()) < LHCb::Math::lowTolerance) { 
     Warning("Entry and exit at same z - not digitized", StatusCode::SUCCESS, 1);
     return false;
   }
