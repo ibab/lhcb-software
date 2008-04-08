@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.cpp,v 1.8 2008-04-02 12:56:13 jucogan Exp $
+// $Id: L0MuonFromRawTrans.cpp,v 1.9 2008-04-08 11:19:57 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -162,7 +162,8 @@ StatusCode L0MuonFromRawTrans::decodeRawBanks(){
   m_l0_B_Id=-1;
 
   //   const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::L0Muon );
-  const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::TT );
+  //  const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::TT );
+  const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::L0MuonRaw );
   if (banks.size()!=0) {
     for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin(); banks.end() != itBnk; ++itBnk ) {
       int srcID = (*itBnk)->sourceID();
@@ -266,7 +267,7 @@ StatusCode L0MuonFromRawTrans::dumpErrors()
       int iq=i*2+ii;
       if (m_ctrlRaw[i].decodingError(ii) || m_ctrlRaw[i].inError(ii)) {
         quarter_in_error[iq]=true;
-        break;
+        continue;
       }
     } // End of loop over quarters in side
   } // End of loop over sides
@@ -281,27 +282,28 @@ StatusCode L0MuonFromRawTrans::dumpErrors()
   } // End of loop over quarters
   
 
-  std::cout<<boost::format("****** L0Muon Error report evt %d") % ievt<<std::endl;
-  for (int i= 0; i<2; ++i) {// Loop over sides
-    for (int ii= 0; ii<2; ++ii) {// Loop over quarters in side
-      int iq=i*2+ii;
-      if (!quarter_in_error[iq]) continue;
-      std::cout<<boost::format("** L0Muon Error report for quarter Q%1d") % (iq+1)<<std::endl;
-      m_ctrlRaw[i].dumpErrorHeader(ii,"\t");
-      m_ctrlRaw[i].dumpErrorField(ii,"\t");
-      m_procRaw[iq].dumpErrorHeader(0,"\t     ");      
-      for (int ib= 0; ib<12; ++ib) {
-        m_procRaw[iq].dumpErrorField(ib,(boost::format("\tPB%2d ") % (ib)).str());      
-      }
-    } // End of loop over quarters in side
-  } // End of loop over sides
-
+  bool error=false;
+  for (int iq=0; iq<4; ++iq) error|=quarter_in_error[iq];
+  if (error){ // If an error occured
+    std::cout<<boost::format("****** L0Muon Error report evt %d") % ievt<<std::endl;
+    for (int i= 0; i<2; ++i) {// Loop over sides
+      for (int ii= 0; ii<2; ++ii) {// Loop over quarters in side
+        int iq=i*2+ii;
+        if (!quarter_in_error[iq]) continue;
+        std::cout<<boost::format("** L0Muon Error report for quarter Q%1d") % (iq+1)<<std::endl;
+        m_ctrlRaw[i].dumpErrorHeader(ii,"\t");
+        m_ctrlRaw[i].dumpErrorField(ii,"\t");
+        m_procRaw[iq].dumpErrorHeader(0,"\t     ");      
+        for (int ib= 0; ib<12; ++ib) {
+          m_procRaw[iq].dumpErrorField(ib,(boost::format("\tPB%2d ") % (ib)).str());      
+        }
+      } // End of loop over quarters in side
+    } // End of loop over sides
+  } // End if an error occured
+  
   return StatusCode::SUCCESS;
   
 }
-
-
-
 
 StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension){
 
