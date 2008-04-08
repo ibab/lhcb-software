@@ -4,12 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r10 2008-04-08 ===========================
 ! 2008-04-01 - Olivier Deschamps
- - RawBankSizeMonitor : produce profile1D histogram by default (2D histo can be activated via options 
-  (RawBankSizeMonitor.Profile = false;)
+ - RawBankSizeMonitor : produce profile1D histogram by default 
+  (2D histo can be activated via options RawBankSizeMonitor.Profile = false;)
 
-!================ DAQEvent v7r10 2008-03-28 ===========================
->>>>>>> 1.127
 ! 2008-03-26 - Olivier Deschamps
  - New monitoring algorithm : RawBankSizeMonitor : 
    produce 2d histo bankSize.vs.sourceID
