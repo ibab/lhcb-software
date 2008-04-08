@@ -69,6 +69,32 @@ private:
   
  // Interface to muon raw buffer 
   IMuonRawBuffer* m_muonBuffer; 
+
+  static inline std::string timeSlot(int bx)  {
+    std::string ts;
+    switch (bx) {
+    case -7 : return "Prev7/";
+    case -6 : return "Prev6/";
+    case -5 : return "Prev5/";
+    case -4 : return "Prev4/";
+    case -3 : return "Prev3/";
+    case -2 : return "Prev2/";
+    case -1 : return "Prev1/";
+    case  0 : return "";
+    case  1 : return "Next1/";
+    case  2 : return "Next2/";
+    case  3 : return "Next3/";
+    case  4 : return "Next4/";
+    case  5 : return "Next5/";
+    case  6 : return "Next6/";
+    case  7 : return "Next7/";
+    default : return "Unknown";
+    };
+
+  };
+
+  std::vector<int> m_time_slots;
+
 };
 
 #endif      // L0MUONTRIGGER_L0MUONALG_H
