@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-04-08- Jose A. Hernando
+ - Uncommenting the muon+hadron alley
+
 ! 2008-04-07 - Jose A. Hernando
  - Removing HltSelections.opts in Hlt.opts (how they got there??)
 

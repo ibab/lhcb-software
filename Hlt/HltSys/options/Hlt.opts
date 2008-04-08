@@ -46,7 +46,7 @@ HltAllAlleysSequence.Members += {  "GaudiSequencer/HltL0TriggerSequence" };
 HltAllAlleysSequence.Members += {  "GaudiSequencer/HltMuonAlleySequence" };
 #include "$HLTSYSROOT/options/HltMuonAlleyConfSequence.opts"
 
-// HltAllAlleysSequence.Members += {  "GaudiSequencer/HltMuHadAlleySequence" };
+HltAllAlleysSequence.Members += {  "GaudiSequencer/HltMuHadAlleySequence" };
 #include "$HLTSYSROOT/options/HltMuHadAlleyConfSequence.opts"
 
 HltAllAlleysSequence.Members += {  "GaudiSequencer/HltHadAlleySequence" };
