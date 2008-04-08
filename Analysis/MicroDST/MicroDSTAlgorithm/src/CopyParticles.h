@@ -1,4 +1,4 @@
-// $Id: CopyParticles.h,v 1.11 2008-03-20 13:39:02 jpalac Exp $
+// $Id: CopyParticles.h,v 1.12 2008-04-08 16:43:01 jpalac Exp $
 #ifndef COPYPARTICLES_H 
 #define COPYPARTICLES_H 1
 
@@ -17,7 +17,7 @@
  * "/Event" + OutputPrefix + InputLocation. If InputLocation already contains
  * a leading "/Event" it is removed.
  * The actual cloning of individual LHCb::Particles is performed by the 
- * IParticleCloner, the implementation of which is set by the property 
+ * ICloneParticle, the implementation of which is set by the property 
  * ICloneParticle (default ParticleCloner)
  * @see ICloneParticle
  * @see ParticleCloner
