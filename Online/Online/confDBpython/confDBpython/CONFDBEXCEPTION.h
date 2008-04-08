@@ -25,6 +25,7 @@ public:
 	CONFDBEXCEPTION(string errMess);
 	virtual ~CONFDBEXCEPTION() throw();
 	string getconfDBErrMess();
+  string getconfDBErrString() {return _errMessage;};
 	char const* what() throw();
 
 };

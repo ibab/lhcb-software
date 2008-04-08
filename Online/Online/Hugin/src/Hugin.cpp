@@ -7,6 +7,7 @@
 #include "dis.hxx"
 #include "dic.hxx"
 #include "CONFDB.h"
+#include "CONFDBEXCEPTION.h"
 #include "stdio.h"
 #include <stdlib.h>
 #include <ctype.h>
@@ -15,12 +16,15 @@
 void printtime(void)
 {
   struct tm *newtime;
+  char tim[25];
   time_t aclock;
   time( &aclock );   // Get time in seconds
   newtime = localtime( &aclock );   // Convert time to struct tm form 
 
   /* Print local time as a string */
-  printf( "%s", asctime( newtime ) );
+  strncpy(tim,asctime( newtime ),24);
+  tim[24]=0;
+  printf( "%s: ", tim );
 }
 class connection
 {
@@ -106,10 +110,10 @@ void HuginRPC::rpcHandler()
       return;
     }
   }
-  catch(...)
+  catch(CONFDBEXCEPTION e)
   {
     printtime();
-    printf("Source device does not exist...\n");
+    printf("Source device does not exist... %s\n",e.getconfDBErrString().c_str());
     tells[0] = 0;
     setData(tells,1);
     return;
@@ -122,10 +126,10 @@ void HuginRPC::rpcHandler()
     'TTHUGIN04|TTTELL01|2|THROTTLE_data|4|THROTTLE_data|1|2|1|0|Throttle Link'
     */
   }
-  catch(...)
+  catch(CONFDBEXCEPTION e)
   {
     printtime();
-    printf("Exception during processing...\n");
+    printf("Exception during processing...%s\n",e.getconfDBErrString().c_str());
     tells[0] = 0;
     setData(tells,1);
     return;
