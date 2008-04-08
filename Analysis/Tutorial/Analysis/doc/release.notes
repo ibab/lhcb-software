@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-04-08 - Patrick Koppenburg
+ - Added solutions/LoKiHybrid with some demo files 
+
 ! 2008-03-32 - Ulrich Kerzel
 - change options file to use new microDST code, adopt InitGaudi accordingly 
 
