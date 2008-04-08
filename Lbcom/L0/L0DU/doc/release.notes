@@ -1,17 +1,14 @@
-! $Id: release.notes,v 1.94 2008-03-28 18:20:00 odescham Exp $
+! $Id: release.notes,v 1.95 2008-04-08 14:44:42 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
-
+!========================== L0DU v8r4 2008-04-08 =========================
 ! 2008-03-27 - Olivier Deschamps 
  - add missing DC06Conditions.opts include in Write/ReadETC
 
 ! 2008-03-27 - Olivier Deschamps 
  - split histogram production in L0DUReportMonitoring
-
-!========================== L0DU v8r4 2008-03-28 =========================
-
 
 ! 2008-03-26 - Olivier Deschamps 
  - L0DUFromRawTool improvement :
