@@ -6,6 +6,11 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2008-04-09 - Olivier Callot
+ - Change the TAE identification from TriggerType to the new field TAEWindow
+ - Changes in OnlineRunInfo.h, RawEventHelpers, TAETestCreator and MEPWriter 
+   In this last one, check the packing factor in TAE mode to be odd and below 15.
+
 !========================= MDF v3r6 2008-03-19 ===============================
 ! 2008-03-19 - Markus Frank
  - Fix bug in RawDataCnvSvc: Fail object creation if data is not accessible.

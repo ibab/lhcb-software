@@ -1,4 +1,4 @@
-// $Id: OnlineRunInfo.h,v 1.4 2008-02-05 16:44:18 frankb Exp $
+// $Id: OnlineRunInfo.h,v 1.5 2008-04-09 15:16:42 ocallot Exp $
 //====================================================================
 //  OnlineRunInfo.h
 //--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //====================================================================
 #ifndef MDF_ONLINERUNINFO_H
 #define MDF_ONLINERUNINFO_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/OnlineRunInfo.h,v 1.4 2008-02-05 16:44:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/OnlineRunInfo.h,v 1.5 2008-04-09 15:16:42 ocallot Exp $
 
 // Framework include files
 #include "Event/RawBank.h"
@@ -40,7 +40,8 @@ namespace LHCb  {
     unsigned      detStatus   : 24;
     unsigned      errors      :  8;
     unsigned      bunchID     : 12;
-    unsigned      pad0        :  4;
+    unsigned      TAEWindow   :  3;
+    unsigned      pad0        :  1;
     unsigned      triggerType :  3;
     unsigned      readoutType :  2;
     unsigned      forceBit    :  1;

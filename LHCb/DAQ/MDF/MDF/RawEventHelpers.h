@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.18 2008-02-05 16:44:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.19 2008-04-09 15:16:42 ocallot Exp $
 //  ====================================================================
 //  MDFIO.h
 //  --------------------------------------------------------------------
@@ -181,7 +181,7 @@ namespace LHCb  {
   StatusCode unpackTAE(const MDFDescriptor& data, const std::string& loc, RawEvent* raw);
 
   /// Force the event type in ODIN to be a TAE event
-  StatusCode change2TAEEvent(RawEvent* raw);
+  StatusCode change2TAEEvent(RawEvent* raw, int halfWindow);
 
   /// Check if a given RawEvent structure belongs to a TAE event
   bool isTAERawEvent(RawEvent* raw);

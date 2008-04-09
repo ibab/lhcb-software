@@ -1,4 +1,4 @@
-// $Id: TAETestCreator.cpp,v 1.7 2008-02-22 16:33:58 frankb Exp $
+// $Id: TAETestCreator.cpp,v 1.8 2008-04-09 15:16:43 ocallot Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
@@ -48,7 +48,7 @@ namespace LHCb  {
               raw->removeBank(*ib);
           }
         }
-        change2TAEEvent(raw);
+        change2TAEEvent(raw, nevts);
         for(int i=-nevts; i<=nevts; ++i)  {
           if ( i != 0 )  {
             RawEvent* copy = 0;

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPWriter.h,v 1.5 2008-02-05 16:44:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPWriter.h,v 1.6 2008-04-09 15:16:42 ocallot Exp $
 //  ====================================================================
 //  MEPWriter.h
 //  --------------------------------------------------------------------
@@ -38,6 +38,8 @@ namespace LHCb    {
     Events        m_events;
     /// Event ID
     unsigned int  m_evID;
+    /// half window size for TAE
+    int           m_halfWindow;
 
   public:
 
@@ -46,6 +48,9 @@ namespace LHCb    {
 
     /// Standard Destructor
     virtual ~MEPWriter();
+
+    // Initialize procedure
+    virtual StatusCode initialize();
 
     // Execute procedure
     virtual StatusCode execute();

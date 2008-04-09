@@ -1,4 +1,4 @@
-// $Id: MEPWriter.cpp,v 1.9 2008-02-05 16:44:18 frankb Exp $
+// $Id: MEPWriter.cpp,v 1.10 2008-04-09 15:16:43 ocallot Exp $
 //  ====================================================================
 //  MEPWriter.cpp
 //  --------------------------------------------------------------------
@@ -37,13 +37,30 @@ MEPWriter::MEPWriter(const std::string& name, ISvcLocator* pSvcLocator)
 MEPWriter::~MEPWriter()     {
 }
 
+//=========================================================================
+//  Initialisation, check parameter consistency
+//=========================================================================
+StatusCode MEPWriter::initialize ( ) {
+  m_halfWindow = (m_packingFactor-1)/2;
+  if ( m_makeTAE ) {
+    if ( 7 < m_halfWindow ||
+         0 > m_halfWindow ||
+         2 * m_halfWindow +1 != m_packingFactor ) {
+      MsgStream msg( msgSvc(), name() );
+      msg << MSG::ERROR << "In TAE mode, window size should be odd and less than 15" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+  return StatusCode::SUCCESS;
+}
+
 /// Execute procedure
 StatusCode MEPWriter::execute()    {
   SmartDataPtr<RawEvent> raw(eventSvc(),"/Event/DAQ/RawEvent");
   if ( raw )  {
     StatusCode sc = StatusCode::SUCCESS;
     raw->addRef();
-    if ( m_makeTAE ) change2TAEEvent(raw);
+    if ( m_makeTAE ) change2TAEEvent(raw, m_halfWindow );
     m_events.insert(std::pair<unsigned int, RawEvent*>(m_evID++, raw.ptr()));
     if ( int(m_events.size()) == m_packingFactor )  {
       MEPEvent* me = 0;

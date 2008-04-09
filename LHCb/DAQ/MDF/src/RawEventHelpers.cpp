@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.33 2008-02-11 07:27:47 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.34 2008-04-09 15:16:43 ocallot Exp $
 //  ====================================================================
 //  RawEventHelpers.cpp
 //  --------------------------------------------------------------------
@@ -1004,13 +1004,14 @@ StatusCode LHCb::unpackTAE(const MDFDescriptor& data, const std::string& loc, Ra
 }
 
 /// Force the event type in ODIN to be a TAE event
-StatusCode LHCb::change2TAEEvent(RawEvent* raw)  {
+StatusCode LHCb::change2TAEEvent(RawEvent* raw, int halfWindow)  {
   StatusCode sc = StatusCode::FAILURE;
   typedef std::vector<RawBank*> _V;
   if ( raw ) {
     const _V& oBnks = raw->banks(RawBank::ODIN);
     for(_V::const_iterator i=oBnks.begin(); i != oBnks.end(); ++i)  {
-      (*i)->begin<OnlineRunInfo>()->triggerType = ODIN::TimingTrigger;
+      //(*i)->begin<OnlineRunInfo>()->triggerType = ODIN::TimingTrigger;
+      (*i)->begin<OnlineRunInfo>()->TAEWindow = halfWindow;
       sc = StatusCode::SUCCESS;
     }
   }
@@ -1024,7 +1025,8 @@ bool LHCb::isTAERawEvent(RawEvent* raw)  {
     //== Check ODIN event type to see if this is TAE
     const _V& oBnks = raw->banks(RawBank::ODIN);
     for(_V::const_iterator i=oBnks.begin(); i != oBnks.end(); ++i)  {
-      if ( (*i)->begin<OnlineRunInfo>()->triggerType == ODIN::TimingTrigger ) {
+      if ( (*i)->begin<OnlineRunInfo>()->triggerType == ODIN::TimingTrigger ||
+           (*i)->begin<OnlineRunInfo>()->TAEWindow   != 0                      ) {
         return true;
       }
     }
