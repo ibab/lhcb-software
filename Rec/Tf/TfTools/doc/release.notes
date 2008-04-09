@@ -3,6 +3,8 @@
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+
+!============================ TfTools v1r4 2008-04-09 ========================
 ! 2008-04-09 - Stephanie Hansmann-Menzemer
   - Move TsaTStationHitManager.cpp to from TsaKernel here, to
     have it in a component libary to allow to create python configurables.
