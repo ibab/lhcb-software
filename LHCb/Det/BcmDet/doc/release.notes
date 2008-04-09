@@ -4,6 +4,10 @@
 ! Purpose     : BCM DetectorElement
 !----------------------------------------------------------------------------
 
+!========================= BcmDet v1r1 2008-04-09 ==========================
+! 2008-04-09 - Marco Cattaneo
+ - Clean up requirements
+
 !========================= BcmDet v1r0 2008-02-11 ==========================
 ! 2008-02-11 - Magnus Lieng
  - Created a new package BcmDet
