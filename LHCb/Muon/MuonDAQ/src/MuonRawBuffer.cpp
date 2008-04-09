@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.10 2008-04-02 11:52:05 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.11 2008-04-09 15:38:42 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -944,7 +944,7 @@ StatusCode MuonRawBuffer::getNZSupp( LHCb::RawEvent* raw,
   
    
   for( itB = b.begin(); itB != b.end(); itB++ ) {  
-    unsigned int tell1Number=(*itB)->sourceID();    
+    //    unsigned int tell1Number=(*itB)->sourceID();    
     std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator 
       itStorage;    
     std::vector<std::pair<LHCb::MuonTileID,unsigned int> > bank_container;    
@@ -1000,7 +1000,7 @@ StatusCode MuonRawBuffer::checkBankSize(const LHCb::RawBank* rawdata)
   
   for(int i=0;i<4;i++){
     //now go to the single pp counter 
-    unsigned int pp_cnt=*it; 
+    int pp_cnt=*it; 
     if ( msgLevel(MSG::VERBOSE) ){
   //    verbose()<<" hit in PP "<<pp_cnt<<endreq;
     }    

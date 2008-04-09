@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.18 2008-04-02 11:52:05 asatta Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.19 2008-04-09 15:38:42 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -411,7 +411,7 @@ StatusCode MuonDigitToRawBuffer::ProcessV1()
     for(int pp=0;pp<4;pp++)totHit=totHit+pp_counter[pp];
     
     unsigned int totalChInL1=0;    
-    unsigned int odeInTell1=0;    
+    //    unsigned int odeInTell1=0;    
     
     // now the dimension of the bank can be fixed....
     //the algo if (odeInTell1+2*totalChInL1+0.5*totalChInL1)/4
@@ -591,7 +591,7 @@ StatusCode MuonDigitToRawBuffer::ProcessDigitDC06()
   }  
   //  debug()<<" tot ODE "<<m_TotODEBoard<<endreq;
   
-  for(int i=0;i<MuonDAQHelper_maxODENumber;i++){
+  for(unsigned int i=0;i<MuonDAQHelper_maxODENumber;i++){
     std::stable_sort(m_digitsInODE[i].begin(),
                      m_digitsInODE[i].end(),SortDigitInODE());    
   }
@@ -777,12 +777,12 @@ unsigned int pp_num=(m_muonDet->getDAQInfo())->getPPNumber(L1Number,ODENumber);
   //  debug()<<" tot ODE "<<m_TotODEBoard<<endreq;
  
   
-  for(int i=0;i<MuonDAQHelper_maxTell1Number;i++){
+  for(unsigned int i=0;i<MuonDAQHelper_maxTell1Number;i++){
  debug()<<" start sorting "<<m_digitsInL1[i].size()<<endreq;
     std::stable_sort(m_digitsInL1[i].begin(),
                      m_digitsInL1[i].end(),SortDigitInL1());    
   } 
-  for(int i=0;i<MuonDAQHelper_maxODENumber;i++){
+  for(unsigned int i=0;i<MuonDAQHelper_maxODENumber;i++){
     debug()<<" start sorting "<<m_digitsInODE[i].size()<<endreq;
     std::stable_sort(m_digitsInODE[i].begin(),
                      m_digitsInODE[i].end(),SortDigitInODE());    

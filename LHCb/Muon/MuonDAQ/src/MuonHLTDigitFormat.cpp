@@ -1,4 +1,4 @@
-// $Id: MuonHLTDigitFormat.cpp,v 1.3 2008-04-02 11:52:05 asatta Exp $
+// $Id: MuonHLTDigitFormat.cpp,v 1.4 2008-04-09 15:38:42 cattanem Exp $
 // Include files 
 
 
@@ -32,7 +32,7 @@ MuonHLTDigitFormat::~MuonHLTDigitFormat() {};
 //=============================================================================
 void MuonHLTDigitFormat::setAddress(unsigned int num)
 {
- unsigned int tmp1 , tmp2 ;
+ unsigned int tmp1=0 , tmp2=0 ;
  if(m_type==MuonBankVersion::DC06)
  {
    
@@ -49,7 +49,7 @@ void MuonHLTDigitFormat::setAddress(unsigned int num)
 
 void MuonHLTDigitFormat::setTime(unsigned int num)
 {
-  unsigned int tmp1 , tmp2 ; 
+  unsigned int tmp1=0 , tmp2=0 ; 
   if(m_type==MuonBankVersion::DC06){
     tmp1 = ( num << MuonHLTBaseDC06::ShiftTime ) & MuonHLTBaseDC06::MaskTime ;
     tmp2 = m_data & ~MuonHLTBaseDC06::MaskTime ; 
@@ -64,26 +64,34 @@ void MuonHLTDigitFormat::setTime(unsigned int num)
 };
 
 unsigned int MuonHLTDigitFormat::getTime()
-{  if(m_type==MuonBankVersion::DC06){
+{
+  if(m_type==MuonBankVersion::DC06){
     return  ( m_data & MuonHLTBaseDC06::MaskTime ) >> 
       MuonHLTBaseDC06::ShiftTime ;
-  }else if(m_type==MuonBankVersion::v1)
-  { return  ( m_data & MuonHLTBaseV1::MaskTime ) >> 
+  } 
+  else if(m_type==MuonBankVersion::v1)
+  { 
+    return  ( m_data & MuonHLTBaseV1::MaskTime ) >> 
       MuonHLTBaseV1::ShiftTime ;
   }
-  
-  
+  else
+    return 0;
 };
 
 unsigned int MuonHLTDigitFormat::getAddress()
-{ if(m_type==MuonBankVersion::DC06){
-  return  ( m_data & MuonHLTBaseDC06::MaskAddress ) >> 
-    MuonHLTBaseDC06::ShiftAddress ;  
-  }else if(m_type==MuonBankVersion::v1)
-  {return  ( m_data & MuonHLTBaseV1::MaskAddress ) >> 
-    MuonHLTBaseV1::ShiftAddress ;
+{
+  if(m_type==MuonBankVersion::DC06){
+    return  ( m_data & MuonHLTBaseDC06::MaskAddress ) >> 
+      MuonHLTBaseDC06::ShiftAddress ;  
   }
-  
+  else if(m_type==MuonBankVersion::v1)
+  {
+    return  ( m_data & MuonHLTBaseV1::MaskAddress ) >> 
+      MuonHLTBaseV1::ShiftAddress ;
+  }
+  else
+    return 0;
+
 };
 
 unsigned int  MuonHLTDigitFormat::getWord()

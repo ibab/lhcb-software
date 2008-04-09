@@ -1,8 +1,6 @@
 #ifndef MUONDAQ_MUONODEDATA_H 
 #define MUONDAQ_MUONODEDATA_H 1
-#include <string>
-#include <vector>
-#include <iostream.h>
+
 /** @class MuonODEData MuonODEData.h Event/MuonODEData.h
  *  
  *
@@ -44,11 +42,7 @@ public:
     //int shift_left=(ch)*4;    
     int index=ch/8+1;
     int relative_ch=ch%8;	
-//std::cout<<" gg "<<index<<" "<<relative_ch<<std::endl;
     return getTDC(index,relative_ch);
-
-    
-  
   }
   
 

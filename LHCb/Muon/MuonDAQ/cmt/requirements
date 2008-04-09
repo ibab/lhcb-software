@@ -1,5 +1,5 @@
 package MuonDAQ
-version v3r3
+version v4r0
 
 # ================ structure ===========================================
 branches src MuonDAQ cmt doc
@@ -27,5 +27,3 @@ apply_pattern reflex_dictionary                                    \
               headerfiles=$(MUONDAQROOT)/dict/MuonDAQDict.h        \
               selectionfile=$(MUONDAQROOT)/dict/MuonDAQDict.xml    \
               options="-U__MINGW32__ -DBOOST_DISABLE_ASSERTS"
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro MuonDAQDict_use_linkopts $(use_linkopts)
