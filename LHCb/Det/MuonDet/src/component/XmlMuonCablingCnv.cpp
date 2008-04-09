@@ -1,13 +1,11 @@
-// $Id: XmlMuonCablingCnv.cpp,v 1.7 2007-06-08 15:34:00 asatta Exp $
+// $Id: XmlMuonCablingCnv.cpp,v 1.8 2008-04-09 15:20:04 cattanem Exp $
 // Include files 
 
+#include <string>
 #include <vector>
 
 #include "DetDescCnv/XmlUserConditionCnv.h"
-#include "MuonDet/MuonReadoutCond.h"
-#include "MuonDet/MuonL1Board.h"
 #include "MuonDet/MuonStationCabling.h"
-#include "GaudiKernel/RegistryEntry.h"
 
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>   
@@ -113,7 +111,8 @@ XmlMuonCablingCnv::~XmlMuonCablingCnv() {
 //=============================================================================
 
 
-StatusCode XmlMuonCablingCnv::updateRep (IOpaqueAddress *pAddress, DataObject *pObject){
+StatusCode XmlMuonCablingCnv::updateRep (IOpaqueAddress* /* pAddress */,
+                                         DataObject*     /* pObject  */ ){
  MsgStream msg(msgSvc(), "XmlMuonCablingCnv");
  msg<<MSG::INFO<<" number of L1 "<<endreq;
  return StatusCode::SUCCESS;
@@ -125,8 +124,8 @@ StatusCode XmlMuonCablingCnv::updateRep (IOpaqueAddress *pAddress, DataObject *p
 // ------------------------------------------------------------------------
 StatusCode 
 XmlMuonCablingCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
-                                          MuonStationCabling* dataObj,
-                                          IOpaqueAddress* address){
+                                     MuonStationCabling* dataObj,
+                                     IOpaqueAddress* /* address */){
   MsgStream msg(msgSvc(), "XmlMuonCablingCnv");
   const XMLCh* tagName = childElement->getNodeName();
 

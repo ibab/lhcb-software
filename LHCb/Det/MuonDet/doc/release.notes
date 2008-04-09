@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.105 2008-04-09 15:06:40 cattanem Exp $
+! $Id: release.notes,v 1.106 2008-04-09 15:20:04 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v8r0 2008-04-09 ==========================
+! 2008-04-09 - Marco Cattaneo
+ - Fix compilation warnings, clean up some includes
+
 ! 2008-04-02 - Alessia Satta
  - add a new helper class which stores the information to decode the raw 
    buffer produced by the Tell1 (MuonDAQHelpers)

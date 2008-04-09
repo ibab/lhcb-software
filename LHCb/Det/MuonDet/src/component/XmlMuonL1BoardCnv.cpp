@@ -1,14 +1,11 @@
-// $Id: XmlMuonL1BoardCnv.cpp,v 1.3 2008-04-02 11:47:48 asatta Exp $
+// $Id: XmlMuonL1BoardCnv.cpp,v 1.4 2008-04-09 15:20:04 cattanem Exp $
 // Include files 
 
+#include <string>
 #include <vector>
 
 #include "DetDescCnv/XmlUserConditionCnv.h"
-#include "MuonDet/MuonReadoutCond.h"
 #include "MuonDet/MuonL1Board.h"
-#include "MuonDet/MuonStationCabling.h"
-#include "MuonDet/MuonODEBoard.h"
-#include "GaudiKernel/RegistryEntry.h"
 
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>   
@@ -18,9 +15,9 @@
 
 // local
 
-/** @class XmlMuonL1Cnv
+/** @class XmlMuonL1BoardCnv
  *
- * XML converter for MuonODE
+ * XML converter for Muon L1 Board
  *
  * @author Alessia Satta
  */
@@ -171,7 +168,7 @@ XmlMuonL1BoardCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
         " something wrong in Tell1 - ODE connectiom description "<<endreq;
       return StatusCode::FAILURE;
     }
-    for( int i =0; i<NumLink;i++){
+    for( unsigned int i =0; i<NumLink;i++){
       msg<<MSG::DEBUG<<" link "<<i<<" ODE "<<ODEListValue[i]<<endreq;
       msg<<MSG::DEBUG<<" ODEList length "<<ODEList.size()<<" "<<ODEListValue.size()<<endreq;
       dataObj->setLinkConnection(i,ODEListValue[i]);      
