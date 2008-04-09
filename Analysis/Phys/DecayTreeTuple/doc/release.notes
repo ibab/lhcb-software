@@ -4,6 +4,11 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-04-09 - V. Gligorov
+ - Added TupleToolTISTOS.{h,cpp} to save TISTOS status of each composite particle
+ - TupleToolGeometry
+  . Added saving of flight distance to PV for particles
+
 ! 2008-03-27 - Patrick Koppenburg
  - DecayTreeTuple: fix an unchecked StatusCode
  - Increment to v1r2
