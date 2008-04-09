@@ -82,6 +82,7 @@
         name   = 'Word8Bits'
         desc   = ''
         value  = 'BunchIDBits      = 0,
+                  TAEWindowBits    = 12,
                   TriggerTypeBits  = 16,
                   ReadoutTypeBits  = 19,
                   ForceBits        = 21,
@@ -93,6 +94,7 @@
         name   = 'Word8Masks'
         desc   = ''
         value  = 'BunchIDMask      = 0x00000FFF,
+                  TAEWindowMask    = 0x00007000,
                   TriggerTypeMask  = 0x00070000,
                   ReadoutTypeMask  = 0x00180000,
                   ForceMask        = 0x00200000,
@@ -230,6 +232,12 @@
         type="unsigned int"
         init="0" />
 
+      <attribute
+        name="timeAlignmentEventWindow"
+        desc="TAE (Time Alignment Event) window size"
+        type="unsigned int"
+        init="0" />
+
 	<constructor 
 		desc     = "Copy constructor. Creates a new ODIN object with the same information" 
 		initList = "DataObject(), m_runNumber(odin.runNumber()), m_eventType(odin.eventType()), m_orbitNumber(odin.orbitNumber()), m_eventNumber(odin.eventNumber()), m_gpsTime(odin.gpsTime()), m_detectorStatus(odin.detectorStatus()), m_errorBits(odin.errorBits()), m_bunchId(odin.bunchId()), m_triggerType(odin.triggerType()), m_readoutType(odin.readoutType()), m_forceBit(odin.forceBit()), m_bunchCrossingType(odin.bunchCrossingType()), m_bunchCurrent(odin.bunchCurrent()), m_version(odin.version()), m_calibrationStep(odin.calibrationStep()), m_triggerConfigurationKey(odin.triggerConfigurationKey())">
@@ -268,7 +276,10 @@
   setTriggerType( (temp32 &amp; LHCb::ODIN::TriggerTypeMask) &gt;&gt; LHCb::ODIN::TriggerTypeBits );
   setReadoutType( ((temp32 &amp; LHCb::ODIN::ReadoutTypeMask) &gt;&gt; LHCb::ODIN::ReadoutTypeBits ) == 0 ?
                   ZeroSuppressed : NonZeroSuppressed );
-
+  if (version() &gt;= 4) {
+    setTimeAlignmentEventWindow( (temp32 &amp; LHCb::ODIN::TAEWindowMask) &gt;&gt; LHCb::ODIN::TAEWindowBits );
+  }
+  
   setForceBit( ((temp32 &amp; LHCb::ODIN::ForceMask) &gt;&gt; LHCb::ODIN::ForceBits ) != 0 );
 
   switch ( (temp32 &amp; LHCb::ODIN::BXTypeMask) &gt;&gt; LHCb::ODIN::BXTypeBits ) {

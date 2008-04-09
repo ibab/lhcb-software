@@ -4,6 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2008-04-09 - Marco Clemencic
+ - Added the TAEWindow property (timeAlignmentEventWindow) to the ODIN class.
+   Available since version 4 of ODIN bank.
+
 !================ DAQEvent v7r10 2008-04-08 ===========================
 ! 2008-04-01 - Olivier Deschamps
  - RawBankSizeMonitor : produce profile1D histogram by default 
@@ -32,7 +36,7 @@
  - Cleanup stl includes in RawBank.h
 
 !================ DAQEvent v7r8 2008-01-30 ============================
-! 2008-01-30 Marco Clemencic
+! 2008-01-30 - Marco Clemencic
  - Fixed compilation warnings in ODIN.xml on Win32.  
 
 ! 2008-01-23 - Olivier Deschamps
