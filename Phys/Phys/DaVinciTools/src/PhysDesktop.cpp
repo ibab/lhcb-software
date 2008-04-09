@@ -650,12 +650,14 @@ StatusCode PhysDesktop::makeParticles(){
     }
   }
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Particles from " << m_pMakerType
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Number of Particles from " << m_pMakerType
                                         << " : " << m_parts.size() << endmsg;
-  if (msgLevel(MSG::VERBOSE)) verbose() << "( from " << particles.size() <<" initial particles) "<< endmsg;
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Vertices from " << m_pMakerType
-                                        << " : " << m_secVerts.size() << endmsg;
-
+    verbose() << "( from " << particles.size() <<" initial particles) "<< endmsg;
+    verbose() << "Number of Vertices from " << m_pMakerType
+              << " : " << m_secVerts.size() << endmsg;
+  }
+  
   return sc;
 }
 //=============================================================================
@@ -673,7 +675,9 @@ StatusCode PhysDesktop::getParticles(){
     std::string location = (*iloc)+"/Particles";
     if ( !exist<LHCb::Particles>( location ) ){ 
       //            return Error("No particles at location "+location); 
-      Warning("No particles at location "+location, StatusCode::SUCCESS, 1).ignore();
+      Warning("No particles at location "+location
+              +((rootInTES().size()>0)?(" under "+rootInTES()):""), 
+              StatusCode::SUCCESS, 1).ignore();
       continue ;
     }
     LHCb::Particles* parts = get<LHCb::Particles>( location );
@@ -713,9 +717,11 @@ StatusCode PhysDesktop::getParticles(){
                                             << location << " = " << m_secVerts.size() << endmsg;
     }
   }
-  if (msgLevel(MSG::VERBOSE)) verbose() << "    Total number of particles " << m_parts.size() << endmsg;
-  if (msgLevel(MSG::VERBOSE)) verbose() << "    Total number of secondary vertices " << m_secVerts.size() << endmsg;
-
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "    Total number of particles " << m_parts.size() << endmsg;
+    verbose() << "    Total number of secondary vertices " << m_secVerts.size() << endmsg;
+  }
+  
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -728,7 +734,7 @@ StatusCode PhysDesktop::getRelations(){
     // Retrieve the particles to PV relations
     std::string location = (*iloc)+"/Particle2VertexRelations";
     if (!exist<Particle2Vertex::Table>(location)){
-      Warning("No relations table at "+location,StatusCode::SUCCESS, 1).ignore();
+      Warning("No relations table at "+location+" under "+rootInTES(),StatusCode::SUCCESS, 1).ignore();
       continue ;
     } else if (msgLevel(MSG::DEBUG)) debug() << "Reading table from " << location << endmsg ;
     Particle2Vertex::Table* table = get<Particle2Vertex::Table>(location);
@@ -765,12 +771,15 @@ StatusCode PhysDesktop::getPrimaryVertices(){
 
     for( LHCb::RecVertices::const_iterator ivert = verts->begin();
          ivert != verts->end(); ivert++ ) {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "    Vertex coordinates = ( "
+      if (msgLevel(MSG::VERBOSE)) {
+        verbose() << "    Vertex coordinates = ( "
                                             << (*ivert)->position().x()
                                             << " , " << (*ivert)->position().y()
                                             << " , " << (*ivert)->position().z() << " ) " << endmsg;
-      if (msgLevel(MSG::VERBOSE)) verbose() << "    Vertex ChiSquare = " << (*ivert)->chi2()
-                                            << endmsg;
+        verbose() << "    Vertex ChiSquare = " << (*ivert)->chi2()
+                  << endmsg;
+      }
+      
       // Put them in local containers
       setInDesktop(*ivert);
       m_primVerts.push_back(*ivert);

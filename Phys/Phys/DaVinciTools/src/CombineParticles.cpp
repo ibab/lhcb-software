@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.10 2008-03-28 09:30:49 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.11 2008-04-09 14:58:10 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -28,9 +28,6 @@ DECLARE_ALGORITHM_FACTORY( CombineParticles );
 CombineParticles::CombineParticles( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator ),
-    m_phase0FilterName("Phase0Filter"),
-    m_phase1FilterName("Phase1Filter"),
-    m_phase2FilterName("Phase2Filter"),
     m_filter0(0),
     m_filter1(0),
     m_filter2(0),
@@ -38,28 +35,19 @@ CombineParticles::CombineParticles( const std::string& name,
     m_particleDescendants(),
     m_plots0(),
     m_plots1(),
-    m_plots2(),
-    m_plot0Tool("RecursivePlotTool/Plots0"),
-    m_plot1Tool("RecursivePlotTool/Plots1"),
-    m_plot2Tool("RecursivePlotTool/Plots2"),
-    m_plots0Path(""),
-    m_plots1Path(""),
-    m_plots2Path(""),
-    m_decayDescriptors(),
-    m_killOverlap(true)
-
+    m_plots2()
 {
-  declareProperty("Phase0FilterName", m_phase0FilterName);
-  declareProperty("Phase1FilterName", m_phase1FilterName);
-  declareProperty("Phase2FilterName", m_phase2FilterName);
-  declareProperty( "Plot0Tool", m_plot0Tool);  
-  declareProperty( "Plot1Tool", m_plot1Tool);  
-  declareProperty( "Plot2Tool", m_plot2Tool);  
-  declareProperty( "Plots0Path", m_plots0Path);  
-  declareProperty( "Plots1Path", m_plots1Path);  
-  declareProperty( "Plots2Path", m_plots2Path);  
+  declareProperty("Phase0FilterName", m_phase0FilterName = "Phase0Filter");
+  declareProperty("Phase1FilterName", m_phase1FilterName = "Phase1Filter");
+  declareProperty("Phase2FilterName", m_phase2FilterName = "Phase2Filter");
+  declareProperty( "Plot0Tool", m_plot0Tool = "RecursivePlotTool/Plots0");  
+  declareProperty( "Plot1Tool", m_plot1Tool = "RecursivePlotTool/Plots1");  
+  declareProperty( "Plot2Tool", m_plot2Tool = "RecursivePlotTool/Plots2");  
+  declareProperty( "Plots0Path", m_plots0Path = "");  
+  declareProperty( "Plots1Path", m_plots1Path = "");  
+  declareProperty( "Plots2Path", m_plots2Path = "");  
   declareProperty( "DecayDescriptors", m_decayDescriptors );  
-  declareProperty( "KillOverlap", m_killOverlap );
+  declareProperty( "KillOverlap", m_killOverlap = true);
   declareProperty( "OutputLocation" , m_outputLocation = "" ) ;
   declareProperty( "PrintStats", m_printStats = false ) ;
   declareProperty( "PrintMoreStats", m_printMoreStats = false ) ;
@@ -87,6 +75,10 @@ StatusCode CombineParticles::initialize() {
   m_criteriaNames[ "Phase1Filter" ] =  "LoKi::Hybrid::FilterCriterion/FILTER1";
   m_criteriaNames[ "Phase2Filter" ] =  "LoKi::Hybrid::FilterCriterion/FILTER2";
   
+  m_filter0 = filterCriterion( m_phase0FilterName ) ;
+  m_filter1 = filterCriterion( m_phase1FilterName ) ;
+  m_filter2 = filterCriterion( m_phase2FilterName ) ;
+
   if ( m_killOverlap ){
     m_checkOverlap = checkOverlap() ;
     m_particleDescendants = descendants();
@@ -98,7 +90,7 @@ StatusCode CombineParticles::initialize() {
     if ( msgLevel( MSG::VERBOSE )) verbose() << "Got overlap and particle descendants tools" << endmsg ;
   }
   if ( msgLevel( MSG::DEBUG )) debug() << "Going to createDecays()" << endmsg;
-  
+
   return initializePlotters() && createDecays();
 }
 
@@ -139,23 +131,20 @@ StatusCode CombineParticles::execute() {
 
   if ( msgLevel( MSG::DEBUG )) debug() << "==> Execute" << endmsg;
 
-  // code goes here  
-
-  m_filter0 = filterCriterion( m_phase0FilterName ) ;
-  m_filter1 = filterCriterion( m_phase1FilterName ) ;
-  m_filter2 = filterCriterion( m_phase2FilterName ) ;
-
   ++m_nEvents ;
 
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
+  
   LHCb::Particle::ConstVector Daughters, Resonances ;
   StatusCode sc = applyFilter(desktop()->particles(),
                               Daughters,
                               m_filter0);
+  
   if (!sc) {
     err() << "Unable to filter daughters" << endmsg;
     return StatusCode::FAILURE ;  
   }
+
   if ( msgLevel( MSG::DEBUG ) || m_printMoreStats ) 
     always() << "Applyed FILTER0 to " << desktop()->particles().size() 
              << " particles and found " << Daughters.size() << endmsg;

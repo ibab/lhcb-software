@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.310 2008-03-31 14:57:43 pkoppenb Exp $
+! $Id: release.notes,v 1.311 2008-04-09 14:58:10 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-04-09 - Patrick Koppenburg
+ - CombineParticles : initialize filters at initialize, not first event.
+ - PhysDesktop : better printout
 
 ! 2008-03-31 - Patrick Koppenburg
  - DecodeSimpleDecayString : Get antiparticle from ParticleProperty, not from 
