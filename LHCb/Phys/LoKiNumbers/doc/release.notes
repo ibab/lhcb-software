@@ -4,6 +4,10 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2008-04-09 - Vanya BELYAEV 
+ - dic/LoKiNumbersDict.h
+   add missing __rshift__ method 
+
 ! =========================== LoKiNumbers v7r3 2008-04-03 =====================
 ! 2008-03-30 - Vanya BELYAEV
  - introduce the symbol for "random" cuts

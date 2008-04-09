@@ -1,4 +1,4 @@
-// $Id: LoKiNumbersDict.h,v 1.4 2008-03-30 13:40:40 ibelyaev Exp $
+// $Id: LoKiNumbersDict.h,v 1.5 2008-04-09 20:19:56 ibelyaev Exp $
 // ============================================================================
 #ifndef DICT_LOKINUMBERSDICT_H 
 #define DICT_LOKINUMBERSDICT_H 1
@@ -119,6 +119,16 @@ namespace LoKi
       static double __rrshift__ 
       ( const Fun& fun  , const double           o ) 
       { return fun ( std::vector<double> ( 1 , o ) ) ; }
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<Type,bool>   __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** the explicit full template specialzation of  LoKi::Dicts::CutCalls
