@@ -3,6 +3,12 @@
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2008-04-09 - Stephanie Hansmann-Menzemer
+  - Move TsaTStationHitManager.cpp to from TsaKernel here, to
+    have it in a component libary to allow to create python configurables.
+    TsaTStationHitManager.h stays in TsaKernel package to keep it visible from
+    outside
+  - Same for PatTStationHitManager.cpp
 
 !============================ TfTools v1r3 2008-01-21 ========================
 ! 2008-01-19 - Gerhard Raven
