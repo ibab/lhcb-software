@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.35 2008-03-14 18:26:41 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.36 2008-04-09 09:49:10 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -99,7 +99,7 @@ StatusCode DeSTSector::initialize() {
 
     // guard ring
     m_deadWidth = param<double>("verticalGuardRing");  
-    if (m_versionString == "DCO6") m_deadWidth += 0.5*param<double>("bondGap");
+    // if (m_versionString == "DCO6") m_deadWidth += 0.5*param<double>("bondGap");
  
     if (m_versionString != "DC06"){
       StatusCode sc = registerCondition(this,m_statusString,
