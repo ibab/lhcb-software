@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!======================= TsaKernel v3r2 2008-04-09 ==========================
 ! 2008-04-09 - Stephanie Hansmann-Menzemer
   - Move TsaTStationHitManager.cpp to TfTools package, which has a 
     component libary to allow to create python configurables.

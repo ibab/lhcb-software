@@ -3,7 +3,7 @@
 # Maintainer : Matt Needham 
 #============================================================================
 package           TsaKernel
-version           v3r1
+version           v3r2
 
 #============================================================================
 # Structure
@@ -43,6 +43,3 @@ apply_pattern reflex_dictionary                                                 
               headerfiles=$(TSAKERNELROOT)/dict/TsaKernelDict.h     \
               selectionfile=$(TSAKERNELROOT)/dict/TsaKernelDict.xml \
               options="-U__MINGW32__"
-
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro TsaKernelDict_use_linkopts $(use_linkopts)
