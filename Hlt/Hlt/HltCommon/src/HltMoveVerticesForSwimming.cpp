@@ -1,4 +1,4 @@
-// $Id: HltMoveVerticesForSwimming.cpp,v 1.1 2008-02-29 19:37:42 gligorov Exp $
+// $Id: HltMoveVerticesForSwimming.cpp,v 1.2 2008-04-09 10:03:05 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -89,6 +89,8 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   //Swim the primary vertices
   m_bDirection = (*(pars->begin()))->slopes().Unit();
   m_bVertexPosition = (*(pars->begin()))->endVertex()->position();
+  m_bMass = (*(pars->begin()))->measuredMass();
+  m_bMom = (*(pars->begin()))->p();
   //sc = move_PVs();
 
   debug() << "The B direction is" << endmsg;
@@ -155,53 +157,53 @@ double HltMoveVerticesForSwimming::get_B_lifetime(){
   double bestVertexCosTheta = 0.;
   LHCb::RecVertex* bestVertex = (*(*m_inputVertices).begin()); 
   
-  info() << "Trying to find the best vertex" << endmsg;
+  debug() << "Trying to find the best vertex" << endmsg;
 
   for (iV = (*m_inputVertices).begin(); iV != (*m_inputVertices).end(); ++iV) {
 
-	info() << "First candidate is " << (*iV) << endmsg;
+	debug() << "First candidate is " << (*iV) << endmsg;
 
   	vertexCosTheta = ((m_bVertexPosition - (*iV)->position()).Unit()).Dot(m_bDirection.Unit());
 
-	info() << "It has a cos theta of " << vertexCosTheta << endmsg;
+	debug() << "It has a cos theta of " << vertexCosTheta << endmsg;
 
 	if (fabs(vertexCosTheta) > fabs(bestVertexCosTheta)) {
 
-		info() << "Which is a new best cos theta" << endmsg;
+		debug() << "Which is a new best cos theta" << endmsg;
 
 		bestVertexCosTheta = fabs(vertexCosTheta);
 		bestVertex = (*iV);
 	}
   }
 
-  info() << "The best vertex is " << bestVertex << endmsg;
+  debug() << "The best vertex is " << bestVertex << endmsg;
 
-  info() << "It has" << endmsg;
-  info() << "X coordinate " << bestVertex->position().X() << endmsg;
-  info() << "Y coordinate " << bestVertex->position().Y() << endmsg;
-  info() << "Z coordinate " << bestVertex->position().Z() << endmsg;
+  debug() << "It has" << endmsg;
+  debug() << "X coordinate " << bestVertex->position().X() << endmsg;
+  debug() << "Y coordinate " << bestVertex->position().Y() << endmsg;
+  debug() << "Z coordinate " << bestVertex->position().Z() << endmsg;
 
   newVertPos = bestVertex->position() + m_swimmingDistance*m_bDirection; 
   bestVertex->setPosition(newVertPos);
 
-  info() << "The moved vertex is at " << bestVertex << endmsg;
-  info() << "With X coordinate " << bestVertex->position().X() << endmsg;
-  info() << "With Y coordinate " << bestVertex->position().Y() << endmsg;
-  info() << "With Z coordinate " << bestVertex->position().Z() << endmsg;
+  debug() << "The moved vertex is at " << bestVertex << endmsg;
+  debug() << "With X coordinate " << bestVertex->position().X() << endmsg;
+  debug() << "With Y coordinate " << bestVertex->position().Y() << endmsg;
+  debug() << "With Z coordinate " << bestVertex->position().Z() << endmsg;
 
   m_outputVertices->push_back( const_cast<LHCb::RecVertex*>(bestVertex));
 
-  templifetime = sqrt((m_bVertexPosition - 
-		       bestVertex->position()
-		      ).Mag2()
-		     );
+  templifetime = 1000.*m_bMass*sqrt(	(m_bVertexPosition - 
+		       			 bestVertex->position()
+		      			).Mag2()
+		     		   )/(300.*m_bMom); //get proper lifetime in ps
 
   if (m_bVertexPosition.Z() < bestVertex->position().Z()) {
   //Negative lifetime if B behind the moved vertex
   	templifetime *= - 1;
   } 
 
-  info() << "With lifetime " << templifetime << endmsg;
+  debug() << "With lifetime " << templifetime << endmsg;
 
   return templifetime;
 

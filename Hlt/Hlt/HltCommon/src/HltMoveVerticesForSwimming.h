@@ -1,4 +1,4 @@
-// $Id: HltMoveVerticesForSwimming.h,v 1.1 2008-02-29 19:37:42 gligorov Exp $
+// $Id: HltMoveVerticesForSwimming.h,v 1.2 2008-04-09 10:03:03 gligorov Exp $
 #ifndef HLTMOVEVERTICESFORSWIMMING_H 
 #define HLTMOVEVERTICESFORSWIMMING_H 1
 
@@ -41,6 +41,8 @@ protected:
   Gaudi::XYZPoint m_bVertexPosition; //The starting point for the swimming
   double m_swimmingDistance; //How far to move the primary vertex. The sign is positive if moving in the direction of the B momentum
   double m_bLifetime; //the measured B lifetime
+  double m_bMass; //the measured B mass, used to convert into proper time
+  double m_bMom; //the measured B momentum, used to convert into proper time 
 
 };
 
