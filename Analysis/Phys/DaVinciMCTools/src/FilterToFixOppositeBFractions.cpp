@@ -1,4 +1,4 @@
-// $Id: FilterToFixOppositeBFractions.cpp,v 1.10 2008-03-03 17:14:30 pkoppenb Exp $
+// $Id: FilterToFixOppositeBFractions.cpp,v 1.11 2008-04-09 20:24:28 ibelyaev Exp $
 // Include files
 #include <sstream>
 
@@ -370,5 +370,6 @@ double FilterToFixOppositeBFractions::errorp(int a, double b)
 //=============================================================================
 double FilterToFixOppositeBFractions::r(double x)
 {
-  return LHCbMath::round(x * 100.)/100.;
+  // return LHCbMath::round(x * 100.)/100.;
+  return LHCb::Math::round(x * 100.)/100.;
 }

@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.211 2008-04-07 19:35:53 gligorov Exp $
+! $Id: release.notes,v 1.212 2008-04-09 20:24:27 ibelyaev Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-04-09 - Vanya BELYAEV
+ - src/FilterToFixOppositeBFractions.cpp
+    fix the namespacpace LHCbMath -> LHCb::Math
+ - src/PRintDecatTreeTool.h 
+    allow also IPrinDecay interface 
+
 
 ! 2008-01-21 - V. Gligorov
  - Added FilterByBackCat.{h,cpp} to allow filtering by the particle's assigned

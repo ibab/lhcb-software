@@ -1,4 +1,4 @@
-// $Id: PrintDecayTreeTool.h,v 1.2 2008-02-15 17:10:25 pkoppenb Exp $
+// $Id: PrintDecayTreeTool.h,v 1.3 2008-04-09 20:24:28 ibelyaev Exp $
 #ifndef PRINTDECAYTREETOOL_H 
 #define PRINTDECAYTREETOOL_H 1
 
@@ -8,6 +8,7 @@
 
 // from DaVinciTools
 #include "Kernel/IPrintDecayTreeTool.h"
+#include "Kernel/IPrintDecay.h"
 
 
 // Forward declarations
@@ -25,8 +26,11 @@ class MsgStream;
  *  @author Juan Palacios juancho@nikhef.nl
  *  @date   10/10/2007
  */
-class PrintDecayTreeTool : public GaudiTool,
-                           virtual public IPrintDecayTreeTool {
+class PrintDecayTreeTool 
+  : public GaudiTool
+  , virtual public IPrintDecay 
+  , virtual public IPrintDecayTreeTool 
+{
 public:  
   /// Standard Constructor
   PrintDecayTreeTool( const std::string& type,
