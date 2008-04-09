@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.10 2008-02-14 08:42:01 ahicheur Exp $
+// $Id: DiagSolvTool.cpp,v 1.11 2008-04-09 12:42:25 wouter Exp $
 // Include files 
 
 #include <stdio.h>
@@ -44,6 +44,7 @@ DiagSolvTool::DiagSolvTool( const std::string& type,
   declareInterface<IAlignSolvTool>(this);
   declareProperty( "NumberOfPrintedEigenvalues", m_numberOfPrintedEigenvalues = 20 ) ;
   declareProperty( "LowerModCut",par_modcut=0);
+  declareProperty( "EigenValueThreshold", m_eigenValueThreshold = -1 ) ;
   declareProperty( "WriteMonNTuple",par_writentp=false);
   declareProperty( "ApplyScaling", m_applyScaling=true) ;
 }
@@ -83,9 +84,9 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
   
   int infjob=999;
   char jobz = 'V';
-  int N = m_bigmatrix.size();
-  m_scale = 1.;
-  
+  size_t N = m_bigmatrix.size();
+  std::cout << "First element in big matrix: " << m_bigmatrix[0][0] << std::endl ;
+
   //declare transition matrix + vector to store eigenvalues
   AlMat z(N,N);
   AlVec w(N);
@@ -95,14 +96,16 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
   
   //normalize bigmatrix and bigvector before solving, alternatively use preconditionning (but complicates eigenvalue analysis)
   
-  m_scale=1 ;
+  double scale=1 ;
   if( m_applyScaling ) {
-    m_scale = findMax(m_bigmatrix);
-    if (m_scale>1e-19) {    
-      m_bigvector*=(1./m_scale);
-      m_bigmatrix*=(1./m_scale);
-    } else {m_scale=1.;}
+    scale = findMax(m_bigmatrix);
+    if (scale>1e-19) {    
+      info() << "Scaling system with scale: " << scale << endreq ;
+      m_bigvector*=(1./scale);
+      m_bigmatrix*=(1./scale);
+    } else {scale=1.;}
   }
+  std::cout << "First element in big matrix: " << m_bigmatrix[0][0] << std::endl ;
   //   Precond(m_bigmatrix,rweight,cweight,true);
 
   //  for(int i=0;i<N;i++) m_bigvector[i]*=rweight[i];
@@ -116,17 +119,20 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
 
   info() << "After diagonalization" << endmsg;
 
-
-  // Dump the 10 smallest eigenvalues
+  // Dump the 10 smallest eigenvalues. They should be sorted, but
+  // let's not take any chances and sort them again.
   std::ostringstream logmessage ;
   logmessage << "Smallest eigen values: [ " << std::setprecision(4) ;
-  for(size_t ipar = std::max(0,int(N) - int(m_numberOfPrintedEigenvalues)); ipar<N; ++ipar) 
-    logmessage << w[ipar] << ", " ;
+  std::vector<double> sortedev(N) ;
+  for(size_t ipar = 0; ipar<N; ++ipar) sortedev[ipar] = w[ipar] ;
+  std::sort(sortedev.begin(),sortedev.end()) ;
+  for(size_t ipar = 0; ipar<m_numberOfPrintedEigenvalues; ++ipar) 
+    logmessage << sortedev[ipar]*scale << ", " ;
   logmessage << "]" ;
   info() << logmessage.str() << endmsg ;
   
   // Issue a warning for each negative eigenvalue
-  for(int ipar = 0; ipar<N; ++ipar) 
+  for(size_t ipar = 0; ipar<N; ++ipar) 
     if( w[ipar] < - DBL_MIN ) 
       error() << "Second derivative has negative eigenvalue: " << w[ipar] << endmsg ;
   
@@ -141,62 +147,32 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
     //D = z.T()*m_bigvector; 
 
 
-    //compute alignment corrections and their variance
-    double threshold = 1e-19;
-    
-    AlVec m_AlignPar(N);
-    AlVec m_AlignSqErr(N);
-    
-    for( int i=0; i<N; i++) {
+    //compute alignment corrections and their variance. first flag modes that we cut away by eigenvalue
+    std::vector<bool> keepEigenValue(N,true) ;
+    for (size_t i=0;i<par_modcut;i++) keepEigenValue[i] = false ;
+    if( m_eigenValueThreshold > 0 )
+      for( size_t i=0; i<N; i++)      keepEigenValue[i] = w[i]>m_eigenValueThreshold ;
+    info() << "Number of rejected eigenvalues: "
+	   << std::count( keepEigenValue.begin(), keepEigenValue.end(), false) << endreq ;
 
-      
-      // for( int i=(24); i<N; i++) {
-      for (int j=0;j<par_modcut;j++) {
+    // reset the input
+    for( size_t i=0; i<N; i++) {
+      m_bigvector[i] = 0 ;
+      for (size_t j=0;j<=i;j++)
         m_bigmatrix[i][j]=0.;
-        for (int k=0;k<N;k++) {
-          if (w[k]>threshold) m_bigmatrix[i][j]=m_bigmatrix[i][j]+(z[k][i]*z[k][j]/w[k]*m_scale);
-          //with GSL convention:
-          //   if (w[k]>threshold) m_bigmatrix[i][j]=m_bigmatrix[i][j]+(z[i][k]*z[j][k]/w[k]); 
-        }
-        
-      }
-      
-
-      for (int j=par_modcut;j<N;j++) {
-
-        m_bigmatrix[i][j]=0.;
-        if (w[j]>threshold){
-	  m_AlignPar[i] += z[j][i]*(D[j]/w[j]);
-    //m_AlignPar[i] += z[j][i]*(D[j]/w[j])*cweight[i];
-	  m_AlignSqErr[i] += (z[j][i])*(z[j][i])/(w[j]*m_scale);
-    //m_AlignSqErr[i] += ((z[j][i])*(z[j][i])/w[j])*rweight[i]*cweight[i];
-	  //Warning, in GSL, definition of z is transposed:
-	  //	  m_AlignPar[i] += z[i][j]*(D[j]/w[j]);
-	  //	  m_AlignSqErr[i] += (z[i][j])*(z[i][j])/(w[j]*m_scale);	  
-
-    
-
-        }
-
-        for (int k=0;k<N;k++) {
-          if (w[k]>threshold) m_bigmatrix[i][j]=m_bigmatrix[i][j]+(z[k][i]*z[k][j]/(w[k]*m_scale));
-          //with GSL convention:
-          //   if (w[k]>threshold) m_bigmatrix[i][j]=m_bigmatrix[i][j]+(z[i][k]*z[j][k]/w[k]); 
-        }
-
-      }
-
-      m_bigvector[i]=m_AlignPar[i];
-      
- 
-
     }
-
     
-    if (par_writentp) MonitorDiag(z,w,D);
+    // now fill it
+    for( size_t k=0;k<N;++k)
+      if( keepEigenValue[k] )
+	for( size_t i=0; i<N; ++i) {
+	  m_bigvector[i] += z[k][i]*D[k]/w[k] ;
+	  for (size_t j=0;j<=i; ++j) 
+	    m_bigmatrix[i][j] += (z[k][i]*z[k][j]/(w[k]*scale));
+	}
     
-
-    
+    // fill the ntuple
+    if (par_writentp) MonitorDiag(z,w,D,scale);
     
   }
   else {
@@ -207,7 +183,7 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
   return infjob;
 }
 
-void DiagSolvTool::MonitorDiag(AlMat& z, AlVec& w, AlVec& D) 
+void DiagSolvTool::MonitorDiag(AlMat& z, AlVec& w, AlVec& D, double scale) 
 {
 // Creating the tuple in memory
   Tuples::Tuple MonTuple = nTuple("SolvMonitor","Spectral Monitoring ntuple" );
@@ -218,7 +194,7 @@ void DiagSolvTool::MonitorDiag(AlMat& z, AlVec& w, AlVec& D)
     nteig_mode = i;
     nteig_eigval = w[i];
     if (w[i]>1e-16) nteig_eigmod = D[i]/w[i]; else nteig_eigmod = 0.0;
-    if (w[i]>1e-16) nteig_erreigmod = sqrt(1.0/(w[i]*m_scale)); else nteig_erreigmod = 0.0;
+    if (w[i]>1e-16) nteig_erreigmod = sqrt(1.0/(w[i]*scale)); else nteig_erreigmod = 0.0;
 
     MonTuple->column("mode",nteig_mode);
     MonTuple->column("eigenval",nteig_eigval);
@@ -272,11 +248,11 @@ void DiagSolvTool::MonitorDiag(AlMat& z, AlVec& w, AlVec& D)
   
 
   
-  for (int i=0;i<w.size();i++) {
+  for (size_t i=0;i<w.size();i++) {
     nteig_mode = i;
     nteig_eigval = w[i];
     if (w[i]>1e-16) nteig_eigmod = D[i]/w[i]; else nteig_eigmod = 0.0;
-    if (w[i]>1e-16) nteig_erreigmod = sqrt(1.0/(w[i]*m_scale)); else nteig_erreigmod = 0.0;
+    if (w[i]>1e-16) nteig_erreigmod = sqrt(1.0/(w[i]*scale)); else nteig_erreigmod = 0.0;
     StatusCode sc = m_tuple->write(); 
     if (!sc.isSuccess()) error()<<"Problem filling Monitor ntuple" << endmsg;   
   }
@@ -293,11 +269,11 @@ void DiagSolvTool::Precond(AlSymMat& M, AlVec& r, AlVec& c, bool equIn = true)
  AlMat V(M.size(),M.size()); 
  V.copyS(M);
   
- int N = M.size();
+ size_t N = M.size();
   
  
   
- int i, j;
+ size_t i, j;
 
  double eps = 1e-17;
 

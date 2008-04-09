@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.h,v 1.6 2008-02-05 21:38:13 wouter Exp $
+// $Id: DiagSolvTool.h,v 1.7 2008-04-09 12:42:25 wouter Exp $
 #ifndef ALIGNSOLVTOOLS_DIAGSOLVTOOL_H 
 #define ALIGNSOLVTOOLS_DIAGSOLVTOOL_H 1
 
@@ -46,9 +46,8 @@ private:
   //parameters
   size_t m_numberOfPrintedEigenvalues ;
   bool m_applyScaling ;
-
-  double m_scale;
-  int par_modcut;
+  double m_eigenValueThreshold ;
+  size_t par_modcut;
   bool par_writentp;
   
   //Monitoring Ntuple variables
@@ -59,7 +58,7 @@ private:
   float nteig_mode,nteig_eigval,nteig_eigmod,nteig_erreigmod;
 
   int SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector);
-  void MonitorDiag(AlMat& z, AlVec& w, AlVec& D);
+  void MonitorDiag(AlMat& z, AlVec& w, AlVec& D, double scale);
   int SolvMinRes(AlSymMat& m_bigmatrix, AlVec& m_bigvector, AlVec& result);
   void Precond(AlSymMat& M, AlVec& r, AlVec& c, bool equIn);
   double findMax(AlSymMat& M);
