@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.cpp,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolGeometry.cpp,v 1.2 2008-04-09 22:32:59 gligorov Exp $
 // Include files
 
 // from Gaudi
@@ -143,6 +143,17 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   test &= tuple->column( head + "_FD", dist );
   // test &= tuple->column( head + "_FDS", dist/edist );
   test &= tuple->column( head + "_FDERR", edist );
+
+  sc = m_geom->calcSignedFlightDistance( *primVtx, *P, dist, edist );
+  if( sc ){}
+  else {
+    dist = 0;
+    edist = 0;
+  }
+
+  test &= tuple->column( head + "_FDPV", dist );
+  //test &= tuple->column( head + "_FDPVS", dist/edist );
+  test &= tuple->column( head + "_FDPVERR", edist );
 
   return StatusCode(test);
 }
