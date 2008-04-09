@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.11 2008-04-09 12:42:25 wouter Exp $
+// $Id: DiagSolvTool.cpp,v 1.12 2008-04-09 13:53:58 wouter Exp $
 // Include files 
 
 #include <stdio.h>
@@ -85,8 +85,7 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
   int infjob=999;
   char jobz = 'V';
   size_t N = m_bigmatrix.size();
-  std::cout << "First element in big matrix: " << m_bigmatrix[0][0] << std::endl ;
-
+  
   //declare transition matrix + vector to store eigenvalues
   AlMat z(N,N);
   AlVec w(N);
@@ -105,7 +104,6 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
       m_bigmatrix*=(1./scale);
     } else {scale=1.;}
   }
-  std::cout << "First element in big matrix: " << m_bigmatrix[0][0] << std::endl ;
   //   Precond(m_bigmatrix,rweight,cweight,true);
 
   //  for(int i=0;i<N;i++) m_bigvector[i]*=rweight[i];
