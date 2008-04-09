@@ -1,9 +1,15 @@
-$Id: release.notes,v 1.18 2008-03-31 07:05:21 ibelyaev Exp $ 
+$Id: release.notes,v 1.19 2008-04-09 20:21:20 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2008-04-09 - Vanya BELYAEV
+ - dict/LoKiArrayFunctorsDict.h 
+     add missing __rshift__ method 
+ - python/LoKiArrayFunctors/functions.py 
+     add AALL, ANONE, ATRUE and AFALSE instances 
 
 ! 2008-03-31 - Vanya BELYAEV
  - src/Component/PrintTool.cpp

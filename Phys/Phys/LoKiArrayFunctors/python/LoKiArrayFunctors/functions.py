@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.9 2008-02-11 10:26:28 ibelyaev Exp $ 
+# $Id: functions.py,v 1.10 2008-04-09 20:21:20 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The set of basic objects from LoKiHlt library
@@ -60,6 +60,11 @@ ACut   = LoKi.FunctorFromFunctor    ( _T ,  bool    )
 # =============================================================================
 ## concrete functions:
 # =============================================================================
+ATRUE    = LoKi.Constant ( _T , bool ) ( True  )
+AFALSE   = LoKi.Constant ( _T , bool ) ( False )
+AALL     = ATRUE 
+ANONE    = AFALSE 
+
 
 ## @see LoKi::Cuts::ACHI2DOCA
 ACHI2DOCA     = LoKi.AParticles.MaxDOCAChi2

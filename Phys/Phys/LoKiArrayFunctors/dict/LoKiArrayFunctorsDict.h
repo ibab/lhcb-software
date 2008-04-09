@@ -1,4 +1,4 @@
-// $Id: LoKiArrayFunctorsDict.h,v 1.7 2007-12-02 17:10:42 ibelyaev Exp $
+// $Id: LoKiArrayFunctorsDict.h,v 1.8 2008-04-09 20:21:20 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIARRAYDICT_H 
 #define LOKI_LOKIARRAYDICT_H 1
@@ -56,6 +56,7 @@ namespace LoKi
       ( const Fun& fun  , const Type::Container& o ) 
       { return fun ( Type ( o.begin() , o.end() ) ) ; }
     public:
+      // ======================================================================
       // __rrshift__ 
       static Fun::result_type              
       __rrshift__ ( const Fun& fun  , const Type&              o  ) 
@@ -68,6 +69,19 @@ namespace LoKi
       static std::vector<Fun::result_type> 
       __rrshift__ ( const Fun& fun  , const std::vector<Type>& o  ) 
       { return o  >> fun  ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rshift__ 
+      static LoKi::FunctorFromFunctor<Type,double>
+      __rshift__ ( const Fun& fun  , const LoKi::Functor<double,double>& o  ) 
+      { return fun >> o   ; }      
+      // ======================================================================
+      // __rshift__ 
+      static LoKi::FunctorFromFunctor<Type,bool>
+      __rshift__ ( const Fun& fun  , const LoKi::Functor<double,bool>& o    ) 
+      { return fun >> o   ; }      
+      // ======================================================================
     } ;
     // ========================================================================
     template <>
