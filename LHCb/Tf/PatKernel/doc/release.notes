@@ -3,6 +3,10 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2008-04-09 - Stephanie Hansmann-Menzemer
+ - Move PatTStationHitManger.cpp to TfTools package, which has a 
+   component libary, to allow to build python configurables
+   PatTStationHitManager.h stays in this package to keep it visible from outside
 
 !============================= PatKernel v2r1 2008-03-19 =====================
 ! 2007-03-18 - Stephanie Hansmann-Menzemer
