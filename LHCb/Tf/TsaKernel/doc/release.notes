@@ -3,7 +3,12 @@
 ! Responsible : Chris Jones
 ! Purpose     : 
 !-----------------------------------------------------------------------------
-
+! 2008-04-09 - Stephanie Hansmann-Menzemer
+  - Move TsaTStationHitManager.cpp to TfTools package, which has a 
+    component libary to allow to create python configurables.
+    TsaTStationHitManager.h stays in this package to keep it visible from
+    outside
+ 
 !======================= TsaKernel v3r1 2007-11-05 ==========================
 ! 2007-11-05 - Marco Cattaneo
  - Add LCG dictionary generation, and make disctionary for the new inteface
