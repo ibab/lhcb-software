@@ -1,13 +1,14 @@
-! $Id: release.notes,v 1.104 2008-04-02 11:47:48 asatta Exp $
+! $Id: release.notes,v 1.105 2008-04-09 15:06:40 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+!========================= MuonDet v8r0 2008-04-09 ==========================
 ! 2008-04-02 - Alessia Satta
  - add a new helper class which stores the information to decode the raw 
    buffer produced by the Tell1 (MuonDAQHelpers)
 
- - modify the Xml specifid converters and the MuonBaords classes to add 
+ - modify the Xml specific converters and the MuonBoards classes to add 
    new information stored in conddb  
   
  - this version requires an updated conddb
