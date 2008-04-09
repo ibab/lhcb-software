@@ -42,7 +42,7 @@ extern "C" {
 	*/
 
 	EXTERN_CONFDB
-		int GetBoardCpntRow_cpntname(char* functionalcpntname,int &len_cpnt, char* cpnt_result,char* ErrorMessage)
+		int _GetBoardCpntRow_cpntname(char* functionalcpntname,int &len_cpnt, char* cpnt_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetBoardCpntRow_cpntname";
 		int i = 0;
@@ -429,7 +429,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetBoardCpntRow_cpntid(int cpntID,int &len_cpnt, char* cpnt_result,char* ErrorMessage)
+		int _GetBoardCpntRow_cpntid(int cpntID,int &len_cpnt, char* cpnt_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetBoardCpntRow_cpntid";
 		int i = 0;
@@ -805,7 +805,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetMicroConnectivityRow_lkid(int lkID, int &len_conn,char* Conn_row,char* ErrorMessage)
+		int _GetMicroConnectivityRow_lkid(int lkID, int &len_conn,char* Conn_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetMicroConnectivityRow_lkid";
 		int i = 0;
@@ -1135,7 +1135,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetMicroConnectivityRow_node(int cpntID, int port_nb, int port_way,int &len_conn, char* Conn_row,char* ErrorMessage)
+		int _GetMicroConnectivityRow_node(int cpntID, int port_nb, int port_way,int &len_conn, char* Conn_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetMicroConnectivityRow_node";
 		int i = 0;
@@ -1469,7 +1469,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetMicroConnectivityRow_cpntname(char* cpnt_name, int port_nb, int port_way,int &len_conn, char* Conn_row,char* ErrorMessage)
+		int _GetMicroConnectivityRow_cpntname(char* cpnt_name, int port_nb, int port_way,int &len_conn, char* Conn_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetMicroConnectivityRow_cpntname";
 		int i = 0;
@@ -1789,7 +1789,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetBoardCpntPerType(char* cpnttype, int &len_array, char* cpntIDs_list,char* ErrorMessage)
+		int _GetBoardCpntPerType(char* cpnttype, int &len_array, char* cpntIDs_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetBoardCpntPerType";
 		int i = 0;
@@ -1992,7 +1992,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetMicroLkFromCpntID(int cpntid_from,int motherboardID, int &len_array, int* lkfrom_list,char* ErrorMessage)
+		int _GetMicroLkFromCpntID(int cpntid_from,int motherboardID, int &len_array, int* lkfrom_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetMicroLkFromCpntID";
 		int i = 0;
@@ -2167,7 +2167,7 @@ extern "C" {
 	*/
 
 	EXTERN_CONFDB
-		int GetMicroLkToCpntID(int cpnt_to,int motherboardID, int &len_array, int* lkfrom_list,char* ErrorMessage)
+		int _GetMicroLkToCpntID(int cpnt_to,int motherboardID, int &len_array, int* lkfrom_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetMicroLkToCpntID";
 		int i =0;
@@ -2346,7 +2346,7 @@ extern "C" {
 	*/
 
 	EXTERN_CONFDB
-		int GetCpntID_cpntname(char* cpntname,int &cpntID,char* ErrorMessage)
+		int _GetCpntID_cpntname(char* cpntname,int &cpntID,char* ErrorMessage)
 	{
 		char appliName[100]="GetCpntID_cpntname";
 		int i = 0;
@@ -2474,7 +2474,7 @@ extern "C" {
 	*/
 
 	EXTERN_CONFDB
-		int GetCpntName_cpntid(int cpntID,char* cpntname,char* ErrorMessage)
+		int _GetCpntName_cpntid(int cpntID,char* cpntname,char* ErrorMessage)
 	{
 		char appliName[100]="GetCpntName_cpntid";
 		int i = 0;
@@ -2633,7 +2633,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetCpntNamesPerBoard(char* motherboardname, int &len_array, char* devnames_list,char* ErrorMessage)
+		int _GetCpntNamesPerBoard(char* motherboardname, int &len_array, char* devnames_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetCpntNamesPerBoard";
 		int i = 0;
@@ -2828,7 +2828,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetSpareHWCpntPerLocation(char* location, int &len_array, char* devnames_list,char* ErrorMessage)
+		int _GetSpareHWCpntPerLocation(char* location, int &len_array, char* devnames_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetSpareHWCpntPerLocation";
 		int i = 0;
@@ -3024,7 +3024,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetSpareHWCpntPerType(char* hwtype, int &len_array, char* devnames_list,char* ErrorMessage)
+		int _GetSpareHWCpntPerType(char* hwtype, int &len_array, char* devnames_list,char* ErrorMessage)
 	{
 		char appliName[100]="GetSpareHWCpntPerType";
 		int i = 0;
@@ -3227,7 +3227,7 @@ extern "C" {
 	*/
 
 	EXTERN_CONFDB
-		int GetHWCpntRow_serialnb(char* serialnb,int &len_cpnt, char* cpnt_result,char* ErrorMessage)
+		int _GetHWCpntRow_serialnb(char* serialnb,int &len_cpnt, char* cpnt_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetHWCpntRow_serialnb";
 		int i = 0;
@@ -3887,7 +3887,7 @@ extern "C" {
 	*/
 
 	EXTERN_CONFDB
-		int GetHWCpntRow_snbid(int snbid,int &len_cpnt, char* cpnt_result,char* ErrorMessage)
+		int _GetHWCpntRow_snbid(int snbid,int &len_cpnt, char* cpnt_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetHWCpntRow_snbid";
 		int i = 0;

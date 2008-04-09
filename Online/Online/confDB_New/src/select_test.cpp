@@ -64,7 +64,7 @@ EXTERN_CONFDB
 		int rgbcolor_null=0;
 		char  buffer[10];
 		int nbrofinput=0;
-		int nbrofoutput=0;
+		int nbrofoutput= 0;
 		int dtypeID=0;
 		char logmessage[100];
 		int res1=0;

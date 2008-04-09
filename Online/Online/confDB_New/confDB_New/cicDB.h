@@ -544,7 +544,8 @@ extern "C" {
 		int _GetDetailedConnBetweenDeviceDevType(char* dev_from, char* dev_to,int devto_type_given,  char* nfrom_list,char* pfrom_list,char* pto_list,int& len_array,int & nfrom_arraylen,int & pfrom_arraylen, int & nto_arraylen, int & pto_arraylen,int &lkinfo_arraylen, int* pfrom1_list,int* pto1_list,char* nto_list,int* pathid_list, int* link_pos_list,char* lkinfo_list,int reload_connectivity,int delete_connectivity,char* ErrMess);
 	EXTERN_CONFDB
 		int _GetAllPathsPerDevice(char* systemnameList,char* devname,int& len_array, int* lkid_list5,int* pathid_list,int* link_pos_list,int reload_connectivity,int delete_connectivity,char* ErrMessage);
-////
+
+//// from select:
 	EXTERN_CONFDB
 		int _GetDeviceTypeRow(char* devitype,int &len_devtype,char* devtype_result,char* ErrorMessage);
 	EXTERN_CONFDB
@@ -619,6 +620,45 @@ extern "C" {
 		int _GetSpareHWTypeList(int &len_array, char* hwtypes_list,char* ErrorMessage);
 	EXTERN_CONFDB
 		int _GetSparePortRow_snb(char* serialnb, char* port_nb,int port_way, char* port_type,int &len_port, char* port_row_result,char* ErrorMessage);
+
+////from select_micro:
+	EXTERN_CONFDB
+		int _GetBoardCpntRow_cpntname(char* functionalcpntname,int &len_cpnt, char* cpnt_result,char* ErrorMessage);
+	EXTERN_CONFDB
+		int _GetBoardCpntRow_cpntid(int cpntID,int &len_cpnt, char* cpnt_result,char* ErrorMessage);
+	EXTERN_CONFDB
+		int _GetMicroConnectivityRow_lkid(int lkID, int &len_conn,char* Conn_row,char* ErrorMessage);
+	EXTERN_CONFDB
+		int _GetMicroConnectivityRow_node(int cpntID, int port_nb, int port_way,int &len_conn, char* Conn_row,char* ErrorMessage);
+	EXTERN_CONFDB
+		int _GetMicroConnectivityRow_cpntname(char* cpnt_name, int port_nb, int port_way,int &len_conn, char* Conn_row,char* ErrorMessage);
+	EXTERN_CONFDB
+		int _GetBoardCpntPerType(char* cpnttype, int &len_array, char* cpntIDs_list,char* ErrorMessage);
+	EXTERN_CONFDB
+		int _GetMicroLkFromCpntID(int cpntid_from,int motherboardID, int &len_array, int* lkfrom_list,char* ErrorMessage);
+	EXTERN_CONFDB
+		int _GetMicroLkToCpntID(int cpnt_to,int motherboardID, int &len_array, int* lkfrom_list,char* ErrorMessage);
+	EXTERN_CONFDB
+		int _GetCpntID_cpntname(char* cpntname,int &cpntID,char* ErrorMessage);
+	EXTERN_CONFDB
+		int _GetCpntName_cpntid(int cpntID,char* cpntname,char* ErrorMessage);
+	EXTERN_CONFDB
+		int _GetCpntNamesPerBoard(char* motherboardname, int &len_array, char* devnames_list,char* ErrorMessage);
+	EXTERN_CONFDB
+		int _GetSpareHWCpntPerLocation(char* location, int &len_array, char* devnames_list,char* ErrorMessage);
+	EXTERN_CONFDB
+		int _GetSpareHWCpntPerType(char* hwtype, int &len_array, char* devnames_list,char* ErrorMessage);
+	EXTERN_CONFDB
+		int _GetHWCpntRow_serialnb(char* serialnb,int &len_cpnt, char* cpnt_result,char* ErrorMessage);
+	EXTERN_CONFDB
+		int _GetHWCpntRow_snbid(int snbid,int &len_cpnt, char* cpnt_result,char* ErrorMessage);
+
+
+
+
+
+
+
 
 
 #if defined(__cplusplus) || defined(c_plusplus)
