@@ -1,7 +1,9 @@
+// $Id: RawDataConnection.h,v 1.2 2008-04-10 09:58:42 cattanem Exp $
 #ifndef MDF_RAWDATACONNECTION_H
 #define MDF_RAWDATACONNECTION_H
+
 // Framework include files
-#include "GaudiUtils/IIODataManager.h"
+#include "GaudiUtils/IIODataManager.h" // for IDataConnection class definition
 #include "MDF/StreamDescriptor.h"
 
 /*
@@ -9,9 +11,9 @@
  */
 namespace LHCb  {
 
-  /** @class IRawDataConnection
+  /** @class RawDataConnection RawDataConnection.h MDF/RawDataConnection.h
     *
-    *  @authot  M.Frank
+    *  @author  M.Frank
     *  @version 1.0
     *  @date    20/10/2007
     */

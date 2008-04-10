@@ -1,14 +1,4 @@
-// $Id: RawDataSelector.h,v 1.15 2008-02-05 16:44:18 frankb Exp $
-//====================================================================
-//  RawDataSelector.h
-//--------------------------------------------------------------------
-//
-//  Description: The RawDataSelector component is able
-//               to read MDF (Master Data File) files.
-//
-//  Author     : M.Frank
-//  Created    : 12/12/2005
-//
+// $Id: RawDataSelector.h,v 1.16 2008-04-10 09:58:42 cattanem Exp $
 //====================================================================
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -16,22 +6,24 @@
 // Include files
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IEvtSelector.h"
-#include "GaudiUtils/IIODataManager.h"
 #include "MDF/StreamDescriptor.h"
 
 // Forward declarations
-namespace Gaudi { class IIODataManager; }
+namespace Gaudi { 
+  class IIODataManager;
+  class IDataConnection;
+ }
 
 /*
  *  LHCb namespace declaration
  */
 namespace LHCb  {
 
-  // Forward declarations
-  class RawBank;
-  class RawDataConnection;
-
-  /** @class RawDataSelector
+  /** @class RawDataSelector RawDataSelector.h MDF/RawDataSelector.h
+    * Component for reading MDF (Master Data File) files.
+    *
+    * @author M.Frank
+    * @date   12/12/2005
     */
   class RawDataSelector : public Service, virtual public IEvtSelector  {
   public:

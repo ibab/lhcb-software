@@ -1,4 +1,4 @@
-// $Id: MDFWriter.h,v 1.10 2008-02-05 16:44:17 frankb Exp $
+// $Id: MDFWriter.h,v 1.11 2008-04-10 09:58:41 cattanem Exp $
 //  ====================================================================
 //  MDFWriter.h
 //  --------------------------------------------------------------------
@@ -25,8 +25,6 @@ namespace Gaudi {
  *    LHCb namespace
  */
 namespace LHCb    {
-
-  class RawBank;
 
   /**@class MDFWriter 
     *

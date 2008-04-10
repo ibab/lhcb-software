@@ -1,4 +1,4 @@
-// $Id: MDFWriterLite.h,v 1.8 2008-02-05 16:44:17 frankb Exp $
+// $Id: MDFWriterLite.h,v 1.9 2008-04-10 09:58:42 cattanem Exp $
 //  ====================================================================
 //  MDFWriterLite.h
 //  --------------------------------------------------------------------
@@ -20,8 +20,6 @@ class TMD5;
  *    LHCb namespace
  */
 namespace LHCb    {
-
-  class RawBank;
 
   /**@class MDFWriterLite 
     *

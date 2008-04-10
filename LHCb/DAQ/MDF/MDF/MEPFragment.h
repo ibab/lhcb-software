@@ -1,4 +1,4 @@
-// $Id: MEPFragment.h,v 1.5 2008-02-05 16:44:17 frankb Exp $
+// $Id: MEPFragment.h,v 1.6 2008-04-10 09:58:42 cattanem Exp $
 //====================================================================
 //  MEPFragment.h
 //--------------------------------------------------------------------
@@ -14,9 +14,6 @@
  *  LHCb namespace declaration
  */
 namespace LHCb  {
-
-  // Forward declarations
-  class RawBank;
 
   /** @class MEPFragment MEPFragment.h Event/MEPFragment.h
     *
