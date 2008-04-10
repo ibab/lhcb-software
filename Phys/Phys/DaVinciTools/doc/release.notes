@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.311 2008-04-09 14:58:10 pkoppenb Exp $
+! $Id: release.notes,v 1.312 2008-04-10 06:14:04 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-04-10 - Vanya BELYAEV 
+
+ - DecodeSimpleDecayString.cpp
+    fix a bug 
 
 ! 2008-04-09 - Patrick Koppenburg
  - CombineParticles : initialize filters at initialize, not first event.

@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.cpp,v 1.11 2008-03-31 14:57:43 pkoppenb Exp $
+// $Id: DecodeSimpleDecayString.cpp,v 1.12 2008-04-10 06:14:04 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -274,7 +274,7 @@ StatusCode DecodeSimpleDecayString::getDecay
 ( DaVinci::Decay& decay ) const  
 {
   //
-  decay.setMother     ( m_mother_cc ) ;
+  decay.setMother     ( m_mother    ) ;
   decay.setDaughters  ( m_daughters ) ;
   //
   return decay.validate ( m_ppSvc ) ;
