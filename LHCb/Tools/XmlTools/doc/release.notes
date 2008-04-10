@@ -4,7 +4,8 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
-! 2007-04-10 - Marco Clemencic
+!======================== XmlTools v5r2 2008-04-10 ===========================
+! 2008-04-10 - Marco Clemencic
  - Modified XmlParserService to load DetDescSvc when needed and not at
    initialization (to avoid circular dependencies between  services during
    initialization).
