@@ -147,14 +147,22 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
         verbose() << endmsg;
 
         test &= tuple->column( head+"_L0TIS", 1 );
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything,
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kAnything ), test,"TIS",1,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything,
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kFalseRequired,
                                                    ITriggerTisTos::kAnything ), test,"TIS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TIS",-1,head,tuple);
       } else {
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames(), test,"TIS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TIS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TIS",-1,head,tuple);
         test &= tuple->column( head+"_L0TIS", 0 );
       }
       if( tosL0 ){
@@ -165,14 +173,22 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
         verbose() << endmsg;
 
         test &= tuple->column( head+"_L0TOS", 1 );
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything,
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kAnything,
                                                    ITriggerTisTos::kTrueRequired ), test,"TOS",1,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything,
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kAnything,
                                                    ITriggerTisTos::kFalseRequired ), test,"TOS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TOS",-1,head,tuple);
       } else {
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames(), test,"TOS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TOS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TOS",-1,head,tuple);
         test &= tuple->column( head+"_L0TOS", 0 );
       }
     }
@@ -196,14 +212,22 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
         verbose() << endmsg;
 
         test &= tuple->column( head+"_HLTALLEYSTIS", 1 );
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything,
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kAnything ), test,"TIS",1,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything,
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kFalseRequired,
                                                    ITriggerTisTos::kAnything ), test,"TIS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TIS",-1,head,tuple);
       } else {
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames(), test,"TIS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TIS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TIS",-1,head,tuple);
         test &= tuple->column( head+"_HLTALLEYSTIS", 0 );
       }
       if( tosAlleys ){
@@ -214,14 +238,22 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
         verbose() << endmsg;
 
         test &= tuple->column( head+"_HLTALLEYSTOS", 1 );
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything,
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kAnything,
                                                    ITriggerTisTos::kTrueRequired ), test,"TOS",1,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything,
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kAnything,
                                                    ITriggerTisTos::kFalseRequired ), test,"TOS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TOS",-1,head,tuple);
       } else {
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames(), test,"TOS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TOS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TOS",-1,head,tuple);
         test &= tuple->column( head+"_HLTALLEYSTOS", 0 );
       }
     }
@@ -245,14 +277,22 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
         verbose() << endmsg;
 
         test &= tuple->column( head+"_HLTSELTIS", 1 );
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything,
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kAnything ), test,"TIS",1,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything,
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kFalseRequired,
                                                    ITriggerTisTos::kAnything ), test,"TIS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TIS",-1,head,tuple);
       } else {
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames(), test,"TIS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TIS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TIS",-1,head,tuple);
         test &= tuple->column( head+"_HLTSELTIS", 0 );
       }
       if( tosSelB ){
@@ -263,14 +303,22 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
         verbose() << endmsg;
 
         test &= tuple->column( head+"_HLTSELTOS", 1 );
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything,
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kAnything,
                                                    ITriggerTisTos::kTrueRequired ), test,"TOS",1,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything,
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
                                                    ITriggerTisTos::kAnything,
                                                    ITriggerTisTos::kFalseRequired ), test,"TOS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TOS",-1,head,tuple);
       } else {
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames(), test,"TOS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TOS",0,head,tuple);
+        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
+                                                   ITriggerTisTos::kAnything,
+                                                   ITriggerTisTos::kAnything ), test,"TOS",-1,head,tuple);
         test &= tuple->column( head+"_HLTSELTOS", 0 );
       }
     }
