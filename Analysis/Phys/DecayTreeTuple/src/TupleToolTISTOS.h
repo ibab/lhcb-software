@@ -12,8 +12,17 @@
  *  This is an adaptation of the TISTOS example by Tomasz
  *  Skwarnicki for the DecayTreeTuple framework  
  *
- *  It saves the trigger TIS TOS decisions for each particle
- *  for the L0, and each HLT Alley and HltSelection
+ *  It saves the trigger TIS/TOS decisions for each 
+ *  particle for the L0, and each HLT Alley and HltSelection
+ *
+ *  Saved values: (once for TIS and once for TOS) 
+ *
+ *  -99 : trigger decision not present
+ *   -1 : the event did not pass the trigger
+ *    0 : the event passed the trigger and was not TIS (TOS)
+ *        with respect to the particle being tested
+ *    1 : the event passed the trigger and was TIS (TOS)
+ *        with respect to the particle being tested
  *
  *  @author V. Gligorov
  *  @date   2008-04-09
