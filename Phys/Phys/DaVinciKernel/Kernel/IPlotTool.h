@@ -1,17 +1,25 @@
-// $Id: IPlotTool.h,v 1.4 2006-03-15 13:34:03 pkoppenb Exp $
+// $Id: IPlotTool.h,v 1.5 2008-04-10 10:34:48 ibelyaev Exp $
+// ============================================================================
 #ifndef KERNEL_IPLOTTOOL_H 
 #define KERNEL_IPLOTTOOL_H 1
-
+// ============================================================================
 // Include files
-// from STL
+// ============================================================================
+// STD&STL
+// ============================================================================
 #include <string>
-
-// from Gaudi
+// ============================================================================
+// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/IAlgTool.h"
+// ============================================================================
+// LHCbKernel
+// ============================================================================
 #include "Event/Particle.h"
-
-static const InterfaceID IID_IPlotTool ( "IPlotTool", 1, 1 );
-
+// ============================================================================
+/// the unique interface identifier
+static const InterfaceID IID_IPlotTool ( "IPlotTool" , 2 , 1 ) ;
+// ============================================================================
 /** @class IPlotTool IPlotTool.h Kernel/IPlotTool.h
  *  
  *  Interface for tools making plots with particles
@@ -19,27 +27,54 @@ static const InterfaceID IID_IPlotTool ( "IPlotTool", 1, 1 );
  *  @author Patrick KOPPENBURG
  *  @date   2005-01-05
  */
-class IPlotTool : virtual public IAlgTool {
+class IPlotTool : virtual public IAlgTool 
+{
 public: 
-
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IPlotTool; }
-
+  
   /// Define plot directory
   virtual StatusCode setPath(const std::string&) = 0;
-
+  
   /// Fill plots using a LHCb::Particle::ConstVector
   virtual StatusCode fillPlots(const LHCb::Particle::ConstVector&,
                                const std::string trailer = "") = 0;
-
+  
   /// Fill plots using a single Particle
   virtual StatusCode fillPlots(const LHCb::Particle*,
                                const std::string trailer = "") = 0;
-
-
-protected:
+  
+  // ==========================================================================
+  /** Fill plots using the arbitrary sequence of objects, convertible to 
+   *  <c>const LHCb::Particle*</c> 
+   *  @param begin begin-iterator for the sequence of particles 
+   *  @param end   end-iterator for the sequence of particles 
+   *  @param trailer the trailer
+   *  @return status code
+   */
+  template <class PARTICLE>
+  StatusCode fillPlots 
+  ( PARTICLE           begin        , 
+    PARTICLE           end          , 
+    const std::string& trailer = "" ) 
+  {
+    for ( ; begin != end ; ++begin ) 
+    {
+      StatusCode sc = this->fillPlots ( *begin , trailer ) ;
+      if ( sc.isFailure() ) { return sc ; }                          // RETURN
+    } 
+    return StatusCode::SUCCESS ;                                     // RETURN
+  }
+  // ==========================================================================
+  
+public:
+  
+  // Return the unique interface ID
+  static const InterfaceID& interfaceID() { return IID_IPlotTool; }
 
 private:
 
 };
+// ============================================================================
+// The END
+// ============================================================================
 #endif // KERNEL_IPLOTTOOL_H
+// ============================================================================

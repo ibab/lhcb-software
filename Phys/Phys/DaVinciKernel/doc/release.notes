@@ -3,6 +3,12 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-04-10 - Vanya BELYAEV 
+ - Kernel/IPlotTool.h
+   Add (implemented) template method to allow filling the plots for 
+   the arbitrary sequence of objects, convertible to "const LHCb::Particle*"
+
+
 !======================== DaVinciKernel v6r12 2008-04-04 ====================
 ! 2008-04-04 - Vanya BELYAEV
  - Kernel/IDistanceCalculator.h
