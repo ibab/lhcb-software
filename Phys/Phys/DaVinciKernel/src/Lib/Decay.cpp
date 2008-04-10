@@ -1,4 +1,4 @@
-// $Id: Decay.cpp,v 1.4 2008-04-03 12:19:21 ibelyaev Exp $
+// $Id: Decay.cpp,v 1.5 2008-04-10 15:46:53 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -65,8 +65,8 @@ StatusCode DaVinci::Decay::Item::validate
 {
   if ( 0 != m_pp ) 
   { 
-    m_name ==                    m_pp -> particle ()    ; 
-    m_pid  == LHCb::ParticleID ( m_pp -> pdgID    ()  ) ;
+    m_name =                    m_pp -> particle ()    ; 
+    m_pid  = LHCb::ParticleID ( m_pp -> pdgID    ()  ) ;
     return StatusCode::SUCCESS ;                                      // RETURN 
   }
   // it not possible to validate it!
@@ -74,16 +74,18 @@ StatusCode DaVinci::Decay::Item::validate
   // check by name  
   if ( !m_name.empty() ) 
   {
-    m_pp = svc->find ( m_name ) ;
+    m_pp = svc -> find ( m_name ) ;
     if ( 0 == m_pp ) { return StatusCode::FAILURE ; }                 // RETURN 
-    return validate ( svc ) ;                                         // RETURN 
+    m_pid  = LHCb::ParticleID ( m_pp -> pdgID    ()  ) ;
+    return StatusCode::SUCCESS ;                                     // RETURN 
   }
   // check by PID 
-  if ( LHCb::ParticleID().pid() != m_pid.pid() ) 
+  if ( LHCb::ParticleID() != m_pid ) 
   {
     m_pp = svc->findByStdHepID ( m_pid.pid()  ) ;
     if ( 0 == m_pp ) { return StatusCode::FAILURE ; }                 // RETURN 
-    return validate ( svc ) ;
+    m_name =                    m_pp -> particle ()    ; 
+    return StatusCode::SUCCESS ;                                     // RETURN 
   }
   return StatusCode::FAILURE ;                                        // RETURN 
 }
@@ -95,15 +97,15 @@ StatusCode DaVinci::Decay::Item::validate
 {
   if      ( 0 != m_pp && 0 == pp ) 
   {
-    m_name ==                    m_pp -> particle ()    ; 
-    m_pid  == LHCb::ParticleID ( m_pp -> pdgID    ()  ) ;
+    m_name =                    m_pp -> particle ()    ; 
+    m_pid  = LHCb::ParticleID ( m_pp -> pdgID    ()  ) ;
     return StatusCode::SUCCESS  ;                                   // RETURN 
   }
   else if ( 0 != pp ) 
   {
-    m_pp = pp ;
-    m_name ==                    m_pp -> particle ()    ; 
-    m_pid  == LHCb::ParticleID ( m_pp -> pdgID    ()  ) ;
+    m_pp   = pp ;
+    m_name =                    m_pp -> particle ()    ; 
+    m_pid  = LHCb::ParticleID ( m_pp -> pdgID    ()  ) ;
     return StatusCode::SUCCESS ;                                   // RETURN
   }
   return StatusCode::FAILURE ;                                     // RETURN  
@@ -164,7 +166,7 @@ DaVinci::Decay::Decay
 // ============================================================================
 StatusCode DaVinci::Decay::validate ( IParticlePropertySvc* svc ) const
 {
-  // validate the mother
+   // validate the mother
   StatusCode sc = m_mother.validate ( svc ) ;
   if ( sc.isFailure() ) { return sc ; }                         // RETURN 
   if ( m_daughters.empty() ) { return StatusCode::FAILURE ; }   // RETURN   
@@ -172,11 +174,11 @@ StatusCode DaVinci::Decay::validate ( IParticlePropertySvc* svc ) const
   for ( Items::iterator idau = m_daughters.begin() ; 
         m_daughters.end() != idau ;  ++idau )
   { 
-    sc = idau->validate ( svc ) ; 
+     sc = idau->validate ( svc ) ; 
     if ( sc.isFailure() ) { return sc ; }                       // RETURN 
   }
   //
-  return sc ;                                                   // RETURN 
+   return sc ;                                                   // RETURN 
 }
 // ============================================================================
 // virtual destructor 

@@ -3,6 +3,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-04-10 - Vanya BELYAEV
+ - src/Lib/Decay.cpp
+    fix a stupid bug ( "==" instead of "=" )
+
 !======================== DaVinciKernel v6r12 2008-04-10 ====================
 ! 2008-04-10 - Vanya BELYAEV 
  - Kernel/IPlotTool.h
