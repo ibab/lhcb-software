@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.97 2008-04-10 12:38:19 cattanem Exp $
+! $Id: release.notes,v 1.98 2008-04-10 14:43:28 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+
+! 2008-04-10 - Olivier Deschamps 
+ - options/L0DUConfig_0xDC06_alg0_set0_lumi2.opts : uniformize channel naming according to other config.
+
 
 !========================== L0DU v8r4 2008-04-10 =========================
 ! 2008-04-10 - Olivier Deschamps 

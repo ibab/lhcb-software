@@ -305,19 +305,19 @@ ToolSvc.L0DUConfig.TCK_0xDC06.Conditions = {
 //------------------
 // L0-Channels 
 ToolSvc.L0DUConfig.TCK_0xDC06.Channels ={ 
-  {"name=[Electron,High]"       , "rate==[100]", "conditions= [Electron,HighEt]    && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" }, 
-  {"name=[Electron,Low]"        , "rate==[0]"  , "conditions= [Electron,LowEt]     && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" }, 
-  {"name=[Photon,High]"         , "rate==[100]", "conditions= [Photon,HighEt]      && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
-  {"name=[Photon,Low]"          , "rate==[0]"  , "conditions= [Photon,LowEt]       && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
-  {"name=[LocalPi0,High]"       , "rate==[100]", "conditions= [LocalPi0,HighEt]    && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
-  {"name=[LocalPi0,Low]"        , "rate==[0]"  , "conditions= [LocalPi0,LowEt]     && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
-  {"name=[GlobalPi0,High]"      , "rate==[100]", "conditions= [GlobalPi0,HighEt]   && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
-  {"name=[GlobalPi0,Low]"       , "rate==[0]"  , "conditions= [GlobalPi0,LowEt]    && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
-  {"name=[Hadron,High]"         , "rate==[100]", "conditions= [Hadron,HighEt]      && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
-  {"name=[Hadron,Low]"          , "rate==[0]"  , "conditions= [Hadron,LowEt]       && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
-  {"name=[Muon,High]"           , "rate==[100]", "conditions= [Muon,HighPt]        && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" }, 
-  {"name=[Muon,Low]"            , "rate==[0]"  , "conditions= [Muon,LowPt]         && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" }, 
-  {"name=[DiMuon,High]"         , "rate==[100]", "conditions= [DiMuon,HighPt]      && [SumEt]"}, 
-  {"name=[DiMuon,Low]"          , "rate==[0]"  , "conditions= [DiMuon,LowPt]       && [SumEt]"}
+  {"name=[Electron]"             , "rate==[100]", "conditions= [Electron,HighEt]    && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" }, 
+  {"name=[Electron,down]"        , "rate==[0]"  , "conditions= [Electron,LowEt]     && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" }, 
+  {"name=[Photon]"               , "rate==[100]", "conditions= [Photon,HighEt]      && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
+  {"name=[Photon,down]"          , "rate==[0]"  , "conditions= [Photon,LowEt]       && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
+  {"name=[LocalPi0]"             , "rate==[100]", "conditions= [LocalPi0,HighEt]    && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
+  {"name=[LocalPi0,down]"        , "rate==[0]"  , "conditions= [LocalPi0,LowEt]     && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
+  {"name=[GlobalPi0]"            , "rate==[100]", "conditions= [GlobalPi0,HighEt]   && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
+  {"name=[GlobalPi0,down]"       , "rate==[0]"  , "conditions= [GlobalPi0,LowEt]    && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
+  {"name=[Hadron]"               , "rate==[100]", "conditions= [Hadron,HighEt]      && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
+  {"name=[Hadron,down]"          , "rate==[0]"  , "conditions= [Hadron,LowEt]       && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" },
+  {"name=[Muon]"                 , "rate==[100]", "conditions= [Muon,HighPt]        && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" }, 
+  {"name=[Muon,down]"            , "rate==[0]"  , "conditions= [Muon,LowPt]         && [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]" }, 
+  {"name=[DiMuon]"               , "rate==[100]", "conditions= [DiMuon,HighPt]      && [SumEt]"}, 
+  {"name=[DiMuon,down]"          , "rate==[0]"  , "conditions= [DiMuon,LowPt]       && [SumEt]"}
 };
 
