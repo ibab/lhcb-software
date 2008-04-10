@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.25 2008-03-10 19:39:38 robbep Exp $
+// $Id: L0CaloAlg.h,v 1.26 2008-04-10 19:18:06 robbep Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -104,7 +104,9 @@ protected:
 private:
 
   std::string m_nameOfOutputDataContainer ;   ///< of the output container.
-
+  bool        m_usePsSpd                  ;   ///< use Ps/Spd in validation
+  bool        m_addEcalToHcal             ;   ///< Use ECAL in Validation
+  
 // Local variables
 
   DeCalorimeter* m_ecal            ; ///< Pointer to Ecal detector element

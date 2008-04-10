@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.48 2008-03-10 19:39:07 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.49 2008-04-10 19:18:05 robbep Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -30,6 +30,8 @@ L0CaloAlg::L0CaloAlg( const std::string& name, ISvcLocator* pSvcLocator)
 {
   declareProperty("OutputData"      , m_nameOfOutputDataContainer) ;
   declareProperty("StoreInBuffer"   , m_storeFlag      = true ) ;
+  declareProperty("UsePSSPD"        , m_usePsSpd       = true ) ;
+  declareProperty("AddECALToHCAL"   , m_addEcalToHcal  = true ) ;
 };
 
 
@@ -227,18 +229,21 @@ StatusCode L0CaloAlg::execute() {
   // Get the ECAL data, store them in the Front-End card
   
   sumEcalData( );
+
+  if ( m_usePsSpd ) {
+      
+    // Get Spd+Prs data
+    m_PrsSpdIds = m_bitsFromRaw->prsSpdCells( );
+    
+    // Get the Prs information. Adds it to the m_ecalFe[] objects
+    
+    addPrsData( );
+    
+    // Get the Spd information. Adds it to the m_ecalFe[] objects
+    
+    addSpdData( );
+  }
   
-  // Get Spd+Prs data
-  m_PrsSpdIds = m_bitsFromRaw->prsSpdCells( );
-
-  // Get the Prs information. Adds it to the m_ecalFe[] objects
-
-  addPrsData( );
-  
-  // Get the Spd information. Adds it to the m_ecalFe[] objects
-
-  addSpdData( );
-
   // Loop on ECAL cards. Get the candidates, select the highest
 
   L0Candidate electron  ( m_ecal );
@@ -274,30 +279,56 @@ StatusCode L0CaloAlg::execute() {
     int prsMask = m_ecalFe[eCard].prsMask();
     int okPrs   = m_validPrs[prsMask];
     int spdMask = prsMask & m_ecalFe[eCard].spdMask() ;
-    
-    if (0 < okPrs) {
-      if (0 < spdMask) {
-        if( electron.et() < etMax ) {
-          particle += " electron";
-          electron.setCandidate( etMax, ID );
-        }
-        if ( allElectrons[numVal].et() < etMax ) {
-          allElectrons[numVal].setCandidate( etMax, ID );
-        }
-      } else {
-        if(  photon.et() < etMax ) {
-          particle += " photon";
-          photon.setCandidate( etMax, ID );
-        }
-        if ( allPhotons[numVal].et() < etMax ) {
-          allPhotons[numVal].setCandidate( etMax, ID );
+
+    if ( m_usePsSpd ) {
+      if (0 < okPrs) {
+        if (0 < spdMask) {
+          if( electron.et() < etMax ) {
+            particle += " electron";
+            electron.setCandidate( etMax, ID );
+          }
+          if ( allElectrons[numVal].et() < etMax ) {
+            allElectrons[numVal].setCandidate( etMax, ID );
+          }
+        } else {
+          if(  photon.et() < etMax ) {
+            particle += " photon";
+            photon.setCandidate( etMax, ID );
+          }
+          if ( allPhotons[numVal].et() < etMax ) {
+            allPhotons[numVal].setCandidate( etMax, ID );
+          }
         }
       }
-    }
-    
-    // Produces also the 'single card' pi0
-    
-    if ( 0 != prsMask ) {  //== Request some preshower activity
+      
+      // Produces also the 'single card' pi0
+      
+      if ( 0 != prsMask ) {  //== Request some preshower activity
+        if ( pi0Local.et() < etTot ) {
+          particle += " pi0L";
+          pi0Local.setCandidate( etTot, ID );
+        }
+        if ( allPi0Local[numVal].et() < etTot ) {
+          allPi0Local[numVal].setCandidate( etTot, ID );
+        }
+      }
+    } else {
+      if( electron.et() < etMax ) {
+        particle += " electron";
+        electron.setCandidate( etMax, ID );
+      }
+      if ( allElectrons[numVal].et() < etMax ) {
+        allElectrons[numVal].setCandidate( etMax, ID );
+      }
+      if(  photon.et() < etMax ) {
+        particle += " photon";
+        photon.setCandidate( etMax, ID );
+      }
+      if ( allPhotons[numVal].et() < etMax ) {
+        allPhotons[numVal].setCandidate( etMax, ID );
+      }
+      
+      // Produces also the 'single card' pi0
       if ( pi0Local.et() < etTot ) {
         particle += " pi0L";
         pi0Local.setCandidate( etTot, ID );
