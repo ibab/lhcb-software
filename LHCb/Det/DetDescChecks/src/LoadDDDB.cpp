@@ -1,4 +1,4 @@
-// $Id: LoadDDDB.cpp,v 1.4 2007-12-20 15:43:19 marcocle Exp $
+// $Id: LoadDDDB.cpp,v 1.5 2008-04-10 09:46:55 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -47,7 +47,7 @@ StatusCode LoadDDDB::initialize() {
   debug() << "==> Initialize" << endmsg;  
 
   std::vector<LHCb::CondDBNameTagPair> tmp;
-  svc<ICondDBInfo>("CondDBCnvSvc")->defaultTags(tmp);
+  svc<ICondDBInfo>("CondDBCnvSvc",true)->defaultTags(tmp);
 
   std::vector<LHCb::CondDBNameTagPair>::iterator db;
   for ( db = tmp.begin(); db != tmp.end(); ++db ) {

@@ -1,11 +1,14 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.30 2007-12-21 07:42:33 cattanem Exp $ 
+! $Id: release.notes,v 1.31 2008-04-10 09:46:54 marcocle Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! Purpose     : Collection of useful components for checking of 
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
+
+! 2008-04-10 - Marco Clemencic
+ - Force the creation of CondDBCnvSvc (if needed) in LoadDDDB::initialize.
 
 !======================= DetDescChecks v4r5 2007-12-21 ========================
 ! 2007-12-21 - Marco Cattaneo
