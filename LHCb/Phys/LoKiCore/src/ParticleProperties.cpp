@@ -1,4 +1,4 @@
-// $Id: ParticleProperties.cpp,v 1.8 2007-08-22 17:25:27 pkoppenb Exp $
+// $Id: ParticleProperties.cpp,v 1.9 2008-04-10 11:44:07 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -253,7 +253,7 @@ std::string LoKi::Particles::antiParticle( const std::string&      name )
         s_InvalidPIDName + "'" ) ;
     return s_InvalidPIDName ;
   }
-  return pp->particle() ;
+  return antiPP->particle() ;
 }
 // ============================================================================
 /*  get name of 'antiparticle'
@@ -271,6 +271,9 @@ LoKi::Particles::antiParticle ( const ParticleProperty* pp )
         "ParticleProperty* points to NULL, return NULL" ) ;
     return 0 ;
   }
+  const PareticleProperty* _pp = pp->antiParticle() ;
+  if ( 0 != _pp ) { return _pp ; }
+  //
   const LHCb::ParticleID pid  = LHCb::ParticleID( pp->jetsetID() ) ;
   /// find ID for antiparticle 
   const LHCb::ParticleID anti = LoKi::Particles::antiParticle( pid ) ;
@@ -308,6 +311,8 @@ LHCb::ParticleID LoKi::Particles::antiParticle( const LHCb::ParticleID& pid  )
         " return LHCb::ParticleID()  "                 ) ;
     return LHCb::ParticleID()  ;
   }
+  const ParticleProperty* _pp = p1->antiParticle() ;
+  if ( 0 != _pp ) { return LHCb::ParticleID( pp->pdgID() ) ; }  
   // check for other sign 
   const LHCb::ParticleID apid = LHCb::ParticleID( -1 * pid.pid()) ;
   const ParticleProperty* p2   = LoKi::Particles::_ppFromPID( apid ) ;
