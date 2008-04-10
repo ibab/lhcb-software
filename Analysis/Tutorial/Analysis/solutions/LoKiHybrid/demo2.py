@@ -19,10 +19,9 @@ evtSvc = gaudi.evtSvc()
 minPT = MINTREE( 'mu+' ==ABSID , PT ) / Units.GeV 
 # minPT = monitor(MINTREE( 'mu+' ==ABSID , PT ) / Units.GeV )
 
-for i in range(1,10) :    
+for i in range(1,100) :    
     gaudi.run(1)
     psis = evtSvc['Phys/Psi2MuMu/Particles']
-    print psis.size()
     
     for psi in psis :
         print ' Mass=%s, ptMin=%s' % ( M ( psi ) , minPT ( psi ) )   
