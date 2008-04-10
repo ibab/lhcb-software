@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidate.cpp,v 1.10 2007-02-09 14:05:57 jucogan Exp $
+// $Id: L0MuonCandidate.cpp,v 1.11 2008-04-10 13:07:10 jucogan Exp $
 
 #include <cmath>
 #include <vector>
@@ -33,4 +33,17 @@ std::vector<LHCb::MuonTileID> LHCb::L0MuonCandidate::muonTileIDs(unsigned int st
 bool LHCb::L0MuonCandidate::operator<(const LHCb::L0MuonCandidate& lmc) const {
   return pt() < lmc.pt();
 }
+
+bool LHCb::L0MuonCandidate::operator==(const LHCb::L0MuonCandidate& lmc) const {
+
+  if (encodedPt()!=lmc.encodedPt()) return false;
+  for (int sta=0; sta<3; ++sta){
+    std::vector<LHCb::MuonTileID> p0=muonTileIDs(sta);
+    std::vector<LHCb::MuonTileID> p1=lmc.muonTileIDs(sta);
+    if (p0!=p1) return false;
+  }
+
+  return true;
+}
+
 

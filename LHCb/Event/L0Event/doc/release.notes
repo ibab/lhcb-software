@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.91 2008-04-01 15:36:07 odescham Exp $
+! $Id: release.notes,v 1.92 2008-04-10 13:07:10 jucogan Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+! 2008-04-10 - Julien Cogan
+ - Add == operator to the L0MuonCandidate class
 
 ! 2008-04-01 - Olivier Deschamps
  - fix uncorrect cyclic counter in increment/decrementCounter() method in L0DUConfig.xml

@@ -25,7 +25,9 @@
       
       <method const="TRUE" type="bool" name="operator&lt;" argList="const L0MuonCandidate lmc" 
                     desc="Comparison operator for sorting candidates in Pt"/>
-      
+      <method const="TRUE" type="bool" name="operator==" argList="const L0MuonCandidate lmc" 
+                    desc="Comparison operator"/>
+
       <attribute name="pt" type="double" desc="Pt of the candidate" setMeth="FALSE"/>
       <attribute name="theta" type="double" desc="Theta at IP of the candidate" setMeth="FALSE"/>
       <attribute name="phi" type="double" desc="Phi at IP of the candidate" setMeth="FALSE"/>
