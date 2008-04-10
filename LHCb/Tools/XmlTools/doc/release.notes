@@ -6,9 +6,8 @@
 
 !======================== XmlTools v5r2 2008-04-10 ===========================
 ! 2008-04-10 - Marco Clemencic
- - Modified XmlParserService to load DetDescSvc when needed and not at
-   initialization (to avoid circular dependencies between  services during
-   initialization).
+ - Modified XmlParserSvc to load DetDescSvc when needed, not at initialization
+   (to avoid circular dependencies between services during initialization).
 
 !======================== XmlTools v5r1 2007-03-05 ===========================
 ! 2007-03-05 - Marco Cattaneo
