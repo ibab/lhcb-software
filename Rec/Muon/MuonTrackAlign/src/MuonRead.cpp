@@ -1,4 +1,4 @@
-// $Id: MuonRead.cpp,v 1.5 2008-02-19 15:50:52 spozzi Exp $
+// $Id: MuonRead.cpp,v 1.6 2008-04-10 17:52:16 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -70,7 +70,9 @@ StatusCode MuonRead::execute() {
 
   debug()<<"muon track size "<<muonTracks->size()<<endreq;
 
-  m_muonDigit=m_muonBuffer->getTile();  //return a vector of  MuonTileID
+  
+  StatusCode sc=m_muonBuffer->getTile(m_muonDigit);  //return a vector of MuonTileID
+  if(sc.isFailure())return sc;
   LHCb::Tracks::const_iterator it;
 
   for(it=muonTracks->begin();it!=muonTracks->end();it++){

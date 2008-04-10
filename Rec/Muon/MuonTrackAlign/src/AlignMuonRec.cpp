@@ -1,7 +1,7 @@
 //
 //Muon_OK
 //
-// $Id: AlignMuonRec.cpp,v 1.4 2008-02-19 15:53:46 spozzi Exp $
+// $Id: AlignMuonRec.cpp,v 1.5 2008-04-10 17:52:16 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -586,7 +586,10 @@ StatusCode AlignMuonRec::printOut()
 StatusCode AlignMuonRec::createCoords()
 {
 
-  std::vector<LHCb::MuonTileID> decodingPads=m_muonBuffer->getPads();
+  std::vector<LHCb::MuonTileID> decodingPads;
+  StatusCode sc=m_muonBuffer->getPads(decodingPads);
+  if(sc.isFailure())return sc;
+  
   std::vector<LHCb::MuonTileID>::iterator it;
   
   for(it=decodingPads.begin();it<decodingPads.end();it++){
@@ -601,7 +604,10 @@ StatusCode AlignMuonRec::createCoords()
      thisRegion->addPoint( x, y,z,padTile ); 
 
   }
-  std::vector<LHCb::MuonTileID> decodingM1=m_muonBuffer->getTile();
+  std::vector<LHCb::MuonTileID> decodingM1;
+  sc=m_muonBuffer->getTile(decodingM1);
+  if(sc.isFailure())return sc;
+  
   for(it=decodingM1.begin();it<decodingM1.end();it++){
     LHCb::MuonTileID padTile= *it;
     if(padTile.station()!=0)continue; 
