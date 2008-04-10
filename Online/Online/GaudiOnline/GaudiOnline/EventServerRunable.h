@@ -1,4 +1,4 @@
-// $Id: EventServerRunable.h,v 1.2 2007-12-07 19:21:11 frankm Exp $
+// $Id: EventServerRunable.h,v 1.3 2008-04-10 09:32:41 frankb Exp $
 //====================================================================
 //  EventServerRunable
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventServerRunable.h,v 1.2 2007-12-07 19:21:11 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventServerRunable.h,v 1.3 2008-04-10 09:32:41 frankb Exp $
 #ifndef GAUDISVC_EVENTSERVERRUNABLE_H
 #define GAUDISVC_EVENTSERVERRUNABLE_H 1
 
@@ -80,6 +80,8 @@ namespace LHCb  {
     MBM::Requirement     m_request;
     /// State variable of the consumer obejct
     int                  m_consState;
+    /// Property: Print delivery after each m_printNum events sent
+    int                  m_printNum;
     /// Flag to indicate if a MBM request is currently pending
     bool                 m_reqActive;
 
