@@ -1,10 +1,11 @@
-$Id: release.notes,v 1.19 2008-04-09 20:21:20 ibelyaev Exp $ 
+$Id: release.notes,v 1.20 2008-04-10 11:30:50 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!======================== LoKiArrayFunctors v7r2 2008-04-10 ===================
 ! 2008-04-09 - Vanya BELYAEV
  - dict/LoKiArrayFunctorsDict.h 
      add missing __rshift__ method 
@@ -14,19 +15,16 @@ $Id: release.notes,v 1.19 2008-04-09 20:21:20 ibelyaev Exp $
 ! 2008-03-31 - Vanya BELYAEV
  - src/Component/PrintTool.cpp
     the simple "LoKi::Hybrid" based implementation on IPrintDecay interface 
-    as PlotTool & TupleTool, it is suposed to be very useful debugging tool
+    as PlotTool & TupleTool, it is supposed to be very useful debugging tool
     for LoKi::Hybrid 
  
 ! 2008-03-30 - Vanya BELYAEV
  - new default list of modules to be loaded 
 
 ! 2008-03-19 - Vanya BELYAEV
-
  - src/Component/TupleTool.cpp
-
     add new tool: LoKi::Hybrid::TupleTool, 
     the implementation of IParticleTupleTool abstract interface 
-
 
 !======================== LoKiArrayFunctors v7r2 2008-03-19 ===================
 ! 2008-03-18 - Vanya BELYAEV

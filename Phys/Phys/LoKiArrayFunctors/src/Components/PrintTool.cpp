@@ -1,4 +1,4 @@
-// $Id: PrintTool.cpp,v 1.1 2008-03-31 07:05:21 ibelyaev Exp $
+// $Id: PrintTool.cpp,v 1.2 2008-04-10 11:30:50 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -100,9 +100,9 @@ namespace LoKi
         const IInterface*  parent )          // the parent  
         : GaudiTool ( type, name , parent )
         , m_vars        (   ) 
-        , m_header      (   )
-        , m_format      (   )
         , m_funcs       (   ) 
+        , m_format      (   )
+        , m_header      (   )
         , m_factory     ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC") 
       {
         declareProperty ( "Variables" , m_vars    , "The list of variables " ) ;
