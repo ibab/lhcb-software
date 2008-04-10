@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.10 2008-04-02 11:04:33 robbep Exp $
+// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.11 2008-04-10 19:20:11 robbep Exp $
 // Include files
 
 // from Gaudi
@@ -300,7 +300,11 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
             }
           }
         }
-        if ( msgLevel( MSG::VERBOSE ) ) verbose() << *myL0Cand << endreq;
+
+        if ( msgLevel( MSG::VERBOSE ) ) {
+          if ( 0 != myL0Cand ) verbose() << *myL0Cand << endreq;
+          else verbose() << "Null L0CaloCandidate" << endreq ;
+        }
       }
     }
   }
