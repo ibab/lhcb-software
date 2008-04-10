@@ -12,8 +12,7 @@ use DAQEvent    v*    Event
 use RecEvent    v*    Event
 use GaudiAlg    v*
 
-apply_pattern install_more_includes more=MuonDAQ
-apply_pattern install_more_includes more=Event
+apply_pattern install_more_includes more=MuonDAQ offset=Event
 
 # build a component library
 library MuonDAQ  *.cpp
