@@ -4,6 +4,16 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-04-10 - Vanya BELYAEV
+ - xml/ParticleID.xml
+  add non-equality operator and comparison(ordering) operator 
+  (the later is needed e.g. to use ParticleID as a key for map-containers)
+  The ordering (for convinience) is defined as ordering by abspid, 
+  and only for equal abspids, the comparion by pids is used...
+  It result that particle and antiparticle in the map-containers 
+  are always "nearby" each other..
+ 
+
 ! 2008-03-18 M Needham
  - update PiecewiseTrajectory, with changes of Gerhard
 

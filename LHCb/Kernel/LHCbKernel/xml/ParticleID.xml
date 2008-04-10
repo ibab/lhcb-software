@@ -45,6 +45,7 @@
          name="pid"
          type="int"
        />
+
        <method
         const="TRUE"
         desc="Equality operator"
@@ -54,6 +55,35 @@
          <arg name="other" type="ParticleID const" const="FALSE"/>
          <code>return ( m_pid == other.pid() );</code>
        </method>
+
+
+       <method
+        const="TRUE"
+        desc="Non-Equality operator"
+        name="operator!="
+        type="bool"
+       >
+         <arg name="other" type="ParticleID" const="TRUE"/>
+         <code>return ( m_pid != other.pid() );</code>
+       </method>
+
+       <method
+        const="TRUE"
+        desc="Comparison operator"
+        name="operator&lt;"
+        type="bool"
+       >
+         <arg name="other" type="ParticleID" const="TRUE"/>
+         <code>
+         const unsigned int i1 = abspid()       ;
+         const unsigned int i2 = other.abspid() ; 
+         if      ( i1 &lt; i2 ) { return true  ; } // RETURN
+         else if ( i2 &lt; i1 ) { return false ; } // RETURN 
+         return pid () &lt; other.pid() ;
+         </code>
+       </method>
+
+
        <!--method const="FALSE" desc="Copy operator" inline="TRUE" name="operator=" type="ParticleID&amp;"-->
          <!--arg const="TRUE" name="orig" type="ParticleID"/-->
          <!--code>m_pid = orig.pid(); </code-->
