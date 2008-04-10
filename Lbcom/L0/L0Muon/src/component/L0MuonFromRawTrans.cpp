@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.cpp,v 1.9 2008-04-08 11:19:57 jucogan Exp $
+// $Id: L0MuonFromRawTrans.cpp,v 1.10 2008-04-10 13:04:58 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -223,6 +223,7 @@ StatusCode L0MuonFromRawTrans::decodeRawBanks(){
       }
       if (srcID==2) {
         m_procRaw[2].decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);      
+//         if (rootInTES()=="") m_procRaw[2].dump(data);
         if (msgLevel( MSG::VERBOSE )) {
           for (int ib= 0; ib<12; ++ib) {
             if (m_procRaw[2].decodingError(ib)) {
@@ -384,14 +385,16 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
 //   }
   for (int i= 0; i<4; ++i) {
     if (!m_procRaw[i].isActiv()) continue;
-//     if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES: quarter "<<i<< endreq;
-    std::vector<LHCb::MuonTileID>  pus = m_procRaw[i].pus();
+    if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES: "<<rootInTES()<<" Q"<<(i+1)<< endreq;
+    std::vector<LHCb::MuonTileID>  pus = m_procRaw[i].pus();   
+    if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES: "<<rootInTES()<<" #of pus "<<pus.size()<< endreq;
     for (std::vector<LHCb::MuonTileID>::iterator itpu=pus.begin(); itpu!=pus.end(); ++itpu){
-      //debug() << "writeOnTES: pu = "<<itpu->toString()<< endreq;
+      debug() << "writeOnTES:  "<<rootInTES()<<"---- pu = "<<itpu->toString()<< endreq;
       std::vector<LHCb::MuonTileID> ols = m_procRaw[i].ols(*itpu);
-      //debug() << "writeOnTES: ols length = "<<ols.size()<< endreq;
+      debug() << "writeOnTES:  "<<rootInTES()<<"ols length = "<<ols.size()<< endreq;
       std::vector<LHCb::MuonTileID> neighs = m_procRaw[i].neighs(*itpu);
-      //debug() << "writeOnTES: neighs length = "<<neighs.size()<< endreq;
+      debug() << "writeOnTES:  "<<rootInTES()<<"neighs length = "<<neighs.size()<< endreq;
+      debug() << "writeOnTES:  "<<rootInTES()<<"---- end pu "<< endreq;
       LHCb::L0MuonData *l0muondata = new LHCb::L0MuonData(*itpu, ols, neighs);
       pdata->insert(l0muondata);
     }

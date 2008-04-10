@@ -13,6 +13,8 @@
 
 #include "L0MuonOutputs.h"
 
+#include "L0MuonKernel/MuonCandidate.h"
+
 class L0MuonAlg : public GaudiAlgorithm {
     
 public:

@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.8 2008-04-08 11:19:20 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.9 2008-04-10 13:04:58 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -39,7 +39,8 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
 {
   
   std::vector<int> time_slots;
-  for (int i=-7;i<=7;++i) time_slots.push_back(i);
+  //  for (int i=-7;i<=7;++i) time_slots.push_back(i);
+  time_slots.push_back(0);
   declareProperty( "TimeSlots"  , m_time_slots = time_slots);
 
   m_muonBuffer = 0;
@@ -444,12 +445,12 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
 
       LHCb::MuonTileID mkey = *id;
 
-      //      if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     mkey: "<<mkey.toString()<<endmsg;
+//       if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     mkey: "<<mkey.toString()<<endmsg;
 
       int sta = mkey.station(); 
       LHCb::MuonTileID olID = m_ollayout.contains(mkey);
 
-      //      if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     olID: "<<olID.toString()<<endmsg;
+//       if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     olID: "<<olID.toString()<<endmsg;
 
       char bufnm[1024];
       sprintf(bufnm,"(Q%d,R%d,%d,%d)",
@@ -458,7 +459,14 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
       char* format = "OL_%d_%s";
       sprintf(buf,format,sta,bufnm);
     
-      //      if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     buf: "<<buf<<endmsg;
+//       if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     buf: "<<buf<<endmsg;
+
+      if( msgLevel(MSG::DEBUG) ) {
+        debug() << "fillOLsfromDigits:     mkey: "<<mkey.toString();
+        debug() << " olID: "<<olID.toString();
+        debug() << " buf: "<<buf<<endmsg;
+      }
+      
 
       L0Muon::TileRegister* pReg = rfactory->createTileRegister(buf,0);
       pReg->setTile(mkey);

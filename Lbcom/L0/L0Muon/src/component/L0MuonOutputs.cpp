@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.8 2008-01-17 19:41:53 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.9 2008-04-10 13:04:58 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -280,7 +280,7 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
   if (m_ctrlFinalFlag) {
     // Candidates selected by the controller boards
     // L0Muon (always there - light, standard and debug modes)
-    location = rootInTES() + LHCb::L0MuonCandidateLocation::Default + extension;
+    location = LHCb::L0MuonCandidateLocation::Default + extension;
     LHCb::L0MuonCandidates* pl0mcands = new LHCb::L0MuonCandidates();
     put(pl0mcands , location );
     if( msgLevel(MSG::DEBUG) ) {
@@ -313,11 +313,9 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
     ++m_nCandFinalNorm;
   }
 
-
-
   // Candidates selected by the BCSUs
   if (m_ctrlAllFlag) {
-    location = rootInTES() + LHCb::L0MuonCandidateLocation::BCSU + extension;
+    location = LHCb::L0MuonCandidateLocation::BCSU + extension;
     LHCb::L0MuonCandidates* pbcsucands = new LHCb::L0MuonCandidates();
     put(pbcsucands , location );
     if (msgLevel( MSG::DEBUG )) {
@@ -331,23 +329,22 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
         debug() << "writeOnTES: => "<<cands.size()<<" candidates found (BCSU)"<< endreq;
       }
       for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
-        if( msgLevel(MSG::DEBUG) ) debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
+        if( msgLevel(MSG::DEBUG) ) debug() << "writeOnTES: BCSU candidate\n"<<(*itcand)->dump("\t=> ")<< endreq;
         LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
         pbcsucands->insert(l0mcand);
       }
     }
   }
-  
 
   // Candidates found by the PUs
   if (m_procCandFlag) {
-    location = rootInTES() + LHCb::L0MuonCandidateLocation::PU  + extension;
+    location = LHCb::L0MuonCandidateLocation::PU  + extension;
     LHCb::L0MuonCandidates* ppucands = new LHCb::L0MuonCandidates();
+    put(ppucands , location );
     if (msgLevel( MSG::DEBUG )) {
       debug() << "writeOnTES -------------------------"<< endreq;
       debug() << "writeOnTES at "<< location << endreq;
     }
-    put(ppucands , location );
     for (int i= 0; i<4; ++i) {      
       cands = m_procCand[i].muonCandidatesPU();
       if (msgLevel( MSG::DEBUG )) {
@@ -355,7 +352,7 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
         debug() << "writeOnTES: => "<<cands.size()<<" candidates found (PU)"<< endreq;
       }
       for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
-        if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
+        if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES: PU candidate\n"<<(*itcand)->dump("\t=> ")<< endreq;
         LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
         ppucands->insert(l0mcand);
       }
@@ -364,7 +361,7 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
   
   // Data received by the PUs
   if (m_procDataFlag){
-    location = rootInTES() + LHCb::L0MuonDataLocation::Default + extension;
+    location = LHCb::L0MuonDataLocation::Default + extension;
     LHCb::L0MuonDatas* pdata = new LHCb::L0MuonDatas();
     put(pdata , location );
     if (msgLevel( MSG::DEBUG )) {
@@ -385,8 +382,7 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
       }
     }
   }
-  
-  
+ 
   return StatusCode::SUCCESS;
 }
 StatusCode L0MuonOutputs::monitorBanks(){
