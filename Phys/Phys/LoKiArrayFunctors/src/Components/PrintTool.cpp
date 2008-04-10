@@ -1,4 +1,4 @@
-// $Id: PrintTool.cpp,v 1.2 2008-04-10 11:30:50 cattanem Exp $
+// $Id: PrintTool.cpp,v 1.3 2008-04-10 17:15:31 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -19,6 +19,7 @@
 #include "LoKi/ParticleProperties.h"
 #include "LoKi/PhysTypes.h"
 #include "LoKi/IHybridFactory.h"
+#include "LoKi/PrintDecay.h"
 // ============================================================================
 // Boost
 // ============================================================================
@@ -36,7 +37,9 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-30
      */
-    class PrintTool : public GaudiTool
+    class PrintTool 
+      : public virtual IPrintDecay 
+      , public          GaudiTool
     {
       /// the friend factory needed for instantiation
       friend class ToolFactory<LoKi::Hybrid::PrintTool> ;
@@ -68,11 +71,15 @@ namespace LoKi
         if ( m_funcs.size() != m_vars.size() ) { return Error ( "Wrong decoding?" ) ; }
         //
         if ( m_format.empty() ) 
-        { for ( unsigned int i = 0 ; i < m_funcs.empty() ; ++i ) { m_format += " %|16.8g| |" ; } }
+        {
+          m_format = "|" ;
+          for ( unsigned int i = 0 ; i < m_funcs.size() ; ++i ) { m_format += "%|=15.5g||" ; } 
+        }
         if ( m_header.empty() ) 
         { 
           // predefine:
-          for ( unsigned int i = 0 ; i < m_funcs.empty() ; ++i ) { m_header += "%|=18.18s||" ; }
+          m_header = "|" ;
+          for ( unsigned int i = 0 ; i < m_funcs.size() ; ++i ) { m_header += "%|=15.15s||" ; }
           boost::format fmt ( m_header ) ;
           // make the printouts:
           using namespace boost::io ;
@@ -82,7 +89,7 @@ namespace LoKi
           { fmt % ifun->m_fun.printOut() ; }    
           // get the format back
           m_header = fmt.str() ;
-        }        
+        } 
         //
         return StatusCode::SUCCESS ;                    // RETURN 
       }
@@ -100,11 +107,13 @@ namespace LoKi
         const IInterface*  parent )          // the parent  
         : GaudiTool ( type, name , parent )
         , m_vars        (   ) 
-        , m_funcs       (   ) 
-        , m_format      (   )
         , m_header      (   )
+        , m_format      (   )
+        , m_funcs       (   ) 
         , m_factory     ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC") 
       {
+        declareInterface<IPrintDecay> ( this ) ;
+        
         declareProperty ( "Variables" , m_vars    , "The list of variables " ) ;
         declareProperty ( "Format"    , m_format  , "The table format "      ) ;
         declareProperty ( "Header"    , m_header  , "The table header "      ) ;
@@ -141,7 +150,7 @@ namespace LoKi
         std::ostream&         stream         , 
         const int             depth          ,
         const int             maxdepth = -1  ,
-        const std::string&    prefix   = " " ) const ;
+        const std::string&    prefix   = ""  ) const ;
       // ======================================================================
       /** perform the actual printpout 
        *  @param begin the begin of the particles sequence 
@@ -251,9 +260,18 @@ void LoKi::Hybrid::PrintTool::printTree
   }
   MsgStream& msg = info () ;
   if ( msg.isActive() ) 
-  {
-    msg << "Print the decay tree" << std::endl ;
+  {    
+    msg << "Print the decay tree: " 
+        << LoKi::Print::printDecay ( particle ) 
+        << std::endl ;
+    boost::format fmt ( " |#%1$=22.22s%2$s" ) ;
+    fmt % "Decay" % m_header ;
+    const std::string header = fmt.str() ;
+    msg << " " << std::string( header.size()-1 , '-' ) << std::endl ;
+    msg << header << std::endl ;
+    msg << " " << std::string( header.size()-1 , '-' ) << std::endl ;
     print ( particle , msg.stream() , 0 , maxDepth ) ;
+    msg << " " << std::string( header.size()-1 , '-' ) << std::endl ;
     msg << endreq ;
   }
 }
@@ -277,7 +295,7 @@ inline std::ostream& LoKi::Hybrid::PrintTool::print
   if ( 0 == particle ) { return stream ; }             // RETURN 
   //
   // the format of the row 
-  boost::format fmt ( " |%1$2d%2$s|->%3$s %30t%| %4$s" ) ;
+  boost::format fmt ( " |%1$-2d%2$s|--> %3$s %|25t|%4$s" ) ;
   // allow various number of arguments 
   using namespace boost::io ;
   fmt.exceptions ( all_error_bits ^ ( too_many_args_bit | too_few_args_bit ) ) ;
@@ -325,6 +343,9 @@ std::string LoKi::Hybrid::PrintTool::eval
   }
   return fmt.str() ;                                            // RETURN 
 }
+// ============================================================================
+/// the factory: needed for instantistion
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,PrintTool) ;
 // ============================================================================
 
       
