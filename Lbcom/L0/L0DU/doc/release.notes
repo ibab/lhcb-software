@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.95 2008-04-08 14:44:42 cattanem Exp $
+! $Id: release.notes,v 1.96 2008-04-10 11:31:48 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+
+
+! 2008-04-10 - Olivier Deschamps 
+ - L0DUEmulatorTool : fix bug in muon processing (affect DiMuon and Muon2 in case single non-0 L0Muon candidate)
+ - improve verbosity
+
 
 !========================== L0DU v8r4 2008-04-08 =========================
 ! 2008-03-27 - Olivier Deschamps 

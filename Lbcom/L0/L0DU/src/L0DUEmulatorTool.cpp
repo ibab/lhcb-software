@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.2 2008-03-27 16:32:13 odescham Exp $
+// $Id: L0DUEmulatorTool.cpp,v 1.3 2008-04-10 11:31:48 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -148,8 +148,8 @@ StatusCode L0DUEmulatorTool::fillData(){
   for(int i=0 ; i !=3 ; i++){
     std::stringstream num("");
     num << (i+1);
-    int maxPt = 0;    
-    int imax = 0;
+    int maxPt = -1;    
+    int imax = -1;
     for(int  j=0 ; j !=8 ; j++){
       bool ok=true;
       for(unsigned int k=0 ; k !=m_muonMaxIndices.size() ; k++)if( j== m_muonMaxIndices[k])ok=false;
@@ -161,18 +161,21 @@ StatusCode L0DUEmulatorTool::fillData(){
         imax=j;
       }
     }
-    std::stringstream numax("");
-    numax << imax;
-    m_muonMaxIndices.push_back(imax);
-    //
-    dataMap["Muon"+num.str()+"(Pt)"]->setOperand(m_muonMap["M"+numax.str()] , scale(L0DUBase::Muon1::Pt) 
-                                                 ,max(L0DUBase::Muon1::Pt) );
-    dataMap["Muon"+num.str()+"(Add)"]->setOperand(m_muonMap["M"+numax.str()+"(Add)"], scale(L0DUBase::Muon1::Address) 
-                                                  ,max(L0DUBase::Muon1::Address));
-    dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(m_muonMap["M"+numax.str()+"(Sgn)"], scale(L0DUBase::Muon1::Sign) 
-                                                  ,max(L0DUBase::Muon1::Sign) );
-}
-
+    if(-1 == imax){
+      Error("Error in muon processing").ignore();
+    }else{
+      std::stringstream numax("");
+      numax << imax;
+      m_muonMaxIndices.push_back(imax);
+      //
+      dataMap["Muon"+num.str()+"(Pt)"]->setOperand(m_muonMap["M"+numax.str()] , scale(L0DUBase::Muon1::Pt) 
+                                                   ,max(L0DUBase::Muon1::Pt) );
+      dataMap["Muon"+num.str()+"(Add)"]->setOperand(m_muonMap["M"+numax.str()+"(Add)"], scale(L0DUBase::Muon1::Address) 
+                                                    ,max(L0DUBase::Muon1::Address));
+      dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(m_muonMap["M"+numax.str()+"(Sgn)"], scale(L0DUBase::Muon1::Sign) 
+                                                    ,max(L0DUBase::Muon1::Sign) );
+    }
+  }
   verbose() << "Muon sorted " << endreq;
 
   const unsigned long dimuon = dataMap["Muon1(Pt)"]->digit()+dataMap["Muon2(Pt)"]->digit();

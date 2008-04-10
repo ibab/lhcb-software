@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.cpp,v 1.5 2008-03-27 16:32:13 odescham Exp $
+// $Id: L0DUAlg.cpp,v 1.6 2008-04-10 11:31:48 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -97,9 +97,7 @@ StatusCode L0DUAlg::initialize() {
     return StatusCode::FAILURE;
   }
 
-  debug() << "OK for config " << m_config << endreq;
-  debug() << "TCK = " << m_config->tck() << endreq;
-
+  info()<< "The L0DUConfig (TCK=" << m_tck << ") have been succesfully loaded" << endreq;
   return sc;
 };
 
