@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.9 2007-05-18 08:33:45 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.10 2008-04-10 11:27:28 cattanem Exp $
 // Include files
 #include <string>
 #include <vector>
@@ -96,7 +96,7 @@ StatusCode LbAppInit::initialize() {
     preloadTool->execute();
   }
 
-  m_condDBInfo = svc<ICondDBInfo>("CondDBCnvSvc");
+  m_condDBInfo = svc<ICondDBInfo>("CondDBCnvSvc", true );
 
   return StatusCode::SUCCESS;
 };
