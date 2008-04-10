@@ -5,7 +5,8 @@
 !               CondDB URLs into xml documents
 !-----------------------------------------------------------------------------
 
-! 2007-04-10 - Marco Clemencic
+!================ Tools/CondDBEntityResolver v4r1 2008-04-10 =================
+! 2008-04-10 - Marco Clemencic
  - Moved the loading of DetDescSvc and CondDBCnvSvc from initialization to
    dedicated functions (to avoid circular dependencies between  services during
    initialization).
