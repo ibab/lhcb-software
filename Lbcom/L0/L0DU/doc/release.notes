@@ -1,16 +1,13 @@
-! $Id: release.notes,v 1.96 2008-04-10 11:31:48 odescham Exp $
+! $Id: release.notes,v 1.97 2008-04-10 12:38:19 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
-
-
+!========================== L0DU v8r4 2008-04-10 =========================
 ! 2008-04-10 - Olivier Deschamps 
- - L0DUEmulatorTool : fix bug in muon processing (affect DiMuon and Muon2 in case single non-0 L0Muon candidate)
- - improve verbosity
+ - L0DUEmulatorTool : fix bug in muon processing 
+   (affects DiMuon and Muon2 in case single non-0 L0Muon candidate)
 
-
-!========================== L0DU v8r4 2008-04-08 =========================
 ! 2008-03-27 - Olivier Deschamps 
  - add missing DC06Conditions.opts include in Write/ReadETC
 
