@@ -1,4 +1,4 @@
-// $Id: Particles13.h,v 1.7 2007-11-28 14:39:29 ibelyaev Exp $
+// $Id: Particles13.h,v 1.8 2008-04-10 18:42:02 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES13_H 
 #define LOKI_PARTICLES13_H 1
@@ -85,6 +85,38 @@ namespace LoKi
     private:
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
+    };
+    // ========================================================================
+    /** @class TrackChi2Prob 
+     *  The trivial function whcih evaluates the track's 
+     *  \f$\chi^2\f$-probability.
+     *
+     *  The GSL routine <c>gsl_cdf_chisq_Q</c> is used for evaluation 
+     *  @see LHCb::Track
+     *  @see LoKi::TRPCHI2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-04-10
+     */
+    class TrackChi2Prob 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~TrackChi2Prob () {}
+      /// MANDATORY: clone method ("virtual constructor") 
+      virtual  TrackChi2Prob* clone () const 
+      { return new TrackChi2Prob ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the extractor of tracks: 
+      LoKi::Extract::Particle2Track m_track ; // the extractor of tracks 
+      // ======================================================================        
     };
     // ========================================================================
     /** @class TrackHasState

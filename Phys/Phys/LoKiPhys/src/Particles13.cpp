@@ -1,4 +1,4 @@
-// $Id: Particles13.cpp,v 1.8 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles13.cpp,v 1.9 2008-04-10 18:42:02 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -20,6 +20,10 @@
 #include "LoKi/PhysExtract.h"
 #include "LoKi/Particles13.h"
 // ============================================================================
+// GSL 
+// ============================================================================
+#include "gsl/gsl_cdf.h"
+// ============================================================================
 /** @file
  *
  *  Implementation file for functions from namespace  LoKi::Particles
@@ -36,10 +40,7 @@
  *  @date 2006-02-22
  */
 // ============================================================================
-
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+// MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::TrackChi2::result_type
 LoKi::Particles::TrackChi2::operator() 
@@ -61,17 +62,15 @@ LoKi::Particles::TrackChi2::operator()
   }
   //
   return track->chi2 () ;                               // RETURN 
-} ;
+} 
 // ============================================================================
-/// OPTIONAL:  the specific printout 
+// OPTIONAL:  the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::TrackChi2::fillStream ( std::ostream& s ) const 
 { return s << "TRCHI2" ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+// MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::TrackChi2PerDoF::result_type
 LoKi::Particles::TrackChi2PerDoF::operator() 
@@ -93,32 +92,28 @@ LoKi::Particles::TrackChi2PerDoF::operator()
   }
   //
   return track->chi2PerDoF () ;                               // RETURN 
-} ;
+} 
 // ============================================================================
-/// OPTIONAL:  the specific printout 
+// OPTIONAL:  the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::TrackChi2PerDoF::fillStream ( std::ostream& s ) const 
 { return s << "TRCHI2DOF" ; }
 // ============================================================================
-
-// ============================================================================
 LoKi::Particles::TrackHasState::TrackHasState
 ( const LHCb::State::Location location ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate()
   , m_location ( location ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::TrackHasState::TrackHasState
 ( const LoKi::Particles::TrackHasState& right ) 
   : LoKi::AuxFunBase                      ( right )
   , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate( right )
   , m_location                            ( right.m_location ) 
-{};
+{}
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+// MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::TrackHasState::result_type
 LoKi::Particles::TrackHasState::operator() 
@@ -140,9 +135,9 @@ LoKi::Particles::TrackHasState::operator()
   }
   //
   return track->hasStateAt ( m_location ) ;                // RETURN 
-} ;
+} 
 // ============================================================================
-/// OPTIONAL:  the specific printout 
+// OPTIONAL:  the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::TrackHasState::fillStream ( std::ostream& s ) const 
@@ -172,11 +167,9 @@ LoKi::Particles::TrackHasState::fillStream ( std::ostream& s ) const
   default : s << "?" <<m_location << "?" ; break ;  
   }
   return s << "']";
-} ;
+} 
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+// MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::TrackType::result_type
 LoKi::Particles::TrackType::operator() 
@@ -198,17 +191,15 @@ LoKi::Particles::TrackType::operator()
   }
   //
   return track->type() ;                 // RETURN 
-} ;
+} 
 // ============================================================================
-/// OPTIONAL:  the specific printout 
+// OPTIONAL:  the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::TrackType::fillStream ( std::ostream& s ) const 
-{ return s << "TRTYPE" ;} ;
+{ return s << "TRTYPE" ;} 
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+// MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::TrackHistory::result_type
 LoKi::Particles::TrackHistory::operator() 
@@ -230,17 +221,15 @@ LoKi::Particles::TrackHistory::operator()
   }
   //
   return track->history() ;                 // RETURN 
-} ;
+} 
 // ============================================================================
-/// OPTIONAL:  the specific printout 
+// OPTIONAL:  the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::TrackHistory::fillStream ( std::ostream& s ) const 
-{ return s << "TRHISTORY" ;} ;
+{ return s << "TRHISTORY" ;} 
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+// MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::TrackHistoryFit::result_type
 LoKi::Particles::TrackHistoryFit::operator() 
@@ -262,18 +251,15 @@ LoKi::Particles::TrackHistoryFit::operator()
   }
   //
   return track->fitHistory() ;                 // RETURN 
-} ;
+} 
 // ============================================================================
-/// OPTIONAL:  the specific printout 
+// OPTIONAL:  the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::TrackHistoryFit::fillStream ( std::ostream& s ) const 
-{ return s << "TRHISTFIT" ;} ;
+{ return s << "TRHISTFIT" ;} 
 // ============================================================================
-
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+// MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::TrackStatus::result_type
 LoKi::Particles::TrackStatus::operator() 
@@ -295,14 +281,47 @@ LoKi::Particles::TrackStatus::operator()
   }
   //
   return track->fitStatus() ;                 // RETURN 
-} ;
+} 
 // ============================================================================
-/// OPTIONAL:  the specific printout 
+// OPTIONAL:  the specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::TrackStatus::fillStream ( std::ostream& s ) const 
-{ return s << "TRSTATUS" ;} ;
+{ return s << "TRSTATUS" ;} 
 // ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::TrackChi2Prob::result_type
+LoKi::Particles::TrackChi2Prob::operator() 
+  ( LoKi::Particles::TrackChi2Prob::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( " Argument is invalid! return 'InvalidConfLevel'" ) ;
+    return LoKi::Constants::InvalidConfLevel;                    // RETURN 
+  }
+  // get the track:
+  const LHCb::Track* track = m_track ( p ) ;
+  //
+  if ( 0 == track ) 
+  {
+    Error ( " Track    is invalid! return 'InvalidConfLevel'" ) ;
+    return LoKi::Constants::InvalidConfLevel ;                        // RETURN 
+  }
+  //
+  const double chi2 = track -> chi2 () ;
+  const int    nDoF = track -> nDoF () ;
+  //
+  return gsl_cdf_chisq_Q ( chi2 , nDoF ) ;
+}
+// ============================================================================
+// OPTIONAL:  the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::TrackChi2Prob::fillStream ( std::ostream& s ) const 
+{ return s << "TRPCHI2" ;} 
+
+
 
 
 

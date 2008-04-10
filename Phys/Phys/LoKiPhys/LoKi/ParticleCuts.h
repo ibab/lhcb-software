@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.24 2008-03-30 13:43:36 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.25 2008-04-10 18:42:02 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -5057,6 +5057,22 @@ namespace LoKi
      *  @date 2006-02-23 
      */
     const EQUALTO                       TRLONG ( TRTYPE , LHCb::Track::Long ) ;
+    // ========================================================================
+    /** @var TRPCHI2 
+     *  The trivial evaluato of \f$\chi^2\f$-probability for the track 
+     *
+     *  @code
+     * 
+     *  const LHCb::Particle* pion = ... ;
+     *  
+     *  const double prob = TRPCHI2 ( pion ) ;
+     *
+     *  @endcode
+     *  @see LoKi::Particles::TrackChi2Prob
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-04-10
+     */
+    const LoKi::Particles::TrackChi2Prob                              TRPCHI2 ;
     // ========================================================================
     /** @var TRSTATUS 
      *  The trivial function which evaluates LHCb::Track::status

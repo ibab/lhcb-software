@@ -366,6 +366,8 @@ DPHI     = LoKi.Particles.DeltaPhi
 DELTAR2  = LoKi.Particles.DeltaR2
 ## @see LoKi::Cuts::DR2
 DR2      = LoKi.Particles.DeltaR2
+## @see LoKi::Cust::TRPCHI2 
+TRPCHI2  = LoKi.Particles.TrackChi2Prob ()
 
 # meta-functions requested by Patrick KOPPENBURG:
 ## @see LoKi::Cuts::INGENERATION 
