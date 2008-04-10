@@ -63,6 +63,9 @@ std::vector<L0Muon::PMuonCandidate>  L0Muon::ProcCandCnv::muonCandidatesPU(){
     for (int ipu= 0; ipu<4 ;++ipu) {
       int ncand= m_candRegHandlerPU[ib][ipu].numberOfCandidates();
       for (int icand = 0;icand<ncand;icand++) {
+        m_candRegHandlerPU[ib][ipu].setCandQuarter(m_quarter,icand); 
+        m_candRegHandlerPU[ib][ipu].setCandBoard(ib,icand); 
+        m_candRegHandlerPU[ib][ipu].setCandPU(ipu,icand);
         cands.push_back(m_candRegHandlerPU[ib][ipu].getMuonCandidate(icand));
       }    
     }
@@ -76,6 +79,8 @@ std::vector<L0Muon::PMuonCandidate>  L0Muon::ProcCandCnv::muonCandidatesBCSU(){
   for (int ib = 0; ib<12 ; ++ib){
     int ncand= m_candRegHandlerBCSU[ib].numberOfCandidates();
     for (int icand = 0;icand<ncand;icand++) {
+      m_candRegHandlerBCSU[ib].setCandQuarter(m_quarter,icand); 
+      m_candRegHandlerBCSU[ib].setCandBoard(ib,icand); 
       cands.push_back(m_candRegHandlerBCSU[ib].getMuonCandidate(icand));
     }    
   }
@@ -125,7 +130,7 @@ void L0Muon::ProcCandCnv::decodeBank(std::vector<unsigned int> raw, int bankVers
           m_candRegHandlerPU[ib][ipu].setCandQuarter(m_quarter,icand); 
           m_candRegHandlerPU[ib][ipu].setCandBoard(ib,icand); 
           // m_candRegHandlerPU[ib][ipu].setCandPU(ipu,icand); 
-          //m_candRegHandlerPU[ib][ipu].dump(-1," "); 
+          // m_candRegHandlerPU[ib][ipu].dump(-1," "); 
           ++ncands;
         } 
       }

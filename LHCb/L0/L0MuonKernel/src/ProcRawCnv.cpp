@@ -162,22 +162,30 @@ std::vector<LHCb::MuonTileID> L0Muon::ProcRawCnv::ols(LHCb::MuonTileID puid)
 {
   std::vector<LHCb::MuonTileID> pads;
 
-  //   std::cout <<"L0Muon::ProcRawCnv::ols input PU "<<puid.toString()<<std::endl;
+//   std::cout <<"L0Muon::ProcRawCnv::ols input PU "<<puid.toString()<<std::endl;
   
   std::map<LHCb::MuonTileID, TileRegister*>::iterator it = m_olsMap.find(puid);
   if (it!=m_olsMap.end()) {
     if ((*it).second!=0) {
       pads = ((*it).second)->firedTiles();
-    }    
-  }
-  //   if (it==m_olsMap.end()) {
-  //     std::cout <<"L0Muon::ProcRawCnv::ols PU not found in ol map"<<std::endl;
-  //     return pads;
-  //   } 
-  //   if ((*it).second==0) {
-  //     std::cout <<"L0Muon::ProcRawCnv::ols no tile register associated"<<std::endl;
-  //     return pads;
-  //   }
+    } else {
+      std::cout <<"L0Muon::ProcRawCnv::ols no tile register associated"<<std::endl;
+    } 
+  } else {
+    std::cout <<"L0Muon::ProcRawCnv::ols PU not found in ol map"<<std::endl;
+  } 
+  
+//   if ( (puid.quarter()==2 && puid.region()==3 && puid.nX()==1 && puid.nY()==2) ||
+//        (puid.quarter()==2 && puid.region()==3 && puid.nX()==0 && puid.nY()==2) ||
+//        (puid.quarter()==2 && puid.region()==3 && puid.nX()==1 && puid.nY()==3) ||
+//        (puid.quarter()==2 && puid.region()==3 && puid.nX()==0 && puid.nY()==3)) {
+//     std::cout <<"L0Muon::ProcRawCnv::ols "<<pads.size()<<" pads found"<<std::endl;
+//     for (std::vector<LHCb::MuonTileID>::iterator itp=pads.begin();itp<pads.end();++itp){
+//       std::cout <<"L0Muon::ProcRawCnv::ols    tile : "<<itp->toString();
+//       if (!itp->isValid()) std::cout <<" NOT VALID *****";
+//       std::cout<<std::endl;
+//     } 
+//   }
   
   //   pads = ((*it).second)->firedTiles();
   //   std::cout <<"L0Muon::ProcRawCnv::ols "<<pads.size()<<" pads found"<<std::endl;
