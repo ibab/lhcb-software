@@ -1,4 +1,4 @@
-// $Id: ParticleProperties.cpp,v 1.9 2008-04-10 11:44:07 ibelyaev Exp $
+// $Id: ParticleProperties.cpp,v 1.10 2008-04-10 11:50:39 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -271,16 +271,7 @@ LoKi::Particles::antiParticle ( const ParticleProperty* pp )
         "ParticleProperty* points to NULL, return NULL" ) ;
     return 0 ;
   }
-  const PareticleProperty* _pp = pp->antiParticle() ;
-  if ( 0 != _pp ) { return _pp ; }
-  //
-  const LHCb::ParticleID pid  = LHCb::ParticleID( pp->jetsetID() ) ;
-  /// find ID for antiparticle 
-  const LHCb::ParticleID anti = LoKi::Particles::antiParticle( pid ) ;
-  /// the same particle ?
-  if ( pid == anti ) { return pp ; }
-  ///
-  const ParticleProperty* antiPP = ppFromPID ( anti ) ;
+  const ParticleProperty* antiPP = pp->antiParticle() ;
   if ( 0 == antiPP ) 
   {
     LoKi::Report::Error
@@ -311,13 +302,19 @@ LHCb::ParticleID LoKi::Particles::antiParticle( const LHCb::ParticleID& pid  )
         " return LHCb::ParticleID()  "                 ) ;
     return LHCb::ParticleID()  ;
   }
-  const ParticleProperty* _pp = p1->antiParticle() ;
-  if ( 0 != _pp ) { return LHCb::ParticleID( pp->pdgID() ) ; }  
-  // check for other sign 
-  const LHCb::ParticleID apid = LHCb::ParticleID( -1 * pid.pid()) ;
-  const ParticleProperty* p2   = LoKi::Particles::_ppFromPID( apid ) ;
-  // 
-  return 0 == p2 ? pid : apid ;
+  // get the anti particle 
+  const ParticleProperty* antiPP = p1->antiParticle() ;
+  if ( 0 == p1 ) 
+  {
+    LoKi::Report::Error
+      ( " LoKi::Particles::antiParticle("              + 
+        boost::lexical_cast<std::string>( pid.pid() )  + 
+        "): ParticleProperty* points to NULL "         + 
+        " return LHCb::ParticleID()  "                 ) ;
+    return LHCb::ParticleID()  ;
+  }
+  //
+  return LHCb::ParticleID( antiPP -> pdgID () ) ; 
 }
 // ============================================================================
 /*  retrieve particle name for given PID 
