@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.cpp,v 1.13 2007-02-05 18:51:19 marcocle Exp $
+// $Id: XmlParserSvc.cpp,v 1.14 2008-04-10 11:52:03 marcocle Exp $
 
 // Include Files
 #include <limits.h>
@@ -100,14 +100,6 @@ StatusCode XmlParserSvc::initialize( ) {
     return StatusCode::FAILURE;
   }
 
-  // find the detector data svc
-  sc = service(m_detDataSvcName,m_detDataSvc,true);
-  if (!sc.isSuccess()) {
-    log << MSG::WARNING << "Unable to get a handle to the detector data service, I will not consider event time" << endmsg;
-  } else {
-    log << MSG::DEBUG << "Got pointer to IDetDataSvc \"" << m_detDataSvcName << '"' << endmsg;
-  }
-  
   return StatusCode::SUCCESS;
 }
 
@@ -117,11 +109,20 @@ StatusCode XmlParserSvc::initialize( ) {
 StatusCode XmlParserSvc::finalize() {
   clearCache();
   
-  if (m_parser) delete m_parser;
+  if (m_parser) {
+    delete m_parser;
+    m_parser = 0;
+  }
 
-  if (m_resolverSvc) m_resolverSvc->release();
+  if (m_resolverSvc) {
+    m_resolverSvc->release();
+    m_resolverSvc = 0;
+  }
   
-  if (m_detDataSvc) m_detDataSvc->release();
+  if (m_detDataSvc) {
+    m_detDataSvc->release();
+    m_detDataSvc = 0;
+  }
   
   xercesc::XMLPlatformUtils::Terminate();
 
@@ -132,6 +133,23 @@ StatusCode XmlParserSvc::finalize() {
 // ------------------------------------------------------------------------
 XmlParserSvc::~XmlParserSvc() { }
 
+//=========================================================================
+// Return the pointer to the detector data service (loading it if not yet done).
+//=========================================================================
+IDetDataSvc *XmlParserSvc::detDataSvc() {
+  if (!m_detDataSvc) {
+    // find the detector data svc
+    StatusCode sc = service(m_detDataSvcName,m_detDataSvc,true);
+    if( !sc.isSuccess() ) {
+      throw GaudiException("Can't locate service " + m_detDataSvcName,
+                           name(),StatusCode::FAILURE);
+    } else {
+      MsgStream log(msgSvc(), name());
+      log << MSG::DEBUG << "Succesfully located service " << m_detDataSvcName << endmsg;
+    }
+  }
+  return m_detDataSvc;
+}
 
 // -----------------------------------------------------------------------
 //  Parse
@@ -143,10 +161,10 @@ IOVDOMDocument* XmlParserSvc::parse (const char* fileName) {
   
   if (it != m_cache.end()) {
     // we found an object in the cache
-    if ( m_detDataSvc && m_detDataSvc->validEventTime() ) {
+    if ( detDataSvc()->validEventTime() ) {
       // since we have a service that knows the event time,
       // we can check if the cached item is still valid
-      if ( it->second.document->isValid(m_detDataSvc->eventTime()) ) {
+      if ( it->second.document->isValid(detDataSvc()->eventTime()) ) {
         // the cached DOM is valid for the current event, so it is what we wanted
         increaseCacheAge();
         ++it->second.utility;

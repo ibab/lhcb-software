@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.h,v 1.9 2007-02-05 18:51:19 marcocle Exp $
+// $Id: XmlParserSvc.h,v 1.10 2008-04-10 11:52:03 marcocle Exp $
 #ifndef DETDESCCNV_XMLPARSERSVC_H
 #define DETDESCCNV_XMLPARSERSVC_H
 
@@ -157,6 +157,8 @@ private:
    */
   void increaseCacheAge ();
 
+  /// Return the pointer to the detector data service (loading it if not yet done).
+  IDetDataSvc *detDataSvc();
   
 private:
 
