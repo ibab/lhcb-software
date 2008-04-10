@@ -5,6 +5,11 @@
 !               CondDB URLs into xml documents
 !-----------------------------------------------------------------------------
 
+! 2007-04-10 - Marco Clemencic
+ - Moved the loading of DetDescSvc and CondDBCnvSvc from initialization to
+   dedicated functions (to avoid circular dependencies between  services during
+   initialization).
+
 !================ Tools/CondDBEntityResolver v4r0 2007-03-05 =================
                       ==== NEEDS LCGCMT >= 50 ====
 

@@ -1,4 +1,4 @@
-// $Id: CondDBEntityResolverSvc.cpp,v 1.7 2007-02-14 16:12:52 marcocle Exp $
+// $Id: CondDBEntityResolverSvc.cpp,v 1.8 2008-04-10 09:33:57 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/IDetDataSvc.h"
@@ -55,22 +55,6 @@ StatusCode CondDBEntityResolverSvc::initialize ( ) {
 
   MsgStream log(msgSvc(), name() );
   log << MSG::INFO << "Initializing..." << endmsg;
-  
-  sc = service(m_detDataSvcName,m_detDataSvc,true);
-  if( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Can't locate service " << m_detDataSvcName << endmsg;
-    return sc;
-  } else {
-    log << MSG::DEBUG << "Succesfully located service " << m_detDataSvcName << endmsg;
-  }
-
-  sc = service(m_condDBReaderName,m_condDBReader,true);
-  if( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Can't locate service " << m_condDBReaderName << endmsg;
-    return sc;
-  } else {
-    log << MSG::DEBUG << "Succesfully located service " << m_condDBReaderName << endmsg;
-  }
 
   // Initialize the Xerces-C++ XML subsystem
   try {
@@ -92,8 +76,14 @@ StatusCode CondDBEntityResolverSvc::initialize ( ) {
 //=========================================================================
 StatusCode CondDBEntityResolverSvc::finalize ( ) {
   
-  if ( m_condDBReader ) m_condDBReader->release();
-  if ( m_detDataSvc ) m_detDataSvc->release();  
+  if ( m_condDBReader ) {
+    m_condDBReader->release();
+    m_condDBReader = 0;
+  }
+  if ( m_detDataSvc ) {
+    m_detDataSvc->release();
+    m_detDataSvc = 0;
+  }
 
   // Finalize the Xerces-C++ XML subsystem
   xercesc::XMLPlatformUtils::Terminate();
@@ -122,11 +112,44 @@ xercesc::EntityResolver *CondDBEntityResolverSvc::resolver() {
 }
 
 //=========================================================================
+// Return the pointer to the CondDBReader (loading it if not yet done).
+//=========================================================================
+ICondDBReader *CondDBEntityResolverSvc::condDBReader() {
+  if (!m_condDBReader) {
+    StatusCode sc = service(m_condDBReaderName,m_condDBReader,true);
+    if( !sc.isSuccess() ) {
+      throw GaudiException("Can't locate service " + m_condDBReaderName,
+                           name(),StatusCode::FAILURE);
+    } else {
+      MsgStream log(msgSvc(), name());
+      log << MSG::DEBUG << "Succesfully located service " << m_condDBReaderName << endmsg;
+    }
+  }
+  return m_condDBReader;
+}
+//=========================================================================
+// Return the pointer to the detector data service (loading it if not yet done).
+//=========================================================================
+IDetDataSvc *CondDBEntityResolverSvc::detDataSvc() {
+  if (!m_detDataSvc) {
+    StatusCode sc = service(m_detDataSvcName,m_detDataSvc,true);
+    if( !sc.isSuccess() ) {
+      throw GaudiException("Can't locate service " + m_detDataSvcName,
+                           name(),StatusCode::FAILURE);
+    } else {
+      MsgStream log(msgSvc(), name());
+      log << MSG::DEBUG << "Succesfully located service " << m_detDataSvcName << endmsg;
+    }
+  }
+  return m_detDataSvc;
+}
+
+//=========================================================================
 //  Create a Xerces-C input source based on the given systemId (publicId is ignored).
 //=========================================================================
 xercesc::InputSource *CondDBEntityResolverSvc::resolveEntity(const XMLCh *const, const XMLCh *const systemId) {
 
-  MsgStream log(msgSvc(), name()+"::resolveEntity" );
+  MsgStream log(msgSvc(), name());
   
   std::string systemIdString;
   
@@ -173,8 +196,8 @@ xercesc::InputSource *CondDBEntityResolverSvc::resolveEntity(const XMLCh *const,
   }
 
   Gaudi::Time now;
-  if ( m_detDataSvc->validEventTime() ) {
-    now =  m_detDataSvc->eventTime();
+  if ( detDataSvc()->validEventTime() ) {
+    now =  detDataSvc()->eventTime();
   } else {
     log << MSG::ERROR << "resolveEntity event time undefined" << endmsg;
     return NULL;
@@ -185,7 +208,7 @@ xercesc::InputSource *CondDBEntityResolverSvc::resolveEntity(const XMLCh *const,
   ICondDBReader::DataPtr data;
   Gaudi::Time since, until;
   
-  StatusCode sc = m_condDBReader->getObject(path,now,data,descr,since,until,channel).isSuccess();
+  StatusCode sc = condDBReader()->getObject(path,now,data,descr,since,until,channel).isSuccess();
 
   if (sc.isSuccess()) {
     if ( data.get() == NULL ) {

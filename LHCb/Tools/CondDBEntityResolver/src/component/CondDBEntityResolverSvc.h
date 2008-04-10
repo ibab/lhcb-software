@@ -1,4 +1,4 @@
-// $Id: CondDBEntityResolverSvc.h,v 1.2 2006-07-14 10:00:35 marcocle Exp $
+// $Id: CondDBEntityResolverSvc.h,v 1.3 2008-04-10 09:33:57 marcocle Exp $
 #ifndef CONDDBENTITYRESOLVERSVC_H 
 #define CONDDBENTITYRESOLVERSVC_H 1
 
@@ -66,6 +66,11 @@ public:
 
 private:
 
+  /// Return the pointer to the CondDBReader (loading it if not yet done).
+  ICondDBReader *condDBReader();
+  /// Return the pointer to the detector data service (loading it if not yet done).
+  IDetDataSvc *detDataSvc();
+  
   /// Name of the CondDBCnvSvc instance.
   /// Set via the property "CondDBReader", default to "CondDBCnvSvc".
   std::string m_condDBReaderName;
