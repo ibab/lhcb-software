@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2008-04-10 - "Antonis Papanestis"
+ - Changes in DeRichHPD and Panel to cope with the new multiple HPD logical
+   volumes.
+
 ! 2008-02-17 - Chris Jones
  - Remove use of floor function in DeRichHPDPanel::findHPDColAndPos 
    (surprisingly slow)

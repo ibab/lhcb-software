@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.13 2008-02-01 10:49:26 papanest Exp $
+ * $Id: DeRichHPD.cpp,v 1.14 2008-04-10 15:23:02 papanest Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
@@ -102,7 +102,7 @@ StatusCode DeRichHPD::initialize ( )
   m_name = ( std::string::npos != pos ? name().substr(pos) : "DeRichHPD_NO_NAME" );
 
   // extract HPD number from detector element name
-  const std::string::size_type pos2 = name().find(':');
+  const std::string::size_type pos2 = name().find(":");
   if ( std::string::npos == pos2 ) {
     msg << MSG::FATAL << "An HPD without a number!" << endmsg;
     return StatusCode::FAILURE;
@@ -117,8 +117,27 @@ StatusCode DeRichHPD::initialize ( )
   msg << MSG::DEBUG << "DeMagFactor(0): " << m_deMagFactor[0]
       << " DeMagFactor(1): " << m_deMagFactor[1] << endmsg;
 
-  const IPVolume * pvHPDSMaster = geometry()->lvolume()->pvolume("pvRichHPDSMaster");
-  const IPVolume * pvSilicon = pvHPDSMaster->lvolume()->pvolume("pvRichHPDSiDet");
+  // find the subMaster volume, normally the first physical volume
+  const IPVolume * pvHPDSMaster = geometry()->lvolume()->pvolume(0);
+  if ( pvHPDSMaster->name().find("HPDSMaster") == std::string::npos )
+  {
+    msg << MSG::FATAL << "Cannot find HPDSMaster volume; " << pvHPDSMaster->name() << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  // find pvRichHPDSiDet volume
+  const IPVolume* pvSilicon = pvHPDSMaster->lvolume()->pvolume("pvRichHPDSiDet");
+  if ( pvSilicon == NULL ) // multiple HPD volumes
+  {
+    pvSilicon = pvHPDSMaster->lvolume()->pvolume(10);
+    if ( pvSilicon == NULL || pvSilicon->name().find("pvRichHPDSiDet") == std::string::npos )
+    {
+      msg << MSG::FATAL << "Cannot find pvRichHPDSiDet volume ";
+      if ( pvSilicon != NULL ) msg << MSG::FATAL << pvSilicon->name();
+      msg << MSG::FATAL << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
 
   // pointer to kapton
   m_kaptonSolid =
@@ -169,6 +188,7 @@ StatusCode DeRichHPD::initialize ( )
         << m_name << endmsg;
     return StatusCode::FAILURE;
   }
+
 
   // register updates for the locally cached geometry information
   updMgrSvc()->registerCondition(this, geometry(),
@@ -295,7 +315,14 @@ StatusCode DeRichHPD::updateTransformations ( )
   // print the message the following times.
   flags[2] = true;
 
-  const IPVolume * pvHPDSMaster = geometry()->lvolume()->pvolume("pvRichHPDSMaster");
+  // find the subMaster volume, normally the first physical volume
+  const IPVolume * pvHPDSMaster = geometry()->lvolume()->pvolume(0);
+  if ( pvHPDSMaster->name().find("HPDSMaster") == std::string::npos )
+  {
+    MsgStream msg ( msgSvc(), myName() );
+    msg << MSG::FATAL << "Cannot find HPDSMaster volume; " << pvHPDSMaster->name() << endmsg;
+    return StatusCode::FAILURE;
+  }
   const IPVolume * pvKapton = pvHPDSMaster->lvolume()->pvolume("pvRichHPDKaptonShield");
 
   // Transformation from HPD window to global coord system

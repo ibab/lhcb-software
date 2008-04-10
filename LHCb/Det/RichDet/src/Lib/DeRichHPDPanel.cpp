@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.65 2008-02-17 15:51:03 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.66 2008-04-10 15:23:02 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -182,8 +182,28 @@ StatusCode DeRichHPDPanel::initialize()
 
   // get the first HPD and follow down to the silicon block
   const IPVolume* pvHPDMaster0  = geometry()->lvolume()->pvolume(0);
+
+  // get subMaster volume
   const IPVolume* pvHPDSMaster0 = pvHPDMaster0->lvolume()->pvolume(0);
-  const IPVolume* pvSilicon0    = pvHPDSMaster0->lvolume()->pvolume("pvRichHPDSiDet");
+  if ( pvHPDSMaster0->name().find("HPDSMaster") == std::string::npos )
+  {
+    msg << MSG::FATAL << "Cannot find HPDSMaster volume; " << pvHPDSMaster0->name() << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  // find pvRichHPDSiDet volume
+  const IPVolume* pvSilicon0 = pvHPDSMaster0->lvolume()->pvolume("pvRichHPDSiDet");
+  if ( pvSilicon0 == NULL ) // multiple HPD volumes
+  {
+    pvSilicon0 = pvHPDSMaster0->lvolume()->pvolume(10);
+    if ( pvSilicon0 == NULL || pvSilicon0->name().find("pvRichHPDSiDet") == std::string::npos )
+    {
+      msg << MSG::FATAL << "Cannot find pvRichHPDSiDet volume ";
+      if ( pvSilicon0 != NULL ) msg << MSG::FATAL << pvSilicon0->name();
+      msg << MSG::FATAL << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
 
   const ISolid* siliconSolid = pvSilicon0->lvolume()->solid();
   msg << MSG::VERBOSE << "About to do a dynamic cast SolidBox" << endreq;
