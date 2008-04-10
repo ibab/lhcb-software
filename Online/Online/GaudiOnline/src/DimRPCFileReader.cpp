@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.1 2008-04-10 10:06:26 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.2 2008-04-10 11:37:35 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -8,17 +8,16 @@
 #include "GaudiOnline/DimRPCFileReader.h"
 #include "GaudiOnline/MEPManager.h"
 #include "OnlineKernel/RTL/rtl.h"
-#include "OnlineKernel/RTL/Lock.h"
-#include <cstdlib>
+
 extern "C" {
 #include "dim.h"
 #include "dis.h"
 }
 
-using namespace LHCb;
-
 // Instantiation of a static factory class used by clients to create instances of this service
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DimRPCFileReader);
+
+using namespace LHCb;
 
 /// Static DIM command callback
 void DimRPCFileReader::cmndCallback(void* tag, void* address, int* size){
@@ -32,7 +31,12 @@ DimRPCFileReader::DimRPCFileReader(const std::string& nam, ISvcLocator* svcLoc)
     m_evtSelector(0), m_evtLoopMgr(0),
     m_receiveEvts(false), m_evtCount(0), m_rpc(0,0)
 {
-  lib_rtl_create_lock(0,&m_lockId);
+  ::lib_rtl_create_lock(0,&m_lock);
+}
+
+/// Standard Destructor
+DimRPCFileReader::~DimRPCFileReader()  {
+  ::lib_rtl_delete_lock(m_lock);
 }
 
 /// IInterface implementation : queryInterface
@@ -69,7 +73,7 @@ StatusCode DimRPCFileReader::initialize()   {
   // Init the extra Services
   m_rpc.first  = ::dis_add_service("RpcOut","C",0,0,publishEvents,(long)this);
   m_rpc.second = ::dis_add_cmnd("RpcIn","C",cmndCallback,(long)this);
-  ::lib_rtl_lock(m_lockId);
+  ::lib_rtl_lock(m_lock);
   return sc;
 }
 
@@ -92,19 +96,17 @@ StatusCode DimRPCFileReader::finalize()     {
 
 void DimRPCFileReader::publishEvents(void* tag, void** buf, int* size, int* first)    {
   DimRPCFileReader* self=(DimRPCFileReader*) tag;
-  std::cout << "Publish events" << std::endl;
-  static const char* empty = "";
+  static const char* empty = "newFile/status=SUCCESS/000000-0000-0000-00000000/None";
   if ( !(*first) )  {
     std::stringstream s;
     s << "newFile/status=SUCCESS/" << self->m_reply << "/" << self->m_evtCount << std::ends;
     self->m_reply = s.str();
-    std::cout << "Sending: " << self->m_reply << std::endl;
+    self->info(self->m_reply);
     *size = self->m_reply.length()+1;
     *buf = (void*)self->m_reply.c_str();
     return;
   }
-  std::cout << "first" << std::endl;
-  *size = 0;
+  *size = ::strlen(empty);
   *buf  = (void*)empty;
 }
 
@@ -115,11 +117,10 @@ void DimRPCFileReader::handleCommand(const char* address, int /* size */){
     cmd = in.substr(0,pos);
     if( cmd == "newFile" )  {
       left = in.substr(pos+1);
-      std::cout << "Command received: " << cmd << " " << left << std::endl;
       if ( (pos=left.find("/")) != std::string::npos ) {
 	file = left.substr(pos+1);
-	fid  = left.substr(0,pos);      
-	std::cout << "Parameters. Filename: " << file << "   FID: " << fid << std::endl;
+	fid  = left.substr(0,pos);
+	info("newFile command: parameters: Filename:"+file+" FID: "+fid);
 	SmartIF<IProperty> prp(m_evtSelector);
 	if ( prp ) {
 	  prp->setProperty("Input","[ \"DATA='file://"+file+"' SVC='LHCb::MDFSelector'\" ]");
@@ -127,13 +128,13 @@ void DimRPCFileReader::handleCommand(const char* address, int /* size */){
 	  m_evtSelector->reinitialize();
 	  m_evtLoopMgr->reinitialize();
 	  m_reply = fid+"/"+RTL::processName()+"/";
-	  ::lib_rtl_unlock(m_lockId);
+	  ::lib_rtl_unlock(m_lock);
 	  return;
 	}
       }
     }
   }
-  std::cout << "Unknown command " << in << std::endl;
+  error("Unknown command:"+in);
 }
 
 /// Incident handler implemenentation: Inform that a new incident has occured
@@ -158,8 +159,8 @@ StatusCode DimRPCFileReader::run()   {
       m_receiveEvts = true;
       info ("Starting loop through events");
       ::dis_update_service(m_rpc.first);
-      std::cout << "Locking event loop. Waiting for work...." << std::endl;
-      ::lib_rtl_lock(m_lockId);
+      info("Locking event loop. Waiting for work....");
+      ::lib_rtl_lock(m_lock);
       m_evtCount = 0;
       // loop over the events
       while ( m_receiveEvts )   {

@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.h,v 1.1 2008-04-10 10:06:26 frankb Exp $
+// $Id: DimRPCFileReader.h,v 1.2 2008-04-10 11:37:35 frankb Exp $
 #ifndef GAUDIONLINE_DIMRPCFILEREADER_H
 #define GAUDIONLINE_DIMRPCFILEREADER_H
 
@@ -49,7 +49,7 @@ namespace LHCb  {
     /// Monitoring quantity: Number of events processed
     int               m_evtCount;
     /// Lock handle
-    void*             m_lockId;
+    void*             m_lock;
     /// DIM RPC handles
     DIMRPC            m_rpc;
     /// Buffer with reply data after successful event processing.
@@ -65,7 +65,7 @@ namespace LHCb  {
     /// Standard Constructor
     DimRPCFileReader(const std::string& nam, ISvcLocator* svcLoc);
     /// Standard Destructor
-    virtual ~DimRPCFileReader() {}
+    virtual ~DimRPCFileReader();
     // IInterface implementation : queryInterface
     virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
     /// IService implementation: initialize the service
