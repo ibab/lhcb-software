@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+
+!============================ L0MuonKernel v7r4 2008-04-11 ============== 
+! 2008-04-11 - Julien Cogan
+ - Upgrade in the decoding of the transparent mode 'a la RICH'
 ! 2008-02-21 - Julien Cogan
  - Fix bug in decoding PU muon candidate charge in ProcRawCnv
 
