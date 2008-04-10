@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.98 2008-04-02 11:04:33 robbep Exp $
+! $Id: release.notes,v 1.99 2008-04-10 19:21:09 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2008-04-10 - Patrick Robbe
+ - src/L0CaloAlg: add options to use or not PS/SPD and ECAL information
+   resp. to build electromagnetic and hadron candidates. Default is to
+   use it.
+ - src/L0CaloCandidatesFromRawBank.cpp: protect against null pointer 
+   in debugging output.
 
 ! 2008-04-02 - Patrick Robbe
  - src/L0CaloMonit.cpp and src/L0CaloNtpMonitor.cpp: protect against non
