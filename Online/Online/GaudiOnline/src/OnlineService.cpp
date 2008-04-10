@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineService.cpp,v 1.5 2007-06-01 13:49:45 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineService.cpp,v 1.6 2008-04-10 10:04:33 frankb Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -55,13 +55,11 @@ StatusCode LHCb::OnlineService::initialize()  {
 StatusCode LHCb::OnlineService::finalize()  {
   if ( m_pMonitorSvc )  {
     m_pMonitorSvc->undeclareAll(this);
-    m_pMonitorSvc->release();
-    m_pMonitorSvc = 0;
+    releaseInterface(m_pMonitorSvc);
   }
   if ( m_incidentSvc )  {
     m_incidentSvc->removeListener(this);
-    m_incidentSvc->release();  
-    m_incidentSvc = 0;
+    releaseInterface(m_incidentSvc);
   }
   return Service::finalize();
 }

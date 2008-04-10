@@ -1,4 +1,4 @@
-// $Id: EventServerRunable.cpp,v 1.3 2008-04-10 09:32:41 frankb Exp $
+// $Id: EventServerRunable.cpp,v 1.4 2008-04-10 10:04:32 frankb Exp $
 //====================================================================
 //  EventServerRunable
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventServerRunable.cpp,v 1.3 2008-04-10 09:32:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventServerRunable.cpp,v 1.4 2008-04-10 10:04:32 frankb Exp $
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
@@ -118,10 +118,7 @@ StatusCode EventServerRunable::finalize()     {
     delete m_consumer;
   }
   m_consumer = 0;
-  if ( m_mepMgr )  {
-    m_mepMgr->release();
-    m_mepMgr = 0;
-  }
+  releaseInterface(m_mepMgr);
   return OnlineService::finalize();
 }
 

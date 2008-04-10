@@ -1,4 +1,4 @@
-// $Id: EventRunable.cpp,v 1.7 2008-03-10 15:38:08 frankb Exp $
+// $Id: EventRunable.cpp,v 1.8 2008-04-10 10:04:32 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -12,8 +12,10 @@
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,EventRunable)
 
+using namespace LHCb;
+
 // Standard Constructor
-LHCb::EventRunable::EventRunable(const std::string& nam, ISvcLocator* svcLoc)   
+EventRunable::EventRunable(const std::string& nam, ISvcLocator* svcLoc)   
 : OnlineService(nam, svcLoc), m_mepMgr(0), m_dataSvc(0),
   m_receiveEvts(false), m_nerr(0), m_evtCount(0)
 {
@@ -23,12 +25,12 @@ LHCb::EventRunable::EventRunable(const std::string& nam, ISvcLocator* svcLoc)
 }
 
 // Standard Destructor
-LHCb::EventRunable::~EventRunable()   
+EventRunable::~EventRunable()   
 {
 }
 
 // IInterface implementation : queryInterface
-StatusCode LHCb::EventRunable::queryInterface(const InterfaceID& riid, void** ppIf)   {
+StatusCode EventRunable::queryInterface(const InterfaceID& riid, void** ppIf)   {
   if ( riid == IID_IRunable )  {
     *ppIf = (IRunable*)this;
     addRef();
@@ -38,7 +40,7 @@ StatusCode LHCb::EventRunable::queryInterface(const InterfaceID& riid, void** pp
 }
 
 // IService implementation: initialize the service
-StatusCode LHCb::EventRunable::initialize()   {
+StatusCode EventRunable::initialize()   {
   StatusCode sc = OnlineService::initialize();
   if ( !sc.isSuccess() )     {
     return error("Failed to initialize service base class.");
@@ -57,20 +59,14 @@ StatusCode LHCb::EventRunable::initialize()   {
 }
 
 // IService implementation: finalize the service
-StatusCode LHCb::EventRunable::finalize()     {
-  if ( m_dataSvc )  {
-    m_dataSvc->release();
-    m_dataSvc = 0;
-  }
-  if ( m_mepMgr      )  {
-    m_mepMgr->release();
-    m_mepMgr = 0;
-  }
-  return Service::finalize();
+StatusCode EventRunable::finalize()     {
+  releaseInterface(m_dataSvc);
+  releaseInterface(m_mepMgr);
+  return OnlineService::finalize();
 }
 
 /// Incident handler implemenentation: Inform that a new incident has occured
-void LHCb::EventRunable::handle(const Incident& inc)    {
+void EventRunable::handle(const Incident& inc)    {
   info("Got incident:"+inc.source()+" of type "+inc.type());
   if ( inc.type() == "DAQ_CANCEL" )  {
     m_receiveEvts = false;
@@ -90,7 +86,7 @@ void LHCb::EventRunable::handle(const Incident& inc)    {
 }
 
 /// IRunable implementation : Run the class implementation
-StatusCode LHCb::EventRunable::run()   {
+StatusCode EventRunable::run()   {
   SmartIF<IAppMgrUI> ui(serviceLocator());
   if ( ui )    {
     m_receiveEvts = true;

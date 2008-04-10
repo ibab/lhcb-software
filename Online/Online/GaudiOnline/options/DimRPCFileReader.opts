@@ -1,0 +1,17 @@
+#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtMax                = 200000000;
+ApplicationMgr.Runable               = "LHCb::DimRPCFileReader/Runable";
+ApplicationMgr.ExtSvc               += { "EventSelector" };
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc"};
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.PartitionBuffers          = false;
+MEPManager.Buffers                   = { "READ" };
+ApplicationMgr.TopAlg               += { "LHCb::RawEvent2MBMMergerAlg/Writer"};
+Writer.Buffer                        = "READ";
+Writer.DataType                      = 1;
+Writer.Compress                      = 0;
+MessageSvc.OutputLevel = 3;

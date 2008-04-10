@@ -43,6 +43,14 @@ namespace LHCb  {
     /// Access incident service (Pointer invalid before initialize()!)
     IIncidentSvc* incidentSvc()  const;
 
+    /// Helper to release interface pointers
+    template <class T> inline void releaseInterface(T*& ptr) {
+      if ( ptr ) {
+	ptr->release();
+	ptr = 0;
+      }
+    }
+
   public:
     /// Service constructor
     OnlineService(const std::string& nam, ISvcLocator* svc);

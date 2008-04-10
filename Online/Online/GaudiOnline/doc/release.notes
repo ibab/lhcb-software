@@ -1,6 +1,11 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+
+! 2008-04-10 Markus Frank, A.Navarro
+ - Fix finalization bug in EventRunable.
+ - New class DimRPCFileReader
+
 ! 2008-03-10 Markus Frank
  - MEPManager: Allow to partition buffers by partition name.
    If the MEPManager.PartitionName is not set partitioning (if requested) will 
