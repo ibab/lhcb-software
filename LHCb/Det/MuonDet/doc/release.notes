@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.107 2008-04-11 10:11:53 asatta Exp $
+! $Id: release.notes,v 1.108 2008-04-11 11:12:04 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
@@ -8,7 +8,7 @@
  - For Silvia Pozzi small changes required
 
 ! 2008-04-09 - Marco Cattaneo
- - Fix compilation warnings, clean up some includes
+ - Fix compilation warnings, clean up some includes, clean up a debug message
 
 ! 2008-04-02 - Alessia Satta
  - add a new helper class which stores the information to decode the raw 
