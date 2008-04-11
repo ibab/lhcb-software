@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.26 2008-03-27 07:24:20 pkoppenb Exp $ 
+! $Id: release.notes,v 1.27 2008-04-11 17:13:26 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.26 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.27 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
 
 ! 2008-03-27 - Patrick Koppenburg
  - No need to depend on LoKiFitters
