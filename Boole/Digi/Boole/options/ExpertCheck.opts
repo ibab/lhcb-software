@@ -2,8 +2,8 @@
 // Assumes BooleMoni.opts and have also been included
 //------------------------------------------------------------------------------
 
-// Uncomment line below to monitor untested status codes
-//ApplicationMgr.StatusCodeCheck = true;
+// Monitor untested status codes
+ApplicationMgr.StatusCodeCheck = true;
 
 // Log time of each CondDB access
 //CondDBLogger.LoggedReader = "CondDBDispatcherSvc";

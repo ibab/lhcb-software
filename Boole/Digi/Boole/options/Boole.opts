@@ -147,7 +147,8 @@ DigiOTSeq.Members += { "MCOTDepositCreator"
 // Velo digitisation and clustering (also for PuVeto and trigger)
 #include "$VELOSIMULATIONROOT/options/VeloSim.opts"
 #include "$VELOALGORITHMSROOT/options/VeloAlgorithms.opts"
-DigiVELOSeq.Members += { "VeloSim" };
+DigiVELOSeq.Members += { "VeloSim/VeloSim" };
+DigiVELOSeq.Members += { "VeloSim/VeloPUSim" };
 DigiVELOSeq.Members += { "VeloDataProcessor" };
 DigiVELOSeq.Members += { "VeloClusterMaker" };
 DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
@@ -182,10 +183,9 @@ RelationsTTSeq.Members += { "STDigit2MCHitLinker/TTDigitLinker" };
 RelationsTTSeq.Members += { "STCluster2MCHitLinker/TTClusterLinker" };
 RelationsTTSeq.Members += { "STCluster2MCParticleLinker/TTTruthLinker" };
 
-RelationsOTSeq.Members += { "OTTimeCreator" };
-RelationsOTSeq.Members += { "OTTime2MCDepositLinker/OTTime2MCDeposit" };
-RelationsOTSeq.Members += { "OTTime2MCHitLinker" };
-RelationsOTSeq.Members += { "OTTime2MCParticleLinker" };
+RelationsOTSeq.Members += { "OTMCDepositLinker" };
+RelationsOTSeq.Members += { "OTMCHitLinker" };
+RelationsOTSeq.Members += { "OTMCParticleLinker" };
 
 RelationsTrSeq.Members += { "BuildMCTrackInfo" };
 

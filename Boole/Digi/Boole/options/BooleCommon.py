@@ -5,7 +5,7 @@
 #
 from Gaudi.Configuration import *
 
-ApplicationMgr( AppName    = 'Boole', AppVersion = 'v14r10' )
+ApplicationMgr( AppName    = 'Boole', AppVersion = 'v14r11' )
 
 import GaudiKernel.ProcessJobOptions
 GaudiKernel.ProcessJobOptions.printing_level += 1

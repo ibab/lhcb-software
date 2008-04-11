@@ -3,6 +3,14 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v14r11>2008-04-11 Boole v14r11</A></H1><PRE>
+ - In BooleMoni.opts: remove monitoring of OTTimes, no longer created in Boole
+   by default
+ - In Boole.opts:
+   o modify RelationsOTSeq to use new linkers that bypass creation of OTTimes
+   o split Velo simulation into VeloSim and VeloPUSim
+ - In ExpertCheck.opts: switch on StatusCode check by default
+
 </PRE><H1><A NAME=v14r10>2008-03-06 Boole v14r10</A></H1><PRE>
  - In v200601.opts, TAE.opts, PilotRun.opts, adapt to new defaults in ST
    digitization

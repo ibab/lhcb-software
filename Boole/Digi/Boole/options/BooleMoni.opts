@@ -38,7 +38,6 @@ Boole.BooleMemory.HistoDir    = "MemoryTool";
 MoniL0Seq.Members += { "L0CaloMonit" };
 MoniL0Seq.Members += { "L0DUReportMonitor/L0Monitor" };
 
-
 // Velo
 MoniVELOSeq.Members += {
                          "VeloSimMoni",
@@ -77,8 +76,6 @@ TTEffChecker.MCParticleSelector.betaGammaMin = 1.0;
 
 // OT
 MoniOTSeq.Members += { "MCOTDepositMonitor" };
-MoniOTSeq.Members += { "OTTimeMonitor" };
-MoniOTSeq.Members += { "OTTimeChecker" };
 
 // Rich
 #include "$RICHDIGIQCOPTS/DigiQC_Boole.opts"
