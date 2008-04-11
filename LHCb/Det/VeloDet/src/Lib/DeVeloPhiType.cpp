@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.40 2008-03-10 14:57:49 dhcroft Exp $
+// $Id: DeVeloPhiType.cpp,v 1.41 2008-04-11 06:33:01 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -300,7 +300,7 @@ StatusCode DeVeloPhiType::pointToChannel(const Gaudi::XYZPoint& point,
     strip = phi / m_outerPitch;
     strip += m_nbInner;
   }
-  closestStrip = LHCbMath::round(strip);
+  closestStrip = LHCb::Math::round(strip);
   fraction = strip - closestStrip;
 
   pitch = phiPitch(radius);

@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.47 2008-02-14 16:15:47 cattanem Exp $
+// $Id: DeVeloRType.cpp,v 1.48 2008-04-11 06:33:01 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -227,7 +227,7 @@ StatusCode DeVeloRType::pointToChannel(const Gaudi::XYZPoint& point,
   logarithm = (m_pitchSlope*(radius - m_innerR)+m_innerPitch) / 
     m_innerPitch;
   strip = log(logarithm)/m_pitchSlope;
-  closestStrip = LHCbMath::round(strip);
+  closestStrip = LHCb::Math::round(strip);
   fraction = strip - closestStrip; 
  
   // Which zone is the strip in?

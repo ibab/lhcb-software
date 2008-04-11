@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.192 2008-03-28 16:31:15 dhcroft Exp $
+! $Id: release.notes,v 1.193 2008-04-11 06:33:01 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v12r5 2008-04-10 ===========================
 ! 2008-03-28 - David Hutchcroft
  - Changed stored condition from strip capactiance to strip noise in DeVeloSensor
+   Requires SQLDDDB >= v4r2
 
-!======================== VeloDet v12r5 2008-03-10 ===========================
 ! 2008-03-10 - David Hutchcroft
  - Removed nan returns when asking for phi offset at radius inside inner radius
    for phi strips.
