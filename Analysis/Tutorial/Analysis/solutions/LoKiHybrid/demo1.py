@@ -27,3 +27,8 @@ print fun2(p)
 fun3 = monitor(fun2)
 print fun3(p)
 
+# browse doxygen
+from LoKiCore.doxygenurl import browse 
+browse(PT)
+
+

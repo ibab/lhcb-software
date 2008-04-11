@@ -11,8 +11,8 @@ Psi2MuMu.PhysDesktop.InputLocations = { "Phys/StdTightMuons" } ;
 
 Psi2MuMu.FILTER0.Code = "ALL" ;
 Psi2MuMu.FILTER1.Code = "ADMASS('J/psi(1S)')<30" ;
-Psi2MuMu.FILTER2.Code = "VFASPF(VCHI2)<10" ;
-//Psi2MuMu.FILTER2.Code = "(VFASPF(VCHI2)<10) & (MINTREE( 'mu+' ==ABSID , PT )>3000)" ;
+//Psi2MuMu.FILTER2.Code = "VFASPF(VCHI2)<10" ;
+Psi2MuMu.FILTER2.Code = "(VFASPF(VCHI2)<10) & (MINTREE( 'mu+' ==ABSID , PT )>3000)" ;
 
 
 ApplicationMgr.EvtMax = 100 ;
