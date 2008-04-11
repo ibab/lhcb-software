@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis3.cpp,v 1.10 2008-03-28 13:24:20 seaso Exp $
+// $Id: RichG4StepAnalysis3.cpp,v 1.11 2008-04-11 13:40:23 seaso Exp $
 // Include files
 
 #include "G4Track.hh"
@@ -234,9 +234,15 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
             }
 
             // Now for photons hitting mirror2
-
-            if(aPreVolName == LogVolC4F10NameAnalysis &&
-               aPostVolName == LogVolRich1Mirror2NameAnalysis ){
+            // The following 'if' has to parts to keep backward compatibility
+            std::string::size_type iR1M2StrPrePos=
+                      aPreVolName.find(LogVolRich1Mirror2MasterNameAnalysis);
+            std::string::size_type iR1M2SegStrPostPos=
+                      aPostVolName.find(LogVolRich1Mirror2SegNameAnalysis);
+            
+            if( ( (aPreVolName == LogVolC4F10NameAnalysis) &&
+               (aPostVolName == LogVolRich1Mirror2NameAnalysis)) || 
+               ( ( iR1M2StrPrePos != std::string::npos)  && (iR1M2SegStrPostPos !=  std::string::npos )   ) ){
               // the reflection already happened at this point.
 
               //                   if(PhotCurDir.z() < 0.0 ) {

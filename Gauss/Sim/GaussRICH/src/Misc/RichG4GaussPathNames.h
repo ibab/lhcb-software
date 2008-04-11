@@ -60,6 +60,15 @@ static const G4String LogVolRich1Mirror1NameAnalysis=
                               "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1CarbonFibreInnerLayer";
 static const G4String LogVolRich1Mirror2NameAnalysis=
                              "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror2";
+static const G4String LogVolRich1Mirror2SegNameAnalysis=
+                             "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror2Seg";
+
+static const G4String LogVolRich1Mirror2MasterNameAnalysis=
+                             "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror2Master";
+static const G4String LogVolRich1Mirror2MasterTopNameAnalysis=
+                             "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror2MasterTop";
+static const G4String LogVolRich1Mirror2MasterBotNameAnalysis=
+                             "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror2MasterBot";
 
 static const G4String LogVolRich2Mirror1ContainerNameAnalysis=
                         "/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2SphMirrorCont";

@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis5.cpp,v 1.7 2008-01-29 12:44:16 seaso Exp $
+// $Id: RichG4StepAnalysis5.cpp,v 1.8 2008-04-11 13:40:23 seaso Exp $
 // Include files 
 
 #include "G4Track.hh"
@@ -128,10 +128,18 @@ void RichG4StepAnalysis5::UserSteppingAction( const G4Step* aStep )
                              
             }
             // now for mirror2 in rich1.
-            if(aPreVolName == LogVolC4F10NameAnalysis &&
-               aPostVolName == LogVolRich1Mirror2NameAnalysis ){
+            std::string::size_type iR1M2StrPrePos=
+                      aPreVolName.find(LogVolRich1Mirror2MasterNameAnalysis);
+            std::string::size_type iR1M2SegStrPostPos=
+                      aPostVolName.find(LogVolRich1Mirror2SegNameAnalysis);
+
+	    // the following 'if' has two parts to keep backward compatibility with older xml db.
+
+            if( ( (aPreVolName == LogVolC4F10NameAnalysis) &&
+                  (aPostVolName == LogVolRich1Mirror2NameAnalysis) ) || 
+                ( ( iR1M2StrPrePos != std::string::npos)  && (iR1M2SegStrPostPos !=  std::string::npos ))   ) {
               // reflection happened in mirror2 .             
-	      RichG4MirrorReflPointTag(aTrack,  postPos, 0,1, aCurrentCopyNum);
+    	        RichG4MirrorReflPointTag(aTrack,  postPos, 0,1, aCurrentCopyNum);
                
             }
             
