@@ -6,6 +6,81 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r16>2008-04-11 LbcomSys v6r16</A></H1><PRE>
+This version uses Gaudi v19r9 and LHCb v23r5
+
+- Packages modified: L0Calo v9r12, L0DU v8r4, L0Muon v7r8, MuonAssociators v3r2, 
+    OTAssociators v4r2, OTMonitor v2r8, RichMCTools v3r9,
+    VeloAlgorithms v4r7, VeloSimulation v2r7, VeloTools v3r1
+
+- In L0Calo v9r12
+  . L0CaloMonit.cpp: use Calo2Dview base class, change binning for slot in crates
+  . L0CaloCandidatesFromRaw.cpp: fix memory leaks in default container filling
+  . src/L0CaloAlg.cpp: remove unnecessary debuging output, add protection against
+    double counting in duplicate candidates.
+  . L0CaloNtpMonitor.cpp: new class to fill Ntuples with L0Calo quantities.
+  . L0CaloCandidatesFromRawBank.cpp: verify output level in debugging messages
+
+- In L0DU v8r4
+  . L0DUFromRawTool: fix bug when decoding consecutive BX info, better print out
+  . Fix bug in options/L0DUBankSwap.opts
+  . Monitoring changes:
+	  + remove L0Monitor algorithm (obsolete)
+    + L0DUReportMonitoring: add histograming (performance, conditions, decisions)
+    + L0DURawBankMonitoring: new alg for full monitoring of L0DU Bank
+  . Filtering changes:
+   	+ L0Filter: add possibility to filter according to 'extra L0 decision'
+    + L0TCKFilter: new algorithms for configuration filtering
+  . New algorithm L0Pattern: produce RAM pattern to feed L0DU board test benches
+  . Add few minor improvements along the code & adapt to changes in L0Event
+  . L0ETC: do not write out. This is done by evtcol svc. Add some .ignore()
+  . Add missing DC06Conditions.opts include in Write/ReadETC
+  . L0DUEmulatorTool : fix bug in muon processing 
+    (affects DiMuon and Muon2 in case single non-0 L0Muon candidate)
+  . options/L0DUConfig_0xDC06_alg0_set0_lumi2.opts :
+    uniformize channel naming according to other config.
+
+- In L0Muon v7r7, v7r8
+  . L0MuonAlg : Allow to run from  data coming from several time bunch
+               crossings (TAE mode)
+  . Update decoding and monitoring of L0Muon data in transparent mode
+  . L0MuonFromRawTrans : new algorithm to decode the data with the format
+                         used at the pit during commissionning.
+  . L0MuonMonitor : new algorithm to make histograms from L0Muon data 
+                    stored in the TES. 
+
+- In OTAssociators v4r2
+  . Added new associator algorithms. The deposits, hits and particles are linked
+    to the channelIDs which are also the keys.
+  . Clean up options to use DataOnDemandSvc.AlgMap instead of .Algorithms
+
+- In OTMonitor v2r8
+  . Added OTTime to expert moni
+  . Minor changes to reflect changes in OTAssociators. Note code is still
+    compatible with DC06 data since the MC information is retrieved via the
+    channelIDs(keys).
+
+- In RichMCTools v3r9
+  . Add new methods (isHPDReflection and isSiBackScatter) to MCTruthTool
+
+- In VeloAlgorithms v4r7
+  . Add VeloEffChecker: algorithm to monitor the velo sensor efficiency in MC
+  . Changed scaling in VeloDataProcessor to increase ADC values of clusters
+  . Changed VeloClusterMaker to set strip thresholds from noise levels per strip
+
+- In VeloSimulation v3r0
+  . Use ST charge deposite tool to correct GEANT dEdx
+  . Use ST amplifier response tool to simulate amplifier response verse time
+  . Allow a list of input containers via options with time offsets
+  . Default to prev, main and next in VeloSim.opts
+  . Allow a list of output locations (for the PileUp modules which write to two)
+  . Simulate noise from the DeVeloSensor->stripNoise() distribution per strip
+  . Added options to convert from noise in ADC to noise in electrons
+
+- In VeloTools v3r1
+  . Adapt to change in namespace LHCbMath -> LHCb::Math
+  . Protect debug() messages with test on msgLevel(MSG::DEBUG)
+
 </PRE><H1><A NAME=v6r15>2008-03-04 LbcomSys v6r15</A></H1><PRE>
 This version uses Gaudi v19r8 and LHCb v23r4
 
