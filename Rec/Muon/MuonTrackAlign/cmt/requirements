@@ -1,12 +1,10 @@
 package MuonTrackAlign
-version v1r2
-
+version v1r3
 
 # ================ structure =========================================
 
 branches src cmt doc options
-
-include_dirs      $(MUONTRACKALIGNROOT)
+include_path none
 
 # ================ used packages =========================================
 use MuonDAQ     v*    Muon
@@ -15,12 +13,10 @@ use MCEvent     v*    Event
 use LinkerEvent v*    Event
 use GaudiAlg      v*
 
-
 # build a component library
 
 library MuonTrackAlign  *.cpp
 apply_pattern component_library library=MuonTrackAlign
-
 
 #===============================================================
 
