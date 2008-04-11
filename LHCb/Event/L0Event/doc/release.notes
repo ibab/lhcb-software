@@ -1,15 +1,16 @@
-! $Id: release.notes,v 1.92 2008-04-10 13:07:10 jucogan Exp $
+! $Id: release.notes,v 1.93 2008-04-11 05:52:16 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
+!======================== L0Event v16r9 2008-04-10 ===========================
 ! 2008-04-10 - Julien Cogan
  - Add == operator to the L0MuonCandidate class
 
 ! 2008-04-01 - Olivier Deschamps
- - fix uncorrect cyclic counter in increment/decrementCounter() method in L0DUConfig.xml
+ - fix uncorrect cyclic counter in increment/decrementCounter() method in
+   L0DUConfig.xml
 
-!======================== L0Event v16r9 2008-03-28 ===========================
 ! 2008-03-25 - Olivier Deschamps
  - Change L0DUCounter::Scale from 100 to 1000 (adapt to firmware change)
  - L0DUConfig.xml/L0DUChannel.xml/L0DUElementaryConditions.xml : 
