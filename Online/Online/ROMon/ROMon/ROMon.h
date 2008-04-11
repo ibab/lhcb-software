@@ -1,4 +1,4 @@
-// $Id: ROMon.h,v 1.6 2008-03-11 12:37:52 frankb Exp $
+// $Id: ROMon.h,v 1.7 2008-04-11 12:11:22 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.6 2008-03-11 12:37:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.7 2008-04-11 12:11:22 frankb Exp $
 #ifndef ROMON_ROMON_H
 #define ROMON_ROMON_H 1
 
@@ -182,7 +182,6 @@ namespace ROMon {
   };
 
   typedef VarItems<Nodeset> Processorfarm;
-
   union ROMonData {
     char*      str;
     void*      ptr;

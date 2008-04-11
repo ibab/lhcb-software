@@ -1,4 +1,4 @@
-// $Id: RODimListener.h,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Id: RODimListener.h,v 1.2 2008-04-11 12:11:22 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RODimListener.h,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RODimListener.h,v 1.2 2008-04-11 12:11:22 frankb Exp $
 #ifndef ROMON_ROMONDIMLISTENER_H
 #define ROMON_ROMONDIMLISTENER_H 1
 
@@ -26,6 +26,10 @@ namespace ROMon {
 
   // Forward declarations
   class ROMonInfo;
+
+  struct ROUpdateHandler {
+    virtual void update() = 0;
+  };
 
   /**@class RODimListener ROMon.h GaudiOnline/ROMon.h
    *
@@ -69,6 +73,8 @@ namespace ROMon {
     ROMonInfo*  m_dns;
     /// Verbose flag
     bool        m_verbose;
+    /// Reference to update handler
+    ROUpdateHandler* m_handler;
     
   public:
     /// Standard constructor
@@ -81,6 +87,10 @@ namespace ROMon {
     void setVerbose(bool val)             {   m_verbose = val; }
     /// Access verbosity flag
     bool verbose() const                  {  return m_verbose; }
+    /// Change handler
+    void setUpdateHandler(ROUpdateHandler* h)  {   m_handler = h; }
+    /// Change handler
+    ROUpdateHandler* updateHandler() const{ return m_handler; }
     /// Add handler for a given message source
     virtual void addHandler(const std::string& node,const std::string& svc) = 0;
     /// Remove handler for a given message source

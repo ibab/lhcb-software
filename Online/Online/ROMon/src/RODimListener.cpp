@@ -1,4 +1,4 @@
-// $Id: RODimListener.cpp,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Id: RODimListener.cpp,v 1.2 2008-04-11 12:11:22 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,14 +11,15 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimListener.cpp,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimListener.cpp,v 1.2 2008-04-11 12:11:22 frankb Exp $
 #include "ROMon/ROMonInfo.h"
 #include "ROMon/RODimListener.h"
 
 using namespace ROMon;
 
 /// Standard constructor
-RODimListener::RODimListener(bool verb) : m_verbose(verb) {
+RODimListener::RODimListener(bool verb) 
+: m_verbose(verb), m_handler(0)  {
   m_dns = new ROMonInfo(this);
 }
 
