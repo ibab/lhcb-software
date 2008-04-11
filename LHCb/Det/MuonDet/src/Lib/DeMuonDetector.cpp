@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.41 2008-04-02 11:47:48 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.42 2008-04-11 10:11:53 asatta Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
@@ -468,6 +468,21 @@ DeMuonChamber* DeMuonDetector::getChmbPtr(const int station, const int region,
   myPtr = m_ChmbPtr.at(encode);
   return myPtr;
 }
+
+/*const DeMuonChamber* DeMuonDetector::getChmbPtr(const int station, 
+                                                const int region,
+                                                const int chmb) const {
+  DeMuonChamber* myPtr;
+  int encode, re(0);
+  encode = 276*station+chmb;
+  if(region) {
+    re = region;
+    while(re >= 1) {encode += MaxRegions[re-1]; re--;}
+  }
+  myPtr = m_ChmbPtr.at(encode);
+  return myPtr;
+}
+*/
 
 /*void DeMuonDetector::fillChmbPtr() {
   
@@ -1203,7 +1218,7 @@ myPoint) const
 }
 
 
-IDetectorElement* DeMuonDetector::Tile2Station(LHCb::MuonTileID aTile)
+DetectorElement* DeMuonDetector::Tile2Station(LHCb::MuonTileID aTile)
 {
   char stationName[10];
   MsgStream msg( msgSvc(), name() );
@@ -1240,7 +1255,7 @@ std::vector<DeMuonChamber*> DeMuonDetector::Tile2Chamber(LHCb::MuonTileID aTile)
 }
 
 
-IDetectorElement* DeMuonDetector::Hit2Station(Gaudi::XYZPoint myPoint)
+DetectorElement* DeMuonDetector::Hit2Station(Gaudi::XYZPoint myPoint)
 { 
   char stationName[10];
   MsgStream msg(msgSvc(),name());

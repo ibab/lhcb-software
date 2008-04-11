@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.27 2008-04-02 11:47:48 asatta Exp $
+// $Id: DeMuonDetector.h,v 1.28 2008-04-11 10:11:53 asatta Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -144,6 +144,11 @@ public:
   DeMuonChamber* getChmbPtr(const int station, const int region,
 			    const int chmb) const;
 
+  //const DeMuonChamber* getChmbPtr(const int station, const int region,
+//			    const int chmb) const;
+
+
+
   //Fills the vector of chamber pointers  
   //void fillChmbPtr();
 
@@ -258,13 +263,13 @@ public:
   };
 
   //Returns the station (as DetectorElement pointer) identified by MuonTileID
-  IDetectorElement* Tile2Station(const LHCb::MuonTileID aTile);
+  DetectorElement* Tile2Station(const LHCb::MuonTileID aTile);
   
   // Return the chambers (as vector of DeMuonChamber pointer) from the MuonTileID
   std::vector<DeMuonChamber*> Tile2Chamber(const LHCb::MuonTileID aTile);
 
   //Returns the station (as DetectorElement pointer) from a Hit 
-  IDetectorElement* DeMuonDetector::Hit2Station(const Gaudi::XYZPoint myPoint);
+  DetectorElement* DeMuonDetector::Hit2Station(const Gaudi::XYZPoint myPoint);
   
   //Returns the chamber (as DetectorElement pointer) from a Hit 
   DeMuonChamber* DeMuonDetector::Hit2Chamber(const Gaudi::XYZPoint myPoint);

@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.cpp,v 1.1 2008-04-02 11:48:20 asatta Exp $
+// $Id: MuonDAQHelper.cpp,v 1.2 2008-04-11 10:11:53 asatta Exp $
 // Include files 
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -172,6 +172,8 @@ StatusCode MuonDAQHelper::initDAQMaps()
         cabling->getL1Name(L1Board);
       SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path); 
       log<<MSG::DEBUG<<" tell1 "<<L1path<<endreq;
+      m_tellPerStation[station].push_back(l1->L1Number());
+
       for(unsigned int i=0;i<MuonDAQHelper_linkNumber;i++){
         log<<MSG::DEBUG<<" link "<<i<<" "<<l1->getLinkConnection(i)<<endreq;
         
@@ -1490,6 +1492,10 @@ void MuonDAQHelper::resetLUT(){
     m_mapTileInODE[i].clear();
     m_mapTileInODEDC06[i].clear();
   }
+  for(int i=0;i<5;i++){
+    m_tellPerStation[i].clear();
+  }  
+
   
 }
 

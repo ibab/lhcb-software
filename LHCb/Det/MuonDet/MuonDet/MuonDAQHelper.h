@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.h,v 1.1 2008-04-02 11:48:20 asatta Exp $
+// $Id: MuonDAQHelper.h,v 1.2 2008-04-11 10:11:53 asatta Exp $
 #ifndef MUONDET_MUONDAQHELPER_H 
 #define MUONDET_MUONDAQHELPER_H 1
 #include <string>
@@ -154,7 +154,8 @@ private:
   std::string m_ODENameInECS[MuonDAQHelper_maxODENumber];
   unsigned int m_TSLength[5][4];
   int m_TUSize[5][4];
-  
+  std::vector<int> m_tellPerStation[5];
+
 
 };
 #endif // MUONDET_MUONDAQHELPER_H

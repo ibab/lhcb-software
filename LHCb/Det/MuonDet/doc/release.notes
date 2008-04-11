@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.106 2008-04-09 15:20:04 cattanem Exp $
+! $Id: release.notes,v 1.107 2008-04-11 10:11:53 asatta Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v8r0 2008-04-09 ==========================
+! 2008-04-09 - Alessia Satta
+ - For Silvia Pozzi small changes required
+
 ! 2008-04-09 - Marco Cattaneo
  - Fix compilation warnings, clean up some includes
 
