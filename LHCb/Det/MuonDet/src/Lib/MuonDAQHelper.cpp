@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.cpp,v 1.2 2008-04-11 10:11:53 asatta Exp $
+// $Id: MuonDAQHelper.cpp,v 1.3 2008-04-11 10:55:16 asatta Exp $
 // Include files 
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -1501,7 +1501,10 @@ void MuonDAQHelper::resetLUT(){
 
 StatusCode MuonDAQHelper::updateLUT(){
   resetLUT();
-  initDAQMaps();
+  
+  StatusCode sc= initDAQMaps();
+  if(sc.isFailure())return sc;
+
   return StatusCode::SUCCESS;
 }
 

@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.42 2008-04-11 10:11:53 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.43 2008-04-11 10:55:16 asatta Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
@@ -81,9 +81,23 @@ StatusCode DeMuonDetector::initialize()
   updMgrSvc()->registerCondition(&m_daqHelper, 
                                  "/dd/Conditions/ReadoutConf/Muon/Cabling/M1/Cabling", 
                                  &MuonDAQHelper::updateLUT);
+  updMgrSvc()->registerCondition(&m_daqHelper,
+                                 "/dd/Conditions/ReadoutConf/Muon/Cabling/M2/Cabling",
+                                 &MuonDAQHelper::updateLUT);
+  updMgrSvc()->registerCondition(&m_daqHelper,
+                                 "/dd/Conditions/ReadoutConf/Muon/Cabling/M3/Cabling",
+                                 &MuonDAQHelper::updateLUT);
+  updMgrSvc()->registerCondition(&m_daqHelper,
+                                 "/dd/Conditions/ReadoutConf/Muon/Cabling/M4/Cabling",
+                                 &MuonDAQHelper::updateLUT);
+  updMgrSvc()->registerCondition(&m_daqHelper,
+                                 "/dd/Conditions/ReadoutConf/Muon/Cabling/M5/Cabling",
+                                 &MuonDAQHelper::updateLUT);
+  
   m_daqHelper.initSvc(dataSvc(),msgSvc());
-  m_daqHelper.initDAQMaps();
-
+  sc=m_daqHelper.initDAQMaps();
+  if(sc.isFailure())return sc;
+  
   return sc;
 }
 
