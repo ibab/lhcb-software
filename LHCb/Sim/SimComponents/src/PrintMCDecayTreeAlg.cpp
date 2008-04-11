@@ -1,4 +1,4 @@
-// $Id: PrintMCDecayTreeAlg.cpp,v 1.2 2008-04-11 07:34:32 jpalac Exp $
+// $Id: PrintMCDecayTreeAlg.cpp,v 1.3 2008-04-11 08:21:50 jpalac Exp $
 // Include files 
 #include <stdlib.h>
 
@@ -60,6 +60,8 @@ StatusCode PrintMCDecayTreeAlg::initialize() {
 StatusCode PrintMCDecayTreeAlg::execute() {
   
   debug() << "==> Execute" << endreq;
+
+  verbose() << "Getting MCParticles from " << m_particleLocation << endmsg;
 
   LHCb::MCParticles* parts = 
     get<LHCb::MCParticles>( m_particleLocation);
