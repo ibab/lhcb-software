@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.20 2008-03-28 16:51:53 dhcroft Exp $
+// $Id: VeloSim.cpp,v 1.21 2008-04-11 11:55:20 cattanem Exp $
 // Include files
 // STL
 #include <string>
@@ -398,7 +398,7 @@ void VeloSim::deltaRayCharge(double charge, double tol,
     // not truly correct
     double charge=ran_inv_E2(Tmin,Tmax);
     // choose pt at random to add delta ray
-    int ipt=int(LHCbMath::round(m_uniformDist()*(Spoints.size()-1)));
+    int ipt=int(LHCb::Math::round(m_uniformDist()*(Spoints.size()-1)));
     //
     if(m_isVerbose) verbose()<< " delta ray charge added to point " << ipt
 			     << "/" << Spoints.size() <<endmsg;
@@ -832,7 +832,7 @@ void VeloSim::noiseSim(){
       int maxStrips= sens->numberOfStrips();
       if(!m_makeNonZeroSuppressedData){
         hitNoiseTotal= 
-	  int(LHCbMath::round(2.*m_noiseTailProb)*float(maxStrips));
+          int(LHCb::Math::round(2.*m_noiseTailProb)*float(maxStrips));
         Rndm::Numbers poisson(randSvc(), Rndm::Poisson(hitNoiseTotal));
         hitNoiseTotal = int(poisson());
       }else{
@@ -855,7 +855,7 @@ void VeloSim::noiseSim(){
           // choose random hit to add noise to
           // get strip number
           int stripArrayIndex=
-	    int(LHCbMath::round(m_uniformDist()*(maxStrips-1)));
+	    int(LHCb::Math::round(m_uniformDist()*(maxStrips-1)));
           LHCb::VeloChannelID stripKey(sensorNo,stripArrayIndex);
           // find strip in list.
           LHCb::MCVeloFE* myFE = findOrInsertFE(stripKey);

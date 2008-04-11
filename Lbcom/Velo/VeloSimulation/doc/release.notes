@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!===================== VeloSimulation v3r0 2008-04-11 ======================
 ! 2008-03-28 - David Hutchcroft
  - Update to VeloSim
  - Use ST charge deposite tool to correct GEANT dEdx
