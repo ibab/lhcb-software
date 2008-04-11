@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.19 2008-04-09 15:38:42 cattanem Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.20 2008-04-11 11:31:58 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -475,7 +475,7 @@ StatusCode MuonDigitToRawBuffer::ProcessV1()
         bank<<(short)pp_counter[pp_data];
         unsigned int hit_counter=0;
         if(pp_data==0) itHit=m_digitsInL1[i].begin();
-        for(hit_counter;  hit_counter<pp_counter[pp_data];hit_counter++)
+        for(hit_counter=0;  hit_counter<pp_counter[pp_data];hit_counter++)
           {
              short hit=(short) (*itHit);
              debug()<<"'digit written "<<(hit&0x0FFF)<<endreq;
