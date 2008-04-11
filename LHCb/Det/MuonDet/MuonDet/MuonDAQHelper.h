@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.h,v 1.2 2008-04-11 10:11:53 asatta Exp $
+// $Id: MuonDAQHelper.h,v 1.3 2008-04-11 11:06:52 asatta Exp $
 #ifndef MUONDET_MUONDAQHELPER_H 
 #define MUONDET_MUONDAQHELPER_H 1
 #include <string>
@@ -112,6 +112,11 @@ public:
   MuonL1Board* getL1Board(unsigned int board_num);
   MuonODEBoard* getODEBoard(MuonL1Board*l1,unsigned int board);  
   MuonTSMap* getTSMap(MuonL1Board*l1,MuonODEBoard* ode,unsigned int ts);  
+  std::vector<int> getTell1InStation(int station)
+  {
+    return m_tellPerStation[station];
+  }
+
 protected:
 
 private:
