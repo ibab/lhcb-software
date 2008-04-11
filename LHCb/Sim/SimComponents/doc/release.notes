@@ -5,6 +5,7 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v2r9 2008-04-10 ========================
 ! 2008-04-10 - Juan PALACIOS
  - src/PrintMCDecayTreeAlg{.cpp, .h}
   . Add property "MCParticleLocation" to allow to provide alternative input
