@@ -3,6 +3,27 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v14r11>2008-04-11 Boole v14r11</A></H1><PRE>
+This version uses projects Gaudi v19r8, LHCb v23r5, Lbcom v6r16
+ and DDDB v1r* (SQLDDDB v4r2 or greater), ParamFiles v7r1, FieldMap v4r7
+
+This is a pre-release version only. Release will be v15r0
+
+This version does not support processing data produced with DC06 geometries.
+Output requires Brunel v32r5 or later
+
+- Persistency changes
+  . OT linker table is now using directly OTChannelID, bypasses creation of
+    OTTime. Requires Brunel v32r5 or greater to read
+    (DigiAlg v4r9, OTAssociators v4r2, Boole.opts)
+
+- Monitoring changes
+  . Overhaul of L0Calo and L0DU monitoring (L0Calo v9r12, L0DU v8r4)
+  . Monitoring of OTTime moved to Expert monitoring
+    (BooleMoni.opts, OTMonitor v2r8)
+
+- Changes also to Velo, L0DU, L0Muon, Muon. Will be documented in release
+
 </PRE><H1><A NAME=v14r10>2008-03-07 Boole v14r10</A></H1><PRE>
 This version uses projects Gaudi v19r8, LHCb v23r4, Lbcom v6r15
  and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
