@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-04-11 - Patrick Koppenburg
+ - Plots: bug fix. Now works again.
+
 !========================== HltSelChecker v6r0 2008-03-07 ===================
 ! 2008-03-07 - Patrick KOPPENBURG
  - Add DecayTreeTuple in all test files
