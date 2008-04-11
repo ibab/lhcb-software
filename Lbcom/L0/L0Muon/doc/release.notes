@@ -1,8 +1,9 @@
-!  $Id: release.notes,v 1.49 2008-04-08 11:21:30 jucogan Exp $
+!  $Id: release.notes,v 1.50 2008-04-11 11:45:52 cattanem Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev
 !-------------------------------------------------------------------------
 
+!========================= L0Muon v7r7 2008-04-11 ========================
 ! 2008-04-08 - Julien Cogan
  - L0MuonAlg : Allow to run from  data coming from several time bunch
    crossing (TAE mode)
