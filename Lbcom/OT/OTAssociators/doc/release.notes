@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.44 2008-04-04 13:34:51 cattanem Exp $
+! $Id: release.notes,v 1.45 2008-04-11 15:30:16 cattanem Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg & Jacopo Nardulli
 
 !===================== OTAssociators v4r2 2008-04-04 =====================
+! 2008-04-04 - Marco Cattaneo
+ - Clean up options to use DataOnDemandSvc.AlgMap instead of .Algorithms
+
 ! 2008-03-31 - Jan Amoraal
  - Some minor clean-up and more doxygen
 

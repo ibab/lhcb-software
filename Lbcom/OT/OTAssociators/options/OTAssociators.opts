@@ -1,8 +1,7 @@
-// $Id: OTAssociators.opts,v 1.10 2008-03-31 16:31:38 janos Exp $
+// $Id: OTAssociators.opts,v 1.11 2008-04-11 15:30:16 cattanem Exp $
 
-DataOnDemandSvc.Algorithms +={ "DATA='/Event/Link/Raw/OT/Times' 
-                                TYPE='OTMCParticleLinker/OTTime2MCParticle'" };
-DataOnDemandSvc.Algorithms +={ "DATA='/Event/Link/OTTimes2MCDeposits' 
-                                TYPE='OTMCDepositLinker/OTTime2MCDeposit'" };
-DataOnDemandSvc.Algorithms +={ "DATA='/Event/Link/OTTimes2MCHits'
-                                TYPE='OTMCHitLinker'" };
+DataOnDemandSvc.AlgMap +={ 
+   "/Event/Link/Raw/OT/Times"       : "OTMCParticleLinker/OTTime2MCParticle"
+  ,"/Event/Link/OTTimes2MCDeposits" : "OTMCDepositLinker/OTTime2MCDeposit"
+  ,"/Event/Link/OTTimes2MCHits"     : "OTMCHitLinker"
+};
