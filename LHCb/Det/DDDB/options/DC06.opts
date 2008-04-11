@@ -1,8 +1,8 @@
 // Defines standard conditions for DC06 production data
 
 // DC06 database tags
-DDDB.DefaultTAG = "DC06-repro0710";
-LHCBCOND.DefaultTAG = "DC06-repro0710";
+DDDB.DefaultTAG = "DC06-20080407";
+LHCBCOND.DefaultTAG = "DC06-20080407";
 
 // DC06 magnetic field
 MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";

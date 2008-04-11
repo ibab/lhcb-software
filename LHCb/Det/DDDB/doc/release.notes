@@ -4,6 +4,12 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================== DDDB v1r5 2008-04-11 =============================
+! 2008-04-11 - Marco Cattaneo
+ - Change default DC06 tag (in DC06.opts, DC06.py) to DC06-20080407, for use
+   with new Muon and Velo detector elements in LHCb v23r5. 
+   Requires SQLDDDB >= v4r2
+
 !========================== DDDB v1r4 2008-03-03 =============================
 ! 2008-02-29 - Marco Clemencic
  - Added Python option files DDDB.py (requires SQLDDDB.py) and DC06.py.
