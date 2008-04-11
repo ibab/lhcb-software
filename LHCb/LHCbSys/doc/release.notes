@@ -5,8 +5,224 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v23r5>2008-04-11 LHCbSys v23r5</A></H1><PRE>
+This version uses Gaudi v19r9 and LCG_54d.
+
+- Packages added:    BcmDet v1r1 - BCM detector element
+- Packages modified: KernelSys v7r3, LHCbKernel v8r3, LHCbMath v2r7,
+    L0MuonKernel v7r4, DetSys v11r4, DetDesc v18r4p1, MuonDet v8r0,
+    VeloDet v12r5, XmlTools v5r2, EventSys v24r2, DAQEvent v7r10, DigiEvent v2r5,
+    LinkerEvent v3r4, L0Event v16r9, MCEvent v2r8, RecEvent v2r11, DAQSys v3r9,
+    CaloDAQ v4r4, MuonDAQ v4r0, CaloUtils v7r9, CondDbEntityResolver v4r1,
+    DaVinciKernel v6r12, DaVinciMCKernel v2r7, DDDB v1r5, LoKiAlgo v7r2,
+    LoKiArrayFunctors v7r2, LoKiCore v7r2, LoKiGen v7r2, LoKiMC v7r2,
+    LoKiNumbers v7r3, LoKiPhys v7r2, L0Interfaces v1r1, MCInterfaces v1r5,
+    MDF v3r6, PatKernel v2r1, SimComponents v2r9, STKernel v1r3, TfKernel v2r4,
+    TrackInterfaces v3r13, TsaKernel v3r2, DetDescChecks v4r6
+
+- In LHCbKernel v8r3
+  . Updates to PiecewiseTrajectory
+  . In LbAppInit.cpp, create CondDBCnvSvc if not existing
+  . In xml/ParticleID.xml: Add non-equality and comparison (ordering) operators 
+
+- In LHCbMath v2r7
+  . LHCbMath/MatrixTransforms.h
+    Added many new operators into namespace Gaudi::Math::Operators 
+  . Fix a bug in Gaudi::Math::closestPointParam function
+  . In LHCbMath.h:
+    o Change namespace from LHCbMath to LHCb::Math
+    o Add floating point comparison constructs previously in LoKi::StdMath
+  . In requirements: Clean up link options for MathCore
+
+- In L0MuonKernel v7r3, v7r4
+  . Upgrade in the decoding of the transparent mode 'a la RICH'
+  . Upgrade decoding of transparent mode with ProcRawCnv and CtrlRawCnv
+    o decodes the format used at the pit during the commissioning
+    o allow error handling 
+  . Fix bug in decoding PU muon candidate charge in ProcRawCnv
+
+- In DetDesc v18r4p1
+  . Bug fix in AlignmentCondition.cpp
+    m_matrixInv was set to m_matrix in the method offNominalMatrix which 
+    meant that both were actually set to newMatrix.Inverse(), while 
+    m_matrixInv should be set to newMatrix.
+  . Bug fix in GlobalToLocalDelta.cpp
+    localDeltaFromAnyFrameDelta(...IDetectorElement...) was calling
+    localDeltaFromAnyFrame(...IGeometryInfo...) instead of
+    localDeltaFromAnyFrameDelta(...IGeometryInfo...)
+
+- In MuonDet v8r0
+  . Add a new helper class which stores the information to decode the raw 
+    buffer produced by the Tell1 (MuonDAQHelpers)
+  . Modify the Xml specific converters and the MuonBoards classes to add 
+    new information stored in conddb - requires SQLDDDB >= v4r2
+
+- In VeloDet v13r0
+  . Changed stored condition from strip capacitance to strip noise in 
+    DeVeloSensor. Requires SQLDDDB >= v4r2
+  . Removed nan returns when asking for phi offset at radius inside inner radius
+    for phi strips.
+  . In DeVeloPhiType: moved phiOffset, phiOfStrip to private; removed trgPhiOfStr
+
+- In DAQEvent v7r10
+  . Add TestDet bank type, for DAQ tests
+  . RawBankReadoutStatusMonitoring : minor change in 2d histo binning
+  . Add RawBankSizeMonitor: produces 2d histo bankSize.vs.sourceID
+  . RawBankSizeMonitor : produce profile1D histogram by default 
+  . Added the TAEWindow property (timeAlignmentEventWindow) to the ODIN class.
+    Available since version 4 of ODIN bank.
+
+- In XmlTools v5r2
+  . Modified XmlParserSvc to load DetDescSvc when needed, not at initialization
+    (to avoid circular dependencies between services during initialization).
+
+- DigiEvent v2r5, STKernel v1r3
+  . Adapt to new LHCb::Math namespace
+
+- In LinkerEvent v3r4
+  . Fixed in LinkedFrom the test to not test the classID if the first template 
+    argument is 'ContainedObject' 
+  . New LinkedFromKey class to access LinkedFrom with only two templates, the
+    TARGET and the KEY type, the SOURCE being defaulted to ContainedObject
+  . New header file 'LocalLinkerTool' that is like a LinkerTool, but doesn't 
+    store the relation on TES. The links have to be created before being used.
+  . New header file "LocalLinker" to make a local linker table not on TES.
+
+- In L0Event v16r9
+  . Change L0DUCounter::Scale from 100 to 1000 (adapt to firmware change)
+  . L0DUConfig.xml/L0DUChannel.xml/L0DUElementaryConditions.xml : 
+    + change few method names to avoid confusion with actual decision from raw
+      e.g.  'decision()' -> 'emulatedDecision()'; 'value()' -> 'emulatedValue()';
+            'fired()' -> 'emulatedTrigger()'
+    + L0DUReport 'fired' -> 'triggered'
+  . add few new methods in L0DUChannel and L0DUConfig
+    + getter method for emulatedDecision (incl downscaling) and emulatedTrigger
+      (w/o dowscaling)
+    + isDownscaled() method returning emulatedDecision() == emulatedTrigger()
+  . L0DUConfig.xml : in(de)crementCounters() method to allow to replay the same
+                     event with same downscaling counters
+  . Add == operator to the L0MuonCandidate class
+
+- In MCEvent v2r8
+  . Remove MCEffTree, MCEffParticle, now private includes in Rec/RecCheckers
+
+- In RecEvent v2r11
+  . Add tdc info in MuonCoord class
+
+- In CaloDAQ v4r4
+  . Fix small problem with decoding of incomplete Prs Front-End board
+  . Reduce verbosity in decoding tools
+
+- In MuonDAQ v4r0
+  . Remove all cabling readout info. Now retrieved by the DeMuonDetector
+  . Add the possibility to decode and encode both DC06 data format and real data
+     format (named v1)
+  . Several new methods for getting the raw data are available.
+  . Add Non Zero Suppressed decoding
+
+- In CaloUtils v7r9
+  . Minor fixes to Calo2DView
+
+- In DaVinciKernel v6r12
+  . Modify a bit IDecodeSimpleDecayString interface to be able to get the 
+    decay descriptor in a form of DaVinci::Decay
+  . New class DaVinci::Decay, which is able to represent the simple 1-step decay
+  . ParticlesFilterBase : no DECLARE_TOOL_FACTORY in linker library
+  . IPrintDecay: New abstract interface for printout of decay tree
+  . Less verbose initialisation of DVAlgorithm
+  . Add new interface IDistanceCalculator
+  . Add (implemented) template method to allow filling the plots for an
+    arbitrary sequence of objects, convertible to "const LHCb::Particle*"
+
+- In DaVinciMCKernel v2r7
+  . Minor (compatible!) modification of IPrintDecayTreeTool interface 
+
+- In DDDB v1r5
+  . Change default DC06 tag (in DC06.opts, DC06.py) to DC06-20080407, for use
+    with new Muon and Velo detector elements. Requires SQLDDDB >= v4r2
+
+- In LoKiAlgo v7r2
+  . Add possibility to define the loop in term of "decays"
+
+- In LoKiArrayFunctors v7r2
+  . New tools: LoKi::Hybrid::PlotTool, PrintTool, TupleTool
+  . New default list of modules to be loaded 
+  . In LoKiArrayFunctors/functions.py, add AALL, ANONE, ATRUE, AFALSE instances 
+
+- In LoKiCore v7r2
+  . Reporter.cpp: fix unchecked StatusCode
+  . python/LoKiCore/functions.py: 
+    + add alias "debug" for creation of monitored functors
+    + fix a type in the iteration method for SmartRefVectors
+  . Remove LoKi/StdMath.h and LoKi/EqualTo.h. 
+    Functionality moved to LHCbMath/LHCbMath.h, in LHCb::Math namespace.
+  . Add random number service into Services
+  . Implement the proper interface dispatches for LoKi-service. SmartIF<...>
+    now allows to extract many other interfaces from LoKi::ILoKiSvc
+  . Add "HugeChi2"and "HugeDistance" into LoKi/Constants.h
+  . Add LoKi/Random.h and src/Random.cpp files. New "random" functors:
+      LoKi::Random::Numbers, LoKi::Random::Uniform, LoKi::Random::Gaussian,
+      LoKi::Random::Rand 
+  . src/ParticleProperties.cpp: fix a stupid bug with antiParticles 
+
+- In LoKiNumbers v7r3
+  . Introduce symbol for "random" cuts
+
+- In LoKiPhys v7r2
+  . Add new context functors
+  . Add new functor LoKi::Particles::TrackChi2Prob, which evaluates the
+    chi2-probability of the track fit using GSL routine
+  . Add the symbol TRPCHI2 for LoKi::Particles::TrackChi2Prob instance
+
+- In LoKiCore v7r2, LoKiGen v7r2, LoKiMC v7r2, LoKiNumbers v7r3, LoKiPhys v7r2
+  . Add __rshift__ streamer operators for the functors 
+
+- In LoKiCore v7r2, LoKiGen v7r2, LoKiMC v7r2, LoKiPhys v7r2
+  . Improved printout of boolean constants 
+
+- In L0Interfaces v1r1
+  . IL0DUEmulatorTool : change method name : 'report()' -> emulatedReport()
+    to avoid confusion with actual L0DUReport from Raw
+
+- In MCInterfaces v1r5
+  . Add IMCReconstructed interface
+  . Add new methods to MCTruth tool interface ( isHPDReflection() and 
+    isSiBackScatter() )
+
+- In MDF v3r6
+  . Fix bug in RawDataCnvSvc: Fail object creation if data is not accessible
+  . Change the TAE identification from TriggerType to the new field TAEWindow
+  . Changes in OnlineRunInfo.h, RawEventHelpers, TAETestCreator and MEPWriter 
+    In this last one, check packing factor in TAE mode to be odd and below 15.
+
+- In PatKernel v2r1
+  . Fix bug for decoding on demand (no effects on standard tracking)
+  . Move PatTStationHitManager.cpp to TfTools component libary.
+    PatTStationHitManager.h stays in this package to keep it visible from outside
+
+- In SimComponents v2r9
+  . PrintMCDecayTreeAlg: add property "MCParticleLocation" to allow to provide
+    alternative input MCParticle containers.
+
+- In TfKernel v2r4
+  . Make clearHits() methode of TStationHitManager public. Needed to run after
+    decoding on demand.
+  . Fix in DefaultVeloHitManager: the hit preparation always tried to access
+    the first cluster in the cluster container to obtain a sensor number,
+    causing a crash on empty cluster containers.
+
+- In TrackInterfaces v3r13
+  . Modify state correction and fitter interfaces to accept optional pid argument
+
+- In TsaKernel v3r2
+  . Move TsaTStationHitManager.cpp to TfTools component libary.
+    TsaTStationHitManager.h stays in this package to keep it visible from outside
+
+- In DetDescChecks v4r6
+  . Force the creation of CondDBCnvSvc (if needed) in LoadDDDB::initialize.
+
 </PRE><H1><A NAME=v23r4>2008-03-05 LHCbSys v23r4</A></H1><PRE>
-This version uses Gaudi v19r8 and LCG_54a. Fully compatible with DC06 data
+This version uses Gaudi v19r8 and LCG_54b. Fully compatible with DC06 data
 
 - Packages removed: MDF_DCAP - Functionality now in MDF_ROOT
                     MDF_GFAL - Functionality now in MDF_ROOT
