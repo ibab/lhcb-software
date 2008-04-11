@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.h,v 1.7 2008-04-02 11:52:05 asatta Exp $
+// $Id: MuonRawBuffer.h,v 1.8 2008-04-11 11:07:11 asatta Exp $
 #ifndef MUONRAWBUFFER_H 
 #define MUONRAWBUFFER_H 1
 
@@ -49,6 +49,9 @@ public:
   MuonPPEventInfo getPPInfo(const LHCb::RawBank* r,unsigned int pp_num);
   MuonPPEventInfo getPPInfo(unsigned int tell1Number,unsigned int pp_num);
   //StatusCode getTDCInODE();
+ 
+  StatusCode getPads( int tell1,std::vector<LHCb::MuonTileID>& pads);
+  StatusCode getPadsInStation( int station,std::vector<LHCb::MuonTileID>& pads);
   
 
   void forceReset()
