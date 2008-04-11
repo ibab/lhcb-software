@@ -1,4 +1,4 @@
-// $Id: PrintMCDecayTreeAlg.cpp,v 1.1 2007-11-26 17:22:24 cattanem Exp $
+// $Id: PrintMCDecayTreeAlg.cpp,v 1.2 2008-04-11 07:34:32 jpalac Exp $
 // Include files 
 #include <stdlib.h>
 
@@ -26,9 +26,13 @@ DECLARE_ALGORITHM_FACTORY( PrintMCDecayTreeAlg );
 //=============================================================================
 PrintMCDecayTreeAlg::PrintMCDecayTreeAlg( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ), m_printTool(0)
+  : 
+  GaudiAlgorithm ( name , pSvcLocator ), m_printTool(0),
+  m_printToolName(  "PrintMCDecayTreeTool" ),
+  m_particleLocation( LHCb::MCParticleLocation::Default )
 {
-  declareProperty( "PrintTool", m_printToolName = "PrintMCDecayTreeTool" );
+  declareProperty( "PrintTool", m_printToolName );
+  declareProperty( "MCParticleLocation", m_particleLocation );
 }
 
 //=============================================================================
@@ -58,7 +62,7 @@ StatusCode PrintMCDecayTreeAlg::execute() {
   debug() << "==> Execute" << endreq;
 
   LHCb::MCParticles* parts = 
-    get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
+    get<LHCb::MCParticles>( m_particleLocation);
 
   LHCb::MCParticles::iterator iPart;
   for( iPart = parts->begin(); iPart != parts->end(); iPart++ ) {
