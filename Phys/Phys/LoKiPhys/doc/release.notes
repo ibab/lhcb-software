@@ -1,19 +1,19 @@
-! $Id: release.notes,v 1.54 2008-04-10 18:42:02 ibelyaev Exp $ 
+! $Id: release.notes,v 1.55 2008-04-11 06:06:16 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhys v7r2 2008-04-10 ==========================
 ! 2008-04-10 - Vanya BELYAEV
  - LoKi/Particles13.h, src/Particles13.cpp
-   add new functor LoKi::Particles::TrackChi2Prob, which evaluates the chi2-probability 
-   of the track fit using GSL routine.
+   add new functor LoKi::Particles::TrackChi2Prob, which evaluates the
+   chi2-probability of the track fit using GSL routine.
  - LoKi/ParticleCuts.h, 
    python/LoKiPhys/functions.py 
     add the symbol TRPCHI2 for LoKi::Particles::TrackChi2Prob instance  
 
-!========================== LoKiPhys v7r2 2008-04-03 ==========================
 ! 2008-03-30 - Vanay BELYAEV
  - add new context functors on requested by Patrick, Sean & Vava 
  - new streamers/shift __rshift__
