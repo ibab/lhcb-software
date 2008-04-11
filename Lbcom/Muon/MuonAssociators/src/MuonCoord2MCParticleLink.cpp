@@ -1,4 +1,4 @@
-// $Id: MuonCoord2MCParticleLink.cpp,v 1.3 2007-06-06 14:59:58 cattanem Exp $
+// $Id: MuonCoord2MCParticleLink.cpp,v 1.4 2008-04-11 10:21:59 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -63,7 +63,8 @@ StatusCode MuonCoord2MCParticleLink::execute() {
     digitLink( evtSvc(), msgSvc(),LHCb::MuonDigitLocation::MuonDigit);
   if(digitLink.notFound())info()<<" my link not found "<<endmsg;
   m_digitLink=&(digitLink);
-  list_digit=m_muonBuffer->getTile();
+  StatusCode sc=m_muonBuffer->getTile(list_digit);
+  if(sc.isFailure())return sc;
   //get the list of coords
 
   LHCb::MuonCoords* coords =
