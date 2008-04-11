@@ -20,8 +20,8 @@ ApplicationMgr.DLLs   += { "FlavourTagging" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/MySeq" };
 
 MySeq.Members += { "TrgL1Filter", 
-		   "Sequencer/SeqTDRselBs2DsPi", 
-		   "Sequencer/SeqTagging" };
+               "Sequencer/SeqTDRselBs2DsPi", 
+               "Sequencer/SeqTagging" };
 
 ApplicationMgr.DLLs      += { "Bs2DsH" , "LoKi" };
 SeqTDRselBs2DsPi.Members += { "LoKiPreLoad/CombinedForBs2DsH" };

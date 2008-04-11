@@ -54,7 +54,7 @@ DaVinciMainSeq.Members += { "SelResultCorrelations/CorrDstar" };
 CorrDstar.Algorithms = { "StdLooseD02KPi", "StdLooseD02KK", "StdLooseD02PiPi",
                          "StdLooseD02KsPiPi", "StdLooseD02KsPiPi", "StdLooseD2KPiPi",
                           "StdLooseDstarWithD02KPi", "StdLooseDstarWithD02KK", 
-			  "StdLooseDstarWithD02PiPi",} ;
+                    "StdLooseDstarWithD02PiPi",} ;
 
 DaVinciMainSeq.Members += { "SelResultCorrelations/BroadResonances" };
 BroadResonances.Algorithms = { "StdLooseKstar2KPi", "StdLooseRho02PiPi", "StdLoosePhi2KK" } ;

@@ -1,5 +1,5 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.15 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $
 // ============================================================================
 
 /** @file
@@ -137,8 +137,8 @@ StdLoosePenguinDimuon.DecayDescriptors = {"J/psi(1S) -> mu+ mu-"};
 
 StdLoosePenguinDimuon.Window = 3000.0 * MeV;
 // Cuts for the mother
-StdLoosePenguinDimuon.MotherFilter.Selections = { 	"J/psi(1S) : 	VtxFilterCriterion"};
-//								  		Momentum2FlightAngleFilterCriterion"};
+StdLoosePenguinDimuon.MotherFilter.Selections = {       "J/psi(1S) :       VtxFilterCriterion"};
+//                                                              Momentum2FlightAngleFilterCriterion"};
 
 StdLoosePenguinDimuon.MotherFilter.VtxFilterCriterion.MaxChi2 = 100000.0; 
 //StdLoosePenguinDimuon.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle = -2;  

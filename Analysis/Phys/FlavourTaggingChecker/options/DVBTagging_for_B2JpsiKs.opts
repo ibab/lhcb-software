@@ -28,7 +28,7 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/SeqB2Jpsihh" } ;
 // and filter only events with a J/Psi reconstructed:
 //-------------------------------------------------------------
 
-SeqB2Jpsihh.Members += { "FilterDesktop/MyJpsi2MuMu" };	
+SeqB2Jpsihh.Members += { "FilterDesktop/MyJpsi2MuMu" };      
 MyJpsi2MuMu.PhysDesktop.InputLocations = {"Phys/StdUnbiasedJpsi2MuMu"};
 
 //====================================================
@@ -91,9 +91,9 @@ BDecay.LinkAsct.AlgorithmName = "Particle2MCLinksBDecay";
 BDecay.LinkAsct.OutputLevel   = 4;
 Particle2MCLinksBDecay.OutputLevel = 4;
 Particle2MCLinksBDecay.InputData = {"Phys/StandardMuons/Particles",
-				    "Phys/StandardPions/Particles",
-				    "Phys/Bd2JpsiKsLL/Particles",
-				    "Phys/Bd2JpsiKsDD/Particles" };
+                            "Phys/StandardPions/Particles",
+                            "Phys/Bd2JpsiKsLL/Particles",
+                            "Phys/Bd2JpsiKsDD/Particles" };
 
 BDecay.DecayDescriptor ="[B0 -> J/psi(1S) KS0]cc" ;
 BDecay.Decay ="{B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-), B~0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-) }";

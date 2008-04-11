@@ -1,6 +1,6 @@
-// $Id: StandardLambda.opts,v 1.3 2007-02-23 14:00:50 jonrob Exp $
+// $Id: StandardLambda.opts,v 1.4 2008-04-11 17:08:11 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 
 /** @file 
@@ -84,11 +84,11 @@ StdTightLambda1115_DL_Seq.MeasureTime = true;
 //
 //                          make LOOSE LAMBDA combinations
 //
-//------------------------------------------------------------------------------																																																				  																
+//------------------------------------------------------------------------------                                                                                                                                                                                                                                                                                                                                                                                                                          
 // LL combinations
 StdLooseLambda1115_LL.PhysDesktop.InputLocations = {
                                             "/Event/Phys/StdLooseProtons",
-		                            "/Event/Phys/StdLoosePions"};
+                                        "/Event/Phys/StdLoosePions"};
 StdLooseLambda1115_LL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
 StdLooseLambda1115_LL.MotherFilter.Selections = 
                                        {"Lambda0 : VtxFilterCriterion,FlightDistanceFilterCriterion"};
@@ -113,12 +113,12 @@ StdLooseLambda1115_DD.DaughterFilter.Selections =
                                         "pi- : KinFilterCriterion/pionKin,
                                                PVIPFilterCriterion/pionPVIP"}; 
 StdLooseLambda1115_DD.KillOverLap = true;
-													  
+                                                                                
 
 // LU combinations
 StdLooseLambda1115_LU.PhysDesktop.InputLocations = {
                                            "/Event/Phys/StdLooseProtons",
-		   			                               "/Event/Phys/StdLooseVTTPions"};
+                                                                "/Event/Phys/StdLooseVTTPions"};
 StdLooseLambda1115_LU.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
 StdLooseLambda1115_LU.MotherFilter.Selections = 
                                        {"Lambda0 : VtxFilterCriterion,FlightDistanceFilterCriterion"};
@@ -134,7 +134,7 @@ StdLooseLambda1115_LU.MotherFilter.FlightDistanceFilterCriterion.CutBestPV = fal
 // UL combinations
 StdLooseLambda1115_UL.PhysDesktop.InputLocations = {
                                            "/Event/Phys/StdLooseVTTProtons",
-		   			   "/Event/Phys/StdLoosePions"};
+                                    "/Event/Phys/StdLoosePions"};
 StdLooseLambda1115_UL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
 StdLooseLambda1115_UL.MotherFilter.Selections = 
                                        {"Lambda0 : VtxFilterCriterion,FlightDistanceFilterCriterion"};
@@ -147,10 +147,10 @@ StdLooseLambda1115_UL.KillOverLap = true;
 StdLooseLambda1115_UL.MotherFilter.FlightDistanceFilterCriterion.CutBestPV = false;
 
 
-// LD combinations													  
+// LD combinations                                                                                
 StdLooseLambda1115_LD.PhysDesktop.InputLocations = {
                                            "/Event/Phys/StdLooseProtons",
-		   																	   "/Event/Phys/StdLooseDownstreamPions"};
+                                                                                                                        "/Event/Phys/StdLooseDownstreamPions"};
 StdLooseLambda1115_LD.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
 StdLooseLambda1115_LD.MotherFilter.Selections = 
                                       {"Lambda0 : VtxFilterCriterion"};
@@ -159,15 +159,15 @@ StdLooseLambda1115_LD.DaughterFilter.Selections =
                                               PVIPFilterCriterion/protonPVIP",
                                         "pi- : KinFilterCriterion/pionKin,
                                                PVIPFilterCriterion/pionPVIP"};
-StdLooseLambda1115_LD.KillOverLap = true;													  
+StdLooseLambda1115_LD.KillOverLap = true;                                                                                
 
 
-// DL combinations													  													  
+// DL combinations                                                                                                                                                                
 StdLooseLambda1115_DL.PhysDesktop.InputLocations = {"/Event/Phys/StdLooseDownstreamProtons",
-		   															        		    "/Event/Phys/StdLoosePions"};								 
+                                                                                                                                 "/Event/Phys/StdLoosePions"};                                                 
 StdLooseLambda1115_DL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
 StdLooseLambda1115_DL.MotherFilter.Selections = 
-                                       {"Lambda0 : VtxFilterCriterion"};												  
+                                       {"Lambda0 : VtxFilterCriterion"};                                                                          
 StdLooseLambda1115_DL.DaughterFilter.Selections =
                                        {"p+ : KinFilterCriterion/protonKin",
                                         "pi- : KinFilterCriterion/pionKin,
@@ -276,11 +276,11 @@ StdLooseLambda1115_DL.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
 //
 //                          make TIGHT LAMBDA combinations
 //
-//------------------------------------------------------------------------------																																																				  																
+//------------------------------------------------------------------------------                                                                                                                                                                                                                                                                                                                                                                                                                          
 // LL combinations
 StdTightLambda1115_LL.PhysDesktop.InputLocations = {
                                             "/Event/Phys/StdLooseProtons",
-		                                  			"/Event/Phys/StdLoosePions"};
+                                                                "/Event/Phys/StdLoosePions"};
 StdTightLambda1115_LL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
 StdTightLambda1115_LL.MotherFilter.Selections = 
                                        {"Lambda0 : VtxFilterCriterion,FlightDistanceFilterCriterion,PVIPFilterCriterion"};
@@ -306,12 +306,12 @@ StdTightLambda1115_DD.DaughterFilter.Selections =
                                         "pi- : KinFilterCriterion/pionKin,
                                                PVIPFilterCriterion/pionPVIP"}; 
 StdTightLambda1115_DD.KillOverLap = true;
-													  
+                                                                                
 
 // LU combinations
 StdTightLambda1115_LU.PhysDesktop.InputLocations = {
                                            "/Event/Phys/StdLooseProtons",
-		   			                               "/Event/Phys/StdLooseVTTPions"};
+                                                                "/Event/Phys/StdLooseVTTPions"};
 StdTightLambda1115_LU.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
 StdTightLambda1115_LU.MotherFilter.Selections = 
                                        {"Lambda0 : VtxFilterCriterion,FlightDistanceFilterCriterion,PVIPFilterCriterion"};
@@ -327,7 +327,7 @@ StdTightLambda1115_LU.MotherFilter.FlightDistanceFilterCriterion.CutBestPV = fal
 // UL combinations
 StdTightLambda1115_UL.PhysDesktop.InputLocations = {
                                            "/Event/Phys/StdLooseVTTProtons",
-		   			                               "/Event/Phys/StdLoosePions"};
+                                                                "/Event/Phys/StdLoosePions"};
 StdTightLambda1115_UL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
 StdTightLambda1115_UL.MotherFilter.Selections = 
                                        {"Lambda0 : VtxFilterCriterion,FlightDistanceFilterCriterion,PVIPFilterCriterion"};
@@ -340,10 +340,10 @@ StdTightLambda1115_UL.KillOverLap = true;
 StdTightLambda1115_UL.MotherFilter.FlightDistanceFilterCriterion.CutBestPV = false;
 
 
-// LD combinations													  
+// LD combinations                                                                                
 StdTightLambda1115_LD.PhysDesktop.InputLocations = {
                                            "/Event/Phys/StdLooseProtons",
-		   																	   "/Event/Phys/StdLooseDownstreamPions"};
+                                                                                                                        "/Event/Phys/StdLooseDownstreamPions"};
 StdTightLambda1115_LD.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
 StdTightLambda1115_LD.MotherFilter.Selections = 
                                       {"Lambda0 : VtxFilterCriterion"};
@@ -352,15 +352,15 @@ StdTightLambda1115_LD.DaughterFilter.Selections =
                                               PVIPFilterCriterion/protonPVIP",
                                         "pi- : KinFilterCriterion/pionKin,
                                                PVIPFilterCriterion/pionPVIP"};
-StdTightLambda1115_LD.KillOverLap = true;													  
+StdTightLambda1115_LD.KillOverLap = true;                                                                                
 
 
-// DL combinations													  													  
+// DL combinations                                                                                                                                                                
 StdTightLambda1115_DL.PhysDesktop.InputLocations = {"/Event/Phys/StdLooseDownstreamProtons",
-		   															        		    "/Event/Phys/StdLoosePions"};								 
+                                                                                                                                 "/Event/Phys/StdLoosePions"};                                                 
 StdTightLambda1115_DL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
 StdTightLambda1115_DL.MotherFilter.Selections = 
-                                       {"Lambda0 : VtxFilterCriterion"};												  
+                                       {"Lambda0 : VtxFilterCriterion"};                                                                          
 StdTightLambda1115_DL.DaughterFilter.Selections =
                                        {"p+ : KinFilterCriterion/protonKin",
                                         "pi- : KinFilterCriterion/pionKin,
