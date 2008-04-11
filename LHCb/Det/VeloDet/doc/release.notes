@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.193 2008-04-11 06:33:01 cattanem Exp $
+! $Id: release.notes,v 1.194 2008-04-11 13:51:17 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
-!======================== VeloDet v12r5 2008-04-10 ===========================
+!======================== VeloDet v13r0 2008-04-10 ===========================
 ! 2008-03-28 - David Hutchcroft
  - Changed stored condition from strip capactiance to strip noise in DeVeloSensor
    Requires SQLDDDB >= v4r2
