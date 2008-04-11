@@ -14,5 +14,5 @@ use MuonDet             v8r0    Det
 use OTDet               v7r7    Det
 use RichDet             v10r10  Det
 use STDet               v3r9    Det
-use VeloDet             v12r5   Det
+use VeloDet             v13r0   Det
 use XmlTools            v5r2    Tools
