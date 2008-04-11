@@ -25,8 +25,8 @@ use RELAX       v*      LCG_Interfaces
 
 #---- Include relevant RELAX dictionaries into LHCB reflex.rootmap
 pattern copy_relax_rootmap \
-  action copy_relax_rootmap<dict> '$(merge_rootmap_cmd) --do-merge -i $(RELAX_home)/lib/lib<dict>Rflx.pamtoor -m $(CMTINSTALLAREA)/$(tag)/lib/reflex.rootmap' \
-         WIN32                    'python $(merge_rootmap_cmd) --do-merge -i $(RELAX_home)/lib/<dict>Rflx.pamtoor -m $(CMTINSTALLAREA)/$(tag)/lib/reflex.rootmap' ;\
+  action copy_relax_rootmap<dict> '$(merge_rootmap_cmd) --stamp-dir $(CMTINSTALLAREA)/$(tag)/lib --do-merge -i $(RELAX_home)/lib/lib<dict>Rflx.pamtoor -m $(CMTINSTALLAREA)/$(tag)/lib/reflex.rootmap' \
+         WIN32                    'python $(merge_rootmap_cmd) --stamp-dir $(CMTINSTALLAREA)/$(tag)/lib --do-merge -i $(RELAX_home)/lib/<dict>Rflx.pamtoor -m $(CMTINSTALLAREA)/$(tag)/lib/reflex.rootmap' ;\
   macro_append constituents  " copy_relax_rootmap<dict> "
 
 
