@@ -1,4 +1,4 @@
-// $Id: Bs2Jpsiphi_mm.opts,v 1.4 2008-03-12 17:14:49 ibelyaev Exp $ 
+// $Id: Bs2Jpsiphi_mm.opts,v 1.5 2008-04-11 17:08:08 pkoppenb Exp $ 
 // ============================================================================
 
 //-- GAUDI data cards generated on 3/12/08 11:52 AM
@@ -217,7 +217,7 @@ EventSelector.Input   = {
 "DATAFILE='LFN:/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000178_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
 };
 
-	
+      
 
 
 // ============================================================================
