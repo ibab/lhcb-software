@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.30 2008-03-14 17:02:16 pkoppenb Exp $
+! $Id: release.notes,v 1.31 2008-04-11 17:13:27 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
 
 ! 2008-03-14 - Patrick Koppenburg for Onuora Awunor
  - TaggingTool to output tagging information from MC truth & Data in root files

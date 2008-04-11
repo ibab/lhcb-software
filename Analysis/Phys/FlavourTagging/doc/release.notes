@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.112 2008-01-15 19:01:59 pkoppenb Exp $
+! $Id: release.notes,v 1.113 2008-04-11 17:13:28 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
 
 !======================= FlavourTagging v7r3p1 2008-01-15 ====================
 ! 2008-01-15 - Patrick Koppenburg
