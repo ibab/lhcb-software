@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.25 2008-04-11 10:21:59 asatta Exp $
+! $Id: release.notes,v 1.26 2008-04-11 11:22:08 cattanem Exp $
 ! Package     : MuonAssociators
 ! Responsible : Alessia Satta
 !---------------------------------------------------------------------------
 
+!==================== MuonAssociators v3r2 2008-04-11 ======================
 ! 2008-04-11 - Alessia Satta
  - Adapt to new MuonDAQ
 
