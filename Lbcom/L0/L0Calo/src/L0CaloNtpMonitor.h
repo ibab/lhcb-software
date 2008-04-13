@@ -1,4 +1,4 @@
-// $Id: L0CaloNtpMonitor.h,v 1.1 2008-03-10 19:38:36 robbep Exp $
+// $Id: L0CaloNtpMonitor.h,v 1.2 2008-04-13 16:53:32 robbep Exp $
 #ifndef L0CALONTPMONITOR_H
 #define L0CALONTPNOMITOR_H 1
 
@@ -8,7 +8,7 @@
 
 class DeCalorimeter ;
 
-/** @class L0CaloNtpMonitor L0CaloMonitor.h
+/** @class L0CaloNtpMonitor L0CaloNtpMonitor.h
  *
  *  @author Marie-Helene Schune
  *  @date 2008-02-22
