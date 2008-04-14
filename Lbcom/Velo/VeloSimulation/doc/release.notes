@@ -4,6 +4,15 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-04-14 - David Hutchcroft
+ - Retuned time curves to use vfp = 150 and vfs = 550 : best guess as inital 
+   BEETLE tune parameters, amount of spillover increased
+ - Offset sampling time to get equal amplification to Prev and Next MCHits
+ - Added PrevPrev and NextNext to simulation by default
+ - Corrected noise simulation otherwise empty strips
+ - Set capacitve coupling to 1% (from 5%) to get approx 1 and 2 strip 
+   ratio about right
+
 !===================== VeloSimulation v3r0 2008-04-11 ======================
 ! 2008-03-28 - David Hutchcroft
  - Update to VeloSim

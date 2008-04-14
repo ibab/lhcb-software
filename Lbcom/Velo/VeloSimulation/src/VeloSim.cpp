@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.21 2008-04-11 11:55:20 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.22 2008-04-14 09:36:45 dhcroft Exp $
 // Include files
 // STL
 #include <string>
@@ -70,7 +70,7 @@ VeloSim::VeloSim( const std::string& name,
   declareProperty("SimulationPointsPerStrip", m_simulationPointsPerStrip = 3 );
   declareProperty("ChargeUniform", m_chargeUniform = 70. );
   declareProperty("DeltaRayMinEnergy", m_deltaRayMinEnergy = 1000. );
-  declareProperty("CapacitiveCoupling", m_capacitiveCoupling = 0.05 );
+  declareProperty("CapacitiveCoupling", m_capacitiveCoupling = 0.01 );
   declareProperty("AverageStripNoise", m_averageStripNoise = 2.3 );
   // 442. is equivalent to 113216. at full range in VeloDataProcessor
   // 113216/256 = 442.
@@ -86,6 +86,8 @@ VeloSim::VeloSim( const std::string& name,
   declareProperty("SiAmplifierResponse",     
 		  m_SiTimeToolType = "SiAmplifierResponse");
   declareProperty("PulseShapePeakTime",m_pulseShapePeakTime=30.7848);
+  declareProperty("NoiseScale" , m_noiseScale =1.);
+
 
   Rndm::Numbers m_gaussDist;
   Rndm::Numbers m_uniformDist;
@@ -136,7 +138,7 @@ StatusCode VeloSim::initialize() {
   m_threshold = m_thresholdADC*m_electronsPerADC;
   // precalulate the probability of adding noise to a strip
   m_noiseTailProb = gsl_sf_erf_Q(m_threshold/ 
-				 (m_averageStripNoise*m_electronsPerADC));
+		      (m_averageStripNoise*m_noiseScale*m_electronsPerADC));
   info() <<"Probability to add noise to empty strips " << m_noiseTailProb
 	 << endmsg;
 
@@ -532,7 +534,7 @@ void VeloSim::fillFE(LHCb::MCVeloFE* myFE,
   myFE->setAddedSignal(myFE->addedSignal()+charge);
   if( hit ){
     // add link to MC hit / update with weight
-    if(m_isVerbose) verbose() << "fillFE " << myFE << endmsg;
+    if(m_isVerbose) verbose() << "fillFE " << myFE->key() << endmsg;
     //
     int size=myFE->NumberOfMCHits();
     int i=0;
@@ -541,7 +543,7 @@ void VeloSim::fillFE(LHCb::MCVeloFE* myFE,
       //
       if(m_isVerbose) verbose()
 	<< "hit number " << i << " / " << size
-	<< " charge " << charge << " hit " << hit <<endmsg;
+	<< " charge " << charge << " hit " << hit->index() <<endmsg;
       hitChk=myFE->mcHit(i);
       i++;
     };
@@ -555,7 +557,8 @@ void VeloSim::fillFE(LHCb::MCVeloFE* myFE,
       myFE->setMCHitCharge(i,sig);
       //
       if(m_isVerbose) verbose()<< " new signal value " << sig << " for hit "
-			       << hit << " hit check " << hitChk << endmsg;
+			       << hit->index() << " hit check " 
+			       << hitChk->index() << endmsg;
     }
     else{
       if(m_isVerbose) verbose()<< "hit added" << endmsg;
@@ -832,7 +835,7 @@ void VeloSim::noiseSim(){
       int maxStrips= sens->numberOfStrips();
       if(!m_makeNonZeroSuppressedData){
         hitNoiseTotal= 
-          int(LHCb::Math::round(2.*m_noiseTailProb)*float(maxStrips));
+	  int(LHCbMath::round(2.*m_noiseTailProb*maxStrips));
         Rndm::Numbers poisson(randSvc(), Rndm::Poisson(hitNoiseTotal));
         hitNoiseTotal = int(poisson());
       }else{
@@ -844,7 +847,8 @@ void VeloSim::noiseSim(){
 	<< "Number of strips to add noise to " << hitNoiseTotal
 	<< " sensor Number " << sensorNo
 	<< " maxStrips " << maxStrips
-	<< " sigma of noise " << m_averageStripNoise*m_electronsPerADC
+	<< " sigma of noise " 
+	<< m_averageStripNoise*m_noiseScale*m_electronsPerADC
 	<< " threshold " << m_threshold
 	<< " tail probability " 
 	<< m_noiseTailProb
@@ -860,7 +864,8 @@ void VeloSim::noiseSim(){
           // find strip in list.
           LHCb::MCVeloFE* myFE = findOrInsertFE(stripKey);
           if (myFE->addedNoise()==0){
-            double noise=noiseValueTail(sens->stripNoise(stripArrayIndex));
+            double noise=
+	      noiseValueTail(sens->stripNoise(stripArrayIndex)*m_noiseScale);
             myFE->setAddedNoise(noise);
             //
             if(m_isVerbose) verbose()<< "hit from tail of noise created "

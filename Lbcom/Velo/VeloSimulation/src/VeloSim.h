@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.10 2008-03-28 16:51:53 dhcroft Exp $
+#// $Id: VeloSim.h,v 1.11 2008-04-14 09:36:45 dhcroft Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -163,6 +163,8 @@ private:
   double m_pedestalVariation;   ///< Simulated pedestal variation 
   /// make a VeloFE for every strip (default false)
   bool m_makeNonZeroSuppressedData; 
+  double m_noiseScale;          ///< Scale factor to apply to noise from db
+
 
   std::string m_SiTimeToolType; ///< normally "SiAmpliferResponse" from STTools
   ISiAmplifierResponse* m_SiTimeTool;
