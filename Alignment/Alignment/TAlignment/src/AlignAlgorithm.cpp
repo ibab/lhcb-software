@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.41 2008-04-06 19:22:57 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.42 2008-04-14 20:46:08 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -51,20 +51,23 @@ namespace {
 
  class Data {
  public:
-   Data(unsigned nodeindex, unsigned index, double r, const Gaudi::Matrix1x6& d)
+   Data(unsigned nodeindex, unsigned index, double r, const Gaudi::Matrix1x6& d,bool isoutlier)
      : m_nodeindex(nodeindex),
        m_index(index),
        m_r(r),
-       m_d(d) {}
+       m_d(d),
+       m_isOutlier(isoutlier) {}
    unsigned index() const { return m_index; }
    double r() const { return m_r; }
    const Gaudi::Matrix1x6& d() const { return m_d; }
    size_t nodeindex() const { return m_nodeindex ; }
+   bool isOutlier() const { return m_isOutlier ; }
  private:
    size_t            m_nodeindex;
    unsigned          m_index;
    double            m_r;
    Gaudi::Matrix1x6  m_d;
+   bool              m_isOutlier ;
  };
  
  //FIXME: the next two stand-alone functions should move into AlVec & AlSymMat...
@@ -140,11 +143,13 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("CanonicalConstraintStrategy" , m_canonicalConstraintStrategy  = CanonicalConstraintAuto );
   declareProperty("Constraints"                 , m_constraints = Constraints::global() ) ;
   declareProperty("UseWeightedAverageConstraint", m_useWeightedAverageConstraint = false                   );
-  declareProperty("MinNumberOfHits"             , m_minNumberOfHits              = 1u                      ); 
+  declareProperty("MinNumberOfHits"             , m_minNumberOfHits              = 100u                    ); 
   declareProperty("FillCorrelationsHistos"      , m_fillCorrelationHistos        = false                   );
   declareProperty("UsePreconditioning"          , m_usePreconditioning           = false                   );
-  declareProperty("OutputDataFile"              , m_outputDataFileName           = "" ) ;
+  declareProperty("OutputDataFile"              , m_outputDataFileName           = "alignderivatives.dat" ) ;
+  declareProperty("InputDataFiles"              , m_inputDataFileNames ) ;
   declareProperty("LogFile"                     , m_logFileName                  = "alignlog.txt" ) ;
+  declareProperty("Chi2Outlier"                 , m_chi2Outlier                  = 10000 ) ;
 }
 
 AlignAlgorithm::~AlignAlgorithm() {}
@@ -192,7 +197,14 @@ StatusCode AlignAlgorithm::initialize() {
   m_equations = new Al::Equations(m_rangeElements.size());
   m_equations->clear() ;
   assert( m_rangeElements.size() == m_equations->nElem() ) ;
-
+  for(std::vector<std::string>::const_iterator ifile = m_inputDataFileNames.begin() ; 
+      ifile != m_inputDataFileNames.end(); ++ifile) {
+    Al::Equations tmp(m_equations->nElem()) ;
+    tmp.readFromFile( (*ifile).c_str() ) ;
+    m_equations->add( tmp ) ; 
+    warning() << "Adding derivatives from input file: " << *ifile << " " << tmp.numHits() << " "
+	      << tmp.totalChiSquare() << " " << m_equations->totalChiSquare() << endreq ;
+  }
 
   /// Get projector selector tool
   m_projSelector = tool<ITrackProjectorSelector>(m_projSelectorName, "Projector", this);
@@ -380,6 +392,7 @@ void AlignAlgorithm::accumulate( const Al::Residuals& residuals )
     m_nHitsHistos[index]->fill(m_iteration);
     m_resHistos[index]->fill(m_iteration, res);
     m_pullHistos[index]->fill(m_iteration, res/(*node)->errResidual());
+    bool isoutlier = res*res/(*node)->errResidual2() > m_chi2Outlier ;
     // Get alignment derivatives
     LHCb::StateVector state((*node)->state().stateVector(),(*node)->state().z());
     // the projector calculates the derivatives in the global
@@ -392,14 +405,21 @@ void AlignAlgorithm::accumulate( const Al::Residuals& residuals )
     // push back normalized residuals & derivatives;
     res /= err;
     der /= err;
-    data.push_back(Data(nodeindex, index, res, der));
-    m_equations->addHitSummary( index, err ) ;
+    data.push_back(Data(nodeindex, index, res, der, isoutlier));
   }
   
   if (!data.empty()) {
     for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
-      m_equations->V(id->index())               -= convert(id->r()*id->d()) ;
-      m_equations->M(id->index(), id->index())  += (Transpose(id->d())*id->d());
+      m_equations->addHitSummary(id->index(), residuals.V(id->nodeindex()), residuals.R(id->nodeindex())) ;
+      // outliers are not added to the first derivative. they must be
+      // added to the 2nd though, because otherwise we loose the
+      // correlations. we'll solve the relative normalization when we
+      // build the full linear system.
+      if( !id->isOutlier() ) 
+	m_equations->V(id->index())            -= convert(id->r()*id->d()) ;
+      else
+	m_equations->numOutliers(id->index())  += 1 ;
+      m_equations->M(id->index(), id->index()) += (Transpose(id->d())*id->d());
       
       for (std::vector<Data>::const_iterator jd = data.begin(); jd != idEnd; ++jd) {
 	if ( id == jd || ( m_correlation && id->index() <= jd->index() )) {
@@ -698,9 +718,11 @@ void AlignAlgorithm::update() {
   AlVec    tmpDerivatives(numParameters);
   AlSymMat tmpMatrix(numParameters);
 
-  /// Loop over map of index to 2nd derivative matrix and 1st derivative vector
+  /// Loop over map of index to 2nd derivative matrix and 1st
+  /// derivative vector. Note that we correct here for the fraction of
+  /// outliers.
   for (unsigned i = 0u, iEnd = m_equations->nElem(); i < iEnd ; ++i) {
-    ass(tmpDerivatives, i*Derivatives::kCols, m_equations->V(i));
+    ass(tmpDerivatives, i*Derivatives::kCols, ROOT::Math::SVector<double, 6u>(m_equations->V(i)/m_equations->fracNonOutlier(i)));
     /// (assume upper triangular input!)
     for (unsigned j = i ; j < iEnd; ++j ) ass(tmpMatrix, i*Derivatives::kCols, j*Derivatives::kCols, m_equations->M(i,j));
   }
@@ -804,7 +826,8 @@ void AlignAlgorithm::update() {
       size_t iElem(0u) ;
       for (ElementRange::iterator it = m_rangeElements.begin(); it != m_rangeElements.end(); ++it, ++iElem) {
 	logmessage << "Alignable: " << it->name() << std::endl
-		   << "Number of hits seen: " << m_equations->numHits(iElem) << std::endl ;
+		   << "Number of hits/outliers seen: " << m_equations->numHits(iElem) << " "
+		   << m_equations->numOutliers(iElem) << std::endl ;
 	if( offsets[iElem] < 0 ) {
 	  logmessage << "Not enough hits for alignment. Skipping update." << std::endl ;
 	} else {
@@ -817,6 +840,10 @@ void AlignAlgorithm::update() {
 		       << " delta= " << std::setw(12) << delta.parameters()[iactive] << " +/- "
 		       << std::setw(12) << signedroot(delta.covariance()[iactive][iactive]) 
 		       << " gcc= " << delta.globalCorrelationCoefficient(iactive) << std::endl ;
+	  double contributionToCoordinateError = delta.measurementCoordinateSigma( m_equations->weightR(iElem) ) ;
+	  double coordinateError = std::sqrt(m_equations->numHits(iElem)/m_equations->weight(iElem)) ;
+	  logmessage << "contribution to hit error (absolute/relative): "
+		     << contributionToCoordinateError << " " << contributionToCoordinateError/coordinateError << std::endl ;
 	  
 	  // need const_cast because loki range givess access only to const values 
 	  StatusCode sc = (const_cast<AlignmentElement&>(*it)).updateGeometry(delta) ;

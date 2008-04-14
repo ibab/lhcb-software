@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.27 2008-04-04 13:57:09 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.28 2008-04-14 20:46:08 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -131,10 +131,12 @@ private:
   std::vector<std::string>          m_constraints;                   ///< Names of constrains
   bool                              m_useWeightedAverageConstraint ; ///< Flag to turn on weighting in constraint averages
   size_t                            m_minNumberOfHits ;              ///< Minimum number of hits for an Alignable to be aligned
+  double                            m_chi2Outlier ;                  ///< Chi2 threshold for outlier rejection
   bool                              m_usePreconditioning ;           ///< Precondition the system of equations before calling solver
   bool                              m_fillCorrelationHistos;         ///< Flag to turn on filling of residual correlation histos
   std::string                       m_logFileName ;
   std::string                       m_outputDataFileName ;
+  std::vector<std::string>          m_inputDataFileNames ;
   
   /// Monitoring
   // @todo: Move this to a monitoring tool

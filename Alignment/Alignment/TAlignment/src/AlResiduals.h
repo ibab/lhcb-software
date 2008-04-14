@@ -1,4 +1,4 @@
-// $Id: AlResiduals.h,v 1.1 2008-03-25 22:02:09 wouter Exp $
+// $Id: AlResiduals.h,v 1.2 2008-04-14 20:46:08 wouter Exp $
 #ifndef TRACKTOOLS_TrackResiduals_H 
 #define TRACKTOOLS_TrackResiduals_H 1
 
@@ -28,6 +28,7 @@ namespace Al
     size_t size() const { return m_nodes.size() ; }
     double r(size_t i) const { return m_r(i+1) ; }
     double V(size_t i) const { return m_V(i+1) ; }
+    double R(size_t i) const { return V(i) - HCH(i,i) ; }
     double V(size_t i, size_t j) const { return i==j ? V(i) : 0 ; }
     double R(size_t i, size_t j) const { return V(i,j) - HCH(i,j) ; }
     double HCH(size_t i, size_t j) const { return m_HCH(i+1,j+1) ; }
