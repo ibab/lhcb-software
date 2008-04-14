@@ -29,9 +29,10 @@ AlParameters::AlParameters(const Vector& parameters, const Covariance& covarianc
 {
   for (unsigned int i = 0u; i < dim(); ++i) {
     m_parameters[i] = parameters[i+offset] ;
-    m_weightmatrix[i] = weightmatrix[offset+i][offset+i] ;
-    for (unsigned int j = 0u; j <= i; ++j)
+    for (unsigned int j = 0u; j <= i; ++j) {
       m_covariance[i][j] = covariance[offset+i][offset+j] ;
+      m_weightmatrix[i][j] = weightmatrix[offset+i][offset+j] ;
+    }
   }
 }
 
@@ -233,6 +234,15 @@ AlParameters::Matrix6x6 AlParameters::jacobianNumeric( const ROOT::Math::Transfo
 
 double AlParameters::globalCorrelationCoefficient(int iactive) const 
 {
-  double varweight =  m_covariance[iactive][iactive] *  m_weightmatrix[iactive] ;
+  double varweight =  m_covariance[iactive][iactive] *  m_weightmatrix[iactive][iactive] ;
   return varweight>1 ? std::sqrt(1 - 1/varweight) : 0  ;
+}
+
+double AlParameters::measurementCoordinateSigma(double weightR) const 
+{
+  double sum(0) ;
+  for(size_t iactive=0; iactive<dim(); ++iactive)  
+    for(size_t jactive=0; jactive<dim(); ++jactive)  
+      sum += m_covariance[iactive][jactive] *  m_weightmatrix[iactive][jactive] ;
+  return std::sqrt(sum/weightR) ;
 }

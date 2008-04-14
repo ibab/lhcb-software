@@ -44,13 +44,14 @@ public:
   std::string activeParName( int iactive ) const { return parName( m_mask.parIndex(iactive) ) ; }
   const Vector& parameters() const { return m_parameters ; }
   const Covariance& covariance() const { return m_covariance ; }
-  double globalCorrelationCoefficient(int iactive) const ; 
+  double globalCorrelationCoefficient(int iactive) const ;
+  double measurementCoordinateSigma(double weightR) const ;
 
 private:
   AlDofMask   m_mask;
   Vector      m_parameters ;
   Covariance  m_covariance ;
-  Vector      m_weightmatrix ; /// diagonals only
+  Covariance  m_weightmatrix ;
 } ;
 
 inline  std::ostream& operator<<(std::ostream& os, const AlParameters& par) {
