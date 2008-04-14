@@ -4,6 +4,14 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2008-04-14 - Kurt Rinnert
+ - Fix for float/double conversion issue in VELO tracking: the HitBase class
+   and all VELO hit classes now store their floating point data as double.
+   Profiling shows that this does not affect the timing performance for the
+   VELO.  Since this was not yet verified for the other tracking algorithms
+   the OT and ST hit classes still use float.  Changing these would also
+   require corresponding changes in the OTDet and STDet trajectory interfaces. 
+
 !============================ TfKernel v2r4 2008-03-19 =======================
 ! 2008-03-19 - Stephanie Hansmann-Menzemer
  - make clearHits() methode of TStationHitManager public. Needed to run after

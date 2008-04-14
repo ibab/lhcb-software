@@ -5,7 +5,7 @@
  *  Header file for track find class Tf::LineHit
  *
  *  CVS Log :-
- *  $Id: LineHit.h,v 1.5 2007-09-07 13:32:10 wouter Exp $
+ *  $Id: LineHit.h,v 1.6 2008-04-14 15:09:10 krinnert Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -166,7 +166,7 @@ namespace Tf
                 RegionID     ( rawhit.channel() ) )
   {
     aModule.trajectory( rawhit.channel().straw(), m_dxdy, m_dzdy, m_xAtYEq0, m_zAtYEq0, m_ybegin, m_yend) ;
-    setCoord( (float)(m_xAtYEq0 * aModule.cosAngle()) ) ;
+    setCoord( m_xAtYEq0 * aModule.cosAngle() ) ;
   }
 
   inline LineHit::LineHit( const DeSTSector& aSector, 
@@ -174,12 +174,12 @@ namespace Tf
     : HitBase ( LHCb::LHCbID ( clus.channelID() ),
                 RegionID     ( clus.channelID() ),
                 0,
-                (float)(aSector.pitch()*aSector.pitch()/12.0) ) // XXX???XXX magic number ...
+                aSector.pitch()*aSector.pitch()/12.0)  
   {
     aSector.trajectory( clus.channelID().strip(), 
                         (float)clus.interStripFraction(), 
                         m_dxdy, m_dzdy, m_xAtYEq0, m_zAtYEq0, m_ybegin, m_yend );
-    setCoord( (float)(m_xAtYEq0 * aSector.cosAngle()) ) ;
+    setCoord( m_xAtYEq0 * aSector.cosAngle() ) ;
   }
 
 }

@@ -1,4 +1,4 @@
-// $Id: VeloHit.h,v 1.5 2008-02-14 16:17:00 cattanem Exp $
+// $Id: VeloHit.h,v 1.6 2008-04-14 15:09:10 krinnert Exp $
 #ifndef INCLUDE_TF_VELOHIT_H
 #define INCLUDE_TF_VELOHIT_H 1
 
@@ -114,18 +114,18 @@ namespace Tf {
     /// Standard Constructor, only derived types can construct this
     inline VeloHit(const LHCb::VeloLiteCluster& c
                    , RegionID rid
-                   , float coord
-                   , float coordHalfBox
-                   , float coordIdeal
-                   , float variance
-                   , float signal);
+                   , double coord
+                   , double coordHalfBox
+                   , double coordIdeal
+                   , double variance
+                   , double signal);
 
   protected:
 
     LHCb::VeloLiteCluster m_clu; ///< the cluster
-    float m_coordHalfBox;        ///< the coordinate in the VELO halfbox frame
-    float m_coordIdeal;          ///< the coordinate in the ideal global frame
-    float m_signal;              ///< the total ADC counts of the cluster (if constructed from a full cluster)
+    double m_coordHalfBox;        ///< the coordinate in the VELO halfbox frame
+    double m_coordIdeal;          ///< the coordinate in the ideal global frame
+    double m_signal;              ///< the total ADC counts of the cluster (if constructed from a full cluster)
 
   };
 
@@ -137,11 +137,11 @@ namespace Tf {
   // constructor
   inline VeloHit::VeloHit(const LHCb::VeloLiteCluster& c
                           , RegionID rid
-                          , float coord
-                          , float coordHalfBox
-                          , float coordIdeal
-                          , float variance
-                          , float signal)
+                          , double coord
+                          , double coordHalfBox
+                          , double coordIdeal
+                          , double variance
+                          , double signal)
     : HitBase(LHCb::LHCbID(c.channelID())
               , rid
               , coord

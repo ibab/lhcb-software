@@ -1,4 +1,4 @@
-// $Id: VeloPhiHit.h,v 1.6 2008-02-14 16:17:00 cattanem Exp $
+// $Id: VeloPhiHit.h,v 1.7 2008-04-14 15:09:10 krinnert Exp $
 #ifndef INCLUDE_VELOPHIHIT_H
 #define INCLUDE_VELOPHIHIT_H 1
 
@@ -36,7 +36,7 @@ namespace Tf {
   public:
 
     /// Standard Constructor
-    inline VeloPhiHit(const DeVeloPhiType* sensor, const LHCb::VeloLiteCluster& clu, float signal);
+    inline VeloPhiHit(const DeVeloPhiType* sensor, const LHCb::VeloLiteCluster& clu, double signal);
 
     //== simple accessors
     double phi()                           const { return m_coord; }
@@ -53,9 +53,9 @@ namespace Tf {
 
     const DeVeloPhiType* m_sensor;        ///< link to detector element
 
-    float m_sortCoord;        ///< phi mapping for sorting in global frame, [pi/2,3/2pi] on the right side 
-    float m_sortCoordHalfBox; ///< phi mapping for sorting in half box frame, [pi/2,3/2pi] on the right side           
-    float m_sortCoordIdeal;   ///< phi mapping for sorting in ideal frame, [pi/2,3/2pi] on the right side 
+    double m_sortCoord;        ///< phi mapping for sorting in global frame, [pi/2,3/2pi] on the right side 
+    double m_sortCoordHalfBox; ///< phi mapping for sorting in half box frame, [pi/2,3/2pi] on the right side           
+    double m_sortCoordIdeal;   ///< phi mapping for sorting in ideal frame, [pi/2,3/2pi] on the right side 
   };
   
 
@@ -71,15 +71,15 @@ namespace Tf {
   //----------------------------------------------------------------------
 
   // constructor
-  inline VeloPhiHit::VeloPhiHit(const DeVeloPhiType* s, const LHCb::VeloLiteCluster& c, float signal)
+  inline VeloPhiHit::VeloPhiHit(const DeVeloPhiType* s, const LHCb::VeloLiteCluster& c, double signal)
     : VeloHit(c
               , RegionID(c.channelID(),s)
-              , static_cast<float>(s->globalPhi(c.channelID().strip(),c.interStripFraction()))
-              , static_cast<float>(s->halfboxPhi(c.channelID().strip(),c.interStripFraction()))
-              , static_cast<float>(s->idealPhi(c.channelID().strip(),c.interStripFraction()))
-              , static_cast<float>((((s->phiPitch(c.channelID().strip())*c.pseudoSize())*
+              , s->globalPhi(c.channelID().strip(),c.interStripFraction())
+              , s->halfboxPhi(c.channelID().strip(),c.interStripFraction())
+              , s->idealPhi(c.channelID().strip(),c.interStripFraction())
+              , (((s->phiPitch(c.channelID().strip())*c.pseudoSize())*
                          (s->phiPitch(c.channelID().strip())*c.pseudoSize()))/
-                        12.0))
+                        12.0)
               , signal
               )
     , m_sensor(s)

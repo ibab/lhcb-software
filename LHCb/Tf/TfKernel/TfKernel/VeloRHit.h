@@ -1,4 +1,4 @@
-// $Id: VeloRHit.h,v 1.6 2008-02-14 16:17:00 cattanem Exp $
+// $Id: VeloRHit.h,v 1.7 2008-04-14 15:09:10 krinnert Exp $
 #ifndef INCLUDE_TF_VELORHIT_H
 #define INCLUDE_TF_VELORHIT_H 1
 
@@ -41,7 +41,7 @@ namespace Tf {
      *  @param[in] signal The cluster signal
      */
     inline VeloRHit(const DeVeloRType* sensor,
-                    const LHCb::VeloLiteCluster& clus, float signal);
+                    const LHCb::VeloLiteCluster& clus, double signal);
 
     //== simple accessors
     double r()                             const { return m_coord; }
@@ -76,15 +76,15 @@ namespace Tf {
   // constructor
   inline VeloRHit::VeloRHit(const DeVeloRType* s, 
                             const LHCb::VeloLiteCluster& c, 
-                            float signal)
+                            double signal)
     : VeloHit(c
               , RegionID(c.channelID(),s)
-              , static_cast<float>(s->globalR(c.channelID().strip(),c.interStripFraction()))
-              , static_cast<float>(s->halfboxR(c.channelID().strip(),c.interStripFraction()))
-              , static_cast<float>(s->rOfStrip(c.channelID().strip(),c.interStripFraction()))
-              , static_cast<float>(((s->rPitch(c.channelID().strip())*c.pseudoSize())*
+              , s->globalR(c.channelID().strip(),c.interStripFraction())
+              , s->halfboxR(c.channelID().strip(),c.interStripFraction())
+              , s->rOfStrip(c.channelID().strip(),c.interStripFraction())
+              , ((s->rPitch(c.channelID().strip())*c.pseudoSize())*
                          (s->rPitch(c.channelID().strip())*c.pseudoSize()))/
-                        12.0)
+                        12.0
               , signal
               )
       , m_sensor(s)

@@ -5,7 +5,7 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.13 2007-12-19 16:04:33 ocallot Exp $
+ *  $Id: HitBase.h,v 1.14 2008-04-14 15:09:10 krinnert Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -96,15 +96,15 @@ namespace Tf
 
     /** Access the coord value (XXX???XXX what is coord X ? Y ? Z ? )
      *  @return The value of coord for this hit */
-    inline float        coord()         const { return m_coord ; }
+    inline double        coord()         const { return m_coord ; }
 
     /** Access the variance value
      *  @return The value of the variance for this hit */
-    inline float        variance()      const { return m_variance ; }
+    inline double        variance()      const { return m_variance ; }
 
     /** Access the weight (1/variance) value
      *  @return The value of the weight for this hit */
-    inline float        weight  ()      const { return (float)(1.0/variance());  }
+    inline double        weight  ()      const { return (double)(1.0/variance());  }
 
     /** Access the LHCbID channel identifier
      *  @return The channel identifier for this hit */
@@ -239,26 +239,26 @@ namespace Tf
      */
     HitBase( const LHCb::LHCbID id,
              const RegionID& regionid,
-             const float coord    = 0,
-             const float variance = 0 )
+             const double coord    = 0,
+             const double variance = 0 )
       : m_lhcbID(id), m_regionID(regionid), m_coord(coord), m_variance(variance) {}
 
     /** Set the coord value
      *  @param x The coord value to use 
      */
-    void setCoord(const float x) { m_coord = x ; }
+    void setCoord(const double x) { m_coord = x ; }
 
     /** Set the variance value
      *  @param v The variance value to use 
      */
-    void setVariance(const float v) { m_variance = v ; }
+    void setVariance(const double v) { m_variance = v ; }
 
   protected:
 
     LHCb::LHCbID m_lhcbID;          ///< The hit LHCbID channel identifier
     RegionID m_regionID;            ///< The hit RegionID
-    float m_coord;                  ///< The hit coord (XXX???XXX X value ?)
-    float m_variance;               ///< The hit variance
+    double m_coord;                  ///< The hit coord (XXX???XXX X value ?)
+    double m_variance;               ///< The hit variance
     mutable StatusFlag m_status;    ///< The hit status word (bit packed)
 
   };
