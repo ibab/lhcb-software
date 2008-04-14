@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.212 2008-04-09 20:24:27 ibelyaev Exp $
+! $Id: release.notes,v 1.213 2008-04-14 15:25:21 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-04-14 - Juan PALACIOS
+ - Add src/MCParticleArrayFilterAlg{.cpp, .h}
+  . Very simple GaudiAlgorithm that takes LHCb::MCParticles from a TES
+    location (property InputLocation with default LHCb::MCParticleLocation::Default), filters them using an IMCParticleArrayFilter (property IMCParticleArrayFilter), and put the resulting LHCb::MCParticles into a TES location (property OutputLocation)
+ - cmt/requirements
+  . Increase version to v9r12
 
 ! 2008-04-09 - Vanya BELYAEV
  - src/FilterToFixOppositeBFractions.cpp
