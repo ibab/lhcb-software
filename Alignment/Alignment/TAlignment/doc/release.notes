@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-04-14 - Wouter Hulsbergen
+- added chi2 cut for outliers
+- added job option to specify input alignderivative files
+
 ! 2008-03-25 - Wouter Hulsbergen
  - Added vertex constraints
 
