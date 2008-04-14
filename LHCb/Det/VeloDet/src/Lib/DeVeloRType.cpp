@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.48 2008-04-11 06:33:01 cattanem Exp $
+// $Id: DeVeloRType.cpp,v 1.49 2008-04-14 15:42:21 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -753,8 +753,8 @@ StatusCode DeVeloRType::updateStripRCache()
     gden += dphi/gp.rho();
 
     // store the results
-    m_halfboxR[strip] = static_cast<float>(num/hbden);
-    m_globalR [strip] = static_cast<float>(num/gden);
+    m_halfboxR[strip] = num/hbden;
+    m_globalR [strip] = num/gden;
 
   }
   

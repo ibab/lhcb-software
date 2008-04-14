@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.28 2008-02-14 16:15:46 cattanem Exp $
+// $Id: DeVeloRType.h,v 1.29 2008-04-14 15:42:21 krinnert Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -143,20 +143,20 @@ public:
   }
 
   /// Return the radius of the centre of strip plus interstrip fraction*pitch in the global frame
-  inline float globalR(unsigned int strip, double isp) const {
-    return static_cast<float>( m_globalR[strip] + isp*rPitch(strip) );
+  inline double globalR(unsigned int strip, double isp) const {
+    return  m_globalR[strip] + isp*rPitch(strip);
   }
   
   /// Return the radius of the centre of strip plus interstrip fraction*pitch in the halfbox frame
-  inline float halfboxR(unsigned int strip, double isp) const {
-    return static_cast<float>(m_halfboxR[strip] + isp*rPitch(strip));
+  inline double halfboxR(unsigned int strip, double isp) const {
+    return m_halfboxR[strip] + isp*rPitch(strip);
   }
   
   /// Return the radius of the centre of the strip in the global frame
-  inline float globalROfStrip(unsigned int strip) const { return m_globalR[strip]; }
+  inline double globalROfStrip(unsigned int strip) const { return m_globalR[strip]; }
 
   /// Return the radius of the centre of the strip in the global frame
-  inline float halfboxROfStrip(unsigned int strip) const { return m_halfboxR[strip]; }
+  inline double halfboxROfStrip(unsigned int strip) const { return m_halfboxR[strip]; }
 
   /** The minimum phi for a zone assuming the radius is not known.  
       This is a constant value for zone 0 and should be used with caution **/
@@ -268,10 +268,10 @@ private:
   double m_phiGap;
 
   /// cache for global strip radii
-  std::vector<float> m_globalR;
+  std::vector<double> m_globalR;
 
   /// cache for strip radii in the halfbox frame
-  std::vector<float> m_halfboxR;
+  std::vector<double> m_halfboxR;
 
   /// cache for phi range of zones in global frame
   std::pair<double,double> m_globalPhiLimitsZone[4];

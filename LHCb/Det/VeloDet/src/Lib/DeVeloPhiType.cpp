@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.41 2008-04-11 06:33:01 cattanem Exp $
+// $Id: DeVeloPhiType.cpp,v 1.42 2008-04-14 15:42:21 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -653,13 +653,13 @@ StatusCode DeVeloPhiType::updatePhiCache()
       double y = r0*sin(phi0);
 
       Gaudi::XYZPoint lp(x,y,0.0);
-      m_idealPhi[strip] = static_cast<float>(localPhiToGlobal(lp.phi()));
+      m_idealPhi[strip] = localPhiToGlobal(lp.phi());
 
       Gaudi::XYZPoint gp = localToGlobal(lp);
-      m_globalPhi[strip] = static_cast<float>(gp.phi());
+      m_globalPhi[strip] = gp.phi();
 
       Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
-      m_halfboxPhi[strip] = static_cast<float>(hbp.phi());
+      m_halfboxPhi[strip] = hbp.phi();
     }
   }
 

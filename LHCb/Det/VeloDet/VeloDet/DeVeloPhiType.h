@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.30 2008-03-10 14:57:49 dhcroft Exp $
+// $Id: DeVeloPhiType.h,v 1.31 2008-04-14 15:42:21 krinnert Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -139,13 +139,13 @@ public:
   }
 
   /// Global phi at strip centre with full alignment
-  inline float globalPhiOfStrip(unsigned int strip) const { return m_globalPhi[strip]; }
+  inline double globalPhiOfStrip(unsigned int strip) const { return m_globalPhi[strip]; }
   
   /// phi at strip centre in the halfbox frame
-  inline float halfboxPhiOfStrip(unsigned int strip) const { return m_halfboxPhi[strip]; }
+  inline double halfboxPhiOfStrip(unsigned int strip) const { return m_halfboxPhi[strip]; }
   
   /// phi at strip centre with ideal alignment
-  inline float idealPhiOfStrip(unsigned int strip) const { return m_idealPhi[strip]; }
+  inline double idealPhiOfStrip(unsigned int strip) const { return m_idealPhi[strip]; }
  
   /// get the global frame phi offset at a given radius in the given zone 
   inline double globalPhiOffset(unsigned int zone, double radius) const {
@@ -395,13 +395,13 @@ private:
   double m_globalOffsetAtR0[2];
   
   /// cache of global phi at the strip centres
-  std::vector<float> m_globalPhi;
+  std::vector<double> m_globalPhi;
     
   /// cache of phi in the halfbox frame at the strip centres
-  std::vector<float> m_halfboxPhi;
+  std::vector<double> m_halfboxPhi;
     
   /// cache of ideal phi 
-  std::vector<float> m_idealPhi;
+  std::vector<double> m_idealPhi;
     
   /// cache for phi range of zones in global frame
   std::pair<double,double> m_globalPhiLimitsZone[2];

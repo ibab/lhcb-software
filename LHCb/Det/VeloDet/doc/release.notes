@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.194 2008-04-11 13:51:17 cattanem Exp $
+! $Id: release.notes,v 1.195 2008-04-14 15:42:21 krinnert Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2008-04-14 - Kurt Rinnert
+ - Changed coordinate cache from float double.  This fixes some float/double
+   conversion issues in the VELO tracking.  Memory is increased by 500 kB.
 
 !======================== VeloDet v13r0 2008-04-10 ===========================
 ! 2008-03-28 - David Hutchcroft
