@@ -1,4 +1,4 @@
-// $Id: MBMEvtSelector.cpp,v 1.2 2008-02-11 20:02:08 frankm Exp $
+// $Id: MBMEvtSelector.cpp,v 1.3 2008-04-15 18:32:02 frankb Exp $
 //====================================================================
 //  MBMEvtSelector
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMEvtSelector.cpp,v 1.2 2008-02-11 20:02:08 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMEvtSelector.cpp,v 1.3 2008-04-15 18:32:02 frankb Exp $
 #ifndef GAUDIONLINE_MBMEVTSELECTOR_H
 #define GAUDIONLINE_MBMEVTSELECTOR_H 1
 
@@ -39,8 +39,12 @@ namespace LHCb  {
     MBMEvtSelector*       m_onlineSel;
     MBM::Consumer*        m_consumer;
     void*                 m_mepStart;
+    /// Connect to MEP buffer
     StatusCode connectMEP(const std::string& input);
+    /// Connect to regular MBM buffer
     StatusCode connectMBM(const std::string& input);
+    /// Test routine for run-time exceptions
+    void testExceptions();
   public:
     /// Standard constructor
     MBMContext(MBMEvtSelector* pSelector);
@@ -84,12 +88,15 @@ namespace LHCb  {
 
   protected:
     /// Data Members
-    LHCb::IMEPManager*            m_mepMgr;
+    /// Reference to MEP manager service
+    LHCb::IMEPManager* m_mepMgr;
+    /// Maximum retries for consecutive events before going to error
+    int                m_maxRetry;
   };
 }
 #endif // GAUDIONLINE_MBMEVTSELECTOR_H
 
-// $Id: MBMEvtSelector.cpp,v 1.2 2008-02-11 20:02:08 frankm Exp $
+// $Id: MBMEvtSelector.cpp,v 1.3 2008-04-15 18:32:02 frankb Exp $
 //====================================================================
 //  MBMEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -165,6 +172,18 @@ MBMContext::MBMContext(MBMEvtSelector* s)
 {
 }
 
+void MBMContext::testExceptions() {
+  static int test = 888;
+  --test;
+  if ( test >300 && test<330 ) {
+    throw std::runtime_error("Bad magic pattern --- test");
+  }
+  if ( test >30 && test<50 ) {
+    throw std::runtime_error("Unknown Bank --- test");
+  }
+  if ( test == 0 ) test = 888;
+}
+
 StatusCode MBMContext::freeEvent()  {
   if ( m_consumer )  {
     if ( m_needFree )   {
@@ -186,6 +205,8 @@ StatusCode MBMContext::rearmEvent()  {
 StatusCode MBMContext::receiveEvent()  {
   m_banks.clear();
   if ( m_consumer )  {
+    int max_retry = m_onlineSel->m_maxRetry;
+    Retry:
     try  {
       m_sel->increaseReqCount();
       m_needFree = false;
@@ -197,6 +218,7 @@ StatusCode MBMContext::receiveEvent()  {
         m_evdesc.setHeader(e.data);
         m_evdesc.setSize(e.len);
         m_needFree = true;
+        //testExceptions();
         if ( m_sel->mustDecode() && e.type == EVENT_TYPE_EVENT )  {
           m_evdesc.setMepBuffer(m_mepStart);
           m_sel->increaseEvtCount();
@@ -207,7 +229,16 @@ StatusCode MBMContext::receiveEvent()  {
       }
     }
     catch(const std::exception& e)  {
-      m_sel->error(std::string("Failed to read next event:")+e.what());
+      std::string err = e.what();
+      m_sel->error("Failed to read next event:"+err);
+      if ( max_retry-- > 0 )  {
+	if (err.substr(0,9)  == "Bad magic" ||
+	    err.substr(0,12) == "Unknown Bank" ) {
+	  freeEvent();
+	  goto Retry;
+	}
+      }
+      m_sel->error("Maximum number of retries exceeded. Giving up...");
     }
     catch(...)  {
       m_sel->error("Failed to read next event - Unknown exception.");
@@ -287,6 +318,7 @@ MBMEvtSelector::MBMEvtSelector(const std::string& nam, ISvcLocator* svc)
 {
   m_input = "EVENT";
   m_decode = true;
+  declareProperty("MaxRetry",m_maxRetry=10000);
 }
 
 // IService implementation: Db event selector override

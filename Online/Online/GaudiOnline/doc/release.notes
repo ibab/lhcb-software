@@ -2,6 +2,10 @@ Package: GaudiOnline
 Author:  Markus Frank
 
 
+! 2008-04-15 Markus Frank
+ - Retry to access MBM events if corrupted data occur.
+   (Exception "Bad magic pattern" and "Unknown Bank")
+
 ! 2008-04-10 Markus Frank, A.Navarro
  - Fix finalization bug in EventRunable.
  - New class DimRPCFileReader
