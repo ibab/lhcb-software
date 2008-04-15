@@ -1,13 +1,13 @@
-! $Id: release.notes,v 1.195 2008-04-14 15:42:21 krinnert Exp $
+! $Id: release.notes,v 1.196 2008-04-15 06:17:18 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v13r0 2008-04-16 ===========================
 ! 2008-04-14 - Kurt Rinnert
  - Changed coordinate cache from float double.  This fixes some float/double
    conversion issues in the VELO tracking.  Memory is increased by 500 kB.
 
-!======================== VeloDet v13r0 2008-04-10 ===========================
 ! 2008-03-28 - David Hutchcroft
  - Changed stored condition from strip capactiance to strip noise in DeVeloSensor
    Requires SQLDDDB >= v4r2
