@@ -1,4 +1,4 @@
-// $Id: Particle2State.h,v 1.2 2006-10-24 02:13:57 xieyu Exp $
+// $Id: Particle2State.h,v 1.3 2008-04-15 16:14:26 jpalac Exp $
 #ifndef PARTICLE2STATE_H 
 #define PARTICLE2STATE_H 1
 
@@ -28,10 +28,12 @@ public:
   virtual ~Particle2State( ); ///< Destructor
 
   /// Fill a Particle from a State
-  StatusCode state2Particle( const LHCb::State& state, LHCb::Particle& particle ) const ;
+  StatusCode state2Particle( const LHCb::State& state, 
+                             LHCb::Particle& particle ) const ;
   
   /// Fill a State from Particle
-  StatusCode particle2State( const LHCb::Particle& particle, LHCb::State& state ) const ;
+  StatusCode particle2State( const LHCb::Particle& particle, 
+                             LHCb::State& state ) const ;
 
   /// test 
   StatusCode test( const LHCb::Particle& particle ) const  ;
@@ -42,7 +44,8 @@ protected:
 
 private:
   /// Get Jacobian for Tx,Ty,q/P -> Px,Py,Pz transformation
-  Gaudi::Matrix5x5 stateJacobian(int charge, const Gaudi::XYZVector&) const ;
+  Gaudi::Matrix5x5 stateJacobian(int charge, 
+                                 const Gaudi::XYZVector&) const ;
 
 };
 #endif // PARTICLE2STATE_H
