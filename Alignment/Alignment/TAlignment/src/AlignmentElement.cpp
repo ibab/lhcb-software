@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.15 2008-03-14 14:34:06 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.16 2008-04-15 19:27:10 janos Exp $
 // Include files
 
 // from STD
@@ -145,8 +145,12 @@ AlParameters AlignmentElement::currentActiveDelta() const {
   double par[6] = {0,0,0,0,0,0} ;
   Gaudi::Transform3D alignmentFrameInv = alignmentFrame().Inverse() ;
   for (ElemIter ielem = m_elements.begin(); ielem != m_elements.end(); ++ielem) {
-    Gaudi::Transform3D globalDeltaMatrix = DetDesc::globalDelta(*ielem) ;
-    Gaudi::Transform3D alignDeltaMatrix = alignmentFrameInv * globalDeltaMatrix * alignmentFrame();
+    //Gaudi::Transform3D globalDeltaMatrix = DetDesc::globalDelta(*ielem) ;
+    Gaudi::Transform3D global        = ((*ielem)->geometry())->toGlobalMatrix();
+    Gaudi::Transform3D globalNominal = ((*ielem)->geometry())->toGlobalMatrixNominal();
+    Gaudi::Transform3D globalDelta   = global*globalNominal.Inverse();
+    //Gaudi::Transform3D alignDeltaMatrix = alignmentFrameInv * globalDeltaMatrix * alignmentFrame();
+    Gaudi::Transform3D alignDeltaMatrix = alignmentFrameInv * globalDelta * alignmentFrame();
     std::vector<double> translations(3,0.0), rotations(3,0.0);
     DetDesc::getZYXTransformParameters(alignDeltaMatrix, translations, rotations);//, it->pivot());
     for(size_t i=0; i<3; ++i) {
