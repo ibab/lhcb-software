@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitor.cpp,v 1.2 2008-04-15 09:47:37 jucogan Exp $
+// $Id: L0MuonMonitor.cpp,v 1.3 2008-04-15 09:58:42 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -189,7 +189,6 @@ StatusCode L0MuonMonitor::execute() {
     // Get Muon Hits
     std::vector<LHCb::MuonTileID> muontiles;
     if (m_muonBuffer) { // If muon raw buffer tool
-      m_muonBuffer->_setProperty("RootInTes", rootInTES());
       IProperty* prop = dynamic_cast<IProperty*>( m_muonBuffer );
       if( prop ) {
         StatusCode sc = prop->setProperty( "RootInTES", rootInTES() );
