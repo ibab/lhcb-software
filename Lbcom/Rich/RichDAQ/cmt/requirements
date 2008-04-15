@@ -2,11 +2,11 @@
 # Created    : 2003-11-06
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.38 2008-01-28 11:05:43 cattanem Exp $
+# $Id: requirements,v 1.39 2008-04-15 14:29:44 cattanem Exp $
 #============================================================================
 
 package           RichDAQ
-version           v3r14
+version           v3r15
 
 # Structure, i.e. directories to process. 
 #============================================================================

@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r15 2008-04-15 =========================
 ! 2008-03-27 - Chris Jones
  - Add protection into clustering code to protect against empty vectors of
    RichSmartIDs
