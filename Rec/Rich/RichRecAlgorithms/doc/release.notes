@@ -4,6 +4,7 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+!===================== RichRecAlgorithms v2r10 2008-04-15 ====================
 ! 2008-03-25 - Chris Jones
  - Remove HPD pixel background algorithms (now implemented as tools in the 
    RichRecTools package). Add new generic background algorithm that simply 
