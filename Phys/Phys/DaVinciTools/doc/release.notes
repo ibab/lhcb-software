@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.312 2008-04-10 06:14:04 ibelyaev Exp $
+! $Id: release.notes,v 1.313 2008-04-15 16:15:01 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-04-15 - Juan PALACIOS
+ - src/Particle2State{.cpp, .h}
+  . Tidy up and add const wherever possible.
 
 ! 2008-04-10 - Vanya BELYAEV 
 
