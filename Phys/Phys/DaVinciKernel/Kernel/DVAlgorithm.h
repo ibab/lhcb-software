@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.26 2008-02-24 19:41:28 ibelyaev Exp $ 
+// $Id: DVAlgorithm.h,v 1.27 2008-04-15 13:26:50 ibelyaev Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -28,6 +28,7 @@
 #include "Kernel/IBTaggingTool.h"
 #include "Kernel/IParticleDescendants.h"
 #include "Kernel/IWriteSelResult.h"
+#include "Kernel/IDistanceCalculator.h"
 // ============================================================================
 #include "Kernel/IMassFit.h"
 #include "Kernel/IMassVertexFit.h"
@@ -251,6 +252,17 @@ public:
   }
   // ==========================================================================
   
+public:
+
+  /// accessor to Distance Calculator tool
+  inline IDistanceCalculator* distanceCalculator 
+  ( const std::string& name = "" ) const 
+  {
+    return getTool<IDistanceCalculator>
+      ( name , 
+        m_distanceCalculatorNames , 
+        m_distanceCalculators     , this ) ;
+  }
   
 public:
   
@@ -425,6 +437,11 @@ protected:
   ToolMap                                              m_directionFitterNames   ;
   /// The actual map of "nickname -> tool" for direction fitters 
   mutable GaudiUtils::VectorMap<std::string,IDirectionFit*> m_directionFitters ;
+  
+  /// mapping of "nickname -> tool" for distance calculators 
+  ToolMap                                                         m_distanceCalculatorNames ;
+  /// the actual map of "nickname -> distance calculator" 
+  mutable GaudiUtils::VectorMap<std::string,IDistanceCalculator*> m_distanceCalculators     ;
   
 protected: 
   

@@ -3,6 +3,26 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-04-15 - Vanya BELYAEV
+ - Kernel/DVAlgorithm.h
+
+     add an accessor to  IDistanceCalculator tools:
+
+    /// accessor to Distance Calculator tool
+    inline IDistanceCalculator* distanceCalculator ( const std::string& name = "" ) const ;
+
+- src/Lib/DVAlgorithm.cpp
+ 
+    1 ) add new property: "DistanceCalculator" with mapping of nickname to the actual type/name 
+    for distance calculator tools.
+    2 ) update the possible mapping for following proeprties:
+         "VertexFitters"    
+         "ParticleCombiners" 
+         "ParticleReFitters"
+         "MassFitters"
+         "LifetimeFitters"
+         "DirectionFitters"  
+
 !======================== DaVinciKernel v6r12 2008-04-10 ====================
 ! 2008-04-10 - Vanya BELYAEV
  - src/Lib/Decay.cpp

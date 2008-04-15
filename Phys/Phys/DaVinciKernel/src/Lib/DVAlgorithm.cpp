@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.31 2008-03-14 11:56:41 pkoppenb Exp $
+// $Id: DVAlgorithm.cpp,v 1.32 2008-04-15 13:26:50 ibelyaev Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -54,6 +54,9 @@ DVAlgorithm::DVAlgorithm
   //
   , m_directionFitterNames  ()
   , m_directionFitters      ()
+    //
+  , m_distanceCalculatorNames  ()
+  , m_distanceCalculators      ()
   //
   , m_checkOverlapName      ( "CheckOverlap" ) 
   , m_checkOverlap          ( 0 )
@@ -71,8 +74,9 @@ DVAlgorithm::DVAlgorithm
   // 
   m_vertexFitNames [ "Offline"       ] = "OfflineVertexFitter" ;
   m_vertexFitNames [ "Trigger"       ] = "TrgVertexFitter"     ;
-  m_vertexFitNames [ "Kalman"        ] = "BlindVertexFitter"   ;
   m_vertexFitNames [ "Blind"         ] = "BlindVertexFitter"   ;
+  m_vertexFitNames [ "LoKi"          ] = "LoKi::VertexFitter"  ;
+  m_vertexFitNames [ "Kalman"        ] = "LoKi::VertexFitter"  ;
   m_vertexFitNames [ "ParticleAdder" ] = "ParticleAdder"       ;
   declareProperty ( "VertexFitters"     , m_vertexFitNames    ) ;
   //
@@ -92,18 +96,24 @@ DVAlgorithm::DVAlgorithm
   m_particleCombinerNames [ ""              ] = "OfflineVertexFitter" ;
   m_particleCombinerNames [ "Offline"       ] = "OfflineVertexFitter" ;
   m_particleCombinerNames [ "Trigger"       ] = "TrgVertexFitter"     ;
-  m_particleCombinerNames [ "Kalman"        ] = "BlindVertexFitter"   ;
+  m_particleCombinerNames [ "Kalman"        ] = "LoKi::VertexFitter"  ;
   m_particleCombinerNames [ "Blind"         ] = "BlindVertexFitter"   ;
+  m_particleCombinerNames [ "LoKi"          ] = "LoKi::VertexFitter"  ;
   m_particleCombinerNames [ "ParticleAdder" ] = "ParticleAdder"       ;
   declareProperty ( "ParticleCombiners"  , m_particleCombinerNames ) ;
   //
-  m_particleReFitterNames [ ""              ] = "OfflineVertexFitter" ;
-  m_particleReFitterNames [ "Offline"       ] = "OfflineVertexFitter" ;
-  m_particleReFitterNames [ "Kalman"        ] = "BlindVertexFitter"   ;
-  m_particleReFitterNames [ "Blind"         ] = "BlindVertexFitter"   ;
-  m_particleReFitterNames [ "ParticleAdder" ] = "ParticleAdder"       ;
+  m_particleReFitterNames [ ""              ] = "OfflineVertexFitter"   ;
+  m_particleReFitterNames [ "Offline"       ] = "OfflineVertexFitter"   ;
+  m_particleReFitterNames [ "Blind"         ] = "BlindVertexFitter"     ;
+  m_particleReFitterNames [ "Kalman"        ] = "LoKi::VertexFitter"    ;
+  m_particleReFitterNames [ "LoKi"          ] = "LoKi::VertexFitter"    ;
+  m_particleReFitterNames [ "Mass"          ] = "LoKi::MassFitter"      ;
+  m_particleReFitterNames [ "Direction"     ] = "LoKi::DirectionFitter" ;
+  m_particleReFitterNames [ "ParticleAdder" ] = "ParticleAdder"         ;
   declareProperty  ( "ParticleReFitters" , m_particleReFitterNames ) ;
   //
+  m_massFitterNames [ ""     ] = "LoKi::MassFitter" ;
+  m_massFitterNames [ "LoKi" ] = "LoKi::MassFitter" ;
   declareProperty  
     ( "MassFitters"       , m_massFitterNames       , 
       "The mapping of nick/name/type for IMassFit tools"        ) ;
@@ -112,16 +122,23 @@ DVAlgorithm::DVAlgorithm
     ( "MassVertexFitters" , m_massVertexFitterNames , 
       "The mapping of nick/name/type for IMassVertexFit tools"  ) ;
   //
-  m_lifetimeFitterNames  [ "" ] = "PropertimeFitter" ;
+  m_lifetimeFitterNames  [ ""     ] = "PropertimeFitter"     ;
+  m_lifetimeFitterNames  [ "LoKi" ] = "LoKi::LifetimeFitter" ;
   declareProperty  
     ( "LifetimeFitters"    , m_lifetimeFitterNames , 
       "The mapping of nick/name/type for ILifetimeFitter tools" ) ;
   //
-  m_directionFitterNames [ "" ] = "DirectionFitter" ;
+  m_directionFitterNames [ ""     ] = "DirectionFitter" ;
+  m_directionFitterNames [ "LoKi" ] = "LoKi::DirectionFitter" ;
   declareProperty  
     ( "DirectionFitters"    , m_directionFitterNames , 
       "The mapping of nick/name/type for IDirectionFit tools"   ) ;
   //
+  m_distanceCalculatorNames [ ""     ] = "LoKi::DistanceCalculator" ;
+  m_distanceCalculatorNames [ "LoKi" ] = "LoKi::DistanceCalculator" ;
+  declareProperty 
+    ( "DistanceCalculators" , m_distanceCalculatorNames , 
+      "The mapping of nick/name/type for IDistanceCalculator tools"   ) ;
   //
   declareProperty ( "DecayDescriptor"   , m_decayDescriptor   = "not specified" ) ;
   declareProperty ( "AvoidSelResult"    , m_avoidSelResult    = false           ) ;
