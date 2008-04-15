@@ -1,8 +1,28 @@
-! $Id: release.notes,v 1.57 2008-03-11 09:13:29 jpalac Exp $
+! $Id: release.notes,v 1.58 2008-04-15 15:46:13 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+! 2008-04-15 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v3r8.
+
+ - src/TransporterFunctions.h
+  . Revive old methods transportComposite and TranportNeutralBasic as
+    transportAndProjectComposite and transportAndProjectNeutralBasic. These 
+    the pre-v3r7p3 mathematics, where a projection block is included in the
+    transport matrix.
+
+ - src/ParticleTransporter{.cpp, .h}
+  .  split transport methods into method for neutrals or composites, plus
+    private helper methods 
+    StatusCode transportChargedBasic(const LHCb::Particle*, 
+                                     const double zNew,
+                                     LHCb::Particle& transParticle);
+    and 
+    StatusCode checkParticle(const LHCb::Particle& transParticle);
+  . Add implementation for transportandProject method if IParticletransporter.
+  . Add doxygen documentation.
 !====================== DaVinciTransporter v3r7p3 2008-03-11 ==================
 
 ! 2008-03-11 - Juan PALACIOS
