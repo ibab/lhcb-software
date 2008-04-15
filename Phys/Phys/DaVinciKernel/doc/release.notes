@@ -3,6 +3,7 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v6r12 2008-04-15 ====================
 ! 2008-04-15 - Juan PALACIOS
  - Add public virtual method 
     StatusCode transportAndProject(const LHCb::Particle*, 
@@ -10,7 +11,6 @@
                                     LHCb::Particle& transParticle) = 0;
    to IParticleTransporter interface.
 
-!======================== DaVinciKernel v6r12 2008-04-15 ====================
 ! 2008-04-15 - Vanya BELYAEV
  - Kernel/DVAlgorithm.h
      add an accessor to  IDistanceCalculator tools:
