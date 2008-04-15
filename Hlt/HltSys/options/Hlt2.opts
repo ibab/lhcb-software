@@ -6,6 +6,10 @@
  *  @date 2006-02-01
  */
 //---------------------------------------------------------------------
+//Common stuff. Probably already included in HltAlleys.
+//---------------------------------------------------------------------
+#include "$HLTSYSROOT/options/HltMainSequence.opts"
+//---------------------------------------------------------------------
 // Phys initialisation
 //---------------------------------------------------------------------
 #include "$HLTSYSROOT/options/HltInitSelections.opts"
@@ -15,30 +19,16 @@
 Hlt.Members += { "GaudiSequencer/HltSelections" };
 HltSelections.MeasureTime = true ;
 HltSelections.Context = "HLT" ;
+// just in case
+HltSelections.Members += { "HltSummaryWriter"};
 
 //---------------------------------------------------------------------
 // Full reconstruction of all tracks 
 //---------------------------------------------------------------------
 
-#include "$HLTSYSROOT/options/HltRecoSequence.opts"
-//HltSelections.Members += {"HltSelectionEntry/HltAlleys",
-HltSelections.Members += {"HltSelectionFilter/HltAlleys",
-                          "GaudiSequencer/PassedAlleys", // empty sequencer
+HltSelections.Members += {"GaudiSequencer/PassedAlleys", // empty sequencer
                           "GaudiSequencer/HltRecoSequence"
 };
-
-//    HltAlleys is set-up in Hlt.opts
-//HltAlleys.Selections = {"MuonTriggerSingle",
-//                        "MuonTriggerDiMuon",
-//                        "MuonTriggerIPDiMuon",
-//                        "MuonTriggerPureDiMuon",
-//                        "MuonTriggerPureIPDiMuon",
-//                        "HadTrigger"
-//                        ,"ELeTriggerEleTrk"
-//                        ,"ELeTriggerSingle"
-//                        ,"PhoTriggerPhoTrk"
-//} ;
-//HltAlleys.SelectionName = "HltAlleys" ;
 
 //---------------------------------------------------------------------
 // ProtoParticles and Particles

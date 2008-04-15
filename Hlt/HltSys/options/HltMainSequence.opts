@@ -1,0 +1,39 @@
+/**
+ * Common configuration for Hlt1 and Hlt2. Will be included only once.
+ *
+ * Take care when changing. Make sure changes work for both trigger levels.
+ */
+/**
+ * Define HltDataSvc 
+ */
+// ApplicationMgr.SvcOptMapping += {"DataSvc/HltDataSvc"};
+HltSvc.ForceLeaves = true;
+
+/**
+ * defines online reconstruction
+ */
+#include "$HLTSYSROOT/options/HltRecoSequence.opts"
+/**
+ * Add Ks 
+ * @todo Make ProtoParticlea and articles with these Ks
+ * @todo See what to do with downstream Ks
+ */
+#include "$HLTKSHORTROOT/options/HltVzero.opts"
+
+/**
+ * main HLT sequencer
+ */
+ApplicationMgr.TopAlg += {"GaudiSequencer/Hlt"};
+
+Hlt.ModeOr = true;
+Hlt.ShortCircuit = false;
+
+/**
+ * init the HLT sequencer
+ */
+Hlt.Members += { "GaudiSequencer/HltInitSequence" };
+HltInitSequence.Members = {"HltInit"};
+
+// now use the updated L0 channel configuration
+// HltInit.TCKName = "UpdatedL0";
+
