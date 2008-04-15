@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.15 2008-03-27 11:06:01 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.16 2008-04-15 18:55:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -158,11 +158,14 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
 
   HPDCount hpdCount;
   MirrorCount primMirrCount, secMirrCount;
+  unsigned int totalInHPD(0);
   for ( LHCb::RichRecPointOnRing::Vector::const_iterator iP = m_last_ring->ringPoints().begin();
         iP != m_last_ring->ringPoints().end(); ++iP )
   {
     if ( (*iP).acceptance() == LHCb::RichRecPointOnRing::InHPDTube )
     {
+      // Count hits in HPD
+      ++totalInHPD;
       // Count HPDs hit by this ring
       ++hpdCount [ (*iP).smartID() ];
       // Count primary mirrors
@@ -172,9 +175,9 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
     }
   }
   if ( msgLevel(MSG::DEBUG) )
-    debug() << " -> Found " << hpdCount.size() << " usable ring points out of "
+    debug() << " -> Found " << totalInHPD << " usable ring points out of "
             << m_last_ring->ringPoints().size() << endreq;
-  if ( hpdCount.empty() ) { return 0; }
+  if ( 0 == totalInHPD ) { return 0; }
 
   // Get weighted average HPD Q.E.
   double hpdQEEff(0);
@@ -188,7 +191,7 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
       // add up Q.E. eff
       hpdQEEff += (double)(iHPD->second) * (*(hpd->hpdQuantumEff()))[energy*Gaudi::Units::eV]/100 ;
     }
-    hpdQEEff /= (double)(hpdCount.size());
+    hpdQEEff /= (double)(totalInHPD);
   }
   else
   {
@@ -206,7 +209,7 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
       primMirrRefl +=
         (double)(iPM->second) * (*(iPM->first->reflectivity()))[energy*Gaudi::Units::eV];
     }
-    primMirrRefl /= (double)(primMirrCount.size());
+    primMirrRefl /= (double)(totalInHPD);
   }
   else
   {
@@ -218,13 +221,13 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
   double secMirrRefl(0);
   if ( !secMirrCount.empty() )
   {
-  for ( MirrorCount::const_iterator iSM = secMirrCount.begin();
-        iSM != secMirrCount.end(); ++iSM )
-  {
-    secMirrRefl +=
-      (double)(iSM->second) * (*(iSM->first->reflectivity()))[energy*Gaudi::Units::eV];
-  }
-  secMirrRefl /= (double)(secMirrCount.size());
+    for ( MirrorCount::const_iterator iSM = secMirrCount.begin();
+          iSM != secMirrCount.end(); ++iSM )
+    {
+      secMirrRefl +=
+        (double)(iSM->second) * (*(iSM->first->reflectivity()))[energy*Gaudi::Units::eV];
+    }
+    secMirrRefl /= (double)(totalInHPD);
   }
   else
   {
@@ -232,9 +235,11 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
     Warning( "No secondary mirrors found -> Assuming Av. reflectivity of 1", StatusCode::SUCCESS );
   }
 
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << " -> Av. HPD Q.E. = " << hpdQEEff << " Prim. Mirr Refl. = " << primMirrRefl
+            << " Sec. Mirr. Refl. " << secMirrRefl << endreq;
+
   // return overall efficiency
-  debug() << " -> Av. HPD Q.E. = " << hpdQEEff << " Prim. Mirr Refl. = " << primMirrRefl
-          << " Sec. Mirr. Refl. " << secMirrRefl << endreq;
   return m_qEffPedLoss * hpdQEEff * primMirrRefl * secMirrRefl;
 }
 
