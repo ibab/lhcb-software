@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v4r3 2008-04-15 ===========================
 ! 2008-03-27 - Chris Jones
  - Add new background tools (previously algorithms in RichRecAlgorithms)
  - Add support for missing mirror segments in RichTabulatedSignalDetectionEff
