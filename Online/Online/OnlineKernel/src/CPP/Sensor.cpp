@@ -90,3 +90,20 @@ int Sensor::run()  {
   } 
   return 1;
 }
+//------------------------------------------------------------------------------
+static int s_runSensor(void* arg)  {
+  Sensor* s = (Sensor*)arg;
+  return s->run();
+}
+//------------------------------------------------------------------------------
+int Sensor::runThreaded()  {
+  static ::lib_rtl_thread_t s_threadH = 0;
+  if ( s_threadH == 0 )  {
+    int sc = ::lib_rtl_start_thread(s_runSensor,this,&s_threadH);
+    if ( !lib_rtl_is_success(sc) )  {
+      ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to start sensor thread.");
+      return 0;
+    }
+  }
+  return 1;
+}

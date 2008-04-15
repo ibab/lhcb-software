@@ -50,5 +50,6 @@ public:
   virtual void dispatch(void*) {}
   virtual void rearm() {}
   virtual int  run();
+  int runThreaded();
 };
 #endif

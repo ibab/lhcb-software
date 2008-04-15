@@ -51,6 +51,8 @@
 #include "CPP/IocSensor.h"
 #include "CPP/AmsSensor.h"
 #include "CPP/TimeSensor.h"
+#include "CPP/Interactor.h"
+#include "CPP/Event.h"
 
 namespace  {
   class Dictionary  {
@@ -61,3 +63,4 @@ namespace  {
     ~Dictionary() {}
   };
 }
+#include "dict/PyInteractor.cpp"
