@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidate.cpp,v 1.5 2007-12-05 14:04:57 odescham Exp $
+// $Id: L0CaloCandidate.cpp,v 1.6 2008-04-15 11:18:15 odescham Exp $
 // Include files 
 
 #include "GaudiKernel/SystemOfUnits.h"
@@ -41,7 +41,7 @@ std::string LHCb::L0CaloCandidate::typeName() const {
 //=========================================================================
 MsgStream& LHCb::L0CaloCandidate::fillStream( MsgStream& msg ) const {
 
-  if ( L0DUBase::Fiber::CaloSpdMult == m_type ) {
+  if ( L0DUBase::CaloType::SpdMult == m_type ) {
     msg << "L0CaloCandidate "  <<  typeName() <<  " Multiplicity " << m_etCode;
     return msg;
   }
