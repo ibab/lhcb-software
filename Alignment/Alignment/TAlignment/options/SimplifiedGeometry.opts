@@ -1,0 +1,31 @@
+PreFitForward.Fitter.Extrapolator.MaterialLocator    = "SimplifiedMaterialLocator" ;
+PreFitForward.Fitter.MaterialLocator                 = "SimplifiedMaterialLocator" ;
+
+FitForward.Fitter.Extrapolator.MaterialLocator       = "SimplifiedMaterialLocator" ;
+FitForward.Fitter.MaterialLocator                    = "SimplifiedMaterialLocator" ;
+
+PreFitMatch.Fitter.Extrapolator.MaterialLocator      = "SimplifiedMaterialLocator" ;
+PreFitMatch.Fitter.MaterialLocator                   = "SimplifiedMaterialLocator" ;
+
+FitMatch.Fitter.Extrapolator.MaterialLocator         = "SimplifiedMaterialLocator" ;
+FitMatch.Fitter.MaterialLocator                      = "SimplifiedMaterialLocator" ;
+
+PreFitDownstream.Fitter.Extrapolator.MaterialLocator = "SimplifiedMaterialLocator" ;
+PreFitDownstream.Fitter.MaterialLocator              = "SimplifiedMaterialLocator" ;
+
+FitDownstream.Fitter.Extrapolator.MaterialLocator    = "SimplifiedMaterialLocator" ;
+FitDownstream.Fitter.MaterialLocator                 = "SimplifiedMaterialLocator" ;
+
+FitTsa.Fitter.Extrapolator.MaterialLocator           = "SimplifiedMaterialLocator" ;
+FitTsa.Fitter.MaterialLocator                        = "SimplifiedMaterialLocator" ;
+
+FitVeloTT.Fitter.Extrapolator.MaterialLocator        = "SimplifiedMaterialLocator" ;
+FitVeloTT.Fitter.MaterialLocator                     = "SimplifiedMaterialLocator" ;
+
+FitVelo.Fitter.Extrapolator.MaterialLocator          = "SimplifiedMaterialLocator" ;
+FitVelo.Fitter.MaterialLocator                       = "SimplifiedMaterialLocator" ;
+
+PatVeloTT.Fitter.Extrapolator.MaterialLocator        = "SimplifiedMaterialLocator" ;
+PatVeloTT.Fitter.MaterialLocator                     = "SimplifiedMaterialLocator" ;
+
+ToolSvc.TrackMasterExtrapolator.MaterialLocator      = "SimplifiedMaterialLocator" ;
