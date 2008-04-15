@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID tool : Rich::Rec::GlobalPID::LikelihoodTool
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihoodTool.cpp,v 1.1 2008-03-25 16:26:44 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihoodTool.cpp,v 1.2 2008-04-15 18:53:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
@@ -670,13 +670,9 @@ double LikelihoodTool::logLikelihood() const
                                                     rRTrack->currentHypothesis() );
   } // end track loop
 
-  // Add background terms for expectation
-  trackLL += ( richStatus()->detOverallBkg( Rich::Rich1 ) +
-               richStatus()->detOverallBkg( Rich::Rich2 ) );
-
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << " -> Track contribution = " << trackLL << endreq;
+    debug() << " -> Track contribution    = " << trackLL << endreq;
   }
 
   // Pixel loop
@@ -700,21 +696,32 @@ double LikelihoodTool::logLikelihood() const
         if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << "  -> Using photon : track=" << rRTrack->key()
-                    << " pixel= " << pixel->key()
-                    << " bkg=" << pixel->currentBackground() << endreq;
+                    << " pixel=" << pixel->key()
+                    << " bkg=" << pixel->currentBackground() 
+                    << " sig=" << m_photonSig->predictedPixelSignal( *iPhoton,
+                                                                     rRTrack->currentHypothesis() )
+                    << endreq;
         }
         foundSelectedTrack = true;
         photonSig += m_photonSig->predictedPixelSignal( *iPhoton,
                                                         rRTrack->currentHypothesis() );
       }
+    } // loop over photons
+    if ( foundSelectedTrack )
+    {
+      pixelLL -= sigFunc( photonSig + pixel->currentBackground() );
     }
-    if ( foundSelectedTrack ) { pixelLL -= sigFunc( photonSig + pixel->currentBackground() ); }
 
   } // loop over all pixels
 
+  // Detector contribution
+  const double detectorLL = ( richStatus()->detOverallBkg( Rich::Rich1 ) +
+                              richStatus()->detOverallBkg( Rich::Rich2 ) );
+
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << " -> Pixel contribution = " << pixelLL << endreq;
+    debug() << " -> Pixel contribution    = " << pixelLL << endreq;
+    debug() << " -> Detector contribution = " << detectorLL << endreq;
   }
 
   // return overall LL
