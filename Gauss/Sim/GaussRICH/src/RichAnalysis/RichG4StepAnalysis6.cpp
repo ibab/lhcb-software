@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis6.cpp,v 1.4 2008-03-28 14:30:45 seaso Exp $
+// $Id: RichG4StepAnalysis6.cpp,v 1.5 2008-04-15 08:32:50 seaso Exp $
 // Include files 
 
 #include "G4Track.hh"
@@ -129,9 +129,11 @@ void RichG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
                       aPreVolName.find(LogVolSiDetNameAnalysisStrPrefix);
              std::string::size_type iHpdSiDetPostPos=
                       aPostVolName.find(LogVolSiDetNameAnalysisStrPrefix);
-             std::string::size_type iHpdSMStrPrePos=
-                      aPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix);
-            
+             std::string::size_type iHpdSMStrPrePos0=
+                      aPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix[0]);
+             std::string::size_type iHpdSMStrPrePos1=
+                      aPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix[1]);
+             
 
 
              if(aPreVolName  ==  LogVolSiDetNameAnalysis ||
@@ -154,8 +156,14 @@ void RichG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
              }             
              // now for the Hpd Quartz Window incidence location
              
-            if( (aPreVolName == LogVolHpdSMasterNameAnalysis || iHpdSMStrPrePos != std::string::npos)  &&
+            if( (aPreVolName == LogVolHpdSMasterNameAnalysis || iHpdSMStrPrePos0 != std::string::npos 
+                  || iHpdSMStrPrePos1 != std::string::npos )  &&
                aPostVolName ==  LogVolHpdQWindowNameAnalysis ){
+              //test 
+              // G4cout<<" Rich HpdQWIncident point photdirZ "<<postPos.x()<<"  "<<postPos.y()<<"  "<<postPos.z()
+              //      <<"   "<< PhotCurDir.z()<<G4endl;
+              // 
+              // end test
               if(PhotCurDir.z() > 0.0 ) {
 
                 RichG4HpdQWIncidentTag((* aTrack), postPos );

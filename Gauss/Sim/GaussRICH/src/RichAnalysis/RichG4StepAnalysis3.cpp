@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis3.cpp,v 1.11 2008-04-11 13:40:23 seaso Exp $
+// $Id: RichG4StepAnalysis3.cpp,v 1.12 2008-04-15 08:32:50 seaso Exp $
 // Include files
 
 #include "G4Track.hh"
@@ -273,12 +273,14 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
               }
             }
             // now for photon hitting the HpdQW
-            std::string::size_type iHpdSMStrPos=
-                      aPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix);
+            std::string::size_type iHpdSMStrPos0=
+                      aPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix[0]);
+            std::string::size_type iHpdSMStrPos1=
+                      aPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix[1]);
             
 
             if( ((aPreVolName == LogVolHpdSMasterNameAnalysis) || 
-                 (iHpdSMStrPos !=  std::string::npos  ) ) &&
+                 (iHpdSMStrPos0 !=  std::string::npos  ) || iHpdSMStrPos1 !=  std::string::npos    ) &&
                aPostVolName ==  LogVolHpdQWindowNameAnalysis ){
 
               if(PhotCurDir.z() > 0.0 ) {
@@ -311,11 +313,13 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
         const G4String & aelnPreVolName=
           aPreStepPoint->GetPhysicalVolume()->GetLogicalVolume()->GetName();
-         std::string::size_type jHpdSMStrPos=
-                      aelnPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix);
+         std::string::size_type jHpdSMStrPos0=
+                      aelnPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix[0]);
+         std::string::size_type jHpdSMStrPos1=
+                      aelnPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix[1]);
 
         if( (aelnPreVolName == LogVolHpdSMasterNameAnalysis) ||
-            (jHpdSMStrPos !=  std::string::npos)  ) {
+            (jHpdSMStrPos0 !=  std::string::npos)  ||  (jHpdSMStrPos1 !=  std::string::npos) ) {
 
           const G4String & aelnPostVolName=
             aPostStepPoint->GetPhysicalVolume()
@@ -329,7 +333,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
             if(aParticleKE > 0.0 ) {
               if(  ( (aelnPreVolName == LogVolHpdSMasterNameAnalysis) ||
-                     (jHpdSMStrPos !=  std::string::npos)  ) &&
+                     (jHpdSMStrPos0 !=  std::string::npos) || (jHpdSMStrPos1 !=  std::string::npos)    ) &&
                    ( (aelnPostVolName == LogVolSiDetNameAnalysis) ||
                      (aelnPostVolName.find(LogVolSiDetNameAnalysisStrPrefix) 
                       != std::string::npos ))){
