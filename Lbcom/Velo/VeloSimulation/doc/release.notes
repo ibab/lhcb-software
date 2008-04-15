@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!===================== VeloSimulation v3r0 2008-04-15 ======================
 ! 2008-04-14 - David Hutchcroft
  - Retuned time curves to use vfp = 150 and vfs = 550 : best guess as inital 
    BEETLE tune parameters, amount of spillover increased
@@ -13,7 +14,6 @@
  - Set capacitve coupling to 1% (from 5%) to get approx 1 and 2 strip 
    ratio about right
 
-!===================== VeloSimulation v3r0 2008-04-11 ======================
 ! 2008-03-28 - David Hutchcroft
  - Update to VeloSim
  - Use ST charge deposite tool to correct GEANT dEdx
