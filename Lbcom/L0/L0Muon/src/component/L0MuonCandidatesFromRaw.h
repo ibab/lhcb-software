@@ -4,6 +4,12 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "L0MuonOutputs.h"
 
+/** @class L0MuonCandidatesFromRaw L0MuonCandidatesFromRaw.h component/L0MuonCandidatesFromRaw.h
+ *  
+ *
+ *  @author Julien Cogan
+ *  @date   2008-04-14
+ */
 class L0MuonCandidatesFromRaw : public GaudiAlgorithm {
     
 public:

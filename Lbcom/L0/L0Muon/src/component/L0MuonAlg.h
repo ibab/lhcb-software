@@ -1,8 +1,6 @@
 #ifndef L0MUONTRIGGER_L0MUONALG_H
 #define L0MUONTRIGGER_L0MUONALG_H     1
 
-
-
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "MuonKernel/MuonSystemLayout.h"
 
@@ -14,6 +12,13 @@
 #include "L0MuonOutputs.h"
 
 #include "L0MuonKernel/MuonCandidate.h"
+
+/** @class L0MuonAlg L0MuonAlg.h component/L0MuonAlg.h
+ *  
+ *
+ *  @author Julien Cogan
+ *  @date   2008-01-10
+ */
 
 class L0MuonAlg : public GaudiAlgorithm {
     
