@@ -5,6 +5,39 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-04-15 - Patrick Koppenburg
+ -
+
+! 2008-04-15 - Patrick Koppenburg
+ - Big reshuffling of option files. 
+   -> Rename alleys to Hlt1 and selections to Hlt2.
+   -> Be able to run Hlt1 and Hlt2 seperately. 
+   
+  To run all Hlt include: 
+  (this is backward compatible with other options in DaVinci)
+ 
+  #include "$HLTSYSROOT/options/Hlt.opts"
+
+  To run only alleys:
+
+  #include "$HLTSYSROOT/options/Hlt1.opts"
+
+  To run only selcetions:
+
+  #include "$HLTSYSROOT/options/Hlt2.opts"
+
+  in the firt two cases make sure the required L0 data is present 
+  (if not rerun L0)
+
+  Details of commit:
+  . options/Hlt.opts : moved content to Hlt1.opts
+  . options/HltSelections.opts : removed. Renamed to Hlt2.opts
+  . options/Hlt1.opts : new options to run alleys
+  . options/Hlt2.opts : new options to run selections
+  . options/HltMainSequence.opts : options common to Hlt1 and Hlt2. Included
+      by both. Take care when changing. Make sure changes work for both 
+      trigger levels.
+
 ! 2008-04-08- Jose A. Hernando
  - Uncommenting the muon+hadron alley
 

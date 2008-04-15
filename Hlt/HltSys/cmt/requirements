@@ -31,8 +31,9 @@ use HltKshort           v1r1    Hlt   # Jaap Panman
 
 use HltBase             v4r1   Hlt    # Jose Angel Hernando-Morata
 
-use LoKiTrigger         v7r2   Phys   # Vanya Belyaev
+use LoKiTrigger         v7r3   Phys   # Vanya Belyaev
 use TisTosTobbing       v2r2   Phys   # Tomasz Skwarnicki  
+
 
 
 
