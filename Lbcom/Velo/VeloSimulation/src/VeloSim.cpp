@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.22 2008-04-14 09:36:45 dhcroft Exp $
+// $Id: VeloSim.cpp,v 1.23 2008-04-15 14:48:22 cattanem Exp $
 // Include files
 // STL
 #include <string>
@@ -835,7 +835,7 @@ void VeloSim::noiseSim(){
       int maxStrips= sens->numberOfStrips();
       if(!m_makeNonZeroSuppressedData){
         hitNoiseTotal= 
-	  int(LHCbMath::round(2.*m_noiseTailProb*maxStrips));
+	  int(LHCb::Math::round(2.*m_noiseTailProb*maxStrips));
         Rndm::Numbers poisson(randSvc(), Rndm::Poisson(hitNoiseTotal));
         hitNoiseTotal = int(poisson());
       }else{
