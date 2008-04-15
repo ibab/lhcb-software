@@ -1,4 +1,4 @@
-// $Id: PhysicalChannelsHist.h,v 1.1 2008-04-08 11:31:03 jucogan Exp $
+// $Id: PhysicalChannelsHist.h,v 1.2 2008-04-15 09:47:37 jucogan Exp $
 #ifndef COMPONENT_PHYSICALCHANNELSHIST_H 
 #define COMPONENT_PHYSICALCHANNELSHIST_H 1
 
@@ -30,15 +30,21 @@ public:
 
   void bookHistos();
   void bookHistos(int quarter, int region, int station);
-  void fillHistos(const std::vector<LHCb::MuonTileID> &tiles);
+  void fillHistos(const std::vector<LHCb::MuonTileID> &tiles, int ts=0);
   
 protected:
 
 private:
   AIDA::IHistogram1D * m_hist[4][3][5][4];
+  AIDA::IHistogram2D * m_hist2D[4][3][5][4];
+  AIDA::IHistogram2D * m_histBX[4][3][5][4];
   MuonSystemLayout  m_channel_layout[3];
-
+  MuonSystemLayout  m_opt_link_layout;
+  
   void setLayouts(); // Set the layouts in use
+
+  bool m_2D; 
+  bool m_BX; 
 
 };
 #endif // COMPONENT_PHYSICALCHANNELSHIST_H

@@ -1,4 +1,4 @@
-// $Id: L0MuonMonUtils.h,v 1.1 2008-04-08 11:31:03 jucogan Exp $
+// $Id: L0MuonMonUtils.h,v 1.2 2008-04-15 09:47:37 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONUTILS_H 
 #define COMPONENT_L0MUONMONUTILS_H 1
 
@@ -10,6 +10,8 @@ namespace L0MuonMonUtils
 {
   enum Channel_type {Pad, StripH, StripV , nb_channel_types};
   enum Stations {M1=0,M2,M3,M4,M5,NStations};
+  enum Regions  {R1=0,R2,R3,R4,NRegions};
+  enum Quarters {Q1=0,Q2,Q3,Q4,NQuarters};
 
   void makePads(std::vector<LHCb::MuonTileID>& tiles, std::vector<LHCb::MuonTileID>& pads);
   void flipCoord(int &x, int&y, const int qua);

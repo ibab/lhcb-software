@@ -1,4 +1,4 @@
-// $Id: PhysicalChannelsHist.cpp,v 1.1 2008-04-08 11:31:03 jucogan Exp $
+// $Id: PhysicalChannelsHist.cpp,v 1.2 2008-04-15 09:47:37 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,9 @@ PhysicalChannelsHist::PhysicalChannelsHist( const std::string& type,
 {
   declareInterface<PhysicalChannelsHist>(this);
 
+  declareProperty("H2D", m_2D=false);
+  declareProperty("HBX", m_BX=false);
+  
   setLayouts();
   
   for (int qua=0;qua<4;++qua){
@@ -69,34 +72,51 @@ void PhysicalChannelsHist::bookHistos(int quarter, int region, int station)
     if (lay.isDefined()){  
       int nbins=lay.xGrid()*lay.yGrid()*3;
       m_hist[quarter][type][station][region]=book1D(hname,hname,-0.5,nbins-0.5,nbins);
+      if (m_2D) {
+        int xbins=2*lay.xGrid();
+        int ybins=2*lay.yGrid();
+        m_hist2D[quarter][type][station][region]=book2D(hname+"2D",hname+"2D",-0.5,xbins-0.5,xbins,-0.5,ybins-0.5,ybins);
+      }
+      if (m_BX){
+        m_histBX[quarter][type][station][region]=book2D(hname+"-VS-BX",hname+"-VS-BX",-0.5,nbins-0.5,nbins,-7.5,7.5,15);
+      }
     }
   }
 }
 
-void PhysicalChannelsHist::fillHistos(const std::vector<LHCb::MuonTileID> &tiles)
+void PhysicalChannelsHist::fillHistos(const std::vector<LHCb::MuonTileID> &tiles, int ts)
 {
     std::vector<LHCb::MuonTileID>::const_iterator it_tiles;
     for (it_tiles=tiles.begin();it_tiles<tiles.end();++it_tiles){
-      int qua = it_tiles->quarter();
       int sta = it_tiles->station();
       int reg = it_tiles->region();
       MuonLayout lay = it_tiles->layout();
       for (L0MuonMonUtils::Channel_type type =L0MuonMonUtils::Pad; type<L0MuonMonUtils::nb_channel_types; type++){
         if (lay==m_channel_layout[type].stationLayout(sta).regionLayout(reg)) {
+          int qua = it_tiles->quarter();
           if (m_hist[qua][type][sta][reg]==NULL) continue;
+          MuonLayout layOL = m_opt_link_layout.stationLayout(sta).regionLayout(reg);
+          LHCb::MuonTileID ol=it_tiles->containerID(layOL);
+
           int xgrid=lay.xGrid();
           int ygrid=lay.yGrid();
-          int x = it_tiles->nX();
-          int y = it_tiles->nY();
-          int qua = it_tiles->quarter();
-          int offset = (int)(x/xgrid) +  ( ( ((int)(y/ygrid)) <<1)&2 ) -1;
-          int ind = (x%xgrid) + (y%ygrid)*xgrid + offset*xgrid*ygrid;
+          int xOLgrid=layOL.xGrid();
+          int yOLgrid=layOL.yGrid();
+
+          int ipb=ol.nX()/xOLgrid+2*(ol.nY()/yOLgrid)-1;
+          int ind_ol=ipb*xOLgrid*yOLgrid+ol.localX(layOL)+ol.localY(layOL)*xOLgrid;
+          int ind_local=it_tiles->localX(lay)%(xgrid/xOLgrid)+it_tiles->localY(lay)%(ygrid/yOLgrid)*xgrid/xOLgrid;
+
+          int ind = ind_local+ind_ol*xgrid*ygrid/(xOLgrid*yOLgrid);
+
           fill(m_hist[qua][type][sta][reg],ind,1);
+          if (m_2D) fill(m_hist2D[qua][type][sta][reg],it_tiles->nX(),it_tiles->nY(),1);
+          if (m_BX) fill(m_histBX[qua][type][sta][reg],ind,ts,1);
         }
       }
     }
-
 }
+
 
 void PhysicalChannelsHist::setLayouts()
 {
@@ -150,6 +170,19 @@ void PhysicalChannelsHist::setLayouts()
                                                                      MuonLayout(12,2),
                                                                      MuonLayout(12,2)));
 
+  m_opt_link_layout = MuonSystemLayout(MuonStationLayout(MuonLayout(2,4)),
+                                       MuonStationLayout(MuonLayout(4,1),
+                                                         MuonLayout(4,2),
+                                                         MuonLayout(2,2),
+                                                         MuonLayout(2,2)),
+                                       MuonStationLayout(MuonLayout(4,1),
+                                                         MuonLayout(4,2),
+                                                         MuonLayout(2,2),
+                                                         MuonLayout(2,2)),
+                                       MuonStationLayout(MuonLayout(2,2)),
+                                       MuonStationLayout(MuonLayout(2,2)));
+  
+  
   m_channel_layout[L0MuonMonUtils::Pad]   =pad_layout;
   m_channel_layout[L0MuonMonUtils::StripV]=stripV_layout;
   m_channel_layout[L0MuonMonUtils::StripH]=stripH_layout;

@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.1.1.1 2008-04-02 12:41:15 jucogan Exp $
+! $Id: release.notes,v 1.2 2008-04-15 09:47:37 jucogan Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
+
+! 2008-04-15 - Julien Cogan 
+ - Upgrade 
 
 ! 20080402 - L0MuonMonitor
 First import

@@ -1,9 +1,10 @@
-// $Id: L0MuonMonitor.cpp,v 1.1 2008-04-08 11:31:03 jucogan Exp $
+// $Id: L0MuonMonitor.cpp,v 1.2 2008-04-15 09:47:37 jucogan Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
+#include "Event/ODIN.h"
 #include "Event/L0MuonData.h"
 
 // local
@@ -44,9 +45,18 @@ StatusCode L0MuonMonitor::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   // Tools
+//   m_odin = tool<IEventTimeDecoder>("OdinTimeDecoder","OdinDecoder",this);
   m_channelHist_l0muon = tool<PhysicalChannelsHist>( "PhysicalChannelsHist", "Channels_l0muon", this);
   m_channelHist_muon = tool<PhysicalChannelsHist>( "PhysicalChannelsHist", "Channels_muon", this);
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer","MuonRawTool", this);
+
+  // Run info
+  setHistoDir("L0Muon/Analysis");
+  std::string name;
+  name = "L0EventNumber";
+  book1D(name,name,-0.5,-0.5+4096,4096);
+  name = "L0_B_Id";
+  book1D(name,name,-0.5,-0.5+3564,3564);
 
   // Physical channels
   m_channelHist_l0muon->setHistoDir("L0Muon/Analysis");
@@ -63,6 +73,20 @@ StatusCode L0MuonMonitor::initialize() {
       }
     }
   }
+
+  setHistoDir("L0Muon/Analysis");
+  // Multiplicity  
+  for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
+    int sta = (*its);
+    std::string name;
+    name="NPads_per_event_"+L0MuonMonUtils::stationName(sta);
+    book1D(name,name,-0.5,10.5,11);
+    name="NPads_per_bx_"+L0MuonMonUtils::stationName(sta);
+    book2D(name,name,
+           (-1*int(m_time_slots.size()/2))-0.5,(int(m_time_slots.size()/2))+0.5,m_time_slots.size(),
+           +0.5,10.5,10);
+  }
+ 
   
 
   return StatusCode::SUCCESS;
@@ -74,14 +98,60 @@ StatusCode L0MuonMonitor::initialize() {
 StatusCode L0MuonMonitor::execute() {
 
   debug() << "==> Execute" << endmsg;
+
+  setProperty("RootInTes",L0MuonMonUtils::timeSlot(0));
+  if (exist<LHCb::RawEvent> (LHCb::RawEventLocation::Default)) {
+    LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+    const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::ODIN );
+    if (banks.size()==1){
+      std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin();
+      LHCb::ODIN odin;
+      odin.set(*itBnk);
+      //info() << " ODIN : RUN "<< odin.runNumber() <<" EVENT "<< odin.eventNumber() <<" BID "<< odin.bunchId() << endreq;
+      long bunch =odin.bunchId() ;
+      if (bunch==0) return StatusCode::SUCCESS;
+    } else{
+      error()<<"More than 1 ODIN bank  ("<<banks.size()<<")"<<endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+
+  int npad[L0MuonMonUtils::NStations]; for (int i=0; i<L0MuonMonUtils::NStations; ++i) npad[i]=0;
+
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
 
     setProperty("RootInTes",L0MuonMonUtils::timeSlot(*it_ts));
     if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
     
+//     m_odin->getTime();
+    long event=0;
+    long run=0 ;
+    long bunch=0;
+    if (exist<LHCb::RawEvent> (LHCb::RawEventLocation::Default)) {
+      LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+      const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::ODIN );
+      if (banks.size()==1){
+        std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin();
+        LHCb::ODIN odin;
+        odin.set(*itBnk);
+        //info() << " ODIN : RUN "<< odin.runNumber() <<" EVENT "<< odin.eventNumber() <<" BID "<< odin.bunchId() << endreq;
+        run   =odin.runNumber();
+        event =odin.eventNumber() ;
+        bunch =odin.bunchId() ;
+      } else{
+        error()<<"More than 1 ODIN bank  ("<<banks.size()<<")"<<endmsg;
+      }
+    }    
+
     std::string location;
     std::string name;
+
+    // Run info
+    name = "L0EventNumber";
+    fill(histo1D(name),event&0xFFF,1,name);
+    name = "L0_B_Id";
+    fill(histo1D(name),bunch,1,name);
 
     // Get L0Muon Hits
     std::vector<LHCb::MuonTileID> l0muontiles;
@@ -102,6 +172,14 @@ StatusCode L0MuonMonitor::execute() {
             if (!stationInUse(itol->station())) continue;
             if (!regionInUse(itol->region())  ) continue;
             
+//             if (itol->station()==L0MuonMonUtils::M5 && itol->region()==L0MuonMonUtils::R3) {
+//               name = "L0_B_Id_PROBLEM";
+//               fill(histo1D(name),bunch,1,name);
+// //               continue;
+//             } else {
+//               name = "L0_B_Id_OK";
+//               fill(histo1D(name),bunch,1,name);
+//             }
             l0muontiles.push_back(*itol);
           }
         }
@@ -121,24 +199,38 @@ StatusCode L0MuonMonitor::execute() {
 
       m_muonBuffer->getTile(muontiles);
       m_muonBuffer->forceReset();
-      //       std::vector<LHCb::MuonTileID> tiles;
-      //       for (std::vector<LHCb::MuonTileID>::iterator it=muontiles.begin(); it!=muontiles.end(); ++itol){
-      //         if (!it->isValid()){
-      //           info()<<"Muon tile "<<it->toString()<<" tile is not valid"<<endreq;
-      //         }
-      //         if (!quarterInUse(it->quarter())) continue;
-      //         if (!stationInUse(it->station())) continue;
-      //         if (!regionInUse(it->region())  ) continue;
-      //         tiles.push_back(*itol);
-      //       }
-      //       muontiles = tiles;
     }// End if muon raw buffer tool
 
     // Physical channels
-    m_channelHist_l0muon->fillHistos(l0muontiles);
-    m_channelHist_muon->fillHistos(muontiles);
+    m_channelHist_l0muon->fillHistos(l0muontiles,*it_ts);
+    m_channelHist_muon->fillHistos(muontiles,*it_ts);
+
+    // Logical channels
+    std::vector<LHCb::MuonTileID> l0muonpads;
+    L0MuonMonUtils::makePads(l0muontiles,l0muonpads);
+
+    // Multiplicity per bx
+    int np[L0MuonMonUtils::NStations]; for (int sta=0; sta<L0MuonMonUtils::NStations; ++sta) np[sta]=0;
+    for (std::vector<LHCb::MuonTileID>::iterator itpad=l0muonpads.begin(); itpad<l0muonpads.end();++itpad){
+      ++np[itpad->station()];
+    }
+    for (int sta=0; sta<L0MuonMonUtils::NStations; ++sta) {
+      name="NPads_per_bx_"+L0MuonMonUtils::stationName(sta);
+      AIDA::IHistogram2D *hcand2 = histo2D(name);
+      if (hcand2!=NULL) fill(hcand2,(*it_ts),np[sta],1.);
+    }
+    for (int sta=0; sta<L0MuonMonUtils::NStations; ++sta) npad[sta]+=np[sta];    
+
 
   } // End of loop over time slots
+
+  // Multiplicity per events
+  for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
+    int sta = (*its);
+    std::string hname="NPads_per_event_"+L0MuonMonUtils::stationName(sta);
+    AIDA::IHistogram1D *hmulti=histo1D(hname);
+    if (hmulti!=NULL) fill(hmulti,npad[sta],1.);
+  }
 
   return StatusCode::SUCCESS;
 }

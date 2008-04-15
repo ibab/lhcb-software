@@ -1,9 +1,10 @@
-// $Id: L0MuonMonitor.h,v 1.1 2008-04-08 11:31:03 jucogan Exp $
+// $Id: L0MuonMonitor.h,v 1.2 2008-04-15 09:47:37 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITOR_H 
 #define COMPONENT_L0MUONMONITOR_H 1
 
 // Include files
 
+#include "Kernel/IEventTimeDecoder.h"
 #include "MuonDAQ/IMuonRawBuffer.h"
 
 #include "L0MuonMonitorBase.h"
@@ -30,6 +31,8 @@ public:
 protected:
 
 private:
+
+  IEventTimeDecoder* m_odin;
 
   PhysicalChannelsHist* m_channelHist_l0muon;
   PhysicalChannelsHist* m_channelHist_muon;
