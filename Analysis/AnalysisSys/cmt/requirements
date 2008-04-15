@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.46 2008-03-11 10:48:05 pkoppenb Exp $
+# $Id: requirements,v 1.47 2008-04-15 06:59:03 pkoppenb Exp $
 package AnalysisSys
 version v1r12
 
@@ -35,7 +35,6 @@ use JetsSel	        v1r4p2  PhysSel # Jets WG
 use Radiative           v2r3    PhysSel # Vanya BELYAEV
 
 # temporary packages
-use Bs2JpsiPhi          v3r3    PhysSel # Gerhard Raven, Jan Amoraal
 use Bd2PiPiPi0          v4r3    PhysSel # Olivier Deschamps
 
 ####################################################################
