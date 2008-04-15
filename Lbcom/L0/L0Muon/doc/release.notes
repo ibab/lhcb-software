@@ -1,9 +1,15 @@
-!  $Id: release.notes,v 1.50 2008-04-11 11:45:52 cattanem Exp $
+!  $Id: release.notes,v 1.51 2008-04-15 09:20:21 jucogan Exp $
 !Package L0Muon
-!Package manager: A.Tsaregorodtsev
+!Package manager: A.Tsaregorodtsev - Julien Cogan
 !-------------------------------------------------------------------------
 
-!========================= L0Muon v7r7 2008-04-11 ========================
+
+! 2008-04-14 - Julien Cogan
+ - Remove undesirable print out in L0MuonAlg
+ - Protect more debug with if(msgLevel(MSG::DEBUG) in L0MuonAlg
+ - Add contact name in L0MuonAlg.h and L0MuonCandidatesFromRaw.h
+
+!========================= L0Muon v7r8 2008-04-11 ========================
 ! 2008-04-08 - Julien Cogan
  - L0MuonAlg : Allow to run from  data coming from several time bunch
    crossing (TAE mode)
