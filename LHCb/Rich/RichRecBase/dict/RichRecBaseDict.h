@@ -19,6 +19,8 @@
 #include "RichRecBase/IRichGeomEff.h"
 #include "RichRecBase/IRichPhotonPredictor.h"
 #include "RichRecBase/IRichPhotonSignal.h"
+#include "RichRecBase/IRichPixelBackgroundEsti.h"
+#include "RichRecBase/IRichPID.h"
 #include "RichRecBase/IRichRayleighScatter.h"
 #include "RichRecBase/IRichSellmeirFunc.h"
 #include "RichRecBase/IRichSignalDetectionEff.h"

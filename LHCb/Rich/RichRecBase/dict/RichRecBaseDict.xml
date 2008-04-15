@@ -50,9 +50,11 @@
   <class name = "Rich::Rec::IPhotonPredictor" />
   <class name = "Rich::Rec::IPhotonReconstruction" />
   <class name = "Rich::Rec::IPhotonSignal" />
+  <class name = "Rich::Rec::IPixelBackgroundEsti" />
   <class name = "Rich::Rec::IPixelCreator" />
   <class name = "Rich::Rec::IRayTraceCherenkovCone" />
   <class name = "Rich::Rec::IRayleighScatter" />
+  <class name = "Rich::Rec::IRichPID" />
   <class name = "Rich::Rec::IGeomTool" />
   <class name = "Rich::Rec::ISegmentCreator" />
   <class name = "Rich::Rec::ISellmeirFunc" />
