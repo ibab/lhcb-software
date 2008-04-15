@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 !2008-04-15 - Sajan Easo
     - Fixed a problem in RichG4Analysis6.cpp and RichG4Analysis3.cpp for the HpdSMaster names.
+    - Fixed a problem in RichG4Analysis5 for Rich2 mirror name.
 !2008-04-11 - Sajan Easo
   - Added the minor changes needed to accomodate the new Rich1 Flat mirrors
     geometry structure in the database. The name changes are kept backward

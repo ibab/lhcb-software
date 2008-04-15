@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.cpp,v 1.12 2006-11-01 09:41:54 seaso Exp $
+// $Id: RichG4CkvRecon.cpp,v 1.13 2008-04-15 09:41:48 seaso Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -151,7 +151,8 @@ RichG4CkvRecon::RichG4CkvRecon()
     m_SphMirrCC [1] [1]= -1.0* m_SphMirrCC [0] [1];
     m_SphMirrCC [1] [2]=   m_SphMirrCC [0] [2];
 
-    RichG4CkvReconlog << MSG::DEBUG<< "Rich1 Spherical Mirror1 bottom  COC and Rad "<< m_SphMirrCC [1] [0]<<"  "<< m_SphMirrCC [1] [1]
+    RichG4CkvReconlog << MSG::DEBUG<< "Rich1 Spherical Mirror1 bottom  COC and Rad "
+         << m_SphMirrCC [1] [0]<<"  "<< m_SphMirrCC [1] [1]
 		      <<"  "<< m_SphMirrCC [1] [2]<<"  "<<m_SphMirrRad [0]<<endreq;
 
 
