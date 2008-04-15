@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.9 2008-03-30 13:48:13 ibelyaev Exp $
+! $Id: release.notes,v 1.10 2008-04-15 06:55:26 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2008-04-15 - Patrick Koppenburg
+ - Use LHCb::Math namespace
 
 ! 2008-03-30 - Vanya BELYAEV
 

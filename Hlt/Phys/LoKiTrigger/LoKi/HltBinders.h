@@ -1,4 +1,4 @@
-// $Id: HltBinders.h,v 1.5 2007-11-28 14:56:23 ibelyaev Exp $
+// $Id: HltBinders.h,v 1.6 2008-04-15 06:55:26 pkoppenb Exp $
 // ============================================================================
 #ifndef LOKI_HLTBINDERS_H 
 #define LOKI_HLTBINDERS_H 1
@@ -10,7 +10,7 @@
 #include "LoKi/Binders.h"
 #include "LoKi/Algs.h"
 #include "LoKi/Objects.h"
-#include "LoKi/StdMath.h"
+#include "LHCbMath/LHCbMath.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -528,7 +528,7 @@ namespace LoKi
     template <class TYPE1,class TYPE2, class TYPE3>
     inline 
     LoKi::HltBinders::BinderValue
-    <TYPE1,TYPE2,TYPE3,LoKi::StdMath::abs_less<TYPE3> >
+    <TYPE1,TYPE2,TYPE3,LHCb::Math::abs_less<TYPE3> >
     bindAbsMin 
     ( const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>& fun   ,
       const std::vector<TYPE2*>*                            vct   , 
@@ -536,7 +536,7 @@ namespace LoKi
       const std::string&                                    nam2  )
     {
       return LoKi::HltBinders::bind 
-        ( fun , vct , LoKi::StdMath::abs_less<TYPE3>() , nam1 , nam2 ) ;
+        ( fun , vct , LHCb::Math::abs_less<TYPE3>() , nam1 , nam2 ) ;
     }
     // ========================================================================
     /** helper function to create the the metafunction:
@@ -564,7 +564,7 @@ namespace LoKi
     template <class TYPE1,class TYPE2, class TYPE3>
     inline 
     LoKi::HltBinders::BinderFun
-    <TYPE1,TYPE2,TYPE3,LoKi::StdMath::abs_less<TYPE3> >
+    <TYPE1,TYPE2,TYPE3,LHCb::Math::abs_less<TYPE3> >
     bindAbsMin 
     ( const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>& fun   ,
       const LoKi::Functor<TYPE2,TYPE3>&                     fun2  , 
@@ -573,7 +573,7 @@ namespace LoKi
       const std::string&                                    nam2  )
     {
       return LoKi::HltBinders::bind 
-        ( fun , fun2 , vct , LoKi::StdMath::abs_less<TYPE3>() , nam1 , nam2 ) ;
+        ( fun , fun2 , vct , LHCb::Math::abs_less<TYPE3>() , nam1 , nam2 ) ;
     }      
     // ========================================================================
     /** helper function to create the the metafunction:
@@ -670,7 +670,7 @@ namespace LoKi
     template <class TYPE1,class TYPE2, class TYPE3>
     inline 
     LoKi::HltBinders::BinderValue
-    <TYPE1,TYPE2,TYPE3,LoKi::StdMath::abs_greater<TYPE3> >
+    <TYPE1,TYPE2,TYPE3,LHCb::Math::abs_greater<TYPE3> >
     bindAbsMax 
     ( const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>& fun   ,
       const std::vector<TYPE2*>*                            vct   , 
@@ -678,7 +678,7 @@ namespace LoKi
       const std::string&                                    nam2  )
     {
       return LoKi::HltBinders::bind 
-        ( fun , vct , LoKi::StdMath::abs_greater<TYPE3>() , nam1 , nam2 ) ;
+        ( fun , vct , LHCb::Math::abs_greater<TYPE3>() , nam1 , nam2 ) ;
     }
     // ========================================================================
     /** helper function to create the the metafunction:
@@ -706,7 +706,7 @@ namespace LoKi
     template <class TYPE1,class TYPE2,class TYPE3>
     inline 
     LoKi::HltBinders::BinderFun
-    <TYPE1,TYPE2,TYPE3,LoKi::StdMath::abs_greater<TYPE3> >
+    <TYPE1,TYPE2,TYPE3,LHCb::Math::abs_greater<TYPE3> >
     bindAbsMax 
     ( const LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>& fun   ,
       const LoKi::Functor<TYPE2,TYPE3>&                     fun2  , 
@@ -715,7 +715,7 @@ namespace LoKi
       const std::string&                                    nam2  )
     {
       return LoKi::HltBinders::bind 
-        ( fun , fun2 , vct , LoKi::StdMath::abs_greater<TYPE3>() , nam1 , nam2 ) ;
+        ( fun , fun2 , vct , LHCb::Math::abs_greater<TYPE3>() , nam1 , nam2 ) ;
     }      
     // ========================================================================
   } // end of namespace LoKi::HltBinders 
