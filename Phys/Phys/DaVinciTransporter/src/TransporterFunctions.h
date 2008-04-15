@@ -1,4 +1,4 @@
-// $Id: TransporterFunctions.h,v 1.12 2008-03-11 09:12:56 jpalac Exp $
+// $Id: TransporterFunctions.h,v 1.13 2008-04-15 14:34:14 jpalac Exp $
 // ============================================================================
 #ifndef TRANSPORTERFUNCTIONS_H 
 #define TRANSPORTERFUNCTIONS_H 1
@@ -94,7 +94,7 @@ namespace DaVinciTransporter
    *
    *
    */
-  StatusCode transportComposite_ 
+  StatusCode transportAndProjectComposite 
   ( const LHCb::Particle* particle, 
     const double zNew,
     LHCb::Particle& transParticle) 
@@ -359,6 +359,13 @@ namespace DaVinciTransporter
     }
     // 
     return StatusCode::SUCCESS ;                                    // RETURN 
+  }
+  // ==========================================================================
+  StatusCode transportAndProjectNeutralBasic(const LHCb::Particle* particle, 
+                                             const double zNew,
+                                             LHCb::Particle& transParticle) 
+  {
+    return transportAndProjectComposite(particle, zNew, transParticle);
   }
   // ==========================================================================
   StatusCode transportNeutralBasic(const LHCb::Particle* particle, 
