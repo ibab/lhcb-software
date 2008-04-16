@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.10 2008-04-09 20:21:20 ibelyaev Exp $ 
+# $Id: functions.py,v 1.11 2008-04-16 11:33:30 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The set of basic objects from LoKiHlt library
@@ -85,6 +85,8 @@ ACUTCHILD     = LoKi.AParticles.ChildCut
 ACUTDOCA      = LoKi.AParticles.MaxDOCACut
 ## @see LoKi::Cuts::ACUTDOCACHI2
 ACUTDOCACHI2  = LoKi.AParticles.MaxDOCAChi2Cut
+## @see LoKi::Cuts::ADAMASS
+ADAMASS       = LoKi.AParticles.AbsDeltaMass 
 ## @see LoKi::Cuts::ADOCACHI2
 ADOCACHI2     = LoKi.AParticles.MaxDOCAChi2
 ## @see LoKi::Cuts::ADOCACHI2CUT
@@ -193,6 +195,9 @@ AWM           = LoKi.AParticles.WrongMass
 ## @see LoKi::Cuts::AWRONGMASS
 AWRONGMASS    = LoKi.AParticles.WrongMass 
 
+## @see LoKi::Cuts::DAMASS
+DAMASS        = LoKi.AParticles.DeltaMass 
+
 
 ## functional part
 _va       = 'std::vector<LoKi::Range_<std::vector<const LHCb::Particle*> > >' ## std.vector ( _T    )
@@ -209,8 +214,34 @@ AElements  = LoKi.Functor             ( _va , _T        )
 AElement   = LoKi.FunctorFromFunctor  ( _va , _T        ) 
 #
 
+def PDGM ( o ) :
+    """
+    Trivial function which returns the PDG mass for the given 'object'
+    
+    >>> m = PDGM('B0')
+    >>> m = PDGM(LHCb.ParticleID(22))
+    >>> m = PGDM(22)
+    >>> particle = ...
+    >>> m = PDGM( particle )
+    >>> mcparticle = ...
+    >>> m = PDGM( mcparticle )
+    >>> genparticle = ...
+    >>> m = PDGM( genparticle )
+    
+    """
+    if   str == type ( o ) :
+        return LoKi.Particles.massFromName ( o )
+    elif LHCb.ParticleID == type ( o ) :
+        return LoKi.Particles.massFromPID  ( o )
+    elif hassattr ( o , "particleID" ) :
+        return LoKi.Particles.massFromPID  ( o.particleID() )
+    elif hassattr ( o , "pdg_id" ) :
+        return LoKi.Particles.massFromPID  ( LHCb.ParticleID( o.pdg_id() ) ) 
+    
+    return PDGM ( LHCb.PartielID( o ) ) 
 
-
+PDGM. __doc__ += '\n' + LoKi.Particles.massFromName . __doc__ 
+PDGM. __doc__ += '\n' + LoKi.Particles.massFromPID  . __doc__
 
 # =============================================================================
 if '__main__' == __name__ :

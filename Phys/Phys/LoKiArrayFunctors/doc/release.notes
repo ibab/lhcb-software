@@ -1,11 +1,31 @@
-$Id: release.notes,v 1.22 2008-04-11 06:03:29 cattanem Exp $ 
+$Id: release.notes,v 1.23 2008-04-16 11:33:30 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
-!======================== LoKiArrayFunctors v7r2 2008-04-10 ===================
+!======================== LoKiArrayFunctors v7r2 2008-04-16 ===================
+
+! 2008-04-16 - Vanya BELYAEV
+
+ - LoKi/AParticles.h, src/AParticle.cpp 
+
+    add new functors DelatMass and AbsDeltaMass
+
+- LoKi/AParticleCuts.h
+
+    add shortcuts for new functions: DAMASS and ADAMASS 
+
+ - python/LoKiArrayFunctors/functions.h
+
+    1) add the symbols DAMASS & ADAMASS 
+    2) add the function PDGM, whcih coudl be used to get the 
+       PDG mass fo the given particle name, particle pid or 
+       given (gen/mc)-particle
+
+
+  
 ! 2008-04-10 - Vanya BELYAEV 
  - src/Components/PrintTool.cpp 
    debug the tool. many fixes

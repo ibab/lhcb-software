@@ -1,4 +1,4 @@
-// $Id: AParticleCuts.h,v 1.4 2007-11-28 14:55:54 ibelyaev Exp $
+// $Id: AParticleCuts.h,v 1.5 2008-04-16 11:33:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLECUTS_H 
 #define LOKI_APARTICLECUTS_H 1
@@ -306,6 +306,29 @@ namespace LoKi
      */
     typedef LoKi::AParticles::MaxDOCAChi2Cut                     ACUTDOCACHI2 ;
     // ========================================================================
+    /** @typedef ADAMASS
+     *
+     *  Trivial functor to get the absolute value for the 
+     *   delta mass of the combination.
+     *  It uses the function LoKi::Kinematics::addMomenta
+     *
+     *  @code 
+     *
+     *    const LHCb::Particle::ConstVector& combination = ... ;
+     *
+     *    
+     *    const AFun adamass = ADAMASS ( "J/psi(1S)" )  
+     *
+     *    const double absdelta = adamass ( combination ) ;
+     * 
+     *  @endcode 
+     * 
+     *  @see LoKi::AParticles::AbsDeltaMass
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-09
+     */
+    typedef LoKi::AParticles::AbsDeltaMass                          ADAMASS ;
+    // ========================================================================    
     /** @typedef ADOCACHI2 
      *  The evaluator of the maximal chi2-distance of the closest approach 
      *  for all two-particle subcombinations
@@ -1604,6 +1627,27 @@ namespace LoKi
      */
     typedef LoKi::AParticles::WrongMass                            AWRONGMASS ;
     // ========================================================================    
+    /** @typedef DAMASS
+     *
+     *  Trivial functor to get delta mass of the combination.
+     *  It uses the function LoKi::Kinematics::addMomenta
+     *
+     *  @code 
+     *
+     *    const LHCb::Particle::ConstVector& combination = ... ;
+     *
+     *    
+     *    const AFun dmass = DAMASS ( "J/psi(1S)" )  
+     *
+     *    const double delta = dmass ( combination ) ;
+     * 
+     *  @endcode 
+     * 
+     *  @see LoKi::AParticles::DeltaMass
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-09
+     */
+    typedef LoKi::AParticles::DeltaMass                          DAMASS ;
   } // end of namespace LoKi::Cuts 
 } // end of namespace LoKi
 // ============================================================================

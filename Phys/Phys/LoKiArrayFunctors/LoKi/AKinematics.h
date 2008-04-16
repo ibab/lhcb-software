@@ -1,4 +1,4 @@
-// $Id: AKinematics.h,v 1.3 2007-12-02 17:10:38 ibelyaev Exp $
+// $Id: AKinematics.h,v 1.4 2008-04-16 11:33:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_AKINEMATICS_H 
 #define LOKI_AKINEMATICS_H 1
@@ -386,7 +386,7 @@ namespace LoKi
     ( const LHCb::Particle::ConstVector& comb    , 
       const std::vector<std::size_t>&    indices ) 
     { return momentum ( comb.begin() , comb.end() , indices ) ; }
-    // ========================================================================    
+    // ========================================================================
   } // end of namespace LoKi::AKinematics 
   namespace Kinematics 
   {

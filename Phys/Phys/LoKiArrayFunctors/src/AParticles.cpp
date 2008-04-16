@@ -1,4 +1,4 @@
-// $Id: AParticles.cpp,v 1.5 2007-12-02 17:10:46 ibelyaev Exp $
+// $Id: AParticles.cpp,v 1.6 2008-04-16 11:33:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ===========================================================================
@@ -11,6 +11,8 @@
 // GaudiKernel
 // ===========================================================================
 #include "GaudiKernel/ToStream.h"
+#include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
 // ===========================================================================
 // LoKi
 // ============================================================================
@@ -166,9 +168,9 @@ std::ostream& LoKi::AParticles::FourMomentum::print_
 ( std::ostream& s , const std::string& nam ) const 
 {
   if ( 4 < m_indices.size() )
-  { return s << nam << "(" 
+  { return s << nam 
              << Gaudi::Utils::toString( m_indices ) << ")" ; } // REUTRN
-  s << nam << "(";
+  s << nam ;
   for ( Indices::const_iterator ii = m_indices.begin() ; 
         m_indices.end() != ii ; ++ii ) 
   {
@@ -791,7 +793,7 @@ LoKi::AParticles::MaxDOCAChi2::operator()
 // ============================================================================
 std::ostream& 
 LoKi::AParticles::MaxDOCAChi2::fillStream ( std::ostream& s ) const 
-{ return s << "ADOCACHI2['" << m_doca->name() << "']" ; }
+{ return s << "ADOCACHI2('" << m_doca->name() << "')" ; }
 
 
 // ============================================================================
@@ -880,8 +882,8 @@ LoKi::AParticles::MaxDOCAChi2Cut::operator()
 // ============================================================================
 std::ostream& 
 LoKi::AParticles::MaxDOCAChi2Cut::fillStream ( std::ostream& s ) const 
-{ return s << "ACUTDOCACHI2['" << m_doca->name() 
-           << "," << m_threshold << "']" ; }
+{ return s << "ACUTDOCACHI2('" << m_doca->name() 
+           << "," << m_threshold << "')" ; }
 // ============================================================================
 /*  constructor with daughter index (starts from 1).
  *  E.g. for 2-body decays it could be 1 or 2 
@@ -1156,6 +1158,72 @@ LoKi::AParticles::WrongMass::fillStream( std::ostream& s ) const
   }
   return s << ")" ;
 }
+// ============================================================================
+// the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::AParticles::DeltaMass::fillStream( std::ostream& s ) const 
+{
+  s << "DAMASS(" << m0() << "," ;
+  return print_ ( s , "" ) ;
+}
+// ============================================================================
+// get the mass from particle property 
+// ============================================================================
+double LoKi::AParticles::DeltaMass::getMass 
+( const ParticleProperty& pp ) const
+{ return pp.mass() ; }
+// ============================================================================
+// get the mass from particle name 
+// ============================================================================
+double LoKi::AParticles::DeltaMass::getMass 
+( const std::string&    name , 
+  IParticlePropertySvc* svc  ) const
+{
+  if ( 0 != svc ) 
+  {
+    const ParticleProperty* pp = svc->find ( name ) ;
+    if ( 0 != pp ) { return pp -> mass() ; }
+    Warning ( "ParticleProperty* points to null, try by name") ;
+    return getMass ( name ) ;
+  }
+  const ParticleProperty* pp = LoKi::Particles::ppFromName ( name ) ;
+  Assert ( 0 != pp , "Invalid particle name!" ) ;
+  //
+  return pp->mass() ; 
+}
+// ============================================================================
+// get the mass from particle name 
+// ============================================================================
+double LoKi::AParticles::DeltaMass::getMass 
+( const LHCb::ParticleID& pid , 
+  IParticlePropertySvc*   svc  ) const
+{
+  if ( 0 != svc ) 
+  {
+    const ParticleProperty* pp = svc->findByStdHepID ( pid.pid() ) ;
+    if ( 0 != pp ) { return pp -> mass() ; }
+    Warning ( "ParticleProperty* points to null, try by PID") ;
+    return getMass ( pid ) ;
+  }
+  const ParticleProperty* pp = LoKi::Particles::ppFromPID ( pid ) ;
+  Assert ( 0 != pp , "Invalid particle ID!" ) ;
+  //
+  return pp->mass() ; 
+}
+// ============================================================================
+// the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::AParticles::AbsDeltaMass::fillStream( std::ostream& s ) const 
+{
+  s << "ADAMASS(" << m0() << "," ;
+  return print_ ( s , "" ) ;  
+}
+// ============================================================================
+
+
+
 // ============================================================================
 // The END 
 // ============================================================================
