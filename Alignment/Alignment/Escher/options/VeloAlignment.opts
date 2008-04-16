@@ -27,23 +27,36 @@ ApplicationMgr.ExtSvc += { "TransportSvc" };
 RecoVELOSeq.Members += {  "DecodeVeloRawBuffer"
                     ,"Tf::PatVeloRTracking/PatVeloRTracking"
                     ,"Tf::PatVeloSpaceTracking/PatVeloSpaceTracking"
-                    ,"Tf::PatVeloGeneralTracking/PatVeloGeneralTracking"
+                    ,"Tf::PatVeloGeneric/PatVeloGeneric" 
+//                    ,"Tf::PatVeloGeneralTracking/PatVeloGeneralTracking"
 };
+
+PatVeloAlignment.OutputLevel = 2;
 
 // Decode also VeloClusters, needed for track fit
 RecoVELOSeq.Members += { "DecodeVeloRawBuffer/DecodeVeloClusters" };
 DecodeVeloClusters.DecodeToVeloLiteClusters = false;
 DecodeVeloClusters.DecodeToVeloClusters     = true;
 
-// obsolete options for PatVeloGeneric (for reference)
-//PatVeloGeneric.FullAlignment = false;
-//PatVeloGeneric.RAliTol = 0.02; 
-//PatVeloGeneric.PAliTol = 0.002;
-//PatVeloGeneric.KalmanState = 2;
-//PatVeloGeneric.MaxSkip = 10;
-//PatVeloGeneric.ClusterCut  = 30;
-//PatVeloGeneric.CleanSeed   = true;
-//PatVeloGeneric.PrivateBest = true;
+//PatVeloGeneralTracking.PointErrorMin = 2*mm;
+//PatVeloGeneralTracking.MaxExtrapStations = 4;
+//PatVeloGeneralTracking.PointErrorScale = 2;
+//PatVeloGeneralTracking.ErrorExtrapScale = 10;
+//PatVeloGeneralTracking.MaxChiAdd = ;
+//PatVeloGeneralTracking.MaxMissedSensor = ;
+//PatVeloGeneralTracking.MaxChiSqDof = 10;
+//ToolSvc.PatVeloTrackTool.highChargeFract = 0.5;
+
+
+// options for PatVeloGeneric
+PatVeloGeneric.FullAlignment = false;
+PatVeloGeneric.RAliTol = 0.02; 
+PatVeloGeneric.PAliTol = 0.002;
+PatVeloGeneric.KalmanState = 2;
+PatVeloGeneric.MaxSkip = 10;
+PatVeloGeneric.ClusterCut  = 30;
+PatVeloGeneric.CleanSeed   = true;
+PatVeloGeneric.PrivateBest = true;
 
 
 // Alignment phase
@@ -53,11 +66,13 @@ ApplicationMgr.DLLs += { "AlignmentTools" };
 
 #include "$VELOALIGNMENTOPTS/VeloAlign.opts"
 #include "$VELOALIGNMENTOPTS/AlignSensors.opts"
-
 //====================================================
 // decide here whether to run module alignment (Align) 
 // or sensor alignment (AlignSensors)
 //----------------------------------------------------
-//RecoAlignmentSeq.Members += { "Align" };
-RecoAlignmentSeq.Members += { "AlignSensors" };
+RecoAlignmentSeq.Members += { "Align", "WriteAlignmentConditions" };
+//RecoAlignmentSeq.Members += { "AlignSensors", "WriteAlignmentConditions" };
 //====================================================
+
+WriteAlignmentConditions.topElement = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
+WriteAlignmentConditions.outputFile = "Detectors.xml";
