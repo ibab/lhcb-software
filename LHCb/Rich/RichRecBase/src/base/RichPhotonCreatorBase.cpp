@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : Rich::Rec::PhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.25 2008-03-25 16:01:13 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.26 2008-04-16 17:31:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -38,7 +38,7 @@ namespace Rich
         m_ckRes                 ( NULL ),
         m_richPartProp          ( NULL ),
         m_Nevts                 ( 0 ),
-        m_bookKeep              ( false ),
+        m_bookKeep              ( true ),
         m_photons               ( NULL ),
         m_richRecPhotonLocation ( LHCb::RichRecPhotonLocation::Default ),
         m_photPredName          ( "RichPhotonPredictor" ),

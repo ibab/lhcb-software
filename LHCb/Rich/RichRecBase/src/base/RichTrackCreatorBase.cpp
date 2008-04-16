@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.17 2008-03-25 16:01:13 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.18 2008-04-16 17:31:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -38,7 +38,7 @@ namespace Rich
         m_tracks               ( 0                  ),
         m_richRecTrackLocation ( LHCb::RichRecTrackLocation::Default ),
         m_Nevts                ( 0                  ),
-        m_bookKeep             ( false              ),
+        m_bookKeep             ( true               ),
         m_traceModeRad         ( Rich::NRadiatorTypes,
                                  LHCb::RichTraceMode(LHCb::RichTraceMode::IgnoreHPDAcceptance) )
     {

@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.28 2008-02-08 14:30:22 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.29 2008-04-16 17:31:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -36,7 +36,7 @@ namespace Rich
         m_decoder       ( NULL  ),
         m_geomTool      ( NULL  ),
         m_pixels        ( NULL  ),
-        m_bookKeep      ( false ),
+        m_bookKeep      ( true  ),
         m_hpdCheck      ( false ),
         m_clusterHits   ( Rich::NRiches, false ),
         m_noClusterFinding ( false ),
