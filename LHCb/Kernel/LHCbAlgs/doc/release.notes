@@ -4,6 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r16 2008-04-16 ==========================
+! 2008-04-16 - Marco Cattaneo
+ - Give meaningful names to MemoryTool histograms and don't print histogram
+   statistics by default
+
 !======================== LHCbAlgs v2r15 2008-02-12 ==========================
 ! 2008-02-11 - Patrick Koppenburg
  - AlgorithmCorrelations : Allow to print efficiencies for conditions 
