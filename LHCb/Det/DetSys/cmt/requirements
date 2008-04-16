@@ -6,13 +6,15 @@ branches cmt doc dict
 use BcmDet              v1r1    Det
 use CaloDet             v8r5    Det
 use CaloDetXmlCnv       v3r1    Det
+use DDDB                v1r5    Det
+use DetCond             v11r9   Det
 use DetDesc             v18r4p1 Det
 use DetDescCnv          v4r5    Det
 use DetDescSvc          v1r16   Det
 use Magnet              v3r7    Det
 use MuonDet             v8r0    Det
 use OTDet               v7r7    Det
-use RichDet             v10r10  Det
+use RichDet             v10r11  Det
 use STDet               v3r9    Det
 use VeloDet             v13r0   Det
 use XmlTools            v5r2    Tools
