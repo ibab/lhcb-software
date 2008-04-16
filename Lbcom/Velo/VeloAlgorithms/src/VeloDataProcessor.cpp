@@ -29,15 +29,31 @@ VeloDataProcessor::VeloDataProcessor( const std::string& name,
     m_outputVeloDigit ( LHCb::VeloDigitLocation::Default )
   {
   declareProperty("InputContainer", m_inputContainer);
+  declareProperty("NonLinear", m_nonLinear = true );
+  declareProperty("NLScale", m_NL_Scale = 297. );  // in ADC counts
+  declareProperty("NLSlope", m_NL_Slope = 0.00226 ); // in ADC/e 
+  declareProperty("NLCenter", m_NL_Center = 19000. ); // in e
+  declareProperty("NLPTerm", m_NL_P_Term = 0.3032 ); // no units
   declareProperty("OutputVeloDigit", m_outputVeloDigit );
   declareProperty("ADCFullScale", m_ADCFullScale = 256. );
   declareProperty("ElectronsFullScale", m_electronsFullScale = 113216.0 );
+  declareProperty("MaxADCOutput", m_maxADCOutput = 127 ); 
+  declareProperty("MinADCOutput", m_minADCOutput = -127);
 }
 
 //=========================================================================
 // Destructor
 //=========================================================================
 VeloDataProcessor::~VeloDataProcessor() {};
+
+// Initialize
+StatusCode VeloDataProcessor::initialize(){
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  m_tanh0 = tanhFunc(0); // set value for speed later
+
+  return StatusCode::SUCCESS;
+}
 
 //=========================================================================
 // take an MCFE make a FullDigit
@@ -58,7 +74,12 @@ StatusCode VeloDataProcessor::execute(){
     // take an MCFE make a VeloDigit
      LHCb::VeloChannelID myKey((*MCFEIt)->key());
      LHCb::VeloDigit* veloDigit=new LHCb::VeloDigit(myKey);
-     int ADC=int(digitise(float((*MCFEIt)->charge())));
+     int ADC;
+     if( m_nonLinear){
+       ADC = digitiseNonLinear((*MCFEIt)->charge());
+     }else{
+       ADC = digitiseLinear((*MCFEIt)->charge());
+     }
      veloDigit->setADCValue(ADC);
      veloDigitVec->insert(veloDigit);
    }
@@ -73,15 +94,26 @@ StatusCode VeloDataProcessor::execute(){
 }
 
 //=========================================================================
-// convert electrons to ADC counts
+// convert electrons to ADC counts using linear function
 //=========================================================================
-float VeloDataProcessor::digitise(float electrons) {
+int VeloDataProcessor::digitiseLinear(double electrons) {
   //
-  debug()<< " ==> VeloDataProcessor::digitise() " <<endmsg;
-  //
-  float digi = float(electrons*(m_ADCFullScale/m_electronsFullScale));
-  if(digi>(m_ADCFullScale-1)) digi=float(m_ADCFullScale-1.);
-  //
-  return digi;
+  double digi = electrons*(m_ADCFullScale/m_electronsFullScale);
+  int adc = static_cast<int>(round(digi));
+  if( adc > m_maxADCOutput ) adc = m_maxADCOutput;
+  if( adc < m_minADCOutput ) adc = m_minADCOutput;
+  return adc;
 }
 //=========================================================================
+
+//=========================================================================
+// convert electrons to ADC counts using non linear function
+//=========================================================================
+int VeloDataProcessor::digitiseNonLinear(double electrons) {
+  //
+  double digi = m_NL_Scale * ( tanhFunc(electrons) - m_tanh0 );
+  int adc = static_cast<int>(round(digi));
+  if( adc > m_maxADCOutput ) adc = m_maxADCOutput;
+  if( adc < m_minADCOutput ) adc = m_minADCOutput;
+  return adc;
+}

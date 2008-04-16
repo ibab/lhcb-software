@@ -1,4 +1,4 @@
-// $Id: VeloClusterMoni.cpp,v 1.10 2006-10-28 18:09:50 mtobin Exp $
+// $Id: VeloClusterMoni.cpp,v 1.11 2008-04-16 15:55:13 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -102,7 +102,7 @@ StatusCode VeloClusterMoni::finalize() {
   double allClusters=m_nVeloClustersS+m_nVeloClustersN+m_nVeloClustersO;
   if(allClusters>0){
     info().precision(4);
-    info()<< "| Clusters from signal:                      " 
+    info()<< "| Clusters from signal +spillover:           " 
           << (m_nVeloClustersS/allClusters)*100
           << "%" <<endmsg;
     info().precision(4);
@@ -110,7 +110,7 @@ StatusCode VeloClusterMoni::finalize() {
           << (m_nVeloClustersN/allClusters)*100
           << "%" <<endmsg;
     info().precision(4);
-    info()<< "| Clusters from other (spillover/coupling):  " 
+    info()<< "| Clusters from other (coupling):            " 
           << (m_nVeloClustersO/allClusters)*100
           << "%" <<endmsg;
     info()<< "------------------------------------------------------" <<endmsg;
