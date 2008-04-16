@@ -298,7 +298,7 @@ class AlConfigurable( ConfigurableUser ) :
             alignSequencer = GaudiSequencer( "AlignmentSeq" )
             alignSequencer.MeasureTime = True
             
-            from Configurables import ( AlignAlgorithm, GetElementsToBeAligned, gslSVDsolver )
+            from Configurables import ( AlignAlgorithm, GetElementsToBeAligned, gslSVDsolver, CLHEPSolver, MA27Solver, DiagSolvTool )
             alignAlg = AlignAlgorithm( "Alignment"                                                                  ,
                                        OutputLevel                  = outputLevel                                   ,
                                        NumberOfIterations           = self.getProp( "NumIterations"                ),
@@ -313,7 +313,13 @@ class AlConfigurable( ConfigurableUser ) :
 
             if self.getProp( "SolvTool" ) == "gslSolver" :
                 alignAlg.addTool( gslSVDsolver(), name = "MatrixSolverTool" )
-
+            if self.getProp( "SolvTool" ) == "CLHEPSolver" :
+                alignAlg.addTool( CLHEPSolver(), name = "MatrixSolverTool" )
+            if self.getProp( "SolvTool" ) == "MA27Solver" :
+                alignAlg.addTool( MA27Solver(), name = "MatrixSolverTool" )
+            if self.getProp( "SolvTool" ) == "DiagSolvTool" :
+                alignAlg.addTool( DiagSolvTool(), name = "MatrixSolverTool" )
+                
             alignAlg.addTool( GetElementsToBeAligned( OutputLevel   = outputLevel                      ,
                                                       Elements      = self.getProp( "ElementsToAlign" ),
                                                       GroupElements = self.getProp( "GroupElements"   ) ),
