@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.31 2008-03-31 15:24:32 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.32 2008-04-16 09:20:25 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -426,7 +426,7 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
   const bool constrainMDau=requireMassConstraint(dau,nominalMassDau);
 
   LHCb::Particle transParticleDau;
-  sc = m_transporter->transport(dau, z2, transParticleDau);
+  sc = m_transporter->transportAndProject(dau, z2, transParticleDau);
   if( sc.isFailure ()) {
     debug() << "transport of dau failed in addFlying(" << endmsg;
     return sc;
@@ -1364,14 +1364,18 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
     iterTransport++;
 
     LHCb::Particle transParticle1;
-    sc = m_transporter->transport(dau1, zPreviousFit, transParticle1);
+    sc = m_transporter->transportAndProject(dau1, 
+                                            zPreviousFit, 
+                                            transParticle1);
      if( sc.isFailure ()) {
        debug() << "transport of dau1 failed in fitTwo!" << endmsg;
        return sc;
      }
 
     LHCb::Particle transParticle2;
-    sc = m_transporter->transport(dau2, zPreviousFit, transParticle2);
+    sc = m_transporter->transportAndProject(dau2, 
+                                            zPreviousFit, 
+                                            transParticle2);
      if( sc.isFailure ()) {
        debug() << "transport of dau2 failed in fitTwo!" << endmsg;
        return sc;
