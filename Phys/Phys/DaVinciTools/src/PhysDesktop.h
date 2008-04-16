@@ -122,13 +122,12 @@ public:
 
 private: // methods
 
-private:
   /// Save all particles and vertices specified in the lists, this is
   /// used internally and no tree structure is propagated.
   inline StatusCode saveDesktop( const LHCb::Particle::ConstVector& pToSave, 
                                  const LHCb::Vertex::ConstVector& vToSave) const 
   {
-    verbose() << "Save specified particles and vertices " << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Save specified particles and vertices " << endmsg;
     saveParticles(pToSave);
     saveVertices(vToSave);
     return StatusCode::SUCCESS;
@@ -155,34 +154,41 @@ private:
   //===========================================================================
   StatusCode getRelations();       ///< get Relation table
   //===========================================================================
-  ///  Is in Desktop
-  inline bool inDesktop(const LHCb::Particle* P) const {
-    verbose() << "LHCb::Particle " << P << " is in desktop " 
-              << (m_partsInTES.find(P)!=m_partsInTES.end()) << endmsg ;
+  ///  Is in TES
+  inline bool inTES(const LHCb::Particle* P) const {
+    if (0==P) Exception("NULL Particle");
+    if (msgLevel(MSG::VERBOSE)) verbose() << "LHCb::Particle " << P << " parent: " 
+                                          << P->parent() << " is in desktop " 
+                                          << (m_partsInTES.find(P)!=m_partsInTES.end()) << endmsg ;
     return (m_partsInTES.find(P)!=m_partsInTES.end()) ;
   }
-  ///  Is in Desktop
-  inline bool inDesktop(const LHCb::Vertex* V)  const {
-    verbose() << "Vertex " << V << " is in desktop " 
-              << (m_vertsInTES.find(V)!=m_vertsInTES.end()) << endmsg ;
+  ///  Is in TES
+  inline bool inTES(const LHCb::Vertex* V)  const {
+    if (0==V) Exception("NULL Vertex");
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Vertex " << V << " is in desktop " 
+                                          << (m_vertsInTES.find(V)!=m_vertsInTES.end()) << endmsg ;
     return (m_vertsInTES.find(V)!=m_vertsInTES.end());
   }
-  ///< Add to Desktop
-  inline void setInDesktop(const LHCb::Particle* P) {
+  /// Add to list of Particles known to be in TES
+  inline void setInTES(const LHCb::Particle* P) {
     m_partsInTES.insert(P); 
-    verbose() << "Inserted LHCb::Particle " 
-              << P << " (" << m_partsInTES.size() << ")" 
-              << endmsg ; return ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "setInDesktop " 
+                                          << (P)->key() 
+                                          << " " << (P)->parent() 
+                                          << " " << (P)->particleID().pid()
+                                          << " with P= " << (P)->momentum() << " m="
+                                          << (P)->measuredMass() 
+                                          << endmsg ; return ;
   }
-  ///< Add to Desktop
-  inline void setInDesktop(const LHCb::VertexBase* V) {
+  /// Add to list of vertices known to be in TES
+  inline void setInTES(const LHCb::VertexBase* V) {
     m_vertsInTES.insert(V); 
-    verbose() << "Inserted Vertex " << V << " (" 
-              << m_vertsInTES.size() << ")" << endmsg ; 
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Inserted Vertex " << V << " (" 
+                                          << m_vertsInTES.size() << ")" << endmsg ; 
     return ;
   }
 
-  ///< inline private method for speed.
+  /// inline private method for speed.
   inline const Particle2Vertex::Table* i_p2PVTable()  const { 
     return &m_p2VtxTable; 
   }
@@ -190,7 +196,7 @@ private:
     return &m_p2VtxTable; 
   }
 
-  ///< Find the position of an LHCb::VertexBase inside a range
+  /// Find the position of an LHCb::VertexBase inside a range
   inline Particle2Vertex::Range::iterator findTo(const Particle2Vertex::Range& range, const LHCb::VertexBase* to ) const 
   {
     for (Particle2Vertex::Range::iterator r = range.begin(); 
@@ -200,7 +206,28 @@ private:
     }
     return range.end();
   }
-  
+
+  /// print out particle in verbose mode
+  inline void printOut(std::string head, const LHCb::Particle* P)const{
+    if (msgLevel(MSG::VERBOSE)) {
+      if (0==P) Exception("Null particle");
+      verbose() << head << " PID= " << P->particleID().pid()
+                << " P= " << P->momentum() << " m= " << P->measuredMass()                                         
+                << " par= " << (0!=P->parent()) << " TES= " << inTES(P) << endmsg ;
+    }
+    return;
+  }
+
+  /// print out vertex in verbose mode
+  inline void printOut(std::string head, const LHCb::Vertex* V)const{
+    if (msgLevel(MSG::VERBOSE)) {
+      if (0==V) Exception("Null Vertex");
+      verbose() << head << " position " << V->position()
+                << " d= " << V->outgoingParticles().size()                                          
+                << " par= " << (0!=V->parent()) << " TES= " << inTES(V) << endmsg ;
+    }
+    return;
+  }
 
 private: // data
 

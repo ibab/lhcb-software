@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.103 2008-03-31 14:57:43 pkoppenb Exp $
+# $Id: requirements,v 1.104 2008-04-16 09:10:29 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -18,11 +18,8 @@ use  Boost                 v* LCG_Interfaces
 use  DaVinciKernel         v* Phys
 use  LHCbMath              v* Kernel
 use  CaloUtils             v* Calo
-
-# For DV v11r12
-# macro_append BOOST_linkopts " -lboost_regex"\
-#              Linux&debug " -lboost_regex_debug"\
-#              WIN32 " boost_regex_debug.lib" 
+use  LoKiPhys              v* Phys
+use  LoKiArrayFunctors     v* Phys
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are

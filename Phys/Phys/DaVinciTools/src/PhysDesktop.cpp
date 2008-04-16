@@ -300,49 +300,41 @@ StatusCode PhysDesktop::finalize(){
 //=============================================================================
 const LHCb::Particle* PhysDesktop::save( const LHCb::Particle* partToSave ){
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "save(const LHCb::Particle) in desktop" << endmsg;
-
+  if ( 0==partToSave ){
+    Exception("Attempt to save NULL Particle") ;
+    return 0;
+  }
+  if (msgLevel(MSG::VERBOSE)) printOut("save Particle in desktop", partToSave);
+  
   // Input particle is given check if it already exist in the stack
-  if( ( 0 != partToSave ) && ( inDesktop( partToSave ) )) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Input particle momentum = "
-                                          << partToSave->momentum().px() << " ,"
-                                          << partToSave->momentum().py() << " ,"
-                                          << partToSave->momentum().pz() << endmsg;
+  if( inTES( partToSave ) ) {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Particle is in desktop" << endmsg ;
+    return partToSave;
+  } else if ( 0!=partToSave->parent()){
+    if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Particle has parent -> set In desktop" << endmsg ;
+    setInTES(partToSave);
     return partToSave;
   }
 
   // Create new particle on the heap
   LHCb::Particle* saveP = new LHCb::Particle();
-  if (msgLevel(MSG::VERBOSE)) verbose() << "New particle momentum = "
-                                        << saveP->momentum().px() << " ,"
-                                        << saveP->momentum().py() << " ,"
-                                        << saveP->momentum().pz() << endmsg;
 
   // Input LHCb::Particle from stack is given as input to fill newly created particle
-  if( ( 0 != partToSave) && ( !inDesktop ( partToSave ) ) ) {
-    // Copy contents to newly created particle
-    LHCb::Particle& savePcont = *saveP;
-    savePcont = *partToSave;
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Input particle momentum = "
-                                          << saveP->momentum().px() << " ,"
-                                          << saveP->momentum().py() << " ,"
-                                          << saveP->momentum().pz() << endmsg;
-    // Check if link to endProducts exist and set it
-    if( 0 != partToSave->endVertex() ) {
-      const LHCb::Vertex* saveV = save( partToSave->endVertex() );
-      saveP->setEndVertex(saveV);
-    }
-    // Link to outgoing particles is followed through the save(LHCb::Vertex)
-    // Link to originators will be correct because they are in the heap
-    // so their pointer is valid
+  // Copy contents to newly created particle
+  LHCb::Particle& savePcont = *saveP;
+  savePcont = *partToSave;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "   -> create new and save" << endmsg ;
+  // Check if link to endProducts exist and set it
+  if( 0 != partToSave->endVertex() ) {
+    const LHCb::Vertex* saveV = save( partToSave->endVertex() );
+    saveP->setEndVertex(saveV);
   }
+  // Link to outgoing particles is followed through the save(LHCb::Vertex)
+  // Link to originators will be correct because they are in the heap
+  // so their pointer is valid
 
   // Put in the desktop container
-  setInDesktop(saveP);
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Momentum of new particle in desktop = "
-                                        << saveP->momentum().px() << " ,"
-                                        << saveP->momentum().py() << " ,"
-                                        << saveP->momentum().pz() << endmsg;
+  setInTES(saveP);
   m_parts.push_back(saveP);
   return saveP;
 
@@ -352,49 +344,45 @@ const LHCb::Particle* PhysDesktop::save( const LHCb::Particle* partToSave ){
 //=============================================================================
 const LHCb::Vertex* PhysDesktop::save( const LHCb::Vertex* vtxToSave ){
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "save (LHCb::Vertex) in desktop" << endmsg;
+  if ( 0==vtxToSave ){
+    Exception("Attempt to save NULL Vertex") ;
+    return 0; 
+  }
+  if (msgLevel(MSG::VERBOSE)) printOut("save in Desktop", vtxToSave);
 
   // Input vertex is given check if it already exist in the stack
-  if( ( 0 != vtxToSave ) && ( inDesktop( vtxToSave ) ) ) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Input vertex position = "
-                                          << vtxToSave->position().x() << " ,"
-                                          << vtxToSave->position().y() << " ,"
-                                          << vtxToSave->position().z() << endmsg;
+  if( inTES( vtxToSave ) ) {
+    if (msgLevel(MSG::VERBOSE)) verbose() << " Vertex is in TES" << endmsg;
+    return vtxToSave;
+  } else if ( 0!=vtxToSave->parent()){
+    if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Vertex has parent -> set In TES" << endmsg ;
+    setInTES(vtxToSave);    
     return vtxToSave;
   }
+  
 
   // Create new vertex on the heap
   LHCb::Vertex* saveV = new LHCb::Vertex();
-  if (msgLevel(MSG::VERBOSE)) verbose() << "New vertex position = "
-                                        << saveV->position().x() << " ,"
-                                        << saveV->position().y() << " ,"
-                                        << saveV->position().z() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Create new and save " << endmsg ;
 
   // Input vertex from stack is given as input to fill new created vertex
-  if( ( 0 != vtxToSave ) && ( !inDesktop( vtxToSave ) ) ) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Input vertex position = "
-                                          << saveV->position().x() << " ,"
-                                          << saveV->position().y() << " ,"
-                                          << saveV->position().z() << endmsg;
-    // Copy contents to newly created vertex
-    LHCb::Vertex& saveVcont = *saveV;
-    saveVcont = *vtxToSave;
-    saveV->clearOutgoingParticles();
-    // Check if link to endProducts exist and set it
-    SmartRefVector<LHCb::Particle> outP = vtxToSave->outgoingParticles();
-    SmartRefVector<LHCb::Particle>::iterator ip;
-    for( ip = outP.begin(); ip != outP.end(); ip++ ) {
-      const LHCb::Particle* saveP = save( *ip );
-      saveV->addToOutgoingParticles(saveP);
-    }
+  // Copy contents to newly created vertex
+  LHCb::Vertex& saveVcont = *saveV;
+  saveVcont = *vtxToSave;
+  saveV->clearOutgoingParticles();
+  // Check if link to endProducts exist and set it
+  SmartRefVector<LHCb::Particle> outP = vtxToSave->outgoingParticles();
+  SmartRefVector<LHCb::Particle>::iterator ip;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Looking for daughters of vertex:" << endmsg ;
+  for( ip = outP.begin(); ip != outP.end(); ip++ ) {
+    if (msgLevel(MSG::VERBOSE)) printOut("    Daughter", (*ip));
+    const LHCb::Particle* saveP = save( *ip );
+    saveV->addToOutgoingParticles(saveP);
   }
 
   // Put in the desktop container
-  setInDesktop(saveV);
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Position of new vertex in desktop = "
-                                        << saveV->position().x() << " ,"
-                                        << saveV->position().y() << " ,"
-                                        << saveV->position().z() << endmsg;
+  setInTES(saveV);
+  if (msgLevel(MSG::VERBOSE)) printOut("New vertex in desktop", saveV);
   m_secVerts.push_back(saveV);
   return saveV;
 
@@ -419,20 +407,13 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
 
   std::string location( m_outputLocn+"/Particles");
 
-  for( p_iter icand = pToSave.begin();
-       icand != pToSave.end(); icand++ ) {
+  for( p_iter icand = pToSave.begin(); icand != pToSave.end(); icand++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
-    if(  0 == (*icand)->parent() ) {
-      particlesToSave->insert((LHCb::Particle*)*icand); // convert to non-const
-      if (msgLevel(MSG::VERBOSE)) verbose() << "  Saving " << (*icand)->key() 
-                                            << " " << (*icand)->particleID().pid()
-                                            << " with P= " << (*icand)->momentum() << " m="
-                                            << (*icand)->measuredMass() << endmsg ;
+    if (  0 == (*icand)->parent() ) {
+      if (msgLevel(MSG::VERBOSE)) printOut("  Saving", (*icand));
+    particlesToSave->insert((LHCb::Particle*)*icand); // convert to non-const
     } else {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Skipping " << (*icand)->key()
-                                            << (*icand)->particleID().pid()
-                                            << " with P= " << (*icand)->momentum() << " m="
-                                            << (*icand)->measuredMass() << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) printOut("Skipping", (*icand));
     }
   }
   if (msgLevel(MSG::VERBOSE)) verbose() << "Saving " << particlesToSave->size()
@@ -500,10 +481,7 @@ StatusCode PhysDesktop::saveTrees(const LHCb::Particle::ConstVector& pToSave) co
   LHCb::Vertex::ConstVector allvToSave;
   for( p_iter icand = pToSave.begin();
        icand != pToSave.end(); icand++ ) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "  Getting " << (*icand)->key() << " " 
-                                          << (*icand)->particleID().pid()
-                                          << " with P= " << (*icand)->momentum() << " parent "
-                                          << (*icand)->parent() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) printOut("  Getting", (*icand));
     // Find all descendendant from this particle
     findAllTree( *icand, allpToSave, allvToSave);
   }
@@ -523,6 +501,7 @@ StatusCode PhysDesktop::saveTrees( int partid ) const {
   LHCb::Particle::ConstVector pToSave;
   for( p_iter icand = m_parts.begin(); icand != m_parts.end(); icand++ ) {
     if( ((*icand)->particleID().pid()) == partid ) {
+      if (msgLevel(MSG::VERBOSE)) printOut("Saving ", (*icand));
       pToSave.push_back(*icand);
     }
   }
@@ -540,9 +519,7 @@ StatusCode PhysDesktop::cloneTrees( const LHCb::Particle::ConstVector& pToSave )
        i!=pToSave.end();++i) {
     LHCb::Particle *clone = (*i)->clone();
     cloned.push_back(clone);
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Clone " << (*i)->key() << " to " << clone->key() << " " 
-                                          << clone->particleID().pid() << " with momentum " 
-                                          << clone->momentum() << " m=" << clone->measuredMass() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) printOut("Cloning", (*i));
     // now clone the relations too
     Particle2Vertex::Range r = m_p2VtxTable.relations(*i);
     for ( Particle2Vertex::Range::const_iterator j = r.begin() ; j!= r.end() ; ++j){
@@ -641,12 +618,13 @@ StatusCode PhysDesktop::makeParticles(){
     LHCb::Vertex::ConstVector verts;
     findAllTree( *ip, descs, verts);
     for( p_iter ipd = descs.begin() ; ipd != descs.end(); ipd++){
+      if (msgLevel(MSG::VERBOSE)) printOut("Inserting ", (*ipd));
       m_parts.push_back(*ipd);
-      setInDesktop(*ipd);
+      setInTES(*ipd);
     }
     for( v_iter ipv = verts.begin() ; ipv != verts.end(); ipv++){
       m_secVerts.push_back(*ipv);
-      setInDesktop(*ipv);
+      setInTES(*ipv);
     }
   }
 
@@ -687,7 +665,7 @@ StatusCode PhysDesktop::getParticles(){
     
     for( LHCb::Particles::iterator icand = parts->begin(); 
          icand != parts->end(); icand++ ) {
-      setInDesktop(*icand);
+      setInTES(*icand);
       m_parts.push_back(*icand);
     }
     
@@ -710,7 +688,7 @@ StatusCode PhysDesktop::getParticles(){
                                             << location << " = " << verts->size() << endmsg;
       for( LHCb::Vertices::iterator ivert = verts->begin();
            ivert != verts->end(); ++ivert ) {
-        setInDesktop(*ivert);
+        setInTES(*ivert);
         m_secVerts.push_back(*ivert);
       }
       if (msgLevel(MSG::VERBOSE)) verbose() << "Number of vertices after adding "
@@ -781,7 +759,7 @@ StatusCode PhysDesktop::getPrimaryVertices(){
       }
       
       // Put them in local containers
-      setInDesktop(*ivert);
+      setInTES(*ivert);
       m_primVerts.push_back(*ivert);
     }
   }
