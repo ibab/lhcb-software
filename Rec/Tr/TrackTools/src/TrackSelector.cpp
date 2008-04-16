@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.cpp,v 1.13 2008-04-03 02:13:45 janos Exp $
+ *  $Id: TrackSelector.cpp,v 1.14 2008-04-16 15:34:31 pkoppenb Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -71,17 +71,17 @@ StatusCode TrackSelector::initialize()
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  info() << "Track Selection Cuts :-" << endreq;
-  info() << " P       = " << m_minPCut  << " -> " << m_maxPCut  << " GeV" << endreq;
-  info() << " Pt      = " << m_minPtCut << " -> " << m_maxPtCut << " GeV" << endreq;
-  info() << " Chi^2   = " << m_minChi2Cut << " -> " << m_maxChi2Cut << endreq;
-  info() << " # hits  = " << m_minHitCut << " -> " << m_maxHitCut << endreq;
+  debug() << "Track Selection Cuts :-" << endreq;
+  debug() << " P       = " << m_minPCut  << " -> " << m_maxPCut  << " GeV" << endreq;
+  debug() << " Pt      = " << m_minPtCut << " -> " << m_maxPtCut << " GeV" << endreq;
+  debug() << " Chi^2   = " << m_minChi2Cut << " -> " << m_maxChi2Cut << endreq;
+  debug() << " # hits  = " << m_minHitCut << " -> " << m_maxHitCut << endreq;
 
   // initialise track type and alg selections
   m_selTypes.clear();
   if ( !m_trTypes.empty() )
   {
-    info() << "Selecting track types = " << m_trTypes << endreq;
+    debug() << "Selecting track types = " << m_trTypes << endreq;
     for ( TrackTypes::const_iterator iT = m_trTypes.begin();
           iT != m_trTypes.end(); ++iT )
     {
