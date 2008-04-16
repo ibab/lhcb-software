@@ -6,12 +6,12 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r16>2008-04-11 LbcomSys v6r16</A></H1><PRE>
+</PRE><H1><A NAME=v6r16>2008-04-15 LbcomSys v6r16</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r5
 
 - Packages modified: L0Calo v9r12, L0DU v8r4, L0Muon v7r8, MuonAssociators v3r2, 
-    OTAssociators v4r2, OTMonitor v2r8, RichMCTools v3r9,
-    VeloAlgorithms v4r7, VeloSimulation v2r7, VeloTools v3r1
+    OTAssociators v4r2, OTMonitor v2r8, RichDAQ v3r15, RichMCTools v3r9,
+    RichTools v2r19, VeloAlgorithms v4r7, VeloSimulation v2r7, VeloTools v3r1
 
 - In L0Calo v9r12
   . L0CaloMonit.cpp: use Calo2Dview base class, change binning for slot in crates
@@ -41,8 +41,9 @@ This version uses Gaudi v19r9 and LHCb v23r5
     uniformize channel naming according to other config.
 
 - In L0Muon v7r7, v7r8
-  . L0MuonAlg : Allow to run from  data coming from several time bunch
-               crossings (TAE mode)
+  . L0MuonAlg : Allow to run from data coming from several time bunch
+                crossings (TAE mode)
+                Protect more debug with if(msgLevel(MSG::DEBUG)
   . Update decoding and monitoring of L0Muon data in transparent mode
   . L0MuonFromRawTrans : new algorithm to decode the data with the format
                          used at the pit during commissionning.
@@ -60,8 +61,15 @@ This version uses Gaudi v19r9 and LHCb v23r5
     compatible with DC06 data since the MC information is retrieved via the
     channelIDs(keys).
 
+- In RichDAQ v3r15
+  . Add protection into clustering code to protect against empty vectors of
+    RichSmartIDs
+
 - In RichMCTools v3r9
   . Add new methods (isHPDReflection and isSiBackScatter) to MCTruthTool
+
+- In RichTools v2r19
+  . Add new default tool mappings
 
 - In VeloAlgorithms v4r7
   . Add VeloEffChecker: algorithm to monitor the velo sensor efficiency in MC
@@ -76,6 +84,13 @@ This version uses Gaudi v19r9 and LHCb v23r5
   . Allow a list of output locations (for the PileUp modules which write to two)
   . Simulate noise from the DeVeloSensor->stripNoise() distribution per strip
   . Added options to convert from noise in ADC to noise in electrons
+  . Retuned time curves to use vfp = 150 and vfs = 550 : best guess as inital 
+    BEETLE tune parameters, amount of spillover increased
+  . Offset sampling time to get equal amplification to Prev and Next MCHits
+  . Added PrevPrev and NextNext to simulation by default
+  . Corrected noise simulation otherwise empty strips
+  . Set capacitve coupling to 1% (from 5%) to get approx 1 and 2 strip 
+    ratio about right
 
 - In VeloTools v3r1
   . Adapt to change in namespace LHCbMath -> LHCb::Math
