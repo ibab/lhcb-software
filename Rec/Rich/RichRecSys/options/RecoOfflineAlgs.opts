@@ -152,7 +152,7 @@ RichGloPIDFinalIt.GPIDLikelihoodTool.MaxTrackChangesPerIt      = 5;
 RichGloPIDFinalIt.GPIDLikelihoodTool.MinSignalForNoLLCalc      = 1e-3;
 
 // Final iteration must have this option set
-RichGloPIDFinalIt.GPIDTool.FinalDLLCheck = true;
+RichGloPIDFinalIt.GPIDLikelihoodTool.FinalDLLCheck = true;
 
 // PID merging
 MergeRichPIDs.UseLocalPIDs     = false;

@@ -25,4 +25,4 @@ ToolSvc.Offline.RichPIDTool.Likelihood2.MaxTrackChangesPerIt     = 5;
 ToolSvc.Offline.RichPIDTool.Likelihood2.MinSignalForNoLLCalc     = 1e-3;
 
 // Final iteration must have this option set
-//ToolSvc.Offline.RichPIDTool.Likelihood2.FinalDLLCheck = true;
+ToolSvc.Offline.RichPIDTool.Likelihood2.FinalDLLCheck = true;
