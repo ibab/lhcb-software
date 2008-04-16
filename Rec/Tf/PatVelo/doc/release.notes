@@ -4,8 +4,15 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-04-16 - Kurt Rinnert
+ - Added an option to PatVeloGeneric allowing to pick up clusters in the other
+   VELO half during candidate propagation.  This should improve the efficiency
+   for tracks in the overlap region.  This is only useful when the VELO is in
+   closed postion.  Behaviour can be controlled via the 'ConsiderOverlaps'
+   property.  Default is false, i.e. the old behaviour.
+
 !========================== PatVelo v3r5 2008-04-04 ==========================
-! 2008-04-03 M. Needham 
+! 2008-04-03 - M. Needham 
  - Update PatVeloFitLHCbIDs for fitter interface change 
 
 !========================== PatVelo v3r4 2008-03-03 ==========================

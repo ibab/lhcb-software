@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneric.cpp,v 1.2 2008-02-27 14:37:37 krinnert Exp $
+// $Id: PatVeloGeneric.cpp,v 1.3 2008-04-16 12:28:09 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -52,6 +52,8 @@ namespace Tf {
       declareProperty( "ErrorQOP", m_momentumError = 1.e-6 );
 
       declareProperty( "DefaultMomentum", m_momentumDefault = 1/(10 * Gaudi::Units::GeV) );
+
+      declareProperty( "ConsiderOverlaps", m_considerOverlaps=false );
 
       m_binary = 1/sqrt(12.);  // digital resolution a priori
 
@@ -299,12 +301,21 @@ namespace Tf {
             // Propagate seeds backward
             // ========================
 
-            PatVeloRHitManager::StationReverseIterator stationRItr = stationRItr2;
+            PatVeloRHitManager::StationReverseIterator stationRItr         = stationRItr2;
+            PatVeloRHitManager::StationReverseIterator reversePropagateEnd = rStationsReverseEnd;
+
+            // switch to global iterators if overlaps are considered
+            if ( m_considerOverlaps ) {
+              PatVeloRHitManager::StationIterator si = m_rHitManager->stationIterAll((*stationRItr)->sensorNumber());
+              stationRItr         = PatVeloRHitManager::StationReverseIterator(++si);
+              reversePropagateEnd = m_rHitManager->stationsAllReverseEnd(); 
+            }
+            
             int nSkip = 0;
             double rEst = 0;
             double pEst = 0;
 
-            while ( (++stationRItr != rStationsReverseEnd) && nSkip <=  m_nSkip) {        
+            while ( (++stationRItr != reversePropagateEnd) && nSkip <=  m_nSkip) {        
 
               stationR = *stationRItr;
               ++nSkip;        
@@ -345,14 +356,21 @@ namespace Tf {
 
             if ( m_forward ) {        
 
-              PatVeloRHitManager::StationReverseIterator sri = stationRItr0;
-              PatVeloRHitManager::StationIterator stationRItr = (++sri).base();
+              PatVeloRHitManager::StationReverseIterator sri   = stationRItr0;
+              PatVeloRHitManager::StationIterator stationRItr  = (++sri).base();
+              PatVeloRHitManager::StationIterator propagateEnd = rStationsEnd;
+
+              // switch to global iterators if overlaps are considered
+              if ( m_considerOverlaps ) {
+                stationRItr  = m_rHitManager->stationIterAll((*stationRItr)->sensorNumber());
+                propagateEnd = m_rHitManager->stationsAllEnd(); 
+              }
 
               nSkip = 0;
               rEst = 0;
               pEst = 0;
 
-              while ( ( ++stationRItr != rStationsEnd) && nSkip <=  m_nSkip) {        
+              while ( ( ++stationRItr != propagateEnd) && nSkip <=  m_nSkip) {        
 
                 stationR = *stationRItr;
                 ++nSkip;        

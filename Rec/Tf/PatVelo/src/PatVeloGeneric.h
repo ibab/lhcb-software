@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneric.h,v 1.2 2008-02-27 14:37:37 krinnert Exp $
+// $Id: PatVeloGeneric.h,v 1.3 2008-04-16 12:28:09 krinnert Exp $
 #ifndef TF_PAT_PATVELOGENERIC_H 
 #define TF_PAT_PATVELOGENERIC_H 1
 
@@ -57,6 +57,7 @@ namespace Tf {
       bool m_checkIfSensorIsReadOut;   ///< If true use only sensors that are readout, according to CondDb
       bool m_acdc;        ///< Turn R sensors 180 deg around x-axis (real data)  
       bool m_doNotRefit;  ///< Force no re-fitting during track propagation
+      bool m_considerOverlaps; ///< Look for clusters in the other hals during propagation
 
       double m_binary;
       double m_sigma;    ///< Corridor width in standard deviations
