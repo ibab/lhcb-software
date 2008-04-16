@@ -4,11 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+!======================== TrackTools v3r5 2008-04-16 ========================
 ! 2008-04-16 - Patrick Koppenburg
  - TrackSelector : initialisation printout in debug instead of info. That
    saves >200 lines of useless printout in a typical stripping job.
 
-!======================== TrackTools v3r5 2008-04-04 ========================
 ! 2008-03-31 Jan Amoraal
  - Remove whitespace from property iWeight of TrackSelector. Python doesn't
    like it.
