@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::TrackPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichTrackPIDAlg.h,v 1.1 2008-03-25 16:43:41 jonrob Exp $
+ *  $Id: RichTrackPIDAlg.h,v 1.2 2008-04-16 17:39:01 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -66,6 +66,9 @@ namespace Rich
 
       /// Track Selector
       const Rich::Rec::ITrackSelector * m_trSelector;
+
+      /// Nickname of RichPID tool to use
+      std::string m_pidToolName;
 
       /// Input location for tracks
       std::string m_trTracksLocation;

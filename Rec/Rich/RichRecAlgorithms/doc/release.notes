@@ -4,6 +4,9 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2008-04-16 - Chris Jones
+ - Make the nickname of the PID tool in RichTrackPIDAlg a configurable option
+
 !===================== RichRecAlgorithms v2r10 2008-04-15 ====================
 ! 2008-03-25 - Chris Jones
  - Remove HPD pixel background algorithms (now implemented as tools in the 

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecInit
  *
  *  CVS Log :-
- *  $Id: RichTrackPIDAlg.cpp,v 1.1 2008-03-25 16:43:41 jonrob Exp $
+ *  $Id: RichTrackPIDAlg.cpp,v 1.2 2008-04-16 17:39:01 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -39,6 +39,7 @@ TrackPIDAlg::TrackPIDAlg( const std::string& name,
   {
     m_trTracksLocation = LHCb::TrackLocation::Default;
   }
+  declareProperty( "PIDToolName", m_pidToolName = "RichPIDTool" );
   declareProperty( "TracksLocation", m_trTracksLocation );
   declareProperty( "NTracksAtOnce",  m_nAtOnce = 1 );
 }
@@ -52,7 +53,7 @@ StatusCode TrackPIDAlg::initialize()
   if ( sc.isFailure() ) return sc;
 
   // load tools
-  acquireTool( "RichPIDTool",   m_pidTool          );
+  acquireTool( m_pidToolName,   m_pidTool          );
   acquireTool( "TrackSelector", m_trSelector, this );
 
   info() << "Will PID " << m_nAtOnce << " track(s) at a time" << endreq;
