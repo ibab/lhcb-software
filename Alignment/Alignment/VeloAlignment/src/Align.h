@@ -65,6 +65,8 @@ public:
     return s.str();
   }
 
+  StatusCode updateConditions( std::vector<double> const_left, std::vector<double> const_right, std::vector<double> const_box );
+
 protected:
 
 private:

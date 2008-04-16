@@ -2,6 +2,9 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "DetDesc/3DTransformationFunctions.h"
+#include "DetDesc/GlobalToLocalDelta.h"
+
 
 // local
 #include "Align.h"
@@ -186,9 +189,9 @@ StatusCode Align::finalize() {
   error_right.resize(126);  
   pulls_right.resize(126);  
 
-  misal_box.resize(24);  
-  error_box.resize(24);  
-  pulls_box.resize(24); 
+  misal_box.resize(18);  
+  error_box.resize(18);  
+  pulls_box.resize(18); 
 
   for (int j=0; j<126; j++)
   {
@@ -299,7 +302,7 @@ StatusCode Align::finalize() {
 
   if (m_step2)
   {
-    for (int i=0;i<24;i++) misal_box[i] = 0.;
+    for (int i=0;i<18;i++) misal_box[i] = 0.;
 
     if (m_VELOopen) // Just a quick check
     {
@@ -311,7 +314,7 @@ StatusCode Align::finalize() {
   
     Align::FindAlignment(my_Config);  // Make the global fit  
 
-    for (int i=0;i<24;i++) 
+    for (int i=0;i<18;i++) 
     {
       misal_box[i] = mis_const[i];  
       error_box[i] = mis_error[i];  
@@ -320,6 +323,8 @@ StatusCode Align::finalize() {
 
     if (m_moni_constants) Align::fill_misalignments(misal_box, error_box, pulls_box, 6);
   }   
+
+  Align::updateConditions( misal_left, misal_right, misal_box );
 
   return GaudiTupleAlg::finalize();  // must be called after all other actions
 }
@@ -795,6 +800,185 @@ StatusCode Align::fill_primary(VeloTracks& aPV, int PV_numb)
     }
   }
 
+  return StatusCode::SUCCESS;
+}
+
+/////////////////////////////////////////////////////
+StatusCode Align::updateConditions( std::vector<double> const_left, std::vector<double> const_right, std::vector<double> const_box )
+{
+  std::string det_velo     = "/dd/Conditions/Alignment/Velo/VeloSystem";
+  std::string cond_veloright = "/dd/Conditions/Alignment/Velo/VeloRight";
+  std::string cond_veloleft  = "/dd/Conditions/Alignment/Velo/VeloLeft";
+  std::string det_veloright   = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight";
+  std::string det_veloleft   = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft";
+  std::string det_module_right   = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module";
+  std::string det_module_left   = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module";
+  std::string cond_module   = "/dd/Conditions/Alignment/Velo/Module";
+
+  int module_num;
+
+  std::string det_number_unit, det_number_diza, det_name, cond_name;
+  std::vector<double> translations, rotations;
+
+
+  if ( m_step1 ) {
+    for (int i=0; i<21; i++)   // First get the alignment conditions from the stations
+    {
+      for (int side=0; side<2; side++)   // 0 left, 1 right
+      {
+        if ( ( side == 0 ) && ! ( m_VELOmap_l[ i ] ) ) continue;
+        if ( ( side == 1 ) && ! ( m_VELOmap_r[ i ] ) ) continue;
+  
+        module_num = 2*i+side; 
+        det_number_unit  = Align::itos(module_num%10);
+        det_number_diza  = Align::itos((module_num-module_num%10)/10);
+        if ( side == 0 ) {
+          det_name  = det_module_left+det_number_diza+det_number_unit;
+        }  
+        else {
+          det_name  = det_module_right+det_number_diza+det_number_unit;
+        }  
+        cond_name  = cond_module+det_number_diza+det_number_unit;
+
+        IDetectorElement *det = getDet<IDetectorElement>(det_name);
+        IGeometryInfo *geo = det->geometry();
+        AlignmentCondition *myCond = getDet<AlignmentCondition>(cond_name);
+        // Convert alignment parameters into
+        // a vector containing translations
+        // a vector containing rotations and
+        // a vector with the pivot point. 
+        // That vector should actually be obtained from the detector element!
+        std::vector<double> translation;
+        translation.push_back(0.0);
+        translation.push_back(0.0);
+        translation.push_back(0.0);
+        std::vector<double> rotation;
+        rotation.push_back(0.0);
+        rotation.push_back(0.0);
+        rotation.push_back(0.0);
+        std::vector<double> pivot;
+        // Get the pivot vector from the geometry object:
+        Gaudi::XYZPoint P = geo->toGlobal( Gaudi::XYZPoint() );
+        pivot.push_back( P.X() );
+        pivot.push_back( P.Y() );
+        pivot.push_back( P.Z() );
+        // fill the translation & rotation vectors
+        // by looping over the number of degrees of freedom
+        // the vector m_align is filled according to the following scheme:
+        // first loop over detector elements, then loop over the degrees of 
+        // freedom.
+        // !!!
+        int n_stat;
+        if ( side == 0 ) {
+          n_stat = const_left.size()/6; // 21 for internal stuff, 2 for the boxes 
+        }
+        else {
+          n_stat = const_right.size()/6; // 21 for internal stuff, 2 for the boxes 
+        }
+        for ( unsigned int d = 0; d < 3; d++ ) {
+          unsigned int pos1 = i + n_stat * d; // translations
+          unsigned int pos2 = i + n_stat * (d + 3); //rotations
+          if ( side == 0 ) {
+            translation[d] = const_left[ pos1 ];
+            rotation[d] = const_left[ pos2 ];
+          }
+          else {
+            translation[d] = const_right[ pos1 ];
+            rotation[d] = const_right[ pos2 ];
+          }
+        }
+    
+        debug() << "Translation vector: " << translation << "\n"
+      	        << "Rotation vector   : " << rotation << "\n"
+    	        << "pivot point       : " << pivot << endreq;
+    
+        const Gaudi::Transform3D halfDelta = DetDesc::localToGlobalTransformation( translation, rotation, pivot);
+        const Gaudi::Transform3D frame = geo->parentIGeometryInfo()->parentIGeometryInfo()->toLocalMatrix() 
+					 * geo->toGlobalMatrix();
+					 // frame = moduleToHalf = VELO_half->toLocal * module->toGlobal 	
+        const Gaudi::Transform3D localDelta = DetDesc::localDeltaFromAnyFrameDelta( frame, geo, halfDelta );
+        myCond->offNominalMatrix( localDelta );
+        updMgrSvc()->invalidate(myCond);
+
+      }
+    }
+  }
+  if ( m_step2 ) {  // VELO half alignment
+    for (int side=0; side<2; side++)   // 0 left, 1 right
+    {
+      if ( side == 0 ) {
+        det_name  = det_veloleft;
+        cond_name = cond_veloleft;
+      }  
+      else {
+        det_name  = det_veloright;
+        cond_name = cond_veloright;
+      }  
+
+      IDetectorElement *det = getDet<IDetectorElement>(det_name);
+      IGeometryInfo *geo = det->geometry();
+      AlignmentCondition *myCond = getDet<AlignmentCondition>(cond_name);
+      // Convert alignment parameters into
+      // a vector containing translations
+      // a vector containing rotations and
+      // a vector with the pivot point. 
+      // That vector should actually be obtained from the detector element!
+      std::vector<double> translation;
+      translation.push_back(0.0);
+      translation.push_back(0.0);
+      translation.push_back(0.0);
+      std::vector<double> rotation;
+      rotation.push_back(0.0);
+      rotation.push_back(0.0);
+      rotation.push_back(0.0);
+      std::vector<double> pivot;
+      pivot.push_back( 0.0 );
+      pivot.push_back( 0.0 );
+      pivot.push_back( 0.0 );
+      // fill the translation & rotation vectors
+      // by looping over the number of degrees of freedom
+      // the vector m_align is filled according to the following scheme:
+      // first loop over detector elements, then loop over the degrees of 
+      // freedom.
+      // !!!
+      int n_stat = const_box.size()/6; // 21 for internal stuff, 2 for the boxes 
+      info() << "n_stat " << n_stat << endmsg;
+
+      for ( unsigned int d = 0; d < 3; d++ ) {
+        if ( m_VELOopen ) {
+          unsigned int pos1 = side + n_stat * d; // translations
+          unsigned int pos2 = side + n_stat * (d + 3); //rotations
+          translation[d] = const_box[ pos1 ];
+          rotation[d] = const_box[ pos2 ];
+        }
+        else {
+          if ( side == 0 ) {
+            translation[d] = 0;
+            rotation[d] = 0;
+          }
+          else {
+            unsigned int pos1 = 2 + n_stat * d; // translations
+            unsigned int pos2 = 2 + n_stat * (d + 3); //rotations
+            translation[d] = const_box[ pos1 ];
+            rotation[d] = const_box[ pos2 ];
+          }
+        }
+      }
+  
+      info() << "Translation vector: " << translation << "\n"
+    	        << "Rotation vector   : " << rotation << "\n"
+  	        << "pivot point       : " << pivot << endreq;
+  
+      for ( int jjj = 0; jjj < const_box.size(); jjj++ ) {
+        info() << jjj << " " << const_box[ jjj ] << endmsg;
+      }
+ 
+      const Gaudi::Transform3D halfDelta = DetDesc::localToGlobalTransformation( translation, rotation, pivot);
+      const Gaudi::Transform3D localDelta = geo->ownToOffNominalMatrix() * halfDelta;
+      myCond->offNominalMatrix( localDelta );
+      updMgrSvc()->invalidate(myCond);
+    }
+  }
   return StatusCode::SUCCESS;
 }
 
