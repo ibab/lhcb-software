@@ -1,4 +1,4 @@
-// $Id: CopyMCParticles.cpp,v 1.1 2008-04-08 16:44:53 jpalac Exp $
+// $Id: CopyMCParticles.cpp,v 1.2 2008-04-16 10:27:56 jpalac Exp $
 // Include files 
 
 // STL
@@ -8,6 +8,8 @@
 // from LHCb
 #include <Event/MCParticle.h>
 #include <Event/Vertex.h>
+// MicroDST
+#include <MicroDST/ICloneMCParticle.h>
 // local
 #include "CopyMCParticles.h"
 //
@@ -54,7 +56,8 @@ StatusCode CopyMCParticles::initialize() {
   m_particleCloner = tool<ICloneMCParticle>(m_particleClonerName, this);
 
   if (m_particleCloner) {
-    debug() << "Found ICloneMCParticle" << endmsg;
+    debug() << "Found ICloneMCParticle type " << m_particleClonerName 
+            << endmsg;
   } else {
     error() << "Failed to find ICloneMCParticle" << endmsg;
   }
