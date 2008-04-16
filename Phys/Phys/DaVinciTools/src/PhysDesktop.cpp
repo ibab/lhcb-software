@@ -22,6 +22,7 @@
  * 17/12/2004 : Patrick Koppenburg : Add OnOffline tool
  * 08/02/2005 : Patrick Koppenburg : Split vertices into primaries and secondaries
  * 20/01/2006 : Patrick Koppenburg : Adapt to DC06 event model
+ * 16/04/2007 : Patrick Koppenburg : Major revamp
  *-----------------------------------------------------------------------------
  */
 typedef LHCb::Particle::ConstVector::const_iterator p_iter;
@@ -219,7 +220,7 @@ const LHCb::Particle::ConstVector& PhysDesktop::particles() const{
 // Provides a reference to its internal container of vertices
 //=============================================================================
 const LHCb::RecVertex::ConstVector& PhysDesktop::primaryVertices(){
-  // @todo Find a smarter way of checking this is done only once...
+  /// @todo Find a smarter way of checking this is done only once...
   if ( m_primVerts.empty()) {
     StatusCode sc = getPrimaryVertices();
     if (!sc) Exception("Cannot get PVs").ignore();
@@ -243,12 +244,14 @@ const LHCb::Vertex::ConstVector& PhysDesktop::secondaryVertices() const {
 //============================================================================
 StatusCode PhysDesktop::cleanDesktop(){
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "cleanDesktop():: Removing all particles from desktop" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "cleanDesktop():: Removing all particles from desktop" << endmsg;
   // Some particle have been saved to the TES, so they belong to it
   // others do not and need to be deleted by the PhysDesktop
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of particles before cleaning = "
-                                        << m_parts.size() << endmsg;
-
+    verbose() << "Number of particles before cleaning = "
+              << m_parts.size() << endmsg;
+  }
+  
   int iTEScount = 0;
   while ( !m_parts.empty() ) {
     const LHCb::Particle* ipart = m_parts.back();
@@ -258,11 +261,13 @@ StatusCode PhysDesktop::cleanDesktop(){
     else delete ipart; 
   }
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "LHCb::Particle in TES = " << iTEScount << endmsg;
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Removing all vertices from desktop" << endmsg;
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of vertices before cleaning = "
-                                        << m_secVerts.size() + m_primVerts.size() << endmsg;
-
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "LHCb::Particle in TES = " << iTEScount << endmsg;
+    verbose() << "Removing all vertices from desktop" << endmsg;
+    verbose() << "Number of vertices before cleaning = "
+              << m_secVerts.size() + m_primVerts.size() << endmsg;
+  }
+  
   iTEScount = 0;
   while ( m_secVerts.size() > 0 ) {
     const LHCb::Vertex* ivert = m_secVerts.back();
@@ -277,13 +282,9 @@ StatusCode PhysDesktop::cleanDesktop(){
     else delete ivert;
   }
 
-  m_partsInTES.clear();
-  m_vertsInTES.clear();
-
   if (msgLevel(MSG::VERBOSE)) verbose() << "Removing all entries from Particle2Vertex relations" << endmsg;
-  i_p2PVTable()->clear();
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "TMP : Cleaned desktop" << endmsg ;
+  i_p2PVTable()->clear();
   
   return StatusCode::SUCCESS;
 
@@ -296,108 +297,87 @@ StatusCode PhysDesktop::finalize(){
   return GaudiTool::finalize() ;
 }
 //=============================================================================
-// Save a new particle in the DeskTop
+// Register a new particle in the Desktop
 //=============================================================================
-const LHCb::Particle* PhysDesktop::save( const LHCb::Particle* partToSave ){
+const LHCb::Particle* PhysDesktop::putOnDesktop( const LHCb::Particle* partToPut ){
 
-  if ( 0==partToSave ){
-    Exception("Attempt to save NULL Particle") ;
+  if ( 0==partToPut ){
+    Exception("Attempt to putOnDesktop NULL Particle") ;
     return 0;
   }
-  if (msgLevel(MSG::VERBOSE)) printOut("save Particle in desktop", partToSave);
+  if (msgLevel(MSG::VERBOSE)) printOut("Put Particle on desktop", partToPut);
   
   // Input particle is given check if it already exist in the stack
-  if( inTES( partToSave ) ) {
+  if( inTES( partToPut ) ) {
     if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Particle is in desktop" << endmsg ;
-    return partToSave;
-  } else if ( 0!=partToSave->parent()){
-    if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Particle has parent -> set In desktop" << endmsg ;
-    setInTES(partToSave);
-    return partToSave;
+    return partToPut;
   }
 
   // Create new particle on the heap
-  LHCb::Particle* saveP = new LHCb::Particle();
+  LHCb::Particle* newP = new LHCb::Particle();
 
   // Input LHCb::Particle from stack is given as input to fill newly created particle
   // Copy contents to newly created particle
-  LHCb::Particle& savePcont = *saveP;
-  savePcont = *partToSave;
-  if (msgLevel(MSG::VERBOSE)) verbose() << "   -> create new and save" << endmsg ;
+  LHCb::Particle& newPcont = *newP;
+  newPcont = *partToPut;
   // Check if link to endProducts exist and set it
-  if( 0 != partToSave->endVertex() ) {
-    const LHCb::Vertex* saveV = save( partToSave->endVertex() );
-    saveP->setEndVertex(saveV);
+  if( 0 != partToPut->endVertex() ) {
+    const LHCb::Vertex* newV = putOnDesktop( partToPut->endVertex() );
+    newP->setEndVertex(newV);
   }
-  // Link to outgoing particles is followed through the save(LHCb::Vertex)
+  // Link to outgoing particles is followed through the putOnDesktop(LHCb::Vertex)
   // Link to originators will be correct because they are in the heap
   // so their pointer is valid
 
   // Put in the desktop container
-  setInTES(saveP);
-  m_parts.push_back(saveP);
-  return saveP;
+  m_parts.push_back(newP);
+  return newP;
 
 }
 //=============================================================================
 // Create a new vertex
 //=============================================================================
-const LHCb::Vertex* PhysDesktop::save( const LHCb::Vertex* vtxToSave ){
+const LHCb::Vertex* PhysDesktop::putOnDesktop( const LHCb::Vertex* vtxToPut ){
 
-  if ( 0==vtxToSave ){
-    Exception("Attempt to save NULL Vertex") ;
+  if ( 0==vtxToPut ){
+    Exception("Attempt to putOnDesktop NULL Vertex") ;
     return 0; 
   }
-  if (msgLevel(MSG::VERBOSE)) printOut("save in Desktop", vtxToSave);
+  if (msgLevel(MSG::VERBOSE)) printOut("putOnDesktop in Desktop", vtxToPut);
 
   // Input vertex is given check if it already exist in the stack
-  if( inTES( vtxToSave ) ) {
+  if( inTES( vtxToPut ) ) {
     if (msgLevel(MSG::VERBOSE)) verbose() << " Vertex is in TES" << endmsg;
-    return vtxToSave;
-  } else if ( 0!=vtxToSave->parent()){
-    if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Vertex has parent -> set In TES" << endmsg ;
-    setInTES(vtxToSave);    
-    return vtxToSave;
+    return vtxToPut;
   }
   
 
   // Create new vertex on the heap
-  LHCb::Vertex* saveV = new LHCb::Vertex();
-  if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Create new and save " << endmsg ;
+  LHCb::Vertex* newV = new LHCb::Vertex();
+  if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Create new and putOnDesktop " << endmsg ;
 
   // Input vertex from stack is given as input to fill new created vertex
   // Copy contents to newly created vertex
-  LHCb::Vertex& saveVcont = *saveV;
-  saveVcont = *vtxToSave;
-  saveV->clearOutgoingParticles();
+  LHCb::Vertex& newVcont = *newV;
+  newVcont = *vtxToPut;
+  newV->clearOutgoingParticles();
   // Check if link to endProducts exist and set it
-  SmartRefVector<LHCb::Particle> outP = vtxToSave->outgoingParticles();
+  SmartRefVector<LHCb::Particle> outP = vtxToPut->outgoingParticles();
   SmartRefVector<LHCb::Particle>::iterator ip;
   if (msgLevel(MSG::VERBOSE)) verbose() << "Looking for daughters of vertex:" << endmsg ;
   for( ip = outP.begin(); ip != outP.end(); ip++ ) {
     if (msgLevel(MSG::VERBOSE)) printOut("    Daughter", (*ip));
-    const LHCb::Particle* saveP = save( *ip );
-    saveV->addToOutgoingParticles(saveP);
+    const LHCb::Particle* newP = putOnDesktop( *ip );
+    newV->addToOutgoingParticles(newP);
   }
 
   // Put in the desktop container
-  setInTES(saveV);
-  if (msgLevel(MSG::VERBOSE)) printOut("New vertex in desktop", saveV);
-  m_secVerts.push_back(saveV);
-  return saveV;
+  if (msgLevel(MSG::VERBOSE)) printOut("New vertex in desktop", newV);
+  m_secVerts.push_back(newV);
+  return newV;
 
 }
 
-
-//=============================================================================
-// Save all particles & vertices in the Desktop to the TES
-//=============================================================================
-StatusCode PhysDesktop::saveDesktop() const {
-
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Save all new particles and vertices in desktop " << endmsg;
-  return saveDesktop( m_parts, m_secVerts );
-  
-}
 //=============================================================================
 void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) const 
 {
@@ -618,13 +598,11 @@ StatusCode PhysDesktop::makeParticles(){
     LHCb::Vertex::ConstVector verts;
     findAllTree( *ip, descs, verts);
     for( p_iter ipd = descs.begin() ; ipd != descs.end(); ipd++){
-      if (msgLevel(MSG::VERBOSE)) printOut("Inserting ", (*ipd));
+      if (msgLevel(MSG::VERBOSE)) printOut("Inserting", (*ipd));
       m_parts.push_back(*ipd);
-      setInTES(*ipd);
     }
     for( v_iter ipv = verts.begin() ; ipv != verts.end(); ipv++){
       m_secVerts.push_back(*ipv);
-      setInTES(*ipv);
     }
   }
 
@@ -665,7 +643,6 @@ StatusCode PhysDesktop::getParticles(){
     
     for( LHCb::Particles::iterator icand = parts->begin(); 
          icand != parts->end(); icand++ ) {
-      setInTES(*icand);
       m_parts.push_back(*icand);
     }
     
@@ -688,7 +665,6 @@ StatusCode PhysDesktop::getParticles(){
                                             << location << " = " << verts->size() << endmsg;
       for( LHCb::Vertices::iterator ivert = verts->begin();
            ivert != verts->end(); ++ivert ) {
-        setInTES(*ivert);
         m_secVerts.push_back(*ivert);
       }
       if (msgLevel(MSG::VERBOSE)) verbose() << "Number of vertices after adding "
@@ -759,7 +735,6 @@ StatusCode PhysDesktop::getPrimaryVertices(){
       }
       
       // Put them in local containers
-      setInTES(*ivert);
       m_primVerts.push_back(*ivert);
     }
   }

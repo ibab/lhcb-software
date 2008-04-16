@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.314 2008-04-16 09:10:29 pkoppenb Exp $
+! $Id: release.notes,v 1.315 2008-04-16 17:29:13 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-04-16 - Patrick Koppenburg
+ - PhysDesktop: 
+   . Completey remove the std::set of Particles in TES. This can be found
+     from parent()
+   . Rename save() to putOnDesktop(). save is kept for bacward compatibility for
+     some time.
 
 ! 2008-04-16 - Patrick Koppenburg
  - PhysDesktop:
@@ -11,7 +18,7 @@
      would save the Bs, the two mus and and the two K's in the TES.
      -> the effective change is to add all particles with 0!=P->parent() 
        to the list of particles already in the TES.
-   . remane methods inDesktop and setInDesktop to inTES() and
+   . rename methods inDesktop and setInDesktop to inTES() and
      setInTES(). 
    . new method printOut that prints out in verbse mode.
 
