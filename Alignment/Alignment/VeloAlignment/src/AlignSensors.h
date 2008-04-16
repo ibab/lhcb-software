@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Alignment/VeloAlignment/src/AlignSensors.h,v 1.1 2008-01-23 12:30:03 gersabec Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Alignment/VeloAlignment/src/AlignSensors.h,v 1.2 2008-04-16 10:25:59 gersabec Exp $
 #ifndef ALIGNSENSORS_H 
 #define ALIGNSENSORS_H 1
 
@@ -8,6 +8,7 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/Incident.h"
+#include "GaudiKernel/Transform3DTypes.h"
 
 
 
@@ -27,6 +28,7 @@ using namespace LHCb;
 #include "TrackInterfaces/ITrackFitter.h"
 #include "TrackInterfaces/ITrackInterpolator.h"
 #include "TrackInterfaces/ITrackProjectorSelector.h"
+#include "TrackInterfaces/IVeloClusterPosition.h"
 
 // root
 
@@ -104,6 +106,7 @@ protected:
   ITrackProjectorSelector* m_projectorSelector;
   IUpdateManagerSvc* m_updMgrSvc;
   IIncidentSvc* m_incSvc;
+  IVeloClusterPosition *m_clusterTool;
 
   std::string m_clusterCont;
   std::string m_trackCont;
@@ -123,8 +126,8 @@ protected:
   bool m_kalmanResidual;
   std::string m_fitterName;
   int m_minNResiduals;
-  double m_minDelta;
   bool m_ACDC;
+  double m_minDeltaSig;
 
 
   TH2D *m_h_res_2d[84];
