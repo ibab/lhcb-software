@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.cpp,v 1.4 2008-04-11 11:12:04 cattanem Exp $
+// $Id: MuonDAQHelper.cpp,v 1.5 2008-04-16 08:28:16 asatta Exp $
 // Include files 
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -884,20 +884,6 @@ LHCb::MuonTileID MuonDAQHelper::getPadInTell1V1(unsigned int Tell1_num,
 
 };
 
-/*
-
-
-void MuonDAQHelper::TilePrintOut(LHCb::MuonTileID digitTile)
-{
-  
-  info()<< "["  <<  digitTile.layout() << ","
-       <<  digitTile.station() << ","
-       <<  digitTile.region() << ","
-       <<  digitTile.quarter() << ","
-       <<  digitTile.nX() << ","
-     <<  digitTile.nY() << "]" <<endmsg;
-};
-*/
 
 LHCb::MuonTileID  MuonDAQHelper::findTS(LHCb::MuonTileID digit)
 { 
@@ -920,7 +906,6 @@ LHCb::MuonTileID  MuonDAQHelper::findTS(LHCb::MuonTileID digit)
   MuonLayout TSLayout(TSLayoutX,TSLayoutY);
   //log<<MSG::INFO<<"TS Layout "<<TSLayoutX<<" "<<TSLayoutY<<endmsg;  
   LHCb::MuonTileID TSTile=TSLayout.contains(digit);
-  //TilePrintOut(TSTile);  
   return TSTile;  
 };
 
@@ -1041,7 +1026,6 @@ std::string MuonDAQHelper::findODEPath(LHCb::MuonTileID TS)
   int odeEnd=m_ODENameEnd[station][region][quadrant];
   //verbose()<<station<<" "<<region<<" "<<quadrant<<endmsg;
   //verbose()<<odeStart<<" "<<odeEnd<<" "<<m_ODEName[odeStart]<<endmsg;
-  //TilePrintOut(TS);
   
   for(int ode=odeStart;ode<odeEnd;ode++){
     std::string odePath=m_ODEName[ode];
@@ -1119,46 +1103,9 @@ long MuonDAQHelper::channelsInL1BeforeODE(std::string L1Path,
   //  long station=l1->getStation();
   MsgStream log(m_msgSvc, "MuonDAQHelper");
   log<<MSG::DEBUG<<L1Path<<" "<<ODENumber<<" "<<hole<<endreq;
-  
-//   std::string base=getBasePath(station);  
-//   long stop=findODEPosition(L1Path, ODENumber);  
-//   long channels=0;
-//   log<<MSG::DEBUG<<"stop "<<station<<" "<<
-//   stop<<" "<<ODENumber<<endmsg;  
+
   return  192*(findODEPosition(L1Path, ODENumber,hole));
-  
-//   if(!hole)
-//     /*  {
-    
-//     for(int ODEBoard=0;ODEBoard<stop;ODEBoard++){
-//       if(ODEBoard>0)
-//       {
-        
-        
 
-
-// std::string ODEpath=base+l1->getODEName(ODEBoard);
-//         //debug()<< ODEpath <<endmsg;
-        
-//         SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEpath);
-//         long TSnumber=ode->getTSNumber();
-//         std::string TSPath=base+ode->getTSName(0);
-//         SmartDataPtr<MuonTSMap>  TS(m_detSvc,TSPath);
-//         long channelInTS=TS->numberOfOutputSignal();
-//         long channelInODE=channelInTS*TSnumber;   
-//         //debug()<<"channel in ODE "<<channelInODE<<endmsg;   
-//         channels=channels+channelInODE;    
-//       }
-    
-//     } 
-//     return channels;
-//     }*/
-//   else if(hole){
-//     log<<MSG::INFO<<L1Path<<" "<<ODENumber<<" "<<
-//     findODEPosition(L1Path, ODENumber,false)<<endreq;
-    
-//    return  192*(findODEPosition(L1Path, ODENumber,false));
-//   }
   
 };
 
@@ -1185,23 +1132,18 @@ unsigned int MuonDAQHelper::DAQaddressInODE(LHCb::MuonTileID digitTile,
                                        long& ODENumber,bool hole){
   MsgStream log(m_msgSvc, "MuonDAQHelper");
   log<<MSG::DEBUG<<"************** start coding a digit "<<endmsg; 
-  //digitTile.printOut(info()<<"digit tile ")<<endmsg;  
   bool print=false;
-   if(print)
-  TilePrintOut(digitTile);
+
   long station=digitTile.station();
   LHCb::MuonTileID TS=findTS(digitTile);
   if(print){
     log<<MSG::DEBUG<<"digit is contained in TS "<<endmsg;
-    TilePrintOut(TS);
   }
   
   std::string L1Path=findL1(TS);
   if(print)log<<MSG::DEBUG<<"the TS is contained in L1 "<<L1Path<<endmsg;
-  // return 1;
   SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1Path);
   if(print)log<<MSG::DEBUG<<"l1 "<<endmsg;
-  //return 1;
   
   if(print)log<<MSG::DEBUG<<" station "<<l1->getStation()<<endmsg;
   //long 
@@ -1231,8 +1173,6 @@ unsigned int MuonDAQHelper::DAQaddressInODE(LHCb::MuonTileID digitTile,
   }else{
     digitInODE=TSSerialNumber*TSMap->numberOfOutputSignal();    
   }
-//debug()<<" the channels in ODE before the TS are "<<
-  //  digitInODE<<endmsg;
   unsigned int DigitOutputPosition=digitInODE+DigitPosition;
   if(print)
     log<<MSG::INFO<<" the output position in L1 of the digit is "<<

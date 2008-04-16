@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.h,v 1.3 2008-04-11 11:06:52 asatta Exp $
+// $Id: MuonDAQHelper.h,v 1.4 2008-04-16 08:28:16 asatta Exp $
 #ifndef MUONDET_MUONDAQHELPER_H 
 #define MUONDET_MUONDAQHELPER_H 1
 #include <string>
@@ -88,7 +88,6 @@ public:
 
 
   
-  void TilePrintOut(LHCb::MuonTileID digitTile);
   LHCb::MuonTileID findTS(LHCb::MuonTileID digit);
   unsigned int findDigitInTS(std::string TSPath, LHCb::MuonTileID TSTile,
                              LHCb::MuonTileID digit,bool hole=true);  
