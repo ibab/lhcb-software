@@ -6,7 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
-!========================= MDF v3r6 2008-04-10 ===============================
+!========================= MDF v3r6 2008-04-16 ===============================
+! 2008-04-16 - Marco Cattaneo
+ - Modify RawDataCnvSvc initialization to avoid initialization loop
+
 ! 2008-04-10 - Marco Cattaneo
  - Remove a few unneccessary #include and forward declarations in public includes
 

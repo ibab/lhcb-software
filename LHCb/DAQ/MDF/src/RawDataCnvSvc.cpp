@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.cpp,v 1.26 2008-03-19 09:27:50 frankb Exp $
+// $Id: RawDataCnvSvc.cpp,v 1.27 2008-04-16 14:56:09 cattanem Exp $
 //  ====================================================================
 //  RawDataCnvSvc.cpp
 //  --------------------------------------------------------------------
@@ -22,7 +22,6 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartIF.h"
 #include "Event/RawEvent.h"
 
 #include <memory>
@@ -86,22 +85,29 @@ StatusCode RawDataCnvSvc::initialize()     {
     log << MSG::ERROR << "Unable to initialize base class ConversionSvc." << endreq;
     return sc;
   }
+
+  // Add this conversion service to the EventPersistencySvc 
   IPersistencySvc *pSvc = 0;
   sc = service("EventPersistencySvc",pSvc,true);
   if ( !sc.isSuccess() )  {
     log << MSG::ERROR << "Unable to localize EventPersistencySvc." << endreq;
     return sc;
   }
-  IConversionSvc *pCnv = 0;
-  sc = pSvc->getService(repSvcType(), pCnv);
-  if ( pCnv == this )  {
-    sc = dataProvider()->queryInterface(IID_IDataManagerSvc,(void**)&m_dataMgr);
-    if ( !sc.isSuccess() )  {
-      log << MSG::ERROR << "Conversion service " << name() 
-          << "not registered to EventPersistencySvc." << endreq;
-      return sc;
-    }
+
+  sc = pSvc->addCnvService( this );
+  if ( !sc.isSuccess() )  {
+    log << MSG::ERROR << "Unable to add conversion service" << endreq;
+    return sc;
   }
+  
+  // get the IDataManagerSvc interface from the EventPersistencySvc
+  sc = dataProvider()->queryInterface(IID_IDataManagerSvc,(void**)&m_dataMgr);
+  if ( !sc.isSuccess() )  {
+    log << MSG::ERROR << "Conversion service " << name() 
+        << "not registered to EventPersistencySvc." << endreq;
+    return sc;
+  }
+
   // Retrieve conversion service handling event iteration
   sc = Service::service(m_ioMgrName, m_ioMgr);
   if( !sc.isSuccess() ) {
