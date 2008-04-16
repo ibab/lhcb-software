@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.135 2008-03-31 15:24:32 xieyu Exp $
+! $Id: release.notes,v 1.136 2008-04-16 09:20:37 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2008-04-16 - Juan PALACIOS
+ - src/OfflineVertexFitter.cpp
+  . Use new IParticleTransporter::transportAndProject method. This has the same
+    maths as the pre-v3r7p3 Phys/DaVinciTransporter ParticleTransporter::transport method.
+ - cmt/requirements
+  . Increment version to v5r1
 
 ! 2008-03-27 - Yuehong Xie
  - PVReFitter.cpp, OfflineVertexFitter.cpp, AdaptivePVReFitter.h: 
