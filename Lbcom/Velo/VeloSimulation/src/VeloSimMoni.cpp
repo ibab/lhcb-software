@@ -1,4 +1,4 @@
-// $Id: VeloSimMoni.cpp,v 1.12 2008-03-10 15:01:04 dhcroft Exp $
+// $Id: VeloSimMoni.cpp,v 1.13 2008-04-16 15:53:01 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -102,13 +102,13 @@ StatusCode VeloSimMoni::finalize() {
   double allFEs=m_nMCVeloFEs+m_nMCVeloFEn+m_nMCVeloFEo;
   if(allFEs>0){
     info().precision(4);
-    info()<< "| FEs from signal:                      " 
+    info()<< "| FEs from signal + spillover:          " 
           << (m_nMCVeloFEs/allFEs)*100
           << "%" <<endmsg;
     info()<< "| FEs from noise:                       " 
           << (m_nMCVeloFEn/allFEs)*100
           << "%" <<endmsg;
-    info()<< "| FEs from other (spillover/coupling):  " 
+    info()<< "| FEs from other (coupling):            " 
           << (m_nMCVeloFEo/allFEs)*100
           << "%" <<endmsg;
   }else{

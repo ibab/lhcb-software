@@ -1,8 +1,10 @@
-// $Id: VeloSim.cpp,v 1.23 2008-04-15 14:48:22 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.24 2008-04-16 15:53:01 dhcroft Exp $
 // Include files
 // STL
 #include <string>
 #include <vector>
+// for round 
+#include <cmath>
 
 // Mathcore
 #include "GaudiKernel/Point3DTypes.h"
@@ -141,7 +143,16 @@ StatusCode VeloSim::initialize() {
 		      (m_averageStripNoise*m_noiseScale*m_electronsPerADC));
   info() <<"Probability to add noise to empty strips " << m_noiseTailProb
 	 << endmsg;
-
+  std::vector<DeVeloSensor*>::const_iterator sens = 
+    m_veloDet->rPhiSensorsBegin();
+  int maxStrips= (*sens)->numberOfStrips();
+  int hitNoiseAverage= int(round(2.*m_noiseTailProb*maxStrips));
+  StatusCode sc3 = m_poissonDist.initialize(randSvc(), 
+					    Rndm::Poisson(hitNoiseAverage));
+  if(!sc3){
+    error() << "Random number init failure" << endmsg;
+    return sc3;
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -834,10 +845,7 @@ void VeloSim::noiseSim(){
       int hitNoiseTotal=-999;
       int maxStrips= sens->numberOfStrips();
       if(!m_makeNonZeroSuppressedData){
-        hitNoiseTotal= 
-	  int(LHCb::Math::round(2.*m_noiseTailProb*maxStrips));
-        Rndm::Numbers poisson(randSvc(), Rndm::Poisson(hitNoiseTotal));
-        hitNoiseTotal = int(poisson());
+        hitNoiseTotal = int(m_poissonDist());
       }else{
         hitNoiseTotal=sens->numberOfStrips();
       }
@@ -858,8 +866,7 @@ void VeloSim::noiseSim(){
         if(!m_makeNonZeroSuppressedData){
           // choose random hit to add noise to
           // get strip number
-          int stripArrayIndex=
-	    int(LHCb::Math::round(m_uniformDist()*(maxStrips-1)));
+          int stripArrayIndex= int(round(m_uniformDist()*(maxStrips-1)));
           LHCb::VeloChannelID stripKey(sensorNo,stripArrayIndex);
           // find strip in list.
           LHCb::MCVeloFE* myFE = findOrInsertFE(stripKey);
@@ -870,9 +877,6 @@ void VeloSim::noiseSim(){
             //
             if(m_isVerbose) verbose()<< "hit from tail of noise created "
 				     << myFE->addedNoise() << endmsg;
-          }else{
-	    // already added noise here - so generate another strip number
-            noiseHit--;
           }
         }else{
           // generate noise for all strips, beside those ones with 

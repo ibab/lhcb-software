@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.11 2008-04-14 09:36:45 dhcroft Exp $
+#// $Id: VeloSim.h,v 1.12 2008-04-16 15:53:01 dhcroft Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -130,6 +130,8 @@ private:
   bool m_simNoisePileUp;      ///< velo or pileup for noise simulation
   Rndm::Numbers m_gaussDist;  ///< gaussian random numbers
   Rndm::Numbers m_uniformDist;///< uniform random numbers
+  ///< poisson random numbers, mean = av. number of noise strips in a sensor
+  Rndm::Numbers m_poissonDist;
 
   double ran_inv_E2(double Emin, double Emax); ///<random numbers from 1/E^2
   /// Random numbers from a gaussian tail

@@ -6,6 +6,11 @@
 
 !===================== VeloSimulation v3r0 2008-04-15 ======================
 ! 2008-04-14 - David Hutchcroft
+ - Removed NextNext from default opts
+ - Use one cached poisson generator instead of making 88 per event 
+ - Changed the label on the signal and other lines of VeloSimMoni
+
+! 2008-04-14 - David Hutchcroft
  - Retuned time curves to use vfp = 150 and vfs = 550 : best guess as inital 
    BEETLE tune parameters, amount of spillover increased
  - Offset sampling time to get equal amplification to Prev and Next MCHits
