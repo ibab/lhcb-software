@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Finalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.cpp,v 1.21 2008-03-25 16:26:44 jonrob Exp $
+ *  $Id: RichGlobalPIDFinalize.cpp,v 1.22 2008-04-16 17:33:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -27,12 +27,10 @@ DECLARE_ALGORITHM_FACTORY( Finalize );
 Finalize::Finalize( const std::string& name,
                     ISvcLocator* pSvcLocator )
   : AlgBase      ( name, pSvcLocator ),
-    m_gtkCreator ( NULL  ) 
-{
-}
+    m_gtkCreator ( NULL  ) { }
 
 // Destructor
-Finalize::~Finalize() {}
+Finalize::~Finalize() { }
 
 StatusCode Finalize::initialize()
 {

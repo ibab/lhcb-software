@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID tool : Rich::Rec::GlobalPID::LikelihoodTool
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihoodTool.cpp,v 1.2 2008-04-15 18:53:51 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihoodTool.cpp,v 1.3 2008-04-16 17:33:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
@@ -188,7 +188,7 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
           // Not quite at best hypos yet ...
           std::ostringstream mess;
           mess << nChange << " track(s) changed hypothesis after LL minimisation "
-               << nRetries << "  -> Re-running";
+               << nRetries << " -> Re-running";
           Warning( mess.str(), StatusCode::SUCCESS, 3 );
           // Rerun iterations
           if ( msgLevel(MSG::DEBUG) )
