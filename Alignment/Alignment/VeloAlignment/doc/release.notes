@@ -3,6 +3,22 @@
 
 
 !=============================================================================
+! 16/04/2008 - Marco Gersabeck  ** v4r1 **
+
+  - Align.cpp(h): New method updateConditions to update alignment conditions 
+                  in memory at the end of the algorithm to enable the use of
+                  WriteAlignmentConditions
+
+  - AlignSensors.cpp/h/otps: 
+                  o Use of VeloClusterPotitionTool for calculation of inter-
+                    strip position
+                  o Do fit in Velo half frame instead of global frame to enable
+                    use when VELO open
+                  o Only update constants when delta in either x or y is significant,
+                    i.e. delta/error > MinDeltaSig (new option)
+                  
+
+!=============================================================================
 ! 23/01/2008 - Marco Gersabeck  ** v4r0 **
 
   - New version now includes VELO sensor alignment
