@@ -1,10 +1,18 @@
-!$Id: release.notes,v 1.8 2008-04-04 11:56:42 jpalac Exp $
+!$Id: release.notes,v 1.9 2008-04-16 10:16:49 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2008-04-16 - Juan PALACIOS
+ - MicroDST/Functors.hpp
+  . Add 
+       static T* BasicItemCloner::copy( const T* )
+    and
+       static T* BasicCopy::clone( const T* )
+    methods such that BasicCopy and BasicItemCloner have the same signatures.  
 
 ! 2008-04-04 - Juan PALACIOS
  - src/Lib/Functions.cpp
