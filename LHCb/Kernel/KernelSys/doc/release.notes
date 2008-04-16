@@ -4,9 +4,9 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
-!======================== KernelSys v7r3 2008-04-11 ==========================
-! 2008-04-10 - Marco Cattaneo
- - Use LHCbKernel v8r3, LHCbMath v2r7, L0MuonKernel v7r4
+!======================== KernelSys v7r3 2008-04-15 ==========================
+! 2008-04-15 - Marco Cattaneo
+ - Use LHCbKernel v8r3, LHCbMath v2r7, L0MuonKernel v7r4, RichKernel v7r11p1
 
 !======================== KernelSys v7r2 2008-02-20 ==========================
 ! 2008-02-20 - Marco Cattaneo

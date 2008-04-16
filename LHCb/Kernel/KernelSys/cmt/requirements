@@ -3,11 +3,11 @@ version v7r3
 
 branches doc cmt
 
-use CaloKernel       v5r1   Calo
-use LHCbKernel       v8r3   Kernel
-use LHCbMath         v2r7   Kernel
-use L0MuonKernel     v7r4   L0
-use MuonKernel       v4r0   Muon
-use ProcessorKernel  v5r1   L0
-use Relations        v5r4   Kernel
-use RichKernel       v7r11  Rich
+use CaloKernel      v5r1    Calo
+use LHCbKernel      v8r3    Kernel
+use LHCbMath        v2r7    Kernel
+use L0MuonKernel    v7r4    L0
+use MuonKernel      v4r0    Muon
+use ProcessorKernel v5r1    L0
+use Relations       v5r4    Kernel
+use RichKernel      v7r11p1 Rich
