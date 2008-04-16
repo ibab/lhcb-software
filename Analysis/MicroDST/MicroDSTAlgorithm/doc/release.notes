@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.59 2008-04-16 10:28:18 jpalac Exp $
+! $Id: release.notes,v 1.60 2008-04-16 13:20:06 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !============================================================
+
+! 2008-04-16 - Juan PALACIOS
+ - Add CopyHltSummary and CopyL0DUReport classes. Perform shallow copy of
+   HltSummary and L0DUReport.
 
 ! 2008-04-16 - Juan PALACIOS
  - Add algorithm CopyFlavourTag to copy keyed container of LHCb::FlavourTags.
