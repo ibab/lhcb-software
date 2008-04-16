@@ -1,4 +1,4 @@
-// $Id: XmlMuonL1BoardCnv.cpp,v 1.4 2008-04-09 15:20:04 cattanem Exp $
+// $Id: XmlMuonL1BoardCnv.cpp,v 1.5 2008-04-16 08:36:48 cattanem Exp $
 // Include files 
 
 #include <string>
@@ -179,10 +179,10 @@ XmlMuonL1BoardCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     }
     
     xercesc::DOMNodeList* nodeChildren = childElement->getChildNodes();
-    unsigned int i;
+//    unsigned int i;
     unsigned int iODE=0;
     
-    for(i=0; i < nodeChildren->getLength(); ++i){   
+    for(unsigned int i=0; i < nodeChildren->getLength(); ++i){   
       msg << MSG::VERBOSE << "Processing child "<<
         dom2Std(nodeChildren->item(i)->getNodeName())<<endreq;
       if(dom2Std(nodeChildren->item(i)->getNodeName()) == 

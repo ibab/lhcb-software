@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.109 2008-04-16 08:28:16 asatta Exp $
+! $Id: release.notes,v 1.110 2008-04-16 08:36:48 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
-!========================= MuonDet v8r0 2008-04-09 ==========================
+!========================= MuonDet v8r0 2008-04-16 ==========================
 ! 2008-04-16 - Alessia Satta
  - Clean up in MuonDAQHelper
  - For Silvia Pozzi small changes required
