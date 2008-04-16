@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.43 2008-04-11 10:55:16 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.44 2008-04-16 11:13:49 cattanem Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
@@ -185,7 +185,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
       <<station<<" "<<chamberNumber<<" "<<regNum<<std::endl;
       
       //Find the vector of chambers near the one under investigation
-      float x_ref(0),y_ref(0);
+      double x_ref(0.),y_ref(0.);
       x_ref = geoChm->toGlobal(Gaudi::XYZPoint(0,0,0)).x();
       y_ref = geoChm->toGlobal(Gaudi::XYZPoint(0,0,0)).y();
       
@@ -610,7 +610,7 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
   //Retrieve the chamber box dimensions  
   const SolidBox *box = dynamic_cast<const SolidBox *>
     (geoCh->lvolume()->solid());
-  float dx = box->xHalfLength();  float dy = box->yHalfLength();
+  double dx = box->xHalfLength();  double dy = box->yHalfLength();
 
 
   //  msg<<MSG::INFO<<" pre gap "<<gapCnt<<" "<<my_entry.x()<<" "<<
@@ -639,7 +639,7 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
 
 
   //Define relative dimensions
-  float mod_xen(0), mod_yen(0), mod_xex(0), mod_yex(0);
+  double mod_xen(0), mod_yen(0), mod_xex(0), mod_yex(0);
   if( dx && dy ) {
     if((lowerleft.x()<lowerright.x())&&(lowerleft.y()<upperleft.y())){
       mod_xen = (new_entry.x()+dx)/(2*dx);
@@ -737,8 +737,8 @@ StatusCode DeMuonDetector::getPCCenter(MuonFrontEndID fe,int chamber,
   //Retrieve the chamber box dimensions  
   const SolidBox *box = dynamic_cast<const SolidBox *>
     (geoCh->lvolume()->solid());
-  float dx = box->xHalfLength();  
-  float dy = box->yHalfLength();
+  double dx = box->xHalfLength();  
+  double dy = box->yHalfLength();
   Condition* aGrid = 
   myChPtr->condition(myChPtr->getGridName());
   MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(aGrid);
@@ -806,9 +806,9 @@ void DeMuonDetector::fillGeoInfo()
           //Retrieve the chamber box dimensions  
           const SolidBox *box = dynamic_cast<const SolidBox *>
             (geoCh->lvolume()->solid());
-          float dx = box->xHalfLength();
-          float dy = box->yHalfLength();
-          float dz = box->zHalfLength();
+          double dx = box->xHalfLength();
+          double dy = box->yHalfLength();
+          double dz = box->zHalfLength();
           m_sensitiveAreaX[station*4+region]=2*dx;
           m_sensitiveAreaY[station*4+region]=2*dy;
           m_sensitiveAreaZ[station*4+region]=2*dz;
@@ -1080,8 +1080,8 @@ void DeMuonDetector::fillGeoArray()
           //Retrieve the chamber box dimensions  
         const SolidBox *box = dynamic_cast<const SolidBox *>
           (geoCh->lvolume()->solid());
-        float dx = box->xHalfLength();
-        float dy = box->yHalfLength();
+        double dx = box->xHalfLength();
+        double dy = box->yHalfLength();
         Gaudi::XYZPoint glob1= geoCh->toGlobal(Gaudi::XYZPoint(-dx,-dy,0));
         Gaudi::XYZPoint glob2= geoCh->toGlobal(Gaudi::XYZPoint(-dx,dy,0));
         Gaudi::XYZPoint glob3= geoCh->toGlobal(Gaudi::XYZPoint(dx,-dy,0));
@@ -1106,8 +1106,8 @@ void DeMuonDetector::fillGeoArray()
           //Retrieve the chamber box dimensions  
         const SolidBox *box = dynamic_cast<const SolidBox *>
           (geoCh->lvolume()->solid());
-        float dx = box->xHalfLength();
-        float dy = box->yHalfLength();
+        double dx = box->xHalfLength();
+        double dy = box->yHalfLength();
         Gaudi::XYZPoint glob1= geoCh->toGlobal(Gaudi::XYZPoint(-dx,-dy,0));
         Gaudi::XYZPoint glob2= geoCh->toGlobal(Gaudi::XYZPoint(-dx,dy,0));
         Gaudi::XYZPoint glob3= geoCh->toGlobal(Gaudi::XYZPoint(dx,-dy,0));
@@ -1138,8 +1138,8 @@ void DeMuonDetector::fillGeoArray()
           //Retrieve the chamber box dimensions  
         const SolidBox *box = dynamic_cast<const SolidBox *>
           (geoCh->lvolume()->solid());
-        float dx = box->xHalfLength();
-        float dy = box->yHalfLength();
+        double dx = box->xHalfLength();
+        double dy = box->yHalfLength();
         Gaudi::XYZPoint glob1= geoCh->toGlobal(Gaudi::XYZPoint(-dx,-dy,0));
         Gaudi::XYZPoint glob2= geoCh->toGlobal(Gaudi::XYZPoint(-dx,dy,0));
         Gaudi::XYZPoint glob3= geoCh->toGlobal(Gaudi::XYZPoint(dx,-dy,0));
@@ -1165,8 +1165,8 @@ void DeMuonDetector::fillGeoArray()
           //Retrieve the chamber box dimensions  
         const SolidBox *box = dynamic_cast<const SolidBox *>
           (geoCh->lvolume()->solid());
-        float dx = box->xHalfLength();
-        float dy = box->yHalfLength();
+        double dx = box->xHalfLength();
+        double dy = box->yHalfLength();
         Gaudi::XYZPoint glob1= geoCh->toGlobal(Gaudi::XYZPoint(-dx,-dy,0));
         Gaudi::XYZPoint glob2= geoCh->toGlobal(Gaudi::XYZPoint(-dx,dy,0));
         Gaudi::XYZPoint glob3= geoCh->toGlobal(Gaudi::XYZPoint(dx,-dy,0));

@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.28 2008-04-11 10:11:53 asatta Exp $
+// $Id: DeMuonDetector.h,v 1.29 2008-04-16 11:13:49 cattanem Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -164,7 +164,7 @@ public:
   int stations();
   int regions();
   int regions(int stations);
-  float getStationZ(const int station);
+  double getStationZ(const int station);
 
   
   int gapsInRegion(const int station, const int region){
@@ -242,16 +242,16 @@ public:
     return m_sensitiveAreaZ[station*4+region];
   };
 
-  float getInnerX(const int station){
+  double getInnerX(const int station){
     return m_stationBox[station][0];
   };
-  float getInnerY(const int station){
+  double getInnerY(const int station){
     return m_stationBox[station][1];
   };
-  float getOuterX(const int station){
+  double getOuterX(const int station){
     return m_stationBox[station][2];
   };
-  float getOuterY(const int station){
+  double getOuterY(const int station){
     return m_stationBox[station][3];
   };
 
@@ -357,7 +357,7 @@ inline int DeMuonDetector::regions()
   return m_regions;
 }
 
-inline float DeMuonDetector::getStationZ(const int station){
+inline double DeMuonDetector::getStationZ(const int station){
     return m_stationZ[station];
   };
 

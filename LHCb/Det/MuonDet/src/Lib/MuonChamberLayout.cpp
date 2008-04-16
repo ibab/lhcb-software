@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.30 2007-12-03 20:51:51 santovet Exp $
+// $Id: MuonChamberLayout.cpp,v 1.31 2008-04-16 11:13:49 cattanem Exp $
 // Include files 
 
 // Gaudi
@@ -586,8 +586,8 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
 
           encode++;
 
-          float myX = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).x();
-          float myY = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).y();
+          double myX = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).x();
+          double myY = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).y();
           gridPosition(myX,myY,iS,idx,idy,reg);
           
           int enc = idx+4*m_cgX.at(reg)*idy+m_offSet.at(reg);
