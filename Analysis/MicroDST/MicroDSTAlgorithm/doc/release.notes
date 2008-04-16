@@ -1,7 +1,23 @@
-! $Id: release.notes,v 1.58 2008-04-02 10:06:20 jpalac Exp $
+! $Id: release.notes,v 1.59 2008-04-16 10:28:18 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !============================================================
+
+! 2008-04-16 - Juan PALACIOS
+ - Add algorithm CopyFlavourTag to copy keyed container of LHCb::FlavourTags.
+ - src/CopyMCParticle.h
+  . Swap include of "MicroDST/ICloneMCParticle.h" for forward declaration of 
+    class.
+ - src/CopyMCParticle.cpp
+  . #include "MicroDST/ICloneMCParticle.h"
+
+! 2008-04-08 - Juan PALACIOS
+
+ - src/CopyParticles.h
+  . Fix doxygen
+
+ - Add src/CopyMCParticles{.cpp, .h}
+  . MicroDSTAlgorithm to copy MCParticles from one TES location to another one.
 
 ! 2008-04-02 - Juan PALACIOS
  - src/CopyRelatedProtoParticles.h, CopyProtoParticles.h
