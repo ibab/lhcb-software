@@ -1,11 +1,12 @@
-// $Id: CopyMCParticles.h,v 1.1 2008-04-08 16:44:53 jpalac Exp $
+// $Id: CopyMCParticles.h,v 1.2 2008-04-16 10:28:04 jpalac Exp $
 #ifndef COPYMCPARTICLES_H 
 #define COPYMCPARTICLES_H 1
 
 // Include files
 // from Gaudi
 #include <MicroDST/MicroDSTAlgorithm.h>
-#include <MicroDST/ICloneMCParticle.h>
+
+class ICloneMCParticle;
 
 /** @class CopyMCParticles CopyMCParticles.h
  *  
@@ -50,7 +51,6 @@ public:
 private:
 
   ICloneMCParticle* m_particleCloner;
-
   std::string m_particleClonerName;
 
 };
