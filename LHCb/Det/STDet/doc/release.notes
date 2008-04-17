@@ -1,14 +1,11 @@
-!$Id: release.notes,v 1.125 2008-04-09 09:49:10 mneedham Exp $
+!$Id: release.notes,v 1.126 2008-04-17 16:04:53 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
-! 2008-03-14 M Needham
+!======================== STDet v4r0 2008-04-16 ==========================
+! 2008-04-09 M Needham
  - Avoid double counting bondgap
-
-
-!======================== STDet v4r0 2008-04-08 ==========================
-
 
 ! 2008-03-14 M Needham
  - Changes to add new level (DeSTSensor and derived classes)
