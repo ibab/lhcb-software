@@ -3,6 +3,12 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
+!2008-04-17 - Johannes Albrecht
+			- remove obsolete tools (.h,.cpp):
+				PrepareElectronSeed, PrepareHadronSeed, PrepareMuonSeed, PrepareMuonTSeed,
+				PrepareMuonTSeedTool, TrackParabel
+			- TsaConfirmTool.cpp: clean up includes
+
 !2008-03-27 - Johannes Albrecht
 			- move IL0ConfExtrapolator.h, FwdHypothesis.h and ParabolaHypothesis.h to HltBase
 			  and change includes
