@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: dump_db_to_files.py,v 1.2 2008-01-08 15:44:51 marcocle Exp $
+# $Id: dump_db_to_files.py,v 1.3 2008-04-17 17:23:27 marcocle Exp $
 
 # @todo: Add support for channel IDs
 
@@ -92,60 +92,69 @@ def copy_to_files(connString,time=0,tag="HEAD",srcs=['/'],
     hrefRE = re.compile('href *= *("conddb:[^">]*"|'+"'conddb:[^'>]*')")
     
     for node in ( n for n in nodes if db.db.existsFolder(n) ):
-        try:
-            log.info("retrieve data from '%s'",node)
-            data = db.getPayload(node, time, channelID = 0, tag = tag)
-            
-            nodesplit = node.split('/')
-            nodebase = '/'.join(nodesplit[:-1])
-            nodename = nodesplit[-1]
-            
-            if '/' != os.sep:
-                tmppath = nodebase.replace('/',os.sep)
-            else:
-                tmppath = nodebase
-            if tmppath and (tmppath[0] == os.sep):
-                tmppath = tmppath[1:]
-            dirname = os.path.join(destroot,tmppath)
-            
-            if not os.path.isdir(dirname):
-                log.info("create directory '%s'",dirname)
-                os.makedirs(dirname)
-            
-            log.debug("looping over data keys")
-            for key,xml in data.items():
+        log.info("retrieve data from '%s'",node)
+        f = db.getCOOLNode(node)
+        channels = [ i for i in f.listChannels() ]
+        if len(channels) > 1:
+            log.info("processing %d channels",len(channels))
+        for ch in channels:
+            try:
                 
-                log.debug("key: '%s'",key)
-                filename = nodename
-                if key != 'data':
-                    filename = '%s@%s'%(key,nodename)
-                tmppath = os.path.join(dirname,filename)
+                data = db.getPayload(node, time, channelID = ch, tag = tag)
                 
-                if not force and os.path.exists(tmppath):
-                    log.warning("file '%s' already exists: skipping",tmppath)
-                    continue
+                nodesplit = node.split('/')
+                nodebase = '/'.join(nodesplit[:-1])
+                nodename = nodesplit[-1]
                 
-                log.debug("fixating XML")
+                if '/' != os.sep:
+                    tmppath = nodebase.replace('/',os.sep)
+                else:
+                    tmppath = nodebase
+                if tmppath and (tmppath[0] == os.sep):
+                    tmppath = tmppath[1:]
+                dirname = os.path.join(destroot,tmppath)
                 
-                # fix system IDs
-                xml = _fixate_string(xml, sysIdRE, _relativize_url(node,key,nodebase))
-                # fix hrefs pointing to absolute conddb urls
-                xml = _fixate_string(xml, hrefRE, _relativize_url(node,key,nodebase))
+                if not os.path.isdir(dirname):
+                    log.info("create directory '%s'",dirname)
+                    os.makedirs(dirname)
                 
-                log.info("write '%s'",tmppath)
-                open(tmppath,'w').write(xml)
+                log.debug("looping over data keys")
+                for key,xml in data.items():
+                    
+                    log.debug("key: '%s'",key)
+                    filename = nodename
+                    if key != 'data':
+                        filename = '%s@%s'%(key,nodename)
+                    # Let's assume that if there is more than 1 channel also the "0" is used explicitely
+                    if ch != 0 or len(channels) > 1:
+                        filename += ':%d'%ch
+                    tmppath = os.path.join(dirname,filename)
+                    
+                    if not force and os.path.exists(tmppath):
+                        log.warning("file '%s' already exists: skipping",tmppath)
+                        continue
+                    
+                    log.debug("fixating XML")
+                    
+                    # fix system IDs
+                    xml = _fixate_string(xml, sysIdRE, _relativize_url(node,key,nodebase))
+                    # fix hrefs pointing to absolute conddb urls
+                    xml = _fixate_string(xml, hrefRE, _relativize_url(node,key,nodebase))
+                    
+                    log.info("write '%s'",tmppath)
+                    open(tmppath,'w').write(xml)
                 
-        except RuntimeError, x:
-            desc = str(x)
-            if "Object not found" in desc:
-                log.info("no data")
-            elif "No child tag" in desc:
-                log.info("no tag")
-            elif "not a child of" in desc:
-                # tag exists in a foldeset not containing the current one
-                log.info("no tag")
-            else:
-                raise
+            except RuntimeError, x:
+                desc = str(x)
+                if "Object not found" in desc:
+                    log.info("no data")
+                elif "No child tag" in desc:
+                    log.info("no tag")
+                elif "not a child of" in desc:
+                    # tag exists in a foldeset not containing the current one
+                    log.info("no tag")
+                else:
+                    raise
 def main():
     from optparse import OptionParser
     parser = OptionParser()
@@ -166,6 +175,11 @@ def main():
                       help="directory, in the database, where the files to copy to the DB are [default: %default]",
                       default="/",
                       metavar="SRCDIR")
+    parser.add_option("--options",
+                      dest="options", type="string", action="append",
+                      help="Option file from which to get the needed informations",
+                      default=[],
+                      metavar="JOBOPTS")
     parser.add_option("-d", "--dest",
                       dest="dest", type="string",
                       help="directory where to copy the files [default: %default]",
@@ -189,23 +203,47 @@ def main():
     
     
     (options, args) = parser.parse_args()
-    
-    if len(args) != 0 or not options.source or not options.dest:
+ 
+    if len(args) != 0 or not (options.source or options.options) or not options.dest:
         parser.error("Bad arguments, use -h for help.")
 
     if options.verbosity == 1:
         logging.getLogger().setLevel(logging.INFO)
     elif options.verbosity > 1:
         logging.getLogger().setLevel(logging.DEBUG)
+
+    if options.options:
+        from Gaudi.Configuration import importOptions, configurationDict
+        for o in options.options:
+            importOptions(o)
+        conf = configurationDict()
+        if "DDDB" not in conf or "LHCBCOND" not in conf:
+            raise RuntimeError("Bad configuration file")
+        t = int(options.time)
+        log = logging.getLogger("copy_to_files")
+        db = conf["DDDB"]
+        l = log.getEffectiveLevel()
+        log.setLevel(logging.INFO)
+        log.info("Copying DDDB from %s with tag %s"%(db["ConnectionString"],db.get("DefaultTAG","HEAD")))
+        log.setLevel(l)
+        copy_to_files(db["ConnectionString"],t,db.get("DefaultTAG","HEAD"),
+                      ["/"],options.dest,options.force)
+        db = conf["LHCBCOND"]
+        l = log.getEffectiveLevel()
+        log.setLevel(logging.INFO)
+        log.info("Copying LHCBCOND from %s with tag %s"%(db["ConnectionString"],db.get("DefaultTAG","HEAD")))
+        log.setLevel(l)
+        copy_to_files(db["ConnectionString"],t,db.get("DefaultTAG","HEAD"),
+                      ["/"],options.dest,options.force)
+    else:
+        srcs = [ options.source ]
+        if options.filelist:
+            srcs = [ f.strip() for f in open(options.filelist).readlines() ]
         
-    srcs = [ options.source ]
-    if options.filelist:
-        srcs = [ f.strip() for f in open(options.filelist).readlines() ]
-    
-    t = int(options.time)        
-        
-    copy_to_files(options.connectString,t,options.tag,srcs,
-                  options.dest,options.force)
+        t = int(options.time)
+            
+        copy_to_files(options.connectString,t,options.tag,srcs,
+                      options.dest,options.force)
 
 if __name__ == "__main__":
     main()

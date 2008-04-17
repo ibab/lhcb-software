@@ -1345,7 +1345,7 @@ class CondDB:
                 since = cool.ValidityKey(obj['since'])
                 until = cool.ValidityKey(obj['until'])
                 channelID = obj['channel']
-                folder.storeObject(since, until, payload, channelID)
+                folder.storeObject(since, until, payload, cool.ChannelId(channelID))
 
             # Write the data to the DB
             folder.flushStorageBuffer()
