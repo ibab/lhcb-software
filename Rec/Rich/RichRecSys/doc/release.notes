@@ -4,10 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r9 2008-04-16 =====================
 ! 2008-04-16 - Chris Jones
  - Fix some minor typos in the Global PID likelihood options
 
-!====================== RichRecSys v3r9 2008-04-15 =====================
 ! 2008-03-25 - Chris Jones
  - Rework options to adapt to new 'tool' based reconstruction
 
