@@ -1,4 +1,4 @@
-// $Id: LoadDDDB.cpp,v 1.5 2008-04-10 09:46:55 marcocle Exp $
+// $Id: LoadDDDB.cpp,v 1.6 2008-04-17 14:14:28 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,7 @@
 
 #include "GaudiKernel/DataStoreItem.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/GaudiException.h"
 
 // from LHCb
 #include "Kernel/ICondDBInfo.h"
@@ -69,6 +70,13 @@ StatusCode LoadDDDB::execute() {
   try {
     detSvc()->addPreLoadItem(m_treeToLoad);
     detSvc()->preLoad();
+  } catch (GaudiException &x) {
+    fatal() << "Gaught GaudiException" << endmsg;
+    int i = 0;
+    for ( GaudiException *ex = &x; 0 != ex; ex = ex->previous() ) {
+      fatal() << std::string(i++,' ') << " ==> " << ex->what() << endmsg;
+    }
+    return StatusCode::FAILURE;
   } catch (std::exception &x) {
     fatal() << "Gaught exception '" << System::typeinfoName(typeid(x)) << "'"
               << endmsg;

@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.32 2008-04-10 12:26:48 cattanem Exp $ 
+! $Id: release.notes,v 1.33 2008-04-17 14:14:28 marcocle Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,7 +7,10 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
-!======================= DetDescChecks v4r6 2008-04-10 ========================
+!======================= DetDescChecks v4r6 2008-04-17 ========================
+! 2008-04-17 - Marco Clemencic
+ - Improved the output in case of GaudiException in LoadDDDB.
+
 ! 2008-04-10 - Marco Clemencic
  - Force the creation of CondDBCnvSvc (if needed) in LoadDDDB::initialize.
 
