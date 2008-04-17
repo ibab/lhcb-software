@@ -66,26 +66,26 @@ public:
 
    /// Register the new particles in the Desktop, pass ownership, 
   /// return pointer to new particle
-  const LHCb::Particle* putOnDesktop( const LHCb::Particle* input ) ;
+  const LHCb::Particle* keep( const LHCb::Particle* input ) ;
 
   /// Register the new vertices in the Desktop, pass ownership, 
   /// return pointer to new vertex
-  const LHCb::Vertex* putOnDesktop( const LHCb::Vertex* input ) ;
+  const LHCb::Vertex* keep( const LHCb::Vertex* input ) ;
 
-  /// OBSOLETE : Use const LHCb::Particle* putOnDesktop( const LHCb::Particle* input ) instead
+  /// OBSOLETE : Use const LHCb::Particle* keep( const LHCb::Particle* input ) instead
   /// @todo Remove this method
   const LHCb::Particle* save( const LHCb::Particle* partToSave ){
-    Warning("Obsolete method which will be removed: Use putOnDesktop(const LHCb::Particle*) instead",
+    Warning("Obsolete method which will be removed: Use keep(const LHCb::Particle*) instead",
             StatusCode::SUCCESS,1).ignore();
-    return putOnDesktop(partToSave);
+    return keep(partToSave);
   }
 
-  /// OBSOLETE : Use const LHCb::Vertex* putOnDesktop( const LHCb::Vertex* input ) instead
+  /// OBSOLETE : Use const LHCb::Vertex* keep( const LHCb::Vertex* input ) instead
   /// @todo Remove this method
   const LHCb::Vertex* save( const LHCb::Vertex* vertToSave ){
-    Warning("Obsolete method which will be removed: Use putOnDesktop(const LHCb::Vertex*) instead",
+    Warning("Obsolete method which will be removed: Use keep(const LHCb::Vertex*) instead",
             StatusCode::SUCCESS,1).ignore();
-    return putOnDesktop(vertToSave);
+    return keep(vertToSave);
   }
   
   /// Save all particles and vertices in the Desktop to the TES

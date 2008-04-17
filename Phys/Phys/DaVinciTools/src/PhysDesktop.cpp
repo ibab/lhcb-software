@@ -299,18 +299,18 @@ StatusCode PhysDesktop::finalize(){
 //=============================================================================
 // Register a new particle in the Desktop
 //=============================================================================
-const LHCb::Particle* PhysDesktop::putOnDesktop( const LHCb::Particle* partToPut ){
+const LHCb::Particle* PhysDesktop::keep( const LHCb::Particle* keptP ){
 
-  if ( 0==partToPut ){
-    Exception("Attempt to putOnDesktop NULL Particle") ;
+  if ( 0==keptP ){
+    Exception("Attempt to keep NULL Particle") ;
     return 0;
   }
-  if (msgLevel(MSG::VERBOSE)) printOut("Put Particle on desktop", partToPut);
+  if (msgLevel(MSG::VERBOSE)) printOut("Put Particle on desktop", keptP);
   
   // Input particle is given check if it already exist in the stack
-  if( inTES( partToPut ) ) {
+  if( inTES( keptP ) ) {
     if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Particle is in desktop" << endmsg ;
-    return partToPut;
+    return keptP;
   }
 
   // Create new particle on the heap
@@ -319,13 +319,13 @@ const LHCb::Particle* PhysDesktop::putOnDesktop( const LHCb::Particle* partToPut
   // Input LHCb::Particle from stack is given as input to fill newly created particle
   // Copy contents to newly created particle
   LHCb::Particle& newPcont = *newP;
-  newPcont = *partToPut;
+  newPcont = *keptP;
   // Check if link to endProducts exist and set it
-  if( 0 != partToPut->endVertex() ) {
-    const LHCb::Vertex* newV = putOnDesktop( partToPut->endVertex() );
+  if( 0 != keptP->endVertex() ) {
+    const LHCb::Vertex* newV = keep( keptP->endVertex() );
     newP->setEndVertex(newV);
   }
-  // Link to outgoing particles is followed through the putOnDesktop(LHCb::Vertex)
+  // Link to outgoing particles is followed through the keep(LHCb::Vertex)
   // Link to originators will be correct because they are in the heap
   // so their pointer is valid
 
@@ -337,37 +337,37 @@ const LHCb::Particle* PhysDesktop::putOnDesktop( const LHCb::Particle* partToPut
 //=============================================================================
 // Create a new vertex
 //=============================================================================
-const LHCb::Vertex* PhysDesktop::putOnDesktop( const LHCb::Vertex* vtxToPut ){
+const LHCb::Vertex* PhysDesktop::keep( const LHCb::Vertex* keptV ){
 
-  if ( 0==vtxToPut ){
-    Exception("Attempt to putOnDesktop NULL Vertex") ;
+  if ( 0==keptV ){
+    Exception("Attempt to keep NULL Vertex") ;
     return 0; 
   }
-  if (msgLevel(MSG::VERBOSE)) printOut("putOnDesktop in Desktop", vtxToPut);
+  if (msgLevel(MSG::VERBOSE)) printOut("keep in Desktop", keptV);
 
   // Input vertex is given check if it already exist in the stack
-  if( inTES( vtxToPut ) ) {
+  if( inTES( keptV ) ) {
     if (msgLevel(MSG::VERBOSE)) verbose() << " Vertex is in TES" << endmsg;
-    return vtxToPut;
+    return keptV;
   }
   
 
   // Create new vertex on the heap
   LHCb::Vertex* newV = new LHCb::Vertex();
-  if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Create new and putOnDesktop " << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Create new and keep " << endmsg ;
 
   // Input vertex from stack is given as input to fill new created vertex
   // Copy contents to newly created vertex
   LHCb::Vertex& newVcont = *newV;
-  newVcont = *vtxToPut;
+  newVcont = *keptV;
   newV->clearOutgoingParticles();
   // Check if link to endProducts exist and set it
-  SmartRefVector<LHCb::Particle> outP = vtxToPut->outgoingParticles();
+  SmartRefVector<LHCb::Particle> outP = keptV->outgoingParticles();
   SmartRefVector<LHCb::Particle>::iterator ip;
   if (msgLevel(MSG::VERBOSE)) verbose() << "Looking for daughters of vertex:" << endmsg ;
   for( ip = outP.begin(); ip != outP.end(); ip++ ) {
     if (msgLevel(MSG::VERBOSE)) printOut("    Daughter", (*ip));
-    const LHCb::Particle* newP = putOnDesktop( *ip );
+    const LHCb::Particle* newP = keep( *ip );
     newV->addToOutgoingParticles(newP);
   }
 

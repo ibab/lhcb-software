@@ -1,4 +1,4 @@
-// $Id: ConjugateNeutralPID.cpp,v 1.3 2007-06-15 13:51:28 jpalac Exp $
+// $Id: ConjugateNeutralPID.cpp,v 1.4 2008-04-17 16:18:44 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -72,7 +72,7 @@ StatusCode ConjugateNeutralPID::execute()
   std::vector<LHCb::Particle>::iterator i;
   for( i = outparts.begin(); i != outparts.end(); i++ )
   {
-    const LHCb::Particle *deskPart = desktop()->save( &(*i) );
+    const LHCb::Particle *deskPart = desktop()->keep( &(*i) );
     if( !deskPart )
     {
       err() << " Unable to save particle" << endmsg;

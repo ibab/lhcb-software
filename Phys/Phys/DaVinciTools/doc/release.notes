@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.315 2008-04-16 17:29:13 pkoppenb Exp $
+! $Id: release.notes,v 1.316 2008-04-17 16:18:44 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-04-17 - Patrick Koppenburg
+ - PhysDesktop: the save(X) method is now called keep(X) to make it clearer.
 
 ! 2008-04-16 - Patrick Koppenburg
  - PhysDesktop: 
