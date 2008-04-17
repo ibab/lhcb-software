@@ -2,12 +2,12 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
+!===================== VeloAlgorithms v4r7 2008-04-16 =====================
 ! 2008-04-16 David Hutchcroft
  - Changed curve in VeloDataProcessor to 2nd order non-linear response from JC
  - Changed monitoring code to label cluster types properly
  - Set ADC output range from 0->256 to -127->127
 
-!===================== VeloAlgorithms v4r7 2008-04-11 =====================
 ! 2008-03-28 David Hutchcroft
  - Changed scaling in VeloDataProcessor to increase ADC values of clusters
  - Changed VeloClusterMaker to set strip thresholds from noise levels per strip
