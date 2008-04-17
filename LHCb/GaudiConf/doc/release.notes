@@ -2,6 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v10r7 2008-04-17 ========================
+! 2008-04-17 - Marco Cattaneo
+ - Add LHCbApp configurable with default options for LHCb applications:
+
 !======================== GaudiConf v10r6 2008-01-30 ========================
 ! 2008-01-29 - Olivier Deschamps
  - In DecodeRawEvent.opts:

@@ -1,11 +1,15 @@
 package GaudiConf
-version v10r6
+version v10r7
 
-branches doc cmt options src
+branches doc cmt options python src
 include_path none
+
+use GaudiPolicy v*
 
 ignore_pattern package_stamps
 
 set STDOPTS    $(GaudiConf_root)/options
 
 macro_append cppflags ' -DAPPNAME=\"${package}\" -DAPPVERS=\"${version}\" '
+
+apply_pattern install_python_modules
