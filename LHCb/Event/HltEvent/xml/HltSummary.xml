@@ -68,7 +68,7 @@
      </method>
 
      <enum
-        name   = 'HltSelectionSummary'
+        name   = 'HltSelectionSummaryEnum'
         desc   = 'Hlt selection summary'
         strTypConv = 'TRUE'
         unknownValue = 'HltSelectionSummaryUnknown'
@@ -124,12 +124,12 @@
         access = 'PUBLIC' />
 
      <method
-	type = 'GaudiUtils::VectorMap &lt; std::string, LHCb::HltEnums::HltSelectionSummary &gt; &amp;'
-	name = 'hltSelectionSummaryTypMap'
+	type = 'GaudiUtils::VectorMap &lt; std::string, LHCb::HltEnums::HltSelectionSummaryEnum &gt; &amp;'
+	name = 'hltSelectionSummaryEnumTypMap'
 	desc = 'gets map of enum and name. Useful for looping over all enums. Needs an instance of LHCb::HltEnums class.'
 	const = 'TRUE' >
 	<code>
-  return s_HltSelectionSummaryTypMap() ;
+  return s_HltSelectionSummaryEnumTypMap() ;
 	</code>
      </method>
 

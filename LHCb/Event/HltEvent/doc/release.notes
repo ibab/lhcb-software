@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2007-04-17 - Jose A. Hernando
+ - Renamed enum type HltSelectionSummary to avoid conflicts with Python dictionaries
+
 !======================== HltEvent v8r7 2008-03-03 ===========================
 ! 2008-02-27 - Chris Jones
  - Add missing STL includes
