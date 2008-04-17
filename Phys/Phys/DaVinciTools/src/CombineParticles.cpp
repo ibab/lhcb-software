@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.11 2008-04-09 14:58:10 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.12 2008-04-17 16:50:58 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -309,8 +309,8 @@ CombineParticles::makeMother(const LHCb::Particle::ConstVector& Daughters,
   
   if (!sc) return NULL;
   
-  if ( msgLevel( MSG::VERBOSE )) verbose() << "Calling desktop()->save(const LHCb::Particle*)" << endmsg ;
-  return desktop()->save(&Candidate);
+  if ( msgLevel( MSG::VERBOSE )) verbose() << "Calling desktop()->keep(const LHCb::Particle*)" << endmsg ;
+  return desktop()->keep(&Candidate);
 
 };
 //=============================================================================

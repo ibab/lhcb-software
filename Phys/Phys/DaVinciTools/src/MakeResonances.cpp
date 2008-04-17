@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.33 2008-01-15 18:05:11 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.34 2008-04-17 16:50:58 pkoppenb Exp $
 
 #include <algorithm>
 
@@ -410,8 +410,8 @@ MakeResonances::makeMother(const LHCb::Particle::ConstVector& Daughters,
   
   if (!sc) return NULL;
   
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Calling desktop()->save(const LHCb::Particle*)" << endmsg ;
-  return desktop()->save(&Candidate);
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Calling desktop()->keep(const LHCb::Particle*)" << endmsg ;
+  return desktop()->keep(&Candidate);
 
 };
 //#############################################################################
