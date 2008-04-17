@@ -584,6 +584,7 @@ std::ostream& LHCb::Track::fillStream(std::ostream& os) const
      << " key     : " << key() << std::endl
      << " type    : " << type() << std::endl
      << " history : " << history() << std::endl
+     << " fitstatus: " << fitStatus() << std::endl
      << " # ids    : " << nLHCbIDs() << std::endl
      << " # meas   : " << nMeasurements() << std::endl
      << " chi2PerDoF : " << (float)m_chi2PerDoF << std::endl
