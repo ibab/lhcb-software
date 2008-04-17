@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.31 2007-09-27 19:16:56 erodrigu Exp $
+// $Id: State.cpp,v 1.32 2008-04-17 11:27:11 wouter Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -67,57 +67,29 @@ double State::pt() const
 //=============================================================================
 SymMatrix6x6 State::posMomCovariance() const
 {
-  // transformation from (x,y,tx,ty,Q/p) to (x,y,px,py,pz)
+  // This computes the jacobian from (x,y,tx,ty,Q/p) to
+  // (x,y,z,px,py,pz). The math is the same as in
+  // Gaudi::Math::JacobdP4dMom, so we should just merge that.
+
   const double qP = qOverP();
   const double tX = tx();
   const double tY = ty();
   const double invNorm = 1. / sqrt( 1. + tX*tX + tX*tX );
   const double mom = p();
-
-  Gaudi::Matrix5x5    jmat;
-  jmat(0,0) = jmat(1,1) = 1.;
-
-#ifdef __JACOBIAN_INVERT
-  // This is the Jacobian of (x,y,tx,ty,Q/p) w.r.t. (x,y,px,py,pz)
-  const double px = pz * tx();
-  const double py = pz * ty();
-  const double pz = mom * invNorm ;
-  const double qOverP3 = qP * qP * qP;
-  jmat(2,2) = jmat(3,3) = 1./pz;
-  jmat(2,4) = - px/(pz*pz);
-  jmat(3,4) = - py/(pz*pz);
-  jmat(4,2) = - px*qOverP3;
-  jmat(4,3) = - py*qOverP3;
-  jmat(4,4) = - pz*qOverP3;
-  // Now invert the Jacobian. Should never fail, but protect anyway
-  if( !jmat.Invert() ) {
-    return SymMatrix6x6();
-  }
-#else
-  // This is the Jacobian of (x,y,px,py,pz) w.r.t. (x,y,tx,ty,Q/p)
   const double invNorm3 = invNorm * invNorm * invNorm;
-  //  const double invP = fabs(qP);
-  const double q = fabs(qP) > TrackParameters::lowTolerance ? 0.0 : (qP > 0.0 ? 1.0 : -1.0);
-  jmat(2,2) = mom * (1.+tY*tY)*invNorm3;
-  jmat(2,3) = jmat(3,2) = -mom * tX * tY * invNorm3;
-  jmat(2,4) = -q * tX * invNorm / (qP*qP);
-  jmat(3,3) = mom * (1.+tX*tX)*invNorm3;
-  jmat(3,4) = -q *tY * invNorm / (qP*qP);
-  jmat(4,2) = -mom * tX * invNorm3;
-  jmat(4,3) = -mom * tY * invNorm3;
-  jmat(4,4) = -q * invNorm * mom * mom;
-#endif
-
-  Gaudi::SymMatrix5x5 newCov5D =  ROOT::Math::Similarity<double,5,5>( jmat, covariance() );
-
-  // Now leave a row and colum of 0 for z
-  Gaudi::Matrix6x6 cov6D   = Matrix6x6();
-
-  cov6D.Place_at( newCov5D.Sub<SymMatrix2x2>( 0, 0 ), 0, 0 );
-  cov6D.Place_at( newCov5D.Sub<SymMatrix3x3>( 2, 2 ), 3, 3 );
-  cov6D.Place_at( newCov5D.Sub<Matrix2x3>( 0, 2 ), 0, 3 );
-  cov6D.Place_at( newCov5D.Sub<Matrix3x2>( 2, 0 ), 3, 0 );
-  return cov6D.LowerBlock();
+  const double q = fabs(qP) > TrackParameters::lowTolerance ? (qP > 0 ? 1 : -1) : 0;
+  ROOT::Math::SMatrix<double, 6, 5> jmat;
+  jmat(0,0) = jmat(1,1) = 1.;
+  jmat(3,2) = mom * (1.+tY*tY)*invNorm3;
+  jmat(3,3) = jmat(4,2) = -mom * tX * tY * invNorm3;
+  jmat(3,4) = -q * tX * invNorm / (qP*qP);
+  jmat(4,3) = mom * (1.+tX*tX)*invNorm3;
+  jmat(4,4) = -q *tY * invNorm / (qP*qP);
+  jmat(5,2) = -mom * tX * invNorm3;
+  jmat(5,3) = -mom * tY * invNorm3;
+  jmat(5,4) = -q * invNorm * mom * mom;
+  
+  return ROOT::Math::Similarity( jmat, covariance() );
 };
 
 //=============================================================================
