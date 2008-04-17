@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.47 2008-02-12 09:35:09 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.48 2008-04-17 13:00:19 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -79,7 +79,7 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   declareProperty("CheckTAGTimeOut",  m_checkTagTimeOut  = 60    );
   declareProperty("ReadOnly",         m_readonly         = true  );
   
-  declareProperty("ConnectionTimeOut", m_connectionTimeOut = 600 );
+  declareProperty("ConnectionTimeOut", m_connectionTimeOut = 120 );
   
   declareProperty("LazyConnect",       m_lazyConnect     = true );
   

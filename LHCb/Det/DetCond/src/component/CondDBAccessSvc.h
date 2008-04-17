@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.33 2008-01-26 15:47:46 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.34 2008-04-17 13:00:19 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -279,7 +279,7 @@ private:
   // -------------------------------------
 
   /// Property CondDBAccessSvc.ConnectionTimeOut: How many seconds to keep the connection to the DB open after the
-  /// last access (default = 600, 0 means never). The connection will be started again if a new operation is performed.
+  /// last access (default = 120, 0 means never). The connection will be started again if a new operation is performed.
   int m_connectionTimeOut;
 
   /// Mutex to avoid conflicts between the main thread and the thread trying to close the connection.
