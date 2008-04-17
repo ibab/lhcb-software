@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.22 2007-12-08 16:10:58 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.23 2008-04-17 14:46:13 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -15,8 +15,48 @@ static const InterfaceID IID_IPhysDesktop("IPhysDesktop", 1, 3);
 
 
 /** @class IPhysDesktop IPhysDesktop.h Kernel/IPhysDesktop.h
- *  Interface for the Desktop
- *  upon which the user keeps his particles and vertices
+ *
+ *  Interface for the Desktop upon which the user keeps his particles and vertices.
+ *
+ *  This tool hides all the I/O from the user and takes care of all ownership.
+ *  The user should never have to type new in a DVAlgorithm using the PhysDesktop.
+ *
+ *  The PhysDesktop is interfaced by desktop() in DVAlgorithm
+ *
+ *  Example of use
+ *
+ *  @code
+ * 
+ *  StatusCode TutorialAlgorithm::execute() {
+ *    LHCb::Particle::ConstVector muons = desktop()->particles(); // get particles
+ *    sc = particleFilter()->filterNegative(muons,MuMinus);
+ *    if (sc) sc = particleFilter()->filterPositive(muons,MuPlus);
+ *    if (!sc) { 
+ *      err() << "Error while filtering" << endmsg ;
+ *      return sc ;
+ *    }
+ *    for ( LHCb::Particle::ConstVector::const_iterator imp =  MuPlus.begin() ;
+ *          imp != MuPlus.end() ; ++imp ){
+ *      for ( LHCb::Particle::ConstVector::const_iterator imm =  MuMinus.begin() ;
+ *            imm != MuMinus.end() ; ++imm ){
+ *        LHCb::Vertex MuMuVertex;
+ *        LHCb::Particle Jpsi(m_jPsiID);
+ *        StatusCode scFit = vertexFitter()->fit(*(*imp),*(*imm),Jpsi,MuMuVertex);
+ *        if (!scFit) continue ;
+ *        if ( MuMuVertex.chi2() > m_jPsiChi2 ) continue ; // chi2 cut
+ *        desktop()->keep(&Jpsi);  // keep in Desktop
+ *        setFilterPassed(true);
+ *      }
+ *    }
+ *    sc = desktop()->saveDesktop() ;  // save the desktop to the TES
+ *    return sc ;
+ *  }
+ *  @endcode
+ *
+ *  The keep() methods pass the ownership to the desktop and return a pointer to
+ *  the new particle. 
+ *
+ *  The saveDesktop() and saveTrees(...) methods then save to the TES.
  *
  *  @author Sandra Amato
  *  @date   18/02/2002
@@ -39,10 +79,20 @@ public:
   /// Retrieve the secondary vertices
   virtual const LHCb::Vertex::ConstVector& secondaryVertices() const = 0;
 
-  /// Add the particles  to the Desktop
+  /// Keep for future use: Register the new particles in the Desktop, pass ownership, 
+  /// return pointer to new particle
+  virtual const LHCb::Particle* keep( const LHCb::Particle* input ) = 0;
+
+  /// Keep for future use: Register the new vertices in the Desktop, pass ownership, 
+  /// return pointer to new vertex
+  virtual const LHCb::Vertex* keep( const LHCb::Vertex* input ) = 0;
+
+  /// OBSOLETE : Use const LHCb::Particle* keep( const LHCb::Particle* input ) instead
+  /// @todo Remove this method
   virtual const LHCb::Particle* save( const LHCb::Particle* input ) = 0;
 
-  /// Add the vertices  to the Desktop
+  /// OBSOLETE : Use const LHCb::Vertex* keep( const LHCb::Vertex* input ) instead
+  /// @todo Remove this method
   virtual const LHCb::Vertex* save( const LHCb::Vertex* input ) = 0;
 
   /// Save particles, vertices and particle->vertices relations to the TES
