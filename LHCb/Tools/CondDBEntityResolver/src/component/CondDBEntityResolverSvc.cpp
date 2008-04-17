@@ -1,4 +1,4 @@
-// $Id: CondDBEntityResolverSvc.cpp,v 1.8 2008-04-10 09:33:57 marcocle Exp $
+// $Id: CondDBEntityResolverSvc.cpp,v 1.9 2008-04-17 14:02:17 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/IDetDataSvc.h"
@@ -34,7 +34,9 @@ DECLARE_SERVICE_FACTORY(CondDBEntityResolverSvc)
 // Standard constructor, initializes variables
 //=============================================================================
 CondDBEntityResolverSvc::CondDBEntityResolverSvc( const std::string& name, ISvcLocator* svc ):
-                                                  Service(name,svc) {
+                                                  Service(name,svc),
+                                                  m_detDataSvc(0),
+                                                  m_condDBReader(0){
 
   declareProperty("DetDataSvc", m_detDataSvcName = "DetDataSvc/DetectorDataSvc");
   declareProperty("CondDBReader", m_condDBReaderName = "CondDBCnvSvc");
