@@ -2,14 +2,12 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
-
+!=========================== STCheckers v2r5 2008-04-17 =======================
 ! 2008-04-17 M Needham
  - Bug fix in STEffChecker to prevent crash
 
-!=========================== STCheckers v2r5 2008-04-08 =======================
 ! 2008-04-01 M Needham
  - check for valid pointers in STClusterResolution
-
 
 ! 2008-03-14  M Needham
  - Follow changes in DeSTDet
