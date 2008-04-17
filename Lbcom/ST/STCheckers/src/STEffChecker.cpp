@@ -1,4 +1,4 @@
-// $Id: STEffChecker.cpp,v 1.6 2008-03-14 18:27:09 mneedham Exp $
+// $Id: STEffChecker.cpp,v 1.7 2008-04-17 08:35:22 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -219,13 +219,20 @@ StatusCode STEffChecker::finalize()
 
   info() << " -----------------------" << endreq;
 
+
+  // hack to prevent crash
+  StatusCode sc = GaudiHistoAlg::finalize();
+  if (sc.isFailure()){
+    return Warning("Failed to finalize base class", sc);
+  }
+
   // unbook if not full detail mode: histograms are not saved
   if (fullDetail() == false){
     unBookHistos();
     eraseHistos();
   }
 
-  return  GaudiHistoAlg::finalize();
+  return StatusCode::SUCCESS;
 }
 
 
