@@ -2,6 +2,10 @@
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
 
+!====================== Tell1Kernel v1r2 2008-04-18 ======================
+! 2008-02-26 - Anne Keune
+ - Add Tell1Kernel/STTell1Core.h
+
 !====================== Tell1Kernel v1r1 2007-12-11 ======================
 ! 2007-12-11 - Marco Cattaneo
  - Fix types for Windows
