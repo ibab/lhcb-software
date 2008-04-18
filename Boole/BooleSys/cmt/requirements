@@ -29,4 +29,4 @@ use RichMCAssociators   v2r5    Rich  # Chris Jones
 use RichReadout         v2r9    Rich  # Chris Jones
 
 # Silicon Tracker
-use STDigiAlgorithms    v1r0    ST    # Matt Needham
+use STDigiAlgorithms    v1r0p1  ST    # Matt Needham
