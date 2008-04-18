@@ -2,10 +2,10 @@
 ! package manager: Marco Cattaneo
 !-------------------------------------------------------------------------
 
-!======================== EventSys v24r2 2008-04-11 ======================
-! 2008-04-11 - Marco Cattaneo
- - Use DAQEvent v7r10, DigiEvent v2r5, LinkerEvent v3r4, L0Event v16r9,
-       MCEvent v2r8, RecEvent v2r11
+!======================== EventSys v24r2 2008-04-17 ======================
+! 2008-04-17 - Marco Cattaneo
+ - Use DAQEvent v7r10, DigiEvent v2r5, HltEvent v8r8, LinkerEvent v3r4,
+       L0Event v16r9, MCEvent v2r8, RecEvent v2r11, TrackEvent v4r12
  - Fix copy_relax_rootmap pattern for Gaudi v19r9
 
 !======================== EventSys v24r1 2008-03-03 ======================
