@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.77 2008-04-17 17:23:27 marcocle Exp $
+! $Id: release.notes,v 1.78 2008-04-18 07:06:26 cattanem Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
 
+!===================== Tools/CondDBUI v2r9 2008-04-18 =========================
 ! 2008-04-17 - Marco Clemencic
  - Preliminary support for dump of the DB image to files based option files.
  - Fix for usage of channel IDs (to/from DB).
