@@ -270,6 +270,7 @@ This version uses Gaudi v19r9 and LCG_54d.
   . Add some missing include statements
   . Some minor improvements related to reconstucting photons on demand 
     track-by-track, instead of the more commonly used all at once approach.
+  . Turn on book keeping in data creators by default
 
 - In SimComponents v2r9
   . PrintMCDecayTreeAlg: add property "MCParticleLocation" to allow to provide
