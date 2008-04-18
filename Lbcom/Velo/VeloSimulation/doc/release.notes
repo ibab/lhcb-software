@@ -4,7 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!===================== VeloSimulation v3r0 2008-04-15 ======================
+!===================== VeloSimulation v3r0 2008-04-18 ======================
+! 2007-04-18 - Marco Cattaneo
+ - Fix Windows compilation ("round" is not in <cmath>, use LHCb::Math::round)
+
 ! 2008-04-14 - David Hutchcroft
  - Removed NextNext from default opts
  - Use one cached poisson generator instead of making 88 per event 

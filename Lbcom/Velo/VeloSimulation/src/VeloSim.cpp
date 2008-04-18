@@ -1,10 +1,8 @@
-// $Id: VeloSim.cpp,v 1.24 2008-04-16 15:53:01 dhcroft Exp $
+// $Id: VeloSim.cpp,v 1.25 2008-04-18 17:17:47 cattanem Exp $
 // Include files
 // STL
 #include <string>
 #include <vector>
-// for round 
-#include <cmath>
 
 // Mathcore
 #include "GaudiKernel/Point3DTypes.h"
@@ -146,7 +144,7 @@ StatusCode VeloSim::initialize() {
   std::vector<DeVeloSensor*>::const_iterator sens = 
     m_veloDet->rPhiSensorsBegin();
   int maxStrips= (*sens)->numberOfStrips();
-  int hitNoiseAverage= int(round(2.*m_noiseTailProb*maxStrips));
+  int hitNoiseAverage= int(LHCb::Math::round(2.*m_noiseTailProb*maxStrips));
   StatusCode sc3 = m_poissonDist.initialize(randSvc(), 
 					    Rndm::Poisson(hitNoiseAverage));
   if(!sc3){
@@ -866,7 +864,7 @@ void VeloSim::noiseSim(){
         if(!m_makeNonZeroSuppressedData){
           // choose random hit to add noise to
           // get strip number
-          int stripArrayIndex= int(round(m_uniformDist()*(maxStrips-1)));
+		  int stripArrayIndex= int(LHCb::Math::round(m_uniformDist()*(maxStrips-1)));
           LHCb::VeloChannelID stripKey(sensorNo,stripArrayIndex);
           // find strip in list.
           LHCb::MCVeloFE* myFE = findOrInsertFE(stripKey);
