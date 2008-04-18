@@ -1,30 +1,32 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.4 2008-03-07 16:40:47 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2008-04-18 14:23:19 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
 from Gaudi.Configuration import *
+from GaudiConf.Configuration import *
 from Configurables import ( CondDBAccessSvc, MagneticFieldSvc,
                             MCSTDepositCreator ) 
 
 class Boole(ConfigurableUser):
     __slots__ = {
-        "skipEvents":   0     # events to skip
+        "EvtMax":          -1 # Maximum number of events to process
+       ,"skipEvents":   0     # events to skip
        ,"skipSpill":    0     # spillover events to skip
        ,"useSpillover": True  # set to False to disable spillover
        ,"generateTAE":  False # set to True to simulate time alignment events
        ,"writeRawMDF":  False # set to True to simulate Raw data.
-                              # Default is POOL .digi
+       ,"writeDigi":    True  # set to False to remove POOL .digi output
        ,"writeL0ETC":   False # set to True to write ETC of L0 selected events
        ,"writeL0Only":  False # set to True to write only L0 selected events
        ,"extendedDigi": False # set to True to add MCHits to .digi output file
        ,"expertHistos": False # set to True to write out expert histos
-       ,"noWarnings":   False # suppress all messages with MSG::WARNING or
-                              # below 
+       ,"noWarnings":   False # suppress all messages with MSG::WARNING or below 
        ,"datasetName":  '00001820_00000001' # string used to build file names
-       ,"condDBtag":    "DC06-latest" # conditions database tag
+       ,"DDDBtag":   "DEFAULT" # geometry database tag
+       ,"condDBtag": "DEFAULT" # conditions database tag
         }
 
     def getProp(self,name):
@@ -35,26 +37,42 @@ class Boole(ConfigurableUser):
 
     def defineDB(self):
         condDBtag = self.getProp("condDBtag")
-        # For all DC06 cases, use latest DC06 tag
-        if condDBtag.find("DC06") != -1 :
-            importOptions( "$DDDBROOT/options/DC06.py" )
-            #-- Do not use Geant deposited charge in DC06
+        if condDBtag != "DEFAULT":
+            if hasattr(LHCbApp(),"condDBtag"):
+                print "LHCbApp().condDBtag already defined, ignoring Boole().condDBtag"
+            else:
+                LHCbApp().condDBtag = condDBtag
+        else:
+            condDBtag =  LHCbApp().getDefaultProperties()["condDBtag"]
+
+        DDDBtag = self.getProp("DDDBtag")
+        if DDDBtag != "DEFAULT":
+            if hasattr(LHCbApp(),"DDDBtag"):
+                print "LHCbApp().DDDBtag already defined, ignoring Boole().DDDBtag"
+            else:
+                LHCbApp().DDDBtag = DDDBtag
+        else:
+            DDDBtag = LHCbApp().getDefaultProperties()["DDDBtag"]
+
+        # Special options for DC06 data processing
+        if condDBtag.find("DC06") != -1 and DDDBtag.find("DC06") != -1 :
             MCSTDepositCreator("MCITDepositCreator").DepChargeTool = "SiDepositedCharge"
             MCSTDepositCreator("MCTTDepositCreator").DepChargeTool = "SiDepositedCharge"
 
-        else:
-            CondDBAccessSvc( "DDDB",     DefaultTAG = condDBtag )
-            CondDBAccessSvc( "LHCBCOND", DefaultTAG = condDBtag )
-            #-- Always DC06 magnetic field for now....
-            MagneticFieldSvc().FieldMapFile = os.environ['FIELDMAPROOT']+'/cdf/field047.cdf'
-
     def defineEvents(self):
+        evtMax = self.getProp("EvtMax")
+        if hasattr(LHCbApp(),"EvtMax"):
+            print "LHCbApp().EvtMax already defined, ignoring Boole().EvtMax"
+        else:
+            LHCbApp().EvtMax = evtMax
+
         skipEvents = self.getProp("skipEvents")
         if skipEvents > 0 :
-            if hasattr(EventSelector(),"FirstEvent"):
-                print "EventSelector().FirstEvent already defined, ignoring Boole().skipEvents"
+            if hasattr(LHCbApp(),"skipEvents"):
+                print "LHCbApp().skipEvents already defined, ignoring Boole().skipEvents"
             else:
-                EventSelector().FirstEvent = skipEvents + 1
+                LHCbApp().skipEvents = skipEvents
+
         skipSpill  = self.getProp("skipSpill")
         if skipSpill  > 0 :
             if hasattr(EventSelector("SpilloverSelector"),"FirstEvent"):
@@ -106,19 +124,24 @@ class Boole(ConfigurableUser):
         """
         Set up output stream according to output data type
         """
-        mdf = self.getProp( "writeRawMDF" )
-        if mdf:
-            importOptions( "$BOOLEOPTS/RawWriter.opts" )
-            MyWriter = OutputStream( "RawWriter" )
-            # ApplicationMgr().OutStream.append( "RawWriter" ) # Already in RawWriter.opts
-        else:
+        l0yes = self.getProp( "writeL0Only" )
+
+        digi = self.getProp( "writeDigi" )
+        if digi:
             extended = self.getProp("extendedDigi")
             if ( extended ): importOptions( "$STDOPTS/ExtendedDigi.opts" )
             MyWriter = OutputStream( "DigiWriter" )
+            if l0yes : MyWriter.RequireAlgs.append( "L0Filter" )
             ApplicationMgr().OutStream.append( "DigiWriter" )
 
-        l0yes = self.getProp( "writeL0Only" )
-        if l0yes : MyWriter.RequireAlgs.append( "L0Filter" )
+        mdf   = self.getProp( "writeRawMDF" )
+        # mdf case must be after digi case, because RawWriter.opts adds EventNodeKiller to OutStream list
+        if mdf:
+            importOptions( "$BOOLEOPTS/RawWriter.opts" )
+            MyWriter = OutputStream( "RawWriter" )
+            if l0yes : MyWriter.RequireAlgs.append( "L0Filter" )
+            # ApplicationMgr().OutStream.append( "RawWriter" ) # Already in RawWriter.opts
+
         l0etc = self.getProp( "writeL0ETC" )
         if l0etc : ApplicationMgr().OutStream.append( "Sequencer/SeqWriteTag" )
         nowarn = self.getProp( "noWarnings" )
@@ -150,3 +173,4 @@ class Boole(ConfigurableUser):
         self.defineOptions()
         self.defineHistos()
         self.defineOutput()
+        LHCbApp().applyConf()

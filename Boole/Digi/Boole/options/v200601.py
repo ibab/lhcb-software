@@ -4,23 +4,26 @@
 #   gaudirun.py ../options/BooleCommon.py ../options/v200601.py
 #
 from Gaudi.Configuration import *
+from GaudiConf.Configuration import *
 from Boole.Configuration import *
 
 ##############################################################################
 # Available steering options with defaults.
 # Edit one or more of these lines to change the defaults
-# ApplicationMgr().EvtMax = -1    # Number of events to process
+# Boole().EvtMax          = -1    # Number of events to process
 # Boole().skipEvents      = 0     # Number of events to skip before first event
 # Boole().skipSpill       = 0     # Number of spillover events to skip
 # Boole().useSpillover    = True  # set to False to disable spillover
 # Boole().generateTAE     = False # set to True to simulate time alignment events
-# Boole().writeRawMDF     = False # set to True to simulate Raw data. Default is POOL .digi
+# Boole().writeRawMDF     = False # set to True to write simulated Raw data
+# Boole().writeDigi       = True  # set to False to not write POOL .digi
 # Boole().writeL0ETC      = False # set to True to write ETC of L0 selected events
 # Boole().writeL0Only     = False # set to True to write only L0 selected events
 # Boole().extendedDigi    = False # set to True to add MCHits to .digi output file
 # Boole().expertHistos    = False # set to True to write out expert histos
 # Boole().noWarnings      = False # set to True to suppress all MSG::WARNING or below 
 # Boole().datasetName     = '00001820_00000001' # string used to build file names
+# Boole().DDDBtag         = "DC06-latest" # geometry database tag
 # Boole().condDBtag       = "DC06-latest" # conditions database tag
 ##############################################################################
 
@@ -36,8 +39,7 @@ Boole().applyConf()
 ##############################################################################
 
 #-- Save the monitoring histograms
-histosName = Boole().histosName()
-HistogramPersistencySvc().OutputFile = histosName
+HistogramPersistencySvc().OutputFile = Boole().histosName()
 
 #-- File catalogs
 FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]

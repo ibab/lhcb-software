@@ -4,23 +4,26 @@
 #   gaudirun.py ../options/BooleCommon.py ../options/v200801.py
 #
 from Gaudi.Configuration import *
+from GaudiConf.Configuration import *
 from Boole.Configuration import *
 
 ##############################################################################
 # Available steering options with defaults.
 # Edit one or more of these lines to change the defaults
-# ApplicationMgr().EvtMax = -1    # Number of events to process
+# Boole().EvtMax          = -1    # Number of events to process
 # Boole().skipEvents      = 0     # Number of events to skip before first event
 # Boole().skipSpill       = 0     # Number of spillover events to skip
 # Boole().useSpillover    = True  # set to False to disable spillover
 # Boole().generateTAE     = False # set to True to simulate time alignment events
-# Boole().writeRawMDF     = False # set to True to simulate Raw data. Default is POOL .digi
+# Boole().writeRawMDF     = False # set to True to write simulated Raw data
+# Boole().writeDigi       = True  # set to False to not write POOL .digi
 # Boole().writeL0ETC      = False # set to True to write ETC of L0 selected events
 # Boole().writeL0Only     = False # set to True to write only L0 selected events
 # Boole().extendedDigi    = False # set to True to add MCHits to .digi output file
 # Boole().expertHistos    = False # set to True to write out expert histos
 # Boole().noWarnings      = False # set to True to suppress all MSG::WARNING or below 
 # Boole().datasetName     = '00001820_00000001' # string used to build file names
+# Boole().DDDBtag         = "DC06-latest" # geometry database tag
 # Boole().condDBtag       = "DC06-latest" # conditions database tag
 ##############################################################################
 
@@ -58,7 +61,7 @@ EventSelector("SpilloverSelector").Input = [
 outputName = Boole().outputName()
 # writeRawMDF = true:  Simulated raw data, in MDF format, without MC truth. 
 OutputStream("RawWriter").Output = "DATAFILE='PFN:" + outputName + ".mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'"
-# writeRawMDF = false: Standard .digi in POOL format. If extendedDigi = true includes also MCHits 
+# writeDigi = true: Standard .digi in POOL format. If extendedDigi = true includes also MCHits 
 OutputStream("DigiWriter").Output = "DATAFILE='PFN:" + outputName + ".digi' TYP='POOL_ROOTTREE' OPT='REC'"
 # write L0ETC = true: ETC with L0 result
 TagCollectionStream( "WR" ).Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='" + datasetName + "-L0ETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE'"
