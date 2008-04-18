@@ -5,21 +5,25 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r5>2008-04-16 LHCbSys v23r5</A></H1><PRE>
+</PRE><H1><A NAME=v23r5>2008-04-18 LHCbSys v23r5</A></H1><PRE>
 This version uses Gaudi v19r9 and LCG_54d.
 
 - Packages added:    BcmDet v1r1 - BCM detector element
-- Packages modified: KernelSys v7r3, LHCbKernel v8r3, LHCbMath v2r7,
-    L0MuonKernel v7r4, RichKernel v7r12, DetSys v11r4, DDDB v1r5,
-    DetDesc v18r4p1, MuonDet v8r0, RichDet v10r11, VeloDet v12r5, XmlTools v5r2,
-    EventSys v24r2, DAQEvent v7r10, DigiEvent v2r5, LinkerEvent v3r4,
-    L0Event v16r9, MCEvent v2r8, RecEvent v2r11, DAQSys v3r9, CaloDAQ v4r4,
-    MuonDAQ v4r0, CaloUtils v7r9, CondDbEntityResolver v4r1, DaVinciKernel v6r12,
-    DaVinciMCKernel v2r7, LHCbAlgs v2r16, LoKiAlgo v7r2, LoKiArrayFunctors v7r2,
+- Packages modified: GaudiConf v10r7, KernelSys v7r3, LHCbKernel v8r3,
+    LHCbMath v2r7, L0MuonKernel v7r4, RichKernel v7r12, DetSys v11r4,
+    CaloDet v8r6, DDDB v1r5, DetCond v11r10, DetDesc v18r4p1, MuonDet v8r0,
+    RichDet v10r11, VeloDet v12r5, XmlTools v5r2, EventSys v24r2, DAQEvent v7r10,
+    DigiEvent v2r5, HltEvent v8r8, LinkerEvent v3r4, L0Event v16r9, MCEvent v2r8,
+    RecEvent v2r11, TrackEvent v4r12, DAQSys v3r9, CaloDAQ v4r4, MuonDAQ v4r0,
+    CaloUtils v7r9, CondDbEntityResolver v4r1, CondDBUI v2r9,DaVinciKernel v6r12,
+    DaVinciMCKernel v2r7, LHCbAlgs v2r16, LoKiAlgo v7r2, LoKiArrayFunctors v7r2, 
     LoKiCore v7r2, LoKiGen v7r2, LoKiMC v7r2, LoKiNumbers v7r3, LoKiPhys v7r2,
     L0Interfaces v1r1, MCInterfaces v1r5, MDF v3r6, PatKernel v2r1,
     RichRecBase v3r12, SimComponents v2r9, STKernel v1r3, TfKernel v2r4,
     TrackInterfaces v3r13, TsaKernel v3r2, DetDescChecks v4r6
+
+- In GaudiConf v10r7
+  . Add LHCbApp configurable with default options for LHCb applications
 
 - In LHCbKernel v8r3
   . Updates to PiecewiseTrajectory
@@ -47,9 +51,16 @@ This version uses Gaudi v19r9 and LCG_54d.
   . add missing STL includes
   . Fix a few doxygen comments
 
+- In CaloDet v8r6
+  . Fix led numbering in case of special LED/PIN/CHANNEL Layout
+
 - In DDDB v1r5
   . Change default DC06 tag (in DC06.opts, DC06.py) to DC06-20080407, for use
     with new Muon and Velo detector elements. Requires SQLDDDB >= v4r2
+
+- In DetCond v11r10
+  . Modified default idle connection time-out in CondDBAccessSvc from 600s to
+    120s.
 
 - In DetDesc v18r4p1
   . Bug fix in AlignmentCondition.cpp
@@ -97,6 +108,9 @@ This version uses Gaudi v19r9 and LCG_54d.
 - DigiEvent v2r5, STKernel v1r3
   . Adapt to new LHCb::Math namespace
 
+- In HltEvent v8r8
+  . Rename enum HltSelectionSummary to avoid conflicts in Python dictionaries
+
 - In LinkerEvent v3r4
   . Fixed in LinkedFrom the test to not test the classID if the first template 
     argument is 'ContainedObject' 
@@ -128,6 +142,9 @@ This version uses Gaudi v19r9 and LCG_54d.
 - In RecEvent v2r11
   . Add tdc info in MuonCoord class
 
+- In TrackEvent v4r12
+  . Fixed bug in State::posMomCovariance
+
 - In CaloDAQ v4r4
   . Fix small problem with decoding of incomplete Prs Front-End board
   . Reduce verbosity in decoding tools
@@ -141,6 +158,15 @@ This version uses Gaudi v19r9 and LCG_54d.
 
 - In CaloUtils v7r9
   . Minor fixes to Calo2DView
+
+- In CondDbEntityResolver v4r1
+  . Moved the loading of DetDescSvc and CondDBCnvSvc from initialization to
+    dedicated functions (to avoid circular dependencies between services during
+    initialization)
+
+- In CondDBUI v2r9
+  . Preliminary support for dump of the DB image to files based option files.
+  . Fix for usage of channel IDs (to/from DB).
 
 - In DaVinciKernel v6r12
   . Modify a bit IDecodeSimpleDecayString interface to be able to get the 
@@ -162,6 +188,7 @@ This version uses Gaudi v19r9 and LCG_54d.
   . Add public virtual method to IParticleTransporter interface:
         StatusCode transportAndProject(const LHCb::Particle*, const double znew,
                                        LHCb::Particle& transParticle) = 0;
+  . IPhysDesktop: save() methods renamed to keep().
 
 - In DaVinciMCKernel v2r7
   . Minor (compatible!) modification of IPrintDecayTreeTool interface 
@@ -177,6 +204,11 @@ This version uses Gaudi v19r9 and LCG_54d.
   . New tools: LoKi::Hybrid::PlotTool, PrintTool, TupleTool
   . New default list of modules to be loaded 
   . In LoKiArrayFunctors/functions.py, add AALL, ANONE, ATRUE, AFALSE instances 
+  . Add new functors DeltaMass and AbsDeltaMass
+  . In LoKiArrayFunctors/functions.h
+    o add the symbols DAMASS & ADAMASS 
+    o add the function PDGM, which could be used to get the PDG mass for the
+      given particle name, particle pid or given (gen/mc)-particle
 
 - In LoKiCore v7r2
   . Reporter.cpp: fix unchecked StatusCode
@@ -223,6 +255,7 @@ This version uses Gaudi v19r9 and LCG_54d.
   . Change the TAE identification from TriggerType to the new field TAEWindow
   . Changes in OnlineRunInfo.h, RawEventHelpers, TAETestCreator and MEPWriter 
     In this last one, check packing factor in TAE mode to be odd and below 15.
+  . Modify RawDataCnvSvc initialization to avoid initialization loop
 
 - In PatKernel v2r1
   . Fix bug for decoding on demand (no effects on standard tracking)
@@ -260,6 +293,7 @@ This version uses Gaudi v19r9 and LCG_54d.
 
 - In DetDescChecks v4r6
   . Force the creation of CondDBCnvSvc (if needed) in LoadDDDB::initialize.
+  . Improved the output in case of GaudiException in LoadDDDB
 
 </PRE><H1><A NAME=v23r4>2008-03-05 LHCbSys v23r4</A></H1><PRE>
 This version uses Gaudi v19r8 and LCG_54b. Fully compatible with DC06 data
