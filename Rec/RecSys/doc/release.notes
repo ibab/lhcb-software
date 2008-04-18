@@ -5,14 +5,15 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r5>2008-04-15 RecSys v5r5</A></H1><PRE>
+</PRE><H1><A NAME=v5r5>2008-04-18 RecSys v5r5</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r5.
 
 - Packages added   : RecCheckers v1r0 - Check reconstruction with MC truth
 - Packages modified: GlobalReco v6r15p1, MuonTrackAlign v1r3,
     PatAlgorithms v3r4p1, PatChecker v3r2, PatVelo v3r5, RichGlobalPID v3r8,
-    RichRecAlgorithms v2r10, RichRecMCTools v2r17, RichRecMonitors v2r16, 
-    RichRecSys v3r9, RichRecTools v4r3, RichRecTrackTools v1r3, TfTools v1r4,
+    RichHLTLocalPID v1r2, RichHLTSys v3r3, RichRecAlgorithms v2r10,
+    RichRecMCTools v2r17, RichRecMonitors v2r16,  RichRecSys v3r9,
+    RichRecTools v4r3, RichRecTrackTools v1r3, TfTools v1r4,
     TrackAssociators v2r6, TrackExtrapolators v2r18, TrackFitEvent v3r13,
     TrackFitter v2r24, TrackTools v3r5
 
@@ -49,7 +50,15 @@ This version uses Gaudi v19r9 and LHCb v23r5.
     o Updating the existing algorithms to use the new tools, so that the previous
       functionality and algorithm sequencing in Brunel is maintained.
 
+- In RichHLTLocalPID v1r2
+  . Reimplement PID algorithm as a tool, using the new PID interface from
+    RichRecBase.
+
+- In RichHLTSys v3r3
+  . Adapt options to changes in Global and Local PID packages
+
 - In RichRecAlgorithms v2r10
+  . Make the nickname of the PID tool in RichTrackPIDAlg a configurable option
   . Remove HPD pixel background algorithms (now implemented as tools in the 
     RichRecTools package). Add new generic background algorithm that simply 
     uses one of these tools.
@@ -96,6 +105,7 @@ This version uses Gaudi v19r9 and LHCb v23r5.
     for qOverP negative
   . MeasurementProviderT now throws exception instead of crashing if the
     clusters have not been loaded.
+  . TrackSelector : initialisation printout in debug instead of info.
 
 </PRE><H1><A NAME=v5r4>2008-03-03 RecSys v5r4</A></H1><PRE>
 This version uses Gaudi v19r8 and LHCb v23r4.
