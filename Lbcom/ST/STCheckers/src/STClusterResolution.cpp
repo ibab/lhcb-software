@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.cpp,v 1.16 2008-04-01 08:39:55 mneedham Exp $
+// $Id: STClusterResolution.cpp,v 1.17 2008-04-18 08:33:24 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -119,12 +119,12 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     const STChannelID aChan = aCluster->channelID();
     const DeSTSector* aSector = m_tracker->findSector(aChan);
     if (aSector == 0){
-      Warning("Failed to find sector", StatusCode::SUCCESS);
+      Warning("Failed to find sector", StatusCode::SUCCESS).ignore();
       return;
     }
     const DeSTSensor* aSensor = aSector->findSensor(aHit->midPoint());
     if (aSector == 0){
-      Warning("Failed to find sensor", StatusCode::SUCCESS);
+      Warning("Failed to find sensor", StatusCode::SUCCESS).ignore();
       return;
     }
 

@@ -2,7 +2,11 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
-!=========================== STCheckers v2r5 2008-04-17 =======================
+!=========================== STCheckers v2r5 2008-04-18 =======================
+! 2008-04-18 - Marco Cattaneo
+ - Set default value of STEffChecker.IncludeGuardRings to false
+ - Set default value of STEffChecker.HistoPrint to false
+
 ! 2008-04-17 M Needham
  - Bug fix in STEffChecker to prevent crash
 

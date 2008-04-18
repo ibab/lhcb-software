@@ -1,4 +1,4 @@
-// $Id: STEffChecker.cpp,v 1.7 2008-04-17 08:35:22 mneedham Exp $
+// $Id: STEffChecker.cpp,v 1.8 2008-04-18 08:33:24 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -45,8 +45,9 @@ STEffChecker::STEffChecker( const std::string& name,
   declareProperty("InputData" , m_clusterLocation  = STClusterLocation::TTClusters);
   declareProperty("SelectorName", m_selectorName = "MCParticleSelector" );
   declareProperty("DetType", m_detType = "TT");
-  declareProperty("IncludeGuardRings", m_includeGuardRings = true);
+  declareProperty("IncludeGuardRings", m_includeGuardRings = false);
   declareProperty("PrintEfficiency", m_pEff = true);
+  setProperty( "HistoPrint", false );
 }
 
 STEffChecker::~STEffChecker()
