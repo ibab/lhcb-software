@@ -34,7 +34,7 @@ SeqHltTruthFilter.IgnoreFilterPassed = true ;
 // #include "$HLTSELCHECKERROOT/options/OverwriteWithTruth.opts"
 #include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
 HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelBd2DsH"};
-HltDecayTreeTuple.Decay = "{[B_s0 -> (^D_s- => ^K+ ^K- ^pi- ) ^pi+ ]cc}"; 
+HltDecayTreeTuple.Decay = "[B_s0 -> (^D_s- => ^K+ ^K- ^pi- ) ^pi+ ]cc"; 
 //
 // Options
 //
