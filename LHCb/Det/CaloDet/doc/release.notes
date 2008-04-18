@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.87 2008-02-15 18:06:59 odescham Exp $ 
+! $Id: release.notes,v 1.88 2008-04-18 06:53:42 cattanem Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!======================== CaloDet v8r6 2008-04-18 =============================
 ! 2007-02-15 - Olivier Deschamps
-- Fix led numbering in case of special LED/PIN/CHANNEL Layout (2 special Ecal LED cabling):
-
+- Fix led numbering in case of special LED/PIN/CHANNEL Layout
+  (2 special Ecal LED cabling):
 
 !======================== CaloDet v8r5 2007-12-05 =============================
 ! 2007-02-03 - Olivier Deschamps

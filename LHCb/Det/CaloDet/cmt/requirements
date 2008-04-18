@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.59 2007-12-05 17:08:23 cattanem Exp $ 
+# $Id: requirements,v 1.60 2008-04-18 06:53:42 cattanem Exp $ 
 # =============================================================================
 package  CaloDet 
-version  v8r5
+version  v8r8
 
 # =============== structure ===================================================
 branches         src cmt doc options CaloDet dict
@@ -35,6 +35,3 @@ apply_pattern     reflex_dictionary                                 \
                   headerfiles=$(CALODETROOT)/dict/CaloDetDict.h     \
                   selectionfile=$(CALODETROOT)/dict/CaloDetDict.xml \
                   options="-U__MINGW32__"
-
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro CaloDetDict_use_linkopts $(use_linkopts)
