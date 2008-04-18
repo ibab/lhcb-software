@@ -4,10 +4,10 @@
 ! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v11r4 2008-04-16 ===========================
-! 2008-04-16 - Marco Cattaneo
- - Use DetDesc v18r4p1, MuonDet v8r0, RichDet v10r11, VeloDet v13r0,
-       XmlTools v5r2
+!========================= DetSys v11r4 2008-04-17 ===========================
+! 2008-04-17 - Marco Cattaneo
+ - Use CaloDet v8r6, DetDesc v18r4p1, MuonDet v8r0, RichDet v10r11, 
+       VeloDet v13r0, XmlTools v5r2
  - Add BcmDet v1r1
  - Add also DDDB and DetCond, logically part of detector description
 
