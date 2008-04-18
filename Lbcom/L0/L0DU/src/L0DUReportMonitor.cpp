@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.8 2008-03-28 16:56:40 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.9 2008-04-18 11:36:25 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -277,27 +277,35 @@ StatusCode L0DUReportMonitor::execute() {
               , 0. , 32. , 32); 
       
       if( ecBin <= 1)continue;
+    
+      
       // correlations
-      for(LHCb::L0DUElementaryCondition::Map::iterator jt = it ;jt!=conditions.end();jt++){
-        int jd = ((*jt).second)->id() ;
-        
-        if( report->conditionValue( id ) && report->conditionValue( jd ) ){
-          // Inclusive 2D counters
-          plot2D( (double) id , (double) jd , base.str() + "/L0Conditions/Counters2D/1" 
-                  , "L0DU Elementary Conditions 2D INclusive counters (TCK = " + ttck.str() + ")"
-                  , -1. ,(double) ecBin, -1. ,(double) ecBin , ecBin+1 , ecBin+1);
-        // Exclusive 2D counters
-          for(LHCb::L0DUElementaryCondition::Map::iterator kt =  conditions.begin() ;kt!=conditions.end();kt++){
-            int kd = ((*kt).second)->id() ;
-            if( report->conditionValue( kd ) || kd == id || kd == jd)continue;
-            plot2D( (double) id , (double) jd , base.str() + "/L0Conditions/Counters2D/2" 
-                    , "L0DU Elementary Conditions 2D EXclusive counters (TCK = " + ttck.str() + ")"
+      if( report->conditionValue( id ) ){
+        for(LHCb::L0DUElementaryCondition::Map::iterator jt = it ;jt!=conditions.end();jt++){
+          int jd = ((*jt).second)->id() ;
+          if( report->conditionValue( jd ) ){
+            // Inclusive 2D counters
+            plot2D( (double) id , (double) jd , base.str() + "/L0Conditions/Counters2D/1" 
+                    , "L0DU Elementary Conditions 2D INclusive counters (TCK = " + ttck.str() + ")"
                     , -1. ,(double) ecBin, -1. ,(double) ecBin , ecBin+1 , ecBin+1);
-          }
-        }      
-      } 
-    }
-  }  
+            // Exclusive 2D counters
+            bool isX = true;
+            for(LHCb::L0DUElementaryCondition::Map::iterator kt =  conditions.begin() ;kt!=conditions.end();kt++){
+              int kd = ((*kt).second)->id() ;
+              if( kd == id || kd == jd )continue;
+              if(  report->conditionValue( kd ) ) {
+                isX = false;
+                break;
+              }
+            }
+            if(isX)plot2D( (double) id , (double) jd , base.str() + "/L0Conditions/Counters2D/2" 
+                           , "L0DU Elementary Conditions 2D EXclusive counters (TCK = " + ttck.str() + ")"
+                           , -1. ,(double) ecBin, -1. ,(double) ecBin , ecBin+1 , ecBin+1);
+          }      
+        } 
+      }
+    }  
+  }
   // ------------ L0DU Channels --------------
   if(m_chan){
     std::stringstream tcName("");
@@ -322,11 +330,14 @@ StatusCode L0DUReportMonitor::execute() {
     for(LHCb::L0DUChannel::Map::iterator it = channels.begin();it!=channels.end();it++){
       int id = ((*it).second)->id() ;
       std::string name = (*it).first;
+
       if( report->channelDecision( id ) ){
         plot1D( (double) id , base.str() + "/L0Channels/Counters/1" , tcName.str()+ " - BX=T0"    , -1. ,(double) cBin  , cBin+1);
         m_chanSeq["Global"] |=  (1 << 2);
         m_chanSeq[name] |=  (1 << 2);
       }    
+
+
       if( report->channelDecision( id , -2) ){
         plot1D( (double) id , base.str() + "/L0Channels/Counters/Prev2/1" 
                 , tcName.str()+ " - BX=Prev2" , -1. ,(double) cBin  , cBin+1);
@@ -359,29 +370,40 @@ StatusCode L0DUReportMonitor::execute() {
       std::stringstream xid("");
       xid << id+1;
       plot1D( m_chanSeq[name] , base.str() + "/L0Channels/Sequence/" + xid.str() 
-              , "Decision sequence over 5 BX for -" + name + "- channel (TCK " + ttck.str() +") - LSB = Prev2"    , 0. , 32. , 32); 
+              , "Decision sequence over 5 BX for -" + name + "- channel (TCK " + ttck.str() +") - LSB = Prev2", 0. , 32., 32);
       
       if(cBin <= 1)continue;
+
       // correlations
-      for(LHCb::L0DUChannel::Map::iterator jt = it ;jt!=channels.end();jt++){
-        int jd = ((*jt).second)->id() ;
-        if( report->channelDecision( id ) && report->channelDecision( jd ) ){
-          // inclusive 2D counters
-          plot2D( (double) id , (double) jd , base.str() + "/L0Channels/Counters2D/1" 
-                  , "L0DU Channels Decision 2D INclusive counters (TCK = " + ttck.str() + ")"
-                  , -1. ,(double) cBin, -1. ,(double) cBin , cBin+1 , cBin+1);
-          //exclusive 2D counters
-          for(LHCb::L0DUChannel::Map::iterator kt = channels.begin();kt!=channels.end();kt++){
-            int kd = ((*kt).second)->id() ;
-            if( report->channelDecision( kd ) || kd == id || kd == jd)continue;
-            plot2D( (double) id , (double) jd , base.str() + "/L0Conditions/Counters2D/2" 
-                    , "L0DU Channels Decision 2D EXclusive counters (TCK = " + ttck.str() + ")"
-                    , -1. ,(double) cBin, -1. ,(double) cBin , cBin+1 , cBin+1);
+      if( report->channelDecision( id ) ){
+        for(LHCb::L0DUChannel::Map::iterator jt = it ;jt!=channels.end();jt++){
+          int jd = ((*jt).second)->id() ;
+          if( report->channelDecision( jd ) ){
+            // inclusive 2D counters
+            plot2D( (double) id , (double) jd , base.str() + "/L0Channels/Counters2D/1" 
+                    , "L0DU Channels Decision 2D INclusive counters (TCK = " + ttck.str() + ")"
+                    , -1. ,(double) cBin, -1. ,(double) cBin , cBin+1 , cBin+1);          
+            //exclusive 2D counters
+            bool isX = true;
+            for(LHCb::L0DUChannel::Map::iterator kt = channels.begin();kt!=channels.end();kt++){
+              int kd = ((*kt).second)->id() ;
+              if( kd == id || kd == jd)continue;
+              if( report->channelDecision( kd ) ){
+                isX = false;
+                break;
+              }  
+            }
+            if(isX)plot2D( (double) id , (double) jd , base.str() + "/L0Channels/Counters2D/2" 
+                           , "L0DU Channels Decision 2D EXclusive counters (TCK = " + ttck.str() + ")"
+                           , -1. ,(double) cBin, -1. ,(double) cBin , cBin+1 , cBin+1);
           }
         }
-      }    
-    }  
+      }
+    }
   }
+  
+  
+  
   // ------------ Decision  ------------
   if(m_dec){
     std::stringstream decName("");

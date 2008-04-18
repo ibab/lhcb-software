@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.1 2008-03-27 16:32:13 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.2 2008-04-18 11:36:25 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -309,28 +309,23 @@ void L0DURawBankMonitor::bookHistos() {
     book1D( "Data/Pus/1"  ,  "PUPeak1(Cont)"   ,  0. , 256.  , 256/m_bin);
     book1D( "Data/Pus/2"  ,  "PUPeak2(Cont)"   ,  0. , 256.  , 256/m_bin);
     //
-    book1D( "Data/Muon/1" ,  "Muon Q00  (Pt)  "   ,  -128.*muonPt, 128*muonPt , 256/m_bin);
-    book1D( "Data/Muon/2" ,  "Muon Q01  (Pt)     "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
-    book1D( "Data/Muon/3" ,  "Muon Q10  (Pt)     "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
-    book1D( "Data/Muon/4" ,  "Muon Q11  (Pt)     "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
-    book1D( "Data/Muon/5" ,  "Muon Q20  (Pt)     "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
-    book1D( "Data/Muon/6" ,  "Muon Q21  (Pt)     "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
-    book1D( "Data/Muon/7" ,  "Muon Q30  (Pt)     "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
-    book1D( "Data/Muon/8" ,  "Muon Q31  (Pt)     "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
+    book1D( "Data/Muon/1" ,  "Muon Q00  (Pt*sign) "   ,  -128.*muonPt, 128*muonPt , 256/m_bin);
+    book1D( "Data/Muon/2" ,  "Muon Q01  (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
+    book1D( "Data/Muon/3" ,  "Muon Q10  (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
+    book1D( "Data/Muon/4" ,  "Muon Q11  (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
+    book1D( "Data/Muon/5" ,  "Muon Q20  (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
+    book1D( "Data/Muon/6" ,  "Muon Q21  (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
+    book1D( "Data/Muon/7" ,  "Muon Q30  (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
+    book1D( "Data/Muon/8" ,  "Muon Q31  (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
   }
 
-
-
    if( m_proc ){
-     book1D( "Process/Muon/1", "1st highest Muon(Pt) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
-     book1D( "Process/Muon/2", "2nd highest Muon(Pt) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
-     book1D( "Process/Muon/3", "3rd highest Muon3(Pt) "  ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
-     book1D( "Process/Muon/4", "DiMuon(Pt) "  ,  0.      , 256.*muonPt , 256/m_bin);
-     book1D( "Process/Muon/5", "Muon Cleaning Pattern "  ,  0.      , 256.   , 256);
+     book1D( "Process/Muon/1", "1st highest Muon (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
+     book1D( "Process/Muon/2", "2nd highest Muon (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
+     book1D( "Process/Muon/3", "3rd highest Muon (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
+     book1D( "Process/Muon/4", "DiMuon (Pt) "                  ,  0.      , 256.*muonPt , 256/m_bin);
+     book1D( "Process/Muon/5", "Muon Cleaning Pattern "        ,  0.      , 256.   , 256);
    }
-  
-
-
 
    if(m_status){     
      book1D( "Status/Muon/1" ,  "Muon CU0 status (status & 0xC)" , 0., 4. , 4 );
