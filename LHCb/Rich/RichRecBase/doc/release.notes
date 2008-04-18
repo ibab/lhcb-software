@@ -4,10 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r12 2008-04-18 ==========================
 ! 2008-04-16 - Chris Jones
  - Turn on book keeping in data creators by default
 
-!===================== RichRecBase v3r12 2008-04-15 ==========================
 ! 2008-03-25 - Chris Jones
  - Add new Tool interface classes
   + IRichPID for track-by-track PID access on-demand
