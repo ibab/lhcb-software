@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.cpp,v 1.2 2007-09-14 12:04:18 mneedham Exp $
+// $Id: TTHitExpectation.cpp,v 1.3 2008-04-18 07:55:44 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -11,6 +11,7 @@
 #include "TsaKernel/Line3D.h"
 #include "LHCbMath/GeomFun.h"
 #include "STDet/DeSTDetector.h"
+#include "STDet/DeSTSensor.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
 #include "TTHitExpectation.h"
@@ -106,12 +107,16 @@ void TTHitExpectation::collectHits(std::vector<LHCb::STChannelID>& chan,
     m_extrapolator->propagate(stateVec,(*iterS)->globalCentre().z());    
     STChannelID elemID = (*iterS)->elementID();
     if (elemID.station() == station){
-      if (insideSector(*iterS,stateVec) == true){
-        chan.push_back(elemID);
-      }
-    }  // correct station
-  } // iterS
-
+      // loop over sensors
+      const DeSTSector::Sensors& tsensors = (*iterS)->sensors();
+      DeSTSector::Sensors::const_iterator iter = tsensors.begin();
+      for (; iter != tsensors.end(); ++iter){
+        if (insideSensor(*iter,stateVec) == true){
+          chan.push_back(elemID);
+        }
+      }  // iter
+    } // station
+  } // sector
 }
 
 

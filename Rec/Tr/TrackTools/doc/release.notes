@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+
+! 2008-04-18 M Needham
+ - Update to changes in STDet [introduction of DeSTSensor]
+
+
 !======================== TrackTools v3r5 2008-04-16 ========================
 ! 2008-04-16 - Patrick Koppenburg
  - TrackSelector : initialisation printout in debug instead of info. That
@@ -13,6 +18,7 @@
  - Remove whitespace from property iWeight of TrackSelector. Python doesn't
    like it.
  
+
 ! 2008-03-31 M Needham
  - Follow interface adaption in IStateCorrection tool
 

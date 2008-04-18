@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.h,v 1.2 2007-10-10 18:32:17 smenzeme Exp $
+// $Id: TTHitExpectation.h,v 1.3 2008-04-18 07:55:44 mneedham Exp $
 #ifndef _TTHitExpectation_H
 #define _TTHitExpectation_H
 
@@ -19,15 +19,13 @@
 
 namespace LHCb{
   class Track;
-  class StateVector;
-  
+  class StateVector;  
   class STChannelID;
 }
 
 
-
 class DeSTDetector;
-class DeSTSector;
+class DeSTSensor;
 class ITrackExtrapolator;
 
 class TTHitExpectation: public GaudiTool,
@@ -69,7 +67,7 @@ private:
   void collectHits(std::vector<LHCb::STChannelID>& chan, 
 		  LHCb::StateVector stateVec, const unsigned int station ) const;
 
-  bool insideSector(const DeSTSector* sector,const LHCb::StateVector& stateVec) const;
+  bool insideSensor(const DeSTSensor* sensor,const LHCb::StateVector& stateVec) const;
  
   ITrackExtrapolator* m_extrapolator;
   DeSTDetector* m_ttDet;
@@ -81,15 +79,17 @@ private:
 };
 
 
-inline bool TTHitExpectation::insideSector(const DeSTSector* sector,
+#include "STDet/DeSTSensor.h"
+
+inline bool TTHitExpectation::insideSensor(const DeSTSensor* sensor,
                                            const LHCb::StateVector& stateVec) const{
 
   bool isIn = false;
   Gaudi::XYZPoint point;
   Tf::Tsa::Line3D line(stateVec.position(), stateVec.slopes());
   double mu;
-  if (Gaudi::Math::intersection(line, sector->plane() ,point, mu) == true){
-    isIn = sector->globalInActive(point);
+  if (Gaudi::Math::intersection(line, sensor->plane() ,point, mu) == true){
+    isIn = sensor->globalInActive(point);
   }
   return isIn;
 }
