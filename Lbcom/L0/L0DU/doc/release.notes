@@ -1,15 +1,13 @@
-! $Id: release.notes,v 1.100 2008-04-18 11:36:25 odescham Exp $
+! $Id: release.notes,v 1.101 2008-04-18 11:44:53 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
-
+!========================== L0DU v8r4 2008-04-18 =========================
 ! 2008-04-18 - Olivier Deschamps 
  - add cosmics muon trigger in options/L0DUConfig_0x0000.opts
  - fix few problems in monitoring algo.
 
-
-!========================== L0DU v8r4 2008-04-10 =========================
 ! 2008-04-10 - Olivier Deschamps 
  - options/L0DUConfig_0xDC06_alg0_set0_lumi2.opts :
    uniformize channel naming according to other config.
