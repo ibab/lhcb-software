@@ -3,6 +3,7 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v4r1 2008-04-17 =======================
 ! 2008-03-18 - Kurt Rinnert
  - minor bug fix introduced in latest update of VeloFullDecoder: a size check
    in the decoding method assumed ADC encoding.  This was removed, there was
