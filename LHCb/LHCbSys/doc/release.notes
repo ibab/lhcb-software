@@ -19,8 +19,8 @@ This version uses Gaudi v19r9 and LCG_54d.
     DaVinciMCKernel v2r7, LHCbAlgs v2r16, LoKiAlgo v7r2, LoKiArrayFunctors v7r2, 
     LoKiCore v7r2, LoKiGen v7r2, LoKiMC v7r2, LoKiNumbers v7r3, LoKiPhys v7r2,
     L0Interfaces v1r1, MCInterfaces v1r5, MDF v3r6, PatKernel v2r1,
-    RichRecBase v3r12, SimComponents v2r9, STKernel v1r3, TfKernel v2r4,
-    TrackInterfaces v3r13, TsaKernel v3r2, DetDescChecks v4r6
+    RichRecBase v3r12, SimComponents v2r9, STKernel v1r3, Tell1Kernel v1r2, 
+    TfKernel v2r4, TrackInterfaces v3r13, TsaKernel v3r2, DetDescChecks v4r6
 
 - In GaudiConf v10r7
   . Add LHCbApp configurable with default options for LHCb applications
@@ -275,6 +275,9 @@ This version uses Gaudi v19r9 and LCG_54d.
 - In SimComponents v2r9
   . PrintMCDecayTreeAlg: add property "MCParticleLocation" to allow to provide
     alternative input MCParticle containers.
+
+- In Tell1Kernel v1r2
+  . Add Tell1Kernel/STTell1Core.h
 
 - In TfKernel v2r4
   . Make clearHits() methode of TStationHitManager public. Needed to run after

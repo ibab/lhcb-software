@@ -93,7 +93,7 @@ use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
 use RichRecBase           v3r12  Rich    # Chris Jones
 use SimComponents         v2r9   Sim     # Gloria Corti, Marco Cattaneo
 use STKernel              v1r3   ST      # Matt Needham
-use Tell1Kernel           v1r1   DAQ     # Tomasz Szumlak
+use Tell1Kernel           v1r2   DAQ     # Tomasz Szumlak
 use TfKernel              v2r4   Tf      # Stephanie Hansmann-Menzemer
 use TrackInterfaces       v3r13  Tr      # Matt Needham
 use TsaKernel             v3r2   Tf      # Matt Needham
