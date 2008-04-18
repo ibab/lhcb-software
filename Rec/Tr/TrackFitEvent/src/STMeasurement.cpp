@@ -1,9 +1,10 @@
-// $Id: STMeasurement.cpp,v 1.11 2008-02-07 16:13:26 cattanem Exp $
+// $Id: STMeasurement.cpp,v 1.12 2008-04-18 06:52:43 mneedham Exp $
 // Include files 
 
 // from STDet
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
+#include "STDet/DeSTSensor.h"
 
 // from Event
 #include "Event/STCluster.h"
@@ -60,12 +61,19 @@ void STMeasurement::init( const DeSTDetector& geom,
   // Get the centre of gravity and the measurement error
   ISTClusterPosition::Info measVal =
     stClusPosTool.estimate( m_cluster );
-  m_measure    = stSector -> localU( stChan.strip() )
-                 + ( measVal.fractionalPosition* stSector -> pitch() );
+ 
   m_errMeasure = measVal.fractionalError*stSector -> pitch();
   m_trajectory = tmpGeom->trajectory( LHCbID(measVal.strip), measVal.fractionalPosition) ;
 
+  Gaudi::XYZPoint point = m_trajectory->position( 0.5*( m_trajectory->beginRange()+m_trajectory->endRange())) ;
+
+  // get the sensor this refers to and go local
+  DeSTSensor* sensor = stSector->findSensor(point);
+    
+  m_measure = sensor->localU( stChan.strip() )
+              + ( measVal.fractionalPosition* stSector -> pitch() );
+
   // Use the z of the centre of the strip
-  m_z = m_trajectory->position(0.0).z();
+  m_z = point.z();
 
 }
