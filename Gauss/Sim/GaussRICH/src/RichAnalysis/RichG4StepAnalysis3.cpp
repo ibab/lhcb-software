@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis3.cpp,v 1.12 2008-04-15 08:32:50 seaso Exp $
+// $Id: RichG4StepAnalysis3.cpp,v 1.13 2008-04-20 16:15:13 seaso Exp $
 // Include files
 
 #include "G4Track.hh"
@@ -272,10 +272,12 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
                 }
               }
             }
+
             // now for photon hitting the HpdQW
-            std::string::size_type iHpdSMStrPos0=
+            
+             std::string::size_type iHpdSMStrPos0=
                       aPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix[0]);
-            std::string::size_type iHpdSMStrPos1=
+             std::string::size_type iHpdSMStrPos1=
                       aPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix[1]);
             
 

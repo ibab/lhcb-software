@@ -3,6 +3,8 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+!2008-04-20 - Sajan Easo
+    - Fixed a typo in RichG4Analysis3.cpp , which was caught only with 32-bit compilation.
 !2008-04-15 - Sajan Easo
     - Fixed a problem in RichG4Analysis6.cpp and RichG4Analysis3.cpp for the HpdSMaster names.
     - Fixed a problem in RichG4Analysis5 for Rich2 mirror name.

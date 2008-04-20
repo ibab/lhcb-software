@@ -88,9 +88,9 @@ static const G4String LogVolCF4NameAnalysis=
                              "/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2Gas";
 static const G4String LogVolHpdSMasterNameAnalysis =
                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichHPDSMaster";
-static const G4String LogVolHpdSMasterNameAnalysisListStrPrefix =
+static const G4String LogVolHpdSMasterNameAnalysisStrPrefix =
                       "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1HPDSMasterLogList";
-static const G4String LogVolHpdSMasterNameAnalysisStrPrefix [] =
+static const G4String LogVolHpdSMasterNameAnalysisListStrPrefix [] =
                      {"/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1HPDSMasterLogList/lvRich1HPDSMaster",
                       "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich2HPDSMasterLogList/lvRich2HPDSMaster"};
 static const G4String LogVolHpdQWindowNameAnalysis =
