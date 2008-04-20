@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.21 2008-02-01 21:51:59 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.22 2008-04-20 14:54:58 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -76,25 +76,29 @@ protected:
 private:
 
   MCParticleVector associate_particles_in_decay(ParticleVector);
-  MCParticleVector get_mc_mothers(MCParticleVector, const LHCb::Particle*);
+  MCParticleVector get_mc_mothers(MCParticleVector);
   MCParticleVector create_finalstatedaughterarray_for_mcmother(const LHCb::MCParticle*);
+  const LHCb::MCParticle* get_top_mother_of_MCParticle(const LHCb::MCParticle*);
+  const LHCb::MCParticle* get_lowest_common_mother(MCParticleVector,ParticleVector);
+  const LHCb::MCParticle* get_lowest_common_mother(MCParticleVector);
+
   int topologycheck(const LHCb::MCParticle*);
   int topologycheck(const LHCb::Particle*);
 
   bool isStable(int);
 
-  bool condition_A(MCParticleVector, MCParticleVector, ParticleVector);
-  bool condition_B(MCParticleVector);
-  bool condition_C(ParticleVector, MCParticleVector);
-  //  bool condition_D(MCParticleVector, const Particle*);
-  bool condition_D(const LHCb::Particle*);
-  bool condition_E(const LHCb::Particle*);
-  bool condition_F(const LHCb::Particle*);
-  bool condition_G(MCParticleVector,ParticleVector);
-  bool condition_H(MCParticleVector,ParticleVector);
-  bool condition_I(MCParticleVector);
-  bool condition_J(MCParticleVector);
-  int condition_PV(/*MCParticleVector,*/MCParticleVector);
+  bool doAllFinalStateParticlesHaveACommonMother(MCParticleVector, MCParticleVector, ParticleVector);
+  bool isTheDecayFullyReconstructed(MCParticleVector);
+  bool areAllFinalStateParticlesCorrectlyIdentified(ParticleVector, MCParticleVector);
+  //  bool isTheMotherCorrectlyIdentified(MCParticleVector, const Particle*);
+  bool isTheMotherCorrectlyIdentified(const LHCb::Particle*);
+  bool wereAnyResonancesMissed(const LHCb::Particle*);
+  bool checkLowMassBackground(const LHCb::Particle*);
+  bool areAnyFinalStateParticlesGhosts(MCParticleVector,ParticleVector);
+  bool isThisAPileup(MCParticleVector,ParticleVector);
+  bool isThisBBarBackground(MCParticleVector);
+  bool isThisCCbarBackground(MCParticleVector);
+  int areAnyFinalStateParticlesFromAPrimaryVertex(/*MCParticleVector,*/MCParticleVector);
 
 private:
   //typedef std::vector<MCParticle*> MCParticleVector;

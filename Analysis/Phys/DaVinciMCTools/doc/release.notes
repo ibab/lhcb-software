@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.213 2008-04-14 15:25:21 jpalac Exp $
+! $Id: release.notes,v 1.214 2008-04-20 14:56:32 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-01-21 - V. Gligorov
+ - src/BackgroundCategory.{cpp,h}
+    Changed names of internal methods to make them more readable
+    Fixed bug when finding the origin particle of charmed mesons 
 
 ! 2008-04-14 - Juan PALACIOS
  - Add src/MCParticleArrayFilterAlg{.cpp, .h}
