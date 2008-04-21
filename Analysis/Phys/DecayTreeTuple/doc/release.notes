@@ -4,9 +4,11 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-04-21 - Patrick Koppenburg
+ - Hlt enums name change
+
 ! 2008-04-09 - V. Gligorov
  - TupleToolTISTOS: bugfix, extra documentation.
-
 
 ! 2008-04-09 - V. Gligorov
  - Added TupleToolTISTOS.{h,cpp} to save TISTOS status of each composite particle

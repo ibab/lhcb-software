@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.2 2008-01-31 18:13:07 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.3 2008-04-21 11:30:04 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -104,7 +104,7 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple ) {
   
   if ( m_verboseSelections){
     for ( int i = LHCb::HltEnums::HltSelEntry ; i!= LHCb::HltEnums::HltSelLastSelection ; ++i){
-      std::string s = LHCb::HltEnums::HltSelectionSummaryToString(i) ;
+      std::string s = LHCb::HltEnums::HltSelectionSummaryEnumToString(i) ;
       if ( ! tuple->column( s, m_summaryTool->selectionDecision(s) ) ) 
         return StatusCode::FAILURE;
       if (msgLevel(MSG::VERBOSE)) verbose() << s << " says " 
