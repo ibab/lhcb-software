@@ -8,6 +8,9 @@
 		IPrepareMuonTSeedTool.h, IPrepareMuonTSeed.h, IPrepareMuonSeed.h,
 		IPrepareCaloSeed.h
 
+! 2008-04-21 - Jose A. Hernando
+	- removing IPrepareXXX interfaces from the dictionary
+
 ! 2008-04-07 - Jose A. Hernando
  - HltBase.icpp assert error if no selection valid, printout the missing selection name
 
