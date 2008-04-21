@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis6.cpp,v 1.5 2008-04-15 08:32:50 seaso Exp $
+// $Id: RichG4StepAnalysis6.cpp,v 1.6 2008-04-21 12:37:30 seaso Exp $
 // Include files 
 
 #include "G4Track.hh"
@@ -134,8 +134,6 @@ void RichG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
              std::string::size_type iHpdSMStrPrePos1=
                       aPreVolName.find(LogVolHpdSMasterNameAnalysisListStrPrefix[1]);
              
-
-
              if(aPreVolName  ==  LogVolSiDetNameAnalysis ||
                 aPostVolName ==  LogVolSiDetNameAnalysis || 
                 iHpdSiDetPrePos != std::string::npos ||
