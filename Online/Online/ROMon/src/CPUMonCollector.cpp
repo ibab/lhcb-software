@@ -1,4 +1,4 @@
-// $Id: CPUMonCollector.cpp,v 1.1 2008-04-11 12:12:36 frankb Exp $
+// $Id: CPUMonCollector.cpp,v 1.2 2008-04-21 17:36:02 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUMonCollector.cpp,v 1.1 2008-04-11 12:12:36 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUMonCollector.cpp,v 1.2 2008-04-21 17:36:02 frankm Exp $
 
 // C++ include files
 #include <iostream>
@@ -81,7 +81,7 @@ int CPUMonCollector::monitor() {
 	  Clients::const_iterator is = cl_stat.find(node);
 	  Clients::const_iterator ii = cl_info.find(node);
 	  if ( is != cl_stat.end() && ii != cl_info.end() ) {
-	    typedef CPUMonListener::Descriptor DSC;
+	    typedef FMCMonListener::Descriptor DSC;
 	    DSC* dsc_info = (*ii).second->data<DSC>();
 	    DSC* dsc_stat = (*is).second->data<DSC>();
 	    const float* ds = (float*)dsc_stat->data;

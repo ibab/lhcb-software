@@ -1,4 +1,4 @@
-// $Id: CPUMonListener.h,v 1.1 2008-04-11 12:12:36 frankb Exp $
+// $Id: FMCMonListener.h,v 1.1 2008-04-21 17:36:28 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,9 +11,9 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMonListener.h,v 1.1 2008-04-11 12:12:36 frankb Exp $
-#ifndef ROMON_ROMONDIMNODELISTENER_H
-#define ROMON_ROMONDIMNODELISTENER_H 1
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FMCMonListener.h,v 1.1 2008-04-21 17:36:28 frankm Exp $
+#ifndef ROMON_FMCMONLISTENER_H
+#define ROMON_FMCMONLISTENER_H 1
 
 // Framework includes
 #include "ROMon/RODimListener.h"
@@ -23,13 +23,13 @@
  */
 namespace ROMon {
 
-  /**@class CPUMonListener CPUMonListener.h ROMon/CPUMonListener.h
+  /**@class FMCMonListener FMCMonListener.h ROMon/FMCMonListener.h
    *
    *   DIM FSM status listener to collect the full information from nodes
    *
    *   @author M.Frank
    */
-  class CPUMonListener : public RODimListener {
+  class FMCMonListener : public RODimListener {
   public:
     struct Descriptor {
       int    len;
@@ -46,9 +46,9 @@ namespace ROMon {
     std::string m_item;
   public:
     /// Standard constructor
-    CPUMonListener(bool verbose=false) : RODimListener(verbose) {}
+    FMCMonListener(bool verbose=false) : RODimListener(verbose) {}
     /// Standard destructor
-    virtual ~CPUMonListener();
+    virtual ~FMCMonListener();
     /// Change service name matching string
     void setMatch(const std::string& val) {  m_match = val;    }
     /// Access service name match
@@ -65,5 +65,5 @@ namespace ROMon {
     static void infoHandler(void* tag, void* address, int* size);
   };
 }      // End namespace ROMon
-#endif /* ROMON_ROMONDIMNODELISTENER_H */
+#endif /* ROMON_FMCMONLISTENER_H */
 

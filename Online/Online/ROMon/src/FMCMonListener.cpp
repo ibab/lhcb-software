@@ -1,4 +1,4 @@
-// $Id: CPUMonListener.cpp,v 1.1 2008-04-11 12:12:36 frankb Exp $
+// $Id: FMCMonListener.cpp,v 1.1 2008-04-21 17:36:28 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUMonListener.cpp,v 1.1 2008-04-11 12:12:36 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FMCMonListener.cpp,v 1.1 2008-04-21 17:36:28 frankm Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -21,13 +21,13 @@
 #include "dic.hxx"
 #include "RTL/strdef.h"
 #include "ROMon/ROMonInfo.h"
-#include "ROMon/CPUMonListener.h"
+#include "ROMon/FMCMonListener.h"
 #include "ROMonDefs.h"
 
 using namespace ROMon;
 
 /// Standard destructor
-CPUMonListener::~CPUMonListener() {
+FMCMonListener::~FMCMonListener() {
   delete m_dns;
   m_dns = 0;
   dim_lock();
@@ -41,7 +41,7 @@ CPUMonListener::~CPUMonListener() {
 }
 
 /// Add handler for a given message source
-void CPUMonListener::addHandler(const std::string& node,const std::string& svc) {
+void FMCMonListener::addHandler(const std::string& node,const std::string& svc) {
   dim_lock();
   Clients::iterator i=m_clients.find(node);
   if ( i == m_clients.end() )  {
@@ -50,7 +50,7 @@ void CPUMonListener::addHandler(const std::string& node,const std::string& svc) 
       std::string nam = svc + "/" + m_item;
       m_clients[node] = itm;
       itm->id = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,infoHandler,(long)itm,0,0);
-      if ( m_verbose ) log() << "[CPUMonListener] Create DimInfo:" 
+      if ( m_verbose ) log() << "[FMCMonListener] Create DimInfo:" 
 			     << svc << "@" << node << " id=" << itm->id << std::endl;
     }
   }
@@ -58,7 +58,7 @@ void CPUMonListener::addHandler(const std::string& node,const std::string& svc) 
 }
 
 /// Remove handler for a given message source
-void CPUMonListener::removeHandler(const std::string& node, const std::string& svc)   {
+void FMCMonListener::removeHandler(const std::string& node, const std::string& svc)   {
   dim_lock();
   Clients::iterator i=m_clients.find(node);
   if ( i != m_clients.end() ) {
@@ -66,7 +66,7 @@ void CPUMonListener::removeHandler(const std::string& node, const std::string& s
     it->data<Descriptor>()->release();
     ::dic_release_service(it->id);
     if ( m_verbose )   {
-      log() << "[CPUMonListener] Delete DimInfo:" 
+      log() << "[FMCMonListener] Delete DimInfo:" 
 	    << svc << "@" << node << " " << it->id << std::endl;
     }
     it->release();
@@ -76,7 +76,7 @@ void CPUMonListener::removeHandler(const std::string& node, const std::string& s
 }
 
 /// DimInfo overload to process messages
-void CPUMonListener::infoHandler(void* tag, void* address, int* size) {
+void FMCMonListener::infoHandler(void* tag, void* address, int* size) {
   if ( address && tag && size && *size>0 ) {
     timeb tm;
     int len = *size;

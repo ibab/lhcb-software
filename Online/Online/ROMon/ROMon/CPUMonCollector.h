@@ -1,4 +1,4 @@
-// $Id: CPUMonCollector.h,v 1.1 2008-04-11 12:12:36 frankb Exp $
+// $Id: CPUMonCollector.h,v 1.2 2008-04-21 17:36:02 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,13 +11,13 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMonCollector.h,v 1.1 2008-04-11 12:12:36 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMonCollector.h,v 1.2 2008-04-21 17:36:02 frankm Exp $
 #ifndef ROMON_CPUMONCOLLECTOR_H
 #define ROMON_CPUMONCOLLECTOR_H 1
 
 // Framework include files
 #include "ROMon/ROMonGblBuffer.h"
-#include "ROMon/CPUMonListener.h"
+#include "ROMon/FMCMonListener.h"
 
 /*
  *   ROMon namespace declaration
@@ -33,9 +33,9 @@ namespace ROMon {
    */
   class CPUMonCollector : public ROMonGblBuffer, virtual public ROUpdateHandler {
   protected:
-    CPUMonListener m_ncpu;
-    CPUMonListener m_info;
-    CPUMonListener m_stat;
+    FMCMonListener m_ncpu;
+    FMCMonListener m_info;
+    FMCMonListener m_stat;
     bool           m_needUpdate;
   public:
     /// Standard constructor

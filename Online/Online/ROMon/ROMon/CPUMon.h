@@ -1,4 +1,4 @@
-// $Id: CPUMon.h,v 1.1 2008-04-11 12:12:36 frankb Exp $
+// $Id: CPUMon.h,v 1.2 2008-04-21 17:36:02 frankm Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.1 2008-04-11 12:12:36 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.2 2008-04-21 17:36:02 frankm Exp $
 #ifndef ROMON_RUNDB_H
 #define ROMON_RUNDB_H 1
 
@@ -72,7 +72,6 @@ namespace ROMon {
   class CPUset {
   public:
     typedef FixItems<CPU> Cores;
-    typedef std::pair<time_t,unsigned int> TimeStamp;
     /// Node name
     char   name[32];
     /// CPU Familiy name
@@ -92,7 +91,6 @@ namespace ROMon {
     /// Length of the object in bytes
     int length()  const {  return sizeof(CPUset)+cores.data_length(); }
   };
-
 
   /**@class CPUfarm ROMon.h ROMon/ROMon.h
    *
@@ -127,12 +125,72 @@ namespace ROMon {
     TimeStamp lastUpdate() const;
   };
 
+  /**@class Process CPUInfo.h ROMon/CPUInfo.h
+   *
+   * Class which represents a single Process (task)
+   *
+   * @author M.Frank
+   */
+  class Process {
+  public:
+    /// Processes UTGID
+    char           utgid[64];
+    /// Processes owner
+    char           owner[32];
+    /// CPU usage in percent
+    float          cpu;
+    /// Memory usage in percent
+    float          mem;
+    /// Process ID
+    unsigned short pid;
+    /// Parent ID
+    unsigned short ppid;
+    /// Number of threads
+    unsigned short threads;
+    /// Padding
+    unsigned short pad;
+    /// Empty constructor
+    Process();
+    /// Reset data content
+    Process*      reset();
+    /// Size of the object
+    long   sizeOf() const {  return sizeof(Process); }
+  };
+
+  /**@class Procset ROMon.h ROMon/ROMon.h
+   *
+   * Class which represents all Processes in a single node
+   *
+   * @author M.Frank
+   */
+  class Procset {
+  public:
+    typedef FixItems<Process> Processes;
+    /// Node name
+    char   name[32];
+    /// Time stamp of last information update
+    time_t time;
+    /// Time stamp of the monitor snapshot [milli seconds]
+    unsigned int millitm;
+    /// Variable size array of node items
+    Processes processes;
+    /// Default constructor
+    Procset();
+    /// Reset object structure
+    Procset* reset();
+    /// Length of the object in bytes
+    int length()  const {  return sizeof(Procset)+processes.data_length(); }
+  };
+
+
   union CPUMonData {
     char*      str;
     void*      ptr;
     CPU*       cpu;
     CPUset*    cpuSet;
     CPUfarm*   farm;
+    Process*   proc;
+    Procset*   processes;
     CPUMonData(void* buffer) { ptr=buffer; }
     int type() { return this->ptr ? *(int*)this->ptr : -1; }
   };
