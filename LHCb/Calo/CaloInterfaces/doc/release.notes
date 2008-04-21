@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.39 2007-07-20 13:14:22 cattanem Exp $
+! $Id: release.notes,v 1.40 2008-04-21 13:54:22 vegorych Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+!========================== CaloInterfaces v7r5 2008-04-21 ====================
+! 2008-04-21 - Victor Egorychev
+ - Add the new Intarface -> ICaloClusterization
+ - increased version
 
 !========================== CaloInterfaces v7r4 2007-07-20 ====================
 ! 2007-07-20 - Marco Cattaneo
