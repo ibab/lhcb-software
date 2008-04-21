@@ -1,4 +1,4 @@
-// $Id: FilterMCParticlesBase.cpp,v 1.1 2007-07-24 12:09:22 jpalac Exp $
+// $Id: FilterMCParticlesBase.cpp,v 1.2 2008-04-21 11:45:13 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -12,10 +12,6 @@
 //
 // 2007-07-20 : Juan Palacios
 //-----------------------------------------------------------------------------
-
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( FilterMCParticlesBase );
-
 
 //=============================================================================
 // Standard constructor, initializes variables
