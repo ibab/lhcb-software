@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-04-21 - Patrick Koppenburg
+ - HltBackgroundCategory : new name of enum
+
 ! 2008-04-11 - Patrick Koppenburg
  - Plots: bug fix. Now works again.
 

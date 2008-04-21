@@ -1,4 +1,4 @@
- // $Id: HltBackgroundCategory.cpp,v 1.3 2008-02-18 14:32:03 pkoppenb Exp $
+ // $Id: HltBackgroundCategory.cpp,v 1.4 2008-04-21 09:45:05 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -78,8 +78,8 @@ StatusCode HltBackgroundCategory::initialize() {
 
   std::vector<std::string> selections ;
   LHCb::HltEnums le ; // I actually need an instance of the HltEnums class to access methods
-  for ( GaudiUtils::VectorMap < std::string, LHCb::HltEnums::HltSelectionSummary >::const_iterator i 
-          = le.hltSelectionSummaryTypMap().begin() ; i != le.hltSelectionSummaryTypMap().end() ; ++i ){
+  for ( GaudiUtils::VectorMap < std::string, LHCb::HltEnums::HltSelectionSummaryEnum >::const_iterator i 
+          = le.hltSelectionSummaryEnumTypMap().begin() ; i != le.hltSelectionSummaryEnumTypMap().end() ; ++i ){
     if ( i->second > LHCb::HltEnums::HltSelEntry ) selections.push_back(i->first) ;
   }
   
