@@ -66,7 +66,6 @@ AlignSensors::AlignSensors( const std::string& name,ISvcLocator* pSvcLocator)
   declareProperty( "MinModule", m_minModule = 4 );
   declareProperty( "KalmanResidual", m_kalmanResidual = false );
   declareProperty( "MinNResiduals", m_minNResiduals = 0 );
-  declareProperty( "MinDelta", m_minDelta = 0 );
   declareProperty( "ACDC", m_ACDC = false );
   declareProperty( "MinDeltaSig", m_minDeltaSig = 1 );
 }

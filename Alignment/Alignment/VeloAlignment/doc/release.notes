@@ -1,6 +1,7 @@
 ! Package     : VeloAlignment
 ! Responsible : Marco Gersabeck
 
+  - AlignSensors.cpp: deleted obsolete option MinDelta
 
 !=============================================================================
 ! 16/04/2008 - Marco Gersabeck  ** v4r1 **
