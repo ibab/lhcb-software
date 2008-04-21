@@ -1,4 +1,4 @@
-// $Id: FilterTrueTracks.cpp,v 1.2 2008-03-05 10:07:46 pkoppenb Exp $
+// $Id: FilterTrueTracks.cpp,v 1.3 2008-04-21 15:22:40 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,7 @@
 
 // LHCb
 #include "MCInterfaces/IMCDecayFinder.h"
+#include "Kernel/IWriteSelResult.h"
 
 // local
 #include "FilterTrueTracks.h"
@@ -27,10 +28,7 @@ FilterTrueTracks::FilterTrueTracks( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_mcDecFinder(0)
-  , m_allTracks(0)
-  , m_savedTracks(0)
-  , m_signalParts(0)
-  ,  m_foundParts(0)
+  , m_selResult(0)
 {
   
   declareProperty( "TracksPath", m_tracksPath );
@@ -62,6 +60,7 @@ StatusCode FilterTrueTracks::initialize() {
   info() << endmsg ;
   
   m_mcDecFinder = tool<IMCDecayFinder>("MCDecayFinder", this);
+  m_selResult = tool<IWriteSelResult>("WriteSelResult", this);
 
   if ( m_outputPath == "Undefined" ){
     err() << "You must set the OutputPath " << endmsg ;
@@ -83,7 +82,7 @@ StatusCode FilterTrueTracks::execute() {
   MCParts mcparts = finalStates();
   if ( msgLevel (MSG::DEBUG)) debug() << "Found " << mcparts.size() 
                                       << " true daughters" << endmsg ;
-  m_signalParts += mcparts.size();
+  counter("Signal particles") += mcparts.size();
   
   LHCb::Track::Container* newTracks = new LHCb::Track::Container() ;
   put( newTracks, m_outputPath);
@@ -106,7 +105,7 @@ StatusCode FilterTrueTracks::execute() {
       }
 
       if (msgLevel(MSG::DEBUG)) nT += inTracks->size();
-      m_allTracks  += inTracks->size();
+      counter("All Tracks") += inTracks->size();
       for ( LHCb::Track::Container::const_iterator t = inTracks->begin() ;
             t != inTracks->end() ; ++t){
         const Range range = table->relations( *t) ;
@@ -128,13 +127,15 @@ StatusCode FilterTrueTracks::execute() {
   if (msgLevel(MSG::DEBUG)) debug() << "Saved " << newTracks->size() << " Tracks from "
                                     << nT << endmsg ;
 
-  m_savedTracks += newTracks->size() ;
+  counter("Saved Tracks") += newTracks->size() ;
 
   for ( MCParts::const_iterator m = mcparts.begin() ; m != mcparts.end() ; ++m){
-    if (m->second) m_foundParts++ ;
+    if (m->second) counter("Found Particles")++ ;
   }
   
   if ( !newTracks->empty()) setFilterPassed(true);
+
+  m_selResult->write(name(), filterPassed());
 
   return StatusCode::SUCCESS;
 }
@@ -194,10 +195,6 @@ StatusCode FilterTrueTracks::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  info() << "Saved " <<  m_savedTracks << " from " << m_allTracks 
-         << " Tracks. Found " << m_foundParts << " of " 
-         << m_signalParts << " signal MCParticles " << endmsg ;
-  
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

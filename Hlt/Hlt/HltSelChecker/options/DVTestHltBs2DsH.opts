@@ -32,8 +32,11 @@ SeqHltTruthFilter.IgnoreFilterPassed = true ;
 // Overwrite input - uncomment to run HLT on true signal only
 //
 // #include "$HLTSELCHECKERROOT/options/OverwriteWithTruth.opts"
+//
+// Decay Tree Tuple
+//
 #include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
-HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelBd2DsH"};
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelBs2DsH"};
 HltDecayTreeTuple.Decay = "[B_s0 -> (^D_s- => ^K+ ^K- ^pi- ) ^pi+ ]cc"; 
 //
 // Options
@@ -48,3 +51,4 @@ NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bs2DsH.root' TYP='ROOT' OPT='NEW'" ] 
 
 ApplicationMgr.EvtMax = -1 ;
 EventSelector.FirstEvent = 1 ;
+

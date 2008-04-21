@@ -25,7 +25,7 @@ SelectTrueDecay.Filter.Bu2D0K_KsHH.ExpectSignal = true ;
 SeqHltTruthFilter.Members += { "MakeResonances/AllTrueBu2D0K_KsHH"};
 AllTrueBu2D0K_KsHH.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueBu2D0K_KsHH.DecayDescriptor = "[B+ -> K+ pi- pi+ pi- pi+]cc" ; // all particles need to be there
-HltExclusiveCorrs.Algorithms += { "AllTrueBu2D0K_KsHH" };
+HltSelectionsCorrs.Algorithms += { "AllTrueBu2D0K_KsHH" };
 /*
  *  Now for tracks
  */

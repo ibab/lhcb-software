@@ -20,7 +20,7 @@ SelectTrueDecay.Filter.Bs2PhiPhi.MCDecayFinder.Decay = "[B_s0 -> (phi(1020) -> ^
 SeqHltTruthFilter.Members += { "MakeResonances/AllTrueBs2PhiPhi"};
 AllTrueBs2PhiPhi.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueBs2PhiPhi.DecayDescriptor = "B_s0 -> K+ K+ K- K-" ; // all kaons need to be there
-HltExclusiveCorrs.Algorithms += { "AllTrueBs2PhiPhi" };
+HltSelectionsCorrs.Algorithms += { "AllTrueBs2PhiPhi" };
 
 /*
  *  Now for tracks

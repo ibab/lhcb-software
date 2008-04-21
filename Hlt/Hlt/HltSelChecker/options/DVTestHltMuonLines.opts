@@ -17,7 +17,7 @@
 //
 // True filter criterion
 //
-#include "$HLTSELCHECKERROOT/options/TrueBd2MuMuKstar.opts"
+//#include "$HLTSELCHECKERROOT/options/TrueBd2MuMuKstar.opts"
 //
 // Set the following to false if you want only events with a signal
 // fully reconstructed in the HLT
@@ -54,3 +54,16 @@ NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Muons.root' TYP='ROOT' OPT='NEW'" ] ;
 ApplicationMgr.EvtMax = 10000 ;
 EventSelector.FirstEvent = 1 ;
 EventSelector.PrintFreq = 100 ;
+
+
+/**
+ * Tuple
+ */
+#include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelUnbiasedDiMuon"};
+HltDecayTreeTuple.Decay = "J/psi(1S) => ^mu+ ^mu-";
+// special for head
+//HltDecayTreeTuple.Branches = {
+//  "Head" : "[B0]cc : [B0 -> (J/psi(1S) => mu+ mu-) (K*(892)0 -> K+ pi-)]cc" 
+
+ReadHltSummary.Context = "HLT" ;

@@ -23,7 +23,7 @@ SelectTrueDecay.Filter.Bd2MuMuKstar.MCDecayFinder.Decay = "[[B0]nos => ^K+ ^pi- 
 SeqHltTruthFilter.Members += { "MakeResonances/AllTrueBd2MuMuKstar"};
 AllTrueBd2MuMuKstar.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueBd2MuMuKstar.DecayDescriptor = "[B0 -> K+ pi- mu- mu+]cc" ; // all particles need to be there
-HltExclusiveCorrs.Algorithms += { "AllTrueBd2MuMuKstar" };
+HltSelectionsCorrs.Algorithms += { "AllTrueBd2MuMuKstar" };
 /* 
  * Check also for muon-L0's. 
  * This is a little complicated...

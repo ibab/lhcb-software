@@ -21,7 +21,7 @@ SelectTrueDecay.Filter.B2MuMu.ExpectSignal = true ;
 SeqHltTruthFilter.Members += { "MakeResonances/AllTrueB2MuMu"};
 AllTrueB2MuMu.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueB2MuMu.DecayDescriptor = "B_s0 -> mu- mu+" ; // all particles need to be there
-HltExclusiveCorrs.Algorithms += { "AllTrueB2MuMu" };
+HltSelectionsCorrs.Algorithms += { "AllTrueB2MuMu" };
 /* 
  * Check also for muon-L0's. 
  * This is a little complicated...

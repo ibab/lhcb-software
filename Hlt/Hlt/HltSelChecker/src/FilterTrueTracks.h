@@ -1,4 +1,4 @@
-// $Id: FilterTrueTracks.h,v 1.1 2007-08-28 13:54:21 pkoppenb Exp $
+// $Id: FilterTrueTracks.h,v 1.2 2008-04-21 15:22:40 pkoppenb Exp $
 #ifndef FILTERTRUETRACKS_H 
 #define FILTERTRUETRACKS_H 1
 
@@ -24,6 +24,7 @@ typedef std::vector<std::pair<const LHCb::MCParticle*,bool> > MCParts ;
  *  @date   2007-08-17
  */
 class IMCDecayFinder;
+class IWriteSelResult ;
 
 class FilterTrueTracks : public GaudiAlgorithm {
 public: 
@@ -44,14 +45,11 @@ private:
 
 private:
   IMCDecayFinder* m_mcDecFinder ;        ///<  MCDecayFinder
+  IWriteSelResult* m_selResult ;         ///< SelResult writer
   std::string m_mcParticlePath ;         ///< MC truth path
   std::vector< std::string >  m_tracksPath ;  ///< Tracks input paths
   std::string m_outputPath ;  ///< Tracks output paths
   bool m_filterOut ;          ///< Revert logic and keep only non-signal?
-  int m_allTracks ;           ///< number of tracks
-  int m_savedTracks ;           ///< number of tracks saved
-  int m_signalParts ;           ///< number of signal particles
-  int m_foundParts ;           ///< number of signal particles found
   
 };
 #endif // FILTERTRUETRACKS_H

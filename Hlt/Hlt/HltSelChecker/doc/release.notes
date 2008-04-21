@@ -13,6 +13,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-04-21 - Patrick Koppenburg
+ - Correct correlations typo in truth
  - HltBackgroundCategory : new name of enum
 
 ! 2008-04-11 - Patrick Koppenburg

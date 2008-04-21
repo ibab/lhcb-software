@@ -22,7 +22,7 @@ SelectTrueDecay.Filter.Bs2DsH.MCDecayFinder.Decay = "{[[B_s0]nos -> (D_s- => ^K+
 SeqHltTruthFilter.Members += { "MakeResonances/AllTrueBs2DsH"};
 AllTrueBs2DsH.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueBs2DsH.DecayDescriptor = "[B_s0 -> K+ K- pi+ pi-]cc" ; // all particles need to be there
-HltExclusiveCorrs.Algorithms += { "AllTrueBs2DsH" };
+HltSelectionsCorrs.Algorithms += { "AllTrueBs2DsH"  };
 /*
  *  Now for tracks
  */

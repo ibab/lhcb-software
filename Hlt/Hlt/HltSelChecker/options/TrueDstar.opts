@@ -25,7 +25,7 @@ SelectTrueDecay.Filter.Dstar.ExpectSignal = true ;
 SeqHltTruthFilter.Members += { "MakeResonances/AllTrueDstar"};
 AllTrueDstar.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueDstar.DecayDescriptor = "[D*(2010)+ -> pi+ pi- pi+]cc" ; // all particles need to be there
-HltExclusiveCorrs.Algorithms += { "AllTrueDstar" };
+HltSelectionsCorrs.Algorithms += { "AllTrueDstar" };
 
 /*
  *  Now for tracks

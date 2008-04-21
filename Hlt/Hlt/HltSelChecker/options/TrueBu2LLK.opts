@@ -25,7 +25,7 @@ SelectTrueDecay.Filter.Bu2LLK.ExpectSignal = true ;
 SeqHltTruthFilter.Members += { "MakeResonances/AllTrueBu2LLK"};
 AllTrueBu2LLK.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueBu2LLK.DecayDescriptors = { "[B+ -> K+ mu- mu+]cc", "[B+ -> K+ e- e+]cc" } ; // all particles need to be there
-HltExclusiveCorrs.Algorithms += { "AllTrueBu2LLK" };
+HltSelectionsCorrs.Algorithms += { "AllTrueBu2LLK" };
 
 #include "$HLTSELCHECKERROOT/options/L0MuCheck.opts"
 /*
