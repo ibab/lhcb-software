@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.6 2008-03-04 19:22:42 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.7 2008-04-21 11:28:07 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -118,11 +118,11 @@ StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::ConstVector& daug
               << " with chi2 " << DaDaVertex.chi2() << endmsg;
       plot(DaDaVertex.chi2(),"Chi2", "TwoP Chi^2",0.,200.);
       if ( DaDaVertex.chi2() > m_motherChi2 ) continue ; // chi2 cut
-      // happy -> save
+      // happy -> keep
       plot(twoDa.M(),"SelChi2", "Selected TwoP mass",m_motherMass-m_motherMassWin,
            m_motherMass+m_motherMassWin);
       setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
-      desktop()->save(&Mother);
+      desktop()->keep(&Mother);
       debug() << "Saved mother " << Mother.particleID().pid() << " to desktop" << endmsg ;
       plotDaughter(*imp,"Selected");
       plotDaughter(*imm,"Selected");

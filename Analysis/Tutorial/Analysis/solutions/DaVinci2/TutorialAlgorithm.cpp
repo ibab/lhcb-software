@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.6 2008-03-04 19:22:42 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.7 2008-04-21 11:28:07 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -115,10 +115,10 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::ConstVector& muons)
               << " with chi2 " << MuMuVertex.chi2() << endmsg;
       plot(MuMuVertex.chi2(), "DiMuChi2", "DiMu Chi^2",0.,200.);
       if ( MuMuVertex.chi2() > m_jPsiChi2 ) continue ; // chi2 cut
-      // happy -> save
+      // happy -> keep
       plot(twoMu.M(),"SelDiMuChi2", "Selected DiMu mass",m_jPsiMass-m_jPsiMassWin,m_jPsiMass+m_jPsiMassWin);
       setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
-      desktop()->save(&Jpsi);
+      desktop()->keep(&Jpsi);
       plotMuon(*imp,"Selected");
       plotMuon(*imm,"Selected");
       ++m_nJPsis ;

@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-04-21 - Patrick Koppenburg
+ - Changed desktop()->save() to desktop()->keep()
+
 ! 2008-04-08 - Patrick Koppenburg
  - Added solutions/LoKiHybrid with some demo files 
 
