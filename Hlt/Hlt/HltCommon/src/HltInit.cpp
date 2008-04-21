@@ -1,4 +1,4 @@
-// $Id: HltInit.cpp,v 1.12 2008-01-23 11:42:22 pkoppenb Exp $
+// $Id: HltInit.cpp,v 1.13 2008-04-21 12:57:05 hernando Exp $
 // Include files
 
 // from Gaudi
@@ -76,7 +76,7 @@ void HltInit::saveConfiguration() {
 
   bool info = m_info; m_info = 0;
   for (int i = 0; i < HltEnums::HltSelLastSelection; ++i) {
-    std::string name = HltEnums::HltSelectionSummaryToString(i);
+    std::string name = HltEnums::HltSelectionSummaryEnumToString(i);
     if (name != "selectionSummaryUnknown") {
       confregister(name,i,"SelectionID");
       std::string sid = boost::lexical_cast<std::string>(i);
