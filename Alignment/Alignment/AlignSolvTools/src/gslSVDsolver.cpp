@@ -1,4 +1,4 @@
-// $Id: gslSVDsolver.cpp,v 1.5 2008-04-06 07:52:47 wouter Exp $
+// $Id: gslSVDsolver.cpp,v 1.6 2008-04-22 11:52:32 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -87,7 +87,7 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
     // print the eigenvalues, but make sure to insert minus signs where needed
     std::vector<double> eigenvalues ;
     eigenvalues.reserve(size) ;
-    for(size_t ipar = size-1 ; ipar<size; --ipar) {
+    for(size_t ipar = 0; ipar<size; ++ipar) {
       // A = U S V^T
       // take inner product of column of U with row of V^T
       double prod(0) ;
@@ -98,7 +98,7 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
     std::sort( eigenvalues.begin(), eigenvalues.end() ) ;
     std::ostringstream logmessage ;
     logmessage << "Smallest eigen values: [ " << std::setprecision(4) ;
-    for( size_t ipar=0; ipar <m_numberOfPrintedEigenvalues; ++ipar)
+    for( size_t ipar=0; ipar <m_numberOfPrintedEigenvalues && ipar<size; ++ipar)
       logmessage << eigenvalues[ipar] << ", " ;
     logmessage << "]" ;
     info() << logmessage.str() << endmsg ;

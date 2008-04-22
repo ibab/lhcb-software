@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.12 2008-04-09 13:53:58 wouter Exp $
+// $Id: DiagSolvTool.cpp,v 1.13 2008-04-22 11:52:32 wouter Exp $
 // Include files 
 
 #include <stdio.h>
@@ -124,7 +124,7 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
   std::vector<double> sortedev(N) ;
   for(size_t ipar = 0; ipar<N; ++ipar) sortedev[ipar] = w[ipar] ;
   std::sort(sortedev.begin(),sortedev.end()) ;
-  for(size_t ipar = 0; ipar<m_numberOfPrintedEigenvalues; ++ipar) 
+  for(size_t ipar = 0; ipar<m_numberOfPrintedEigenvalues && ipar<N; ++ipar) 
     logmessage << sortedev[ipar]*scale << ", " ;
   logmessage << "]" ;
   info() << logmessage.str() << endmsg ;
