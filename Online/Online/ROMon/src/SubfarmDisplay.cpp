@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.cpp,v 1.2 2008-02-19 10:24:21 frankb Exp $
+// $Id: SubfarmDisplay.cpp,v 1.3 2008-04-22 17:26:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.2 2008-02-19 10:24:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.3 2008-04-22 17:26:04 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -72,7 +72,7 @@ SubfarmDisplay::SubfarmDisplay(int argc, char** argv)   {
   cli.getopt("nodesheight",   1, nodes_height  =  15);
   cli.getopt("mooresheight",  1, moores_height =  18);
   cli.getopt("delay",         1, m_delay       = 1000);
-  cli.getopt("servicename",   1, m_svcName     = "RONodePublish_hlte07");
+  cli.getopt("servicename",   1, m_svcName     = "/hlte07/ROpublish");
 
   setup_window();
   int width    = m_area.width;

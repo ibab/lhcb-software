@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.6 2008-02-18 20:01:54 frankb Exp $
+// $Id: StorageDisplay.cpp,v 1.7 2008-04-22 17:26:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.6 2008-02-18 20:01:54 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.7 2008-04-22 17:26:04 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -91,7 +91,7 @@ StorageDisplay::StorageDisplay(int argc, char** argv) : ROMonDisplay(), m_partNa
   cli.getopt("widthhltrec",   1, hlt_width     =   27);
   cli.getopt("bufferheight",  1, buff_height   =    5);
   cli.getopt("delay",         1, m_delay       = 1000);
-  cli.getopt("servicename",   1, m_svcName     = "RONodePublish_storectl01");
+  cli.getopt("servicename",   1, m_svcName     = "/storectl01/ROpublish");
   cli.getopt("partitionname", 1, m_partName    = "LHCb");
 
   setup_window();

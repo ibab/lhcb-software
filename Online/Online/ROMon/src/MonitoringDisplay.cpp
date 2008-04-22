@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.cpp,v 1.6 2008-04-22 17:13:48 frankb Exp $
+// $Id: MonitoringDisplay.cpp,v 1.7 2008-04-22 17:26:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.6 2008-04-22 17:13:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.7 2008-04-22 17:26:04 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -78,7 +78,7 @@ MonitoringDisplay::MonitoringDisplay(int argc, char** argv)   {
   cli.getopt("relayheight",   1, relay_height  =    8);
   cli.getopt("nodeheight",    1, node_height   =    8);
   cli.getopt("delay",         1, m_delay       = 1000);
-  cli.getopt("servicename",   1, m_svcName     = "/MONA08/ROpublish");
+  cli.getopt("servicename",   1, m_svcName     = "/mona08/ROpublish");
   cli.getopt("partitionname", 1, m_partName    = "LHCb");
   cli.getopt("namerelay",     1, m_relayNode   = "mona0801");
 
