@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.h,v 1.8 2008-03-06 09:07:16 wouter Exp $
+// $Id: GetElementsToBeAligned.h,v 1.9 2008-04-22 16:45:29 janos Exp $
 #ifndef GETELEMENTSTOBEALIGNED_H
 #define GETELEMENTSTOBEALIGNED_H 1
 
@@ -50,27 +50,26 @@ public:
 
   // Virtual in IGetElementsToBeAligned
   // Return method that finds an alignment element for a given LHCb id
-  virtual const AlignmentElement* findElement(LHCb::LHCbID anLHCbID) const ;
+  virtual const AlignmentElement* findElement(const LHCb::LHCbID& anLHCbID) const ;
 
   // Return method that finds an alignment element for a given Measuerment
   virtual const AlignmentElement* findElement(const LHCb::Measurement& meas) const;
 
 private:
   enum e_DoFs {Tx, Ty, Tz, Rx, Ry, Rz};
-
+  
   void getElements(const IDetectorElement* parent);
   
-  bool                                                              m_groupElems;
   bool                                                              m_useLocalFrame;    ///< Use local frame as alignmentframe
-  std::map<std::string, std::vector<std::string> >                  m_elemsToBeAligned;           ///< Elemenst : Path to elements
-  RegExs                                                            m_regexs;                     ///< List of regular expresions
-  size_t                                                            m_depth;                      ///< How deep?
-  size_t                                                            m_index;                      ///< index
-  mutable std::vector<const DetectorElement*>                       m_elements;                   ///< Flat vector of detector elements
-  mutable IGetElementsToBeAligned::Elements                         m_alignElements;              ///< Flat vector of alignment elements
-  IGetElementsToBeAligned::ElementRange                             m_rangeElements;              ///< Range of elements to be aligned
+  std::vector<std::string>                                          m_elemsToBeAligned; ///< Elemenst : Path to elements
+  RegExs                                                            m_regexs;           ///< List of regular expresions
+  size_t                                                            m_depth;            ///< How deep?
+  size_t                                                            m_index;            ///< index
+  mutable std::vector<const DetectorElement*>                       m_elements;         ///< Flat vector of detector elements
+  mutable IGetElementsToBeAligned::Elements                         m_alignElements;    ///< Flat vector of alignment elements
+  IGetElementsToBeAligned::ElementRange                             m_rangeElements;    ///< Range of elements to be aligned
   typedef std::map<const DetectorElement*, const AlignmentElement*> ElementMap;
-  ElementMap                                                        m_elementMap;                 ///< Map of detector elements to alignment element
+  ElementMap                                                        m_elementMap;       ///< Map of detector elements to alignment element
    
 };
 

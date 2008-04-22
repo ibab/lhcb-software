@@ -1,4 +1,4 @@
-// $Id: IGetElementsToBeAligned.h,v 1.5 2008-02-13 18:08:38 janos Exp $
+// $Id: IGetElementsToBeAligned.h,v 1.6 2008-04-22 16:45:29 janos Exp $
 #ifndef IGETELEMENTSTOBEALIGNED_H 
 #define IGETELEMENTSTOBEALIGNED_H 1
 
@@ -47,7 +47,7 @@ class IGetElementsToBeAligned : virtual public IAlgTool {
   virtual const ElementRange& rangeElements() const = 0;
   
   // Return method that finds an alignment element for a given LHCb id
-  virtual const AlignmentElement* findElement(LHCb::LHCbID anLHCbID) const = 0;
+  virtual const AlignmentElement* findElement(const LHCb::LHCbID& anLHCbID) const = 0;
 
   // Return method that finds an alignment element for a given Measuerment
   virtual const AlignmentElement* findElement(const LHCb::Measurement& meas) const = 0;

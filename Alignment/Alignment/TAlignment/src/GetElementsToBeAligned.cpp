@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.18 2008-04-07 17:35:44 janos Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.19 2008-04-22 16:45:28 janos Exp $
 // Include files
 
 //from STL
@@ -42,7 +42,6 @@ GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_groupElems(false),
     m_useLocalFrame(false),
     m_elemsToBeAligned(),
     m_depth(0),
@@ -53,7 +52,6 @@ GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
 {
   declareInterface<IGetElementsToBeAligned>(this);
   declareProperty("Elements"     , m_elemsToBeAligned);
-  declareProperty("GroupElements", m_groupElems      );
   declareProperty("UseLocalFrame", m_useLocalFrame   );
 }
 
@@ -94,20 +92,48 @@ StatusCode GetElementsToBeAligned::initialize() {
 
   info() << "===================== GetElementsToAlign =====================" << endmsg;
   info() << "   Using the following regular expressions: " << endmsg;
- 
-  std::vector<std::string> groupsOfElements = m_elemsToBeAligned.begin()->second;
-  for (std::vector<std::string>::const_iterator i = groupsOfElements.begin(), iEnd = groupsOfElements.end(); i != iEnd; ++i) {
+
+  for ( std::vector<std::string>::const_iterator i = m_elemsToBeAligned.begin(), iEnd = m_elemsToBeAligned.end(); 
+        i != iEnd; ++i ) {
     /// Split string into path to det elem regex and dofs to align
+    bool groupElems = false;
     std::string path = "", dofs = "";
+
     if ((*i).find(":") != std::string::npos) {
-      Tokenizer path_DoFs((*i), Separator(":"));
-      path = *(path_DoFs.begin());
-      dofs = *(++path_DoFs.begin());
+      /// first : second : third
+      /// tokens of strings
+      std::vector<std::string> tokens;
+      Tokenizer split((*i), Separator(" :"));
+      for (Tokenizer::iterator j = split.begin(), jEnd = split.end(); j != jEnd; ++j) tokens.push_back((*j));
+    
+      groupElems = tokens.at(0).find("Group") != std::string::npos ? true : false;
+
+      if (tokens.size() > 3u) {
+        error() << "==> There is something wrong with the specified property Elements" << endmsg;
+        return StatusCode::FAILURE;
+      }
+      
+      if (groupElems && tokens.size() == 3u) {
+        path = tokens.at(1);
+        dofs = tokens.at(2);
+      }
+      
+      if (tokens.size() == 2u) {
+        if (groupElems) {
+          path = tokens.at(1);
+        } else {
+          path = tokens.at(0);
+          dofs = tokens.at(1);
+        }
+      }
     } else path = (*i);
-        
-    debug() << "Path to detelems: " << path << endmsg;
-    debug() << "DoFs to align   : " << dofs << endmsg;
-        
+    
+    if ( msgLevel(MSG::DEBUG) ) {
+      debug() << "Group elements   : " << groupElems << endmsg;
+      debug() << "Path to detelems : " << path       << endmsg;
+      debug() << "DoFs to align    : " << dofs       << endmsg;
+    }
+    
     /// Break path into a set of regexs
     /// Forward slash is the path separator
     // Separator pathSep("/");
@@ -133,14 +159,22 @@ StatusCode GetElementsToBeAligned::initialize() {
       /// If valid add expression to list of expressions.
       m_regexs.push_back(ex);
     }
-
+    
     /// Depth is equal to the number regular expressions in the regex list.
     m_depth = m_regexs.size();
     
     /// Traverse LHCb detector in transient store and get alignable elements
     getElements(lhcb);
     
-    
+     /// Check that we have found elements to align, else exit gracefully
+    if ( m_elements.empty() ) {
+      error() << "\n ==> Couldn't find any elements that matched the given regular expression! \n"
+              << " ==> The syntax of the property Elements is a list of : \"Group : Regex representing path of det elems : dofs\" \n" 
+              << " ==> where group and dofs are optional.\n" 
+              << " ==> Check the regular expression and also check if there are no whitespaces.\n" << endmsg;
+      return StatusCode::FAILURE;
+    }
+
     /// Set the dofs we want to align for
     /// First try to find matches
     bool matchTx = false, matchTy = false, matchTz = false;
@@ -158,22 +192,27 @@ StatusCode GetElementsToBeAligned::initialize() {
       dofMask.at(Tx) = true; dofMask.at(Ty) = true; dofMask.at(Tz) = true;
       dofMask.at(Rx) = true; dofMask.at(Ry) = true; dofMask.at(Rz) = true;
     }
-
+    
     /// Loop over elements and create AlignmentElements
-    if (m_groupElems) m_alignElements.push_back(AlignmentElement(m_elements, m_index++, dofMask,m_useLocalFrame));
+    if (groupElems) m_alignElements.push_back(AlignmentElement(m_elements, m_index++, dofMask,m_useLocalFrame));
     else std::transform(m_elements.begin(), m_elements.end(), std::back_inserter(m_alignElements),
                         boost::lambda::bind(boost::lambda::constructor<AlignmentElement>(), 
                                             boost::lambda::_1, 
                                             boost::lambda::var(m_index)++, 
-                                            dofMask,m_useLocalFrame));
+                                            dofMask,
+                                            m_useLocalFrame));
     
     m_regexs.clear();
     m_depth = 0u;
     m_elements.clear();
-  
+    
   }
-  
+      
   m_rangeElements = ElementRange(m_alignElements.begin(), m_alignElements.end());
+  /// Print list of detector elements that are going to be aligned
+  
+  info() << "   Going to align " << m_rangeElements.size() << " detector elements:" << endmsg;
+  for( ElementRange::const_iterator i = m_rangeElements.begin() ; i != m_rangeElements.end(); ++i) info() <<  "        " << (*i) << endmsg;    
 
   // Fill the element map
   for (Elements::const_iterator ialignable = m_alignElements.begin(); ialignable != m_alignElements.end(); ++ialignable) {
@@ -184,10 +223,6 @@ StatusCode GetElementsToBeAligned::initialize() {
     }
   }
   info() << "   Number of elements in map: " << m_elementMap.size() << endmsg ;
-
-  /// Print list of detector elements that are going to be aligned
-  info() << "   Going to align " << m_rangeElements.size() << " detector elements:" << endmsg;
-  for( ElementRange::const_iterator i = m_rangeElements.begin() ; i != m_rangeElements.end(); ++i) info() <<  "        " << (*i) << endmsg;
 
   info() << "==============================================================" << endmsg;
 
@@ -246,7 +281,7 @@ const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::Measurem
   return findElement(meas.lhcbID()) ;
 }
 
-const AlignmentElement* GetElementsToBeAligned::findElement( LHCb::LHCbID id) const {
+const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::LHCbID& id) const {
   // first get the detector element from the measurement. this is no
   // longer needed if we have a new version of brunel.
   const DetectorElement* element(0) ; // = meas.detectorElement() ;
