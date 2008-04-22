@@ -1,4 +1,4 @@
-// $Id: MuonMeasurement.cpp,v 1.3 2008-02-04 09:47:50 wouter Exp $
+// $Id: MuonMeasurement.cpp,v 1.4 2008-04-22 15:05:36 wouter Exp $
 // Include files 
 
 // local
@@ -25,7 +25,9 @@ MuonMeasurement::MuonMeasurement( const LHCbID& lhcbID,
     m_position(position),  m_muonProjection(XY) 
 {
   LHCb::MuonTileID muid = lhcbID.muonID();
-  DeMuonChamber* chamber = muondet.getChmbPtr(muid.station(),muid.region(),muid.quarter()) ;
+  // they have promised to fix the const
+  const DeMuonChamber* chamber = muondet.getChmbPtr(muid.station(),muid.region(),
+						    const_cast<DeMuonDetector&>(muondet).Tile2Chamber(muid).front()->chamberNumber()) ;
   m_detectorElement = chamber ;
   setZ(position.z());
   if(m_muonProjection == Y){
