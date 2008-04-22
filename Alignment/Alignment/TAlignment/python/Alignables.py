@@ -3,15 +3,17 @@ import types
 class Alignables( list ):
     
     def __init__( self, elements = None, dofs = "" ) :        
-        self.m_dofs     = [ "Tx", "Ty", "Tz", "Rx", "Ry", "Rz" ]
-        self.m_velo     = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo"
-        self.m_tt       = "/dd/Structure/LHCb/BeforeMagnetRegion/TT"
-        self.m_it       = "/dd/Structure/LHCb/AfterMagnetRegion/T/IT"
-        self.m_ot       = "/dd/Structure/LHCb/AfterMagnetRegion/T/OT"
-        self.m_stations = [ "/T1", "/T2", "/T3" ]
-        self.m_layers   = [ "/X1layer", "/Ulayer", "/Vlayer", "/X2layer" ]
-        self.m_quarters = [ "/Quarter(0|2)", "/Quarter(1|3)" ]
-        self.m_modules  = [ "/Module1", "/Module2", "/Module3", "/Module4", "/Module5", "/Module6", "/Module7", "/Module8", "/Module9" ]
+        self.m_dofs      = [ "Tx", "Ty", "Tz", "Rx", "Ry", "Rz" ]
+        self.m_velo      = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo"
+        self.m_veloLeft  = "/VeloLeft"
+        self.m_veloRight = "/VeloRight"
+        self.m_tt        = "/dd/Structure/LHCb/BeforeMagnetRegion/TT"
+        self.m_it        = "/dd/Structure/LHCb/AfterMagnetRegion/T/IT"
+        self.m_ot        = "/dd/Structure/LHCb/AfterMagnetRegion/T/OT"
+        self.m_stations  = [ "/T1", "/T2", "/T3" ]
+        self.m_layers    = [ "/X1layer", "/Ulayer", "/Vlayer", "/X2layer" ]
+        self.m_quarters  = [ "/Quarter(0|2)", "/Quarter(1|3)" ]
+        self.m_modules   = [ "/Module1", "/Module2", "/Module3", "/Module4", "/Module5", "/Module6", "/Module7", "/Module8", "/Module9" ]
         if elements and self.__validElements( elements ) :    
             self.__append( elements, dofs )
         
@@ -82,6 +84,22 @@ class Alignables( list ):
     def Velo( self, dofs = "" ) :
         self.__append( self.m_velo, dofs )
 
+    ## TODO: Need to make the following more generic
+    def VeloRSensors( self, dofs = "" ) :
+        elements = []
+        elements.append( self.m_velo + "/Velo(Left|Right)/Module(00|01|04|05|08|09|12|13|16|17|20|21|24|25|28|29|32|33|36|37|40|41)/RPhiPair.{1,2}/Detector-00" )
+        elements.append( self.m_velo + "/Velo(Left|Right)/Module(02|03|06|07|10|11|14|15|18|19|22|23|26|27|30|31|34|35|38|39)/RPhiPair.{1,2}/Detector-01" )
+        self.__append( elements, dofs )
+
+    def VeloPhiSensors( self, dofs = "" ) :
+        elements = []
+        elements.append( self.m_velo + "/Velo(Left|Right)/Module(00|01|04|05|08|09|12|13|16|17|20|21|24|25|28|29|32|33|36|37|40|41)/RPhiPair.{1,2}/Detector-01" )
+        elements.append( self.m_velo + "/Velo(Left|Right)/Module(02|03|06|07|10|11|14|15|18|19|22|23|26|27|30|31|34|35|38|39)/RPhiPair.{1,2}/Detector-00" )
+        self.__append( elements, dofs )
+        
+    def VeloRightRSensors( self, dofs = "" ) :
+        self.__append( self.m_velo + self.m_veloRight + "/Module(00|01|04|05|08|09|12|13|16|17|20|21|24|25|28|29|32|33|36|37|40|41)/RPhiPair.{1,2}/Detector-00", dofs)
+        
     def TT( self, dofs = "" ) :
         self.__append( self.m_tt, dofs )
             
