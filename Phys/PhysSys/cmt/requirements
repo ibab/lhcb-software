@@ -14,3 +14,5 @@ use  ParticleMaker      	v3r4p1   Phys   # Chris Jones
 use  VertexFit			v5r0     Phys   # Yuehong Xie
 use  LoKiFitters                v1r1     Phys   # Vanya Belyaev
 
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
