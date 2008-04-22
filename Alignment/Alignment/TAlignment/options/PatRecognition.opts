@@ -1,5 +1,17 @@
 /// Decoding of tracking detectors, track pattern recognition, track fit
 #include "$TRACKSYSROOT/options/RecoTracking.opts"
 
+FitTsa.Fitter.MeasProvider.IgnoreTT = true;
+FitTsa.OutputLevel = 3;
+
+FitMatch.Fitter.MeasProvider.IgnoreTT = true;
+FitMatch.OutputLevel = 3;
+
+PrefitDownstream.Fitter.MeasProvider.IgnoreTT = true;
+FitDownstream.Fitter.MeasProvider.IgnoreTT = true;
+
+PrefitDownstream.OutputLevel = 3;
+FitDownstream.OutputLevel    = 3;
+
 /// Remove NeuralNetTmva
 TrackAddExtraInfoSeq.Members -= { "NeuralNetTmva" };
