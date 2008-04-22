@@ -6,7 +6,7 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r16>2008-04-18 LbcomSys v6r16</A></H1><PRE>
+</PRE><H1><A NAME=v6r16>2008-04-22 LbcomSys v6r16</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r5
 
 - Packages modified: L0Calo v9r12, L0DU v8r4, L0Muon v7r8, MuonAssociators v3r2, 
@@ -15,12 +15,23 @@ This version uses Gaudi v19r9 and LHCb v23r5
     VeloSimulation v2r7, VeloTools v3r1
 
 - In L0Calo v9r12
-  . L0CaloMonit.cpp: use Calo2Dview base class, change binning for slot in crates
-  . L0CaloCandidatesFromRaw.cpp: fix memory leaks in default container filling
-  . src/L0CaloAlg.cpp: remove unnecessary debuging output, add protection against
-    double counting in duplicate candidates.
+  . L0CaloMonit.cpp: 
+    o use Calo2Dview base class, change binning for slot in crates
+    o add an option (false by default) not to produce detailed histograms.
+    o protect against non existing input data
+  . L0CaloCandidatesFromRaw.cpp: 
+    o fix memory leaks in default container filling
+    o protect against non existing input data
+    o change output level of debugging messages
+  . L0CaloAlg.cpp:
+    o remove unnecessary debuging output
+    o add protection against double counting in duplicate candidates.
+    o add options to use or not PS/SPD and ECAL information resp. to build
+      electromagnetic and hadron candidates. Default is to use it.
   . L0CaloNtpMonitor.cpp: new class to fill Ntuples with L0Calo quantities.
-  . L0CaloCandidatesFromRawBank.cpp: verify output level in debugging messages
+  . L0CaloCandidatesFromRawBank.cpp: 
+    o verify output level in debugging messages
+    o protect against null pointer in debugging output.
 
 - In L0DU v8r4
   . L0DUFromRawTool: fix bug when decoding consecutive BX info, better print out
