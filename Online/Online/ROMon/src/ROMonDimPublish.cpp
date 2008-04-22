@@ -1,4 +1,4 @@
-// $Id: ROMonDimPublish.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Id: ROMonDimPublish.cpp,v 1.2 2008-04-22 15:50:02 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDimPublish.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDimPublish.cpp,v 1.2 2008-04-22 15:50:02 frankb Exp $
 // C++ include files
 #include <stdexcept>
 
@@ -22,6 +22,7 @@
 #define MBM_IMPLEMENTATION
 #include "ROMonDefs.h"
 #include "ROMon/ROMon.h"
+#include "ROMon/CPUMon.h"
 #include "ROMon/ROMonDimPublish.h"
 
 using namespace ROMon;
@@ -51,6 +52,7 @@ void ROMonDimPublish::feedData(void* tag, void** buf, int* size, int* first) {
   if ( !(*first) ) {
     RTL::Lock lock(h->m_lock);
     ROMonData gbl(h->data());
+    CPUMonData cpu(h->data());
     *buf = gbl.ptr;
     switch(gbl.type()) {
     case Node::TYPE:
@@ -58,6 +60,12 @@ void ROMonDimPublish::feedData(void* tag, void** buf, int* size, int* first) {
       break;
     case Nodeset::TYPE:
       *size  = gbl.nodeset->length();
+      break;
+    case CPUfarm::TYPE:
+      *size  = cpu.farm->length();
+      break;
+    case ProcFarm::TYPE:
+      *size  = cpu.procFarm->length();
       break;
     default:
       *size = 0;
