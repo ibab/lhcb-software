@@ -1,61 +1,31 @@
-nIter   = 8
-nEvents = 2000
-data    = [ 'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000011_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000012_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000016_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000018_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000019_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000020_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000021_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000023_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000024_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000025_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000026_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000027_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000028_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000029_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000031_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000032_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000033_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000035_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000036_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000037_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000038_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000043_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000045_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000046_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000047_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000048_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000049_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000050_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000051_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000052_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000053_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000054_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000055_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000057_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000058_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000059_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000060_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000061_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000065_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000066_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000067_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000069_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000070_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000072_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000073_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000075_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000077_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000078_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000079_5.dst',
-            'PFN:/data/bfys/lhcb/production/DC06/phys-v2-lumi2/00001868/DST/0000/00001868_00000080_5.dst' ]
-output = "MisAlignOTLayersSwitchDrift" 
-
-## File to setup Alignment
 from Gaudi.Configuration import *
 
-ApplicationMgr( AppName         = "TAlignment", AppVersion      = "v3r4",
+appName            = "LayerAlignment"
+appVersion         = "v3r4"
+nIter              = 8
+nEvents            = 2000
+minNumHits         = 100
+alignDoFs          = "TxRz"
+constraintStrategy = 0  #1
+constraints        = [] #[ "Tx" ]
+preCondition       = False
+solver             = "gslSolver"
+
+from OTAlElements import *
+elements           = OTAlElements().OTLayers( alignDoFs )
+group              = True
+trackingOpts       = "$TALIGNMENTROOT/python/OTTrackFitSel.py"
+
+from OTdata import *
+data               = dataAtNikhef
+output             = "AlignOTLayersInTxRz"
+
+
+# Go past this line only when you know what you are doing
+############################################################################################################################
+## File to setup Alignment
+
+ApplicationMgr( AppName         = appName, AppVersion      = appVersion,
                 AuditTools      = True       , AuditServices   = True  , AuditAlgorithms = True )
 
 from Configurables import LbAppInit
@@ -89,50 +59,38 @@ from AlConfigurable import *
 #    "Conditions/Alignment/OT/T3StationX2layer := double_v dPosXYZ =  0.3 1.5 0.0  ; double_v dRotXYZ = 0.0  0.0001  0.0005 ;"
 #    ]
 
-
 ## AlternativeDB
-AlConfigurable().AlternativeDB        = "$TALIGNMENTROOT/python/LHCBCOND.db/LHCBCOND"
-AlConfigurable().AlternativeCondDBTag = "MisA-OTL-1"
-AlConfigurable().AlternativeOverlay   = "/Conditions/OT"
-
-## AlternativeDB
-#AlConfigurable().AlternativeDB        = "/afs/cern.ch/user/j/jblouw/LHCBCOND.db"
-#AlConfigurable().AlternativeCondDBTag = "AW2_IT_OT_01"
-#AlConfigurable().AlternativeOverlay   = "/Conditions/OT"
-
-## Simplified geometry
-AlConfigurable().SimplifiedGeom = False
+AlConfigurable().AlternativeCondDB          = "$TALIGNMENTROOT/python/LHCBCOND.db/LHCBCOND"
+AlConfigurable().AlternativeCondDBTag       = "MisA-OTL-1"
+AlConfigurable().AlternativeCondDBOverlay   = "/Conditions/OT"
 
 ## Patttern Recognition?
-AlConfigurable().Pat            = True
+AlConfigurable().Pat                          = True
 
 ## Set output level
-AlConfigurable().OutputLevel    = INFO
-
-from OTAlElements import *
-elements = OTAlElements().OTLayers("TxRz")
+AlConfigurable().OutputLevel                  = INFO
 
 ## Configure alignment
-AlConfigurable().ElementsToAlign              = { "OTLayers" : elements }
-AlConfigurable().GroupElements                = False
+AlConfigurable().ElementsToAlign              = { "Elements" : elements }
+AlConfigurable().GroupElements                = True
 AlConfigurable().NumIterations                = nIter
 AlConfigurable().AlignInputTackCont           = "Alignment/AlignmentTracks"
 AlConfigurable().UseCorrelations              = True
-AlConfigurable().CanonicalConstraintStrategy  = 0 #1
-AlConfigurable().Constraints                  = [] #["Tx", "Szx"]
+AlConfigurable().CanonicalConstraintStrategy  = constraintStrategy
+AlConfigurable().Constraints                  = constraints
 AlConfigurable().UseWeightedAverageConstraint = False
-AlConfigurable().MinNumberOfHits              = 1
-AlConfigurable().UsePreconditioning           = False
-AlConfigurable().SolvTool                     = "gslSolver"
+AlConfigurable().MinNumberOfHits              = minNumHits
+AlConfigurable().UsePreconditioning           = preCondition
+AlConfigurable().SolvTool                     = solver
 AlConfigurable().WriteCondToXML               = True
-AlConfigurable().CondFileName                 = "OTConditions.xml"
+AlConfigurable().CondFileName                 = "Conditions.xml"
 AlConfigurable().Precision                    = 8
 
 ## Call after all options are set
 AlConfigurable().applyConf()
 
 ## Here we configure the track fitting/selection and what else?
-importOptions("$TALIGNMENTROOT/python/OTTrackFitSel.py")
+importOptions( trackingOpts )
 
 ## Now lets run it
 from GaudiPython import *
@@ -145,7 +103,7 @@ def update(algorithm, appMgr) :
    updateConstants = gbl.Incident( algorithm, 'UpdateConstants' )
    incSvc.fireIncident( updateConstants )
 
-HistogramPersistencySvc().OutputFile = "$TALIGNMENTROOT/python/"+output+".root"
+HistogramPersistencySvc().OutputFile = "$TALIGNMENTROOT/python/" + output + ".root"
 
 ## Instantiate application manager
 appMgr = AppMgr()
@@ -159,17 +117,18 @@ evtSel.printfreq = 500
 ## Open Files; Also initialises Application Manager
 evtSel.open( data )
 
-print "===> Running " + str( nIter ) + " iterations over " + str( nEvents )
 
-t = appMgr.tool( "ToolSvc.TrajOTProjector" )
+otProjector = appMgr.tool( "ToolSvc.TrajOTProjector" )
 
 for i in range( nIter ) :
     evtSel.rewind()
-    if i < (nIter/2) :
-       t.UseDrift = False
+    if i != 1 and i < (nIter/2) :
+       otProjector.UseDrift = False
     else :
-       t.UseDrift = True
+       otProjector.UseDrift = True
     appMgr.run( nEvents )
     update( "Alignment", appMgr )
 
 appMgr.finalize()
+
+

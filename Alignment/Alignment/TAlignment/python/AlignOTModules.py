@@ -1,7 +1,30 @@
-## File to setup Alignment
 from Gaudi.Configuration import *
 
-ApplicationMgr( AppName         = "TAlignment", AppVersion      = "v3r4",
+appName            = "ModuleAlignment"
+appVersion         = "v3r4"
+nIter              = 1
+nEvents            = 20000
+minNumHits         = 100
+alignDoFs          = "TxRz"
+constraintStrategy = 0
+constraints        = [] #["Tx", "Szx"]
+solver             = "gslSolver"
+
+from OTAlElements import *
+elements           = OTAlElements().OTModules( alignDoFs )
+group              = True
+trackingOpts       = "$TALIGNMENTROOT/python/OTTrackFitSel.py"
+
+from OTdata import *
+data               = dataAtNikhef
+output             = "MisAlignedStationsInTxRzInDDDBAlignForTxTyTzRxRyRz"
+
+
+# Go past this line only when you know what you are doing
+############################################################################################################################
+## File to setup Alignment
+
+ApplicationMgr( AppName         = appName, AppVersion      = appVersion,
                 AuditTools      = True       , AuditServices   = True  , AuditAlgorithms = True )
 
 from Configurables import LbAppInit
@@ -41,43 +64,36 @@ from AlConfigurable import *
 # AlConfigurable().AlternativeOverlay   = "/Conditions/OT"
 
 ## Patttern Recognition?
-AlConfigurable().Pat            = True
+AlConfigurable().Pat                          = True
 
 ## Set output level
-AlConfigurable().OutputLevel    = INFO
-
-from OTAlElements import *
-elements = OTAlElements().OTModules("TxRz")
-
-nIter   = 2
+AlConfigurable().OutputLevel                  = INFO
 
 ## Configure alignment
-AlConfigurable().ElementsToAlign              = { "OTModules" : elements }
+AlConfigurable().ElementsToAlign              = { "Elements" : elements }
 AlConfigurable().GroupElements                = True
 AlConfigurable().NumIterations                = nIter
 AlConfigurable().AlignInputTackCont           = "Alignment/AlignmentTracks"
 AlConfigurable().UseCorrelations              = True
-AlConfigurable().CanonicalConstraintStrategy  = 1
-AlConfigurable().Constraints                  = ["Tx", "Szx"]
+AlConfigurable().CanonicalConstraintStrategy  = constraintStrategy
+AlConfigurable().Constraints                  = constraints
 AlConfigurable().UseWeightedAverageConstraint = False
-AlConfigurable().MinNumberOfHits              = 1
+AlConfigurable().MinNumberOfHits              = minNumHits
 AlConfigurable().UsePreconditioning           = False
-AlConfigurable().SolvTool                     = "gslSolver"
+AlConfigurable().SolvTool                     = solver
 AlConfigurable().WriteCondToXML               = True
-AlConfigurable().CondFileName                 = "OTConditions.xml"
+AlConfigurable().CondFileName                 = "Conditions.xml"
 AlConfigurable().Precision                    = 8
 
 ## Call after all options are set
 AlConfigurable().applyConf()
 
 ## Here we configure the track fitting/selection and what else?
-importOptions("$TALIGNMENTROOT/python/OTTrackFitSel.py")
+importOptions( trackingOpts )
 
 ## Now lets run it
 from GaudiPython import *
 from GaudiPython import gbl
-
-nEvents = 2000
 
 def update(algorithm, appMgr) :
    # get pointer to incident service
@@ -86,7 +102,7 @@ def update(algorithm, appMgr) :
    updateConstants = gbl.Incident( algorithm, 'UpdateConstants' )
    incSvc.fireIncident( updateConstants )
 
-HistogramPersistencySvc().OutputFile = "$TALIGNMENTROOT/python/test.root"
+HistogramPersistencySvc().OutputFile = "$TALIGNMENTROOT/python/" + output + ".root"
 
 ## Instantiate application manager
 appMgr = AppMgr()
@@ -98,12 +114,20 @@ evtSel           = appMgr.evtSel()
 evtSel.printfreq = 500
 
 ## Open Files; Also initialises Application Manager
-evtSel.open( )
+evtSel.open( data )
+
+
+otProjector = appMgr.tool( "ToolSvc.TrajOTProjector" )
 
 for i in range( nIter ) :
-
     evtSel.rewind()
+    if i < (nIter/2) :
+       otProjector.UseDrift = False
+    else :
+       otProjector.UseDrift = True
     appMgr.run( nEvents )
     update( "Alignment", appMgr )
 
 appMgr.finalize()
+
+

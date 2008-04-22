@@ -115,7 +115,7 @@ evtSel.open( data )
 
 print "===> Running " + str( nIter ) + " iterations over " + str( nEvents )
 
-t = appMgr.tool( "ToolSvc.TrajOTProjector" )
+otProjector = appMgr.tool( "ToolSvc.TrajOTProjector" )
 
 for i in range( nIter ) :
     evtSel.rewind()

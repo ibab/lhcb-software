@@ -4,14 +4,15 @@ from Configurables import (TrackFilterAlg, GetElementsToBeAligned, AlignSelTool,
 
 outputLevel = INFO
 useDrift    = False
+trackThrough = "OT"
 
 trajOTProjector = TrajOTProjector( OutputLevel = DEBUG, UseDrift = useDrift )
 
 trackFilterAlg  = TrackFilterAlg( "FilterTracks1",
                                   OutputLevel               = outputLevel,
-                                  TracksInputContainer      = "Rec/Track/Best",
+                                  TracksInputContainer      = "Rec/Track/Best", #"Rec/Track/Tsa", 
                                   TracksOutputContainer     = "Alignment/FilterTracks1",
-                                  TrackType                 = "Long",
+                                  TrackType                 = "Long", #"Ttrack", #"Long",
                                   StripUnwantedDetectorHits = False,
                                   KeepDetectorHits          = "OT",
                                   MinNHits                  = 0)
@@ -22,7 +23,7 @@ trackFilterAlg.addTool( GetElementsToBeAligned( OutputLevel   = outputLevel     
 
 trackFilterAlg.addTool( AlignSelTool( OutputLevel  = outputLevel,
                                       BFieldStatus                  =    True ,
-                                      TrackType                     =   "ALL" ,
+                                      TrackType                     =   trackThrough,
                                       IsolatedTrackNStripsTolerance =       2 ,
                                       IsolatedTrackNStrawsTolerance =       1 ,
                                       #MattCuts                      =   False ,
@@ -66,8 +67,8 @@ trackContCopy = TrackContainerCopy( "FilterTracks2",
                                     copyFailures   = False )
 
 trackContCopy.addTool( TrackSelector(), name = "Selector" )
-trackContCopy.Selector.TrackTypes = [ "Velo", "Long", "Ttrack" ]
-trackContCopy.Selector.MaxChi2Cut = 20.0
+trackContCopy.Selector.TrackTypes = [ "Long", "Ttrack" ]
+trackContCopy.Selector.MaxChi2Cut = 40.0
 
 AlConfigurable().filterSeq().Members.append( trackContCopy  )
 
