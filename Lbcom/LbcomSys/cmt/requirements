@@ -48,3 +48,7 @@ use VeloAlgorithms    v4r7    Velo      # Tomasz Szumlak
 use VeloDAQ           v4r1    Velo      # Kurt Rinnert
 use VeloSimulation    v3r0    Velo      # Tomasz Szumlak
 use VeloTools         v3r1    Velo      # Tomasz Szumlak
+
+
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
