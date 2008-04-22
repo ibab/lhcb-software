@@ -16,8 +16,7 @@ class AlConfigurable( ConfigurableUser ) :
         "AlternativeCondDBOverlay"     : ""                         , ## Alternative CondDB overlay
         "SimplifiedGeom"               : False                      , ## Use simplified geometry
         "Pat"                          : False                      , ## Run pattern recognition
-        "ElementsToAlign"              : {}                         , ## Elements to align
-        "GroupElements"                : False                      , ## Want to group them?
+        "ElementsToAlign"              : []                         , ## Elements to align
         "NumIterations"                : 10                         , ## Number of iterations
         "AlignInputTackCont"           : "Alignment/AlignmentTracks", ## Input track container for alignment
         "UseCorrelations"              : True                       , ## Correlations
@@ -92,9 +91,6 @@ class AlConfigurable( ConfigurableUser ) :
                                                        DefaultTAG       = self.getProp( "AlternativeDDDBTag" )
                                                        )
                 addCondDBAlternative( myDDDB , self.getProp( "AlternativeDDDBOverlay" ) )
-                #overlay = self.getProp( "AlternativeOverlay")+"="+myCondDB.getFullName()
-                #mainDBReader = CondDBDispatcherSvc()
-                #mainDBReader.Alternatives.append( overlay )
             else: print "WARNING: Need to specify a tag for alternative DDDB!"
 
         if self.getProp( "AlternativeCondDB" ) and not self.getProp( "CondDBOverride" ) :
@@ -107,9 +103,6 @@ class AlConfigurable( ConfigurableUser ) :
                                                              DefaultTAG       = self.getProp( "AlternativeCondDBTag" )
                                                              )
                 addCondDBAlternative( myCondDB , self.getProp( "AlternativeCondDBOverlay" ) )
-                #overlay = self.getProp( "AlternativeOverlay")+"="+myCondDB.getFullName()
-                #mainDBReader = CondDBDispatcherSvc()
-                #mainDBReader.Alternatives.append( overlay )
             else: print "WARNING: Need to specify a tag for alternative CondDB!"
             
 
@@ -340,8 +333,7 @@ class AlConfigurable( ConfigurableUser ) :
                 alignAlg.addTool( DiagSolvTool(), name = "MatrixSolverTool" )
                 
             alignAlg.addTool( GetElementsToBeAligned( OutputLevel   = INFO, #outputLevel                      ,
-                                                      Elements      = self.getProp( "ElementsToAlign" ),
-                                                      GroupElements = self.getProp( "GroupElements"   ) ),
+                                                      Elements      = self.getProp( "ElementsToAlign" ) ),
                               name = "GetElementsToBeAligned" )
             
             alignSequencer.Members.append(alignAlg)

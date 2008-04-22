@@ -2,8 +2,8 @@ from Gaudi.Configuration import *
 
 appName            = "LayerAlignment"
 appVersion         = "v3r4"
-nIter              = 8
-nEvents            = 2000
+nIter              = 1
+nEvents            = 1
 minNumHits         = 100
 alignDoFs          = "TxRz"
 constraintStrategy = 0  #1
@@ -11,14 +11,16 @@ constraints        = [] #[ "Tx" ]
 preCondition       = False
 solver             = "gslSolver"
 
-from OTAlElements import *
-elements           = OTAlElements().OTLayers( alignDoFs )
-group              = True
+from Alignables import *
+elements           = Alignables()
+#elements.OTLayers( alignDoFs )
+elements.OTModules()
+
 trackingOpts       = "$TALIGNMENTROOT/python/OTTrackFitSel.py"
 
 from OTdata import *
-data               = dataAtNikhef
-output             = "AlignOTLayersInTxRz"
+data               = Bs2JpsiPhiAtCern
+output             = "test"
 
 
 # Go past this line only when you know what you are doing
@@ -71,8 +73,7 @@ AlConfigurable().Pat                          = True
 AlConfigurable().OutputLevel                  = INFO
 
 ## Configure alignment
-AlConfigurable().ElementsToAlign              = { "Elements" : elements }
-AlConfigurable().GroupElements                = True
+AlConfigurable().ElementsToAlign              = elements
 AlConfigurable().NumIterations                = nIter
 AlConfigurable().AlignInputTackCont           = "Alignment/AlignmentTracks"
 AlConfigurable().UseCorrelations              = True
