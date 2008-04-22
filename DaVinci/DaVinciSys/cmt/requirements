@@ -8,3 +8,5 @@ branches doc cmt
 #=======================================================
 use  DaVinci                 	v19r12   Phys   
 
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
