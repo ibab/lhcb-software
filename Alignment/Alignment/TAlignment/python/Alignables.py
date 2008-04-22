@@ -3,17 +3,16 @@ import types
 class Alignables( list ):
     
     def __init__( self, elements = None, dofs = "" ) :        
-        if elements and self.__validElements( elements ) :
-            self.m_dofs     = [ "Tx", "Ty", "Tz", "Rx", "Ry", "Rz" ]
-            self.m_velo     = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo"
-            self.m_tt       = "/dd/Structure/LHCb/BeforeMagnetRegion/TT"
-            self.m_it       = "/dd/Structure/LHCb/AfterMagnetRegion/T/IT"
-            self.m_ot       = "/dd/Structure/LHCb/AfterMagnetRegion/T/OT"
-            self.m_stations = [ "/T1", "/T2", "/T3" ]
-            self.m_layers   = [ "/X1layer", "/Ulayer", "/Vlayer", "/X2layer" ]
-            self.m_quarters = [ "/Quarter(0|2)", "/Quarter(1|3)" ]
-            self.m_modules  = [ "/Module1", "/Module2", "/Module3", "/Module4", "/Module5", "/Module6", "/Module7", "/Module8", "/Module9" ]
-            
+        self.m_dofs     = [ "Tx", "Ty", "Tz", "Rx", "Ry", "Rz" ]
+        self.m_velo     = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo"
+        self.m_tt       = "/dd/Structure/LHCb/BeforeMagnetRegion/TT"
+        self.m_it       = "/dd/Structure/LHCb/AfterMagnetRegion/T/IT"
+        self.m_ot       = "/dd/Structure/LHCb/AfterMagnetRegion/T/OT"
+        self.m_stations = [ "/T1", "/T2", "/T3" ]
+        self.m_layers   = [ "/X1layer", "/Ulayer", "/Vlayer", "/X2layer" ]
+        self.m_quarters = [ "/Quarter(0|2)", "/Quarter(1|3)" ]
+        self.m_modules  = [ "/Module1", "/Module2", "/Module3", "/Module4", "/Module5", "/Module6", "/Module7", "/Module8", "/Module9" ]
+        if elements and self.__validElements( elements ) :    
             self.__append( elements, dofs )
         
     def __findDOF( self, dof, dofs ):
@@ -90,7 +89,7 @@ class Alignables( list ):
         self.__append( self.m_it, element )
 
     def OT( self, dofs = "" ) :
-        self.append( self.m_ot, dofs )
+        self.__append( self.m_ot, dofs )
     
     def OTStations( self, dofs = "" ) :
         elements = []
@@ -118,7 +117,7 @@ class Alignables( list ):
                 for k in range( len( self.m_quarters ) ) :
                     ## Nine modules numbered from 1 to 9
                     for l in range( len( self.m_modules ) ) :
-                        elements.append( self.m_ot + self.m_stations[ i ] + self.m_layers[ j ] + self.m_quarters[ k ] + self.m_modules[ l ] )
+                        elements.append("Group : " + self.m_ot + self.m_stations[ i ] + self.m_layers[ j ] + self.m_quarters[ k ] + self.m_modules[ l ] )
            
         self.__append( elements, dofs )    
         
