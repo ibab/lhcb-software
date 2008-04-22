@@ -45,3 +45,5 @@ use Viewer            v1r5     Online
 use Writer            v1r6     Online
 use Hugin             v1r5     Online
 
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
