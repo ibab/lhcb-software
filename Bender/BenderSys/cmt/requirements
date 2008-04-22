@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.91 2008-03-15 14:12:06 ibelyaev Exp $ 
+# $Id: requirements,v 1.92 2008-04-22 15:59:12 hmdegaud Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.91 $	
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.92 $	
 # =============================================================================
 # The management of the content of BENDER project:
 #                 LHCb Physics Analysis with Python  
@@ -23,6 +23,10 @@ use           BenderTutor    v8r1   Tutorial
 
 # =========== template of user module/scriot ==================================
 use           BenderUser     v8r1   Phys 
+
+
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
 
 
 # =============================================================================
