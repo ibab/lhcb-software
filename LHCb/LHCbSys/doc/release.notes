@@ -5,8 +5,8 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r5>2008-04-18 LHCbSys v23r5</A></H1><PRE>
-This version uses Gaudi v19r9 and LCG_54d.
+</PRE><H1><A NAME=v23r5>2008-04-22 LHCbSys v23r5</A></H1><PRE>
+This version uses Gaudi v19r9 and LCG_54e.
 
 - Packages added:    BcmDet v1r1 - BCM detector element
 - Packages modified: GaudiConf v10r7, KernelSys v7r3, LHCbKernel v8r3,
@@ -15,12 +15,13 @@ This version uses Gaudi v19r9 and LCG_54d.
     RichDet v10r11, VeloDet v12r5, XmlTools v5r2, EventSys v24r2, DAQEvent v7r10,
     DigiEvent v2r5, HltEvent v8r8, LinkerEvent v3r4, L0Event v16r9, MCEvent v2r8,
     RecEvent v2r11, TrackEvent v4r12, DAQSys v3r9, CaloDAQ v4r4, MuonDAQ v4r0,
-    CaloUtils v7r9, CondDbEntityResolver v4r1, CondDBUI v2r9,DaVinciKernel v6r12,
-    DaVinciMCKernel v2r7, LHCbAlgs v2r16, LoKiAlgo v7r2, LoKiArrayFunctors v7r2, 
-    LoKiCore v7r2, LoKiGen v7r2, LoKiMC v7r2, LoKiNumbers v7r3, LoKiPhys v7r2,
-    L0Interfaces v1r1, MCInterfaces v1r5, MDF v3r6, PatKernel v2r1,
-    RichRecBase v3r12, SimComponents v2r9, STKernel v1r3, Tell1Kernel v1r2, 
-    TfKernel v2r4, TrackInterfaces v3r13, TsaKernel v3r2, DetDescChecks v4r6
+    CaloInterfaces v7r5, CaloUtils v7r9, CondDbEntityResolver v4r1,
+    CondDBUI v2r9, DaVinciKernel v6r12, DaVinciMCKernel v2r7, LHCbAlgs v2r16,
+    LoKiAlgo v7r2, LoKiArrayFunctors v7r2, LoKiCore v7r2, LoKiGen v7r2,
+    LoKiMC v7r2, LoKiNumbers v7r3, LoKiPhys v7r2, L0Interfaces v1r1,
+    MCInterfaces v1r5, MDF v3r6, PatKernel v2r1, RichRecBase v3r12,
+    SimComponents v2r9, STKernel v1r3, Tell1Kernel v1r2, TfKernel v2r4,
+    TrackInterfaces v3r13, TsaKernel v3r2, DetDescChecks v4r6
 
 - In GaudiConf v10r7
   . Add LHCbApp configurable with default options for LHCb applications
@@ -156,6 +157,9 @@ This version uses Gaudi v19r9 and LCG_54d.
   . Several new methods for getting the raw data are available.
   . Add Non Zero Suppressed decoding
 
+- In CaloInterfaces v7r5
+  . Add new interface ICaloClusterization
+
 - In CaloUtils v7r9
   . Minor fixes to Calo2DView
 
@@ -192,6 +196,7 @@ This version uses Gaudi v19r9 and LCG_54d.
 
 - In DaVinciMCKernel v2r7
   . Minor (compatible!) modification of IPrintDecayTreeTool interface 
+  . Remove DECLARE_TOOL_FACTORY in FilterMCCriterionBase
 
 - In LHCbAlgs v2r16
   . Give meaningful names to MemoryTool histograms and don't print histogram
