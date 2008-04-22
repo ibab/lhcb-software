@@ -6,28 +6,31 @@ from DetCond.Configuration import *
 
 class AlConfigurable( ConfigurableUser ) :
     __slots__ = {
-        "CondDBTag"                   : "DC06-latest"              , ## Default database to use
-        "CondDBOverride"              : []                         , ## Overwrite conditions
-        "AlternativeDB"               : ""                         , ## Path to alternate database
-        "AlternativeCondDBTag"        : ""                         , ## Alternate DB tag
-        "AlternativeOverlay"          : ""                         , ## Alternate overlay
-        "SimplifiedGeom"              : False                      , ## Use simplified geometry
-        "Pat"                         : False                      , ## Run pattern recognition
-        "ElementsToAlign"             : {}                         , ## Elements to align
-        "GroupElements"               : False                      , ## Want to group them?
-        "NumIterations"               : 10                         , ## Number of iterations
-        "AlignInputTackCont"          : "Alignment/AlignmentTracks", ## Input track container for alignment
-        "UseCorrelations"             : True                       , ## Correlations
-        "CanonicalConstraintStrategy" : 0                          , ## Constrain Strategy ( 0 == off, 1 == on, 2 == auto )
-        "Constraints"                 : []                         , ## Specify which constrains to use with strategy 1  
-        "UseWeightedAverageConstraint": False                      , ## Weighted avergae constrain
-        "MinNumberOfHits"             : 1                          , ## Min number of hits
-        "UsePreconditioning"          : False                      , ## Pre-conditioning
-        "SolvTool"                    : "gslSolver"                , ## Solver to use
-        "WriteCondToXML"              : False                      , ## Write conditions to xml file
-        "CondFileName"                : "Conditions.xml"           , ## Name of xml file
-        "Precision"                   : 16                         , ## Set precision for conditions
-        "OutputLevel"                 : INFO                         ## Output level
+        "CondDBTag"                    : "DC06-latest"              , ## Default database to use
+        "CondDBOverride"               : []                         , ## Overwrite conditions
+        "AlternativeDDDB"              : ""                         , ## Path to alternative DDDB
+        "AlternativeDDDBTag"           : ""                         , ## Alternative DDDB tag
+        "AlternativeDDDBOverlay"       : ""                         , ## Alternative DDDB overlay
+        "AlternativeCondDB"            : ""                         , ## Alternative CondDB
+        "AlternativeCondDBTag"         : ""                         , ## Alternative CondDB tag
+        "AlternativeCondDBOverlay"     : ""                         , ## Alternative CondDB overlay
+        "SimplifiedGeom"               : False                      , ## Use simplified geometry
+        "Pat"                          : False                      , ## Run pattern recognition
+        "ElementsToAlign"              : {}                         , ## Elements to align
+        "GroupElements"                : False                      , ## Want to group them?
+        "NumIterations"                : 10                         , ## Number of iterations
+        "AlignInputTackCont"           : "Alignment/AlignmentTracks", ## Input track container for alignment
+        "UseCorrelations"              : True                       , ## Correlations
+        "CanonicalConstraintStrategy"  : 0                          , ## Constrain Strategy ( 0 == off, 1 == on, 2 == auto )
+        "Constraints"                  : []                         , ## Specify which constrains to use with strategy 1  
+        "UseWeightedAverageConstraint" : False                      , ## Weighted avergae constrain
+        "MinNumberOfHits"              : 1                          , ## Min number of hits
+        "UsePreconditioning"           : False                      , ## Pre-conditioning
+        "SolvTool"                     : "gslSolver"                , ## Solver to use
+        "WriteCondToXML"               : False                      , ## Write conditions to xml file
+        "CondFileName"                 : "Conditions.xml"           , ## Name of xml file
+        "Precision"                    : 16                         , ## Set precision for conditions
+        "OutputLevel"                  : INFO                         ## Output level
         }
 
     def getProp( self, name ) :
@@ -79,20 +82,36 @@ class AlConfigurable( ConfigurableUser ) :
 
         ## No need to check whether path makes sense
         ## CondDBAccessSvc throws FAILURE if path is unknown / invalid
-        if self.getProp( "AlternativeDB" ) and not self.getProp( "CondDBOverride" ) :
+        if self.getProp( "AlternativeDDDB" ) :
+            ## Check there's a tag.
+            ## No need to check for conditions overlay
+            ## CondDBDispatcherSvc throws error
+            if self.getProp( "AlternativeDDDBTag" ) :
+                myDDDB = CondDBAccessSvc("DDDB").clone("MyDDDB"                                                                         ,
+                                                       ConnectionString = "sqlite_file:%s"%expandvars(self.getProp( "AlternativeDDDB" )),
+                                                       DefaultTAG       = self.getProp( "AlternativeDDDBTag" )
+                                                       )
+                addCondDBAlternative( myDDDB , self.getProp( "AlternativeDDDBOverlay" ) )
+                #overlay = self.getProp( "AlternativeOverlay")+"="+myCondDB.getFullName()
+                #mainDBReader = CondDBDispatcherSvc()
+                #mainDBReader.Alternatives.append( overlay )
+            else: print "WARNING: Need to specify a tag for alternative DDDB!"
+
+        if self.getProp( "AlternativeCondDB" ) and not self.getProp( "CondDBOverride" ) :
             ## Check there's a tag.
             ## No need to check for conditions overlay
             ## CondDBDispatcherSvc throws error
             if self.getProp( "AlternativeCondDBTag" ) :
                 myCondDB = CondDBAccessSvc("LHCBCOND").clone("MyLHCBCOND"                                                     ,
-                                                             ConnectionString = "sqlite_file:%s"%expandvars(self.getProp( "AlternativeDB" )),
+                                                             ConnectionString = "sqlite_file:%s"%expandvars(self.getProp( "AlternativeCondDB" )),
                                                              DefaultTAG       = self.getProp( "AlternativeCondDBTag" )
                                                              )
-                addCondDBAlternative( myCondDB , self.getProp( "AlternativeOverlay" ) )
+                addCondDBAlternative( myCondDB , self.getProp( "AlternativeCondDBOverlay" ) )
                 #overlay = self.getProp( "AlternativeOverlay")+"="+myCondDB.getFullName()
                 #mainDBReader = CondDBDispatcherSvc()
                 #mainDBReader.Alternatives.append( overlay )
             else: print "WARNING: Need to specify a tag for alternative CondDB!"
+            
 
     def simplifiedGeom( self ) :
         importOptions("$TALIGNMENTROOT/options/SimplifiedGeometry.opts")
@@ -300,7 +319,7 @@ class AlConfigurable( ConfigurableUser ) :
             
             from Configurables import ( AlignAlgorithm, GetElementsToBeAligned, gslSVDsolver, CLHEPSolver, MA27Solver, DiagSolvTool )
             alignAlg = AlignAlgorithm( "Alignment"                                                                  ,
-                                       OutputLevel                  = outputLevel                                   ,
+                                       OutputLevel                  = INFO                                   ,
                                        NumberOfIterations           = self.getProp( "NumIterations"                ),
                                        TracksLocation               = self.getProp( "AlignInputTackCont"           ),
                                        UseCorrelations              = self.getProp( "UseCorrelations"              ),
@@ -320,7 +339,7 @@ class AlConfigurable( ConfigurableUser ) :
             if self.getProp( "SolvTool" ) == "DiagSolvTool" :
                 alignAlg.addTool( DiagSolvTool(), name = "MatrixSolverTool" )
                 
-            alignAlg.addTool( GetElementsToBeAligned( OutputLevel   = outputLevel                      ,
+            alignAlg.addTool( GetElementsToBeAligned( OutputLevel   = INFO, #outputLevel                      ,
                                                       Elements      = self.getProp( "ElementsToAlign" ),
                                                       GroupElements = self.getProp( "GroupElements"   ) ),
                               name = "GetElementsToBeAligned" )
