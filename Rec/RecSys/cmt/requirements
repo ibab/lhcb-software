@@ -72,3 +72,6 @@ use RichRecTrackTools   v1r3    Rich  # Chris Jones
 
 # Global reco
 use GlobalReco          v6r15p1 Rec   # Chris Jones
+
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
