@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.99 2008-04-10 19:21:09 robbep Exp $
+! $Id: release.notes,v 1.100 2008-04-22 10:28:06 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v9r12 2007-04-22 ========================
 ! 2008-04-10 - Patrick Robbe
  - src/L0CaloAlg: add options to use or not PS/SPD and ECAL information
    resp. to build electromagnetic and hadron candidates. Default is to
@@ -20,7 +21,6 @@
  - src/L0CaloMonit.cpp: add an option (false by default) not to produce
    detailed histograms.
 
-!========================= L0Calo v9r12 2007-03-28 ========================
 ! 2008-03-27 - Patrick Robbe
  - src/L0CaloMonit.cpp: change binning for slot in crates
  - src/L0CaloCandidatesFromRaw.cpp: fix memory leaks in default container
