@@ -52,36 +52,12 @@ Nodeset* Nodeset::reset() {
 
 /// Retrieve timestamp of earliest updated node
 Nodeset::TimeStamp Nodeset::firstUpdate() const {
-  bool has_nodes = false;
-  TimeStamp t(INT_MAX,999);
-  for(Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
-    has_nodes = true;
-    if ( (*n).time < t.first ) {
-      t.first = (*n).time;
-      t.second = (*n).millitm;
-    }
-    else if ( (*n).time == t.first && (*n).millitm < t.second ) {
-      t.second = (*n).millitm;
-    }
-  }
-  return has_nodes ? t : TimeStamp(0,0);
+  return _firstUpdate(nodes);
 }
 
 /// Retrieve timestamp of most recent updated node
 Nodeset::TimeStamp Nodeset::lastUpdate() const {
-  bool has_nodes = false;
-  TimeStamp t(0,0);
-  for(Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
-    has_nodes = true;
-    if ( (*n).time > t.first ) {
-      t.first = (*n).time;
-      t.second = (*n).millitm;
-    }
-    else if ( (*n).time == t.first && (*n).millitm > t.second ) {
-      t.second = (*n).millitm;
-    }
-  }
-  return has_nodes ? t : TimeStamp(0,0);
+  return _lastUpdate(nodes);
 }
 
 /// Default constructor
@@ -110,7 +86,6 @@ FSMTask& FSMTask::operator=(const FSMTask& copy) {
 std::ostream& ROMon::log() {
   return std::cout << ::lib_rtl_timestr() << " ";
 }
-
 
 void ROMon::print_startup(const char* msg) {
   log() << ::lib_rtl_timestr() << "> Readout monitor " << msg << " started on " 

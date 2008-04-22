@@ -1,4 +1,4 @@
-// $Id: CPUMonOstream.h,v 1.2 2008-04-21 17:36:02 frankm Exp $
+// $Id: CPUMonOstream.h,v 1.3 2008-04-22 15:22:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMonOstream.h,v 1.2 2008-04-21 17:36:02 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMonOstream.h,v 1.3 2008-04-22 15:22:09 frankb Exp $
 #ifndef ROMON_CPUMONOSTREAM_H
 #define ROMON_CPUMONOSTREAM_H 1
 
@@ -27,6 +27,7 @@ std::ostream& operator<<(std::ostream& os, const ROMon::CPUfarm& n);
 
 std::ostream& operator<<(std::ostream& os, const ROMon::Process& n);
 std::ostream& operator<<(std::ostream& os, const ROMon::Procset& n);
+std::ostream& operator<<(std::ostream& os, const ROMon::ProcFarm& n);
 
 #endif /* ROMON_CPUMONOSTREAM_H */
 

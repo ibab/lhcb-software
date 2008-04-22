@@ -1,4 +1,4 @@
-// $Id: Collections.h,v 1.1 2008-03-11 12:39:11 frankb Exp $
+// $Id: Collections.h,v 1.2 2008-04-22 15:22:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Collections.h,v 1.1 2008-03-11 12:39:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Collections.h,v 1.2 2008-04-22 15:22:09 frankb Exp $
 #ifndef ROMON_COLLECTIONS_H
 #define ROMON_COLLECTIONS_H 1
 
@@ -134,6 +134,42 @@ namespace ROMon {
       return end()->reset();
     }
   };
+
+
+  typedef std::pair<time_t,unsigned int> TimeStamp;
+
+  template <typename T> TimeStamp _firstUpdate(const T& nodes) {
+    bool has_nodes = false;
+    TimeStamp t(INT_MAX,999);
+    for(typename T::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
+      has_nodes = true;
+      if ( (*n).time < t.first ) {
+	t.first = (*n).time;
+	t.second = (*n).millitm;
+      }
+      else if ( (*n).time == t.first && (*n).millitm < t.second ) {
+	t.second = (*n).millitm;
+      }
+    }
+    return has_nodes ? t : TimeStamp(0,0);
+  }
+
+  template <typename T> TimeStamp _lastUpdate(const T& nodes) {
+    bool has_nodes = false;
+    TimeStamp t(0,0);
+    for(typename T::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
+      has_nodes = true;
+      if ( (*n).time > t.first ) {
+	t.first = (*n).time;
+	t.second = (*n).millitm;
+      }
+      else if ( (*n).time == t.first && (*n).millitm > t.second ) {
+	t.second = (*n).millitm;
+      }
+    }
+    return has_nodes ? t : TimeStamp(0,0);
+  }
+
 }
 
 template<typename T> inline 
@@ -165,6 +201,7 @@ std::ostream& operator<<(std::ostream& os, const ROMon::VarItems<T>& items) {
   for (const T* p=items.begin(); p!=items.end(); p=items.next(p)) os << *p;
   return os;
 }
+
 
 #endif /* ROMON_COLLECTIONS_H */
 

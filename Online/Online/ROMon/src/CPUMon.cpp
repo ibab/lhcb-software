@@ -30,16 +30,26 @@ std::ostream& operator<<(std::ostream& os, const CPUfarm& f) {
 
 std::ostream& operator<<(std::ostream& os, const Process& p) {
   char text[132];
-  sprintf(text,"    PID:%5d %5d %3.0f %3.0f %1d %-16s %s",
-	  p.pid,p.ppid,p.cpu,p.mem,p.threads,p.owner,p.utgid);
+  sprintf(text,"    %5d %5d %4.1f %4.1f %6.0f %6.0f %4d %-16s %s",
+	  p.pid,p.ppid,p.cpu,p.mem,p.vsize,p.rss,p.threads,p.owner,p.utgid);
   return os << text;
 }
 
 std::ostream& operator<<(std::ostream& os, const Procset& s) {
+  char text[132];
+  sprintf(text,"          %5s %5s %4s %4s %6s %6s %-4s %-16s %s","PID","PPID","%CPU","%MEM","VSize","RSS","#Thr","Owner","UTGID");
   os << "  Node:"  << s.name << " " << s.processes.size() 
-     << " Last update:" << s.time << "." << s.millitm << std::endl;
+     << " Last update:" << s.time << "." << s.millitm << std::endl
+     << text << std::endl;
   for(Procset::Processes::const_iterator c=s.processes.begin(); c!=s.processes.end(); c=s.processes.next(c))
     os << "   -> " << *c << std::endl;
+  return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const ProcFarm& f) {
+  os << "Farm:"  << f.name << " " << f.nodes.size() << " nodes. Last update:" << f.time << std::endl;
+  for(ProcFarm::Nodes::const_iterator n=f.nodes.begin(); n!=f.nodes.end(); n=f.nodes.next(n))
+    os << *n << std::endl;
   return os;
 }
 
@@ -80,36 +90,12 @@ void CPUfarm::fixup() {
 
 /// Retrieve timestamp of earliest updated node
 CPUfarm::TimeStamp CPUfarm::firstUpdate() const {
-  bool has_nodes = false;
-  TimeStamp t(INT_MAX,999);
-  for(Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
-    has_nodes = true;
-    if ( (*n).time < t.first ) {
-      t.first = (*n).time;
-      t.second = (*n).millitm;
-    }
-    else if ( (*n).time == t.first && (*n).millitm < t.second ) {
-      t.second = (*n).millitm;
-    }
-  }
-  return has_nodes ? t : TimeStamp(0,0);
+  return _firstUpdate(nodes);
 }
 
 /// Retrieve timestamp of most recent updated node
 CPUfarm::TimeStamp CPUfarm::lastUpdate() const {
-  bool has_nodes = false;
-  TimeStamp t(0,0);
-  for(Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
-    has_nodes = true;
-    if ( (*n).time > t.first ) {
-      t.first = (*n).time;
-      t.second = (*n).millitm;
-    }
-    else if ( (*n).time == t.first && (*n).millitm > t.second ) {
-      t.second = (*n).millitm;
-    }
-  }
-  return has_nodes ? t : TimeStamp(0,0);
+  return _lastUpdate(nodes);
 }
 
 /// Empty constructor
@@ -132,5 +118,28 @@ Procset::Procset() {
 Procset* Procset::reset() {
   ::memset(this,0,sizeof(Procset));
   return this;
+}
+
+/// Reset object structure
+ProcFarm* ProcFarm::reset() {
+  ::memset(this,0,sizeof(ProcFarm));  
+  type = TYPE;
+  return this;
+}
+
+/// Fix-up object sizes
+void ProcFarm::fixup() {
+  type = TYPE;
+  totalSize = length();
+}
+
+/// Retrieve timestamp of earliest updated node
+ProcFarm::TimeStamp ProcFarm::firstUpdate() const {
+  return _firstUpdate(nodes);
+}
+
+/// Retrieve timestamp of most recent updated node
+ProcFarm::TimeStamp ProcFarm::lastUpdate() const {
+  return _lastUpdate(nodes);
 }
 

@@ -1,4 +1,4 @@
-// $Id: CPUMon.h,v 1.2 2008-04-21 17:36:02 frankm Exp $
+// $Id: CPUMon.h,v 1.3 2008-04-22 15:22:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.2 2008-04-21 17:36:02 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.3 2008-04-22 15:22:09 frankb Exp $
 #ifndef ROMON_RUNDB_H
 #define ROMON_RUNDB_H 1
 
@@ -109,7 +109,7 @@ namespace ROMon {
     int  totalSize;
     /// Date of last update
     time_t time;
-    /// Node name
+    /// Farm name
     char  name[32];
     /// Variable size array of node items
     Nodes  nodes;
@@ -141,6 +141,10 @@ namespace ROMon {
     float          cpu;
     /// Memory usage in percent
     float          mem;
+    /// Size of virtual memory
+    float          vsize;
+    /// Size of resident memory
+    float          rss;
     /// Process ID
     unsigned short pid;
     /// Parent ID
@@ -182,6 +186,38 @@ namespace ROMon {
     int length()  const {  return sizeof(Procset)+processes.data_length(); }
   };
 
+  /**@class ProcFarm ROMon.h ROMon/ROMon.h
+   *
+   * Class which represents all CPUs in a DIM_DNS_NODE
+   *
+   * @author M.Frank
+   */
+  class ProcFarm {
+  public:
+    typedef VarItems<Procset> Nodes;
+    typedef std::pair<time_t,unsigned int> TimeStamp;
+    enum { TYPE = 5 };
+    /// First word: Data type descriptor (MUST always be 5)
+    int   type;
+    /// Total size of the node information
+    int  totalSize;
+    /// Date of last update
+    time_t time;
+    /// Farm name
+    char  name[32];
+    /// Variable size array of node items
+    Nodes  nodes;
+    /// Reset object structure
+    ProcFarm* reset();
+    /// Fix-up object sizes
+    void fixup();
+    /// Length of the object in bytes
+    int length()  const {  return sizeof(ProcFarm)+nodes.data_length(); }
+    /// Retrieve timestamp of earliest updated node
+    TimeStamp firstUpdate() const;
+    /// Retrieve timestamp of most recent updated node
+    TimeStamp lastUpdate() const;
+  };
 
   union CPUMonData {
     char*      str;
@@ -191,6 +227,7 @@ namespace ROMon {
     CPUfarm*   farm;
     Process*   proc;
     Procset*   processes;
+    ProcFarm*  procFarm;
     CPUMonData(void* buffer) { ptr=buffer; }
     int type() { return this->ptr ? *(int*)this->ptr : -1; }
   };
