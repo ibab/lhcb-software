@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.47 2008-04-15 06:59:03 pkoppenb Exp $
+# $Id: requirements,v 1.48 2008-04-22 15:58:44 hmdegaud Exp $
 package AnalysisSys
 version v1r12
 
@@ -58,3 +58,5 @@ use Analysis            v7r0    Tutorial         # P. Koppenburg
 use LoKiExample         v7r0    Ex       # Vanya Belyaev
 
 
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
