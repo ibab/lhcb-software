@@ -35,5 +35,7 @@ use LoKiTrigger         v7r3   Phys   # Vanya Belyaev
 use TisTosTobbing       v2r2   Phys   # Tomasz Skwarnicki  
 
 
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
 
 
