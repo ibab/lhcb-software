@@ -9,9 +9,9 @@
 
 // CaloClusters
 
-DataOnDemandSvc.Algorithms += {
-  "DATA='/Event/Rec/Calo/EcalClusters'       TYPE='GaudiSequencer/CaloClusterOnDemand'",
-  "DATA='/Event/Rec/Calo/EcalSplitClusters'  Type='CaloMergedPi0Alg/MergedPi0Rec'"
+DataOnDemandSvc.AlgMap += {
+  "Rec/Calo/EcalClusters"      : "GaudiSequencer/CaloClusterOnDemand"
+ ,"Rec/Calo/EcalSplitClusters" : "CaloMergedPi0Alg/MergedPi0Rec"
 };
 
 CaloClusterOnDemand.Members += { "CellularAutomaton/EcalClust",

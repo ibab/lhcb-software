@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.107 2008-04-21 13:52:17 vegorych Exp $
+! $Id: release.notes,v 1.108 2008-04-22 12:13:07 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
-!========================== CaloReco v4r11 2008-04-21 ===================
+!========================== CaloReco v4r11 2008-04-22 ===================
+! 2008-04-22 - Marco Cattaneo
+ - In CaloRecoOnDemand.opts, replace DataOnDemandSvc.Algorithms with .AlgMap
+
 ! 2008-04-21 - Victor Egorychev
  - New CellularAutomatonAlg.cpp and CellularAtomatonAlg.h were added
  - New CaloClusterizationTool.cpp and CaloClustrerizationTool.h were added
