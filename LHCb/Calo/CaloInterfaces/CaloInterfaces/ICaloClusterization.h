@@ -1,13 +1,21 @@
-// $Id: ICaloClusterization.h,v 1.1 2008-04-21 13:54:22 vegorych Exp $
+// $Id: ICaloClusterization.h,v 1.2 2008-04-22 09:46:51 cattanem Exp $
 #ifndef CALOINTERFACES_ICALOCLUSTERIZATION_H 
 #define CALOINTERFACES_ICALOCLUSTERIZATION_H 1
 
 // Include files
 // from STL
-#include <string>
+#include <vector>
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+
+// from LHCb
+#include "Kernel/CaloCellID.h"
+#include "Event/CaloCluster.h"
+#include "Event/CaloDigit.h"
+
+// forward declarations
+class DeCalorimeter;
 
 static const InterfaceID IID_ICaloClusterization ( "ICaloClusterization", 1, 0 );
 

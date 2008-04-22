@@ -1,7 +1,8 @@
-// $Id: CaloInterfacesDict.h,v 1.3 2007-07-20 13:14:22 cattanem Exp $
+// $Id: CaloInterfacesDict.h,v 1.4 2008-04-22 09:46:51 cattanem Exp $
 #ifndef DICT_CALOINTERFACESDICT_H 
 #define DICT_CALOINTERFACESDICT_H 1
 
+#include "CaloInterfaces/ICaloClusterization.h"     
 #include "CaloInterfaces/ICalo2Calo.h"     
 #include "CaloInterfaces/ICaloClusterSelector.h"     
 #include "CaloInterfaces/ICaloClusterTool.h"         
