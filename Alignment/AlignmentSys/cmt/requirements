@@ -16,3 +16,7 @@ use AlignSolvTools      v2r2    Alignment # Adlene Hicheur
 use TAlignment		v3r4	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
 use AlignT2Velo         v1r1    Alignment # Steve Blusk
 use Escher		v2r2	Alignment # Johan Blouw
+
+
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
