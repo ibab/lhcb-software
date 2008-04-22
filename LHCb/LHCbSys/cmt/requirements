@@ -103,3 +103,7 @@ use DetDescChecks         v4r6   Det     # Ivan Belyaev
 use DetDescExample        v7r6   Ex      # Marco Clemencic
 use IOExample             v2r4   Ex      # Marco Cattaneo
 use DetCondExample        v11r2  Ex      # Marco Clemencic
+
+
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
