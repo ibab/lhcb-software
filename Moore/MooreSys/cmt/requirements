@@ -7,3 +7,7 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 use  Moore  v4r0    Hlt
+
+
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
