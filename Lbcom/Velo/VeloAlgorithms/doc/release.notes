@@ -2,7 +2,10 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
-!===================== VeloAlgorithms v4r7 2008-04-16 =====================
+!===================== VeloAlgorithms v4r7 2008-04-22 =====================
+! 2008-04-22 - Marco Cattaneo
+ - Use LHCb::Math::round to compile on Windows
+
 ! 2008-04-16 David Hutchcroft
  - Changed curve in VeloDataProcessor to 2nd order non-linear response from JC
  - Changed monitoring code to label cluster types properly

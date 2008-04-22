@@ -8,6 +8,7 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "Kernel/VeloChannelID.h"
 #include "Kernel/VeloEventFunctor.h"
+#include "LHCbMath/LHCbMath.h"
 
 // local
 #include "VeloDataProcessor.h"
@@ -99,7 +100,7 @@ StatusCode VeloDataProcessor::execute(){
 int VeloDataProcessor::digitiseLinear(double electrons) {
   //
   double digi = electrons*(m_ADCFullScale/m_electronsFullScale);
-  int adc = static_cast<int>(round(digi));
+  int adc = static_cast<int>(LHCb::Math::round(digi));
   if( adc > m_maxADCOutput ) adc = m_maxADCOutput;
   if( adc < m_minADCOutput ) adc = m_minADCOutput;
   return adc;
@@ -112,7 +113,7 @@ int VeloDataProcessor::digitiseLinear(double electrons) {
 int VeloDataProcessor::digitiseNonLinear(double electrons) {
   //
   double digi = m_NL_Scale * ( tanhFunc(electrons) - m_tanh0 );
-  int adc = static_cast<int>(round(digi));
+  int adc = static_cast<int>(LHCb::Math::round(digi));
   if( adc > m_maxADCOutput ) adc = m_maxADCOutput;
   if( adc < m_minADCOutput ) adc = m_minADCOutput;
   return adc;
