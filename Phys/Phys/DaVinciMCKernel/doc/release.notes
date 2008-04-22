@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.34 2008-04-21 11:45:13 pkoppenb Exp $
+! $Id: release.notes,v 1.35 2008-04-22 09:52:03 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+!====================== DaVinciMCKernel v2r7 2008-04-22 =====================
 ! 2008-04-21 - Patrick Koppenburg
  - Remove Declare-tool-factory in FilterMCCriterionBase
 
-!====================== DaVinciMCKernel v2r7 2008-04-03 =====================
 ! 2008-03-30 - Vanya BELYAEV
  - make the minor (compatible!) 
    modification of IPrintDecayTreeTool interface 
