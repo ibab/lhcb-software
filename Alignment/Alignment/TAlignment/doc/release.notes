@@ -3,9 +3,18 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-04-22 Jan Amoraal
+ - Added a jab configurable AlConfigurable.py, see for example OT scripts to use it
+ - Added some OT alignment scripts
+ - Modified the elements to be aligned property of GetElementsToBeAligned. It's now a list of strings.
+   Usage:
+     .Elements = { "Group : regex representing path to det elems : dof",
+                   "Group : regex representing path to det elems : dof" }
+   Where "Group :" and " : dof" are optional
+
 ! 2008-04-14 - Wouter Hulsbergen
-- added chi2 cut for outliers
-- added job option to specify input alignderivative files
+ - added chi2 cut for outliers
+ - added job option to specify input alignderivative files
 
 ! 2008-03-25 - Wouter Hulsbergen
  - Added vertex constraints
