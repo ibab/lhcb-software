@@ -1,13 +1,13 @@
-! $Id: release.notes,v 1.56 2008-04-22 12:13:08 ibelyaev Exp $ 
+! $Id: release.notes,v 1.57 2008-04-22 17:19:06 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhys v7r3 2008-04-22 ==========================
 ! 2008-04-22 - Vanya BELYAEV
-
- - python/LoKiPhys/functios.py
+ - python/LoKiPhys/functions.py
    python/LoKiPhys/decorators.py
 
    fix a stupid bug with ISLONG/ISDOWN/IS<XXX> functors. 
