@@ -30,3 +30,7 @@ use RichReadout         v2r9    Rich  # Chris Jones
 
 # Silicon Tracker
 use STDigiAlgorithms    v1r0p1  ST    # Matt Needham
+
+
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
