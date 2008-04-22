@@ -1,4 +1,4 @@
-// $Id: SolvExample.cpp,v 1.6 2007-08-28 14:44:04 ahicheur Exp $
+// $Id: SolvExample.cpp,v 1.7 2008-04-22 11:53:04 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -116,25 +116,25 @@ StatusCode SolvExample::execute() {
   AlMat mk = ma*me;
   AlMat mj = me*ma;
 
-  for (int i=0;i<me.nrow();i++) {
+  for (size_t i=0;i<me.nrow();i++) {
     debug()<<"AlMat me values line "<<i<<" -- ";
-    for (int j=0;j<me.ncol();j++) {
+    for (size_t j=0;j<me.ncol();j++) {
       debug()<<me[i][j]<<" - ";
      }
     debug()<<endmsg;
   }
 
-  for (int i=0;i<mk.nrow();i++) {
+  for (size_t i=0;i<mk.nrow();i++) {
     debug()<<"AlSymMat*AlMat mk=ma*me values line "<<i<<" -- ";
-    for (int j=0;j<mk.ncol();j++) {
+    for (size_t j=0;j<mk.ncol();j++) {
       debug()<<mk[i][j]<<" - ";
      }
     debug()<<endmsg;
   }
 
-  for (int i=0;i<mj.nrow();i++) {
+  for (size_t i=0;i<mj.nrow();i++) {
     debug()<<"AlMat*AlSymMat mj=me*ma values line "<<i<<" -- ";
-    for (int j=0;j<mj.ncol();j++) {
+    for (size_t j=0;j<mj.ncol();j++) {
       debug()<<mj[i][j]<<" - ";
      }
     debug()<<endmsg;
@@ -143,9 +143,9 @@ StatusCode SolvExample::execute() {
   me*=5.;
   AlSymMat mf(me.nrow());
 
-  for (int i=0;i<me.nrow();i++) {
+  for (size_t i=0;i<me.nrow();i++) {
     debug()<<"AlMat me*5 values line "<<i<<" -- ";
-    for (int j=0;j<me.ncol();j++) {
+    for (size_t j=0;j<me.ncol();j++) {
       debug()<<me[i][j]<<" - ";
       mf[i][j]=me[i][j];
      }
@@ -183,9 +183,9 @@ StatusCode SolvExample::execute() {
 
   debug()<<"AlSymMat me*me^-1 values line "<< endmsg;
 
-  for (int i=0;i<(mf*mfi).nrow();i++) {
+  for (size_t i=0;i<(mf*mfi).nrow();i++) {
     debug()<<"AlSymMat me*me^-1 values line "<<i<<" -- ";
-    for (int j=0;j<(mf*mfi).ncol();j++) {
+    for (size_t j=0;j<(mf*mfi).ncol();j++) {
       debug()<<(mf*mfi)[i][j]<<" - ";
     }
     debug()<<endmsg;
@@ -198,7 +198,7 @@ StatusCode SolvExample::execute() {
   int info = 999;
   char jobz = 'V';
   //declare transition matrix + vector to store eigenvalues
-  int dim = mf.size();
+  size_t dim = mf.size();
   
   AlMat z(dim,dim);
   AlVec w(dim);
@@ -215,7 +215,7 @@ StatusCode SolvExample::execute() {
     for (unsigned(i) = 0; i < invmat.size(); ++i) {
       debug()<<w[i]<< "  " <<endmsg;
       for (unsigned(j) = 0; j <= i; ++j) {
-        for (int k=0;k<dim;k++) invmat[i][j]=invmat[i][j]+(z[k][i]*z[k][j]/w[k]);
+        for (size_t k=0;k<dim;k++) invmat[i][j]=invmat[i][j]+(z[k][i]*z[k][j]/w[k]);
       }
     } 
 
