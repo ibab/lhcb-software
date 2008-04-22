@@ -38,6 +38,7 @@ ps = picosecond
 fs = femtosecond
 
 from   LoKiPhys.functions  import *
+from   LoKiCore.functions  import  equal_to 
 
 _name = __name__ 
 # =============================================================================
@@ -148,6 +149,14 @@ VGAUSS = VONE>>_LoKiNumbers.XGAUSS
 VRAND  = VONE>>_LoKiNumbers.XRAND
 
 
+## @see LoKi::Cuts::ISLONG
+ISLONG   =  equal_to ( TRTYPE , LHCb.Track.Long       )
+## @see LoKi::Cuts::ISUP   
+ISUP     =  equal_to ( TRTYPE , LHCb.Track.Upstream   ) 
+## @see LoKi::Cuts::ISDOWN
+ISDOWN   =  equal_to ( TRTYPE , LHCb.Track.Downstream ) 
+## @see LoKi::Cuts::ISTTRACK
+ISTTRACK =  equal_to ( TRTYPE , LHCb.Track.Ttrack     ) 
 
 
 # =============================================================================

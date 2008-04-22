@@ -338,14 +338,6 @@ TRCHI2DOF= LoKi.Particles.TrackChi2PerDoF     ()
 HASSTATE = LoKi.Particles.TrackHasState 
 ## @see LoKi::Cuts::TRTYPE 
 TRTYPE   = LoKi.Particles.TrackType           () 
-## @see LoKi::Cuts::ISLONG
-ISLONG   =  equal_to ( TRTYPE , LHCb.Track.Long       )
-## @see LoKi::Cuts::ISUP   
-ISUP     =  equal_to ( TRTYPE , LHCb.Track.Upstream   ) 
-## @see LoKi::Cuts::ISDOWN
-ISDOWN   =  equal_to ( TRTYPE , float(LHCb.Track.Downstream) ) 
-## @see LoKi::Cuts::ISTTRACK
-ISTTRACK =  equal_to ( TRTYPE , float(LHCb.Track.Ttrack)     ) 
 ## @see LoKi::Cuts::TRHISTORY
 TRHISTORY= LoKi.Particles.TrackHistory            () 
 ## @see LoKi::Cuts::TRHISTFIT 
