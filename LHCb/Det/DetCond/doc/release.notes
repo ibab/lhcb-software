@@ -1,11 +1,14 @@
-# $Id: release.notes,v 1.126 2008-04-17 14:31:07 cattanem Exp $
+# $Id: release.notes,v 1.127 2008-04-22 10:11:36 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
-!===================== Det/DetCond v11r10 2008-04-17 =========================
+!===================== Det/DetCond v11r10 2008-04-22 =========================
+! 2008-04-22 - Marco Clemencic
+ - Fixed a problem in CondDBAccessSvc related to the usage of local tags.
+
 ! 2008-04-09 - Marco Clemencic
  - Modified default idle connection time-out in CondDBAccessSvc from 600s to
    120s.
