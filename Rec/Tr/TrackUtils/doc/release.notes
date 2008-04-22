@@ -3,6 +3,12 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
+
+! 2008-04-22 - Stephanie Hansmann-Menzemer
+ - Bug fix in TrackFromDST for backward compatibility,
+   add PatKShort tracks (old name of PatDownstream tracks)
+   in PatDownstream collection.
+
 ! 2008-03-27 - Louis Nicolas
  - Moved algorithm TrackRemoveDoubleITHits to TrackRemoveDoubleHits:
    now removes all double hits: in IT, OT and TT (two kinds: same sector and

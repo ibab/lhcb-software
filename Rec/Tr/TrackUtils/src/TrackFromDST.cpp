@@ -1,4 +1,4 @@
-// $Id: TrackFromDST.cpp,v 1.4 2007-10-23 15:37:16 cattanem Exp $
+// $Id: TrackFromDST.cpp,v 1.5 2008-04-22 08:33:16 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -51,7 +51,6 @@ StatusCode TrackFromDST::initialize()
   m_map[ LHCb::Track::PatVeloTT     ] = LHCb::TrackLocation::VeloTT;
   m_map[ LHCb::Track::PatForward    ] = LHCb::TrackLocation::Forward;
   m_map[ LHCb::Track::TrackMatching ] = LHCb::TrackLocation::Match;
-  m_map[ LHCb::Track::PatKShort     ] = LHCb::TrackLocation::Downstream;
   m_map[ LHCb::Track::TsaTrack      ] = LHCb::TrackLocation::Tsa;
   m_map[ LHCb::Track::PatDownstream ] = LHCb::TrackLocation::Downstream;
   
@@ -100,11 +99,21 @@ TracksMap TrackFromDST::classifyTracks( LHCb::Tracks*& inTracks )
         iter != m_map.end(); ++iter ) {
     tMap[(*iter).first] = std::vector<LHCb::Track*>();
   }
-
+  
   LHCb::Tracks::iterator iTrack = inTracks -> begin();
-  for( ; iTrack != inTracks -> end(); ++iTrack ) {
-    tMap[(*iTrack)->history()].push_back( *iTrack );
-  }  
+  for( ; iTrack != inTracks -> end(); ++iTrack ) { 
+    TracksMap::iterator it = tMap.find( (*iTrack)->history() );
+     if ( it != tMap.end() ) {
+       (it->second).push_back( *iTrack );
+     } else 
+       // in for backward compatiblity, PatDownstream tracks were
+       // called PatKShort tracks before
+       if ( (*iTrack)->history() == LHCb::Track::PatKShort ) {
+	 tMap[LHCb::Track::PatDownstream].push_back( *iTrack );
+       } else {
+	 debug() << "Invalid track type " << (*iTrack)->history() << endmsg;
+       }  
+  }
 
   return tMap;
 }
