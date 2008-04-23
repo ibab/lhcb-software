@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.25 2008-04-04 13:50:37 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.26 2008-04-23 15:49:32 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -113,14 +113,14 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
 
   if(m_packed){  // TELL1 format : 1 source per TELL1
     std::vector<Tell1Param>& tell1s = m_calo->tell1Params();
-    for(std::vector<int>::iterator it = sources.begin() ; it != sources.end() ; it++){
+    for(std::vector<Tell1Param>::iterator itt = tell1s.begin() ; itt != tell1s.end() ; itt++){
       bool ok=false;
-      for(std::vector<Tell1Param>::iterator itt = tell1s.begin() ; itt != tell1s.end() ; itt++){
+      for(std::vector<int>::iterator it = sources.begin() ; it != sources.end() ; it++){
         if( (*itt).number() == *it){ok=true;break;}
       }
       ok ? 
-        m_status.addStatus( *it , LHCb::RawBankReadoutStatus::OK) : 
-        m_status.addStatus( *it , LHCb::RawBankReadoutStatus::Missing);
+        m_status.addStatus( (*itt).number()  , LHCb::RawBankReadoutStatus::OK) : 
+        m_status.addStatus( (*itt).number()  , LHCb::RawBankReadoutStatus::Missing);
     }
   } else { // Offline format : single source 0
     (sources.size() != 0) ? 
@@ -174,7 +174,9 @@ int CaloReadoutTool::findCardbyCode(std::vector<int> feCards , int code){
       break;
     }        
   }
-  error() << "  FE-Card [code : " << code << "] does not match the condDB cabling scheme  " << endreq;
+  std::stringstream c("");
+  c<<code;
+  Error("FE-Card [code : " + c.str() + "] does not match the condDB cabling scheme  ",StatusCode::SUCCESS).ignore();
   return -1;
 }    
 
