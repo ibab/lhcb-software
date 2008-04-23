@@ -4,6 +4,11 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v3r4p2 2008-04-23 =====================
+! 2008-04-23 - Marco Cattaneo
+ - In TrackResChecker.h change type of m_plotsByMeasType to bool, to match
+   Property type. Needed for Python options type checking
+
 !======================= TrackCheckers v3r4p1 2008-02-08 =====================
 ! 2008-02-08 - Marco Cattaneo
  - Add missing includes following changes in event model includes

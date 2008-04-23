@@ -1,4 +1,4 @@
-// $Id: TrackResChecker.h,v 1.1 2007-06-27 15:05:06 mneedham Exp $
+// $Id: TrackResChecker.h,v 1.2 2008-04-23 13:53:34 cattanem Exp $
 #ifndef TRACKRESCHECKER_H
 #define TRACKRESCHECKER_H 1
  
@@ -64,7 +64,7 @@ class TrackResChecker : public TrackCheckerBase {
                                        const std::string& type) const;
 
  std::vector<double> m_zPositions;
- double m_plotsByMeasType;
+ bool m_plotsByMeasType;
 
  typedef LinkedTo<LHCb::MCParticle,LHCb::OTTime> OTLinks;
  mutable OTLinks m_otLinker;
