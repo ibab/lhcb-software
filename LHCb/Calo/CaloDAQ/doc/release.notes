@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v4r4p1 2008-04-23 ========================
+! 2008-04-23 - Marco Cattaneo
+ - In CaloBankHandler.opts, remove some whitespace causing problems to Python
+
 !========================== CaloDAQ v4r4 2008-04-08 ==========================
 ! 2008-04-04 - Olivier Deschamps
  - reduce verbosity in decoding tools

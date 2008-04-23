@@ -26,7 +26,7 @@ PrsBanksHandler.Members = { "CheckCaloBank/PrsCheckBanks",        // ...Check if
 
 RemoveEcalPackedBanks.bankTypes ={ "EcalPacked" };
 RemoveHcalPackedBanks.bankTypes ={ "HcalPacked" };
-RemovePrsPackedBanks .bankTypes ={ "PrsPacked"  };
+RemovePrsPackedBanks.bankTypes  ={ "PrsPacked"  };
 
 EcalADCs.OutputType ="ADCs";
 HcalADCs.OutputType ="ADCs";
