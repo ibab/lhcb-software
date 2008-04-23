@@ -1,7 +1,7 @@
 # Example file for running Boole on data produced with DC06 geometry 
 
 # Syntax is:
-#   gaudirun.py ../options/BooleCommon.py ../options/v200601.py
+#   gaudirun.py $BOOLEOPTS/v200601.py
 #
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
@@ -10,6 +10,7 @@ from Boole.Configuration import *
 ##############################################################################
 # Available steering options with defaults.
 # Edit one or more of these lines to change the defaults
+##############################################################################
 # Boole().EvtMax          = -1    # Number of events to process
 # Boole().skipEvents      = 0     # Number of events to skip before first event
 # Boole().skipSpill       = 0     # Number of spillover events to skip

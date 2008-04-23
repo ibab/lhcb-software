@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.5 2008-04-18 14:23:19 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2008-04-23 11:47:50 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -9,6 +9,7 @@ from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import ( CondDBAccessSvc, MagneticFieldSvc,
                             MCSTDepositCreator ) 
+import GaudiKernel.ProcessJobOptions
 
 class Boole(ConfigurableUser):
     __slots__ = {
@@ -168,6 +169,8 @@ class Boole(ConfigurableUser):
             return ApplicationMgr().getDefaultProperties()["EvtMax"]
 
     def applyConf(self):
+        GaudiKernel.ProcessJobOptions.printing_level += 1
+        importOptions('$BOOLEOPTS/Boole.opts')
         self.defineDB()
         self.defineEvents()
         self.defineOptions()

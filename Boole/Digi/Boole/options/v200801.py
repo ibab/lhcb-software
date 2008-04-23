@@ -1,7 +1,7 @@
 # Example file for running Boole on data produced with Gaudi v31r* or greater 
 
 # Syntax is:
-#   gaudirun.py ../options/BooleCommon.py ../options/v200801.py
+#   gaudirun.py $BOOLEOPTS/options/v200801.py
 #
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
@@ -10,6 +10,7 @@ from Boole.Configuration import *
 ##############################################################################
 # Available steering options with defaults.
 # Edit one or more of these lines to change the defaults
+##############################################################################
 # Boole().EvtMax          = -1    # Number of events to process
 # Boole().skipEvents      = 0     # Number of events to skip before first event
 # Boole().skipSpill       = 0     # Number of spillover events to skip
@@ -28,6 +29,7 @@ from Boole.Configuration import *
 ##############################################################################
 
 Boole().datasetName = '11144103-500ev-20080228' # Events from Gauss v30r1
+Boole().DDDBtag     = "head-20080130"
 Boole().condDBtag   = "head-20080130"
 
 ##############################################################################
