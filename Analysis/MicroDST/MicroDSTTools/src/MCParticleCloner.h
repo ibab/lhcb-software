@@ -1,4 +1,4 @@
-// $Id: MCParticleCloner.h,v 1.3 2008-04-04 14:07:20 jpalac Exp $
+// $Id: MCParticleCloner.h,v 1.4 2008-04-23 13:01:55 jpalac Exp $
 #ifndef MCPARTICLECLONER_H 
 #define MCPARTICLECLONER_H 1
 
@@ -49,10 +49,16 @@ public:
   
 private:
 
-  LHCb::MCParticle* clone(const LHCb::MCParticle* mcp, bool cloneOriginVertex);
+  LHCb::MCParticle* clone(const LHCb::MCParticle* mcp);
 
-  LHCb::MCVertex* cloneVertexTree(const LHCb::MCVertex* mcVertex);
-
+  inline bool cloneOriginVertex(const LHCb::MCVertex* vertex) 
+  {
+    return vertex && (vertex->isDecay() || vertex->isPrimary() );
+  }
+  
+  void cloneDecayVertices(const SmartRefVector<LHCb::MCVertex>& endVertices,
+                          LHCb::MCParticle* clonedParticle);
+  
 private:
 
   typedef MicroDST::BasicItemCloner<LHCb::MCParticle> BasicMCPCloner;
