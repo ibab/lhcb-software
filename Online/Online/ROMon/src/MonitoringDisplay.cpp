@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.cpp,v 1.7 2008-04-22 17:26:04 frankb Exp $
+// $Id: MonitoringDisplay.cpp,v 1.8 2008-04-23 09:48:45 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.7 2008-04-22 17:26:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.8 2008-04-23 09:48:45 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -101,6 +101,7 @@ void MonitoringDisplay::showTasks(const Nodeset& ns) {
   int nTsk;
   char txt[2][256];
   std::string part = m_partName + "_";
+  std::string part2 = "_" + m_partName;
   MonitorDisplay* disp = m_tasks;
   const char* fmt = " %-24s%4s %c%c%c%c%11d %3.0f ";
   sprintf(txt[0],   " %-23s%5s %c%c%c%c%11s %3s ","Monitoring Task","State",'R','e','q','s',"Seen","[%]");
@@ -110,7 +111,9 @@ void MonitoringDisplay::showTasks(const Nodeset& ns) {
     if ( ::strncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) != 0 ) {
       const Buffers& buffs = *(*n).buffers();
       for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+	std::string buff_nam = (*ib).name;
 	const Clients& clients = (*ib).clients;
+	if ( buff_nam.find(part2) == std::string::npos ) continue;
 	for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
 	  const MBMClient& c = *ic;
 	  if (strncmp(c.name,part.c_str(),part.length())==0) {
@@ -120,7 +123,7 @@ void MonitoringDisplay::showTasks(const Nodeset& ns) {
 	    else if ( (typ=nullstr(nam,"_RCV")) ) {}
 	    else if ( (typ=nullchr(node,'_')) && c.type=='C' ) {
 	      *typ = 0;
-	      float perc=(*ib).ctrl.tot_produced>0 ? 100*(c.events/(*ib).ctrl.tot_produced) : 0;
+	      float perc=(*ib).ctrl.tot_produced>0 ? 100*(float(c.events)/(*ib).ctrl.tot_produced) : 0;
 	      sprintf(txt[nTsk++],fmt,++typ,sstat[size_t(c.state)],c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],c.events,perc);
 	      if ( nTsk==2 ) {
 		disp->draw_line_normal("%-50s%-50s",txt[0],txt[1]);
@@ -141,10 +144,12 @@ void MonitoringDisplay::showNodes(const Nodeset& ns) {
   MBMBuffer::Control total;
   MonitorDisplay* disp = m_nodes;
   std::string part = m_partName + "_";
-  const char* fmt = " %-10s %12d%12d%12d%12d%12d%12d";
+  std::string part2 = "_" + m_partName;
+  const char* fmt = " %-10s %-12s %12d%12d%12d%12d%12d%12d";
 
   ::memset(&total,0,sizeof(total));
-  disp->draw_line_reverse(" %-10s %12s%12s%12s%12s%12s%12s","Node","Received","Produced","Pending","Space[kB]","Free Slots","Free Users");
+  disp->draw_line_reverse(" %-10s %-12s %12s%12s%12s%12s%12s%12s",
+			  "Node","Buffer","Received","Produced","Pending","Space[kB]","Free Slots","Free Users");
   
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     if ( ::strncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) != 0 ) {
@@ -152,13 +157,15 @@ void MonitoringDisplay::showNodes(const Nodeset& ns) {
       for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
 	const MBMBuffer::Control& ctrl = (*ib).ctrl;
 	const Clients& clients = (*ib).clients;
+	std::string buff_nam = (*ib).name;
+	if ( buff_nam.find(part2) == std::string::npos ) continue;
 	for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
 	  const MBMClient& c = *ic;
 	  if (strncmp(c.name,part.c_str(),part.length())==0) {
 	    char nam[BM_USER_NAME_LEN],*typ,*node=nam+part.length();
 	    ::strcpy(nam,c.name);
 	    if ( (typ=nullstr(nam,"_RCV")) )  {
-	      disp->draw_line_normal(fmt,node,c.events,ctrl.tot_produced,ctrl.i_events,
+	      disp->draw_line_normal(fmt,node,buff_nam.c_str(),c.events,ctrl.tot_produced,ctrl.i_events,
 				     (ctrl.i_space*ctrl.bytes_p_Bit)/1024,
 				     ctrl.p_emax-ctrl.i_events,ctrl.p_umax-ctrl.i_users);
 	      seen += c.events;
@@ -175,7 +182,7 @@ void MonitoringDisplay::showNodes(const Nodeset& ns) {
       }
     }
   }
-  disp->draw_line_bold(fmt,"Total:",seen,total.tot_produced,total.i_events,
+  disp->draw_line_bold(fmt,"Total","(all)",seen,total.tot_produced,total.i_events,
 		       total.i_space,total.p_emax-total.i_events,total.p_umax-total.i_users);
 }
 
@@ -188,39 +195,44 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
   Streams streams;
   MonitorDisplay* disp = m_relay;
   std::string part = m_partName + "_";
+  std::string part2 = "_" + m_partName;
 
-  disp->draw_line_reverse(" %-10s %11s%12s%11s%11s%10s%6s%6s","Node","Received","Produced","Pending",
-		       "Sent","Free[kB]","Slots","Users");
+  disp->draw_line_reverse(" %-10s %-12s %11s%12s%11s%11s%10s%6s%6s",
+			  "Node","Buffer","Received","Produced","Pending",
+			  "Sent","Free[kB]","Slots","Users");
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     if ( ::strncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) == 0 ) {
       const Buffers& buffs = *(*n).buffers();
       for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-	const MBMBuffer::Control& c = (*ib).ctrl;
-	const Clients& clients = (*ib).clients;
-	for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	  const MBMClient& cl = *ic;
-	  if (strncmp(cl.name,part.c_str(),part.length())==0) {
-	    char nam[BM_USER_NAME_LEN], *typ, *ptr, *str;
-	    strcpy(nam,cl.name);
-	    if ( (typ=nullstr(nam,"_RCV")) )  {
-	      *typ = 0;
-	      str=typ+4;
-	      received += cl.events;
-	      streams[str].received  = cl.events;
-	      streams[str].buffer    = &(*ib);
-	    }
-	    else if ( (typ=nullstr(nam,"_SND")) ) {
-	      str=typ+4;
-	      ptr = nullchr(typ+4,'_');
-	      streams[str].to[++ptr] = cl.events;
-	      streams[str].buffer    = &(*ib);
+	std::string buff_nam = (*ib).name;
+	if ( buff_nam.find(part2.c_str()) != std::string::npos )  {
+	  const MBMBuffer::Control& c = (*ib).ctrl;
+	  const Clients& clients = (*ib).clients;
+	  for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
+	    const MBMClient& cl = *ic;
+	    if (strncmp(cl.name,part.c_str(),part.length())==0) {
+	      char nam[BM_USER_NAME_LEN], *typ, *ptr, *str;
+	      strcpy(nam,cl.name);
+	      if ( (typ=nullstr(nam,"_RCV")) )  {
+		*typ = 0;
+		str=typ+4;
+		received += cl.events;
+		streams[str].received  = cl.events;
+		streams[str].buffer    = &(*ib);
+	      }
+	      else if ( (typ=nullstr(nam,"_SND")) ) {
+		str=typ+4;
+		ptr = nullchr(typ+4,'_');
+		streams[str].to[++ptr] = cl.events;
+		streams[str].buffer    = &(*ib);
+	      }
 	    }
 	  }
+	  nlines++;
+	  disp->draw_line_normal(" %-10s %-12s %11d%12d%11d%11d%10d%6d%6d",
+				 (*n).name,buff_nam.c_str(),received,c.tot_produced,c.i_events,received,
+				 (c.i_space*c.bytes_p_Bit)/1024,c.p_emax-c.i_events,c.i_users);
 	}
-	nlines++;
-	disp->draw_line_normal(" %-10s %11d%12d%11d%11d%10d%6d%6d",
-			       m_relayNode.c_str(),received,c.tot_produced,c.i_events,received,
-			       ((c.bm_size-c.i_space)*c.bytes_p_Bit)/1024,c.p_emax-c.i_events,c.i_users);
       }
     }
   }
