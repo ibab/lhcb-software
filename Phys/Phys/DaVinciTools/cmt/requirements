@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.105 2008-04-17 16:18:44 pkoppenb Exp $
+# $Id: requirements,v 1.106 2008-04-23 20:28:26 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -18,8 +18,8 @@ use  Boost                 v* LCG_Interfaces
 use  DaVinciKernel         v* Phys
 use  LHCbMath              v* Kernel
 use  CaloUtils             v* Calo
-#use  LoKiPhys              v* Phys
-#use  LoKiArrayFunctors     v* Phys
+use  LoKiPhys              v* Phys
+use  LoKiArrayFunctors     v* Phys
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are

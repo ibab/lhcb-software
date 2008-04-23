@@ -1,0 +1,58 @@
+
+#include "$LOKIEXAMPLEOPTS/LoKi_Hybrid.opts"
+
+ApplicationMgr.TopAlg  = { "CombineParticles/Test" };
+
+Test.PhysDesktop.InputLocations = { 
+  "Phys/StdTightMuons" , 
+  "Phys/StdTightKaons"  
+};
+Test.DecayDescriptors = { "B0 -> mu+ mu- K+ K-" } ;
+Test.DaughtersCuts = {
+  'mu-' : "PT>1*GeV" ,    
+  'K-'  : "PT>1*GeV"     
+};
+Test.MotherCut = "PT>1*GeV" ;
+
+ApplicationMgr.TopAlg += { "OldCombineParticles/Test2" };
+ApplicationMgr.TopAlg += { "OldCombineParticles/Test1" };
+
+
+Test1.PhysDesktop.InputLocations = { 
+  "Phys/StdTightMuons" , 
+  "Phys/StdTightKaons"  
+};
+Test1.DecayDescriptors = { "B0 -> mu+ mu- K+ K-" } ;
+Test1.DaughtersCuts = {
+  'mu-' : 'PT>0.3*GeV' ,    
+  'K+'  : 'PT>0.3*GeV'     
+};
+Test1.MotherCut = "ALL" ;
+
+
+Test2.PhysDesktop.InputLocations = { 
+  "Phys/StdTightMuons" , 
+  "Phys/StdTightKaons"  
+};
+
+Test2.DecayDescriptors = { "B0 -> mu+ mu- K+ K-" } ;
+Test2.FILTER0.Code  = " (('K+'==ABSID)&(PT>0.3*GeV)) | (('mu+'==ABSID)&(PT>0.3*GeV))" ;
+Test2.FILTER1.Code  = "ALL" ;
+Test2.FILTER2.Code  = "ALL" ;
+
+
+  
+ApplicationMgr.TopAlg += { "PrintDecayTree/Print1" };
+Print1.PhysDesktop.InputLocations = { "Phys/Test1" };
+
+ApplicationMgr.TopAlg += { "PrintDecayTree/Print2" };
+Print2.PhysDesktop.InputLocations = { "Phys/Test1" };
+Print2.PrintDecayTool = "LoKi::Hybrid::PrintTool/PRINT" ;
+
+Print2.PRINT.Variables = { "ID" , "P/GeV" , "PT/GeV" , "M" , "KEY" } ;
+
+
+ApplicationMgr.EvtMax = 50 ;
+
+
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"

@@ -1,8 +1,21 @@
-! $Id: release.notes,v 1.317 2008-04-17 16:50:58 pkoppenb Exp $
+! $Id: release.notes,v 1.318 2008-04-23 20:28:26 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-04-23 - Patrick Koppenburg
+ - Renamed CombineParticles to OldCombineParticles.
+ - New implementation CombineParticles. Small change in syntax :
+
+CombineParticles.DecayDescriptors = { "B0 -> mu+ mu- K+ K-" } ;
+CombineParticles.DaughtersCuts = {
+  'mu-' : "PT>1*GeV" ,    
+  'K-'  : "PT>1*GeV"     
+};
+CombineParticles.CombinationCut = "ADAMASS('B0')<500*MeV"
+CombineParticles.MotherCut = "PT>1*GeV" ;
+
 
 ! 2008-04-17 - Patrick Koppenburg
  - Use keep instead of save
@@ -60,6 +73,12 @@
 
 ! 2008-03-28 - Patrick Koppenburg
  - CombineParticles : Fix uninitialised m_printStats
+Test.DecayDescriptors = { "B0 -> mu+ mu- K+ K-" } ;
+Test.DaughtersCuts = {
+  'mu-' : "PT>1*GeV" ,    
+  'K-'  : "PT>1*GeV"     
+};
+Test.MotherCut = "PT>1*GeV" ;
 
 ! 2008-03-27 - Patrick Koppenburg
  - DecayFinder : check StatusCode

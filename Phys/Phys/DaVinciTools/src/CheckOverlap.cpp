@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.cpp,v 1.13 2007-01-15 10:32:26 jpalac Exp $
+// $Id: CheckOverlap.cpp,v 1.14 2008-04-23 20:28:27 pkoppenb Exp $
 
 // Include files 
 
@@ -46,13 +46,13 @@ CheckOverlap::CheckOverlap( const std::string& type,
 //===========================================================================
 bool CheckOverlap::foundOverlap( const LHCb::Particle::ConstVector & parts, 
                                  std::vector<const LHCb::ProtoParticle* > & proto ) {
-  verbose() << "foundOverlap(parts, protos) " << parts.size() << " " 
+  if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(parts, protos) " << parts.size() << " " 
             << proto.size() << endmsg ;
   StatusCode sc = addOrigins( parts, proto );
   if (!sc){
     Exception("Unable to get origin vector of particle vector");
   }
-  verbose() << "searching overlap" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "searching overlap" << endmsg ;
   return searchOverlap( proto );
 }
 //===========================================================================
@@ -60,30 +60,32 @@ bool CheckOverlap::foundOverlap( const LHCb::Particle::ConstVector & parts,
 //===========================================================================
 bool CheckOverlap::searchOverlap( std::vector<const LHCb::ProtoParticle* > & proto ) {
   
-  verbose() << "searchOverlap(protos)" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "searchOverlap(protos)" << endmsg ;
   // It its a simple particle made from protoparticle. Check.
 
   for (std::vector<const LHCb::ProtoParticle* >::const_iterator i = proto.begin(); 
        i != proto.end() ; ++i){
-    verbose() << "In single loop" << endmsg ;
     for (std::vector<const LHCb::ProtoParticle* >::const_iterator j = i ; 
          j != proto.end(); ++j){
       if (j==i) continue ;
-      verbose() << "In double loop" << endmsg ;
-      if ( *i==*j ) return true ;
+      if ( *i==*j ) {
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Found overlap " << *i << endmsg ;
+       return true ;
+      }
     } 
   }
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Found no overlap" << endmsg ;
   return false;
 }
 //===========================================================================
 bool CheckOverlap::foundOverlap( const LHCb::Particle::ConstVector & parts ){  
-  verbose() << "foundOverlap(LHCb::Particle::ConstVector)" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(LHCb::Particle::ConstVector)" << endmsg ;
   std::vector<const LHCb::ProtoParticle* > m_proto(0);
   return foundOverlap( parts, m_proto );
 }
 //===========================================================================
 bool CheckOverlap::foundOverlap( const LHCb::Particle* particle1 ){ 
-  verbose() << "foundOverlap(1)" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(1)" << endmsg ;
   if (!particle1) Exception("Null pointer");
   LHCb::Particle::ConstVector parts(1, particle1 );
   std::vector<const LHCb::ProtoParticle* > m_proto(0);
@@ -92,7 +94,7 @@ bool CheckOverlap::foundOverlap( const LHCb::Particle* particle1 ){
 //===========================================================================
 bool CheckOverlap::foundOverlap( const LHCb::Particle* particle1, 
                                  const LHCb::Particle* particle2 ){  
-  verbose() << "foundOverlap(2)" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(2)" << endmsg ;
   if (!particle1 || !particle2) Exception("Null pointer");
   LHCb::Particle::ConstVector parts ;
   parts.push_back( particle1 );
@@ -104,7 +106,7 @@ bool CheckOverlap::foundOverlap( const LHCb::Particle* particle1,
 bool CheckOverlap::foundOverlap( const LHCb::Particle* particle1, 
                                  const LHCb::Particle* particle2, 
                                  const LHCb::Particle* particle3){
-  verbose() << "foundOverlap(3)" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(3)" << endmsg ;
   if (!particle1 || !particle2 || !particle3) Exception("Null pointer");
   LHCb::Particle::ConstVector parts ;
   parts.push_back( particle1 );
@@ -118,7 +120,7 @@ bool CheckOverlap::foundOverlap( const LHCb::Particle* particle1,
                                  const LHCb::Particle* particle2, 
                                  const LHCb::Particle* particle3, 
                                  const LHCb::Particle* particle4){
-  verbose() << "foundOverlap(4)" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(4)" << endmsg ;
   if (!particle1 || !particle2 || !particle3|| !particle4 ) Exception("Null pointer");
   LHCb::Particle::ConstVector parts ;
   parts.push_back( particle1 );
@@ -133,7 +135,7 @@ bool CheckOverlap::foundOverlap( const LHCb::Particle* particle1,
 // any particle in vector. Removes found particles from vector.
 //===========================================================================
 StatusCode CheckOverlap::removeOverlap( LHCb::Particle::Vector& PV){
-  verbose() << "removeOverlap( LHCb::Particle::Vector)" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "removeOverlap( LHCb::Particle::Vector)" << endmsg ;
   LHCb::Particle::Vector Out ;
   for ( LHCb::Particle::Vector::const_iterator i = PV.begin() ; i!=PV.end() ; ++i){
     if (!foundOverlap( *i )) Out.push_back(*i);
@@ -143,7 +145,7 @@ StatusCode CheckOverlap::removeOverlap( LHCb::Particle::Vector& PV){
 } 
 //===========================================================================
 StatusCode CheckOverlap::removeOverlap( LHCb::Particle::ConstVector& PV){
-  verbose() << "removeOverlap(LHCb::Particle::ConstVector)" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "removeOverlap(LHCb::Particle::ConstVector)" << endmsg ;
   LHCb::Particle::ConstVector Out ;
   for ( LHCb::Particle::ConstVector::const_iterator i = PV.begin() ; i!=PV.end() ; ++i){
     if (!foundOverlap( *i )) Out.push_back(*i);
@@ -156,19 +158,18 @@ StatusCode CheckOverlap::removeOverlap( LHCb::Particle::ConstVector& PV){
 //=============================================================================
 StatusCode  CheckOverlap::addOrigins( const LHCb::Particle::ConstVector& parts, 
                                       std::vector<const LHCb::ProtoParticle* >& protos){
-  verbose() << "addOrigins() " << parts.size() << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "addOrigins() " << parts.size() << endmsg ;
   for ( LHCb::Particle::ConstVector::const_iterator c = parts.begin() ; c !=  parts.end() ; ++c ){
     
-    verbose() << "Particle loop " << endmsg ;  
-    verbose() << "Particle loop " << (*c)->particleID() << endmsg ;  
-    verbose() << "Particle " << (*c)->particleID().pid() 
+    if (msgLevel(MSG::VERBOSE))
+      verbose() << "Particle " << (*c)->particleID().pid() 
               << " " << (*c)->momentum() << endmsg ;
     if ( (*c)->proto() ){
-      verbose() << "has an origin " << (*c)->proto() << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "has an origin " << (*c)->proto() << endmsg ;
       protos.push_back((*c)->proto());
     } else if ( (*c)->endVertex() ){
-      verbose() << "has a vertex" << (*c)->endVertex() << endmsg ;
-      verbose() << "has a daughters " << (*c)->daughters().size() << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "has a vertex" << (*c)->endVertex() << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "has a daughters " << (*c)->daughters().size() << endmsg ;
       LHCb::Particle::ConstVector dau = (*c)->daughtersVector()  ;
       StatusCode sc = addOrigins(dau, protos);
       if (!sc) return sc ;
@@ -181,6 +182,6 @@ StatusCode  CheckOverlap::addOrigins( const LHCb::Particle::ConstVector& parts,
                  <<  "Assuming it's from MC" << endmsg ;
     } 
   }
-  verbose() << "addOrigins() left " << protos.size() << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "addOrigins() left " << protos.size() << endmsg ;
   return StatusCode::SUCCESS ;
 }
