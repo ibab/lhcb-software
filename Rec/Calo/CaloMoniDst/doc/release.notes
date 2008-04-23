@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.16 2007-12-03 07:52:13 cattanem Exp $ 
+! $Id: release.notes,v 1.17 2008-04-23 13:55:19 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+!========================== CaloMoniDst v3r0p2 2008-04-23 ===================
+! 2008-04-23 - Marco Cattaneo
+ - Remove whitespace in options, needed for Python options parser
 
 !========================== CaloMoniDst v3r0p1 2007-12-03 ===================
 ! 2007-12-03 - Marco Cattaneo

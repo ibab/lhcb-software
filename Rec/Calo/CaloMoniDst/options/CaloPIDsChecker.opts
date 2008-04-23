@@ -5,47 +5,47 @@
 //   - Associated MC-type = Particle, 0 (Ghost) and non-Particle 
 
 
-PIDeEcalChecker.  Particle      =  11                  ;
-PIDeEcalChecker.  Input         = "Rec/Calo/EcalPIDe"  ;
-PIDeEcalChecker.  Normalization =  50.0 * GeV          ;
-PIDeEcalChecker.  Cut           =  0.0                 ;
-PIDeEcalChecker.  TrackType     = "Long"               ;
-PIDeEcalChecker.  TrackAcceptance= "Rec/Calo/InAccEcal" ;
+PIDeEcalChecker.Particle      =  11                  ;
+PIDeEcalChecker.Input         = "Rec/Calo/EcalPIDe"  ;
+PIDeEcalChecker.Normalization =  50.0 * GeV          ;
+PIDeEcalChecker.Cut           =  0.0                 ;
+PIDeEcalChecker.TrackType     = "Long"               ;
+PIDeEcalChecker.TrackAcceptance= "Rec/Calo/InAccEcal" ;
 
 
-PIDePrsChecker.   Particle      = 11 ;
-PIDePrsChecker.   Input         = "Rec/Calo/PrsPIDe"   ;
-PIDePrsChecker.   Normalization =  50.0 * GeV ;
-PIDePrsChecker.   Cut           =  0.0                 ;
-PIDePrsChecker.   TrackType     = "Long" ;
-PIDePrsChecker.   TrackAcceptance= "Rec/Calo/InAccPrs" ;
+PIDePrsChecker.Particle      = 11 ;
+PIDePrsChecker.Input         = "Rec/Calo/PrsPIDe"   ;
+PIDePrsChecker.Normalization =  50.0 * GeV ;
+PIDePrsChecker.Cut           =  0.0                 ;
+PIDePrsChecker.TrackType     = "Long" ;
+PIDePrsChecker.TrackAcceptance= "Rec/Calo/InAccPrs" ;
 
 
-PIDeBremChecker.  Particle      = 11 ;
-PIDeBremChecker.  Input         = "Rec/Calo/BremPIDe"  ;
-PIDeBremChecker.  Normalization =  50.0 * GeV ;
-PIDeBremChecker.  Cut           =  0.                 ;
-PIDeBremChecker.   TrackType     = "Long" ;
-PIDeBremChecker.   TrackAcceptance= "Rec/Calo/InAccBrem" ;
+PIDeBremChecker.Particle      = 11 ;
+PIDeBremChecker.Input         = "Rec/Calo/BremPIDe"  ;
+PIDeBremChecker.Normalization =  50.0 * GeV ;
+PIDeBremChecker.Cut           =  0.                 ;
+PIDeBremChecker.TrackType     = "Long" ;
+PIDeBremChecker.TrackAcceptance= "Rec/Calo/InAccBrem" ;
 
-PIDeHcalChecker.  Particle      = 11 ;
-PIDeHcalChecker.  Input         = "Rec/Calo/HcalPIDe"  ;
-PIDeHcalChecker.  Normalization =  50.0 * GeV ;
-PIDeHcalChecker.  Cut           =  0.                 ;
-PIDeHcalChecker.   TrackType     = "Long" ;
-PIDeHcalChecker.   TrackAcceptance= "Rec/Calo/InAccHcal" ;
+PIDeHcalChecker.Particle      = 11 ;
+PIDeHcalChecker.Input         = "Rec/Calo/HcalPIDe"  ;
+PIDeHcalChecker.Normalization =  50.0 * GeV ;
+PIDeHcalChecker.Cut           =  0.                 ;
+PIDeHcalChecker.TrackType     = "Long" ;
+PIDeHcalChecker.TrackAcceptance= "Rec/Calo/InAccHcal" ;
 
 
-PIDmEcalChecker.  Particle      = 13 ;
-PIDmEcalChecker.  Input         = "Rec/Calo/EcalPIDmu" ;
-PIDmEcalChecker.  Normalization =  25.0 * GeV ;
-PIDmEcalChecker.  Cut           =  0.                 ;
-PIDmEcalChecker.   TrackType     = "Long" ;
-PIDmEcalChecker.   TrackAcceptance= "Rec/Calo/InAccEcal" ;
+PIDmEcalChecker.Particle      = 13 ;
+PIDmEcalChecker.Input         = "Rec/Calo/EcalPIDmu" ;
+PIDmEcalChecker.Normalization =  25.0 * GeV ;
+PIDmEcalChecker.Cut           =  0.                 ;
+PIDmEcalChecker.TrackType     = "Long" ;
+PIDmEcalChecker.TrackAcceptance= "Rec/Calo/InAccEcal" ;
 
-PIDmHcalChecker.  Particle      = 13                   ;
-PIDmHcalChecker.  Input         = "Rec/Calo/HcalPIDmu" ;
-PIDmHcalChecker.  Normalization =  25.0 * GeV          ;
-PIDmHcalChecker.  Cut           =  0.                 ;
-PIDmHcalChecker.   TrackType     = "Long" ;
-PIDmHcalChecker.   TrackAcceptance= "Rec/Calo/InAccHcal" ;
+PIDmHcalChecker.Particle      = 13                   ;
+PIDmHcalChecker.Input         = "Rec/Calo/HcalPIDmu" ;
+PIDmHcalChecker.Normalization =  25.0 * GeV          ;
+PIDmHcalChecker.Cut           =  0.                 ;
+PIDmHcalChecker.TrackType     = "Long" ;
+PIDmHcalChecker.TrackAcceptance= "Rec/Calo/InAccHcal" ;
