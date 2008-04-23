@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.76 2008-02-05 10:51:22 jpalac Exp $ 
+! $Id: release.notes,v 1.77 2008-04-23 20:31:01 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+! 2008-04-23 - Patrick Koppenburg
+ - Change of default values for NoPIDsParticleMaker:
+   UseDownstreamTracks : true -> false
+   UseUpstreamTracks :   true -> false
+   This aligns with CombinedParticlemaker
+ - Increment to v4r0 as this is backward-incompatible
 
 !======================== ParticleMaker v3r4p1 2008-02-05 ===================
 

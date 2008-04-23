@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.11 2007-11-27 16:46:14 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.12 2008-04-23 20:31:01 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -48,8 +48,8 @@ NoPIDsParticleMaker::NoPIDsParticleMaker( const std::string& type,
   , m_sum    ( 0 ) 
   , m_sum2   ( 0 )
   , m_longTracks ( true )
-  , m_downstreamTracks ( true )  // set to false for HLT
-  , m_vttTracks ( true )         // set to false for HLT
+  , m_downstreamTracks ( false )  // set to false for HLT
+  , m_vttTracks ( false )         // set to false for HLT
   , m_veloTracks ( false )         // 
   , m_p2s()
 {
