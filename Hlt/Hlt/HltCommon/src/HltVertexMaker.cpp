@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.15 2008-02-06 20:04:44 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.16 2008-04-23 09:08:22 hernando Exp $
 // Include files 
 
 
@@ -30,11 +30,12 @@ using namespace boost::lambda;
 // Standard constructor, initializes variables
 //=============================================================================
 HltVertexMaker::HltVertexMaker( const std::string& name,
-                                          ISvcLocator* pSvcLocator)
+                                ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
   declareProperty("CheckForOverlaps", m_checkForOverlaps = false );
   declareProperty("FilterDescriptor", m_filterDescriptor);
+  declareProperty("DoMergeInputs", m_doMergeInputs = true);
 
   m_inputTracks = 0;
   m_inputTracks2 = 0;
@@ -139,13 +140,20 @@ StatusCode HltVertexMaker::execute() {
     debug() << " no enought tracks in container to make vertices " << endreq;
     return sc;
   } 
-  if (m_twoContainers && (m_inputTracks->size() + m_inputTracks2->size()<2)) {
-    debug() << " no enought tracks in container to make vertices " << endreq;
-    return sc;
+  if (m_twoContainers) {
+    size_t n1 = m_inputTracks->size();
+    size_t n2 = m_inputTracks2->size();
+    bool novalid = false;
+    if (!m_doMergeInputs && (n1<1 || n2<1)) novalid = true;
+    else if (n1+n2<2) novalid = true;
+    if (novalid) {
+      debug() << " no enought tracks in container to make vertices " << endreq;
+      return sc;
+    }
   }
 
   m_input2.clear();
-  zen::copy(*m_inputTracks,m_input2);
+  if (m_doMergeInputs) zen::copy(*m_inputTracks,m_input2);
   if (m_twoContainers) zen::copy(*m_inputTracks2,m_input2);
 
   if (m_debug) {
@@ -164,7 +172,8 @@ StatusCode HltVertexMaker::execute() {
     
     verbose() << " track 0 " << track1.key() << track1.slopes() << endreq;
 
-    itHStart++;
+    if (m_doMergeInputs) itHStart++;
+    else itHStart = m_input2.begin();
 
     for (Hlt::TrackContainer::const_iterator itH = itHStart; 
          itH != m_input2.end(); itH++) {

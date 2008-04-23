@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-04-23 (St. Jorge) - Jose A. Hernando
+ - MakeVertex set option DoMergeInputs option (true by default)   
+
 ! 2008-04-21 - Jose a. Hernando
  - Addapted to the new enum type name HltSelectionSummaryEnum
 

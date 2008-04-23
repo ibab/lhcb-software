@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.h,v 1.6 2008-01-22 09:56:44 hernando Exp $
+// $Id: HltVertexMaker.h,v 1.7 2008-04-23 09:08:22 hernando Exp $
 #ifndef HLTVERTEXMAKER_H 
 #define HLTVERTEXMAKER_H 1
 
@@ -37,6 +37,8 @@ class HltVertexMaker : public HltAlgorithm {
 
  private:
 
+  bool m_doMergeInputs;
+  
   bool m_checkForOverlaps;
   bool m_twoContainers;
 
