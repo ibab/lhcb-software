@@ -3,8 +3,26 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.9 2008-04-04 14:08:06 jpalac Exp $
+! $Id: release.notes,v 1.10 2008-04-23 13:02:23 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-04-11 - Juan PALACIOS
+ - src/MCVertexCloner{.cpp, .h}
+  . Add property "ICloneMCParticle" to control implementation of 
+    ICloneMCVertex to use.
+ - src/MCVertexCloner.cpp,  MCParticleCloner.cpp
+  . Add safety to operator(): check if clonee already exists before invoking 
+    clone() method.
+ - src/MCVertexCloner.cpp
+  . clone(const LHCb::MCVertex*) method now takes control of cloning the 
+    LHCb::Particle products of the MCVertex using the ICloneMCParticle of
+    choice.
+ - src/MCParticleCloner{.cpp, .h}
+  . Remove method 
+    LHCb::MCVertex* cloneVertexTree(const LHCb::MCVertex* mcVertex). 
+    Responsibility delegated to ICloneMCVertex tool.
+  . Add safety to cloning of originVertex. Check if it is already cloned before
+    invoking ICloneMCVertex cloning.
 
 ! 2008-04-04 - Juan PALACIOS
  - src/VertexCloner.h
