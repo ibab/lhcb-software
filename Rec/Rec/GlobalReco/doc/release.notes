@@ -4,6 +4,12 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+
+! 2008-04-23 - Olivier Deschamps
+ - Fix wrong counter initialization in NeutralProtoPAlg
+
+
+
 !========================== GlobalReco v6r15p1 2008-03-27 ====================
 ! 2008-03-27 - Marco Cattaneo
  - Protect some verbose() statements with if ( msgLevel(MSG::VERBOSE) )

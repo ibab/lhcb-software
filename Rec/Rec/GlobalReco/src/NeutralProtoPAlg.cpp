@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.14 2008-03-27 13:13:26 cattanem Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.15 2008-04-23 07:59:38 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -87,6 +87,15 @@ StatusCode NeutralProtoPAlg::initialize()
     info() << " Hypothesis loaded from " << *location << endreq;
   }
 
+  // Initialize counters
+  m_counts["All"] = 0;
+  for ( std::vector<std::string>::const_iterator location = m_hyposLocations.begin() ;
+        m_hyposLocations.end() != location ; ++location ) {
+    m_counts[(*location).substr(9) ] = 0;
+  }
+  
+
+
   // locate tools
   m_spdprs   = tool< ICaloHypoLikelihood>( m_spdprsType   ,  m_spdprsName ) ;
   if( 0 == m_spdprs ) { return StatusCode::FAILURE ; }
@@ -131,7 +140,6 @@ StatusCode NeutralProtoPAlg::execute()
   const LHCb::Calo2Track::IClusTrTable* table = get<LHCb::Calo2Track::IClusTrTable> ( m_matchLocation ) ;
   if ( 0 == table     ) { return Error("Table* points to NULL!");}
   // loop over all caloHypos and create the protoparticles
-  m_counts["All"] = 0;
   for ( std::vector<std::string>::const_iterator location = m_hyposLocations.begin() ;
         m_hyposLocations.end() != location ; ++location ) {
 
@@ -143,7 +151,6 @@ StatusCode NeutralProtoPAlg::execute()
     const LHCb::CaloHypos* hypos = get<LHCb::CaloHypos>( *location );
     if ( msgLevel(MSG::DEBUG) )
       debug() << "CaloHypo loaded at " << *location  << " (# " << hypos->size()<<")"<< endmsg;
-    m_counts[(*location).substr(9) ] = 0;
 
     for ( LHCb::CaloHypos::const_iterator ihypo = hypos->begin() ;
           hypos->end() != ihypo  ; ++ihypo )  {
