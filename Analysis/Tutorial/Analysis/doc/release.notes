@@ -9,6 +9,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-04-24 - Patrick Koppenburg
+ - Corrected way of using Linkers
+
+! 2008-04-24 - Patrick Koppenburg
  - Use new style CombineParticles. Requires DaVinci v19r12.
 
 ! 2008-04-21 - Patrick Koppenburg

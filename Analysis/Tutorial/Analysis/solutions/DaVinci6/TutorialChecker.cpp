@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.cpp,v 1.8 2008-02-12 13:18:30 jpalac Exp $
+// $Id: TutorialChecker.cpp,v 1.9 2008-04-24 12:19:49 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -29,8 +29,7 @@ DECLARE_ALGORITHM_FACTORY( TutorialChecker );
 TutorialChecker::TutorialChecker( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
-  , m_background(),
-    m_pLinker()
+  , m_background()
 {
 }
 //=============================================================================
@@ -47,10 +46,6 @@ StatusCode TutorialChecker::initialize() {
   if ( sc.isFailure() ) return sc;
 
   m_background = tool<IBackgroundCategory>("BackgroundCategory",this);
-  
-  m_pLinker = new Particle2MCLinker(this,
-                                    Particle2MCMethod::Composite,
-                                    std::vector<std::string>(1,"") ); 
 
   debug() << "==> Initialize" << endmsg;
 
@@ -65,13 +60,14 @@ StatusCode TutorialChecker::execute() {
   debug() << "==> Execute" << endmsg;
   StatusCode sc = StatusCode::SUCCESS ;
   // code goes here  
+  Particle2MCLinker Linker(this,Particle2MCMethod::Composite,std::vector<std::string>(1,"") ); 
   Tuple tuple = nTuple("TutorialTuple");
   LHCb::Particle::ConstVector Bcands = desktop()->particles();
   for ( LHCb::Particle::ConstVector::const_iterator b = Bcands.begin(); 
         b != Bcands.end() ; ++b){
     sc = fillHeader(tuple); // header filled for every B, not every event!
     if (sc) sc = fillReco(tuple,*b);
-    if (sc) sc = fillTruth(tuple,*b);
+    if (sc) sc = fillTruth(tuple,*b, &Linker);
     if (sc) sc = fillTagging(tuple,*b);
     if (sc) sc = fillTrigger(tuple);
     
@@ -88,8 +84,6 @@ StatusCode TutorialChecker::execute() {
 StatusCode TutorialChecker::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-
-  if (NULL!=m_pLinker) delete m_pLinker ;  
 
   return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
 }
@@ -131,14 +125,14 @@ StatusCode TutorialChecker::fillReco(Tuple& tuple,const LHCb::Particle* b) {
 //=============================================================================
 //  Truth
 //=============================================================================
-StatusCode TutorialChecker::fillTruth(Tuple& tuple,const LHCb::Particle* b) {
+StatusCode TutorialChecker::fillTruth(Tuple& tuple,const LHCb::Particle* b, Particle2MCLinker* Linker) {
   
   debug() << "==> fillTruth" << endmsg;
   
   IBackgroundCategory::categories cat = m_background->category(b);
   tuple->fill("category",(int)cat);
   
-  const LHCb::MCParticle* MC = m_pLinker->firstMCP( b );
+  const LHCb::MCParticle* MC = Linker->firstMCP( b );
   
   if ( NULL!=MC ){
     tuple->column( "TP", MC->momentum());
@@ -153,26 +147,26 @@ StatusCode TutorialChecker::fillTruth(Tuple& tuple,const LHCb::Particle* b) {
   // some looping in debug mode
   // that's the excerpt from the talk
   if ( msgLevel( MSG::DEBUG )  ){
-    if ( m_pLinker->isAssociated( b ) )
+    if ( Linker->isAssociated( b ) )
       debug() << "Particle is associated" << endmsg;
     else debug() << "Particle is not associated" << endmsg;
-    const LHCb::MCParticle *MCpart = m_pLinker->firstMCP( b );
+    const LHCb::MCParticle *MCpart = Linker->firstMCP( b );
     while ( NULL!=MCpart ){
       debug() << "Particle " << b->key() << " " << b->particleID().pid() 
               << " associated to MC part " << MCpart->key() << " " 
               << MCpart->particleID().pid() << endmsg;
-      MCpart = m_pLinker->next();
+      MCpart = Linker->next();
     }
     
     if ( NULL!=MC ){
-      const LHCb::Particle *Part = m_pLinker->firstP( MC );
+      const LHCb::Particle *Part = Linker->firstP( MC );
       if ( NULL==Part ) debug() << "No association for MC Particle " 
                                 << MC->key() << endmsg ;
       while ( NULL!=Part ){
         debug() << "MC Particle " << MC->key() << " " << MC->particleID().pid()
                 << " associated to Particle " << Part->key() << " " 
                 << Part->particleID().pid()<< endmsg;
-        Part = m_pLinker->nextP();
+        Part = Linker->nextP();
       }
     }
   }
