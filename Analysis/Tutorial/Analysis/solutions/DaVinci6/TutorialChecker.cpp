@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.cpp,v 1.9 2008-04-24 12:19:49 pkoppenb Exp $
+// $Id: TutorialChecker.cpp,v 1.10 2008-04-24 12:46:16 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -67,7 +67,7 @@ StatusCode TutorialChecker::execute() {
         b != Bcands.end() ; ++b){
     sc = fillHeader(tuple); // header filled for every B, not every event!
     if (sc) sc = fillReco(tuple,*b);
-    if (sc) sc = fillTruth(tuple,*b, &Linker);
+    if (sc) sc = fillTruth(tuple,*b, Linker);
     if (sc) sc = fillTagging(tuple,*b);
     if (sc) sc = fillTrigger(tuple);
     
@@ -125,14 +125,14 @@ StatusCode TutorialChecker::fillReco(Tuple& tuple,const LHCb::Particle* b) {
 //=============================================================================
 //  Truth
 //=============================================================================
-StatusCode TutorialChecker::fillTruth(Tuple& tuple,const LHCb::Particle* b, Particle2MCLinker* Linker) {
+StatusCode TutorialChecker::fillTruth(Tuple& tuple,const LHCb::Particle* b, Particle2MCLinker& Link) {
   
   debug() << "==> fillTruth" << endmsg;
   
   IBackgroundCategory::categories cat = m_background->category(b);
   tuple->fill("category",(int)cat);
   
-  const LHCb::MCParticle* MC = Linker->firstMCP( b );
+  const LHCb::MCParticle* MC = Link.firstMCP( b );
   
   if ( NULL!=MC ){
     tuple->column( "TP", MC->momentum());
@@ -147,26 +147,26 @@ StatusCode TutorialChecker::fillTruth(Tuple& tuple,const LHCb::Particle* b, Part
   // some looping in debug mode
   // that's the excerpt from the talk
   if ( msgLevel( MSG::DEBUG )  ){
-    if ( Linker->isAssociated( b ) )
+    if ( Link.isAssociated( b ) )
       debug() << "Particle is associated" << endmsg;
     else debug() << "Particle is not associated" << endmsg;
-    const LHCb::MCParticle *MCpart = Linker->firstMCP( b );
+    const LHCb::MCParticle *MCpart = Link.firstMCP( b );
     while ( NULL!=MCpart ){
       debug() << "Particle " << b->key() << " " << b->particleID().pid() 
               << " associated to MC part " << MCpart->key() << " " 
               << MCpart->particleID().pid() << endmsg;
-      MCpart = Linker->next();
+      MCpart = Link.next();
     }
     
     if ( NULL!=MC ){
-      const LHCb::Particle *Part = Linker->firstP( MC );
+      const LHCb::Particle *Part = Link.firstP( MC );
       if ( NULL==Part ) debug() << "No association for MC Particle " 
                                 << MC->key() << endmsg ;
       while ( NULL!=Part ){
         debug() << "MC Particle " << MC->key() << " " << MC->particleID().pid()
                 << " associated to Particle " << Part->key() << " " 
                 << Part->particleID().pid()<< endmsg;
-        Part = Linker->nextP();
+        Part = Link.nextP();
       }
     }
   }

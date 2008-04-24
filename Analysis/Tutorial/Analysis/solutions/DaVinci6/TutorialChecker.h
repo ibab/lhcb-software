@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.h,v 1.5 2008-04-24 12:19:49 pkoppenb Exp $
+// $Id: TutorialChecker.h,v 1.6 2008-04-24 12:46:16 pkoppenb Exp $
 #ifndef TUTORIALCHECKER_H 
 #define TUTORIALCHECKER_H 1
 
@@ -31,7 +31,7 @@ protected:
 private:
 
   StatusCode fillReco(Tuple&,const LHCb::Particle*);
-  StatusCode fillTruth(Tuple&,const LHCb::Particle*, Particle2MCLinker*);
+  StatusCode fillTruth(Tuple&,const LHCb::Particle*, Particle2MCLinker&);
   StatusCode fillTagging(Tuple&,const LHCb::Particle*);
   StatusCode fillTrigger(Tuple&);
   StatusCode fillHeader(Tuple&);
