@@ -3,6 +3,191 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v6r12>2008-04-24 Phys v6r12 - Version for CCRC stripping</A></H1><PRE>
+
+- Based on LHCb v23r5 and Gaudi v19r9
+- Changes to PhysDesktop.
+- Changes ot default behaviour of NoPIDsParticleMaker.
+- New LoKiFitters package.
+- New syntax for CombineParticles
+- Fixes and extensions to DaVinciTransporter.
+- Various other fixes and extensions.
+
+###############################################################################
+#                                  PHYS v6r12                                 #
+###############################################################################
+
+!========================== DaVinciFilter v6r7 2008-04-24 =================
+
+! 2008-04-14 - Patrick Koppenburg
+ - FiltderDesktop: New optiosn CloneTree and CloneFinalStates to save 
+	 whole tree including mother, or final state particles instead of mother.
+
+! 2008-03-21 - V. Gligorov
+ - Moved it to DaVinciMCTools.
+
+! 2008-03-21 - V. Gligorov
+ - Added FilterByBackCat.{h,cpp} to allow filtering by the particle's assigned 
+   Background Category. Should only be used for composites.
+
+!======================== DaVinciTools v16r0 2008-04-24 =====================
+
+! 2008-04-23 - Patrick Koppenburg
+ - Renamed CombineParticles to OldCombineParticles.
+ - New implementation CombineParticles. Small change in syntax :
+
+CombineParticles.DecayDescriptors = { "B0 -> mu+ mu- K+ K-" } ;
+CombineParticles.DaughtersCuts = {
+  'mu-' : "PT>1*GeV" ,    
+  'K-'  : "PT>1*GeV"     
+};
+CombineParticles.CombinationCut = "ADAMASS('B0')<500*MeV"
+CombineParticles.MotherCut = "PT>1*GeV" ;
+
+ - increment to v16r0
+
+! 2008-04-17 - Patrick Koppenburg
+ - Use keep instead of save
+
+! 2008-04-17 - Patrick Koppenburg
+ - PhysDesktop: the save(X) method is now called keep(X) to make it clearer.
+
+! 2008-04-16 - Patrick Koppenburg
+ - PhysDesktop: 
+   . Completey remove the std::set of Particles in TES. This can be found
+     from parent()
+   . Rename save() to putOnDesktop(). save is kept for bacward compatibility for
+     some time.
+
+! 2008-04-16 - Patrick Koppenburg
+ - PhysDesktop:
+   . Bug fix: daughters of input particles were saved along with mother when
+     saveDesktop() was called. Example: a Bs->j/psi phi LoKi_CombineParticles
+     would save the Bs, the two mus and and the two K's in the TES.
+     -> the effective change is to add all particles with 0!=P->parent() 
+       to the list of particles already in the TES.
+   . rename methods inDesktop and setInDesktop to inTES() and
+     setInTES(). 
+   . new method printOut that prints out in verbse mode.
+
+! 2008-04-15 - Juan PALACIOS
+ - src/Particle2State{.cpp, .h}
+  . Tidy up and add const wherever possible.
+
+! 2008-04-10 - Vanya BELYAEV 
+ - DecodeSimpleDecayString.cpp
+    fix a bug 
+
+! 2008-04-09 - Patrick Koppenburg
+ - CombineParticles : initialize filters at initialize, not first event.
+ - PhysDesktop : better printout
+
+! 2008-03-31 - Patrick Koppenburg
+ - DecodeSimpleDecayString : Get antiparticle from ParticleProperty, not from 
+	 the service
+ - Increment to v15r9
+
+! 2008-03-31 - Vanya BELYAEV
+ - make use of new setters for DaVinci::Decay 
+
+! 2008-03-31 - Vanya BELYAEV
+ - src/DecodeSimpleDecayString.h,.cpp
+    add few mehtods to deal with DaVinci::Decay 
+
+! 2008-03-30 - Vanya BELYAEV
+
+ - src/PrintDecayTree.cpp
+  new algoruthm (simplified,MC-free version of PrintTree)
+ 
+
+! 2008-03-28 - Patrick Koppenburg
+ - CombineParticles : Fix uninitialised m_printStats
+Test.DecayDescriptors = { "B0 -> mu+ mu- K+ K-" } ;
+Test.DaughtersCuts = {
+  'mu-' : "PT>1*GeV" ,    
+  'K-'  : "PT>1*GeV"     
+};
+Test.MotherCut = "PT>1*GeV" ;
+
+! 2008-03-27 - Patrick Koppenburg
+ - DecayFinder : check StatusCode
+ - Increment to v15r8p2
+
+!======================== ParticleMaker v4r0 2008-04-24 ===================
+
+! 2008-04-23 - Patrick Koppenburg
+ - Change of default values for NoPIDsParticleMaker:
+   UseDownstreamTracks : true -> false
+   UseUpstreamTracks :   true -> false
+   This aligns with CombinedParticlemaker
+ - Increment to v4r0 as this is backward-incompatible
+
+!========================== VertexFit v5r1 2008-04-24 ===================
+
+! 2008-04-16 - Juan PALACIOS
+ - src/OfflineVertexFitter.cpp
+  . Use new IParticleTransporter::transportAndProject method. This has the same
+    maths as the pre-v3r7p3 Phys/DaVinciTransporter ParticleTransporter::transport method.
+ - cmt/requirements
+  . Increment version to v5r1
+
+! 2008-03-27 - Yuehong Xie
+ - PVReFitter.cpp, OfflineVertexFitter.cpp, AdaptivePVReFitter.h: 
+   fix compilation warnings
+
+! 2008-03-27 - Patrick Koppenburg
+ - PropertTimeFitter: check statuscodes
+ - Increment to v5r0p1
+
+! =========================== LoKiFitters v1r1 2008-04-24 =====================
+
+! 2008-04-04 - Vanya BELYAEV
+
+ - complete the implementation of DistanceCalculator tool
+
+    now it is a right time to start the tests...
+ 
+
+! 2008-03-10 - Vanya BELYAEV
+
+ - Add new lines and perform the major reshuffling 
+   of the existing lines:
+ 
+    - src/KalmanFilter.h, src/KalmanFilter.cpp
+      the major ingredienst for Kalman-Filter based vertex fitting 
+    - src/FitterUtils.h, src/FitetrUtils.cpp 
+      the major ingeredients for "direction/path/lifetime" fitting
+    - src/DistanceCalculatorBase.h, src/DistanceCalculatorBase.cpp
+      the base class for implementation of "distance calculator" tool
+    - src/DistanceCalculator.h, src/DistanceCalculator.cpp
+      the concrete (precise) implementationo of IDistanceCalculator tool  
+    - 
+ - cmt/requirements
+     version increment to v1r1 
+
+!====================== DaVinciTransporter v3r8 2008-04-24 ====================
+
+! 2008-04-15 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v3r8.
+
+ - src/TransporterFunctions.h
+  . Revive old methods transportComposite and TranportNeutralBasic as
+    transportAndProjectComposite and transportAndProjectNeutralBasic. These 
+    the pre-v3r7p3 mathematics, where a projection block is included in the
+    transport matrix.
+
+ - src/ParticleTransporter{.cpp, .h}
+  .  split transport methods into method for neutrals or composites, plus
+    private helper methods 
+    StatusCode transportChargedBasic(const LHCb::Particle*, 
+                                     const double zNew,
+                                     LHCb::Particle& transParticle);
+    and 
+    StatusCode checkParticle(const LHCb::Particle& transParticle);
+  . Add implementation for transportandProject method if IParticletransporter.
+  . Add doxygen documentation.
+
 </PRE><H1><A NAME=v6r11>2008-03-10 Phys v6r11 - Third Tf framework compatible version</A></H1><PRE>
 
 - Based on LHCb v23r4 and Gaudi v19r8
