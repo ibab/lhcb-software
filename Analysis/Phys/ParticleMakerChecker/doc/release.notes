@@ -4,6 +4,8 @@
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
 
+!========================== ParticleMakerChecker v1r1p2 2008-04-24 ============
+
 ! 2008-02-12 - Juan PALACIOS
  - cmt/requirements
   . Increase version to v1r1p2
