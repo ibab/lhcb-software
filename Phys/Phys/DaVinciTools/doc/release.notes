@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.319 2008-04-23 20:35:20 pkoppenb Exp $
+! $Id: release.notes,v 1.320 2008-04-24 13:19:43 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!======================== DaVinciTools v16r0 2008-04-24 =====================
 
 ! 2008-04-23 - Patrick Koppenburg
  - Renamed CombineParticles to OldCombineParticles.
