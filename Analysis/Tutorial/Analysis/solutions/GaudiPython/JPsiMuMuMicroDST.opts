@@ -12,9 +12,9 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
 TutorialSeq.Members                += { "CombineParticles/JPsiMuMu" };
 JPsiMuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
 JPsiMuMu.DecayDescriptor            = "J/psi(1S) -> mu+ mu-"; // mandatory
-JPsiMuMu.FILTER0.Code               = "((ABSID=='mu-') & (P>100))";
-JPsiMuMu.FILTER1.Code               = "ADMASS('J/psi(1S)')<2000";
-JPsiMuMu.FILTER2.Code               = "(VFASPF(VCHI2/VDOF)<20)";
+JPsiMuMu.DaughtersCut               = { "mu-" : "P>100*MeV" };
+JPsiMuMu.CombinationCut             = "ADAMASS('J/psi(1S)')<2*GeV";
+JPsiMuMu.MotherCut                  = "(VFASPF(VCHI2/VDOF)<20)";
 
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "JPsiMuMuHistos.root";

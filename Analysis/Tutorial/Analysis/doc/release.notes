@@ -8,8 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-04-24 - Patrick Koppenburg
+ - Use new style CombineParticles. Requires DaVinci v19r12.
+
 ! 2008-04-21 - Patrick Koppenburg
- - Changed desktop()->save() to desktop()->keep()
+ - Changed desktop()->save() to desktop()->keep(). Requires DaVinci v19r12.
 
 ! 2008-04-08 - Patrick Koppenburg
  - Added solutions/LoKiHybrid with some demo files 
