@@ -43,7 +43,7 @@ Bs2JpsiPhi.DaughtersPlots.Histos ={ "P/1000"  : ('momentum',0,100) ,
 Bs2JpsiPhi.MotherPlots.Histos = { "P/1000"  : ('momentum',0,100) , 
                                   "PT/1000" : ('pt_%1%',0,5,500) , 
                                   "M"       : ('mass in MeV_%1%_%2%_%3%',4*GeV,6*GeV) } ;
- TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
+TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos_4b.root";
