@@ -9,7 +9,7 @@
 //
 // Truth filter for B->PhiPhi
 //
-SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
+SeqHlt2TruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
 SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons" } ;
 SelectTrueDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bs2PhiPhi" } ;
 
@@ -17,7 +17,7 @@ SelectTrueDecay.Filter.Bs2PhiPhi.MCDecayFinder.Decay = "[B_s0 -> (phi(1020) -> ^
 //
 // Dummy MakeResonances to check that all tracks are there
 //
-SeqHltTruthFilter.Members += { "MakeResonances/AllTrueBs2PhiPhi"};
+SeqHlt2TruthFilter.Members += { "MakeResonances/AllTrueBs2PhiPhi"};
 AllTrueBs2PhiPhi.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueBs2PhiPhi.DecayDescriptor = "B_s0 -> K+ K+ K- K-" ; // all kaons need to be there
 HltSelectionsCorrs.Algorithms += { "AllTrueBs2PhiPhi" };

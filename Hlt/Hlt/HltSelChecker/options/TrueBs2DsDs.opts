@@ -9,9 +9,9 @@
 //
 // Truth filter for Bs -> DsDs
 //
-//SeqHltTruthFilter.Members += { "PrintMCTree"};
+//SeqHlt2TruthFilter.Members += { "PrintMCTree"};
 PrintMCTree.ParticleNames = { "B_s0", "B_s~0" } ;
-SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
+SeqHlt2TruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
 SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", 
                                                 "Phys/HltNoPIDsPions" } ;
 SelectTrueDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bs2DsDs",
@@ -21,7 +21,7 @@ SelectTrueDecay.Filter.Bs2DsDs.MCDecayFinder.Decay = "[B_s0 -> (D_s+ => ^K+ ^K- 
 //
 // Dummy MakeResonances to check that all tracks are there
 //
-SeqHltTruthFilter.Members += { "MakeResonances/AllTrueBs2DsDs"};
+SeqHlt2TruthFilter.Members += { "MakeResonances/AllTrueBs2DsDs"};
 AllTrueBs2DsDs.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueBs2DsDs.DecayDescriptor = "B_s0 -> K+ K- pi+ K+ K- pi-" ; // all particles need to be there
 HltSelectionsCorrs.Algorithms += { "AllTrueBs2DsDs" };

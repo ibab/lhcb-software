@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-04-24 - Patrick Koppenburg
+ - Rename all SeqHlt in SeqHlt2
+
 ! 2008-04-21 - Patrick Koppenburg
  - Correct correlations typo in truth
  - HltBackgroundCategory : new name of enum

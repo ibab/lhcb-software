@@ -30,7 +30,7 @@ PrintPreselBd2D0Kst_D02HH.OutputLevel = 3 ;
 // Set the following to false if you want only events with a signal
 // fully reconstructed in the HLT
 //
-SeqHltTruthFilter.IgnoreFilterPassed = true ; 
+SeqHlt2TruthFilter.IgnoreFilterPassed = true ; 
 //
 // #include "$HLTSELCHECKERROOT/options/OverwriteWithTruth.opts"
 /**

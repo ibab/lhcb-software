@@ -27,7 +27,7 @@ HltExclusiveCorrs.Algorithms += { "PreselBs2PhiPhi" };
 // Set the following to false if you want only events with a signal
 // fully reconstructed in the HLT
 //
-SeqHltTruthFilter.IgnoreFilterPassed = true ; 
+SeqHlt2TruthFilter.IgnoreFilterPassed = true ; 
 //
 // Overwrite input - uncomment to run HLT on true signal only
 //

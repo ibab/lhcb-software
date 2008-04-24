@@ -12,22 +12,22 @@
 //---------------------------------------------------------------------
 // Phys initialisation
 //---------------------------------------------------------------------
-#include "$HLTSYSROOT/options/HltInitSelections.opts"
+#include "$HLTSYSROOT/options/Hlt2Init.opts"
 //---------------------------------------------------------------------
 // HLT exclusive Selections
 //---------------------------------------------------------------------
-Hlt.Members += { "GaudiSequencer/HltSelections" };
-HltSelections.MeasureTime = true ;
-HltSelections.Context = "HLT" ;
+Hlt.Members += { "GaudiSequencer/Hlt2" };
+Hlt2.MeasureTime = true ;
+Hlt2.Context = "HLT" ;
 // just in case
-HltSelections.Members += { "HltSummaryWriter"};
+Hlt2.Members += { "HltSummaryWriter"};
 
 //---------------------------------------------------------------------
 // Full reconstruction of all tracks 
 //---------------------------------------------------------------------
 
-HltSelections.Members += {"GaudiSequencer/PassedAlleys", // empty sequencer
-                          "GaudiSequencer/HltRecoSequence"
+Hlt2.Members += {"GaudiSequencer/PassedAlleys", // empty sequencer
+                 "GaudiSequencer/HltRecoSequence"
 };
 
 //---------------------------------------------------------------------
@@ -37,22 +37,22 @@ HltSelections.Members += {"GaudiSequencer/PassedAlleys", // empty sequencer
 //---------------------------------------------------------------------
 // Empty Sequencer for MC truth filtering --- fill in HltSelChecker
 //---------------------------------------------------------------------
-HltSelections.Members += { "GaudiSequencer/SeqHltTruthFilter" } ;
+Hlt2.Members += { "GaudiSequencer/SeqHlt2TruthFilter" } ;
 //---------------------------------------------------------------------
 // Standard HLT Particles
 //---------------------------------------------------------------------
-HltSelections.Members += { "GaudiSequencer/HltShared" };
+Hlt2.Members += { "GaudiSequencer/HltShared" };
 #include "$HLTSELECTIONSROOT/options/HltShared.opts"
 //---------------------------------------------------------------------
 // Exclusive selections
 //---------------------------------------------------------------------
-HltSelections.Members += { "GaudiSequencer/HltExclusive" };
+Hlt2.Members += { "GaudiSequencer/HltExclusive" };
 #include "$HLTSELECTIONSROOT/options/HltSelections.opts"
 
 //--------------------------------------------------------------------
 // Decision
 //--------------------------------------------------------------------
-HltSelections.Members += { "HltSelectionsDecision" } ;
+Hlt2.Members += { "HltSelectionsDecision" } ;
 //HltSelectionsDecision.OutputLevel = 2 ;
 
 //-------------------------------------------------------------------

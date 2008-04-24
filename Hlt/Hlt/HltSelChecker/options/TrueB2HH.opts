@@ -9,9 +9,9 @@
 //
 // Truth filter for B->HH
 //
-//SeqHltTruthFilter.Members += { "PrintMCTree"};
+//SeqHlt2TruthFilter.Members += { "PrintMCTree"};
 PrintMCTree.ParticleNames = { "B0", "B~0" } ;
-SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
+SeqHlt2TruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
 SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsPions" } ;
 SelectTrueDecay.Filter.Selections =  { "pi+ : TrueMCFilterCriterion/B2HH" } ;
 
@@ -20,7 +20,7 @@ SelectTrueDecay.Filter.B2HH.ExpectSignal = true ;
 //
 // Dummy MakeResonances to check that both tracks are there
 //
-SeqHltTruthFilter.Members += { "MakeResonances/AllTrueB2HH"};
+SeqHlt2TruthFilter.Members += { "MakeResonances/AllTrueB2HH"};
 AllTrueB2HH.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueB2HH.DecayDescriptor = "B0 -> pi+ pi-" ; // always for B -> hh with pions
 HltSelectionsCorrs.Algorithms += { "AllTrueB2HH" };

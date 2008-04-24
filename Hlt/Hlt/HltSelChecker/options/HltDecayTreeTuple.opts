@@ -32,6 +32,7 @@ HltDecayTreeTuple.ToolList += {
     , "TupleToolPropertime"
     , "TupleToolPrimaries"
     , "TupleToolEventInfo"
+    , "LoKi::Hybrid::TupleTool/LoKiTool"
 };
 
 // Can be overwritten for special branches
@@ -42,3 +43,4 @@ HltDecayTreeTuple.TupleToolMCTruth.StoreVertexInfo = true;
 HltDecayTreeTuple.TupleToolTrigger.VerboseL0 = true ;
 HltDecayTreeTuple.TupleToolTrigger.VerboseAlleys = true ;
 HltDecayTreeTuple.TupleToolTrigger.VerboseSelections = true ;
+HltDecayTreeTuple.LoKiTool.Variables = { "LifeTimeChi2" : "BPVLTFITCHI2" };

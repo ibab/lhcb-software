@@ -5,12 +5,12 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-04-24 - Patrick Koppenburg
+ - HltSelections : rename to Hlt2
+
 ! 2008-04-23 - Jose A. Hernando
 	- HltHadAlleyConfSequence - two separate alleys for the single and dihadron
 	- HltMuonAlleyConfSequece - 8 separate alleys for the single(2) and puredimuon(2)+ l0+l0-dimuon(2) + l0+musegment-dimuon(2)
-
-! 2008-04-15 - Patrick Koppenburg
- -
 
 ! 2008-04-15 - Patrick Koppenburg
  - Big reshuffling of option files. 

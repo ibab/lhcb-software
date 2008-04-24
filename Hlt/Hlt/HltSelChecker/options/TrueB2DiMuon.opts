@@ -9,7 +9,7 @@
 //
 // Truth filter for J/psi -> mu mu
 //
-SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
+SeqHlt2TruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
 SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltMuons" } ;
 SelectTrueDecay.Filter.Selections =  { "mu+ : TrueMCFilterCriterion/B2DiMuon"} ;
 
@@ -17,7 +17,7 @@ SelectTrueDecay.Filter.B2DiMuon.MCDecayFinder.Decay = "{<Xb>, <Xb~>, [<Xb~>]os, 
 //
 // Dummy MakeResonances to check that all tracks are there
 //
-SeqHltTruthFilter.Members += { "MakeResonances/AllTrueB2DiMuon"};
+SeqHlt2TruthFilter.Members += { "MakeResonances/AllTrueB2DiMuon"};
 AllTrueB2DiMuon.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueB2DiMuon.DecayDescriptor = "J/psi(1S) -> mu- mu+" ; // all particles need to be there
 HltSelectionsCorrs.Algorithms += { "AllTrueB2DiMuon" };

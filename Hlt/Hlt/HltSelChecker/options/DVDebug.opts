@@ -7,7 +7,7 @@
  */
 //--------------------------------------------------------------
 
-SeqHltTruthFilter.Members += { "PrintMCTree"};
+SeqHlt2TruthFilter.Members += { "PrintMCTree"};
 PrintMCTree.ParticleNames = { "B0", "B~0", "B_s0", "B_s~0", "B+", "B-" } ;   // edit for other types
 /*
  * type - change here

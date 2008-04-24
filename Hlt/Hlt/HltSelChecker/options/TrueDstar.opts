@@ -9,9 +9,9 @@
 //
 // Truth filter for D* -> D0(hh)pi
 //
-//SeqHltTruthFilter.Members += { "PrintMCTree"};
+//SeqHlt2TruthFilter.Members += { "PrintMCTree"};
 PrintMCTree.ParticleNames = { "D*(2010)+", "D*(2010)-" } ;
-SeqHltTruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
+SeqHlt2TruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
 SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltNoPIDsPions" } ;
 SelectTrueDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Dstar",
                                        "pi+ : TrueMCFilterCriterion/Dstar"} ;
@@ -22,7 +22,7 @@ SelectTrueDecay.Filter.Dstar.ExpectSignal = true ;
 //
 // Dummy MakeResonances to check that all tracks are there
 //
-SeqHltTruthFilter.Members += { "MakeResonances/AllTrueDstar"};
+SeqHlt2TruthFilter.Members += { "MakeResonances/AllTrueDstar"};
 AllTrueDstar.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueDstar.DecayDescriptor = "[D*(2010)+ -> pi+ pi- pi+]cc" ; // all particles need to be there
 HltSelectionsCorrs.Algorithms += { "AllTrueDstar" };
