@@ -3,6 +3,430 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v1r12>2008-04-24 Analysis v1r12 - CCRC striping version</A></H1><PRE>
+
+ - Uses LHCb v23r5 and Gaudi v19r9
+ - Developments in MicroDST and DecayTupleTree
+ - Updates to pre-selections
+ - Various bug-fixes.
+#######################################MM######################################
+#                                  ANALYSIS v1r12                             #
+###############################################################################
+##################################### PHYS ####################################
+!========================== CommonParticles v3r12 2008-04-24 ==================
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
+
+! 2008-03-14 - Patrick Koppenburg
+ - do not print options
+
+!======================= FlavourTagging v7r3p2 2008-04-24 ====================
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
+
+!========================== DaVinciMCTools v9r12 2008-04-24 ==================
+
+! 2008-01-21 - V. Gligorov
+ - src/BackgroundCategory.{cpp,h}
+    Changed names of internal methods to make them more readable
+    Fixed bug when finding the origin particle of charmed mesons 
+
+! 2008-04-14 - Juan PALACIOS
+ - Add src/MCParticleArrayFilterAlg{.cpp, .h}
+  . Very simple GaudiAlgorithm that takes LHCb::MCParticles from a TES
+    location (property InputLocation with default LHCb::MCParticleLocation::Default), filters them using an IMCParticleArrayFilter (property IMCParticleArrayFilter), and put the resulting LHCb::MCParticles into a TES location (property OutputLocation)
+ - cmt/requirements
+  . Increase version to v9r12
+
+! 2008-04-09 - Vanya BELYAEV
+ - src/FilterToFixOppositeBFractions.cpp
+    fix the namespacpace LHCbMath -> LHCb::Math
+ - src/PRintDecatTreeTool.h 
+    allow also IPrinDecay interface 
+
+
+! 2008-01-21 - V. Gligorov
+ - Added FilterByBackCat.{h,cpp} to allow filtering by the particle's assigned
+   Background Category. Should only be used for composites.
+
+! 2008-03-30 - Vanya BELYAEV
+ - src/PrintDecayTreeTool.cpp:    
+     allow the tool to be used through IPrintDecay interface 
+
+! 2008-03-28 - Patrick Koppenburg
+ - DecayChainNTuple : Removed. Please use DecayTreeTuple instead.
+ - increment to v9r12
+
+!===================== FlavourTaggingChecker v2r7 2008-04-24 ===============
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
+
+! 2008-03-14 - Patrick Koppenburg for Onuora Awunor
+ - TaggingTool to output tagging information from MC truth & Data in root files
+ - Test option file using taggingTool
+ - Macro using root file output from TaggingTool to calculate efficiencies, plots histograms
+   carry out fitting and projections.
+ - Increment to v2r7
+
+!========================== DaVinciUser v8r4p1 2008-04-24 =================
+
+! 2008-04-21 - Patrick Koppenburg
+ - changed desktop()->save() to dektop()->keep()
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
+
+!========================== ParticleMakerChecker v1r1p2 2008-04-24 ============
+
+! 2008-02-12 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r1p2
+ - src/ParticleEffPurMoni.h
+  . Adapt to removal of Particle2MCLinker constructor with only one 
+    TES location. Use single-sized std::vector<std::string>.
+
+!============================== LoKiUser v6r1 2008-04-24 ======================
+
+! 2008-04-21 - Patrick Koppenburg
+ - No dependency on Jets
+
+!===================== DecayTreeTuple v1r2 2008-04-24 =======================
+
+! 2008-04-21 - Patrick Koppenburg
+ - Hlt enums name change
+
+! 2008-04-09 - V. Gligorov
+ - TupleToolTISTOS: bugfix, extra documentation.
+
+! 2008-04-09 - V. Gligorov
+ - Added TupleToolTISTOS.{h,cpp} to save TISTOS status of each composite particle
+ - TupleToolGeometry
+  . Added saving of flight distance to PV for particles
+
+! 2008-03-27 - Patrick Koppenburg
+ - DecayTreeTuple: fix an unchecked StatusCode
+ - Increment to v1r2
+
+! 2008-03-17 - Stephane Poss
+ - TupleToolPrimaries
+  . Correct documentation (was TupleTooEventInfo documentation)
+ - TupleToolTagging
+  . Add tagger type number
+ - TupleToolMCHierarchy
+  . Gives MC mother, MC grand mother and MC grand grand mother IDs
+    for particles, useful as complement to Background Category Tool
+ - TupleToolTrackInfo
+	. Track chi2 and track ndof for basic particles
+
+
+##################################### PHYSSEL #################################
+
+!========================= PhysSelSys v10r9 2008-04-24 =====================
+
+! 2008-04-21 - Patrick Koppenburg
+ - Remove JetsSel as LokiJets is removed
+
+!========================== Ccbar v1r6 2008-04-24 ===================
+
+! 2008-04-14 - Adlene Hicheur
+- Add new lifetime unbiased offline selections
+
+!========================== B2Dilepton v1r6 2008-04-24 ===================
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
+
+! 2008-03-27 - Patrick Koppenburg
+ - Better syntax thanks to Vanya
+
+! 2008-03-27 - Patrick Koppenburg
+ - Added Bu -> eeK selection for M(ee) < sqrt(6) GeV for trigger training.
+
+! 2008-03-14 - Hugh Skottowe
+ - Add DC06 selection algorithm for Bd -> Kstar Mu Mu, suitable
+   for trigger training
+
+!========================== B2D0X v1r13 2008-04-24 ==================
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
+
+! 2008-04-09 - Mitesh Patel
+ - added DC06 Bu2D0K_D02HH selection 
+
+!========================= B2DsX v1r5p2 2008-04-24 ===================
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
+
+!========================== B2DstarX v1r6p2 2008-04-24 =================
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
+
+!========================== B2uds v2r6p2 2008-04-24 ===================
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
+!========================== Radiative v2r4p1 2008-04-24 --=================
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
+
+!========================== Radiative v2r4 2008-03-12 --=================
+
+! 2008-03-12 - Lesya Shchutska
+ - cmt/requirements
+   . Increase version to v2r3
+
+! 2008-03-12 - Lesya Shchutska
+ - src/SelBs2PhiGamma.cc
+   . Bs->phi gamma selection algorithm for trigger training with the cuts
+from lhcb-2007-030 and mass window for Bs 4.3-6.7 GeV
+
+! 2008-03-12 - Lesya Shchutska
+ - options/DVSelBs2PhiGamma.opts
+   . Options file for Bs->phi gamma selection
+
+!========================== Bd2PiPiPi0 v4r3p1 2008-04-24 =================
+
+! 2008-04-21 - Patrick Koppenburg
+ - dektop keep()
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
+
+################################## MICRODST ###################################
+
+!====================== MicroDSTBase v1r1 2008-04-24 =======================
+
+! 2008-04-16 - Juan PALACIOS
+ - MicroDST/Functors.hpp
+  . Add 
+       static T* BasicItemCloner::copy( const T* )
+    and
+       static T* BasicCopy::clone( const T* )
+    methods such that BasicCopy and BasicItemCloner have the same signatures.  
+
+! 2008-04-04 - Juan PALACIOS
+ - src/Lib/Functions.cpp
+  . Fix bug in synchroniseProperty. Pointer to Property was baing passed to 
+    Gaudi::Utils::setProperty.
+ - src/Lib/MicroDSTTool.cpp
+  . Remove synchronisation of InputLocation: clearly not necessary.
+
+! 2008-04-03 - Juan PALACIOS
+ - MicroDST/Functions.h, src/Lib/Functions.cpp
+  . Add function 
+
+  StatusCode synchroniseProperty(const IInterface* parent,
+                                 IInterface* daughter,
+                                 const std::string& name  );
+
+    intended for use in MicroDSTTools and anything else that might have a 
+    MicroDSTAlgorithm as a parent. The purpose is to allow easy synchronisation
+    of properties of the parent and child.    
+
+ - MicroDST/MicroDSTTool.h
+  . Add method virtual StatusCode initialize()
+ - src/Lib/MicroDSTTool.cpp
+  . Implement  virtual StatusCode initialize(): 
+    call MicroDSTCommon<GaudiTool>::initialize()
+    synchronise "InputPrefix" and "OutputPrefix" properties.
+
+ - cmt/requirements
+  . Increase version to v1r1
+
+!===================== MicroDSTinterfaces v1r0p1 2008-04-24 ==================
+
+! 2008-04-24 - Patrick Koppenburg
+ - No Makefile
+
+! 2007-12-10 - Juan Palacios
+ - First commit of MicroDSTInterfaces, a package containing interfaces for the
+   cloning of LHCb event model classes. All interfaces have the method
+
+   EventModelType* operator() (const EventModelType*) =0;
+
+   Implementations of this method should call some cloning and storing logic.
+
+
+!======================= MicroDSTTools v1r2 2008-04-24 =======================
+
+! 2008-04-11 - Juan PALACIOS
+ - src/MCVertexCloner{.cpp, .h}
+  . Add property "ICloneMCParticle" to control implementation of 
+    ICloneMCVertex to use.
+ - src/MCVertexCloner.cpp,  MCParticleCloner.cpp
+  . Add safety to operator(): check if clonee already exists before invoking 
+    clone() method.
+ - src/MCVertexCloner.cpp
+  . clone(const LHCb::MCVertex*) method now takes control of cloning the 
+    LHCb::Particle products of the MCVertex using the ICloneMCParticle of
+    choice.
+ - src/MCParticleCloner{.cpp, .h}
+  . Remove method 
+    LHCb::MCVertex* cloneVertexTree(const LHCb::MCVertex* mcVertex). 
+    Responsibility delegated to ICloneMCVertex tool.
+  . Add safety to cloning of originVertex. Check if it is already cloned before
+    invoking ICloneMCVertex cloning.
+
+! 2008-04-04 - Juan PALACIOS
+ - src/VertexCloner.h
+  . Start adding some doxygen.
+ - src/MCParticleCloner.h
+  . Add properties "ICloneMCVertex": m_vertexClonerName and 
+    "CloneDecayVertices": m_cloneDecayVertices.
+  . Add doxygen description.
+ - src/MCParticleCloner.cpp
+  . Add copying of LHCb::Particle::endVertices() SmartRefs and possibility to 
+    clone and store end vertices that are decay vertices.
+
+! 2008-04-03 - Juan PALACIOS
+ - src/RecVertexCloner.h
+  . Add method StatusCode initialize()
+ - src/RecVertexCloner.cpp
+  . Implement StatusCode initialize(): simple return MicroDSTTool::initialize()
+
+! 2008-04-01 - Juan PALACIOS
+
+ - Add src/ProtoParticleCloner{.cpp, .h} implementation of ICloneProtoParticle.
+   Contains property ICloneTrack allowing to chose which implementation of
+   ICloneTrack to use to clone the related LHCb::Track.
+
+ - Add src/TrackCloner{.cpp, .h} simplest implementation of ICloneTrack.
+
+ - cmt/requirements
+  . Increase version to v1r2
+
+!======================== MicroDST v3r2 2008-04-24 ====================
+
+! 2008-04-16 - Juan PALACIOS
+ - Add CopyHltSummary and CopyL0DUReport classes. Perform shallow copy of
+   HltSummary and L0DUReport.
+
+! 2008-04-16 - Juan PALACIOS
+ - Add algorithm CopyFlavourTag to copy keyed container of LHCb::FlavourTags.
+ - src/CopyMCParticle.h
+  . Swap include of "MicroDST/ICloneMCParticle.h" for forward declaration of 
+    class.
+ - src/CopyMCParticle.cpp
+  . #include "MicroDST/ICloneMCParticle.h"
+
+! 2008-04-08 - Juan PALACIOS
+
+ - src/CopyParticles.h
+  . Fix doxygen
+
+ - Add src/CopyMCParticles{.cpp, .h}
+  . MicroDSTAlgorithm to copy MCParticles from one TES location to another one.
+
+! 2008-04-02 - Juan PALACIOS
+ - src/CopyRelatedProtoParticles.h, CopyProtoParticles.h
+  . Fix doxygen typos.
+
+! 2008-04-01 - Juan PALACIOS
+ 
+ - Add src/CopyRelatedProtoParticles{.cpp, .h}
+  . This has the old funcitonality of CopyProtoParticles. It takes as input
+    a location of LHCb::Particles from the property InputLocation, and clones
+    the LHCb::ProtoParticles related to them and all their daughters and 
+    outgoing particles. Internally it uses an implementation of 
+    ICloneProtoParticle, set by default to ProtoParticleCloner.
+
+ - src/CopyProtoParticles{.h, .cpp}
+  . Change logic. Algorithm now takes all ProtoParticles in InputLocation and 
+    clones them. Internally it now uses an implementation of 
+    ICloneProtoParticle, set by default to ProtoParticleCloner.
+
+! 2008-03-26 - Juan PALACIOS
+ - src/CopyRelatedMCParticles.h
+  . Add doxygen documentation.
+
+! 2008-03-20 - Juan PALACIOS
+ - src/CopyRelatedMCParticles.h
+  . Remove obsolete private methods.
+  . Add std::string m_mcParticleClonerName to control ICloneMCParticle via 
+    properties.
+ - src/CopyRelatedMCParticles.cpp
+  . Add property ICloneMCParticle to control implementation to be used.
+
+! 2008-03-19 - Juan PALACIOS
+ - src/CopyPrimaryVertices.h
+ - src/CopyMCHeader.h
+ - src/CopyODIN.h
+ - src/CopyRecHeader.h
+  . Add doxygen documentation.
+
+ - src/CopyPrimaryVertices.h
+  . Move MicroDST interface headers to .cpp file.
+
+! 2008-03-19 - Juan PALACIOS
+ 
+ - src/CopyParticles{.cpp, .h}
+  . Remove all private methods. These were not used anymore. Functionality
+    now in the IParticleCloner and IVertexCloner implementations.
+  . Remove un-necessary typedefs.
+  . Move LHCb event model class includes from .h to .cpp
+  . Add some doxygen documentation.
+
+ - cmt/requirements
+  . Increase version to v3r2
+
+####################################### TOOLS #################################
+!======================== Stripping v6r4p1 2008-04-24 ===================
+
+! 2008-03-14 - Patrick Koppenburg
+ - StripETC: for ETC DO NOT write out. It is done by EvtCollectionStream.
+ - Add some ignore()
+ - increment to v6r4p1
+
+############################ EXAMPLES AND TUTORIALS ###########################
+
+!===================== Tutorial/Analysis v7r1 2008-04-24 ======================
+
+! 2008-04-24 - Patrick Koppenburg
+ - Corrected way of using Linkers
+
+! 2008-04-24 - Patrick Koppenburg
+ - Use new style CombineParticles. Requires DaVinci v19r12.
+
+! 2008-04-21 - Patrick Koppenburg
+ - Changed desktop()->save() to desktop()->keep(). Requires DaVinci v19r12.
+
+! 2008-04-08 - Patrick Koppenburg
+ - Added solutions/LoKiHybrid with some demo files 
+
+! 2008-03-32 - Ulrich Kerzel
+- change options file to use new microDST code, adopt InitGaudi accordingly 
+
+! 2008-03-32 - Ulrich Kerzel
+ - added files for GaudiPython / MicroDST tutorial
+   - InitGaudi.py          : initialise Gaudi
+   - Analysis.py           : run a J/Psi -> MuMu vertex fit in GaudiPython
+   - AnalysisMicroDST.py   : run over a microDST and analyse the particles
+   - JPsiMuMuMicroDST.opts : small options file to create a J/Psi->MuMu microDST,
+                             to be used with AnalysisMicroDST.py
+
+! 2008-03-26 - Patrick Koppenburg
+ - Some typos fixed thanks to Roel Aaij
+
+! 2008-03-17 - Patrick Koppenburg
+ - Use ALL instaed of TRUE
+
+!========================== LoKiExample v7r3 2008-04-24 =======================
+
+! 2008-04-11 - Patrick Koppenburg
+ - No tabs in options 
+
+! 2008-03-27 - Patrick Koppenburg
+ - No need to depend on LoKiFitters
+
+
+
 </PRE><H1><A NAME=v1r11>2008-03-10 Analysis v1r11 - DC06 and Tf compatible analysis  version</A></H1><PRE>
 
  - Uses LHCb v23r4 and Gaudi v19r8
