@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.10 2008-03-28 11:05:09 hernando Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.11 2008-04-24 14:32:36 hernando Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -34,6 +34,7 @@ HltTrackUpgradeTool::HltTrackUpgradeTool( const std::string& type,
   declareProperty("RecoName", m_recoName = "empty");
   declareProperty("TransferExtraInfo", m_transferExtraInfo = true);
   declareProperty("OrderByPt", m_orderByPt = false);
+  declareProperty("DoTrackReco",m_doTrackReco = true);
 
   m_tool = NULL;
 };
@@ -183,7 +184,7 @@ StatusCode HltTrackUpgradeTool::upgrade(LHCb::Track& seed,
     sc = m_tool->tracksFromTrack(seed,tracks);
     m_timer->stop(m_timerTool);
     if (sc.isFailure()) {
-      Warning(" reconstruction failure ",0);
+      // TODO Warning(" reconstruction failure ",0);
       return sc;
     }
     recoDone(seed,tracks);
@@ -200,6 +201,7 @@ StatusCode HltTrackUpgradeTool::upgrade(LHCb::Track& seed,
 }
 
 bool HltTrackUpgradeTool::isReco(const Track& seed) {
+  if (!m_doTrackReco) return false;
   int ncan = (int) seed.info(m_recoID,-1);
   bool ok = (ncan != -1);
   verbose() << " has Reco ?" << ok << " n-descendants " << ncan << endreq;
@@ -230,6 +232,7 @@ void HltTrackUpgradeTool::recoDone(Track& seed,
 
 size_t HltTrackUpgradeTool::find(const Track& seed,
                              std::vector<Track*>& tracks) {
+  if (!m_doTrackReco) return 0;
   double key = (double) seed.key();
   double ncan = (double) seed.info(m_recoID,-1);
   debug() << " find seed key " << key << " n-descendants " << ncan << endreq;
@@ -243,8 +246,8 @@ size_t HltTrackUpgradeTool::find(const Track& seed,
     for (Tracks::iterator it = m_otracks->begin();
          it != m_otracks->end();++it) {
       Track& track = *(*it);
-      info() << " key " << key << " mother " 
-             << track.info(m_recoID,-1) << endreq;
+      error() << " key " << key << " mother " 
+              << track.info(m_recoID,-1) << endreq;
     }
   }  
 

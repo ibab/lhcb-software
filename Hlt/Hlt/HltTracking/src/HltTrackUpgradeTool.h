@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.4 2008-01-22 10:04:25 hernando Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.5 2008-04-24 14:32:36 hernando Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -91,6 +91,7 @@ protected:
   bool m_transferIDs;
   bool m_transferAncestor;
   bool m_orderByPt;
+  bool m_doTrackReco;
 
 protected:
 

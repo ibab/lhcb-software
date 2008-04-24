@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-02-12 Jose A. Hernando
+ - HltTrackUpgradeTool option to not track the reconstruction DoTrackReco = true;
+
+! 2008-02-12 Jose A. Hernando
  - HltTrackMatch, solving a bug in storing quality (deltaX,deltaY) into the track extraInfo
 
 !========================== HltTracking v3r1 2008-03-07 ===================

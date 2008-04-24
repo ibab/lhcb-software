@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.2 2008-03-28 11:05:09 hernando Exp $
+// $Id: HltTrackMatch.cpp,v 1.3 2008-04-24 14:32:36 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -166,7 +166,7 @@ StatusCode HltTrackMatch::execute() {
       double quality2 = 0.;
       sc = m_tool->match(track1,track2,otrack,quality,quality2);
       if (sc.isFailure()) {
-        Warning(" matching failed ",0);
+        // Warning(" matching failed ",0);
         continue;
       }
       if (m_verbose) {
