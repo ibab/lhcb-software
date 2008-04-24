@@ -1,4 +1,4 @@
-// $Id: COOLConfSvc.cpp,v 1.2 2008-04-24 07:46:05 marcocle Exp $
+// $Id: COOLConfSvc.cpp,v 1.3 2008-04-24 12:41:30 hmdegaud Exp $
 
 // Include files
 #include "SealKernel/Context.h"
@@ -16,6 +16,11 @@
 #include "GaudiKernel/SvcFactory.h"
 
 #include "COOLConfSvc.h"
+
+#ifdef WIN32
+#define NOMSG
+#define NOGDI
+#endif
 
 // For the case insensitive string comparison (boost::algorithm::icontains).
 #include "boost/algorithm/string/predicate.hpp"

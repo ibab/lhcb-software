@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.81 2008-04-17 14:31:07 cattanem Exp $
+# $Id: requirements,v 1.82 2008-04-24 12:41:30 hmdegaud Exp $
 # =============================================================================
 package       DetCond
 version       v11r10
@@ -48,5 +48,9 @@ apply_pattern install_python_modules
 private
 
 macro_append DetCond_use_linkopts " $(Boost_linkopts_thread) $(Boost_linkopts_filesystem_mt) "
+
+macro_append DetCond_use_linkopts " -lboost_date_time-$(Boost_compiler_version)-mt " \
+        Darwin                    " -lboost_date_time-mt-$(Boost_file_version) " \
+        WIN32                     "   boost_date_time-vc71-mt-$(Boost_file_version).lib "
 
 end_private
