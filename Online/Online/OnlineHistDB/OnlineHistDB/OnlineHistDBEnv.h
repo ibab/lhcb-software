@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.23 2008-03-12 12:29:55 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.24 2008-04-24 12:37:08 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -92,7 +92,7 @@ class OnlineHistDBEnv {
   inline OCIEnv *envhp() const {return m_envhp;}
   inline OCIError *errhp() const {return m_errhp;}
   inline OCISvcCtx *svchp() const {return m_svchp;}
-  
+  inline void setStmtMethod(std::string Caller) {m_StmtMethod = Caller;}
 
  protected:
   OnlineHistDBEnv(std::string User); 

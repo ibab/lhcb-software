@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.29 2008-03-12 12:29:55 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.30 2008-04-24 12:37:08 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -180,9 +180,9 @@ OnlineHistogram* OnlineHistDB::declareAnalysisHistogram
             << Title << "',";
     command << ( InputSet ? InputSet->hsid() : 0);
     command <<",ONLINEHISTDB.SOURCEH(";
-    for (int ish=0 ; ish < nin ; ish++) {
+    for (unsigned int ish=0 ; ish < Sources.size() ; ish++) {
       command << "'" << Sources[ish]->hid() << "'";
-      if (ish < nin-1) command << ",";
+      if (ish < Sources.size()-1) command << ",";
     }
     command << ")";
     command << ",THRESHOLDS(";

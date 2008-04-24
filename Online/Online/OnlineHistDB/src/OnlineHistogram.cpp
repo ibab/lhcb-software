@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.29 2008-03-12 12:29:55 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.30 2008-04-24 12:37:08 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -1431,6 +1431,7 @@ void OnlineHistogramStorage::updateHistograms() {
 OnlineHistogram* OnlineHistogramStorage::getHistogram(std::string Identifier, 
 					    std::string Page,
 					    int Instance) {
+  m_Histenv->setStmtMethod("OnlineHistDB::getHistogram");
   OnlineHistogram* h=0;
   if (m_avoid_hdup) {
     std::string folder="_NONE_";
@@ -1439,16 +1440,16 @@ OnlineHistogram* OnlineHistogramStorage::getHistogram(std::string Identifier,
     for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
       if (Page != "_NONE_" && folder=="_NONE_") Page = (*ih)->PagenameSyntax(Page, folder);
       if ((*ih)->identifier() == Identifier && (*ih)->page() == Page && 
-	  (*ih)->instance() == Instance ) {
-	h = *ih;
-	break;
+          (*ih)->instance() == Instance ) {
+        h = *ih;
+        break;
       }
     }
   }
   if (!h) {
     h= new OnlineHistogram(*m_Histenv,Identifier,Page,Instance);
     if (h->isAbort()) {
-      m_Histenv->warningMessage("error from getHistogram:cannot create histogram object "+Identifier);
+      m_Histenv->warningMessage("cannot create histogram object "+Identifier);
       delete h;
       h=0;
     }
