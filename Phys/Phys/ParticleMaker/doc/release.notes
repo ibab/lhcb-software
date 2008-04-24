@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.77 2008-04-23 20:31:01 pkoppenb Exp $ 
+! $Id: release.notes,v 1.78 2008-04-24 13:22:48 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+!======================== ParticleMaker v4r0 2008-04-24 ===================
 
 ! 2008-04-23 - Patrick Koppenburg
  - Change of default values for NoPIDsParticleMaker:
