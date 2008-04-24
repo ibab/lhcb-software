@@ -1,4 +1,4 @@
-// $Id: COOLConfSvc.cpp,v 1.1 2007-12-20 15:48:52 marcocle Exp $
+// $Id: COOLConfSvc.cpp,v 1.2 2008-04-24 07:46:05 marcocle Exp $
 
 // Include files
 #include "SealKernel/Context.h"
@@ -16,6 +16,13 @@
 #include "GaudiKernel/SvcFactory.h"
 
 #include "COOLConfSvc.h"
+
+// For the case insensitive string comparison (boost::algorithm::icontains).
+#include "boost/algorithm/string/predicate.hpp"
+// For random numbers not affecting simulation.
+#include "boost/random/linear_congruential.hpp"
+//#include "boost/random/uniform_smallint.hpp"
+#include "boost/date_time/posix_time/posix_time_types.hpp"
 
 namespace 
 {
@@ -50,27 +57,56 @@ namespace
      */
     class Comparator: public std::binary_function<const dbDesc_t*,const dbDesc_t*,bool>
     {
-
+      typedef boost::rand48 RandomGenType;
+      typedef RandomGenType::result_type WeightType; 
+      typedef std::map<std::string,WeightType> WeightMap;
+      
+      /// Site that have to be used before the others 
       std::string site;
+      /// Map used to remember the priority of the sites.
+      /// the local site has weight -1, the other are randomly chosen the first
+      /// time they are encountered. 
+      mutable WeightMap weights;
+      /// Random number generator. Using Boost to avoid interactions with the
+      /// random generator services. 
+      mutable RandomGenType gen;
 
+      WeightType getWeight(const std::string& key) const {
+        WeightMap::iterator i = weights.find(key);
+        if ( weights.end() == i ) { // not found
+          WeightType newWeight = 0;
+          if (boost::algorithm::icontains(key,site)) {
+            // it means that this is the site with highest priority
+            newWeight = -1;
+          } else {
+            // all other sites are distributed randomly
+            newWeight = gen();
+          }
+          weights[key] = newWeight;
+          return newWeight;
+        }
+        return i->second;
+      }
+      
     public:
       
       /// Constructor.
-      /// @param theSite the local LHCb Production Site (LCG.<i>SITE</i>.<i>country</i>)
-      Comparator(const std::string &theSite): site(theSite) {}
+      /// @param theSite the local LHCb Production Site (<i>SITE</i>.<i>country</i>)
+      Comparator(const std::string &theSite):
+        site(theSite),
+        gen(// this is the rather longish Boost way of getting the current number of
+            // seconds since the beginning of the day... that I want to use as seed
+            // for the local random number generator (I do not use "seconds since epoch"
+            // because the boosted way of getting it is too long).
+            boost::posix_time::second_clock::universal_time().time_of_day().total_seconds())
+      {}
 
       /// Main function
       result_type operator() (first_argument_type a, second_argument_type b) const
       {
-        std::string serverA =  a->serviceParameter(a->serverNameParam());
-        std::string serverB =  b->serviceParameter(b->serverNameParam());
-        
-        if ( serverA == serverB )       return false; // equality                   => false
-        if ( serverA == site )          return true;  // "SITE" < "anything"        => true
-        if ( serverB == site )          return false; // "anything" < "SITE"        => false
-        if ( serverA == "LCG.CERN.ch" ) return true;  // "LCG.CERN.ch" < "anything" => true
-        if ( serverB == "LCG.CERN.ch" ) return false; // "anything" < "LCG.CERN.ch" => false
-        return serverA < serverB;  // for any other case use, alphabetical order
+        return getWeight(a->serviceParameter(a->serverNameParam()))
+               <
+               getWeight(b->serviceParameter(b->serverNameParam()));
       }
 
     };
@@ -132,6 +168,9 @@ COOLConfSvc::COOLConfSvc(const std::string& name, ISvcLocator* svcloc):
   Service(name,svcloc),m_coolApplication(0)
 {
   declareProperty("UseLFCReplicaSvc", m_useLFCReplicaSvc = false );
+  declareProperty("LocalSite", m_localSite = "",
+                  "The name of the site we are running on, used to order the "
+                  "list of replicas in LFC.");
   declareProperty("EnableCoralConnectionCleanUp", m_coralConnCleanUp = false );
   declareProperty("CoralConnectionRetrialPeriod", m_retrialPeriod = 60,
                   "Time between two connection trials (in seconds).");
@@ -201,13 +240,22 @@ StatusCode COOLConfSvc::initialize(){
 
       log << MSG::INFO << "Loading CORAL LFCReplicaService" << endmsg;
       loader->load( "CORAL/Services/LFCReplicaService" );
-            
-      std::string theSite = System::getEnv("LHCBPRODSITE");
-      if ( theSite.empty() || theSite == "UNKNOWN" ) {
-        theSite = "LCG.CERN.ch";
+      
+      if ( m_localSite.empty() ) {
+        // if we didn't get a site from options, we try the environment var DIRACSITE
+        m_localSite = System::getEnv("DIRACSITE");
+        if ( m_localSite.empty() || m_localSite == "UNKNOWN" ) {
+          // if DIRACSITE is not defined, we try, for backward compatibility, LHCBPRODSITE
+          m_localSite = System::getEnv("LHCBPRODSITE");
+          if ( m_localSite.empty() || m_localSite == "UNKNOWN" ) {
+            // if none of the env. vars is set, let's stick to a "sensible" default 
+            m_localSite = "CERN.ch";
+          }
+        }
       }
-
-      connSvcConf.setReplicaSortingAlgorithm(new ReplicaSortAlg(theSite,msgSvc()));
+      log << MSG::INFO << "Using '" << m_localSite << "' as preferred site" << endmsg;
+      
+      connSvcConf.setReplicaSortingAlgorithm(new ReplicaSortAlg(m_localSite,msgSvc()));
     }
 
     if ( ! m_coralConnCleanUp ) {

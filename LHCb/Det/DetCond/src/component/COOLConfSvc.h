@@ -1,4 +1,4 @@
-// $Id: COOLConfSvc.h,v 1.1 2007-12-20 15:48:52 marcocle Exp $
+// $Id: COOLConfSvc.h,v 1.2 2008-04-24 07:46:05 marcocle Exp $
 #ifndef COMPONENT_COOLCONFSVC_H 
 #define COMPONENT_COOLCONFSVC_H 1
 
@@ -70,6 +70,13 @@ private:
   /// Setting this option works only if it is set for the first COOLConfSvc initialized
   /// because of a "feature" of CORAL.
   bool m_useLFCReplicaSvc;
+
+  /// Name of the grid site the application is running on. It is meaningful only
+  /// if m_useLFCReplicaSvc (option UseLFCReplicaSvc) is set to true. If not
+  /// specified the value of the environment variables "DIRACSITE" or
+  /// "LHCBPRODSITE" is used. If even the environment variables are not set,
+  /// then it is assumed to be "CERN.ch". (Note: the value is case insensitive)
+  std::string m_localSite;
 
   /// Flag to turn off/on the CORAL Automatinc connection clean up
   /// (option EnableCoralConnectionCleanUp, default = false).
