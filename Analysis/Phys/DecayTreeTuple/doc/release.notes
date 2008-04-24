@@ -4,6 +4,8 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+!===================== DecayTreeTuple v1r2 2008-04-24 =======================
+
 ! 2008-04-21 - Patrick Koppenburg
  - Hlt enums name change
 
