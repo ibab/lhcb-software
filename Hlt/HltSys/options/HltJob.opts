@@ -19,7 +19,7 @@
 //
 
 #include "$HLTSYSROOT/options/L0.opts"
-#include "$HLTSYSROOT/options/Hlt.opts"
+#include "$HLTSYSROOT/options/Hlt1.opts"
 
 
 //

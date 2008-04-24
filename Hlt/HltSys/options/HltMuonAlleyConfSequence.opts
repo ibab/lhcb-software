@@ -104,12 +104,12 @@ MuonTriggerSingle.FilterDescriptor = {
   "IP_PV2D,||[],0.08,30.",
   "PT,>,1300"
 };
-MuonTriggerSingle.OutputLevel = 3;
+//MuonTriggerSingle.OutputLevel = 3;
 
 
 MuonTriggerSingleNoIP.InputSelection ="MuonAndTVelo";
 MuonTriggerSingleNoIP.FilterDescriptor = {"PT,>,6000"};
-MuonTriggerSingleNoIP.OutputLevel = 3;
+//MuonTriggerSingleNoIP.OutputLevel = 3;
 
 
 //---- L0 muon single preparation
@@ -137,32 +137,33 @@ MuonRecon.Members={"MuonRec"};
 //--------------------------
 
 MuonEntry.L0ChannelsName = {"Muon" ,"MuonNoGlob"};
-MuonEntry.OutputLevel = 3;
+//MuonEntry.OutputLevel = 3;
 
 L0MuonSingle.InputSelection ="L0AllMuons";
 L0MuonSingle.FilterDescriptor = {"PT0,||>,1300"};
-L0MuonSingle.OutputLevel = 3;
+//L0MuonSingle.OutputLevel = 3;
 
 L0MuonConfirmedWithT.InputSelection = "L0MuonSingle";
 L0MuonConfirmedWithT.RecoName = "TConf";
-L0MuonConfirmedWithT.OutputLevel = 3;
+L0MuonConfirmedWithT.HltTrackUpgradeTool.DoTrackReco = false;
+//L0MuonConfirmedWithT.OutputLevel = 2;
  
 L0MuonAndTConfirmed.InputSelection = "L0MuonConfirmedWithT";
 L0MuonAndTConfirmed.FilterDescriptor = {"IsMuon,>,0."};
-L0MuonAndTConfirmed.OutputLevel = 3;
+//L0MuonAndTConfirmed.OutputLevel = 3;
 
 RZMuon.InputSelection = "RZVelo";
 RZMuon.FilterDescriptor = {"RZVeloTMatch_L0MuonAndTConfirmed,||<,80."};
-RZMuon.OutputLevel = 3;
+//RZMuon.OutputLevel = 3;
 
 VeloMuonConf.InputSelection = "RZMuon";
 VeloMuonConf.RecoName = "Velo";
-VeloMuonConf.OutputLevel = 3;
+//VeloMuonConf.OutputLevel = 3;
 
 MuonAndTVelo.InputSelection =    "VeloMuonConf";
 MuonAndTVelo.InputTracks2Name =  "L0MuonAndTConfirmed";
 MuonAndTVelo.MatchName = "VeloT";
-MuonAndTVelo.OutputLevel = 3;
+//MuonAndTVelo.OutputLevel = 3;
 
 
 //----------------------------
@@ -200,52 +201,53 @@ HltDiMuonFromL0DiMuonPreparation.Members = {
 
 
 L0DimuonEntry.L0ChannelsName = {"DiMuon"};
-L0DimuonEntry.OutputLevel = 3;
+//L0DimuonEntry.OutputLevel = 3;
 
 
 L0MuonDimuon.InputSelection ="L0TriggerDiMuon";
-L0MuonDimuon.OutputLevel = 3;
+//L0MuonDimuon.OutputLevel = 3;
 
 DiMuonConfirmedWithT.InputSelection = "L0MuonDimuon";
 DiMuonConfirmedWithT.RecoName = "TConf";
-DiMuonConfirmedWithT.OutputLevel = 3;
+DiMuonConfirmedWithT.HltTrackUpgradeTool.DoTrackReco = false;
+//DiMuonConfirmedWithT.OutputLevel = 2;
 
 DiMuonAndTConfirmed.InputSelection = "DiMuonConfirmedWithT";
 DiMuonAndTConfirmed.FilterDescriptor = {"IsMuon,>,0."};
-DiMuonAndTConfirmed.OutputLevel = 3;
+//DiMuonAndTConfirmed.OutputLevel = 3;
 
 RZDiMuon.InputSelection = "RZVelo";
 RZDiMuon.FilterDescriptor = {"RZVeloTMatch_DiMuonAndTConfirmed,||<,80."};
-RZDiMuon.OutputLevel = 3;
+//RZDiMuon.OutputLevel = 3;
 
 VeloDiMuonConf.InputSelection = "RZDiMuon";
 VeloDiMuonConf.RecoName = "Velo";
-VeloDiMuonConf.OutputLevel = 3;
+//VeloDiMuonConf.OutputLevel = 3;
 
 DiMuonAndTVelo.InputSelection =    "VeloDiMuonConf";
 DiMuonAndTVelo.InputSelection2 =  "DiMuonAndTConfirmed";
 DiMuonAndTVelo.MatchName = "VeloT";
-DiMuonAndTVelo.OutputLevel = 3;
+//DiMuonAndTVelo.OutputLevel = 3;
 
 DiMuonAndTVeloVertices.InputSelection = "DiMuonAndTVelo";
 DiMuonAndTVeloVertices.FilterDescriptor   = {"DOCA,<,0.5"};
-DiMuonAndTVeloVertices.OutputLevel = 3;
+//DiMuonAndTVeloVertices.OutputLevel = 3;
 
 PureL0Dimuons.InputSelection    = "DiMuonAndTVeloVertices";
 PureL0Dimuons.FilterDescriptor   = {
   "VertexMatchIDsFraction_L0TriggerDiMuon,>,1.9"};
-PureL0Dimuons.OutputLevel = 3;
+//PureL0Dimuons.OutputLevel = 3;
 
 MuonTriggerPureDiMuon.InputSelection = "PureL0Dimuons";
 MuonTriggerPureDiMuon.FilterDescriptor = {"VertexDimuonMass,>,2500."};
-MuonTriggerPureDiMuon.OutputLevel = 3;
+//MuonTriggerPureDiMuon.OutputLevel = 3;
 
 MuonTriggerPureIPDiMuon.InputSelection = "PureL0Dimuons";
 MuonTriggerPureIPDiMuon.FilterDescriptor = { 
   "VertexDimuonMass,>,500.",
   "VertexMinIP_PV2D,||>,0.05"
 };
-MuonTriggerPureIPDiMuon.OutputLevel = 3;
+//MuonTriggerPureIPDiMuon.OutputLevel = 3;
 
 
 //-----------------------------------------------------
@@ -270,16 +272,16 @@ HltDiMuonFrom2L0NoIP.Members = {
 
 DimuonFromTwoL0.InputSelection = "MuonAndTVelo";
 DimuonFromTwoL0.FilterDescriptor = {"DOCA,<,0.5"};
-DimuonFromTwoL0.OutputLevel = 3;
+//DimuonFromTwoL0.OutputLevel = 3;
 
 MuonTriggerIPDiMuon2L0.InputSelection = "DimuonFromTwoL0";
 MuonTriggerIPDiMuon2L0.FilterDescriptor = {"VertexDimuonMass,>,500.",
                                         "VertexMinIP_PV2D,||>,0.05"};
-MuonTriggerIPDiMuon2L0.OutputLevel = 3;
+//MuonTriggerIPDiMuon2L0.OutputLevel = 3;
 
 MuonTriggerDiMuon2L0.InputSelection = "DimuonFromTwoL0";
 MuonTriggerDiMuon2L0.FilterDescriptor = {"VertexDimuonMass,>,2500."};
-MuonTriggerDiMuon2L0.OutputLevel = 3;
+//MuonTriggerDiMuon2L0.OutputLevel = 3;
 
 //-----------------------------------------------------
 // DIMUON ALLEY : from L0Muon + Muon Segment
@@ -317,39 +319,40 @@ HltMuonSegPreparation.Members = {
 
 
 MuonSegEntry.InputSelections = {"MuonAndTVelo"};
-MuonSegEntry.OutputLevel = 3;
+//MuonSegEntry.OutputLevel = 3;
 
 // It already Prepare the muon segments with proper error calling the tool MuonSeedTool
 MuonTrackRecForL0Single.OutputMuonTracksName="Hlt/Track/MuonSegmentForL0Single";
 MuonTrackRecForL0Single.DecodingFromCoord=true;
-MuonTrackRecForL0Single.OutputLevel = 3;
+//MuonTrackRecForL0Single.OutputLevel = 3;
 
 FilteredMuonSegments.TESInputName = "Hlt/Track/MuonSegmentForL0Single";
 FilteredMuonSegments.FilterDescriptor = {
   "DoShareM3_L0MuonConfirmedWithT,<,0.5"
 };
-FilteredMuonSegments.OutputLevel = 3;
+//FilteredMuonSegments.OutputLevel = 3;
 
 MuonTConfirmedWithT.InputSelection = "FilteredMuonSegments";
 MuonTConfirmedWithT.RecoName = "TConf";
-MuonTConfirmedWithT.OutputLevel = 3;
+MuonTConfirmedWithT.HltTrackUpgradeTool.DoTrackReco = false;
+//MuonTConfirmedWithT.OutputLevel = 2;
 
 MuonTAndTConfirmed.InputSelection = "MuonTConfirmedWithT";
 MuonTAndTConfirmed.FilterDescriptor = {"IsMuon,>,0."};
-MuonTAndTConfirmed.OutputLevel = 3;
+//MuonTAndTConfirmed.OutputLevel = 3;
 
 RZMuonSeg.InputSelection = "RZVelo";
 RZMuonSeg.FilterDescriptor = {"RZVeloTMatch_MuonTAndTConfirmed,||<,80."};
-RZMuonSeg.OutputLevel = 3;
+//RZMuonSeg.OutputLevel = 3;
 
 VeloMuonFromMuonSeg.InputSelection = "RZMuonSeg";
 VeloMuonFromMuonSeg.RecoName = "Velo";
-VeloMuonFromMuonSeg.OutputLevel = 3;
+//VeloMuonFromMuonSeg.OutputLevel = 3;
 
 MuonAndTVeloFromMuonSeg.InputSelection = "VeloMuonFromMuonSeg";
 MuonAndTVeloFromMuonSeg.InputSelection2 = "MuonTAndTConfirmed";
 MuonAndTVeloFromMuonSeg.MatchName = "VeloT";
-MuonAndTVeloFromMuonSeg.OutputLevel = 3;
+//MuonAndTVeloFromMuonSeg.OutputLevel = 3;
 
 
 DimuonFromOneL0MuonSeg.InputSelection = "MuonAndTVelo";
@@ -359,17 +362,17 @@ DimuonFromOneL0MuonSeg.FilterDescriptor = {"DOCA,<,0.5"};
 //with 2 tracks from  InputSelection and
 //one track from InputSelection and another track from InputSelection2 
 DimuonFromOneL0MuonSeg.DoMergeInputs = False;
-DimuonFromOneL0MuonSeg.OutputLevel = 3;
+//DimuonFromOneL0MuonSeg.OutputLevel = 3;
 
 
 MuonTriggerIPDiMuonMuonSeg.InputSelection = "DimuonFromOneL0MuonSeg";
 MuonTriggerIPDiMuonMuonSeg.FilterDescriptor = {"VertexDimuonMass,>,500.",
                                         "VertexMinIP_PV2D,||>,0.05"};
-MuonTriggerIPDiMuonMuonSeg.OutputLevel = 3;
+//MuonTriggerIPDiMuonMuonSeg.OutputLevel = 3;
 
 MuonTriggerDiMuonMuonSeg.InputSelection = "DimuonFromOneL0MuonSeg";
 MuonTriggerDiMuonMuonSeg.FilterDescriptor = {"VertexDimuonMass,>,2500."};
-MuonTriggerDiMuonMuonSeg.OutputLevel = 3;									  
+//MuonTriggerDiMuonMuonSeg.OutputLevel = 3;									  
 
 
 
