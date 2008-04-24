@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.60 2008-04-16 13:20:06 jpalac Exp $
+! $Id: release.notes,v 1.61 2008-04-24 15:36:12 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !============================================================
+
+!======================== MicroDST v3r2 2008-04-24 ====================
 
 ! 2008-04-16 - Juan PALACIOS
  - Add CopyHltSummary and CopyL0DUReport classes. Perform shallow copy of
