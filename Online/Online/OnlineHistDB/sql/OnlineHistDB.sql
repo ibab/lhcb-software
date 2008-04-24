@@ -254,9 +254,9 @@ end DeclareHistogram;
 
 procedure DeclareHistByServiceName(ServiceName IN varchar2) is
  mytype HISTOGRAMSET.HSTYPE%TYPE; 
- tk TASK.TASKNAME%TYPE;
- algo HISTOGRAMSET.HSALGO%TYPE;
- title varchar2(300);
+ tk varchar2(200);
+ algo varchar2(200);
+ title varchar2(200);
  cursor mysn(Xsn DIMSERVICENAME.SN%TYPE) is select SN from DIMSERVICENAME where SN=Xsn;
  myfsn  DIMSERVICENAME.SN%TYPE;
  hid HISTOGRAM.HID%TYPE := '';
