@@ -4,8 +4,11 @@
 ! Purpose     : Interfaces for MicroDST cloning and storing of LHCb event
 !               model classes
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.1.1.1 2007-12-10 08:23:45 jpalac Exp $
+! $Id: release.notes,v 1.2 2008-04-24 08:21:05 pkoppenb Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-04-24 - Patrick Koppenburg
+ - No Makefile
 
 ! 2007-12-10 - Juan Palacios
  - First commit of MicroDSTInterfaces, a package containing interfaces for the
