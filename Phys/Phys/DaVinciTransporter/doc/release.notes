@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.58 2008-04-15 15:46:13 jpalac Exp $
+! $Id: release.notes,v 1.59 2008-04-24 13:32:24 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+!====================== DaVinciTransporter v3r8 2008-04-24 ====================
 
 ! 2008-04-15 - Juan PALACIOS
  - cmt/requirements
