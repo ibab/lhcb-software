@@ -6,12 +6,12 @@ branches doc cmt
 ####################################################################
 
 #===================================================================
-use  DaVinciFilter      	v6r6     Phys   # Juan Palacios
+use  DaVinciFilter      	v6r7     Phys   # Juan Palacios
 use  ProtoParticleFilter        v1r3     Phys   # Chris Jones
-use  DaVinciTools       	v15r8p1  Phys   # Juan Palacios
+use  DaVinciTools       	v16r0    Phys   # Juan Palacios
 use  DaVinciTransporter 	v3r7p3   Phys   # Juan Palacios
-use  ParticleMaker      	v3r4p1   Phys   # Chris Jones
-use  VertexFit			v5r0     Phys   # Yuehong Xie
+use  ParticleMaker      	v4r0     Phys   # Chris Jones
+use  VertexFit			v5r1     Phys   # Yuehong Xie
 use  LoKiFitters                v1r1     Phys   # Vanya Belyaev
 
 # Allow the generation of QMTest summary 
