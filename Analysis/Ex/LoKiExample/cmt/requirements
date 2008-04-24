@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.38 2008-03-27 07:24:20 pkoppenb Exp $ 
+# $Id: requirements,v 1.39 2008-04-24 08:41:23 pkoppenb Exp $ 
 # =============================================================================
 package         LoKiExample
-version         v7r2
+version         v7r3
 
 # ============= structure =====================================================
 branches        cmt doc src options 
