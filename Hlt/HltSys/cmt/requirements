@@ -7,32 +7,32 @@ branches cmt doc options
 # LHCb High Level Trigger packages
 #=======================================================
 
-use HltCommon           v3r1    Hlt   # Jose Angel Hernando-Morata
-use HltTracking         v3r1    Hlt   # Jose Angel Hernando-Morata
+use HltCommon           v3r2    Hlt   # Jose Angel Hernando-Morata
+use HltTracking         v3r2    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v3r1    Hlt   # Jose Angel Hernando-Morata
-use HltPython	        v1r4    Hlt   # Jose Angel Hernando-Morata
+use HltPython	        v1r5    Hlt   # Jose Angel Hernando-Morata
 
-use HltMuon             v3r0    Hlt   # Alessia Satta          
+use HltMuon             v3r1    Hlt   # Alessia Satta          
 
-use HltMuonAlley        v2r2    Hlt   # Sandra Amato 
+use HltMuonAlley        v2r3    Hlt   # Sandra Amato 
 
 use HltRecChecker	v1r5	Hlt   # Jose Angel Hernando-Morata
-use HltL0Conf           v1r5    Hlt   # Johannes Albrecht
+use HltL0Conf           v2r0    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r0    Hlt   # Alessia Satta/Sandra Amato  
 
-use HltSelections       v6r0    Hlt   # Patrick Koppenburg
-use HltSelChecker       v6r0    Hlt   # Patrick Koppenburg
+use HltSelections       v7r0    Hlt   # Patrick Koppenburg
+use HltSelChecker       v6r1    Hlt   # Patrick Koppenburg
 
-use HltKshort           v1r1    Hlt   # Jaap Panman
+use HltKshort           v1r2    Hlt   # Jaap Panman
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
 #=============================================================
 
-use HltBase             v4r1   Hlt    # Jose Angel Hernando-Morata
+use HltBase             v4r2   Hlt    # Jose Angel Hernando-Morata
 
 use LoKiTrigger         v7r3   Phys   # Vanya Belyaev
-use TisTosTobbing       v2r2   Phys   # Tomasz Skwarnicki  
+use TisTosTobbing       v2r3   Phys   # Tomasz Skwarnicki  
 
 
 # Allow the generation of QMTest summary 
