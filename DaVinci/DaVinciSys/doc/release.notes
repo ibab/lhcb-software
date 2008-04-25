@@ -8,6 +8,7 @@ Based on Phys v6r11, Analysis v1r12, Rec v5r5, HLT v3r2, Lbcom v6r16, LHCb v23r5
 
  - Restore pre-v19r11 ParticleTransporter behaviour and extend to transport without projection.
  - Extend MicroDST capabilities.
+ - New syntax for CombineParticles, see https://twiki.cern.ch/twiki/bin/view/LHCb/LoKiHybridFilters
  - Various bug fixes and improvements, see PHYS, ANALYSIS and LLT release notes.
 
 </PRE><H1><A NAME=v19r11>2008-03-11 DaVinci v19r11. DC06-compatible analysis version.</A></H1><PRE>
