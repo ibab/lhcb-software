@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.320 2008-04-24 13:19:43 jpalac Exp $
+! $Id: release.notes,v 1.321 2008-04-25 16:37:37 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-04-25 - Patrick Koppenburg
+ - Check a few StatusCodes
 
 !======================== DaVinciTools v16r0 2008-04-24 =====================
 

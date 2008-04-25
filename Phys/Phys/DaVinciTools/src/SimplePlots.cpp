@@ -1,4 +1,4 @@
-// $Id: SimplePlots.cpp,v 1.5 2007-01-15 10:32:38 jpalac Exp $
+// $Id: SimplePlots.cpp,v 1.6 2008-04-25 16:37:37 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -43,9 +43,8 @@ StatusCode SimplePlots::initialize() {
     err() << "Unable to retrieve Plot Tool " << m_plotTool << endmsg;
     return StatusCode::FAILURE;
   }
-  m_plots->setPath(name());
+  return m_plots->setPath(name());
 
-  return StatusCode::SUCCESS;
 };
 
 //=============================================================================

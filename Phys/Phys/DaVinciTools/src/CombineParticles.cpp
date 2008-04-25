@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.13 2008-04-23 20:28:27 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.14 2008-04-25 16:37:37 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -469,7 +469,8 @@ StatusCode CombineParticles::execute    ()  // standard execution
   // the final statistics 
   counter ( "# selected") += nTotal ;
   
-  desktop()->saveDesktop() ;
+  StatusCode sc =  desktop()->saveDesktop() ;
+  if (!sc) return sc;
   
   // the final decision 
   setFilterPassed ( 0 < nTotal ) ;

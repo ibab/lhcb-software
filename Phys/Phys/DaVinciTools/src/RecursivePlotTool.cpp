@@ -1,4 +1,4 @@
-// $Id: RecursivePlotTool.cpp,v 1.5 2007-01-15 10:32:37 jpalac Exp $
+// $Id: RecursivePlotTool.cpp,v 1.6 2008-04-25 16:37:37 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -74,7 +74,6 @@ StatusCode RecursivePlotTool::initialize() {
 }
 //=============================================================================
 StatusCode RecursivePlotTool::finalize(){
-  if (m_simplePlotTool) toolSvc()->releaseTool(m_simplePlotTool);
   return GaudiTool::finalize();
 }
 //=============================================================================
