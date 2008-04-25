@@ -3,79 +3,9 @@
 <!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
 <POOLFILECATALOG>
 
-  <File ID="1863E514-8FEC-DA11-8ED8-003048836649">
-    <physical>
-      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/user/c/cattanem/Boole/v12r1/0601-11144100.digi"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="5C03EE1D-0701-DB11-BEAE-0002B3AFA9A3">
-    <physical>
-      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/user/g/gcorti/Gauss/v24r9/30000000.1000ev.21Jun.sim"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="4AED8850-1A02-DB11-AF8C-0007E9EDBD41">
-    <physical>
-      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/user/g/gcorti/Gauss/v24r9/11144100.500ev.22Jun.sim"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="1688359D-ABCF-DA11-BFDD-003048836649">
-    <physical>
-      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/user/c/cattanem/Boole/v11r3/0601-11144100.digi"/>
-    </physical>
-    <logical/>
-  </File>
-
   <File ID="70737DCB-49D9-DB11-A9D4-0002B3B0DEA0">
     <physical>
       <pfn filetype="ROOT_All" name="castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="5EDCB9D2-89FF-DA11-B4F7-003048836649">
-    <physical>
-      <pfn filetype="ROOT_All" name="0601-11144100.dst"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="62ED0AE7-EE10-DB11-BA6A-003048836649">
-    <physical>
-      <pfn filetype="ROOT_All" name="0601-11144100-evt.dst"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="64B2B6EC-BB11-DB11-81DC-003048836649">
-    <physical>
-      <pfn filetype="ROOT_All" name="0601-11144100.rdst"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="4032021D-E317-DB11-9D30-003048836649">
-    <physical>
-      <pfn filetype="ROOT_All" name="etc-output2.root"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="06024E58-303F-DB11-820B-003048836649">
-    <physical>
-      <pfn filetype="ROOT_All" name="PilotRun.dst"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="B8EE9830-56D9-DB11-AC45-003048836626">
-    <physical>
-      <pfn filetype="ROOT_All" name="FieldOff.dst"/>
     </physical>
     <logical/>
   </File>
@@ -94,23 +24,9 @@
     <logical/>
   </File>
 
-  <File ID="58110D9A-8FA9-DC11-8B79-003048836626">
+  <File ID="94ACC0F5-09A3-DC11-8140-003048836626">
     <physical>
-      <pfn filetype="ROOT_All" name="test_mdf.dst"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="28AB087A-90A9-DC11-A31F-003048836626">
-    <physical>
-      <pfn filetype="ROOT_All" name="test-FETC.dst"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="24357C7B-90A9-DC11-A31F-003048836626">
-    <physical>
-      <pfn filetype="ROOT_All" name="etc-output-test.root"/>
+      <pfn filetype="MDF" name="rfio:///castor/cern.ch/user/c/cattanem/Boole/v12r10/00001820_00000001_4.mdf"/>
     </physical>
     <logical/>
   </File>

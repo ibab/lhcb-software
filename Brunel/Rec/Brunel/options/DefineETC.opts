@@ -1,0 +1,17 @@
+// Options to define an event tag collection. Switched on by adding
+// ApplicationMgr.OutStream += { "GaudiSequencer/SeqTagWriter"};
+// (Must be added AFTER the Dst OutStream)
+
+SeqTagWriter.Members += { "CopyStripETC/TagCreator",
+                          "EvtCollectionStream/TagWriter" } ;
+TagCreator.InputCollectionName = "TagCreator" ;
+TagCreator.EvtColsProduce = true;   // switch it on
+TagCreator.HistoProduce   = false;  // no histos
+TagCreator.EvtColLUN      = "EVTTAGS2";
+TagCreator.OutputCollectionName = "EVTTAGS2/TagCreator/Strip" ;
+
+TagWriter.ItemList = { "/NTUPLES/EVTTAGS2/TagCreator/1" };
+TagWriter.EvtDataSvc = "EvtTupleSvc";
+
+// N.B. "EVTTAGS2" is the name to be given to the EvtTupleSvc.Output:
+// EvtTupleSvc.Output = { "EVTTAGS2 DATAFILE='etc.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " } ;

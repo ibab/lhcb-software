@@ -44,4 +44,6 @@ application Brunel $(GAUDICONFROOT)/src/GaudiMain.cpp
 macro Brunel_linkopts    "$(application_linkopts)"
 
 apply_pattern application_path
+apply_pattern install_python_modules
+apply_pattern GaudiApp
 
