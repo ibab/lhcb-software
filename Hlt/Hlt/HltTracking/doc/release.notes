@@ -4,10 +4,13 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
-! 2008-02-12 Jose A. Hernando
+! 2008-04-25 - Patrick Koppenburg
+ - Error become a warning
+
+! 2008-04-24 Jose A. Hernando
  - HltTrackUpgradeTool option to not track the reconstruction DoTrackReco = true;
 
-! 2008-02-12 Jose A. Hernando
+! 2008-04-XX Jose A. Hernando
  - HltTrackMatch, solving a bug in storing quality (deltaX,deltaY) into the track extraInfo
 
 !========================== HltTracking v3r1 2008-03-07 ===================

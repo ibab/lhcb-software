@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.11 2008-04-24 14:32:36 hernando Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.12 2008-04-25 12:57:38 pkoppenb Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -232,6 +232,7 @@ void HltTrackUpgradeTool::recoDone(Track& seed,
 
 size_t HltTrackUpgradeTool::find(const Track& seed,
                              std::vector<Track*>& tracks) {
+  /// @todo This comparison of doubles must be fixed
   if (!m_doTrackReco) return 0;
   double key = (double) seed.key();
   double ncan = (double) seed.info(m_recoID,-1);
@@ -241,12 +242,13 @@ size_t HltTrackUpgradeTool::find(const Track& seed,
     if (ptrack->info(m_recoID,-1) == key) tracks.push_back(ptrack);
   }
   if (ncan != (double) tracks.size()) {
-    error() << " different number of stored tracks! " << ncan 
+    Warning("Different number of tracks",StatusCode::SUCCESS,1);
+    debug() << " different number of stored tracks! " << ncan 
             << " != " << tracks.size() << endreq;
     for (Tracks::iterator it = m_otracks->begin();
          it != m_otracks->end();++it) {
       Track& track = *(*it);
-      error() << " key " << key << " mother " 
+      debug() << " key " << key << " mother " 
               << track.info(m_recoID,-1) << endreq;
     }
   }  
