@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v3r2 2008-04-25 ===================
 ! 2008-04-23 (St. Jorge) - Jose A. Hernando
  - MakeVertex set option DoMergeInputs option (true by default)   
 
