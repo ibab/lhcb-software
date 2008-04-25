@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.14 2008-02-05 13:58:07 pkoppenb Exp $
+! $Id: release.notes,v 1.15 2008-04-25 16:48:51 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+!========================== TisTosTobbing v2r3 2008-04-25 ===================
 !========================== TisTosTobbing v2r2 2008-02-05 ===================
 ! 2008-02-04 Tomasz Skwarnicki
  - triggerTisTos.cpp: take alley exit selections from input of "HltAlleys" if it exists
