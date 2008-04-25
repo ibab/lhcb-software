@@ -4,9 +4,9 @@
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
 
+!========================== HltMuonAlley v2r3 2008-04-25 ===================
 ! 2008-02-17 - Jose A. Hernando
    In HltMatchTVeloTracks.cpp, propagate extraInfo of the Velo to the matched track
-
 
 !========================== HltMuonAlley v2r2 2008-03-07 ===================
 ! 2008-02-13 - Gerhard Raven
