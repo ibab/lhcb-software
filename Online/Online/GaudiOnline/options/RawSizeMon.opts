@@ -1,0 +1,17 @@
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.SvcOptMapping        += { "LHCb::MEPManager/MEPManager"};
+ApplicationMgr.ExtSvc               += { "LHCb::OnlineEvtSelector/EventSelector" };
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
+MEPManager.Buffers                   = { "Events" };
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.PartitionBuffers          = true;
+EventSelector.Input                  = "Events";
+EventSelector.AllowSuspend           = false;
+EventSelector.Decode                 = false;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+#include "$ONLINETASKS/options/MessageSvc.opts"
+EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0";
+ApplicationMgr.TopAlg                = { "RawBankSizeMonitor/RawSize" };
