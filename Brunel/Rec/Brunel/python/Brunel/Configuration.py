@@ -1,7 +1,7 @@
 """
 High level configuration tools for Brunel
 """
-__version__ = "$Id: Configuration.py,v 1.1 2008-04-25 06:59:29 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2008-04-25 09:00:47 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -81,11 +81,11 @@ class Brunel(ConfigurableUser):
 
     def defineOptions(self):
         inputType = self.getProp( "inputType" ).upper()
-        if ( inputType ) not in [ "MDF", "DST", "DIGI", "ETC", "RDST" ]:
+        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST" ]:
             raise TypeError( "Invalid outputType '%s'"%inputType )
 
-        withMC   = self.getProp("withMC")
-        if ( inputType == "DST" or inputType == "RDST" or inputType == "ETC" ):
+        withMC = self.getProp("withMC")
+        if inputType in [ "DST", "RDST", "ETC" ]:
             # Kill knowledge of any previous Brunel processing
             InitReprocSeq = GaudiSequencer( "InitReprocSeq" )
             InitReprocSeq.Members.append( "TESCheck" )
@@ -95,15 +95,17 @@ class Brunel(ConfigurableUser):
                 GaudiSequencer("InitBrunelSeq").Members.append("ReadStripETC/TagReader")
                 ReadStripETC("TagReader").CollectionName = "TagCreator"
                 IODataManager().AgeLimit += 1
-            elif ( inputType == "MDF" ):
-                importOptions( "$STDOPTS/RawDataIO.opts" )
-                withMC = False # Force it, MDF never contains MC truth
+        elif ( inputType == "MDF" ):
+            withMC = False # Force it, MDF never contains MC truth
 
         if self.getProp("outputType").upper() == "RDST":
             withMC = False # Force it, RDST never contains MC truth
 
         if withMC:
             importOptions( "$BRUNELOPTS/BrunelMC.opts" )
+        elif inputType not in [ "DIGI", "DST" ]:
+            # In case raw data resides in MDF file
+            EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
 
         if self.getProp("recL0Only"):
             ProcessPhase("Init").DetectorList.append("L0")
@@ -131,9 +133,9 @@ class Brunel(ConfigurableUser):
         Set up output stream
         """
         dstType = self.getProp( "outputType" ).upper()
-        if ( dstType ) not in [ "RDST", "DST", "NONE" ]:
+        if dstType not in [ "RDST", "DST", "NONE" ]:
             raise TypeError( "Invalid outputType '%s'"%dstType )
-        if ( dstType == "DST" or dstType == "RDST" ):
+        if dstType in [ "DST", "RDST" ]:
             if( dstType == "DST" ):
                 importOptions( "$BRUNELOPTS/DstContent.opts" )
             else:
