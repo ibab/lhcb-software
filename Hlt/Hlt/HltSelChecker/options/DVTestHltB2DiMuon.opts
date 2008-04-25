@@ -10,7 +10,7 @@
 // Preselection
 //
 #include "$CCBARROOT/options/DVPreselHeavyDimuon.opts"
-HltExclusiveCorrs.Algorithms += { "PreselHeavyDimuon" };
+HltSelectionsCorrs.Algorithms += { "PreselHeavyDimuon" };
 PrintPreselHeavyDimuon.OutputLevel = 3 ;
 //
 // Hlt test

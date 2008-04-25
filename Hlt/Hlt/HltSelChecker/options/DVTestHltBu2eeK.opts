@@ -10,7 +10,7 @@
 // Preselection
 //
 #include "$B2DILEPTONROOT/options/DVPreselBu2LLK.opts"
-HltExclusiveCorrs.Algorithms += { "PreselBu2LLK" };
+HltSelectionsCorrs.Algorithms += { "PreselBu2LLK" };
 PrintDiLeptonForPreselBu2LLK.OutputLevel = 3 ;
 PrintPreselBu2LLK.OutputLevel = 3 ;
 //

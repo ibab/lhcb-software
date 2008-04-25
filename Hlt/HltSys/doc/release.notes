@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-04-25 - Patrick Koppenburg
+ - Hlt2: don't use "exclusive" anymore
+
 ! 2008-04-24 - Jose A. Hernando
  - HltMuonAlleyConfSequence, do track tracking in L0Confirmation, temporally
 

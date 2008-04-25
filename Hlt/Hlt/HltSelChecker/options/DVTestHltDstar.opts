@@ -10,7 +10,7 @@
 // Preselection
 //
 #include "$B2DSTARXROOT/options/DVPreselDstarNoPID.opts"
-HltExclusiveCorrs.Algorithms += { "DVPreselDstarNoPID" };
+HltSelectionsCorrs.Algorithms += { "DVPreselDstarNoPID" };
 //
 // Hlt test
 //

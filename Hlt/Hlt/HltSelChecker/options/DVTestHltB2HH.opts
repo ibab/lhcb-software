@@ -10,7 +10,7 @@
 // Preselection
 //
 #include "$B2UDSROOT/options/DVPreselB2HH.opts"
-HltExclusiveCorrs.Algorithms += { "PreselB2HH" };
+HltSelectionsCorrs.Algorithms += { "PreselB2HH" };
 //
 // Hlt test
 //

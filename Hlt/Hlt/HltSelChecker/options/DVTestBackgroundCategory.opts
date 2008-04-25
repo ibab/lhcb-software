@@ -25,7 +25,7 @@ HltMuonTriggerDiMuons.OutputLevel = 4 ;
 #include "$HLTSELECTIONSROOT/options/HltCorrelations.opts"
 #include "$HLTSELECTIONSROOT/options/HltSelTiming.opts"
 
-//HltExclusiveCorrs.Algorithms += { "IsBEvent" };
+//HltSelectionsCorrs.Algorithms += { "IsBEvent" };
 
 //ApplicationMgr.ExtSvc += { "NTupleSvc" };
 

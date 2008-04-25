@@ -10,7 +10,7 @@
 // Preselection
 //
 #include "$B2DILEPTONROOT/options/DVPreselBd2KstarMuMu.opts"
-HltExclusiveCorrs.Algorithms += { "PreselBd2KstarMuMu" };
+HltSelectionsCorrs.Algorithms += { "PreselBd2KstarMuMu" };
 //
 // Hlt test
 //

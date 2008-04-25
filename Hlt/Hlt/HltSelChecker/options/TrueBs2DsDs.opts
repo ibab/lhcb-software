@@ -1,6 +1,6 @@
 /** @file TrueBs2DsDs.opts
  *  
- *  Options for running exclusive HLT only on truth
+ *  Options for running HLT2 only on truth
  *
  *  @author P. Koppenburg
  *  @date 2007-07-23

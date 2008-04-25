@@ -10,7 +10,7 @@
 // Preselection
 //
 #include "$B2D0XROOT/options/DVPreselBd2D0Kst_D02HH.opts"
-HltExclusiveCorrs.Algorithms += { "PreselBd2D0Kst_D02HH" };
+HltSelectionsCorrs.Algorithms += { "PreselBd2D0Kst_D02HH" };
 PrintPreselBd2D0Kst_D02HH.OutputLevel = 3 ;
 //
 // Hlt test

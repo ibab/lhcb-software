@@ -41,12 +41,11 @@ Hlt2.Members += { "GaudiSequencer/SeqHlt2TruthFilter" } ;
 //---------------------------------------------------------------------
 // Standard HLT Particles
 //---------------------------------------------------------------------
-Hlt2.Members += { "GaudiSequencer/HltShared" };
+// just initialisation
 #include "$HLTSELECTIONSROOT/options/HltShared.opts"
 //---------------------------------------------------------------------
-// Exclusive selections
+// Final selections
 //---------------------------------------------------------------------
-Hlt2.Members += { "GaudiSequencer/HltExclusive" };
 #include "$HLTSELECTIONSROOT/options/HltSelections.opts"
 
 //--------------------------------------------------------------------
