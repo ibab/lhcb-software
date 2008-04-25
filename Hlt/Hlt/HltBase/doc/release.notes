@@ -3,6 +3,9 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+
+!========================== HltBase v4r2 2008-04-25 ===================
 !2008-04-17 - Johannes Albrecht
 	- remove interfaces for obsolete tools in HltL0Conf:
 		IPrepareMuonTSeedTool.h, IPrepareMuonTSeed.h, IPrepareMuonSeed.h,
