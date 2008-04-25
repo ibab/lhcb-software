@@ -3,7 +3,22 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v32r5>2008-04-11 Brunel v32r5</A></H1><PRE>
+</PRE><H1><A NAME=v32r5>2008-04-25 Brunel v32r5</A></H1><PRE>
+ - Added python configurable for Brunel (python/Brunel/Configuration.py)
+   Related files in options directory:
+   . Brunel-Default.py       : describes available options and defaults
+   . Brunel-DC06Rdst.py      : configuration for DC06 rdst production
+   . Brunel-L0DC06Rdst.py    : same as DC06Rdst, L0 selected events
+   . Brunel-DC06Stripping.py : configuration for DC06 stripped DST production
+   . DC06-Files.py           : example files for I/O with above configurations
+ - Removed obsolete file v200601.py (replaced by Brunel-Default.py)
+ - Added DefineETC.opts, options for setting up stripping ETC, previously
+   duplicated in several files
+ - Removed "Etc" from Init.DetectorList, had identical functionality to "Reproc"
+ - RecInit/Brunel algorithm renamed RecInit/BrunelInit, to avoid name clash with
+   configurable
+ - Updated SuppressWarnings.opts to suppress histogram statistics printout in
+   production
 
 </PRE><H1><A NAME=v32r4>2008-03-12 Brunel v32r4</A></H1><PRE>
  - In SuppressWarnings.opts, timestamp is printed in UTC, keep EventLoopMgr msgs
