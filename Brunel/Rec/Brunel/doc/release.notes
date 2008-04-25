@@ -11,6 +11,7 @@ Purpose: LHCb reconstruction program
    . Brunel-L0DC06Rdst.py    : same as DC06Rdst, L0 selected events
    . Brunel-DC06Stripping.py : configuration for DC06 stripped DST production
    . DC06-Files.py           : example files for I/O with above configurations
+   . Brunel-CCRCStripping.py : same as DC06Stripping but without MC truth
  - Removed obsolete file v200601.py (replaced by Brunel-Default.py)
  - Added DefineETC.opts, options for setting up stripping ETC, previously
    duplicated in several files
