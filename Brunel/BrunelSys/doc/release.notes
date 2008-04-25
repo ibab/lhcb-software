@@ -3,11 +3,59 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v32r5>2008-04-11 Brunel v32r5</A></H1><PRE>
+</PRE><H1><A NAME=v32r5>2008-04-25 Brunel v32r5</A></H1><PRE>
 This version uses projects Gaudi v19r9, LHCb v23r5, Lbcom v6r16, Rec v5r5
  and DDDB v1r* (SQLDDDB v4r2 or greater), ParamFiles v7r1, FieldMap v4r7
 
-This is a pre-release.
+This is a development version 
+
+- New features
+  . Added python configurable for Brunel (python/Brunel/Configuration.py)
+    Related files in options directory:
+    o Brunel-Default.py       : describes available options and defaults
+    o Brunel-DC06Rdst.py      : configuration for DC06 rdst production
+    o Brunel-L0DC06Rdst.py    : same as DC06Rdst, L0 selected events
+    o Brunel-DC06Stripping.py : configuration for DC06 stripped DST production
+    o DC06-Files.py           : example files for I/O with above configurations
+    o Brunel-CCRCStripping.py : same as DC06Stripping but without MC truth
+  . RecInit/Brunel algorithm renamed RecInit/BrunelInit, to avoid name clash with
+    configurable
+  . Updated file catalog usage. Now a new catalog MyCatalog.xml is created for
+    output files, existing job/NewCatalog.xml is read only, describes example
+    input files 
+  . Reworking of Rich packages to allow for tool based reconstruction
+    (See RecSys v5r5 release notes)
+
+- New tuning
+  . Modified default idle connection time-out in CondDBAccessSvc from 600s to
+    120s (DetCond v11r10)
+  . Changed coordinate cache from float to double. This fixes some float/double
+    conversion issues in the VELO tracking. Memory is increased by 500 kB.
+    (VeloDet v13r0, TfKernel v2r4)
+
+- Bug fixes
+  . Fixed unchecked StatusCodes (GlobalReco v6r15p1)
+  . Fixed bug in FastMomentumEstimate.cpp: sigmaQOverP used to be negative
+    for qOverP negative (TrackTools v3r5)
+  . Fixed bug in State::posMomCovariance (TrackEvent v4r12)
+  . Fixed memory leak in XmlFileCatalog (GaudiUtils v1r6)
+  . Fix in DefaultVeloHitManager: the hit preparation always tried to access
+    the first cluster in the cluster container to obtain a sensor number,
+    causing a crash on empty cluster containers (TfKernel v2r4)
+
+- Removed features
+  . Removed obsolete file v200601.py (replaced by Brunel-Default.py)
+  . Removed "Etc" from Init.DetectorList, had identical functionality to "Reproc"
+
+- Monitoring changes
+  . Updated SuppressWarnings.opts to suppress histogram statistics printout in
+    production
+  . Add back functionality to exclude guard rings in efficiency calculation;
+    default value of STEffChecker.IncludeGuardRings is false (STCheckers v2r4p1)
+  . Give meaningful names to MemoryTool histograms and don't print histogram
+    statistics by default (LHCbAlgs v12r6)
+  . Gaudi Histo base classes now print histogram statistics by default at
+    finalize (GaudiUtils v1r6, GaudiAlg v10r5)
 
 </PRE><H1><A NAME=v32r4>2008-03-12 Brunel v32r4</A></H1><PRE>
 This version uses projects Gaudi v19r8, LHCb v23r4, Lbcom v6r15, Rec v5r4
