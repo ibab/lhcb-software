@@ -1,4 +1,4 @@
-// $Id: FilterByRunEvent.h,v 1.2 2007-11-28 13:43:20 cattanem Exp $
+// $Id: FilterByRunEvent.h,v 1.3 2008-04-25 11:58:53 graven Exp $
 #ifndef FILTERBYRUNEVENT_H 
 #define FILTERBYRUNEVENT_H 1
 
@@ -28,6 +28,7 @@ protected:
 private:
 
   std::vector<std::pair<int,int> > m_events; ///< Run/event number pairs
+  //FIXME: needs to be: std::vector<std::pair<unsigned int,ulonglong> > m_events; ///< Run/event number pairs
   bool m_passSelect;		///< If true, will pass list events; false, fail
 
 };

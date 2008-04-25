@@ -1,4 +1,4 @@
-// $Id: FilterByRunEvent.cpp,v 1.2 2007-11-28 13:43:20 cattanem Exp $
+// $Id: FilterByRunEvent.cpp,v 1.3 2008-04-25 11:58:53 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -48,27 +48,21 @@ StatusCode FilterByRunEvent::execute()
   // Get the run and event number from the ODIN bank
   LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
 
-  int lcl_runNum = odin->runNumber();
-  int lcl_evtNum = odin->eventNumber();
+  // TODO: it might be advantageous to sort m_events (and add a call-back for when
+  //       it is updated!), and use a binary search instead...
+  bool lcl_sel = ( std::find(m_events.begin(),
+                             m_events.end(), 
+                             std::make_pair<int,int>(odin->runNumber(),odin->eventNumber())) 
+                             // FIXME: delete the <int,int> part in the above... once m_events is of the right type...
+                   != m_events.end() );
 
-  bool lcl_sel = false;
-  std::vector< std::pair<int,int> >::const_iterator i;
-  for( i = m_events.begin(); i != m_events.end(); i++ )
-  {
-    if( lcl_runNum == (*i).first && lcl_evtNum == (*i).second )
-    {
-      lcl_sel = true;
-      break;
-    }
-  }
-
-  bool lcl_pass = (m_passSelect && lcl_sel) || (!m_passSelect && !lcl_sel);
+  bool lcl_pass = ( m_passSelect ? lcl_sel : !lcl_sel );
 
   setFilterPassed( lcl_pass );
 
   if( lcl_pass )
-    info() << "Passing Run " << lcl_runNum 
-    		<< " event number " << lcl_evtNum << endmsg;
+    info() << "Passing Run "   << odin->runNumber() 
+           << " event number " << odin->eventNumber() << endmsg;
 
   return StatusCode::SUCCESS;
 }

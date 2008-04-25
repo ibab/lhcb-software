@@ -3,6 +3,11 @@
 ! Responsible : Marco Cattaneo
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
+! 2008-04-25 - Gerhard Raven
+ - add rate prescaling based on run#, event#, gpsTime and algorithm instance
+   name to DeterministicPrescaler
+ - add some comments to FilterByRunEvent pointing out that event# is NOT a 
+   32 bit number -- fixing this properly requires adding a new property type.
 
 !======================== LHCbAlgs v2r16 2008-04-16 ==========================
 ! 2008-04-16 - Marco Cattaneo
