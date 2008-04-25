@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.375 2008-03-18 21:08:28 pkoppenb Exp $
+# $Id: requirements,v 1.376 2008-04-25 12:16:40 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -36,14 +36,16 @@ use CaloDAQ            v*    Calo           -no_auto_imports
 use LinkerInstances    v*    Event
 use SimComponents      v*    Sim            -no_auto_imports
 
+#-- Hlt
+use HltSys      v*
+
 #-- Lbcom
 use LbcomSys    v*
 
 #-- Rec
 use RecSys      v*
 
-#-- Hlt
-use HltSys      v*
+
 
 #-- Phys
 use PhysSys     v*

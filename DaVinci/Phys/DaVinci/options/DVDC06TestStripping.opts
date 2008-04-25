@@ -30,7 +30,7 @@ DSTOR.Output = "DATAFILE='Presel_test.dst' TYP='POOL_ROOTTREE' OPT='RECREATE'";
  * Job steering
  */
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
-ApplicationMgr.EvtMax = 100 ;
+ApplicationMgr.EvtMax = 1000 ;
 EventSelector.PrintFreq  = 1;
 
 MessageSvc.OutputLevel = 3 ;
