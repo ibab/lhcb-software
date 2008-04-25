@@ -20,6 +20,9 @@ Purpose: LHCb reconstruction program
    configurable
  - Updated SuppressWarnings.opts to suppress histogram statistics printout in
    production
+ - Updated file catalog usage. Now a new catalog MyCatalog.xml is created for
+   output files, existing job/NewCatalog.xml is read only, describes example
+   input files 
 
 </PRE><H1><A NAME=v32r4>2008-03-12 Brunel v32r4</A></H1><PRE>
  - In SuppressWarnings.opts, timestamp is printed in UTC, keep EventLoopMgr msgs

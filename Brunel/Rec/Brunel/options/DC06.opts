@@ -31,7 +31,10 @@ HistogramPersistencySvc.OutputFile = "00001820_00000001_5.root";  // Monitoring 
 //---------------------------------------------------------------------------
 // File catalogs. First one is read-write, any others are read only
 //---------------------------------------------------------------------------
-FileCatalog.Catalogs = { "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml" };
+FileCatalog.Catalogs = {
+  "xmlcatalog_file:MyCatalog.xml"
+ ,"xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml"
+};
 
 //---------------------------------------------------------------------------
 // Event input

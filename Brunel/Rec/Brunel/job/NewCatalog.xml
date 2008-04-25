@@ -10,20 +10,6 @@
     <logical/>
   </File>
 
-  <File ID="CAA89D27-E42D-DC11-B844-003048836626">
-    <physical>
-      <pfn filetype="ROOT_All" name="00001820_00000001_5.dst"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="AC2D8E0A-BBA8-DC11-9551-003048836626">
-    <physical>
-      <pfn filetype="ROOT_All" name="00001820_00000001_5.rdst"/>
-    </physical>
-    <logical/>
-  </File>
-
   <File ID="94ACC0F5-09A3-DC11-8140-003048836626">
     <physical>
       <pfn filetype="MDF" name="rfio:///castor/cern.ch/user/c/cattanem/Boole/v12r10/00001820_00000001_4.mdf"/>

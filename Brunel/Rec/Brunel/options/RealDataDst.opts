@@ -37,8 +37,11 @@ ApplicationMgr.EvtMax = -1;
 // Monitoring histograms output
 HistogramPersistencySvc.OutputFile = "00001820_00000001_5.root";
 
-// Read-write catalog to describe input (MDF) and output (POOL) files
-FileCatalog.Catalogs = { "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml" };
+// File catalogs. First one is read-write, other is read only, describes MDF
+FileCatalog.Catalogs = {
+  "xmlcatalog_file:MyCatalog.xml"
+ ,"xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml"
+};
 
 // Input MDF file. This file MUST be described in the FileCatalog, with an FID
 // generated externally, as it is not contained in the MDF file. If the FID is

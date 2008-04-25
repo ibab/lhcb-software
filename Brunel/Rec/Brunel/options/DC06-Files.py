@@ -9,9 +9,10 @@ from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 from Brunel.Configuration import *
 
-#-- File catalogs
+#-- File catalogs. First one is read-write
 BrunelRoot = os.environ["BRUNELROOT"]
-FileCatalog().Catalogs = [ "xmlcatalog_file:" + BrunelRoot + "/job/NewCatalog.xml" ]
+FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
+                           "xmlcatalog_file:" + BrunelRoot + "/job/NewCatalog.xml" ]
 
 #-- Main ('signal') event input
 inputType   = Brunel().getProp("inputType").upper()

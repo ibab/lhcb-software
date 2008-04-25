@@ -50,7 +50,8 @@ HistogramPersistencySvc.OutputFile = "testhh.root";  // Monitoring histos
 // File catalogs. First one is read-write, others are read only
 //---------------------------------------------------------------------------
 FileCatalog.Catalogs = {
-  "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml"
+  "xmlcatalog_file:MyCatalog.xml"
+ ,"xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml"
  ,"xmlcatalog_file:$BRUNELROOT/job/ETC_00002000_00000621_catalog.xml" // corresponds to ETC
 };
 
