@@ -1,4 +1,4 @@
-// $Id: RichG4HitRecon.cpp,v 1.10 2006-11-01 09:41:54 seaso Exp $
+// $Id: RichG4HitRecon.cpp,v 1.11 2008-04-25 11:55:08 seaso Exp $
 // Include files
 
 // local
@@ -149,11 +149,28 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
           G4int aPrimaryMirrCopyInfo = aHit->Mirror1PhotonDetectorCopyNum();
           G4int aSecMirrCopyInfo = aHit->Mirror2PhotonDetectorCopyNum();
-	  //          G4cout<<" RichHitrecon hit info: richdet PrimMirrCopyInfo  SecMirrorcopyinfo "<< aRichDetNum<<" "
-	  //		<<aPrimaryMirrCopyInfo<<"  " <<  aSecMirrCopyInfo<<G4endl;
+	        //    G4cout<<" RichHitrecon hit info: richdet PrimMirrCopyInfo  SecMirrorcopyinfo "<< aRichDetNum<<" "
+          //	<<aPrimaryMirrCopyInfo<<"  " <<  aSecMirrCopyInfo<<G4endl;
 
           G4int adfact = 100;
           G4int aSecMirrCopyNum = aSecMirrCopyInfo- (((G4int) (aSecMirrCopyInfo/adfact))*adfact); 
+          // for test true coords 
+
+          // const G4ThreeVector trueLocalPeOrigin =  aHit->GetLocalPEOriginPos();
+          
+          //const G4ThreeVector trueGlobalPeOrigin= aHit->GetGlobalPEOriginPos();
+          
+          //const G4ThreeVector trueReflPtOnMirror1=  aHit-> Mirror1PhotonReflPosition();
+          
+          //const G4ThreeVector trueReflPtOnMirror2=  aHit-> Mirror2PhotonReflPosition();
+
+          // G4cout<<" True Local PeOrigin "<<trueLocalPeOrigin <<G4endl;
+          // G4cout<<" TrueGlocal Peorigin "<<trueGlobalPeOrigin<<G4endl;
+          // G4cout<<" trueReflPtOnMirror1 "<<trueReflPtOnMirror1<<G4endl;
+          //G4cout<<" trueReflPtOnMirror2 "<<trueReflPtOnMirror2<<G4endl;
+
+          //end test
+
           const G4ThreeVector & EmissPt =  aHit->GetPhotEmisPt();
           const G4ThreeVector & TkMom = aHit->ChTrackMomVect() ;
           G4int aRadiatornum= aHit->GetRadiatorNumber();
@@ -271,7 +288,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
           if(  SelectThisHit ) {
 
-            //             RichG4HitReconlog<<MSG::INFO<<
+            //              RichG4HitReconlog<<MSG::DEBUG<<
             //  "For the RichG4Hit hitnum  RichDet collection hpd "
             //                  <<iha<<"   "<<aRichDetNum<<"   "
             //                  << ihcol<<"   "<< anHpdNum
@@ -281,7 +298,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
             //                  <<aPixelXNum<<"   "<<aPixelYNum<<endreq;
 
 
-            // RichG4HitReconlog<<MSG::INFO<<" Local ph cath coord is "
+            //  RichG4HitReconlog<<MSG::DEBUG<<" Local ph cath coord is "
             //                 << LocalPhcathCoord.x()<<"    "
             //                 <<  LocalPhcathCoord.y()<<"    "
             //                 <<  LocalPhcathCoord.z()<<endreq;
@@ -481,12 +498,12 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
             // test printout
 
-	    //   G4cout<<" det pont HpdQw D1XYZ" << aHitOnQwFromPixelNum.x()<<"  "
+            // G4cout<<" det pont HpdQw D1XYZ" << aHitOnQwFromPixelNum.x()<<"  "
             //      <<aHitOnQwFromPixelNum.y()<<"  "<<aHitOnQwFromPixelNum.z()<<G4endl;
 
-	    //  G4cout<<" det pont at HPDQW D2XYZ "<< aHitOnQwFromTrueLocalHit.x()<<"   "
+            //  G4cout<<" det pont at HPDQW D2XYZ "<< aHitOnQwFromTrueLocalHit.x()<<"   "
             //      << aHitOnQwFromTrueLocalHit.y()<<"  "<< aHitOnQwFromTrueLocalHit.z()<<G4endl;
-	    // G4cout<<" det pont at HPDQW D3XYZ "<<GlobalPhcathCoord.x() <<"   "
+            // G4cout<<" det pont at HPDQW D3XYZ "<<GlobalPhcathCoord.x() <<"   "
             //      << GlobalPhcathCoord.y()<<"  "<< GlobalPhcathCoord.z()<<G4endl;
             
 
@@ -593,6 +610,11 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
                                                   aRichDetNum, aSecMirrCopyNum );
 
 
+              // G4cout<<"Reflection point D1E1  on SphMirror "<< aReflPointD1E1.x()<<"   "
+              //      <<  aReflPointD1E1.y()<<"   "<<aReflPointD1E1.z()<<G4endl;
+              //  G4cout<<"Reflection point D1E2  on SphMirror "<< aReflPointD1E2.x()<<"   "
+              //      <<  aReflPointD1E2.y()<<"   "<<aReflPointD1E2.z()<<G4endl;
+              
 
               // calculate the cherenkov angle in gas radiators.
               // G4cout<<" Now for the gas radaitor ckv D1E1 "<<G4endl;
@@ -713,7 +735,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
 
             if(m_RichG4HistoFillSet4Ckv) {
-              //            RichG4HitReconlog << MSG::INFO
+              //              RichG4HitReconlog << MSG::INFO
               //  << " Now filling Ckv Angle histo "
               //                <<  aCkvAngle<< endreq;
 

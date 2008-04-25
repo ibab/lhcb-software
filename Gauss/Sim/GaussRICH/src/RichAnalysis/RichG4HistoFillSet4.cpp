@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet4.cpp,v 1.4 2007-01-12 15:32:11 ranjard Exp $
+// $Id: RichG4HistoFillSet4.cpp,v 1.5 2008-04-25 11:55:08 seaso Exp $
 // Include files
 
 
@@ -230,6 +230,8 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
   }
   if( (curRdet == 1) &&  (curRadiator== 2)) {
 
+    // G4cout<<" Rich2 reconstructed Ckv Angle D3E1 D1E4 "<< aCkvRecD3E1<<"   "<<aCkvRecD1E4<<G4endl;
+    
     if(hCkvRich2GasD3E1) hCkvRich2GasD3E1->fill(aCkvRecD3E1) ;
     if(hCkvRich2GasD1E4) hCkvRich2GasD1E4->fill(aCkvRecD1E4) ;
     if(hCkvRich2GasGen) hCkvRich2GasGen->fill(genckv) ;

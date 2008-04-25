@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis5.cpp,v 1.9 2008-04-15 09:41:48 seaso Exp $
+// $Id: RichG4StepAnalysis5.cpp,v 1.10 2008-04-25 11:55:08 seaso Exp $
 // Include files 
 
 #include "G4Track.hh"
@@ -152,36 +152,60 @@ void RichG4StepAnalysis5::UserSteppingAction( const G4Step* aStep )
            // G4cout<<"step analysis5  rich2 pre vol name "<< aPreVolName<<G4endl;
 
            CurrentRichDetnum=1;
-           G4String  aPreVolNameM2 =std::string(aPostVolName,0,57);
+           G4String  aPreVolNameM2 =std::string(aPreVolName,0,57);
            G4String  aPostVolNameM2 =std::string(aPostVolName,0,53);
-           std::string::size_type aPreVolNameSubStrSize= aPreVolName.find(LogVolRich2Mirror1ContainerNameAnalysis);
+           std::string::size_type aPreVolNameSubStrSize=0;
+           std::string::size_type aPostVolNameSubStrSize=0;
            
-	   std::string::size_type aPostVolNameSubStrSize = aPostVolName.find(LogVolRich2Mirror1NameAnalysisSubString);
-           if( ( (aPreVolNameM2 ==  LogVolRich2Mirror1ContainerNameAnalysis) || 
-                 ( aPreVolNameSubStrSize != std::string::npos  ))&&
-               ( (aPostVolNameM2 == LogVolRich2Mirror1NameAnalysis) ||  (aPostVolNameSubStrSize != std::string::npos))){
-              // the reflection happened at mirror1 at this point.
+           aPreVolNameSubStrSize  = aPreVolName.find(LogVolRich2Mirror1ContainerNameAnalysis);
+	         aPostVolNameSubStrSize = aPostVolName.find(LogVolRich2Mirror1NameAnalysisSubString);
+
+           //           G4cout<<"G4stepanalysis5 : Now at rich2 mirror1  "<< aPreVolName<<"   "
+           //        <<aPostVolName<<"  "<< aPreVolNameSubStrSize<<"  "<< aPostVolNameSubStrSize<< G4endl;
+           // G4cout<<"G4stepanalysis5 : Now at rich2 mirror1 test   aPreVolNameM2 aPostVolNameM2 lognameA lognameB "
+           //      << aPreVolNameM2 <<"   "<< aPostVolNameM2 <<"  "<<  LogVolRich2Mirror1ContainerNameAnalysis 
+           //      <<"   "<< LogVolRich2Mirror1NameAnalysis <<G4endl;
+           
+
+            if( ( (aPreVolNameM2 ==  LogVolRich2Mirror1ContainerNameAnalysis) ||      
+                  (aPreVolNameSubStrSize < std::string::npos)) &&
+                ( (aPostVolNameM2 == LogVolRich2Mirror1NameAnalysis) ||  
+                (aPostVolNameSubStrSize < std::string::npos) )){
+
+              // if( ( aPreVolNameSubStrSize < std::string::npos ) &&  
+              // (aPostVolNameSubStrSize < std::string::npos )){
+             // the reflection happened at mirror1 at this point.
        	      RichG4MirrorReflPointTag(aTrack,  postPos, 1,0, aCurrentCopyNum);
-            // G4cout<<"G4stepanalysis5 : Now at rich2 mirror1  "<< aPreVolName<<"   "
-            //         <<aPostVolName<< G4endl;
-              
-           }
+
+              //  G4cout<<"G4stepanalysis5 : Now at rich2 mirror1  "<< aPreVolName<<"   "
+              //     <<aPostVolName<<"  "<< aPreVolNameSubStrSize<<"  "<< aPostVolNameSubStrSize<< G4endl;
+                
+            }
+            
+           
            
             // now for Mirror2 in rich2
            G4String  aPreVolNameSC =std::string(aPreVolName,0,57);
            G4String  aPostVolNameMS =std::string(aPostVolName,0,56);
-           std::string::size_type aPreVolNameSCSize=  aPreVolName.find(LogVolRich2Mirror2ContainerAnalysis);
-           std::string::size_type aPostVolNameSCSize=  aPostVolName.find(LogVolRich2Mirror2NameAnalysis);
+           std::string::size_type aPreVolNameSCSize=0;
+           std::string::size_type aPostVolNameSCSize=0;
            
-            if( ( (aPreVolNameSC == LogVolRich2Mirror2ContainerAnalysis) ||
-                  ( aPreVolNameSCSize !=  std::string::npos ))  &&
-               (( aPostVolNameMS == LogVolRich2Mirror2NameAnalysis) || 
-               ( aPostVolNameSCSize |= std::string::npos)) ){
+           aPreVolNameSCSize  =  aPreVolName.find(LogVolRich2Mirror2ContainerAnalysis);
+           aPostVolNameSCSize =  aPostVolName.find(LogVolRich2Mirror2NameAnalysis);
+
+
+             if( ( (aPreVolNameSC == LogVolRich2Mirror2ContainerAnalysis) ||
+                   ( aPreVolNameSCSize <  std::string::npos))  &&
+                  (( aPostVolNameMS == LogVolRich2Mirror2NameAnalysis) || 
+                   ( aPostVolNameSCSize < std::string::npos )) ){
+
+               //if(  ( aPreVolNameSCSize <  std::string::npos)  && 
+               // ( aPostVolNameSCSize < std::string::npos ) ){
               // the reflection  happened at mirror2 at this point.
 
      	      RichG4MirrorReflPointTag(aTrack,  postPos, 1,1, aCurrentCopyNum);
-            //  G4cout<<"G4stepanalysis5 : Now at rich2 mirror2  "<< aPreVolName<<"   "
-            //       <<aPostVolName<< G4endl;
+            //   G4cout<<"G4stepanalysis5 : Now at rich2 mirror2  "<< aPreVolName<<"   "
+            //        <<aPostVolName<<"  "<<aPreVolNameSCSize<<"   "<< aPostVolNameSCSize<< G4endl;
             
             }
             
