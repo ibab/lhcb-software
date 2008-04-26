@@ -1,4 +1,4 @@
-// $Id: GeneratorToG4.cpp,v 1.6 2007-08-17 09:07:16 gcorti Exp $
+// $Id: GeneratorToG4.cpp,v 1.7 2008-04-26 21:43:28 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -208,6 +208,8 @@ G4PrimaryParticle* GeneratorToG4::makeG4Particle(HepMC::GenParticle* genPart,
                            genPart->momentum().pz() );
 //                            genPart->momentum().pz() ,
 //                            genPart->momentum().e()  );  
+
+  g4Particle -> SetMass( genPart -> momentum().m() ) ;
   
   // create a new User information to contain the link to the HepMC
   // particle and signal information for particles with 889 status
