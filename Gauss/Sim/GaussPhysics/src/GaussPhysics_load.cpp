@@ -1,4 +1,4 @@
-// $Id: GaussPhysics_load.cpp,v 1.12 2007-03-26 10:07:08 gcorti Exp $
+// $Id: GaussPhysics_load.cpp,v 1.13 2008-04-26 22:01:57 robbep Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
@@ -77,6 +77,6 @@ typedef GiGaExtPhysics< HadronPhysicsQGSC_EFLOW > HadPhysQGSC_EFLOWFactory;
 DECLARE_TOOL_FACTORY( HadPhysQGSC_EFLOWFactory );
 
 DECLARE_FACTORY_ENTRIES(GaussPhysics) { 
-
+  DECLARE_TOOL( GiGaPhysUnknownParticles ) ;
 };
 
