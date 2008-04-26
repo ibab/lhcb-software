@@ -4,6 +4,11 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2008-04-26 - Patrick Robbe
+ - Remove unnecessary particle definitions (shortlived particles) 
+ - Add GiGaPhysUnknownParticles to define special long-lived particles
+   and "unknown" particles
+
 !====================== GaussPhysics v5r0 2007-03-26 =========================
 ! 2007-03-26 - Gloria Corti
  - Remove special hadronic physics (EMV and EMX) not necessary for use of
