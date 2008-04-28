@@ -4,6 +4,10 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2008-04-28 - Patrick Robbe
+ - src/Components/GaussEventActionHepMC: modifications to allow usage 
+   of unknown particles
+
 !======================== GaussTools v13r3 2008-02-08 ========================
 ! 2008-02-08 - Gloria CORTI
  - Insert private preloading for Mac OS as provided by Brett VIREN
