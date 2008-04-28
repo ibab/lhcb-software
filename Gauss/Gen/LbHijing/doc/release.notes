@@ -4,6 +4,10 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+!========================= LbHijing v3r2 2008-04-11 ==========================
+! 2008-04-10 - Gloria CORTI
+ - Remove obsolete LbHijing_load.cpp
+
 !========================= LbHijing v3r1 2007-05-22 ==========================
 ! 2007-06-22 - Gloria Corti
  - Use LbPythia instead of Generators otherwise problems for undefined 

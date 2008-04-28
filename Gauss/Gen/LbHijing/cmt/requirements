@@ -1,17 +1,17 @@
-# $Id: requirements,v 1.8 2007-06-22 13:24:55 gcorti Exp $ 
+# $Id: requirements,v 1.9 2008-04-28 17:45:08 gcorti Exp $ 
 #============================================================================
 # Created    : 2006-07-03
 # Maintainer : Daniele Gregori, Vincenzo Vagnoni
 #============================================================================
 package       LbHijing
-version       v3r1
+version       v3r2
 
-#============================================================================
+
 # Structure, i.e. directories to process. 
 #============================================================================
 branches      LbHijing doc cmt src
 
-#============================================================================
+
 # Used packages. 
 #============================================================================
 include_dirs  $(LBHIJINGROOT)
@@ -21,13 +21,13 @@ include_dirs  $(LBHIJINGROOT)
 use  hijing      v*  LCG_GeneratorsInterfaces    
 use  LbPythia    v*  Gen
 
-#============================================================================
+
 # Component and linker library building rule
 #============================================================================
 library       LbHijingLib       Lib/*.cpp Lib/*.F
 library       LbHijing          component/*.cpp
 
-#============================================================================
+
 # define component and linker library link options
 #============================================================================
 apply_pattern component_library library=LbHijing 
