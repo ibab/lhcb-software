@@ -1,4 +1,4 @@
-// $Id: PhysList-LHEP.opts,v 1.1 2007-03-26 11:45:01 gcorti Exp $ 
+// $Id: PhysList-LHEP.opts,v 1.2 2008-04-28 09:55:48 robbep Exp $ 
 
 /** @file 
  * 
@@ -46,5 +46,6 @@ GiGa.ModularPL.PhysicsConstructors += {
 // == LHCb specific RICH processes
 GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysConstructorOp"  };
 GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysConstructorHpd" };
+GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysUnknownParticles" };
 
 
