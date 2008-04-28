@@ -1,9 +1,28 @@
-! $Id: release.notes,v 1.119 2008-03-16 20:18:24 robbep Exp $
+! $Id: release.notes,v 1.120 2008-04-28 17:42:12 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+!====================== Generators v8r0 2008-04-28 ===========================
+! 2008-04-10 - Gloria CORTI
+ - Give mean z position of vertex as an option to allow generation of
+   events in the center of the cavern in which case need to set value to 
+   11.26 m ( "ZPos", Default = 0.0 )
+   Also introduce option to set time of vertex as for beam having 
+   traveled to mean z distance ( "ApplyToFvsIP", Default = false ) 
+   The default is for pp collisions occuring at IP8.
+   . src/component/BeamSpotSmearVertex.{h,cpp}   
+
+! 2008-03-20 - Gloria CORTI
+ - Temporarly exclude from library MuXMaxBias.cpp because of compilation 
+   problems
+   . cmt/requirements
+ - Put time of vertex as z/c, assuming these smearing are used for beam 
+   gas so the time on which the occur is the time the beam has travelled
+   at that z from IP. 
+   . src/component/FlatZSmearVertex.cpp, UniformSmearVertex.cpp
 
 ! 2008-03-16 - Patrick Robbe
  - src/Lib/pyr.F: move to GENSER package
@@ -23,6 +42,7 @@
    library rather then linker to allow compilation.
    . requirements
 
+!====================== Generators v7r6 2007-12-06 ===========================
 ! 2007-11-26 - Chris Jones
  - Add three new Signal selection 'Cut' tools
   + SignalIsFromBDecay      : Selects only decays that originate from a b
