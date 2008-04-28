@@ -1,5 +1,5 @@
 package LbcomSys
-version v6r16
+version v6r17
 
 branches doc cmt
 
@@ -38,7 +38,7 @@ use SiTools           v1r5    Si        # Matt Needham
 # Silicon Tracker
 use STAlgorithms      v3r0    ST        # Jeroen van Tilburg, Matt Needham
 use STAssociators     v1r5    ST        # Jeroen van Tilburg, Matt Needham
-use STCheckers        v2r4p1  ST        # Jeroen van Tilburg, Matt Needham
+use STCheckers        v2r5    ST        # Jeroen van Tilburg, Matt Needham
 use STDAQ             v3r5    ST        # Jeroen van Tilburg, Matt Needham
 use STTools           v3r5    ST        # Jeroen van Tilburg, Matt Needham
 

@@ -6,6 +6,14 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r17>2008-04-23 LbcomSys v6r17</A></H1><PRE>
+This version uses Gaudi v19r9 and LHCb v23r6
+
+- Packages modified: STCheckers v2r5
+
+- In STCheckers v2r5
+  . Follow changes in DeSTDet v4r0 [introduction of DeSTSensor level]
+
 </PRE><H1><A NAME=v6r16>2008-04-22 LbcomSys v6r16</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r5
 
