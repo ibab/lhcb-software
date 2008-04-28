@@ -6,6 +6,7 @@ version v1r0
 branches          cmt src Writer
 use GaudiKernel   v*
 use OnlineKernel  v* Online
+use DIM           v* Online
 use DAQEvent      v* Event     -no_auto_imports
 use MDF           v* DAQ
 

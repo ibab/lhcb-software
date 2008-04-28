@@ -15,7 +15,11 @@
 #include "Event/RawEvent.h"
 #include "Writer/Connection.h"
 #include "Writer/MDFWriterNet.h"
+#include "RTL/rtl.h"
 #include "TMD5.h"
+extern "C" {
+#include "dis.h"
+}
 
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFWriterNet);
 
@@ -55,6 +59,46 @@ using namespace LHCb;
     strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
     (h)->data.chunk_data.seq_num = seqno; \
     (h)->run_no = rno;	\
+}
+
+void File::feedMonitor(void* tag, void** buf, int* size, int* first) {
+  static const char* empty = "";
+  Monitor* h = *(Monitor**)tag;
+  if ( !(*first) ) {
+    *buf  = h;
+    *size = sizeof(Monitor);
+    return;
+  }
+  *size = 0;
+  *buf = (void*)empty;
+}
+
+/// Constructor
+File::File(std::string fileName, unsigned int runNumber) {
+  static int s_seqNo = 0;
+  char txt[32];
+  m_mon = &m_monBuffer;
+  m_mon->m_seqNum = 0;
+  m_mon->m_runNumber = runNumber;
+  ::strncpy(m_mon->m_name,fileName.c_str(),sizeof(m_mon->m_name));
+  m_mon->m_name[sizeof(m_mon->m_name)-1]=0;
+  m_mon->m_adler32 = adler32(0, NULL, 0);
+  m_mon->m_lastUpdated = time(NULL);
+  m_mon->m_fileOpen = false;
+  m_mon->m_bytesWritten = 0;
+  m_fileName = fileName;
+  m_md5 = new TMD5();
+  m_prev = NULL;
+  m_next = NULL;
+  sprintf(txt,"/File#%02d",s_seqNo++);
+  std::string svc = RTL::processName()+txt;
+  m_mon->m_svcID = ::dis_add_service((char*)svc.c_str(),"C",0,0,feedMonitor,(long)m_mon);
+}
+
+/// Destructor.
+File::~File() {
+  delete m_md5;
+  ::dis_remove_service(m_mon->m_svcID);
 }
 
 
@@ -166,7 +210,7 @@ StatusCode MDFWriterNet::finalize(void)
  */
 File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
 {
-  File *currFile;
+  File *currFile = 0;
   struct cmd_header header;
   memset(&header, 0, sizeof(struct cmd_header));
 

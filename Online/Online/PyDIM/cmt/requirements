@@ -36,3 +36,5 @@ apply_pattern pydim_module name=dimcpp   files="dimcppmodule.cpp
 
 apply_pattern install_python_modules
 
+private
+use UPI           v* Online -no_auto_imports

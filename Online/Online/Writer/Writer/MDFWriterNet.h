@@ -31,29 +31,43 @@ namespace LHCb {
    */
   class File {
   private:
-    /// The number of bytes written so far in the current file.
-    size_t m_bytesWritten;
-
     /// The current file being written to.
     std::string m_fileName;
-
-    /// The sequence number of the last command that was sent for this file.
-    unsigned int m_seqNum;
-
-    /// The Adler32 checksum of the file.
-    unsigned int m_adler32;
 
     /// The MD5 checksum of the file.
     TMD5 *m_md5;
 
-    /// The run number that this file is associated with.
-    unsigned int m_runNumber;
+    /// Pointer to monitoring structure
+    struct Monitor {
 
-    /// The last time a write was made to this file (for determining timeouts).
-    time_t m_lastUpdated;
+      /// Local buffer for file name
+      char   m_name[255];
 
-    /// A boolean to keep track of whether the file is open or closed.
-    bool m_fileOpen;
+      /// The number of bytes written so far in the current file.
+      size_t m_bytesWritten;
+
+      /// The sequence number of the last command that was sent for this file.
+      unsigned int m_seqNum;
+
+      /// The Adler32 checksum of the file.
+      unsigned int m_adler32;
+
+      /// The run number that this file is associated with.
+      unsigned int m_runNumber;
+
+      /// The last time a write was made to this file (for determining timeouts).
+      time_t m_lastUpdated;
+
+      /// A boolean to keep track of whether the file is open or closed.
+      int    m_fileOpen;
+
+      /// DIM publishing service ID
+      int m_svcID;
+
+    }   m_monBuffer;
+
+    /// Reference to monitoring structure
+    Monitor* m_mon;
 
     /// A link to the next element in the list.
     File *m_next;
@@ -61,37 +75,39 @@ namespace LHCb {
     /// A link to the previous element in the list.
     File *m_prev;
 
+    static void feedMonitor(void* tag, void** buf, int* size, int* first);
+
   public:
 
     /// Increments the sequence number.
-    inline void incSeqNum() { ++m_seqNum; }
+    inline void incSeqNum() { ++m_mon->m_seqNum; }
 
     /// Returns the current sequence number.
-    inline unsigned int getSeqNum() { return m_seqNum; }
+    inline unsigned int getSeqNum() { return m_mon->m_seqNum; }
 
     /// Sets the status of the current file to open.
-    inline void open() { m_fileOpen = true; }
+    inline void open() { m_mon->m_fileOpen = true; }
 
     /// Returns the number of bytes written to the file so far.
-    inline size_t getBytesWritten() { return m_bytesWritten; }
+    inline size_t getBytesWritten() { return m_mon->m_bytesWritten; }
 
     /// Returns the name of the file.
     inline std::string* getFileName() { return &m_fileName; }
 
     /// Returns the Adler32 checksum computed so far.
-    inline int getAdlerChecksum() { return m_adler32; }
+    inline int getAdlerChecksum() { return m_mon->m_adler32; }
 
     /// Returns the MD5 checksum calculated so far.
     inline TMD5* getMD5Checksum() { return m_md5; }
 
     /// Returns the run number associated with this file.
-    inline unsigned int getRunNumber() { return m_runNumber; }
+    inline unsigned int getRunNumber() { return m_mon->m_runNumber; }
 
     /// Returns how many seconds elapsed since the last update.
-    inline time_t getTimeSinceLastWrite() { return time(NULL) - m_lastUpdated; }
+    inline time_t getTimeSinceLastWrite() { return time(NULL) - m_mon->m_lastUpdated; }
 
     /// Returns true if the file is open, and false otherwise.
-    inline bool isOpen() { return m_fileOpen; }
+    inline bool isOpen() { return m_mon->m_fileOpen; }
 
     /// Sets the next file after this one.
     inline void setNext(File *next) { m_next = next; }
@@ -106,33 +122,20 @@ namespace LHCb {
     inline File* getPrev() { return m_prev; }
 
     /// Constructor
-    File(std::string fileName, unsigned int runNumber) {
-      m_seqNum = 0;
-      m_fileName = fileName;
-      m_runNumber = runNumber;
-      m_md5 = new TMD5();
-      m_adler32 = adler32(0, NULL, 0);
-      m_lastUpdated = time(NULL);
-      m_fileOpen = false;
-      m_bytesWritten = 0;
-      m_prev = NULL;
-      m_next = NULL;
-    }
+    File(std::string fileName, unsigned int runNumber);
 
     /// Updates the checksums and the bytes written count for the file, given a new chunk to be written.
     /// Returns the number of bytes written in all so far.
     inline size_t updateWrite(const void *data, size_t len) {
       m_md5->Update((UChar_t*)data, (UInt_t)len);
-      m_adler32 = adler32(m_adler32, (const char*)data, len);
-      m_bytesWritten += len;
-      m_lastUpdated = time(NULL);
-      return m_bytesWritten;
+      m_mon->m_adler32 = adler32(m_mon->m_adler32, (const char*)data, len);
+      m_mon->m_bytesWritten += len;
+      m_mon->m_lastUpdated = time(NULL);
+      return m_mon->m_bytesWritten;
     }
 
     /// Destructor.
-    ~File() {
-      delete m_md5;
-    }
+    ~File();
   };
 
   /**
