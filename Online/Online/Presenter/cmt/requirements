@@ -1,5 +1,5 @@
 package Presenter
-version v0r7
+version v0r8
 
 branches cmt doc src test
 
@@ -14,7 +14,7 @@ use Python        v*  LCG_Interfaces
 use  Boost        v*  LCG_Interfaces
 
 # Go for the latest and greatest ROOT
-macro ROOT_config_version "5.18.00"
+#macro ROOT_config_version "5.18.00"
 
 #path_remove LD_LIBRARY_PATH "$(ROOTSYS)/lib"
 #macro     ROOT_home     "/tmp/root"
