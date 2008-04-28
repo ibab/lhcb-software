@@ -1,5 +1,5 @@
 package DAQSys
-version v3r9
+version v3r9p1
 
 branches doc cmt
 
@@ -7,5 +7,5 @@ branches doc cmt
 
 use MuonDAQ     v4r0    Muon
 use OTDAQ       v5r6    OT
-use CaloDAQ     v4r4    Calo
+use CaloDAQ     v4r4p1  Calo
 use SiDAQ       v2r0    Si
