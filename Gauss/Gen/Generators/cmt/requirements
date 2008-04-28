@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.43 2007-12-19 18:11:52 gcorti Exp $ 
+# $Id: requirements,v 1.44 2008-04-28 17:41:59 gcorti Exp $ 
 #============================================================================
 # Created    : 2005-06-20
 # Maintainer : Patrick ROBBE
 #============================================================================
 package       Generators
-version       v7r7
+version       v8r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -33,7 +33,7 @@ include_dirs  $(GENERATORSROOT)
 macro         GeneratorsLibSrc  "Lib/*.cpp Lib/*.F "
 macro_append  GeneratorsLibSrc  "" \
                          WIN32  "-x=ExternalGenerator.cpp -x=Signal.cpp "
-macro         GeneratorsSrc     "component/*.cpp " 
+macro         GeneratorsSrc     "component/*.cpp -x=MuXMaxBias.cpp" 
 macro_append  GeneratorsSrc     "" \
                          WIN32  "Lib/ExternalGenerator.cpp  Lib/Signal.cpp "
 
