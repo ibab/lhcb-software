@@ -1,4 +1,4 @@
-// $Id: UniformSmearVertex.cpp,v 1.1 2007-10-11 11:55:20 gcorti Exp $
+// $Id: UniformSmearVertex.cpp,v 1.2 2008-04-28 17:40:24 gcorti Exp $
 // Include files 
 
 // local
@@ -84,7 +84,7 @@ StatusCode UniformSmearVertex::initialize( ) {
 // Smearing function
 //=============================================================================
 StatusCode UniformSmearVertex::smearVertex( LHCb::HepMCEvent * theEvent ) {
-  double dx , dy , dz, rsq, r, th ;
+  double dx , dy , dz, dt, rsq, r, th ;
   
   // generate flat in z, r^2 and theta:
   dz  = m_deltaz   * m_flatDist( ) + m_zmin ;
@@ -93,7 +93,8 @@ StatusCode UniformSmearVertex::smearVertex( LHCb::HepMCEvent * theEvent ) {
   r   = sqrt(rsq) ;
   dx  = r*cos(th) ;  
   dy  = r*sin(th) ;
-  Gaudi::LorentzVector dpos( dx , dy , dz , 0. ) ;
+  dt  = dz/Gaudi::Units::c_light ;
+  Gaudi::LorentzVector dpos( dx , dy , dz , dt ) ;
   
   HepMC::GenEvent::vertex_iterator vit ;
   HepMC::GenEvent * pEvt = theEvent -> pGenEvt() ;

@@ -1,4 +1,4 @@
-// $Id: FlatZSmearVertex.cpp,v 1.9 2007-10-02 15:56:42 gcorti Exp $
+// $Id: FlatZSmearVertex.cpp,v 1.10 2008-04-28 17:40:16 gcorti Exp $
 // Include files 
 
 // local
@@ -7,7 +7,7 @@
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IRndmGenSvc.h" 
-#include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // from LHCb
 #include "Kernel/Vector4DTypes.h"
@@ -90,15 +90,16 @@ StatusCode FlatZSmearVertex::initialize( ) {
 // Smearing function
 //=============================================================================
 StatusCode FlatZSmearVertex::smearVertex( LHCb::HepMCEvent * theEvent ) {
-  double dx , dy , dz ;
+  double dx , dy , dz , dt;
   
   do { dx = m_gaussDist( ) ; } while ( fabs( dx ) > m_xcut ) ;
   dx = dx * m_sigmaX ;
   do { dy = m_gaussDist( ) ; } while ( fabs( dy ) > m_ycut ) ;
   dy = dy * m_sigmaY ;
   dz = m_flatDist( ) ;
+  dt = dz/Gaudi::Units::c_light;
 
-  Gaudi::LorentzVector dpos( dx , dy , dz , 0. ) ;
+  Gaudi::LorentzVector dpos( dx , dy , dz , dt ) ;
   
   HepMC::GenEvent::vertex_iterator vit ;
   HepMC::GenEvent * pEvt = theEvent -> pGenEvt() ;
