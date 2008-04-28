@@ -4,6 +4,11 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2008-04-23 - Marco Cattaneo
+ - Change default DC06 tag (in DC06.opts, DC06.py) to DC06-20080427, for use
+   with new ST detector elements in LHCb v23r6. 
+   Requires SQLDDDB >= v4r3
+
 !========================== DDDB v1r5 2008-04-11 =============================
 ! 2008-04-11 - Marco Cattaneo
  - Change default DC06 tag (in DC06.opts, DC06.py) to DC06-20080407, for use
