@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.6 2008-04-23 11:47:50 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2008-04-28 08:39:27 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -35,6 +35,9 @@ class Boole(ConfigurableUser):
             return getattr(self,name)
         else:
             return self.getDefaultProperties()[name]
+
+    def setProp(self,name,value):
+        return setattr(self,name,value)
 
     def defineDB(self):
         condDBtag = self.getProp("condDBtag")

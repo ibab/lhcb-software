@@ -3,19 +3,22 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r11>2008-04-23 Boole v14r11</A></H1><PRE>
+</PRE><H1><A NAME=v14r11>2008-04-28 Boole v14r11</A></H1><PRE>
  - In BooleMoni.opts: remove monitoring of OTTimes, no longer created in Boole
    by default
  - In Boole.opts:
    o modify RelationsOTSeq to use new linkers that bypass creation of OTTimes
    o split Velo simulation into VeloSim and VeloPUSim
  - In ExpertCheck.opts: switch on StatusCode check by default
+ - Update SuppressWarnings.opts to not print out histogram statistics
  - In Boole/Configuration.py: 
    . Add "writeDigi" option, default True. If False, .digi output is switched off
      Can be used independently of "writeMDF"
    . Add options DDDBtag and EvtMax
    . Use internally LHCbApp configurable
    . Include Boole.opts directly, BooleCommon.py no longer needed
+ - v200601.py and v200801.py removed. Replaced by Boole-Default.py, Boole-2008.py
+   and corresponding DC06-Files.py, 2008-Files.py
  - In requirements: use GaudiApp pattern to set version number for gaudirun.py
 
 </PRE><H1><A NAME=v14r10>2008-03-06 Boole v14r10</A></H1><PRE>
