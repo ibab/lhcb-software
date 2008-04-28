@@ -119,7 +119,7 @@ RichGloPIDDigSel.MaxUsedPixels            = 8000;
 
 // Global PID track selection
 RichGloPIDTrSel.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
-RichGloPIDTrSel.TrackSelector.TrackAlgs += {"MCRichTrack"}; // uncomment to all MC tracks to be used by GPID
+RichGloPIDTrSel.TrackSelector.TrackAlgs += {"MCRichTrack"}; // uncomment to add MC tracks to be used by GPID
 RichGloPIDTrSel.TrackSelector.KsTrack.MinPCut = 0;
 RichGloPIDTrSel.TrackSelector.VeloTT.MinPCut  = 0;
 RichGloPIDTrSel.MaxUsedTracks             = 400;
