@@ -1,4 +1,4 @@
-// $Id: RODIMLogger.cpp,v 1.1 2008-04-28 15:16:40 frankb Exp $
+// $Id: RODIMLogger.cpp,v 1.2 2008-04-28 16:48:43 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODIMLogger.cpp,v 1.1 2008-04-28 15:16:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODIMLogger.cpp,v 1.2 2008-04-28 16:48:43 frankb Exp $
 
 // Framework include files
 extern "C" {
@@ -19,7 +19,9 @@ extern "C" {
 }
 #include "dis.hxx"
 #include <cerrno>
+#ifdef __linux
 #include <sys/ioctl.h>
+#endif
 #include "RTL/rtl.h"
 #include "ROMonDefs.h"
 #include "ROMon/RODIMLogger.h"
