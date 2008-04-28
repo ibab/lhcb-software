@@ -28,10 +28,10 @@ use InsertDB          v1r2     Online
 use MBMDump           v1r8     Online
 use OMAlib            v1r0     Online
 use OnlineDummyReader v1r4     Online
-use OnlineHistDB      v4r7     Online
+use OnlineHistDB      v4r8     Online
 use OnlineKernel      v1r14    Online
 use OnlineTasks       v1r10    Online
-use Presenter         v0r7     Online
+use Presenter         v0r8     Online
 ### PVSS Distribution only: use PVSS              v1r0    Online
 ### PVSS Distribution only: use PVSSInterface     v1r0    Online
 ### PVSS Distribution only: use PVSSManager       v1r0    Online
