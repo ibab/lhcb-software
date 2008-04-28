@@ -4,6 +4,10 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-04-28 - Patrick Koppenburg for Mitesh Patel
+ - TupleToolVtxIsolation: new tool for isolation
+ - Increment to v1r3
+
 !===================== DecayTreeTuple v1r2 2008-04-24 =======================
 
 ! 2008-04-21 - Patrick Koppenburg
