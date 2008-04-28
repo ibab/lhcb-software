@@ -4,7 +4,11 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+
 !========================== HltL0Conf v2r0 2008-04-25 ===================
+! 2008-04-28 - Patrick Koppenburg
+ - Correct a static constant disliked by Windows.
+
 !2008-04-17 - Johannes Albrecht
 			- remove obsolete tools (.h,.cpp):
 				PrepareElectronSeed, PrepareHadronSeed, PrepareMuonSeed, PrepareMuonTSeed,

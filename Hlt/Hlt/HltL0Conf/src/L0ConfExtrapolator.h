@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.h,v 1.2 2008-03-27 10:46:53 albrecht Exp $
+// $Id: L0ConfExtrapolator.h,v 1.3 2008-04-28 15:14:47 pkoppenb Exp $
 #ifndef L0CONFEXTRAPOLATOR_H 
 #define L0CONFEXTRAPOLATOR_H 1
 
@@ -68,8 +68,9 @@ private:
 
   double m_HECalKick[2], m_HCalKick[2];
   
-  // FIXME: until this gets into StateParameters.h, we define a constant
-  static const double zEndT3 = 9315.0;
+  /// @todo FIXME: until this gets into StateParameters.h, we define a constant
+  //  static const double zEndT3 = 9315.0;
+  double zEndT3 ;
   
   // this routine does the real work once the kick in x direction has
   // been figured out by [eh]cal2T rountines above

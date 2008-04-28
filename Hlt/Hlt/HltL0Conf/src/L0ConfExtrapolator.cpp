@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.cpp,v 1.2 2008-03-27 10:46:56 albrecht Exp $
+// $Id: L0ConfExtrapolator.cpp,v 1.3 2008-04-28 15:14:47 pkoppenb Exp $
 // Include files 
 
 #include <cmath>
@@ -33,6 +33,7 @@ L0ConfExtrapolator::L0ConfExtrapolator( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
   : GaudiTool ( type, name , parent )
+    , zEndT3(9315.0)
 {
   declareInterface<IL0ConfExtrapolator>(this);
 
