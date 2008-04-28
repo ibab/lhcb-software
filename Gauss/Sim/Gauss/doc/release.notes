@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-04-28 - Patrick Robbe
+ - Phys-LHEP.opts: add new physics list which declares unknown particles to 
+   Geant4.
+
 ! 2008-02-08 - Gloria CORTI
  - Use latest versions of ParamFiles v7r1 and DecFiles v14r1
  - Adapt to change in the options for catalog:
