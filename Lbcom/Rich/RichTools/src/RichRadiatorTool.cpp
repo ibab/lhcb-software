@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRadiatorTool
  *
  *  CVS Log :-
- *  $Id: RichRadiatorTool.cpp,v 1.8 2007-02-01 17:51:10 jonrob Exp $
+ *  $Id: RichRadiatorTool.cpp,v 1.9 2008-04-28 09:32:10 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -44,9 +44,9 @@ Rich::RadiatorTool::RadiatorTool( const std::string& type,
 Rich::RadiatorTool::~RadiatorTool() {}
 //=============================================================================
 
-//=========================================================================
+//=============================================================================
 // initialize
-//=========================================================================
+//=============================================================================
 StatusCode Rich::RadiatorTool::initialize ( )
 {
 
@@ -87,9 +87,9 @@ StatusCode Rich::RadiatorTool::initialize ( )
   return sc;
 }
 
-//=========================================================================
-//  intersections
-//=========================================================================
+//=============================================================================
+// intersections
+//=============================================================================
 unsigned int
 Rich::RadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
                                    const Gaudi::XYZVector& globalVector,
@@ -142,4 +142,4 @@ Rich::RadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
   return totalIntersections;
 }
 
-//=========================================================================
+//=============================================================================
