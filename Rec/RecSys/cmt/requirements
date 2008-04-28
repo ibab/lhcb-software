@@ -1,5 +1,5 @@
 package RecSys
-version v5r5
+version v5r6
 
 branches cmt doc
  
@@ -13,7 +13,7 @@ use RecCheckers         v1r0    Rec   # Marco Cattaneo
 use RecUtils            v1r5    Rec   # Juan Palacios, Patrick Koppenburg
 
 # Calorimeter                         # Maintainer
-use CaloMoniDst         v3r0p1  Calo  # Olivier Deschamps
+use CaloMoniDst         v3r0p2  Calo  # Olivier Deschamps
 use CaloPIDs            v4r9    Calo  # Victor Egorychev, Vanya Belyaev
 use CaloReco            v4r11   Calo  # Olivier Deschamps
 
@@ -21,15 +21,15 @@ use CaloReco            v4r11   Calo  # Olivier Deschamps
 use PatChecker          v3r2    Tr    # Olivier Callot, David Hutchcroft
 use PatFitParams        v3r1    Tr    # Olivier Callot
 use TrackAssociators    v2r6    Tr    # Eduardo Rodrigues, Edwin Bos
-use TrackCheckers       v3r4p1  Tr    # Eduardo Rodrigues
+use TrackCheckers       v3r4p2  Tr    # Eduardo Rodrigues
 use TrackExtrapolators  v2r18   Tr    # Eduardo Rodrigues
-use TrackFitEvent       v3r13   Tr    # Eduardo Rodrigues
+use TrackFitEvent       v3r14   Tr    # Eduardo Rodrigues
 use TrackFitter         v2r24   Tr    # Eduardo Rodrigues
 use TrackIdealPR        v2r15   Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r17   Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r18   Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v3r1    Tr    # Eduardo Rodrigues
-use TrackTools          v3r5    Tr    # Eduardo Rodrigues
+use TrackTools          v3r6    Tr    # Eduardo Rodrigues
 use TrackUtils          v1r19   Tr    # Eduardo Rodrigues
 
 # Tf packages: Track Pattern Recognition
@@ -41,7 +41,7 @@ use PatVeloTT           v3r1    Tf    # Mariusz Witek
 use TfTools             v1r4    Tf    # Stephanie Hansmann-Menzemer
 use TrackSeeding        v1r3    Tf    # Eduardo Rodrigues, Henk Jan Bulten
 use TrackMatching       v2r17   Tf    # Eduardo Rodrigues
-use TsaAlgorithms       v3r2    Tf    # Matt Needham
+use TsaAlgorithms       v3r3    Tf    # Matt Needham
 
 # Primary Vertex Finder
 use PatPV               v3r2    Tr   # Mariusz Witek
