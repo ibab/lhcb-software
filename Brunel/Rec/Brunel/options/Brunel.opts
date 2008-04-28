@@ -41,9 +41,6 @@ InitBrunelSeq.Members += { "RecInit/BrunelInit" };
 InitCaloSeq.Members += { "GaudiSequencer/CaloBanksHandler" };
 #include "$CALODAQROOT/options/CaloBankHandler.opts"
 
-// Fix typo in CaloDAQ v4r4, for gaudirun.py
-RemovePrsPackedBanks.bankTypes ={ "PrsPacked"  };
-
 // Setup L0 filtering. Has no effect unless "L0" is added to Init.DetectorList
 #include "$L0DUROOT/options/L0Sequence.opts"
 InitL0Seq.Members += { "GaudiSequencer/L0", "L0Filter"}; // run L0 before Reco

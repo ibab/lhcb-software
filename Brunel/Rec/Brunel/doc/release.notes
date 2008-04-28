@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v32r6>2008-04-28 Brunel v32r6</A></H1><PRE>
+ - In Brunel.opts, removed workaround for fix in CaloDAQ v4r4p1
+
 </PRE><H1><A NAME=v32r5>2008-04-25 Brunel v32r5</A></H1><PRE>
  - Added python configurable for Brunel (python/Brunel/Configuration.py)
    Related files in options directory:
