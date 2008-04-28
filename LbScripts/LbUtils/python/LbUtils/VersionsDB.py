@@ -4,7 +4,7 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.2 2008-04-28 10:40:23 marcocle Exp $"
+__version__ = "$Id: VersionsDB.py,v 1.3 2008-04-28 18:13:05 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
@@ -35,6 +35,28 @@ class DuplicatedProjectError(VersionsDBError):
         self.release = rel
         self.project = proj
 
+#--- Utility functions
+def _sortProjects(pl):
+    """
+    Sort a list of project objects according to the their dependencies.
+    """
+    global DEBUG
+    tmp = []
+    weights = {}
+    modified = True
+    while modified:
+        modified = False
+        for p in pl:
+            w = max([ weights[w]
+                      for w in p.buildtimedeps + p.runtimedeps
+                      if w in weights ] + [0]) + 1
+            if p.name not in weights or weights[p.name] != w:
+                modified = True
+                weights[p.name] = w
+    l = [ (weights[p.name],p.name,p) for p in pl ]
+    l.sort()
+    return [ i[2] for i in l ]
+ 
 #--- Main classes
 import re
 class Version:
@@ -42,55 +64,58 @@ class Version:
     Handle version numbers.
     """
     __regexp__ = re.compile(r"v([0-9]+)r([0-9]+)(?:p([0-9]+))?")
-    def __init__(self,*args):
+    __regexp_lcg__ = re.compile(r"([0-9]+)([a-z])?")
+    def __init__(self,vers_string):
         """
-        Construct a version object from a version string like "v1r2p3" or
-        from 2-3 integers .
+        Construct a version object from a version string, like "v1r2p3" or "54a".
         """
         self._version = ()
-        if len(args) < 1:
-            raise TypeError("__init__() takes at least 1 argument (0 given)")
-        elif len(args) == 1:
-            if type(args[0]) is str:
-                import re
-                m = self.__regexp__.match(args[0])
-                if m:
-                    self._version = tuple([int(i)
-                                           for i in m.groups()
-                                           if i is not None])
+        self._lcg_style = False
+        vers_string = str(vers_string)
+        m = self.__regexp__.match(vers_string) or \
+            self.__regexp_lcg__.match(vers_string) 
+        if m:
+            if len(m.groups()) == 3: # vXrY[pZ]
+                self._lcg_style = False
+                self._version = tuple([int(i)
+                                       for i in m.groups()
+                                       if i is not None])
+            else: # XX[y]
+                self._lcg_style = True
+                if m.group(2):
+                    self._version = (int(m.group(1)),m.group(2))
                 else:
-                    raise ValueError("wrong version string: '%s'"%args[0])
-            elif type(args[0]) is self.__class__:
-                # copy constructor
-                self._version = args[0]._version                
-            else:
-                raise TypeError("__init__() needs a string as single argument ('%s' given)"%type(args[0]))
-        elif len(args) <= 3:
-            self._version = tuple([int(i) for i in args]) 
+                    self._version = (int(m.group(1)),)
         else:
-            raise TypeError("__init__() takes at most 3 arguments (%d given)"%len(args))
+            raise ValueError("wrong version string: '%s'"%vers_string)
     def __repr__(self):
         """
         Returns a string that can be evaluated to get a version object
         equivalent to the current one.
         """
-        return self.__class__.__name__ + repr(self._version)
+        return "%s(%s)"%(self.__class__.__name__,repr(str(self)))
     def __str__(self):
         """
         Return a the version as version string like "v1r2p3".
         """
-        if len(self._version) == 2:
-            s = "v%dr%d"
+        if self._lcg_style:
+            s = "%d"%self._version[0]
+            if len(self._version) == 2:
+                s += self._version[1]
         else:
-            s = "v%dr%dp%d"
-        return s%self._version
+            if len(self._version) == 2:
+                s = "v%dr%d"
+            else:
+                s = "v%dr%dp%d"
+            s %= self._version
+        return s
     def __hash__(self):
         return hash(self._version)
     def __cmp__(self,other):
-        if other.__class__ == self.__class__:
-            other = other._version
-        if self._version < other: return -1
-        elif self._version == other: return 0
+        if other.__class__ is not self.__class__:
+            return self.__cmp__(Version(other))
+        if self._version < other._version: return -1
+        elif self._version == other._version: return 0
         else: return 1
 
 class Project:
@@ -99,7 +124,7 @@ class Project:
     """
     def __init__(self,name,version,buildtimedeps=[],runtimedeps=[]):
         self.name = name
-        self.version = version
+        self.version = Version(version)
         self.buildtimedeps = buildtimedeps[:]
         self.runtimedeps = runtimedeps[:]
     def addBuildTimeDep(self,proj_name):
@@ -111,7 +136,7 @@ class Project:
     def __repr__(self):
         return "Project(name=%s,version=%s,buildtimedeps=%s,runtimedeps=%s)" % \
                 (repr(self.name),
-                 repr(self.version),
+                 repr(str(self.version)),
                  repr(self.buildtimedeps),
                  repr(self.runtimedeps))
     
@@ -139,6 +164,31 @@ class Release:
         return "Release(name=%s,projects=%s,base=%s)"%(repr(self.name),
                                                        repr(self.projects.items()),
                                                        repr(self.base))
+    def allProjects(self):
+        """
+        Returns a list of all the projects available in the release (either directly or
+        through the bases), sorted by dependencies. 
+        """
+        # get all projects from current and base releases
+        all_projs = set(self.projects.keys())
+        base = self.base
+        while base:
+            r = self.__releases__[base]
+            all_projs.update(r.projects.keys())
+            base = r.base
+        # put them in alphabetical order
+        all_projs = list(all_projs)
+        all_projs.sort()
+        # get the actual projects from the names to be able to sort them
+        # according their dependencies
+        all_projs = [ self[p] for p in all_projs ]
+        return _sortProjects(all_projs)
+        
+    def __str__(self):
+        s = "Release %s:"%self.name
+        for p in self.allProjects():
+            s += "\n\t%s\t%s"%(p.name,p.version)
+        return s
     def __contains__(self,key):
         return ( key in self.projects ) or \
                ( self.base is not None and key in self.__releases__[self.base] )
@@ -160,7 +210,7 @@ class Release:
     def items(self):
         return self.projects.items()
     def values(self):
-        return self.projects.values()
+        return _sortProjects(self.projects.values())
     def _expandDeps(self,project,function):
         deps = function(self[project])
         deps += reduce(lambda a,b: a+b,
@@ -168,13 +218,22 @@ class Release:
                        [])
         return deps
     def expandBuildTimeDeps(self,project):
+        """
+        Return a list of projects on which the requested project depends for building
+        (either directly or indirectly).
+        """
         return list(set(self._expandDeps(project,lambda p: p.buildtimedeps)))
     def expandRunTimeDeps(self,project):
+        """
+        Return a list of projects on which the requested project depends at run-time
+        (either directly or indirectly, through both build-time and run-time dependencies).
+        """
+        local_deps = self._expandDeps(project,lambda p: p.runtimedeps)
         deps = reduce(lambda a,b: a+b,
                       [ self.expandRunTimeDeps(p)
-                        for p in self.expandBuildTimeDeps(project) ],
-                      [])
-        return list(set(deps + self._expandDeps(project,lambda p: p.runtimedeps)))
+                        for p in self.expandBuildTimeDeps(project) + local_deps ],
+                      local_deps)
+        return list(set(deps))
     
 from xml.sax.handler import ContentHandler
 class _ReleaseSAXHandler(ContentHandler):
@@ -250,7 +309,9 @@ def _findAllReleases(project,versions):
     tmp = set()
     for v in versions:
         tmp.update(_findReleases(project,v))
-    return list(tmp)
+    tmp = list(tmp)
+    tmp.sort()
+    return tmp
 
 def _getVersions(project,releases):
     """
@@ -260,7 +321,9 @@ def _getVersions(project,releases):
     versions = [ getRelease(r)[project].version
                  for r in releases
                  if project in getRelease(r) ] # do we want this check?
-    return list(set(versions))
+    versions = list(set(versions)) # remove duplicates
+    versions.sort() 
+    return versions
 
 #--- Public query functions
 def getCompatibleVersions(project,version,otherproject,keyproj="LHCb"):
@@ -274,18 +337,21 @@ def getCompatibleVersions(project,version,otherproject,keyproj="LHCb"):
                                                       _findReleases(project, version))))
 
 def getRuntimeVersions(project,version,keyproj="LHCb"):
+    """
+    Get a list of projects needed by the specified project and compatible with
+    the specified version of it. 
+    """
     deps = []
     proj_releases = _findReleases(project, version)
     #proj_releases.sort()
     if proj_releases:
-        rt_deps =proj_releases[-1].expandRuntimeDeps(project)
+        rt_deps = getRelease(proj_releases[-1]).expandRunTimeDeps(project)
         comp_releases = _findAllReleases(keyproj,
                                          _getVersions(keyproj,
                                                       proj_releases))
         for p in rt_deps:
             vers = _getVersions(p,comp_releases)
             if vers:
-                vers.sort()
                 deps.append(p,vers[-1])
     return deps
 
@@ -307,7 +373,6 @@ def releaseExists(name):
     """
     return name in Release.__releases__
 
-# @TODO: Use some alphabetical order.
 def generateXML(withDTD = False, withSchema = True):
     # header
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -315,13 +380,16 @@ def generateXML(withDTD = False, withSchema = True):
         xml += '<!DOCTYPE releases_db SYSTEM "releases_db.dtd">\n<releases_db>\n'
     elif withSchema:
         xml += '<releases_db\n' + \
-               ' xmlns="http://cern.ch/lhcb-comp/"\n' + \
-               ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' + \
-               ' xsi:schemaLocation="http://cern.ch/lhcb-comp/ releases_db.xsd ">\n'
+               ' xmlns="http://cern.ch/lhcbproject/dist/"\n' + \
+               ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n' + \
+               ' xsi:schemaLocation="http://cern.ch/lhcbproject/dist/ releases_db.xsd ">\n'
     else:
         xml += '<releases_db>\n'
     # body
-    for rel in Release.__releases__.values():
+    rel_names = Release.__releases__.keys()
+    rel_names.sort()
+    for rel_name in rel_names:
+        rel = Release.__releases__[rel_name]
         xml += '  <release name="' + rel.name
         if rel.base is not None:
             xml += '" base="' + rel.base
