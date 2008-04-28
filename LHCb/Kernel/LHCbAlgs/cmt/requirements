@@ -3,7 +3,7 @@
 # Maintainer : Marco Cattaneo
 #============================================================================
 package LHCbAlgs
-version v2r16
+version v2r17
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -27,7 +27,3 @@ library LHCbAlgs ../src/*.cpp -import=LHCbKernel
 # define component library link options
 #============================================================================
 apply_pattern   component_library library=LHCbAlgs
-
-private
-# Remove unneccessary dependency from library
-macro_remove LHCbAlgs_shlibflags $(LHCbAlgslinkopts)

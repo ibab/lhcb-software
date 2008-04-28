@@ -1,8 +1,8 @@
-// $Id: FilterByRunEvent.cpp,v 1.3 2008-04-25 11:58:53 graven Exp $
+// $Id: FilterByRunEvent.cpp,v 1.4 2008-04-28 11:43:47 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 #include "Event/ODIN.h"
 
