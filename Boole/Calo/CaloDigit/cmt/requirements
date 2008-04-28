@@ -18,6 +18,7 @@ use MCEvent     v*      Event
 use DigiEvent   v*      Event
 use CaloDet     v*      Det
 use L0Event     v*      Event
+use GaudiUtils  v*
 #============================================================================
 # Component library building rule
 #============================================================================
@@ -27,3 +28,9 @@ library          CaloDigit    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=CaloDigit
+
+private 
+
+macro_append ROOT_linkopts " -lHist " \
+                     WIN32 " libHist.lib " \
+                    osx104 " -lHist -lMatrix "

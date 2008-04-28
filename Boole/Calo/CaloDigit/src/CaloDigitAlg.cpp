@@ -1,9 +1,11 @@
-// $Id: CaloDigitAlg.cpp,v 1.19 2007-12-10 22:20:22 odescham Exp $
+// $Id: CaloDigitAlg.cpp,v 1.20 2008-04-28 14:32:39 akozlins Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
+
+#include "GaudiUtils/Aida2ROOT.h"
 
 // Event 
 #include "Event/MCTruth.h"
@@ -14,8 +16,15 @@
 #include "Event/L0CaloAdc.h"
 #include "Event/L0PrsSpdHit.h"
 
+// ROOT
+#include "TH1D.h"
+#include "TF1.h"
+
 // local
 #include "CaloDigitAlg.h"
+
+#include <boost/assign.hpp>
+using namespace boost::assign;
 
 // ============================================================================
 /** @file CaloDigitAlg.cpp
@@ -34,7 +43,7 @@ DECLARE_ALGORITHM_FACTORY( CaloDigitAlg );
 //=============================================================================
 CaloDigitAlg::CaloDigitAlg( const std::string& name,
                             ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator            )
+  : GaudiHistoAlg ( name , pSvcLocator            )
   , m_inputPrevData     ( ""    )
   , m_rndmSvc           (  0    )
   , m_coherentNoise     ( 0.3   )
@@ -65,6 +74,13 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
   declareProperty("TriggerEtScale"     , m_triggerEtScale   ) ;
   declareProperty("ZSupThreshold"      , m_zSupThreshold    ) ;
   
+  m_advancedNoise[0].clear();
+  m_advancedNoise[1].clear();
+  m_advancedNoise[2].clear();
+  m_noiseHist[0] = NULL;
+  m_noiseHist[1] = NULL;
+  m_noiseHist[2] = NULL;
+
   std::string begName = name.substr( 0, 8 );
 
   //== Get the previous MC Calo Digit contained according to rootInTES and context
@@ -120,6 +136,32 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_corrArea.push_back( 1.04 );
     m_corrArea.push_back( 1.08 );
     
+    m_monitorNoise = true;
+    m_useAdvancedNoise = true;
+
+    m_advancedNoise[0] +=
+      list_of( 0.618503 )(   0.2671 )( 1.30606 ),
+      list_of( 0.288860 )(   0.8269 )( 2.55909 ),
+      list_of( 0.081979 )(   3.5597 )( 5.67153 ),
+      list_of( 0.005044 )(  20.3323 )( 5.70424 ),
+      list_of( 0.004536 )( -11.3676 )( 5.51563 ),
+      list_of( 0.001078 )( -28.2179 )( 5.42412 );
+
+    m_advancedNoise[1] +=
+      list_of( 0.579320 )(   0.2466 )( 1.31034 ),
+      list_of( 0.304418 )(   0.8750 )( 2.54487 ),
+      list_of( 0.103213 )(   2.9349 )( 5.80636 ),
+      list_of( 0.006098 )(  21.9765 )( 7.15202 ),
+      list_of( 0.005976 )(  -9.1017 )( 6.18245 ),
+      list_of( 0.000975 )( -26.2710 )( 5.48446 );
+
+    m_advancedNoise[2] +=
+      list_of( 0.557991 )(   0.2394 )( 1.36762 ),
+      list_of( 0.312109 )(   0.9972 )( 2.85723 ),
+      list_of( 0.120438 )(   2.5708 )( 7.18906 ),
+      list_of( 0.007780 )(  27.4646 )( 11.3398 ),
+      list_of( 0.001681 )( -37.0023 )( 13.6182 );
+
  } else if ( "HcalDigi" == begName ) {
     m_detectorName     = DeCalorimeterLocation::Hcal;
     m_inputData        = LHCb::MCCaloDigitLocation::Hcal;
@@ -131,6 +173,19 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_corrArea.push_back( 1.00 );
     m_corrArea.push_back( 1.05 );
   }
+
+  declareProperty("MonitorNoise", m_monitorNoise,
+    "Switch on/off noise monitoring");
+
+  declareProperty("UseAdvancedNoise", m_useAdvancedNoise,
+    "Switch on/off advanced noise");
+
+  declareProperty("AdvancedNoiseOuter", m_advancedNoise[0],
+    "Advanced noise for outer area.");
+  declareProperty("AdvancedNoiseMiddle", m_advancedNoise[1],
+    "Advanced noise for middle area.");
+  declareProperty("AdvancedNoiseInner", m_advancedNoise[2],
+    "Advanced noise for inner area.");
 
 };
 
@@ -144,7 +199,7 @@ CaloDigitAlg::~CaloDigitAlg() {};
 //=============================================================================
 StatusCode CaloDigitAlg::initialize() {
 
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = GaudiHistoAlg::initialize();
   if( sc.isFailure() ) return sc;
 
   // Retrieve the calorimeter we are working with.
@@ -152,7 +207,7 @@ StatusCode CaloDigitAlg::initialize() {
 
   //*** Initialize the random number service
 
-  m_rndmSvc = svc< IRndmGenSvc>( "RndmGenSvc" , true );
+  m_rndmSvc = svc< IRndmGenSvc >( "RndmGenSvc" , true );
 
   //** Number of Cells and other detector parameters
 
@@ -180,6 +235,78 @@ StatusCode CaloDigitAlg::initialize() {
     }
     info() << endreq;
   }
+
+  // define the names of the monitoring histograms
+  std::vector<std::string> areas; areas.push_back("outer"); areas.push_back("middle"); areas.push_back("inner");
+  
+  // configure advanced noise parameters
+  if(m_useAdvancedNoise)
+  {
+    // check number of parameters
+    for(int area = 0; area < 3; area++)
+    {
+      if(m_advancedNoise[area].empty())
+        return Error("Advanced noise is configured incorectly (see options file).", StatusCode::FAILURE);
+      for(int i = 0, size = m_advancedNoise[area].size(); i < size; i++)
+      {
+        if(m_advancedNoise[area][i].size() != 3)
+          return Error("Advanced noise is configured incorectly (see options file).", StatusCode::FAILURE);
+      }
+    }
+
+    const double nsigma = 6.0;
+
+    // define monitoring histograms limits and calculate integrals
+    for(int area = 0; area < 3; area++)
+    {
+      const std::vector< std::vector<double> >& advancedNoise = m_advancedNoise[area];
+
+      int low = 0xFFFF; // low limit of the monitoring histogram
+      int high = -0xFFFF; // high limit of the monitoring histogram
+
+      debug() << "advanced noise parameters for " << areas[area] << " area:" << endreq;
+
+      double& noiseIntegral = m_noiseIntegral[area];
+      noiseIntegral = 0;
+      
+      for(int i = 0, size = advancedNoise.size(); i < size; i++)
+      {
+        debug() << "gaus " << i + 1 << ": " <<
+          "[ integral = " << advancedNoise[i][GAUS_INTEGRAL] <<
+          ", mean = " << advancedNoise[i][GAUS_MEAN] <<
+          ", sigma = " << advancedNoise[i][GAUS_SIGMA] << " ]" << endreq;
+
+        // check value of the sigma
+        if(advancedNoise[i][GAUS_SIGMA] <= 0)
+          return Error("Sigma is negative.", StatusCode::FAILURE);
+
+        // calculate integral
+        noiseIntegral += advancedNoise[i][GAUS_INTEGRAL];
+
+        // calculate histograms limits
+        int low_ = (int)(advancedNoise[i][GAUS_MEAN] - nsigma * advancedNoise[i][GAUS_SIGMA]);
+        low = low_ < low ? low_ : low;
+        int high_ = (int)(advancedNoise[i][GAUS_MEAN] + nsigma * advancedNoise[i][GAUS_SIGMA]);
+        high = high_ > high ? high_ : high;
+      }
+
+      // noise integral have to be greater then zero
+      if(noiseIntegral == 0)
+        return Error("Noise integral is equal to zero (see options file).", StatusCode::FAILURE);
+
+      // create monitoring histogram
+      if(m_monitorNoise) m_noiseHist[area] = book(areas[area].c_str(), low, high, high - low);
+    }
+  }
+  else if(m_monitorNoise)
+  {
+    // create monitoring histograms
+    for(int area = 0; area < 3; area++)
+    {
+      m_noiseHist[area] = book1D(areas[area].c_str(), -10, 10, 200);
+    }
+  }
+
   return StatusCode::SUCCESS;
 };
 
@@ -189,6 +316,10 @@ StatusCode CaloDigitAlg::initialize() {
 StatusCode CaloDigitAlg::execute() {
 
   bool isDebug = (msgLevel() <= MSG::DEBUG );
+
+  // random numbers for advanced noise generation
+  Rndm::Numbers noiseFlatRndm(rndmSvc(), Rndm::Flat(0.0, 1.0));
+  Rndm::Numbers noiseGausRndm(rndmSvc(), Rndm::Gauss(0.0, 1.0));
 
   //*** get the input data
   
@@ -248,7 +379,8 @@ StatusCode CaloDigitAlg::execute() {
   }
 
   std::vector<double> incoherentNoise   ( m_numberOfCells, 0.0 );
-  if( 0 < m_incoherentNoise ) {
+  if( false == m_useAdvancedNoise && 0 < m_incoherentNoise )
+  {
     std::generate( incoherentNoise.begin(), incoherentNoise.end() ,
                    Rndm::Numbers( rndmSvc(), Rndm::Gauss( 0.0 , m_incoherentNoise ) ) );
   }
@@ -287,7 +419,54 @@ StatusCode CaloDigitAlg::execute() {
     }
 
     double gain     = m_calo->cellGain( id ) ;
-    double adcValue = gainErrors[index] * energy / gain +  incoherentNoise[index] + offset;
+    double adcValue;
+
+    // if use advanced noise then generate noise value accordint to description of the noise spectra
+    if(m_useAdvancedNoise)
+    {
+      // generate advanced noise
+
+      double noise = 0;
+
+      // select noise spectrum corresponding to the cell area
+      const std::vector< std::vector<double> >& advancedNoise = m_advancedNoise[id.area()];
+      
+      // generate random flat value in the range ( 0 : noise spectrum integral )
+      // this value is used to select Gaussian which will be generated (the Gaussian is selected according to its component fraction)
+      double selector = m_noiseIntegral[id.area()] * noiseFlatRndm();
+
+      // find Gaussian to generate
+      for(int i = 0, size = advancedNoise.size(); i < size; i++)
+      {
+        // substract from the selector value current Gaussian integral
+        selector -= advancedNoise[i][GAUS_INTEGRAL];
+        
+        // if it became less then zero or it is the last Gaussian (this must not happen) then we generate it
+        if(selector < 0 || i == size - 1)
+        {
+          noise = advancedNoise[i][GAUS_MEAN] +
+            advancedNoise[i][GAUS_SIGMA] * noiseGausRndm();
+          break;
+        }
+      }
+
+      adcValue = gainErrors[index] * energy / gain + noise;
+
+      // fill monitoring histograms
+      if(m_monitorNoise && m_noiseHist[id.area()] != NULL)
+        fill(m_noiseHist[id.area()], noise, 1.0);
+    }
+    else
+    {
+      // generate standard noise
+      
+      adcValue = gainErrors[index] * energy / gain + incoherentNoise[index] + offset;
+
+      // fill monitoring histograms
+      if(m_monitorNoise && m_noiseHist[id.area()] != NULL)
+        fill(m_noiseHist[id.area()], incoherentNoise[index] + offset, 1.0);
+    }
+
     if ( 0 != prevDigits ) {
 
       // Correct for spill-over in Prs/Spd by a fixed fraction.
@@ -349,12 +528,75 @@ StatusCode CaloDigitAlg::execute() {
     trigSize = trigBank->size();
   }
 
-
   debug() << format( "Have digitized and stored %5d adcs and %5d trigger from %5d MCDigits.",
                      adcs->size(), trigSize, mcDigits->size() )
           << endreq;
 
   return StatusCode::SUCCESS;
 };
+
+//=============================================================================
+//  Finalize
+//=============================================================================
+StatusCode CaloDigitAlg::finalize()
+{
+  // if monitor advanced noise then fit histogram and check chi2
+  if(m_useAdvancedNoise && m_monitorNoise)
+  {
+    std::vector<std::string> areas; areas.push_back("outer"); areas.push_back("middle"); areas.push_back("inner");
+    for(int area = 0; area < 3; area++)
+    {
+      AIDA::IHistogram1D* aidaHist = m_noiseHist[area];
+      if(0 == aidaHist) continue;
+
+      const double noiseIntegral = m_noiseIntegral[area];
+      const std::vector< std::vector<double> >& advancedNoise = m_advancedNoise[area];
+
+      // get root histogram
+      TH1D* rootHist = Gaudi::Utils::Aida2ROOT::aida2root(aidaHist);
+
+      double* pars = new double[3 * advancedNoise.size()];
+      if(pars == 0)
+      {
+        continue;
+      }
+
+      // form function
+      std::ostringstream stream;
+      for(int i = 0, size = advancedNoise.size(); i < size; i++)
+      {
+        pars[3 * i + 0] = (rootHist->GetEntries() / noiseIntegral) * advancedNoise[i][GAUS_INTEGRAL] / (advancedNoise[i][GAUS_SIGMA] * sqrt(2 * 3.1415927));
+        pars[3 * i + 1] = advancedNoise[i][GAUS_MEAN];
+        pars[3 * i + 2] = advancedNoise[i][GAUS_SIGMA];
+        if(i != 0) stream << " + ";
+        stream << "gaus(" << i * 3 << ")";
+      }
+
+      // create root function
+      TF1 func("noiseFunc", stream.str().c_str(), rootHist->GetXaxis()->GetXmin(), rootHist->GetXaxis()->GetXmax());
+      func.SetParameters(pars);
+
+      // fix all parameter of the function except component fractions (integrals)
+      for(int i = 0, size = 3 * advancedNoise.size(); i < size; i++)
+      {
+        if(i % 3 != 0) func.FixParameter(i, pars[i]);
+      }
+
+      // fit noise spectra
+      rootHist->Fit("noiseFunc", "INQ");
+
+      // print obtained component fractions and chisquare
+      info() << "noise fit (" << areas[area] << " area):" << endreq;
+      info() << "  chisquare = " << func.GetChisquare() << "/" << func.GetNDF() << endreq;
+      for(int i = 0, size = 3 * advancedNoise.size(); i < size; i++)
+      {
+        if(i % 3 == 0) info() << "  amplitude for gaus #" << 1 + i / 3 << " = " << func.GetParameter(i) << " +- " << func.GetParError(i) << " ( " << pars[i] << " )" << endreq;
+      }
+
+      delete[] pars;
+    }
+  }
+  return GaudiHistoAlg::finalize();
+}
 
 //=============================================================================

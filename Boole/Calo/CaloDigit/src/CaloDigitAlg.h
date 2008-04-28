@@ -1,10 +1,10 @@
-// $Id: CaloDigitAlg.h,v 1.6 2005-11-10 16:44:02 ocallot Exp $ 
+// $Id: CaloDigitAlg.h,v 1.7 2008-04-28 14:32:39 akozlins Exp $ 
 #ifndef   CALODIGIT_CALODIGITALG_H
 #define   CALODIGIT_CALODIGITALG_H 1
 // ============================================================================
 // from Gaudi 
 #include "GaudiKernel/IRndmGenSvc.h" 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 
 // CaloDet
 #include "CaloDet/DeCalorimeter.h"
@@ -18,7 +18,7 @@
  *   @date:   5 June 2000
  */
 
-class CaloDigitAlg : public GaudiAlgorithm {  
+class CaloDigitAlg : public GaudiHistoAlg {  
 
 public:
   CaloDigitAlg( const std::string& name, ISvcLocator* pSvcLocator);
@@ -27,13 +27,11 @@ public:
   
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-
+  virtual StatusCode finalize();
 protected:
-
   IRndmGenSvc* rndmSvc() const  { return m_rndmSvc ; } 
 
-private:   
-
+private:
   std::string m_detectorName;      ///< Detector element location
   std::string m_inputData;         ///< Input container
   std::string m_outputData;        ///< Output container
@@ -61,5 +59,13 @@ private:
   int         m_saturatedAdc      ; ///< Value to set in case ADC is saturated.
   int         m_maxAdcValue       ; ///< Maximum ADC content, after ped. substr
   double      m_activeToTotal     ; ///< Ratio activeE to total energy in ADC.
+
+
+  enum { GAUS_INTEGRAL = 0, GAUS_MEAN = 1, GAUS_SIGMA = 2 };
+  bool m_monitorNoise; ///< create noise monitoring histogram for each section
+  bool m_useAdvancedNoise; ///< use advanced noise spectra generation
+  double m_noiseIntegral[3]; ///< integrals of noise spectra
+  std::map< int, std::vector< std::vector<double> > > m_advancedNoise; ///< parameters of the advanced noise spectra for different sections
+  AIDA::IHistogram1D* m_noiseHist[3]; ///< monitoring histograms from advanced noise
 };
 #endif //    CALODIGIT_CALODIGITALG_H
