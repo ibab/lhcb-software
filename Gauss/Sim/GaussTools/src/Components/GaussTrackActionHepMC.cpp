@@ -1,4 +1,4 @@
-// $Id: GaussTrackActionHepMC.cpp,v 1.6 2008-01-31 13:27:14 seaso Exp $
+// $Id: GaussTrackActionHepMC.cpp,v 1.7 2008-04-28 09:04:20 robbep Exp $
 // Include files 
 
 // STD & STL 
@@ -141,22 +141,22 @@ void GaussTrackActionHepMC::PreUserTrackingAction  ( const G4Track* track )
   }
 
   // Reset momentum in the case of short lived from HepMC
-  if( track->GetDefinition()->IsShortLived() ) {
-    if( NULL != track->GetDynamicParticle() ) {
-      if( NULL != track->GetDynamicParticle()->GetPrimaryParticle() ) {
-        G4VUserPrimaryParticleInformation* g4uInf = 
-          track->GetDynamicParticle()->GetPrimaryParticle()->GetUserInformation();
-        if( g4uInf ) {
-          GiGaPrimaryParticleInformation* uInf = 
-            (GiGaPrimaryParticleInformation*) g4uInf;
-          HepMC::GenEvent* gEvt = uInf->pHepMCEvent()->pGenEvt();
-          HepMC::GenParticle* gPart = 
-            gEvt->barcode_to_particle( uInf->signalBarcode() );
-          fourmomentum = gPart->momentum();
-        }
-      }
-    }
-  }
+//  if( track->GetDefinition()->IsShortLived() ) {
+//    if( NULL != track->GetDynamicParticle() ) {
+//      if( NULL != track->GetDynamicParticle()->GetPrimaryParticle() ) {
+//        G4VUserPrimaryParticleInformation* g4uInf = 
+//          track->GetDynamicParticle()->GetPrimaryParticle()->GetUserInformation();
+//        if( g4uInf ) {
+//          GiGaPrimaryParticleInformation* uInf = 
+//            (GiGaPrimaryParticleInformation*) g4uInf;
+//          HepMC::GenEvent* gEvt = uInf->pHepMCEvent()->pGenEvt();
+//          HepMC::GenParticle* gPart = 
+//            gEvt->barcode_to_particle( uInf->signalBarcode() );
+//          fourmomentum = gPart->momentum();
+//        }
+//      }
+//    }
+//  }
 
 };
 // ============================================================================
@@ -183,16 +183,27 @@ void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
     // Get the pdgID+LHCb extension
     int pdgID = track->GetDefinition()->GetPDGEncoding();
     if( 0 == pdgID ) {
-      ParticleProperty* pProp = m_ppSvc->find( track->GetDefinition()->GetParticleName() );
-      if( NULL != pProp ) {
-        pdgID = pProp->pdgID();
-      } else {
-        std::string message = "PDGEncoding does not exist, G4 name is ";
-        message += track->GetDefinition()->GetParticleName();
-        Warning( message, StatusCode::SUCCESS, 10 );
+      // Use dynamic particle PDG Id in this case (unknown particle)
+      if ( NULL != track -> GetDynamicParticle() ) {
+        if ( NULL != track -> GetDynamicParticle() -> GetPrimaryParticle() ) {
+          pdgID = track -> GetDynamicParticle() -> GetPrimaryParticle() -> GetPDGcode() ;
+          if ( "unknown" == track->GetDefinition()->GetParticleName() ) 
+            fourmomentum.setVectM( track -> GetDynamicParticle() -> GetPrimaryParticle() -> GetMomentum() , 
+                                   track -> GetDynamicParticle() -> GetPrimaryParticle() -> GetMass() ) ;
+        }
+      } 
+      if ( 0 == pdgID ) {
+        // Last chance, use name of particle
+        ParticleProperty* pProp = m_ppSvc->find( track->GetDefinition()->GetParticleName() );
+        if( NULL != pProp ) {
+          pdgID = pProp->pdgID();
+        } else {
+          std::string message = "PDGEncoding does not exist, G4 name is ";
+          message += track->GetDefinition()->GetParticleName();
+          Warning( message, StatusCode::SUCCESS, 10 );
+        }
       }
     }
-
     // get the process type of the origin vertex
     int creatorID = processID( track->GetCreatorProcess() );
 
@@ -210,7 +221,6 @@ void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
         }
       }
     }
-
 
     m_mcMgr->AddParticle( fourmomentum, prodpos, endpos,
                           pdgID, track->GetTrackID(), track->GetParentID(), 
@@ -269,8 +279,6 @@ int GaussTrackActionHepMC::processID(const G4VProcess* creator ) {
       processID = LHCb::MCVertex::PhotoElectric;
     } else if( "RichHpdPhotoelectricProcess" == pname ) {
       processID = LHCb::MCVertex::RICHPhotoElectric;
-    } else if ("RichHpdSiEnergyLossProcess" == pname ){
-      processID = LHCb::MCVertex::RichHpdBackScat;    
     } else if( "RichG4Cerenkov" == pname ) {
       processID = LHCb::MCVertex::Cerenkov;
     } else if( "eIoni" == pname || "hIoni" == pname || "ionIoni" == pname ||
