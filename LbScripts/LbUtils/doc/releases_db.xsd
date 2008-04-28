@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsi:schema targetNamespace="http://cern.ch/lhcbproject/dist/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://cern.ch/lhcbproject/dist/">
+    <xsi:element name="releases_db" type="tns:release_db">
+    	<xsi:annotation>
+    		<xsi:documentation>Root element.</xsi:documentation>
+    	</xsi:annotation>
+    </xsi:element>
+    
+
+
+
+
+
+
+    <xsi:complexType name="name_version">
+    	<xsi:annotation>
+    		<xsi:documentation>
+    			Type for a project name-version. A project have a name
+    			and a version.
+    		</xsi:documentation>
+    	</xsi:annotation>
+    	<xsi:complexContent>
+    		<xsi:extension base="tns:named">
+
+    			<xsi:attribute name="version" type="xsi:string" use="required">
+    			</xsi:attribute>
+
+    		</xsi:extension>
+    	</xsi:complexContent>
+    </xsi:complexType>
+
+    <xsi:complexType name="release">
+    	<xsi:annotation>
+    		<xsi:documentation>
+    			Type of a release. It is essentially a list of projects
+    			identified by a name. It can also have a base, which
+    			means that it has the same project versions as the base
+    			release, except for the ones explicitly specified.
+    		</xsi:documentation>
+    	</xsi:annotation>
+    	<xsi:complexContent>
+    		<xsi:extension base="tns:named"><xsi:sequence><xsi:element name="project" type="tns:project" minOccurs="1" maxOccurs="unbounded"></xsi:element></xsi:sequence><xsi:attribute name="base" type="xsi:string" use="optional"></xsi:attribute>
+    		</xsi:extension></xsi:complexContent></xsi:complexType>
+
+
+    <xsi:complexType name="release_db">
+        <xsi:annotation>
+        	<xsi:documentation>
+        		Type defining the content of the database of releases.
+        	</xsi:documentation>
+        </xsi:annotation>
+        <xsi:sequence>
+        	<xsi:element name="release" type="tns:release" minOccurs="1" maxOccurs="unbounded">
+        	</xsi:element>
+        </xsi:sequence>
+    </xsi:complexType>
+
+    <xsi:complexType name="named">
+    	<xsi:attribute name="name" type="xsi:string" use="required"></xsi:attribute>
+    </xsi:complexType>
+
+    <xsi:complexType name="project">
+        <xsi:annotation>
+        	<xsi:documentation>
+        		Type for a project with optional runtime and build-time
+        		dependencies
+        	</xsi:documentation>
+        </xsi:annotation>
+        <xsi:complexContent>
+    		<xsi:extension base="tns:name_version">
+    			<xsi:sequence>
+                    <xsi:element name="buildtimedep" type="tns:named" minOccurs="0" maxOccurs="unbounded"></xsi:element>
+                    <xsi:element name="runtimedep" type="tns:named" minOccurs="0" maxOccurs="unbounded"></xsi:element>
+    			</xsi:sequence>
+    		</xsi:extension>
+    	</xsi:complexContent>
+    </xsi:complexType>
+
+</xsi:schema>
