@@ -3,6 +3,17 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v32r6>2008-04-28 Brunel v32r6</A></H1><PRE>
+This version uses projects Gaudi v19r9, LHCb v23r6, Lbcom v6r16, Rec v5r5
+ and DDDB v1r* (SQLDDDB v4r3 or greater), ParamFiles v7r1, FieldMap v4r7
+
+- New features
+  . new ST geometry (not yet complete)
+
+- Bug fixes
+  . Fixes to spaces in job options, to allow use with python
+    (CaloDAQ v4r4p1, CaloMoniDst v3r0p2, TrackCheckers v3r4p2)
+
 </PRE><H1><A NAME=v32r5>2008-04-25 Brunel v32r5</A></H1><PRE>
 This version uses projects Gaudi v19r9, LHCb v23r5, Lbcom v6r16, Rec v5r5
  and DDDB v1r* (SQLDDDB v4r2 or greater), ParamFiles v7r1, FieldMap v4r7
