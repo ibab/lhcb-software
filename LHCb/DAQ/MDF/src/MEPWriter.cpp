@@ -1,4 +1,4 @@
-// $Id: MEPWriter.cpp,v 1.10 2008-04-09 15:16:43 ocallot Exp $
+// $Id: MEPWriter.cpp,v 1.11 2008-04-28 17:19:34 frankb Exp $
 //  ====================================================================
 //  MEPWriter.cpp
 //  --------------------------------------------------------------------
@@ -41,17 +41,20 @@ MEPWriter::~MEPWriter()     {
 //  Initialisation, check parameter consistency
 //=========================================================================
 StatusCode MEPWriter::initialize ( ) {
-  m_halfWindow = (m_packingFactor-1)/2;
-  if ( m_makeTAE ) {
-    if ( 7 < m_halfWindow ||
-         0 > m_halfWindow ||
-         2 * m_halfWindow +1 != m_packingFactor ) {
-      MsgStream msg( msgSvc(), name() );
-      msg << MSG::ERROR << "In TAE mode, window size should be odd and less than 15" << endmsg;
-      return StatusCode::FAILURE;
+  StatusCode sc = MDFWriter::initialize();
+  if ( sc.isSuccess() ) {
+    m_halfWindow = (m_packingFactor-1)/2;
+    if ( m_makeTAE ) {
+      if ( 7 < m_halfWindow ||
+	   0 > m_halfWindow ||
+	   2 * m_halfWindow +1 != m_packingFactor ) {
+	MsgStream msg( msgSvc(), name() );
+	msg << MSG::ERROR << "In TAE mode, window size should be odd and less than 15" << endmsg;
+	return StatusCode::FAILURE;
+      }
     }
   }
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 /// Execute procedure

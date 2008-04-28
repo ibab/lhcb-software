@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2008-04-28 - Markus Frank
+ - Fix initialization of MEPWriter, which got screwed in v3r6. Used for tests only.
+
 !========================= MDF v3r6 2008-04-16 ===============================
 ! 2008-04-16 - Marco Cattaneo
  - Modify RawDataCnvSvc initialization to avoid initialization loop
