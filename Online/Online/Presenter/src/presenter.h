@@ -5,7 +5,7 @@
 #include <TPRegexp.h>
 #include <TString.h>
 
-static const std::string s_presenterVersion("v0r7");
+static const std::string s_presenterVersion("v0r8");
 // environment variable for archive mount point (i.e. prefix to paths)
 static const std::string s_groupdir("GROUPDIR");
 
