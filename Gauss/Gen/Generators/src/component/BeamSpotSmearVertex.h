@@ -1,4 +1,4 @@
-// $Id: BeamSpotSmearVertex.h,v 1.4 2005-12-31 17:31:24 robbep Exp $
+// $Id: BeamSpotSmearVertex.h,v 1.5 2008-04-28 17:41:05 gcorti Exp $
 #ifndef GENERATORS_BEAMSPOTSMEARVERTEX_H 
 #define GENERATORS_BEAMSPOTSMEARVERTEX_H 1
 
@@ -54,6 +54,12 @@ public:
   /// Number of sigma above which to cut for z-axis smearing (set by options)
   double m_zcut   ;
 
+  /// Mean position of the beam on the z-axis
+  double m_zPos   ;
+
+  /// Time of flight with respect to origin as for position
+  bool m_applyToFvsIP ;
+  
   Rndm::Numbers m_gaussDist ; ///< Gaussian random number generator
   
 };

@@ -1,4 +1,4 @@
-// $Id: BeamSpotSmearVertex.cpp,v 1.8 2007-02-08 17:46:06 gcorti Exp $
+// $Id: BeamSpotSmearVertex.cpp,v 1.9 2008-04-28 17:41:05 gcorti Exp $
 // Include files 
 
 // local
@@ -11,7 +11,7 @@
 // from Event
 #include "Event/HepMCEvent.h"
 
-#include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : LHCbAcceptance
@@ -39,6 +39,10 @@ BeamSpotSmearVertex::BeamSpotSmearVertex( const std::string& type,
     declareProperty( "Xcut" , m_xcut = 4. ) ; // times SigmaX 
     declareProperty( "Ycut" , m_ycut = 4. ) ; // times SigmaY
     declareProperty( "Zcut" , m_zcut = 4. ) ; // times SigmaZ    
+
+    declareProperty( "Zpos" , m_zPos = 0. * Gaudi::Units::mm ) ;
+    declareProperty( "ApplyToFvsIP", m_applyToFvsIP = false ) ;
+    
 }
 
 //=============================================================================
@@ -60,6 +64,10 @@ StatusCode BeamSpotSmearVertex::initialize( ) {
 
   info() << "Smearing of interaction point with Gaussian distribution "
          << endmsg;
+  info() << " Z primary = " << m_zPos / Gaudi::Units::mm << " mm " << endmsg;
+  std::string infoMsg = "Apply time of flight respect to IP";
+  if( !m_applyToFvsIP ) infoMsg = "Do not ";
+  info() << infoMsg << endmsg;
   if( msgLevel(MSG::DEBUG) ) {
     debug() << " with sigma(X) = " << m_sigmaX / Gaudi::Units::mm 
             << " mm troncated at " << m_xcut << " sigma(X)";
@@ -84,16 +92,20 @@ StatusCode BeamSpotSmearVertex::initialize( ) {
 // Smearing function
 //=============================================================================
 StatusCode BeamSpotSmearVertex::smearVertex( LHCb::HepMCEvent * theEvent ) {
-  double dx , dy , dz ;
+  double dx , dy , dz, dt;
   
   do { dx = m_gaussDist( ) ; } while ( fabs( dx ) > m_xcut ) ;
   dx = dx * m_sigmaX ;
   do { dy = m_gaussDist( ) ; } while ( fabs( dy ) > m_ycut ) ;
   dy = dy * m_sigmaY ;
   do { dz = m_gaussDist( ) ; } while ( fabs( dz ) > m_zcut ) ;
-  dz = dz * m_sigmaZ ;
+  dz = dz * m_sigmaZ + m_zPos;
 
-  HepLorentzVector dpos( dx , dy , dz , 0. ) ;
+  dt = 0.0;
+  if( m_applyToFvsIP ) {
+    dt = dz/Gaudi::Units::c_light;
+  }
+  HepLorentzVector dpos( dx , dy , dz , dt ) ;
   
   HepMC::GenEvent::vertex_iterator vit ;
   HepMC::GenEvent * pEvt = theEvent -> pGenEvt() ;
