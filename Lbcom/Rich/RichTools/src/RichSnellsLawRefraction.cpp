@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::SnellsLawRefraction
  *
  * CVS Log :-
- * $Id: RichSnellsLawRefraction.cpp,v 1.1 2008-01-11 12:04:31 jonrob Exp $
+ * $Id: RichSnellsLawRefraction.cpp,v 1.2 2008-04-28 09:32:28 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -84,10 +84,10 @@ StatusCode SnellsLawRefraction::initialize()
 }
 
 void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
-                                        Gaudi::XYZVector &     dir,
+                                        Gaudi::XYZVector & dir,
                                         const double photonEnergy ) const
 {
-  if ( photonEnergy   > 0 )
+  if ( photonEnergy > 0 )
   {
     if ( startPoint.z() < m_minZaero )
     {
@@ -115,7 +115,7 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
   else { Warning( "aerogelToGas:: photonEnergy = 0" ); }
 }
 
-void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector &     dir,
+void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
                                         const double photonEnergy ) const
 {
   if ( photonEnergy > 0 )
@@ -131,7 +131,7 @@ void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector &     dir,
     // Apply Snells law and update vector
     Gaudi::XYZVector newDir( 0, 0, std::sqrt(1.-(1.-dir.Z()*dir.Z())/RratioSq) );
     const double R = dir.Y()/dir.X();
-    newDir.SetX( sqrt( (1.-newDir.Z()*newDir.Z())/(1. + R*R) ) );
+    newDir.SetX( std::sqrt( (1.-newDir.Z()*newDir.Z())/(1. + R*R) ) );
     if ( dir.X() < 0 ) newDir.SetX( -newDir.X() );
     newDir.SetY( R*newDir.X() );
     dir = newDir;
