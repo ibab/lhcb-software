@@ -5,6 +5,35 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v23r6>2008-04-28 LHCbSys v23r6</A></H1><PRE>
+This version uses Gaudi v19r9 and LCG_54e.
+
+- Packages modified: DetSys v12r0, DDDB v1r6, STDet v4r0, DAQSys v3r9p1,
+    CaloDAQ v4r4p1, LHCbAlgs v2r17, LoKiPhys v7r3
+
+- In DDDB v1r6
+  . Change default DC06 tag (in DC06.opts, DC06.py) to DC06-20080427, for use
+    with STDet v4r0. Requires SQLDDDB >= v4r3
+
+- In STDet v4r0
+  . Major changes to add new level (DeSTSensor and derived classes)
+    Interface and functionality of DeSTSector has changed. 
+    o See talk in ST software meeting 13/03/08
+    o Requires SQLDDDB >= v4r3
+  . Avoid double counting bondgap
+
+- In CaloDAQ v4r4p1
+  . In CaloBankHandler.opts, remove some whitespace causing problems to Python
+
+- In LHCbAlgs v2r17
+  . Add rate prescaling based on run#, event#, gpsTime and algorithm instance
+    name to DeterministicPrescaler
+  . Add some comments to FilterByRunEvent pointing out that event# is NOT a 
+    32 bit number -- fixing this properly requires adding a new property type.
+
+- In LoKiPhys v7r3
+  . fix a stupid bug with ISLONG/ISDOWN/IS<XXX> functors
+
 </PRE><H1><A NAME=v23r5>2008-04-22 LHCbSys v23r5</A></H1><PRE>
 This version uses Gaudi v19r9 and LCG_54e.
 

@@ -23,11 +23,11 @@ use Relations             v5r4    Kernel  # Ivan Belyaev
 use RichKernel            v7r11p1 Rich    # Chris Jones
 
 # Detector description
-use DetSys                v11r4   Det     # Marco Cattaneo
+use DetSys                v12r0   Det     # Marco Cattaneo
 use BcmDet                v1r1    Det     # Magnus Lieng
 use CaloDet               v8r6    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r1    Det     # Olivier Deschamps
-use DDDB                  v1r5    Det     # Marco Cattaneo
+use DDDB                  v1r6    Det     # Marco Cattaneo
 use DetCond               v11r10  Det     # Marco Clemencic
 use DetDesc               v18r4p1 Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v4r5    Det     # Marco Clemencic, Juan Palacios
@@ -36,7 +36,7 @@ use Magnet                v3r7    Det     # N.N.
 use MuonDet               v8r0    Det     # Alessia Satta, Alessio Sarti
 use OTDet                 v7r7    Det     # Jan Amoraal
 use RichDet               v10r11  Det     # Chris Jones
-use STDet                 v3r9    Det     # Jeroen van Tilburg, Matt Needham
+use STDet                 v4r0    Det     # Jeroen van Tilburg, Matt Needham
 use VeloDet               v13r0   Det     # Mark Tobin, Kurt Rinnert
 use XmlTools              v5r2    Tools   # Marco Clemencic
 
@@ -58,10 +58,10 @@ use TrackEvent            v4r12   Event   # Matt Needham
 use VeloEvent             v16r3   Event   # Tomasz Szumlak, Chris Parkes
 
 # L1/Raw buffer encoding and decoding
-use DAQSys                v3r9    DAQ     # Marco Cattaneo
+use DAQSys                v3r9p1  DAQ     # Marco Cattaneo
 use MuonDAQ               v4r0    Muon    # Alessia Satta
 use OTDAQ                 v5r6    OT      # Jan Amoraal
-use CaloDAQ               v4r4    Calo    # Olivier Deschamps
+use CaloDAQ               v4r4p1  Calo    # Olivier Deschamps
 use SiDAQ                 v2r0    Si      # Matt Needham
 
 # Other stuff
@@ -71,7 +71,7 @@ use CondDBEntityResolver  v4r1   Tools   # Marco Clemencic
 use CondDBUI              v2r9   Tools   # Marco Clemencic
 use DaVinciKernel         v6r12  Phys    # Juan Palacios
 use DaVinciMCKernel       v2r7   Phys    # Juan Palacios
-use LHCbAlgs              v2r16  Kernel  # Marco Cattaneo
+use LHCbAlgs              v2r17  Kernel  # Marco Cattaneo
 use LinkerInstances       v3r4   Event   # Thomas Ruf
 use LoKi                  v7r0   Phys    # Ivan Belyaev
 use LoKiAlgo              v7r2   Phys    # Ivan Belyaev
@@ -82,7 +82,7 @@ use LoKiGen               v7r2   Phys    # Ivan Belyaev
 use LoKiGenMC             v7r0   Phys    # Ivan Belyaev
 use LoKiMC                v7r2   Phys    # Ivan Belyaev
 use LoKiNumbers           v7r3   Phys    # Ivan Belyaev
-use LoKiPhys              v7r2   Phys    # Ivan Belyaev
+use LoKiPhys              v7r3   Phys    # Ivan Belyaev
 use LoKiPhysMC            v7r0   Phys    # Ivan Belyaev
 use L0Interfaces          v1r1   L0      # Olivier Deschamps
 use MCInterfaces          v1r5   Kernel  # Marco Cattaneo et al.
