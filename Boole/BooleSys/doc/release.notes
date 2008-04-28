@@ -3,26 +3,75 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r11>2008-04-11 Boole v14r11</A></H1><PRE>
-This version uses projects Gaudi v19r8, LHCb v23r5, Lbcom v6r16
+</PRE><H1><A NAME=v14r11>2008-04-28 Boole v14r11</A></H1><PRE>
+This version uses projects Gaudi v19r9, LHCb v23r5, Lbcom v6r16
  and DDDB v1r* (SQLDDDB v4r2 or greater), ParamFiles v7r1, FieldMap v4r7
 
-This is a pre-release version only. Release will be v15r0
+This is a development version. It can process DC06 data, but output format and
+tuning is different from DC06. Processing of 2008 data is possible but not yet
+commissioned. Output requires Brunel v32r5 or later
 
-This version does not support processing data produced with DC06 geometries.
-Output requires Brunel v32r5 or later
-
-- Persistency changes
-  . OT linker table is now using directly OTChannelID, bypasses creation of
-    OTTime. Requires Brunel v32r5 or greater to read
+- Persistency changes (require Brunel v32r5 or greater to read)
+  . OT linker table now using directly OTChannelID, bypasses creation of OTTime
     (DigiAlg v4r9, OTAssociators v4r2, Boole.opts)
+  . When using 2008 conditions, simulates Muon RawBank version 2 (MuonDAQ v4r0)
+
+- New tuning
+  . Major retuning of Velo simulation
+    (VeloAlgorithms v4r7, VeloSimulation v3r0, VeloDet v13r0)
+    o Changed scaling in VeloDataProcessor to increase ADC values of clusters
+    o VeloClusterMaker now sets strip thresholds from noise levels per strip
+    o Changed curve in VeloDataProcessor to 2nd order non-linear response from JC
+    o Set ADC output range from 0->256 to -127->127
+    o Use ST charge deposit tool to correct GEANT dEdx
+    o Use ST amplifier response tool to simulate amplifier response versus time
+    o Simulate noise from the DeVeloSensor->stripNoise() distribution per strip
+    o Retuned time curves to use vfp = 150 and vfs = 550 : best guess as initial
+      BEETLE tune parameters, amount of spillover increased
+    o Offset sampling time to get equal amplification to Prev and Next MCHits
+    o Added PrevPrev to simulation by default
+    o Set capacitve coupling to 1% (from 5%) to get approx 1 and 2 strip
+      ratio about right
+    o Changed stored condition from strip capacitance to strip noise in
+      DeVeloSensor. Requires SQLDDDB >= v4r2
+  . Muon cabling readout info moved out of MuonDAQ
+    (MuonDet v8r0, MuonDAQ v4r0. Requires SQLDDDB v42 or later) 
+  . Modified default idle connection time-out in CondDBAccessSvc from 600s to
+    120s (DetCond v11r10)
+
+- New features
+  . In Boole/Configuration.py: 
+    o Added "writeDigi" option, default True. If False, .digi is output switched
+      off. Can be used independently of "writeMDF"
+    o Added options DDDBtag and EvtMax
+    o Include Boole.opts directly, BooleCommon.py no longer needed
+  . Reorganised configuration files for gaudirun.py - now, configuration is 
+    split from example I/O files
+    o Predefined configurations: Boole-Default.py, Boole-2008.py
+    o Predefined I/O files: DC06-Files.py, 2008-Files.py
+    o Syntax is "gaudirun.py Boole-<someconfig>.py <somefiles>.py" 
+
+- Removed features
+  . Removed obsolete files BooleCommon.py, v200601.py, v200801.py. Replaced by
+    Boole-Default.py, Boole-2008.py, DC06-Files.py, 2008-Files.py
+
+- Bug fixes
+  . Muon2Pt was wrong for events with only 1 Muon candidate (Muon1 was used).
+    Fix gives reduction in the rate of Muon2Pt (L0DU v8r4)
+  . TT cluster killer was called in IT sequence, after writing TT RawBanks
 
 - Monitoring changes
   . Overhaul of L0Calo and L0DU monitoring (L0Calo v9r12, L0DU v8r4)
   . Monitoring of OTTime moved to Expert monitoring
     (BooleMoni.opts, OTMonitor v2r8)
-
-- Changes also to Velo, L0DU, L0Muon, Muon. Will be documented in release
+  . Add back functionality to exclude guard rings in efficiency calculation.
+    Default value of STEffChecker.IncludeGuardRings is false (STCheckers v2r4p1)
+  . Changed monitoring code to label cluster types properly (VeloAlgorithms v4r7)
+  . Give meaningful names to MemoryTool histograms (LHCbAlgs v2r16)
+  . Gaudi Histo base classes now print histogram statistics by default at
+    finalize (GaudiUtils v1r6, GaudiAlg v10r5)
+  . Update SuppressWarnings.opts to not print out histogram statistics
+  . In ExpertCheck.opts: switch on StatusCode check by default
 
 </PRE><H1><A NAME=v14r10>2008-03-07 Boole v14r10</A></H1><PRE>
 This version uses projects Gaudi v19r8, LHCb v23r4, Lbcom v6r15
