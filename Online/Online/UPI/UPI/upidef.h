@@ -81,11 +81,11 @@ typedef int  (*WtRoutine)(unsigned int,void*);
 #define ENABLED    1
  
 /* menu_item.type field */
-typedef enum {
+enum {
   COMMENT,
   COMMAND,
   PARAM
-} Item_types;
+} Item_typesEx;
 
 /* menu.type field */
 typedef enum {

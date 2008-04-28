@@ -7,8 +7,8 @@ else:
   Dict.loadDictionary('OnlineKernelDict.dll')
   Dict.loadDictionary('UPIDict.dll')
 
+CPP = Dict.makeNamespace('CPP')
 gbl = Dict.makeNamespace('')
-pvss = Dict.makeNamespace('PVSS')
 #import os
 #l=os.popen("cat /proc/"+str(os.getpid())+"/maps | grep UPIR").readlines()
 #ll=os.popen('nm -C -D '+l[0].split(' ')[-1])
@@ -31,7 +31,7 @@ FONT_USER           = 0x30
 FONTS               = 0x30
 MODIFIED            = 0x40
 
-Interactor           = pvss.PyInteractor
+Interactor           = CPP.PyInteractor
 resetANSI            = gbl.scrc_resetANSI
 BaseSensor           = gbl.Sensor
 Sensor               = gbl.UpiSensor

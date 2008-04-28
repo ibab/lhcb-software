@@ -1,4 +1,4 @@
-// $Id: ROMonInfo.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Id: ROMonInfo.cpp,v 1.2 2008-04-28 15:16:40 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfo.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfo.cpp,v 1.2 2008-04-28 15:16:40 frankb Exp $
 
 // Framework include files
 #include "dic.hxx"
@@ -32,6 +32,7 @@ ROMonInfo::ROMonInfo(RODimListener* s) : m_server(s) {
 ROMonInfo::~ROMonInfo()  {
   if ( m_info ) {
     ::dic_release_service(m_info);
+    m_info = 0;
   }
 }
 
