@@ -135,7 +135,7 @@ DigiTTSeq.Members += { "MCSTDepositCreator/MCTTDepositCreator" };
 DigiTTSeq.Members += { "MCSTDigitCreator/MCTTDigitCreator" };
 DigiTTSeq.Members += { "STDigitCreator/TTDigitCreator" };
 DigiTTSeq.Members += { "STClusterCreator/TTClusterCreator" };
-DigiITSeq.Members += { "STClusterKiller/TTClusterKiller" };
+DigiTTSeq.Members += { "STClusterKiller/TTClusterKiller" };
 DigiTTSeq.Members += { "STClustersToRawBankAlg/createTTRawBuffer" };
 
 // Outer tracker digitisation

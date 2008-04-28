@@ -1,14 +1,14 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.7 2008-04-28 08:39:27 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2008-04-28 11:12:36 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import ( CondDBAccessSvc, MagneticFieldSvc,
-                            MCSTDepositCreator ) 
+                            MCSTDepositCreator, MuonDigitToRawBuffer ) 
 import GaudiKernel.ProcessJobOptions
 
 class Boole(ConfigurableUser):
@@ -63,6 +63,10 @@ class Boole(ConfigurableUser):
             MCSTDepositCreator("MCITDepositCreator").DepChargeTool = "SiDepositedCharge"
             MCSTDepositCreator("MCTTDepositCreator").DepChargeTool = "SiDepositedCharge"
 
+        # Special options for 2008 data processing
+        if condDBtag.find("-2008") != -1 and DDDBtag.find("-2008") != -1 :
+          MuonDigitToRawBuffer().VType = 2 # New RawBank type
+          
     def defineEvents(self):
         evtMax = self.getProp("EvtMax")
         if hasattr(LHCbApp(),"EvtMax"):

@@ -9,17 +9,19 @@ from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 from Boole.Configuration import *
 
+# Suppress TT RawBank: no .sim data exists with a working TT readout mapping
+GaudiSequencer("DigiTTSeq").Members.remove("STClustersToRawBankAlg/createTTRawBuffer")
+
 #-- File catalogs
 FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
 
 #-- Main ('signal') event input
-datasetName = '11144103-500ev-20080228' # Events from Gauss v30r1
+datasetName = '11144103-500ev-20080228' # Events from Gauss v31r0
 EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2008/v31r0/" + datasetName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 #-- Spillover events
-EventSelector("SpilloverSelector").Input = [
-    "DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2008/v31r0/30000000-1000ev-20080223.sim' TYP='POOL_ROOTTREE' OPT='READ'"
-    ]
+spilloverName = '30000000-1000ev-20080319' # Gauss v31r0, head-20080225-no-TT
+EventSelector("SpilloverSelector").Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2008/v31r0/" + spilloverName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 # Set the property used to build other file names
 Boole().setProp( "datasetName", datasetName )
