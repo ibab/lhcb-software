@@ -13,7 +13,7 @@ branches cmt doc
 use Adder             v4r6     Online
 use confDB            v1r5     Online
 ### Note: confDBPython is internally forced to python 2.5
-use confDBpython      v1r5p2   Online
+use confDBpython      v1r7     Online
 use $(CCPCHist_use)
 macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
 use DIM               v17r1    Online
@@ -21,7 +21,7 @@ use DIM               v17r1    Online
 use ExampleGaucho     v2r5     Online
 use Gaucho            v5r6     Online
 ### Obsolete: use GauchoJob         v3r1     Online
-use GaudiOnline       v2r14    Online
+use GaudiOnline       v2r15    Online
 use GaudiUPI          v1r7     Online
 use HPDMonitor        v1r5     Online
 use InsertDB          v1r2     Online
@@ -29,21 +29,21 @@ use MBMDump           v1r8     Online
 use OMAlib            v1r0     Online
 use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v4r8     Online
-use OnlineKernel      v1r14    Online
+use OnlineKernel      v1r15    Online
 use OnlineTasks       v1r10    Online
 use Presenter         v0r8     Online
 ### PVSS Distribution only: use PVSS              v1r0    Online
 ### PVSS Distribution only: use PVSSInterface     v1r0    Online
 ### PVSS Distribution only: use PVSSManager       v1r0    Online
-use PyDIM             v2r2     Online
-use ROMon             v1r1     Online
+use PyDIM             v2r3     Online
+use ROMon             v1r2     Online
 ### Obsolete: use RunDatabase       v1r2     Online
 use Saver             v1r5     Online
-use UPI               v1r8     Online
+use UPI               v1r9     Online
 use UPIR              v1r0     Online
 use Viewer            v1r5     Online
-use Writer            v1r6     Online
-use Hugin             v1r5     Online
+use Writer            v1r7     Online
+use Hugin             v1r6     Online
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
