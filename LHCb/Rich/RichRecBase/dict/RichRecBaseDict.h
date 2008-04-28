@@ -36,6 +36,7 @@
 #include "RichRecBase/IRichStatusCreator.h"
 #include "RichRecBase/IRichTrackCreator.h"
 #include "RichRecBase/IRichPhotonEmissionPoint.h"
+#include "RichRecBase/IRichPIDPlots.h"
 
 // instantiate some templated classes, to get them into the dictionary
 namespace 

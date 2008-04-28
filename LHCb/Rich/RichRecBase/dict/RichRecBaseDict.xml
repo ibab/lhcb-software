@@ -64,5 +64,6 @@
   <class name = "Rich::Rec::ITrackCreator" />
   <class name = "Rich::Rec::ITrackSelector" />
   <class name = "Rich::Rec::IPhotonEmissionPoint" />
+  <class name = "Rich::Rec::IPIDPlots" />
 
 </lcgdict>
