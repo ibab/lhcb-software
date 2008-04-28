@@ -1,8 +1,19 @@
 !-----------------------------------------------------------------------------
 ! Package     : Gen/GENSER
-! Responsible : Florence RANJARD
+! Responsible : Gloria CORTI, Patrick ROBBE
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
+
+!========================== GENSER v4r0 2008-04-28 ===========================
+! 2008-04-28 - Gloria CORTI
+ - cmt/requirements: move to use latest version of pythia8 compiled with 
+   HepMC 1.26 in LCG as from our request (107.1) 
+
+! 2008-04-14 - Gloria CORTI, Hubert DEGAUDENZI, Patrick ROBBE
+ - cmt/requirements: take latest version of pythia6 (416.2) and change linking
+   statement to link always with block data in pydata.o as avalaible from
+   LCG. This fixes core dump at run time for not having loaded correctly
+   the block data and correcly forces loading of overwritten pythai6 routines
 
 ! 2008-03-18 - Gloria CORTI
  - cmt/requirements: force linking of routines in pythia6_dummy
