@@ -14,4 +14,4 @@ EventDataSvc.EnableFaultHandler      = true ;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 #include "$ONLINETASKS/options/MessageSvc.opts"
 EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0";
-ApplicationMgr.TopAlg                = { "RawBankSizeMonitor/RawSize" };
+ApplicationMgr.TopAlg                = { "LHCb::RawBankSizeMonitor/RawSize" };
