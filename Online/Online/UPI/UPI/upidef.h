@@ -85,7 +85,7 @@ enum {
   COMMENT,
   COMMAND,
   PARAM
-} Item_typesEx;
+} Item_types;
 
 /* menu.type field */
 typedef enum {
