@@ -50,7 +50,11 @@
         	</xsi:documentation>
         </xsi:annotation>
         <xsi:sequence>
-        	<xsi:element name="release" type="tns:release" minOccurs="1" maxOccurs="unbounded">
+        	<xsi:element name="release" type="tns:release" minOccurs="1"
+        		maxOccurs="unbounded">
+        	</xsi:element>
+        	<xsi:element name="unversioned_project" type="tns:unversioned_project"
+        		minOccurs="0" maxOccurs="unbounded">
         	</xsi:element>
         </xsi:sequence>
     </xsi:complexType>
@@ -75,5 +79,22 @@
     		</xsi:extension>
     	</xsi:complexContent>
     </xsi:complexType>
+    <xsi:complexType name="unversioned_project">
+        <xsi:annotation>
+        	<xsi:documentation>
+        		Type for a non-versioned project with optional runtime and build-time
+        		dependencies
+        	</xsi:documentation>
+        </xsi:annotation>
+        <xsi:complexContent>
+    		<xsi:extension base="tns:named">
+    			<xsi:sequence>
+                    <xsi:element name="buildtimedep" type="tns:named" minOccurs="0" maxOccurs="unbounded"></xsi:element>
+                    <xsi:element name="runtimedep" type="tns:named" minOccurs="0" maxOccurs="unbounded"></xsi:element>
+    			</xsi:sequence>
+    		</xsi:extension>
+    	</xsi:complexContent>
+    </xsi:complexType>
+
 
 </xsi:schema>
