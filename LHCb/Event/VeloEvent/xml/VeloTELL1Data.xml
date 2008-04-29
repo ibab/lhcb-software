@@ -40,6 +40,7 @@
    <location name="ReorderedADCs" place="Raw/Velo/ADCReordered"/>
    <location name="CMSuppressedADCs" place="Raw/Velo/ADCCMSuppressed"/>
    <location name="CMSNoise" place="Raw/Velo/CMSNoise"/>
+   <location name="MCMSCorrectedADCs" place="Raw/Velo/ADCMCMSCorrected"/>
 
    <constructor
     desc="constructor with key"
@@ -52,7 +53,7 @@
    <enum
     desc="Configuration constants depending on stored data type"
     name="NZSDataType"
-    value="VeloFull=18, VeloPedestal=30, WriteHeaders=40"
+    value="VeloFull=18, VeloPedestal=30, Headers=40"
     access="PUBLIC"
    />
     
@@ -66,7 +67,7 @@
    <enum
     desc="Strips"
     name="strips"
-    value="INNER_DUMMY_1=21, INNER_DUMMY_2=22, OUTER_DUMMY_1=42, OUTER_DUMMY_2=43, DUMMY_CHANNELS=64, INNER_DUMMY=85, INNER_STRIPS_1=170, INNER_STRIPS_2=171, OUTER_STRIPS_1=341, OUTER_STRIPS_2=342, INNER_STRIPS=683, PPFPGA_CHANNELS=512, SENSOR_STRIPS=2048, ALL_STRIPS=2304"
+   value="DUMMY_CHANNELS=64, ERROR=99, INNER_STRIPS_1=170, INNER_STRIPS_2=171, INNER_SHIFT=192, OUTER_STRIPS_1=341, OUTER_STRIPS_2=342, PPFPGA_CHANNELS=512, PPFPGA_SHIFT=576, INNER_STRIPS=683, SENSOR_STRIPS=2048, ALL_STRIPS=2304"
    />
  
    <enum
@@ -93,7 +94,7 @@
    />
    
    <attribute
-    desc="Name of last process"
+    desc="Check if the data stored are reorderd"
     name="isReordered"
     type="bool"
     setMeth="TRUE"
@@ -121,7 +122,7 @@
       // use it only before reordering
       if(!m_isReordered){
         if(ALinkNumber&lt;SENSOR_ALINKS){
-          if(m_dataType==WriteHeaders){
+          if(m_dataType==Headers){
             ALinkBegin=ALinkNumber*HEADERS;
             ALinkEnd=ALinkBegin+HEADERS;
           }else if(m_dataType==VeloPedestal){
@@ -239,41 +240,59 @@
      <arg name="strip" type="unsigned int" const="TRUE"/>
       <code>
        signed int adc=0;
-       if(m_isReordered&amp;&amp;strip&lt;SENSOR_STRIPS&amp;&amp;m_dataType==VeloFull){
+       unsigned int localStrip=0, index=0;
+       if(m_isReordered&amp;&amp;strip&lt;SENSOR_STRIPS&amp;&amp;m_dataType!=Headers){
          if(m_sensorType==R_SENSOR||m_sensorType==PILE_UP){
            unsigned int processor=strip/PPFPGA_CHANNELS;
            unsigned int index=strip+DUMMY_CHANNELS*processor;
            adc=m_decodedData[index];
          }else if(m_sensorType==PHI_SENSOR){
            if(strip&lt;INNER_STRIPS){
-             if(strip&lt;INNER_STRIPS_1){
+             // pp_fpga 0
+             if(strip&lt;INNER_STRIPS_2){                           
                adc=m_decodedData[strip];
-             }else if(strip&lt;INNER_STRIPS_1+INNER_STRIPS_2){
-               unsigned int index=strip+INNER_DUMMY_1;
+             // pp_fpga 1
+             }else if(strip&lt;2*INNER_STRIPS_2){
+               localStrip=strip-INNER_STRIPS_2;
+               index=localStrip+PPFPGA_SHIFT;
                adc=m_decodedData[index];
-             }else if(strip&lt;INNER_STRIPS_1+2*INNER_STRIPS_2){
-               unsigned int index=strip+INNER_DUMMY_1+INNER_DUMMY_2;
+             // pp_fpga 2
+             }else if(strip&lt;2*INNER_STRIPS_2+INNER_STRIPS_1){
+               localStrip=strip-2*INNER_STRIPS_2;
+               index=localStrip+2*PPFPGA_SHIFT;
                adc=m_decodedData[index];
-             }else if(strip&lt;INNER_STRIPS_1+3*INNER_STRIPS_2){
-               unsigned int index=strip+INNER_DUMMY_1+2*INNER_DUMMY_2;
+             // pp_fpga 3
+             }else if(strip&lt;3*INNER_STRIPS_2+INNER_STRIPS_1){
+               localStrip=strip-(2*INNER_STRIPS_2+INNER_STRIPS_1);
+               index=localStrip+3*PPFPGA_SHIFT;
                adc=m_decodedData[index];
              }
           }else{
+             // pp_fpga 0
              if(strip&lt;INNER_STRIPS+OUTER_STRIPS_1){
-               unsigned int index=strip+INNER_DUMMY; 
+               localStrip=strip-INNER_STRIPS;
+               index=localStrip+INNER_SHIFT; 
                adc=m_decodedData[index];
-             }else if(strip&lt;INNER_STRIPS+OUTER_STRIPS_1+OUTER_STRIPS_2){
-               unsigned int index=strip+INNER_DUMMY+OUTER_DUMMY_1;
+             // pp_fpga 1
+             }else if(strip&lt;INNER_STRIPS+2*OUTER_STRIPS_1){
+               localStrip=strip-(INNER_STRIPS+OUTER_STRIPS_1);
+               index=localStrip+PPFPGA_SHIFT+INNER_SHIFT;
                adc=m_decodedData[index];
+             // pp_fpga 2
              }else if(strip&lt;INNER_STRIPS+2*OUTER_STRIPS_1+OUTER_STRIPS_2){
-               unsigned int index=strip+INNER_DUMMY+OUTER_DUMMY_1+OUTER_DUMMY_2;
+               localStrip=strip-(INNER_STRIPS+2*OUTER_STRIPS_1);
+               index=localStrip+2*PPFPGA_SHIFT+INNER_SHIFT;
                adc=m_decodedData[index];
+             // pp_fpga 3
              }else if(strip&lt;INNER_STRIPS+3*OUTER_STRIPS_1+OUTER_STRIPS_2){
-               unsigned int index=strip+INNER_DUMMY+OUTER_DUMMY_1+2*OUTER_DUMMY_2;
+               localStrip=strip-(INNER_STRIPS+2*OUTER_STRIPS_1+OUTER_STRIPS_2);
+               index=localStrip+3*PPFPGA_SHIFT+INNER_SHIFT;
                adc=m_decodedData[index];
              }
            }
          }
+       }else{
+         adc=(-ERROR);
        }
        return ( adc );
       </code>
@@ -305,7 +324,7 @@
        for( ; datIt!=inVec.end(); datIt++){
          m_decodedData.push_back(*datIt);
        }
-       assert(m_decodedData.size()&lt;=SENSOR_STRIPS);
+       assert(m_decodedData.size()&lt;=ALL_STRIPS);
       </code>
      </method>
 

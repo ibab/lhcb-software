@@ -1,9 +1,23 @@
-! $Id: release.notes,v 1.54 2008-03-03 10:17:40 cattanem Exp $
+! $Id: release.notes,v 1.55 2008-04-29 08:53:03 szumlat Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
 
 !====================== VeloEvent v16r3 2008-03-03 ======================
+!2008-04-28 - Tomasz Szumlak
+ - New functionality added for VeloTELL1Data
+   allow to:
+    1) set up reordering flag when the data are reordered - strip ordering
+       this allows to propagate the information about reorderign to other
+       algorithms - needed when order of the processing changes 
+    2) it is no longer possible to access data by alinks after the
+       reordering (the notion of alink has no sense once the ordering
+       has been performed)
+    3) access to data after the reordering can be done sequentially by
+       using data() method or randomly by using stripADC(int strip)
+       method 
+ - new location for added for data processed by MCMS algorithm
+    
 ! 2008-02-27 - Chris Jones
  - Add a few missing STL includes
 
