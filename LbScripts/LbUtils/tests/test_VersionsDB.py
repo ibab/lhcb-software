@@ -1,7 +1,7 @@
 import unittest
 from LbUtils import VersionsDB
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: test_VersionsDB.py,v 1.3 2008-04-28 18:13:31 marcocle Exp $"
+__version__ = "$Id: test_VersionsDB.py,v 1.4 2008-04-29 09:34:53 marcocle Exp $"
 
 class VersionsDBTest(unittest.TestCase):
     def _prepareXML(self, data):
@@ -22,9 +22,9 @@ class VersionsDBTest(unittest.TestCase):
         VersionsDB.loadString(self._prepareXML(data))
     
     def setUp(self):
-        VersionsDB.Release.__releases__ = {}
+        VersionsDB.clean()
     def tearDown(self):
-        VersionsDB.Release.__releases__ = {}
+        VersionsDB.clean()
     
     def test_001_version_class(self):
         from LbUtils.VersionsDB import Version
@@ -38,10 +38,14 @@ class VersionsDBTest(unittest.TestCase):
         self.assertEquals(str(eval(repr(Version(v)))),v)
         v = "54e"
         self.assertEquals(str(eval(repr(Version(v)))),v)
+        v = "" # unversioned
+        self.assertEquals(str(eval(repr(Version(v)))),v)
         # copy constructor
         v = Version("v1r2p3")
         self.assertEquals(Version(v),v)
         v = Version("54e")
+        self.assertEquals(Version(v),v)
+        v = Version("")
         self.assertEquals(Version(v),v)
         # errors
         self.assertRaises(ValueError,Version,"test")
@@ -220,6 +224,37 @@ class VersionsDBTest(unittest.TestCase):
         
         projs = [ p.name for p in r.values() ]
         self.assertEquals(projs,['z10', 'p5'])
+    def test_420_dependencies_loop(self):
+        r = VersionsDB.Release("r1")
+        r["a"] = "v1r0"
+        r["b"] = "v1r0"
+        r["c"] = "v1r0"
+        
+        r["b"].addBuildTimeDep("a")
+        r["c"].addBuildTimeDep("b")
+        r["a"].addBuildTimeDep("c")
+        
+        self.assertRaises(VersionsDB.DependencyLoopError,VersionsDB._sortProjects,[r['a'],r['b'],r['c']])
+    def test_500_unversioned_projects(self):
+        r = VersionsDB.Release("r1")
+        r["a"] = "v1r0"
+        r["b"] = "v1r0"
+        r["c"] = "v1r0"
+        VersionsDB.addUnversionedProject("u1")
+        VersionsDB.addUnversionedProject("u2").addRunTimeDep("u1")
+        
+        r["b"].addRunTimeDep("u2")
+        r["c"].addRunTimeDep("b")
+        
+        rtd = r.expandRunTimeDeps("c")
+        rtd.sort()
+        self.assertEquals(rtd,["b","u1","u2"])
+        
+        expected = [ ("b","v1r0"), ("u1",""), ("u2","") ]
+        rtv = VersionsDB.getRuntimeVersions("c","v1r0","a")
+        rtv.sort()
+        self.assertEquals(rtv,expected)
+        
     def test_900_generateXML(self):
         data = [("R1",None,[("P1","v1r0"),("P2","v1r0"),("P3","v1r0"),("P4","v1r0")]),
                 ("R2",None,[("P1","v2r0"),("P2","v2r0"),("P3","v1r0"),("P4","v1r0")]),
@@ -229,6 +264,8 @@ class VersionsDBTest(unittest.TestCase):
                 ("R6",None,[("P1","v5r0"),("P2","v2r0"),("P3","v4r0"),("P4","v3r0")]),
                 ]
         self._fillDB(data)
+        VersionsDB.addUnversionedProject("U1")
+        VersionsDB.addUnversionedProject("U2").addRunTimeDep("U1")
         xml = VersionsDB.generateXML()
         #print repr(xml)
         VersionsDB.loadString(xml)
