@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.322 2008-04-29 14:15:37 pkoppenb Exp $
+! $Id: release.notes,v 1.323 2008-04-29 14:16:14 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
@@ -6,6 +6,7 @@
 
 ! 2008-04-29 - Patrick Koppenburg
  - PhysDesktop, CombineParticles : remove save()
+ - Increment to v16r1
 
 ! 2008-04-25 - Patrick Koppenburg
  - Check a few StatusCodes
