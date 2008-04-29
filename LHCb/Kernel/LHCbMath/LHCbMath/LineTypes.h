@@ -1,17 +1,4 @@
-
-//---------------------------------------------------------------------------------
-/** @file
- *
- *  3D line typedefs
- *
- *  CVS Log :-
- *  $Id: LineTypes.h,v 1.3 2007-07-10 07:25:51 cattanem Exp $
- *
- *  @author Juan PALACIOS
- *  @date   2005-11-21
- */
-//---------------------------------------------------------------------------------
-
+// $Id: LineTypes.h,v 1.4 2008-04-29 12:01:08 cattanem Exp $
 #ifndef LHCBMATH_LINETYPES_H 
 #define LHCBMATH_LINETYPES_H 1
 
@@ -22,7 +9,7 @@
 
 /** @file
  *  
- *  Typedefs for line types
+ *  Typedefs for 3D line types
  * 
  *  @author Juan PALACIOS
  *  @date   2005-11-21

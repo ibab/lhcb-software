@@ -3,8 +3,8 @@
 # Maintainer : Juan Palacios
 #============================================================================
 
-package Kernel/LHCbMath
-version v2r7
+package LHCbMath
+version v2r7p1
 
 #============================================================================
 # Structure, i.e. directories to process. 

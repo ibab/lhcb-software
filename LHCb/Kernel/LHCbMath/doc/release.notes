@@ -6,10 +6,12 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v2r7p1 2008-04-29 ========================
+! 2008-04-29 - Marco Cattaneo
+ - Fix a doxygen warning
+
 ! 2008-04-29 - Vanya BELYAEV
-
  -  LHCbMath/Line.h
-
     fix LaTeX inside DoxyGen comments 
 
 !========================= LHCbMath v2r7 2008-04-02 ==========================
