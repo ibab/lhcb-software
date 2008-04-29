@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.14 2008-04-25 16:37:37 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.15 2008-04-29 14:15:37 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -446,9 +446,9 @@ StatusCode CombineParticles::execute    ()  // standard execution
       
       if ( !m_cut  ( &mother ) )  { continue ; }                    // CONTINUE
       
-      // save the good candidate:
+      // keep the good candidate:
       
-      const LHCb::Particle* particle = desktop()->save ( &mother ) ;
+      const LHCb::Particle* particle = desktop()->keep ( &mother ) ;
       
       if ( 0 != m_motherPlots ) 
       {
