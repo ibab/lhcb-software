@@ -1,5 +1,5 @@
 package EventSys
-version v24r2
+version v24r3
 
 branches doc cmt
 
@@ -18,7 +18,7 @@ use PackedEvent v3r3    Event
 use PhysEvent   v11r6   Event
 use RecEvent    v2r11   Event
 use TrackEvent  v4r12   Event
-use VeloEvent   v16r3   Event
+use VeloEvent   v16r4   Event
 
 private
 use RELAX       v*      LCG_Interfaces
