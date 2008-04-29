@@ -1,4 +1,4 @@
-// $Id: RawDataWriter.cpp,v 1.12 2008-02-05 16:44:18 frankb Exp $
+// $Id: RawDataWriter.cpp,v 1.13 2008-04-29 11:49:21 cattanem Exp $
 //  ====================================================================
 //  RawDataWriter.cpp
 //  --------------------------------------------------------------------
@@ -25,7 +25,7 @@ using namespace LHCb;
 using namespace Gaudi;
 
 /// Initializing constructor
-RawDataFile::RawDataFile(IIODataManager* m, IInterface* owner, const std::string& fname, bool md5, unsigned int run_no, unsigned int orb)
+RawDataFile::RawDataFile(Gaudi::IIODataManager* m, IInterface* owner, const std::string& fname, bool md5, unsigned int run_no, unsigned int orb)
 : m_bytesWritten(0), m_name(fname), m_runNumber(run_no), 
   m_firstOrbit(orb), m_lastOrbit(std::numeric_limits<unsigned int>::max()),
   m_closeStamp(0), m_eventCounter(0), m_ioMgr(m), m_owner(owner)

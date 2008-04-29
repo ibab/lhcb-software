@@ -6,8 +6,13 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r7 2008-04-29 ===============================
+! 2008-04-29 - Marco Cattaneo
+ - Fix a doxygen comment and a duplicated function definition
+
 ! 2008-04-28 - Markus Frank
- - Fix initialization of MEPWriter, which got screwed in v3r6. Used for tests only.
+ - Fix initialization of MEPWriter, which got screwed in v3r6.
+   Used for tests only.
 
 !========================= MDF v3r6 2008-04-16 ===============================
 ! 2008-04-16 - Marco Cattaneo

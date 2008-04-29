@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.19 2008-04-09 15:16:42 ocallot Exp $
+// $Id: RawEventHelpers.h,v 1.20 2008-04-29 11:49:21 cattanem Exp $
 //  ====================================================================
 //  MDFIO.h
 //  --------------------------------------------------------------------
@@ -158,9 +158,6 @@ namespace LHCb  {
 
   /// Unpack the buffer specified by the two pointers, and return a vector of pairs: root on TES and RawEvent
   std::vector<std::pair<std::string,RawEvent*> > unpackTAEBuffer(const char* start, const char* end);
-
-  /// Returns the prefix in TES for the raw event, according to the bx offset
-  std::string rootFromBxOffset(int bxOffset);
 
   /// Return vector of TAE event names
   std::vector<std::string> buffersTAE(const char* start);
