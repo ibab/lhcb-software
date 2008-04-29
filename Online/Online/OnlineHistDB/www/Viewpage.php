@@ -111,7 +111,7 @@ function page_form($page) {
     }
   }
   echo "</form>";
-  if ($page != 'new__') {
+  if ($page != 'new__' && (!$readonly) ) {
     echo "<hr><form method='post' action='write/deletePage.php'>\n";
     echo "<input type='hidden' name=PAGETODELETE value='".$_POST["PAGENAME"]."'>\n";
     echo "<input type='submit' class=bad name='Delete' value='Delete This Page'>\n";
