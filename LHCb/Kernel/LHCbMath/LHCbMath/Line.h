@@ -1,4 +1,4 @@
-// $Id: Line.h,v 1.5 2008-03-10 11:42:12 ibelyaev Exp $
+// $Id: Line.h,v 1.6 2008-04-29 10:44:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_LINE_H 
 #define LHCBMATH_LINE_H 1
@@ -14,11 +14,11 @@ namespace Gaudi
    *  
    *  A very simple class to describe a 3D-line.
    *  Based on line equation 
-   *  \f$\vec{\mathbf{P}}\left(\mu\right) = 
-   *     \vec{\mathbf{P}}_0 + \mu \vec{\mathbf{V}}_0\f$.
-   *  where \f$\vec{\mathbf{V}}_0\f$ is a direction vector of the 
-   *  line, \f$\vec{\mathbf{V}}_0=\vec{\mathbf{P}}_1-\vec{\mathbf{P}}_1\f$,
-   *  \f$\vec{\mathbf{P}}_1\f$ and f$\vec{\mathbf{P}}_0\f$
+   *  \f$ \vec{\mathbf{P}}\left(\mu\right) = 
+   *      \vec{\mathbf{P}}_0 + \mu \vec{\mathbf{V}}_0 \f$.
+   *  where \f$ \vec{\mathbf{V}}_0\f$ is a direction vector of the 
+   *  line, \f$ \vec{\mathbf{V}}_0=\vec{\mathbf{P}}_1-\vec{\mathbf{P}}_1 \f$,
+   *  \f$ \vec{\mathbf{P}}_1\f$ and f$\vec{\mathbf{P}}_0 \f$
    *   being two points on the line.
    *  
    *  The class can be used as a very general abstraction for a 3D line.
@@ -50,15 +50,15 @@ namespace Gaudi
     const aVector& direction()  const { return m_v0 ; }
     /** Return a point on the line tick direction vectors away
      *  from point of origin:
-     *  \$\vec{\mathbf{P}}\left(\mu\right) = 
-     *    \vec{\mathbf{P}}_0 + \mu\vec{\mathbf{V}} \f$ 
+     *  \f$ \vec{\mathbf{P}}\left(\mu\right) = 
+     *      \vec{\mathbf{P}}_0 + \mu\vec{\mathbf{V}} \f$ 
      */
     aPoint position ( const double mu ) const 
     { return beginPoint() + direction() * mu ; }
     /** Return a point on the line tick direction vectors away
      *  from point of origin:
-     *  \$\vec{\mathbf{P}}\left(\mu\right) = 
-     *    \vec{\mathbf{P}}_0 + \mu\vec{\mathbf{V}} \f$ 
+     *  \f$ \vec{\mathbf{P}}\left(\mu\right) = 
+     *      \vec{\mathbf{P}}_0 + \mu\vec{\mathbf{V}} \f$ 
      */    
     aPoint operator() ( const double mu ) const 
     { return beginPoint() + direction() * mu ; }
