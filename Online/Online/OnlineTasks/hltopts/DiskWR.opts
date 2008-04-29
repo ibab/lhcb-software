@@ -7,19 +7,16 @@ ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
 ApplicationMgr.ExtSvc               += {"LHCb::MEPManager/MEPManager"};
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
-MEPManager.Buffers                   = {"RESULT"};
-MEPManager.OutputLevel               = 1;
-
+MEPManager.Buffers                   = {"SEND"};
 ApplicationMgr.TopAlg               += {"LHCb::SocketDataSender/SND_0"};
 SND_0.DataSink                       = @OnlineEnv.Target;
 SND_0.Compress                       = 0;
-SND_0.DataType                       = 1; // MDF_NONE=1, MDF_RECORDS=2, MDF_BANKS=3 
-
+SND_0.DataType                       = 3; // MDF_NONE=1, MDF_RECORDS=2, MDF_BANKS=3 
+SND_0.InputDataType                  = 3;
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true ;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
-EventSelector.Input                  = "RESULT";
+EventSelector.Input                  = "SEND";
 EventSelector.AllowSuspend           = true;
-EventSelector.Decode                 = true;
+EventSelector.Decode                 = false;
 EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
-//MessageSvc.OutputLevel = 1;

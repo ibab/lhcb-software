@@ -7,7 +7,7 @@ EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
-MEPManager.Buffers                   = { "EVENT", "RESULT" };
+MEPManager.Buffers                   = { "EVENT", "SEND" };
 
 ApplicationMgr.DLLs                 += { "GaudiAlg" };
 EventSelector.Input                  = "EVENT";
@@ -19,6 +19,10 @@ StoreExplorerAlg.PrintFreq           = 0.001;
 
 // Prescale events declared to RESULT buffer
 ApplicationMgr.TopAlg               += { "Sequencer/SendSequence" };
-SendSequence.Members                 = {"Prescaler/Prescaler", "LHCb::DecisionSetterAlg/DecisionSetter"};
-Prescaler.PercentPass                = 100.;
+SendSequence.Members                 = {"Prescaler/Prescaler", "LHCb::RawEvent2MBMMergerAlg/Output"};
+Prescaler.PercentPass                = 10.;
 Prescaler.OutputLevel                = 4;
+Output.Buffer                        = "SEND";
+Output.DataType                      = 2;
+Output.Compress                      = 0;
+MessageSvc.OutputLevel               = 4;
