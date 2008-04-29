@@ -3,6 +3,7 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v6r13 2008-04-29 ====================
 ! 2008-04-29 - Patrick Koppenburg
  - IPhysDesktop: remove save() method
  - ProtoParticleFilterBase.cpp : reduce verbosity
