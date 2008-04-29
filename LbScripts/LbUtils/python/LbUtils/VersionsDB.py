@@ -4,7 +4,7 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.3 2008-04-28 18:13:05 marcocle Exp $"
+__version__ = "$Id: VersionsDB.py,v 1.4 2008-04-29 09:34:47 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
@@ -34,6 +34,12 @@ class DuplicatedProjectError(VersionsDBError):
         VersionsDBError.__init__(self,"Duplicated project '%s' in release '%s'"%(proj,rel))
         self.release = rel
         self.project = proj
+class DependencyLoopError(VersionsDBError):
+    """
+    Error raised when a possible dependency loop is detected.
+    """
+    def __init__(self):
+        VersionsDBError.__init__(self,"detected possible dependency loop.")
 
 #--- Utility functions
 def _sortProjects(pl):
@@ -44,7 +50,10 @@ def _sortProjects(pl):
     tmp = []
     weights = {}
     modified = True
+    loops_maxcount = 100
     while modified:
+        if loops_maxcount < 0:
+            raise DependencyLoopError()
         modified = False
         for p in pl:
             w = max([ weights[w]
@@ -53,6 +62,7 @@ def _sortProjects(pl):
             if p.name not in weights or weights[p.name] != w:
                 modified = True
                 weights[p.name] = w
+        loops_maxcount -= 1
     l = [ (weights[p.name],p.name,p) for p in pl ]
     l.sort()
     return [ i[2] for i in l ]
@@ -68,6 +78,7 @@ class Version:
     def __init__(self,vers_string):
         """
         Construct a version object from a version string, like "v1r2p3" or "54a".
+        An empty version string identifies a project without versions.
         """
         self._version = ()
         self._lcg_style = False
@@ -86,6 +97,8 @@ class Version:
                     self._version = (int(m.group(1)),m.group(2))
                 else:
                     self._version = (int(m.group(1)),)
+        elif not vers_string: # unversioned project
+            pass
         else:
             raise ValueError("wrong version string: '%s'"%vers_string)
     def __repr__(self):
@@ -98,6 +111,8 @@ class Version:
         """
         Return a the version as version string like "v1r2p3".
         """
+        if not self._version:
+            return ""
         if self._lcg_style:
             s = "%d"%self._version[0]
             if len(self._version) == 2:
@@ -150,6 +165,7 @@ class Release:
     (option base of the constructor).
     """
     __releases__ = {}
+    __unversioned_projects__ = {}
     def __init__(self, name, projects = [], base = None):
         if name in self.__releases__:
             raise DuplicatedReleaseError(name)
@@ -191,12 +207,15 @@ class Release:
         return s
     def __contains__(self,key):
         return ( key in self.projects ) or \
-               ( self.base is not None and key in self.__releases__[self.base] )
+               ( self.base is not None and key in self.__releases__[self.base] ) or \
+               ( key in self.__unversioned_projects__ )
     def __getitem__(self,key):
         if key in self.projects:
             return self.projects[key]
         elif self.base:
             return self.__releases__[self.base][key]
+        elif key in self.__unversioned_projects__:
+            return self.__unversioned_projects__[key]
         else:
             raise KeyError(key)
     def __setitem__(self,key,value):
@@ -235,6 +254,14 @@ class Release:
                       local_deps)
         return list(set(deps))
     
+def addUnversionedProject(project):
+    if type(project) is not Project:
+        project = Project(project,"")
+    if project.name in Release.__unversioned_projects__:
+        raise DuplicatedProjectError("UnversionedProjects",project.name)
+    Release.__unversioned_projects__[project.name] = project
+    return project
+
 from xml.sax.handler import ContentHandler
 class _ReleaseSAXHandler(ContentHandler):
     """
@@ -244,7 +271,7 @@ class _ReleaseSAXHandler(ContentHandler):
     def startDocument(self):
         #print "startDocument"
         # reset the DB of releases
-        Release.__releases__ = {} 
+        clean() 
         self.releases = Release.__releases__
         self._currentRelease = None
         self._currentProject = None
@@ -264,6 +291,10 @@ class _ReleaseSAXHandler(ContentHandler):
             self._currentProject = Project(name = name_attr,
                                            version = attrs.getValue(u'version'))
             self._currentRelease.add(self._currentProject)
+        elif name == u'unversioned_project':
+            self._currentProject = Project(name = name_attr,
+                                           version = "")
+            Release.__unversioned_projects__[name_attr] = self._currentProject
         elif name == u'buildtimedep':
             self._currentProject.addBuildTimeDep(name_attr)
         elif name == u'runtimedep':
@@ -275,6 +306,8 @@ class _ReleaseSAXHandler(ContentHandler):
         if name == u'release':
             self._currentRelease = None
         elif name == u'project':
+            self._currentProject = None
+        elif name == u'unversioned_project':
             self._currentProject = None
 
 #--- Initialization functions
@@ -292,6 +325,13 @@ def loadString(source):
     from xml.sax import parseString as parse
     parse(str(source),_ReleaseSAXHandler())
 
+def clean():
+    """
+    Remove all entries from the database (in memory).
+    """
+    Release.__releases__ = {} 
+    Release.__unversioned_projects__ = {} 
+    
 #--- Internal query functions
 def _findReleases(project,version):
     """
@@ -352,7 +392,7 @@ def getRuntimeVersions(project,version,keyproj="LHCb"):
         for p in rt_deps:
             vers = _getVersions(p,comp_releases)
             if vers:
-                deps.append(p,vers[-1])
+                deps.append((p,vers[-1]))
     return deps
 
 def getRelease(name):
@@ -372,6 +412,18 @@ def releaseExists(name):
     Tell if a release with the given name is known. 
     """
     return name in Release.__releases__
+
+def unversionedProject(name):
+    """
+    Return the set of unversioned projects known in the database. 
+    """
+    return Release.__unversioned_projects__[name]
+
+def unversionedProjects():
+    """
+    Return the set of unversioned projects known in the database. 
+    """
+    return Release.__unversioned_projects__.values()
 
 def generateXML(withDTD = False, withSchema = True):
     # header
@@ -402,5 +454,14 @@ def generateXML(withDTD = False, withSchema = True):
                 xml += '      <runtimedep name="%s"/>\n'%dep
             xml += '    </project>\n'
         xml += '  </release>\n'
+    unversioned = list(unversionedProjects())
+    _sortProjects(unversioned)
+    for p in unversioned:
+        xml += '  <unversioned_project name="%s">\n'%(p.name)
+        for dep in p.buildtimedeps:
+            xml += '    <buildtimedep name="%s"/>\n'%dep
+        for dep in p.runtimedeps:
+            xml += '    <runtimedep name="%s"/>\n'%dep
+        xml += '  </unversioned_project>\n'
     xml += '</releases_db>\n'
     return xml
