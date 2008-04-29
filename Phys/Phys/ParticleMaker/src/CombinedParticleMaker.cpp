@@ -4,7 +4,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.27 2008-01-11 11:56:11 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.28 2008-04-29 11:06:01 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -98,7 +98,7 @@ StatusCode CombinedParticleMaker::initialize()
   // BremStrahlung added
   m_brem = tool<IBremAdder>("BremAdder","BremAdder", this);
 
-  info() << "Will produce : " << m_particleList << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Will produce : " << m_particleList << endmsg;
   if ( m_exclusive ) info() << "Using exclusive selection policy" << endmsg;
 
   // loop over selection and load ProtoParticle selectors
@@ -144,7 +144,7 @@ StatusCode CombinedParticleMaker::initialize()
     const ParticleProperty * partProp = ppSvc->find( ppName );
 
     // load tool into map
-    info() << "Particle type " << name << " using ProtoParticle Filter '"
+    if (msgLevel(MSG::DEBUG)) debug() << "Particle type " << name << " using ProtoParticle Filter '"
            << toolType << "'" << endmsg;
     const IProtoParticleFilter * t = tool<IProtoParticleFilter>( toolType, name, this );
     m_protoMap.push_back( ProtoPair(partProp,t) );
