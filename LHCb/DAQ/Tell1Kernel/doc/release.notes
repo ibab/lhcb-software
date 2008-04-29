@@ -2,10 +2,11 @@
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
 
-!====================== Tell1Kernel v1r2 2008-04-18 ======================
+!====================== Tell1Kernel v1r3 2008-04-29 ======================
 !2008-04-28 - Tomasz Szumlak
  - Add stuff that helps to run Vetra (Velo part) with condition DB
 
+!====================== Tell1Kernel v1r2 2008-04-18 ======================
 ! 2008-02-26 - Anne Keune
  - Add Tell1Kernel/STTell1Core.h
 
