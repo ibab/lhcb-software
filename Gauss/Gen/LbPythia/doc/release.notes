@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v7r1 2008-04-29 ==========================
 ! 2008-03-16 - Patrick Robbe
  - src/Lib: move overriden Pythia Fortran libraries to GENSER package
 
