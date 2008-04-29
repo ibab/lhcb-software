@@ -5,11 +5,16 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r6>2008-04-28 LHCbSys v23r6</A></H1><PRE>
+</PRE><H1><A NAME=v23r6>2008-04-29 LHCbSys v23r6</A></H1><PRE>
 This version uses Gaudi v19r9 and LCG_54e.
 
-- Packages modified: DetSys v12r0, DDDB v1r6, STDet v4r0, DAQSys v3r9p1,
-    CaloDAQ v4r4p1, LHCbAlgs v2r17, LoKiPhys v7r3
+- Packages modified: KernelSys v7r3p1, LHCbMath v2r7p1, DetSys v12r0, DDDB v1r6,
+    STDet v4r0, EventSys v24r3, VeloEvent v16r4, DAQSys v3r9p1, CaloDAQ v4r4p1,
+    MuonDAQ v4r0p1, DaVinciKernel v6r13, LHCbAlgs v2r17, LoKiPhys v7r3, MDF v3r7,
+    Tell1Kernel v1r3
+
+- In LHCBMath v2r7p1
+  . Fix LaTeX inside DoxyGen comments 
 
 - In DDDB v1r6
   . Change default DC06 tag (in DC06.opts, DC06.py) to DC06-20080427, for use
@@ -22,8 +27,23 @@ This version uses Gaudi v19r9 and LCG_54e.
     o Requires SQLDDDB >= v4r3
   . Avoid double counting bondgap
 
+- In VeloEvent v16r4
+  . New functionality added for VeloTELL1Data, allow to:
+    1) set up reordering flag when the data are reordered - strip ordering
+       this allows to propagate the information about reordering to other
+       algorithms - needed when order of the processing changes 
+    2) it is no longer possible to access data by alinks after the
+       reordering (the notion of alink has no sense once the ordering
+       has been performed)
+    3) access to data after the reordering can be done sequentially by
+       using data() method or randomly by using stripADC(int strip) method 
+  . new location for added for data processed by MCMS algorithm
+
 - In CaloDAQ v4r4p1
   . In CaloBankHandler.opts, remove some whitespace causing problems to Python
+
+- In MuonDAQ v4r0p1
+  . Remove two obsolete lines causing a crash on Windows
 
 - In LHCbAlgs v2r17
   . Add rate prescaling based on run#, event#, gpsTime and algorithm instance
@@ -31,8 +51,19 @@ This version uses Gaudi v19r9 and LCG_54e.
   . Add some comments to FilterByRunEvent pointing out that event# is NOT a 
     32 bit number -- fixing this properly requires adding a new property type.
 
+- In DaVinciKernel v6r13
+  . IPhysDesktop: remove save() method
+  . ProtoParticleFilterBase.cpp : reduce verbosity
+
 - In LoKiPhys v7r3
   . fix a stupid bug with ISLONG/ISDOWN/IS<XXX> functors
+
+- In MDF v3r7
+  . Fix a doxygen comment and a duplicated function definition
+  . Fix initialization of MEPWriter, which got broken in v3r6.Used for tests only
+
+- In Tell1Kernel v1r3
+  . Add stuff that helps to run Vetra (Velo part) with condition DB
 
 </PRE><H1><A NAME=v23r5>2008-04-22 LHCbSys v23r5</A></H1><PRE>
 This version uses Gaudi v19r9 and LCG_54e.
