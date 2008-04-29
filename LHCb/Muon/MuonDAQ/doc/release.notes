@@ -4,6 +4,10 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+!========================== MuonDAQ v4r0p1 2008-04-29 ========================
+! 2008-04-29 - Marco Cattaneo
+ - Remove two obsolete lines causing a crash on Windows
+
 !========================== MuonDAQ v4r0 2008-04-08 ==========================
 ! 2008-04-02 - Alessia Satta
  - many changes. 

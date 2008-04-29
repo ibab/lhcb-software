@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.12 2008-04-11 11:07:11 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.13 2008-04-29 12:55:21 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -257,10 +257,8 @@ StatusCode  MuonRawBuffer::decodeTileAndTDCDC06(const RawBank* rawdata){
   unsigned int countChannels=0;
   
   for(unsigned int ch=0;ch<TDCword;ch++){
-     unsigned int time1 = (*it)&((unsigned char)15 );
+    unsigned int time1 = (*it)&((unsigned char)15 );
     unsigned int time2 = ((*it)>>4)&((unsigned char) 15);   
-    MuonTileID tile=   (m_storage[tell1Number])[chIterator].first;
-    MuonTileID tile1=   (m_storage[tell1Number])[chIterator+1].first;
      
     (m_storage[tell1Number])[chIterator].second=time1;
     chIterator++;
