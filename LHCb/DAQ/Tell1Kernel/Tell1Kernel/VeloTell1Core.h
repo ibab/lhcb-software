@@ -1,9 +1,10 @@
-// $Id: VeloTell1Core.h,v 1.3 2007-12-11 08:39:10 cattanem Exp $
+// $Id: VeloTell1Core.h,v 1.4 2008-04-29 11:06:21 szumlat Exp $
 #ifndef VELOTELL1CORE_H 
 #define VELOTELL1CORE_H 1
 
 // Include files
 #include <vector>
+#include <map>
 
 /** @namespace VeloTell1Core VeloTell1Core.h Kernel/VeloTell1Core.h
  *  
@@ -18,11 +19,17 @@ namespace VeloTELL1{
   typedef unsigned short int u_int16_t;
   typedef unsigned char u_int8_t;
 
+  enum dbConfig{
+    STATIC=0,
+    DYNAMIC=1
+  };
+
   enum strips{
     HEADER_STRIPS=4
   };
 
   enum tableLimits{
+    HEADER_STATES=2,
     PP_FPGA=4,
     HEADERS_PER_ALINK=8,
     PROCESSING_CHANNELS=9,
@@ -32,6 +39,12 @@ namespace VeloTELL1{
     PP_MAX_CLUSTERS=255,
     ALL_STRIPS=2304         /// real and dummy strips
   };
+
+  enum fir{
+    FIR_COEFF=4,
+    REAL_ALINKS=8
+  };
+  
   /// as defined in tell1lib: velo/velo_offline.h
   /// VELO_CLUSTER_UNIT and VELO_ADC_UNIT needed by ZS module
   // TELL1 raw cluster structure (as defined in edms note EDMS-690585)
@@ -85,29 +98,33 @@ namespace VeloTELL1{
   typedef std::vector<u_int16_t> LinkPedestalVec;
   typedef std::vector<u_int16_t>::iterator lpIT;
   typedef std::vector<u_int16_t>::const_iterator const_lpIT;
-  // heder correction values
-  typedef u_int32_t HeaderStrip0 [HEADER_STRIPS];
+  // header correction values
+  typedef u_int32_t HeaderThresholds [HEADER_STATES];
+  typedef int HeaderCorrValues [ALINKS][HEADER_STATES];
   typedef u_int32_t* hiT;
   typedef const u_int32_t* const_hiT;
-  typedef std::vector<u_int32_t> HeaderStrip0Vec;
+  typedef std::vector<u_int32_t> HeaderThresholdsVec;
+  typedef std::vector<int> HeaderCorrValuesVec;
   typedef std::vector<u_int32_t>::iterator hsIT;
   typedef std::vector<u_int32_t>::const_iterator const_hsIT;
+  // fir coefficients
+  typedef int FIRCoeff [PP_FPGA][REAL_ALINKS][FIR_COEFF];
+  typedef std::vector<int> FIRCoeffVec;
   // heders
   typedef int Header [PP_FPGA][PROCESSING_CHANNELS][HEADERS_PER_ALINK];
   typedef int Data [PP_FPGA][PROCESSING_CHANNELS][ALINKS];
   typedef int* iT;          /// iterator
   typedef const int* const_iT;   /// const_iterator
-  // seeding thresholds for cluster maker
-  typedef u_int8_t HitThreshold [PP_FPGA][PROCESSING_CHANNELS][ALINKS];
-  typedef std::vector<u_int8_t> HitThresholdVec;
-  typedef std::vector<u_int8_t>::iterator hthIT;
-  typedef std::vector<u_int8_t>::const_iterator const_hthIT;
-  // inclusion and sum thresholds - cluster maker
-  typedef u_int32_t LowThreshold [SECTORS];
-  typedef u_int32_t SumThreshold [SECTORS];
-  typedef std::vector<u_int32_t> Thresholds;
-  typedef std::vector<u_int32_t>::iterator thIT;
-  typedef std::vector<u_int32_t>::const_iterator const_thIT;
+  // seeding thresholds for cluster maker - both hit and inclusion
+  typedef int Thresholds [PP_FPGA][PROCESSING_CHANNELS][ALINKS];
+  typedef std::vector<int> ThresholdsVec;
+  typedef std::vector<int>::iterator hthIT;
+  typedef std::vector<int>::const_iterator const_hthIT;
+  // sum thresholds - cluster maker
+  typedef u_int32_t SumThresholds [SECTORS];
+  typedef std::vector<u_int32_t> SumThresholdsVec;
+  typedef std::vector<u_int32_t>::iterator sthIT;
+  typedef std::vector<u_int32_t>::const_iterator const_sthIT;
   // boundary strips - cluster maker
   typedef u_int32_t BoundaryStrip [SECTORS];
   typedef std::vector<u_int32_t> BoundaryStripVec;
@@ -131,7 +148,38 @@ namespace VeloTELL1{
   typedef EngineVec::const_iterator const_diT;
   // these are needed after upadate of the VeloTELL1Data
   typedef std::vector<signed int>::const_iterator cIT;
-  // Pair of const iterators
+  typedef std::vector<unsigned int>::const_iterator ucIT;
+  // Pair of const iterators for signed int
   typedef std::pair<cIT, cIT> ALinkPair;
+  // Pair of const iterators for unsigned int
+  typedef std::pair<ucIT, ucIT> AListPair;
+  typedef u_int32_t HeaderStrip0 [HEADER_STRIPS];
+  typedef u_int32_t* hiT;
+  typedef const u_int32_t* const_hiT;
+  typedef std::vector<u_int32_t> HeaderStrip0Vec;
+  typedef std::vector<u_int32_t>::iterator hsIT;
+  typedef std::vector<u_int32_t>::const_iterator const_hsIT;
+  //typedef u_int8_t HitThreshold [PP_FPGA][PROCESSING_CHANNELS][ALINKS];
+  //typedef std::vector<u_int8_t> HitThresholdVec;
+  //typedef std::vector<u_int8_t>::iterator hthIT;
+  //typedef std::vector<u_int8_t>::const_iterator const_hthIT;
+  // inclusion and sum thresholds - cluster maker
+  typedef u_int32_t LowThreshold [SECTORS];
+  typedef u_int32_t SumThreshold [SECTORS];
+  //typedef std::vector<u_int32_t> Thresholds;
+  //typedef std::vector<u_int32_t>::iterator thIT;
+  //typedef std::vector<u_int32_t>::const_iterator const_thIT;
+  //-- maps for different conditions
+  // map for an int condition
+  typedef std::map<unsigned int, HeaderStrip0Vec> HeaderStrip0Map;
+  typedef std::map<unsigned int, int> IntCondMap;
+  typedef std::map<unsigned int, FIRCoeffVec> FIRCoeffMap;
+  typedef std::map<unsigned int, LinkMaskVec> LinkMaskMap;
+  typedef std::map<unsigned int, HeaderThresholdsVec> HeaderThresholdsMap;
+  typedef std::map<unsigned int, HeaderCorrValuesVec> HeaderCorrValuesMap;
+  typedef std::map<unsigned int, ThresholdsVec> ThresholdsMap;
+  typedef std::map<unsigned int, SumThresholdsVec> SumThresholdsMap;
+  typedef std::map<unsigned int, BoundaryStripVec> BoundaryStripMap;
+
 };
 #endif // VELOTELL1CORE_H

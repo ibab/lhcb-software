@@ -1,4 +1,4 @@
-// $Id: VeloDecodeConf.h,v 1.2 2007-12-09 22:03:00 szumlat Exp $
+// $Id: VeloDecodeConf.h,v 1.3 2008-04-29 11:06:21 szumlat Exp $
 #ifndef VELODECODECONF_H 
 #define VELODECODECONF_H 1
 
@@ -79,7 +79,8 @@ namespace VeloTELL1
     BIT_LIMIT=4,
     FIR_FILTER=6,
     CHANNEL_REORDERING=7,
-    CLUSTER_MAKER=8
+    CLUSTER_MAKER=8,
+    MEAN_COMMON_MODE_SUBTRACTION=9
   };
   //
   enum dataTypes{

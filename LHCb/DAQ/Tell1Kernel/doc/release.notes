@@ -3,6 +3,9 @@
 !-------------------------------------------------------------------------
 
 !====================== Tell1Kernel v1r2 2008-04-18 ======================
+!2008-04-28 - Tomasz Szumlak
+ - Add stuff that helps to run Vetra (Velo part) with condition DB
+
 ! 2008-02-26 - Anne Keune
  - Add Tell1Kernel/STTell1Core.h
 
