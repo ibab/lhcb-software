@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2008-04-29 - Chris Jones
+ - Add new tool for creating 'standard' PID calibration and monitoring plots
+
 !===================== RichRecTools v4r3 2008-04-15 ===========================
 ! 2008-03-27 - Chris Jones
  - Add new background tools (previously algorithms in RichRecAlgorithms)
