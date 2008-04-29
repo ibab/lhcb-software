@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.23 2008-04-17 14:46:13 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.24 2008-04-29 14:17:45 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -86,14 +86,6 @@ public:
   /// Keep for future use: Register the new vertices in the Desktop, pass ownership, 
   /// return pointer to new vertex
   virtual const LHCb::Vertex* keep( const LHCb::Vertex* input ) = 0;
-
-  /// OBSOLETE : Use const LHCb::Particle* keep( const LHCb::Particle* input ) instead
-  /// @todo Remove this method
-  virtual const LHCb::Particle* save( const LHCb::Particle* input ) = 0;
-
-  /// OBSOLETE : Use const LHCb::Vertex* keep( const LHCb::Vertex* input ) instead
-  /// @todo Remove this method
-  virtual const LHCb::Vertex* save( const LHCb::Vertex* input ) = 0;
 
   /// Save particles, vertices and particle->vertices relations to the TES
   virtual StatusCode saveDesktop() const = 0;

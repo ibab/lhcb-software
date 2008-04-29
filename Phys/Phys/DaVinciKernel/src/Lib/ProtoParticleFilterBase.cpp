@@ -1,11 +1,10 @@
-
 //-----------------------------------------------------------------------------
 /** @file ProtoParticleFilterBase.cpp
  *
  * Implementation file for tool ProtoParticleFilterBase
  *
  * CVS Log :-
- * $Id: ProtoParticleFilterBase.cpp,v 1.6 2007-04-26 09:27:39 jonrob Exp $
+ * $Id: ProtoParticleFilterBase.cpp,v 1.7 2008-04-29 14:17:45 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -118,7 +117,7 @@ StatusCode ProtoParticleFilterBase::defineSelections()
 StatusCode ProtoParticleFilterBase::decodeSelOpts( const std::string & description )
 {
   // seperate into detector and cut data
-  info() << "Selection criteria : " << description << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "Selection criteria : " << description << endreq;
 
   // Create a new ProtoParticleSelection for this description
   m_protoSels.push_back( ProtoParticleSelection() );
