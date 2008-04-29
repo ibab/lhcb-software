@@ -4,7 +4,7 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.4 2008-04-29 09:34:47 marcocle Exp $"
+__version__ = "$Id: VersionsDB.py,v 1.5 2008-04-29 09:40:09 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
@@ -192,6 +192,7 @@ class Release:
             r = self.__releases__[base]
             all_projs.update(r.projects.keys())
             base = r.base
+        all_projs.update(Release.__unversioned_projects__.keys())
         # put them in alphabetical order
         all_projs = list(all_projs)
         all_projs.sort()

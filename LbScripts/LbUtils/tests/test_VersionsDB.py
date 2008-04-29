@@ -1,7 +1,7 @@
 import unittest
 from LbUtils import VersionsDB
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: test_VersionsDB.py,v 1.4 2008-04-29 09:34:53 marcocle Exp $"
+__version__ = "$Id: test_VersionsDB.py,v 1.5 2008-04-29 09:40:09 marcocle Exp $"
 
 class VersionsDBTest(unittest.TestCase):
     def _prepareXML(self, data):
@@ -254,6 +254,8 @@ class VersionsDBTest(unittest.TestCase):
         rtv = VersionsDB.getRuntimeVersions("c","v1r0","a")
         rtv.sort()
         self.assertEquals(rtv,expected)
+        
+        self.assertEquals([p.name for p in r.allProjects()],["a","u1","u2","b","c"])
         
     def test_900_generateXML(self):
         data = [("R1",None,[("P1","v1r0"),("P2","v1r0"),("P3","v1r0"),("P4","v1r0")]),
