@@ -2,18 +2,24 @@
 #need to cd incase script is launched outside the taskmanager
 #get online version
 
-pathofthisfile=`which $0`
-first=${pathofthisfile#*_}
-export onlineversion=${first%%/*}
-second=${first#*/*/*/}
-export onlinetasksversion=${second%%/*}
+test -n "$1" ; export PARENT=$1
 
-cd /home/online/Online_${onlineversion}/Online/OnlineTasks/${onlinetasksversion}/job
+test -n "$2" ; export UTGID=$2
+
+if test -n "$3" ; then 
+   export PARTNAME=$3
+
+fi
+
+cd /home/online/Online_v4r7/Online/OnlineTasks/v1r10/job
 export DEBUGGING=YES
 
-export $1="NOTAN"$1 
+# remove the args because they interfere with the cmt scripts
+while [ $# -ne 0 ]; do
+  shift 
+done
 
-. ./setupOnline.sh $*
+. ./setupOnline.sh 
 
 if test -n "$PARTNAME" 
    then export DIM_DNS_NODE=hlt01;

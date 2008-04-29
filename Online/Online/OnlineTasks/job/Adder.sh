@@ -1,27 +1,28 @@
 #!/bin/bash
 #cases: 1. 2 arguments: adder adds processes in a subfarm. options created by this script. $1: parent, $2 UTGID 
-#       2. 3 arguments: adder adds adders in a partition. $1: parent, $2: UTGID. $3:. partition name
+#       2. 2 arguments: calibration farm. Options to be edited by hand in options/AdderCalibrationfarm.opts
+#       3. 3 arguments: adder adds adders in a partition. $1: parent, $2: UTGID. $3:. partition name
+#       
 #need to cd incase script is launched outside the taskmanager
 #get online version
 
 
-test -n "$1" ; export PARENT=$1
+test -n "$1" ; export PARENT=$( echo $1 | tr "[:upper:]" "[:lower:]" )
+
+if test -n "$2" ; then
+   export UTGID=$2
+fi
 
 if test -n "$3" ; then 
    export PARTNAME=$3
-   test -n "$2" ; export UTGID=$2
 fi
 
 echo UTGID ${UTGID}
 
-#pathofthisfile=`which $0`
-#first=${pathofthisfile#*_}
-#export onlineversion=${first%%/*}
-#second=${first#*/*/*/}
-#export onlinetasksversion=${second%%/*}
+echo $PARENT 
 
-cd /home/online/Online_v4r6/Online/OnlineTasks/v1r9/job
-export DEBUGGING=YES
+cd /home/online/Online_v4r7/Online/OnlineTasks/v1r10/job
+#export DEBUGGING=YES
 
 # remove the args because they interfere with the cmt scripts
 while [ $# -ne 0 ]; do
@@ -29,23 +30,36 @@ while [ $# -ne 0 ]; do
 done
 
 export OPTIONS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_Info.opts
-export PARTOPTIONS=`pwd`/../options/Adder${PARENT}.opts
-export SUBFARM=/group/online/dataflow/options/${PARENT}.opts
+
+#export SUBFARM=/group/online/dataflow/options/${PARENT}.opts
+# don't have write access to this directory
+export SUBFARM=../options/Adder${PARENT}.opts
 
 . ./setupOnline.sh
 
 if test -n "${PARTNAME}" ; then 
-  echo partname n ${PARTNAME}
+  #top level adder for this partition
   export DIM_DNS_NODE=hlt01
   ${gaudi_exe3} -options=../options/Adder.opts -loop &  
 fi
-if test -z "${PARTNAME}" ; then
-  echo partname z ${PARTNAME}
-  if test -f ${SUBFARM} ; 
-    then rm ${SUBFARM} ;
-  fi  
-  export SUBFARMCONTENTS="Subfarm.Name = {\""$PARENT"\"}; \n Subfarm.ServerName = \""$PARENT"\"; \n Subfarm.ClientName = \""$PARENT"\";"
-  echo  -e ${SUBFARMCONTENTS} > ${SUBFARM}
 
-  ${gaudi_exe3} -options=../options/AdderSubfarm.opts -loop &
+if [[ ${PARENT} == "hlta08" ]] ; then 
+   export DIM_DNS_NODE=hlta08.lbdaq.cern.ch
+fi
+
+echo DIM_DNS_NODE ${DIM_DNS_NODE}
+
+if test -z "${PARTNAME}" ; then
+  #adder for this subfarm
+  #if test -f ${SUBFARM} ; 
+  #  then rm ${SUBFARM} ;
+  #fi  
+  if [[ ${PARENT} == "hlta08" ]]
+    then ${gaudi_exe3} -options=../options/AdderCalibrationfarm.opts -loop &
+    else 
+       if [[ ${PARENT} == "mona08" ]]
+         then ${gaudi_exe3} -options=../options/AdderMonitorfarm.opts -loop &
+         else ${gaudi_exe3} -options=../options/AdderSubfarm.opts -loop &
+       fi
+  fi
 fi

@@ -6,6 +6,8 @@
 # $3: runtype; for tae events prefixed with TAE_
 # $4: acceptrate in percent
 
+export ARCH=`uname -i`;
+echo "Architecture "${ARCH}
 
 if test -n "$1" ;
   then 
@@ -34,11 +36,19 @@ if  [[ ${RUNTYPE:0:4} == "TAE_" ]]
   else echo "Normal run";export IS_TAE_RUN=""
 fi   
 
-if test -z "${DEBUGGING}";
-  then echo running normal sw;export CMTCONFIG=slc4_ia32_gcc34
-  else echo running debug sw;export CMTCONFIG=slc4_ia32_gcc34_dbg   
-fi
 
+if [[ ${ARCH} == "x86_64" ]]
+  then 
+     if test -z "${DEBUGGING}";
+      then echo running normal sw;export CMTCONFIG=slc4_amd64_gcc34
+      else echo running debug sw;export CMTCONFIG=slc4_amd64_gcc34_dbg   
+     fi        
+  else
+    if test -z "${DEBUGGING}";
+      then echo running normal sw;export CMTCONFIG=slc4_ia32_gcc34
+      else echo running debug sw;export CMTCONFIG=slc4_ia32_gcc34_dbg   
+    fi
+fi
 # now in INFOOPTIONS
 #if test -z "${PRESCALEROPTIONS}";
 #   then echo Using default acceptrate.
@@ -69,6 +79,13 @@ if [[ ${CMTCONFIG} == "slc4_ia32_gcc34" ]]
   else 
      if  [[ ${CMTCONFIG} == "slc4_ia32_gcc34_dbg" ]]
        then . ./pathsetup_dbg
+     fi
+fi
+if [[ ${CMTCONFIG} == "slc4_amd64_gcc34" ]]
+  then . ./pathsetup64
+  else 
+     if  [[ ${CMTCONFIG} == "slc4_amd64_gcc34_dbg" ]]
+       then . ./pathsetup64_dbg
      fi
 fi
 
