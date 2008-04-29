@@ -16,7 +16,7 @@ Saver.OutputLevel = 3;
 ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
 ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 
-Saver.nodename="$TOPLEVEL";
+Saver.nodename="$PARENT";
 //Saver.histogramname={"1Da*","2D*","1Db*","Prof*"};
 //Saver.algorithmname={"GaudiExample","GaudiExample","GaudiExample","GaudiExample"};
 Saver.histogramname={"banktype*","eventsize*"};

@@ -1,7 +1,6 @@
 // Job options file. Simple Online monitoring example
 //==============================================================
 #include "$OPTIONS"
-#include "$PARTOPTIONS"
 ApplicationMgr.ExtSvc = { "MonitorSvc" };
 
 ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho","GaudiOnline"};
@@ -20,10 +19,9 @@ ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 //from $OPTIONS
 Adder.nodenames=@OnlineEnv.SubFarms;
 
-//from $PARTOPTIONS
-Adder.servername=@PartEnv.servername;
-//Adder.histogramname={"1Da*","2D*","1Db*","Prof*"};
-//Adder.algorithmname={"GaudiExample","GaudiExample","GaudiExample","GaudiExample"};
+//partition name (goes into Dimservice name)
+Adder.servername=@OnlineEnv.PartitionName;
+
 Adder.histogramname={"banktype*","eventsize*"};
 Adder.algorithmname={"OnlineDummyReader","OnlineDummyReader"};
 Adder.taskname={"GauchoJob","GauchoJob"};
