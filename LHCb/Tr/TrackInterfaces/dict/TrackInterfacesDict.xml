@@ -2,6 +2,7 @@
   <class name    = "IAddTTClusterTool"       />
   <class name    = "IFastMomentumEstimate"   />
   <class name    = "IHitExpectation"         />
+  <class name    = "IHltV0Upgrade"           />
   <class name    = "IMaterialLocator"        />
   <class name    = "IMeasurementProvider"    />
   <class name    = "IPatDebugTool"           />

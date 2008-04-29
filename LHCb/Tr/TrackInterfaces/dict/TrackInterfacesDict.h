@@ -4,6 +4,7 @@
 #include "TrackInterfaces/IAddTTClusterTool.h"
 #include "TrackInterfaces/IFastMomentumEstimate.h"
 #include "TrackInterfaces/IHitExpectation.h"
+#include "TrackInterfaces/IHltV0Upgrade.h"
 #include "TrackInterfaces/IMaterialLocator.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
 #include "TrackInterfaces/IPatDebugTool.h"
