@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.41 2008-03-03 10:17:39 cattanem Exp $
+# $Id: requirements,v 1.42 2008-04-29 12:18:06 cattanem Exp $
 # Maintainer: Chris Parkes, Tomasz Szumlak
 #
 package VeloEvent
 
-version v16r3
+version v16r4
 
 branches cmt doc xml VeloEvent
 

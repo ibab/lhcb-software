@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.55 2008-04-29 08:53:03 szumlat Exp $
+! $Id: release.notes,v 1.56 2008-04-29 12:18:06 cattanem Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
 
-!====================== VeloEvent v16r3 2008-03-03 ======================
-!2008-04-28 - Tomasz Szumlak
+!====================== VeloEvent v16r4 2008-04-29 ======================
+! 2008-04-28 - Tomasz Szumlak
  - New functionality added for VeloTELL1Data
    allow to:
     1) set up reordering flag when the data are reordered - strip ordering
@@ -18,6 +18,7 @@
        method 
  - new location for added for data processed by MCMS algorithm
     
+!====================== VeloEvent v16r3 2008-03-03 ======================
 ! 2008-02-27 - Chris Jones
  - Add a few missing STL includes
 
