@@ -1,0 +1,5 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+Subfarm.Name={"HLTA07"};
+Subfarm.ServerName="HLTA07";
+Subfarm.ClientName="HLTA07";
