@@ -1,4 +1,4 @@
-// $Id: Algo.cpp,v 1.18 2008-03-31 15:06:00 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.19 2008-04-29 16:03:06 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -359,9 +359,9 @@ StatusCode LoKi::Algo::save
   if( 0 == particle ) 
   { return Error("save('"+tag+"'): invalid particle could not be saved!") ; }
   
-  const LHCb::Particle* saved = desktop()->save( particle );
+  const LHCb::Particle* saved = desktop()->keep( particle );
   
-  if( 0 == saved ) { return Error("Particle '"+tag+"' is not saved! " ) ; }
+  if( 0 == saved ) { return Error("Particle '"+tag+"' is not kept! " ) ; }
   
   m_selected.add ( tag , saved ) ;
   
