@@ -1,4 +1,4 @@
-// $Id: LoopChild.h,v 1.4 2007-08-14 17:12:31 ibelyaev Exp $
+// $Id: LoopChild.h,v 1.5 2008-04-30 05:39:20 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_LOOPCHILD_H 
 #define LOKI_LOOPCHILD_H 1
@@ -16,7 +16,7 @@ namespace LoKi
   {
     // ========================================================================
     /** get the number of children 
-     *  @param mother poiunter to mother particle 
+     *  @param  particle (const) pointer to mother particle 
      *  @return number of daugthter particles 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-02

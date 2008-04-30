@@ -1,4 +1,4 @@
-// $Id: Algo.h,v 1.12 2008-03-31 15:06:00 ibelyaev Exp $
+// $Id: Algo.h,v 1.13 2008-04-30 05:39:20 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
@@ -152,7 +152,7 @@ namespace LoKi
      *  - The selected particles
      *  are stored inside local LoKi storage under the tags @c "positive"
      *  and @c "negative" and returned as a sequence of particles 
-     *  @c positive and @negative
+     *  @c positive and @c negative
      *
      *  @see LHCb::Particle::Vector
      *  @see LoKi::Types::Range 
@@ -160,7 +160,7 @@ namespace LoKi
      *  @see LoKi::Cuts::Q
      *  @param name name/tag assigned to the selected particles
      *  @param cont input container of particles 
-     *  @param cut  cut to be applied
+     *  @param cuts cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::Range 
@@ -189,12 +189,12 @@ namespace LoKi
      *  - The selected particles
      *  are stored inside local LoKi storage under the tags @c "positive"
      *  and @c "negative" and returned as a sequence of particles 
-     *  @c positive and @negative
+     *  @c positive and @c negative
      *
      *  @see LoKi::Cuts::Q
      *  @param name name/tag assigned to the selected particles
      *  @param cont input container of particles 
-     *  @param cut  cut to be applied
+     *  @param cuts cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::Range 
@@ -223,7 +223,7 @@ namespace LoKi
      *  - The selected particles
      *  are stored inside local LoKi storage under the tags @c "positive"
      *  and @c "negative" and returned as a sequence of particles 
-     *  @c positive and @negative
+     *  @c positive and @c negative
      *
      *  @see LHCb::Particle
      *  @see LHCb::Particles
@@ -231,7 +231,7 @@ namespace LoKi
      *  @see LoKi::Cuts::Q
      *  @param name name/tag assigned to the selected particles
      *  @param cont input container of particles 
-     *  @param cut  cut to be applied
+     *  @param cuts cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::Range 
@@ -265,7 +265,7 @@ namespace LoKi
      *  - The selected particles
      *  are stored inside local LoKi storage under the tags @c "positive"
      *  and @c "negative" and returned as a sequence of particles 
-     *  @c positive and @negative
+     *  @c positive and @c negative
      *
      *  @see LHCb::Particle
      *  @see LoKi::Keeper
@@ -273,7 +273,7 @@ namespace LoKi
      *  @see LoKi::Cuts::Q
      *  @param name name/tag assigned to the selected particles
      *  @param cont input container of particles 
-     *  @param cut  cut to be applied
+     *  @param cuts cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::Range 
@@ -302,7 +302,7 @@ namespace LoKi
      *  - The selected particles
      *  are stored inside local LoKi storage under the tags @c "positive"
      *  and @c "negative" and returned as a sequence of particles 
-     *  @c positive and @negative
+     *  @c positive and @c negative
      *
      *  @see LHCb::Particle
      *  @see LoKi::UniqueKeeper
@@ -310,7 +310,7 @@ namespace LoKi
      *  @see LoKi::Cuts::Q
      *  @param name name/tag assigned to the selected particles
      *  @param cont input container of particles 
-     *  @param cut  cut to be applied
+     *  @param cuts cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::Range 
@@ -343,7 +343,7 @@ namespace LoKi
      *  - The selected particles
      *  are stored inside local LoKi storage under the tag @c "positive"
      *  and returned as a sequence of particles 
-     *  @c positive and @negative
+     *  @c positive and @c negative
      *
      *  @see LoKi::Types::Range
      *  @see LoKi::Types::Cuts
@@ -351,7 +351,7 @@ namespace LoKi
      *  @param name name/tag assigned to the selected particles
      *  @param first begin of sequence of particls 
      *  @param last  last  of sequence of particls 
-     *  @param cut  cut to be applied
+     *  @param cuts cut to be applied
      *  @return selected range of particles
      */
     template <class PARTICLE, class CUT>
@@ -394,7 +394,7 @@ namespace LoKi
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
      *  @param name name/tag assigned to the selected particles
-     *  @param cut  cut to be applied
+     *  @param cuts cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::VRange        
@@ -409,7 +409,7 @@ namespace LoKi
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
      *  @param name name/tag assigned to the selected particles
-     *  @param cut  cut to be applied
+     *  @param cuts cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::VRange        
@@ -424,7 +424,7 @@ namespace LoKi
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
      *  @param name name/tag assigned to the selected particles
-     *  @param cut  cut to be applied
+     *  @param cuts cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::VRange        
@@ -439,7 +439,7 @@ namespace LoKi
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
      *  @param name name/tag assigned to the selected particles
-     *  @param cut  cut to be applied
+     *  @param cuts cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::VRange        
@@ -454,7 +454,7 @@ namespace LoKi
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
      *  @param name name/tag assigned to the selected particles
-     *  @param cut  cut to be applied
+     *  @param cuts cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::VRange        
@@ -469,7 +469,7 @@ namespace LoKi
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
      *  @param name name/tag assigned to the selected particles
-     *  @param cut  cut to be applied
+     *  @param cuts cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::VRange        
@@ -484,7 +484,7 @@ namespace LoKi
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont" )
      *  @param name name/tag assigned to the selected particles
-     *  @param cut  cut to be applied
+     *  @param cuts cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::VRange        
@@ -523,7 +523,7 @@ namespace LoKi
      *  - The selected vertices
      *  are stored inside local LoKi storage under the tag @c "primaries"
      *  and returned as a sequence of vertices 
-     *  @c positive and @negative
+     *  @c positive and @c negative
      *
      *  @see LoKi::Cuts
      *  @param name name/tag assigned to the selected vertices
@@ -700,7 +700,7 @@ namespace LoKi
     /** Create the loop object from "decay"
      *  @see DaVinci::Decay
      *  @param decay the decay desctrptor
-     *  @param combined the combiner
+     *  @param combiner the combiner
      *  @return the valid looping-object
      */
     LoKi::Loop loop 
@@ -879,7 +879,6 @@ namespace LoKi
      *  @param tag    the symbolic unique tag 
      *  @param loop   the looping object itself 
      *  @param window the width of the mass window around nominal mass 
-     *  @param high  high edge for mass window 
      *  @param cut1  cut to be used for filtering before refit
      *  @param vcut1 vertex cut to be used for filtering before refitt
      *  @param fitter refitter to be applied before cuts 
@@ -900,7 +899,7 @@ namespace LoKi
   public:
     /** save the particle  into LoKi storage
      *  The particle @c p will be saved to
-     *  LoKi storage with the tag/name @v tag
+     *  LoKi storage with the tag/name @c tag
      *  @param  tag particle tag (only for LoKi)
      *  @param  particle particle to be saved
      *  @return status code 

@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.32 2008-04-29 16:03:06 pkoppenb Exp $ 
+! $Id: release.notes,v 1.33 2008-04-30 05:39:20 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiAlgo v7r2p1 2008-04-30 ========================
+! 2008-04-30 - Marco Cattaneo
+ - Fix some doxygen warnings
 
 ! 2008-04-29 - Patrick Koppenburg
  - LoKiAlgo : desktop->save() becomes keep() 

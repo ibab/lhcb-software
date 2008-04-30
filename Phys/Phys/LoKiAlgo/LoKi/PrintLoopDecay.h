@@ -1,9 +1,7 @@
-// $Id: PrintLoopDecay.h,v 1.2 2007-08-16 13:49:43 ibelyaev Exp $
+// $Id: PrintLoopDecay.h,v 1.3 2008-04-30 05:39:20 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PRINTLOOPDECAY_H 
 #define LOKI_PRINTLOOPDECAY_H 1
-// ============================================================================
-// Include files
 // ============================================================================
 // Include files
 // ============================================================================
@@ -30,10 +28,6 @@ class MsgStream ;
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of <XXXXXXX> et al. : 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-05-26 
