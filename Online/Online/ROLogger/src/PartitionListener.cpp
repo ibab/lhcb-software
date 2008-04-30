@@ -1,0 +1,87 @@
+// $Id: PartitionListener.cpp,v 1.1 2008-04-30 08:39:24 frankb Exp $
+//====================================================================
+//  ROLogger
+//--------------------------------------------------------------------
+//
+//  Package    : ROLogger
+//
+//  Description: Readout monitoring in the LHCb experiment
+//
+//  Author     : M.Frank
+//  Created    : 29/1/2008
+//
+//====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.1 2008-04-30 08:39:24 frankb Exp $
+
+// Framework include files
+#include "ROLogger/PartitionListener.h"
+#include "UPI/UpiSensor.h"
+#include "CPP/IocSensor.h"
+#include "UPI/upidef.h"
+#include "ROLoggerDefs.h"
+
+#include <vector>
+
+extern "C" {
+#include "dic.h"
+}
+#include <netdb.h>
+#include <arpa/inet.h>
+
+typedef std::vector<std::string> _SV;
+using namespace ROLogger;
+
+/// Standard constructor with object setup through parameters
+PartitionListener::PartitionListener(Interactor* parent,const std::string& nam) : m_parent(parent)
+{
+  std::string info, name=nam;
+  size_t idx = name.find(":");
+  if ( idx != std::string::npos ) name[idx] = '/';
+  if ( name[0] != '/' ) info = "/";
+  info += name + "_RunInfo";
+  name = info + ".HLTFarm.subFarms";
+  m_subFarmDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,subFarmHandler,(long)this,0,0);
+  ::upic_write_message2("Subfarm content for %s_RunInfo from:%s",nam.c_str(),name.c_str());
+  name = info + ".HLTFarm.nodeList";
+  m_nodesDP   = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,nodeHandler,(long)this,0,0);
+  ::upic_write_message2("Nodelist content for %s_RunInfo from:%s",nam.c_str(),name.c_str());
+}
+
+/// Standard destructor
+PartitionListener::~PartitionListener() {
+  ::dic_release_service(m_subFarmDP);
+  ::dic_release_service(m_nodesDP);
+}
+
+/// DIM command service callback
+void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
+  std::auto_ptr<_SV> f(new _SV());
+  PartitionListener* h = *(PartitionListener**)tag;
+  for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1)
+    f->push_back(data);
+  IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
+}
+
+/// DIM command service callback
+void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
+  std::auto_ptr<_SV> n(new _SV());
+  PartitionListener* h = *(PartitionListener**)tag;
+  for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1) {
+    in_addr addr;
+    addr.s_addr = inet_addr(data);
+    hostent* he = gethostbyaddr(&addr,sizeof(addr),AF_INET);
+    if ( he ) {
+      std::string node = he->h_name;
+      size_t idx = node.find("-d1"); 
+      if ( idx != std::string::npos ) node = node.substr(0,idx); 
+      idx = node.find(".");
+      if ( idx != std::string::npos ) node = node.substr(0,idx); 
+      for(size_t i=0; i<node.length();++i) node[i] = ::toupper(node[i]);
+      n->push_back(node);
+    }
+    else {
+      ::upic_write_message2("Failed to resolve network address:%s",data);
+    }
+  }
+  IocSensor::instance().send(h->m_parent,CMD_UPDATE_NODES,n.release());
+}
