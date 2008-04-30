@@ -4,9 +4,15 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+<<<<<<< release.notes
+! 2008-04-30 M Needham
+ -  Change STMeasurement to prevent crash in init due to 0 pointer for sensor 
+
+=======
 2008-04-22 - Wouter Hulsbergen
  - Fixed bug in MuonMeasurement
 
+>>>>>>> 1.132
 !========================== TrackFitEvent v3r14 2008-04-18 ===================
 ! 2008-04-18 M Needham 
  - Update to changes in STDet to add sensor level

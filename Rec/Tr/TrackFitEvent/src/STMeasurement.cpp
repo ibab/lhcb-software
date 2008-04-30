@@ -1,4 +1,4 @@
-// $Id: STMeasurement.cpp,v 1.12 2008-04-18 06:52:43 mneedham Exp $
+// $Id: STMeasurement.cpp,v 1.13 2008-04-30 14:58:41 mneedham Exp $
 // Include files 
 
 // from STDet
@@ -51,6 +51,7 @@ void STMeasurement::init( const DeSTDetector& geom,
   // Fill the data members
   STChannelID stChan = m_cluster -> channelID();
   m_mtype = ( stChan.isTT() ? Measurement::TT : Measurement::IT );
+ 
 
   // Get the corresponding sensor
   // TODO: Add const functions in STDet
@@ -63,17 +64,20 @@ void STMeasurement::init( const DeSTDetector& geom,
     stClusPosTool.estimate( m_cluster );
  
   m_errMeasure = measVal.fractionalError*stSector -> pitch();
-  m_trajectory = tmpGeom->trajectory( LHCbID(measVal.strip), measVal.fractionalPosition) ;
+  m_trajectory = stSector->trajectory( measVal.strip, measVal.fractionalPosition) ;
 
   Gaudi::XYZPoint point = m_trajectory->position( 0.5*( m_trajectory->beginRange()+m_trajectory->endRange())) ;
 
-  // get the sensor this refers to and go local
-  DeSTSensor* sensor = stSector->findSensor(point);
-    
-  m_measure = sensor->localU( stChan.strip() )
-              + ( measVal.fractionalPosition* stSector -> pitch() );
-
-  // Use the z of the centre of the strip
   m_z = point.z();
 
+  // get the best sensor to and go local
+  // this is the only way to ensure we get inside a 
+  // sensor, and not into a bondgap
+  const DeSTSector::Sensors& sensors = stSector->sensors();
+  unsigned int sensorNum = sensors.size()/2u;
+  DeSTSensor* sensor = sensors[sensorNum];
+
+  m_measure = sensor->localU( stChan.strip() )
+              + ( measVal.fractionalPosition* stSector -> pitch() );
+ 
 }
