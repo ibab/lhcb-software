@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.30 2008-04-24 12:37:08 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.31 2008-04-30 13:29:16 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -6,6 +6,7 @@
 */
 
 #include "OnlineHistDB/OnlineHistDB.h"
+using namespace std;
 using namespace OnlineHistDBEnv_constants;
 OnlineHistDB::OnlineHistDB(std::string passwd,
 			   std::string user,
@@ -316,7 +317,7 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
   return out;
 }
 
-bool OnlineHistDB::removePageFolder(std::string Folder) {
+bool OnlineHistDB::removePageFolder(std::string& Folder) {
   bool out=false;
   int iout=0;
   // check that there are no pages on folder

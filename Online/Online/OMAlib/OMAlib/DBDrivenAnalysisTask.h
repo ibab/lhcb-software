@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.h,v 1.2 2008-03-11 18:23:26 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.h,v 1.3 2008-04-30 13:28:54 ggiacomo Exp $
 #ifndef OMALIB_DBDRIVENANALYSISTASK_H
 #define OMALIB_DBDRIVENANALYSISTASK_H 1
 #include <map>
@@ -15,7 +15,7 @@ class DBDrivenAnalysisTask : public AnalysisTask
     AnalysisTask( name, pSvcLocator ) {}
   virtual ~DBDrivenAnalysisTask ();
   virtual StatusCode initialize();
-  virtual StatusCode analyze(std::string SaveSet,
+  virtual StatusCode analyze(std::string& SaveSet,
                              std::string Task = "any");
 
  private:

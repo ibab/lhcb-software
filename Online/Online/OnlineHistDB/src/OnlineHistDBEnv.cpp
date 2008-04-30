@@ -1,5 +1,7 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.12 2008-03-14 15:29:50 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.13 2008-04-30 13:29:16 ggiacomo Exp $
+#include <cctype>
 #include "OnlineHistDB/OnlineHistDBEnv.h"
+using namespace std;
 using namespace OnlineHistDBEnv_constants;
 
 OnlineHistDBEnv::OnlineHistDBEnv(std::string User) 
@@ -8,8 +10,9 @@ OnlineHistDBEnv::OnlineHistDBEnv(std::string User)
     m_TaggedStatement(NULL),
     m_refRoot(NULL), m_savesetsRoot(NULL),
     m_TStorage(NULL), m_HStorage(NULL), m_PStorage(NULL), 
-    m_user(toUpper(User)), m_debug(0), m_excLevel(1)
+    m_user(User), m_debug(0), m_excLevel(1)
 {
+  toUpper(m_user);
   initOCIBinds();
 }
 
@@ -108,13 +111,14 @@ void OnlineHistDBEnv::warningMessage(std::string Error) const {
   }     
 }
 
-std::string OnlineHistDBEnv::toUpper(string str) {
-  for(unsigned int i=0;i<str.length();i++)
-    str[i] = toupper(str[i]);
-  return str;
+void OnlineHistDBEnv::toUpper(std::string& str) {
+  std::string::iterator i;
+  for (i = str.begin() ; i != str.end() ; i++) {
+    *i = toupper(*i);
+  }
 }
 
-std::string OnlineHistDBEnv::PagenameSyntax(std::string fullname, std::string &folder) {
+std::string OnlineHistDBEnv::PagenameSyntax(std::string &fullname, std::string &folder) {
   text outname[VSIZE_PAGENAME]="";
   text fold[VSIZE_FOLDER]="";
   std::string command = "BEGIN :1 := ONLINEHISTDB.PAGENAMESYNTAX(TheName => :name,Folder => :2); END;";
@@ -132,7 +136,7 @@ std::string OnlineHistDBEnv::PagenameSyntax(std::string fullname, std::string &f
   return std::string((char *) outname);
 }
 
-int OnlineHistDBEnv::getAlgorithmNpar(std::string AlgName, int* Ninput)
+int OnlineHistDBEnv::getAlgorithmNpar(std::string& AlgName, int* Ninput)
 {
   int xNpar= -1, xNinp=0;
   m_StmtMethod = "OnlineHistDB::getAlgorithmNpar";
@@ -150,7 +154,7 @@ int OnlineHistDBEnv::getAlgorithmNpar(std::string AlgName, int* Ninput)
   return xNpar;
 }
 
-std::string OnlineHistDBEnv::getAlgParName(std::string AlgName,
+std::string OnlineHistDBEnv::getAlgParName(std::string& AlgName,
 					int Ipar)
 {
   text out[VSIZE_PARAMETERS]="";

@@ -1,6 +1,7 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.20 2007-11-29 11:22:22 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.21 2008-04-30 13:29:16 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
+using namespace std;
 using namespace OnlineHistDBEnv_constants;
 
 OnlineHistPage::OnlineHistPage(OnlineHistDBEnv& Env,

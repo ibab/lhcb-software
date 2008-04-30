@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistTask.h,v 1.7 2008-02-20 16:47:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistTask.h,v 1.8 2008-04-30 13:29:16 ggiacomo Exp $
 #ifndef ONLINEHISTTASK_H
 #define ONLINEHISTTASK_H 1
 /** @class  OnlineHistTask OnlineHistTask.h OnlineHistDB/OnlineHistTask.h
@@ -27,7 +27,7 @@ class OnlineHistTask : public OnlineHistDBEnv
 		 std::string Name);
   virtual ~OnlineHistTask() {}
   /// task name
-  std::string name() {return m_name;}
+  std::string& name() {return m_name;}
   /// number of associated subdetector/subsystems (up to 3)
   int ndet() {return m_ndet;}
   /// name of associated subdetector/subsystems (-1 < i < ndet() )
@@ -41,7 +41,7 @@ class OnlineHistTask : public OnlineHistDBEnv
   /// task saving frequency
   float savingFrequency() { return m_SavingFrequency;}
   /// location of latest reference file
-  std::string reference() { return m_Reference;}
+  std::string& reference() { return m_Reference;}
   
   /// sets the associated subdetector/subsystems. "NULL" unsets the value 
   bool setSubDetectors(std::string SubDet1="NULL", 
@@ -60,7 +60,7 @@ class OnlineHistTask : public OnlineHistDBEnv
   /// sets task saving frequency
   bool setSavingFrequency(float SavingFrequency) {m_SavingFrequency = SavingFrequency; return save();}
   /// sets the location of latest reference file
-  bool setReference(std::string Reference) {m_Reference = Reference; m_Reference_null=0;return save();}
+  bool setReference(std::string& Reference) {m_Reference = Reference; m_Reference_null=0;return save();}
   bool isAbort() {return m_abort;}
   /// dumps task options
   void dump();

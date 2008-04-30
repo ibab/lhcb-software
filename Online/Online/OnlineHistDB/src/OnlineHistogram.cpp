@@ -1,15 +1,13 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.30 2008-04-24 12:37:08 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.31 2008-04-30 13:29:16 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
 
 */
 
-
-
 #include <math.h>
-
 #include "OnlineHistDB/OnlineHistogram.h"
+using namespace std;
 using namespace OnlineHistDBEnv_constants;
 OnlineHistogram::OnlineHistogram(OnlineHistDBEnv &env,
                                  std::string Identifier,
@@ -78,7 +76,7 @@ void OnlineHistogram::unsetPage() {
   }
 }
 
-bool OnlineHistogram::setDimServiceName(std::string DimServiceName) {
+bool OnlineHistogram::setDimServiceName(std::string& DimServiceName) {
   int out=0;
   OCIStmt *stmt=NULL;
   m_StmtMethod = "OnlineHistogram::setDimServiceName";
@@ -1164,9 +1162,9 @@ void OnlineHistogram::dumpDisplayOptions() {
 
 // analysys methods 
 
-std::string OnlineHistogram::algFromID(int anaid) {
+std::string& OnlineHistogram::algFromID(int anaid) {
   if(!m_anadirLoaded) loadAnalysisDirections();
-  std::string out="UNKNOWN";
+  std::string& out=OnlineHistDBEnv_constants::unknown;
   for (unsigned int i=0 ; i < m_anaId.size() ; i++) {
     if(m_anaId[i]  == anaid) {
       out = m_anaName[i];

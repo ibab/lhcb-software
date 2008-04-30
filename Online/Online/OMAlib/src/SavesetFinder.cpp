@@ -1,4 +1,4 @@
-// $Id: SavesetFinder.cpp,v 1.1 2008-03-11 18:23:27 ggiacomo Exp $
+// $Id: SavesetFinder.cpp,v 1.2 2008-04-30 13:28:54 ggiacomo Exp $
 
 #include "OMAlib/SavesetFinder.h"
 #include "OMAlib/AnalysisTask.h"
@@ -10,7 +10,8 @@ SavesetFinder::SavesetFinder(AnalysisTask* Ana,
 {}
 
 void SavesetFinder::infoHandler() {
-  m_analysis->analyze( std::string( getString() ) , m_taskname );
+  std::string saveset( getString() );
+  m_analysis->analyze( saveset, m_taskname );
 }
 
 SavesetFinder::~SavesetFinder() {} 

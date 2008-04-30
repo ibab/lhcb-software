@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.2 2008-03-11 18:23:26 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.3 2008-04-30 13:28:54 ggiacomo Exp $
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAlib.h"
@@ -26,7 +26,7 @@ StatusCode DBDrivenAnalysisTask::initialize()
 
 
 
-StatusCode DBDrivenAnalysisTask::analyze(std::string SaveSet,
+StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
                                          std::string Task)
 {
   TFile* f = new TFile(SaveSet.c_str(),"READ");

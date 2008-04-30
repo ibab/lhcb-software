@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.3 2008-03-11 18:23:26 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.4 2008-04-30 13:28:54 ggiacomo Exp $
 #ifndef OMALIB_OMAALG_H
 #define OMALIB_OMAALG_H 1
 /** @class  OMAalg OMAalg.h OMAlib/OMAalg.h
@@ -10,19 +10,18 @@
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
 #include <TH1.h>
-using namespace std;
 
 class OMAalg : public OMAMsgInterface
 {
  public:
   OMAalg(std::string Name);
   virtual ~OMAalg();
-  inline std::string name() const { return m_name;}
+  inline std::string& name() { return m_name;}
   std::string type();
   inline int npars() const {return m_npars;}
   inline int ninput() const {return m_ninput;}
-  inline std::string doc() const {return m_doc;}
-  inline std::string parName(int i) const { return m_parnames[i];}
+  inline std::string& doc() {return m_doc;}
+  inline std::string& parName(int i)  { return m_parnames[i];}
 
  protected:
   void setType(std::string type);

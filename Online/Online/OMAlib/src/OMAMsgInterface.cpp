@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.1 2008-03-11 18:23:26 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.2 2008-04-30 13:28:54 ggiacomo Exp $
 #include <iostream>
 #include "OMAlib/OMAMsgInterface.h"
 
@@ -19,7 +19,10 @@ void OMAMsgInterface::raiseMessage(OMAMsgLevel level,
                                    std::string message,
                                    std::string histogramName ) {
   
+  // to be implemented ... dummy version for the moment
+  
   std::cout << std::endl << "==================================================================="<<std::endl;
+  std::cout << (level == ALARM ? "ALARM" : "WARNING") << " from histogram "<<histogramName <<std::endl;
   std::cout << "   " << message <<std::endl;
   std::cout  << "==================================================================="<<std::endl<< std::endl;
 

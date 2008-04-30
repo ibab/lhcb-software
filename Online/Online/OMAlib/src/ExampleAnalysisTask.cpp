@@ -1,4 +1,4 @@
-// $Id: ExampleAnalysisTask.cpp,v 1.1 2008-03-11 18:23:26 ggiacomo Exp $
+// $Id: ExampleAnalysisTask.cpp,v 1.2 2008-04-30 13:28:54 ggiacomo Exp $
 #include "OMAlib/ExampleAnalysisTask.h"
 
 //for using Histogram DB
@@ -25,7 +25,7 @@ StatusCode ExampleAnalysisTask::initialize()
 
 
 
-StatusCode ExampleAnalysisTask::analyze(std::string SaveSet,
+StatusCode ExampleAnalysisTask::analyze(std::string& SaveSet,
                                         std::string Task)
 {
   // open saveset (a ROOT file)

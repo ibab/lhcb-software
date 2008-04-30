@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.21 2008-03-12 12:29:55 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.22 2008-04-30 13:29:16 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -23,25 +23,25 @@ class  OnlineHistogram : public OnlineHistDBEnv
   void checkServiceName();
   bool isAbort() const {return m_isAbort;}
   /// full histogram unique identifier Taskname/AlgorithmName/HistogramName
-  inline std::string identifier() const {return m_identifier;}
+  inline std::string& identifier() {return m_identifier;}
   /// full path name of the page to which this histogram object is attached
-  inline std::string page() const {return m_page;}
+  inline std::string& page() {return m_page;}
   /// counter (starting from 1) to distinguish several instances of the same histogram on the same page
   inline int instance() const {return m_instance;}
   /// name of the DIM service that is currently publishing the histogram
-  inline std::string dimServiceName() const  {return m_dimServiceName;}
+  inline std::string& dimServiceName() {return m_dimServiceName;}
   /// internal histogram set ID
   inline int hsid() const {return m_hsid;}
   /// position of this histogram in set (starting from 1). Can be larger than nhs() if some histogram in the set has been deleted
   inline int ihs() const {return m_ihs;}
   /// internal histogram ID (equivalent to hsid()/ihs())
-  inline std::string hid() const {return m_hid;}
+  inline std::string& hid() {return m_hid;}
   /// number of histograms in set
   inline int nhs() const {return m_nhs;}
   /// histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'' or ``CNT'' )
-  inline std::string hstype() const {return m_hstype;}
+  inline std::string& hstype() {return m_hstype;}
   /// histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'' or ``CNT'' )
-  inline OnlineHistDBEnv::HistType type() const {return m_type;}
+  inline OnlineHistDBEnv::HistType type() {return m_type;}
   /// histogram dimension (1 or 2 for histograms, 0 for counters)
   inline int dimension() { 
     int out=-1;
@@ -65,17 +65,17 @@ class  OnlineHistogram : public OnlineHistDBEnv
   inline std::string htitle() const {return (m_subname == "") ? 
       m_hsname : m_hsname + " " + m_subname;} 
   /// histogram set name
-  inline std::string hsname() const {return m_hsname;}
+  inline std::string& hsname() {return m_hsname;}
   /// subname
-  inline std::string subname() const {return m_subname;}
+  inline std::string& subname() {return m_subname;}
   /// task name
-  inline std::string task() const {return m_task;}
+  inline std::string& task() {return m_task;}
   /// algorithm name
-  inline std::string algorithm() const {return m_algorithm;}  
+  inline std::string& algorithm() {return m_algorithm;}  
   /// short description of the histogram
-  std::string descr() const {return m_Descr;}
+  std::string& descr() {return m_Descr;}
   /// link to a more extensive documentation
-  std::string doc() const {return m_Doc;}
+  std::string& doc() {return m_Doc;}
   /// creation date, as a unix timestamp
   int creation() const {return m_creation;}
   /// if the histogram is no more in use, returns the end--of--validity date
@@ -88,7 +88,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// unsets page associated to histogram object
   void unsetPage();
   /// sets the DIM service name that is currently publishing the histogram. Returns true on success
-  bool setDimServiceName(std::string DimServiceName);
+  bool setDimServiceName(std::string& DimServiceName);
   /// provide a short description to be optionally printed on the plot 
   bool setDoc(std::string doc);
   /// provide a  description of the histogram content 
@@ -165,7 +165,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
 
   // ANALYSIS OPTIONS
   /// for analysis histogram, get the directions for creating histogram
-  bool getCreationDirections(std::string &Algorithm,
+  bool getCreationDirections(std::string& Algorithm,
 			     std::vector<std::string> &source_list,
 			     std::vector<float> &parameters);
   /// number of analysis to be performed on the histogram set
@@ -238,7 +238,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
 			OCIInd* OCIvar_null,
 			OnlineHistDBEnv * Env);
     virtual ~OnlineDisplayOption();
-    std::string name() const { return m_name; }
+    std::string& name() { return m_name; }
     inline DisplayOptionType type() const { return m_type; }    
     void set(void* option);
     bool get(void* option);
@@ -308,7 +308,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   bool useHistForPageDisplay();
   OnlineDisplayOption* getDO(std::string ParameterName); 
   void getDisplayOptions(int doid); 
-  std::string algFromID(int anaid);
+  std::string& algFromID(int anaid);
   int setDisplayOptions(std::string function);
   void createDisplayOptions();
   int findAnalysis(std::string Algorithm,

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.22 2008-03-12 12:29:55 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.23 2008-04-30 13:29:16 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -86,15 +86,15 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   /// sets the algorithm list version (works only for DB admin account)
   bool setAlgListID(int algListID);
   /// change reference histograms root directory (for testing)
-  void setRefRoot(std::string newroot) { *m_refRoot = newroot; }
+  void setRefRoot(std::string& newroot) { *m_refRoot = newroot; }
   /// change savesets root directory (for testing)
-  void setSavesetsRoot(std::string newroot) { *m_savesetsRoot = newroot; }
+  void setSavesetsRoot(std::string& newroot) { *m_savesetsRoot = newroot; }
 
 
   // deleting methods (handle with care!)
 
   /// removes Page Folder only if it doesn't have pages (useful for cleanup)
-  bool removePageFolder(std::string Folder);
+  bool removePageFolder(std::string& Folder);
   /// reload all cached objects from the DB
   void refresh();
 
@@ -110,52 +110,52 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   /// to OnlineHistogram objects, histogram identifiers, histogram types can optionally created  by the user
   /// and filled if not null
   int getAllHistograms(std::vector<OnlineHistogram*>* list = NULL,
-		       std::vector<string>* ids = NULL,
-		       std::vector<string>* types = NULL);
+		       std::vector<std::string>* ids = NULL,
+		       std::vector<std::string>* types = NULL);
   /// gets the list of histograms on which some check analysis has to be performed 
   int getHistogramsWithAnalysis(std::vector<OnlineHistogram*>* list = NULL,
-				std::vector<string>* ids = NULL,
-				std::vector<string>* types = NULL);
+				std::vector<std::string>* ids = NULL,
+				std::vector<std::string>* types = NULL);
   /// gets the list of histograms that have to be produced by analysis task
   int getAnalysisHistograms(std::vector<OnlineHistogram*>* list = NULL,
-			    std::vector<string>* ids = NULL,
-			    std::vector<string>* types = NULL);
+			    std::vector<std::string>* ids = NULL,
+			    std::vector<std::string>* types = NULL);
   /// gets the list of histograms related to subsystem SubSys
   int getHistogramsBySubsystem(std::string SubSys,
 			       std::vector<OnlineHistogram*>* list = NULL,
-			       std::vector<string>* ids = NULL,
-			       std::vector<string>* types = NULL);
+			       std::vector<std::string>* ids = NULL,
+			       std::vector<std::string>* types = NULL);
   /// gets the list of histograms related to task Task
   int getHistogramsByTask(std::string Task,
 			  std::vector<OnlineHistogram*>* list = NULL,
-			  std::vector<string>* ids = NULL,
-			  std::vector<string>* types = NULL);
+			  std::vector<std::string>* ids = NULL,
+			  std::vector<std::string>* types = NULL);
   /// gets the list of histograms displayed on page Page
   int getHistogramsByPage(std::string Page,
 			  std::vector<OnlineHistogram*>* list = NULL,
-			  std::vector<string>* ids = NULL,
-			  std::vector<string>* types = NULL);
+			  std::vector<std::string>* ids = NULL,
+			  std::vector<std::string>* types = NULL);
   /// gets the list of histograms in a Set
   int getHistogramsBySet(std::string SetName,
 			 std::vector<OnlineHistogram*>* list = NULL,
-			 std::vector<string>* ids = NULL,
-			 std::vector<string>* types = NULL);
+			 std::vector<std::string>* ids = NULL,
+			 std::vector<std::string>* types = NULL);
   int getHistogramsBySet(const OnlineHistogram& Set,
 			 std::vector<OnlineHistogram*>* list,
-			 std::vector<string>* ids = NULL,
-			 std::vector<string>* types = NULL);
+			 std::vector<std::string>* ids = NULL,
+			 std::vector<std::string>* types = NULL);
   /// gets the list of page folders, Parent can be "/", a page folder name or "_ALL_" for all folders  
-  int getPageFolderNames(std::vector<string>& list, std::string Parent="_ALL_");
+  int getPageFolderNames(std::vector<std::string>& list, std::string Parent="_ALL_");
   /// gets the list of pages in a folder
   int getPageNamesByFolder(std::string Folder,
-			   std::vector<string>& list);
-  int getPageNames(std::vector<string>& list);
+			   std::vector<std::string>& list);
+  int getPageNames(std::vector<std::string>& list);
   /// gets the list of known subsystems
-  int getSubsystems(std::vector<string>& list);
+  int getSubsystems(std::vector<std::string>& list);
   /// gets the list of tasks
-  int getTasks(std::vector<string>& list);
+  int getTasks(std::vector<std::string>& list);
   /// gets the list of algorithms, type can be "_ALL_", "CHECK", "HCREATOR"
-  int getAlgorithms(std::vector<string>& list,std::string type="_ALL_");
+  int getAlgorithms(std::vector<std::string>& list,std::string type="_ALL_");
 
  private:
   // private dummy copy constructor and assignment operator
@@ -168,11 +168,11 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   int m_nHistograms;
   int m_nPages;
   int m_nPageFolders;
-  int genericStringQuery(std::string command,std::vector<string>& list);
+  int genericStringQuery(std::string command,std::vector<std::string>& list);
   int getHistograms(std::string query,
 		    std::vector<OnlineHistogram*>* list=NULL,
-		    std::vector<string>* ids = NULL,
-		    std::vector<string>* types = NULL); 
+		    std::vector<std::string>* ids = NULL,
+		    std::vector<std::string>* types = NULL); 
 };
 
 #endif // ONLINEHISTDB_Hg

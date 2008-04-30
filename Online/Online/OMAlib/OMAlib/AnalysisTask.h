@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.h,v 1.2 2008-03-11 18:23:26 ggiacomo Exp $
+// $Id: AnalysisTask.h,v 1.3 2008-04-30 13:28:54 ggiacomo Exp $
 #ifndef OMALIB_ANALYSISTASK_H 
 #define OMALIB_ANALYSISTASK_H 1
 
@@ -29,7 +29,7 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  virtual StatusCode analyze(std::string SaveSet,
+  virtual StatusCode analyze(std::string& SaveSet,
                              std::string Task) = 0;
 
 protected:

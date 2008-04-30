@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.3 2008-03-11 18:23:26 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.4 2008-04-30 13:28:54 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -7,6 +7,7 @@
 
 #include "OMAlib/OMAlib.h"
 #include "OMAlib/OMAAlgorithms.h"
+using namespace std;
 
 OMAlib::OMAlib(OnlineHistDB* HistDB) : m_histDB(HistDB), m_debug(2) { 
   m_localDBsession=false;

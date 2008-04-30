@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.24 2008-04-24 12:37:08 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.25 2008-04-30 13:29:16 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -13,9 +13,7 @@
 #include <sstream>
 #include <set>
 #include <vector>
-#include <cctype>
 #include <oci.h>
-using namespace std;
 class OnlineTaskStorage;
 class OnlineHistogramStorage;
 class OnlinePageStorage;
@@ -53,6 +51,8 @@ namespace OnlineHistDBEnv_constants {
   static const unsigned int VSIZE_SSNAME      =  11;
   static const unsigned int VSIZE_REFERENCE   = 101;
   static const unsigned int VSIZE_PARAMETERS  =  16;
+
+  static std::string unknown = "unknown";
 }
 
 
@@ -76,17 +76,17 @@ class OnlineHistDBEnv {
   ///
   void setExcLevel(int ExceptionLevel) {m_excLevel=ExceptionLevel;}
   /// check the syntax of the page full name, returning the correct syntax and the folder name 
-  std::string PagenameSyntax(std::string fullname, std::string &folder);
+  std::string PagenameSyntax(std::string &fullname, std::string &folder);
   /// gets the number of parameters, and optionally the number of input histograms, needed by algorithm AlgName.
-  int getAlgorithmNpar(std::string AlgName,
+  int getAlgorithmNpar(std::string& AlgName,
 		       int* Ninput = NULL);
   /// gets the name of parameter Ipar (starting from 1) of algorithm AlgName
-  std::string getAlgParName(std::string AlgName,
+  std::string getAlgParName(std::string& AlgName,
 			    int Ipar);
   /// get reference histograms root directory 
-  inline std::string refRoot() {return *m_refRoot;}
+  inline std::string& refRoot() {return (m_refRoot ? (*m_refRoot) : OnlineHistDBEnv_constants::unknown);}
   /// get saveset root directory 
-  inline std::string savesetsRoot() {return *m_savesetsRoot;}
+  inline std::string& savesetsRoot() {return (m_savesetsRoot ? (*m_savesetsRoot) : OnlineHistDBEnv_constants::unknown);}
 
   void warningMessage(std::string Error) const; 
   inline OCIEnv *envhp() const {return m_envhp;}
@@ -205,7 +205,7 @@ class OnlineHistDBEnv {
 
   void checkCurBind();
   void resetTaggedStatements();
-  std::string toUpper(string str);
+  void toUpper(std::string& str);
   int m_debug;
   int m_excLevel;
 };
