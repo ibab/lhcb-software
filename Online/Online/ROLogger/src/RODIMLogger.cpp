@@ -1,4 +1,4 @@
-// $Id: RODIMLogger.cpp,v 1.5 2008-04-30 19:19:11 frankb Exp $
+// $Id: RODIMLogger.cpp,v 1.6 2008-04-30 21:06:53 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RODIMLogger.cpp,v 1.5 2008-04-30 19:19:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RODIMLogger.cpp,v 1.6 2008-04-30 21:06:53 frankb Exp $
 
 // Framework include files
 extern "C" {
@@ -24,41 +24,59 @@ extern "C" {
 #include "ROLogger/RODIMLogger.h"
 
 #ifdef _WIN32
+#include "RTL/conioex.h"
 #endif
 namespace graphics {
 #ifdef _WIN32
   inline void  consolesize(size_t* rows, size_t* cols) { int x,y; ::consolesize(&y,&x); *rows=y;*cols=x; }
-  inline void  gotoxy(int x,int y) { ::gotoxy(x,y);            }
-  inline void  inverse()       {    inversevideo();            }
-  inline void  underline()     {    underlinevideo();          }
-  inline void  normal()        {    normalvideo();             }
-  inline void  clear_screen()  {    clrscr();                  }
-  inline void  flash()         {    blinkvideo();              }
-  inline void  plain()         {    lowvideo();normalvideo();  }
-  inline void  narrow_screen() {                               }
-  inline void  wide_screen()   {                               }
-  inline void  cursor_on()     {    _setcursortype(); }
-  inline void  cursor_off()    {    _setcursortype(_NOCURSOR);               }
-
-  inline void  red()               {    textattr(BUILD_TEXTATTR(BLACK,RED));     }
-  inline void  yellow()            {    textattr(BUILD_TEXTATTR(BLACK,YELLOW));  }
-  inline void  white()             {    textattr(BUILD_TEXTATTR(BLACK,WHITE));   }
-  inline void  green()             {    textattr(BUILD_TEXTATTR(BLACK,GREEN));   }
-  inline void  blue()              {    textattr(BUILD_TEXTATTR(BLACK,BLUE));    }
-  inline void  cyan()              {    textattr(BUILD_TEXTATTR(BLACK,CYAN));    }
-
+  inline void  gotoxy(int x,int y) {    ::gotoxy(x,y);             }
   inline void  bold()              {    highvideo();               }
+  inline void  nobold()            {    lowvideo();                }
+  inline void  dimmed()            {    lowvideo();                }
+  inline void  nodimmed()          {    normalvideo();             }
+  inline void  inverse()           {    inversevideo();            }
+  inline void  noinverse()         {    noinversevideo();          }
+  inline void  underline()         {    underlinevideo();          }
+  inline void  nounderline()       {    normalvideo();             }
+  inline void  flash()             {    blinkvideo();              }
+  inline void  noflash()           {    normalvideo();             }
+  inline void  normal()            {    normalvideo();             }
+
+  inline void  clear_screen()      {    clrscr();                  }
+  inline void  plain()             {    lowvideo();normalvideo();  }
+  inline void  narrow_screen()     {                               }
+  inline void  wide_screen()       {                               }
+  inline void  cursor_on()         {    _setcursortype(_NORMALCURSOR); }
+  inline void  cursor_off()        {    _setcursortype(_NOCURSOR);}
+
+  inline void  red()               {    textcolor(RED);           }
+  inline void  yellow()            {    textcolor(YELLOW);        }
+  inline void  white()             {    textcolor(WHITE);         }
+  inline void  green()             {    textcolor(GREEN);         }
+  inline void  blue()              {    textcolor(BLUE);          }
+  inline void  cyan()              {    textcolor(CYAN);          }
+  inline void  black()             {    textcolor(BLACK);         }
+  inline void  magenta()           {    textcolor(MAGENTA);       }
+
+
+  inline void  bg_red()            {    textbackground(RED);     }
+  inline void  bg_yellow()         {    textbackground(YELLOW);  }
+  inline void  bg_white()          {    textbackground(WHITE);   }
+  inline void  bg_green()          {    textbackground(GREEN);   }
+  inline void  bg_blue()           {    textbackground(BLUE);    }
+  inline void  bg_cyan()           {    textbackground(CYAN);    }
+  inline void  bg_black()          {    textbackground(BLACK);    }
+  inline void  bg_magenta()        {    textbackground(MAGENTA);    }
+
   inline void  bold_yellow()       {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,YELLOW));  }
   inline void  bold_magenta()      {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,MAGENTA)); }
   inline void  bold_red()          {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,RED));     }
-
-  inline_void  bg_red()            {    textbackground(RED); }
-
 
 #else
 
   inline void  consolesize(size_t* rows, size_t* cols);
   inline void  gotoxy(int x,int y) {    ::printf("\033[%d;%dH",y,x);    }
+  inline void  scroll(int top,int bot)  { ::printf("\033[%d;%dr",top,bot); }
 
   inline void  plain()             {    ::printf("\033[0m");         }
   inline void  bold()              {    ::printf("\033[1m");         }
@@ -98,14 +116,6 @@ namespace graphics {
   inline void  bg_cyan()           {    ::printf("\033[46m");     }
   inline void  bg_white()          {    ::printf("\033[47m");     }
 
-  inline void  bold_grey()         {    ::printf("\033[0;1;30;40m"); }
-  inline void  bold_red()          {    ::printf("\033[0;1;31;40m"); }
-  inline void  bold_green()        {    ::printf("\033[0;1;32;40m"); }
-  inline void  bold_yellow()       {    ::printf("\033[0;1;33;40m"); }
-  inline void  bold_blue()         {    ::printf("\033[0;1;34;40m"); }
-  inline void  bold_magenta()      {    ::printf("\033[0;1;35;40m"); }
-  inline void  bold_cyan()         {    ::printf("\033[0;1;36;40m"); }
-  inline void  bold_white()        {    ::printf("\033[0;1;37;40m"); }
   inline void  tographics()          {    ::printf("\033>"); }
   inline void  toascii()          {    ::printf("\033(B"); }
 #endif
@@ -133,7 +143,8 @@ void graphics::consolesize(size_t* rows, size_t* cols) {
 #endif
 
 using namespace graphics;
-static void graphics_test() {
+
+extern "C" int graphics_test(int,char**) {
 #define DO(x,y) x(); y();                printf(" test ");           plain();                      printf("   ");  \
          x(); y();  dimmed();            printf(" Dimmed ");         nodimmed();                   printf("   ");  \
          x(); y();  bold();              printf(" Bold ");           nobold();                     printf("   ");  \
@@ -168,7 +179,7 @@ static void graphics_test() {
   DO(bg_green,magenta);
   DO(bg_green,blue);
   DO(bg_green,cyan);
-
+#ifndef _WIN32
   fprintf(stdout,"\033#3");printf(" Hello\n");
   fprintf(stdout,"\033#4");printf(" Hello\n");
   fprintf(stdout,"\033#6");printf(" Hello\n");
@@ -180,10 +191,11 @@ static void graphics_test() {
     fprintf(stdout,"\033D"); fflush(stdout);
     ::lib_rtl_sleep(100);
   }
-}
-
-extern "C" int graphics_test(int,char**) {
-  graphics_test();
+#endif
+  bg_black();
+  green();
+  normal();
+  return 1;
 }
 
 
@@ -282,6 +294,7 @@ void RODIMLogger::printHeader(FILE* fp, const std::string& title) {
       char buffer[1024];
       cols  = cols<sizeof(buffer)?cols:sizeof(buffer);
 
+      ::white();
       ::bg_black();
       ::inverse();
       ::bold();
@@ -314,6 +327,7 @@ void RODIMLogger::printHeader(FILE* fp, const std::vector<std::string>& titles) 
     if ( rows>0 && cols>0 ) {
       char buffer[1024];
       cols  = cols<sizeof(buffer)?cols:sizeof(buffer);
+      ::white();
       ::bg_black();
       ::inverse();
       ::bold();
