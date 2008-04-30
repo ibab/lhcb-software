@@ -230,7 +230,7 @@ extern "C" {
 		char appliName[100]="DeletePortRow";
 		int numrows=1;
 		int numrows_bis=1;
-		char sqlstmt[1000];
+		char sqlstmt[10000];
 		OCIStmt *hstmt;
 		OCIBind  *bndp[11]; 
 		int ptoid=0;
@@ -309,9 +309,9 @@ extern "C" {
 		{
 
 			//sprintf(sqlstmt,"begin delete from %s where portidfrom=:pid or portidto=:pid returning portidfrom,portidto into :pfrom,:pto; if %s=1 then :rescode:=%s(:pfrom,:pto); else :numrows:=0; end if; delete from %s where portid=:pid returning nvl(port_type,'none'),port_nbr,port_way,deviceid,nvl(ipaddress,'none') into :ptype,:pnb,:pway,:devid,:ipadd ;if %s=1 then delete from %s where port_nbr=:pnb and port_way=:pway and nvl(port_type,'none')=:ptype and serialnb=(select serialnb from %s where deviceid=:devid); if :ipadd!='none' then  delete from %s g where g.ipaddress=:ipadd and g.ipaddress not in (select ipaddress from %s where ipaddress=:ipadd); delete from %s t where t.ipaddress=:ipadd and t.ipaddress not in (select e.ipaddress from %s e); end if;else :numrows_bis:=0; end if; end;",MACRO_CONNECTIVITY_TABLE,SQLROWCOUNT,_DeleteLinksInPaths,PORT_TABLE,SQLROWCOUNT,HWPORT_TABLE,LOGICAL_DEVICE_TABLE,IPALIAS_TABLE, PORT_TABLE,IPINFO_TABLE,PORT_TABLE);
-			sprintf(sqlstmt,"begin delete from %s where portidfrom=:pid or portidto=:pid returning portidfrom,portidto into :pfrom,:pto; if %s=1 then :rescode:=%s(:pfrom,:pto); else :numrows:=0; end if; delete from MICRO_CONNECTIVITY_TABLE where portidfrom=:pid or portidto=:pid; delete from %s where portid=:pid returning nvl(port_type,'none'),port_nbr,port_way,deviceid,nvl(ipaddress,'none') into :ptype,:pnb,:pway,:devid,:ipadd ;if %s=1 then delete from %s where port_nbr=:pnb and port_way=:pway and nvl(port_type,'none')=:ptype and serialnb=(select serialnb from %s where deviceid=:devid); if :ipadd!='none' then  delete from %s g where g.ipaddress=:ipadd and g.ipaddress not in (select ipaddress from %s where ipaddress=:ipadd); delete from %s t where t.ipaddress=:ipadd and t.ipaddress not in (select e.ipaddress from %s e); end if;else :numrows_bis:=0; end if; end;",MACRO_CONNECTIVITY_TABLE,SQLROWCOUNT,_DeleteLinksInPaths,PORT_TABLE,SQLROWCOUNT,HWPORT_TABLE,LOGICAL_DEVICE_TABLE,IPALIAS_TABLE, PORT_TABLE,IPINFO_TABLE,PORT_TABLE);
+			sprintf(sqlstmt,"begin delete from %s where portidfrom=:pid or portidto=:pid returning portidfrom,portidto into :pfrom,:pto; if %s=1 then :rescode:=%s(:pfrom,:pto); else :numrows:=0; end if; delete from %s where portidfrom=:pid or portidto=:pid; delete from %s where portid=:pid returning nvl(port_type,'none'),port_nbr,port_way,deviceid,nvl(ipaddress,'none') into :ptype,:pnb,:pway,:devid,:ipadd ;if %s=1 then delete from %s where port_nbr=:pnb and port_way=:pway and nvl(port_type,'none')=:ptype and serialnb=(select serialnb from %s where deviceid=:devid); if :ipadd!='none' then  delete from %s g where g.ipaddress=:ipadd and g.ipaddress not in (select ipaddress from %s where ipaddress=:ipadd); delete from %s t where t.ipaddress=:ipadd and t.ipaddress not in (select e.ipaddress from %s e); end if;else :numrows_bis:=0; end if; end;",MACRO_CONNECTIVITY_TABLE,SQLROWCOUNT,_DeleteLinksInPaths,MICRO_CONNECTIVITY_TABLE,PORT_TABLE,SQLROWCOUNT,HWPORT_TABLE,LOGICAL_DEVICE_TABLE,IPALIAS_TABLE, PORT_TABLE,IPINFO_TABLE,PORT_TABLE);
 
-			status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
+      status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
 		}
 
 		if(status!=OCI_SUCCESS)

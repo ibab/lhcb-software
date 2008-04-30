@@ -491,10 +491,10 @@ int GetDeviceStatus(int devstatus,char* device_status)
 	}
 
 }
-
-int DefineByPos(OCIStmt* stmthp,OCIDefine** def, OCIError* ociError, int pos, char* valuep, sb4 value_sz, int indp, sword* status){
+//////////////
+int DefineByPos(OCIStmt* stmthp,OCIDefine** def, OCIError* ociError, int pos, char* valuep, sb4 value_sz, sword* status){
 	Error err;
-	*status =OCIDefineByPos(stmthp, &def[pos-1], ociError,pos, (ub1 *) (valuep), value_sz,SQLT_STR, (dvoid *)&indp,(ub2 *) 0,0, OCI_DEFAULT);
+	*status =OCIDefineByPos(stmthp, &def[pos-1], ociError,pos, (ub1 *) (valuep), value_sz,SQLT_STR, (dvoid *)0,(ub2 *) 0,0, OCI_DEFAULT);
 	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
 		err.ociError=ociError;
 		sprintf(err.log,"OCIDefineByPos (pos %i) unsuccessful",pos);
@@ -601,4 +601,11 @@ int AttrSet (OCIStmt* stmthp,int* attributep,OCIError* ociError, sword* status){
 		throw err;
 	}	
 	return *status;
+}
+//////////////////////////////
+void RemoveSeparator(char* attribute_value, char* separator)
+{
+	int pos;
+	pos=strcspn(attribute_value,separator);
+	attribute_value[pos]='\0';
 }

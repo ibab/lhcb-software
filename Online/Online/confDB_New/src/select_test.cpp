@@ -37,17 +37,7 @@ EXTERN_CONFDB
 	int GetDeviceTypeRow(char* devitype,int &len_devtype,char* devtype_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetDeviceTypeRow";
-		int i = 0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
-		int len1=0;
-		int pos3=0;
 		int rescode=0;
-		int free_mem=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		sword status;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -59,15 +49,9 @@ EXTERN_CONFDB
 		char * devicetype_temp=NULL;
 		char * description_temp=NULL;
 		char* rgbcolor_temp=NULL;
-		int dtype_null=0;
-		int description_null=0;
-		int rgbcolor_null=0;
-		char  buffer[10];
 		int nbrofinput=0;
 		int nbrofoutput= 0;
 		int dtypeID=0;
-		char logmessage[100];
-		int res1=0;
 		int sysID=0;
 		char* sysIDList=NULL;
 		if(devitype==NULL)
@@ -93,10 +77,6 @@ EXTERN_CONFDB
 			ParamGet(stmthp, ociError, &parmdp, 6, &status);
 			AttrGet(parmdp, &rgbcolorlen, ociError, &status);
 
-			// Use the retrieved length of dept to allocate an output buffer, and then define the output variable. If the define call returns an error,exit the application 
-			MinStringLength(devtypelen); //case it will be a null value need a buffer bigger than 5
-			MinStringLength(descriptionlen);
-
 			devicetype_temp = (char *) realloc(devicetype_temp,(devtypelen + 1)*sizeof(char));
 			description_temp= (char *) realloc(description_temp,(descriptionlen + 1)*sizeof(char));
 			rgbcolor_temp= (char *) realloc(rgbcolor_temp,(rgbcolorlen + 1)*sizeof(char));
@@ -117,12 +97,12 @@ EXTERN_CONFDB
 				return rescode;
 			}
 			
-			DefineByPos(stmthp,def,ociError,1, devicetype_temp,devtypelen+1,dtype_null,&status);							
+			DefineByPos(stmthp,def,ociError,1, devicetype_temp,devtypelen+1,&status);							
 			DefineByPos(stmthp,def,ociError,2,&dtypeID,&status);				
 			DefineByPos(stmthp,def,ociError,3,&nbrofinput,&status);
 			DefineByPos(stmthp,def,ociError,4,&nbrofoutput,&status);
-			DefineByPos(stmthp,def,ociError,5, description_temp, descriptionlen + 1,description_null,&status);				
-			DefineByPos(stmthp,def,ociError,6, rgbcolor_temp, descriptionlen + 1,rgbcolor_null,&status);	
+			DefineByPos(stmthp,def,ociError,5, description_temp, descriptionlen + 1,&status);				
+			DefineByPos(stmthp,def,ociError,6, rgbcolor_temp, descriptionlen + 1,&status);	
 			DefineByPos(stmthp,def,ociError,7,&sysID,&status);		
 		
 		}catch(Error err){
@@ -143,57 +123,26 @@ EXTERN_CONFDB
 
 		if (status == OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO) 
 		{	
-			Format_output(description_null,description_temp,  logmessage,'?');
-			Format_output(dtype_null,devicetype_temp, logmessage,'?');
-			Format_output(rgbcolor_null,rgbcolor_temp, logmessage,'?');
+			RemoveSeparator(description_temp,"?");
+			RemoveSeparator(devicetype_temp, "?");
+			RemoveSeparator(rgbcolor_temp,  "?");
+
 			sysIDList=(char*)malloc(200*sizeof(char));
 			if(sysIDList!=NULL)
-				res1=DecomposeSysID_bis(sysID, sysIDList);
+				rescode=DecomposeSysID_bis(sysID, sysIDList);
 			else
 			{
 				GetErrorMess(appliName, "Malloc unsuccessfull",ErrorMessage,1);
 				if(devicetype_temp!=NULL)
-					devicetype_temp = (char *) realloc(devicetype_temp,(0)*sizeof(char));
+					free(devicetype_temp);
 				if(description_temp!=NULL)
-					description_temp= (char *) realloc(description_temp,(0)*sizeof(char));
+					free(description_temp);
 				if(rgbcolor_temp!=NULL)
-					rgbcolor_temp= (char *) realloc(rgbcolor_temp,(0)*sizeof(char));
+					free(rgbcolor_temp);
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				return -1;
 			}
-			//case where value has been truncated
-			pos1=strcspn(description_temp,"?");
-			pos2=strcspn(devicetype_temp,"?");
-			pos3=strcspn(rgbcolor_temp,"?");
-			description_temp[pos1]='\0';
-			devicetype_temp[pos2]='\0';
-			rgbcolor_temp[pos3]='\0';
-			len1=strlen("|devicetype (C): |devicetypeID (I): |nbrofinput (I): |nbrofoutput (I): |description (C): |rgbcolor (C): |system_name (C): |")+strlen(devicetype_temp)+strlen(description_temp)+strlen(rgbcolor_temp)+strlen(sysIDList);
-			sprintf(buffer,"%d",nbrofinput);
-			len1+=strlen(buffer);
-			sprintf(buffer,"%d",nbrofoutput);
-			len1+=strlen(buffer);
-			sprintf(buffer,"%d",dtypeID);
-			len1+=strlen(buffer);
-			if(len_devtype<len1)
-			{	
-				len1++;
-				len_devtype=len1;
-				GetErrorMess(appliName, "BUFFER_TOO_SMALL",ErrorMessage,1);
-				if(devicetype_temp!=NULL)
-					devicetype_temp = (char *) realloc(devicetype_temp,(0)*sizeof(char));
-				free(sysIDList);
-				if(description_temp!=NULL)
-					description_temp= (char *) realloc(description_temp,(0)*sizeof(char));
-				if(rgbcolor_temp!=NULL)
-					rgbcolor_temp= (char *) realloc(rgbcolor_temp,(0)*sizeof(char));
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				return -1;
-			}
-			else
-			{
-				sprintf(devtype_result,"|devicetype (C):%s |devicetypeID (I):%d |nbrofinput (I):%d |nbrofoutput (I):%d |description (C):%s |rgbcolor (C):%s |system_name (C):%s |",devicetype_temp,dtypeID,nbrofinput,nbrofoutput,description_temp,rgbcolor_temp,sysIDList);
-			}
+			sprintf(devtype_result,"|devicetype (C):%s |devicetypeID (I):%d |nbrofinput (I):%d |nbrofoutput (I):%d |description (C):%s |rgbcolor (C):%s |system_name (C):%s |",devicetype_temp,dtypeID,nbrofinput,nbrofoutput,description_temp,rgbcolor_temp,sysIDList);
 		} 
 		else 
 		{
@@ -207,12 +156,11 @@ EXTERN_CONFDB
 		if(sysIDList!=NULL)
 			free(sysIDList);
 		if(devicetype_temp!=NULL)
-			devicetype_temp = (char *) realloc(devicetype_temp,(0)*sizeof(char));
-
+			free(devicetype_temp);
 		if(description_temp!=NULL)
-			description_temp= (char *) realloc(description_temp,(0)*sizeof(char));
+			free(description_temp);
 		if(rgbcolor_temp!=NULL)
-			rgbcolor_temp= (char *) realloc(rgbcolor_temp,(0)*sizeof(char));
+			free(rgbcolor_temp);
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 		rescode+=status;
 		if(strstr(ErrorMessage,"NO_ROWS_SELECTED")==NULL)
@@ -247,22 +195,10 @@ EXTERN_CONFDB
 	int GetDeviceRow_devicename(char* functionaldeviname,int &len_device, char* device_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetDeviceRow_devicename";
-		int i = 0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
-		int pos3=0;
-		int pos4=0;
-		int pos5=0;
-		int free_mem=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		sword status;
 		int rescode=0;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
-		OCIBind  *bnd2p = (OCIBind *) 0;
 		OCIDefine* def[11];
 		sb4  devtypelen=0;
 		sb4 devlen=0;
@@ -274,24 +210,15 @@ EXTERN_CONFDB
 		int active=0;
 		int deviceid=0;
 		int promiscuous_mode=0;
-		int status1=0;
 		int nodeused=0;
-		char buffer[20];
-		int len=0;
 		char * devicename_temp=NULL;
 		char * devicetype_temp=NULL;
 		char * location_temp=NULL;
 		char * serialnb_temp=NULL;
 		char * devicefunction_temp=NULL;
 		int sysID=0;
-		int dname_null=0;
-		int dtype_null=0;
-		int serialnb_null=0;
-		int location_null=0;
-		int devfunction_null=0;
-		char logmessage[100];
 		char* sysIDlist=NULL;
-		int res1=0;
+		char selectdev[1000];
 		if(functionaldeviname==NULL)
 		{
 			GetErrorMess(appliName,"devicename MUST be given",ErrorMessage,1);
@@ -299,14 +226,10 @@ EXTERN_CONFDB
 		}	
 		try{
 			HandleAlloc(ociEnv,&stmthp,ociError,&status);
-		 			
-			char selectdev[1000];
 			sprintf(selectdev,"select t.devicename||'?',e.devicetype||'?',t.active,t.node,t.deviceid,t.promiscuous_mode,nvl(t.location,'none')||'?',t.nodeused,t.serialnb||'?',nvl(t.system_name,-1),%s(t.functionID)||'?' from %s e,%s t where t.devicename=:dname and e.devicetypeID=t.devicetypeID",_DecomposeFctID,DEVICETYPE_TABLE,LOGICAL_DEVICE_TABLE);
-				
 			StmtPrepare(stmthp,ociError, selectdev, &status);
 			BindByName(stmthp,&bnd1p,ociError,":dname",functionaldeviname,&status);
 			StmtExecute(ociHdbc, stmthp, ociError, &status);
-
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &devlen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
@@ -317,16 +240,7 @@ EXTERN_CONFDB
 			AttrGet(parmdp, &serialnblen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 11, &status);
 			AttrGet(parmdp, &devfunctionlen, ociError, &status);
-
-			/* Use the retrieved length of dept to allocate an output buffer, and
-			then define the output variable. If the define call returns an error,
-			exit the application */
-			MinStringLength(devtypelen);
-			MinStringLength(devlen);
-			MinStringLength(locationlen);
-			MinStringLength(serialnblen);
-			MinStringLength(devfunctionlen);
-			//std::cout << "devtype_len" << devtypelen<< std::endl;
+		
 			devicetype_temp = (char *) realloc(devicetype_temp,(devtypelen + 1)*sizeof(char));
 			devicename_temp= (char *) realloc(devicename_temp,(devlen + 1)*sizeof(char));
 			location_temp = (char *) realloc(location_temp,(locationlen + 1)*sizeof(char));
@@ -335,7 +249,6 @@ EXTERN_CONFDB
 
 			if(devicetype_temp==NULL || devicename_temp==NULL || location_temp==NULL || serialnb_temp==NULL||devicefunction_temp==NULL)
 			{
-
 				rescode=ShowErrors (status, ociError, "  pointer allocation unsuccessful");
 				rescode=-1;
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
@@ -351,20 +264,19 @@ EXTERN_CONFDB
 					free(devicefunction_temp);
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return rescode;
-
 			}
 			
-			DefineByPos(stmthp,def,ociError,1, devicename_temp,devlen + 1,dname_null,&status);							
-			DefineByPos(stmthp,def,ociError,2, devicetype_temp,devtypelen+1,dtype_null,&status);		
+			DefineByPos(stmthp,def,ociError,1, devicename_temp,devlen + 1,&status);							
+			DefineByPos(stmthp,def,ociError,2, devicetype_temp,devtypelen+1,&status);		
 			DefineByPos(stmthp,def,ociError,3,&active,&status);			
 			DefineByPos(stmthp,def,ociError,4,&node,&status);
 			DefineByPos(stmthp,def,ociError,5,&deviceid,&status);
 			DefineByPos(stmthp,def,ociError,6,&promiscuous_mode,&status);
-			DefineByPos(stmthp,def,ociError,7, location_temp, locationlen+1,location_null,&status);				
+			DefineByPos(stmthp,def,ociError,7, location_temp, locationlen+1,&status);				
 			DefineByPos(stmthp,def,ociError,8,&nodeused,&status);
-			DefineByPos(stmthp,def,ociError,9, serialnb_temp, serialnblen + 1,serialnb_null,&status);	
+			DefineByPos(stmthp,def,ociError,9, serialnb_temp, serialnblen + 1,&status);	
 			DefineByPos(stmthp,def,ociError,10,&sysID,&status);
-			DefineByPos(stmthp,def,ociError,11, devicefunction_temp, devfunctionlen+1,0,&status);				
+			DefineByPos(stmthp,def,ociError,11, devicefunction_temp, devfunctionlen+1,&status);				
 		
 		}catch(Error err){
 			sprintf(appliName,"GetDeviceRow_devicename");	///////
@@ -380,70 +292,35 @@ EXTERN_CONFDB
 		}
 
 		if(status==OCI_SUCCESS)
-
 			status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
-			Format_output(serialnb_null,serialnb_temp, logmessage,'?');
-			Format_output(dtype_null,devicetype_temp,logmessage,'?');
-			Format_output(location_null,location_temp,logmessage,'?');
-			Format_output(dname_null,devicename_temp,logmessage,'?');
-			Format_output(devfunction_null,devicefunction_temp,logmessage,'?');
+			RemoveSeparator(serialnb_temp,"?");
+			RemoveSeparator(devicetype_temp, "?");
+			RemoveSeparator(location_temp,"?");
+			RemoveSeparator(devicename_temp, "?");
+			RemoveSeparator(devicefunction_temp,"?");
 
-			pos1=strcspn(devicename_temp,"?");
-			pos2=strcspn(devicetype_temp,"?");
-			pos3=strcspn(location_temp,"?");
-			pos4=strcspn(serialnb_temp,"?");
-			pos5=strcspn(devicefunction_temp,"?");
-			devicename_temp[pos1]='\0';
-			devicetype_temp[pos2]='\0';
-			location_temp[pos3]='\0';
-			serialnb_temp[pos4]='\0';
-			devicefunction_temp[pos5]='\0';
 			sysIDlist=(char*)malloc(200*sizeof(char));
 			if(sysIDlist!=NULL)
-				res1=DecomposeSysID_bis(sysID, sysIDlist);
+				rescode=DecomposeSysID_bis(sysID, sysIDlist);
 			else
 			{
 				GetErrorMess(appliName, "Malloc unsuccessfull",ErrorMessage,1);
 				if(devicetype_temp!=NULL)
-					devicetype_temp = (char *) realloc(devicetype_temp,(0)*sizeof(char));
+					free(devicetype_temp);
 				if(devicename_temp!=NULL)
-					devicename_temp= (char *) realloc(devicename_temp,(0)*sizeof(char));
+					free(devicename_temp);
 				if(serialnb_temp!=NULL)
-					serialnb_temp = (char *) realloc(serialnb_temp,(0)*sizeof(char));
+					free(serialnb_temp);
 				if(location_temp!=NULL)
-					location_temp= (char *) realloc(location_temp,(0)*sizeof(char));
+					free(location_temp);
 				if(devicefunction_temp!=NULL)
-					devicefunction_temp= (char *) realloc(devicefunction_temp,(0)*sizeof(char));
+					free(devicefunction_temp);
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				return -1;
 			}
-			len=strlen(sysIDlist)+strlen(devicefunction_temp)+strlen(devicetype_temp)+strlen(devicename_temp)+strlen(location_temp)+strlen(serialnb_temp)+strlen("|devicename (C): |devicetype (C): |active (I):1 |node (I):1 |deviceid  (I): |promiscuous_mode (I):1 |location (C): |nodeused (I):1 |serialnb  (C): |device_function (C): |system_name (C): |");
-			sprintf(buffer,"%d",deviceid);
-			len+=strlen(buffer);
-
-			if(len_device<len)
-			{
-				len++;
-				len_device=len;
-				GetErrorMess(appliName, "BUFFER_TOO_SMALL",ErrorMessage,1);
-				if(devicetype_temp!=NULL)
-					devicetype_temp = (char *) realloc(devicetype_temp,(0)*sizeof(char));
-				if(devicename_temp!=NULL)
-					devicename_temp= (char *) realloc(devicename_temp,(0)*sizeof(char));
-				if(serialnb_temp!=NULL)
-					serialnb_temp = (char *) realloc(serialnb_temp,(0)*sizeof(char));
-				if(location_temp!=NULL)
-					location_temp= (char *) realloc(location_temp,(0)*sizeof(char));
-				if(devicefunction_temp!=NULL)
-					devicefunction_temp= (char *) realloc(devicefunction_temp,(0)*sizeof(char));
-				free(sysIDlist);
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				return -1;
-			}
-			else
 				sprintf(device_result,"|devicename (C):%s |devicetype (C):%s |active (I):%d |node (I):%d |deviceid  (I):%d |promiscuous_mode (I):%d |location (C):%s |nodeused (I):%d |serialnb  (C):%s |device_function (C):%s |system_name (C):%s |" ,devicename_temp,devicetype_temp,active,node,deviceid,promiscuous_mode,location_temp,nodeused,serialnb_temp,devicefunction_temp,sysIDlist);
 		} 
 		else 
@@ -457,15 +334,15 @@ EXTERN_CONFDB
 		}
 
 		if(devicetype_temp!=NULL)
-			devicetype_temp = (char *) realloc(devicetype_temp,(0)*sizeof(char));
+			free(devicetype_temp);
 		if(devicename_temp!=NULL)
-			devicename_temp= (char *) realloc(devicename_temp,(0)*sizeof(char));
+			free(devicename_temp);
 		if(location_temp!=NULL)
-			location_temp = (char *) realloc(location_temp,(0)*sizeof(char));
+			free(location_temp);
 		if(serialnb_temp!=NULL)
-			serialnb_temp= (char *) realloc(serialnb_temp,(0)*sizeof(char));
+			free(serialnb_temp);
 		if(devicefunction_temp!=NULL)
-			devicefunction_temp= (char *) realloc(devicefunction_temp,(0)*sizeof(char));
+			free(devicefunction_temp);
 		if(sysIDlist!=NULL)
 			free(sysIDlist);
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
@@ -500,26 +377,13 @@ EXTERN_CONFDB
 	int GetDeviceRow_devid(int deviceID,int &len_device, char* device_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetDeviceRow_devid";
-		int i = 0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
-		int pos3=0;
-		int pos4=0;
-		int pos5=0;
 		int node=0;
 		int active=0;
 		int deviceid=0;
 		int promiscuous_mode=0;
-		int status1=0;
 		int nodeused=0;
-		ub4 numcols = 0;
 		int rescode=0;
-		int free_mem=0;
-		ub4 collen=0;
-		ub2 type = 0;
 		sword status;
-
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
 		OCIDefine* def[11];
@@ -528,36 +392,22 @@ EXTERN_CONFDB
 		sb4  locationlen=0;
 		sb4 serialnblen=0;
 		sb4 functiondevlen=0;
-
 		OCIParam *parmdp;
-		int len=0;
-		char buffer[20];
 		char * devicename_temp=NULL;
 		char * devicetype_temp=NULL;
 		char * serialnb_temp=NULL;
 		char * location_temp=NULL;
 		char* functiondev_temp=NULL;
 		char selectdev[1000];
-
-		int dname_null=0;
-		int dtype_null=0;
-		int location_null=0;
-		int serialnb_null=0;
-		int devfunction_null=0;
 		int sysID=0;
 		char* sysIDlist=NULL;
-		int res1=0;
-		char logmessage[100];
-
+		
 		try{
 			HandleAlloc(ociEnv,&stmthp,ociError,&status);
-		 			
 			sprintf(selectdev,"select t.devicename||'?',e.devicetype||'?',t.active,t.node,t.deviceid,t.promiscuous_mode,nvl(t.location,'none')||'?',t.nodeused,t.serialnb,nvl(t.system_name,-1), %s(t.functionid)||'?' from %s t,%s e where t.deviceid=:dID and e.devicetypeID=t.devicetypeID",_DecomposeFctID,LOGICAL_DEVICE_TABLE,DEVICETYPE_TABLE);
-				
 			StmtPrepare(stmthp,ociError, selectdev, &status);
 			BindByName(stmthp,&bnd1p,ociError,":dID",&deviceID,&status);
 			StmtExecute(ociHdbc, stmthp, ociError, &status);
-
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &devlen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
@@ -569,12 +419,6 @@ EXTERN_CONFDB
 			ParamGet(stmthp, ociError, &parmdp, 11, &status);
 			AttrGet(parmdp, &functiondevlen, ociError, &status);
 			
-			MinStringLength(devtypelen);
-			MinStringLength(devlen);
-			MinStringLength(locationlen);
-			MinStringLength(serialnblen);
-			MinStringLength(functiondevlen);
-
 			devicetype_temp = (char *) realloc(devicetype_temp,(devtypelen + 1)*sizeof(char));
 			devicename_temp= (char *) realloc(devicename_temp,(devlen + 1)*sizeof(char));
 			location_temp = (char *) realloc(location_temp,(locationlen + 1)*sizeof(char));
@@ -601,17 +445,17 @@ EXTERN_CONFDB
 				return rescode;
 			}
 		
-			DefineByPos(stmthp,def,ociError,1, devicename_temp,devlen + 1,dname_null,&status);							
-			DefineByPos(stmthp,def,ociError,2, devicetype_temp,devtypelen+1,dtype_null,&status);		
+			DefineByPos(stmthp,def,ociError,1, devicename_temp,devlen + 1,&status);							
+			DefineByPos(stmthp,def,ociError,2, devicetype_temp,devtypelen+1,&status);		
 			DefineByPos(stmthp,def,ociError,3,&active,&status);			
 			DefineByPos(stmthp,def,ociError,4,&node,&status);
 			DefineByPos(stmthp,def,ociError,5,&deviceid,&status);
 			DefineByPos(stmthp,def,ociError,6,&promiscuous_mode,&status);
-			DefineByPos(stmthp,def,ociError,7, location_temp, locationlen+1,location_null,&status);				
+			DefineByPos(stmthp,def,ociError,7, location_temp, locationlen+1,&status);				
 			DefineByPos(stmthp,def,ociError,8,&nodeused,&status);
-			DefineByPos(stmthp,def,ociError,9, serialnb_temp, serialnblen + 1,serialnb_null,&status);	
+			DefineByPos(stmthp,def,ociError,9, serialnb_temp, serialnblen + 1,&status);	
 			DefineByPos(stmthp,def,ociError,10,&sysID,&status);
-			DefineByPos(stmthp,def,ociError,11, functiondev_temp, functiondevlen,0,&status);					
+			DefineByPos(stmthp,def,ociError,11, functiondev_temp, functiondevlen,&status);					
 		
 		}catch(Error err){
 			sprintf(appliName,"GetDeviceRow_devid");	///////
@@ -627,35 +471,19 @@ EXTERN_CONFDB
 		}
 
 		if(status==OCI_SUCCESS)
-
 			status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1, OCI_DEFAULT);
 
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
-			Format_output(serialnb_null,serialnb_temp, logmessage,'?');
-			//std::cout <<"logmessage bar "<<logmessage << "oracle "<<bar_null <<std::endl;
-			Format_output(dtype_null,devicetype_temp, logmessage,'?');
-			//std::cout <<"logmessage dtype "<<logmessage <<"oracle "<<dtype_null <<std::endl;
-			Format_output(location_null,location_temp, logmessage,'?');
-			//std::cout <<"logmessage uuid "<<logmessage <<"oracle "<<uuid_null <<std::endl;
-			Format_output(dname_null,devicename_temp, logmessage,'?');
-			//std::cout0 <<"logmessage dname "<<logmessage <<"oracle "<<dname_null <<std::endl;
-			Format_output(devfunction_null,functiondev_temp, logmessage,'?');
-
-			pos1=strcspn(devicename_temp,"?");
-			pos2=strcspn(devicetype_temp,"?");
-			pos3=strcspn(location_temp,"?");
-			pos4=strcspn(serialnb_temp,"?");
-			pos5=strcspn(functiondev_temp,"?");
-			devicename_temp[pos1]='\0';
-			devicetype_temp[pos2]='\0';
-			serialnb_temp[pos4]='\0';
-			location_temp[pos3]='\0';
-			functiondev_temp[pos5]='\0';
+			RemoveSeparator(serialnb_temp,"?");
+			RemoveSeparator(devicetype_temp, "?");
+			RemoveSeparator(location_temp,"?");
+			RemoveSeparator(devicename_temp,"?");
+			RemoveSeparator(functiondev_temp,"?");
 
 			sysIDlist=(char*)malloc(200*sizeof(char));
 			if(sysIDlist!=NULL)
-				res1=DecomposeSysID_bis(sysID, sysIDlist);
+				rescode=DecomposeSysID_bis(sysID, sysIDlist);
 			else
 			{
 				GetErrorMess(appliName, "Malloc unsuccessfull",ErrorMessage,1);
@@ -672,31 +500,6 @@ EXTERN_CONFDB
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				return -1;
 			}
-			len=strlen(functiondev_temp)+strlen(sysIDlist)+strlen(devicetype_temp)+strlen(devicename_temp)+strlen(location_temp)+strlen(serialnb_temp)+strlen("|devicename (C): |devicetype (C): |active (I):1 |node (I):1 |deviceid  (I): |promiscuous_mode (I):1 |location (C): |nodeused (I):1 |serialnb  (C): |device_function (C): |system_name (C): |");
-			sprintf(buffer,"%d",deviceid);
-			len+=strlen(buffer);
-			if(len_device<len)
-			{
-				len++;
-				len_device=len;
-				rescode=-1;
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				if(devicetype_temp!=NULL)
-					free(devicetype_temp);
-				if(devicename_temp!=NULL)
-					free(devicename_temp);
-				if(location_temp!=NULL)
-					free(location_temp);
-				if(serialnb_temp!=NULL)
-					free(serialnb_temp);
-				if(functiondev_temp!=NULL)
-					functiondev_temp= (char *) realloc(functiondev_temp,(0)*sizeof(char));
-
-				free(sysIDlist);
-				GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-				return rescode;
-			}
-			else
 				sprintf(device_result,"|devicename (C):%s |devicetype (C):%s |active (I):%d |node (I):%d |deviceid  (I):%d |promiscuous_mode (I):%d |location (C):%s |nodeused (I):%d |serialnb  (C):%s |device_function (C):%s |system_name (C):%s |",devicename_temp,devicetype_temp,active,node,deviceid,promiscuous_mode,location_temp,nodeused,serialnb_temp,functiondev_temp,sysIDlist);
 		} 
 		else 
@@ -710,16 +513,15 @@ EXTERN_CONFDB
 		}
 
 		if(devicetype_temp!=NULL)
-			devicetype_temp = (char *) realloc(devicetype_temp,(0)*sizeof(char));
+			free(devicetype_temp);
 		if(devicename_temp!=NULL)
-			devicename_temp= (char *) realloc(devicename_temp,(0)*sizeof(char));
+			free(devicename_temp);
 		if(serialnb_temp!=NULL)
-			serialnb_temp = (char *) realloc(serialnb_temp,(0)*sizeof(char));
+			free(serialnb_temp);
 		if(location_temp!=NULL)
-			location_temp= (char *) realloc(location_temp,(0)*sizeof(char));
+			free(location_temp);
 		if(functiondev_temp!=NULL)
-			functiondev_temp= (char *) realloc(functiondev_temp,(0)*sizeof(char));
-
+			free(functiondev_temp);
 		if(sysIDlist!=NULL)
 			free(sysIDlist);
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
@@ -732,7 +534,7 @@ EXTERN_CONFDB
 			}
 			else
 			{
-				OCIReportError(ociError,"GetDeviceRow_devid ",ErrorMessage,1); 
+				OCIReportError(ociError,appliName,ErrorMessage,1); 
 			}
 		}
 		return rescode;
@@ -757,14 +559,7 @@ EXTERN_CONFDB
 	int GetPortRow_pid(int portID, int &len_port,char* port_row_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetPortRow_pid";
-		int i = 0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		sword status;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -777,9 +572,6 @@ EXTERN_CONFDB
 		sb4 maclen=0;
 		sb4 bialen=0;
 		OCIParam *parmdp;
-		int len=0;
-		int free_mem=0;
-		char buffer[20];
 		int portid=0;
 		int admin_status=0; 
 		int pxi_booting=0;
@@ -792,25 +584,14 @@ EXTERN_CONFDB
 		char * dname_temp=NULL;
 		char * portype_temp=NULL;
 		char * portnb_temp=NULL;
-		int phy_null=0;
-		int ip_null=0;
-		int mac_null=0;
-		int bia_null=0;
-		int dname_null=0;
-		int portype_null=0;
-		int portnb_null=0;
-		char logmessage[100];
 		char selectport[1000];
 		
 		try{
 			HandleAlloc(ociEnv,&stmthp,ociError,&status);
-		 			
 			sprintf(selectport,"select e.portid,t.devicename||'?',e.port_nbr||'?',e.port_way,e.administrative_status,nvl(e.speed,0),nvl(e.port_type,'None')||'?',nvl(e.phy,'None')||'?',nvl(e.pxi_booting,-1),nvl(f.bia,'None')||'?',nvl(f.macaddress,'None')||'?',nvl(e.ipaddress,'None')||'?' from %s e,%s t,%s f where e.portid=:portID and t.deviceid=e.deviceid and f.serialnb=t.serialnb and f.port_nbr=e.port_nbr and nvl(f.port_type,'none')=nvl(e.port_type,'none') and f.port_way=e.port_way",PORT_TABLE,LOGICAL_DEVICE_TABLE,HWPORT_TABLE);
-				
 			StmtPrepare(stmthp,ociError, selectport, &status);
 			BindByName(stmthp,&bnd1p,ociError,":portID",&portID,&status);
 			StmtExecute(ociHdbc, stmthp, ociError, &status);
-
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
 			AttrGet(parmdp, &dnamelen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -826,14 +607,6 @@ EXTERN_CONFDB
             ParamGet(stmthp, ociError, &parmdp, 12, &status);
 			AttrGet(parmdp, &iplen, ociError, &status);
 			
-			MinStringLength(portnblen);
-			MinStringLength(phylen);
-			MinStringLength(portypelen);
-			MinStringLength(bialen);
-			MinStringLength(maclen);
-			MinStringLength(iplen);
-			MinStringLength(dnamelen);
-
 			portype_temp = (char *) realloc(portype_temp,(portypelen + 1)*sizeof(char));
 			phy_temp= (char *) realloc(phy_temp,(phylen + 1)*sizeof(char));
 			portnb_temp = (char *) realloc(portnb_temp,(portnblen + 1)*sizeof(char));
@@ -867,17 +640,17 @@ EXTERN_CONFDB
 				return rescode;
 			}
 			DefineByPos(stmthp,def,ociError,1,&portid,&status);			
-			DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,dname_null,&status);							
-			DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,portnb_null,&status);		
+			DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,&status);							
+			DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,&status);		
 			DefineByPos(stmthp,def,ociError,4,&portway,&status);
 			DefineByPos(stmthp,def,ociError,5,&admin_status,&status);
 			DefineByPos(stmthp,def,ociError,6,&speed,&status);
-			DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,portype_null,&status);	
-			DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,phy_null,&status);		
+			DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,&status);	
+			DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,&status);		
 			DefineByPos(stmthp,def,ociError,9,&pxi_booting,&status);
-			DefineByPos(stmthp,def,ociError,10, bia_temp, bialen + 1,bia_null,&status);	
-			DefineByPos(stmthp,def,ociError,11, mac_temp, maclen+1,mac_null,&status);				
-			DefineByPos(stmthp,def,ociError,12, ip_temp, iplen+1,ip_null,&status);						
+			DefineByPos(stmthp,def,ociError,10, bia_temp, bialen + 1,&status);	
+			DefineByPos(stmthp,def,ociError,11, mac_temp, maclen+1,&status);				
+			DefineByPos(stmthp,def,ociError,12, ip_temp, iplen+1,&status);						
 
 		}catch(Error err){
 			sprintf(appliName,"GetPortRow_pid");	///////
@@ -893,67 +666,19 @@ EXTERN_CONFDB
 		}
 
 		if(status==OCI_SUCCESS)
-
 			status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
-			Format_output(ip_null,ip_temp,  logmessage,'?');
-			Format_output(phy_null,phy_temp, logmessage,'?');
-			Format_output(mac_null,mac_temp,  logmessage,'?');
-			Format_output(portnb_null,portnb_temp, logmessage,'?');
-			Format_output(dname_null,dname_temp,  logmessage,'?');
-			Format_output(bia_null,bia_temp, logmessage,'?');
-			Format_output(portype_null,portype_temp,  logmessage,'?');
+			RemoveSeparator(ip_temp,"?");
+			RemoveSeparator(phy_temp, "?");
+			RemoveSeparator(mac_temp,"?");
+			RemoveSeparator(portnb_temp,"?");
+			RemoveSeparator(dname_temp,"?");
+			RemoveSeparator(bia_temp,"?");
+			RemoveSeparator(portype_temp,"?");
 
-			pos1=strcspn(portype_temp,"?");
-			pos2=strcspn(phy_temp,"?");
-			portype_temp[pos1]='\0';
-			phy_temp[pos2]='\0';
-			pos1=strcspn(portnb_temp,"?");
-			pos2=strcspn(bia_temp,"?");
-			portnb_temp[pos1]='\0';
-			bia_temp[pos2]='\0';
-			pos1=strcspn(mac_temp,"?");
-			pos2=strcspn(ip_temp,"?");
-			mac_temp[pos1]='\0';
-			ip_temp[pos2]='\0';
-			pos1=strcspn(dname_temp,"?");
-			dname_temp[pos1]='\0';
-
-			len=strlen(mac_temp)+strlen(phy_temp)+strlen(ip_temp)+strlen(bia_temp)+strlen(dname_temp)+strlen(portype_temp)+strlen(portnb_temp)+strlen("|portid (I): |devicename (C): |port_nbr (C): |port_way (I):1 |administrative_status (I):1 |speed (I): |port_type (C): |phy (C): |pxi_booting (I):1 |bia (C): |macaddress (C): |ipaddress (C): |");
-
-			sprintf(buffer,"%d",portid);
-			len+=strlen(buffer);
-			sprintf(buffer,"%d",speed);
-			len+=strlen(buffer);
-
-			if(len_port<len)
-			{
-				len++;
-				len_port=len;
-				rescode=-1;
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				if(phy_temp!=NULL)
-					free(phy_temp);
-				if(bia_temp!=NULL)
-					free(bia_temp);
-				if(portnb_temp!=NULL)
-					free(portnb_temp);
-				if(mac_temp!=NULL)
-					free(mac_temp);
-				if(ip_temp!=NULL)
-					free(ip_temp);
-				if(portype_temp!=NULL)
-					free(portype_temp);
-				if(dname_temp!=NULL)
-					free(dname_temp);
-
-				GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-				return rescode;
-			}
-			else
-				sprintf(port_row_result,"|portid (I):%d |devicename (C):%s |port_nbr (C):%s |port_way (I):%d |administrative_status (I):%d |speed (I):%d |port_type (C):%s |phy (C):%s |pxi_booting (I):%d |bia (C):%s |macaddress (C):%s |ipaddress (C):%s |",portid,dname_temp,portnb_temp,portway,admin_status,speed,portype_temp,phy_temp,pxi_booting,bia_temp,mac_temp,ip_temp);
+			sprintf(port_row_result,"|portid (I):%d |devicename (C):%s |port_nbr (C):%s |port_way (I):%d |administrative_status (I):%d |speed (I):%d |port_type (C):%s |phy (C):%s |pxi_booting (I):%d |bia (C):%s |macaddress (C):%s |ipaddress (C):%s |",portid,dname_temp,portnb_temp,portway,admin_status,speed,portype_temp,phy_temp,pxi_booting,bia_temp,mac_temp,ip_temp);
 		} 
 		else 
 		{
@@ -965,7 +690,6 @@ EXTERN_CONFDB
                     StmtPrepare(stmthp,ociError, selectport, &status);
                     BindByName(stmthp,&bnd1p,ociError,":portID",&portID,&status);
                     StmtExecute(ociHdbc, stmthp, ociError, &status);
-
 					ParamGet(stmthp, ociError, &parmdp, 2, &status);
 					AttrGet(parmdp, &dnamelen, ociError, &status);
 					ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -977,12 +701,6 @@ EXTERN_CONFDB
 					ParamGet(stmthp, ociError, &parmdp, 10, &status);
 					AttrGet(parmdp, &iplen, ociError, &status);
 					
-					MinStringLength(portnblen);
-					MinStringLength(phylen);
-					MinStringLength(portypelen);
-					MinStringLength(iplen);
-					MinStringLength(dnamelen);
-
 					portype_temp = (char *) realloc(portype_temp,(portypelen + 1)*sizeof(char));
 					phy_temp= (char *) realloc(phy_temp,(phylen + 1)*sizeof(char));
 					portnb_temp = (char *) realloc(portnb_temp,(portnblen + 1)*sizeof(char));
@@ -1010,15 +728,15 @@ EXTERN_CONFDB
 						return rescode;
 					}
 					DefineByPos(stmthp,def,ociError,1,&portid,&status);			
-					DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,dname_null,&status);							
-					DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,portnb_null,&status);	
+					DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,&status);							
+					DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,&status);	
 					DefineByPos(stmthp,def,ociError,4,&portway,&status);			  
 					DefineByPos(stmthp,def,ociError,5,&admin_status,&status);
 					DefineByPos(stmthp,def,ociError,6,&speed,&status);
-					DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,portype_null,&status);				
-					DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,phy_null,&status);					
+					DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,&status);				
+					DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,&status);					
 					DefineByPos(stmthp,def,ociError,9,&pxi_booting,&status);
-					DefineByPos(stmthp,def,ociError,10, ip_temp, iplen+1,ip_null,&status);						
+					DefineByPos(stmthp,def,ociError,10, ip_temp, iplen+1,&status);						
 
 				}catch(Error err){
 					sprintf(appliName,"GetPortRow_pid");	///////
@@ -1036,52 +754,13 @@ EXTERN_CONFDB
 
 				if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 				{	
-					Format_output(ip_null,ip_temp,  logmessage,'?');
-					Format_output(phy_null,phy_temp, logmessage,'?');
-					Format_output(portnb_null,portnb_temp, logmessage,'?');
-					Format_output(dname_null,dname_temp,  logmessage,'?');
-					Format_output(portype_null,portype_temp,  logmessage,'?');
-					pos1=strcspn(portype_temp,"?");
-					pos2=strcspn(phy_temp,"?");
-					portype_temp[pos1]='\0';
-					phy_temp[pos2]='\0';
-					pos1=strcspn(portnb_temp,"?");
-					portnb_temp[pos1]='\0';
-					pos2=strcspn(ip_temp,"?");
-					ip_temp[pos2]='\0';
-					pos1=strcspn(dname_temp,"?");
-					dname_temp[pos1]='\0';
-
-					len=strlen(phy_temp)+strlen(ip_temp)+strlen(dname_temp)+strlen(portype_temp)+strlen(portnb_temp)+strlen("|portid (I): |devicename (C): |port_nbr (C): |port_way (I):1 |administrative_status (I):1 |speed (I): |port_type (C): |phy (C): |pxi_booting (I):1 |bia (C):none |macaddress (C):none |ipaddress (C): |");
-
-					sprintf(buffer,"%d",portid);
-					len+=strlen(buffer);
-					sprintf(buffer,"%d",speed);
-					len+=strlen(buffer);
-
-
-					if(len_port<len)
-					{
-						len++;
-						len_port=len;
-						rescode=-1;
-						status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-						if(phy_temp!=NULL)
-							free(phy_temp);
-						if(portnb_temp!=NULL)
-							free(portnb_temp);
-
-						if(ip_temp!=NULL)
-							free(ip_temp);
-						if(portype_temp!=NULL)
-							free(portype_temp);
-						if(dname_temp!=NULL)
-							free(dname_temp);
-						GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-						return rescode;
-					}
-					else
-						sprintf(port_row_result,"|portid (I):%d |devicename (C):%s |port_nbr (C):%s |port_way (I):%d |administrative_status (I):%d |speed (I):%d |port_type (C):%s |phy (C):%s |pxi_booting (I):%d |bia (C):none |macaddress (C):none |ipaddress (C):%s |",portid,dname_temp,portnb_temp,portway,admin_status,speed,portype_temp,phy_temp,pxi_booting,ip_temp);
+					RemoveSeparator(ip_temp,"?");
+					RemoveSeparator(phy_temp,"?");
+					RemoveSeparator(portnb_temp,"?");
+					RemoveSeparator(dname_temp,"?");
+					RemoveSeparator(portype_temp,"?");
+					
+					sprintf(port_row_result,"|portid (I):%d |devicename (C):%s |port_nbr (C):%s |port_way (I):%d |administrative_status (I):%d |speed (I):%d |port_type (C):%s |phy (C):%s |pxi_booting (I):%d |bia (C):none |macaddress (C):none |ipaddress (C):%s |",portid,dname_temp,portnb_temp,portway,admin_status,speed,portype_temp,phy_temp,pxi_booting,ip_temp);
 				} 
 				else
 				{
@@ -1144,14 +823,7 @@ EXTERN_CONFDB
 	int GetPortRow_devname(char* devicename, char* port_nb,int port_way, char* port_type,int &len_port, char* port_row_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetPortRow_devname";
-		int i = 0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		sword status;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p[4] ; 
@@ -1164,9 +836,6 @@ EXTERN_CONFDB
 		sb4 maclen=0;
 		sb4 bialen=0;
 		OCIParam *parmdp;
-		int len=0;
-		int free_mem=0;
-		char buffer[20];
 		int portid=0;
 		int admin_status=0; 
 		int pxi_booting=0;
@@ -1179,14 +848,6 @@ EXTERN_CONFDB
 		char * dname_temp=NULL;
 		char * portype_temp=NULL;
 		char * portnb_temp=NULL;
-		int phy_null=0;
-		int ip_null=0;
-		int mac_null=0;
-		int bia_null=0;
-		int dname_null=0;
-		int portype_null=0;
-		int portnb_null=0;
-		char logmessage[100];
 		char selectport[1000];
 		char port_type1[100];
 
@@ -1204,16 +865,13 @@ EXTERN_CONFDB
 
 		try{
 			HandleAlloc(ociEnv,&stmthp,ociError,&status);
-		 			
 			sprintf(selectport,"select e.portid,t.devicename||'?',e.port_nbr||'?',e.port_way,e.administrative_status,nvl(e.speed,0),nvl(e.port_type,'none')||'?',nvl(e.phy,'none')||'?',nvl(e.pxi_booting,-1),nvl(f.bia,'none')||'?',nvl(f.macaddress,'none')||'?',nvl(e.ipaddress,'none')||'?' from %s e,%s t , %s f where t.devicename=:dname and e.port_nbr=:portnb and e.port_way=:portway and nvl(e.port_type,'none')=:portype and t.deviceid=e.deviceid and f.serialnb=t.serialnb and nvl(f.port_type,'none')=:portype and f.port_way=:portway and f.port_nbr=:portnb",PORT_TABLE,LOGICAL_DEVICE_TABLE,HWPORT_TABLE);
-				
 			StmtPrepare(stmthp,ociError, selectport, &status);
 			BindByName(stmthp,&bnd1p[0],ociError,":dname",devicename,&status);
 			BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,&status);
 			BindByName(stmthp,&bnd1p[2],ociError,":portway",&port_way,&status);
 			BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,&status);
 			StmtExecute(ociHdbc, stmthp, ociError, &status);
-
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
 			AttrGet(parmdp, &dnamelen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -1229,14 +887,6 @@ EXTERN_CONFDB
 			ParamGet(stmthp, ociError, &parmdp, 12, &status);
 			AttrGet(parmdp, &iplen, ociError, &status);
 			
-			MinStringLength(portnblen);
-			MinStringLength(phylen);
-			MinStringLength(portypelen);
-			MinStringLength(bialen);
-			MinStringLength(maclen);
-			MinStringLength(iplen);
-			MinStringLength(dnamelen);
-
 			portype_temp = (char *) realloc(portype_temp,(portypelen + 1)*sizeof(char));
 			phy_temp= (char *) realloc(phy_temp,(phylen + 1)*sizeof(char));
 			portnb_temp = (char *) realloc(portnb_temp,(portnblen + 1)*sizeof(char));
@@ -1270,17 +920,17 @@ EXTERN_CONFDB
 				return rescode;
 			}						
 			DefineByPos(stmthp,def,ociError,1,&portid,&status);						
-			DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,dname_null,&status);										 
-			DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,portnb_null,&status);					
+			DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,&status);										 
+			DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,&status);					
 			DefineByPos(stmthp,def,ociError,4,&portway,&status);
 			DefineByPos(stmthp,def,ociError,5,&admin_status,&status);
 			DefineByPos(stmthp,def,ociError,6,&speed,&status);
-			DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,portype_null,&status);				
-			DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,phy_null,&status);		
+			DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,&status);				
+			DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,&status);		
 			DefineByPos(stmthp,def,ociError,9,&pxi_booting,&status);			
-			DefineByPos(stmthp,def,ociError,10, bia_temp, bialen + 1,bia_null,&status);				
-			DefineByPos(stmthp,def,ociError,11, mac_temp, maclen+1,mac_null,&status);				
-			DefineByPos(stmthp,def,ociError,12, ip_temp, iplen+1,ip_null,&status);						
+			DefineByPos(stmthp,def,ociError,10, bia_temp, bialen + 1,&status);				
+			DefineByPos(stmthp,def,ociError,11, mac_temp, maclen+1,&status);				
+			DefineByPos(stmthp,def,ociError,12, ip_temp, iplen+1,&status);						
 
 		}catch(Error err){
 			sprintf(appliName,"GetPortRow_devname");	///////
@@ -1296,67 +946,19 @@ EXTERN_CONFDB
 		}
 
 		if(status==OCI_SUCCESS)
-
 			status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 		
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
-			Format_output(ip_null,ip_temp,  logmessage,'?');
-			Format_output(phy_null,phy_temp, logmessage,'?');
-			Format_output(mac_null,mac_temp,  logmessage,'?');
-			Format_output(portnb_null,portnb_temp, logmessage,'?');
-			Format_output(dname_null,dname_temp,  logmessage,'?');
-			Format_output(bia_null,bia_temp, logmessage,'?');
-			Format_output(portype_null,portype_temp,  logmessage,'?');
+			RemoveSeparator(ip_temp,"?");
+			RemoveSeparator(phy_temp,"?");
+			RemoveSeparator(mac_temp,"?");
+			RemoveSeparator(portnb_temp,"?");
+			RemoveSeparator(dname_temp,"?");
+			RemoveSeparator(bia_temp,"?");
+			RemoveSeparator(portype_temp,"?");
 
-			pos1=strcspn(portype_temp,"?");
-			pos2=strcspn(phy_temp,"?");
-			portype_temp[pos1]='\0';
-			phy_temp[pos2]='\0';
-			pos1=strcspn(portnb_temp,"?");
-			pos2=strcspn(bia_temp,"?");
-			portnb_temp[pos1]='\0';
-			bia_temp[pos2]='\0';
-			pos1=strcspn(mac_temp,"?");
-			pos2=strcspn(ip_temp,"?");
-			mac_temp[pos1]='\0';
-			ip_temp[pos2]='\0';
-			pos1=strcspn(dname_temp,"?");
-			dname_temp[pos1]='\0';
-
-			len=strlen(mac_temp)+strlen(phy_temp)+strlen(ip_temp)+strlen(bia_temp)+strlen(dname_temp)+strlen(portype_temp)+strlen(portnb_temp)+strlen("|portid (I): |devicename (C): |port_nbr (C): |port_way (I):1 |administrative_status (I):1 |speed (I): |port_type (C): |phy (C): |pxi_booting (I):1 |bia (C): |macaddress (C): |ipaddress (C): |");
-
-			sprintf(buffer,"%d",portid);
-			len+=strlen(buffer);
-			sprintf(buffer,"%d",speed);
-			len+=strlen(buffer);
-
-			if(len_port<len)
-			{
-				len++;
-				len_port=len;
-				rescode=-1;
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				if(phy_temp!=NULL)
-					free(phy_temp);
-				if(bia_temp!=NULL)
-					free(bia_temp);
-				if(portnb_temp!=NULL)
-					free(portnb_temp);
-				if(mac_temp!=NULL)
-					free(mac_temp);
-				if(ip_temp!=NULL)
-					free(ip_temp);
-				if(portype_temp!=NULL)
-					free(portype_temp);
-				if(dname_temp!=NULL)
-					free(dname_temp);
-
-				GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-				return rescode;
-			}
-			else
-				sprintf(port_row_result,"|portid (I):%d |devicename (C):%s |port_nbr (C):%s |port_way (I):%d |administrative_status (I):%d |speed (I):%d |port_type (C):%s |phy (C):%s |pxi_booting (I):%d |bia (C):%s |macaddress (C):%s |ipaddress (C):%s |",portid,dname_temp,portnb_temp,portway,admin_status,speed,portype_temp,phy_temp,pxi_booting,bia_temp,mac_temp,ip_temp);
+			sprintf(port_row_result,"|portid (I):%d |devicename (C):%s |port_nbr (C):%s |port_way (I):%d |administrative_status (I):%d |speed (I):%d |port_type (C):%s |phy (C):%s |pxi_booting (I):%d |bia (C):%s |macaddress (C):%s |ipaddress (C):%s |",portid,dname_temp,portnb_temp,portway,admin_status,speed,portype_temp,phy_temp,pxi_booting,bia_temp,mac_temp,ip_temp);
 		} 
 		else 
 		{
@@ -1370,9 +972,7 @@ EXTERN_CONFDB
 					BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,&status);
 					BindByName(stmthp,&bnd1p[2],ociError,":portway",&port_way,&status);
 					BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,&status);
-                  
                     StmtExecute(ociHdbc, stmthp, ociError, &status);
-
 					ParamGet(stmthp, ociError, &parmdp, 2, &status);
 					AttrGet(parmdp, &dnamelen, ociError, &status);
 					ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -1384,12 +984,6 @@ EXTERN_CONFDB
 					ParamGet(stmthp, ociError, &parmdp, 10, &status);
 					AttrGet(parmdp, &iplen, ociError, &status);
 				
-					MinStringLength(portnblen);
-					MinStringLength(phylen);
-					MinStringLength(portypelen);
-					MinStringLength(iplen);
-					MinStringLength(dnamelen);
-
 					portype_temp = (char *) realloc(portype_temp,(portypelen + 1)*sizeof(char));
 					phy_temp= (char *) realloc(phy_temp,(phylen + 1)*sizeof(char));
 					portnb_temp = (char *) realloc(portnb_temp,(portnblen + 1)*sizeof(char));
@@ -1417,15 +1011,15 @@ EXTERN_CONFDB
 						return rescode;
 					}				
 					DefineByPos(stmthp,def,ociError,1,&portid,&status);			
-					DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,dname_null,&status);							
-					DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,portnb_null,&status);	
+					DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,&status);							
+					DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,&status);	
 					DefineByPos(stmthp,def,ociError,4,&portway,&status);			  
 					DefineByPos(stmthp,def,ociError,5,&admin_status,&status);
 					DefineByPos(stmthp,def,ociError,6,&speed,&status);
-					DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,portype_null,&status);				
-					DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,phy_null,&status);					
+					DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,&status);				
+					DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,&status);					
 					DefineByPos(stmthp,def,ociError,9,&pxi_booting,&status);
-					DefineByPos(stmthp,def,ociError,10, ip_temp, iplen+1,ip_null,&status);		
+					DefineByPos(stmthp,def,ociError,10, ip_temp, iplen+1,&status);		
 
 				}catch(Error err){
 					sprintf(appliName,"GetPortRow_devname");	///////
@@ -1438,57 +1032,17 @@ EXTERN_CONFDB
 				}			
 				
 				if(status==OCI_SUCCESS)
-
 					status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 
 				if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 				{	
-					Format_output(ip_null,ip_temp,  logmessage,'?');
-					Format_output(phy_null,phy_temp, logmessage,'?');
-					Format_output(portnb_null,portnb_temp, logmessage,'?');
-					Format_output(dname_null,dname_temp,  logmessage,'?');
-					Format_output(portype_null,portype_temp,  logmessage,'?');
-
-					pos1=strcspn(portype_temp,"?");
-					pos2=strcspn(phy_temp,"?");
-					portype_temp[pos1]='\0';
-					phy_temp[pos2]='\0';
-					pos1=strcspn(portnb_temp,"?");
-					pos2=strcspn(ip_temp,"?");
-					portnb_temp[pos1]='\0';
-					ip_temp[pos2]='\0';
-					pos1=strcspn(dname_temp,"?");
-					dname_temp[pos1]='\0';
-
-					len=strlen(phy_temp)+strlen(ip_temp)+strlen(dname_temp)+strlen(portype_temp)+strlen(portnb_temp)+strlen("|portid (I): |devicename (C): |port_nbr (C): |port_way (I):1 |administrative_status (I):1 |speed (I): |port_type (C): |phy (C): |pxi_booting (I):1 |bia (C):none |macaddress (C):none |ipaddress (C): |");
-
-					sprintf(buffer,"%d",portid);
-					len+=strlen(buffer);
-					sprintf(buffer,"%d",speed);
-					len+=strlen(buffer);
-
-					if(len_port<len)
-					{
-						len++;
-						len_port=len;
-						rescode=-1;
-						status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-						if(phy_temp!=NULL)
-							free(phy_temp);
-						if(portnb_temp!=NULL)
-							free(portnb_temp);
-						if(ip_temp!=NULL)
-							free(ip_temp);
-						if(portype_temp!=NULL)
-							free(portype_temp);
-						if(dname_temp!=NULL)
-							free(dname_temp);
-
-						GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-						return rescode;
-					}
-					else
-						sprintf(port_row_result,"|portid (I):%d |devicename (C):%s |port_nbr (C):%s |port_way (I):%d |administrative_status (I):%d |speed (I):%d |port_type (C):%s |phy (C):%s |pxi_booting (I):%d |bia (C):none |macaddress (C):none |ipaddress (C):%s |",portid,dname_temp,portnb_temp,portway,admin_status,speed,portype_temp,phy_temp,pxi_booting,ip_temp);
+					RemoveSeparator(ip_temp,"?");
+					RemoveSeparator(phy_temp,"?");
+					RemoveSeparator(portnb_temp,"?");
+					RemoveSeparator(dname_temp,"?");
+					RemoveSeparator(portype_temp,"?");
+					
+					sprintf(port_row_result,"|portid (I):%d |devicename (C):%s |port_nbr (C):%s |port_way (I):%d |administrative_status (I):%d |speed (I):%d |port_type (C):%s |phy (C):%s |pxi_booting (I):%d |bia (C):none |macaddress (C):none |ipaddress (C):%s |",portid,dname_temp,portnb_temp,portway,admin_status,speed,portype_temp,phy_temp,pxi_booting,ip_temp);
 				} 
 				else 
 				{
@@ -1551,14 +1105,7 @@ EXTERN_CONFDB
 	int GetPortRow_devid(int deviceid, char* port_nb,int port_way,char* port_type,int &len_port, char* port_row_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetPortRow_devid";
-		int i = 0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		sword status;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p[4] ; 
@@ -1571,9 +1118,6 @@ EXTERN_CONFDB
 		sb4 maclen=0;
 		sb4 bialen=0;
 		OCIParam *parmdp;
-		int len=0;
-		int free_mem=0;
-		char buffer[20];
 		int portid=0;
 		int admin_status=0; 
 		int pxi_booting=0;
@@ -1586,14 +1130,6 @@ EXTERN_CONFDB
 		char * dname_temp=NULL;
 		char * portype_temp=NULL;
 		char * portnb_temp=NULL;
-		int phy_null=0;
-		int ip_null=0;
-		int mac_null=0;
-		int bia_null=0;
-		int dname_null=0;
-		int portype_null=0;
-		int portnb_null=0;
-		char logmessage[100];
 		char selectport[1000];
 		char port_type1[100];
 		if(port_type!=NULL)
@@ -1610,16 +1146,13 @@ EXTERN_CONFDB
 		
 		try{
 			HandleAlloc(ociEnv,&stmthp,ociError,&status);
-		 			
 			sprintf(selectport,"select e.portid,t.devicename||'?',e.port_nbr||'?',e.port_way,e.administrative_status,nvl(e.speed,0),nvl(e.port_type,'none')||'?',nvl(e.phy,'none')||'?',nvl(e.pxi_booting,-1),nvl(f.bia,'none')||'?',nvl(f.macaddress,'none')||'?',nvl(e.ipaddress,'none')||'?' from %s e,%s t,%s f where t.deviceid=:dID and e.port_nbr=:portnb and e.port_way=:portway and nvl(e.port_type,'none')=:portype and t.deviceid=e.deviceid and f.serialnb=t.serialnb and f.port_way=:portway and nvl(f.port_type,'none')=:portype and f.port_nbr=:portnb",PORT_TABLE,LOGICAL_DEVICE_TABLE,HWPORT_TABLE);
-				
 			StmtPrepare(stmthp,ociError, selectport, &status);
 			BindByName(stmthp,&bnd1p[0],ociError,":dID",&deviceid,&status);
 			BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,&status);
 			BindByName(stmthp,&bnd1p[2],ociError,":portway",&port_way,&status);
 			BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,&status);
 			StmtExecute(ociHdbc, stmthp, ociError, &status);
-			
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
 			AttrGet(parmdp, &dnamelen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -1634,14 +1167,6 @@ EXTERN_CONFDB
 			AttrGet(parmdp, &maclen, ociError, &status);            
 			ParamGet(stmthp, ociError, &parmdp, 12, &status);
 			AttrGet(parmdp, &iplen, ociError, &status);
-
-			MinStringLength(portnblen);
-			MinStringLength(phylen);
-			MinStringLength(portypelen);
-			MinStringLength(bialen);
-			MinStringLength(maclen);
-			MinStringLength(iplen);
-			MinStringLength(dnamelen);
 
 			portype_temp = (char *) realloc(portype_temp,(portypelen + 1)*sizeof(char));
 			phy_temp= (char *) realloc(phy_temp,(phylen + 1)*sizeof(char));
@@ -1676,17 +1201,17 @@ EXTERN_CONFDB
 				return rescode;
 			}							
 			DefineByPos(stmthp,def,ociError,1,&portid,&status);						
-			DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,dname_null,&status);										 
-			DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,portnb_null,&status);					
+			DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,&status);										 
+			DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,&status);					
 			DefineByPos(stmthp,def,ociError,4,&portway,&status);
 			DefineByPos(stmthp,def,ociError,5,&admin_status,&status);
 			DefineByPos(stmthp,def,ociError,6,&speed,&status);
-			DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,portype_null,&status);				
-			DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,phy_null,&status);		
+			DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,&status);				
+			DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,&status);		
 			DefineByPos(stmthp,def,ociError,9,&pxi_booting,&status);			
-			DefineByPos(stmthp,def,ociError,10, bia_temp, bialen + 1,bia_null,&status);				
-			DefineByPos(stmthp,def,ociError,11, mac_temp, maclen+1,mac_null,&status);				
-			DefineByPos(stmthp,def,ociError,12, ip_temp, iplen+1,ip_null,&status);
+			DefineByPos(stmthp,def,ociError,10, bia_temp, bialen + 1,&status);				
+			DefineByPos(stmthp,def,ociError,11, mac_temp, maclen+1,&status);				
+			DefineByPos(stmthp,def,ociError,12, ip_temp, iplen+1,&status);
 
 		}catch(Error err){
 			sprintf(appliName,"GetPortRow_devid");	///////
@@ -1702,67 +1227,19 @@ EXTERN_CONFDB
 		}
 		
 		if(status==OCI_SUCCESS)
-
 			status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
-			Format_output(ip_null,ip_temp,  logmessage,'?');
-			Format_output(phy_null,phy_temp, logmessage,'?');
-			Format_output(mac_null,mac_temp,  logmessage,'?');
-			Format_output(portnb_null,portnb_temp, logmessage,'?');
-			Format_output(dname_null,dname_temp,  logmessage,'?');
-			Format_output(bia_null,bia_temp, logmessage,'?');
-			Format_output(portype_null,portype_temp,  logmessage,'?');
+			RemoveSeparator(ip_temp,"?");
+			RemoveSeparator(phy_temp,"?");
+			RemoveSeparator(mac_temp,"?");
+			RemoveSeparator(portnb_temp,"?");
+			RemoveSeparator(dname_temp,"?");
+			RemoveSeparator(bia_temp,"?");
+			RemoveSeparator(portype_temp,"?");
 
-			pos1=strcspn(portype_temp,"?");
-			pos2=strcspn(phy_temp,"?");
-			portype_temp[pos1]='\0';
-			phy_temp[pos2]='\0';
-			pos1=strcspn(portnb_temp,"?");
-			pos2=strcspn(bia_temp,"?");
-			portnb_temp[pos1]='\0';
-			bia_temp[pos2]='\0';
-			pos1=strcspn(mac_temp,"?");
-			pos2=strcspn(ip_temp,"?");
-			mac_temp[pos1]='\0';
-			ip_temp[pos2]='\0';
-			pos1=strcspn(dname_temp,"?");
-			dname_temp[pos1]='\0';
-
-			len=strlen(mac_temp)+strlen(phy_temp)+strlen(ip_temp)+strlen(bia_temp)+strlen(dname_temp)+strlen(portype_temp)+strlen(portnb_temp)+strlen("|portid (I): |devicename (C): |port_nbr (C): |port_way (I):1 |administrative_status (I):1 |speed (I): |port_type (C): |phy (C): |pxi_booting (I):1 |bia (C): |macaddress (C): |ipaddress (C): |");
-
-			sprintf(buffer,"%d",portid);
-			len+=strlen(buffer);
-			sprintf(buffer,"%d",speed);
-			len+=strlen(buffer);
-
-			if(len_port<len)
-			{
-				len++;
-				len_port=len;
-				rescode=-1;
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				if(phy_temp!=NULL)
-					free(phy_temp);
-				if(bia_temp!=NULL)
-					free(bia_temp);
-				if(portnb_temp!=NULL)
-					free(portnb_temp);
-				if(mac_temp!=NULL)
-					free(mac_temp);
-				if(ip_temp!=NULL)
-					free(ip_temp);
-				if(portype_temp!=NULL)
-					free(portype_temp);
-				if(dname_temp!=NULL)
-					free(dname_temp);
-
-				GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-				return rescode;
-			}
-			else
-				sprintf(port_row_result,"|portid (I):%d |devicename (C):%s |port_nbr (C):%s |port_way (I):%d |administrative_status (I):%d |speed (I):%d |port_type (C):%s |phy (C):%s |pxi_booting (I):%d |bia (C):%s |macaddress (C):%s |ipaddress (C):%s |",portid,dname_temp,portnb_temp,portway,admin_status,speed,portype_temp,phy_temp,pxi_booting,bia_temp,mac_temp,ip_temp);
+			sprintf(port_row_result,"|portid (I):%d |devicename (C):%s |port_nbr (C):%s |port_way (I):%d |administrative_status (I):%d |speed (I):%d |port_type (C):%s |phy (C):%s |pxi_booting (I):%d |bia (C):%s |macaddress (C):%s |ipaddress (C):%s |",portid,dname_temp,portnb_temp,portway,admin_status,speed,portype_temp,phy_temp,pxi_booting,bia_temp,mac_temp,ip_temp);
 		} 
 		else 
 		{
@@ -1776,10 +1253,8 @@ EXTERN_CONFDB
                     BindByName(stmthp,&bnd1p[0],ociError,":dID",&deviceid,&status);
 					BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,&status);
 					BindByName(stmthp,&bnd1p[2],ociError,":portway",&port_way,&status);
-					BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,&status);
-                  
+					BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,&status);                  
                     StmtExecute(ociHdbc, stmthp, ociError, &status);
-
 					ParamGet(stmthp, ociError, &parmdp, 2, &status);
 					AttrGet(parmdp, &dnamelen, ociError, &status);
 					ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -1791,12 +1266,6 @@ EXTERN_CONFDB
 					ParamGet(stmthp, ociError, &parmdp, 10, &status);
 					AttrGet(parmdp, &iplen, ociError, &status);
 		
-					MinStringLength(portnblen);
-					MinStringLength(phylen);
-					MinStringLength(portypelen);
-					MinStringLength(iplen);
-					MinStringLength(dnamelen);
-
 					portype_temp = (char *) realloc(portype_temp,(portypelen + 1)*sizeof(char));
 					phy_temp= (char *) realloc(phy_temp,(phylen + 1)*sizeof(char));
 					portnb_temp = (char *) realloc(portnb_temp,(portnblen + 1)*sizeof(char));
@@ -1824,15 +1293,15 @@ EXTERN_CONFDB
 						return rescode;
 					}									
 					DefineByPos(stmthp,def,ociError,1,&portid,&status);			
-					DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,dname_null,&status);							
-					DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,portnb_null,&status);	
+					DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,&status);							
+					DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,&status);	
 					DefineByPos(stmthp,def,ociError,4,&portway,&status);			  
 					DefineByPos(stmthp,def,ociError,5,&admin_status,&status);
 					DefineByPos(stmthp,def,ociError,6,&speed,&status);
-					DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,portype_null,&status);				
-					DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,phy_null,&status);					
+					DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,&status);				
+					DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,&status);					
 					DefineByPos(stmthp,def,ociError,9,&pxi_booting,&status);
-					DefineByPos(stmthp,def,ociError,10, ip_temp, iplen+1,ip_null,&status);
+					DefineByPos(stmthp,def,ociError,10, ip_temp, iplen+1,&status);
 					
 				}catch(Error err){
 					sprintf(appliName,"GetPortRow_devid");	///////
@@ -1845,56 +1314,17 @@ EXTERN_CONFDB
 				}
 		
 				if(status==OCI_SUCCESS)
-	
-					status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
+                    status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 	
 				if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 				{	
-					Format_output(ip_null,ip_temp,  logmessage,'?');
-					Format_output(phy_null,phy_temp, logmessage,'?');
-					Format_output(portnb_null,portnb_temp, logmessage,'?');
-					Format_output(dname_null,dname_temp,  logmessage,'?');
-					Format_output(portype_null,portype_temp,  logmessage,'?');
-
-					pos1=strcspn(portype_temp,"?");
-					pos2=strcspn(phy_temp,"?");
-					portype_temp[pos1]='\0';
-					phy_temp[pos2]='\0';
-					pos1=strcspn(portnb_temp,"?");
-					pos2=strcspn(ip_temp,"?");
-					ip_temp[pos2]='\0';
-					portnb_temp[pos1]='\0';
-					pos1=strcspn(dname_temp,"?");
-					dname_temp[pos1]='\0';
-
-					len=strlen(phy_temp)+strlen(ip_temp)+strlen(dname_temp)+strlen(portype_temp)+strlen(portnb_temp)+strlen("|portid (I): |devicename (C): |port_nbr (C): |port_way (I):1 |administrative_status (I):1 |speed (I): |port_type (C): |phy (C): |pxi_booting (I):1 |bia (C):none |macaddress (C):none |ipaddress (C): |");
-	
-					sprintf(buffer,"%d",portid);
-					len+=strlen(buffer);
-					sprintf(buffer,"%d",speed);
-					len+=strlen(buffer);
-
-					if(len_port<len)
-					{
-						len++;
-						len_port=len;
-						rescode=-1;
-						status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-						if(phy_temp!=NULL)
-							free(phy_temp);
-						if(portnb_temp!=NULL)
-							free(portnb_temp);
-						if(ip_temp!=NULL)
-							free(ip_temp);
-						if(portype_temp!=NULL)
-							free(portype_temp);
-						if(dname_temp!=NULL)
-							free(dname_temp);
-						GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-						return rescode;
-					}
-					else	
-						sprintf(port_row_result,"|portid (I):%d |devicename (C):%s |port_nbr (C):%s |port_way (I):%d |administrative_status (I):%d |speed (I):%d |port_type (C):%s |phy (C):%s |pxi_booting (I):%d |bia (C):none |macaddress (C):none |ipaddress (C):%s |",portid,dname_temp,portnb_temp,portway,admin_status,speed,portype_temp,phy_temp,pxi_booting,ip_temp);
+					RemoveSeparator(ip_temp,"?");
+					RemoveSeparator(phy_temp,"?");
+					RemoveSeparator(portnb_temp,"?");
+					RemoveSeparator(dname_temp,"?");
+					RemoveSeparator(portype_temp,"?");
+		
+					sprintf(port_row_result,"|portid (I):%d |devicename (C):%s |port_nbr (C):%s |port_way (I):%d |administrative_status (I):%d |speed (I):%d |port_type (C):%s |phy (C):%s |pxi_booting (I):%d |bia (C):none |macaddress (C):none |ipaddress (C):%s |",portid,dname_temp,portnb_temp,portway,admin_status,speed,portype_temp,phy_temp,pxi_booting,ip_temp);
 				} 
 				else 
 				{
@@ -1954,20 +1384,12 @@ EXTERN_CONFDB
 	int GetMacroConnectivityRow_lkid(int lkID, int &len_conn,char* Conn_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetMacroConnectivityRow_lkid";
-		int i = 0;
-		int len=0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
 		sword status;
 		int rescode=0;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
 		OCIDefine* def[11];
 		OCIParam *parmdp;
-		char buffer[20];
-		char logmessage[100];
-
 		sb4  dnamefromlen=0;
 		sb4 dnametolen=0;
 		sb4  portnbfromlen=0;
@@ -1980,17 +1402,9 @@ EXTERN_CONFDB
 		char * portnbfrom_temp=NULL;
 		char * portnbto_temp=NULL;
 		char * lkname_temp=NULL;
-		int dnamefrom_null=0;
-		int dnameto_null=0;
-		int portnbfrom_null=0;
-		int portnbto_null=0;
-		int lkname_null=0;
 		int linkid=0;
 		char * porttypefrom_temp=NULL;
 		char * porttypeto_temp=NULL;
-		int porttypefrom_null=0;
-		int porttypeto_null=0;
-		int lkinfo_null=0;
 		int lkinfolen=0;
 		int bidirectional_link_used=0;
 		int lkused=0;
@@ -1999,13 +1413,10 @@ EXTERN_CONFDB
 
 		try{
 			HandleAlloc(ociEnv,&stmthp,ociError,&status);
-		 			
 			sprintf(selectconn,"select t.linkid,e.devicename||'?',f.devicename||'?',p.port_nbr||'?',nvl(p.port_type,'none')||'?',g.port_nbr||'?',nvl(g.port_type,'none')||'?',nvl(l.link_name,'none')||'?',t.bidirectional_link_used, t.lkused,nvl(t.link_info,'none')||'?' from %s t,%s p,%s g,%s l,%s e,%s f where t.linkid=:lkid and t.link_type=l.linktypeID and p.portid=t.portidfrom and g.portid=t.portidto and p.deviceid=e.deviceid and g.deviceid=f.deviceid",MACRO_CONNECTIVITY_TABLE,PORT_TABLE,PORT_TABLE,LINKTYPE_TABLE,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE);
-				
 			StmtPrepare(stmthp,ociError, selectconn, &status);
 			BindByName(stmthp,&bnd1p,ociError,":lkid",&lkID,&status);
 			StmtExecute(ociHdbc, stmthp, ociError, &status);
-			
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
 			AttrGet(parmdp, &dnamefromlen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -2022,15 +1433,6 @@ EXTERN_CONFDB
 			AttrGet(parmdp, &lknamelen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 11, &status);
 			AttrGet(parmdp, &lkinfolen, ociError, &status);
-
-			MinStringLength(lknamelen);
-			MinStringLength(dnamefromlen);
-			MinStringLength(dnametolen);
-			MinStringLength(portnbfromlen);
-			MinStringLength(portnbtolen);
-			MinStringLength(porttypefromlen);
-			MinStringLength(porttypetolen);
-			MinStringLength(lkinfolen);
 
 			portnbfrom_temp = (char *) realloc(portnbfrom_temp,(portnbfromlen + 1)*sizeof(char));
 			portnbto_temp= (char *) realloc(portnbto_temp,(portnbtolen + 1)*sizeof(char));
@@ -2068,16 +1470,16 @@ EXTERN_CONFDB
 				return rescode;
 			}			
 			DefineByPos(stmthp,def,ociError,1,&linkid,&status);						
-			DefineByPos(stmthp,def,ociError,2, dnamefrom_temp,dnamefromlen+1,dnamefrom_null,&status);										 
-			DefineByPos(stmthp,def,ociError,3, dnameto_temp,dnametolen+1,dnameto_null,&status);					
-			DefineByPos(stmthp,def,ociError,4, portnbfrom_temp,portnbfromlen+1,portnbfrom_null,&status);					
-			DefineByPos(stmthp,def,ociError,5, porttypefrom_temp,porttypefromlen+1,porttypefrom_null,&status);					
-			DefineByPos(stmthp,def,ociError,6, portnbto_temp,portnbtolen+1,portnbto_null,&status);					
-			DefineByPos(stmthp,def,ociError,7, porttypeto_temp,porttypetolen+1,porttypeto_null,&status);					
-			DefineByPos(stmthp,def,ociError,8, lkname_temp,lknamelen,lkname_null,&status);					
+			DefineByPos(stmthp,def,ociError,2, dnamefrom_temp,dnamefromlen+1,&status);										 
+			DefineByPos(stmthp,def,ociError,3, dnameto_temp,dnametolen+1,&status);					
+			DefineByPos(stmthp,def,ociError,4, portnbfrom_temp,portnbfromlen+1,&status);					
+			DefineByPos(stmthp,def,ociError,5, porttypefrom_temp,porttypefromlen+1,&status);					
+			DefineByPos(stmthp,def,ociError,6, portnbto_temp,portnbtolen+1,&status);					
+			DefineByPos(stmthp,def,ociError,7, porttypeto_temp,porttypetolen+1,&status);					
+			DefineByPos(stmthp,def,ociError,8, lkname_temp,lknamelen,&status);					
 			DefineByPos(stmthp,def,ociError,9,&bidirectional_link_used,&status);
 			DefineByPos(stmthp,def,ociError,10,&lkused,&status);
-			DefineByPos(stmthp,def,ociError,11, lkinfo_temp,lkinfolen+1,0,&status);					
+			DefineByPos(stmthp,def,ociError,11, lkinfo_temp,lkinfolen+1,&status);					
 						
 		}catch(Error err){
 			sprintf(appliName,"GetMacroConnectivityRow_lkid");	///////
@@ -2096,81 +1498,33 @@ EXTERN_CONFDB
 			status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1, OCI_DEFAULT);
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
+			RemoveSeparator(dnamefrom_temp,"?");
+			RemoveSeparator(dnameto_temp,"?");
+			RemoveSeparator(portnbfrom_temp, "?");
+			RemoveSeparator(portnbto_temp,"?");
+			RemoveSeparator(lkname_temp,"?");
+			RemoveSeparator(lkinfo_temp,"?");
+			RemoveSeparator(porttypefrom_temp,"?");
+			RemoveSeparator(porttypeto_temp,"?");
+			
+			sprintf(Conn_row,"|linkid (I):%d |node_from (C):%s |node_to (C):%s |port_nbrfrom (C):%s |port_typefrom (C): %s|port_nbrto (C):%s |port_typeto (C):%s |link_type (C):%s |bidirectional_link_used (I):%d |lkused (I):%d |link_info (C):%s |",linkid,dnamefrom_temp,dnameto_temp,portnbfrom_temp,porttypefrom_temp,portnbto_temp,porttypeto_temp,lkname_temp,bidirectional_link_used, lkused,lkinfo_temp);
 
-			Format_output(dnamefrom_null,dnamefrom_temp,  logmessage,'?');
-			Format_output(dnameto_null,dnameto_temp, logmessage,'?');
-			Format_output(portnbfrom_null,portnbfrom_temp,  logmessage,'?');
-			Format_output(portnbto_null,portnbto_temp, logmessage,'?');
-			Format_output(lkname_null,lkname_temp,  logmessage,'?');
-			Format_output(lkinfo_null,lkinfo_temp,  logmessage,'?');
-			Format_output(porttypefrom_null,porttypefrom_temp,  logmessage,'?');
-			Format_output(porttypeto_null,porttypeto_temp, logmessage,'?');
-			pos1=strcspn(dnamefrom_temp,"?");
-			pos2=strcspn(dnameto_temp,"?");
-			dnamefrom_temp[pos1]='\0';
-			dnameto_temp[pos2]='\0';
-			pos1=strcspn(portnbfrom_temp,"?");
-			pos2=strcspn(portnbto_temp,"?");
-			portnbfrom_temp[pos1]='\0';
-			portnbto_temp[pos2]='\0';
-			pos1=strcspn(porttypefrom_temp,"?");
-			pos2=strcspn(porttypeto_temp,"?");
-			porttypefrom_temp[pos1]='\0';
-			porttypeto_temp[pos2]='\0';
-			pos1=strcspn(lkname_temp,"?");
-			pos2=strcspn(lkinfo_temp,"?");
-			lkinfo_temp[pos2]='\0';
-			lkname_temp[pos1]='\0';
-			len=strlen(lkinfo_temp)+strlen(lkname_temp)+strlen(dnamefrom_temp)+strlen(dnameto_temp)+strlen(portnbfrom_temp)+strlen(porttypeto_temp)+strlen(porttypefrom_temp)+strlen(portnbto_temp)+strlen("|linkid (I): |node_from (C): |node_to (C): |port_nbrfrom (C): |port_typefrom (C) : |port_nbrto (C): |port_typeto (C) : |link_type (C): |bidirectional_link_used (I):1 |lkused (I):1 |link_info (C): |");
-			sprintf(buffer,"%d",linkid);
-			len+=strlen(buffer);
-			if(len>len_conn)
-			{
-				len++;
-				len_conn=len;
-				rescode=-1;
-				if(portnbfrom_temp!=NULL)
-					free(portnbfrom_temp);
-				if(portnbto_temp!=NULL)
-					free(portnbto_temp);
-				if(dnamefrom_temp!=NULL)
-					free(dnamefrom_temp);
-				if(dnameto_temp!=NULL)
-					free(dnameto_temp);
-				if(lkname_temp!=NULL)
-					free(lkname_temp);
-				if(lkinfo_temp!=NULL)
-					free(lkinfo_temp);
-				if(porttypefrom_temp!=NULL)
-					free(porttypefrom_temp);
-				if(porttypeto_temp!=NULL)
-					free(porttypeto_temp);
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-
-				GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-				return rescode;
-			}
-			else
-			{
-				sprintf(Conn_row,"|linkid (I):%d |node_from (C):%s |node_to (C):%s |port_nbrfrom (C):%s |port_typefrom (C): %s|port_nbrto (C):%s |port_typeto (C):%s |link_type (C):%s |bidirectional_link_used (I):%d |lkused (I):%d |link_info (C):%s |",linkid,dnamefrom_temp,dnameto_temp,portnbfrom_temp,porttypefrom_temp,portnbto_temp,porttypeto_temp,lkname_temp,bidirectional_link_used, lkused,lkinfo_temp);
-
-				if(portnbfrom_temp!=NULL)
-					free(portnbfrom_temp);
-				if(portnbto_temp!=NULL)
-					free(portnbto_temp);
-				if(dnamefrom_temp!=NULL)
-					free(dnamefrom_temp);
-				if(dnameto_temp!=NULL)
-					free(dnameto_temp);
-				if(lkname_temp!=NULL)
-					free(lkname_temp);
-				if(porttypefrom_temp!=NULL)
-					free(porttypefrom_temp);
-				if(porttypeto_temp!=NULL)
-					free(porttypeto_temp);
-				if(lkinfo_temp!=NULL)
-					free(lkinfo_temp);
-			}
+			if(portnbfrom_temp!=NULL)
+				free(portnbfrom_temp);
+			if(portnbto_temp!=NULL)
+				free(portnbto_temp);
+			if(dnamefrom_temp!=NULL)
+				free(dnamefrom_temp);
+			if(dnameto_temp!=NULL)
+				free(dnameto_temp);
+			if(lkname_temp!=NULL)
+				free(lkname_temp);
+			if(porttypefrom_temp!=NULL)
+				free(porttypefrom_temp);
+			if(porttypeto_temp!=NULL)
+				free(porttypeto_temp);
+			if(lkinfo_temp!=NULL)
+				free(lkinfo_temp);
 		} 
 		else 
 		{
@@ -2219,21 +1573,14 @@ EXTERN_CONFDB
 	int GetMacroConnectivityRow_node(int nodeID, char* port_nb, int port_way,char* port_type,int &len_conn, char* Conn_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetMacroConnectivityRow_node";
-		int i = 0;
-		int len=0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
 		sword status;
 		int rescode=0;
-		char logmessage[100];
 		sb4  porttypefromlen=0;
 		sb4 porttypetolen=0;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p[3] ; 
 		OCIDefine* def[11];
 		OCIParam *parmdp;
-		char buffer[20];
 		sb4  dnamefromlen=0;
 		sb4 dnametolen=0;
 		sb4  portnbfromlen=0;
@@ -2246,18 +1593,10 @@ EXTERN_CONFDB
 		char * portnbto_temp=NULL;
 		char * lkname_temp=NULL;
 		char * lkinfo_temp=NULL;
-		int dnamefrom_null=0;
-		int dnameto_null=0;
-		int portnbfrom_null=0;
-		int portnbto_null=0;
-		int lkname_null=0;
-		int lkinfo_null=0;
 		int linkid=0;
 		char port_type1[100];
 		char * porttypefrom_temp=NULL;
 		char * porttypeto_temp=NULL;
-		int porttypefrom_null=0;
-		int porttypeto_null=0;
 		if(port_type!=NULL)
 		{
 			if(strlen(port_type)==0)
@@ -2275,7 +1614,6 @@ EXTERN_CONFDB
 				
 		try{
 			HandleAlloc(ociEnv,&stmthp,ociError,&status);
-		 			
 			if(port_way==1) //port nb is an output so we have info about the node_to part of a link
 				sprintf(selectconn,"select t.linkid,e.devicename||'?',f.devicename||'?',p.port_nbr||'?',nvl(p.port_type,'none')||'?',g.port_nbr||'?',nvl(g.port_type,'none')||'?',l.link_name||'?',t.bidirectional_link_used, t.lkused,nvl(t.link_info,'none')||'?' from %s t,%s p,%s g,%s l,%s e,%s f where nvl(g.port_type,'none')=:portype and g.port_nbr=:portnb and g.port_way=1  and t.link_type=l.linktypeID and p.portid=t.portidfrom and g.portid=t.portidto and g.deviceid=f.deviceid and p.deviceid=e.deviceid and f.deviceid=:dID",MACRO_CONNECTIVITY_TABLE,PORT_TABLE,PORT_TABLE,LINKTYPE_TABLE,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE);
 			else if(port_way==2)// info about the node_from part of a link
@@ -2291,7 +1629,6 @@ EXTERN_CONFDB
 			BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,&status);
 			BindByName(stmthp,&bnd1p[2],ociError,":portype",port_type1,&status);			
 			StmtExecute(ociHdbc, stmthp, ociError, &status);
-			
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
 			AttrGet(parmdp, &dnamefromlen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -2309,15 +1646,6 @@ EXTERN_CONFDB
 			ParamGet(stmthp, ociError, &parmdp, 11, &status);
 			AttrGet(parmdp, &lkinfolen, ociError, &status);
 			
-			MinStringLength(lknamelen);
-			MinStringLength(dnamefromlen);
-			MinStringLength(dnametolen);
-			MinStringLength(portnbfromlen);
-			MinStringLength(portnbtolen);
-			MinStringLength(porttypefromlen);
-			MinStringLength(porttypetolen);
-			MinStringLength(lkinfolen);
-
 			portnbfrom_temp = (char *) realloc(portnbfrom_temp,(portnbfromlen + 1)*sizeof(char));
 			portnbto_temp= (char *) realloc(portnbto_temp,(portnbtolen + 1)*sizeof(char));
 			dnameto_temp = (char *) realloc(dnameto_temp,(dnametolen + 1)*sizeof(char));
@@ -2354,16 +1682,16 @@ EXTERN_CONFDB
 				return rescode;
 			}
 			DefineByPos(stmthp,def,ociError,1,&linkid,&status);						
-			DefineByPos(stmthp,def,ociError,2, dnamefrom_temp,dnamefromlen+1,dnamefrom_null,&status);	
-			DefineByPos(stmthp,def,ociError,3, dnameto_temp,dnametolen+1,dnameto_null,&status);			
-			DefineByPos(stmthp,def,ociError,4, portnbfrom_temp,portnbfromlen+1,portnbfrom_null,&status);	
-			DefineByPos(stmthp,def,ociError,5, porttypefrom_temp,porttypefromlen+1,porttypefrom_null,&status);			
-			DefineByPos(stmthp,def,ociError,6, portnbto_temp,portnbtolen+1,portnbto_null,&status);		
-			DefineByPos(stmthp,def,ociError,7, porttypeto_temp,porttypetolen+1,porttypeto_null,&status);		
-			DefineByPos(stmthp,def,ociError,8, lkname_temp,lknamelen,lkname_null,&status);
+			DefineByPos(stmthp,def,ociError,2, dnamefrom_temp,dnamefromlen+1,&status);	
+			DefineByPos(stmthp,def,ociError,3, dnameto_temp,dnametolen+1,&status);			
+			DefineByPos(stmthp,def,ociError,4, portnbfrom_temp,portnbfromlen+1,&status);	
+			DefineByPos(stmthp,def,ociError,5, porttypefrom_temp,porttypefromlen+1,&status);			
+			DefineByPos(stmthp,def,ociError,6, portnbto_temp,portnbtolen+1,&status);		
+			DefineByPos(stmthp,def,ociError,7, porttypeto_temp,porttypetolen+1,&status);		
+			DefineByPos(stmthp,def,ociError,8, lkname_temp,lknamelen,&status);
 			DefineByPos(stmthp,def,ociError,9,&bidirectional_link_used,&status);
 			DefineByPos(stmthp,def,ociError,10,&lkused,&status);
-			DefineByPos(stmthp,def,ociError,11, lkinfo_temp,lkinfolen+1,0,&status);
+			DefineByPos(stmthp,def,ociError,11, lkinfo_temp,lkinfolen+1,&status);
 			
 		}catch(Error err){
 			sprintf(appliName,"GetMacroConnectivityRow_node");	///////
@@ -2382,92 +1710,40 @@ EXTERN_CONFDB
 			status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1, OCI_DEFAULT);
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
-			Format_output(dnamefrom_null,dnamefrom_temp,  logmessage,'?');
-			Format_output(dnameto_null,dnameto_temp, logmessage,'?');
-			Format_output(portnbfrom_null,portnbfrom_temp,  logmessage,'?');
-			Format_output(portnbto_null,portnbto_temp, logmessage,'?');
-			Format_output(lkname_null,lkname_temp,  logmessage,'?');
-			Format_output(lkinfo_null,lkinfo_temp,  logmessage,'?');
-			Format_output(porttypefrom_null,porttypefrom_temp,  logmessage,'?');
-			Format_output(porttypeto_null,porttypeto_temp, logmessage,'?');
-			pos1=strcspn(dnamefrom_temp,"?");
-			pos2=strcspn(dnameto_temp,"?");
-			dnamefrom_temp[pos1]='\0';
-			dnameto_temp[pos2]='\0';
-			pos1=strcspn(portnbfrom_temp,"?");
-			pos2=strcspn(portnbto_temp,"?");
-			portnbfrom_temp[pos1]='\0';
-			portnbto_temp[pos2]='\0';
-			pos1=strcspn(porttypefrom_temp,"?");
-			pos2=strcspn(porttypeto_temp,"?");
-			porttypefrom_temp[pos1]='\0';
-			porttypeto_temp[pos2]='\0';
+			RemoveSeparator(dnamefrom_temp,"?");
+			RemoveSeparator(dnameto_temp,"?");
+			RemoveSeparator(portnbfrom_temp,"?");
+			RemoveSeparator(portnbto_temp,"?");
+			RemoveSeparator(lkname_temp,"?");
+			RemoveSeparator(lkinfo_temp,"?");
+			RemoveSeparator(porttypefrom_temp,"?");
+			RemoveSeparator(porttypeto_temp,"?");
 
-			pos1=strcspn(lkname_temp,"?");
-			lkname_temp[pos1]='\0';
-			pos2=strcspn(lkinfo_temp,"?");
-			lkinfo_temp[pos2]='\0';
-			len=strlen(lkinfo_temp)+strlen(lkname_temp)+strlen(dnamefrom_temp)+strlen(dnameto_temp)+strlen(portnbfrom_temp)+strlen(portnbto_temp)+strlen(porttypefrom_temp)+strlen(porttypeto_temp)+strlen("|linkid (I): |node_from (C): |node_to (C): |port_nbrfrom (C): |port_typefrom (C): |port_nbrto (C): |port_typeto (C): |link_type (C): |bidirectional_link_used (I):1 |lkused (I):1 |link_info (C): |");
-			sprintf(buffer,"%d",linkid);
-			len+=strlen(buffer);
+			sprintf(Conn_row,"|linkid (I):%d |node_from (C):%s |node_to (C):%s |port_nbrfrom (C):%s |port_typefrom (C):%s |port_nbrto (C):%s |port_typeto (C):%s |link_type (C):%s |bidirectional_link_used (I):%d |lkused (I):%d |link_info (C):%s |",linkid,dnamefrom_temp,dnameto_temp,portnbfrom_temp,porttypefrom_temp,portnbto_temp,porttypeto_temp,lkname_temp,bidirectional_link_used, lkused,lkinfo_temp);
 
-			if(len>len_conn)
-			{
-				len++;
-				len_conn=len;
-				rescode=-1;
-				if(portnbfrom_temp!=NULL)
-					free(portnbfrom_temp);
-				if(portnbto_temp!=NULL)
-					free(portnbto_temp);
-				if(dnamefrom_temp!=NULL)
-					free(dnamefrom_temp);
-				if(dnameto_temp!=NULL)
-					free(dnameto_temp);
-				if(lkname_temp!=NULL)
-					free(lkname_temp);
-				if(porttypefrom_temp!=NULL)
-					free(porttypefrom_temp);
-				if(porttypeto_temp!=NULL)
-					free(porttypeto_temp);				
-				if(lkinfo_temp!=NULL)
-					free(lkinfo_temp);
-
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-				return rescode;
-			}
-			else
-			{
-				sprintf(Conn_row,"|linkid (I):%d |node_from (C):%s |node_to (C):%s |port_nbrfrom (C):%s |port_typefrom (C):%s |port_nbrto (C):%s |port_typeto (C):%s |link_type (C):%s |bidirectional_link_used (I):%d |lkused (I):%d |link_info (C):%s |",linkid,dnamefrom_temp,dnameto_temp,portnbfrom_temp,porttypefrom_temp,portnbto_temp,porttypeto_temp,lkname_temp,bidirectional_link_used, lkused,lkinfo_temp);
-
-				if(portnbfrom_temp!=NULL)
-					free(portnbfrom_temp);
-				if(portnbto_temp!=NULL)
-					free(portnbto_temp);
-				if(dnamefrom_temp!=NULL)
-					free(dnamefrom_temp);
-				if(dnameto_temp!=NULL)
-					free(dnameto_temp);
-				if(lkname_temp!=NULL)
-					free(lkname_temp);
-				if(lkinfo_temp!=NULL)
-					free(lkinfo_temp);
-				if(porttypefrom_temp!=NULL)
-					free(porttypefrom_temp);
-				if(porttypeto_temp!=NULL)
-					free(porttypeto_temp);
-			}
+			if(portnbfrom_temp!=NULL)
+				free(portnbfrom_temp);
+			if(portnbto_temp!=NULL)
+				free(portnbto_temp);
+			if(dnamefrom_temp!=NULL)
+				free(dnamefrom_temp);
+			if(dnameto_temp!=NULL)
+				free(dnameto_temp);
+			if(lkname_temp!=NULL)
+				free(lkname_temp);
+			if(lkinfo_temp!=NULL)
+				free(lkinfo_temp);
+			if(porttypefrom_temp!=NULL)
+				free(porttypefrom_temp);
+			if(porttypeto_temp!=NULL)
+				free(porttypeto_temp);
 		} 
-		else 
-		{
-			if(rescode==0)
-			{
+		else if(rescode==0)
+            {
 				rescode=0;
 				strcpy(Conn_row,"NO_ROWS_SELECTED");
 				GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 			}
-		}
 
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 		if(strstr(ErrorMessage,"NO_ROWS_SELECTED")==NULL)
@@ -2507,21 +1783,14 @@ EXTERN_CONFDB
 	int GetMacroConnectivityRow_nodename(char* node_name, char* port_nb, int port_way,char* port_type,int &len_conn, char* Conn_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetMacroConnectivityRow_nodename";
-		int i = 0;
-		int len=0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
 		sword status;
 		int rescode=0;
-		char logmessage[100];
 		sb4  porttypefromlen=0;
 		sb4 porttypetolen=0;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p[3] ; 
 		OCIDefine* def[11];
 		OCIParam *parmdp;
-		char buffer[20];
 		sb4  dnamefromlen=0;
 		sb4 dnametolen=0;
 		sb4  portnbfromlen=0;
@@ -2536,14 +1805,6 @@ EXTERN_CONFDB
 		char * porttypeto_temp=NULL;
 		char * lkname_temp=NULL;
 		char* lkinfo_temp=NULL;
-		int dnamefrom_null=0;
-		int dnameto_null=0;
-		int portnbfrom_null=0;
-		int portnbto_null=0;
-		int porttypefrom_null=0;
-		int porttypeto_null=0;
-		int lkinfo_null=0;
-		int lkname_null=0;
 		int linkid=0;
 		char port_type1[100];
 		if(port_type!=NULL)
@@ -2577,8 +1838,7 @@ EXTERN_CONFDB
 			BindByName(stmthp,&bnd1p[0],ociError,":dname",node_name,&status);
 			BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,&status);
 			BindByName(stmthp,&bnd1p[2],ociError,":portype",port_type1,&status);			
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
-						
+			StmtExecute(ociHdbc, stmthp, ociError, &status);						
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
 			AttrGet(parmdp, &dnamefromlen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -2595,15 +1855,6 @@ EXTERN_CONFDB
 			AttrGet(parmdp, &lknamelen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 11, &status);
 			AttrGet(parmdp, &lkinfolen, ociError, &status);
-
-			MinStringLength(lknamelen);
-			MinStringLength(dnamefromlen);
-			MinStringLength(dnametolen);
-			MinStringLength(portnbfromlen);
-			MinStringLength(portnbtolen);
-			MinStringLength(porttypefromlen);
-			MinStringLength(porttypetolen);
-			MinStringLength(lkinfolen);
 
 			portnbfrom_temp = (char *) realloc(portnbfrom_temp,(portnbfromlen + 1)*sizeof(char));
 			portnbto_temp= (char *) realloc(portnbto_temp,(portnbtolen + 1)*sizeof(char));
@@ -2641,16 +1892,16 @@ EXTERN_CONFDB
 				return rescode;
 			}						
 			DefineByPos(stmthp,def,ociError,1,&linkid,&status);						
-			DefineByPos(stmthp,def,ociError,2, dnamefrom_temp,dnamefromlen+1,dnamefrom_null,&status);	
-			DefineByPos(stmthp,def,ociError,3, dnameto_temp,dnametolen+1,dnameto_null,&status);			
-			DefineByPos(stmthp,def,ociError,4, portnbfrom_temp,portnbfromlen+1,portnbfrom_null,&status);	
-			DefineByPos(stmthp,def,ociError,5, porttypefrom_temp,porttypefromlen+1,porttypefrom_null,&status);			
-			DefineByPos(stmthp,def,ociError,6, portnbto_temp,portnbtolen+1,portnbto_null,&status);		
-			DefineByPos(stmthp,def,ociError,7, porttypeto_temp,porttypetolen+1,porttypeto_null,&status);		
-			DefineByPos(stmthp,def,ociError,8, lkname_temp,lknamelen,lkname_null,&status);
+			DefineByPos(stmthp,def,ociError,2, dnamefrom_temp,dnamefromlen+1,&status);	
+			DefineByPos(stmthp,def,ociError,3, dnameto_temp,dnametolen+1,&status);			
+			DefineByPos(stmthp,def,ociError,4, portnbfrom_temp,portnbfromlen+1,&status);	
+			DefineByPos(stmthp,def,ociError,5, porttypefrom_temp,porttypefromlen+1,&status);			
+			DefineByPos(stmthp,def,ociError,6, portnbto_temp,portnbtolen+1,&status);		
+			DefineByPos(stmthp,def,ociError,7, porttypeto_temp,porttypetolen+1,&status);		
+			DefineByPos(stmthp,def,ociError,8, lkname_temp,lknamelen,&status);
 			DefineByPos(stmthp,def,ociError,9,&bidirectional_link_used,&status);
 			DefineByPos(stmthp,def,ociError,10,&lkused,&status);
-			DefineByPos(stmthp,def,ociError,11, lkinfo_temp,lkinfolen+1,0,&status);
+			DefineByPos(stmthp,def,ociError,11, lkinfo_temp,lkinfolen+1,&status);
 						
 		}catch(Error err){
 			sprintf(appliName,"GetMacroConnectivityRow_nodename");	///////
@@ -2668,82 +1919,34 @@ EXTERN_CONFDB
 		if(status==OCI_SUCCESS)
 			status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1, OCI_DEFAULT);
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
-		{	
-			Format_output(dnamefrom_null,dnamefrom_temp,  logmessage,'?');
-			Format_output(dnameto_null,dnameto_temp, logmessage,'?');
-			Format_output(portnbfrom_null,portnbfrom_temp,  logmessage,'?');
-			Format_output(portnbto_null,portnbto_temp, logmessage,'?');
-			Format_output(lkname_null,lkname_temp,  logmessage,'?');
-			Format_output(lkinfo_null,lkinfo_temp,  logmessage,'?');
-			Format_output(porttypefrom_null,porttypefrom_temp,  logmessage,'?');
-			Format_output(porttypeto_null,porttypeto_temp, logmessage,'?');
-			pos1=strcspn(dnamefrom_temp,"?");
-			pos2=strcspn(dnameto_temp,"?");
-			dnamefrom_temp[pos1]='\0';
-			dnameto_temp[pos2]='\0';
-			pos1=strcspn(portnbfrom_temp,"?");
-			pos2=strcspn(portnbto_temp,"?");
-			portnbfrom_temp[pos1]='\0';
-			portnbto_temp[pos2]='\0';
-			pos1=strcspn(porttypefrom_temp,"?");
-			pos2=strcspn(porttypeto_temp,"?");
-			porttypefrom_temp[pos1]='\0';
-			porttypeto_temp[pos2]='\0';
-			pos1=strcspn(lkname_temp,"?");
-			lkname_temp[pos1]='\0';
-			pos2=strcspn(lkinfo_temp,"?");
-			lkinfo_temp[pos2]='\0';
-			len=strlen(lkinfo_temp)+strlen(lkname_temp)+strlen(dnamefrom_temp)+strlen(dnameto_temp)+strlen(portnbfrom_temp)+strlen(portnbto_temp)+strlen(porttypefrom_temp)+strlen(porttypeto_temp)+strlen("|linkid (I): |node_from (C): |node_to (C): |port_nbrfrom (C): |port_typefrom (C): |port_nbrto (C): |port_typeto (C): |link_type (C): |bidirectional_link_used (I):1 |lkused (I):1 |link_info (C): |");
-			sprintf(buffer,"%d",linkid);
-			len+=strlen(buffer);
-			
-			if(len>len_conn)
-			{
-				len++;
-				len_conn=len;
-				rescode=-1;
-				if(portnbfrom_temp!=NULL)
-					free(portnbfrom_temp);
-				if(portnbto_temp!=NULL)
-					free(portnbto_temp);
-				if(dnamefrom_temp!=NULL)
-					free(dnamefrom_temp);
-				if(dnameto_temp!=NULL)
-					free(dnameto_temp);
-				if(lkname_temp!=NULL)
-					free(lkname_temp);
-				if(porttypefrom_temp!=NULL)
-					free(porttypefrom_temp);
-				if(porttypeto_temp!=NULL)
-					free(porttypeto_temp);
-				if(lkinfo_temp!=NULL)
-					free(lkinfo_temp);
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
+		{
+			RemoveSeparator(dnamefrom_temp,"?");
+			RemoveSeparator(dnameto_temp, "?");
+			RemoveSeparator(portnbfrom_temp,"?");
+			RemoveSeparator(portnbto_temp,"?");
+			RemoveSeparator(lkname_temp, "?");
+			RemoveSeparator(lkinfo_temp,"?");
+			RemoveSeparator(porttypefrom_temp,"?");
+			RemoveSeparator(porttypeto_temp,"?");
 
-				GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-				return rescode;
-			}
-			else
-			{
-				sprintf(Conn_row,"|linkid (I):%d |node_from (C):%s |node_to (C):%s |port_nbrfrom (C):%s |port_typefrom (C): %s|port_nbrto (C):%s |port_typeto (C):%s |link_type (C):%s |bidirectional_link_used (I):%d |lkused (I):%d |link_info (C):%s |",linkid,dnamefrom_temp,dnameto_temp,portnbfrom_temp,porttypefrom_temp,portnbto_temp,porttypeto_temp,lkname_temp,bidirectional_link_used, lkused,lkinfo_temp);
+			sprintf(Conn_row,"|linkid (I):%d |node_from (C):%s |node_to (C):%s |port_nbrfrom (C):%s |port_typefrom (C): %s|port_nbrto (C):%s |port_typeto (C):%s |link_type (C):%s |bidirectional_link_used (I):%d |lkused (I):%d |link_info (C):%s |",linkid,dnamefrom_temp,dnameto_temp,portnbfrom_temp,porttypefrom_temp,portnbto_temp,porttypeto_temp,lkname_temp,bidirectional_link_used, lkused,lkinfo_temp);
 
-				if(portnbfrom_temp!=NULL)
-					free(portnbfrom_temp);
-				if(portnbto_temp!=NULL)
-					free(portnbto_temp);
-				if(dnamefrom_temp!=NULL)
-					free(dnamefrom_temp);
-				if(dnameto_temp!=NULL)
-					free(dnameto_temp);
-				if(lkname_temp!=NULL)
-					free(lkname_temp);
-				if(lkinfo_temp!=NULL)
-					free(lkinfo_temp);
-				if(porttypefrom_temp!=NULL)
-					free(porttypefrom_temp);
-				if(porttypeto_temp!=NULL)
-					free(porttypeto_temp);
-			}
+			if(portnbfrom_temp!=NULL)
+				free(portnbfrom_temp);
+			if(portnbto_temp!=NULL)
+				free(portnbto_temp);
+			if(dnamefrom_temp!=NULL)
+				free(dnamefrom_temp);
+			if(dnameto_temp!=NULL)
+				free(dnameto_temp);
+			if(lkname_temp!=NULL)
+				free(lkname_temp);
+			if(lkinfo_temp!=NULL)
+				free(lkinfo_temp);
+			if(porttypefrom_temp!=NULL)
+				free(porttypefrom_temp);
+			if(porttypeto_temp!=NULL)
+				free(porttypeto_temp);
 		} 
 		else 
 		{
@@ -2787,22 +1990,10 @@ EXTERN_CONFDB
 	int GetIPInfoRow(char* ip_address,int &len_ip, char*  IP_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetIPInfoRow";
-		int i = 0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
-		int pos3=0;
 		int rescode=0;
-		int free_mem=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		sb4 ipnamelen=0;
 		sb4 ipaddlen=0;
 		sb4 subnetlen=0;
-		int len=0;
-		//char buffer[20];
-		sb4 sublen=0;
 		sword status;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -2812,11 +2003,6 @@ EXTERN_CONFDB
 		char * ipname_temp=NULL;
 		char * subnet_temp=NULL;
 		char selectIP[1000];
-		int ipadd_null=0;
-		int ipname_null=0;
-		int subnet_null=0;
-		char logmessage[100];
-
 		if(ip_address==NULL)
 		{
 			GetErrorMess(appliName," IP add MUST be given",ErrorMessage,1);
@@ -2828,17 +2014,12 @@ EXTERN_CONFDB
 			StmtPrepare(stmthp,ociError, selectIP, &status);
 			BindByName(stmthp,&bnd1p,ociError,":IPadd",ip_address,&status);
 			StmtExecute(ociHdbc, stmthp, ociError, &status);
-						
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &ipaddlen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
 			AttrGet(parmdp, &subnetlen, ociError, &status);			
 			ParamGet(stmthp, ociError, &parmdp, 3, &status);
 			AttrGet(parmdp, &ipnamelen, ociError, &status);					
-
-			MinStringLength(ipaddlen);
-			MinStringLength(ipnamelen);
-			MinStringLength(subnetlen);
 
 			ipadd_temp = (char *) realloc(ipadd_temp,(ipaddlen + 1)*sizeof(char));
 			ipname_temp= (char *) realloc(ipname_temp,(ipnamelen + 1)*sizeof(char));
@@ -2861,9 +2042,9 @@ EXTERN_CONFDB
 				return rescode;
 			}
 		
-			DefineByPos(stmthp,def,ociError,1, ipadd_temp,ipaddlen + 1,ipadd_null,&status);	
-			DefineByPos(stmthp,def,ociError,2, subnet_temp, subnetlen + 1,subnet_null,&status);			
-			DefineByPos(stmthp,def,ociError,3, ipname_temp,ipnamelen + 1,ipname_null,&status);	
+			DefineByPos(stmthp,def,ociError,1, ipadd_temp,ipaddlen + 1,&status);	
+			DefineByPos(stmthp,def,ociError,2, subnet_temp, subnetlen + 1,&status);			
+			DefineByPos(stmthp,def,ociError,3, ipname_temp,ipnamelen + 1,&status);	
 						
 		}catch(Error err){
 			sprintf(appliName,"GetIPInfoRow");	///////
@@ -2883,35 +2064,11 @@ EXTERN_CONFDB
 
 		if (status == OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO) 
 		{	
-			Format_output(ipname_null,ipname_temp,logmessage,'?');
-			Format_output(ipadd_null,ipadd_temp,logmessage,'?');
-			Format_output(subnet_null,subnet_temp,logmessage,'?');
-			pos1=strcspn(subnet_temp,"?");
-			pos2=strcspn(ipadd_temp,"?");
-			pos3=strcspn(ipname_temp,"?");
-			subnet_temp[pos1]='\0';
-			ipadd_temp[pos2]='\0';
-			ipname_temp[pos3]='\0';
-			len=strlen(ipadd_temp)+strlen(ipname_temp)+strlen(subnet_temp)+strlen("|ipaddress (C):|subnet_info (C): |ipname (C): |");
+			RemoveSeparator(ipname_temp,"?");
+			RemoveSeparator(ipadd_temp,"?");
+			RemoveSeparator(subnet_temp,"?");
 
-			if(len>len_ip)
-			{
-				len++;
-				len_ip=len;
-				rescode= -1;
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				if(ipadd_temp!=NULL)
-					free(ipadd_temp);
-				if(ipname_temp!=NULL)
-					free(ipname_temp);
-				if(subnet_temp!=NULL)
-					free(subnet_temp);
-
-				GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-				return rescode;
-			}
-			else
-				sprintf(IP_row,"|ipaddress (C):%s|subnet_info (C):%s |ipname (C):%s |",ipadd_temp,subnet_temp,ipname_temp);
+			sprintf(IP_row,"|ipaddress (C):%s|subnet_info (C):%s |ipname (C):%s |",ipadd_temp,subnet_temp,ipname_temp);
 		} 
 		else 
 		{
@@ -2961,19 +2118,9 @@ EXTERN_CONFDB
 	int GetLkTypeRow_lkname(char* lktype_name,int &len_lktype,char* LkType_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetLkTypeRow_lkname";
-		int i = 0;
-		int j=0;
-		int len=0;
-		char buffer[20];
-		int pos1=0;
 		int link_nbr=0;
 		int rescode=0;
-		int free_mem=0;
-		int pos2=0;
 		int linktypeID=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		sword status;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -2981,6 +2128,7 @@ EXTERN_CONFDB
 		sb4 lktypelen=0;
 		OCIParam *parmdp;
 		char * lktype_temp=NULL;
+		char selectlktype[1000];
 		if(lktype_name==NULL)
 		{
 			GetErrorMess(appliName," lktype_name MUST be given",ErrorMessage,1);
@@ -2989,7 +2137,6 @@ EXTERN_CONFDB
 		
 		try{
 			HandleAlloc(ociEnv,&stmthp,ociError,&status);
-			char selectlktype[1000];
 			sprintf(selectlktype,"select  link_name||'?',link_nbr,linktypeID from %s where link_name=:ltype",LINKTYPE_TABLE);
 			StmtPrepare(stmthp,ociError, selectlktype, &status);
 			BindByName(stmthp,&bnd1p,ociError,":ltype",lktype_name,&status);
@@ -3000,7 +2147,6 @@ EXTERN_CONFDB
 			AttrGet(parmdp, &lktypelen, ociError, &status);
 			
 			lktype_temp = (char *) realloc(lktype_temp,(lktypelen + 1)*sizeof(char));
-			free_mem=1;
 			if(lktype_temp==NULL)
 			{
 				status=-10;
@@ -3010,7 +2156,7 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return rescode;
 			}
-			DefineByPos(stmthp,def,ociError,1, lktype_temp, lktypelen + 1,0,&status);	
+			DefineByPos(stmthp,def,ociError,1, lktype_temp, lktypelen + 1,&status);	
 			DefineByPos(stmthp,def,ociError,2,&link_nbr,&status);	
 			DefineByPos(stmthp,def,ociError,3,&linktypeID,&status);	
 						
@@ -3032,26 +2178,8 @@ EXTERN_CONFDB
 
 		if (status == OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO) 
 		{	
-			pos2=strcspn(lktype_temp,"?");
-			lktype_temp[pos2]='\0';
-			len=strlen("|link_name (C): |link_nbr (I): |linktypeID (I) : |")+strlen(lktype_temp);
-			sprintf(buffer,"%d",link_nbr);
-			len+=strlen(buffer);
-			sprintf(buffer,"%d",linktypeID);
-			len+=strlen(buffer);
-			if(len>len_lktype)
-			{
-				len++;
-				len_lktype=len;
-				rescode=-1;
-				if(lktype_temp!=NULL)
-					lktype_temp = (char *) realloc(lktype_temp,(0)*sizeof(char));
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-				return rescode;
-			}
-			else
-				sprintf(LkType_row,"|link_name (C):%s |link_nbr (I):%d |linktypeID (I) :%d |",lktype_temp,link_nbr,linktypeID);
+			RemoveSeparator(lktype_temp,"?");
+			sprintf(LkType_row,"|link_name (C):%s |link_nbr (I):%d |linktypeID (I) :%d |",lktype_temp,link_nbr,linktypeID);
 		} 
 		else 
 		{
@@ -3063,7 +2191,7 @@ EXTERN_CONFDB
 			}
 		}
 		if(lktype_temp!=NULL)
-			lktype_temp = (char *) realloc(lktype_temp,(0)*sizeof(char));
+			free(lktype_temp);
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 
 		if(strstr(ErrorMessage,"NO_ROWS_SELECTED")==NULL)
@@ -3096,15 +2224,6 @@ EXTERN_CONFDB
 	int GetLkTypeRow_lknb(int lktype_nbr,int &len_lktype,char* LkType_row,char* ErrorMessage)
 	{
 		char appliName[100]="GetLkTypeRow_lknb";
-		int i = 0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
-		int len=0;
-		char buffer[20];
 		sword status;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -3112,24 +2231,21 @@ EXTERN_CONFDB
 		ub4 lktypelen=0;
 		int linktypeID=0;
 		int rescode=0;
-		int free_mem=0;
 		OCIParam *parmdp;
 		char * lktype_temp=NULL;
 		int link_nbr=0;
+		char selectlktype[1000];
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
-			char selectlktype[1000];
+			HandleAlloc(ociEnv,&stmthp,ociError,&status);			
 			sprintf(selectlktype,"select link_name||'?',link_nbr,linktypeID from %s where linktypeID=:ltype",LINKTYPE_TABLE);
 			StmtPrepare(stmthp,ociError, selectlktype, &status);
 			BindByName(stmthp,&bnd1p,ociError,":ltype",&lktype_nbr,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
-						
+			StmtExecute(ociHdbc, stmthp, ociError, &status);						
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, (sb4*) &lktypelen, ociError, &status);
 			
 			lktype_temp=(char *) realloc(lktype_temp,(lktypelen + 1)*sizeof(char));
-			free_mem=1;
 			if(lktype_temp==NULL)
 			{
 				status=-10;
@@ -3139,7 +2255,7 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return rescode;
 			}						
-			DefineByPos(stmthp,def,ociError,1, lktype_temp, lktypelen + 1,0,&status);	
+			DefineByPos(stmthp,def,ociError,1, lktype_temp, lktypelen + 1,&status);	
 			DefineByPos(stmthp,def,ociError,2,&link_nbr,&status);	
 			DefineByPos(stmthp,def,ociError,3,&linktypeID,&status);	
 									
@@ -3161,26 +2277,9 @@ EXTERN_CONFDB
 
 		if (status == OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO) 
 		{	
-			pos2=strcspn(lktype_temp,"?");
-			lktype_temp[pos2]='\0';
-			len=strlen("|link_name (C): |link_nbr (I): |linktypeID (I) : |")+strlen(lktype_temp);
-			sprintf(buffer,"%d",link_nbr);
-			len+=strlen(buffer);
-			sprintf(buffer,"%d",linktypeID);
-			len+=strlen(buffer);
-			if(len>len_lktype)
-			{
-				len++;
-				len_lktype=len;
-				rescode=-1;
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				if(lktype_temp!=NULL)
-					lktype_temp = (char *) realloc(lktype_temp,(0)*sizeof(char));
-				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-				return rescode;
-			}
-			else
-				sprintf(LkType_row,"|link_name (C):%s |link_nbr (I):%d |linktypeID (I):%d |",lktype_temp,link_nbr,linktypeID);
+			RemoveSeparator(lktype_temp,"?");
+
+			sprintf(LkType_row,"|link_name (C):%s |link_nbr (I):%d |linktypeID (I):%d |",lktype_temp,link_nbr,linktypeID);
 		} 
 		else 
 		{
@@ -3192,7 +2291,8 @@ EXTERN_CONFDB
 			}
 		}
 		if(lktype_temp!=NULL)
-			lktype_temp = (char *) realloc(lktype_temp,(0)*sizeof(char));
+			free(lktype_temp);
+	
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 
 		if(strstr(ErrorMessage,"NO_ROWS_SELECTED")==NULL)
@@ -3225,16 +2325,10 @@ EXTERN_CONFDB
 	{
 		char appliName[100]="GetLkTypeDecomposition_lknb";
 		int i = 0;
-		int j=0;
 		int pos1=0;
 		int pos2=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
-		int len=0;
 		int pos3=0;
 		int lkname_null=0;
-		char logmessage[100];
 		int prefetch_rows=50;
 		sword status;
 		OCIStmt *stmthp;
@@ -3242,26 +2336,24 @@ EXTERN_CONFDB
 		OCIDefine* def[2];
 		ub4 lktypelen=0;
 		int rescode=0;
-		int free_mem=0;
 		OCIParam *parmdp;
 		char * lktype_temp=NULL;
 		char * lkTypeslist_temp=NULL;
 		int link_nbr=0;
+		char selectlktype[1000];
 
 		try{
 			HandleAlloc(ociEnv,&stmthp,ociError,&status);
-			char selectlktype[1000];
 			sprintf(selectlktype,"select e.link_name||'|'||e.linktypeid||'?' from %s t, %s e,%s f where mod(t.link_nbr,e.link_nbr)=0 and e.link_nbr!=t.link_nbr and e.link_nbr=f.prime_nb and t.linktypeID=:ltype",LINKTYPE_TABLE,LINKTYPE_TABLE,PRIME_NUMBER_TABLE);
 			StmtPrepare(stmthp,ociError, selectlktype, &status);
 			BindByName(stmthp,&bnd1p,ociError,":ltype",&lktype_nbr,&status);
 			AttrSet(stmthp,&prefetch_rows,ociError, &status);
 			StmtExecute(ociHdbc, stmthp, ociError, &status);
-						
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, (sb4*) &lktypelen, ociError, &status);
 
 			lktype_temp=(char *) realloc(lktype_temp,(lktypelen + 1)*sizeof(char));
-			free_mem=1;
+
 			if(lktype_temp==NULL)
 			{
 				status=-10;
@@ -3271,7 +2363,7 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return rescode;
 			}
-			DefineByPos(stmthp,def,ociError,1, lktype_temp, lktypelen + 1,0,&status);	
+			DefineByPos(stmthp,def,ociError,1, lktype_temp, lktypelen + 1,&status);	
 									
 		}catch(Error err){
 			sprintf(appliName,"GetLkTypeDecomposition_lknb");	///////
@@ -3288,16 +2380,13 @@ EXTERN_CONFDB
 		
 		if(status==OCI_SUCCESS)
 		{
-			pos2=0;
-			i=0;
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch2 (stmthp, ociError, 1, OCI_FETCH_NEXT,1, OCI_DEFAULT);
 				if(status==OCI_SUCCESS)
 				{
-					Format_output(lkname_null, lktype_temp, logmessage, '?');
-					pos1=strcspn(lktype_temp,"?");
-					lktype_temp[pos1]='\0';
+					RemoveSeparator(lktype_temp,"?");
+					pos1=strlen(lktype_temp);
 					pos3=pos2;
 					pos2+=pos1+1;
 					lkTypeslist_temp=(char*) realloc(lkTypeslist_temp,pos2*sizeof(char));
@@ -3320,7 +2409,7 @@ EXTERN_CONFDB
 			}
 			if(rescode==0)
 			{	
-				if(pos2>len_array)
+                if(pos2>len_array)
 				{
 					len_array=pos2;
 					rescode= -1;	
@@ -3342,9 +2431,10 @@ EXTERN_CONFDB
 						rescode=ShowErrors (status, ociError, "OCIFETCH unsuccessful");
 						strcpy(LkType_row,"NO_ROWS_SELECTED");
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
+
 					}
 				}
-				lkTypeslist_temp=(char*) realloc(lkTypeslist_temp,0*sizeof(char));
+				free(lkTypeslist_temp);
 				free(lktype_temp);
 			}
 		}
@@ -3379,30 +2469,21 @@ EXTERN_CONFDB
 	{
 		char appliName[100]="GetDeviceNamesPerType";
 		int i = 0;
-		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int pos1=0;
 		int pos3=0;
-		int actual_len=0;
 		int pos2=0;
 		int len_devname=0;
 		char* devName=NULL;
 		char* devIDs_temp=NULL;
 		sword status;
-		int nline=0;
-		int nb_rdtrip=1;
 		OCIParam *parmdp;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
 		OCIDefine* def;
 		char selectdevID[1000];
-		int dname_null=0;
-		char logmessage[100];
-
+		
 		if(devitype==NULL)
 		{
 			GetErrorMess(appliName," device type MUST be given",ErrorMessage,1);
@@ -3421,7 +2502,7 @@ EXTERN_CONFDB
 			
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-			DefineByPos(stmthp,&def,ociError,1, devName, len_devname+1, dname_null,&status);
+			DefineByPos(stmthp,&def,ociError,1, devName, len_devname+1, &status);
 			else
 			{
 				status=-10;
@@ -3448,20 +2529,17 @@ EXTERN_CONFDB
 		
 		if(status==OCI_SUCCESS)
 		{
-			pos2=0;
-			i=0;
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch2 (stmthp, ociError, 1, OCI_FETCH_NEXT,1, OCI_DEFAULT);
 				if(status==OCI_SUCCESS)
 				{
-					Format_output(dname_null, devName, logmessage, '?');
-					pos1=strcspn(devName,"?");
-					devName[pos1]='\0';
+					RemoveSeparator(devName,"?");
+					pos1=strlen(devName);
 					pos3=pos2;
-					pos2+=pos1+1;
-
+					pos2+=pos1+1;					
 					devIDs_temp=(char*) realloc(devIDs_temp,pos2*sizeof(char));
+
 					if(devIDs_temp==NULL)
 					{
 						status=-10;
@@ -3480,7 +2558,7 @@ EXTERN_CONFDB
 				}
 			}
 			if(rescode==0)
-			{	
+			{
 				if(pos2>len_array)
 				{
 					len_array=pos2;
@@ -3503,9 +2581,10 @@ EXTERN_CONFDB
 						rescode=0;
 						strcpy(devIDs_list,"NO_ROWS_SELECTED");
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
+
 					}
 				}
-				devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
+				free(devIDs_temp);
 				free(devName);
 			}
 		}
@@ -3541,13 +2620,9 @@ EXTERN_CONFDB
 		int i = 0;
 		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int devID=0;
 		int* devIDs_temp=NULL;
 		sword status;
-		int nline=0;
 		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
@@ -3565,7 +2640,6 @@ EXTERN_CONFDB
 			sprintf(selectdevID,"select t.deviceid from %s t, %s f where t.devicetypeID=f.devicetypeID and f.devicetype=:dtype",LOGICAL_DEVICE_TABLE,DEVICETYPE_TABLE);
 			StmtPrepare(stmthp,ociError,selectdevID, &status);
 			BindByName(stmthp,&bnd1p,ociError,":dtype",devitype,&status);
-
 			AttrSet(stmthp,&prefetch_rows,ociError, &status);
 			StmtExecute(ociHdbc, stmthp, ociError, &status);
 			DefineByPos(stmthp,&def,ociError,1, &devID,&status);
@@ -3634,7 +2708,7 @@ EXTERN_CONFDB
 				else
 				{
 					if(i>0)
-					{
+					{	
 						for(j=0;j<i;j++)
 						{
 							devIDs_list[j]=devIDs_temp[j];
@@ -3649,7 +2723,7 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 					}
 				}
-				devIDs_temp=(int*) realloc(devIDs_temp,0*sizeof(int));
+				free(devIDs_temp);
 			}
 		}
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
@@ -3685,13 +2759,9 @@ EXTERN_CONFDB
 		int i = 0;
 		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int lkID=0;
 		int* lkIDs_temp=NULL;
 		sword status;
-		int nline=0;
 		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
@@ -3784,7 +2854,7 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 					}
 				}
-				lkIDs_temp=(int*) realloc(lkIDs_temp,0*sizeof(int));
+				free(lkIDs_temp);
 			}
 		}
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
@@ -3821,13 +2891,9 @@ EXTERN_CONFDB
 		int i =0;
 		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int lkID=0;
 		int* lkIDs_temp=NULL;
 		sword status;
-		int nline=0;
 		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
@@ -3921,7 +2987,7 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 					}
 				}
-				lkIDs_temp=(int*) realloc(lkIDs_temp,0*sizeof(int));
+				free(lkIDs_temp);
 			}
 		}
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
@@ -3956,13 +3022,9 @@ EXTERN_CONFDB
 		int i = 0;
 		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int portID=0;
 		int* portIDs_temp=NULL;
 		sword status;
-		int nline=0;
 		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
@@ -4055,7 +3117,7 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 					}
 				}
-				portIDs_temp=(int*) realloc(portIDs_temp,0*sizeof(int));
+				free(portIDs_temp);
 			}
 		}
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
@@ -4088,20 +3150,14 @@ EXTERN_CONFDB
 	{
 		char appliName[100]="GetPortInfoPerSpare";
 		int i = 0;
-		int j=0;
 		int rescode=0;
 		int len_port=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
 		int pos1=0;
 		int pos2=0;
 		int pos3=0;
-		ub2 type = 0;
 		char* port_info=NULL;
 		char* portInfos_temp=NULL;
 		sword status;
-		int nline=0;
-		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -4122,7 +3178,7 @@ EXTERN_CONFDB
 			
 			port_info=(char*) malloc((len_port+1)*sizeof(char));
 			if(port_info!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, port_info,len_port+1,0,&status);												
+				DefineByPos(stmthp,&def,ociError,1, port_info,len_port+1,&status);												
 			else
 			{
 				status=-10;
@@ -4151,10 +3207,10 @@ EXTERN_CONFDB
 				status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT, 1,OCI_DEFAULT);
 				if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 				{
-					pos1=strcspn(port_info,"?");
-					port_info[pos1]='\0';
+					RemoveSeparator(port_info,"?");
+					pos1=strlen(port_info);
 					pos3=pos2;
-					pos2+=pos1+1;
+					pos2+=pos1+1;					
 					portInfos_temp=(char*) realloc(portInfos_temp,(pos2)*sizeof(char));
 					if(portInfos_temp==NULL)
 					{
@@ -4233,22 +3289,15 @@ EXTERN_CONFDB
 	{
 		char appliName[100]="GetMacIPAddPerDevID";
 		int i = 0;
-		int j=0;
 		int rescode=0;
 		int pos1=0;
-		int actual_len=0;
 		int pos2=0;
 		int pos3=0;
 		int etherlen=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		char* etheradd=NULL;
 		char* MacAdds_temp=NULL;
 		sword status;
-		int nline=0;
 		OCIParam *parmdp;
-		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -4276,7 +3325,7 @@ EXTERN_CONFDB
 			}
 			else
 				//add 2 because 1 for \0 and 1 for ?
-				DefineByPos(stmthp,&def,ociError,1, etheradd,etherlen+1,0,&status);																			
+				DefineByPos(stmthp,&def,ociError,1, etheradd,etherlen+1,&status);																			
 		}catch(Error err){
 			sprintf(appliName,"GetMacIPAddPerDevID");	///////
 			rescode=ShowErrors (status, err.ociError, err.log);
@@ -4299,18 +3348,16 @@ EXTERN_CONFDB
 		}
 		else
 		{
-			pos2=0;
-			i=0;
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1, OCI_DEFAULT);
 				if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 				{
-					pos1=strcspn(etheradd,"?");
-					etheradd[pos1]='\0';
+					RemoveSeparator(etheradd,"?");
+					pos1=strlen(etheradd);
 					pos3=pos2;
-					pos2+=pos1+1;
-
+					pos2+=pos1+1;					
+					
 					MacAdds_temp=(char*) realloc(MacAdds_temp,pos2*sizeof(char));
 					if(MacAdds_temp==NULL)
 					{
@@ -4325,7 +3372,7 @@ EXTERN_CONFDB
 					else
 					{
 						memcpy(MacAdds_temp+pos3,etheradd,pos1+1);
-						i++;
+						i++;//
 					}
 				}
 			}
@@ -4335,9 +3382,9 @@ EXTERN_CONFDB
 				{
 					len_mac=pos2;
 					rescode=-1;
-					etheradd=(char*)realloc(etheradd,0*sizeof(char));
+					free(etheradd);
 					if(MacAdds_temp!=NULL)
-					MacAdds_temp=(char*) realloc(MacAdds_temp,0*sizeof(char));
+						free(MacAdds_temp);
 					status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 					GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
 					return rescode;		
@@ -4358,10 +3405,10 @@ EXTERN_CONFDB
 			}
 		}
 		if(etheradd!=NULL)
-			etheradd=(char*)realloc(etheradd,0*sizeof(char));
+			free(etheradd);
 		if(MacAdds_temp!=NULL)
-			MacAdds_temp=(char*) realloc(MacAdds_temp,0*sizeof(char));
-
+			free(MacAdds_temp);
+			
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 
 		if(strstr(ErrorMessage,"NO_ROWS_SELECTED")==NULL)
@@ -4396,27 +3443,18 @@ EXTERN_CONFDB
 	{
 		char appliName[100]="GetDestinationNamePerDevPort";
 		int i = 0;
-		int j=0;
 		int rescode=0;
 		int pos1=0;
-		int actual_len=0;
 		int pos2=0;
 		int pos3=0;
 		int devlen=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		char* destin=NULL;
 		char* destin_temp=NULL;
 		sword status;
-		int nline=0;
 		OCIParam *parmdp;
-		int nb_rdtrip=1;
 		int prefetch_rows=5000;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
-		OCIBind  *bnd2p = (OCIBind *) 0; 
-		OCIBind  *bnd3p = (OCIBind *) 0; 
 		OCIDefine* def;
 		char select_query[1000];
 		if(devname==NULL)
@@ -4450,7 +3488,7 @@ EXTERN_CONFDB
 			}
 			else
 				//add 2 because 1 for \0 and 1 for ?
-				DefineByPos(stmthp,&def,ociError,1, destin,devlen+1,0,&status);										
+				DefineByPos(stmthp,&def,ociError,1, destin,devlen+1,&status);										
 		}catch(Error err){
 			sprintf(appliName,"GetDestinationNamePerDevPort");	///////
 			rescode=ShowErrors (status, err.ociError, err.log);
@@ -4466,17 +3504,16 @@ EXTERN_CONFDB
 
 		if(status==OCI_SUCCESS)
 		{
-			pos2=0;
-			i=0;
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 				if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 				{
-					pos1=strcspn(destin,"|");
-					destin[pos1]='\0';
+					RemoveSeparator(destin,"|");
+					pos1=strlen(destin);
 					pos3=pos2;
 					pos2+=pos1+1;
+
 					destin_temp=(char*) realloc(destin_temp,pos2*sizeof(char));
 					if(destin_temp==NULL)
 					{
@@ -4501,7 +3538,6 @@ EXTERN_CONFDB
 					rescode=ShowErrors (status, ociError, "OCIFETCH  unsuccessful");
 					strcpy(Destin_list,"NO_ROWS_SELECTED");
 					GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
-					//rescode=0;	//?
 				}
 			}
 			if(rescode==0 && i>0)
@@ -4509,11 +3545,11 @@ EXTERN_CONFDB
 				if(pos2>len_Destin_list)
 				{
 					len_Destin_list=pos2;
-					destin=(char*)realloc(destin,(0)*sizeof(char));
+					free(destin);
 					status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 					rescode=-1;
 					if(destin_temp!=NULL)
-						destin_temp=(char*) realloc(destin_temp,0*sizeof(char));
+						free(destin_temp);
 					GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
 					return rescode;	
 				}
@@ -4525,7 +3561,7 @@ EXTERN_CONFDB
 			}
 		}
 		if(destin!=NULL)
-			destin=(char*)realloc(destin,0*sizeof(char));
+			free(destin);
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 		if(strstr(ErrorMessage,"NO_ROWS_SELECTED")==NULL)
 		{
@@ -4556,21 +3592,14 @@ EXTERN_CONFDB
 	{
 		char appliName[100]="GetFreeDeviceNamesPerType";
 		int i = 0;
-		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int pos1=0;
 		int pos3=0;
-		int actual_len=0;
 		int pos2=0;
 		int len_devname=0;
 		char* devName=NULL;
 		char* devIDs_temp=NULL;
 		sword status;
-		int nline=0;
-		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -4596,7 +3625,7 @@ EXTERN_CONFDB
 			
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,0,&status);												
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);
 			else
 			{
 				status=-10;
@@ -4620,18 +3649,16 @@ EXTERN_CONFDB
 		}
 		if(status==OCI_SUCCESS)
 		{
-			pos2=0;
-			i=0;
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 				if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 				{
-					pos1=strcspn(devName,"|");
-					devName[pos1]='\0';
+					RemoveSeparator(devName,"|");
+					pos1=strlen(devName);
 					pos3=pos2;
-					pos2+=pos1+1;
-					actual_len+=pos1+1;
+					pos2+=pos1+1;				
+
 					devIDs_temp=(char*) realloc(devIDs_temp,pos2*sizeof(char));
 					if(devIDs_temp==NULL)
 					{
@@ -4655,12 +3682,11 @@ EXTERN_CONFDB
 				if(pos2>len_array)
 				{
 					len_array=pos2;
-					devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
-					rescode=-1;
+					free(devIDs_temp);
 					free(devName);
 					status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 					GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-					return rescode;
+					return -1;
 				}
 				else
 				{
@@ -4676,7 +3702,7 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 					}
 				}
-				devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
+				free(devIDs_temp);
 				free(devName);
 			}
 		}
@@ -4710,32 +3736,11 @@ EXTERN_CONFDB
 	int GetDeviceID_devicename(char* deviname,int &deviceID,char* ErrorMessage)
 	{
 		char appliName[100]="GetDeviceID_devicename";
-		int i = 0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
-		int pos3=0;
-		int pos4=0;
-		int free_mem=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		sword status;
 		int rescode=0;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
 		OCIDefine* def[1];
-		ub4  devtypelen=0;
-		ub4 devlen=0;
-		ub4  uuidlen=0;
-		ub4 barcodelen=0;
-		int node=0;
-		int active=0;
-		int deviceid=0;
-		int promiscuous_mode=0;
-		int status1=0;
-		int nodeused=0;
-		int len=0;
 		char selectdev[1000];
 		if(deviname==NULL)
 		{
@@ -4749,7 +3754,7 @@ EXTERN_CONFDB
 			StmtPrepare(stmthp,ociError, selectdev, &status);
 			BindByName(stmthp,&bnd1p,ociError,":dname",deviname,&status);
             StmtExecute(ociHdbc, stmthp, ociError, &status);
-			DefineByPos(stmthp,def,ociError,1, &deviceid,&status);										
+			DefineByPos(stmthp,def,ociError,1, &deviceID,&status);										
 		}catch(Error err){
 			sprintf(appliName,"GetDeviceID_devicename");	///////
 			rescode=ShowErrors (status, err.ociError, err.log);
@@ -4766,20 +3771,15 @@ EXTERN_CONFDB
 		if(status==OCI_SUCCESS)
 			status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1, OCI_DEFAULT);
 
-		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
-		{	
-			deviceID=deviceid;
-		} 
-		else 
+		if (status!=OCI_SUCCESS && status!=OCI_SUCCESS_WITH_INFO)  
 		{
 			if(rescode==0)
 			{
 				rescode=ShowErrors (status, ociError, "Fetch unsuccessful");
 				strcpy(ErrorMessage,"NO_ROWS_SELECTED");
 				GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
-				rescode=0; //means no data found
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				return rescode;
+				return 0;
 			}
 		}
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
@@ -4812,29 +3812,11 @@ EXTERN_CONFDB
 	int GetPortID_portinfo(int deviceID,char* port_nb,char* port_type,int port_way,int &portID,char* ErrorMessage)
 	{
 		char appliName[100]="GetPortID_portinfo";
-		int i = 0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
-		int pos3=0;
-		int pos4=0;
-		int free_mem=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		sword status;
 		int rescode=0;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p[4]; 
 		OCIDefine* def[1];
-		ub4  devtypelen=0;
-		ub4 devlen=0;
-		ub4  uuidlen=0;
-		ub4 barcodelen=0;
-		int portid=0;
-		int status1=0;
-		int nodeused=0;
-		int len=0;
 		char selectdev[1000];
 
 		try{
@@ -4846,7 +3828,7 @@ EXTERN_CONFDB
 			BindByName(stmthp,&bnd1p[2],ociError,":ptype",port_type,&status);
 			BindByName(stmthp,&bnd1p[3],ociError,":pway",&port_way,&status);
 			StmtExecute(ociHdbc, stmthp, ociError, &status);
-			DefineByPos(stmthp,def,ociError,1, &portid,&status);																		
+			DefineByPos(stmthp,def,ociError,1, &portID,&status);																		
 		}catch(Error err){
 			sprintf(appliName,"GetPortID_portinfo");	///////
 			rescode=ShowErrors (status, err.ociError, err.log);
@@ -4863,18 +3845,13 @@ EXTERN_CONFDB
 		if(status==OCI_SUCCESS)
 			status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1, OCI_DEFAULT);
 
-		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
-		{	
-			portID=portid;
-		} 
-		else 
+		if (status!=OCI_SUCCESS && status!=OCI_SUCCESS_WITH_INFO) 
 		{
 			if(rescode==0)
 			{
 				rescode=ShowErrors (status, ociError, "Fetch unsuccessful");
 				strcpy(ErrorMessage,"NO_ROWS_SELECTED");
 				GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
-				rescode=0; //means no data found
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				return rescode;
 			}
@@ -4907,29 +3884,13 @@ EXTERN_CONFDB
 	int GetDeviceName_deviceid(int deviceID,char* devicename,char* ErrorMessage)
 	{
 		char appliName[100]="GetDeviceName_deviceid";
-		int i = 0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
-		int pos3=0;
-		int pos4=0;
-		int free_mem=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		sword status;
 		int rescode=0;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
 		OCIDefine* def[1];
-		ub4  devtypelen=0;
 		ub4 devlen=0;
-		ub4  uuidlen=0;
-		ub4 barcodelen=0;
 		OCIParam *parmdp;
-		int status1=0;
-		int len=0;
-		char * devicename_temp=NULL;
 		char selectdev[1000];
 
 		try{
@@ -4940,19 +3901,8 @@ EXTERN_CONFDB
 			StmtExecute(ociHdbc, stmthp, ociError, &status);
 			/* The next two statements describe the select-list item, dept, and return its length to allocate the memory*/
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
-			AttrGet(parmdp, (sb4*) &devlen, ociError, &status);
-			
-			devicename_temp=(char*)realloc(devicename_temp,(devlen+1)*sizeof(char));
-			if(devicename_temp==NULL)
-			{
-				rescode=ShowErrors (-10, ociError, "Memory allocation failed ");
-				status=-10;
-				rescode=-1;
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-				return rescode;
-			}			
-			DefineByPos(stmthp,def,ociError,1, devicename_temp,devlen+1,0,&status);	
+			AttrGet(parmdp, (sb4*) &devlen, ociError, &status);	
+			DefineByPos(stmthp,def,ociError,1, devicename,devlen+1,&status);	
 
 		}catch(Error err){
 			sprintf(appliName,"GetDeviceName_deviceid");	///////
@@ -4970,22 +3920,15 @@ EXTERN_CONFDB
 			status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT, 1,OCI_DEFAULT);
 
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
-		{	
-			pos1=strcspn(devicename_temp,"?");
-			devicename_temp[pos1]='\0';
-			strcpy(devicename,devicename_temp);
-		} 
+            RemoveSeparator(devicename,"?");
 		else 
 		{
 			if(rescode==0)
 			{
-				rescode=0;
 				strcpy(devicename,"NO_ROWS_SELECTED");
 				GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 			}
 		}
-		if(devicename_temp!=NULL)
-			devicename_temp=(char*)realloc(devicename_temp,0*sizeof(char));
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 		if(strstr(ErrorMessage,"NO_ROWS_SELECTED")==NULL)
 		{
@@ -5016,21 +3959,14 @@ EXTERN_CONFDB
 	{
 		char appliName[100]="GetDeviceNamesPerLocation";
 		int i = 0;
-		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int pos1=0;
 		int pos3=0;
-		int actual_len=0;
 		int pos2=0;
 		int len_devname=0;
 		char* devName=NULL;
 		char* devIDs_temp=NULL;
 		sword status;
-		int nline=0;
-		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -5056,15 +3992,14 @@ EXTERN_CONFDB
 			
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,0,&status);	
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);	
 			else
 			{
 				status=-10;
 				rescode=ShowErrors (status, ociError, "pointer allocation unsuccessful");
-				rescode=-1;
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-				return rescode;	
+				return -1;	
 			}
 
 		}catch(Error err){
@@ -5082,15 +4017,13 @@ EXTERN_CONFDB
 
 		if(status==OCI_SUCCESS)
 		{
-			pos2=0;
-			i=0;
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 				if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 				{
-					pos1=strcspn(devName,"|");
-					devName[pos1]='\0';
+					RemoveSeparator(devName,"|");
+					pos1=strlen(devName);
 					pos3=pos2;
 					pos2+=pos1+1;
 					devIDs_temp=(char*) realloc(devIDs_temp,pos2*sizeof(char));
@@ -5098,11 +4031,10 @@ EXTERN_CONFDB
 					{
 						status=-10;
 						rescode=ShowErrors (status, ociError, "  pointer allocation unsuccessful");
-						rescode=-1;
 						free(devName);
 						status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 						GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-						return rescode;
+						return -1;
 					}
 					else
 					{
@@ -5116,12 +4048,11 @@ EXTERN_CONFDB
 				if(pos2>len_array)
 				{
 					len_array=pos2;
-					devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
-					rescode=-1;
+					free(devIDs_temp);					
 					free(devName);
 					status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 					GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-					return rescode;
+					return -1;
 				}
 				else
 				{
@@ -5137,7 +4068,7 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 					}
 				}
-				devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
+				free(devIDs_temp);
 				free(devName);
 			}
 		}
@@ -5170,21 +4101,14 @@ EXTERN_CONFDB
 	{
 		char appliName[100]="GetDeviceNamesPerFunction";
 		int i = 0;
-		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int pos1=0;
 		int pos3=0;
-		int actual_len=0;
 		int pos2=0;
 		int len_devname=0;
 		char* devName=NULL;
 		char* devIDs_temp=NULL;
 		sword status;
-		int nline=0;
-		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -5213,15 +4137,14 @@ EXTERN_CONFDB
 			AttrGet(parmdp, &len_devname, ociError, &status);
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,0,&status);	
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);	
 			else
 			{
 				status=-10;
 				rescode=ShowErrors (status, ociError, "pointer allocation unsuccessful");
-				rescode=-1;
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-				return rescode;	
+				return -1;	
 			}
 		}catch(Error err){
 			sprintf(appliName,"GetDeviceNamesPerFunction");	///////
@@ -5237,27 +4160,24 @@ EXTERN_CONFDB
 		}	
 		if(status==OCI_SUCCESS)
 		{
-			pos2=0;
-			i=0;
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 				if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 				{
-					pos1=strcspn(devName,"|");
-					devName[pos1]='\0';
+					RemoveSeparator(devName,"|");
+					pos1=strlen(devName);
 					pos3=pos2;
-					pos2+=pos1+1;
+					pos2+=pos1+1;					
 					devIDs_temp=(char*) realloc(devIDs_temp,pos2*sizeof(char));
 					if(devIDs_temp==NULL)
 					{
 						status=-10;
 						rescode=ShowErrors (status, ociError, "  pointer allocation unsuccessful");
-						rescode=-1;
 						free(devName);
 						status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 						GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-						return rescode;
+						return -1;
 					}
 					else
 					{
@@ -5271,12 +4191,11 @@ EXTERN_CONFDB
 				if(pos2>len_array)
 				{
 					len_array=pos2;
-					devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
-					rescode=-1;
+					free(devIDs_temp);
 					free(devName);
 					status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 					GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-					return rescode;
+					return -1;
 				}
 				else
 				{
@@ -5292,7 +4211,7 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 					}
 				}
-				devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
+				free(devIDs_temp);
 				free(devName);
 			}
 		}
@@ -5325,21 +4244,14 @@ EXTERN_CONFDB
 	{
 		char appliName[100]="GetSpareHWPerLocation";
 		int i = 0;
-		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int pos1=0;
 		int pos3=0;
-		int actual_len=0;
 		int pos2=0;
 		int len_devname=0;
 		char* devName=NULL;
 		char* devIDs_temp=NULL;
 		sword status;
-		int nline=0;
-		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -5365,15 +4277,14 @@ EXTERN_CONFDB
 			
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,0,&status);		
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);		
 			else
 			{
 				status=-10;
 				rescode=ShowErrors (status, ociError, "pointer allocation unsuccessful");
-				rescode=-1;
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-				return rescode;	
+				return -1;	
 			}
 		}catch(Error err){
 			sprintf(appliName,"GetSpareHWPerLocation");	///////
@@ -5390,28 +4301,25 @@ EXTERN_CONFDB
 
 		if(status==OCI_SUCCESS)
 		{
-			pos2=0;
-			i=0;
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 				if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 				{
-					pos1=strcspn(devName,"?");
-					devName[pos1]='\0';
+					RemoveSeparator(devName,"?");
+					pos1=strlen(devName);
 					pos3=pos2;
 					pos2+=pos1+1;
-
+					
 					devIDs_temp=(char*) realloc(devIDs_temp,pos2*sizeof(char));
 					if(devIDs_temp==NULL)
 					{
 						status=-10;
 						rescode=ShowErrors (status, ociError, "  pointer allocation unsuccessful");
-						rescode=-1;
 						free(devName);
 						status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 						GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-						return rescode;
+						return -1;
 					}
 					else
 					{
@@ -5425,12 +4333,11 @@ EXTERN_CONFDB
 				if(pos2>len_array)
 				{
 					len_array=pos2;
-					devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
-					rescode=-1;
+					free(devIDs_temp);
 					free(devName);
 					status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 					GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-					return rescode;
+					return -1;
 				}
 				else
 				{
@@ -5446,7 +4353,7 @@ EXTERN_CONFDB
 						strcpy(devnames_list,"NO_ROWS_SELECTED");
 					}
 				}
-				devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
+				free(devIDs_temp);
 				free(devName);
 			}
 		}
@@ -5479,21 +4386,14 @@ EXTERN_CONFDB
 	{
 		char appliName[100]="GetSpareHWPerPerType";
 		int i = 0;
-		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int pos1=0;
 		int pos3=0;
-		int actual_len=0;
 		int pos2=0;
 		int len_devname=0;
 		char* devName=NULL;
 		char* devIDs_temp=NULL;
 		sword status;
-		int nline=0;
-		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -5519,15 +4419,14 @@ EXTERN_CONFDB
 
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)				
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,0,&status);		
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);		
 			else
 			{
 				status=-10;
 				rescode=ShowErrors (status, ociError, "pointer allocation unsuccessful");
-				rescode=-1;
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-				return rescode;	
+				return -1;	
 			}			
 		}catch(Error err){
 			sprintf(appliName,"GetSpareHWPerType");	///////
@@ -5544,28 +4443,24 @@ EXTERN_CONFDB
 
 		if(status==OCI_SUCCESS)
 		{
-			pos2=0;
-			i=0;
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 				if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 				{
-					pos1=strcspn(devName,"?");
-					devName[pos1]='\0';
+					RemoveSeparator(devName,"?");
+					pos1=strlen(devName);
 					pos3=pos2;
-					pos2+=pos1+1;
-
-					devIDs_temp=(char*) realloc(devIDs_temp,pos2*sizeof(char));
+					pos2+=pos1+1;					
+                    devIDs_temp=(char*) realloc(devIDs_temp,pos2*sizeof(char));
 					if(devIDs_temp==NULL)
 					{
 						status=-10;
 						rescode=ShowErrors (status, ociError, "  pointer allocation unsuccessful");
-						rescode=-1;
 						free(devName);
 						status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 						GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-						return rescode;
+						return -1;
 					}
 					else
 					{
@@ -5580,11 +4475,10 @@ EXTERN_CONFDB
 				{
 					len_array=pos2;
 					devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
-					rescode=-1;
 					free(devName);
 					status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 					GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-					return rescode;
+					return -1;
 				}
 				else
 				{
@@ -5600,7 +4494,7 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 					}
 				}
-				devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
+				free(devIDs_temp);
 				free(devName);
 			}
 		}
@@ -5637,25 +4531,10 @@ EXTERN_CONFDB
 	int GetHWDeviceRow_serialnb(char* serialnb,int &len_device, char* device_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetHWDeviceRow_serialnb";
-		int i = 0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
-		int pos3=0;
-		int pos4=0;
-		int pos5=0;
-		int pos6=0;
-		int pos7=0;
-		int rescode1=0;
-		int free_mem=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		sword status;
 		int rescode=0;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
-		OCIBind  *bnd2p = (OCIBind *) 0;
 		OCIDefine* def[9];
 		sb4  devtypelen=0;
 		sb4 devlen=0;
@@ -5666,7 +4545,6 @@ EXTERN_CONFDB
 		sb4 dnamelen=0;
 		OCIParam *parmdp;
 		int status1=0;
-		int len=0;
 		char * hwname_temp=NULL;
 		char * hwtype_temp=NULL;
 		char * location_temp=NULL;
@@ -5674,14 +4552,6 @@ EXTERN_CONFDB
 		char * responsible_temp=NULL;
 		char * comments_temp=NULL;
 		char * dname_temp=NULL;
-		int dname_null=0;
-		int dtype_null=0;
-		int serialnb_null=0;
-		int location_null=0;
-		int dcomments_null=0;
-		int dresponsible_null=0;
-		int hwname_null=0;
-		char logmessage[100];
 		char device_status[20];
 		if(serialnb==NULL)
 		{
@@ -5711,18 +4581,7 @@ EXTERN_CONFDB
 			AttrGet(parmdp, &locationlen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 8, &status);
 			AttrGet(parmdp, &dnamelen, ociError, &status);
-
-			/* Use the retrieved length of dept to allocate an output buffer, and
-			then define the output variable. If the define call returns an error,
-			exit the application */
-			MinStringLength(devtypelen);
-			MinStringLength(devlen);
-			MinStringLength(locationlen);
-			MinStringLength(serialnblen);
-			MinStringLength(responlen);
-			MinStringLength(commentslen);
-			MinStringLength(dnamelen);
-			
+	
 			hwtype_temp = (char *) realloc(hwtype_temp,(devtypelen + 1)*sizeof(char));
 			hwname_temp= (char *) realloc(hwname_temp,(devlen + 1)*sizeof(char));
 			location_temp = (char *) realloc(location_temp,(locationlen + 1)*sizeof(char));
@@ -5734,7 +4593,6 @@ EXTERN_CONFDB
 			if(hwtype_temp==NULL || hwname_temp==NULL || location_temp==NULL || serialnb_temp==NULL ||dname_temp==NULL||responsible_temp==NULL||comments_temp==NULL)
 			{
 				rescode=ShowErrors (status, ociError, "  pointer allocation unsuccessful");
-				rescode=-1;
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				if(hwtype_temp!=NULL)
 					free(hwtype_temp);
@@ -5751,16 +4609,16 @@ EXTERN_CONFDB
 				if(comments_temp!=NULL)
 					free(comments_temp);
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-				return rescode;
+				return -1;
 			}
-			DefineByPos(stmthp,def,ociError,1, hwname_temp,devlen + 1,hwname_null,&status);		
-			DefineByPos(stmthp,def,ociError,2, hwtype_temp,devtypelen+1,dtype_null,&status);		
+			DefineByPos(stmthp,def,ociError,1, hwname_temp,devlen + 1,&status);		
+			DefineByPos(stmthp,def,ociError,2, hwtype_temp,devtypelen+1,&status);		
 			DefineByPos(stmthp,def,ociError,3, &status1,&status);		
-			DefineByPos(stmthp,def,ociError,4, responsible_temp,responlen+1,dresponsible_null,&status);		
-			DefineByPos(stmthp,def,ociError,5, comments_temp,commentslen+1, dcomments_null,&status);		
-			DefineByPos(stmthp,def,ociError,6, location_temp,locationlen+1, location_null,&status);		
-			DefineByPos(stmthp,def,ociError,7, serialnb_temp,serialnblen+1, serialnb_null,&status);		
-			DefineByPos(stmthp,def,ociError,8, dname_temp,dnamelen+1, dname_null,&status);		
+			DefineByPos(stmthp,def,ociError,4, responsible_temp,responlen+1,&status);		
+			DefineByPos(stmthp,def,ociError,5, comments_temp,commentslen+1, &status);		
+			DefineByPos(stmthp,def,ociError,6, location_temp,locationlen+1, &status);		
+			DefineByPos(stmthp,def,ociError,7, serialnb_temp,serialnblen+1, &status);		
+			DefineByPos(stmthp,def,ociError,8, dname_temp,dnamelen+1, &status);		
 			
 		}catch(Error err){
 			sprintf(appliName,"GetHWDeviceRow_serialnb");	///////
@@ -5780,54 +4638,15 @@ EXTERN_CONFDB
 
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
-			Format_output(serialnb_null,serialnb_temp, logmessage,'?');
-			Format_output(dtype_null,hwtype_temp,logmessage,'?');
-			Format_output(location_null,location_temp,logmessage,'?');
-			Format_output(hwname_null,hwname_temp,logmessage,'?');
-			Format_output(dname_null,dname_temp,logmessage,'?');
-			Format_output(dresponsible_null,responsible_temp,logmessage,'?');
-			Format_output(dcomments_null,comments_temp,logmessage,'?');
-			pos1=strcspn(dname_temp,"?");
-			pos2=strcspn(hwtype_temp,"?");
-			pos3=strcspn(location_temp,"?");
-			pos4=strcspn(serialnb_temp,"?");
-			pos5=strcspn(hwname_temp,"?");
-			pos6=strcspn(comments_temp,"?");
-			pos7=strcspn(responsible_temp,"?");
-			dname_temp[pos1]='\0';
-			hwtype_temp[pos2]='\0';
-			location_temp[pos3]='\0';
-			serialnb_temp[pos4]='\0';
-			hwname_temp[pos5]='\0';
-			comments_temp[pos6]='\0';
-			responsible_temp[pos7]='\0';
-			rescode1=GetDeviceStatus(status1, device_status);
-			len=strlen(device_status)+strlen(responsible_temp)+strlen(hwtype_temp)+strlen(dname_temp)+strlen(hwname_temp)+strlen(location_temp)+strlen(serialnb_temp)+strlen(comments_temp)+strlen("|hwname (C): |hwtype (C): |device_status (C): |location (C): |user_comments  (C): |responsible (C): |devicename (C): |serialnb  (C): |");
-
-			if(len_device<len)
-			{
-				len++;
-				len_device=len;
-				GetErrorMess(appliName, "BUFFER_TOO_SMALL",ErrorMessage,1);
-				if(hwtype_temp!=NULL)
-					hwtype_temp = (char *) realloc(hwtype_temp,(0)*sizeof(char));
-				if(hwname_temp!=NULL)
-					hwname_temp= (char *) realloc(hwname_temp,(0)*sizeof(char));
-				if(dname_temp!=NULL)
-					dname_temp= (char *) realloc(dname_temp,(0)*sizeof(char));
-				if(serialnb_temp!=NULL)
-					serialnb_temp = (char *) realloc(serialnb_temp,(0)*sizeof(char));
-				if(location_temp!=NULL)
-					location_temp= (char *) realloc(location_temp,(0)*sizeof(char));
-				if(responsible_temp!=NULL)
-					responsible_temp= (char *) realloc(responsible_temp,(0)*sizeof(char));
-				if(comments_temp!=NULL)
-					comments_temp= (char *) realloc(comments_temp,(0)*sizeof(char));
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				return -1;
-			}
-			else
-				sprintf(device_result,"|hwname (C):%s |hwtype (C):%s |device_status (C):%s |location (C):%s |responsible  (C):%s |user_comments (C):%s |devicename (C):%s |serialnb  (C):%s |" ,hwname_temp,hwtype_temp,device_status,location_temp,responsible_temp,comments_temp,dname_temp,serialnb_temp);
+			RemoveSeparator(serialnb_temp,"?");
+			RemoveSeparator(hwtype_temp,"?");
+			RemoveSeparator(location_temp,"?");
+			RemoveSeparator(hwname_temp,"?");
+			RemoveSeparator(dname_temp,"?");
+			RemoveSeparator(responsible_temp,"?");
+			RemoveSeparator(comments_temp,"?");
+			GetDeviceStatus(status1, device_status);
+			sprintf(device_result,"|hwname (C):%s |hwtype (C):%s |device_status (C):%s |location (C):%s |responsible  (C):%s |user_comments (C):%s |devicename (C):%s |serialnb  (C):%s |" ,hwname_temp,hwtype_temp,device_status,location_temp,responsible_temp,comments_temp,dname_temp,serialnb_temp);
 		} 
 		else 
 		{
@@ -5838,13 +4657,13 @@ EXTERN_CONFDB
                     StmtPrepare(stmthp,ociError, selectdev, &status);              
 					BindByName(stmthp,&bnd1p,ociError,":dname",serialnb,&status);
     				StmtExecute(ociHdbc, stmthp, ociError, &status);
-					DefineByPos(stmthp,def,ociError,1, hwname_temp,devlen + 1,hwname_null,&status);		
-					DefineByPos(stmthp,def,ociError,2, hwtype_temp,devtypelen+1,dtype_null,&status);		
+					DefineByPos(stmthp,def,ociError,1, hwname_temp,devlen + 1,&status);		
+					DefineByPos(stmthp,def,ociError,2, hwtype_temp,devtypelen+1,&status);		
 					DefineByPos(stmthp,def,ociError,3, &status1,&status);		
-					DefineByPos(stmthp,def,ociError,4, responsible_temp,responlen+1,dresponsible_null,&status);		
-					DefineByPos(stmthp,def,ociError,5, comments_temp,commentslen+1, dcomments_null,&status);		
-					DefineByPos(stmthp,def,ociError,6, location_temp,locationlen+1, location_null,&status);		
-					DefineByPos(stmthp,def,ociError,7, serialnb_temp,serialnblen+1, serialnb_null,&status);						
+					DefineByPos(stmthp,def,ociError,4, responsible_temp,responlen+1,&status);		
+					DefineByPos(stmthp,def,ociError,5, comments_temp,commentslen+1,&status);		
+					DefineByPos(stmthp,def,ociError,6, location_temp,locationlen+1,&status);		
+					DefineByPos(stmthp,def,ociError,7, serialnb_temp,serialnblen+1,&status);						
 				}catch(Error err){
 					sprintf(appliName,"GetHWDeviceRow_serialnb");	///////
 					rescode=ShowErrors (status, err.ociError, err.log);
@@ -5860,52 +4679,14 @@ EXTERN_CONFDB
 
 				if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 				{	
-					Format_output(serialnb_null,serialnb_temp, logmessage,'?');
-					Format_output(dtype_null,hwtype_temp,logmessage,'?');
-					Format_output(location_null,location_temp,logmessage,'?');
-					Format_output(hwname_null,hwname_temp,logmessage,'?');
-					Format_output(dresponsible_null,responsible_temp,logmessage,'?');
-					Format_output(dcomments_null,comments_temp,logmessage,'?');
-
-					pos2=strcspn(hwtype_temp,"?");
-					pos3=strcspn(location_temp,"?");
-					pos4=strcspn(serialnb_temp,"?");
-					pos5=strcspn(hwname_temp,"?");
-					pos6=strcspn(comments_temp,"?");
-					pos7=strcspn(responsible_temp,"?");
-
-					hwtype_temp[pos2]='\0';
-					location_temp[pos3]='\0';
-					serialnb_temp[pos4]='\0';
-					hwname_temp[pos5]='\0';
-					comments_temp[pos6]='\0';
-					responsible_temp[pos7]='\0';
-					rescode1=GetDeviceStatus(status1, device_status);
-					len=strlen(device_status)+strlen(responsible_temp)+strlen(hwtype_temp)+strlen(hwname_temp)+strlen(location_temp)+strlen(serialnb_temp)+strlen(comments_temp)+strlen("|hwname (C): |hwtype (C): |device_status (C): |location (C): |user_comments  (C): |responsible (C): |devicename (C): none |serialnb  (C): |");
-
-					if(len_device<len)
-					{
-						len++;
-						len_device=len;
-						GetErrorMess(appliName, "BUFFER_TOO_SMALL",ErrorMessage,1);
-						if(hwtype_temp!=NULL)
-							hwtype_temp = (char *) realloc(hwtype_temp,(0)*sizeof(char));
-						if(hwname_temp!=NULL)
-							hwname_temp= (char *) realloc(hwname_temp,(0)*sizeof(char));
-
-						if(serialnb_temp!=NULL)
-							serialnb_temp = (char *) realloc(serialnb_temp,(0)*sizeof(char));
-						if(location_temp!=NULL)
-							location_temp= (char *) realloc(location_temp,(0)*sizeof(char));
-						if(responsible_temp!=NULL)
-							responsible_temp= (char *) realloc(responsible_temp,(0)*sizeof(char));
-						if(comments_temp!=NULL)
-							comments_temp= (char *) realloc(comments_temp,(0)*sizeof(char));
-						status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-						return -1;
-					}
-					else
-						sprintf(device_result,"|hwname (C):%s |hwtype (C):%s |device_status (C):%s |location (C):%s |responsible  (C):%s |user_comments (C):%s |devicename (C):none |serialnb  (C):%s |" ,hwname_temp,hwtype_temp,device_status,location_temp,responsible_temp,comments_temp,serialnb_temp);
+					RemoveSeparator(serialnb_temp,"?");
+					RemoveSeparator(hwtype_temp,"?");
+					RemoveSeparator(location_temp,"?");
+					RemoveSeparator(hwname_temp,"?");
+					RemoveSeparator(responsible_temp,"?");
+					RemoveSeparator(comments_temp,"?");
+					GetDeviceStatus(status1, device_status);
+					sprintf(device_result,"|hwname (C):%s |hwtype (C):%s |device_status (C):%s |location (C):%s |responsible  (C):%s |user_comments (C):%s |devicename (C):none |serialnb  (C):%s |" ,hwname_temp,hwtype_temp,device_status,location_temp,responsible_temp,comments_temp,serialnb_temp);
 				}
 				else
 				{
@@ -5919,19 +4700,19 @@ EXTERN_CONFDB
 			}
 		}
 		if(hwtype_temp!=NULL)
-			hwtype_temp = (char *) realloc(hwtype_temp,(0)*sizeof(char));
+			free(hwtype_temp);
 		if(hwname_temp!=NULL)
-			hwname_temp= (char *) realloc(hwname_temp,(0)*sizeof(char));
+			free(hwname_temp);
 		if(dname_temp!=NULL)
-			dname_temp= (char *) realloc(dname_temp,(0)*sizeof(char));
+			free(dname_temp);
 		if(serialnb_temp!=NULL)
-			serialnb_temp = (char *) realloc(serialnb_temp,(0)*sizeof(char));
+			free(serialnb_temp);
 		if(location_temp!=NULL)
-			location_temp= (char *) realloc(location_temp,(0)*sizeof(char));
+			free(location_temp);
 		if(responsible_temp!=NULL)
-			responsible_temp= (char *) realloc(responsible_temp,(0)*sizeof(char));
+			free(responsible_temp);
 		if(comments_temp!=NULL)
-			comments_temp= (char *) realloc(comments_temp,(0)*sizeof(char));
+			free(comments_temp);
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 		rescode+=status;
 		if(strstr(ErrorMessage,"NO_ROWS_SELECTED")==NULL)
@@ -5962,21 +4743,14 @@ EXTERN_CONFDB
 	{
 		char appliName[100]="GetIPAliasesPerIPName";
 		int i = 0;
-		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int pos1=0;
 		int pos3=0;
-		int actual_len=0;
 		int pos2=0;
 		int len_devname=0;
 		char* devName=NULL;
 		char* devIDs_temp=NULL;
 		sword status;
-		int nline=0;
-		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -6002,15 +4776,14 @@ EXTERN_CONFDB
 
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,0,&status);		
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);		
 			else
 			{
 				status=-10;
 				rescode=ShowErrors (status, ociError, "pointer allocation unsuccessful");
-				rescode=-1;
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-				return rescode;	
+				return -1;	
 			}			
 		}catch(Error err){
 			sprintf(appliName,"GetIPAliasesPerIPName");	///////
@@ -6027,15 +4800,13 @@ EXTERN_CONFDB
 
 		if(status==OCI_SUCCESS)
 		{
-			pos2=0;
-			i=0;
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 				if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 				{
-					pos1=strcspn(devName,"|");
-					devName[pos1]='\0';
+					RemoveSeparator(devName,"|");
+					pos1=strlen(devName);
 					pos3=pos2;
 					pos2+=pos1+1;
 					devIDs_temp=(char*) realloc(devIDs_temp,pos2*sizeof(char));
@@ -6043,11 +4814,10 @@ EXTERN_CONFDB
 					{
 						status=-10;
 						rescode=ShowErrors (status, ociError, "  pointer allocation unsuccessful");
-						rescode=-1;
 						free(devName);
 						status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 						GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-						return rescode;
+						return -1;
 					}
 					else
 					{
@@ -6062,11 +4832,10 @@ EXTERN_CONFDB
 				{
 					len_array=pos2;
 					devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
-					rescode=-1;
 					free(devName);
 					status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 					GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-					return rescode;
+					return -1;
 				}
 				else
 				{
@@ -6082,7 +4851,7 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 					}
 				}
-				devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
+				free(devIDs_temp);
 				free(devName);
 			}
 		}
@@ -6114,21 +4883,14 @@ EXTERN_CONFDB
 	{
 		char appliName[100]="GetAvailableFunctions";
 		int i = 0;
-		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int pos1=0;
 		int pos3=0;
-		int actual_len=0;
 		int pos2=0;
 		int len_devname=0;
 		char* devName=NULL;
 		char* devIDs_temp=NULL;
 		sword status;
-		int nline=0;
-		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
 		OCIDefine* def;
@@ -6147,15 +4909,14 @@ EXTERN_CONFDB
 			
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,0,&status);		
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);		
 			else
 			{
 				status=-10;
 				rescode=ShowErrors (status, ociError, "pointer allocation unsuccessful");
-				rescode=-1;
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-				return rescode;	
+				return -1;	
 			}
 		}catch(Error err){
 			sprintf(appliName,"GetAvailableFunctions");	///////
@@ -6172,15 +4933,13 @@ EXTERN_CONFDB
 
 		if(status==OCI_SUCCESS)
 		{
-			pos2=0;
-			i=0;
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 				if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 				{
-					pos1=strcspn(devName,"|");
-					devName[pos1]='\0';
+					RemoveSeparator(devName,"|");
+					pos1=strlen(devName);
 					pos3=pos2;
 					pos2+=pos1+1;
 					devIDs_temp=(char*) realloc(devIDs_temp,pos2*sizeof(char));
@@ -6188,11 +4947,10 @@ EXTERN_CONFDB
 					{
 						status=-10;
 						rescode=ShowErrors (status, ociError, "  pointer allocation unsuccessful");
-						rescode=-1;
 						free(devName);
 						status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 						GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-						return rescode;
+						return -1;
 					}
 					else
 					{
@@ -6206,12 +4964,11 @@ EXTERN_CONFDB
 				if(pos2>len_array)
 				{
 					len_array=pos2;
-					devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
-					rescode=-1;
+					free(devIDs_temp);
 					free(devName);
 					status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 					GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-					return rescode;
+					return -1;
 				}
 				else
 				{
@@ -6227,7 +4984,7 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 					}
 				}
-				devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
+				free(devIDs_temp);
 				free(devName);
 			}
 		}
@@ -6264,18 +5021,7 @@ EXTERN_CONFDB
 	int GetIPAliasRow(char* ipalias,int &len_ipalias,char* ipalias_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetIPAliasRow";
-		int i = 0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
-		int len1=0;
-		int pos3=0;
-		int pos4=0;
 		int rescode=0;
-		int free_mem=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		sword status;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -6288,13 +5034,7 @@ EXTERN_CONFDB
 		char * ipname_temp=NULL;
 		char* ipaddress_temp=NULL;
 		char* subnet_temp=NULL;
-		int ipalias_null=0;
-		int ipaddress_null=0;
-		int ipname_null=0;
-		int subnet_null=0;
-		char logmessage[100];
-		int res1=0;
-
+		char selectdevtype[1000];
 		if(ipalias==NULL)
 		{
 			GetErrorMess(appliName," ipalias MUST be given",ErrorMessage,1);
@@ -6303,7 +5043,6 @@ EXTERN_CONFDB
 		
 		try{
 			HandleAlloc(ociEnv,&stmthp,ociError,&status);
-			char selectdevtype[1000];
 			sprintf(selectdevtype,"select t.ipaddress||'?',t.ipalias||'?',e.ipname||'?',e.subnet_info||'?' from %s t,%s e where t.ipalias=:ipalias and t.ipaddress=e.ipaddress ",IPALIAS_TABLE,IPINFO_TABLE);
 			StmtPrepare(stmthp,ociError, selectdevtype, &status);
 			BindByName(stmthp,&bnd1p,ociError,":ipalias",ipalias,&status);
@@ -6314,10 +5053,6 @@ EXTERN_CONFDB
 			ParamGet(stmthp, ociError, &parmdp, 3, &status);
 			AttrGet(parmdp,  &ipname_len, ociError, &status);
 
-			/* Use the retrieved length of dept to allocate an output buffer, and then define the output variable. If the define call returns an error,exit the application */
-			MinStringLength(ipalias_len); //case it will be a null value need a buffer bigger than 5
-			MinStringLength(ipname_len);
-
 			ipname_temp = (char *) realloc(ipname_temp,(ipname_len + 1)*sizeof(char));
 			ipalias_temp= (char *) realloc(ipalias_temp,(ipalias_len + 1)*sizeof(char));
 			ipaddress_temp= (char *) realloc(ipaddress_temp,(ipadd_len + 1)*sizeof(char));
@@ -6326,7 +5061,6 @@ EXTERN_CONFDB
 			{
 				status=-10;
 				rescode=ShowErrors (status, ociError, "  pointer allocation unsuccessful");
-				rescode=-1;
 				if(subnet_temp!=NULL)
 					free(subnet_temp);
 				if(ipaddress_temp!=NULL)
@@ -6337,12 +5071,12 @@ EXTERN_CONFDB
 					free(ipname_temp);
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-				return rescode;
+				return -1;
 			}
-			DefineByPos(stmthp,def,ociError,1,ipaddress_temp, ipadd_len + 1,ipaddress_null,&status);		
-			DefineByPos(stmthp,def,ociError,2,ipalias_temp,ipalias_len,ipalias_null,&status);		
-			DefineByPos(stmthp,def,ociError,3,ipname_temp,ipname_len,ipname_null,&status);		
-			DefineByPos(stmthp,def,ociError,4,subnet_temp,ipadd_len, subnet_null,&status);		
+			DefineByPos(stmthp,def,ociError,1,ipaddress_temp, ipadd_len + 1,&status);		
+			DefineByPos(stmthp,def,ociError,2,ipalias_temp,ipalias_len,&status);		
+			DefineByPos(stmthp,def,ociError,3,ipname_temp,ipname_len,&status);		
+			DefineByPos(stmthp,def,ociError,4,subnet_temp,ipadd_len,&status);		
 						
 		}catch(Error err){
 			sprintf(appliName,"GetIPAliasRow");	///////
@@ -6362,41 +5096,11 @@ EXTERN_CONFDB
 
 		if (status == OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO) 
 		{	
-			Format_output(ipaddress_null,ipaddress_temp,  logmessage,'?');
-			Format_output(ipname_null,ipname_temp, logmessage,'?');
-			Format_output(ipalias_null,ipalias_temp, logmessage,'?');
-			Format_output(subnet_null,subnet_temp, logmessage,'?');
-			//case where value has been truncated
-			pos1=strcspn(ipaddress_temp,"?");
-			pos2=strcspn(ipname_temp,"?");
-			pos3=strcspn(ipalias_temp,"?");
-			pos4=strcspn(subnet_temp,"?");
-			ipaddress_temp[pos1]='\0';
-			ipname_temp[pos2]='\0';
-			ipalias_temp[pos3]='\0';
-			subnet_temp[pos4]='\0';
-			len1=strlen("|ipalias (C): |ipaddress (C): |ipname (C): |subnet_mask (C): |")+strlen(ipname_temp)+strlen(ipalias_temp)+strlen(ipaddress_temp)+strlen(subnet_temp);
-
-			if(len_ipalias<len1)
-			{	
-				len1++;
-				len_ipalias=len1;
-				GetErrorMess(appliName, "BUFFER_TOO_SMALL",ErrorMessage,1);
-				if(ipalias_temp!=NULL)
-					ipalias_temp = (char *) realloc(ipalias_temp,(0)*sizeof(char));
-				if(subnet_temp!=NULL)
-					subnet_temp= (char *) realloc(subnet_temp,(0)*sizeof(char));
-				if(ipname_temp!=NULL)
-					ipname_temp= (char *) realloc(ipname_temp,(0)*sizeof(char));
-				if(ipaddress_temp!=NULL)
-					ipaddress_temp= (char *) realloc(ipaddress_temp,(0)*sizeof(char));
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				return -1;
-			}
-			else
-			{
-				sprintf(ipalias_result,"|ipalias (C):%s |ipaddress (C):%s |ipname (C):%s |subnet_mask (C):%s |",ipalias_temp,ipaddress_temp,ipname_temp,subnet_temp);
-			}
+			RemoveSeparator(ipaddress_temp,"?");
+			RemoveSeparator(ipname_temp,"?");
+			RemoveSeparator(ipalias_temp,"?");
+			RemoveSeparator(subnet_temp,"?");
+			sprintf(ipalias_result,"|ipalias (C):%s |ipaddress (C):%s |ipname (C):%s |subnet_mask (C):%s |",ipalias_temp,ipaddress_temp,ipname_temp,subnet_temp);
 		} 
 		else 
 		{
@@ -6408,13 +5112,13 @@ EXTERN_CONFDB
 			}
 		}
 		if(ipalias_temp!=NULL)
-			ipalias_temp = (char *) realloc(ipalias_temp,(0)*sizeof(char));
+			free(ipalias_temp);
 		if(subnet_temp!=NULL)
-			subnet_temp= (char *) realloc(subnet_temp,(0)*sizeof(char));
+			free(subnet_temp);
 		if(ipname_temp!=NULL)
-			ipname_temp= (char *) realloc(ipname_temp,(0)*sizeof(char));
+			free(ipname_temp);
 		if(ipaddress_temp!=NULL)
-			ipaddress_temp= (char *) realloc(ipaddress_temp,(0)*sizeof(char));
+			free(ipaddress_temp);
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 		rescode+=status;
 		if(strstr(ErrorMessage,"NO_ROWS_SELECTED")==NULL)
@@ -6448,13 +5152,9 @@ EXTERN_CONFDB
 		int i = 0;
 		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int lkID=0;
 		int* lkIDs_temp=NULL;
 		sword status;
-		int nline=0;
 		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
@@ -6496,10 +5196,9 @@ EXTERN_CONFDB
 			{
 				status=-10;
 				rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
-				rescode=-1;
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-				return rescode;	
+				return -1;	
 			}
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
@@ -6517,11 +5216,9 @@ EXTERN_CONFDB
 					{
 						status=-10;
 						rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
-						rescode=-1;
 						status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-
 						GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-						return rescode;
+						return -1;
 					}
 				}
 			}
@@ -6530,11 +5227,10 @@ EXTERN_CONFDB
 				if(i>len_array)
 				{
 					len_array=i;
-					rescode=-1;
 					status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 					lkIDs_temp=(int*) realloc(lkIDs_temp,0*sizeof(int));
 					GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-					return rescode;	
+					return -1;	
 				}
 				else
 				{
@@ -6555,7 +5251,7 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 					}
 				}
-				lkIDs_temp=(int*) realloc(lkIDs_temp,0*sizeof(int));
+				free(lkIDs_temp);
 			}
 		}
 		status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
@@ -6586,21 +5282,14 @@ EXTERN_CONFDB
 	{
 		char appliName[100]="GetListOfSubsystems";
 		int i = 0;
-		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int pos1=0;
 		int pos3=0;
-		int actual_len=0;
 		int pos2=0;
 		int len_devname=0;
 		char* devName=NULL;
 		char* devIDs_temp=NULL;
 		sword status;
-		int nline=0;
-		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
 		OCIDefine* def;
@@ -6619,15 +5308,14 @@ EXTERN_CONFDB
 			
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1,devName,len_devname+1,0,&status);
+				DefineByPos(stmthp,&def,ociError,1,devName,len_devname+1,&status);
 			else
 			{
 				status=-10;
 				rescode=ShowErrors (status, ociError, "pointer allocation unsuccessful");
-				rescode=-1;
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-				return rescode;	
+				return -1;	
 			}
 		}catch(Error err){
 			sprintf(appliName,"GetListOfSubsystems");	///////
@@ -6644,15 +5332,13 @@ EXTERN_CONFDB
 
 		if(status==OCI_SUCCESS)
 		{
-			pos2=0;
-			i=0;
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 				if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 				{
-					pos1=strcspn(devName,"|");
-					devName[pos1]='\0';
+					RemoveSeparator(devName,"|");
+					pos1=strlen(devName);
 					pos3=pos2;
 					pos2+=pos1+1;
 					devIDs_temp=(char*) realloc(devIDs_temp,pos2*sizeof(char));
@@ -6660,11 +5346,10 @@ EXTERN_CONFDB
 					{
 						status=-10;
 						rescode=ShowErrors (status, ociError, "  pointer allocation unsuccessful");
-						rescode=-1;
 						free(devName);
 						status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 						GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-						return rescode;
+						return -1;
 					}
 					else
 					{
@@ -6679,11 +5364,10 @@ EXTERN_CONFDB
 				{
 					len_array=pos2;
 					devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
-					rescode=-1;
 					free(devName);
 					status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 					GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-					return rescode;
+					return -1;
 				}
 				else
 				{
@@ -6699,7 +5383,7 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 					}
 				}
-				devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
+				free(devIDs_temp);
 				free(devName);
 			}
 		}
@@ -6731,11 +5415,7 @@ EXTERN_CONFDB
 	{
 		char appliName[100]="GetSpareHWTypeList";
 		int i = 0;
-		int j=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		int pos1=0;
 		int pos3=0;
 		int actual_len=0;
@@ -6744,8 +5424,6 @@ EXTERN_CONFDB
 		char* devName=NULL;
 		char* devIDs_temp=NULL;
 		sword status;
-		int nline=0;
-		int nb_rdtrip=1;
 		int prefetch_rows=2000;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p = (OCIBind *) 0; 
@@ -6765,15 +5443,14 @@ EXTERN_CONFDB
 			
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,0,&status);		
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);		
 			else
 			{
 				status=-10;
 				rescode=ShowErrors (status, ociError, "pointer allocation unsuccessful");
-				rescode=-1;
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-				return rescode;	
+				return -1;	
 			}
 		}catch(Error err){
 			sprintf(appliName,"GetSpareHWTypeList");	///////
@@ -6790,15 +5467,13 @@ EXTERN_CONFDB
 
 		if(status==OCI_SUCCESS)
 		{
-			pos2=0;
-			i=0;
 			while(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 			{
 				status =OCIStmtFetch2(stmthp, ociError, 1, OCI_FETCH_NEXT,1,OCI_DEFAULT);
 				if(status==OCI_SUCCESS || status== OCI_SUCCESS_WITH_INFO)
 				{
-					pos1=strcspn(devName,"?");
-					devName[pos1]='\0';
+					RemoveSeparator(devName,"?");
+					pos1=strlen(devName);
 					pos3=pos2;
 					pos2+=pos1+1;
 
@@ -6807,11 +5482,10 @@ EXTERN_CONFDB
 					{
 						status=-10;
 						rescode=ShowErrors (status, ociError, "  pointer allocation unsuccessful");
-						rescode=-1;
 						free(devName);
 						status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 						GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-						return rescode;
+						return -1;
 					}
 					else
 					{
@@ -6826,11 +5500,10 @@ EXTERN_CONFDB
 				{
 					len_array=pos2;
 					devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
-					rescode=-1;
 					free(devName);
 					status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 					GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-					return rescode;
+					return -1;
 				}
 				else
 				{
@@ -6846,7 +5519,7 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"NO_ROWS_SELECTED",ErrorMessage,1);
 					}
 				}
-				devIDs_temp=(char*) realloc(devIDs_temp,0*sizeof(char));
+				free(devIDs_temp);
 				free(devName);
 			}
 		}
@@ -6886,44 +5559,23 @@ EXTERN_CONFDB
 	int GetSparePortRow_snb(char* serialnb, char* port_nb,int port_way, char* port_type,int &len_port, char* port_row_result,char* ErrorMessage)
 	{
 		char appliName[100]="GetSparePortRow_snb";
-		int i = 0;
-		int j=0;
-		int pos1=0;
-		int pos2=0;
 		int rescode=0;
-		ub4 numcols = 0;
-		ub4 collen=0;
-		ub2 type = 0;
 		sword status;
 		OCIStmt *stmthp;
 		OCIBind  *bnd1p[4] ; 
 		OCIDefine* def[6];
-		sb4  phylen=0;
-		sb4 iplen=0;
 		sb4  dnamelen=0;
 		sb4 portypelen=0;
 		sb4  portnblen=0;
 		sb4 maclen=0;
 		sb4 bialen=0;
 		OCIParam *parmdp;
-		int len=0;
-		int free_mem=0;
-		int portid=0;
-		int admin_status=0; 
-		int pxi_booting=0;
-		int speed=0;
 		int portway=0;
 		char * mac_temp=NULL;
 		char * bia_temp=NULL;
 		char * snb_temp=NULL;
 		char * portype_temp=NULL;
 		char * portnb_temp=NULL;
-		int mac_null=0;
-		int bia_null=0;
-		int snb_null=0;
-		int portype_null=0;
-		int portnb_null=0;
-		char logmessage[100];
 		char selectport[1000];
 		char port_type1[100];
 		if(port_type!=NULL)
@@ -6958,12 +5610,6 @@ EXTERN_CONFDB
 			ParamGet(stmthp, ociError, &parmdp, 6, &status);
 			AttrGet(parmdp, &maclen, ociError, &status);
 
-			MinStringLength(portnblen);
-			MinStringLength(portypelen);
-			MinStringLength(bialen);
-			MinStringLength(maclen);
-			MinStringLength(dnamelen);
-
 			portype_temp = (char *) realloc(portype_temp,(portypelen + 1)*sizeof(char));
 			portnb_temp = (char *) realloc(portnb_temp,(portnblen + 1)*sizeof(char));
 			bia_temp= (char *) realloc(bia_temp,(bialen + 1)*sizeof(char));
@@ -6974,7 +5620,6 @@ EXTERN_CONFDB
 			{
 				status=-10;
 				rescode=ShowErrors (status, ociError, "  pointer allocation unsuccessful");
-				rescode=-1;
 				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
 				if(snb_temp!=NULL)
 					free(snb_temp);
@@ -6988,14 +5633,14 @@ EXTERN_CONFDB
 					free(bia_temp);
 
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
-				return rescode;
+				return -1;
 			}
-			DefineByPos(stmthp,def,ociError,1, snb_temp,dnamelen+1,snb_null,&status);		
-			DefineByPos(stmthp,def,ociError,2, portnb_temp,portnblen+1,portnb_null,&status);		
+			DefineByPos(stmthp,def,ociError,1, snb_temp,dnamelen+1,&status);		
+			DefineByPos(stmthp,def,ociError,2, portnb_temp,portnblen+1,&status);		
 			DefineByPos(stmthp,def,ociError,3, &portway,&status);		
-			DefineByPos(stmthp,def,ociError,4, portype_temp,portypelen+1, portype_null,&status);		
-			DefineByPos(stmthp,def,ociError,5, bia_temp, bialen + 1,bia_null,&status);		
-			DefineByPos(stmthp,def,ociError,6, mac_temp,maclen+1,mac_null,&status);		
+			DefineByPos(stmthp,def,ociError,4, portype_temp,portypelen+1,&status);		
+			DefineByPos(stmthp,def,ociError,5, bia_temp, bialen + 1,&status);		
+			DefineByPos(stmthp,def,ociError,6, mac_temp,maclen+1,&status);		
 						
 		}catch(Error err){
 			sprintf(appliName,"GetSparePortRow_snb");	///////
@@ -7015,45 +5660,12 @@ EXTERN_CONFDB
 
 		if (status==OCI_SUCCESS || status==OCI_SUCCESS_WITH_INFO) 
 		{	
-			Format_output(mac_null,mac_temp,  logmessage,'?');
-			Format_output(portnb_null,portnb_temp, logmessage,'?');
-			Format_output(snb_null,snb_temp,  logmessage,'?');
-			Format_output(bia_null,bia_temp, logmessage,'?');
-			Format_output(portype_null,portype_temp,  logmessage,'?');
-			pos1=strcspn(portype_temp,"?");
-			portype_temp[pos1]='\0';
-			pos1=strcspn(portnb_temp,"?");
-			pos2=strcspn(bia_temp,"?");
-			portnb_temp[pos1]='\0';
-			bia_temp[pos2]='\0';
-			pos1=strcspn(mac_temp,"?");
-			mac_temp[pos1]='\0';
-			pos1=strcspn(snb_temp,"?");
-			snb_temp[pos1]='\0';
-
-			len=strlen(mac_temp)+strlen(bia_temp)+strlen(snb_temp)+strlen(portype_temp)+strlen(portnb_temp)+strlen("|serialnb (C): |port_nbr (C): |port_way (I):1 |port_type (C): |bia (C): |macaddress (C): |");
-			if(len_port<len)
-			{
-				len++;
-				len_port=len;
-				rescode=-1;
-				status =OCIHandleFree (stmthp,OCI_HTYPE_STMT);
-				if(bia_temp!=NULL)
-					free(bia_temp);
-				if(portnb_temp!=NULL)
-					free(portnb_temp);
-				if(mac_temp!=NULL)
-					free(mac_temp);
-				if(portype_temp!=NULL)
-					free(portype_temp);
-				if(snb_temp!=NULL)
-					free(snb_temp);
-
-				GetErrorMess(appliName,"BUFFER_TOO_SMALL",ErrorMessage,1);
-				return rescode;
-			}
-			else
-				sprintf(port_row_result,"|serialnb (C):%s |port_nbr (C):%s |port_way (I):%d |port_type (C):%s |bia (C):%s |macaddress (C):%s |",snb_temp,portnb_temp,portway,portype_temp,bia_temp,mac_temp);
+			RemoveSeparator(mac_temp,"?");
+			RemoveSeparator(portnb_temp,"?");
+			RemoveSeparator(snb_temp,"?");
+			RemoveSeparator(bia_temp,"?");
+			RemoveSeparator(portype_temp,"?");
+			sprintf(port_row_result,"|serialnb (C):%s |port_nbr (C):%s |port_way (I):%d |port_type (C):%s |bia (C):%s |macaddress (C):%s |",snb_temp,portnb_temp,portway,portype_temp,bia_temp,mac_temp);
 		} 
 		else 
 		{
