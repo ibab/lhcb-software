@@ -104,11 +104,20 @@
       // turns on underline mode
       void TBK_CONIOEXAPI underlinevideo(void);
 
+      // turns off underline mode
+      void TBK_CONIOEXAPI nounderlinevideo(void);
+
       // turns on reverse video mode
       void TBK_CONIOEXAPI inversevideo(void);
 
+      // turns off reverse video mode
+      void TBK_CONIOEXAPI noinversevideo(void);
+
       // turn on blinking
       void TBK_CONIOEXAPI blinkvideo(void);
+
+      // turn off blinking
+      void TBK_CONIOEXAPI noblinkvideo(void);
 
       // turn off underline and inverse mode
       void TBK_CONIOEXAPI normalvideo(void);
@@ -121,6 +130,10 @@
 
       // returns the console size
       void  TBK_CONIOEXAPI  consolesize(int* rows, int* cols);
+
+      // Scroll console up or down
+      bool TBK_CONIOEXAPI consolescroll(bool Up);
+
       #ifdef __cplusplus
         }
       #endif
