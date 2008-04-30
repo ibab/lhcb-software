@@ -1,4 +1,4 @@
-// $Id: ExtCalls.h,v 1.4 2007-12-03 11:14:51 ibelyaev Exp $
+// $Id: ExtCalls.h,v 1.5 2008-04-30 11:11:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTCALLS_H 
 #define LOKI_EXTCALLS_H 1
@@ -44,8 +44,10 @@ namespace LoKi
     class ExtFunCalls<LHCb::Particle>
     {
     private:
+      // ======================================================================
       typedef LHCb::Particle                             Type ;
       typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;      
+      // ======================================================================
     public:
       // ======================================================================
       static Fun::result_type __call__ 
@@ -92,15 +94,28 @@ namespace LoKi
       // __rrshift__ 
       static Fun::result_type              __rrshift__ 
       ( const Fun& fun  , const SmartRef<Type>& o ) { return fun ( o ) ; }
-      //
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rshift__ 
+      static LoKi::FunctorFromFunctor<const Type*,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // __rshift__ 
+      static LoKi::FunctorFromFunctor<const Type*,bool>   __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      // ======================================================================
     } ;
     // ========================================================================
     template <>
     class ExtCutCalls<LHCb::Particle>
     {
     private:
+      // ======================================================================
       typedef LHCb::Particle                              Type ;
       typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;      
+      // ======================================================================
     public:
       // ======================================================================
       static Fun::result_type __call__ 
@@ -149,16 +164,20 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
+      // __rshift__
       static LoKi::FunctorFromFunctor<const Type*,bool> __rshift__            
       ( const Fun& fun  , const Fun&                        o ) { return fun >> o  ; }
+      // ======================================================================
     } ;
     // ========================================================================
     template <>
     class ExtFunCalls<LHCb::VertexBase>
     {
     private:
+      // ======================================================================
       typedef LHCb::VertexBase            Type ;
       typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;      
+      // ======================================================================
     public:
       // ======================================================================
       static Fun::result_type __call__ 
@@ -175,6 +194,8 @@ namespace LoKi
       // ======================================================================
       static Fun::result_type __call__ 
       ( const Fun& fun , const SmartRef<LHCb::RecVertex>&  p ) { return fun ( p ) ; }
+      // ======================================================================
+    public:
       // ======================================================================
       // __rrshift__ 
       static std::vector<Fun::result_type> __rrshift__ 
@@ -251,7 +272,18 @@ namespace LoKi
       // __rrshift__ 
       static Fun::result_type              __rrshift__ 
       ( const Fun& fun  , const SmartRef<LHCb::RecVertex>& o ) { return fun ( o ) ; }
-      //
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rshift__ 
+      static LoKi::FunctorFromFunctor<const Type*,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // __rshift__ 
+      static LoKi::FunctorFromFunctor<const Type*,bool>   __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      // ======================================================================
     };
     // ========================================================================
     template <>
@@ -277,6 +309,9 @@ namespace LoKi
       static Fun::result_type __call__ 
       ( const Fun& fun , const SmartRef<LHCb::RecVertex>&  p ) { return fun ( p ) ; }
       // ======================================================================
+    public:
+      // ======================================================================
+      // __rrshift__ 
       static Type::ConstVector __rrshift__ 
       ( const Fun& fun  , const Type::ConstVector& o ) { return o >> fun  ; }
       // __rrshift__
@@ -355,8 +390,12 @@ namespace LoKi
       static Fun::result_type  __rrshift__ 
       ( const Fun& fun  , const SmartRef<LHCb::RecVertex>&  o ) { return fun ( o ) ; }
       // ======================================================================
+    public:
+      // ======================================================================
+      // __rshift__ 
       static LoKi::FunctorFromFunctor<const Type*,bool> __rshift__            
       ( const Fun& fun  , const Fun&                        o ) { return fun >> o  ; }
+      // ======================================================================
     } ;
     // ========================================================================    
   } // end of namespace LoKi::Dicts

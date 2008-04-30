@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.33 2008-04-30 05:39:20 cattanem Exp $ 
+! $Id: release.notes,v 1.34 2008-04-30 11:11:45 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiAlgo v7r3 2008-04-30 ==========================
+
+! 2008-04-30 - Vanya BELYAEV
+
+ - LoKi/ExtCalls.h
+
+   fix the missing "__rshift__" to allow the proper decorations in Bender
+
+ - cmt/requirements 
+
+   version increment to v7r3 
 
 !========================== LoKiAlgo v7r2p1 2008-04-30 ========================
 ! 2008-04-30 - Marco Cattaneo
