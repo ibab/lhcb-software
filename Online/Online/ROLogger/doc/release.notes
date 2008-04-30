@@ -1,0 +1,10 @@
+Package: ROLogger
+Author:  Markus Frank
+
+!================== ROLogger v1r0 2008-05-01 =============================
+
+  New Package.
+  The ROLogger package interfaces to the FMC loggers.
+  The basic version allows to dynamically connect to the FMC loggers
+  of all clusters connected to the RunInfo datapoint.
+
