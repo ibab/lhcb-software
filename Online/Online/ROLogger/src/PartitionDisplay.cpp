@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.2 2008-04-30 09:24:43 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
@@ -26,8 +26,10 @@ extern "C" {
 }
 using namespace ROLogger;
 
-static char  s_enable[]  = "Enable ";
-static char  s_disable[] = "Disable";
+static char* s_show[]    = {"Show"};
+static char* s_config[]  = {"Configure"};
+static char* s_enable[]  = {"Enable "};
+static char* s_disable[] = {"Disable"};
 static char  s_enableDisableResult[80];
 static char  s_param_buff[80];
 
@@ -72,9 +74,10 @@ static std::string setupParams(const std::string& name, bool val) {
   char text[132];
   ::sprintf(text,"%-12s %-10s  ^^^^     ^^^^^^^     ^^^^^^^^^",
 	    name.c_str(), val ? "[ENABLED]" : "[DISABLED]");
-  ::upic_set_param(s_param_buff,1,"A4","Show",0,0,0,0,0);
-  ::upic_set_param(s_enableDisableResult,2,"A7",val?s_disable:s_enable,0,0,0,0,0);
-  ::upic_set_param(s_param_buff,3,"A9","Configure",0,0,0,0,0);
+  ::upic_set_param(s_param_buff,1,"A4",s_show[0],0,0,s_show,1,1);
+  ::upic_set_param(s_enableDisableResult,2,"A7",val?s_disable[0]:s_enable[0],
+		   0,0,val?s_disable:s_enable,1,1);
+  ::upic_set_param(s_param_buff,3,"A9",s_config[0],0,0,s_config,1,1);
   return text;
 }
 
@@ -137,7 +140,7 @@ void PartitionDisplay::handle(const Event& ev) {
 	  showCluster(cmd);
 	  break;
 	case 2:
-	  val = m_items[cmd].first = ::strcmp(s_enableDisableResult,s_enable)==0;
+	  val = m_items[cmd].first = ::strcmp(s_enableDisableResult,s_enable[0])==0;
 	  ::upic_replace_param_line(m_id,cmd,setupParams(m_items[cmd].second,val).c_str(),"");
 	  ::upic_set_cursor(ev.menu_id,cmd,ev.param_id);
 	  ioc.send(m_msg,val ? CMD_DISCONNECT_CLUSTER : CMD_CONNECT_CLUSTER,new std::string(m_items[cmd].second));
