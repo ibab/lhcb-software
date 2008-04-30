@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.93 2008-04-30 10:48:38 ibelyaev Exp $ 
+# $Id: requirements,v 1.94 2008-04-30 11:12:52 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.93 $	
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.94 $	
 # =============================================================================
 # The management of the content of BENDER project:
 #                 LHCb Physics Analysis with Python  
@@ -8,6 +8,8 @@
 package       BenderSys
 version       v8r2
 author        Vanya BELYAEV
+
+use LoKiAlgo v7r3 Phys 
 
 # =========== Bender Application itself =======================================
 use           Bender         v8r2   Phys 
