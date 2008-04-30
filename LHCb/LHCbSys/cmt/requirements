@@ -74,7 +74,7 @@ use DaVinciMCKernel       v2r7   Phys    # Juan Palacios
 use LHCbAlgs              v2r17  Kernel  # Marco Cattaneo
 use LinkerInstances       v3r4   Event   # Thomas Ruf
 use LoKi                  v7r0   Phys    # Ivan Belyaev
-use LoKiAlgo              v7r2   Phys    # Ivan Belyaev
+use LoKiAlgo              v7r2p1 Phys    # Ivan Belyaev
 use LoKiAlgoMC            v7r0   Phys    # Ivan Belyaev
 use LoKiArrayFunctors     v7r2   Phys    # Ivan Belyaev
 use LoKiCore              v7r2   Phys    # Ivan Belyaev
