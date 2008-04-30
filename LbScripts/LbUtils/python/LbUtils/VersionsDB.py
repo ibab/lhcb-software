@@ -4,7 +4,7 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.5 2008-04-29 09:40:09 marcocle Exp $"
+__version__ = "$Id: VersionsDB.py,v 1.6 2008-04-30 18:02:00 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
@@ -166,12 +166,14 @@ class Release:
     """
     __releases__ = {}
     __unversioned_projects__ = {}
-    def __init__(self, name, projects = [], base = None):
+    def __init__(self, name, projects = None, base = None):
         if name in self.__releases__:
             raise DuplicatedReleaseError(name)
         self.name = name
         self.base = base
         self.projects = {}
+        if projects is None:
+            projects = []
         for (k,v) in projects:
             self.projects[k] = v
         self.__releases__[name] = self
@@ -269,10 +271,16 @@ class _ReleaseSAXHandler(ContentHandler):
     SAX content handler used to fill the database of releases from the XML file.
     Note: the database is purged before a 
     """
+    def __init__(self):
+        ContentHandler.__init__(self)
+        self.releases = Release.__releases__
+        self._currentRelease = None
+        self._currentProject = None
+        
     def startDocument(self):
         #print "startDocument"
         # reset the DB of releases
-        clean() 
+        clean()
         self.releases = Release.__releases__
         self._currentRelease = None
         self._currentProject = None
