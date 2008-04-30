@@ -1,4 +1,4 @@
-// $Id: RODIMLogger.cpp,v 1.2 2008-04-30 14:47:19 frankb Exp $
+// $Id: RODIMLogger.cpp,v 1.3 2008-04-30 14:58:57 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RODIMLogger.cpp,v 1.2 2008-04-30 14:47:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RODIMLogger.cpp,v 1.3 2008-04-30 14:58:57 frankb Exp $
 
 // Framework include files
 extern "C" {
@@ -52,7 +52,7 @@ namespace graphics {
 #else
 
   inline void  consolesize(size_t* rows, size_t* cols);
-  inline void  gotoxy(int x,int y) { ::printf("\033[%d;%dH",y,x);    }
+  inline void  gotoxy(int x,int y) {    ::printf("\033[%d;%dH",y,x);    }
 
   inline void  inverse()           {    ::printf("\033[7m");         }
   inline void  underline()         {    ::printf("\033[4;30m");      }
@@ -79,6 +79,8 @@ namespace graphics {
 #ifndef _WIN32
 #include <cstdlib>
 #include <sys/ioctl.h>
+
+
 
 void graphics::consolesize(size_t* rows, size_t* cols) {
   int fd = ::fileno(stdout);

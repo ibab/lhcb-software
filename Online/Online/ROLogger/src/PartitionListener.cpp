@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.2 2008-04-30 14:58:57 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.2 2008-04-30 14:58:57 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -25,8 +25,12 @@
 extern "C" {
 #include "dic.h"
 }
+#ifdef _WIN32
+#include <winsock2.h>
+#else
 #include <netdb.h>
 #include <arpa/inet.h>
+#endif
 
 typedef std::vector<std::string> _SV;
 using namespace ROLogger;
