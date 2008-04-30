@@ -1,28 +1,25 @@
-# $Id: requirements,v 1.92 2008-04-22 15:59:12 hmdegaud Exp $ 
+# $Id: requirements,v 1.93 2008-04-30 10:48:38 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.92 $	
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.93 $	
 # =============================================================================
 # The management of the content of BENDER project:
 #                 LHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
-version       v8r1
+version       v8r2
 author        Vanya BELYAEV
 
-# temporary fixes:
-use           LoKiAlgo     v7r1p1 Phys 
-
 # =========== Bender Application itself =======================================
-use           Bender         v8r1   Phys 
+use           Bender         v8r2   Phys 
   
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v8r1   Ex
+use           BenderExample  v8r2   Ex
 
 # =========== Bender tutorial =================================================
-use           BenderTutor    v8r1   Tutorial
+use           BenderTutor    v8r2   Tutorial
 
 # =========== template of user module/scriot ==================================
-use           BenderUser     v8r1   Phys 
+use           BenderUser     v8r2   Phys 
 
 
 # Allow the generation of QMTest summary 

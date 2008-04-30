@@ -1,11 +1,23 @@
 <PRE>
-! $Id: release.notes,v 1.14 2008-03-15 13:55:00 ibelyaev Exp $ 
+! $Id: release.notes,v 1.15 2008-04-30 10:48:38 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
 </PRE>
+
+<H1>
+<A NAME=v8r2>2008-04-30 Bender v8r2 based on the DaVinci v19r12 </A>
+</H1>	
+
+<PRE>		
+This version is based on DaVinci v19r12 and essentially it carries no major new functionality. 
+
+The concept of "Configurables" is not used yet. 
+
+</PRE>
+
 
 <H1>
 <A NAME=v8r1>2008-03-15 Bender v8r1 based on the DaVinci v19r11 </A>
