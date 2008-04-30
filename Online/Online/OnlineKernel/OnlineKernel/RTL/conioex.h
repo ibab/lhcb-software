@@ -101,6 +101,18 @@
       // turns off high intensity for following text outputs
       void  TBK_CONIOEXAPI  lowvideo(void);
 
+      // turns on underline mode
+      void TBK_CONIOEXAPI underlinevideo(void);
+
+      // turns on reverse video mode
+      void TBK_CONIOEXAPI inversevideo(void);
+
+      // turn on blinking
+      void TBK_CONIOEXAPI blinkvideo(void);
+
+      // turn off underline and inverse mode
+      void TBK_CONIOEXAPI normalvideo(void);
+
       // set the cursor shape to one of the following shapes:
       // _NOCURSOR     - the cursor is invisible
       // _NORMALCURSOR - default underscore-cursor

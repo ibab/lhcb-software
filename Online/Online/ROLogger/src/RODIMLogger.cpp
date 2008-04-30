@@ -1,4 +1,4 @@
-// $Id: RODIMLogger.cpp,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Id: RODIMLogger.cpp,v 1.2 2008-04-30 14:47:19 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,32 +11,94 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RODIMLogger.cpp,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RODIMLogger.cpp,v 1.2 2008-04-30 14:47:19 frankb Exp $
 
 // Framework include files
 extern "C" {
-#include "dic.h"
+  #include "dic.h"
+  #include "dis.h"
 }
-#include "dis.hxx"
 #include <cerrno>
 #include <iostream>
-#include <sys/ioctl.h>
 #include "RTL/rtl.h"
 #include "ROLogger/RODIMLogger.h"
 
-#define inverse(fp)          fprintf(fp,"\033[7m")
-#define underline(fp)        fprintf(fp,"\033[4;30m")
-#define bold(fp)             fprintf(fp,"\033[1m")
-#define normal(fp)           fprintf(fp,"\033[27m")
-#define clear_screen(fp)     fprintf(fp,"\033[2J")
-#define flash(fp)            fprintf(fp,"\033[5m")
-#define plain(fp)            fprintf(fp,"\033[0m")
-#define narrow_screen(fp)    fprintf(fp,"\033[?3l")
-#define wide_screen(fp)      fprintf(fp,"\033[?3h")
-#define cursor_on(fp)        fprintf(fp,"\033[?25h")
-#define cursor_off(fp)       fprintf(fp,"\033[?25l")
+#ifdef _WIN32
+#endif
+namespace graphics {
+#ifdef _WIN32
+  inline void  consolesize(size_t* rows, size_t* cols) { int x,y; ::consolesize(&y,&x); *rows=y;*cols=x; }
+  inline void  gotoxy(int x,int y) { ::gotoxy(x,y);            }
+  inline void  inverse()       {    inversevideo();            }
+  inline void  underline()     {    underlinevideo();          }
+  inline void  normal()        {    normalvideo();             }
+  inline void  clear_screen()  {    clrscr();                  }
+  inline void  flash()         {    blinkvideo();              }
+  inline void  plain()         {    lowvideo();normalvideo();  }
+  inline void  narrow_screen() {                               }
+  inline void  wide_screen()   {                               }
+  inline void  cursor_on()     {    _setcursortype(); }
+  inline void  cursor_off()    {    _setcursortype(_NOCURSOR);       }
+
+  inline void  white()         {    textattr(BUILD_TEXTATTR(BLACK,WHITE));   }
+  inline void  green()         {    textattr(BUILD_TEXTATTR(BLACK,GREEN));   }
+  inline void  blue()          {    textattr(BUILD_TEXTATTR(BLACK,BLUE));    }
+
+  inline void  bold()          {    highvideo();               }
+  inline void  bold_yellow()   {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,YELLOW));  }
+  inline void  bold_magenta()  {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,MAGENTA)); }
+  inline void  bold_red()      {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,RED));     }
+
+#else
+
+  inline void  consolesize(size_t* rows, size_t* cols);
+  inline void  gotoxy(int x,int y) { ::printf("\033[%d;%dH",y,x);    }
+
+  inline void  inverse()           {    ::printf("\033[7m");         }
+  inline void  underline()         {    ::printf("\033[4;30m");      }
+  inline void  normal()            {    ::printf("\033[27m");        }
+  inline void  clear_screen()      {    ::printf("\033[2J");         }
+  inline void  flash()             {    ::printf("\033[5m");         }
+  inline void  plain()             {    ::printf("\033[0m");         }
+  inline void  narrow_screen()     {    ::printf("\033[?3l");        }
+  inline void  wide_screen()       {    ::printf("\033[?3h");        }
+  inline void  cursor_on()         {    ::printf("\033[?25h");       }
+  inline void  cursor_off()        {    ::printf("\033[?25l");       }
+
+  inline void  white()             {    ::printf("\033[0;37;40m");   }
+  inline void  green()             {    ::printf("\033[0;32;40m");   }
+  inline void  blue()              {    ::printf("\033[0;34;40m");   }
+
+  inline void  bold()              {    ::printf("\033[1m");         }
+  inline void  bold_yellow()       {    ::printf("\033[0;1;33;40m"); }
+  inline void  bold_magenta()      {    ::printf("\033[0;1;35;40m"); }
+  inline void  bold_red()          {    ::printf("\033[0;1;31;40m"); }
+#endif
+}
+
+#ifndef _WIN32
+#include <cstdlib>
+#include <sys/ioctl.h>
+
+void graphics::consolesize(size_t* rows, size_t* cols) {
+  int fd = ::fileno(stdout);
+  if ( ::isatty(fd) ) {
+    struct winsize wns;
+    do {
+      if( ::ioctl(fd,TIOCGWINSZ,&wns) == 0 ) {
+        *rows = wns.ws_row;
+        *cols = wns.ws_col;
+	return;
+      }
+    } while (errno == EINTR);   
+  }
+  *rows = 0;
+  *cols = 0;
+}
+#endif
 
 using namespace ROLogger;
+using namespace graphics;
 
 /// Standard constructor
 RODIMLogger::RODIMLogger(int argc, char** argv) 
@@ -92,114 +154,96 @@ void RODIMLogger::printMessage(FILE* fp, const char* msg, bool crlf)  {
   if ( m_colors ) {
     switch(msgSeverity(msg))      {
     case 0: /* No label - white */
-      fprintf(fp,"\033[0;37;40m");
+      white();
       break;
     case 1: /* VERBOSE - blue */
-      fprintf(fp,"\033[0;34;40m");
+      blue();
       break;
     case 2: /* DEBUG - green */
-      fprintf(fp,"\033[0;32;40m");
+      green();
       break;
     case 3: /* INFO - white */
-      fprintf(fp,"\033[0;37;40m");
+      white();
       break;
     case 4: /* WARN - bold yellow */
-      fprintf(fp,"\033[0;1;33;40m");
+      bold_yellow();
       break;
     case 5: /* ERROR - bold red */
-      fprintf(fp,"\033[0;1;31;40m");
+      bold_red();
       break;
     case 6: /* FATAL - bold magenta */
-      fprintf(fp,"\033[0;1;35;40m");
+      bold_magenta();
       break;
     } 
   }
   fprintf(fp,msg);
   if ( crlf ) fprintf(fp,"\n");
-  if ( m_colors ) fprintf(fp,"\033[0m");
+  if ( m_colors ) plain();
 }
 
 /// Print header information before starting output
 void RODIMLogger::printHeader(FILE* fp, const std::string& title) {
-#ifdef __linux
-  size_t rows, cols;
-  int fd = ::fileno(fp);
-  if ( m_colors && ::isatty(fd) ) {
-    struct winsize wns;
-    do {
-      if(::ioctl(fd,TIOCGWINSZ,&wns) == 0) {
-	char buffer[1024];
-        rows = wns.ws_row;
-        cols = wns.ws_col;
-	cols  = cols<sizeof(buffer)?cols:sizeof(buffer);
+  if ( m_colors ) {
+    size_t rows=0, cols=0;
+    consolesize(&rows,&cols);
+    if ( rows>0 && cols>0 ) {
+      char buffer[1024];
+      cols  = cols<sizeof(buffer)?cols:sizeof(buffer);
 
-	//::clear_screen(fp);
-	::inverse(fp);
-	::bold(fp);
+      ::inverse();
+      ::bold();
 
-	::memset(buffer,' ',cols);
-	buffer[cols-1] = 0;	
-	::fprintf(fp,buffer);
-	::fprintf(fp,"\n");
-	::memcpy(&buffer[20],title.c_str(),title.length());
-	::fprintf(fp,buffer);
-	::fprintf(fp,"\n");
-	::memset(&buffer[20],' ',title.length());
-	buffer[cols-1] = 0;
-	::fprintf(fp,buffer);
-	::fprintf(fp,"\n");
-	::normal(fp);
-	::plain(fp);
-	::fprintf(fp,"\n");
-        return;
-      }
-    } while (errno == EINTR);   
-  } 
-#endif
+      ::memset(buffer,' ',cols);
+      buffer[cols-1] = 0;	
+      ::printf(buffer);
+      ::printf("\n");
+      ::memcpy(&buffer[20],title.c_str(),title.length());
+      ::printf(buffer);
+      ::printf("\n");
+      ::memset(&buffer[20],' ',title.length());
+      buffer[cols-1] = 0;
+      ::printf(buffer);
+      ::printf("\n");
+      ::normal();
+      ::plain();
+      ::printf("\n");
+      return;
+    }
+  }
   ::fprintf(fp,"\n                        Logger history of %s\n\n",title.c_str());
 }
 
 /// Print multi-line header information before starting output
 void RODIMLogger::printHeader(FILE* fp, const std::vector<std::string>& titles) {
-#ifdef __linux
-  size_t rows, cols;
-  int fd = ::fileno(fp);
-  if ( m_colors && ::isatty(fd) ) {
-    struct winsize wns;
-    do {
-      if(::ioctl(fd,TIOCGWINSZ,&wns) == 0) {
-	char buffer[1024];
-        rows = wns.ws_row;
-        cols = wns.ws_col;
-	cols  = cols<sizeof(buffer)?cols:sizeof(buffer);
-
-	//::clear_screen(fp);
-	::inverse(fp);
-	::bold(fp);
-
-	::memset(buffer,' ',cols);
-	buffer[cols-1] = 0;	
-	::fprintf(fp,buffer);
-	::fprintf(fp,"\n");
-	for(std::vector<std::string>::const_iterator i=titles.begin();i!=titles.end();++i) {
-	  const std::string& title = *i;
-	  ::memcpy(&buffer[20],title.c_str(),title.length());
-	  ::fprintf(fp,buffer);
-	  ::fprintf(fp,"\n");
-	  ::memset(&buffer[20],' ',title.length());
-	  buffer[cols-1] = 0;
-	}
-
-	::fprintf(fp,buffer);
-	::fprintf(fp,"\n");
-	::normal(fp);
-	::plain(fp);
-	::fprintf(fp,"\n");
-        return;
+  if ( m_colors ) {
+    size_t rows=0, cols=0;
+    consolesize(&rows,&cols);
+    if ( rows>0 && cols>0 ) {
+      char buffer[1024];
+      cols  = cols<sizeof(buffer)?cols:sizeof(buffer);
+      ::inverse();
+      ::bold();
+      ::memset(buffer,' ',cols);
+      buffer[cols-1] = 0;	
+      ::printf(buffer);
+      ::printf("\n");
+      for(std::vector<std::string>::const_iterator i=titles.begin();i!=titles.end();++i) {
+	const std::string& title = *i;
+	::memcpy(&buffer[20],title.c_str(),title.length());
+	::printf(buffer);
+	::printf("\n");
+	::memset(&buffer[20],' ',title.length());
+	buffer[cols-1] = 0;
       }
-    } while (errno == EINTR);   
+      
+      ::printf(buffer);
+      ::printf("\n");
+      ::normal();
+      ::plain();
+      ::printf("\n");
+      return;
+    }
   } 
-#endif
   for(std::vector<std::string>::const_iterator i=titles.begin();i!=titles.end();++i)
     ::fprintf(fp,"                   -> %s\n",(*i).c_str());
 }
@@ -364,7 +408,7 @@ void RODIMLogger::historyInfoHandler(void* tag, void* address, int* size)  {
 
 extern "C" int romon_logger(int argc, char** argv) {
   RODIMLogger mon(argc, argv);
-  DimServer::start(RTL::processName().c_str());
+  ::dis_start_serving((char*)RTL::processName().c_str());
   while(1) ::lib_rtl_sleep(1000);
   return 1;
 }

@@ -218,6 +218,64 @@ extern "C" void TBK_CONIOEXAPI lowvideo(void)
   return;
 }
 
+extern "C" void TBK_CONIOEXAPI inversevideo(void)
+{
+  CONSOLE_SCREEN_BUFFER_INFO csbi;
+  HANDLE                     hOutput;
+
+    if(INVALID_HANDLE_VALUE == (hOutput = GetStdHandle(STD_OUTPUT_HANDLE)))
+        return;
+    if(!GetConsoleScreenBufferInfo(hOutput, &csbi))
+        return;
+
+    SetConsoleTextAttribute(hOutput, (WORD)(csbi.wAttributes | COMMON_LVB_REVERSE_VIDEO));
+  return;
+}
+
+extern "C" void TBK_CONIOEXAPI underlinevideo(void)
+{
+  CONSOLE_SCREEN_BUFFER_INFO csbi;
+  HANDLE                     hOutput;
+
+    if(INVALID_HANDLE_VALUE == (hOutput = GetStdHandle(STD_OUTPUT_HANDLE)))
+        return;
+    if(!GetConsoleScreenBufferInfo(hOutput, &csbi))
+        return;
+
+    SetConsoleTextAttribute(hOutput, (WORD)(csbi.wAttributes | COMMON_LVB_UNDERSCORE));
+  return;
+}
+
+extern "C" void TBK_CONIOEXAPI blinkvideo(void)
+{
+  CONSOLE_SCREEN_BUFFER_INFO csbi;
+  HANDLE                     hOutput;
+
+    if(INVALID_HANDLE_VALUE == (hOutput = GetStdHandle(STD_OUTPUT_HANDLE)))
+        return;
+    if(!GetConsoleScreenBufferInfo(hOutput, &csbi))
+        return;
+
+    SetConsoleTextAttribute(hOutput, (WORD)(csbi.wAttributes | BACKGROUND_INTENSITY));
+  return;
+}
+
+extern "C" void TBK_CONIOEXAPI normalvideo(void)
+{
+  CONSOLE_SCREEN_BUFFER_INFO csbi;
+  HANDLE                     hOutput;
+  WORD                       attr;
+    if(INVALID_HANDLE_VALUE == (hOutput = GetStdHandle(STD_OUTPUT_HANDLE)))
+        return;
+    if(!GetConsoleScreenBufferInfo(hOutput, &csbi))
+        return;
+    attr = (WORD)(csbi.wAttributes & ~COMMON_LVB_REVERSE_VIDEO;
+    attr = attr & ~COMMON_LVB_UNDERSCORE;
+    attr = attr & BACKGROUND_INTENSITY;
+    SetConsoleTextAttribute(hOutput, attr);
+  return;
+}
+
 // returns the console size
 extern "C" void TBK_CONIOEXAPI consolesize(int* rows, int* cols)  
 {

@@ -1,4 +1,4 @@
-// $Id: ErrorLog.cpp,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Id: ErrorLog.cpp,v 1.2 2008-04-30 14:47:19 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.2 2008-04-30 14:47:19 frankb Exp $
 
 // Framework include files
 #include <sstream>
@@ -113,9 +113,13 @@ void ErrorLog::handle(const Event& ev) {
 #include "dis.hxx"
 #include "UPI/UpiSensor.h"
 extern "C" int romon_display_server(int argc, char** argv) {
+  int srows, scols, cols, rows, col, row;
   UpiSensor& s = UpiSensor::instance();
   ErrorLog mon(argc, argv);
   ::dis_start_serving((char*)RTL::processName().c_str());
+  ::upic_get_screen_size(&srows, &scols);
+  ::upic_get_message_window(&rows, &cols,&row, &col);
+  ::upic_set_message_window (srows-5, scols-2, 15, 2);
   s.run();
   return 1;
 }
