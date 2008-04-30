@@ -1,4 +1,4 @@
-// $Id: RODIMLogger.cpp,v 1.3 2008-04-30 14:58:57 frankb Exp $
+// $Id: RODIMLogger.cpp,v 1.4 2008-04-30 18:58:51 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RODIMLogger.cpp,v 1.3 2008-04-30 14:58:57 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RODIMLogger.cpp,v 1.4 2008-04-30 18:58:51 frankb Exp $
 
 // Framework include files
 extern "C" {
@@ -24,6 +24,7 @@ extern "C" {
 #include "ROLogger/RODIMLogger.h"
 
 #ifdef _WIN32
+#include "RTL/conioex.h"
 #endif
 namespace graphics {
 #ifdef _WIN32
@@ -37,7 +38,7 @@ namespace graphics {
   inline void  plain()         {    lowvideo();normalvideo();  }
   inline void  narrow_screen() {                               }
   inline void  wide_screen()   {                               }
-  inline void  cursor_on()     {    _setcursortype(); }
+  inline void  cursor_on()     {    _setcursortype(_NORMALCURSOR); }
   inline void  cursor_off()    {    _setcursortype(_NOCURSOR);       }
 
   inline void  white()         {    textattr(BUILD_TEXTATTR(BLACK,WHITE));   }
@@ -55,7 +56,9 @@ namespace graphics {
   inline void  gotoxy(int x,int y) {    ::printf("\033[%d;%dH",y,x);    }
 
   inline void  inverse()           {    ::printf("\033[7m");         }
+  inline void  inverse_off()       {    ::printf("\033[27m");        }
   inline void  underline()         {    ::printf("\033[4;30m");      }
+  inline void  underline_off()     {    ::printf("\033[24m");        }
   inline void  normal()            {    ::printf("\033[27m");        }
   inline void  clear_screen()      {    ::printf("\033[2J");         }
   inline void  flash()             {    ::printf("\033[5m");         }

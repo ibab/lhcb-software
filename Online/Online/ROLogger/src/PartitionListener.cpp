@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.2 2008-04-30 14:58:57 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.3 2008-04-30 18:58:51 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.2 2008-04-30 14:58:57 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.3 2008-04-30 18:58:51 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -73,7 +73,11 @@ void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1) {
     in_addr addr;
     addr.s_addr = inet_addr(data);
+#ifdef _WIN32
+    hostent* he = gethostbyaddr((const char*)&addr,sizeof(addr),AF_INET);
+#else
     hostent* he = gethostbyaddr(&addr,sizeof(addr),AF_INET);
+#endif
     if ( he ) {
       std::string node = he->h_name;
       size_t idx = node.find("-d1"); 
