@@ -1,4 +1,4 @@
-// $Id: RODIMLogger.cpp,v 1.4 2008-04-30 18:58:51 frankb Exp $
+// $Id: RODIMLogger.cpp,v 1.5 2008-04-30 19:19:11 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RODIMLogger.cpp,v 1.4 2008-04-30 18:58:51 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RODIMLogger.cpp,v 1.5 2008-04-30 19:19:11 frankb Exp $
 
 // Framework include files
 extern "C" {
@@ -24,7 +24,6 @@ extern "C" {
 #include "ROLogger/RODIMLogger.h"
 
 #ifdef _WIN32
-#include "RTL/conioex.h"
 #endif
 namespace graphics {
 #ifdef _WIN32
@@ -38,52 +37,83 @@ namespace graphics {
   inline void  plain()         {    lowvideo();normalvideo();  }
   inline void  narrow_screen() {                               }
   inline void  wide_screen()   {                               }
-  inline void  cursor_on()     {    _setcursortype(_NORMALCURSOR); }
-  inline void  cursor_off()    {    _setcursortype(_NOCURSOR);       }
+  inline void  cursor_on()     {    _setcursortype(); }
+  inline void  cursor_off()    {    _setcursortype(_NOCURSOR);               }
 
-  inline void  white()         {    textattr(BUILD_TEXTATTR(BLACK,WHITE));   }
-  inline void  green()         {    textattr(BUILD_TEXTATTR(BLACK,GREEN));   }
-  inline void  blue()          {    textattr(BUILD_TEXTATTR(BLACK,BLUE));    }
+  inline void  red()               {    textattr(BUILD_TEXTATTR(BLACK,RED));     }
+  inline void  yellow()            {    textattr(BUILD_TEXTATTR(BLACK,YELLOW));  }
+  inline void  white()             {    textattr(BUILD_TEXTATTR(BLACK,WHITE));   }
+  inline void  green()             {    textattr(BUILD_TEXTATTR(BLACK,GREEN));   }
+  inline void  blue()              {    textattr(BUILD_TEXTATTR(BLACK,BLUE));    }
+  inline void  cyan()              {    textattr(BUILD_TEXTATTR(BLACK,CYAN));    }
 
-  inline void  bold()          {    highvideo();               }
-  inline void  bold_yellow()   {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,YELLOW));  }
-  inline void  bold_magenta()  {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,MAGENTA)); }
-  inline void  bold_red()      {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,RED));     }
+  inline void  bold()              {    highvideo();               }
+  inline void  bold_yellow()       {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,YELLOW));  }
+  inline void  bold_magenta()      {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,MAGENTA)); }
+  inline void  bold_red()          {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,RED));     }
+
+  inline_void  bg_red()            {    textbackground(RED); }
+
 
 #else
 
   inline void  consolesize(size_t* rows, size_t* cols);
   inline void  gotoxy(int x,int y) {    ::printf("\033[%d;%dH",y,x);    }
 
+  inline void  plain()             {    ::printf("\033[0m");         }
+  inline void  bold()              {    ::printf("\033[1m");         }
+  inline void  nobold()            {    ::printf("\033[21m");        }
+  inline void  dimmed()            {    ::printf("\033[2m");         }
+  inline void  nodimmed()          {    ::printf("\033[22m");        }
+  inline void  underline()         {    ::printf("\033[4m");         }
+  inline void  nounderline()       {    ::printf("\033[24m");        }
+  inline void  flash()             {    ::printf("\033[5m");         }
+  inline void  noflash()           {    ::printf("\033[25m");        }
+  inline void  hidden()            {    ::printf("\033[6m");         }
   inline void  inverse()           {    ::printf("\033[7m");         }
-  inline void  inverse_off()       {    ::printf("\033[27m");        }
-  inline void  underline()         {    ::printf("\033[4;30m");      }
-  inline void  underline_off()     {    ::printf("\033[24m");        }
+  inline void  noinverse()         {    ::printf("\033[27m");        }
+
   inline void  normal()            {    ::printf("\033[27m");        }
   inline void  clear_screen()      {    ::printf("\033[2J");         }
-  inline void  flash()             {    ::printf("\033[5m");         }
-  inline void  plain()             {    ::printf("\033[0m");         }
   inline void  narrow_screen()     {    ::printf("\033[?3l");        }
   inline void  wide_screen()       {    ::printf("\033[?3h");        }
   inline void  cursor_on()         {    ::printf("\033[?25h");       }
   inline void  cursor_off()        {    ::printf("\033[?25l");       }
 
-  inline void  white()             {    ::printf("\033[0;37;40m");   }
-  inline void  green()             {    ::printf("\033[0;32;40m");   }
-  inline void  blue()              {    ::printf("\033[0;34;40m");   }
+  inline void  black()             {    ::printf("\033[30m");     }
+  inline void  red()               {    ::printf("\033[31m");     }
+  inline void  green()             {    ::printf("\033[32m");     }
+  inline void  yellow()            {    ::printf("\033[33m");     }
+  inline void  blue()              {    ::printf("\033[34m");     }
+  inline void  magenta()           {    ::printf("\033[35m");     }
+  inline void  cyan()              {    ::printf("\033[36m");     }
+  inline void  white()             {    ::printf("\033[37m");     }
 
-  inline void  bold()              {    ::printf("\033[1m");         }
-  inline void  bold_yellow()       {    ::printf("\033[0;1;33;40m"); }
-  inline void  bold_magenta()      {    ::printf("\033[0;1;35;40m"); }
+  inline void  bg_black()          {    ::printf("\033[40m");     }
+  inline void  bg_red()            {    ::printf("\033[41m");     }
+  inline void  bg_green()          {    ::printf("\033[42m");     }
+  inline void  bg_yellow()         {    ::printf("\033[43m");     }
+  inline void  bg_blue()           {    ::printf("\033[44m");     }
+  inline void  bg_magenta()        {    ::printf("\033[45m");     }
+  inline void  bg_cyan()           {    ::printf("\033[46m");     }
+  inline void  bg_white()          {    ::printf("\033[47m");     }
+
+  inline void  bold_grey()         {    ::printf("\033[0;1;30;40m"); }
   inline void  bold_red()          {    ::printf("\033[0;1;31;40m"); }
+  inline void  bold_green()        {    ::printf("\033[0;1;32;40m"); }
+  inline void  bold_yellow()       {    ::printf("\033[0;1;33;40m"); }
+  inline void  bold_blue()         {    ::printf("\033[0;1;34;40m"); }
+  inline void  bold_magenta()      {    ::printf("\033[0;1;35;40m"); }
+  inline void  bold_cyan()         {    ::printf("\033[0;1;36;40m"); }
+  inline void  bold_white()        {    ::printf("\033[0;1;37;40m"); }
+  inline void  tographics()          {    ::printf("\033>"); }
+  inline void  toascii()          {    ::printf("\033(B"); }
 #endif
 }
 
 #ifndef _WIN32
 #include <cstdlib>
 #include <sys/ioctl.h>
-
-
 
 void graphics::consolesize(size_t* rows, size_t* cols) {
   int fd = ::fileno(stdout);
@@ -102,6 +132,61 @@ void graphics::consolesize(size_t* rows, size_t* cols) {
 }
 #endif
 
+using namespace graphics;
+static void graphics_test() {
+#define DO(x,y) x(); y();                printf(" test ");           plain();                      printf("   ");  \
+         x(); y();  dimmed();            printf(" Dimmed ");         nodimmed();                   printf("   ");  \
+         x(); y();  bold();              printf(" Bold ");           nobold();                     printf("   ");  \
+         x(); y();  underline();         printf(" Underline ");      nounderline();                printf("   ");  \
+         x(); y();  underline(); bold(); printf(" Bold-Underline "); nobold();      nounderline(); printf("   ");  \
+         x(); y();  inverse();           printf(" Inverse ");        noinverse();                  printf("   ");  \
+         x(); y();  inverse(); bold();   printf(" Bold-Inverse ");   nobold();      noinverse();   printf("   ");  \
+         x(); y();  flash();             printf(" Flash ");          noflash();                    plain();  printf("\n");
+  DO(bg_black,black);
+  DO(bg_black,white);
+  DO(bg_black,yellow);
+  DO(bg_black,green);
+  DO(bg_black,red);
+  DO(bg_black,magenta);
+  DO(bg_black,blue);
+  DO(bg_black,cyan);
+
+  DO(bg_white,black);
+  DO(bg_white,white);
+  DO(bg_white,yellow);
+  DO(bg_white,green);
+  DO(bg_white,red);
+  DO(bg_white,magenta);
+  DO(bg_white,blue);
+  DO(bg_white,cyan);
+
+  DO(bg_green,black);
+  DO(bg_green,white);
+  DO(bg_green,yellow);
+  DO(bg_green,green);
+  DO(bg_green,red);
+  DO(bg_green,magenta);
+  DO(bg_green,blue);
+  DO(bg_green,cyan);
+
+  fprintf(stdout,"\033#3");printf(" Hello\n");
+  fprintf(stdout,"\033#4");printf(" Hello\n");
+  fprintf(stdout,"\033#6");printf(" Hello\n");
+  for(int i = 0; i < 3; ++i) {
+    fprintf(stdout,"\033M"); fflush(stdout);
+    ::lib_rtl_sleep(10);
+  }
+  for(int i = 0; i < 3; ++i) {
+    fprintf(stdout,"\033D"); fflush(stdout);
+    ::lib_rtl_sleep(100);
+  }
+}
+
+extern "C" int graphics_test(int,char**) {
+  graphics_test();
+}
+
+
 using namespace ROLogger;
 using namespace graphics;
 
@@ -119,6 +204,7 @@ RODIMLogger::RODIMLogger(int argc, char** argv)
     ::exit(2);
   }
   m_service = ::dis_add_cmnd((char*)name.c_str(),(char*)"C",requestHandler,(long)this);
+  bg_black();
 }
 
 /// Standard destructor
@@ -157,6 +243,7 @@ int RODIMLogger::msgSeverity(const char* msg) {
 /// Print single message retrieved from error logger
 void RODIMLogger::printMessage(FILE* fp, const char* msg, bool crlf)  {
   if ( m_colors ) {
+    bg_black();
     switch(msgSeverity(msg))      {
     case 0: /* No label - white */
       white();
@@ -171,19 +258,19 @@ void RODIMLogger::printMessage(FILE* fp, const char* msg, bool crlf)  {
       white();
       break;
     case 4: /* WARN - bold yellow */
-      bold_yellow();
+      bold(); yellow();
       break;
     case 5: /* ERROR - bold red */
-      bold_red();
+      bold(); red();
       break;
     case 6: /* FATAL - bold magenta */
-      bold_magenta();
+      bold(); magenta();
       break;
     } 
   }
   fprintf(fp,msg);
   if ( crlf ) fprintf(fp,"\n");
-  if ( m_colors ) plain();
+  if ( m_colors ) ::plain();
 }
 
 /// Print header information before starting output
@@ -195,6 +282,7 @@ void RODIMLogger::printHeader(FILE* fp, const std::string& title) {
       char buffer[1024];
       cols  = cols<sizeof(buffer)?cols:sizeof(buffer);
 
+      ::bg_black();
       ::inverse();
       ::bold();
 
@@ -226,6 +314,7 @@ void RODIMLogger::printHeader(FILE* fp, const std::vector<std::string>& titles) 
     if ( rows>0 && cols>0 ) {
       char buffer[1024];
       cols  = cols<sizeof(buffer)?cols:sizeof(buffer);
+      ::bg_black();
       ::inverse();
       ::bold();
       ::memset(buffer,' ',cols);
