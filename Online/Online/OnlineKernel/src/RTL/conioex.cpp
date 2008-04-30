@@ -269,9 +269,9 @@ extern "C" void TBK_CONIOEXAPI normalvideo(void)
         return;
     if(!GetConsoleScreenBufferInfo(hOutput, &csbi))
         return;
-    attr = (WORD)(csbi.wAttributes & ~COMMON_LVB_REVERSE_VIDEO;
-    attr = attr & ~COMMON_LVB_UNDERSCORE;
-    attr = attr & BACKGROUND_INTENSITY;
+    attr = (WORD)(csbi.wAttributes & ~COMMON_LVB_REVERSE_VIDEO);
+    attr = (attr & ~COMMON_LVB_UNDERSCORE);
+    attr = (attr & ~BACKGROUND_INTENSITY);
     SetConsoleTextAttribute(hOutput, attr);
   return;
 }
