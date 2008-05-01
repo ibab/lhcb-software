@@ -4,9 +4,13 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2008-05-01 - Chris Jones
+ - Usability improvements to IStereoFitter tool interface + add dict entries
+   for the interface
+
 ! 2008-04-28 - Chris Jones
  - Add new tool interface IRichPIDPlots.h which is used to make 'standard' PID
-  plots for calibration etc.
+   plots for calibration etc.
 
 !===================== RichRecBase v3r12 2008-04-18 ==========================
 ! 2008-04-16 - Chris Jones
