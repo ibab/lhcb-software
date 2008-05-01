@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.32 2008-04-24 09:47:49 pkoppenb Exp $
+# $Id: requirements,v 1.33 2008-05-01 08:16:18 graven Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 
@@ -13,6 +13,7 @@ branches          cmt doc options
 #============================================================================
 use DaVinciKernel   v* Phys
 use DaVinciMCKernel v* Phys
+use HltEvent        v* Event
 
 # Component library building rule
 #============================================================================

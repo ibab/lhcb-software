@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-05-01 - Gerhard Raven
+ - Add HltEvent to requirements -- it is used by HltBackgroundCategory
+
 !========================== HltSelChecker v6r1 2008-04-25 ===================
 ! 2008-04-24 - Patrick Koppenburg
  - Rename all SeqHlt in SeqHlt2
