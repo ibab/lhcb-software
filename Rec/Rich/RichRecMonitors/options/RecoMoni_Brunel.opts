@@ -14,9 +14,10 @@ CheckRICHSeq.Members += {
   ,"GaudiSequencer/RichPhotSig" // photon signal number plots
   ,"GaudiSequencer/RichPhotAng" // photon angle plots
   ,"GaudiSequencer/RichPhotGeom" // photon geometry plots
-  //,"GaudiSequencer/RichPhotEff"  // photon reco efficiency plots
+   //,"GaudiSequencer/RichPhotEff"  // photon reco efficiency plots
   ,"GaudiSequencer/RichPixelMoni" // pixel plots
-  ,"GaudiSequencer/RichRayTraceTests" // pixel plots
+  //,"GaudiSequencer/RichRayTraceTests" // ray tracing plots
+  ,"GaudiSequencer/RichStereoFitterTests" // stereographic refitting plots
 };
 RichPhotEff.MeasureTime  = true;
 RichPhotGeom.MeasureTime = true;
@@ -26,6 +27,7 @@ RichTkGeom.MeasureTime   = true;
 RichCKRes.MeasureTime    = true;
 RichTkRes.MeasureTime    = true;
 RichRayTraceTests.MeasureTime = true;
+RichStereoFitterTests.MeasureTime = true;
 
 // Reco track monitors
 #include "$RICHRECMONITORSOPTS/RecoMoni_Brunel_Tracks.opts"
@@ -81,3 +83,7 @@ PhotRayTraceTestSimple.FullHPDsInRayTracing = false;
 PhotRayTraceTestFull.FullHPDsInRayTracing   = true;
 //PhotRayTraceTestSimpleNoAmbig.FullHPDsInRayTracing = false;
 //PhotRayTraceTestFullNoAmbig.FullHPDsInRayTracing   = true;
+
+// stereofitter
+RichStereoFitterTests.Members += { "Rich::Rec::MC::StereoPhotonFitTest/StereoFitTestLong" };
+StereoFitTestLong.TrackSelector.TrackAlgs  = { "Forward", "Match" };
